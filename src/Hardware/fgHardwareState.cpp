@@ -8,7 +8,6 @@
  *******************************************************/
 
 #include "fgHardwareState.h"
-
 #include "../fgCommon.h"
 
 #include <cstdlib>
@@ -42,7 +41,7 @@ fgHardwareState::~fgHardwareState() {
 void fgHardwareState::initDPI() {
     DPI::dpiInit();
 
-    m_dpi = DPI::dpiGetScreenDPI();
+    m_dpi = DPI::dpiGetScreenDPI(m_screenWidth, m_screenHeight);
     
     FG_WriteLog("### SCREEN DPI IS: %d ###", m_dpi);
     

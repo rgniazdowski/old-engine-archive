@@ -10,8 +10,20 @@
 #ifndef _FG_TEXTURE_RESOURCE_H
 #define _FG_TEXTURE_RESOURCE_H
 
+#include "../../fgBuildConfig.h"
+
+#if defined FG_USING_MARMALADE
 #include "IwImage.h"
-#include "IwGL.h"
+#if !defined FG_USING_MARMALADE_EGL && defined FG_USING_MARMALADE_IWGL
+#include <IwGL.h>
+#elif defined FG_USING_MARMALADE_OPENGL_ES
+#include <GLES2/gl2.h>
+#include <GLES2/gl2ext.h>
+#include <GLES2/gl2platform.h>
+#include <EGL/egl.h>
+#endif
+
+#endif
 
 class fgTexture;
 

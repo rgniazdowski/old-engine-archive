@@ -19,7 +19,7 @@ namespace DPI
 		dpiLengthUnit Unit;
 
 		inline bool IsZero() const {return Value == 0;}
-
+#if 0 // #FIXME #TODO
 		int32 GetPx(int32 total) const
 		{
 			if (Value == 0)
@@ -44,6 +44,7 @@ namespace DPI
 			}
 			return res;
 		}
+#endif
 		CdpiLength(int32 v, dpiLengthUnit u):Value(v),Unit(u){}
 		CdpiLength():Value(0),Unit(PX){}
 		void Serialise();

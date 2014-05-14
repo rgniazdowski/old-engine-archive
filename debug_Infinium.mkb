@@ -239,7 +239,6 @@ options
 
 subprojects
 {
-	iwgl
 	tinyxml
 	dpi
 }

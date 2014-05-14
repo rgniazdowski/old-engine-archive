@@ -139,7 +139,9 @@ bool fgGameMain::initSubsystems(void)
 	//glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
 	//glHint(GL_POINT_SMOOTH_HINT, GL_NICEST);
 #endif
-
+	glClearDepthf(1.0f);
+	glDepthFunc(GL_LESS);
+	glEnable(GL_DEPTH_TEST);
 	return true;
 }
 

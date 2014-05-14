@@ -1,7 +1,7 @@
 #include <IwDebug.h>
 #include <dpiInfo.h>
 // #include <iwgx.h>
-#include <IwGL.h>
+//#include <IwGL.h>
 #include <dpiExt.h>
 
 namespace DPI
@@ -24,10 +24,12 @@ namespace DPI
 		return 146;
 	}
 
-	int32 dpiGetScreenDPI_iOS()
+	int32 dpiGetScreenDPI_iOS(int _w, int _h)
 	{
-		uint32 w = IwGLGetInt(IW_GL_WIDTH);
-		uint32 h = IwGLGetInt(IW_GL_HEIGHT);
+		//uint32 w = IwGLGetInt(IW_GL_WIDTH);
+		//uint32 h = IwGLGetInt(IW_GL_HEIGHT);
+		uint32 w = (uint32) _w;
+		uint32 h = (uint32) _h;
 #ifdef IW_DEBUG
 		printf("Inside DPI_ext, w[%d], h[%d]\n", w, h);
 #else
@@ -91,7 +93,7 @@ void DPI::dpiTerminate()
 }
 
 // General DPI
-int32 DPI::dpiGetScreenDPI()
+int32 DPI::dpiGetScreenDPI(int w, int h)
 {
 	if (g_dpiChached)
 		return g_dpiChachedValue;
@@ -102,7 +104,7 @@ int32 DPI::dpiGetScreenDPI()
 	switch (os)
 	{
 	case S3E_OS_ID_IPHONE:
-		g_dpiChachedValue = dpiGetScreenDPI_iOS();
+		g_dpiChachedValue = dpiGetScreenDPI_iOS(w, h);
 		break;
 //	case S3E_OS_ID_BADA:
 	//	g_dpiChachedValue = dpiGetScreenDPI_Bada();

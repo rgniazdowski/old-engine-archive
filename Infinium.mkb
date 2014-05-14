@@ -324,7 +324,6 @@ packages
 
 subprojects
 {
-	iwgl
 	dpi
 	tinyxml	
 	libjpeg
