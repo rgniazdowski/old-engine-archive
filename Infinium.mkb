@@ -1,0 +1,371 @@
+#!/usr/bin/env mkb
+files
+{
+	(src)
+	["Infinium"]
+	MainModule.cpp
+	
+	["Infinium/BaseCode"]
+	fgBuildConfig.h
+	fgMemory.h
+	fgCommon.cpp
+	fgCommon.h
+	fgFileStream.cpp
+	fgFileStream.h
+	fgGameMain.cpp
+	fgGameMain.h
+	fgResource.cpp
+	fgResource.h
+	fgResourceManager.cpp
+	fgResourceManager.h
+	fgSettings.cpp
+	fgSettings.h
+	fgSingleton.cpp
+	fgSingleton.h
+	fgXMLParser.cpp
+	fgXMLParser.h
+
+	["Infinium/Audio"]
+	Audio/fgSFXAudioResource.cpp
+	Audio/fgSFXAudioResource.h
+	Audio/fgSFXManager.cpp
+	Audio/fgSFXManager.h
+	Audio/fgSFXMusicResource.cpp
+	Audio/fgSFXMusicResource.h
+
+	["Infinium/Event"]
+	Event/fgEventHelper.h
+	Event/fgEventDefinitions.h
+	Event/fgArgumentList.cpp
+	Event/fgArgumentList.h
+	Event/fgThrownEvent.h
+	Event/fgCyclicCallback.h
+	Event/fgTimeoutCallback.h
+	Event/fgCallback.h
+	Event/fgEventManager.cpp
+	Event/fgEventManager.h
+
+	["Infinium/Math"]
+	Math/fgKalmanFilter.cpp
+	Math/fgKalmanFilter.h
+	Math/fgMathLib.h	
+
+	["Infinium/Scripting"]
+	Scripting/fgScriptManager.cpp
+	Scripting/fgScriptManager.h
+	Scripting/fgScriptResource.cpp
+	Scripting/fgScriptResource.h
+
+	["Infinium/Input"]
+	Input/fgTouchRawData.h
+	Input/fgTouchReceiver.cpp
+	Input/fgTouchReceiver.h
+	
+	["Infinium/GUI"]
+	GUI/fgFontDrawer.cpp
+	GUI/fgFontDrawer.h
+	GUI/fgFontManager.cpp
+	GUI/fgFontManager.h
+	GUI/fgFontResource.cpp
+	GUI/fgFontResource.h
+	GUI/fgGuiButton.cpp
+	GUI/fgGuiButton.h
+	GUI/fgGuiCallback.cpp
+	GUI/fgGuiCallback.h
+	GUI/fgGuiConsole.cpp
+	GUI/fgGuiConsole.h
+	GUI/fgGuiContainer.cpp
+	GUI/fgGuiContainer.h
+	GUI/fgGuiDrawer.cpp
+	GUI/fgGuiDrawer.h
+	GUI/fgGuiLabel.cpp
+	GUI/fgGuiLabel.h
+	GUI/fgGuiLoader.cpp
+	GUI/fgGuiLoader.h
+	GUI/fgGuiMain.cpp
+	GUI/fgGuiMain.h
+	GUI/fgGuiMenu.cpp
+	GUI/fgGuiMenu.h
+	GUI/fgGuiMessageBox.cpp
+	GUI/fgGuiMessageBox.h
+	GUI/fgGuiPrimitives.cpp
+	GUI/fgGuiPrimitives.h
+	GUI/fgGuiProgressBar.cpp
+	GUI/fgGuiProgressBar.h
+	GUI/fgGuiScreenGrid.cpp
+	GUI/fgGuiScreenGrid.h
+	GUI/fgGuiStructureSheet.cpp
+	GUI/fgGuiStructureSheet.h
+	GUI/fgGuiStructureSheetInterpreter.cpp
+	GUI/fgGuiStructureSheetInterpreter.h
+	GUI/fgGuiStyleSheet.cpp
+	GUI/fgGuiStyleSheet.h
+	GUI/fgGuiStyleSheetInterpreter.cpp
+	GUI/fgGuiStyleSheetInterpreter.h
+	GUI/fgGuiWidget.cpp
+	GUI/fgGuiWidget.h
+	
+	["Infinium/Graphics"]
+	Graphics/fgGFXTypes.h
+	Graphics/fgGFX2DScene.cpp
+	Graphics/fgGFX2DScene.h
+	Graphics/fgGFX3DScene.cpp
+	Graphics/fgGFX3DScene.h
+	Graphics/fgGFXCamera.cpp
+	Graphics/fgGFXCamera.h
+	Graphics/fgGFXCameraAnimation.cpp
+	Graphics/fgGFXCameraAnimation.h
+	Graphics/fgGFXDrawingBatch.cpp
+	Graphics/fgGFXDrawingBatch.h
+	Graphics/fgGFXPerspectiveView.h
+	Graphics/fgGFXMain.cpp
+	Graphics/fgGFXMain.h
+	Graphics/fgGFXMaterial.cpp
+	Graphics/fgGFXMaterial.h
+	Graphics/fgGFXModel.cpp
+	Graphics/fgGFXModel.h	
+	Graphics/fgGFXObject.cpp
+	Graphics/fgGFXObject.h
+	Graphics/fgGFXOctreeBase.cpp
+	Graphics/fgGFXOctreeBase.h
+	Graphics/fgGFXOrthoView.h
+	Graphics/fgGFXPrimitives.cpp
+	Graphics/fgGFXPrimitives.h
+	Graphics/fgGFXQuadtreeBase.cpp
+	Graphics/fgGFXQuadtreeBase.h
+	Graphics/fgGFXSceneManager.cpp
+	Graphics/fgGFXSceneManager.h	
+	Graphics/fgGFXShader.cpp
+	Graphics/fgGFXShader.h
+	Graphics/fgGFXShaderBinder.cpp
+	Graphics/fgGFXShaderBinder.h
+	Graphics/fgGFXSimpleDrawer.cpp
+	Graphics/fgGFXSimpleDrawer.h
+	Graphics/fgGFXTexturing.cpp
+	Graphics/fgGFXTexturing.h
+
+	["Infinium/Graphics/Marmalade OpenGL"]
+	Graphics/MarmaladeOpenGL/OGLDrawingBatch.cpp
+	Graphics/MarmaladeOpenGL/OGLDrawingBatch.h
+	Graphics/MarmaladeOpenGL/OGLPerspectiveView.cpp
+	Graphics/MarmaladeOpenGL/OGLPerspectiveView.h
+	Graphics/MarmaladeOpenGL/OGLLighting.cpp
+	Graphics/MarmaladeOpenGL/OGLLighting.h
+	Graphics/MarmaladeOpenGL/OGLMain.cpp
+	Graphics/MarmaladeOpenGL/OGLMain.h
+	Graphics/MarmaladeOpenGL/OGLOrthoView.cpp
+	Graphics/MarmaladeOpenGL/OGLOrthoView.h
+	Graphics/MarmaladeOpenGL/OGLPrimitives.cpp
+	Graphics/MarmaladeOpenGL/OGLPrimitives.h
+	Graphics/MarmaladeOpenGL/OGLShader.cpp
+	Graphics/MarmaladeOpenGL/OGLShader.h
+	Graphics/MarmaladeOpenGL/OGLShaderBinder.cpp
+	Graphics/MarmaladeOpenGL/OGLShaderBinder.h
+	Graphics/MarmaladeOpenGL/OGLTexturing.cpp
+	Graphics/MarmaladeOpenGL/OGLTexturing.h
+	
+	["Infinium/Particles"]
+	Graphics/Particles/fgParticle.h
+	Graphics/Particles/fgParticleSystem.cpp
+	Graphics/Particles/fgParticleSystem.h
+	Graphics/Particles/fgPsExplosionEffect.cpp
+	Graphics/Particles/fgPsExplosionEffect.h
+	Graphics/Particles/fgPsFlashEffect.cpp
+	Graphics/Particles/fgPsFlashEffect.h
+	Graphics/Particles/fgPsFlyingDebrisEffect.cpp
+	Graphics/Particles/fgPsFlyingDebrisEffect.h
+	Graphics/Particles/fgPsObjectPulseEffect.cpp
+	Graphics/Particles/fgPsObjectPulseEffect.h
+	Graphics/Particles/fgPsParticleDrawer.cpp
+	Graphics/Particles/fgPsParticleDrawer.h
+	Graphics/Particles/fgPsParticleEffect.cpp
+	Graphics/Particles/fgPsParticleEffect.h
+	Graphics/Particles/fgPsParticleEffectCircular.cpp
+	Graphics/Particles/fgPsParticleEffectCircular.h
+	Graphics/Particles/fgPsParticleEffectLimited.cpp
+	Graphics/Particles/fgPsParticleEffectLimited.h
+	Graphics/Particles/fgPsSequentialEffect.cpp
+	Graphics/Particles/fgPsSequentialEffect.h
+	Graphics/Particles/fgPsSpecialEffect.h
+
+	["Infinium/Textures"]
+	Graphics/Textures/fgTextureCommon.h
+	Graphics/Textures/fgTextureLoader.cpp
+	Graphics/Textures/fgTextureLoader.h
+	Graphics/Textures/fgTextureManager.cpp
+	Graphics/Textures/fgTextureManager.h
+	Graphics/Textures/fgTextureResource.cpp
+	Graphics/Textures/fgTextureResource.h	
+
+	["Infinium/Hardware"]
+	Hardware/fgDeviceQuery.cpp
+	Hardware/fgDeviceQuery.h
+	Hardware/fgHardwareState.cpp
+	Hardware/fgHardwareState.h
+	Hardware/fgQualityManager.cpp
+	Hardware/fgQualityManager.h
+	Hardware/fgSensors.cpp
+	Hardware/fgSensors.h
+	
+	["Infinium/GameLogic"]
+	GameLogic/fgGameLogic.cpp
+	GameLogic/fgGameLogic.h
+
+
+}
+
+assets
+{
+	(data)	
+	sound/c.raw
+	sound/m.raw
+	sound/p.raw
+	sound/tod.raw
+	sound/s.raw
+	sound/d.raw
+
+	sound/m1.mp3
+	
+	(data)
+	textures/loading_screen0.jpg
+	textures/nebula_1024.jpg
+	textures/hud_center_512.tga
+	textures/bg_biohazard0_1136x640.jpg
+	textures/hud_center_1024.tga
+	textures/hud_center.png
+	textures/hud_bottom.png
+	textures/flash0_sheet.tga
+	textures/flame0_sheet.tga
+	textures/hud_bottom_1024.tga
+	textures/hud_top.png
+	textures/smoketrail0.tga
+	textures/hud_top_2048.tga
+	textures/shockwave1.tga
+	textures/arrow0_right.tga
+	textures/BackgroundCrate_1024x512.jpg
+	textures/bg_biohazard0_1024x768.jpg
+	textures/explosion1_1024.tga
+	textures/crosshair0.tga
+	textures/bg_biohazard0_1920x1200.jpg
+	textures/hud_lines_2048.tga
+	textures/arrow0_left.tga
+	textures/spark0.tga
+	textures/hud_bottom_2048.tga
+	textures/hud_top_1024.tga
+	textures/shockwave0.tga
+	textures/fire1_512.tga
+	textures/debris0_sheet.tga
+	textures/hud_lines.png
+	textures/hud_lines_1024.tga
+	textures/galaxy_1024.jpg
+	textures/loading_screen0.jpg
+	textures/plasma_galaxy_1024.jpg
+
+	(data)
+	fonts/Armalite_1024.tga
+	fonts/Armalite_2048.tga
+	fonts/Armalite_512.tga
+	fonts/CaptureIt_1024.tga
+	fonts/CaptureIt_2048.tga
+	fonts/CaptureIt_512.tga
+	fonts/CarbonType_1024.tga
+	fonts/CarbonType_2048.tga
+	fonts/CarbonType_512.tga
+	fonts/Destroy_1024.tga
+	fonts/Destroy_2048.tga
+	fonts/Destroy_512.tga
+	fonts/DigitalDream_1024.tga
+	fonts/DigitalDream_2048.tga
+	fonts/DigitalDream_512.tga
+	fonts/Franchise_1024.tga
+	fonts/Franchise_2048.tga
+	fonts/Franchise_512.tga
+	fonts/Furore_1024.tga
+	fonts/Furore_2048.tga
+	fonts/Furore_512.tga
+	fonts/Karnivore_1024.tga
+	fonts/Karnivore_2048.tga
+	fonts/Karnivore_512.tga
+	fonts/Loaded_1024.tga
+	fonts/Loaded_2048.tga
+	fonts/Loaded_512.tga
+	fonts/Minotaur_1024.tga
+	fonts/Minotaur_2048.tga
+	fonts/Minotaur_512.tga
+	fonts/Nevis_1024.tga
+	fonts/Nevis_2048.tga
+	fonts/Nevis_512.tga
+	fonts/OnRamp_1024.tga
+	fonts/OnRamp_2048.tga
+	fonts/OnRamp_512.tga
+	fonts/Orbitron_1024.tga
+	fonts/Orbitron_2048.tga
+	fonts/Orbitron_512.tga
+	fonts/TrueCrimes_1024.tga
+	fonts/TrueCrimes_2048.tga
+	fonts/TrueCrimes_512.tga
+
+}
+
+options
+{
+	module_path="modules"
+	arm-cpu=6
+	arm-fpu=vfp
+	optimise-speed
+	warn-level=2
+}
+
+packages 
+{
+	tinyxml
+	libjpeg
+}
+
+subprojects
+{
+	iwgl
+	dpi
+	tinyxml	
+	libjpeg
+}
+
+includepath
+{	
+	tinyxml
+	dpi	
+}
+
+#### AUTO GENERATED deployment settings from DeployTool.exe. Do not edit below this line ####
+deployments
+{
+	["Default"]
+	android-extra-manifest='ExtraManifest.xml'
+	android-icon='icons/and_48x48.png'
+	android-icon-gallery='icons/and_170x170.png'
+	android-icon-hdpi='icons/and_72x72.png'
+	android-icon-ldpi='icons/and_36x36.png'
+	android-icon-mdpi='icons/and_48x48.png'
+	android-manifest='AndroidManifest.xml'
+	android-unsigned=0
+	copyright='(C) FlexiGame'
+	iphone-appid='biz.gniazdowski.SecondApp'
+	iphone-enable-4inch-retina=1
+	iphone-icon='icons/ios_57x57.png'
+	iphone-icon-high-res='icons/ios_114x114.png'
+	iphone-icon-ipad='icons/ios_72x72.png'
+	iphone-icon-ipad-high-res='icons/ios_144x144.png'
+	iphone-info-plist='info_second.plist'
+	iphone-provisioning-profile='SecondApp.mobileprovision'
+	iphone-sign-for-distribution=1
+	iphone-splash='icons/iPhone_splash.png'
+	iphone-splashscreen-landscape='icons/iPhone_splash_landscape.png'
+	iphone-splashscreen-portrait='icons/iPhone_splash_portrait.png'
+	name='Infinium'
+	provider='Radoslaw Gniazdowski'
+	splashscreen-auto-onblack=1
+	version-major=1
+	version-minor=0
+	version-revision=0
+}
+

@@ -1,0 +1,20 @@
+Package: tinyxml
+Maintainer: Airplay Package Team <packages@ideaworkslabs.com>
+Mkbs: tinyxml.mkf
+Libraries: tinyxml
+Description:
+  TinyXml is a simple and small C++ XML parser that can be easily integrating
+  into other programs. It reads XML and creates C++ objects representing
+  the XML document. The objects can be manipulated, changed, and
+  saved again as XML.
+Contents-Source:
+ - README.txt
+ - tinyxml.mkf
+ - xmltest.mkb
+ - app.icf
+ - upstream/tinyxmlparser.cpp
+ - upstream/tinyxml.cpp
+ - upstream/tinyxml.h
+Contents:
+ - upstream/tinyxml.h : h/tinyxml.h
+ - upstream/tinystr.h : h/tinystr.h

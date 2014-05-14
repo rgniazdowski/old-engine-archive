@@ -1,0 +1,86 @@
+# This file is for configuration settings for your
+# application.
+#
+# The syntax is similar to windows .ini files ie
+#
+# [GroupName]
+# Setting = Value
+#
+# Which can be read by your application using
+#  e.g s3eConfigGetString("GroupName", "Setting", string)
+#
+# All settings must be documented in .config.txt files.
+# New settings specific to this application should be
+# documented in app.config.txt
+#
+# Some conditional operations are also permitted, see the
+# S3E documentation for details.
+
+[GL]
+AllowNoDepthBufferClear=1
+
+[s3e]
+# Mozna programowo
+# s3eSurfaceSetInt(S3E_SURFACE_DEVICE_ORIENTATION_LOCK, S3E_SURFACE_PORTRAIT_FIXED);
+DispFixRot="FixedLandscape"
+#SysGlesVersion=1 
+
+{}
+MemSize=50000000
+
+#low 240x320
+{[S3E]DispAreaQ==76800}
+MemSize=40000000
+
+#low 320x480
+{[S3E]DispAreaQ==153600}
+MemSize=40000000
+
+#low 400x800
+{[S3E]DispAreaQ==320000}
+MemSize=40000000
+
+#low 480x800
+{[S3E]DispAreaQ==384000}
+MemSize=40000000
+	
+#medium 540x960
+{[S3E]DispAreaQ==518400}
+MemSize=50000000
+
+#medium 640x960
+{[S3E]DispAreaQ==614400}
+MemSize=50000000
+	
+#medium 600x1024
+{[S3E]DispAreaQ==614400}
+MemSize=70000000
+
+#medium 640x1146 - NEW IPHONE 
+{[S3E]DispAreaQ==733440}
+MemSize=70000000
+
+#medium 640x1136 - NEW IPHONE 
+{[S3E]DispAreaQ==727040}
+MemSize=70000000
+
+#medium 768x1024
+{[S3E]DispAreaQ==786432}
+MemSize=70000000
+
+#medium 768x1280
+{[S3E]DispAreaQ==983040}
+MemSize=70000000
+
+#medium 800x1280
+{[S3E]DispAreaQ==1024000}
+MemSize=70000000
+	
+#high 1200x1920	
+{[S3E]DispAreaQ==2304000}
+MemSize=80000000
+
+#high 1536x2048	
+{[S3E]DispAreaQ==3145728}
+MemSize=80000000
+

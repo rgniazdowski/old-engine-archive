@@ -1,0 +1,86 @@
+#!/bin/bash
+
+# No alpha for iOS
+OPTS_REMOVE_ALPHA=( -background black -flatten +matte )
+
+FILES_AND=( and_36x36.png and_48x48.png and_72x72.png and_170x170.png )
+FILES_IOS=( ios_72x72.png ios_114x114.png ios_144x144.png ios_57x57.png )
+# SPOTLIGHT
+FILES_IOS=( "${FILES_IOS[@]}" spot_58x58.png spot_29x29.png spot_100x100.png spot_50x50.png )
+# WEBCLIP
+FILES_IOS=( "${FILES_IOS[@]}" webclip_114x114.png webclip_57x57.png webclip_144x144.png )
+# TOOLBAR & TAB BAR
+FILES_IOS=( "${FILES_IOS[@]}" toolbar_40x40.png toolbar_20x20.png tabbar_60x60.png tabbar_30x30.png )
+
+# WTF, depth is for bits per COLOR, not per PIXEL?
+DEPTH_AND=( -depth 8 )
+DEPTH_IOS=( -depth 8 )
+
+TEMPLATE=editable/huggable_template.svg
+
+# Android
+for fname in "${FILES_AND[@]}"; do
+		echo $fname...
+		rm -f $fname
+
+		# Extract image size
+		size=${fname#and_}
+		size=${size%.png}
+
+		width=${size%x*}
+		height=${size#*x}
+
+		#convert "$TEMPLATE" "${DEPTH_AND[@]}" -resize $size "$fname"
+		inkscape -z -e "$fname" -w "$width" -h "$height" -D "$TEMPLATE"
+		mogrify -background black -flatten +matte "$fname"
+done
+
+# iOS
+for fname in "${FILES_IOS[@]}"; do
+		echo $fname...
+		rm -f $fname
+
+		# Extract image size
+		size=${fname#ios_}
+		size=${size#spot_}
+		size=${size#webclip_}
+		size=${size#toolbar_}
+		size=${size#tabbar_}
+		size=${size%.png}
+
+		width=${size%x*}
+		height=${size#*x}
+
+		#convert "$TEMPLATE" "${DEPTH_IOS[@]}" "${OPTS_REMOVE_ALPHA[@]}" -resize $size "$fname"
+		inkscape -z -e "$fname" -w "$width" -h "$height" -D "$TEMPLATE"
+		mogrify -background black -flatten +matte "$fname"
+done
+
+# Large icons
+rm -vf LargeAppIcon_*
+#convert "$TEMPLATE" "${DEPTH_IOS[@]}" "${OPTS_REMOVE_ALPHA[@]}" -resize 1024x1024 LargeAppIcon_1024.png
+#convert "$TEMPLATE" "${DEPTH_IOS[@]}" "${OPTS_REMOVE_ALPHA[@]}" -resize 512x512 LargeAppIcon_512.png
+
+fname=LargeAppIcon_1024.png
+width=1024
+height=1024
+inkscape -z -e "$fname" -w "$width" -h "$height" -D "$TEMPLATE"
+mogrify -background black -flatten +matte "$fname"
+
+fname=LargeAppIcon_512.png
+width=512
+height=512
+inkscape -z -e "$fname" -w "$width" -h "$height" -D "$TEMPLATE"
+mogrify -background black -flatten +matte "$fname"
+
+echo
+identify *.png
+
+
+#
+# WEB
+#
+
+inkscape -z -e web/web_logo_512.png -w 512 -h 512 -D editable/web_logo.svg 
+inkscape -z -e web/web_logo_256.png -w 256 -h 256 -D editable/web_logo.svg 
+inkscape -z -e web/web_logo_128.png -w 128 -h 128 -D editable/web_logo.svg 

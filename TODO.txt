@@ -1,0 +1,49 @@
+[X] w pelni funkcjonalna klasa FileStream do ladowania plikow - nakladka
+
+[X] podstawowa wersja klasy Resource do uzycia w calym projekcie
+
+[X] manager zasobow calej gry - ResourceManager - korzystajacy z klasy Resource
+
+[ ] fgResourceManager -> rozroznianie typow zasobow
+
+[ ] fgResourceManager -> pliki konfiguracyjne tj. definiowanie grup plikow traktowanych jako paczka (np. do zaladowania poziomu czy grafik GUI)
+
+	[ ] wydaje sie ze bedzie potrzebna klasa fgResourceGroup ewentualnie jeszcze fgResourceFile/fgResourceConfig
+
+[ ] restrukturyzacja ladowania tekstur - podpiecie pod klase Resource i ResourceManager
+
+[ ] poprawienie klasy QualityManager - pytanie jest czy klasa ta powinna definiowac nazwy plikow biorac pod uwage rozdzielczosc ekranu - raczej nie
+
+[ ] poprawienie klasy Font - powinna uzywac systemu zasobow i tekstur (w sumie klasa Font moze rozszerzac klase Texture poniewaz tak naprawde Font to tekstura :)
+
+[ ] stworzenie odpowiednich klas do ladowania plikow audio oraz muzyki - oczywiscie z odpowiednim podpieciem pod ResourceManagera
+
+[X] klasa do ladowania pliku XML - plus wspieranie parsowania (w jakis latwiejszy i bardziej oczywisty sposob - opcjonalnie)
+
+[ ] ladowanie pliku Settings XML - Settings jako Resource File? nie (po parsowaniu i tak text data jest zwalniane, pliki config nie sa resourcami)
+
+[ ] obsluga ladowania tekstury do karty graficznej - nakladka na OGL i GFX
+
+[X] poprawne zamykanie aplikacji czyli zwalnianie wszystkich zasobow w poprawnej kolejnosci w tym wszystkich singletonow
+
+[ ] Stworzenie klasy Material w glownym podsystemie GFX (wazne - tablice wierzcholkow/kolorow/koordynatow tekstur sa grupowane wg uzytego materialu)
+
+[ ] stworzenie podstawowego systemu rysowania 2D z buforowaniem i dzieleniem buforow pod wzgledem uzytej tekstury (materialu)
+
+[X] obsluga frustum i ortho view - podstawowa inicjalizacja + nakladki na OGL
+
+[ ] podstawowa wersja klasy Camera
+
+[ ] poprawienie systemu particles - narazie nic nie bedzie dzialac i tak - konieczny jest dzialajacy podsystem rysowania
+
+[ ] dodanie drawera do particles - wymagany juz dzialajacy (glownie 2D) podsystem GFX
+
+[ ] 
+
+[ ] podstawowe wsparcie oswietlenia 
+
+[ ] podstawowa wersja GUI
+
+[ ] 
+
+[ ] Loading Screen z paskiem postepu (wymagana podstawowa wersja GUI)

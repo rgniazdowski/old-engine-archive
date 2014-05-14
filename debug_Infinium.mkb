@@ -1,0 +1,279 @@
+#!/usr/bin/env mkb
+files
+{
+	(src)
+	["Infinium"]
+	MainModule.cpp
+	
+	["Infinium/BaseCode"]
+	Common.cpp
+	Common.h
+	FileStream.cpp
+	FileStream.h
+	ProgramMain.cpp
+	ProgramMain.h
+	Resource.cpp
+	Resource.h
+	ResourceManager.cpp
+	ResourceManager.h
+	Settings.cpp
+	Settings.h
+	Singleton.cpp
+	Singleton.h
+	XMLResource.cpp
+	XMLResource.h
+
+	["Infinium/Audio"]
+	Audio/SFXAudioResource.cpp
+	Audio/SFXAudioResource.h
+	Audio/SFXManager.cpp
+	Audio/SFXManager.h
+	Audio/SFXMusicResource.cpp
+	Audio/SFXMusicResource.h
+
+	["Infinium/Event"]
+	Event/EventHelper.h
+	Event/EventDefinitions.h
+	Event/ArgumentList.cpp
+	Event/ArgumentList.h
+	Event/ThrownEvent.h
+	Event/CyclicCallback.h
+	Event/TimeoutCallback.h
+	Event/Callback.h
+	Event/EventManager.cpp
+	Event/EventManager.h
+
+	["Infinium/Math"]
+	Math/KalmanFilter.cpp
+	Math/KalmanFilter.h
+	Math/MathLib.h	
+
+	["Infinium/Scripting"]
+	Scripting/ScriptManager.cpp
+	Scripting/ScriptManager.h
+	Scripting/ScriptResource.cpp
+	Scripting/ScriptResource.h
+
+	["Infinium/Input"]
+	Input/TouchRawData.h
+	Input/TouchReceiver.cpp
+	Input/TouchReceiver.h
+	
+	["Infinium/GUI"]
+	GUI/FontDrawer.cpp
+	GUI/FontDrawer.h
+	GUI/FontManager.cpp
+	GUI/FontManager.h
+	GUI/FontResource.cpp
+	GUI/FontResource.h
+	GUI/GuiButton.cpp
+	GUI/GuiButton.h
+	GUI/GuiCallback.cpp
+	GUI/GuiCallback.h
+	GUI/GuiConsole.cpp
+	GUI/GuiConsole.h
+	GUI/GuiContainer.cpp
+	GUI/GuiContainer.h
+	GUI/GuiDrawer.cpp
+	GUI/GuiDrawer.h
+	GUI/GuiLabel.cpp
+	GUI/GuiLabel.h
+	GUI/GuiLoader.cpp
+	GUI/GuiLoader.h
+	GUI/GuiMain.cpp
+	GUI/GuiMain.h
+	GUI/GuiMenu.cpp
+	GUI/GuiMenu.h
+	GUI/GuiMessageBox.cpp
+	GUI/GuiMessageBox.h
+	GUI/GuiPrimitives.cpp
+	GUI/GuiPrimitives.h
+	GUI/GuiProgressBar.cpp
+	GUI/GuiProgressBar.h
+	GUI/GuiScreenGrid.cpp
+	GUI/GuiScreenGrid.h
+	GUI/GuiStructureSheet.cpp
+	GUI/GuiStructureSheet.h
+	GUI/GuiStructureSheetInterpreter.cpp
+	GUI/GuiStructureSheetInterpreter.h
+	GUI/GuiStyleSheet.cpp
+	GUI/GuiStyleSheet.h
+	GUI/GuiStyleSheetInterpreter.cpp
+	GUI/GuiStyleSheetInterpreter.h
+	GUI/GuiWidget.cpp
+	GUI/GuiWidget.h
+	
+	["Infinium/Graphics"]
+	Graphics/GFXTypes.h
+	Graphics/GFX2DScene.cpp
+	Graphics/GFX2DScene.h
+	Graphics/GFX3DScene.cpp
+	Graphics/GFX3DScene.h
+	Graphics/GFXCamera.cpp
+	Graphics/GFXCamera.h
+	Graphics/GFXCameraAnimation.cpp
+	Graphics/GFXCameraAnimation.h
+	Graphics/GFXDrawingBatch.cpp
+	Graphics/GFXDrawingBatch.h
+	Graphics/GFXFrustumView.cpp
+	Graphics/GFXFrustumView.h
+	Graphics/GFXMain.cpp
+	Graphics/GFXMain.h
+	Graphics/GFXMaterial.cpp
+	Graphics/GFXMaterial.h
+	Graphics/GFXModel.cpp
+	Graphics/GFXModel.h	
+	Graphics/GFXObject.cpp
+	Graphics/GFXObject.h
+	Graphics/GFXOctreeBase.cpp
+	Graphics/GFXOctreeBase.h
+	Graphics/GFXOrthoView.cpp
+	Graphics/GFXOrthoView.h
+	Graphics/GFXPrimitives.cpp
+	Graphics/GFXPrimitives.h
+	Graphics/GFXQuadtreeBase.cpp
+	Graphics/GFXQuadtreeBase.h
+	Graphics/GFXSceneManager.cpp
+	Graphics/GFXSceneManager.h	
+	Graphics/GFXShader.cpp
+	Graphics/GFXShader.h
+	Graphics/GFXShaderBinder.cpp
+	Graphics/GFXShaderBinder.h
+	Graphics/GFXSimpleDrawer.cpp
+	Graphics/GFXSimpleDrawer.h
+	Graphics/GFXTexturing.cpp
+	Graphics/GFXTexturing.h
+	Graphics/OpenGL/OGLDrawingBatch.cpp
+	Graphics/OpenGL/OGLDrawingBatch.h
+	Graphics/OpenGL/OGLFrustumView.cpp
+	Graphics/OpenGL/OGLFrustumView.h
+	Graphics/OpenGL/OGLLighting.cpp
+	Graphics/OpenGL/OGLLighting.h
+	Graphics/OpenGL/OGLMain.cpp
+	Graphics/OpenGL/OGLMain.h
+	Graphics/OpenGL/OGLOrthoView.cpp
+	Graphics/OpenGL/OGLOrthoView.h
+	Graphics/OpenGL/OGLPrimitives.cpp
+	Graphics/OpenGL/OGLPrimitives.h
+	Graphics/OpenGL/OGLShader.cpp
+	Graphics/OpenGL/OGLShader.h
+	Graphics/OpenGL/OGLShaderBinder.cpp
+	Graphics/OpenGL/OGLShaderBinder.h
+	Graphics/OpenGL/OGLTexturing.cpp
+	Graphics/OpenGL/OGLTexturing.h
+	
+	["Infinium/Particles"]
+	Graphics/Particles/Particle.h
+	Graphics/Particles/ParticleSystem.cpp
+	Graphics/Particles/ParticleSystem.h
+	Graphics/Particles/PsExplosionEffect.cpp
+	Graphics/Particles/PsExplosionEffect.h
+	Graphics/Particles/PsFlashEffect.cpp
+	Graphics/Particles/PsFlashEffect.h
+	Graphics/Particles/PsFlyingDebrisEffect.cpp
+	Graphics/Particles/PsFlyingDebrisEffect.h
+	Graphics/Particles/PsObjectPulseEffect.cpp
+	Graphics/Particles/PsObjectPulseEffect.h
+	Graphics/Particles/PsParticleDrawer.cpp
+	Graphics/Particles/PsParticleDrawer.h
+	Graphics/Particles/PsParticleEffect.cpp
+	Graphics/Particles/PsParticleEffect.h
+	Graphics/Particles/PsParticleEffectCircular.cpp
+	Graphics/Particles/PsParticleEffectCircular.h
+	Graphics/Particles/PsParticleEffectLimited.cpp
+	Graphics/Particles/PsParticleEffectLimited.h
+	Graphics/Particles/PsSequentialEffect.cpp
+	Graphics/Particles/PsSequentialEffect.h
+	Graphics/Particles/PsSpecialEffect.h
+
+	["Infinium/Textures"]
+	Graphics/Textures/TextureCommon.h
+	Graphics/Textures/TextureLoader.cpp
+	Graphics/Textures/TextureLoader.h
+	Graphics/Textures/TextureManager.cpp
+	Graphics/Textures/TextureManager.h
+	Graphics/Textures/TextureResource.cpp
+	Graphics/Textures/TextureResource.h	
+
+	["Infinium/Hardware"]
+	Hardware/DeviceQuery.cpp
+	Hardware/DeviceQuery.h
+	Hardware/HardwareState.cpp
+	Hardware/HardwareState.h
+	Hardware/QualityManager.cpp
+	Hardware/QualityManager.h
+	Hardware/Sensors.cpp
+	Hardware/Sensors.h
+	
+	["Infinium/GameLogic"]
+	GameLogic/GameLogic.cpp
+	GameLogic/GameLogic.h
+
+
+}
+
+assets
+{
+	(data)	
+	sound/c.raw
+	sound/m.raw
+	sound/p.raw
+	sound/tod.raw
+	sound/s.raw
+	sound/d.raw
+
+	sound/m1.mp3
+	
+	(data)
+	textures/loading_screen0.jpg
+}
+
+options
+{
+	module_path="modules"
+	arm-cpu=6
+	arm-fpu=vfp
+	optimise-speed
+	warn-level=2
+}
+
+subprojects
+{
+	iwgl
+	tinyxml
+	dpi
+}
+
+
+#### AUTO GENERATED deployment settings from DeployTool.exe. Do not edit below this line ####
+deployments
+{
+	["Default"]
+	android-extra-manifest='ExtraManifest.xml'
+	android-icon='icons/and_48x48.png'
+	android-icon-gallery='icons/and_170x170.png'
+	android-icon-hdpi='icons/and_72x72.png'
+	android-icon-ldpi='icons/and_36x36.png'
+	android-icon-mdpi='icons/and_48x48.png'
+	android-manifest='AndroidManifest.xml'
+	android-unsigned=0
+	copyright='(C) FlexiGame'
+	iphone-appid='biz.gniazdowski.SecondApp'
+	iphone-enable-4inch-retina=1
+	iphone-icon='icons/ios_57x57.png'
+	iphone-icon-high-res='icons/ios_114x114.png'
+	iphone-icon-ipad='icons/ios_72x72.png'
+	iphone-icon-ipad-high-res='icons/ios_144x144.png'
+	iphone-info-plist='info_second.plist'
+	iphone-provisioning-profile='SecondApp.mobileprovision'
+	iphone-sign-for-distribution=1
+	iphone-splash='icons/iPhone_splash.png'
+	iphone-splashscreen-landscape='icons/iPhone_splash_landscape.png'
+	iphone-splashscreen-portrait='icons/iPhone_splash_portrait.png'
+	name='Infinium'
+	provider='Radoslaw Gniazdowski'
+	splashscreen-auto-onblack=1
+	version-major=1
+	version-minor=0
+	version-revision=0
+}
