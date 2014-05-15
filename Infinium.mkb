@@ -122,8 +122,10 @@ files
 	Graphics/fgGFXMain.h
 	Graphics/fgGFXMaterial.cpp
 	Graphics/fgGFXMaterial.h
-	Graphics/fgGFXModel.cpp
-	Graphics/fgGFXModel.h	
+	Graphics/fgGFXModelResource.cpp
+	Graphics/fgGFXModelResource.h
+	Graphics/fgGFXModelOBJResource.cpp
+	Graphics/fgGFXModelOBJResource.h
 	Graphics/fgGFXObject.cpp
 	Graphics/fgGFXObject.h
 	Graphics/fgGFXOctreeBase.cpp
@@ -318,21 +320,23 @@ options
 
 packages 
 {
-	tinyxml
 	libjpeg
 }
 
 subprojects
 {
+	iwutil
 	dpi
+	tinyobj
 	tinyxml	
 	libjpeg
 }
 
 includepath
 {	
-	tinyxml
-	dpi	
+	dpi
+	tinyobj
+	tinyxml	
 }
 
 #### AUTO GENERATED deployment settings from DeployTool.exe. Do not edit below this line ####

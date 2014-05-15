@@ -3,8 +3,8 @@
  * 
  * This file is part of #FLEXIGAME_PROJECT
  * 
- * #FLEXIGAME_PROJECT source code and any related files can not be copied and/or 
- * distributed without the express permission
+ * #FLEXIGAME_PROJECT source code and any related files can not be copied, modified 
+ * and/or distributed without the express or written permission from the author.
  *******************************************************/
 
 #ifndef _FG_TOUCH_RECEIVER_H_
@@ -73,9 +73,9 @@ public:
 		return MAX_OFFSET_FOR_TAP;
 	}
 
-	void handlePointerPressed(Vector2i point, unsigned int touchId);
-	void handlePointerMoved(Vector2i point, unsigned int touchId);
-	void handlePointerReleased(Vector2i point, unsigned int touchId);
+	void handlePointerPressed(fgVector2i point, unsigned int touchId);
+	void handlePointerMoved(fgVector2i point, unsigned int touchId);
+	void handlePointerReleased(fgVector2i point, unsigned int touchId);
 
 	// This function will probably be useful only in debugging
 	// There's no need to check the data manually - proper events 

@@ -3,8 +3,8 @@
  * 
  * This file is part of #FLEXIGAME_PROJECT
  * 
- * #FLEXIGAME_PROJECT source code and any related files can not be copied and/or 
- * distributed without the express permission
+ * #FLEXIGAME_PROJECT source code and any related files can not be copied, modified 
+ * and/or distributed without the express or written permission from the author.
  *******************************************************/
 
 #include <cstdlib>
@@ -283,7 +283,7 @@ private:
 			return;
 
 		m_touches[touchId] = true;
-		FG_TouchReceiver->handlePointerPressed(Vector2i(x,y), touchId);
+		FG_TouchReceiver->handlePointerPressed(fgVector2i(x,y), touchId);
 	}
 
 	/**
@@ -295,7 +295,7 @@ private:
 			return;
 
 		if(m_touches[touchId] == true)
-			FG_TouchReceiver->handlePointerMoved(Vector2i(x,y), touchId);
+			FG_TouchReceiver->handlePointerMoved(fgVector2i(x,y), touchId);
 	}
 
 	/**
@@ -309,7 +309,7 @@ private:
 			return;
 
 		m_touches[touchId] = false;
-		FG_TouchReceiver->handlePointerReleased(Vector2i(x,y),touchId);
+		FG_TouchReceiver->handlePointerReleased(fgVector2i(x,y),touchId);
 	}	
 
 private:

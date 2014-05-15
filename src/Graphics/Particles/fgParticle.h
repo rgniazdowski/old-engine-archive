@@ -3,8 +3,8 @@
  * 
  * This file is part of #FLEXIGAME_PROJECT
  * 
- * #FLEXIGAME_PROJECT source code and any related files can not be copied and/or 
- * distributed without the express permission
+ * #FLEXIGAME_PROJECT source code and any related files can not be copied, modified 
+ * and/or distributed without the express or written permission from the author.
  *******************************************************/
 
 #ifndef _FG_PARTICLE_H_
@@ -16,13 +16,13 @@
 struct Particle
 {
 	// Aktualna pozycja
-	Vector3f position;	
+	fgVector3f position;	
 	// Predkosc (o ile czasteczka ma sie przesunac w ciagu jednej sekundy)
-	Vector3f velocity;
+	fgVector3f velocity;
 	// Aktualny obrot w 3 osiach, podany w stopniach
-	Vector3f rotation;
+	fgVector3f rotation;
 	// Predkosc katowa rowniez podana w stopniach (o ile stopni czasteczka ma sie obrocic w ciagu jednej sekundy)
-	Vector3f angularVelocity;
+	fgVector3f angularVelocity;
 	// Zakladamy ze kazdy particle jest kwadratowy wiec potrzebna jest tylko jedna zmienna do przechowania rozmiaru
 	float size;
 	// Zycie danej czasteczki (gdy <=0 czasteczka jest usuwana)

@@ -3,8 +3,8 @@
  * 
  * This file is part of #FLEXIGAME_PROJECT
  * 
- * #FLEXIGAME_PROJECT source code and any related files can not be copied and/or 
- * distributed without the express permission
+ * #FLEXIGAME_PROJECT source code and any related files can not be copied, modified 
+ * and/or distributed without the express or written permission from the author.
  *******************************************************/
 
 #include "../Hardware/fgHardwareState.h"
@@ -95,14 +95,14 @@ float fgGuiScreenGrid::transformToPixels(float grid_position) const
 	return (float)grid_position * gridCellSize;
 }
 
-Vector2f fgGuiScreenGrid::transform(Vector2f grid_position) const
+fgVector2f fgGuiScreenGrid::transform(fgVector2f grid_position) const
 {
 	return fgGuiScreenGrid::transform(grid_position.x, grid_position.y);
 }
 
-Vector2f fgGuiScreenGrid::transform(float grid_position_x, float grid_position_y) const
+fgVector2f fgGuiScreenGrid::transform(float grid_position_x, float grid_position_y) const
 {
-	Vector2f transformed;
+	fgVector2f transformed;
 	transformed.x = (float)transformToPixels(grid_position_x);
 	transformed.y = (float)transformToPixels(grid_position_y);
 	return transformed;

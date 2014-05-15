@@ -3,8 +3,8 @@
  * 
  * This file is part of #FLEXIGAME_PROJECT
  * 
- * #FLEXIGAME_PROJECT source code and any related files can not be copied and/or 
- * distributed without the express permission
+ * #FLEXIGAME_PROJECT source code and any related files can not be copied, modified 
+ * and/or distributed without the express or written permission from the author.
  *******************************************************/
 
 #include "fgTouchReceiver.h"
@@ -159,7 +159,7 @@ fgTouchReceiver::~fgTouchReceiver() {
  * Screen touch event.
  * @param point Pointer position
  */
-void fgTouchReceiver::handlePointerPressed(Vector2i point, unsigned int touchId)
+void fgTouchReceiver::handlePointerPressed(fgVector2i point, unsigned int touchId)
 {
 	if(touchId >= MAX_TOUCH_POINTS) {
 		m_rawTouches.erase(touchId);
@@ -215,7 +215,7 @@ void fgTouchReceiver::handlePointerPressed(Vector2i point, unsigned int touchId)
  * Pointer move event.
  * @param point Pointer position
  */
-void fgTouchReceiver::handlePointerMoved(Vector2i point, unsigned int touchId)
+void fgTouchReceiver::handlePointerMoved(fgVector2i point, unsigned int touchId)
 {
 	if(touchId >= MAX_TOUCH_POINTS)
 		return;
@@ -249,7 +249,7 @@ void fgTouchReceiver::handlePointerMoved(Vector2i point, unsigned int touchId)
  * Pointer released.
  * @param point Pointer position
  */
-void fgTouchReceiver::handlePointerReleased(Vector2i point, unsigned int touchId)
+void fgTouchReceiver::handlePointerReleased(fgVector2i point, unsigned int touchId)
 {
 	if(touchId >= MAX_TOUCH_POINTS)
 		return;

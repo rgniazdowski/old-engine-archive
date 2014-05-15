@@ -3,8 +3,8 @@
  * 
  * This file is part of #FLEXIGAME_PROJECT
  * 
- * #FLEXIGAME_PROJECT source code and any related files can not be copied and/or 
- * distributed without the express permission
+ * #FLEXIGAME_PROJECT source code and any related files can not be copied, modified 
+ * and/or distributed without the express or written permission from the author.
  *******************************************************/
 
 #include "fgResource.h"
@@ -17,6 +17,8 @@ void fgResource::clear()
 	m_priority = FG_RES_MED_PRIORITY;
 	m_nRefCount = 0;
 	m_lastAccess = 0;
+	m_isReady = false;
+	memset(m_filePath, 0, FG_RESOURCE_PATH_MAX);
 }
 
 /*

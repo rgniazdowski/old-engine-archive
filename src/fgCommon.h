@@ -3,8 +3,8 @@
  * 
  * This file is part of #FLEXIGAME_PROJECT
  * 
- * #FLEXIGAME_PROJECT source code and any related files can not be copied and/or 
- * distributed without the express permission
+ * #FLEXIGAME_PROJECT source code and any related files can not be copied, modified 
+ * and/or distributed without the express or written permission from the author.
  *******************************************************/
 
 #ifndef _FG_COMMON_H_
@@ -27,6 +27,16 @@
 
 #ifdef _MSC_VER
 #pragma warning(disable : 4244)
+#endif
+
+#if defined FG_USING_MARMALADE
+#include "IwUtil.h"
+template <class X, class A=CIwAllocator<X>, class REALLOCATE = ReallocateDefault<X, A > >
+class fgArrayVector : public CIwArray<X, A, REALLOCATE> {};
+#else 
+#include <vector>
+template <class T, class Alloc = allocator<T> >
+class fgArrayVector : public std::vector<T, Alloc> {};
 #endif
 
 //FIXME this should not be in this file, but for now (just to compile the damn code) it'll be here

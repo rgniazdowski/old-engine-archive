@@ -3,8 +3,8 @@
  * 
  * This file is part of #FLEXIGAME_PROJECT
  * 
- * #FLEXIGAME_PROJECT source code and any related files can not be copied and/or 
- * distributed without the express permission
+ * #FLEXIGAME_PROJECT source code and any related files can not be copied, modified 
+ * and/or distributed without the express or written permission from the author.
  *******************************************************/
 
 #ifndef _FG_MATHLIB_H_
@@ -21,42 +21,42 @@
 #define DEG2RAD (PI / 180.0f)
 #define RAD2DEG (180.0f / PI)
 
-struct Vector2i;
-struct Vector2f;
-struct Vector3f;
-struct Vector4f;
-struct Matrix3f;
-struct Matrix4f;
-struct Quaterionf;
+struct fgVector2i;
+struct fgVector2f;
+struct fgVector3f;
+struct fgVector4f;
+struct fgMatrix3f;
+struct fgMatrix4f;
+struct fgQuaterionf;
 
 /*****************************************************************************/
 /*                                                                           */
-/* Vector2f                                                                  */
+/* fgVector2f                                                                  */
 /*                                                                           */
 /*****************************************************************************/
 
-struct Vector2i {
+struct fgVector2i {
 	
-	inline Vector2i() : x(0), y(0) { }
-	inline Vector2i(int x,int y) : x(x), y(y) { }
-	inline Vector2i(const int *v) : x(v[0]), y(v[1]) { }
-	inline Vector2i(const Vector2i &v) : x(v.x), y(v.y) { }
+	inline fgVector2i() : x(0), y(0) { }
+	inline fgVector2i(int x,int y) : x(x), y(y) { }
+	inline fgVector2i(const int *v) : x(v[0]), y(v[1]) { }
+	inline fgVector2i(const fgVector2i &v) : x(v.x), y(v.y) { }
 	
-	inline int operator==(const Vector2i &v) { return (x == v.x && y == v.y); }
-	inline int operator!=(const Vector2i &v) { return !(*this == v); }
+	inline int operator==(const fgVector2i &v) { return (x == v.x && y == v.y); }
+	inline int operator!=(const fgVector2i &v) { return !(*this == v); }
 	
-	inline const Vector2i operator*(int f) const { return Vector2i(int(x * f),int(y * f)); }
-	inline const Vector2i operator/(int f) const { return Vector2i(int(x / f),int(y / f)); }
-	inline const Vector2i operator+(const Vector2i &v) const { return Vector2i(x + v.x,y + v.y); }
-	inline const Vector2i operator-() const { return Vector2i(-x,-y); }
-	inline const Vector2i operator-(const Vector2i &v) const { return Vector2i(x - v.x,y - v.y); }
+	inline const fgVector2i operator*(int f) const { return fgVector2i(int(x * f),int(y * f)); }
+	inline const fgVector2i operator/(int f) const { return fgVector2i(int(x / f),int(y / f)); }
+	inline const fgVector2i operator+(const fgVector2i &v) const { return fgVector2i(x + v.x,y + v.y); }
+	inline const fgVector2i operator-() const { return fgVector2i(-x,-y); }
+	inline const fgVector2i operator-(const fgVector2i &v) const { return fgVector2i(x - v.x,y - v.y); }
 	
-	inline Vector2i &operator*=(int f) { return *this = *this * f; }
-	inline Vector2i &operator/=(int f) { return *this = *this / f; }
-	inline Vector2i &operator+=(const Vector2i &v) { return *this = *this + v; }
-	inline Vector2i &operator-=(const Vector2i &v) { return *this = *this - v; }
+	inline fgVector2i &operator*=(int f) { return *this = *this * f; }
+	inline fgVector2i &operator/=(int f) { return *this = *this / f; }
+	inline fgVector2i &operator+=(const fgVector2i &v) { return *this = *this + v; }
+	inline fgVector2i &operator-=(const fgVector2i &v) { return *this = *this - v; }
 	
-	inline int operator*(const Vector2i &v) const { return x * v.x + y * v.y; }
+	inline int operator*(const fgVector2i &v) const { return x * v.x + y * v.y; }
 	
 	inline operator int*() { return (int*)&x; }
 	inline operator const int*() const { return (int*)&x; }
@@ -76,32 +76,32 @@ struct Vector2i {
 
 /*****************************************************************************/
 /*                                                                           */
-/* Vector2f                                                                  */
+/* fgVector2f                                                                  */
 /*                                                                           */
 /*****************************************************************************/
 
-struct Vector2f {
+struct fgVector2f {
 	
-	inline Vector2f() : x(0), y(0) { }
-	inline Vector2f(float x,float y) : x(x), y(y) { }
-	inline Vector2f(const float *v) : x(v[0]), y(v[1]) { }
-	inline Vector2f(const Vector2f &v) : x(v.x), y(v.y) { }
+	inline fgVector2f() : x(0), y(0) { }
+	inline fgVector2f(float x,float y) : x(x), y(y) { }
+	inline fgVector2f(const float *v) : x(v[0]), y(v[1]) { }
+	inline fgVector2f(const fgVector2f &v) : x(v.x), y(v.y) { }
 	
-	inline int operator==(const Vector2f &v) { return (fabs(x - v.x) < EPSILON && fabs(y - v.y) < EPSILON); }
-	inline int operator!=(const Vector2f &v) { return !(*this == v); }
+	inline int operator==(const fgVector2f &v) { return (fabs(x - v.x) < EPSILON && fabs(y - v.y) < EPSILON); }
+	inline int operator!=(const fgVector2f &v) { return !(*this == v); }
 	
-	inline const Vector2f operator*(float f) const { return Vector2f(x * f,y * f); }
-	inline const Vector2f operator/(float f) const { return Vector2f(x / f,y / f); }
-	inline const Vector2f operator+(const Vector2f &v) const { return Vector2f(x + v.x,y + v.y); }
-	inline const Vector2f operator-() const { return Vector2f(-x,-y); }
-	inline const Vector2f operator-(const Vector2f &v) const { return Vector2f(x - v.x,y - v.y); }
+	inline const fgVector2f operator*(float f) const { return fgVector2f(x * f,y * f); }
+	inline const fgVector2f operator/(float f) const { return fgVector2f(x / f,y / f); }
+	inline const fgVector2f operator+(const fgVector2f &v) const { return fgVector2f(x + v.x,y + v.y); }
+	inline const fgVector2f operator-() const { return fgVector2f(-x,-y); }
+	inline const fgVector2f operator-(const fgVector2f &v) const { return fgVector2f(x - v.x,y - v.y); }
 	
-	inline Vector2f &operator*=(float f) { return *this = *this * f; }
-	inline Vector2f &operator/=(float f) { return *this = *this / f; }
-	inline Vector2f &operator+=(const Vector2f &v) { return *this = *this + v; }
-	inline Vector2f &operator-=(const Vector2f &v) { return *this = *this - v; }
+	inline fgVector2f &operator*=(float f) { return *this = *this * f; }
+	inline fgVector2f &operator/=(float f) { return *this = *this / f; }
+	inline fgVector2f &operator+=(const fgVector2f &v) { return *this = *this + v; }
+	inline fgVector2f &operator-=(const fgVector2f &v) { return *this = *this - v; }
 	
-	inline float operator*(const Vector2f &v) const { return x * v.x + y * v.y; }
+	inline float operator*(const fgVector2f &v) const { return x * v.x + y * v.y; }
 	
 	inline operator float*() { return (float*)&x; }
 	inline operator const float*() const { return (float*)&x; }
@@ -129,34 +129,34 @@ struct Vector2f {
 
 /*****************************************************************************/
 /*                                                                           */
-/* Vector3f                                                                  */
+/* fgVector3f                                                                  */
 /*                                                                           */
 /*****************************************************************************/
 
-struct Vector3f {
+struct fgVector3f {
 	
-	inline Vector3f() : x(0), y(0), z(0) { }
-	inline Vector3f(float x,float y,float z) : x(x), y(y), z(z) { }
-	inline Vector3f(const float *v) : x(v[0]), y(v[1]), z(v[2]) { }
-	inline Vector3f(const Vector3f &v) : x(v.x), y(v.y), z(v.z) { }
-	inline Vector3f(const Vector4f &v);
+	inline fgVector3f() : x(0), y(0), z(0) { }
+	inline fgVector3f(float x,float y,float z) : x(x), y(y), z(z) { }
+	inline fgVector3f(const float *v) : x(v[0]), y(v[1]), z(v[2]) { }
+	inline fgVector3f(const fgVector3f &v) : x(v.x), y(v.y), z(v.z) { }
+	inline fgVector3f(const fgVector4f &v);
 	
-	inline int operator==(const Vector3f &v) { return (fabs(x - v.x) < EPSILON && fabs(y - v.y) < EPSILON && fabs(z - v.z) < EPSILON); }
-	inline int operator!=(const Vector3f &v) { return !(*this == v); }
+	inline int operator==(const fgVector3f &v) { return (fabs(x - v.x) < EPSILON && fabs(y - v.y) < EPSILON && fabs(z - v.z) < EPSILON); }
+	inline int operator!=(const fgVector3f &v) { return !(*this == v); }
 	
-	inline const Vector3f operator*(float f) const { return Vector3f(x * f,y * f,z * f); }
-	inline const Vector3f operator/(float f) const { return Vector3f(x / f,y / f,z / f); }
-	inline const Vector3f operator+(const Vector3f &v) const { return Vector3f(x + v.x,y + v.y,z + v.z); }
-	inline const Vector3f operator-() const { return Vector3f(-x,-y,-z); }
-	inline const Vector3f operator-(const Vector3f &v) const { return Vector3f(x - v.x,y - v.y,z - v.z); }
+	inline const fgVector3f operator*(float f) const { return fgVector3f(x * f,y * f,z * f); }
+	inline const fgVector3f operator/(float f) const { return fgVector3f(x / f,y / f,z / f); }
+	inline const fgVector3f operator+(const fgVector3f &v) const { return fgVector3f(x + v.x,y + v.y,z + v.z); }
+	inline const fgVector3f operator-() const { return fgVector3f(-x,-y,-z); }
+	inline const fgVector3f operator-(const fgVector3f &v) const { return fgVector3f(x - v.x,y - v.y,z - v.z); }
 	
-	inline Vector3f &operator*=(float f) { return *this = *this * f; }
-	inline Vector3f &operator/=(float f) { return *this = *this / f; }
-	inline Vector3f &operator+=(const Vector3f &v) { return *this = *this + v; }
-	inline Vector3f &operator-=(const Vector3f &v) { return *this = *this - v; }
+	inline fgVector3f &operator*=(float f) { return *this = *this * f; }
+	inline fgVector3f &operator/=(float f) { return *this = *this / f; }
+	inline fgVector3f &operator+=(const fgVector3f &v) { return *this = *this + v; }
+	inline fgVector3f &operator-=(const fgVector3f &v) { return *this = *this - v; }
 	
-	inline float operator*(const Vector3f &v) const { return x * v.x + y * v.y + z * v.z; }
-	inline float operator*(const Vector4f &v) const;
+	inline float operator*(const fgVector3f &v) const { return x * v.x + y * v.y + z * v.z; }
+	inline float operator*(const fgVector4f &v) const;
 	
 	inline operator float*() { return (float*)&x; }
 	inline operator const float*() const { return (float*)&x; }
@@ -174,7 +174,7 @@ struct Vector3f {
 		z *= inv;
 		return length;
 	}
-	inline void cross(const Vector3f &v1,const Vector3f &v2) {
+	inline void cross(const fgVector3f &v1,const fgVector3f &v2) {
 		x = v1.y * v2.z - v1.z * v2.y;
 		y = v1.z * v2.x - v1.x * v2.z;
 		z = v1.x * v2.y - v1.y * v2.x;
@@ -188,8 +188,8 @@ struct Vector3f {
 	};
 };
 
-inline Vector3f cross(const Vector3f &v1,const Vector3f &v2) {
-	Vector3f ret;
+inline fgVector3f cross(const fgVector3f &v1,const fgVector3f &v2) {
+	fgVector3f ret;
 	ret.x = v1.y * v2.z - v1.z * v2.y;
 	ret.y = v1.z * v2.x - v1.x * v2.z;
 	ret.z = v1.x * v2.y - v1.y * v2.x;
@@ -198,35 +198,35 @@ inline Vector3f cross(const Vector3f &v1,const Vector3f &v2) {
 
 /*****************************************************************************/
 /*                                                                           */
-/* Vector4f                                                                  */
+/* fgVector4f                                                                  */
 /*                                                                           */
 /*****************************************************************************/
 
-struct Vector4f {
+struct fgVector4f {
 	
-	inline Vector4f() : x(0), y(0), z(0), w(1) { }
-	inline Vector4f(float x,float y,float z,float w) : x(x), y(y), z(z), w(w) { }
-	inline Vector4f(const float *v) : x(v[0]), y(v[1]), z(v[2]), w(v[3]) { }
-	inline Vector4f(const Vector3f &v) : x(v.x), y(v.y), z(v.z), w(1) { }
-	inline Vector4f(const Vector3f &v,float w) : x(v.x), y(v.y), z(v.z), w(w) { }
-	inline Vector4f(const Vector4f &v) : x(v.x), y(v.y), z(v.z), w(v.w) { }
+	inline fgVector4f() : x(0), y(0), z(0), w(1) { }
+	inline fgVector4f(float x,float y,float z,float w) : x(x), y(y), z(z), w(w) { }
+	inline fgVector4f(const float *v) : x(v[0]), y(v[1]), z(v[2]), w(v[3]) { }
+	inline fgVector4f(const fgVector3f &v) : x(v.x), y(v.y), z(v.z), w(1) { }
+	inline fgVector4f(const fgVector3f &v,float w) : x(v.x), y(v.y), z(v.z), w(w) { }
+	inline fgVector4f(const fgVector4f &v) : x(v.x), y(v.y), z(v.z), w(v.w) { }
 	
-	inline int operator==(const Vector4f &v) { return (fabs(x - v.x) < EPSILON && fabs(y - v.y) < EPSILON && fabs(z - v.z) < EPSILON && fabs(w - v.w) < EPSILON); }
-	inline int operator!=(const Vector4f &v) { return !(*this == v); }
+	inline int operator==(const fgVector4f &v) { return (fabs(x - v.x) < EPSILON && fabs(y - v.y) < EPSILON && fabs(z - v.z) < EPSILON && fabs(w - v.w) < EPSILON); }
+	inline int operator!=(const fgVector4f &v) { return !(*this == v); }
 	
-	inline const Vector4f operator*(float f) const { return Vector4f(x * f,y * f,z * f,w * f); }
-	inline const Vector4f operator/(float f) const { return Vector4f(x / f,y / f,z / f,w / f); }
-	inline const Vector4f operator+(const Vector4f &v) const { return Vector4f(x + v.x,y + v.y,z + v.z,w + v.w); }
-	inline const Vector4f operator-() const { return Vector4f(-x,-y,-z,-w); }
-	inline const Vector4f operator-(const Vector4f &v) const { return Vector4f(x - v.x,y - v.y,z - v.z,z - v.w); }
+	inline const fgVector4f operator*(float f) const { return fgVector4f(x * f,y * f,z * f,w * f); }
+	inline const fgVector4f operator/(float f) const { return fgVector4f(x / f,y / f,z / f,w / f); }
+	inline const fgVector4f operator+(const fgVector4f &v) const { return fgVector4f(x + v.x,y + v.y,z + v.z,w + v.w); }
+	inline const fgVector4f operator-() const { return fgVector4f(-x,-y,-z,-w); }
+	inline const fgVector4f operator-(const fgVector4f &v) const { return fgVector4f(x - v.x,y - v.y,z - v.z,z - v.w); }
 	
-	inline Vector4f &operator*=(float f) { return *this = *this * f; }
-	inline Vector4f &operator/=(float f) { return *this = *this / f; }
-	inline Vector4f &operator+=(const Vector4f &v) { return *this = *this + v; }
-	inline Vector4f &operator-=(const Vector4f &v) { return *this = *this - v; }
+	inline fgVector4f &operator*=(float f) { return *this = *this * f; }
+	inline fgVector4f &operator/=(float f) { return *this = *this / f; }
+	inline fgVector4f &operator+=(const fgVector4f &v) { return *this = *this + v; }
+	inline fgVector4f &operator-=(const fgVector4f &v) { return *this = *this - v; }
 	
-	inline float operator*(const Vector3f &v) const { return x * v.x + y * v.y + z * v.z + w; }
-	inline float operator*(const Vector4f &v) const { return x * v.x + y * v.y + z * v.z + w * v.w; }
+	inline float operator*(const fgVector3f &v) const { return x * v.x + y * v.y + z * v.z + w; }
+	inline float operator*(const fgVector4f &v) const { return x * v.x + y * v.y + z * v.z + w * v.w; }
 	
 	inline operator float*() { return (float*)&x; }
 	inline operator const float*() const { return (float*)&x; }
@@ -242,65 +242,65 @@ struct Vector4f {
 	};
 };
 
-inline Vector3f::Vector3f(const Vector4f &v) {
+inline fgVector3f::fgVector3f(const fgVector4f &v) {
 	x = v.x;
 	y = v.y;
 	z = v.z;
 }
 
-inline float Vector3f::operator*(const Vector4f &v) const {
+inline float fgVector3f::operator*(const fgVector4f &v) const {
 	return x * v.x + y * v.y + z * v.z + v.w;
 }
 
 /*****************************************************************************/
 /*                                                                           */
-/* Matrix3f                                                                  */
+/* fgMatrix3f                                                                  */
 /*                                                                           */
 /*****************************************************************************/
 
-struct Matrix3f {
+struct fgMatrix3f {
 	
-	Matrix3f() {
+	fgMatrix3f() {
 		mat[0] = 1.0; mat[3] = 0.0; mat[6] = 0.0;
 		mat[1] = 0.0; mat[4] = 1.0; mat[7] = 0.0;
 		mat[2] = 0.0; mat[5] = 0.0; mat[8] = 1.0;
 	}
-	Matrix3f(const float *m) {
+	fgMatrix3f(const float *m) {
 		mat[0] = m[0]; mat[3] = m[3]; mat[6] = m[6];
 		mat[1] = m[1]; mat[4] = m[4]; mat[7] = m[7];
 		mat[2] = m[2]; mat[5] = m[5]; mat[8] = m[8];
 	}
-	Matrix3f(const Matrix3f &m) {
+	fgMatrix3f(const fgMatrix3f &m) {
 		mat[0] = m[0]; mat[3] = m[3]; mat[6] = m[6];
 		mat[1] = m[1]; mat[4] = m[4]; mat[7] = m[7];
 		mat[2] = m[2]; mat[5] = m[5]; mat[8] = m[8];
 	}
-	Matrix3f(const Matrix4f &m);
+	fgMatrix3f(const fgMatrix4f &m);
 	
-	Vector3f operator*(const Vector3f &v) const {
-		Vector3f ret;
+	fgVector3f operator*(const fgVector3f &v) const {
+		fgVector3f ret;
 		ret[0] = mat[0] * v[0] + mat[3] * v[1] + mat[6] * v[2];
 		ret[1] = mat[1] * v[0] + mat[4] * v[1] + mat[7] * v[2];
 		ret[2] = mat[2] * v[0] + mat[5] * v[1] + mat[8] * v[2];
 		return ret;
 	}
-	Vector4f operator*(const Vector4f &v) const {
-		Vector4f ret;
+	fgVector4f operator*(const fgVector4f &v) const {
+		fgVector4f ret;
 		ret[0] = mat[0] * v[0] + mat[3] * v[1] + mat[6] * v[2];
 		ret[1] = mat[1] * v[0] + mat[4] * v[1] + mat[7] * v[2];
 		ret[2] = mat[2] * v[0] + mat[5] * v[1] + mat[8] * v[2];
 		ret[3] = v[3];
 		return ret;
 	}
-	Matrix3f operator*(float f) const {
-		Matrix3f ret;
+	fgMatrix3f operator*(float f) const {
+		fgMatrix3f ret;
 		ret[0] = mat[0] * f; ret[3] = mat[3] * f; ret[6] = mat[6] * f;
 		ret[1] = mat[1] * f; ret[4] = mat[4] * f; ret[7] = mat[7] * f;
 		ret[2] = mat[2] * f; ret[5] = mat[5] * f; ret[8] = mat[8] * f;
 		return ret;
 	}
-	Matrix3f operator*(const Matrix3f &m) const {
-		Matrix3f ret;
+	fgMatrix3f operator*(const fgMatrix3f &m) const {
+		fgMatrix3f ret;
 		ret[0] = mat[0] * m[0] + mat[3] * m[1] + mat[6] * m[2];
 		ret[1] = mat[1] * m[0] + mat[4] * m[1] + mat[7] * m[2];
 		ret[2] = mat[2] * m[0] + mat[5] * m[1] + mat[8] * m[2];
@@ -312,25 +312,25 @@ struct Matrix3f {
 		ret[8] = mat[2] * m[6] + mat[5] * m[7] + mat[8] * m[8];
 		return ret;
 	}
-	Matrix3f operator+(const Matrix3f &m) const {
-		Matrix3f ret;
+	fgMatrix3f operator+(const fgMatrix3f &m) const {
+		fgMatrix3f ret;
 		ret[0] = mat[0] + m[0]; ret[3] = mat[3] + m[3]; ret[6] = mat[6] + m[6];
 		ret[1] = mat[1] + m[1]; ret[4] = mat[4] + m[4]; ret[7] = mat[7] + m[7];
 		ret[2] = mat[2] + m[2]; ret[5] = mat[5] + m[5]; ret[8] = mat[8] + m[8];
 		return ret;
 	}
-	Matrix3f operator-(const Matrix3f &m) const {
-		Matrix3f ret;
+	fgMatrix3f operator-(const fgMatrix3f &m) const {
+		fgMatrix3f ret;
 		ret[0] = mat[0] - m[0]; ret[3] = mat[3] - m[3]; ret[6] = mat[6] - m[6];
 		ret[1] = mat[1] - m[1]; ret[4] = mat[4] - m[4]; ret[7] = mat[7] - m[7];
 		ret[2] = mat[2] - m[2]; ret[5] = mat[5] - m[5]; ret[8] = mat[8] - m[8];
 		return ret;
 	}
 	
-	Matrix3f &operator*=(float f) { return *this = *this * f; }
-	Matrix3f &operator*=(const Matrix3f &m) { return *this = *this * m; }
-	Matrix3f &operator+=(const Matrix3f &m) { return *this = *this + m; }
-	Matrix3f &operator-=(const Matrix3f &m) { return *this = *this - m; }
+	fgMatrix3f &operator*=(float f) { return *this = *this * f; }
+	fgMatrix3f &operator*=(const fgMatrix3f &m) { return *this = *this * m; }
+	fgMatrix3f &operator+=(const fgMatrix3f &m) { return *this = *this + m; }
+	fgMatrix3f &operator-=(const fgMatrix3f &m) { return *this = *this - m; }
 	
 	operator float*() { return mat; }
 	operator const float*() const { return mat; }
@@ -338,8 +338,8 @@ struct Matrix3f {
 	float &operator[](int i) { return mat[i]; }
 	const float operator[](int i) const { return mat[i]; }
 	
-	Matrix3f transpose() const {
-		Matrix3f ret;
+	fgMatrix3f transpose() const {
+		fgMatrix3f ret;
 		ret[0] = mat[0]; ret[3] = mat[1]; ret[6] = mat[2];
 		ret[1] = mat[3]; ret[4] = mat[4]; ret[7] = mat[5];
 		ret[2] = mat[6]; ret[5] = mat[7]; ret[8] = mat[8];
@@ -355,8 +355,8 @@ struct Matrix3f {
 		det -= mat[0] * mat[7] * mat[5];
 		return det;
 	}
-	Matrix3f inverse() const {
-		Matrix3f ret;
+	fgMatrix3f inverse() const {
+		fgMatrix3f ret;
 		float idet = 1.0f / det();
 		ret[0] =  (mat[4] * mat[8] - mat[7] * mat[5]) * idet;
 		ret[1] = -(mat[1] * mat[8] - mat[7] * mat[2]) * idet;
@@ -380,11 +380,11 @@ struct Matrix3f {
 		mat[1] = 0.0; mat[4] = 1.0; mat[7] = 0.0;
 		mat[2] = 0.0; mat[5] = 0.0; mat[8] = 1.0;
 	}
-	void rotate(const Vector3f &axis,float angle) {
+	void rotate(const fgVector3f &axis,float angle) {
 		float rad = angle * DEG2RAD;
 		float c = cosf(rad);
 		float s = sinf(rad);
-		Vector3f v = axis;
+		fgVector3f v = axis;
 		v.normalize();
 		float xx = v.x * v.x;
 		float yy = v.y * v.y;
@@ -400,7 +400,7 @@ struct Matrix3f {
 		mat[2] = (1.0f - c) * zx - ys; mat[5] = (1.0f - c) * yz + xs; mat[8] = (1.0f - c) * zz + c;
 	}
 	void rotate(float x,float y,float z,float angle) {
-		rotate(Vector3f(x,y,z),angle);
+		rotate(fgVector3f(x,y,z),angle);
 	}
 	void rotate_x(float angle) {
 		float rad = angle * DEG2RAD;
@@ -426,18 +426,18 @@ struct Matrix3f {
 		mat[1] = s; mat[4] = c; mat[7] = 0.0;
 		mat[2] = 0.0; mat[5] = 0.0; mat[8] = 1.0;
 	}
-	void scale(const Vector3f &v) {
+	void scale(const fgVector3f &v) {
 		mat[0] = v.x; mat[3] = 0.0; mat[6] = 0.0;
 		mat[1] = 0.0; mat[4] = v.y; mat[7] = 0.0;
 		mat[2] = 0.0; mat[5] = 0.0; mat[8] = v.z;
 	}
 	void scale(float x,float y,float z) {
-		scale(Vector3f(x,y,z));
+		scale(fgVector3f(x,y,z));
 	}
 	void orthonormalize() {
-		Vector3f x(mat[0],mat[1],mat[2]);
-		Vector3f y(mat[3],mat[4],mat[5]);
-		Vector3f z;
+		fgVector3f x(mat[0],mat[1],mat[2]);
+		fgVector3f y(mat[3],mat[4],mat[5]);
+		fgVector3f z;
 		x.normalize();
 		z.cross(x,y);
 		z.normalize();
@@ -453,74 +453,74 @@ struct Matrix3f {
 
 /*****************************************************************************/
 /*                                                                           */
-/* Matrix4f                                                                  */
+/* fgMatrix4f                                                                  */
 /*                                                                           */
 /*****************************************************************************/
 
-struct Matrix4f {
+struct fgMatrix4f {
 	
-	Matrix4f() {
+	fgMatrix4f() {
 		mat[0] = 1.0; mat[4] = 0.0; mat[8] = 0.0; mat[12] = 0.0;
 		mat[1] = 0.0; mat[5] = 1.0; mat[9] = 0.0; mat[13] = 0.0;
 		mat[2] = 0.0; mat[6] = 0.0; mat[10] = 1.0; mat[14] = 0.0;
 		mat[3] = 0.0; mat[7] = 0.0; mat[11] = 0.0; mat[15] = 1.0;
 	}
-	Matrix4f(const Vector3f &v) {
+	fgMatrix4f(const fgVector3f &v) {
 		translate(v);
 	}
-	Matrix4f(float x,float y,float z) {
+	fgMatrix4f(float x,float y,float z) {
 		translate(x,y,z);
 	}
-	Matrix4f(const Vector3f &axis,float angle) {
+	fgMatrix4f(const fgVector3f &axis,float angle) {
 		rotate(axis,angle);
 	}
-	Matrix4f(float x,float y,float z,float angle) {
+	fgMatrix4f(float x,float y,float z,float angle) {
 		rotate(x,y,z,angle);
 	}
-	Matrix4f(const Matrix3f &m) {
+	fgMatrix4f(const fgMatrix3f &m) {
 		mat[0] = m[0]; mat[4] = m[3]; mat[8] = m[6]; mat[12] = 0.0;
 		mat[1] = m[1]; mat[5] = m[4]; mat[9] = m[7]; mat[13] = 0.0;
 		mat[2] = m[2]; mat[6] = m[5]; mat[10] = m[8]; mat[14] = 0.0;
 		mat[3] = 0.0; mat[7] = 0.0; mat[11] = 0.0; mat[15] = 1.0;
 	}
-	Matrix4f(const float *m) {
+	fgMatrix4f(const float *m) {
 		mat[0] = m[0]; mat[4] = m[4]; mat[8] = m[8]; mat[12] = m[12];
 		mat[1] = m[1]; mat[5] = m[5]; mat[9] = m[9]; mat[13] = m[13];
 		mat[2] = m[2]; mat[6] = m[6]; mat[10] = m[10]; mat[14] = m[14];
 		mat[3] = m[3]; mat[7] = m[7]; mat[11] = m[11]; mat[15] = m[15];
 	}
-	Matrix4f(const Matrix4f &m) {
+	fgMatrix4f(const fgMatrix4f &m) {
 		mat[0] = m[0]; mat[4] = m[4]; mat[8] = m[8]; mat[12] = m[12];
 		mat[1] = m[1]; mat[5] = m[5]; mat[9] = m[9]; mat[13] = m[13];
 		mat[2] = m[2]; mat[6] = m[6]; mat[10] = m[10]; mat[14] = m[14];
 		mat[3] = m[3]; mat[7] = m[7]; mat[11] = m[11]; mat[15] = m[15];
 	}
 	
-	Vector3f operator*(const Vector3f &v) const {
-		Vector3f ret;
+	fgVector3f operator*(const fgVector3f &v) const {
+		fgVector3f ret;
 		ret[0] = mat[0] * v[0] + mat[4] * v[1] + mat[8] * v[2] + mat[12];
 		ret[1] = mat[1] * v[0] + mat[5] * v[1] + mat[9] * v[2] + mat[13];
 		ret[2] = mat[2] * v[0] + mat[6] * v[1] + mat[10] * v[2] + mat[14];
 		return ret;
 	}
-	Vector4f operator*(const Vector4f &v) const {
-		Vector4f ret;
+	fgVector4f operator*(const fgVector4f &v) const {
+		fgVector4f ret;
 		ret[0] = mat[0] * v[0] + mat[4] * v[1] + mat[8] * v[2] + mat[12] * v[3];
 		ret[1] = mat[1] * v[0] + mat[5] * v[1] + mat[9] * v[2] + mat[13] * v[3];
 		ret[2] = mat[2] * v[0] + mat[6] * v[1] + mat[10] * v[2] + mat[14] * v[3];
 		ret[3] = mat[3] * v[0] + mat[7] * v[1] + mat[11] * v[2] + mat[15] * v[3];
 		return ret;
 	}
-	Matrix4f operator*(float f) const {
-		Matrix4f ret;
+	fgMatrix4f operator*(float f) const {
+		fgMatrix4f ret;
 		ret[0] = mat[0] * f; ret[4] = mat[4] * f; ret[8] = mat[8] * f; ret[12] = mat[12] * f;
 		ret[1] = mat[1] * f; ret[5] = mat[5] * f; ret[9] = mat[9] * f; ret[13] = mat[13] * f;
 		ret[2] = mat[2] * f; ret[6] = mat[6] * f; ret[10] = mat[10] * f; ret[14] = mat[14] * f;
 		ret[3] = mat[3] * f; ret[7] = mat[7] * f; ret[11] = mat[11] * f; ret[15] = mat[15] * f;
 		return ret;
 	}
-	Matrix4f operator*(const Matrix4f &m) const {
-		Matrix4f ret;
+	fgMatrix4f operator*(const fgMatrix4f &m) const {
+		fgMatrix4f ret;
 		ret[0] = mat[0] * m[0] + mat[4] * m[1] + mat[8] * m[2] + mat[12] * m[3];
 		ret[1] = mat[1] * m[0] + mat[5] * m[1] + mat[9] * m[2] + mat[13] * m[3];
 		ret[2] = mat[2] * m[0] + mat[6] * m[1] + mat[10] * m[2] + mat[14] * m[3];
@@ -539,16 +539,16 @@ struct Matrix4f {
 		ret[15] = mat[3] * m[12] + mat[7] * m[13] + mat[11] * m[14] + mat[15] * m[15];
 		return ret;
 	}
-	Matrix4f operator+(const Matrix4f &m) const {
-		Matrix4f ret;
+	fgMatrix4f operator+(const fgMatrix4f &m) const {
+		fgMatrix4f ret;
 		ret[0] = mat[0] + m[0]; ret[4] = mat[4] + m[4]; ret[8] = mat[8] + m[8]; ret[12] = mat[12] + m[12];
 		ret[1] = mat[1] + m[1]; ret[5] = mat[5] + m[5]; ret[9] = mat[9] + m[9]; ret[13] = mat[13] + m[13];
 		ret[2] = mat[2] + m[2]; ret[6] = mat[6] + m[6]; ret[10] = mat[10] + m[10]; ret[14] = mat[14] + m[14];
 		ret[3] = mat[3] + m[3]; ret[7] = mat[7] + m[7]; ret[11] = mat[11] + m[11]; ret[15] = mat[15] + m[15];
 		return ret;
 	}
-	Matrix4f operator-(const Matrix4f &m) const {
-		Matrix4f ret;
+	fgMatrix4f operator-(const fgMatrix4f &m) const {
+		fgMatrix4f ret;
 		ret[0] = mat[0] - m[0]; ret[4] = mat[4] - m[4]; ret[8] = mat[8] - m[8]; ret[12] = mat[12] - m[12];
 		ret[1] = mat[1] - m[1]; ret[5] = mat[5] - m[5]; ret[9] = mat[9] - m[9]; ret[13] = mat[13] - m[13];
 		ret[2] = mat[2] - m[2]; ret[6] = mat[6] - m[6]; ret[10] = mat[10] - m[10]; ret[14] = mat[14] - m[14];
@@ -556,10 +556,10 @@ struct Matrix4f {
 		return ret;
 	}
 	
-	Matrix4f &operator*=(float f) { return *this = *this * f; }
-	Matrix4f &operator*=(const Matrix4f &m) { return *this = *this * m; }
-	Matrix4f &operator+=(const Matrix4f &m) { return *this = *this + m; }
-	Matrix4f &operator-=(const Matrix4f &m) { return *this = *this - m; }
+	fgMatrix4f &operator*=(float f) { return *this = *this * f; }
+	fgMatrix4f &operator*=(const fgMatrix4f &m) { return *this = *this * m; }
+	fgMatrix4f &operator+=(const fgMatrix4f &m) { return *this = *this + m; }
+	fgMatrix4f &operator-=(const fgMatrix4f &m) { return *this = *this - m; }
 	
 	operator float*() { return mat; }
 	operator const float*() const { return mat; }
@@ -567,24 +567,24 @@ struct Matrix4f {
 	float &operator[](int i) { return mat[i]; }
 	const float operator[](int i) const { return mat[i]; }
 	
-	Matrix4f rotation() const {
-		Matrix4f ret;
+	fgMatrix4f rotation() const {
+		fgMatrix4f ret;
 		ret[0] = mat[0]; ret[4] = mat[4]; ret[8] = mat[8]; ret[12] = 0;
 		ret[1] = mat[1]; ret[5] = mat[5]; ret[9] = mat[9]; ret[13] = 0;
 		ret[2] = mat[2]; ret[6] = mat[6]; ret[10] = mat[10]; ret[14] = 0;
 		ret[3] = 0; ret[7] = 0; ret[11] = 0; ret[15] = 1;
 		return ret;
 	}
-	Matrix4f transpose() const {
-		Matrix4f ret;
+	fgMatrix4f transpose() const {
+		fgMatrix4f ret;
 		ret[0] = mat[0]; ret[4] = mat[1]; ret[8] = mat[2]; ret[12] = mat[3];
 		ret[1] = mat[4]; ret[5] = mat[5]; ret[9] = mat[6]; ret[13] = mat[7];
 		ret[2] = mat[8]; ret[6] = mat[9]; ret[10] = mat[10]; ret[14] = mat[11];
 		ret[3] = mat[12]; ret[7] = mat[13]; ret[11] = mat[14]; ret[15] = mat[15];
 		return ret;
 	}
-	Matrix4f transpose_rotation() const {
-		Matrix4f ret;
+	fgMatrix4f transpose_rotation() const {
+		fgMatrix4f ret;
 		ret[0] = mat[0]; ret[4] = mat[1]; ret[8] = mat[2]; ret[12] = mat[12];
 		ret[1] = mat[4]; ret[5] = mat[5]; ret[9] = mat[6]; ret[13] = mat[13];
 		ret[2] = mat[8]; ret[6] = mat[9]; ret[10] = mat[10]; ret[14] = mat[14];
@@ -603,8 +603,8 @@ struct Matrix4f {
 		return det;
 	}
 	
-	Matrix4f inverse() const {
-		Matrix4f ret;
+	fgMatrix4f inverse() const {
+		fgMatrix4f ret;
 		float idet = 1.0f / det();
 		ret[0] =  (mat[5] * mat[10] - mat[9] * mat[6]) * idet;
 		ret[1] = -(mat[1] * mat[10] - mat[9] * mat[2]) * idet;
@@ -637,11 +637,11 @@ struct Matrix4f {
 		mat[2] = 0.0; mat[6] = 0.0; mat[10] = 1.0; mat[14] = 0.0;
 		mat[3] = 0.0; mat[7] = 0.0; mat[11] = 0.0; mat[15] = 1.0;
 	}
-	void rotate(const Vector3f &axis,float angle) {
+	void rotate(const fgVector3f &axis,float angle) {
 		float rad = angle * DEG2RAD;
 		float c = cosf(rad);
 		float s = sinf(rad);
-		Vector3f v = axis;
+		fgVector3f v = axis;
 		v.normalize();
 		float xx = v.x * v.x;
 		float yy = v.y * v.y;
@@ -658,7 +658,7 @@ struct Matrix4f {
 		mat[3] = 0.0; mat[7] = 0.0; mat[11] = 0.0; mat[15] = 1.0;
 	}
 	void rotate(float x,float y,float z,float angle) {
-		rotate(Vector3f(x,y,z),angle);
+		rotate(fgVector3f(x,y,z),angle);
 	}
 	void rotate_x(float angle) {
 		float rad = angle * DEG2RAD;
@@ -687,25 +687,25 @@ struct Matrix4f {
 		mat[2] = 0.0; mat[6] = 0.0; mat[10] = 1.0; mat[14] = 0.0;
 		mat[3] = 0.0; mat[7] = 0.0; mat[11] = 0.0; mat[15] = 1.0;
 	}
-	void scale(const Vector3f &v) {
+	void scale(const fgVector3f &v) {
 		mat[0] = v.x; mat[4] = 0.0; mat[8] = 0.0; mat[12] = 0.0;
 		mat[1] = 0.0; mat[5] = v.y; mat[9] = 0.0; mat[13] = 0.0;
 		mat[2] = 0.0; mat[6] = 0.0; mat[10] = v.z; mat[14] = 0.0;
 		mat[3] = 0.0; mat[7] = 0.0; mat[11] = 0.0; mat[15] = 1.0;
 	}
 	void scale(float x,float y,float z) {
-		scale(Vector3f(x,y,z));
+		scale(fgVector3f(x,y,z));
 	}
-	void translate(const Vector3f &v) {
+	void translate(const fgVector3f &v) {
 		mat[0] = 1.0; mat[4] = 0.0; mat[8] = 0.0; mat[12] = v.x;
 		mat[1] = 0.0; mat[5] = 1.0; mat[9] = 0.0; mat[13] = v.y;
 		mat[2] = 0.0; mat[6] = 0.0; mat[10] = 1.0; mat[14] = v.z;
 		mat[3] = 0.0; mat[7] = 0.0; mat[11] = 0.0; mat[15] = 1.0;
 	}
 	void translate(float x,float y,float z) {
-		translate(Vector3f(x,y,z));
+		translate(fgVector3f(x,y,z));
 	}
-	void reflect(const Vector4f &plane) {
+	void reflect(const fgVector4f &plane) {
 		float x = plane.x;
 		float y = plane.y;
 		float z = plane.z;
@@ -718,7 +718,7 @@ struct Matrix4f {
 		mat[3] = 0.0; mat[7] = 0.0; mat[11] = 0.0; mat[15] = 1.0;
 	}
 	void reflect(float x,float y,float z,float w) {
-		reflect(Vector4f(x,y,z,w));
+		reflect(fgVector4f(x,y,z,w));
 	}
 	
 	void perspective(float fov,float aspect,float znear,float zfar) {
@@ -729,9 +729,9 @@ struct Matrix4f {
 		mat[2] = 0.0; mat[6] = 0.0; mat[10] = -(zfar + znear) / (zfar - znear); mat[14] = -(2.0f * zfar * znear) / (zfar - znear);
 		mat[3] = 0.0; mat[7] = 0.0; mat[11] = -1.0; mat[15] = 0.0;
 	}
-	void look_at(const Vector3f &eye,const Vector3f &dir,const Vector3f &up) {
-		Vector3f x,y,z;
-		Matrix4f m0,m1;
+	void look_at(const fgVector3f &eye,const fgVector3f &dir,const fgVector3f &up) {
+		fgVector3f x,y,z;
+		fgMatrix4f m0,m1;
 		z = eye - dir;
 		z.normalize();
 		x.cross(up,z);
@@ -746,13 +746,13 @@ struct Matrix4f {
 		*this = m0 * m1;
 	}
 	void look_at(const float *eye,const float *dir,const float *up) {
-		look_at(Vector3f(eye),Vector3f(dir),Vector3f(up));
+		look_at(fgVector3f(eye),fgVector3f(dir),fgVector3f(up));
 	}
 	
 	float mat[16];
 };
 
-inline Matrix3f::Matrix3f(const Matrix4f &m) {
+inline fgMatrix3f::fgMatrix3f(const fgMatrix4f &m) {
 	mat[0] = m[0]; mat[3] = m[4]; mat[6] = m[8];
 	mat[1] = m[1]; mat[4] = m[5]; mat[7] = m[9];
 	mat[2] = m[2]; mat[5] = m[6]; mat[8] = m[10];
@@ -760,20 +760,20 @@ inline Matrix3f::Matrix3f(const Matrix4f &m) {
 
 /*****************************************************************************/
 /*                                                                           */
-/* Quaterionf                                                                */
+/* fgQuaterionf                                                                */
 /*                                                                           */
 /*****************************************************************************/
 
-struct Quaterionf {
+struct fgQuaterionf {
 	
-	Quaterionf() : x(0), y(0), z(0), w(1) { }
-	Quaterionf(const Vector3f &dir,float angle) {
+	fgQuaterionf() : x(0), y(0), z(0), w(1) { }
+	fgQuaterionf(const fgVector3f &dir,float angle) {
 		set(dir,angle);
 	}
-	Quaterionf(float x,float y,float z,float angle) {
+	fgQuaterionf(float x,float y,float z,float angle) {
 		set(x,y,z,angle);
 	}
-	Quaterionf(const Matrix3f &m) {
+	fgQuaterionf(const fgMatrix3f &m) {
 		float trace = m[0] + m[4] + m[8];
 		if(trace > 0.0) {
 			float s = sqrtf(trace + 1.0f);
@@ -804,8 +804,8 @@ struct Quaterionf {
 	float &operator[](int i) { return ((float*)&x)[i]; }
 	const float operator[](int i) const { return ((float*)&x)[i]; }
 	
-	Quaterionf operator*(const Quaterionf &q) const {
-		Quaterionf ret;
+	fgQuaterionf operator*(const fgQuaterionf &q) const {
+		fgQuaterionf ret;
 		ret.x = w * q.x + x * q.x + y * q.z - z * q.y;
 		ret.y = w * q.y + y * q.w + z * q.x - x * q.z;
 		ret.z = w * q.z + z * q.w + x * q.y - y * q.x;
@@ -813,7 +813,7 @@ struct Quaterionf {
 		return ret;
 	}
 	
-	void set(const Vector3f &dir,float angle) {
+	void set(const fgVector3f &dir,float angle) {
 		float length = dir.length();
 		if(length != 0.0) {
 			length = 1.0f / length;
@@ -828,12 +828,12 @@ struct Quaterionf {
 		}
 	}
 	void set(float x,float y,float z,float angle) {
-		set(Vector3f(x,y,z),angle);
+		set(fgVector3f(x,y,z),angle);
 	}
 	
-	void slerp(const Quaterionf &q0,const Quaterionf &q1,float t) {
+	void slerp(const fgQuaterionf &q0,const fgQuaterionf &q1,float t) {
 		float k0,k1,cosomega = q0.x * q1.x + q0.y * q1.y + q0.z * q1.z + q0.w * q1.w;
-		Quaterionf q;
+		fgQuaterionf q;
 		if(cosomega < 0.0) {
 			cosomega = -cosomega;
 			q.x = -q1.x;
@@ -861,8 +861,8 @@ struct Quaterionf {
 		w = q0.w * k0 + q.w * k1;
 	}
 	
-	Matrix3f to_matrix() const {
-		Matrix3f ret;
+	fgMatrix3f to_matrix() const {
+		fgMatrix3f ret;
 		float x2 = x + x;
 		float y2 = y + y;
 		float z2 = z + z;

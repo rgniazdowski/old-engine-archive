@@ -3,8 +3,8 @@
  * 
  * This file is part of #FLEXIGAME_PROJECT
  * 
- * #FLEXIGAME_PROJECT source code and any related files can not be copied and/or 
- * distributed without the express permission
+ * #FLEXIGAME_PROJECT source code and any related files can not be copied, modified 
+ * and/or distributed without the express or written permission from the author.
  *******************************************************/
 
 // #FIXME - this actually needs small fixes - however the idea is quite good and will be useful for
@@ -76,8 +76,8 @@ public:
 		float transformToPixels(int grid_position) const;
 		float transformToPixels(float grid_position) const;
 
-		Vector2f transform(Vector2f grid_position) const;
-		Vector2f transform(float grid_position_x, float grid_position_y) const;
+		fgVector2f transform(fgVector2f grid_position) const;
+		fgVector2f transform(float grid_position_x, float grid_position_y) const;
 };
 
 #define SCREEN_TRANSFORM(POS) fgGuiScreenGrid::getInstance()->transformToPixels(POS)

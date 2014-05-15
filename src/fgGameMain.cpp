@@ -3,8 +3,8 @@
  * 
  * This file is part of #FLEXIGAME_PROJECT
  * 
- * #FLEXIGAME_PROJECT source code and any related files can not be copied and/or 
- * distributed without the express permission
+ * #FLEXIGAME_PROJECT source code and any related files can not be copied, modified 
+ * and/or distributed without the express or written permission from the author.
  *******************************************************/
 
 #include "fgGameMain.h"
@@ -139,6 +139,7 @@ bool fgGameMain::initSubsystems(void)
 	//glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
 	//glHint(GL_POINT_SMOOTH_HINT, GL_NICEST);
 #endif
+	// #FIXME - this is not a place where this should be
 	glClearDepthf(1.0f);
 	glDepthFunc(GL_LESS);
 	glEnable(GL_DEPTH_TEST);
@@ -234,11 +235,11 @@ void fgGameMain::render(void)
 	float size_x = 100.0f;
 	float size_y = 150.0f;
 
-	Vector2f vertexArray[] = {
-		Vector2f(0.0f, 0.0f),
-		Vector2f(size_x, 0.0f),
-		Vector2f(size_x, size_y),
-		Vector2f(0.0f, size_y)
+	fgVector2f vertexArray[] = {
+		fgVector2f(0.0f, 0.0f),
+		fgVector2f(size_x, 0.0f),
+		fgVector2f(size_x, size_y),
+		fgVector2f(0.0f, size_y)
 	};
 
 	glLoadIdentity();

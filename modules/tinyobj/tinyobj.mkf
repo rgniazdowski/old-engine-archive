@@ -1,0 +1,13 @@
+includepaths
+{
+    "upstream"
+}
+
+files
+{
+    tinyobj.mkf
+
+	("upstream")
+	tiny_obj_loader.h
+    tiny_obj_loader.cpp
+}

@@ -3,8 +3,8 @@
  * 
  * This file is part of #FLEXIGAME_PROJECT
  * 
- * #FLEXIGAME_PROJECT source code and any related files can not be copied and/or 
- * distributed without the express permission
+ * #FLEXIGAME_PROJECT source code and any related files can not be copied, modified 
+ * and/or distributed without the express or written permission from the author.
  *******************************************************/
 
 #include "fgPsParticleEffect.h"
@@ -83,9 +83,9 @@ void ParticleEffect::setMaxCount(int max_count)
 	// FIXME This allocations need to be in DrawingBatch or SimpleDrawer, need to think about it
 
 	m_colorStream = (fgColor *) fgMalloc(sizeof(fgColor) * 4 * max_count);
-	m_vertStream2D = (Vector2i *) fgMalloc(sizeof(Vector2i) * 4 * max_count);
-	m_vertStream3D = (Vector3f *) fgMalloc(sizeof(Vector3f) * 4 * max_count);
-	m_UVStream = (Vector2f *) fgMalloc(sizeof(Vector2f) * 4 * max_count);
+	m_vertStream2D = (fgVector2i *) fgMalloc(sizeof(fgVector2i) * 4 * max_count);
+	m_vertStream3D = (fgVector3f *) fgMalloc(sizeof(fgVector3f) * 4 * max_count);
+	m_UVStream = (fgVector2f *) fgMalloc(sizeof(fgVector2f) * 4 * max_count);
 	//m_material = new CIwMaterial();
 
 	//m_material->SetCullMode(CIwMaterial::CULL_NONE);
@@ -355,12 +355,12 @@ void ParticleEffect::draw(void)
 {
 	int i = 0;
 
-	static Vector2f defaultTexCoords[ 4 ] =
+	static fgVector2f defaultTexCoords[ 4 ] =
 	{
-		Vector2f(0.0f, 0.0f),	// 0.x 0.y
-		Vector2f(0.0f, 1.0f),	// 1.x 1.y
-		Vector2f(1.0f, 1.0f),	// 2.x 2.y
-		Vector2f(1.0f, 0.0f),	// 3.x 3.y
+		fgVector2f(0.0f, 0.0f),	// 0.x 0.y
+		fgVector2f(0.0f, 1.0f),	// 1.x 1.y
+		fgVector2f(1.0f, 1.0f),	// 2.x 2.y
+		fgVector2f(1.0f, 0.0f),	// 3.x 3.y
 	};
 
 	for(i=0; i<int(m_particles.size()); i++)
@@ -369,23 +369,23 @@ void ParticleEffect::draw(void)
 		int h = w;
 
 		// Setting up the particle position
-		Vector2i origin2D;
+		fgVector2i origin2D;
 		origin2D.x = m_emitterOrigin.x + m_particles[i].position.x;
 		origin2D.y = m_emitterOrigin.y + m_particles[i].position.y;
-		Vector3f origin3D;
+		fgVector3f origin3D;
 		origin3D = m_particles[i].position + m_emitterOrigin;
 
 		// Setting up the VERTICES STREAM
 		if(m_drawMode == MODE_2D) {
-			m_vertStream2D[i*4+0] = Vector2i( -w/2,	-h/2);
-			m_vertStream2D[i*4+1] = Vector2i( -w/2,	 h/2);
-			m_vertStream2D[i*4+2] = Vector2i(  w/2,	 h/2);
-			m_vertStream2D[i*4+3] = Vector2i(  w/2,	-h/2);
+			m_vertStream2D[i*4+0] = fgVector2i( -w/2,	-h/2);
+			m_vertStream2D[i*4+1] = fgVector2i( -w/2,	 h/2);
+			m_vertStream2D[i*4+2] = fgVector2i(  w/2,	 h/2);
+			m_vertStream2D[i*4+3] = fgVector2i(  w/2,	-h/2);
 		} else {
-			m_vertStream3D[i*4+0] = Vector3f( -w/2,	-h/2, 0.0f);
-			m_vertStream3D[i*4+1] = Vector3f( -w/2,	 h/2, 0.0f);
-			m_vertStream3D[i*4+2] = Vector3f(  w/2,	 h/2, 0.0f);
-			m_vertStream3D[i*4+3] = Vector3f(  w/2,	-h/2, 0.0f);
+			m_vertStream3D[i*4+0] = fgVector3f( -w/2,	-h/2, 0.0f);
+			m_vertStream3D[i*4+1] = fgVector3f( -w/2,	 h/2, 0.0f);
+			m_vertStream3D[i*4+2] = fgVector3f(  w/2,	 h/2, 0.0f);
+			m_vertStream3D[i*4+3] = fgVector3f(  w/2,	-h/2, 0.0f);
 		}
 		if(m_particles[i].texture_id < 0)
 			m_particles[i].texture_id = 0;
@@ -399,10 +399,10 @@ void ParticleEffect::draw(void)
 		float dt = 1.0f/m_textureYSize;
 
 		// Setting up the UV STREAM
-		m_UVStream[i*4+0] = Vector2f(s, t);
-		m_UVStream[i*4+1] = Vector2f(s, t+dt);
-		m_UVStream[i*4+2] = Vector2f(s+ds, t+dt);
-		m_UVStream[i*4+3] = Vector2f(s+ds, t);
+		m_UVStream[i*4+0] = fgVector2f(s, t);
+		m_UVStream[i*4+1] = fgVector2f(s, t+dt);
+		m_UVStream[i*4+2] = fgVector2f(s+ds, t+dt);
+		m_UVStream[i*4+3] = fgVector2f(s+ds, t);
 
 		// Setting up the COLOR STREAM
 		fgColor color = m_particles[i].color;

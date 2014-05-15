@@ -3,12 +3,12 @@
  * 
  * This file is part of #FLEXIGAME_PROJECT
  * 
- * #FLEXIGAME_PROJECT source code and any related files can not be copied and/or 
- * distributed without the express permission
+ * #FLEXIGAME_PROJECT source code and any related files can not be copied, modified 
+ * and/or distributed without the express or written permission from the author.
  *******************************************************/
 
-#ifndef _FG_RESOURCE_MANAGER_H
-#define _FG_RESOURCE_MANAGER_H
+#ifndef _FG_RESOURCE_MANAGER_H_
+#define _FG_RESOURCE_MANAGER_H_
 
 #include "fgSingleton.h"
 #include "fgResource.h"
@@ -16,12 +16,35 @@
 #include <map>
 
 // A resource handle is define as an unsigned integer
+#ifndef FG_RHANDLE
 #define FG_RHANDLE unsigned int
+#endif
 
 // All bits filled defines an invalid resource handle
 #define FG_INVALID_RHANDLE			0xFFFFFFFF
 #define FG_IS_INVALID_RHANDLE(_rh)	((_rh == FG_INVALID_RHANDLE) ? true : false)
 #define FG_IS_VALID_RHANDLE(_rh)	((_rh == FG_INVALID_RHANDLE) ? false : true)
+
+enum fgResourceType {
+	FG_RESOURCE_INVALID,
+	FG_RESOURCE_SOUND,
+	FG_RESOURCE_MUSIC,
+	FG_RESOURCE_3D_MODEL,
+	FG_RESOURCE_TEXTURE,
+	FG_RESOURCE_SAVE_FILE,
+	FG_RESOURCE_GUI_STRUCTURE_SHEET,
+	FG_RESOURCE_GUI_STYLE_SHEET,
+	FG_RESOURCE_SHADER,
+	FG_RESOURCE_SCENE,
+	FG_RESOURCE_GROUP_CONFIG,
+	FG_RESOURCE_CONFIG,
+	FG_RESOURCE_SCRIPT,
+
+	FG_RESOURCE_VARIA,
+	FG_RESOURCE_BINARY,
+
+	FG_NUM_RESOURCE_TYPES
+};
 
 // This class allows an STL object to compare the objects instead of
 // comparing the value of the objects' pointers.
@@ -151,6 +174,7 @@ protected:
 	fgResourceMap			m_resourceMap;
 };
 
+// #FIXME - again, with the singletons...
 #define FG_ResourceManager fgResourceManager::getInstance()
 
 #endif

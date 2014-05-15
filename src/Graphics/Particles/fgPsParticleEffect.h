@@ -3,8 +3,8 @@
  * 
  * This file is part of #FLEXIGAME_PROJECT
  * 
- * #FLEXIGAME_PROJECT source code and any related files can not be copied and/or 
- * distributed without the express permission
+ * #FLEXIGAME_PROJECT source code and any related files can not be copied, modified 
+ * and/or distributed without the express or written permission from the author.
  *******************************************************/
 
 #ifndef _FG_PS_PARTICLE_EFFECT_H_
@@ -87,22 +87,22 @@ protected:
 	/// The color stream
 	fgColor *m_colorStream;
 	/// The vertices stream in 2D space (XY)
-	Vector2i *m_vertStream2D;
+	fgVector2i *m_vertStream2D;
 	/// The vertices stream in 3D space (XYZ)
-	Vector3f *m_vertStream3D;
+	fgVector3f *m_vertStream3D;
 	/// The UV stream
-	Vector2f *m_UVStream;
+	fgVector2f *m_UVStream;
 	/// Marmalade material used for the effect
 	//CIwMaterial* m_material; // FIXME
 	void *m_material; // FIXME
 	/// The texture used on the particles
 	fgTexture *m_texture; 
 	/// Matrix model used in 3D space particle rendering
-	Matrix4f m_modelMatrix;
+	fgMatrix4f m_modelMatrix;
 	/// Point in 2D or 3D space where the new particles are added
 	/// Changing position will move all the particles in the current effect
 	/// because positions stored in particle data are relative
-	Vector3f m_emitterOrigin;
+	fgVector3f m_emitterOrigin;
 
 	/// One texture file can hold for example 4 smaller textures (2x2)
 	/// when adding a new particle to the effect, only one of them will 
@@ -155,7 +155,7 @@ public:
 	/**
 	 * Get the emitter origin position
 	 */
-	Vector3f emitterOrigin(void) const {
+	fgVector3f emitterOrigin(void) const {
 		return m_emitterOrigin;
 	}
 
@@ -235,14 +235,14 @@ public:
 	 * Setting the emitter origin position
 	 */
 	void setEmitterOrigin(float x, float y) {
-		m_emitterOrigin = Vector3f(x,y,0.0f);
+		m_emitterOrigin = fgVector3f(x,y,0.0f);
 	}
 
 	void setEmitterOrigin(float x, float y, float z) {
-		m_emitterOrigin = Vector3f(x,y,z);
+		m_emitterOrigin = fgVector3f(x,y,z);
 	}
 
-	void setEmitterOrigin(Vector3f origin) {
+	void setEmitterOrigin(fgVector3f origin) {
 		m_emitterOrigin = origin;
 	}
 
