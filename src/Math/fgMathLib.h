@@ -14,12 +14,16 @@
 
 #define EPSILON 1e-6f
 
-#ifndef PI
-#define PI 3.14159265358979323846f
+#ifndef M_PI
+#define M_PI 3.14159265358979323846
 #endif
 
-#define DEG2RAD (PI / 180.0f)
-#define RAD2DEG (180.0f / PI)
+#ifndef M_PIF
+#define M_PIF 3.14159265358979323846f
+#endif
+
+#define DEG2RAD (M_PIF / 180.0f)
+#define RAD2DEG (180.0f / M_PIF)
 
 struct fgVector2i;
 struct fgVector2f;
@@ -722,7 +726,7 @@ struct fgMatrix4f {
 	}
 	
 	void perspective(float fov,float aspect,float znear,float zfar) {
-		float y = tanf(fov * PI / 360.0f);
+		float y = tanf(fov * M_PIF / 360.0f);
 		float x = y * aspect;
 		mat[0] = 1.0f / x; mat[4] = 0.0; mat[8] = 0.0; mat[12] = 0.0;
 		mat[1] = 0.0; mat[5] = 1.0f / y; mat[9] = 0.0; mat[13] = 0.0;
