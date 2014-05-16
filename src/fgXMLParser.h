@@ -7,17 +7,19 @@
  * and/or distributed without the express or written permission from the author.
  *******************************************************/
 
-#ifndef _FG_XML_PARSER_H
-#define _FG_XML_PARSER_H
+#ifndef _FG_XML_PARSER_H_
+#define _FG_XML_PARSER_H_
 
 #include "fgCommon.h"
 #include "fgFileStream.h"
 
+// #FIXME - P8
+#ifdef FG_USING_TINYXML
 #include "tinyxml.h"
+#endif
 
 #include <string>
 #include <cstring>
-
 #include <stack>
 
 /* Simple wrappers for tiny xml structure types */

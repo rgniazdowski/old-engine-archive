@@ -36,10 +36,17 @@ class fgArrayVector : public CIwArray<X, A, REALLOCATE> {};
 #else 
 #include <vector>
 template <class T, class Alloc = allocator<T> >
-class fgArrayVector : public std::vector<T, Alloc> {};
+class fgArrayVector : public std::vector<T, Alloc> {
+public:
+	void clear_optimised()
+	{
+		clear();
+	}
+};
 #endif
 
-//FIXME this should not be in this file, but for now (just to compile the damn code) it'll be here
+// #FIXME this should not be in this file, but for now (just to compile the damn code) it'll be here
+// #TODO P2 this class needs modification so it will have the standard of all the fgVector*/fgColor* classes
 struct Area
 {
 		int x;

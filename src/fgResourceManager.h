@@ -12,18 +12,22 @@
 
 #include "fgSingleton.h"
 #include "fgResource.h"
+#include "fgResourceGroup.h"
 
-#include <map>
+#include <iostream>
+#include <hash_map>
 
 // A resource handle is define as an unsigned integer
 #ifndef FG_RHANDLE
 #define FG_RHANDLE unsigned int
 #endif
 
+#ifndef FG_INVALID_RHANDLE
 // All bits filled defines an invalid resource handle
 #define FG_INVALID_RHANDLE			0xFFFFFFFF
 #define FG_IS_INVALID_RHANDLE(_rh)	((_rh == FG_INVALID_RHANDLE) ? true : false)
 #define FG_IS_VALID_RHANDLE(_rh)	((_rh == FG_INVALID_RHANDLE) ? false : true)
+#endif
 
 enum fgResourceType {
 	FG_RESOURCE_INVALID,
@@ -36,8 +40,6 @@ enum fgResourceType {
 	FG_RESOURCE_GUI_STYLE_SHEET,
 	FG_RESOURCE_SHADER,
 	FG_RESOURCE_SCENE,
-	FG_RESOURCE_GROUP_CONFIG,
-	FG_RESOURCE_CONFIG,
 	FG_RESOURCE_SCRIPT,
 
 	FG_RESOURCE_VARIA,
@@ -66,10 +68,13 @@ public:
 	{  return !((*left) < (*right));  }
 };
 
-typedef std::map<FG_RHANDLE, fgResource*>	fgResourceMap;
+typedef std::hash_map<FG_RHANDLE, fgResource*>	fgResourceMap;
 typedef fgResourceMap::iterator				fgResourceMapItor;
 typedef fgResourceMap::value_type			fgResourceMapPair;
 
+// The resource manager handles all the external resources. It takes care of the memory
+// usage and destroys all unused data. Its very convinient as after pushing resource into
+// the manager there's no additional
 class fgResourceManager : public fgSingleton<fgResourceManager>
 {
 	friend class fgSingleton<fgResourceManager>;
@@ -119,12 +124,23 @@ public:
 	bool insertResource(FG_RHANDLE* rhUniqueID, fgResource* pResource);
 	bool insertResource(FG_RHANDLE rhUniqueID, fgResource* pResource);
 
-	// Removes an object completely from the manager. 
+	// ! Important !
+	// removeResource(...) functions are for internal use only
+	// meaning that anywhere else in the code it is not allowed to remove
+	// resource from the manager without handling the memory release properly
+
+	// Removes an object completely from the manager (does not free memory)
 	bool removeResource(fgResource* pResource);
+	// Removes an object completely from the manager (does not free memory)
 	bool removeResource(FG_RHANDLE rhUniqueID);
+
+	// Destroy functions will release all the memory for the resource, delete
+	// the object, remove the resource from the manager - resource handle will
+	// become invalid - the resource manager doesnt have it anymore in its map
 
 	// Destroys an object and deallocates it's memory
 	bool destroyResource(fgResource* pResource);
+	// Destroys an object and deallocates it's memory
 	bool destroyResource(FG_RHANDLE rhUniqueID);
 
 	// Using GetResource tells the manager that you are about to access the

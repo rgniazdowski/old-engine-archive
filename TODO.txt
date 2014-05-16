@@ -26,11 +26,11 @@
 
 [X] poprawne zamykanie aplikacji czyli zwalnianie wszystkich zasobow w poprawnej kolejnosci w tym wszystkich singletonow
 
-[ ] Stworzenie klasy Material w glownym podsystemie GFX (wazne - tablice wierzcholkow/kolorow/koordynatow tekstur sa grupowane wg uzytego materialu)
+[ ] P4 - Stworzenie klasy Material w glownym podsystemie GFX (wazne - tablice wierzcholkow/kolorow/koordynatow tekstur sa grupowane wg uzytego materialu)
 
 [ ] stworzenie podstawowego systemu rysowania 2D z buforowaniem i dzieleniem buforow pod wzgledem uzytej tekstury (materialu)
 
-[X] obsluga frustum i ortho view - podstawowa inicjalizacja + nakladki na OGL
+[0] - todo - przejscie na ogles2.x, teraz bedzie troche inaczej - obsluga frustum i ortho view - podstawowa inicjalizacja + nakladki na OGL
 
 [ ] podstawowa wersja klasy Camera
 
@@ -47,3 +47,6 @@
 [ ] 
 
 [ ] Loading Screen z paskiem postepu (wymagana podstawowa wersja GUI)
+
+	[ ] Potrzebne przy tym jest rowniez wpelni dzialajacy podsystem Zasobow,
+		poniewaz zasoby musza byc ladowane sekwencyjnie 

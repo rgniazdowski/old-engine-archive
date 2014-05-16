@@ -16,6 +16,8 @@ files
 	fgGameMain.h
 	fgResource.cpp
 	fgResource.h
+	fgResourceGroup.cpp
+	fgResourceGroup.h
 	fgResourceManager.cpp
 	fgResourceManager.h
 	fgSettings.cpp

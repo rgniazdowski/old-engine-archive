@@ -7,7 +7,4 @@
  * and/or distributed without the express or written permission from the author.
  *******************************************************/
 
-#ifndef _FG_GUI_CONTAINER_H
-#define _FG_GUI_CONTAINER_H
-
-#endif
+#include "fgGuiContainer.h"

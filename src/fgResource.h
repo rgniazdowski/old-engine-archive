@@ -15,6 +15,13 @@
 #define FG_RHANDLE unsigned int
 #endif
 
+#ifndef FG_INVALID_RHANDLE
+// All bits filled defines an invalid resource handle
+#define FG_INVALID_RHANDLE			0xFFFFFFFF
+#define FG_IS_INVALID_RHANDLE(_rh)	((_rh == FG_INVALID_RHANDLE) ? true : false)
+#define FG_IS_VALID_RHANDLE(_rh)	((_rh == FG_INVALID_RHANDLE) ? false : true)
+#endif
+
 #include "fgCommon.h"
 
 #include <ctime>
@@ -44,7 +51,7 @@ public:
 	// create() function should simply be overloaded to call any proper loading function,
 	// which will load/interpret data from file in ROM and place it in RAM memory.
 	virtual bool create()	{  return false;  }
-	virtual void destroy()	{ }
+	virtual void destroy()	{ dispose(); clear(); }
 
 	// Dispose and recreate must be able to discard and then completely recreate
 	// the data contained in the class with no additional parameters

@@ -17,7 +17,9 @@ bool fgSingleton<fgResourceManager>::instanceFlag = false;
 template <>
 fgResourceManager *fgSingleton<fgResourceManager>::instance = NULL;
 
-
+/*
+ *
+ */
 void fgResourceManager::clear()
 {
 	m_resourceMap.clear();
@@ -28,6 +30,9 @@ void fgResourceManager::clear()
 	m_currentResource = m_resourceMap.end();
 }
 
+/*
+ *
+ */
 bool fgResourceManager::create(unsigned int nMaxSize)
 {
 	clear();
@@ -35,6 +40,9 @@ bool fgResourceManager::create(unsigned int nMaxSize)
 	return true;
 }
 
+/*
+ *
+ */
 void fgResourceManager::destroy()
 {
 	for(fgResourceMapItor itor = m_resourceMap.begin(); itor != m_resourceMap.end(); ++itor)
@@ -48,12 +56,18 @@ void fgResourceManager::destroy()
 	clear();
 }
 
+/*
+ *
+ */
 bool fgResourceManager::setMaximumMemory(size_t nMem)
 {
 	m_nMaximumMemory = nMem;
 	return checkForOverallocation();
 }
 
+/*
+ *
+ */
 bool fgResourceManager::reserveMemory(size_t nMem)
 {
 	addMemory(nMem);
@@ -63,28 +77,19 @@ bool fgResourceManager::reserveMemory(size_t nMem)
 	return true;
 }
 
+/*
+ *
+ */
 bool fgResourceManager::insertResource(FG_RHANDLE* rhUniqueID, fgResource* pResource)
 {
-	// Get the next unique ID for this catalog
+	// Get the next unique resource ID for this catalog
 	*rhUniqueID = getNextResHandle();
-	// Insert the resource into the current catalog's map
-	m_resourceMap.insert(fgResourceMapPair(*rhUniqueID, pResource));
-	// Get the memory and add it to the catalog total.  Note that we only have
-	// to check for memory overallocation if we haven't preallocated memory
-	if(!m_bResourceReserved)
-	{
-		addMemory(pResource->getSize());
-		// check to see if any overallocation has taken place
-		if(!checkForOverallocation())
-			return false;
-	}
-	else
-		m_bResourceReserved = false;
-	// return success
-	return true;
+	return insertResource(*rhUniqueID, pResource);
 }
 
-// object access
+/*
+ *
+ */
 bool fgResourceManager::insertResource(FG_RHANDLE rhUniqueID, fgResource* pResource)
 {
 	fgResourceMapItor itor = m_resourceMap.find(rhUniqueID);
@@ -109,6 +114,9 @@ bool fgResourceManager::insertResource(FG_RHANDLE rhUniqueID, fgResource* pResou
 	return true;
 }
 
+/*
+ * Removes an object completely from the manager. 
+ */
 bool fgResourceManager::removeResource(FG_RHANDLE rhUniqueID)
 {
 	// try to find the resource with the specified id
@@ -122,12 +130,15 @@ bool fgResourceManager::removeResource(FG_RHANDLE rhUniqueID)
 		return false;
 	// Get the memory and subtract it from the manager total
 	removeMemory(((*itor).second)->getSize());
-	// remove the requested resource
+	// remove the requested resource (erase removes the pointers from the container, but does not call delete)
 	m_resourceMap.erase(itor);
 
 	return true;
 }
 
+/*
+ * Removes an object completely from the manager. 
+ */
 bool fgResourceManager::removeResource(fgResource* pResource)
 {
 	// try to find the resource with the specified resource
@@ -152,7 +163,9 @@ bool fgResourceManager::removeResource(fgResource* pResource)
 	return true;
 }
 
-// Destroys an object
+/*
+ * Destroys an object and deallocates it's memory
+ */
 bool fgResourceManager::destroyResource(fgResource* pResource)
 {
 	if(!removeResource(pResource))
@@ -161,6 +174,12 @@ bool fgResourceManager::destroyResource(fgResource* pResource)
 	return true;
 }
 
+/*
+ * Destroys an object and deallocates it's memory. First resource is removed
+ * from the resource managers map, existing rhandles will become invalid
+ * regardless of the usage in the program - however if the reference count is
+ * not zero the resource wont be removed and destroyed
+ */
 bool fgResourceManager::destroyResource(FG_RHANDLE rhUniqueID)
 {
 	fgResource* pResource = getResource(rhUniqueID);
@@ -170,6 +189,9 @@ bool fgResourceManager::destroyResource(FG_RHANDLE rhUniqueID)
 	return true;
 }
 
+/*
+ * Get the resource pointer (object) via rhandle ID
+ */
 fgResource* fgResourceManager::getResource(FG_RHANDLE rhUniqueID)
 {
 	fgResourceMapItor itor = m_resourceMap.find(rhUniqueID);
@@ -200,8 +222,13 @@ fgResource* fgResourceManager::getResource(FG_RHANDLE rhUniqueID)
 	return itor->second;
 }
 
+/*
+ *
+ */
 fgResource* fgResourceManager::lockResource(FG_RHANDLE rhUniqueID)
 {
+	if(FG_IS_INVALID_RHANDLE(rhUniqueID))
+		return NULL;
 	fgResourceMapItor itor = m_resourceMap.find(rhUniqueID);
 	if(itor == m_resourceMap.end())
 		return NULL;
@@ -222,8 +249,13 @@ fgResource* fgResourceManager::lockResource(FG_RHANDLE rhUniqueID)
 	return itor->second;
 }
 
+/*
+ *
+ */
 int fgResourceManager::unlockResource(FG_RHANDLE rhUniqueID)
 {
+	if(FG_IS_INVALID_RHANDLE(rhUniqueID))
+		return -1;
 	fgResourceMapItor itor = m_resourceMap.find(rhUniqueID);
 	if(itor == m_resourceMap.end())
 		return -1;
@@ -235,6 +267,9 @@ int fgResourceManager::unlockResource(FG_RHANDLE rhUniqueID)
 	return itor->second->getReferenceCount();
 }
 
+/*
+ *
+ */
 int fgResourceManager::unlockResource(fgResource* pResource)
 {
 	FG_RHANDLE rhResource = findResourceHandle(pResource);
@@ -243,6 +278,9 @@ int fgResourceManager::unlockResource(fgResource* pResource)
 	return unlockResource(rhResource);
 }
 
+/*
+ *
+ */
 FG_RHANDLE fgResourceManager::findResourceHandle(fgResource* pResource)
 {
 	// try to find the resource with the specified resource
@@ -257,6 +295,9 @@ FG_RHANDLE fgResourceManager::findResourceHandle(fgResource* pResource)
 	return itor->first;
 }
 
+/*
+ *
+ */
 bool fgResourceManager::checkForOverallocation()
 {
 	if(m_nCurrentUsedMemory > m_nMaximumMemory)
@@ -278,6 +319,7 @@ bool fgResourceManager::checkForOverallocation()
 		while((!PriQueue.empty()) && (m_nCurrentUsedMemory > m_nMaximumMemory))
 		{
 			unsigned int nDisposalSize = PriQueue.top()->getSize();
+			// Dispose of the all loaded data, free all memory, but don't destroy the object
 			PriQueue.top()->dispose();
 			if(PriQueue.top()->isDisposed())
 				removeMemory(nDisposalSize);

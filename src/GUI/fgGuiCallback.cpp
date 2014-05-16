@@ -6,3 +6,5 @@
  * #FLEXIGAME_PROJECT source code and any related files can not be copied, modified 
  * and/or distributed without the express or written permission from the author.
  *******************************************************/
+
+#include "fgGuiCallback.h"
