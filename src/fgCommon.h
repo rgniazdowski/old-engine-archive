@@ -16,6 +16,7 @@
 #include <cstdlib>
 
 #define FG_PATH_MAX 256
+#define FG_INVALID	-1
 
 #ifndef max
 #define max(a,b) (((a) > (b)) ? (a) : (b))
@@ -112,9 +113,10 @@ struct Area
 
 //FIXME
 void FG_InfoLog(const char *fmt, ...);
-void FG_ErrorLog (const char *fmt, ...);
-void FG_WriteLog (const char *fmt, ...);
+void FG_ErrorLog(const char *fmt, ...);
+void FG_WriteLog(const char *fmt, ...);
 
+// Platform independent function for getting time in miliseconds
 unsigned long int FG_GetTicks(void);
 
 /**
@@ -124,4 +126,4 @@ inline int simpleRand(int a, int b) {
 	return a +(int)(((float)(b-a+1))*rand()/(float(RAND_MAX)+1.0f));
 }
 
-#endif /* _COMMON_H */
+#endif /* _FG_COMMON_H_ */

@@ -1,0 +1,28 @@
+<!-- vim: ft=xml 
+-->
+<ResourceGroup name="mainTextures" priority="1">
+	<Texture path="textures/BackgroundCrate_1024x512.jpg" name="MainBackgroundTexture" quality="-1" />
+	<Texture path="textures/shockwave1.tga" name="PulseTexture" quality="-1" />
+	<Texture path="textures/debris0_sheet.tga" name="DebrisSheetTexture" quality="-1" />
+	<Texture path="textures/flame0_sheet.tga" name="FlameSheetTexture" quality="-1" />
+	<Texture path="textures/flash0_sheet.tga" name="FlashSheetTexture" quality="-1" />
+	<Texture path="textures/smoketrail0.tga" name="SmokeTrailTexture" quality="-1" />
+	<Texture path="textures/roundspark0.tga" name="RoundSparkTexture" quality="-1" />
+	<Texture path="textures/shockwave0.tga" name="ShockWaveTexture" quality="-1" />
+	<Texture path="textures/spark0.tga" name="SparkTexture" quality="-1" />
+	<Texture path="textures/explosion1_1024.tga" name="ExplosionSequenceTexture" quality="-1" />
+	<Texture path="textures/fire1_512.tga" name="FireSequenceTexture" quality="-1" />
+	<Texture path="textures/plasma_galaxy_1024.jpg" name="SkyBoxTexture" quality="-1" />
+
+	<!-- quality below zero tells the system that that texture must be used in
+		 every quality setup (which has not texture with the same name) -->
+	<Texture path="textures/hud_bottom_1024.tga" name="HudBottomTexture" quality="-1" />
+	<Texture path="textures/hud_center_512.tga" name="HudCenterTexture" quality="-1" />
+	<Texture path="textures/hud_lines_1024.tga" name="HudLinesTexture" quality="-1" />
+	<Texture path="textures/hud_top_1024.tga" name="HudTopTexture" quality="-1" />
+
+	<Texture path="textures/hud_bottom_2048.tga" name="HudBottomTexture" quality="2" />
+	<Texture path="textures/hud_center_1024.tga" name="HudCenterTexture" quality="2" />
+	<Texture path="textures/hud_lines_2048.tga" name="HudLinesTexture" quality="2" />
+	<Texture path="textures/hud_top_2048.tga" name="HudTopTexture" quality="2" />
+</ResourceGroup>

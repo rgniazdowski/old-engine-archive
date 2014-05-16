@@ -29,25 +29,6 @@
 #define FG_IS_VALID_RHANDLE(_rh)	((_rh == FG_INVALID_RHANDLE) ? false : true)
 #endif
 
-enum fgResourceType {
-	FG_RESOURCE_INVALID,
-	FG_RESOURCE_SOUND,
-	FG_RESOURCE_MUSIC,
-	FG_RESOURCE_3D_MODEL,
-	FG_RESOURCE_TEXTURE,
-	FG_RESOURCE_SAVE_FILE,
-	FG_RESOURCE_GUI_STRUCTURE_SHEET,
-	FG_RESOURCE_GUI_STYLE_SHEET,
-	FG_RESOURCE_SHADER,
-	FG_RESOURCE_SCENE,
-	FG_RESOURCE_SCRIPT,
-
-	FG_RESOURCE_VARIA,
-	FG_RESOURCE_BINARY,
-
-	FG_NUM_RESOURCE_TYPES
-};
-
 // This class allows an STL object to compare the objects instead of
 // comparing the value of the objects' pointers.
 template <class T>
@@ -83,16 +64,16 @@ public:
 	fgResourceManager()				{  clear();  }
 	virtual ~fgResourceManager()	{  destroy();  }
 
-	void clear();
+	void clear(void);
 	
 	bool create(unsigned int nMaxSize);
-	void destroy();
+	void destroy(void);
 
 	// --------------------------------------------------------------------------
 	// Memory management routines
 
 	bool setMaximumMemory(size_t nMem);
-	size_t getMaximumMemory()		{  return m_nMaximumMemory;  }
+	size_t getMaximumMemory(void) const		{  return m_nMaximumMemory;  }
 	
 	// --------------------------------------------------------------------------
 	// Resource map iteration
@@ -100,13 +81,13 @@ public:
 	// Access functions for cycling through each item.  Giving direct
 	// access to the map or iterator causes a stack pointer fault if you access
 	// the map across a dll boundary, but it's safe through the wrappers.  
-	inline void goToBegin()
+	inline void goToBegin(void)
 	{  m_currentResource = m_resourceMap.begin(); }
 	
-	inline fgResource* getCurrentResource()
+	inline fgResource* getCurrentResource(void) const
 	{  return (*m_currentResource).second;  }
 	
-	inline bool isValid()
+	inline bool isValid(void) const
 	{  return (m_currentResource != m_resourceMap.end()) ? true : false;  }
 
 	inline bool goToNext()
@@ -172,14 +153,14 @@ public:
 	// limit has been reached, and it will discard them from lowest to highest
 	// priority, determined by the resource class's < operator.  Function will
 	// fail if requested memory cannot be freed.
-	bool checkForOverallocation();
+	bool checkForOverallocation(void);
 
 protected:
 
 	// Internal functions
 	inline void addMemory(size_t nMem)		{  m_nCurrentUsedMemory += nMem;  }
 	inline void removeMemory(size_t nMem)	{  m_nCurrentUsedMemory -= nMem;  }
-	FG_RHANDLE getNextResHandle()			{  return --m_rhNextResHandle;  }
+	FG_RHANDLE getNextResHandle(void)			{  return --m_rhNextResHandle;  }
 
 protected:
 	FG_RHANDLE				m_rhNextResHandle;

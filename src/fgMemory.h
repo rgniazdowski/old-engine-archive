@@ -24,7 +24,12 @@
 
 #else
 
-#endif
+#include <malloc.h>
 
+#define fgMalloc	malloc
+#define fgFree		free
+#define fgRealloc	realloc
+
+#endif
 
 #endif

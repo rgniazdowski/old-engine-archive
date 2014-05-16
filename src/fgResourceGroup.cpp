@@ -12,10 +12,11 @@
 /*
  *
  */
-void fgResourceGroup::clear()
+void fgResourceGroup::clear(void)
 {
 	fgResource::clear();
-	m_rHandles.clear();
+	m_rHandles.clear_optimised();
+	m_resourceFiles.clear_optimised();
 }
 
 /*
@@ -53,15 +54,7 @@ void fgResourceGroup::dispose()
 /*
  *
  */
-size_t fgResourceGroup::getSize() 
-{
-	return 0;
-}
-
-/*
- *
- */
-bool fgResourceGroup::isDisposed()
+bool fgResourceGroup::isDisposed(void) const
 {
 	return false;
 }

@@ -1,0 +1,4 @@
+<!-- vim: ft=xml 
+-->
+<ResourceGroup name="mainAudio" priority="0">
+</ResourceGroup>

@@ -20,7 +20,7 @@ fgResourceManager *fgSingleton<fgResourceManager>::instance = NULL;
 /*
  *
  */
-void fgResourceManager::clear()
+void fgResourceManager::clear(void)
 {
 	m_resourceMap.clear();
 	m_rhNextResHandle = FG_INVALID_RHANDLE;
@@ -43,7 +43,7 @@ bool fgResourceManager::create(unsigned int nMaxSize)
 /*
  *
  */
-void fgResourceManager::destroy()
+void fgResourceManager::destroy(void)
 {
 	for(fgResourceMapItor itor = m_resourceMap.begin(); itor != m_resourceMap.end(); ++itor)
 	{
@@ -298,7 +298,7 @@ FG_RHANDLE fgResourceManager::findResourceHandle(fgResource* pResource)
 /*
  *
  */
-bool fgResourceManager::checkForOverallocation()
+bool fgResourceManager::checkForOverallocation(void)
 {
 	if(m_nCurrentUsedMemory > m_nMaximumMemory)
 	{

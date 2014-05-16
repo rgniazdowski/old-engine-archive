@@ -29,6 +29,31 @@
 
 #define FG_RESOURCE_PATH_MAX	FG_PATH_MAX
 
+enum fgResourceType {
+	FG_RESOURCE_INVALID,
+	FG_RESOURCE_SOUND,
+	FG_RESOURCE_MUSIC,
+	FG_RESOURCE_3D_MODEL,
+	FG_RESOURCE_TEXTURE,
+	FG_RESOURCE_SAVE_FILE,
+	FG_RESOURCE_GUI_STRUCTURE_SHEET,
+	FG_RESOURCE_GUI_STYLE_SHEET,
+	FG_RESOURCE_SHADER,
+	FG_RESOURCE_SCENE,
+	FG_RESOURCE_SCRIPT,
+	FG_RESOURCE_GROUP,
+
+	FG_RESOURCE_VARIA,
+	FG_RESOURCE_BINARY,
+
+	FG_RESOURCE_ZIP_PACK,
+
+	FG_NUM_RESOURCE_TYPES
+};
+
+/*
+ * Base class for resource
+ */
 class fgResource 
 {
 public:
@@ -43,27 +68,27 @@ public:
 	virtual ~fgResource()	{  destroy();  }
 
 	// Clears the class data, this actually does not free allocated memory, just resets base class attributes
-	virtual void clear();
+	virtual void clear(void);
 
 	// Create and destroy functions.  Note that the create() function of the
 	// derived class does not have to exactly match the base class.  No assumptions
 	// are made regarding parameters.
 	// create() function should simply be overloaded to call any proper loading function,
 	// which will load/interpret data from file in ROM and place it in RAM memory.
-	virtual bool create()	{  return false;  }
-	virtual void destroy()	{ dispose(); clear(); }
+	virtual bool create(void)	{  return false;  }
+	virtual void destroy(void)	{ dispose(); clear(); }
 
 	// Dispose and recreate must be able to discard and then completely recreate
 	// the data contained in the class with no additional parameters
 	// This functions should NOT be overloaded to have different number of parameters.
-	virtual bool recreate() = 0;
+	virtual bool recreate(void) = 0;
 	// Dispose completely of the all loaded data, free all memory
-	virtual void dispose() = 0;
+	virtual void dispose(void) = 0;
 
-	// Rturn the size of the data actually loaded inside the class
-	virtual size_t getSize() = 0;
+	// Return the size of the data actually loaded inside the class
+	virtual size_t getSize(void) const { return m_size; }
 	// Return true if the data exists (it's loaded and ready)
-	virtual bool isDisposed() = 0;
+	virtual bool isDisposed(void) const = 0;
 
 	// These functions set the parameters by which the sorting operator determines
 	// in what order resources are discarded
@@ -71,14 +96,17 @@ public:
 	// Set the resource priority
 	inline void setPriority(fgResPriorityType priority)		{  m_priority = priority;  }
 	// Get the resource priority
-	inline fgResPriorityType getPriority()					{  return m_priority;  }
+	inline fgResPriorityType getPriority() const			{  return m_priority;  }
+
+	// Get the resource type id
+	inline fgResourceType gerResourceType() const			{  return m_resType;  }
 
 	inline void setReferenceCount(unsigned int nCount)	{  m_nRefCount = nCount;  }
-	inline unsigned int getReferenceCount()				{  return m_nRefCount;  }
-	inline bool isLocked()								{  return (m_nRefCount > 0) ? true : false;  }
+	inline unsigned int getReferenceCount(void) const	{  return m_nRefCount;  }
+	inline bool isLocked(void) const					{  return (m_nRefCount > 0) ? true : false;  }
 
 	inline void setLastAccess(time_t lastAccess)		{  m_lastAccess = lastAccess;  }
-	inline time_t getLastAccess()						{  return m_lastAccess;  }
+	inline time_t getLastAccess(void) const				{  return m_lastAccess;  }
 
 	// Set file path to this resource
 	inline void setFilePath(char *path) {
@@ -99,6 +127,8 @@ protected:
 	FG_RHANDLE			m_handle;
 	// Priority of this resource
 	fgResPriorityType	m_priority;
+	// Resource type
+	fgResourceType		m_resType;
 	// Number of references to this resource
 	unsigned int		m_nRefCount;
 	// Time of last access, may become handy
@@ -107,6 +137,8 @@ protected:
 	char				m_filePath[FG_RESOURCE_PATH_MAX];
 	// Is the resource loaded and ready to be used in program?
 	bool				m_isReady;
+	// Size in bytes of the loaded data
+	size_t				m_size;
 
 };
 

@@ -10,6 +10,8 @@
 #ifndef _FG_RESOURCE_GROUP_H_
 #define _FG_RESOURCE_GROUP_H_
 
+//#include <utility>
+
 #include "fgCommon.h"
 #include "fgResource.h"
 #include "fgXMLParser.h"
@@ -31,20 +33,77 @@ class fgResourceGroup : public fgResource {
 public:
 	fgResourceGroup();
 	~fgResourceGroup();
-	
-	virtual void clear();
 
-	virtual bool create();
-	virtual void destroy();
-	virtual bool recreate();
-	virtual void dispose();
-	virtual size_t getSize();
-	virtual bool isDisposed();
+	virtual void clear(void);
+
+	virtual bool create(void);
+	virtual void destroy(void);
+	virtual bool recreate(void);
+	virtual void dispose(void);
+	virtual bool isDisposed(void) const;
+
+	// Simple wrapper for managing the resource bundle
+	struct fgResGroupItem {
+		FG_RHANDLE rhandle;
+		std::string resourceName;
+		fgResource *resource;
+
+		fgResGroupItem() {
+			rhandle = FG_INVALID_RHANDLE;
+			resourceName.clear();
+			resource = NULL;
+		}
+
+		bool create(void) {
+			if(resource)
+				return resource->create();
+			else
+				return false;
+		}
+
+		void destroy(void) {
+			if(resource)
+				resource->destroy();
+			resource = NULL;
+			rhandle = FG_INVALID_RHANDLE;
+		}
+
+		bool recreate(void) {
+			if(resource)
+				return resource->recreate();
+			else
+				return false;
+		}
+
+		void dispose(void) {
+			if(resource)
+				resource->dispose();
+		}
+
+		size_t getSize(void) const {
+			if(resource)
+				return resource->getSize();
+			else
+				return 0;
+		}
+
+		bool isDisposed(void) const {
+			if(resource)
+				return resource->isDisposed();
+			else
+				return false;
+		}
+	};
+
+	// parse and load the 
 
 protected:
 	fgArrayVector<FG_RHANDLE> m_rHandles;
-	fgArrayVector<std::string> resourceFiles;
+	// list of all resource files 
+	fgArrayVector<fgResGroupItem> m_resourceFiles;
 
+	// Parser for xml config files (here: resource group xml files)
+	fgXMLParser *m_xmlParser;
 };
 
 #endif

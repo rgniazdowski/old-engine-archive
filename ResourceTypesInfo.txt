@@ -1,0 +1,18 @@
+In xml tags for resource types are:
+
+ResourceGroup
+
+Sound
+Music
+3DModel
+Texture
+SaveFile
+GuiStructureSheet
+GuiStyleSheet
+Shader
+Scene
+Script
+
+Varia
+
+ZipPack

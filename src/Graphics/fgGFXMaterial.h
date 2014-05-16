@@ -20,7 +20,7 @@
 
 namespace FG_GFX 
 {
-
+	// Base structure describing material in graphics rendering
 	struct fgGfxMaterial
 	{
 	public:

@@ -7,8 +7,8 @@
  * and/or distributed without the express or written permission from the author.
  *******************************************************/
 
-#ifndef _FG_FILE_STREAM_H
-#define _FG_FILE_STREAM_H
+#ifndef _FG_FILE_STREAM_H_
+#define _FG_FILE_STREAM_H_
 
 #include "fgCommon.h"
 
@@ -22,6 +22,9 @@
 
 #define FG_FILE_PATH_MAX	FG_PATH_MAX
 
+/*
+ * Platform independent wrapper for basic file operations
+ */
 class fgFileStream
 {
 protected:
@@ -67,7 +70,7 @@ public:
 #ifdef FG_USING_MARMALADE
 		if(S3E_FALSE == s3eFileCheckExists(filePath))
 #else
-		if(0)		// FIXME
+		if(0)		// #FIXME
 #endif
 			return false;
 		else 
@@ -76,7 +79,7 @@ public:
 
 	inline bool fileExists(void)
 	{
-		// FIXME
+		// #FIXME
 		return fgFileStream::fileExists(m_filePath);
 	}
 
@@ -129,7 +132,7 @@ public:
 		if(charRead == S3E_FILE_EOF)
 		{
 			s3eFileError fileError = s3eFileGetError();
-			// FIXME
+			// #FIXME
 		}
 #else
 		int charRead = fgetc(m_file);
