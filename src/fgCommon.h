@@ -14,7 +14,9 @@
 #include "fgBuildConfig.h"
 
 #include <cstdlib>
+#include <cstring>
 
+#define FG_FILE_NAME_MAX 256
 #define FG_PATH_MAX 256
 #define FG_INVALID	-1
 
@@ -122,8 +124,14 @@ unsigned long int FG_GetTicks(void);
 /**
  * Random int from [a,b]
  */
-inline int simpleRand(int a, int b) {
+inline int FG_Rand(int a, int b) {
 	return a +(int)(((float)(b-a+1))*rand()/(float(RAND_MAX)+1.0f));
+}
+
+inline const char *FG_FileExt(const char *filename) {
+    const char *dot = strrchr(filename, '.');
+    if(!dot || dot == filename) return NULL;
+    return dot + 1;
 }
 
 #endif /* _FG_COMMON_H_ */

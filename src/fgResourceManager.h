@@ -16,6 +16,7 @@
 
 #include <iostream>
 #include <hash_map>
+//#include <limits>
 
 // A resource handle is define as an unsigned integer
 #ifndef FG_RHANDLE
@@ -24,7 +25,7 @@
 
 #ifndef FG_INVALID_RHANDLE
 // All bits filled defines an invalid resource handle
-#define FG_INVALID_RHANDLE			0xFFFFFFFF
+#define FG_INVALID_RHANDLE			0xFFFFFFFFUL
 #define FG_IS_INVALID_RHANDLE(_rh)	((_rh == FG_INVALID_RHANDLE) ? true : false)
 #define FG_IS_VALID_RHANDLE(_rh)	((_rh == FG_INVALID_RHANDLE) ? false : true)
 #endif
@@ -59,13 +60,14 @@ typedef fgResourceMap::value_type			fgResourceMapPair;
 class fgResourceManager : public fgSingleton<fgResourceManager>
 {
 	friend class fgSingleton<fgResourceManager>;
-public:
-	
+private:	
 	fgResourceManager()				{  clear();  }
 	virtual ~fgResourceManager()	{  destroy();  }
-
+public:
+	// This will pre-load any required data
+	bool initialize(void);
 	void clear(void);
-	
+
 	bool create(unsigned int nMaxSize);
 	void destroy(void);
 

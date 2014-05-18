@@ -8,6 +8,7 @@
  *******************************************************/
 
 #include "fgResourceManager.h"
+#include "fgDirent.h"
 
 #include <queue>
 
@@ -45,15 +46,57 @@ bool fgResourceManager::create(unsigned int nMaxSize)
  */
 void fgResourceManager::destroy(void)
 {
+	//FG_WriteLog(">>>>> fgResourceManager::destroy(void);");
 	for(fgResourceMapItor itor = m_resourceMap.begin(); itor != m_resourceMap.end(); ++itor)
 	{
 		if(!((*itor).second)->isLocked())
 		{
+			//FG_WriteLog(">>>>> fgResourceManager: deleting from resource map value: id=%ud; name='%s';", (*itor).first, typeid((*itor).second).name());
 			delete ((*itor).second);
 		}
 	}
 	m_resourceMap.clear();
 	clear();
+}
+
+/*
+ * Function pre loads any required data (configs, metadata, etc)
+ */
+bool fgResourceManager::initialize(void)
+{
+	// First of all load any resource group configs,
+	// file extension is *.rgrp and it's a xml file.
+	fgDirent *datadir = new fgDirent();
+	datadir->readDirectory(".\\");
+	const char *filename = NULL;
+	fgArrayVector<std::string> resGroupFiles;
+	while((filename = datadir->getNextFile()) != NULL)
+	{
+		// #FIXME - this should check for string length errors (?)
+		const char *ext = FG_FileExt(filename);
+		if(!ext)
+			continue;
+		if(strlen(ext) == 4)
+			if(strcmp(ext, "rgrp") == 0)
+				resGroupFiles.push_back(std::string(filename));
+	}
+	delete datadir;
+	filename = NULL;
+
+	if(resGroupFiles.size() == 0)
+		return false; // #TODO proper error handling
+
+	for(unsigned int i=0;i<resGroupFiles.size();i++)
+	{
+		FG_RHANDLE uniqueID; // #FIXME - should resource manager hold separate array for res groups IDS ? oh my ...
+		filename = resGroupFiles[i].c_str();
+		fgResourceGroup *resGroup = new fgResourceGroup();
+		resGroup->setFilePath(filename); // #TODO this will not always look like this - requires full path
+		resGroup->preLoadConfig();
+		insertResource(&uniqueID, resGroup);
+		FG_WriteLog("LOG INSERTED RESOURCE GROUP"); // #FIXME
+	}
+	return true;
 }
 
 /*

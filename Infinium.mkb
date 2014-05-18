@@ -10,6 +10,8 @@ files
 	fgMemory.h
 	fgCommon.cpp
 	fgCommon.h
+	fgDirent.cpp
+	fgDirent.h
 	fgFileStream.cpp
 	fgFileStream.h
 	fgGameMain.cpp

@@ -17,7 +17,7 @@
 
 #ifndef FG_INVALID_RHANDLE
 // All bits filled defines an invalid resource handle
-#define FG_INVALID_RHANDLE			0xFFFFFFFF
+#define FG_INVALID_RHANDLE			0xFFFFFFFFUL
 #define FG_IS_INVALID_RHANDLE(_rh)	((_rh == FG_INVALID_RHANDLE) ? true : false)
 #define FG_IS_VALID_RHANDLE(_rh)	((_rh == FG_INVALID_RHANDLE) ? false : true)
 #endif
@@ -64,8 +64,8 @@ public:
 		FG_RES_HIGH_PRIORITY
 	};
 
-	fgResource()			{  clear();  }
-	virtual ~fgResource()	{  destroy();  }
+	fgResource()	{  clear();  }
+	~fgResource()	{ destroy(); }
 
 	// Clears the class data, this actually does not free allocated memory, just resets base class attributes
 	virtual void clear(void);
@@ -75,8 +75,8 @@ public:
 	// are made regarding parameters.
 	// create() function should simply be overloaded to call any proper loading function,
 	// which will load/interpret data from file in ROM and place it in RAM memory.
-	virtual bool create(void)	{  return false;  }
-	virtual void destroy(void)	{ dispose(); clear(); }
+	virtual bool create(void) = 0;
+	virtual void destroy(void) { };
 
 	// Dispose and recreate must be able to discard and then completely recreate
 	// the data contained in the class with no additional parameters
@@ -109,7 +109,7 @@ public:
 	inline time_t getLastAccess(void) const				{  return m_lastAccess;  }
 
 	// Set file path to this resource
-	inline void setFilePath(char *path) {
+	inline void setFilePath(const char *path) {
 		strncpy(m_filePath, path, FG_RESOURCE_PATH_MAX-1);
 	}
 

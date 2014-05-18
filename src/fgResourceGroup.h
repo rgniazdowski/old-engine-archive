@@ -42,6 +42,11 @@ public:
 	virtual void dispose(void);
 	virtual bool isDisposed(void) const;
 
+	// This will parse/load xml group config file. It wont
+	// load or allocate any data - this is for 'create' to do.
+	// This function will return false if file path is not set.
+	virtual bool preLoadConfig(void);
+
 	// Simple wrapper for managing the resource bundle
 	struct fgResGroupItem {
 		FG_RHANDLE rhandle;

@@ -1,12 +1,14 @@
-<testrootnode>
-	<TestOne>
-		<DeeperOne1>
+<testrootnode rootnodeparam="123">
+	<TestOne testoneattr="testone">
+		<DeeperOne1 deepone1="deep1">
+			DLACZEGO?
 		</DeeperOne1>
 		asdasdasd
 	</TestOne>
-	<TestTwo>
-		<DeeperTwo1>
+	<TestTwo testtwoattribute="attr2">
+		<DeeperTwo1 deepertwo1="deeptwo1">
 		</DeeperTwo1>
+		DEEPER TWO 1
 		<DeeperTwo2>
 		</DeeperTwo2>
 		asdasd

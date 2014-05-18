@@ -168,7 +168,7 @@ bool ParticleEffect::addParameterized(float x, float y, float z, int count)
 		if(m_randomVelocity == false)
 		{
 			int idx = m_particles.size()-1;
-			int r = simpleRand(0,1);
+			int r = FG_Rand(0,1);
 			if(r == 1)
 			{
 				if(m_particles[idx].velocity.x < 0.0f)
@@ -480,42 +480,42 @@ void ParticleEffect::randomizeOnPair(Particle* from, Particle* to, Particle *res
 	// Position X
 	from_val = (int)(from->position.x*1000);
 	to_val = (int)(to->position.x*1000);
-	target->position.x = simpleRand(from_val, to_val)/1000.0f;
+	target->position.x = FG_Rand(from_val, to_val)/1000.0f;
 
 	// Position Y
 	from_val = (int)(from->position.y*1000);
 	to_val = (int)(to->position.y*1000);
-	target->position.y = simpleRand(from_val, to_val)/1000.0f;
+	target->position.y = FG_Rand(from_val, to_val)/1000.0f;
 
 	// Position Z
 	from_val = (int)(from->position.z*1000);
 	to_val = (int)(to->position.z*1000);
-	target->position.z = simpleRand(from_val, to_val)/1000.0f;
+	target->position.z = FG_Rand(from_val, to_val)/1000.0f;
 
 	// Velocity X
 	from_val = (int)(from->velocity.x*1000);
 	to_val = (int)(to->velocity.x*1000);
-	target->velocity.x = simpleRand(from_val, to_val)/1000.0f;
+	target->velocity.x = FG_Rand(from_val, to_val)/1000.0f;
 
 	// Velocity Y	
 	from_val = (int)(from->velocity.y*1000);
 	to_val = (int)(to->velocity.y*1000);
-	target->velocity.y = simpleRand(from_val, to_val)/1000.0f;
+	target->velocity.y = FG_Rand(from_val, to_val)/1000.0f;
 
 	// Velocity Z
 	from_val = (int)(from->velocity.z*1000);
 	to_val = (int)(to->velocity.z*1000);
-	target->velocity.z = simpleRand(from_val, to_val)/1000.0f;
+	target->velocity.z = FG_Rand(from_val, to_val)/1000.0f;
 
 	// Fade speed
 	from_val = (int)(from->fade_speed*1000);
 	to_val = (int)(to->fade_speed*1000);
-	target->fade_speed = simpleRand(from_val, to_val)/1000.0f;
+	target->fade_speed = FG_Rand(from_val, to_val)/1000.0f;
 
 	// Life
 	from_val = (int)(from->life*1000);
 	to_val = (int)(to->life*1000);
-	target->life = simpleRand(from_val, to_val)/1000.0f;
+	target->life = FG_Rand(from_val, to_val)/1000.0f;
 
 	if(from->ttl != 0 || to->ttl != 0)
 	{
@@ -529,49 +529,49 @@ void ParticleEffect::randomizeOnPair(Particle* from, Particle* to, Particle *res
 			from_val = to->ttl;
 			to_val = from->ttl;
 		}
-		int ttl = simpleRand(from_val, to_val);
+		int ttl = FG_Rand(from_val, to_val);
 		target->setTTL(ttl);
 	}
 
 	// Size
 	from_val = (int)(from->size*1000);
 	to_val = (int)(to->size*1000);
-	target->size = simpleRand(from_val, to_val)/1000.0f;
+	target->size = FG_Rand(from_val, to_val)/1000.0f;
 
 	// Rotation X
 	from_val = (int)(from->rotation.x*1000);
 	to_val = (int)(to->rotation.x*1000);
-	target->rotation.x = simpleRand(from_val, to_val)/1000.0f;
+	target->rotation.x = FG_Rand(from_val, to_val)/1000.0f;
 
 	// Rotation Y
 	from_val = (int)(from->rotation.y*1000);
 	to_val = (int)(to->rotation.y*1000);
-	target->rotation.y = simpleRand(from_val, to_val)/1000.0f;
+	target->rotation.y = FG_Rand(from_val, to_val)/1000.0f;
 
 	// Rotation Z
 	from_val = (int)(from->rotation.z*1000);
 	to_val = (int)(to->rotation.z*1000);
-	target->rotation.z = simpleRand(from_val, to_val)/1000.0f;
+	target->rotation.z = FG_Rand(from_val, to_val)/1000.0f;
 
 	// Angular Velocity X
 	from_val = (int)(from->angularVelocity.x*1000);
 	to_val = (int)(to->angularVelocity.x*1000);
-	target->angularVelocity.x = simpleRand(from_val, to_val)/1000.0f;
+	target->angularVelocity.x = FG_Rand(from_val, to_val)/1000.0f;
 
 	// Angular Velocity Y
 	from_val = (int)(from->angularVelocity.y*1000);
 	to_val = (int)(to->angularVelocity.y*1000);
-	target->angularVelocity.y = simpleRand(from_val, to_val)/1000.0f;
+	target->angularVelocity.y = FG_Rand(from_val, to_val)/1000.0f;
 
 	// Angular Velocity Z
 	from_val = (int)(from->angularVelocity.z*1000);
 	to_val = (int)(to->angularVelocity.z*1000);
-	target->angularVelocity.z = simpleRand(from_val, to_val)/1000.0f;
+	target->angularVelocity.z = FG_Rand(from_val, to_val)/1000.0f;
 
 	// Texture id
 	from_val = (int)from->texture_id;
 	to_val = (int)to->texture_id;
-	target->texture_id = simpleRand(from_val, to_val);
+	target->texture_id = FG_Rand(from_val, to_val);
 	
 	// Data
 	target->data = NULL;
@@ -584,22 +584,22 @@ void ParticleEffect::randomizeOnPair(Particle* from, Particle* to, Particle *res
 	// Color R
 	from_val = (int)(from->color.r);
 	to_val = (int)(to->color.r);
-	color.r = (uint8)simpleRand(from_val, to_val);
+	color.r = (uint8)FG_Rand(from_val, to_val);
 	
 	// Color G
 	from_val = (int)(from->color.g);
 	to_val = (int)(to->color.g);
-	color.g = (uint8)simpleRand(from_val, to_val);
+	color.g = (uint8)FG_Rand(from_val, to_val);
 
 	// Color B
 	from_val = (int)(from->color.b);
 	to_val = (int)(to->color.b);
-	color.b = (uint8)simpleRand(from_val, to_val);
+	color.b = (uint8)FG_Rand(from_val, to_val);
 
 	// Color A
 	from_val = (int)(from->color.a);
 	to_val = (int)(to->color.a);
-	color.a = (uint8)simpleRand(from_val, to_val);
+	color.a = (uint8)FG_Rand(from_val, to_val);
 
 	target->setColor(color);
 }

@@ -76,7 +76,7 @@ bool fgGameMain::initSubsystems(void)
 	s3eMemoryGetInt(S3E_MEMORY_FREE);*/ 
 	// FIXME
 	FG_ResourceManager->setMaximumMemory(s3eMemoryGetInt(S3E_MEMORY_FREE)-1024*1024*3); // minus 3MB for the structures and other overheads
-
+	FG_ResourceManager->initialize();
 	/*fgXMLParser *parser = new fgXMLParser();
 
 	parser->loadXML("test2.xml");

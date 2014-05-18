@@ -1,0 +1,2 @@
+[ ] napisac szablonowy kod do odczytywanie xml'a w glab rekurencyjnie -
+    aktualnie kod z dwiema petlami wchodzi tylko na poziom nizej

@@ -12,6 +12,23 @@
 /*
  *
  */
+fgResourceGroup::fgResourceGroup()
+{
+	FG_WriteLog("fgResourceGroup::fgResourceGroup(); constructor");
+}
+
+/*
+ *
+ */
+fgResourceGroup::~fgResourceGroup()
+{
+	FG_WriteLog("fgResourceGroup::~fgResourceGroup(); deconstructor");
+	destroy();
+}
+
+/*
+ *
+ */
 void fgResourceGroup::clear(void)
 {
 	fgResource::clear();
@@ -22,7 +39,7 @@ void fgResourceGroup::clear(void)
 /*
  *
  */
-bool fgResourceGroup::create()
+bool fgResourceGroup::create(void)
 {
 	return true;
 }
@@ -30,15 +47,15 @@ bool fgResourceGroup::create()
 /*
  *
  */
-void fgResourceGroup::destroy()
+void fgResourceGroup::destroy(void)
 {
-	
+	FG_WriteLog("fgResourceGroup::destroy();");
 }
 
 /*
  *
  */
-bool fgResourceGroup::recreate()
+bool fgResourceGroup::recreate(void)
 {
 	return true;
 }
@@ -46,9 +63,9 @@ bool fgResourceGroup::recreate()
 /*
  *
  */
-void fgResourceGroup::dispose()
+void fgResourceGroup::dispose(void)
 {
-
+	FG_WriteLog("fgResourceGroup::~dispose();");
 }
 
 /*
@@ -57,4 +74,59 @@ void fgResourceGroup::dispose()
 bool fgResourceGroup::isDisposed(void) const
 {
 	return false;
+}
+
+/*
+ *
+ */
+bool fgResourceGroup::preLoadConfig(void)
+{
+	if(strnlen(m_filePath,sizeof(m_filePath)) == 0)
+		return false;
+	m_xmlParser = new fgXMLParser();
+	if(!m_xmlParser)
+	{
+		// #TODO P2 error messages 
+		return false;
+	}
+	m_xmlParser->loadXML(m_filePath);
+	const char *rootName = m_xmlParser->getRootElementValue();
+
+	printf("Root node name: '%s'\n", rootName);
+	// Parsing attributes
+	if(m_xmlParser->setFirstAttribute())
+	{
+		do {
+			printf(" %ss' attribute '%s' value: '%s\n", rootName, m_xmlParser->getCurrentAttributeName(), m_xmlParser->getCurrentAttributeValue());
+		} while(m_xmlParser->goToNextAttribute());
+	}
+	if(m_xmlParser->isXMLLoaded())
+	{
+		m_xmlParser->goDeeper();
+		do {
+			printf("Roots' child node name: '%s'\n", m_xmlParser->getCurrentNodeValue());
+			const char *childName = m_xmlParser->getCurrentNodeValue();
+
+			// Parsing attributes
+			if(m_xmlParser->setFirstAttribute())
+			{
+				do {
+					printf(" %ss' attribute '%s' value: '%s\n", childName, m_xmlParser->getCurrentAttributeName(), m_xmlParser->getCurrentAttributeValue());
+				} while(m_xmlParser->goToNextAttribute());
+			}
+
+			// Parsing children nodes
+			if(m_xmlParser->getCurrentNodeChildrenPresence())
+			{
+				m_xmlParser->goDeeper();
+				do {
+					printf("   %ss' child node (%s) name: '%s'\n", childName, (m_xmlParser->isCurrentElement() ? "ELEMENT" : "TEXT"), m_xmlParser->getCurrentNodeValue());
+				} while(m_xmlParser->goToNextNode());
+				m_xmlParser->goHigher();
+			}
+		} while(m_xmlParser->goToNextNode());
+	}
+	delete m_xmlParser;
+	m_xmlParser = NULL;
+	return true;
 }

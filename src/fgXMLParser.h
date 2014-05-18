@@ -255,7 +255,14 @@ public:
 	bool setFirstAttribute(void) 
 	{
 		if(!m_currentXMLNode)
-			return false;
+		{
+			if(!m_rootXMLElement)
+				return false;
+			m_currentXMLAttribute = m_rootXMLElement->FirstAttribute();
+			if(m_currentXMLAttribute == NULL)
+				return false;
+			return true;
+		}
 		if(!isCurrentElement())
 			return false;
 		fgXMLElement *xmlElement = m_currentXMLNode->ToElement();

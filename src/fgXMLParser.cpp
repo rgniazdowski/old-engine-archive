@@ -10,15 +10,18 @@
 #include "fgXMLParser.h"
 #include "fgMemory.h"
 
+/*
+ *
+ */
 bool fgXMLParser::loadXML(const char *filePath)
 {
 	if(filePath == NULL) {
-		// FIXME proper error message
+		// #FIXME proper error message
 		return false;
 	}
 
 	if(!fileExists(filePath)) {
-		// FIXME proper error message
+		// #FIXME proper error message
 		return false;
 	}
 	

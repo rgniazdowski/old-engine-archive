@@ -33,7 +33,7 @@ public:
 			if(!instance)
 				instance = new Class();
 			instanceFlag = true;
-			printf(">>>>>>>>>> Created instance of type: '%s'\n", typeid(instance).name());
+			FG_WriteLog(">>>>>>>>>> Created instance of type: '%s'\n", typeid(instance).name());
 			return instance;
 		} else {
 			return instance;
@@ -45,7 +45,7 @@ public:
 		if(instanceFlag || instance)
 		{
 			instanceFlag = false;
-			printf(">>>>>>>>>> Deleted instance of type: '%s'\n", typeid(instance).name());
+			FG_WriteLog(">>>>>>>>>> Deleted instance of type: '%s'\n", typeid(instance).name());
 			if(instance)
 				delete instance;
 			instance = NULL;

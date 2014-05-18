@@ -21,6 +21,7 @@ void fgResource::clear(void)
 	m_size = 0;
 	memset(m_filePath, 0, FG_RESOURCE_PATH_MAX);
 	m_resType = FG_RESOURCE_INVALID;
+	FG_WriteLog("fgResource::clear(void);");
 }
 
 /*
