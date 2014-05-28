@@ -1,5 +1,5 @@
 /*******************************************************
- * Copyright (C) 2014 Radoslaw Gniazdowski <r.gniazdowski@gmail.com>
+ * Copyright (C) 2014 Radoslaw Gniazdowski <r.gniazdowski@gmail.com>. All rights reserved.
  * 
  * This file is part of #FLEXIGAME_PROJECT
  * 
@@ -29,6 +29,9 @@
 // location. The config files will specify the type and  location
 // resources that will be part of this group/union. Additional 
 // parameters include things like priority, tags, etc.
+//
+// Hint: Use smart pointers in the future - from boost library or
+// own proper implementation
 class fgResourceGroup : public fgResource {
 public:
 	fgResourceGroup();
@@ -100,11 +103,9 @@ public:
 		}
 	};
 
-	// parse and load the 
-
 protected:
 	fgArrayVector<FG_RHANDLE> m_rHandles;
-	// list of all resource files 
+	// List of all resource files 
 	fgArrayVector<fgResGroupItem> m_resourceFiles;
 
 	// Parser for xml config files (here: resource group xml files)

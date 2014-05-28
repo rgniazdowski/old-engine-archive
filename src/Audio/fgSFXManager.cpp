@@ -1,5 +1,5 @@
 /*******************************************************
- * Copyright (C) 2014 Radoslaw Gniazdowski <r.gniazdowski@gmail.com>
+ * Copyright (C) 2014 Radoslaw Gniazdowski <r.gniazdowski@gmail.com>. All rights reserved.
  * 
  * This file is part of #FLEXIGAME_PROJECT
  * 
@@ -17,10 +17,11 @@
 #include "../fgCommon.h"
 #include "../Hardware/fgDeviceQuery.h"
 
-
 #define SNDDIR "sound/"
 
-const char* fgSFXManager::m_sfxResources[ fgSFXManager::SFX_COUNT ] =  { SNDDIR"c.raw", SNDDIR"s.raw", SNDDIR"tod.raw", SNDDIR"p.raw", SNDDIR"m.raw", SNDDIR"d.raw" };
+// #FIXME
+
+const char* fgSFXManager::m_sfxResources[ fgSFXManager::SFX_COUNT ] = { SNDDIR"c.raw", SNDDIR"s.raw", SNDDIR"tod.raw", SNDDIR"p.raw", SNDDIR"m.raw", SNDDIR"d.raw" };
 const char* fgSFXManager::m_musResources[ fgSFXManager::MUS_COUNT ] = { SNDDIR"m1.mp3" };
 
 template <>
@@ -28,11 +29,6 @@ bool fgSingleton<fgSFXManager>::instanceFlag = false;
 
 template <>
 fgSFXManager *fgSingleton<fgSFXManager>::instance = NULL;
-
-//
-// MARK: -
-// MARK: Initializers & destroyers
-//
 
 /**
  * Private destructor
@@ -106,11 +102,6 @@ bool fgSFXManager::loadAudioFile(const char* name, unsigned char* & out_buffer, 
 	return true;
 }
 
-//
-// MARK: -
-// MARK: SFX
-//
-
 bool fgSFXManager::loadSfxFiles()
 {
 	for(int i = 0; i < SFX_COUNT; i++) {
@@ -152,10 +143,6 @@ void fgSFXManager::play(int idx) {
 void fgSFXManager::stopAll() {
     s3eSoundStopAllChannels();
 }
-
-//
-// MARK: Music
-//
 
 bool fgSFXManager::loadMusFiles()
 {
@@ -216,10 +203,3 @@ void fgSFXManager::stopMus(int idx) {
 void fgSFXManager::rewindMus(int idx) {
     playMus(idx);
 }
-
-
-
-
-
-
-

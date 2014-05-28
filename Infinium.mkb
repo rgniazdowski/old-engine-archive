@@ -29,6 +29,10 @@ files
 	fgXMLParser.cpp
 	fgXMLParser.h
 
+	["Infinium/GameLogic"]
+	GameLogic/fgGameLogic.cpp
+	GameLogic/fgGameLogic.h
+
 	["Infinium/Audio"]
 	Audio/fgSFXAudioResource.cpp
 	Audio/fgSFXAudioResource.h
@@ -49,11 +53,6 @@ files
 	Event/fgEventManager.cpp
 	Event/fgEventManager.h
 
-	["Infinium/Math"]
-	Math/fgKalmanFilter.cpp
-	Math/fgKalmanFilter.h
-	Math/fgMathLib.h	
-
 	["Infinium/Scripting"]
 	Scripting/fgScriptManager.cpp
 	Scripting/fgScriptManager.h
@@ -64,7 +63,98 @@ files
 	Input/fgTouchRawData.h
 	Input/fgTouchReceiver.cpp
 	Input/fgTouchReceiver.h
+
+	["Infinium/Hardware"]
+	Hardware/fgDeviceQuery.cpp
+	Hardware/fgDeviceQuery.h
+	Hardware/fgHardwareState.cpp
+	Hardware/fgHardwareState.h
+	Hardware/fgQualityManager.cpp
+	Hardware/fgQualityManager.h
+	Hardware/fgSensors.cpp
+	Hardware/fgSensors.h
 	
+	["Infinium/Math"]
+	Math/fgKalmanFilter.cpp
+	Math/fgKalmanFilter.h
+	Math/fgMathLib.h	
+
+	["Infinium/Graphics"]
+	Graphics/fgGFXTypes.h
+	Graphics/fgGFX2DScene.cpp
+	Graphics/fgGFX2DScene.h
+	Graphics/fgGFX3DScene.cpp
+	Graphics/fgGFX3DScene.h
+	Graphics/fgGFXCamera.cpp
+	Graphics/fgGFXCamera.h
+	Graphics/fgGFXCameraAnimation.cpp
+	Graphics/fgGFXCameraAnimation.h
+	Graphics/fgGFXDrawingBatch.cpp
+	Graphics/fgGFXDrawingBatch.h
+	Graphics/fgGFXPerspectiveView.h
+	Graphics/fgGFXMain.cpp
+	Graphics/fgGFXMain.h
+	Graphics/fgGFXMaterial.cpp
+	Graphics/fgGFXMaterial.h
+	Graphics/fgGFXModelResource.cpp
+	Graphics/fgGFXModelResource.h
+	Graphics/fgGFXModelOBJResource.cpp
+	Graphics/fgGFXModelOBJResource.h
+	Graphics/fgGFXObject.cpp
+	Graphics/fgGFXObject.h
+	Graphics/fgGFXOctreeBase.cpp
+	Graphics/fgGFXOctreeBase.h
+	Graphics/fgGFXOrthoView.h
+	Graphics/fgGFXPrimitives.cpp
+	Graphics/fgGFXPrimitives.h
+	Graphics/fgGFXQuadtreeBase.cpp
+	Graphics/fgGFXQuadtreeBase.h
+	Graphics/fgGFXSceneManager.cpp
+	Graphics/fgGFXSceneManager.h	
+	Graphics/fgGFXShader.cpp
+	Graphics/fgGFXShader.h
+	Graphics/fgGFXShaderManager.cpp
+	Graphics/fgGFXShaderManager.h
+	Graphics/fgGFXShaderProgram.cpp
+	Graphics/fgGFXShaderProgram.h
+	Graphics/fgGFXSimpleDrawer.cpp
+	Graphics/fgGFXSimpleDrawer.h
+	Graphics/fgGFXTexturing.cpp
+	Graphics/fgGFXTexturing.h
+
+	["Infinium/Graphics/Textures"]
+	Graphics/Textures/fgTextureCommon.h
+	Graphics/Textures/fgTextureLoader.cpp
+	Graphics/Textures/fgTextureLoader.h
+	Graphics/Textures/fgTextureManager.cpp
+	Graphics/Textures/fgTextureManager.h
+	Graphics/Textures/fgTextureResource.cpp
+	Graphics/Textures/fgTextureResource.h	
+
+	["Infinium/Graphics/Particles"]
+	Graphics/Particles/fgParticle.h
+	Graphics/Particles/fgParticleSystem.cpp
+	Graphics/Particles/fgParticleSystem.h
+	Graphics/Particles/fgPsExplosionEffect.cpp
+	Graphics/Particles/fgPsExplosionEffect.h
+	Graphics/Particles/fgPsFlashEffect.cpp
+	Graphics/Particles/fgPsFlashEffect.h
+	Graphics/Particles/fgPsFlyingDebrisEffect.cpp
+	Graphics/Particles/fgPsFlyingDebrisEffect.h
+	Graphics/Particles/fgPsObjectPulseEffect.cpp
+	Graphics/Particles/fgPsObjectPulseEffect.h
+	Graphics/Particles/fgPsParticleDrawer.cpp
+	Graphics/Particles/fgPsParticleDrawer.h
+	Graphics/Particles/fgPsParticleEffect.cpp
+	Graphics/Particles/fgPsParticleEffect.h
+	Graphics/Particles/fgPsParticleEffectCircular.cpp
+	Graphics/Particles/fgPsParticleEffectCircular.h
+	Graphics/Particles/fgPsParticleEffectLimited.cpp
+	Graphics/Particles/fgPsParticleEffectLimited.h
+	Graphics/Particles/fgPsSequentialEffect.cpp
+	Graphics/Particles/fgPsSequentialEffect.h
+	Graphics/Particles/fgPsSpecialEffect.h
+
 	["Infinium/GUI"]
 	GUI/fgFontDrawer.cpp
 	GUI/fgFontDrawer.h
@@ -108,114 +198,6 @@ files
 	GUI/fgGuiStyleSheetInterpreter.h
 	GUI/fgGuiWidget.cpp
 	GUI/fgGuiWidget.h
-	
-	["Infinium/Graphics"]
-	Graphics/fgGFXTypes.h
-	Graphics/fgGFX2DScene.cpp
-	Graphics/fgGFX2DScene.h
-	Graphics/fgGFX3DScene.cpp
-	Graphics/fgGFX3DScene.h
-	Graphics/fgGFXCamera.cpp
-	Graphics/fgGFXCamera.h
-	Graphics/fgGFXCameraAnimation.cpp
-	Graphics/fgGFXCameraAnimation.h
-	Graphics/fgGFXDrawingBatch.cpp
-	Graphics/fgGFXDrawingBatch.h
-	Graphics/fgGFXPerspectiveView.h
-	Graphics/fgGFXMain.cpp
-	Graphics/fgGFXMain.h
-	Graphics/fgGFXMaterial.cpp
-	Graphics/fgGFXMaterial.h
-	Graphics/fgGFXModelResource.cpp
-	Graphics/fgGFXModelResource.h
-	Graphics/fgGFXModelOBJResource.cpp
-	Graphics/fgGFXModelOBJResource.h
-	Graphics/fgGFXObject.cpp
-	Graphics/fgGFXObject.h
-	Graphics/fgGFXOctreeBase.cpp
-	Graphics/fgGFXOctreeBase.h
-	Graphics/fgGFXOrthoView.h
-	Graphics/fgGFXPrimitives.cpp
-	Graphics/fgGFXPrimitives.h
-	Graphics/fgGFXQuadtreeBase.cpp
-	Graphics/fgGFXQuadtreeBase.h
-	Graphics/fgGFXSceneManager.cpp
-	Graphics/fgGFXSceneManager.h	
-	Graphics/fgGFXShader.cpp
-	Graphics/fgGFXShader.h
-	Graphics/fgGFXShaderBinder.cpp
-	Graphics/fgGFXShaderBinder.h
-	Graphics/fgGFXSimpleDrawer.cpp
-	Graphics/fgGFXSimpleDrawer.h
-	Graphics/fgGFXTexturing.cpp
-	Graphics/fgGFXTexturing.h
-
-	["Infinium/Graphics/Marmalade OpenGL"]
-	Graphics/MarmaladeOpenGL/OGLDrawingBatch.cpp
-	Graphics/MarmaladeOpenGL/OGLDrawingBatch.h
-	Graphics/MarmaladeOpenGL/OGLPerspectiveView.cpp
-	Graphics/MarmaladeOpenGL/OGLPerspectiveView.h
-	Graphics/MarmaladeOpenGL/OGLLighting.cpp
-	Graphics/MarmaladeOpenGL/OGLLighting.h
-	Graphics/MarmaladeOpenGL/OGLMain.cpp
-	Graphics/MarmaladeOpenGL/OGLMain.h
-	Graphics/MarmaladeOpenGL/OGLOrthoView.cpp
-	Graphics/MarmaladeOpenGL/OGLOrthoView.h
-	Graphics/MarmaladeOpenGL/OGLPrimitives.cpp
-	Graphics/MarmaladeOpenGL/OGLPrimitives.h
-	Graphics/MarmaladeOpenGL/OGLShader.cpp
-	Graphics/MarmaladeOpenGL/OGLShader.h
-	Graphics/MarmaladeOpenGL/OGLShaderBinder.cpp
-	Graphics/MarmaladeOpenGL/OGLShaderBinder.h
-	Graphics/MarmaladeOpenGL/OGLTexturing.cpp
-	Graphics/MarmaladeOpenGL/OGLTexturing.h
-	
-	["Infinium/Particles"]
-	Graphics/Particles/fgParticle.h
-	Graphics/Particles/fgParticleSystem.cpp
-	Graphics/Particles/fgParticleSystem.h
-	Graphics/Particles/fgPsExplosionEffect.cpp
-	Graphics/Particles/fgPsExplosionEffect.h
-	Graphics/Particles/fgPsFlashEffect.cpp
-	Graphics/Particles/fgPsFlashEffect.h
-	Graphics/Particles/fgPsFlyingDebrisEffect.cpp
-	Graphics/Particles/fgPsFlyingDebrisEffect.h
-	Graphics/Particles/fgPsObjectPulseEffect.cpp
-	Graphics/Particles/fgPsObjectPulseEffect.h
-	Graphics/Particles/fgPsParticleDrawer.cpp
-	Graphics/Particles/fgPsParticleDrawer.h
-	Graphics/Particles/fgPsParticleEffect.cpp
-	Graphics/Particles/fgPsParticleEffect.h
-	Graphics/Particles/fgPsParticleEffectCircular.cpp
-	Graphics/Particles/fgPsParticleEffectCircular.h
-	Graphics/Particles/fgPsParticleEffectLimited.cpp
-	Graphics/Particles/fgPsParticleEffectLimited.h
-	Graphics/Particles/fgPsSequentialEffect.cpp
-	Graphics/Particles/fgPsSequentialEffect.h
-	Graphics/Particles/fgPsSpecialEffect.h
-
-	["Infinium/Textures"]
-	Graphics/Textures/fgTextureCommon.h
-	Graphics/Textures/fgTextureLoader.cpp
-	Graphics/Textures/fgTextureLoader.h
-	Graphics/Textures/fgTextureManager.cpp
-	Graphics/Textures/fgTextureManager.h
-	Graphics/Textures/fgTextureResource.cpp
-	Graphics/Textures/fgTextureResource.h	
-
-	["Infinium/Hardware"]
-	Hardware/fgDeviceQuery.cpp
-	Hardware/fgDeviceQuery.h
-	Hardware/fgHardwareState.cpp
-	Hardware/fgHardwareState.h
-	Hardware/fgQualityManager.cpp
-	Hardware/fgQualityManager.h
-	Hardware/fgSensors.cpp
-	Hardware/fgSensors.h
-	
-	["Infinium/GameLogic"]
-	GameLogic/fgGameLogic.cpp
-	GameLogic/fgGameLogic.h
 
 
 }

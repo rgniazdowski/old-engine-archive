@@ -1,5 +1,5 @@
 /*******************************************************
- * Copyright (C) 2014 Radoslaw Gniazdowski <r.gniazdowski@gmail.com>
+ * Copyright (C) 2014 Radoslaw Gniazdowski <r.gniazdowski@gmail.com>. All rights reserved.
  * 
  * This file is part of #FLEXIGAME_PROJECT
  * 
@@ -7,8 +7,8 @@
  * and/or distributed without the express or written permission from the author.
  *******************************************************/
 
-#ifndef _ARGUMENT_LIST_H
-#define _ARGUMENT_LIST_H
+#ifndef _FG_ARGUMENT_LIST_H_
+#define _FG_ARGUMENT_LIST_H_
 
 #include <vector>
 

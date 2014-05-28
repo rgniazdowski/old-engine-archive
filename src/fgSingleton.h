@@ -1,5 +1,5 @@
 /*******************************************************
- * Copyright (C) 2014 Radoslaw Gniazdowski <r.gniazdowski@gmail.com>
+ * Copyright (C) 2014 Radoslaw Gniazdowski <r.gniazdowski@gmail.com>. All rights reserved.
  * 
  * This file is part of #FLEXIGAME_PROJECT
  * 
@@ -12,6 +12,9 @@
 
 #include <cstdio>
 #include <typeinfo>
+
+// #FIXME - this is temporary...
+#include "fgCommon.h"
 
 template<typename Class>
 class fgSingleton

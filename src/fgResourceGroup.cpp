@@ -1,5 +1,5 @@
 /*******************************************************
- * Copyright (C) 2014 Radoslaw Gniazdowski <r.gniazdowski@gmail.com>
+ * Copyright (C) 2014 Radoslaw Gniazdowski <r.gniazdowski@gmail.com>. All rights reserved.
  * 
  * This file is part of #FLEXIGAME_PROJECT
  * 
@@ -84,6 +84,11 @@ bool fgResourceGroup::preLoadConfig(void)
 	if(strnlen(m_filePath,sizeof(m_filePath)) == 0)
 		return false;
 	m_xmlParser = new fgXMLParser();
+	// #FIXME #TODO P2 now this loading code for xml should be a lot different - 
+	// probably somewhere in the future there needs to be some automatic loader / wrapper
+	// for loading xml directly in to proper structures - or at least an xml wrapper that 
+	// will parse deeply - recursively, no matter how much tag nesting there is - 
+	// something like SAXParser(?) in Java... that's a good idea.
 	if(!m_xmlParser)
 	{
 		// #TODO P2 error messages 

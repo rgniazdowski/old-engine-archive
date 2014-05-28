@@ -6,9 +6,9 @@
 
 [ ] fgResourceManager -> rozroznianie typow zasobow
 
-[ ] fgResourceManager -> pliki konfiguracyjne tj. definiowanie grup plikow traktowanych jako paczka (np. do zaladowania poziomu czy grafik GUI)
+[ 50% ] fgResourceManager -> pliki konfiguracyjne tj. definiowanie grup plikow traktowanych jako paczka (np. do zaladowania poziomu czy grafik GUI)
 
-	[ ] wydaje sie ze bedzie potrzebna klasa fgResourceGroup ewentualnie jeszcze fgResourceFile/fgResourceConfig
+	[X] wydaje sie ze bedzie potrzebna klasa fgResourceGroup ewentualnie jeszcze fgResourceFile/fgResourceConfig
 
 [ ] restrukturyzacja ladowania tekstur - podpiecie pod klase Resource i ResourceManager
 
