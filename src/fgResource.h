@@ -24,10 +24,28 @@
 
 #include "fgCommon.h"
 
+#include <string>
 #include <ctime>
 #include <cstring>
 
 #define FG_RESOURCE_PATH_MAX	FG_PATH_MAX
+
+#define FG_RESOURCE_INVALID_NAME				"Invalid"
+#define FG_RESOURCE_SOUND_NAME					"Sound"
+#define FG_RESOURCE_MUSIC_NAME					"Music"
+#define FG_RESOURCE_3D_MODEL_NAME				"3DModel"
+#define FG_RESOURCE_TEXTURE_NAME				"Texture"
+#define FG_RESOURCE_FONT_NAME					"Font"
+#define FG_RESOURCE_SAVE_FILE_NAME				"SaveFile"
+#define FG_RESOURCE_GUI_STRUCTURE_SHEET_NAME 	"GuiStructureSheet"
+#define FG_RESOURCE_GUI_STYLE_SHEET_NAME		"GuiStyleSheet"
+#define FG_RESOURCE_SHADER_NAME					"Shader"
+#define FG_RESOURCE_SCENE_NAME					"Scene"
+#define FG_RESOURCE_SCRIPT_NAME					"Script"
+#define FG_RESOURCE_GROUP_NAME					"ResourceGroup"
+#define FG_RESOURCE_VARIA_NAME					"Varia"
+#define FG_RESOURCE_BINARY_NAME 				"Binary"
+#define FG_RESOURCE_ZIP_PACK_NAME				"ZipPack"
 
 enum fgResourceType {
 	FG_RESOURCE_INVALID,
@@ -35,6 +53,7 @@ enum fgResourceType {
 	FG_RESOURCE_MUSIC,
 	FG_RESOURCE_3D_MODEL,
 	FG_RESOURCE_TEXTURE,
+	FG_RESOURCE_FONT,
 	FG_RESOURCE_SAVE_FILE,
 	FG_RESOURCE_GUI_STRUCTURE_SHEET,
 	FG_RESOURCE_GUI_STYLE_SHEET,
@@ -42,14 +61,25 @@ enum fgResourceType {
 	FG_RESOURCE_SCENE,
 	FG_RESOURCE_SCRIPT,
 	FG_RESOURCE_GROUP,
-
 	FG_RESOURCE_VARIA,
 	FG_RESOURCE_BINARY,
-
 	FG_RESOURCE_ZIP_PACK,
+
+	FG_NUM_RESOURCE_BASIC_TYPES,
+
+	FG_RESOURCE_RESERVED1,
+	FG_RESOURCE_RESERVED2,
+	FG_RESOURCE_RESERVED3,
+	FG_RESOURCE_RESERVED4,
+	FG_RESOURCE_RESERVED5,
+	FG_RESOURCE_RESERVED6,
 
 	FG_NUM_RESOURCE_TYPES
 };
+
+#define FG_RES_PRIORITY_LOW_NAME "Low"
+#define FG_RES_PRIORITY_MEDIUM_NAME "Medium"
+#define FG_RES_PRIORITY_HIGH_NAME "High"
 
 /*
  * Base class for resource
@@ -59,9 +89,15 @@ class fgResource
 public:
 	enum fgResPriorityType
 	{
-		FG_RES_LOW_PRIORITY = 0,
-		FG_RES_MED_PRIORITY,
-		FG_RES_HIGH_PRIORITY
+		FG_RES_PRIORITY_LOW = 0,
+		FG_RES_PRIORITY_MEDIUM = 1,
+		FG_RES_PRIORITY_HIGH = 2,
+
+		FG_RES_PRIORITY_RESERVED1 = 3,
+		FG_RES_PRIORITY_RESERVED2 = 4,
+		FG_RES_PRIORITY_RESERVED3 = 5,
+
+		FG_RES_PRIORITY_INVALID = -1,
 	};
 
 	fgResource()	{  clear();  }
@@ -99,7 +135,7 @@ public:
 	inline fgResPriorityType getPriority() const			{  return m_priority;  }
 
 	// Get the resource type id
-	inline fgResourceType gerResourceType() const			{  return m_resType;  }
+	inline fgResourceType getResourceType() const			{  return m_resType;  }
 
 	inline void setReferenceCount(unsigned int nCount)	{  m_nRefCount = nCount;  }
 	inline unsigned int getReferenceCount(void) const	{  return m_nRefCount;  }
@@ -113,14 +149,30 @@ public:
 		strncpy(m_filePath, path, FG_RESOURCE_PATH_MAX-1);
 	}
 
+	// Set resource name (string ID)
+	inline void setResourceName(const char *name) {
+		m_resourceName = name;
+	}
+
+	// Set resource name (string ID)
+	inline void setResourceName(std::string name) {
+		m_resourceName = name;
+	}
+
 	// The less-than operator defines how resources get sorted for discarding.
 	virtual bool operator < (fgResource& container);
 
+	// Well using reference count as simple as below is not recommended, it is more difficult
+	// to handle in the end, dims the code etc., can cause many problems. Need to migrate to
+	// smart pointers... using boost or some implementation #FIXME #P3 #TODO
 protected:
 	// Increase the reference count
 	inline void upRef(void)		{ m_nRefCount++; }
 	// Decrease the reference count
 	inline void downRef(void)	{ if(m_nRefCount > 0) m_nRefCount--; }
+
+	inline void Lock(void) { upRef(); }
+	inline void Unlock(void) { downRef(); }
 
 protected:
 	// Unique handle number (Resource Handle)
@@ -139,6 +191,8 @@ protected:
 	bool				m_isReady;
 	// Size in bytes of the loaded data
 	size_t				m_size;
+	// Name of the resource, string ID
+	std::string			m_resourceName;
 
 };
 

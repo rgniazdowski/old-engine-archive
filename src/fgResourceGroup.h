@@ -16,6 +16,24 @@
 #include "fgResource.h"
 #include "fgXMLParser.h"
 
+#include <cstdlib>
+
+// -----------------------------
+// Predefined classes
+
+class fgResourceGroup;
+class fgResourceGroupContentHandler;
+
+// #FIXME #P2 well this seems... wrong. Moving on...
+namespace FG_GFX {
+	class fgGfxModelResource;
+};
+
+class fgTextureResource;
+class fgFontResource;
+
+// -----------------------------
+
 /*
  * This is ResourceGroup content handler helper class used for deep/recursive automatic xml parsing (SAXP alike).
  * This resource group handler will be somehow universal for every resource group. Which means that there need
@@ -25,38 +43,48 @@
 class fgResourceGroupContentHandler : public fgXMLDefaultHandler {
 	friend class fgResourceGroup;
 private:
-	fgResourceGroupContentHandler()
+	fgResourceGroup *m_resourceGroup;
+	fgResourceType m_resType;
+	fgResource *m_resourcePtr;
+
+	fgResourceGroupContentHandler() : m_resourceGroup(NULL), m_resType(FG_RESOURCE_INVALID), m_resourcePtr(NULL)
 	{
 	}
+
 	~fgResourceGroupContentHandler()
 	{
 	}
+protected:
+	void setResourceGroupPointer(fgResourceGroup *group) { m_resourceGroup = group; }
 public:
+	// Receive notification of the end of the document.
 	virtual void endDocument(fgXMLDocument *document)
 	{
-		printf("### FG RESOURCE END DOCUMENT\n");
+		// End document
 	}
 
     // Receive notification of the end of an element.
-	virtual void endElement(const char *localName, fgXMLElement *elementPtr, fgXMLNodeType nodeType)
+	virtual void endElement(const char *localName, fgXMLElement *elementPtr, fgXMLNodeType nodeType, int depth = -1)
 	{
-		printf("### FG RESOURCE END ELEMENT: '%s'\n", localName);
+		// End of element
 	}
+
 	// Receive notification of the beginning of the document.
 	virtual void startDocument(fgXMLDocument *document)
 	{
-		printf("### FG RESOURCE START DOCUMENT\n");
-	}
-	// Receive notification of the start of an element.
-	virtual void startElement(const char *localName, fgXMLElement *elementPtr, fgXMLNodeType nodeType, fgXMLAttribute *firstAttribute)
-	{
-		printf("### FG RESOURCE START ELEMENT: '%s'\n", localName);
+		// Start document
 	}
 
+	// Receive notification of the start of an element.
+	virtual void startElement(const char *localName, fgXMLElement *elementPtr, fgXMLNodeType nodeType, fgXMLAttribute *firstAttribute, int depth = -1);
+
+	// Receive notification of character data inside an element or comment
 	virtual void characters(const char ch[], int start, int length)
 	{
-		printf("characters: n: %d, val: '%s'\n", length, ch);
+		// Characters - wont be needed
+		//printf("characters: n: %d, val: '%s'\n", length, ch);
 	}
+
 };
 
 // This is resource group and it is treated like normal resource.
@@ -76,6 +104,7 @@ public:
 // Hint: Use smart pointers in the future - from boost library or
 // own proper implementation
 class fgResourceGroup : public fgResource {
+	friend class fgResourceGroupContentHandler;
 public:
 	fgResourceGroup();
 	~fgResourceGroup();
@@ -92,64 +121,11 @@ public:
 	// load or allocate any data - this is for 'create' to do.
 	// This function will return false if file path is not set.
 	virtual bool preLoadConfig(void);
-
-	// Simple wrapper for managing the resource bundle
-	struct fgResGroupItem {
-		FG_RHANDLE rhandle;
-		std::string resourceName;
-		fgResource *resource;
-
-		fgResGroupItem() {
-			rhandle = FG_INVALID_RHANDLE;
-			resourceName.clear();
-			resource = NULL;
-		}
-
-		bool create(void) {
-			if(resource)
-				return resource->create();
-			else
-				return false;
-		}
-
-		void destroy(void) {
-			if(resource)
-				resource->destroy();
-			resource = NULL;
-			rhandle = FG_INVALID_RHANDLE;
-		}
-
-		bool recreate(void) {
-			if(resource)
-				return resource->recreate();
-			else
-				return false;
-		}
-
-		void dispose(void) {
-			if(resource)
-				resource->dispose();
-		}
-
-		size_t getSize(void) const {
-			if(resource)
-				return resource->getSize();
-			else
-				return 0;
-		}
-
-		bool isDisposed(void) const {
-			if(resource)
-				return resource->isDisposed();
-			else
-				return false;
-		}
-	};
-
 protected:
+	// List of all handles within this resource group
 	fgArrayVector<FG_RHANDLE> m_rHandles;
 	// List of all resource files 
-	fgArrayVector<fgResGroupItem> m_resourceFiles;
+	fgArrayVector<fgResource *> m_resourceFiles;
 
 	// Parser for xml config files (here: resource group xml files)
 	fgXMLParser *m_xmlParser;

@@ -70,6 +70,10 @@ bool fgResourceManager::initialize(void)
 	datadir->readDirectory(".\\");
 	const char *filename = NULL;
 	fgArrayVector<std::string> resGroupFiles;
+	// #FIXME - well this looks kinda bad, probably loading
+	// resource groups files should look different - must be
+	// more universal - platform independent, check for 
+	// correct paths in the environment, etc.
 	while((filename = datadir->getNextFile()) != NULL)
 	{
 		// #FIXME - this should check for string length errors (?)
@@ -180,7 +184,8 @@ bool fgResourceManager::removeResource(FG_RHANDLE rhUniqueID)
 }
 
 /*
- * Removes an object completely from the manager. 
+ * Removes an object completely from the manager.
+ * Does not free memory (held by the allocated object).
  */
 bool fgResourceManager::removeResource(fgResource* pResource)
 {

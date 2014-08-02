@@ -14,7 +14,7 @@
  */
 void fgResource::clear(void)
 {
-	m_priority = FG_RES_MED_PRIORITY;
+	m_priority = FG_RES_PRIORITY_LOW;
 	m_nRefCount = 0;
 	m_lastAccess = 0;
 	m_isReady = false;

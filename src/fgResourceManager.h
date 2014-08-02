@@ -64,12 +64,15 @@ private:
 	fgResourceManager()				{  clear();  }
 	virtual ~fgResourceManager()	{  destroy();  }
 public:
+	// This function will release all data and memory held by resource
+	// manager itself (including resources)
+	void destroy(void);
+	// Reset local parameters
+	void clear(void);
+public:
 	// This will pre-load any required data
 	bool initialize(void);
-	void clear(void);
-
 	bool create(unsigned int nMaxSize);
-	void destroy(void);
 
 	// --------------------------------------------------------------------------
 	// Memory management routines
