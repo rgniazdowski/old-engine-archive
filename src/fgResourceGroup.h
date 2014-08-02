@@ -16,6 +16,49 @@
 #include "fgResource.h"
 #include "fgXMLParser.h"
 
+/*
+ * This is ResourceGroup content handler helper class used for deep/recursive automatic xml parsing (SAXP alike).
+ * This resource group handler will be somehow universal for every resource group. Which means that there need
+ * to be some other helper functions/classes to properly handle all current and future data/resource types.
+ * #TODO #FIXME #P3 #CONTINUE
+ */
+class fgResourceGroupContentHandler : public fgXMLDefaultHandler {
+	friend class fgResourceGroup;
+private:
+	fgResourceGroupContentHandler()
+	{
+	}
+	~fgResourceGroupContentHandler()
+	{
+	}
+public:
+	virtual void endDocument(fgXMLDocument *document)
+	{
+		printf("### FG RESOURCE END DOCUMENT\n");
+	}
+
+    // Receive notification of the end of an element.
+	virtual void endElement(const char *localName, fgXMLElement *elementPtr, fgXMLNodeType nodeType)
+	{
+		printf("### FG RESOURCE END ELEMENT: '%s'\n", localName);
+	}
+	// Receive notification of the beginning of the document.
+	virtual void startDocument(fgXMLDocument *document)
+	{
+		printf("### FG RESOURCE START DOCUMENT\n");
+	}
+	// Receive notification of the start of an element.
+	virtual void startElement(const char *localName, fgXMLElement *elementPtr, fgXMLNodeType nodeType, fgXMLAttribute *firstAttribute)
+	{
+		printf("### FG RESOURCE START ELEMENT: '%s'\n", localName);
+	}
+
+	virtual void characters(const char ch[], int start, int length)
+	{
+		printf("characters: n: %d, val: '%s'\n", length, ch);
+	}
+};
+
 // This is resource group and it is treated like normal resource.
 // The idea behind is that when ResourceGroup  is loaded/released 
 // it will also release  all binded resources - however only when

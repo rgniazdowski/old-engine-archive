@@ -79,7 +79,7 @@ bool fgXMLParser::loadXML(const char *filePath)
 }
 
 /*
- *
+ * Frees all data stored
  */
 void fgXMLParser::freeXML(void)
 {
@@ -99,7 +99,66 @@ void fgXMLParser::freeXML(void)
 }
 
 /*
- *
+ * Helper function (private) used for deep xml parsing with content handler.
+ * Well its used in recursive way, in the future this should be avoided
+ * For now however (because of the XMLParser function) it is almost impossible
+ * to make such function without recursion. #FIXME #TODO #P4
+ */
+bool fgXMLParser::_parseDeep(fgXMLNode *cnode, int depth)
+{	
+	if(!cnode) {
+		fgXMLAttribute *firstAttribute = NULL;
+		fgXMLElement *elementPtr = NULL;
+		// Retrieve the root's node name
+		const char *rootName = this->getRootElementValue();
+		if(!rootName)
+			return false;
+		if(this->setFirstAttribute())
+			firstAttribute = this->getCurrentAttribute();
+		elementPtr = this->getRootElement();
+		// Call start element for the very first element in the XML tree - root node
+		this->m_contentHandler->startElement(rootName, elementPtr, (fgXMLNodeType)elementPtr->Type(), firstAttribute);
+	}
+	// Parsing children nodes
+	if(this->getCurrentNodeChildrenPresence()) {
+		fgXMLAttribute *firstAttribute = NULL;
+		fgXMLElement *elementPtr = NULL;
+		this->goDeeper();
+		do {
+			if(this->setFirstAttribute())
+				firstAttribute = this->getCurrentAttribute();
+			const char *currentNodeValue = this->getCurrentNodeValue();
+			elementPtr = this->getCurrentNode()->ToElement();
+			if(this->isCurrentElement()) {
+				// Handlers function for properly handling begining of the element
+				this->m_contentHandler->startElement(currentNodeValue, elementPtr, (fgXMLNodeType)elementPtr->Type(), firstAttribute);
+				// Go deeper in the parsing tree
+				this->_parseDeep(this->getCurrentNode(), depth++);
+				// Handle end of the element
+				this->m_contentHandler->endElement(currentNodeValue, elementPtr, (fgXMLNodeType)elementPtr->Type());
+			} else if(this->isCurrentText() || this->isCurrentComment()) {
+				// This will be probably comment element or text between tags (start / end)
+				this->m_contentHandler->characters(currentNodeValue, 0, strlen(currentNodeValue));
+			}
+		} while(this->goToNextNode());
+		this->goHigher();
+	} else {
+		// #FIXME
+	}
+	if(!cnode) {
+		fgXMLElement *elementPtr = NULL;
+		// Retrieve the root's node name
+		const char *rootName = this->getRootElementValue();
+		if(!rootName)
+			return false;
+		elementPtr = this->getRootElement();
+		this->m_contentHandler->endElement(rootName, elementPtr, (fgXMLNodeType)elementPtr->Type());
+	}
+	return true;
+}
+
+/*
+ * Parse (analyze) the xml file using predefined content handler.
  */
 fgStatus fgXMLParser::parseWithHandler(void)
 {
@@ -110,9 +169,23 @@ fgStatus fgXMLParser::parseWithHandler(void)
 		status.message = NULL;
 		return status;
 	}
+	std::stack<fgXMLNode *> toVisitStack;
 
-
-
+	// Parsing XML using content handler class
+	if(!this->isXMLLoaded()) {
+		status.isError = true;
+		return status;
+	}
+	// Start document parsing
+	m_contentHandler->startDocument(&this->m_xmlDocument);
+	// Start deep parsing #FIXME
+	bool pstatus = _parseDeep();
+	if(!pstatus) {
+		status.isError = true;
+		return status;
+	}
+	m_contentHandler->endDocument(&this->m_xmlDocument);
+	status.isSuccess = true;
 	return status;
 }
 

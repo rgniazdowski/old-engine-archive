@@ -95,43 +95,12 @@ bool fgResourceGroup::preLoadConfig(void)
 		return false;
 	}
 	m_xmlParser->loadXML(m_filePath);
-	const char *rootName = m_xmlParser->getRootElementValue();
-
-	printf("Root node name: '%s'\n", rootName);
-	// Parsing attributes
-	if(m_xmlParser->setFirstAttribute())
-	{
-		do {
-			printf(" %ss' attribute '%s' value: '%s\n", rootName, m_xmlParser->getCurrentAttributeName(), m_xmlParser->getCurrentAttributeValue());
-		} while(m_xmlParser->goToNextAttribute());
-	}
-	if(m_xmlParser->isXMLLoaded())
-	{
-		m_xmlParser->goDeeper();
-		do {
-			printf("Roots' child node name: '%s'\n", m_xmlParser->getCurrentNodeValue());
-			const char *childName = m_xmlParser->getCurrentNodeValue();
-
-			// Parsing attributes
-			if(m_xmlParser->setFirstAttribute())
-			{
-				do {
-					printf(" %ss' attribute '%s' value: '%s\n", childName, m_xmlParser->getCurrentAttributeName(), m_xmlParser->getCurrentAttributeValue());
-				} while(m_xmlParser->goToNextAttribute());
-			}
-
-			// Parsing children nodes
-			if(m_xmlParser->getCurrentNodeChildrenPresence())
-			{
-				m_xmlParser->goDeeper();
-				do {
-					printf("   %ss' child node (%s) name: '%s'\n", childName, (m_xmlParser->isCurrentElement() ? "ELEMENT" : "TEXT"), m_xmlParser->getCurrentNodeValue());
-				} while(m_xmlParser->goToNextNode());
-				m_xmlParser->goHigher();
-			}
-		} while(m_xmlParser->goToNextNode());
-	}
+	fgResourceGroupContentHandler *contentHandler = new fgResourceGroupContentHandler();
+	m_xmlParser->setContentHandler(contentHandler);
+	// ! #FIXME
+	m_xmlParser->parseWithHandler();
 	delete m_xmlParser;
+	delete contentHandler;
 	m_xmlParser = NULL;
 	return true;
 }

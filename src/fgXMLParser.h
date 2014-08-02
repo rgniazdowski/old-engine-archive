@@ -136,9 +136,16 @@ public:
 	}
 
 	/*
-	 *
+	 * Parse (analyze) the xml file using predefined content handler.
 	 */
 	fgStatus parseWithHandler(void);
+
+	/*
+	 *
+	 */
+private:
+	bool _parseDeep(fgXMLNode *cnode = NULL, int depth = 0);
+public:
 
 	/*
 	 * Check if XML is loaded
@@ -202,8 +209,11 @@ public:
 	 * Checks for the nodes children
 	 */
 	bool getCurrentNodeChildrenPresence(void) const {
-		if(!m_currentXMLNode)
+		if(!m_currentXMLNode) {
+			if(m_rootXMLElement)
+				return !m_rootXMLElement->NoChildren();
 			return false;
+		}
 		return !m_currentXMLNode->NoChildren();
 	}
 

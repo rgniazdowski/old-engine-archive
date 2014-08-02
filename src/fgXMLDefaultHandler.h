@@ -18,25 +18,25 @@
 class fgXMLDefaultHandler {
 private:
 protected:
-	fgXMLDefaultHandler();
-	~fgXMLDefaultHandler();
+	fgXMLDefaultHandler() {}
+	~fgXMLDefaultHandler() {}
 public:
 	// Receive notification of character data inside an element.
-	virtual void characters(char ch[], int start, int length) {};
+	virtual void characters(const char ch[], int start, int length) {}
 	// Receive notification of the end of the document.
-	virtual void endDocument(fgXMLDocument *document)  = 0;
+	virtual void endDocument(fgXMLDocument *document) = 0;
     // Receive notification of the end of an element.
-	virtual void endElement(const char *localName, fgXMLNode *nodePtr, fgXMLNodeType nodeType)  = 0;
+	virtual void endElement(const char *localName, fgXMLElement *elementPtr, fgXMLNodeType nodeType) = 0;
 	// Receive notification of a recoverable parser error.
 	//void error(exception e)
 	// Report a fatal XML parsing error.
 	//void fatalError(exception e)
 	// Receive notification of ignorable whitespace in element content.
-	virtual void ignorableWhitespace(char ch[], int start, int length) {};
+	virtual void ignorableWhitespace(char ch[], int start, int length) {}
 	// Receive notification of the beginning of the document.
-	virtual void startDocument(fgXMLDocument *document)  = 0;
+	virtual void startDocument(fgXMLDocument *document) = 0;
 	// Receive notification of the start of an element.
-	virtual void startElement(const char *localName, fgXMLNode *nodePtr, fgXMLNodeType nodeType, fgXMLAttribute *attributes)  = 0;
+	virtual void startElement(const char *localName, fgXMLElement *elementPtr, fgXMLNodeType nodeType, fgXMLAttribute *firstAttribute) = 0;
 	// Receive notification of a parser warning.
 	//void warning(exception e); // #FIXME - the whole error reporting system...
 };
