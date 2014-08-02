@@ -32,6 +32,14 @@
 #pragma warning(disable : 4244)
 #endif
 
+#ifndef fgBool
+typedef bool fgBool; // #FIXME
+#endif
+
+#ifndef fgBoolean
+typedef unsigned char fgBoolean; // #FIXME
+#endif
+
 #if defined FG_USING_MARMALADE
 #include "IwUtil.h"
 template <class X, class A=CIwAllocator<X>, class REALLOCATE = ReallocateDefault<X, A > >

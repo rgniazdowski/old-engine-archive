@@ -7,15 +7,17 @@ files
 	
 	["Infinium/BaseCode"]
 	fgBuildConfig.h
-	fgMemory.h
 	fgCommon.cpp
 	fgCommon.h
 	fgDirent.cpp
 	fgDirent.h
+	fgException.h
 	fgFileStream.cpp
 	fgFileStream.h
 	fgGameMain.cpp
 	fgGameMain.h
+	fgMemory.h
+	fgMessageCommon.h
 	fgResource.cpp
 	fgResource.h
 	fgResourceGroup.cpp
@@ -26,8 +28,11 @@ files
 	fgSettings.h
 	fgSingleton.cpp
 	fgSingleton.h
+	fgStatus.h
+	fgXMLDefaultHandler.h
 	fgXMLParser.cpp
 	fgXMLParser.h
+	fgXMLTypesWrap.h
 
 	["Infinium/GameLogic"]
 	GameLogic/fgGameLogic.cpp

@@ -12,7 +12,7 @@
 
 #include <cmath>
 
-// FIXME
+// #FIXME
 #define EPSILON 1e-6f
 
 struct fgColor3f;
@@ -136,4 +136,4 @@ inline float fgColor3f::operator*(const fgColor4f &c) const {
 
 typedef fgColor4f fgColor;
 
-#endif
+#endif /* _FG_GFX_TYPES_H_ */

@@ -6,3 +6,8 @@
  * #FLEXIGAME_PROJECT source code and any related files can not be copied, modified 
  * and/or distributed without the express or written permission from the author.
  *******************************************************/
+
+#ifndef _FG_GFX_PRIMITIVES_H_
+#define _FG_GFX_PRIMITIVES_H_
+
+#endif /* _FG_GFX_PRIMITIVES_H_ */

@@ -48,4 +48,4 @@ namespace FG_GFX {
 	void clearScreen(void);
 };
 
-#endif
+#endif /* _FG_GFX_MAIN_H_ */ 

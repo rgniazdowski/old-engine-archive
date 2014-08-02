@@ -7,9 +7,13 @@
  * and/or distributed without the express or written permission from the author.
  *******************************************************/
 
-#ifndef _FG_GFX_SCENE_MANAGER_H_
-#define _FG_GFX_SCENE_MANAGER_H_
+#ifndef _FG_EXCEPTION_H_
+#define _FG_EXCEPTION_H_
 
+struct fgException
+{
+	int a;
+	
+};
 
-
-#endif /* _FG_GFX_SCENE_MANAGER_H_ */
+#endif /* _FG_EXCEPTION_H_ */

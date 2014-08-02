@@ -10,4 +10,4 @@
 #ifndef _FG_GFX_SHADER_H_
 #define _FG_GFX_SHADER_H_
 
-#endif
+#endif /* _FG_GFX_SHADER_H_ */

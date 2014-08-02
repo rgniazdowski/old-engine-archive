@@ -6,3 +6,10 @@
  * #FLEXIGAME_PROJECT source code and any related files can not be copied, modified 
  * and/or distributed without the express or written permission from the author.
  *******************************************************/
+
+#ifndef _FG_GFX_OBJECT_H_
+#define _FG_GFX_OBJECT_H_
+
+
+
+#endif /* _FG_GFX_SCENE_MANAGER_H_ */

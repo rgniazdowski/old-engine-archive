@@ -28,4 +28,4 @@ namespace FG_GFX {
 
 };
 
-#endif
+#endif /* _FG_GFX_PERSPECTIVE_VIEW_H */

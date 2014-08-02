@@ -7,9 +7,30 @@
  * and/or distributed without the express or written permission from the author.
  *******************************************************/
 
-#ifndef _FG_GFX_SCENE_MANAGER_H_
-#define _FG_GFX_SCENE_MANAGER_H_
+#ifndef _FG_STATUS_H_
+#define _FG_STATUS_H_
 
+#include "fgMessageCommon.h"
 
+#ifndef NULL
+    #ifndef __cplusplus
+        #define NULL ((void *)0)
+    #else
+        #define NULL 0
+    #endif
+#endif
 
-#endif /* _FG_GFX_SCENE_MANAGER_H_ */
+struct fgStatus
+{
+	bool isError;
+	bool isSuccess;
+	bool isFailure;
+	fgMessage *message;
+
+	fgStatus() : isError(false), isSuccess(true), isFailure(false)
+	{
+		message = NULL;
+	}
+};
+
+#endif /* _FG_STATUS_H_ */

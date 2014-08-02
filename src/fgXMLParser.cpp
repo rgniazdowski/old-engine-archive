@@ -46,8 +46,7 @@ bool fgXMLParser::loadXML(const char *filePath)
 
 	// Read the XML data
 	m_fileBuffer = (char *) fgMalloc(sizeof(char)*(m_fileSize+1));
-	if(m_fileBuffer == NULL)
-	{
+	if(m_fileBuffer == NULL) {
 		// ERROR
 		return false;
 	}
@@ -84,14 +83,36 @@ bool fgXMLParser::loadXML(const char *filePath)
  */
 void fgXMLParser::freeXML(void)
 {
-	if(m_fileBuffer)
+	if(m_fileBuffer) {
 		fgFree(m_fileBuffer);
+	}
 	m_fileBuffer = false;
 	m_fileSize = false;
 	m_xmlDocument.ClearError();
 	m_xmlDocument.Clear();
 	m_rootXMLElement = NULL;
 	m_currentXMLNode = NULL;
-	while(!m_parsingStack.empty())
+	m_contentHandler = NULL;
+	while(!m_parsingStack.empty()) {
 		m_parsingStack.pop();
+	}
 }
+
+/*
+ *
+ */
+fgStatus fgXMLParser::parseWithHandler(void)
+{
+	fgStatus status;
+	if(!m_contentHandler) {
+		status.isFailure = true;
+		status.isError = true;
+		status.message = NULL;
+		return status;
+	}
+
+
+
+	return status;
+}
+
