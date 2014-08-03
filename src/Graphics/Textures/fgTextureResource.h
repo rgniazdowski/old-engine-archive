@@ -11,6 +11,7 @@
 #define _FG_TEXTURE_RESOURCE_H
 
 #include "../../fgBuildConfig.h"
+#include "../../fgResource.h"
 
 #if defined FG_USING_MARMALADE
 #include "IwImage.h"
@@ -25,45 +26,59 @@
 
 #endif
 
-class fgTexture;
+class fgTextureResource;
+typedef fgTextureResource* PfgTexture;
 
-typedef fgTexture* PfgTexture;
+// Texture file type enumeration. Supported file formats (current & future):
+// bmp, raw, jpg, png, tga
+enum fgTextureFileType {
+	FG_TEXTURE_FILE_BMP,
+	FG_TEXTURE_FILE_RAW,
+	FG_TEXTURE_FILE_JPG,
+	FG_TEXTURE_FILE_PNG,
+	FG_TEXTURE_FILE_TGA,
 
-class fgTexture {
+	FG_TEXTURE_FILE_OTHER,
+	FG_TEXTURE_FILE_INVALID,
 
-//
-// MARK: -
-// MARK: Utils
-//
+	FG_NUM_TEXTURE_FILE_TYPES
+};
 
-    /**
-     * Check for glGetError() and conditionally returns false
-     * (but only for DEBUG builds)
-     */
-    //bool checkGlError(const char* fname);
+// Texture type enumeration, defines the type of the texture and
+// possible usage because of this
+enum fgTextureType {
+	FG_TEXTURE_PLAIN,
+	FG_TEXTURE_BUMP,
+	FG_TEXTURE_NORMAL,
+	FG_TEXTURE_RAW,
+	FG_TEXTURE_FONT,
+
+	FG_TEXTURE_INVALID,
+	FG_NUM_TEXTURE_TYPES
+};
+
+/*
+ *
+ */
+class fgTextureResource : public fgResource {
 
 public:
+	//
+    fgTextureResource();
+    //
+	~fgTextureResource();
 
-//
-// MARK: -
-// MARK: Initializers & destroyers
-//
+	// Clears the class data, this actually does not free allocated memory, just resets base class attributes
+	virtual void clear(void);
 
-    /**
-     * Public constructor
-     */
-    fgTexture();
+	virtual bool create(void);
+	virtual void destroy(void);
+	virtual bool recreate(void);
+	// Dispose completely of the all loaded data, free all memory
+	virtual void dispose(void);
+	virtual bool isDisposed(void) const;
 
-    /**
-     * Public destructor
-     */
-    ~fgTexture();
-
-//
-// MARK: -
-// MARK: Business – initialize & destroy
-//
-
+	enum { NOTYPE = 0, TEXTURE = 1, UCDATA = 2 }; // #FIXME #P1
     /**
      * Loads texture using CIwImage. The image remains
      * in RAM until removed via releaseNonGl()
@@ -77,7 +92,7 @@ public:
 
     /**
      * Releases non-GPU side of resources – should be
-     * used to free data after uploading int oVRAM
+     * used to free data after uploading into VRAM
      */
     void releaseNonGl(void);
 
@@ -106,19 +121,10 @@ public:
         return result;
     }
 
-//
-// MARK: -
-// MARK: Business
-//
-
     /**
      * Uploads image to VRAM as a texture
      */
     bool makeTexture();
-
-    //
-    // MARK: Getters
-    //
 
     int mode() const {
         return m_mode;
@@ -144,16 +150,9 @@ public:
         return m_ucdata;
     }
 
-    //
-    // MARK: Setters
-    //
-
-    /// Set ONE double initialization allowed
-    void setAllowDoubleInit() {
-        m_allowDoubleInit = true;
-    }
-
 private:
+	fgTextureFileType m_fileType;
+	fgTextureType m_textureType;
 	CIwImage *m_img;
     int m_mode;
     GLuint m_texId;
@@ -161,15 +160,12 @@ private:
     int m_height;
     int m_comp;
     unsigned char* m_ucdata;
-    const char* m_filename;
 
     /// Allows ONE double init – i.e. the init
     /// when object already has m_mode set
     bool m_allowDoubleInit;
-public:
-    // The object can either represent a texture, or an
-    // UCDATA used by Font manager to create font textures
-    enum { NOTYPE = 0, TEXTURE = 1, UCDATA = 2 };
+
+	
 };
 
 

@@ -25,20 +25,20 @@
 // well the question is this is really necessary - time will show
 
 
-static fgTexture *tutorial_images[4] = { NULL, NULL, NULL, NULL };
+static fgTextureResource *tutorial_images[4] = { NULL, NULL, NULL, NULL };
 
-static fgTexture *backgroundTex = NULL;
-static fgTexture *arrow1Tex = NULL;
-static fgTexture *blockTex = NULL;
-static fgTexture *pulseTexture = NULL;
-static fgTexture *font1Texture = NULL;
-static fgTexture *font2Texture = NULL;
-static fgTexture *levelTexture = NULL;
+static fgTextureResource *backgroundTex = NULL;
+static fgTextureResource *arrow1Tex = NULL;
+static fgTextureResource *blockTex = NULL;
+static fgTextureResource *pulseTexture = NULL;
+static fgTextureResource *font1Texture = NULL;
+static fgTextureResource *font2Texture = NULL;
+static fgTextureResource *levelTexture = NULL;
 
-static fgTexture *skyboxTex = NULL;
+static fgTextureResource *skyboxTex = NULL;
 
-static fgTexture *particleTextures[10] = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL };
-static fgTexture *hudTextures[5] = { NULL, NULL, NULL, NULL, NULL };
+static fgTextureResource *particleTextures[10] = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL };
+static fgTextureResource *hudTextures[5] = { NULL, NULL, NULL, NULL, NULL };
 
 /*
  * The Texture Identifiers (TextureCommon.h) - the same as positions in allTex array:
@@ -47,10 +47,10 @@ static fgTexture *hudTextures[5] = { NULL, NULL, NULL, NULL, NULL };
 
 #define LAST_TEX_ID (Tex::NUM_TEXTURES-1)
 
-fgTexture **thumbnailTex = NULL;
+fgTextureResource **thumbnailTex = NULL;
 static int numThumbnails = 0;
 
-std::map<int, fgTexture **> allTex;
+std::map<int, fgTextureResource **> allTex;
 
 template <>
 bool fgSingleton<fgTextureManager>::instanceFlag = false;
@@ -103,7 +103,7 @@ void fgTextureManager::setThumbnailsCount(int num_thumbnails)
 	}
 	if(thumbnailTex == NULL)
 	{
-		thumbnailTex = new fgTexture *[num_thumbnails];
+		thumbnailTex = new fgTextureResource *[num_thumbnails];
 		numThumbnails = num_thumbnails;
 		for(int i=0;i<num_thumbnails;i++)
 		{
@@ -190,11 +190,11 @@ void fgTextureManager::allReleaseNonGl() {
     // RAM -> VRAM
     for ( int i = 0; i <= LAST_TEX_ID; i++ ) {
         facadeReference ( Tex::ID(i) ) -> releaseNonGl();
-        facadeReference ( Tex::ID(i) ) -> setAllowDoubleInit();
+       // facadeReference ( Tex::ID(i) ) -> setAllowDoubleInit();
     }
 	for(int i=0;i<numThumbnails;i++) {
 		facadeReference ( Tex::ID(getThumbnailTextureID(i)) ) -> releaseNonGl();
-        facadeReference ( Tex::ID(getThumbnailTextureID(i)) ) -> setAllowDoubleInit();
+      //  facadeReference ( Tex::ID(getThumbnailTextureID(i)) ) -> setAllowDoubleInit();
 	}
 }
 
@@ -222,7 +222,7 @@ bool fgTextureManager::loadTexture( Tex::ID TEX_ID, bool force ) {
     PfgTexture & tex_facade = facadeReference ( TEX_ID );
 
     if ( NULL == tex_facade ) {
-        tex_facade = new fgTexture();
+        tex_facade = new fgTextureResource();
     }
 
     if ( NULL == tex_facade ) {
@@ -273,7 +273,7 @@ bool fgTextureManager::makeTexture( Tex::ID TEX_ID ) {
 	}
 
     // FIXME should truly do this
-    if( 0 && tex_facade->mode() == fgTexture::TEXTURE )
+    if( 0 && tex_facade->mode() == fgTextureResource::TEXTURE )
         tex_facade->releaseNonGl();
 
     return true;

@@ -43,7 +43,7 @@ public:
      * Returns given fgTexture*
      * (does not use reference, so internal variable cannot be altered)
      */
-    fgTexture* facade(Tex::ID TEX_ID) {
+    fgTextureResource* facade(Tex::ID TEX_ID) {
         return facadeReference(TEX_ID);
     }
 

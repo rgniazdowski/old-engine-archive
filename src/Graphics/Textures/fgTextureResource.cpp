@@ -47,7 +47,7 @@ bool fgTexture::checkGlError(const char* fname) {
 /**
  * Constructor
  */
-fgTexture::fgTexture() : m_mode(NOTYPE), m_width(0), m_height(0), m_comp(0), m_texId(0),
+fgTextureResource::fgTextureResource() : m_mode(NOTYPE), m_width(0), m_height(0), m_comp(0), m_texId(0),
                                 m_ucdata(NULL), m_img(NULL)
 {
 }
@@ -55,20 +55,67 @@ fgTexture::fgTexture() : m_mode(NOTYPE), m_width(0), m_height(0), m_comp(0), m_t
 /**
  * Destructor
  */
-fgTexture::~fgTexture() {
+fgTextureResource::~fgTextureResource() {
     releaseAll();
 }
 
-//
-// MARK: -
-// MARK: Business – initialize & destroy
-//
+
+/*
+ *
+ */
+void fgTextureResource::clear(void)
+{
+	fgResource::clear();
+	//m_rHandles.clear_optimised();
+	//m_resourceFiles.clear_optimised();
+}
+
+/*
+ *
+ */
+bool fgTextureResource::create(void)
+{
+	return true;
+}
+
+/*
+ *
+ */
+void fgTextureResource::destroy(void)
+{
+	FG_WriteLog("fgTextureResource::destroy();");
+}
+
+/*
+ *
+ */
+bool fgTextureResource::recreate(void)
+{
+	return true;
+}
+
+/*
+ *
+ */
+void fgTextureResource::dispose(void)
+{
+	FG_WriteLog("fgTextureResource::~dispose();");
+}
+
+/*
+ *
+ */
+bool fgTextureResource::isDisposed(void) const
+{
+	return false;
+}
+
 
 /**
  * Loads texture using CIwImage. The image remains
  * in RAM until removed via releaseNonGl()
  */
-bool fgTexture::loadFromFile(const char* file)
+bool fgTextureResource::loadFromFile(const char* file)
 {
     if( m_mode != NOTYPE && !m_allowDoubleInit ) {
         FG_ErrorLog("Double initialization of fgTexture! %d/%d", m_mode, TEXTURE);
@@ -76,7 +123,7 @@ bool fgTexture::loadFromFile(const char* file)
     }
     m_allowDoubleInit = false;
     m_mode = TEXTURE;
-    m_filename = file;
+	strncpy(m_filePath, file, FG_FILE_PATH_MAX);
 
 	if(m_img == NULL)
 		m_img = new CIwImage();
@@ -103,7 +150,7 @@ bool fgTexture::loadFromFile(const char* file)
 /*
  * Loads TGA image "by hand", with custom, non-Marmalade code.
  */
-bool fgTexture::prepareTgaFromFile(const char* filename)
+bool fgTextureResource::prepareTgaFromFile(const char* filename)
 {
     if( m_mode != NOTYPE && !m_allowDoubleInit ) {
         FG_ErrorLog("Double initialization of fgTexture! %d/%d", m_mode, UCDATA);
@@ -111,7 +158,7 @@ bool fgTexture::prepareTgaFromFile(const char* filename)
     }
     m_allowDoubleInit = false;
     m_mode = UCDATA;
-    m_filename = filename;
+	strncpy(m_filePath, filename, FG_FILE_PATH_MAX);
 
 	int i=0,j=0,k=0,l=0,w=0,h=0,components=0,size=0;
 	unsigned char rep=0;
@@ -297,7 +344,7 @@ bool fgTexture::prepareTgaFromFile(const char* filename)
  * Releases non-GPU side of resources – should be
  * used to free data after uploading int oVRAM
  */
-void fgTexture::releaseNonGl(void) {
+void fgTextureResource::releaseNonGl(void) {
     if ( NOTYPE == m_mode ) {
         FG_ErrorLog("clearTexture(): INCONSISTENCY - called on already empty fgTexture! %d/%d", m_mode, UCDATA);
         return;
@@ -331,7 +378,7 @@ void fgTexture::releaseNonGl(void) {
 /**
  * Releases OpenGL structures (i.e. the texture id)
  */
-void fgTexture::releaseGl(void) {
+void fgTextureResource::releaseGl(void) {
     // GL DATA
     if( m_texId != 0 )
     {
@@ -348,7 +395,7 @@ void fgTexture::releaseGl(void) {
  * and in VRAM / OpenGL – all will get released,
  * and object's m_mode will be set to NOTYPE.
  */
-void fgTexture::releaseAll(void) {
+void fgTextureResource::releaseAll(void) {
     releaseNonGl();
     releaseGl();
 
@@ -370,7 +417,7 @@ void fgTexture::releaseAll(void) {
  * uploadowanej drugi raz sa takie same, mozna uzyc
  * glTexSubImage2D zamiast glTexImage2D
  */
-bool fgTexture::makeTexture() {
+bool fgTextureResource::makeTexture() {
     if( ! m_ucdata ) {
         FG_ErrorLog("makeTexture() called when m_ucdata is NULL");
         return false;

@@ -18,7 +18,10 @@
 
 #define BUFFF_SIZE 1024
 
-fgFont::fgFont()
+/*
+ *
+ */
+fgFontResource::fgFontResource()
 {
 	setColorDefault();
 	setFontAreaDefault();
@@ -26,18 +29,81 @@ fgFont::fgFont()
 	m_isLoaded = false;
 }
 
-fgFont::fgFont(Tex::ID FONT_ID)
+/*
+ *
+ */
+fgFontResource::fgFontResource(Tex::ID FONT_ID)
 {
 	m_step = 0;
 	m_isLoaded = false;	
 	load(FONT_ID);
 }
 
-fgFont::~fgFont()
+/*
+ *
+ */
+fgFontResource::~fgFontResource()
 {
 }
 
-void fgFont::setFontArea(Area *area)
+/*
+ *
+ */
+void fgFontResource::clear(void)
+{
+	fgResource::clear();
+	// #FIXME - #P1
+	// Should FontResource extend TextureResource or plain Resource
+	// I think that TextureResource - but that later #TODO
+	//fgTextureResource::clear();
+	//m_rHandles.clear_optimised();
+	//m_resourceFiles.clear_optimised();
+}
+
+/*
+ *
+ */
+bool fgFontResource::create(void)
+{
+	return true;
+}
+
+/*
+ *
+ */
+void fgFontResource::destroy(void)
+{
+	FG_WriteLog("fgFontResource::destroy();");
+}
+
+/*
+ *
+ */
+bool fgFontResource::recreate(void)
+{
+	return true;
+}
+
+/*
+ *
+ */
+void fgFontResource::dispose(void)
+{
+	FG_WriteLog("fgFontResource::~dispose();");
+}
+
+/*
+ *
+ */
+bool fgFontResource::isDisposed(void) const
+{
+	return false;
+}
+
+/*
+ *
+ */
+void fgFontResource::setFontArea(Area *area)
 {
 	m_fontArea.x = area->x;
 	m_fontArea.y = area->y;
@@ -46,7 +112,10 @@ void fgFont::setFontArea(Area *area)
 	m_isFontAreaDefault = false;
 }
 
-void fgFont::setFontAreaDefault(void)
+/*
+ *
+ */
+void fgFontResource::setFontAreaDefault(void)
 {
 	m_fontArea.x = 0;
 	m_fontArea.y = 0;
@@ -55,7 +124,10 @@ void fgFont::setFontAreaDefault(void)
 	m_isFontAreaDefault = true;
 }
 
-bool fgFont::load(Tex::ID FONT_ID)
+/*
+ *
+ */
+bool fgFontResource::load(Tex::ID FONT_ID)
 {
 	int i,j,k,x,y,size,step;
 	unsigned char *ptr;
@@ -121,7 +193,7 @@ bool fgFont::load(Tex::ID FONT_ID)
  * @param char_size	Rozmiar jednego znaku (wysokosc)
  * @param letter	Znak do wypisania
  */
-float fgFont::placeChar(float x0, float y0, float char_size, char letter, void *inmat)
+float fgFontResource::placeChar(float x0, float y0, float char_size, char letter, void *inmat)
 {
 	int x, y, i, size;
 	float s,t,ds,dt;
@@ -176,7 +248,7 @@ float fgFont::placeChar(float x0, float y0, float char_size, char letter, void *
  * @param string
  * @return
  */
-int fgFont::print(float x, float y, float size, const char *string, ...)
+int fgFontResource::print(float x, float y, float size, const char *string, ...)
 {
 	int n;
 	char *s;
@@ -308,7 +380,7 @@ int fgFont::print(float x, float y, float size, const char *string, ...)
  * @param string
  * @return
  */
-int fgFont::printCenter(float y, float size, const char *string, ...)
+int fgFontResource::printCenter(float y, float size, const char *string, ...)
 {
 	char buf[BUFFF_SIZE];
 	int n = 0;
@@ -339,7 +411,7 @@ int fgFont::printCenter(float y, float size, const char *string, ...)
  * @param fmt
  * @return
  */
-int fgFont::printLeft(float y, float size, const char *string, ...)
+int fgFontResource::printLeft(float y, float size, const char *string, ...)
 {
 	char buf[BUFFF_SIZE];
 	int n=0;
@@ -363,7 +435,7 @@ int fgFont::printLeft(float y, float size, const char *string, ...)
  * @param fmt
  * @return
  */
-int fgFont::printRight(float y, float size, const char *string, ...)
+int fgFontResource::printRight(float y, float size, const char *string, ...)
 {
 	char buf[BUFFF_SIZE];
 	int n = 0;
@@ -395,7 +467,7 @@ int fgFont::printRight(float y, float size, const char *string, ...)
  * @param fmt
  * @return
  */
-float fgFont::width(float size, const char *string, ...)
+float fgFontResource::width(float size, const char *string, ...)
 {
 	char buf[ BUFFF_SIZE ];
 	va_list args;
@@ -452,7 +524,7 @@ float fgFont::width(float size, const char *string, ...)
  * @param fmt
  * @return
  */
-float fgFont::height(float size, const char *string, ...)
+float fgFontResource::height(float size, const char *string, ...)
 {
 	char buf[BUFFF_SIZE];
 	int i;

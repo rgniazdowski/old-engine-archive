@@ -96,7 +96,7 @@ protected:
 	//CIwMaterial* m_material; // FIXME
 	void *m_material; // FIXME
 	/// The texture used on the particles
-	fgTexture *m_texture; 
+	fgTextureResource *m_texture; 
 	/// Matrix model used in 3D space particle rendering
 	fgMatrix4f m_modelMatrix;
 	/// Point in 2D or 3D space where the new particles are added
@@ -169,7 +169,7 @@ public:
 	/**
 	 * Texture used in the effect
 	 */
-	fgTexture *texture(void) const {
+	fgTextureResource *texture(void) const {
 		return m_texture;
 	}
 
@@ -267,7 +267,7 @@ public:
 	/**
 	 * Setting texture for every particle displayed
 	 */
-	void setTexture(fgTexture *texture) {
+	void setTexture(fgTextureResource *texture) {
 		m_texture = texture;
 		//if(m_material)
 		//	m_material->SetTexture(m_texture->texture());
