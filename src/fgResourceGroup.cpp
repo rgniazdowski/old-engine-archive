@@ -84,6 +84,15 @@ void fgResourceGroupContentHandler::startElement(const char *localName, fgXMLEle
 	} else if(strnicmp(localName, FG_RESOURCE_BINARY_NAME, strlen(FG_RESOURCE_BINARY_NAME)) == 0) {
 		m_resType = FG_RESOURCE_BINARY;
 	//
+	} else if(strnicmp(localName, FG_RESOURCE_LIBRARY_NAME, strlen(FG_RESOURCE_LIBRARY_NAME)) == 0) {
+		m_resType = FG_RESOURCE_LIBRARY;
+	//
+	} else if(strnicmp(localName, FG_RESOURCE_PLUGIN_NAME, strlen(FG_RESOURCE_PLUGIN_NAME)) == 0) {
+		m_resType = FG_RESOURCE_PLUGIN;
+	//
+	} else if(strnicmp(localName, FG_RESOURCE_CUSTOM_NAME, strlen(FG_RESOURCE_CUSTOM_NAME)) == 0) {
+		m_resType = FG_RESOURCE_CUSTOM;
+	//
 	} else if(strnicmp(localName, FG_RESOURCE_ZIP_PACK_NAME, strlen(FG_RESOURCE_ZIP_PACK_NAME)) == 0) {
 		m_resType = FG_RESOURCE_ZIP_PACK;
 	} /*if(strnicmp(localName, FG_RESOURCE_INVALID_NAME, strlen(FG_RESOURCE_INVALID_NAME)) == 0) {
@@ -115,6 +124,7 @@ void fgResourceGroupContentHandler::startElement(const char *localName, fgXMLEle
 		}
 	}
 
+	// #FIXME
 	printf("%s: >>> path = '%s'; name = '%s'; priority = '%s'; quality = '%s'; \n", localName, path, name, priority, quality);
 
 	switch(m_resType)
@@ -126,9 +136,11 @@ void fgResourceGroupContentHandler::startElement(const char *localName, fgXMLEle
 	case FG_RESOURCE_3D_MODEL:
 		break;
 	case FG_RESOURCE_TEXTURE:
+		//#FIXME
 		//m_resourcePtr = new fgTextureResource();
 		break;
 	case FG_RESOURCE_FONT:
+		//#FIXME
 		//m_resourcePtr = new fgFontResource();
 		break;
 	case FG_RESOURCE_GUI_STRUCTURE_SHEET:
@@ -146,6 +158,12 @@ void fgResourceGroupContentHandler::startElement(const char *localName, fgXMLEle
 	case FG_RESOURCE_VARIA:
 		break;
 	case FG_RESOURCE_BINARY:
+		break;
+	case FG_RESOURCE_LIBRARY:
+		break;
+	case FG_RESOURCE_PLUGIN:
+		break;
+	case FG_RESOURCE_CUSTOM:
 		break;
 	case FG_RESOURCE_ZIP_PACK:
 		break;

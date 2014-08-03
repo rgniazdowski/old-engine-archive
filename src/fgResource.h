@@ -45,6 +45,9 @@
 #define FG_RESOURCE_GROUP_NAME					"ResourceGroup"
 #define FG_RESOURCE_VARIA_NAME					"Varia"
 #define FG_RESOURCE_BINARY_NAME 				"Binary"
+#define FG_RESOURCE_LIBRARY_NAME 				"Library"
+#define FG_RESOURCE_PLUGIN_NAME 				"Plugin"
+#define FG_RESOURCE_CUSTOM_NAME 				"Custom"
 #define FG_RESOURCE_ZIP_PACK_NAME				"ZipPack"
 
 enum fgResourceType {
@@ -63,8 +66,11 @@ enum fgResourceType {
 	FG_RESOURCE_GROUP,
 	FG_RESOURCE_VARIA,
 	FG_RESOURCE_BINARY,
+	FG_RESOURCE_LIBRARY,
+	FG_RESOURCE_PLUGIN,
+	FG_RESOURCE_CUSTOM,
 	FG_RESOURCE_ZIP_PACK,
-
+	
 	FG_NUM_RESOURCE_BASIC_TYPES,
 
 	FG_RESOURCE_RESERVED1,
@@ -100,7 +106,9 @@ public:
 		FG_RES_PRIORITY_INVALID = -1,
 	};
 
+	//
 	fgResource()	{  clear();  }
+	//
 	~fgResource()	{ destroy(); }
 
 	// Clears the class data, this actually does not free allocated memory, just resets base class attributes

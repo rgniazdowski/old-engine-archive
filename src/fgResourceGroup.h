@@ -109,11 +109,13 @@ public:
 	fgResourceGroup();
 	~fgResourceGroup();
 
+	// Clears the class data, this actually does not free allocated memory, just resets base class attributes
 	virtual void clear(void);
 
 	virtual bool create(void);
 	virtual void destroy(void);
 	virtual bool recreate(void);
+	// Dispose completely of the all loaded data, free all memory
 	virtual void dispose(void);
 	virtual bool isDisposed(void) const;
 
