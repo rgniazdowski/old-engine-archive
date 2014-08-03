@@ -8,3 +8,354 @@
  *******************************************************/
 
 #include "fgTextureLoader.h"
+
+/*
+ *
+ */
+static unsigned char *universalPreLoad(const char *path, int &width, int &height, const char *extType)
+{
+	if(!path) {
+		// #TODO error handling / reporting
+		return NULL;
+	}
+	fgFileStream *fileStream = new fgFileStream(path);
+	if(!fileStream->fileExists()) {
+		// #TODO error handling / reporting
+		return NULL;
+	} else if(fileStream->openFile("rb")) {
+		unsigned char *data = NULL;
+		if(strnicmp(extType, "jpeg", 4) == 0) {
+			data = fgTextureLoader::loadJPEG(fileStream, width, height);
+		} else if(strnicmp(extType, "png", 4) == 0) {
+			data = fgTextureLoader::loadPNG(fileStream, width, height);
+		} else if(strnicmp(extType, "tga", 4) == 0) {
+			data = fgTextureLoader::loadTGA(fileStream, width, height);
+		}
+		if(!fileStream->closeFile()) {
+			// #TODO error handling / reporting
+		}
+		if(!data) {
+			// #TODO error handling / reporting
+			return NULL;
+		}
+		return data;
+	} else {
+		// #TODO error handling / reporting
+		return NULL;
+	}
+}
+
+/*
+ *
+ */
+unsigned char *fgTextureLoader::loadJPEG(const char *path, int &width, int &height)
+{
+	return universalPreLoad(path, width, height, "jpeg");
+}
+
+/*
+ *
+ */
+unsigned char *fgTextureLoader::loadJPEG(fgFileStream *fileStream, int &width, int &height)
+{
+	if(!fileStream) {
+		// #TODO error handling / reporting
+		return NULL;
+	} else if(!fileStream->isFileLoaded()) {
+		if(!fileStream->openFile("rb")) {
+			// #TODO error handling / reporting
+			return NULL;
+		}
+	}
+	
+	unsigned char *data = NULL;
+	int i = 0, j = 0, rowStride = -1;
+	long cont = 0;
+	struct jpeg_decompress_struct cinfo;
+	struct fgJPEGErrorMgr jpegError;
+	JSAMPARRAY buffer;
+	JSAMPLE *dataBuffer = NULL;
+	
+	cinfo.err = jpeg_std_error(&jpegError.pub);
+	jpegError.pub.error_exit = fgJPEGErrorExit;
+	if(setjmp(jpegError.setjmp_buffer)) {
+		// #TODO error handling / reporting
+		jpeg_destroy_decompress(&cinfo);
+		return NULL;
+	}
+	jpeg_create_decompress(&cinfo);
+	jpeg_stdio_src(&cinfo, fileStream->getFilePtr());
+	jpeg_read_header(&cinfo, TRUE);
+	jpeg_start_decompress(&cinfo);
+
+	rowStride = cinfo.output_width * cinfo.output_components;
+	buffer = (*cinfo.mem->alloc_sarray)((j_common_ptr)&cinfo, JPOOL_IMAGE, rowStride, 1);
+	dataBuffer = new JSAMPLE[cinfo.image_width * cinfo.image_height * cinfo.output_components];
+	
+	while(cinfo.output_scanline < cinfo.output_height) {
+		jpeg_read_scanlines(&cinfo, buffer, 1);
+		memcpy(dataBuffer + cinfo.image_width * cinfo.output_components * cont, buffer[0], rowStride);
+		cont++;
+	}
+	jpeg_finish_decompress(&cinfo);
+	jpeg_destroy_decompress(&cinfo);
+	width = cinfo.image_width;
+	height = cinfo.image_height;
+	data = new unsigned char[width * height * 4];
+
+	switch(cinfo.output_components) 
+	{
+	case 1:
+		for(i = 0, j = 0; i < width * height; i++, j += 4) {
+			data[j] = data[j + 1] = data[j + 2] = dataBuffer[i];
+			data[j + 3] = 255;
+		}
+		break;
+	case 3:
+		for(i = 0, j = 0; i < width * height * 3; i += 3, j += 4) {
+			data[j] = dataBuffer[i];
+			data[j + 1] = dataBuffer[i + 1];
+			data[j + 2] = dataBuffer[i + 2];
+			data[j + 3] = 255;
+		}
+		break;
+	default:
+		// #TODO error handling / reporting
+		delete [] data;
+		delete [] dataBuffer;
+		return NULL;
+	}
+	delete [] dataBuffer;
+	return data;
+}
+
+/*
+ *
+ */
+unsigned char *fgTextureLoader::loadPNG(const char *path, int &width, int &height)
+{
+	return universalPreLoad(path, width, height, "png");
+}
+
+/*
+ *
+ */
+unsigned char *fgTextureLoader::loadPNG(fgFileStream *fileStream, int &width, int &height)
+{
+	if(!fileStream) {
+		// #TODO error handling / reporting
+		return NULL;
+	} else if(!fileStream->isFileLoaded()) {
+		if(!fileStream->openFile("rb")) {
+			// #TODO error handling / reporting
+			return NULL;
+		}
+	}
+    double gamma = 0.0;
+    unsigned char *data = NULL;
+    unsigned long w = 0, h = 0;
+    int i, j, k, l, bit_depth, color_type;
+    png_uint_32 channels, row_bytes;
+    png_byte *img = NULL, **row = NULL, sig[8];
+    png_structp png_ptr = 0;
+    png_infop info_ptr = 0;
+
+	fileStream->readFile(sig, 8, 1);
+    if(!png_check_sig(sig, 8)) {
+		// #TODO error handling / reporting
+		return NULL;
+    }
+    png_ptr = png_create_read_struct(PNG_LIBPNG_VER_STRING, 0, 0, 0);
+    if(!png_ptr) {
+		// #TODO error handling / reporting
+        return NULL;
+    }
+    info_ptr = png_create_info_struct(png_ptr);
+    if(!info_ptr) {
+		// #TODO error handling / reporting
+		png_destroy_read_struct(&png_ptr,0,0);
+        return NULL;
+    }
+	png_init_io(png_ptr, fileStream->getFilePtr());
+    png_set_sig_bytes(png_ptr, 8);
+    png_read_info(png_ptr, info_ptr);
+    png_get_IHDR(png_ptr, info_ptr, &w, &h, &bit_depth, &color_type, 0, 0, 0);
+
+    if(bit_depth == 16) 
+		png_set_strip_16(png_ptr);
+    if(color_type == PNG_COLOR_TYPE_PALETTE) 
+		png_set_expand(png_ptr);
+    if(bit_depth < 8) 
+		png_set_expand(png_ptr);
+    if(png_get_valid(png_ptr, info_ptr, PNG_INFO_tRNS)) 
+		png_set_expand(png_ptr);
+    if(color_type == PNG_COLOR_TYPE_GRAY || color_type == PNG_COLOR_TYPE_GRAY_ALPHA) {		png_set_gray_to_rgb(png_ptr);
+	}
+
+    if(png_get_gAMA(png_ptr, info_ptr, &gamma)) {
+		png_set_gamma(png_ptr, (double)2.2, gamma);
+	}
+    png_read_update_info(png_ptr, info_ptr);
+    png_get_IHDR(png_ptr, info_ptr, &w, &h, &bit_depth, &color_type, 0, 0, 0);
+
+    row_bytes = png_get_rowbytes(png_ptr, info_ptr);
+    channels = png_get_channels(png_ptr, info_ptr);
+    //img = (png_byte*)malloc(sizeof(png_byte) * row_bytes * h);
+	img = new png_byte[row_bytes * h];
+    //row = (png_byte**)malloc(sizeof(png_byte*) * h);
+	row = new png_byte*[h];
+
+	for(i = 0; i < (int)h; i++) {
+		row[i] = img + row_bytes * i;
+	}
+    png_read_image(png_ptr, row);
+    png_read_end(png_ptr, NULL);
+    //data = (unsigned char*)malloc(sizeof(unsigned char) * w * h * 4);
+	data = new unsigned char[w * h * 4];
+    switch(channels) {
+        case 4:
+            for(j = 0, k = 0; j < (int)h; j++)
+                for(i = 0; i < (int)w; i++, k += 4) {
+                    l = row_bytes * j + i * 4;
+                    data[k + 0] = img[l + 0];
+                    data[k + 1] = img[l + 1];
+                    data[k + 2] = img[l + 2];
+                    data[k + 3] = img[l + 3];
+                }
+            break;
+        case 3:
+            for(j = 0, k = 0; j < (int)h; j++)
+                for(i = 0; i < (int)w; i++, k += 4) {
+                    l = row_bytes * j + i * 3;
+                    data[k + 0] = img[l + 0];
+                    data[k + 1] = img[l + 1];
+                    data[k + 2] = img[l + 2];
+                    data[k + 3] = 255;
+                }
+            break;
+    }
+	delete [] img;
+    delete [] row;
+	png_destroy_read_struct(&png_ptr, 0, 0);
+    width = w;
+    height = h;
+    return data;
+}
+
+/*
+ *
+ */
+unsigned char *fgTextureLoader::loadTGA(const char *path, int &width, int &height)
+{
+	return universalPreLoad(path, width, height, "tga");
+}
+
+/*
+ *
+ */
+unsigned char *fgTextureLoader::loadTGA(fgFileStream *fileStream, int &width, int &height)
+{
+	if(!fileStream) {
+		// #TODO error handling / reporting
+		return NULL;
+	} else if(!fileStream->isFileLoaded()) {
+		if(!fileStream->openFile("rb")) {
+			// #TODO error handling / reporting
+			return NULL;
+		}
+	}
+	unsigned char rep, *data = NULL, *buffer = NULL;
+	unsigned char *ptr = NULL, info[18];
+    int w = 0, h = 0, components = 0, size = 0;
+	int i = 0, j = 0, k = 0, l = 0;
+	fileStream->readFile(&info, 1, 18);
+    w = info[12] + info[13] * 256;
+    h = info[14] + info[15] * 256;
+    // Read only 32 && 24 bit per pixel
+	switch(info[16]) 
+	{
+        case 32:
+            components = 4; // 32 bit per pixel (RGBA)
+            break;
+        case 24:
+            components = 3; // 24 bit per pixel (RGB)
+            break;
+        default:
+			// #TODO error handling / reporting
+            return NULL;
+    }
+    size = w * h * components;
+    //buffer = (unsigned char*)malloc(Size);
+    //data = (unsigned char*)malloc(w * h * 4);
+	// FIXME - while using operator new for allocating arrays there needs to be a check for an exception
+	// however operator new is overloaded (when using Marmalade), so when 'new' fails it will return NULL
+	// NOTE: while compiling without marmalade there needs to be a proper check or at least use of std::nothrow
+	// Buffer for RGB or RGBA image
+	buffer = new unsigned char[size]; 
+	// Output RGBA image
+	data = new unsigned char[w * h * 4];
+	if(!data || !buffer) {
+		// #TODO error handling / reporting
+        return NULL;
+    }
+	fileStream->setPosition(info[0], SEEK_CUR);
+    i = 0;
+    ptr = buffer;
+    switch(info[2]) 
+	{
+		// Unmapped RGB image
+        case 2:     
+			fileStream->readFile(buffer, 1, size);
+            break;
+		// Run length encoded file
+        case 10:    
+            while(i < size) {
+				fileStream->readFile(&rep, 1, 1);
+                if(rep & 0x80) {
+                    rep ^= 0x80;
+					fileStream->readFile(ptr,1,components);
+                    ptr += components;
+                    for(j = 0; j < rep * components; j++) {
+                        *ptr = *(ptr - components);
+                        ptr ++;
+                    }
+                    i += components * (rep + 1);
+                }
+                else {
+                    k = components * (rep + 1);
+					fileStream->readFile(ptr, 1, k);
+                    ptr += k;
+                    i += k;
+                }
+            }
+            break;
+        default:
+			delete [] buffer;
+            delete [] data;
+            return 0;
+    }
+	// Conversion from BGR to RGBA
+    for(i = 0, j = 0; i < size; i += components, j += 4) {  
+        data[j] = buffer[i + 2];
+        data[j + 1] = buffer[i + 1];
+        data[j + 2] = buffer[i];
+        if(components == 4) {
+			data[j + 3] = buffer[i + 3];
+		} else {
+			data[j + 3] = 255;
+		}
+    }
+    if(!(info[17] & 0x20)) {
+        for(j = 0, k = w * 4; j < h / 2; j ++) {
+            for(i = 0; i < w * 4; i ++) {
+                l = data[j * k + i];
+                data[j * k + i] = data[(h - j - 1) * k + i];
+                data[(h - j - 1) * k + i] = l;
+            }
+		}
+	}
+	delete [] buffer;
+    width = w;
+    height = h;
+	return data;
+}
