@@ -8,6 +8,8 @@
  *******************************************************/
 
 #include "fgResourceGroup.h"
+#include "Graphics/Textures/fgTextureResource.h"
+#include "GUI/fgFontResource.h"
 
 void fgResourceGroupContentHandler::startElement(const char *localName, fgXMLElement *elementPtr, fgXMLNodeType nodeType, fgXMLAttribute *firstAttribute, int depth)
 {
@@ -40,7 +42,7 @@ void fgResourceGroupContentHandler::startElement(const char *localName, fgXMLEle
 			if(strnicmp(attrname, "name", 4) == 0) {
 				m_resourceGroup->setResourceName(attrvalue);
 			} else if(strnicmp(attrname, "priority", 8) == 0) {
-				m_resourceGroup->setPriority((fgResource::fgResPriorityType)atoi(attrvalue));
+				m_resourceGroup->setPriority((fgResPriorityType)atoi(attrvalue));
 			}
 			attribute = attribute->Next();
 		}
@@ -99,12 +101,11 @@ void fgResourceGroupContentHandler::startElement(const char *localName, fgXMLEle
 	}*/
 
 	// Here are common attributes for every resource tag in resource group
-	const char *path = NULL;
-	const char *name = NULL;
-	const char *priority = NULL;
-	const char *quality = NULL;
-	fgResource::fgResPriorityType resPriority = fgResource::FG_RES_PRIORITY_INVALID;
-
+	const char *resPath = NULL;
+	const char *resName = NULL;
+	const char *resPriorityStr = NULL;
+	const char *resQualityStr = NULL;
+	fgResPriorityType resPriority = FG_RES_PRIORITY_INVALID;
 	fgXMLAttribute *attribute = firstAttribute;
 
 	if(m_resType != FG_RESOURCE_GROUP && m_resType != FG_RESOURCE_INVALID) {
@@ -112,20 +113,21 @@ void fgResourceGroupContentHandler::startElement(const char *localName, fgXMLEle
 			const char *attrname = attribute->Name();
 			const char *attrvalue = attribute->Value();
 			if(strnicmp(attrname, "path", 4) == 0) {
-				path = attrvalue;
+				resPath = attrvalue;
 			} else if(strnicmp(attrname, "name", 4) == 0) {
-				name = attrvalue;
+				resName = attrvalue;
 			} else if(strnicmp(attrname, "priority", 8) == 0) {
-				priority = attrvalue;
+				resPriorityStr = attrvalue;
 			} else if(strnicmp(attrname, "quality", 7) == 0) {
-				quality = attrvalue;
+				resQualityStr = attrvalue;
 			}
 			attribute = attribute->Next();
 		}
 	}
-
+	resPriority = (fgResPriorityType)atoi(resPriorityStr);
+	// quality_ = (Quality)atoi(resQualityStr);
 	// #FIXME
-	printf("%s: >>> path = '%s'; name = '%s'; priority = '%s'; quality = '%s'; \n", localName, path, name, priority, quality);
+	printf("%s: >>> path = '%s'; name = '%s'; priority = '%s'; quality = '%s'; \n", localName, resPath, resName, resPriorityStr, resQualityStr);
 
 	switch(m_resType)
 	{
@@ -138,10 +140,12 @@ void fgResourceGroupContentHandler::startElement(const char *localName, fgXMLEle
 	case FG_RESOURCE_TEXTURE:
 		//#FIXME
 		//m_resourcePtr = new fgTextureResource();
+		m_resourcePtr = new fgTextureResource(resPath);
 		break;
 	case FG_RESOURCE_FONT:
 		//#FIXME
 		//m_resourcePtr = new fgFontResource();
+		m_resourcePtr = new fgFontResource(resPath);
 		break;
 	case FG_RESOURCE_GUI_STRUCTURE_SHEET:
 		break;
@@ -170,6 +174,11 @@ void fgResourceGroupContentHandler::startElement(const char *localName, fgXMLEle
 	default:
 		break;
 	};
+
+	if(m_resourcePtr) {
+		m_resourcePtr->setPriority(resPriority);
+		m_resourcePtr->setResourceName(resName);
+	}
 }
 
 /*******************************************************/
@@ -246,7 +255,7 @@ bool fgResourceGroup::isDisposed(void) const
  */
 bool fgResourceGroup::preLoadConfig(void)
 {
-	if(strnlen(m_filePath,sizeof(m_filePath)) == 0)
+	if(m_filePath.empty())
 		return false;
 	m_xmlParser = new fgXMLParser();
 	fgResourceGroupContentHandler *contentHandler = new fgResourceGroupContentHandler();
@@ -256,7 +265,7 @@ bool fgResourceGroup::preLoadConfig(void)
 		// #TODO #P2 error messages 
 		return false;
 	}
-	if(!m_xmlParser->loadXML(m_filePath)) {
+	if(!m_xmlParser->loadXML(m_filePath.c_str())) {
 		return false;
 	}
 	// ! #FIXME
@@ -266,3 +275,16 @@ bool fgResourceGroup::preLoadConfig(void)
 	m_xmlParser = NULL;
 	return true;
 }
+
+/*
+ *
+ */
+void fgResourceGroup::refreshArrays(void)
+{
+	typedef fgArrayVector<fgResource *>::iterator ResVecIt;
+	m_rHandles.clear();
+	for(ResVecIt it = m_resourceFiles.begin(); it != m_resourceFiles.end(); it++) {
+		m_rHandles.push_back((*it)->getHandle());
+	}
+}
+

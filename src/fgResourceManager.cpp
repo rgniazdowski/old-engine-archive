@@ -92,12 +92,19 @@ bool fgResourceManager::initialize(void)
 
 	for(unsigned int i=0;i<resGroupFiles.size();i++)
 	{
-		FG_RHANDLE uniqueID; // #FIXME - should resource manager hold separate array for res groups IDS ? oh my ...
+		FG_RHANDLE grpUniqueID; // #FIXME - should resource manager hold separate array for res groups IDS ? oh my ...
 		filename = resGroupFiles[i].c_str();
 		fgResourceGroup *resGroup = new fgResourceGroup();
 		resGroup->setFilePath(filename); // #TODO this will not always look like this - requires full path
 		resGroup->preLoadConfig();
-		insertResource(&uniqueID, resGroup);
+		insertResource(&grpUniqueID, resGroup);
+		fgArrayVector<fgResource *>& resInGrp = resGroup->getRefResourceFiles();
+		typedef fgArrayVector<fgResource *>::iterator ResVecIt; // #FIXME global? anyone?
+		for(ResVecIt it = resInGrp.begin(); it != resInGrp.end(); it++) {
+			FG_RHANDLE resUniqueID;
+			insertResource(&resUniqueID, (*it));
+		}
+		resGroup->refreshArrays();
 		FG_WriteLog("LOG INSERTED RESOURCE GROUP"); // #FIXME
 	}
 	return true;
@@ -140,9 +147,10 @@ bool fgResourceManager::insertResource(FG_RHANDLE* rhUniqueID, fgResource* pReso
 bool fgResourceManager::insertResource(FG_RHANDLE rhUniqueID, fgResource* pResource)
 {
 	fgResourceMapItor itor = m_resourceMap.find(rhUniqueID);
-	if(itor != m_resourceMap.end())
+	if(itor != m_resourceMap.end()) {
 		// ID has already been allocated as a resource
 		return false;
+	}
 	// Insert the resource into the current catalog's map
 	m_resourceMap.insert(fgResourceMapPair(rhUniqueID, pResource));
 	// Get the memory and add it to the catalog total.  Note that we only have
@@ -156,7 +164,7 @@ bool fgResourceManager::insertResource(FG_RHANDLE rhUniqueID, fgResource* pResou
 	}
 	else
 		m_bResourceReserved = false;
-
+	pResource->setResourceHandle(rhUniqueID);
 	// return the id to the user for their use and return success
 	return true;
 }
@@ -320,6 +328,7 @@ int fgResourceManager::unlockResource(FG_RHANDLE rhUniqueID)
  */
 int fgResourceManager::unlockResource(fgResource* pResource)
 {
+	// #FIXME fgResource contains handle for itself
 	FG_RHANDLE rhResource = findResourceHandle(pResource);
 	if FG_IS_INVALID_RHANDLE(rhResource)
 		return -1;

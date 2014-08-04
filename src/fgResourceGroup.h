@@ -111,18 +111,34 @@ public:
 
 	// Clears the class data, this actually does not free allocated memory, just resets base class attributes
 	virtual void clear(void);
-
+	// Create function loads/interprets data from file in ROM and place it in RAM memory.
 	virtual bool create(void);
+	// Destroy all loaded data including additional metadata (called with deconstructor)
 	virtual void destroy(void);
+	// Reloads any data, recreates the resource (refresh)
 	virtual bool recreate(void);
 	// Dispose completely of the all loaded data, free all memory
 	virtual void dispose(void);
+	// Check if resource is disposed (not loaded yet or disposed after)
 	virtual bool isDisposed(void) const;
 
 	// This will parse/load xml group config file. It wont
 	// load or allocate any data - this is for 'create' to do.
 	// This function will return false if file path is not set.
 	virtual bool preLoadConfig(void);
+
+	// Refresh arrays holding handles and resource pointers within this group
+	virtual void refreshArrays(void);
+
+	// Return reference to array of resource pointers (objects) within this resource group
+	fgArrayVector<fgResource *>& getRefResourceFiles(void) {
+		return m_resourceFiles;
+	}
+	// Return reference to array of resource handles within this resource group
+	fgArrayVector<FG_RHANDLE>& getRefResourceHandles(void) {
+		return m_rHandles;
+	}
+
 protected:
 	// List of all handles within this resource group
 	fgArrayVector<FG_RHANDLE> m_rHandles;
