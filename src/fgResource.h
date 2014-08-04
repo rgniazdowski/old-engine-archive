@@ -10,6 +10,12 @@
 #ifndef _FG_RESOURCE_H_
 #define _FG_RESOURCE_H_
 
+#include "fgCommon.h"
+
+#include <string>
+#include <ctime>
+#include <cstring>
+
 // A resource handle is define as an unsigned integer
 #ifndef FG_RHANDLE
 #define FG_RHANDLE unsigned int
@@ -22,12 +28,9 @@
 #define FG_IS_VALID_RHANDLE(_rh)	((_rh == FG_INVALID_RHANDLE) ? false : true)
 #endif
 
-#include "fgCommon.h"
+class fgResourceManager;
 
-#include <string>
-#include <ctime>
-#include <cstring>
-
+// Maximum length of the path string for resource file
 #define FG_RESOURCE_PATH_MAX	FG_PATH_MAX
 
 #define FG_RESOURCE_INVALID_NAME				"Invalid"
@@ -50,6 +53,8 @@
 #define FG_RESOURCE_CUSTOM_NAME 				"Custom"
 #define FG_RESOURCE_ZIP_PACK_NAME				"ZipPack"
 
+// Enum type holding all possible resource types
+// used in the game engine
 enum fgResourceType {
 	FG_RESOURCE_INVALID,
 	FG_RESOURCE_SOUND,
@@ -83,45 +88,53 @@ enum fgResourceType {
 	FG_NUM_RESOURCE_TYPES
 };
 
-#define FG_RES_PRIORITY_LOW_NAME "Low"
+// Name (string version) for the resource low priority enum
+#define FG_RES_PRIORITY_LOW_NAME	"Low"
+// Name (string version) for the resource medium priority enum
 #define FG_RES_PRIORITY_MEDIUM_NAME "Medium"
-#define FG_RES_PRIORITY_HIGH_NAME "High"
+// Name (string version) for the resource high priority enum
+#define FG_RES_PRIORITY_HIGH_NAME	"High"
+
+// Enum for resource priority (low, medium, high, ...)
+enum fgResPriorityType
+{
+	FG_RES_PRIORITY_LOW = 0,
+	FG_RES_PRIORITY_MEDIUM = 1,
+	FG_RES_PRIORITY_HIGH = 2,
+
+	FG_RES_PRIORITY_RESERVED1 = 3,
+	FG_RES_PRIORITY_RESERVED2 = 4,
+	FG_RES_PRIORITY_RESERVED3 = 5,
+
+	FG_RES_PRIORITY_INVALID = -1,
+};
 
 /*
  * Base class for resource
  */
 class fgResource 
 {
+	friend class fgResourceManager;
 public:
-	enum fgResPriorityType
-	{
-		FG_RES_PRIORITY_LOW = 0,
-		FG_RES_PRIORITY_MEDIUM = 1,
-		FG_RES_PRIORITY_HIGH = 2,
-
-		FG_RES_PRIORITY_RESERVED1 = 3,
-		FG_RES_PRIORITY_RESERVED2 = 4,
-		FG_RES_PRIORITY_RESERVED3 = 5,
-
-		FG_RES_PRIORITY_INVALID = -1,
-	};
-
-	//
+	// Base constructor of the resource object
 	fgResource()	{  clear();  }
-	//
+	// Base constructor with additional parameter (path)
+	fgResource(const char *path) { clear(); setFilePath(path); };
+	// Base constructor with additional parameter (path)
+	fgResource(std::string& path) { clear(); setFilePath(path); };
+	// Base destructor of the resource object
 	~fgResource()	{ destroy(); }
 
 	// Clears the class data, this actually does not free allocated memory, just resets base class attributes
 	virtual void clear(void);
-
 	// Create and destroy functions.  Note that the create() function of the
 	// derived class does not have to exactly match the base class.  No assumptions
 	// are made regarding parameters.
 	// create() function should simply be overloaded to call any proper loading function,
 	// which will load/interpret data from file in ROM and place it in RAM memory.
 	virtual bool create(void) = 0;
+	// Destroy all loaded data including additional metadata (called with deconstructor)
 	virtual void destroy(void) { };
-
 	// Dispose and recreate must be able to discard and then completely recreate
 	// the data contained in the class with no additional parameters
 	// This functions should NOT be overloaded to have different number of parameters.
@@ -145,16 +158,28 @@ public:
 	// Get the resource type id
 	inline fgResourceType getResourceType() const			{  return m_resType;  }
 
+	// Set the reference counter for the resource
 	inline void setReferenceCount(unsigned int nCount)	{  m_nRefCount = nCount;  }
+	// Return the current hit of the reference counter for the resource
 	inline unsigned int getReferenceCount(void) const	{  return m_nRefCount;  }
+	// Check if the resource is locked (reference counter is not zero)
 	inline bool isLocked(void) const					{  return (m_nRefCount > 0) ? true : false;  }
 
+	// Set the last access time
 	inline void setLastAccess(time_t lastAccess)		{  m_lastAccess = lastAccess;  }
+	// Return the current access time of the resource
 	inline time_t getLastAccess(void) const				{  return m_lastAccess;  }
 
 	// Set file path to this resource
-	inline void setFilePath(const char *path) {
-		strncpy(m_filePath, path, FG_RESOURCE_PATH_MAX-1);
+	virtual void setFilePath(const char *path) {
+		m_filePath.clear();
+		m_filePath.copy(const_cast<char *>(path), FG_RESOURCE_PATH_MAX, 0);
+	}
+
+	// Set file path to this resource
+	virtual void setFilePath(std::string& path) {
+		m_filePath.clear();
+		m_filePath.append(path, 0, FG_RESOURCE_PATH_MAX);
 	}
 
 	// Set resource name (string ID)
@@ -163,8 +188,9 @@ public:
 	}
 
 	// Set resource name (string ID)
-	inline void setResourceName(std::string name) {
-		m_resourceName = name;
+	inline void setResourceName(std::string& name) {
+		m_resourceName.clear();
+		m_resourceName.append(name);
 	}
 
 	// The less-than operator defines how resources get sorted for discarding.
@@ -179,9 +205,18 @@ protected:
 	// Decrease the reference count
 	inline void downRef(void)	{ if(m_nRefCount > 0) m_nRefCount--; }
 
+	// Lock the resource (reference counter +1)
 	inline void Lock(void) { upRef(); }
+	// Unlock the resource (reference counter -1)
 	inline void Unlock(void) { downRef(); }
-
+protected:
+	void setResourceHandle(FG_RHANDLE handle) {
+		m_handle = handle;
+	}
+public:
+	FG_RHANDLE getHandle(void) const {
+		return m_handle;
+	}
 protected:
 	// Unique handle number (Resource Handle)
 	FG_RHANDLE			m_handle;
@@ -193,8 +228,8 @@ protected:
 	unsigned int		m_nRefCount;
 	// Time of last access, may become handy
 	time_t				m_lastAccess;
-	// File path (can be relative) to file holding data
-	char				m_filePath[FG_RESOURCE_PATH_MAX];
+	// File path (can be relative) to file holding data #FIXME
+	std::string			m_filePath;
 	// Is the resource loaded and ready to be used in program?
 	bool				m_isReady;
 	// Size in bytes of the loaded data

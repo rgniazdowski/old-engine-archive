@@ -14,13 +14,14 @@
  */
 void fgResource::clear(void)
 {
+	m_handle = FG_INVALID_RHANDLE;
+	m_resType = FG_RESOURCE_INVALID;
 	m_priority = FG_RES_PRIORITY_LOW;
 	m_nRefCount = 0;
 	m_lastAccess = 0;
 	m_isReady = false;
 	m_size = 0;
-	memset(m_filePath, 0, FG_RESOURCE_PATH_MAX);
-	m_resType = FG_RESOURCE_INVALID;
+	m_filePath.clear();
 	FG_WriteLog("fgResource::clear(void);");
 }
 
