@@ -10,11 +10,13 @@
 #ifndef FG_TEXTURE_MANAGER_H_
 #define FG_TEXTURE_MANAGER_H_
 
+#include "../../fgSingleton.h"
 #include "fgTextureResource.h"
 #include "fgTextureCommon.h"
-#include "../../fgSingleton.h"
+#include "fgTextureTypes.h"
 
 // #FIXME - now that class just retarded - but before it will load textures from XML/CSS/Lua files many other classes and functions are needed before it will be possible
+typedef fgTextureResource * PfgTexture;
 
 /**
  * COMPOSITE DESIGN PATTERN
@@ -27,14 +29,7 @@ class fgTextureManager : public fgSingleton<fgTextureManager> {
 	friend class fgSingleton<fgTextureManager>;
 
 protected:
-    /**
-     * Private constructor
-     */
     fgTextureManager();
-
-    /**
-     * Private destructor
-     */
     ~fgTextureManager();
 
 public:
@@ -92,6 +87,12 @@ public:
     bool isFont(Tex::ID theId) const {
         return ( theId == Tex::FONT_MAIN_TEXTURE ) || ( theId == Tex::FONT_SECONDARY_TEXTURE );
     }
+
+	//////////////////////////
+#if defined(FG_USING_OPENGL_ES) || defined(FG_USING_OPENGL)
+	static GLint translatePixelFormat(fgTexturePixelFormat pixelFormat);
+	static GLint translateInternalPixelFormat(fgTextureInternalPixelFormat internalPixelFormat);
+#endif
 
 private:
     /**

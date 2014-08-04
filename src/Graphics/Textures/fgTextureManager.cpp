@@ -189,11 +189,11 @@ bool fgTextureManager::allToVRAM( bool force ) {
 void fgTextureManager::allReleaseNonGl() {
     // RAM -> VRAM
     for ( int i = 0; i <= LAST_TEX_ID; i++ ) {
-        facadeReference ( Tex::ID(i) ) -> releaseNonGl();
+		facadeReference ( Tex::ID(i) ) -> releaseNonGFX();
        // facadeReference ( Tex::ID(i) ) -> setAllowDoubleInit();
     }
 	for(int i=0;i<numThumbnails;i++) {
-		facadeReference ( Tex::ID(getThumbnailTextureID(i)) ) -> releaseNonGl();
+		facadeReference ( Tex::ID(getThumbnailTextureID(i)) ) -> releaseNonGFX();
       //  facadeReference ( Tex::ID(getThumbnailTextureID(i)) ) -> setAllowDoubleInit();
 	}
 }
@@ -204,10 +204,30 @@ void fgTextureManager::allReleaseNonGl() {
 void fgTextureManager::allReleaseGl() {
     // RAM -> VRAM
     for ( int i = 0; i <= LAST_TEX_ID; i++ ) {
-        facadeReference ( Tex::ID(i) ) -> releaseGl();
+		//facadeReference ( Tex::ID(i) ) -> releaseGFX();
+		GLuint &idRef = facadeReference ( Tex::ID(i) )->getRefGLTextureID();
+		if( idRef != 0 )
+		{
+			glDeleteTextures(1, &idRef);
+			idRef = 0;
+			facadeReference ( Tex::ID(getThumbnailTextureID(i)) )->setGLTextureID(0);
+		}
+		if( idRef ) {
+			//FG_ErrorLog("Inconsistent data! [mode=%d] Non-NULL value in m_ucdata[%p] or m_img[%p] or m_texId[%d]", m_mode, m_ucdata, m_img, m_texId);
+		}
     }
 	for(int i=0;i<numThumbnails;i++) {
-		facadeReference ( Tex::ID(getThumbnailTextureID(i)) ) -> releaseGl();
+		//facadeReference ( Tex::ID(getThumbnailTextureID(i)) ) -> releaseGFX();
+		GLuint &idRef = facadeReference ( Tex::ID(getThumbnailTextureID(i)) )->getRefGLTextureID();
+		if( idRef != 0 )
+		{
+			glDeleteTextures(1, &idRef);
+			idRef = 0;
+			facadeReference ( Tex::ID(getThumbnailTextureID(i)) )->setGLTextureID(0);
+		}
+		if( idRef ) {
+			//FG_ErrorLog("Inconsistent data! [mode=%d] Non-NULL value in m_ucdata[%p] or m_img[%p] or m_texId[%d]", m_mode, m_ucdata, m_img, m_texId);
+		}
 	}
 }
 
@@ -233,9 +253,9 @@ bool fgTextureManager::loadTexture( Tex::ID TEX_ID, bool force ) {
     // fgTexture has data loaded into RAM,
     // and force option demands its reload
     if ( force && tex_facade->hasOwnedRAM() ) {
-        tex_facade->releaseNonGl();
+        tex_facade->releaseNonGFX();
     }
-
+#if 0
     if ( force || !tex_facade->hasOwnedRAM() ) {
         if ( isFont(TEX_ID) ) {
             /// FONT
@@ -251,12 +271,16 @@ bool fgTextureManager::loadTexture( Tex::ID TEX_ID, bool force ) {
             }
         }
     }
-
+#endif
     return true;
 }
 
 /**
- * Uploads to VRAM
+ * Uploads image to VRAM as a texture
+ *
+ * TODO: mozliwa jest optymalizacja: gdy wymiary tekstury
+ * uploadowanej drugi raz sa takie same, mozna uzyc
+ * glTexSubImage2D zamiast glTexImage2D
  */
 bool fgTextureManager::makeTexture( Tex::ID TEX_ID ) {
     PfgTexture & tex_facade = facadeReference ( TEX_ID );
@@ -267,14 +291,53 @@ bool fgTextureManager::makeTexture( Tex::ID TEX_ID ) {
     }
 
     // Supports creation of texture, and update of texture
-	if ( !tex_facade->makeTexture() ) {
+	/*if ( !tex_facade->makeGFXTexture() ) {
 		FG_ErrorLog("Making texture [%d] failed", TEX_ID);
 		return false;
-	}
+	}*/
+
+	if( ! tex_facade->getRawData() ) {
+        FG_ErrorLog("makeTexture() called when m_ucdata is NULL");
+        return false;
+    }
+	GLuint &idRef = tex_facade->getRefGLTextureID();
+
+    glEnable(GL_TEXTURE_2D);
+
+    // Generate texture object ONLY IF NEEDED
+	if( !idRef ) {
+        glGenTextures(1, &idRef);
+       // if(!checkGlError("glGenTextures")) {
+       //     return false;
+       // }
+    }
+
+    glBindTexture(GL_TEXTURE_2D, idRef);
+    //if(!checkGlError("glBindTexture")) {
+    //    return false;
+    //}
+
+    // Disable mipmapping
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    //if(!checkGlError("[various GL]")) {
+    //    return false;
+    //}
+
+	// #TODO
+	// #FIXME check for quick pixel format in/out
+
+    // Upload
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, tex_facade->getWidth(), tex_facade->getHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, tex_facade->getRawData());
+    //if(!checkGlError("glTexImage2D")) {
+    //    return false;
+    //}
 
     // FIXME should truly do this
-    if( 0 && tex_facade->mode() == fgTextureResource::TEXTURE )
-        tex_facade->releaseNonGl();
+    //if( 0 && tex_facade->mode() == fgTextureResource::TEXTURE )
+	//	tex_facade->releaseNonGFX();
 
     return true;
 }

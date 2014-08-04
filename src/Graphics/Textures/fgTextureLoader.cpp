@@ -10,7 +10,7 @@
 #include "fgTextureLoader.h"
 
 /*
- *
+ * This function is used for preloading given file for later processing
  */
 static unsigned char *universalPreLoad(const char *path, int &width, int &height, const char *extType)
 {
@@ -46,7 +46,7 @@ static unsigned char *universalPreLoad(const char *path, int &width, int &height
 }
 
 /*
- *
+ * Loads a JPEG file and returns unsigned char array with raw data
  */
 unsigned char *fgTextureLoader::loadJPEG(const char *path, int &width, int &height)
 {
@@ -54,7 +54,7 @@ unsigned char *fgTextureLoader::loadJPEG(const char *path, int &width, int &heig
 }
 
 /*
- *
+ * Loads a JPEG file and returns unsigned char array with raw data
  */
 unsigned char *fgTextureLoader::loadJPEG(fgFileStream *fileStream, int &width, int &height)
 {
@@ -130,7 +130,7 @@ unsigned char *fgTextureLoader::loadJPEG(fgFileStream *fileStream, int &width, i
 }
 
 /*
- *
+ * Loads a PNG file and returns unsigned char array with raw data
  */
 unsigned char *fgTextureLoader::loadPNG(const char *path, int &width, int &height)
 {
@@ -138,7 +138,7 @@ unsigned char *fgTextureLoader::loadPNG(const char *path, int &width, int &heigh
 }
 
 /*
- *
+ * Loads a PNG file and returns unsigned char array with raw data
  */
 unsigned char *fgTextureLoader::loadPNG(fgFileStream *fileStream, int &width, int &height)
 {
@@ -243,7 +243,7 @@ unsigned char *fgTextureLoader::loadPNG(fgFileStream *fileStream, int &width, in
 }
 
 /*
- *
+ * Loads a TGA file and returns unsigned char array with raw data
  */
 unsigned char *fgTextureLoader::loadTGA(const char *path, int &width, int &height)
 {
@@ -251,7 +251,7 @@ unsigned char *fgTextureLoader::loadTGA(const char *path, int &width, int &heigh
 }
 
 /*
- *
+ * Loads a TGA file and returns unsigned char array with raw data
  */
 unsigned char *fgTextureLoader::loadTGA(fgFileStream *fileStream, int &width, int &height)
 {

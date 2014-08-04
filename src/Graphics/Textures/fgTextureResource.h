@@ -13,8 +13,10 @@
 #include "../../fgBuildConfig.h"
 #include "../../fgResource.h"
 
+#include "fgTextureTypes.h"
+
 #if defined FG_USING_MARMALADE
-#include "IwImage.h"
+
 #if !defined FG_USING_MARMALADE_EGL && defined FG_USING_MARMALADE_IWGL
 #include <IwGL.h>
 #elif defined FG_USING_MARMALADE_OPENGL_ES
@@ -26,147 +28,155 @@
 
 #endif
 
-class fgTextureResource;
-typedef fgTextureResource* PfgTexture;
-
-// Texture file type enumeration. Supported file formats (current & future):
-// bmp, raw, jpg, png, tga
-enum fgTextureFileType {
-	FG_TEXTURE_FILE_BMP,
-	FG_TEXTURE_FILE_RAW,
-	FG_TEXTURE_FILE_JPG,
-	FG_TEXTURE_FILE_PNG,
-	FG_TEXTURE_FILE_TGA,
-
-	FG_TEXTURE_FILE_OTHER,
-	FG_TEXTURE_FILE_INVALID,
-
-	FG_NUM_TEXTURE_FILE_TYPES
-};
-
-// Texture type enumeration, defines the type of the texture and
-// possible usage because of this
-enum fgTextureType {
-	FG_TEXTURE_PLAIN,
-	FG_TEXTURE_BUMP,
-	FG_TEXTURE_NORMAL,
-	FG_TEXTURE_RAW,
-	FG_TEXTURE_FONT,
-
-	FG_TEXTURE_INVALID,
-	FG_NUM_TEXTURE_TYPES
-};
-
 /*
  *
  */
 class fgTextureResource : public fgResource {
-
 public:
-	//
-    fgTextureResource();
-    //
-	~fgTextureResource();
+	// Base constructor of the texture resource object
+	fgTextureResource()	{  clear();  }
+	// Base constructor with additional parameter (path)
+	fgTextureResource(const char *path) { clear(); setFilePath(path); };
+	// Base constructor with additional parameter (path)
+	fgTextureResource(std::string& path) { clear(); setFilePath(path); };
+	// Base destructor of the texture resource object
+	~fgTextureResource()	{ destroy(); }
 
 	// Clears the class data, this actually does not free allocated memory, just resets base class attributes
 	virtual void clear(void);
-
+	// Create function loads/interprets data from file in ROM and place it in RAM memory.
 	virtual bool create(void);
+	// Destroy all loaded data including additional metadata (called with deconstructor)
 	virtual void destroy(void);
+	// Reloads any data, recreates the resource (refresh)
 	virtual bool recreate(void);
 	// Dispose completely of the all loaded data, free all memory
 	virtual void dispose(void);
+	// Check if resource is disposed (not loaded yet or disposed after)
 	virtual bool isDisposed(void) const;
 
-	enum { NOTYPE = 0, TEXTURE = 1, UCDATA = 2 }; // #FIXME #P1
-    /**
-     * Loads texture using CIwImage. The image remains
-     * in RAM until removed via releaseNonGl()
-     */
-    bool loadFromFile(const char* file);
+protected:
+	bool setFileTypeFromFilePath(std::string &path) {
+		// #FIXME - this should be extracted to other file (used for some basic file operation, pathext or whatnot #P3 #TODO)
+		std::string ext = path.substr(path.find_last_of(".") + 1);
+		if(strnicmp(ext.c_str(), FG_TEXTURE_FILE_EXTENSION_BMP, strlen(FG_TEXTURE_FILE_EXTENSION_BMP)) == 0) {
+			this->m_fileType = FG_TEXTURE_FILE_BMP;
+		} else if(strnicmp(ext.c_str(), FG_TEXTURE_FILE_EXTENSION_RAW, strlen(FG_TEXTURE_FILE_EXTENSION_RAW)) == 0) {
+			this->m_fileType = FG_TEXTURE_FILE_RAW;
+		} else if(strnicmp(ext.c_str(), FG_TEXTURE_FILE_EXTENSION_JPEG, strlen(FG_TEXTURE_FILE_EXTENSION_JPEG)) == 0) {
+			this->m_fileType = FG_TEXTURE_FILE_JPEG;
+		} else if(strnicmp(ext.c_str(), FG_TEXTURE_FILE_EXTENSION_PNG, strlen(FG_TEXTURE_FILE_EXTENSION_PNG)) == 0) {
+			this->m_fileType = FG_TEXTURE_FILE_PNG;
+		} else if(strnicmp(ext.c_str(), FG_TEXTURE_FILE_EXTENSION_TGA, strlen(FG_TEXTURE_FILE_EXTENSION_TGA)) == 0) {
+			this->m_fileType = FG_TEXTURE_FILE_TGA;
+		} else {
+			this->m_fileType = FG_TEXTURE_FILE_OTHER;
+		}
+		return true;
+	}
 
-    /*
-     * Loads TGA image "by hand", with custom, non-Marmalade code.
-     */
-    bool prepareTgaFromFile(const char* file);
+	bool setFileTypeFromFilePath(void) {
+		if(this->m_filePath.empty())
+			return false;
+		return setFileTypeFromFilePath(m_filePath);
+	}
 
-    /**
-     * Releases non-GPU side of resources – should be
-     * used to free data after uploading into VRAM
-     */
-    void releaseNonGl(void);
+public:
+	// Set file path to this resource
+	virtual void setFilePath(const char *path) {
+		fgResource::setFilePath(path);
+		setFileTypeFromFilePath();
+	}
 
-    /**
-     * Releases OpenGL structures (i.e. the texture id)
-     */
-    void releaseGl(void);
+	// Set file path to this resource
+	virtual void setFilePath(std::string& path) {
+		fgResource::setFilePath(path);
+		setFileTypeFromFilePath();
+	}
 
-    /**
-     * Makes object fully EMPTY – structures in RAM and
-     * in VRAM/OpenGL – all will get released, and object's
-     * m_mode will be set to NOTYPE.
-     */
-	void releaseAll(void);
+    // Releases non-GPU side of resources – should be
+    // used to free data after uploading into VRAM
+    void releaseNonGFX(void);
 
-    /**
-     * Checks whether RAM is owned by the object
-     */
+    // Checks whether RAM is owned by the object
     bool hasOwnedRAM(void) const {
-        bool result = true;
-
-        if( m_ucdata == NULL ) {
-            result = false;
-        }
-
-        return result;
+        if( m_rawData == NULL ) {
+			return false;
+		}
+		return true;
     }
 
-    /**
-     * Uploads image to VRAM as a texture
-     */
-    bool makeTexture();
+    // Uploads image to VRAM as a texture
+    bool makeGFXTexture();
 
-    int mode() const {
-        return m_mode;
+
+	// Get the texture id used by the low level graphics system - handle in OpenGL
+    GLuint getGLTextureID() const {
+        return m_glTextureID;
     }
-
-    GLuint textureId() const {
-        return m_texId;
+	// Get reference tothe texture id used by the low level graphics system - handle in OpenGL
+    GLuint& getRefGLTextureID() {
+        return m_glTextureID;
     }
+	// Set the texture id used by the low level graphics system
+	void setGLTextureID(GLuint id) {
+		m_glTextureID = id;
+	}
 
-    int width() const {
+	// Get width of the texture in pixels
+    int getWidth() const {
         return m_width;
     }
-
-    int height() const {
+	// Get height of the texture in pixels
+    int getHeight(void) const {
         return m_height;
     }
-
-    int components() const {
-        return m_comp;
+	// Get number of color components
+    int getComponents(void) const {
+        return m_components;
     }
-
-    unsigned char * ucdata() const {
-        return m_ucdata;
+	// Return pointer to raw pixel data (unsigned char array)
+    unsigned char* getRawData(void) const {
+        return m_rawData;
     }
+	// Get texture file type (determined from extension)
+	fgTextureFileType getFileType(void) const {
+		return m_fileType;
+	}
+	// Get texture type
+	fgTextureType getTextureType(void) const {
+		return m_textureType;
+	}
+	// Get texture pixel format
+	fgTexturePixelFormat getPixelFormat(void) const {
+		return m_pixelFormat;
+	}
+	// Set the texture type (usage)
+	void setTextureType(fgTextureType textureType) {
+		m_textureType = textureType;
+	}
+	// Set the final texture pixel format
+	void setPixelFormat(fgTexturePixelFormat pixelFormat) {
+		m_pixelFormat = pixelFormat;
+	}
 
-private:
-	fgTextureFileType m_fileType;
-	fgTextureType m_textureType;
-	CIwImage *m_img;
-    int m_mode;
-    GLuint m_texId;
+protected:
+	// Texture file type (by extension)
+	fgTextureFileType		m_fileType;
+	// Texture type and possible usage
+	fgTextureType			m_textureType;
+	// Final texture pixel format (data pixel format)
+	fgTexturePixelFormat	m_pixelFormat;
+	// Storage for raw pixel data
+    unsigned char*			m_rawData;
+	// Width of the texture in pixels
     int m_width;
-    int m_height;
-    int m_comp;
-    unsigned char* m_ucdata;
-
-    /// Allows ONE double init – i.e. the init
-    /// when object already has m_mode set
-    bool m_allowDoubleInit;
-
-	
+	// Height of the texture in pixels
+	int m_height;
+	// Number of color components (grayscale, RGB, RGBA)
+    int m_components;
+	// OpenGL texture id handle
+	GLuint m_glTextureID;
 };
-
 
 #endif

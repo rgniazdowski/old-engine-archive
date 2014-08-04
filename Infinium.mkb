@@ -134,7 +134,8 @@ files
 	Graphics/Textures/fgTextureManager.cpp
 	Graphics/Textures/fgTextureManager.h
 	Graphics/Textures/fgTextureResource.cpp
-	Graphics/Textures/fgTextureResource.h	
+	Graphics/Textures/fgTextureResource.h
+	Graphics/Textures/fgTextureTypes.h
 
 	["Infinium/Graphics/Particles"]
 	Graphics/Particles/fgParticle.h
