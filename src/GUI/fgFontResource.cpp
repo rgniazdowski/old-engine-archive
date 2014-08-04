@@ -16,48 +16,14 @@
 #include "../Graphics/Textures/fgTextureManager.h"
 #include "../Hardware/fgHardwareState.h"
 
-#define BUFFF_SIZE 1024
-
-/*
- *
- */
-fgFontResource::fgFontResource()
-{
-	setColorDefault();
-	setFontAreaDefault();
-	m_step = 0;
-	m_isLoaded = false;
-}
-
-/*
- *
- */
-fgFontResource::fgFontResource(Tex::ID FONT_ID)
-{
-	m_step = 0;
-	m_isLoaded = false;	
-	load(FONT_ID);
-}
-
-/*
- *
- */
-fgFontResource::~fgFontResource()
-{
-}
-
 /*
  *
  */
 void fgFontResource::clear(void)
 {
-	fgResource::clear();
-	// #FIXME - #P1
-	// Should FontResource extend TextureResource or plain Resource
-	// I think that TextureResource - but that later #TODO
-	//fgTextureResource::clear();
-	//m_rHandles.clear_optimised();
-	//m_resourceFiles.clear_optimised();
+	fgTextureResource::clear();
+	m_step = 0;
+	memset(m_space, 0, sizeof(m_space[0][0]) * FG_FONT_STANDARD_ASCII_SIZE * 2);
 }
 
 /*
@@ -65,6 +31,55 @@ void fgFontResource::clear(void)
  */
 bool fgFontResource::create(void)
 {
+	m_textureType = FG_TEXTURE_FONT;
+	if(!fgTextureResource::create()) {
+		// #TODO error handling / reporting
+		return false;
+	}
+	int i = 0, j = 0, k = 0;
+	int x = 0, y = 0;
+	int size = m_width;
+	m_step = size / 16;
+	unsigned char *ptr = NULL;
+	
+	//FG_WriteLog("Font_load 'Tex::ID=%d'; size=%dx%d; step=%d;", FONT_ID, m_texture->width(), m_texture->height(), m_step);
+
+	for(y=0, i=0; y<16; y++)
+	{
+		for(x=0; x<16; x++, i++)
+		{
+			m_space[i][0] = 0;
+			for(j=0; j < m_step; j++) 
+			{
+				ptr = m_rawData + (size*y*m_step+x*m_step+j)*4;
+				for(k=0; k < m_step; k++) 
+				{
+					if(*(ptr + 3)!=0) break;
+					ptr += size * 4;
+				}
+				if(k!=m_step)
+					break;
+				m_space[i][0]++;
+			}
+			m_space[i][1] = 0;
+			if(m_space[i][0]==m_step)
+				continue;
+			for(j=m_step-1; j>=0; j--)
+			{
+				ptr = m_rawData + (size*y*m_step+x*m_step+j)*4;
+				for(k=0; k<m_step; k++)
+				{
+					if(*(ptr + 3)!= 0)
+						break;
+					ptr += size*4;
+				}
+				if(k!=m_step) break;
+				m_space[i][1]++;
+			}
+			m_space[i][1] = m_step-m_space[i][0]-m_space[i][1];
+		}
+	}
+
 	return true;
 }
 
@@ -74,6 +89,8 @@ bool fgFontResource::create(void)
 void fgFontResource::destroy(void)
 {
 	FG_WriteLog("fgFontResource::destroy();");
+	releaseNonGFX();
+	clear();
 }
 
 /*
@@ -81,7 +98,8 @@ void fgFontResource::destroy(void)
  */
 bool fgFontResource::recreate(void)
 {
-	return true;
+	dispose();
+	return create();
 }
 
 /*
@@ -90,6 +108,7 @@ bool fgFontResource::recreate(void)
 void fgFontResource::dispose(void)
 {
 	FG_WriteLog("fgFontResource::~dispose();");
+	fgTextureResource::dispose();
 }
 
 /*
@@ -97,9 +116,9 @@ void fgFontResource::dispose(void)
  */
 bool fgFontResource::isDisposed(void) const
 {
-	return false;
+	return fgTextureResource::isDisposed();
 }
-
+#if 0
 /*
  *
  */
@@ -123,68 +142,14 @@ void fgFontResource::setFontAreaDefault(void)
 	m_fontArea.h = FG_HardwareState->screenHeight();
 	m_isFontAreaDefault = true;
 }
-
+#endif
+#if 0
 /*
  *
  */
 bool fgFontResource::load(Tex::ID FONT_ID)
 {
-	int i,j,k,x,y,size,step;
-	unsigned char *ptr;
 
-	if (m_isLoaded == true) {
-		return false;
-	}
-
-	//m_color.Set( 255, 255, 255, 255 );
-	m_texture = fgTextureManager::getInstance()->facade(FONT_ID);
-
-	if(m_texture == NULL)
-		return false;
-
-	size = m_texture->width();
-	step = size / 16;
-	m_step = step;
-	FG_WriteLog("Font_load 'Tex::ID=%d'; size=%dx%d; step=%d;", FONT_ID, m_texture->width(), m_texture->height(), m_step);
-
-	for(y=0, i=0; y<16; y++)
-	{
-		for(x=0; x<16; x++, i++)
-		{
-			m_space[i][0] = 0;
-			for(j=0; j < step; j++) 
-			{
-				ptr = m_texture->ucdata() + (size*y*step+x*step+j)*4;
-				for(k=0; k < step; k++) 
-				{
-					if(*(ptr + 3)!=0) break;
-					ptr += size * 4;
-				}
-				if(k!=step)
-					break;
-				m_space[i][0]++;
-			}
-			m_space[i][1] = 0;
-			if(m_space[i][0]==step)
-				continue;
-			for(j=step-1; j>=0; j--)
-			{
-				ptr = m_texture->ucdata() + (size*y*step+x*step+j)*4;
-				for(k=0; k<step; k++)
-				{
-					if(*(ptr + 3)!= 0)
-						break;
-					ptr += size*4;
-				}
-				if(k!=step) break;
-				m_space[i][1]++;
-			}
-			m_space[i][1] = m_step-m_space[i][0]-m_space[i][1];
-		}
-	}
-	m_isLoaded = true;
-	setFontAreaDefault();
-	return true;
 }
 
 /**
@@ -547,4 +512,4 @@ float fgFontResource::height(float size, const char *string, ...)
 	y = y*scale;
 	return y;
 }
-
+#endif

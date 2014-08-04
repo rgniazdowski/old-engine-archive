@@ -15,33 +15,40 @@
 
 #include "../Graphics/fgGFXTypes.h"
 #include "../Graphics/Textures/fgTextureResource.h"
-#include "../Graphics/Textures/fgTextureCommon.h"
 
-//
-class fgFontResource : public fgResource
+// This is standard grid size (used for fonts based on textures)
+#define FG_FONT_STANDARD_GRID_SIZE	16
+#define FG_FONT_STANDARD_ASCII_SIZE	(FG_FONT_STANDARD_GRID_SIZE*FG_FONT_STANDARD_GRID_SIZE)
+
+/*
+ *
+ */
+class fgFontResource : public fgTextureResource
 {
 public:
-	//
-	fgFontResource();
-	//
-	fgFontResource(Tex::ID FONT_ID); // #FIXME
-	// 
-	~fgFontResource();
+	// Base constructor of the font resource object
+	fgFontResource()	{  clear();  }
+	// Base constructor with additional parameter (path)
+	fgFontResource(const char *path) { clear(); setFilePath(path); };
+	// Base constructor with additional parameter (path)
+	fgFontResource(std::string& path) { clear(); setFilePath(path); };
+	// Base destructor of the font resource object
+	~fgFontResource()	{ destroy(); }
 
 	// Clears the class data, this actually does not free allocated memory, just resets base class attributes
 	virtual void clear(void);
-
+	// Create function loads/interprets data from file in ROM and place it in RAM memory.
 	virtual bool create(void);
+	// Destroy all loaded data including additional metadata (called with deconstructor)
 	virtual void destroy(void);
+	// Reloads any data, recreates the resource (refresh)
 	virtual bool recreate(void);
 	// Dispose completely of the all loaded data, free all memory
 	virtual void dispose(void);
+	// Check if resource is disposed (not loaded yet or disposed after)
 	virtual bool isDisposed(void) const;
 
-	int step(void) const {
-		return m_step;
-	}
-
+#if 0
 	// #FIXME (!) well this should not be here
 	// area and color are something dynamic - what's the point to
 	// set those parameters at every frame draw? (! omg !)
@@ -76,7 +83,8 @@ public:
 	{
 		m_color.a = 255;
 	}
-
+#endif
+#if 0
 	// #FIXME
     bool load(Tex::ID FONT_ID);
 
@@ -91,15 +99,13 @@ public:
 
     int printLeft(float y, float size, const char *string, ...);
     int printRight(float y, float size, const char *string, ...);
-
+#endif 
+	int getStep(void) const {
+		return m_step;
+	}
 private:
-	fgTextureResource* m_texture;
 	int m_step;
-	bool m_isLoaded;
-	int m_space[256][2];
-	fgColor m_color; // FIXME
-	Area m_fontArea;
-	bool m_isFontAreaDefault;
+	int m_space[FG_FONT_STANDARD_ASCII_SIZE][2];
 };
 
-#endif /* _FONTFACADE_H */
+#endif /* _FG_FONT_RESOURCE_H_ */
