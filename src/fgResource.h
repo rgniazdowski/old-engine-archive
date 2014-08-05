@@ -29,6 +29,7 @@
 #endif
 
 class fgResourceManager;
+class fgResourceGroup;
 
 // Maximum length of the path string for resource file
 #define FG_RESOURCE_PATH_MAX	FG_PATH_MAX
@@ -115,6 +116,7 @@ enum fgResPriorityType
 class fgResource 
 {
 	friend class fgResourceManager;
+	friend class fgResourceGroup;
 public:
 	// Base constructor of the resource object
 	fgResource()	{  clear();  }
@@ -206,9 +208,11 @@ protected:
 	inline unsigned int downRef(void)	{ if(m_nRefCount > 0) m_nRefCount--; return m_nRefCount; }
 
 	// Lock the resource (reference counter +1)
-	inline unsigned int Lock(void) { return upRef(); }
+	virtual unsigned int Lock(void) { return upRef(); }
 	// Unlock the resource (reference counter -1)
-	inline unsigned int Unlock(void) { return downRef(); }
+	virtual unsigned int Unlock(void) { return downRef(); }
+	// Unlock completely the resource (reference counter = 0) #NOTSAFE #FIXME
+	virtual void ZeroLock(void) { m_nRefCount = 0; }
 protected:
 	void setResourceHandle(FG_RHANDLE handle) {
 		m_handle = handle;

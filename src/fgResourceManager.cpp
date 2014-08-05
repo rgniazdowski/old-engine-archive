@@ -24,6 +24,7 @@ fgResourceManager *fgSingleton<fgResourceManager>::instance = NULL;
 void fgResourceManager::clear(void)
 {
 	m_resourceMap.clear();
+	m_resourceGroupMap.clear();
 	m_rhNextResHandle = FG_INVALID_RHANDLE;
 	m_nCurrentUsedMemory = 0;
 	m_nMaximumMemory = 0;
@@ -46,16 +47,30 @@ bool fgResourceManager::create(unsigned int nMaxSize)
  */
 void fgResourceManager::destroy(void)
 {
+	for(fgResourceMapItor itor = m_resourceGroupMap.begin(); itor != m_resourceGroupMap.end(); ++itor)
+	{
+		itor->second->ZeroLock();
+		itor->second->dispose();
+		fgArrayVector<fgResource *>& resInGrp = ((fgResourceGroup *)itor->second)->getRefResourceFiles();
+		for(fgResourceGroup::ResVecIt it = resInGrp.begin(); it != resInGrp.end(); it++) {
+			destroyResource((*it));
+		}
+		itor->second->clear();
+		destroyResource(itor->second);
+	}
+	//m_resourceGroupMap.clear();
+
 	//FG_WriteLog(">>>>> fgResourceManager::destroy(void);");
 	for(fgResourceMapItor itor = m_resourceMap.begin(); itor != m_resourceMap.end(); ++itor)
 	{
-		if(!((*itor).second)->isLocked())
+		//if(!((*itor).second)->isLocked())
 		{
-			//FG_WriteLog(">>>>> fgResourceManager: deleting from resource map value: id=%ud; name='%s';", (*itor).first, typeid((*itor).second).name());
+			itor->second->dispose();
+			//FG_WriteLog(">>>>> fgResourceManager: deleting from resource map value:
+			//id=%ud; name='%s';", (*itor).first, typeid((*itor).second).name());
 			delete ((*itor).second);
 		}
 	}
-	m_resourceMap.clear();
 	clear();
 }
 
@@ -87,8 +102,9 @@ bool fgResourceManager::initialize(void)
 	delete datadir;
 	filename = NULL;
 
-	if(resGroupFiles.size() == 0)
+	if(resGroupFiles.size() == 0) {
 		return false; // #TODO proper error handling
+	}
 
 	for(unsigned int i=0;i<resGroupFiles.size();i++)
 	{
@@ -97,16 +113,24 @@ bool fgResourceManager::initialize(void)
 		fgResourceGroup *resGroup = new fgResourceGroup();
 		resGroup->setFilePath(filename); // #TODO this will not always look like this - requires full path
 		resGroup->preLoadConfig();
+		// Resource group is inserted as normal resource 
+		// Resources within resource group are treated as one
+		// so even if resources in main map are being checked
+		// for overallocation, they will not be purged if the
+		// resource group is still being used (and locked)
+		// Locking resource group - locks all the resources 
 		insertResource(&grpUniqueID, resGroup);
+		// There is a separate holder for resource group
+		insertResourceGroup(&grpUniqueID, resGroup);
 		fgArrayVector<fgResource *>& resInGrp = resGroup->getRefResourceFiles();
-		typedef fgArrayVector<fgResource *>::iterator ResVecIt; // #FIXME global? anyone?
-		for(ResVecIt it = resInGrp.begin(); it != resInGrp.end(); it++) {
+		for(fgResourceGroup::ResVecIt it = resInGrp.begin(); it != resInGrp.end(); it++) {
 			FG_RHANDLE resUniqueID;
 			insertResource(&resUniqueID, (*it));
 		}
 		resGroup->refreshArrays();
 		FG_WriteLog("LOG INSERTED RESOURCE GROUP"); // #FIXME
 	}
+	resGroupFiles.clear();
 	return true;
 }
 
@@ -170,6 +194,33 @@ bool fgResourceManager::insertResource(FG_RHANDLE rhUniqueID, fgResource* pResou
 }
 
 /*
+ *
+ */
+bool fgResourceManager::insertResourceGroup(FG_RHANDLE* rhUniqueID, fgResource* pResource)
+{
+	// Get the next unique resource ID for this catalog
+	*rhUniqueID = getNextResHandle();
+	return insertResourceGroup(*rhUniqueID, pResource);
+}
+
+/*
+ *
+ */
+bool fgResourceManager::insertResourceGroup(FG_RHANDLE rhUniqueID, fgResource* pResource)
+{
+	fgResourceMapItor itor = m_resourceGroupMap.find(rhUniqueID);
+	if(itor != m_resourceGroupMap.end()) {
+		// ID has already been allocated as a resource
+		return false;
+	}
+	// Insert the resource into the current catalog's map
+	m_resourceGroupMap.insert(fgResourceMapPair(rhUniqueID, pResource));
+	pResource->setResourceHandle(rhUniqueID);
+	// return the id to the user for their use and return success
+	return true;
+}
+
+/*
  * Removes an object completely from the manager. 
  */
 bool fgResourceManager::removeResource(FG_RHANDLE rhUniqueID)
@@ -180,11 +231,11 @@ bool fgResourceManager::removeResource(FG_RHANDLE rhUniqueID)
 		// Could not find resource to remove
 		return false;
 	// if the resource was found, check to see that it's not locked
-	if(((*itor).second)->isLocked())
+	if(itor->second->isLocked())
 		// Can't remove a locked resource
 		return false;
 	// Get the memory and subtract it from the manager total
-	removeMemory(((*itor).second)->getSize());
+	removeMemory(itor->second->getSize());
 	// remove the requested resource (erase removes the pointers from the container, but does not call delete)
 	m_resourceMap.erase(itor);
 
@@ -383,7 +434,7 @@ fgResource* fgResourceManager::unlockResource(FG_RHANDLE rhUniqueID)
  */
 FG_RHANDLE fgResourceManager::findResourceHandle(fgResource* pResource)
 {
-	// Try to find the resource with the specified resource
+	// Try to find the resource in the resource map
 	fgResourceMapItor itor;
 	for(itor = m_resourceMap.begin(); itor != m_resourceMap.end(); ++itor)
 	{
@@ -398,13 +449,22 @@ FG_RHANDLE fgResourceManager::findResourceHandle(fgResource* pResource)
 /*
  *
  */
+void fgResourceManager::refreshMemory(void)
+{
+	resetMemory();
+	for(fgResourceMapItor itor = m_resourceMap.begin(); itor != m_resourceMap.end(); ++itor) {
+		addMemory(itor->second->getSize());
+	}
+}
+
+/*
+ *
+ */
 bool fgResourceManager::checkForOverallocation(void)
 {
 	if(m_nCurrentUsedMemory > m_nMaximumMemory)
 	{
-		// Attempt to remove iMemToPurge bytes from the managed resource
-		int iMemToPurge = m_nCurrentUsedMemory - m_nMaximumMemory;
-
+		resetMemory();
 		// create a temporary priority queue to store the managed items
 		std::priority_queue<fgResource*, std::vector<fgResource*>, ptr_greater<fgResource*> > PriQueue;
 
@@ -412,10 +472,12 @@ bool fgResourceManager::checkForOverallocation(void)
 		// exclude those that are current disposed or are locked
 		for(fgResourceMapItor itor = m_resourceMap.begin(); itor != m_resourceMap.end(); ++itor)
 		{
+			addMemory(itor->second->getSize());
 			if(!itor->second->isDisposed() && !itor->second->isLocked())
 				PriQueue.push(itor->second);
 		}
-
+		// Attempt to remove iMemToPurge bytes from the managed resource
+		int iMemToPurge = m_nCurrentUsedMemory - m_nMaximumMemory;
 		while((!PriQueue.empty()) && (m_nCurrentUsedMemory > m_nMaximumMemory))
 		{
 			unsigned int nDisposalSize = PriQueue.top()->getSize();

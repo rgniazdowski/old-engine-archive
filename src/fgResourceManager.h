@@ -60,8 +60,10 @@ typedef fgResourceMap::value_type			fgResourceMapPair;
 class fgResourceManager : public fgSingleton<fgResourceManager>
 {
 	friend class fgSingleton<fgResourceManager>;
-private:	
+private:
+	// Default constructor for resource manager
 	fgResourceManager()				{  clear();  }
+	// Default destructor for resource manager
 	virtual ~fgResourceManager()	{  destroy();  }
 public:
 	// This function will release all data and memory held by resource
@@ -72,12 +74,15 @@ public:
 public:
 	// This will pre-load any required data
 	bool initialize(void);
+	// Creates the resource manager
 	bool create(unsigned int nMaxSize);
 
 	// --------------------------------------------------------------------------
 	// Memory management routines
 
+	// Set maximum memory value for the used memory counter
 	bool setMaximumMemory(size_t nMem);
+	// Return the maximum memory value
 	size_t getMaximumMemory(void) const		{  return m_nMaximumMemory;  }
 	
 	// --------------------------------------------------------------------------
@@ -105,10 +110,18 @@ public:
 	// an inserted resource does not exceed the maximum allowed memory
 	bool reserveMemory(size_t nMem);
 
-	// If you pass in the address of a resource handle, the Resource Manager
+	// If you pass in the pointer to resource handle, the Resource Manager 
 	// will provide a unique handle for you.  
 	bool insertResource(FG_RHANDLE* rhUniqueID, fgResource* pResource);
+	// Insert resource into manager with predefined resource handle ID
 	bool insertResource(FG_RHANDLE rhUniqueID, fgResource* pResource);
+
+protected:
+	// Insert resource group into manager
+	bool insertResourceGroup(FG_RHANDLE* rhUniqueID, fgResource* pResource);
+	// Insert resource group into manager with predefined resource handle ID
+	bool insertResourceGroup(FG_RHANDLE rhUniqueID, fgResource* pResource);
+public:
 
 	// ! Important !
 	// removeResource(...) functions are for internal use only
@@ -163,12 +176,17 @@ public:
 	// priority, determined by the resource class's < operator.  Function will
 	// fail if requested memory cannot be freed.
 	bool checkForOverallocation(void);
-
+	
 protected:
-
-	// Internal functions
+	// Refresh allocated memory based on managed resource
+	void refreshMemory(void);
+	// Set used memory to zero
+	inline void resetMemory(void)			{  m_nCurrentUsedMemory = 0; }
+	// Add given value to used memory counter
 	inline void addMemory(size_t nMem)		{  m_nCurrentUsedMemory += nMem;  }
+	// Substract given value from used memory counter
 	inline void removeMemory(size_t nMem)	{  m_nCurrentUsedMemory -= nMem;  }
+	// Return next valid (not used) resource handle #FIXME
 	FG_RHANDLE getNextResHandle(void)			{  return --m_rhNextResHandle;  }
 
 protected:
@@ -178,6 +196,7 @@ protected:
 	bool					m_bResourceReserved;
 	fgResourceMapItor		m_currentResource;
 	fgResourceMap			m_resourceMap;
+	fgResourceMap			m_resourceGroupMap;
 };
 
 // #FIXME - again, with the singletons...

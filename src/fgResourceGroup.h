@@ -106,7 +106,10 @@ public:
 class fgResourceGroup : public fgResource {
 	friend class fgResourceGroupContentHandler;
 public:
+	typedef fgArrayVector<fgResource *>::iterator ResVecIt;
+	// Base constructor of the resource group object
 	fgResourceGroup();
+	// Base destructor of the resource group object
 	~fgResourceGroup();
 
 	// Clears the class data, this actually does not free allocated memory, just resets base class attributes
@@ -138,6 +141,13 @@ public:
 	fgArrayVector<FG_RHANDLE>& getRefResourceHandles(void) {
 		return m_rHandles;
 	}
+
+	// Lock the resource (reference counter +1)
+	virtual unsigned int Lock(void);
+	// Unlock the resource (reference counter -1)
+	virtual unsigned int Unlock(void);
+	// Unlock completely the resource (reference counter = 0) #NOTSAFE #FIXME
+	virtual void ZeroLock(void);
 
 protected:
 	// List of all handles within this resource group

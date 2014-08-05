@@ -127,7 +127,8 @@ void fgResourceGroupContentHandler::startElement(const char *localName, fgXMLEle
 	resPriority = (fgResPriorityType)atoi(resPriorityStr);
 	// quality_ = (Quality)atoi(resQualityStr);
 	// #FIXME
-	printf("%s: >>> path = '%s'; name = '%s'; priority = '%s'; quality = '%s'; \n", localName, resPath, resName, resPriorityStr, resQualityStr);
+	printf("%s: >>> path = '%s'; name = '%s'; priority = '%s'; quality = '%s'; \n",
+		localName, resPath, resName, resPriorityStr, resQualityStr);
 
 	switch(m_resType)
 	{
@@ -208,6 +209,7 @@ void fgResourceGroup::clear(void)
 	fgResource::clear();
 	m_rHandles.clear_optimised();
 	m_resourceFiles.clear_optimised();
+	m_resType = FG_RESOURCE_GROUP;
 }
 
 /*
@@ -215,7 +217,13 @@ void fgResourceGroup::clear(void)
  */
 bool fgResourceGroup::create(void)
 {
-	return true;
+	bool status = true;
+	for(ResVecIt it = m_resourceFiles.begin(); it != m_resourceFiles.end(); it++) {
+		if(!(*it)->create()) {
+			status = false;
+		}
+	}
+	return status;
 }
 
 /*
@@ -224,6 +232,9 @@ bool fgResourceGroup::create(void)
 void fgResourceGroup::destroy(void)
 {
 	FG_WriteLog("fgResourceGroup::destroy();");
+	ZeroLock();
+	dispose();
+	clear();
 }
 
 /*
@@ -231,7 +242,13 @@ void fgResourceGroup::destroy(void)
  */
 bool fgResourceGroup::recreate(void)
 {
-	return true;
+	bool status = true;
+	for(ResVecIt it = m_resourceFiles.begin(); it != m_resourceFiles.end(); it++) {
+		if(!(*it)->recreate()) {
+			status = false;
+		}
+	}
+	return status;
 }
 
 /*
@@ -240,6 +257,9 @@ bool fgResourceGroup::recreate(void)
 void fgResourceGroup::dispose(void)
 {
 	FG_WriteLog("fgResourceGroup::~dispose();");
+	for(ResVecIt it = m_resourceFiles.begin(); it != m_resourceFiles.end(); it++) {
+		(*it)->dispose();
+	}
 }
 
 /*
@@ -247,7 +267,12 @@ void fgResourceGroup::dispose(void)
  */
 bool fgResourceGroup::isDisposed(void) const
 {
-	return false;
+	bool status = true;
+	for(ResVecIt it = m_resourceFiles.begin(); it != m_resourceFiles.end(); it++) {
+		if(!(*it)->isDisposed())
+			status = false;
+	}
+	return status;
 }
 
 /*
@@ -281,10 +306,41 @@ bool fgResourceGroup::preLoadConfig(void)
  */
 void fgResourceGroup::refreshArrays(void)
 {
-	typedef fgArrayVector<fgResource *>::iterator ResVecIt;
 	m_rHandles.clear();
 	for(ResVecIt it = m_resourceFiles.begin(); it != m_resourceFiles.end(); it++) {
 		m_rHandles.push_back((*it)->getHandle());
 	}
 }
 
+/*
+ * Lock the resource (reference counter +1)
+ */
+unsigned int fgResourceGroup::Lock(void)
+{
+	for(ResVecIt it = m_resourceFiles.begin(); it != m_resourceFiles.end(); it++) {
+		(*it)->Lock();
+	}
+	return upRef();
+}
+
+/*
+ * Unlock the resource (reference counter -1)
+ */
+unsigned int fgResourceGroup::Unlock(void)
+{
+	for(ResVecIt it = m_resourceFiles.begin(); it != m_resourceFiles.end(); it++) {
+		(*it)->Unlock();
+	}
+	return downRef();
+}
+
+/*
+ * Unlock completely the resource (reference counter = 0)
+ */
+void fgResourceGroup::ZeroLock(void)
+{
+	for(ResVecIt it = m_resourceFiles.begin(); it != m_resourceFiles.end(); it++) {
+		(*it)->ZeroLock();
+	}
+	ZeroLock();
+}
