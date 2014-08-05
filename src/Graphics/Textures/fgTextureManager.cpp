@@ -16,14 +16,12 @@
 #include "fgTextureResource.h"
 #include "fgTextureManager.h"
 
-
 // FIXME
 // This file is somehow retarded because the whole texture loading procedure is hardcoded - texture files and pointer holders are defined upfront - well in game engine it is
 // unacceptable as file paths and string IDs need to be placed in configuration files (ie. XMLs)
 //
 // This file will be changed and fgTextureManager will hold handles (FG_RHANDLE) to texture resources placed in fgResourceManager
 // well the question is this is really necessary - time will show
-
 
 static fgTextureResource *tutorial_images[4] = { NULL, NULL, NULL, NULL };
 
@@ -40,28 +38,13 @@ static fgTextureResource *skyboxTex = NULL;
 static fgTextureResource *particleTextures[10] = { NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL };
 static fgTextureResource *hudTextures[5] = { NULL, NULL, NULL, NULL, NULL };
 
-/*
- * The Texture Identifiers (TextureCommon.h) - the same as positions in allTex array:
- *
- */
-
 #define LAST_TEX_ID (Tex::NUM_TEXTURES-1)
 
-fgTextureResource **thumbnailTex = NULL;
-static int numThumbnails = 0;
-
 std::map<int, fgTextureResource **> allTex;
-
 template <>
 bool fgSingleton<fgTextureManager>::instanceFlag = false;
-
 template <>
 fgTextureManager *fgSingleton<fgTextureManager>::instance = NULL;
-
-//
-// MARK: -
-// MARK: Initializers & destroyers
-//
 
 /**
  * Private constructor
@@ -92,39 +75,6 @@ fgTextureManager::fgTextureManager() {
 }
 
 /**
- * Set the number of thumbnails used in the game
- */
-void fgTextureManager::setThumbnailsCount(int num_thumbnails)
-{
-	if(thumbnailTex)
-	{
-		delete [] thumbnailTex;
-		thumbnailTex = NULL;
-	}
-	if(thumbnailTex == NULL)
-	{
-		thumbnailTex = new fgTextureResource *[num_thumbnails];
-		numThumbnails = num_thumbnails;
-		for(int i=0;i<num_thumbnails;i++)
-		{
-			thumbnailTex[i] = NULL;
-			allTex[getThumbnailTextureID(i)] = &thumbnailTex[i];
-			FG_WriteLog("allTex[%d] is %p", getThumbnailTextureID(i), allTex[getThumbnailTextureID(i)]);
-		}
-	}
-}
-
-/**
- * Getting the texture ID for the thumbnail
- */
-int fgTextureManager::getThumbnailTextureID(int thumbnail_id)
-{
-	// The thumbnail ID is counted from zero so
-	// the texture ID for given thumbnail is:
-	return Tex::NUM_TEXTURES+thumbnail_id;
-}
-
-/**
  * Private destructor
  */
 fgTextureManager::~fgTextureManager() {
@@ -132,20 +82,7 @@ fgTextureManager::~fgTextureManager() {
         delete facadeReference( Tex::ID(i) );
         facadeReference( Tex::ID(i) ) = NULL;
     }
-    // Deleting the thumbnails
-	for(int i=0;i<numThumbnails;i++) {
-		delete facadeReference( Tex::ID(getThumbnailTextureID(i)) );
-        facadeReference( Tex::ID(getThumbnailTextureID(i)) ) = NULL;
-	}
-
-	delete [] thumbnailTex;
-	thumbnailTex = NULL;
 }
-
-//
-// MARK: -
-// MARK: Business
-//
 
 /**
  * LOAD from disk
@@ -157,9 +94,6 @@ bool fgTextureManager::allToRAM( bool force ) {
     for ( int i = 0; i <= LAST_TEX_ID; i++ ) {
         result &= loadTexture( Tex::ID(i), force );
     }
-	for(int i=0;i<numThumbnails;i++) {
-		result &= loadTexture( Tex::ID(getThumbnailTextureID(i)), force );
-	}
     return result;
 }
 
@@ -176,9 +110,6 @@ bool fgTextureManager::allToVRAM( bool force ) {
     for ( int i = 0; i <= LAST_TEX_ID; i++ ) {
         result &= makeTexture( Tex::ID(i) );
     }
-	for(int i=0;i<numThumbnails;i++) {
-		result &= makeTexture( Tex::ID(getThumbnailTextureID(i)) );
-	}
 
     return result;
 }
@@ -192,10 +123,6 @@ void fgTextureManager::allReleaseNonGl() {
 		facadeReference ( Tex::ID(i) ) -> releaseNonGFX();
        // facadeReference ( Tex::ID(i) ) -> setAllowDoubleInit();
     }
-	for(int i=0;i<numThumbnails;i++) {
-		facadeReference ( Tex::ID(getThumbnailTextureID(i)) ) -> releaseNonGFX();
-      //  facadeReference ( Tex::ID(getThumbnailTextureID(i)) ) -> setAllowDoubleInit();
-	}
 }
 
 /**
@@ -210,25 +137,12 @@ void fgTextureManager::allReleaseGl() {
 		{
 			glDeleteTextures(1, &idRef);
 			idRef = 0;
-			facadeReference ( Tex::ID(getThumbnailTextureID(i)) )->setGLTextureID(0);
+			facadeReference ( Tex::ID(i) )->setGLTextureID(0);
 		}
 		if( idRef ) {
 			//FG_ErrorLog("Inconsistent data! [mode=%d] Non-NULL value in m_ucdata[%p] or m_img[%p] or m_texId[%d]", m_mode, m_ucdata, m_img, m_texId);
 		}
     }
-	for(int i=0;i<numThumbnails;i++) {
-		//facadeReference ( Tex::ID(getThumbnailTextureID(i)) ) -> releaseGFX();
-		GLuint &idRef = facadeReference ( Tex::ID(getThumbnailTextureID(i)) )->getRefGLTextureID();
-		if( idRef != 0 )
-		{
-			glDeleteTextures(1, &idRef);
-			idRef = 0;
-			facadeReference ( Tex::ID(getThumbnailTextureID(i)) )->setGLTextureID(0);
-		}
-		if( idRef ) {
-			//FG_ErrorLog("Inconsistent data! [mode=%d] Non-NULL value in m_ucdata[%p] or m_img[%p] or m_texId[%d]", m_mode, m_ucdata, m_img, m_texId);
-		}
-	}
 }
 
 /**

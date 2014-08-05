@@ -47,16 +47,6 @@ public:
      */
     PfgTexture & facadeReference( Tex::ID TEX_ID );
 
-	/**
-	 * Set the number of thumbnails used in the game
-	 */
-	void setThumbnailsCount(int num_thumbnails);
-
-	/**
-	 * Getting the texture ID for the thumbnail
-	 */
-	int getThumbnailTextureID(int thumbnail_id);
-
     /**
      * DISK -> RAM: only if needed OR force given
      */
