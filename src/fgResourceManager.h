@@ -120,6 +120,11 @@ public:
 	// Removes an object completely from the manager (does not free memory)
 	bool removeResource(FG_RHANDLE rhUniqueID);
 
+	// Disposes of the resource (frees memory) - does not remove resource from the manager
+	bool disposeResource(fgResource* pResource);
+	// Disposes of the resource (frees memory) - does not remove resource from the manager
+	bool disposeResource(FG_RHANDLE rhUniqueID);
+
 	// Destroy functions will release all the memory for the resource, delete
 	// the object, remove the resource from the manager - resource handle will
 	// become invalid - the resource manager doesnt have it anymore in its map
@@ -145,8 +150,7 @@ public:
 	// count is 0), the object is considered safe for management again and can
 	// be swapped out at the manager's discretion.  The object can be referenced
 	// either by handle or by the object's pointer. 
-	int unlockResource(FG_RHANDLE rhUniqueID);
-	int unlockResource(fgResource* pResource);
+	fgResource* unlockResource(FG_RHANDLE rhUniqueID);
 
 	// Retrieve the stored handle based on a pointer to the resource.  Note that 
 	// it's assumed that there are no duplicate pointers, as it will return the

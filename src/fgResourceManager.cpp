@@ -220,6 +220,63 @@ bool fgResourceManager::removeResource(fgResource* pResource)
 }
 
 /*
+ * Disposes of the resource (frees memory) - does not remove resource from the manager
+ */
+bool fgResourceManager::disposeResource(FG_RHANDLE rhUniqueID)
+{
+	// try to find the resource with the specified id
+	fgResourceMapItor itor = m_resourceMap.find(rhUniqueID);
+	if(itor == m_resourceMap.end()) {
+		// Could not find resource to remove
+		return false;
+	}
+	// if the resource was found, check to see that it's not locked
+	if(itor->second->isLocked())
+		// Can't remove a locked resource
+		return false;
+	unsigned int nDisposalSize = itor->second->getSize();
+	itor->second->dispose();
+	if(itor->second->isDisposed()) {
+		// Get the memory and subtract it from the manager total
+		removeMemory(nDisposalSize);
+	} else {
+		// For some reason the resource is not disposed
+		return false;
+	}
+	return true;
+}
+
+/*
+ * Disposes of the resource (frees memory) - does not remove resource from the manager
+ */
+bool fgResourceManager::disposeResource(fgResource* pResource)
+{
+	if(!pResource)
+		return false;
+	// Try to find the resource with the specified id
+	fgResourceMapItor itor = m_resourceMap.find(pResource->getHandle());
+	if(itor == m_resourceMap.end()) {
+		// Could not find resource to remove
+		return false;
+	}
+	// if the resource was found, check to see that it's not locked
+	if(pResource->isLocked()) {
+		// Can't remove a locked resource
+		return false;
+	}
+	unsigned int nDisposalSize = pResource->getSize();
+	pResource->dispose();
+	if(pResource->isDisposed()) {
+		// Get the memory and subtract it from the manager total
+		removeMemory(nDisposalSize);
+	} else {
+		// For some reason the resource is not disposed
+		return false;
+	}
+	return true;
+}
+
+/*
  * Destroys an object and deallocates it's memory
  */
 bool fgResourceManager::destroyResource(fgResource* pResource)
@@ -251,17 +308,17 @@ bool fgResourceManager::destroyResource(FG_RHANDLE rhUniqueID)
 fgResource* fgResourceManager::getResource(FG_RHANDLE rhUniqueID)
 {
 	fgResourceMapItor itor = m_resourceMap.find(rhUniqueID);
-
-	if(itor == m_resourceMap.end())
+	if(itor == m_resourceMap.end()) {
 		return NULL;
+	}
 	
-	// you may need to add your own OS dependent method of getting
+	// You may need to add your own OS dependent method of getting
 	// the current time to set your resource access time
 
-	// set the current time as the last time the object was accessed
+	// Set the current time as the last time the object was accessed
 	itor->second->setLastAccess(time(0));
 
-	// recreate the object before giving it to the application
+	// Recreate the object before giving it to the application
 	if(itor->second->isDisposed())
 	{
 		itor->second->recreate();
@@ -283,14 +340,16 @@ fgResource* fgResourceManager::getResource(FG_RHANDLE rhUniqueID)
  */
 fgResource* fgResourceManager::lockResource(FG_RHANDLE rhUniqueID)
 {
-	if(FG_IS_INVALID_RHANDLE(rhUniqueID))
+	if(FG_IS_INVALID_RHANDLE(rhUniqueID)) {
 		return NULL;
+	}
 	fgResourceMapItor itor = m_resourceMap.find(rhUniqueID);
-	if(itor == m_resourceMap.end())
+	if(itor == m_resourceMap.end()) {
 		return NULL;
+	}
 	
 	// increment the object's count
-	itor->second->setReferenceCount(itor->second->getReferenceCount() + 1);
+	itor->second->Lock();
 
 	// recreate the object before giving it to the application
 	if(itor->second->isDisposed())
@@ -300,7 +359,6 @@ fgResource* fgResourceManager::lockResource(FG_RHANDLE rhUniqueID)
 		// check to see if any overallocation has taken place
 		checkForOverallocation();
 	}
-
 	// return the object pointer
 	return itor->second;
 }
@@ -308,31 +366,16 @@ fgResource* fgResourceManager::lockResource(FG_RHANDLE rhUniqueID)
 /*
  *
  */
-int fgResourceManager::unlockResource(FG_RHANDLE rhUniqueID)
+fgResource* fgResourceManager::unlockResource(FG_RHANDLE rhUniqueID)
 {
-	if(FG_IS_INVALID_RHANDLE(rhUniqueID))
-		return -1;
+	if(FG_IS_INVALID_RHANDLE(rhUniqueID)) {
+		return NULL;
+	}
 	fgResourceMapItor itor = m_resourceMap.find(rhUniqueID);
 	if(itor == m_resourceMap.end())
-		return -1;
-	
-	// decrement the object's count
-	if(itor->second->getReferenceCount() > 0)
-		itor->second->setReferenceCount(itor->second->getReferenceCount() - 1);
-
-	return itor->second->getReferenceCount();
-}
-
-/*
- *
- */
-int fgResourceManager::unlockResource(fgResource* pResource)
-{
-	// #FIXME fgResource contains handle for itself
-	FG_RHANDLE rhResource = findResourceHandle(pResource);
-	if FG_IS_INVALID_RHANDLE(rhResource)
-		return -1;
-	return unlockResource(rhResource);
+		return NULL;
+	itor->second->Unlock();
+	return itor->second;
 }
 
 /*
@@ -340,7 +383,7 @@ int fgResourceManager::unlockResource(fgResource* pResource)
  */
 FG_RHANDLE fgResourceManager::findResourceHandle(fgResource* pResource)
 {
-	// try to find the resource with the specified resource
+	// Try to find the resource with the specified resource
 	fgResourceMapItor itor;
 	for(itor = m_resourceMap.begin(); itor != m_resourceMap.end(); ++itor)
 	{

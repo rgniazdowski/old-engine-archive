@@ -201,14 +201,14 @@ public:
 	// smart pointers... using boost or some implementation #FIXME #P3 #TODO
 protected:
 	// Increase the reference count
-	inline void upRef(void)		{ m_nRefCount++; }
+	inline unsigned int upRef(void)		{ m_nRefCount++; return m_nRefCount; }
 	// Decrease the reference count
-	inline void downRef(void)	{ if(m_nRefCount > 0) m_nRefCount--; }
+	inline unsigned int downRef(void)	{ if(m_nRefCount > 0) m_nRefCount--; return m_nRefCount; }
 
 	// Lock the resource (reference counter +1)
-	inline void Lock(void) { upRef(); }
+	inline unsigned int Lock(void) { return upRef(); }
 	// Unlock the resource (reference counter -1)
-	inline void Unlock(void) { downRef(); }
+	inline unsigned int Unlock(void) { return downRef(); }
 protected:
 	void setResourceHandle(FG_RHANDLE handle) {
 		m_handle = handle;
