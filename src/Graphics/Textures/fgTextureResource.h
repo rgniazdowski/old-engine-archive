@@ -109,7 +109,6 @@ public:
     // Uploads image to VRAM as a texture
     bool makeGFXTexture();
 
-
 	// Get the texture id used by the low level graphics system - handle in OpenGL
     GLuint getGLTextureID() const {
         return m_glTextureID;

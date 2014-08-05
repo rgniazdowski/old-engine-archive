@@ -16,18 +16,20 @@
 #include "../Graphics/Textures/fgTextureManager.h"
 #include "../Hardware/fgHardwareState.h"
 
+
 /*
- *
+ * Clears the class data, this actually does not free allocated memory, just resets base class attributes
  */
 void fgFontResource::clear(void)
 {
 	fgTextureResource::clear();
 	m_step = 0;
 	memset(m_space, 0, sizeof(m_space[0][0]) * FG_FONT_STANDARD_ASCII_SIZE * 2);
+	m_resType = FG_RESOURCE_FONT;
 }
 
 /*
- *
+ * Create function loads/interprets data from file in ROM and place it in RAM memory.
  */
 bool fgFontResource::create(void)
 {
@@ -84,7 +86,7 @@ bool fgFontResource::create(void)
 }
 
 /*
- *
+ * Destroy all loaded data including additional metadata (called with deconstructor)
  */
 void fgFontResource::destroy(void)
 {
@@ -94,7 +96,7 @@ void fgFontResource::destroy(void)
 }
 
 /*
- *
+ * Reloads any data, recreates the resource (refresh)
  */
 bool fgFontResource::recreate(void)
 {
@@ -103,7 +105,7 @@ bool fgFontResource::recreate(void)
 }
 
 /*
- *
+ * Dispose completely of the all loaded data, free all memory
  */
 void fgFontResource::dispose(void)
 {
@@ -112,7 +114,7 @@ void fgFontResource::dispose(void)
 }
 
 /*
- *
+ * Check if resource is disposed (not loaded yet or disposed after)
  */
 bool fgFontResource::isDisposed(void) const
 {

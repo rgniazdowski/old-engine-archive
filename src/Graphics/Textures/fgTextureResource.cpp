@@ -46,6 +46,7 @@ void fgTextureResource::clear(void)
 	m_height = 0;
     m_components = -1;
 	m_glTextureID = 0;
+	m_resType = FG_RESOURCE_TEXTURE;
 }
 
 /*

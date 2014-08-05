@@ -7,7 +7,4 @@
  * and/or distributed without the express or written permission from the author.
  *******************************************************/
 
-#ifndef _FG_GFX_MODEL_OBJ_RESOURCE_H_
-#define _FG_GFX_MODEL_OBJ_RESOURCE_H_
-
-#endif
+#include "fgGFXModelOBJResource.h"
