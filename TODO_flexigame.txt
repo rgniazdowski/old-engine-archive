@@ -1,0 +1,198 @@
+** ABSTRACT PLAN **
+
+- by stworzyc gre musze miec pelen plan i projekt dotyczacy funkcjonowania 
+  samego silnika
+  -- to nie jest takie latwe, zgadzam sie na to - biore to na klate
+  -- wiadome jest ze nie wazne jakie zalozenia projektowe przyjme teraz dla
+     samego silnika gry (projekt klas, podsystemow, zaleznosci miedzy nimi),
+	 pozniej moze sie okazac ze sa bledne i jest wymagany spory refactoring przy
+	 dodawaniu nowej funkcjonalnosci czy podsystemu
+
+  -- glownym jednak zalozeniem przy projekcie jest uzycie w pelni modelu MVC
+     MODEL, VIEW, CONTROLLER
+
+  -- rowniez od samego poczatku (wiem ze bedzie to dodatkowa praca, ale chodzi
+     o dlugofalowe wyniki) kod bedzie pisany z uwzglednieniem wszystkich platform:
+	 - linux
+	 - windows
+	 - macosx
+	 - android
+	 - ios
+
+	 * jednak w przypadku platform mobilnych - uzywany bedzie Marmalade - 
+	   - z gory jest wiadome ze w przyszlosci nastapi rezygnacja z Marmalade
+	   - bedzie to jednak dopiero za 4-5 lat lub gdy firma Ideaworks padnie
+	 
+	 * jednoczesnie w przypadku grafiki uzywane bedzie tylko OpenGL - wersja
+	   desktop i mobilna - w tym ES tylko wersja 2.0
+	   * na poczatku jednak trudno bedzie uwzgledniac rozne wersje OpenGL na 
+	     desktop'y - potrzebny bylby tu bardziej zautomatyzowany podsystem
+		 sprawdzania wersji, sprawdzania dostepnych rozszerzen i wybierania
+		 optymalnej drogi
+
+  -- trudne bedzie rowniez debugowanie na urzadzeniu
+  -- trudne bedzie pisanie silnika z uwzglednieniem wielowatkowosci
+     - w tym przypadku na desktop + mobilne beda wystepowac maksymalnie 2 watki
+	 - na poczatku nie bedzie to dobrze wspierane - czysty szablon i niepelne
+	   klasy
+	 - wymagane jest tutaj rowniez testowanie wydajnosci, benchmarking
+	   i profiling
+	 - to ma maly priorytet: P5-6
+	 - jednak napisanie szablonu podsystemu, klas - P2-3 - jak najszybciej
+	   poniewaz jest to lekkie - wzor klasy i podstawowe typy i funckcje napisze
+	   sie bardzo szybko, mozna na to poswiecic jeden dzien lub polowe
+
+  -- duze trudnosci wynikaja z samych zalozen automatyzacji
+	- w tym rowniez resource manager, pliki XML
+	- wsparcie dla skryptow LUA
+	- automatyczne GUI, z plikow XML/HTML (udawane) + .css (podobne) + .lua
+	- wsparcie dla automatycznego ladowania shaderow
+	  - w tym automatyzacja w przypadku uzywania zmiennych uniform oraz
+	    atrybuty
+	  - plikom shaderow towarzysza rowniez pliki xml z opcjami
+	- pliki zip/pak, paczki danych
+	- manager sceny 3D/2D (omg)
+	  - rowniez pliki xml + lua do projektowania sceny
+	  - to bedzie kozak
+	- automatyzacja kamery
+	  - xml + lua
+	- podzial danych 3D do rysowania wg uzytego materialu/tekstury
+	  - drawing batch (omg)
+	- wczytywanie plikow 3D (narazie tylko obj)
+	- wczytywanie roznych rodzajow tekstur
+	- obsluga dzwieku (marmalade)
+
+	- programy i skrypty pomocnicze
+	  - programy pisane w Qt
+	  - wyswietlanie rowniez sceny 3D za pomoca tych programow - projektowanie
+	  - wymagany jest tutaj od silnika inny tryb konfiguracji zeby kompilowac
+	    to do biblioteki .so/.a, a nastepnie dolaczanie go do specjalnego programu
+
+	- i wiele innych...
+
+
+*** *** NA CZYM SIE SKUPIC NA POCZATKU *** ***
+
+[X] ** automatyzacja XML, wczytywanie / tworzenie loaderow XML w podobny sposob jak
+       w Javie - SAXP loader - klasa wrapper, pisanie wlasnych funkcji pod dany rodzaj
+       pliku XML - that's the way to go
+[ ]- nastepnie napisanie tych wrapperow dla plikow:
+[ ]  - resource
+[X]  - resource group [ DONE ]
+[ ]  - shader config
+[ ]  - main configuration
+[ ]  - save game state (much later)
+
+** w przypadku Resource Manager'a
+  - rowniez napisanie w pelni resource'a dla:
+[ ]    - obiektu 3D - obj
+[ ]	- grup
+[ ] - font (texture based)
+[ ]	- tekstur
+[ ]	- dzwiekow, muzyki
+[ ]	- menu, gui (pozniej, gdy rozpocznie sie praca z GUI)
+[ ]	- shaderow
+[ ]	  - obsluga shaderow moze byc napisana w pewnym stopniu na poczatku nawet
+		jesli nie jest jeszcze do konca jasna struktura silnika 3D i menagera scen
+		- shader bedzie jednostka w pewnym stopniu autonomiczna, nie zalezy zbyt
+		  od modelu wyswietlania itp itd - poniewaz to reszta podsystemow bedzie
+		  korzystac z shaderow - tutaj warto zadbac z poczatku o automatyzacje
+
+	
+** w przypadku silnika 3D (2.5D)
+- na poczatek ofc: Shader Manager
+- wraz z tworzeniem automatyzacji przy zmiennych uniform oraz atrybutow bedzie
+  mozna stworzyc szablon zarzadzania rzutem perspektywistycznym/orto + kamera
+  (podstawowe)
+- Shader Manager (minimal)
+[X] - ladowanie tekstur, obsluga podstawowych formatow, w pelni podlaczenie rowniez
+	  pod resource manager
+[X] - przy teksturach nie wystarczy zaladowac RAW data do pamieci (ROM -> RAM)
+[ ]  - nalezy rowniez uzyc funkcji GL w celu stworzenia prawdziwej tekstury
+	   w pamieci karty graficznej - to juz jest podsystem GFX
+[ ] - ladowanie plikow OBJ (warto tutaj zadbac od razu o wszelkie dane w tym
+      material
+[ ] - podlaczenie material z teksturami
+- OFC: polaczenie z RM i wczytywanie XML
+
+** scene manager - podstawowy
+[ ]  - wczytywanie XML 
+[ ]    - wymyslenie formatu XML
+  - LUA pozniej (duzo)
+  - frustum culling (na poczatek bardzo prosty, opierajacy sie o cale obiekty,
+    a nie podzielone na trojkaty)
+    - octree
+  - quadtree
+
+** drawing batch -- bardzo podstawowy
+  - proste sortowanie wedlug uzytego materialu, na poczatek nawet nie bedzie to
+	testowane
+  - wystarczy napisac tego pewien szablon
+  - na poczatek najbardziej to sie przyda w przypadku GUI
+
+** GUI:
+- zalezny od GFX + Resource Manager + tekstury + dzwieki + system XML i LUA
+- wpierw napisanie, zaprojektowanie wiekszosci potrzebnych klas
+[ ] - zdefiniowanie formatu XML dla definicji menu oraz wygladu
+[ ] - XML/HTML + CSS
+[ ] - LUA (opcjonalne)
+[ ] - definicja rysowania prymitywnych konstrukcji (primitives) - 
+    czyli: kwadraty, prostokaty, zaokraglenia, krawedzie, linie, tabele
+           cienie, + czcionki
+	  * tu bedzie potrzebne drawing batch - w pewnym stopniu
+      -- - - - definicja rysowania prymitowow oparta na podsystemie GFX
+[ ] - na poczatek 2.5D
+[ ]- potem konieczne jest 3D, uzywanie perspektywy, obliczanie proporcji widoku
+    (frustum), wymiarow, by pracowac na menu w pikselach/procentach (rozmiar) - 
+    jednak juz obiekty beda wyswietlane odpowiednio na ekranie (potrzeba ogarnac
+    wymagane do tego wzory) - trudne
+[ ] - automatyczne dostosowywanie rozmiaru, dzialanie na %
+[ ] - style (podstawy)
+
+** Podsystem GFX - Particle System
+- silnie zalezny od GFX
+[ ] - wymagany dzialajacy juz Resource Manager + GFX
+[ ] - wymagany dzialajacy Scene Manager 
+[ ] - shadery ?
+- ladowanie definicji z XML
+[ ]  - definicja zawiera parametry, nazwe kodowa, ID
+[ ]   - potrzebne tekstury i dzwieki
+[ ]   - forma wyswietlania
+[ ]   - 2.5D / 3D
+[ ]   - rodzaj obiektu na ktorym jest oparte
+[ ]   - parametry fizyczne i podstawowe efekty (takie jak np. obracanie sie w 
+      kierunku lotu/poruszania sie)
+[ ]  - wykrywanie kolizji ze swiatem on/off
+[ ]  - czas zycia
+[ ]  - rodzaj efektu
+[ ]  - parametry ilosciowe
+[ ]  - kolory
+[ ]  - parametry, limity losowania parametrow przy aktywacji
+[ ]  - cyklicznosc
+[ ]  - INFO: pozycja poczatkowa ustawiana jest zwykle z zewnatrz
+[ ]  - i inne - pelna definicja
+[ ] - mozliwosc pelnej parametryzacji
+[ ] - nie jest konieczne tworzenie wlasnych sztywnych klas
+[ ] - mozliwosc tworzenia multi-efektow - grupowanie (wymagane np. w przypadku 
+    eksplozji)
+
+------
+
+** oswietlenie + cienie (P9) - to i tak shadery 
+** wykrywanie kolizji (duzo potem, na pierwsza gre to nie jest potrzebne)
+	- podstawowe wykrywanie kolizji na podstawie bounding box i bounding sphere
+
+
+** Silnik fizyki:
+ - w systemie particles jest on latwy do implementacji
+   - w rzeczywistosci to tylko uwzglednianie grawitacji + 
+     wiatru i ewentualnie innych sil + poruszanie sie w kierunku / zmiana
+
+ - w innych przypadkach jesli bedzie wymagany silnik fizyki nalezy uzyc gotowego
+   silnika Bullet - darmowy i licencja pozwala na uzycie w projektach komercyjnych
+   i jest udostepniany pelen kod
+   - w tym przypadku nalezy podlaczyc manager sceny z Bullet ze Scene Managerem
+	 z FlexiGame
+
+
+

@@ -1,2 +1,5 @@
-[ ] napisac szablonowy kod do odczytywanie xml'a w glab rekurencyjnie -
+[X] napisac szablonowy kod do odczytywanie xml'a w glab rekurencyjnie -
     aktualnie kod z dwiema petlami wchodzi tylko na poziom nizej
+	[X] - oddzielna klasa helper - jak w javie - saxp reader
+
+
