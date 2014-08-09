@@ -76,6 +76,7 @@ files
 	Hardware/fgHardwareState.h
 	Hardware/fgQualityManager.cpp
 	Hardware/fgQualityManager.h
+	Hardware/fgQualityTypes.h
 	Hardware/fgSensors.cpp
 	Hardware/fgSensors.h
 	
@@ -164,8 +165,6 @@ files
 	["Infinium/GUI"]
 	GUI/fgFontDrawer.cpp
 	GUI/fgFontDrawer.h
-	GUI/fgFontManager.cpp
-	GUI/fgFontManager.h
 	GUI/fgFontResource.cpp
 	GUI/fgFontResource.h
 	GUI/fgGuiButton.cpp

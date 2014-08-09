@@ -10,4 +10,5 @@
 #ifndef _FG_GUI_LABEL_H_
 #define _FG_GUI_LABEL_H_
 
-#endif
+#endif /* _FG_GUI_LABEL_H_ */
+

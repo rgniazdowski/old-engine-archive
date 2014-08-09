@@ -10,4 +10,5 @@
 #ifndef _FG_GUI_MESSAGE_BOX_H_
 #define _FG_GUI_MESSAGE_BOX_H_
 
-#endif
+#endif /* _FG_GUI_MESSAGE_BOX_H_ */ 
+

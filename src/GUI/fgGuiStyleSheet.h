@@ -10,4 +10,5 @@
 #ifndef _FG_GUI_STYLE_SHEET_H_
 #define _FG_GUI_STYLE_SHEET_H_
 
-#endif
+#endif /* _FG_GUI_STYLE_SHEET_H_ */
+

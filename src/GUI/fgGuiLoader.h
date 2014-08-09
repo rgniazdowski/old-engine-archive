@@ -10,4 +10,5 @@
 #ifndef _FG_GUI_LOADER_H_
 #define _FG_GUI_LOADER_H_
 
-#endif
+#endif /* _FG_GUI_LOADER_H_ */
+

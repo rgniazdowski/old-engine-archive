@@ -7,6 +7,8 @@
  * and/or distributed without the express or written permission from the author.
  *******************************************************/
 
-#ifndef _FG_GUI_CALLBACK_H
-#define _FG_GUI_CALLBACK_H
-#endif
+#ifndef _FG_GUI_CALLBACK_H_
+#define _FG_GUI_CALLBACK_H_
+
+#endif /* _FG_GUI_CALLBACK_H_ */
+

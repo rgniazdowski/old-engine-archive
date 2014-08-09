@@ -10,6 +10,5 @@
 #ifndef _FG_GUI_BUTTON_H_
 #define _FG_GUI_BUTTON_H_
 
+#endif /* _FG_GUI_BUTTON_H_ */ 
 
-
-#endif

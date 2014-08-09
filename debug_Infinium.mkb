@@ -6,209 +6,203 @@ files
 	MainModule.cpp
 	
 	["Infinium/BaseCode"]
-	Common.cpp
-	Common.h
-	FileStream.cpp
-	FileStream.h
-	ProgramMain.cpp
-	ProgramMain.h
-	Resource.cpp
-	Resource.h
-	ResourceManager.cpp
-	ResourceManager.h
-	Settings.cpp
-	Settings.h
-	Singleton.cpp
-	Singleton.h
-	XMLResource.cpp
-	XMLResource.h
+	fgBuildConfig.h
+	fgCommon.cpp
+	fgCommon.h
+	fgDirent.cpp
+	fgDirent.h
+	fgException.h
+	fgFileStream.cpp
+	fgFileStream.h
+	fgGameMain.cpp
+	fgGameMain.h
+	fgMemory.h
+	fgMessageCommon.h
+	fgResource.cpp
+	fgResource.h
+	fgResourceGroup.cpp
+	fgResourceGroup.h
+	fgResourceManager.cpp
+	fgResourceManager.h
+	fgSettings.cpp
+	fgSettings.h
+	fgSingleton.cpp
+	fgSingleton.h
+	fgStatus.h
+	fgXMLDefaultHandler.h
+	fgXMLParser.cpp
+	fgXMLParser.h
+	fgXMLTypesWrap.h
+
+	["Infinium/GameLogic"]
+	GameLogic/fgGameLogic.cpp
+	GameLogic/fgGameLogic.h
 
 	["Infinium/Audio"]
-	Audio/SFXAudioResource.cpp
-	Audio/SFXAudioResource.h
-	Audio/SFXManager.cpp
-	Audio/SFXManager.h
-	Audio/SFXMusicResource.cpp
-	Audio/SFXMusicResource.h
+	Audio/fgSFXAudioResource.cpp
+	Audio/fgSFXAudioResource.h
+	Audio/fgSFXManager.cpp
+	Audio/fgSFXManager.h
+	Audio/fgSFXMusicResource.cpp
+	Audio/fgSFXMusicResource.h
 
 	["Infinium/Event"]
-	Event/EventHelper.h
-	Event/EventDefinitions.h
-	Event/ArgumentList.cpp
-	Event/ArgumentList.h
-	Event/ThrownEvent.h
-	Event/CyclicCallback.h
-	Event/TimeoutCallback.h
-	Event/Callback.h
-	Event/EventManager.cpp
-	Event/EventManager.h
-
-	["Infinium/Math"]
-	Math/KalmanFilter.cpp
-	Math/KalmanFilter.h
-	Math/MathLib.h	
+	Event/fgEventHelper.h
+	Event/fgEventDefinitions.h
+	Event/fgArgumentList.cpp
+	Event/fgArgumentList.h
+	Event/fgThrownEvent.h
+	Event/fgCyclicCallback.h
+	Event/fgTimeoutCallback.h
+	Event/fgCallback.h
+	Event/fgEventManager.cpp
+	Event/fgEventManager.h
 
 	["Infinium/Scripting"]
-	Scripting/ScriptManager.cpp
-	Scripting/ScriptManager.h
-	Scripting/ScriptResource.cpp
-	Scripting/ScriptResource.h
+	Scripting/fgScriptManager.cpp
+	Scripting/fgScriptManager.h
+	Scripting/fgScriptResource.cpp
+	Scripting/fgScriptResource.h
 
 	["Infinium/Input"]
-	Input/TouchRawData.h
-	Input/TouchReceiver.cpp
-	Input/TouchReceiver.h
-	
-	["Infinium/GUI"]
-	GUI/FontDrawer.cpp
-	GUI/FontDrawer.h
-	GUI/FontManager.cpp
-	GUI/FontManager.h
-	GUI/FontResource.cpp
-	GUI/FontResource.h
-	GUI/GuiButton.cpp
-	GUI/GuiButton.h
-	GUI/GuiCallback.cpp
-	GUI/GuiCallback.h
-	GUI/GuiConsole.cpp
-	GUI/GuiConsole.h
-	GUI/GuiContainer.cpp
-	GUI/GuiContainer.h
-	GUI/GuiDrawer.cpp
-	GUI/GuiDrawer.h
-	GUI/GuiLabel.cpp
-	GUI/GuiLabel.h
-	GUI/GuiLoader.cpp
-	GUI/GuiLoader.h
-	GUI/GuiMain.cpp
-	GUI/GuiMain.h
-	GUI/GuiMenu.cpp
-	GUI/GuiMenu.h
-	GUI/GuiMessageBox.cpp
-	GUI/GuiMessageBox.h
-	GUI/GuiPrimitives.cpp
-	GUI/GuiPrimitives.h
-	GUI/GuiProgressBar.cpp
-	GUI/GuiProgressBar.h
-	GUI/GuiScreenGrid.cpp
-	GUI/GuiScreenGrid.h
-	GUI/GuiStructureSheet.cpp
-	GUI/GuiStructureSheet.h
-	GUI/GuiStructureSheetInterpreter.cpp
-	GUI/GuiStructureSheetInterpreter.h
-	GUI/GuiStyleSheet.cpp
-	GUI/GuiStyleSheet.h
-	GUI/GuiStyleSheetInterpreter.cpp
-	GUI/GuiStyleSheetInterpreter.h
-	GUI/GuiWidget.cpp
-	GUI/GuiWidget.h
-	
-	["Infinium/Graphics"]
-	Graphics/GFXTypes.h
-	Graphics/GFX2DScene.cpp
-	Graphics/GFX2DScene.h
-	Graphics/GFX3DScene.cpp
-	Graphics/GFX3DScene.h
-	Graphics/GFXCamera.cpp
-	Graphics/GFXCamera.h
-	Graphics/GFXCameraAnimation.cpp
-	Graphics/GFXCameraAnimation.h
-	Graphics/GFXDrawingBatch.cpp
-	Graphics/GFXDrawingBatch.h
-	Graphics/GFXFrustumView.cpp
-	Graphics/GFXFrustumView.h
-	Graphics/GFXMain.cpp
-	Graphics/GFXMain.h
-	Graphics/GFXMaterial.cpp
-	Graphics/GFXMaterial.h
-	Graphics/GFXModel.cpp
-	Graphics/GFXModel.h	
-	Graphics/GFXObject.cpp
-	Graphics/GFXObject.h
-	Graphics/GFXOctreeBase.cpp
-	Graphics/GFXOctreeBase.h
-	Graphics/GFXOrthoView.cpp
-	Graphics/GFXOrthoView.h
-	Graphics/GFXPrimitives.cpp
-	Graphics/GFXPrimitives.h
-	Graphics/GFXQuadtreeBase.cpp
-	Graphics/GFXQuadtreeBase.h
-	Graphics/GFXSceneManager.cpp
-	Graphics/GFXSceneManager.h	
-	Graphics/GFXShader.cpp
-	Graphics/GFXShader.h
-	Graphics/GFXShaderBinder.cpp
-	Graphics/GFXShaderBinder.h
-	Graphics/GFXSimpleDrawer.cpp
-	Graphics/GFXSimpleDrawer.h
-	Graphics/GFXTexturing.cpp
-	Graphics/GFXTexturing.h
-	Graphics/OpenGL/OGLDrawingBatch.cpp
-	Graphics/OpenGL/OGLDrawingBatch.h
-	Graphics/OpenGL/OGLFrustumView.cpp
-	Graphics/OpenGL/OGLFrustumView.h
-	Graphics/OpenGL/OGLLighting.cpp
-	Graphics/OpenGL/OGLLighting.h
-	Graphics/OpenGL/OGLMain.cpp
-	Graphics/OpenGL/OGLMain.h
-	Graphics/OpenGL/OGLOrthoView.cpp
-	Graphics/OpenGL/OGLOrthoView.h
-	Graphics/OpenGL/OGLPrimitives.cpp
-	Graphics/OpenGL/OGLPrimitives.h
-	Graphics/OpenGL/OGLShader.cpp
-	Graphics/OpenGL/OGLShader.h
-	Graphics/OpenGL/OGLShaderBinder.cpp
-	Graphics/OpenGL/OGLShaderBinder.h
-	Graphics/OpenGL/OGLTexturing.cpp
-	Graphics/OpenGL/OGLTexturing.h
-	
-	["Infinium/Particles"]
-	Graphics/Particles/Particle.h
-	Graphics/Particles/ParticleSystem.cpp
-	Graphics/Particles/ParticleSystem.h
-	Graphics/Particles/PsExplosionEffect.cpp
-	Graphics/Particles/PsExplosionEffect.h
-	Graphics/Particles/PsFlashEffect.cpp
-	Graphics/Particles/PsFlashEffect.h
-	Graphics/Particles/PsFlyingDebrisEffect.cpp
-	Graphics/Particles/PsFlyingDebrisEffect.h
-	Graphics/Particles/PsObjectPulseEffect.cpp
-	Graphics/Particles/PsObjectPulseEffect.h
-	Graphics/Particles/PsParticleDrawer.cpp
-	Graphics/Particles/PsParticleDrawer.h
-	Graphics/Particles/PsParticleEffect.cpp
-	Graphics/Particles/PsParticleEffect.h
-	Graphics/Particles/PsParticleEffectCircular.cpp
-	Graphics/Particles/PsParticleEffectCircular.h
-	Graphics/Particles/PsParticleEffectLimited.cpp
-	Graphics/Particles/PsParticleEffectLimited.h
-	Graphics/Particles/PsSequentialEffect.cpp
-	Graphics/Particles/PsSequentialEffect.h
-	Graphics/Particles/PsSpecialEffect.h
-
-	["Infinium/Textures"]
-	Graphics/Textures/TextureCommon.h
-	Graphics/Textures/TextureLoader.cpp
-	Graphics/Textures/TextureLoader.h
-	Graphics/Textures/TextureManager.cpp
-	Graphics/Textures/TextureManager.h
-	Graphics/Textures/TextureResource.cpp
-	Graphics/Textures/TextureResource.h	
+	Input/fgTouchRawData.h
+	Input/fgTouchReceiver.cpp
+	Input/fgTouchReceiver.h
 
 	["Infinium/Hardware"]
-	Hardware/DeviceQuery.cpp
-	Hardware/DeviceQuery.h
-	Hardware/HardwareState.cpp
-	Hardware/HardwareState.h
-	Hardware/QualityManager.cpp
-	Hardware/QualityManager.h
-	Hardware/Sensors.cpp
-	Hardware/Sensors.h
+	Hardware/fgDeviceQuery.cpp
+	Hardware/fgDeviceQuery.h
+	Hardware/fgHardwareState.cpp
+	Hardware/fgHardwareState.h
+	Hardware/fgQualityManager.cpp
+	Hardware/fgQualityManager.h
+	Hardware/fgQualityTypes.h
+	Hardware/fgSensors.cpp
+	Hardware/fgSensors.h
 	
-	["Infinium/GameLogic"]
-	GameLogic/GameLogic.cpp
-	GameLogic/GameLogic.h
+	["Infinium/Math"]
+	Math/fgKalmanFilter.cpp
+	Math/fgKalmanFilter.h
+	Math/fgMathLib.h	
 
+	["Infinium/Graphics"]
+	Graphics/fgGFXTypes.h
+	Graphics/fgGFX2DScene.cpp
+	Graphics/fgGFX2DScene.h
+	Graphics/fgGFX3DScene.cpp
+	Graphics/fgGFX3DScene.h
+	Graphics/fgGFXCamera.cpp
+	Graphics/fgGFXCamera.h
+	Graphics/fgGFXCameraAnimation.cpp
+	Graphics/fgGFXCameraAnimation.h
+	Graphics/fgGFXDrawingBatch.cpp
+	Graphics/fgGFXDrawingBatch.h
+	Graphics/fgGFXPerspectiveView.h
+	Graphics/fgGFXMain.cpp
+	Graphics/fgGFXMain.h
+	Graphics/fgGFXMaterial.cpp
+	Graphics/fgGFXMaterial.h
+	Graphics/fgGFXModelResource.cpp
+	Graphics/fgGFXModelResource.h
+	Graphics/fgGFXModelOBJResource.cpp
+	Graphics/fgGFXModelOBJResource.h
+	Graphics/fgGFXObject.cpp
+	Graphics/fgGFXObject.h
+	Graphics/fgGFXOctreeBase.cpp
+	Graphics/fgGFXOctreeBase.h
+	Graphics/fgGFXOrthoView.h
+	Graphics/fgGFXPrimitives.cpp
+	Graphics/fgGFXPrimitives.h
+	Graphics/fgGFXQuadtreeBase.cpp
+	Graphics/fgGFXQuadtreeBase.h
+	Graphics/fgGFXSceneManager.cpp
+	Graphics/fgGFXSceneManager.h	
+	Graphics/fgGFXShader.cpp
+	Graphics/fgGFXShader.h
+	Graphics/fgGFXShaderManager.cpp
+	Graphics/fgGFXShaderManager.h
+	Graphics/fgGFXShaderProgram.cpp
+	Graphics/fgGFXShaderProgram.h
+	Graphics/fgGFXSimpleDrawer.cpp
+	Graphics/fgGFXSimpleDrawer.h
+	Graphics/fgGFXTexturing.cpp
+	Graphics/fgGFXTexturing.h
+
+	["Infinium/Graphics/Textures"]
+	Graphics/Textures/fgTextureCommon.h
+	Graphics/Textures/fgTextureLoader.cpp
+	Graphics/Textures/fgTextureLoader.h
+	Graphics/Textures/fgTextureManager.cpp
+	Graphics/Textures/fgTextureManager.h
+	Graphics/Textures/fgTextureResource.cpp
+	Graphics/Textures/fgTextureResource.h
+	Graphics/Textures/fgTextureTypes.h
+
+	["Infinium/Graphics/Particles"]
+	Graphics/Particles/fgParticle.h
+	Graphics/Particles/fgParticleSystem.cpp
+	Graphics/Particles/fgParticleSystem.h
+	Graphics/Particles/fgPsExplosionEffect.cpp
+	Graphics/Particles/fgPsExplosionEffect.h
+	Graphics/Particles/fgPsFlashEffect.cpp
+	Graphics/Particles/fgPsFlashEffect.h
+	Graphics/Particles/fgPsFlyingDebrisEffect.cpp
+	Graphics/Particles/fgPsFlyingDebrisEffect.h
+	Graphics/Particles/fgPsObjectPulseEffect.cpp
+	Graphics/Particles/fgPsObjectPulseEffect.h
+	Graphics/Particles/fgPsParticleDrawer.cpp
+	Graphics/Particles/fgPsParticleDrawer.h
+	Graphics/Particles/fgPsParticleEffect.cpp
+	Graphics/Particles/fgPsParticleEffect.h
+	Graphics/Particles/fgPsParticleEffectCircular.cpp
+	Graphics/Particles/fgPsParticleEffectCircular.h
+	Graphics/Particles/fgPsParticleEffectLimited.cpp
+	Graphics/Particles/fgPsParticleEffectLimited.h
+	Graphics/Particles/fgPsSequentialEffect.cpp
+	Graphics/Particles/fgPsSequentialEffect.h
+	Graphics/Particles/fgPsSpecialEffect.h
+
+	["Infinium/GUI"]
+	GUI/fgFontDrawer.cpp
+	GUI/fgFontDrawer.h
+	GUI/fgFontResource.cpp
+	GUI/fgFontResource.h
+	GUI/fgGuiButton.cpp
+	GUI/fgGuiButton.h
+	GUI/fgGuiCallback.cpp
+	GUI/fgGuiCallback.h
+	GUI/fgGuiConsole.cpp
+	GUI/fgGuiConsole.h
+	GUI/fgGuiContainer.cpp
+	GUI/fgGuiContainer.h
+	GUI/fgGuiDrawer.cpp
+	GUI/fgGuiDrawer.h
+	GUI/fgGuiLabel.cpp
+	GUI/fgGuiLabel.h
+	GUI/fgGuiLoader.cpp
+	GUI/fgGuiLoader.h
+	GUI/fgGuiMain.cpp
+	GUI/fgGuiMain.h
+	GUI/fgGuiMenu.cpp
+	GUI/fgGuiMenu.h
+	GUI/fgGuiMessageBox.cpp
+	GUI/fgGuiMessageBox.h
+	GUI/fgGuiPrimitives.cpp
+	GUI/fgGuiPrimitives.h
+	GUI/fgGuiProgressBar.cpp
+	GUI/fgGuiProgressBar.h
+	GUI/fgGuiScreenGrid.cpp
+	GUI/fgGuiScreenGrid.h
+	GUI/fgGuiStructureSheet.cpp
+	GUI/fgGuiStructureSheet.h
+	GUI/fgGuiStructureSheetInterpreter.cpp
+	GUI/fgGuiStructureSheetInterpreter.h
+	GUI/fgGuiStyleSheet.cpp
+	GUI/fgGuiStyleSheet.h
+	GUI/fgGuiStyleSheetInterpreter.cpp
+	GUI/fgGuiStyleSheetInterpreter.h
+	GUI/fgGuiWidget.cpp
+	GUI/fgGuiWidget.h
 
 }
 
@@ -226,6 +220,83 @@ assets
 	
 	(data)
 	textures/loading_screen0.jpg
+	textures/nebula_1024.jpg
+	textures/hud_center_512.tga
+	textures/bg_biohazard0_1136x640.jpg
+	textures/hud_center_1024.tga
+	textures/hud_center.png
+	textures/hud_bottom.png
+	textures/flash0_sheet.tga
+	textures/flame0_sheet.tga
+	textures/hud_bottom_1024.tga
+	textures/hud_top.png
+	textures/smoketrail0.tga
+	textures/hud_top_2048.tga
+	textures/shockwave1.tga
+	textures/arrow0_right.tga
+	textures/BackgroundCrate_1024x512.jpg
+	textures/bg_biohazard0_1024x768.jpg
+	textures/explosion1_1024.tga
+	textures/crosshair0.tga
+	textures/bg_biohazard0_1920x1200.jpg
+	textures/hud_lines_2048.tga
+	textures/arrow0_left.tga
+	textures/spark0.tga
+	textures/hud_bottom_2048.tga
+	textures/hud_top_1024.tga
+	textures/shockwave0.tga
+	textures/fire1_512.tga
+	textures/debris0_sheet.tga
+	textures/hud_lines.png
+	textures/hud_lines_1024.tga
+	textures/galaxy_1024.jpg
+	textures/loading_screen0.jpg
+	textures/plasma_galaxy_1024.jpg
+
+	(data)
+	fonts/Armalite_1024.tga
+	fonts/Armalite_2048.tga
+	fonts/Armalite_512.tga
+	fonts/CaptureIt_1024.tga
+	fonts/CaptureIt_2048.tga
+	fonts/CaptureIt_512.tga
+	fonts/CarbonType_1024.tga
+	fonts/CarbonType_2048.tga
+	fonts/CarbonType_512.tga
+	fonts/Destroy_1024.tga
+	fonts/Destroy_2048.tga
+	fonts/Destroy_512.tga
+	fonts/DigitalDream_1024.tga
+	fonts/DigitalDream_2048.tga
+	fonts/DigitalDream_512.tga
+	fonts/Franchise_1024.tga
+	fonts/Franchise_2048.tga
+	fonts/Franchise_512.tga
+	fonts/Furore_1024.tga
+	fonts/Furore_2048.tga
+	fonts/Furore_512.tga
+	fonts/Karnivore_1024.tga
+	fonts/Karnivore_2048.tga
+	fonts/Karnivore_512.tga
+	fonts/Loaded_1024.tga
+	fonts/Loaded_2048.tga
+	fonts/Loaded_512.tga
+	fonts/Minotaur_1024.tga
+	fonts/Minotaur_2048.tga
+	fonts/Minotaur_512.tga
+	fonts/Nevis_1024.tga
+	fonts/Nevis_2048.tga
+	fonts/Nevis_512.tga
+	fonts/OnRamp_1024.tga
+	fonts/OnRamp_2048.tga
+	fonts/OnRamp_512.tga
+	fonts/Orbitron_1024.tga
+	fonts/Orbitron_2048.tga
+	fonts/Orbitron_512.tga
+	fonts/TrueCrimes_1024.tga
+	fonts/TrueCrimes_2048.tga
+	fonts/TrueCrimes_512.tga
+
 }
 
 options
@@ -237,10 +308,25 @@ options
 	warn-level=2
 }
 
+packages 
+{
+	libjpeg
+}
+
 subprojects
 {
-	tinyxml
+	iwutil
 	dpi
+	tinyobj
+	tinyxml	
+	libjpeg
+}
+
+includepath
+{	
+	dpi
+	tinyobj
+	tinyxml	
 }
 
 

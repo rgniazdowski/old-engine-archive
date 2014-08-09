@@ -7,8 +7,9 @@
  * and/or distributed without the express or written permission from the author.
  *******************************************************/
 
-#ifndef _GUI_WIDGET_H_
-#define _GUI_WIDGET_H_
+#ifndef _FG_GUI_WIDGET_H_
+#define _FG_GUI_WIDGET_H_
 
 
-#endif
+#endif /* _FG_GUI_WIDGET_H_ */
+

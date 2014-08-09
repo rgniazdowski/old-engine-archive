@@ -7,8 +7,8 @@
  * and/or distributed without the express or written permission from the author.
  *******************************************************/
 
-#ifndef _GUI_MENU_H_
-#define _GUI_MENU_H_
+#ifndef _FG_GUI_MENU_H_
+#define _FG_GUI_MENU_H_
 
 #include <map>
 
@@ -64,4 +64,5 @@ public:
 	virtual void draw(void);
 };
 
-#endif
+#endif /* _FG_GUI_MENU_H_ */
+

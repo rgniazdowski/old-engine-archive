@@ -10,4 +10,5 @@
 #ifndef _FG_GUI_PRIMITIVES_H_
 #define _FG_GUI_PRIMITIVES_H_
 
-#endif
+#endif /* _FG_GUI_PRIMITIVES_H_ */
+

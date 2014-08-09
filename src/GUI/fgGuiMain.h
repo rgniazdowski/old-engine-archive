@@ -13,6 +13,9 @@
 #include "fgGuiWidget.h"
 #include "fgGuiMenu.h"
 
+// #FIXME #TODO #P4 - this needs so much fixing and refactoring that I dont
+// even know where to start... whole GUI, FONT & drawing is fubar...
+
 #define MENU_GAME_STAGE 0
 #define MENU_MAIN 1
 #define MENU_NEW_GAME 2
@@ -38,10 +41,6 @@ public:
 	GuiMain();
 	~GuiMain();
 
-	//
-	// GETTERS
-	//
-
 	void initMenuElements(void);
 	void draw(void);
 	void getSignals(void);
@@ -49,4 +48,5 @@ public:
 	
 };
 
-#endif
+#endif /* _FG_GUI_MAIN_H_ */
+
