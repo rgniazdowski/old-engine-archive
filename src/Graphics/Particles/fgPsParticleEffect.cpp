@@ -193,23 +193,24 @@ void ParticleEffect::calculate(void)
 	Area screenArea;
 	screenArea.x = 0;
 	screenArea.y = 0;
-	screenArea.w = FG_HardwareState->screenWidth();
-	screenArea.h = FG_HardwareState->screenHeight();
+	screenArea.w = FG_HardwareState->getScreenWidth();
+	screenArea.h = FG_HardwareState->getScreenHeight();
+	float DT2 = (float)FG_HardwareState->getDelta2();
 
 	for(int i=0; i<int(m_particles.size()); i++)
 	{
         // MOVEMENT
-		m_particles[i].position.x += m_particles[i].velocity.x/1000.0f * FG_HardwareState->DT2();
-		m_particles[i].position.y += m_particles[i].velocity.y/1000.0f * FG_HardwareState->DT2();
-		m_particles[i].position.z += m_particles[i].velocity.z/1000.0f * FG_HardwareState->DT2();
+		m_particles[i].position.x += m_particles[i].velocity.x/1000.0f * DT2;
+		m_particles[i].position.y += m_particles[i].velocity.y/1000.0f * DT2;
+		m_particles[i].position.z += m_particles[i].velocity.z/1000.0f * DT2;
 
         // ROTATION
-		m_particles[i].rotation.x += m_particles[i].angularVelocity.x/1000.0f * FG_HardwareState->DT2();
-		m_particles[i].rotation.y += m_particles[i].angularVelocity.y/1000.0f * FG_HardwareState->DT2();
-		m_particles[i].rotation.z += m_particles[i].angularVelocity.z/1000.0f * FG_HardwareState->DT2();
+		m_particles[i].rotation.x += m_particles[i].angularVelocity.x/1000.0f * DT2;
+		m_particles[i].rotation.y += m_particles[i].angularVelocity.y/1000.0f * DT2;
+		m_particles[i].rotation.z += m_particles[i].angularVelocity.z/1000.0f * DT2;
 
         // FADE
-		m_particles[i].life -= m_particles[i].fade_speed/1000.0f * FG_HardwareState->DT2();
+		m_particles[i].life -= m_particles[i].fade_speed/1000.0f * DT2;
 
         // LIFE AS SIZE
 		if( m_lifeAsSize )
@@ -254,7 +255,7 @@ void ParticleEffect::calculate(void)
 		{
 			// This actions will work properly only if the particle TTL parameter is set
 			// Size 
-			m_particles[i].size += (m_endSize-m_startSize)/m_particles[i].ttl * FG_HardwareState->DT2();
+			m_particles[i].size += (m_endSize-m_startSize)/m_particles[i].ttl * DT2;
 
 			/*fgColor color = m_particles[i].color;
 
@@ -577,7 +578,7 @@ void ParticleEffect::randomizeOnPair(Particle* from, Particle* to, Particle *res
 	target->data = NULL;
 
 	// Spawn Time
-	target->spawn_time = FG_HardwareState->TS(); 
+	target->spawn_time = FG_HardwareState->getTS(); 
 
 	fgColor color;
 

@@ -23,13 +23,16 @@ fgHardwareState *fgSingleton<fgHardwareState>::instance = NULL;
 /**
  * Private constructor
  */
-fgHardwareState::fgHardwareState() : m_TS(0), m_screenHeight(0), m_screenWidth(0), m_dispArea(0), m_DT(0), m_DT2(0), m_fps(0.0f), m_dpi(0) {
+fgHardwareState::fgHardwareState() : m_TS(0), m_screenHeight(0), m_screenWidth(0),
+	m_dispArea(0), m_DT(0), m_DT2(0), m_fps(0.0f), m_dpi(0) 
+{
 }
 
 /**
  * Private destructor
  */
-fgHardwareState::~fgHardwareState() {
+fgHardwareState::~fgHardwareState() 
+{
     if( 0 != m_dpi ) {
         DPI::dpiTerminate();
     }
@@ -38,7 +41,8 @@ fgHardwareState::~fgHardwareState() {
 /**
  * Inits DPI. Called from GL init code, when display is ready
  */
-void fgHardwareState::initDPI() {
+void fgHardwareState::initDPI() 
+{
     DPI::dpiInit();
 
     m_dpi = DPI::dpiGetScreenDPI(m_screenWidth, m_screenHeight);
@@ -66,22 +70,22 @@ void fgHardwareState::calculateDT(void)
 {
 	static unsigned long int t1=FG_GetTicks(), t2=FG_GetTicks();
 	t2 = FG_GetTicks();
-    setTS( t2 );		// Time stamp
-	setDT( t2 - t1 );	// Delta time (length of the single frame)	
-	setDT2( t2 -t1 );	// Delta time used in animations - easy pause -> just set to 0 and animations/movement will stop
 
-	// FIXME
+    m_TS = t2;		// Time stamp update
+	m_DT = t2-t1;	// Delta time (length of the single frame)	
+	m_DT2 = t2-t1;	// Delta time used in animations - easy pause -> just set to 0 and animations/movement will stop
+
+	// #FIXME
 	// This is some fallback when fps is lower than 30
 	// Animation will be smoother but slower
-	if( FG_HardwareState->DT2() >= 30 )
-		FG_HardwareState->setDT2( 15 );
+	if( m_DT2 >= 30 )
+		m_DT2 = 15;
 
 	t1=t2;
 }
 
 /**
  * Compute FPS
- * @return FPS
  */
 float fgHardwareState::calculateFPS(void)
 {
@@ -94,5 +98,5 @@ float fgHardwareState::calculateFPS(void)
 		fps_time = ((float)FG_GetTicks()) / 1000.0f;
 		nframes = 0;
 	}
-	return FPS();
+	return m_fps;
 }

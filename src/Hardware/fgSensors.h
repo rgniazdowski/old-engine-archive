@@ -20,6 +20,7 @@
 static int32 HarvestCallback(void* systemData, void* userData);
 
 /**
+ * Class fgSensors - management of sensors data (mobile).
  * 
  * Klasa definiuje symboliczne typy sensorow:
  * enum { NONE = 0,
@@ -38,10 +39,10 @@ class fgSensors : public fgSingleton<fgSensors> {
     friend int32 HarvestCallback(void* systemData, void* userData);
 	friend class fgSingleton<fgSensors>;
 public:
-
     enum { FG_SENSORS_ACCELEROMETER = 0, FG_SENSORS_COMPASS = 1 };
 
 private:
+	// Are sensors running?
     bool m_isRunning;
 
 	/// Number of supported sensors (includes the "NONE" sensor)
@@ -65,108 +66,71 @@ private:
     enum { 
 		FG_SENSORS_AFTER_UNLOCK_DELAY = 3000 
 	};
-    
-	/// List of available sensor names
+    // List of available sensor names
 	static const char* s_sensorsNames[FG_SENSORS_TYPES];
-
-	/// List with sensor errors
+	// List with sensor errors
 	int m_sensorsErrors[FG_SENSORS_TYPES];
-
-	/// Data harvested from sensors
+	// Data harvested from sensors
 	float m_sensorsValues[FG_SENSORS_TYPES][FG_SENSORS_VALUES];
-
 	/// "Triple" Kalman filters for each sensor
 	TripleKalman m_filters[FG_SENSORS_TYPES];
-
-    /// 5 last values used to compute REFERENCE BASE for accelerometer values
+	// 5 last values used to compute REFERENCE BASE for accelerometer values
     float m_accelRawBase[FG_SENSORS_BASE_SIZE][FG_SENSORS_VALUES];
-    
-    /// Actual circular index in m_accelRawBase
+    // Actual circular index in m_accelRawBase
     int m_arbIdx;
-    
-    /// Actual base, computed from the raw data
+    // Actual base, computed from the raw data
     float m_accelFinalBase[FG_SENSORS_VALUES];
-
-    /// When was base requested to unlock
+	// When was base requested to unlock
     unsigned long int m_unlockTS;
-    
-    /// Together with unlockTS, marks if the accelBase is locked
+    // Together with unlockTS, marks if the accelBase is locked
     bool m_accelBaseLocked;
     
 protected:
-
+	// Default constructor for Sensors object
 	fgSensors();
+	// Default destructor for Sensors object
 	~fgSensors();
 
 public:
-
-	/**
-	 * Register to all sensors and get the error codes
-	 */
+	// Register to all sensors and get the error codes
 	bool startSensors();
 
-	/**
-	 * Unregister all the sensors
-	 */
+	// Unregister all the sensors
 	void stopSensors();
 
-//
-// MARK: -
-// MARK: Utils
-//
-
-	/**
-	 * Get the error message using the sensor error code.
-	 */
+	// Get the error message using the sensor error code.
 	const char* errorCodeText(int errorCode);
     
-//
-// MARK: -
-// MARK: Business
-//
-
-    /**
-     * Gets data processed by the filters
-     */
+    // Gets data processed by the filters
 	void getAccelerometer(float *x, float *y, float *z);
 
-    /**
-     * Gets the reference, normal values
-     */
+    // Gets the reference, normal values
 	void getAccelerometerBase(float *x, float *y);
 
-    /**
-     * Locks the base – called, when first MOD is activated,
-     * because then user starts to rotate the device – so
-     * accelerometer values are no longer normal, neutral
-     */
+    // Locks the base – called, when first MOD is activated,
+    // because then user starts to rotate the device – so
+    // accelerometer values are no longer normal, neutral
     void lockBase() {
         m_accelBaseLocked = true;
     }
 
-    /**
-     * Unlocks accelerometer base – called, when last
-     * MOD is deactivated
-     */
+    // Unlocks accelerometer base – called, when last
+    // MOD is deactivated
     void unlockBase() {
         if( m_accelBaseLocked ) {
             m_accelBaseLocked = false;
-            m_unlockTS = FG_HardwareState->TS();
+            m_unlockTS = FG_HardwareState->getTS();
         }
     }
 
-    /**
-     * Accel-base is unlocked after unlockBase() call & after AFTER_UNLOCK_DELAY ms passed
-     */
+    // Accel-base is unlocked after unlockBase() call & after AFTER_UNLOCK_DELAY ms passed
     bool isBaseLocked() const {
-        return m_accelBaseLocked || ( m_unlockTS > (FG_HardwareState->TS() - FG_SENSORS_AFTER_UNLOCK_DELAY) );
+        return m_accelBaseLocked || ( m_unlockTS > (FG_HardwareState->getTS() - FG_SENSORS_AFTER_UNLOCK_DELAY) );
     }
 
-	/**
-	 * Harvests sensor data from given event.
-	 */
+	// Harvests sensor data from given event.
 	void harvestData( int type, float x, float y, float z );
 
 };
 
-#endif /* SENSORS_H_ */
+#endif /* _FG_SENSORS_H_ */

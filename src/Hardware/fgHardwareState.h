@@ -53,63 +53,67 @@ public:
     void initDPI();
 
 	// FIXME
-	// now in the engine there will be two (or more) main threads - one for calculation of various thins (3d data, logic, scripts, events, callbacks, etc.) and another one for calling proper drawing functions
-	// so basically DT should be calculated in the way that takes into account both threads - however calculation of FPS should be done only in graphics thread (?)
+	// now in the engine there will be two (or more) main threads - one for calculation of 
+	// various thins (3d data, logic, scripts, events, callbacks, etc.) and another one for 
+	// calling proper drawing functions, so basically DT should be calculated in the way
+	// that takes into account both threads - however calculation of FPS should be done only 
+	// in graphics thread (?)
 	void calculateDT(void);
 	float calculateFPS(void);
 
 	//
 	// Getters
 	//
-    /// Timestamp without possibly slow s3eTimerGetMs() call. Used when ONE FRAME accuracy is sufficient.
-    unsigned long int TS(void) const {
+    /// Timestamp without possibly slow s3eTimerGetMs() call. 
+	// Used when ONE FRAME accuracy is sufficient.
+    unsigned long int getTS(void) const {
         return m_TS;
     }
 
     /// Returns delta-time
-	unsigned long int DT(void) const {
+	unsigned long int getDelta(void) const {
 		return m_DT;
 	}
 
     /// Returns delta-time 2
-	unsigned long int DT2(void) const {
+	unsigned long int getDelta2(void) const {
 		return m_DT2;
 	}
 
     /// Returns FPS
-	float FPS(void) const {
+	float getFPS(void) const {
 		return m_fps;
 	}
 
     /// Returns screen height
-	int screenHeight(void) const {
+	int getScreenHeight(void) const {
 		return m_screenHeight;
 	}
 
     /// Returns screen width
-	int screenWidth(void) const {
+	int getScreenWidth(void) const {
 		return m_screenWidth;
 	}
 
-	int dispArea(void) const {
+	int getDisplayArea(void) const {
 		return m_dispArea;
 	}
 
-    int dpi(void) const {
+    int getDPI(void) const {
         return m_dpi;
     }
 
-    int xdpi(void) const {
+    int getXDPI(void) const {
         int sum = m_screenWidth + m_screenHeight;
         return int(float(m_screenWidth) / sum * m_dpi);
     }
 
-    int ydpi(void) const {
+    int getYDPI(void) const {
         int sum = m_screenWidth + m_screenHeight;
         return int(float(m_screenHeight) / sum * m_dpi);
     }
 
-    float displayCoefficient(void) const {
+    float getDisplayCoefficient(void) const {
         return m_dpiAndAreaCoef;
     }
 
@@ -126,19 +130,19 @@ public:
     }
 
     int inchesToPixelsX(float inches) {
-        return (int) (xdpi() * inches);
+        return (int) (getXDPI() * inches);
     }
 
     int millimeterToPixelsX(float mm) {
-        return (int) (xdpi() * mm / 25.4f );
+        return (int) (getXDPI() * mm / 25.4f );
     }
 
     int inchesToPixelsY(float inches) {
-        return (int) (ydpi() * inches);
+        return (int) (getYDPI() * inches);
     }
 
     int millimeterToPixelsY(float mm) {
-        return (int) (ydpi() * mm / 25.4f );
+        return (int) (getYDPI() * mm / 25.4f );
     }
 
 	//
@@ -151,12 +155,12 @@ public:
     }
 
     /// Sets delta-time
-	void setDT(unsigned long int dt) {
+	void setDelta(unsigned long int dt) {
 		m_DT = dt;
 	}
 
     /// Sets delta-time 2
-	void setDT2(unsigned long int dt2) {
+	void setDelta2(unsigned long int dt2) {
 		m_DT2 = dt2;
 	}
 

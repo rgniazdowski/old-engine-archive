@@ -48,10 +48,10 @@ fgGuiScreenGrid::fgGuiScreenGrid()
 	 * It would work and no reload/reprocessing of textures would be needed (? if it's normally needed while changing orientation - no info on this in mosync docs
 	 * however not reloading/reinit of gl after change of orientation could be the reason of the crash mentioned before, not sure)
 	 */
-	if(FG_HardwareState->screenWidth() < FG_HardwareState->screenHeight())
+	if(FG_HardwareState->getScreenWidth() < FG_HardwareState->getScreenHeight())
 	{
-		minSize = (float)FG_HardwareState->screenWidth();
-		maxSize = (float)FG_HardwareState->screenHeight();
+		minSize = (float)FG_HardwareState->getScreenWidth();
+		maxSize = (float)FG_HardwareState->getScreenHeight();
 		aspectRatio = maxSize/minSize;
 		aspectRatioI= minSize/maxSize;
         // FIXME
@@ -66,8 +66,8 @@ fgGuiScreenGrid::fgGuiScreenGrid()
 	}
 	else
 	{
-		minSize = (float)FG_HardwareState->screenHeight();
-		maxSize = (float)FG_HardwareState->screenWidth();
+		minSize = (float)FG_HardwareState->getScreenHeight();
+		maxSize = (float)FG_HardwareState->getScreenWidth();
 		aspectRatio = maxSize/minSize;
 		aspectRatioI = minSize/maxSize;
         // FIXME

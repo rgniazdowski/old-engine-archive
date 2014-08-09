@@ -30,19 +30,30 @@ fgQualityManager *fgSingleton<fgQualityManager>::instance = NULL;
 
 
 // FIXME
-// Well this class is quite needed for quality management but it uses predefined texture files which is unacceptable in professional game engine 
+// Well this class is quite needed for quality management 
+// but it uses predefined texture files which is unacceptable 
+// in professional game engine 
 
+/*
+ *
+ */
 fgQualityManager::fgQualityManager()
 {
 }
 
+/*
+ *
+ */
 fgQualityManager::~fgQualityManager()
 {
 }
 
+/*
+ *
+ */
 void fgQualityManager::determineQuality(void)
 {
-	int DispArea = FG_HardwareState->dispArea();
+	int DispArea = FG_HardwareState->getDisplayArea();
 	/*
 	#low
 	240×320		{[S3E]DispAreaQ==76800}
@@ -152,6 +163,9 @@ void fgQualityManager::determineQuality(void)
 	}
 }
 
+/*
+ *
+ */
 std::string & fgQualityManager::getFileName(int texture_id)
 {
 	static std::string filename;
@@ -162,12 +176,18 @@ std::string & fgQualityManager::getFileName(int texture_id)
 	return filename;
 }
 
+/*
+ *
+ */
 void fgQualityManager::setFileName(int texture_id, const char *filename)
 {
 	m_textureFileName[texture_id] = std::string(filename);
 	FG_WriteLog("fgQualityManager::setFileName(): ID: %d, filename: '%s'", texture_id, filename);
 }
 
+/*
+ *
+ */
 int fgQualityManager::getTextureID(const char *filename)
 {
 	typedef std::map<int, std::string> MyMap;

@@ -66,7 +66,7 @@ fgTouchReceiver::fgTouchReceiver()  {
 
 void fgTouchReceiver::initialize(void)
 {
-	int DispArea = FG_HardwareState->dispArea();
+	int DispArea = FG_HardwareState->getDisplayArea();
 
     //
     // Reference DPI and RESOLUTION – of iPod 3Gen
@@ -89,9 +89,9 @@ void fgTouchReceiver::initialize(void)
     // DPI and RESOLUTION bias of CURRENT device
     //
 
-    float pfactor = FG_HardwareState->dpi() / reference_dpi;
-    float xpfactor = FG_HardwareState->xdpi() / reference_xdpi;
-    float ypfactor = FG_HardwareState->ydpi() / reference_ydpi;
+	float pfactor = FG_HardwareState->getDPI() / reference_dpi;
+    float xpfactor = FG_HardwareState->getXDPI() / reference_xdpi;
+    float ypfactor = FG_HardwareState->getYDPI() / reference_ydpi;
     float rfactor = sqrt(DispArea / reference_res);
 
     //
@@ -141,7 +141,7 @@ void fgTouchReceiver::initialize(void)
     PIXELS_PER_STEP_Y = y_threshold;
 
     FG_WriteLog("### pfactor: %f, xpfactor: %f, ypfactor: %f, dpi:%d, xdpi:%d, ydpi:%d",
-              pfactor, xpfactor, ypfactor, FG_HardwareState->dpi(), FG_HardwareState->xdpi(), FG_HardwareState->ydpi());
+		pfactor, xpfactor, ypfactor, FG_HardwareState->getDPI(), FG_HardwareState->getXDPI(), FG_HardwareState->getYDPI());
     FG_WriteLog("MAX_OFFSET_FOR_TAP: [%d], MIN SWIPE_X: [%d], MIN SWIPE_Y: [%d], PIXELS_PER_X: [%d], PIXELS_PER_Y: [%d]",
               MAX_OFFSET_FOR_TAP, MIN_OFFSET_FOR_SWIPE_X, MIN_OFFSET_FOR_SWIPE_Y, PIXELS_PER_STEP_X, PIXELS_PER_STEP_Y);
 }
@@ -159,17 +159,17 @@ fgTouchReceiver::~fgTouchReceiver() {
  * Screen touch event.
  * @param point Pointer position
  */
-void fgTouchReceiver::handlePointerPressed(fgVector2i point, unsigned int touchId)
+void fgTouchReceiver::handlePointerPressed(fgVector2i point, unsigned int touchID)
 {
-	if(touchId >= MAX_TOUCH_POINTS) {
-		m_rawTouches.erase(touchId);
+	if(touchID >= MAX_TOUCH_POINTS) {
+		m_rawTouches.erase(touchID);
 		return;
-	} else if(touchId == 0) {
+	} else if(touchID == 0) {
 		m_rawTouches.clear();
 	}
 
-    fgTouchRawData & touchData = m_rawTouches[ touchId ];
-	m_touchActive[ touchId ] = true;
+    fgTouchRawData & touchData = m_rawTouches[ touchID ];
+	m_touchActive[ touchID ] = true;
 
 	// Time stamp of contact with the screen
 	touchData.m_pressedMilliseconds = (unsigned long int) FG_GetTicks();
@@ -198,12 +198,13 @@ void fgTouchReceiver::handlePointerPressed(fgVector2i point, unsigned int touchI
 	// Throwing the proper event
 	//
 
-	fgTouchEvent *touchEvent = (fgTouchEvent *) fgMalloc(sizeof(fgTouchEvent));
-	touchEvent->m_timestamp = FG_GetTicks();
-	touchEvent->m_pressed = true;
-	touchEvent->m_touchId = touchId;
-	touchEvent->m_x = point.x;
-	touchEvent->m_y = point.y;
+	//fgTouchEvent *touchEvent = (fgTouchEvent *) fgMalloc(sizeof(fgTouchEvent));
+	fgTouchEvent *touchEvent = new fgTouchEvent();
+	touchEvent->timeStamp = FG_GetTicks();
+	touchEvent->pressed = true;
+	touchEvent->touchID = touchID;
+	touchEvent->x = point.x;
+	touchEvent->y = point.y;
 
 	fgArgumentList *argList = new fgArgumentList();
 	argList->pushArgument(FG_ARGUMENT_STRUCT, (void *)touchEvent);
@@ -215,29 +216,29 @@ void fgTouchReceiver::handlePointerPressed(fgVector2i point, unsigned int touchI
  * Pointer move event.
  * @param point Pointer position
  */
-void fgTouchReceiver::handlePointerMoved(fgVector2i point, unsigned int touchId)
+void fgTouchReceiver::handlePointerMoved(fgVector2i point, unsigned int touchID)
 {
-	if(touchId >= MAX_TOUCH_POINTS)
+	if(touchID >= MAX_TOUCH_POINTS)
 		return;
 	
-	m_touchActive[ touchId ] = true;
+	m_touchActive[ touchID ] = true;
 
 	// Essential swipe data
-	m_rawTouches[touchId].m_pointerXEnd = point.x;
-	m_rawTouches[touchId].m_pointerYEnd = point.y;
-	m_rawTouches[touchId].m_moveX = point.x;
-	m_rawTouches[touchId].m_moveY = point.y;
+	m_rawTouches[touchID].m_pointerXEnd = point.x;
+	m_rawTouches[touchID].m_pointerYEnd = point.y;
+	m_rawTouches[touchID].m_moveX = point.x;
+	m_rawTouches[touchID].m_moveY = point.y;
 
 	//
 	// Throwing the proper event
 	//
 
 	fgTouchEvent *touchEvent = (fgTouchEvent *) fgMalloc(sizeof(fgTouchEvent));
-	touchEvent->m_timestamp = FG_GetTicks();
-	touchEvent->m_pressed = true;
-	touchEvent->m_touchId = touchId;
-	touchEvent->m_x = point.x;
-	touchEvent->m_y = point.y;
+	touchEvent->timeStamp = FG_GetTicks();
+	touchEvent->pressed = true;
+	touchEvent->touchID = touchID;
+	touchEvent->x = point.x;
+	touchEvent->y = point.y;
 
 	fgArgumentList *argList = new fgArgumentList();
 	argList->pushArgument(FG_ARGUMENT_STRUCT, (void *)touchEvent);
@@ -249,13 +250,13 @@ void fgTouchReceiver::handlePointerMoved(fgVector2i point, unsigned int touchId)
  * Pointer released.
  * @param point Pointer position
  */
-void fgTouchReceiver::handlePointerReleased(fgVector2i point, unsigned int touchId)
+void fgTouchReceiver::handlePointerReleased(fgVector2i point, unsigned int touchID)
 {
-	if(touchId >= MAX_TOUCH_POINTS)
+	if(touchID >= MAX_TOUCH_POINTS)
 		return;
 
-    fgTouchRawData & touchData = m_rawTouches[ touchId ];
-	m_touchActive[ touchId ] = false;
+    fgTouchRawData & touchData = m_rawTouches[ touchID ];
+	m_touchActive[ touchID ] = false;
 
 	// Time stamp of contact with the screen
 	touchData.m_releasedMilliseconds = (unsigned long int) FG_GetTicks();
@@ -279,12 +280,13 @@ void fgTouchReceiver::handlePointerReleased(fgVector2i point, unsigned int touch
 	//
 	// Throwing the proper event
 	//
-	fgTouchEvent *touchEvent = (fgTouchEvent *) fgMalloc(sizeof(fgTouchEvent));
-	touchEvent->m_timestamp = FG_GetTicks();
-	touchEvent->m_pressed = false; // Touch is released
-	touchEvent->m_touchId = touchId;
-	touchEvent->m_x = point.x;
-	touchEvent->m_y = point.y;
+	//fgTouchEvent *touchEvent = (fgTouchEvent *) fgMalloc(sizeof(fgTouchEvent));
+	fgTouchEvent *touchEvent = new fgTouchEvent();
+	touchEvent->timeStamp = FG_GetTicks();
+	touchEvent->pressed = false; // Touch is released
+	touchEvent->touchID = touchID;
+	touchEvent->x = point.x;
+	touchEvent->y = point.y;
 
 	fgArgumentList *argList = new fgArgumentList();
 	argList->pushArgument(FG_ARGUMENT_STRUCT, (void *)touchEvent);
@@ -292,21 +294,21 @@ void fgTouchReceiver::handlePointerReleased(fgVector2i point, unsigned int touch
 	FG_EventManager->throwEvent(FG_EVENT_TOUCH_RELEASED, argList);
 }
 
-fgTouchRawData fgTouchReceiver::getTouchData(unsigned int touchId)
+fgTouchRawData fgTouchReceiver::getTouchData(unsigned int touchID)
 {
 	fgTouchRawData empty;
-	if(touchId >= m_rawTouchesProcessed.size())
+	if(touchID >= m_rawTouchesProcessed.size())
 		return empty;
 
-	return m_rawTouchesProcessed[touchId];
+	return m_rawTouchesProcessed[touchID];
 }
 
-bool fgTouchReceiver::getTouchStatus(unsigned int touchId)
+bool fgTouchReceiver::getTouchStatus(unsigned int touchID)
 {
-	if(touchId >= m_touchActive.size())
+	if(touchID >= m_touchActive.size())
 		return false;
 
-	return m_touchActive[touchId];
+	return m_touchActive[touchID];
 }
 
 void fgTouchReceiver::processData()
@@ -315,7 +317,7 @@ void fgTouchReceiver::processData()
 			touchIt != m_rawTouches.end();
 			touchIt++)
 	{
-		int touchId = touchIt->first;
+		int touchID = touchIt->first;
 		fgTouchRawData & touchPtr = touchIt->second;
         //
 		// DETECT TAP
@@ -339,12 +341,13 @@ void fgTouchReceiver::processData()
 					//
 					// Throwing the proper event
 					//
-					fgTouchEvent *touchEvent = (fgTouchEvent *) fgMalloc(sizeof(fgTouchEvent));
-					touchEvent->m_timestamp = FG_GetTicks();
-					touchEvent->m_pressed = false;
-					touchEvent->m_touchId = touchId;
-					touchEvent->m_x = touchPtr.m_tapX;
-					touchEvent->m_y = touchPtr.m_tapY;
+					//fgTouchEvent *touchEvent = (fgTouchEvent *) fgMalloc(sizeof(fgTouchEvent));
+					fgTouchEvent *touchEvent = new fgTouchEvent();
+					touchEvent->timeStamp = FG_GetTicks();
+					touchEvent->pressed = false;
+					touchEvent->touchID = touchID;
+					touchEvent->x = touchPtr.m_tapX;
+					touchEvent->y = touchPtr.m_tapY;
 
 					fgArgumentList *argList = new fgArgumentList();
 					argList->pushArgument(FG_ARGUMENT_STRUCT, (void *)touchEvent);
@@ -407,34 +410,35 @@ void fgTouchReceiver::processData()
 			// Throwing the proper event
 			//
 			if (touchPtr.m_swipeLeft || touchPtr.m_swipeRight || touchPtr.m_swipeUp || touchPtr.m_swipeDown) {
-				fgSwipeEvent *swipeEvent = (fgSwipeEvent *) fgMalloc(sizeof(fgSwipeEvent));
-				swipeEvent->m_timestamp = FG_GetTicks();
+				//fgSwipeEvent *swipeEvent = (fgSwipeEvent *) fgMalloc(sizeof(fgSwipeEvent));
+				fgSwipeEvent *swipeEvent = new fgSwipeEvent();
+				swipeEvent->timeStamp = FG_GetTicks();
 				bool X=false, Y=false;
 				if(touchPtr.m_swipeDown) {
-					swipeEvent->m_swipeDirection = FG_SWIPE_DOWN;
+					swipeEvent->swipeDirection = FG_SWIPE_DOWN;
 					Y = true;
 				} else if(touchPtr.m_swipeUp) {
-					swipeEvent->m_swipeDirection = FG_SWIPE_UP;
+					swipeEvent->swipeDirection = FG_SWIPE_UP;
 					Y = true;
 				} 
 				if(touchPtr.m_swipeLeft) {
-					swipeEvent->m_swipeDirection = FG_SWIPE_LEFT;
+					swipeEvent->swipeDirection = FG_SWIPE_LEFT;
 					X = true;
 				} else if(touchPtr.m_swipeRight) {
-					swipeEvent->m_swipeDirection = FG_SWIPE_RIGHT;
+					swipeEvent->swipeDirection = FG_SWIPE_RIGHT;
 					X = true;
 				}
-				swipeEvent->m_swipeXOffset = touchPtr.m_basicSwipeXSize;
-				swipeEvent->m_swipeYOffset = touchPtr.m_basicSwipeYSize;
+				swipeEvent->swipeXOffset = touchPtr.m_basicSwipeXSize;
+				swipeEvent->swipeYOffset = touchPtr.m_basicSwipeYSize;
 
-				swipeEvent->m_swipeXSteps = touchPtr.m_xSwipeSteps;
-				swipeEvent->m_swipeYSteps = touchPtr.m_ySwipeSteps;
+				swipeEvent->swipeXSteps = touchPtr.m_xSwipeSteps;
+				swipeEvent->swipeYSteps = touchPtr.m_ySwipeSteps;
 
-				swipeEvent->m_xStart = touchPtr.m_pointerXStart;
-				swipeEvent->m_yStart = touchPtr.m_pointerYStart;
+				swipeEvent->xStart = touchPtr.m_pointerXStart;
+				swipeEvent->yStart = touchPtr.m_pointerYStart;
 
-				swipeEvent->m_xEnd = touchPtr.m_pointerXEnd;
-				swipeEvent->m_yEnd = touchPtr.m_pointerYEnd;
+				swipeEvent->xEnd = touchPtr.m_pointerXEnd;
+				swipeEvent->yEnd = touchPtr.m_pointerYEnd;
 
 				fgArgumentList *argList = new fgArgumentList();
 				argList->pushArgument(FG_ARGUMENT_STRUCT, (void *)swipeEvent);
@@ -468,7 +472,7 @@ void fgTouchReceiver::processData()
 		}
 
 		// COPIES DATA
-		m_rawTouchesProcessed[touchId] = touchPtr;
+		m_rawTouchesProcessed[touchID] = touchPtr;
 
         //
         // Forget some part of POINTER DATA

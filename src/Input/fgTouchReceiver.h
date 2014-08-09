@@ -73,15 +73,15 @@ public:
 		return MAX_OFFSET_FOR_TAP;
 	}
 
-	void handlePointerPressed(fgVector2i point, unsigned int touchId);
-	void handlePointerMoved(fgVector2i point, unsigned int touchId);
-	void handlePointerReleased(fgVector2i point, unsigned int touchId);
+	void handlePointerPressed(fgVector2i point, unsigned int touchID);
+	void handlePointerMoved(fgVector2i point, unsigned int touchID);
+	void handlePointerReleased(fgVector2i point, unsigned int touchID);
 
 	// This function will probably be useful only in debugging
 	// There's no need to check the data manually - proper events 
 	// are being thrown from processData method
-	fgTouchRawData getTouchData(unsigned int touchId);
-	bool getTouchStatus(unsigned int touchId);
+	fgTouchRawData getTouchData(unsigned int touchID);
+	bool getTouchStatus(unsigned int touchID);
 
 	void processData();
 

@@ -83,8 +83,8 @@ int SequentialEffect::addSequence(float x, float y, float z, float size, int cou
 	m_data[idx].frame_duration = frame_duration;
 	m_data[idx].delete_mark = false;
 	m_data[idx].loop = loop;
-	m_data[idx].time_begin = FG_HardwareState->TS();
-	m_data[idx].time_last_frame = FG_HardwareState->TS();
+	m_data[idx].time_begin = FG_HardwareState->getTS();
+	m_data[idx].time_last_frame = FG_HardwareState->getTS();
 
 	fgColor color;
 	//color.Set(255,255,255,255);
@@ -117,7 +117,7 @@ void SequentialEffect::calculate(void)
 	for(int i=0;i<m_countData;i++)
 	{
 		particle = &(particlesData()[i]);
-		if( FG_HardwareState->TS() - m_data[i].time_last_frame >= m_data[i].frame_duration )
+		if( FG_HardwareState->getTS() - m_data[i].time_last_frame >= m_data[i].frame_duration )
 		{
 			particle->texture_id++;
 			if(particle->texture_id >= m_data[i].count_frames) {
@@ -128,7 +128,7 @@ void SequentialEffect::calculate(void)
 					m_data[i].delete_mark = false;
 				}
 			}
-			m_data[i].time_last_frame = FG_HardwareState->TS();
+			m_data[i].time_last_frame = FG_HardwareState->getTS();
 		}
 		if(m_data[i].delete_mark) {
 			SequentialEffect::remove(i);
