@@ -136,7 +136,11 @@ public:
 	{
 		if(m_file == NULL)
 			return -1;
-		return -1; // FIXME
+		long prev = ftell(m_file);
+		fseek(m_file, 0L, SEEK_END);
+		long size = ftell(m_file);
+		fseek(m_file, prev, SEEK_SET); //go back to where we were
+		return (int)size; // FIXME
 	}
 	// 
 	long getPosition(void)
