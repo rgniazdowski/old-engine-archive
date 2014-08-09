@@ -7,26 +7,26 @@
  * and/or distributed without the express or written permission from the author.
  *******************************************************/
 
-#ifndef _THROWN_EVENT_H
-#define _THROWN_EVENT_H
+#ifndef _FG_THROWN_EVENT_H_
+#define _FG_THROWN_EVENT_H_
 
 #include <iostream>
 
-#include "fgEventHelper.h"
+#include "fgEventDefinitions.h"
 #include "fgArgumentList.h"
 
 struct fgThrownEvent
 {
-	int eventCode;
+	fgEventType eventCode;
 	fgArgumentList *argList;
 
-	fgThrownEvent() : eventCode(-1), argList(NULL) {
+	fgThrownEvent() : eventCode(FG_EVENT_INVALID), argList(NULL) {
 	}
 
-	fgThrownEvent(int _eventCode, fgArgumentList *_argList) {
+	fgThrownEvent(fgEventType _eventCode, fgArgumentList *_argList) {
 		eventCode = _eventCode;
 		argList = _argList;
 	}
 };
 
-#endif
+#endif /* _FG_THROWN_EVENT_H_ */

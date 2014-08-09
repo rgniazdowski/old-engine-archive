@@ -8,8 +8,9 @@
  *******************************************************/
 
 // #include "s3eKeyboard.h" ??
-#include "../fgCommon.h"
+
 #include "fgEventManager.h"
+#include "../fgCommon.h"
 
 #include "../Hardware/fgHardwareState.h"
 
@@ -19,10 +20,16 @@ bool fgSingleton<fgEventManager>::instanceFlag = false;
 template <>
 fgEventManager *fgSingleton<fgEventManager>::instance = NULL;
 
+/*
+ *
+ */
 fgEventManager::fgEventManager()
 {
 }
 
+/*
+ *
+ */
 fgEventManager::~fgEventManager()
 {
 	for(fgCallbackBinding::iterator it = m_keyDownBinds.begin(); it != m_keyDownBinds.end(); it++) {
@@ -78,6 +85,9 @@ fgEventManager::~fgEventManager()
 	m_keysDownPool.clear();
 }
 
+/*
+ *
+ */
 void fgEventManager::initialize(void)
 {
 	m_keyDownBinds.clear();
@@ -90,12 +100,18 @@ void fgEventManager::initialize(void)
 	m_keysDownPool.clear();
 }
 
-void fgEventManager::throwEvent(int eventCode, fgArgumentList *list)
+/*
+ *
+ */
+void fgEventManager::throwEvent(fgEventType eventCode, fgArgumentList *list)
 {
 	fgThrownEvent event(eventCode, list);
 	m_eventsQueue.push(event);
 }
 
+/*
+ *
+ */
 void fgEventManager::addKeyDownCallback(int keyCode, fgCallbackFunction *callback)
 {
 	if(!callback || keyCode <= 0)
@@ -103,6 +119,9 @@ void fgEventManager::addKeyDownCallback(int keyCode, fgCallbackFunction *callbac
 	m_keyDownBinds[keyCode].push_back(callback);
 }
 
+/*
+ *
+ */
 void fgEventManager::addKeyUpCallback(int keyCode, fgCallbackFunction *callback)
 {
 	if(!callback || keyCode <= 0)
@@ -110,13 +129,19 @@ void fgEventManager::addKeyUpCallback(int keyCode, fgCallbackFunction *callback)
 	m_keyUpBinds[keyCode].push_back(callback);
 }
 
-void fgEventManager::addEventCallback(int eventCode, fgCallbackFunction *callback)
+/*
+ *
+ */
+void fgEventManager::addEventCallback(fgEventType eventCode, fgCallbackFunction *callback)
 {
-	if(!callback || eventCode < 0)
+	if(!callback || (int)eventCode < 0)
 		return;
 	m_eventBinds[eventCode].push_back(callback);
 }
 
+/*
+ *
+ */
 void fgEventManager::addTimeoutCallback(fgCallbackFunction *callback, int timeout, fgArgumentList *argList)
 {
 	if(!callback)
@@ -126,6 +151,9 @@ void fgEventManager::addTimeoutCallback(fgCallbackFunction *callback, int timeou
 	m_timeoutCallbacks.push_back(timeoutCallback);
 }
 
+/*
+ *
+ */
 void fgEventManager::addCyclicCallback(fgCallbackFunction *callback, int repeats, int interval, fgArgumentList *argList)
 {
 	if(!callback)
@@ -135,11 +163,17 @@ void fgEventManager::addCyclicCallback(fgCallbackFunction *callback, int repeats
 	m_cyclicCallbacks.push_back(cyclicCallback);
 }
 
+/*
+ * This adds key code to the pool of pressed down keys
+ */
 void fgEventManager::addKeyDown(int keyCode)
 {
 	m_keysDownPool.push_back(keyCode);
 }
 
+/*
+ * This adds key code to the pool of released (up) keys
+ */
 void fgEventManager::addKeyUp(int keyCode)
 {
 	m_keysUpPool.push_back(keyCode);
@@ -176,7 +210,8 @@ void fgEventManager::executeEvents(void)
 	}
 	m_keysUpPool.clear();
 
-	// Phase 2: execution of thrown events (now including the argument list). Btw after calling the proper callback, queue entry with argument list must be erased 
+	// Phase 2: execution of thrown events (now including the argument list). Btw after calling the proper callback,
+	// queue entry with argument list must be erased 
 	while(!m_eventsQueue.empty()) {
 		fgThrownEvent event = m_eventsQueue.front();
 		int eventCode = event.eventCode;
@@ -202,9 +237,10 @@ void fgEventManager::executeEvents(void)
 	}
 
 	// Phase 3: Timeouts
-	unsigned long int TS = FG_HardwareState->TS();
+	unsigned long int TS = FG_HardwareState->getTS();
 
-	// After timeout is executed it needs to be deleted from the timeouts pool - also the callback pointer must be freed with the argument list as they no longer needed
+	// After timeout is executed it needs to be deleted from the timeouts pool - also the callback pointer must 
+	// be freed with the argument list as they no longer needed
 	for(fgTimeoutCallbacksPool::iterator it = m_timeoutCallbacks.begin(); it != m_timeoutCallbacks.end(); it++) {
 		if(TS - it->timestamp >= (unsigned long int)it->timeout) {
 			if(it->callback) {
@@ -250,3 +286,4 @@ void fgEventManager::executeEvents(void)
 		}
 	}
 }
+

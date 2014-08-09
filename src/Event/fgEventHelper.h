@@ -7,9 +7,10 @@
  * and/or distributed without the express or written permission from the author.
  *******************************************************/
 
-#ifndef _FG__EVENT_HELPER_H
-#define _FG__EVENT_HELPER_H
+#ifndef _FG_EVENT_HELPER_H_
+#define _FG_EVENT_HELPER_H_
 
+#include "../fgCommon.h"
 #include "fgCallback.h"
 
 #include "fgThrownEvent.h"
@@ -18,16 +19,15 @@
 
 #include <map>
 #include <queue>
-#include <vector>
 
-// #TODO check if it is not deprecated (in Marmalade) to use the standard data types
+// #FIXME #TODO #P2 check if it is not deprecated (in Marmalade) to use the standard data types
 //		 it can be necessary to use Marmalade specific wrappers
 
-typedef std::map<int, std::vector<fgCallbackFunction *> > fgCallbackBinding;
-typedef std::vector<fgCallbackFunction *> fgCallbacksPool;
+typedef std::map<int, fgArrayVector<fgCallbackFunction *> > fgCallbackBinding;
+typedef fgArrayVector<fgCallbackFunction *> fgCallbacksPool;
 
 typedef std::queue<fgThrownEvent> fgEventsQueue;
-typedef std::vector<fgTimeoutCallback> fgTimeoutCallbacksPool;
-typedef std::vector<fgCyclicCallback> fgCyclicCallbacksPool;
+typedef fgArrayVector<fgTimeoutCallback> fgTimeoutCallbacksPool;
+typedef fgArrayVector<fgCyclicCallback> fgCyclicCallbacksPool;
 
 #endif

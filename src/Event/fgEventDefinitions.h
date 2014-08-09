@@ -7,53 +7,62 @@
  * and/or distributed without the express or written permission from the author.
  *******************************************************/
 
-#ifndef _FG_EVENT_DEFINITIONS_H
-#define _FG_EVENT_DEFINITIONS_H
+#ifndef _FG_EVENT_DEFINITIONS_H_
+#define _FG_EVENT_DEFINITIONS_H_
 
 //
 // This file will contain all basic events occuring in the game engine
 // also defines standard event structures holding info about the event
 //
 
-#define FG_EVENT_TOUCH_PRESSED			1
-#define FG_EVENT_TOUCH_RELEASED			2
-#define FG_EVENT_TOUCH_MOTION			3
-#define FG_EVENT_TOUCH_TAP_FINISHED		4
+enum fgEventType {
+	FG_EVENT_INVALID			=	0,
 
-#define FG_EVENT_MOUSE_PRESSED			5
-#define FG_EVENT_MOUSE_RELEASED			6
-#define FG_EVENT_MOUSE_MOTION			7
+	FG_EVENT_TOUCH_PRESSED		=	1,
+	FG_EVENT_TOUCH_RELEASED		=	2,
+	FG_EVENT_TOUCH_MOTION		=	3,
+	FG_EVENT_TOUCH_TAP_FINISHED	=	4,
 
-#define FG_EVENT_SWIPE_X				8
-#define FG_EVENT_SWIPE_Y				9
-#define FG_EVENT_SWIPE_XY				10
-#define FG_EVENT_SWIPE_ANGLE			10
+	FG_EVENT_MOUSE_PRESSED		=	5,
+	FG_EVENT_MOUSE_RELEASED		=	6,
+	FG_EVENT_MOUSE_MOTION		=	7,
 
-#define FG_EVENT_SWIPE_PINCH			12
+	FG_EVENT_SWIPE_X			=	8,
+	FG_EVENT_SWIPE_Y			=	9,
+	FG_EVENT_SWIPE_XY			=	10,
+	FG_EVENT_SWIPE_ANGLE		=	10,
 
-#define FG_EVENT_MULTI_SWIPE_ROTATE		13
+	FG_EVENT_SWIPE_PINCH		=	12,
 
-#define FG_EVENT_KEY_DOWN				14
-#define FG_EVENT_KEY_UP					15
+	FG_EVENT_MULTI_SWIPE_ROTATE	=	13,
 
-#define FG_EVENT_RESOURCE_LOADED		16
-#define FG_EVENT_RESOURCE_RELEASED		17
-#define FG_EVENT_RESOURCE_REQUESTED		18
+	FG_EVENT_KEY_DOWN			=	14,
+	FG_EVENT_KEY_UP				=	15,
 
-#define FG_EVENT_PROGRAM_INIT			19
+	FG_EVENT_RESOURCE_LOADED	=	16,
+	FG_EVENT_RESOURCE_RELEASED	=	17,
+	FG_EVENT_RESOURCE_REQUESTED	=	18,
 
-#define FG_EVENT_VERTEX_STREAM_READY	20
-#define FG_EVENT_CAMERA_CHANGED			21
+	FG_EVENT_PROGRAM_INIT		=	19,
 
-#define FG_EVENT_SOUND_PLAYED			22
+	FG_EVENT_VERTEX_STREAM_READY=	20,
+	FG_EVENT_CAMERA_CHANGED		=	21,
+	
+	FG_EVENT_SOUND_PLAYED		=	22,
 
-#define FG_EVENT_MENU_CHANGED			23
-#define FG_EVENT_WIDGET_STATE_CHANGED	24
+	FG_EVENT_MENU_CHANGED		=	23,
+	FG_EVENT_WIDGET_STATE_CHANGED=	24,
 
-#define FG_EVENT_SENSORS_CHANGED		25
+	FG_EVENT_SENSORS_CHANGED	=	25,
+
+	FG_EVENT_RESERVED1,
+	FG_EVENT_RESERVED2,
+	FG_NUM_EVENT_TYPES
+};
 
 enum fgSwipeDirection
 {
+	FG_SWIPE_INVALID,
 	FG_SWIPE_LEFT,
 	FG_SWIPE_RIGHT,
 	FG_SWIPE_UP,
@@ -63,8 +72,9 @@ enum fgSwipeDirection
 
 enum fgPinchDirection
 {
-	PINCH_IN,
-	PINCH_OUT
+	FG_PINCH_INVALID,
+	FG_PINCH_IN,
+	FG_PINCH_OUT
 };
 
 // FIXME this should be declared in the ResourceManager header file - well I think so...
@@ -75,109 +85,144 @@ enum fgResourceStatus
 	FG_RESOURCE_REQUESTED
 };
 
-typedef struct fgTouchEvent {
-	int m_x;
-	int m_y;
-	bool m_pressed;
-	unsigned int m_touchId;
-	unsigned long int m_timestamp;
-}fgTouchEvent;
+struct fgTouchEvent {
+	fgEventType eventType;
+	unsigned long int timeStamp;
+	int x;
+	int y;
+	bool pressed;
+	unsigned int touchID;
+};
 
-typedef struct fgMouseEvent {
-	int m_x;
-	int m_y;
-	bool m_pressed;
-	int m_buttonId;
-	unsigned long int m_timestamp;
-}fgMouseEvent;
+struct fgMouseEvent {
+	fgEventType eventType;
+	unsigned long int timeStamp;
+	int x;
+	int y;
+	bool pressed;
+	unsigned int buttonID;
+};
 
-typedef struct fgSwipeEvent {
-	int m_xStart;
-	int m_yStart;
-	int m_xEnd;
-	int m_yEnd;
-	int m_swipeXOffset;
-	int m_swipeYOffset;
-	int m_swipeXSteps;
-	int m_swipeYSteps;
-	fgSwipeDirection m_swipeDirection;
-	unsigned long int m_timestamp;
-}fgSwipeEvent;
+struct fgSwipeEvent {
+	fgEventType eventType;
+	unsigned long int timeStamp;
+	fgSwipeDirection swipeDirection;
+	int xStart;
+	int yStart;
+	int xEnd;
+	int yEnd;
+	int swipeXOffset;
+	int swipeYOffset;
+	int swipeXSteps;
+	int swipeYSteps;
 
-typedef struct fgSwipePinchEvent {
-	int m_x;
-	int m_y;
-	int m_x2;
-	int m_y2;
-	int m_pinchXOffset;
-	int m_pinchYOffset;
-	int m_pinchSize;
-	fgPinchDirection m_pinchDirection;
-	unsigned long int m_timestamp;
-}fgSwipePinchEvent;
+};
 
-typedef struct fgSwipeRotateEvent {
-	int m_x;
-	int m_y;
-	int m_x2;
-	int m_y2;
-	float m_angle;
-	unsigned long int m_timestamp;
-}fgSwipeRotateEvent;
+struct fgSwipePinchEvent {
+	fgEventType eventType;
+	unsigned long int timeStamp;
+	fgPinchDirection pinchDirection;
+	int x;
+	int y;
+	int x2;
+	int y2;
+	int pinchXOffset;
+	int pinchYOffset;
+	int pinchSize;
+};
 
-typedef struct fgKeyEvent {
-	int m_keyCode;
-	int m_pressed;
-	unsigned long int m_timestamp;
-}fgKeyEvent;
+struct fgSwipeRotateEvent {
+	fgEventType eventType;
+	unsigned long int timeStamp;
+	int x;
+	int y;
+	int x2;
+	int y2;
+	float angle;
+};
 
-typedef struct fgResourceEvent {
-	fgResourceStatus m_resourceStatus;
-	unsigned long int m_timestamp;
-	//fgResource *m_resourceHolder;
-	//FG_RHANDLE m_resourceHandle;
-}fgResourceEvent;
+struct fgKeyEvent {
+	fgEventType eventType;
+	unsigned long int timeStamp;
+	int keyCode;
+	bool pressed;
+};
 
-typedef struct fgVertexStreamEvent {
-	//FG_GFXHANDLE m_vertexStreamHandle;
-	//fgVertexStream *m_vertexStreamHolder;
-	unsigned long int m_timestamp;
-}FG_VertexStreamEvent;
+struct fgResourceEvent {
+	fgEventType eventType;
+	unsigned long int timeStamp;
+	fgResourceStatus resourceStatus;
+	//fgResource *resourceHolder;
+	//FG_RHANDLE resourceHandle;
+};
 
-typedef struct fgCameraEvent {
-	//GfxCamera *m_cameraHolder;
-	//FG_GFXHANDLE m_cameraHandle;
-	unsigned long int m_timestamp;
-}fgCameraEvent;
+struct fgVertexStreamEvent {
+	fgEventType eventType;
+	unsigned long int timeStamp;
+	//FG_GFXHANDLE vertexStreamHandle;
+	//fgVertexStream *vertexStreamHolder;
+};
 
-typedef struct fgSoundEvent {
-	//FG_RHANDLE m_soundHandle;
-	//fgResource *m_soundHolder;
-	unsigned long int m_timestamp;
-}fgSoundEvent;
+struct fgCameraEvent {
+	fgEventType eventType;
+	unsigned long int timeStamp;
+	//GfxCamera *cameraHolder;
+	//FG_GFXHANDLE cameraHandle;
+};
 
-typedef struct fgMenuChangedEvent {
-	//GUIHANDLE m_
+struct fgSoundEvent {
+	fgEventType eventType;
+	unsigned long int timeStamp;
+	//FG_RHANDLE soundHandle;
+	//fgResource *soundHolder;
+};
+
+struct fgMenuChangedEvent {
+	fgEventType eventType;
+	unsigned long int timeStamp;
+	//GUIHANDLE 
 	//
-	unsigned long int m_timestamp;
-}fgMenuChangedEvent;
+};
 
-typedef struct fgWidgetEvent {
-	//FG_GUIHANDLE m_widgetHandle;
+struct fgWidgetEvent {
+	fgEventType eventType;
+	unsigned long int timeStamp;
+	//FG_GUIHANDLE widgetHandle;
 	//fgWidget
 	//fgResource
-	unsigned long int m_timestamp;
-}fgWidgetEvent;
+};
 
-typedef struct fgSensorsEvent {
-	unsigned long int m_timestamp;
-	// int m_type; or fgSensorType m_type;
+struct fgSensorsEvent {
+	fgEventType eventType;
+	unsigned long int timeStamp;
+	// int type; or fgSensorType type;
 	union {
 		struct {
-			float  m_x,m_y,m_z;
+			float  x,y,z;
 		};
-		float m_data[3];
+		float data[3];
 	};
-}fgSensorsEvent;
+};
 
-#endif
+struct fgEvent {
+	union {
+		fgEventType eventType;
+		unsigned long int timeStamp;
+
+		fgTouchEvent touchEvent;
+		fgMouseEvent mouseEvent;
+		fgSwipeEvent swipeEvent;
+		fgSwipePinchEvent swipePinchEvent;
+		fgSwipeRotateEvent swipeRotateEvent;
+		fgKeyEvent keyEvent;
+		fgResourceEvent resourceEvent;
+		fgVertexStreamEvent vertexStreamEvent;
+		fgCameraEvent cameraEvent;
+		fgSoundEvent soundEvent;
+		fgMenuChangedEvent menuChangedEvent;
+		fgWidgetEvent widgetEvent;
+		fgSensorsEvent sensorsEvent;
+	};
+};
+
+#endif /* _FG_EVENT_DEFINITIONS_H_ */
