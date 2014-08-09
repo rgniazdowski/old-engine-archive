@@ -11,6 +11,10 @@
 #include "Graphics/Textures/fgTextureResource.h"
 #include "GUI/fgFontResource.h"
 
+/*
+ * Receive notification of the start of an element.
+ * This function will add to the specified resource group any identified resources.
+ */
 void fgResourceGroupContentHandler::startElement(const char *localName, fgXMLElement *elementPtr, fgXMLNodeType nodeType, fgXMLAttribute *firstAttribute, int depth)
 {
 	// Sound
@@ -31,11 +35,13 @@ void fgResourceGroupContentHandler::startElement(const char *localName, fgXMLEle
 
 	m_resType = FG_RESOURCE_INVALID;
 	m_resourcePtr = NULL;
-
 	// Handling for resource group tag type - in most cases it's the root node.
+	// #TODO - there needs to be a security check - checking if the resource group does not
+	// contain links to other resource group files - this is not support and not needed.
 	if(strnicmp(localName, FG_RESOURCE_GROUP_NAME, strlen(FG_RESOURCE_GROUP_NAME)) == 0) {
 		m_resType = FG_RESOURCE_GROUP;
 		fgXMLAttribute *attribute = firstAttribute;
+		// #FIXME #P5 - well looks like this could use some kind of error checking, maybe...
 		while(attribute) {
 			const char *attrname = attribute->Name();
 			const char *attrvalue = attribute->Value();
@@ -46,68 +52,73 @@ void fgResourceGroupContentHandler::startElement(const char *localName, fgXMLEle
 			}
 			attribute = attribute->Next();
 		}
-	// 
+	// Resource is a sfx sound file (effects mostly)
 	} else if(strnicmp(localName, FG_RESOURCE_SOUND_NAME, strlen(FG_RESOURCE_SOUND_NAME)) == 0) {
 		m_resType = FG_RESOURCE_SOUND;
-	// 
+	// Resource is a music file
 	} else if(strnicmp(localName, FG_RESOURCE_MUSIC_NAME, strlen(FG_RESOURCE_MUSIC_NAME)) == 0) {
 		m_resType = FG_RESOURCE_MUSIC;
-	// 
+	// Resource file is 3D model (obj/3ds/...)
 	} else if(strnicmp(localName, FG_RESOURCE_3D_MODEL_NAME, strlen(FG_RESOURCE_3D_MODEL_NAME)) == 0) {
 		m_resType = FG_RESOURCE_3D_MODEL;
-	// 
+	// Resource is a texture (jpg/png/tga)
 	} else if(strnicmp(localName, FG_RESOURCE_TEXTURE_NAME, strlen(FG_RESOURCE_TEXTURE_NAME)) == 0) {
 		m_resType = FG_RESOURCE_TEXTURE;
-	// 
+	// Resource is a Font - just for now it is really a texture file - support for TTF in the future
 	} else if(strnicmp(localName, FG_RESOURCE_FONT_NAME, strlen(FG_RESOURCE_FONT_NAME)) == 0) {
 		m_resType = FG_RESOURCE_FONT;
-	// 
+	// Resource is a GUI structure definition (also XML based file - similar to HTML for a reason)
 	} else if(strnicmp(localName, FG_RESOURCE_GUI_STRUCTURE_SHEET_NAME, strlen(FG_RESOURCE_GUI_STRUCTURE_SHEET_NAME)) == 0) {
 		m_resType = FG_RESOURCE_GUI_STRUCTURE_SHEET;
-	// 
+	// Resource type is GUI stylesheet
 	} else if(strnicmp(localName, FG_RESOURCE_GUI_STYLE_SHEET_NAME, strlen(FG_RESOURCE_GUI_STYLE_SHEET_NAME)) == 0) {
 		m_resType = FG_RESOURCE_GUI_STYLE_SHEET;
-	// 
+	// Resource file is shader config file
 	} else if(strnicmp(localName, FG_RESOURCE_SHADER_NAME, strlen(FG_RESOURCE_SHADER_NAME)) == 0) {
 		m_resType = FG_RESOURCE_SHADER;
-	// 
+	// Resource file is scene - this something like level file, bound to change later...
 	} else if(strnicmp(localName, FG_RESOURCE_SCENE_NAME, strlen(FG_RESOURCE_SCENE_NAME)) == 0) {
 		m_resType = FG_RESOURCE_SCENE;
-	// 
+	// Resource file is a script (custom language or LUA)
 	} else if(strnicmp(localName, FG_RESOURCE_SCRIPT_NAME, strlen(FG_RESOURCE_SCRIPT_NAME)) == 0) {
 		m_resType = FG_RESOURCE_SCRIPT;
-	// 
+	//  Resource file is save file (save state) - this is kinda broad definition
 	} else if(strnicmp(localName, FG_RESOURCE_SAVE_FILE_NAME, strlen(FG_RESOURCE_SAVE_FILE_NAME)) == 0) {
 		m_resType = FG_RESOURCE_SAVE_FILE;
-	//
+	// Various resource (this might become handy or not, we'll see)
 	} else if(strnicmp(localName, FG_RESOURCE_VARIA_NAME, strlen(FG_RESOURCE_VARIA_NAME)) == 0) {
 		m_resType = FG_RESOURCE_VARIA;
-	//
+	// Resource is binary file
 	} else if(strnicmp(localName, FG_RESOURCE_BINARY_NAME, strlen(FG_RESOURCE_BINARY_NAME)) == 0) {
 		m_resType = FG_RESOURCE_BINARY;
-	//
+	// Resource type is library (in the future, however now in mind I have dynamic linking - DLL)
 	} else if(strnicmp(localName, FG_RESOURCE_LIBRARY_NAME, strlen(FG_RESOURCE_LIBRARY_NAME)) == 0) {
 		m_resType = FG_RESOURCE_LIBRARY;
-	//
+	// Resource type is plugin
 	} else if(strnicmp(localName, FG_RESOURCE_PLUGIN_NAME, strlen(FG_RESOURCE_PLUGIN_NAME)) == 0) {
 		m_resType = FG_RESOURCE_PLUGIN;
-	//
+	// Resource type is custom (based, managed by other plugins - to come in the future)
 	} else if(strnicmp(localName, FG_RESOURCE_CUSTOM_NAME, strlen(FG_RESOURCE_CUSTOM_NAME)) == 0) {
 		m_resType = FG_RESOURCE_CUSTOM;
-	//
+	// Resource type is ZipPack (uncompressed zip, pk3 like from Quake III)
 	} else if(strnicmp(localName, FG_RESOURCE_ZIP_PACK_NAME, strlen(FG_RESOURCE_ZIP_PACK_NAME)) == 0) {
 		m_resType = FG_RESOURCE_ZIP_PACK;
 	} /*if(strnicmp(localName, FG_RESOURCE_INVALID_NAME, strlen(FG_RESOURCE_INVALID_NAME)) == 0) {
 	}*/
 
 	// Here are common attributes for every resource tag in resource group
+	// Path to the resource
 	const char *resPath = NULL;
+	// Resource name (ID/TAG string) 
 	const char *resName = NULL;
+	// Priority for the resource stored as a string
 	const char *resPriorityStr = NULL;
+	// Quality for the resource stored as a string
 	const char *resQualityStr = NULL;
+	// Resources' priority in proper format
 	fgResPriorityType resPriority = FG_RES_PRIORITY_INVALID;
+	// Pointer to the first attribute for checking
 	fgXMLAttribute *attribute = firstAttribute;
-
 	if(m_resType != FG_RESOURCE_GROUP && m_resType != FG_RESOURCE_INVALID) {
 		while(attribute) {
 			const char *attrname = attribute->Name();
@@ -124,11 +135,12 @@ void fgResourceGroupContentHandler::startElement(const char *localName, fgXMLEle
 			attribute = attribute->Next();
 		}
 	}
-	resPriority = (fgResPriorityType)atoi(resPriorityStr);
+	if(resPriorityStr)
+		resPriority = (fgResPriorityType)atoi(resPriorityStr);
 	// quality_ = (Quality)atoi(resQualityStr);
-	// #FIXME
-	printf("%s: >>> path = '%s'; name = '%s'; priority = '%s'; quality = '%s'; \n",
-		localName, resPath, resName, resPriorityStr, resQualityStr);
+	// #FIXME #DEBUG string
+	//printf("%s: >>> path = '%s'; name = '%s'; priority = '%s'; quality = '%s'; \n",
+	//	localName, resPath, resName, resPriorityStr, resQualityStr);
 
 	switch(m_resType)
 	{
@@ -139,13 +151,11 @@ void fgResourceGroupContentHandler::startElement(const char *localName, fgXMLEle
 	case FG_RESOURCE_3D_MODEL:
 		break;
 	case FG_RESOURCE_TEXTURE:
-		//#FIXME
-		//m_resourcePtr = new fgTextureResource();
+		// Create new texture resource
 		m_resourcePtr = new fgTextureResource(resPath);
 		break;
 	case FG_RESOURCE_FONT:
-		//#FIXME
-		//m_resourcePtr = new fgFontResource();
+		// Create new font resource
 		m_resourcePtr = new fgFontResource(resPath);
 		break;
 	case FG_RESOURCE_GUI_STRUCTURE_SHEET:
@@ -175,37 +185,42 @@ void fgResourceGroupContentHandler::startElement(const char *localName, fgXMLEle
 	default:
 		break;
 	};
-
+	// If the resource was created...
 	if(m_resourcePtr) {
 		m_resourcePtr->setPriority(resPriority);
 		m_resourcePtr->setResourceName(resName);
+		FG_WriteLog("fgResourceGroupContentHandler::startElement(); push_back(*);");
+		// ...then it can be added to the Resource Groups' list.
+		this->m_resourceGroup->getRefResourceFiles().push_back(m_resourcePtr);
 	}
 }
 
 /*******************************************************/
 
 /*
- *
+ * Base constructor of the resource group object
  */
 fgResourceGroup::fgResourceGroup()
 {
 	FG_WriteLog("fgResourceGroup::fgResourceGroup(); constructor");
+	clear();
 }
 
 /*
- *
+ * Base destructor of the resource group object
  */
 fgResourceGroup::~fgResourceGroup()
 {
-	FG_WriteLog("fgResourceGroup::~fgResourceGroup(); deconstructor");
+	FG_WriteLog("fgResourceGroup::~fgResourceGroup(); destructor");
 	destroy();
 }
 
 /*
- *
+ * Clears the class data, this actually does not free allocated memory, just resets base class attributes
  */
 void fgResourceGroup::clear(void)
 {
+	FG_WriteLog("fgResourceGroup::clear();");
 	fgResource::clear();
 	m_rHandles.clear_optimised();
 	m_resourceFiles.clear_optimised();
@@ -213,10 +228,13 @@ void fgResourceGroup::clear(void)
 }
 
 /*
- *
+ * Create function loads/interprets data from file in ROM and place it in RAM memory.
  */
 bool fgResourceGroup::create(void)
 {
+	FG_WriteLog("fgResourceGroup::create();");
+	if(m_resourceFiles.empty())
+		return false;
 	bool status = true;
 	for(ResVecIt it = m_resourceFiles.begin(); it != m_resourceFiles.end(); it++) {
 		if(!(*it)->create()) {
@@ -227,7 +245,7 @@ bool fgResourceGroup::create(void)
 }
 
 /*
- *
+ * Destroy all loaded data including additional metadata (called with deconstructor)
  */
 void fgResourceGroup::destroy(void)
 {
@@ -238,10 +256,13 @@ void fgResourceGroup::destroy(void)
 }
 
 /*
- *
+ * Reloads any data, recreates the resource (refresh)
  */
 bool fgResourceGroup::recreate(void)
 {
+	FG_WriteLog("fgResourceGroup::recreate();");
+	if(m_resourceFiles.empty())
+		return false;
 	bool status = true;
 	for(ResVecIt it = m_resourceFiles.begin(); it != m_resourceFiles.end(); it++) {
 		if(!(*it)->recreate()) {
@@ -252,21 +273,25 @@ bool fgResourceGroup::recreate(void)
 }
 
 /*
- *
+ * Dispose completely of the all loaded data, free all memory
  */
 void fgResourceGroup::dispose(void)
 {
 	FG_WriteLog("fgResourceGroup::~dispose();");
+	if(m_resourceFiles.empty())
+		return;
 	for(ResVecIt it = m_resourceFiles.begin(); it != m_resourceFiles.end(); it++) {
 		(*it)->dispose();
 	}
 }
 
 /*
- *
+ * Check if resource is disposed (not loaded yet or disposed after)
  */
 bool fgResourceGroup::isDisposed(void) const
 {
+	if(m_resourceFiles.empty())
+		return true;
 	bool status = true;
 	for(ResVecIt it = m_resourceFiles.begin(); it != m_resourceFiles.end(); it++) {
 		if(!(*it)->isDisposed())
@@ -276,7 +301,9 @@ bool fgResourceGroup::isDisposed(void) const
 }
 
 /*
- *
+ * This will parse/load xml group config file. It wont
+ * load or allocate any data - this is for 'create' to do.
+ * This function will return false if file path is not set.
  */
 bool fgResourceGroup::preLoadConfig(void)
 {
@@ -293,7 +320,6 @@ bool fgResourceGroup::preLoadConfig(void)
 	if(!m_xmlParser->loadXML(m_filePath.c_str())) {
 		return false;
 	}
-	// ! #FIXME
 	m_xmlParser->parseWithHandler();
 	delete m_xmlParser;
 	delete contentHandler;
@@ -302,11 +328,13 @@ bool fgResourceGroup::preLoadConfig(void)
 }
 
 /*
- *
+ * Refresh arrays holding handles and resource pointers within this group
  */
 void fgResourceGroup::refreshArrays(void)
 {
 	m_rHandles.clear();
+	if(m_resourceFiles.empty())
+		return;
 	for(ResVecIt it = m_resourceFiles.begin(); it != m_resourceFiles.end(); it++) {
 		m_rHandles.push_back((*it)->getHandle());
 	}
@@ -317,6 +345,8 @@ void fgResourceGroup::refreshArrays(void)
  */
 unsigned int fgResourceGroup::Lock(void)
 {
+	if(m_resourceFiles.empty())
+		return -1;
 	for(ResVecIt it = m_resourceFiles.begin(); it != m_resourceFiles.end(); it++) {
 		(*it)->Lock();
 	}
@@ -328,6 +358,8 @@ unsigned int fgResourceGroup::Lock(void)
  */
 unsigned int fgResourceGroup::Unlock(void)
 {
+	if(m_resourceFiles.empty())
+		return -1;
 	for(ResVecIt it = m_resourceFiles.begin(); it != m_resourceFiles.end(); it++) {
 		(*it)->Unlock();
 	}
@@ -339,8 +371,10 @@ unsigned int fgResourceGroup::Unlock(void)
  */
 void fgResourceGroup::ZeroLock(void)
 {
+	if(m_resourceFiles.empty())
+		return;
 	for(ResVecIt it = m_resourceFiles.begin(); it != m_resourceFiles.end(); it++) {
 		(*it)->ZeroLock();
 	}
-	ZeroLock();
+	fgResource::ZeroLock();
 }

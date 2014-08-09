@@ -136,7 +136,7 @@ public:
 	// which will load/interpret data from file in ROM and place it in RAM memory.
 	virtual bool create(void) = 0;
 	// Destroy all loaded data including additional metadata (called with deconstructor)
-	virtual void destroy(void) { };
+	virtual void destroy(void) { clear(); };
 	// Dispose and recreate must be able to discard and then completely recreate
 	// the data contained in the class with no additional parameters
 	// This functions should NOT be overloaded to have different number of parameters.
@@ -159,9 +159,10 @@ public:
 
 	// Get the resource type id
 	inline fgResourceType getResourceType() const			{  return m_resType;  }
-
+protected:
 	// Set the reference counter for the resource
 	inline void setReferenceCount(unsigned int nCount)	{  m_nRefCount = nCount;  }
+public:
 	// Return the current hit of the reference counter for the resource
 	inline unsigned int getReferenceCount(void) const	{  return m_nRefCount;  }
 	// Check if the resource is locked (reference counter is not zero)
@@ -175,24 +176,49 @@ public:
 	// Set file path to this resource
 	virtual void setFilePath(const char *path) {
 		m_filePath.clear();
-		m_filePath.copy(const_cast<char *>(path), FG_RESOURCE_PATH_MAX, 0);
+		m_filePath = path;
 	}
-
 	// Set file path to this resource
 	virtual void setFilePath(std::string& path) {
 		m_filePath.clear();
 		m_filePath.append(path, 0, FG_RESOURCE_PATH_MAX);
 	}
 
-	// Set resource name (string ID)
-	inline void setResourceName(const char *name) {
-		m_resourceName = name;
+	// Get resource file path string
+	std::string getFilePath(void) const {
+		return m_filePath;
+	}
+	// Get reference to resource file path string
+	std::string& getFilePath(void) {
+		return m_filePath;
+	}
+	// Get resource file path as C-like string (char array)
+	const char* getFilePathStr(void) const {
+		return m_filePath.c_str();
 	}
 
-	// Set resource name (string ID)
+	// Set resource name (string TAG/ID)
+	inline void setResourceName(const char *name) {
+		m_resourceName.clear();
+		m_resourceName = name;
+	}
+	// Set resource name (string TAG/ID)
 	inline void setResourceName(std::string& name) {
 		m_resourceName.clear();
 		m_resourceName.append(name);
+	}
+
+	// Get resource name string
+	std::string getResourceName(void) const {
+		return m_resourceName;
+	}
+	// Get reference to resource name string
+	std::string& getResourceName(void) {
+		return m_resourceName;
+	}
+	// Get resource name (TAG/string ID) as C-like string (char array)
+	const char* getResourceNameStr(void) const {
+		return m_resourceName.c_str();
 	}
 
 	// The less-than operator defines how resources get sorted for discarding.
@@ -213,11 +239,12 @@ protected:
 	virtual unsigned int Unlock(void) { return downRef(); }
 	// Unlock completely the resource (reference counter = 0) #NOTSAFE #FIXME
 	virtual void ZeroLock(void) { m_nRefCount = 0; }
-protected:
+	// Set the resource handle ID out front (internal use, restricted)
 	void setResourceHandle(FG_RHANDLE handle) {
 		m_handle = handle;
 	}
 public:
+	// Return the resource handle ID
 	FG_RHANDLE getHandle(void) const {
 		return m_handle;
 	}
@@ -230,7 +257,7 @@ protected:
 	fgResourceType		m_resType;
 	// Number of references to this resource
 	unsigned int		m_nRefCount;
-	// Time of last access, may become handy
+	// Time of last access, may become handy #TESTME
 	time_t				m_lastAccess;
 	// File path (can be relative) to file holding data #FIXME
 	std::string			m_filePath;

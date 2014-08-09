@@ -43,18 +43,23 @@ class fgFontResource;
 class fgResourceGroupContentHandler : public fgXMLDefaultHandler {
 	friend class fgResourceGroup;
 private:
+	// Pointer to the resource group - this groups' xml config file is being parsed by this handler
 	fgResourceGroup *m_resourceGroup;
+	// Current resource type
 	fgResourceType m_resType;
+	// Current resource object pointer
 	fgResource *m_resourcePtr;
 
+	// Base constructor of the resource group content handler object
 	fgResourceGroupContentHandler() : m_resourceGroup(NULL), m_resType(FG_RESOURCE_INVALID), m_resourcePtr(NULL)
 	{
 	}
-
+	// Base destructor of the resource group content handler object
 	~fgResourceGroupContentHandler()
 	{
 	}
 protected:
+	// Set pointer to resource group object - this group is being parsed
 	void setResourceGroupPointer(fgResourceGroup *group) { m_resourceGroup = group; }
 public:
 	// Receive notification of the end of the document.
@@ -84,7 +89,6 @@ public:
 		// Characters - wont be needed
 		//printf("characters: n: %d, val: '%s'\n", length, ch);
 	}
-
 };
 
 // This is resource group and it is treated like normal resource.
@@ -98,7 +102,7 @@ public:
 // In other words this class binds separate resources into one.
 // ResourceGroup files are loaded via xml configs from predefined
 // location. The config files will specify the type and  location
-// resources that will be part of this group/union. Additional 
+// of resources that will be part of this group/union. Additional 
 // parameters include things like priority, tags, etc.
 //
 // Hint: Use smart pointers in the future - from boost library or
@@ -125,6 +129,10 @@ public:
 	// Check if resource is disposed (not loaded yet or disposed after)
 	virtual bool isDisposed(void) const;
 
+	// Return the size of the data actually loaded inside the class
+	// For the resource group this allways returns zero
+	virtual size_t getSize() const { return 0; }
+
 	// This will parse/load xml group config file. It wont
 	// load or allocate any data - this is for 'create' to do.
 	// This function will return false if file path is not set.
@@ -141,7 +149,7 @@ public:
 	fgArrayVector<FG_RHANDLE>& getRefResourceHandles(void) {
 		return m_rHandles;
 	}
-
+protected:
 	// Lock the resource (reference counter +1)
 	virtual unsigned int Lock(void);
 	// Unlock the resource (reference counter -1)
@@ -154,7 +162,6 @@ protected:
 	fgArrayVector<FG_RHANDLE> m_rHandles;
 	// List of all resource files 
 	fgArrayVector<fgResource *> m_resourceFiles;
-
 	// Parser for xml config files (here: resource group xml files)
 	fgXMLParser *m_xmlParser;
 };

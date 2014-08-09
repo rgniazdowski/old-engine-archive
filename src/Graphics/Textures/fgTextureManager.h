@@ -19,8 +19,6 @@
 typedef fgTextureResource * PfgTexture;
 
 /**
- * COMPOSITE DESIGN PATTERN
- *
  * Class that allows to perform GROUP OPERATIONS
  * on all textures. 
  */

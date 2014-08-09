@@ -90,16 +90,18 @@ public:
 
 	// Access functions for cycling through each item.  Giving direct
 	// access to the map or iterator causes a stack pointer fault if you access
-	// the map across a dll boundary, but it's safe through the wrappers.  
+	// the map across a dll boundary, but it's safe through the wrappers. 
+
+	// Go to the begin of resource map iteration
 	inline void goToBegin(void)
 	{  m_currentResource = m_resourceMap.begin(); }
-	
+	// Get pointer to the current resource (based on iterator)
 	inline fgResource* getCurrentResource(void) const
 	{  return (*m_currentResource).second;  }
-	
+	// Is current pointer to resource valid?
 	inline bool isValid(void) const
 	{  return (m_currentResource != m_resourceMap.end()) ? true : false;  }
-
+	// Go to the next resource (iterate to next)
 	inline bool goToNext()
 	{  m_currentResource++;  return isValid();  }
 	
@@ -110,6 +112,7 @@ public:
 	// an inserted resource does not exceed the maximum allowed memory
 	bool reserveMemory(size_t nMem);
 
+	// Insert resource group into manager
 	// If you pass in the pointer to resource handle, the Resource Manager 
 	// will provide a unique handle for you.  
 	bool insertResource(FG_RHANDLE* rhUniqueID, fgResource* pResource);
@@ -142,9 +145,15 @@ public:
 	// the object, remove the resource from the manager - resource handle will
 	// become invalid - the resource manager doesnt have it anymore in its map
 
-	// Destroys an object and deallocates it's memory
+	// Destroys an object and deallocates it's memory. First resource is removed
+	// from the resource managers map, existing rhandles will become invalid
+	// regardless of the usage in the program - however if the reference count is
+	// not zero the resource wont be removed and destroyed
 	bool destroyResource(fgResource* pResource);
-	// Destroys an object and deallocates it's memory
+	// Destroys an object and deallocates it's memory. First resource is removed
+	// from the resource managers map, existing rhandles will become invalid
+	// regardless of the usage in the program - however if the reference count is
+	// not zero the resource wont be removed and destroyed
 	bool destroyResource(FG_RHANDLE rhUniqueID);
 
 	// Using GetResource tells the manager that you are about to access the
@@ -156,18 +165,20 @@ public:
 	// the Resource Manager.  You can use this to ensure that a surface does not
 	// get swapped out, for instance.  The resource contains a reference count
 	// to ensure that numerous locks can be safely made.
+	// #FIXME #TODO #P3 - locking/unlocking is based on counter - DEPRECATED.
 	fgResource* lockResource(FG_RHANDLE rhUniqueID);
-
 	// Unlocking the object let's the resource manager know that you no longer
 	// need exclusive access.  When all locks have been released (the reference
 	// count is 0), the object is considered safe for management again and can
 	// be swapped out at the manager's discretion.  The object can be referenced
 	// either by handle or by the object's pointer. 
+	// #FIXME #TODO #P3 - locking/unlocking is based on counter - DEPRECATED.
 	fgResource* unlockResource(FG_RHANDLE rhUniqueID);
 
 	// Retrieve the stored handle based on a pointer to the resource.  Note that 
 	// it's assumed that there are no duplicate pointers, as it will return the
 	// first match found.
+	// This function can be also used to check if given resource is managed
 	FG_RHANDLE findResourceHandle(fgResource* pResource);
 
 	// This must be called when you wish the manager to check for discardable
@@ -178,7 +189,7 @@ public:
 	bool checkForOverallocation(void);
 	
 protected:
-	// Refresh allocated memory based on managed resource
+	// Refresh allocated memory based on managed resources
 	void refreshMemory(void);
 	// Set used memory to zero
 	inline void resetMemory(void)			{  m_nCurrentUsedMemory = 0; }
@@ -190,16 +201,23 @@ protected:
 	FG_RHANDLE getNextResHandle(void)			{  return --m_rhNextResHandle;  }
 
 protected:
+	// Value of the next valid resource handle (used while adding new resource to manage)
 	FG_RHANDLE				m_rhNextResHandle;
+	// Size of the current used memory by the managed resources
 	size_t					m_nCurrentUsedMemory;
+	// Value of the maximum supported size of all managed resources
 	size_t					m_nMaximumMemory;
+	// Is resources are reserved? Used for blocking overallocation check
 	bool					m_bResourceReserved;
+	// Iterator to the current resource (used for browsing through the resources' map)
 	fgResourceMapItor		m_currentResource;
+	// Main resource map (managed resources)
 	fgResourceMap			m_resourceMap;
+	// Resource group map (managed resource groups)
 	fgResourceMap			m_resourceGroupMap;
 };
 
-// #FIXME - again, with the singletons...
+// #FIXME - here we go again, with the singletons... :)
 #define FG_ResourceManager fgResourceManager::getInstance()
 
 #endif

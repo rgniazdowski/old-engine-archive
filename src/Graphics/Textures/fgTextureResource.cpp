@@ -37,6 +37,7 @@ bool fgTexture::checkGlError(const char* fname) {
  */
 void fgTextureResource::clear(void)
 {
+	FG_WriteLog("fgTextureResource::clear();");
 	fgResource::clear();
 	m_fileType = FG_TEXTURE_FILE_INVALID;
 	m_textureType = FG_TEXTURE_INVALID;

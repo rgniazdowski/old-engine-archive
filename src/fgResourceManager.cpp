@@ -19,10 +19,11 @@ template <>
 fgResourceManager *fgSingleton<fgResourceManager>::instance = NULL;
 
 /*
- *
+ * Reset local parameters
  */
 void fgResourceManager::clear(void)
 {
+	FG_WriteLog(">>>>> fgResourceManager::clear(void); ALL"); // #TODELETE
 	m_resourceMap.clear();
 	m_resourceGroupMap.clear();
 	m_rhNextResHandle = FG_INVALID_RHANDLE;
@@ -33,7 +34,7 @@ void fgResourceManager::clear(void)
 }
 
 /*
- *
+ * Creates the resource manager
  */
 bool fgResourceManager::create(unsigned int nMaxSize)
 {
@@ -43,33 +44,32 @@ bool fgResourceManager::create(unsigned int nMaxSize)
 }
 
 /*
- *
+ * This function will release all data and memory held by resource
+ * manager itself (including resources)
  */
 void fgResourceManager::destroy(void)
 {
+	FG_WriteLog(">>>>> fgResourceManager::destroy(void); GROUPS"); // #TODELETE
 	for(fgResourceMapItor itor = m_resourceGroupMap.begin(); itor != m_resourceGroupMap.end(); ++itor)
 	{
 		itor->second->ZeroLock();
 		itor->second->dispose();
 		fgArrayVector<fgResource *>& resInGrp = ((fgResourceGroup *)itor->second)->getRefResourceFiles();
-		for(fgResourceGroup::ResVecIt it = resInGrp.begin(); it != resInGrp.end(); it++) {
-			destroyResource((*it));
+		while(!resInGrp.empty()) {
+			fgResource *resPtr = resInGrp.back();
+			resInGrp.pop_back();
+			destroyResource(resPtr);
 		}
+
 		itor->second->clear();
 		destroyResource(itor->second);
 	}
-	//m_resourceGroupMap.clear();
+	m_resourceGroupMap.clear();
 
-	//FG_WriteLog(">>>>> fgResourceManager::destroy(void);");
-	for(fgResourceMapItor itor = m_resourceMap.begin(); itor != m_resourceMap.end(); ++itor)
-	{
-		//if(!((*itor).second)->isLocked())
-		{
-			itor->second->dispose();
-			//FG_WriteLog(">>>>> fgResourceManager: deleting from resource map value:
-			//id=%ud; name='%s';", (*itor).first, typeid((*itor).second).name());
-			delete ((*itor).second);
-		}
+	FG_WriteLog(">>>>> fgResourceManager::destroy(void); RESOURCES"); // #TODELETE
+	while(!m_resourceMap.empty()) {
+		fgResourceMapItor itor = m_resourceMap.begin();
+		destroyResource(itor->second);
 	}
 	clear();
 }
@@ -121,21 +121,21 @@ bool fgResourceManager::initialize(void)
 		// Locking resource group - locks all the resources 
 		insertResource(&grpUniqueID, resGroup);
 		// There is a separate holder for resource group
-		insertResourceGroup(&grpUniqueID, resGroup);
+		insertResourceGroup(grpUniqueID, resGroup);
 		fgArrayVector<fgResource *>& resInGrp = resGroup->getRefResourceFiles();
 		for(fgResourceGroup::ResVecIt it = resInGrp.begin(); it != resInGrp.end(); it++) {
 			FG_RHANDLE resUniqueID;
 			insertResource(&resUniqueID, (*it));
 		}
 		resGroup->refreshArrays();
-		FG_WriteLog("LOG INSERTED RESOURCE GROUP"); // #FIXME
+		FG_WriteLog("LOG INSERTED RESOURCE GROUP"); // #FIXME #TODELETE
 	}
 	resGroupFiles.clear();
 	return true;
 }
 
 /*
- *
+ * Set maximum memory value for the used memory counter
  */
 bool fgResourceManager::setMaximumMemory(size_t nMem)
 {
@@ -144,7 +144,8 @@ bool fgResourceManager::setMaximumMemory(size_t nMem)
 }
 
 /*
- *
+ * Allows the resource manager to pre-reserve an amount of memory so
+ * an inserted resource does not exceed the maximum allowed memory
  */
 bool fgResourceManager::reserveMemory(size_t nMem)
 {
@@ -156,7 +157,8 @@ bool fgResourceManager::reserveMemory(size_t nMem)
 }
 
 /*
- *
+ * Insert resource group into manager, if you pass in the pointer to
+ * resource handle, the Resource Manager will provide a unique handle for you.  
  */
 bool fgResourceManager::insertResource(FG_RHANDLE* rhUniqueID, fgResource* pResource)
 {
@@ -166,7 +168,7 @@ bool fgResourceManager::insertResource(FG_RHANDLE* rhUniqueID, fgResource* pReso
 }
 
 /*
- *
+ * Insert resource into manager with predefined resource handle ID
  */
 bool fgResourceManager::insertResource(FG_RHANDLE rhUniqueID, fgResource* pResource)
 {
@@ -194,7 +196,7 @@ bool fgResourceManager::insertResource(FG_RHANDLE rhUniqueID, fgResource* pResou
 }
 
 /*
- *
+ * Insert resource group into manager
  */
 bool fgResourceManager::insertResourceGroup(FG_RHANDLE* rhUniqueID, fgResource* pResource)
 {
@@ -204,10 +206,12 @@ bool fgResourceManager::insertResourceGroup(FG_RHANDLE* rhUniqueID, fgResource* 
 }
 
 /*
- *
+ * Insert resource group into manager with predefined resource handle ID
  */
 bool fgResourceManager::insertResourceGroup(FG_RHANDLE rhUniqueID, fgResource* pResource)
 {
+	// #FIXME #TODO #P4 - maybe this function should also insert resources within the
+	// resource group - seems legit...
 	fgResourceMapItor itor = m_resourceGroupMap.find(rhUniqueID);
 	if(itor != m_resourceGroupMap.end()) {
 		// ID has already been allocated as a resource
@@ -225,15 +229,18 @@ bool fgResourceManager::insertResourceGroup(FG_RHANDLE rhUniqueID, fgResource* p
  */
 bool fgResourceManager::removeResource(FG_RHANDLE rhUniqueID)
 {
+	FG_WriteLog("fgResourceManager::removeResource(FG_RHANDLE rhUniqueID);"); // #TODELETE
 	// try to find the resource with the specified id
 	fgResourceMapItor itor = m_resourceMap.find(rhUniqueID);
-	if(itor == m_resourceMap.end())
+	if(itor == m_resourceMap.end()) {
 		// Could not find resource to remove
 		return false;
+	}
 	// if the resource was found, check to see that it's not locked
-	if(itor->second->isLocked())
+	if(itor->second->isLocked()) {
 		// Can't remove a locked resource
 		return false;
+	}
 	// Get the memory and subtract it from the manager total
 	removeMemory(itor->second->getSize());
 	// remove the requested resource (erase removes the pointers from the container, but does not call delete)
@@ -248,6 +255,7 @@ bool fgResourceManager::removeResource(FG_RHANDLE rhUniqueID)
  */
 bool fgResourceManager::removeResource(fgResource* pResource)
 {
+	FG_WriteLog("fgResourceManager::removeResource(fgResource* pResource);");
 	// try to find the resource with the specified resource
 	fgResourceMapItor itor;
 	for(itor = m_resourceMap.begin(); itor != m_resourceMap.end(); ++itor)
@@ -255,13 +263,15 @@ bool fgResourceManager::removeResource(fgResource* pResource)
 		if(itor->second == pResource)
 			break;
 	}
-	if(itor == m_resourceMap.end())
+	if(itor == m_resourceMap.end()) {
 		// Could not find resource to remove. 
 		return false;
+	}
 	// if the resource was found, check to see that it's not locked
-	if(itor->second->isLocked())
+	if(itor->second->isLocked()) {
 		// Can't remove a locked resource
 		return false;
+	}
 	// Get the memory and subtract it from the manager total
 	removeMemory(pResource->getSize());
 	// remove the requested resource
@@ -282,9 +292,10 @@ bool fgResourceManager::disposeResource(FG_RHANDLE rhUniqueID)
 		return false;
 	}
 	// if the resource was found, check to see that it's not locked
-	if(itor->second->isLocked())
+	if(itor->second->isLocked()) {
 		// Can't remove a locked resource
 		return false;
+	}
 	unsigned int nDisposalSize = itor->second->getSize();
 	itor->second->dispose();
 	if(itor->second->isDisposed()) {
@@ -328,12 +339,16 @@ bool fgResourceManager::disposeResource(fgResource* pResource)
 }
 
 /*
- * Destroys an object and deallocates it's memory
+ * Destroys an object and deallocates it's memory. First resource is removed
+ * from the resource managers map, existing rhandles will become invalid
+ * regardless of the usage in the program - however if the reference count is
+ * not zero the resource wont be removed and destroyed
  */
 bool fgResourceManager::destroyResource(fgResource* pResource)
 {
 	if(!removeResource(pResource))
 		return false;
+	FG_WriteLog("fgResourceManager::destroyResource(fgResource* pResource) -> delete pResource;");
 	delete pResource;
 	return true;
 }
@@ -349,12 +364,16 @@ bool fgResourceManager::destroyResource(FG_RHANDLE rhUniqueID)
 	fgResource* pResource = getResource(rhUniqueID);
 	if(!removeResource(rhUniqueID))
 		return false;
+	FG_WriteLog("fgResourceManager::destroyResource(FG_RHANDLE rhUniqueID) -> delete pResource;");
 	delete pResource;
 	return true;
 }
 
 /*
- * Get the resource pointer (object) via rhandle ID
+ * Get the resource pointer (object) via resource handle ID
+ * Using GetResource tells the manager that you are about to access the
+ * object.  If the resource has been disposed, it will be recreated 
+ * before it has been returned. 
  */
 fgResource* fgResourceManager::getResource(FG_RHANDLE rhUniqueID)
 {
@@ -387,7 +406,11 @@ fgResource* fgResourceManager::getResource(FG_RHANDLE rhUniqueID)
 }
 
 /*
- *
+ * Locking the resource ensures that the resource does not get managed by
+ * the Resource Manager.  You can use this to ensure that a surface does not
+ * get swapped out, for instance.  The resource contains a reference count
+ * to ensure that numerous locks can be safely made.
+ * #FIXME #TODO #P3 - locking/unlocking is based on counter - DEPRECATED.
  */
 fgResource* fgResourceManager::lockResource(FG_RHANDLE rhUniqueID)
 {
@@ -415,7 +438,12 @@ fgResource* fgResourceManager::lockResource(FG_RHANDLE rhUniqueID)
 }
 
 /*
- *
+ * Unlocking the object let's the resource manager know that you no longer
+ * need exclusive access.  When all locks have been released (the reference
+ * count is 0), the object is considered safe for management again and can
+ * be swapped out at the manager's discretion.  The object can be referenced
+ * either by handle or by the object's pointer. 
+ * #FIXME #TODO #P3 - locking/unlocking is based on counter - DEPRECATED.
  */
 fgResource* fgResourceManager::unlockResource(FG_RHANDLE rhUniqueID)
 {
@@ -430,7 +458,10 @@ fgResource* fgResourceManager::unlockResource(FG_RHANDLE rhUniqueID)
 }
 
 /*
- *
+ * Retrieve the stored handle based on a pointer to the resource.  Note that 
+ * it's assumed that there are no duplicate pointers, as it will return the
+ * first match found.
+ * This function can be also used to check if given resource is managed
  */
 FG_RHANDLE fgResourceManager::findResourceHandle(fgResource* pResource)
 {
@@ -447,7 +478,7 @@ FG_RHANDLE fgResourceManager::findResourceHandle(fgResource* pResource)
 }
 
 /*
- *
+ * Refresh allocated memory based on managed resources
  */
 void fgResourceManager::refreshMemory(void)
 {
@@ -458,7 +489,11 @@ void fgResourceManager::refreshMemory(void)
 }
 
 /*
- *
+ * This must be called when you wish the manager to check for discardable
+ * resources.  Resources will only be swapped out if the maximum allowable
+ * limit has been reached, and it will discard them from lowest to highest
+ * priority, determined by the resource class's < operator.  Function will
+ * fail if requested memory cannot be freed.
  */
 bool fgResourceManager::checkForOverallocation(void)
 {

@@ -22,6 +22,7 @@
  */
 void fgFontResource::clear(void)
 {
+	FG_WriteLog("fgFontResource::clear();");
 	fgTextureResource::clear();
 	m_step = 0;
 	memset(m_space, 0, sizeof(m_space[0][0]) * FG_FONT_STANDARD_ASCII_SIZE * 2);
