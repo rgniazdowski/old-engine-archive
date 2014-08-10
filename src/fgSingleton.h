@@ -57,8 +57,9 @@ public:
 
 	~fgSingleton()
 	{
+		FG_WriteLog(">>>>>>>>>> Deleted instance of Singleton - ~ destructor called.");
 		instanceFlag = false;
 	}
 };
 
-#endif
+#endif /* _FG_SINGLETON_H_ */
