@@ -11,6 +11,7 @@
 #define _FG_RESOURCE_H_
 
 #include "fgCommon.h"
+#include "Hardware/fgQualityTypes.h"
 
 #include <string>
 #include <ctime>
@@ -99,15 +100,15 @@ enum fgResourceType {
 // Enum for resource priority (low, medium, high, ...)
 enum fgResPriorityType
 {
+	FG_RES_PRIORITY_INVALID = -1,
+
 	FG_RES_PRIORITY_LOW = 0,
 	FG_RES_PRIORITY_MEDIUM = 1,
 	FG_RES_PRIORITY_HIGH = 2,
 
 	FG_RES_PRIORITY_RESERVED1 = 3,
 	FG_RES_PRIORITY_RESERVED2 = 4,
-	FG_RES_PRIORITY_RESERVED3 = 5,
-
-	FG_RES_PRIORITY_INVALID = -1,
+	FG_RES_PRIORITY_RESERVED3 = 5
 };
 
 /*
@@ -153,25 +154,30 @@ public:
 	// in what order resources are discarded
 
 	// Set the resource priority
-	inline void setPriority(fgResPriorityType priority)		{  m_priority = priority;  }
+	void setPriority(fgResPriorityType priority)		{  m_priority = priority;  }
 	// Get the resource priority
-	inline fgResPriorityType getPriority() const			{  return m_priority;  }
+	fgResPriorityType getPriority() const			{  return m_priority;  }
+
+	// Set the resource quality
+	inline void setQuality(fgQuality quality)		{  m_quality = quality;  }
+	// Get the resource quality
+	fgQuality getQuality() const			{  return m_quality;  }
 
 	// Get the resource type id
-	inline fgResourceType getResourceType() const			{  return m_resType;  }
+	fgResourceType getResourceType() const			{  return m_resType;  }
 protected:
 	// Set the reference counter for the resource
-	inline void setReferenceCount(unsigned int nCount)	{  m_nRefCount = nCount;  }
+	void setReferenceCount(unsigned int nCount)	{  m_nRefCount = nCount;  }
 public:
 	// Return the current hit of the reference counter for the resource
-	inline unsigned int getReferenceCount(void) const	{  return m_nRefCount;  }
+	unsigned int getReferenceCount(void) const	{  return m_nRefCount;  }
 	// Check if the resource is locked (reference counter is not zero)
-	inline bool isLocked(void) const					{  return (m_nRefCount > 0) ? true : false;  }
+	bool isLocked(void) const					{  return (m_nRefCount > 0) ? true : false;  }
 
 	// Set the last access time
-	inline void setLastAccess(time_t lastAccess)		{  m_lastAccess = lastAccess;  }
+	void setLastAccess(time_t lastAccess)		{  m_lastAccess = lastAccess;  }
 	// Return the current access time of the resource
-	inline time_t getLastAccess(void) const				{  return m_lastAccess;  }
+	time_t getLastAccess(void) const				{  return m_lastAccess;  }
 
 	// Set file path to this resource
 	virtual void setFilePath(const char *path) {
@@ -223,6 +229,8 @@ public:
 
 	// The less-than operator defines how resources get sorted for discarding.
 	virtual bool operator < (fgResource& container);
+	// The greater-than operator is used for comparison (eg. while sorting)
+	virtual bool operator > (fgResource& container);
 
 	// Well using reference count as simple as below is not recommended, it is more difficult
 	// to handle in the end, dims the code etc., can cause many problems. Need to migrate to
@@ -253,6 +261,8 @@ protected:
 	FG_RHANDLE			m_handle;
 	// Priority of this resource
 	fgResPriorityType	m_priority;
+	// Quality of the resource
+	fgQuality			m_quality;
 	// Resource type
 	fgResourceType		m_resType;
 	// Number of references to this resource
@@ -270,4 +280,4 @@ protected:
 
 };
 
-#endif
+#endif /* _FG_RESOURCE_H_ */

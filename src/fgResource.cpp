@@ -17,6 +17,7 @@ void fgResource::clear(void)
 	m_handle = FG_INVALID_RHANDLE;
 	m_resType = FG_RESOURCE_INVALID;
 	m_priority = FG_RES_PRIORITY_LOW;
+	m_quality = FG_QUALITY_UNIVERSAL;
 	m_nRefCount = 0;
 	m_lastAccess = 0;
 	m_isReady = false;
@@ -46,6 +47,32 @@ bool fgResource::operator < (fgResource& container)
 				return true;
 			else
 				return false;
+		}
+	}
+	return false;
+}
+
+/**
+ *
+ */
+bool fgResource::operator > (fgResource& container)
+{
+	if(getPriority() < container.getPriority())
+		return false;
+	else if(getPriority() > container.getPriority())
+		return true;
+	else
+	{
+		if(m_lastAccess < container.getLastAccess())
+			return false;
+		else if(m_lastAccess > container.getLastAccess())
+			return true;
+		else
+		{
+			if(getSize() < container.getSize())
+				return false;
+			else
+				return true;
 		}
 	}
 	return false;
