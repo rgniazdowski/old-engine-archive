@@ -32,7 +32,7 @@ class MainModule;
 
 // FIXME - remove usage of singletons (at least to some acceptable level)
 // Currently every major class / subsystem is a singleton - there is no 
-// consistent structure / hierarchy
+// consistent structure / hierarchy - which is kinda retarded if U ask me.
 template <>
 bool fgSingleton<MainModule>::instanceFlag = false;
 
@@ -40,16 +40,16 @@ template <>
 MainModule *fgSingleton<MainModule>::instance = NULL;
 
 /**
-*
-*/
+ *
+ */
 class MainModule : public fgSingleton<MainModule>
 {
 	friend class fgSingleton<MainModule>;
 protected:
 	/**
-	* Initialize rendering parameters.
-	*/
-	MainModule() : m_useMultitouch(false), m_appInit(false), m_slow(false) {
+	 * Initialize rendering parameters.
+	 */
+	MainModule() : m_useMultitouch(false), m_appInit(false), m_slow(false), m_isExit(false) {
 		memset(&m_touches, 0, sizeof(m_touches));
 	}
 
@@ -60,6 +60,14 @@ public:
 
 	void setSlow(bool slow) {
 		m_slow = slow;
+	}
+
+	void setExit(bool exit) {
+		m_isExit = exit;
+	}
+
+	bool isExit(void) const {
+		return m_isExit;
 	}
 
 	/**
@@ -190,14 +198,20 @@ public:
 			m_appInit = false;
 			return false;
 		}
-		if (s3eKeyboardGetState(s3eKeyEsc) & S3E_KEY_STATE_PRESSED)	{
+		if (s3eKeyboardGetState(s3eKeyEnter) & S3E_KEY_STATE_PRESSED)	{
 			m_appInit = false;
-			FG_WriteLog("ESCAPE PRESSED...");
+			FG_WriteLog("ENTER PRESSED...");
+			return false;
+		}
+		if (m_isExit) {
+			m_appInit = false;
+			FG_WriteLog("EXIT IS ACTIVATED - break loop main ! bye!");
 			return false;
 		}
 
 		s3eDeviceYield(0);
 		FG_GameMain->update();
+		s3eDeviceYield(0);
 
 		// well for now drawing and all update functions will be called in one place (one thread)
 		// however it neads changing
@@ -265,12 +279,12 @@ private:
 	void keyStateChangedEvent(s3eKeyboardEvent* event) {
 		if( !m_appInit )
 			return;
-
 		if (event->m_Pressed) {
 			FG_EventManager->addKeyDown((int)event->m_Key);
 		} else {
 			FG_EventManager->addKeyUp((int)event->m_Key);
 		}
+		FG_WriteLog("FG_EventManager - keyboard - %d is pressed? - code: %d\n", (int)event->m_Pressed, (int)event->m_Key);
 	}
 
 	/**
@@ -326,16 +340,14 @@ private:
 
 	/// Is the device slow?
 	bool m_slow;
+
+	/// Is exit activated?
+	bool m_isExit;
 };
 
 #define FG_MainModule MainModule::getInstance()
 
 #if 0
-
-//
-// MARK: -
-// MARK: Main entry point
-//
 
 /// Sets FPS-limit HANDLER
 static bool set_allow_loop_handler(void);
@@ -424,7 +436,7 @@ extern "C" int main()
 
 	while(true)	{
 		int status = FG_MainModule->mainLoopStep();
-		s3eDeviceYield(0);
+		s3eDeviceYield(1);
 		if(!status)
 			break;
 	}

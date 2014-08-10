@@ -58,7 +58,6 @@
 #undef FG_USING_VISUAL_STUDIO			//  Does the build system run under Visual Studio (any version)?
 #undef FG_USING_QT						//	Does the build system run under QtCreator (any version)?
 
-
 /*************************** CURRENT TARGET PLATFORM / BUILD SYSTEM ***************************/
 
 // Well this build of course is using Marmalade, need to define it to use properly in the code, which needs to be multiplatform
@@ -186,5 +185,5 @@
 // For handling physics the Bullet library will be used
 //#define FG_USING_BULLET
 
-#endif
-/*************************** END MAIN BUILD CONFIG ***************************/
+#endif /* _FG_BUILD_CONFIG_H_ */
+/*************************** END MAIN MARMALADE BUILD CONFIG ***************************/

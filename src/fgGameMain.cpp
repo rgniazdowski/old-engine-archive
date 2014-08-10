@@ -75,41 +75,10 @@ bool fgGameMain::initSubsystems(void)
 	s3eMemoryGetInt(S3E_MEMORY_SIZE);
 	s3eMemoryGetInt(S3E_MEMORY_FREE);*/ 
 	// FIXME
-	FG_ResourceManager->setMaximumMemory(s3eMemoryGetInt(S3E_MEMORY_FREE)-1024*1024*3); // minus 3MB for the structures and other overheads
+	FG_WriteLog("MARMALADE CURRENT HEAP MEMORY: TOTAL: %.3f, FREE: %.3f, USED: %.3f, LARGEST FREE BLOCK: %.3f\n",
+		(float)s3eMemoryGetInt(S3E_MEMORY_SIZE)/1024.0f/1024.0f, (float)s3eMemoryGetInt(S3E_MEMORY_FREE)/1024.0f/1024.0f, (float)s3eMemoryGetInt(S3E_MEMORY_USED)/1024.0f/1024.0f, (float)s3eMemoryGetInt(S3E_MEMORY_LFB)/1024.0f/1024.0f);
+	FG_ResourceManager->setMaximumMemory(s3eMemoryGetInt(S3E_MEMORY_FREE)-1024*1024*10); // minus 10MB for the structures and other overheads
 	FG_ResourceManager->initialize();
-	/*fgXMLParser *parser = new fgXMLParser();
-
-	parser->loadXML("test2.xml");
-	printf("Root node name: '%s'\n", parser->getRootElementValue());
-	if(parser->isXMLLoaded())
-	{
-		parser->goDeeper();
-		do {
-			printf("Roots' child node name: '%s'\n", parser->getCurrentNodeValue());
-			const char *childName = parser->getCurrentNodeValue();
-
-			// Parsing attributes
-			if(parser->setFirstAttribute())
-			{
-				do {
-					printf(" %ss' attribute '%s' value: '%s\n", childName, parser->getCurrentAttributeName(), parser->getCurrentAttributeValue());
-				} while(parser->goToNextAttribute());
-			}
-
-			// Parsing children nodes
-			if(parser->getCurrentNodeChildrenPresence())
-			{
-				parser->goDeeper();
-				do {
-					printf("   %ss' child node (%s) name: '%s'\n", childName, (parser->isCurrentElement() ? "ELEMENT" : "TEXT"), parser->getCurrentNodeValue());
-				} while(parser->goToNextNode());
-				parser->goHigher();
-			}
-		} while(parser->goToNextNode());
-	}
-
-	delete parser;
-	parser = NULL;*/
 
 //	FG_GFX::setOrthoView(FG_OGL_ORTHO_ZNEAR_DEFAULT, FG_OGL_ORTHO_ZFAR_DEFAULT);
 //	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);

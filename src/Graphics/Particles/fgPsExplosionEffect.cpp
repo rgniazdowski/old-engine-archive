@@ -31,7 +31,7 @@ ExplosionEffect::ExplosionEffect(ParticleEffect::DrawMode drawMode, float scale)
 	m_flameEmitter->setAreaCheck(false);
 	m_flameEmitter->setAlphaActive(true);
 	m_flameEmitter->setDrawMode(drawMode);
-	m_flameEmitter->setTexture(TEXTURE_PTR(Tex::FLAME_SHEET_TEXTURE));
+//	m_flameEmitter->setTexture(TEXTURE_PTR(Tex::FLAME_SHEET_TEXTURE));
 	m_flameEmitter->setTextureXSize(2);
 	m_flameEmitter->setTextureYSize(2);
 	m_flameEmitter->setLifeAsSize(false);
@@ -59,7 +59,7 @@ ExplosionEffect::ExplosionEffect(ParticleEffect::DrawMode drawMode, float scale)
 	m_flashEmitter->setAreaCheck(false);
 	m_flashEmitter->setAlphaActive(true);
 	m_flashEmitter->setDrawMode(drawMode);
-	m_flashEmitter->setTexture(TEXTURE_PTR(Tex::FLASH_SHEET_TEXTURE));
+	//m_flashEmitter->setTexture(TEXTURE_PTR(Tex::FLASH_SHEET_TEXTURE));
 	m_flashEmitter->setTextureXSize(2);
 	m_flashEmitter->setTextureYSize(2);
 	m_flashEmitter->setLifeAsSize(false);
@@ -87,7 +87,7 @@ ExplosionEffect::ExplosionEffect(ParticleEffect::DrawMode drawMode, float scale)
 	m_sparksEmitter->setAreaCheck(false);
 	m_sparksEmitter->setAlphaActive(true);
 	m_sparksEmitter->setDrawMode(drawMode);
-	m_sparksEmitter->setTexture(TEXTURE_PTR(Tex::SPARK_TEXTURE));
+	//m_sparksEmitter->setTexture(TEXTURE_PTR(Tex::SPARK_TEXTURE));
 	m_sparksEmitter->setTextureXSize(1);
 	m_sparksEmitter->setTextureYSize(1);
 	m_sparksEmitter->setLifeAsSize(false);
@@ -115,7 +115,7 @@ ExplosionEffect::ExplosionEffect(ParticleEffect::DrawMode drawMode, float scale)
 	m_smokeTrailsEmitter->setAreaCheck(false);
 	m_smokeTrailsEmitter->setAlphaActive(true);
 	m_smokeTrailsEmitter->setDrawMode(drawMode);
-	m_smokeTrailsEmitter->setTexture(TEXTURE_PTR(Tex::SMOKETRAIL_TEXTURE));
+	//m_smokeTrailsEmitter->setTexture(TEXTURE_PTR(Tex::SMOKETRAIL_TEXTURE));
 	m_smokeTrailsEmitter->setTextureXSize(1);
 	m_smokeTrailsEmitter->setTextureYSize(1);
 	m_smokeTrailsEmitter->setLifeAsSize(false);
@@ -143,7 +143,7 @@ ExplosionEffect::ExplosionEffect(ParticleEffect::DrawMode drawMode, float scale)
 	m_roundSparksEmitter->setAreaCheck(false);
 	m_roundSparksEmitter->setAlphaActive(true);
 	m_roundSparksEmitter->setDrawMode(drawMode);
-	m_roundSparksEmitter->setTexture(TEXTURE_PTR(Tex::ROUNDSPARK_TEXTURE));
+	//m_roundSparksEmitter->setTexture(TEXTURE_PTR(Tex::ROUNDSPARK_TEXTURE));
 	m_roundSparksEmitter->setTextureXSize(1);
 	m_roundSparksEmitter->setTextureYSize(1);
 	m_roundSparksEmitter->setLifeAsSize(false);
@@ -171,7 +171,7 @@ ExplosionEffect::ExplosionEffect(ParticleEffect::DrawMode drawMode, float scale)
 	m_debrisEmitter->setAreaCheck(false);
 	m_debrisEmitter->setAlphaActive(true);
 	m_debrisEmitter->setDrawMode(drawMode);
-	m_debrisEmitter->setTexture(TEXTURE_PTR(Tex::DEBRIS_SHEET_TEXTURE));
+	//m_debrisEmitter->setTexture(TEXTURE_PTR(Tex::DEBRIS_SHEET_TEXTURE));
 	m_debrisEmitter->setTextureXSize(3);
 	m_debrisEmitter->setTextureYSize(3);
 	m_debrisEmitter->setLifeAsSize(false);
@@ -199,7 +199,7 @@ ExplosionEffect::ExplosionEffect(ParticleEffect::DrawMode drawMode, float scale)
 	m_shockwaveEmitter->setAreaCheck(false);
 	m_shockwaveEmitter->setAlphaActive(true);
 	m_shockwaveEmitter->setDrawMode(drawMode);
-	m_shockwaveEmitter->setTexture(TEXTURE_PTR(Tex::SHOCKWAVE_TEXTURE));
+	//m_shockwaveEmitter->setTexture(TEXTURE_PTR(Tex::SHOCKWAVE_TEXTURE));
 	m_shockwaveEmitter->setTextureXSize(1);
 	m_shockwaveEmitter->setTextureYSize(1);
 	m_shockwaveEmitter->setLifeAsSize(false);
