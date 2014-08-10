@@ -27,13 +27,11 @@ EGL_ALPHA_SIZE=8
 # Set a 24 bit depth buffer
 EGL_DEPTH_SIZE=24
 
-[s3e]
+[S3E]
 # Mozna programowo
 # s3eSurfaceSetInt(S3E_SURFACE_DEVICE_ORIENTATION_LOCK, S3E_SURFACE_PORTRAIT_FIXED);
 DispFixRot="FixedLandscape"
-#SysGlesVersion=1 
-
-{}
+SysGlesVersion=2
 MemSize=50000000
 
 #low 240x320
@@ -46,19 +44,19 @@ MemSize=40000000
 
 #low 400x800
 {[S3E]DispAreaQ==320000}
-MemSize=40000000
+MemSize=50000000
 
 #low 480x800
 {[S3E]DispAreaQ==384000}
-MemSize=40000000
+MemSize=50000000
 	
 #medium 540x960
 {[S3E]DispAreaQ==518400}
-MemSize=50000000
+MemSize=60000000
 
 #medium 640x960
 {[S3E]DispAreaQ==614400}
-MemSize=50000000
+MemSize=65000000
 	
 #medium 600x1024
 {[S3E]DispAreaQ==614400}
@@ -84,11 +82,13 @@ MemSize=70000000
 {[S3E]DispAreaQ==1024000}
 MemSize=70000000
 	
-#high 1200x1920	
-{[S3E]DispAreaQ==2304000}
+#high 1200x1920	| 2304000
+{[S3E]DispAreaQ > 1024000}
 MemSize=80000000
 
 #high 1536x2048	
-{[S3E]DispAreaQ==3145728}
+{[S3E]DispAreaQ >= 3145728}
 MemSize=80000000
+
+{}
 
