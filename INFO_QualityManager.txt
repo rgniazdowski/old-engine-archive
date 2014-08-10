@@ -1,0 +1,45 @@
+m_textureFileName[Tex::ARROW1_TEXTURE]		= "arrow1_32.tga";
+//	m_textureFileName[Tex::BLOCK_TEXTURE]		= "block0.tga";
+	m_textureFileName[Tex::PULSE_TEXTURE]		= "shockwave1.tga";
+	m_textureFileName[Tex::DEBRIS_SHEET_TEXTURE]= "debris0_sheet.tga";	// DEBRIS_SHEET_TEXTURE (3x3)
+	m_textureFileName[Tex::FLAME_SHEET_TEXTURE]	= "flame0_sheet.tga";	// FLAME_SHEET_TEXTURE (2x2)
+	m_textureFileName[Tex::FLASH_SHEET_TEXTURE]	= "flash0_sheet.tga";	// FLASH_SHEET_TEXTURE (2x2)
+	m_textureFileName[Tex::SMOKETRAIL_TEXTURE]	= "smoketrail0.tga";	// SMOKETRAIL_TEXTURE (1x1)
+	m_textureFileName[Tex::ROUNDSPARK_TEXTURE]	= "roundspark0.tga";	// ROUNDSPARK_TEXTURE	(1x1)
+	m_textureFileName[Tex::SHOCKWAVE_TEXTURE]	= "shockwave0.tga";		// SHOCKWAVE_TEXTURE	(1x1)
+	m_textureFileName[Tex::SPARK_TEXTURE]		= "spark0.tga";			// SPARK_TEXTURE (1x1)
+	m_textureFileName[Tex::EXPLOSION_SEQUENCE_TEXTURE] = "explosion1_1024.tga"; // EXPLOSION_SEQUENCE_TEXTURE (8x8 -> 8x6)
+	m_textureFileName[Tex::FIRE_SEQUENCE_TEXTURE]	= "fire1_512.tga";	// FIRE_SEQUENCE_TEXTURE (5x5)
+	m_textureFileName[Tex::SKYBOX_TEXTURE]			= "plasma_galaxy_1024.jpg";		// SKYBOX_TEXTURE FIXME
+	m_textureFileName[Tex::HUD_BOTTOM_TEXTURE]		= "hud_bottom_1024.tga";	// HUD_BOTTOM_TEXTURE
+	m_textureFileName[Tex::HUD_CENTER_TEXTURE]		= "hud_center_512.tga";		// HUD_CENTER_TEXTURE
+	m_textureFileName[Tex::HUD_LINES_TEXTURE]		= "hud_lines_1024.tga";		// HUD_LINES_TEXTURE
+	m_textureFileName[Tex::HUD_TOP_TEXTURE]			= "hud_top_1024.tga";		// HUD_TOP_TEXTURE
+	//m_textureFileName[Tex::LEVEL_TEXTURE]			= "level/ImageEmpty.tga";	// LEVEL_TEXTURE
+
+	switch(m_selectedQuality)
+	{
+	case Tex::QUALITY_LOW:
+		FG_WriteLog("SELECTED LOW QUALITY (DispArea: %d)", DispArea);
+		m_textureFileName[Tex::BACKGROUND_TEXTURE]	= "BackgroundCrate_1024x512.jpg";
+		m_textureFileName[Tex::FONT_MAIN_TEXTURE]	= "CarbonType_512.tga";
+		m_textureFileName[Tex::FONT_SECONDARY_TEXTURE] = "CaptureIt_512.tga";
+            
+		break;
+	case Tex::QUALITY_MEDIUM:
+		FG_WriteLog("SELECTED MEDIUM QUALITY (DispArea: %d)", DispArea);
+		m_textureFileName[Tex::BACKGROUND_TEXTURE]	= "BackgroundCrate_1024x512.jpg";
+		m_textureFileName[Tex::FONT_MAIN_TEXTURE]	= "CarbonType_1024.tga";
+		m_textureFileName[Tex::FONT_SECONDARY_TEXTURE] = "CaptureIt_1024.tga";
+
+		break;
+	case Tex::QUALITY_HIGH:
+		FG_WriteLog("SELECTED HIGH QUALITY (DispArea: %d)", DispArea);
+		m_textureFileName[Tex::BACKGROUND_TEXTURE]	= "BackgroundCrate_1024x512.jpg";
+		m_textureFileName[Tex::FONT_MAIN_TEXTURE]	= "CarbonType_2048.tga";
+		m_textureFileName[Tex::FONT_SECONDARY_TEXTURE] = "CaptureIt_2048.tga";
+
+		break;
+	default:
+		break;
+	}
