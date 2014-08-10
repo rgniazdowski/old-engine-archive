@@ -28,6 +28,8 @@
 
 #endif
 
+typedef GLuint fgTextureGfxID;
+
 /*
  *
  */
@@ -106,20 +108,17 @@ public:
 		return true;
     }
 
-    // Uploads image to VRAM as a texture
-    bool makeGFXTexture();
-
 	// Get the texture id used by the low level graphics system - handle in OpenGL
-    GLuint getGLTextureID() const {
-        return m_glTextureID;
+    fgTextureGfxID getTextureGfxID() const {
+        return m_textureGfxID;
     }
 	// Get reference tothe texture id used by the low level graphics system - handle in OpenGL
-    GLuint& getRefGLTextureID() {
-        return m_glTextureID;
+    fgTextureGfxID& getRefTextureGfxID() {
+        return m_textureGfxID;
     }
 	// Set the texture id used by the low level graphics system
-	void setGLTextureID(GLuint id) {
-		m_glTextureID = id;
+	void setTextureGfxID(fgTextureGfxID id) {
+		m_textureGfxID = id;
 	}
 
 	// Get width of the texture in pixels
@@ -175,7 +174,7 @@ protected:
 	// Number of color components (grayscale, RGB, RGBA)
     int m_components;
 	// OpenGL texture id handle
-	GLuint m_glTextureID;
+	fgTextureGfxID m_textureGfxID;
 };
 
 #endif

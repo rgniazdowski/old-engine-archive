@@ -7,49 +7,27 @@
  * and/or distributed without the express or written permission from the author.
  *******************************************************/
 
-#ifndef FG_TEXTURE_MANAGER_H_
-#define FG_TEXTURE_MANAGER_H_
+#ifndef _FG_TEXTURE_MANAGER_H_
+#define _FG_TEXTURE_MANAGER_H_
 
 #include "../../fgSingleton.h"
 #include "fgTextureResource.h"
 #include "fgTextureCommon.h"
 #include "fgTextureTypes.h"
-
-// #FIXME - now that class just retarded - but before it will load textures from XML/CSS/Lua files many other classes and functions are needed before it will be possible
-typedef fgTextureResource * PfgTexture;
+#include "../../fgResourceManager.h"
 
 /**
- * Class that allows to perform GROUP OPERATIONS
- * on all textures. 
+ * Class that allows to perform GROUP OPERATIONS on all textures. 
  */
 class fgTextureManager : public fgSingleton<fgTextureManager> {
-
 	friend class fgSingleton<fgTextureManager>;
-
+    friend class MainModule;
 protected:
+	// Default constructor for Texture Manager object
     fgTextureManager();
+	// Default destructor for Texture Manager object
     ~fgTextureManager();
-
 public:
-
-    /**
-     * Returns given fgTexture*
-     * (does not use reference, so internal variable cannot be altered)
-     */
-    fgTextureResource* facade(Tex::ID TEX_ID) {
-        return facadeReference(TEX_ID);
-    }
-
-    /**
-     * Gets reference to THE variable holding fgTexture (one and only for the TEX_ID)
-     */
-    PfgTexture & facadeReference( Tex::ID TEX_ID );
-
-    /**
-     * DISK -> RAM: only if needed OR force given
-     */
-    bool allToRAM(bool force = false);
-
     /**
      * RAM -> VRAM.
      * Update of VRAM is unconditional. 
@@ -57,37 +35,21 @@ public:
      * - no image being already loaded,
      * - force option given.
      */
-    bool allToVRAM(bool force = false);
+    bool allToVRAM(void);
 
-    /**
-     * Releases all NonGl (i.e. non VRAM) data
-     */
-    void allReleaseNonGl();
+    // Releases all non GFX (i.e. non VRAM) data
+    void allReleaseNonGFX(void);
 
-    /**
-     * Releases all OpenGl (i.e. texture ids) data
-     */
-    void allReleaseGl();
+    // Releases all GFX (i.e. texture ids) data
+    void allReleaseGFX(void);
 
-    /**
-     * Checks if the Tex::ID is FONT
-     */
-    bool isFont(Tex::ID theId) const {
-        return ( theId == Tex::FONT_MAIN_TEXTURE ) || ( theId == Tex::FONT_SECONDARY_TEXTURE );
-    }
-
-	//////////////////////////
+	// #FIXME #TODO #P2
 #if defined(FG_USING_OPENGL_ES) || defined(FG_USING_OPENGL)
 	static GLint translatePixelFormat(fgTexturePixelFormat pixelFormat);
 	static GLint translateInternalPixelFormat(fgTextureInternalPixelFormat internalPixelFormat);
 #endif
 
 private:
-    /**
-     * Loads texture of given ID
-     */
-    bool loadTexture( Tex::ID TEX_ID, bool force = false );
-
     /**
      * Uploads texture given via ID into VRAM.
      *
@@ -100,12 +62,9 @@ private:
      * leave filename intact. It is however not needed, and should not
      * be used).
      */
-    bool makeTexture( Tex::ID TEX_ID );
-
-    friend class MainModule;
+    bool makeTexture(fgTextureResource *textureResource);
+protected:
+	bool m_isYolo;
 };
 
-#define TEXTURE_PTR(TEX_ID) fgTextureManager::getInstance()->facade(TEX_ID)
-#define TEXTURE_REF_PTR(TEX_ID) fgTextureManager::getInstance()->facadeReference(TEX_ID)
-
-#endif
+#endif /* _FG_TEXTURE_MANAGER_H_ */

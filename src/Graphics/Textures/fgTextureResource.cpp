@@ -46,7 +46,7 @@ void fgTextureResource::clear(void)
     m_width = 0;
 	m_height = 0;
     m_components = -1;
-	m_glTextureID = 0;
+	m_textureGfxID = 0;
 	m_resType = FG_RESOURCE_TEXTURE;
 }
 
@@ -132,6 +132,12 @@ void fgTextureResource::dispose(void)
  */
 bool fgTextureResource::isDisposed(void) const
 {
+	// #FIXME ?
+	// This should also check if texture (GL/GFX) ID is valid.
+	// If it is, then it means that the texture is uploaded and
+	// ready to use. If GfxID is invalid than we can assume that
+	// resource is disposed. This is kinda tricky one.
+	
 	return !this->hasOwnedRAM();
 }
 
