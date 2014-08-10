@@ -21,14 +21,14 @@ template <>
 fgEventManager *fgSingleton<fgEventManager>::instance = NULL;
 
 /*
- *
+ * Default constructor for Event Manager object
  */
 fgEventManager::fgEventManager()
 {
 }
 
 /*
- *
+ * Default destructor for Event Manager object
  */
 fgEventManager::~fgEventManager()
 {

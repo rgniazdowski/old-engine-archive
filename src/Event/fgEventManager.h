@@ -20,8 +20,6 @@
 #include "fgCyclicCallback.h"
 
 #include "fgEventDefinitions.h"
-
-
 #include "fgCallback.h"
 
 // #FIXME #TODO #P3 key codes standard mapping / translation

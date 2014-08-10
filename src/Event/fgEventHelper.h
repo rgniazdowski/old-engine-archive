@@ -22,9 +22,11 @@
 
 // #FIXME #TODO #P2 check if it is not deprecated (in Marmalade) to use the standard data types
 //		 it can be necessary to use Marmalade specific wrappers
-
 typedef std::map<int, fgArrayVector<fgCallbackFunction *> > fgCallbackBinding;
 typedef fgArrayVector<fgCallbackFunction *> fgCallbacksPool;
+
+typedef fgArrayVector<fgCallbackFunction *>::iterator fgCallbacksPoolIt;
+typedef fgArrayVector<fgCallbackFunction *>::const_iterator fgCallbacksPoolConstIt;
 
 typedef std::queue<fgThrownEvent> fgEventsQueue;
 typedef fgArrayVector<fgTimeoutCallback> fgTimeoutCallbacksPool;

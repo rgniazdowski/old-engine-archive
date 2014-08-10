@@ -21,7 +21,7 @@
 #define FG_FONT_STANDARD_ASCII_SIZE	(FG_FONT_STANDARD_GRID_SIZE*FG_FONT_STANDARD_GRID_SIZE)
 
 /*
- *
+ * Class definition for Font Resource - extends the Texture Resource
  */
 class fgFontResource : public fgTextureResource
 {
@@ -35,7 +35,8 @@ public:
 	// Base destructor of the font resource object
 	~fgFontResource()	{ destroy(); }
 
-	// Clears the class data, this actually does not free allocated memory, just resets base class attributes
+	// Clears the class data, this actually does not free allocated memory, 
+	// just resets base class attributes
 	virtual void clear(void);
 	// Create function loads/interprets data from file in ROM and place it in RAM memory.
 	virtual bool create(void);

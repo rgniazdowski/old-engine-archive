@@ -7,18 +7,14 @@
  * and/or distributed without the express or written permission from the author.
  *******************************************************/
 
-#include <cstdio>
-#include <cstring>
-#include <malloc.h>
-
-#include "../fgCommon.h"
 #include "fgFontResource.h"
+
 #include "../Graphics/Textures/fgTextureManager.h"
 #include "../Hardware/fgHardwareState.h"
 
-
 /*
- * Clears the class data, this actually does not free allocated memory, just resets base class attributes
+ * Clears the class data, this actually does not free allocated memory, 
+ * just resets base class attributes
  */
 void fgFontResource::clear(void)
 {
@@ -121,6 +117,7 @@ bool fgFontResource::isDisposed(void) const
 {
 	return fgTextureResource::isDisposed();
 }
+
 #if 0
 /*
  *
