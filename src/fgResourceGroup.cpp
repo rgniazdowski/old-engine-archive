@@ -189,7 +189,6 @@ void fgResourceGroupContentHandler::startElement(const char *localName, fgXMLEle
 	if(m_resourcePtr) {
 		m_resourcePtr->setPriority(resPriority);
 		m_resourcePtr->setResourceName(resName);
-		FG_WriteLog("fgResourceGroupContentHandler::startElement(); push_back(*);");
 		// ...then it can be added to the Resource Groups' list.
 		this->m_resourceGroup->getRefResourceFiles().push_back(m_resourcePtr);
 	}
@@ -236,7 +235,7 @@ bool fgResourceGroup::create(void)
 	if(m_resourceFiles.empty())
 		return false;
 	bool status = true;
-	for(ResVecIt it = m_resourceFiles.begin(); it != m_resourceFiles.end(); it++) {
+	for(fgResPoolIt it = m_resourceFiles.begin(); it != m_resourceFiles.end(); it++) {
 		if(!(*it)->create()) {
 			status = false;
 		}
@@ -264,7 +263,7 @@ bool fgResourceGroup::recreate(void)
 	if(m_resourceFiles.empty())
 		return false;
 	bool status = true;
-	for(ResVecIt it = m_resourceFiles.begin(); it != m_resourceFiles.end(); it++) {
+	for(fgResPoolIt it = m_resourceFiles.begin(); it != m_resourceFiles.end(); it++) {
 		if(!(*it)->recreate()) {
 			status = false;
 		}
@@ -280,7 +279,7 @@ void fgResourceGroup::dispose(void)
 	FG_WriteLog("fgResourceGroup::~dispose();");
 	if(m_resourceFiles.empty())
 		return;
-	for(ResVecIt it = m_resourceFiles.begin(); it != m_resourceFiles.end(); it++) {
+	for(fgResPoolIt it = m_resourceFiles.begin(); it != m_resourceFiles.end(); it++) {
 		(*it)->dispose();
 	}
 }
@@ -293,7 +292,7 @@ bool fgResourceGroup::isDisposed(void) const
 	if(m_resourceFiles.empty())
 		return true;
 	bool status = true;
-	for(ResVecIt it = m_resourceFiles.begin(); it != m_resourceFiles.end(); it++) {
+	for(fgResPoolIt it = m_resourceFiles.begin(); it != m_resourceFiles.end(); it++) {
 		if(!(*it)->isDisposed())
 			status = false;
 	}
@@ -335,7 +334,7 @@ void fgResourceGroup::refreshArrays(void)
 	m_rHandles.clear();
 	if(m_resourceFiles.empty())
 		return;
-	for(ResVecIt it = m_resourceFiles.begin(); it != m_resourceFiles.end(); it++) {
+	for(fgResPoolIt it = m_resourceFiles.begin(); it != m_resourceFiles.end(); it++) {
 		m_rHandles.push_back((*it)->getHandle());
 	}
 }
@@ -347,7 +346,7 @@ unsigned int fgResourceGroup::Lock(void)
 {
 	if(m_resourceFiles.empty())
 		return -1;
-	for(ResVecIt it = m_resourceFiles.begin(); it != m_resourceFiles.end(); it++) {
+	for(fgResPoolIt it = m_resourceFiles.begin(); it != m_resourceFiles.end(); it++) {
 		(*it)->Lock();
 	}
 	return upRef();
@@ -360,7 +359,7 @@ unsigned int fgResourceGroup::Unlock(void)
 {
 	if(m_resourceFiles.empty())
 		return -1;
-	for(ResVecIt it = m_resourceFiles.begin(); it != m_resourceFiles.end(); it++) {
+	for(fgResPoolIt it = m_resourceFiles.begin(); it != m_resourceFiles.end(); it++) {
 		(*it)->Unlock();
 	}
 	return downRef();
@@ -373,7 +372,7 @@ void fgResourceGroup::ZeroLock(void)
 {
 	if(m_resourceFiles.empty())
 		return;
-	for(ResVecIt it = m_resourceFiles.begin(); it != m_resourceFiles.end(); it++) {
+	for(fgResPoolIt it = m_resourceFiles.begin(); it != m_resourceFiles.end(); it++) {
 		(*it)->ZeroLock();
 	}
 	fgResource::ZeroLock();

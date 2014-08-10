@@ -91,6 +91,16 @@ public:
 	}
 };
 
+// #FIXME Probably move to somewhere else
+typedef fgArrayVector<fgResource *> fgResourcesPool;
+typedef fgArrayVector<FG_RHANDLE> fgResHandlesPool;
+
+typedef fgArrayVector<fgResource *>::iterator fgResPoolIt;
+typedef fgArrayVector<FG_RHANDLE>::iterator fgResHandlesPoolIt;
+
+typedef fgArrayVector<fgResource *>::const_iterator fgResPoolConstIt;
+typedef fgArrayVector<FG_RHANDLE>::const_iterator fgResHandlesPoolConstIt;
+
 // This is resource group and it is treated like normal resource.
 // The idea behind is that when ResourceGroup  is loaded/released 
 // it will also release  all binded resources - however only when
@@ -110,7 +120,6 @@ public:
 class fgResourceGroup : public fgResource {
 	friend class fgResourceGroupContentHandler;
 public:
-	typedef fgArrayVector<fgResource *>::iterator ResVecIt;
 	// Base constructor of the resource group object
 	fgResourceGroup();
 	// Base destructor of the resource group object
@@ -142,11 +151,11 @@ public:
 	virtual void refreshArrays(void);
 
 	// Return reference to array of resource pointers (objects) within this resource group
-	fgArrayVector<fgResource *>& getRefResourceFiles(void) {
+	fgResourcesPool& getRefResourceFiles(void) {
 		return m_resourceFiles;
 	}
 	// Return reference to array of resource handles within this resource group
-	fgArrayVector<FG_RHANDLE>& getRefResourceHandles(void) {
+	fgResHandlesPool& getRefResourceHandles(void) {
 		return m_rHandles;
 	}
 protected:
@@ -159,11 +168,11 @@ protected:
 
 protected:
 	// List of all handles within this resource group
-	fgArrayVector<FG_RHANDLE> m_rHandles;
+	fgResHandlesPool m_rHandles;
 	// List of all resource files 
-	fgArrayVector<fgResource *> m_resourceFiles;
+	fgResourcesPool m_resourceFiles;
 	// Parser for xml config files (here: resource group xml files)
 	fgXMLParser *m_xmlParser;
 };
 
-#endif
+#endif /* _FG_RESOURCE_GROUP_H_ */

@@ -54,12 +54,15 @@ typedef std::hash_map<FG_RHANDLE, fgResource*>	fgResourceMap;
 typedef fgResourceMap::iterator				fgResourceMapItor;
 typedef fgResourceMap::value_type			fgResourceMapPair;
 
+class fgTextureManager;
+
 // The resource manager handles all the external resources. It takes care of the memory
 // usage and destroys all unused data. Its very convinient as after pushing resource into
 // the manager there's no additional
 class fgResourceManager : public fgSingleton<fgResourceManager>
 {
 	friend class fgSingleton<fgResourceManager>;
+	friend class fgTextureManager;
 private:
 	// Default constructor for resource manager
 	fgResourceManager()				{  clear();  }
@@ -97,13 +100,19 @@ public:
 	{  m_currentResource = m_resourceMap.begin(); }
 	// Get pointer to the current resource (based on iterator)
 	inline fgResource* getCurrentResource(void) const
-	{  return (*m_currentResource).second;  }
+	{  if(!isValid()) return NULL; else return (*m_currentResource).second;  }
 	// Is current pointer to resource valid?
 	inline bool isValid(void) const
 	{  return (m_currentResource != m_resourceMap.end()) ? true : false;  }
 	// Go to the next resource (iterate to next)
 	inline bool goToNext()
 	{  m_currentResource++;  return isValid();  }
+	// Find next resource with given criteria (currently resource type)
+	bool goToNext(fgResourceType resType);
+	// Find next resource with given criteria (currently resource type)
+	bool goToNext(const fgResourceType* resType, int n);
+	// Find next resource with given criteria (currently resource type and quality)
+	bool goToNext(fgResourceType resType, fgQuality quality);
 	
 	// -----------------------------------------------------------------------
 	// General resource access
@@ -124,6 +133,14 @@ protected:
 	bool insertResourceGroup(FG_RHANDLE* rhUniqueID, fgResource* pResource);
 	// Insert resource group into manager with predefined resource handle ID
 	bool insertResourceGroup(FG_RHANDLE rhUniqueID, fgResource* pResource);
+	// Get the reference to the resource map (protected)
+	fgResourceMap& getResourceMap(void) {
+		return m_resourceMap;
+	}
+	// Get the reference to the resource group map (protected)
+	fgResourceMap& getResourceGroupMap(void) {
+		return m_resourceGroupMap;
+	}
 public:
 
 	// ! Important !
@@ -167,6 +184,8 @@ public:
 	// to ensure that numerous locks can be safely made.
 	// #FIXME #TODO #P3 - locking/unlocking is based on counter - DEPRECATED.
 	fgResource* lockResource(FG_RHANDLE rhUniqueID);
+	// Lock the resource
+	bool lockResource(fgResource *pResource);
 	// Unlocking the object let's the resource manager know that you no longer
 	// need exclusive access.  When all locks have been released (the reference
 	// count is 0), the object is considered safe for management again and can
@@ -174,6 +193,8 @@ public:
 	// either by handle or by the object's pointer. 
 	// #FIXME #TODO #P3 - locking/unlocking is based on counter - DEPRECATED.
 	fgResource* unlockResource(FG_RHANDLE rhUniqueID);
+	// Unlock the resource
+	bool unlockResource(fgResource *pResource);
 
 	// Retrieve the stored handle based on a pointer to the resource.  Note that 
 	// it's assumed that there are no duplicate pointers, as it will return the
@@ -220,4 +241,4 @@ protected:
 // #FIXME - here we go again, with the singletons... :)
 #define FG_ResourceManager fgResourceManager::getInstance()
 
-#endif
+#endif /* _FG_RESOURCE_MANAGER_H_ */

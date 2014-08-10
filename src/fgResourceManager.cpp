@@ -79,6 +79,7 @@ void fgResourceManager::destroy(void)
  */
 bool fgResourceManager::initialize(void)
 {
+	FG_WriteLog(">>>>>> fgResourceManager::initialize(void); -> Initializing resource manager\nCurrent maximum memory: %.2f", (float)m_nMaximumMemory/1024.0/1024.0);
 	// First of all load any resource group configs,
 	// file extension is *.rgrp and it's a xml file.
 	fgDirent *datadir = new fgDirent();
@@ -122,8 +123,8 @@ bool fgResourceManager::initialize(void)
 		insertResource(&grpUniqueID, resGroup);
 		// There is a separate holder for resource group
 		insertResourceGroup(grpUniqueID, resGroup);
-		fgArrayVector<fgResource *>& resInGrp = resGroup->getRefResourceFiles();
-		for(fgResourceGroup::ResVecIt it = resInGrp.begin(); it != resInGrp.end(); it++) {
+		fgResourcesPool& resInGrp = resGroup->getRefResourceFiles();
+		for(fgResPoolIt it = resInGrp.begin(); it != resInGrp.end(); it++) {
 			FG_RHANDLE resUniqueID;
 			insertResource(&resUniqueID, (*it));
 		}
@@ -131,6 +132,8 @@ bool fgResourceManager::initialize(void)
 		FG_WriteLog("LOG INSERTED RESOURCE GROUP"); // #FIXME #TODELETE
 	}
 	resGroupFiles.clear();
+	goToBegin();
+
 	return true;
 }
 
@@ -154,6 +157,74 @@ bool fgResourceManager::reserveMemory(size_t nMem)
 		return false;
 	m_bResourceReserved = true;
 	return true;
+}
+
+/*
+ * Find next resource with given criteria (currently resource type)
+ */
+bool fgResourceManager::goToNext(fgResourceType resType)
+{
+	while(true) {
+		m_currentResource++;
+		if(!isValid()) {
+			return false;
+		}
+		if(m_currentResource->second->getResourceType() == resType) {
+			return true;
+		}
+	}
+
+	return isValid();
+}
+
+/*
+ * Find next resource with given criteria (currently resource type)
+ */
+bool fgResourceManager::goToNext(const fgResourceType* resTypes, int n)
+{
+	if(!resTypes)
+		return false;
+
+	while(true) {
+		m_currentResource++;
+		if(!isValid()) {
+			break;
+		}
+		bool status = false;
+		int i = 0;
+		while(!status) {
+			if(i == n || resTypes[i] == FG_RESOURCE_INVALID)
+				break;
+			if(m_currentResource->second->getResourceType() == resTypes[i]) {
+				status = true;
+			}
+			i++;
+		}
+		if(status == true)
+			break;
+	}
+
+	return isValid();
+}
+
+/*
+ * Find next resource with given criteria (currently resource type and quality)
+ */
+bool fgResourceManager::goToNext(fgResourceType resType, fgQuality quality)
+{
+	while(true) {
+		m_currentResource++;
+		if(!isValid()) {
+			return false;
+		}
+		if(m_currentResource->second->getResourceType() == resType) {
+			if(m_currentResource->second->getQuality() == quality) {
+				return true;
+			}
+		}
+	}
+
+	return isValid();
 }
 
 /*
@@ -396,9 +467,9 @@ fgResource* fgResourceManager::getResource(FG_RHANDLE rhUniqueID)
 
 		// check to see if any overallocation has taken place, but
 		// make sure we don't swap out the same resource.
-		lockResource(rhUniqueID);
+		itor->second->Lock();
 		checkForOverallocation();
-		unlockResource(rhUniqueID);
+		itor->second->Unlock();
 	}
 
 	// return the object pointer
@@ -421,20 +492,30 @@ fgResource* fgResourceManager::lockResource(FG_RHANDLE rhUniqueID)
 	if(itor == m_resourceMap.end()) {
 		return NULL;
 	}
-	
-	// increment the object's count
-	itor->second->Lock();
+	lockResource(itor->second);
+	// return the object pointer
+	return itor->second;
+}
 
+/*
+ * Lock the resource
+ */
+bool fgResourceManager::lockResource(fgResource *pResource)
+{
+	if(FG_IS_INVALID_RHANDLE(pResource->getHandle())) {
+		return false;
+	}
+	// increment the object's count
+	pResource->Lock();
 	// recreate the object before giving it to the application
-	if(itor->second->isDisposed())
+	if(pResource->isDisposed())
 	{
-		itor->second->recreate();
-		addMemory(itor->second->getSize());
+		pResource->recreate();
+		addMemory(pResource->getSize());
 		// check to see if any overallocation has taken place
 		checkForOverallocation();
 	}
-	// return the object pointer
-	return itor->second;
+	return true;
 }
 
 /*
@@ -455,6 +536,20 @@ fgResource* fgResourceManager::unlockResource(FG_RHANDLE rhUniqueID)
 		return NULL;
 	itor->second->Unlock();
 	return itor->second;
+}
+
+/*
+ * Unlock the resource
+ */
+bool fgResourceManager::unlockResource(fgResource *pResource)
+{
+	if(FG_IS_INVALID_RHANDLE(pResource->getHandle())) {
+		return false;
+	}
+	if(pResource->getReferenceCount() == 0)
+		return false;
+	pResource->Unlock();
+	return true;
 }
 
 /*
