@@ -16,9 +16,9 @@
 #include <cstdlib>
 #include <cstring>
 
-#define FG_FILE_NAME_MAX 256
-#define FG_PATH_MAX 256
-#define FG_INVALID	-1
+#define FG_FILE_NAME_MAX	256
+#define FG_PATH_MAX			256
+#define FG_INVALID			-1
 
 #ifndef max
 #define max(a,b) (((a) > (b)) ? (a) : (b))
@@ -33,17 +33,34 @@
 #endif
 
 #ifndef fgBool
-typedef bool fgBool; // #FIXME
+typedef unsigned char fgBool;
 #endif
 
-#ifndef fgBoolean
-typedef unsigned char fgBoolean; // #FIXME
+#ifndef FG_FALSE
+#define FG_FALSE 0
+#endif
+
+#ifndef FG_TRUE
+#define FG_TRUE 1
+#endif
+
+#ifndef FG_SUCCESS
+#define FG_SUCCESS 1
 #endif
 
 #if defined FG_USING_MARMALADE
 #include "IwUtil.h"
 template <class X, class A=CIwAllocator<X>, class REALLOCATE = ReallocateDefault<X, A > >
-class fgArrayVector : public CIwArray<X, A, REALLOCATE> {};
+class fgArrayVector : public CIwArray<X, A, REALLOCATE> {
+public:
+	X & at(int const i) const {
+		uint32 index = (uint32)i;
+        if(index >= num_p) {
+			return p[0];
+		}
+        return p[index];
+	}
+};
 #else 
 #include <vector>
 template <class T, class Alloc = allocator<T> >
@@ -51,13 +68,34 @@ class fgArrayVector : public std::vector<T, Alloc> {
 public:
 	void clear_optimised()
 	{
-		clear();
+		clear();		
 	}
+		
+	int find(T const & value) const
+    {
+        for (int i = 0, iterator it = begin(); it != end(); it++, i++) {
+			if((*it) == value) {
+				return i;
+			}
+		}
+        return -1;
+    }
+
+    bool contains(T const & value) const
+    {
+		for (iterator it = begin(); it != end(); it++) {
+			if((*it) == value) {
+				return true;
+			}
+		}
+        return false;
+    }
+
 };
 #endif
 
 // #FIXME this should not be in this file, but for now (just to compile the damn code) it'll be here
-// #TODO P2 this class needs modification so it will have the standard of all the fgVector*/fgColor* classes
+// #TODO #P2 this class needs modification so it will have the standard of all the fgVector*/fgColor* classes
 struct Area
 {
 		int x;
