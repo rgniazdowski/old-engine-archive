@@ -6,6 +6,9 @@
  * #FLEXIGAME_PROJECT source code and any related files can not be copied, modified 
  * and/or distributed without the express or written permission from the author.
  *******************************************************/
+/**
+ * Portions Copyright (C) James Boer, 2000
+ */
 
 #ifndef _FG_RESOURCE_MANAGER_H_
 #define _FG_RESOURCE_MANAGER_H_
@@ -14,20 +17,14 @@
 #include "fgResource.h"
 #include "fgResourceGroup.h"
 
+#include "fgHandleManager.h"
+
 #include <iostream>
 #include <hash_map>
 //#include <limits>
 
-// A resource handle is define as an unsigned integer
 #ifndef FG_RHANDLE
-#define FG_RHANDLE unsigned int
-#endif
-
-#ifndef FG_INVALID_RHANDLE
-// All bits filled defines an invalid resource handle
-#define FG_INVALID_RHANDLE			0xFFFFFFFFUL
-#define FG_IS_INVALID_RHANDLE(_rh)	((_rh == FG_INVALID_RHANDLE) ? true : false)
-#define FG_IS_VALID_RHANDLE(_rh)	((_rh == FG_INVALID_RHANDLE) ? false : true)
+#define FG_RHANDLE fgResourceHandle
 #endif
 
 // This class allows an STL object to compare the objects instead of
@@ -50,9 +47,9 @@ public:
 	{  return !((*left) < (*right));  }
 };
 
-typedef std::hash_map<FG_RHANDLE, fgResource*>	fgResourceMap;
-typedef fgResourceMap::iterator				fgResourceMapItor;
-typedef fgResourceMap::value_type			fgResourceMapPair;
+typedef fgHandleManager<fgResource*, FG_RHANDLE>		fgResourceHandleManager;
+typedef fgResourceHandleManager::hmDataVec				fgResourceVector;
+typedef fgResourceHandleManager::hmDataVec::iterator	fgResourceVectorItor;
 
 class fgTextureManager;
 
@@ -76,15 +73,15 @@ public:
 	void clear(void);
 public:
 	// This will pre-load any required data
-	bool initialize(void);
+	fgBool initialize(void);
 	// Creates the resource manager
-	bool create(unsigned int nMaxSize);
+	fgBool create(unsigned int nMaxSize);
 
 	// --------------------------------------------------------------------------
 	// Memory management routines
 
 	// Set maximum memory value for the used memory counter
-	bool setMaximumMemory(size_t nMem);
+	fgBool setMaximumMemory(size_t nMem);
 	// Return the maximum memory value
 	size_t getMaximumMemory(void) const		{  return m_nMaximumMemory;  }
 	
@@ -96,50 +93,53 @@ public:
 	// the map across a dll boundary, but it's safe through the wrappers. 
 
 	// Go to the begin of resource map iteration
-	inline void goToBegin(void)
-	{  m_currentResource = m_resourceMap.begin(); }
+	inline void goToBegin(void) {
+		m_currentResource = getRefResourceVector().begin(); 
+	}
 	// Get pointer to the current resource (based on iterator)
-	inline fgResource* getCurrentResource(void) const
-	{  if(!isValid()) return NULL; else return (*m_currentResource).second;  }
+	inline fgResource* getCurrentResource(void)	{  
+		if(!isValid()) 
+			return NULL;
+		else
+			return (*m_currentResource);
+	}
 	// Is current pointer to resource valid?
-	inline bool isValid(void) const
-	{  return (m_currentResource != m_resourceMap.end()) ? true : false;  }
+	inline fgBool isValid(void)	{
+		return ((m_currentResource != getRefResourceVector().end()) ? FG_TRUE : FG_FALSE);
+	}
 	// Go to the next resource (iterate to next)
-	inline bool goToNext()
-	{  m_currentResource++;  return isValid();  }
+	inline fgBool goToNext() {
+		m_currentResource++;  return isValid();  
+	}
 	// Find next resource with given criteria (currently resource type)
-	bool goToNext(fgResourceType resType);
+	fgBool goToNext(fgResourceType resType);
 	// Find next resource with given criteria (currently resource type)
-	bool goToNext(const fgResourceType* resType, int n);
+	fgBool goToNext(const fgResourceType* resType, int n);
 	// Find next resource with given criteria (currently resource type and quality)
-	bool goToNext(fgResourceType resType, fgQuality quality);
+	fgBool goToNext(fgResourceType resType, fgQuality quality);
 	
 	// -----------------------------------------------------------------------
 	// General resource access
 
 	// Allows the resource manager to pre-reserve an amount of memory so
 	// an inserted resource does not exceed the maximum allowed memory
-	bool reserveMemory(size_t nMem);
+	fgBool reserveMemory(size_t nMem);
 
 	// Insert resource group into manager
 	// If you pass in the pointer to resource handle, the Resource Manager 
 	// will provide a unique handle for you.  
-	bool insertResource(FG_RHANDLE* rhUniqueID, fgResource* pResource);
-	// Insert resource into manager with predefined resource handle ID
-	bool insertResource(FG_RHANDLE rhUniqueID, fgResource* pResource);
+	fgBool insertResource(FG_RHANDLE& rhUniqueID, fgResource* pResource);
 
 protected:
 	// Insert resource group into manager
-	bool insertResourceGroup(FG_RHANDLE* rhUniqueID, fgResource* pResource);
-	// Insert resource group into manager with predefined resource handle ID
-	bool insertResourceGroup(FG_RHANDLE rhUniqueID, fgResource* pResource);
+	fgBool insertResourceGroup(FG_RHANDLE& rhUniqueID, fgResource* pResource);
 	// Get the reference to the resource map (protected)
-	fgResourceMap& getResourceMap(void) {
-		return m_resourceMap;
+	fgResourceVector& getRefResourceVector(void) {
+		return m_resourceHandlesMgr.getRefDataVector();
 	}
 	// Get the reference to the resource group map (protected)
-	fgResourceMap& getResourceGroupMap(void) {
-		return m_resourceGroupMap;
+	fgResourceVector& getRefResourceGroupVector(void) {
+		return m_resourceGroupHandlesMgr.getRefDataVector();
 	}
 public:
 
@@ -149,14 +149,14 @@ public:
 	// resource from the manager without handling the memory release properly
 
 	// Removes an object completely from the manager (does not free memory)
-	bool removeResource(fgResource* pResource);
+	fgBool removeResource(fgResource* pResource);
 	// Removes an object completely from the manager (does not free memory)
-	bool removeResource(FG_RHANDLE rhUniqueID);
+	fgBool removeResource(FG_RHANDLE rhUniqueID);
 
 	// Disposes of the resource (frees memory) - does not remove resource from the manager
-	bool disposeResource(fgResource* pResource);
+	fgBool disposeResource(fgResource* pResource);
 	// Disposes of the resource (frees memory) - does not remove resource from the manager
-	bool disposeResource(FG_RHANDLE rhUniqueID);
+	fgBool disposeResource(FG_RHANDLE rhUniqueID);
 
 	// Destroy functions will release all the memory for the resource, delete
 	// the object, remove the resource from the manager - resource handle will
@@ -166,12 +166,12 @@ public:
 	// from the resource managers map, existing rhandles will become invalid
 	// regardless of the usage in the program - however if the reference count is
 	// not zero the resource wont be removed and destroyed
-	bool destroyResource(fgResource* pResource);
+	fgBool destroyResource(fgResource* pResource);
 	// Destroys an object and deallocates it's memory. First resource is removed
 	// from the resource managers map, existing rhandles will become invalid
 	// regardless of the usage in the program - however if the reference count is
 	// not zero the resource wont be removed and destroyed
-	bool destroyResource(FG_RHANDLE rhUniqueID);
+	fgBool destroyResource(FG_RHANDLE rhUniqueID);
 
 	// Using GetResource tells the manager that you are about to access the
 	// object.  If the resource has been disposed, it will be recreated 
@@ -185,7 +185,7 @@ public:
 	// #FIXME #TODO #P3 - locking/unlocking is based on counter - DEPRECATED.
 	fgResource* lockResource(FG_RHANDLE rhUniqueID);
 	// Lock the resource
-	bool lockResource(fgResource *pResource);
+	fgBool lockResource(fgResource *pResource);
 	// Unlocking the object let's the resource manager know that you no longer
 	// need exclusive access.  When all locks have been released (the reference
 	// count is 0), the object is considered safe for management again and can
@@ -194,20 +194,17 @@ public:
 	// #FIXME #TODO #P3 - locking/unlocking is based on counter - DEPRECATED.
 	fgResource* unlockResource(FG_RHANDLE rhUniqueID);
 	// Unlock the resource
-	bool unlockResource(fgResource *pResource);
+	fgBool unlockResource(fgResource *pResource);
 
-	// Retrieve the stored handle based on a pointer to the resource.  Note that 
-	// it's assumed that there are no duplicate pointers, as it will return the
-	// first match found.
 	// This function can be also used to check if given resource is managed
-	FG_RHANDLE findResourceHandle(fgResource* pResource);
+	fgBool isResourceManaged(fgResource* pResource);
 
 	// This must be called when you wish the manager to check for discardable
 	// resources.  Resources will only be swapped out if the maximum allowable
 	// limit has been reached, and it will discard them from lowest to highest
 	// priority, determined by the resource class's < operator.  Function will
 	// fail if requested memory cannot be freed.
-	bool checkForOverallocation(void);
+	fgBool checkForOverallocation(void);
 	
 protected:
 	// Refresh allocated memory based on managed resources
@@ -218,24 +215,22 @@ protected:
 	inline void addMemory(size_t nMem)		{  m_nCurrentUsedMemory += nMem;  }
 	// Substract given value from used memory counter
 	inline void removeMemory(size_t nMem)	{  m_nCurrentUsedMemory -= nMem;  }
-	// Return next valid (not used) resource handle #FIXME
-	FG_RHANDLE getNextResHandle(void)			{  return --m_rhNextResHandle;  }
 
 protected:
-	// Value of the next valid resource handle (used while adding new resource to manage)
-	FG_RHANDLE				m_rhNextResHandle;
 	// Size of the current used memory by the managed resources
 	size_t					m_nCurrentUsedMemory;
 	// Value of the maximum supported size of all managed resources
 	size_t					m_nMaximumMemory;
 	// Is resources are reserved? Used for blocking overallocation check
-	bool					m_bResourceReserved;
+	fgBool					m_bResourceReserved;
 	// Iterator to the current resource (used for browsing through the resources' map)
-	fgResourceMapItor		m_currentResource;
-	// Main resource map (managed resources)
-	fgResourceMap			m_resourceMap;
-	// Resource group map (managed resource groups)
-	fgResourceMap			m_resourceGroupMap;
+	fgResourceVectorItor	m_currentResource;
+
+	// Main resource handles manager (managed resources)
+	fgResourceHandleManager	m_resourceHandlesMgr;
+	// Resource group handles manager (managed resource groups)
+	fgResourceHandleManager	m_resourceGroupHandlesMgr;
+
 };
 
 // #FIXME - here we go again, with the singletons... :)

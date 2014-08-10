@@ -11,6 +11,7 @@
 #define _FG_TEXTURE_MANAGER_H_
 
 #include "../../fgSingleton.h"
+#include "../../fgCommon.h"
 #include "fgTextureResource.h"
 #include "fgTextureCommon.h"
 #include "fgTextureTypes.h"
@@ -35,7 +36,7 @@ public:
      * - no image being already loaded,
      * - force option given.
      */
-    bool allToVRAM(void);
+    fgBool allToVRAM(void);
 
     // Releases all non GFX (i.e. non VRAM) data
     void allReleaseNonGFX(void);
@@ -62,7 +63,7 @@ private:
      * leave filename intact. It is however not needed, and should not
      * be used).
      */
-    bool makeTexture(fgTextureResource *textureResource);
+    fgBool makeTexture(fgTextureResource *textureResource);
 protected:
 	bool m_isYolo;
 };

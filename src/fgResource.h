@@ -6,6 +6,9 @@
  * #FLEXIGAME_PROJECT source code and any related files can not be copied, modified 
  * and/or distributed without the express or written permission from the author.
  *******************************************************/
+/**
+ * Portions Copyright (C) James Boer, 2000
+ */
 
 #ifndef _FG_RESOURCE_H_
 #define _FG_RESOURCE_H_
@@ -17,16 +20,13 @@
 #include <ctime>
 #include <cstring>
 
-// A resource handle is define as an unsigned integer
-#ifndef FG_RHANDLE
-#define FG_RHANDLE unsigned int
-#endif
+#include "fgHandle.h"
 
-#ifndef FG_INVALID_RHANDLE
-// All bits filled defines an invalid resource handle
-#define FG_INVALID_RHANDLE			0xFFFFFFFFUL
-#define FG_IS_INVALID_RHANDLE(_rh)	((_rh == FG_INVALID_RHANDLE) ? true : false)
-#define FG_IS_VALID_RHANDLE(_rh)	((_rh == FG_INVALID_RHANDLE) ? false : true)
+struct fgTagResource  {  };
+typedef fgHandle<fgTagResource> fgResourceHandle;
+
+#ifndef FG_RHANDLE
+#define FG_RHANDLE fgResourceHandle
 #endif
 
 class fgResourceManager;

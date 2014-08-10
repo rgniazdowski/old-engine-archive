@@ -62,11 +62,6 @@ namespace FG_GFX
 
 		fgGfxMaterial()
 		{
-			ambientTexHandle = FG_INVALID_RHANDLE;
-			diffuseTexHandle = FG_INVALID_RHANDLE;
-			specularTexHandle = FG_INVALID_RHANDLE;
-			normalTexHandle = FG_INVALID_RHANDLE;
-
 			ambientTexName.clear();
 			diffuseTexName.clear();
 			specularTexName.clear();

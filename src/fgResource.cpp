@@ -6,6 +6,9 @@
  * #FLEXIGAME_PROJECT source code and any related files can not be copied, modified 
  * and/or distributed without the express or written permission from the author.
  *******************************************************/
+/**
+ * Portions Copyright (C) James Boer, 2000
+ */
 
 #include "fgResource.h"
 
@@ -14,7 +17,6 @@
  */
 void fgResource::clear(void)
 {
-	m_handle = FG_INVALID_RHANDLE;
 	m_resType = FG_RESOURCE_INVALID;
 	m_priority = FG_RES_PRIORITY_LOW;
 	m_quality = FG_QUALITY_UNIVERSAL;

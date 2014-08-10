@@ -19,6 +19,7 @@
 
 template <>
 bool fgSingleton<fgTextureManager>::instanceFlag = false;
+
 template <>
 fgTextureManager *fgSingleton<fgTextureManager>::instance = NULL;
 
@@ -37,8 +38,8 @@ fgTextureManager::~fgTextureManager() {
 /**
  * UPLOAD to VRAM – skips reload from disk ONLY if possible
  */
-bool fgTextureManager::allToVRAM(void) {
-    bool result = true;
+fgBool fgTextureManager::allToVRAM(void) {
+    fgBool result = FG_TRUE;
 	fgResourceType searchTypes[] = {FG_RESOURCE_TEXTURE, FG_RESOURCE_FONT, FG_RESOURCE_INVALID};
 	//
 	// #FIXME #P1 - this needs more testing and should look quite different
@@ -48,7 +49,7 @@ bool fgTextureManager::allToVRAM(void) {
 	while(FG_ResourceManager->isValid()) {
 		fgResource *resource = FG_ResourceManager->getCurrentResource();
 		if(!resource) {
-			return false;
+			return FG_FALSE;
 			// FAIL
 		}
 		fgResourceType resType = resource->getResourceType();
@@ -66,12 +67,12 @@ bool fgTextureManager::allToVRAM(void) {
 						if(!textureResource->recreate()) {
 							FG_ErrorLog("Could not recrete texture '%s'\n", textureResource->getFilePathStr());
 							// FAIL
-							result = false;
+							result = FG_FALSE;
 						}
 					} else {
 						// SUCCESS
 						if(!makeTexture(textureResource)) {
-							result = false;
+							result = FG_FALSE;
 							// FAIL
 							FG_ErrorLog("Could not upload texture '%s'\n", textureResource->getFilePathStr());
 						}
@@ -155,15 +156,15 @@ void fgTextureManager::allReleaseGFX(void) {
  * uploadowanej drugi raz sa takie same, mozna uzyc
  * glTexSubImage2D zamiast glTexImage2D
  */
-bool fgTextureManager::makeTexture(fgTextureResource *pTexture) {
+fgBool fgTextureManager::makeTexture(fgTextureResource *pTexture) {
 
     if(!pTexture) {
         FG_ErrorLog("Cannot upload texture - texture resource is NULL");
-        return false;
+        return FG_FALSE;
     }
-	if(FG_IS_INVALID_RHANDLE(FG_ResourceManager->findResourceHandle(pTexture))) {
+	if(!FG_ResourceManager->isResourceManaged(pTexture)) {
 		FG_ErrorLog("Cannot upload texture - texture resource is not managed by Resource Manager");
-		return false;
+		return FG_FALSE;
 	}
     // Supports creation of texture, and update of texture
 	/*if ( !tex_facade->makeGFXTexture() ) {
@@ -175,7 +176,7 @@ bool fgTextureManager::makeTexture(fgTextureResource *pTexture) {
 
 	if(!pTexture->getRawData() || pTexture->isDisposed()) {
         FG_ErrorLog("Cannot upload texture - texture resource is disposed / empty");
-        return false;
+        return FG_FALSE;
     }
 
 	GLuint &idRef = pTexture->getRefTextureGfxID();
@@ -185,13 +186,13 @@ bool fgTextureManager::makeTexture(fgTextureResource *pTexture) {
 	if( !idRef ) {
         glGenTextures(1, &idRef);
        // if(!checkGlError("glGenTextures")) {
-       //     return false;
+       //     return FG_FALSE;
        // }
     }
 
     glBindTexture(GL_TEXTURE_2D, idRef);
     //if(!checkGlError("glBindTexture")) {
-    //    return false;
+    //    return FG_FALSE;
     //}
 
     // Disable mipmapping
@@ -200,7 +201,7 @@ bool fgTextureManager::makeTexture(fgTextureResource *pTexture) {
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     //if(!checkGlError("[various GL]")) {
-    //    return false;
+    //    return FG_FALSE;
     //}
 
 	// #TODO
@@ -217,5 +218,5 @@ bool fgTextureManager::makeTexture(fgTextureResource *pTexture) {
 	//	tex_facade->releaseNonGFX();
 	FG_ResourceManager->unlockResource(pTexture);
 
-    return true;
+    return FG_TRUE;
 }
