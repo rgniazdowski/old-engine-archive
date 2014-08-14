@@ -76,7 +76,7 @@
 [X] ** automatyzacja XML, wczytywanie / tworzenie loaderow XML w podobny sposob jak
        w Javie - SAXP loader - klasa wrapper, pisanie wlasnych funkcji pod dany rodzaj
        pliku XML - that's the way to go
-[ ]- nastepnie napisanie tych wrapperow dla plikow:
+[ ] - nastepnie napisanie tych wrapperow dla plikow:
 [ ]  - resource
 [X]  - resource group [ DONE ]
 [ ]  - shader config
@@ -86,9 +86,9 @@
 ** w przypadku Resource Manager'a
   - rowniez napisanie w pelni resource'a dla:
 [ ]    - obiektu 3D - obj
-[ ]	- grup
-[ ] - font (texture based)
-[ ]	- tekstur
+[X]	- grup (ResourceGroup)
+[X] - font (texture based) - FontResource
+[X]	- tekstur (TextureResource)
 [ ]	- dzwiekow, muzyki
 [ ]	- menu, gui (pozniej, gdy rozpocznie sie praca z GUI)
 [ ]	- shaderow
@@ -108,12 +108,14 @@
 [X] - ladowanie tekstur, obsluga podstawowych formatow, w pelni podlaczenie rowniez
 	  pod resource manager
 [X] - przy teksturach nie wystarczy zaladowac RAW data do pamieci (ROM -> RAM)
-[ ]  - nalezy rowniez uzyc funkcji GL w celu stworzenia prawdziwej tekstury
+[X]  - nalezy rowniez uzyc funkcji GL w celu stworzenia prawdziwej tekstury
 	   w pamieci karty graficznej - to juz jest podsystem GFX
 [ ] - ladowanie plikow OBJ (warto tutaj zadbac od razu o wszelkie dane w tym
       material
 [ ] - podlaczenie material z teksturami
 - OFC: polaczenie z RM i wczytywanie XML
+
+[X?] - TextureManager
 
 ** scene manager - podstawowy
 [ ]  - wczytywanie XML 
@@ -123,6 +125,7 @@
     a nie podzielone na trojkaty)
     - octree
   - quadtree
+  - portale
 
 ** drawing batch -- bardzo podstawowy
   - proste sortowanie wedlug uzytego materialu, na poczatek nawet nie bedzie to

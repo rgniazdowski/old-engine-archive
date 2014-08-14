@@ -12,15 +12,15 @@
 
 [ ] system do profilowania
 
-[ 50% ] fgResourceManager -> pliki konfiguracyjne tj. definiowanie grup plikow 
+[X] fgResourceManager -> pliki konfiguracyjne tj. definiowanie grup plikow 
 	traktowanych jako paczka (np. do zaladowania poziomu czy grafik GUI)
 
 	[X] wydaje sie ze bedzie potrzebna klasa fgResourceGroup ewentualnie 
 	    jeszcze fgResourceFile/fgResourceConfig
 
-[ ] restrukturyzacja ladowania tekstur - podpiecie pod klase Resource i ResourceManager
+[X] restrukturyzacja ladowania tekstur - podpiecie pod klase Resource i ResourceManager
 
-[ ] poprawienie klasy QualityManager - pytanie jest czy klasa ta powinna 
+[X] poprawienie klasy QualityManager - pytanie jest czy klasa ta powinna 
     definiowac nazwy plikow biorac pod uwage rozdzielczosc ekranu - raczej nie
 
 [X] poprawienie klasy Font - powinna uzywac systemu zasobow i tekstur (w sumie 
@@ -35,7 +35,7 @@
 [ ] ladowanie pliku Settings XML - Settings jako Resource File? nie (po 
     parsowaniu i tak text data jest zwalniane, pliki config nie sa resourcami)
 
-[ ] obsluga ladowania tekstury do karty graficznej - nakladka na OGL i GFX
+[ 50% / ? ] obsluga ladowania tekstury do karty graficznej - nakladka na OGL i GFX
 
 [X] poprawne zamykanie aplikacji czyli zwalnianie wszystkich zasobow w 
     poprawnej kolejnosci w tym wszystkich singletonow
@@ -66,8 +66,14 @@
 [ ] Loading Screen z paskiem postepu (wymagana podstawowa wersja GUI)
 	[ ] Potrzebne przy tym jest rowniez wpelni dzialajacy podsystem Zasobow,
 		poniewaz zasoby musza byc ladowane sekwencyjnie 
+	[ ] Mozliwe rowniez ze funkcje ktore laduja dany jeden plik rowniez musza
+		byc w stanie przerwac prace (wyjsc z petli a potem do niej wrocic)
+		[ ] - dodatkowy bufor / cos takiego
+		[ ] - FileStream - jesli uzywane jest FileStream, mozna zrobic cos jak
+			SaveState (zapisanie pozycji fseek itp)
 
 [ ] smart pointers / hash tables / etc - szybka dereferencja w systemie Resource
+	[X] - Jest to w pewien blady sposob zaimplementowane w Handle Managerze
 [ ] mozliwosc odnoszenia sie do resource'a za pomoca napisu (string/char *)
 
 
