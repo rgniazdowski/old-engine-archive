@@ -18,44 +18,96 @@
 
 #include <hash_map>
 
+namespace std
+{
+	template<> struct hash<std::string>
+	{
+		size_t operator()(const std::string& x) const
+		{
+			return hash<const char*>()(x.c_str());
+		}
+	};
+};
+
+#define hmHashKeyType std::string
+
 template <typename DataType, typename HandleType>
 class fgHandleManager
 {
 public:
+	struct hmEqualTo
+	{
+		bool operator()(const char* s1, const char* s2) const
+		{
+			return strcmp(s1, s2) == 0;
+		}
+
+		bool operator()(const hmHashKeyType& s1, const hmHashKeyType& s2) const
+		{
+			return s1.compare(s2) == 0;
+		}
+	};
+	typedef std::hash<hmHashKeyType> hmHashType;
+	// Type for vector storing Data pointers
     typedef fgArrayVector <DataType> hmDataVec;
+	// Type for map, assigning handle index value to string ID (case sensitive)
+	typedef std::hash_map <hmHashKeyType, fgRawIndex, hmHashType, hmEqualTo> hmNameMap; //#FIXME - this is not standard
 private:
     typedef fgArrayVector <fgRawMagic>   hmMagicVec;
+	typedef fgArrayVector <hmHashKeyType>  hmNameVec;
     typedef fgArrayVector <unsigned int> hmFreeSlotsVec;
 	// Data storage
     hmDataVec  m_managedData;
 	// Corresponding magic numbers
     hmMagicVec m_magicData;
 	// Free slots in the database
-    hmFreeSlotsVec  m_FreeSlots;
-
+    hmFreeSlotsVec  m_freeSlots;
+	// Map for name (string) IDs
+	hmNameMap m_nameMap;
+	// Vector for storing string IDs
+	hmNameVec m_nameVec;
+	// Check for reassignment?
+	fgBool m_checkReassignment;
 protected:
 	// Reset internal data
 	void clear(void);
 public:
 	// Default constructor for Handle Manager object
-	fgHandleManager() { clear(); }
+	fgHandleManager() : m_checkReassignment(FG_TRUE) { clear(); }
 	// Default destructor for Handle Manager object
 	~fgHandleManager() { clear(); }
 
 	//
     fgBool acquireHandle(HandleType& rHandle, DataType pResource);
 	//
-    fgBool  releaseHandle(HandleType handle);
+	fgBool setupName(hmHashKeyType& name, HandleType rHandle);
+	//
+	fgBool setupName(const char* name, HandleType rHandle);
+	//
+    fgBool releaseHandle(HandleType handle);
 	//
 	void releaseAllHandles(void);
 
 	//
     DataType dereference(HandleType handle);
+	//
+    DataType dereference(hmHashKeyType& name);
+	//
+    DataType dereference(const char* name);
     //const DataType* Dereference( HandleType handle ) const;
 
 	//
+	void setReassignmentCheck(fgBool toggle) {
+		m_checkReassignment = toggle;
+	}
+
+	fgBool isReassignmentAllowed(void) const {
+		return !m_checkReassignment;
+	}
+
+	//
     unsigned int getUsedHandleCount(void) const {
-		return ( m_magicData.size() - m_FreeSlots.size());
+		return ( m_magicData.size() - m_freeSlots.size());
 	}
 
 	//
@@ -82,7 +134,9 @@ void fgHandleManager<DataType, HandleType>::clear(void)
 {
 	m_managedData.clear_optimised();
 	m_magicData.clear_optimised();
-	m_FreeSlots.clear_optimised();
+	m_freeSlots.clear_optimised();
+	m_nameVec.clear_optimised();
+	m_nameMap.clear();
 }
 
 /*
@@ -93,19 +147,23 @@ fgBool fgHandleManager<DataType, HandleType>::acquireHandle(HandleType& rHandle,
 {
     // If free list is empty, add a new one otherwise use first one found
     unsigned int index;
-    if(m_FreeSlots.empty()) {
+    if(m_freeSlots.empty()) {
         index = m_magicData.size();
         if(!rHandle.init(index))
-			return FG_FALSE;
+			if(m_checkReassignment)
+				return FG_FALSE;
         m_managedData.push_back(pResource);
         m_magicData.push_back(rHandle.getMagic());
+		m_nameVec.push_back(hmHashKeyType());
     } else {
-        index = m_FreeSlots.back();
+        index = m_freeSlots.back();
 		if(!rHandle.init(index))
-			return FG_FALSE;
-        m_FreeSlots.pop_back();
+			if(m_checkReassignment)
+				return FG_FALSE;
+        m_freeSlots.pop_back();
 		m_managedData[index] = pResource;
         m_magicData[index] = rHandle.getMagic();
+		m_nameVec[index] = hmHashKeyType();
     }
     return FG_TRUE;
 }
@@ -114,16 +172,66 @@ fgBool fgHandleManager<DataType, HandleType>::acquireHandle(HandleType& rHandle,
  *
  */
 template <typename DataType, typename HandleType>
+fgBool fgHandleManager<DataType, HandleType>::setupName(hmHashKeyType& name, HandleType rHandle)
+{
+	if(!isHandleValid(rHandle))
+		return FG_FALSE;
+	if(m_nameMap.find(name) != m_nameMap.end()) {
+		return FG_FALSE; // Such key already exists
+	}
+    fgRawIndex index = rHandle.getIndex();
+	if(m_nameVec[index].size() > 0) {
+		// There is already some set on the current index
+		// No reassignment is allowed
+		return FG_FALSE;
+	}
+	m_nameMap[name] = index;
+	m_nameVec[index] = name;
+	return FG_TRUE;
+}
+
+/*
+ *
+ */
+template <typename DataType, typename HandleType>
+fgBool fgHandleManager<DataType, HandleType>::setupName(const char* name, HandleType rHandle)
+{
+	if(!isHandleValid(rHandle))
+		return FG_FALSE;
+	if(m_nameMap.find(hmHashKeyType(name)) != m_nameMap.end()) {
+		return FG_FALSE; // Such key already exists
+	}
+    fgRawIndex index = rHandle.getIndex();
+	if(m_nameVec[index].size() > 0) {
+		// There is already some set on the current index
+		// No reassignment is allowed
+		return FG_FALSE;
+	}
+	m_nameMap[hmHashKeyType(name)] = index;
+	m_nameVec[index] = hmHashKeyType(name);
+	return FG_TRUE;
+}
+
+/*
+ *
+ */
+template <typename DataType, typename HandleType>
 fgBool fgHandleManager<DataType, HandleType>::releaseHandle(HandleType handle)
 {
-	if(!isHandleValid(handle))
+	if(!isHandleValid(handle)) {
+		FG_ErrorLog("releaseHandle() - handle is invalid.");
 		return FG_FALSE;
+	}
     // which one?
     fgRawIndex index = handle.getIndex();
     // ok remove it - tag as unused and add to free list
     m_magicData[index] = 0;
 	m_managedData[index] = NULL;
-    m_FreeSlots.push_back(index);
+	m_nameVec[index].clear();
+    m_freeSlots.push_back(index);
+	if(!getUsedHandleCount()) {
+		clear();
+	}
 	return FG_TRUE;
 }
 
@@ -146,6 +254,49 @@ inline DataType fgHandleManager<DataType, HandleType>::dereference(HandleType ha
 		return NULL;
 	fgRawIndex index = handle.getIndex();
     return *(m_managedData.begin() + index);
+}
+
+/*
+ *
+ */
+template <typename DataType, typename HandleType>
+inline DataType fgHandleManager<DataType, HandleType>::dereference(hmHashKeyType& name)
+{
+	hmNameMap::iterator it = m_nameMap.find(name);
+	if(it == m_nameMap.end()) {
+		return NULL;
+	}
+	fgRawIndex index = (*it).second;
+	if(index >= m_managedData.size()) {
+		return NULL;
+	}
+	if(m_nameVec[index].compare(name) == 0) {
+		return *(m_managedData.begin() + index);
+	} else {
+		return NULL;
+	}
+}
+
+/*
+ *
+ */
+template <typename DataType, typename HandleType>
+inline DataType fgHandleManager<DataType, HandleType>::dereference(const char* name)
+{
+	hmHashKeyType key = name;
+	hmNameMap::iterator it = m_nameMap.find(key);
+	if(it == m_nameMap.end()) {
+		return NULL;
+	}
+	fgRawIndex index = (*it).second;
+	if(index >= m_managedData.size()) {
+		return NULL;
+	}
+	if(m_nameVec[index].compare(key) == 0) {
+		return *(m_managedData.begin() + index);
+	} else {
+		return NULL;
+	}
 }
 
 /*

@@ -19,8 +19,11 @@
 #define FG_RAW_HANDLE_TYPE unsigned int
 #endif
 
+// Type of the raw handle
 typedef FG_RAW_HANDLE_TYPE fgRawHandle;
+// Type of the index number (part of handle ID)
 typedef FG_RAW_HANDLE_TYPE fgRawIndex;
+// Type of the magic number
 typedef FG_RAW_HANDLE_TYPE fgRawMagic;
 
 #ifndef FG_INVALID_HANDLE
@@ -66,36 +69,39 @@ public:
 	// Default constructor for Handle object
     fgHandle() : m_handle(FG_INVALID_HANDLE) { }
 
-	//
+	// Reset the handle (becomes invalid)
 	void reset(void) {
 		m_handle = FG_INVALID_HANDLE;
 	}
 
-	//
+	// Init handle with given index
     fgBool init(fgRawIndex index);
 
-	//
+	// Get the index part of the handle
     fgRawIndex getIndex(void) const {
 		return m_index;
 	}
-	//
+	// Get the magic part of the handle
     fgRawMagic getMagic(void) const {
 		return m_magic;
 	}
-	//
+	// Return the handle ID number
 	fgRawHandle getHandle(void) const {
 		return m_handle;
 	}
-	//
+	// Check if handle is null
     fgBool isNull(void) const {
 		return (fgBool)(m_handle == FG_INVALID_HANDLE);
 	}
-	//
+	// Return the handle ID number
 	operator fgRawHandle(void) const {
 		return m_handle;
 	}
 };
 
+/*
+ *
+ */
 template <typename TagType>
 fgBool fgHandle<TagType>::init(fgRawIndex index)
 {
@@ -115,6 +121,7 @@ fgBool fgHandle<TagType>::init(fgRawIndex index)
 
     m_index = index;
     m_magic = s_autoMagic;
+	return FG_TRUE;
 }
 
 template <typename TagType>
