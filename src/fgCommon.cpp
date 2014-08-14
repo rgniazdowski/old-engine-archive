@@ -142,3 +142,8 @@ cont:
 }
 
 #endif
+
+const char* FG_Filename (const char* str)
+{
+	return (strrchr(str, '/') ? strrchr(str, '/') + 1 : strrchr(str, '\\') ? strrchr(str, '\\') + 1 : str);
+}

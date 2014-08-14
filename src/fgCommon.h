@@ -15,6 +15,7 @@
 
 #include <cstdlib>
 #include <cstring>
+#include <string>
 
 #define FG_FILE_NAME_MAX	256
 #define FG_PATH_MAX			256
@@ -195,5 +196,7 @@ inline const char *FG_FileExt(const char *filename) {
     if(!dot || dot == filename) return NULL;
     return dot + 1;
 }
+
+const char* FG_Filename (const char* str);
 
 #endif /* _FG_COMMON_H_ */
