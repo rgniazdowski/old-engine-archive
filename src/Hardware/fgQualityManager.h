@@ -74,8 +74,8 @@ public:
 	}
 
 	// Return true if currently set quality is hardware
-	bool isHardwareQuality(void) const {
-		return (m_hardwareQuality == m_selectedQuality);
+	fgBool isHardwareQuality(void) const {
+		return (fgBool)(m_hardwareQuality == m_selectedQuality);
 	}
 
 	// Get currently selected quality

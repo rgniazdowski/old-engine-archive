@@ -30,7 +30,7 @@ namespace FG_GFX {
 	/*
 	 *
 	 */
-	bool initGFX(void)
+	fgBool initGFX(void)
 	{		
 #if defined FG_USING_MARMALADE_EGL
 		EGLint major;
@@ -42,19 +42,19 @@ namespace FG_GFX {
 		if (!g_EGLDisplay)
 		{
 			s3eDebugErrorShow(S3E_MESSAGE_CONTINUE, "eglGetDisplay failed");
-			return false;
+			return FG_FALSE;
 		}
 		EGLBoolean res = eglInitialize(g_EGLDisplay, &major, &minor);
 		if (!res)
 		{
 			s3eDebugErrorShow(S3E_MESSAGE_CONTINUE, "eglInitialize failed");
-			return false;
+			return FG_FALSE;
 		}
 		eglGetConfigs(g_EGLDisplay, configList, FG_EGL_MAX_CONFIG, &numFound);
 		if (!numFound)
 		{
 			s3eDebugErrorShow(S3E_MESSAGE_CONTINUE, "eglGetConfigs failed to find any configs");
-			return false;
+			return FG_FALSE;
 		}
 		int config = -1;
 		FG_InfoLog("found %d configs\n", numFound);
@@ -81,19 +81,19 @@ namespace FG_GFX {
 		if (!g_EGLContext)
 		{
 			s3eDebugErrorShow(S3E_MESSAGE_CONTINUE, "eglCreateContext failed");
-			return false;
+			return FG_FALSE;
 		}
 		version = s3eGLGetInt(S3E_GL_VERSION)>>8;
 		if (version != 2)
 		{
 			FG_InfoLog("reported GL version: %d", version);
 			s3eDebugErrorShow(S3E_MESSAGE_CONTINUE, "This example requires GLES v2.x");
-			return false;
+			return FG_FALSE;
 		}
 		void* nativeWindow = s3eGLGetNativeWindow();
 		g_EGLSurface = eglCreateWindowSurface(g_EGLDisplay, configList[config], nativeWindow, NULL);
 		eglMakeCurrent(g_EGLDisplay, g_EGLSurface, g_EGLSurface, g_EGLContext);
-		return true;
+		return FG_TRUE;
 #elif defined FG_USING_MARMALADE_IWGL
 		return IwGLInit();
 #endif

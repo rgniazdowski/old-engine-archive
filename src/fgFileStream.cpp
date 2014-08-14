@@ -22,35 +22,35 @@
 /*
  * #TODO
  */
-bool fgFileStream::openFile(const char *filePath, const char *mode)
+fgBool fgFileStream::openFile(const char *filePath, const char *mode)
 {
 	if(m_file != NULL || mode == NULL || filePath == NULL)
-		return false;
+		return FG_FALSE;
 	if(strlen(filePath) <= 1) {
-		return false;
+		return FG_FALSE;
 	}
 	if(!fileExists(filePath)) {
-		return false;
+		return FG_FALSE;
 	}
 
 	strncpy(m_filePath, filePath, FG_FILE_PATH_MAX-1);
 	m_file = fopen(filePath, mode);
 
 	if(m_file == NULL) {
-		return false;
+		return FG_FALSE;
 	}
-	return true;
+	return FG_TRUE;
 }
 
 /*
  *
  */
-bool fgFileStream::openFile(const char *mode)
+fgBool fgFileStream::openFile(const char *mode)
 {
 	if(mode == NULL)
-		return false;
+		return FG_FALSE;
 	if(strlen(mode) < 1)
-		return false;
+		return FG_FALSE;
 
 	return openFile(m_filePath, mode);
 }
@@ -58,15 +58,15 @@ bool fgFileStream::openFile(const char *mode)
 /*
  *
  */
-bool fgFileStream::closeFile(void)
+fgBool fgFileStream::closeFile(void)
 {
 	// FIXME
 	if(m_file != NULL) {
 		fclose(m_file);
 		m_file = NULL;
-		return true;
+		return FG_TRUE;
 	}
-	return false;
+	return FG_FALSE;
 }
 
 /*

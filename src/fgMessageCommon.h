@@ -19,7 +19,7 @@ enum fgMessageType {
 	FG_MESSAGE_WARNING = 1,
 	FG_MESSAGE_ERROR = 2,
 	FG_MESSAGE_DEBUG = 3,
-	FG_MESSAGE_TYPES = 5
+	FG_NUM_MESSAGE_TYPES = 5
 };
 
 /*
@@ -38,7 +38,7 @@ struct fgWarning
 {
 	fgMessageType messageType;
 	int warningCode;
-	bool isSerious;
+	fgBool isSerious;
 };
 
 /*
@@ -48,7 +48,7 @@ struct fgError
 {
 	fgMessageType messageType;
 	int errorCode;
-	bool isCritical;
+	fgBool isCritical;
 };
 
 /*
@@ -58,11 +58,10 @@ struct fgDebug
 {
 	fgMessageType messageType;
 	int debugCode;
-	bool isCritical;
+	fgBool isCritical;
 };
 
-#define FG_MESSAGE_BUFFER_MAX		256
-#define FG_MESSAGE_SMALL_BUFFER_MAX 96
+#define FG_MESSAGE_BUFFER_MAX		512
 
 /*
  * Main structure for any type of message (and message code)
@@ -81,7 +80,7 @@ struct fgMessage
 		fgError error;
 		fgDebug debug;
 	};
-	char messageData[FG_MESSAGE_BUFFER_MAX]; // #FIXME
+	std::string messageData;
 };
 
 #endif /* _FG_MESSAGE_COMMON_H_ */

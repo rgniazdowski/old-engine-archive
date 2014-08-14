@@ -12,6 +12,7 @@
 
 #include <map>
 
+#include "../fgCommon.h"
 #include "fgGuiWidget.h"
 
 #define MENU_TITLE_MAX 32
@@ -59,7 +60,7 @@ public:
 		return m_menuTitle;
 	}
 
-	virtual bool init(void) { return true; };
+	virtual fgBool init(void) { return FG_TRUE; };
 	virtual void getSignals(void);
 	virtual void draw(void);
 };

@@ -48,6 +48,22 @@ typedef unsigned char fgBool;
 #define FG_SUCCESS 1
 #endif
 
+#ifndef NULL
+    #ifndef __cplusplus
+        #define NULL ((void *)0)
+    #else
+        #define NULL 0
+    #endif
+#endif
+
+#ifndef FG_NULL
+    #ifndef __cplusplus
+        #define FG_NULL ((void *)0)
+    #else
+        #define FG_NULL 0
+    #endif
+#endif
+
 #if defined FG_USING_MARMALADE
 #include "IwUtil.h"
 template <class X, class A=CIwAllocator<X>, class REALLOCATE = ReallocateDefault<X, A > >

@@ -28,7 +28,11 @@
 
 #endif
 
+#if defined FG_USING_OPENGL_ES
 typedef GLuint fgTextureGfxID;
+#else
+typedef unsigned int fgTextureGfxID;
+#endif
 
 /*
  *
@@ -47,18 +51,18 @@ public:
 	// Clears the class data, this actually does not free allocated memory, just resets base class attributes
 	virtual void clear(void);
 	// Create function loads/interprets data from file in ROM and place it in RAM memory.
-	virtual bool create(void);
+	virtual fgBool create(void);
 	// Destroy all loaded data including additional metadata (called with deconstructor)
 	virtual void destroy(void);
 	// Reloads any data, recreates the resource (refresh)
-	virtual bool recreate(void);
+	virtual fgBool recreate(void);
 	// Dispose completely of the all loaded data, free all memory
 	virtual void dispose(void);
 	// Check if resource is disposed (not loaded yet or disposed after)
-	virtual bool isDisposed(void) const;
+	virtual fgBool isDisposed(void) const;
 
 protected:
-	bool setFileTypeFromFilePath(std::string &path) {
+	fgBool setFileTypeFromFilePath(std::string &path) {
 		// #FIXME - this should be extracted to other file (used for some basic file operation, pathext or whatnot #P3 #TODO)
 		std::string ext = path.substr(path.find_last_of(".") + 1);
 		if(strnicmp(ext.c_str(), FG_TEXTURE_FILE_EXTENSION_BMP, strlen(FG_TEXTURE_FILE_EXTENSION_BMP)) == 0) {
@@ -74,12 +78,12 @@ protected:
 		} else {
 			this->m_fileType = FG_TEXTURE_FILE_OTHER;
 		}
-		return true;
+		return FG_TRUE;
 	}
 
-	bool setFileTypeFromFilePath(void) {
+	fgBool setFileTypeFromFilePath(void) {
 		if(this->m_filePath.empty())
-			return false;
+			return FG_FALSE;
 		return setFileTypeFromFilePath(m_filePath);
 	}
 
@@ -101,11 +105,11 @@ public:
     void releaseNonGFX(void);
 
     // Checks whether RAM is owned by the object
-    bool hasOwnedRAM(void) const {
+    fgBool hasOwnedRAM(void) const {
         if( m_rawData == NULL ) {
-			return false;
+			return FG_FALSE;
 		}
-		return true;
+		return FG_TRUE;
     }
 
 	// Get the texture id used by the low level graphics system - handle in OpenGL

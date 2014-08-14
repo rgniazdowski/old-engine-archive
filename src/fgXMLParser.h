@@ -53,7 +53,7 @@
 	A Decleration contains: Attributes (not on tree)
 */
 
-#define SETT_FILENAME "test.xml"
+#define SETT_FILENAME "test.xml" // #FIXME
 
 #define FG_XML_PARSER_ERROR_LENGTH		512
 
@@ -61,7 +61,7 @@ class fgXMLParser : private fgFileStream
 {
 protected:
 	// Status for error #FIXME
-	bool			m_isError;
+	fgBool			m_isError;
 	// Full error message #FIXME
 	char			m_errorMessage[FG_XML_PARSER_ERROR_LENGTH];
 	// Loaded file size
@@ -84,7 +84,9 @@ public:
 	/*
 	 * Default empty constructor
 	 */
-	fgXMLParser() : m_isError(false), m_fileSize(0), m_fileBuffer(NULL), m_rootXMLElement(NULL), m_currentXMLNode(NULL), m_currentXMLAttribute(NULL), m_contentHandler(NULL)
+	fgXMLParser() : m_isError(FG_FALSE), m_fileSize(0), m_fileBuffer(NULL),
+		m_rootXMLElement(NULL), m_currentXMLNode(NULL),
+		m_currentXMLAttribute(NULL), m_contentHandler(NULL)
 	{
 		memset(m_errorMessage, 0, FG_XML_PARSER_ERROR_LENGTH);
 	}
@@ -92,7 +94,9 @@ public:
 	/*
 	 * Constructor with file path parameter - loads the xml file
 	 */
-	fgXMLParser(const char *filePath) : m_isError(false), m_fileSize(0), m_fileBuffer(NULL), m_rootXMLElement(NULL), m_currentXMLNode(NULL), m_currentXMLAttribute(NULL), m_contentHandler(NULL)
+	fgXMLParser(const char *filePath) : m_isError(FG_FALSE), m_fileSize(0), m_fileBuffer(NULL),
+		m_rootXMLElement(NULL), m_currentXMLNode(NULL),
+		m_currentXMLAttribute(NULL), m_contentHandler(NULL)
 	{
 		memset(m_errorMessage, 0, FG_XML_PARSER_ERROR_LENGTH);
 		loadXML(filePath);
@@ -108,7 +112,7 @@ public:
 	/*
 	 *
 	 */
-	bool loadXML(const char *filePath);
+	fgBool loadXML(const char *filePath);
 
 	/*
 	 * Frees the structures holding all of the xml data
@@ -119,12 +123,12 @@ public:
 	 * Stores the pointer to the object for content event handling.
 	 * This handler is managed outside of this class.
 	 */
-	bool setContentHandler(fgXMLDefaultHandler *contentHandler) {
+	fgBool setContentHandler(fgXMLDefaultHandler *contentHandler) {
 		if(contentHandler)
 			m_contentHandler = contentHandler;
 		else
-			return false;
-		return true;
+			return FG_FALSE;
+		return FG_TRUE;
 	}
 
 	/*
@@ -144,17 +148,17 @@ public:
 	 *
 	 */
 private:
-	bool _parseDeep(fgXMLNode *cnode = NULL, int depth = 0);
+	fgBool _parseDeep(fgXMLNode *cnode = NULL, int depth = 0);
 public:
 
 	/*
 	 * Check if XML is loaded
 	 */
-	bool isXMLLoaded(void) const {
+	fgBool isXMLLoaded(void) const {
 		if(m_rootXMLElement)
-			return true;
+			return FG_TRUE;
 		else
-			return false;
+			return FG_FALSE;
 	}
 
 	/*
@@ -208,11 +212,11 @@ public:
 	/*
 	 * Checks for the nodes children
 	 */
-	bool getCurrentNodeChildrenPresence(void) const {
+	fgBool getCurrentNodeChildrenPresence(void) const {
 		if(!m_currentXMLNode) {
 			if(m_rootXMLElement)
 				return !m_rootXMLElement->NoChildren();
-			return false;
+			return FG_FALSE;
 		}
 		return !m_currentXMLNode->NoChildren();
 	}
@@ -246,170 +250,170 @@ public:
 	/*
 	 * Checks is there any current node/element in the seek position
 	 */
-	bool isCurrent(void) const {
+	fgBool isCurrent(void) const {
 		if(!m_currentXMLNode)
-			return false;
+			return FG_FALSE;
 		else 
-			return true;
+			return FG_TRUE;
 	}
 
 	/*
 	 * Checks if the current pointer points to XML Element
 	 */
-	bool isCurrentElement(void) const {
+	fgBool isCurrentElement(void) const {
 		if(!m_currentXMLNode)
-			return false;
+			return FG_FALSE;
 		return (m_currentXMLNode->Type() == fgXMLNode::ELEMENT);
 	}
 
 	/*
 	 * Checks if the current pointer points to XML Text
 	 */
-	bool isCurrentText(void) const {
+	fgBool isCurrentText(void) const {
 		if(!m_currentXMLNode)
-			return false;
+			return FG_FALSE;
 		return (m_currentXMLNode->Type() == fgXMLNode::TEXT);
 	}
 
 	/*
 	 * Checks if the current pointer points to XML Comment
 	 */
-	bool isCurrentComment(void) const {
+	fgBool isCurrentComment(void) const {
 		if(!m_currentXMLNode)
-			return false;
+			return FG_FALSE;
 		return (m_currentXMLNode->Type() == fgXMLNode::COMMENT);
 	}
 
 	/*
 	 * Checks if the current pointer points to unknown xml node type
 	 */
-	bool isCurrentUnknown(void) const {
+	fgBool isCurrentUnknown(void) const {
 		if(!m_currentXMLNode)
-			return false;
+			return FG_FALSE;
 		return (m_currentXMLNode->Type() == fgXMLNode::UNKNOWN);
 	}
 
 	/*
 	 * Sets the attribute pointer to the first possible attribute in the current node
 	 */
-	bool setFirstAttribute(void) 
+	fgBool setFirstAttribute(void) 
 	{
 		if(!m_currentXMLNode)
 		{
 			if(!m_rootXMLElement)
-				return false;
+				return FG_FALSE;
 			m_currentXMLAttribute = m_rootXMLElement->FirstAttribute();
 			if(m_currentXMLAttribute == NULL)
-				return false;
-			return true;
+				return FG_FALSE;
+			return FG_TRUE;
 		}
 		if(!isCurrentElement())
-			return false;
+			return FG_FALSE;
 		fgXMLElement *xmlElement = m_currentXMLNode->ToElement();
 		if(!xmlElement)
-			return false;
+			return FG_FALSE;
 		m_currentXMLAttribute = xmlElement->FirstAttribute();
 		if(m_currentXMLAttribute == NULL)
-			return false;
-		return true;
+			return FG_FALSE;
+		return FG_TRUE;
 	}
 
 	/*
 	 * Parser goes deeper into the xml document structure, setting proper value for the current pointer 
 	 */
-	bool goDeeper(void)
+	fgBool goDeeper(void)
 	{
 		if(!m_currentXMLNode)
 		{
 			if(!m_rootXMLElement)
-				return false;
+				return FG_FALSE;
 			m_currentXMLNode = m_rootXMLElement->FirstChild();
 			if(!m_currentXMLNode) {
-				return false;
+				return FG_FALSE;
 			} else {
 				m_currentXMLAttribute = NULL;
-				return true;
+				return FG_TRUE;
 			}
 		}
 
 		if(m_currentXMLNode->NoChildren())
-			return false;
+			return FG_FALSE;
 
 		m_parsingStack.push(m_currentXMLNode);
 		m_currentXMLNode = m_currentXMLNode->FirstChild();
 		m_currentXMLAttribute = NULL;
-		return true;
+		return FG_TRUE;
 	}
 
 	/*
 	 * Parser goes higher (back) in the xml document structure
 	 */
-	bool goHigher(void)
+	fgBool goHigher(void)
 	{
 		if(m_parsingStack.empty())
-			return false;
+			return FG_FALSE;
 		m_currentXMLNode = m_parsingStack.top();
 		m_parsingStack.pop();
 		if(!m_currentXMLNode)
-			return false;
+			return FG_FALSE;
 		m_currentXMLAttribute = NULL;
-		return true;
+		return FG_TRUE;
 	}
 
 	/*
 	 * Parser goes to the next node (next sibling)
 	 */
-	bool goToNextNode(void)
+	fgBool goToNextNode(void)
 	{
 		if(!m_currentXMLNode)
-			return false;
+			return FG_FALSE;
 		m_currentXMLNode = m_currentXMLNode->NextSibling();
 		if(m_currentXMLNode)
-			return true;
+			return FG_TRUE;
 		else
-			return false;
+			return FG_FALSE;
 	}
 
 	/*
 	 * Parser goes to the previous node (previous sibling)
 	 */
-	bool goToPreviousNode(void)
+	fgBool goToPreviousNode(void)
 	{
 		if(!m_currentXMLNode)
-			return false;
+			return FG_FALSE;
 		m_currentXMLNode = m_currentXMLNode->PreviousSibling();
 		if(m_currentXMLNode)
-			return true;
+			return FG_TRUE;
 		else
-			return false;
+			return FG_FALSE;
 	}
 
 	/*
 	 * Parser goes to the next attribute
 	 */
-	bool goToNextAttribute(void)
+	fgBool goToNextAttribute(void)
 	{
 		if(!m_currentXMLAttribute)
-			return false;
+			return FG_FALSE;
 		m_currentXMLAttribute = m_currentXMLAttribute->Next();
 		if(m_currentXMLAttribute)
-			return true;
+			return FG_TRUE;
 		else
-			return false;
+			return FG_FALSE;
 	}
 
 	/*
 	 * Parser goes to the previous attribute
 	 */
-	bool goToPreviousAttribute(void)
+	fgBool goToPreviousAttribute(void)
 	{
 		if(!m_currentXMLAttribute)
-			return false;
+			return FG_FALSE;
 		m_currentXMLAttribute = m_currentXMLAttribute->Previous();
 		if(m_currentXMLAttribute)
-			return true;
+			return FG_TRUE;
 		else
-			return false;
+			return FG_FALSE;
 	}
 };
 

@@ -35,22 +35,22 @@ public:
     /**
      * NORMAL MODE particle insert - can decline insertion
      */
-    virtual bool add(Particle *particle);
+    virtual fgBool add(Particle *particle);
 
     /**
      * Batch-add
      */
-    virtual bool addGroup(Particle *particles, int count);
+    virtual fgBool addGroup(Particle *particles, int count);
 
     /**
      * Adds random Particle, built upon values in [from->some_field, to->some_field]
      */
-    virtual bool addRandom(Particle *from, Particle *to);
+    virtual fgBool addRandom(Particle *from, Particle *to);
 
     /**
      * Batch-add with randomization
      */
-    bool addRandomGroup(Particle *from, Particle *to, int count);
+    fgBool addRandomGroup(Particle *from, Particle *to, int count);
 
 };
 

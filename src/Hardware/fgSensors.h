@@ -43,7 +43,7 @@ public:
 
 private:
 	// Are sensors running?
-    bool m_isRunning;
+    fgBool m_isRunning;
 
 	/// Number of supported sensors (includes the "NONE" sensor)
 	enum { FG_SENSORS_TYPES = 2, FG_SENSORS_VALUES = 3 };
@@ -83,7 +83,7 @@ private:
 	// When was base requested to unlock
     unsigned long int m_unlockTS;
     // Together with unlockTS, marks if the accelBase is locked
-    bool m_accelBaseLocked;
+    fgBool m_accelBaseLocked;
     
 protected:
 	// Default constructor for Sensors object
@@ -93,7 +93,7 @@ protected:
 
 public:
 	// Register to all sensors and get the error codes
-	bool startSensors();
+	fgBool startSensors();
 
 	// Unregister all the sensors
 	void stopSensors();
@@ -111,20 +111,20 @@ public:
     // because then user starts to rotate the device – so
     // accelerometer values are no longer normal, neutral
     void lockBase() {
-        m_accelBaseLocked = true;
+        m_accelBaseLocked = FG_FALSE;
     }
 
     // Unlocks accelerometer base – called, when last
     // MOD is deactivated
     void unlockBase() {
         if( m_accelBaseLocked ) {
-            m_accelBaseLocked = false;
+            m_accelBaseLocked = FG_FALSE;
             m_unlockTS = FG_HardwareState->getTS();
         }
     }
 
     // Accel-base is unlocked after unlockBase() call & after AFTER_UNLOCK_DELAY ms passed
-    bool isBaseLocked() const {
+    fgBool isBaseLocked() const {
         return m_accelBaseLocked || ( m_unlockTS > (FG_HardwareState->getTS() - FG_SENSORS_AFTER_UNLOCK_DELAY) );
     }
 

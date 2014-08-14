@@ -18,13 +18,13 @@
 
 #include "../fgCommon.h"
 
-static bool isAndroid();
-static bool isiOS();
-static bool isOSX();
-static bool isBADA();
-static bool isBB();
+static fgBool isAndroid();
+static fgBool isiOS();
+static fgBool isOSX();
+static fgBool isBADA();
+static fgBool isBB();
 
-static bool try_device(const char* dev_id, const char* base_name, fgDeviceClass givenClass, fgDeviceClass& tryClass, int& tryVersion);
+static fgBool try_device(const char* dev_id, const char* base_name, fgDeviceClass givenClass, fgDeviceClass& tryClass, int& tryVersion);
 static fgDeviceGeneration computeGeneration(const char* dev_id, fgDeviceClass dev_class, int dev_version );
 
 // enum DeviceClass { UNKNOWN, IPHONE, IPOD, IPAD, ANDROID };
@@ -38,8 +38,10 @@ fgDeviceQuery *fgSingleton<fgDeviceQuery>::instance = NULL;
 
 
 
-fgDeviceQuery::fgDeviceQuery() : m_deviceString(NULL), m_deviceVersion(0), m_deviceClass(FG_DEVICE_CLASS_UNKNOWN),
-	m_deviceGeneration(FG_DEVICE_GENERATION_UNKNOWN), m_android(false), m_iOS(false), m_computed(false)
+fgDeviceQuery::fgDeviceQuery() : m_deviceString(NULL), m_deviceVersion(0),
+	m_deviceClass(FG_DEVICE_CLASS_UNKNOWN),
+	m_deviceGeneration(FG_DEVICE_GENERATION_UNKNOWN),
+	m_android(FG_FALSE), m_iOS(FG_FALSE), m_computed(FG_FALSE)
 {
     // Compute Device is not being called here - it is done at first query!
 }
@@ -95,7 +97,7 @@ void fgDeviceQuery::computeDevice() {
     // GENERATION
     m_deviceGeneration = computeGeneration(dev_id, m_deviceClass, m_deviceVersion);
 
-    m_computed = true;
+    m_computed = FG_TRUE;
 
     FG_WriteLog("Detected [%s] DEVICE: %s, VERSION: %d, GENERATION: %d", dev_id, class_to_name[m_deviceClass], m_deviceVersion, m_deviceGeneration);
 }
@@ -171,7 +173,7 @@ static fgDeviceGeneration computeGeneration(const char* dev_id, fgDeviceClass de
  *
  * The main version may be unusable in practice, as generation is what matters.
  */
-bool try_device(const char* dev_id, const char* base_name, fgDeviceClass givenClass, fgDeviceClass& tryClass, int& tryVersion) {
+fgBool try_device(const char* dev_id, const char* base_name, fgDeviceClass givenClass, fgDeviceClass& tryClass, int& tryVersion) {
     FG_WriteLog("try_device(): Searching for %s VER in string: %s", base_name, dev_id);
 
     // Copy  the base name. Ensure there are two free bytes at the end.
@@ -198,26 +200,26 @@ bool try_device(const char* dev_id, const char* base_name, fgDeviceClass givenCl
     if (version_found) {
         tryVersion = version_found;
         tryClass = givenClass;
-        return true;
+        return FG_TRUE;
     }
 
     tryVersion = 0;
 	tryClass = FG_DEVICE_CLASS_UNKNOWN;
-    return false;
+    return FG_FALSE;
 }
 
 /**
  * Can query any OS - basic function
  */
-static bool isPlatform(s3eDeviceOSID os) {
-    return ( os == s3eDeviceGetInt(S3E_DEVICE_OS) );
+static fgBool isPlatform(s3eDeviceOSID os) {
+    return (fgBool)( os == s3eDeviceGetInt(S3E_DEVICE_OS) );
 }
 
 /**
  * Detects if the current platform is Android.
  * @return true if the platform is Android, false otherwise.
  */
-static bool isAndroid() {
+static fgBool isAndroid() {
     return isPlatform( S3E_OS_ID_ANDROID );
 }
 
@@ -225,14 +227,14 @@ static bool isAndroid() {
  * Detects if the current platform is iOS.
  * @return true if the platform is iOS, false otherwise.
  */
-static bool isiOS() {
-    return isPlatform( S3E_OS_ID_IPHONE );
+static fgBool isiOS() {
+	return isPlatform( S3E_OS_ID_IPHONE );
 }
 
 /**
  * Detects if the current platform is BADA
  */
-static bool isBADA() {
+static fgBool isBADA() {
 //    return isPlatform( S3E_OS_ID_BADA );
 	return false;
 }
@@ -240,13 +242,13 @@ static bool isBADA() {
 /**
  * Detects if the current platform is OSX
  */
-static bool isOSX() {
+static fgBool isOSX() {
     return isPlatform( S3E_OS_ID_OSX );
 }
 
 /**
  * Detects if the current platform is BB
  */
-static bool isBB() {
+static fgBool isBB() {
     return isPlatform( S3E_OS_ID_QNX );
 }

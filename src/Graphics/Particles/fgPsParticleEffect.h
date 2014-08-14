@@ -460,22 +460,22 @@ public:
     /**
      * Add prepare particle
      */
-    virtual bool add(Particle* particle) = 0;
+    virtual fgBool add(Particle* particle) = 0;
 
     /**
      * Does the same as above, but multiple (count) times
      */
-	virtual bool addGroup(Particle *particles, int count) = 0;
+	virtual fgBool addGroup(Particle *particles, int count) = 0;
 
     /**
      * Adds ONE particle, with fields set to RANDOM on interval [from.the_field, to_the_field]
      */
-	virtual bool addRandom(Particle *from, Particle *to) = 0;
+	virtual fgBool addRandom(Particle *from, Particle *to) = 0;
 
     /**
      * Does the same as above, but multiple times
      */
-	virtual bool addRandomGroup(Particle *from, Particle *to, int count) = 0;
+	virtual fgBool addRandomGroup(Particle *from, Particle *to, int count) = 0;
 
     /**
      * Takes two particles, does randomization on [from->some_val, to->some_val]

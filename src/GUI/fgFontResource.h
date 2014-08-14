@@ -39,15 +39,15 @@ public:
 	// just resets base class attributes
 	virtual void clear(void);
 	// Create function loads/interprets data from file in ROM and place it in RAM memory.
-	virtual bool create(void);
+	virtual fgBool create(void);
 	// Destroy all loaded data including additional metadata (called with deconstructor)
 	virtual void destroy(void);
 	// Reloads any data, recreates the resource (refresh)
-	virtual bool recreate(void);
+	virtual fgBool recreate(void);
 	// Dispose completely of the all loaded data, free all memory
 	virtual void dispose(void);
 	// Check if resource is disposed (not loaded yet or disposed after)
-	virtual bool isDisposed(void) const;
+	virtual fgBool isDisposed(void) const;
 
 #if 0
 	// #FIXME (!) well this should not be here
@@ -86,9 +86,6 @@ public:
 	}
 #endif
 #if 0
-	// #FIXME
-    bool load(Tex::ID FONT_ID);
-
 	/* ALL TO HELL ! ! ! ! #FIXME #TODO */
     float width(float size, const char *string, ...);
     float height(float size, const char *string, ...);

@@ -10,24 +10,20 @@
 #ifndef _FG_STATUS_H_
 #define _FG_STATUS_H_
 
+#include "fgCommon.h"
 #include "fgMessageCommon.h"
 
-#ifndef NULL
-    #ifndef __cplusplus
-        #define NULL ((void *)0)
-    #else
-        #define NULL 0
-    #endif
-#endif
-
+/*
+ *
+ */
 struct fgStatus
 {
-	bool isError;
-	bool isSuccess;
-	bool isFailure;
+	fgBool isError;
+	fgBool isSuccess;
+	fgBool isFailure;
 	fgMessage *message;
 
-	fgStatus() : isError(false), isSuccess(true), isFailure(false)
+	fgStatus() : isError(FG_FALSE), isSuccess(FG_TRUE), isFailure(FG_FALSE)
 	{
 		message = NULL;
 	}

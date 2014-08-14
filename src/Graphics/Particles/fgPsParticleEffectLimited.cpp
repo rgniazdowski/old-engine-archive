@@ -46,54 +46,54 @@ void ParticleEffectLimited::remove(int which)
 /**
  * NORMAL MODE particle insert - can decline insertion
  */
-bool ParticleEffectLimited::add(Particle *particle)
+fgBool ParticleEffectLimited::add(Particle *particle)
 {
     // Normal insert – only when there is free space
     if( int(m_particles.size()) >= maxCount() )
-        return false;
+        return FG_FALSE;
 
     // Incorrect input
     if( particle == NULL )
-        return false;
+        return FG_FALSE;
 
     m_particles.push_back( *particle );
 
-	return true;
+	return FG_TRUE;
 }
 
 /**
  * Batch-add
  */
-bool ParticleEffectLimited::addGroup(Particle *particles, int count)
+fgBool ParticleEffectLimited::addGroup(Particle *particles, int count)
 {
 	if( int(m_particles.size()) >= maxCount() || count <= 0 )
-		return false;
+		return FG_FALSE;
 
 	if( particles == NULL )
-		return false;
+		return FG_FALSE;
 
 	for( int i=0; i<count; i++ )
 	{
 		if( !add(&particles[i]) )
-			return false;
+			return FG_FALSE;
 		if( int(m_particles.size()) == maxCount() && i < count-1 )
-			return false;
+			return FG_FALSE;
 		else if( int(m_particles.size()) == maxCount() && i < count )
-			return true;
+			return FG_TRUE;
 	}
-	return true;
+	return FG_TRUE;
 }
 
 /**
  * Adds random Particle, built upon values in [from->some_field, to->some_field]
  */
-bool ParticleEffectLimited::addRandom(Particle *from, Particle *to)
+fgBool ParticleEffectLimited::addRandom(Particle *from, Particle *to)
 {
 	if( int(m_particles.size()) >= maxCount() )
-		return false;
+		return FG_FALSE;
 
 	if(from == NULL || to == NULL)
-		return false;
+		return FG_FALSE;
 
 	Particle result;
 
@@ -105,22 +105,21 @@ bool ParticleEffectLimited::addRandom(Particle *from, Particle *to)
 /**
  * Batch-add with randomization
  */
-bool ParticleEffectLimited::addRandomGroup(Particle *from, Particle *to, int count)
+fgBool ParticleEffectLimited::addRandomGroup(Particle *from, Particle *to, int count)
 {
 	if( int(m_particles.size()) >= maxCount() || count <= 0)
-		return false;
+		return FG_FALSE;
 	if(from == NULL || to == NULL)
-		return false;
+		return FG_FALSE;
 
 	for(int i=0;i<count;i++)
 	{
 		addRandom(from, to);
 		if( int(m_particles.size()) == maxCount() && i < count-1 )
-			return false;
+			return FG_FALSE;
 		else if( int(m_particles.size()) == maxCount() && i < count )
-			return true;
+			return FG_TRUE;
 	}
 
-	return true;
+	return FG_TRUE;
 }
-

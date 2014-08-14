@@ -50,7 +50,7 @@ static int32 HarvestCallback(void* systemData, void* userData) {
     fgSensors *self = (fgSensors *) userData;
 
     // Are sensors running?
-    if ( false == self->m_isRunning ) {
+    if ( FG_FALSE == self->m_isRunning ) {
         // If no, skip any operation (in
         // particular, do not reset the timer).
         return 0;
@@ -68,7 +68,7 @@ static int32 HarvestCallback(void* systemData, void* userData) {
     int result = s3eTimerSetTimer( 80, &HarvestCallback, (void *) self );
     if ( result == S3E_RESULT_ERROR ) {
         FG_ErrorLog("Setting continued sensors-callback failed!");
-        return false;
+        return 0;
     }
 
     return 0;
@@ -98,12 +98,12 @@ fgSensors::~fgSensors()
 /**
  * Starts sensors subsystems, registers timer and callback
  */
-bool fgSensors::startSensors()
+fgBool fgSensors::startSensors()
 {
 	m_sensorsErrors[ FG_SENSORS_ACCELEROMETER ] = s3eAccelerometerStart();
     if(m_sensorsErrors[ FG_SENSORS_ACCELEROMETER ] == S3E_RESULT_ERROR) {
         FG_ErrorLog("ERROR! Accelerometer did not activate!");
-        return false;
+        return FG_FALSE;
     }
     
     // init(float q, float r, float initial_error, float intial_value)
@@ -115,17 +115,17 @@ bool fgSensors::startSensors()
 	m_filters[FG_SENSORS_ACCELEROMETER].y().init(0.8f, 0.2f, 0.05f, 0.1f);
 	m_filters[FG_SENSORS_ACCELEROMETER].z().init(0.8f, 0.2f, 0.05f, 0.1f);
     
-    m_isRunning = true;
+    m_isRunning = FG_TRUE;
     
     // Setup a timer that will harvest sensor data in periodic manner
     // The timer receives pointer to this object! :)
     int result = s3eTimerSetTimer( 80, &HarvestCallback, (void *) this );
     if ( result == S3E_RESULT_ERROR ) {
         FG_ErrorLog("Setting sensors-callback failed!");
-        m_isRunning = false;
-        return false;
+        m_isRunning = FG_FALSE;
+        return FG_FALSE;
     }
-    return true;
+    return FG_TRUE;
 }
 
 /**
@@ -133,7 +133,7 @@ bool fgSensors::startSensors()
  */
 void fgSensors::stopSensors()
 {
-    m_isRunning = false;
+    m_isRunning = FG_FALSE;
     s3eAccelerometerStop();
 }
 

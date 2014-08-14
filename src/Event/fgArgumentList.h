@@ -10,15 +10,21 @@
 #ifndef _FG_ARGUMENT_LIST_H_
 #define _FG_ARGUMENT_LIST_H_
 
-#include <vector>
+#include "../fgCommon.h"
 
 #define FG_ARGUMENT_DEFAULT_COUNT	8
 #define FG_ARGUMENT_MAX_STRING		256
 
+/*
+ *
+ */
 enum fgArgumentType
 {
+	// Integer
 	FG_ARGUMENT_INTEGER,
+	// Double number
 	FG_ARGUMENT_DOUBLE,
+	// Float number
 	FG_ARGUMENT_FLOAT,
 	// Char string array
 	FG_ARGUMENT_STRING,
@@ -26,9 +32,13 @@ enum fgArgumentType
 	FG_ARGUMENT_POINTER,
 	// Pointer to allocated structure, structure needs to be allocated by 'malloc' and freed using the 'free' function
 	FG_ARGUMENT_STRUCT,
+	// No argument
 	FG_ARGUMENT_NONE
 };
 
+/*
+ *
+ */
 struct fgArgument
 {
 	fgArgumentType type;
@@ -53,7 +63,7 @@ struct fgArgument
 class fgArgumentList
 {
 	private:
-		std::vector<fgArgument> m_argv;
+		fgArrayVector<fgArgument> m_argv;
 		int m_argc;
 		int m_maxArgs;
 		int m_currentArg;
@@ -77,7 +87,7 @@ class fgArgumentList
 		inline int getArgumentCount();
 
 		inline void reset();
-		inline bool isThereNextArgument();
+		inline fgBool isThereNextArgument();
 
 		void *getNextArgumentValue(fgArgumentType *_type);
 		void *getArgumentValueByID(int ID, fgArgumentType *_type);
@@ -89,11 +99,23 @@ class fgArgumentList
 
 		void clearArguments();
 
-		inline fgArgument &operator[](int i) { m_emptyArgument.reset(); if((int)m_argv.size() > i) return m_argv[i]; else return m_emptyArgument; }
-		inline const fgArgument operator[](int i) const { if((int)m_argv.size() > i) return m_argv[i]; else return m_emptyArgument; }
+		inline fgArgument &operator[](int i) 
+		{
+			m_emptyArgument.reset();
+			if((int)m_argv.size() > i)
+				return m_argv[i]; 
+			else 
+				return m_emptyArgument;
+		}
+
+		inline const fgArgument operator[](int i) const 
+		{
+			if((int)m_argv.size() > i)
+				return m_argv[i];
+			else 
+				return m_emptyArgument; 
+		}
 };
 
 
-#endif
-
-
+#endif /* _FG_ARGUMENT_LIST_H_ */

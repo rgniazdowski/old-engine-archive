@@ -229,15 +229,15 @@ void fgResourceGroup::clear(void)
 /*
  * Create function loads/interprets data from file in ROM and place it in RAM memory.
  */
-bool fgResourceGroup::create(void)
+fgBool fgResourceGroup::create(void)
 {
 	FG_WriteLog("fgResourceGroup::create();");
 	if(m_resourceFiles.empty())
-		return false;
-	bool status = true;
+		return FG_FALSE;
+	fgBool status = FG_TRUE;
 	for(fgResPoolIt it = m_resourceFiles.begin(); it != m_resourceFiles.end(); it++) {
 		if(!(*it)->create()) {
-			status = false;
+			status = FG_FALSE;
 		}
 	}
 	return status;
@@ -257,15 +257,15 @@ void fgResourceGroup::destroy(void)
 /*
  * Reloads any data, recreates the resource (refresh)
  */
-bool fgResourceGroup::recreate(void)
+fgBool fgResourceGroup::recreate(void)
 {
 	FG_WriteLog("fgResourceGroup::recreate();");
 	if(m_resourceFiles.empty())
-		return false;
-	bool status = true;
+		return FG_FALSE;
+	fgBool status = FG_TRUE;
 	for(fgResPoolIt it = m_resourceFiles.begin(); it != m_resourceFiles.end(); it++) {
 		if(!(*it)->recreate()) {
-			status = false;
+			status = FG_FALSE;
 		}
 	}
 	return status;
@@ -287,14 +287,14 @@ void fgResourceGroup::dispose(void)
 /*
  * Check if resource is disposed (not loaded yet or disposed after)
  */
-bool fgResourceGroup::isDisposed(void) const
+fgBool fgResourceGroup::isDisposed(void) const
 {
 	if(m_resourceFiles.empty())
-		return true;
-	bool status = true;
+		return FG_TRUE;
+	fgBool status = FG_TRUE;
 	for(fgResPoolIt it = m_resourceFiles.begin(); it != m_resourceFiles.end(); it++) {
 		if(!(*it)->isDisposed())
-			status = false;
+			status = FG_FALSE;
 	}
 	return status;
 }
@@ -304,26 +304,26 @@ bool fgResourceGroup::isDisposed(void) const
  * load or allocate any data - this is for 'create' to do.
  * This function will return false if file path is not set.
  */
-bool fgResourceGroup::preLoadConfig(void)
+fgBool fgResourceGroup::preLoadConfig(void)
 {
 	if(m_filePath.empty())
-		return false;
+		return FG_FALSE;
 	m_xmlParser = new fgXMLParser();
 	fgResourceGroupContentHandler *contentHandler = new fgResourceGroupContentHandler();
 	contentHandler->setResourceGroupPointer(this);
 	m_xmlParser->setContentHandler(contentHandler);
 	if(!m_xmlParser) {
 		// #TODO #P2 error messages 
-		return false;
+		return FG_FALSE;
 	}
 	if(!m_xmlParser->loadXML(m_filePath.c_str())) {
-		return false;
+		return FG_FALSE;
 	}
 	m_xmlParser->parseWithHandler();
 	delete m_xmlParser;
 	delete contentHandler;
 	m_xmlParser = NULL;
-	return true;
+	return FG_TRUE;
 }
 
 /*

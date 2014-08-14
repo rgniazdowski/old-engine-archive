@@ -26,12 +26,13 @@ typedef FG_RAW_HANDLE_TYPE fgRawMagic;
 #ifndef FG_INVALID_HANDLE
 // All bits filled defines an invalid resource handle
 #define FG_INVALID_HANDLE			0xFFFFFFFFUL
-//#define FG_IS_INVALID_HANDLE(_rh)	((_rh.getHandle() == FG_INVALID_HANDLE) ? true : false)
 #define FG_IS_INVALID_HANDLE(_rh)	( _rh.isNull() )
-//#define FG_IS_VALID_HANDLE(_rh)		((_rh.getHandle() == FG_INVALID_HANDLE) ? false : true)
 #define FG_IS_VALID_HANDLE(_rh)	( !_rh.isNull() )
 #endif
 
+/*
+ *
+ */
 template <typename TagType>
 class fgHandle
 {
@@ -65,24 +66,31 @@ public:
 	// Default constructor for Handle object
     fgHandle() : m_handle(FG_INVALID_HANDLE) { }
 
+	//
+	void reset(void) {
+		m_handle = FG_INVALID_HANDLE;
+	}
+
+	//
     fgBool init(fgRawIndex index);
 
+	//
     fgRawIndex getIndex(void) const {
 		return m_index;
 	}
-
+	//
     fgRawMagic getMagic(void) const {
 		return m_magic;
 	}
-
+	//
 	fgRawHandle getHandle(void) const {
 		return m_handle;
 	}
-
+	//
     fgBool isNull(void) const {
 		return (fgBool)(m_handle == FG_INVALID_HANDLE);
 	}
-
+	//
 	operator fgRawHandle(void) const {
 		return m_handle;
 	}

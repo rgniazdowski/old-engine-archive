@@ -65,7 +65,7 @@ private:
      */
     fgBool makeTexture(fgTextureResource *textureResource);
 protected:
-	bool m_isYolo;
+	fgBool m_isYolo;
 };
 
 #endif /* _FG_TEXTURE_MANAGER_H_ */

@@ -40,11 +40,13 @@ if ((dir = opendir ("c:\\src\\")) != NULL) {
 }
 */
 
-// Simple class for reading directory contents
-// uses dirent.h which is available for linux and windows
-// Initial version just outputs file names - in the future
-// there will be a specialized structure with all the possible
-// info (like from stat for example)...
+/*
+ * Simple class for reading directory contents
+ * uses dirent.h which is available for linux and windows
+ * Initial version just outputs file names - in the future
+ * there will be a specialized structure with all the possible
+ * info (like from stat for example)...
+ */
 class fgDirent
 {
 public:
@@ -82,15 +84,15 @@ public:
 	}
 
 	// Reads the directory that was specified earlier
-	bool readDirectory(void);
+	fgBool readDirectory(void);
 	// Reads the specified directory creating the list of files
 	// to be processed later
-	bool readDirectory(const char *dirPath);
+	fgBool readDirectory(const char *dirPath);
 
 	// Returns the next file name
 	const char *getNextFile(void);
 	// This function rewinds to the beginning the file pointer (in the list)
-	bool rewind(void);
+	fgBool rewind(void);
 protected:
 	// The whole path to the directory
 	std::string m_dirPath;

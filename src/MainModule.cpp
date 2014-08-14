@@ -49,24 +49,24 @@ protected:
 	/**
 	 * Initialize rendering parameters.
 	 */
-	MainModule() : m_useMultitouch(false), m_appInit(false), m_slow(false), m_isExit(false) {
+	MainModule() : m_useMultitouch(FG_FALSE), m_appInit(FG_FALSE), m_slow(FG_FALSE), m_isExit(FG_FALSE) {
 		memset(&m_touches, 0, sizeof(m_touches));
 	}
 
 public:
-	bool isSlow(void) const {
+	fgBool isSlow(void) const {
 		return m_slow;
 	}
 
-	void setSlow(bool slow) {
+	void setSlow(fgBool slow) {
 		m_slow = slow;
 	}
 
-	void setExit(bool exit) {
+	void setExit(fgBool exit) {
 		m_isExit = exit;
 	}
 
-	bool isExit(void) const {
+	fgBool isExit(void) const {
 		return m_isExit;
 	}
 
@@ -148,7 +148,7 @@ public:
 	 * Called when a fullscreen window with an OpenGL context
 	 * has been created and is ready to be used.
 	 */
-	bool initProgram()
+	fgBool initProgram()
 	{
 		s3eSurfaceSetInt(S3E_SURFACE_DEVICE_ORIENTATION_LOCK, S3E_SURFACE_LANDSCAPE_FIXED);
 
@@ -156,7 +156,7 @@ public:
 		s3eKeyboardRegister(S3E_KEYBOARD_KEY_EVENT, &MainModule::keyStateChangedHandler, NULL);
 
 		// Register for touches
-		m_useMultitouch = s3ePointerGetInt(S3E_POINTER_MULTI_TOUCH_AVAILABLE) ? true : false;
+		m_useMultitouch = s3ePointerGetInt(S3E_POINTER_MULTI_TOUCH_AVAILABLE) ? FG_TRUE : FG_FALSE;
 		if(m_useMultitouch) {
 			s3ePointerRegister(S3E_POINTER_TOUCH_EVENT, &MainModule::multiTouchButtonHandler, NULL);
 			s3ePointerRegister(S3E_POINTER_TOUCH_MOTION_EVENT, &MainModule::multiTouchMotionHandler, NULL);
@@ -175,38 +175,38 @@ public:
 		// show the game initialization process by displaying the progress bar
 
 		if(!FG_GameMain->initSubsystems()) {
-			return false;
+			return FG_FALSE;
 		}
 		
 		if(!FG_GameMain->loadConfiguration()) {
-			return false;
+			return FG_FALSE;
 		}
 
 		if(!FG_GameMain->loadResources()) {
-			return false;
+			return FG_FALSE;
 		}
 
-		m_appInit = true;
-		return true;
+		m_appInit = FG_TRUE;
+		return FG_TRUE;
 	}
 
 	/**
 	 * Apps main loop step (one thread)
 	 */
-	bool mainLoopStep() {
+	fgBool mainLoopStep() {
 		if (s3eDeviceCheckQuitRequest()) {
-			m_appInit = false;
-			return false;
+			m_appInit = FG_FALSE;
+			return FG_FALSE;
 		}
 		if (s3eKeyboardGetState(s3eKeyEnter) & S3E_KEY_STATE_PRESSED)	{
-			m_appInit = false;
+			m_appInit = FG_FALSE;
 			FG_WriteLog("ENTER PRESSED...");
-			return false;
+			return FG_FALSE;
 		}
 		if (m_isExit) {
-			m_appInit = false;
+			m_appInit = FG_FALSE;
 			FG_WriteLog("EXIT IS ACTIVATED - break loop main ! bye!");
-			return false;
+			return FG_FALSE;
 		}
 
 		s3eDeviceYield(0);
@@ -221,7 +221,7 @@ public:
 		FG_GameMain->render();	
 		s3eDeviceYield(0);
 
-		return true;
+		return FG_TRUE;
 	}
 
 	/**
@@ -237,7 +237,7 @@ public:
 
 		FG_GameMain->deleteInstance();
 
-		m_appInit = false;
+		m_appInit = FG_FALSE;
 	}
 
 private:
@@ -296,7 +296,7 @@ private:
 		if( !m_appInit )
 			return;
 
-		m_touches[touchId] = true;
+		m_touches[touchId] = FG_TRUE;
 		FG_TouchReceiver->handlePointerPressed(fgVector2i(x,y), touchId);
 	}
 
@@ -308,7 +308,7 @@ private:
 		if( !m_appInit )
 			return;
 
-		if(m_touches[touchId] == true)
+		if(m_touches[touchId] == FG_TRUE)
 			FG_TouchReceiver->handlePointerMoved(fgVector2i(x,y), touchId);
 	}
 
@@ -322,7 +322,7 @@ private:
 		if( !m_appInit )
 			return;
 
-		m_touches[touchId] = false;
+		m_touches[touchId] = FG_FALSE;
 		FG_TouchReceiver->handlePointerReleased(fgVector2i(x,y),touchId);
 	}	
 
@@ -330,19 +330,19 @@ private:
 	enum {NUM_TOUCHES = 10};
 
 	/// Touches (using multitouch)
-	bool m_touches[NUM_TOUCHES];
+	fgBool m_touches[NUM_TOUCHES];
 
 	/// Result of multitouch availability test
-	bool m_useMultitouch;
+	fgBool m_useMultitouch;
 
 	/// Is app fully initialized?
-	bool m_appInit;
+	fgBool m_appInit;
 
 	/// Is the device slow?
-	bool m_slow;
+	fgBool m_slow;
 
 	/// Is exit activated?
-	bool m_isExit;
+	fgBool m_isExit;
 };
 
 #define FG_MainModule MainModule::getInstance()
@@ -386,8 +386,8 @@ static bool set_allow_loop_handler(void) {
 #endif
 
 /**
-* Main function that is called when the program starts.
-*/
+ * Main function that is called when the program starts.
+ */
 extern "C" int main()
 {
 	IwUtilInit();
@@ -435,9 +435,9 @@ extern "C" int main()
 	}*/
 
 	while(true)	{
-		int status = FG_MainModule->mainLoopStep();
+		fgBool status = FG_MainModule->mainLoopStep();
 		s3eDeviceYield(1);
-		if(!status)
+		if(status == FG_FALSE)
 			break;
 	}
 

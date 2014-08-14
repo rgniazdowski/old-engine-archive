@@ -48,7 +48,7 @@ void ParticleEffectCircular::setMaxCount(int max_count)
 /**
  * CIRCULAR MODE particle insert - always accepts new particle (deleting old if needed)
  */
-bool ParticleEffectCircular::add(Particle* particle)
+fgBool ParticleEffectCircular::add(Particle* particle)
 {
     // OVERWRITE LAST STORED PARTICLE?
     if( m_overwrite_once_flag ) {
@@ -73,36 +73,36 @@ bool ParticleEffectCircular::add(Particle* particle)
     // Move to new insert position
     m_current_insert_idx = ( m_current_insert_idx + 1 ) % maxCount();
 
-    return true;
+    return FG_TRUE;
 }
 
 /**
  * Batch-add of particles. Number of inserts is limited to maxCount
  */
-bool ParticleEffectCircular::addGroup(Particle *particles, int count)
+fgBool ParticleEffectCircular::addGroup(Particle *particles, int count)
 {
 	if( count <= 0 )
-		return false;
+		return FG_FALSE;
 
 	if( particles == NULL )
-		return false;
+		return FG_FALSE;
 
     // There is no point in adding > maxCount() elements
 	for( int i=0; i<count && i<maxCount(); i++ )
 	{
 		if( !add(&particles[i]) )
-			return false;
+			return FG_FALSE;
 	}
-	return true;
+	return FG_TRUE;
 }
 
 /**
  * Adds random Particle, built upon values in [from->some_field, to->some_field]
  */
-bool ParticleEffectCircular::addRandom(Particle *from, Particle *to)
+fgBool ParticleEffectCircular::addRandom(Particle *from, Particle *to)
 {    
 	if(from == NULL || to == NULL)
-		return false;
+		return FG_FALSE;
 
 	Particle result;
 
@@ -114,19 +114,20 @@ bool ParticleEffectCircular::addRandom(Particle *from, Particle *to)
 /**
  * Batch-add with randomization
  */
-bool ParticleEffectCircular::addRandomGroup(Particle *from, Particle *to, int count)
+fgBool ParticleEffectCircular::addRandomGroup(Particle *from, Particle *to, int count)
 {
-	if(from == NULL || to == NULL)
-		return false;
+	if(from == NULL || to == NULL) {
+		return FG_FALSE;
+	}
 
-	for(int i=0; i<count && i<maxCount(); i++)
-	{
+	for(int i=0; i<count && i<maxCount(); i++) {
 		addRandom(from, to);
 	}
 
     // Polityka: true wtedy, gdy dodano tyle, ile zlecono
-    if( count > maxCount() )
-        return false;
+    if(count > maxCount()) {
+        return FG_FALSE;
+	}
 
-	return true;
+	return FG_TRUE;
 }

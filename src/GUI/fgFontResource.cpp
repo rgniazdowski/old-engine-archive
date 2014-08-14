@@ -28,12 +28,12 @@ void fgFontResource::clear(void)
 /*
  * Create function loads/interprets data from file in ROM and place it in RAM memory.
  */
-bool fgFontResource::create(void)
+fgBool fgFontResource::create(void)
 {
 	m_textureType = FG_TEXTURE_FONT;
 	if(!fgTextureResource::create()) {
 		// #TODO error handling / reporting
-		return false;
+		return FG_FALSE;
 	}
 	int i = 0, j = 0, k = 0;
 	int x = 0, y = 0;
@@ -79,7 +79,7 @@ bool fgFontResource::create(void)
 		}
 	}
 
-	return true;
+	return FG_TRUE;
 }
 
 /*
@@ -95,7 +95,7 @@ void fgFontResource::destroy(void)
 /*
  * Reloads any data, recreates the resource (refresh)
  */
-bool fgFontResource::recreate(void)
+fgBool fgFontResource::recreate(void)
 {
 	dispose();
 	return create();
@@ -113,7 +113,7 @@ void fgFontResource::dispose(void)
 /*
  * Check if resource is disposed (not loaded yet or disposed after)
  */
-bool fgFontResource::isDisposed(void) const
+fgBool fgFontResource::isDisposed(void) const
 {
 	return fgTextureResource::isDisposed();
 }

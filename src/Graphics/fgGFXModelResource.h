@@ -81,9 +81,9 @@ namespace FG_GFX {
 	protected:
 		fgGfxModelResType m_modelResourceType;
 		std::string m_modelName;
-		bool	m_isMultitextured;
-		bool	m_isTextured;
-		bool	m_hasMaterial;
+		fgBool	m_isMultitextured;
+		fgBool	m_isTextured;
+		fgBool	m_hasMaterial;
 
 		union {
 			struct {

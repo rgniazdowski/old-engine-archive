@@ -37,24 +37,30 @@ bool fgSingleton<fgGameMain>::instanceFlag = false;
 template <>
 fgGameMain *fgSingleton<fgGameMain>::instance = NULL;
 
+/*
+ * Default constructor for the Game Main object
+ */
 fgGameMain::fgGameMain()
 {
 	srand(time(NULL));
 }
 
+/*
+ * Default destructor for the Game Main object
+ */
 fgGameMain::~fgGameMain()
 {
 }
 
 /*
-* This needs to be called first before everything else.
-* Function creates and initializes subsystems
-*/
-bool fgGameMain::initSubsystems(void)
+ * This needs to be called first before everything else.
+ * Function creates and initializes subsystems
+ */
+fgBool fgGameMain::initSubsystems(void)
 {
 	if(!FG_GFX::initGFX()) {
 		// FIXME 
-		return false;
+		return FG_FALSE;
 	}
 	
 	FG_DeviceQuery->computeDevice();
@@ -112,40 +118,40 @@ bool fgGameMain::initSubsystems(void)
 	glClearDepthf(1.0f);
 	glDepthFunc(GL_LESS);
 	glEnable(GL_DEPTH_TEST);
-	return true;
+	return FG_TRUE;
 }
 
 /*
-* This loads main configuration files determining the next steps
-* of game initialization
-*/
-bool fgGameMain::loadConfiguration(void)
+ * This loads main configuration files determining the next steps
+ * of game initialization
+ */
+fgBool fgGameMain::loadConfiguration(void)
 {
-	return true;
+	return FG_TRUE;
 }
 
 /*
-* This loads resources specified in configuration files
-*/
-bool fgGameMain::loadResources(void)
+ * This loads resources specified in configuration files
+ */
+fgBool fgGameMain::loadResources(void)
 {
-	return true;
+	return FG_TRUE;
 }
 
 /*
-* This unloads, frees and deletes all data from fgResourceManager subsystem
-*/
-bool fgGameMain::releaseResources(void)
+ * This unloads, frees and deletes all data from fgResourceManager subsystem
+ */
+fgBool fgGameMain::releaseResources(void)
 {
 	FG_ResourceManager->destroy();
-	return true;
+	return FG_TRUE;
 }
 
 /*
-* This frees the subsystems - simply deletes all singleton instances (every main subsystem is a singleton)
-* must be called after releaseResources
-*/
-bool fgGameMain::closeSybsystems(void)
+ * This frees the subsystems - simply deletes all singleton instances (every main subsystem is a singleton)
+ * must be called after releaseResources
+ */
+fgBool fgGameMain::closeSybsystems(void)
 {
 	FG_ResourceManager->deleteInstance();
 	FG_HardwareState->deleteInstance();
@@ -156,34 +162,35 @@ bool fgGameMain::closeSybsystems(void)
 
 	FG_GFX::closeGFX();
 
-	return true;
+	return FG_TRUE;
 }
 
 /*
-* This function releases the resources and closes the subsystems
-*/
-bool fgGameMain::quit(void)
+ * This function releases the resources and closes the subsystems
+ */
+fgBool fgGameMain::quit(void)
 {
-	bool status = true;
+	fgBool status = FG_TRUE;
 	if(!releaseResources())
-		status = false;
+		status = FG_FALSE;
 	if(!closeSybsystems())
-		status = false;
+		status = FG_FALSE;
 	return status;
 }
 
 /*
-* Now main display function creates the buffer (vertex/color/texture coords buffers) to be displayed in current frame
-* The real drawing of created buffers in inside the render function (which in the future should be in separate thread)
-*/
+ * Main display function creates the buffer (vertex/color/texture coords buffers) to be
+ * displayed in current frame; the real drawing of created buffers is inside the render
+ * function (which in the future should be in separate thread)
+ */
 void fgGameMain::display(void)
 {
 	// #TROLOLO
 }
 
 /*
-* Begins the proper render of the created buffers
-*/
+ * Begins the proper render of the created buffers
+ */
 void fgGameMain::render(void)
 {
 	// #TODO / #FIXME - all the crap with FG_GFX namespace should be somehow put into classes
@@ -239,11 +246,12 @@ void fgGameMain::update(void)
 	FG_HardwareState->calculateDT();
 	FG_HardwareState->calculateFPS();
 
-	// TouchReceiver processes the data received from marmalade event callbacks and throws proper events
+	// TouchReceiver processes the data received from marmalade/system event
+	// callbacks and throws proper events
 	FG_TouchReceiver->processData();
 	s3eDeviceYield(0);
-	// Well this is really useful system, in the end GUI and others will be hooked to EventManager so
-	// everything what needs to be done is done in this function
+	// Well this is really useful system, in the end GUI and others will be hooked 
+	// to EventManager so everything what needs to be done is done in this function
 	FG_EventManager->executeEvents();
 	s3eDeviceYield(0);
 	// This must be called  when you wish the manager to check for discardable

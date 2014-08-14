@@ -59,8 +59,8 @@ public:
 	}
 
 	//
-    bool hasUsedHandles(void) const {
-		return (!!GetUsedHandleCount());  
+    fgBool hasUsedHandles(void) const {
+		return (fgBool)(!!GetUsedHandleCount());  
 	}
 
 	// 

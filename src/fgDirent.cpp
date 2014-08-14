@@ -25,7 +25,7 @@ fgDirent::fgDirent(const char *dirPath)
  * Reads the directory content creating a list
  * with file names in it
  */
-bool fgDirent::readDirectory(void)
+fgBool fgDirent::readDirectory(void)
 {
 #ifdef FG_USING_MARMALADE
 	m_fileList = NULL;
@@ -46,7 +46,7 @@ bool fgDirent::readDirectory(void)
 			m_fileNames.push_back(std::string(fileName));
 		s3eFileListClose(m_fileList);
 		rewind();
-		return true;
+		return FG_TRUE;
 	}
 	//return s3eFileGetError();
 #else
@@ -58,23 +58,23 @@ bool fgDirent::readDirectory(void)
 		}
 		closedir (m_curDir);
 		rewind();
-		return true;
+		return FG_TRUE;
 	} else {
 		// could not open directory
 		//perror ("");
 		//return EXIT_FAILURE;
 		// #TODO proper error handling
-		return false;
+		return FG_FALSE;
 	}
 #endif
-	return false;
+	return FG_FALSE;
 }
 
 /*
  * Reads the specified directory content creating
  * a list of file names
  */
-bool fgDirent::readDirectory(const char *dirPath)
+fgBool fgDirent::readDirectory(const char *dirPath)
 {
 	m_dirPath.clear();
 	m_dirPath.assign(dirPath);
@@ -103,10 +103,10 @@ const char *fgDirent::getNextFile(void)
 /*
  * This function rewinds to the beginning the file pointer (in the list)
  */
-bool fgDirent::rewind(void)
+fgBool fgDirent::rewind(void)
 {
 	m_fileIt = m_fileNames.end();
 	if(!m_fileNames.size())
-		return false;
-	return true;
+		return FG_FALSE;
+	return FG_TRUE;
 }

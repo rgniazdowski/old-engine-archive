@@ -135,20 +135,20 @@ public:
 	// are made regarding parameters.
 	// create() function should simply be overloaded to call any proper loading function,
 	// which will load/interpret data from file in ROM and place it in RAM memory.
-	virtual bool create(void) = 0;
+	virtual fgBool create(void) = 0;
 	// Destroy all loaded data including additional metadata (called with deconstructor)
 	virtual void destroy(void) { clear(); };
 	// Dispose and recreate must be able to discard and then completely recreate
 	// the data contained in the class with no additional parameters
 	// This functions should NOT be overloaded to have different number of parameters.
-	virtual bool recreate(void) = 0;
+	virtual fgBool recreate(void) = 0;
 	// Dispose completely of the all loaded data, free all memory
 	virtual void dispose(void) = 0;
 
 	// Return the size of the data actually loaded inside the class
 	virtual size_t getSize(void) const { return m_size; }
 	// Return true if the data exists (it's loaded and ready)
-	virtual bool isDisposed(void) const = 0;
+	virtual fgBool isDisposed(void) const = 0;
 
 	// These functions set the parameters by which the sorting operator determines
 	// in what order resources are discarded
@@ -172,7 +172,7 @@ public:
 	// Return the current hit of the reference counter for the resource
 	unsigned int getReferenceCount(void) const	{  return m_nRefCount;  }
 	// Check if the resource is locked (reference counter is not zero)
-	bool isLocked(void) const					{  return (m_nRefCount > 0) ? true : false;  }
+	fgBool isLocked(void) const					{  return (m_nRefCount > 0) ? FG_TRUE : FG_FALSE;  }
 
 	// Set the last access time
 	void setLastAccess(time_t lastAccess)		{  m_lastAccess = lastAccess;  }
@@ -272,7 +272,7 @@ protected:
 	// File path (can be relative) to file holding data #FIXME
 	std::string			m_filePath;
 	// Is the resource loaded and ready to be used in program?
-	bool				m_isReady;
+	fgBool				m_isReady;
 	// Size in bytes of the loaded data
 	size_t				m_size;
 	// Name of the resource, string ID

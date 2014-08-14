@@ -11,16 +11,18 @@
 #define _FG_PS_PARTICLE_EFFECT_CIRCULAR_H_
 
 #include <limits.h>
-
 #include "fgPsParticleEffect.h"
 
+/*
+ *
+ */
 class ParticleEffectCircular : public ParticleEffect {
 
 protected:
-    /// The CIRCULAR insert index
+    // The CIRCULAR insert index
     int m_current_insert_idx;
 
-    /// Dummy counter
+    // Dummy counter
     int m_dummy_count;
 
     /**
@@ -120,22 +122,22 @@ public:
      * e. Then, m_current_index_idx ++ MODULO m_maxCount
      *
      */
-    virtual bool add(Particle* particle);
+    virtual fgBool add(Particle* particle);
 
     /**
      * Batch-add. Number of inserts is limited to maxCount()
      */
-    virtual bool addGroup(Particle *particles, int count);
+    virtual fgBool addGroup(Particle *particles, int count);
 
     /**
      * Adds random Particle, built upon values in [from->some_field, to->some_field]
      */
-    virtual bool addRandom(Particle *from, Particle *to);
+    virtual fgBool addRandom(Particle *from, Particle *to);
 
     /**
      * Batch-add with randomization
      */
-    bool addRandomGroup(Particle *from, Particle *to, int count);
+    fgBool addRandomGroup(Particle *from, Particle *to, int count);
 
 };
 

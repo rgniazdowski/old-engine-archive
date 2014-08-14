@@ -11,6 +11,7 @@
 #define _FG_GFX_MAIN_H_
 
 #include "../fgBuildConfig.h"
+#include "../fgCommon.h"
 
 #if defined FG_USING_MARMALADE
 
@@ -35,7 +36,7 @@
 namespace FG_GFX {
 
 	// Init the whole GFX subsystem - set the screen and other
-	bool initGFX(void);
+	fgBool initGFX(void);
 	// Close the subsystem - destroy the graphics context
 	void closeGFX(void);
 	// Swap the screen buffers

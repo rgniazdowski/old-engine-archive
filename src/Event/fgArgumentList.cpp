@@ -276,12 +276,12 @@ fgArgument fgArgumentList::getArgumentStructByID(int ID)
 /*
  *
  */
-inline bool fgArgumentList::isThereNextArgument()
+inline fgBool fgArgumentList::isThereNextArgument()
 {
 	if((m_currentArg+1) >= getArgumentCount())
-		return false;
+		return FG_FALSE;
 	else
-		return true;
+		return FG_TRUE;
 }
 
 /*

@@ -13,16 +13,16 @@
 /*
  *
  */
-bool fgXMLParser::loadXML(const char *filePath)
+fgBool fgXMLParser::loadXML(const char *filePath)
 {
 	if(filePath == NULL) {
 		// #FIXME proper error message
-		return false;
+		return FG_FALSE;
 	}
 
 	if(!fileExists(filePath)) {
 		// #FIXME proper error message
-		return false;
+		return FG_FALSE;
 	}
 	
 	// Clear previously parsed XML document
@@ -30,25 +30,25 @@ bool fgXMLParser::loadXML(const char *filePath)
 	m_xmlDocument.Clear();
 
 	if(!openFile(filePath, "r")) {
-		return false;
+		return FG_FALSE;
 	}
 
 	if(!isFileLoaded()) {
-		return false;
+		return FG_FALSE;
 	}
 
 	// Get the XML file size in bytes
 	m_fileSize = getSize();
 	if(m_fileSize < 4) { // it could be any number basically, just checking if the file isnt too small
 		closeFile();
-		return false;
+		return FG_FALSE;
 	}
 
 	// Read the XML data
 	m_fileBuffer = (char *) fgMalloc(sizeof(char)*(m_fileSize+1));
 	if(m_fileBuffer == NULL) {
 		// ERROR
-		return false;
+		return FG_FALSE;
 	}
 	int bytesRead = readFile(m_fileBuffer, 1, m_fileSize);
 	m_fileBuffer[m_fileSize] = '\0';
@@ -57,7 +57,7 @@ bool fgXMLParser::loadXML(const char *filePath)
 		m_fileBuffer = NULL;
 		m_fileSize = 0;
 		closeFile();
-		return false;
+		return FG_FALSE;
 	}
 
 	// Close the file
@@ -73,9 +73,9 @@ bool fgXMLParser::loadXML(const char *filePath)
 	if(m_rootXMLElement == NULL) {
 		// FIXME this should get some error from TinyXML if it's possible
 		m_xmlDocument.Clear();
-		return false;
+		return FG_FALSE;
 	}
-	return true;
+	return FG_TRUE;
 }
 
 /*
@@ -86,8 +86,8 @@ void fgXMLParser::freeXML(void)
 	if(m_fileBuffer) {
 		fgFree(m_fileBuffer);
 	}
-	m_fileBuffer = false;
-	m_fileSize = false;
+	m_fileBuffer = FG_FALSE;
+	m_fileSize = FG_FALSE;
 	m_xmlDocument.ClearError();
 	m_xmlDocument.Clear();
 	m_rootXMLElement = NULL;
@@ -104,7 +104,7 @@ void fgXMLParser::freeXML(void)
  * For now however (because of the XMLParser function) it is almost impossible
  * to make such function without recursion. #FIXME #TODO #P4
  */
-bool fgXMLParser::_parseDeep(fgXMLNode *cnode, int depth)
+fgBool fgXMLParser::_parseDeep(fgXMLNode *cnode, int depth)
 {	
 	if(!cnode) {
 		fgXMLAttribute *firstAttribute = NULL;
@@ -112,7 +112,7 @@ bool fgXMLParser::_parseDeep(fgXMLNode *cnode, int depth)
 		// Retrieve the root's node name
 		const char *rootName = this->getRootElementValue();
 		if(!rootName)
-			return false;
+			return FG_FALSE;
 		if(this->setFirstAttribute())
 			firstAttribute = this->getCurrentAttribute();
 		elementPtr = this->getRootElement();
@@ -150,11 +150,11 @@ bool fgXMLParser::_parseDeep(fgXMLNode *cnode, int depth)
 		// Retrieve the root's node name
 		const char *rootName = this->getRootElementValue();
 		if(!rootName)
-			return false;
+			return FG_FALSE;
 		elementPtr = this->getRootElement();
 		this->m_contentHandler->endElement(rootName, elementPtr, (fgXMLNodeType)elementPtr->Type());
 	}
-	return true;
+	return FG_TRUE;
 }
 
 /*
@@ -164,8 +164,8 @@ fgStatus fgXMLParser::parseWithHandler(void)
 {
 	fgStatus status;
 	if(!m_contentHandler) {
-		status.isFailure = true;
-		status.isError = true;
+		status.isFailure = FG_TRUE;
+		status.isError = FG_TRUE;
 		status.message = NULL;
 		return status;
 	}
@@ -173,7 +173,7 @@ fgStatus fgXMLParser::parseWithHandler(void)
 
 	// Parsing XML using content handler class
 	if(!this->isXMLLoaded()) {
-		status.isError = true;
+		status.isError = FG_TRUE;
 		return status;
 	}
 	// Start document parsing
@@ -181,11 +181,11 @@ fgStatus fgXMLParser::parseWithHandler(void)
 	// Start deep parsing #FIXME
 	bool pstatus = _parseDeep();
 	if(!pstatus) {
-		status.isError = true;
+		status.isError = FG_TRUE;
 		return status;
 	}
 	m_contentHandler->endDocument(&this->m_xmlDocument);
-	status.isSuccess = true;
+	status.isSuccess = FG_TRUE;
 	return status;
 }
 

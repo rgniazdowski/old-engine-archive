@@ -62,31 +62,31 @@ public:
 	// 
 	void setFilePath(const char *filePath);
 	// 
-	bool openFile(const char *mode);
+	fgBool openFile(const char *mode);
 	// 
-	bool openFile(const char *filePath, const char *mode);
+	fgBool openFile(const char *filePath, const char *mode);
 	// 
-	bool closeFile(void);
+	fgBool closeFile(void);
 
 	// 
-	bool isFileLoaded(void) const {
+	fgBool isFileLoaded(void) const {
 		if(m_file)
-			return true;
+			return FG_TRUE;
 		else
-			return false;
+			return FG_FALSE;
 	}
 
 	//
-	inline static bool fileExists(const char *filePath)
+	inline static fgBool fileExists(const char *filePath)
 	{
 		if(0)		// #FIXME
-			return false;
+			return FG_FALSE;
 		else 
-			return true;
+			return FG_TRUE;
 	}
 
 	// 
-	inline bool fileExists(void)
+	inline fgBool fileExists(void)
 	{
 		// #FIXME
 		return fgFileStream::fileExists(m_filePath);
@@ -102,11 +102,11 @@ public:
 	int print(const char *fmt, ...);
 
 	// 
-	bool isEOF(void)
+	fgBool isEOF(void)
 	{
 		if(m_file == NULL)
-			return false;
-		return false; // FIXME
+			return FG_FALSE;
+		return FG_FALSE; // FIXME
 	}
 	// 
 	void flushFile(void)

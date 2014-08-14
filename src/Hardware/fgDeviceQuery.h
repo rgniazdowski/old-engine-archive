@@ -47,17 +47,17 @@ private:
     /// Device generation (applies to Apple)
     fgDeviceGeneration m_deviceGeneration;
     /// Is the device Android
-    bool m_android;
+    fgBool m_android;
     /// Is the device iOS
-    bool m_iOS;
+    fgBool m_iOS;
     /// Is the device OSX
-    bool m_OSX;
+    fgBool m_OSX;
     /// Is the device BADA
-    bool m_BADA;
+    fgBool m_BADA;
     /// Is the device BB
-    bool m_BB;
+    fgBool m_BB;
     /// Is information ready?
-    bool m_computed;
+    fgBool m_computed;
 
 protected:
     fgDeviceQuery();
@@ -87,27 +87,27 @@ public:
         return m_deviceGeneration;
     }
 
-    bool android() {
+    fgBool android() {
         computeDevice();
         return m_android;
     }
 
-    bool iOS() {
+    fgBool iOS() {
         computeDevice();
         return m_iOS;
     }
     
-    bool OSX() {
+    fgBool OSX() {
         computeDevice();
         return m_OSX;
     }
     
-    bool BB() {
+    fgBool BB() {
         computeDevice();
         return m_BB;
     }
     
-    bool BADA() {
+    fgBool BADA() {
         computeDevice();
         return m_BADA;
     }
@@ -115,4 +115,4 @@ public:
 
 #define FG_DeviceQuery		 fgDeviceQuery::getInstance()
 
-#endif
+#endif /* _FG_DEVICE_QUERY_H_ */

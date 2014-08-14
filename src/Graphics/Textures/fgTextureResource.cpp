@@ -53,15 +53,15 @@ void fgTextureResource::clear(void)
 /*
  * Create function loads/interprets data from file in ROM and place it in RAM memory.
  */
-bool fgTextureResource::create(void)
+fgBool fgTextureResource::create(void)
 {
 	if(m_filePath.empty()) {
 		// #TODO error handling / reporting
-		return false;
+		return FG_FALSE;
 	}
 	if(m_fileType == FG_TEXTURE_FILE_INVALID) {
 		// #TODO error handling / reporting
-		return false;
+		return FG_FALSE;
 	}
 	switch(m_fileType)
 	{
@@ -79,23 +79,23 @@ bool fgTextureResource::create(void)
 		m_rawData = fgTextureLoader::loadTGA(m_filePath.c_str(), m_width, m_height);
 		break;
 	case FG_TEXTURE_FILE_OTHER:
-		return false;
+		return FG_FALSE;
 		break;
 	default:
-		return false;
+		return FG_FALSE;
 		break;
 	};
 
 	if(!m_rawData) {
 		// #TODO error handling / reporting
-		return false;
+		return FG_FALSE;
 	}
-	m_isReady = true;
+	m_isReady = FG_TRUE;
 	// #FIXME
 	m_components = FG_TEXTURE_COMP_RGBA;
 	// #FIXME size calculation
 	m_size = sizeof(unsigned char) * m_width * m_height * m_components;
-	return true;
+	return FG_TRUE;
 }
 
 /*
@@ -111,7 +111,7 @@ void fgTextureResource::destroy(void)
 /*
  * Reloads any data, recreates the resource (refresh)
  */
-bool fgTextureResource::recreate(void)
+fgBool fgTextureResource::recreate(void)
 {
 	releaseNonGFX();
 	return create();
@@ -130,7 +130,7 @@ void fgTextureResource::dispose(void)
 /*
  * Check if resource is disposed (not loaded yet or disposed after)
  */
-bool fgTextureResource::isDisposed(void) const
+fgBool fgTextureResource::isDisposed(void) const
 {
 	// #FIXME ?
 	// This should also check if texture (GL/GFX) ID is valid.

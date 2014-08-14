@@ -90,7 +90,7 @@ struct fgTouchEvent {
 	unsigned long int timeStamp;
 	int x;
 	int y;
-	bool pressed;
+	fgBool pressed;
 	unsigned int touchID;
 };
 
@@ -99,7 +99,7 @@ struct fgMouseEvent {
 	unsigned long int timeStamp;
 	int x;
 	int y;
-	bool pressed;
+	fgBool pressed;
 	unsigned int buttonID;
 };
 
@@ -145,7 +145,7 @@ struct fgKeyEvent {
 	fgEventType eventType;
 	unsigned long int timeStamp;
 	int keyCode;
-	bool pressed;
+	fgBool pressed;
 };
 
 struct fgResourceEvent {
