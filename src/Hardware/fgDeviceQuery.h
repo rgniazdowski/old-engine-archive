@@ -33,8 +33,10 @@ enum fgDeviceGeneration {
 	FG_DEVICE_GENERATION_FIFTH
 };
 
+/*
+ * #FIXME
+ */
 class fgDeviceQuery : public fgSingleton<fgDeviceQuery> {
-
 	friend class fgSingleton<fgDeviceQuery>;
 
 private:

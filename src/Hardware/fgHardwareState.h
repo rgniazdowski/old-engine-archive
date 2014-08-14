@@ -7,11 +7,17 @@
  * and/or distributed without the express or written permission from the author.
  *******************************************************/
 
-#ifndef _FG_HARDWARESTATE_H_
-#define _FG_HARDWARESTATE_H_
+#ifndef _FG_HARDWARE_STATE_H_
+#define _FG_HARDWARE_STATE_H_
 
 #include "s3eTypes.h"
 #include "../fgSingleton.h"
+
+// #FIXME
+enum fgScreenOrientation {
+	FG_SCREEN_ORIENTATION_PORTRAIT,
+	FG_SCREEN_ORIENTATION_LANDSCAPE
+};
 
 #define FG_ORIENTATION_PORTRAIT		0
 #define FG_ORIENTATION_LANDSCAPE	1
@@ -20,35 +26,40 @@
 
 #define FG_DEVICE_ORIENTATION FG_ORIENTATION_LANDSCAPE
 
-/**
+/** #FIXME
  * The class holds only SIMPLE states, i.e. it does not
  * hold GameLogic object. Reason: to avoid including EVERYTHING here.
- *
- * Still, game_main/main do include everything :) Is it possible to avoid?
  */
-
 class fgHardwareState : public fgSingleton<fgHardwareState> 
 {
 	friend class fgSingleton<fgHardwareState>;
 private:
+	// Timestamp (in miliseconds)
     unsigned long int m_TS;
+	// Screen height
 	int m_screenHeight;
+	// Screen width
 	int m_screenWidth;
+	// Display area (WxH)
 	int m_dispArea;
+	// Delta time (duration of last frame, in ms)
 	unsigned long int m_DT;
+	// Delta time 2
 	unsigned long int m_DT2;
+	// Current FPS (frames per second)
 	float m_fps;
+	// DPI of the screen
     int m_dpi;
-
-    /// Coefficient DisplayArea / DPI
+    // Coefficient DisplayArea / DPI
     float m_dpiAndAreaCoef;
 
 protected:
+	// Default constructor for Hardware State object
     fgHardwareState();
+	// Default destructor for Hardware State object
     ~fgHardwareState();
 
 public:
-
     // Inits DPI. Called from GL init code, when display is ready
     void initDPI();
 
@@ -59,116 +70,110 @@ public:
 	// that takes into account both threads - however calculation of FPS should be done only 
 	// in graphics thread (?)
 	void calculateDT(void);
+	// Calculate current FPS
 	float calculateFPS(void);
 
-	//
-	// Getters
-	//
-    /// Timestamp without possibly slow s3eTimerGetMs() call. 
+    // Timestamp without possibly slow s3eTimerGetMs() call. 
 	// Used when ONE FRAME accuracy is sufficient.
     unsigned long int getTS(void) const {
         return m_TS;
     }
 
-    /// Returns delta-time
+    // Returns delta-time
 	unsigned long int getDelta(void) const {
 		return m_DT;
 	}
 
-    /// Returns delta-time 2
+    // Returns delta-time 2
 	unsigned long int getDelta2(void) const {
 		return m_DT2;
 	}
 
-    /// Returns FPS
+    // Returns FPS
 	float getFPS(void) const {
 		return m_fps;
 	}
 
-    /// Returns screen height
+    // Returns screen height
 	int getScreenHeight(void) const {
 		return m_screenHeight;
 	}
 
-    /// Returns screen width
+    // Returns screen width
 	int getScreenWidth(void) const {
 		return m_screenWidth;
 	}
-
+	
+	// Returns display area
 	int getDisplayArea(void) const {
 		return m_dispArea;
 	}
 
+	// Returns screen DPI
     int getDPI(void) const {
         return m_dpi;
     }
-
+	// Returns horizontal (X) screen DPI
     int getXDPI(void) const {
         int sum = m_screenWidth + m_screenHeight;
         return int(float(m_screenWidth) / sum * m_dpi);
     }
-
+	// Returns vertical (Y) screen DPI
     int getYDPI(void) const {
         int sum = m_screenWidth + m_screenHeight;
         return int(float(m_screenHeight) / sum * m_dpi);
     }
-
+	// Returns screen display coefficient
     float getDisplayCoefficient(void) const {
         return m_dpiAndAreaCoef;
     }
 
-    //
-    // MARK: -
-    // MARK: Lengths conversion methods
-    //
+	// Convert inches to pixels (from screen DPI)
     int inchesToPixels(float inches) {
         return (int) (m_dpi * inches);
     }
 
+	// Convert millimeters to pixels
     int millimeterToPixels(float mm) {
         return (int) (m_dpi * mm / 25.4f );
     }
 
+	// Convert inches to pixels horizontally
     int inchesToPixelsX(float inches) {
         return (int) (getXDPI() * inches);
     }
 
+	// Convert millimeters to pixels horizontally
     int millimeterToPixelsX(float mm) {
         return (int) (getXDPI() * mm / 25.4f );
     }
 
+	// Convert inches to pixels vertically
     int inchesToPixelsY(float inches) {
         return (int) (getYDPI() * inches);
     }
 
+	// Convert millimeters to pixels vertically
     int millimeterToPixelsY(float mm) {
         return (int) (getYDPI() * mm / 25.4f );
     }
 
-	//
-	// Setters
-	//
-
-    /// Sets time stamp
+    // Sets time stamp
     void setTS(unsigned long int ts) {
         m_TS = ts;
     }
 
-    /// Sets delta-time
+    // Sets delta-time
 	void setDelta(unsigned long int dt) {
 		m_DT = dt;
 	}
 
-    /// Sets delta-time 2
+    // Sets delta-time 2
 	void setDelta2(unsigned long int dt2) {
 		m_DT2 = dt2;
 	}
 
-    /// Sets FPS
-	void setFPS(float fps) {
-		m_fps = fps;
-	}
-
+	// Set screen dimensions
 	void setScreenDimensions(int screenWidth, int screenHeight) {
 		if(FG_DEVICE_ORIENTATION == FG_ORIENTATION_LANDSCAPE) {
 			if(screenWidth > screenHeight) {
@@ -193,4 +198,4 @@ public:
 
 #define FG_HardwareState fgHardwareState::getInstance()
 
-#endif /* _FG_HARDWARE_STATE_H */
+#endif /* _FG_HARDWARE_STATE_H_ */

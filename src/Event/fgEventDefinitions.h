@@ -15,6 +15,7 @@
 // also defines standard event structures holding info about the event
 //
 
+// Event Type enumeration
 enum fgEventType {
 	FG_EVENT_INVALID			=	0,
 

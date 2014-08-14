@@ -94,7 +94,7 @@ float fgHardwareState::calculateFPS(void)
 	nframes++;
 	if(nframes == FG_FRAMES_COUNT_LIMIT)
 	{
-		setFPS(((float)FG_FRAMES_COUNT_LIMIT) / (((float)FG_GetTicks()) / 1000.0f - fps_time));
+		m_fps = ((float)FG_FRAMES_COUNT_LIMIT) / (((float)FG_GetTicks()) / 1000.0f - fps_time);
 		fps_time = ((float)FG_GetTicks()) / 1000.0f;
 		nframes = 0;
 	}
