@@ -18,13 +18,18 @@
 
 #include "Hardware\fgQualityTypes.h"
 
+#define FG_FILE_QUALITY_MAPPING_NAME "FileQualityMap"
+
 /*
  *
  */
 class fgFileQualityMapping {
 public:
 	// Default empty constructor for file quality mapping object
-	fgFileQualityMapping() {}
+	fgFileQualityMapping() {
+		m_filePath.clear();
+		m_fileMapping.clear();
+	}
 
 	// Default empty destructor for file quality mapping object
 	~fgFileQualityMapping() {
@@ -34,6 +39,8 @@ public:
 public:
 	// Set file path to this resource
 	virtual void setFilePath(const char *path) {
+		if(!path)
+			return;
 		m_filePath.clear();
 		m_filePath = path;
 		m_fileMapping[(int)FG_QUALITY_UNIVERSAL] = path;
@@ -60,14 +67,20 @@ public:
 
 	// Set file path to this resource
 	virtual void setFilePath(const char *path, fgQuality quality) {
+		if(!path)
+			return;
 		m_fileMapping[(int)quality] = path;
 		if(quality == FG_QUALITY_UNIVERSAL)
+			m_filePath = path;
+		else if(m_filePath.empty())
 			m_filePath = path;
 	}
 	// Set file path to this resource
 	virtual void setFilePath(std::string& path, fgQuality quality) {
 		m_fileMapping[(int)quality] = path;
 		if(quality == FG_QUALITY_UNIVERSAL)
+			m_filePath = path;
+		else if(m_filePath.empty())
 			m_filePath = path;
 	}
 
@@ -88,7 +101,7 @@ public:
 	// Get resource file path as C-like string (char array)
 	const char* getFilePathStr(fgQuality quality) {
 		if(m_fileMapping.find((int)quality) == m_fileMapping.end()) {
-			return NULL;
+			return m_filePath.c_str();
 		}
 		return m_fileMapping[(int)quality].c_str();
 	}
