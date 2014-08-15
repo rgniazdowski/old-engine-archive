@@ -74,6 +74,14 @@
 
 [ ] smart pointers / hash tables / etc - szybka dereferencja w systemie Resource
 	[X] - Jest to w pewien blady sposob zaimplementowane w Handle Managerze
-[ ] mozliwosc odnoszenia sie do resource'a za pomoca napisu (string/char *)
+[X] mozliwosc odnoszenia sie do resource'a za pomoca napisu (string/char *)
+	[X] - trzeba jeszcze przetestowac
+
+[ ] - system logowania, kolejka wiadomosci (info text), grupowanie, itp
+
+[X] - wydzielenie zarzadzania jakoscia na zewnatrz, jeden resource zawiera
+		info o roznych plikach - kategorie jakosci, itp
+	[X]- wiele jakosci - jeden resource handle
+
 
 
