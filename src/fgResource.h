@@ -22,6 +22,8 @@
 
 #include "fgHandle.h"
 
+#include "fgFileQualityMapping.h"
+
 struct fgTagResource  {  };
 typedef fgHandle<fgTagResource> fgResourceHandle;
 
@@ -114,7 +116,7 @@ enum fgResPriorityType
 /*
  * Base class for resource
  */
-class fgResource 
+class fgResource : public fgFileQualityMapping
 {
 	friend class fgResourceManager;
 	friend class fgResourceGroup;
@@ -181,26 +183,11 @@ public:
 
 	// Set file path to this resource
 	virtual void setFilePath(const char *path) {
-		m_filePath.clear();
-		m_filePath = path;
+		fgFileQualityMapping::setFilePath(path);
 	}
 	// Set file path to this resource
 	virtual void setFilePath(std::string& path) {
-		m_filePath.clear();
-		m_filePath.append(path, 0, FG_RESOURCE_PATH_MAX);
-	}
-
-	// Get resource file path string
-	std::string getFilePath(void) const {
-		return m_filePath;
-	}
-	// Get reference to resource file path string
-	std::string& getFilePath(void) {
-		return m_filePath;
-	}
-	// Get resource file path as C-like string (char array)
-	const char* getFilePathStr(void) const {
-		return m_filePath.c_str();
+		fgFileQualityMapping::setFilePath(path);
 	}
 
 	// Set resource name (string TAG/ID)
@@ -269,8 +256,6 @@ protected:
 	unsigned int		m_nRefCount;
 	// Time of last access, may become handy #TESTME
 	time_t				m_lastAccess;
-	// File path (can be relative) to file holding data #FIXME
-	std::string			m_filePath;
 	// Is the resource loaded and ready to be used in program?
 	fgBool				m_isReady;
 	// Size in bytes of the loaded data

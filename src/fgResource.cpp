@@ -24,6 +24,7 @@ void fgResource::clear(void)
 	m_lastAccess = 0;
 	m_isReady = false;
 	m_size = 0;
+	m_fileMapping.clear();
 	m_filePath.clear();
 	FG_WriteLog("fgResource::clear(void);");
 }
