@@ -1,11 +1,14 @@
 <!-- vim: ft=xml 
 -->
-<ResourceGroup name="mainFonts" priority="2">
-	<Font path="fonts/CarbonType_512.tga" name="MainFont" quality="0" priority="2" />
-	<Font path="fonts/CarbonType_1024.tga" name="MainFont" quality="1" priority="2" />
-	<Font path="fonts/CarbonType_2048.tga" name="MainFont" quality="2" priority="2" />
-
-	<Font path="fonts/CaptureIt_512.tga" name="SecondFont" quality="0" priority="2" />
-	<Font path="fonts/CaptureIt_1024.tga" name="SecondFont" quality="1" priority="2" />
-	<Font path="fonts/CaptureIt_2048.tga" name="SecondFont" quality="2" priority="2" />
+<ResourceGroup name="MainFonts" priority="high">
+	<Font name="CarbonType" isMapped="true">
+		<FileQualityMap path="fonts/CarbonType_512.tga" quality="low" />
+		<FileQualityMap path="fonts/CarbonType_1024.tga" quality="medium" />
+		<FileQualityMap path="fonts/CarbonType_2048.tga" quality="high" />
+	</Font>
+	<Font name="CaptureIt" isMapped="true">
+		<FileQualityMap path="fonts/CaptureIt_512.tga" quality="low" />
+		<FileQualityMap path="fonts/CaptureIt_1024.tga" quality="medium" />
+		<FileQualityMap path="fonts/CaptureIt_2048.tga" quality="high" />
+	</Font>
 </ResourceGroup>

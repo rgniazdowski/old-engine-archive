@@ -40,15 +40,16 @@ typedef unsigned int fgTextureGfxID;
 class fgTextureResource : public fgResource {
 public:
 	// Base constructor of the texture resource object
-	fgTextureResource()	{  clear();  }
-	// Base constructor with additional parameter (path)
-	fgTextureResource(const char *path) { clear(); setFilePath(path); };
-	// Base constructor with additional parameter (path)
-	fgTextureResource(std::string& path) { clear(); setFilePath(path); };
+	fgTextureResource();
+	// Constructor with additional parameter (path)
+	fgTextureResource(const char *path);
+	// Constructor with additional parameter (path)
+	fgTextureResource(std::string& path);
 	// Base destructor of the texture resource object
 	~fgTextureResource()	{ destroy(); }
 
-	// Clears the class data, this actually does not free allocated memory, just resets base class attributes
+	// Clears the class data, this actually does not free allocated memory,
+	// just resets base class attributes
 	virtual void clear(void);
 	// Create function loads/interprets data from file in ROM and place it in RAM memory.
 	virtual fgBool create(void);
@@ -63,6 +64,8 @@ public:
 
 protected:
 	fgBool setFileTypeFromFilePath(std::string &path) {
+		if(path.empty())
+			return FG_FALSE;
 		// #FIXME - this should be extracted to other file (used for some basic file operation, pathext or whatnot #P3 #TODO)
 		std::string ext = path.substr(path.find_last_of(".") + 1);
 		if(strnicmp(ext.c_str(), FG_TEXTURE_FILE_EXTENSION_BMP, strlen(FG_TEXTURE_FILE_EXTENSION_BMP)) == 0) {
@@ -82,24 +85,12 @@ protected:
 	}
 
 	fgBool setFileTypeFromFilePath(void) {
-		if(this->m_filePath.empty())
+		if(getFilePath(m_quality).empty())
 			return FG_FALSE;
-		return setFileTypeFromFilePath(m_filePath);
+		return setFileTypeFromFilePath(getFilePath(m_quality));
 	}
 
 public:
-	// Set file path to this resource
-	virtual void setFilePath(const char *path) {
-		fgResource::setFilePath(path);
-		setFileTypeFromFilePath();
-	}
-
-	// Set file path to this resource
-	virtual void setFilePath(std::string& path) {
-		fgResource::setFilePath(path);
-		setFileTypeFromFilePath();
-	}
-
     // Releases non-GPU side of resources – should be
     // used to free data after uploading into VRAM
     void releaseNonGFX(void);

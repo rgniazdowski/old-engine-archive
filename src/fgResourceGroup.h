@@ -49,18 +49,32 @@ private:
 	fgResourceType m_resType;
 	// Current resource object pointer
 	fgResource *m_resourcePtr;
+	fgResPriorityType m_curResPriority;
+	fgBool m_isMapped;
+	fgBool m_isFileQualityMapTag;
+	const char *m_curResName;
+	std::stack<fgXMLElement *> m_elemStack;
 
 	// Base constructor of the resource group content handler object
-	fgResourceGroupContentHandler() : m_resourceGroup(NULL), m_resType(FG_RESOURCE_INVALID), m_resourcePtr(NULL)
+	fgResourceGroupContentHandler() : m_resourceGroup(NULL),
+		m_resType(FG_RESOURCE_INVALID),
+		m_resourcePtr(NULL),
+		m_curResName(NULL),
+		m_isMapped(FG_FALSE),
+		m_isFileQualityMapTag(FG_FALSE),
+		m_curResPriority(FG_RES_PRIORITY_INVALID)
 	{
 	}
 	// Base destructor of the resource group content handler object
 	~fgResourceGroupContentHandler()
 	{
+		while(!m_elemStack.empty())
+			m_elemStack.pop();
 	}
 protected:
 	// Set pointer to resource group object - this group is being parsed
 	void setResourceGroupPointer(fgResourceGroup *group) { m_resourceGroup = group; }
+	fgResourceType getResourceTagType(const char *localName);
 public:
 	// Receive notification of the end of the document.
 	virtual void endDocument(fgXMLDocument *document)
@@ -69,10 +83,7 @@ public:
 	}
 
     // Receive notification of the end of an element.
-	virtual void endElement(const char *localName, fgXMLElement *elementPtr, fgXMLNodeType nodeType, int depth = -1)
-	{
-		// End of element
-	}
+	virtual void endElement(const char *localName, fgXMLElement *elementPtr, fgXMLNodeType nodeType, int depth = -1);
 
 	// Receive notification of the beginning of the document.
 	virtual void startDocument(fgXMLDocument *document)

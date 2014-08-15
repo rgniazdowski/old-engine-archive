@@ -33,7 +33,60 @@ bool fgTexture::checkGlError(const char* fname) {
 */
 
 /*
- * Clears the class data, this actually does not free allocated memory, just resets base class attributes
+ * Base constructor of the texture resource object
+ */
+fgTextureResource::fgTextureResource() :
+	m_fileType(FG_TEXTURE_FILE_INVALID),
+	m_textureType(FG_TEXTURE_INVALID),
+	m_pixelFormat(FG_TEXTURE_PIXEL_INVALID),
+	m_rawData(NULL),
+	m_width(0),
+	m_height(0),
+	m_components(-1),
+	m_textureGfxID(0)
+{
+	m_resType = FG_RESOURCE_TEXTURE;
+}
+
+/*
+ *
+ */
+fgTextureResource::fgTextureResource(const char *path) :
+	m_fileType(FG_TEXTURE_FILE_INVALID),
+	m_textureType(FG_TEXTURE_INVALID),
+	m_pixelFormat(FG_TEXTURE_PIXEL_INVALID),
+	m_rawData(NULL),
+	m_width(0),
+	m_height(0),
+	m_components(-1),
+	m_textureGfxID(0)
+{
+	m_resType = FG_RESOURCE_TEXTURE;
+	FG_WriteLog("fgTextureResource(const char *path)"); 
+	setFilePath(path); 
+}
+
+/*
+ *
+ */
+fgTextureResource::fgTextureResource(std::string& path) :
+	m_fileType(FG_TEXTURE_FILE_INVALID),
+	m_textureType(FG_TEXTURE_INVALID),
+	m_pixelFormat(FG_TEXTURE_PIXEL_INVALID),
+	m_rawData(NULL),
+	m_width(0),
+	m_height(0),
+	m_components(-1),
+	m_textureGfxID(0)
+{
+	m_resType = FG_RESOURCE_TEXTURE;
+	FG_WriteLog("fgTextureResource(std::string& path)"); 
+	setFilePath(path); 
+}
+
+/*
+ * Clears the class data, this actually does not free allocated memory,
+ * just resets base class attributes
  */
 void fgTextureResource::clear(void)
 {
@@ -42,7 +95,7 @@ void fgTextureResource::clear(void)
 	m_fileType = FG_TEXTURE_FILE_INVALID;
 	m_textureType = FG_TEXTURE_INVALID;
 	m_pixelFormat = FG_TEXTURE_PIXEL_INVALID;
-    m_rawData = NULL;
+    m_rawData = NULL; // #FIXME
     m_width = 0;
 	m_height = 0;
     m_components = -1;
@@ -55,11 +108,15 @@ void fgTextureResource::clear(void)
  */
 fgBool fgTextureResource::create(void)
 {
-	if(m_filePath.empty()) {
+	FG_InfoLog("fgTextureResource::create(void)");
+	if(getFilePath(m_quality).empty()) {
+		FG_ErrorLog("%s(%d): file path is empty on create - in function %s.", FG_Filename(__FILE__), __LINE__-1,__FUNCTION__); 
 		// #TODO error handling / reporting
 		return FG_FALSE;
 	}
+	setFileTypeFromFilePath();
 	if(m_fileType == FG_TEXTURE_FILE_INVALID) {
+		FG_ErrorLog("%s(%d): texture file type is invalid - in function %s.", FG_Filename(__FILE__), __LINE__-1,__FUNCTION__); 
 		// #TODO error handling / reporting
 		return FG_FALSE;
 	}
@@ -87,6 +144,7 @@ fgBool fgTextureResource::create(void)
 	};
 
 	if(!m_rawData) {
+		FG_ErrorLog("%s(%d): raw data is NULL - failed to load texture - in function %s.", FG_Filename(__FILE__), __LINE__-1,__FUNCTION__); 
 		// #TODO error handling / reporting
 		return FG_FALSE;
 	}
@@ -113,6 +171,7 @@ void fgTextureResource::destroy(void)
  */
 fgBool fgTextureResource::recreate(void)
 {
+	FG_InfoLog("fgTextureResource::recreate(void)");
 	releaseNonGFX();
 	return create();
 }
@@ -137,6 +196,7 @@ fgBool fgTextureResource::isDisposed(void) const
 	// If it is, then it means that the texture is uploaded and
 	// ready to use. If GfxID is invalid than we can assume that
 	// resource is disposed. This is kinda tricky one.
+	FG_WriteLog("fgTextureResource::isDisposed();   p_rawData=%p;", m_rawData);
 	
 	return !this->hasOwnedRAM();
 }
@@ -146,11 +206,13 @@ fgBool fgTextureResource::isDisposed(void) const
  */
 void fgTextureResource::releaseNonGFX(void) 
 {
+	FG_WriteLog("fgTextureResource::releaseNonGFX();   p_rawData=%p;", m_rawData);
+
 	if(m_rawData)
 		delete [] m_rawData;
 	m_width = 0;
 	m_height = 0;
 	m_components = 0;
 	m_size = 0;
-	m_isReady = false;
+	m_isReady = FG_FALSE;
 }
