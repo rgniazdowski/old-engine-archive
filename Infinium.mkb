@@ -14,6 +14,7 @@ files
 	fgException.h
 	fgFileStream.cpp
 	fgFileStream.h
+	fgFileQualityMapping.h
 	fgGameMain.cpp
 	fgGameMain.h
 	fgHandle.h
