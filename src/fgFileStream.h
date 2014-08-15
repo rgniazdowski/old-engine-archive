@@ -61,6 +61,9 @@ public:
 
 	// 
 	void setFilePath(const char *filePath);
+	const char *getFilePath(void) const {
+		return m_filePath;
+	}
 	// 
 	fgBool openFile(const char *mode);
 	// 
