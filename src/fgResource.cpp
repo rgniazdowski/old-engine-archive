@@ -13,7 +13,58 @@
 #include "fgResource.h"
 
 /*
- *
+ * Base constructor of the resource object
+ */
+fgResource::fgResource() :
+	m_resType(FG_RESOURCE_INVALID),
+	m_priority(FG_RES_PRIORITY_LOW),
+	m_quality(FG_QUALITY_UNIVERSAL),
+	m_nRefCount(0),
+	m_lastAccess(0),
+	m_isReady(FG_FALSE),
+	m_size(0)
+{
+	m_resourceName.clear();
+	FG_WriteLog("fgResource::fgResource();");
+}
+
+/*
+ * Constructor with additional parameter (path)
+ */
+fgResource::fgResource(const char *path) :
+	m_resType(FG_RESOURCE_INVALID),
+	m_priority(FG_RES_PRIORITY_LOW),
+	m_quality(FG_QUALITY_UNIVERSAL),
+	m_nRefCount(0),
+	m_lastAccess(0),
+	m_isReady(FG_FALSE),
+	m_size(0)
+{
+	m_resourceName.clear();
+	FG_WriteLog("fgResource::fgResource(const char *path);");
+	setFilePath(path);
+}
+
+/*
+ * Constructor with additional parameter (path)
+ */
+fgResource::fgResource(std::string& path) :
+	m_resType(FG_RESOURCE_INVALID),
+	m_priority(FG_RES_PRIORITY_LOW),
+	m_quality(FG_QUALITY_UNIVERSAL),
+	m_nRefCount(0),
+	m_lastAccess(0),
+	m_isReady(FG_FALSE),
+	m_size(0)
+{
+	m_resourceName.clear();
+	FG_WriteLog("fgResource::fgResource(std::string& path);");
+	setFilePath(path);
+}
+
+/*
+ * Clears the class data, this actually does not free allocated memory,
+ * just resets base class attributes
  */
 void fgResource::clear(void)
 {
@@ -22,7 +73,7 @@ void fgResource::clear(void)
 	m_quality = FG_QUALITY_UNIVERSAL;
 	m_nRefCount = 0;
 	m_lastAccess = 0;
-	m_isReady = false;
+	m_isReady = FG_FALSE;
 	m_size = 0;
 	m_fileMapping.clear();
 	m_filePath.clear();

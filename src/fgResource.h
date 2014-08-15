@@ -93,11 +93,13 @@ enum fgResourceType {
 };
 
 // Name (string version) for the resource low priority enum
-#define FG_RES_PRIORITY_LOW_NAME	"Low"
+#define FG_RES_PRIORITY_LOW_NAME	"low"
 // Name (string version) for the resource medium priority enum
-#define FG_RES_PRIORITY_MEDIUM_NAME "Medium"
+#define FG_RES_PRIORITY_MEDIUM_NAME "medium"
 // Name (string version) for the resource high priority enum
-#define FG_RES_PRIORITY_HIGH_NAME	"High"
+#define FG_RES_PRIORITY_HIGH_NAME	"high"
+// Name (string version_ for the resource invalid priority enum
+#define FG_RES_PRIORITY_INVALID_NAME "invalid"
 
 // Enum for resource priority (low, medium, high, ...)
 enum fgResPriorityType
@@ -114,6 +116,26 @@ enum fgResPriorityType
 };
 
 /*
+ *
+ */
+inline fgResPriorityType _FG_RES_PRIORITY_FROM_NAME(const char* name) {
+	if(!name)
+		return FG_RES_PRIORITY_INVALID;
+	if(strnicmp(name, FG_RES_PRIORITY_INVALID_NAME, strlen(FG_RES_PRIORITY_INVALID_NAME)) == 0) {
+		return FG_RES_PRIORITY_INVALID;
+	} else if(strnicmp(name, FG_RES_PRIORITY_LOW_NAME, strlen(FG_RES_PRIORITY_LOW_NAME)) == 0) {
+		return FG_RES_PRIORITY_LOW;
+	} else if(strnicmp(name, FG_RES_PRIORITY_MEDIUM_NAME, strlen(FG_RES_PRIORITY_MEDIUM_NAME)) == 0) {
+		return FG_RES_PRIORITY_MEDIUM;
+	} else if(strnicmp(name, FG_RES_PRIORITY_HIGH_NAME, strlen(FG_RES_PRIORITY_HIGH_NAME)) == 0) {
+		return FG_RES_PRIORITY_HIGH;
+	}
+	return FG_RES_PRIORITY_INVALID;
+}
+
+#define FG_RES_PRIORITY_FROM_NAME(name) _FG_RES_PRIORITY_FROM_NAME(name)
+
+/*
  * Base class for resource
  */
 class fgResource : public fgFileQualityMapping
@@ -122,15 +144,16 @@ class fgResource : public fgFileQualityMapping
 	friend class fgResourceGroup;
 public:
 	// Base constructor of the resource object
-	fgResource()	{  clear();  }
-	// Base constructor with additional parameter (path)
-	fgResource(const char *path) { clear(); setFilePath(path); };
-	// Base constructor with additional parameter (path)
-	fgResource(std::string& path) { clear(); setFilePath(path); };
+	fgResource();
+	// Constructor with additional parameter (path)
+	fgResource(const char *path);
+	// Constructor with additional parameter (path)
+	fgResource(std::string& path);
 	// Base destructor of the resource object
 	~fgResource()	{ destroy(); }
 
-	// Clears the class data, this actually does not free allocated memory, just resets base class attributes
+	// Clears the class data, this actually does not free allocated memory,
+	// just resets base class attributes
 	virtual void clear(void);
 	// Create and destroy functions.  Note that the create() function of the
 	// derived class does not have to exactly match the base class.  No assumptions
@@ -188,6 +211,14 @@ public:
 	// Set file path to this resource
 	virtual void setFilePath(std::string& path) {
 		fgFileQualityMapping::setFilePath(path);
+	}
+	// Set file path to this resource
+	virtual void setFilePath(const char *path, fgQuality quality) {
+		fgFileQualityMapping::setFilePath(path, quality);
+	}
+	// Set file path to this resource
+	virtual void setFilePath(std::string& path, fgQuality quality) {
+		fgFileQualityMapping::setFilePath(path, quality);
 	}
 
 	// Set resource name (string TAG/ID)
