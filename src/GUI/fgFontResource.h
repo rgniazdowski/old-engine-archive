@@ -27,11 +27,11 @@ class fgFontResource : public fgTextureResource
 {
 public:
 	// Base constructor of the font resource object
-	fgFontResource()	{  clear();  }
-	// Base constructor with additional parameter (path)
-	fgFontResource(const char *path) { clear(); setFilePath(path); };
-	// Base constructor with additional parameter (path)
-	fgFontResource(std::string& path) { clear(); setFilePath(path); };
+	fgFontResource();
+	// Constructor with additional parameter (path)
+	fgFontResource(const char *path);
+	// Constructor with additional parameter (path)
+	fgFontResource(std::string& path);
 	// Base destructor of the font resource object
 	~fgFontResource()	{ destroy(); }
 

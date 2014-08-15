@@ -13,6 +13,40 @@
 #include "../Hardware/fgHardwareState.h"
 
 /*
+ * Base constructor of the font resource object
+ */
+fgFontResource::fgFontResource() :
+	m_step(0)
+{
+	m_resType = FG_RESOURCE_FONT;
+	FG_WriteLog("fgFontResource::fgFontResource()");
+}
+
+/*
+ * Constructor with additional parameter (path)
+ */
+fgFontResource::fgFontResource(const char *path) :
+	m_step(0)
+{
+	m_resType = FG_RESOURCE_FONT;
+	FG_WriteLog("fgFontResource::fgFontResource()");
+	if(path)
+		setFilePath(path);
+}
+
+/*
+ * Constructor with additional parameter (path)
+ */
+fgFontResource::fgFontResource(std::string& path) :
+	m_step(0)
+{
+	m_resType = FG_RESOURCE_FONT;
+	FG_WriteLog("fgFontResource::fgFontResource()");
+	if(!path.empty())
+		setFilePath(path);
+}
+
+/*
  * Clears the class data, this actually does not free allocated memory, 
  * just resets base class attributes
  */
@@ -33,6 +67,7 @@ fgBool fgFontResource::create(void)
 	m_textureType = FG_TEXTURE_FONT;
 	if(!fgTextureResource::create()) {
 		// #TODO error handling / reporting
+		FG_ErrorLog("%s(%d): texture create function has failed - in function %s.", FG_Filename(__FILE__), __LINE__-1,__FUNCTION__); 
 		return FG_FALSE;
 	}
 	int i = 0, j = 0, k = 0;
@@ -41,7 +76,7 @@ fgBool fgFontResource::create(void)
 	m_step = size / 16;
 	unsigned char *ptr = NULL;
 	
-	//FG_WriteLog("Font_load 'Tex::ID=%d'; size=%dx%d; step=%d;", FONT_ID, m_texture->width(), m_texture->height(), m_step);
+	FG_WriteLog("FONT CREATE 'Tex::ID=%s'; size=%dx%d; step=%d;", this->m_resourceName.c_str(), m_width, m_width, m_step);
 
 	for(y=0, i=0; y<16; y++)
 	{
@@ -97,6 +132,7 @@ void fgFontResource::destroy(void)
  */
 fgBool fgFontResource::recreate(void)
 {
+	FG_WriteLog("fgFontResource::recreate();");
 	dispose();
 	return create();
 }
