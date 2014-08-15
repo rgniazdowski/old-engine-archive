@@ -47,10 +47,6 @@ public:
 	{  return !((*left) < (*right));  }
 };
 
-typedef fgHandleManager<fgResource*, FG_RHANDLE>		fgResourceHandleManager;
-typedef fgResourceHandleManager::hmDataVec				fgResourceVector;
-typedef fgResourceHandleManager::hmDataVec::iterator	fgResourceVectorItor;
-
 class fgTextureManager;
 
 // The resource manager handles all the external resources. It takes care of the memory
@@ -60,6 +56,12 @@ class fgResourceManager : public fgSingleton<fgResourceManager>
 {
 	friend class fgSingleton<fgResourceManager>;
 	friend class fgTextureManager;
+protected:
+	typedef fgHandleManager<fgResource*, FG_RHANDLE>		fgResourceHandleManager;
+	typedef fgResourceHandleManager::hmDataVec				fgResourceVector;
+	typedef fgResourceHandleManager::hmDataVec::iterator	fgResourceVectorItor;
+	typedef fgArrayVector<FG_RHANDLE>						fgResHandlesVec;
+	typedef fgResHandlesVec::iterator			fgResHandlesVecItor;
 private:
 	// Default constructor for resource manager
 	fgResourceManager()				{  clear();  }
@@ -109,7 +111,12 @@ public:
 	}
 	// Go to the next resource (iterate to next)
 	inline fgBool goToNext() {
-		m_currentResource++;  return isValid();  
+		while((*m_currentResource) != NULL) {
+			m_currentResource++;
+			if(!isValid())
+				break;
+		}
+		return isValid();  
 	}
 	// Find next resource with given criteria (currently resource type)
 	fgBool goToNext(fgResourceType resType);
@@ -132,14 +139,10 @@ public:
 
 protected:
 	// Insert resource group into manager
-	fgBool insertResourceGroup(FG_RHANDLE& rhUniqueID, fgResource* pResource);
+	fgBool insertResourceGroup(FG_RHANDLE rhUniqueID, fgResource* pResource);
 	// Get the reference to the resource map (protected)
 	fgResourceVector& getRefResourceVector(void) {
 		return m_resourceHandlesMgr.getRefDataVector();
-	}
-	// Get the reference to the resource group map (protected)
-	fgResourceVector& getRefResourceGroupVector(void) {
-		return m_resourceGroupHandlesMgr.getRefDataVector();
 	}
 public:
 
@@ -177,6 +180,11 @@ public:
 	// object.  If the resource has been disposed, it will be recreated 
 	// before it has been returned. 
 	fgResource* getResource(FG_RHANDLE rhUniqueID);
+
+	// Using GetResource tells the manager that you are about to access the
+	// object.  If the resource has been disposed, it will be recreated 
+	// before it has been returned. 
+	fgResource* getResource(std::string& nameTag);
 
 	// Locking the resource ensures that the resource does not get managed by
 	// the Resource Manager.  You can use this to ensure that a surface does not
@@ -228,8 +236,8 @@ protected:
 
 	// Main resource handles manager (managed resources)
 	fgResourceHandleManager	m_resourceHandlesMgr;
-	// Resource group handles manager (managed resource groups)
-	fgResourceHandleManager	m_resourceGroupHandlesMgr;
+	// Array holding handles to resource groups
+	fgResHandlesVec m_resourceGroupHandles;
 
 };
 
