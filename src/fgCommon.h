@@ -49,6 +49,10 @@ typedef unsigned char fgBool;
 #define FG_SUCCESS 1
 #endif
 
+#define FG_SUCCESS_NAME "success"
+#define FG_TRUE_NAME "true"
+#define FG_FALSE_NAME "false"
+
 #ifndef NULL
     #ifndef __cplusplus
         #define NULL ((void *)0)
@@ -64,6 +68,21 @@ typedef unsigned char fgBool;
         #define FG_NULL 0
     #endif
 #endif
+
+inline fgBool _FG_BOOL_FROM_NAME(const char* name) {
+	if(!name)
+		return FG_FALSE;
+	if(strnicmp(name, FG_TRUE_NAME, strlen(FG_TRUE_NAME)) == 0) {
+		return FG_TRUE;
+	} else if(strnicmp(name, FG_FALSE_NAME, strlen(FG_FALSE_NAME)) == 0) {
+		return FG_FALSE;
+	} else if(strnicmp(name, FG_SUCCESS_NAME, strlen(FG_SUCCESS_NAME)) == 0) {
+		return FG_TRUE;
+	}
+	return FG_FALSE;
+}
+
+#define FG_BOOL_FROM_NAME(name) _FG_BOOL_FROM_NAME(name)
 
 #if defined FG_USING_MARMALADE
 #include "IwUtil.h"
@@ -198,5 +217,7 @@ inline const char *FG_FileExt(const char *filename) {
 }
 
 const char* FG_Filename (const char* str);
+
+
 
 #endif /* _FG_COMMON_H_ */

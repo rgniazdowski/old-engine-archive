@@ -18,4 +18,29 @@ enum fgQuality {
 	FG_QUALITY_EXTRA	= 3
 };
 
+#define FG_QUALITY_UNIVERSAL_NAME	"universal"
+#define FG_QUALITY_LOW_NAME			"low"
+#define FG_QUALITY_MEDIUM_NAME		"medium"
+#define FG_QUALITY_HIGH_NAME		"high"
+#define FG_QUALITY_EXTRA_NAME		"extra"
+
+inline fgQuality _FG_QUALITY_FROM_NAME(const char* name) {
+	if(!name)
+		return FG_QUALITY_UNIVERSAL;
+	if(strnicmp(name, FG_QUALITY_UNIVERSAL_NAME, strlen(FG_QUALITY_UNIVERSAL_NAME)) == 0) {
+		return FG_QUALITY_UNIVERSAL;
+	} else if(strnicmp(name, FG_QUALITY_LOW_NAME, strlen(FG_QUALITY_LOW_NAME)) == 0) {
+		return FG_QUALITY_LOW;
+	} else if(strnicmp(name, FG_QUALITY_MEDIUM_NAME, strlen(FG_QUALITY_MEDIUM_NAME)) == 0) {
+		return FG_QUALITY_MEDIUM;
+	} else if(strnicmp(name, FG_QUALITY_HIGH_NAME, strlen(FG_QUALITY_HIGH_NAME)) == 0) {
+		return FG_QUALITY_HIGH;
+	} else if(strnicmp(name, FG_QUALITY_EXTRA_NAME, strlen(FG_QUALITY_EXTRA_NAME)) == 0) {
+		return FG_QUALITY_EXTRA;
+	}
+	return FG_QUALITY_UNIVERSAL;
+}
+
+#define FG_QUALITY_FROM_NAME(name) _FG_QUALITY_FROM_NAME(name)
+
 #endif /* _FG_QUALITY_TYPES_H_ */
