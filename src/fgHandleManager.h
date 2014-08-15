@@ -177,10 +177,12 @@ fgBool fgHandleManager<DataType, HandleType>::setupName(hmHashKeyType& name, Han
 	if(!isHandleValid(rHandle))
 		return FG_FALSE;
 	if(m_nameMap.find(name) != m_nameMap.end()) {
+		FG_ErrorLog("%s(%d): Such key already exists in name map - in function %s.", FG_Filename(__FILE__), __LINE__-1,__FUNCTION__); 
 		return FG_FALSE; // Such key already exists
 	}
     fgRawIndex index = rHandle.getIndex();
-	if(m_nameVec[index].size() > 0) {
+	if(!m_nameVec[index].empty()) {
+		FG_ErrorLog("%s(%d): There is name tag already in the vector on index: '%d', name tag: '%s' - in function %s.", FG_Filename(__FILE__), __LINE__-1,index,name.c_str(),__FUNCTION__); 
 		// There is already some set on the current index
 		// No reassignment is allowed
 		return FG_FALSE;
@@ -227,6 +229,8 @@ fgBool fgHandleManager<DataType, HandleType>::releaseHandle(HandleType handle)
     // ok remove it - tag as unused and add to free list
     m_magicData[index] = 0;
 	m_managedData[index] = NULL;
+	if(!m_nameVec[index].empty())
+		m_nameMap.erase(m_nameVec[index]);
 	m_nameVec[index].clear();
     m_freeSlots.push_back(index);
 	if(!getUsedHandleCount()) {
@@ -324,6 +328,7 @@ inline fgBool fgHandleManager<DataType, HandleType>::isHandleValid(HandleType ha
     if ((index >= m_managedData.size()) || (m_magicData[index] != handle.getMagic()))
     {
         // no good! invalid handle == client programming error
+		FG_ErrorLog("%s(%d): Invalid handle, magic numbers don't match with index - in function %s.", FG_Filename(__FILE__), __LINE__-1,__FUNCTION__); 
         return FG_FALSE;
     }
 	return FG_TRUE;
