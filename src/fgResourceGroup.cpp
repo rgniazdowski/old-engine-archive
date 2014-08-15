@@ -197,12 +197,10 @@ void fgResourceGroupContentHandler::startElement(const char *localName, fgXMLEle
 	case FG_RESOURCE_TEXTURE:
 		// Create new texture resource
 		m_resourcePtr = new fgTextureResource(resPath);
-		m_resourcePtr->clear();
 		break;
 	case FG_RESOURCE_FONT:
 		// Create new font resource
 		m_resourcePtr = new fgFontResource(resPath);
-		m_resourcePtr->clear();
 		break;
 	case FG_RESOURCE_GUI_STRUCTURE_SHEET:
 		break;
