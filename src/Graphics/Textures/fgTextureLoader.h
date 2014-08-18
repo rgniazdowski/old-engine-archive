@@ -10,7 +10,7 @@
 #ifndef _FG_TEXTURE_LOADER_H_
 #define _FG_TEXTURE_LOADER_H_
 
-#include "../../fgFileStream.h"
+#include "../../fgFile.h"
 
 #include "png.h"
 extern "C" {
@@ -40,17 +40,17 @@ public:
 	// Loads a JPEG file and returns unsigned char array with raw data
 	static unsigned char *loadJPEG(const char *path, int &width, int &height);
 	// Loads a JPEG file and returns unsigned char array with raw data
-	static unsigned char *loadJPEG(fgFileStream *fileStream, int &width, int &height);
+	static unsigned char *loadJPEG(fgFile *fileStream, int &width, int &height);
 	
 	// Loads a PNG file and returns unsigned char array with raw data
 	static unsigned char *loadPNG(const char *path, int &width, int &height);
 	// Loads a PNG file and returns unsigned char array with raw data
-	static unsigned char *loadPNG(fgFileStream *fileStream, int &width, int &height);
+	static unsigned char *loadPNG(fgFile *fileStream, int &width, int &height);
 	
 	// Loads a TGA file and returns unsigned char array with raw data
 	static unsigned char *loadTGA(const char *path, int &width, int &height);
 	// Loads a TGA file and returns unsigned char array with raw data
-	static unsigned char *loadTGA(fgFileStream *fileStream, int &width, int &height);
+	static unsigned char *loadTGA(fgFile *fileStream, int &width, int &height);
 };
 
 #endif

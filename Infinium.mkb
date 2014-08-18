@@ -12,8 +12,8 @@ files
 	fgDirent.cpp
 	fgDirent.h
 	fgException.h
-	fgFileStream.cpp
-	fgFileStream.h
+	fgFile.cpp
+	fgFile.h
 	fgFileQualityMapping.h
 	fgGameMain.cpp
 	fgGameMain.h

@@ -21,7 +21,7 @@ struct fgStatus
 	fgBool isError;
 	fgBool isSuccess;
 	fgBool isFailure;
-	fgMessage *message;
+	fgMessage *message; // #FIXME
 
 	fgStatus() : isError(FG_FALSE), isSuccess(FG_TRUE), isFailure(FG_FALSE)
 	{

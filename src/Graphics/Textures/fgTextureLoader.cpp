@@ -18,12 +18,12 @@ static unsigned char *universalPreLoad(const char *path, int &width, int &height
 		// #TODO error handling / reporting
 		return NULL;
 	}
-	fgFileStream *fileStream = new fgFileStream(path);
-	if(!fileStream->fileExists()) {
+	fgFile *fileStream = new fgFile(path);
+	if(!fileStream->exists()) {
 		delete fileStream;
 		// #TODO error handling / reporting
 		return NULL;
-	} else if(fileStream->openFile("rb")) {
+	} else if(fileStream->open(FG_FILE_MODE_READ | FG_FILE_MODE_BINARY)) {
 		unsigned char *data = NULL;
 		if(strnicmp(extType, "jpeg", 4) == 0) {
 			data = fgTextureLoader::loadJPEG(fileStream, width, height);
@@ -32,7 +32,7 @@ static unsigned char *universalPreLoad(const char *path, int &width, int &height
 		} else if(strnicmp(extType, "tga", 4) == 0) {
 			data = fgTextureLoader::loadTGA(fileStream, width, height);
 		}
-		if(!fileStream->closeFile()) {
+		if(!fileStream->close()) {
 			// #TODO error handling / reporting
 		}
 		delete fileStream;
@@ -59,13 +59,13 @@ unsigned char *fgTextureLoader::loadJPEG(const char *path, int &width, int &heig
 /*
  * Loads a JPEG file and returns unsigned char array with raw data
  */
-unsigned char *fgTextureLoader::loadJPEG(fgFileStream *fileStream, int &width, int &height)
+unsigned char *fgTextureLoader::loadJPEG(fgFile *fileStream, int &width, int &height)
 {
 	if(!fileStream) {
 		// #TODO error handling / reporting
 		return NULL;
-	} else if(!fileStream->isFileLoaded()) {
-		if(!fileStream->openFile("rb")) {
+	} else if(!fileStream->isOpen()) {
+		if(!fileStream->open(FG_FILE_MODE_READ | FG_FILE_MODE_BINARY)) {
 			// #TODO error handling / reporting
 			return NULL;
 		}
@@ -129,7 +129,7 @@ unsigned char *fgTextureLoader::loadJPEG(fgFileStream *fileStream, int &width, i
 		return NULL;
 	}
 	delete [] dataBuffer;
-	FG_InfoLog("JPEG LOAD: %s, %dx%d, data=%p;", fileStream->getFilePath(), width,height, data);
+	FG_InfoLog("JPEG LOAD: %s, %dx%d, data=%p;", fileStream->getPath(), width,height, data);
 	return data;
 }
 
@@ -144,13 +144,13 @@ unsigned char *fgTextureLoader::loadPNG(const char *path, int &width, int &heigh
 /*
  * Loads a PNG file and returns unsigned char array with raw data
  */
-unsigned char *fgTextureLoader::loadPNG(fgFileStream *fileStream, int &width, int &height)
+unsigned char *fgTextureLoader::loadPNG(fgFile *fileStream, int &width, int &height)
 {
 	if(!fileStream) {
 		// #TODO error handling / reporting
 		return NULL;
-	} else if(!fileStream->isFileLoaded()) {
-		if(!fileStream->openFile("rb")) {
+	} else if(!fileStream->isOpen()) {
+		if(!fileStream->open(FG_FILE_MODE_READ | FG_FILE_MODE_BINARY)) {
 			// #TODO error handling / reporting
 			return NULL;
 		}
@@ -164,7 +164,7 @@ unsigned char *fgTextureLoader::loadPNG(fgFileStream *fileStream, int &width, in
     png_structp png_ptr = 0;
     png_infop info_ptr = 0;
 
-	fileStream->readFile(sig, 8, 1);
+	fileStream->read(sig, 8, 1);
     if(!png_check_sig(sig, 8)) {
 		// #TODO error handling / reporting
 		return NULL;
@@ -243,7 +243,7 @@ unsigned char *fgTextureLoader::loadPNG(fgFileStream *fileStream, int &width, in
 	png_destroy_read_struct(&png_ptr, 0, 0);
     width = w;
     height = h;
-	FG_InfoLog("PNG LOAD: %s, %dx%d, data=%p;", fileStream->getFilePath(), w,h, data);
+	FG_InfoLog("PNG LOAD: %s, %dx%d, data=%p;", fileStream->getPath(), w,h, data);
     return data;
 }
 
@@ -258,14 +258,14 @@ unsigned char *fgTextureLoader::loadTGA(const char *path, int &width, int &heigh
 /*
  * Loads a TGA file and returns unsigned char array with raw data
  */
-unsigned char *fgTextureLoader::loadTGA(fgFileStream *fileStream, int &width, int &height)
+unsigned char *fgTextureLoader::loadTGA(fgFile *fileStream, int &width, int &height)
 {
 	if(!fileStream) {
 		FG_ErrorLog("%s(%d): fileStream is NULL - failed to load texture - in function %s.", FG_Filename(__FILE__), __LINE__-1,__FUNCTION__); 
 		// #TODO error handling / reporting
 		return NULL;
-	} else if(!fileStream->isFileLoaded()) {
-		if(!fileStream->openFile("rb")) {
+	} else if(!fileStream->isOpen()) {
+		if(!fileStream->open(FG_FILE_MODE_READ | FG_FILE_MODE_BINARY)) {
 			FG_ErrorLog("%s(%d): failed to open texture file - in function %s.", FG_Filename(__FILE__), __LINE__-1,__FUNCTION__); 
 			// #TODO error handling / reporting
 			return NULL;
@@ -275,7 +275,7 @@ unsigned char *fgTextureLoader::loadTGA(fgFileStream *fileStream, int &width, in
 	unsigned char *ptr = NULL, info[18];
     int w = 0, h = 0, components = 0, size = 0;
 	int i = 0, j = 0, k = 0, l = 0;
-	fileStream->readFile(&info, 1, 18);
+	fileStream->read(&info, 1, 18);
     w = info[12] + info[13] * 256;
     h = info[14] + info[15] * 256;
     // Read only 32 && 24 bit per pixel
@@ -313,15 +313,15 @@ unsigned char *fgTextureLoader::loadTGA(fgFileStream *fileStream, int &width, in
 	{
 		// Unmapped RGB image
         case 2:     
-			fileStream->readFile(buffer, 1, size);
+			fileStream->read(buffer, 1, size);
             break;
 		// Run length encoded file
         case 10:    
             while(i < size) {
-				fileStream->readFile(&rep, 1, 1);
+				fileStream->read(&rep, 1, 1);
                 if(rep & 0x80) {
                     rep ^= 0x80;
-					fileStream->readFile(ptr,1,components);
+					fileStream->read(ptr,1,components);
                     ptr += components;
                     for(j = 0; j < rep * components; j++) {
                         *ptr = *(ptr - components);
@@ -331,7 +331,7 @@ unsigned char *fgTextureLoader::loadTGA(fgFileStream *fileStream, int &width, in
                 }
                 else {
                     k = components * (rep + 1);
-					fileStream->readFile(ptr, 1, k);
+					fileStream->read(ptr, 1, k);
                     ptr += k;
                     i += k;
                 }
@@ -365,6 +365,6 @@ unsigned char *fgTextureLoader::loadTGA(fgFileStream *fileStream, int &width, in
 	delete [] buffer;
     width = w;
     height = h;
-	FG_InfoLog("TGA LOAD: %s, %dx%d, data=%p;", fileStream->getFilePath(), w,h, data);
+	FG_InfoLog("TGA LOAD: %s, %dx%d, data=%p;", fileStream->getPath(), w,h, data);
 	return data;
 }

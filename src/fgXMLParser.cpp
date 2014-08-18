@@ -20,7 +20,7 @@ fgBool fgXMLParser::loadXML(const char *filePath)
 		return FG_FALSE;
 	}
 
-	if(!fileExists(filePath)) {
+	if(!exists(filePath)) {
 		// #FIXME proper error message
 		return FG_FALSE;
 	}
@@ -29,18 +29,18 @@ fgBool fgXMLParser::loadXML(const char *filePath)
 	m_xmlDocument.ClearError();
 	m_xmlDocument.Clear();
 
-	if(!openFile(filePath, "r")) {
+	if(!open(filePath, FG_FILE_MODE_READ)) {
 		return FG_FALSE;
 	}
 
-	if(!isFileLoaded()) {
+	if(!isOpen()) {
 		return FG_FALSE;
 	}
 
 	// Get the XML file size in bytes
 	m_fileSize = getSize();
 	if(m_fileSize < 4) { // it could be any number basically, just checking if the file isnt too small
-		closeFile();
+		close();
 		return FG_FALSE;
 	}
 
@@ -50,18 +50,18 @@ fgBool fgXMLParser::loadXML(const char *filePath)
 		// ERROR
 		return FG_FALSE;
 	}
-	int bytesRead = readFile(m_fileBuffer, 1, m_fileSize);
+	int bytesRead = read(m_fileBuffer, 1, m_fileSize);
 	m_fileBuffer[m_fileSize] = '\0';
 	if(bytesRead != m_fileSize) {
 		fgFree(m_fileBuffer);
 		m_fileBuffer = NULL;
 		m_fileSize = 0;
-		closeFile();
+		close();
 		return FG_FALSE;
 	}
 
 	// Close the file
-	closeFile();
+	close();
 
 	// Process the XML raw data
 	m_xmlDocument.Parse(m_fileBuffer);
@@ -179,7 +179,7 @@ fgStatus fgXMLParser::parseWithHandler(void)
 	// Start document parsing
 	m_contentHandler->startDocument(&this->m_xmlDocument);
 	// Start deep parsing #FIXME
-	bool pstatus = _parseDeep();
+	fgBool pstatus = _parseDeep();
 	if(!pstatus) {
 		status.isError = FG_TRUE;
 		return status;

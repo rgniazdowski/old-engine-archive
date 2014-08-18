@@ -22,13 +22,13 @@
 #include <stack>
 
 #include "fgStatus.h"
-#include "fgFileStream.h"
+#include "fgFile.h"
 
 #include "fgXMLTypesWrap.h"
 #include "fgXMLDefaultHandler.h"
 
 
-// This class extends the fgFileStream, so it can load the proper XML file
+// This class extends the fgFile, so it can load the proper XML file
 // fgXMLParser contains  specialized functions for  parsing/interpreting the  data inside the XML file, its 
 // a kind of a XML functions wrapper to make it easier and more intuitive to interpret and extract the data
 
@@ -57,7 +57,7 @@
 
 #define FG_XML_PARSER_ERROR_LENGTH		512
 
-class fgXMLParser : private fgFileStream
+class fgXMLParser : private fgFile
 {
 protected:
 	// Status for error #FIXME
