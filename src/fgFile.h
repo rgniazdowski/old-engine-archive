@@ -16,13 +16,13 @@
 #include <cstdio>
 #include <string>
 
-#define FG_FILE_PATH_MAX		FG_PATH_MAX
+#define FG_FILE_PATH_MAX	FG_PATH_MAX
 
-/* Seek from beginning of file.  */
+/* Seek from beginning of file. */
 #define FG_FILE_SEEK_SET    SEEK_SET   
-/* Seek from current position.  */
+/* Seek from current position. */
 #define FG_FILE_SEEK_CUR    SEEK_CUR   
-/* Seek from end of file.  */
+/* Seek from end of file. */
 #define FG_FILE_SEEK_END    SEEK_END   
 /* End of file */
 #define FG_EOF				EOF

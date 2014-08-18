@@ -60,7 +60,6 @@ const char *fgFile::modeStr(fgFileMode mode)
 {
 	if(mode == FG_FILE_MODE_NONE)
 		return "";
-	
 	if(mode & FG_FILE_MODE_READ) {
 		if(mode & FG_FILE_MODE_READ_UPDATE && mode & FG_FILE_MODE_BINARY)
 			return "r+b";

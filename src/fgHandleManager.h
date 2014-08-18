@@ -18,6 +18,9 @@
 
 #include <hash_map>
 
+#ifndef FG_HASH_STD_STRING_TEMPLATE_DEFINED_
+#define FG_HASH_STD_STRING_TEMPLATE_DEFINED_
+
 namespace std
 {
 	template<> struct hash<std::string>
@@ -28,6 +31,8 @@ namespace std
 		}
 	};
 };
+
+#endif /* FG_HASH_STD_STRING_TEMPLATE_DEFINED_ */
 
 #define hmHashKeyType std::string
 
@@ -47,14 +52,15 @@ public:
 			return s1.compare(s2) == 0;
 		}
 	};
-	typedef std::hash<hmHashKeyType> hmHashType;
+	typedef std::string hashKey;
+	typedef std::hash<hmHashKeyType> hashFunc;
 	// Type for vector storing Data pointers
     typedef fgArrayVector <DataType> hmDataVec;
 	// Type for map, assigning handle index value to string ID (case sensitive)
-	typedef std::hash_map <hmHashKeyType, fgRawIndex, hmHashType, hmEqualTo> hmNameMap; //#FIXME - this is not standard
+	typedef std::hash_map <hashKey, fgRawIndex, hashFunc, hmEqualTo> hmNameMap; //#FIXME - this is not standard
 private:
     typedef fgArrayVector <fgRawMagic>   hmMagicVec;
-	typedef fgArrayVector <hmHashKeyType>  hmNameVec;
+	typedef fgArrayVector <hashKey>  hmNameVec;
     typedef fgArrayVector <unsigned int> hmFreeSlotsVec;
 	// Data storage
     hmDataVec  m_managedData;

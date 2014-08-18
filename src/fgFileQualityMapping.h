@@ -18,7 +18,7 @@
 
 #include "Hardware\fgQualityTypes.h"
 
-#define FG_FILE_QUALITY_MAPPING_NAME "FileQualityMap"
+#define FG_FILE_QUALITY_MAPPING_TEXT "FileQualityMap"
 
 /*
  *

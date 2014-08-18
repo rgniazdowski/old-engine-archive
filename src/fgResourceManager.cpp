@@ -661,7 +661,7 @@ fgBool fgResourceManager::checkForOverallocation(void)
 	{
 		resetMemory();
 		// create a temporary priority queue to store the managed items
-		std::priority_queue<fgResource*, std::vector<fgResource*>, ptr_greater<fgResource*> > PriQueue;
+		std::priority_queue<fgResource*, std::vector<fgResource*>, fgPtrGreater<fgResource*> > PriQueue;
 		fgResourceVectorItor begin = getRefResourceVector().begin(), end = getRefResourceVector().end();
 
 		// insert copies of all the resource pointers into the priority queue, but

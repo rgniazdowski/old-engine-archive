@@ -27,26 +27,6 @@
 #define FG_RHANDLE fgResourceHandle
 #endif
 
-// This class allows an STL object to compare the objects instead of
-// comparing the value of the objects' pointers.
-template <class T>
-class ptr_less
-{
-public:
-	inline bool operator ()(T left, T right)
-	{  return ((*left) < (*right));  }
-};
-
-// This class allows an STL object to compare the objects instead of
-// comparing the value of the objects' pointers.
-template <class T>
-class ptr_greater
-{
-public:
-	inline bool operator ()(T left, T right)
-	{  return !((*left) < (*right));  }
-};
-
 class fgTextureManager;
 
 // The resource manager handles all the external resources. It takes care of the memory

@@ -49,10 +49,15 @@ private:
 	fgResourceType m_resType;
 	// Current resource object pointer
 	fgResource *m_resourcePtr;
+	// Current resource priority
 	fgResPriorityType m_curResPriority;
+	// Is current resource tag mapped? (file names mapped to quality)
 	fgBool m_isMapped;
+	// Is current xml used for mapping file to quality?
 	fgBool m_isFileQualityMapTag;
+	// Current resource name (tag id, #FIXME)
 	const char *m_curResName;
+	// Element stack (not used yet, #FIXME)
 	std::stack<fgXMLElement *> m_elemStack;
 
 	// Base constructor of the resource group content handler object
@@ -74,7 +79,6 @@ private:
 protected:
 	// Set pointer to resource group object - this group is being parsed
 	void setResourceGroupPointer(fgResourceGroup *group) { m_resourceGroup = group; }
-	fgResourceType getResourceTagType(const char *localName);
 public:
 	// Receive notification of the end of the document.
 	virtual void endDocument(fgXMLDocument *document)

@@ -49,9 +49,9 @@ typedef unsigned char fgBool;
 #define FG_SUCCESS 1
 #endif
 
-#define FG_SUCCESS_NAME "success"
-#define FG_TRUE_NAME "true"
-#define FG_FALSE_NAME "false"
+#define FG_SUCCESS_TEXT		"success"
+#define FG_TRUE_TEXT		"true"
+#define FG_FALSE_TEXT		"false"
 
 #ifndef NULL
     #ifndef __cplusplus
@@ -67,24 +67,41 @@ typedef unsigned char fgBool;
     #else
         #define FG_NULL 0
     #endif
-#endif
+#endif /* FG_NULL */
 
-#define FG_RETURN_IF_NAME_EQ(input, checkStr, returnVal) \
-	do { if(strnicmp(input, checkStr, strlen(checkStr)) == 0) return returnVal; } while(0)
+// Special macros for checking text/string value, in context of converting to enums/ints etc.
 
-#define FG_RETURN_IF_NAME_EQ_S(input, returnVal) \
-	do { if(strnicmp(input, returnVal ## _NAME, strlen(returnVal ## _NAME)) == 0) return returnVal; } while(0)
+// Convert enum to text (can be useful)
+#define FG_TEXT_FROM_ENUM(ENUM) ENUM ## _TEXT
+// Convert enum to text (can be useful)
+#define FG_TEXT FG_TEXT_FROM_ENUM
 
-#define FG_RETURN_FALSE(check) do { if(!check) return FG_FALSE; } while(0)
+// This enum is used to return (exit function) specific value if variable 'text' is equal to 'checkStr'
+#define FG_RETURN_VAL_IF_TEXT_EQ(checkStr, returnVal) \
+	do { if(strnicmp(text, checkStr, strlen(checkStr)) == 0) return returnVal; } while(0)
 
-inline fgBool _FG_BOOL_FROM_NAME(const char* name) {
-	FG_RETURN_FALSE(name);
-	FG_RETURN_IF_NAME_EQ_S(name, FG_TRUE);
-	FG_RETURN_IF_NAME_EQ_S(name, FG_FALSE);
-	FG_RETURN_IF_NAME_EQ(name, FG_SUCCESS_NAME, FG_TRUE);
+// This is similar to the macro above, but is more automatic.
+// As a parameter it needs to get some enum value (not by variable however)
+// Macro uses concatenation (token pasting) to get to strings (literals)
+// stored in (enum name)_TEXT global constants - this how comparison is made
+#define FG_RETURN_ENUM_IF_TEXT_EQ(returnVal) \
+	do { if(strnicmp(text, returnVal ## _TEXT, strlen(returnVal ## _TEXT)) == 0) return returnVal; } while(0)
+
+// Simple if for checking string against enum equivalent
+#define FG_ENUM_IF_TEXT_EQ(ENUM) \
+	if(strnicmp(text, ENUM ## _TEXT, strlen(ENUM ## _TEXT)) == 0)
+
+// Convert text (literal) to corresponding enum value
+inline fgBool _FG_BOOL_FROM_TEXT(const char* text) {
+	if(!text)
+		return FG_FALSE;
+	FG_RETURN_ENUM_IF_TEXT_EQ(FG_TRUE);
+	FG_RETURN_ENUM_IF_TEXT_EQ(FG_FALSE);
+	FG_RETURN_VAL_IF_TEXT_EQ(FG_SUCCESS_TEXT, FG_TRUE);
 	return FG_FALSE;
 }
-#define FG_BOOL_FROM_NAME(name) _FG_BOOL_FROM_NAME(name)
+#define FG_BOOL_FROM_TEXT(text) _FG_BOOL_FROM_TEXT(text)
+#define FG_BOOL FG_BOOL_FROM_TEXT
 
 #define FG_ENUM_FLAGS(Type) \
 enum Type;	\
@@ -140,7 +157,34 @@ public:
     }
 
 };
-#endif
+#endif /* FG_USING_MARMALADE */
+
+#ifndef FG_PTR_LESS_DEFINED_
+#define FG_PTR_LESS_DEFINED_
+// This class allows an STL object to compare the objects instead of
+// comparing the value of the objects' pointers.
+template <class T>
+class fgPtrLess
+{
+public:
+	inline bool operator ()(T left, T right)
+	{  return ((*left) < (*right));  }
+};
+#endif /* FG_PTR_LESS_DEFINED_ */
+
+#ifndef FG_PTR_GREATER_DEFINED_
+#define FG_PTR_GREATER_DEFINED_
+// This class allows an STL object to compare the objects instead of
+// comparing the value of the objects' pointers.
+template <class T>
+class fgPtrGreater
+{
+public:
+	inline bool operator ()(T left, T right)
+	{  return !((*left) < (*right));  }
+};
+#endif /* FG_PTR_GREATER_DEFINED_ */
+
 
 // #FIXME this should not be in this file, but for now (just to compile the damn code) it'll be here
 // #TODO #P2 this class needs modification so it will have the standard of all the fgVector*/fgColor* classes

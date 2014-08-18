@@ -11,69 +11,10 @@
 #include "Graphics/Textures/fgTextureResource.h"
 #include "GUI/fgFontResource.h"
 
-fgResourceType fgResourceGroupContentHandler::getResourceTagType(const char *localName)
-{
-	if(strnicmp(localName, FG_RESOURCE_GROUP_NAME, strlen(FG_RESOURCE_GROUP_NAME)) == 0) {
-		return FG_RESOURCE_GROUP;
-	// Resource is a sfx sound file (effects mostly)
-	} else if(strnicmp(localName, FG_RESOURCE_SOUND_NAME, strlen(FG_RESOURCE_SOUND_NAME)) == 0) {
-		return FG_RESOURCE_SOUND;
-	// Resource is a music file
-	} else if(strnicmp(localName, FG_RESOURCE_MUSIC_NAME, strlen(FG_RESOURCE_MUSIC_NAME)) == 0) {
-		return FG_RESOURCE_MUSIC;
-	// Resource file is 3D model (obj/3ds/...)
-	} else if(strnicmp(localName, FG_RESOURCE_3D_MODEL_NAME, strlen(FG_RESOURCE_3D_MODEL_NAME)) == 0) {
-		return FG_RESOURCE_3D_MODEL;
-	// Resource is a texture (jpg/png/tga)
-	} else if(strnicmp(localName, FG_RESOURCE_TEXTURE_NAME, strlen(FG_RESOURCE_TEXTURE_NAME)) == 0) {
-		return FG_RESOURCE_TEXTURE;
-	// Resource is a Font - just for now it is really a texture file - support for TTF in the future
-	} else if(strnicmp(localName, FG_RESOURCE_FONT_NAME, strlen(FG_RESOURCE_FONT_NAME)) == 0) {
-		return FG_RESOURCE_FONT;
-	// Resource is a GUI structure definition (also XML based file - similar to HTML for a reason)
-	} else if(strnicmp(localName, FG_RESOURCE_GUI_STRUCTURE_SHEET_NAME, strlen(FG_RESOURCE_GUI_STRUCTURE_SHEET_NAME)) == 0) {
-		return FG_RESOURCE_GUI_STRUCTURE_SHEET;
-	// Resource type is GUI stylesheet
-	} else if(strnicmp(localName, FG_RESOURCE_GUI_STYLE_SHEET_NAME, strlen(FG_RESOURCE_GUI_STYLE_SHEET_NAME)) == 0) {
-		return FG_RESOURCE_GUI_STYLE_SHEET;
-	// Resource file is shader config file
-	} else if(strnicmp(localName, FG_RESOURCE_SHADER_NAME, strlen(FG_RESOURCE_SHADER_NAME)) == 0) {
-		return FG_RESOURCE_SHADER;
-	// Resource file is scene - this something like level file, bound to change later...
-	} else if(strnicmp(localName, FG_RESOURCE_SCENE_NAME, strlen(FG_RESOURCE_SCENE_NAME)) == 0) {
-		return FG_RESOURCE_SCENE;
-	// Resource file is a script (custom language or LUA)
-	} else if(strnicmp(localName, FG_RESOURCE_SCRIPT_NAME, strlen(FG_RESOURCE_SCRIPT_NAME)) == 0) {
-		return FG_RESOURCE_SCRIPT;
-	//  Resource file is save file (save state) - this is kinda broad definition
-	} else if(strnicmp(localName, FG_RESOURCE_SAVE_FILE_NAME, strlen(FG_RESOURCE_SAVE_FILE_NAME)) == 0) {
-		return FG_RESOURCE_SAVE_FILE;
-	// Various resource (this might become handy or not, we'll see)
-	} else if(strnicmp(localName, FG_RESOURCE_VARIA_NAME, strlen(FG_RESOURCE_VARIA_NAME)) == 0) {
-		return FG_RESOURCE_VARIA;
-	// Resource is binary file
-	} else if(strnicmp(localName, FG_RESOURCE_BINARY_NAME, strlen(FG_RESOURCE_BINARY_NAME)) == 0) {
-		return FG_RESOURCE_BINARY;
-	// Resource type is library (in the future, however now in mind I have dynamic linking - DLL)
-	} else if(strnicmp(localName, FG_RESOURCE_LIBRARY_NAME, strlen(FG_RESOURCE_LIBRARY_NAME)) == 0) {
-		return FG_RESOURCE_LIBRARY;
-	// Resource type is plugin
-	} else if(strnicmp(localName, FG_RESOURCE_PLUGIN_NAME, strlen(FG_RESOURCE_PLUGIN_NAME)) == 0) {
-		return FG_RESOURCE_PLUGIN;
-	// Resource type is custom (based, managed by other plugins - to come in the future)
-	} else if(strnicmp(localName, FG_RESOURCE_CUSTOM_NAME, strlen(FG_RESOURCE_CUSTOM_NAME)) == 0) {
-		return FG_RESOURCE_CUSTOM;
-	// Resource type is ZipPack (uncompressed zip, pk3 like from Quake III)
-	} else if(strnicmp(localName, FG_RESOURCE_ZIP_PACK_NAME, strlen(FG_RESOURCE_ZIP_PACK_NAME)) == 0) {
-		return FG_RESOURCE_ZIP_PACK;
-	}
-	return FG_RESOURCE_INVALID;
-}
-
 void fgResourceGroupContentHandler::endElement(const char *localName, fgXMLElement *elementPtr, fgXMLNodeType nodeType, int depth)
 {
 	m_elemStack.pop();
-	fgResourceType rtype = getResourceTagType(localName);
+	fgResourceType rtype = FG_RESOURCE_TYPE_FROM_TEXT(localName);
 	// If the resource was created...
 	if(m_resourcePtr && (rtype != FG_RESOURCE_GROUP && rtype != FG_RESOURCE_INVALID)) {
 		m_resourcePtr->setPriority(m_curResPriority);
@@ -116,7 +57,7 @@ void fgResourceGroupContentHandler::startElement(const char *localName, fgXMLEle
 	// Resource Group ?
 	m_elemStack.push(elementPtr);
 	
-	m_resType = getResourceTagType(localName);
+	m_resType = FG_RESOURCE_TYPE_FROM_TEXT(localName);
 	// Handling for resource group tag type - in most cases it's the root node.
 	// #TODO - there needs to be a security check - checking if the resource group does not
 	// contain links to other resource group files - this is not support and not needed.
@@ -130,19 +71,16 @@ void fgResourceGroupContentHandler::startElement(const char *localName, fgXMLEle
 				m_resourceGroup->setResourceName(attrvalue);
 				FG_WriteLog("RESOURCE GROUP: NAME: '%s'", attrvalue);
 			} else if(strnicmp(attrname, "priority", 8) == 0) {
-				m_resourceGroup->setPriority(FG_RES_PRIORITY_FROM_NAME(attrvalue));
+				m_resourceGroup->setPriority(FG_RES_PRIORITY_FROM_TEXT(attrvalue));
 			}
 			attribute = attribute->Next();
 		}
 	} else if(m_resType == FG_RESOURCE_INVALID) {
-		if(strnicmp(localName, FG_FILE_QUALITY_MAPPING_NAME, strlen(FG_FILE_QUALITY_MAPPING_NAME)) == 0) {			
+		if(strnicmp(localName, FG_FILE_QUALITY_MAPPING_TEXT, strlen(FG_FILE_QUALITY_MAPPING_TEXT)) == 0) {			
 			m_isFileQualityMapTag = FG_TRUE;
 		} else if(true) {
 		}
 	}
-
-	//else if(strnicmp(localName, FG_RESOURCE_INVALID_NAME, strlen(FG_RESOURCE_INVALID_NAME)) == 0) {
-	//} 	
 
 	// Here are common attributes for every resource tag in resource group
 	// Path to the resource
@@ -169,7 +107,7 @@ void fgResourceGroupContentHandler::startElement(const char *localName, fgXMLEle
 			} else if(strnicmp(attrname, "quality", 7) == 0) {
 				resQualityStr = attrvalue;
 			} else if(strnicmp(attrname, "ismapped", 8) == 0) {
-				m_isMapped = FG_BOOL_FROM_NAME(attrvalue);
+				m_isMapped = FG_BOOL_FROM_TEXT(attrvalue);
 			}
 			if(!resQualityStr)
 				resQualityStr = "universal";
@@ -177,11 +115,11 @@ void fgResourceGroupContentHandler::startElement(const char *localName, fgXMLEle
 		}
 	}
 	if(resPriorityStr)
-		m_curResPriority = FG_RES_PRIORITY_FROM_NAME(resPriorityStr);
+		m_curResPriority = FG_RES_PRIORITY_FROM_TEXT(resPriorityStr);
 	if(m_resType == FG_RESOURCE_INVALID) {
 		if(m_resourcePtr && m_isFileQualityMapTag && resPath) {
 			FG_WriteLog("Setting path: '%s', for resource: '%s', quality='%s'", resPath, m_curResName, resQualityStr);
-			m_resourcePtr->setFilePath(resPath, FG_QUALITY_FROM_NAME(resQualityStr));
+			m_resourcePtr->setFilePath(resPath, FG_QUALITY_FROM_TEXT(resQualityStr));
 		}
 		return;
 	}

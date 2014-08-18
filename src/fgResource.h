@@ -21,10 +21,11 @@
 #include <cstring>
 
 #include "fgHandle.h"
+#include "fgFileQualityMapping.h" // #FIXME
 
-#include "fgFileQualityMapping.h"
-
+// Empty structure for resource tag
 struct fgTagResource  {  };
+// Special handle type for resource
 typedef fgHandle<fgTagResource> fgResourceHandle;
 
 #ifndef FG_RHANDLE
@@ -37,25 +38,25 @@ class fgResourceGroup;
 // Maximum length of the path string for resource file
 #define FG_RESOURCE_PATH_MAX	FG_PATH_MAX
 
-#define FG_RESOURCE_INVALID_NAME				"Invalid"
-#define FG_RESOURCE_SOUND_NAME					"Sound"
-#define FG_RESOURCE_MUSIC_NAME					"Music"
-#define FG_RESOURCE_3D_MODEL_NAME				"3DModel"
-#define FG_RESOURCE_TEXTURE_NAME				"Texture"
-#define FG_RESOURCE_FONT_NAME					"Font"
-#define FG_RESOURCE_SAVE_FILE_NAME				"SaveFile"
-#define FG_RESOURCE_GUI_STRUCTURE_SHEET_NAME 	"GuiStructureSheet"
-#define FG_RESOURCE_GUI_STYLE_SHEET_NAME		"GuiStyleSheet"
-#define FG_RESOURCE_SHADER_NAME					"Shader"
-#define FG_RESOURCE_SCENE_NAME					"Scene"
-#define FG_RESOURCE_SCRIPT_NAME					"Script"
-#define FG_RESOURCE_GROUP_NAME					"ResourceGroup"
-#define FG_RESOURCE_VARIA_NAME					"Varia"
-#define FG_RESOURCE_BINARY_NAME 				"Binary"
-#define FG_RESOURCE_LIBRARY_NAME 				"Library"
-#define FG_RESOURCE_PLUGIN_NAME 				"Plugin"
-#define FG_RESOURCE_CUSTOM_NAME 				"Custom"
-#define FG_RESOURCE_ZIP_PACK_NAME				"ZipPack"
+#define FG_RESOURCE_INVALID_TEXT				"Invalid"
+#define FG_RESOURCE_SOUND_TEXT					"Sound"
+#define FG_RESOURCE_MUSIC_TEXT					"Music"
+#define FG_RESOURCE_3D_MODEL_TEXT				"3DModel"
+#define FG_RESOURCE_TEXTURE_TEXT				"Texture"
+#define FG_RESOURCE_FONT_TEXT					"Font"
+#define FG_RESOURCE_SAVE_FILE_TEXT				"SaveFile"
+#define FG_RESOURCE_GUI_STRUCTURE_SHEET_TEXT 	"GuiStructureSheet"
+#define FG_RESOURCE_GUI_STYLE_SHEET_TEXT		"GuiStyleSheet"
+#define FG_RESOURCE_SHADER_TEXT					"Shader"
+#define FG_RESOURCE_SCENE_TEXT					"Scene"
+#define FG_RESOURCE_SCRIPT_TEXT					"Script"
+#define FG_RESOURCE_GROUP_TEXT					"ResourceGroup"
+#define FG_RESOURCE_VARIA_TEXT					"Varia"
+#define FG_RESOURCE_BINARY_TEXT 				"Binary"
+#define FG_RESOURCE_LIBRARY_TEXT 				"Library"
+#define FG_RESOURCE_PLUGIN_TEXT 				"Plugin"
+#define FG_RESOURCE_CUSTOM_TEXT 				"Custom"
+#define FG_RESOURCE_ZIP_PACK_TEXT				"ZipPack"
 
 // Enum type holding all possible resource types
 // used in the game engine
@@ -95,41 +96,42 @@ enum fgResourceType {
 /*
  *
  */
-inline fgResourceType _FG_RESOURCE_TYPE_FROM_NAME(const char* name) {
-	if(!name)
+inline fgResourceType _FG_RESOURCE_TYPE_FROM_TEXT(const char* text) {
+	
+	if(!text)
 		return FG_RESOURCE_INVALID;
-	FG_RETURN_IF_NAME_EQ_S(name, FG_RESOURCE_INVALID);
-	FG_RETURN_IF_NAME_EQ_S(name, FG_RESOURCE_SOUND);
-	FG_RETURN_IF_NAME_EQ_S(name, FG_RESOURCE_MUSIC);
-	FG_RETURN_IF_NAME_EQ_S(name, FG_RESOURCE_3D_MODEL);
-	FG_RETURN_IF_NAME_EQ_S(name, FG_RESOURCE_TEXTURE);
-	FG_RETURN_IF_NAME_EQ_S(name, FG_RESOURCE_FONT);
-	FG_RETURN_IF_NAME_EQ_S(name, FG_RESOURCE_SAVE_FILE);
-	FG_RETURN_IF_NAME_EQ_S(name, FG_RESOURCE_GUI_STRUCTURE_SHEET);
-	FG_RETURN_IF_NAME_EQ_S(name, FG_RESOURCE_GUI_STYLE_SHEET);
-	FG_RETURN_IF_NAME_EQ_S(name, FG_RESOURCE_SHADER);
-	FG_RETURN_IF_NAME_EQ_S(name, FG_RESOURCE_SCENE);
-	FG_RETURN_IF_NAME_EQ_S(name, FG_RESOURCE_SCRIPT);
-	FG_RETURN_IF_NAME_EQ_S(name, FG_RESOURCE_GROUP);
-	FG_RETURN_IF_NAME_EQ_S(name, FG_RESOURCE_VARIA);
-	FG_RETURN_IF_NAME_EQ_S(name, FG_RESOURCE_BINARY);
-	FG_RETURN_IF_NAME_EQ_S(name, FG_RESOURCE_LIBRARY);
-	FG_RETURN_IF_NAME_EQ_S(name, FG_RESOURCE_PLUGIN);
-	FG_RETURN_IF_NAME_EQ_S(name, FG_RESOURCE_CUSTOM);
-	FG_RETURN_IF_NAME_EQ_S(name, FG_RESOURCE_ZIP_PACK);
+	FG_RETURN_ENUM_IF_TEXT_EQ(FG_RESOURCE_INVALID);
+	FG_RETURN_ENUM_IF_TEXT_EQ(FG_RESOURCE_SOUND);
+	FG_RETURN_ENUM_IF_TEXT_EQ(FG_RESOURCE_MUSIC);
+	FG_RETURN_ENUM_IF_TEXT_EQ(FG_RESOURCE_3D_MODEL);
+	FG_RETURN_ENUM_IF_TEXT_EQ(FG_RESOURCE_TEXTURE);
+	FG_RETURN_ENUM_IF_TEXT_EQ(FG_RESOURCE_FONT);
+	FG_RETURN_ENUM_IF_TEXT_EQ(FG_RESOURCE_SAVE_FILE);
+	FG_RETURN_ENUM_IF_TEXT_EQ(FG_RESOURCE_GUI_STRUCTURE_SHEET);
+	FG_RETURN_ENUM_IF_TEXT_EQ(FG_RESOURCE_GUI_STYLE_SHEET);
+	FG_RETURN_ENUM_IF_TEXT_EQ(FG_RESOURCE_SHADER);
+	FG_RETURN_ENUM_IF_TEXT_EQ(FG_RESOURCE_SCENE);
+	FG_RETURN_ENUM_IF_TEXT_EQ(FG_RESOURCE_SCRIPT);
+	FG_RETURN_ENUM_IF_TEXT_EQ(FG_RESOURCE_GROUP);
+	FG_RETURN_ENUM_IF_TEXT_EQ(FG_RESOURCE_VARIA);
+	FG_RETURN_ENUM_IF_TEXT_EQ(FG_RESOURCE_BINARY);
+	FG_RETURN_ENUM_IF_TEXT_EQ(FG_RESOURCE_LIBRARY);
+	FG_RETURN_ENUM_IF_TEXT_EQ(FG_RESOURCE_PLUGIN);
+	FG_RETURN_ENUM_IF_TEXT_EQ(FG_RESOURCE_CUSTOM);
+	FG_RETURN_ENUM_IF_TEXT_EQ(FG_RESOURCE_ZIP_PACK);
 	return FG_RESOURCE_INVALID;
 }
 
-#define FG_RESOURCE_TYPE_FROM_NAME(name) _FG_RESOURCE_TYPE_FROM_NAME(name)
+#define FG_RESOURCE_TYPE_FROM_TEXT(text) _FG_RESOURCE_TYPE_FROM_TEXT(text)
 
-// Name (string version) for the resource low priority enum
-#define FG_RES_PRIORITY_LOW_NAME	"low"
-// Name (string version) for the resource medium priority enum
-#define FG_RES_PRIORITY_MEDIUM_NAME "medium"
-// Name (string version) for the resource high priority enum
-#define FG_RES_PRIORITY_HIGH_NAME	"high"
-// Name (string version_ for the resource invalid priority enum
-#define FG_RES_PRIORITY_INVALID_NAME "invalid"
+// Text (string version) for the resource low priority enum
+#define FG_RES_PRIORITY_LOW_TEXT		"low"
+// Text (string version) for the resource medium priority enum
+#define FG_RES_PRIORITY_MEDIUM_TEXT		"medium"
+// Text (string version) for the resource high priority enum
+#define FG_RES_PRIORITY_HIGH_TEXT		"high"
+// Text (string version_ for the resource invalid priority enum
+#define FG_RES_PRIORITY_INVALID_TEXT	"invalid"
 
 // Enum for resource priority (low, medium, high, ...)
 enum fgResPriorityType
@@ -145,20 +147,18 @@ enum fgResPriorityType
 	FG_RES_PRIORITY_RESERVED3 = 5
 };
 
-/*
- *
- */
-inline fgResPriorityType _FG_RES_PRIORITY_FROM_NAME(const char* name) {
-	if(!name)
+// Convert text (literal) to corresponding enum value
+inline fgResPriorityType _FG_RES_PRIORITY_FROM_TEXT(const char* text) {
+	if(!text)
 		return FG_RES_PRIORITY_INVALID;
-	FG_RETURN_IF_NAME_EQ_S(name, FG_RES_PRIORITY_INVALID);
-	FG_RETURN_IF_NAME_EQ_S(name, FG_RES_PRIORITY_LOW);
-	FG_RETURN_IF_NAME_EQ_S(name, FG_RES_PRIORITY_MEDIUM);
-	FG_RETURN_IF_NAME_EQ_S(name, FG_RES_PRIORITY_HIGH);
+	FG_RETURN_ENUM_IF_TEXT_EQ(FG_RES_PRIORITY_INVALID);
+	FG_RETURN_ENUM_IF_TEXT_EQ(FG_RES_PRIORITY_LOW);
+	FG_RETURN_ENUM_IF_TEXT_EQ(FG_RES_PRIORITY_MEDIUM);
+	FG_RETURN_ENUM_IF_TEXT_EQ(FG_RES_PRIORITY_HIGH);
 	return FG_RES_PRIORITY_INVALID;
 }
 
-#define FG_RES_PRIORITY_FROM_NAME(name) _FG_RES_PRIORITY_FROM_NAME(name)
+#define FG_RES_PRIORITY_FROM_TEXT(text) _FG_RES_PRIORITY_FROM_TEXT(text)
 
 /*
  * Base class for resource

@@ -12,6 +12,7 @@
 
 #include "../fgCommon.h"
 
+// Enums for specifing quality
 enum fgQuality {
 	FG_QUALITY_UNIVERSAL=-1,
 	FG_QUALITY_LOW		= 0,
@@ -20,23 +21,29 @@ enum fgQuality {
 	FG_QUALITY_EXTRA	= 3
 };
 
-#define FG_QUALITY_UNIVERSAL_NAME	"universal"
-#define FG_QUALITY_LOW_NAME			"low"
-#define FG_QUALITY_MEDIUM_NAME		"medium"
-#define FG_QUALITY_HIGH_NAME		"high"
-#define FG_QUALITY_EXTRA_NAME		"extra"
+// Text (string version) for the universal quality enum
+#define FG_QUALITY_UNIVERSAL_TEXT	"universal"
+// Text (string version) for the universal quality enum
+#define FG_QUALITY_LOW_TEXT			"low"
+// Text (string version) for the medium quality enum
+#define FG_QUALITY_MEDIUM_TEXT		"medium"
+// Text (string version) for the high quality enum
+#define FG_QUALITY_HIGH_TEXT		"high"
+// Text (string version) for the universal quality enum
+#define FG_QUALITY_EXTRA_TEXT		"extra"
 
-inline fgQuality _FG_QUALITY_FROM_NAME(const char* name) {
-	if(!name)
+// Convert text (literal) to corresponding enum value
+inline fgQuality _FG_QUALITY_FROM_TEXT(const char* text) {
+	if(!text)
 		return FG_QUALITY_UNIVERSAL;
-	FG_RETURN_IF_NAME_EQ_S(name, FG_QUALITY_UNIVERSAL);
-	FG_RETURN_IF_NAME_EQ_S(name, FG_QUALITY_LOW);
-	FG_RETURN_IF_NAME_EQ_S(name, FG_QUALITY_MEDIUM);
-	FG_RETURN_IF_NAME_EQ_S(name, FG_QUALITY_HIGH);
-	FG_RETURN_IF_NAME_EQ_S(name, FG_QUALITY_EXTRA);
+	FG_RETURN_ENUM_IF_TEXT_EQ(FG_QUALITY_UNIVERSAL);
+	FG_RETURN_ENUM_IF_TEXT_EQ(FG_QUALITY_LOW);
+	FG_RETURN_ENUM_IF_TEXT_EQ(FG_QUALITY_MEDIUM);
+	FG_RETURN_ENUM_IF_TEXT_EQ(FG_QUALITY_HIGH);
+	FG_RETURN_ENUM_IF_TEXT_EQ(FG_QUALITY_EXTRA);
 	return FG_QUALITY_UNIVERSAL;
 }
 
-#define FG_QUALITY_FROM_NAME(name) _FG_QUALITY_FROM_NAME(name)
+#define FG_QUALITY_FROM_TEXT(text) _FG_QUALITY_FROM_TEXT(text)
 
 #endif /* _FG_QUALITY_TYPES_H_ */
