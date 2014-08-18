@@ -21,6 +21,8 @@ files
 	fgHandleManager.h
 	fgMemory.h
 	fgMessageCommon.h
+	fgProfiling.cpp
+	fgProfiling.h
 	fgResource.cpp
 	fgResource.h
 	fgResourceGroup.cpp
@@ -32,6 +34,8 @@ files
 	fgSingleton.cpp
 	fgSingleton.h
 	fgStatus.h
+	fgTime.cpp
+	fgTime.h
 	fgXMLDefaultHandler.h
 	fgXMLParser.cpp
 	fgXMLParser.h
