@@ -10,6 +10,8 @@
 #ifndef _FG_QUALITY_TYPES_H_
 #define _FG_QUALITY_TYPES_H_
 
+#include "../fgCommon.h"
+
 enum fgQuality {
 	FG_QUALITY_UNIVERSAL=-1,
 	FG_QUALITY_LOW		= 0,
@@ -27,17 +29,11 @@ enum fgQuality {
 inline fgQuality _FG_QUALITY_FROM_NAME(const char* name) {
 	if(!name)
 		return FG_QUALITY_UNIVERSAL;
-	if(strnicmp(name, FG_QUALITY_UNIVERSAL_NAME, strlen(FG_QUALITY_UNIVERSAL_NAME)) == 0) {
-		return FG_QUALITY_UNIVERSAL;
-	} else if(strnicmp(name, FG_QUALITY_LOW_NAME, strlen(FG_QUALITY_LOW_NAME)) == 0) {
-		return FG_QUALITY_LOW;
-	} else if(strnicmp(name, FG_QUALITY_MEDIUM_NAME, strlen(FG_QUALITY_MEDIUM_NAME)) == 0) {
-		return FG_QUALITY_MEDIUM;
-	} else if(strnicmp(name, FG_QUALITY_HIGH_NAME, strlen(FG_QUALITY_HIGH_NAME)) == 0) {
-		return FG_QUALITY_HIGH;
-	} else if(strnicmp(name, FG_QUALITY_EXTRA_NAME, strlen(FG_QUALITY_EXTRA_NAME)) == 0) {
-		return FG_QUALITY_EXTRA;
-	}
+	FG_RETURN_IF_NAME_EQ_S(name, FG_QUALITY_UNIVERSAL);
+	FG_RETURN_IF_NAME_EQ_S(name, FG_QUALITY_LOW);
+	FG_RETURN_IF_NAME_EQ_S(name, FG_QUALITY_MEDIUM);
+	FG_RETURN_IF_NAME_EQ_S(name, FG_QUALITY_HIGH);
+	FG_RETURN_IF_NAME_EQ_S(name, FG_QUALITY_EXTRA);
 	return FG_QUALITY_UNIVERSAL;
 }
 

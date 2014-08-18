@@ -69,20 +69,32 @@ typedef unsigned char fgBool;
     #endif
 #endif
 
+#define FG_RETURN_IF_NAME_EQ(input, checkStr, returnVal) \
+	do { if(strnicmp(input, checkStr, strlen(checkStr)) == 0) return returnVal; } while(0)
+
+#define FG_RETURN_IF_NAME_EQ_S(input, returnVal) \
+	do { if(strnicmp(input, returnVal ## _NAME, strlen(returnVal ## _NAME)) == 0) return returnVal; } while(0)
+
+#define FG_RETURN_FALSE(check) do { if(!check) return FG_FALSE; } while(0)
+
 inline fgBool _FG_BOOL_FROM_NAME(const char* name) {
-	if(!name)
-		return FG_FALSE;
-	if(strnicmp(name, FG_TRUE_NAME, strlen(FG_TRUE_NAME)) == 0) {
-		return FG_TRUE;
-	} else if(strnicmp(name, FG_FALSE_NAME, strlen(FG_FALSE_NAME)) == 0) {
-		return FG_FALSE;
-	} else if(strnicmp(name, FG_SUCCESS_NAME, strlen(FG_SUCCESS_NAME)) == 0) {
-		return FG_TRUE;
-	}
+	FG_RETURN_FALSE(name);
+	FG_RETURN_IF_NAME_EQ_S(name, FG_TRUE);
+	FG_RETURN_IF_NAME_EQ_S(name, FG_FALSE);
+	FG_RETURN_IF_NAME_EQ(name, FG_SUCCESS_NAME, FG_TRUE);
 	return FG_FALSE;
 }
-
 #define FG_BOOL_FROM_NAME(name) _FG_BOOL_FROM_NAME(name)
+
+#define FG_ENUM_FLAGS(Type) \
+enum Type;	\
+inline Type	operator	& (Type x, Type y)		{	return static_cast<Type>	(static_cast<int>(x) & static_cast<int>(y));	} \
+inline Type	operator	| (Type x, Type y)		{	return static_cast<Type>	(static_cast<int>(x) | static_cast<int>(y));	} \
+inline Type	operator	^ (Type x, Type y)		{	return static_cast<Type>	(static_cast<int>(x) ^ static_cast<int>(y));	} \
+inline Type	operator	~ (Type x)			{	return static_cast<Type>	(~static_cast<int>(x));	} \
+inline Type& operator	&= (Type& x, Type y)		{	x = x & y;	return x;	} \
+inline Type& operator	|= (Type& x, Type y)		{	x = x | y;	return x;	} \
+inline Type& operator	^= (Type& x, Type y)		{	x = x ^ y;	return x;	}
 
 #if defined FG_USING_MARMALADE
 #include "IwUtil.h"
