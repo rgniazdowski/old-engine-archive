@@ -19,6 +19,9 @@
 #ifndef _FG_BUILD_CONFIG_H_
 #define _FG_BUILD_CONFIG_H_
 
+#undef FG_VERBOSE
+#undef FG_VERBOSE_LEVEL
+
 #undef FG_USING_MARMALADE				//	Is Marmalade framework used in this build?
 #undef FG_USING_MARMALADE_SENSORS		//	Is Marmalades' sensor subsystem used?
 #undef FG_USING_MARMALADE_KEYBOARD		//	Is Marmalades' keyboard event handled in this build?
@@ -57,6 +60,7 @@
 #undef FG_USING_MINGW					//	Is MinGW used for current build?
 #undef FG_USING_VISUAL_STUDIO			//  Does the build system run under Visual Studio (any version)?
 #undef FG_USING_QT						//	Does the build system run under QtCreator (any version)?
+#undef FG_USING_PLUGINS					//	Is Plugin Subsystem used in this build?
 
 /*************************** CURRENT TARGET PLATFORM / BUILD SYSTEM ***************************/
 
@@ -99,7 +103,7 @@
 #endif
 
 #if defined _DEBUG && !defined DEBUG
-#define DEBUG
+#define DEBUG 1
 #endif
 
 #if defined IW_DEBUG
@@ -108,6 +112,13 @@
 #define FG_DEBUG 1
 #endif
 
+#if defined FG_DEBUG
+#define FG_VERBOSE_LEVEL 3
+#define FG_VERBOSE
+#else
+#define FG_VERBOSE_LEVEL 1
+#define FG_VERBOSE
+#endif
 
 /*************************** SUBSYSTEM / INPUT / AUDIO SUPPORT ***************************/
 
@@ -141,6 +152,11 @@
 #ifndef FG_USING_MARMALADE_IWGX
 #define FG_USING_MARMALADE_EGL
 #endif
+#endif
+
+// Compatibility for sensors
+#ifdef FG_USING_MARMALADE_SENSORS
+#define FG_USING_SENSORS
 #endif
 
 
@@ -184,6 +200,67 @@
 //#define FG_USING_LUA_PLUS
 // For handling physics the Bullet library will be used
 //#define FG_USING_BULLET
+
+//
+// SPECIAL STRUCT DEFINITION - EASY ACCESS
+//
+struct fgBuildConfig {
+	bool isDebug;
+	bool isVerbose;
+	int verboseLevel;
+	bool usingMarmalade;			//	Is Marmalade framework used in this build?
+	bool usingMarmaladeSensors;		//	Is Marmalades' sensor subsystem used?
+	bool usingMarmaladeKeyboard;	//	Is Marmalades' keyboard event handled in this build?
+	bool usingMarmaladeSound;		//	Is the s3eSound used?
+	bool usingMarmaladeAudio;		//	Is the s3eAudio used?
+	bool usingMarmaladeThreads;		//	Are Marmalades' threads used in this build?
+	bool usingMarmaladeIwGX;		//	Is the IwGX subproject used?
+	bool usingMarmaladeIwGL;		//	Is the IwGL subproject used in this build?
+	bool usingMarmaladeOpenGLES;	//	Is the OpenGL ES used via Marmalade?
+	bool usingOpenGLES;			//	Is the OpenGL ES used (will be also set when using OpenGL ES via Marmalade)?
+	bool usingOpenGL;			//	Is the plain OpenGL used in this build?
+	bool usingOpenGLGLU;		//	Is the GLU library used in this build?
+	bool usingOpenGLGLUT;		//	Is the GLUT library used?
+	bool usingOpenGLGLEW;		//	Is the GLEW library used?
+	bool usingSDL;
+	bool usingSDL2;
+	bool usingOpenAL;			//	Is the OpenAL library used (for sound system) in this build?
+	bool usingMarmaladeEGL;		//	Is the EGL used via Marmalade in this build?
+	bool usingEGL;				//	Is the EGL library used in this build?
+	bool usingSensors;			//	Are sensors used in this build?
+	bool usingAudio;			//	Is audio used at all?
+	bool usingThreads;			//	Are threads (non-Marmalade) used at all?
+	bool usingDirectX;			//	Is the DirectX (any version) used in this build?
+	bool usingDirectSound;		//	Is the DirectSound used?
+	bool usingDPIInfo;			//	Is the DPI Info extension used (Marmalade needed)?
+	bool usingTinyXML;			//	Is the tinyxml library used in this build?
+	bool usingLUAPlus;			//	Is the enhanced Lua C API used?
+	bool usingLUA;				//	Is the original Lua C API used?
+	bool usingBullet;			//	Is the Bullet (physics engine) library used in this build?
+	bool isPlatformWindows;		//	Is the target platform Windows in this build?
+	bool isPlatformLinux;		//	Is the target platform Linux?
+	bool isPlatformAndroid;		//	Is the target platform Android?
+	bool isPlatformIOS;			//	Is the target platform iOS?
+	bool isPlatformMACOS;		//	Is the target platform MACOS/X
+	bool usingCygwin;			//	Is Cygwin used for current build?
+	bool usingMinGW;			//	Is MinGW used for current build?
+	bool usingVisualStudio;		//  Does the build system run under Visual Studio (any version)?
+	bool usingQT;				//	Does the build system run under QtCreator (any version)?
+	bool usingPlugins;			//	Is Plugin Subsystem used in this build?
+	int version;
+	int versionMajor;
+	int versionMinor;
+	int versionRevision;
+	int empty;
+};
+
+extern struct fgBuildConfig g_fgBuildConfig;
+
+#define FG_BUILD g_fgBuildConfig
+
+#define FG_BUILD_DATE		__DATE__
+#define FG_BUILD_TIME		__TIME__
+#define FG_BUILD_VERSION	100
 
 #endif /* _FG_BUILD_CONFIG_H_ */
 /*************************** END MAIN MARMALADE BUILD CONFIG ***************************/

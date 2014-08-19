@@ -7,6 +7,7 @@ files
 	
 	["Infinium/BaseCode"]
 	fgBuildConfig.h
+	fgBuildConfig.cpp
 	fgCommon.cpp
 	fgCommon.h
 	fgDirent.cpp
