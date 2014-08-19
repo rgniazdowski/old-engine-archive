@@ -19,7 +19,7 @@ private:
 
 public:
 	SpecialEffect() {};
-	~SpecialEffect() {};
+	virtual ~SpecialEffect() {};
 
 	virtual void calculate(void) = 0;
 	virtual void draw(void) = 0;

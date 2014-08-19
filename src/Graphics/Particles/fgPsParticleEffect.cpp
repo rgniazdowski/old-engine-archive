@@ -33,8 +33,8 @@ ParticleEffect::~ParticleEffect()
 		fgFree(m_vertStream3D);
 	if(m_UVStream)
 		fgFree(m_UVStream);
-	if(m_material)
-		delete m_material;
+	//if(m_material)
+	//	delete m_material; // #FIXME
 
 	m_colorStream = NULL;
 	m_vertStream2D = NULL;
@@ -71,8 +71,8 @@ void ParticleEffect::setMaxCount(int max_count)
 		s3eFree(m_vertStream3D);
 	if(m_UVStream)
 		s3eFree(m_UVStream);
-	if(m_material)
-		delete m_material;
+//if(m_material)
+//		delete m_material; // #FIXME
 
 	m_colorStream = NULL;
 	m_vertStream2D = NULL;
@@ -80,16 +80,15 @@ void ParticleEffect::setMaxCount(int max_count)
 	m_UVStream = NULL;
 	m_material = NULL;
 
-	// FIXME This allocations need to be in DrawingBatch or SimpleDrawer, need to think about it
+	// #FIXME This allocations need to be in DrawingBatch or SimpleDrawer, need to think about it
 
 	m_colorStream = (fgColor *) fgMalloc(sizeof(fgColor) * 4 * max_count);
 	m_vertStream2D = (fgVector2i *) fgMalloc(sizeof(fgVector2i) * 4 * max_count);
 	m_vertStream3D = (fgVector3f *) fgMalloc(sizeof(fgVector3f) * 4 * max_count);
 	m_UVStream = (fgVector2f *) fgMalloc(sizeof(fgVector2f) * 4 * max_count);
+	// #FIXME
 	//m_material = new CIwMaterial();
-
 	//m_material->SetCullMode(CIwMaterial::CULL_NONE);
-
 	//m_modelMatrix.SetIdentity();
 	//m_emitterOrigin = CIwFVec3::g_Zero;
 }

@@ -23,7 +23,7 @@ public:
     /**
      * Public destructor
      */
-    ~ParticleEffectLimited();
+    virtual ~ParticleEffectLimited();
 
     /**
      * Removes given index. The element

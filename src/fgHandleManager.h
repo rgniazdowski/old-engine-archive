@@ -118,7 +118,7 @@ public:
 
 	//
     fgBool hasUsedHandles(void) const {
-		return (fgBool)(!!GetUsedHandleCount());  
+		return (fgBool)(!!getUsedHandleCount());  
 	}
 
 	// 
@@ -272,7 +272,7 @@ inline DataType fgHandleManager<DataType, HandleType>::dereference(HandleType ha
 template <typename DataType, typename HandleType>
 inline DataType fgHandleManager<DataType, HandleType>::dereference(hmHashKeyType& name)
 {
-	hmNameMap::iterator it = m_nameMap.find(name);
+	typename hmNameMap::iterator it = m_nameMap.find(name);
 	if(it == m_nameMap.end()) {
 		return NULL;
 	}
@@ -294,7 +294,7 @@ template <typename DataType, typename HandleType>
 inline DataType fgHandleManager<DataType, HandleType>::dereference(const char* name)
 {
 	hmHashKeyType key = name;
-	hmNameMap::iterator it = m_nameMap.find(key);
+	typename hmNameMap::iterator it = m_nameMap.find(key);
 	if(it == m_nameMap.end()) {
 		return NULL;
 	}

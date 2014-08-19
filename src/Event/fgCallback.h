@@ -27,7 +27,7 @@ public:
 	//
 	fgCallbackFunction() { }
 	// 
-	~fgCallbackFunction() {	}
+	virtual ~fgCallbackFunction() {	}
 
 	// 
 	fgCallbackFunction(fgFunction function)

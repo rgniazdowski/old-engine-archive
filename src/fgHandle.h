@@ -40,21 +40,20 @@ template <typename TagType>
 class fgHandle
 {
 private:
+	enum
+    {
+        // Size to use for index bit field
+        FG_HANDLE_MAX_BITS_INDEX = 16,
+        // Size to use for magic bit field
+        FG_HANDLE_MAX_BITS_MAGIC = 16,
+
+        // Size to compare against for asserting dereferences
+        FG_HANDLE_MAX_INDEX = ( 1 << FG_HANDLE_MAX_BITS_INDEX) - 1,
+        // Size to compare against for asserting dereferences
+        FG_HANDLE_MAX_MAGIC = ( 1 << FG_HANDLE_MAX_BITS_MAGIC) - 1,
+    };
     union
     {
-        enum
-        {
-            // Size to use for index bit field
-            FG_HANDLE_MAX_BITS_INDEX = 16,
-            // Size to use for magic bit field
-            FG_HANDLE_MAX_BITS_MAGIC = 16,
-
-            // Size to compare against for asserting dereferences
-            FG_HANDLE_MAX_INDEX = ( 1 << FG_HANDLE_MAX_BITS_INDEX) - 1,
-            // Size to compare against for asserting dereferences
-            FG_HANDLE_MAX_MAGIC = ( 1 << FG_HANDLE_MAX_BITS_MAGIC) - 1,
-        };
-
         struct
         {
 			// index into resource array

@@ -175,7 +175,7 @@ public:
 	// Constructor with additional parameter (path)
 	fgResource(std::string& path);
 	// Base destructor of the resource object
-	~fgResource()	{ destroy(); }
+	virtual ~fgResource()	{ destroy(); }
 
 	// Clears the class data, this actually does not free allocated memory,
 	// just resets base class attributes

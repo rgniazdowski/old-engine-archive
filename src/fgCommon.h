@@ -104,7 +104,6 @@ inline fgBool _FG_BOOL_FROM_TEXT(const char* text) {
 #define FG_BOOL FG_BOOL_FROM_TEXT
 
 #define FG_ENUM_FLAGS(Type) \
-enum Type;	\
 inline Type	operator	& (Type x, Type y)		{	return static_cast<Type>	(static_cast<int>(x) & static_cast<int>(y));	} \
 inline Type	operator	| (Type x, Type y)		{	return static_cast<Type>	(static_cast<int>(x) | static_cast<int>(y));	} \
 inline Type	operator	^ (Type x, Type y)		{	return static_cast<Type>	(static_cast<int>(x) ^ static_cast<int>(y));	} \
@@ -120,10 +119,10 @@ class fgArrayVector : public CIwArray<X, A, REALLOCATE> {
 public:
 	X & at(int const i) const {
 		uint32 index = (uint32)i;
-        if(index >= num_p) {
-			return p[0];
+        if(index >= this->num_p) {
+			return this->p[0];
 		}
-        return p[index];
+        return this->p[index];
 	}
 };
 #else 

@@ -36,8 +36,6 @@
 // Standard error output
 #define FG_ERR				stderr
 
-// Overload standard bitwise operator for enum type
-FG_ENUM_FLAGS(fgFileMode);
 // Enumeration for standard file manipulation modes
 enum fgFileMode {
 	FG_FILE_MODE_NONE	= 0,		// No mode specified (invalid).
@@ -58,6 +56,8 @@ enum fgFileMode {
 	// position back to the end of file.  The file is  created if  it does not exist.
 	FG_FILE_MODE_APPEND_UPDATE = FG_FILE_MODE_APPEND + FG_FILE_MODE_UPDATE
 };
+// Overload standard bitwise operator for enum type
+FG_ENUM_FLAGS(fgFileMode);
 
 /*
  * Platform independent wrapper for basic file operations

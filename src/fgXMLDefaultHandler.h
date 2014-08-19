@@ -19,7 +19,7 @@ class fgXMLDefaultHandler {
 private:
 protected:
 	fgXMLDefaultHandler() {}
-	~fgXMLDefaultHandler() {}
+	virtual ~fgXMLDefaultHandler() {}
 public:
 	// Receive notification of character data inside an element or comment
 	virtual void characters(const char ch[], int start, int length) {}

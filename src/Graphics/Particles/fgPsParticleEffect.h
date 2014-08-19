@@ -83,7 +83,7 @@ protected:
 
 protected:
     /// Array – serves as NORMAL or CIRCULAR buffer for Particle objects
-    CIwArray<Particle> m_particles;
+    fgArrayVector<Particle> m_particles;
 	/// The color stream
 	fgColor *m_colorStream;
 	/// The vertices stream in 2D space (XY)
@@ -145,7 +145,7 @@ public:
 		m_endColor = color;
     }
 
-	~ParticleEffect();
+	virtual ~ParticleEffect();
 
 //
 // MARK: -

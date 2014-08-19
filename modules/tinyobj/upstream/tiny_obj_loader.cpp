@@ -177,7 +177,7 @@ updateVertex(
     return it->second;
   }
 
-  assert(in_positions.size() > (3*i.v_idx+2));
+  assert(in_positions.size() > std::vector<float>::size_type(3*i.v_idx+2));
 
   positions.push_back(in_positions[3*i.v_idx+0]);
   positions.push_back(in_positions[3*i.v_idx+1]);

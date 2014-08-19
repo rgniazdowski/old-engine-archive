@@ -101,7 +101,8 @@ fgBool fgProfiling::begin(const char* name)
 {
 	if(!name)
 		return FG_FALSE;
-	return begin(std::string(name));
+	std::string strName = std::string(name);
+	return begin(reinterpret_cast<std::string&>(strName));
 }
 
 /*
@@ -140,7 +141,8 @@ fgBool fgProfiling::end(const char* name)
 {
 	if(!name)
 		return FG_FALSE;
-	return end(std::string(name));
+	std::string strName = std::string(name);
+	return end(reinterpret_cast<std::string&>(strName));
 }
 
 /*

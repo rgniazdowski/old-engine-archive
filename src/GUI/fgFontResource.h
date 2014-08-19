@@ -33,7 +33,7 @@ public:
 	// Constructor with additional parameter (path)
 	fgFontResource(std::string& path);
 	// Base destructor of the font resource object
-	~fgFontResource()	{ destroy(); }
+	virtual ~fgFontResource()	{ destroy(); }
 
 	// Clears the class data, this actually does not free allocated memory, 
 	// just resets base class attributes

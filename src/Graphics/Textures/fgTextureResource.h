@@ -46,7 +46,7 @@ public:
 	// Constructor with additional parameter (path)
 	fgTextureResource(std::string& path);
 	// Base destructor of the texture resource object
-	~fgTextureResource()	{ destroy(); }
+	virtual ~fgTextureResource()	{ destroy(); }
 
 	// Clears the class data, this actually does not free allocated memory,
 	// just resets base class attributes

@@ -75,22 +75,22 @@ public:
 	// the map across a dll boundary, but it's safe through the wrappers. 
 
 	// Go to the begin of resource map iteration
-	inline void goToBegin(void) {
+	void goToBegin(void) {
 		m_currentResource = getRefResourceVector().begin(); 
 	}
 	// Get pointer to the current resource (based on iterator)
-	inline fgResource* getCurrentResource(void)	{  
+	fgResource* getCurrentResource(void)	{  
 		if(!isValid()) 
 			return NULL;
 		else
 			return (*m_currentResource);
 	}
 	// Is current pointer to resource valid?
-	inline fgBool isValid(void)	{
+	fgBool isValid(void)	{
 		return ((m_currentResource != getRefResourceVector().end()) ? FG_TRUE : FG_FALSE);
 	}
 	// Go to the next resource (iterate to next)
-	inline fgBool goToNext() {
+	fgBool goToNext() {
 		while((*m_currentResource) != NULL) {
 			m_currentResource++;
 			if(!isValid())

@@ -52,7 +52,7 @@ fgBool fgXMLParser::loadXML(const char *filePath)
 	}
 	int bytesRead = read(m_fileBuffer, 1, m_fileSize);
 	m_fileBuffer[m_fileSize] = '\0';
-	if(bytesRead != m_fileSize) {
+	if(bytesRead != (int)m_fileSize) {
 		fgFree(m_fileBuffer);
 		m_fileBuffer = NULL;
 		m_fileSize = 0;
