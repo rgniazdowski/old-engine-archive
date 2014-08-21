@@ -1,17 +1,25 @@
 https://stackoverflow.com/questions/9209700/opengl-es-2-0-multiple-programs-or-multiple-shaders-or-what-how-does-it-work
 
 
-If your application is written for OpenGL ES 2.0, do not create a single shader with lots of switches and conditionals that performs every task your application needs to render the scene. Instead, compile multiple shader programs that each perform a specific, focused task.
+If your application is written for OpenGL ES 2.0, do not create a single shader with lots of 
+switches and conditionals that performs every task your application needs to render the scene. 
+Instead, compile multiple shader programs that each perform a specific, focused task.
 
 iOS OpenGL ES 2.0 Guidelines
 http://developer.apple.com/library/ios/#documentation/3DDrawing/Conceptual/OpenGLES_ProgrammingGuide/Performance/Performance.html#//apple_ref/doc/uid/TP40008793-CH105-SW11
 
 Solution:
-Zaleca się kompilowanie wielu shader programów które bedą wykonywać specifyczne zadania. Można używać takich samych vertex shaderów i kompilować  razem specyficzne fragment shadery do jednego programu. Między programami można przełączać się używając funkcji glUseProgram();
+Zaleca sie kompilowanie wielu shader programow ktore beda wykonywac specifyczne zadania. Mozna 
+uzywac takich samych vertex shaderow i kompilowac  razem specyficzne fragment shadery do jednego 
+programu. Miedzy programami mozna przelaczac sie uzywajac funkcji glUseProgram();
 
-Dobrą praktyką byłoby również definiować użyty shader w strukturze *Material.
+Dobra praktyka byloby rowniez definiowac uzyty shader w strukturze *Material.
 
-Ogólnie odradza się stosowania rozbudowanych shaderów (skompilowanych w jeden program używanego przy renderowaniu całej sceny), gdzie wykonywane funkcje są zmieniane przez "przełączniki" przekazywane w zmiennych uniform.
+Ogolnie odradza sie stosowania rozbudowanych shaderow (skompilowanych w jeden program uzywanego przy
+renderowaniu calej sceny), gdzie wykonywane funkcje sa zmieniane przez "przelaczniki" przekazywane 
+w zmiennych uniform.
 
 Follow up:
-"I just wanted to come back and say that this is the exact way that I ended up doing it. This works fantastically and you don't have to draw in any particular order to get the correct depth in OpenGL thanks to the z-buffer."
+"I just wanted to come back and say that this is the exact way that I ended up doing it. This works
+fantastically and you don't have to draw in any particular order to get the correct depth in OpenGL
+thanks to the z-buffer."

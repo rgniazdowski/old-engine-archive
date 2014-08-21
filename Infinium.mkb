@@ -26,6 +26,8 @@ files
 	fgProfiling.h
 	fgResource.cpp
 	fgResource.h
+	fgResourceFactory.cpp
+	fgResourceFactory.h
 	fgResourceGroup.cpp
 	fgResourceGroup.h
 	fgResourceManager.cpp

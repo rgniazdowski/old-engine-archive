@@ -35,6 +35,8 @@ public:
 	// Base destructor of the font resource object
 	virtual ~fgFontResource()	{ destroy(); }
 
+	FG_RESOURCE_FACTORY_CREATE_FUNCTION(fgFontResource);
+
 	// Clears the class data, this actually does not free allocated memory, 
 	// just resets base class attributes
 	virtual void clear(void);
@@ -48,6 +50,7 @@ public:
 	virtual void dispose(void);
 	// Check if resource is disposed (not loaded yet or disposed after)
 	virtual fgBool isDisposed(void) const;
+
 
 #if 0
 	// #FIXME (!) well this should not be here

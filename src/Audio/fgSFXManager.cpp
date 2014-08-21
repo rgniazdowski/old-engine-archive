@@ -54,13 +54,14 @@ fgSFXManager::fgSFXManager() {
 
     memset(m_sfxBuffers, 0, sizeof(m_sfxBuffers));
     memset(m_sfxBuffersSizes, 0, sizeof(m_sfxBuffersSizes));
-
-    if( (m_mp3 = s3eAudioIsCodecSupported(S3E_AUDIO_CODEC_MP3)) ) {
+	m_mp3 = (fgBool)s3eAudioIsCodecSupported(S3E_AUDIO_CODEC_MP3);
+    if(m_mp3) {
         FG_WriteLog("MP3 codec supported");
     } else {
         FG_ErrorLog("No MP3 support!");
     }
-    if( (m_pcm = s3eAudioIsCodecSupported(S3E_AUDIO_CODEC_PCM)) ) {
+	m_pcm = (fgBool)s3eAudioIsCodecSupported(S3E_AUDIO_CODEC_PCM);
+    if(m_pcm) {
         FG_WriteLog("PCM codec supported");
     } else {
         FG_ErrorLog("No PCM support!");
@@ -132,7 +133,6 @@ void fgSFXManager::applySfxVolume() {
 void fgSFXManager::play(int idx) {
     int channel = s3eSoundGetFreeChannel();
     s3eSoundChannelPlay(channel, (int16*) m_sfxBuffers[idx], m_sfxBuffersSizes[idx] / 2, 1, 0);
-
     // Check for error
     s3eSoundError err = s3eSoundGetError();
     if(err != S3E_SOUND_ERR_NONE) {

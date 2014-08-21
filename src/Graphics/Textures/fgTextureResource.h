@@ -48,6 +48,8 @@ public:
 	// Base destructor of the texture resource object
 	virtual ~fgTextureResource()	{ destroy(); }
 
+	FG_RESOURCE_FACTORY_CREATE_FUNCTION(fgTextureResource);
+
 	// Clears the class data, this actually does not free allocated memory,
 	// just resets base class attributes
 	virtual void clear(void);

@@ -17,11 +17,8 @@
 class fgSFXManager : public fgSingleton<fgSFXManager> {
 	friend class fgSingleton<fgSFXManager>;
 private:
-    /// Is mp3 codec supported
-    bool m_mp3;
-
-    /// Is pcm codec supported
-    bool m_pcm;
+    fgBool m_mp3;
+    fgBool m_pcm;
 
 public:
 	/// Identifiers of SFX sounds. Every array obeys the order and indices
@@ -42,29 +39,14 @@ public:
 	/// Resources for SFX sounds
 	static const char* m_musResources[ MUS_COUNT ];
 
-    /// Sfx volume 0.0-1.0f
     float m_sfxVolume;
-    /// Music volume 0.0-1.0f
     float m_musVolume;
 
-public:
-    //
-    // MARK: -
-    // MARK: Initializers & destroyers
-    //
-
-    /**
-     * Private constructor
-     */
+protected:
 	fgSFXManager();
-
-    /**
-     * Private destructor
-     */
 	~fgSFXManager();
 
 private:
-    /// Load given audio file (pointed to by idx)
     bool loadAudioFile(const char* name, unsigned char* & out_buffer, int & out_size);
 
 public:
@@ -78,42 +60,24 @@ public:
      */
 	bool loadMusFiles();
 
-	//
-	// MARK: SFX
-	//
-
-    /// Sets SFX volume
 	void setSfxVolume(float volume);
 
-    /// Apply volume to device
     void applySfxVolume();
 
-	/// Plays the sound
 	void play(int idx);
 
-    /// Stops given sound
 	void stopAll();
 
-	//
-	// MARK: Music
-	//
-
-    /// Sets music volume
 	void setMusVolume(float volume);
 
-    /// Applies the volume
     void applyMusVolume();
 
-	/// Plays the music
 	void playMus(int idx);
 
-	/// Pauses given music
 	void pauseMus(int idx);
 
-	/// Stops given music
 	void stopMus(int idx);
 
-    /// Rewinds the music instance to the start of the sound
 	void rewindMus(int idx);
 };
 

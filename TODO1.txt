@@ -10,7 +10,7 @@
 
 [ ] poprawienie systemu loggera
 
-[ ] system do profilowania
+[X] system do profilowania
 
 [X] fgResourceManager -> pliki konfiguracyjne tj. definiowanie grup plikow 
 	traktowanych jako paczka (np. do zaladowania poziomu czy grafik GUI)

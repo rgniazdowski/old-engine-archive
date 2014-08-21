@@ -23,6 +23,16 @@
 #include "fgHandle.h"
 #include "fgFileQualityMapping.h" // #FIXME
 
+#ifndef FG_FACTORY_CREATE_FUNCTION
+#define FG_FACTORY_CREATE_FUNCTION(RETURNTYPE, CREATETYPE) \
+static RETURNTYPE * __stdcall createResource(void) { return new CREATETYPE(); }
+#endif
+
+#ifndef FG_RESOURCE_FACTORY_CREATE_FUNCTION
+#define FG_RESOURCE_FACTORY_CREATE_FUNCTION(CREATETYPE) \
+static fgResource * __stdcall createResource(void) { return new CREATETYPE(); }
+#endif
+
 // Empty structure for resource tag
 struct fgTagResource  {  };
 // Special handle type for resource
@@ -229,19 +239,19 @@ public:
 	// Return the current access time of the resource
 	time_t getLastAccess(void) const				{  return m_lastAccess;  }
 
-	// Set file path to this resource
+	// Set file path to this resource #FIXME
 	virtual void setFilePath(const char *path) {
 		fgFileQualityMapping::setFilePath(path);
 	}
-	// Set file path to this resource
+	// Set file path to this resource #FIXME
 	virtual void setFilePath(std::string& path) {
 		fgFileQualityMapping::setFilePath(path);
 	}
-	// Set file path to this resource
+	// Set file path to this resource #FIXME
 	virtual void setFilePath(const char *path, fgQuality quality) {
 		fgFileQualityMapping::setFilePath(path, quality);
 	}
-	// Set file path to this resource
+	// Set file path to this resource #FIXME
 	virtual void setFilePath(std::string& path, fgQuality quality) {
 		fgFileQualityMapping::setFilePath(path, quality);
 	}
