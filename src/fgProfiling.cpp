@@ -28,7 +28,7 @@ fgProfiling::~fgProfiling()
 /*
  *
  */
-void fgProfiling::init(void)
+void fgProfiling::initialize(void)
 {
 	m_startProfile = fgTime::exact();
 }

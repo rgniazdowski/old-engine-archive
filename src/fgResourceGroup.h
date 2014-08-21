@@ -35,9 +35,11 @@ class fgFontResource;
 // -----------------------------
 
 /*
- * This is ResourceGroup content handler helper class used for deep/recursive automatic xml parsing (SAXP alike).
- * This resource group handler will be somehow universal for every resource group. Which means that there need
- * to be some other helper functions/classes to properly handle all current and future data/resource types.
+ * This is ResourceGroup content handler helper class used for deep/recursive
+ * automatic xml parsing  (SAXP alike).  This resource group  handler will be
+ * somehow universal for every resource group. Which means that there need to
+ * be some other helper  functions/classes to properly handle all current and 
+ * future data/resource types.
  * #TODO #FIXME #P3 #CONTINUE
  */
 class fgResourceGroupContentHandler : public fgXMLDefaultHandler {
@@ -61,21 +63,9 @@ private:
 	std::stack<fgXMLElement *> m_elemStack;
 
 	// Base constructor of the resource group content handler object
-	fgResourceGroupContentHandler() : m_resourceGroup(NULL),
-		m_resType(FG_RESOURCE_INVALID),
-		m_resourcePtr(NULL),
-		m_curResName(NULL),
-		m_isMapped(FG_FALSE),
-		m_isFileQualityMapTag(FG_FALSE),
-		m_curResPriority(FG_RES_PRIORITY_INVALID)
-	{
-	}
+	fgResourceGroupContentHandler();
 	// Base destructor of the resource group content handler object
-	~fgResourceGroupContentHandler()
-	{
-		while(!m_elemStack.empty())
-			m_elemStack.pop();
-	}
+	virtual ~fgResourceGroupContentHandler();
 protected:
 	// Set pointer to resource group object - this group is being parsed
 	void setResourceGroupPointer(fgResourceGroup *group) { m_resourceGroup = group; }
@@ -106,16 +96,6 @@ public:
 	}
 };
 
-// #FIXME Probably move to somewhere else
-typedef fgArrayVector<fgResource *> fgResourcesPool;
-typedef fgArrayVector<FG_RHANDLE> fgResHandlesPool;
-
-typedef fgArrayVector<fgResource *>::iterator fgResPoolIt;
-typedef fgArrayVector<FG_RHANDLE>::iterator fgResHandlesPoolIt;
-
-typedef fgArrayVector<fgResource *>::const_iterator fgResPoolConstIt;
-typedef fgArrayVector<FG_RHANDLE>::const_iterator fgResHandlesPoolConstIt;
-
 // This is resource group and it is treated like normal resource.
 // The idea behind is that when ResourceGroup  is loaded/released 
 // it will also release  all binded resources - however only when
@@ -135,10 +115,19 @@ typedef fgArrayVector<FG_RHANDLE>::const_iterator fgResHandlesPoolConstIt;
 class fgResourceGroup : public fgResource {
 	friend class fgResourceGroupContentHandler;
 public:
+	typedef fgArrayVector<fgResource *>		rgResVec;
+	typedef fgArrayVector<FG_RHANDLE>		rgHandleVec;
+	typedef fgArrayVector<fgResource *>::iterator	rgResVecItor;
+	typedef fgArrayVector<FG_RHANDLE>::iterator		rgHandleVecItor;
+	typedef fgArrayVector<fgResource *>::const_iterator	rgResVecConstItor;
+	typedef fgArrayVector<FG_RHANDLE>::const_iterator	rgHandleVecConstItor;
+public:
 	// Base constructor of the resource group object
 	fgResourceGroup();
 	// Base destructor of the resource group object
 	~fgResourceGroup();
+
+	FG_RESOURCE_FACTORY_CREATE_FUNCTION(fgResourceGroup);
 
 	// Clears the class data, this actually does not free allocated memory, just resets base class attributes
 	virtual void clear(void);
@@ -166,11 +155,11 @@ public:
 	virtual void refreshArrays(void);
 
 	// Return reference to array of resource pointers (objects) within this resource group
-	fgResourcesPool& getRefResourceFiles(void) {
+	rgResVec& getRefResourceFiles(void) {
 		return m_resourceFiles;
 	}
 	// Return reference to array of resource handles within this resource group
-	fgResHandlesPool& getRefResourceHandles(void) {
+	rgHandleVec& getRefResourceHandles(void) {
 		return m_rHandles;
 	}
 protected:
@@ -183,9 +172,9 @@ protected:
 
 protected:
 	// List of all handles within this resource group
-	fgResHandlesPool m_rHandles;
+	rgHandleVec m_rHandles;
 	// List of all resource files 
-	fgResourcesPool m_resourceFiles;
+	rgResVec m_resourceFiles;
 	// Parser for xml config files (here: resource group xml files)
 	fgXMLParser *m_xmlParser;
 };

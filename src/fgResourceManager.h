@@ -16,12 +16,10 @@
 #include "fgSingleton.h"
 #include "fgResource.h"
 #include "fgResourceGroup.h"
-
 #include "fgHandleManager.h"
 
 #include <iostream>
 #include <hash_map>
-//#include <limits>
 
 #ifndef FG_RHANDLE
 #define FG_RHANDLE fgResourceHandle
@@ -29,24 +27,26 @@
 
 class fgTextureManager;
 
+//
 // The resource manager handles all the external resources. It takes care of the memory
 // usage and destroys all unused data. Its very convinient as after pushing resource into
 // the manager there's no additional
+//
 class fgResourceManager : public fgSingleton<fgResourceManager>
 {
 	friend class fgSingleton<fgResourceManager>;
 	friend class fgTextureManager;
 protected:
-	typedef fgHandleManager<fgResource*, FG_RHANDLE>		fgResourceHandleManager;
-	typedef fgResourceHandleManager::hmDataVec				fgResourceVector;
-	typedef fgResourceHandleManager::hmDataVec::iterator	fgResourceVectorItor;
-	typedef fgArrayVector<FG_RHANDLE>						fgResHandlesVec;
-	typedef fgResHandlesVec::iterator			fgResHandlesVecItor;
+	typedef fgHandleManager<fgResource*, FG_RHANDLE>	rmHandleManager;
+	typedef rmHandleManager::hmDataVec					rmResVec;
+	typedef rmHandleManager::hmDataVec::iterator		rmResVecItor;
+	typedef fgArrayVector<FG_RHANDLE>					rmHandleVec;
+	typedef rmHandleVec::iterator						rmHandleVecItor;
 private:
 	// Default constructor for resource manager
-	fgResourceManager()				{  clear();  }
+	fgResourceManager();
 	// Default destructor for resource manager
-	virtual ~fgResourceManager()	{  destroy();  }
+	virtual ~fgResourceManager();
 public:
 	// This function will release all data and memory held by resource
 	// manager itself (including resources)
@@ -56,14 +56,12 @@ public:
 public:
 	// This will pre-load any required data
 	fgBool initialize(void);
-	// Creates the resource manager
-	fgBool create(unsigned int nMaxSize);
 
 	// --------------------------------------------------------------------------
 	// Memory management routines
 
 	// Set maximum memory value for the used memory counter
-	fgBool setMaximumMemory(size_t nMem);
+	fgBool setMaximumMemory(size_t nMaxSize);
 	// Return the maximum memory value
 	size_t getMaximumMemory(void) const		{  return m_nMaximumMemory;  }
 	
@@ -121,7 +119,7 @@ protected:
 	// Insert resource group into manager
 	fgBool insertResourceGroup(FG_RHANDLE rhUniqueID, fgResource* pResource);
 	// Get the reference to the resource map (protected)
-	fgResourceVector& getRefResourceVector(void) {
+	rmResVec& getRefResourceVector(void) {
 		return m_resourceHandlesMgr.getRefDataVector();
 	}
 public:
@@ -212,12 +210,12 @@ protected:
 	// Is resources are reserved? Used for blocking overallocation check
 	fgBool					m_bResourceReserved;
 	// Iterator to the current resource (used for browsing through the resources' map)
-	fgResourceVectorItor	m_currentResource;
+	rmResVecItor	m_currentResource;
 
 	// Main resource handles manager (managed resources)
-	fgResourceHandleManager	m_resourceHandlesMgr;
+	rmHandleManager	m_resourceHandlesMgr;
 	// Array holding handles to resource groups
-	fgResHandlesVec m_resourceGroupHandles;
+	rmHandleVec m_resourceGroupHandles;
 
 };
 

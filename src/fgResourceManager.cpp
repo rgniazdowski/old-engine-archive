@@ -11,6 +11,7 @@
  */
 
 #include "fgResourceManager.h"
+#include "fgResourceFactory.h"
 #include "fgDirent.h"
 
 #include <queue>
@@ -20,6 +21,38 @@ bool fgSingleton<fgResourceManager>::instanceFlag = false;
 
 template <>
 fgResourceManager *fgSingleton<fgResourceManager>::instance = NULL;
+
+//#FIXME #BIGFIXME! ! ! ! #BUG #TODO
+#include "GUI/fgFontResource.h"
+#include "Graphics/Textures/fgTextureResource.h"
+#include "fgResourceGroup.h"
+
+/*
+ *
+ */
+fgResourceManager::fgResourceManager() : 
+	m_nCurrentUsedMemory(0),
+	m_nMaximumMemory(0),
+	m_bResourceReserved(FG_FALSE)
+{
+	m_resourceHandlesMgr.releaseAllHandles();
+	m_currentResource = getRefResourceVector().end();
+	m_resourceGroupHandles.clear_optimised();
+
+	// #FIXME #BUG
+	fgResourceFactory::registerResource(FG_RESOURCE_TEXTURE, &fgTextureResource::createResource);
+	fgResourceFactory::registerResource(FG_RESOURCE_FONT, &fgFontResource::createResource);
+	fgResourceFactory::registerResource(FG_RESOURCE_GROUP, &fgResourceGroup::createResource);
+}
+
+/*
+ *
+ */
+fgResourceManager::~fgResourceManager()
+{
+	fgResourceFactory::clear(); // #BUG
+	destroy();
+}
 
 /*
  * Reset local parameters
@@ -36,16 +69,6 @@ void fgResourceManager::clear(void)
 }
 
 /*
- * Creates the resource manager
- */
-fgBool fgResourceManager::create(unsigned int nMaxSize)
-{
-	clear();
-	setMaximumMemory(nMaxSize);
-	return FG_TRUE;
-}
-
-/*
  * This function will release all data and memory held by resource
  * manager itself (including resources)
  */
@@ -53,9 +76,9 @@ void fgResourceManager::destroy(void)
 {
 	FG_WriteLog(">>>>> fgResourceManager::destroy(void); GROUPS"); // #TODELETE
 	{
-		fgResHandlesVecItor begin = m_resourceGroupHandles.begin();
-		fgResHandlesVecItor	end = m_resourceGroupHandles.end(); 
-		for(fgResHandlesVecItor itor = begin; itor != end; ++itor)
+		rmHandleVecItor begin = m_resourceGroupHandles.begin();
+		rmHandleVecItor	end = m_resourceGroupHandles.end(); 
+		for(rmHandleVecItor itor = begin; itor != end; ++itor)
 		{
 			if((*itor).isNull())
 				continue;
@@ -66,7 +89,7 @@ void fgResourceManager::destroy(void)
 			}
 			pResource->ZeroLock();
 			pResourceGroup->dispose();
-			fgArrayVector<fgResource *>& resInGrp = pResourceGroup->getRefResourceFiles();
+			fgResourceGroup::rgResVec& resInGrp = pResourceGroup->getRefResourceFiles();
 			while(!resInGrp.empty()) {
 				fgResource *resPtr = resInGrp.back();
 				resInGrp.pop_back();
@@ -80,9 +103,9 @@ void fgResourceManager::destroy(void)
 
 	FG_WriteLog(">>>>> fgResourceManager::destroy(void); RESOURCES");
 	{
-		fgResourceVectorItor begin = getRefResourceVector().begin();
-		fgResourceVectorItor end = getRefResourceVector().end();
-		for(fgResourceVectorItor itor = begin; itor != end ; ++itor) {
+		rmResVecItor begin = getRefResourceVector().begin();
+		rmResVecItor end = getRefResourceVector().end();
+		for(rmResVecItor itor = begin; itor != end ; ++itor) {
 			if((*itor) == NULL)
 				continue;
 			destroyResource((*itor));
@@ -143,8 +166,8 @@ fgBool fgResourceManager::initialize(void)
 		insertResource(grpUniqueID, resGroup);
 		// There is a separate holder for resource group
 		insertResourceGroup(grpUniqueID, resGroup);
-		fgResourcesPool& resInGrp = resGroup->getRefResourceFiles();
-		for(fgResPoolIt it = resInGrp.begin(); it != resInGrp.end(); it++) {
+		fgResourceGroup::rgResVec& resInGrp = resGroup->getRefResourceFiles();
+		for(fgResourceGroup::rgResVecItor it = resInGrp.begin(); it != resInGrp.end(); it++) {
 			FG_RHANDLE resUniqueID;
 			insertResource(resUniqueID, (*it));
 		}
@@ -160,9 +183,9 @@ fgBool fgResourceManager::initialize(void)
 /*
  * Set maximum memory value for the used memory counter
  */
-fgBool fgResourceManager::setMaximumMemory(size_t nMem)
+fgBool fgResourceManager::setMaximumMemory(size_t nMaxSize)
 {
-	m_nMaximumMemory = nMem;
+	m_nMaximumMemory = nMaxSize;
 	return checkForOverallocation();
 }
 
@@ -642,8 +665,8 @@ fgBool fgResourceManager::isResourceManaged(fgResource* pResource)
 void fgResourceManager::refreshMemory(void)
 {
 	resetMemory();
-	fgResourceVectorItor begin = getRefResourceVector().begin(), end = getRefResourceVector().end();
-	for(fgResourceVectorItor itor = begin; itor != end; ++itor) {
+	rmResVecItor begin = getRefResourceVector().begin(), end = getRefResourceVector().end();
+	for(rmResVecItor itor = begin; itor != end; ++itor) {
 		addMemory((*itor)->getSize());
 	}
 }
@@ -662,11 +685,11 @@ fgBool fgResourceManager::checkForOverallocation(void)
 		resetMemory();
 		// create a temporary priority queue to store the managed items
 		std::priority_queue<fgResource*, std::vector<fgResource*>, fgPtrGreater<fgResource*> > PriQueue;
-		fgResourceVectorItor begin = getRefResourceVector().begin(), end = getRefResourceVector().end();
+		rmResVecItor begin = getRefResourceVector().begin(), end = getRefResourceVector().end();
 
 		// insert copies of all the resource pointers into the priority queue, but
 		// exclude those that are current disposed or are locked
-		for(fgResourceVectorItor itor = begin; itor != end; ++itor)
+		for(rmResVecItor itor = begin; itor != end; ++itor)
 		{
 			addMemory((*itor)->getSize());
 			if(!(*itor)->isDisposed() && !(*itor)->isLocked())

@@ -34,12 +34,10 @@ namespace std
 
 #endif /* FG_HASH_STD_STRING_TEMPLATE_DEFINED_ */
 
-#define hmHashKeyType std::string
-
 template <typename DataType, typename HandleType>
 class fgHandleManager
 {
-public:
+protected:
 	struct hmEqualTo
 	{
 		bool operator()(const char* s1, const char* s2) const
@@ -47,20 +45,21 @@ public:
 			return strcmp(s1, s2) == 0;
 		}
 
-		bool operator()(const hmHashKeyType& s1, const hmHashKeyType& s2) const
+		bool operator()(const std::string& s1, const std::string& s2) const
 		{
 			return s1.compare(s2) == 0;
 		}
 	};
+public:
 	typedef std::string hashKey;
-	typedef std::hash<hmHashKeyType> hashFunc;
+	typedef std::hash<std::string> hashFunc;
 	// Type for vector storing Data pointers
     typedef fgArrayVector <DataType> hmDataVec;
 	// Type for map, assigning handle index value to string ID (case sensitive)
 	typedef std::hash_map <hashKey, fgRawIndex, hashFunc, hmEqualTo> hmNameMap; //#FIXME - this is not standard
 private:
-    typedef fgArrayVector <fgRawMagic>   hmMagicVec;
-	typedef fgArrayVector <hashKey>  hmNameVec;
+    typedef fgArrayVector <fgRawMagic>	hmMagicVec;
+	typedef fgArrayVector <hashKey>		hmNameVec;
     typedef fgArrayVector <unsigned int> hmFreeSlotsVec;
 	// Data storage
     hmDataVec  m_managedData;
@@ -86,7 +85,7 @@ public:
 	//
     fgBool acquireHandle(HandleType& rHandle, DataType pResource);
 	//
-	fgBool setupName(hmHashKeyType& name, HandleType rHandle);
+	fgBool setupName(std::string& name, HandleType rHandle);
 	//
 	fgBool setupName(const char* name, HandleType rHandle);
 	//
@@ -97,7 +96,7 @@ public:
 	//
     DataType dereference(HandleType handle);
 	//
-    DataType dereference(hmHashKeyType& name);
+    DataType dereference(std::string& name);
 	//
     DataType dereference(const char* name);
     //const DataType* Dereference( HandleType handle ) const;
@@ -160,7 +159,7 @@ fgBool fgHandleManager<DataType, HandleType>::acquireHandle(HandleType& rHandle,
 				return FG_FALSE;
         m_managedData.push_back(pResource);
         m_magicData.push_back(rHandle.getMagic());
-		m_nameVec.push_back(hmHashKeyType());
+		m_nameVec.push_back(std::string());
     } else {
         index = m_freeSlots.back();
 		if(!rHandle.init(index))
@@ -169,7 +168,7 @@ fgBool fgHandleManager<DataType, HandleType>::acquireHandle(HandleType& rHandle,
         m_freeSlots.pop_back();
 		m_managedData[index] = pResource;
         m_magicData[index] = rHandle.getMagic();
-		m_nameVec[index] = hmHashKeyType();
+		m_nameVec[index] = std::string();
     }
     return FG_TRUE;
 }
@@ -178,7 +177,7 @@ fgBool fgHandleManager<DataType, HandleType>::acquireHandle(HandleType& rHandle,
  *
  */
 template <typename DataType, typename HandleType>
-fgBool fgHandleManager<DataType, HandleType>::setupName(hmHashKeyType& name, HandleType rHandle)
+fgBool fgHandleManager<DataType, HandleType>::setupName(std::string& name, HandleType rHandle)
 {
 	if(!isHandleValid(rHandle))
 		return FG_FALSE;
@@ -206,7 +205,7 @@ fgBool fgHandleManager<DataType, HandleType>::setupName(const char* name, Handle
 {
 	if(!isHandleValid(rHandle))
 		return FG_FALSE;
-	if(m_nameMap.find(hmHashKeyType(name)) != m_nameMap.end()) {
+	if(m_nameMap.find(std::string(name)) != m_nameMap.end()) {
 		return FG_FALSE; // Such key already exists
 	}
     fgRawIndex index = rHandle.getIndex();
@@ -215,8 +214,8 @@ fgBool fgHandleManager<DataType, HandleType>::setupName(const char* name, Handle
 		// No reassignment is allowed
 		return FG_FALSE;
 	}
-	m_nameMap[hmHashKeyType(name)] = index;
-	m_nameVec[index] = hmHashKeyType(name);
+	m_nameMap[std::string(name)] = index;
+	m_nameVec[index] = std::string(name);
 	return FG_TRUE;
 }
 
@@ -270,7 +269,7 @@ inline DataType fgHandleManager<DataType, HandleType>::dereference(HandleType ha
  *
  */
 template <typename DataType, typename HandleType>
-inline DataType fgHandleManager<DataType, HandleType>::dereference(hmHashKeyType& name)
+inline DataType fgHandleManager<DataType, HandleType>::dereference(std::string& name)
 {
 	typename hmNameMap::iterator it = m_nameMap.find(name);
 	if(it == m_nameMap.end()) {
@@ -293,7 +292,7 @@ inline DataType fgHandleManager<DataType, HandleType>::dereference(hmHashKeyType
 template <typename DataType, typename HandleType>
 inline DataType fgHandleManager<DataType, HandleType>::dereference(const char* name)
 {
-	hmHashKeyType key = name;
+	std::string key = name;
 	typename hmNameMap::iterator it = m_nameMap.find(key);
 	if(it == m_nameMap.end()) {
 		return NULL;

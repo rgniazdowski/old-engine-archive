@@ -16,17 +16,20 @@
 
 #define FG_MAX_PROFILE_SAMPLES 10
 
-//
+/*
+ * Struct for profile sample. Holds various info: name, time started,
+ * accumulated values
+ */
 struct fgProfileSample
 {
-	fgBool isValid;				// whether this data is valid
-	unsigned int numInstances;	// number of times profile begin called
-	unsigned int numOpen;		// number of times opened w/o profile end
-	std::string name;			// name of sample
-	float startTime;			// the current open profile start time
-	float accumulator;			// all samples this frame added together
-	float childrenSampleTime;	// time taken by all children
-	unsigned int numParents;	// number of profile parents
+	fgBool isValid;				// Whether this data is valid
+	unsigned int numInstances;	// Number of times profile begin called
+	unsigned int numOpen;		// Number of times opened w/o profile end
+	std::string name;			// Name of sample
+	float startTime;			// The current open profile start time
+	float accumulator;			// All samples this frame added together
+	float childrenSampleTime;	// Time taken by all children
+	unsigned int numParents;	// Number of profile parents
 
 	fgProfileSample() : isValid(FG_FALSE), numInstances(0),
 		numOpen(0), startTime(-1.0f), accumulator(0.0f), 
@@ -94,28 +97,45 @@ protected:
 	typedef fgArrayVector<fgProfileSample *> profileVec;
 	typedef profileVec::iterator profileVecItor;
 private:
+	// Stack holding currently open samples (active) in order
 	profileStack m_profileStack;
+	// Stack holding all profiles in order in which they were added
 	profileVec m_orderVec;
+	// Map for binding string id (name) to profile info structure
 	profileMap m_sampleMap;
+	// Map holding history records (for average values)
 	historyMap m_sampleHistory;
+	// When the profiling started (frame)
 	float m_startProfile;
+	// When the profiling ended
 	float m_endProfile;
 public:
+	// Base constructor for Profiling object
 	fgProfiling();
+	// Base destructor for Profiling object
 	~fgProfiling();
 
-	void init(void);
+	// Initialize the profiling
+	void initialize(void);
+	// Clear all data, reset
 	void clear(void);
 
+	// Open given profile (begin calculations)
 	fgBool begin(std::string& name);
+	// Open given profile (begin calculations)
 	fgBool begin(const char* name);
 
+	// End given profile (stop)
 	fgBool end(std::string& name);
+	// End given profile (stop)
 	fgBool end(const char *name);
 
+	// Update the history, count average values
 	void updateHistory(void);
 
+	// Store the current profile in history
 	fgBool storeProfileHistory(std::string& name, float percent);
+	// Get profile informatione from history
 	fgBool getProfileHistory(std::string& name, float* average, float* minimum, float* maximum);
 };
 
