@@ -20,11 +20,6 @@ fgBool fgXMLParser::loadXML(const char *filePath)
 		return FG_FALSE;
 	}
 
-	if(!exists(filePath)) {
-		// #FIXME proper error message
-		return FG_FALSE;
-	}
-	
 	// Clear previously parsed XML document
 	m_xmlDocument.ClearError();
 	m_xmlDocument.Clear();

@@ -61,27 +61,27 @@ const char *fgFile::modeStr(fgFileMode mode)
 	if(mode == FG_FILE_MODE_NONE)
 		return "";
 	if(mode & FG_FILE_MODE_READ) {
-		if(mode & FG_FILE_MODE_READ_UPDATE && mode & FG_FILE_MODE_BINARY)
+		if(mode & FG_FILE_MODE_UPDATE && mode & FG_FILE_MODE_BINARY)
 			return "r+b";
-		if(mode & FG_FILE_MODE_READ_UPDATE)
+		if(mode & FG_FILE_MODE_UPDATE)
 			return "r+";
 		if(mode & FG_FILE_MODE_BINARY)
 			return "rb";
 		return "r";
 	}
 	if(mode & FG_FILE_MODE_WRITE) {
-		if(mode & FG_FILE_MODE_WRITE_UPDATE && mode & FG_FILE_MODE_BINARY)
+		if(mode & FG_FILE_MODE_UPDATE && mode & FG_FILE_MODE_BINARY)
 			return "w+b";
-		if(mode & FG_FILE_MODE_WRITE_UPDATE)
+		if(mode & FG_FILE_MODE_UPDATE)
 			return "w+";
 		if(mode & FG_FILE_MODE_BINARY)
 			return "ab";
 		return "w";
 	}
 	if(mode & FG_FILE_MODE_APPEND) {
-		if(mode & FG_FILE_MODE_APPEND_UPDATE && mode & FG_FILE_MODE_BINARY)
+		if(mode & FG_FILE_MODE_UPDATE && mode & FG_FILE_MODE_BINARY)
 			return "a+b";
-		if(mode & FG_FILE_MODE_APPEND_UPDATE)
+		if(mode & FG_FILE_MODE_UPDATE)
 			return "a+";
 		if(mode & FG_FILE_MODE_BINARY)
 			return "wb";

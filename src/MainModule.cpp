@@ -391,7 +391,7 @@ static bool set_allow_loop_handler(void) {
 extern "C" int main()
 {
 	IwUtilInit();
-
+	//IwMemBucketDebugSetBreakpoint(118);
 	/*fgDeviceQuery* dev = fgDeviceQuery::getInstance();
 
 	if ( dev->iOS() &&
