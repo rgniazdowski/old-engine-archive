@@ -10,6 +10,12 @@
 #ifndef _FG_MESSAGE_COMMON_H_
 #define _FG_MESSAGE_COMMON_H_
 
+// #FIXME
+#ifndef FG_BOOL_DEFINED_
+#define FG_BOOL_DEFINED_
+typedef unsigned char fgBool;
+#endif
+
 /*
  * Enum for the common message types
  */
@@ -22,43 +28,40 @@ enum fgMessageType {
 	FG_NUM_MESSAGE_TYPES = 5
 };
 
+struct fgMsgBase {
+	fgMessageType type;
+	int code;
+};
+
 /*
  * Structure for the info message
  */
-struct fgInfo
+struct fgInfo : fgMsgBase
 {
-	fgMessageType messageType;
-	int infoCode;
 };
 
 /*
  * Structure for the warning message
  */
-struct fgWarning
+struct fgWarning : fgMsgBase
 {
-	fgMessageType messageType;
-	int warningCode;
-	fgBool isSerious;
+	fgBool serious;
 };
 
 /*
  * Structure for the error message
  */
-struct fgError
+struct fgError : fgMsgBase
 {
-	fgMessageType messageType;
-	int errorCode;
-	fgBool isCritical;
+	fgBool critical;
 };
 
 /*
  * Structure for the debug message
  */
-struct fgDebug
+struct fgDebug : fgMsgBase
 {
-	fgMessageType messageType;
-	int debugCode;
-	fgBool isCritical;
+	fgBool critical;
 };
 
 #define FG_MESSAGE_BUFFER_MAX		512
@@ -73,14 +76,105 @@ struct fgDebug
 struct fgMessage
 {
 	union {
-		fgMessageType messageType;
-		int messageCode;
+		fgMessageType type;
 		fgInfo info;
 		fgWarning warning;
 		fgError error;
 		fgDebug debug;
 	};
-	std::string messageData;
+	std::string data;
+
+	// Default constructor for message object
+	fgMessage() : 
+		type(FG_MESSAGE_INFO) {
+		info.code = 0;
+		warning.serious = FG_FALSE;
+	}
+	
+	// Default destructor for message object
+	~fgMessage() {
+		data.clear();
+	}
+	
+	fgMessage& operator= (const fgMessage &source)
+	{
+		printf(" --- --- fgMessage assignment called =!, this: %p, source: %p\n", this, &source);
+
+		if(this == &source)
+			return *this;
+
+		type = source.type;
+		info.code = source.info.code;
+		warning.serious = source.warning.serious;
+		data = source.data;
+
+		return *this;
+	}
+
+	fgMessage(fgMessageType _type, int _code) : 
+		type(_type) {
+		info.code = 0;
+		warning.serious = FG_FALSE;
+	}
+
+	fgMessage(fgMessageType _type, int _code, fgBool _critical) : 
+		type(_type) {
+		info.code = _code;
+		warning.serious = _critical; // this will also set similar flag in error/debug - union
+	}
+
+	fgMessage(fgMessageType _type, const char *_data) : 
+		type(_type) {
+		info.code = 0;
+		warning.serious = FG_FALSE;
+		if(_data)
+			data = _data;
+	}
+
+	fgMessage(fgMessageType _type, const char *_data, int _code) : 
+		type(_type) {
+		info.code = _code;
+		warning.serious = FG_FALSE;
+		if(_data)
+			data = _data;
+	}
+
+	fgMessage(fgMessageType _type, const char *_data, int _code, fgBool _critical) : 
+		type(_type) {
+		info.code = _code;
+		warning.serious = _critical;
+		if(_data)
+			data = _data;
+	}
+
+	fgMessage(const char *_data) : 
+		type(FG_MESSAGE_INFO) {
+		info.code = 0;
+		warning.serious = FG_FALSE;
+		if(_data)
+			data = _data;
+	}
+
+	fgMessage(const char *_data, int _code) : 
+		type(FG_MESSAGE_INFO) {
+		info.code = _code;
+		warning.serious = FG_FALSE;
+		if(_data)
+			data = _data;
+	}
+
+	fgMessage(const char *_data, int _code, fgBool _critical) : 
+		type(FG_MESSAGE_INFO) {
+		info.code = _code;
+		warning.serious = _critical;
+		if(_data)
+			data = _data;
+	}
+
+	fgMessage *setCode(int _code) {
+		info.code = _code;
+		return this;
+	}
 };
 
 #endif /* _FG_MESSAGE_COMMON_H_ */

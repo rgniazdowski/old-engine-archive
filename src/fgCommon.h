@@ -33,7 +33,8 @@
 #pragma warning(disable : 4244)
 #endif
 
-#ifndef fgBool
+#ifndef FG_BOOL_DEFINED_
+#define FG_BOOL_DEFINED_
 typedef unsigned char fgBool;
 #endif
 
@@ -49,9 +50,21 @@ typedef unsigned char fgBool;
 #define FG_SUCCESS 1
 #endif
 
+#ifndef FG_WARNING
+#define FG_WARNING 3
+#endif
+
+#ifndef FG_ERROR
+#define FG_ERROR 0
+#endif
+
+
+
 #define FG_SUCCESS_TEXT		"success"
 #define FG_TRUE_TEXT		"true"
 #define FG_FALSE_TEXT		"false"
+#define FG_WARNING_TEXT		"warning"
+#define FG_ERROR_TEXT		"error"
 
 #ifndef NULL
     #ifndef __cplusplus
@@ -97,7 +110,9 @@ inline fgBool _FG_BOOL_FROM_TEXT(const char* text) {
 		return FG_FALSE;
 	FG_RETURN_ENUM_IF_TEXT_EQ(FG_TRUE);
 	FG_RETURN_ENUM_IF_TEXT_EQ(FG_FALSE);
-	FG_RETURN_VAL_IF_TEXT_EQ(FG_SUCCESS_TEXT, FG_TRUE);
+	FG_RETURN_ENUM_IF_TEXT_EQ(FG_SUCCESS);
+	FG_RETURN_ENUM_IF_TEXT_EQ(FG_WARNING);
+	FG_RETURN_ENUM_IF_TEXT_EQ(FG_ERROR);
 	return FG_FALSE;
 }
 #define FG_BOOL_FROM_TEXT(text) _FG_BOOL_FROM_TEXT(text)
@@ -120,7 +135,7 @@ public:
 	X & at(int const i) const {
 		uint32 index = (uint32)i;
         if(index >= this->num_p) {
-			return this->p[0];
+			return this->p[0]
 		}
         return this->p[index];
 	}

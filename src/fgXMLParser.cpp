@@ -157,30 +157,23 @@ fgBool fgXMLParser::_parseDeep(fgXMLNode *cnode, int depth)
  */
 fgStatus fgXMLParser::parseWithHandler(void)
 {
-	fgStatus status;
 	if(!m_contentHandler) {
-		status.isFailure = FG_TRUE;
-		status.isError = FG_TRUE;
-		status.message = NULL;
-		return status;
+		return *fgStatus().error();
 	}
 	std::stack<fgXMLNode *> toVisitStack;
 
 	// Parsing XML using content handler class
 	if(!this->isXMLLoaded()) {
-		status.isError = FG_TRUE;
-		return status;
+		return *fgStatus().error();
 	}
 	// Start document parsing
 	m_contentHandler->startDocument(&this->m_xmlDocument);
 	// Start deep parsing #FIXME
 	fgBool pstatus = _parseDeep();
 	if(!pstatus) {
-		status.isError = FG_TRUE;
-		return status;
+		return *fgStatus().error();
 	}
 	m_contentHandler->endDocument(&this->m_xmlDocument);
-	status.isSuccess = FG_TRUE;
-	return status;
+	return *fgStatus().success();
 }
 
