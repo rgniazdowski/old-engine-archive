@@ -9,19 +9,29 @@
 
 #include "fgResourceFactory.h"
 
-fgResourceFactory::rfFactoryMap fgResourceFactory::m_factoryMap;
+// Map storing create functions for given resource types
+//fgResourceFactory::rfFactoryMap fgResourceFactory::m_factoryMap;
+
+template <>
+bool fgSingleton<fgResourceFactory>::instanceFlag = false;
+
+template <>
+fgResourceFactory *fgSingleton<fgResourceFactory>::instance = NULL;
 
 /*
  * Default empty constructor for Resource Factory object
  */
 fgResourceFactory::fgResourceFactory()
 {
+	FG_ErrorLog("fgResourceFactory::fgResourceFactory()");
 }
 
 /*
+ * Default destructor for Resource Factory object
  */
 fgResourceFactory::~fgResourceFactory()
 {
+	FG_ErrorLog("fgResourceFactory::~fgResourceFactory()");
 	clear();
 }
 
@@ -30,6 +40,7 @@ fgResourceFactory::~fgResourceFactory()
  */
 void fgResourceFactory::clear(void) 
 {
+	FG_ErrorLog("fgResourceFactory::clear()");
 	m_factoryMap.clear(); 
 }
 

@@ -142,10 +142,12 @@ void fgResourceGroupContentHandler::startElement(const char *localName, fgXMLEle
 		return;
 	}
 
-	if(!fgResourceFactory::isRegistered(m_resType)) {
+	// Check if the create function for current resource type is registered.
+	// Also ignore resource group type.
+	if(!FG_ResourceFactory->isRegistered(m_resType) || m_resType == FG_RESOURCE_GROUP) {
 		m_resourcePtr = NULL;
 	} else {
-		m_resourcePtr = fgResourceFactory::createResource(m_resType);
+		m_resourcePtr = FG_ResourceFactory->createResource(m_resType);
 		m_resourcePtr->setFilePath(resPath);
 	}
 }

@@ -35,9 +35,9 @@
  * This is bound to change in the future
  * Let's call this version v0.1
  */
-class fgQualityManager : public fgSingleton<fgQualityManager> {
-	friend class fgSingleton<fgQualityManager>;
-	
+class fgQualityManager : public fgSingleton<fgQualityManager> 
+{
+	friend class fgSingleton<fgQualityManager>;	
 private:
 	// Temporary map for storing display area sizes and corresponding quality
 	// This will work only for mobile platforms (iOS especially)

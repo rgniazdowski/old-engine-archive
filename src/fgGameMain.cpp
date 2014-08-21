@@ -30,6 +30,7 @@
 #include "Input/fgTouchReceiver.h"
 #include "GameLogic/fgGameLogic.h"
 #include "fgXMLParser.h"
+#include "fgResourceFactory.h"
 
 template <>
 bool fgSingleton<fgGameMain>::instanceFlag = false;
@@ -76,6 +77,8 @@ fgBool fgGameMain::initSubsystems(void)
 	FG_EventManager->initialize();
 	FG_TouchReceiver->initialize();
 	
+	FG_ResourceFactory->clear();
+
 	/* Useful for memory management
 	s3eMemoryGetInt(S3E_MEMORY_USED);
 	s3eMemoryGetInt(S3E_MEMORY_SIZE);
@@ -159,6 +162,7 @@ fgBool fgGameMain::closeSybsystems(void)
 	FG_EventManager->deleteInstance();
 	FG_DeviceQuery->deleteInstance();
 	FG_QualityManager->deleteInstance();
+	FG_ResourceFactory->deleteInstance();
 
 	FG_GFX::closeGFX();
 

@@ -41,6 +41,7 @@ fgQualityManager::fgQualityManager() : m_selectedQuality(FG_QUALITY_DEFAULT),
  */
 fgQualityManager::~fgQualityManager()
 {
+	m_displayAreaQuality.clear();
 }
 
 /*

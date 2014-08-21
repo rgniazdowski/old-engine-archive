@@ -40,9 +40,9 @@ fgResourceManager::fgResourceManager() :
 	m_resourceGroupHandles.clear_optimised();
 
 	// #FIXME #BUG
-	fgResourceFactory::registerResource(FG_RESOURCE_TEXTURE, &fgTextureResource::createResource);
-	fgResourceFactory::registerResource(FG_RESOURCE_FONT, &fgFontResource::createResource);
-	fgResourceFactory::registerResource(FG_RESOURCE_GROUP, &fgResourceGroup::createResource);
+	FG_ResourceFactory->registerResource(FG_RESOURCE_TEXTURE, &fgTextureResource::createResource);
+	FG_ResourceFactory->registerResource(FG_RESOURCE_FONT, &fgFontResource::createResource);
+	FG_ResourceFactory->registerResource(FG_RESOURCE_GROUP, &fgResourceGroup::createResource);
 }
 
 /*
@@ -50,7 +50,7 @@ fgResourceManager::fgResourceManager() :
  */
 fgResourceManager::~fgResourceManager()
 {
-	fgResourceFactory::clear(); // #BUG
+	FG_ResourceFactory->clear(); // #BUG
 	destroy();
 }
 

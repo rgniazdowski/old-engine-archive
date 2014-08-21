@@ -12,6 +12,7 @@
 
 #include "fgCommon.h"
 #include "fgResource.h"
+#include "fgSingleton.h"
 
 #include <map>
 
@@ -27,31 +28,36 @@ static RETURNTYPE * __stdcall createResource(void) { return new CREATETYPE(); }
 static fgResource * __stdcall createResource(void) { return new CREATETYPE(); }
 #endif
 
-class fgResourceFactory
+class fgResourceFactory : public fgSingleton<fgResourceFactory>
 {
+	friend class fgSingleton<fgResourceFactory>;
 public:
 	typedef std::map<fgResourceType, fgCreateResourceFn> rfFactoryMap;
 	typedef std::pair<fgResourceType, fgCreateResourceFn> rfFactoryPair;
 	typedef rfFactoryMap::iterator rfFactoryMapItor;
 	typedef rfFactoryMap::const_iterator rfFactoryMapConstItor;
-public:
+protected:
 	// Default empty constructor for Resource Factory object
 	fgResourceFactory();
 	// Default destructor for Resource Factory object
 	~fgResourceFactory();
+public:
 
 	// Clear all registered resource creators
-	static void clear(void);
+	void clear(void);
 
 	// Register resource create function based on resource type
-	static fgBool registerResource(fgResourceType type, fgCreateResourceFn function);
+	fgBool registerResource(fgResourceType type, fgCreateResourceFn function);
 	// Call specific create function for given resource
-	static fgResource* createResource(fgResourceType type);
+	fgResource* createResource(fgResourceType type);
 	// Check if given resource type constructor/create function is registered in factory
-	static fgBool isRegistered(fgResourceType type);
+	fgBool isRegistered(fgResourceType type);
 	
 private:
-	static rfFactoryMap m_factoryMap;
+	// Map storing create functions for given resource types
+	rfFactoryMap m_factoryMap;
 };
+
+#define FG_ResourceFactory fgResourceFactory::getInstance()
 
 #endif /* _FG_RESOURCE_FACTORY_H_ */
