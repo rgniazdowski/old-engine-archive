@@ -39,6 +39,11 @@ unsigned long int FG_GetTicks(void)
 #endif
 }
 
+const char* FG_Filename (const char* str)
+{
+	return (strrchr(str, '/') ? strrchr(str, '/') + 1 : strrchr(str, '\\') ? strrchr(str, '\\') + 1 : str);
+}
+
 /**
  * Log info message
  */
@@ -91,7 +96,7 @@ void FG_ErrorLog(const char *fmt, ...)
 }
 
 #ifdef _MSC_VER
-
+#if 0
 #undef strtok_r
 
 char *strtok_r(char *s, const char *delim, char **last)
@@ -140,10 +145,6 @@ cont:
 	}
 	/* NOTREACHED */
 }
-
+#endif
 #endif
 
-const char* FG_Filename (const char* str)
-{
-	return (strrchr(str, '/') ? strrchr(str, '/') + 1 : strrchr(str, '\\') ? strrchr(str, '\\') + 1 : str);
-}

@@ -9,9 +9,6 @@
 
 #include "fgResourceFactory.h"
 
-// Map storing create functions for given resource types
-//fgResourceFactory::rfFactoryMap fgResourceFactory::m_factoryMap;
-
 template <>
 bool fgSingleton<fgResourceFactory>::instanceFlag = false;
 
