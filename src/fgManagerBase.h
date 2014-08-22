@@ -7,11 +7,23 @@
  * and/or distributed without the express or written permission from the author.
  *******************************************************/
 
-#include <iostream>
-#include "fgSingleton.h"
+#ifndef _FG_MANAGER_BASE_H_
+#define _FG_MANAGER_BASE_H_
 
-template <typename Class>
-bool fgSingleton<Class>::instanceFlag = false;
+#include "fgCommon.h"
+#include "fgStatusReporter.h"
 
-template <typename Class>
-Class *fgSingleton<Class>::instance = NULL;
+class fgManagerBase : public fgStatusReporter {
+public:
+	fgManagerBase() {}
+	virtual ~fgManagerBase() {}
+		
+	virtual void clear(void) = 0;
+	virtual void destroy(void) = 0;
+
+	virtual fgBool initialize(void) = 0;
+
+};
+
+#endif /* _FG_MANAGER_BASE_H_ */
+
