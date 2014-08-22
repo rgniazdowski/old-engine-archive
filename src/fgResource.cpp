@@ -11,6 +11,7 @@
  */
 
 #include "fgResource.h"
+#include "fgLog.h"
 
 /*
  * Base constructor of the resource object

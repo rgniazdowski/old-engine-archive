@@ -136,4 +136,63 @@ inline float fgColor3f::operator*(const fgColor4f &c) const {
 
 typedef fgColor4f fgColor;
 
+// #FIXME FG_AREA, fgArea, standard !
+struct fgArea
+{
+		int x;
+		int y;
+		int w;
+		int h;
+		fgArea(int _x, int _y, int _w, int _h) : x(_x), y(_y), w(_w), h(_h) {}
+		fgArea() : x(0), y(0), w(0), h(0) {}
+
+        int left() const {
+            return x;
+        }
+
+        int right() const {
+            return x + w;
+        }
+
+        int top() const {
+            return y;
+        }
+
+        int bottom() const {
+            return y + h;
+        }
+
+        int width() const {
+            return w;
+        }
+
+        int height() const {
+            return h;
+        }
+
+        void set_left(int l) {
+            x = l;
+        }
+
+        void set_right(int r) {
+            w = r - x;
+        }
+
+        void set_top(int t) {
+            y = t;
+        }
+
+        void set_bottom(int b) {
+            h = b - y;
+        }
+
+        void set_width(int _w) {
+            w = _w;
+        }
+
+        void set_height(int _h) {
+            h = _h;
+        }
+};
+
 #endif /* _FG_GFX_TYPES_H_ */

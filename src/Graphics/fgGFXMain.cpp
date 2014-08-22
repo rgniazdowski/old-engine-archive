@@ -10,6 +10,7 @@
 #include "fgGFXMain.h"
 #include "../fgBuildConfig.h"
 #include "../fgCommon.h"
+#include "../fgLog.h"
 
 #if defined FG_USING_MARMALADE
 #include "s3e.h"

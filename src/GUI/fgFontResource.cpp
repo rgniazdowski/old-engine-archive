@@ -9,6 +9,8 @@
 
 #include "fgFontResource.h"
 
+#include "../fgLog.h"
+#include "../fgPath.h"
 #include "../Graphics/Textures/fgTextureManager.h"
 #include "../Hardware/fgHardwareState.h"
 

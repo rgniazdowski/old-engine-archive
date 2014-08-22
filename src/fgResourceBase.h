@@ -7,8 +7,8 @@
  * and/or distributed without the express or written permission from the author.
  *******************************************************/
 
-#ifndef _FG_FILE_QUALITY_MAPPING_H_
-#define _FG_FILE_QUALITY_MAPPING_H_
+#ifndef _FG_RESOURCE_BASE_H_
+#define _FG_RESOURCE_BASE_H_
 
 // Global include needed (it defines the parameters of the build)
 #include "fgBuildConfig.h"
@@ -16,23 +16,21 @@
 #include <map>
 #include <string>
 
-#include "Hardware\fgQualityTypes.h"
-
 #define FG_FILE_QUALITY_MAPPING_TEXT "FileQualityMap"
 
 /*
  *
  */
-class fgFileQualityMapping {
+class fgResourceBase {
 public:
-	// Default empty constructor for file quality mapping object
-	fgFileQualityMapping() {
+	// Default empty constructor for resource base object
+	fgResourceBase() : m_defaultID(-1) {
 		m_filePath.clear();
 		m_fileMapping.clear();
 	}
 
-	// Default empty destructor for file quality mapping object
-	~fgFileQualityMapping() {
+	// Default empty destructor for resource base object
+	virtual ~fgResourceBase() {
 		m_filePath.clear();
 		m_fileMapping.clear();
 	}
@@ -43,13 +41,13 @@ public:
 			return;
 		m_filePath.clear();
 		m_filePath = path;
-		m_fileMapping[(int)FG_QUALITY_UNIVERSAL] = path;
+		m_fileMapping[m_defaultID] = path;
 	}
 	// Set file path to this resource
 	virtual void setFilePath(std::string& path) {
 		m_filePath.clear();
 		m_filePath = path;
-		m_fileMapping[(int)FG_QUALITY_UNIVERSAL] = path;
+		m_fileMapping[m_defaultID] = path;
 	}
 
 	// Get resource file path string
@@ -66,50 +64,56 @@ public:
 	}
 
 	// Set file path to this resource
-	virtual void setFilePath(const char *path, fgQuality quality) {
+	virtual void setFilePath(const char *path, int id) {
 		if(!path)
 			return;
-		m_fileMapping[(int)quality] = path;
-		if(quality == FG_QUALITY_UNIVERSAL)
+		m_fileMapping[id] = path;
+		if(id == m_defaultID)
 			m_filePath = path;
 		else if(m_filePath.empty())
 			m_filePath = path;
 	}
 	// Set file path to this resource
-	virtual void setFilePath(std::string& path, fgQuality quality) {
-		m_fileMapping[(int)quality] = path;
-		if(quality == FG_QUALITY_UNIVERSAL)
+	virtual void setFilePath(std::string& path, int id) {
+		m_fileMapping[id] = path;
+		if(id == m_defaultID)
 			m_filePath = path;
 		else if(m_filePath.empty())
 			m_filePath = path;
 	}
 
 	// Get resource file path string
-	std::string getFilePath(fgQuality quality) const {
+	std::string getFilePath(int id) const {
 		 // this lazy cast is ok - non-const version does not modify anything
-		return (const_cast<fgFileQualityMapping*>(this)->getFilePath(quality));
+		return (const_cast<fgResourceBase*>(this)->getFilePath(id));
 	}
 
 	// Get reference to resource file path string
-	std::string& getFilePath(fgQuality quality) {
-		if(m_fileMapping.find((int)quality) == m_fileMapping.end()) {
+	std::string& getFilePath(int id) {
+		if(m_fileMapping.find(id) == m_fileMapping.end()) {
 			return m_filePath;
 		}
-		return m_fileMapping[(int)quality];
+		return m_fileMapping[id];
 	}
 
 	// Get resource file path as C-like string (char array)
-	const char* getFilePathStr(fgQuality quality) {
-		if(m_fileMapping.find((int)quality) == m_fileMapping.end()) {
+	const char* getFilePathStr(int id) {
+		if(m_fileMapping.find(id) == m_fileMapping.end()) {
 			return m_filePath.c_str();
 		}
-		return m_fileMapping[(int)quality].c_str();
+		return m_fileMapping[id].c_str();
+	}
+
+	// Set default ID
+	void setDefaultID(int id) {
+		m_defaultID = id;
 	}
 protected:
 	// File mapping, the key is int (quality)
 	std::map<int, std::string>	m_fileMapping;
 	// File path as separate string (by default this is for universal quality)
 	std::string					m_filePath;
+	int							m_defaultID;
 };
 
-#endif /* _FG_FILE_QUALITY_MAPPING_H_ */
+#endif /* _FG_RESOURCE_BASE_H_ */

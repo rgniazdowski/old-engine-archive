@@ -24,15 +24,34 @@ template <>
 fgTextureManager *fgSingleton<fgTextureManager>::instance = NULL;
 
 /**
- * Private constructor
+ * Protected constructor
  */
 fgTextureManager::fgTextureManager() {
 }
 
 /**
- * Private destructor
+ * Protected destructor
  */
 fgTextureManager::~fgTextureManager() {
+}
+
+/*
+ *
+ */
+void fgTextureManager::clear(void) {
+}
+
+/*
+ *
+ */
+void fgTextureManager::destroy(void) {
+}
+
+/*
+ *
+ */
+fgBool fgTextureManager::initialize(void) {
+	return FG_TRUE;
 }
 
 /**

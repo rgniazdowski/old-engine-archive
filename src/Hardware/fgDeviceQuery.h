@@ -11,6 +11,7 @@
 #define _FG_DEVICE_QUERY_H_
 
 #include "../fgSingleton.h"
+#include "../fgCommon.h"
 
 enum fgDeviceClass 
 {

@@ -39,4 +39,7 @@ public:
 	static float ms(void);
 };
 
+// Platform independent function for getting time in miliseconds
+unsigned long int FG_GetTicks(void);
+
 #endif

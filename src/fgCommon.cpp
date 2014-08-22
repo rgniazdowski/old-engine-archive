@@ -15,85 +15,10 @@
 #include <cstring>
 #include <cctype>
 
-#ifdef FG_USING_MARMALADE
-#include "s3eDebug.h"
-#include "s3eTimer.h"
-#endif
-
 // #TODO #P2 - need to create some levels of logging verbosity
 // #TODO #P3 - also maybe some files to write to
 // #TODO #P4 - need to add some over the top logging subsystem and hook it to console or whatnot
 // #TODO #P3 - this also should be linked directly to the error reporting subsystem/standard
-
-/*
- * This function gets time in miliseconds. It doesnt matter from what 
- * point in time this is calculated - it is used for delta time mostly.
- * This function is very similar in usage as the SDL_GetTicks().
- */
-unsigned long int FG_GetTicks(void)
-{
-#ifdef FG_USING_MARMALADE
-	return s3eTimerGetMs();
-#else
-	return 32; // FIXME - here needs to be proper function getting the miliseconds
-#endif
-}
-
-const char* FG_Filename (const char* str)
-{
-	return (strrchr(str, '/') ? strrchr(str, '/') + 1 : strrchr(str, '\\') ? strrchr(str, '\\') + 1 : str);
-}
-
-/**
- * Log info message
- */
-void FG_InfoLog(const char *fmt, ...)
-{
-	char buf[256];
-	va_list args;
-
-	sprintf(buf, "INFO: ");
-	va_start(args,fmt);
-	vsprintf(buf+strlen(buf), fmt, args);
-	va_end(args);
-
-    // s3eDebugTracePrintf(buf);
-    puts(buf);
-}
-
-/**
- * Write log message
- */
-void FG_WriteLog(const char *fmt, ...)
-{
-	char buf[256];
-	va_list args;
-
-	sprintf(buf, "LOG: ");
-	va_start(args,fmt);
-	vsprintf(buf+strlen(buf), fmt, args);
-	va_end(args);
-
-    // s3eDebugTracePrintf(buf);
-    puts(buf);
-}
-
-/**
- * Log error message
- */
-void FG_ErrorLog(const char *fmt, ...)
-{
-	char buf[256];
-	va_list args;
-
-	sprintf(buf, "ERROR: ");
-	va_start(args,fmt);
-	vsprintf(buf+strlen(buf), fmt, args);
-	va_end(args);
-
-    //s3eDebugErrorPrintf(buf);
-    puts(buf);
-}
 
 #ifdef _MSC_VER
 #if 0

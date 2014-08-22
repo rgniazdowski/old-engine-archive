@@ -11,6 +11,8 @@
 
 #include "fgEventManager.h"
 #include "../fgCommon.h"
+#include "../fgLog.h"
+#include "../fgTime.h"
 
 #include "../Hardware/fgHardwareState.h"
 

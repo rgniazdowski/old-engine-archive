@@ -13,6 +13,8 @@
 #include "fgResourceManager.h"
 #include "fgResourceFactory.h"
 #include "fgDirent.h"
+#include "fgPath.h"
+#include "fgLog.h"
 
 #include <queue>
 

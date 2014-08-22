@@ -15,6 +15,7 @@
 #include "s3eAudio.h"
 
 #include "../fgCommon.h"
+#include "../fgLog.h"
 #include "../Hardware/fgDeviceQuery.h"
 
 #define SNDDIR "sound/"

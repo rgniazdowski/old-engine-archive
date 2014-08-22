@@ -18,6 +18,11 @@ static DWORD g_start;
 static struct timeval g_start;
 #endif
 
+#ifdef FG_USING_MARMALADE
+#include "s3eDebug.h"
+#include "s3eTimer.h"
+#endif
+
 #include <ctime>
 static clock_t g_clock_start = 0L;
 
@@ -96,7 +101,7 @@ float fgTime::exact(void)
 }
 
 /*
- *
+ * Get clock ticks
  */
 float fgTime::ticks(void)
 {
@@ -113,4 +118,18 @@ float fgTime::ms(void)
 	gettimeofday(&newTime, NULL);
 	return float(newTime.tv_sec-g_start.tv_sec)*1000.0f +
 		float(newTime.tv_usec-g_start.tv_usec)/1000.0f;
+}
+
+/*
+ * This function gets time in miliseconds. It doesnt matter from what 
+ * point in time this is calculated - it is used for delta time mostly.
+ * This function is very similar in usage as the SDL_GetTicks().
+ */
+unsigned long int FG_GetTicks(void)
+{
+#ifdef FG_USING_MARMALADE
+	return s3eTimerGetMs();
+#else
+	return (unsigned long int)(fgTime::ticks()/((float)CLOCKS_PER_SEC/1000.0f)); // FIXME - here needs to be proper function getting the miliseconds
+#endif
 }

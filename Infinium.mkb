@@ -15,17 +15,24 @@ files
 	fgException.h
 	fgFile.cpp
 	fgFile.h
-	fgFileQualityMapping.h
 	fgGameMain.cpp
 	fgGameMain.h
 	fgHandle.h
 	fgHandleManager.h
+	fgLog.cpp
+	fgLog.h
+	fgManagerBase.h
 	fgMemory.h
 	fgMessageCommon.h
+	fgMessageSubsystem.cpp
+	fgMessageSubsystem.h
+	fgPath.cpp
+	fgPath.h
 	fgProfiling.cpp
 	fgProfiling.h
 	fgResource.cpp
 	fgResource.h
+	fgResourceBase.h
 	fgResourceFactory.cpp
 	fgResourceFactory.h
 	fgResourceGroup.cpp
@@ -34,9 +41,9 @@ files
 	fgResourceManager.h
 	fgSettings.cpp
 	fgSettings.h
-	fgSingleton.cpp
 	fgSingleton.h
 	fgStatus.h
+	fgStatusReporter.h
 	fgTime.cpp
 	fgTime.h
 	fgXMLDefaultHandler.h

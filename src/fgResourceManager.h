@@ -14,6 +14,7 @@
 #define _FG_RESOURCE_MANAGER_H_
 
 #include "fgSingleton.h"
+#include "fgManagerBase.h"
 #include "fgResource.h"
 #include "fgResourceGroup.h"
 #include "fgHandleManager.h"
@@ -32,7 +33,7 @@ class fgTextureManager;
 // usage and destroys all unused data. Its very convinient as after pushing resource into
 // the manager there's no additional
 //
-class fgResourceManager : public fgSingleton<fgResourceManager>
+class fgResourceManager : public fgManagerBase, public fgSingleton<fgResourceManager>
 {
 	friend class fgSingleton<fgResourceManager>;
 	friend class fgTextureManager;

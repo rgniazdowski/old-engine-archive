@@ -8,6 +8,7 @@
  *******************************************************/
 
 #include "fgPsParticleEffectLimited.h"
+#include "../../fgLog.h"
 
 #include <cstdlib>
 

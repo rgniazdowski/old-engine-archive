@@ -9,6 +9,7 @@
 
 #include "fgHardwareState.h"
 #include "../fgCommon.h"
+#include "../fgTime.h"
 
 #include <cstdlib>
 #include <cmath>

@@ -9,14 +9,14 @@
 
 #include "fgTouchReceiver.h"
 
-#include <cstdlib>
-#include <cmath>
-
 #include "../fgMemory.h"
-
 #include "../fgCommon.h"
+#include "../fgTime.h"
 #include "../Hardware/fgHardwareState.h"
 #include "../Event/fgEventManager.h"
+
+#include <cstdlib>
+#include <cmath>
 
 const unsigned int fgTouchReceiver::MAX_TOUCH_POINTS = 10;
 

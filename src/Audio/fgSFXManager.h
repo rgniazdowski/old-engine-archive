@@ -11,6 +11,7 @@
 #define _FG_SFX_MANAGER_H_
 
 #include "../fgSingleton.h"
+#include "../fgCommon.h"
 
 // This class needs total refactoring to make it somehow compatible with ResourceManager
 

@@ -21,7 +21,7 @@
 #include <cstring>
 
 #include "fgHandle.h"
-#include "fgFileQualityMapping.h" // #FIXME
+#include "fgResourceBase.h"
 
 #ifndef FG_FACTORY_CREATE_FUNCTION
 #define FG_FACTORY_CREATE_FUNCTION(RETURNTYPE, CREATETYPE) \
@@ -173,7 +173,7 @@ inline fgResPriorityType _FG_RES_PRIORITY_FROM_TEXT(const char* text) {
 /*
  * Base class for resource
  */
-class fgResource : public fgFileQualityMapping
+class fgResource : public fgResourceBase
 {
 	friend class fgResourceManager;
 	friend class fgResourceGroup;
@@ -241,19 +241,19 @@ public:
 
 	// Set file path to this resource #FIXME
 	virtual void setFilePath(const char *path) {
-		fgFileQualityMapping::setFilePath(path);
+		fgResourceBase::setFilePath(path);
 	}
 	// Set file path to this resource #FIXME
 	virtual void setFilePath(std::string& path) {
-		fgFileQualityMapping::setFilePath(path);
+		fgResourceBase::setFilePath(path);
 	}
 	// Set file path to this resource #FIXME
 	virtual void setFilePath(const char *path, fgQuality quality) {
-		fgFileQualityMapping::setFilePath(path, quality);
+		fgResourceBase::setFilePath(path, (int)quality);
 	}
 	// Set file path to this resource #FIXME
 	virtual void setFilePath(std::string& path, fgQuality quality) {
-		fgFileQualityMapping::setFilePath(path, quality);
+		fgResourceBase::setFilePath(path, (int)quality);
 	}
 
 	// Set resource name (string TAG/ID)

@@ -23,6 +23,7 @@
 
 #include "fgSingleton.h"
 #include "fgCommon.h"
+#include "fgLog.h"
 #include "Event/fgEventManager.h"
 #include "Input/fgTouchReceiver.h"
 

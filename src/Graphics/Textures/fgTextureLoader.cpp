@@ -8,6 +8,8 @@
  *******************************************************/
 
 #include "fgTextureLoader.h"
+#include "../../fgPath.h"
+#include "../../fgLog.h"
 
 /*
  * This function is used for preloading given file for later processing

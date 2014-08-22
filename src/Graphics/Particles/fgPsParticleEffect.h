@@ -41,7 +41,7 @@ private:
 
 protected:
 	/// The particle area to check for collisions in 2D space
-	Area m_particleArea; // FIXME
+	fgArea m_particleArea; // FIXME
 	/// Is area set?
 	bool m_areaSet;
 	/// Is area going to be checked? Only in 2D drawing mode.
@@ -204,7 +204,7 @@ public:
 	/**
 	 * The particle area (area for checking the collisions in 2D space)
 	 */
-	Area & particleArea(void) {
+	fgArea & particleArea(void) {
 		return m_particleArea;
 	}
 
@@ -226,10 +226,6 @@ public:
     Type type() const {
         return m_type;
     }
-//
-// MARK: -
-// MARK: Setters
-//
 	
 	/**
 	 * Setting the emitter origin position
@@ -385,7 +381,7 @@ public:
 	 * Unset the particle area
 	 */
 	void unsetParticleArea() {
-		m_particleArea = Area();
+		m_particleArea = fgArea();
 		m_areaSet = false;
 		m_areaCheck = false;
 	}
@@ -393,13 +389,13 @@ public:
 	/**
 	 * Set the particle area for checking collisions with
 	 */
-	void setParticleArea(Area area) {
+	void setParticleArea(fgArea area) {
 		m_particleArea = area;
 		m_areaSet = true;
 		m_areaCheck = true;
 	}
 
-	void setParticleArea(Area *area) {
+	void setParticleArea(fgArea *area) {
 		m_particleArea = *area;
 		m_areaSet = true;
 		m_areaCheck = true;

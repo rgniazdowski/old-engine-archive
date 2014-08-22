@@ -16,6 +16,7 @@
 #include "fgHardwareState.h"
 
 #include "../fgSingleton.h"
+#include "../fgCommon.h"
 
 static int32 HarvestCallback(void* systemData, void* userData);
 

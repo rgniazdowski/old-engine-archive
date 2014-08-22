@@ -59,7 +59,6 @@ typedef unsigned char fgBool;
 #endif
 
 
-
 #define FG_SUCCESS_TEXT		"success"
 #define FG_TRUE_TEXT		"true"
 #define FG_FALSE_TEXT		"false"
@@ -199,95 +198,11 @@ public:
 };
 #endif /* FG_PTR_GREATER_DEFINED_ */
 
-
-// #FIXME this should not be in this file, but for now (just to compile the damn code) it'll be here
-// #TODO #P2 this class needs modification so it will have the standard of all the fgVector*/fgColor* classes
-struct Area
-{
-		int x;
-		int y;
-		int w;
-		int h;
-		Area(int _x, int _y, int _w, int _h) : x(_x), y(_y), w(_w), h(_h) {}
-		Area() : x(0), y(0), w(0), h(0) {}
-
-// MARK: Getters
-
-        int left() const {
-            return x;
-        }
-
-        int right() const {
-            return x + w;
-        }
-
-        int top() const {
-            return y;
-        }
-
-        int bottom() const {
-            return y + h;
-        }
-
-        int width() const {
-            return w;
-        }
-
-        int height() const {
-            return h;
-        }
-
-// MARK: Setters
-
-        void set_left(int l) {
-            x = l;
-        }
-
-        void set_right(int r) {
-            w = r - x;
-        }
-
-        void set_top(int t) {
-            y = t;
-        }
-
-        void set_bottom(int b) {
-            h = b - y;
-        }
-
-        void set_width(int _w) {
-            w = _w;
-        }
-
-        void set_height(int _h) {
-            h = _h;
-        }
-};
-
-
-//FIXME
-void FG_InfoLog(const char *fmt, ...);
-void FG_ErrorLog(const char *fmt, ...);
-void FG_WriteLog(const char *fmt, ...);
-
-// Platform independent function for getting time in miliseconds
-unsigned long int FG_GetTicks(void);
-
 /**
  * Random int from [a,b]
  */
 inline int FG_Rand(int a, int b) {
 	return a +(int)(((float)(b-a+1))*rand()/(float(RAND_MAX)+1.0f));
 }
-
-inline const char *FG_FileExt(const char *filename) {
-    const char *dot = strrchr(filename, '.');
-    if(!dot || dot == filename) return NULL;
-    return dot + 1;
-}
-
-const char* FG_Filename (const char* str);
-
-
 
 #endif /* _FG_COMMON_H_ */

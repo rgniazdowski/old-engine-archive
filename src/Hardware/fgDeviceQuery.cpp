@@ -17,6 +17,7 @@
 #include "s3eDevice.h"
 
 #include "../fgCommon.h"
+#include "../fgLog.h"
 
 static fgBool isAndroid();
 static fgBool isiOS();

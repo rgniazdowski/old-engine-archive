@@ -14,7 +14,7 @@
 #include <typeinfo>
 
 // #FIXME - this is temporary...
-#include "fgCommon.h"
+#include "fgLog.h"
 
 template<typename Class>
 class fgSingleton

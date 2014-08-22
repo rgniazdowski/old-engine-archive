@@ -189,7 +189,7 @@ bool ParticleEffect::addParameterized(float x, float y, float z, int count)
 
 void ParticleEffect::calculate(void)
 {
-	Area screenArea;
+	fgArea screenArea;
 	screenArea.x = 0;
 	screenArea.y = 0;
 	screenArea.w = FG_HardwareState->getScreenWidth();

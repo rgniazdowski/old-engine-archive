@@ -10,6 +10,7 @@
 #include "fgKalmanFilter.h"
 
 #include "../fgCommon.h"
+#include "../fgLog.h"
 
 void KalmanFilter::init(float q, float r, float p, float intial_value)
 {

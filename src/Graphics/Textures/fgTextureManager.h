@@ -12,6 +12,7 @@
 
 #include "../../fgSingleton.h"
 #include "../../fgCommon.h"
+#include "../../fgManagerBase.h"
 #include "fgTextureResource.h"
 #include "fgTextureCommon.h"
 #include "fgTextureTypes.h"
@@ -20,15 +21,21 @@
 /**
  * Class that allows to perform GROUP OPERATIONS on all textures. 
  */
-class fgTextureManager : public fgSingleton<fgTextureManager> {
+class fgTextureManager : public fgManagerBase, public fgSingleton<fgTextureManager> {
 	friend class fgSingleton<fgTextureManager>;
     friend class MainModule;
 protected:
 	// Default constructor for Texture Manager object
     fgTextureManager();
 	// Default destructor for Texture Manager object
-    ~fgTextureManager();
+    virtual ~fgTextureManager();
 public:
+
+	void clear(void);
+	void destroy(void);
+
+	fgBool initialize(void);
+
     /**
      * RAM -> VRAM.
      * Update of VRAM is unconditional. 
