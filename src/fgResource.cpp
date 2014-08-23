@@ -1,9 +1,9 @@
 /*******************************************************
  * Copyright (C) 2014 Radoslaw Gniazdowski <r.gniazdowski@gmail.com>. All rights reserved.
- * 
+ *
  * This file is part of #FLEXIGAME_PROJECT
- * 
- * #FLEXIGAME_PROJECT source code and any related files can not be copied, modified 
+ *
+ * #FLEXIGAME_PROJECT source code and any related files can not be copied, modified
  * and/or distributed without the express or written permission from the author.
  *******************************************************/
 /**
@@ -17,9 +17,9 @@
  * Base constructor of the resource object
  */
 fgResource::fgResource() :
-	m_resType(FG_RESOURCE_INVALID),
 	m_priority(FG_RES_PRIORITY_LOW),
 	m_quality(FG_QUALITY_UNIVERSAL),
+	m_resType(FG_RESOURCE_INVALID),
 	m_nRefCount(0),
 	m_lastAccess(0),
 	m_isReady(FG_FALSE),
@@ -33,9 +33,9 @@ fgResource::fgResource() :
  * Constructor with additional parameter (path)
  */
 fgResource::fgResource(const char *path) :
-	m_resType(FG_RESOURCE_INVALID),
 	m_priority(FG_RES_PRIORITY_LOW),
 	m_quality(FG_QUALITY_UNIVERSAL),
+	m_resType(FG_RESOURCE_INVALID),
 	m_nRefCount(0),
 	m_lastAccess(0),
 	m_isReady(FG_FALSE),
@@ -50,9 +50,9 @@ fgResource::fgResource(const char *path) :
  * Constructor with additional parameter (path)
  */
 fgResource::fgResource(std::string& path) :
-	m_resType(FG_RESOURCE_INVALID),
 	m_priority(FG_RES_PRIORITY_LOW),
 	m_quality(FG_QUALITY_UNIVERSAL),
+	m_resType(FG_RESOURCE_INVALID),
 	m_nRefCount(0),
 	m_lastAccess(0),
 	m_isReady(FG_FALSE),

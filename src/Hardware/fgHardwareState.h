@@ -1,16 +1,15 @@
 /*******************************************************
  * Copyright (C) 2014 Radoslaw Gniazdowski <r.gniazdowski@gmail.com>. All rights reserved.
- * 
+ *
  * This file is part of #FLEXIGAME_PROJECT
- * 
- * #FLEXIGAME_PROJECT source code and any related files can not be copied, modified 
+ *
+ * #FLEXIGAME_PROJECT source code and any related files can not be copied, modified
  * and/or distributed without the express or written permission from the author.
  *******************************************************/
 
 #ifndef _FG_HARDWARE_STATE_H_
 #define _FG_HARDWARE_STATE_H_
 
-#include "s3eTypes.h"
 #include "../fgSingleton.h"
 
 // #FIXME
@@ -30,7 +29,7 @@ enum fgScreenOrientation {
  * The class holds only SIMPLE states, i.e. it does not
  * hold GameLogic object. Reason: to avoid including EVERYTHING here.
  */
-class fgHardwareState : public fgSingleton<fgHardwareState> 
+class fgHardwareState : public fgSingleton<fgHardwareState>
 {
 	friend class fgSingleton<fgHardwareState>;
 private:
@@ -63,17 +62,19 @@ public:
     // Inits DPI. Called from GL init code, when display is ready
     void initDPI();
 
+    void deviceYield(int ms = 0);
+
 	// FIXME
-	// now in the engine there will be two (or more) main threads - one for calculation of 
-	// various thins (3d data, logic, scripts, events, callbacks, etc.) and another one for 
+	// now in the engine there will be two (or more) main threads - one for calculation of
+	// various thins (3d data, logic, scripts, events, callbacks, etc.) and another one for
 	// calling proper drawing functions, so basically DT should be calculated in the way
-	// that takes into account both threads - however calculation of FPS should be done only 
+	// that takes into account both threads - however calculation of FPS should be done only
 	// in graphics thread (?)
 	void calculateDT(void);
 	// Calculate current FPS
 	float calculateFPS(void);
 
-    // Timestamp without possibly slow s3eTimerGetMs() call. 
+    // Timestamp without possibly slow s3eTimerGetMs() call.
 	// Used when ONE FRAME accuracy is sufficient.
     unsigned long int getTS(void) const {
         return m_TS;
@@ -103,7 +104,7 @@ public:
 	int getScreenWidth(void) const {
 		return m_screenWidth;
 	}
-	
+
 	// Returns display area
 	int getDisplayArea(void) const {
 		return m_dispArea;

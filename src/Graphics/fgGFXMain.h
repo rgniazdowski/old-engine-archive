@@ -1,9 +1,9 @@
 /*******************************************************
  * Copyright (C) 2014 Radoslaw Gniazdowski <r.gniazdowski@gmail.com>. All rights reserved.
- * 
+ *
  * This file is part of #FLEXIGAME_PROJECT
- * 
- * #FLEXIGAME_PROJECT source code and any related files can not be copied, modified 
+ *
+ * #FLEXIGAME_PROJECT source code and any related files can not be copied, modified
  * and/or distributed without the express or written permission from the author.
  *******************************************************/
 
@@ -22,11 +22,16 @@
 #include <GLES2/gl2ext.h>
 #include <GLES2/gl2platform.h>
 #include <EGL/egl.h>
-
 #define FG_EGL_MAX_CONFIG 32
-#endif
+#endif // FG_USING_MARMALADE_OPENGL_ES
 
-#endif
+#elif defined FG_USING_PLATFORM_LINUX
+
+#ifdef FG_USING_OPENGL
+#include <GL/gl.h>
+#endif // FG_USING_OPENGL
+
+#endif // FG_USING_MARMALADE
 
 #include "fgGFXPerspectiveView.h"
 #include "fgGFXOrthoView.h" // is this really necessary?
@@ -49,4 +54,4 @@ namespace FG_GFX {
 	void clearScreen(void);
 };
 
-#endif /* _FG_GFX_MAIN_H_ */ 
+#endif /* _FG_GFX_MAIN_H_ */

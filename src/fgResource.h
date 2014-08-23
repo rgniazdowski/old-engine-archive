@@ -1,9 +1,9 @@
 /*******************************************************
  * Copyright (C) 2014 Radoslaw Gniazdowski <r.gniazdowski@gmail.com>. All rights reserved.
- * 
+ *
  * This file is part of #FLEXIGAME_PROJECT
- * 
- * #FLEXIGAME_PROJECT source code and any related files can not be copied, modified 
+ *
+ * #FLEXIGAME_PROJECT source code and any related files can not be copied, modified
  * and/or distributed without the express or written permission from the author.
  *******************************************************/
 /**
@@ -25,12 +25,12 @@
 
 #ifndef FG_FACTORY_CREATE_FUNCTION
 #define FG_FACTORY_CREATE_FUNCTION(RETURNTYPE, CREATETYPE) \
-static RETURNTYPE * __stdcall createResource(void) { return new CREATETYPE(); }
+static RETURNTYPE * createResource(void) { return new CREATETYPE(); }
 #endif
 
 #ifndef FG_RESOURCE_FACTORY_CREATE_FUNCTION
 #define FG_RESOURCE_FACTORY_CREATE_FUNCTION(CREATETYPE) \
-static fgResource * __stdcall createResource(void) { return new CREATETYPE(); }
+static fgResource * createResource(void) { return new CREATETYPE(); }
 #endif
 
 // Empty structure for resource tag
@@ -90,7 +90,7 @@ enum fgResourceType {
 	FG_RESOURCE_PLUGIN,
 	FG_RESOURCE_CUSTOM,
 	FG_RESOURCE_ZIP_PACK,
-	
+
 	FG_NUM_RESOURCE_BASIC_TYPES,
 
 	FG_RESOURCE_RESERVED1,
@@ -107,7 +107,7 @@ enum fgResourceType {
  *
  */
 inline fgResourceType _FG_RESOURCE_TYPE_FROM_TEXT(const char* text) {
-	
+
 	if(!text)
 		return FG_RESOURCE_INVALID;
 	FG_RETURN_ENUM_IF_TEXT_EQ(FG_RESOURCE_INVALID);

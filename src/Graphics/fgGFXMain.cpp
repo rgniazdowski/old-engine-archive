@@ -1,9 +1,9 @@
 /*******************************************************
  * Copyright (C) 2014 Radoslaw Gniazdowski <r.gniazdowski@gmail.com>. All rights reserved.
- * 
+ *
  * This file is part of #FLEXIGAME_PROJECT
- * 
- * #FLEXIGAME_PROJECT source code and any related files can not be copied, modified 
+ *
+ * #FLEXIGAME_PROJECT source code and any related files can not be copied, modified
  * and/or distributed without the express or written permission from the author.
  *******************************************************/
 
@@ -32,7 +32,7 @@ namespace FG_GFX {
 	 *
 	 */
 	fgBool initGFX(void)
-	{		
+	{
 #if defined FG_USING_MARMALADE_EGL
 		EGLint major;
 		EGLint minor;
@@ -128,7 +128,7 @@ namespace FG_GFX {
 		eglSwapBuffers(g_EGLDisplay, g_EGLSurface);
 #elif defined FG_USING_MARMALADE_IWGL
 		IwGLSwapBuffers();
-#endif		
+#endif
 	}
 
 	/*
@@ -136,12 +136,14 @@ namespace FG_GFX {
 	 */
 	int getScreenHeight(void)
 	{
-		EGLint h = -1;
 #if defined FG_USING_MARMALADE_EGL
+        EGLint h = -1;
 		eglQuerySurface(g_EGLDisplay,g_EGLSurface,EGL_HEIGHT,&h);
 #elif defined FG_USING_MARMALADE_IWGL
-		h = IwGLGetInt(IW_GL_HEIGHT);
-#endif	
+		int h = IwGLGetInt(IW_GL_HEIGHT);
+#else
+        int h = 0;
+#endif
 		return (int)h;
 	}
 
@@ -150,11 +152,13 @@ namespace FG_GFX {
 	 */
 	int getScreenWidth(void)
 	{
-		EGLint w = -1;
 #if defined FG_USING_MARMALADE_EGL
+        EGLint w = -1;
 		eglQuerySurface(g_EGLDisplay,g_EGLSurface,EGL_WIDTH,&w);
 #elif defined FG_USING_MARMALADE_IWGL
-		w = IwGLGetInt(IW_GL_WIDTH);
+		int w = IwGLGetInt(IW_GL_WIDTH);
+#else
+        int w = 0;
 #endif
 		return w;
 	}

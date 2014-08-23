@@ -1,9 +1,9 @@
 /*******************************************************
  * Copyright (C) 2014 Radoslaw Gniazdowski <r.gniazdowski@gmail.com>. All rights reserved.
- * 
+ *
  * This file is part of #FLEXIGAME_PROJECT
- * 
- * #FLEXIGAME_PROJECT source code and any related files can not be copied, modified 
+ *
+ * #FLEXIGAME_PROJECT source code and any related files can not be copied, modified
  * and/or distributed without the express or written permission from the author.
  *******************************************************/
 /**
@@ -20,7 +20,6 @@
 #include "fgHandleManager.h"
 
 #include <iostream>
-#include <hash_map>
 
 #ifndef FG_RHANDLE
 #define FG_RHANDLE fgResourceHandle
@@ -65,21 +64,21 @@ public:
 	fgBool setMaximumMemory(size_t nMaxSize);
 	// Return the maximum memory value
 	size_t getMaximumMemory(void) const		{  return m_nMaximumMemory;  }
-	
+
 	// --------------------------------------------------------------------------
 	// Resource map iteration
 
 	// Access functions for cycling through each item.  Giving direct
 	// access to the map or iterator causes a stack pointer fault if you access
-	// the map across a dll boundary, but it's safe through the wrappers. 
+	// the map across a dll boundary, but it's safe through the wrappers.
 
 	// Go to the begin of resource map iteration
 	void goToBegin(void) {
-		m_currentResource = getRefResourceVector().begin(); 
+		m_currentResource = getRefResourceVector().begin();
 	}
 	// Get pointer to the current resource (based on iterator)
-	fgResource* getCurrentResource(void)	{  
-		if(!isValid()) 
+	fgResource* getCurrentResource(void)	{
+		if(!isValid())
 			return NULL;
 		else
 			return (*m_currentResource);
@@ -95,7 +94,7 @@ public:
 			if(!isValid())
 				break;
 		}
-		return isValid();  
+		return isValid();
 	}
 	// Find next resource with given criteria (currently resource type)
 	fgBool goToNext(fgResourceType resType);
@@ -103,7 +102,7 @@ public:
 	fgBool goToNext(const fgResourceType* resType, int n);
 	// Find next resource with given criteria (currently resource type and quality)
 	fgBool goToNext(fgResourceType resType, fgQuality quality);
-	
+
 	// -----------------------------------------------------------------------
 	// General resource access
 
@@ -112,8 +111,8 @@ public:
 	fgBool reserveMemory(size_t nMem);
 
 	// Insert resource group into manager
-	// If you pass in the pointer to resource handle, the Resource Manager 
-	// will provide a unique handle for you.  
+	// If you pass in the pointer to resource handle, the Resource Manager
+	// will provide a unique handle for you.
 	fgBool insertResource(FG_RHANDLE& rhUniqueID, fgResource* pResource);
 
 protected:
@@ -156,13 +155,13 @@ public:
 	fgBool destroyResource(FG_RHANDLE rhUniqueID);
 
 	// Using GetResource tells the manager that you are about to access the
-	// object.  If the resource has been disposed, it will be recreated 
-	// before it has been returned. 
+	// object.  If the resource has been disposed, it will be recreated
+	// before it has been returned.
 	fgResource* getResource(FG_RHANDLE rhUniqueID);
 
 	// Using GetResource tells the manager that you are about to access the
-	// object.  If the resource has been disposed, it will be recreated 
-	// before it has been returned. 
+	// object.  If the resource has been disposed, it will be recreated
+	// before it has been returned.
 	fgResource* getResource(std::string& nameTag);
 
 	// Locking the resource ensures that the resource does not get managed by
@@ -177,7 +176,7 @@ public:
 	// need exclusive access.  When all locks have been released (the reference
 	// count is 0), the object is considered safe for management again and can
 	// be swapped out at the manager's discretion.  The object can be referenced
-	// either by handle or by the object's pointer. 
+	// either by handle or by the object's pointer.
 	// #FIXME #TODO #P3 - locking/unlocking is based on counter - DEPRECATED.
 	fgResource* unlockResource(FG_RHANDLE rhUniqueID);
 	// Unlock the resource
@@ -192,7 +191,7 @@ public:
 	// priority, determined by the resource class's < operator.  Function will
 	// fail if requested memory cannot be freed.
 	fgBool checkForOverallocation(void);
-	
+
 protected:
 	// Refresh allocated memory based on managed resources
 	void refreshMemory(void);

@@ -7,11 +7,15 @@
  * and/or distributed without the express or written permission from the author.
  *******************************************************/
 
+#include "../fgBuildConfig.h"
 #include "fgArgumentList.h"
+#include "../fgMemory.h"
 
 #include <iostream>
 
+#ifdef FG_USING_MARMALADE
 #include "s3eMemory.h"
+#endif
 
 /*
  *
@@ -305,7 +309,7 @@ void fgArgumentList::clearArguments()
 		fgArgument arg = getNextArgumentStruct();
 		if(arg.type == FG_ARGUMENT_STRUCT) {
 			if(arg.custom_pointer != NULL) {
-				s3eFree(arg.custom_pointer);
+				fgFree(arg.custom_pointer);
 			}
 		}
 	}

@@ -127,7 +127,7 @@ public:
 	// Base destructor of the resource group object
 	~fgResourceGroup();
 
-	FG_RESOURCE_FACTORY_CREATE_FUNCTION(fgResourceGroup);
+	FG_RESOURCE_FACTORY_CREATE_FUNCTION(fgResourceGroup)
 
 	// Clears the class data, this actually does not free allocated memory, just resets base class attributes
 	virtual void clear(void);

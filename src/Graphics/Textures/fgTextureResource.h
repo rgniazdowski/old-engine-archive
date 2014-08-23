@@ -1,9 +1,9 @@
 /*******************************************************
  * Copyright (C) 2014 Radoslaw Gniazdowski <r.gniazdowski@gmail.com>. All rights reserved.
- * 
+ *
  * This file is part of #FLEXIGAME_PROJECT
- * 
- * #FLEXIGAME_PROJECT source code and any related files can not be copied, modified 
+ *
+ * #FLEXIGAME_PROJECT source code and any related files can not be copied, modified
  * and/or distributed without the express or written permission from the author.
  *******************************************************/
 
@@ -24,15 +24,21 @@
 #include <GLES2/gl2ext.h>
 #include <GLES2/gl2platform.h>
 #include <EGL/egl.h>
-#endif
+#endif // FG_USING_MARMALADE_OPENGL_ES
 
-#endif
+#elif defined FG_USING_PLATFORM_LINUX
 
-#if defined FG_USING_OPENGL_ES
+#ifdef FG_USING_OPENGL
+#include <GL/gl.h>
+#endif // FG_USING_OPENGL
+
+#endif // FG_USING_MARMALADE
+
+#if defined FG_USING_OPENGL_ES || defined FG_USING_OPENGL
 typedef GLuint fgTextureGfxID;
 #else
 typedef unsigned int fgTextureGfxID;
-#endif
+#endif // FG_USING_OPENGL_ES || FG_USING_OPENGL
 
 /*
  *
@@ -48,7 +54,7 @@ public:
 	// Base destructor of the texture resource object
 	virtual ~fgTextureResource()	{ destroy(); }
 
-	FG_RESOURCE_FACTORY_CREATE_FUNCTION(fgTextureResource);
+	FG_RESOURCE_FACTORY_CREATE_FUNCTION(fgTextureResource)
 
 	// Clears the class data, this actually does not free allocated memory,
 	// just resets base class attributes
@@ -70,15 +76,15 @@ protected:
 			return FG_FALSE;
 		// #FIXME - this should be extracted to other file (used for some basic file operation, pathext or whatnot #P3 #TODO)
 		std::string ext = path.substr(path.find_last_of(".") + 1);
-		if(strnicmp(ext.c_str(), FG_TEXTURE_FILE_EXTENSION_BMP, strlen(FG_TEXTURE_FILE_EXTENSION_BMP)) == 0) {
+		if(strncasecmp(ext.c_str(), FG_TEXTURE_FILE_EXTENSION_BMP, strlen(FG_TEXTURE_FILE_EXTENSION_BMP)) == 0) {
 			this->m_fileType = FG_TEXTURE_FILE_BMP;
-		} else if(strnicmp(ext.c_str(), FG_TEXTURE_FILE_EXTENSION_RAW, strlen(FG_TEXTURE_FILE_EXTENSION_RAW)) == 0) {
+		} else if(strncasecmp(ext.c_str(), FG_TEXTURE_FILE_EXTENSION_RAW, strlen(FG_TEXTURE_FILE_EXTENSION_RAW)) == 0) {
 			this->m_fileType = FG_TEXTURE_FILE_RAW;
-		} else if(strnicmp(ext.c_str(), FG_TEXTURE_FILE_EXTENSION_JPEG, strlen(FG_TEXTURE_FILE_EXTENSION_JPEG)) == 0) {
+		} else if(strncasecmp(ext.c_str(), FG_TEXTURE_FILE_EXTENSION_JPEG, strlen(FG_TEXTURE_FILE_EXTENSION_JPEG)) == 0) {
 			this->m_fileType = FG_TEXTURE_FILE_JPEG;
-		} else if(strnicmp(ext.c_str(), FG_TEXTURE_FILE_EXTENSION_PNG, strlen(FG_TEXTURE_FILE_EXTENSION_PNG)) == 0) {
+		} else if(strncasecmp(ext.c_str(), FG_TEXTURE_FILE_EXTENSION_PNG, strlen(FG_TEXTURE_FILE_EXTENSION_PNG)) == 0) {
 			this->m_fileType = FG_TEXTURE_FILE_PNG;
-		} else if(strnicmp(ext.c_str(), FG_TEXTURE_FILE_EXTENSION_TGA, strlen(FG_TEXTURE_FILE_EXTENSION_TGA)) == 0) {
+		} else if(strncasecmp(ext.c_str(), FG_TEXTURE_FILE_EXTENSION_TGA, strlen(FG_TEXTURE_FILE_EXTENSION_TGA)) == 0) {
 			this->m_fileType = FG_TEXTURE_FILE_TGA;
 		} else {
 			this->m_fileType = FG_TEXTURE_FILE_OTHER;

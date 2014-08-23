@@ -1,20 +1,23 @@
 /*******************************************************
  * Copyright (C) 2014 Radoslaw Gniazdowski <r.gniazdowski@gmail.com>. All rights reserved.
- * 
+ *
  * This file is part of #FLEXIGAME_PROJECT
- * 
- * #FLEXIGAME_PROJECT source code and any related files can not be copied, modified 
+ *
+ * #FLEXIGAME_PROJECT source code and any related files can not be copied, modified
  * and/or distributed without the express or written permission from the author.
  *******************************************************/
 
-#include <map>
-
+#include "../../fgBuildConfig.h"
 #include "../../fgCommon.h"
-#include "../../Hardware/fgQualityManager.h"
+
+#include "fgTextureManager.h"
+
+#include <map>
 
 #include "fgTextureCommon.h"
 #include "fgTextureResource.h"
-#include "fgTextureManager.h"
+
+#include "../../Hardware/fgQualityManager.h"
 #include "../../fgResourceManager.h"
 
 template <>
@@ -73,8 +76,8 @@ fgBool fgTextureManager::allToVRAM(void) {
 		}
 		fgResourceType resType = resource->getResourceType();
 		fgQuality quality = resource->getQuality();
-		if((resType == FG_RESOURCE_TEXTURE || resType == FG_RESOURCE_FONT) && 
-			(quality == FG_QualityManager->getQuality() || 
+		if((resType == FG_RESOURCE_TEXTURE || resType == FG_RESOURCE_FONT) &&
+			(quality == FG_QualityManager->getQuality() ||
 			quality == FG_QUALITY_UNIVERSAL) ) {
 				// Check if resource is locked - if it is - it's quite possible
 				// that it needs to be used in the future - so upload it
@@ -108,7 +111,7 @@ fgBool fgTextureManager::allToVRAM(void) {
 /**
  * Releases all NonGl (i.e. non VRAM) data
  */
-void fgTextureManager::allReleaseNonGFX(void) 
+void fgTextureManager::allReleaseNonGFX(void)
 {
 	fgResourceType searchTypes[] = {FG_RESOURCE_TEXTURE, FG_RESOURCE_FONT, FG_RESOURCE_INVALID};
 	//

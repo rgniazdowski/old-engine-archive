@@ -13,7 +13,7 @@
 #include <map>
 
 #include "../fgSingleton.h"
-#include "../Math/fgMathlib.h"
+#include "../Math/fgMathLib.h"
 
 #include "fgTouchRawData.h"
 

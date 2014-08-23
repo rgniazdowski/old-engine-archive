@@ -12,7 +12,6 @@
 
 #include "fgCommon.h"
 #include <stack>
-#include <hash_map>
 
 #define FG_MAX_PROFILE_SAMPLES 10
 
@@ -51,6 +50,9 @@ struct fgProfileSampleHistory
 	}
 };
 
+#ifdef FG_USING_MARMALADE
+#include <hash_map>
+
 #ifndef FG_HASH_STD_STRING_TEMPLATE_DEFINED_
 #define FG_HASH_STD_STRING_TEMPLATE_DEFINED_
 
@@ -65,14 +67,17 @@ namespace std
 	};
 };
 
-#endif /* FG_HASH_STD_STRING_TEMPLATE_DEFINED_ */
+#endif // FG_HASH_STD_STRING_TEMPLATE_DEFINED_ 
+#else
+#include <unordered_map>
+#endif // FG_USING_MARMALADE
 
 /*
  *
  */
 class fgProfiling
 {
-
+#ifdef FG_USING_MARMALADE
 protected:
 	struct profileEqualTo
 	{
@@ -86,13 +91,19 @@ protected:
 			return s1.compare(s2) == 0;
 		}
 	};
+#endif // FG_USING_MARMALADE
 protected:
 	typedef std::stack<fgProfileSample *> profileStack;
 	typedef std::string hashKey;
+#ifdef FG_USING_MARMALADE
 	typedef std::hash<std::string> hashFunc;
-	typedef std::hash_map <std::string, fgProfileSample *, hashFunc, profileEqualTo> profileMap;
+	typedef std::hash_map <hashKey, fgProfileSample *, hashFunc, profileEqualTo> profileMap;
+	typedef std::hash_map <hashKey, fgProfileSampleHistory *, hashFunc, profileEqualTo> historyMap;
+#else
+	typedef std::unordered_map <hashKey, fgProfileSample *> profileMap;
+	typedef std::unordered_map <hashKey, fgProfileSampleHistory *> historyMap;
+#endif
 	typedef profileMap::iterator profileMapItor;
-	typedef std::hash_map <std::string, fgProfileSampleHistory *, hashFunc, profileEqualTo> historyMap;
 	typedef historyMap::iterator historyMapItor;
 	typedef fgArrayVector<fgProfileSample *> profileVec;
 	typedef profileVec::iterator profileVecItor;

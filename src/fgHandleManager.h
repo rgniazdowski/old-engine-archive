@@ -1,9 +1,9 @@
 /*******************************************************
  * Copyright (C) 2014 Radoslaw Gniazdowski <r.gniazdowski@gmail.com>. All rights reserved.
- * 
+ *
  * This file is part of #FLEXIGAME_PROJECT
- * 
- * #FLEXIGAME_PROJECT source code and any related files can not be copied, modified 
+ *
+ * #FLEXIGAME_PROJECT source code and any related files can not be copied, modified
  * and/or distributed without the express or written permission from the author.
  *******************************************************/
 /**
@@ -13,9 +13,13 @@
 #ifndef _FG_HANDLE_MANAGER_H_
 #define _FG_HANDLE_MANAGER_H_
 
+#include "fgBuildConfig.h"
 #include "fgCommon.h"
+#include "fgPath.h"
+#include "fgLog.h"
 #include "fgHandle.h"
 
+#ifdef FG_USING_MARMALADE
 #include <hash_map>
 
 #ifndef FG_HASH_STD_STRING_TEMPLATE_DEFINED_
@@ -32,11 +36,15 @@ namespace std
 	};
 };
 
-#endif /* FG_HASH_STD_STRING_TEMPLATE_DEFINED_ */
+#endif // FG_HASH_STD_STRING_TEMPLATE_DEFINED_
+#else
+#include <unordered_map>
+#endif // FG_USING_MARMALADE
 
 template <typename DataType, typename HandleType>
 class fgHandleManager
 {
+#ifdef FG_USING_MARMALADE
 protected:
 	struct hmEqualTo
 	{
@@ -50,13 +58,18 @@ protected:
 			return s1.compare(s2) == 0;
 		}
 	};
+#endif
 public:
 	typedef std::string hashKey;
-	typedef std::hash<std::string> hashFunc;
 	// Type for vector storing Data pointers
     typedef fgArrayVector <DataType> hmDataVec;
+#ifdef FG_USING_MARMALADE
+	typedef std::hash<std::string> hashFunc;
 	// Type for map, assigning handle index value to string ID (case sensitive)
 	typedef std::hash_map <hashKey, fgRawIndex, hashFunc, hmEqualTo> hmNameMap; //#FIXME - this is not standard
+#else
+	typedef std::unordered_map <hashKey, fgRawIndex> hmNameMap;
+#endif
 private:
     typedef fgArrayVector <fgRawMagic>	hmMagicVec;
 	typedef fgArrayVector <hashKey>		hmNameVec;
@@ -117,10 +130,10 @@ public:
 
 	//
     fgBool hasUsedHandles(void) const {
-		return (fgBool)(!!getUsedHandleCount());  
+		return (fgBool)(!!getUsedHandleCount());
 	}
 
-	// 
+	//
 	hmDataVec& getRefDataVector(void) {
 		return m_managedData;
 	}
@@ -182,12 +195,12 @@ fgBool fgHandleManager<DataType, HandleType>::setupName(std::string& name, Handl
 	if(!isHandleValid(rHandle))
 		return FG_FALSE;
 	if(m_nameMap.find(name) != m_nameMap.end()) {
-		FG_ErrorLog("%s(%d): Such key already exists in name map - in function %s.", FG_Filename(__FILE__), __LINE__-1,__FUNCTION__); 
+		FG_ErrorLog("%s(%d): Such key already exists in name map - in function %s.", FG_Filename(__FILE__), __LINE__-1,__FUNCTION__);
 		return FG_FALSE; // Such key already exists
 	}
     fgRawIndex index = rHandle.getIndex();
 	if(!m_nameVec[index].empty()) {
-		FG_ErrorLog("%s(%d): There is name tag already in the vector on index: '%d', name tag: '%s' - in function %s.", FG_Filename(__FILE__), __LINE__-1,index,name.c_str(),__FUNCTION__); 
+		FG_ErrorLog("%s(%d): There is name tag already in the vector on index: '%d', name tag: '%s' - in function %s.", FG_Filename(__FILE__), __LINE__-1,index,name.c_str(),__FUNCTION__);
 		// There is already some set on the current index
 		// No reassignment is allowed
 		return FG_FALSE;
@@ -333,7 +346,7 @@ inline fgBool fgHandleManager<DataType, HandleType>::isHandleValid(HandleType ha
     if ((index >= m_managedData.size()) || (m_magicData[index] != handle.getMagic()))
     {
         // no good! invalid handle == client programming error
-		FG_ErrorLog("%s(%d): Invalid handle, magic numbers don't match with index - in function %s.", FG_Filename(__FILE__), __LINE__-1,__FUNCTION__); 
+		FG_ErrorLog("%s(%d): Invalid handle, magic numbers don't match with index - in function %s.", FG_Filename(__FILE__), __LINE__-1,__FUNCTION__);
         return FG_FALSE;
     }
 	return FG_TRUE;

@@ -1,9 +1,9 @@
 /*******************************************************
  * Copyright (C) 2014 Radoslaw Gniazdowski <r.gniazdowski@gmail.com>. All rights reserved.
- * 
+ *
  * This file is part of #FLEXIGAME_PROJECT
- * 
- * #FLEXIGAME_PROJECT source code and any related files can not be copied, modified 
+ *
+ * #FLEXIGAME_PROJECT source code and any related files can not be copied, modified
  * and/or distributed without the express or written permission from the author.
  *******************************************************/
 
@@ -11,12 +11,15 @@
 // also should be somewhat platform independent - usage of system libs is highly recommended for
 // aquiring info about CPU/GPU/platform/tools/system version and managing video quality / threads
 
+#include "../fgCommon.h"
 #include "fgDeviceQuery.h"
 
 #include <cstring>
-#include "s3eDevice.h"
 
-#include "../fgCommon.h"
+#if defined FG_USING_MARMALADE
+#include "s3eDevice.h"
+//#endif
+
 #include "../fgLog.h"
 
 static fgBool isAndroid();
@@ -129,7 +132,7 @@ static fgDeviceGeneration computeGeneration(const char* dev_id, fgDeviceClass de
                 FG_ErrorLog("Unsupported iPhone 3G detected!");
             } else if( NULL != strstr(dev_id, "iPhone2,1") ) {
                 // iPhone 3GS
-                gen = FG_DEVICE_GENERATION_THIRD;                
+                gen = FG_DEVICE_GENERATION_THIRD;
             } else if( NULL != strstr(dev_id, "iPhone3,1") ) {
                 // iPhone 4
                 gen = FG_DEVICE_GENERATION_FOURTH;
@@ -253,3 +256,5 @@ static fgBool isOSX() {
 static fgBool isBB() {
     return isPlatform( S3E_OS_ID_QNX );
 }
+
+#endif

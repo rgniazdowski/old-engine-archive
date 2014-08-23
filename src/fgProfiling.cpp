@@ -1,9 +1,9 @@
 /*******************************************************
  * Copyright (C) 2014 Radoslaw Gniazdowski <r.gniazdowski@gmail.com>. All rights reserved.
- * 
+ *
  * This file is part of #FLEXIGAME_PROJECT
- * 
- * #FLEXIGAME_PROJECT source code and any related files can not be copied, modified 
+ *
+ * #FLEXIGAME_PROJECT source code and any related files can not be copied, modified
  * and/or distributed without the express or written permission from the author.
  *******************************************************/
 
@@ -77,7 +77,7 @@ fgBool fgProfiling::begin(std::string& name)
 			m_sampleMap.erase(it);
 			return FG_FALSE;
 		}
-		
+
 		sample->isValid = FG_TRUE;
 		sample->numOpen = 1;
 		sample->numInstances = 1;
@@ -209,7 +209,7 @@ fgBool fgProfiling::storeProfileHistory(std::string& name, float percent)
 			m_sampleHistory.erase(it);
 			return FG_FALSE;
 		}
-		
+
 		sample->isValid = FG_TRUE;
 		sample->name = name;
 		sample->average = sample->minimum = sample->maximum = percent;

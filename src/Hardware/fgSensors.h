@@ -1,16 +1,14 @@
 /*******************************************************
  * Copyright (C) 2014 Radoslaw Gniazdowski <r.gniazdowski@gmail.com>. All rights reserved.
- * 
+ *
  * This file is part of #FLEXIGAME_PROJECT
- * 
- * #FLEXIGAME_PROJECT source code and any related files can not be copied, modified 
+ *
+ * #FLEXIGAME_PROJECT source code and any related files can not be copied, modified
  * and/or distributed without the express or written permission from the author.
  *******************************************************/
 
 #ifndef _FG_SENSORS_H_
 #define _FG_SENSORS_H_
-
-#include "s3eTypes.h"
 
 #include "../Math/fgKalmanFilter.h"
 #include "fgHardwareState.h"
@@ -18,11 +16,11 @@
 #include "../fgSingleton.h"
 #include "../fgCommon.h"
 
-static int32 HarvestCallback(void* systemData, void* userData);
+//int32_t HarvestCallback(void* systemData, void* userData);
 
-/**
+/** \brief
  * Class fgSensors - management of sensors data (mobile).
- * 
+ *
  * Klasa definiuje symboliczne typy sensorow:
  * enum { NONE = 0,
  * 		ACCELEROMETER = 1,
@@ -36,8 +34,8 @@ static int32 HarvestCallback(void* systemData, void* userData);
  * Accelerometer: mierzy przyspieszenie WZDŁUŻ OSI.
  *
  */
-class fgSensors : public fgSingleton<fgSensors> {    
-    friend int32 HarvestCallback(void* systemData, void* userData);
+class fgSensors : public fgSingleton<fgSensors> {
+    friend int32_t HarvestCallback(void* systemData, void* userData);
 	friend class fgSingleton<fgSensors>;
 public:
     enum { FG_SENSORS_ACCELEROMETER = 0, FG_SENSORS_COMPASS = 1 };
@@ -46,26 +44,25 @@ private:
 	// Are sensors running?
     fgBool m_isRunning;
 
-	/// Number of supported sensors (includes the "NONE" sensor)
 	enum { FG_SENSORS_TYPES = 2, FG_SENSORS_VALUES = 3 };
 
-	enum { 
+	enum {
 		FG_SENSORS_UNKNOWN = 0,
 		FG_SENSORS_PORTRAIT = 1,
 		FG_SENSORS_UPSIDE_DOWN = 2,
 		FG_SENSORS_LANDSCAPE_LEFT = 3,
 		FG_SENSORS_LANDSCAPE_RIGHT = 4,
 		FG_SENSORS_FACE_UP = 5,
-		FG_SENSORS_FACE_DOWN = 6 
+		FG_SENSORS_FACE_DOWN = 6
 	};
-    
-    enum { 
-		FG_SENSORS_BASE_SIZE = 4 
+
+    enum {
+		FG_SENSORS_BASE_SIZE = 4
 	};
-    
+
     // How long after accel-base unlock request, should the base remain locked
-    enum { 
-		FG_SENSORS_AFTER_UNLOCK_DELAY = 3000 
+    enum {
+		FG_SENSORS_AFTER_UNLOCK_DELAY = 3000
 	};
     // List of available sensor names
 	static const char* s_sensorsNames[FG_SENSORS_TYPES];
@@ -85,7 +82,7 @@ private:
     unsigned long int m_unlockTS;
     // Together with unlockTS, marks if the accelBase is locked
     fgBool m_accelBaseLocked;
-    
+
 protected:
 	// Default constructor for Sensors object
 	fgSensors();
@@ -101,7 +98,7 @@ public:
 
 	// Get the error message using the sensor error code.
 	const char* errorCodeText(int errorCode);
-    
+
     // Gets data processed by the filters
 	void getAccelerometer(float *x, float *y, float *z);
 

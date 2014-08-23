@@ -1,9 +1,9 @@
 /*******************************************************
  * Copyright (C) 2014 Radoslaw Gniazdowski <r.gniazdowski@gmail.com>. All rights reserved.
- * 
+ *
  * This file is part of #FLEXIGAME_PROJECT
- * 
- * #FLEXIGAME_PROJECT source code and any related files can not be copied, modified 
+ *
+ * #FLEXIGAME_PROJECT source code and any related files can not be copied, modified
  * and/or distributed without the express or written permission from the author.
  *******************************************************/
 
@@ -27,11 +27,11 @@ static unsigned char *universalPreLoad(const char *path, int &width, int &height
 		return NULL;
 	} else if(fileStream->open(FG_FILE_MODE_READ | FG_FILE_MODE_BINARY)) {
 		unsigned char *data = NULL;
-		if(strnicmp(extType, "jpeg", 4) == 0) {
+		if(strncasecmp(extType, "jpeg", 4) == 0) {
 			data = fgTextureLoader::loadJPEG(fileStream, width, height);
-		} else if(strnicmp(extType, "png", 4) == 0) {
+		} else if(strncasecmp(extType, "png", 4) == 0) {
 			data = fgTextureLoader::loadPNG(fileStream, width, height);
-		} else if(strnicmp(extType, "tga", 4) == 0) {
+		} else if(strncasecmp(extType, "tga", 4) == 0) {
 			data = fgTextureLoader::loadTGA(fileStream, width, height);
 		}
 		if(!fileStream->close()) {
@@ -72,7 +72,7 @@ unsigned char *fgTextureLoader::loadJPEG(fgFile *fileStream, int &width, int &he
 			return NULL;
 		}
 	}
-	
+
 	unsigned char *data = NULL;
 	int i = 0, j = 0, rowStride = -1;
 	long cont = 0;
@@ -80,7 +80,7 @@ unsigned char *fgTextureLoader::loadJPEG(fgFile *fileStream, int &width, int &he
 	struct fgJPEGErrorMgr jpegError;
 	JSAMPARRAY buffer;
 	JSAMPLE *dataBuffer = NULL;
-	
+
 	cinfo.err = jpeg_std_error(&jpegError.pub);
 	jpegError.pub.error_exit = fgJPEGErrorExit;
 	if(setjmp(jpegError.setjmp_buffer)) {
@@ -96,7 +96,7 @@ unsigned char *fgTextureLoader::loadJPEG(fgFile *fileStream, int &width, int &he
 	rowStride = cinfo.output_width * cinfo.output_components;
 	buffer = (*cinfo.mem->alloc_sarray)((j_common_ptr)&cinfo, JPOOL_IMAGE, rowStride, 1);
 	dataBuffer = new JSAMPLE[cinfo.image_width * cinfo.image_height * cinfo.output_components];
-	
+
 	while(cinfo.output_scanline < cinfo.output_height) {
 		jpeg_read_scanlines(&cinfo, buffer, 1);
 		memcpy(dataBuffer + cinfo.image_width * cinfo.output_components * cont, buffer[0], rowStride);
@@ -108,7 +108,7 @@ unsigned char *fgTextureLoader::loadJPEG(fgFile *fileStream, int &width, int &he
 	height = cinfo.image_height;
 	data = new unsigned char[width * height * 4];
 
-	switch(cinfo.output_components) 
+	switch(cinfo.output_components)
 	{
 	case 1:
 		for(i = 0, j = 0; i < width * height; i++, j += 4) {
@@ -159,7 +159,7 @@ unsigned char *fgTextureLoader::loadPNG(fgFile *fileStream, int &width, int &hei
 	}
     double gamma = 0.0;
     unsigned char *data = NULL;
-    unsigned long w = 0, h = 0;
+    unsigned int w = 0, h = 0;
     int i, j, k, l, bit_depth, color_type;
     png_uint_32 channels, row_bytes;
     png_byte *img = NULL, **row = NULL, sig[8];
@@ -187,13 +187,13 @@ unsigned char *fgTextureLoader::loadPNG(fgFile *fileStream, int &width, int &hei
     png_read_info(png_ptr, info_ptr);
     png_get_IHDR(png_ptr, info_ptr, &w, &h, &bit_depth, &color_type, 0, 0, 0);
 
-    if(bit_depth == 16) 
+    if(bit_depth == 16)
 		png_set_strip_16(png_ptr);
-    if(color_type == PNG_COLOR_TYPE_PALETTE) 
+    if(color_type == PNG_COLOR_TYPE_PALETTE)
 		png_set_expand(png_ptr);
-    if(bit_depth < 8) 
+    if(bit_depth < 8)
 		png_set_expand(png_ptr);
-    if(png_get_valid(png_ptr, info_ptr, PNG_INFO_tRNS)) 
+    if(png_get_valid(png_ptr, info_ptr, PNG_INFO_tRNS))
 		png_set_expand(png_ptr);
     if(color_type == PNG_COLOR_TYPE_GRAY || color_type == PNG_COLOR_TYPE_GRAY_ALPHA) {		png_set_gray_to_rgb(png_ptr);
 	}
@@ -263,12 +263,12 @@ unsigned char *fgTextureLoader::loadTGA(const char *path, int &width, int &heigh
 unsigned char *fgTextureLoader::loadTGA(fgFile *fileStream, int &width, int &height)
 {
 	if(!fileStream) {
-		FG_ErrorLog("%s(%d): fileStream is NULL - failed to load texture - in function %s.", FG_Filename(__FILE__), __LINE__-1,__FUNCTION__); 
+		FG_ErrorLog("%s(%d): fileStream is NULL - failed to load texture - in function %s.", FG_Filename(__FILE__), __LINE__-1,__FUNCTION__);
 		// #TODO error handling / reporting
 		return NULL;
 	} else if(!fileStream->isOpen()) {
 		if(!fileStream->open(FG_FILE_MODE_READ | FG_FILE_MODE_BINARY)) {
-			FG_ErrorLog("%s(%d): failed to open texture file - in function %s.", FG_Filename(__FILE__), __LINE__-1,__FUNCTION__); 
+			FG_ErrorLog("%s(%d): failed to open texture file - in function %s.", FG_Filename(__FILE__), __LINE__-1,__FUNCTION__);
 			// #TODO error handling / reporting
 			return NULL;
 		}
@@ -281,7 +281,7 @@ unsigned char *fgTextureLoader::loadTGA(fgFile *fileStream, int &width, int &hei
     w = info[12] + info[13] * 256;
     h = info[14] + info[15] * 256;
     // Read only 32 && 24 bit per pixel
-	switch(info[16]) 
+	switch(info[16])
 	{
         case 32:
             components = 4; // 32 bit per pixel (RGBA)
@@ -300,25 +300,25 @@ unsigned char *fgTextureLoader::loadTGA(fgFile *fileStream, int &width, int &hei
 	// however operator new is overloaded (when using Marmalade), so when 'new' fails it will return NULL
 	// NOTE: while compiling without marmalade there needs to be a proper check or at least use of std::nothrow
 	// Buffer for RGB or RGBA image
-	buffer = new unsigned char[size]; 
+	buffer = new unsigned char[size];
 	// Output RGBA image
 	data = new unsigned char[w * h * 4];
 	if(!data || !buffer) {
-		FG_ErrorLog("%s(%d): failed to allocate new data  - in function %s.", FG_Filename(__FILE__), __LINE__-1,__FUNCTION__); 
+		FG_ErrorLog("%s(%d): failed to allocate new data  - in function %s.", FG_Filename(__FILE__), __LINE__-1,__FUNCTION__);
 		// #TODO error handling / reporting
         return NULL;
     }
 	fileStream->setPosition(info[0], SEEK_CUR);
     i = 0;
     ptr = buffer;
-    switch(info[2]) 
+    switch(info[2])
 	{
 		// Unmapped RGB image
-        case 2:     
+        case 2:
 			fileStream->read(buffer, 1, size);
             break;
 		// Run length encoded file
-        case 10:    
+        case 10:
             while(i < size) {
 				fileStream->read(&rep, 1, 1);
                 if(rep & 0x80) {
@@ -345,7 +345,7 @@ unsigned char *fgTextureLoader::loadTGA(fgFile *fileStream, int &width, int &hei
             return 0;
     }
 	// Conversion from BGR to RGBA
-    for(i = 0, j = 0; i < size; i += components, j += 4) {  
+    for(i = 0, j = 0; i < size; i += components, j += 4) {
         data[j] = buffer[i + 2];
         data[j + 1] = buffer[i + 1];
         data[j + 2] = buffer[i];

@@ -1,9 +1,9 @@
 /*******************************************************
  * Copyright (C) 2014 Radoslaw Gniazdowski <r.gniazdowski@gmail.com>. All rights reserved.
- * 
+ *
  * This file is part of #FLEXIGAME_PROJECT
- * 
- * #FLEXIGAME_PROJECT source code and any related files can not be copied, modified 
+ *
+ * #FLEXIGAME_PROJECT source code and any related files can not be copied, modified
  * and/or distributed without the express or written permission from the author.
  *******************************************************/
 
@@ -22,7 +22,7 @@ ParticleEffect::~ParticleEffect()
 {
     // Love to do destroying manually.. Although it isn't necessary
 	m_particles.clear();
-    CIwArray<Particle> tmpv;
+    fgArrayVector<Particle> tmpv;
     m_particles.swap( tmpv );
 
 	if(m_colorStream)
@@ -56,7 +56,7 @@ void ParticleEffect::setMaxCount(int max_count)
 
     // This will fully erase the array
 	m_particles.clear();
-    CIwArray<Particle> tmpv;
+    fgArrayVector<Particle> tmpv;
     m_particles.swap( tmpv );
 
     // Prepare for new amount of data
@@ -64,13 +64,13 @@ void ParticleEffect::setMaxCount(int max_count)
     m_maxCount = max_count;
 
 	if(m_colorStream)
-		s3eFree(m_colorStream);
+		fgFree(m_colorStream);
 	if(m_vertStream2D)
-		s3eFree(m_vertStream2D);
+		fgFree(m_vertStream2D);
 	if(m_vertStream3D)
-		s3eFree(m_vertStream3D);
+		fgFree(m_vertStream3D);
 	if(m_UVStream)
-		s3eFree(m_UVStream);
+		fgFree(m_UVStream);
 //if(m_material)
 //		delete m_material; // #FIXME
 
@@ -93,16 +93,16 @@ void ParticleEffect::setMaxCount(int max_count)
 	//m_emitterOrigin = CIwFVec3::g_Zero;
 }
 
-bool ParticleEffect::addParameterized(float x, float y, float z, int count)
+fgBool ParticleEffect::addParameterized(float x, float y, float z, int count)
 {
 	Particle from, to;
 	int i;
 
 	if(count <= 0)
-		return false;
+		return FG_FALSE;
 
 	if( int(m_particles.size()) >= maxCount() )
-        return false;
+        return FG_FALSE;
 
 	//from.color = m_startColor;
 	from.setColor(m_startColor);
@@ -110,7 +110,7 @@ bool ParticleEffect::addParameterized(float x, float y, float z, int count)
 	from.velocity.x = -m_spreadSpeed;
 	from.velocity.y = -m_spreadSpeed;
 	from.velocity.z = 0.0f;
-	
+
 	from.size = m_startSize;
 
 	// m_lowLife holds life for the particle where value 10.0f is equal to 1000ms TTL
@@ -123,11 +123,11 @@ bool ParticleEffect::addParameterized(float x, float y, float z, int count)
 	from.angularVelocity.x = 0.0f;
 	from.angularVelocity.y = 0.0f;
 	from.angularVelocity.z = 0.0f;
-	
+
 	from.position.x = x;
 	from.position.y = y;
 	from.position.z = z;
-	
+
 	from.texture_id = 0;
 
 
@@ -137,7 +137,7 @@ bool ParticleEffect::addParameterized(float x, float y, float z, int count)
 	to.velocity.x = m_spreadSpeed;
 	to.velocity.y = m_spreadSpeed;
 	to.velocity.z = 0.0f;
-	
+
 	to.size = m_startSize;
 
 	// m_highLife holds life for the particle where value 10.0f is equal to 1000ms TTL
@@ -153,18 +153,18 @@ bool ParticleEffect::addParameterized(float x, float y, float z, int count)
 	to.angularVelocity.x = 0.0f;
 	to.angularVelocity.y = 0.0f;
 	to.angularVelocity.z = 0.0f;
-	
+
 	to.position.x = x;
 	to.position.y = y;
 	to.position.z = z;
-	
+
 	to.texture_id = m_textureXSize*m_textureYSize-1;
 
 	for(i=0;i<count;i++)
 	{
 		if(!addRandom(&from, &to))
-			return false;
-		if(m_randomVelocity == false)
+			return FG_FALSE;
+		if(m_randomVelocity == FG_FALSE)
 		{
 			int idx = m_particles.size()-1;
 			int r = FG_Rand(0,1);
@@ -184,7 +184,7 @@ bool ParticleEffect::addParameterized(float x, float y, float z, int count)
 			}
 		}
 	}
-	return true;
+	return FG_TRUE;
 }
 
 void ParticleEffect::calculate(void)
@@ -253,7 +253,7 @@ void ParticleEffect::calculate(void)
 		if( m_paramsActive)
 		{
 			// This actions will work properly only if the particle TTL parameter is set
-			// Size 
+			// Size
 			m_particles[i].size += (m_endSize-m_startSize)/m_particles[i].ttl * DT2;
 
 			/*fgColor color = m_particles[i].color;
@@ -435,11 +435,11 @@ void ParticleEffect::draw(void)
 			rotZ.SetRotZ(m_particles[i].rotation.z*(float)M_PI/180.0f);
 			m.CopyRot(rotX * rotY * rotZ);
 			m.SetTrans(origin3D);
-			
+
 			for(uint32 j = 0; j < 4; j++) {
 				m_vertStream3D[i*4+j] = m.TransformVec(m_vertStream3D[i*4+j]);
 			}
-		}	*/	
+		}	*/
 	}
 	// PLEASE FIX ME FIX ME FIX ME FIX ME FIX ME
 	/*
@@ -450,7 +450,7 @@ void ParticleEffect::draw(void)
 	IwGxSetColStream( m_colorStream, int(m_particles.size())*4 );
 	// Screen space origin (0,0)
 	IwGxSetScreenSpaceOrg( &CIwSVec2::g_Zero );
-	
+
 	// Setting up the vertices stream, in 2D or 3D space
 	if(m_drawMode == MODE_2D) {
 		IwGxSetVertStreamScreenSpace( m_vertStream2D, int(m_particles.size())*4 );
@@ -497,7 +497,7 @@ void ParticleEffect::randomizeOnPair(Particle* from, Particle* to, Particle *res
 	to_val = (int)(to->velocity.x*1000);
 	target->velocity.x = FG_Rand(from_val, to_val)/1000.0f;
 
-	// Velocity Y	
+	// Velocity Y
 	from_val = (int)(from->velocity.y*1000);
 	to_val = (int)(to->velocity.y*1000);
 	target->velocity.y = FG_Rand(from_val, to_val)/1000.0f;
@@ -572,34 +572,34 @@ void ParticleEffect::randomizeOnPair(Particle* from, Particle* to, Particle *res
 	from_val = (int)from->texture_id;
 	to_val = (int)to->texture_id;
 	target->texture_id = FG_Rand(from_val, to_val);
-	
+
 	// Data
 	target->data = NULL;
 
 	// Spawn Time
-	target->spawn_time = FG_HardwareState->getTS(); 
+	target->spawn_time = FG_HardwareState->getTS();
 
 	fgColor color;
 
 	// Color R
 	from_val = (int)(from->color.r);
 	to_val = (int)(to->color.r);
-	color.r = (uint8)FG_Rand(from_val, to_val);
-	
+	color.r = (float)FG_Rand(from_val, to_val)/255.0f;
+
 	// Color G
 	from_val = (int)(from->color.g);
 	to_val = (int)(to->color.g);
-	color.g = (uint8)FG_Rand(from_val, to_val);
+	color.g = (float)FG_Rand(from_val, to_val)/255.0f;
 
 	// Color B
 	from_val = (int)(from->color.b);
 	to_val = (int)(to->color.b);
-	color.b = (uint8)FG_Rand(from_val, to_val);
+	color.b = (float)FG_Rand(from_val, to_val)/255.0f;
 
 	// Color A
 	from_val = (int)(from->color.a);
 	to_val = (int)(to->color.a);
-	color.a = (uint8)FG_Rand(from_val, to_val);
+	color.a = (float)FG_Rand(from_val, to_val)/255.0f;
 
 	target->setColor(color);
 }

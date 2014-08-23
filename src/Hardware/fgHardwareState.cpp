@@ -1,19 +1,28 @@
 /*******************************************************
  * Copyright (C) 2014 Radoslaw Gniazdowski <r.gniazdowski@gmail.com>. All rights reserved.
- * 
+ *
  * This file is part of #FLEXIGAME_PROJECT
- * 
- * #FLEXIGAME_PROJECT source code and any related files can not be copied, modified 
+ *
+ * #FLEXIGAME_PROJECT source code and any related files can not be copied, modified
  * and/or distributed without the express or written permission from the author.
  *******************************************************/
 
-#include "fgHardwareState.h"
+#include "../fgBuildConfig.h"
 #include "../fgCommon.h"
-#include "../fgTime.h"
+#include "fgHardwareState.h"
 
 #include <cstdlib>
 #include <cmath>
+
+#if defined FG_USING_MARMALADE
+#include "s3eDevice.h"
+#endif // FG_USING_MARMALADE
+
+#include "../fgTime.h"
+
+#if defined FG_USING_DPI_INFO
 #include "dpiInfo.h"
+#endif // FG_USING_DPI_INFO
 
 template <>
 bool fgSingleton<fgHardwareState>::instanceFlag = false;
@@ -25,35 +34,41 @@ fgHardwareState *fgSingleton<fgHardwareState>::instance = NULL;
  * Private constructor
  */
 fgHardwareState::fgHardwareState() : m_TS(0), m_screenHeight(0), m_screenWidth(0),
-	m_dispArea(0), m_DT(0), m_DT2(0), m_fps(0.0f), m_dpi(0) 
+	m_dispArea(0), m_DT(0), m_DT2(0), m_fps(0.0f), m_dpi(0)
 {
 }
 
 /**
  * Private destructor
  */
-fgHardwareState::~fgHardwareState() 
+fgHardwareState::~fgHardwareState()
 {
+#if defined FG_USING_DPI_INFO
     if( 0 != m_dpi ) {
         DPI::dpiTerminate();
     }
+#endif // FG_USING_DPI_INFO
 }
 
 /**
  * Inits DPI. Called from GL init code, when display is ready
  */
-void fgHardwareState::initDPI() 
+void fgHardwareState::initDPI()
 {
+#if defined FG_USING_DPI_INFO
     DPI::dpiInit();
 
     m_dpi = DPI::dpiGetScreenDPI(m_screenWidth, m_screenHeight);
-    
+
     FG_WriteLog("### SCREEN DPI IS: %d ###", m_dpi);
-    
+
     if( 0 == m_dpi ) {
         FG_ErrorLog("DPI extension returned dpi=0. Overwriting with 163");
         m_dpi = 163;
     }
+#else
+    m_dpi = 163; // #FIXME
+#endif // FG_USING_DPI_INFO
 
     if( 0 == m_screenWidth || 0 == m_screenHeight ) {
         FG_ErrorLog("initDPI called when no screen width & height being set!");
@@ -62,6 +77,13 @@ void fgHardwareState::initDPI()
     int display_area = m_screenWidth * m_screenHeight;
 
     m_dpiAndAreaCoef = sqrtf(float(display_area)) / m_dpi;
+}
+
+void fgHardwareState::deviceYield(int ms)
+{
+#if defined FG_USING_MARMALADE
+    s3eDeviceYield(ms);
+#endif // FG_USING_MARMALADE
 }
 
 /**
@@ -73,7 +95,7 @@ void fgHardwareState::calculateDT(void)
 	t2 = FG_GetTicks();
 
     m_TS = t2;		// Time stamp update
-	m_DT = t2-t1;	// Delta time (length of the single frame)	
+	m_DT = t2-t1;	// Delta time (length of the single frame)
 	m_DT2 = t2-t1;	// Delta time used in animations - easy pause -> just set to 0 and animations/movement will stop
 
 	// #FIXME

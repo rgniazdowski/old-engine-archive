@@ -1,16 +1,16 @@
 /*******************************************************
  * Copyright (C) 2014 Radoslaw Gniazdowski <r.gniazdowski@gmail.com>. All rights reserved.
- * 
+ *
  * This file is part of #FLEXIGAME_PROJECT
- * 
- * #FLEXIGAME_PROJECT source code and any related files can not be copied, modified 
+ *
+ * #FLEXIGAME_PROJECT source code and any related files can not be copied, modified
  * and/or distributed without the express or written permission from the author.
  *******************************************************/
 
 // The build config is used to configure the whole engine at compile time.
 // The whole idea of using macros to add or remove big chunks of code is to
 // generate different executables depending on the target platform, build platform
-// and libraries availability on the current system. 
+// and libraries availability on the current system.
 //
 // Also after this config file other config files can be included to alter defined macros.
 //
@@ -78,7 +78,7 @@
 #define FG_USING_PLATFORM_ANDROID
 #endif
 
-#if defined __gnu_linux__
+#if defined __gnu_linux__ || defined __linux__ || defined linux || defined __linux
 #define FG_USING_PLATFORM_LINUX
 #endif
 
@@ -86,7 +86,7 @@
 #define FG_USING_CYGWIN
 #endif
 
-#if defined __MINGW__
+#if defined __MINGW__ || defined __MINGW32__ || defined __MINGW64__
 #define FG_USING_MINGW
 #endif
 
@@ -130,7 +130,7 @@
 #define FG_USING_MARMALADE_KEYBOARD
 #endif
 
-// Marmalade's sounds subsystem 
+// Marmalade's sounds subsystem
 #ifdef FG_USING_MARMALADE
 #define FG_USING_MARMALADE_SOUND
 // Marmalade's audio subsystem, used along with s3eSound *FIXME*
@@ -176,6 +176,12 @@
 #endif
 #endif
 
+// Under linux - use plain GL
+#ifdef FG_USING_PLATFORM_LINUX
+#ifndef FG_USING_OPENGL
+#define FG_USING_OPENGL
+#endif
+#endif
 
 /*************************** EXTENSIONS / PLUGINS SUPPORT ***************************/
 
@@ -200,6 +206,13 @@
 //#define FG_USING_LUA_PLUS
 // For handling physics the Bullet library will be used
 //#define FG_USING_BULLET
+
+// Use TinyXML even on Linux
+#ifdef FG_USING_PLATFORM_LINUX
+#define FG_USING_TINYXML
+#endif
+
+/*************************** OTHER DEFINITIONS / STRUCTURES ***************************/
 
 //
 // SPECIAL STRUCT DEFINITION - EASY ACCESS

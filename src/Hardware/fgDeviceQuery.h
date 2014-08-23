@@ -1,19 +1,22 @@
 /*******************************************************
  * Copyright (C) 2014 Radoslaw Gniazdowski <r.gniazdowski@gmail.com>. All rights reserved.
- * 
+ *
  * This file is part of #FLEXIGAME_PROJECT
- * 
- * #FLEXIGAME_PROJECT source code and any related files can not be copied, modified 
+ *
+ * #FLEXIGAME_PROJECT source code and any related files can not be copied, modified
  * and/or distributed without the express or written permission from the author.
  *******************************************************/
 
 #ifndef _FG_DEVICE_QUERY_H_
 #define _FG_DEVICE_QUERY_H_
 
-#include "../fgSingleton.h"
+#include "../fgBuildConfig.h"
 #include "../fgCommon.h"
+#include "../fgSingleton.h"
 
-enum fgDeviceClass 
+#if defined FG_USING_MARMALADE
+
+enum fgDeviceClass
 {
 	FG_DEVICE_CLASS_UNKNOWN,
 	FG_DEVICE_CLASS_IPHONE,
@@ -22,7 +25,7 @@ enum fgDeviceClass
 	FG_DEVICE_CLASS_ANDROID,
 	FG_DEVICE_CLASS_OSX,
 	FG_DEVICE_CLASS_BADA,
-	FG_DEVICE_CLASS_BB 
+	FG_DEVICE_CLASS_BB
 };
 
 enum fgDeviceGeneration {
@@ -99,17 +102,17 @@ public:
         computeDevice();
         return m_iOS;
     }
-    
+
     fgBool OSX() {
         computeDevice();
         return m_OSX;
     }
-    
+
     fgBool BB() {
         computeDevice();
         return m_BB;
     }
-    
+
     fgBool BADA() {
         computeDevice();
         return m_BADA;
@@ -117,5 +120,7 @@ public:
 };
 
 #define FG_DeviceQuery		 fgDeviceQuery::getInstance()
+
+#endif // FG_USING_MARMALADE
 
 #endif /* _FG_DEVICE_QUERY_H_ */

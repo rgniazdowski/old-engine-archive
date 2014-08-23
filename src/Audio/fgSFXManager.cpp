@@ -1,26 +1,30 @@
 /*******************************************************
  * Copyright (C) 2014 Radoslaw Gniazdowski <r.gniazdowski@gmail.com>. All rights reserved.
- * 
+ *
  * This file is part of #FLEXIGAME_PROJECT
- * 
- * #FLEXIGAME_PROJECT source code and any related files can not be copied, modified 
+ *
+ * #FLEXIGAME_PROJECT source code and any related files can not be copied, modified
  * and/or distributed without the express or written permission from the author.
  *******************************************************/
 
+#include "../fgBuildConfig.h"
 #include "fgSFXManager.h"
 
 #include <cstring>
+#ifdef FG_USING_MARMALADE
 #include "s3eFile.h"
+#ifdef FG_USING_MARMALADE_SOUND
 #include "s3eSound.h"
+#endif // FG_USING_MARMALADE_SOUND
+#ifdef FG_USING_MARMALADE_AUDIO
 #include "s3eAudio.h"
+#endif // FG_USING_MARMALADE_AUDIO
+#endif // FG_USING_MARMALADE
 
 #include "../fgCommon.h"
 #include "../fgLog.h"
-#include "../Hardware/fgDeviceQuery.h"
 
 #define SNDDIR "sound/"
-
-// #FIXME
 
 const char* fgSFXManager::m_sfxResources[ fgSFXManager::SFX_COUNT ] = { SNDDIR"c.raw", SNDDIR"s.raw", SNDDIR"tod.raw", SNDDIR"p.raw", SNDDIR"m.raw", SNDDIR"d.raw" };
 const char* fgSFXManager::m_musResources[ fgSFXManager::MUS_COUNT ] = { SNDDIR"m1.mp3" };
@@ -37,7 +41,9 @@ fgSFXManager *fgSingleton<fgSFXManager>::instance = NULL;
 fgSFXManager::~fgSFXManager() {
 
     stopAll();
+#ifdef FG_USING_MARMALADE_AUDIO
     s3eAudioStop();
+#endif // FG_USING_MARMALADE_AUDIO
 
 	for(int i = 0; i < SFX_COUNT; i++) {
         if(m_sfxBuffers[i] && m_sfxBuffersSizes[i]) {
@@ -55,6 +61,7 @@ fgSFXManager::fgSFXManager() {
 
     memset(m_sfxBuffers, 0, sizeof(m_sfxBuffers));
     memset(m_sfxBuffersSizes, 0, sizeof(m_sfxBuffersSizes));
+#ifdef FG_USING_MARMALADE_AUDIO
 	m_mp3 = (fgBool)s3eAudioIsCodecSupported(S3E_AUDIO_CODEC_MP3);
     if(m_mp3) {
         FG_WriteLog("MP3 codec supported");
@@ -67,12 +74,15 @@ fgSFXManager::fgSFXManager() {
     } else {
         FG_ErrorLog("No PCM support!");
     }
+#endif // FG_USING_MARMALADE_AUDIO
 }
 
 /**
   * Loads given file into memory
   */
-bool fgSFXManager::loadAudioFile(const char* name, unsigned char* & out_buffer, int & out_size) {
+bool fgSFXManager::loadAudioFile(const char* name, unsigned char* & out_buffer, int & out_size)
+{
+#ifdef FG_USING_MARMALADE_AUDIO // #FIXME
 
     out_buffer = NULL;
     out_size = 0;
@@ -101,6 +111,7 @@ bool fgSFXManager::loadAudioFile(const char* name, unsigned char* & out_buffer, 
 
     out_buffer = buffer;
     out_size = fileSize;
+#endif // FG_USING_MARMALADE_AUDIO
 	return true;
 }
 
@@ -125,13 +136,17 @@ void fgSFXManager::setSfxVolume(float volume) {
 }
 
 void fgSFXManager::applySfxVolume() {
+#ifdef FG_USING_MARMALADE_SOUND
     s3eResult result = s3eSoundSetInt(S3E_SOUND_VOLUME, int(m_sfxVolume * S3E_SOUND_MAX_VOLUME * 0.9f));
     if(S3E_RESULT_SUCCESS != result) {
         FG_ErrorLog("Error when setting the sfx volume: %d", result );
     }
+#endif // FG_USING_MARMALADE_SOUND
 }
 
 void fgSFXManager::play(int idx) {
+#ifdef FG_USING_MARMALADE_SOUND
+
     int channel = s3eSoundGetFreeChannel();
     s3eSoundChannelPlay(channel, (int16*) m_sfxBuffers[idx], m_sfxBuffersSizes[idx] / 2, 1, 0);
     // Check for error
@@ -139,10 +154,13 @@ void fgSFXManager::play(int idx) {
     if(err != S3E_SOUND_ERR_NONE) {
         FG_ErrorLog("playSFX(%d) on channel[%d] error[%d]: %s", idx, channel, err, s3eSoundGetErrorString());
     }
+#endif // FG_USING_MARMALADE_SOUND
 }
 
 void fgSFXManager::stopAll() {
+#ifdef FG_USING_MARMALADE_SOUND
     s3eSoundStopAllChannels();
+#endif // FG_USING_MARMALADE_SOUND
 }
 
 bool fgSFXManager::loadMusFiles()
@@ -163,10 +181,13 @@ void fgSFXManager::setMusVolume(float volume) {
 }
 
 void fgSFXManager::applyMusVolume() {
+#ifdef FG_USING_MARMALADE_AUDIO
     s3eResult result = s3eAudioSetInt( S3E_AUDIO_VOLUME, int(m_musVolume * S3E_AUDIO_MAX_VOLUME * 0.85f));
+#endif // FG_USING_MARMALADE_AUDIO
 }
 
 void fgSFXManager::playMus(int idx) {
+#ifdef FG_USING_MARMALADE_AUDIO
     s3eAudioStatus status = (s3eAudioStatus) s3eAudioGetInt(S3E_AUDIO_STATUS);
 
     if(S3E_AUDIO_PAUSED == status) {
@@ -177,7 +198,7 @@ void fgSFXManager::playMus(int idx) {
         s3eAudioStop();
         s3eAudioPlay(m_musResources[idx], 0);
     } else {
-        s3eAudioPlay(m_musResources[idx], 0);        
+        s3eAudioPlay(m_musResources[idx], 0);
     }
 
     // Check for error
@@ -185,9 +206,11 @@ void fgSFXManager::playMus(int idx) {
     if(err != S3E_AUDIO_ERR_NONE) {
         FG_ErrorLog("playMus(%d) error[%d]: %s (also status is: %d)", idx, err, s3eAudioGetErrorString(), status);
     }
+#endif // FG_USING_MARMALADE_AUDIO
 }
 
 void fgSFXManager::pauseMus(int idx) {
+#ifdef FG_USING_MARMALADE_AUDIO
     s3eAudioPause();
 
     // Check for error
@@ -195,10 +218,13 @@ void fgSFXManager::pauseMus(int idx) {
     if(err != S3E_AUDIO_ERR_NONE) {
         FG_ErrorLog("pauseMus(%d) error[%d]: %s", idx, err, s3eAudioGetErrorString());
     }
+#endif // FG_USING_MARMALADE_AUDIO
 }
 
 void fgSFXManager::stopMus(int idx) {
+#ifdef FG_USING_MARMALADE_AUDIO
     s3eAudioStop();
+#endif // FG_USING_MARMALADE_AUDIO
 }
 
 void fgSFXManager::rewindMus(int idx) {

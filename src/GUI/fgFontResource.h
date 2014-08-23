@@ -35,7 +35,7 @@ public:
 	// Base destructor of the font resource object
 	virtual ~fgFontResource()	{ destroy(); }
 
-	FG_RESOURCE_FACTORY_CREATE_FUNCTION(fgFontResource);
+	FG_RESOURCE_FACTORY_CREATE_FUNCTION(fgFontResource)
 
 	// Clears the class data, this actually does not free allocated memory, 
 	// just resets base class attributes

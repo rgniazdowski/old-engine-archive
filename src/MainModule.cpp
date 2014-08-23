@@ -1,18 +1,21 @@
 /*******************************************************
  * Copyright (C) 2014 Radoslaw Gniazdowski <r.gniazdowski@gmail.com>. All rights reserved.
- * 
+ *
  * This file is part of #FLEXIGAME_PROJECT
- * 
- * #FLEXIGAME_PROJECT source code and any related files can not be copied, modified 
+ *
+ * #FLEXIGAME_PROJECT source code and any related files can not be copied, modified
  * and/or distributed without the express or written permission from the author.
  *******************************************************/
+
+#include "fgBuildConfig.h"
+#include "fgCommon.h"
+
+#include "fgGameMain.h"
 
 #include <cstdlib>
 #include <cstdio>
 #include <cmath>
 #include <map>
-
-#include "fgBuildConfig.h"
 
 #if defined FG_USING_MARMALADE
 #include "s3e.h"
@@ -22,17 +25,15 @@
 #endif
 
 #include "fgSingleton.h"
-#include "fgCommon.h"
 #include "fgLog.h"
 #include "Event/fgEventManager.h"
 #include "Input/fgTouchReceiver.h"
-
-#include "fgGameMain.h"
+#include "Hardware/fgHardwareState.h"
 
 class MainModule;
 
 // FIXME - remove usage of singletons (at least to some acceptable level)
-// Currently every major class / subsystem is a singleton - there is no 
+// Currently every major class / subsystem is a singleton - there is no
 // consistent structure / hierarchy - which is kinda retarded if U ask me.
 template <>
 bool fgSingleton<MainModule>::instanceFlag = false;
@@ -74,7 +75,7 @@ public:
 	/**
 	 * Focus lost HANDLER
 	 */
-	static int32 pauseHandler(void *systemData, void *userData) {
+	static int32_t pauseHandler(void *systemData, void *userData) {
 		MainModule::getInstance()->focusLostEvent();
 		return 0;
 	}
@@ -82,7 +83,7 @@ public:
 	/**
 	 * Focus restored HANDLER
 	 */
-	static int32 unpauseHandler(void *systemData, void *userData) {
+	static int32_t unpauseHandler(void *systemData, void *userData) {
 		MainModule::getInstance()->focusGainedEvent();
 		return 0;
 	}
@@ -90,58 +91,68 @@ public:
 	/**
 	* Key state changed HANDLER
 	*/
-	static int32 keyStateChangedHandler(void *systemData, void *userData)
+	static int32_t keyStateChangedHandler(void *systemData, void *userData)
 	{
+#if defined FG_USING_MARMALADE
 		s3eKeyboardEvent* event = (s3eKeyboardEvent*)systemData;
 		MainModule::getInstance()->keyStateChangedEvent(event);
+#endif // FG_USING_MARMALADE
 		return 0;
 	}
 
 	/**
 	 * Touch press/release HANDLER
 	 */
-	static int32 multiTouchButtonHandler(void* systemData, void* userData)
+	static int32_t multiTouchButtonHandler(void* systemData, void* userData)
 	{
+#if defined FG_USING_MARMALADE
 		s3ePointerTouchEvent* event = (s3ePointerTouchEvent*) systemData;
 		if(event->m_Pressed) {
 			MainModule::getInstance()->multiTouchPressEvent(event->m_x, event->m_y, event->m_TouchID);
 		} else {
 			MainModule::getInstance()->multiTouchReleaseEvent(event->m_x, event->m_y, event->m_TouchID);
 		}
+#endif // FG_USING_MARMALADE
 		return 0;
 	}
 
 	/**
 	 * Touch motion HANDLER
 	 */
-	static int32 multiTouchMotionHandler(void* systemData, void* userData)
+	static int32_t multiTouchMotionHandler(void* systemData, void* userData)
 	{
+#if defined FG_USING_MARMALADE
 		s3ePointerTouchMotionEvent* event = (s3ePointerTouchMotionEvent*) systemData;
 		MainModule::getInstance()->multiTouchMoveEvent(event->m_x, event->m_y, event->m_TouchID);
+#endif // FG_USING_MARMALADE
 		return 0;
 	}
 
 	/**
 	 * Single press/release HANDLER
 	 */
-	static int32 singleTouchButtonHandler(void* systemData, void* userData)
+	static int32_t singleTouchButtonHandler(void* systemData, void* userData)
 	{
+#if defined FG_USING_MARMALADE
 		s3ePointerEvent* event = (s3ePointerEvent*) systemData;
 		if(event->m_Pressed) {
 			MainModule::getInstance()->multiTouchPressEvent(event->m_x, event->m_y, 0);
 		} else {
 			MainModule::getInstance()->multiTouchReleaseEvent(event->m_x, event->m_y, 0);
 		}
+#endif // FG_USING_MARMALADE
 		return 0;
 	}
 
 	/**
 	 * Single motion HANDLER
 	 */
-	static int32 singleTouchMotionHandler(void* systemData, void* userData)
+	static int32_t singleTouchMotionHandler(void* systemData, void* userData)
 	{
+#if defined FG_USING_MARMALADE
 		s3ePointerMotionEvent* event = (s3ePointerMotionEvent*) systemData;
 		MainModule::getInstance()->multiTouchMoveEvent(event->m_x, event->m_y, 0);
+#endif // FG_USING_MARMALADE
 		return 0;
 	}
 
@@ -151,6 +162,7 @@ public:
 	 */
 	fgBool initProgram()
 	{
+#if defined FG_USING_MARMALADE
 		s3eSurfaceSetInt(S3E_SURFACE_DEVICE_ORIENTATION_LOCK, S3E_SURFACE_LANDSCAPE_FIXED);
 
 		// Register for keyboard
@@ -170,6 +182,8 @@ public:
 		s3eDeviceRegister (S3E_DEVICE_PAUSE, &MainModule::pauseHandler, NULL);
 		s3eDeviceRegister (S3E_DEVICE_UNPAUSE, &MainModule::unpauseHandler, NULL);
 
+#endif // FG_USING_MARMALADE
+
 		// FIXME
 		// Well the whole configuration process should update the screen (swap buffers)
 		// this is needed to display splash screen (after marmalade splash screen) and
@@ -178,7 +192,7 @@ public:
 		if(!FG_GameMain->initSubsystems()) {
 			return FG_FALSE;
 		}
-		
+
 		if(!FG_GameMain->loadConfiguration()) {
 			return FG_FALSE;
 		}
@@ -194,7 +208,9 @@ public:
 	/**
 	 * Apps main loop step (one thread)
 	 */
-	fgBool mainLoopStep() {
+	fgBool mainLoopStep()
+	{
+#if defined FG_USING_MARMALADE
 		if (s3eDeviceCheckQuitRequest()) {
 			m_appInit = FG_FALSE;
 			return FG_FALSE;
@@ -204,23 +220,24 @@ public:
 			FG_WriteLog("ENTER PRESSED...");
 			return FG_FALSE;
 		}
+#endif // FG_USING_MARMALADE
 		if (m_isExit) {
 			m_appInit = FG_FALSE;
 			FG_WriteLog("EXIT IS ACTIVATED - break loop main ! bye!");
 			return FG_FALSE;
 		}
 
-		s3eDeviceYield(0);
+		FG_HardwareState->deviceYield(0);
 		FG_GameMain->update();
-		s3eDeviceYield(0);
+		FG_HardwareState->deviceYield(0);
 
 		// well for now drawing and all update functions will be called in one place (one thread)
 		// however it neads changing
 		FG_GameMain->display();
-		s3eDeviceYield(0);
+		FG_HardwareState->deviceYield(0);
 
-		FG_GameMain->render();	
-		s3eDeviceYield(0);
+		FG_GameMain->render();
+		FG_HardwareState->deviceYield(0);
 
 		return FG_TRUE;
 	}
@@ -235,7 +252,6 @@ public:
 		// This frees all the data used by singletons and other nonresource data
 		// after that only things left to free are FG_GameMain and MainModule
 		FG_GameMain->closeSybsystems();
-
 		FG_GameMain->deleteInstance();
 
 		m_appInit = FG_FALSE;
@@ -273,7 +289,7 @@ private:
 	{
 		FG_WriteLog("focusGainedEvent()");
 	}
-
+#if defined FG_USING_MARMALADE
 	/**
 	 * Handle PRESSING and RELEASING keys
 	 */
@@ -287,6 +303,7 @@ private:
 		}
 		FG_WriteLog("FG_EventManager - keyboard - %d is pressed? - code: %d\n", (int)event->m_Pressed, (int)event->m_Key);
 	}
+#endif // FG_USING_MARMALADE
 
 	/**
 	 * This function is called with a coordinate when the screen is touched.
@@ -325,7 +342,7 @@ private:
 
 		m_touches[touchId] = FG_FALSE;
 		FG_TouchReceiver->handlePointerReleased(fgVector2i(x,y),touchId);
-	}	
+	}
 
 private:
 	enum {NUM_TOUCHES = 10};
@@ -391,7 +408,9 @@ static bool set_allow_loop_handler(void) {
  */
 extern "C" int main()
 {
+#if defined FG_USING_MARMALADE
 	IwUtilInit();
+#endif // FG_USING_MARMALADE
 	//IwMemBucketDebugSetBreakpoint(118);
 	/*fgDeviceQuery* dev = fgDeviceQuery::getInstance();
 
@@ -407,9 +426,8 @@ extern "C" int main()
 		FG_MainModule->setSlow(false);
 	}
 	*/
-	s3eDeviceYield(0);
 	FG_MainModule->initProgram();
-	s3eDeviceYield(0);
+	FG_HardwareState->deviceYield(0);
 
 	/*if( FG_MainModule->isSlow() ) {
 		// USE FPS LIMIT
@@ -424,28 +442,29 @@ extern "C" int main()
 				g_allowLoop = false;
 				FG_MainModule->mainLoopStep();
 			}
-			s3eDeviceYield(10);
+			FG_HardwareState->deviceYield(10);
 		}
 	} else {
 		// NO FPS LIMIT
 		FG_WriteLog("NO FPS LIMIT FOR DEVICE GEN: %d", dev->deviceGeneration());
 		while(1) {
 			FG_MainModule->mainLoopStep();
-			s3eDeviceYield(0);
+			FG_HardwareState->deviceYield(0);
 		}
 	}*/
 
 	while(true)	{
 		fgBool status = FG_MainModule->mainLoopStep();
-		s3eDeviceYield(1);
+		FG_HardwareState->deviceYield(1);
 		if(status == FG_FALSE)
 			break;
 	}
 
 	FG_MainModule->closeProgram();
 	FG_MainModule->deleteInstance();
-
+#if defined FG_USING_MARMALADE
 	IwUtilTerminate();
 	s3eDeviceExit(0);
+#endif // FG_USING_MARMALADE
 	return 0;
 }

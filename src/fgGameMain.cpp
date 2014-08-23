@@ -1,12 +1,14 @@
 /*******************************************************
  * Copyright (C) 2014 Radoslaw Gniazdowski <r.gniazdowski@gmail.com>. All rights reserved.
- * 
+ *
  * This file is part of #FLEXIGAME_PROJECT
- * 
- * #FLEXIGAME_PROJECT source code and any related files can not be copied, modified 
+ *
+ * #FLEXIGAME_PROJECT source code and any related files can not be copied, modified
  * and/or distributed without the express or written permission from the author.
  *******************************************************/
 
+#include "fgBuildConfig.h"
+#include "fgCommon.h"
 #include "fgGameMain.h"
 
 #include <cstdlib>
@@ -15,11 +17,14 @@
 #include <ctime>
 #include <cstring>
 
+#if defined FG_USING_MARMALADE
+#include "Hardware/fgDeviceQuery.h"
+#endif // FG_USING_MARMALADE
+
 #include "Graphics/fgGFXMain.h"
 
 #include "fgSettings.h"
 #include "fgResourceManager.h"
-#include "Hardware/fgDeviceQuery.h"
 #include "Hardware/fgSensors.h"
 #include "Hardware/fgQualityManager.h"
 #include "Hardware/fgHardwareState.h"
@@ -60,12 +65,13 @@ fgGameMain::~fgGameMain()
 fgBool fgGameMain::initSubsystems(void)
 {
 	if(!FG_GFX::initGFX()) {
-		// FIXME 
+		// FIXME
 		return FG_FALSE;
 	}
-	
+#if defined FG_USING_MARMALADE
 	FG_DeviceQuery->computeDevice();
-	
+#endif // FG_USING_MARMALADE
+
 	int w = FG_GFX::getScreenWidth();
 	int h = FG_GFX::getScreenHeight();
 
@@ -73,21 +79,26 @@ fgBool fgGameMain::initSubsystems(void)
 	FG_HardwareState->initDPI();
 
 	FG_QualityManager->determineQuality();
-	
+
 	FG_EventManager->initialize();
 	FG_TouchReceiver->initialize();
-	
+
 	FG_ResourceFactory->clear();
 
 	/* Useful for memory management
 	s3eMemoryGetInt(S3E_MEMORY_USED);
 	s3eMemoryGetInt(S3E_MEMORY_SIZE);
-	s3eMemoryGetInt(S3E_MEMORY_FREE);*/ 
+	s3eMemoryGetInt(S3E_MEMORY_FREE);*/
 	// FIXME
+#ifdef FG_USING_MARMALADE
 	FG_WriteLog("MARMALADE CURRENT HEAP MEMORY: TOTAL: %.3f, FREE: %.3f, USED: %.3f, LARGEST FREE BLOCK: %.3f\n",
 		(float)s3eMemoryGetInt(S3E_MEMORY_SIZE)/1024.0f/1024.0f, (float)s3eMemoryGetInt(S3E_MEMORY_FREE)/1024.0f/1024.0f, (float)s3eMemoryGetInt(S3E_MEMORY_USED)/1024.0f/1024.0f, (float)s3eMemoryGetInt(S3E_MEMORY_LFB)/1024.0f/1024.0f);
 	FG_ResourceManager->setMaximumMemory(s3eMemoryGetInt(S3E_MEMORY_FREE)-1024*1024*10); // minus 10MB for the structures and other overheads
 	FG_ResourceManager->initialize();
+#else
+    FG_ResourceManager->setMaximumMemory(128*1024*1024-1024*1024*10); // #FIXME #TODO
+    FG_ResourceManager->initialize();
+#endif // FG_USING_MARMALADE
 
 //	FG_GFX::setOrthoView(FG_OGL_ORTHO_ZNEAR_DEFAULT, FG_OGL_ORTHO_ZFAR_DEFAULT);
 //	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
@@ -118,7 +129,11 @@ fgBool fgGameMain::initSubsystems(void)
 	//glHint(GL_POINT_SMOOTH_HINT, GL_NICEST);
 #endif
 	// #FIXME - this is not a place where this should be
-	glClearDepthf(1.0f);
+	#if defined FG_USING_OPENGL_ES
+        glClearDepthf(1.0f);
+    #else
+        glClearDepth(1.0f);
+    #endif
 	glDepthFunc(GL_LESS);
 	glEnable(GL_DEPTH_TEST);
 	return FG_TRUE;
@@ -160,7 +175,9 @@ fgBool fgGameMain::closeSybsystems(void)
 	FG_HardwareState->deleteInstance();
 	FG_TouchReceiver->deleteInstance();
 	FG_EventManager->deleteInstance();
+#if defined FG_USING_MARMALADE
 	FG_DeviceQuery->deleteInstance();
+#endif // FG_USING_MARMALADE
 	FG_QualityManager->deleteInstance();
 	FG_ResourceFactory->deleteInstance();
 
@@ -207,7 +224,7 @@ void fgGameMain::render(void)
 	// render something and shit
 
 	// #CRAP
-	// the code below should be removed 
+	// the code below should be removed
 #if 0
 	// V- & T-database INDEXES
 	GLushort defaultIndices[] = { 0, 1, 3, 2 };
@@ -253,11 +270,11 @@ void fgGameMain::update(void)
 	// TouchReceiver processes the data received from marmalade/system event
 	// callbacks and throws proper events
 	FG_TouchReceiver->processData();
-	s3eDeviceYield(0);
-	// Well this is really useful system, in the end GUI and others will be hooked 
+	FG_HardwareState->deviceYield(0);
+	// Well this is really useful system, in the end GUI and others will be hooked
 	// to EventManager so everything what needs to be done is done in this function
 	FG_EventManager->executeEvents();
-	s3eDeviceYield(0);
+	FG_HardwareState->deviceYield(0);
 	// This must be called  when you wish the manager to check for discardable
 	// resources.  Resources will only be swapped out if the maximum allowable
 	// limit has been reached, and it will discard them from lowest to highest

@@ -1,9 +1,9 @@
 /*******************************************************
  * Copyright (C) 2014 Radoslaw Gniazdowski <r.gniazdowski@gmail.com>. All rights reserved.
- * 
+ *
  * This file is part of #FLEXIGAME_PROJECT
- * 
- * #FLEXIGAME_PROJECT source code and any related files can not be copied, modified 
+ *
+ * #FLEXIGAME_PROJECT source code and any related files can not be copied, modified
  * and/or distributed without the express or written permission from the author.
  *******************************************************/
 
@@ -22,8 +22,8 @@ private:
 	{
 		int count_frames;
 		int frame_duration;
-		int64 time_begin;
-		int64 time_last_frame;
+		int64_t time_begin;
+		int64_t time_last_frame;
 		bool loop;
 		bool delete_mark;
 		AdditionalData() : count_frames(0), frame_duration(0), time_begin(0), time_last_frame(0), loop(false), delete_mark(false) {}

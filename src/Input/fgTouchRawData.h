@@ -1,9 +1,9 @@
 /*******************************************************
  * Copyright (C) 2014 Radoslaw Gniazdowski <r.gniazdowski@gmail.com>. All rights reserved.
- * 
+ *
  * This file is part of #FLEXIGAME_PROJECT
- * 
- * #FLEXIGAME_PROJECT source code and any related files can not be copied, modified 
+ *
+ * #FLEXIGAME_PROJECT source code and any related files can not be copied, modified
  * and/or distributed without the express or written permission from the author.
  *******************************************************/
 
@@ -58,11 +58,15 @@ struct fgTouchRawData
     // UPDATE: niekoniecznie tak jest. Przywrocilem konstruktor. Trzeba doczytac.
     // http://stackoverflow.com/questions/1542892/two-ways-of-calling-default-constructor
     fgTouchRawData() : m_pressOccured(false), m_pressedMilliseconds(0), m_releasedMilliseconds(0),
-                        m_pointerXSwipeInitial(0), m_pointerXInitial(0), m_pointerXStart(0), m_pointerXEnd(0),
-                        m_pointerYSwipeInitial(0), m_pointerYInitial(0), m_pointerYStart(0), m_pointerYEnd(0),
-                        m_tapX(0), m_tapY(0), m_basicSwipeXSize(0), m_basicSwipeYSize(0), m_swipeXSize(0), m_swipeYSize(0),
-                        m_moveX(0), m_moveY(0), m_pointerTap(false), m_swipeLeft(false), m_swipeRight(false),
-                        m_swipeDown(false), m_swipeUp(false), m_xSwipeSteps(0), m_ySwipeSteps(0)
+        m_pointerXSwipeInitial(0), m_pointerXInitial(0),
+        m_pointerXStart(0), m_pointerXEnd(0),
+        m_pointerYSwipeInitial(0), m_pointerYInitial(0),
+        m_pointerYStart(0), m_pointerYEnd(0),
+        m_moveX(0), m_moveY(0), m_tapX(0), m_tapY(0),
+        m_basicSwipeXSize(0), m_basicSwipeYSize(0),
+        m_swipeXSize(0), m_swipeYSize(0),
+        m_pointerTap(false), m_swipeLeft(false), m_swipeRight(false),
+        m_swipeDown(false), m_swipeUp(false), m_xSwipeSteps(0), m_ySwipeSteps(0)
     { }
 
 };

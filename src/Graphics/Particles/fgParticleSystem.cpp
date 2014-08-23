@@ -6,7 +6,6 @@
  * #FLEXIGAME_PROJECT source code and any related files can not be copied, modified 
  * and/or distributed without the express or written permission from the author.
  *******************************************************/
-
 /*
  * fgParticleSystem.cpp
  *
@@ -19,7 +18,9 @@
 #include <cmath>
 #include <cstring>
 #include <cstdlib>
+#ifdef FG_USING_MARMALADE
 #include "s3eTimer.h"
+#endif
 
 template <>
 bool fgSingleton<fgParticleSystem>::instanceFlag = false;
@@ -194,11 +195,11 @@ void fgParticleSystem::addEffectToGroup(int group_id, int effect_id)
 
 void fgParticleSystem::removeEffectFromGroup(int group_id, int effect_id)
 {
-	std::map<int, CIwArray<int> >::iterator pointer = m_effectGroups.find(group_id);
+	std::map<int, fgArrayVector<int> >::iterator pointer = m_effectGroups.find(group_id);
 	if(pointer == m_effectGroups.end())
 		return;
 
-	for(CIwArray<int>::iterator iter = (*pointer).second.begin();
+	for(fgArrayVector<int>::iterator iter = (*pointer).second.begin();
 		iter != (*pointer).second.end();
 		iter ++
     ) {
@@ -213,10 +214,10 @@ void fgParticleSystem::removeEffectFromGroup(int group_id, int effect_id)
 void fgParticleSystem::calculateGroup(int group_id)
 {
 
-	std::map<int, CIwArray<int> >::iterator pointer = m_effectGroups.find(group_id);
+	std::map<int, fgArrayVector<int> >::iterator pointer = m_effectGroups.find(group_id);
 	if(pointer == m_effectGroups.end())
 		return;
-	for(CIwArray<int>::iterator iter = (*pointer).second.begin();
+	for(fgArrayVector<int>::iterator iter = (*pointer).second.begin();
 		iter != (*pointer).second.end();
 		iter++) {
 			calculateParticleEffect(*iter);
@@ -227,10 +228,10 @@ void fgParticleSystem::calculateGroup(int group_id)
 
 void fgParticleSystem::drawGroup(int group_id)
 {
-	std::map<int, CIwArray<int> >::iterator pointer = m_effectGroups.find(group_id);
+	std::map<int, fgArrayVector<int> >::iterator pointer = m_effectGroups.find(group_id);
 	if(pointer == m_effectGroups.end())
 		return;
-	for(CIwArray<int>::iterator iter = (*pointer).second.begin();
+	for(fgArrayVector<int>::iterator iter = (*pointer).second.begin();
 		iter != (*pointer).second.end();
 		iter++) {
 			drawParticleEffect(*iter);
@@ -293,7 +294,7 @@ void fgParticleSystem::drawSpecialEffect(int effect_id)
 
 void fgParticleSystem::clearGroups()
 {
-	for(std::map<int, CIwArray<int> >::iterator pointer = m_effectGroups.begin();
+	for(std::map<int, fgArrayVector<int> >::iterator pointer = m_effectGroups.begin();
 		pointer != m_effectGroups.end();
 		pointer++) {
 			(*pointer).second.clear();		

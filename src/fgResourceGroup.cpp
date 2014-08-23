@@ -1,14 +1,15 @@
 /*******************************************************
  * Copyright (C) 2014 Radoslaw Gniazdowski <r.gniazdowski@gmail.com>. All rights reserved.
- * 
+ *
  * This file is part of #FLEXIGAME_PROJECT
- * 
- * #FLEXIGAME_PROJECT source code and any related files can not be copied, modified 
+ *
+ * #FLEXIGAME_PROJECT source code and any related files can not be copied, modified
  * and/or distributed without the express or written permission from the author.
  *******************************************************/
 
 #include "fgResourceGroup.h"
 #include "fgResourceFactory.h"
+
 #include "Graphics/Textures/fgTextureResource.h"
 #include "GUI/fgFontResource.h"
 
@@ -74,7 +75,7 @@ void fgResourceGroupContentHandler::startElement(const char *localName, fgXMLEle
 	// ZipPack
 	// Resource Group ?
 	m_elemStack.push(elementPtr);
-	
+
 	m_resType = FG_RESOURCE_TYPE_FROM_TEXT(localName);
 	// Handling for resource group tag type - in most cases it's the root node.
 	// #TODO - there needs to be a security check - checking if the resource group does not
@@ -85,16 +86,16 @@ void fgResourceGroupContentHandler::startElement(const char *localName, fgXMLEle
 		while(attribute) {
 			const char *attrname = attribute->Name();
 			const char *attrvalue = attribute->Value();
-			if(strnicmp(attrname, "name", 4) == 0) {
+			if(strncasecmp(attrname, "name", 4) == 0) {
 				m_resourceGroup->setResourceName(attrvalue);
 				FG_WriteLog("RESOURCE GROUP: NAME: '%s'", attrvalue);
-			} else if(strnicmp(attrname, "priority", 8) == 0) {
+			} else if(strncasecmp(attrname, "priority", 8) == 0) {
 				m_resourceGroup->setPriority(FG_RES_PRIORITY_FROM_TEXT(attrvalue));
 			}
 			attribute = attribute->Next();
 		}
 	} else if(m_resType == FG_RESOURCE_INVALID) {
-		if(strnicmp(localName, FG_FILE_QUALITY_MAPPING_TEXT, strlen(FG_FILE_QUALITY_MAPPING_TEXT)) == 0) {			
+		if(strncasecmp(localName, FG_FILE_QUALITY_MAPPING_TEXT, strlen(FG_FILE_QUALITY_MAPPING_TEXT)) == 0) {
 			m_isFileQualityMapTag = FG_TRUE;
 		} else if(true) {
 		}
@@ -103,7 +104,7 @@ void fgResourceGroupContentHandler::startElement(const char *localName, fgXMLEle
 	// Here are common attributes for every resource tag in resource group
 	// Path to the resource
 	const char *resPath = NULL;
-	// Resource name (ID/TAG string) 
+	// Resource name (ID/TAG string)
 	const char *resName = NULL;
 	// Priority for the resource stored as a string
 	const char *resPriorityStr = NULL;
@@ -115,16 +116,16 @@ void fgResourceGroupContentHandler::startElement(const char *localName, fgXMLEle
 		while(attribute) {
 			const char *attrname = attribute->Name();
 			const char *attrvalue = attribute->Value();
-			if(strnicmp(attrname, "path", 4) == 0) {
+			if(strncasecmp(attrname, "path", 4) == 0) {
 				resPath = attrvalue;
-			} else if(strnicmp(attrname, "name", 4) == 0) {
+			} else if(strncasecmp(attrname, "name", 4) == 0) {
 				resName = attrvalue;
 				m_curResName = resName;
-			} else if(strnicmp(attrname, "priority", 8) == 0) {
+			} else if(strncasecmp(attrname, "priority", 8) == 0) {
 				resPriorityStr = attrvalue;
-			} else if(strnicmp(attrname, "quality", 7) == 0) {
+			} else if(strncasecmp(attrname, "quality", 7) == 0) {
 				resQualityStr = attrvalue;
-			} else if(strnicmp(attrname, "ismapped", 8) == 0) {
+			} else if(strncasecmp(attrname, "ismapped", 8) == 0) {
 				m_isMapped = FG_BOOL_FROM_TEXT(attrvalue);
 			}
 			if(!resQualityStr)
@@ -250,7 +251,7 @@ fgBool fgResourceGroup::isDisposed(void) const
 	if(m_resourceFiles.empty())
 		return FG_TRUE;
 	fgBool status = FG_TRUE;
-	for(rgResVecItor it = m_resourceFiles.begin(); it != m_resourceFiles.end(); it++) {
+	for(rgResVecConstItor it = m_resourceFiles.begin(); it != m_resourceFiles.end(); it++) {
 		if(!(*it)->isDisposed())
 			status = FG_FALSE;
 	}
@@ -271,7 +272,7 @@ fgBool fgResourceGroup::preLoadConfig(void)
 	contentHandler->setResourceGroupPointer(this);
 	m_xmlParser->setContentHandler(contentHandler);
 	if(!m_xmlParser) {
-		// #TODO #P2 error messages 
+		// #TODO #P2 error messages
 		return FG_FALSE;
 	}
 	if(!m_xmlParser->loadXML(m_filePath.c_str())) {

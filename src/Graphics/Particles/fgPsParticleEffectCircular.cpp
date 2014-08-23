@@ -37,7 +37,7 @@ void ParticleEffectCircular::setMaxCount(int max_count)
 
     // ALL FIELDS ARE DUMMIES AT START
     m_particles.resize(max_count);
-    for( CIwArray<Particle>::iterator it = m_particles.begin(); it != m_particles.end(); it++ )
+    for( fgArrayVector<Particle>::iterator it = m_particles.begin(); it != m_particles.end(); it++ )
         *it = dummy_particle;
 
     m_dummy_count = maxCount();
@@ -100,7 +100,7 @@ fgBool ParticleEffectCircular::addGroup(Particle *particles, int count)
  * Adds random Particle, built upon values in [from->some_field, to->some_field]
  */
 fgBool ParticleEffectCircular::addRandom(Particle *from, Particle *to)
-{    
+{
 	if(from == NULL || to == NULL)
 		return FG_FALSE;
 

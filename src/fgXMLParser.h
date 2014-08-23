@@ -1,9 +1,9 @@
 /*******************************************************
  * Copyright (C) 2014 Radoslaw Gniazdowski <r.gniazdowski@gmail.com>. All rights reserved.
- * 
+ *
  * This file is part of #FLEXIGAME_PROJECT
- * 
- * #FLEXIGAME_PROJECT source code and any related files can not be copied, modified 
+ *
+ * #FLEXIGAME_PROJECT source code and any related files can not be copied, modified
  * and/or distributed without the express or written permission from the author.
  *******************************************************/
 
@@ -12,7 +12,6 @@
 
 #include "fgCommon.h"
 
-// #FIXME - P8
 #ifdef FG_USING_TINYXML
 #include "tinyxml.h"
 #endif
@@ -29,7 +28,7 @@
 
 
 // This class extends the fgFile, so it can load the proper XML file
-// fgXMLParser contains  specialized functions for  parsing/interpreting the  data inside the XML file, its 
+// fgXMLParser contains  specialized functions for  parsing/interpreting the  data inside the XML file, its
 // a kind of a XML functions wrapper to make it easier and more intuitive to interpret and extract the data
 
 /** TiXmlBase is a base class for every class in TinyXml.
@@ -227,7 +226,7 @@ public:
 	const char *getCurrentNodeValue(void) const {
 		if(!m_currentXMLNode)
 			return NULL;
-		if( m_currentXMLNode->Type() != fgXMLNode::TEXT )
+		if( m_currentXMLNode->Type() != fgXMLNode::TINYXML_TEXT )
 			return m_currentXMLNode->Value();
 		else
 			return getCurrentTextNodeValue();
@@ -239,7 +238,7 @@ public:
 	const char *getCurrentTextNodeValue(void) const {
 		if(!m_currentXMLNode)
 			return NULL;
-		if( m_currentXMLNode->Type() != fgXMLNode::TEXT )
+		if( m_currentXMLNode->Type() != fgXMLNode::TINYXML_TEXT )
 			return NULL;
 		fgXMLText *textNode = m_currentXMLNode->ToText();
 		if(!textNode)
@@ -253,7 +252,7 @@ public:
 	fgBool isCurrent(void) const {
 		if(!m_currentXMLNode)
 			return FG_FALSE;
-		else 
+		else
 			return FG_TRUE;
 	}
 
@@ -263,7 +262,7 @@ public:
 	fgBool isCurrentElement(void) const {
 		if(!m_currentXMLNode)
 			return FG_FALSE;
-		return (m_currentXMLNode->Type() == fgXMLNode::ELEMENT);
+		return (m_currentXMLNode->Type() == fgXMLNode::TINYXML_ELEMENT);
 	}
 
 	/*
@@ -272,7 +271,7 @@ public:
 	fgBool isCurrentText(void) const {
 		if(!m_currentXMLNode)
 			return FG_FALSE;
-		return (m_currentXMLNode->Type() == fgXMLNode::TEXT);
+		return (m_currentXMLNode->Type() == fgXMLNode::TINYXML_TEXT);
 	}
 
 	/*
@@ -281,7 +280,7 @@ public:
 	fgBool isCurrentComment(void) const {
 		if(!m_currentXMLNode)
 			return FG_FALSE;
-		return (m_currentXMLNode->Type() == fgXMLNode::COMMENT);
+		return (m_currentXMLNode->Type() == fgXMLNode::TINYXML_COMMENT);
 	}
 
 	/*
@@ -290,13 +289,13 @@ public:
 	fgBool isCurrentUnknown(void) const {
 		if(!m_currentXMLNode)
 			return FG_FALSE;
-		return (m_currentXMLNode->Type() == fgXMLNode::UNKNOWN);
+		return (m_currentXMLNode->Type() == fgXMLNode::TINYXML_UNKNOWN);
 	}
 
 	/*
 	 * Sets the attribute pointer to the first possible attribute in the current node
 	 */
-	fgBool setFirstAttribute(void) 
+	fgBool setFirstAttribute(void)
 	{
 		if(!m_currentXMLNode)
 		{
@@ -319,7 +318,7 @@ public:
 	}
 
 	/*
-	 * Parser goes deeper into the xml document structure, setting proper value for the current pointer 
+	 * Parser goes deeper into the xml document structure, setting proper value for the current pointer
 	 */
 	fgBool goDeeper(void)
 	{

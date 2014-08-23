@@ -18,7 +18,6 @@
 #include "../../fgSingleton.h"
 
 #include <map>
-#include "IwArray.h"
 
 #include "fgPsFlashEffect.h"
 #include "fgPsSpecialEffect.h"
@@ -58,7 +57,7 @@ private:
 	std::map<int, ParticleEffect *> m_particleEffects;
 	//std::map<int, FlashEffect *> m_flashEffects;
 	std::map<int, SpecialEffect *> m_specialEffects;
-	std::map<int, CIwArray<int> > m_effectGroups;
+	std::map<int, fgArrayVector<int> > m_effectGroups;
 	
 protected:
 	fgParticleSystem();

@@ -1,9 +1,9 @@
 /*******************************************************
  * Copyright (C) 2014 Radoslaw Gniazdowski <r.gniazdowski@gmail.com>. All rights reserved.
- * 
+ *
  * This file is part of #FLEXIGAME_PROJECT
- * 
- * #FLEXIGAME_PROJECT source code and any related files can not be copied, modified 
+ *
+ * #FLEXIGAME_PROJECT source code and any related files can not be copied, modified
  * and/or distributed without the express or written permission from the author.
  *******************************************************/
 
@@ -21,12 +21,12 @@
 #define FG_PATH_MAX			256
 #define FG_INVALID			-1
 
-#ifndef max
-#define max(a,b) (((a) > (b)) ? (a) : (b))
+#ifndef MAX
+#define MAX(a,b) (((a) > (b)) ? (a) : (b))
 #endif
 
-#ifndef min
-#define min(a,b) (((a) < (b)) ? (a) : (b))
+#ifndef MIN
+#define MIN(a,b) (((a) < (b)) ? (a) : (b))
 #endif
 
 #ifdef _MSC_VER
@@ -90,18 +90,18 @@ typedef unsigned char fgBool;
 
 // This enum is used to return (exit function) specific value if variable 'text' is equal to 'checkStr'
 #define FG_RETURN_VAL_IF_TEXT_EQ(checkStr, returnVal) \
-	do { if(strnicmp(text, checkStr, strlen(checkStr)) == 0) return returnVal; } while(0)
+	do { if(strncasecmp(text, checkStr, strlen(checkStr)) == 0) return returnVal; } while(0)
 
 // This is similar to the macro above, but is more automatic.
 // As a parameter it needs to get some enum value (not by variable however)
 // Macro uses concatenation (token pasting) to get to strings (literals)
 // stored in (enum name)_TEXT global constants - this how comparison is made
 #define FG_RETURN_ENUM_IF_TEXT_EQ(returnVal) \
-	do { if(strnicmp(text, returnVal ## _TEXT, strlen(returnVal ## _TEXT)) == 0) return returnVal; } while(0)
+	do { if(strncasecmp(text, returnVal ## _TEXT, strlen(returnVal ## _TEXT)) == 0) return returnVal; } while(0)
 
 // Simple if for checking string against enum equivalent
 #define FG_ENUM_IF_TEXT_EQ(ENUM) \
-	if(strnicmp(text, ENUM ## _TEXT, strlen(ENUM ## _TEXT)) == 0)
+	if(strncasecmp(text, ENUM ## _TEXT, strlen(ENUM ## _TEXT)) == 0)
 
 // Convert text (literal) to corresponding enum value
 inline fgBool _FG_BOOL_FROM_TEXT(const char* text) {
@@ -139,19 +139,22 @@ public:
         return this->p[index];
 	}
 };
-#else 
+#else
 #include <vector>
-template <class T, class Alloc = allocator<T> >
+template <class T, class Alloc = std::allocator<T> >
 class fgArrayVector : public std::vector<T, Alloc> {
 public:
 	void clear_optimised()
 	{
-		clear();		
+		std::vector<T, Alloc>::clear();
 	}
-		
+
 	int find(T const & value) const
     {
-        for (int i = 0, iterator it = begin(); it != end(); it++, i++) {
+		int i=0;
+        for (typename std::vector<T, Alloc>::const_iterator it = std::vector<T, Alloc>::begin();
+             it != std::vector<T, Alloc>::end();
+             it++, i++) {
 			if((*it) == value) {
 				return i;
 			}
@@ -161,7 +164,8 @@ public:
 
     bool contains(T const & value) const
     {
-		for (iterator it = begin(); it != end(); it++) {
+		for (typename std::vector<T, Alloc>::const_iterator it = std::vector<T, Alloc>::begin();
+		     it != std::vector<T, Alloc>::end(); it++) {
 			if((*it) == value) {
 				return true;
 			}
