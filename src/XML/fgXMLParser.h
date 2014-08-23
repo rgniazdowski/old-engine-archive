@@ -141,7 +141,7 @@ public:
 	/*
 	 * Parse (analyze) the xml file using predefined content handler.
 	 */
-	fgStatus parseWithHandler(void);
+	fgBool parseWithHandler(void);
 
 	/*
 	 *

@@ -10,13 +10,13 @@
 #ifndef _FG_RESOURCE_GROUP_H_
 #define _FG_RESOURCE_GROUP_H_
 
-//#include <utility>
-
 #include "fgCommon.h"
 #include "fgResource.h"
-#include "XML/fgXMLParser.h"
+#include "fgResourceFactoryTypes.h"
 
 #include <cstdlib>
+
+#include "XML/fgXMLParser.h"
 
 // -----------------------------
 // Predefined classes

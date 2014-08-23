@@ -42,6 +42,8 @@ namespace std
 #include <unordered_map>
 #endif // FG_USING_MARMALADE
 
+// HandleType HAS TO BE template of fgHandle
+
 template <typename DataType, typename HandleType>
 class fgHandleManager
 {

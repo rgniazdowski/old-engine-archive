@@ -10,7 +10,8 @@
 #ifndef _FG_STATUS_H_
 #define _FG_STATUS_H_
 
-#include "fgCommon.h"
+#include "fgTypes.h"
+#include "fgErrno.h"
 #include "fgMessageCommon.h"
 
 // ? the hell?
@@ -22,6 +23,9 @@ typedef unsigned char fgMask8;
  * false/true status). Additionally there is a pointer to message 
  * structure holding error/message code and text.
  * Without code or text message the message structure will not be allocated.
+ *
+ * If status is managed it means that the pointer is held also in message subsystem,
+ * so in status reporter the object should not be deleted (when clearing stack).
  */
 struct fgStatus
 {
@@ -29,9 +33,13 @@ struct fgStatus
 	fgMask8 mask;
 	// Message - contains indicator code (error code, etc.) and message text.
 	fgMessage *message;
+	// Is this status managed in the message subsystem?
+	fgBool isManaged;
+	// 
+	int errCode;
 
 	// Default constructor
-	fgStatus() : mask(0)
+	fgStatus() : mask(0), isManaged(FG_FALSE), errCode(FG_ERRNO_OK)
 	{
 		message = NULL;
 	}
@@ -45,19 +53,31 @@ struct fgStatus
 		// Message from source will be cleared
 	}
 
+	fgStatus *setManaged(void) {
+		isManaged = FG_TRUE;
+		// If status is managed, then message needs to be also
+		if(message)
+			message->setManaged();
+		return this;
+	}
+
 	// Assignment operator. If source has message allocated it will be
 	// taken over by this fgStatus structure. Pointer in source will be deleted.
+	// FIXME - this wont be needed (I think) - need further testing
 	fgStatus& operator= (fgStatus source)
 	{
 		if(this == &source)
 			return *this;
 
+		errCode = source.errCode;
 		mask = source.mask;
+		isManaged = source.isManaged;
 		if(source.message && !message) {
 			message = source.message;
 		} else if(source.message) {
 			*message = *source.message;
-			source.clearMessage();
+			if(!source.isManaged) // #FIXME #ERROR possible
+				source.clearMessage();
 		}
 		else {
 			message = NULL;
@@ -72,6 +92,19 @@ struct fgStatus
 			delete message;
 			message = NULL;
 		}
+	}
+
+	int code(void) const {
+		if(message) {
+			return message->code();
+		}
+		return errCode;
+	}
+
+	fgBool hasMessage(void) const {
+		if(message)
+			return FG_TRUE;
+		return FG_FALSE;
 	}
 
 	// True if current status is success
@@ -99,14 +132,15 @@ struct fgStatus
 		if(!message) {
 			message = new fgMessage(FG_MESSAGE_INFO, _code);
 		}
-		message->info.code = _code;
+		message->setCode(_code);
+		errCode = _code;
 		return this;
 	}
 
 	// Create (initialize) and return status with success.
 	// If message (text) is passed  (not NULL) the message
 	// struct will be initialized.
-	fgStatus *success(const char *msgData = NULL)
+	fgStatus *success(const char *msgData = NULL, int _code = FG_ERRNO_OK)
 	{
 		mask = FG_SUCCESS;
 		if(msgData) {
@@ -115,16 +149,18 @@ struct fgStatus
 			} else {
 				message->data = msgData;
 				message->type = FG_MESSAGE_INFO;
-				message->info.code = 0;
+				setCode(_code);
 			}
 		}
+		if(isManaged && message)
+			message->setManaged();
 		return this;
 	}
 
 	// Create (initialize) and return status with warning.
 	// If message (text) is passed  (not NULL) the message
 	// struct will be initialized.
-	fgStatus *warning(const char *msgData = NULL)
+	fgStatus *warning(const char *msgData = NULL, int _code = FG_ERRNO_OK)
 	{
 		mask = FG_WARNING;
 		if(msgData) {
@@ -133,16 +169,18 @@ struct fgStatus
 			} else {
 				message->data = msgData;
 				message->type = FG_MESSAGE_WARNING;
-				message->info.code = 0;
+				setCode(_code);
 			}
 		}
+		if(isManaged && message)
+			message->setManaged();
 		return this;
 	}
 
 	// Create (initialize)  and return status with error.
 	// If message (text) is passed (not NULL) the message
 	// struct will be initialized.
-	fgStatus *error(const char *msgData = NULL)
+	fgStatus *error(const char *msgData = NULL, int _code = FG_ERRNO_OK)
 	{
 		mask = FG_ERROR;
 		if(msgData) {
@@ -151,15 +189,17 @@ struct fgStatus
 			} else {
 				message->data = msgData;
 				message->type = FG_MESSAGE_ERROR;
-				message->info.code = 0;
+				setCode(_code);
 			}
 		}
+		if(isManaged && message)
+			message->setManaged();
 		return this;
 	}
 
 	// Create (initialize) and return debug status - this not an error in most cases.
 	// If message (text) is passed (not NULL) the message struct will be initialized.
-	fgStatus *debug(const char *msgData = NULL)
+	fgStatus *debug(const char *msgData = NULL, int _code = FG_ERRNO_OK)
 	{
 		mask = FG_WARNING;
 		if(msgData) {
@@ -168,9 +208,11 @@ struct fgStatus
 			} else {
 				message->data = msgData;
 				message->type = FG_MESSAGE_DEBUG;
-				message->info.code = 0;
+				setCode(_code);
 			}
 		}
+		if(isManaged && message)
+			message->setManaged();
 		return this;
 	}
 };

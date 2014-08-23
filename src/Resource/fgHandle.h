@@ -34,7 +34,7 @@ typedef FG_RAW_HANDLE_TYPE fgRawMagic;
 #endif
 
 /*
- *
+ * The TagType paramater has to be one of fgTag template
  */
 template <typename TagType>
 class fgHandle
@@ -95,6 +95,10 @@ public:
 	// Return the handle ID number
 	operator fgRawHandle(void) const {
 		return m_handle;
+	}
+
+	static const char *getTagName(void) {
+		return TagType::name();
 	}
 };
 

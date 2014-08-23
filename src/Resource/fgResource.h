@@ -23,28 +23,28 @@
 
 #include "fgHandle.h"
 #include "fgResourceBase.h"
+#include "Util/fgTag.h"
 
-#ifndef FG_FACTORY_CREATE_FUNCTION
-#define FG_FACTORY_CREATE_FUNCTION(RETURNTYPE, CREATETYPE) \
-static RETURNTYPE * createResource(void) { return new CREATETYPE(); }
-#endif
+class fgResourceManager;
+class fgResourceGroup;
+class fgResource;
 
-#ifndef FG_RESOURCE_FACTORY_CREATE_FUNCTION
-#define FG_RESOURCE_FACTORY_CREATE_FUNCTION(CREATETYPE) \
-static fgResource * createResource(void) { return new CREATETYPE(); }
-#endif
+#include "fgResourceFactoryTypes.h"
 
-// Empty structure for resource tag
-struct fgTagResource  {  };
+#define FG_TAG_RESOURCE_NAME	"tag{fgResource}"
+//#define FG_TAG_RESOURCE_ID		10 //#FIXME - something automatic maybe?
+#define FG_TAG_RESOURCE			FG_TAG_TYPE(fgResource)
+
+//FG_TAG_TEMPLATE(fgResource, FG_TAG_RESOURCE_NAME, FG_TAG_RESOURCE_ID);
+FG_TAG_TEMPLATE_ID_AUTO(fgResource, FG_TAG_RESOURCE_NAME);
+
 // Special handle type for resource
-typedef fgHandle<fgTagResource> fgResourceHandle;
+typedef fgHandle<FG_TAG_RESOURCE > fgResourceHandle;
+typedef FG_TAG_RESOURCE fgResourceTag;
 
 #ifndef FG_RHANDLE
 #define FG_RHANDLE fgResourceHandle
 #endif
-
-class fgResourceManager;
-class fgResourceGroup;
 
 // Maximum length of the path string for resource file
 #define FG_RESOURCE_PATH_MAX	FG_PATH_MAX
@@ -174,7 +174,7 @@ inline fgResPriorityType _FG_RES_PRIORITY_FROM_TEXT(const char* text) {
 /*
  * Base class for resource
  */
-class fgResource : public fgResourceBase, public fgStatusReporter
+class fgResource : public fgResourceBase, public fgStatusReporter<fgResourceTag>
 {
 	friend class fgResourceManager;
 	friend class fgResourceGroup;

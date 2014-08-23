@@ -11,6 +11,7 @@
 #define _FG_MESSAGE_COMMON_H_
 
 #include "fgBool.h"
+#include "fgErrno.h"
 
 /*
  * Enum for the common message types
@@ -72,18 +73,27 @@ struct fgDebug : fgMsgBase
 struct fgMessage
 {
 	union {
+		// The type of the message
 		fgMessageType type;
+		// Info part of the message
 		fgInfo info;
+		// Warning part of the message
 		fgWarning warning;
+		// Error part
 		fgError error;
+		// Debug part (type, code)
 		fgDebug debug;
 	};
+	// Message data (text)
 	std::string data;
+	// Is this status managed in the message subsystem?
+	fgBool isManaged;
 
 	// Default constructor for message object
 	fgMessage() : 
-		type(FG_MESSAGE_INFO) {
-		info.code = 0;
+		type(FG_MESSAGE_INFO),
+		isManaged(FG_FALSE) {
+		info.code = FG_ERRNO_OK;
 		warning.serious = FG_FALSE;
 	}
 	
@@ -92,43 +102,32 @@ struct fgMessage
 		data.clear();
 	}
 	
-	fgMessage& operator= (const fgMessage &source)
-	{
-		printf(" --- --- fgMessage assignment called =!, this: %p, source: %p\n", this, &source);
-
-		if(this == &source)
-			return *this;
-
-		type = source.type;
-		info.code = source.info.code;
-		warning.serious = source.warning.serious;
-		data = source.data;
-
-		return *this;
-	}
-
 	fgMessage(fgMessageType _type, int _code) : 
-		type(_type) {
-		info.code = 0;
+		type(_type),
+		isManaged(FG_FALSE) {
+		info.code = FG_ERRNO_OK;
 		warning.serious = FG_FALSE;
 	}
 
 	fgMessage(fgMessageType _type, int _code, fgBool _critical) : 
-		type(_type) {
+		type(_type),
+		isManaged(FG_FALSE) {
 		info.code = _code;
 		warning.serious = _critical; // this will also set similar flag in error/debug - union
 	}
 
 	fgMessage(fgMessageType _type, const char *_data) : 
-		type(_type) {
-		info.code = 0;
+		type(_type),
+		isManaged(FG_FALSE) {
+		info.code = FG_ERRNO_OK;
 		warning.serious = FG_FALSE;
 		if(_data)
 			data = _data;
 	}
 
 	fgMessage(fgMessageType _type, const char *_data, int _code) : 
-		type(_type) {
+		type(_type),
+		isManaged(FG_FALSE) {
 		info.code = _code;
 		warning.serious = FG_FALSE;
 		if(_data)
@@ -136,7 +135,8 @@ struct fgMessage
 	}
 
 	fgMessage(fgMessageType _type, const char *_data, int _code, fgBool _critical) : 
-		type(_type) {
+		type(_type),
+		isManaged(FG_FALSE) {
 		info.code = _code;
 		warning.serious = _critical;
 		if(_data)
@@ -144,15 +144,17 @@ struct fgMessage
 	}
 
 	fgMessage(const char *_data) : 
-		type(FG_MESSAGE_INFO) {
-		info.code = 0;
+		type(FG_MESSAGE_INFO),
+		isManaged(FG_FALSE) {
+		info.code = FG_ERRNO_OK;
 		warning.serious = FG_FALSE;
 		if(_data)
 			data = _data;
 	}
 
 	fgMessage(const char *_data, int _code) : 
-		type(FG_MESSAGE_INFO) {
+		type(FG_MESSAGE_INFO),
+		isManaged(FG_FALSE) {
 		info.code = _code;
 		warning.serious = FG_FALSE;
 		if(_data)
@@ -160,15 +162,28 @@ struct fgMessage
 	}
 
 	fgMessage(const char *_data, int _code, fgBool _critical) : 
-		type(FG_MESSAGE_INFO) {
+		type(FG_MESSAGE_INFO),
+		isManaged(FG_FALSE) {
 		info.code = _code;
 		warning.serious = _critical;
 		if(_data)
 			data = _data;
 	}
 
+	// Set the code for the message (returns pointer to this)
 	fgMessage *setCode(int _code) {
 		info.code = _code;
+		return this;
+	}
+
+	// Get the message code (error code/etc)
+	int code(void) const {
+		return info.code;
+	}
+
+	// Set the message to be managed via message subsystem
+	fgMessage *setManaged(void) {
+		isManaged = FG_TRUE;
 		return this;
 	}
 };

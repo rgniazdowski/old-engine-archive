@@ -12,8 +12,22 @@
 
 #include "fgCommon.h"
 #include "fgStatusReporter.h"
+#include "Util/fgTag.h"
 
-class fgManagerBase : public fgStatusReporter {
+class fgManagerBase;
+
+#define FG_TAG_MANAGER_BASE_NAME	"fgManagerBase"
+//#define FG_TAG_MANAGER_BASE_ID		20 //#FIXME - something automatic maybe?
+#define FG_TAG_MANAGER_BASE			FG_TAG_TYPE(fgManagerBase)
+
+//FG_TAG_TEMPLATE(fgManagerBase, FG_TAG_MANAGER_BASE_NAME, FG_TAG_MANAGER_BASE_ID);
+
+FG_TAG_TEMPLATE_ID_AUTO(fgManagerBase, FG_TAG_MANAGER_BASE_NAME);
+
+// Special handle type for resource
+typedef FG_TAG_MANAGER_BASE fgManagerBaseTag;
+
+class fgManagerBase : public fgStatusReporter<fgManagerBaseTag> {
 public:
 	fgManagerBase() {}
 	virtual ~fgManagerBase() {}

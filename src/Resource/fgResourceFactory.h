@@ -11,25 +11,12 @@
 #define _FG_RESOURCE_FACTORY_H_
 
 #include "fgCommon.h"
-#include "fgResource.h"
 #include "fgSingleton.h"
+#include "fgResource.h"
 
 #include <map>
-#if __cplusplus > 199711L
-using fgCreateResourceFn = fgResource* (*)(void);
-#else
-typedef fgResource* (*fgCreateResourceFn)(void);
-#endif
 
-#ifndef FG_FACTORY_CREATE_FUNCTION
-#define FG_FACTORY_CREATE_FUNCTION(RETURNTYPE, CREATETYPE) \
-static RETURNTYPE * createResource(void) { return new CREATETYPE(); }
-#endif
-
-#ifndef FG_RESOURCE_FACTORY_CREATE_FUNCTION
-#define FG_RESOURCE_FACTORY_CREATE_FUNCTION(CREATETYPE) \
-static fgResource * createResource(void) { return new CREATETYPE(); }
-#endif
+#include "fgResourceFactoryTypes.h"
 
 class fgResourceFactory : public fgSingleton<fgResourceFactory>
 {
