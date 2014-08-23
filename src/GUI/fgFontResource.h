@@ -12,7 +12,8 @@
 
 #include "fgCommon.h"
 #include "Resource/fgResource.h"
-#include "Graphics/Textures/fgTextureResource.h"
+#include "Resource/fgResourceFactoryTypes.h"
+#include "GFX/Textures/fgTextureResource.h"
 
 // This is standard grid size (used for fonts based on textures)
 #define FG_FONT_STANDARD_GRID_SIZE	16

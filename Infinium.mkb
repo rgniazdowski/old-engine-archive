@@ -45,6 +45,7 @@ files
 	Util/fgSettings.h
 	Util/fgTime.cpp
 	Util/fgTime.h
+	Util/fgTag.h
 
 	["FlexiGame/BaseCode/XML"]
 	XML/fgXMLDefaultHandler.h
@@ -59,6 +60,7 @@ files
 	Resource/fgResourceBase.h
 	Resource/fgResourceFactory.cpp
 	Resource/fgResourceFactory.h
+	Resource/fgResourceFactoryTypes.h
 	Resource/fgResourceGroup.cpp
 	Resource/fgResourceGroup.h
 	Resource/fgResourceManager.cpp
@@ -125,84 +127,84 @@ files
 	Math/fgKalmanFilter.h
 	Math/fgMathLib.h	
 
-	["FlexiGame/Graphics"]
-	Graphics/fgGFXErrorCodes.h
-	Graphics/fgGFXTypes.h
-	Graphics/fgGFX2DScene.cpp
-	Graphics/fgGFX2DScene.h
-	Graphics/fgGFX3DScene.cpp
-	Graphics/fgGFX3DScene.h
-	Graphics/fgGFXCamera.cpp
-	Graphics/fgGFXCamera.h
-	Graphics/fgGFXCameraAnimation.cpp
-	Graphics/fgGFXCameraAnimation.h
-	Graphics/fgGFXDrawingBatch.cpp
-	Graphics/fgGFXDrawingBatch.h
-	Graphics/fgGFXPerspectiveView.h
-	Graphics/fgGFXMain.cpp
-	Graphics/fgGFXMain.h
-	Graphics/fgGFXMaterial.cpp
-	Graphics/fgGFXMaterial.h
-	Graphics/fgGFXModelResource.cpp
-	Graphics/fgGFXModelResource.h
-	Graphics/fgGFXModelOBJResource.cpp
-	Graphics/fgGFXModelOBJResource.h
-	Graphics/fgGFXObject.cpp
-	Graphics/fgGFXObject.h
-	Graphics/fgGFXOctreeBase.cpp
-	Graphics/fgGFXOctreeBase.h
-	Graphics/fgGFXOrthoView.h
-	Graphics/fgGFXPrimitives.cpp
-	Graphics/fgGFXPrimitives.h
-	Graphics/fgGFXQuadtreeBase.cpp
-	Graphics/fgGFXQuadtreeBase.h
-	Graphics/fgGFXSceneManager.cpp
-	Graphics/fgGFXSceneManager.h	
-	Graphics/fgGFXShader.cpp
-	Graphics/fgGFXShader.h
-	Graphics/fgGFXShaderManager.cpp
-	Graphics/fgGFXShaderManager.h
-	Graphics/fgGFXShaderProgram.cpp
-	Graphics/fgGFXShaderProgram.h
-	Graphics/fgGFXSimpleDrawer.cpp
-	Graphics/fgGFXSimpleDrawer.h
-	Graphics/fgGFXTexturing.cpp
-	Graphics/fgGFXTexturing.h
+	["FlexiGame/GFX"]
+	GFX/fgGFXErrorCodes.h
+	GFX/fgGFXTypes.h
+	GFX/fgGFX2DScene.cpp
+	GFX/fgGFX2DScene.h
+	GFX/fgGFX3DScene.cpp
+	GFX/fgGFX3DScene.h
+	GFX/fgGFXCamera.cpp
+	GFX/fgGFXCamera.h
+	GFX/fgGFXCameraAnimation.cpp
+	GFX/fgGFXCameraAnimation.h
+	GFX/fgGFXDrawingBatch.cpp
+	GFX/fgGFXDrawingBatch.h
+	GFX/fgGFXPerspectiveView.h
+	GFX/fgGFXMain.cpp
+	GFX/fgGFXMain.h
+	GFX/fgGFXMaterial.cpp
+	GFX/fgGFXMaterial.h
+	GFX/fgGFXModelResource.cpp
+	GFX/fgGFXModelResource.h
+	GFX/fgGFXModelOBJResource.cpp
+	GFX/fgGFXModelOBJResource.h
+	GFX/fgGFXObject.cpp
+	GFX/fgGFXObject.h
+	GFX/fgGFXOctreeBase.cpp
+	GFX/fgGFXOctreeBase.h
+	GFX/fgGFXOrthoView.h
+	GFX/fgGFXPrimitives.cpp
+	GFX/fgGFXPrimitives.h
+	GFX/fgGFXQuadtreeBase.cpp
+	GFX/fgGFXQuadtreeBase.h
+	GFX/fgGFXSceneManager.cpp
+	GFX/fgGFXSceneManager.h	
+	GFX/fgGFXShader.cpp
+	GFX/fgGFXShader.h
+	GFX/fgGFXShaderManager.cpp
+	GFX/fgGFXShaderManager.h
+	GFX/fgGFXShaderProgram.cpp
+	GFX/fgGFXShaderProgram.h
+	GFX/fgGFXSimpleDrawer.cpp
+	GFX/fgGFXSimpleDrawer.h
+	GFX/fgGFXTexturing.cpp
+	GFX/fgGFXTexturing.h
 
-	["FlexiGame/Graphics/Textures"]
-	Graphics/Textures/fgTextureErrorCodes.h
-	Graphics/Textures/fgTextureCommon.h
-	Graphics/Textures/fgTextureLoader.cpp
-	Graphics/Textures/fgTextureLoader.h
-	Graphics/Textures/fgTextureManager.cpp
-	Graphics/Textures/fgTextureManager.h
-	Graphics/Textures/fgTextureResource.cpp
-	Graphics/Textures/fgTextureResource.h
-	Graphics/Textures/fgTextureTypes.h
+	["FlexiGame/GFX/Textures"]
+	GFX/Textures/fgTextureErrorCodes.h
+	GFX/Textures/fgTextureCommon.h
+	GFX/Textures/fgTextureLoader.cpp
+	GFX/Textures/fgTextureLoader.h
+	GFX/Textures/fgTextureManager.cpp
+	GFX/Textures/fgTextureManager.h
+	GFX/Textures/fgTextureResource.cpp
+	GFX/Textures/fgTextureResource.h
+	GFX/Textures/fgTextureTypes.h
 
-	["FlexiGame/Graphics/Particles"]
-	Graphics/Particles/fgParticle.h
-	Graphics/Particles/fgParticleSystem.cpp
-	Graphics/Particles/fgParticleSystem.h
-	Graphics/Particles/fgPsExplosionEffect.cpp
-	Graphics/Particles/fgPsExplosionEffect.h
-	Graphics/Particles/fgPsFlashEffect.cpp
-	Graphics/Particles/fgPsFlashEffect.h
-	Graphics/Particles/fgPsFlyingDebrisEffect.cpp
-	Graphics/Particles/fgPsFlyingDebrisEffect.h
-	Graphics/Particles/fgPsObjectPulseEffect.cpp
-	Graphics/Particles/fgPsObjectPulseEffect.h
-	Graphics/Particles/fgPsParticleDrawer.cpp
-	Graphics/Particles/fgPsParticleDrawer.h
-	Graphics/Particles/fgPsParticleEffect.cpp
-	Graphics/Particles/fgPsParticleEffect.h
-	Graphics/Particles/fgPsParticleEffectCircular.cpp
-	Graphics/Particles/fgPsParticleEffectCircular.h
-	Graphics/Particles/fgPsParticleEffectLimited.cpp
-	Graphics/Particles/fgPsParticleEffectLimited.h
-	Graphics/Particles/fgPsSequentialEffect.cpp
-	Graphics/Particles/fgPsSequentialEffect.h
-	Graphics/Particles/fgPsSpecialEffect.h
+	["FlexiGame/GFX/Particles"]
+	GFX/Particles/fgParticle.h
+	GFX/Particles/fgParticleSystem.cpp
+	GFX/Particles/fgParticleSystem.h
+	GFX/Particles/fgPsExplosionEffect.cpp
+	GFX/Particles/fgPsExplosionEffect.h
+	GFX/Particles/fgPsFlashEffect.cpp
+	GFX/Particles/fgPsFlashEffect.h
+	GFX/Particles/fgPsFlyingDebrisEffect.cpp
+	GFX/Particles/fgPsFlyingDebrisEffect.h
+	GFX/Particles/fgPsObjectPulseEffect.cpp
+	GFX/Particles/fgPsObjectPulseEffect.h
+	GFX/Particles/fgPsParticleDrawer.cpp
+	GFX/Particles/fgPsParticleDrawer.h
+	GFX/Particles/fgPsParticleEffect.cpp
+	GFX/Particles/fgPsParticleEffect.h
+	GFX/Particles/fgPsParticleEffectCircular.cpp
+	GFX/Particles/fgPsParticleEffectCircular.h
+	GFX/Particles/fgPsParticleEffectLimited.cpp
+	GFX/Particles/fgPsParticleEffectLimited.h
+	GFX/Particles/fgPsSequentialEffect.cpp
+	GFX/Particles/fgPsSequentialEffect.h
+	GFX/Particles/fgPsSpecialEffect.h
 
 	["FlexiGame/GUI"]
 	GUI/fgGuiErrorCodes.h
@@ -356,6 +358,7 @@ packages
 	libjpeg
 	libpng
 	tinyxml
+	zlib
 }
 
 subprojects
@@ -366,6 +369,7 @@ subprojects
 	libjpeg
 	libpng
 	tinyxml
+	zlib
 }
 
 includepath

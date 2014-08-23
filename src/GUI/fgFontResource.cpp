@@ -11,7 +11,7 @@
 
 #include "fgLog.h"
 #include "Util/fgPath.h"
-#include "Graphics/Textures/fgTextureManager.h"
+#include "GFX/Textures/fgTextureManager.h"
 #include "Hardware/fgHardwareState.h"
 
 /*

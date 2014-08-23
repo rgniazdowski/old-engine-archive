@@ -11,7 +11,7 @@
 #define _FG_PARTICLE_H_
 
 #include "Math/fgMathLib.h"
-#include "Graphics/fgGFXTypes.h"
+#include "GFX/fgGFXTypes.h"
 
 struct Particle
 {

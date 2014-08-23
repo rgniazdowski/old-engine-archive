@@ -11,9 +11,9 @@
 #define _FG_PS_PARTICLE_EFFECT_H_
 
 #include "fgCommon.h"
-#include "Graphics/fgGFXTypes.h"
 #include "Math/fgMathLib.h"
-#include "Graphics/Textures/fgTextureResource.h"
+#include "GFX/fgGFXTypes.h"
+#include "GFX/Textures/fgTextureResource.h"
 
 #include "fgParticle.h"
 

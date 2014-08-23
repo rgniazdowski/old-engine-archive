@@ -14,6 +14,11 @@
 #include "fgSingleton.h"
 #include "fgManagerBase.h"
 
+#include "fgStatus.h"
+
+/*
+ *
+ */
 class fgMessageSubsystem : public fgManagerBase, public fgSingleton<fgMessageSubsystem>
 {
 	friend class fgSingleton<fgMessageSubsystem>;
@@ -26,6 +31,7 @@ public:
 	void destroy(void);
 };
 
+// #FIXME - here we go again with the singletons... :)
 #define FG_MessageSubsystem fgMessageSubsystem::getInstance()
 
 #endif /* _FG_MESSAGE_SUBSYSTEM_H_ */

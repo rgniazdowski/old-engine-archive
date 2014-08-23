@@ -12,8 +12,8 @@
 
 #include "Audio/fgSFXErrorCodes.h"
 #include "Event/fgEventErrorCodes.h"
-#include "Graphics/fgGFXErrorCodes.h"
-#include "Graphics/Textures/fgTextureErrorCodes.h"
+#include "GFX/fgGFXErrorCodes.h"
+#include "GFX/Textures/fgTextureErrorCodes.h"
 #include "GUI/fgGuiErrorCodes.h"
 #include "Resource/fgResourceErrorCodes.h"
 #include "Scripting/fgScriptErrorCodes.h"

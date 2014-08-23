@@ -12,6 +12,7 @@
 
 #include "fgBuildConfig.h"
 #include "Resource/fgResource.h"
+#include "Resource/fgResourceFactoryTypes.h"
 
 #include "fgTextureTypes.h"
 

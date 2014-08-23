@@ -28,7 +28,7 @@ fgResourceManager *fgSingleton<fgResourceManager>::instance = NULL;
 
 //#FIXME #BIGFIXME! ! ! ! #BUG #TODO
 #include "GUI/fgFontResource.h"
-#include "Graphics/Textures/fgTextureResource.h"
+#include "GFX/Textures/fgTextureResource.h"
 #include "fgResourceGroup.h"
 
 /*
