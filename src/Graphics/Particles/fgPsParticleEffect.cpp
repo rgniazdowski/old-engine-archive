@@ -313,7 +313,7 @@ void ParticleEffect::calculate(void)
 		if( m_particles[i].life <= 0.0f ) {
 			remove(i);
 		// Checking the particle area which means checking and bouncing off particles of the area edges
-		} else if( m_areaSet == true && m_areaCheck == true && m_drawMode == MODE_2D) {
+		} else if( m_areaSet == FG_TRUE && m_areaCheck == FG_TRUE && m_drawMode == MODE_2D) {
 			// Particle X position is within the boundaries so we can check the Y position
 			if( m_particles[i].position.x >= float(m_particleArea.x) && m_particles[i].position.x + m_particles[i].size <= float(m_particleArea.x + m_particleArea.w) ) {
 				// The UPPER and LOWER boundary

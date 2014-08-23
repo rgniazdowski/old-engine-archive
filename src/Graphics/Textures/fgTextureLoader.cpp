@@ -159,7 +159,7 @@ unsigned char *fgTextureLoader::loadPNG(fgFile *fileStream, int &width, int &hei
 	}
     double gamma = 0.0;
     unsigned char *data = NULL;
-    unsigned int w = 0, h = 0;
+    png_uint_32 w = 0, h = 0;
     int i, j, k, l, bit_depth, color_type;
     png_uint_32 channels, row_bytes;
     png_byte *img = NULL, **row = NULL, sig[8];
@@ -243,8 +243,8 @@ unsigned char *fgTextureLoader::loadPNG(fgFile *fileStream, int &width, int &hei
 	delete [] img;
     delete [] row;
 	png_destroy_read_struct(&png_ptr, 0, 0);
-    width = w;
-    height = h;
+    width = (int)w;
+    height = (int)h;
 	FG_InfoLog("PNG LOAD: %s, %dx%d, data=%p;", fileStream->getPath(), w,h, data);
     return data;
 }

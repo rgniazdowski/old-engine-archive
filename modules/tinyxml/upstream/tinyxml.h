@@ -58,6 +58,7 @@ distribution.
 // but it gets closer. There are too many compilers for me to fully
 // test. If you get compilation troubles, undefine TIXML_SAFE
 #define TIXML_SAFE
+#undef TIXML_SAFE
 
 #ifdef TIXML_SAFE
 	#if defined(_MSC_VER) && (_MSC_VER >= 1400 )
@@ -78,6 +79,9 @@ distribution.
 		#define TIXML_SNPRINTF snprintf
 		#define TIXML_SSCANF   sscanf
 	#endif
+#else
+	#define TIXML_SNPRINTF snprintf
+	#define TIXML_SSCANF   sscanf
 #endif	
 
 class TiXmlDocument;
