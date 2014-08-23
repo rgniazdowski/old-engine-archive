@@ -190,7 +190,7 @@ struct fgBuildConfig g_fgBuildConfig = {
 #else
 	false,
 #endif
-#ifdef FG_USING_PLATFORM_MACOS
+#ifdef FG_USING_PLATFORM_MACOSX
 	true,
 #else
 	false,
@@ -216,6 +216,16 @@ struct fgBuildConfig g_fgBuildConfig = {
 	false,
 #endif
 #ifdef FG_USING_PLUGINS
+	true,
+#else
+	false,
+#endif
+#ifdef FG_USING_WXWIDGETS
+	true,
+#else
+	false,
+#endif
+#ifdef FG_SUPPORT_WXWIDGETS
 	true,
 #else
 	false,

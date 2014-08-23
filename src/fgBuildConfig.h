@@ -36,8 +36,8 @@
 #undef FG_USING_OPENGL_GLU				//	Is the GLU library used in this build?
 #undef FG_USING_OPENGL_GLUT				//	Is the GLUT library used?
 #undef FG_USING_OPENGL_GLEW				//	Is the GLEW library used?
-#undef FG_USING_SDL
-#undef FG_USING_SDL2
+#undef FG_USING_SDL						//  Is the SDL1.x used?
+#undef FG_USING_SDL2					//  Is the latest SDL2 used in this build?
 #undef FG_USING_OPENAL					//	Is the OpenAL library used (for sound system) in this build?
 #undef FG_USING_MARMALADE_EGL			//	Is the EGL used via Marmalade in this build?
 #undef FG_USING_EGL						//	Is the EGL library used in this build?
@@ -55,12 +55,14 @@
 #undef FG_USING_PLATFORM_LINUX			//	Is the target platform Linux?
 #undef FG_USING_PLATFORM_ANDROID		//	Is the target platform Android?
 #undef FG_USING_PLATFORM_IOS			//	Is the target platform iOS?
-#undef FG_USING_PLATFORM_MACOS			//	Is the target platform MACOS/X
+#undef FG_USING_PLATFORM_MACOSX			//	Is the target platform MACOS/X
 #undef FG_USING_CYGWIN					//	Is Cygwin used for current build?
 #undef FG_USING_MINGW					//	Is MinGW used for current build?
 #undef FG_USING_VISUAL_STUDIO			//  Does the build system run under Visual Studio (any version)?
 #undef FG_USING_QT						//	Does the build system run under QtCreator (any version)?
 #undef FG_USING_PLUGINS					//	Is Plugin Subsystem used in this build?
+#undef FG_USING_WXWIDGETS				//  Is wxWidgets GUI library used in this build?
+#undef FG_SUPPORT_WXWIDGETS				//  Is wxWidgets enabled/supported in this build?
 
 /*************************** CURRENT TARGET PLATFORM / BUILD SYSTEM ***************************/
 
@@ -91,7 +93,7 @@
 #endif
 
 #if (defined __APPLE__ && defined __MACH__) || defined Macintosh || defined macintosh
-#define FG_USING_PLATFORM_MACOS
+#define FG_USING_PLATFORM_MACOSX
 #endif
 
 #if !defined FG_USING_MARMALADE && ( defined __WINDOWS__ || defined __WIN32__ || defined _WIN32 || defined _WIN64 || defined __TOS_WIN__ || defined WIN32 || defined win32)
@@ -254,12 +256,14 @@ struct fgBuildConfig {
 	bool isPlatformLinux;		//	Is the target platform Linux?
 	bool isPlatformAndroid;		//	Is the target platform Android?
 	bool isPlatformIOS;			//	Is the target platform iOS?
-	bool isPlatformMACOS;		//	Is the target platform MACOS/X
+	bool isPlatformMACOSX;		//	Is the target platform MACOS/X
 	bool usingCygwin;			//	Is Cygwin used for current build?
 	bool usingMinGW;			//	Is MinGW used for current build?
 	bool usingVisualStudio;		//  Does the build system run under Visual Studio (any version)?
 	bool usingQT;				//	Does the build system run under QtCreator (any version)?
 	bool usingPlugins;			//	Is Plugin Subsystem used in this build?
+	bool using_wxWidgets;		//  Is wxWidgets GUI library used in this build?
+	bool support_wxWidgets;		//  Is wxWidgets enabled/supported in this build?
 	int version;
 	int versionMajor;
 	int versionMinor;
