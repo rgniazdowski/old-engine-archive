@@ -7,9 +7,9 @@
  * and/or distributed without the express or written permission from the author.
  *******************************************************/
 
-#include "../fgBuildConfig.h"
+#include "fgBuildConfig.h"
 #include "fgArgumentList.h"
-#include "../fgMemory.h"
+#include "Util/fgMemory.h"
 
 #include <iostream>
 

@@ -10,9 +10,9 @@
 #ifndef _FG_DEVICE_QUERY_H_
 #define _FG_DEVICE_QUERY_H_
 
-#include "../fgBuildConfig.h"
-#include "../fgCommon.h"
-#include "../fgSingleton.h"
+#include "fgBuildConfig.h"
+#include "fgTypes.h"
+#include "fgSingleton.h"
 
 #if defined FG_USING_MARMALADE
 

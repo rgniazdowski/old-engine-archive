@@ -10,9 +10,10 @@
 #ifndef _FG_CALLBACK_H_
 #define _FG_CALLBACK_H_
 
-#include "../fgCommon.h"
+#include "fgTypes.h"
 
 #include <iostream>
+
 #include "fgArgumentList.h"
 
 /*

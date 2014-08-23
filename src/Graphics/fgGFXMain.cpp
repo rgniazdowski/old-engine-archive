@@ -7,10 +7,9 @@
  * and/or distributed without the express or written permission from the author.
  *******************************************************/
 
+#include "fgBuildConfig.h"
+#include "fgCommon.h"
 #include "fgGFXMain.h"
-#include "../fgBuildConfig.h"
-#include "../fgCommon.h"
-#include "../fgLog.h"
 
 #if defined FG_USING_MARMALADE
 #include "s3e.h"
@@ -18,6 +17,8 @@
 //#include "IwUtil.h" // ?
 //#include "s3eDevice.h" // ?
 #endif
+
+#include "fgLog.h"
 
 // #FIXME
 #if defined FG_USING_MARMALADE_EGL

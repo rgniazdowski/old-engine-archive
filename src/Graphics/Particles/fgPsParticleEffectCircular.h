@@ -12,7 +12,7 @@
 
 #include <limits.h>
 #include "fgPsParticleEffect.h"
-#include "../../fgLog.h"
+#include "fgLog.h"
 
 /*
  *

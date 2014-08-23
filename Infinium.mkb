@@ -2,60 +2,73 @@
 files
 {
 	(src)
-	["Infinium"]
-	MainModule.cpp
 	
-	["Infinium/BaseCode"]
+	["FlexiGame/BaseCode"]
+	MainModule.cpp
+	fgArrayVector.h
+	fgBool.h
 	fgBuildConfig.h
 	fgBuildConfig.cpp
 	fgCommon.cpp
 	fgCommon.h
-	fgDirent.cpp
-	fgDirent.h
+	fgErrno.h
+	fgErrno.cpp
+	fgErrorCodes.h
 	fgException.h
-	fgFile.cpp
-	fgFile.h
 	fgGameMain.cpp
 	fgGameMain.h
-	fgHandle.h
-	fgHandleManager.h
+	fgGameErrorCodes.h
 	fgLog.cpp
 	fgLog.h
 	fgManagerBase.h
-	fgMemory.h
 	fgMessageCommon.h
 	fgMessageSubsystem.cpp
 	fgMessageSubsystem.h
-	fgPath.cpp
-	fgPath.h
-	fgProfiling.cpp
-	fgProfiling.h
-	fgResource.cpp
-	fgResource.h
-	fgResourceBase.h
-	fgResourceFactory.cpp
-	fgResourceFactory.h
-	fgResourceGroup.cpp
-	fgResourceGroup.h
-	fgResourceManager.cpp
-	fgResourceManager.h
-	fgSettings.cpp
-	fgSettings.h
 	fgSingleton.h
 	fgStatus.h
 	fgStatusReporter.h
-	fgTime.cpp
-	fgTime.h
-	fgXMLDefaultHandler.h
-	fgXMLParser.cpp
-	fgXMLParser.h
-	fgXMLTypesWrap.h
+	fgTypes.h
 
-	["Infinium/GameLogic"]
-	GameLogic/fgGameLogic.cpp
-	GameLogic/fgGameLogic.h
+	["FlexiGame/BaseCode/Util"]
+	Util/fgPath.cpp
+	Util/fgPath.h
+	Util/fgFile.cpp
+	Util/fgFile.h
+	Util/fgFileErrorCodes.h
+	Util/fgDirent.cpp
+	Util/fgDirent.h
+	Util/fgMemory.h
+	Util/fgMemoryErrorCodes.h
+	Util/fgProfiling.cpp
+	Util/fgProfiling.h
+	Util/fgSettings.cpp
+	Util/fgSettings.h
+	Util/fgTime.cpp
+	Util/fgTime.h
 
-	["Infinium/Audio"]
+	["FlexiGame/BaseCode/XML"]
+	XML/fgXMLDefaultHandler.h
+	XML/fgXMLErrorCodes.h
+	XML/fgXMLParser.cpp
+	XML/fgXMLParser.h
+	XML/fgXMLTypesWrap.h
+
+	["FlexiGame/BaseCode/Resources"]
+	Resource/fgResource.cpp
+	Resource/fgResource.h
+	Resource/fgResourceBase.h
+	Resource/fgResourceFactory.cpp
+	Resource/fgResourceFactory.h
+	Resource/fgResourceGroup.cpp
+	Resource/fgResourceGroup.h
+	Resource/fgResourceManager.cpp
+	Resource/fgResourceManager.h
+	Resource/fgHandle.h
+	Resource/fgHandleManager.h
+	Resource/fgResourceErrorCodes.h
+
+	["FlexiGame/BaseCode/Audio"]
+	Audio/fgSFXErrorCodes.h
 	Audio/fgSFXAudioResource.cpp
 	Audio/fgSFXAudioResource.h
 	Audio/fgSFXManager.cpp
@@ -63,7 +76,16 @@ files
 	Audio/fgSFXMusicResource.cpp
 	Audio/fgSFXMusicResource.h
 
-	["Infinium/Event"]
+	["FlexiGame/BaseCode/Threads"]
+	Threads/fgThread.h
+
+	["FlexiGame/GameLogic"]
+	GameLogic/fgGameLogic.cpp
+	GameLogic/fgGameLogic.h
+
+
+	["FlexiGame/Event"]
+	Event/fgEventErrorCodes.h
 	Event/fgEventHelper.h
 	Event/fgEventDefinitions.h
 	Event/fgArgumentList.cpp
@@ -75,18 +97,19 @@ files
 	Event/fgEventManager.cpp
 	Event/fgEventManager.h
 
-	["Infinium/Scripting"]
+	["FlexiGame/Scripting"]
+	Scripting/fgScriptErrorCodes.h
 	Scripting/fgScriptManager.cpp
 	Scripting/fgScriptManager.h
 	Scripting/fgScriptResource.cpp
 	Scripting/fgScriptResource.h
 
-	["Infinium/Input"]
+	["FlexiGame/Input"]
 	Input/fgTouchRawData.h
 	Input/fgTouchReceiver.cpp
 	Input/fgTouchReceiver.h
 
-	["Infinium/Hardware"]
+	["FlexiGame/Hardware"]
 	Hardware/fgDeviceQuery.cpp
 	Hardware/fgDeviceQuery.h
 	Hardware/fgHardwareState.cpp
@@ -97,12 +120,13 @@ files
 	Hardware/fgSensors.cpp
 	Hardware/fgSensors.h
 	
-	["Infinium/Math"]
+	["FlexiGame/Math"]
 	Math/fgKalmanFilter.cpp
 	Math/fgKalmanFilter.h
 	Math/fgMathLib.h	
 
-	["Infinium/Graphics"]
+	["FlexiGame/Graphics"]
+	Graphics/fgGFXErrorCodes.h
 	Graphics/fgGFXTypes.h
 	Graphics/fgGFX2DScene.cpp
 	Graphics/fgGFX2DScene.h
@@ -145,7 +169,8 @@ files
 	Graphics/fgGFXTexturing.cpp
 	Graphics/fgGFXTexturing.h
 
-	["Infinium/Graphics/Textures"]
+	["FlexiGame/Graphics/Textures"]
+	Graphics/Textures/fgTextureErrorCodes.h
 	Graphics/Textures/fgTextureCommon.h
 	Graphics/Textures/fgTextureLoader.cpp
 	Graphics/Textures/fgTextureLoader.h
@@ -155,7 +180,7 @@ files
 	Graphics/Textures/fgTextureResource.h
 	Graphics/Textures/fgTextureTypes.h
 
-	["Infinium/Graphics/Particles"]
+	["FlexiGame/Graphics/Particles"]
 	Graphics/Particles/fgParticle.h
 	Graphics/Particles/fgParticleSystem.cpp
 	Graphics/Particles/fgParticleSystem.h
@@ -179,7 +204,8 @@ files
 	Graphics/Particles/fgPsSequentialEffect.h
 	Graphics/Particles/fgPsSpecialEffect.h
 
-	["Infinium/GUI"]
+	["FlexiGame/GUI"]
+	GUI/fgGuiErrorCodes.h
 	GUI/fgFontDrawer.cpp
 	GUI/fgFontDrawer.h
 	GUI/fgFontResource.cpp
@@ -220,7 +246,6 @@ files
 	GUI/fgGuiStyleSheetInterpreter.h
 	GUI/fgGuiWidget.cpp
 	GUI/fgGuiWidget.h
-
 
 }
 
@@ -329,6 +354,8 @@ options
 packages 
 {
 	libjpeg
+	libpng
+	tinyxml
 }
 
 subprojects
@@ -336,16 +363,19 @@ subprojects
 	iwutil
 	dpi
 	tinyobj
-	tinyxml	
 	libjpeg
+	libpng
+	tinyxml
 }
 
 includepath
-{	
-	dpi
-	tinyobj
-	tinyxml	
+{
+	src
 }
+#	dpi
+#	tinyobj
+#	tinyxml	
+#}
 
 #### AUTO GENERATED deployment settings from DeployTool.exe. Do not edit below this line ####
 deployments

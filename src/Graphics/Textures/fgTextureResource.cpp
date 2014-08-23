@@ -9,8 +9,8 @@
 
 #include "fgTextureResource.h"
 #include "fgTextureLoader.h"
-#include "../../fgPath.h"
-#include "../../fgLog.h"
+#include "Util/fgPath.h"
+#include "fgLog.h"
 
 /**
 

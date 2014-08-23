@@ -10,11 +10,11 @@
 // #include "s3eKeyboard.h" ??
 
 #include "fgEventManager.h"
-#include "../fgCommon.h"
-#include "../fgLog.h"
-#include "../fgTime.h"
+#include "fgCommon.h"
+#include "fgLog.h"
+#include "Util/fgTime.h"
 
-#include "../Hardware/fgHardwareState.h"
+#include "Hardware/fgHardwareState.h"
 
 template <>
 bool fgSingleton<fgEventManager>::instanceFlag = false;

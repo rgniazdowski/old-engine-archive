@@ -10,10 +10,39 @@
 #ifndef _FG_EXCEPTION_H_
 #define _FG_EXCEPTION_H_
 
-struct fgException
+#include "fgBool.h"
+#include "fgErrno.h"
+#include "fgMessageCommon.h"
+#include <string>
+
+/*
+ *
+ */
+struct fgException : fgError
 {
-	int a;
-	
+	std::string data;
+
+	fgException() {
+		critical = FG_TRUE;
+	}
+
+	fgException(const char *_data) {
+		critical = FG_TRUE;
+		data = _data;
+		code = FG_ERRNO_OK;
+	}
+
+	fgException(const char *_data, int _code) {
+		critical = FG_TRUE;
+		data = _data;
+		code = _code;
+	}
+
+	fgException(int _code) {
+		critical = FG_TRUE;
+		code = _code;
+		data = FG_ERRNO_STR(_code); // #FIXME
+	}
 };
 
 #endif /* _FG_EXCEPTION_H_ */

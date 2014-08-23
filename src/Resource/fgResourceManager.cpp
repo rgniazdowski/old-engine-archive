@@ -16,8 +16,8 @@
 #include <queue>
 
 #include "fgResourceFactory.h"
-#include "fgDirent.h"
-#include "fgPath.h"
+#include "Util/fgDirent.h"
+#include "Util/fgPath.h"
 #include "fgLog.h"
 
 template <>

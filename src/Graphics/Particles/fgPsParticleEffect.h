@@ -10,10 +10,10 @@
 #ifndef _FG_PS_PARTICLE_EFFECT_H_
 #define _FG_PS_PARTICLE_EFFECT_H_
 
-#include "../../fgCommon.h"
-#include "../fgGFXTypes.h"
-#include "../../Math/fgMathLib.h"
-#include "../Textures/fgTextureResource.h"
+#include "fgCommon.h"
+#include "Graphics/fgGFXTypes.h"
+#include "Math/fgMathLib.h"
+#include "Graphics/Textures/fgTextureResource.h"
 
 #include "fgParticle.h"
 

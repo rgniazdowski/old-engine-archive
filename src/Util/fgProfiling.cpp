@@ -54,7 +54,7 @@ fgBool fgProfiling::begin(std::string& name)
 {
 	if(name.empty())
 		return FG_FALSE;
-	std::pair<std::string, fgProfileSample *> query_pair;
+	profileMapPair query_pair;
 	query_pair.first = name;
 	query_pair.second = new fgProfileSample();
 	std::pair<profileMapItor, bool> result = m_sampleMap.insert(query_pair);

@@ -14,7 +14,7 @@
 
 #include "fgCommon.h"
 #include "fgResource.h"
-#include "fgXMLParser.h"
+#include "XML/fgXMLParser.h"
 
 #include <cstdlib>
 

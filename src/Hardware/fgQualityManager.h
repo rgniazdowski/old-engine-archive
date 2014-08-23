@@ -10,7 +10,7 @@
 #ifndef _FG_QUALITY_MANAGER_H_
 #define _FG_QUALITY_MANAGER_H_
 
-#include "../fgSingleton.h"
+#include "fgSingleton.h"
 #include "fgQualityTypes.h"
 
 #include <map>

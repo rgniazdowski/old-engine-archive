@@ -10,13 +10,14 @@
 #ifndef _FG_GFX_MATERIAL_H_
 #define _FG_GFX_MATERIAL_H_
 
+#include "fgCommon.h"
+#include "fgGFXTypes.h"
+
 #include <string>
 
-#include "fgGFXTypes.h"
-#include "../fgCommon.h"
-#include "../fgResource.h"
-#include "../fgResourceManager.h"
-#include "../Math/fgMathLib.h"
+#include "Resource/fgResource.h"
+#include "Resource/fgResourceManager.h"
+#include "Math/fgMathLib.h"
 
 namespace FG_GFX 
 {

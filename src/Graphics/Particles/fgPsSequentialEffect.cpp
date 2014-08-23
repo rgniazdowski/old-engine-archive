@@ -12,8 +12,8 @@
 #include <cstring>
 
 #include "fgPsSequentialEffect.h"
-#include "../../Hardware/fgHardwareState.h"
-#include "../../fgMemory.h"
+#include "Hardware/fgHardwareState.h"
+#include "Util/fgMemory.h"
 
 SequentialEffect::~SequentialEffect()
 {

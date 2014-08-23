@@ -10,12 +10,12 @@
 #undef _FG_PS_FLASH_EFFECT_
 #ifdef _FG_PS_FLASH_EFFECT_
 //#define _FG_PS_FLASH_EFFECT_
-
+// #FIXME #DEPRECATED
 #include "IwGx.h"
 #include "s3eTimer.h"
 
-#include "../Common.h"
-#include "../fgHardwareState.h"
+#include "fgCommon.h"
+#include "Hardware/fgHardwareState.h"
 
 /**
  *

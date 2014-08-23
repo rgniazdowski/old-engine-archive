@@ -10,8 +10,8 @@
 #ifndef _FG_GFX_MAIN_H_
 #define _FG_GFX_MAIN_H_
 
-#include "../fgBuildConfig.h"
-#include "../fgCommon.h"
+#include "fgBuildConfig.h"
+#include "fgCommon.h"
 
 #if defined FG_USING_MARMALADE
 

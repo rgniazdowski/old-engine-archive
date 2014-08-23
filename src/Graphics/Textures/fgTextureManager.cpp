@@ -7,8 +7,8 @@
  * and/or distributed without the express or written permission from the author.
  *******************************************************/
 
-#include "../../fgBuildConfig.h"
-#include "../../fgCommon.h"
+#include "fgBuildConfig.h"
+#include "fgCommon.h"
 
 #include "fgTextureManager.h"
 
@@ -17,8 +17,8 @@
 #include "fgTextureCommon.h"
 #include "fgTextureResource.h"
 
-#include "../../Hardware/fgQualityManager.h"
-#include "../../fgResourceManager.h"
+#include "Hardware/fgQualityManager.h"
+#include "Resource/fgResourceManager.h"
 
 template <>
 bool fgSingleton<fgTextureManager>::instanceFlag = false;

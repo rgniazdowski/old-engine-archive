@@ -19,7 +19,7 @@
 #include <ctime>
 #include <cstring>
 
-#include "../fgCommon.h"
+#include "fgCommon.h"
 #include "fgHardwareState.h"
 
 template <>

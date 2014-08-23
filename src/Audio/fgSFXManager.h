@@ -10,8 +10,8 @@
 #ifndef _FG_SFX_MANAGER_H_
 #define _FG_SFX_MANAGER_H_
 
-#include "../fgSingleton.h"
-#include "../fgCommon.h"
+#include "fgSingleton.h"
+#include "fgTypes.h"
 
 // This class needs total refactoring to make it somehow compatible with ResourceManager
 

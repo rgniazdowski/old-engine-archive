@@ -7,10 +7,10 @@
  * and/or distributed without the express or written permission from the author.
  *******************************************************/
 
+#include "fgCommon.h"
 #include "fgKalmanFilter.h"
 
-#include "../fgCommon.h"
-#include "../fgLog.h"
+#include "fgLog.h"
 
 void KalmanFilter::init(float q, float r, float p, float intial_value)
 {

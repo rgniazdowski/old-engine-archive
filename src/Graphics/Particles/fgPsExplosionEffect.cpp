@@ -12,8 +12,8 @@
 #include <cstring>
 
 #include "fgPsExplosionEffect.h"
-#include "../Textures/fgTextureCommon.h"
-#include "../Textures/fgTextureManager.h"
+#include "Graphics/Textures/fgTextureCommon.h"
+#include "Graphics/Textures/fgTextureManager.h"
 
 /*
  * The default constructor for the particle explosion special effect

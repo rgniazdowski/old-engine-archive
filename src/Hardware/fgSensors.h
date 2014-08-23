@@ -10,11 +10,11 @@
 #ifndef _FG_SENSORS_H_
 #define _FG_SENSORS_H_
 
-#include "../Math/fgKalmanFilter.h"
-#include "fgHardwareState.h"
+#include "Math/fgKalmanFilter.h"
+#include "Hardware/fgHardwareState.h"
 
-#include "../fgSingleton.h"
-#include "../fgCommon.h"
+#include "fgSingleton.h"
+#include "fgCommon.h"
 
 //int32_t HarvestCallback(void* systemData, void* userData);
 

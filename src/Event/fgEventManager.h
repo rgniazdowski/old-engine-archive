@@ -10,16 +10,16 @@
 #ifndef _FG_EVENT_MANAGER_H_
 #define _FG_EVENT_MANAGER_H_
 
-#include "../fgSingleton.h"
-#include "../fgBuildConfig.h"
-#include "../fgCommon.h"
+#include "fgBuildConfig.h"
+#include "fgTypes.h"
+#include "fgSingleton.h"
 
+#include "fgEventDefinitions.h"
 #include "fgEventHelper.h"
 #include "fgThrownEvent.h"
 #include "fgTimeoutCallback.h"
 #include "fgCyclicCallback.h"
 
-#include "fgEventDefinitions.h"
 #include "fgCallback.h"
 
 // #FIXME #TODO #P3 key codes standard mapping / translation

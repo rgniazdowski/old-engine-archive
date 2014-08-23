@@ -10,8 +10,8 @@
 #ifndef _FG_TEXTURE_RESOURCE_H
 #define _FG_TEXTURE_RESOURCE_H
 
-#include "../../fgBuildConfig.h"
-#include "../../fgResource.h"
+#include "fgBuildConfig.h"
+#include "Resource/fgResource.h"
 
 #include "fgTextureTypes.h"
 

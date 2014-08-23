@@ -10,7 +10,7 @@
 #ifndef _FG_QUALITY_TYPES_H_
 #define _FG_QUALITY_TYPES_H_
 
-#include "../fgCommon.h"
+#include "fgCommon.h"
 
 // Enums for specifing quality
 enum fgQuality {

@@ -7,26 +7,18 @@
  * and/or distributed without the express or written permission from the author.
  *******************************************************/
 
+#include "fgCommon.h"
 #include "fgTouchReceiver.h"
-
-#include "../fgMemory.h"
-#include "../fgCommon.h"
-#include "../fgTime.h"
-#include "../Hardware/fgHardwareState.h"
-#include "../Event/fgEventManager.h"
 
 #include <cstdlib>
 #include <cmath>
 
+#include "Util/fgMemory.h"
+#include "Util/fgTime.h"
+#include "Hardware/fgHardwareState.h"
+#include "Event/fgEventManager.h"
+
 const unsigned int fgTouchReceiver::MAX_TOUCH_POINTS = 10;
-
-#ifndef MAX
-#define MAX(x, y) (((x) > (y)) ? (x) : (y))
-#endif
-
-#ifndef MIN
-#define MIN(x, y) (((x) < (y)) ? (x) : (y))
-#endif
 
 template <>
 bool fgSingleton<fgTouchReceiver>::instanceFlag = false;

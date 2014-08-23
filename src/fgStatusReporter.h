@@ -14,6 +14,7 @@ class fgStatusReporter {
 public:
 	fgStatusReporter() {}
 	~fgStatusReporter() {}
+protected:
 };
 
 #endif /* _FG_STATUS_REPORTER_H_ */

@@ -7,9 +7,11 @@
  * and/or distributed without the express or written permission from the author.
  *******************************************************/
 
-#include "../fgBuildConfig.h"
-#include "../fgCommon.h"
-#include "fgSensors.h"
+#include "fgBuildConfig.h"
+#include "fgCommon.h"
+
+#include <cmath>
+#include <cstring>
 
 #ifdef FG_USING_MARMALADE_SENSORS
 #include "s3eTypes.h"
@@ -17,8 +19,7 @@
 #include "s3eTimer.h"
 #endif
 
-#include <cmath>
-#include <cstring>
+#include "fgSensors.h"
 
 static char const * const FG_NONE_TXT				= "";
 static char const * const FG_SENSOR_ACCELEROMETER_TXT	= "Accelerometer";

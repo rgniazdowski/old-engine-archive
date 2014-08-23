@@ -9,10 +9,10 @@
 
 #include "fgFontResource.h"
 
-#include "../fgLog.h"
-#include "../fgPath.h"
-#include "../Graphics/Textures/fgTextureManager.h"
-#include "../Hardware/fgHardwareState.h"
+#include "fgLog.h"
+#include "Util/fgPath.h"
+#include "Graphics/Textures/fgTextureManager.h"
+#include "Hardware/fgHardwareState.h"
 
 /*
  * Base constructor of the font resource object

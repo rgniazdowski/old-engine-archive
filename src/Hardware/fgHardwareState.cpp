@@ -7,8 +7,8 @@
  * and/or distributed without the express or written permission from the author.
  *******************************************************/
 
-#include "../fgBuildConfig.h"
-#include "../fgCommon.h"
+#include "fgBuildConfig.h"
+#include "fgCommon.h"
 #include "fgHardwareState.h"
 
 #include <cstdlib>
@@ -18,7 +18,7 @@
 #include "s3eDevice.h"
 #endif // FG_USING_MARMALADE
 
-#include "../fgTime.h"
+#include "Util/fgTime.h"
 
 #if defined FG_USING_DPI_INFO
 #include "dpiInfo.h"

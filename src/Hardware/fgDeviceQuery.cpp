@@ -11,7 +11,7 @@
 // also should be somewhat platform independent - usage of system libs is highly recommended for
 // aquiring info about CPU/GPU/platform/tools/system version and managing video quality / threads
 
-#include "../fgCommon.h"
+#include "fgCommon.h"
 #include "fgDeviceQuery.h"
 
 #include <cstring>
@@ -20,7 +20,7 @@
 #include "s3eDevice.h"
 //#endif
 
-#include "../fgLog.h"
+#include "fgLog.h"
 
 static fgBool isAndroid();
 static fgBool isiOS();

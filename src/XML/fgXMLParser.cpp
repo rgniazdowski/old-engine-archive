@@ -8,7 +8,7 @@
  *******************************************************/
 
 #include "fgXMLParser.h"
-#include "fgMemory.h"
+#include "Util/fgMemory.h"
 
 /*
  *

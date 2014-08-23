@@ -7,7 +7,7 @@
  * and/or distributed without the express or written permission from the author.
  *******************************************************/
 
-#include "../Hardware/fgHardwareState.h"
+#include "Hardware/fgHardwareState.h"
 
 #include "fgGuiScreenGrid.h"
 

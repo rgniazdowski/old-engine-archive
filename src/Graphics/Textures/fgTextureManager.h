@@ -10,13 +10,13 @@
 #ifndef _FG_TEXTURE_MANAGER_H_
 #define _FG_TEXTURE_MANAGER_H_
 
-#include "../../fgSingleton.h"
-#include "../../fgCommon.h"
-#include "../../fgManagerBase.h"
+#include "fgSingleton.h"
+#include "fgCommon.h"
+#include "fgManagerBase.h"
 #include "fgTextureResource.h"
 #include "fgTextureCommon.h"
 #include "fgTextureTypes.h"
-#include "../../fgResourceManager.h"
+#include "Resource/fgResourceManager.h"
 
 /**
  * Class that allows to perform GROUP OPERATIONS on all textures. 

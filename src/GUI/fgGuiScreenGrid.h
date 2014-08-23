@@ -16,8 +16,8 @@
 #ifndef _FG_GUI_SCREEN_GRID_H_
 #define _FG_GUI_SCREEN_GRID_H_
 
-#include "../Math/fgMathLib.h"
-#include "../fgSingleton.h"
+#include "Math/fgMathLib.h"
+#include "fgSingleton.h"
 
 class fgGuiScreenGrid : fgSingleton<fgGuiScreenGrid>
 {

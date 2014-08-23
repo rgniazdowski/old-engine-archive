@@ -7,10 +7,15 @@
  * and/or distributed without the express or written permission from the author.
  *******************************************************/
 
-#include "../fgBuildConfig.h"
+#include "fgBuildConfig.h"
+#include "fgCommon.h"
 #include "fgSFXManager.h"
 
 #include <cstring>
+#include <cstdlib>
+#include <cerrno>
+#include <cstdio>
+
 #ifdef FG_USING_MARMALADE
 #include "s3eFile.h"
 #ifdef FG_USING_MARMALADE_SOUND
@@ -21,8 +26,7 @@
 #endif // FG_USING_MARMALADE_AUDIO
 #endif // FG_USING_MARMALADE
 
-#include "../fgCommon.h"
-#include "../fgLog.h"
+#include "fgLog.h"
 
 #define SNDDIR "sound/"
 

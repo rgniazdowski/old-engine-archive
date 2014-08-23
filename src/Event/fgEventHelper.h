@@ -10,7 +10,7 @@
 #ifndef _FG_EVENT_HELPER_H_
 #define _FG_EVENT_HELPER_H_
 
-#include "../fgCommon.h"
+#include "fgArrayVector.h"
 #include "fgCallback.h"
 
 #include "fgThrownEvent.h"

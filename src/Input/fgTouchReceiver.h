@@ -10,12 +10,13 @@
 #ifndef _FG_TOUCH_RECEIVER_H_
 #define _FG_TOUCH_RECEIVER_H_
 
+#include "fgSingleton.h"
+
 #include <map>
 
-#include "../fgSingleton.h"
-#include "../Math/fgMathLib.h"
-
 #include "fgTouchRawData.h"
+#include "Math/fgMathLib.h"
+
 
 /*
  * TouchReceiver receives touch events directly from the MainModule object which contains callbacks hooked directly to the Marmalade subsystem

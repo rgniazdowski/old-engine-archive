@@ -15,7 +15,8 @@
 
 #include "fgBuildConfig.h"
 #include "fgCommon.h"
-#include "fgPath.h"
+
+#include "Util/fgPath.h"
 #include "fgLog.h"
 #include "fgHandle.h"
 

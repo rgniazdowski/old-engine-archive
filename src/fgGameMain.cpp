@@ -21,21 +21,20 @@
 #include "Hardware/fgDeviceQuery.h"
 #endif // FG_USING_MARMALADE
 
-#include "Graphics/fgGFXMain.h"
-
-#include "fgSettings.h"
-#include "fgResourceManager.h"
+#include "GameLogic/fgGameLogic.h"
+#include "Util/fgSettings.h"
 #include "Hardware/fgSensors.h"
 #include "Hardware/fgQualityManager.h"
 #include "Hardware/fgHardwareState.h"
+#include "Graphics/fgGFXMain.h"
 #include "Graphics/Textures/fgTextureManager.h"
-#include "Audio/fgSFXManager.h"
 #include "Graphics/Particles/fgParticleSystem.h"
+#include "Audio/fgSFXManager.h"
 #include "Event/fgEventManager.h"
 #include "Input/fgTouchReceiver.h"
-#include "GameLogic/fgGameLogic.h"
-#include "fgXMLParser.h"
-#include "fgResourceFactory.h"
+#include "XML/fgXMLParser.h"
+#include "Resource/fgResourceManager.h"
+#include "Resource/fgResourceFactory.h"
 
 template <>
 bool fgSingleton<fgGameMain>::instanceFlag = false;

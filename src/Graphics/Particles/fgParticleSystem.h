@@ -15,7 +15,7 @@
 #ifndef _FG_PARTICLE_SYSTEM_H_
 #define _FG_PARTICLE_SYSTEM_H_
 
-#include "../../fgSingleton.h"
+#include "fgSingleton.h"
 
 #include <map>
 

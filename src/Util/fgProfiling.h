@@ -103,6 +103,8 @@ protected:
 	typedef std::unordered_map <hashKey, fgProfileSample *> profileMap;
 	typedef std::unordered_map <hashKey, fgProfileSampleHistory *> historyMap;
 #endif
+	typedef std::pair<std::string, fgProfileSample *> profileMapPair;
+	typedef std::pair<std::string, fgProfileSampleHistory *> historyMapPair;
 	typedef profileMap::iterator profileMapItor;
 	typedef historyMap::iterator historyMapItor;
 	typedef fgArrayVector<fgProfileSample *> profileVec;

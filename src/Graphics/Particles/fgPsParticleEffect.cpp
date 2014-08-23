@@ -14,9 +14,9 @@
 #include <cstdlib>
 
 #include "fgParticleSystem.h"
-#include "../../fgCommon.h"
-#include "../../fgMemory.h"
-#include "../../Hardware/fgHardwareState.h"
+#include "fgCommon.h"
+#include "Util/fgMemory.h"
+#include "Hardware/fgHardwareState.h"
 
 ParticleEffect::~ParticleEffect()
 {

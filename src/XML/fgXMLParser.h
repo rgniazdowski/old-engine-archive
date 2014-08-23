@@ -21,7 +21,7 @@
 #include <stack>
 
 #include "fgStatus.h"
-#include "fgFile.h"
+#include "Util/fgFile.h"
 
 #include "fgXMLTypesWrap.h"
 #include "fgXMLDefaultHandler.h"

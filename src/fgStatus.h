@@ -39,6 +39,10 @@ struct fgStatus
 	// Default destructor
 	~fgStatus()
 	{
+		// Do not free *message
+		// overloaded assignment operators in fgStatus and fgMessage
+		// take care of it (it's taking over the ownership)
+		// Message from source will be cleared
 	}
 
 	// Assignment operator. If source has message allocated it will be

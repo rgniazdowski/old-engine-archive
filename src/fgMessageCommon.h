@@ -10,11 +10,7 @@
 #ifndef _FG_MESSAGE_COMMON_H_
 #define _FG_MESSAGE_COMMON_H_
 
-// #FIXME
-#ifndef FG_BOOL_DEFINED_
-#define FG_BOOL_DEFINED_
-typedef unsigned char fgBool;
-#endif
+#include "fgBool.h"
 
 /*
  * Enum for the common message types

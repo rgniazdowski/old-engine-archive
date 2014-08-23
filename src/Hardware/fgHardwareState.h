@@ -10,7 +10,7 @@
 #ifndef _FG_HARDWARE_STATE_H_
 #define _FG_HARDWARE_STATE_H_
 
-#include "../fgSingleton.h"
+#include "fgSingleton.h"
 
 // #FIXME
 enum fgScreenOrientation {

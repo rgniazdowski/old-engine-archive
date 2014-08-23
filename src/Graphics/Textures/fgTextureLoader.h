@@ -10,7 +10,7 @@
 #ifndef _FG_TEXTURE_LOADER_H_
 #define _FG_TEXTURE_LOADER_H_
 
-#include "../../fgFile.h"
+#include "Util/fgFile.h"
 
 #include "png.h"
 extern "C" {

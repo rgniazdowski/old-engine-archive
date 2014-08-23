@@ -10,9 +10,6 @@
 #include "fgResourceGroup.h"
 #include "fgResourceFactory.h"
 
-#include "Graphics/Textures/fgTextureResource.h"
-#include "GUI/fgFontResource.h"
-
 // Base constructor of the resource group content handler object
 fgResourceGroupContentHandler::fgResourceGroupContentHandler() : m_resourceGroup(NULL),
 	m_resType(FG_RESOURCE_INVALID),

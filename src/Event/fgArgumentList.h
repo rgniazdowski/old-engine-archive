@@ -10,7 +10,7 @@
 #ifndef _FG_ARGUMENT_LIST_H_
 #define _FG_ARGUMENT_LIST_H_
 
-#include "../fgCommon.h"
+#include "fgTypes.h"
 
 #define FG_ARGUMENT_DEFAULT_COUNT	8
 #define FG_ARGUMENT_MAX_STRING		256

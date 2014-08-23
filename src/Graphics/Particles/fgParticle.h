@@ -10,8 +10,8 @@
 #ifndef _FG_PARTICLE_H_
 #define _FG_PARTICLE_H_
 
-#include "../../Math/fgMathLib.h"
-#include "../fgGFXTypes.h"
+#include "Math/fgMathLib.h"
+#include "Graphics/fgGFXTypes.h"
 
 struct Particle
 {
