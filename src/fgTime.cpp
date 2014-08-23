@@ -127,8 +127,10 @@ float fgTime::ms(void)
  */
 unsigned long int FG_GetTicks(void)
 {
-#ifdef FG_USING_MARMALADE
+#if defined FG_USING_MARMALADE
 	return (unsigned long int)s3eTimerGetMs();
+#elif defined FG_USING_SDL || defined FG_USING_SDL2
+	return (unsigned long int)SDL_GetTicks();
 #else
 	return (unsigned long int)(fgTime::ticks()/((float)CLOCKS_PER_SEC/1000.0f)); // FIXME - here needs to be proper function getting the miliseconds
 #endif
