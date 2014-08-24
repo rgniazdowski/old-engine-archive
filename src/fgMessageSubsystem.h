@@ -16,6 +16,13 @@
 
 #include "fgStatus.h"
 
+#include <stack>
+#include <map>
+#include "fgArrayVector.h"
+#include "Util/fgFile.h"
+
+#include "fgLog.h"
+
 /*
  *
  */
@@ -23,12 +30,53 @@ class fgMessageSubsystem : public fgManagerBase, public fgSingleton<fgMessageSub
 {
 	friend class fgSingleton<fgMessageSubsystem>;
 protected:
+	typedef fgArrayVector<fgStatus *> msStatusVec;
+	typedef msStatusVec::iterator msStatusVecItor;
+
+protected:
+	// 
 	fgMessageSubsystem();
+	// 
 	virtual ~fgMessageSubsystem();
+
 public:
+	// 
 	fgBool initialize(void);
+	// 
 	void clear(void);
+	// 
 	void destroy(void);
+
+	//
+	void setLogPaths(const char *pathAll, const char *pathError, const char *pathDebug);
+	// 
+	void setLogAllPath(const char *pathAll);
+	// 
+	void setLogErrorPath(const char *pathError);
+	// 
+	void setLogDebugPath(const char *pathDebug);
+	// 
+	void flushAll(void);
+
+	// 
+	fgBool pushMessage(fgMessage *msg);
+	// 
+	fgBool pushStatus(fgStatus *status);
+
+	// 
+	fgStatus *getLastStatus(void);
+	// 
+	fgMessage *getLastMessage(void);
+
+protected:
+	//
+	msStatusVec m_statusVec;
+	//
+	fgFile m_logAll;
+	//
+	fgFile m_logError;
+	//
+	fgFile m_logDebug;
 };
 
 // #FIXME - here we go again with the singletons... :)
