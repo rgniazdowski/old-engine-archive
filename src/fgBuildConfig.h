@@ -279,5 +279,23 @@ extern struct fgBuildConfig g_fgBuildConfig;
 #define FG_BUILD_TIME		__TIME__
 #define FG_BUILD_VERSION	100
 
+#define FG_PACKAGE_NAME			"FlexiGame"
+#define FG_PROJECT_CODE_NAME	"Infinium"
+#define FG_PREFIX				"fg"
+
+#define FG_FULL_NAME			"Flexible Game Engine"
+#define FG_AUTHOR_ALIAS			""
+#define FG_PACKAGE_ALIAS		""
+
+#define FG_COPYRIGHT			"Copyright (C) 2014 Radoslaw Gniazdowski. All rights reserved."
+#define FG_LICENSE				"Proprietary license" 
+#define FG_HOMEPAGE				"http://flexigame.com"
+
+#define FG_ENGINE
+#define FG_FLEXIGAME
+#define FG_JUST_FOR_FUN
+
+#define FG_MOTTO				"Per aspera ad astra"
+
 #endif /* _FG_BUILD_CONFIG_H_ */
 /*************************** END MAIN MARMALADE BUILD CONFIG ***************************/
