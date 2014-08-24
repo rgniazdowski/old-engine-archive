@@ -37,6 +37,9 @@ public:
 	static float ticks(void);
 	// Get time since init in miliseconds
 	static float ms(void);
+	// Get the number of seconds since 00:00 hours, Jan 1, 1970 UTC
+	// (i.e., the current unix timestamp). Uses time(null)
+	static long seconds(void);
 };
 
 // Platform independent function for getting time in miliseconds

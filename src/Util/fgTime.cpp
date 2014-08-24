@@ -121,6 +121,14 @@ float fgTime::ms(void)
 }
 
 /*
+ *
+ */
+long fgTime::seconds(void)
+{
+	return time(NULL);
+}
+
+/*
  * This function gets time in miliseconds. It doesnt matter from what 
  * point in time this is calculated - it is used for delta time mostly.
  * This function is very similar in usage as the SDL_GetTicks().
