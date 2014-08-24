@@ -10,8 +10,26 @@
 #ifndef _FG_LOG_H_
 #define _FG_LOG_H_
 
-void FG_InfoLog(const char *fmt, ...);
-void FG_ErrorLog(const char *fmt, ...);
-void FG_WriteLog(const char *fmt, ...);
+#include "fgBuildConfig.h"
+#include "fgMessageCommon.h"
+#include "Util/fgFile.h"
 
+// #FIXME #TODO things like that should be in xml config file, settings or whatever
+#define FG_LOG_DEFAULT_FOLDER	"log"
+
+#define FG_LOG_DEFAULT_PREFIX	
+
+#define FG_LOG_BUF_MAX			1024
+
+namespace FG_LOG {
+
+void PrintInfo(const char *fmt, ...);
+void PrintError(const char *fmt, ...);
+void PrintDebug(const char *fmt, ...);
+
+void WriteToLog(fgFile *file, const char *fmt, ...);
+void PrintMessage(fgMessage *message);
+void PrintMessageToLog(fgFile *file, fgMessage *message);
+
+};
 #endif

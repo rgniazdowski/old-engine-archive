@@ -90,7 +90,7 @@ fgBool fgGameMain::initSubsystems(void)
 	s3eMemoryGetInt(S3E_MEMORY_FREE);*/
 	// FIXME
 #ifdef FG_USING_MARMALADE
-	FG_WriteLog("MARMALADE CURRENT HEAP MEMORY: TOTAL: %.3f, FREE: %.3f, USED: %.3f, LARGEST FREE BLOCK: %.3f\n",
+	FG_LOG::PrintDebug("MARMALADE CURRENT HEAP MEMORY: TOTAL: %.3f, FREE: %.3f, USED: %.3f, LARGEST FREE BLOCK: %.3f\n",
 		(float)s3eMemoryGetInt(S3E_MEMORY_SIZE)/1024.0f/1024.0f, (float)s3eMemoryGetInt(S3E_MEMORY_FREE)/1024.0f/1024.0f, (float)s3eMemoryGetInt(S3E_MEMORY_USED)/1024.0f/1024.0f, (float)s3eMemoryGetInt(S3E_MEMORY_LFB)/1024.0f/1024.0f);
 	FG_ResourceManager->setMaximumMemory(s3eMemoryGetInt(S3E_MEMORY_FREE)-1024*1024*10); // minus 10MB for the structures and other overheads
 	FG_ResourceManager->initialize();
@@ -308,7 +308,7 @@ int applicationInit(void)
 	// Object of ProgramMain class will be created in MainModule etc.
 
 	/// SENSORS
-	FG_WriteLog("Initializing Sensors..");
+	FG_LOG::PrintDebug("Initializing Sensors..");
 	fgSensors::getInstance()->startSensors();
 
 	// FIXME - Initialization of TouchReceiver needed :D
@@ -316,39 +316,39 @@ int applicationInit(void)
 	// FIXME: Textures need to be loaded in different way
 	// For now textures (file names etc.) are hardcoded within the source code - file names and handles should be read from XML/CSS configuration files
 	// TEXTURES
-	FG_WriteLog("Initializing textures..");
+	FG_LOG::PrintDebug("Initializing textures..");
 	if(!fgTextureManager::getInstance()->allToVRAM()) {
-		FG_ErrorLog("diskToVram failed");
+		FG_LOG::PrintError("diskToVram failed");
 		return false;
 	}
 
 	// FONTS - FIXME
-	/*FG_WriteLog("Initializing fonts..");
+	/*FG_LOG::PrintDebug("Initializing fonts..");
 	if(!loadFonts()) {
-	FG_ErrorLog("loadFonts failed");
+	FG_LOG::PrintError("loadFonts failed");
 	return false;
 	}
 	*/
 
 	// FIXME - texture manager is just wrong
 	// UNUSED MEMORY – after textures and fonts are uploaded to VRAM
-	FG_WriteLog("Initializing releasing non-GL memory..");
+	FG_LOG::PrintDebug("Initializing releasing non-GL memory..");
 	fgTextureManager::getInstance()->allReleaseNonGl();
 
 	// AUDIO - FIXME - now that just needs a lot of fixing (personally I would just delete it and rewrote it from scratch using s3eSound)
 	// actually now the Audio subsystem loads the .raw (sfx) and .mp3 (music) files
 	// it needs to work like new texture subsystem - load audio file names and handles from XML files
 	// also it should be dependent (like other file loading subsystems) from fgResourceManager main class
-	//FG_WriteLog( "Initializing Audio.." );
+	//FG_LOG::PrintDebug( "Initializing Audio.." );
 	/*fgSFXManager *audio = fgSFXManager::getInstance();
 	if( !audio ) {
-	FG_ErrorLog( "init_audio failed" );
+	FG_LOG::PrintError( "init_audio failed" );
 	return false;
 	} else {
 	// LOAD MUS & SFX
-	FG_WriteLog( "Initializing SFX & MUS.." );
+	FG_LOG::PrintDebug( "Initializing SFX & MUS.." );
 	if( !audio->loadMusFiles() || !audio->loadSfxFiles() ) {
-	FG_ErrorLog( "load{Mus,Sfx}Files failed!" );
+	FG_LOG::PrintError( "load{Mus,Sfx}Files failed!" );
 	return false;
 	}
 
@@ -371,7 +371,7 @@ int applicationInit(void)
 	// and also textures used in particles also need to be specified within XML/Lua files for further loading/processing.
 
 	// PARTICLE SYSTEM
-	//FG_WriteLog("Initializing fgParticleSystem.."); // FIXME - also all debug text messages printed to the console need to be stored in internal buffer for further processing and display (in-program console)
+	//FG_LOG::PrintDebug("Initializing fgParticleSystem.."); // FIXME - also all debug text messages printed to the console need to be stored in internal buffer for further processing and display (in-program console)
 	//g_particleSystem = fgParticleSystem::getInstance(); // FIXME
 
 	return true;

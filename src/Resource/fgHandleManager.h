@@ -69,7 +69,7 @@ public:
 #ifdef FG_USING_MARMALADE
 	typedef std::hash<std::string> hashFunc;
 	// Type for map, assigning handle index value to string ID (case sensitive)
-	typedef std::hash_map <hashKey, fgRawIndex, hashFunc, hmEqualTo> hmNameMap; //#FIXME - this is not standard
+	typedef std::hash_map <hashKey, fgRawIndex, hashFunc, hmEqualTo> hmNameMap;
 #else
 	typedef std::unordered_map <hashKey, fgRawIndex> hmNameMap;
 #endif
@@ -198,12 +198,12 @@ fgBool fgHandleManager<DataType, HandleType>::setupName(std::string& name, Handl
 	if(!isHandleValid(rHandle))
 		return FG_FALSE;
 	if(m_nameMap.find(name) != m_nameMap.end()) {
-		FG_ErrorLog("%s(%d): Such key already exists in name map - in function %s.", FG_Filename(__FILE__), __LINE__-1,__FUNCTION__);
+		FG_LOG::PrintError("%s(%d): Such key already exists in name map - in function %s.", FG_Filename(__FILE__), __LINE__-1,__FUNCTION__);
 		return FG_FALSE; // Such key already exists
 	}
     fgRawIndex index = rHandle.getIndex();
 	if(!m_nameVec[index].empty()) {
-		FG_ErrorLog("%s(%d): There is name tag already in the vector on index: '%d', name tag: '%s' - in function %s.", FG_Filename(__FILE__), __LINE__-1,index,name.c_str(),__FUNCTION__);
+		FG_LOG::PrintError("%s(%d): There is name tag already in the vector on index: '%d', name tag: '%s' - in function %s.", FG_Filename(__FILE__), __LINE__-1,index,name.c_str(),__FUNCTION__);
 		// There is already some set on the current index
 		// No reassignment is allowed
 		return FG_FALSE;
@@ -242,7 +242,7 @@ template <typename DataType, typename HandleType>
 fgBool fgHandleManager<DataType, HandleType>::releaseHandle(HandleType handle)
 {
 	if(!isHandleValid(handle)) {
-		FG_ErrorLog("releaseHandle() - handle is invalid.");
+		FG_LOG::PrintError("releaseHandle() - handle is invalid.");
 		return FG_FALSE;
 	}
     // which one?
@@ -349,7 +349,7 @@ inline fgBool fgHandleManager<DataType, HandleType>::isHandleValid(HandleType ha
     if ((index >= m_managedData.size()) || (m_magicData[index] != handle.getMagic()))
     {
         // no good! invalid handle == client programming error
-		FG_ErrorLog("%s(%d): Invalid handle, magic numbers don't match with index - in function %s.", FG_Filename(__FILE__), __LINE__-1,__FUNCTION__);
+		FG_LOG::PrintError("%s(%d): Invalid handle, magic numbers don't match with index - in function %s.", FG_Filename(__FILE__), __LINE__-1,__FUNCTION__);
         return FG_FALSE;
     }
 	return FG_TRUE;

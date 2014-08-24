@@ -131,7 +131,7 @@ unsigned char *fgTextureLoader::loadJPEG(fgFile *fileStream, int &width, int &he
 		return NULL;
 	}
 	delete [] dataBuffer;
-	FG_InfoLog("JPEG LOAD: %s, %dx%d, data=%p;", fileStream->getPath(), width,height, data);
+	FG_LOG::PrintInfo("JPEG LOAD: %s, %dx%d, data=%p;", fileStream->getPath(), width,height, data);
 	return data;
 }
 
@@ -245,7 +245,7 @@ unsigned char *fgTextureLoader::loadPNG(fgFile *fileStream, int &width, int &hei
 	png_destroy_read_struct(&png_ptr, 0, 0);
     width = (int)w;
     height = (int)h;
-	FG_InfoLog("PNG LOAD: %s, %dx%d, data=%p;", fileStream->getPath(), w,h, data);
+	FG_LOG::PrintInfo("PNG LOAD: %s, %dx%d, data=%p;", fileStream->getPath(), w,h, data);
     return data;
 }
 
@@ -263,12 +263,12 @@ unsigned char *fgTextureLoader::loadTGA(const char *path, int &width, int &heigh
 unsigned char *fgTextureLoader::loadTGA(fgFile *fileStream, int &width, int &height)
 {
 	if(!fileStream) {
-		FG_ErrorLog("%s(%d): fileStream is NULL - failed to load texture - in function %s.", FG_Filename(__FILE__), __LINE__-1,__FUNCTION__);
+		FG_LOG::PrintError("%s(%d): fileStream is NULL - failed to load texture - in function %s.", FG_Filename(__FILE__), __LINE__-1,__FUNCTION__);
 		// #TODO error handling / reporting
 		return NULL;
 	} else if(!fileStream->isOpen()) {
 		if(!fileStream->open(FG_FILE_MODE_READ | FG_FILE_MODE_BINARY)) {
-			FG_ErrorLog("%s(%d): failed to open texture file - in function %s.", FG_Filename(__FILE__), __LINE__-1,__FUNCTION__);
+			FG_LOG::PrintError("%s(%d): failed to open texture file - in function %s.", FG_Filename(__FILE__), __LINE__-1,__FUNCTION__);
 			// #TODO error handling / reporting
 			return NULL;
 		}
@@ -304,7 +304,7 @@ unsigned char *fgTextureLoader::loadTGA(fgFile *fileStream, int &width, int &hei
 	// Output RGBA image
 	data = new unsigned char[w * h * 4];
 	if(!data || !buffer) {
-		FG_ErrorLog("%s(%d): failed to allocate new data  - in function %s.", FG_Filename(__FILE__), __LINE__-1,__FUNCTION__);
+		FG_LOG::PrintError("%s(%d): failed to allocate new data  - in function %s.", FG_Filename(__FILE__), __LINE__-1,__FUNCTION__);
 		// #TODO error handling / reporting
         return NULL;
     }
@@ -367,6 +367,6 @@ unsigned char *fgTextureLoader::loadTGA(fgFile *fileStream, int &width, int &hei
 	delete [] buffer;
     width = w;
     height = h;
-	FG_InfoLog("TGA LOAD: %s, %dx%d, data=%p;", fileStream->getPath(), w,h, data);
+	FG_LOG::PrintInfo("TGA LOAD: %s, %dx%d, data=%p;", fileStream->getPath(), w,h, data);
 	return data;
 }

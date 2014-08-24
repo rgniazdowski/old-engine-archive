@@ -103,7 +103,7 @@ void fgDeviceQuery::computeDevice() {
 
     m_computed = FG_TRUE;
 
-    FG_WriteLog("Detected [%s] DEVICE: %s, VERSION: %d, GENERATION: %d", dev_id, class_to_name[m_deviceClass], m_deviceVersion, m_deviceGeneration);
+    FG_LOG::PrintDebug("Detected [%s] DEVICE: %s, VERSION: %d, GENERATION: %d", dev_id, class_to_name[m_deviceClass], m_deviceVersion, m_deviceGeneration);
 }
 
 /**
@@ -129,7 +129,7 @@ static fgDeviceGeneration computeGeneration(const char* dev_id, fgDeviceClass de
             if( NULL != strstr(dev_id, "iPhone1,2") ) {
                 // iPhone 3G
                 gen = FG_DEVICE_GENERATION_SECOND;
-                FG_ErrorLog("Unsupported iPhone 3G detected!");
+                FG_LOG::PrintError("Unsupported iPhone 3G detected!");
             } else if( NULL != strstr(dev_id, "iPhone2,1") ) {
                 // iPhone 3GS
                 gen = FG_DEVICE_GENERATION_THIRD;
@@ -145,11 +145,11 @@ static fgDeviceGeneration computeGeneration(const char* dev_id, fgDeviceClass de
             if( NULL != strstr(dev_id, "iPod1,1") ) {
                 // iPod 1G
                 gen = FG_DEVICE_GENERATION_FIRST;
-                FG_ErrorLog("Unsupported iPod 1G detected!");
+                FG_LOG::PrintError("Unsupported iPod 1G detected!");
             } else if( NULL != strstr(dev_id, "iPod2,1") ) {
                 // iPod 2G
                 gen = FG_DEVICE_GENERATION_SECOND;
-                FG_ErrorLog("Unsupported iPod 2G detected!");
+                FG_LOG::PrintError("Unsupported iPod 2G detected!");
             } else if( NULL != strstr(dev_id, "iPod3,1") ) {
                 // iPod 3G
                 gen = FG_DEVICE_GENERATION_THIRD;
@@ -168,7 +168,7 @@ static fgDeviceGeneration computeGeneration(const char* dev_id, fgDeviceClass de
             break;
     }
 
-    FG_WriteLog("Device [%s] generation is: %dG", dev_id, gen);
+    FG_LOG::PrintDebug("Device [%s] generation is: %dG", dev_id, gen);
     return gen;
 }
 
@@ -178,7 +178,7 @@ static fgDeviceGeneration computeGeneration(const char* dev_id, fgDeviceClass de
  * The main version may be unusable in practice, as generation is what matters.
  */
 fgBool try_device(const char* dev_id, const char* base_name, fgDeviceClass givenClass, fgDeviceClass& tryClass, int& tryVersion) {
-    FG_WriteLog("try_device(): Searching for %s VER in string: %s", base_name, dev_id);
+    FG_LOG::PrintDebug("try_device(): Searching for %s VER in string: %s", base_name, dev_id);
 
     // Copy  the base name. Ensure there are two free bytes at the end.
     char name[20];
@@ -194,7 +194,7 @@ fgBool try_device(const char* dev_id, const char* base_name, fgDeviceClass given
     for ( int i=0; i<6; i++ ) {
         name[base_len] = '1'+i;
         if(NULL != strstr(dev_id, name) ) {
-            FG_WriteLog("try_device(): FOUND name=%s in dev_id=%s", name, dev_id);
+            FG_LOG::PrintDebug("try_device(): FOUND name=%s in dev_id=%s", name, dev_id);
             version_found = 1+i;
             break;
         }

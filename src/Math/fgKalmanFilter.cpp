@@ -50,6 +50,6 @@ void TripleKalman::update_one(int which, float data) {
 			fz.update(data);
 			break;
 		default:
-			FG_ErrorLog("Warning! TripleKalman::update_one with unknown which:%d", which);
+			FG_LOG::PrintError("Warning! TripleKalman::update_one with unknown which:%d", which);
 	}
 }

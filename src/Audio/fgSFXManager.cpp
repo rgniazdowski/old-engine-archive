@@ -68,15 +68,15 @@ fgSFXManager::fgSFXManager() {
 #ifdef FG_USING_MARMALADE_AUDIO
 	m_mp3 = (fgBool)s3eAudioIsCodecSupported(S3E_AUDIO_CODEC_MP3);
     if(m_mp3) {
-        FG_WriteLog("MP3 codec supported");
+        FG_LOG::PrintDebug("MP3 codec supported");
     } else {
-        FG_ErrorLog("No MP3 support!");
+        FG_LOG::PrintError("No MP3 support!");
     }
 	m_pcm = (fgBool)s3eAudioIsCodecSupported(S3E_AUDIO_CODEC_PCM);
     if(m_pcm) {
-        FG_WriteLog("PCM codec supported");
+        FG_LOG::PrintDebug("PCM codec supported");
     } else {
-        FG_ErrorLog("No PCM support!");
+        FG_LOG::PrintError("No PCM support!");
     }
 #endif // FG_USING_MARMALADE_AUDIO
 }
@@ -93,7 +93,7 @@ bool fgSFXManager::loadAudioFile(const char* name, unsigned char* & out_buffer, 
 
     s3eFile* fileHandle = s3eFileOpen(name, "rb");
     if(NULL == fileHandle) {
-        FG_ErrorLog("Unable to open audio file '%s', error code: %d", name, s3eFileGetError());
+        FG_LOG::PrintError("Unable to open audio file '%s', error code: %d", name, s3eFileGetError());
         return false;
     }
 
@@ -106,12 +106,12 @@ bool fgSFXManager::loadAudioFile(const char* name, unsigned char* & out_buffer, 
     s3eFileClose(fileHandle);
 
     if ( objectsRead != 1 ) {
-        FG_ErrorLog("Should read %d bytes of an sound file, read %d instead!", fileSize, objectsRead * fileSize);
+        FG_LOG::PrintError("Should read %d bytes of an sound file, read %d instead!", fileSize, objectsRead * fileSize);
         delete [] buffer;
         return false;
     }
 
-    FG_WriteLog("Read %d bytes of '%s', buffer = %p", fileSize, name, buffer);
+    FG_LOG::PrintDebug("Read %d bytes of '%s', buffer = %p", fileSize, name, buffer);
 
     out_buffer = buffer;
     out_size = fileSize;
@@ -143,7 +143,7 @@ void fgSFXManager::applySfxVolume() {
 #ifdef FG_USING_MARMALADE_SOUND
     s3eResult result = s3eSoundSetInt(S3E_SOUND_VOLUME, int(m_sfxVolume * S3E_SOUND_MAX_VOLUME * 0.9f));
     if(S3E_RESULT_SUCCESS != result) {
-        FG_ErrorLog("Error when setting the sfx volume: %d", result );
+        FG_LOG::PrintError("Error when setting the sfx volume: %d", result );
     }
 #endif // FG_USING_MARMALADE_SOUND
 }
@@ -156,7 +156,7 @@ void fgSFXManager::play(int idx) {
     // Check for error
     s3eSoundError err = s3eSoundGetError();
     if(err != S3E_SOUND_ERR_NONE) {
-        FG_ErrorLog("playSFX(%d) on channel[%d] error[%d]: %s", idx, channel, err, s3eSoundGetErrorString());
+        FG_LOG::PrintError("playSFX(%d) on channel[%d] error[%d]: %s", idx, channel, err, s3eSoundGetErrorString());
     }
 #endif // FG_USING_MARMALADE_SOUND
 }
@@ -208,7 +208,7 @@ void fgSFXManager::playMus(int idx) {
     // Check for error
     s3eAudioError err = s3eAudioGetError();
     if(err != S3E_AUDIO_ERR_NONE) {
-        FG_ErrorLog("playMus(%d) error[%d]: %s (also status is: %d)", idx, err, s3eAudioGetErrorString(), status);
+        FG_LOG::PrintError("playMus(%d) error[%d]: %s (also status is: %d)", idx, err, s3eAudioGetErrorString(), status);
     }
 #endif // FG_USING_MARMALADE_AUDIO
 }
@@ -220,7 +220,7 @@ void fgSFXManager::pauseMus(int idx) {
     // Check for error
     s3eAudioError err = s3eAudioGetError();
     if(err != S3E_AUDIO_ERR_NONE) {
-        FG_ErrorLog("pauseMus(%d) error[%d]: %s", idx, err, s3eAudioGetErrorString());
+        FG_LOG::PrintError("pauseMus(%d) error[%d]: %s", idx, err, s3eAudioGetErrorString());
     }
 #endif // FG_USING_MARMALADE_AUDIO
 }

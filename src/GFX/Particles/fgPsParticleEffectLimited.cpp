@@ -32,7 +32,7 @@ ParticleEffectLimited::~ParticleEffectLimited() {
 void ParticleEffectLimited::remove(int which)
 {
     if( which > int(m_particles.size())-1 ) {
-        FG_ErrorLog("Invalid index [which:%d] given to Limited::remove! Size:%d", which, m_particles.size());
+        FG_LOG::PrintError("Invalid index [which:%d] given to Limited::remove! Size:%d", which, m_particles.size());
         return;
     }
 

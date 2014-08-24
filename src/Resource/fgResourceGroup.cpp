@@ -38,7 +38,7 @@ void fgResourceGroupContentHandler::endElement(const char *localName, fgXMLEleme
 			m_resourcePtr->setResourceName(m_curResName);
 		// ...then it can be added to the Resource Groups' list.
 		this->m_resourceGroup->getRefResourceFiles().push_back(m_resourcePtr);
-		FG_WriteLog("PUSH RES: Resource name: '%s'", m_curResName);
+		FG_LOG::PrintDebug("PUSH RES: Resource name: '%s'", m_curResName);
 		m_resType = FG_RESOURCE_INVALID;
 		m_resourcePtr = NULL;
 		m_isMapped = FG_FALSE;
@@ -46,7 +46,7 @@ void fgResourceGroupContentHandler::endElement(const char *localName, fgXMLEleme
 		m_curResName = NULL;
 		m_curResPriority = FG_RES_PRIORITY_INVALID;
 	}
-	FG_WriteLog("END ELEMENT: %s\n", localName);
+	FG_LOG::PrintDebug("END ELEMENT: %s\n", localName);
 }
 
 /*
@@ -55,7 +55,7 @@ void fgResourceGroupContentHandler::endElement(const char *localName, fgXMLEleme
  */
 void fgResourceGroupContentHandler::startElement(const char *localName, fgXMLElement *elementPtr, fgXMLNodeType nodeType, fgXMLAttribute *firstAttribute, int depth)
 {
-	FG_WriteLog("START ELEMENT: %s", localName);
+	FG_LOG::PrintDebug("START ELEMENT: %s", localName);
 	// Sound
 	// Music
 	// 3DModel
@@ -85,7 +85,7 @@ void fgResourceGroupContentHandler::startElement(const char *localName, fgXMLEle
 			const char *attrvalue = attribute->Value();
 			if(strncasecmp(attrname, "name", 4) == 0) {
 				m_resourceGroup->setResourceName(attrvalue);
-				FG_WriteLog("RESOURCE GROUP: NAME: '%s'", attrvalue);
+				FG_LOG::PrintDebug("RESOURCE GROUP: NAME: '%s'", attrvalue);
 			} else if(strncasecmp(attrname, "priority", 8) == 0) {
 				m_resourceGroup->setPriority(FG_RES_PRIORITY_FROM_TEXT(attrvalue));
 			}
@@ -134,7 +134,7 @@ void fgResourceGroupContentHandler::startElement(const char *localName, fgXMLEle
 		m_curResPriority = FG_RES_PRIORITY_FROM_TEXT(resPriorityStr);
 	if(m_resType == FG_RESOURCE_INVALID) {
 		if(m_resourcePtr && m_isFileQualityMapTag && resPath) {
-			FG_WriteLog("Setting path: '%s', for resource: '%s', quality='%s'", resPath, m_curResName, resQualityStr);
+			FG_LOG::PrintDebug("Setting path: '%s', for resource: '%s', quality='%s'", resPath, m_curResName, resQualityStr);
 			m_resourcePtr->setFilePath(resPath, FG_QUALITY_FROM_TEXT(resQualityStr));
 		}
 		return;
@@ -157,7 +157,7 @@ void fgResourceGroupContentHandler::startElement(const char *localName, fgXMLEle
  */
 fgResourceGroup::fgResourceGroup()
 {
-	FG_WriteLog("fgResourceGroup::fgResourceGroup(); constructor");
+	FG_LOG::PrintDebug("fgResourceGroup::fgResourceGroup(); constructor");
 	clear();
 }
 
@@ -166,7 +166,7 @@ fgResourceGroup::fgResourceGroup()
  */
 fgResourceGroup::~fgResourceGroup()
 {
-	FG_WriteLog("fgResourceGroup::~fgResourceGroup(); destructor");
+	FG_LOG::PrintDebug("fgResourceGroup::~fgResourceGroup(); destructor");
 	destroy();
 }
 
@@ -175,7 +175,7 @@ fgResourceGroup::~fgResourceGroup()
  */
 void fgResourceGroup::clear(void)
 {
-	FG_WriteLog("fgResourceGroup::clear();");
+	FG_LOG::PrintDebug("fgResourceGroup::clear();");
 	fgResource::clear();
 	m_rHandles.clear_optimised();
 	m_resourceFiles.clear_optimised();
@@ -187,7 +187,7 @@ void fgResourceGroup::clear(void)
  */
 fgBool fgResourceGroup::create(void)
 {
-	FG_WriteLog("fgResourceGroup::create();");
+	FG_LOG::PrintDebug("fgResourceGroup::create();");
 	if(m_resourceFiles.empty())
 		return FG_FALSE;
 	fgBool status = FG_TRUE;
@@ -204,7 +204,7 @@ fgBool fgResourceGroup::create(void)
  */
 void fgResourceGroup::destroy(void)
 {
-	FG_WriteLog("fgResourceGroup::destroy();");
+	FG_LOG::PrintDebug("fgResourceGroup::destroy();");
 	ZeroLock();
 	dispose();
 	clear();
@@ -215,7 +215,7 @@ void fgResourceGroup::destroy(void)
  */
 fgBool fgResourceGroup::recreate(void)
 {
-	FG_WriteLog("fgResourceGroup::recreate();");
+	FG_LOG::PrintDebug("fgResourceGroup::recreate();");
 	if(m_resourceFiles.empty())
 		return FG_FALSE;
 	fgBool status = FG_TRUE;
@@ -232,7 +232,7 @@ fgBool fgResourceGroup::recreate(void)
  */
 void fgResourceGroup::dispose(void)
 {
-	FG_WriteLog("fgResourceGroup::~dispose();");
+	FG_LOG::PrintDebug("fgResourceGroup::~dispose();");
 	if(m_resourceFiles.empty())
 		return;
 	for(rgResVecItor it = m_resourceFiles.begin(); it != m_resourceFiles.end(); it++) {

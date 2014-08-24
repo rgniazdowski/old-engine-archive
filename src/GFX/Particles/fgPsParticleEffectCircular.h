@@ -67,7 +67,7 @@ public:
 
         uidx = (uidx - ualive) % umax_count;
 
-        //FG_WriteLog("firstAliveIdx computed: %d  [alive:%d, idx:%d, max:%d]", int(uidx), aliveCount(), m_current_insert_idx, maxCount() );
+        //FG_LOG::PrintDebug("firstAliveIdx computed: %d  [alive:%d, idx:%d, max:%d]", int(uidx), aliveCount(), m_current_insert_idx, maxCount() );
 
         return int(uidx);
     }
@@ -91,7 +91,7 @@ public:
      */
     bool setDummy(int idx) {
         if( int(m_particles.size()) != maxCount() || idx >= maxCount() ) {
-            FG_ErrorLog("########## Inconsistent ParticleEffectCircular: size[%d], maxCount[%d], which[%d] ##########", m_particles.size(), maxCount(), idx);
+            FG_LOG::PrintError("########## Inconsistent ParticleEffectCircular: size[%d], maxCount[%d], which[%d] ##########", m_particles.size(), maxCount(), idx);
             return false;
         }
 

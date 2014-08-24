@@ -64,7 +64,7 @@ fgBool ParticleEffectCircular::add(Particle* particle)
         m_dummy_count --;
 
         if( m_dummy_count < 0 ) {
-            FG_ErrorLog("INCONSISTENCY! m_dummy_count[%d] < 0!", m_dummy_count);
+            FG_LOG::PrintError("INCONSISTENCY! m_dummy_count[%d] < 0!", m_dummy_count);
         }
     }
 

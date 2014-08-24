@@ -60,10 +60,10 @@ void fgHardwareState::initDPI()
 
     m_dpi = DPI::dpiGetScreenDPI(m_screenWidth, m_screenHeight);
 
-    FG_WriteLog("### SCREEN DPI IS: %d ###", m_dpi);
+    FG_LOG::PrintDebug("### SCREEN DPI IS: %d ###", m_dpi);
 
     if( 0 == m_dpi ) {
-        FG_ErrorLog("DPI extension returned dpi=0. Overwriting with 163");
+        FG_LOG::PrintError("DPI extension returned dpi=0. Overwriting with 163");
         m_dpi = 163;
     }
 #else
@@ -71,7 +71,7 @@ void fgHardwareState::initDPI()
 #endif // FG_USING_DPI_INFO
 
     if( 0 == m_screenWidth || 0 == m_screenHeight ) {
-        FG_ErrorLog("initDPI called when no screen width & height being set!");
+        FG_LOG::PrintError("initDPI called when no screen width & height being set!");
         exit(5);
     }
     int display_area = m_screenWidth * m_screenHeight;

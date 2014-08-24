@@ -21,7 +21,7 @@ fgFontResource::fgFontResource() :
 	m_step(0)
 {
 	m_resType = FG_RESOURCE_FONT;
-	FG_WriteLog("fgFontResource::fgFontResource()");
+	FG_LOG::PrintDebug("fgFontResource::fgFontResource()");
 }
 
 /*
@@ -31,7 +31,7 @@ fgFontResource::fgFontResource(const char *path) :
 	m_step(0)
 {
 	m_resType = FG_RESOURCE_FONT;
-	FG_WriteLog("fgFontResource::fgFontResource()");
+	FG_LOG::PrintDebug("fgFontResource::fgFontResource()");
 	if(path)
 		setFilePath(path);
 }
@@ -43,7 +43,7 @@ fgFontResource::fgFontResource(std::string& path) :
 	m_step(0)
 {
 	m_resType = FG_RESOURCE_FONT;
-	FG_WriteLog("fgFontResource::fgFontResource()");
+	FG_LOG::PrintDebug("fgFontResource::fgFontResource()");
 	if(!path.empty())
 		setFilePath(path);
 }
@@ -54,7 +54,7 @@ fgFontResource::fgFontResource(std::string& path) :
  */
 void fgFontResource::clear(void)
 {
-	FG_WriteLog("fgFontResource::clear();");
+	FG_LOG::PrintDebug("fgFontResource::clear();");
 	fgTextureResource::clear();
 	m_step = 0;
 	memset(m_space, 0, sizeof(m_space[0][0]) * FG_FONT_STANDARD_ASCII_SIZE * 2);
@@ -69,7 +69,7 @@ fgBool fgFontResource::create(void)
 	m_textureType = FG_TEXTURE_FONT;
 	if(!fgTextureResource::create()) {
 		// #TODO error handling / reporting
-		FG_ErrorLog("%s(%d): texture create function has failed - in function %s.", FG_Filename(__FILE__), __LINE__-1,__FUNCTION__); 
+		FG_LOG::PrintError("%s(%d): texture create function has failed - in function %s.", FG_Filename(__FILE__), __LINE__-1,__FUNCTION__); 
 		return FG_FALSE;
 	}
 	int i = 0, j = 0, k = 0;
@@ -78,7 +78,7 @@ fgBool fgFontResource::create(void)
 	m_step = size / 16;
 	unsigned char *ptr = NULL;
 	
-	FG_WriteLog("FONT CREATE 'Tex::ID=%s'; size=%dx%d; step=%d;", this->m_resourceName.c_str(), m_width, m_width, m_step);
+	FG_LOG::PrintDebug("FONT CREATE 'Tex::ID=%s'; size=%dx%d; step=%d;", this->m_resourceName.c_str(), m_width, m_width, m_step);
 
 	for(y=0, i=0; y<16; y++)
 	{
@@ -124,7 +124,7 @@ fgBool fgFontResource::create(void)
  */
 void fgFontResource::destroy(void)
 {
-	FG_WriteLog("fgFontResource::destroy();");
+	FG_LOG::PrintDebug("fgFontResource::destroy();");
 	releaseNonGFX();
 	clear();
 }
@@ -134,7 +134,7 @@ void fgFontResource::destroy(void)
  */
 fgBool fgFontResource::recreate(void)
 {
-	FG_WriteLog("fgFontResource::recreate();");
+	FG_LOG::PrintDebug("fgFontResource::recreate();");
 	dispose();
 	return create();
 }
@@ -144,7 +144,7 @@ fgBool fgFontResource::recreate(void)
  */
 void fgFontResource::dispose(void)
 {
-	FG_WriteLog("fgFontResource::~dispose();");
+	FG_LOG::PrintDebug("fgFontResource::~dispose();");
 	fgTextureResource::dispose();
 }
 

@@ -23,7 +23,7 @@ bool fgTexture::checkGlError(const char* fname) {
 
     code = glGetError();
     if(GL_NO_ERROR != code) {
-        FG_ErrorLog("%s() failed! Code=%d, TexId=%d",fname, code, m_texId);
+        FG_LOG::PrintError("%s() failed! Code=%d, TexId=%d",fname, code, m_texId);
 
 #ifdef IW_DEBUG
         return false;
@@ -64,7 +64,7 @@ fgTextureResource::fgTextureResource(const char *path) :
 	m_textureGfxID(0)
 {
 	m_resType = FG_RESOURCE_TEXTURE;
-	FG_WriteLog("fgTextureResource(const char *path)"); 
+	FG_LOG::PrintDebug("fgTextureResource(const char *path)"); 
 	setFilePath(path); 
 }
 
@@ -82,7 +82,7 @@ fgTextureResource::fgTextureResource(std::string& path) :
 	m_textureGfxID(0)
 {
 	m_resType = FG_RESOURCE_TEXTURE;
-	FG_WriteLog("fgTextureResource(std::string& path)"); 
+	FG_LOG::PrintDebug("fgTextureResource(std::string& path)"); 
 	setFilePath(path); 
 }
 
@@ -92,7 +92,7 @@ fgTextureResource::fgTextureResource(std::string& path) :
  */
 void fgTextureResource::clear(void)
 {
-	FG_WriteLog("fgTextureResource::clear();");
+	FG_LOG::PrintDebug("fgTextureResource::clear();");
 	fgResource::clear();
 	m_fileType = FG_TEXTURE_FILE_INVALID;
 	m_textureType = FG_TEXTURE_INVALID;
@@ -110,15 +110,15 @@ void fgTextureResource::clear(void)
  */
 fgBool fgTextureResource::create(void)
 {
-	FG_InfoLog("fgTextureResource::create(void)");
+	FG_LOG::PrintInfo("fgTextureResource::create(void)");
 	if(getFilePath(m_quality).empty()) {
-		FG_ErrorLog("%s(%d): file path is empty on create - in function %s.", FG_Filename(__FILE__), __LINE__-1,__FUNCTION__); 
+		FG_LOG::PrintError("%s(%d): file path is empty on create - in function %s.", FG_Filename(__FILE__), __LINE__-1,__FUNCTION__); 
 		// #TODO error handling / reporting
 		return FG_FALSE;
 	}
 	setFileTypeFromFilePath();
 	if(m_fileType == FG_TEXTURE_FILE_INVALID) {
-		FG_ErrorLog("%s(%d): texture file type is invalid - in function %s.", FG_Filename(__FILE__), __LINE__-1,__FUNCTION__); 
+		FG_LOG::PrintError("%s(%d): texture file type is invalid - in function %s.", FG_Filename(__FILE__), __LINE__-1,__FUNCTION__); 
 		// #TODO error handling / reporting
 		return FG_FALSE;
 	}
@@ -146,7 +146,7 @@ fgBool fgTextureResource::create(void)
 	};
 
 	if(!m_rawData) {
-		FG_ErrorLog("%s(%d): raw data is NULL - failed to load texture - in function %s.", FG_Filename(__FILE__), __LINE__-1,__FUNCTION__); 
+		FG_LOG::PrintError("%s(%d): raw data is NULL - failed to load texture - in function %s.", FG_Filename(__FILE__), __LINE__-1,__FUNCTION__); 
 		// #TODO error handling / reporting
 		return FG_FALSE;
 	}
@@ -163,7 +163,7 @@ fgBool fgTextureResource::create(void)
  */
 void fgTextureResource::destroy(void)
 {
-	FG_WriteLog("fgTextureResource::destroy();");
+	FG_LOG::PrintDebug("fgTextureResource::destroy();");
 	releaseNonGFX();
 	clear();
 }
@@ -173,7 +173,7 @@ void fgTextureResource::destroy(void)
  */
 fgBool fgTextureResource::recreate(void)
 {
-	FG_InfoLog("fgTextureResource::recreate(void)");
+	FG_LOG::PrintInfo("fgTextureResource::recreate(void)");
 	releaseNonGFX();
 	return create();
 }
@@ -184,7 +184,7 @@ fgBool fgTextureResource::recreate(void)
  */
 void fgTextureResource::dispose(void)
 {
-	FG_WriteLog("fgTextureResource::~dispose();");
+	FG_LOG::PrintDebug("fgTextureResource::~dispose();");
 	releaseNonGFX();
 }
 
@@ -198,7 +198,7 @@ fgBool fgTextureResource::isDisposed(void) const
 	// If it is, then it means that the texture is uploaded and
 	// ready to use. If GfxID is invalid than we can assume that
 	// resource is disposed. This is kinda tricky one.
-	FG_WriteLog("fgTextureResource::isDisposed();   p_rawData=%p;", m_rawData);
+	FG_LOG::PrintDebug("fgTextureResource::isDisposed();   p_rawData=%p;", m_rawData);
 	
 	return !this->hasOwnedRAM();
 }
@@ -208,7 +208,7 @@ fgBool fgTextureResource::isDisposed(void) const
  */
 void fgTextureResource::releaseNonGFX(void) 
 {
-	FG_WriteLog("fgTextureResource::releaseNonGFX();   p_rawData=%p;", m_rawData);
+	FG_LOG::PrintDebug("fgTextureResource::releaseNonGFX();   p_rawData=%p;", m_rawData);
 
 	if(m_rawData)
 		delete [] m_rawData;

@@ -26,7 +26,7 @@ fgResource::fgResource() :
 	m_size(0)
 {
 	m_resourceName.clear();
-	FG_WriteLog("fgResource::fgResource();");
+	FG_LOG::PrintDebug("fgResource::fgResource();");
 }
 
 /*
@@ -42,7 +42,7 @@ fgResource::fgResource(const char *path) :
 	m_size(0)
 {
 	m_resourceName.clear();
-	FG_WriteLog("fgResource::fgResource(const char *path);");
+	FG_LOG::PrintDebug("fgResource::fgResource(const char *path);");
 	setFilePath(path);
 }
 
@@ -59,7 +59,7 @@ fgResource::fgResource(std::string& path) :
 	m_size(0)
 {
 	m_resourceName.clear();
-	FG_WriteLog("fgResource::fgResource(std::string& path);");
+	FG_LOG::PrintDebug("fgResource::fgResource(std::string& path);");
 	setFilePath(path);
 }
 
@@ -78,7 +78,7 @@ void fgResource::clear(void)
 	m_size = 0;
 	m_fileMapping.clear();
 	m_filePath.clear();
-	FG_WriteLog("fgResource::clear(void);");
+	FG_LOG::PrintDebug("fgResource::clear(void);");
 }
 
 /*

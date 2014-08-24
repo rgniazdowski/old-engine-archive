@@ -59,7 +59,7 @@ namespace FG_GFX {
 			return FG_FALSE;
 		}
 		int config = -1;
-		FG_InfoLog("found %d configs\n", numFound);
+		FG_LOG::PrintInfo("found %d configs\n", numFound);
 		for (int i = 0; i < numFound; i++)
 		{
 			EGLint renderable = 0;
@@ -76,8 +76,8 @@ namespace FG_GFX {
 			config = 0;
 		}
 		int version = s3eGLGetInt(S3E_GL_VERSION)>>8;
-		FG_InfoLog("requesting GL version: %d\n", version);
-		FG_InfoLog("choosing config: %d\n", config);
+		FG_LOG::PrintInfo("requesting GL version: %d\n", version);
+		FG_LOG::PrintInfo("choosing config: %d\n", config);
 		EGLint attribs[] = { EGL_CONTEXT_CLIENT_VERSION, version, EGL_NONE, };
 		g_EGLContext = eglCreateContext(g_EGLDisplay, configList[config], NULL, attribs);
 		if (!g_EGLContext)
@@ -88,7 +88,7 @@ namespace FG_GFX {
 		version = s3eGLGetInt(S3E_GL_VERSION)>>8;
 		if (version != 2)
 		{
-			FG_InfoLog("reported GL version: %d", version);
+			FG_LOG::PrintInfo("reported GL version: %d", version);
 			s3eDebugErrorShow(S3E_MESSAGE_CONTINUE, "This example requires GLES v2.x");
 			return FG_FALSE;
 		}

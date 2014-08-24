@@ -20,7 +20,7 @@ fgResourceFactory *fgSingleton<fgResourceFactory>::instance = NULL;
  */
 fgResourceFactory::fgResourceFactory()
 {
-	FG_ErrorLog("fgResourceFactory::fgResourceFactory()");
+	FG_LOG::PrintError("fgResourceFactory::fgResourceFactory()");
 }
 
 /*
@@ -28,7 +28,7 @@ fgResourceFactory::fgResourceFactory()
  */
 fgResourceFactory::~fgResourceFactory()
 {
-	FG_ErrorLog("fgResourceFactory::~fgResourceFactory()");
+	FG_LOG::PrintError("fgResourceFactory::~fgResourceFactory()");
 	clear();
 }
 
@@ -37,7 +37,7 @@ fgResourceFactory::~fgResourceFactory()
  */
 void fgResourceFactory::clear(void) 
 {
-	FG_ErrorLog("fgResourceFactory::clear()");
+	FG_LOG::PrintError("fgResourceFactory::clear()");
 	m_factoryMap.clear(); 
 }
 

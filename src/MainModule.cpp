@@ -217,13 +217,13 @@ public:
 		}
 		if (s3eKeyboardGetState(s3eKeyEnter) & S3E_KEY_STATE_PRESSED)	{
 			m_appInit = FG_FALSE;
-			FG_WriteLog("ENTER PRESSED...");
+			FG_LOG::PrintDebug("ENTER PRESSED...");
 			return FG_FALSE;
 		}
 #endif // FG_USING_MARMALADE
 		if (m_isExit) {
 			m_appInit = FG_FALSE;
-			FG_WriteLog("EXIT IS ACTIVATED - break loop main ! bye!");
+			FG_LOG::PrintDebug("EXIT IS ACTIVATED - break loop main ! bye!");
 			return FG_FALSE;
 		}
 
@@ -246,7 +246,7 @@ public:
 	 * The way to exit from the app
 	 */
 	void closeProgram() {
-		FG_WriteLog("closeEvent()");
+		FG_LOG::PrintDebug("closeEvent()");
 		FG_GameMain->releaseResources();
 
 		// This frees all the data used by singletons and other nonresource data
@@ -265,7 +265,7 @@ private:
 	 */
 	void focusLostEvent()
 	{
-		FG_WriteLog("focusLostEvent()");
+		FG_LOG::PrintDebug("focusLostEvent()");
 
 		// Brak focus czyli:
 		// - wyswietlenie menu
@@ -287,7 +287,7 @@ private:
 	 */
 	void focusGainedEvent()
 	{
-		FG_WriteLog("focusGainedEvent()");
+		FG_LOG::PrintDebug("focusGainedEvent()");
 	}
 #if defined FG_USING_MARMALADE
 	/**
@@ -301,7 +301,7 @@ private:
 		} else {
 			FG_EventManager->addKeyUp((int)event->m_Key);
 		}
-		FG_WriteLog("FG_EventManager - keyboard - %d is pressed? - code: %d\n", (int)event->m_Pressed, (int)event->m_Key);
+		FG_LOG::PrintDebug("FG_EventManager - keyboard - %d is pressed? - code: %d\n", (int)event->m_Pressed, (int)event->m_Key);
 	}
 #endif // FG_USING_MARMALADE
 
@@ -395,7 +395,7 @@ static bool set_allow_loop_handler(void) {
 	float milisec = (1.0f/fps) * 1000.0f;
 	int result = s3eTimerSetTimer( milisec, &allow_moblet_loop, NULL );
 	if ( result == S3E_RESULT_ERROR ) {
-		FG_ErrorLog("Setting Moblet::loop callback failed!");
+		FG_LOG::PrintError("Setting Moblet::loop callback failed!");
 		return false;
 	}
 	return true;
@@ -431,10 +431,10 @@ extern "C" int main()
 
 	/*if( FG_MainModule->isSlow() ) {
 		// USE FPS LIMIT
-		FG_WriteLog("USING FPS LIMIT FOR DEVICE GEN: %d", dev->deviceGeneration());
+		FG_LOG::PrintDebug("USING FPS LIMIT FOR DEVICE GEN: %d", dev->deviceGeneration());
 
 		if(!set_allow_loop_handler()) {
-			FG_ErrorLog("FATAL ERROR #1: EXITING");
+			FG_LOG::PrintError("FATAL ERROR #1: EXITING");
 			s3eDeviceExit(1);
 		}
 		while(1) {
@@ -446,7 +446,7 @@ extern "C" int main()
 		}
 	} else {
 		// NO FPS LIMIT
-		FG_WriteLog("NO FPS LIMIT FOR DEVICE GEN: %d", dev->deviceGeneration());
+		FG_LOG::PrintDebug("NO FPS LIMIT FOR DEVICE GEN: %d", dev->deviceGeneration());
 		while(1) {
 			FG_MainModule->mainLoopStep();
 			FG_HardwareState->deviceYield(0);

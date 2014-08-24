@@ -36,7 +36,7 @@ public:
 			if(!instance)
 				instance = new Class();
 			instanceFlag = true;
-			FG_WriteLog(">>>>>>>>>> Created instance of type: '%s'\n", typeid(instance).name());
+			FG_LOG::PrintDebug(">>>>>>>>>> Created instance of type: '%s'\n", typeid(instance).name());
 			return instance;
 		} else {
 			return instance;
@@ -48,7 +48,7 @@ public:
 		if(instanceFlag || instance)
 		{
 			instanceFlag = false;
-			FG_WriteLog(">>>>>>>>>> Deleted instance of type: '%s'\n", typeid(instance).name());
+			FG_LOG::PrintDebug(">>>>>>>>>> Deleted instance of type: '%s'\n", typeid(instance).name());
 			if(instance)
 				delete instance;
 			instance = NULL;
@@ -57,7 +57,7 @@ public:
 
 	~fgSingleton()
 	{
-		FG_WriteLog(">>>>>>>>>> Deleted instance of Singleton - ~ destructor called.");
+		FG_LOG::PrintDebug(">>>>>>>>>> Deleted instance of Singleton - ~ destructor called.");
 		instanceFlag = false;
 	}
 };

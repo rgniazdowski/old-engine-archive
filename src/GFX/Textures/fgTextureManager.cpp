@@ -87,7 +87,7 @@ fgBool fgTextureManager::allToVRAM(void) {
 					// #FIXME #P1 - i just don't know what I am doing... this all so blurry.
 					if(glIsTexture(texGfxID) == GL_FALSE || !textureResource->isDisposed()) {
 						if(!textureResource->recreate()) {
-							FG_ErrorLog("Could not recrete texture '%s'\n", textureResource->getFilePathStr());
+							FG_LOG::PrintError("Could not recrete texture '%s'\n", textureResource->getFilePathStr());
 							// FAIL
 							result = FG_FALSE;
 						}
@@ -96,7 +96,7 @@ fgBool fgTextureManager::allToVRAM(void) {
 						if(!makeTexture(textureResource)) {
 							result = FG_FALSE;
 							// FAIL
-							FG_ErrorLog("Could not upload texture '%s'\n", textureResource->getFilePathStr());
+							FG_LOG::PrintError("Could not upload texture '%s'\n", textureResource->getFilePathStr());
 						}
 					}
 				} // else: if resource is not locked then most likely it is not needed
@@ -181,23 +181,23 @@ void fgTextureManager::allReleaseGFX(void) {
 fgBool fgTextureManager::makeTexture(fgTextureResource *pTexture) {
 
     if(!pTexture) {
-        FG_ErrorLog("Cannot upload texture - texture resource is NULL");
+        FG_LOG::PrintError("Cannot upload texture - texture resource is NULL");
         return FG_FALSE;
     }
 	if(!FG_ResourceManager->isResourceManaged(pTexture)) {
-		FG_ErrorLog("Cannot upload texture - texture resource is not managed by Resource Manager");
+		FG_LOG::PrintError("Cannot upload texture - texture resource is not managed by Resource Manager");
 		return FG_FALSE;
 	}
     // Supports creation of texture, and update of texture
 	/*if ( !tex_facade->makeGFXTexture() ) {
-		FG_ErrorLog("Making texture [%d] failed", TEX_ID);
+		FG_LOG::PrintError("Making texture [%d] failed", TEX_ID);
 		return false;
 	}*/
 
 	FG_ResourceManager->lockResource(pTexture);
 
 	if(!pTexture->getRawData() || pTexture->isDisposed()) {
-        FG_ErrorLog("Cannot upload texture - texture resource is disposed / empty");
+        FG_LOG::PrintError("Cannot upload texture - texture resource is disposed / empty");
         return FG_FALSE;
     }
 
