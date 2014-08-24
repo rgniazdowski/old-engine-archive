@@ -30,7 +30,9 @@ fgBool fgFile::exists(const char *filePath)
 /*
  *
  */
-fgFile::fgFile() : m_file(NULL)
+fgFile::fgFile() :
+	m_file(NULL), 
+	m_modeFlags(FG_FILE_MODE_READ | FG_FILE_MODE_BINARY)
 {
 }
 
@@ -52,6 +54,14 @@ fgFile::~fgFile()
 		// FIXME
 	}
 	m_filePath.clear();
+}
+
+/*
+ *
+ */
+void fgFile::setMode(fgFileMode mode)
+{
+	m_modeFlags = mode;
 }
 
 /*
@@ -122,6 +132,15 @@ fgBool fgFile::open(fgFileMode mode)
 	if(mode == FG_FILE_MODE_NONE)
 		return FG_FALSE;
 	return open(m_filePath.c_str(), mode);
+}
+
+/*
+ *
+ */
+fgBool fgFile::open(void) {
+	if(m_modeFlags == FG_FILE_MODE_NONE)
+		m_modeFlags = FG_FILE_MODE_READ;
+	return open(m_filePath.c_str(), m_modeFlags);
 }
 
 /*
@@ -208,4 +227,17 @@ int fgFile::write(void *buffer, unsigned int elemsize, unsigned int elemcount)
 	}
 
 	return elemWritten;
+}
+
+/*
+ *
+ */
+int fgFile::puts(const char *str)
+{
+	if(m_file == NULL || str == NULL)
+		return -1;
+
+	int status = fputs(str, m_file);
+	// FIXME
+	return status;
 }

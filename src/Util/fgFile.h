@@ -91,9 +91,13 @@ public:
 		return m_filePath.c_str();
 	}
 
+	void setMode(fgFileMode mode);
+
 	// Get the C standard mode for fopen
 	static const char *modeStr(fgFileMode mode);
 
+	// Open the file with already set options
+	fgBool open(void);
 	// Open the file with specified mode
 	fgBool open(fgFileMode mode);
 	// Open the file (pointed to by path) with specified mode
@@ -125,6 +129,8 @@ public:
 	int write(void *buffer, unsigned int elemsize, unsigned int elemcount);
 	// Print to file
 	int print(const char *fmt, ...);
+	// Put string to file :)
+	int puts(const char *str);
 
 	// Check is it end of file
 	fgBool isEOF(void)
