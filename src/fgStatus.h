@@ -13,6 +13,7 @@
 #include "fgTypes.h"
 #include "fgErrno.h"
 #include "fgMessageCommon.h"
+#include "Util/fgTime.h"
 
 // ? the hell?
 typedef unsigned char fgMask8;
@@ -37,11 +38,30 @@ struct fgStatus
 	fgBool isManaged;
 	// 
 	int errCode;
+	//
+	long timestamp;
 
 	// Default constructor
 	fgStatus() : mask(0), isManaged(FG_FALSE), errCode(FG_ERRNO_OK)
 	{
 		message = NULL;
+		timestamp = fgTime::seconds();
+	}
+
+	fgStatus(fgMessage *msg) : mask(0), isManaged(FG_FALSE), errCode(FG_ERRNO_OK) 
+	{
+		mask = FG_SUCCESS;
+		if(msg) {
+			errCode = msg->code();
+			if(msg->type == FG_MESSAGE_INFO)
+				mask = FG_SUCCESS;
+			else if(msg->type == FG_MESSAGE_WARNING || msg->type == FG_MESSAGE_DEBUG)
+				mask = FG_WARNING;
+			else if(msg->type == FG_MESSAGE_ERROR)
+				mask = FG_ERROR;
+		}		
+		timestamp = fgTime::seconds();
+		message = msg;
 	}
 
 	// Default destructor
@@ -154,6 +174,7 @@ struct fgStatus
 		}
 		if(isManaged && message)
 			message->setManaged();
+		timestamp = fgTime::seconds();
 		return this;
 	}
 
@@ -174,6 +195,7 @@ struct fgStatus
 		}
 		if(isManaged && message)
 			message->setManaged();
+		timestamp = fgTime::seconds();
 		return this;
 	}
 
@@ -194,6 +216,7 @@ struct fgStatus
 		}
 		if(isManaged && message)
 			message->setManaged();
+		timestamp = fgTime::seconds();
 		return this;
 	}
 
@@ -213,7 +236,12 @@ struct fgStatus
 		}
 		if(isManaged && message)
 			message->setManaged();
+		timestamp = fgTime::seconds();
 		return this;
+	}
+
+	void updateTimeStamp(void) {
+		timestamp = fgTime::seconds();
 	}
 };
 

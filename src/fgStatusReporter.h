@@ -42,11 +42,17 @@ public:
 	int getLastErrorCode(void) const {
 		if(!m_statusStack.empty())
 			return m_statusStack.top()->code();
-		return FG_ERRNO_OK;
+		return m_errCode;
 	}
 
 	void setReportToMsgSystem(fgBool _set) {
 		m_reportToMsgSystem = _set;
+	}
+
+	fgStatus *getLastStatus(void) const {
+		if(!m_statusStack.empty())
+			return m_statusStack.top();
+		return NULL;
 	}
 protected:
 	void setErrorCode(int _code) {
@@ -66,6 +72,7 @@ protected:
 
 		if(_status->hasMessage()) {
 			char tmp[64];
+			// #FIXME ?
 			snprintf(tmp, 63, "%s: ", typeid(TagType::_type).name());
 			_status->message->data.insert(0, tmp);
 		}
@@ -78,13 +85,34 @@ protected:
 		// it in proper place, save to corresponding file and take ownership
 		if(_status->isManaged) {
 			// #TODO #P1
+
 		}
 	}
 
-	void reportStatus(fgStatus& _status) {
+	void reportStatus(fgStatus& _status) { // #FIXME
 		fgStatus* newStatus(&_status);
 		_status.clearMessage();
 		reportStatus(newStatus);
+	}
+
+	void reportSuccess(const char *msgData = NULL, int _code = FG_ERRNO_OK) {
+		fgStatus *newStatus = new fgStatus();
+		reportStatus(newStatus->success(msgData, _code));
+	}
+
+	void reportWarning(const char *msgData = NULL, int _code = FG_ERRNO_OK) {
+		fgStatus *newStatus = new fgStatus();
+		reportStatus(newStatus->warning(msgData, _code));
+	}
+
+	void reportError(const char *msgData = NULL, int _code = FG_ERRNO_OK) {
+		fgStatus *newStatus = new fgStatus();
+		reportStatus(newStatus->error(msgData, _code));
+	}
+
+	void reportDebug(const char *msgData = NULL, int _code = FG_ERRNO_OK) {
+		fgStatus *newStatus = new fgStatus();
+		reportStatus(newStatus->debug(msgData, _code));
 	}
 
 	void clearStatus(void) {
