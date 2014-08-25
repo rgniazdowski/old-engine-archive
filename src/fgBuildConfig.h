@@ -268,27 +268,68 @@ struct fgBuildConfig {
 	int versionMajor;
 	int versionMinor;
 	int versionRevision;
+	const char *buildDate;
+	const char *buildTime;
+	const char *buildVersionText;
+	const char *packageName;
+	const char *packageFullText;
 	int empty;
 };
 
 extern struct fgBuildConfig g_fgBuildConfig;
 
-#define FG_BUILD g_fgBuildConfig
+#define FG_BUILD		g_fgBuildConfig
+#define FG_BUILD_CONFIG	g_fgBuildConfig
 
-#define FG_BUILD_DATE		__DATE__
-#define FG_BUILD_TIME		__TIME__
-#define FG_BUILD_VERSION	100
+#define FG_BUILD_DATE			__DATE__
+#define FG_BUILD_TIME			__TIME__
 
+#define FG_XSTR(S)	FG_STR(S)
+#define FG_STR(S)	#S
+
+// Major part of the version
+#define FG_BUILD_VERSION_MAJ	0
+// Minor part of the version
+#define FG_BUILD_VERSION_MIN	10
+// Revision part
+#define FG_BUILD_VERSION_REV	0
+
+// #FIXME
+// Build version number [Major]*.[Minor].[Revision]
+// Build version as number, 100 means 0.10.0;
+// 1000 means 1.0.0, 1010 means 1.1.0, 1011 means: 1.1.1
+// Last digit means revision (it is always one digit)
+// next two digits (from back) are minor part of version, so 01 is 1, 10 is 10
+// first digits (if any) are always version.
+// To wrap it up: last 3 digits are: MM.R, if no Major number is specified
+// It means that Major is 0.
+#define FG_BUILD_VERSION		(FG_BUILD_VERSION_MAJ*1000+FG_BUILD_VERSION_MIN*10+FG_BUILD_VERSION_REV)
+// Stringified version number
+#define FG_BUILD_VERSION_STR	FG_XSTR(FG_BUILD_VERSION)
+// Version text, parts separated by .
+#define FG_BUILD_VERSION_TEXT	FG_XSTR(FG_BUILD_VERSION_MAJ)"."FG_XSTR(FG_BUILD_VERSION_MIN)"."FG_XSTR(FG_BUILD_VERSION_REV)
+
+// Package name - name of the engine
 #define FG_PACKAGE_NAME			"FlexiGame"
+// Code name of this version
 #define FG_PROJECT_CODE_NAME	"Infinium"
 #define FG_PREFIX				"fg"
 
+// Package name with version and codename
+#define FG_PACKAGE_FULL_TEXT	FG_PACKAGE_NAME" v"FG_BUILD_VERSION_TEXT" codename: "FG_PROJECT_CODE_NAME
+
+// Full name of the project
 #define FG_FULL_NAME			"Flexible Game Engine"
 #define FG_AUTHOR_ALIAS			""
 #define FG_PACKAGE_ALIAS		""
 
+// Copyright text
 #define FG_COPYRIGHT			"Copyright (C) 2014 Radoslaw Gniazdowski. All rights reserved."
+// Copying text
+#define FG_COPYING				FG_PACKAGE_NAME" source code and any related files can not be copied, modified and/or distributed without the express or written permission from the author."
+// License type
 #define FG_LICENSE				"Proprietary license" 
+// Home page address
 #define FG_HOMEPAGE				"http://flexigame.com"
 
 #define FG_ENGINE

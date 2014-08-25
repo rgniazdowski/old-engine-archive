@@ -230,9 +230,15 @@ struct fgBuildConfig g_fgBuildConfig = {
 #else
 	false,
 #endif
-	FG_BUILD_VERSION, // 100 -> 0.10.0, 1000 -> 1.0.0, 1010 -> 1.1.0
-	0,
-	10,
-	0,
-	0
+	FG_BUILD_VERSION,		// Build version number (for example 100)
+	FG_BUILD_VERSION_MAJ,	// Major part of version
+	FG_BUILD_VERSION_MIN,	// Minor part
+	FG_BUILD_VERSION_REV,	// Revision
+	FG_BUILD_DATE,		// date
+	FG_BUILD_TIME,		// local time
+	FG_BUILD_VERSION_TEXT,
+	FG_PACKAGE_NAME,
+	FG_PACKAGE_FULL_TEXT,
+	///
+	0 // empty
 };
