@@ -56,13 +56,9 @@
 
 #define FG_XML_PARSER_ERROR_LENGTH		512
 
-class fgXMLParser : private fgFile
+class fgXMLParser : protected fgFile
 {
 protected:
-	// Status for error #FIXME
-	fgBool			m_isError;
-	// Full error message #FIXME
-	char			m_errorMessage[FG_XML_PARSER_ERROR_LENGTH];
 	// Loaded file size
 	unsigned int	m_fileSize;
 	// Data buffer
@@ -83,21 +79,19 @@ public:
 	/*
 	 * Default empty constructor
 	 */
-	fgXMLParser() : m_isError(FG_FALSE), m_fileSize(0), m_fileBuffer(NULL),
+	fgXMLParser() : m_fileSize(0), m_fileBuffer(NULL),
 		m_rootXMLElement(NULL), m_currentXMLNode(NULL),
 		m_currentXMLAttribute(NULL), m_contentHandler(NULL)
 	{
-		memset(m_errorMessage, 0, FG_XML_PARSER_ERROR_LENGTH);
 	}
 
 	/*
 	 * Constructor with file path parameter - loads the xml file
 	 */
-	fgXMLParser(const char *filePath) : m_isError(FG_FALSE), m_fileSize(0), m_fileBuffer(NULL),
+	fgXMLParser(const char *filePath) : m_fileSize(0), m_fileBuffer(NULL),
 		m_rootXMLElement(NULL), m_currentXMLNode(NULL),
 		m_currentXMLAttribute(NULL), m_contentHandler(NULL)
 	{
-		memset(m_errorMessage, 0, FG_XML_PARSER_ERROR_LENGTH);
 		loadXML(filePath);
 	}
 
@@ -414,6 +408,33 @@ public:
 		else
 			return FG_FALSE;
 	}
+
+	/************************************************
+	 * These function are here because XMLParser extends
+	 * fgFile with access level protected. Need to make
+	 * public methods of status reporter available
+	 */
+
+	fgBool isError(void) const {
+		return fgStatusReporter::isError();
+	}
+
+	int getErrorCode(void) const {
+		return fgStatusReporter::getErrorCode();
+	}
+
+	int getLastErrorCode(void) const {
+		return fgStatusReporter::getLastErrorCode();
+	}
+
+	void setReportToMsgSystem(fgBool _set) {
+		fgStatusReporter::setReportToMsgSystem(_set);
+	}
+
+	fgStatus *getLastStatus(void) const {
+		return fgStatusReporter::getLastStatus();
+	}
+
 };
 
 #endif /* _FG_XML_PARSER_H_ */

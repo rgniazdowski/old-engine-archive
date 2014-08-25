@@ -15,6 +15,7 @@
  */
 fgBool fgXMLParser::loadXML(const char *filePath)
 {
+	fgStatusReporter::clearStatus();
 	if(filePath == NULL) {
 		// #FIXME proper error message
 		return FG_FALSE;
@@ -112,13 +113,13 @@ fgBool fgXMLParser::_parseDeep(fgXMLNode *cnode, int depth)
 			firstAttribute = this->getCurrentAttribute();
 		elementPtr = this->getRootElement();
 		// Call start element for the very first element in the XML tree - root node
-		this->m_contentHandler->startElement(rootName, elementPtr, (fgXMLNodeType)elementPtr->Type(), firstAttribute);
+		this->m_contentHandler->startElement(rootName, elementPtr, (fgXMLNodeType)elementPtr->Type(), firstAttribute, depth);
 	}
 	// Parsing children nodes
 	if(this->getCurrentNodeChildrenPresence()) {
 		fgXMLAttribute *firstAttribute = NULL;
 		fgXMLElement *elementPtr = NULL;
-		this->goDeeper();
+		this->goDeeper(); depth++;
 		do {
 			if(this->setFirstAttribute())
 				firstAttribute = this->getCurrentAttribute();
@@ -126,17 +127,17 @@ fgBool fgXMLParser::_parseDeep(fgXMLNode *cnode, int depth)
 			elementPtr = this->getCurrentNode()->ToElement();
 			if(this->isCurrentElement()) {
 				// Handlers function for properly handling begining of the element
-				this->m_contentHandler->startElement(currentNodeValue, elementPtr, (fgXMLNodeType)elementPtr->Type(), firstAttribute);
+				this->m_contentHandler->startElement(currentNodeValue, elementPtr, (fgXMLNodeType)elementPtr->Type(), firstAttribute, depth);
 				// Go deeper in the parsing tree
-				this->_parseDeep(this->getCurrentNode(), depth++);
+				this->_parseDeep(this->getCurrentNode(), (depth));
 				// Handle end of the element
-				this->m_contentHandler->endElement(currentNodeValue, elementPtr, (fgXMLNodeType)elementPtr->Type());
+				this->m_contentHandler->endElement(currentNodeValue, elementPtr, (fgXMLNodeType)elementPtr->Type(), depth);
 			} else if(this->isCurrentText() || this->isCurrentComment()) {
 				// This will be probably comment element or text between tags (start / end)
-				this->m_contentHandler->characters(currentNodeValue, 0, strlen(currentNodeValue));
+				this->m_contentHandler->characters(currentNodeValue, 0, strlen(currentNodeValue), depth);
 			}
 		} while(this->goToNextNode());
-		this->goHigher();
+		this->goHigher(); depth--;
 	} else {
 		// #FIXME
 	}
@@ -147,7 +148,7 @@ fgBool fgXMLParser::_parseDeep(fgXMLNode *cnode, int depth)
 		if(!rootName)
 			return FG_FALSE;
 		elementPtr = this->getRootElement();
-		this->m_contentHandler->endElement(rootName, elementPtr, (fgXMLNodeType)elementPtr->Type());
+		this->m_contentHandler->endElement(rootName, elementPtr, (fgXMLNodeType)elementPtr->Type(), depth);
 	}
 	return FG_TRUE;
 }
@@ -169,7 +170,7 @@ fgBool fgXMLParser::parseWithHandler(void)
 	// Start document parsing
 	m_contentHandler->startDocument(&this->m_xmlDocument);
 	// Start deep parsing #FIXME
-	fgBool pstatus = _parseDeep();
+	fgBool pstatus = _parseDeep(NULL, 0);
 	if(!pstatus) {
 		return FG_FALSE;
 	}
