@@ -48,6 +48,7 @@ files
 	Util/fgTag.h
 
 	["FlexiGame/BaseCode/XML"]
+	XML/fgXMLAutoHandler.h
 	XML/fgXMLDefaultHandler.h
 	XML/fgXMLErrorCodes.h
 	XML/fgXMLParser.cpp
