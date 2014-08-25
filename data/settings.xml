@@ -1,0 +1,17 @@
+<Settings>
+	<defaultDataPath>data</defaultDataPath>
+	<defaultLogPath>log</defaultLogPath>
+	<mainConfigPath>main.ini</mainConfigPath>
+	<programTitle>Flexible Game Engine: Infinium</programTitle>
+	<defaultProfileName></defaultProfileName>
+	<mainProfileName></mainProfileName>
+	<lastExecution></lastExecution>
+	<videoModeID></videoModeID>
+	<verboseLevel></verboseLevel>
+	<lastTimestamp></lastTimestamp>
+	<useSound>true</useSound>
+	<useConsole>true</useConsole>
+	<useNetwork>true</useNetwork>
+	<cleanExit>true</cleanExit>
+	<debugMode>true</debugMode>
+</Settings>
