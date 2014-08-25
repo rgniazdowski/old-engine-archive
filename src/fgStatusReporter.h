@@ -28,6 +28,7 @@ public:
 	}
 
 	virtual ~fgStatusReporter() {
+		printf("virtual ~~~~fgStatusReporter() - clear status...\n"); // #DEBUG #FIXME
 		clearStatus();
 	}
 public:
@@ -53,6 +54,20 @@ public:
 		if(!m_statusStack.empty())
 			return m_statusStack.top();
 		return NULL;
+	}
+
+	void clearStatus(void) {
+		while(!m_statusStack.empty()) {
+			fgStatus *top = m_statusStack.top();
+			// Remove the message only if it's not managed
+			if(!top->message->isManaged)
+				top->clearMessage();
+			// Delete the status (when not managed)
+			if(!top->isManaged)
+				delete top;
+			m_statusStack.pop();
+		}
+		m_errCode = FG_ERRNO_OK;
 	}
 protected:
 	void setErrorCode(int _code) {
@@ -115,19 +130,6 @@ protected:
 		reportStatus(newStatus->debug(msgData, _code));
 	}
 
-	void clearStatus(void) {
-		while(!m_statusStack.empty()) {
-			fgStatus *top = m_statusStack.top();
-			// Remove the message only if it's not managed
-			if(!top->message->isManaged)
-				top->clearMessage();
-			// Delete the status (when not managed)
-			if(!top->isManaged)
-				delete top;
-			m_statusStack.pop();
-		}
-		m_errCode = FG_ERRNO_OK;
-	}
 protected:
 	int		m_errCode;
 	fgBool	m_reportToMsgSystem;

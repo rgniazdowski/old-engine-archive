@@ -15,6 +15,7 @@ bool fgSingleton<fgMessageSubsystem>::instanceFlag = false;
 template <>
 fgMessageSubsystem *fgSingleton<fgMessageSubsystem>::instance = NULL;
 
+
 /** \brief
  */
 fgMessageSubsystem::fgMessageSubsystem()

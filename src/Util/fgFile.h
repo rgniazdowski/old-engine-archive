@@ -13,6 +13,17 @@
 #include "fgBuildConfig.h"
 #include "fgCommon.h"
 
+#include "fgTag.h"
+#include "fgStatusReporter.h"
+
+class fgFile;
+
+#define FG_TAG_FILE_NAME	"tag{fgFile}"
+#define FG_TAG_FILE			FG_TAG_TYPE(fgFile)
+
+FG_TAG_TEMPLATE_ID_AUTO(fgFile, FG_TAG_FILE_NAME);
+typedef FG_TAG_FILE fgFileTag;
+
 #include <cstdio>
 #include <string>
 
@@ -62,7 +73,7 @@ FG_ENUM_FLAGS(fgFileMode);
 /*
  * Platform independent wrapper for basic file operations
  */
-class fgFile
+class fgFile : public fgStatusReporter<fgFileTag>
 {
 protected:
 	// C standard file handle
