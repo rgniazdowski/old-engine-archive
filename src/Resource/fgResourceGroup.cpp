@@ -72,7 +72,6 @@ void fgResourceGroupContentHandler::startElement(const char *localName, fgXMLEle
 	// ZipPack
 	// Resource Group ?
 	m_elemStack.push(elementPtr);
-
 	m_resType = FG_RESOURCE_TYPE_FROM_TEXT(localName);
 	// Handling for resource group tag type - in most cases it's the root node.
 	// #TODO - there needs to be a security check - checking if the resource group does not

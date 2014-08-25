@@ -17,6 +17,7 @@
 #include <cstdlib>
 
 #include "XML/fgXMLParser.h"
+#include "XML/fgXMLDefaultHandler.h"
 
 // -----------------------------
 // Predefined classes
@@ -77,7 +78,7 @@ public:
 	}
 
     // Receive notification of the end of an element.
-	virtual void endElement(const char *localName, fgXMLElement *elementPtr, fgXMLNodeType nodeType, int depth = -1);
+	virtual void endElement(const char *localName, fgXMLElement *elementPtr, fgXMLNodeType nodeType, int depth = 0);
 
 	// Receive notification of the beginning of the document.
 	virtual void startDocument(fgXMLDocument *document)
@@ -86,10 +87,10 @@ public:
 	}
 
 	// Receive notification of the start of an element.
-	virtual void startElement(const char *localName, fgXMLElement *elementPtr, fgXMLNodeType nodeType, fgXMLAttribute *firstAttribute, int depth = -1);
+	virtual void startElement(const char *localName, fgXMLElement *elementPtr, fgXMLNodeType nodeType, fgXMLAttribute *firstAttribute, int depth = 0);
 
 	// Receive notification of character data inside an element or comment
-	virtual void characters(const char ch[], int start, int length)
+	virtual void characters(const char ch[], int start, int length, int depth = 0)
 	{
 		// Characters - wont be needed
 		//printf("characters: n: %d, val: '%s'\n", length, ch);

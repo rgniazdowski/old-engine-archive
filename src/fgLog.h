@@ -32,4 +32,5 @@ void PrintMessage(fgMessage *message);
 void PrintMessageToLog(fgFile *file, fgMessage *message);
 
 };
-#endif
+
+#endif /* _FG_LOG_H_ */

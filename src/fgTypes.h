@@ -65,7 +65,6 @@ inline fgBool _FG_BOOL_FROM_TEXT(const char* text) {
 	return FG_FALSE;
 }
 #define FG_BOOL_FROM_TEXT(text) _FG_BOOL_FROM_TEXT(text)
-#define FG_BOOL FG_BOOL_FROM_TEXT
 
 #define FG_ENUM_FLAGS(Type) \
 inline Type	operator	& (Type x, Type y)		{	return static_cast<Type>	(static_cast<int>(x) & static_cast<int>(y));	} \
