@@ -26,7 +26,6 @@
 #include "fgXMLTypesWrap.h"
 #include "fgXMLDefaultHandler.h"
 
-
 // This class extends the fgFile, so it can load the proper XML file
 // fgXMLParser contains  specialized functions for  parsing/interpreting the  data inside the XML file, its
 // a kind of a XML functions wrapper to make it easier and more intuitive to interpret and extract the data
@@ -51,10 +50,6 @@
 
 	A Decleration contains: Attributes (not on tree)
 */
-
-#define SETT_FILENAME "test.xml" // #FIXME
-
-#define FG_XML_PARSER_ERROR_LENGTH		512
 
 class fgXMLParser : protected fgFile
 {
@@ -90,7 +85,7 @@ public:
 	 */
 	fgXMLParser(const char *filePath) : m_fileSize(0), m_fileBuffer(NULL),
 		m_rootXMLElement(NULL), m_currentXMLNode(NULL),
-		m_currentXMLAttribute(NULL), m_contentHandler(NULL)
+		m_currentXMLAttribute(NULL), m_contentHandler(NULL), fgFile(filePath)
 	{
 		loadXML(filePath);
 	}

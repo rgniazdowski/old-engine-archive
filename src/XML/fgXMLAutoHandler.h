@@ -70,7 +70,9 @@ template <> struct fgXMLAutoElement<_type> { \
 #define FG_XML_AUTO_TEMPLATE_ELEMENT_CHECK_NAME(_elemType, _target_member, _name) \
 	do { \
 	if(strncasecmp(localName, _name, strlen(_name)) == 0) { \
-		_target->_target_member = fgXMLAutoConvert<_elemType>::convert(_elemPtr->GetText()); \
+		const char *_e_txt = _elemPtr->GetText(); \
+		if(_e_txt != NULL) \
+			_target->_target_member = fgXMLAutoConvert<_elemType>::convert(_e_txt); \
 	} \
 	} while(0)
 
@@ -85,7 +87,7 @@ template <> struct fgXMLAutoElement<_type> { \
 template <> struct fgXMLAutoCharacters<_type> { \
 	typedef _type type; \
 	static void characters(const char ch[], int start, int length, type *_target, fgXMLElement *_elemPtr) { \
-		if(!_target || !_elemPtr) return; \
+		if(!_target || !_elemPtr || !length) return; \
 		const char  *localName = _elemPtr->Value()
 
 #define FG_XML_AUTO_TEMPLATE_CHARACTERS_CHECK_NAME(_elemType, _target_member, _name) \
