@@ -1,10 +1,16 @@
 /*******************************************************
  * Copyright (C) 2014 Radoslaw Gniazdowski <r.gniazdowski@gmail.com>. All rights reserved.
  *
- * This file is part of #FLEXIGAME_PROJECT
+ * This file is part of FlexiGame: Flexible Game Engine™
+ * ______  _              _  _____                         
+ * |  ___|| |            (_)|  __ \                        
+ * | |_   | |  ___ __  __ _ | |  \/  __ _  _ __ ___    ___ 
+ * |  _|  | | / _ \\ \/ /| || | __  / _` || '_ ` _ \  / _ \
+ * | |    | ||  __/ >  < | || |_\ \| (_| || | | | | ||  __/
+ * \_|    |_| \___|/_/\_\|_| \____/ \__,_||_| |_| |_| \___|
  *
- * #FLEXIGAME_PROJECT source code and any related files can not be copied, modified
- * and/or distributed without the express or written permission from the author.
+ * FlexiGame source code and any related files can not be copied, modified
+ * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
 // The build config is used to configure the whole engine at compile time.

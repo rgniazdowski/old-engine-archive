@@ -1,10 +1,10 @@
 /*******************************************************
  * Copyright (C) 2014 Radoslaw Gniazdowski <r.gniazdowski@gmail.com>. All rights reserved.
  *
- * This file is part of #FLEXIGAME_PROJECT
+ * This file is part of FlexiGame: Flexible Game Engine
  *
- * #FLEXIGAME_PROJECT source code and any related files can not be copied, modified
- * and/or distributed without the express or written permission from the author.
+ * FlexiGame source code and any related files can not be copied, modified
+ * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
 #include "fgBuildConfig.h"
@@ -23,6 +23,7 @@
 
 #include "GameLogic/fgGameLogic.h"
 #include "Util/fgSettings.h"
+#include "Util/fgConfigParser.h" // FIXME
 #include "Hardware/fgSensors.h"
 #include "Hardware/fgQualityManager.h"
 #include "Hardware/fgHardwareState.h"
@@ -35,6 +36,7 @@
 #include "XML/fgXMLParser.h"
 #include "Resource/fgResourceManager.h"
 #include "Resource/fgResourceFactory.h"
+#include "fgMessageSubsystem.h"
 
 template <>
 bool fgSingleton<fgGameMain>::instanceFlag = false;
@@ -135,6 +137,47 @@ fgBool fgGameMain::initSubsystems(void)
     #endif
 	glDepthFunc(GL_LESS);
 	glEnable(GL_DEPTH_TEST);
+
+	fgSettings *set11 = new fgSettings("settings.xml");
+	delete set11;
+	set11 = NULL;
+
+	FG_MessageSubsystem->initialize(); // ?
+	FG_MessageSubsystem->setLogPaths("all.log", "error.log", "debug.log");
+
+	fgConfigParser *ini = new fgConfigParser("main.config.ini");
+	fgConfigParser::parameterMap &params = ini->getRefParameterMap();
+	fgConfigParser::parameterMapItor it = params.begin();
+	for(;it!=params.end();it++) {
+		std::string section = it->first.first;
+		std::string pname = it->first.second;
+		fgCfgParameter &param1 = it->second;
+		printf("section: '%s', param: '%s', value: ", section.c_str(), pname.c_str());
+		switch(param1.type) {
+		case FG_CFG_PARAMETER_INT:
+			printf("int = %d\n", param1.int_val);
+			break;
+		case FG_CFG_PARAMETER_LONG:
+			printf("long = %ld\n", param1.long_val);
+			break;
+		case FG_CFG_PARAMETER_FLOAT:
+			printf("float = %.4f\n", param1.float_val);
+			break;
+		case FG_CFG_PARAMETER_BOOL:
+			printf("bool = %d\n", (int)param1.bool_val);
+			break;
+		case FG_CFG_PARAMETER_STRING:
+			printf("str = '%s'\n", param1.string);
+			break;
+		case FG_CFG_PARAMETER_NONE:
+			printf("NONE\n");
+			break;
+		default:
+			break;
+		};
+	}
+	delete ini;
+
 	return FG_TRUE;
 }
 
@@ -179,6 +222,7 @@ fgBool fgGameMain::closeSybsystems(void)
 #endif // FG_USING_MARMALADE
 	FG_QualityManager->deleteInstance();
 	FG_ResourceFactory->deleteInstance();
+	FG_MessageSubsystem->deleteInstance();
 
 	FG_GFX::closeGFX();
 

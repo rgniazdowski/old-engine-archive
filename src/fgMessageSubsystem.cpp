@@ -1,10 +1,10 @@
 /*******************************************************
  * Copyright (C) 2014 Radoslaw Gniazdowski <r.gniazdowski@gmail.com>. All rights reserved.
  *
- * This file is part of #FLEXIGAME_PROJECT
+ * This file is part of FlexiGame: Flexible Game Engine
  *
- * #FLEXIGAME_PROJECT source code and any related files can not be copied, modified
- * and/or distributed without the express or written permission from the author.
+ * FlexiGame source code and any related files can not be copied, modified
+ * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
 #include "fgMessageSubsystem.h"
@@ -167,7 +167,7 @@ fgBool fgMessageSubsystem::pushStatus(fgStatus *status)
 		}
 
 		FG_LOG::PrintStatus(status);
-
+		// #FIXME #TODO - buffering messages, cyclic writing to log files (but always to console output)
 		// Warning, Info, Debug, Error
 		FG_LOG::PrintStatusToLog(&m_logAll, status);
 		// Debug or Error
