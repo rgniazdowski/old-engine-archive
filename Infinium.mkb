@@ -30,6 +30,8 @@ files
 	fgTypes.h
 
 	["FlexiGame/BaseCode/Util"]
+	Util/fgConfigParser.cpp
+	Util/fgConfigParser.h
 	Util/fgPath.cpp
 	Util/fgPath.h
 	Util/fgFile.cpp
