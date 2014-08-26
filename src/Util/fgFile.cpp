@@ -39,7 +39,8 @@ fgFile::fgFile() :
 /*
  *
  */
-fgFile::fgFile(const char *filePath) : m_file(NULL)
+fgFile::fgFile(const char *filePath) : m_file(NULL),
+	m_modeFlags(FG_FILE_MODE_READ | FG_FILE_MODE_BINARY)
 {
 	m_filePath = filePath;
 }
@@ -54,6 +55,7 @@ fgFile::~fgFile()
 		// FIXME
 	}
 	m_filePath.clear();
+	clearStatus();
 }
 
 /*
@@ -86,7 +88,7 @@ const char *fgFile::modeStr(fgFileMode mode)
 		if(mode & FG_FILE_MODE_UPDATE)
 			return "w+";
 		if(mode & FG_FILE_MODE_BINARY)
-			return "ab";
+			return "wb";
 		return "w";
 	}
 	if(mode & FG_FILE_MODE_APPEND) {
@@ -95,8 +97,8 @@ const char *fgFile::modeStr(fgFileMode mode)
 		if(mode & FG_FILE_MODE_UPDATE)
 			return "a+";
 		if(mode & FG_FILE_MODE_BINARY)
-			return "wb";
-		return "w";
+			return "ab";
+		return "a";
 	}
 	return "";
 }
@@ -111,15 +113,19 @@ fgBool fgFile::open(const char *filePath, fgFileMode mode)
 	if(strlen(filePath) <= 1) {
 		return FG_FALSE;
 	}
-	if(!exists(filePath)) {
-		return FG_FALSE;
+	if(mode == FG_FILE_MODE_READ || 
+		mode == (FG_FILE_MODE_READ | FG_FILE_MODE_BINARY) ||
+		mode & FG_FILE_MODE_READ_UPDATE) {
+		if(!exists(filePath))
+			return FG_FALSE;
 	}
+	printf("FILE MODE: %d | str: '%s'\n", (int)mode, modeStr(mode));
 	m_file = fopen(filePath, modeStr(mode));
 
 	if(m_file == NULL) {
 		return FG_FALSE;
 	}
-
+	setPath(filePath);
 	m_modeFlags = mode;
 	return FG_TRUE;
 }
