@@ -43,6 +43,7 @@ files
 	Util/fgProfiling.h
 	Util/fgSettings.cpp
 	Util/fgSettings.h
+	Util/fgStrings.h
 	Util/fgTime.cpp
 	Util/fgTime.h
 	Util/fgTag.h
