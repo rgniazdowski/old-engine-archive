@@ -140,12 +140,12 @@ fgBool fgResourceManager::initialize(void)
 	while((filename = datadir->getNextFile()) != NULL)
 	{
 		// #FIXME - this should check for string length errors (?)
-		const char *ext = FG_FileExt(filename);
+		const char *ext = FG_FileExt(filename, FG_TRUE);
 		if(!ext)
 			continue;
-		if(strlen(ext) == 4)
-			if(strcmp(ext, "rgrp") == 0)
-				resGroupFiles.push_back(std::string(filename));
+		if(strcmp(ext, "group.xml") == 0) {
+			resGroupFiles.push_back(std::string(filename));
+		}
 	}
 	delete datadir;
 	filename = NULL;
