@@ -10,10 +10,12 @@
 #ifndef _FG_PATH_H_
 #define _FG_PATH_H_
 
-// Return the file extension #FIXME
-const char *FG_FileExt(const char *filename);
+#include "fgBool.h"
 
-// Return the file name in path #FIXME
+// Return the file extension
+const char *FG_FileExt(const char *path, fgBool fullExt = FG_FALSE);
+
+// Return the file name in path
 const char* FG_Filename(const char* path);
 
 #endif /* _FG_PATH_H_ */

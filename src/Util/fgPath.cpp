@@ -13,9 +13,15 @@
 /*
  *
  */
-const char *FG_FileExt(const char *filename) {
-    const char *dot = strrchr(filename, '.');
-    if(!dot || dot == filename) return NULL;
+const char *FG_FileExt(const char *path, fgBool fullExt) {
+	if(!path) return NULL;
+	path = FG_Filename(path);
+	const char *dot = NULL;
+	if(fullExt == FG_TRUE)
+		dot = strchr(path, '.');
+	else
+		dot = strrchr(path, '.');
+    if(!dot || dot == path) return NULL;
     return dot + 1;
 }
 
@@ -24,5 +30,7 @@ const char *FG_FileExt(const char *filename) {
  */
 const char* FG_Filename (const char* path)
 {
+	if(!path)
+		return NULL;
 	return (strrchr(path, '/') ? strrchr(path, '/') + 1 : strrchr(path, '\\') ? strrchr(path, '\\') + 1 : path);
 }
