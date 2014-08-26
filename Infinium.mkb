@@ -26,6 +26,7 @@ files
 	fgMessageSubsystem.h
 	fgSingleton.h
 	fgStatus.h
+	fgStatusReporter.cpp
 	fgStatusReporter.h
 	fgTypes.h
 

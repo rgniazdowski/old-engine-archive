@@ -12,9 +12,8 @@
 
 #include "fgCommon.h"
 #include "fgSingleton.h"
-#include "fgManagerBase.h"
-
 #include "fgStatus.h"
+#include "fgManagerBase.h"
 
 #include <stack>
 #include <map>
@@ -26,7 +25,7 @@
 /*
  *
  */
-class fgMessageSubsystem : public fgManagerBase, public fgSingleton<fgMessageSubsystem>
+class fgMessageSubsystem : protected fgManagerBase, public fgSingleton<fgMessageSubsystem>
 {
 	friend class fgSingleton<fgMessageSubsystem>;
 protected:

@@ -151,7 +151,6 @@ fgBool fgMessageSubsystem::pushStatus(fgStatus *status)
 		return FG_FALSE;
 	status->setManaged();
 	m_statusVec.push_back(status);
-
 	if(status->message)
 	{
 		fgFile *filePtr = NULL;
@@ -167,11 +166,13 @@ fgBool fgMessageSubsystem::pushStatus(fgStatus *status)
 			break;
 		}
 
+		FG_LOG::PrintStatus(status);
+
 		// Warning, Info, Debug, Error
-		FG_LOG::PrintMessageToLog(&m_logAll, status->message);
+		FG_LOG::PrintStatusToLog(&m_logAll, status);
 		// Debug or Error
 		if(filePtr)
-			FG_LOG::PrintMessageToLog(filePtr, status->message);
+			FG_LOG::PrintStatusToLog(filePtr, status);
 	}
 	return FG_TRUE;
 }
