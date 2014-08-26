@@ -10,6 +10,16 @@
 #ifndef _FG_ERROR_CODES_H_
 #define _FG_ERROR_CODES_H_
 
+#ifdef _FG_ERRNO_ERROR_CODES_BLOCK__
+#error "FG_ERRNO_ERROR_CODES_BLOCK constant is defined. Do not include ErrorCodes inside of fgErrno header."
+#endif
+
+#ifdef _FG_ERRNO_ERROR_CODES_BLOCK_OTHER__
+#error "FG_ERRNO_ERROR_CODES_BLOCK constant is defined. Do not include fgErrorCodes.h inside of other error codes definition header."
+#endif 
+
+#include "fgErrno.h"
+
 #include "Audio/fgSFXErrorCodes.h"
 #include "Event/fgEventErrorCodes.h"
 #include "GFX/fgGFXErrorCodes.h"

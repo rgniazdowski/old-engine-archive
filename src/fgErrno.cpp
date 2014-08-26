@@ -12,6 +12,9 @@
 fgErrno::strErrMap fgErrno::s_errorMap;
 int fgErrno::s_errno = 0;
 
+/*
+ *
+ */
 const char *fgErrno::strError(int _code)
 {
 	if(_code < FG_ERRNO_BASE_CODE(0)) {
@@ -21,15 +24,21 @@ const char *fgErrno::strError(int _code)
 	}
 }
 
+/*
+ *
+ */
 const char *fgErrno::_getStrError(int _fg_code)
 {
 	strErrMapItor it = s_errorMap.find(_fg_code);
 	if(it == s_errorMap.end())
-		return "invalid code";
+		return FG_ERRNO_INVALID_CODE_TEXT;
 	else
 		return (*it).second.c_str();
 }
 
+/*
+ *
+ */
 void fgErrno::registerStrError(int _code, const char *_str)
 {
 	if(!_str)
@@ -40,11 +49,17 @@ void fgErrno::registerStrError(int _code, const char *_str)
 	std::pair<strErrMapItor, bool> result = s_errorMap.insert(query_pair);
 }
 
+/*
+ *
+ */
 void fgErrno::registerStrError(int _code, std::string& _str)
 {
 	registerStrError(_code, _str.c_str());
 }
 
+/*
+ *
+ */
 void fgErrno::setErrno(int _code)
 {
 	if(_code < FG_ERRNO_BASE_CODE(0)) {
@@ -53,6 +68,9 @@ void fgErrno::setErrno(int _code)
 	s_errno = _code;
 }
 
+/*
+ *
+ */
 void fgErrno::reset(void)
 {
 	s_errorMap.clear();
