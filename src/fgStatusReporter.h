@@ -16,6 +16,10 @@
 
 #include <stack>
 
+namespace FG_STATUS {
+	void reportToMessageSubsystem(fgStatus *_status);
+};
+
 /*
  *
  */
@@ -28,7 +32,6 @@ public:
 	}
 
 	virtual ~fgStatusReporter() {
-		printf("virtual ~~~~fgStatusReporter() - clear status...\n"); // #DEBUG #FIXME
 		clearStatus();
 	}
 public:
@@ -100,7 +103,7 @@ protected:
 		// it in proper place, save to corresponding file and take ownership
 		if(_status->isManaged) {
 			// #TODO #P1
-
+			FG_STATUS::reportToMessageSubsystem(_status);
 		}
 	}
 

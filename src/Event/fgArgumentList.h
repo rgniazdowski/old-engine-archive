@@ -54,7 +54,7 @@ struct fgArgument
 	fgArgument() : type(FG_ARGUMENT_NONE), int_val(0) {
 	}
 
-	void reset() {
+	void reset(void) {
 		type = FG_ARGUMENT_NONE;
 		int_val = 0;
 	}

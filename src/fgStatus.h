@@ -130,7 +130,7 @@ struct fgStatus
 	// True if current status is success
 	fgBool isSuccess(void)
 	{
-		return (fgBool)(mask & FG_SUCCESS);
+		return (fgBool)(mask == FG_SUCCESS);
 	}
 
 	// Check whether current status is warning (message)
