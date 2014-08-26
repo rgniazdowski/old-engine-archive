@@ -10,6 +10,7 @@
 #ifndef _FG_BOOL_H_
 #define _FG_BOOL_H_
 
+#include <climits>
 
 #ifndef FG_BOOL_DEFINED_
 #define FG_BOOL_DEFINED_
@@ -34,6 +35,10 @@ typedef unsigned char fgBool;
 
 #ifndef FG_ERROR
 #define FG_ERROR 0
+#endif
+
+#ifndef FG_BOOL_INVALID
+#define FG_BOOL_INVALID UCHAR_MAX
 #endif
 
 #define FG_SUCCESS_TEXT		"success"

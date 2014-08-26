@@ -56,13 +56,13 @@
 // Convert text (literal) to corresponding enum value
 inline fgBool _FG_BOOL_FROM_TEXT(const char* text) {
 	if(!text)
-		return FG_FALSE;
+		return FG_BOOL_INVALID;
 	FG_RETURN_ENUM_IF_TEXT_EQ(FG_TRUE);
 	FG_RETURN_ENUM_IF_TEXT_EQ(FG_FALSE);
 	FG_RETURN_ENUM_IF_TEXT_EQ(FG_SUCCESS);
 	FG_RETURN_ENUM_IF_TEXT_EQ(FG_WARNING);
 	FG_RETURN_ENUM_IF_TEXT_EQ(FG_ERROR);
-	return FG_FALSE;
+	return FG_BOOL_INVALID;
 }
 #define FG_BOOL_FROM_TEXT(text) _FG_BOOL_FROM_TEXT(text)
 
