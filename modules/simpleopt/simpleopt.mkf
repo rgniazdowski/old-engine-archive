@@ -1,0 +1,11 @@
+includepaths
+{
+    "."
+}
+
+files
+{
+    simpleopt.mkf
+    SimpleOpt.h
+    SimpleGlob.h
+}
