@@ -1,0 +1,79 @@
+upstream
+{
+	url="https://github.com/bulletphysics/bullet3/archive/master.zip"
+	local=modified
+}
+
+library
+{
+	".,bullet"
+}
+
+defines
+{
+	BT_NO_PROFILE
+}
+
+includepaths
+{
+	"modified/src"
+	"modified/Extras"
+}
+
+files
+{
+	("modified/src")
+	"*.h"
+
+	[docs]
+	("docs")
+	bullet.defines.txt
+		
+	[LinearMath]
+	("modified/src/LinearMath")
+	"*.h"
+	
+	[BulletCollision/BroadphaseCollision]
+	("modified/src/BulletCollision/BroadphaseCollision")
+	"*.h"
+
+	[BulletCollision/CollisionDispatch]
+	("modified/src/BulletCollision/CollisionDispatch")
+	"*.h"
+
+	[BulletCollision/CollisionShapes]
+	("modified/src/BulletCollision/CollisionShapes")
+	"*.h"
+
+#	[BulletCollision/Gimpact]
+#	("modified/src/BulletCollision/Gimpact")
+#	"*.h"
+
+	[BulletCollision/NarrowPhaseCollision]
+	("modified/src/BulletCollision/NarrowPhaseCollision")
+	"*.h"
+	
+#	[BulletDynamics/Character]
+#	("modified/src/BulletDynamics/Character")
+#	"*.h"
+
+	[BulletDynamics/ConstraintSolver]
+	("modified/src/BulletDynamics/ConstraintSolver")
+	"*.h"
+
+	[BulletDynamics/Dynamics]
+	("modified/src/BulletDynamics/Dynamics")
+	"*.h"
+
+	[BulletDynamics/Vehicle]
+	("modified/src/BulletDynamics/Vehicle")
+	"*.h"
+
+#	[Extras/Serialize/BulletWorldImporter]
+#	("modified/Extras/Serialize/BulletWorldImporter")
+#	"*.h"
+
+#	[Extras/Serialize/BulletFileLoader]
+#	("modified/Extras/Serialize/BulletFileLoader")
+#	"*.h"
+}
