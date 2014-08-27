@@ -1,0 +1,10 @@
+includepaths
+{
+    "."
+}
+
+files
+{
+    simpleini.mkf
+    SimpleIni.h
+}
