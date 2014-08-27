@@ -1,0 +1,77 @@
+#upstream
+#{
+#    original: http://www.lua.org/ftp/lua-5.1.5.tar.gz
+#    url="http://source.madewithmarmalade.com/upstream/lua-5.1.4.tar.gz"
+#    checkin=git
+#}
+
+includepath
+{
+    "src"
+}
+
+files
+{
+    ["Source Lua 5.1.5"]
+    ("src")
+    lapi.c
+    lcode.c
+    ldebug.c
+    ldo.c
+    ldump.c
+    lfunc.c
+    lgc.c
+    linit.c
+    llex.c
+    lmem.c    
+    lobject.c
+    lopcodes.c
+    lparser.c
+    lstate.c
+    lstring.c    
+    ltable.c
+    ltm.c
+    lundump.c
+    lvm.c
+    lzio.c
+    print.c
+    
+    lapi.h    
+    lcode.h
+    ldebug.h
+    ldo.h
+    lfunc.h
+    lgc.h
+    llex.h
+    llimits.h
+    lmem.h
+    lobject.h
+    lopcodes.h
+    lparser.h
+    lstate.h
+    lstring.h
+    ltable.h
+    ltm.h
+    luaconf.h
+    lundump.h
+    lvm.h
+    lzio.h
+    
+    ["Libs Lua 5.1.5"]
+    ("src")
+    lauxlib.c
+    lbaselib.c
+    lmathlib.c
+    loslib.c
+    liolib.c
+    ltablib.c
+    loadlib.c
+#   ldblib.c
+    lstrlib.c
+    
+    ["Public headers Lua 5.1.5"]
+    ("src")
+    lauxlib.h
+    lua.h
+    lualib.h
+}
