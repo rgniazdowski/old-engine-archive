@@ -6,3 +6,12 @@ project/linux/foobar-cpp
 project/linux/FlexiGame_NB/build
 project/linux/FlexiGame_NB/dist
 log
+modules/bullet/modified/
+modules/lua_514/src
+modules/lua_514/test
+modules/lua_514/etc
+modules/lua_515/src
+modules/lua_515/test
+modules/lua_515/etc
+modules/lua_523/src
+modules/luaplus/upstream

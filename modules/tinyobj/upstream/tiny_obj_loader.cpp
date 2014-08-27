@@ -16,6 +16,7 @@
 // version 0.9.0: Initial
 //
 
+
 #include <cstdlib>
 #include <cstring>
 #include <cassert>
@@ -177,7 +178,7 @@ updateVertex(
     return it->second;
   }
 
-  assert(in_positions.size() > std::vector<float>::size_type(3*i.v_idx+2));
+  assert(in_positions.size() > (unsigned int) (3*i.v_idx+2));
 
   positions.push_back(in_positions[3*i.v_idx+0]);
   positions.push_back(in_positions[3*i.v_idx+1]);
@@ -306,12 +307,12 @@ std::string LoadMtl (
 
     std::string linebuf(&buf[0]);
 
-    // Trim newline '\r\n' or '\r'
+    // Trim newline '\r\n' or '\n'
     if (linebuf.size() > 0) {
       if (linebuf[linebuf.size()-1] == '\n') linebuf.erase(linebuf.size()-1);
     }
     if (linebuf.size() > 0) {
-      if (linebuf[linebuf.size()-1] == '\n') linebuf.erase(linebuf.size()-1);
+      if (linebuf[linebuf.size()-1] == '\r') linebuf.erase(linebuf.size()-1);
     }
 
     // Skip if empty line.
@@ -545,12 +546,12 @@ std::string LoadObj(
 
     std::string linebuf(&buf[0]);
 
-    // Trim newline '\r\n' or '\r'
+    // Trim newline '\r\n' or '\n'
     if (linebuf.size() > 0) {
       if (linebuf[linebuf.size()-1] == '\n') linebuf.erase(linebuf.size()-1);
     }
     if (linebuf.size() > 0) {
-      if (linebuf[linebuf.size()-1] == '\n') linebuf.erase(linebuf.size()-1);
+      if (linebuf[linebuf.size()-1] == '\r') linebuf.erase(linebuf.size()-1);
     }
 
     // Skip if empty line.
@@ -720,4 +721,4 @@ std::string LoadObj(
 }
 
 
-};
+}

@@ -1,6 +1,8 @@
 tinyobjloader
 =============
 
+[![wercker status](https://app.wercker.com/status/495a3bac400212cdacdeb4dd9397bf4f/m "wercker status")](https://app.wercker.com/project/bykey/495a3bac400212cdacdeb4dd9397bf4f)
+
 http://syoyo.github.io/tinyobjloader/
 
 Tiny but poweful single file wavefront obj loader written in C++. No dependency except for C++ STL. It can parse 10M over polygons with moderate memory and time.
@@ -10,6 +12,7 @@ Good for embedding .obj loader to your (global illumination) renderer ;-)
 What's new
 ----------
 
+* May 17, 2014 : Fixed trim newline bugs. Thanks ardneran!
 * Apr 29, 2014 : Add API to read .obj from std::istream. Good for reading compressed .obj or connecting to procedural primitive generator. Thanks burnse!
 * Apr 21, 2014 : Define default material if no material definition exists in .obj. Thanks YarmUI!
 * Apr 10, 2014 : Add support for parsing 'illum' and 'd'/'Tr' statements. Thanks mmp!

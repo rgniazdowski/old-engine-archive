@@ -2,12 +2,12 @@ includepaths
 {
     "upstream"
 }
-
+# https://github.com/syoyo/tinyobjloader/archive/master.zip
 files
 {
     tinyobj.mkf
 
-	("upstream")
-	tiny_obj_loader.h
+    ("upstream")
+    tiny_obj_loader.h
     tiny_obj_loader.cpp
 }
