@@ -149,11 +149,44 @@ struct fgStatus
 	// If message is NULL, it'll be allocated with new.
 	fgStatus *setCode(int _code)
 	{
-		if(!message) {
-			message = new fgMessage(FG_MESSAGE_INFO, _code);
+		if(message) {
+			message->setCode(_code);
 		}
-		message->setCode(_code);
 		errCode = _code;
+		return this;
+	}
+
+	fgStatus *setupMessage(fgMessageType _type = FG_MESSAGE_INFO, const char *msgData = NULL, int _code = FG_ERRNO_OK)
+	{
+		switch(_type) {
+		case FG_MESSAGE_INFO:
+			mask = FG_SUCCESS;
+			break;
+		case FG_MESSAGE_WARNING:
+		case FG_MESSAGE_DEBUG:
+			mask = FG_WARNING;
+			break;
+		case FG_MESSAGE_ERROR:
+			mask = FG_ERROR;
+			break;
+		default:
+			break;
+		};
+
+		if(msgData) {
+			if(!message) {
+				message = new fgMessage(_type, msgData);
+			} else {
+				message->data = msgData;
+				message->type = _type;
+				setCode(_code);
+			}
+		} else {
+			errCode = _code;
+		}
+		if(isManaged && message)
+			message->setManaged();
+		timestamp = fgTime::seconds();
 		return this;
 	}
 
@@ -162,20 +195,7 @@ struct fgStatus
 	// struct will be initialized.
 	fgStatus *success(const char *msgData = NULL, int _code = FG_ERRNO_OK)
 	{
-		mask = FG_SUCCESS;
-		if(msgData) {
-			if(!message) {
-				message = new fgMessage(FG_MESSAGE_INFO, msgData);
-			} else {
-				message->data = msgData;
-				message->type = FG_MESSAGE_INFO;
-				setCode(_code);
-			}
-		}
-		if(isManaged && message)
-			message->setManaged();
-		timestamp = fgTime::seconds();
-		return this;
+		return setupMessage(FG_MESSAGE_INFO, msgData, _code);
 	}
 
 	// Create (initialize) and return status with warning.
@@ -183,20 +203,7 @@ struct fgStatus
 	// struct will be initialized.
 	fgStatus *warning(const char *msgData = NULL, int _code = FG_ERRNO_OK)
 	{
-		mask = FG_WARNING;
-		if(msgData) {
-			if(!message) {
-				message = new fgMessage(FG_MESSAGE_WARNING, msgData);
-			} else {
-				message->data = msgData;
-				message->type = FG_MESSAGE_WARNING;
-				setCode(_code);
-			}
-		}
-		if(isManaged && message)
-			message->setManaged();
-		timestamp = fgTime::seconds();
-		return this;
+		return setupMessage(FG_MESSAGE_WARNING, msgData, _code);
 	}
 
 	// Create (initialize)  and return status with error.
@@ -204,39 +211,41 @@ struct fgStatus
 	// struct will be initialized.
 	fgStatus *error(const char *msgData = NULL, int _code = FG_ERRNO_OK)
 	{
-		mask = FG_ERROR;
-		if(msgData) {
-			if(!message) {
-				message = new fgMessage(FG_MESSAGE_ERROR, msgData);
-			} else {
-				message->data = msgData;
-				message->type = FG_MESSAGE_ERROR;
-				setCode(_code);
-			}
-		}
-		if(isManaged && message)
-			message->setManaged();
-		timestamp = fgTime::seconds();
-		return this;
+		return setupMessage(FG_MESSAGE_ERROR, msgData, _code);		
 	}
 
 	// Create (initialize) and return debug status - this not an error in most cases.
 	// If message (text) is passed (not NULL) the message struct will be initialized.
 	fgStatus *debug(const char *msgData = NULL, int _code = FG_ERRNO_OK)
 	{
+		return setupMessage(FG_MESSAGE_DEBUG, msgData, _code);
+	}
+
+	fgStatus *setSuccess(void) {
+		mask = FG_SUCCESS;
+		if(message)
+			message->type = FG_MESSAGE_INFO;
+		return this;
+	}
+
+	fgStatus *setError(void) {
+		mask = FG_ERROR;
+		if(message)
+			message->type = FG_MESSAGE_ERROR;
+		return this;
+	}
+
+	fgStatus *setWarning(void) {
 		mask = FG_WARNING;
-		if(msgData) {
-			if(!message) {
-				message = new fgMessage(FG_MESSAGE_DEBUG, msgData);
-			} else {
-				message->data = msgData;
-				message->type = FG_MESSAGE_DEBUG;
-				setCode(_code);
-			}
-		}
-		if(isManaged && message)
-			message->setManaged();
-		timestamp = fgTime::seconds();
+		if(message)
+			message->type = FG_MESSAGE_WARNING;
+		return this;
+	}
+
+	fgStatus *setDebug(void) {
+		mask = FG_WARNING;
+		if(message)
+			message->type = FG_MESSAGE_DEBUG;
 		return this;
 	}
 

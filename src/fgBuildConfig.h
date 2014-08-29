@@ -330,7 +330,7 @@ extern struct fgBuildConfig g_fgBuildConfig;
 #define FG_PACKAGE_ALIAS		""
 
 // Copyright text
-#define FG_COPYRIGHT			"Copyright (C) 2014 Radoslaw Gniazdowski. All rights reserved."
+#define FG_COPYRIGHT			"Copyright (C) Radoslaw Gniazdowski. All rights reserved."
 // Copying text
 #define FG_COPYING				FG_PACKAGE_NAME" source code and any related files can not be copied, modified and/or distributed without the express or written permission from the author."
 // License type
