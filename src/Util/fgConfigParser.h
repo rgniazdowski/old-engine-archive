@@ -38,7 +38,10 @@ enum fgCfgParameterType {
 struct fgCfgParameter
 {
 	std::string name;
+	std::string sectionName;
+	std::string subSectionName;
 	fgCfgParameterType type;
+
 	union {
 		int int_val;
 		long int long_val;
@@ -55,6 +58,8 @@ struct fgCfgParameter
 		type = FG_CFG_PARAMETER_NONE;
 		int_val = 0;
 		name.clear();
+		sectionName.clear();
+		subSectionName.clear();
 		memset(string, 0, FG_CFG_PARAMATER_STRING_MAX);
 	}
 
@@ -90,6 +95,7 @@ struct fgCfgParameter
 			break;
 		case FG_CFG_PARAMETER_LONG:
 			return (void *)&long_val;
+			break;
 		case FG_CFG_PARAMETER_FLOAT:
 			return (void *)&float_val;
 			break;
