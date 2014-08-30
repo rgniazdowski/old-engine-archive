@@ -25,7 +25,7 @@ fgBool fgXMLParser::loadXML(const char *filePath)
 	m_xmlDocument.ClearError();
 	m_xmlDocument.Clear();
 
-	if(!open(filePath, FG_FILE_MODE_READ)) {
+	if(!open(filePath, FG_FILE_MODE_READ | FG_FILE_MODE_BINARY)) {
 		return FG_FALSE;
 	}
 

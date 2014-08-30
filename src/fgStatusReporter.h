@@ -114,24 +114,60 @@ protected:
 		reportStatus(newStatus);
 	}
 
-	void reportSuccess(const char *msgData = NULL, int _code = FG_ERRNO_OK) {
+	void reportSuccess(int _code = FG_ERRNO_OK, const char *fmt = NULL, ...) {
+		const char *msgData = NULL;
+		char buf[FG_MESSAGE_BUFFER_MAX];
+		if(fmt) {
+			va_list args;
+			va_start(args,fmt);
+			vsprintf(buf, fmt, args);
+			va_end(args);
+			msgData = buf;
+		}
 		fgStatus *newStatus = new fgStatus();
-		reportStatus(newStatus->success(msgData, _code));
+		reportStatus(newStatus->success(_code, msgData));
 	}
 
-	void reportWarning(const char *msgData = NULL, int _code = FG_ERRNO_OK) {
+	void reportWarning(int _code = FG_ERRNO_OK, const char *fmt = NULL, ...) {
+		const char *msgData = NULL;
+		char buf[FG_MESSAGE_BUFFER_MAX];
+		if(fmt) {
+			va_list args;
+			va_start(args,fmt);
+			vsprintf(buf, fmt, args);
+			va_end(args);
+			msgData = buf;
+		}
 		fgStatus *newStatus = new fgStatus();
-		reportStatus(newStatus->warning(msgData, _code));
+		reportStatus(newStatus->warning(_code, msgData));
 	}
 
-	void reportError(const char *msgData = NULL, int _code = FG_ERRNO_OK) {
+	void reportError(int _code = FG_ERRNO_OK, const char *fmt = NULL, ...) {
+		const char *msgData = NULL;
+		char buf[FG_MESSAGE_BUFFER_MAX];
+		if(fmt) {
+			va_list args;
+			va_start(args,fmt);
+			vsprintf(buf, fmt, args);
+			va_end(args);
+			msgData = buf;
+		}
 		fgStatus *newStatus = new fgStatus();
-		reportStatus(newStatus->error(msgData, _code));
+		reportStatus(newStatus->error(_code, msgData));
 	}
 
-	void reportDebug(const char *msgData = NULL, int _code = FG_ERRNO_OK) {
+	void reportDebug(int _code = FG_ERRNO_OK, const char *fmt = NULL, ...) {
+		const char *msgData = NULL;
+		char buf[FG_MESSAGE_BUFFER_MAX];
+		if(fmt) {
+			va_list args;
+			va_start(args,fmt);
+			vsprintf(buf, fmt, args);
+			va_end(args);
+			msgData = buf;
+		}
 		fgStatus *newStatus = new fgStatus();
-		reportStatus(newStatus->debug(msgData, _code));
+		reportStatus(newStatus->debug(_code, msgData));
 	}
 
 protected:
@@ -139,7 +175,5 @@ protected:
 	fgBool	m_reportToMsgSystem;
 	std::stack<fgStatus *> m_statusStack;
 };
-
-
 
 #endif /* _FG_STATUS_REPORTER_H_ */

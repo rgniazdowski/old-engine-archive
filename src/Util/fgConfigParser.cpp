@@ -36,12 +36,12 @@ fgBool fgConfigParser::loadConfig(const char *filePath)
 {
 	fgStatusReporter::clearStatus();
 	if(filePath == NULL) {
-		reportError("error");
+		reportError(FG_WARNING, "error");
 		return FG_FALSE;
 	}
 
 	if(!open(filePath, FG_FILE_MODE_READ)) {
-		reportError("could not open file config ini");
+		reportError(FG_WARNING, "could not open file config ini");
 		return FG_FALSE;
 	}
 
@@ -49,14 +49,14 @@ fgBool fgConfigParser::loadConfig(const char *filePath)
 
 	m_fileBuffer = (char *) fgMalloc(sizeof(char) * (m_fileSize+1));
 	if(m_fileBuffer == NULL) {
-		reportError("m_fileBuffer is NULL");
+		reportError(FG_WARNING, "m_fileBuffer is NULL");
 		return FG_FALSE;
 	}
 
 	int bytesRead = read(m_fileBuffer, 1, m_fileSize);
 	m_fileBuffer[m_fileSize] = '\0';
 	if(bytesRead != (int)m_fileSize) {
-		reportError("if(!bytesRead != (int)m_fileSize)");
+		reportError(FG_WARNING, "if(!bytesRead != (int)m_fileSize)");
 		fgFree(m_fileBuffer);
 		m_fileBuffer = NULL;
 		m_fileSize = 0;
@@ -82,7 +82,7 @@ fgBool fgConfigParser::parseData(const char *data)
 {
 	if(!data) {
 		if(!m_fileBuffer) {
-			reportError("Parse data file buffer error - null");
+			reportError(FG_WARNING, "Parse data file buffer error - null");
 			return FG_FALSE;
 		}
 		data = m_fileBuffer;

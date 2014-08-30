@@ -36,9 +36,9 @@ struct fgStatus
 	fgMessage *message;
 	// Is this status managed in the message subsystem?
 	fgBool isManaged;
-	// 
+	//  Error code
 	int errCode;
-	//
+	// Timestamp (seconds)
 	long timestamp;
 
 	// Default constructor
@@ -147,7 +147,7 @@ struct fgStatus
 
 	// Set code for the current status (in message).
 	// If message is NULL, it'll be allocated with new.
-	fgStatus *setCode(int _code)
+	fgStatus *setCode(int _code = FG_ERRNO_OK)
 	{
 		if(message) {
 			message->setCode(_code);
@@ -156,8 +156,17 @@ struct fgStatus
 		return this;
 	}
 
-	fgStatus *setupMessage(fgMessageType _type = FG_MESSAGE_INFO, const char *msgData = NULL, int _code = FG_ERRNO_OK)
+	fgStatus *setupMessage(fgMessageType _type = FG_MESSAGE_INFO, int _code = FG_ERRNO_OK, const char *fmt = NULL, ...)
 	{
+		const char *msgData = NULL;
+		char buf[FG_MESSAGE_BUFFER_MAX];
+		if(fmt) {
+			va_list args;
+			va_start(args,fmt);
+			vsprintf(buf, fmt, args);
+			va_end(args);
+			msgData = buf;
+		}
 		switch(_type) {
 		case FG_MESSAGE_INFO:
 			mask = FG_SUCCESS;
@@ -191,32 +200,69 @@ struct fgStatus
 	// Create (initialize) and return status with success.
 	// If message (text) is passed  (not NULL) the message
 	// struct will be initialized.
-	fgStatus *success(const char *msgData = NULL, int _code = FG_ERRNO_OK)
+	fgStatus *success(int _code = FG_ERRNO_OK, const char *fmt = NULL, ...)
 	{
-		return setupMessage(FG_MESSAGE_INFO, msgData, _code);
+		const char *msgData = NULL;
+		char buf[FG_MESSAGE_BUFFER_MAX];
+		if(fmt) {
+			va_list args;
+			va_start(args,fmt);
+			vsprintf(buf, fmt, args);
+			va_end(args);
+			msgData = buf;
+		}
+		// #TODO - use va_args, message format string, sprintf, etc
+		return setupMessage(FG_MESSAGE_INFO, _code, msgData);
 	}
 
 	// Create (initialize) and return status with warning.
 	// If message (text) is passed  (not NULL) the message
 	// struct will be initialized.
-	fgStatus *warning(const char *msgData = NULL, int _code = FG_ERRNO_OK)
+	fgStatus *warning(int _code = FG_ERRNO_OK, const char *fmt = NULL, ...)
 	{
-		return setupMessage(FG_MESSAGE_WARNING, msgData, _code);
+		const char *msgData = NULL;
+		char buf[FG_MESSAGE_BUFFER_MAX];
+		if(fmt) {
+			va_list args;
+			va_start(args,fmt);
+			vsprintf(buf, fmt, args);
+			va_end(args);
+			msgData = buf;
+		}
+		return setupMessage(FG_MESSAGE_WARNING, _code, msgData);
 	}
 
 	// Create (initialize)  and return status with error.
 	// If message (text) is passed (not NULL) the message
 	// struct will be initialized.
-	fgStatus *error(const char *msgData = NULL, int _code = FG_ERRNO_OK)
+	fgStatus *error(int _code = FG_ERRNO_OK, const char *fmt = NULL, ...)
 	{
-		return setupMessage(FG_MESSAGE_ERROR, msgData, _code);		
+		const char *msgData = NULL;
+		char buf[FG_MESSAGE_BUFFER_MAX];
+		if(fmt) {
+			va_list args;
+			va_start(args,fmt);
+			vsprintf(buf, fmt, args);
+			va_end(args);
+			msgData = buf;
+		}
+		return setupMessage(FG_MESSAGE_ERROR, _code, msgData);
 	}
 
 	// Create (initialize) and return debug status - this not an error in most cases.
 	// If message (text) is passed (not NULL) the message struct will be initialized.
-	fgStatus *debug(const char *msgData = NULL, int _code = FG_ERRNO_OK)
+	fgStatus *debug(int _code = FG_ERRNO_OK, const char *fmt = NULL, ...)
 	{
-		return setupMessage(FG_MESSAGE_DEBUG, msgData, _code);
+		const char *msgData = NULL;
+		char buf[FG_MESSAGE_BUFFER_MAX];
+		if(fmt) {
+			va_list args;
+			va_start(args,fmt);
+			vsprintf(buf, fmt, args);
+			va_end(args);
+			msgData = buf;
+		}
+		return setupMessage(FG_MESSAGE_DEBUG, _code, msgData);
 	}
 
 	fgStatus *setSuccess(void) {
