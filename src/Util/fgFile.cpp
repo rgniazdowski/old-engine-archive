@@ -10,6 +10,8 @@
 #include "fgFile.h"
 #include "fgFileErrorCodes.h"
 
+#include "fgMemory.h"
+
 #include <cstdarg>
 #include <cstdio>
 #include <cstdlib>
@@ -193,6 +195,52 @@ fgBool fgFile::isOpen(void) const {
 		return FG_TRUE;
 	else
 		return FG_FALSE;
+}
+
+/*
+ *
+ */
+char *fgFile::load(const char *filePath)
+{
+	if(!open(filePath, FG_FILE_MODE_READ | FG_FILE_MODE_BINARY)) {
+		return NULL;
+	}
+
+	int fileSize = getSize();
+	if(fileSize < 0) {
+		reportWarning(FG_ERRNO_FILE_ERROR_SIZE);
+		return NULL;
+	}
+
+	char *fileBuffer = (char *) fgMalloc(sizeof(char) * (fileSize+1));
+	if(fileBuffer == NULL) {
+		reportError(FG_ERRNO); // FIXME - memory error codes
+		return NULL;
+	}
+
+	int bytesRead = read(fileBuffer, 1, fileSize);
+	fileBuffer[fileSize] = '\0';
+	if(bytesRead != (int)fileSize) {
+		fgFree(fileBuffer);
+		fileBuffer = NULL;
+		fileSize = 0;
+		close();
+		return NULL;
+	}
+
+	return fileBuffer;
+}
+
+/*
+ *
+ */
+char *fgFile::load(void) 
+{
+	if(m_filePath.empty()) {
+		reportWarning(FG_ERRNO_FILE_NO_PATH);
+		return NULL;
+	}
+	return load(m_filePath.c_str());
 }
 
 /*

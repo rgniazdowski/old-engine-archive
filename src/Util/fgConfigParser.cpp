@@ -34,43 +34,10 @@ fgConfigParser::fgConfigParser(const char *filePath) :
  */
 fgBool fgConfigParser::loadConfig(const char *filePath)
 {
-	fgStatusReporter::clearStatus();
-	if(filePath == NULL) {
-		reportError(FG_WARNING, "error");
-		return FG_FALSE;
-	}
-
-	if(!open(filePath, FG_FILE_MODE_READ)) {
-		reportError(FG_WARNING, "could not open file config ini");
-		return FG_FALSE;
-	}
-
-	m_fileSize = getSize();
-
-	m_fileBuffer = (char *) fgMalloc(sizeof(char) * (m_fileSize+1));
-	if(m_fileBuffer == NULL) {
-		reportError(FG_WARNING, "m_fileBuffer is NULL");
-		return FG_FALSE;
-	}
-
-	int bytesRead = read(m_fileBuffer, 1, m_fileSize);
-	m_fileBuffer[m_fileSize] = '\0';
-	if(bytesRead != (int)m_fileSize) {
-		reportError(FG_WARNING, "if(!bytesRead != (int)m_fileSize)");
-		fgFree(m_fileBuffer);
-		m_fileBuffer = NULL;
-		m_fileSize = 0;
-		close();
-		return FG_FALSE;
-	}
-
+	fgStatusReporter::clearStatus();	
+	m_fileBuffer = load(filePath);
 	// Close the file
 	close();
-	
-	// The above code is just the same as in xml parser, 
-	// this could be separate function in fgFile, #TODO #FIXME #P2
-	//
-
 	// parse
 	return parseData(m_fileBuffer);
 }
@@ -183,8 +150,9 @@ fgBool fgConfigParser::parseData(const char *data)
 			m_parameterMap[key] = parameter;
 		}
 	} while (next != std::string::npos);
-	if(m_parameterMap.empty())
+	if(m_parameterMap.empty()) {
 		return FG_FALSE;
+	}
 	return FG_TRUE;
 }
 
@@ -197,6 +165,7 @@ void fgConfigParser::freeConfig(void)
 		fgFree(m_fileBuffer);
 	m_fileSize = 0;
 	m_parameterMap.clear();
+	fgStatusReporter::clearStatus();
 }
 
 /*

@@ -25,36 +25,7 @@ fgBool fgXMLParser::loadXML(const char *filePath)
 	m_xmlDocument.ClearError();
 	m_xmlDocument.Clear();
 
-	if(!open(filePath, FG_FILE_MODE_READ | FG_FILE_MODE_BINARY)) {
-		return FG_FALSE;
-	}
-
-	if(!isOpen()) {
-		return FG_FALSE;
-	}
-
-	// Get the XML file size in bytes
-	m_fileSize = getSize();
-	if(m_fileSize < 4) { // it could be any number basically, just checking if the file isnt too small
-		close();
-		return FG_FALSE;
-	}
-
-	// Read the XML data
-	m_fileBuffer = (char *) fgMalloc(sizeof(char)*(m_fileSize+1));
-	if(m_fileBuffer == NULL) {
-		// ERROR
-		return FG_FALSE;
-	}
-	int bytesRead = read(m_fileBuffer, 1, m_fileSize);
-	m_fileBuffer[m_fileSize] = '\0';
-	if(bytesRead != (int)m_fileSize) {
-		fgFree(m_fileBuffer);
-		m_fileBuffer = NULL;
-		m_fileSize = 0;
-		close();
-		return FG_FALSE;
-	}
+	m_fileBuffer = load(filePath);
 
 	// Close the file
 	close();

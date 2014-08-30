@@ -127,6 +127,12 @@ public:
 		return fgFile::exists(m_filePath.c_str());
 	}
 
+	// This will load the whole file into char *buffer
+	char *load(void);
+
+	// This will load the whole file into char *buffer
+	char *load(const char *filePath);
+
 	// Read from file
 	int read(void *buffer, unsigned int elemsize, unsigned int elemcount);
 	// Read string from file
