@@ -64,8 +64,42 @@ void fgErrno::setErrno(int _code)
 {
 	if(_code < FG_ERRNO_BASE_CODE(0)) {
 		errno = _code;
-	} 
+	} else {
+		s_errno = _code; // ?
+	}
+}
+
+/*
+ *
+ */
+void fgErrno::setLocalErrno(int _code)
+{
 	s_errno = _code;
+}
+
+/*
+ *
+ */
+int fgErrno::code(void)
+{
+	return errno;
+}
+
+/*
+ *
+ */
+int fgErrno::localCode(void)
+{
+	return s_errno;
+}
+
+/*
+ *
+ */
+void fgErrno::clearError(void)
+{
+	errno = 0;
+	s_errno = 0;
 }
 
 /*

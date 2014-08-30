@@ -13,6 +13,7 @@ files
 	fgCommon.h
 	fgErrno.h
 	fgErrno.cpp
+	fgErrorCodes.cpp
 	fgErrorCodes.h
 	fgException.h
 	fgGameMain.cpp

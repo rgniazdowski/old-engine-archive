@@ -26,7 +26,7 @@ bool fgSingleton<fgResourceManager>::instanceFlag = false;
 template <>
 fgResourceManager *fgSingleton<fgResourceManager>::instance = NULL;
 
-//#FIXME #BIGFIXME! ! ! ! #BUG #TODO
+//#FIXME #BIGFIXME! ! ! ! #BUG #TODO #BORT
 #include "GUI/fgFontResource.h"
 #include "GFX/Textures/fgTextureResource.h"
 #include "fgResourceGroup.h"

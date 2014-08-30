@@ -82,6 +82,8 @@ protected:
 			return;
 		if(_status->hasMessage())
 			m_errCode = _status->message->code();
+		else
+			m_errCode = _status->code();
 		if(m_reportToMsgSystem) {
 			_status->setManaged();
 		} else {
@@ -102,7 +104,6 @@ protected:
 		// Based on the status code and message, subsystem will print
 		// it in proper place, save to corresponding file and take ownership
 		if(_status->isManaged) {
-			// #TODO #P1
 			FG_STATUS::reportToMessageSubsystem(_status);
 		}
 	}
@@ -138,5 +139,7 @@ protected:
 	fgBool	m_reportToMsgSystem;
 	std::stack<fgStatus *> m_statusStack;
 };
+
+
 
 #endif /* _FG_STATUS_REPORTER_H_ */

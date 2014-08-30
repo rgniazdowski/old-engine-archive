@@ -30,7 +30,16 @@
 #include "Util/fgFileErrorCodes.h"
 #include "Util/fgMemoryErrorCodes.h"
 #include "XML/fgXMLErrorCodes.h"
-
 #include "fgGameErrorCodes.h"
+
+class fgErrorCodes
+{
+protected:
+	fgErrorCodes() {}
+	~fgErrorCodes() {}
+public:
+	static void registerAll(void);
+	static void unregisterAll(void);
+};
 
 #endif /* _FG_ERROR_CODES_H_ */

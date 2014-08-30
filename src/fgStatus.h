@@ -179,11 +179,9 @@ struct fgStatus
 			} else {
 				message->data = msgData;
 				message->type = _type;
-				setCode(_code);
 			}
-		} else {
-			errCode = _code;
 		}
+		setCode(_code);
 		if(isManaged && message)
 			message->setManaged();
 		timestamp = fgTime::seconds();

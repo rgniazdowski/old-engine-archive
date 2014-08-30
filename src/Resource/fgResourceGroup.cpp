@@ -20,6 +20,7 @@ fgResourceGroupContentHandler::fgResourceGroupContentHandler() : m_resourceGroup
 	m_curResPriority(FG_RES_PRIORITY_INVALID)
 {
 }
+
 // Base destructor of the resource group content handler object
 fgResourceGroupContentHandler::~fgResourceGroupContentHandler()
 {
@@ -27,6 +28,7 @@ fgResourceGroupContentHandler::~fgResourceGroupContentHandler()
 		m_elemStack.pop();
 }
 
+// 
 void fgResourceGroupContentHandler::endElement(const char *localName, fgXMLElement *elementPtr, fgXMLNodeType nodeType, int depth)
 {
 	m_elemStack.pop();
@@ -38,7 +40,6 @@ void fgResourceGroupContentHandler::endElement(const char *localName, fgXMLEleme
 			m_resourcePtr->setResourceName(m_curResName);
 		// ...then it can be added to the Resource Groups' list.
 		this->m_resourceGroup->getRefResourceFiles().push_back(m_resourcePtr);
-		FG_LOG::PrintDebug("PUSH RES: Resource name: '%s'", m_curResName);
 		m_resType = FG_RESOURCE_INVALID;
 		m_resourcePtr = NULL;
 		m_isMapped = FG_FALSE;

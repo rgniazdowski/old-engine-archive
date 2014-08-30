@@ -16,9 +16,9 @@
 #include <map>
 #include <string>
 
-#define FG_ERRNO_CLEAR()				do { errno = 0; } while(0)
-
 #define FG_ERRNO_INVALID_CODE_TEXT		"invalid error code"
+
+#define FG_ERRNO	errno
 
 #define FG_ERRNO_BASE_CODE_				20000
 #define FG_ERRNO_BASE_CODE(code)		(FG_ERRNO_BASE_CODE_+code)
@@ -26,6 +26,10 @@
 #define FG_ERRNO_WARNING_BASE_CODE_		63600
 #define FG_ERRNO_DEBUG_BASE_CODE_		616000
 #define FG_ERRNO_INFO_BASE_CODE_		100000
+
+#define FG_ERRNO_WARNING_BASE_CODE(code)	(FG_ERRNO_WARNING_BASE_CODE_+code)
+#define FG_ERRNO_DEBUG_BASE_CODE(code)		(FG_ERRNO_DEBUG_BASE_CODE_+code)
+#define FG_ERRNO_INFO_BASE_CODE(code)		(FG_ERRNO_INFO_BASE_CODE_+code)
 
 /**********************************************************
  * FlexiGame specific error codes
@@ -48,8 +52,16 @@ public:
 	static void registerStrError(int _code, std::string& _str);
 	// 
 	static void setErrno(int _code);
+	//
+	static void setLocalErrno(int _code);
 	// 
 	static void reset(void);
+	//
+	static int code(void);
+	//
+	static int localCode(void);
+	//
+	static void clearError(void);
 
 protected:
 	// 
@@ -67,11 +79,11 @@ private:
 };
 
 #define FG_ERRNO_STR(code)	fgErrno::strError(code)
-#define FG_ERRNO			fgErrno
 
 #define FG_ERRNO_SET(code)				fgErrno::setErrno(code)
 #define FG_ERRNO_REGISTER(code, str)	fgErrno::registerStrError(code, str)
 
-#undef _FG_ERRNO_ERROR_CODES_BLOCK__
+#define FG_ERRNO_CLEAR()				do { fgErrno::clearError(); } while(0)
 
+#undef _FG_ERRNO_ERROR_CODES_BLOCK__
 #endif /* _FG_ERRNO_H_ */
