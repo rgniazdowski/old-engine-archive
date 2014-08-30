@@ -7,8 +7,8 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-
 #include "fgFile.h"
+#include "fgFileErrorCodes.h"
 
 #include <cstdarg>
 #include <cstdio>
@@ -50,10 +50,7 @@ fgFile::fgFile(const char *filePath) : m_file(NULL),
  */
 fgFile::~fgFile()
 {
-	if(m_file != NULL) {
-		int result = fclose(m_file);
-		// FIXME
-	}
+	close();
 	m_filePath.clear();
 	clearStatus();
 }
@@ -108,21 +105,33 @@ const char *fgFile::modeStr(fgFileMode mode)
  */
 fgBool fgFile::open(const char *filePath, fgFileMode mode)
 {
-	if(m_file != NULL || filePath == NULL)
+	if(filePath == NULL) {
+		reportWarning(NULL, FG_ERRNO_FILE_NO_PATH);
 		return FG_FALSE;
+	}
+	if(m_file != NULL) {
+		reportError(NULL, FG_ERRNO_FILE_ALREADY_OPEN);
+		return FG_FALSE;
+	}
 	if(strlen(filePath) <= 1) {
+		reportWarning(NULL, FG_ERRNO_FILE_NO_PATH);
 		return FG_FALSE;
 	}
 	if(mode == FG_FILE_MODE_READ || 
 		mode == (FG_FILE_MODE_READ | FG_FILE_MODE_BINARY) ||
 		mode & FG_FILE_MODE_READ_UPDATE) {
-		if(!exists(filePath))
+		if(!exists(filePath)) {
+			reportError(NULL, FG_ERRNO_FILE_DOESNT_EXIST);
 			return FG_FALSE;
+		}
 	}
-	printf("FILE MODE: %d | str: '%s'\n", (int)mode, modeStr(mode));
+	FG_ERRNO_CLEAR();
+	clearerr(m_file);
 	m_file = fopen(filePath, modeStr(mode));
 
 	if(m_file == NULL) {
+		reportError(NULL, errno);
+		reportError(NULL, FG_ERRNO_FILE_OPEN_FAILED);
 		return FG_FALSE;
 	}
 	setPath(filePath);
@@ -135,8 +144,10 @@ fgBool fgFile::open(const char *filePath, fgFileMode mode)
  */
 fgBool fgFile::open(fgFileMode mode)
 {
-	if(mode == FG_FILE_MODE_NONE)
+	if(mode == FG_FILE_MODE_NONE) {
+		reportWarning(NULL, FG_ERRNO_FILE_WRONG_MODE);
 		return FG_FALSE;
+	}
 	return open(m_filePath.c_str(), mode);
 }
 
@@ -154,14 +165,32 @@ fgBool fgFile::open(void) {
  */
 fgBool fgFile::close(void)
 {
-	// FIXME
-	if(m_file != NULL) {
-		fclose(m_file);
-		m_file = NULL;
-		m_modeFlags = FG_FILE_MODE_NONE;
-		return FG_TRUE;
+	if(m_file) {
+		FG_ERRNO_CLEAR();
+		clearerr(m_file);
 	}
-	return FG_FALSE;
+	if(m_file != NULL) {
+		if(fclose(m_file) == FG_EOF) {
+			if(FG_ERRNO)
+				reportError(NULL, FG_ERRNO);
+			else
+				reportError(NULL, FG_ERRNO_FILE_CLOSING);
+			m_file = NULL;
+			return FG_FALSE;
+		}
+		m_file = NULL;
+	}
+	return FG_TRUE;
+}
+
+/*
+ *
+ */
+fgBool fgFile::isOpen(void) const {
+	if(m_file)
+		return FG_TRUE;
+	else
+		return FG_FALSE;
 }
 
 /*
@@ -170,15 +199,18 @@ fgBool fgFile::close(void)
 int fgFile::read(void *buffer, unsigned int elemsize, unsigned int elemcount)
 {
 	if(buffer == NULL || elemsize == 0 || elemcount == 0 || m_file == NULL) {
-		// FIXME
+		reportWarning(NULL, FG_ERRNO_FILE_WRONG_PARAMETERS);
 		return 0;
 	}
-
+	FG_ERRNO_CLEAR();
+	clearerr(m_file);
 	unsigned int elemRead = (unsigned int)fread(buffer, elemsize, elemcount, m_file);
 
 	if(elemRead != elemcount)
 	{
-		// FIXME
+		if(ferror(m_file) && FG_ERRNO)
+			reportError(NULL, FG_ERRNO);
+		reportWarning(NULL, FG_ERRNO_FILE_READ_COUNT);
 	}
 	return elemRead;
 }
@@ -188,13 +220,20 @@ int fgFile::read(void *buffer, unsigned int elemsize, unsigned int elemcount)
  */
 char *fgFile::readString(char *buffer, unsigned int maxlen)
 {
-	if(buffer == NULL || maxlen == 0 || m_file == NULL)
+	if(buffer == NULL || maxlen == 0 || m_file == NULL) {
+		reportWarning(NULL, FG_ERRNO_FILE_WRONG_PARAMETERS);
 		return NULL;
-
+	}
+	FG_ERRNO_CLEAR();
+	clearerr(m_file);
 	char *retString = fgets(buffer, maxlen, m_file);
 	if(retString == NULL)
 	{
-		// FIXME
+		if(ferror(m_file) && FG_ERRNO)
+			reportError(NULL, FG_ERRNO);
+		else
+			reportError(NULL, FG_ERRNO_FILE_ERROR_READ);
+		reportWarning(NULL, FG_ERRNO_FILE_ERROR_STRING);
 	}
 	return retString;
 }
@@ -204,8 +243,10 @@ char *fgFile::readString(char *buffer, unsigned int maxlen)
  */
 int fgFile::print(const char *fmt, ...)
 {
-	if(fmt == NULL || m_file == NULL)
+	if(fmt == NULL || m_file == NULL) {
+		reportWarning(NULL, FG_ERRNO_FILE_WRONG_PARAMETERS);
 		return -1;
+	}
 
 	char buf[FG_MAX_BUFFER];
 	va_list args;
@@ -214,7 +255,15 @@ int fgFile::print(const char *fmt, ...)
 	vsnprintf(buf, FG_MAX_BUFFER, fmt, args);
 	va_end(args);
 
+	FG_ERRNO_CLEAR();
+	clearerr(m_file);
 	int charsCount = fprintf(m_file, buf);
+	if(ferror(m_file)) {
+		if(FG_ERRNO)
+			reportError(NULL, FG_ERRNO);
+		else
+			reportError(NULL, FG_ERRNO_FILE_ERROR_WRITE);
+	}
 	return charsCount;
 }
 
@@ -223,13 +272,20 @@ int fgFile::print(const char *fmt, ...)
  */
 int fgFile::write(void *buffer, unsigned int elemsize, unsigned int elemcount)
 {
-	if(m_file == NULL || buffer == NULL || elemsize == 0 || elemcount == 0)
+	if(m_file == NULL || buffer == NULL || elemsize == 0 || elemcount == 0) {
+		reportWarning(NULL, FG_ERRNO_FILE_WRONG_PARAMETERS);
 		return -1;
-
+	}
+	FG_ERRNO_CLEAR();
+	clearerr(m_file);
 	unsigned int elemWritten = (unsigned int) fwrite(buffer, elemsize, elemcount, m_file);
 	if(elemWritten != elemcount)
 	{
-		// #FIXME
+		if(ferror(m_file) && FG_ERRNO)
+			reportError(NULL, FG_ERRNO);
+		else
+			reportError(NULL, FG_ERRNO_FILE_ERROR_WRITE);
+		reportWarning(NULL, FG_ERRNO_FILE_WRITE_COUNT);
 	}
 
 	return elemWritten;
@@ -240,10 +296,183 @@ int fgFile::write(void *buffer, unsigned int elemsize, unsigned int elemcount)
  */
 int fgFile::puts(const char *str)
 {
-	if(m_file == NULL || str == NULL)
+	if(str == NULL) {
+		reportWarning(NULL, FG_ERRNO_FILE_WRONG_PARAMETERS);
 		return -1;
+	}
+	if(m_file == NULL) {
+		reportWarning(NULL, FG_ERRNO_FILE_NOT_OPENED);
+		return -1;
+	}
 
+	FG_ERRNO_CLEAR();
+	clearerr(m_file);
 	int status = fputs(str, m_file);
-	// FIXME
+	if(status == FG_EOF) {
+		if(ferror(m_file))
+			reportError(NULL, errno);
+		else
+			reportError(NULL, FG_ERRNO_FILE_ERROR_WRITE);
+	}
 	return status;
+}
+
+/*
+ *
+ */
+fgBool fgFile::isEOF(void)
+{
+	if(m_file == NULL)
+	{
+		reportWarning(NULL, FG_ERRNO_FILE_NOT_OPENED);
+		return FG_FALSE;
+	}
+	if(feof(m_file))
+		return FG_TRUE;
+	return FG_FALSE;
+}
+
+/*
+ *
+ */
+fgBool fgFile::flushFile(void)
+{
+	if(m_file == NULL) {
+		reportWarning(NULL, FG_ERRNO_FILE_NOT_OPENED);
+		return FG_FALSE;
+	}
+	FG_ERRNO_CLEAR();
+	clearerr(m_file);
+	if(fflush(m_file) == 0) {
+		if(ferror(m_file))
+			reportError(NULL, errno);
+		else
+			reportError(NULL, FG_ERRNO_FILE_ERROR_FLUSH);
+		return FG_FALSE;
+	}
+	return FG_TRUE;
+}
+
+/*
+ *
+ */
+int fgFile::getChar(void)
+{
+	if(m_file == NULL) {
+		reportWarning(NULL, FG_ERRNO_FILE_NOT_OPENED);
+		return -1;
+	}
+	FG_ERRNO_CLEAR();
+	clearerr(m_file);
+	int charRead = fgetc(m_file);
+	if(charRead == FG_EOF) {
+		if(ferror(m_file)) {
+			reportError(NULL, errno);
+			reportError(NULL, FG_ERRNO_FILE_ERROR_READ);
+		}
+		if(feof(m_file))
+			reportWarning(NULL, FG_ERRNO_FILE_EOF);
+	}
+	return charRead;
+}
+
+/*
+ *
+ */
+int fgFile::putChar(char c)
+{
+	if(m_file == NULL) {
+		reportWarning(NULL, FG_ERRNO_FILE_NOT_OPENED);
+		return FG_EOF;
+	}
+	FG_ERRNO_CLEAR();
+	clearerr(m_file);
+	int charWrite = fputc(c, m_file);
+	if(charWrite == FG_EOF) {
+		if(ferror(m_file))
+			reportError(NULL, errno);
+		else
+			reportError(NULL, FG_ERRNO_FILE_ERROR_WRITE);
+	}
+	return charWrite;
+}
+
+/*
+ * Get the file size #FIXME (need to reopen in binary mode)
+ */
+int fgFile::getSize(void)
+{
+	if(m_file == NULL) {
+		reportWarning(NULL, FG_ERRNO_FILE_NOT_OPENED);
+		return -1;
+	}
+	long size=0;
+	long prev=0;
+	fgBool _err = FG_FALSE;
+	// #FIXME
+	// #TODO - there needs to be some consistency with
+	// holding local errno codes and setting error indicator
+	// in status reporter - need additional functions
+	prev = getPosition();
+	if(prev == -1L)
+		_err = FG_TRUE;
+	if(!_err) {
+		if(setPosition(0L, SEEK_END))
+			_err = FG_TRUE;
+	}
+	if(!_err) {
+		size = getPosition();
+		if(size == -1L)
+			_err = FG_TRUE;
+	}
+	if(!_err) {
+		if(setPosition(prev, SEEK_SET))
+			_err = FG_TRUE;
+	}
+	if(_err)
+		size = -1L;
+	return (int)size;
+}
+
+/*
+ * Get current position in file
+ */
+long fgFile::getPosition(void) 
+{
+	if(m_file == NULL) {
+		reportWarning(NULL, FG_ERRNO_FILE_NOT_OPENED);
+		return -1;
+	}
+	FG_ERRNO_CLEAR();
+	clearerr(m_file);
+	long position = ftell(m_file);
+	if(position == -1L) {
+		if(FG_ERRNO)
+			reportError(NULL, FG_ERRNO);
+		else
+			reportError(NULL, FG_ERRNO_FILE_ERROR_TELL);
+		return -1L;
+	}
+	return position;
+}
+
+/*
+ *
+ */
+int fgFile::setPosition(long offset, int whence) 
+{
+	if(m_file == NULL) {
+		reportWarning(NULL, FG_ERRNO_FILE_NOT_OPENED);
+		return -1;
+	}
+	FG_ERRNO_CLEAR();
+	clearerr(m_file);
+	if(fseek(m_file, offset, whence)) {
+		if(ferror(m_file) && FG_ERRNO)
+			reportError(NULL, FG_ERRNO);
+		else
+			reportError(NULL, FG_ERRNO_FILE_ERROR_SEEK);
+		return -1;
+	}
+	return 0;
 }

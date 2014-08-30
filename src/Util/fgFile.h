@@ -117,12 +117,7 @@ public:
 	fgBool close(void);
 
 	// Check if file is currently opened
-	fgBool isOpen(void) const {
-		if(m_file)
-			return FG_TRUE;
-		else
-			return FG_FALSE;
-	}
+	fgBool isOpen(void) const;
 
 	// Check if file exists
 	static fgBool exists(const char *filePath);
@@ -144,61 +139,20 @@ public:
 	int puts(const char *str);
 
 	// Check is it end of file
-	fgBool isEOF(void)
-	{
-		if(m_file == NULL)
-			return FG_FALSE;
-		if(feof(m_file))
-			return FG_TRUE;
-		return FG_FALSE;
-	}
+	fgBool isEOF(void);
 	// Flush file buffers
-	fgBool flushFile(void)
-	{
-		if(m_file == NULL)
-			return FG_FALSE;
-		if(fflush(m_file) != 0) {
-			return FG_FALSE;
-		}
-		return FG_TRUE;
-	}
-	// Get (read) single character from file
-	int getChar(void)
-	{
-		if(m_file == NULL)
-			return -1;
+	fgBool flushFile(void);
 
-		int charRead = fgetc(m_file);
-		return charRead;
-	}
+	// Get (read) single character from file
+	int getChar(void);
 	// Put (write) single character to file
-	void putChar(char c)
-	{
-		if(m_file == NULL)
-			return;
-		fputc(c, m_file);
-	}
+	int putChar(char c);
 	// Get the file size #FIXME (need to reopen in binary mode)
-	int getSize(void)
-	{
-		if(m_file == NULL)
-			return -1;
-		long prev = ftell(m_file);
-		fseek(m_file, 0L, SEEK_END);
-		long size = ftell(m_file);
-		fseek(m_file, prev, SEEK_SET);
-		return (int)size;
-	}
+	int getSize(void);
 	// Get current position in file
-	long getPosition(void) {
-		if(m_file == NULL)
-			return -1;
-		return ftell(m_file);
-	}
+	long getPosition(void);
 	// Set position in file
-	int setPosition(long offset, int whence) {
-		return fseek(m_file, offset, whence);
-	}
+	int setPosition(long offset, int whence);
 
 	// Return the stdio FILE standard pointer
 	FILE *getFilePtr(void) const {
