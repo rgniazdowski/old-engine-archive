@@ -36,7 +36,7 @@
 // Convert enum to text (can be useful)
 #define FG_TEXT_FROM_ENUM(ENUM) ENUM ## _TEXT
 // Convert enum to text (can be useful)
-#define FG_TEXT FG_TEXT_FROM_ENUM
+#define FG_TEXT(ENUM) ENUM ## _TEXT
 
 // This enum is used to return (exit function) specific value if variable 'text' is equal to 'checkStr'
 #define FG_RETURN_VAL_IF_TEXT_EQ(checkStr, returnVal) \

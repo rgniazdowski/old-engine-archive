@@ -17,5 +17,24 @@
 
 #include "fgErrno.h"
 
+#define FG_ERRNO_TEXTURE_BASE_CODE(_code)		(FG_ERRNO_BASE_CODE(400)+_code)
+
+#define FG_ERRNO_TEXTURE_OK						FG_ERRNO_TEXTURE_BASE_CODE(0)
+#define FG_ERRNO_TEXTURE_LAST_CODE				FG_ERRNO_TEXTURE_BASE_CODE(0)
+
+#define FG_ERRNO_TEXTURE_OK_TEXT "No error"
+
+namespace FG_ERRNO_TEXTURE {
+	const char * const __allErrVec[] = {
+		FG_ERRNO_TEXTURE_OK_TEXT
+	};
+
+	static void __registerAll(void) {		
+		for(int code=FG_ERRNO_TEXTURE_BASE_CODE(0), i=0; code<=FG_ERRNO_TEXTURE_LAST_CODE; code++, i++) {
+			FG_ERRNO_REGISTER(code, FG_ERRNO_TEXTURE::__allErrVec[i]);
+		}
+	}
+};
+
 #undef _FG_ERRNO_ERROR_CODES_BLOCK_OTHER__
 #endif /* _FG_TEXTURE_ERROR_CODES_H_ */
