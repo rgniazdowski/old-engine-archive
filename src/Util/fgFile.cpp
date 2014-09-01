@@ -128,7 +128,6 @@ fgBool fgFile::open(const char *filePath, fgFileMode mode)
 		}
 	}
 	FG_ERRNO_CLEAR();
-	clearerr(m_file);
 	m_file = fopen(filePath, modeStr(mode));
 
 	if(m_file == NULL) {

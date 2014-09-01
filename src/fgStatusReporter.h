@@ -15,6 +15,7 @@
 #include "fgStatus.h"
 
 #include <stack>
+#include <typeinfo>
 
 namespace FG_STATUS {
 	void reportToMessageSubsystem(fgStatus *_status);
@@ -93,7 +94,7 @@ protected:
 		if(_status->hasMessage()) {
 			char tmp[64];
 			// #FIXME ?
-			snprintf(tmp, 63, "%s: ", typeid(TagType::_type).name());
+			snprintf(tmp, 63, "%s: ", typeid(typename TagType::_type).name());
 			_status->message->data.insert(0, tmp);
 		}
 

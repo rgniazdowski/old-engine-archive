@@ -20,7 +20,7 @@ public:
 	X & at(int const i) const {
 		uint32 index = (uint32)i;
         if(index >= this->num_p) {
-			return this->p[0]
+			return this->p[0];
 		}
         return this->p[index];
 	}

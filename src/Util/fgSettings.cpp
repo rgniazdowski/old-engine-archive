@@ -59,9 +59,9 @@ fgBool fgSettings::load(const char *filePath)
 	if(status) {
 
 		printf("\n>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n");
-		printf(">>>>>>> defaultDataPath: '%s'\n", data.defaultDataPath);
-		printf(">>>>>>> defaultLogPath:  '%s'\n", data.defaultLogPath);
-		printf(">>>>>>> programTitle:    '%s'\n", data.programTitle);
+		printf(">>>>>>> defaultDataPath: '%s'\n", data.defaultDataPath.c_str());
+		printf(">>>>>>> defaultLogPath:  '%s'\n", data.defaultLogPath.c_str());
+		printf(">>>>>>> programTitle:    '%s'\n", data.programTitle.c_str());
 		printf(">>>>>>> useConsole:      '%d'\n", data.useConsole);
 		printf(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n\n");
 	}
