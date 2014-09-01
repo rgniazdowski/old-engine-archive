@@ -20,41 +20,27 @@
 #define FG_ERRNO_XML_BASE_CODE(_code)		(FG_ERRNO_BASE_CODE(1000)+_code)
 
 // TINYXML / XML PARSING - universal for any xml reader/parser used
-#define FG_ERRNO_XML_OK						FG_ERRNO_XML_BASE_CODE(0)	/* No error */
+#define FG_ERRNO_XML_OK						FG_ERRNO_XML_BASE_CODE(0) /* No error */
 #define FG_ERRNO_XML_ERROR					FG_ERRNO_XML_BASE_CODE(1) /* Error */
 #define FG_ERRNO_XML_IOFILE					FG_ERRNO_XML_BASE_CODE(2) /* Failed to open file */
-#define FG_ERRNO_XML_PARSE_ELEMENT			FG_ERRNO_XML_BASE_CODE(3) /* Error parsing element */
-#define FG_ERRNO_XML_PARSE_ELEMENT_NAME		FG_ERRNO_XML_BASE_CODE(4) /* Failed to read element name */
-#define FG_ERRNO_XML_PARSE_ELEMENT_VALUE	FG_ERRNO_XML_BASE_CODE(5) /* Error reading element value */
-#define FG_ERRNO_XML_PARSE_ATTRIBUTES		FG_ERRNO_XML_BASE_CODE(6) /* Error reading attributes  */
-#define FG_ERRNO_XML_PARSE_EMPTY			FG_ERRNO_XML_BASE_CODE(7) /* Error: empty tag */
-#define FG_ERRNO_XML_PARSE_END_TAG			FG_ERRNO_XML_BASE_CODE(8) /* Error reading end tag */
-#define FG_ERRNO_XML_PARSE_UNKNOWN			FG_ERRNO_XML_BASE_CODE(9) /* Error parsing unknown */
-#define FG_ERRNO_XML_PARSE_COMMENT			FG_ERRNO_XML_BASE_CODE(10) /* Error parsing comment */
-#define FG_ERRNO_XML_PARSE_DECLARATION		FG_ERRNO_XML_BASE_CODE(11) /* Error parsing declaration */
-#define FG_ERRNO_XML_PARSE_DOCUMENT_EMPTY	FG_ERRNO_XML_BASE_CODE(12) /* Error document empty */
-#define FG_ERRNO_XML_PARSE_NULL_EOF			FG_ERRNO_XML_BASE_CODE(13) /* Error null(0) or unexpected EOF found in input stream. */
-#define FG_ERRNO_XML_PARSE_CDATA			FG_ERRNO_XML_BASE_CODE(14) /* Error parsing CDATA */
-#define FG_ERRNO_XML_PARSE_ROOT_DOCUMENT	FG_ERRNO_XML_BASE_CODE(15) /* Error when XmlDocument added to document, because it can only be at the root.*/
+#define FG_ERRNO_XML_PARSE					FG_ERRNO_XML_BASE_CODE(3) /* Error parsing file */
+#define FG_ERRNO_XML_LOAD					FG_ERRNO_XML_BASE_CODE(4) /* Failed to load file data */
 
-#define FG_ERRNO_XML_LAST_CODE				FG_ERRNO_XML_BASE_CODE(15)
+#define FG_ERRNO_XML_NO_CONTENT_HANDLER		FG_ERRNO_XML_BASE_CODE(5) /* No content handler set */
+#define FG_ERRNO_XML_NOT_LOADED				FG_ERRNO_XML_BASE_CODE(6) /* File not loaded */
+#define FG_ERRNO_XML_PARSE_DEEP				FG_ERRNO_XML_BASE_CODE(7) /* Error occured while parsing with content handler */
+
+#define FG_ERRNO_XML_LAST_CODE				FG_ERRNO_XML_BASE_CODE(7)
 
 #define FG_ERRNO_XML_OK_TEXT					"No error"
 #define FG_ERRNO_XML_ERROR_TEXT					"Error"
 #define FG_ERRNO_XML_IOFILE_TEXT				"Failed to open file"
-#define FG_ERRNO_XML_PARSE_ELEMENT_TEXT			"Error parsing element"
-#define FG_ERRNO_XML_PARSE_ELEMENT_NAME_TEXT	"Failed to read element name"
-#define FG_ERRNO_XML_PARSE_ELEMENT_VALUE_TEXT	"Error reading element value"
-#define FG_ERRNO_XML_PARSE_ATTRIBUTES_TEXT		"Error reading attributes "
-#define FG_ERRNO_XML_PARSE_EMPTY_TEXT			"Error: empty tag"
-#define FG_ERRNO_XML_PARSE_END_TAG_TEXT			"Error reading end tag"
-#define FG_ERRNO_XML_PARSE_UNKNOWN_TEXT			"Error parsing unknown"
-#define FG_ERRNO_XML_PARSE_COMMENT_TEXT			"Error parsing comment"
-#define FG_ERRNO_XML_PARSE_DECLARATION_TEXT		"Error parsing declaration"
-#define FG_ERRNO_XML_PARSE_DOCUMENT_EMPTY_TEXT	"Error document empty"
-#define FG_ERRNO_XML_PARSE_NULL_EOF_TEXT		"Error null(0) or unexpected EOF found in input stream"
-#define FG_ERRNO_XML_PARSE_CDATA_TEXT			"Error parsing CDATA"
-#define FG_ERRNO_XML_PARSE_ROOT_DOCUMENT_TEXT	"Error when XmlDocument added to document, because it can only be at the root"
+#define FG_ERRNO_XML_PARSE_TEXT					"Error parsing file"
+#define FG_ERRNO_XML_LOAD_TEXT					"Failed to load file data"
+
+#define FG_ERRNO_XML_NO_CONTENT_HANDLER_TEXT	"No content handler set"
+#define FG_ERRNO_XML_NOT_LOADED_TEXT			"File not loaded"
+#define FG_ERRNO_XML_PARSE_DEEP_TEXT			"Error occured while parsing with content handler"
 
 namespace FG_ERRNO_XML 
 {
@@ -62,19 +48,11 @@ namespace FG_ERRNO_XML
 		FG_ERRNO_XML_OK_TEXT,
 		FG_ERRNO_XML_ERROR_TEXT,
 		FG_ERRNO_XML_IOFILE_TEXT,
-		FG_ERRNO_XML_PARSE_ELEMENT_TEXT,
-		FG_ERRNO_XML_PARSE_ELEMENT_NAME_TEXT,
-		FG_ERRNO_XML_PARSE_ELEMENT_VALUE_TEXT,
-		FG_ERRNO_XML_PARSE_ATTRIBUTES_TEXT,
-		FG_ERRNO_XML_PARSE_EMPTY_TEXT,
-		FG_ERRNO_XML_PARSE_END_TAG_TEXT,
-		FG_ERRNO_XML_PARSE_UNKNOWN_TEXT,
-		FG_ERRNO_XML_PARSE_COMMENT_TEXT,
-		FG_ERRNO_XML_PARSE_DECLARATION_TEXT,
-		FG_ERRNO_XML_PARSE_DOCUMENT_EMPTY_TEXT,
-		FG_ERRNO_XML_PARSE_NULL_EOF_TEXT,
-		FG_ERRNO_XML_PARSE_CDATA_TEXT,
-		FG_ERRNO_XML_PARSE_ROOT_DOCUMENT_TEXT
+		FG_ERRNO_XML_PARSE_TEXT,
+		FG_ERRNO_XML_LOAD_TEXT,
+		FG_ERRNO_XML_NO_CONTENT_HANDLER_TEXT,
+		FG_ERRNO_XML_NOT_LOADED_TEXT,
+		FG_ERRNO_XML_PARSE_DEEP_TEXT
 	};
 
 	static void __registerAll(void) {		

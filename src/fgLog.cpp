@@ -141,7 +141,7 @@ namespace FG_LOG {
 			break;
 		}; 
 
-		snprintf(buf, FG_LOG_BUF_MAX-1, "%02d/%02d/%02d %02d:%02d:%02d - %s(%d): %s", 
+		snprintf(buf, FG_LOG_BUF_MAX-1, "%02d/%02d/%02d %02d:%02d:%02d - %s(%d): %s; additional info: %s", 
 			ti->tm_mday,
 			ti->tm_mon+1,
 			ti->tm_year-100,
@@ -150,6 +150,7 @@ namespace FG_LOG {
 			ti->tm_sec,
 			msg_type,
 			message->code(),
+			fgErrno::strError(message->code()),
 			message->data.c_str());
 
 		return FG_TRUE;

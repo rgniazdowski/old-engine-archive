@@ -8,6 +8,8 @@
  *******************************************************/
 
 #include "fgXMLParser.h"
+#include "fgXMLErrorCodes.h"
+#include "Util/fgFileErrorCodes.h"
 #include "Util/fgMemory.h"
 
 /*
@@ -17,7 +19,7 @@ fgBool fgXMLParser::loadXML(const char *filePath)
 {
 	fgStatusReporter::clearStatus();
 	if(filePath == NULL) {
-		// #FIXME proper error message
+		reportWarning(FG_ERRNO_FILE_WRONG_PARAMETERS);
 		return FG_FALSE;
 	}
 
@@ -27,21 +29,30 @@ fgBool fgXMLParser::loadXML(const char *filePath)
 
 	m_fileBuffer = load(filePath);
 
+	if(!m_fileBuffer) {
+		reportError(FG_ERRNO_XML_LOAD);
+		return FG_FALSE;
+	}
+
 	// Close the file
 	close();
 
 	// Process the XML raw data
-	m_xmlDocument.Parse(m_fileBuffer);
+	if(!m_xmlDocument.Parse(m_fileBuffer)) {
+		if(m_xmlDocument.Error()) {
+			reportError(FG_ERRNO_XML_PARSE, "id: %d - %s in line (%d,%d)", 
+				m_xmlDocument.ErrorId(), m_xmlDocument.ErrorDesc(), 
+				m_xmlDocument.ErrorRow(), m_xmlDocument.ErrorCol());
+		} else {
+			reportError(FG_ERRNO_XML_PARSE);
+		}
+		return FG_FALSE;
+	}
 	fgFree(m_fileBuffer);
 	m_fileBuffer = NULL;
 
 	// Set the root element
 	m_rootXMLElement = m_xmlDocument.FirstChildElement();
-	if(m_rootXMLElement == NULL) {
-		// FIXME this should get some error from TinyXML if it's possible
-		m_xmlDocument.Clear();
-		return FG_FALSE;
-	}
 	return FG_TRUE;
 }
 
@@ -53,7 +64,7 @@ void fgXMLParser::freeXML(void)
 	if(m_fileBuffer) {
 		fgFree(m_fileBuffer);
 	}
-	m_fileBuffer = FG_FALSE;
+	m_fileBuffer = NULL;
 	m_fileSize = FG_FALSE;
 	m_xmlDocument.ClearError();
 	m_xmlDocument.Clear();
@@ -130,12 +141,14 @@ fgBool fgXMLParser::_parseDeep(fgXMLNode *cnode, int depth)
 fgBool fgXMLParser::parseWithHandler(void)
 {
 	if(!m_contentHandler) {
+		reportError(FG_ERRNO_XML_NO_CONTENT_HANDLER);
 		return FG_FALSE;
 	}
 	std::stack<fgXMLNode *> toVisitStack;
 
 	// Parsing XML using content handler class
 	if(!this->isXMLLoaded()) {
+		reportError(FG_ERRNO_XML_NOT_LOADED);
 		return FG_FALSE;
 	}
 	// Start document parsing
@@ -143,9 +156,9 @@ fgBool fgXMLParser::parseWithHandler(void)
 	// Start deep parsing #FIXME
 	fgBool pstatus = _parseDeep(NULL, 0);
 	if(!pstatus) {
+		reportError(FG_ERRNO_XML_PARSE_DEEP);
 		return FG_FALSE;
 	}
 	m_contentHandler->endDocument(&this->m_xmlDocument);
 	return FG_TRUE;
 }
-

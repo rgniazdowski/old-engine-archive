@@ -83,7 +83,7 @@ struct fgStatus
 
 	// Assignment operator. If source has message allocated it will be
 	// taken over by this fgStatus structure. Pointer in source will be deleted.
-	// FIXME - this wont be needed (I think) - need further testing
+	// #FIXME - this wont be needed (I think) - need further testing
 	fgStatus& operator= (fgStatus source)
 	{
 		if(this == &source)

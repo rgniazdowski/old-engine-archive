@@ -20,9 +20,8 @@
 #include <cerrno>
 
 /*
- * #TODO - Need to add error handling and proper calls for all version of the code
+ *
  */
-
 fgBool fgFile::exists(const char *filePath)
 {
 	std::ifstream fileCheck(filePath);
@@ -45,6 +44,7 @@ fgFile::fgFile(const char *filePath) : m_file(NULL),
 	m_modeFlags(FG_FILE_MODE_READ | FG_FILE_MODE_BINARY)
 {
 	m_filePath = filePath;
+	exists();
 }
 
 /*
@@ -103,7 +103,7 @@ const char *fgFile::modeStr(fgFileMode mode)
 }
 
 /*
- * #TODO
+ *
  */
 fgBool fgFile::open(const char *filePath, fgFileMode mode)
 {
@@ -201,19 +201,21 @@ fgBool fgFile::isOpen(void) const {
  */
 char *fgFile::load(const char *filePath)
 {
-	if(!open(filePath, FG_FILE_MODE_READ | FG_FILE_MODE_BINARY)) {
+	if(!isOpen() && !open(filePath, FG_FILE_MODE_READ | FG_FILE_MODE_BINARY)) {
 		return NULL;
 	}
 
 	int fileSize = getSize();
 	if(fileSize < 0) {
 		reportWarning(FG_ERRNO_FILE_ERROR_SIZE);
+		close();
 		return NULL;
 	}
-
+	// #FIXME
 	char *fileBuffer = (char *) fgMalloc(sizeof(char) * (fileSize+1));
 	if(fileBuffer == NULL) {
-		reportError(FG_ERRNO); // FIXME - memory error codes
+		reportError(FG_ERRNO); // #FIXME - memory error codes
+		close();
 		return NULL;
 	}
 

@@ -122,7 +122,7 @@ fgBool fgConfigParser::parseData(const char *data)
 			fgBool bool_value = FG_BOOL_FROM_TEXT(parameterValue.c_str());
 
 			// Does the string contain quotes?
-			if(quotepos != std::string::npos) {
+			if(quotepos != (int)std::string::npos) {
 				// it's a string value
 				parameterValue = fgStrings::trim(parameterValue, "'\"");
 				parameter.set(parameterValue.c_str());
