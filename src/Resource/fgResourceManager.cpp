@@ -16,7 +16,6 @@
 
 #include <queue>
 
-#include "fgResourceFactory.h"
 #include "Util/fgDirent.h"
 #include "Util/fgPath.h"
 #include "fgLog.h"
@@ -26,11 +25,6 @@ bool fgSingleton<fgResourceManager>::instanceFlag = false;
 
 template <>
 fgResourceManager *fgSingleton<fgResourceManager>::instance = NULL;
-
-//#FIXME #BIGFIXME! ! ! ! #BUG #TODO #BORT
-#include "GUI/fgFontResource.h"
-#include "GFX/Textures/fgTextureResource.h"
-#include "fgResourceGroup.h"
 
 /*
  *
@@ -43,11 +37,6 @@ fgResourceManager::fgResourceManager() :
 	m_resourceHandlesMgr.releaseAllHandles();
 	m_currentResource = getRefResourceVector().end();
 	m_resourceGroupHandles.clear_optimised();
-
-	// #FIXME #BUG #KILLALLSINGLETONS!
-	FG_ResourceFactory->registerResource(FG_RESOURCE_TEXTURE, &fgTextureResource::createResource);
-	FG_ResourceFactory->registerResource(FG_RESOURCE_FONT, &fgFontResource::createResource);
-	FG_ResourceFactory->registerResource(FG_RESOURCE_GROUP, &fgResourceGroup::createResource);
 }
 
 /*
@@ -55,7 +44,6 @@ fgResourceManager::fgResourceManager() :
  */
 fgResourceManager::~fgResourceManager()
 {
-	FG_ResourceFactory->clear(); // #BUG
 	destroy();
 }
 

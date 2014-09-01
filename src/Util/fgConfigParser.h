@@ -18,7 +18,7 @@
 #include "fgStatus.h"
 #include "fgFile.h"
 
-#define FG_CFG_PARAMATER_STRING_MAX 128
+#define FG_CFG_PARAMATER_STRING_MAX 512
 
 /*
  *
@@ -131,6 +131,12 @@ protected:
 	// Data buffer
 	char *m_fileBuffer;
 	// Mapped values: Key is a pair of <section name, parameter name>
+	// Remember that in this implementation of INI configs, section name can
+	// be split into parts: section and sub section. Delimeter is a '.' (point); Example:
+	// 'Settings' -> section: 'Settings', subsection: empty
+	// 'Settings.debug' -> section: 'Settings', subsection: 'debug'
+	// 'Settings.GFX.Textures' -> section: 'Settings.GFX', subsection: 'Textures'
+	// Section used in map key is always the last part (subsection or section name if one part exists)
 	parameterMap m_parameterMap;
 
 public:

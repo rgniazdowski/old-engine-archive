@@ -95,6 +95,7 @@ fgBool fgConfigParser::parseData(const char *data)
 				subSectionName = splitSection[subid];
 			} else {
 				isSection = false;
+				subSectionName.clear();
 			}
 			printf("section name: %s\n", sectionName.c_str());
 			if(!subSectionName.empty())

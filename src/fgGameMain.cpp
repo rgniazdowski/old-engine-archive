@@ -28,6 +28,7 @@
 #include "Hardware/fgQualityManager.h"
 #include "Hardware/fgHardwareState.h"
 #include "GFX/fgGFXMain.h"
+#include "GUI/fgFontResource.h"
 #include "GFX/Textures/fgTextureManager.h"
 #include "GFX/Particles/fgParticleSystem.h"
 #include "Audio/fgSFXManager.h"
@@ -85,7 +86,9 @@ fgBool fgGameMain::initSubsystems(void)
 	FG_TouchReceiver->initialize();
 
 	FG_ResourceFactory->clear();
-
+	FG_ResourceFactory->registerResource(FG_RESOURCE_TEXTURE, &fgTextureResource::createResource);
+	FG_ResourceFactory->registerResource(FG_RESOURCE_FONT, &fgFontResource::createResource);
+	FG_ResourceFactory->registerResource(FG_RESOURCE_GROUP, &fgResourceGroup::createResource);
 	/* Useful for memory management
 	s3eMemoryGetInt(S3E_MEMORY_USED);
 	s3eMemoryGetInt(S3E_MEMORY_SIZE);
@@ -152,7 +155,7 @@ fgBool fgGameMain::initSubsystems(void)
 		std::string section = it->first.first;
 		std::string pname = it->first.second;
 		fgCfgParameter &param1 = it->second;
-		printf("section: '%s', param: '%s', value: ", section.c_str(), pname.c_str());
+		printf("section: '%s', sub: '%s', param: '%s', value: ", param1.sectionName.c_str(), param1.subSectionName.c_str(), pname.c_str());
 		switch(param1.type) {
 		case FG_CFG_PARAMETER_INT:
 			printf("int = %d\n", param1.int_val);
