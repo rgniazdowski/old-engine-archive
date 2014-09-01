@@ -12,6 +12,7 @@
 
 #include "fgCommon.h"
 #include "fgResourceManager.h"
+#include "fgResourceErrorCodes.h"
 
 #include <queue>
 
@@ -43,7 +44,7 @@ fgResourceManager::fgResourceManager() :
 	m_currentResource = getRefResourceVector().end();
 	m_resourceGroupHandles.clear_optimised();
 
-	// #FIXME #BUG
+	// #FIXME #BUG #KILLALLSINGLETONS!
 	FG_ResourceFactory->registerResource(FG_RESOURCE_TEXTURE, &fgTextureResource::createResource);
 	FG_ResourceFactory->registerResource(FG_RESOURCE_FONT, &fgFontResource::createResource);
 	FG_ResourceFactory->registerResource(FG_RESOURCE_GROUP, &fgResourceGroup::createResource);
@@ -105,7 +106,7 @@ void fgResourceManager::destroy(void)
 		m_resourceGroupHandles.clear_optimised();
 	}
 
-	FG_LOG::PrintDebug(">>>>> fgResourceManager::destroy(void); RESOURCES");
+	FG_LOG::PrintDebug(">>>>> fgResourceManager::destroy(void); RESOURCES"); // #TODELETE
 	{
 		rmResVecItor begin = getRefResourceVector().begin();
 		rmResVecItor end = getRefResourceVector().end();
@@ -126,7 +127,7 @@ void fgResourceManager::destroy(void)
  */
 fgBool fgResourceManager::initialize(void)
 {
-	FG_LOG::PrintDebug(">>>>>> fgResourceManager::initialize(void); -> Initializing resource manager\nCurrent maximum memory: %.2f", (float)m_nMaximumMemory/1024.0/1024.0);
+	FG_LOG::PrintDebug(">>>>>> fgResourceManager::initialize(void); -> Initializing resource manager\nCurrent maximum memory: %.2f", (float)m_nMaximumMemory/1024.0/1024.0); // #TODELETE
 	// First of all load any resource group configs,
 	// file extension is *.rgrp and it's a xml file.
 	fgDirent *datadir = new fgDirent();
@@ -151,7 +152,8 @@ fgBool fgResourceManager::initialize(void)
 	filename = NULL;
 
 	if(resGroupFiles.size() == 0) {
-		return FG_FALSE; // #TODO proper error handling
+		reportWarning(FG_ERRNO_RESOURCE_NO_GROUPS, FG_MSG_IN_FUNCTION);
+		return FG_FALSE;
 	}
 
 	for(unsigned int i=0;i<resGroupFiles.size();i++)
@@ -281,28 +283,32 @@ fgBool fgResourceManager::goToNext(fgResourceType resType, fgQuality quality)
 fgBool fgResourceManager::insertResource(FG_RHANDLE& rhUniqueID, fgResource* pResource)
 {
 	if(!pResource) {
-		FG_LOG::PrintError("%s(%d): resource parameter is NULL - in function %s.", FG_Filename(__FILE__), __LINE__-1,__FUNCTION__);
+		reportWarning(FG_ERRNO_RESOURCE_PARAMETER_NULL, FG_MSG_IN_FUNCTION);
 		return FG_FALSE;
 	}
 
 	if(m_resourceHandlesMgr.isDataManaged(pResource)) {
+		reportError(FG_ERRNO_RESOURCE_ALREADY_MANAGED, FG_MSG_IN_FUNCTION);
 		FG_LOG::PrintError("%s(%d): this resource is already managed (it exists in the handle manager) - in function %s.", FG_Filename(__FILE__), __LINE__-1,__FUNCTION__);
 		return FG_FALSE;
 	}
 
 	if(!pResource->getHandle().isNull()) {
-		FG_LOG::PrintError("%s(%d): resource has already initialized handle - in function %s.", FG_Filename(__FILE__), __LINE__-1,__FUNCTION__);
+		// Resource has already initialized handle
+		reportError(FG_ERRNO_RESOURCE_INITIALIZED_HANDLE, FG_MSG_IN_FUNCTION);
 		return FG_FALSE;
 	}
 	// Acquire next valid resource handle
 	// Insert the resource into the current catalog
 	if(!m_resourceHandlesMgr.acquireHandle(rhUniqueID, pResource)) {
-		FG_LOG::PrintError("%s(%d): could not acquire handle for the resource - in function %s.", FG_Filename(__FILE__), __LINE__-1,__FUNCTION__);
+		// Could not aquire handle for the resource
+		reportError(FG_ERRNO_RESOURCE_ACQUIRE_HANDLE, FG_MSG_IN_FUNCTION);
 		return FG_FALSE;
 	}
 	pResource->setResourceHandle(rhUniqueID);
 	if(!m_resourceHandlesMgr.setupName(pResource->getResourceName(), rhUniqueID)) {
-		FG_LOG::PrintError("%s(%d): could not setup handle string tag for the resource - in function %s.", FG_Filename(__FILE__), __LINE__-1,__FUNCTION__);
+		// Could not setup handle string tag/name for the resource
+		reportError(FG_ERRNO_RESOURCE_SETUP_HANDLE_NAME, FG_MSG_IN_FUNCTION);
 		return FG_FALSE;
 	}
 	// Get the memory and add it to the catalog total.  Note that we only have
@@ -316,7 +322,6 @@ fgBool fgResourceManager::insertResource(FG_RHANDLE& rhUniqueID, fgResource* pRe
 	}
 	else
 		m_bResourceReserved = FG_FALSE;
-	// return the id to the user for their use and return success
 	return FG_TRUE;
 }
 
@@ -326,16 +331,16 @@ fgBool fgResourceManager::insertResource(FG_RHANDLE& rhUniqueID, fgResource* pRe
 fgBool fgResourceManager::insertResourceGroup(FG_RHANDLE rhUniqueID, fgResource* pResource)
 {
 	if(!pResource) {
-		FG_LOG::PrintError("%s(%d): resource parameter is NULL - in function %s.", FG_Filename(__FILE__), __LINE__-1,__FUNCTION__);
+		reportWarning(FG_ERRNO_RESOURCE_PARAMETER_NULL, FG_MSG_IN_FUNCTION);
 		return FG_FALSE;
 	}
 	if(!m_resourceHandlesMgr.isHandleValid(rhUniqueID)) {
-		FG_LOG::PrintError("%s(%d): resource group handle is invalid- in function %s.", FG_Filename(__FILE__), __LINE__-1,__FUNCTION__);
+		reportError(FG_ERRNO_RESOURCE_GROUP_HANDLE_INVALID, FG_MSG_IN_FUNCTION);
 		return FG_FALSE;
 	}
 
 	if(m_resourceGroupHandles.find(rhUniqueID) != -1) {
-		FG_LOG::PrintError("%s(%d): this resource group (%s) is already in the vector - in function %s.", FG_Filename(__FILE__), __LINE__-1,pResource->getResourceNameStr(),__FUNCTION__);
+		reportError(FG_ERRNO_RESOURCE_GROUP_IN_VECTOR, FG_MSG_IN_FUNCTION);
 		return FG_FALSE;
 	}
 	m_resourceGroupHandles.push_back(rhUniqueID);
@@ -351,7 +356,7 @@ fgBool fgResourceManager::removeResource(FG_RHANDLE rhUniqueID)
 	fgResource *pResource = m_resourceHandlesMgr.dereference(rhUniqueID);
 	if(!pResource) {
 		// Could not find resource to remove, handle is invalid
-		FG_LOG::PrintError("%s(%d): could not find resource to remove, handle is invalid - in function %s.", FG_Filename(__FILE__), __LINE__-1,__FUNCTION__);
+		reportError(FG_ERRNO_RESOURCE_NOT_FOUND_INVALID_HANDLE, FG_MSG_IN_FUNCTION);		
 		return FG_FALSE;
 	}
 	return removeResource(pResource);
@@ -363,20 +368,20 @@ fgBool fgResourceManager::removeResource(FG_RHANDLE rhUniqueID)
  */
 fgBool fgResourceManager::removeResource(fgResource* pResource)
 {
-	FG_LOG::PrintDebug("fgResourceManager::removeResource(fgResource* pResource);");
+	FG_LOG::PrintDebug("fgResourceManager::removeResource(fgResource* pResource);"); // #TODELETE
 	if(!pResource) {
-		FG_LOG::PrintError("%s(%d): resource parameter is NULL - in function %s.", FG_Filename(__FILE__), __LINE__-1,__FUNCTION__);
+		reportWarning(FG_ERRNO_RESOURCE_PARAMETER_NULL, FG_MSG_IN_FUNCTION);
 		return FG_FALSE;
 	}
 	if(!m_resourceHandlesMgr.isHandleValid(pResource->getHandle())) {
 		// The handle of the resource is invalid, this resource is not managed
-		FG_LOG::PrintError("%s(%d): the handle of the resource is invalid, this resource is not managed- in function %s.", FG_Filename(__FILE__), __LINE__-1,__FUNCTION__);
+		reportError(FG_ERRNO_RESOURCE_HANDLE_INVALID, FG_MSG_IN_FUNCTION);
 		return FG_FALSE;
 	}
 	// if the resource was found, check to see that it's not locked
 	if(pResource->isLocked()) {
 		// Can't remove a locked resource
-		FG_LOG::PrintError("%s(%d): can't remove a locked resource - in function %s.", FG_Filename(__FILE__), __LINE__-1,__FUNCTION__);
+		reportError(FG_ERRNO_RESOURCE_LOCKED_REMOVAL, FG_MSG_IN_FUNCTION);
 		return FG_FALSE;
 	}
 	// Get the memory and subtract it from the manager total
@@ -394,7 +399,7 @@ fgBool fgResourceManager::disposeResource(FG_RHANDLE rhUniqueID)
 	fgResource *pResource = m_resourceHandlesMgr.dereference(rhUniqueID);
 	if(!pResource) {
 		// Could not find resource to remove, handle is invalid
-		FG_LOG::PrintError("%s(%d): could not find resource to remove, handle is invalid - in function %s.", FG_Filename(__FILE__), __LINE__-1,__FUNCTION__);
+		reportError(FG_ERRNO_RESOURCE_NOT_FOUND_INVALID_HANDLE, FG_MSG_IN_FUNCTION);
 		return FG_FALSE;
 	}
 	return disposeResource(pResource);
@@ -406,18 +411,18 @@ fgBool fgResourceManager::disposeResource(FG_RHANDLE rhUniqueID)
 fgBool fgResourceManager::disposeResource(fgResource* pResource)
 {
 	if(!pResource) {
-		FG_LOG::PrintError("%s(%d): resource parameter is NULL - in function %s.", FG_Filename(__FILE__), __LINE__-1,__FUNCTION__);
+		reportWarning(FG_ERRNO_RESOURCE_PARAMETER_NULL, FG_MSG_IN_FUNCTION);
 		return FG_FALSE;
 	}
 	if(!m_resourceHandlesMgr.isHandleValid(pResource->getHandle())) {
 		// The handle of the resource is invalid, this resource is not managed
-		FG_LOG::PrintError("%s(%d): the handle of the resource is invalid, this resource is not managed- in function %s.", FG_Filename(__FILE__), __LINE__-1,__FUNCTION__);
+		reportError(FG_ERRNO_RESOURCE_HANDLE_INVALID, FG_MSG_IN_FUNCTION);
 		return FG_FALSE;
 	}
 	// if the resource was found, check to see that it's not locked
 	if(pResource->isLocked()) {
 		// Can't remove a locked resource
-		FG_LOG::PrintError("%s(%d): can't remove a locked resource - in function %s.", FG_Filename(__FILE__), __LINE__-1,__FUNCTION__);
+		reportError(FG_ERRNO_RESOURCE_LOCKED_REMOVAL, FG_MSG_IN_FUNCTION);
 		return FG_FALSE;
 	}
 	unsigned int nDisposalSize = pResource->getSize();
@@ -427,7 +432,7 @@ fgBool fgResourceManager::disposeResource(fgResource* pResource)
 		removeMemory(nDisposalSize);
 	} else {
 		// For some reason the resource is not disposed
-		FG_LOG::PrintError("%s(%d): for some reason resource is not disposed - in function %s.", FG_Filename(__FILE__), __LINE__-1,__FUNCTION__);
+		reportWarning(FG_ERRNO_RESOURCE_NOT_DISPOSED, FG_MSG_IN_FUNCTION);
 		return FG_FALSE;
 	}
 	return FG_TRUE;
@@ -442,10 +447,10 @@ fgBool fgResourceManager::disposeResource(fgResource* pResource)
 fgBool fgResourceManager::destroyResource(fgResource* pResource)
 {
 	if(!removeResource(pResource)) {
-		FG_LOG::PrintError("%s(%d): could not remove resource - in function %s.", FG_Filename(__FILE__), __LINE__-1,__FUNCTION__);
+		reportError(FG_ERRNO_RESOURCE_REMOVE);
 		return FG_FALSE;
 	}
-	FG_LOG::PrintDebug("fgResourceManager::destroyResource(fgResource* pResource) -> delete pResource;");
+	FG_LOG::PrintDebug("fgResourceManager::destroyResource(fgResource* pResource) -> delete pResource;"); // #TODELETE
 	delete pResource;
 	return FG_TRUE;
 }
@@ -458,13 +463,12 @@ fgBool fgResourceManager::destroyResource(fgResource* pResource)
  */
 fgBool fgResourceManager::destroyResource(FG_RHANDLE rhUniqueID)
 {
-	//fgResource* pResource = getResource(rhUniqueID);
 	fgResource *pResource = m_resourceHandlesMgr.dereference(rhUniqueID);
 	if(!removeResource(rhUniqueID)) {
-		FG_LOG::PrintError("%s(%d): could not remove resource - in function %s.", FG_Filename(__FILE__), __LINE__-1,__FUNCTION__);
+		reportError(FG_ERRNO_RESOURCE_REMOVE);
 		return FG_FALSE;
 	}
-	FG_LOG::PrintDebug("fgResourceManager::destroyResource(FG_RHANDLE rhUniqueID) -> delete pResource;");
+	FG_LOG::PrintDebug("fgResourceManager::destroyResource(FG_RHANDLE rhUniqueID) -> delete pResource;"); // #TODELETE
 	delete pResource;
 	return FG_TRUE;
 }
@@ -480,7 +484,7 @@ fgResource* fgResourceManager::getResource(FG_RHANDLE rhUniqueID)
 	fgResource *pResource = m_resourceHandlesMgr.dereference(rhUniqueID);
 	if(!pResource) {
 		// Could not find resource to remove, handle is invalid
-		FG_LOG::PrintError("%s(%d): could not find resource, handle is invalid - in function %s.", FG_Filename(__FILE__), __LINE__-1,__FUNCTION__);
+		reportError(FG_ERRNO_RESOURCE_NOT_FOUND_INVALID_HANDLE, FG_MSG_IN_FUNCTION);
 		return NULL;
 	}
 	// You may need to add your own OS dependent method of getting
@@ -515,13 +519,12 @@ fgResource* fgResourceManager::getResource(FG_RHANDLE rhUniqueID)
 fgResource* fgResourceManager::getResource(std::string& nameTag)
 {
 	if(nameTag.empty()) {
-		FG_LOG::PrintError("%s(%d): resource name tag is empty - in function %s.", FG_Filename(__FILE__), __LINE__-1,__FUNCTION__);
+		reportWarning(FG_ERRNO_RESOURCE_NAME_TAG_EMPTY, FG_MSG_IN_FUNCTION);
 		return NULL;
 	}
 	fgResource *pResource = m_resourceHandlesMgr.dereference(nameTag);
 	if(!pResource) {
-		// Could not find resource to remove, handle is invalid
-		FG_LOG::PrintError("%s(%d): could not find resource, tag name is invalid - in function %s.", FG_Filename(__FILE__), __LINE__-1,__FUNCTION__);
+		reportError(FG_ERRNO_RESOURCE_NAME_TAG_INVALID, FG_MSG_IN_FUNCTION);
 		return NULL;
 	}
 	// You may need to add your own OS dependent method of getting
@@ -557,12 +560,12 @@ fgResource* fgResourceManager::getResource(std::string& nameTag)
 fgResource* fgResourceManager::lockResource(FG_RHANDLE rhUniqueID)
 {
 	if(FG_IS_INVALID_HANDLE(rhUniqueID)) {
-		FG_LOG::PrintError("%s(%d): resource handle is invalid - in function %s.", FG_Filename(__FILE__), __LINE__-1,__FUNCTION__);
+		reportWarning(FG_ERRNO_RESOURCE_PARAMETER_NULL);
 		return NULL;
 	}
 	fgResource *pResource = m_resourceHandlesMgr.dereference(rhUniqueID);
 	if(!pResource) {
-		FG_LOG::PrintError("%s(%d): could not find resource to lock, handle is invalid - in function %s.", FG_Filename(__FILE__), __LINE__-1,__FUNCTION__);
+		reportError(FG_ERRNO_RESOURCE_NOT_FOUND_INVALID_HANDLE);
 		return NULL;
 	}
 	lockResource(pResource);
@@ -576,12 +579,12 @@ fgResource* fgResourceManager::lockResource(FG_RHANDLE rhUniqueID)
 fgBool fgResourceManager::lockResource(fgResource *pResource)
 {
 	if(!pResource) {
-		FG_LOG::PrintError("%s(%d): resource parameter is NULL - in function %s.", FG_Filename(__FILE__), __LINE__-1,__FUNCTION__);
+		reportWarning(FG_ERRNO_RESOURCE_PARAMETER_NULL, FG_MSG_IN_FUNCTION);
 		return FG_FALSE;
 	}
 	if(FG_IS_INVALID_HANDLE(pResource->getHandle())
 		|| !m_resourceHandlesMgr.isHandleValid(pResource->getHandle())) {
-		FG_LOG::PrintError("%s(%d): resource handle is invalid - in function %s.", FG_Filename(__FILE__), __LINE__-1,__FUNCTION__);
+			reportError(FG_ERRNO_RESOURCE_HANDLE_INVALID, FG_MSG_IN_FUNCTION);
 		return FG_FALSE;
 	}
 	// increment the object's count
@@ -608,12 +611,12 @@ fgBool fgResourceManager::lockResource(fgResource *pResource)
 fgResource* fgResourceManager::unlockResource(FG_RHANDLE rhUniqueID)
 {
 	if(FG_IS_INVALID_HANDLE(rhUniqueID)) {
-		FG_LOG::PrintError("%s(%d): resource handle is invalid - in function %s.", FG_Filename(__FILE__), __LINE__-1,__FUNCTION__);
+		reportWarning(FG_ERRNO_RESOURCE_PARAMETER_NULL, FG_MSG_IN_FUNCTION);
 		return NULL;
 	}
 	fgResource *pResource = m_resourceHandlesMgr.dereference(rhUniqueID);
 	if(!pResource) {
-		FG_LOG::PrintError("%s(%d): could not find resource to unlock, handle is invalid - in function %s.", FG_Filename(__FILE__), __LINE__-1,__FUNCTION__);
+		reportError(FG_ERRNO_RESOURCE_NOT_FOUND_INVALID_HANDLE, FG_MSG_IN_FUNCTION);
 		return NULL;
 	}
 	pResource->Unlock();
@@ -626,16 +629,16 @@ fgResource* fgResourceManager::unlockResource(FG_RHANDLE rhUniqueID)
 fgBool fgResourceManager::unlockResource(fgResource *pResource)
 {
 	if(!pResource) {
-		FG_LOG::PrintError("%s(%d): resource parameter is NULL - in function %s.", FG_Filename(__FILE__), __LINE__-1,__FUNCTION__);
+		reportWarning(FG_ERRNO_RESOURCE_PARAMETER_NULL, FG_MSG_IN_FUNCTION);
 		return FG_FALSE;
 	}
 	if(FG_IS_INVALID_HANDLE(pResource->getHandle())
 		|| !m_resourceHandlesMgr.isHandleValid(pResource->getHandle())) {
-		FG_LOG::PrintError("%s(%d): resource handle is invalid - in function %s.", FG_Filename(__FILE__), __LINE__-1,__FUNCTION__);
+		reportError(FG_ERRNO_RESOURCE_HANDLE_INVALID, FG_MSG_IN_FUNCTION);
 		return FG_FALSE;
 	}
 	if(pResource->getReferenceCount() == 0) {
-		FG_LOG::PrintError("%s(%d): resource reference count is already zero - too many unlocks - in function %s.", FG_Filename(__FILE__), __LINE__-1,__FUNCTION__);
+		reportError(FG_ERRNO_RESOURCE_TOO_MANY_UNLOCKS, FG_MSG_IN_FUNCTION);
 		return FG_FALSE;
 	}
 	pResource->Unlock();
@@ -648,16 +651,16 @@ fgBool fgResourceManager::unlockResource(fgResource *pResource)
 fgBool fgResourceManager::isResourceManaged(fgResource* pResource)
 {
 	if(!pResource) {
-		FG_LOG::PrintError("%s(%d): resource parameter is NULL - in function %s.", FG_Filename(__FILE__), __LINE__-1,__FUNCTION__);
+		reportWarning(FG_ERRNO_RESOURCE_PARAMETER_NULL, FG_MSG_IN_FUNCTION);
 		return FG_FALSE;
 	}
 	if(FG_IS_INVALID_HANDLE(pResource->getHandle())
 		|| !m_resourceHandlesMgr.isHandleValid(pResource->getHandle())) {
-		FG_LOG::PrintError("%s(%d): resource handle is invalid - in function %s.", FG_Filename(__FILE__), __LINE__-1,__FUNCTION__);
+			reportError(FG_ERRNO_RESOURCE_HANDLE_INVALID, FG_MSG_IN_FUNCTION);
 		return FG_FALSE;
 	}
 	if(!m_resourceHandlesMgr.isDataManaged(pResource)) {
-		FG_LOG::PrintError("%s(%d): given resource is not managed - in function %s.", FG_Filename(__FILE__), __LINE__-1,__FUNCTION__);
+		reportWarning(FG_ERRNO_RESOURCE_NOT_MANAGED, FG_MSG_IN_FUNCTION);
 		return FG_FALSE;
 	}
 	return pResource->getHandle();
@@ -714,8 +717,10 @@ fgBool fgResourceManager::checkForOverallocation(void)
 		// If the resource queue is empty and we still have too much memory allocated,
 		// then we return failure.  This could happen if too many resources were locked
 		// or if a resource larger than the requested maximum memory was inserted.
-		if(PriQueue.empty() && (m_nCurrentUsedMemory > m_nMaximumMemory))
+		if(PriQueue.empty() && (m_nCurrentUsedMemory > m_nMaximumMemory)) {
+			reportWarning(FG_ERRNO_RESOURCE_OVERALLOCATION);
 			return FG_FALSE;
+		}
 	}
 	return FG_TRUE;
 }

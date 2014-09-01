@@ -7,6 +7,7 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
+#include "fgBuildConfig.h"
 #include "fgLog.h"
 #include "fgErrno.h"
 
@@ -38,6 +39,8 @@ void FG_LOG::PrintInfo(const char *fmt, ...)
  */
 void FG_LOG::PrintDebug(const char *fmt, ...)
 {
+#ifdef FG_DEBUG
+#if FG_DEBUG
 	char buf[FG_LOG_BUF_MAX];
 	va_list args;
 
@@ -48,6 +51,8 @@ void FG_LOG::PrintDebug(const char *fmt, ...)
 
     // s3eDebugTracePrintf(buf);
     puts(buf);
+#endif
+#endif
 }
 
 /*
@@ -141,7 +146,7 @@ namespace FG_LOG {
 			break;
 		}; 
 
-		snprintf(buf, FG_LOG_BUF_MAX-1, "%02d/%02d/%02d %02d:%02d:%02d - %s(%d): %s; additional info: %s", 
+		snprintf(buf, FG_LOG_BUF_MAX-1, "%02d/%02d/%02d %02d:%02d:%02d - %s(%d): %s: %s", 
 			ti->tm_mday,
 			ti->tm_mon+1,
 			ti->tm_year-100,
