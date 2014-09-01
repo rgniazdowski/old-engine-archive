@@ -57,7 +57,7 @@ fgBool fgSettings::load(const char *filePath)
 	m_parser->freeXML();
 
 	if(status) {
-
+		m_settings = data;
 		printf("\n>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n");
 		printf(">>>>>>> defaultDataPath: '%s'\n", data.defaultDataPath.c_str());
 		printf(">>>>>>> defaultLogPath:  '%s'\n", data.defaultLogPath.c_str());

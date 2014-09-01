@@ -158,6 +158,7 @@ public:
 		if(m_isFailure)
 			return;
 		m_elemStack.push(elementPtr);
+		
 		fgXMLAutoElement<Target>::onElement(localName, m_target, elementPtr);
 	}
 

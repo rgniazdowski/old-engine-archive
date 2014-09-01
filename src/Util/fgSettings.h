@@ -21,23 +21,25 @@
  */
 class fgSettings {
 public:
+	// 
 	struct settingsData {
-		std::string defaultDataPath;
-		std::string defaultLogPath;
-		std::string mainConfigPath;
-		std::string programTitle;
-		std::string defaultProfileName;
-		std::string mainProfileName;
-		std::string lastExecution;
-		int	videoModeID;
-		int verboseLevel;
-		long lastTimestamp;
-		fgBool useSound;
-		fgBool useConsole;
-		fgBool useNetwork;
-		fgBool cleanExit;
-		fgBool debugMode;
+		std::string defaultDataPath;	// Path to the data folder
+		std::string defaultLogPath;		// Path to the log folder
+		std::string mainConfigPath;		// Path to the main configuration file
+		std::string programTitle;		// Program title
+		std::string defaultProfileName;	// Default profile name
+		std::string mainProfileName;	// Main profile name
+		std::string lastExecution;		// Last run/execution time in readable format (string/text)
+		int	videoModeID;				// Active video mode ID
+		int verboseLevel;				// Verbose level
+		long lastTimestamp;				// Last run timestamp
+		fgBool useSound;				// Will be sound used?
+		fgBool useConsole;				// Will be console used (GUI)?
+		fgBool useNetwork;				// Will be network used?
+		fgBool cleanExit;				// Did the application closed normally last time?
+		fgBool debugMode;				// Is debug mode on?
 
+		// 
 		settingsData() :
 			videoModeID(-1),
 			verboseLevel(0),
@@ -50,19 +52,197 @@ public:
 		{
 		}
 
+		// 
 		void clear(void) {
 
 		}
 	};
 public:
+	// 
 	fgSettings();
+	// 
 	fgSettings(const char *filePath);
+	// 
 	~fgSettings();
 
+	// 
 	fgBool load(const char *filePath);
 protected:
+	// 
 	fgXMLParser *m_parser;
+	// 
 	settingsData m_settings;
+public:
+	// 
+	std::string &getDefaultDataPath(void) {
+		return m_settings.defaultDataPath;
+	}
+	// 
+	const char *getDefaultDataPathStr(void) const {
+		return m_settings.defaultDataPath.c_str();
+	}
+	// 
+	void setDefaultDataPath(const char *path) {
+		if(path)
+			m_settings.defaultDataPath = path;
+	}
+
+	// 
+	std::string &getDefaultLogPath(void) {
+		return m_settings.defaultLogPath;
+	}
+	// 
+	const char *getDefaultLogPathStr(void) const {
+		return m_settings.defaultLogPath.c_str();
+	}
+	// 
+	void setDefaultLogPath(const char *path) {
+		if(path)
+			m_settings.defaultLogPath = path;
+	}
+
+	// 
+	std::string &getMainConfigPath(void) {
+		return m_settings.mainConfigPath;
+	}
+	// 
+	const char *getMainConfigPathStr(void) const {
+		return m_settings.mainConfigPath.c_str();
+	}
+	// 
+	void setMainConfigPath(const char *path) {
+		if(path)
+			m_settings.mainConfigPath = path;
+	}
+
+	// 
+	std::string &getProgramTitle(void) {
+		return m_settings.programTitle;
+	}
+	// 
+	const char *getProgramTitleStr(void) const {
+		return m_settings.programTitle.c_str();
+	}
+	// 
+	void setProgramTitle(const char *path) {
+		if(path)
+			m_settings.programTitle = path;
+	}
+
+	// 
+	std::string &getDefaultProfileName(void) {
+		return m_settings.defaultProfileName;
+	}
+	// 
+	const char *getDefaultProfileNameStr(void) const {
+		return m_settings.defaultProfileName.c_str();
+	}
+	// 
+	void setDefaultProfileName(const char *path) {
+		if(path)
+			m_settings.defaultProfileName = path;
+	}
+
+	// 
+	std::string &getMainProfileName(void) {
+		return m_settings.mainProfileName;
+	}
+	// 
+	const char *getMainProfileNameStr(void) const {
+		return m_settings.mainProfileName.c_str();
+	}
+	// 
+	void setMainProfileName(const char *path) {
+		if(path)
+			m_settings.mainProfileName = path;
+	}
+
+	// 
+	std::string &getLastExecution(void) {
+		return m_settings.lastExecution;
+	}
+	// 
+	const char *getLastExecutionStr(void) const {
+		return m_settings.lastExecution.c_str();
+	}
+	// 
+	void setLastExecution(const char *path) {
+		if(path)
+			m_settings.lastExecution = path;
+	}
+
+	// 
+	int getVideoModeID(void) const {
+		return m_settings.videoModeID;
+	}
+	// 
+	void setVideoModeID(int modeID) {
+		m_settings.videoModeID = modeID;
+	}
+
+	// 
+	int getVerboseLevel(void) const {
+		return m_settings.verboseLevel;
+	}
+	// 
+	void setVerboseLevel(int verboseLevel) {
+		m_settings.verboseLevel = verboseLevel;
+	}
+
+	// 
+	long getLastTimestamp(void) const {
+		return m_settings.lastTimestamp;
+	}
+	// 
+	void setLastTimestamp(long timestamp) {
+		m_settings.lastTimestamp = timestamp;
+	}
+
+	// 
+	fgBool isUseSound(void) const {
+		return m_settings.useSound;
+	}
+	// 
+	void setUseSound(fgBool toggle) {
+		m_settings.useSound = toggle;
+	}
+
+	// 
+	fgBool isUseConsole(void) const {
+		return m_settings.useConsole;
+	}
+	// 
+	void setUseConsole(fgBool toggle) {
+		m_settings.useConsole = toggle;
+	}
+
+	// 
+	fgBool isUseNetwork(void) const {
+		return m_settings.useNetwork;
+	}
+	// 
+	void setUseNetwork(fgBool toggle) {
+		m_settings.useNetwork = toggle;
+	}
+
+	// 
+	fgBool isCleanExit(void) const {
+		return m_settings.cleanExit;
+	}
+	// 
+	void setCleanExit(fgBool toggle) {
+		m_settings.cleanExit = toggle;
+	}
+
+	// 
+	fgBool isDebugMode(void) const {
+		return m_settings.debugMode;
+	}
+	// 
+	void setDebugMode(fgBool toggle) {
+		m_settings.debugMode = toggle;
+	}
+
 };
 
 #define FG_SETTINGS_XML_ROOT_NODE_NAME	"Settings"
