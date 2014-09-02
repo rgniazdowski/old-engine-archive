@@ -14,6 +14,8 @@
  */
 void fgErrorCodes::registerAll(void)
 {
+	FG_ERRNO_MAIN::__registerAll();
+
 	FG_ERRNO_SFX::__registerAll();
 	FG_ERRNO_EVENT::__registerAll();
 	FG_ERRNO_GFX::__registerAll();
@@ -24,6 +26,7 @@ void fgErrorCodes::registerAll(void)
 	FG_ERRNO_FILE::__registerAll();
 	FG_ERRNO_MEMORY::__registerAll();
 	FG_ERRNO_XML::__registerAll();
+
 	FG_ERRNO_GAME::__registerAll();
 }
 

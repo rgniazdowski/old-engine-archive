@@ -35,8 +35,23 @@
  * FlexiGame specific error codes
  */
 
-#define FG_ERRNO_OK			FG_ERRNO_BASE_CODE(0)	/* No error */
-#define FG_ERRNO_NOCFG		FG_ERRNO_BASE_CODE(1)	/* No config file found */
+#define FG_ERRNO_OK				FG_ERRNO_BASE_CODE(0)	/* No error */
+#define FG_ERRNO_NOCFG			FG_ERRNO_BASE_CODE(1)	/* No config file found */
+#define FG_ERRNO_EXCEPTION		FG_ERRNO_BASE_CODE(2)   /* Exception */
+#define FG_ERRNO_NOT_FOUND		FG_ERRNO_BASE_CODE(3)	/* Element was not found */
+#define FG_ERRNO_WRONG_PARAM	FG_ERRNO_BASE_CODE(4)	/* Wrong parameter */
+
+#define FG_ERRNO_LAST_CODE		FG_ERRNO_BASE_CODE(4)	/* Last code */
+
+#define FG_ERRNO_OK_TEXT			"No error"
+#define FG_ERRNO_NOCFG_TEXT			"No config file found"
+#define FG_ERRNO_EXCEPTION_TEXT		"Exception"
+#define FG_ERRNO_NOT_FOUND_TEXT		"Element was not found"
+#define FG_ERRNO_WRONG_PARAM_TEXT	"Wrong parameter"
+
+/*
+ *
+ **********************************************************/
 
 /*
  * 
@@ -84,6 +99,22 @@ private:
 #define FG_ERRNO_REGISTER(code, str)	fgErrno::registerStrError(code, str)
 
 #define FG_ERRNO_CLEAR()				do { fgErrno::clearError(); } while(0)
+
+namespace FG_ERRNO_MAIN {
+	const char * const __allErrVec[] = {
+		FG_ERRNO_OK_TEXT,
+		FG_ERRNO_NOCFG_TEXT,
+		FG_ERRNO_EXCEPTION_TEXT,
+		FG_ERRNO_NOT_FOUND_TEXT,
+		FG_ERRNO_WRONG_PARAM_TEXT
+	};
+
+	static void __registerAll(void) {		
+		for(int code=FG_ERRNO_BASE_CODE(0), i=0; code<=FG_ERRNO_LAST_CODE; code++, i++) {
+			FG_ERRNO_REGISTER(code, FG_ERRNO_MAIN::__allErrVec[i]);
+		}
+	}
+};
 
 #undef _FG_ERRNO_ERROR_CODES_BLOCK__
 #endif /* _FG_ERRNO_H_ */

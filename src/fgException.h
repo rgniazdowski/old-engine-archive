@@ -23,25 +23,33 @@ struct fgException : fgError
 	std::string data;
 
 	fgException() {
+		type = FG_MESSAGE_ERROR;
 		critical = FG_TRUE;
 	}
 
 	fgException(const char *_data) {
+		type = FG_MESSAGE_ERROR;
 		critical = FG_TRUE;
 		data = _data;
 		code = FG_ERRNO_OK;
 	}
 
 	fgException(const char *_data, int _code) {
+		type = FG_MESSAGE_ERROR;
 		critical = FG_TRUE;
 		data = _data;
 		code = _code;
 	}
 
 	fgException(int _code) {
+		type = FG_MESSAGE_ERROR;
 		critical = FG_TRUE;
 		code = _code;
 		data = FG_ERRNO_STR(_code); // #FIXME
+	}
+
+	~fgException() {
+		data.clear();
 	}
 };
 
