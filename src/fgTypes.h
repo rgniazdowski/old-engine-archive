@@ -53,6 +53,9 @@
 #define FG_ENUM_IF_TEXT_EQ(ENUM) \
 	if(strncasecmp(text, ENUM ## _TEXT, strlen(ENUM ## _TEXT)) == 0)
 
+#define FG_RETURN_VAL_IF_EQUAL(varToCheck, valueToCheck, returnVal) \
+	do { if(varToCheck == valueToCheck ) return returnVal; } while(0)
+
 // Convert text (literal) to corresponding enum value
 inline fgBool _FG_BOOL_FROM_TEXT(const char* text) {
 	if(!text)
@@ -64,7 +67,16 @@ inline fgBool _FG_BOOL_FROM_TEXT(const char* text) {
 	FG_RETURN_ENUM_IF_TEXT_EQ(FG_ERROR);
 	return FG_BOOL_INVALID;
 }
+
+inline const char * _FG_BOOL_TO_TEXT(fgBool value) {
+	FG_RETURN_VAL_IF_EQUAL(value, FG_TRUE, FG_TEXT(FG_TRUE));
+	FG_RETURN_VAL_IF_EQUAL(value, FG_FALSE, FG_TEXT(FG_FALSE));
+	FG_RETURN_VAL_IF_EQUAL(value, FG_WARNING, FG_TEXT(FG_WARNING));
+	return NULL;
+}
+
 #define FG_BOOL_FROM_TEXT(text) _FG_BOOL_FROM_TEXT(text)
+#define FG_BOOL_TO_TEXT(value) _FG_BOOL_TO_TEXT(value)
 
 #define FG_ENUM_FLAGS(Type) \
 inline Type	operator	& (Type x, Type y)		{	return static_cast<Type>	(static_cast<int>(x) & static_cast<int>(y));	} \

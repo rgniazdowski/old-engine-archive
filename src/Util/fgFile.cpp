@@ -127,6 +127,7 @@ fgBool fgFile::open(const char *filePath, fgFileMode mode)
 			return FG_FALSE;
 		}
 	}
+	fgStatusReporter::clearStatus();
 	FG_ERRNO_CLEAR();
 	m_file = fopen(filePath, modeStr(mode));
 

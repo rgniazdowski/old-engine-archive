@@ -20,7 +20,7 @@ public:
 	fgConfigWriter();
 	~fgConfigWriter();
 
-	fgBool fgSaveConfig(void);
+	fgBool save(const char *filePath, fgCfgTypes::sectionMap &sectionMap);
 
 	/*******************************************************
 	 * These function are here because ConfigWriter extends
