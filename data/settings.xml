@@ -1,7 +1,7 @@
 <Settings>
 	<defaultDataPath>data</defaultDataPath>
 	<defaultLogPath>log</defaultLogPath>
-	<mainConfigPath>main.ini</mainConfigPath>
+	<mainConfigPath>main.config.ini</mainConfigPath>
 	<programTitle>Flexible Game Engine: Infinium</programTitle>
 	<defaultProfileName></defaultProfileName>
 	<mainProfileName></mainProfileName>

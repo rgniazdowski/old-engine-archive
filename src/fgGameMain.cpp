@@ -147,7 +147,7 @@ fgBool fgGameMain::initSubsystems(void)
 
 	FG_MessageSubsystem->initialize(); // ?
 	FG_MessageSubsystem->setLogPaths("all.log", "error.log", "debug.log");
-
+#if 0
 	fgConfigParser *ini = new fgConfigParser("main.config.ini");
 	fgConfigParser::parameterMap &params = ini->getRefParameterMap();
 	fgConfigParser::parameterMapItor it = params.begin();
@@ -180,7 +180,7 @@ fgBool fgGameMain::initSubsystems(void)
 		};
 	}
 	delete ini;
-
+#endif
 	return FG_TRUE;
 }
 

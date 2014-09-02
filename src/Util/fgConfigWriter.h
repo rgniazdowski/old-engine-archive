@@ -7,47 +7,23 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-#ifndef _FG_CONFIG_PARSER_H_
-#define _FG_CONFIG_PARSER_H_
+#ifndef _FG_CONFIG_WRITER_H_
+#define _FG_CONFIG_WRITER_H_
 
-#include "fgStatus.h"
 #include "fgFile.h"
 
 #include "fgConfigStruct.h"
 
-/*
- *
- */
-class fgConfigParser : protected fgFile
-{
+class fgConfigWriter : protected fgFile {
 protected:
-	// Loaded file size
-	unsigned int m_fileSize;
-	// Data buffer
-	char *m_fileBuffer;
 public:
-	// Default constructor for config parser object
-	fgConfigParser();
+	fgConfigWriter();
+	~fgConfigWriter();
 
-	// Default destructor for config parser object
-	~fgConfigParser();
-
-	// Load config and store all parameters in given section map
-	fgBool load(const char *filePath, fgCfgTypes::sectionMap &sectionMap);
-
-	// Parse data and store parameters in given section map (reference)
-	fgBool parseData(const char *data, fgCfgTypes::sectionMap &sectionMap);
-
-	// Free all data assiocated with the config
-	void freeData(void);
-
-	// Return the file size (in bytes)
-	unsigned int getFileSize(void) const {
-		return m_fileSize;
-	}
+	fgBool fgSaveConfig(void);
 
 	/*******************************************************
-	 * These function are here because ConfigParser extends
+	 * These function are here because ConfigWriter extends
 	 * fgFile with access level protected. Need to make
 	 * public methods of status reporter available. #FIXME
 	 */
@@ -73,4 +49,4 @@ public:
 	}
 };
 
-#endif /* _FG_CONFIG_PARSER_H_ */
+#endif /* _FG_CONFIG_WRITER_H_ */

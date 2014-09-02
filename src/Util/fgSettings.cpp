@@ -58,12 +58,6 @@ fgBool fgSettings::load(const char *filePath)
 
 	if(status) {
 		m_settings = data;
-		printf("\n>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n");
-		printf(">>>>>>> defaultDataPath: '%s'\n", data.defaultDataPath.c_str());
-		printf(">>>>>>> defaultLogPath:  '%s'\n", data.defaultLogPath.c_str());
-		printf(">>>>>>> programTitle:    '%s'\n", data.programTitle.c_str());
-		printf(">>>>>>> useConsole:      '%d'\n", data.useConsole);
-		printf(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n\n");
 	}
 	delete m_parser;
 	m_parser = NULL;
