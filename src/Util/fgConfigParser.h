@@ -32,6 +32,9 @@ public:
 	// Default destructor for config parser object
 	~fgConfigParser();
 
+	// Split section name
+	static fgBool splitSectionName(std::string fullSectionName, std::string &sectionName, std::string &subSectionName);
+
 	// Load config and store all parameters in given section map
 	fgBool load(const char *filePath, fgCfgTypes::sectionMap &sectionMap);
 

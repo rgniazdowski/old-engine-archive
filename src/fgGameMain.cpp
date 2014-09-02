@@ -23,7 +23,7 @@
 
 #include "GameLogic/fgGameLogic.h"
 #include "Util/fgSettings.h"
-#include "Util/fgConfigParser.h" // FIXME
+#include "Util/fgConfig.h"
 #include "Hardware/fgSensors.h"
 #include "Hardware/fgQualityManager.h"
 #include "Hardware/fgHardwareState.h"
@@ -148,38 +148,15 @@ fgBool fgGameMain::initSubsystems(void)
 	FG_MessageSubsystem->initialize(); // ?
 	FG_MessageSubsystem->setLogPaths("all.log", "error.log", "debug.log");
 #if 0
-	fgConfigParser *ini = new fgConfigParser("main.config.ini");
-	fgConfigParser::parameterMap &params = ini->getRefParameterMap();
-	fgConfigParser::parameterMapItor it = params.begin();
-	for(;it!=params.end();it++) {
-		std::string section = it->first.first;
-		std::string pname = it->first.second;
-		fgCfgParameter &param1 = it->second;
-		printf("section: '%s', sub: '%s', param: '%s', value: ", param1.sectionName.c_str(), param1.subSectionName.c_str(), pname.c_str());
-		switch(param1.type) {
-		case FG_CFG_PARAMETER_INT:
-			printf("int = %d\n", param1.int_val);
-			break;
-		case FG_CFG_PARAMETER_LONG:
-			printf("long = %ld\n", param1.long_val);
-			break;
-		case FG_CFG_PARAMETER_FLOAT:
-			printf("float = %.4f\n", param1.float_val);
-			break;
-		case FG_CFG_PARAMETER_BOOL:
-			printf("bool = %d\n", (int)param1.bool_val);
-			break;
-		case FG_CFG_PARAMETER_STRING:
-			printf("str = '%s'\n", param1.string);
-			break;
-		case FG_CFG_PARAMETER_NONE:
-			printf("NONE\n");
-			break;
-		default:
-			break;
-		};
-	}
-	delete ini;
+	fgConfig *config = new fgConfig("main.config.ini");
+	config->setParameterBool("Settings.game", "programTitle", FG_TRUE);
+	config->setParameterFloat("Settings.game", "defaultProfileName", 123.444555666f);
+	config->setParameterInt("Settings.game", "defaultProfileNameASDASD", 1236666);
+	config->setParameterString("Settings.game", "newEntry", "This is new entry. YOLO!");
+	config->setParameterString("Settings.newEntry.YOLO", "YOLO1", "HAHAHAHA");
+	config->save("test.new.config.ini");
+	config->clearAll();
+	delete config;
 #endif
 	return FG_TRUE;
 }

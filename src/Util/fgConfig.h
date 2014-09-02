@@ -14,26 +14,38 @@
 #include "fgConfigParser.h"
 #include "fgConfigWriter.h"
 
-
-
+/*
+ *
+ */
 class fgConfig
 {
 protected:
+	//
 	fgConfigParser *m_parser;
+	//
 	fgConfigWriter *m_writer;
-
+	//
 	fgCfgTypes::sectionMap m_sectionMap;
+	//
 	fgCfgTypes::parameterVec m_parameterVec;
-
+	//
 	std::string m_filePath;
 public:
+	//
 	fgConfig();
+	//
 	fgConfig(const char *filePath);
+	//
 	~fgConfig();
 
+	//
+	void refreshParameterVec(void);
+	//
 	fgBool load(const char *filePath = NULL);
+	//
 	fgBool save(const char *filePath = NULL);
 
+	//
 	void clearAll(void);
 
 	// Return the void* pointer to parameter value. NULL if there is no such parameter.
@@ -48,6 +60,19 @@ public:
 	fgBool getParameterBool(const char *sectionName, const char *parameterName, fgBool *status = NULL);
 	// Return the pointer to string value of the paramater. NULL if there is no such parameter.
 	char *getParameterString(const char *sectionName, const char *parameterName);
+
+	//
+	fgBool setParameterValue(const char *sectionName, const char *parameterName, fgCfgParameterType type, void *value, fgBool freeInValue = FG_FALSE);
+	//
+	fgBool setParameterInt(const char *sectionName, const char *parameterName, int value);
+	//
+	fgBool setParameterLong(const char *sectionName, const char *parameterName, long int value);
+	//
+	fgBool setParameterFloat(const char *sectionName, const char *parameterName, float value);
+	//
+	fgBool setParameterBool(const char *sectionName, const char *parameterName, fgBool value);
+	//
+	fgBool setParameterString(const char *sectionName, const char *parameterName, const char *value);
 
 	// Return the reference to internal section map
 	fgCfgTypes::sectionMap & getRefSectionMap(void) {

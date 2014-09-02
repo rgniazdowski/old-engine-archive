@@ -27,6 +27,37 @@ fgConfigParser::~fgConfigParser()
 }
 
 /*
+ *
+ */
+fgBool fgConfigParser::splitSectionName(std::string fullSectionName, std::string &sectionName, std::string &subSectionName)
+{
+	fgBool isSection = FG_TRUE;
+	fullSectionName = fgStrings::trim(fullSectionName, "[]");
+	fgArrayVector<std::string> splitSection;
+	splitSection.reserve(4);
+	fgStrings::split(fullSectionName, '.', splitSection);
+	if(splitSection.size() == 1) {
+		sectionName = splitSection[0];
+		subSectionName.clear();
+	} else if(splitSection.size()) {
+		int subid = (int)splitSection.size()-1;
+		int i = 0;
+		sectionName.clear();
+		for(;i<subid;i++) {
+			sectionName += splitSection[i];
+			if(i != subid-1)
+				sectionName += ".";
+		}
+		subSectionName = splitSection[subid];
+	} else {
+		isSection = FG_FALSE;
+		sectionName.clear();
+		subSectionName.clear();
+	}
+	return isSection;
+}
+
+/*
  * Load config and store all parameters in given section map
  */
 fgBool fgConfigParser::load(const char *filePath, fgCfgTypes::sectionMap &sectionMap)
@@ -80,41 +111,19 @@ fgBool fgConfigParser::parseData(const char *data, fgCfgTypes::sectionMap &secti
 			(line[0] == '/' && line[1] == '/')) // Ignore comments
 			continue;
 		if(line[0] == '[') {
-			isSection = true;
 			fullSectionName = fgStrings::trim(line, "[]");
-			fgArrayVector<std::string> splitSection;
-			splitSection.reserve(4);
-			fgStrings::split(fullSectionName, '.', splitSection);
-			if(splitSection.size() == 1) {
-				sectionName = splitSection[0];
-				subSectionName.clear();
-			} else if(splitSection.size()) {
-				int subid = (int)splitSection.size()-1;
-				int i = 0;
-				sectionName.clear();
-				for(;i<subid;i++) {
-					sectionName += splitSection[i];
-					if(i != subid-1)
-						sectionName += ".";
-				}
-				subSectionName = splitSection[subid];
-			} else {
-				isSection = false;
-				sectionName.clear();
-				subSectionName.clear();
+			isSection = fgConfigParser::splitSectionName(fullSectionName, sectionName, subSectionName);
+			if(newSection) {				
+				newSection = NULL;
 			}
-			if(isSection) {
-				if(newSection) {
-					fgCfgTypes::sectionMapKey key = fullSectionName;
-					sectionMap[key] = newSection;
-					newSection = NULL;
-				}
+			if(isSection) {				
 				newSection = new fgCfgSection();
 				newSection->name = fullSectionName;
-			} 
-			printf("section name: %s\n", sectionName.c_str());
-			if(!subSectionName.empty())
-				printf("sub section name: %s\n", subSectionName.c_str());
+				fgCfgTypes::sectionMapKey key = fullSectionName;
+				sectionMap[key] = newSection;
+			}
+			//printf(">>> full section '%s', section '%s', subsection '%s'\n", fullSectionName.c_str(),
+			//	sectionName.c_str(), subSectionName.c_str());
 		} else if(isSection && !sectionName.empty()) {
 			// Now checking for parameters and values for given section/subsection
 			// parameter = value
@@ -124,7 +133,7 @@ fgBool fgConfigParser::parseData(const char *data, fgCfgTypes::sectionMap &secti
 			int eqpos = line.find_first_of('=');
 			std::string parameterName = fgStrings::trim(line.substr(0,eqpos));
 			std::string parameterValue = fgStrings::trim(line.substr(eqpos+1));
-			printf("param value: %s = '%s'\n", parameterName.c_str(), parameterValue.c_str());
+			//printf("param value: %s = '%s'\n", parameterName.c_str(), parameterValue.c_str());
 			if(parameterName.empty())
 				continue;
 			fgCfgParameter *parameter = new fgCfgParameter();

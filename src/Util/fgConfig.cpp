@@ -8,6 +8,7 @@
  *******************************************************/
 
 #include "fgConfig.h"
+#include "fgMemory.h"
 #include "fgException.h"
 
 /*
@@ -37,7 +38,24 @@ fgConfig::~fgConfig()
 		delete m_writer;
 	clearAll();
 }
-#include <vector>
+
+/*
+ *
+ */
+void fgConfig::refreshParameterVec(void)
+{
+	m_parameterVec.clear_optimised();
+	fgCfgTypes::sectionMapItor it = m_sectionMap.begin(),
+		end = m_sectionMap.end();
+	for(;it!=end; it++) {
+		fgCfgSection *section = it->second;
+		if(!section) continue;
+		for(unsigned int i=0;i<section->parameters.size();i++) {
+			m_parameterVec.push_back(section->parameters[i]);
+		}
+	}
+}
+
 /*
  *
  */
@@ -59,14 +77,7 @@ fgBool fgConfig::load(const char *filePath)
 		return FG_FALSE;
 	}
 	
-	fgCfgTypes::sectionMapItor it = m_sectionMap.begin(),
-		end = m_sectionMap.end();
-	for(;it!=end; it++) {
-		fgCfgSection *section = it->second;
-		if(!section) continue;
-		for(unsigned int i=0;i<section->parameters.size();i++)
-			m_parameterVec.push_back(section->parameters[i]);
-	}
+	refreshParameterVec();
 	return FG_TRUE;
 }
 
@@ -87,7 +98,9 @@ fgBool fgConfig::save(const char *filePath)
 	if(!m_writer)
 		m_writer = new fgConfigWriter();
 
-	// // // // // 
+	if(!m_writer->save(filePath, m_sectionMap)) {
+		return FG_FALSE;
+	}
 
 	return FG_TRUE;
 }
@@ -251,4 +264,106 @@ char *fgConfig::getParameterString(const char *sectionName, const char *paramete
 	if(!ptr)
 		return NULL;
 	return (char *)ptr;
+}
+
+/*
+ *
+ */
+fgBool fgConfig::setParameterValue(const char *sectionName, const char *parameterName, fgCfgParameterType type, void *value, fgBool freeInValue)
+{
+	if(!sectionName || !parameterName || !value)
+		return FG_FALSE;
+
+	fgCfgSection *section = NULL;
+	fgCfgParameter *parameter = NULL;
+	fgCfgTypes::sectionMapPair sm_query_pair;
+	fgCfgTypes::sectionMapKey sm_key = sectionName;
+	sm_query_pair.first = sm_key;
+	sm_query_pair.second = NULL;
+	std::pair<fgCfgTypes::sectionMapItor, bool> sm_result = m_sectionMap.insert(sm_query_pair);
+	if(sm_result.second == false) {
+		// already existed
+		section = sm_result.first->second;
+	} else {
+		// inserted new
+		section = new fgCfgSection();
+		section->name = sectionName;
+		m_sectionMap[sm_key] = section;
+	}
+
+	fgCfgTypes::parameterMapPair pm_query_pair;
+	fgCfgTypes::parameterMapKey pm_key = parameterName;
+	pm_query_pair.first = pm_key;
+	pm_query_pair.second = NULL;
+	std::pair<fgCfgTypes::parameterMapItor, bool> pm_result = section->parametersMap.insert(pm_query_pair);
+	if(pm_result.second == false) {
+		// already existed
+		parameter = pm_result.first->second;
+	} else {
+		// new insertion
+		parameter = new fgCfgParameter();
+		parameter->name = parameterName;
+		fgConfigParser::splitSectionName(sm_key, parameter->sectionName, parameter->subSectionName);
+		section->parametersMap[pm_key] = parameter;
+		section->parameters.push_back(parameter);
+	}
+
+	fgBool status = parameter->set(type, value);
+	if(status)
+		refreshParameterVec();
+	if(freeInValue) {
+		fgFree(value);
+		value = NULL;
+	}
+	return status;
+}
+
+/*
+ *
+ */
+fgBool fgConfig::setParameterInt(const char *sectionName, const char *parameterName, int value)
+{
+	int newValue = value;
+	void *void_ptr = (void *)(&newValue);
+	return setParameterValue(sectionName, parameterName, FG_CFG_PARAMETER_INT, void_ptr);
+}
+
+/*
+ *
+ */
+fgBool fgConfig::setParameterLong(const char *sectionName, const char *parameterName, long int value)
+{
+	long int newValue = value;
+	void *void_ptr = (void *)(&newValue);
+	return setParameterValue(sectionName, parameterName, FG_CFG_PARAMETER_LONG, void_ptr);
+}
+
+/*
+ *
+ */
+fgBool fgConfig::setParameterFloat(const char *sectionName, const char *parameterName, float value)
+{
+	float newValue = value;
+	void *void_ptr = (void *)(&newValue);
+	return setParameterValue(sectionName, parameterName, FG_CFG_PARAMETER_FLOAT, void_ptr);
+}
+
+/*
+ *
+ */
+fgBool fgConfig::setParameterBool(const char *sectionName, const char *parameterName, fgBool value)
+{
+	fgBool newValue = value;
+	void *void_ptr = (void *)(&newValue);
+	return setParameterValue(sectionName, parameterName, FG_CFG_PARAMETER_BOOL, void_ptr);
+}
+
+/*
+ *
+ */
+fgBool fgConfig::setParameterString(const char *sectionName, const char *parameterName, const char *value)
+{
+	char *newValue = strdup(value);
+	void *void_ptr = (void *)(newValue);
+	return setParameterValue(sectionName, parameterName, FG_CFG_PARAMETER_STRING, void_ptr, FG_TRUE);
 }
