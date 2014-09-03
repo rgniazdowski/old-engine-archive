@@ -220,6 +220,12 @@
 #define FG_USING_TINYXML
 #endif
 
+/**************************** CROSS PLATFORM COMPATIBILITY ****************************/
+
+#ifdef FG_USING_MARMALADE
+#define GLM_FORCE_PURE
+#endif
+
 /*************************** OTHER DEFINITIONS / STRUCTURES ***************************/
 
 //

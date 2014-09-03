@@ -13,7 +13,6 @@
 #include "fgCommon.h"
 #include "fgResourceManager.h"
 #include "fgResourceErrorCodes.h"
-
 #include <queue>
 
 #include "Util/fgDirent.h"

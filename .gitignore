@@ -15,3 +15,8 @@ modules/lua_515/test
 modules/lua_515/etc
 modules/lua_523/src
 modules/luaplus/upstream
+modules/glm/cmake
+modules/glm/test
+modules/glm/util
+modules/glm/CMakeLists.txt
+modules/glm/CTestConfig.cmake

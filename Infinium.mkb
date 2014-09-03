@@ -361,6 +361,7 @@ options
 	arm-cpu=6
 	arm-fpu=vfp
 	optimise-speed
+	enable-exceptions
 	warn-level=2
 }
 
@@ -386,6 +387,7 @@ subprojects
 includepath
 {
 	src
+	modules/glm
 }
 #	dpi
 #	tinyobj
