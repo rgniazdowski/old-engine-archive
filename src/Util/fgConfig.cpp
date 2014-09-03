@@ -180,11 +180,10 @@ void *fgConfig::getParameterValue(const char *sectionName, const char *parameter
 	fgCfgSection *section = getSection(sectionName);
 	if(!section)
 		return NULL;
-	fgCfgTypes::parameterMapKey pmkey = parameterName;
-	fgCfgTypes::parameterMapItor pmit = section->parametersMap.find(pmkey);
-	if(pmit == section->parametersMap.end())
+	fgCfgParameter *parameter = section->getParameter(parameterName);
+	if(!parameter)
 		return NULL;
-	return pmit->second->get();
+	return parameter->get();
 }
 
 /*

@@ -245,6 +245,15 @@ struct fgCfgSection {
 		parametersMap.clear();
 	}
 	
+	// Return the parameter with given name
+	fgCfgParameter *getParameter(const char *parameterName) {
+		fgCfgTypes::parameterMapKey pmkey = parameterName;
+		fgCfgTypes::parameterMapItor pmit = parametersMap.find(pmkey);
+		if(pmit == parametersMap.end())
+			return NULL;
+		return pmit->second;
+	}
+
 	// This will release all data - calls destructors
 	void freeAll(void) {
 		parametersMap.clear();

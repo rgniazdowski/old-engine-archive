@@ -129,7 +129,8 @@ fgBool fgConfigParser::parseData(const char *data, fgCfgTypes::sectionMap &secti
 			// parameter = value
 			// Also need to ignore comments as some lines can have this format:
 			// parameter = value ; comment
-			line = line.substr(0, line.find_last_of(';'));
+			if(line.find_last_of('\"') < line.find_last_of(';'))
+				line = line.substr(0, line.find_last_of(';'));
 			int eqpos = line.find_first_of('=');
 			std::string parameterName = fgStrings::trim(line.substr(0,eqpos));
 			std::string parameterValue = fgStrings::trim(line.substr(eqpos+1));
