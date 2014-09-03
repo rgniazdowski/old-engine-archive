@@ -132,7 +132,7 @@ fgBool fgResourceManager::initialize(void)
 		const char *ext = FG_FileExt(filename, FG_TRUE);
 		if(!ext)
 			continue;
-		if(strcmp(ext, "group.xml") == 0) {
+		if(strcasecmp(ext, "group.xml") == 0 || strcasecmp(ext, "group.ini") == 0) {
 			resGroupFiles.push_back(std::string(filename));
 		}
 	}
@@ -146,11 +146,17 @@ fgBool fgResourceManager::initialize(void)
 
 	for(unsigned int i=0;i<resGroupFiles.size();i++)
 	{
-		FG_RHANDLE grpUniqueID; // #FIXME - should resource manager hold separate array for res groups IDS ? oh my ...
+		// #FIXME - should resource manager hold separate array for res groups IDS ? oh my ...
+		FG_RHANDLE grpUniqueID;
 		filename = resGroupFiles[i].c_str();
 		fgResourceGroup *resGroup = new fgResourceGroup();
-		resGroup->setFilePath(filename); // #TODO this will not always look like this - requires full path
-		resGroup->preLoadConfig();
+		// #TODO this will not always look like this - requires full path (cross platform)
+		resGroup->setFilePath(filename); 
+		if(!resGroup->preLoadConfig()) {
+			delete resGroup;
+			resGroup = NULL;
+			continue;
+		}
 		// Resource group is inserted as normal resource
 		// Resources within resource group are treated as one
 		// so even if resources in main map are being checked
@@ -165,8 +171,8 @@ fgBool fgResourceManager::initialize(void)
 			FG_RHANDLE resUniqueID;
 			insertResource(resUniqueID, (*it));
 		}
+		// This is really important - refresh array with resource handles
 		resGroup->refreshArrays();
-		FG_LOG::PrintDebug("LOG INSERTED RESOURCE GROUP"); // #FIXME #TODELETE
 	}
 	resGroupFiles.clear();
 	goToBegin();
@@ -277,7 +283,6 @@ fgBool fgResourceManager::insertResource(FG_RHANDLE& rhUniqueID, fgResource* pRe
 
 	if(m_resourceHandlesMgr.isDataManaged(pResource)) {
 		reportError(FG_ERRNO_RESOURCE_ALREADY_MANAGED, FG_MSG_IN_FUNCTION);
-		FG_LOG::PrintError("%s(%d): this resource is already managed (it exists in the handle manager) - in function %s.", FG_Filename(__FILE__), __LINE__-1,__FUNCTION__);
 		return FG_FALSE;
 	}
 
@@ -340,7 +345,6 @@ fgBool fgResourceManager::insertResourceGroup(FG_RHANDLE rhUniqueID, fgResource*
  */
 fgBool fgResourceManager::removeResource(FG_RHANDLE rhUniqueID)
 {
-	FG_LOG::PrintDebug("fgResourceManager::removeResource(FG_RHANDLE rhUniqueID);"); // #TODELETE
 	fgResource *pResource = m_resourceHandlesMgr.dereference(rhUniqueID);
 	if(!pResource) {
 		// Could not find resource to remove, handle is invalid
@@ -356,7 +360,6 @@ fgBool fgResourceManager::removeResource(FG_RHANDLE rhUniqueID)
  */
 fgBool fgResourceManager::removeResource(fgResource* pResource)
 {
-	FG_LOG::PrintDebug("fgResourceManager::removeResource(fgResource* pResource);"); // #TODELETE
 	if(!pResource) {
 		reportWarning(FG_ERRNO_RESOURCE_PARAMETER_NULL, FG_MSG_IN_FUNCTION);
 		return FG_FALSE;
@@ -438,7 +441,6 @@ fgBool fgResourceManager::destroyResource(fgResource* pResource)
 		reportError(FG_ERRNO_RESOURCE_REMOVE);
 		return FG_FALSE;
 	}
-	FG_LOG::PrintDebug("fgResourceManager::destroyResource(fgResource* pResource) -> delete pResource;"); // #TODELETE
 	delete pResource;
 	return FG_TRUE;
 }
@@ -456,7 +458,6 @@ fgBool fgResourceManager::destroyResource(FG_RHANDLE rhUniqueID)
 		reportError(FG_ERRNO_RESOURCE_REMOVE);
 		return FG_FALSE;
 	}
-	FG_LOG::PrintDebug("fgResourceManager::destroyResource(FG_RHANDLE rhUniqueID) -> delete pResource;"); // #TODELETE
 	delete pResource;
 	return FG_TRUE;
 }

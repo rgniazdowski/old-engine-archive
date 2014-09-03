@@ -116,8 +116,8 @@ public:
 class fgResourceGroup : public fgResource {
 	friend class fgResourceGroupContentHandler;
 public:
-	typedef fgArrayVector<fgResource *>		rgResVec;
-	typedef fgArrayVector<FG_RHANDLE>		rgHandleVec;
+	typedef fgArrayVector<fgResource *>				rgResVec;
+	typedef fgArrayVector<FG_RHANDLE>				rgHandleVec;
 	typedef fgArrayVector<fgResource *>::iterator	rgResVecItor;
 	typedef fgArrayVector<FG_RHANDLE>::iterator		rgHandleVecItor;
 	typedef fgArrayVector<fgResource *>::const_iterator	rgResVecConstItor;
@@ -170,7 +170,8 @@ protected:
 	virtual unsigned int Unlock(void);
 	// Unlock completely the resource (reference counter = 0) #NOTSAFE #FIXME
 	virtual void ZeroLock(void);
-
+private:
+	fgBool _parseIniConfig(void);
 protected:
 	// List of all handles within this resource group
 	rgHandleVec m_rHandles;
