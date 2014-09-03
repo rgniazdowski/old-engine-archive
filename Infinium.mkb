@@ -384,15 +384,11 @@ subprojects
 	zlib
 }
 
-includepath
+includepaths
 {
 	src
 	modules/glm
 }
-#	dpi
-#	tinyobj
-#	tinyxml	
-#}
 
 #### AUTO GENERATED deployment settings from DeployTool.exe. Do not edit below this line ####
 deployments

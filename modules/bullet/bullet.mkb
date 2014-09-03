@@ -11,7 +11,7 @@ options
 {
 	strict=0
 	arm-cpu=6
-	arm-fpu=vfpv3
+	arm-fpu=vfp
 	optimise-speed
 }
 
