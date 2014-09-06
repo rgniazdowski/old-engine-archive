@@ -29,25 +29,25 @@ public:
 		std::string programTitle;		// Program title
 		std::string defaultProfileName;	// Default profile name
 		std::string mainProfileName;	// Main profile name
-		std::string lastExecution;		// Last run/execution time in readable format (string/text)
-		int	videoModeID;				// Active video mode ID
+		//std::string lastExecution;		// Last run/execution time in readable format (string/text)
+		//int	videoModeID;				// Active video mode ID
 		int verboseLevel;				// Verbose level
-		long lastTimestamp;				// Last run timestamp
+		//long lastTimestamp;				// Last run timestamp
 		fgBool useSound;				// Will be sound used?
 		fgBool useConsole;				// Will be console used (GUI)?
 		fgBool useNetwork;				// Will be network used?
-		fgBool cleanExit;				// Did the application closed normally last time?
+		//fgBool cleanExit;				// Did the application closed normally last time?
 		fgBool debugMode;				// Is debug mode on?
 
 		// 
 		settingsData() :
-			videoModeID(-1),
+			//videoModeID(-1),
 			verboseLevel(0),
-			lastTimestamp(0L),
+			//lastTimestamp(0L),
 			useSound(FG_FALSE),
 			useConsole(FG_FALSE),
 			useNetwork(FG_FALSE),
-			cleanExit(FG_FALSE),
+			//cleanExit(FG_FALSE),
 			debugMode(FG_FALSE)
 		{
 		}
@@ -156,7 +156,7 @@ public:
 		if(path)
 			m_settings.mainProfileName = path;
 	}
-
+#if 0
 	// 
 	std::string &getLastExecution(void) {
 		return m_settings.lastExecution;
@@ -179,7 +179,7 @@ public:
 	void setVideoModeID(int modeID) {
 		m_settings.videoModeID = modeID;
 	}
-
+#endif
 	// 
 	int getVerboseLevel(void) const {
 		return m_settings.verboseLevel;
@@ -188,7 +188,7 @@ public:
 	void setVerboseLevel(int verboseLevel) {
 		m_settings.verboseLevel = verboseLevel;
 	}
-
+#if 0
 	// 
 	long getLastTimestamp(void) const {
 		return m_settings.lastTimestamp;
@@ -197,7 +197,7 @@ public:
 	void setLastTimestamp(long timestamp) {
 		m_settings.lastTimestamp = timestamp;
 	}
-
+#endif
 	// 
 	fgBool isUseSound(void) const {
 		return m_settings.useSound;
@@ -224,7 +224,7 @@ public:
 	void setUseNetwork(fgBool toggle) {
 		m_settings.useNetwork = toggle;
 	}
-
+#if 0
 	// 
 	fgBool isCleanExit(void) const {
 		return m_settings.cleanExit;
@@ -233,7 +233,7 @@ public:
 	void setCleanExit(fgBool toggle) {
 		m_settings.cleanExit = toggle;
 	}
-
+#endif
 	// 
 	fgBool isDebugMode(void) const {
 		return m_settings.debugMode;
@@ -256,14 +256,14 @@ FG_XML_AUTO_TEMPLATE_ELEMENT_CHECK_NAME(const char *, mainConfigPath,		"mainConf
 FG_XML_AUTO_TEMPLATE_ELEMENT_CHECK_NAME(const char *, programTitle,			"programTitle");
 FG_XML_AUTO_TEMPLATE_ELEMENT_CHECK_NAME(const char *, defaultProfileName,	"defaultProfileName");
 FG_XML_AUTO_TEMPLATE_ELEMENT_CHECK_NAME(const char *, mainProfileName,		"mainProfileName");
-FG_XML_AUTO_TEMPLATE_ELEMENT_CHECK_NAME(const char *, lastExecution,		"lastExecution");
-FG_XML_AUTO_TEMPLATE_ELEMENT_CHECK_NAME(int,		videoModeID,		"videoModeID");
+//FG_XML_AUTO_TEMPLATE_ELEMENT_CHECK_NAME(const char *, lastExecution,		"lastExecution");
+//FG_XML_AUTO_TEMPLATE_ELEMENT_CHECK_NAME(int,		videoModeID,		"videoModeID");
 FG_XML_AUTO_TEMPLATE_ELEMENT_CHECK_NAME(int,		verboseLevel,		"verboseLevel");
-FG_XML_AUTO_TEMPLATE_ELEMENT_CHECK_NAME(long,		lastTimestamp,		"lastTimestamp");
+//FG_XML_AUTO_TEMPLATE_ELEMENT_CHECK_NAME(long,		lastTimestamp,		"lastTimestamp");
 FG_XML_AUTO_TEMPLATE_ELEMENT_CHECK_NAME(fgBool,		useSound,			"useSound");
 FG_XML_AUTO_TEMPLATE_ELEMENT_CHECK_NAME(fgBool,		useConsole,			"useConsole");
 FG_XML_AUTO_TEMPLATE_ELEMENT_CHECK_NAME(fgBool,		useNetwork,			"useNetwork");
-FG_XML_AUTO_TEMPLATE_ELEMENT_CHECK_NAME(fgBool,		cleanExit,			"cleanExit");
+//FG_XML_AUTO_TEMPLATE_ELEMENT_CHECK_NAME(fgBool,		cleanExit,			"cleanExit");
 FG_XML_AUTO_TEMPLATE_ELEMENT_CHECK_NAME(fgBool,		debugMode,			"debugMode");
 FG_XML_AUTO_TEMPLATE_ELEMENT_END();
 

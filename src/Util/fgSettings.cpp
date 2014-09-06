@@ -31,6 +31,9 @@ fgSettings::~fgSettings()
 {
 }
 
+/*
+ *
+ */
 fgBool fgSettings::load(const char *filePath)
 {
 	if(!filePath)
