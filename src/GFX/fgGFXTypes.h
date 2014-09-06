@@ -12,8 +12,24 @@
 
 #include <cmath>
 
-// #FIXME #DUNNO
-#define EPSILON 1e-6f
+#ifndef FG_EPSILON
+#define FG_EPSILON 1e-6f
+#endif
+
+#ifndef M_PI
+#define M_PI 3.14159265358979323846
+#endif
+
+#ifndef M_PIF
+#define M_PIF 3.14159265358979323846f
+#endif
+
+#ifndef FG_DEG2RAD
+#define FG_DEG2RAD (M_PIF / 180.0f)
+#endif
+#ifndef FG_RAD2DEG
+#define FG_RAD2DEG (180.0f / M_PIF)
+#endif
 
 struct fgColor3f;
 struct fgColor4f;
@@ -26,7 +42,7 @@ struct fgColor3f {
 	inline fgColor3f(const fgColor3f &c) : r(c.r), g(c.g), b(c.b) { }
 	inline fgColor3f(const fgColor4f &c);
 	
-	inline int operator==(const fgColor3f &c) { return (fabs(r - c.r) < EPSILON && fabs(g - c.g) < EPSILON && fabs(b - c.b) < EPSILON); }
+	inline int operator==(const fgColor3f &c) { return (fabs(r - c.r) < FG_EPSILON && fabs(g - c.g) < FG_EPSILON && fabs(b - c.b) < FG_EPSILON); }
 	inline int operator!=(const fgColor3f &c) { return !(*this == c); }
 	
 	inline const fgColor3f operator*(float f) const { return fgColor3f(r * f,g * f,b * f); }
@@ -52,7 +68,7 @@ struct fgColor3f {
 	inline float length() const { return sqrtf(r * r + g * g + b * b); }
 	inline float normalibe() {
 		float inv,length = sqrtf(r * r + g * g + b * b);
-		if(length < EPSILON) return 0.0;
+		if(length < FG_EPSILON) return 0.0;
 		inv = 1.0f / length;
 		r *= inv;
 		g *= inv;
@@ -92,7 +108,7 @@ struct fgColor4f {
 	inline fgColor4f(const fgColor3f &c,float a) : r(c.r), g(c.g), b(c.b), a(a) { }
 	inline fgColor4f(const fgColor4f &c) : r(c.r), g(c.g), b(c.b), a(c.a) { }
 	
-	inline int operator==(const fgColor4f &c) { return (fabs(r - c.r) < EPSILON && fabs(g - c.g) < EPSILON && fabs(b - c.b) < EPSILON && fabs(a - c.a) < EPSILON); }
+	inline int operator==(const fgColor4f &c) { return (fabs(r - c.r) < FG_EPSILON && fabs(g - c.g) < FG_EPSILON && fabs(b - c.b) < FG_EPSILON && fabs(a - c.a) < FG_EPSILON); }
 	inline int operator!=(const fgColor4f &c) { return !(*this == c); }
 	
 	inline const fgColor4f operator*(float f) const { return fgColor4f(r * f,g * f,b * f,a * f); }

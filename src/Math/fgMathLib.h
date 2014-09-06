@@ -12,7 +12,9 @@
 
 #include <cmath>
 
-#define EPSILON 1e-6f
+#ifndef FG_EPSILON
+#define FG_EPSILON 1e-6f
+#endif
 
 #ifndef M_PI
 #define M_PI 3.14159265358979323846
@@ -22,8 +24,12 @@
 #define M_PIF 3.14159265358979323846f
 #endif
 
-#define DEG2RAD (M_PIF / 180.0f)
-#define RAD2DEG (180.0f / M_PIF)
+#ifndef FG_DEG2RAD
+#define FG_DEG2RAD (M_PIF / 180.0f)
+#endif
+#ifndef FG_RAD2DEG
+#define FG_RAD2DEG (180.0f / M_PIF)
+#endif
 
 struct fgVector2i;
 struct fgVector2f;
@@ -91,7 +97,7 @@ struct fgVector2f {
 	inline fgVector2f(const float *v) : x(v[0]), y(v[1]) { }
 	inline fgVector2f(const fgVector2f &v) : x(v.x), y(v.y) { }
 	
-	inline int operator==(const fgVector2f &v) { return (fabs(x - v.x) < EPSILON && fabs(y - v.y) < EPSILON); }
+	inline int operator==(const fgVector2f &v) { return (fabs(x - v.x) < FG_EPSILON && fabs(y - v.y) < FG_EPSILON); }
 	inline int operator!=(const fgVector2f &v) { return !(*this == v); }
 	
 	inline const fgVector2f operator*(float f) const { return fgVector2f(x * f,y * f); }
@@ -116,7 +122,7 @@ struct fgVector2f {
 	inline float length() const { return sqrtf(x * x + y * y); }
 	inline float normalize() {
 		float inv,length = sqrtf(x * x + y * y);
-		if(length < EPSILON) return 0.0;
+		if(length < FG_EPSILON) return 0.0;
 		inv = 1.0f / length;
 		x *= inv;
 		y *= inv;
@@ -145,7 +151,7 @@ struct fgVector3f {
 	inline fgVector3f(const fgVector3f &v) : x(v.x), y(v.y), z(v.z) { }
 	inline fgVector3f(const fgVector4f &v);
 	
-	inline int operator==(const fgVector3f &v) { return (fabs(x - v.x) < EPSILON && fabs(y - v.y) < EPSILON && fabs(z - v.z) < EPSILON); }
+	inline int operator==(const fgVector3f &v) { return (fabs(x - v.x) < FG_EPSILON && fabs(y - v.y) < FG_EPSILON && fabs(z - v.z) < FG_EPSILON); }
 	inline int operator!=(const fgVector3f &v) { return !(*this == v); }
 	
 	inline const fgVector3f operator*(float f) const { return fgVector3f(x * f,y * f,z * f); }
@@ -171,7 +177,7 @@ struct fgVector3f {
 	inline float length() const { return sqrtf(x * x + y * y + z * z); }
 	inline float normalize() {
 		float inv,length = sqrtf(x * x + y * y + z * z);
-		if(length < EPSILON) return 0.0;
+		if(length < FG_EPSILON) return 0.0;
 		inv = 1.0f / length;
 		x *= inv;
 		y *= inv;
@@ -215,7 +221,7 @@ struct fgVector4f {
 	inline fgVector4f(const fgVector3f &v,float w) : x(v.x), y(v.y), z(v.z), w(w) { }
 	inline fgVector4f(const fgVector4f &v) : x(v.x), y(v.y), z(v.z), w(v.w) { }
 	
-	inline int operator==(const fgVector4f &v) { return (fabs(x - v.x) < EPSILON && fabs(y - v.y) < EPSILON && fabs(z - v.z) < EPSILON && fabs(w - v.w) < EPSILON); }
+	inline int operator==(const fgVector4f &v) { return (fabs(x - v.x) < FG_EPSILON && fabs(y - v.y) < FG_EPSILON && fabs(z - v.z) < FG_EPSILON && fabs(w - v.w) < FG_EPSILON); }
 	inline int operator!=(const fgVector4f &v) { return !(*this == v); }
 	
 	inline const fgVector4f operator*(float f) const { return fgVector4f(x * f,y * f,z * f,w * f); }
@@ -385,7 +391,7 @@ struct fgMatrix3f {
 		mat[2] = 0.0; mat[5] = 0.0; mat[8] = 1.0;
 	}
 	void rotate(const fgVector3f &axis,float angle) {
-		float rad = angle * DEG2RAD;
+		float rad = angle * FG_DEG2RAD;
 		float c = cosf(rad);
 		float s = sinf(rad);
 		fgVector3f v = axis;
@@ -407,7 +413,7 @@ struct fgMatrix3f {
 		rotate(fgVector3f(x,y,z),angle);
 	}
 	void rotate_x(float angle) {
-		float rad = angle * DEG2RAD;
+		float rad = angle * FG_DEG2RAD;
 		float c = cosf(rad);
 		float s = sinf(rad);
 		mat[0] = 1.0; mat[3] = 0.0; mat[6] = 0.0;
@@ -415,7 +421,7 @@ struct fgMatrix3f {
 		mat[2] = 0.0; mat[5] = s; mat[8] = c;
 	}
 	void rotate_y(float angle) {
-		float rad = angle * DEG2RAD;
+		float rad = angle * FG_DEG2RAD;
 		float c = cosf(rad);
 		float s = sinf(rad);
 		mat[0] = c; mat[3] = 0.0; mat[6] = s;
@@ -423,7 +429,7 @@ struct fgMatrix3f {
 		mat[2] = -s; mat[5] = 0.0; mat[8] = c;
 	}
 	void rotate_z(float angle) {
-		float rad = angle * DEG2RAD;
+		float rad = angle * FG_DEG2RAD;
 		float c = cosf(rad);
 		float s = sinf(rad);
 		mat[0] = c; mat[3] = -s; mat[6] = 0.0;
@@ -642,7 +648,7 @@ struct fgMatrix4f {
 		mat[3] = 0.0; mat[7] = 0.0; mat[11] = 0.0; mat[15] = 1.0;
 	}
 	void rotate(const fgVector3f &axis,float angle) {
-		float rad = angle * DEG2RAD;
+		float rad = angle * FG_DEG2RAD;
 		float c = cosf(rad);
 		float s = sinf(rad);
 		fgVector3f v = axis;
@@ -665,7 +671,7 @@ struct fgMatrix4f {
 		rotate(fgVector3f(x,y,z),angle);
 	}
 	void rotate_x(float angle) {
-		float rad = angle * DEG2RAD;
+		float rad = angle * FG_DEG2RAD;
 		float c = cosf(rad);
 		float s = sinf(rad);
 		mat[0] = 1.0; mat[4] = 0.0; mat[8] = 0.0; mat[12] = 0.0;
@@ -674,7 +680,7 @@ struct fgMatrix4f {
 		mat[3] = 0.0; mat[7] = 0.0; mat[11] = 0.0; mat[15] = 1.0;
 	}
 	void rotate_y(float angle) {
-		float rad = angle * DEG2RAD;
+		float rad = angle * FG_DEG2RAD;
 		float c = cosf(rad);
 		float s = sinf(rad);
 		mat[0] = c; mat[4] = 0.0; mat[8] = s; mat[12] = 0.0;
@@ -683,7 +689,7 @@ struct fgMatrix4f {
 		mat[3] = 0.0; mat[7] = 0.0; mat[11] = 0.0; mat[15] = 1.0;
 	}
 	void rotate_z(float angle) {
-		float rad = angle * DEG2RAD;
+		float rad = angle * FG_DEG2RAD;
 		float c = cosf(rad);
 		float s = sinf(rad);
 		mat[0] = c; mat[4] = -s; mat[8] = 0.0; mat[12] = 0.0;
@@ -726,7 +732,7 @@ struct fgMatrix4f {
 	}
 	
 	void perspective(float fov,float aspect,float znear,float zfar) {
-		float y = tanf(fov * M_PIF / 360.0f);
+		float y = tanf(fov * FG_DEG2RAD);
 		float x = y * aspect;
 		mat[0] = 1.0f / x; mat[4] = 0.0; mat[8] = 0.0; mat[12] = 0.0;
 		mat[1] = 0.0; mat[5] = 1.0f / y; mat[9] = 0.0; mat[13] = 0.0;
@@ -821,11 +827,11 @@ struct fgQuaterionf {
 		float length = dir.length();
 		if(length != 0.0) {
 			length = 1.0f / length;
-			float sinangle = sinf(angle * DEG2RAD / 2.0f);
+			float sinangle = sinf(angle * FG_DEG2RAD / 2.0f);
 			x = dir[0] * length * sinangle;
 			y = dir[1] * length * sinangle;
 			z = dir[2] * length * sinangle;
-			w = cosf(angle * DEG2RAD / 2.0f);
+			w = cosf(angle * FG_DEG2RAD / 2.0f);
 		} else {
 			x = y = z = 0.0;
 			w = 1.0;
@@ -893,4 +899,4 @@ struct fgQuaterionf {
 	};
 };
 
-#endif /* __MATHLIB_H__ */
+#endif /* _FG_MATHLIB_H_ */
