@@ -12,7 +12,6 @@
 #include <cstring>
 
 #include "fgPsExplosionEffect.h"
-#include "GFX/Textures/fgTextureCommon.h"
 #include "GFX/Textures/fgTextureManager.h"
 
 /*

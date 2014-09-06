@@ -86,27 +86,26 @@ enum fgResourceStatus
 	FG_RESOURCE_REQUESTED
 };
 
-struct fgTouchEvent {
+struct fgEventBase {
 	fgEventType eventType;
 	unsigned long int timeStamp;
+};
+
+struct fgTouchEvent : fgEventBase {	
 	int x;
 	int y;
 	fgBool pressed;
 	unsigned int touchID;
 };
 
-struct fgMouseEvent {
-	fgEventType eventType;
-	unsigned long int timeStamp;
+struct fgMouseEvent : fgEventBase {
 	int x;
 	int y;
 	fgBool pressed;
 	unsigned int buttonID;
 };
 
-struct fgSwipeEvent {
-	fgEventType eventType;
-	unsigned long int timeStamp;
+struct fgSwipeEvent : fgEventBase {
 	fgSwipeDirection swipeDirection;
 	int xStart;
 	int yStart;
@@ -119,9 +118,7 @@ struct fgSwipeEvent {
 
 };
 
-struct fgSwipePinchEvent {
-	fgEventType eventType;
-	unsigned long int timeStamp;
+struct fgSwipePinchEvent : fgEventBase {
 	fgPinchDirection pinchDirection;
 	int x;
 	int y;
@@ -132,9 +129,7 @@ struct fgSwipePinchEvent {
 	int pinchSize;
 };
 
-struct fgSwipeRotateEvent {
-	fgEventType eventType;
-	unsigned long int timeStamp;
+struct fgSwipeRotateEvent : fgEventBase {
 	int x;
 	int y;
 	int x2;
@@ -142,60 +137,44 @@ struct fgSwipeRotateEvent {
 	float angle;
 };
 
-struct fgKeyEvent {
-	fgEventType eventType;
-	unsigned long int timeStamp;
+struct fgKeyEvent : fgEventBase {
 	int keyCode;
 	fgBool pressed;
 };
 
-struct fgResourceEvent {
-	fgEventType eventType;
-	unsigned long int timeStamp;
+struct fgResourceEvent : fgEventBase {
 	fgResourceStatus resourceStatus;
 	//fgResource *resourceHolder;
 	//FG_RHANDLE resourceHandle;
 };
 
-struct fgVertexStreamEvent {
-	fgEventType eventType;
-	unsigned long int timeStamp;
+struct fgVertexStreamEvent : fgEventBase {
 	//FG_GFXHANDLE vertexStreamHandle;
 	//fgVertexStream *vertexStreamHolder;
 };
 
-struct fgCameraEvent {
-	fgEventType eventType;
-	unsigned long int timeStamp;
+struct fgCameraEvent : fgEventBase {
 	//GfxCamera *cameraHolder;
 	//FG_GFXHANDLE cameraHandle;
 };
 
-struct fgSoundEvent {
-	fgEventType eventType;
-	unsigned long int timeStamp;
+struct fgSoundEvent : fgEventBase {
 	//FG_RHANDLE soundHandle;
 	//fgResource *soundHolder;
 };
 
-struct fgMenuChangedEvent {
-	fgEventType eventType;
-	unsigned long int timeStamp;
+struct fgMenuChangedEvent : fgEventBase {
 	//GUIHANDLE 
 	//
 };
 
-struct fgWidgetEvent {
-	fgEventType eventType;
-	unsigned long int timeStamp;
+struct fgWidgetEvent : fgEventBase {
 	//FG_GUIHANDLE widgetHandle;
 	//fgWidget
 	//fgResource
 };
 
-struct fgSensorsEvent {
-	fgEventType eventType;
-	unsigned long int timeStamp;
+struct fgSensorsEvent : fgEventBase {
 	// int type; or fgSensorType type;
 	union {
 		struct {
@@ -208,7 +187,6 @@ struct fgSensorsEvent {
 struct fgEvent {
 	union {
 		fgEventType eventType;
-		unsigned long int timeStamp;
 
 		fgTouchEvent touchEvent;
 		fgMouseEvent mouseEvent;

@@ -14,6 +14,8 @@
 #include "fgConfigParser.h"
 #include "fgConfigWriter.h"
 
+// some kind of status reporter ? ....
+
 /*
  *
  */
@@ -36,12 +38,12 @@ public:
 	//
 	fgConfig(const char *filePath);
 	//
-	~fgConfig();
+	virtual ~fgConfig();
 
 	//
 	void refreshParameterVec(void);
 	//
-	fgBool load(const char *filePath = NULL);
+	virtual fgBool load(const char *filePath = NULL);
 	//
 	fgBool save(const char *filePath = NULL);
 

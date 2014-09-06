@@ -90,7 +90,7 @@ public:
 	fgFile(const char *filePath);
 
 	// Destructor, closes the file, frees up all buffers
-	~fgFile();
+	virtual ~fgFile();
 
 	// Set the file path
 	void setPath(const char *filePath) {

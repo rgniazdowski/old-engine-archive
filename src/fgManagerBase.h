@@ -21,23 +21,22 @@ class fgManagerBase;
 #define FG_TAG_MANAGER_BASE			FG_TAG_TYPE(fgManagerBase)
 
 //FG_TAG_TEMPLATE(fgManagerBase, FG_TAG_MANAGER_BASE_NAME, FG_TAG_MANAGER_BASE_ID);
-
 FG_TAG_TEMPLATE_ID_AUTO(fgManagerBase, FG_TAG_MANAGER_BASE_NAME);
 
-// Special handle type for resource
+// Special handle type for manager base
 typedef FG_TAG_MANAGER_BASE fgManagerBaseTag;
 
 class fgManagerBase : public fgStatusReporter<fgManagerBaseTag> {
 public:
-	fgManagerBase() {}
+	fgManagerBase() : m_init(FG_FALSE) {}
 	virtual ~fgManagerBase() {}
 		
 	virtual void clear(void) = 0;
 	virtual void destroy(void) = 0;
 
 	virtual fgBool initialize(void) = 0;
-
+protected:
+	fgBool m_init;
 };
 
 #endif /* _FG_MANAGER_BASE_H_ */
-

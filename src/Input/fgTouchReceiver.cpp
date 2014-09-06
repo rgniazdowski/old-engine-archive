@@ -190,8 +190,8 @@ void fgTouchReceiver::handlePointerPressed(fgVector2i point, unsigned int touchI
 	// Throwing the proper event
 	//
 
-	//fgTouchEvent *touchEvent = (fgTouchEvent *) fgMalloc(sizeof(fgTouchEvent));
 	fgTouchEvent *touchEvent = new fgTouchEvent();
+	touchEvent->eventType = FG_EVENT_TOUCH_PRESSED;
 	touchEvent->timeStamp = FG_GetTicks();
 	touchEvent->pressed = true;
 	touchEvent->touchID = touchID;
@@ -225,7 +225,8 @@ void fgTouchReceiver::handlePointerMoved(fgVector2i point, unsigned int touchID)
 	// Throwing the proper event
 	//
 
-	fgTouchEvent *touchEvent = (fgTouchEvent *) fgMalloc(sizeof(fgTouchEvent));
+	fgTouchEvent *touchEvent = new fgTouchEvent();
+	touchEvent->eventType = FG_EVENT_TOUCH_MOTION;
 	touchEvent->timeStamp = FG_GetTicks();
 	touchEvent->pressed = true;
 	touchEvent->touchID = touchID;
@@ -272,8 +273,8 @@ void fgTouchReceiver::handlePointerReleased(fgVector2i point, unsigned int touch
 	//
 	// Throwing the proper event
 	//
-	//fgTouchEvent *touchEvent = (fgTouchEvent *) fgMalloc(sizeof(fgTouchEvent));
 	fgTouchEvent *touchEvent = new fgTouchEvent();
+	touchEvent->eventType = FG_EVENT_TOUCH_RELEASED;
 	touchEvent->timeStamp = FG_GetTicks();
 	touchEvent->pressed = false; // Touch is released
 	touchEvent->touchID = touchID;
@@ -333,8 +334,8 @@ void fgTouchReceiver::processData()
 					//
 					// Throwing the proper event
 					//
-					//fgTouchEvent *touchEvent = (fgTouchEvent *) fgMalloc(sizeof(fgTouchEvent));
 					fgTouchEvent *touchEvent = new fgTouchEvent();
+					touchEvent->eventType = FG_EVENT_TOUCH_TAP_FINISHED;
 					touchEvent->timeStamp = FG_GetTicks();
 					touchEvent->pressed = false;
 					touchEvent->touchID = touchID;
@@ -402,7 +403,6 @@ void fgTouchReceiver::processData()
 			// Throwing the proper event
 			//
 			if (touchPtr.m_swipeLeft || touchPtr.m_swipeRight || touchPtr.m_swipeUp || touchPtr.m_swipeDown) {
-				//fgSwipeEvent *swipeEvent = (fgSwipeEvent *) fgMalloc(sizeof(fgSwipeEvent));
 				fgSwipeEvent *swipeEvent = new fgSwipeEvent();
 				swipeEvent->timeStamp = FG_GetTicks();
 				bool X=false, Y=false;
@@ -435,12 +435,16 @@ void fgTouchReceiver::processData()
 				fgArgumentList *argList = new fgArgumentList();
 				argList->pushArgument(FG_ARGUMENT_STRUCT, (void *)swipeEvent);
 
-				if(X && Y)
+				if(X && Y) {
+					swipeEvent->eventType = FG_EVENT_SWIPE_XY;
 					FG_EventManager->throwEvent(FG_EVENT_SWIPE_XY, argList);
-				else if(X)
+				} else if(X) {
+					swipeEvent->eventType = FG_EVENT_SWIPE_X;
 					FG_EventManager->throwEvent(FG_EVENT_SWIPE_X, argList);
-				else if(Y)
+				} else if(Y) {
+					swipeEvent->eventType = FG_EVENT_SWIPE_Y;
 					FG_EventManager->throwEvent(FG_EVENT_SWIPE_Y, argList);
+				}
 			}
 
 			// If swipe in Y is much larger than
