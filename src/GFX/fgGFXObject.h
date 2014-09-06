@@ -12,4 +12,4 @@
 
 
 
-#endif /* _FG_GFX_SCENE_MANAGER_H_ */
+#endif /* _FG_GFX_OBJECT_H_ */
