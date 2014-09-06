@@ -23,5 +23,3 @@
  * *
  * * To ma sens przy scenach z duza iloscia obiektow - zostawiam na pozniej - P4
  */
-
-using namespace FG_GFX;

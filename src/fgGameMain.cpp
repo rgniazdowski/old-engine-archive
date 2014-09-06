@@ -39,16 +39,13 @@
 #include "Resource/fgResourceFactory.h"
 #include "fgMessageSubsystem.h"
 
-template <>
-bool fgSingleton<fgGameMain>::instanceFlag = false;
-
-template <>
-fgGameMain *fgSingleton<fgGameMain>::instance = NULL;
-
 /*
  * Default constructor for the Game Main object
  */
-fgGameMain::fgGameMain()
+fgGameMain::fgGameMain() :
+	m_gfxMain(NULL),
+	m_settings(NULL),
+	m_mainConfig(NULL)
 {
 	srand(time(NULL));
 }
@@ -58,6 +55,15 @@ fgGameMain::fgGameMain()
  */
 fgGameMain::~fgGameMain()
 {
+	if(m_settings)
+		delete m_settings;
+	m_settings = NULL;
+	if(m_mainConfig)
+		delete m_mainConfig;
+	m_mainConfig = NULL;
+	if(m_gfxMain)
+		delete m_gfxMain;
+	m_gfxMain = NULL;
 }
 
 /*
@@ -66,7 +72,12 @@ fgGameMain::~fgGameMain()
  */
 fgBool fgGameMain::initSubsystems(void)
 {
-	if(!FG_GFX::initGFX()) {
+	if(m_gfxMain)
+		return FG_FALSE;
+	m_gfxMain = new fgGfxMain();
+	// For other platforms need to pass some parameters
+	// regarding screen resolution / full screen mode - etc
+	if(!m_gfxMain->initGFX()) {
 		// FIXME
 		return FG_FALSE;
 	}
@@ -74,8 +85,8 @@ fgBool fgGameMain::initSubsystems(void)
 	FG_DeviceQuery->computeDevice();
 #endif // FG_USING_MARMALADE
 
-	int w = FG_GFX::getScreenWidth();
-	int h = FG_GFX::getScreenHeight();
+	int w = m_gfxMain->getScreenWidth();
+	int h = m_gfxMain->getScreenHeight();
 
 	FG_HardwareState->setScreenDimensions(w, h);
 	FG_HardwareState->initDPI();
@@ -103,6 +114,8 @@ fgBool fgGameMain::initSubsystems(void)
     FG_ResourceManager->setMaximumMemory(128*1024*1024-1024*1024*10); // #FIXME #TODO
     FG_ResourceManager->initialize();
 #endif // FG_USING_MARMALADE
+
+	m_gfxMain->setResourceManager(FG_ResourceManager);
 
 //	FG_GFX::setOrthoView(FG_OGL_ORTHO_ZNEAR_DEFAULT, FG_OGL_ORTHO_ZFAR_DEFAULT);
 //	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
@@ -141,12 +154,6 @@ fgBool fgGameMain::initSubsystems(void)
 	glDepthFunc(GL_LESS);
 	glEnable(GL_DEPTH_TEST);
 
-	fgSettings *set11 = new fgSettings("settings.xml");
-	delete set11;
-	set11 = NULL;
-
-	FG_MessageSubsystem->initialize(); // ?
-	FG_MessageSubsystem->setLogPaths("all.log", "error.log", "debug.log");
 #if 0
 	fgConfig *config = new fgConfig("main.config.ini");
 	config->setParameterBool("Settings.game", "programTitle", FG_TRUE);
@@ -167,6 +174,13 @@ fgBool fgGameMain::initSubsystems(void)
  */
 fgBool fgGameMain::loadConfiguration(void)
 {
+	FG_MessageSubsystem->initialize(); // ?
+	FG_MessageSubsystem->setLogPaths("all.log", "error.log", "debug.log");
+	if(!m_settings)
+		m_settings = new fgSettings();
+	if(!m_settings->load("settings.xml")) { // #FIXME - universal, cross solution - path management
+		return FG_FALSE;
+	}
 	return FG_TRUE;
 }
 
@@ -193,6 +207,10 @@ fgBool fgGameMain::releaseResources(void)
  */
 fgBool fgGameMain::closeSybsystems(void)
 {
+	// #TODO - KILLALLSINGLETONS
+	// KILL ALL SINGLETONS
+	m_gfxMain->releaseTextures();
+
 	FG_ResourceManager->deleteInstance();
 	FG_HardwareState->deleteInstance();
 	FG_TouchReceiver->deleteInstance();
@@ -204,7 +222,7 @@ fgBool fgGameMain::closeSybsystems(void)
 	FG_ResourceFactory->deleteInstance();
 	FG_MessageSubsystem->deleteInstance();
 
-	FG_GFX::closeGFX();
+	m_gfxMain->closeGFX();
 
 	return FG_TRUE;
 }
@@ -229,7 +247,7 @@ fgBool fgGameMain::quit(void)
  */
 void fgGameMain::display(void)
 {
-	// #TROLOLO
+	m_gfxMain->display();
 }
 
 /*
@@ -237,48 +255,7 @@ void fgGameMain::display(void)
  */
 void fgGameMain::render(void)
 {
-	// #TODO / #FIXME - all the crap with FG_GFX namespace should be somehow put into classes
-	// currently the model for handling different rendering APIs sux so much its too hard
-	// to put it in words - however its still not clear whether to stay with the namespace tag name
-	FG_GFX::clearScreen();
-
-	// #MARKED
-	// proper rendering calls go here
-	// render something and shit
-
-	// #CRAP
-	// the code below should be removed
-#if 0
-	// V- & T-database INDEXES
-	GLushort defaultIndices[] = { 0, 1, 3, 2 };
-
-	float size_x = 100.0f;
-	float size_y = 150.0f;
-
-	fgVector2f vertexArray[] = {
-		fgVector2f(0.0f, 0.0f),
-		fgVector2f(size_x, 0.0f),
-		fgVector2f(size_x, size_y),
-		fgVector2f(0.0f, size_y)
-	};
-
-	glLoadIdentity();
-	glTranslatef(FG_GFX::getScreenWidth()/2.0f, FG_GFX::getScreenHeight()/2.0f, 0.0f);
-	glRotatef((FG_GetTicks()/4)%360, 0.0f, 0.0f, 1.0f);
-	// Activate and specify pointer to vertex array
-	glEnableClientState(GL_VERTEX_ARRAY);
-	glColor4f(1.0f, 0.25f, 0.25f, 1.0f);
-	glVertexPointer(2, GL_FLOAT, 0, (GLvoid *)vertexArray);
-
-    // DRAW
-	glDrawElements(GL_TRIANGLE_STRIP, 4, GL_UNSIGNED_SHORT, defaultIndices);
-
-	// glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-	// Deactivate vertex arrays after drawing
-	glDisableClientState(GL_VERTEX_ARRAY);
-#endif
-	// After rendering swap buffers so the changes are visible on the screen
-	FG_GFX::swapBuffers();
+	m_gfxMain->render();
 }
 
 /*

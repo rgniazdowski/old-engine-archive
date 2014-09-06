@@ -162,6 +162,14 @@ public:
 		m_pixelFormat = pixelFormat;
 	}
 
+
+	void setIsInVRAM(fgBool toggle) {
+		m_isInVRAM = toggle;
+	}
+
+	fgBool isInVRAM(void) const {
+		return m_isInVRAM;
+	}
 protected:
 	// Texture file type (by extension)
 	fgTextureFileType		m_fileType;
@@ -179,6 +187,8 @@ protected:
     int m_components;
 	// OpenGL texture id handle
 	fgTextureGfxID m_textureGfxID;
+private:
+	fgBool m_isInVRAM;
 };
 
 #endif

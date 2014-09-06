@@ -14,63 +14,82 @@
 
 #include <map>
 
-#include "fgTextureCommon.h"
 #include "fgTextureResource.h"
 
 #include "Hardware/fgQualityManager.h"
 #include "Resource/fgResourceManager.h"
 
-template <>
-bool fgSingleton<fgTextureManager>::instanceFlag = false;
-
-template <>
-fgTextureManager *fgSingleton<fgTextureManager>::instance = NULL;
-
 /**
  * Protected constructor
  */
-fgTextureManager::fgTextureManager() {
+fgTextureManager::fgTextureManager(fgManagerBase *resourceManager) : 
+	m_allInVRAM(FG_FALSE)
+{
+	fgStatusReporter::setReportToMsgSystem(FG_TRUE);
+	if(!resourceManager) {
+		setErrorCode(FG_ERRNO_WRONG_PARAM);
+		m_init = FG_FALSE;
+		m_resourceManager = NULL;
+	} else {
+		m_resourceManager = (fgResourceManager *) resourceManager;
+	}
 }
 
 /**
  * Protected destructor
  */
-fgTextureManager::~fgTextureManager() {
+fgTextureManager::~fgTextureManager()
+{
+	destroy();
 }
 
 /*
  *
  */
-void fgTextureManager::clear(void) {
+void fgTextureManager::clear(void) 
+{
 }
 
 /*
  *
  */
-void fgTextureManager::destroy(void) {
+void fgTextureManager::destroy(void) 
+{
+	m_resourceManager = NULL;
+	m_init = FG_FALSE;
 }
 
 /*
  *
  */
-fgBool fgTextureManager::initialize(void) {
+fgBool fgTextureManager::initialize(void) 
+{
+	if(!m_resourceManager)
+		return FG_FALSE;
+	m_init = FG_TRUE;
 	return FG_TRUE;
 }
 
 /**
  * UPLOAD to VRAM – skips reload from disk ONLY if possible
  */
-fgBool fgTextureManager::allToVRAM(void) {
+fgBool fgTextureManager::allToVRAM(void)
+{
+	if(!m_init) {
+		if(!initialize())
+			return FG_FALSE;
+	}
     fgBool result = FG_TRUE;
 	fgResourceType searchTypes[] = {FG_RESOURCE_TEXTURE, FG_RESOURCE_FONT, FG_RESOURCE_INVALID};
 	//
 	// #FIXME #P1 - this needs more testing and should look quite different
 	// right now it's just bollocks
 	//
-	FG_ResourceManager->goToBegin();
-	while(FG_ResourceManager->isValid()) {
-		fgResource *resource = FG_ResourceManager->getCurrentResource();
+	m_resourceManager->goToBegin();
+	while(m_resourceManager->isValid()) {
+		fgResource *resource = m_resourceManager->getCurrentResource();
 		if(!resource) {
+			printf("ERROR: Loop in texture manager, resource is %p\n", resource);
 			return FG_FALSE;
 			// FAIL
 		}
@@ -78,33 +97,40 @@ fgBool fgTextureManager::allToVRAM(void) {
 		fgQuality quality = resource->getQuality();
 		if((resType == FG_RESOURCE_TEXTURE || resType == FG_RESOURCE_FONT) &&
 			(quality == FG_QualityManager->getQuality() ||
-			quality == FG_QUALITY_UNIVERSAL) ) {
+			quality == FG_QUALITY_UNIVERSAL) ) 
+		{
 				// Check if resource is locked - if it is - it's quite possible
 				// that it needs to be used in the future - so upload it
-				if(resource->isLocked()) {
+				if(resource->isLocked())
+				{
 					fgTextureResource *textureResource = (fgTextureResource *)resource;
+					textureResource->setIsInVRAM(FG_FALSE);
 					fgTextureGfxID& texGfxID = textureResource->getRefTextureGfxID();
 					// #FIXME #P1 - i just don't know what I am doing... this all so blurry.
-					if(glIsTexture(texGfxID) == GL_FALSE || !textureResource->isDisposed()) {
+					if(glIsTexture(texGfxID) == GL_FALSE || !textureResource->hasOwnedRAM()) {
 						if(!textureResource->recreate()) {
 							FG_LOG::PrintError("Could not recrete texture '%s'\n", textureResource->getFilePathStr());
 							// FAIL
 							result = FG_FALSE;
 						}
-					} else {
-						// SUCCESS
+					} 
+					
+					if(textureResource->hasOwnedRAM())
+					{
 						if(!makeTexture(textureResource)) {
 							result = FG_FALSE;
 							// FAIL
 							FG_LOG::PrintError("Could not upload texture '%s'\n", textureResource->getFilePathStr());
+						} else {
+							textureResource->setIsInVRAM(FG_TRUE); // #FIXME - this can be set in a better place
 						}
 					}
 				} // else: if resource is not locked then most likely it is not needed
 		}
 		//FG_ResourceManager->goToNext(FG_RESOURCE_TEXTURE);
-		FG_ResourceManager->goToNext(searchTypes, 3);
+		m_resourceManager->goToNext(searchTypes, 3);
 	}
-
+	m_allInVRAM = FG_TRUE;
     return result;
 }
 
@@ -113,14 +139,16 @@ fgBool fgTextureManager::allToVRAM(void) {
  */
 void fgTextureManager::allReleaseNonGFX(void)
 {
+	if(!m_resourceManager)
+		return;
 	fgResourceType searchTypes[] = {FG_RESOURCE_TEXTURE, FG_RESOURCE_FONT, FG_RESOURCE_INVALID};
 	//
 	// #FIXME #P1 - this needs more testing and should look quite different
 	// right now it's just bollocks
 	//
-	FG_ResourceManager->goToBegin();
-	while(FG_ResourceManager->isValid()) {
-		fgResource *resource = FG_ResourceManager->getCurrentResource();
+	m_resourceManager->goToBegin();
+	while(m_resourceManager->isValid()) {
+		fgResource *resource = m_resourceManager->getCurrentResource();
 		if(!resource) {
 			return;
 			// FAIL
@@ -129,25 +157,31 @@ void fgTextureManager::allReleaseNonGFX(void)
 		if(resType == FG_RESOURCE_TEXTURE || resType == FG_RESOURCE_FONT) {
 			fgTextureResource *textureResource = (fgTextureResource *)resource;
 			textureResource->releaseNonGFX();
+			fgTextureGfxID& texGfxID = textureResource->getRefTextureGfxID();
+			if(glIsTexture(texGfxID) == GL_TRUE)
+				textureResource->setIsInVRAM(FG_TRUE);
+
 		}
 		//FG_ResourceManager->goToNext(FG_RESOURCE_TEXTURE);
-		FG_ResourceManager->goToNext(searchTypes, 3);
+		m_resourceManager->goToNext(searchTypes, 3);
 	}
-	FG_ResourceManager->refreshMemory();
+	m_resourceManager->refreshMemory();
 }
 
 /**
  * Releases all OpenGl (i.e. texture ids) data
  */
 void fgTextureManager::allReleaseGFX(void) {
+	if(!m_resourceManager)
+		return;
 	fgResourceType searchTypes[] = {FG_RESOURCE_TEXTURE, FG_RESOURCE_FONT, FG_RESOURCE_INVALID};
 	//
 	// #FIXME #P1 - this needs more testing and should look quite different
 	// right now it's just bollocks
 	//
-	FG_ResourceManager->goToBegin();
-	while(FG_ResourceManager->isValid()) {
-		fgResource *resource = FG_ResourceManager->getCurrentResource();
+	m_resourceManager->goToBegin();
+	while(m_resourceManager->isValid()) {
+		fgResource *resource = m_resourceManager->getCurrentResource();
 		if(!resource) {
 			return;
 			// FAIL
@@ -162,13 +196,14 @@ void fgTextureManager::allReleaseGFX(void) {
 				glDeleteTextures(1, &texGfxID);
 				texGfxID = 0;
 				textureResource->setTextureGfxID(0);
+				textureResource->setIsInVRAM(FG_FALSE);
 			}
 			textureResource->releaseNonGFX();
 		}
 		//FG_ResourceManager->goToNext(FG_RESOURCE_TEXTURE);
-		FG_ResourceManager->goToNext(searchTypes, 3);
+		m_resourceManager->goToNext(searchTypes, 3);
 	}
-	FG_ResourceManager->refreshMemory();
+	m_resourceManager->refreshMemory();
 }
 
 /**
@@ -178,13 +213,16 @@ void fgTextureManager::allReleaseGFX(void) {
  * uploadowanej drugi raz sa takie same, mozna uzyc
  * glTexSubImage2D zamiast glTexImage2D
  */
-fgBool fgTextureManager::makeTexture(fgTextureResource *pTexture) {
+fgBool fgTextureManager::makeTexture(fgTextureResource *pTexture) 
+{
+	if(!m_resourceManager)
+		return FG_FALSE;
 
     if(!pTexture) {
         FG_LOG::PrintError("Cannot upload texture - texture resource is NULL");
         return FG_FALSE;
     }
-	if(!FG_ResourceManager->isResourceManaged(pTexture)) {
+	if(!m_resourceManager->isResourceManaged(pTexture)) {
 		FG_LOG::PrintError("Cannot upload texture - texture resource is not managed by Resource Manager");
 		return FG_FALSE;
 	}
@@ -194,9 +232,9 @@ fgBool fgTextureManager::makeTexture(fgTextureResource *pTexture) {
 		return false;
 	}*/
 
-	FG_ResourceManager->lockResource(pTexture);
+	m_resourceManager->lockResource(pTexture);
 
-	if(!pTexture->getRawData() || pTexture->isDisposed()) {
+	if(!pTexture->getRawData() || !pTexture->hasOwnedRAM()) {
         FG_LOG::PrintError("Cannot upload texture - texture resource is disposed / empty");
         return FG_FALSE;
     }
@@ -238,7 +276,7 @@ fgBool fgTextureManager::makeTexture(fgTextureResource *pTexture) {
     // FIXME should truly do this
     //if( 0 && tex_facade->mode() == fgTextureResource::TEXTURE )
 	//	tex_facade->releaseNonGFX();
-	FG_ResourceManager->unlockResource(pTexture);
+	m_resourceManager->unlockResource(pTexture);
 
     return FG_TRUE;
 }

@@ -58,6 +58,7 @@ void fgResourceManager::clear(void)
 	m_bResourceReserved = FG_FALSE;
 	m_currentResource = getRefResourceVector().end();
 	m_resourceGroupHandles.clear_optimised();
+	m_init = FG_FALSE;
 }
 
 /*
@@ -114,6 +115,11 @@ void fgResourceManager::destroy(void)
  */
 fgBool fgResourceManager::initialize(void)
 {
+	if(m_init) {
+		// double initialization ?
+		return FG_FALSE;
+	}
+	m_init = FG_FALSE;
 	FG_LOG::PrintDebug(">>>>>> fgResourceManager::initialize(void); -> Initializing resource manager\nCurrent maximum memory: %.2f", (float)m_nMaximumMemory/1024.0/1024.0); // #TODELETE
 	// First of all load any resource group configs,
 	// file extension is *.rgrp and it's a xml file.
@@ -175,7 +181,7 @@ fgBool fgResourceManager::initialize(void)
 	}
 	resGroupFiles.clear();
 	goToBegin();
-
+	m_init = FG_TRUE;
 	return FG_TRUE;
 }
 

@@ -19,77 +19,72 @@
 #include "Resource/fgResourceManager.h"
 #include "Math/fgMathLib.h"
 
-namespace FG_GFX 
+// Base structure describing material in graphics rendering
+struct fgGfxMaterial
 {
-	// Base structure describing material in graphics rendering
-	struct fgGfxMaterial
-	{
-	public:
-		std::string name;
+public:
+	std::string name;
 
-		fgColor4f ambient;
-		fgColor4f diffuse;
-		fgColor4f specular;
-		fgColor4f transmittance;
-		fgColor4f emission;
+	fgColor4f ambient;
+	fgColor4f diffuse;
+	fgColor4f specular;
+	fgColor4f transmittance;
+	fgColor4f emission;
 		
-		// The shininess parameter of the material
-		float shininess;
-		// Index of refraction parameter
-		float ior;
-		// The dissolve parameter of the material
-		float dissolve;           // 1 == opaque; 0 == fully transparent
-		// Illumination model (see http://www.fileformat.info/format/material/)
-		int illuminationModel;
+	// The shininess parameter of the material
+	float shininess;
+	// Index of refraction parameter
+	float ior;
+	// The dissolve parameter of the material
+	float dissolve;           // 1 == opaque; 0 == fully transparent
+	// Illumination model (see http://www.fileformat.info/format/material/)
+	int illuminationModel;
 
-		// Name of the ambient texture
-		std::string ambientTexName;
-		// Name of the diffuse texture
-		std::string diffuseTexName;
-		// Name of the specular texture
-		std::string specularTexName;
-		// Name of the normal texture
-		std::string normalTexName;
+	// Name of the ambient texture
+	std::string ambientTexName;
+	// Name of the diffuse texture
+	std::string diffuseTexName;
+	// Name of the specular texture
+	std::string specularTexName;
+	// Name of the normal texture
+	std::string normalTexName;
 
-		//std::map<std::string, std::string> unknown_parameter; // #FIXME
-		// Handle for the ambient texture
-		FG_RHANDLE ambientTexHandle;
-		// Handle for the diffuse texture
-		FG_RHANDLE diffuseTexHandle;
-		// Handle for the specular texture
-		FG_RHANDLE specularTexHandle;
-		// Handle for the normal texture
-		FG_RHANDLE normalTexHandle;
+	//std::map<std::string, std::string> unknown_parameter; // #FIXME
+	// Handle for the ambient texture
+	FG_RHANDLE ambientTexHandle;
+	// Handle for the diffuse texture
+	FG_RHANDLE diffuseTexHandle;
+	// Handle for the specular texture
+	FG_RHANDLE specularTexHandle;
+	// Handle for the normal texture
+	FG_RHANDLE normalTexHandle;
 
-		fgGfxMaterial()
-		{
-			ambientTexName.clear();
-			diffuseTexName.clear();
-			specularTexName.clear();
-			normalTexName.clear();
-		}
+	fgGfxMaterial()
+	{
+		ambientTexName.clear();
+		diffuseTexName.clear();
+		specularTexName.clear();
+		normalTexName.clear();
+	}
 
-		~fgGfxMaterial()
-		{
-			clear();
-		}
+	~fgGfxMaterial()
+	{
+		clear();
+	}
 
-		void clear(void)
-		{
-			// #TODO - here is the place to call resource manager and decrease reference count for the used textures
-			// #TODO - ! remember to change the whole reference mechanism to be more automatic (if its even possible)
-			FG_ResourceManager->unlockResource(ambientTexHandle);
-			FG_ResourceManager->unlockResource(diffuseTexHandle);
-			FG_ResourceManager->unlockResource(specularTexHandle);
-			FG_ResourceManager->unlockResource(normalTexHandle);
+	void clear(void)
+	{
+		// #TODO - here is the place to call resource manager and decrease reference count for the used textures
+		FG_ResourceManager->unlockResource(ambientTexHandle);
+		FG_ResourceManager->unlockResource(diffuseTexHandle);
+		FG_ResourceManager->unlockResource(specularTexHandle);
+		FG_ResourceManager->unlockResource(normalTexHandle);
 
-			ambientTexName.clear();
-			diffuseTexName.clear();
-			specularTexName.clear();
-			normalTexName.clear();
-		}
-	};
-
+		ambientTexName.clear();
+		diffuseTexName.clear();
+		specularTexName.clear();
+		normalTexName.clear();
+	}
 };
 
 #endif /* _FG_GFX_MATERIAL_H_ */

@@ -45,7 +45,8 @@ fgTextureResource::fgTextureResource() :
 	m_width(0),
 	m_height(0),
 	m_components(-1),
-	m_textureGfxID(0)
+	m_textureGfxID(0),
+	m_isInVRAM(FG_FALSE)
 {
 	m_resType = FG_RESOURCE_TEXTURE;
 }
@@ -61,11 +62,12 @@ fgTextureResource::fgTextureResource(const char *path) :
 	m_width(0),
 	m_height(0),
 	m_components(-1),
-	m_textureGfxID(0)
+	m_textureGfxID(0),
+	m_isInVRAM(FG_FALSE),
+	fgResource(path)
 {
 	m_resType = FG_RESOURCE_TEXTURE;
 	FG_LOG::PrintDebug("fgTextureResource(const char *path)"); 
-	setFilePath(path); 
 }
 
 /*
@@ -79,11 +81,12 @@ fgTextureResource::fgTextureResource(std::string& path) :
 	m_width(0),
 	m_height(0),
 	m_components(-1),
-	m_textureGfxID(0)
+	m_textureGfxID(0),
+	m_isInVRAM(FG_FALSE),
+	fgResource(path)
 {
 	m_resType = FG_RESOURCE_TEXTURE;
 	FG_LOG::PrintDebug("fgTextureResource(std::string& path)"); 
-	setFilePath(path); 
 }
 
 /*
@@ -103,6 +106,7 @@ void fgTextureResource::clear(void)
     m_components = -1;
 	m_textureGfxID = 0;
 	m_resType = FG_RESOURCE_TEXTURE;
+	m_isInVRAM = FG_FALSE;
 }
 
 /*
@@ -199,8 +203,10 @@ fgBool fgTextureResource::isDisposed(void) const
 	// ready to use. If GfxID is invalid than we can assume that
 	// resource is disposed. This is kinda tricky one.
 	FG_LOG::PrintDebug("fgTextureResource::isDisposed();   p_rawData=%p;", m_rawData);
-	
-	return !this->hasOwnedRAM();
+	if(m_isInVRAM)
+		return FG_FALSE;
+	else 
+		return !this->hasOwnedRAM();
 }
 
 /*

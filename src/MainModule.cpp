@@ -51,7 +51,12 @@ protected:
 	/**
 	 * Initialize rendering parameters.
 	 */
-	MainModule() : m_useMultitouch(FG_FALSE), m_appInit(FG_FALSE), m_slow(FG_FALSE), m_isExit(FG_FALSE) {
+	MainModule() : m_useMultitouch(FG_FALSE),
+		m_appInit(FG_FALSE),
+		m_slow(FG_FALSE),
+		m_isExit(FG_FALSE),
+		m_gameMain(NULL)
+	{
 		memset(&m_touches, 0, sizeof(m_touches));
 	}
 
@@ -183,21 +188,25 @@ public:
 		s3eDeviceRegister (S3E_DEVICE_UNPAUSE, &MainModule::unpauseHandler, NULL);
 
 #endif // FG_USING_MARMALADE
+		if(m_gameMain) {
+			// already initialized ?
+			return FG_FALSE;
+		}
+		m_gameMain = new fgGameMain();
 
 		// FIXME
 		// Well the whole configuration process should update the screen (swap buffers)
 		// this is needed to display splash screen (after marmalade splash screen) and
 		// show the game initialization process by displaying the progress bar
-
-		if(!FG_GameMain->initSubsystems()) {
+		if(!m_gameMain->loadConfiguration()) {
 			return FG_FALSE;
 		}
 
-		if(!FG_GameMain->loadConfiguration()) {
+		if(!m_gameMain->initSubsystems()) {
 			return FG_FALSE;
 		}
 
-		if(!FG_GameMain->loadResources()) {
+		if(!m_gameMain->loadResources()) {
 			return FG_FALSE;
 		}
 
@@ -210,7 +219,13 @@ public:
 	 */
 	fgBool mainLoopStep()
 	{
+		FG_HardwareState->deviceYield(0);
+		if(!m_appInit) {
+			return FG_FALSE;
+		}
+
 #if defined FG_USING_MARMALADE
+		s3eKeyboardUpdate();
 		if (s3eDeviceCheckQuitRequest()) {
 			m_appInit = FG_FALSE;
 			return FG_FALSE;
@@ -228,15 +243,15 @@ public:
 		}
 
 		FG_HardwareState->deviceYield(0);
-		FG_GameMain->update();
+		m_gameMain->update();
 		FG_HardwareState->deviceYield(0);
 
 		// well for now drawing and all update functions will be called in one place (one thread)
 		// however it neads changing
-		FG_GameMain->display();
+		m_gameMain->display();
 		FG_HardwareState->deviceYield(0);
 
-		FG_GameMain->render();
+		m_gameMain->render();
 		FG_HardwareState->deviceYield(0);
 
 		return FG_TRUE;
@@ -247,13 +262,13 @@ public:
 	 */
 	void closeProgram() {
 		FG_LOG::PrintDebug("closeEvent()");
-		FG_GameMain->releaseResources();
+		m_gameMain->releaseResources();
 
 		// This frees all the data used by singletons and other nonresource data
 		// after that only things left to free are FG_GameMain and MainModule
-		FG_GameMain->closeSybsystems();
-		FG_GameMain->deleteInstance();
-
+		m_gameMain->closeSybsystems();
+		delete m_gameMain;
+		m_gameMain = NULL;
 		m_appInit = FG_FALSE;
 	}
 
@@ -361,6 +376,13 @@ private:
 
 	/// Is exit activated?
 	fgBool m_isExit;
+
+	/// Game main class - this is for initialization procedures
+	/// contains also functions for handling events, drawing, etc #TODO
+	/// Needs refactoring, some level of merging within main module or
+	/// changing name to fgApplication - or extending fgApplication class
+	/// #TODO - support threads
+	fgGameMain *m_gameMain;
 };
 
 #define FG_MainModule MainModule::getInstance()
@@ -427,7 +449,14 @@ extern "C" int main()
 		FG_MainModule->setSlow(false);
 	}
 	*/
-	FG_MainModule->initProgram();
+	if(!FG_MainModule->initProgram()) {
+		FG_MainModule->closeProgram();
+		FG_MainModule->deleteInstance();
+	#if defined FG_USING_MARMALADE
+		IwUtilTerminate();
+		s3eDeviceExit(0);
+	#endif // FG_USING_MARMALADE
+	}
 	FG_HardwareState->deviceYield(0);
 
 	/*if( FG_MainModule->isSlow() ) {

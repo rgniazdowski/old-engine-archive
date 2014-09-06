@@ -25,14 +25,6 @@
 class fgResourceGroup;
 class fgResourceGroupContentHandler;
 
-// #FIXME #P2 well this seems... wrong. Moving on...
-namespace FG_GFX {
-	class fgGfxModelResource;
-};
-
-class fgTextureResource;
-class fgFontResource;
-
 // -----------------------------
 
 /*

@@ -10,26 +10,22 @@
 #ifndef _FG_TEXTURE_MANAGER_H_
 #define _FG_TEXTURE_MANAGER_H_
 
-#include "fgSingleton.h"
 #include "fgCommon.h"
 #include "fgManagerBase.h"
 #include "fgTextureResource.h"
-#include "fgTextureCommon.h"
 #include "fgTextureTypes.h"
 #include "Resource/fgResourceManager.h"
 
 /**
  * Class that allows to perform GROUP OPERATIONS on all textures. 
  */
-class fgTextureManager : public fgManagerBase, public fgSingleton<fgTextureManager> {
-	friend class fgSingleton<fgTextureManager>;
-    friend class MainModule;
-protected:
+class fgTextureManager : public fgManagerBase {
+    friend class MainModule; // ?? ?? ??
+public:
 	// Default constructor for Texture Manager object
-    fgTextureManager();
+    fgTextureManager(fgManagerBase *resourceManager);
 	// Default destructor for Texture Manager object
     virtual ~fgTextureManager();
-public:
 
 	void clear(void);
 	void destroy(void);
@@ -71,8 +67,10 @@ private:
      * be used).
      */
     fgBool makeTexture(fgTextureResource *textureResource);
-protected:
-	fgBool m_isYolo;
+
+private:
+	fgResourceManager *m_resourceManager;
+	fgBool m_allInVRAM;
 };
 
 #endif /* _FG_TEXTURE_MANAGER_H_ */

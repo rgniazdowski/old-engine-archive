@@ -12,32 +12,29 @@
 
 #include "fgBuildConfig.h"
 #include "fgCommon.h"
-#include "fgSingleton.h"
+#include "fgStatusReporter.h"
+#include "Util/fgSettings.h"
+#include "Util/fgConfig.h"
+#include "Util/fgTag.h"
 
-#include <ctime>
+#include "GFX/fgGFXMain.h"
 
-#define FG_FRAMES_LIMIT		20
-#define FG_MAX_FPS			60.0
-#define FG_FPS_LIMIT		FG_MAX_FPS
-
-#define FG_PKG			"unknown"
-#define FG_TITLE		"unknown"
-
-#define FG_VERSION		1.0f
-#define FG_VERSION_NAME	"1.0"
+class fgGameMain;
+#define FG_TAG_GAME_MAIN_NAME		"fgGameMain"
+#define FG_TAG_GAME_MAIN			FG_TAG_TYPE(fgGameMain)
+FG_TAG_TEMPLATE_ID_AUTO(fgGameMain, FG_TAG_GAME_MAIN_NAME);
+typedef FG_TAG_GAME_MAIN fgGameMainTag;
 
 /*
  *
  */
-class fgGameMain : public fgSingleton<fgGameMain>
+class fgGameMain : public fgStatusReporter<fgGameMainTag>
 {
-	friend class fgSingleton<fgGameMain>;
-protected:
+public:
 	// Default constructor for the Game Main object
 	fgGameMain();
 	// Default destructor for the Game Main object
 	~fgGameMain();
-public:
 	
 	// This needs to be called first before everything else.
 	// Function creates and initializes subsystems
@@ -47,14 +44,14 @@ public:
 	// of game initialization
 	fgBool loadConfiguration(void);
 
-	// Loads resources specified in configuration files
+	// Loads resources specified in configuration files (pre load phase ?)
 	fgBool loadResources(void);
 
 	// Unloads, frees and deletes all data from fgResourceManager subsystem
 	fgBool releaseResources(void);
 
 	// This frees the subsystems - simply deletes all singleton instances 
-	// (every main subsystem is a singleton)
+	// (every main subsystem is a singleton) #FIXME #KILLALLSINGLETONS
 	fgBool closeSybsystems(void);
 
 	// This function releases the resources and closes the subsystems
@@ -71,8 +68,13 @@ public:
 	// Update - all event handling, calling scripts, AI, game logic and etc
 	void update(void);
 
+protected:
+	/// 
+	fgGfxMain *m_gfxMain;
+	/// 
+	fgSettings *m_settings;
+	/// 
+	fgConfig *m_mainConfig;
 };
-
-#define FG_GameMain fgGameMain::getInstance()
 
 #endif /* _FG_GAME_MAIN_H_ */
