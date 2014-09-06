@@ -30,6 +30,7 @@ files
 	fgStatusReporter.cpp
 	fgStatusReporter.h
 	fgTypes.h
+	fgUnistd.h
 
 	["FlexiGame/BaseCode/Util"]
 	Util/fgConfig.cpp
@@ -151,7 +152,6 @@ files
 	GFX/fgGFXCameraAnimation.h
 	GFX/fgGFXDrawingBatch.cpp
 	GFX/fgGFXDrawingBatch.h
-	GFX/fgGFXPerspectiveView.h
 	GFX/fgGFXMain.cpp
 	GFX/fgGFXMain.h
 	GFX/fgGFXMaterial.cpp
@@ -164,15 +164,17 @@ files
 	GFX/fgGFXObject.h
 	GFX/fgGFXOctreeBase.cpp
 	GFX/fgGFXOctreeBase.h
-	GFX/fgGFXOrthoView.h
 	GFX/fgGFXPrimitives.cpp
 	GFX/fgGFXPrimitives.h
+	GFX/fgGFXProjection.h
 	GFX/fgGFXQuadtreeBase.cpp
 	GFX/fgGFXQuadtreeBase.h
 	GFX/fgGFXSceneManager.cpp
 	GFX/fgGFXSceneManager.h	
 	GFX/fgGFXShader.cpp
 	GFX/fgGFXShader.h
+	GFX/fgGFXShaderConfig.cpp
+	GFX/fgGFXShaderConfig.h
 	GFX/fgGFXShaderManager.cpp
 	GFX/fgGFXShaderManager.h
 	GFX/fgGFXShaderProgram.cpp
@@ -184,7 +186,6 @@ files
 
 	["FlexiGame/GFX/Textures"]
 	GFX/Textures/fgTextureErrorCodes.h
-	GFX/Textures/fgTextureCommon.h
 	GFX/Textures/fgTextureLoader.cpp
 	GFX/Textures/fgTextureLoader.h
 	GFX/Textures/fgTextureManager.cpp

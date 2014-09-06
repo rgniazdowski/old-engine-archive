@@ -3,15 +3,11 @@
 	<defaultLogPath>log</defaultLogPath>
 	<mainConfigPath>main.config.ini</mainConfigPath>
 	<programTitle>Flexible Game Engine: Infinium</programTitle>
-	<defaultProfileName></defaultProfileName>
-	<mainProfileName></mainProfileName>
-	<lastExecution></lastExecution>
-	<videoModeID></videoModeID>
-	<verboseLevel></verboseLevel>
-	<lastTimestamp></lastTimestamp>
+	<defaultProfileName>default</defaultProfileName>
+	<mainProfileName>main</mainProfileName>
+	<verboseLevel>3</verboseLevel>
 	<useSound>true</useSound>
 	<useConsole>true</useConsole>
 	<useNetwork>true</useNetwork>
-	<cleanExit>true</cleanExit>
 	<debugMode>true</debugMode>
 </Settings>

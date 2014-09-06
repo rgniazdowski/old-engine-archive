@@ -7,7 +7,28 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-#ifndef _FG_TEXTURE_COMMON_H_
-#define _FG_TEXTURE_COMMON_H_
-// #TODELETE
-#endif /* _FG_TEXTURE_COMMON_H_ */
+#ifndef _FG_GFX_SHADER_CONFIG_H_
+#define _FG_GFX_SHADER_CONFIG_H_
+
+#include "Util/fgConfig.h"
+
+/*
+ *
+ */
+class fgGfxShaderConfig : protected fgConfig {
+protected:
+public:
+	//
+	fgGfxShaderConfig();
+	// 
+	fgGfxShaderConfig(const char *filePath);
+	// 
+	virtual ~fgGfxShaderConfig();
+
+	// 
+	fgBool load(const char *filePath = NULL);
+
+private:
+};
+
+#endif /* _FG_GFX_SHADER_CONFIG_H_ */
