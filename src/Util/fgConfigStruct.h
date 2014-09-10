@@ -31,6 +31,9 @@ namespace fgCfgTypes {
 	typedef fgArrayVector<fgCfgParameter*> parameterVec;
 	typedef parameterVec::iterator parameterVecItor;
 
+	typedef fgArrayVector<fgCfgSection*> sectionVec;
+	typedef sectionVec::iterator sectionVecItor;
+
 	typedef std::string parameterMapKey;
 	typedef std::map<parameterMapKey, fgCfgParameter*> parameterMap;
 	typedef std::pair<parameterMapKey, fgCfgParameter*> parameterMapPair;
@@ -230,7 +233,10 @@ struct fgCfgParameter
  *
  */
 struct fgCfgSection {
+	// Full section name
 	std::string name;
+	// Name of the subsection
+	std::string subName;
 	// parameters vector - all parameters one after another
 	fgCfgTypes::parameterVec parameters;
 	// parameters map - key is the parameter name
@@ -241,6 +247,8 @@ struct fgCfgSection {
 
 	// Default destructor for config section
 	~fgCfgSection() {
+		name.clear();
+		subName.clear();
 		parameters.clear_optimised();
 		parametersMap.clear();
 	}
@@ -254,6 +262,26 @@ struct fgCfgSection {
 		return pmit->second;
 	}
 
+	//
+	fgCfgParameter *getParameter(const char *parameterName, fgCfgParameterType _type) {
+		fgCfgParameter *param = getParameter(parameterName);
+		if(!param)
+			return NULL;
+		if(param->type != _type)
+			return NULL;
+		return param;
+	}
+
+	// Return the parameter with given name
+	fgCfgParameter *getParameter(std::string & parameterName) {
+		return getParameter(parameterName.c_str());
+	}
+
+	//
+	fgCfgParameter *getParameter(std::string & parameterName, fgCfgParameterType _type) {
+		return getParameter(parameterName.c_str(), _type);
+	}
+
 	// This will release all data - calls destructors
 	void freeAll(void) {
 		parametersMap.clear();
@@ -265,6 +293,7 @@ struct fgCfgSection {
 		}
 	}
 
+	// 
 	char *toString(char *buf, unsigned int nmax = FG_CFG_PARAMATER_STRING_MAX)
 	{
 		if(!buf)

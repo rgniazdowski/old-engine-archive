@@ -146,6 +146,35 @@ fgCfgSection *fgConfig::getSection(const char *sectionName)
 /*
  *
  */
+fgCfgSection *fgConfig::getSection(std::string & sectionName)
+{
+	return getSection(sectionName.c_str());
+}
+
+/*
+ *
+ */
+int fgConfig::getSectionsWith(fgCfgTypes::sectionVec & sectionsVec, const char *sectionNameBegin)
+{
+	if(!sectionNameBegin || m_sectionMap.empty()) {
+		return 0;
+	}
+
+	fgCfgTypes::sectionMapItor begin = m_sectionMap.begin(), end = m_sectionMap.end();
+	fgCfgTypes::sectionMapItor smit = begin;
+	std::string prefix = sectionNameBegin;
+	int prefixLen = (int)prefix.length();
+	for(;smit!=end;smit++) {
+		if(smit->second->name.substr(0, prefixLen).compare(prefix) == 0)
+			sectionsVec.push_back(smit->second);
+	}
+	return sectionsVec.size();
+}
+
+
+/*
+ *
+ */
 fgCfgTypes::parameterMap & fgConfig::getRefSectionsParameterMap(const char *sectionName)
 {
 	if(!sectionName)

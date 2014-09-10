@@ -29,7 +29,7 @@ fgConfigParser::~fgConfigParser()
 /*
  *
  */
-fgBool fgConfigParser::splitSectionName(std::string fullSectionName, std::string &sectionName, std::string &subSectionName)
+fgBool fgConfigParser::splitSectionName(std::string &fullSectionName, std::string &sectionName, std::string &subSectionName)
 {
 	fgBool isSection = FG_TRUE;
 	fullSectionName = fgStrings::trim(fullSectionName, "[]");
@@ -119,6 +119,7 @@ fgBool fgConfigParser::parseData(const char *data, fgCfgTypes::sectionMap &secti
 			if(isSection) {				
 				newSection = new fgCfgSection();
 				newSection->name = fullSectionName;
+				newSection->subName = subSectionName;
 				fgCfgTypes::sectionMapKey key = fullSectionName;
 				sectionMap[key] = newSection;
 			}

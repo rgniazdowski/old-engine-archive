@@ -48,7 +48,7 @@ public:
 	fgBool save(const char *filePath = NULL);
 
 	//
-	void clearAll(void);
+	virtual void clearAll(void);
 
 	// Return the void* pointer to parameter value. NULL if there is no such parameter.
 	void *getParameterValue(const char *sectionName, const char *parameterName);
@@ -84,9 +84,25 @@ public:
 	fgCfgTypes::parameterVec & getRefParameterVec(void) {
 		return m_parameterVec;
 	}
+	
+	//
+	int getSectionsCount(void) const {
+		return m_sectionMap.size();
+	}
+
+	//
+	int getParametersCount(void) const {
+		return m_parameterVec.size();
+	}
+
+	//
+	int getSectionsWith(fgCfgTypes::sectionVec & sectionsVec, const char *sectionNameBegin);
 
 	// Return pointer to section structure
 	fgCfgSection *getSection(const char *sectionName);
+
+	// Return pointer to section structure
+	fgCfgSection *getSection(std::string & sectionName);
 
 	// Return the reference to the given sections parameter map
 	fgCfgTypes::parameterMap & getRefSectionsParameterMap(const char *sectionName);

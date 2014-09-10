@@ -349,55 +349,47 @@ fgBool fgResourceGroup::_parseIniConfig(void)
 			// indicating that the values stored inside are separated by ';' char (array/vector)
 			if(isMapped) {
 				// Get the parameter: quality vector
-				if((param = section->getParameter("qualityVec")) != NULL) {
-					if(param->type == FG_CFG_PARAMETER_STRING) {
-						printf("QUALITY  VEC : %s\n", param->string);
-						std::string _q_vec = param->string;
-						_helperVec.clear_optimised();
-						fgStrings::split(_q_vec, ';', _helperVec);
-						for(int i=0;i<(int)_helperVec.size();i++) {
-							qualityVec.push_back(FG_QUALITY_FROM_TEXT(_helperVec[i].c_str()));
-						}
-						if(qualityVec.empty())
-							foundQuality = FG_FALSE;
-						_q_vec.clear();
-						_helperVec.clear_optimised();
+				if((param = section->getParameter("qualityVec", FG_CFG_PARAMETER_STRING)) != NULL) {
+					printf("QUALITY  VEC : %s\n", param->string);
+					std::string _q_vec = param->string;
+					_helperVec.clear_optimised();
+					fgStrings::split(_q_vec, ';', _helperVec);
+					for(int i=0;i<(int)_helperVec.size();i++) {
+						qualityVec.push_back(FG_QUALITY_FROM_TEXT(_helperVec[i].c_str()));
 					}
+					if(qualityVec.empty())
+						foundQuality = FG_FALSE;
+					_q_vec.clear();
+					_helperVec.clear_optimised();
 				} else {
 					foundQuality = FG_FALSE;
 				}
-				if((param = section->getParameter("pathVec")) != NULL) {
-					if(param->type == FG_CFG_PARAMETER_STRING) {
-						printf("PATH VEC : %s\n", param->string);
+				if((param = section->getParameter("pathVec", FG_CFG_PARAMETER_STRING)) != NULL) {
+					printf("PATH VEC : %s\n", param->string);
 
-						std::string _p_vec = param->string;
-						_helperVec.clear_optimised();
-						fgStrings::split(_p_vec, ';', _helperVec);
-						for(int i=0;i<(int)_helperVec.size();i++) {
-							pathVec.push_back(_helperVec[i]);
-						}
-						if(pathVec.empty())
-							foundPath = FG_FALSE;
-						_p_vec.clear();
-						_helperVec.clear_optimised();
+					std::string _p_vec = param->string;
+					_helperVec.clear_optimised();
+					fgStrings::split(_p_vec, ';', _helperVec);
+					for(int i=0;i<(int)_helperVec.size();i++) {
+						pathVec.push_back(_helperVec[i]);
 					}
+					if(pathVec.empty())
+						foundPath = FG_FALSE;
+					_p_vec.clear();
+					_helperVec.clear_optimised();
 				} else {
 					foundPath = FG_FALSE;
 				}
 				// In other case, the resource has single quality selected and stores single file
 			} else {
-				if((param = section->getParameter("quality")) != NULL) {
-					if(param->type == FG_CFG_PARAMETER_STRING) {
-						quality = FG_QUALITY_FROM_TEXT(param->string);
-						printf("QUALITY : %s\n", param->string);
-					}
+				if((param = section->getParameter("quality", FG_CFG_PARAMETER_STRING)) != NULL) {
+					quality = FG_QUALITY_FROM_TEXT(param->string);
+					printf("QUALITY : %s\n", param->string);
 				} else {
 					quality = FG_QUALITY_UNIVERSAL;
 				}
-				if((param = section->getParameter("path")) != NULL) {
-					if(param->type == FG_CFG_PARAMETER_STRING)
-						path = param->string;
-					
+				if((param = section->getParameter("path", FG_CFG_PARAMETER_STRING)) != NULL) {
+					path = param->string;
 				} else {
 					foundPath = FG_FALSE;
 				}
