@@ -9,6 +9,7 @@
 
 #ifndef _FG_TYPES_H_
 #define _FG_TYPES_H_
+#define _FG_TYPES_BLOCK__
 
 #include "fgBuildConfig.h"
 #include "fgBool.h"
@@ -31,7 +32,14 @@
     #endif
 #endif /* FG_NULL */
 
+#ifndef FG_NONE
+#define FG_NONE 0
+#endif
+
 // Special macros for checking text/string value, in context of converting to enums/ints etc.
+//
+// Need to create other method for literals - need obfuscation #FIXME #TODO #P3
+//
 
 // Convert enum to text (can be useful)
 #define FG_TEXT_FROM_ENUM(ENUM) ENUM ## _TEXT
@@ -75,6 +83,7 @@ inline const char * _FG_BOOL_TO_TEXT(fgBool value) {
 	return NULL;
 }
 
+// #FIXME - #P3 - string obfuscation (also for error code -> text msg translations)
 #define FG_BOOL_FROM_TEXT(text) _FG_BOOL_FROM_TEXT(text)
 #define FG_BOOL_TO_TEXT(value) _FG_BOOL_TO_TEXT(value)
 
@@ -89,4 +98,5 @@ inline Type& operator	^= (Type& x, Type y)		{	x = x ^ y;	return x;	}
 
 #include "fgArrayVector.h"
 
+#undef _FG_TYPES_BLOCK__
 #endif /* _FG_TYPES_H_ */

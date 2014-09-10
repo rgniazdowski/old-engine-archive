@@ -43,7 +43,7 @@ inline fgQuality _FG_QUALITY_FROM_TEXT(const char* text) {
 	FG_RETURN_ENUM_IF_TEXT_EQ(FG_QUALITY_EXTRA);
 	return FG_QUALITY_UNIVERSAL;
 }
-
+// #FIXME - #P3 - string obfuscation (also for error code -> text msg translations)
 #define FG_QUALITY_FROM_TEXT(text) _FG_QUALITY_FROM_TEXT(text)
 
 #endif /* _FG_QUALITY_TYPES_H_ */

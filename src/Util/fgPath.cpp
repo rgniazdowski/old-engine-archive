@@ -13,9 +13,10 @@
 /*
  *
  */
-const char *FG_FileExt(const char *path, fgBool fullExt) {
+const char *fgPath::fileExt(const char *path, fgBool fullExt) 
+{
 	if(!path) return NULL;
-	path = FG_Filename(path);
+	path = fgPath::fileName(path);
 	const char *dot = NULL;
 	if(fullExt == FG_TRUE)
 		dot = strchr(path, '.');
@@ -28,7 +29,7 @@ const char *FG_FileExt(const char *path, fgBool fullExt) {
 /*
  *
  */
-const char* FG_Filename (const char* path)
+const char* fgPath::fileName (const char* path)
 {
 	if(!path)
 		return NULL;

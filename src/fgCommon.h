@@ -68,7 +68,7 @@ inline int FG_Rand(int a, int b) {
 	return a +(int)(((float)(b-a+1))*rand()/(float(RAND_MAX)+1.0f));
 }
 
-#define FG_MSG_IN_FUNCTION_FULL "in function: %s - %s(%d)", __FUNCTION__, FG_Filename(__FILE__), __LINE__-1
+#define FG_MSG_IN_FUNCTION_FULL "in function: %s - %s(%d)", __FUNCTION__, fgPath::fileName(__FILE__), __LINE__-1
 #define FG_MSG_IN_FUNCTION "in function: %s", __FUNCTION__
 
 #endif /* _FG_COMMON_H_ */

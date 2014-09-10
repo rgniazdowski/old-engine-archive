@@ -450,7 +450,7 @@ fgBool fgResourceGroup::preLoadConfig(void)
 {
 	if(m_filePath.empty())
 		return FG_FALSE;
-	const char *ext = FG_FileExt(m_filePath.c_str(), FG_TRUE);
+	const char *ext = fgPath::fileExt(m_filePath.c_str(), FG_TRUE);
 	if(!ext)
 		return FG_FALSE;
 	if(strcasecmp(ext, "group.xml") == 0) {

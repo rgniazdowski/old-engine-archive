@@ -104,7 +104,8 @@ fgBool fgGameMain::initSubsystems(void)
 	s3eMemoryGetInt(S3E_MEMORY_USED);
 	s3eMemoryGetInt(S3E_MEMORY_SIZE);
 	s3eMemoryGetInt(S3E_MEMORY_FREE);*/
-	// FIXME
+	// #FIXME - for linux/windows (non marmalade build) memory management would be useful, buckets anyone?
+	// #FIXME
 #ifdef FG_USING_MARMALADE
 	FG_LOG::PrintDebug("MARMALADE CURRENT HEAP MEMORY: TOTAL: %.3f, FREE: %.3f, USED: %.3f, LARGEST FREE BLOCK: %.3f\n",
 		(float)s3eMemoryGetInt(S3E_MEMORY_SIZE)/1024.0f/1024.0f, (float)s3eMemoryGetInt(S3E_MEMORY_FREE)/1024.0f/1024.0f, (float)s3eMemoryGetInt(S3E_MEMORY_USED)/1024.0f/1024.0f, (float)s3eMemoryGetInt(S3E_MEMORY_LFB)/1024.0f/1024.0f);
@@ -174,6 +175,7 @@ fgBool fgGameMain::initSubsystems(void)
  */
 fgBool fgGameMain::loadConfiguration(void)
 {
+	// #FIXME - getcwd / get exec path / paths management / etc
 	FG_MessageSubsystem->initialize(); // ?
 	FG_MessageSubsystem->setLogPaths("all.log", "error.log", "debug.log");
 	if(!m_settings)

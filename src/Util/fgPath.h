@@ -12,10 +12,18 @@
 
 #include "fgBool.h"
 
-// Return the file extension
-const char *FG_FileExt(const char *path, fgBool fullExt = FG_FALSE);
+class fgPath
+{
+protected:
+	fgPath() {}
+	~fgPath() {}
+public:
+	// Return the file extension //fgPath::fileExt
+	static const char* fileExt(const char *path, fgBool fullExt = FG_FALSE);
 
-// Return the file name in path
-const char* FG_Filename(const char* path);
+	// Return the file name in path //fgPath::fileName
+	static const char* fileName(const char* path);
+
+};
 
 #endif /* _FG_PATH_H_ */

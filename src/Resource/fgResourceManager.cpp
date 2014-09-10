@@ -134,7 +134,7 @@ fgBool fgResourceManager::initialize(void)
 	while((filename = datadir->getNextFile()) != NULL)
 	{
 		// #FIXME - this should check for string length errors (?)
-		const char *ext = FG_FileExt(filename, FG_TRUE);
+		const char *ext = fgPath::fileExt(filename, FG_TRUE);
 		if(!ext)
 			continue;
 		if(strcasecmp(ext, "group.xml") == 0 || strcasecmp(ext, "group.ini") == 0) {
