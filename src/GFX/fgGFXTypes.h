@@ -9,6 +9,66 @@
 
 #ifndef _FG_GFX_TYPES_H_
 #define _FG_GFX_TYPES_H_
+#define _FG_GFX_TYPES_BLOCK__
+
+#ifdef _FG_TYPES_BLOCK__
+#error "FG_TYPES_BLOCK constant is defined. Do not include fgGfxTypes header inside of fgTypes header."
+#endif
+
+#ifndef FG_GFX_GL_INCLUDES_FINISHED
+#define FG_GFX_GL_INCLUDES_FINISHED
+
+#include "fgBuildConfig.h"
+
+#if defined FG_USING_MARMALADE
+
+#if !defined FG_USING_MARMALADE_OPENGL_ES && defined FG_USING_MARMALADE_IWGL
+#include <IwGL.h>
+#endif // FG_USING_MARMALADE_OPENGL_ES
+
+#elif defined FG_USING_PLATFORM_LINUX
+
+#ifdef FG_USING_OPENGL
+#include <GL/gl.h>
+#endif // FG_USING_OPENGL
+
+#endif // FG_USING_MARMALADE
+
+#if defined FG_USING_OPENGL_ES
+#include <GLES2/gl2.h>
+#include <GLES2/gl2ext.h>
+#include <GLES2/gl2platform.h>
+
+#if defined FG_USING_EGL
+#include <EGL/egl.h>
+#define FG_EGL_MAX_CONFIG 32
+#endif // FG_USING_EGL
+#endif // FG_USING_OPENGL_ES
+
+#endif // FG_GFX_GL_INCLUDES_FINISHED
+
+#ifndef FG_GFX_GL_MASK_TYPEDEFS_DEFINED
+#define FG_GFX_GL_MASK_TYPEDEFS_DEFINED
+typedef GLvoid		fgGFXvoid;
+typedef GLchar		fgGFXchar;
+typedef GLenum		fgGFXenum;
+typedef GLboolean	fgGFXboolean;
+typedef GLbitfield	fgGFXbitfield;
+typedef GLbyte		fgGFXbyte;
+typedef GLshort		fgGFXshort;
+typedef GLint		fgGFXint;
+typedef GLsizei		fgGFXsizei;
+typedef GLubyte		fgGFXubyte;
+typedef GLushort	fgGFXushort;
+typedef GLuint		fgGFXuint;
+typedef GLfloat		fgGFXfloat;
+typedef GLclampf	fgGFXclampf;
+typedef GLfixed		fgGFXfixed;
+#endif
+
+#ifndef FG_GFX_NONE
+#define FG_GFX_NONE 0
+#endif
 
 #include <cmath>
 
@@ -211,4 +271,5 @@ struct fgArea
         }
 };
 
+#undef _FG_GFX_TYPES_BLOCK__
 #endif /* _FG_GFX_TYPES_H_ */

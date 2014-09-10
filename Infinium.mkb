@@ -183,6 +183,7 @@ files
 	GFX/fgGFXSimpleDrawer.h
 	GFX/fgGFXTexturing.cpp
 	GFX/fgGFXTexturing.h
+	GFX/fgGFXStdInc.h
 
 	["FlexiGame/GFX/Textures"]
 	GFX/Textures/fgTextureErrorCodes.h

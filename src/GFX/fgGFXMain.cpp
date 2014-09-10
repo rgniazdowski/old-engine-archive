@@ -217,7 +217,7 @@ void fgGfxMain::display(void)
  */
 void fgGfxMain::render(void)
 {
-		// #TODO / #FIXME - all the crap with FG_GFX namespace should be somehow put into classes
+	// #TODO / #FIXME - all the crap with FG_GFX namespace should be somehow put into classes
 	// currently the model for handling different rendering APIs sux so much its too hard
 	// to put it in words - however its still not clear whether to stay with the namespace tag name
 	clearScreen();
@@ -272,7 +272,7 @@ fgBool fgGfxMain::setResourceManager(fgManagerBase *resourceManager)
 		// #ERROR - already initialized ?
 		return FG_FALSE;
 	}
-
+	
 	m_textureManager = new fgTextureManager(resourceManager);
 	m_resourceManager = resourceManager;
 
