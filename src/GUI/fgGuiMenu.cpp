@@ -9,6 +9,45 @@
 
 #include "fgGuiMenu.h"
 
+/*
+ *
+ */
+fgGuiMenu::fgGuiMenu()
+{
+}
+
+/*
+ *
+ */
+fgGuiMenu::~fgGuiMenu()
+{
+}
+
+/*
+ *
+ */
+void fgGuiMenu::setDefaults(void)
+{
+}
+
+/*
+ *
+ */
+fgVector4f fgGuiMenu::updateSize(void)
+{
+	fgVector4f returnVec;
+	return returnVec;
+}
+
+/*
+ *
+ */
+void fgGuiMenu::refresh(void)
+{
+}
+
+/////////////////////////////////////////////////////////////////////
+
 /**
  *
  */

@@ -4,7 +4,7 @@ files
 	(src)
 	
 	["FlexiGame/BaseCode"]
-	MainModule.cpp
+	fgMainModule.cpp
 	fgArrayVector.h
 	fgBool.h
 	fgBuildConfig.h
@@ -234,6 +234,8 @@ files
 	GUI/fgGuiContainer.h
 	GUI/fgGuiDrawer.cpp
 	GUI/fgGuiDrawer.h
+	GUI/fgGuiFrame.cpp
+	GUI/fgGuiFrame.h
 	GUI/fgGuiLabel.cpp
 	GUI/fgGuiLabel.h
 	GUI/fgGuiLoader.cpp
@@ -244,6 +246,8 @@ files
 	GUI/fgGuiMenu.h
 	GUI/fgGuiMessageBox.cpp
 	GUI/fgGuiMessageBox.h
+	GUI/fgGuiPopup.cpp
+	GUI/fgGuiPopup.h
 	GUI/fgGuiPrimitives.cpp
 	GUI/fgGuiPrimitives.h
 	GUI/fgGuiProgressBar.cpp
@@ -252,15 +256,26 @@ files
 	GUI/fgGuiScreenGrid.h
 	GUI/fgGuiStructureSheet.cpp
 	GUI/fgGuiStructureSheet.h
-	GUI/fgGuiStructureSheetInterpreter.cpp
-	GUI/fgGuiStructureSheetInterpreter.h
-	GUI/fgGuiStyleSheet.cpp
-	GUI/fgGuiStyleSheet.h
-	GUI/fgGuiStyleSheetInterpreter.cpp
-	GUI/fgGuiStyleSheetInterpreter.h
+	GUI/fgGuiStructureSheetParser.cpp
+	GUI/fgGuiStructureSheetParser.h
+	GUI/fgGuiStyle.cpp
+	GUI/fgGuiStyle.h
+	GUI/fgGuiStyleContent.cpp
+	GUI/fgGuiStyleContent.h
+	GUI/fgGuiStyleSheetParser.cpp
+	GUI/fgGuiStyleSheetParser.h
+	GUI/fgGuiTable.cpp
+	GUI/fgGuiTable.h
+	GUI/fgGuiText.cpp
+	GUI/fgGuiText.h
+	GUI/fgGuiTextArea.cpp
+	GUI/fgGuiTextArea.h
+	GUI/fgGuiToggleButton.cpp
+	GUI/fgGuiToggleButton.h
 	GUI/fgGuiWidget.cpp
 	GUI/fgGuiWidget.h
-
+	GUI/fgGuiWidgetFactory.cpp
+	GUI/fgGuiWidgetFactory.h
 }
 
 assets

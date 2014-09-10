@@ -69,7 +69,7 @@ fgBool fgFontResource::create(void)
 	m_textureType = FG_TEXTURE_FONT;
 	if(!fgTextureResource::create()) {
 		// #TODO error handling / reporting
-		FG_LOG::PrintError("%s(%d): texture create function has failed - in function %s.", FG_Filename(__FILE__), __LINE__-1,__FUNCTION__); 
+		FG_LOG::PrintError("%s(%d): texture create function has failed - in function %s.", fgPath::fileName(__FILE__), __LINE__-1,__FUNCTION__); 
 		return FG_FALSE;
 	}
 	int i = 0, j = 0, k = 0;

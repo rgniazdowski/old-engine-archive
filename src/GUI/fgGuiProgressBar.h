@@ -11,4 +11,3 @@
 #define _FG_GUI_PROGRESS_BAR_H_
 
 #endif /* _FG_GUI_PROGRESS_BAR_H_ */
-

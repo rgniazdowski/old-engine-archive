@@ -8,3 +8,48 @@
  *******************************************************/
 
 #include "fgGuiContainer.h"
+
+/*
+ *
+ */
+fgGuiContainer::fgGuiContainer()
+{
+}
+
+/*
+ *
+ */
+fgGuiContainer::~fgGuiContainer()
+{
+}
+
+/*
+ *
+ */
+void fgGuiContainer::setDefaults(void)
+{
+}
+
+/*
+ *
+ */
+fgVector4f fgGuiContainer::updateSize(void)
+{
+	fgVector4f returnVec;
+	return returnVec;
+}
+
+/*
+ *
+ */
+void fgGuiContainer::refresh(void)
+{
+}
+
+/*
+ *
+ */
+int fgGuiContainer::updateState(void)
+{
+	return 0;
+}

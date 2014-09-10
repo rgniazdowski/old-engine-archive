@@ -10,5 +10,33 @@
 #ifndef _FG_GUI_LABEL_H_
 #define _FG_GUI_LABEL_H_
 
-#endif /* _FG_GUI_LABEL_H_ */
+#include "fgGuiWidget.h"
 
+#define FG_GUI_LABEL		5
+#define FG_GUI_LABEL_NAME	"Label"
+
+/*
+ *
+ */
+class fgGuiLabel : public fgGuiWidget
+{
+private:
+protected:
+	/// 
+	std::string m_text;
+
+protected:
+	// 
+	virtual void setDefaults(void);
+
+public:
+	// 
+	fgGuiLabel();
+	// 
+	virtual ~fgGuiLabel();
+
+	// 
+	virtual fgVector4f updateSize(void);
+};
+
+#endif /* _FG_GUI_LABEL_H_ */

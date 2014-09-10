@@ -11,4 +11,3 @@
 #define _FG_GUI_PRIMITIVES_H_
 
 #endif /* _FG_GUI_PRIMITIVES_H_ */
-

@@ -10,5 +10,9 @@
 #ifndef _FG_GUI_CONSOLE_H_
 #define _FG_GUI_CONSOLE_H_
 
+#include "fgGuiWidget.h"
+
+#define FG_GUI_CONSOLE 3
+
 #endif /* _FG_GUI_CONSOLE_H_ */
 

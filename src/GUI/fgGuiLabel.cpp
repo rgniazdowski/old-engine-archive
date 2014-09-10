@@ -9,4 +9,32 @@
 
 #include "fgGuiLabel.h"
 
-// #TODO
+/*
+ *
+ */
+fgGuiLabel::fgGuiLabel()
+{
+}
+
+/*
+ *
+ */
+fgGuiLabel::~fgGuiLabel()
+{
+}
+
+/*
+ *
+ */
+void fgGuiLabel::setDefaults(void)
+{
+}
+
+/*
+ *
+ */
+fgVector4f fgGuiLabel::updateSize(void)
+{
+	fgVector4f returnVec;
+	return returnVec;
+}

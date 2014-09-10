@@ -8,3 +8,57 @@
  *******************************************************/
 
 #include "fgGuiWidget.h"
+
+/*
+ *
+ */
+fgGuiWidget::fgGuiWidget()
+{
+}
+
+/*
+ *
+ */
+fgGuiWidget::~fgGuiWidget()
+{
+}
+
+/*
+ *
+ */
+void fgGuiWidget::setDefaults(void)
+{
+}
+
+/*
+ *
+ */
+fgVector4f fgGuiWidget::updateSize(void)
+{
+	fgVector4f returnVec;
+	return returnVec;
+}
+
+/*
+ *
+ */
+fgVector4f fgGuiWidget::updateSize(const fgVector2f & boundPos, const fgVector2f & boundSize)
+{
+	fgVector4f returnVec;
+	return returnVec;
+}
+
+/*
+ *
+ */
+void fgGuiWidget::refresh(void)
+{
+}
+
+/*
+ *
+ */
+int fgGuiWidget::updateState(void)
+{
+	return 0;
+}

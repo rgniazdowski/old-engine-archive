@@ -12,8 +12,30 @@
 
 #include <map>
 
-#include "../fgCommon.h"
-#include "fgGuiWidget.h"
+#include "fgCommon.h"
+#include "fgGuiContainer.h"
+
+class fgGuiMenu : public fgGuiContainer
+{
+private:
+protected:
+
+protected:
+	// 
+	virtual void setDefaults(void);
+
+public:
+	// 
+	fgGuiMenu();
+	// 
+	virtual ~fgGuiMenu();
+
+	// 
+	virtual fgVector4f updateSize(void);
+	// 
+	virtual void refresh(void);
+
+};
 
 #define MENU_TITLE_MAX 32
 
