@@ -171,19 +171,22 @@ files
 	GFX/fgGFXQuadtreeBase.h
 	GFX/fgGFXSceneManager.cpp
 	GFX/fgGFXSceneManager.h	
-	GFX/fgGFXShader.cpp
-	GFX/fgGFXShader.h
-	GFX/fgGFXShaderConfig.cpp
-	GFX/fgGFXShaderConfig.h
-	GFX/fgGFXShaderManager.cpp
-	GFX/fgGFXShaderManager.h
-	GFX/fgGFXShaderProgram.cpp
-	GFX/fgGFXShaderProgram.h
 	GFX/fgGFXSimpleDrawer.cpp
 	GFX/fgGFXSimpleDrawer.h
 	GFX/fgGFXTexturing.cpp
 	GFX/fgGFXTexturing.h
 	GFX/fgGFXStdInc.h
+
+	["FlexiGame/GFX/Shaders"]
+	GFX/Shaders/fgGFXShader.cpp
+	GFX/Shaders/fgGFXShader.h
+	GFX/Shaders/fgGFXShaderConfig.cpp
+	GFX/Shaders/fgGFXShaderConfig.h
+	GFX/Shaders/fgGFXShaderManager.cpp
+	GFX/Shaders/fgGFXShaderManager.h
+	GFX/Shaders/fgGFXShaderProgram.cpp
+	GFX/Shaders/fgGFXShaderProgram.h
+	GFX/Shaders/fgGFXShaderDefs.h
 
 	["FlexiGame/GFX/Textures"]
 	GFX/Textures/fgTextureErrorCodes.h
