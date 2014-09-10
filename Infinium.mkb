@@ -40,6 +40,8 @@ files
 	Util/fgConfigStruct.h
 	Util/fgConfigWriter.cpp
 	Util/fgConfigWriter.h
+	Util/fgHandle.h
+	Util/fgHandleManager.h
 	Util/fgPath.cpp
 	Util/fgPath.h
 	Util/fgFile.cpp
@@ -77,8 +79,6 @@ files
 	Resource/fgResourceGroup.h
 	Resource/fgResourceManager.cpp
 	Resource/fgResourceManager.h
-	Resource/fgHandle.h
-	Resource/fgHandleManager.h
 	Resource/fgResourceErrorCodes.h
 
 	["FlexiGame/BaseCode/Audio"]

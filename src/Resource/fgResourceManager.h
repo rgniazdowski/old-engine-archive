@@ -17,7 +17,7 @@
 #include "fgManagerBase.h"
 #include "fgResource.h"
 #include "fgResourceGroup.h"
-#include "fgHandleManager.h"
+#include "Util/fgHandleManager.h"
 
 #include <iostream>
 

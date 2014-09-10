@@ -21,8 +21,8 @@
 #include <ctime>
 #include <cstring>
 
-#include "fgHandle.h"
 #include "fgResourceBase.h"
+#include "Util/fgHandle.h"
 #include "Util/fgTag.h"
 
 class fgResourceManager;
@@ -132,7 +132,7 @@ inline fgResourceType _FG_RESOURCE_TYPE_FROM_TEXT(const char* text) {
 	FG_RETURN_ENUM_IF_TEXT_EQ(FG_RESOURCE_ZIP_PACK);
 	return FG_RESOURCE_INVALID;
 }
-
+// #FIXME - #P3 - string obfuscation (also for error code -> text msg translations)
 #define FG_RESOURCE_TYPE_FROM_TEXT(text) _FG_RESOURCE_TYPE_FROM_TEXT(text)
 
 // Text (string version) for the resource low priority enum
@@ -169,6 +169,7 @@ inline fgResPriorityType _FG_RES_PRIORITY_FROM_TEXT(const char* text) {
 	return FG_RES_PRIORITY_INVALID;
 }
 
+// #FIXME - #P3 - string obfuscation (also for error code -> text msg translations)
 #define FG_RES_PRIORITY_FROM_TEXT(text) _FG_RES_PRIORITY_FROM_TEXT(text)
 
 /*
