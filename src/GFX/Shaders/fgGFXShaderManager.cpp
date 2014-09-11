@@ -8,3 +8,49 @@
  *******************************************************/
 
 #include "fgGFXShaderManager.h"
+
+/*
+ *
+ */
+fgGfxShaderManager::fgGfxShaderManager()
+{
+	setReportToMsgSystem(FG_TRUE);
+}
+
+/*
+ *
+ */
+fgGfxShaderManager::~fgGfxShaderManager()
+{
+
+}
+
+/*
+ *
+ */
+void fgGfxShaderManager::clear(void)
+{
+}
+
+/*
+ *
+ */
+void fgGfxShaderManager::destroy(void)
+{
+}
+
+/*
+ *
+ */
+fgBool fgGfxShaderManager::initialize(void)
+{
+	return FG_TRUE;
+}
+
+/*
+ *
+ */
+fgBool fgGfxShaderManager::preLoadShaders(void)
+{
+	return FG_TRUE;
+}

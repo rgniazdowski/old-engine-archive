@@ -453,10 +453,16 @@ struct fgGfxUniformBind {
 //
 struct fgGfxAttributeBind
 {
+	// Location to which given attribute will be bound (must not equal 0)
 	fgGFXuint			location;
+	// The engine specific attribute type
 	fgGfxAttributeType	type;
+	// Specifies the data type of a single element.
+	// Can be float, vec2, vec3, vec4, mat2, mat3, and mat4.
 	fgGFXenum			dataType;
+	// Currently used precision for this attribute
 	fgGfxPrecision		precision;
+	// Name of the variable to bind
 	std::string			variableName;
 
 	fgGfxAttributeBind() : 
@@ -473,10 +479,68 @@ struct fgGfxAttributeBind
 	}
 };
 
+// Attribute raw data parameters
+// This is not to use within the shader / shader program structure
+// This data is used for draw calls. Shader hold more general data
+// about the attribute binds (location)
+struct fgGfxAttributeData
+{
+	/// Index of the generic vertex attribute to be modifed.
+	fgGFXuint	index;
+	/// Number of components per generic vertex attribute. 
+	/// Must be 1,2,3 or 4. (default is 4)
+	fgGFXint	size;
+	// The engine specific attribute type
+	fgGfxAttributeType	type;
+	/// Specifies the data type of each component in the array.
+	/// Possible values: BYTE, UNSIGNED_BYTE, SHORT, UNSIGNED_SHORT, FIXED and FLOAT.
+	fgGFXenum	dataType;
+	/// The byte offset between between consecutive generic vertex attributes.
+	/// For structures and interleaved data this will be sizeof(struct/Vertex)
+	fgGFXsizei	stride;
+	union {
+		// Pointer to the vertex data
+		fgGFXvoid	*pointer;
+		// Offset if vertex buffer object is used
+		fgGFXvoid	*offset;
+	};
+	/// Specifies whether data values should be normalized
+	fgGFXboolean normalized;
+	/// Is data interleaved? This is important, if data is not interleaved then
+	/// it means that vertices, normals, UVS, colors etc are in separate arrays
+	/// (Struct of arrays) and/or separate buffer objects (isBO).
+	/// If true then Array of structs is used and one vertex buffer (additionally
+	/// another buffer for indeces)
+	fgGFXboolean interleaved;
+	/// Is attribute data bound to vertex/index buffer?
+	/// Note: attribute data used for index buffer cannot be bound to attribute in the shader
+	/// It is used for indexed drawing - it's additional 3D data (glDrawElements)
+	fgGFXboolean isBO;
+};
+
+//
 struct fgGfxShaderConstantDef
 {
 	std::string		name;
 	fgBool			value;
+
+	// #FIXME - need some standard abstract class for that kind of operations
+	void toString(char *buf, unsigned int maxlen = 128)
+	{
+		if(!buf)
+			return;
+		snprintf(buf, (size_t)maxlen, "#define %s %d", name.c_str(), value);
+	}
+
+	std::string & toString(std::string & buf)
+	{
+		buf.append("#define ").append(name);
+		if(value)
+			buf.append(" 1");
+		else
+			buf.append(" 0");
+		return buf;
+	}
 };
 
 #endif /* _FG_GFX_SHADER_DEFS_H_ */

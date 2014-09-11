@@ -25,6 +25,13 @@
 #ifndef _FG_BUILD_CONFIG_H_
 #define _FG_BUILD_CONFIG_H_
 
+#define FG_VERBOSE_LVL_NONE		0 // report only critical errors - no warnings, info, status etc
+#define FG_VERBOSE_LVL_LOW		1 // report only errors
+#define FG_VERBOSE_LVL_MEDIUM	2 // report only errors and warnings (+info, success)
+#define FG_VERBOSE_LVL_HIGH		3 // report everything: Info, Status, Warning, Debug, Errors and others
+
+#ifndef FG_BC_NO_UNDEF_
+
 #undef FG_VERBOSE
 #undef FG_VERBOSE_LEVEL
 
@@ -70,6 +77,7 @@
 #undef FG_USING_WXWIDGETS				//  Is wxWidgets GUI library used in this build?
 #undef FG_SUPPORT_WXWIDGETS				//  Is wxWidgets enabled/supported in this build?
 
+#endif /* FG_BC_NO_UNDEF_ */
 /*************************** CURRENT TARGET PLATFORM / BUILD SYSTEM ***************************/
 
 // Well this build of course is using Marmalade, need to define it to use properly in the code, which needs to be multiplatform
@@ -121,11 +129,15 @@
 #endif
 
 #if defined FG_DEBUG
-#define FG_VERBOSE_LEVEL 3
+#ifndef FG_VERBOSE_LEVEL
+#define FG_VERBOSE_LEVEL FG_VERBOSE_LVL_HIGH
 #define FG_VERBOSE
+#endif
 #else
-#define FG_VERBOSE_LEVEL 1
+#ifndef FG_VERBOSE_LEVEL
+#define FG_VERBOSE_LEVEL FG_VERBOSE_LVL_LOW
 #define FG_VERBOSE
+#endif
 #endif
 
 /*************************** SUBSYSTEM / INPUT / AUDIO SUPPORT ***************************/

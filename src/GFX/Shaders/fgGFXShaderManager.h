@@ -34,20 +34,20 @@ protected:
 	smHandleManager		m_programHandlesMgr;
 public:
 	// 
-	fgGfxShaderManager() {}
+	fgGfxShaderManager();
 	// 
-	virtual ~fgGfxShaderManager() {}
+	virtual ~fgGfxShaderManager();
 
 	// 
-	void clear(void) {}
+	void clear(void);
 	//
-	void destroy(void) {}
+	void destroy(void);
 
 	//
-	fgBool initialize(void) { return FG_FALSE; }
+	fgBool initialize(void);
 	
 	//
-	fgBool preLoadShaders(void) { return FG_FALSE; }
+	fgBool preLoadShaders(void);
 
 };
 
