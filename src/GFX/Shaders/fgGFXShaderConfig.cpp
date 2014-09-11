@@ -8,6 +8,7 @@
  *******************************************************/
 
 #include "fgGFXShaderConfig.h"
+#include "GFX/fgGFXErrorCodes.h"
 #include "Util/fgPath.h"
 #include "Util/fgStrings.h"
 
@@ -34,10 +35,7 @@ fgGfxShaderConfig::fgGfxShaderConfig(const char *filePath)
  */
 fgGfxShaderConfig::~fgGfxShaderConfig()
 {
-	if(m_parser)
-		delete m_parser;
-	if(m_writer)
-		delete m_writer;
+	printf("fgGfxShaderConfig::~fgGfxShaderConfig()\n");
 	clearAll();
 }
 
@@ -64,12 +62,15 @@ void fgGfxShaderConfig::clearAll(void)
 /*
  *
  */
-fgBool fgGfxShaderConfig::load(const char *filePath)
+fgBool fgGfxShaderConfig::load(const char *filePath, fgGfxShadingLanguageVersion SLver)
 {
 	//fgGfxShaderConfig::clearAll();
-	if(!fgConfig::load(filePath))
+	if(!fgConfig::load(filePath)) {
+		reportError(FG_ERRNO_GFX_SHADER_FAIL_CFG_LOAD);
 		return FG_FALSE;
-	return _parseData();
+	}
+	fgGfxShaderConfig::clearStatus();
+	return _parseData(SLver);
 }
 
 /*
@@ -127,21 +128,22 @@ fgBool fgGfxShaderConfig::_parseInclude(fgCfgSection *_includeSection)
 /*
  * #OPTIMISE #DIVIDE #FIXME shader config parse data, move some operations to other function for clarity
  */
-fgBool fgGfxShaderConfig::_parseData(void)
+fgBool fgGfxShaderConfig::_parseData(fgGfxShadingLanguageVersion SLver)
 {
-	if(m_preferredSLVersion == FG_GFX_SHADING_LANGUAGE_INVALID) {
+	if(SLver != FG_GFX_SHADING_LANGUAGE_INVALID) {
+		m_preferredSLVersion = SLver;
+	} else if(m_preferredSLVersion == FG_GFX_SHADING_LANGUAGE_INVALID) {
+		reportError(FG_ERRNO_GFX_SHADER_INVALID_SLVER);
 		return FG_FALSE;
 	}
 	if(m_filePath.empty()) {
-		return FG_FALSE;
-	}
-
-	if(m_sectionMap.empty()) {
+		reportError(FG_ERRNO_WRONG_PATH);
 		return FG_FALSE;
 	}
 
 	const char *ext = fgPath::fileExt(m_filePath.c_str(), FG_TRUE);
 	if(!ext) {
+		reportError(FG_ERRNO_WRONG_PATH);
 		return FG_FALSE;
 	}
 
@@ -165,11 +167,12 @@ fgBool fgGfxShaderConfig::_parseData(void)
 	}
 
 	if(m_configType == FG_GFX_SHADER_CONFIG_INVALID) {
+		reportError(FG_ERRNO_GFX_SHADER_WRONG_CFG_TYPE);
 		return FG_FALSE;
 	}
+	_dumpAllParameters(); // #TODELETE
 	
 	fgCfgSection *mainSection = NULL;
-	
 	if(m_configType == FG_GFX_SHADER_CONFIG_PROGRAM) {
 		mainSection = getSection(FG_GFX_SHADER_CONFIG_PROGRAM_SECTION_NAME);
 	} else {
@@ -178,9 +181,9 @@ fgBool fgGfxShaderConfig::_parseData(void)
 
 	if(!mainSection) {
 		// No new section found, the ini config is malformed
+		reportError(FG_ERRNO_GFX_SHADER_NO_MAIN_SECTION);
 		return FG_FALSE;
 	}
-
 	{
 		fgCfgParameter *param = mainSection->getParameter("precision", FG_CFG_PARAMETER_STRING);
 		if(param) {
@@ -198,7 +201,7 @@ fgBool fgGfxShaderConfig::_parseData(void)
 	// Check if the shader supports that shading language
 	fgCfgSection *slVersionSection = getSection(slVerSubSectionName);
 	if(!slVersionSection) {
-		// Current shading language version is not supported by this shader / program
+		reportError(FG_ERRNO_GFX_SHADER_NOT_SUPPORTED_SLVER);		
 		return FG_FALSE;
 	} else if(!slVersionSection->parametersMap.size()) {
 		// there is such section but it does not provide the name of the valid configuration
@@ -233,18 +236,18 @@ fgBool fgGfxShaderConfig::_parseData(void)
 		if(!param) {
 			// no shader type specified - it has to be explicitly stated in config
 			// even if the file extension points to shader type
+			reportError(FG_ERRNO_GFX_SHADER_NO_TYPE);
 			return FG_FALSE;
 		}
 		fgGfxShaderType _shadertype = FG_GFX_SHADER_TYPE_FROM_TEXT(param->string);
 		if(_shadertype == FG_GFX_SHADER_INVALID) {
-			// Unsupported shader type ...
+			reportError(FG_ERRNO_GFX_SHADER_WRONG_TYPE);
 			return FG_FALSE;
 		}
 		m_shaderTypes.push_back(_shadertype);
 		const char *shortPrefix = FG_GFX_SHADER_SHORT_PREFIX(_shadertype);
 
 		// Parse defines
-		//
 		std::string _tmp;
 		_tmp.append(shortPrefix).append(".Defines");
 		std::string _tmp2 = _tmp;
@@ -254,7 +257,6 @@ fgBool fgGfxShaderConfig::_parseData(void)
 		_tmp.clear(); _tmp2.clear();
 
 		// parse includes
-		//
 		_tmp.append(shortPrefix).append(".Include");
 		_parseInclude(getSection(_tmp));
 		_tmp.clear();
@@ -267,12 +269,12 @@ fgBool fgGfxShaderConfig::_parseData(void)
 		_tmp.clear();
 		if(!cfgSpecSection) {
 			// This is bad - specific config with file/quality list was not found
+			reportError(FG_ERRNO_GFX_SHADER_NO_FILE_SECTION);
 			return FG_FALSE;
 		}
 		fgArrayVector<std::string> _helperVec;
 		fgBool foundQuality = FG_FALSE, foundFile = FG_FALSE;
 		if((param = cfgSpecSection->getParameter("quality", FG_CFG_PARAMETER_STRING)) != NULL) {
-			printf("GFX QUALITY  VEC : %s\n", param->string);
 			std::string _q_vec = param->string;
 			fgStrings::split(_q_vec, ';', _helperVec);
 			m_qualities.clear_optimised();
@@ -286,8 +288,6 @@ fgBool fgGfxShaderConfig::_parseData(void)
 			_helperVec.clear_optimised();
 		} 
 		if((param = cfgSpecSection->getParameter("file", FG_CFG_PARAMETER_STRING)) != NULL) {
-			printf("GFX FILE VEC : %s\n", param->string);
-
 			std::string _f_vec = param->string;
 			fgStrings::split(_f_vec, ';', _helperVec);
 			m_files.clear_optimised();
@@ -302,6 +302,7 @@ fgBool fgGfxShaderConfig::_parseData(void)
 		}
 		if(!foundFile || !foundQuality) {
 			// Did not find parameters for quality or file
+			reportError(FG_ERRNO_GFX_SHADER_NO_FILEQ_PARAMS);
 			return FG_FALSE;
 		}
 		//
@@ -315,6 +316,7 @@ fgBool fgGfxShaderConfig::_parseData(void)
 			getSectionsWith(_attributes, _tmp.c_str());
 			if(_attributes.empty()) {
 				// error - attributes are required - minimum one
+				reportError(FG_ERRNO_GFX_SHADER_NO_ATTRIBUTES);
 				return FG_FALSE;
 			}
 			// !! data type for attribute (GL) possible values:
@@ -324,15 +326,15 @@ fgBool fgGfxShaderConfig::_parseData(void)
 				fgGfxAttributeBind _bind;
 				_bind.type = FG_GFX_ATTRIBUTE_TYPE_FROM_TEXT(_attributes[i]->subName.c_str());
 				if(_bind.type == FG_GFX_ATTRIBUTE_INVALID) {
-					// #FIXME
+					reportWarning(FG_ERRNO_GFX_SHADER_WRONG_ATTRIBUTE);
 					continue;
 				}
-				fgCfgParameter *_aname=NULL, *_aDataType=NULL, *_aprecision=NULL;
+				fgCfgParameter *_aname=NULL, *_aprecision=NULL;
 				_aname = _attributes[i]->getParameter("attributeName", FG_CFG_PARAMETER_STRING);
-				_aDataType = _attributes[i]->getParameter("type", FG_CFG_PARAMETER_STRING);
 				_aprecision = _attributes[i]->getParameter("precision", FG_CFG_PARAMETER_STRING);
-				if(!_aname || !_aDataType) {
+				if(!_aname) {
 					// This attribute definition section is malformed
+					reportWarning(FG_ERRNO_GFX_SHADER_WRONG_ATTRIBUTE);
 					continue;
 				}
 				_bind.precision = FG_GFX_PRECISION_DEFAULT;
@@ -340,12 +342,10 @@ fgBool fgGfxShaderConfig::_parseData(void)
 					_bind.precision = FG_GFX_PRECISION_FROM_TEXT(_aprecision->string);
 				}
 				_bind.variableName = _aname->string;
-				_bind.dataType = FG_GFX_DATA_TYPE_FROM_TEXT(_aDataType->string);
+				//_bind.dataType = FG_GFX_DATA_TYPE_FROM_TEXT(_aDataType->string);
 				m_attributeBinds.push_back(_bind);
 			}
 		}
-
-		//
 		// Loading uniforms
 		//
 		// checking for attributes only for vertex shader 
@@ -355,8 +355,7 @@ fgBool fgGfxShaderConfig::_parseData(void)
 		_tmp.append(shortPrefix).append(".").append("Uniform.");
 		getSectionsWith(_uniforms, _tmp.c_str());
 		if(_uniforms.empty()) {
-			// error - attributes are required - minimum one
-			return FG_FALSE;
+			// uniforms are not required...
 		}
 		unsigned short _nmax=(unsigned short)_uniforms.size(),i;
 		for(i=0;i<_nmax;i++) {
@@ -365,14 +364,16 @@ fgBool fgGfxShaderConfig::_parseData(void)
 			if(_bind.type == FG_GFX_UNIFORM_INVALID) {
 				// Not a valid / supported uniform type - can ignore it ? Pass empty data to it?
 				// #FIXME
+				reportWarning(FG_ERRNO_GFX_SHADER_WRONG_UNIFORM);
 				continue;
 			}
-			fgCfgParameter *_uname=NULL, *_uDataType=NULL, *_uprecision=NULL;
+			fgCfgParameter *_uname=NULL, *_uprecision=NULL;
 			_uname = _uniforms[i]->getParameter("uniformName", FG_CFG_PARAMETER_STRING);
-			_uDataType = _uniforms[i]->getParameter("type", FG_CFG_PARAMETER_STRING);
+			//_uDataType = _uniforms[i]->getParameter("type", FG_CFG_PARAMETER_STRING);
 			_uprecision = _uniforms[i]->getParameter("precision", FG_CFG_PARAMETER_STRING);
-			if(!_uname || !_uDataType) {
-				// This attribute definition section is malformed
+			if(!_uname) {
+				// This uniform definition section is malformed
+				reportWarning(FG_ERRNO_GFX_SHADER_WRONG_UNIFORM);
 				continue;
 			}
 			_bind.precision = FG_GFX_PRECISION_DEFAULT;
@@ -380,16 +381,17 @@ fgBool fgGfxShaderConfig::_parseData(void)
 				_bind.precision = FG_GFX_PRECISION_FROM_TEXT(_uprecision->string);
 			}
 			_bind.variableName = _uname->string;
-			_bind.dataType = FG_GFX_DATA_TYPE_FROM_TEXT(_uDataType->string);
+			//_bind.dataType = FG_GFX_DATA_TYPE_FROM_TEXT(_uDataType->string);
 			m_uniformBinds.push_back(_bind);
 		}
 	}
+	// specific configuration procedures for main shader config (shader program)
 	if(m_configType == FG_GFX_SHADER_CONFIG_PROGRAM) {
-		// specific configuration procedures for main shader config (shader program)
 		fgCfgParameter *param = NULL;
 		param = mainSection->getParameter("programName", FG_CFG_PARAMETER_STRING);
 		if(!param) {
 			// this is kinda big error, the program name (string handle ID) is not specified
+			reportError(FG_ERRNO_GFX_SHADER_NO_PROG_NAME);
 			return FG_FALSE;
 		}
 		m_programName = param->string;
@@ -430,6 +432,8 @@ fgBool fgGfxShaderConfig::_parseData(void)
 		// specific configuration procedures for compute shader
 #endif
 	}
-
+	if(FG_BUILD_CONFIG.verboseLevel >= FG_VERBOSE_LVL_MEDIUM) {
+		reportSuccess(FG_ERRNO_GFX_OK, "Shader config loaded successfully");
+	}
 	return FG_TRUE;
 }

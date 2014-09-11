@@ -109,6 +109,9 @@ public:
 
 	// Return the reference to the given sections parameter vector
 	fgCfgTypes::parameterVec & getRefSectionsParameterVec(const char *sectionName);
+
+protected:
+	void _dumpAllParameters(void);
 };
 
 #endif /* _FG_CONFIG_H_ */

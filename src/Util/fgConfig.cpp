@@ -32,10 +32,13 @@ fgConfig::fgConfig(const char *filePath) : m_parser(NULL), m_writer(NULL)
  */
 fgConfig::~fgConfig()
 {
+	printf("fgConfig::~fgConfig()\n");
 	if(m_parser)
 		delete m_parser;
+	m_parser = NULL;
 	if(m_writer)
 		delete m_writer;
+	m_writer = NULL;
 	clearAll();
 }
 
@@ -72,7 +75,7 @@ fgBool fgConfig::load(const char *filePath)
 
 	if(!m_parser)
 		m_parser = new fgConfigParser();
-	clearAll();
+	fgConfig::clearAll();
 	if(!m_parser->load(filePath, m_sectionMap)) {
 		return FG_FALSE;
 	}
@@ -110,8 +113,9 @@ fgBool fgConfig::save(const char *filePath)
  */
 void fgConfig::clearAll(void)
 {
-	m_filePath.clear();
+	printf("fgConfig::clearAll(void)\n");
 	if(!m_sectionMap.empty()) {
+		m_filePath.clear();
 		fgCfgTypes::sectionMapItor it = m_sectionMap.begin(),
 			end = m_sectionMap.end();
 		for(;it!=end;it++)
@@ -394,4 +398,28 @@ fgBool fgConfig::setParameterString(const char *sectionName, const char *paramet
 	char *newValue = strdup(value);
 	void *void_ptr = (void *)(newValue);
 	return setParameterValue(sectionName, parameterName, FG_CFG_PARAMETER_STRING, void_ptr, FG_TRUE);
+}
+
+/*
+ *
+ */
+void fgConfig::_dumpAllParameters(void)
+{
+	fgCfgTypes::parameterVecItor begin, end, itor;
+	begin = m_parameterVec.begin();
+	end = m_parameterVec.end();
+	itor = begin;
+	char _buf[1024];
+	for(;itor!=end;itor++) {
+		fgCfgParameter *param = *itor;
+		param->toString(_buf);
+		printf("PARAM: '%s' type: '%d', section: '%s', sub: '%s', dump: '%s'\n",
+			param->name.c_str(),
+			(int)param->type,
+			param->sectionName.c_str(),
+			param->subSectionName.c_str(),
+			_buf
+			);
+		memset(_buf, 0, 1024);
+	}
 }

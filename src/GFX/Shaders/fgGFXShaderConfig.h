@@ -15,6 +15,8 @@
 #endif
 
 #include "Util/fgConfig.h"
+#include "Util/fgTag.h"
+#include "fgStatusReporter.h"
 #include "fgGFXShaderDefs.h"
 #include "Hardware/fgQualityTypes.h"
 
@@ -36,6 +38,13 @@ enum fgGfxShaderConfigType
 #define FG_GFX_SHADER_CONFIG_PROGRAM_SECTION_NAME	"ShaderProgramConfig"
 #define FG_GFX_SHADER_CONFIG_BASIC_SECTION_NAME		"ShaderConfig"
 
+class fgGfxShaderConfig;
+#define FG_TAG_GFX_SHADER_CONFIG_NAME	"tag{fgGfxShaderConfig}"
+#define FG_TAG_GFX_SHADER_CONFIG		FG_TAG_TYPE(fgGfxShaderConfig)
+
+FG_TAG_TEMPLATE_ID_AUTO(fgGfxShaderConfig, FG_TAG_GFX_SHADER_CONFIG_NAME);
+typedef FG_TAG_GFX_SHADER_CONFIG fgGfxShaderConfigTag;
+
 /*
  * Shader config mission is to read special configs (INI) holding information
  * about shader program and respective shaders. It's universal for different kinds
@@ -54,7 +63,7 @@ enum fgGfxShaderConfigType
  * This class can load and parse only one config at one time, and
  * will provide that data for only one config type.
  */
-class fgGfxShaderConfig : protected fgConfig 
+class fgGfxShaderConfig : protected fgConfig, public fgStatusReporter<fgGfxShaderConfigTag> 
 {
 public:
 	typedef fgArrayVector<fgGfxShaderType>		shaderTypeVec;
@@ -105,7 +114,7 @@ public:
 	virtual void clearAll(void);
 
 	// 
-	fgBool load(const char *filePath = NULL);
+	fgBool load(const char *filePath = NULL, fgGfxShadingLanguageVersion SLver = FG_GFX_SHADING_LANGUAGE_INVALID);
 
 	//
 	fgGfxShaderConfigType getType(void) const {
@@ -157,9 +166,14 @@ public:
 		return m_selectedConfigName;
 	}
 
+	//
+	void setPreferredSLVersion(fgGfxShadingLanguageVersion _ver) {
+		m_preferredSLVersion = _ver;
+	}
+
 private:
 	// 
-	fgBool _parseData(void);
+	fgBool _parseData(fgGfxShadingLanguageVersion SLver);
 	//
 	fgBool _parseDefines(fgCfgSection *_definesSection);
 	//

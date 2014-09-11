@@ -97,11 +97,17 @@ public:
 		m_filePath = filePath;
 	}
 
+	// Set the file path
+	void setPath(std::string & filePath) {
+		m_filePath = filePath;
+	}
+
 	// Return the file path (C string)
 	const char *getPath(void) const {
 		return m_filePath.c_str();
 	}
 
+	// Set file open mode
 	void setMode(fgFileMode mode);
 
 	// Get the C standard mode for fopen

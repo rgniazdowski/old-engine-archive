@@ -114,6 +114,7 @@ public:
 	typedef fgArrayVector<FG_RHANDLE>::iterator		rgHandleVecItor;
 	typedef fgArrayVector<fgResource *>::const_iterator	rgResVecConstItor;
 	typedef fgArrayVector<FG_RHANDLE>::const_iterator	rgHandleVecConstItor;
+
 public:
 	// Base constructor of the resource group object
 	fgResourceGroup();
@@ -155,6 +156,7 @@ public:
 	rgHandleVec& getRefResourceHandles(void) {
 		return m_rHandles;
 	}
+
 protected:
 	// Lock the resource (reference counter +1)
 	virtual unsigned int Lock(void);
@@ -162,8 +164,10 @@ protected:
 	virtual unsigned int Unlock(void);
 	// Unlock completely the resource (reference counter = 0) #NOTSAFE #FIXME
 	virtual void ZeroLock(void);
+
 private:
 	fgBool _parseIniConfig(void);
+
 protected:
 	// List of all handles within this resource group
 	rgHandleVec m_rHandles;
@@ -171,6 +175,7 @@ protected:
 	rgResVec m_resourceFiles;
 	// Parser for xml config files (here: resource group xml files)
 	fgXMLParser *m_xmlParser;
+
 };
 
 #endif /* _FG_RESOURCE_GROUP_H_ */
