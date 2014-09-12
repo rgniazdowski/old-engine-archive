@@ -11,21 +11,31 @@
 #define _FG_GFX_SHADER_H_
 
 #include "fgGFXShaderDefs.h"
+#include "fgGFXShaderBase.h"
 #include "Util/fgFile.h"
+#include <map>
+
+enum fgGfxShaderObjParamType {
+	FG_GFX_SHADER_TYPE				= GL_SHADER_TYPE,
+	FG_GFX_SHADER_DELETE_STATUS		= GL_DELETE_STATUS,
+	FG_GFX_SHADER_COMPILE_STATUS	= GL_COMPILE_STATUS,
+	FG_GFX_SHADER_INFO_LOG_LENGTH	= GL_INFO_LOG_LENGTH,
+	FG_GFX_SHADER_SOURCE_LENGTH		= GL_SHADER_SOURCE_LENGTH
+};
 
 /*
  *
  */
-class fgGfxShader : protected fgFile
+class fgGfxShader : protected fgGfxShaderBase, protected fgFile
 {
+	friend class fgGfxShaderProgram;
 public:
 	typedef fgArrayVector<std::string>	defineStrVec;
 	typedef defineStrVec::iterator		defineStrVecItor;
 	typedef fgArrayVector<std::string>	includeStrVec;
 	typedef includeStrVec::iterator		includeStrVecItor;
+
 protected:
-	///
-	fgGFXuint m_shaderGfxID;
 	///
 	fgGfxShaderType m_type;
 	///
@@ -35,13 +45,13 @@ protected:
 	///
 	fgGfxShadingLanguageVersion m_version;
 	///
-	std::string m_log;
-	///
 	int m_numSources;
 	///
 	char const ** m_sources;
 	///
 	char * m_fileSource;
+	///
+	fgGfxShaderPrecision m_precision;
 	///
 	fgBool m_isSourceLoaded;
 public:
@@ -63,7 +73,6 @@ public:
 	fgBool loadSource(const char *path);
 	//
 	fgBool loadSource(std::string & path);
-
 	//
 	void freeSource(void);
 
@@ -75,33 +84,34 @@ public:
 	fgBool compile(const char *path);
 	//
 	fgBool compile(std::string & path);
-
 	//
 	fgBool deleteShader(void);
+
+protected:
 	//
 	fgBool attach(fgGFXuint program);
 	//
 	fgBool detach(fgGFXuint program);
 
+public:
 	//
 	fgBool setFilePath(std::string & path);
 	//
 	fgBool setFilePath(const char *path);
 
 	//
-	fgGFXuint getGfxID(void) const {
-		return m_shaderGfxID;
+	void setPrecision(fgGfxShaderPrecision precision) {
+		m_precision = precision;
 	}
 	//
-	const char *getLog(void) const {
-		return m_log.c_str();
+	fgGfxShaderPrecision getPrecision(void) const {
+		return m_precision;
 	}
 
+	//
 	const char *getSource(void) const {
 		return (const char *)m_fileSource;
 	}
-protected:
-	void _updateShaderLog(void);
 };
 
 #endif /* _FG_GFX_SHADER_H_ */

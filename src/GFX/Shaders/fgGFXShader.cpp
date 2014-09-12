@@ -15,16 +15,22 @@
  *
  */
 fgGfxShader::fgGfxShader(fgGfxShaderType type) :
-	m_shaderGfxID(0),
 	m_type(type),
 	m_version(FG_GFX_SHADING_LANGUAGE_INVALID),
 	m_numSources(0),
 	m_sources(NULL),
 	m_fileSource(NULL),
+	m_precision(FG_GFX_SHADER_PRECISION_DEFAULT),
 	m_isSourceLoaded(FG_FALSE)
 {
 	if(m_type == FG_GFX_SHADER_INVALID)
 		reportError(FG_ERRNO_GFX_SHADER_WRONG_TYPE);
+	m_params[(fgGFXuint)FG_GFX_SHADER_TYPE] = m_type;
+	m_params[(fgGFXuint)FG_GFX_SHADER_DELETE_STATUS] = 0;
+	m_params[(fgGFXuint)FG_GFX_SHADER_COMPILE_STATUS] = 0;
+	m_params[(fgGFXuint)FG_GFX_SHADER_INFO_LOG_LENGTH] = 0;
+	m_params[(fgGFXuint)FG_GFX_SHADER_SOURCE_LENGTH] = 0;
+	m_baseType = FG_GFX_BASE_TYPE_SHADER;
 }
 
 /*
@@ -35,6 +41,7 @@ fgGfxShader::~fgGfxShader()
 	freeSource();
 	m_defineStrVec.clear_optimised();
 	m_includeStrVec.clear_optimised();
+	m_params.clear();
 	deleteShader();
 }
 
@@ -166,10 +173,10 @@ fgGFXuint fgGfxShader::create(void)
 {
 	if(m_type == FG_GFX_SHADER_INVALID)
 		return 0;
-	if(!m_shaderGfxID || !glIsShader(m_shaderGfxID)) {
-		m_shaderGfxID = glCreateShader((fgGFXenum)m_type);
+	if(!m_gfxID || !glIsShader(m_gfxID)) {
+		m_gfxID = glCreateShader((fgGFXenum)m_type);
 	}
-	return m_shaderGfxID;
+	return m_gfxID;
 }
 
 /*
@@ -188,12 +195,11 @@ fgBool fgGfxShader::compile(void)
 		// Failed to create shader
 		return FG_FALSE;
 	}
-	glShaderSource(m_shaderGfxID, m_numSources, m_sources, NULL);
-	glCompileShader(m_shaderGfxID);
-	fgGFXint status;
-	glGetShaderiv(m_shaderGfxID, GL_COMPILE_STATUS, &status);
-	_updateShaderLog();
-	return (fgBool)status;
+	glShaderSource(m_gfxID, m_numSources, m_sources, NULL);
+	glCompileShader(m_gfxID);
+	_updateParams();
+	_updateLog();
+	return (fgBool)m_params[(fgGFXuint)FG_GFX_SHADER_COMPILE_STATUS];
 }
 
 /*
@@ -229,8 +235,9 @@ fgBool fgGfxShader::compile(std::string & path)
  */
 fgBool fgGfxShader::deleteShader(void)
 {
-	if(glIsShader(m_shaderGfxID)) {
-		glDeleteShader(m_shaderGfxID);
+	if(glIsShader(m_gfxID)) {
+		glDeleteShader(m_gfxID);
+		_updateParams();
 		//m_shaderGfxID = 0;
 		return FG_TRUE;
 	}
@@ -242,8 +249,8 @@ fgBool fgGfxShader::deleteShader(void)
  */
 fgBool fgGfxShader::attach(fgGFXuint program)
 {
-	if(glIsProgram(program) && glIsShader(m_shaderGfxID)) {
-		glAttachShader(program, m_shaderGfxID);
+	if(glIsProgram(program) && glIsShader(m_gfxID)) {
+		glAttachShader(program, m_gfxID);
 		return FG_TRUE;
 	}
 	return FG_FALSE;
@@ -254,8 +261,8 @@ fgBool fgGfxShader::attach(fgGFXuint program)
  */
 fgBool fgGfxShader::detach(fgGFXuint program)
 {
-	if(glIsProgram(program) && glIsShader(m_shaderGfxID)) {
-		glDetachShader(program, m_shaderGfxID);
+	if(glIsProgram(program) && glIsShader(m_gfxID)) {
+		glDetachShader(program, m_gfxID);
 		return FG_TRUE;
 	}
 	return FG_FALSE;
@@ -290,23 +297,4 @@ fgBool fgGfxShader::setFilePath(const char *path)
 	}
 	setPath(path);
 	return FG_TRUE;
-}
-
-/*
- *
- */
-void fgGfxShader::_updateShaderLog(void)
-{
-	if(!glIsShader(m_shaderGfxID))
-		return;
-	GLint length;
-	glGetShaderiv(m_shaderGfxID, GL_INFO_LOG_LENGTH, &length);
-	if (length)
-	{
-		char* buffer = (char*)malloc( sizeof(char) * length ) ;
-		glGetShaderInfoLog(m_shaderGfxID, length, NULL, buffer);
-		m_log.clear();
-		m_log = buffer;
-		free(buffer);
-	}
 }

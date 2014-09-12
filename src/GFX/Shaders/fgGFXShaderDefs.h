@@ -48,6 +48,12 @@ enum fgGfxShadingLanguageVersion
 	FG_GFX_GLSL_440		=	440,
 };
 
+#if defined FG_USING_OPENGL_ES
+#define FG_GFX_SHADING_LANG_VERSION_DEFAULT FG_GFX_ESSL_100
+#else
+#define FG_GFX_SHADING_LANG_VERSION_DEFAULT FG_GFX_GLSL_330 // ?
+#endif
+
 //
 enum fgGfxShaderType {
 	FG_GFX_SHADER_FRAGMENT			=	GL_FRAGMENT_SHADER,
@@ -330,6 +336,32 @@ enum fgGfxShaderPrecisionType {
 
 #define FG_GFX_SHADER_CONFIG_STD_SUFFIX					"shader.ini"
 
+const char * const g_fgGfxShaderSuffixes[] = {
+	FG_GFX_SHADER_CONFIG_FRAGMENT_STD_SUFFIX,
+	FG_GFX_SHADER_CONFIG_VERTEX_STD_SUFFIX
+#if defined FG_USING_OPENGL
+	,
+	FG_GFX_SHADER_CONFIG_TESS_CONTROL_STD_SUFFIX,
+	FG_GFX_SHADER_CONFIG_TESS_EVALUATION_STD_SUFFIX,
+	FG_GFX_SHADER_CONFIG_GEOMETRY_STD_SUFFIX,
+	FG_GFX_SHADER_CONFIG_COMPUTE_STD_SUFFIX
+#endif
+};
+
+inline const char * _FG_GFX_SHADER_STD_SUFFIX(fgGfxShaderType _type) {
+	FG_RETURN_VAL_IF_EQUAL(_type, FG_GFX_SHADER_FRAGMENT, FG_GFX_SHADER_FRAGMENT_STD_SUFFIX);
+	FG_RETURN_VAL_IF_EQUAL(_type, FG_GFX_SHADER_VERTEX, FG_GFX_SHADER_CONFIG_VERTEX_STD_SUFFIX);
+#if defined FG_USING_OPENGL
+	FG_RETURN_VAL_IF_EQUAL(_type, FG_GFX_SHADER_TESS_CONTROL, FG_GFX_SHADER_CONFIG_TESS_CONTROL_STD_SUFFIX);
+	FG_RETURN_VAL_IF_EQUAL(_type, FG_GFX_SHADER_TESS_EVALUATION, FG_GFX_SHADER_CONFIG_TESS_EVALUATION_STD_SUFFIX);
+	FG_RETURN_VAL_IF_EQUAL(_type, FG_GFX_SHADER_GEOMETRY, FG_GFX_SHADER_CONFIG_GEOMETRY_STD_SUFFIX);
+	FG_RETURN_VAL_IF_EQUAL(_type, FG_GFX_SHADER_COMPUTE, FG_GFX_SHADER_CONFIG_COMPUTE_STD_SUFFIX);
+#endif
+	return NULL;
+};
+
+#define FG_GFX_SHADER_STD_SUFFIX(type) _FG_GFX_SHADER_STD_SUFFIX(type)
+
 //
 enum fgGfxUniformType {
 	FG_GFX_UNIFORM_INVALID,
@@ -444,6 +476,13 @@ struct fgGfxUniformBind {
 	{
 		variableName.clear();
 	}
+
+	inline int operator==(const fgGfxUniformBind &b) {
+		return (b.variableName.compare(this->variableName) == 0 && b.type == this->type);
+	}
+	inline int operator!=(const fgGfxUniformBind &b) {
+		return !(b.variableName.compare(this->variableName) == 0 && b.type == this->type);
+	}
 };
 
 // The attribute qualifier can be used only with the data types:
@@ -476,6 +515,13 @@ struct fgGfxAttributeBind
 	~fgGfxAttributeBind()
 	{
 		variableName.clear();
+	}
+
+	inline int operator==(const fgGfxAttributeBind &b) {
+		return (b.variableName.compare(this->variableName) == 0 && b.type == this->type);
+	}
+	inline int operator!=(const fgGfxAttributeBind &b) {
+		return !(b.variableName.compare(this->variableName) == 0 && b.type == this->type);
 	}
 };
 
