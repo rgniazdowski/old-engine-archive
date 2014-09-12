@@ -178,6 +178,8 @@ files
 	GFX/fgGFXStdInc.h
 
 	["FlexiGame/GFX/Shaders"]
+	GFX/Shaders/fgGFXShaderBase.cpp
+	GFX/Shaders/fgGFXShaderBase.h
 	GFX/Shaders/fgGFXShader.cpp
 	GFX/Shaders/fgGFXShader.h
 	GFX/Shaders/fgGFXShaderConfig.cpp
