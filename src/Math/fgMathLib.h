@@ -12,6 +12,21 @@
 
 #include <cmath>
 
+#include "fgBuildConfig.h"
+#if defined FG_USING_GLM
+#include "glm/common.hpp"
+#include "glm/vec2.hpp"
+#include "glm/vec3.hpp"
+#include "glm/vec4.hpp"
+#include "glm/mat3x3.hpp"
+#include "glm/mat4x4.hpp"
+#include "glm/geometric.hpp"
+#include "glm/gtc/matrix_transform.hpp"
+#include "glm/gtc/matrix_inverse.hpp"
+#include "glm/gtc/epsilon.hpp"
+#include "glm/gtc/type_ptr.hpp"
+#endif
+
 #ifndef FG_EPSILON
 #define FG_EPSILON 1e-6f
 #endif
@@ -30,6 +45,39 @@
 #ifndef FG_RAD2DEG
 #define FG_RAD2DEG (180.0f / M_PIF)
 #endif
+
+#if defined FG_USING_GLM
+
+#define fgMath glm
+
+typedef glm::bvec2 fgVector2b;
+typedef glm::bvec3 fgVector3b;
+typedef glm::bvec4 fgVector4b;
+
+typedef glm::uvec2 fgVector2u;
+typedef glm::uvec3 fgVector3u;
+typedef glm::uvec4 fgVector4u;
+
+typedef glm::ivec2 fgVector2i;
+typedef glm::ivec3 fgVector3i;
+typedef glm::ivec4 fgVector4i;
+
+typedef glm::vec2 fgVector2f;
+typedef glm::vec3 fgVector3f;
+typedef glm::vec4 fgVector4f;
+
+typedef glm::mat2 fgMatrix2f;
+typedef glm::mat3 fgMatrix3f;
+typedef glm::mat4 fgMatrix4f;
+
+typedef glm::dmat2 fgMatrix2d;
+typedef glm::dmat3 fgMatrix3d;
+typedef glm::dmat4 fgMatrix4d;
+
+typedef glm::quat fgQuaternionf;
+typedef glm::dquat fgQuaterniond;
+
+#else /* FG_USING_GLM */
 
 struct fgVector2i;
 struct fgVector2f;
@@ -898,5 +946,35 @@ struct fgQuaterionf {
 		float q[4];
 	};
 };
+#endif /* FG_USING_GLM */
+
+// #FIXME
+
+typedef fgVector2b	fgVec2b;
+typedef fgVector3b	fgVec3b;
+typedef fgVector4b	fgVec4b;
+
+typedef fgVector2u	fgVec2u;
+typedef fgVector3u	fgVec3u;
+typedef fgVector4u	fgVec4u;
+
+typedef fgVector2i	fgVec2i;
+typedef fgVector3i	fgVec3i;
+typedef fgVector4i	fgVec4i;
+
+typedef fgVector2f	fgVec2f;
+typedef fgVector3f	fgVec3f;
+typedef fgVector4f	fgVec4f;
+
+typedef fgMatrix2f	fgMat2f;
+typedef fgMatrix3f	fgMat3f;
+typedef fgMatrix4f	fgMat4f;
+
+typedef fgMatrix2d	fgMat2d;
+typedef fgMatrix3d	fgMat3d;
+typedef fgMatrix4d	fgMat4d;
+
+typedef fgQuaternionf	fgQuatf;
+typedef fgQuaterniond	fgQuatd;
 
 #endif /* _FG_MATHLIB_H_ */

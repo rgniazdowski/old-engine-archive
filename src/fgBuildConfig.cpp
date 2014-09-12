@@ -95,6 +95,11 @@ struct fgBuildConfig g_fgBuildConfig = {
 #else
 	false,
 #endif
+#ifdef FG_USING_GLM
+	true,
+#else
+	false,
+#endif
 #ifdef FG_USING_SDL
 	true,
 #else

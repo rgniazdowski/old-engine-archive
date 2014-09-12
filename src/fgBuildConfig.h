@@ -49,6 +49,7 @@
 #undef FG_USING_OPENGL_GLU				//	Is the GLU library used in this build?
 #undef FG_USING_OPENGL_GLUT				//	Is the GLUT library used?
 #undef FG_USING_OPENGL_GLEW				//	Is the GLEW library used?
+#undef FG_USING_GLM						//	Is the OpenGL Mathemathics library (GLM) used? 
 #undef FG_USING_SDL						//  Is the SDL1.x used?
 #undef FG_USING_SDL2					//  Is the latest SDL2 used in this build?
 #undef FG_USING_OPENAL					//	Is the OpenAL library used (for sound system) in this build?
@@ -234,8 +235,13 @@
 
 /**************************** CROSS PLATFORM COMPATIBILITY ****************************/
 
+// Always (as default) us OpenGL Mathemathics library
+#define FG_USING_GLM
+
 #ifdef FG_USING_MARMALADE
+#if defined FG_USING_GLM
 #define GLM_FORCE_PURE
+#endif
 #endif
 
 /*************************** OTHER DEFINITIONS / STRUCTURES ***************************/
@@ -261,6 +267,7 @@ struct fgBuildConfig {
 	bool usingOpenGLGLU;		//	Is the GLU library used in this build?
 	bool usingOpenGLGLUT;		//	Is the GLUT library used?
 	bool usingOpenGLGLEW;		//	Is the GLEW library used?
+	bool usingGLM;				//	Is the OpenGL Mathemathics library (GLM) used? 
 	bool usingSDL;
 	bool usingSDL2;
 	bool usingOpenAL;			//	Is the OpenAL library used (for sound system) in this build?
