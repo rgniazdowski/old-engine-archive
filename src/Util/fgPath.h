@@ -11,6 +11,7 @@
 #define _FG_PATH_H_
 
 #include "fgBool.h"
+#include <string>
 
 class fgPath
 {
@@ -23,6 +24,14 @@ public:
 
 	// Return the file name in path //fgPath::fileName
 	static const char* fileName(const char* path);
+
+	// Retrieve the dirname in path - this will change the input string
+	static void dirName(char* path);
+
+	// Remember that this function allocates a new string
+	static char *dirName(const char* path);
+
+	static std::string dirName(std::string & path);
 
 };
 
