@@ -11,12 +11,28 @@
 #define _FG_GFX_SHADER_BASE_H_
 
 #include "fgGFXShaderDefs.h"
+
+#include "Hardware/fgQualityTypes.h"
+#include "Resource/fgDataObjectBase.h"
+#include "Util/fgHandle.h"
+#include "Util/fgTag.h"
 #include <map>
+
+class fgGfxShader;
+
+#define FG_TAG_GFX_SHADER_NAME	"GfxShader"
+#define FG_TAG_GFX_SHADER		FG_TAG_TYPE(fgGfxShader)
+
+FG_TAG_TEMPLATE_ID_AUTO(fgGfxShader, FG_TAG_GFX_SHADER_NAME);
+typedef FG_TAG_GFX_SHADER fgGfxShaderTag;
+
+// Special handle type for shader program
+typedef fgHandle<fgGfxShaderTag> fgGfxShaderHandle;
 
 /*
  *
  */
-class fgGfxShaderBase
+class fgGfxShaderBase : public fgDataObjectBase<fgGfxShaderHandle, fgQuality>
 {
 	friend class fgGfxShaderProgram;
 protected:
@@ -30,13 +46,15 @@ protected:
 	};
 
 protected:
-	shaderBaseType m_baseType;
-	///
-	fgGFXuint	m_gfxID;
 	///
 	objParamMap	m_params;
 	///
-	std::string m_log;
+	char *m_log;
+	///
+	fgGFXuint	m_gfxID;
+	/// 
+	shaderBaseType m_baseType;
+	
 
 public:
 	//
@@ -50,22 +68,30 @@ public:
 	}
 
 	//
+	fgGFXuint & getRefGfxID(void) {
+		return m_gfxID;
+	}
+
+	//
 	fgGFXint getParam(fgGFXuint pname) {
 		return m_params[pname];
 	}
 
 	//
 	const char *getLog(void) const {
-		return m_log.c_str();
+		return m_log;
 	}
+
+	//
+	virtual void clearAll(void) = 0;
 
 protected:
 	//
-	void _updateLog(void);
+	void updateLog(void);
 	//
-	void _updateParams(void);
+	void updateParams(void);
 	//
-	fgGFXint _updateParam(fgGFXuint pname);
+	fgGFXint updateParam(fgGFXuint pname);
 };
 
 #endif /*_FG_GFX_SHADER_BASE_H_ */

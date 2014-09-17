@@ -22,10 +22,9 @@ fgResource::fgResource() :
 	m_resType(FG_RESOURCE_INVALID),
 	m_nRefCount(0),
 	m_lastAccess(0),
-	m_isReady(FG_FALSE),
-	m_size(0)
+	m_size(0),
+	m_isReady(FG_FALSE)
 {
-	m_resourceName.clear();
 	FG_LOG::PrintDebug("fgResource::fgResource();");
 }
 
@@ -38,10 +37,9 @@ fgResource::fgResource(const char *path) :
 	m_resType(FG_RESOURCE_INVALID),
 	m_nRefCount(0),
 	m_lastAccess(0),
-	m_isReady(FG_FALSE),
-	m_size(0)
+	m_size(0),
+	m_isReady(FG_FALSE)
 {
-	m_resourceName.clear();
 	FG_LOG::PrintDebug("fgResource::fgResource(const char *path);");
 	setFilePath(path);
 }
@@ -55,10 +53,9 @@ fgResource::fgResource(std::string& path) :
 	m_resType(FG_RESOURCE_INVALID),
 	m_nRefCount(0),
 	m_lastAccess(0),
-	m_isReady(FG_FALSE),
-	m_size(0)
+	m_size(0),
+	m_isReady(FG_FALSE)
 {
-	m_resourceName.clear();
 	FG_LOG::PrintDebug("fgResource::fgResource(std::string& path);");
 	setFilePath(path);
 }

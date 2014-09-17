@@ -10,6 +10,8 @@
 #include "fgBuildConfig.h"
 #include "fgCommon.h"
 #include "fgGFXMain.h"
+#include "Textures/fgTextureResource.h"
+#include "Hardware/fgHardwareState.h"
 
 #if defined FG_USING_MARMALADE
 #include "s3e.h"
@@ -19,21 +21,19 @@
 #endif
 
 #include "fgLog.h"
-
-// #FIXME
-#if defined FG_USING_EGL
-static EGLSurface g_EGLSurface = NULL;
-static EGLDisplay g_EGLDisplay = NULL;
-static EGLContext g_EGLContext = NULL;
-#endif
-
 /*
  *
  */
 fgGfxMain::fgGfxMain() :
-	m_init(FG_FALSE),
-	m_textureManager(NULL),
-	m_resourceManager(NULL)
+	m_textureMgr(NULL),
+	m_resourceMgr(NULL),
+	m_shaderMgr(NULL),
+	m_EGLSurface(NULL),
+	m_EGLDisplay(NULL),
+	m_EGLContext(NULL),
+	m_screenW(-1),
+	m_screenH(-1),
+	m_init(FG_FALSE)
 {
 }
 
@@ -42,41 +42,55 @@ fgGfxMain::fgGfxMain() :
  */
 fgGfxMain::~fgGfxMain()
 {
+	FG_LOG::PrintInfo("BEG: >>> fgGfxMain::~fgGfxMain();");
 	if(m_init)
 		closeGFX();
-	if(m_textureManager)
-		delete m_textureManager;
-	m_textureManager = NULL;
-	m_resourceManager = NULL;
+	if(m_textureMgr)
+		delete m_textureMgr;
+	if(m_shaderMgr)
+		delete m_shaderMgr;
+
+	m_textureMgr = NULL;
+	m_resourceMgr = NULL;
+	m_shaderMgr = NULL;
+	
+	FG_LOG::PrintDebug("END: <<< fgGfxMain::~fgGfxMain();");
 }
+
+
 
 /*
  *
  */
 fgBool fgGfxMain::initGFX(void)
 {
+	FG_LOG::PrintDebug("BEG: >>> fgGfxMain::initGFX();");
+
 #if defined FG_USING_MARMALADE_EGL
 	EGLint major;
 	EGLint minor;
 	EGLint numFound = 0;
 	EGLConfig configList[FG_EGL_MAX_CONFIG];
 
-	g_EGLDisplay = eglGetDisplay(EGL_DEFAULT_DISPLAY);
-	if (!g_EGLDisplay)
+	m_EGLDisplay = eglGetDisplay(EGL_DEFAULT_DISPLAY);
+	if (!m_EGLDisplay)
 	{
-		s3eDebugErrorShow(S3E_MESSAGE_CONTINUE, "eglGetDisplay failed");
+		//s3eDebugErrorShow(S3E_MESSAGE_CONTINUE, "eglGetDisplay failed");
+		FG_LOG::PrintError("eglGetDisplay failed");
 		return FG_FALSE;
 	}
-	EGLBoolean res = eglInitialize(g_EGLDisplay, &major, &minor);
+	EGLBoolean res = eglInitialize(m_EGLDisplay, &major, &minor);
 	if (!res)
 	{
-		s3eDebugErrorShow(S3E_MESSAGE_CONTINUE, "eglInitialize failed");
+		//s3eDebugErrorShow(S3E_MESSAGE_CONTINUE, "eglInitialize failed");
+		FG_LOG::PrintError("eglInitialize failed");
 		return FG_FALSE;
 	}
-	eglGetConfigs(g_EGLDisplay, configList, FG_EGL_MAX_CONFIG, &numFound);
+	eglGetConfigs(m_EGLDisplay, configList, FG_EGL_MAX_CONFIG, &numFound);
 	if (!numFound)
 	{
-		s3eDebugErrorShow(S3E_MESSAGE_CONTINUE, "eglGetConfigs failed to find any configs");
+		//s3eDebugErrorShow(S3E_MESSAGE_CONTINUE, "eglGetConfigs failed to find any configs");
+		FG_LOG::PrintError("eglGetConfigs failed to find any configs");
 		return FG_FALSE;
 	}
 	int config = -1;
@@ -84,7 +98,7 @@ fgBool fgGfxMain::initGFX(void)
 	for (int i = 0; i < numFound; i++)
 	{
 		EGLint renderable = 0;
-		eglGetConfigAttrib(g_EGLDisplay, configList[i], EGL_RENDERABLE_TYPE, &renderable);
+		eglGetConfigAttrib(m_EGLDisplay, configList[i], EGL_RENDERABLE_TYPE, &renderable);
 		if (renderable & EGL_OPENGL_ES2_BIT)
 		{
 			config = i;
@@ -93,30 +107,53 @@ fgBool fgGfxMain::initGFX(void)
 	}
 	if (config == -1)
 	{
-		s3eDebugErrorShow(S3E_MESSAGE_CONTINUE, "No GLES2 configs reported.  Trying random config");
+		//s3eDebugErrorShow(S3E_MESSAGE_CONTINUE, "No GLES2 configs reported.  Trying random config");
+		FG_LOG::PrintError("No GLES2 configs reported.  Trying random config");
 		config = 0;
 	}
 	int version = s3eGLGetInt(S3E_GL_VERSION)>>8;
 	FG_LOG::PrintInfo("requesting GL version: %d\n", version);
 	FG_LOG::PrintInfo("choosing config: %d\n", config);
 	EGLint attribs[] = { EGL_CONTEXT_CLIENT_VERSION, version, EGL_NONE, };
-	g_EGLContext = eglCreateContext(g_EGLDisplay, configList[config], NULL, attribs);
-	if (!g_EGLContext)
+	m_EGLContext = eglCreateContext(m_EGLDisplay, configList[config], NULL, attribs);
+	if (!m_EGLContext)
 	{
-		s3eDebugErrorShow(S3E_MESSAGE_CONTINUE, "eglCreateContext failed");
+		//s3eDebugErrorShow(S3E_MESSAGE_CONTINUE, "eglCreateContext failed");
+		FG_LOG::PrintError("eglCreateContext failed");
 		return FG_FALSE;
 	}
 	version = s3eGLGetInt(S3E_GL_VERSION)>>8;
 	if (version != 2)
 	{
 		FG_LOG::PrintInfo("reported GL version: %d", version);
-		s3eDebugErrorShow(S3E_MESSAGE_CONTINUE, "This example requires GLES v2.x");
+		FG_LOG::PrintError("Required GLES v2.x");
+		//s3eDebugErrorShow(S3E_MESSAGE_CONTINUE, "Required GLES v2.x");
 		return FG_FALSE;
 	}
 	void* nativeWindow = s3eGLGetNativeWindow();
-	g_EGLSurface = eglCreateWindowSurface(g_EGLDisplay, configList[config], nativeWindow, NULL);
-	eglMakeCurrent(g_EGLDisplay, g_EGLSurface, g_EGLSurface, g_EGLContext);
+	m_EGLSurface = eglCreateWindowSurface(m_EGLDisplay, configList[config], nativeWindow, NULL);
+	eglMakeCurrent(m_EGLDisplay, m_EGLSurface, m_EGLSurface, m_EGLContext);
+	
+	glViewport(0,0,getScreenWidth(), getScreenHeight());
+	FG_LOG::PrintInfo("Screen BPP: %d", s3eSurfaceGetInt(S3E_SURFACE_PIXEL_TYPE) & S3E_SURFACE_PIXEL_SIZE_MASK);
+	FG_LOG::PrintInfo("Vendor : %s", (const char*)glGetString( GL_VENDOR ) );
+	FG_LOG::PrintInfo("Renderer : %s", (const char*)glGetString( GL_RENDERER ) );
+	FG_LOG::PrintInfo("Version : %s", (const char*)glGetString( GL_VERSION ) );
+	FG_LOG::PrintInfo("Shading Lang Version : %s", (const char*)glGetString( GL_SHADING_LANGUAGE_VERSION ) );
+
+	FG_LOG::PrintInfo("Extensions : %s\n", (const char*)glGetString( GL_EXTENSIONS ) );
+
+	if(!m_shaderMgr)
+		m_shaderMgr = new fgGfxShaderManager();
+	#if defined FG_USING_OPENGL_ES
+        glClearDepthf(1.0f);
+    #else
+        glClearDepth(1.0f);
+    #endif
+	glEnable(GL_DEPTH_TEST);
+	glDepthFunc(GL_LESS);
 	m_init = FG_TRUE;
+	FG_LOG::PrintDebug("END: <<< fgGfxMain::initGFX();");
 	return FG_TRUE;
 #elif defined FG_USING_MARMALADE_IWGL
 	// #FIXME ! m_init = FG_TRUE
@@ -131,17 +168,17 @@ void fgGfxMain::closeGFX(void)
 {
 	if(m_init) 
 	{
-		m_resourceManager = NULL;
+		m_resourceMgr = NULL;
 		
 #if defined FG_USING_MARMALADE_EGL
-		if (g_EGLDisplay)
+		if (m_EGLDisplay)
 		{
-			eglMakeCurrent(g_EGLDisplay, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
-			eglDestroySurface(g_EGLDisplay, g_EGLSurface);
-			eglDestroyContext(g_EGLDisplay, g_EGLContext);
+			eglMakeCurrent(m_EGLDisplay, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
+			eglDestroySurface(m_EGLDisplay, m_EGLSurface);
+			eglDestroyContext(m_EGLDisplay, m_EGLContext);
 		}
-		eglTerminate(g_EGLDisplay);
-		g_EGLDisplay = 0;
+		eglTerminate(m_EGLDisplay);
+		m_EGLDisplay = NULL;
 #elif defined FG_USING_MARMALADE_IWGL
 		IwGLTerminate();
 #endif
@@ -268,24 +305,43 @@ fgBool fgGfxMain::setResourceManager(fgManagerBase *resourceManager)
 {
 	if(!resourceManager)
 		return FG_FALSE;
-	if(m_textureManager) {
+	if(m_textureMgr) {
 		// #ERROR - already initialized ?
 		return FG_FALSE;
 	}
-	
-	m_textureManager = new fgTextureManager(resourceManager);
-	m_resourceManager = resourceManager;
+	m_textureMgr = new fgTextureManager(resourceManager);
+	m_resourceMgr = resourceManager;
 
 	// should initialize ?
 
-	return m_textureManager->initialize();
+	return m_textureMgr->initialize();
 }
 
 /*
  *
  */
-fgTextureManager *fgGfxMain::getTextureManager(void) const {
-	return m_textureManager;
+fgTextureManager *fgGfxMain::getTextureManager(void) const 
+{
+	return m_textureMgr;
+}
+
+/*
+ *
+ */
+fgGfxShaderManager *fgGfxMain::getShaderManager(void) const
+{
+	return m_shaderMgr;
+}
+
+/*
+ *
+ */
+fgBool fgGfxMain::preLoadShaders(void) const 
+{
+	if(!m_shaderMgr) {
+		return FG_FALSE;
+	}
+	return m_shaderMgr->preLoadShaders();
 }
 
 /*

@@ -18,9 +18,10 @@
 #include "Util/fgTag.h"
 #include "fgManagerBase.h"
 #include "Textures/fgTextureManager.h"
+#include "Shaders/fgGFXShaderManager.h"
 
 class fgGfxMain;
-#define FG_TAG_GFX_MAIN_NAME	"fgGfxMain"
+#define FG_TAG_GFX_MAIN_NAME	"GfxMain"
 #define FG_TAG_GFX_MAIN			FG_TAG_TYPE(fgGfxMain)
 FG_TAG_TEMPLATE_ID_AUTO(fgGfxMain, FG_TAG_GFX_MAIN_NAME);
 typedef FG_TAG_GFX_MAIN fgGfxMainTag;
@@ -41,17 +42,16 @@ public:
 	// 
 	fgGfxMain();
 	// 
-	//fgGfxMain();
-	// 
 	~fgGfxMain();
 
 	// 
 	fgBool setResourceManager(fgManagerBase *resourceManager);
 
-	// Init the whole GFX subsystem - set the screen and other
+	// Init the whole GFX subsystem - set the screen
 	fgBool initGFX(void);
 	// Close the subsystem - destroy the graphics context
 	void closeGFX(void);
+
 	// Swap the screen buffers
 	void swapBuffers(void);
 	// Return the screen height in pixels
@@ -74,14 +74,30 @@ public:
 	fgTextureManager *getTextureManager(void) const;
 	// 
 	fgBool releaseTextures(void);
+	//
+	fgGfxShaderManager *getShaderManager(void) const;
+	//
+	fgBool preLoadShaders(void) const;
 
 private:
+	/// 
+	fgTextureManager *m_textureMgr;
+	///
+	fgManagerBase *m_resourceMgr;
+	///
+	fgGfxShaderManager *m_shaderMgr;
+#if defined FG_USING_EGL
+	EGLSurface m_EGLSurface;
+	EGLDisplay m_EGLDisplay;
+	EGLContext m_EGLContext;
+#endif
+	// FIXME
+	int m_screenW;
+	// FIXME
+	int m_screenH;
 	// 
 	fgBool m_init;
-	// 
-	fgTextureManager *m_textureManager;
-	// 
-	fgManagerBase *m_resourceManager;
+	
 };
 
 #endif /* _FG_GFX_MAIN_H_ */

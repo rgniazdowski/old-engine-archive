@@ -13,29 +13,38 @@
 #include "fgCommon.h"
 #include "fgResourceManager.h"
 #include "fgResourceErrorCodes.h"
+#include "fgResourceFactory.h"
+
 #include <queue>
 
 #include "Util/fgDirent.h"
 #include "Util/fgPath.h"
 #include "fgLog.h"
 
-template <>
-bool fgSingleton<fgResourceManager>::instanceFlag = false;
-
-template <>
-fgResourceManager *fgSingleton<fgResourceManager>::instance = NULL;
-
 /*
  *
  */
 fgResourceManager::fgResourceManager() :
+	m_resourceFactory(NULL),
 	m_nCurrentUsedMemory(0),
 	m_nMaximumMemory(0),
 	m_bResourceReserved(FG_FALSE)
 {
-	m_resourceHandlesMgr.releaseAllHandles();
-	m_currentResource = getRefResourceVector().end();
+	m_currentResource = getRefDataVector().end();
 	m_resourceGroupHandles.clear_optimised();
+}
+
+/*
+ *
+ */
+fgResourceManager::fgResourceManager(fgResourceFactory *resourceFactory) :
+	m_nCurrentUsedMemory(0),
+	m_nMaximumMemory(0),
+	m_bResourceReserved(FG_FALSE)
+{
+	m_currentResource = getRefDataVector().end();
+	m_resourceGroupHandles.clear_optimised();
+	setResourceFactory(resourceFactory);
 }
 
 /*
@@ -47,25 +56,43 @@ fgResourceManager::~fgResourceManager()
 }
 
 /*
+ *
+ */
+void fgResourceManager::setResourceFactory(fgResourceFactory *resourceFactory)
+{
+	if(resourceFactory)
+		m_resourceFactory = resourceFactory;
+}
+
+/*
+ *
+ */
+fgResourceFactory *fgResourceManager::getResourceFactory(void) const
+{
+	return m_resourceFactory;
+}
+
+
+/*
  * Reset local parameters
  */
 void fgResourceManager::clear(void)
 {
-	FG_LOG::PrintDebug(">>>>> fgResourceManager::clear(void); ALL"); // #TODELETE
-	m_resourceHandlesMgr.releaseAllHandles();
+	releaseAllHandles();
 	m_nCurrentUsedMemory = 0;
 	m_nMaximumMemory = 0;
 	m_bResourceReserved = FG_FALSE;
-	m_currentResource = getRefResourceVector().end();
+	m_currentResource = getRefDataVector().end();
 	m_resourceGroupHandles.clear_optimised();
 	m_init = FG_FALSE;
+	m_resourceFactory = NULL;
 }
 
 /*
  * This function will release all data and memory held by resource
  * manager itself (including resources)
  */
-void fgResourceManager::destroy(void)
+fgBool fgResourceManager::destroy(void)
 {
 	FG_LOG::PrintDebug(">>>>> fgResourceManager::destroy(void); GROUPS"); // #TODELETE
 	{
@@ -75,7 +102,7 @@ void fgResourceManager::destroy(void)
 		{
 			if((*itor).isNull())
 				continue;
-			fgResource *pResource = m_resourceHandlesMgr.dereference(*itor);
+			fgResource *pResource = dereference(*itor);
 			fgResourceGroup *pResourceGroup = (fgResourceGroup *)pResource;
 			if(!pResourceGroup || !pResource) {
 				continue;
@@ -86,28 +113,26 @@ void fgResourceManager::destroy(void)
 			while(!resInGrp.empty()) {
 				fgResource *resPtr = resInGrp.back();
 				resInGrp.pop_back();
-				destroyResource(resPtr);
+				destroyData(resPtr);
 			}
 			pResourceGroup->clear();
-			destroyResource(pResource);
+			destroyData(pResource);
 		}
 		m_resourceGroupHandles.clear_optimised();
 	}
 
 	FG_LOG::PrintDebug(">>>>> fgResourceManager::destroy(void); RESOURCES"); // #TODELETE
 	{
-		rmResVecItor begin = getRefResourceVector().begin();
-		rmResVecItor end = getRefResourceVector().end();
-		for(rmResVecItor itor = begin; itor != end ; ++itor) {
+		hmDataVecItor begin = getRefDataVector().begin();
+		hmDataVecItor end = getRefDataVector().end();
+		for(hmDataVecItor itor = begin; itor != end ; ++itor) {
 			if((*itor) == NULL)
 				continue;
-			destroyResource((*itor));
-			if(!m_resourceHandlesMgr.getUsedHandleCount())
-				break;
+			delete (*itor);
 		}
-		m_resourceHandlesMgr.releaseAllHandles();
-		clear();
+		fgResourceManager::clear();
 	}
+	return FG_TRUE;
 }
 
 /*
@@ -119,14 +144,18 @@ fgBool fgResourceManager::initialize(void)
 		// double initialization ?
 		return FG_FALSE;
 	}
+	if(!m_resourceFactory) {
+		// the resource factory is not set
+		return FG_FALSE;
+	}
 	m_init = FG_FALSE;
-	FG_LOG::PrintDebug(">>>>>> fgResourceManager::initialize(void); -> Initializing resource manager\nCurrent maximum memory: %.2f", (float)m_nMaximumMemory/1024.0/1024.0); // #TODELETE
+	FG_LOG::PrintDebug("Initializing resource manager\nCurrent maximum memory: %.2f", (float)m_nMaximumMemory/1024.0/1024.0); // #TODELETE
 	// First of all load any resource group configs,
 	// file extension is *.rgrp and it's a xml file.
 	fgDirent *datadir = new fgDirent();
 	datadir->readDirectory(".\\");
 	const char *filename = NULL;
-	fgArrayVector<std::string> resGroupFiles;
+	fgStringVector resGroupFiles;
 	// #FIXME - well this looks kinda bad, probably loading
 	// resource groups files should look different - must be
 	// more universal - platform independent, check for
@@ -154,7 +183,7 @@ fgBool fgResourceManager::initialize(void)
 		// #FIXME - should resource manager hold separate array for res groups IDS ? oh my ...
 		FG_RHANDLE grpUniqueID;
 		filename = resGroupFiles[i].c_str();
-		fgResourceGroup *resGroup = new fgResourceGroup();
+		fgResourceGroup *resGroup = new fgResourceGroup(m_resourceFactory);
 		// #TODO this will not always look like this - requires full path (cross platform)
 		resGroup->setFilePath(filename); 
 		if(!resGroup->preLoadConfig()) {
@@ -168,13 +197,13 @@ fgBool fgResourceManager::initialize(void)
 		// for overallocation, they will not be purged if the
 		// resource group is still being used (and locked)
 		// Locking resource group - locks all the resources
-		insertResource(grpUniqueID, resGroup);
+		insertResource(resGroup->getRefHandle(), resGroup);
+		grpUniqueID = resGroup->getHandle();
 		// There is a separate holder for resource group
 		insertResourceGroup(grpUniqueID, resGroup);
 		fgResourceGroup::rgResVec& resInGrp = resGroup->getRefResourceFiles();
 		for(fgResourceGroup::rgResVecItor it = resInGrp.begin(); it != resInGrp.end(); it++) {
-			FG_RHANDLE resUniqueID;
-			insertResource(resUniqueID, (*it));
+			insertResource((*it)->getRefHandle(), (*it));
 		}
 		// This is really important - refresh array with resource handles
 		resGroup->refreshArrays();
@@ -282,31 +311,9 @@ fgBool fgResourceManager::goToNext(fgResourceType resType, fgQuality quality)
 fgBool fgResourceManager::insertResource(FG_RHANDLE& rhUniqueID, fgResource* pResource)
 {
 	if(!pResource) {
-		reportWarning(FG_ERRNO_RESOURCE_PARAMETER_NULL, FG_MSG_IN_FUNCTION);
 		return FG_FALSE;
 	}
-
-	if(m_resourceHandlesMgr.isDataManaged(pResource)) {
-		reportError(FG_ERRNO_RESOURCE_ALREADY_MANAGED, FG_MSG_IN_FUNCTION);
-		return FG_FALSE;
-	}
-
-	if(!pResource->getHandle().isNull()) {
-		// Resource has already initialized handle
-		reportError(FG_ERRNO_RESOURCE_INITIALIZED_HANDLE, FG_MSG_IN_FUNCTION);
-		return FG_FALSE;
-	}
-	// Acquire next valid resource handle
-	// Insert the resource into the current catalog
-	if(!m_resourceHandlesMgr.acquireHandle(rhUniqueID, pResource)) {
-		// Could not aquire handle for the resource
-		reportError(FG_ERRNO_RESOURCE_ACQUIRE_HANDLE, FG_MSG_IN_FUNCTION);
-		return FG_FALSE;
-	}
-	pResource->setResourceHandle(rhUniqueID);
-	if(!m_resourceHandlesMgr.setupName(pResource->getResourceName(), rhUniqueID)) {
-		// Could not setup handle string tag/name for the resource
-		reportError(FG_ERRNO_RESOURCE_SETUP_HANDLE_NAME, FG_MSG_IN_FUNCTION);
+	if(!insert(rhUniqueID, pResource, pResource->getName())) {
 		return FG_FALSE;
 	}
 	// Get the memory and add it to the catalog total.  Note that we only have
@@ -328,12 +335,7 @@ fgBool fgResourceManager::insertResource(FG_RHANDLE& rhUniqueID, fgResource* pRe
  */
 fgBool fgResourceManager::insertResourceGroup(FG_RHANDLE rhUniqueID, fgResource* pResource)
 {
-	if(!pResource) {
-		reportWarning(FG_ERRNO_RESOURCE_PARAMETER_NULL, FG_MSG_IN_FUNCTION);
-		return FG_FALSE;
-	}
-	if(!m_resourceHandlesMgr.isHandleValid(rhUniqueID)) {
-		reportError(FG_ERRNO_RESOURCE_GROUP_HANDLE_INVALID, FG_MSG_IN_FUNCTION);
+	if(!fgDataManagerBase::isManaged(pResource)) {
 		return FG_FALSE;
 	}
 
@@ -348,32 +350,27 @@ fgBool fgResourceManager::insertResourceGroup(FG_RHANDLE rhUniqueID, fgResource*
 /*
  * Removes an object completely from the manager.
  */
-fgBool fgResourceManager::removeResource(FG_RHANDLE rhUniqueID)
+fgBool fgResourceManager::remove(FG_RHANDLE rhUniqueID)
 {
-	fgResource *pResource = m_resourceHandlesMgr.dereference(rhUniqueID);
-	if(!pResource) {
-		// Could not find resource to remove, handle is invalid
-		reportError(FG_ERRNO_RESOURCE_NOT_FOUND_INVALID_HANDLE, FG_MSG_IN_FUNCTION);		
-		return FG_FALSE;
-	}
-	return removeResource(pResource);
+	return fgResourceManager::remove(fgDataManagerBase::get(rhUniqueID));
+}
+
+/*
+ * Removes an object completely from the manager.
+ */
+fgBool fgResourceManager::remove(std::string& nameTag)
+{
+	return fgResourceManager::remove(fgDataManagerBase::get(nameTag));
 }
 
 /*
  * Removes an object completely from the manager.
  * Does not free memory (held by the allocated object).
  */
-fgBool fgResourceManager::removeResource(fgResource* pResource)
+fgBool fgResourceManager::remove(fgResource* pResource)
 {
-	if(!pResource) {
-		reportWarning(FG_ERRNO_RESOURCE_PARAMETER_NULL, FG_MSG_IN_FUNCTION);
+	if(!fgDataManagerBase::isManaged(pResource))
 		return FG_FALSE;
-	}
-	if(!m_resourceHandlesMgr.isHandleValid(pResource->getHandle())) {
-		// The handle of the resource is invalid, this resource is not managed
-		reportError(FG_ERRNO_RESOURCE_HANDLE_INVALID, FG_MSG_IN_FUNCTION);
-		return FG_FALSE;
-	}
 	// if the resource was found, check to see that it's not locked
 	if(pResource->isLocked()) {
 		// Can't remove a locked resource
@@ -382,39 +379,33 @@ fgBool fgResourceManager::removeResource(fgResource* pResource)
 	}
 	// Get the memory and subtract it from the manager total
 	removeMemory(pResource->getSize());
-	m_resourceHandlesMgr.releaseHandle(pResource->getHandle());
+	releaseHandle(pResource->getHandle());
 	return FG_TRUE;
 }
 
 /*
  * Disposes of the resource (frees memory) - does not remove resource from the manager
  */
-fgBool fgResourceManager::disposeResource(FG_RHANDLE rhUniqueID)
+fgBool fgResourceManager::dispose(FG_RHANDLE rhUniqueID)
 {
-	// try to find the resource with the specified id
-	fgResource *pResource = m_resourceHandlesMgr.dereference(rhUniqueID);
-	if(!pResource) {
-		// Could not find resource to remove, handle is invalid
-		reportError(FG_ERRNO_RESOURCE_NOT_FOUND_INVALID_HANDLE, FG_MSG_IN_FUNCTION);
-		return FG_FALSE;
-	}
-	return disposeResource(pResource);
+	return dispose(fgDataManagerBase::get(rhUniqueID));
 }
 
 /*
  * Disposes of the resource (frees memory) - does not remove resource from the manager
  */
-fgBool fgResourceManager::disposeResource(fgResource* pResource)
+fgBool fgResourceManager::dispose(std::string& nameTag)
 {
-	if(!pResource) {
-		reportWarning(FG_ERRNO_RESOURCE_PARAMETER_NULL, FG_MSG_IN_FUNCTION);
+	return dispose(fgDataManagerBase::get(nameTag));
+}
+
+/*
+ * Disposes of the resource (frees memory) - does not remove resource from the manager
+ */
+fgBool fgResourceManager::dispose(fgResource* pResource)
+{
+	if(!fgDataManagerBase::isManaged(pResource))
 		return FG_FALSE;
-	}
-	if(!m_resourceHandlesMgr.isHandleValid(pResource->getHandle())) {
-		// The handle of the resource is invalid, this resource is not managed
-		reportError(FG_ERRNO_RESOURCE_HANDLE_INVALID, FG_MSG_IN_FUNCTION);
-		return FG_FALSE;
-	}
 	// if the resource was found, check to see that it's not locked
 	if(pResource->isLocked()) {
 		// Can't remove a locked resource
@@ -435,50 +426,15 @@ fgBool fgResourceManager::disposeResource(fgResource* pResource)
 }
 
 /*
- * Destroys an object and deallocates it's memory. First resource is removed
- * from the resource managers map, existing rhandles will become invalid
- * regardless of the usage in the program - however if the reference count is
- * not zero the resource wont be removed and destroyed
- */
-fgBool fgResourceManager::destroyResource(fgResource* pResource)
-{
-	if(!removeResource(pResource)) {
-		reportError(FG_ERRNO_RESOURCE_REMOVE);
-		return FG_FALSE;
-	}
-	delete pResource;
-	return FG_TRUE;
-}
-
-/*
- * Destroys an object and deallocates it's memory. First resource is removed
- * from the resource managers map, existing rhandles will become invalid
- * regardless of the usage in the program - however if the reference count is
- * not zero the resource wont be removed and destroyed
- */
-fgBool fgResourceManager::destroyResource(FG_RHANDLE rhUniqueID)
-{
-	fgResource *pResource = m_resourceHandlesMgr.dereference(rhUniqueID);
-	if(!removeResource(rhUniqueID)) {
-		reportError(FG_ERRNO_RESOURCE_REMOVE);
-		return FG_FALSE;
-	}
-	delete pResource;
-	return FG_TRUE;
-}
-
-/*
  * Get the resource pointer (object) via resource handle ID
  * Using GetResource tells the manager that you are about to access the
  * object.  If the resource has been disposed, it will be recreated
  * before it has been returned.
  */
-fgResource* fgResourceManager::getResource(FG_RHANDLE rhUniqueID)
+fgResource* fgResourceManager::get(FG_RHANDLE rhUniqueID)
 {
-	fgResource *pResource = m_resourceHandlesMgr.dereference(rhUniqueID);
+	fgResource *pResource = fgDataManagerBase::get(rhUniqueID);
 	if(!pResource) {
-		// Could not find resource to remove, handle is invalid
-		reportError(FG_ERRNO_RESOURCE_NOT_FOUND_INVALID_HANDLE, FG_MSG_IN_FUNCTION);
 		return NULL;
 	}
 	// You may need to add your own OS dependent method of getting
@@ -510,15 +466,10 @@ fgResource* fgResourceManager::getResource(FG_RHANDLE rhUniqueID)
  * object.  If the resource has been disposed, it will be recreated
  * before it has been returned.
  */
-fgResource* fgResourceManager::getResource(std::string& nameTag)
+fgResource* fgResourceManager::get(std::string& nameTag)
 {
-	if(nameTag.empty()) {
-		reportWarning(FG_ERRNO_RESOURCE_NAME_TAG_EMPTY, FG_MSG_IN_FUNCTION);
-		return NULL;
-	}
-	fgResource *pResource = m_resourceHandlesMgr.dereference(nameTag);
+	fgResource *pResource = fgDataManagerBase::get(nameTag);
 	if(!pResource) {
-		reportError(FG_ERRNO_RESOURCE_NAME_TAG_INVALID, FG_MSG_IN_FUNCTION);
 		return NULL;
 	}
 	// You may need to add your own OS dependent method of getting
@@ -553,15 +504,7 @@ fgResource* fgResourceManager::getResource(std::string& nameTag)
  */
 fgResource* fgResourceManager::lockResource(FG_RHANDLE rhUniqueID)
 {
-	if(FG_IS_INVALID_HANDLE(rhUniqueID)) {
-		reportWarning(FG_ERRNO_RESOURCE_PARAMETER_NULL);
-		return NULL;
-	}
-	fgResource *pResource = m_resourceHandlesMgr.dereference(rhUniqueID);
-	if(!pResource) {
-		reportError(FG_ERRNO_RESOURCE_NOT_FOUND_INVALID_HANDLE);
-		return NULL;
-	}
+	fgResource *pResource = fgDataManagerBase::get(rhUniqueID);
 	lockResource(pResource);
 	// return the object pointer
 	return pResource;
@@ -572,13 +515,7 @@ fgResource* fgResourceManager::lockResource(FG_RHANDLE rhUniqueID)
  */
 fgBool fgResourceManager::lockResource(fgResource *pResource)
 {
-	if(!pResource) {
-		reportWarning(FG_ERRNO_RESOURCE_PARAMETER_NULL, FG_MSG_IN_FUNCTION);
-		return FG_FALSE;
-	}
-	if(FG_IS_INVALID_HANDLE(pResource->getHandle())
-		|| !m_resourceHandlesMgr.isHandleValid(pResource->getHandle())) {
-			reportError(FG_ERRNO_RESOURCE_HANDLE_INVALID, FG_MSG_IN_FUNCTION);
+	if(!fgDataManagerBase::isManaged(pResource)) {
 		return FG_FALSE;
 	}
 	// increment the object's count
@@ -604,15 +541,7 @@ fgBool fgResourceManager::lockResource(fgResource *pResource)
  */
 fgResource* fgResourceManager::unlockResource(FG_RHANDLE rhUniqueID)
 {
-	if(FG_IS_INVALID_HANDLE(rhUniqueID)) {
-		reportWarning(FG_ERRNO_RESOURCE_PARAMETER_NULL, FG_MSG_IN_FUNCTION);
-		return NULL;
-	}
-	fgResource *pResource = m_resourceHandlesMgr.dereference(rhUniqueID);
-	if(!pResource) {
-		reportError(FG_ERRNO_RESOURCE_NOT_FOUND_INVALID_HANDLE, FG_MSG_IN_FUNCTION);
-		return NULL;
-	}
+	fgResource *pResource = fgDataManagerBase::get(rhUniqueID);
 	pResource->Unlock();
 	return pResource;
 }
@@ -622,13 +551,7 @@ fgResource* fgResourceManager::unlockResource(FG_RHANDLE rhUniqueID)
  */
 fgBool fgResourceManager::unlockResource(fgResource *pResource)
 {
-	if(!pResource) {
-		reportWarning(FG_ERRNO_RESOURCE_PARAMETER_NULL, FG_MSG_IN_FUNCTION);
-		return FG_FALSE;
-	}
-	if(FG_IS_INVALID_HANDLE(pResource->getHandle())
-		|| !m_resourceHandlesMgr.isHandleValid(pResource->getHandle())) {
-		reportError(FG_ERRNO_RESOURCE_HANDLE_INVALID, FG_MSG_IN_FUNCTION);
+	if(!fgDataManagerBase::isManaged(pResource)) {
 		return FG_FALSE;
 	}
 	if(pResource->getReferenceCount() == 0) {
@@ -640,34 +563,13 @@ fgBool fgResourceManager::unlockResource(fgResource *pResource)
 }
 
 /*
- * This function can be also used to check if given resource is managed
- */
-fgBool fgResourceManager::isResourceManaged(fgResource* pResource)
-{
-	if(!pResource) {
-		reportWarning(FG_ERRNO_RESOURCE_PARAMETER_NULL, FG_MSG_IN_FUNCTION);
-		return FG_FALSE;
-	}
-	if(FG_IS_INVALID_HANDLE(pResource->getHandle())
-		|| !m_resourceHandlesMgr.isHandleValid(pResource->getHandle())) {
-			reportError(FG_ERRNO_RESOURCE_HANDLE_INVALID, FG_MSG_IN_FUNCTION);
-		return FG_FALSE;
-	}
-	if(!m_resourceHandlesMgr.isDataManaged(pResource)) {
-		reportWarning(FG_ERRNO_RESOURCE_NOT_MANAGED, FG_MSG_IN_FUNCTION);
-		return FG_FALSE;
-	}
-	return pResource->getHandle();
-}
-
-/*
  * Refresh allocated memory based on managed resources
  */
 void fgResourceManager::refreshMemory(void)
 {
 	resetMemory();
-	rmResVecItor begin = getRefResourceVector().begin(), end = getRefResourceVector().end();
-	for(rmResVecItor itor = begin; itor != end; ++itor) {
+	hmDataVecItor begin = getRefDataVector().begin(), end = getRefDataVector().end();
+	for(hmDataVecItor itor = begin; itor != end; ++itor) {
 		addMemory((*itor)->getSize());
 	}
 }
@@ -686,11 +588,11 @@ fgBool fgResourceManager::checkForOverallocation(void)
 		resetMemory();
 		// create a temporary priority queue to store the managed items
 		std::priority_queue<fgResource*, std::vector<fgResource*>, fgPtrGreater<fgResource*> > PriQueue;
-		rmResVecItor begin = getRefResourceVector().begin(), end = getRefResourceVector().end();
+		hmDataVecItor begin = getRefDataVector().begin(), end = getRefDataVector().end();
 
 		// insert copies of all the resource pointers into the priority queue, but
 		// exclude those that are current disposed or are locked
-		for(rmResVecItor itor = begin; itor != end; ++itor)
+		for(hmDataVecItor itor = begin; itor != end; ++itor)
 		{
 			addMemory((*itor)->getSize());
 			if(!(*itor)->isDisposed() && !(*itor)->isLocked())

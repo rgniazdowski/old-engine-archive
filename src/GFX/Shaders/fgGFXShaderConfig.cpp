@@ -9,6 +9,7 @@
 
 #include "fgGFXShaderConfig.h"
 #include "GFX/fgGFXErrorCodes.h"
+#include "fgLog.h"
 #include "Util/fgPath.h"
 #include "Util/fgStrings.h"
 
@@ -35,7 +36,7 @@ fgGfxShaderConfig::fgGfxShaderConfig(const char *filePath)
  */
 fgGfxShaderConfig::~fgGfxShaderConfig()
 {
-	printf("fgGfxShaderConfig::~fgGfxShaderConfig()\n");
+	FG_LOG::PrintInfo("fgGfxShaderConfig::~fgGfxShaderConfig()\n");
 	clearAll();
 }
 
@@ -64,7 +65,7 @@ void fgGfxShaderConfig::clearAll(void)
  */
 fgBool fgGfxShaderConfig::load(const char *filePath, fgGfxShadingLanguageVersion SLver)
 {
-	//fgGfxShaderConfig::clearAll();
+	fgGfxShaderConfig::clearAll();
 	if(!fgConfig::load(filePath)) {
 		reportError(FG_ERRNO_GFX_SHADER_FAIL_CFG_LOAD);
 		return FG_FALSE;
@@ -113,7 +114,7 @@ fgBool fgGfxShaderConfig::_parseInclude(fgCfgSection *_includeSection)
 	unsigned short _n = 0;
 	fgCfgParameter *param = _includeSection->getParameter("list", FG_CFG_PARAMETER_STRING);
 	if(!param) return FG_FALSE;
-	fgArrayVector<std::string> _incVec;
+	fgVector<std::string> _incVec;
 	std::string _tmp = param->string;
 	fgStrings::split(_tmp, ',', _incVec);
 	for(int i=0;i<(int)_incVec.size();i++) {
@@ -170,7 +171,6 @@ fgBool fgGfxShaderConfig::_parseData(fgGfxShadingLanguageVersion SLver)
 		reportError(FG_ERRNO_GFX_SHADER_WRONG_CFG_TYPE);
 		return FG_FALSE;
 	}
-	_dumpAllParameters(); // #TODELETE
 	
 	fgCfgSection *mainSection = NULL;
 	if(m_configType == FG_GFX_SHADER_CONFIG_PROGRAM) {
@@ -205,12 +205,14 @@ fgBool fgGfxShaderConfig::_parseData(fgGfxShadingLanguageVersion SLver)
 		return FG_FALSE;
 	} else if(!slVersionSection->parametersMap.size()) {
 		// there is such section but it does not provide the name of the valid configuration
+		reportError(FG_ERRNO_GFX_SHADER_WRONG_PARAM);
 		return FG_FALSE;
 	}
 	// Get the name of the configuration based on shading language version
 	{
 		fgCfgParameter *param = slVersionSection->getParameter("configuration", FG_CFG_PARAMETER_STRING);
 		if(!param) {
+			reportError(FG_ERRNO_GFX_SHADER_WRONG_PARAM);
 			return FG_FALSE;
 		}
 		m_selectedConfigName = param->string;
@@ -250,11 +252,11 @@ fgBool fgGfxShaderConfig::_parseData(fgGfxShadingLanguageVersion SLver)
 		// Parse defines
 		std::string _tmp;
 		_tmp.append(shortPrefix).append(".Defines");
-		std::string _tmp2 = _tmp;
 		_parseDefines(getSection(_tmp));
-		_tmp2.append(".").append(m_selectedConfigName);
-		_parseDefines(getSection(_tmp2));
-		_tmp.clear(); _tmp2.clear();
+		_tmp.clear();
+		_tmp.append(shortPrefix).append(".Defines.").append(m_selectedConfigName);
+		_parseDefines(getSection(_tmp));
+		_tmp.clear(); 
 
 		// parse includes
 		_tmp.append(shortPrefix).append(".Include");
@@ -272,7 +274,7 @@ fgBool fgGfxShaderConfig::_parseData(fgGfxShadingLanguageVersion SLver)
 			reportError(FG_ERRNO_GFX_SHADER_NO_FILE_SECTION);
 			return FG_FALSE;
 		}
-		fgArrayVector<std::string> _helperVec;
+		fgVector<std::string> _helperVec;
 		fgBool foundQuality = FG_FALSE, foundFile = FG_FALSE;
 		if((param = cfgSpecSection->getParameter("quality", FG_CFG_PARAMETER_STRING)) != NULL) {
 			std::string _q_vec = param->string;
@@ -329,6 +331,8 @@ fgBool fgGfxShaderConfig::_parseData(fgGfxShadingLanguageVersion SLver)
 					reportWarning(FG_ERRNO_GFX_SHADER_WRONG_ATTRIBUTE);
 					continue;
 				}
+				// This will also set the proper location and data type
+				_bind.setType(_bind.type);
 				fgCfgParameter *_aname=NULL, *_aprecision=NULL;
 				_aname = _attributes[i]->getParameter("attributeName", FG_CFG_PARAMETER_STRING);
 				_aprecision = _attributes[i]->getParameter("precision", FG_CFG_PARAMETER_STRING);
@@ -432,8 +436,6 @@ fgBool fgGfxShaderConfig::_parseData(fgGfxShadingLanguageVersion SLver)
 		// specific configuration procedures for compute shader
 #endif
 	}
-	if(FG_BUILD_CONFIG.verboseLevel >= FG_VERBOSE_LVL_MEDIUM) {
-		reportSuccess(FG_ERRNO_GFX_OK, "Shader config loaded successfully");
-	}
+	reportSuccess(FG_ERRNO_GFX_OK, "Shader config loaded successfully");
 	return FG_TRUE;
 }

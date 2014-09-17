@@ -78,7 +78,7 @@ fgBool fgFontResource::create(void)
 	m_step = size / 16;
 	unsigned char *ptr = NULL;
 	
-	FG_LOG::PrintDebug("FONT CREATE 'Tex::ID=%s'; size=%dx%d; step=%d;", this->m_resourceName.c_str(), m_width, m_width, m_step);
+	FG_LOG::PrintDebug("FONT CREATE 'Tex::ID=%s'; size=%dx%d; step=%d;", this->m_nameTag.c_str(), m_width, m_width, m_step);
 
 	for(y=0, i=0; y<16; y++)
 	{

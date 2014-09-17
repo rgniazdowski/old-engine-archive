@@ -10,6 +10,7 @@
 #include "fgGFXShader.h"
 #include "GFX/fgGFXErrorCodes.h"
 #include "Util/fgMemory.h"
+#include "fgLog.h"
 
 /*
  *
@@ -83,7 +84,7 @@ void fgGfxShader::appendInclude(std::string & includeName)
 fgBool fgGfxShader::loadSource(void)
 {
 	fgFile::clearStatus();
-	if(m_filePath.empty()) {
+	if(getFilePath().empty()) {
 		reportWarning(FG_ERRNO_WRONG_PATH);
 		return FG_FALSE;
 	}
@@ -96,7 +97,7 @@ fgBool fgGfxShader::loadSource(void)
 		return FG_TRUE;
 	}
 
-	m_fileSource = fgFile::load();
+	m_fileSource = fgFile::load(getFilePath().c_str());
 	if(!m_fileSource) {
 		return FG_FALSE; // PROPER ERROR CODE
 	}
@@ -133,9 +134,8 @@ fgBool fgGfxShader::loadSource(void)
 
 fgBool fgGfxShader::loadSource(const char *path)
 {
-	if(!fgGfxShader::setFilePath(path)) {
-		return FG_FALSE;
-	}
+	setFilePath(path);
+	fgFile::setPath(path);
 	return loadSource();
 }
 
@@ -144,9 +144,8 @@ fgBool fgGfxShader::loadSource(const char *path)
  */
 fgBool fgGfxShader::loadSource(std::string & path)
 {
-	if(!fgGfxShader::setFilePath(path)) {
-		return FG_FALSE;
-	}
+	setFilePath(path);
+	fgFile::setPath(path);
 	return loadSource();
 }
 
@@ -187,19 +186,25 @@ fgBool fgGfxShader::compile(void)
 	fgFile::clearStatus();
 	if(!m_isSourceLoaded) {
 		if(!loadSource()) {
+			reportError(FG_ERRNO_EIO, "Failed to load shader source file.");
 			// Failed to load shader source
 			return FG_FALSE;
 		}
 	}
 	if(!create()) {
 		// Failed to create shader
+		FG_LOG::PrintError("Failed to create shader");
 		return FG_FALSE;
 	}
 	glShaderSource(m_gfxID, m_numSources, m_sources, NULL);
 	glCompileShader(m_gfxID);
-	_updateParams();
-	_updateLog();
-	return (fgBool)m_params[(fgGFXuint)FG_GFX_SHADER_COMPILE_STATUS];
+	s3eDeviceYield(0);
+	updateLog();
+	updateParams();
+	if(!m_params[FG_GFX_SHADER_COMPILE_STATUS]) {
+		FG_LOG::PrintError("GfxShader::compile()  failed -  %s", getFilePath().c_str());
+	}
+	return (fgBool)m_params[FG_GFX_SHADER_COMPILE_STATUS];
 }
 
 /*
@@ -210,9 +215,8 @@ fgBool fgGfxShader::compile(const char *path)
 	if(m_isSourceLoaded || m_fileSource) {
 		return FG_FALSE;
 	}
-	if(!fgGfxShader::setFilePath(path)) {
-		return FG_FALSE;
-	}
+	setFilePath(path);
+	fgFile::setPath(path);
 	return compile();
 }
 
@@ -224,9 +228,8 @@ fgBool fgGfxShader::compile(std::string & path)
 	if(m_isSourceLoaded || m_fileSource) {
 		return FG_FALSE;
 	}
-	if(!fgGfxShader::setFilePath(path)) {
-		return FG_FALSE;
-	}
+	setFilePath(path);
+	fgFile::setPath(path);
 	return compile();
 }
 
@@ -237,7 +240,7 @@ fgBool fgGfxShader::deleteShader(void)
 {
 	if(glIsShader(m_gfxID)) {
 		glDeleteShader(m_gfxID);
-		_updateParams();
+		updateParams();
 		//m_shaderGfxID = 0;
 		return FG_TRUE;
 	}
@@ -266,35 +269,4 @@ fgBool fgGfxShader::detach(fgGFXuint program)
 		return FG_TRUE;
 	}
 	return FG_FALSE;
-}
-
-/*
- *
- */
-fgBool fgGfxShader::setFilePath(std::string & path)
-{
-	if(path.empty()) {
-		return FG_FALSE;
-	}
-	if(!fgFile::exists(path.c_str())) {
-		reportError(FG_ERRNO_ENOENT);
-		return FG_FALSE;
-	}
-	setPath(path);
-	return FG_TRUE;
-}
-
-/*
- *
- */
-fgBool fgGfxShader::setFilePath(const char *path)
-{
-	if(!path)
-		return FG_FALSE;
-	if(!fgFile::exists(path)) {
-		reportError(FG_ERRNO_ENOENT);
-		return FG_FALSE;
-	}
-	setPath(path);
-	return FG_TRUE;
 }

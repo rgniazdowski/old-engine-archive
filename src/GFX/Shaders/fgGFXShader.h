@@ -15,24 +15,24 @@
 #include "Util/fgFile.h"
 #include <map>
 
-enum fgGfxShaderObjParamType {
-	FG_GFX_SHADER_TYPE				= GL_SHADER_TYPE,
-	FG_GFX_SHADER_DELETE_STATUS		= GL_DELETE_STATUS,
-	FG_GFX_SHADER_COMPILE_STATUS	= GL_COMPILE_STATUS,
-	FG_GFX_SHADER_INFO_LOG_LENGTH	= GL_INFO_LOG_LENGTH,
-	FG_GFX_SHADER_SOURCE_LENGTH		= GL_SHADER_SOURCE_LENGTH
-};
+typedef fgGFXuint fgGfxShaderObjParamType;
+
+#define	FG_GFX_SHADER_TYPE				GL_SHADER_TYPE
+#define	FG_GFX_SHADER_DELETE_STATUS		GL_DELETE_STATUS
+#define	FG_GFX_SHADER_COMPILE_STATUS	GL_COMPILE_STATUS
+#define	FG_GFX_SHADER_INFO_LOG_LENGTH	GL_INFO_LOG_LENGTH
+#define	FG_GFX_SHADER_SOURCE_LENGTH		GL_SHADER_SOURCE_LENGTH
 
 /*
  *
  */
-class fgGfxShader : protected fgGfxShaderBase, protected fgFile
+class fgGfxShader : public fgGfxShaderBase, protected fgFile
 {
 	friend class fgGfxShaderProgram;
 public:
-	typedef fgArrayVector<std::string>	defineStrVec;
+	typedef fgVector<std::string>	defineStrVec;
 	typedef defineStrVec::iterator		defineStrVecItor;
-	typedef fgArrayVector<std::string>	includeStrVec;
+	typedef fgVector<std::string>	includeStrVec;
 	typedef includeStrVec::iterator		includeStrVecItor;
 
 protected:
@@ -86,6 +86,8 @@ public:
 	fgBool compile(std::string & path);
 	//
 	fgBool deleteShader(void);
+	//
+	void clearAll(void);
 
 protected:
 	//
@@ -94,11 +96,6 @@ protected:
 	fgBool detach(fgGFXuint program);
 
 public:
-	//
-	fgBool setFilePath(std::string & path);
-	//
-	fgBool setFilePath(const char *path);
-
 	//
 	void setPrecision(fgGfxShaderPrecision precision) {
 		m_precision = precision;

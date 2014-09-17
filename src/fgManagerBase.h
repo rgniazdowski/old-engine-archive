@@ -10,30 +10,27 @@
 #ifndef _FG_MANAGER_BASE_H_
 #define _FG_MANAGER_BASE_H_
 
-#include "fgCommon.h"
-#include "fgStatusReporter.h"
-#include "Util/fgTag.h"
+#include "fgBool.h"
 
-class fgManagerBase;
-
-#define FG_TAG_MANAGER_BASE_NAME	"fgManagerBase"
-//#define FG_TAG_MANAGER_BASE_ID		20 //#FIXME - something automatic maybe?
-#define FG_TAG_MANAGER_BASE			FG_TAG_TYPE(fgManagerBase)
-
-//FG_TAG_TEMPLATE(fgManagerBase, FG_TAG_MANAGER_BASE_NAME, FG_TAG_MANAGER_BASE_ID);
-FG_TAG_TEMPLATE_ID_AUTO(fgManagerBase, FG_TAG_MANAGER_BASE_NAME);
-
-// Special handle type for manager base
-typedef FG_TAG_MANAGER_BASE fgManagerBaseTag;
-
-class fgManagerBase : public fgStatusReporter<fgManagerBaseTag> {
+/*
+ *
+ */
+class fgManagerBase
+{
 public:
+	// 
 	fgManagerBase() : m_init(FG_FALSE) {}
+	// 
 	virtual ~fgManagerBase() {}
-		
-	virtual void clear(void) = 0;
-	virtual void destroy(void) = 0;
 
+protected:
+	//
+	virtual void clear(void) = 0;
+
+public:
+	//
+	virtual fgBool destroy(void) = 0;
+	//
 	virtual fgBool initialize(void) = 0;
 protected:
 	fgBool m_init;

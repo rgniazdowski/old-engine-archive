@@ -15,15 +15,14 @@
 #include "fgGFXShaderBase.h"
 #include "fgGFXShaderConfig.h"
 
-#include "fgArrayVector.h"
-
 #include "Util/fgHandle.h"
 #include "Util/fgTag.h"
 #include "fgStatusReporter.h"
+#include "fgVector.h"
 
 class fgGfxShaderProgram;
 
-#define FG_TAG_GFX_SHADER_PROGRAM_NAME	"tag{fgGfxShaderProgram}"
+#define FG_TAG_GFX_SHADER_PROGRAM_NAME	"GfxShaderProgram"
 #define FG_TAG_GFX_SHADER_PROGRAM		FG_TAG_TYPE(fgGfxShaderProgram)
 
 FG_TAG_TEMPLATE_ID_AUTO(fgGfxShaderProgram, FG_TAG_GFX_SHADER_PROGRAM_NAME);
@@ -57,8 +56,9 @@ enum fgGfxProgramObjParamType {
 /*
  *
  */
-class fgGfxShaderProgram : protected fgGfxShaderBase, public fgStatusReporter<fgGfxShaderProgramTag> 
+class fgGfxShaderProgram : public fgGfxShaderBase, public fgStatusReporter<fgGfxShaderProgramTag> 
 {
+	friend class fgGfxShaderManager;
 protected:
 	enum 
 	{
@@ -119,11 +119,7 @@ protected:
 	///
 	attributeBindVec			m_attrBinds;
 	///
-	std::string					m_programName;
-	///
 	fgGfxShaderConfig*			m_config;
-	///
-	fgGfxShaderProgramHandle	m_handle;
 	///
 	fgBool						m_isPreLoaded;
 	///

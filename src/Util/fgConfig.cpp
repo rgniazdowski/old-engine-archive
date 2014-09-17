@@ -32,7 +32,6 @@ fgConfig::fgConfig(const char *filePath) : m_parser(NULL), m_writer(NULL)
  */
 fgConfig::~fgConfig()
 {
-	printf("fgConfig::~fgConfig()\n");
 	if(m_parser)
 		delete m_parser;
 	m_parser = NULL;
@@ -113,7 +112,6 @@ fgBool fgConfig::save(const char *filePath)
  */
 void fgConfig::clearAll(void)
 {
-	printf("fgConfig::clearAll(void)\n");
 	if(!m_sectionMap.empty()) {
 		m_filePath.clear();
 		fgCfgTypes::sectionMapItor it = m_sectionMap.begin(),

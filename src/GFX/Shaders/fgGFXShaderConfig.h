@@ -13,12 +13,11 @@
 #ifdef _FG_GFX_STD_INC_BLOCK__
 #error "FG_GFX_STD_INC_BLOCK constant is defined. Do not include GfxShaderConfig inside of Gfx Standard Include header."
 #endif
-
+#include "fgGFXShaderDefs.h"
+#include "fgStatusReporter.h"
+#include "Hardware/fgQualityTypes.h"
 #include "Util/fgConfig.h"
 #include "Util/fgTag.h"
-#include "fgStatusReporter.h"
-#include "fgGFXShaderDefs.h"
-#include "Hardware/fgQualityTypes.h"
 
 enum fgGfxShaderConfigType
 {
@@ -39,7 +38,7 @@ enum fgGfxShaderConfigType
 #define FG_GFX_SHADER_CONFIG_BASIC_SECTION_NAME		"ShaderConfig"
 
 class fgGfxShaderConfig;
-#define FG_TAG_GFX_SHADER_CONFIG_NAME	"tag{fgGfxShaderConfig}"
+#define FG_TAG_GFX_SHADER_CONFIG_NAME	"GfxShaderConfig"
 #define FG_TAG_GFX_SHADER_CONFIG		FG_TAG_TYPE(fgGfxShaderConfig)
 
 FG_TAG_TEMPLATE_ID_AUTO(fgGfxShaderConfig, FG_TAG_GFX_SHADER_CONFIG_NAME);
@@ -66,13 +65,13 @@ typedef FG_TAG_GFX_SHADER_CONFIG fgGfxShaderConfigTag;
 class fgGfxShaderConfig : protected fgConfig, public fgStatusReporter<fgGfxShaderConfigTag> 
 {
 public:
-	typedef fgArrayVector<fgGfxShaderType>		shaderTypeVec;
-	typedef fgArrayVector<fgGfxUniformBind>		shaderUniformBindVec;
-	typedef fgArrayVector<fgGfxAttributeBind>	shaderAttributeBindVec;
-	typedef fgArrayVector<std::string>			shaderIncludeNameVec;
-	typedef fgArrayVector<std::string>			shaderFileVec;
-	typedef fgArrayVector<fgQuality>			shaderQualityVec;
-	typedef fgArrayVector<fgGfxShaderConstantDef>	shaderConstantVec;
+	typedef fgVector<fgGfxShaderType>		shaderTypeVec;
+	typedef fgVector<fgGfxUniformBind>		shaderUniformBindVec;
+	typedef fgVector<fgGfxAttributeBind>	shaderAttributeBindVec;
+	typedef fgVector<std::string>			shaderIncludeNameVec;
+	typedef fgVector<std::string>			shaderFileVec;
+	typedef fgVector<fgQuality>			shaderQualityVec;
+	typedef fgVector<fgGfxShaderConstantDef>	shaderConstantVec;
 
 protected:
 	///

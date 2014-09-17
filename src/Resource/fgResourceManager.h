@@ -13,10 +13,11 @@
 #ifndef _FG_RESOURCE_MANAGER_H_
 #define _FG_RESOURCE_MANAGER_H_
 
-#include "fgSingleton.h"
-#include "fgManagerBase.h"
+#include "fgDataManagerBase.h"
 #include "fgResource.h"
 #include "fgResourceGroup.h"
+#include "fgResourceFactory.h"
+#include "Util/fgTag.h"
 #include "Util/fgHandleManager.h"
 
 #include <iostream>
@@ -25,38 +26,55 @@
 #define FG_RHANDLE fgResourceHandle
 #endif
 
-class fgTextureManager;
+class fgResourceManager;
+
+#define FG_TAG_RESOURCE_MANAGER_NAME	"ResourceMgr"
+//#define FG_TAG_MANAGER_BASE_ID		20 //#FIXME - something automatic maybe?
+#define FG_TAG_RESOURCE_MANAGER			FG_TAG_TYPE(fgResourceManager)
+
+//FG_TAG_TEMPLATE(fgResourceManager, FG_TAG_MANAGER_BASE_NAME, FG_TAG_MANAGER_BASE_ID);
+FG_TAG_TEMPLATE_ID_AUTO(fgResourceManager, FG_TAG_RESOURCE_MANAGER_NAME);
+
+// Special handle type for manager base
+typedef FG_TAG_RESOURCE_MANAGER fgResourceManagerTag;
 
 //
 // The resource manager handles all the external resources. It takes care of the memory
 // usage and destroys all unused data. Its very convinient as after pushing resource into
 // the manager there's no additional
 //
-class fgResourceManager : public fgManagerBase, public fgSingleton<fgResourceManager>
+class fgResourceManager : public fgDataManagerBase<fgResource*, fgResourceHandle, fgResourceManagerTag>
 {
-	friend class fgSingleton<fgResourceManager>;
 	friend class fgTextureManager;
 protected:
-	typedef fgHandleManager<fgResource*, FG_RHANDLE>	rmHandleManager;
-	typedef rmHandleManager::hmDataVec					rmResVec;
-	typedef rmHandleManager::hmDataVec::iterator		rmResVecItor;
-	typedef fgArrayVector<FG_RHANDLE>					rmHandleVec;
-	typedef rmHandleVec::iterator						rmHandleVecItor;
-private:
+	typedef fgVector<FG_RHANDLE>			rmHandleVec;
+	typedef rmHandleVec::iterator			rmHandleVecItor;
+
+public:
 	// Default constructor for resource manager
 	fgResourceManager();
+	// Constructor with default resource factory to be used within the resource manager
+	fgResourceManager(fgResourceFactory *resourceFactory);
 	// Default destructor for resource manager
 	virtual ~fgResourceManager();
+
+protected:
+	// Reset local parameters
+	void clear(void);
+
 public:
 	// This function will release all data and memory held by resource
 	// manager itself (including resources)
-	void destroy(void);
-	// Reset local parameters
-	void clear(void);
-public:
+	fgBool destroy(void);
 	// This will pre-load any required data
 	fgBool initialize(void);
 
+	// Set the default resource factory - this is mandatory 
+	// without factory set the resource manager will fail to initialize
+	void setResourceFactory(fgResourceFactory *resourceFactory);
+	//
+	fgResourceFactory *getResourceFactory(void) const;
+	
 	// --------------------------------------------------------------------------
 	// Memory management routines
 
@@ -74,7 +92,7 @@ public:
 
 	// Go to the begin of resource map iteration
 	void goToBegin(void) {
-		m_currentResource = getRefResourceVector().begin();
+		m_currentResource = getRefDataVector().begin();
 	}
 	// Get pointer to the current resource (based on iterator)
 	fgResource* getCurrentResource(void)	{
@@ -85,7 +103,7 @@ public:
 	}
 	// Is current pointer to resource valid?
 	fgBool isValid(void)	{
-		return ((m_currentResource != getRefResourceVector().end()) ? FG_TRUE : FG_FALSE);
+		return ((m_currentResource != getRefDataVector().end()) ? FG_TRUE : FG_FALSE);
 	}
 	// Go to the next resource (iterate to next)
 	fgBool goToNext() {
@@ -118,10 +136,6 @@ public:
 protected:
 	// Insert resource group into manager
 	fgBool insertResourceGroup(FG_RHANDLE rhUniqueID, fgResource* pResource);
-	// Get the reference to the resource map (protected)
-	rmResVec& getRefResourceVector(void) {
-		return m_resourceHandlesMgr.getRefDataVector();
-	}
 public:
 
 	// ! Important !
@@ -130,14 +144,18 @@ public:
 	// resource from the manager without handling the memory release properly
 
 	// Removes an object completely from the manager (does not free memory)
-	fgBool removeResource(fgResource* pResource);
+	virtual fgBool remove(fgResource* pResource);
 	// Removes an object completely from the manager (does not free memory)
-	fgBool removeResource(FG_RHANDLE rhUniqueID);
+	virtual fgBool remove(FG_RHANDLE rhUniqueID);
+	// Removes an object completely from the manager (does not free memory)
+	virtual fgBool remove(std::string& nameTag);
 
 	// Disposes of the resource (frees memory) - does not remove resource from the manager
-	fgBool disposeResource(fgResource* pResource);
+	fgBool dispose(fgResource* pResource);
 	// Disposes of the resource (frees memory) - does not remove resource from the manager
-	fgBool disposeResource(FG_RHANDLE rhUniqueID);
+	fgBool dispose(FG_RHANDLE rhUniqueID);
+	// Disposes of the resource (frees memory) - does not remove resource from the manager
+	fgBool dispose(std::string& nameTag);
 
 	// Destroy functions will release all the memory for the resource, delete
 	// the object, remove the resource from the manager - resource handle will
@@ -147,22 +165,17 @@ public:
 	// from the resource managers map, existing rhandles will become invalid
 	// regardless of the usage in the program - however if the reference count is
 	// not zero the resource wont be removed and destroyed
-	fgBool destroyResource(fgResource* pResource);
-	// Destroys an object and deallocates it's memory. First resource is removed
-	// from the resource managers map, existing rhandles will become invalid
-	// regardless of the usage in the program - however if the reference count is
-	// not zero the resource wont be removed and destroyed
-	fgBool destroyResource(FG_RHANDLE rhUniqueID);
+	//fgBool destroyResource(fgResource* pResource);
+	
+	// Using GetResource tells the manager that you are about to access the
+	// object.  If the resource has been disposed, it will be recreated
+	// before it has been returned.
+	fgResource* get(FG_RHANDLE rhUniqueID);
 
 	// Using GetResource tells the manager that you are about to access the
 	// object.  If the resource has been disposed, it will be recreated
 	// before it has been returned.
-	fgResource* getResource(FG_RHANDLE rhUniqueID);
-
-	// Using GetResource tells the manager that you are about to access the
-	// object.  If the resource has been disposed, it will be recreated
-	// before it has been returned.
-	fgResource* getResource(std::string& nameTag);
+	fgResource* get(std::string& nameTag);
 
 	// Locking the resource ensures that the resource does not get managed by
 	// the Resource Manager.  You can use this to ensure that a surface does not
@@ -182,9 +195,6 @@ public:
 	// Unlock the resource
 	fgBool unlockResource(fgResource *pResource);
 
-	// This function can be also used to check if given resource is managed
-	fgBool isResourceManaged(fgResource* pResource);
-
 	// This must be called when you wish the manager to check for discardable
 	// resources.  Resources will only be swapped out if the maximum allowable
 	// limit has been reached, and it will discard them from lowest to highest
@@ -202,24 +212,19 @@ protected:
 	// Substract given value from used memory counter
 	inline void removeMemory(size_t nMem)	{  m_nCurrentUsedMemory -= nMem;  }
 
-protected:
-	// Size of the current used memory by the managed resources
+private:	
+	/// Iterator to the current resource (used for browsing through the resources' map)
+	hmDataVecItor			m_currentResource;
+	/// Array holding handles to resource groups
+	rmHandleVec				m_resourceGroupHandles;
+	/// 
+	fgResourceFactory		*m_resourceFactory;
+	/// Size of the current used memory by the managed resources
 	size_t					m_nCurrentUsedMemory;
-	// Value of the maximum supported size of all managed resources
+	/// Value of the maximum supported size of all managed resources
 	size_t					m_nMaximumMemory;
-	// Is resources are reserved? Used for blocking overallocation check
+	/// Is resources are reserved? Used for blocking overallocation check
 	fgBool					m_bResourceReserved;
-	// Iterator to the current resource (used for browsing through the resources' map)
-	rmResVecItor	m_currentResource;
-
-	// Main resource handles manager (managed resources)
-	rmHandleManager	m_resourceHandlesMgr;
-	// Array holding handles to resource groups
-	rmHandleVec m_resourceGroupHandles;
-
 };
-
-// #FIXME - here we go again, with the singletons... :)
-#define FG_ResourceManager fgResourceManager::getInstance()
 
 #endif /* _FG_RESOURCE_MANAGER_H_ */

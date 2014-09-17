@@ -69,9 +69,10 @@ files
 	XML/fgXMLTypesWrap.h
 
 	["FlexiGame/BaseCode/Resources"]
+	Resource/fgDataManagerBase.h
+	Resource/fgDataObjectBase.h
 	Resource/fgResource.cpp
 	Resource/fgResource.h
-	Resource/fgResourceBase.h
 	Resource/fgResourceFactory.cpp
 	Resource/fgResourceFactory.h
 	Resource/fgResourceFactoryTypes.h

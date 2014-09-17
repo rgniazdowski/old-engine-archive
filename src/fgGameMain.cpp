@@ -14,30 +14,36 @@
 #include <cstdlib>
 #include <cstdio>
 #include <cmath>
-#include <ctime>
 #include <cstring>
 
 #if defined FG_USING_MARMALADE
 #include "Hardware/fgDeviceQuery.h"
 #endif // FG_USING_MARMALADE
 
-#include "GameLogic/fgGameLogic.h"
 #include "Util/fgSettings.h"
 #include "Util/fgConfig.h"
+#include "Util/fgTime.h"
+
+#include "GameLogic/fgGameLogic.h"
+#include "Resource/fgResourceManager.h"
+#include "Resource/fgResourceFactory.h"
+
 #include "Hardware/fgSensors.h"
 #include "Hardware/fgQualityManager.h"
 #include "Hardware/fgHardwareState.h"
+
 #include "GFX/fgGFXMain.h"
-#include "GUI/fgFontResource.h"
 #include "GFX/Textures/fgTextureManager.h"
 #include "GFX/Particles/fgParticleSystem.h"
+#include "GUI/fgFontResource.h"
+
 #include "Audio/fgSFXManager.h"
 #include "Event/fgEventManager.h"
 #include "Input/fgTouchReceiver.h"
 #include "XML/fgXMLParser.h"
-#include "Resource/fgResourceManager.h"
-#include "Resource/fgResourceFactory.h"
+
 #include "fgMessageSubsystem.h"
+#include "fgErrorCodes.h"
 
 /*
  * Default constructor for the Game Main object
@@ -45,9 +51,14 @@
 fgGameMain::fgGameMain() :
 	m_gfxMain(NULL),
 	m_settings(NULL),
-	m_mainConfig(NULL)
+	m_mainConfig(NULL),
+	m_resourceMgr(NULL),
+	m_resourceFactory(NULL)
 {
 	srand(time(NULL));
+	fgErrorCodes::registerAll();
+	fgTime::init();
+	FG_LOG::PrintDebug("fgGameMain::fgGameMain();");
 }
 
 /*
@@ -55,6 +66,7 @@ fgGameMain::fgGameMain() :
  */
 fgGameMain::~fgGameMain()
 {
+	FG_LOG::PrintDebug("BEGIN: fgGameMain::~fgGameMain();");
 	if(m_settings)
 		delete m_settings;
 	m_settings = NULL;
@@ -64,6 +76,14 @@ fgGameMain::~fgGameMain()
 	if(m_gfxMain)
 		delete m_gfxMain;
 	m_gfxMain = NULL;
+	if(m_resourceMgr)
+		delete m_resourceMgr;
+	m_resourceMgr = NULL;
+	if(m_resourceFactory)
+		delete m_resourceFactory;
+	m_resourceFactory = NULL;
+	fgErrorCodes::unregisterAll();
+	FG_LOG::PrintDebug("END: fgGameMain::~fgGameMain();");
 }
 
 /*
@@ -72,6 +92,7 @@ fgGameMain::~fgGameMain()
  */
 fgBool fgGameMain::initSubsystems(void)
 {
+	FG_HardwareState->deviceYield(0);	// #FIXME - device yield...
 	if(m_gfxMain)
 		return FG_FALSE;
 	m_gfxMain = new fgGfxMain();
@@ -81,42 +102,57 @@ fgBool fgGameMain::initSubsystems(void)
 		// FIXME
 		return FG_FALSE;
 	}
+	FG_HardwareState->deviceYield(0);	// #FIXME - device yield...
 #if defined FG_USING_MARMALADE
 	FG_DeviceQuery->computeDevice();
 #endif // FG_USING_MARMALADE
+
+	FG_HardwareState->deviceYield(0);	// #FIXME - device yield...
 
 	int w = m_gfxMain->getScreenWidth();
 	int h = m_gfxMain->getScreenHeight();
 
 	FG_HardwareState->setScreenDimensions(w, h);
+	FG_HardwareState->deviceYield(0);	// #FIXME - device yield...
 	FG_HardwareState->initDPI();
+	FG_HardwareState->deviceYield(0);	// #FIXME - device yield...
 
 	FG_QualityManager->determineQuality();
+	FG_HardwareState->deviceYield(0);	// #FIXME - device yield...
 
 	FG_EventManager->initialize();
+	FG_HardwareState->deviceYield(0);	// #FIXME - device yield...
 	FG_TouchReceiver->initialize();
+	FG_HardwareState->deviceYield(0);	// #FIXME - device yield...
 
-	FG_ResourceFactory->clear();
-	FG_ResourceFactory->registerResource(FG_RESOURCE_TEXTURE, &fgTextureResource::createResource);
-	FG_ResourceFactory->registerResource(FG_RESOURCE_FONT, &fgFontResource::createResource);
-	FG_ResourceFactory->registerResource(FG_RESOURCE_GROUP, &fgResourceGroup::createResource);
+	if(!m_resourceFactory)
+		m_resourceFactory = new fgResourceFactory();
+	else
+		m_resourceFactory->clear();
+	m_resourceFactory->registerResource(FG_RESOURCE_TEXTURE,	&fgTextureResource::createResource);
+	m_resourceFactory->registerResource(FG_RESOURCE_FONT,		&fgFontResource::createResource);
+	m_resourceFactory->registerResource(FG_RESOURCE_GROUP,		&fgResourceGroup::createResource);
+	m_resourceFactory->registerResource(FG_RESOURCE_3D_MODEL,	&fgGfxModelResource::createResource);
+	FG_HardwareState->deviceYield(0);	// #FIXME - device yield...
 	/* Useful for memory management
 	s3eMemoryGetInt(S3E_MEMORY_USED);
 	s3eMemoryGetInt(S3E_MEMORY_SIZE);
 	s3eMemoryGetInt(S3E_MEMORY_FREE);*/
 	// #FIXME - for linux/windows (non marmalade build) memory management would be useful, buckets anyone?
 	// #FIXME
+	m_resourceMgr = new fgResourceManager(m_resourceFactory);
 #ifdef FG_USING_MARMALADE
 	FG_LOG::PrintDebug("MARMALADE CURRENT HEAP MEMORY: TOTAL: %.3f, FREE: %.3f, USED: %.3f, LARGEST FREE BLOCK: %.3f\n",
 		(float)s3eMemoryGetInt(S3E_MEMORY_SIZE)/1024.0f/1024.0f, (float)s3eMemoryGetInt(S3E_MEMORY_FREE)/1024.0f/1024.0f, (float)s3eMemoryGetInt(S3E_MEMORY_USED)/1024.0f/1024.0f, (float)s3eMemoryGetInt(S3E_MEMORY_LFB)/1024.0f/1024.0f);
-	FG_ResourceManager->setMaximumMemory(s3eMemoryGetInt(S3E_MEMORY_FREE)-1024*1024*10); // minus 10MB for the structures and other overheads
-	FG_ResourceManager->initialize();
+	m_resourceMgr->setMaximumMemory(s3eMemoryGetInt(S3E_MEMORY_FREE)-1024*1024*10); // minus 10MB for the structures and other overheads
+	m_resourceMgr->initialize();
 #else
-    FG_ResourceManager->setMaximumMemory(128*1024*1024-1024*1024*10); // #FIXME #TODO
-    FG_ResourceManager->initialize();
+    m_resourceMgr->setMaximumMemory(128*1024*1024-1024*1024*10); // #FIXME #TODO
+    m_resourceMgr->initialize();
 #endif // FG_USING_MARMALADE
 
-	m_gfxMain->setResourceManager(FG_ResourceManager);
+	m_gfxMain->setResourceManager(m_resourceMgr);
+	FG_HardwareState->deviceYield(0);	// #FIXME - device yield...
 
 //	FG_GFX::setOrthoView(FG_OGL_ORTHO_ZNEAR_DEFAULT, FG_OGL_ORTHO_ZFAR_DEFAULT);
 //	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
@@ -147,13 +183,8 @@ fgBool fgGameMain::initSubsystems(void)
 	//glHint(GL_POINT_SMOOTH_HINT, GL_NICEST);
 #endif
 	// #FIXME - this is not a place where this should be
-	#if defined FG_USING_OPENGL_ES
-        glClearDepthf(1.0f);
-    #else
-        glClearDepth(1.0f);
-    #endif
-	glDepthFunc(GL_LESS);
-	glEnable(GL_DEPTH_TEST);
+	
+	FG_HardwareState->deviceYield(0);	// #FIXME - device yield...
 
 #if 0
 	fgConfig *config = new fgConfig("main.config.ini");
@@ -199,8 +230,7 @@ fgBool fgGameMain::loadResources(void)
  */
 fgBool fgGameMain::releaseResources(void)
 {
-	FG_ResourceManager->destroy();
-	return FG_TRUE;
+	return m_resourceMgr->destroy();
 }
 
 /*
@@ -213,7 +243,7 @@ fgBool fgGameMain::closeSybsystems(void)
 	// KILL ALL SINGLETONS
 	m_gfxMain->releaseTextures();
 
-	FG_ResourceManager->deleteInstance();
+	fgGameMain::releaseResources();
 	FG_HardwareState->deleteInstance();
 	FG_TouchReceiver->deleteInstance();
 	FG_EventManager->deleteInstance();
@@ -221,7 +251,6 @@ fgBool fgGameMain::closeSybsystems(void)
 	FG_DeviceQuery->deleteInstance();
 #endif // FG_USING_MARMALADE
 	FG_QualityManager->deleteInstance();
-	FG_ResourceFactory->deleteInstance();
 	FG_MessageSubsystem->deleteInstance();
 
 	m_gfxMain->closeGFX();
@@ -266,6 +295,7 @@ void fgGameMain::render(void)
  */
 void fgGameMain::update(void)
 {
+	fgTime::markTick();
 	FG_HardwareState->calculateDT();
 	FG_HardwareState->calculateFPS();
 

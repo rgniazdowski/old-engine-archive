@@ -8,12 +8,7 @@
  *******************************************************/
 
 #include "fgResourceFactory.h"
-
-template <>
-bool fgSingleton<fgResourceFactory>::instanceFlag = false;
-
-template <>
-fgResourceFactory *fgSingleton<fgResourceFactory>::instance = NULL;
+#include "fgLog.h"
 
 /*
  * Default empty constructor for Resource Factory object

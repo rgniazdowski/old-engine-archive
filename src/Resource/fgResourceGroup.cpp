@@ -10,6 +10,7 @@
 #include "fgResourceGroup.h"
 #include "fgResourceFactory.h"
 
+#include "fgLog.h"
 #include "Util/fgPath.h"
 #include "Util/fgConfig.h"
 #include "Util/fgStrings.h"
@@ -51,7 +52,7 @@ void fgResourceGroupContentHandler::endElement(const char *localName, fgXMLEleme
 	if(m_resourcePtr && (rtype != FG_RESOURCE_GROUP && rtype != FG_RESOURCE_INVALID)) {
 		m_resourcePtr->setPriority(m_curResPriority);
 		if(m_curResName)
-			m_resourcePtr->setResourceName(m_curResName);
+			m_resourcePtr->setName(m_curResName);
 		// ...then it can be added to the Resource Groups' list.
 		this->m_resourceGroup->getRefResourceFiles().push_back(m_resourcePtr);
 		m_resType = FG_RESOURCE_INVALID;
@@ -61,7 +62,7 @@ void fgResourceGroupContentHandler::endElement(const char *localName, fgXMLEleme
 		m_curResName = NULL;
 		m_curResPriority = FG_RES_PRIORITY_INVALID;
 	}
-	FG_LOG::PrintDebug("END ELEMENT: %s\n", localName);
+	//FG_LOG::PrintDebug("END ELEMENT: %s\n", localName);
 }
 
 /*
@@ -70,7 +71,7 @@ void fgResourceGroupContentHandler::endElement(const char *localName, fgXMLEleme
  */
 void fgResourceGroupContentHandler::startElement(const char *localName, fgXMLElement *elementPtr, fgXMLNodeType nodeType, fgXMLAttribute *firstAttribute, int depth)
 {
-	FG_LOG::PrintDebug("START ELEMENT: %s", localName);
+	//FG_LOG::PrintDebug("START ELEMENT: %s", localName);
 	// Sound
 	// Music
 	// 3DModel
@@ -98,7 +99,7 @@ void fgResourceGroupContentHandler::startElement(const char *localName, fgXMLEle
 			const char *attrname = attribute->Name();
 			const char *attrvalue = attribute->Value();
 			if(strncasecmp(attrname, "name", 4) == 0) {
-				m_resourceGroup->setResourceName(attrvalue);
+				m_resourceGroup->setName(attrvalue);
 			} else if(strncasecmp(attrname, "priority", 8) == 0) {
 				m_resourceGroup->setPriority(FG_RES_PRIORITY_FROM_TEXT(attrvalue));
 			}
@@ -147,7 +148,7 @@ void fgResourceGroupContentHandler::startElement(const char *localName, fgXMLEle
 		m_curResPriority = FG_RES_PRIORITY_FROM_TEXT(resPriorityStr);
 	if(m_resType == FG_RESOURCE_INVALID) {
 		if(m_resourcePtr && m_isFileQualityMapTag && resPath) {
-			FG_LOG::PrintDebug("Setting path: '%s', for resource: '%s', quality='%s'", resPath, m_curResName, resQualityStr);
+			//FG_LOG::PrintDebug("Setting path: '%s', for resource: '%s', quality='%s'", resPath, m_curResName, resQualityStr);
 			m_resourcePtr->setFilePath(resPath, FG_QUALITY_FROM_TEXT(resQualityStr));
 		}
 		return;
@@ -155,10 +156,10 @@ void fgResourceGroupContentHandler::startElement(const char *localName, fgXMLEle
 
 	// Check if the create function for current resource type is registered.
 	// Also ignore resource group type.
-	if(!FG_ResourceFactory->isRegistered(m_resType) || m_resType == FG_RESOURCE_GROUP) {
+	if(!m_resourceGroup->getResourceFactory()->isRegistered(m_resType) || m_resType == FG_RESOURCE_GROUP) {
 		m_resourcePtr = NULL;
 	} else {
-		m_resourcePtr = FG_ResourceFactory->createResource(m_resType);
+		m_resourcePtr = m_resourceGroup->getResourceFactory()->createResource(m_resType);
 		m_resourcePtr->setFilePath(resPath);
 	}
 }
@@ -170,8 +171,13 @@ void fgResourceGroupContentHandler::startElement(const char *localName, fgXMLEle
  */
 fgResourceGroup::fgResourceGroup()
 {
-	FG_LOG::PrintDebug("fgResourceGroup::fgResourceGroup(); constructor");
 	clear();
+}
+
+fgResourceGroup::fgResourceGroup(fgResourceFactory *resourceFactory)
+{
+	clear();
+	setResourceFactory(resourceFactory);
 }
 
 /*
@@ -179,8 +185,24 @@ fgResourceGroup::fgResourceGroup()
  */
 fgResourceGroup::~fgResourceGroup()
 {
-	FG_LOG::PrintDebug("fgResourceGroup::~fgResourceGroup(); destructor");
 	destroy();
+}
+
+/*
+ *
+ */
+void fgResourceGroup::setResourceFactory(fgResourceFactory *resourceFactory)
+{
+	if(resourceFactory)
+		m_resourceFactory = resourceFactory;
+}
+
+/*
+ *
+ */
+fgResourceFactory *fgResourceGroup::getResourceFactory(void) const
+{
+	return m_resourceFactory;
 }
 
 /*
@@ -188,11 +210,11 @@ fgResourceGroup::~fgResourceGroup()
  */
 void fgResourceGroup::clear(void)
 {
-	FG_LOG::PrintDebug("fgResourceGroup::clear();");
 	fgResource::clear();
 	m_rHandles.clear_optimised();
 	m_resourceFiles.clear_optimised();
 	m_resType = FG_RESOURCE_GROUP;
+	m_resourceFactory = NULL;
 }
 
 /*
@@ -200,7 +222,6 @@ void fgResourceGroup::clear(void)
  */
 fgBool fgResourceGroup::create(void)
 {
-	FG_LOG::PrintDebug("fgResourceGroup::create();");
 	if(m_resourceFiles.empty())
 		return FG_FALSE;
 	fgBool status = FG_TRUE;
@@ -228,7 +249,7 @@ void fgResourceGroup::destroy(void)
  */
 fgBool fgResourceGroup::recreate(void)
 {
-	FG_LOG::PrintDebug("fgResourceGroup::recreate();");
+	//FG_LOG::PrintDebug("fgResourceGroup::recreate();");
 	if(m_resourceFiles.empty())
 		return FG_FALSE;
 	fgBool status = FG_TRUE;
@@ -245,7 +266,7 @@ fgBool fgResourceGroup::recreate(void)
  */
 void fgResourceGroup::dispose(void)
 {
-	FG_LOG::PrintDebug("fgResourceGroup::~dispose();");
+	//FG_LOG::PrintDebug("fgResourceGroup::~dispose();");
 	if(m_resourceFiles.empty())
 		return;
 	for(rgResVecItor it = m_resourceFiles.begin(); it != m_resourceFiles.end(); it++) {
@@ -273,6 +294,9 @@ fgBool fgResourceGroup::isDisposed(void) const
  */
 fgBool fgResourceGroup::_parseIniConfig(void)
 {
+	if(!m_resourceFactory) {
+		return FG_FALSE;
+	}
 	if(m_filePath.empty())
 		return FG_FALSE;
 	fgConfig *config = new fgConfig();
@@ -292,9 +316,9 @@ fgBool fgResourceGroup::_parseIniConfig(void)
 			fgCfgParameter *param = NULL;
 			if((param = section->getParameter("name")) != NULL) {
 				if(param->type == FG_CFG_PARAMETER_STRING)
-					setResourceName(param->string);
+					setName(param->string);
 
-				printf("RESOURCE GROUP NAME: %s\n", param->string);
+				//FG_LOG::PrintInfo("RESOURCE GROUP NAME: %s\n", param->string);
 			} else {
 			}
 			if((param = section->getParameter("priority")) != NULL) {
@@ -311,15 +335,14 @@ fgBool fgResourceGroup::_parseIniConfig(void)
 			fgQuality quality = FG_QUALITY_UNIVERSAL;
 			fgResPriorityType priority = FG_RES_PRIORITY_LOW;
 			fgBool isMapped = FG_FALSE;
-			fgArrayVector<fgQuality> qualityVec;
-			fgArrayVector<std::string> pathVec;
-			fgArrayVector<std::string> _helperVec;
+			fgVector<fgQuality> qualityVec;
+			fgVector<std::string> pathVec;
+			fgVector<std::string> _helperVec;
 
 			/// Get the resource name
 			if((param = section->getParameter("name")) != NULL) {
 				if(param->type == FG_CFG_PARAMETER_STRING)
 					name = param->string;
-				printf("RESOURCE NAME: %s\n", param->string);
 			} else {
 				foundName = FG_FALSE;
 			}
@@ -327,7 +350,6 @@ fgBool fgResourceGroup::_parseIniConfig(void)
 			if((param = section->getParameter("type")) != NULL) {
 				if(param->type == FG_CFG_PARAMETER_STRING)
 					type = FG_RESOURCE_TYPE_FROM_TEXT(param->string);
-				printf("TYPE STR : %s\n", param->string);
 			} else {
 				foundType = FG_FALSE;
 			}
@@ -350,7 +372,6 @@ fgBool fgResourceGroup::_parseIniConfig(void)
 			if(isMapped) {
 				// Get the parameter: quality vector
 				if((param = section->getParameter("qualityVec", FG_CFG_PARAMETER_STRING)) != NULL) {
-					printf("QUALITY  VEC : %s\n", param->string);
 					std::string _q_vec = param->string;
 					_helperVec.clear_optimised();
 					fgStrings::split(_q_vec, ';', _helperVec);
@@ -365,8 +386,6 @@ fgBool fgResourceGroup::_parseIniConfig(void)
 					foundQuality = FG_FALSE;
 				}
 				if((param = section->getParameter("pathVec", FG_CFG_PARAMETER_STRING)) != NULL) {
-					printf("PATH VEC : %s\n", param->string);
-
 					std::string _p_vec = param->string;
 					_helperVec.clear_optimised();
 					fgStrings::split(_p_vec, ';', _helperVec);
@@ -384,7 +403,6 @@ fgBool fgResourceGroup::_parseIniConfig(void)
 			} else {
 				if((param = section->getParameter("quality", FG_CFG_PARAMETER_STRING)) != NULL) {
 					quality = FG_QUALITY_FROM_TEXT(param->string);
-					printf("QUALITY : %s\n", param->string);
 				} else {
 					quality = FG_QUALITY_UNIVERSAL;
 				}
@@ -396,14 +414,13 @@ fgBool fgResourceGroup::_parseIniConfig(void)
 			}
 			if(!foundPath || !foundType || !foundName || !foundQuality)
 				continue;
-			if(!FG_ResourceFactory->isRegistered(type) || type == FG_RESOURCE_GROUP) {
+			if(!m_resourceFactory->isRegistered(type) || type == FG_RESOURCE_GROUP) {
 				continue;
 			}
-			fgResource *resource = FG_ResourceFactory->createResource(type);
+			fgResource *resource = m_resourceFactory->createResource(type);
 			if(!resource)
 				continue;
-			printf("NAME __ : __ %s\n", name.c_str());
-			resource->setResourceName(name);
+			resource->setName(name);
 			if(foundPriority)
 				resource->setPriority(priority);
 			if(isMapped) {
@@ -416,8 +433,7 @@ fgBool fgResourceGroup::_parseIniConfig(void)
 				}
 				for(int i=0;i<(int)pathVec.size();i++) {
 					resource->setFilePath(pathVec[i],qualityVec[i]);
-					FG_LOG::PrintDebug("Setting path: '%s', for resource: '%s', quality='%d'", pathVec[i].c_str(), name.c_str(), (int)qualityVec[i]);
-
+					//FG_LOG::PrintDebug("Setting path: '%s', for resource: '%s', quality='%d'", pathVec[i].c_str(), name.c_str(), (int)qualityVec[i]);
 				}
 			} else {
 				resource->setFilePath(path);
@@ -440,6 +456,9 @@ fgBool fgResourceGroup::_parseIniConfig(void)
  */
 fgBool fgResourceGroup::preLoadConfig(void)
 {
+	if(!m_resourceFactory) {
+		return FG_FALSE;
+	}
 	if(m_filePath.empty())
 		return FG_FALSE;
 	const char *ext = fgPath::fileExt(m_filePath.c_str(), FG_TRUE);

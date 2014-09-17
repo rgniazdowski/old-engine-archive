@@ -12,7 +12,7 @@
 
 #include "fgCommon.h"
 #include "fgResource.h"
-#include "fgResourceFactoryTypes.h"
+#include "fgResourceFactory.h"
 
 #include <cstdlib>
 
@@ -85,7 +85,6 @@ public:
 	virtual void characters(const char ch[], int start, int length, int depth = 0)
 	{
 		// Characters - wont be needed
-		//printf("characters: n: %d, val: '%s'\n", length, ch);
 	}
 };
 
@@ -105,26 +104,36 @@ public:
 //
 // Hint: Use smart pointers in the future - from boost library or
 // own proper implementation
-class fgResourceGroup : public fgResource {
+class fgResourceGroup : public fgResource
+{
 	friend class fgResourceGroupContentHandler;
+	friend class fgResourceManager;
 public:
-	typedef fgArrayVector<fgResource *>				rgResVec;
-	typedef fgArrayVector<FG_RHANDLE>				rgHandleVec;
-	typedef fgArrayVector<fgResource *>::iterator	rgResVecItor;
-	typedef fgArrayVector<FG_RHANDLE>::iterator		rgHandleVecItor;
-	typedef fgArrayVector<fgResource *>::const_iterator	rgResVecConstItor;
-	typedef fgArrayVector<FG_RHANDLE>::const_iterator	rgHandleVecConstItor;
+	typedef fgVector<fgResource *>				rgResVec;
+	typedef fgVector<FG_RHANDLE>				rgHandleVec;
+	typedef fgVector<fgResource *>::iterator	rgResVecItor;
+	typedef fgVector<FG_RHANDLE>::iterator		rgHandleVecItor;
+	typedef fgVector<fgResource *>::const_iterator	rgResVecConstItor;
+	typedef fgVector<FG_RHANDLE>::const_iterator	rgHandleVecConstItor;
 
 public:
 	// Base constructor of the resource group object
 	fgResourceGroup();
+	//
+	fgResourceGroup(fgResourceFactory *resourceFactory);
 	// Base destructor of the resource group object
 	~fgResourceGroup();
 
 	FG_RESOURCE_FACTORY_CREATE_FUNCTION(fgResourceGroup)
 
+	//
+	void setResourceFactory(fgResourceFactory *resourceFactory);
+	//
+	fgResourceFactory *getResourceFactory(void) const;
+protected:
 	// Clears the class data, this actually does not free allocated memory, just resets base class attributes
 	virtual void clear(void);
+public:
 	// Create function loads/interprets data from file in ROM and place it in RAM memory.
 	virtual fgBool create(void);
 	// Destroy all loaded data including additional metadata (called with deconstructor)
@@ -175,6 +184,8 @@ protected:
 	rgResVec m_resourceFiles;
 	// Parser for xml config files (here: resource group xml files)
 	fgXMLParser *m_xmlParser;
+	// Resource factory
+	fgResourceFactory *m_resourceFactory;
 
 };
 

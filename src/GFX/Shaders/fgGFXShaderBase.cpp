@@ -8,11 +8,14 @@
  *******************************************************/
 
 #include "fgGFXShaderBase.h"
+#include "Util/fgMemory.h"
+#include "fgLog.h"
 
 /*
  *
  */
 fgGfxShaderBase::fgGfxShaderBase() :
+	m_log(NULL),
 	m_gfxID(0),
 	m_baseType(FG_GFX_BASE_TYPE_INVALID)
 {
@@ -24,17 +27,19 @@ fgGfxShaderBase::fgGfxShaderBase() :
 fgGfxShaderBase::~fgGfxShaderBase()
 {
 	m_params.clear();
-	m_log.clear();
+	if(m_log)
+		fgFree(m_log);
+	m_log = NULL;
 }
 
 /*
  *
  */
-void fgGfxShaderBase::_updateLog(void)
+void fgGfxShaderBase::updateLog(void)
 {
 	if(m_baseType == FG_GFX_BASE_TYPE_INVALID)
 		return;
-	GLint length;
+	fgGFXint length;
 	if(m_baseType == FG_GFX_BASE_TYPE_SHADER) {
 		if(!glIsShader(m_gfxID))
 			return;
@@ -44,31 +49,26 @@ void fgGfxShaderBase::_updateLog(void)
 			return;
 		glGetProgramiv(m_gfxID, GL_INFO_LOG_LENGTH, &length);
 	}
-	m_params[GL_INFO_LOG_LENGTH] = length;
 	if(length)
 	{
-		char *buffer = (char*)malloc(sizeof(char)*length);
+		if(m_log)
+			fgFree(m_log);
+		char *buffer = (char*)fgMalloc(sizeof(char)*length);
 		if(m_baseType == FG_GFX_BASE_TYPE_SHADER) {
 			glGetShaderInfoLog(m_gfxID, length, NULL, buffer);
 		} else if(m_baseType == FG_GFX_BASE_TYPE_PROGRAM) {
 			glGetProgramInfoLog(m_gfxID, length, NULL, buffer);
 		}
-		m_log.clear();
 		m_log = buffer;
-		free(buffer);
 	}
 }
 
 /*
  *
  */
-void fgGfxShaderBase::_updateParams(void)
+void fgGfxShaderBase::updateParams(void)
 {
-	if(m_baseType == FG_GFX_BASE_TYPE_SHADER && !glIsShader(m_gfxID)) {
-		return;
-	} else if(m_baseType == FG_GFX_BASE_TYPE_PROGRAM && !glIsProgram(m_gfxID)) {
-		return;
-	} else {
+	if(m_baseType == FG_GFX_BASE_TYPE_INVALID) {
 		return;
 	}
 	GLint value;
@@ -89,16 +89,16 @@ void fgGfxShaderBase::_updateParams(void)
 /*
  *
  */
-fgGFXint fgGfxShaderBase::_updateParam(fgGFXuint pname)
+fgGFXint fgGfxShaderBase::updateParam(fgGFXuint pname)
 {
 	if(m_baseType == FG_GFX_BASE_TYPE_INVALID)
 		return 0;
 	fgGFXint value = 0;
-	if(m_baseType == FG_GFX_BASE_TYPE_SHADER && !glIsShader(m_gfxID)) {
+	if(m_baseType == FG_GFX_BASE_TYPE_SHADER && glIsShader(m_gfxID)) {
 		glGetShaderiv(m_gfxID, (fgGFXenum)pname, &value);
-	} else if(m_baseType == FG_GFX_BASE_TYPE_PROGRAM && !glIsProgram(m_gfxID)) {
+	} else if(m_baseType == FG_GFX_BASE_TYPE_PROGRAM && glIsProgram(m_gfxID)) {
 		glGetProgramiv(m_gfxID, (fgGFXenum)pname, &value);
 	} 
-	m_params[(fgGFXuint)pname] = value;
+	m_params[pname] = value;
 	return value;
 }

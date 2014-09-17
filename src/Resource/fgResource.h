@@ -21,7 +21,7 @@
 #include <ctime>
 #include <cstring>
 
-#include "fgResourceBase.h"
+#include "fgDataObjectBase.h"
 #include "Util/fgHandle.h"
 #include "Util/fgTag.h"
 
@@ -31,7 +31,7 @@ class fgResource;
 
 #include "fgResourceFactoryTypes.h"
 
-#define FG_TAG_RESOURCE_NAME	"tag{fgResource}"
+#define FG_TAG_RESOURCE_NAME	"Resource"
 //#define FG_TAG_RESOURCE_ID		10 //#FIXME - something automatic maybe?
 #define FG_TAG_RESOURCE			FG_TAG_TYPE(fgResource)
 
@@ -39,8 +39,8 @@ class fgResource;
 FG_TAG_TEMPLATE_ID_AUTO(fgResource, FG_TAG_RESOURCE_NAME);
 
 // Special handle type for resource
-typedef fgHandle<FG_TAG_RESOURCE > fgResourceHandle;
 typedef FG_TAG_RESOURCE fgResourceTag;
+typedef fgHandle<fgResourceTag> fgResourceHandle;
 
 #ifndef FG_RHANDLE
 #define FG_RHANDLE fgResourceHandle
@@ -58,7 +58,7 @@ typedef FG_TAG_RESOURCE fgResourceTag;
 #define FG_RESOURCE_SAVE_FILE_TEXT				"SaveFile"
 #define FG_RESOURCE_GUI_STRUCTURE_SHEET_TEXT 	"GuiStructureSheet"
 #define FG_RESOURCE_GUI_STYLE_SHEET_TEXT		"GuiStyleSheet"
-#define FG_RESOURCE_SHADER_TEXT					"Shader"
+#define FG_RESOURCE_SHADER_TEXT					"Shader" // #FIXME
 #define FG_RESOURCE_SCENE_TEXT					"Scene"
 #define FG_RESOURCE_SCRIPT_TEXT					"Script"
 #define FG_RESOURCE_GROUP_TEXT					"ResourceGroup"
@@ -71,38 +71,38 @@ typedef FG_TAG_RESOURCE fgResourceTag;
 
 // Enum type holding all possible resource types
 // used in the game engine
-enum fgResourceType {
-	FG_RESOURCE_INVALID,
-	FG_RESOURCE_SOUND,
-	FG_RESOURCE_MUSIC,
-	FG_RESOURCE_3D_MODEL,
-	FG_RESOURCE_TEXTURE,
-	FG_RESOURCE_FONT,
-	FG_RESOURCE_SAVE_FILE,
-	FG_RESOURCE_GUI_STRUCTURE_SHEET,
-	FG_RESOURCE_GUI_STYLE_SHEET,
-	FG_RESOURCE_SHADER,
-	FG_RESOURCE_SCENE,
-	FG_RESOURCE_SCRIPT,
-	FG_RESOURCE_GROUP,
-	FG_RESOURCE_VARIA,
-	FG_RESOURCE_BINARY,
-	FG_RESOURCE_LIBRARY,
-	FG_RESOURCE_PLUGIN,
-	FG_RESOURCE_CUSTOM,
-	FG_RESOURCE_ZIP_PACK,
+typedef unsigned int fgResourceType;
 
-	FG_NUM_RESOURCE_BASIC_TYPES,
+#define FG_RESOURCE_INVALID				0x0000
+#define	FG_RESOURCE_SOUND				0x0AB0
+#define	FG_RESOURCE_MUSIC				0x0AB1
+#define	FG_RESOURCE_3D_MODEL			0x0AB2
+#define	FG_RESOURCE_TEXTURE				0x0AB3
+#define	FG_RESOURCE_FONT				0x0AB4
+#define	FG_RESOURCE_SAVE_FILE			0x0AB5
+#define	FG_RESOURCE_GUI_STRUCTURE_SHEET	0x0AB6
+#define	FG_RESOURCE_GUI_STYLE_SHEET		0x0AB7
+#define	FG_RESOURCE_SHADER				0x0AB8	// #FIXME
+#define	FG_RESOURCE_SCENE				0x0AB9
+#define	FG_RESOURCE_SCRIPT				0x0ABA
+#define	FG_RESOURCE_GROUP				0x0ABB
+#define	FG_RESOURCE_VARIA				0x0ABC
+#define	FG_RESOURCE_BINARY				0x0ABD
+#define	FG_RESOURCE_LIBRARY				0x0ABE
+#define	FG_RESOURCE_PLUGIN				0x0ABF
+#define	FG_RESOURCE_CUSTOM				0x0AC0
+#define	FG_RESOURCE_ZIP_PACK			0x0AC1
 
-	FG_RESOURCE_RESERVED1,
-	FG_RESOURCE_RESERVED2,
-	FG_RESOURCE_RESERVED3,
-	FG_RESOURCE_RESERVED4,
-	FG_RESOURCE_RESERVED5,
-	FG_RESOURCE_RESERVED6,
+#define FG_NUM_RESOURCE_BASIC_TYPES		(FG_RESOURCE_ZIP_PACK-FG_RESOURCE_SOUND)
 
-	FG_NUM_RESOURCE_TYPES
-};
+#define FG_RESOURCE_RESERVED1			0x0ACA
+#define FG_RESOURCE_RESERVED2			0x0ACB
+#define FG_RESOURCE_RESERVED3			0x0ACC
+#define FG_RESOURCE_RESERVED4			0x0ACD
+#define FG_RESOURCE_RESERVED5			0x0ACE
+#define FG_RESOURCE_RESERVED6			0x0ACF
+
+#define FG_NUM_RESOURCE_TYPES			(1)
 
 /*
  *
@@ -175,7 +175,7 @@ inline fgResPriorityType _FG_RES_PRIORITY_FROM_TEXT(const char* text) {
 /*
  * Base class for resource
  */
-class fgResource : public fgResourceBase, public fgStatusReporter<fgResourceTag>
+class fgResource : public fgDataObjectBase<fgResourceHandle, fgQuality>, public fgStatusReporter<fgResourceTag>
 {
 	friend class fgResourceManager;
 	friend class fgResourceGroup;
@@ -189,9 +189,12 @@ public:
 	// Base destructor of the resource object
 	virtual ~fgResource()	{ destroy(); }
 
+protected:
 	// Clears the class data, this actually does not free allocated memory,
 	// just resets base class attributes
 	virtual void clear(void);
+
+public:
 	// Create and destroy functions.  Note that the create() function of the
 	// derived class does not have to exactly match the base class.  No assumptions
 	// are made regarding parameters.
@@ -241,47 +244,6 @@ public:
 	// Return the current access time of the resource
 	time_t getLastAccess(void) const				{  return m_lastAccess;  }
 
-	// Set file path to this resource #FIXME
-	virtual void setFilePath(const char *path) {
-		fgResourceBase::setFilePath(path);
-	}
-	// Set file path to this resource #FIXME
-	virtual void setFilePath(std::string& path) {
-		fgResourceBase::setFilePath(path);
-	}
-	// Set file path to this resource #FIXME
-	virtual void setFilePath(const char *path, fgQuality quality) {
-		fgResourceBase::setFilePath(path, (int)quality);
-	}
-	// Set file path to this resource #FIXME
-	virtual void setFilePath(std::string& path, fgQuality quality) {
-		fgResourceBase::setFilePath(path, (int)quality);
-	}
-
-	// Set resource name (string TAG/ID)
-	inline void setResourceName(const char *name) {
-		m_resourceName.clear();
-		m_resourceName = name;
-	}
-	// Set resource name (string TAG/ID)
-	inline void setResourceName(std::string& name) {
-		m_resourceName.clear();
-		m_resourceName.append(name);
-	}
-
-	// Get resource name string
-	std::string getResourceName(void) const {
-		return m_resourceName;
-	}
-	// Get reference to resource name string
-	std::string& getResourceName(void) {
-		return m_resourceName;
-	}
-	// Get resource name (TAG/string ID) as C-like string (char array)
-	const char* getResourceNameStr(void) const {
-		return m_resourceName.c_str();
-	}
-
 	// The less-than operator defines how resources get sorted for discarding.
 	virtual bool operator < (fgResource& container);
 	// The greater-than operator is used for comparison (eg. while sorting)
@@ -302,35 +264,22 @@ protected:
 	virtual unsigned int Unlock(void) { return downRef(); }
 	// Unlock completely the resource (reference counter = 0) #NOTSAFE #FIXME
 	virtual void ZeroLock(void) { m_nRefCount = 0; }
-	// Set the resource handle ID out front (internal use, restricted)
-	void setResourceHandle(FG_RHANDLE handle) {
-		m_handle = handle;
-	}
-public:
-	// Return the resource handle ID
-	FG_RHANDLE getHandle(void) const {
-		return m_handle;
-	}
-protected:
-	// Unique handle number (Resource Handle)
-	FG_RHANDLE			m_handle;
-	// Priority of this resource
-	fgResPriorityType	m_priority;
-	// Quality of the resource
-	fgQuality			m_quality;
-	// Resource type
-	fgResourceType		m_resType;
-	// Number of references to this resource
-	unsigned int		m_nRefCount;
-	// Time of last access, may become handy #TESTME
-	time_t				m_lastAccess;
-	// Is the resource loaded and ready to be used in program?
-	fgBool				m_isReady;
-	// Size in bytes of the loaded data
-	size_t				m_size;
-	// Name of the resource, string ID
-	std::string			m_resourceName;
 
+protected:
+	/// Priority of this resource
+	fgResPriorityType	m_priority;
+	/// Quality of the resource
+	fgQuality			m_quality;
+	/// Resource type
+	fgResourceType		m_resType;
+	/// Number of references to this resource
+	unsigned int		m_nRefCount;
+	/// Time of last access, may become handy #TESTME
+	time_t				m_lastAccess;
+	/// Size in bytes of the loaded data
+	size_t				m_size;
+	/// Is the resource loaded and ready to be used in program?
+	fgBool				m_isReady;
 };
 
 #endif /* _FG_RESOURCE_H_ */

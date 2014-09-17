@@ -16,11 +16,13 @@
 #include "Util/fgSettings.h"
 #include "Util/fgConfig.h"
 #include "Util/fgTag.h"
+#include "Resource/fgResourceManager.h"
+#include "Resource/fgResourceFactory.h"
 
 #include "GFX/fgGFXMain.h"
 
 class fgGameMain;
-#define FG_TAG_GAME_MAIN_NAME		"fgGameMain"
+#define FG_TAG_GAME_MAIN_NAME		"GameMain"
 #define FG_TAG_GAME_MAIN			FG_TAG_TYPE(fgGameMain)
 FG_TAG_TEMPLATE_ID_AUTO(fgGameMain, FG_TAG_GAME_MAIN_NAME);
 typedef FG_TAG_GAME_MAIN fgGameMainTag;
@@ -68,6 +70,22 @@ public:
 	// Update - all event handling, calling scripts, AI, game logic and etc
 	void update(void);
 
+	fgGfxMain *getGfxMain(void) const {
+		return m_gfxMain;
+	}
+
+	fgSettings *getSettings(void) const {
+		return m_settings;
+	}
+
+	fgConfig *getMainConfig(void) const {
+		return m_mainConfig;
+	}
+
+	fgResourceManager *getResourceManager(void) const {
+		return m_resourceMgr;
+	}
+
 protected:
 	/// 
 	fgGfxMain *m_gfxMain;
@@ -75,6 +93,10 @@ protected:
 	fgSettings *m_settings;
 	/// 
 	fgConfig *m_mainConfig;
+	///
+	fgResourceManager *m_resourceMgr;
+	///
+	fgResourceFactory *m_resourceFactory;
 };
 
 #endif /* _FG_GAME_MAIN_H_ */
