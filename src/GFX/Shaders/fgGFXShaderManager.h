@@ -16,38 +16,71 @@
 
 #include "GFX/fgGFXStdInc.h"
 #include "fgManagerBase.h"
+#include "Resource/fgDataManagerBase.h"
 
 #include "Util/fgHandleManager.h"
+#include "Util/fgTag.h"
 #include "fgGFXShaderProgram.h"
+
+class fgGfxShaderManager;
+
+#define FG_TAG_SHADER_MANAGER_NAME		"fgGfxShaderManager"
+//#define FG_TAG_MANAGER_BASE_ID		20 //#FIXME - something automatic maybe?
+#define FG_TAG_SHADER_MANAGER			FG_TAG_TYPE(fgGfxShaderManager)
+
+//FG_TAG_TEMPLATE(fgResourceManager, FG_TAG_MANAGER_BASE_NAME, FG_TAG_MANAGER_BASE_ID);
+FG_TAG_TEMPLATE_ID_AUTO(fgGfxShaderManager, FG_TAG_SHADER_MANAGER_NAME);
+
+// Special handle type for manager base
+typedef FG_TAG_SHADER_MANAGER fgGfxShaderManagerTag;
 
 /*
  *
  */
-class fgGfxShaderManager : public fgManagerBase
+class fgGfxShaderManager : public fgDataManagerBase<fgGfxShaderProgram*, fgGfxShaderHandle, fgGfxShaderManagerTag>
 {
 protected:
-	typedef fgHandleManager<fgGfxShaderProgram*, fgGfxShaderProgramHandle>	smHandleManager;
-	typedef smHandleManager::hmDataVec					smProgramVec;
-	typedef smHandleManager::hmDataVec::iterator		smProgramVecItor;
-protected:
-	/// 
-	smHandleManager		m_programHandlesMgr;
+	typedef hmDataVec					smProgramVec;
+	typedef hmDataVec::iterator		smProgramVecItor;
 public:
-	// 
+	// Default constructor for the shader manager object
 	fgGfxShaderManager();
-	// 
+	// Default destructor for the shader manager object
 	virtual ~fgGfxShaderManager();
 
-	// 
+protected:
+	//	
 	void clear(void);
-	//
-	void destroy(void);
 
-	//
+public:
+	// Destroy the shader manager and all managed data (destructors called - every handle becomes invalid)
+	fgBool destroy(void);
+
+	// Initialize the shader manager
 	fgBool initialize(void);
 	
-	//
+	// Pre load / pre cache the required
 	fgBool preLoadShaders(void);
+
+	// 
+	fgBool compileShaders(void);
+
+	//
+	fgBool useProgram(fgGfxShaderHandle spUniqueID);
+	//
+	fgBool useProgram(std::string &nameTag);
+
+	// Insert the specified shader program into the manager
+	fgBool insertProgram(fgGfxShaderHandle& phUniqueID, fgGfxShaderProgram *pProgram);
+
+	//
+	void setShadersPath(std::string &path);
+	//
+	void setShadersPath(const char *path);
+
+private:
+	//
+	std::string		m_shadersPath;
 
 };
 
