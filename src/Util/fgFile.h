@@ -18,7 +18,7 @@
 
 class fgFile;
 
-#define FG_TAG_FILE_NAME	"tag{fgFile}"
+#define FG_TAG_FILE_NAME	"File"
 #define FG_TAG_FILE			FG_TAG_TYPE(fgFile)
 
 FG_TAG_TEMPLATE_ID_AUTO(fgFile, FG_TAG_FILE_NAME);
@@ -127,6 +127,9 @@ public:
 
 	// Check if file exists
 	static fgBool exists(const char *filePath);
+
+	// Check if file exists
+	static fgBool exists(std::string &filePath);
 
 	// Check if file exists
 	fgBool exists(void) {

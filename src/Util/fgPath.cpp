@@ -72,10 +72,67 @@ char *fgPath::dirName(const char *path)
 /*
  *
  */
-std::string fgPath::dirName(std::string & path)
+std::string fgPath::dirName(std::string &path)
 {
 	const char* filename = fgPath::fileName(path.c_str());
 	if(!filename)
 		return path;
 	return path.substr(0, path.length()-strlen(filename));
+}
+
+/*
+ *
+ */
+std::string& fgPath::dirName(std::string &path, std::string &dirpath)
+{
+	dirpath = dirName(path);
+	return dirpath;
+}
+
+/*
+ *
+ */
+void fgPath::split(std::string &path, std::string &dirpath, std::string &filename)
+{
+	dirpath = dirName(path);
+	const char* filename_c = fgPath::fileName(path.c_str());
+	if(!filename_c)
+		filename.clear();
+	else
+		filename = filename_c;
+}
+
+/*
+ *
+ */
+std::string& fgPath::join(std::string &path, std::string &dirpath, std::string &filename)
+{
+	// path - here is the result stored
+	
+	int dirlen = (int)dirpath.length();
+	int filelen = (int)filename.length();
+	path = dirpath;
+	if(path[dirlen-1] == FG_PATH_DELIMC || path[dirlen-1] == FG_PATH_DELIM2C)
+		path[dirlen-1] = FG_PATH_DELIMC;
+	else
+		path.append(FG_PATH_DELIM);
+	path.append(filename);
+	return path;
+}
+
+/*
+ *
+ */
+std::string fgPath::join(std::string &dirpath, std::string &filename)
+{
+	std::string path;
+	fgPath::join(path, dirpath, filename);
+	return path;
+}
+
+/*
+ *
+ */
+void fgPath::join(std::string &path, fgStringVector &parts)
+{
 }

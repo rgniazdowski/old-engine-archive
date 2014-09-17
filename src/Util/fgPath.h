@@ -41,14 +41,25 @@ public:
 	// Return the file name in path //fgPath::fileName
 	static const char* fileName(const char* path);
 
-	// Retrieve the dirname in path - this will change the input string
+	// Retrieve the dirname in path - this will change the input string (fill last part with \0)
 	static void dirName(char* path);
-
-	// Remember that this function allocates a new string
+	// Retrieve the dirname in path - remember that this function allocates a new string
 	static char *dirName(const char* path);
+	//
+	static std::string dirName(std::string &path);
+	//
+	static std::string& dirName(std::string &path, std::string &dir);
 
-	static std::string dirName(std::string & path);
+	// Split the path and save parts (dirname, filename) in input parameters
+	static void split(std::string &path, std::string &dirpath, std::string &filename);
 
+	// Join the path elements
+	static std::string& join(std::string &path, std::string &dirpath, std::string &filename);
+	
+	static std::string join(std::string &dirpath, std::string &filename);
+
+	// Join the path from parts
+	static void join(std::string &path, fgStringVector &parts);
 };
 
 #endif /* _FG_PATH_H_ */

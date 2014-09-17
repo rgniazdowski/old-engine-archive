@@ -16,10 +16,21 @@
  */
 fgDirent::fgDirent(const char *dirPath)
 {
-	m_dirPath.clear();
-	m_dirPath.assign(dirPath);
+	m_dirPath = dirPath;
 	readDirectory();
 }
+
+/*
+ * Default constructor with the specified directory path
+ * Please note that this constructor will also call the
+ * read directory function.
+ */
+fgDirent::fgDirent(std::string &dirPath)
+{
+	m_dirPath = dirPath;
+	readDirectory();
+}
+
 
 /*
  * Reads the directory content creating a list
@@ -76,8 +87,17 @@ fgBool fgDirent::readDirectory(void)
  */
 fgBool fgDirent::readDirectory(const char *dirPath)
 {
-	m_dirPath.clear();
-	m_dirPath.assign(dirPath);
+	m_dirPath = dirPath;
+	return readDirectory();
+}
+
+/*
+ * Reads the specified directory content creating
+ * a list of file names
+ */
+fgBool fgDirent::readDirectory(std::string &dirPath)
+{
+	m_dirPath = dirPath;
 	return readDirectory();
 }
 

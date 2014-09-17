@@ -31,6 +31,14 @@ fgBool fgFile::exists(const char *filePath)
 /*
  *
  */
+fgBool fgFile::exists(std::string &filePath)
+{
+	return fgFile::exists(filePath.c_str());
+}
+
+/*
+ *
+ */
 fgFile::fgFile() :
 	m_file(NULL), 
 	m_modeFlags(FG_FILE_MODE_READ | FG_FILE_MODE_BINARY)
@@ -203,6 +211,7 @@ fgBool fgFile::isOpen(void) const {
 char *fgFile::load(const char *filePath)
 {
 	if(!isOpen() && !open(filePath, FG_FILE_MODE_READ | FG_FILE_MODE_BINARY)) {
+		reportWarning(FG_ERRNO_FILE_ALREADY_OPEN);
 		return NULL;
 	}
 
@@ -223,6 +232,7 @@ char *fgFile::load(const char *filePath)
 	int bytesRead = read(fileBuffer, 1, fileSize);
 	fileBuffer[fileSize] = '\0';
 	if(bytesRead != (int)fileSize) {
+		reportWarning(FG_ERRNO_FILE_READ_COUNT);
 		fgFree(fileBuffer);
 		fileBuffer = NULL;
 		fileSize = 0;

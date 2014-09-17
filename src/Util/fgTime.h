@@ -10,9 +10,13 @@
 #ifndef _FG_TIME_H_
 #define _FG_TIME_H_
 
-#define FG_TIME_MIN_TICK 0.001f
+#include <ctime>
 
-class fgTime {
+#define FG_TIME_MIN_TICK	0.001f
+#define FG_CLOCKS_PER_SEC	CLOCKS_PER_SEC
+
+class fgTime 
+{
 private:
 	// Time marking start (init function)
 	static float s_start;

@@ -34,17 +34,20 @@ namespace __FG_TAG {
 struct fgTagVoid {
 };
 
-template<class _type> struct fgTag { };
+struct fgTagBase {
+};
+
+template<class _type> struct fgTag : fgTagBase { };
 
 #define FG_TAG_TEMPLATE(_tag_type, _tag_name, _tag_id) \
-template <> struct fgTag<_tag_type> { \
+template <> struct fgTag<_tag_type> : fgTagBase { \
 	typedef _tag_type _type; \
 	FG_TAG_FUNCTION_NAME(_tag_name) \
 	FG_TAG_FUNCTION_ID(_tag_id) \
 	}
 
 #define FG_TAG_TEMPLATE_ID_AUTO(_tag_type, _tag_name) \
-template <> struct fgTag<_tag_type> { \
+template <> struct fgTag<_tag_type> : fgTagBase { \
 	typedef _tag_type _type; \
 	FG_TAG_FUNCTION_NAME(_tag_name) \
 	FG_TAG_FUNCTION_ID_AUTO() \

@@ -67,9 +67,7 @@ public:
 	// Please note that this constructor will also call the
 	// read directory function.
 	fgDirent(const char *dirPath);
-#if 0
-	fgDirent(std::string dirPath);
-#endif
+	fgDirent(std::string &dirPath);
 
 	// The default deconstructor
 	~fgDirent()
@@ -88,6 +86,9 @@ public:
 	// Reads the specified directory creating the list of files
 	// to be processed later
 	fgBool readDirectory(const char *dirPath);
+	// Reads the specified directory creating the list of files
+	// to be processed later
+	fgBool readDirectory(std::string &dirPath);
 
 	// Returns the next file name
 	const char *getNextFile(void);
