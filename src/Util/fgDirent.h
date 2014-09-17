@@ -97,8 +97,8 @@ protected:
 	// The whole path to the directory
 	std::string m_dirPath;
 	// List/vector with the file names in the specified directory #FIXME
-	fgArrayVector<std::string> m_fileNames;
-	fgArrayVector<std::string>::iterator m_fileIt;
+	fgVector<std::string> m_fileNames;
+	fgVector<std::string>::iterator m_fileIt;
 #ifdef FG_USING_MARMALADE
 	// Marmalade specific structure for reading directory contents
 	s3eFileList *m_fileList;

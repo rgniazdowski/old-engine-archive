@@ -47,9 +47,9 @@ class fgEventManager : public fgSingleton<fgEventManager>
 
 private:
 	// 
-	fgArrayVector<int> m_keysDownPool;
+	fgVector<int> m_keysDownPool;
 	// 
-	fgArrayVector<int> m_keysUpPool;
+	fgVector<int> m_keysUpPool;
 
 	// int - keyCode, value - vector of callbacks to call
 	// Binding for key down events

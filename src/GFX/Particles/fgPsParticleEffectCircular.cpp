@@ -37,7 +37,7 @@ void ParticleEffectCircular::setMaxCount(int max_count)
 
     // ALL FIELDS ARE DUMMIES AT START
     m_particles.resize(max_count);
-    for( fgArrayVector<Particle>::iterator it = m_particles.begin(); it != m_particles.end(); it++ )
+    for( fgVector<Particle>::iterator it = m_particles.begin(); it != m_particles.end(); it++ )
         *it = dummy_particle;
 
     m_dummy_count = maxCount();

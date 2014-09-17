@@ -22,7 +22,7 @@ ParticleEffect::~ParticleEffect()
 {
     // Love to do destroying manually.. Although it isn't necessary
 	m_particles.clear();
-    fgArrayVector<Particle> tmpv;
+    fgVector<Particle> tmpv;
     m_particles.swap( tmpv );
 
 	if(m_colorStream)
@@ -56,7 +56,7 @@ void ParticleEffect::setMaxCount(int max_count)
 
     // This will fully erase the array
 	m_particles.clear();
-    fgArrayVector<Particle> tmpv;
+    fgVector<Particle> tmpv;
     m_particles.swap( tmpv );
 
     // Prepare for new amount of data

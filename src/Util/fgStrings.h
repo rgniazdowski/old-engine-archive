@@ -10,7 +10,7 @@
 #ifndef _FG_STRINGS_H_
 #define _FG_STRINGS_H_
 
-#include <fgArrayVector.h>
+#include <fgVector.h>
 #include <string>
 #include <sstream>
 
@@ -66,7 +66,7 @@ public:
 	/*
 	 *
 	 */
-	static fgArrayVector<std::string> &split(const std::string &s, char delim, fgArrayVector<std::string> &elems) 
+	static fgVector<std::string> &split(const std::string &s, char delim, fgVector<std::string> &elems) 
 	{
 		std::stringstream ss(s);
 		std::string item;
@@ -80,9 +80,9 @@ public:
 	/*
 	 *
 	 */
-	static fgArrayVector<std::string> split(const std::string &s, char delim) 
+	static fgVector<std::string> split(const std::string &s, char delim) 
 	{
-		fgArrayVector<std::string> elems;
+		fgVector<std::string> elems;
 		fgStrings::split(s, delim, elems);
 		return elems;
 	}

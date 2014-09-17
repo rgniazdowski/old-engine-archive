@@ -107,7 +107,7 @@ protected:
 	typedef std::pair<std::string, fgProfileSampleHistory *> historyMapPair;
 	typedef profileMap::iterator profileMapItor;
 	typedef historyMap::iterator historyMapItor;
-	typedef fgArrayVector<fgProfileSample *> profileVec;
+	typedef fgVector<fgProfileSample *> profileVec;
 	typedef profileVec::iterator profileVecItor;
 private:
 	// Stack holding currently open samples (active) in order

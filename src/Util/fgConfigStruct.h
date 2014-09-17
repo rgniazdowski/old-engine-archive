@@ -28,10 +28,10 @@ namespace fgCfgTypes {
 	typedef std::pair<sectionMapKey, fgCfgSection*> sectionMapPair;
 	typedef sectionMap::iterator sectionMapItor;
 
-	typedef fgArrayVector<fgCfgParameter*> parameterVec;
+	typedef fgVector<fgCfgParameter*> parameterVec;
 	typedef parameterVec::iterator parameterVecItor;
 
-	typedef fgArrayVector<fgCfgSection*> sectionVec;
+	typedef fgVector<fgCfgSection*> sectionVec;
 	typedef sectionVec::iterator sectionVecItor;
 
 	typedef std::string parameterMapKey;

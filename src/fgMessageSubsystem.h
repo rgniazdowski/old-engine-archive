@@ -17,7 +17,7 @@
 
 #include <stack>
 #include <map>
-#include "fgArrayVector.h"
+#include "fgVector.h"
 #include "Util/fgFile.h"
 
 #include "fgLog.h"
@@ -29,7 +29,7 @@ class fgMessageSubsystem : protected fgManagerBase, public fgSingleton<fgMessage
 {
 	friend class fgSingleton<fgMessageSubsystem>;
 protected:
-	typedef fgArrayVector<fgStatus *> msStatusVec;
+	typedef fgVector<fgStatus *> msStatusVec;
 	typedef msStatusVec::iterator msStatusVecItor;
 
 protected:
@@ -44,7 +44,7 @@ public:
 	// 
 	void clear(void);
 	// 
-	void destroy(void);
+	fgBool destroy(void);
 
 	//
 	void setLogPaths(const char *pathAll, const char *pathError, const char *pathDebug);

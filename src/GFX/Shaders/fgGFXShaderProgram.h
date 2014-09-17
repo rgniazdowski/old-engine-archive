@@ -105,7 +105,7 @@ protected:
 	}
 
 public:
-	typedef fgArrayVector<fgGfxShader *>	shaderVec;
+	typedef fgVector<fgGfxShader *>	shaderVec;
 	typedef shaderVec::iterator				shaderVecItor;
 	typedef fgGfxShaderConfig::shaderUniformBindVec		uniformBindVec;
 	typedef uniformBindVec::iterator					uniformBindVecItor;

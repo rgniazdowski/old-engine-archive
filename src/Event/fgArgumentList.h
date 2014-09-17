@@ -63,7 +63,7 @@ struct fgArgument
 class fgArgumentList
 {
 	private:
-		fgArrayVector<fgArgument> m_argv;
+		fgVector<fgArgument> m_argv;
 		int m_argc;
 		int m_maxArgs;
 		int m_currentArg;
@@ -89,8 +89,8 @@ class fgArgumentList
 		inline void reset();
 		inline fgBool isThereNextArgument();
 
-		void *getNextArgumentValue(fgArgumentType *_type);
-		void *getArgumentValueByID(int ID, fgArgumentType *_type);
+		void *getNextArgumentValue(fgArgumentType *_type = NULL);
+		void *getArgumentValueByID(int ID, fgArgumentType *_type = NULL);
 
 		fgArgument getNextArgumentStruct();
 		fgArgument getArgumentStructByID(int ID);

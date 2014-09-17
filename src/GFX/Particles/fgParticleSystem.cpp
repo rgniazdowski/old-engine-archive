@@ -195,11 +195,11 @@ void fgParticleSystem::addEffectToGroup(int group_id, int effect_id)
 
 void fgParticleSystem::removeEffectFromGroup(int group_id, int effect_id)
 {
-	std::map<int, fgArrayVector<int> >::iterator pointer = m_effectGroups.find(group_id);
+	std::map<int, fgVector<int> >::iterator pointer = m_effectGroups.find(group_id);
 	if(pointer == m_effectGroups.end())
 		return;
 
-	for(fgArrayVector<int>::iterator iter = (*pointer).second.begin();
+	for(fgVector<int>::iterator iter = (*pointer).second.begin();
 		iter != (*pointer).second.end();
 		iter ++
     ) {
@@ -214,10 +214,10 @@ void fgParticleSystem::removeEffectFromGroup(int group_id, int effect_id)
 void fgParticleSystem::calculateGroup(int group_id)
 {
 
-	std::map<int, fgArrayVector<int> >::iterator pointer = m_effectGroups.find(group_id);
+	std::map<int, fgVector<int> >::iterator pointer = m_effectGroups.find(group_id);
 	if(pointer == m_effectGroups.end())
 		return;
-	for(fgArrayVector<int>::iterator iter = (*pointer).second.begin();
+	for(fgVector<int>::iterator iter = (*pointer).second.begin();
 		iter != (*pointer).second.end();
 		iter++) {
 			calculateParticleEffect(*iter);
@@ -228,10 +228,10 @@ void fgParticleSystem::calculateGroup(int group_id)
 
 void fgParticleSystem::drawGroup(int group_id)
 {
-	std::map<int, fgArrayVector<int> >::iterator pointer = m_effectGroups.find(group_id);
+	std::map<int, fgVector<int> >::iterator pointer = m_effectGroups.find(group_id);
 	if(pointer == m_effectGroups.end())
 		return;
-	for(fgArrayVector<int>::iterator iter = (*pointer).second.begin();
+	for(fgVector<int>::iterator iter = (*pointer).second.begin();
 		iter != (*pointer).second.end();
 		iter++) {
 			drawParticleEffect(*iter);
@@ -294,7 +294,7 @@ void fgParticleSystem::drawSpecialEffect(int effect_id)
 
 void fgParticleSystem::clearGroups()
 {
-	for(std::map<int, fgArrayVector<int> >::iterator pointer = m_effectGroups.begin();
+	for(std::map<int, fgVector<int> >::iterator pointer = m_effectGroups.begin();
 		pointer != m_effectGroups.end();
 		pointer++) {
 			(*pointer).second.clear();		

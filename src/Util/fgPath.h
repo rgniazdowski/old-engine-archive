@@ -10,12 +10,28 @@
 #ifndef _FG_PATH_H_
 #define _FG_PATH_H_
 
+#include "fgBuildConfig.h"
 #include "fgBool.h"
+#include "fgVector.h"
 #include <string>
+
+#if defined FG_USING_PLATFORM_WINDOWS
+#define FG_PATH_DELIM "\\"
+#define FG_PATH_DELIMC '\\'
+#define FG_PATH_DELIM2 "/"
+#define FG_PATH_DELIM2C '/'
+#else
+#define FG_PATH_DELIM "/"
+#define FG_PATH_DELIMC '/'
+#define FG_PATH_DELIM2 "\\"
+#define FG_PATH_DELIM2C '\\'
+#endif
+
+
 
 class fgPath
 {
-protected:
+private:
 	fgPath() {}
 	~fgPath() {}
 public:

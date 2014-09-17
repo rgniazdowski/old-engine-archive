@@ -5,7 +5,7 @@ files
 	
 	["FlexiGame/BaseCode"]
 	fgMainModule.cpp
-	fgArrayVector.h
+	fgVector.h
 	fgBool.h
 	fgBuildConfig.h
 	fgBuildConfig.cpp
@@ -385,6 +385,7 @@ options
 	optimise-speed
 	enable-exceptions
 	warn-level=2
+	buildenv=VC11
 }
 
 packages 

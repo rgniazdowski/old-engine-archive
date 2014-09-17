@@ -57,7 +57,7 @@ private:
 	std::map<int, ParticleEffect *> m_particleEffects;
 	//std::map<int, FlashEffect *> m_flashEffects;
 	std::map<int, SpecialEffect *> m_specialEffects;
-	std::map<int, fgArrayVector<int> > m_effectGroups;
+	std::map<int, fgVector<int> > m_effectGroups;
 	
 protected:
 	fgParticleSystem();

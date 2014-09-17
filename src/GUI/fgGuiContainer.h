@@ -52,7 +52,7 @@ protected:
 	// 
 	std::map<std::string, fgGuiWidget *> m_childrenMap;
 	//
-	fgArrayVector<fgGuiWidget *> m_children;
+	fgVector<fgGuiWidget *> m_children;
 
 protected:
 	// 

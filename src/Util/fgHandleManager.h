@@ -65,7 +65,8 @@ protected:
 public:
 	typedef std::string hashKey;
 	// Type for vector storing Data pointers
-    typedef fgArrayVector <DataType> hmDataVec;
+    typedef fgVector <DataType> hmDataVec;
+    typedef typename fgVector <DataType>::iterator hmDataVecItor;
 #ifdef FG_USING_MARMALADE
 	typedef std::hash<std::string> hashFunc;
 	// Type for map, assigning handle index value to string ID (case sensitive)
@@ -74,9 +75,9 @@ public:
 	typedef std::unordered_map <hashKey, fgRawIndex> hmNameMap;
 #endif
 private:
-    typedef fgArrayVector <fgRawMagic>	hmMagicVec;
-	typedef fgArrayVector <hashKey>		hmNameVec;
-    typedef fgArrayVector <unsigned int> hmFreeSlotsVec;
+    typedef fgVector <fgRawMagic>	hmMagicVec;
+	typedef fgVector <hashKey>		hmNameVec;
+    typedef fgVector <unsigned int> hmFreeSlotsVec;
 	// Data storage
     hmDataVec  m_managedData;
 	// Corresponding magic numbers
@@ -250,8 +251,10 @@ fgBool fgHandleManager<DataType, HandleType>::releaseHandle(HandleType handle)
     // ok remove it - tag as unused and add to free list
     m_magicData[index] = 0;
 	m_managedData[index] = NULL;
-	if(!m_nameVec[index].empty())
+	if(!m_nameVec[index].empty()) {
 		m_nameMap.erase(m_nameVec[index]);
+		FG_LOG::PrintDebug(">> Erasing %s from handle map...", m_nameVec[index].c_str());
+	}
 	m_nameVec[index].clear();
     m_freeSlots.push_back(index);
 	if(!getUsedHandleCount()) {
