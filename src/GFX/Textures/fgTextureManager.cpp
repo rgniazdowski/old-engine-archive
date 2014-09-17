@@ -31,7 +31,7 @@ fgTextureManager::fgTextureManager(fgManagerBase *resourceManager) :
 		m_init = FG_FALSE;
 		m_resourceManager = NULL;
 	} else {
-		m_resourceManager = (fgResourceManager *) resourceManager;
+		m_resourceManager = static_cast<fgResourceManager *>(resourceManager);
 	}
 }
 
@@ -53,10 +53,11 @@ void fgTextureManager::clear(void)
 /*
  *
  */
-void fgTextureManager::destroy(void) 
+fgBool fgTextureManager::destroy(void) 
 {
 	m_resourceManager = NULL;
 	m_init = FG_FALSE;
+	return FG_TRUE;
 }
 
 /*
@@ -89,7 +90,7 @@ fgBool fgTextureManager::allToVRAM(void)
 	while(m_resourceManager->isValid()) {
 		fgResource *resource = m_resourceManager->getCurrentResource();
 		if(!resource) {
-			printf("ERROR: Loop in texture manager, resource is %p\n", resource);
+			FG_LOG::PrintError("Loop in texture manager, resource is %p\n", resource);
 			return FG_FALSE;
 			// FAIL
 		}
@@ -206,6 +207,48 @@ void fgTextureManager::allReleaseGFX(void) {
 	m_resourceManager->refreshMemory();
 }
 
+// #FIXME OOOO
+fgBool fgTextureManager::uploadToVRAM(fgTextureResource *texture, fgBool force)
+{
+	if(!m_resourceManager || !texture)
+		return FG_FALSE;
+	fgResourceType resType = texture->getResourceType();
+	fgQuality quality = texture->getQuality();
+	if( ! ((resType == FG_RESOURCE_TEXTURE || resType == FG_RESOURCE_FONT) &&
+		(quality == FG_QualityManager->getQuality() ||
+		quality == FG_QUALITY_UNIVERSAL)) ) { 
+			FG_LOG::PrintDebug("Resource '%s' is not texture?", texture->getNameStr());
+			return FG_FALSE;
+	}
+	fgBool result = FG_TRUE;
+	FG_LOG::PrintDebug("Is texture '%s' locked? [%d]", texture->getNameStr(), texture->isLocked());
+	if(texture->isLocked() || force) {
+		FG_LOG::PrintDebug("Going to upload texture to VRAM - '%s'", texture->getNameStr());
+		texture->setIsInVRAM(FG_FALSE);
+		fgTextureGfxID& texGfxID = texture->getRefTextureGfxID();
+		// #FIXME #P1 - i just don't know what I am doing... this all so blurry.
+		if(glIsTexture(texGfxID) == GL_FALSE || !texture->hasOwnedRAM()) {
+			if(!texture->recreate()) {
+				FG_LOG::PrintError("Could not recreate texture '%s'\n", texture->getFilePathStr());
+				// FAIL
+				result = FG_FALSE;
+			}
+		} 
+
+		if(texture->hasOwnedRAM())
+		{
+			if(!makeTexture(texture)) {
+				result = FG_FALSE;
+				// FAIL
+				FG_LOG::PrintError("Could not upload texture '%s'\n", texture->getFilePathStr());
+			} else {
+				texture->setIsInVRAM(FG_TRUE); // #FIXME - this can be set in a better place
+			}
+		}
+	} // else: if resource is not locked then most likely it is not needed
+	return result;
+}
+
 /**
  * Uploads image to VRAM as a texture
  *
@@ -222,7 +265,7 @@ fgBool fgTextureManager::makeTexture(fgTextureResource *pTexture)
         FG_LOG::PrintError("Cannot upload texture - texture resource is NULL");
         return FG_FALSE;
     }
-	if(!m_resourceManager->isResourceManaged(pTexture)) {
+	if(!m_resourceManager->isManaged(pTexture)) {
 		FG_LOG::PrintError("Cannot upload texture - texture resource is not managed by Resource Manager");
 		return FG_FALSE;
 	}
@@ -277,6 +320,6 @@ fgBool fgTextureManager::makeTexture(fgTextureResource *pTexture)
     //if( 0 && tex_facade->mode() == fgTextureResource::TEXTURE )
 	//	tex_facade->releaseNonGFX();
 	m_resourceManager->unlockResource(pTexture);
-
+	fgGLError();
     return FG_TRUE;
 }

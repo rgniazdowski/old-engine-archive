@@ -14,12 +14,26 @@
 #include "fgManagerBase.h"
 #include "fgTextureResource.h"
 #include "fgTextureTypes.h"
+#include "fgStatusReporter.h"
 #include "Resource/fgResourceManager.h"
+#include "Util/fgTag.h"
+
+class fgTextureManager;
+
+#define FG_TAG_TEXTURE_MANAGER_NAME	"TextureManager"
+//#define FG_TAG_MANAGER_BASE_ID		20 //#FIXME - something automatic maybe?
+#define FG_TAG_TEXTURE_MANAGER			FG_TAG_TYPE(fgTextureManager)
+
+//FG_TAG_TEMPLATE(fgResourceManager, FG_TAG_MANAGER_BASE_NAME, FG_TAG_MANAGER_BASE_ID);
+FG_TAG_TEMPLATE_ID_AUTO(fgTextureManager, FG_TAG_TEXTURE_MANAGER_NAME);
+
+// Special handle type for manager base
+typedef FG_TAG_TEXTURE_MANAGER fgTextureManagerTag;
 
 /**
  * Class that allows to perform GROUP OPERATIONS on all textures. 
  */
-class fgTextureManager : public fgManagerBase {
+class fgTextureManager : public fgManagerBase, public fgStatusReporter<fgTextureManagerTag> {
     friend class MainModule; // ?? ?? ??
 public:
 	// Default constructor for Texture Manager object
@@ -27,10 +41,23 @@ public:
 	// Default destructor for Texture Manager object
     virtual ~fgTextureManager();
 
-	void clear(void);
-	void destroy(void);
+protected:
+	virtual void clear(void);
 
-	fgBool initialize(void);
+public:
+	//
+	virtual fgBool destroy(void);
+	//
+	virtual fgBool initialize(void);
+
+	void setResourceManager(fgManagerBase *resourceManager) {
+		if(resourceManager)
+			m_resourceManager = static_cast<fgResourceManager *>(resourceManager);
+	}
+
+	fgResourceManager *getResourceManager(void) const {
+		return m_resourceManager;
+	}
 
     /**
      * RAM -> VRAM.
@@ -53,6 +80,8 @@ public:
 	static GLint translateInternalPixelFormat(fgTextureInternalPixelFormat internalPixelFormat);
 #endif
 
+	fgBool uploadToVRAM(fgTextureResource *texture, fgBool force = FG_FALSE);
+
 private:
     /**
      * Uploads texture given via ID into VRAM.
@@ -66,7 +95,7 @@ private:
      * leave filename intact. It is however not needed, and should not
      * be used).
      */
-    fgBool makeTexture(fgTextureResource *textureResource);
+    fgBool makeTexture(fgTextureResource *textureResource);	
 
 private:
 	fgResourceManager *m_resourceManager;
