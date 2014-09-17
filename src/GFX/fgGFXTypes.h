@@ -91,6 +91,54 @@ typedef GLfixed		fgGFXfixed;
 #define FG_RAD2DEG (180.0f / M_PIF)
 #endif
 
+#if defined FG_USING_GLM
+#include "glm/vec2.hpp"
+#include "glm/vec3.hpp"
+#include "glm/vec4.hpp"
+
+typedef glm::vec3 fgColor3f;
+typedef glm::vec4 fgColor4f;
+typedef fgColor4f fgColor;
+
+#ifndef FG_MATH_GLM_VECTOR_MASK
+#define FG_MATH_GLM_VECTOR_MASK
+
+typedef glm::bvec2 fgVector2b;
+typedef glm::bvec3 fgVector3b;
+typedef glm::bvec4 fgVector4b;
+
+typedef glm::uvec2 fgVector2u;
+typedef glm::uvec3 fgVector3u;
+typedef glm::uvec4 fgVector4u;
+
+typedef glm::ivec2 fgVector2i;
+typedef glm::ivec3 fgVector3i;
+typedef glm::ivec4 fgVector4i;
+
+typedef glm::vec2 fgVector2f;
+typedef glm::vec3 fgVector3f;
+typedef glm::vec4 fgVector4f;
+
+#endif
+
+typedef fgVector2b	fgVec2b;
+typedef fgVector3b	fgVec3b;
+typedef fgVector4b	fgVec4b;
+
+typedef fgVector2u	fgVec2u;
+typedef fgVector3u	fgVec3u;
+typedef fgVector4u	fgVec4u;
+
+typedef fgVector2i	fgVec2i;
+typedef fgVector3i	fgVec3i;
+typedef fgVector4i	fgVec4i;
+
+typedef fgVector2f	fgVec2f;
+typedef fgVector3f	fgVec3f;
+typedef fgVector4f	fgVec4f;
+
+#else
+
 struct fgColor3f;
 struct fgColor4f;
 
@@ -212,6 +260,8 @@ inline float fgColor3f::operator*(const fgColor4f &c) const {
 
 typedef fgColor4f fgColor;
 
+#endif /* FG_USING_GLM */
+
 // #FIXME FG_AREA, fgArea, standard !
 struct fgArea
 {
@@ -269,6 +319,32 @@ struct fgArea
         void set_height(int _h) {
             h = _h;
         }
+};
+
+///////////////////////////////////////////////////////////
+
+// Vertex4 - pos, norm, uv, color
+struct fgVertex4
+{
+	fgVector3f position;	// location 0
+	fgVector3f normal;		// location 1
+	fgVector2f uv;			// location 2
+	fgColor4f color;		// location 3
+};
+
+// Vertex3 - pos, norm, uv
+struct fgVertex3
+{
+	fgVector3f position;
+	fgVector3f normal;
+	fgVector2f uv;
+};
+
+// Vertex2 - pos, uv
+struct fgVertex2
+{
+	fgVector3f position;
+	fgVector2f uv;
 };
 
 #undef _FG_GFX_TYPES_BLOCK__

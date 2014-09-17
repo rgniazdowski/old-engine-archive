@@ -48,7 +48,12 @@
 
 #if defined FG_USING_GLM
 
+#ifndef fgMath
 #define fgMath glm
+#endif
+
+#ifndef FG_MATH_GLM_VECTOR_MASK
+#define FG_MATH_GLM_VECTOR_MASK
 
 typedef glm::bvec2 fgVector2b;
 typedef glm::bvec3 fgVector3b;
@@ -65,6 +70,10 @@ typedef glm::ivec4 fgVector4i;
 typedef glm::vec2 fgVector2f;
 typedef glm::vec3 fgVector3f;
 typedef glm::vec4 fgVector4f;
+#endif
+
+#ifndef FG_MATH_GLM_MATRIX_MASK
+#define FG_MATH_GLM_MATRIX_MASK
 
 typedef glm::mat2 fgMatrix2f;
 typedef glm::mat3 fgMatrix3f;
@@ -74,8 +83,15 @@ typedef glm::dmat2 fgMatrix2d;
 typedef glm::dmat3 fgMatrix3d;
 typedef glm::dmat4 fgMatrix4d;
 
+#endif
+
+#ifndef FG_MATH_GLM_QUAT_MASK
+#define FG_MATH_GLM_QUAT_MASK
+
 typedef glm::quat fgQuaternionf;
 typedef glm::dquat fgQuaterniond;
+
+#endif
 
 #else /* FG_USING_GLM */
 
