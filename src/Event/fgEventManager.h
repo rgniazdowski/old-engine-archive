@@ -86,6 +86,8 @@ public:
 	void addKeyUpCallback(int keyCode, fgCallbackFunction *callback);
 	//
 	void addEventCallback(fgEventType eventCode, fgCallbackFunction *callback);
+	//
+	void addEventCallback(fgEventType eventCode, fgCallbackFunction::fgFunction function);
 
 	//
 	void addTimeoutCallback(fgCallbackFunction *callback, int timeout, fgArgumentList *argList);

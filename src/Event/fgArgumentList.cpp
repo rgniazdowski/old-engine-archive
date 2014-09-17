@@ -197,7 +197,8 @@ void* fgArgumentList::getNextArgumentValue(fgArgumentType *_type)
 	{
 	//	ArgumentList::Reset();
 		m_currentArg = getArgumentCount();
-		*_type = FG_ARGUMENT_NONE;
+		if(_type != NULL)
+			*_type = FG_ARGUMENT_NONE;
 		return NULL;
 	}
 
@@ -307,6 +308,11 @@ void fgArgumentList::clearArguments()
 	reset();
 	while(isThereNextArgument()) {
 		fgArgument arg = getNextArgumentStruct();
+		// ARGUMENT STRUCT is a special kind of argument
+		// it means that if it's past as a argument (pointer to struvt / object)
+		// it needs to be freed together with the argument list (argument list takes the ownership)
+		// This still needs fixing because no destructor is called (free function instead)
+		// That is deprecated. Handling allocator maybe?
 		if(arg.type == FG_ARGUMENT_STRUCT) {
 			if(arg.custom_pointer != NULL) {
 				fgFree(arg.custom_pointer);

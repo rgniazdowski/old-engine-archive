@@ -54,7 +54,8 @@ fgEventManager::~fgEventManager()
 
 	for(fgCallbackBinding::iterator it = m_eventBinds.begin(); it != m_eventBinds.end(); it++) {
 		for(int i=0; i<(int)it->second.size(); i++) {
-			delete it->second[i];
+			if(it->second[i])
+				delete it->second[i];
 			it->second[i] = NULL;
 		}
 		it->second.clear();
@@ -68,17 +69,21 @@ fgEventManager::~fgEventManager()
     }
 
 	for(int i=0;i<(int)m_timeoutCallbacks.size();i++) {
-		delete m_timeoutCallbacks[i].argList;
+		if(m_timeoutCallbacks[i].argList)
+			delete m_timeoutCallbacks[i].argList;
+		if(m_timeoutCallbacks[i].callback)
+			delete m_timeoutCallbacks[i].callback;
 		m_timeoutCallbacks[i].argList = NULL;
-		delete m_timeoutCallbacks[i].callback;
 		m_timeoutCallbacks[i].callback = NULL;
 	}
 	m_timeoutCallbacks.clear();
 
 	for(int i=0;i<(int)m_cyclicCallbacks.size();i++) {
-		delete m_cyclicCallbacks[i].argList;
+		if(m_cyclicCallbacks[i].argList)
+			delete m_cyclicCallbacks[i].argList;
+		if(m_cyclicCallbacks[i].callback)
+			delete m_cyclicCallbacks[i].callback;
 		m_cyclicCallbacks[i].argList = NULL;
-		delete m_cyclicCallbacks[i].callback;
 		m_cyclicCallbacks[i].callback = NULL;
 	}
 	m_cyclicCallbacks.clear();
@@ -138,6 +143,17 @@ void fgEventManager::addEventCallback(fgEventType eventCode, fgCallbackFunction 
 {
 	if(!callback || (int)eventCode < 0)
 		return;
+	m_eventBinds[eventCode].push_back(callback);
+}
+
+/*
+ *
+ */
+void fgEventManager::addEventCallback(fgEventType eventCode, fgCallbackFunction::fgFunction function)
+{
+	if(!function|| (int)eventCode < 0)
+		return;
+	fgCallbackFunction *callback = new fgCallbackFunction(function);
 	m_eventBinds[eventCode].push_back(callback);
 }
 
@@ -217,9 +233,7 @@ void fgEventManager::executeEvents(void)
 	while(!m_eventsQueue.empty()) {
 		fgThrownEvent event = m_eventsQueue.front();
 		int eventCode = event.eventCode;
-
-		printf("Event code thrown %d | list: %p\n", eventCode, event.argList);
-
+		//FG_LOG::PrintDebug("Event code thrown %d | list: %p", eventCode, event.argList);
 		fgCallbackBinding::iterator found = m_eventBinds.find(eventCode);
 		if(found == m_eventBinds.end()) {
 			if(event.argList)
