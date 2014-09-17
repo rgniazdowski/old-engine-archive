@@ -26,12 +26,13 @@ fgGfxShader::fgGfxShader(fgGfxShaderType type) :
 {
 	if(m_type == FG_GFX_SHADER_INVALID)
 		reportError(FG_ERRNO_GFX_SHADER_WRONG_TYPE);
-	m_params[(fgGFXuint)FG_GFX_SHADER_TYPE] = m_type;
-	m_params[(fgGFXuint)FG_GFX_SHADER_DELETE_STATUS] = 0;
-	m_params[(fgGFXuint)FG_GFX_SHADER_COMPILE_STATUS] = 0;
-	m_params[(fgGFXuint)FG_GFX_SHADER_INFO_LOG_LENGTH] = 0;
-	m_params[(fgGFXuint)FG_GFX_SHADER_SOURCE_LENGTH] = 0;
+	m_params[FG_GFX_SHADER_TYPE]			= m_type;
+	m_params[FG_GFX_SHADER_DELETE_STATUS]	= 0;
+	m_params[FG_GFX_SHADER_COMPILE_STATUS]	= 0;
+	m_params[FG_GFX_SHADER_INFO_LOG_LENGTH] = 0;
+	m_params[FG_GFX_SHADER_SOURCE_LENGTH]	= 0;
 	m_baseType = FG_GFX_BASE_TYPE_SHADER;
+	FG_LOG::PrintDebug("fgGfxShader::fgGfxShader();");
 }
 
 /*
@@ -39,11 +40,23 @@ fgGfxShader::fgGfxShader(fgGfxShaderType type) :
  */
 fgGfxShader::~fgGfxShader()
 {
+	FG_LOG::PrintDebug("BEGIN: fgGfxShader::~fgGfxShader(); NAME: %s, P: %p", getFilePathStr(), this);
+	fgGfxShader::clearAll();
+	FG_LOG::PrintDebug("END: fgGfxShader::~fgGfxShader();");
+}
+
+/*
+ *
+ */
+void fgGfxShader::clearAll(void)
+{
+	FG_LOG::PrintDebug("BEGIN: fgGfxShader::clearAll(); NAME: %s, P: %p", getFilePathStr(), this);
 	freeSource();
 	m_defineStrVec.clear_optimised();
 	m_includeStrVec.clear_optimised();
 	m_params.clear();
 	deleteShader();
+	FG_LOG::PrintDebug("END: fgGfxShader::clearAll();");
 }
 
 /*
@@ -77,7 +90,9 @@ void fgGfxShader::appendInclude(std::string & includeName)
 	if(!includeName.empty())
 		m_includeStrVec.push_back(includeName);
 }
-
+// #FIXME
+#define _FG_GFX_SL_VERSION_ES_100 "#version 100 es\n"
+#define _FG_GFX_SL_VERSION_EMPTY "\n"
 /*
  *
  */
@@ -106,13 +121,15 @@ fgBool fgGfxShader::loadSource(void)
 	m_sources = (char const **)fgMalloc(sizeof(char *) * (m_numSources));
 	if(!m_sources) {
 		//reportError(
+		reportError(FG_ERRNO_ENOMEM);
 		return FG_FALSE;
 	}
-	std::string _version;
-	_version.append("#version ");
+	//std::string _version;
+	//_version.append("#version ");
 	if(m_version == FG_GFX_ESSL_100)
-		_version.append("100 es\n");
-	m_sources[0] = _version.c_str();
+		m_sources[0] = _FG_GFX_SL_VERSION_EMPTY;
+		//_version.append("100 es\n");
+	//m_sources[0] = _version.c_str();
 	int n = 1;
 	// include constant definitions (#define) into the shader source
 	for(int i=0;i<(int)m_defineStrVec.size();i++,n++) {
@@ -123,7 +140,8 @@ fgBool fgGfxShader::loadSource(void)
 		m_sources[n] = "\n"; // #FIXME
 	}
 	m_sources[n] = m_fileSource;
-	n++;
+	for(int i=0;i<(int)m_numSources;i++)
+		printf("[%d] = '%s'\n", i, m_sources[i]);
 	m_isSourceLoaded = FG_TRUE;
 	return FG_TRUE;
 }

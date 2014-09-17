@@ -20,6 +20,8 @@
 #include "fgStatusReporter.h"
 #include "fgVector.h"
 
+#include "GFX/fgGFXMVPMatrix.h"
+
 class fgGfxShaderProgram;
 
 #define FG_TAG_GFX_SHADER_PROGRAM_NAME	"GfxShaderProgram"
@@ -28,30 +30,27 @@ class fgGfxShaderProgram;
 FG_TAG_TEMPLATE_ID_AUTO(fgGfxShaderProgram, FG_TAG_GFX_SHADER_PROGRAM_NAME);
 typedef FG_TAG_GFX_SHADER_PROGRAM fgGfxShaderProgramTag;
 
-// Special handle type for shader program
-typedef fgHandle<FG_TAG_GFX_SHADER_PROGRAM > fgGfxShaderProgramHandle;
-
 //
-enum fgGfxProgramObjParamType {
+typedef fgGFXuint fgGfxProgramObjParamType;
+
 	// GL_TRUE if program is currently flagged for deletion, and GL_FALSE otherwise.
-	FG_GFX_PROGRAM_DELETE_STATUS	= GL_DELETE_STATUS,
+#define	FG_GFX_PROGRAM_DELETE_STATUS					GL_DELETE_STATUS
 	// GL_TRUE if the last link operation on program was successful, and GL_FALSE otherwise.
-	FG_GFX_PROGRAM_LINK_STATUS		= GL_LINK_STATUS,
+#define	FG_GFX_PROGRAM_LINK_STATUS						GL_LINK_STATUS
 	// GL_TRUE or if the last validation operation on program was successful, and GL_FALSE otherwise.
-	FG_GFX_PROGRAM_VALIDATE_STATUS	= GL_VALIDATE_STATUS,
+#define FG_GFX_PROGRAM_VALIDATE_STATUS					GL_VALIDATE_STATUS
 	// the number of characters in the information log for program including the null termination
 	// character (i.e., the size of the character buffer required to store the informationlog). 
 	// If program has no information log, a value of 0 is returned.
-	FG_GFX_PROGRAM_INFO_LOG_LENGTH	= GL_INFO_LOG_LENGTH,
+#define FG_GFX_PROGRAM_INFO_LOG_LENGTH					GL_INFO_LOG_LENGTH
 	// the number of shader objects attached to program.
-	FG_GFX_PROGRAM_ATTACHED_SHADERS = GL_ATTACHED_SHADERS,
+#define FG_GFX_PROGRAM_ATTACHED_SHADERS					GL_ATTACHED_SHADERS
 	// number of active attribute variables for program
-	FG_GFX_PROGRAM_ACTIVE_ATTRIBUTES = GL_ACTIVE_ATTRIBUTES,
+#define FG_GFX_PROGRAM_ACTIVE_ATTRIBUTES				GL_ACTIVE_ATTRIBUTES
 	// the length of the longest active attribute name for program, including the null termination character
-	FG_GFX_PROGRAM_ACTIVE_ATTRIBUTE_MAX_LENGTH = GL_ACTIVE_ATTRIBUTE_MAX_LENGTH,
+#define FG_GFX_PROGRAM_ACTIVE_ATTRIBUTE_MAX_LENGTH		GL_ACTIVE_ATTRIBUTE_MAX_LENGTH
 	// the number of active uniform variables
-	FG_GFX_PROGRAM_ACTIVE_UNIFORMS = GL_ACTIVE_UNIFORMS
-};
+#define FG_GFX_PROGRAM_ACTIVE_UNIFORMS					GL_ACTIVE_UNIFORMS
 
 /*
  *
@@ -134,6 +133,8 @@ public:
 
 	//
 	fgBool preLoadConfig(const char *path);
+	//
+	fgBool preLoadConfig(std::string &path);
 
 protected:
 	//
@@ -152,9 +153,9 @@ protected:
 	fgBool _detachShaders(void);
 	
 	//
-	fgGFXint _updateLinkStatus(void);
+	fgGFXint updateLinkStatus(void);
 	//
-	fgGFXint _updateValidateStatus(void);
+	fgGFXint updateValidateStatus(void);
 
 public:
 	//
@@ -171,23 +172,10 @@ public:
 	fgBool bindUniforms(void);
 	//
 	fgBool deleteProgram(void);
+	//
+	void clearAll(void);
 
 public:
-	//
-	std::string & getName(void) {
-		return m_programName;
-	}
-
-	//
-	const char *getNameStr(void) const {
-		return m_programName.c_str();
-	}
-
-	//
-	fgGfxShaderProgramHandle & getRefHandle(void) {
-		return m_handle;
-	}
-
 	//
 	shaderVec & getRefShaderVec(void) {
 		return m_shaders;
@@ -203,11 +191,7 @@ public:
 		return m_uniformBinds;
 	}
 
-	//
-	fgGFXuint & getRefGfxID(void) {
-		return m_gfxID;
-	}
-
+	// 
 	fgGfxShader *getShader(fgGfxShaderType type) const {
 		fgGFXint id = _shaderTypeToSpID(type);
 		if(id != -1)
@@ -215,6 +199,48 @@ public:
 		else
 			return NULL;
 	}
+
+	///////////////////////////////////////////////////////
+
+	//
+	fgGFXint getUniformLocation(fgGfxUniformType type);
+	//
+	fgGFXint getUniformLocation(std::string variableName);
+
+	//
+	fgGFXint getUniformBindIndex(fgGfxUniformType type);
+	//
+	fgGfxUniformBind *getUniformBind(fgGfxUniformType type);
+
+	//
+	fgBool setUniform(fgGfxMVPMatrix *matrix);
+	//
+	fgBool setUniform(fgGfxMVMatrix *matrix);
+	
+	//
+	fgBool setUniform(fgGfxUniformType type, fgGFXfloat v0);
+	//
+	fgBool setUniform(fgGfxUniformType type, fgGFXfloat v0, fgGFXfloat v1);
+	//
+	fgBool setUniform(fgGfxUniformType type, fgGFXfloat v0, fgGFXfloat v1, fgGFXfloat v2);
+	//
+	fgBool setUniform(fgGfxUniformType type, fgGFXfloat v0, fgGFXfloat v1, fgGFXfloat v2, fgGFXfloat v3);
+
+	//
+	fgBool setUniform(fgGfxUniformType type, fgGFXint v0);
+	//
+	fgBool setUniform(fgGfxUniformType type, fgGFXint v0, fgGFXint v1);
+	//
+	fgBool setUniform(fgGfxUniformType type, fgGFXint v0, fgGFXint v1, fgGFXint v2);
+	//
+	fgBool setUniform(fgGfxUniformType type, fgGFXint v0, fgGFXint v1, fgGFXint v2, fgGFXint v3);
+
+	//
+	fgBool setUniform(fgGfxUniformType type, fgGFXsizei count, const fgGFXfloat *value);
+	//
+	fgBool setUniform(fgGfxUniformType type, fgGFXsizei count, const fgGFXint *value);
+
+	///////////////////////////////////////////////////////
 
 	//
 	fgGfxShader *getFragmentShader(void) const {
