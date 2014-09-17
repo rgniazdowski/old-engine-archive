@@ -48,6 +48,50 @@
 #endif // FG_GFX_GL_INCLUDES_FINISHED
 #include "fgTypes.h"
 #include "fgGFXTypes.h"
+#include "fgLog.h"
+
+inline unsigned int fgGLError(const char *afterFunc = NULL) {
+	const char * invalidEnum = "An unacceptable value is specified for an enumerated argument.";
+	const char * invalidValue = "A numeric argument is out of range.";
+	const char * invalidOperation = "The specified operation is not allowed in the current state.";
+	const char * outOfMemory = "There is not enough memory left to execute the command. The state of the GL is undefined";
+	const char * invalidFBOp = "The command is trying to render to or read from the framebuffer while the currently bound framebuffer is not framebuffer complete (i.e. the return value from glCheckFramebufferStatus is not GL_FRAMEBUFFER_COMPLETE).";
+	unsigned int retCode = 0;
+	if(afterFunc == NULL)
+		afterFunc = "gl*";
+	fgGFXenum code = 0;
+	while(FG_TRUE) {
+		code = glGetError();
+		if(code == GL_NO_ERROR)
+			break;
+		switch (code)
+		{
+		case GL_INVALID_ENUM:
+			FG_LOG::PrintError("GL error GL_INVALID_ENUM (%d) after %s(): %s", code, afterFunc, invalidEnum);
+			retCode = code;
+			break;
+		case GL_INVALID_VALUE:
+			FG_LOG::PrintError("GL error GL_INVALID_VALUE (%d) after %s(): %s", code, afterFunc, invalidValue);
+			retCode = code;
+			break;
+		case GL_INVALID_OPERATION:
+			FG_LOG::PrintError("GL error GL_INVALID_OPERATION (%d) after %s(): %s", code, afterFunc, invalidOperation);
+			retCode = code;
+			break;
+		case GL_OUT_OF_MEMORY:
+			FG_LOG::PrintError("GL error GL_OUT_OF_MEMORY (%d) after %s(): %s", code, afterFunc, outOfMemory);
+			retCode = code;
+			break;
+		case GL_INVALID_FRAMEBUFFER_OPERATION:
+			FG_LOG::PrintError("GL error GL_INVALID_FRAMEBUFFER_OPERATION (%d) after %s(): %s", code, afterFunc, invalidFBOp);
+			retCode = code;
+			break;
+		default:
+			break;
+		}
+	}
+	return retCode;
+}
 
 #undef _FG_GFX_STD_INC_BLOCK__
 #endif /* _FG_GFX_STD_INC_H_ */

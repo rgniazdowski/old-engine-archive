@@ -202,7 +202,7 @@ fgBool fgTextureResource::isDisposed(void) const
 	// If it is, then it means that the texture is uploaded and
 	// ready to use. If GfxID is invalid than we can assume that
 	// resource is disposed. This is kinda tricky one.
-	FG_LOG::PrintDebug("fgTextureResource::isDisposed();   p_rawData=%p;", m_rawData);
+	//FG_LOG::PrintDebug("fgTextureResource::isDisposed();   p_rawData=%p;", m_rawData);
 	if(m_isInVRAM)
 		return FG_FALSE;
 	else 
@@ -218,6 +218,7 @@ void fgTextureResource::releaseNonGFX(void)
 
 	if(m_rawData)
 		delete [] m_rawData;
+	m_rawData = NULL;
 	m_width = 0;
 	m_height = 0;
 	m_components = 0;

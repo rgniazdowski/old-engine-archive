@@ -17,6 +17,24 @@
 
 #include "Util/fgTime.h"
 
+void _preparePrintBuf(char *buf, const char *type)
+{
+	long timestamp = fgTime::seconds();
+	int mstru = (int)fgTime::ms()%1000;
+	struct tm *ti;
+	ti = localtime(&timestamp);
+
+	snprintf(buf, FG_LOG_BUF_MAX-1, "%02d/%02d/%02d %02d:%02d:%02d.%03d: %s", 
+			ti->tm_mday,
+			ti->tm_mon+1,
+			ti->tm_year-100,
+			ti->tm_hour,
+			ti->tm_min,
+			ti->tm_sec,
+			mstru,
+			type);
+}
+
 /*
  * Log info message
  */
@@ -25,11 +43,12 @@ void FG_LOG::PrintInfo(const char *fmt, ...)
 	char buf[FG_LOG_BUF_MAX];
 	va_list args;
 
-	sprintf(buf, "INFO: ");
+	//memset(buf, 0, FG_LOG_BUF_MAX);
+	_preparePrintBuf(buf, "INFO: ");
 	va_start(args,fmt);
 	vsprintf(buf+strlen(buf), fmt, args);
 	va_end(args);
-
+	
     // s3eDebugTracePrintf(buf);
     puts(buf);
 }
@@ -44,7 +63,8 @@ void FG_LOG::PrintDebug(const char *fmt, ...)
 	char buf[FG_LOG_BUF_MAX];
 	va_list args;
 
-	sprintf(buf, "DEBUG: ");
+	//memset(buf, 0, FG_LOG_BUF_MAX);
+	_preparePrintBuf(buf, "DEBUG: ");
 	va_start(args,fmt);
 	vsprintf(buf+strlen(buf), fmt, args);
 	va_end(args);
@@ -63,7 +83,8 @@ void FG_LOG::PrintError(const char *fmt, ...)
 	char buf[FG_LOG_BUF_MAX];
 	va_list args;
 
-	sprintf(buf, "ERROR: ");
+	//memset(buf, 0, FG_LOG_BUF_MAX);
+	_preparePrintBuf(buf, "ERROR: ");
 	va_start(args,fmt);
 	vsprintf(buf+strlen(buf), fmt, args);
 	va_end(args);
@@ -80,7 +101,8 @@ void FG_LOG::PrintWarning(const char *fmt, ...)
 	char buf[FG_LOG_BUF_MAX];
 	va_list args;
 
-	sprintf(buf, "WARNING: ");
+	//memset(buf, 0, FG_LOG_BUF_MAX);
+	_preparePrintBuf(buf, "WARNING: ");
 	va_start(args,fmt);
 	vsprintf(buf+strlen(buf), fmt, args);
 	va_end(args);
@@ -122,7 +144,6 @@ namespace FG_LOG {
 			timestamp = fgTime::seconds();
 		struct tm *ti;
 		ti = localtime(&timestamp);
-
 		const char *msg_type;
 		switch(message->type)
 		{
@@ -145,14 +166,16 @@ namespace FG_LOG {
 			msg_type = "INFO";
 			break;
 		}; 
+		int mstru = (int)fgTime::ms()%1000;
 
-		snprintf(buf, FG_LOG_BUF_MAX-1, "%02d/%02d/%02d %02d:%02d:%02d - %s(%d): %s: %s", 
+		snprintf(buf, FG_LOG_BUF_MAX-1, "%02d/%02d/%02d %02d:%02d:%02d.%03d: - %s(%d): %s: %s", 
 			ti->tm_mday,
 			ti->tm_mon+1,
 			ti->tm_year-100,
 			ti->tm_hour,
 			ti->tm_min,
 			ti->tm_sec,
+			mstru,
 			msg_type,
 			message->code(),
 			fgErrno::strError(message->code()),
@@ -220,6 +243,10 @@ void FG_LOG::PrintMessageToLog(fgFile *file, fgMessage *message, long timestamp)
 	char buf[FG_LOG_BUF_MAX];
 	if(!FG_LOG::_prepareMsgBuf(message, buf, timestamp))
 		return;
+	int n = (int)strlen(buf);
+	buf[n] = '\r';
+	buf[n+1] = '\n';
+	buf[n+2] = '\0';
 	file->puts(buf);
 }
 
@@ -259,6 +286,10 @@ void FG_LOG::PrintStatusToLog(fgFile *file, fgStatus *status)
 		char buf[FG_LOG_BUF_MAX];
 		if(!FG_LOG::_prepareStatusBuf(status, buf))
 			return;
+			int n = (int)strlen(buf);
+		buf[n] = '\r';
+		buf[n+1] = '\n';
+		buf[n+2] = '\0';
 		file->puts(buf);
 	}
 }

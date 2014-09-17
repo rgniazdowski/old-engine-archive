@@ -15,28 +15,10 @@
 #include "Resource/fgResourceFactoryTypes.h"
 
 #include "fgTextureTypes.h"
-
-#if defined FG_USING_MARMALADE
-
-#if !defined FG_USING_MARMALADE_EGL && defined FG_USING_MARMALADE_IWGL
-#include <IwGL.h>
-#elif defined FG_USING_MARMALADE_OPENGL_ES
-#include <GLES2/gl2.h>
-#include <GLES2/gl2ext.h>
-#include <GLES2/gl2platform.h>
-#include <EGL/egl.h>
-#endif // FG_USING_MARMALADE_OPENGL_ES
-
-#elif defined FG_USING_PLATFORM_LINUX
-
-#ifdef FG_USING_OPENGL
-#include <GL/gl.h>
-#endif // FG_USING_OPENGL
-
-#endif // FG_USING_MARMALADE
+#include "GFX/fgGFXStdInc.h"
 
 #if defined FG_USING_OPENGL_ES || defined FG_USING_OPENGL
-typedef GLuint fgTextureGfxID;
+typedef fgGFXuint fgTextureGfxID;
 #else
 typedef unsigned int fgTextureGfxID;
 #endif // FG_USING_OPENGL_ES || FG_USING_OPENGL
@@ -44,7 +26,8 @@ typedef unsigned int fgTextureGfxID;
 /*
  *
  */
-class fgTextureResource : public fgResource {
+class fgTextureResource : public fgResource
+{
 public:
 	// Base constructor of the texture resource object
 	fgTextureResource();
@@ -56,10 +39,11 @@ public:
 	virtual ~fgTextureResource()	{ destroy(); }
 
 	FG_RESOURCE_FACTORY_CREATE_FUNCTION(fgTextureResource)
-
+protected:
 	// Clears the class data, this actually does not free allocated memory,
 	// just resets base class attributes
 	virtual void clear(void);
+public:
 	// Create function loads/interprets data from file in ROM and place it in RAM memory.
 	virtual fgBool create(void);
 	// Destroy all loaded data including additional metadata (called with deconstructor)
@@ -72,6 +56,7 @@ public:
 	virtual fgBool isDisposed(void) const;
 
 protected:
+	// 
 	fgBool setFileTypeFromFilePath(std::string &path) {
 		if(path.empty())
 			return FG_FALSE;
@@ -93,6 +78,7 @@ protected:
 		return FG_TRUE;
 	}
 
+	//
 	fgBool setFileTypeFromFilePath(void) {
 		if(getFilePath(m_quality).empty())
 			return FG_FALSE;
