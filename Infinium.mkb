@@ -157,10 +157,11 @@ files
 	GFX/fgGFXMain.h
 	GFX/fgGFXMaterial.cpp
 	GFX/fgGFXMaterial.h
+	GFX/fgGFXModelTypes.h
 	GFX/fgGFXModelResource.cpp
 	GFX/fgGFXModelResource.h
-	GFX/fgGFXModelOBJResource.cpp
-	GFX/fgGFXModelOBJResource.h
+	GFX/fgGFXMVMatrix.h
+	GFX/fgGFXMVPMatrix.h
 	GFX/fgGFXObject.cpp
 	GFX/fgGFXObject.h
 	GFX/fgGFXOctreeBase.cpp
