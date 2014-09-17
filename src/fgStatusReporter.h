@@ -25,8 +25,10 @@ namespace FG_STATUS {
  *
  */
 template<typename TagType>
-class fgStatusReporter {
+class fgStatusReporter 
+{
 public:
+	//
 	fgStatusReporter() : m_errCode(FG_ERRNO_OK),
 		m_reportToMsgSystem(FG_TRUE)
 	{
@@ -36,36 +38,42 @@ public:
 		clearStatus();
 	}
 public:
+	//
 	fgBool isError(void) const {
 		return (fgBool)(m_errCode != FG_ERRNO_OK);
 	}
-
+	//
 	int getErrorCode(void) const {
 		return m_errCode;
 	}
-
+	//
 	int getLastErrorCode(void) const {
 		if(!m_statusStack.empty())
 			return m_statusStack.top()->code();
 		return m_errCode;
 	}
 
+	//
 	void setReportToMsgSystem(fgBool _set) {
 		m_reportToMsgSystem = _set;
 	}
 
+	//
 	fgStatus *getLastStatus(void) const {
 		if(!m_statusStack.empty())
 			return m_statusStack.top();
 		return NULL;
 	}
 
+	//
 	void clearStatus(void) {
 		while(!m_statusStack.empty()) {
 			fgStatus *top = m_statusStack.top();
 			// Remove the message only if it's not managed
-			if(!top->message->isManaged)
-				top->clearMessage();
+			if(top->message) {
+				if(!top->message->isManaged)
+					top->clearMessage();
+			}
 			// Delete the status (when not managed)
 			if(!top->isManaged)
 				delete top;
@@ -73,11 +81,13 @@ public:
 		}
 		m_errCode = FG_ERRNO_OK;
 	}
+
 protected:
+	//
 	void setErrorCode(int _code) {
 		m_errCode = _code;
 	}
-
+	//
 	void reportStatus(fgStatus *_status) {
 		if(!_status)
 			return;
@@ -109,12 +119,14 @@ protected:
 		}
 	}
 
-	void reportStatus(fgStatus& _status) { // #FIXME
+	//
+	/*void reportStatus(fgStatus& _status) { // #FIXME
 		fgStatus* newStatus(&_status);
 		_status.clearMessage();
 		reportStatus(newStatus);
-	}
+	}*/
 
+	//
 	void reportSuccess(int _code = FG_ERRNO_OK, const char *fmt = NULL, ...) {
 		const char *msgData = NULL;
 		char buf[FG_MESSAGE_BUFFER_MAX];
@@ -129,6 +141,7 @@ protected:
 		reportStatus(newStatus->success(_code, msgData));
 	}
 
+	//
 	void reportWarning(int _code = FG_ERRNO_OK, const char *fmt = NULL, ...) {
 		const char *msgData = NULL;
 		char buf[FG_MESSAGE_BUFFER_MAX];
@@ -143,6 +156,7 @@ protected:
 		reportStatus(newStatus->warning(_code, msgData));
 	}
 
+	//
 	void reportError(int _code = FG_ERRNO_OK, const char *fmt = NULL, ...) {
 		const char *msgData = NULL;
 		char buf[FG_MESSAGE_BUFFER_MAX];
@@ -157,6 +171,7 @@ protected:
 		reportStatus(newStatus->error(_code, msgData));
 	}
 
+	//
 	void reportDebug(int _code = FG_ERRNO_OK, const char *fmt = NULL, ...) {
 		const char *msgData = NULL;
 		char buf[FG_MESSAGE_BUFFER_MAX];
@@ -172,8 +187,11 @@ protected:
 	}
 
 protected:
+	///
 	int		m_errCode;
+	///
 	fgBool	m_reportToMsgSystem;
+	///
 	std::stack<fgStatus *> m_statusStack;
 };
 
