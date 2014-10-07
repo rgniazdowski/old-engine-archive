@@ -1,38 +1,42 @@
 <!-- vim: ft=xml 
 -->
 <ResourceGroup name="MainTextures" priority="medium">
-	<Texture path="textures/BackgroundCrate_1024x512.jpg" name="MainBackgroundTexture" quality="universal" />
-	<Texture path="textures/shockwave1.tga" name="PulseTexture" quality="universal" />
-	<Texture path="textures/debris0_sheet.tga" name="DebrisSheetTexture" quality="universal" />
-	<Texture path="textures/flame0_sheet.tga" name="FlameSheetTexture" quality="universal" />
-	<Texture path="textures/flash0_sheet.tga" name="FlashSheetTexture" quality="universal" />
-	<Texture path="textures/smoketrail0.tga" name="SmokeTrailTexture" quality="universal" />
-	<Texture path="textures/roundspark0.tga" name="RoundSparkTexture" quality="universal" />
-	<Texture path="textures/shockwave0.tga" name="ShockWaveTexture" quality="universal" />
-	<Texture path="textures/spark0.tga" name="SparkTexture" quality="universal" />
-	<Texture path="textures/explosion1_1024.tga" name="ExplosionSequenceTexture" quality="universal" />
-	<Texture path="textures/fire1_512.tga" name="FireSequenceTexture" quality="universal" />
-	<Texture path="textures/plasma_galaxy_1024.jpg" name="SkyBoxTexture" quality="universal" />
-
+	<Texture path="textures/other/BackgroundCrate_1024x512.jpg" name="MainBackgroundTexture" quality="universal" />
+	<Texture path="textures/particle/shockwave1.tga" name="PulseTex" quality="universal" />
+	<Texture path="textures/particle/debris0_sheet.tga" name="DebrisSheetTex" quality="universal" />
+	<Texture path="textures/particle/flame0_sheet.tga" name="FlameSheetTex" quality="universal" />
+	<Texture path="textures/particle/flash0_sheet.tga" name="FlashSheetTex" quality="universal" />
+	<Texture path="textures/particle/smoketrail0.tga" name="SmokeTrailTex" quality="universal" />
+	<Texture path="textures/particle/roundspark0.tga" name="RoundSparkTex" quality="universal" />
+	<Texture path="textures/particle/shockwave0.tga" name="ShockWaveTex" quality="universal" />
+	<Texture path="textures/particle/spark0.tga" name="SparkTex" quality="universal" />
+	<Texture path="textures/particle/explosion1_1024.tga" name="ExplosionSeqTex" quality="universal" />
+	<Texture path="textures/particle/fire1_512.tga" name="FireSequenceTex" quality="universal" />
+	<Texture path="textures/skybox/plasma_galaxy_1024.jpg" name="SkyBoxTex" quality="universal" />
+	<Texture path="textures/splash/loading_screen0.jpg" name="Splash" quality="universal" />
+	
 	<!-- quality below zero tells the system that that texture must be used in
 		 every quality setup (which has not texture with the same name) -->
-	<Texture  name="HudTopTexture" isMapped="true">
-		<FileQualityMap path="textures/hud_top_1024.tga" quality="universal" />
-		<FileQualityMap path="textures/hud_top_2048.tga" quality="high" />	
-	</Texture>
-	
+	<Texture config="textures/gui/hud/HudTop.res.ini" />
+	<Texture config="textures/gui/hud/HudBottom.res.ini" />
+	<Texture config="textures/gui/hud/HudCenter.res.ini" />
+	<Texture config="textures/gui/hud/HudLines.res.ini" />
+	<Texture config="textures/MetalGrill.res.ini" />
+	<Texture config="textures/gui/PopupBG.res.ini" />
+<!--
 	<Texture name="HudBottomTexture" isMapped="true">
-		<FileQualityMap path="textures/hud_bottom_1024.tga" quality="universal" />
-		<FileQualityMap path="textures/hud_bottom_2048.tga" quality="high" />
+		<FileQualityMap path="textures/gui/hud/hud_bottom_1024.tga" quality="universal" />
+		<FileQualityMap path="textures/gui/hud/hud_bottom_2048.tga" quality="high" />
 	</Texture>
 	
 	<Texture name="HudCenterTexture" isMapped="true">
-		<FileQualityMap path="textures/hud_center_512.tga" quality="universal" />
-		<FileQualityMap path="textures/hud_center_1024.tga" quality="high" />
+		<FileQualityMap path="textures/gui/hud/hud_center_512.tga" quality="universal" />
+		<FileQualityMap path="textures/gui/hud/hud_center_1024.tga" quality="high" />
 	</Texture>
 	
 	<Texture name="HudLinesTexture" isMapped="true">
-		<FileQualityMap path="textures/hud_lines_1024.tga" quality="universal" />
-		<FileQualityMap path="textures/hud_lines_2048.tga" quality="high" />
-	</Texture>	
+		<FileQualityMap path="textures/gui/hud/hud_lines_1024.tga" quality="universal" />
+		<FileQualityMap path="textures/gui/hud/hud_lines_2048.tga" quality="high" />
+	</Texture>
+-->
 </ResourceGroup>

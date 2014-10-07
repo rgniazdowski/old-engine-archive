@@ -9,16 +9,14 @@ attribute vec4 a_position;
 attribute vec3 a_normal;
 attribute vec2 a_texCoord;
 
-varying mediump vec3 v_position;
-varying mediump vec3 v_normal;
-varying mediump vec2 v_texCoord;
+varying highp vec3 v_position;
+varying highp vec3 v_normal;
+varying highp vec2 v_texCoord;
 
 void main()
 {
     // Define position and normal in model coordinates. he?
     vec4 mcPosition = a_position;
-	//mcPosition.xyz = a_position;
-	//mcPosition.w = 0.0;
     
 	  gl_Position = u_mvpMatrix * mcPosition;    
 	
