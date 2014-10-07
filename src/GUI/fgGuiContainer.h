@@ -11,8 +11,9 @@
 #define _FG_GUI_CONTAINER_H_
 
 #include "fgGuiWidget.h"
+#include "fgGuiWidgetFactoryTypes.h"
 
-#define FG_GUI_CONTAINER		4
+#define FG_GUI_CONTAINER		0x00000020
 #define FG_GUI_CONTAINER_NAME	"Container"
 
 /* horizontal, vertical */
@@ -47,12 +48,16 @@ FG_ENUM_FLAGS(fgGuiContainerPackAlign);
  */
 class fgGuiContainer : public fgGuiWidget
 {
-private:
+public:
+	typedef std::map<std::string, fgGuiWidget*> childrenMap;
+	typedef childrenMap::iterator				childrenMapItor;
+
+	typedef fgVector<fgGuiWidget *> childrenVec;
+	typedef childrenVec::iterator	childrenVecItor;
 protected:
-	// 
-	std::map<std::string, fgGuiWidget *> m_childrenMap;
-	//
-	fgVector<fgGuiWidget *> m_children;
+	/// 
+	childrenMap		m_childrenMap;
+	childrenVec		m_children;
 
 protected:
 	// 
@@ -64,13 +69,35 @@ public:
 	// 
 	virtual ~fgGuiContainer();
 
+	FG_GUI_WIDGET_FACTORY_CREATE_FUNCTION(fgGuiContainer);
+	
+	//
+	virtual void display(fgGfxLayer *guiLayer);
+
 	// 
-	virtual fgVector4f updateSize(void);
+	virtual fgBoundingBox3Df& updateSize(void);
 	// 
 	virtual void refresh(void);
 
 	// 
-	virtual int updateState(void);
+	virtual int updateState(const fgPointerData *pointerData);
+
+	//
+	fgGuiWidget *getChild(const std::string& nameTag);
+	//
+	fgGuiWidget *getChild(const char *nameTag);
+	//
+	childrenVec& getChildren(void);
+	//
+	childrenMap& getChildrenMap(void);
+	//
+	fgBool addChild(fgGuiWidget *pWidget);
+	//
+	fgBool removeChild(fgGuiWidget *pWidget);
+	//
+	fgBool removeChild(const std::string& nameTag);
+	//
+	fgBool removeChild(const char *nameTag);
 };
 
 #endif /* _FG_GUI_CONTAINER_H_ */

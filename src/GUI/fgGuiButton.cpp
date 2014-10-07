@@ -12,8 +12,10 @@
 /*
  *
  */
-fgGuiButton::fgGuiButton()
+fgGuiButton::fgGuiButton() : 
+	m_label(NULL)
 {
+	fgGuiButton::setDefaults();
 }
 
 /*
@@ -28,15 +30,17 @@ fgGuiButton::~fgGuiButton()
  */
 void fgGuiButton::setDefaults(void)
 {
+	m_type = FG_GUI_BUTTON;
+	m_typeName = FG_GUI_BUTTON_NAME;
+	m_typeTraits = FG_GUI_BUTTON | FG_GUI_WIDGET;
 }
 
 /*
  *
  */
-fgVector4f fgGuiButton::updateSize(void)
+fgBoundingBox3Df& fgGuiButton::updateSize(void)
 {
-	fgVector4f returnVec;
-	return returnVec;
+	return fgGuiWidget::updateSize();
 }
 
 /*

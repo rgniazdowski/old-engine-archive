@@ -7,16 +7,19 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-#ifndef _FG_GUI_TABLE_H_
-#define _FG_GUI_TABLE_H_
+#ifndef _FG_GUI_EDITABLE_TEXT_H_
+#define _FG_GUI_EDITABLE_TEXT_H_
 
-#include "fgGuiContainer.h"
+#include "fgGuiTextArea.h"
 #include "fgGuiWidgetFactoryTypes.h"
 
-#define FG_GUI_TABLE		0x00080000
-#define FG_GUI_TABLE_NAME	"Table"
+#define FG_GUI_EDITABLE_TEXT		0x00000800
+#define FG_GUI_EDITABLE_TEXT_NAME	"EditableText"
 
-class fgGuiTable : public fgGuiContainer
+/*
+ *
+ */
+class fgGuiEditableText : public fgGuiTextArea
 {
 private:
 protected:
@@ -27,12 +30,12 @@ protected:
 
 public:
 	// 
-	fgGuiTable();
+	fgGuiEditableText();
 	// 
-	virtual ~fgGuiTable();
+	virtual ~fgGuiEditableText();
 
-	FG_GUI_WIDGET_FACTORY_CREATE_FUNCTION(fgGuiTable);
-
+	FG_GUI_WIDGET_FACTORY_CREATE_FUNCTION(fgGuiEditableText);
+	
 	// 
 	virtual fgBoundingBox3Df& updateSize(void);
 	// 
@@ -40,4 +43,4 @@ public:
 
 };
 
-#endif /* _FG_GUI_TABLE_H_ */
+#endif /* _FG_GUI_EDITABLE_TEXT_H_ */

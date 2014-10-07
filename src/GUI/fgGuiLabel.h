@@ -11,8 +11,9 @@
 #define _FG_GUI_LABEL_H_
 
 #include "fgGuiWidget.h"
+#include "fgGuiWidgetFactoryTypes.h"
 
-#define FG_GUI_LABEL		5
+#define FG_GUI_LABEL		0x00000002
 #define FG_GUI_LABEL_NAME	"Label"
 
 /*
@@ -35,8 +36,10 @@ public:
 	// 
 	virtual ~fgGuiLabel();
 
+	FG_GUI_WIDGET_FACTORY_CREATE_FUNCTION(fgGuiLabel);
+
 	// 
-	virtual fgVector4f updateSize(void);
+	virtual fgBoundingBox3Df& updateSize(void);
 };
 
 #endif /* _FG_GUI_LABEL_H_ */

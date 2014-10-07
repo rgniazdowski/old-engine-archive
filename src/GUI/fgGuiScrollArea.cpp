@@ -7,44 +7,44 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-#include "fgGuiPopup.h"
+#include "fgGuiScrollArea.h"
 
 /*
  *
  */
-fgGuiPopup::fgGuiPopup()
+fgGuiScrollArea::fgGuiScrollArea()
 {
-	fgGuiPopup::setDefaults();
+	fgGuiScrollArea::setDefaults();
 }
 
 /*
  *
  */
-fgGuiPopup::~fgGuiPopup()
+fgGuiScrollArea::~fgGuiScrollArea()
 {
 }
 
 /*
  *
  */
-void fgGuiPopup::setDefaults(void)
+void fgGuiScrollArea::setDefaults(void)
 {
-	m_type = FG_GUI_POPUP;
-	m_typeName = FG_GUI_POPUP_NAME;
-	m_typeTraits = FG_GUI_POPUP | FG_GUI_WINDOW | FG_GUI_CONTAINER | FG_GUI_WIDGET;
+	m_type = FG_GUI_SCROLL_AREA;
+	m_typeName = FG_GUI_SCROLL_AREA_NAME;
+	m_typeTraits = FG_GUI_SCROLL_AREA | FG_GUI_CONTAINER | FG_GUI_WIDGET;
 }
 
 /*
  *
  */
-fgBoundingBox3Df& fgGuiPopup::updateSize(void)
+fgBoundingBox3Df& fgGuiScrollArea::updateSize(void)
 {
-	return fgGuiWindow::updateSize();
+	return fgGuiContainer::updateSize();
 }
 
 /*
  *
  */
-void fgGuiPopup::refresh(void)
+void fgGuiScrollArea::refresh(void)
 {
 }

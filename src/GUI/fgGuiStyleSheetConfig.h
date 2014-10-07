@@ -7,10 +7,8 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-#ifndef _FG_GUI_TEXT_H_
-#define _FG_GUI_TEXT_H_
+#ifndef _FG_GUI_STYLE_SHEET_CONFIG_H_
+#define _FG_GUI_STYLE_SHEET_CONFIG_H_
 
-#define FG_GUI_TEXT			X
-#define FG_GUI_TEXT_NAME	"Text"
+#endif /* _FG_GUI_STYLE_SHEET_CONFIG_H_ */
 
-#endif /* _FG_GUI_TEXT_H_ */

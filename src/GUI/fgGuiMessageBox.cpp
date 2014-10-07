@@ -8,3 +8,43 @@
  *******************************************************/
 
 #include "fgGuiMessageBox.h"
+
+/*
+ *
+ */
+fgGuiMessageBox::fgGuiMessageBox()
+{
+	fgGuiMessageBox::setDefaults();
+}
+
+/*
+ *
+ */
+fgGuiMessageBox::~fgGuiMessageBox()
+{
+}
+
+/*
+ *
+ */
+void fgGuiMessageBox::setDefaults(void)
+{
+	m_type = FG_GUI_MESSAGE_BOX;
+	m_typeName = FG_GUI_MESSAGE_BOX_NAME;
+	m_typeTraits = FG_GUI_MESSAGE_BOX | FG_GUI_WINDOW | FG_GUI_CONTAINER | FG_GUI_WIDGET;
+}
+
+/*
+ *
+ */
+fgBoundingBox3Df& fgGuiMessageBox::updateSize(void)
+{
+	return fgGuiWindow::updateSize();
+}
+
+/*
+ *
+ */
+void fgGuiMessageBox::refresh(void)
+{
+}

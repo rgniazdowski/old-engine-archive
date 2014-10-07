@@ -103,6 +103,11 @@ public:
 	int getStep(void) const {
 		return m_step;
 	}
+	int getSpace(int id, int b) {
+		if(id >= FG_FONT_STANDARD_ASCII_SIZE || b >= 2)
+			return 0;
+		return m_space[id][b];
+	}
 private:
 	int m_step;
 	int m_space[FG_FONT_STANDARD_ASCII_SIZE][2];

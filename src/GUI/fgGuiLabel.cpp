@@ -28,13 +28,15 @@ fgGuiLabel::~fgGuiLabel()
  */
 void fgGuiLabel::setDefaults(void)
 {
+	m_type = FG_GUI_LABEL;
+	m_typeName = FG_GUI_LABEL_NAME;
+	m_typeTraits = FG_GUI_LABEL | FG_GUI_WIDGET;
 }
 
 /*
  *
  */
-fgVector4f fgGuiLabel::updateSize(void)
+fgBoundingBox3Df& fgGuiLabel::updateSize(void)
 {
-	fgVector4f returnVec;
-	return returnVec;
+	return fgGuiWidget::updateSize();
 }

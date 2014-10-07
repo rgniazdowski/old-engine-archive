@@ -10,9 +10,37 @@
 #ifndef _FG_GUI_CONSOLE_H_
 #define _FG_GUI_CONSOLE_H_
 
-#include "fgGuiWidget.h"
+#include "fgGuiTextArea.h"
+#include "fgGuiWidgetFactoryTypes.h"
 
-#define FG_GUI_CONSOLE 3
+#define FG_GUI_CONSOLE			0x00002000
+#define FG_GUI_CONSOLE_NAME		"Console"
+
+/*
+ *
+ */
+class fgGuiConsole : public fgGuiTextArea
+{
+private:
+protected:
+
+protected:
+	// 
+	virtual void setDefaults(void);
+
+public:
+	// 
+	fgGuiConsole();
+	// 
+	virtual ~fgGuiConsole();
+
+	FG_GUI_WIDGET_FACTORY_CREATE_FUNCTION(fgGuiConsole);
+	
+	// 
+	virtual fgBoundingBox3Df& updateSize(void);
+	// 
+	virtual void refresh(void);
+
+};
 
 #endif /* _FG_GUI_CONSOLE_H_ */
-

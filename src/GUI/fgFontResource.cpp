@@ -66,6 +66,7 @@ void fgFontResource::clear(void)
  */
 fgBool fgFontResource::create(void)
 {
+	FG_LOG::PrintDebug("fgFontResource::create();");
 	m_textureType = FG_TEXTURE_FONT;
 	if(!fgTextureResource::create()) {
 		// #TODO error handling / reporting
@@ -75,6 +76,8 @@ fgBool fgFontResource::create(void)
 	int i = 0, j = 0, k = 0;
 	int x = 0, y = 0;
 	int size = m_width;
+	if(m_step)
+		return FG_TRUE;
 	m_step = size / 16;
 	unsigned char *ptr = NULL;
 	
@@ -124,9 +127,7 @@ fgBool fgFontResource::create(void)
  */
 void fgFontResource::destroy(void)
 {
-	FG_LOG::PrintDebug("fgFontResource::destroy();");
-	releaseNonGFX();
-	clear();
+	fgTextureResource::destroy();
 }
 
 /*
@@ -135,8 +136,8 @@ void fgFontResource::destroy(void)
 fgBool fgFontResource::recreate(void)
 {
 	FG_LOG::PrintDebug("fgFontResource::recreate();");
-	dispose();
-	return create();
+	fgFontResource::dispose();
+	return fgFontResource::create();
 }
 
 /*
@@ -146,6 +147,7 @@ void fgFontResource::dispose(void)
 {
 	FG_LOG::PrintDebug("fgFontResource::~dispose();");
 	fgTextureResource::dispose();
+	m_step = 0;
 }
 
 /*
@@ -215,7 +217,11 @@ float fgFontResource::placeChar(float x0, float y0, float char_size, char letter
 	float size_x = m_space[i][1]*scale;
 	float size_y = char_size;
 	float italic_offset = char_size/4.0f;
-
+	//fgVec2f(0.0f,1.0f), fgVec2f(1.0f,0.0f),
+	
+	fgVec2f(s,t), fgVec2f(s+dt,t+dt),
+	
+	
 	// Set this as the active material
  /*   IwGxSetMaterial( inmat );
 
@@ -460,64 +466,6 @@ int fgFontResource::printRight(float y, float size, const char *string, ...)
 	}
 
 	return n;
-}
-
-/**
- * Returns width of given text
- *
- * @param font
- * @param size
- * @param fmt
- * @return
- */
-float fgFontResource::width(float size, const char *string, ...)
-{
-	char buf[ BUFFF_SIZE ];
-	va_list args;
-	float x = 0.0f;
-	char *s = NULL;
-	float scale = size/(float)m_step;
-
-	va_start(args,string);
-	vsnprintf(buf, BUFFF_SIZE-1, string, args);
-	va_end(args);
-
-    // Index is zero based -> BUFFF_SIZE-1 points to last byte in buffer
-    buf[BUFFF_SIZE-1] = '\0';
-
-    // Longest line seen
-    float max_x = 0.0f;
-
-	for(s=buf; *s; s++)
-	{
-		if( *s == ' ' )
-		{
-            x += 1.0f;
-			x += size / 3.0f;
-		}
-		else if( *s != '\n' )
-		{
-            // Adds size of char
-            x += 1.0f;
-			x += (float) m_space[ *(unsigned char*)s ][ 1 ] * scale;
-		} else {
-            x += 1.0f;
-
-            // Processed a new line. Remember its length if long enough
-            if( x > max_x ) {
-                max_x = x;
-            }
-
-            // Prepare for the new line!
-            x = 0.0f;
-        }
-	}
-
-    // Grabs x into max_x if there was no explicit '\n'
-    if( x > max_x ) {
-        max_x = x;
-    }
-	return max_x;
 }
 
 /**

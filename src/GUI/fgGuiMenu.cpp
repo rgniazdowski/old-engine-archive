@@ -14,6 +14,7 @@
  */
 fgGuiMenu::fgGuiMenu()
 {
+	fgGuiMenu::setDefaults();
 }
 
 /*
@@ -28,15 +29,17 @@ fgGuiMenu::~fgGuiMenu()
  */
 void fgGuiMenu::setDefaults(void)
 {
+	m_type = FG_GUI_MENU;
+	m_typeName = FG_GUI_MENU_NAME;
+	m_typeTraits = FG_GUI_MENU | FG_GUI_CONTAINER | FG_GUI_WIDGET;
 }
 
 /*
  *
  */
-fgVector4f fgGuiMenu::updateSize(void)
+fgBoundingBox3Df& fgGuiMenu::updateSize(void)
 {
-	fgVector4f returnVec;
-	return returnVec;
+	return fgGuiContainer::updateSize();
 }
 
 /*

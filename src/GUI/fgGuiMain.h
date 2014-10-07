@@ -10,43 +10,111 @@
 #ifndef _FG_GUI_MAIN_H_
 #define _FG_GUI_MAIN_H_
 
+#include "fgGuiBase.h"
 #include "fgGuiWidget.h"
 #include "fgGuiMenu.h"
 
-// #FIXME #TODO #P4 - this needs so much fixing and refactoring that I dont
-// even know where to start... whole GUI, FONT & drawing is fubar...
+#include "fgGuiStyleManager.h"
+#include "fgGuiWidgetManager.h"
+#include "fgGuiWidgetFactory.h"
 
-#define MENU_GAME_STAGE 0
-#define MENU_MAIN 1
-#define MENU_NEW_GAME 2
-#define MENU_OPTIONS 3
-#define MENU_HIGHSCORES 4
-#define MENU_HELP 5
-#define MENU_ESCAPE 6
-#define MENU_NONE 7
-
-#define NUM_OBJ_COLORS 15
-
-// For Gui::selection, and multiple other selection-situations
-#ifndef NO_SELECTION
-#define NO_SELECTION (-1)
+#include "Event/fgEventManager.h"
+#include "Input/fgPointerInputReceiver.h"
+#ifndef _FG_RESOURCE_MANAGER_H_
+#include "Resource/fgResourceManager.h"
 #endif
 
+#include "fgGuiDrawer.h"
+#include "fgGuiCallback.h"
 
+class fgGuiMain;
 
-class GuiMain {
+//FG_EVENT_TOUCH_PRESSED		=	1,
+//FG_EVENT_TOUCH_RELEASED		=	2,
+//FG_EVENT_TOUCH_MOTION		=	3,
+//FG_EVENT_TOUCH_TAP_FINISHED	=	4,
+
+//FG_EVENT_MOUSE_PRESSED		=	5,
+//FG_EVENT_MOUSE_RELEASED		=	6,
+//FG_EVENT_MOUSE_MOTION		=	7,
+
+/*
+ *
+ */
+class fgGuiMain : public fgGuiBase
+{
 private:
+	///
+	fgGuiStyleManager *m_styleMgr;
+	///
+	fgGuiWidgetManager *m_widgetMgr;
+	///
+	fgGuiWidgetFactory *m_widgetFactory;
+	///
+	fgEventManager *m_eventMgr;
+	///
+	fgResourceManager *m_resourceMgr;
+	///
+	fgGuiDrawer		*m_guiDrawer;
+	///
+	fgManagerBase *m_shaderMgr;
+	///
+	fgPointerInputReceiver *m_pointerInputReceiver;
+
+	///
+	fgFunctionCallback *m_guiTouchCallback;
+	///
+	fgFunctionCallback *m_guiMouseCallback;
+
+protected:
+	// 
+	void registerGuiCallbacks(void);
+	//
+	void unregisterGuiCallbacks(void);
 
 public:
-	GuiMain();
-	~GuiMain();
+	//
+	fgGuiMain(fgEventManager *eventMgr = NULL, fgResourceManager *resourceMgr = NULL);
+	//
+	virtual ~fgGuiMain();
 
-	void initMenuElements(void);
-	void draw(void);
-	void getSignals(void);
-	void onMenuChange(void);
-	
+	//
+	fgGuiWidgetManager *getWidgetManager(void) const;
+	//
+	fgGuiWidgetFactory *getWidgetFactory(void) const;
+	//
+	fgGuiStyleManager *getStyleManager(void) const;
+	//
+	fgEventManager *getEventManager(void) const;
+	//
+	fgResourceManager *getResourceManager(void) const;
+	//
+	fgManagerBase *getShaderManager(void) const;
+	//
+	fgPointerInputReceiver *getPointerInputReceiver(void) const;
+
+	//
+	void setEventManager(fgEventManager *eventMgr);
+	//
+	void setResourceManager(fgResourceManager *resourceMgr);
+	//
+	void setShaderManager(fgManagerBase *shaderMgr);
+	//
+	void setPointerInputReceiver(fgPointerInputReceiver *pointerInputReceiver);
+
+	//
+	virtual void updateState(void);
+
+	// This generates the buffers to draw
+	virtual void display(void);
+
+	// This calls proper drawing functions. The screen will be updated
+	virtual void render(void); // #FIXME, just testing
+
+	//
+	fgBool guiTouchHandler(fgArgumentList *argv);
+	//
+	fgBool guiMouseHandler(fgArgumentList *argv);
 };
 
 #endif /* _FG_GUI_MAIN_H_ */
-

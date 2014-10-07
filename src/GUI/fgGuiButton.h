@@ -12,8 +12,9 @@
 
 #include "fgGuiWidget.h"
 #include "fgGuiLabel.h"
+#include "fgGuiWidgetFactoryTypes.h"
 
-#define FG_GUI_BUTTON		2
+#define FG_GUI_BUTTON		0x00000004
 #define FG_GUI_BUTTON_NAME	"Button"
 
 /*
@@ -36,8 +37,10 @@ public:
 	// 
 	virtual ~fgGuiButton();
 
+	FG_GUI_WIDGET_FACTORY_CREATE_FUNCTION(fgGuiButton);
+
 	// 
-	virtual fgVector4f updateSize(void);
+	virtual fgBoundingBox3Df& updateSize(void);
 	//
 	virtual void refresh(void);
 };

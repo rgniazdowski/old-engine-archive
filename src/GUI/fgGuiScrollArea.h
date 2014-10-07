@@ -7,16 +7,16 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-#ifndef _FG_GUI_TABLE_H_
-#define _FG_GUI_TABLE_H_
+#ifndef _FG_GUI_SCROLL_AREA_H_
+#define _FG_GUI_SCROLL_AREA_H_
 
 #include "fgGuiContainer.h"
 #include "fgGuiWidgetFactoryTypes.h"
 
-#define FG_GUI_TABLE		0x00080000
-#define FG_GUI_TABLE_NAME	"Table"
+#define FG_GUI_SCROLL_AREA		0x00000200
+#define FG_GUI_SCROLL_AREA_NAME	"ScrollArea"
 
-class fgGuiTable : public fgGuiContainer
+class fgGuiScrollArea : public fgGuiContainer
 {
 private:
 protected:
@@ -27,12 +27,12 @@ protected:
 
 public:
 	// 
-	fgGuiTable();
+	fgGuiScrollArea();
 	// 
-	virtual ~fgGuiTable();
+	virtual ~fgGuiScrollArea();
 
-	FG_GUI_WIDGET_FACTORY_CREATE_FUNCTION(fgGuiTable);
-
+	FG_GUI_WIDGET_FACTORY_CREATE_FUNCTION(fgGuiScrollArea);
+	
 	// 
 	virtual fgBoundingBox3Df& updateSize(void);
 	// 
@@ -40,4 +40,4 @@ public:
 
 };
 
-#endif /* _FG_GUI_TABLE_H_ */
+#endif /* _FG_GUI_SCROLL_AREA_H_ */

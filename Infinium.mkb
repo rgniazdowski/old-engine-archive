@@ -232,6 +232,7 @@ files
 	GUI/fgFontDrawer.h
 	GUI/fgFontResource.cpp
 	GUI/fgFontResource.h
+	GUI/fgGuiBase.h
 	GUI/fgGuiButton.cpp
 	GUI/fgGuiButton.h
 	GUI/fgGuiCallback.cpp
@@ -262,6 +263,8 @@ files
 	GUI/fgGuiProgressBar.h
 	GUI/fgGuiScreenGrid.cpp
 	GUI/fgGuiScreenGrid.h
+	GUI/fgGuiScrollArea.cpp
+	GUI/fgGuiScrollArea.h
 	GUI/fgGuiStructureSheet.cpp
 	GUI/fgGuiStructureSheet.h
 	GUI/fgGuiStructureSheetParser.cpp
@@ -270,20 +273,27 @@ files
 	GUI/fgGuiStyle.h
 	GUI/fgGuiStyleContent.cpp
 	GUI/fgGuiStyleContent.h
-	GUI/fgGuiStyleSheetParser.cpp
-	GUI/fgGuiStyleSheetParser.h
+	GUI/fgGuiStyleSheetConfig.cpp
+	GUI/fgGuiStyleSheetConfig.h
 	GUI/fgGuiTable.cpp
 	GUI/fgGuiTable.h
-	GUI/fgGuiText.cpp
-	GUI/fgGuiText.h
+	GUI/fgGuiEditableText.cpp
+	GUI/fgGuiEditableText.h
 	GUI/fgGuiTextArea.cpp
 	GUI/fgGuiTextArea.h
 	GUI/fgGuiToggleButton.cpp
 	GUI/fgGuiToggleButton.h
+	GUI/fgGuiWindow.cpp
+	GUI/fgGuiWindow.h
 	GUI/fgGuiWidget.cpp
 	GUI/fgGuiWidget.h
 	GUI/fgGuiWidgetFactory.cpp
 	GUI/fgGuiWidgetFactory.h
+	GUI/fgGuiWidgetFactoryTypes.h
+	GUI/fgGuiWidgetManager.cpp
+	GUI/fgGuiWidgetManager.h
+	GUI/fgGuiStyleManager.cpp
+	GUI/fgGuiStyleManager.h
 }
 
 assets

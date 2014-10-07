@@ -14,6 +14,10 @@
 
 #include "fgCommon.h"
 #include "fgGuiContainer.h"
+#include "fgGuiWidgetFactoryTypes.h"
+
+#define FG_GUI_MENU			0x00000040
+#define FG_GUI_MENU_NAME	"Menu"
 
 class fgGuiMenu : public fgGuiContainer
 {
@@ -30,8 +34,10 @@ public:
 	// 
 	virtual ~fgGuiMenu();
 
+	FG_GUI_WIDGET_FACTORY_CREATE_FUNCTION(fgGuiMenu);
+
 	// 
-	virtual fgVector4f updateSize(void);
+	virtual fgBoundingBox3Df& updateSize(void);
 	// 
 	virtual void refresh(void);
 
