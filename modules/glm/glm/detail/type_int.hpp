@@ -32,7 +32,7 @@
 #include "setup.hpp"
 
 #if GLM_HAS_EXTENDED_INTEGER_TYPE
-#ifdef FG_USING_MARMALADE
+#if defined(FG_USING_MARMALADE) || defined(__S3E__) || (GLM_PLATFORM & GLM_PLATFORM_MARMALADE)
 #include "stl/_prolog.h"
 #include "stdint.h"
 #define std 

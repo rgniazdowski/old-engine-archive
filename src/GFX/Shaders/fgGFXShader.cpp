@@ -19,6 +19,7 @@ fgGfxShader::fgGfxShader(fgGfxShaderType type) :
 	m_type(type),
 	m_version(FG_GFX_SHADING_LANGUAGE_INVALID),
 	m_numSources(0),
+	m_sourceSize(0),
 	m_sources(NULL),
 	m_fileSource(NULL),
 	m_precision(FG_GFX_SHADER_PRECISION_DEFAULT),
@@ -32,7 +33,7 @@ fgGfxShader::fgGfxShader(fgGfxShaderType type) :
 	m_params[FG_GFX_SHADER_INFO_LOG_LENGTH] = 0;
 	m_params[FG_GFX_SHADER_SOURCE_LENGTH]	= 0;
 	m_baseType = FG_GFX_BASE_TYPE_SHADER;
-	FG_LOG::PrintDebug("fgGfxShader::fgGfxShader();");
+	//FG_LOG::PrintDebug("fgGfxShader::fgGfxShader();");
 }
 
 /*
@@ -40,9 +41,9 @@ fgGfxShader::fgGfxShader(fgGfxShaderType type) :
  */
 fgGfxShader::~fgGfxShader()
 {
-	FG_LOG::PrintDebug("BEGIN: fgGfxShader::~fgGfxShader(); NAME: %s, P: %p", getFilePathStr(), this);
+	//FG_LOG::PrintDebug("BEGIN: fgGfxShader::~fgGfxShader(); NAME: %s, P: %p", getFilePathStr(), this);
 	fgGfxShader::clearAll();
-	FG_LOG::PrintDebug("END: fgGfxShader::~fgGfxShader();");
+	//FG_LOG::PrintDebug("END: fgGfxShader::~fgGfxShader();");
 }
 
 /*
@@ -50,13 +51,11 @@ fgGfxShader::~fgGfxShader()
  */
 void fgGfxShader::clearAll(void)
 {
-	FG_LOG::PrintDebug("BEGIN: fgGfxShader::clearAll(); NAME: %s, P: %p", getFilePathStr(), this);
 	freeSource();
 	m_defineStrVec.clear_optimised();
 	m_includeStrVec.clear_optimised();
 	m_params.clear();
 	deleteShader();
-	FG_LOG::PrintDebug("END: fgGfxShader::clearAll();");
 }
 
 /*
@@ -117,10 +116,9 @@ fgBool fgGfxShader::loadSource(void)
 		return FG_FALSE; // PROPER ERROR CODE
 	}
 
-	m_numSources = (int)m_includeStrVec.size()+m_defineStrVec.size()+2;
-	m_sources = (char const **)fgMalloc(sizeof(char *) * (m_numSources));
+	m_numSources = (int)m_includeStrVec.size()+m_defineStrVec.size()+3;
+	m_sources = (char const **)fgMalloc<char *>(m_numSources);
 	if(!m_sources) {
-		//reportError(
 		reportError(FG_ERRNO_ENOMEM);
 		return FG_FALSE;
 	}
@@ -131,6 +129,13 @@ fgBool fgGfxShader::loadSource(void)
 		//_version.append("100 es\n");
 	//m_sources[0] = _version.c_str();
 	int n = 1;
+	// #FIXME
+	m_sources[n] = "#define FG_GFX_POSITION_BIT		0x0001\n" \
+		"#define FG_GFX_NORMAL_BIT		0x0002\n" \
+		"#define FG_GFX_UVS_BIT		    0x0004\n" \
+		"#define FG_GFX_COLOR_BIT		0x0008\n" \
+		"#define FG_GFX_TANGENT_BIT		0x0020\n";
+	n++;
 	// include constant definitions (#define) into the shader source
 	for(int i=0;i<(int)m_defineStrVec.size();i++,n++) {
 		m_sources[n] = m_defineStrVec[i].c_str();
@@ -140,8 +145,9 @@ fgBool fgGfxShader::loadSource(void)
 		m_sources[n] = "\n"; // #FIXME
 	}
 	m_sources[n] = m_fileSource;
-	for(int i=0;i<(int)m_numSources;i++)
-		printf("[%d] = '%s'\n", i, m_sources[i]);
+	for(int i=0;i<(int)m_numSources;i++) {
+		printf("[%d] '%s'\n", i, m_sources[i]);
+	}
 	m_isSourceLoaded = FG_TRUE;
 	return FG_TRUE;
 }
@@ -172,7 +178,6 @@ fgBool fgGfxShader::loadSource(std::string & path)
  */
 void fgGfxShader::freeSource(void)
 {
-	
 	if(m_fileSource)
 		fgFree(m_fileSource);
 	m_fileSource = NULL;
@@ -192,6 +197,8 @@ fgGFXuint fgGfxShader::create(void)
 		return 0;
 	if(!m_gfxID || !glIsShader(m_gfxID)) {
 		m_gfxID = glCreateShader((fgGFXenum)m_type);
+		fgGLError("glCreateShader");
+		FG_LOG::PrintDebug("GFX: Created shader: %s, gfxID: %d [is shader? = %d]", FG_GFX_SHADER_TYPE_TO_TEXT(m_type), m_gfxID, glIsShader(m_gfxID));
 	}
 	return m_gfxID;
 }
@@ -204,23 +211,26 @@ fgBool fgGfxShader::compile(void)
 	fgFile::clearStatus();
 	if(!m_isSourceLoaded) {
 		if(!loadSource()) {
-			reportError(FG_ERRNO_EIO, "Failed to load shader source file.");
+			reportError(FG_ERRNO_EIO, "GFX: Failed to load shader source file.");
 			// Failed to load shader source
 			return FG_FALSE;
 		}
 	}
 	if(!create()) {
 		// Failed to create shader
-		FG_LOG::PrintError("Failed to create shader");
+		FG_LOG::PrintError("GFX: Failed to create shader '%s'", getNameStr());
 		return FG_FALSE;
 	}
 	glShaderSource(m_gfxID, m_numSources, m_sources, NULL);
+	fgGLError("glShaderSource");
 	glCompileShader(m_gfxID);
-	s3eDeviceYield(0);
+	fgGLError("glCompileShader");
 	updateLog();
 	updateParams();
 	if(!m_params[FG_GFX_SHADER_COMPILE_STATUS]) {
-		FG_LOG::PrintError("GfxShader::compile()  failed -  %s", getFilePath().c_str());
+		FG_LOG::PrintError("GFX: compilation failed -  %s", getFilePath().c_str());
+	} else {
+		FG_LOG::PrintDebug("GFX: Successfully compiled shader: '%s', type: '%s'", getFilePathStr(), FG_GFX_SHADER_TYPE_TO_TEXT(m_type));
 	}
 	return (fgBool)m_params[FG_GFX_SHADER_COMPILE_STATUS];
 }
@@ -258,8 +268,9 @@ fgBool fgGfxShader::deleteShader(void)
 {
 	if(glIsShader(m_gfxID)) {
 		glDeleteShader(m_gfxID);
+		fgGLError("glDeleteShader");
 		updateParams();
-		//m_shaderGfxID = 0;
+		m_gfxID = 0;
 		return FG_TRUE;
 	}
 	return FG_FALSE;
@@ -272,6 +283,7 @@ fgBool fgGfxShader::attach(fgGFXuint program)
 {
 	if(glIsProgram(program) && glIsShader(m_gfxID)) {
 		glAttachShader(program, m_gfxID);
+		fgGLError("glAttachShader");
 		return FG_TRUE;
 	}
 	return FG_FALSE;
@@ -284,6 +296,7 @@ fgBool fgGfxShader::detach(fgGFXuint program)
 {
 	if(glIsProgram(program) && glIsShader(m_gfxID)) {
 		glDetachShader(program, m_gfxID);
+		fgGLError("glDetachShader");
 		return FG_TRUE;
 	}
 	return FG_FALSE;

@@ -17,14 +17,15 @@
 
 #include "Util/fgTime.h"
 
-void _preparePrintBuf(char *buf, const char *type)
-{
-	long timestamp = fgTime::seconds();
-	int mstru = (int)fgTime::ms()%1000;
-	struct tm *ti;
-	ti = localtime(&timestamp);
+namespace FG_LOG {
+	void _preparePrintBuf(char *buf, const char *type)
+	{
+		long timestamp = fgTime::seconds();
+		int mstru = (int)fgTime::ms()%1000;
+		struct tm *ti;
+		ti = localtime(&timestamp);
 
-	snprintf(buf, FG_LOG_BUF_MAX-1, "%02d/%02d/%02d %02d:%02d:%02d.%03d: %s", 
+		snprintf(buf, FG_LOG_BUF_MAX-1, "%02d/%02d/%02d %02d:%02d:%02d.%03d: %s", 
 			ti->tm_mday,
 			ti->tm_mon+1,
 			ti->tm_year-100,
@@ -33,8 +34,8 @@ void _preparePrintBuf(char *buf, const char *type)
 			ti->tm_sec,
 			mstru,
 			type);
-}
-
+    }
+};
 /*
  * Log info message
  */
@@ -44,7 +45,7 @@ void FG_LOG::PrintInfo(const char *fmt, ...)
 	va_list args;
 
 	//memset(buf, 0, FG_LOG_BUF_MAX);
-	_preparePrintBuf(buf, "INFO: ");
+	FG_LOG::_preparePrintBuf(buf, "INFO: ");
 	va_start(args,fmt);
 	vsprintf(buf+strlen(buf), fmt, args);
 	va_end(args);
@@ -64,9 +65,12 @@ void FG_LOG::PrintDebug(const char *fmt, ...)
 	va_list args;
 
 	//memset(buf, 0, FG_LOG_BUF_MAX);
-	_preparePrintBuf(buf, "DEBUG: ");
-	va_start(args,fmt);
-	vsprintf(buf+strlen(buf), fmt, args);
+	FG_LOG::_preparePrintBuf(buf, "DEBUG: ");
+	int n = strlen(buf);
+	va_start(args, fmt);
+	vsprintf(buf+n, fmt, args);
+	vsnprintf(buf+n, FG_LOG_BUF_MAX-n-1, fmt, args);
+	n = strlen(buf);
 	va_end(args);
 
     // s3eDebugTracePrintf(buf);
@@ -84,7 +88,7 @@ void FG_LOG::PrintError(const char *fmt, ...)
 	va_list args;
 
 	//memset(buf, 0, FG_LOG_BUF_MAX);
-	_preparePrintBuf(buf, "ERROR: ");
+	FG_LOG::_preparePrintBuf(buf, "ERROR: ");
 	va_start(args,fmt);
 	vsprintf(buf+strlen(buf), fmt, args);
 	va_end(args);
@@ -102,7 +106,7 @@ void FG_LOG::PrintWarning(const char *fmt, ...)
 	va_list args;
 
 	//memset(buf, 0, FG_LOG_BUF_MAX);
-	_preparePrintBuf(buf, "WARNING: ");
+	FG_LOG::_preparePrintBuf(buf, "WARNING: ");
 	va_start(args,fmt);
 	vsprintf(buf+strlen(buf), fmt, args);
 	va_end(args);
@@ -168,7 +172,7 @@ namespace FG_LOG {
 		}; 
 		int mstru = (int)fgTime::ms()%1000;
 
-		snprintf(buf, FG_LOG_BUF_MAX-1, "%02d/%02d/%02d %02d:%02d:%02d.%03d: - %s(%d): %s: %s", 
+		snprintf(buf, FG_LOG_BUF_MAX-1, "%02d/%02d/%02d %02d:%02d:%02d.%03d: %s(%d): %s: %s", 
 			ti->tm_mday,
 			ti->tm_mon+1,
 			ti->tm_year-100,
@@ -201,13 +205,15 @@ namespace FG_LOG {
 			}
 			struct tm *ti;
 			ti = localtime(&status->timestamp);
-			snprintf(buf, FG_LOG_BUF_MAX-1, "%02d/%02d/%02d %02d:%02d:%02d - %s(%d): %s", 
+			int mstru = (int)fgTime::ms()%1000;
+			snprintf(buf, FG_LOG_BUF_MAX-1, "%02d/%02d/%02d %02d:%02d:%02d.%03d: %s(%d): %s", 
 				ti->tm_mday,
 				ti->tm_mon+1,
 				ti->tm_year-100,
 				ti->tm_hour,
 				ti->tm_min,
 				ti->tm_sec,
+				mstru,
 				msg_type,
 				status->code(),
 				fgErrno::strError(status->code()));

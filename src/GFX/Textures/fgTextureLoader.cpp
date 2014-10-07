@@ -21,11 +21,7 @@ static unsigned char *universalPreLoad(const char *path, int &width, int &height
 		return NULL;
 	}
 	fgFile *fileStream = new fgFile(path);
-	if(!fileStream->exists()) {
-		delete fileStream;
-		// #TODO error handling / reporting
-		return NULL;
-	} else if(fileStream->open(FG_FILE_MODE_READ | FG_FILE_MODE_BINARY)) {
+	if(fileStream->open(FG_FILE_MODE_READ | FG_FILE_MODE_BINARY)) {
 		unsigned char *data = NULL;
 		if(strncasecmp(extType, "jpeg", 4) == 0) {
 			data = fgTextureLoader::loadJPEG(fileStream, width, height);
@@ -242,10 +238,14 @@ unsigned char *fgTextureLoader::loadPNG(fgFile *fileStream, int &width, int &hei
     }
 	delete [] img;
     delete [] row;
+	png_destroy_info_struct(png_ptr, &info_ptr);
 	png_destroy_read_struct(&png_ptr, 0, 0);
+	png_ptr = NULL;
+	info_ptr = NULL;
+	
     width = (int)w;
     height = (int)h;
-	FG_LOG::PrintInfo("PNG LOAD: %s, %dx%d, data=%p;", fileStream->getPath(), w,h, data);
+	FG_LOG::PrintInfo("PNG LOAD: %s, %dx%d, data=%p;", fileStream->getPath(), w, h, data);
     return data;
 }
 

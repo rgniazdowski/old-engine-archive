@@ -12,6 +12,10 @@
 
 #include "fgBool.h"
 
+typedef unsigned int fgManagerType;
+
+#define FG_MANAGER_INVALID	0x00000000
+
 /*
  *
  */
@@ -19,7 +23,10 @@ class fgManagerBase
 {
 public:
 	// 
-	fgManagerBase() : m_init(FG_FALSE) {}
+	fgManagerBase() : 
+		m_init(FG_FALSE),
+		m_managerType(FG_MANAGER_INVALID) {
+	}
 	// 
 	virtual ~fgManagerBase() {}
 
@@ -32,8 +39,13 @@ public:
 	virtual fgBool destroy(void) = 0;
 	//
 	virtual fgBool initialize(void) = 0;
+	//
+	fgManagerType getManagerType(void) const {
+		return m_managerType;
+	}
 protected:
-	fgBool m_init;
+	fgBool			m_init;
+	fgManagerType	m_managerType;
 };
 
 #endif /* _FG_MANAGER_BASE_H_ */

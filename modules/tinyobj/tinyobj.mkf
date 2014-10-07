@@ -10,4 +10,6 @@ files
     ("upstream")
     tiny_obj_loader.h
     tiny_obj_loader.cpp
+	fgTinyObj.h
+	fgTinyObj.cpp
 }

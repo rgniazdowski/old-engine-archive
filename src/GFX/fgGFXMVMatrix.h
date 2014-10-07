@@ -36,7 +36,6 @@ public:
 			m_center = camera->getRefCenter();
 			m_up = camera->getRefUp();
 			fgGfxMVMatrix::update();
-			//m_viewMatrix = camera->getRefViewMatrix();
 		}
 		if(updateMatrix)
 			m_modelViewMatrix = m_viewMatrix * modelMatrix;
@@ -57,7 +56,10 @@ public:
 	float * getModelViewMatPtr(void) {
 		return glm::value_ptr(m_modelViewMatrix);
 	}
-
+	void identity(void) {
+		fgGfxCamera::identity();
+		m_modelViewMatrix = fgMatrix4f();
+	}
 protected:
 	/// 
 	fgMatrix4f m_modelViewMatrix;

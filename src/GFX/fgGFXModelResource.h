@@ -40,7 +40,7 @@
 class fgGfxModelResource : public fgResource
 {
 public:
-	typedef fgVector<fgGfxShape>	modelShapes;
+	typedef fgVector<fgGfxShape *>	modelShapes;
 	typedef modelShapes::iterator	modelShapesItor;
 
 public:

@@ -18,8 +18,10 @@
 #include "Util/fgTag.h"
 #include "Resource/fgResourceManager.h"
 #include "Resource/fgResourceFactory.h"
+#include "Input/fgPointerInputReceiver.h"
 
 #include "GFX/fgGFXMain.h"
+#include "GUI/fgGuiMain.h"
 
 class fgGameMain;
 #define FG_TAG_GAME_MAIN_NAME		"GameMain"
@@ -36,7 +38,7 @@ public:
 	// Default constructor for the Game Main object
 	fgGameMain();
 	// Default destructor for the Game Main object
-	~fgGameMain();
+	virtual ~fgGameMain();
 	
 	// This needs to be called first before everything else.
 	// Function creates and initializes subsystems
@@ -70,33 +72,65 @@ public:
 	// Update - all event handling, calling scripts, AI, game logic and etc
 	void update(void);
 
+	//
 	fgGfxMain *getGfxMain(void) const {
 		return m_gfxMain;
 	}
 
+	//
 	fgSettings *getSettings(void) const {
 		return m_settings;
 	}
 
+	//
 	fgConfig *getMainConfig(void) const {
 		return m_mainConfig;
 	}
 
+	//
 	fgResourceManager *getResourceManager(void) const {
 		return m_resourceMgr;
 	}
 
+	//
+	fgEventManager *getEventManager(void) const {
+		return m_eventMgr;
+	}
+
+	//
+	void setEventManager(fgEventManager *eventMgr) {
+		printf("fgGameMain::setEventManager(fgEventManager *eventMgr)\n");
+		m_eventMgr = eventMgr;
+		if(m_pointerInputReceiver)
+			m_pointerInputReceiver->setEventManager(m_eventMgr);
+		if(m_guiMain) {
+			m_guiMain->setEventManager(m_eventMgr);
+			m_guiMain->setPointerInputReceiver(m_pointerInputReceiver);
+		}
+	}
+
+	//
+	fgPointerInputReceiver *getPointerInputReceiver(void) const {
+		return m_pointerInputReceiver;
+	}
+
 protected:
 	/// 
-	fgGfxMain *m_gfxMain;
-	/// 
-	fgSettings *m_settings;
-	/// 
-	fgConfig *m_mainConfig;
+	fgGfxMain		*m_gfxMain;
 	///
-	fgResourceManager *m_resourceMgr;
+	fgGuiMain		*m_guiMain;
+	/// 
+	fgSettings		*m_settings;
+	/// 
+	fgConfig		*m_mainConfig;
 	///
-	fgResourceFactory *m_resourceFactory;
+	fgResourceManager	*m_resourceMgr;
+	///
+	fgResourceFactory	*m_resourceFactory;
+	///
+	fgEventManager		*m_eventMgr;
+	///
+	fgPointerInputReceiver *m_pointerInputReceiver;
 };
 
 #endif /* _FG_GAME_MAIN_H_ */

@@ -1,7 +1,7 @@
 /*******************************************************
  * Copyright (C) 2014 Radoslaw Gniazdowski <r.gniazdowski@gmail.com>. All rights reserved.
  *
- * This file is part of FlexiGame: Flexible Game Engine™
+ * This file is part of FlexiGame: Flexible Game Engine
  * ______  _              _  _____                         
  * |  ___|| |            (_)|  __ \                        
  * | |_   | |  ___ __  __ _ | |  \/  __ _  _ __ ___    ___ 
@@ -30,7 +30,10 @@
 #define FG_VERBOSE_LVL_MEDIUM	2 // report only errors and warnings (+info, success)
 #define FG_VERBOSE_LVL_HIGH		3 // report everything: Info, Status, Warning, Debug, Errors and others
 
-#ifndef FG_BC_NO_UNDEF_
+// #FIXME
+//#define FG_MESSAGES
+
+#ifndef FG_NO_UNDEF
 
 #undef FG_VERBOSE
 #undef FG_VERBOSE_LEVEL
@@ -78,7 +81,7 @@
 #undef FG_USING_WXWIDGETS				//  Is wxWidgets GUI library used in this build?
 #undef FG_SUPPORT_WXWIDGETS				//  Is wxWidgets enabled/supported in this build?
 
-#endif /* FG_BC_NO_UNDEF_ */
+#endif /* FG_NO_UNDEF */
 /*************************** CURRENT TARGET PLATFORM / BUILD SYSTEM ***************************/
 
 // Well this build of course is using Marmalade, need to define it to use properly in the code, which needs to be multiplatform
@@ -119,14 +122,10 @@
 #define FG_USING_VISUAL_STUDIO
 #endif
 
-#if defined _DEBUG && !defined DEBUG
-#define DEBUG 1
-#endif
-
-#if defined IW_DEBUG
-#undef DEBUG
-#define DEBUG 1
-#define FG_DEBUG 1
+#if defined _DEBUG || defined DEBUG || defined IW_DEBUG
+#undef	DEBUG
+#define DEBUG		1
+#define FG_DEBUG	1
 #endif
 
 #if defined FG_DEBUG
@@ -230,17 +229,41 @@
 
 // Use TinyXML even on Linux
 #ifdef FG_USING_PLATFORM_LINUX
+#ifndef FG_USING_TINYXML
 #define FG_USING_TINYXML
+#endif
 #endif
 
 /**************************** CROSS PLATFORM COMPATIBILITY ****************************/
 
 // Always (as default) us OpenGL Mathemathics library
+#ifndef FG_USING_GLM
 #define FG_USING_GLM
+#endif
+// As default force radians as standard paramater type for angles
+#ifdef FG_USING_GLM
+#ifndef GLM_FORCE_RADIANS
+#define GLM_FORCE_RADIANS
+#endif
+#if !defined(GLM_MESSAGES) && defined(FG_DEBUG) && defined(FG_MESSAGES)
+#define GLM_MESSAGES
+#endif
+#endif
 
+// Build for marmalade needs to use pure GLM
 #ifdef FG_USING_MARMALADE
 #if defined FG_USING_GLM
 #define GLM_FORCE_PURE
+#ifdef I3D_ARCH_ARM
+#define GLM_FORCE_CXX03
+#endif
+#endif
+#endif
+
+// Force TinyXml to use STL
+#ifdef FG_USING_TINYXML
+#ifndef TIXML_USE_STL
+#define TIXML_USE_STL
 #endif
 #endif
 
@@ -338,7 +361,7 @@ extern struct fgBuildConfig g_fgBuildConfig;
 // Stringified version number
 #define FG_BUILD_VERSION_STR	FG_XSTR(FG_BUILD_VERSION)
 // Version text, parts separated by .
-#define FG_BUILD_VERSION_TEXT	FG_XSTR(FG_BUILD_VERSION_MAJ)"."FG_XSTR(FG_BUILD_VERSION_MIN)"."FG_XSTR(FG_BUILD_VERSION_REV)
+#define FG_BUILD_VERSION_TEXT	FG_XSTR(FG_BUILD_VERSION_MAJ)"." FG_XSTR(FG_BUILD_VERSION_MIN)"." FG_XSTR(FG_BUILD_VERSION_REV)
 
 // Package name - name of the engine
 #define FG_PACKAGE_NAME			"FlexiGame"
@@ -347,7 +370,7 @@ extern struct fgBuildConfig g_fgBuildConfig;
 #define FG_PREFIX				"fg"
 
 // Package name with version and codename
-#define FG_PACKAGE_FULL_TEXT	FG_PACKAGE_NAME" v"FG_BUILD_VERSION_TEXT" codename: "FG_PROJECT_CODE_NAME
+#define FG_PACKAGE_FULL_TEXT	FG_PACKAGE_NAME" v" FG_BUILD_VERSION_TEXT" codename: " FG_PROJECT_CODE_NAME
 
 // Full name of the project
 #define FG_FULL_NAME			"Flexible Game Engine"
@@ -367,7 +390,7 @@ extern struct fgBuildConfig g_fgBuildConfig;
 #define FG_FLEXIGAME
 #define FG_JUST_FOR_FUN
 
-#define FG_MOTTO				"Per aspera ad astra"
+#define FG_MOTTO				"The spice is vital for space travel"
 
 #endif /* _FG_BUILD_CONFIG_H_ */
 /*************************** END MAIN MARMALADE BUILD CONFIG ***************************/

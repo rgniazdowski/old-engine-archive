@@ -39,7 +39,7 @@ bool fgTexture::checkGlError(const char* fname) {
  */
 fgTextureResource::fgTextureResource() :
 	m_fileType(FG_TEXTURE_FILE_INVALID),
-	m_textureType(FG_TEXTURE_INVALID),
+	m_textureType(FG_TEXTURE_PLAIN),
 	m_pixelFormat(FG_TEXTURE_PIXEL_INVALID),
 	m_rawData(NULL),
 	m_width(0),
@@ -55,16 +55,16 @@ fgTextureResource::fgTextureResource() :
  *
  */
 fgTextureResource::fgTextureResource(const char *path) :
+	fgResource(path),
 	m_fileType(FG_TEXTURE_FILE_INVALID),
-	m_textureType(FG_TEXTURE_INVALID),
+	m_textureType(FG_TEXTURE_PLAIN),
 	m_pixelFormat(FG_TEXTURE_PIXEL_INVALID),
 	m_rawData(NULL),
 	m_width(0),
 	m_height(0),
 	m_components(-1),
 	m_textureGfxID(0),
-	m_isInVRAM(FG_FALSE),
-	fgResource(path)
+	m_isInVRAM(FG_FALSE)	
 {
 	m_resType = FG_RESOURCE_TEXTURE;
 	FG_LOG::PrintDebug("fgTextureResource(const char *path)"); 
@@ -74,16 +74,16 @@ fgTextureResource::fgTextureResource(const char *path) :
  *
  */
 fgTextureResource::fgTextureResource(std::string& path) :
+	fgResource(path),
 	m_fileType(FG_TEXTURE_FILE_INVALID),
-	m_textureType(FG_TEXTURE_INVALID),
+	m_textureType(FG_TEXTURE_PLAIN),
 	m_pixelFormat(FG_TEXTURE_PIXEL_INVALID),
 	m_rawData(NULL),
 	m_width(0),
 	m_height(0),
 	m_components(-1),
 	m_textureGfxID(0),
-	m_isInVRAM(FG_FALSE),
-	fgResource(path)
+	m_isInVRAM(FG_FALSE)
 {
 	m_resType = FG_RESOURCE_TEXTURE;
 	FG_LOG::PrintDebug("fgTextureResource(std::string& path)"); 
@@ -114,6 +114,12 @@ void fgTextureResource::clear(void)
  */
 fgBool fgTextureResource::create(void)
 {
+	if(m_rawData && m_isReady) {
+		return FG_TRUE;
+	}
+	if(m_rawData && !m_isReady) {
+		releaseNonGFX();
+	}
 	FG_LOG::PrintInfo("fgTextureResource::create(void)");
 	if(getFilePath(m_quality).empty()) {
 		FG_LOG::PrintError("%s(%d): file path is empty on create - in function %s.", fgPath::fileName(__FILE__), __LINE__-1,__FUNCTION__); 
@@ -133,13 +139,13 @@ fgBool fgTextureResource::create(void)
 	case FG_TEXTURE_FILE_RAW:
 		break;
 	case FG_TEXTURE_FILE_JPEG:
-		m_rawData = fgTextureLoader::loadJPEG(m_filePath.c_str(), m_width, m_height);
+		m_rawData = fgTextureLoader::loadJPEG(getFilePathStr(m_quality), m_width, m_height);
 		break;
 	case FG_TEXTURE_FILE_PNG:
-		m_rawData = fgTextureLoader::loadPNG(m_filePath.c_str(), m_width, m_height);
+		m_rawData = fgTextureLoader::loadPNG(getFilePathStr(m_quality), m_width, m_height);
 		break;
 	case FG_TEXTURE_FILE_TGA:
-		m_rawData = fgTextureLoader::loadTGA(m_filePath.c_str(), m_width, m_height);
+		m_rawData = fgTextureLoader::loadTGA(getFilePathStr(m_quality), m_width, m_height);
 		break;
 	case FG_TEXTURE_FILE_OTHER:
 		return FG_FALSE;
@@ -178,7 +184,9 @@ void fgTextureResource::destroy(void)
 fgBool fgTextureResource::recreate(void)
 {
 	FG_LOG::PrintInfo("fgTextureResource::recreate(void)");
-	releaseNonGFX();
+	if(m_isReady || m_rawData)
+		releaseNonGFX();
+	m_isReady = FG_FALSE;
 	return create();
 }
 
@@ -207,6 +215,30 @@ fgBool fgTextureResource::isDisposed(void) const
 		return FG_FALSE;
 	else 
 		return !this->hasOwnedRAM();
+}
+
+/*
+ *
+ */
+fgBool fgTextureResource::setFileTypeFromFilePath(std::string &path) {
+	if(path.empty())
+		return FG_FALSE;
+	// #FIXME - this should be extracted to other file (used for some basic file operation, pathext or whatnot #P3 #TODO)
+	const char *ext = fgPath::fileExt(path.c_str(), FG_TRUE);
+	if(strncasecmp(ext, FG_TEXTURE_FILE_EXTENSION_BMP, strlen(FG_TEXTURE_FILE_EXTENSION_BMP)) == 0) {
+		this->m_fileType = FG_TEXTURE_FILE_BMP;
+	} else if(strncasecmp(ext, FG_TEXTURE_FILE_EXTENSION_RAW, strlen(FG_TEXTURE_FILE_EXTENSION_RAW)) == 0) {
+		this->m_fileType = FG_TEXTURE_FILE_RAW;
+	} else if(strncasecmp(ext, FG_TEXTURE_FILE_EXTENSION_JPEG, strlen(FG_TEXTURE_FILE_EXTENSION_JPEG)) == 0) {
+		this->m_fileType = FG_TEXTURE_FILE_JPEG;
+	} else if(strncasecmp(ext, FG_TEXTURE_FILE_EXTENSION_PNG, strlen(FG_TEXTURE_FILE_EXTENSION_PNG)) == 0) {
+		this->m_fileType = FG_TEXTURE_FILE_PNG;
+	} else if(strncasecmp(ext, FG_TEXTURE_FILE_EXTENSION_TGA, strlen(FG_TEXTURE_FILE_EXTENSION_TGA)) == 0) {
+		this->m_fileType = FG_TEXTURE_FILE_TGA;
+	} else {
+		this->m_fileType = FG_TEXTURE_FILE_OTHER;
+	}
+	return FG_TRUE;
 }
 
 /*

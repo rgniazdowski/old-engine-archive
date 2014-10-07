@@ -73,6 +73,8 @@ files
 	Resource/fgDataObjectBase.h
 	Resource/fgResource.cpp
 	Resource/fgResource.h
+	Resource/fgResourceConfigParser.cpp
+	Resource/fgResourceConfigParser.h
 	Resource/fgResourceFactory.cpp
 	Resource/fgResourceFactory.h
 	Resource/fgResourceFactoryTypes.h
@@ -120,9 +122,10 @@ files
 	Scripting/fgScriptResource.h
 
 	["FlexiGame/Input"]
-	Input/fgTouchRawData.h
-	Input/fgTouchReceiver.cpp
-	Input/fgTouchReceiver.h
+	Input/fgPointerData.h
+	Input/fgPointerRawData.h
+	Input/fgPointerInputReceiver.cpp
+	Input/fgPointerInputReceiver.h
 
 	["FlexiGame/Hardware"]
 	Hardware/fgDeviceQuery.cpp
@@ -141,6 +144,11 @@ files
 	Math/fgMathLib.h	
 
 	["FlexiGame/GFX"]
+	GFX/fgGFXGL.h
+	GFX/fgGFXBoundingBox.h
+	GFX/fgGFXColor.h
+	GFX/fgGFXContext.cpp
+	GFX/fgGFXContext.h
 	GFX/fgGFXErrorCodes.h
 	GFX/fgGFXTypes.h
 	GFX/fgGFX2DScene.cpp
@@ -151,8 +159,11 @@ files
 	GFX/fgGFXCamera.h
 	GFX/fgGFXCameraAnimation.cpp
 	GFX/fgGFXCameraAnimation.h
+	GFX/fgGFXDrawCall.cpp
+	GFX/fgGFXDrawCall.h
 	GFX/fgGFXDrawingBatch.cpp
 	GFX/fgGFXDrawingBatch.h
+	GFX/fgGFXLayer.h
 	GFX/fgGFXMain.cpp
 	GFX/fgGFXMain.h
 	GFX/fgGFXMaterial.cpp
@@ -178,6 +189,10 @@ files
 	GFX/fgGFXTexturing.cpp
 	GFX/fgGFXTexturing.h
 	GFX/fgGFXStdInc.h
+	GFX/fgGFXWindow.cpp
+	GFX/fgGFXWindow.h
+	GFX/fgGFXPlatform.cpp
+	GFX/fgGFXPlatform.h
 
 	["FlexiGame/GFX/Shaders"]
 	GFX/Shaders/fgGFXShaderBase.cpp
@@ -305,88 +320,125 @@ assets
 	sound/tod.raw
 	sound/s.raw
 	sound/d.raw
-
 	sound/m1.mp3
-	
-	(data)
-	textures/loading_screen0.jpg
-	textures/nebula_1024.jpg
-	textures/hud_center_512.tga
-	textures/bg_biohazard0_1136x640.jpg
-	textures/hud_center_1024.tga
-	textures/hud_center.png
-	textures/hud_bottom.png
-	textures/flash0_sheet.tga
-	textures/flame0_sheet.tga
-	textures/hud_bottom_1024.tga
-	textures/hud_top.png
-	textures/smoketrail0.tga
-	textures/hud_top_2048.tga
-	textures/shockwave1.tga
-	textures/arrow0_right.tga
-	textures/BackgroundCrate_1024x512.jpg
-	textures/bg_biohazard0_1024x768.jpg
-	textures/explosion1_1024.tga
-	textures/crosshair0.tga
-	textures/bg_biohazard0_1920x1200.jpg
-	textures/hud_lines_2048.tga
-	textures/arrow0_left.tga
-	textures/spark0.tga
-	textures/hud_bottom_2048.tga
-	textures/hud_top_1024.tga
-	textures/shockwave0.tga
-	textures/fire1_512.tga
-	textures/debris0_sheet.tga
-	textures/hud_lines.png
-	textures/hud_lines_1024.tga
-	textures/galaxy_1024.jpg
-	textures/loading_screen0.jpg
-	textures/plasma_galaxy_1024.jpg
 
 	(data)
-	fonts/Armalite_1024.tga
-	fonts/Armalite_2048.tga
-	fonts/Armalite_512.tga
+	textures/splash/bg_biohazard0_1920x1200.jpg
+	textures/splash/loading_screen0.jpg
+	textures/splash/bg_biohazard0_1136x640.jpg
+	textures/splash/bg_biohazard0_1024x768.jpg
+
+	(data)
+	textures/skybox/plasma_galaxy_1024.jpg
+
+	(data)
+	textures/particle/shockwave1.tga
+	textures/particle/shockwave0.tga
+	textures/particle/smoketrail0.tga
+	textures/particle/flame0_sheet.tga
+	textures/particle/flash0_sheet.tga
+	textures/particle/spark0.tga
+	textures/particle/explosion1_1024.tga
+	textures/particle/fire1_512.tga
+	textures/particle/debris0_sheet.tga
+
+	(data)
+	textures/gui/hud/HudTop.res.ini
+	textures/gui/hud/hud_top_1024.tga
+	textures/gui/hud/hud_top_2048.tga
+	textures/gui/hud/HudBottom.res.ini
+	textures/gui/hud/hud_bottom_1024.tga
+	textures/gui/hud/hud_bottom_2048.tga
+	textures/gui/hud/HudLines.res.ini
+	textures/gui/hud/hud_lines_1024.tga
+	textures/gui/hud/hud_lines_2048.tga
+	textures/gui/hud/HudCenter.res.ini
+	textures/gui/hud/hud_center_512.tga
+	textures/gui/hud/hud_center_1024.tga
+
+	(data)
+	textures/other/BackgroundCrate_1024x512.jpg
+
+	(data)
+	fonts/CaptureIt.res.ini
 	fonts/CaptureIt_1024.tga
 	fonts/CaptureIt_2048.tga
 	fonts/CaptureIt_512.tga
+
+	fonts/CarbonType.res.ini
 	fonts/CarbonType_1024.tga
 	fonts/CarbonType_2048.tga
 	fonts/CarbonType_512.tga
-	fonts/Destroy_1024.tga
-	fonts/Destroy_2048.tga
-	fonts/Destroy_512.tga
-	fonts/DigitalDream_1024.tga
-	fonts/DigitalDream_2048.tga
-	fonts/DigitalDream_512.tga
-	fonts/Franchise_1024.tga
-	fonts/Franchise_2048.tga
-	fonts/Franchise_512.tga
-	fonts/Furore_1024.tga
-	fonts/Furore_2048.tga
-	fonts/Furore_512.tga
-	fonts/Karnivore_1024.tga
-	fonts/Karnivore_2048.tga
-	fonts/Karnivore_512.tga
-	fonts/Loaded_1024.tga
-	fonts/Loaded_2048.tga
-	fonts/Loaded_512.tga
-	fonts/Minotaur_1024.tga
-	fonts/Minotaur_2048.tga
-	fonts/Minotaur_512.tga
-	fonts/Nevis_1024.tga
-	fonts/Nevis_2048.tga
-	fonts/Nevis_512.tga
-	fonts/OnRamp_1024.tga
-	fonts/OnRamp_2048.tga
-	fonts/OnRamp_512.tga
-	fonts/Orbitron_1024.tga
-	fonts/Orbitron_2048.tga
-	fonts/Orbitron_512.tga
+
+	fonts/TrueCrimes.res.ini
 	fonts/TrueCrimes_1024.tga
 	fonts/TrueCrimes_2048.tga
 	fonts/TrueCrimes_512.tga
 
+	(data)
+	obj/CobraBomber/CobraBomber_512.png	
+	obj/CobraBomber/CobraBomber_1024.png
+	obj/CobraBomber/CobraBomber.mtl
+	obj/CobraBomber/CobraBomber.obj
+
+	(data)
+	obj/MalHideout/MalHideout_512.jpg
+	obj/MalHideout/MalHideout_1024.jpg
+	obj/MalHideout/MalHideout.mtl
+	obj/MalHideout/MalHideout.obj
+
+	(data)
+	CobraBomber.group.ini
+	fonts.group.ini
+	main.config.ini
+	audio.group.xml
+	settings.xml
+	textures.group.xml
+	
+	(data)
+	shaders/sVertexLighting.frag
+	shaders/sVertexLighting.vert
+	
+	(data)
+	shaders/sPlainEasy.frag
+	shaders/sPlainEasy.vert
+	shaders/sPlainEasy.program.ini
+	shaders/sPlainEasy.frag.shader.ini
+	shaders/sPlainEasy.vert.shader.ini
+
+	(data)
+	shaders/sOrthoEasy.frag
+	shaders/sOrthoEasy.vert
+	shaders/sOrthoEasy.program.ini
+	shaders/sOrthoEasy.frag.shader.ini
+	shaders/sOrthoEasy.vert.shader.ini	
+
+	(data)
+	shaders/sSlowBumpMapping.frag
+	shaders/sSlowBumpMapping.vert
+	shaders/sSlowBumpMapping.program.ini	
+	shaders/sSlowBumpMapping.frag.shader.ini
+	shaders/sSlowBumpMapping.vert.shader.ini
+	
+	(data)
+	shaders/sEnvironmentMapping.frag
+	shaders/sEnvironmentMapping.vert
+	shaders/sEnvironmentMapping.program.ini
+	shaders/sEnvironmentMapping.frag.shader.ini
+	shaders/sEnvironmentMapping.vert.shader.ini
+	
+	(data)
+	shaders/sFragmentLighting.frag
+	shaders/sFragmentLighting.vert
+	shaders/sFragmentLighting.program.ini
+	shaders/sFragmentLighting.frag.shader.ini
+	shaders/sFragmentLighting.vert.shader.ini
+	
+}
+
+defines
+{
+	TIXML_USE_STL
 }
 
 options
@@ -404,7 +456,6 @@ packages
 {
 	libjpeg
 	libpng
-	tinyxml
 	zlib
 }
 
@@ -413,10 +464,7 @@ subprojects
 	iwutil
 	dpi
 	tinyobj
-	libjpeg
-	libpng
 	tinyxml
-	zlib
 }
 
 includepaths
@@ -435,9 +483,13 @@ deployments
 	android-icon-hdpi='icons/and_72x72.png'
 	android-icon-ldpi='icons/and_36x36.png'
 	android-icon-mdpi='icons/and_48x48.png'
+	android-icon-xxhdpi='icons/ios_144x144.png'
 	android-manifest='AndroidManifest.xml'
 	android-unsigned=0
+	caption='A Flexi Game'
 	copyright='(C) FlexiGame'
+	embed-icf=1
+	icon='icons/BiohazardIcon_256.png'
 	iphone-appid='biz.gniazdowski.SecondApp'
 	iphone-enable-4inch-retina=1
 	iphone-icon='icons/ios_57x57.png'
@@ -452,9 +504,12 @@ deployments
 	iphone-splashscreen-portrait='icons/iPhone_splash_portrait.png'
 	name='Infinium'
 	provider='Radoslaw Gniazdowski'
+	splashscreen='icons/splash'
 	splashscreen-auto-onblack=1
+	splashscreen-use-all='1'
 	version-major=1
 	version-minor=0
 	version-revision=0
+	win32-icon='icons/BiohazardIcon_256.png'
+	win32-pref-processtitle='FlexiGame Infinium'
 }
-

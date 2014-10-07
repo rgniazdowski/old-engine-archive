@@ -11,8 +11,9 @@
             <make-dep-projects/>
             <sourceRootList>
                 <sourceRootElem>../../../src</sourceRootElem>
-                <sourceRootElem>../../../modules/tinyobj/upstream</sourceRootElem>
-                <sourceRootElem>../../../modules/tinyxml/upstream</sourceRootElem>
+                <sourceRootElem>../../../modules/glm</sourceRootElem>
+                <sourceRootElem>../../../modules/tinyobj</sourceRootElem>
+                <sourceRootElem>../../../modules/tinyxml</sourceRootElem>
             </sourceRootList>
             <confList>
                 <confElem>

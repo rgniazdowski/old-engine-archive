@@ -17,11 +17,45 @@
 #include "GFX/fgGFXStdInc.h"
 #include <string>
 
+#ifndef FG_GFX_ATTRIB_POS_LOCATION
 #define FG_GFX_ATTRIB_POS_LOCATION		0
+#endif
+
+#ifndef FG_GFX_ATTRIB_NORM_LOCATION
 #define FG_GFX_ATTRIB_NORM_LOCATION		1
+#endif
+
+#ifndef FG_GFX_ATTRIB_UVS_LOCATION
 #define FG_GFX_ATTRIB_UVS_LOCATION		2
+#endif
+
+#ifndef FG_GFX_ATTRIB_COLOR_LOCATION
 #define FG_GFX_ATTRIB_COLOR_LOCATION	3
+#endif
+
+#ifndef FG_GFX_ATTRIB_TANGENT_LOCATION
 #define FG_GFX_ATTRIB_TANGENT_LOCATION	4
+#endif
+
+#ifndef FG_GFX_POSITION_BIT
+#define FG_GFX_POSITION_BIT		0x0001
+#endif
+
+#ifndef FG_GFX_NORMAL_BIT
+#define FG_GFX_NORMAL_BIT		0x0002
+#endif 
+
+#ifndef FG_GFX_UVS_BIT
+#define FG_GFX_UVS_BIT		    0x0004
+#endif 
+
+#ifndef FG_GFX_COLOR_BIT
+#define FG_GFX_COLOR_BIT		0x0008
+#endif 
+
+#ifndef FG_GFX_TANGENT_BIT
+#define FG_GFX_TANGENT_BIT		0x0020
+#endif 
 
 //GLSL Version      OpenGL Version
 //1.10				2.0
@@ -98,10 +132,10 @@ const char * const g_fgGfxSupportedShaderTypesText[] = {
 	FG_GFX_SHADER_VERTEX_TEXT
 #if defined FG_USING_OPENGL
 	,
-	FG_GFX_SHADER_TESS_CONTROL,
-	FG_GFX_SHADER_TESS_EVALUATION,
-	FG_GFX_SHADER_GEOMETRY,
-	FG_GFX_SHADER_COMPUTE
+	FG_GFX_SHADER_TESS_CONTROL_TEXT,
+	FG_GFX_SHADER_TESS_EVALUATION_TEXT,
+	FG_GFX_SHADER_GEOMETRY_TEXT,
+	FG_GFX_SHADER_COMPUTE_TEXT
 #endif
 };
 
@@ -125,9 +159,9 @@ inline const char * _FG_GFX_SHADER_TYPE_TO_TEXT(fgGfxShaderType value) {
 	FG_RETURN_VAL_IF_EQUAL(value, FG_GFX_SHADER_VERTEX, FG_TEXT(FG_GFX_SHADER_VERTEX));
 #if defined FG_USING_OPENGL
 	FG_RETURN_VAL_IF_EQUAL(value, FG_GFX_SHADER_TESS_CONTROL, FG_TEXT(FG_GFX_SHADER_TESS_CONTROL));
-	FG_RETURN_VAL_IF_EQUAL(value, FG_GFX_SHADER_TESS_EVALUATION_TEXT, FG_TEXT(FG_GFX_SHADER_TESS_EVALUATION_TEXT));
-	FG_RETURN_VAL_IF_EQUAL(value, FG_GFX_SHADER_GEOMETRY_TEXT, FG_TEXT(FG_GFX_SHADER_GEOMETRY_TEXT));
-	FG_RETURN_VAL_IF_EQUAL(value, FG_GFX_SHADER_COMPUTE_TEXT, FG_TEXT(FG_GFX_SHADER_COMPUTE_TEXT));
+	FG_RETURN_VAL_IF_EQUAL(value, FG_GFX_SHADER_TESS_EVALUATION, FG_TEXT(FG_GFX_SHADER_TESS_EVALUATION));
+	FG_RETURN_VAL_IF_EQUAL(value, FG_GFX_SHADER_GEOMETRY, FG_TEXT(FG_GFX_SHADER_GEOMETRY));
+	FG_RETURN_VAL_IF_EQUAL(value, FG_GFX_SHADER_COMPUTE, FG_TEXT(FG_GFX_SHADER_COMPUTE));
 #endif
 	return NULL;
 }
@@ -141,9 +175,9 @@ inline const char * _FG_GFX_SHADER_SHORT_PREFIX(fgGfxShaderType value) {
 	FG_RETURN_VAL_IF_EQUAL(value, FG_GFX_SHADER_VERTEX, "VS");
 #if defined FG_USING_OPENGL
 	FG_RETURN_VAL_IF_EQUAL(value, FG_GFX_SHADER_TESS_CONTROL, "TCS");
-	FG_RETURN_VAL_IF_EQUAL(value, FG_GFX_SHADER_TESS_EVALUATION_TEXT, "TES");
-	FG_RETURN_VAL_IF_EQUAL(value, FG_GFX_SHADER_GEOMETRY_TEXT, "GS");
-	FG_RETURN_VAL_IF_EQUAL(value, FG_GFX_SHADER_COMPUTE_TEXT, "CS");
+	FG_RETURN_VAL_IF_EQUAL(value, FG_GFX_SHADER_TESS_EVALUATION, "TES");
+	FG_RETURN_VAL_IF_EQUAL(value, FG_GFX_SHADER_GEOMETRY, "GS");
+	FG_RETURN_VAL_IF_EQUAL(value, FG_GFX_SHADER_COMPUTE, "CS");
 #endif
 	return NULL;
 }
@@ -189,124 +223,8 @@ inline const char * _FG_GFX_PRECISION_TYPE_TO_TEXT(fgGfxPrecision value) {
 }
 
 // #FIXME - #P3 - string obfuscation (also for error code -> text msg translations)
-#define FG_GFX_PRECISION_FROM_TEXT(text)		_FG_GFX_PRECISION_FROM_TEXT(text)
+#define FG_GFX_PRECISION_FROM_TEXT(text)	_FG_GFX_PRECISION_FROM_TEXT(text)
 #define FG_GFX_PRECISION_TYPE_TO_TEXT(value)	_FG_GFX_PRECISION_TYPE_TO_TEXT(value)
-
-//
-// Data types
-//
-
-//	bool	-	a conditional type, taking on values of true or false
-//	int		-	a signed integer
-//	float	-	a single floating-point scalar
-//	vec2	-	a two component floating-point vector
-//	vec3	-	a three component floating-point vector
-//	vec4	-	a four component floating-point vector
-//	bvec2	-	a two component Boolean vector
-//	bvec3	-	a three component Boolean vector
-//	bvec4	-	a four component Boolean vector
-//	ivec2	-	a two component integer vector
-//	ivec3	-	a three component integer vector
-//	ivec4	-	a four component integer vector
-//	mat2	-	a 2×2 floating-point matrix
-//	mat3	-	a 3×3 floating-point matrix
-//	mat4	-	a 4×4 floating-point matrix
-//	sampler2D	-	a handle for accessing a 2D texture
-//	samplerCube	-	a handle for accessing a cube mapped texture
-
-#define	FG_GFX_FLOAT			GL_FLOAT
-#define	FG_GFX_FLOAT_VEC2		GL_FLOAT_VEC2
-#define	FG_GFX_FLOAT_VEC3		GL_FLOAT_VEC3
-#define	FG_GFX_FLOAT_VEC4		GL_FLOAT_VEC4
-#define FG_GFX_INT				GL_INT
-#define	FG_GFX_INT_VEC2			GL_INT_VEC2
-#define	FG_GFX_INT_VEC3			GL_INT_VEC3
-#define	FG_GFX_INT_VEC4			GL_INT_VEC4
-#define	FG_GFX_BOOL				GL_BOOL
-#define	FG_GFX_BOOL_VEC2		GL_BOOL_VEC2
-#define	FG_GFX_BOOL_VEC3		GL_BOOL_VEC3
-#define	FG_GFX_BOOL_VEC4		GL_BOOL_VEC4
-#define	FG_GFX_FLOAT_MAT2		GL_FLOAT_MAT2
-#define	FG_GFX_FLOAT_MAT3		GL_FLOAT_MAT3
-#define	FG_GFX_FLOAT_MAT4		GL_FLOAT_MAT4	
-#define	FG_GFX_SAMPLER_2D		GL_SAMPLER_2D
-#define	FG_GFX_SAMPLER_CUBE		GL_SAMPLER_CUBE
-
-//
-// String literals for uniform data types (GL)
-//
-
-#define	FG_GFX_FLOAT_TEXT			"float"
-#define	FG_GFX_FLOAT_VEC2_TEXT		"vec2"
-#define	FG_GFX_FLOAT_VEC3_TEXT		"vec3"
-#define	FG_GFX_FLOAT_VEC4_TEXT		"vec4"
-#define FG_GFX_INT_TEXT				"int"
-#define	FG_GFX_INT_VEC2_TEXT		"ivec2"
-#define	FG_GFX_INT_VEC3_TEXT		"ivec3"
-#define	FG_GFX_INT_VEC4_TEXT		"ivec4"
-#define	FG_GFX_BOOL_TEXT			"bool"
-#define	FG_GFX_BOOL_VEC2_TEXT		"bvec2"
-#define	FG_GFX_BOOL_VEC3_TEXT		"bvec3"
-#define	FG_GFX_BOOL_VEC4_TEXT		"bvec4"
-#define	FG_GFX_FLOAT_MAT2_TEXT		"mat2"
-#define	FG_GFX_FLOAT_MAT3_TEXT		"mat3"
-#define	FG_GFX_FLOAT_MAT4_TEXT		"mat4"
-#define	FG_GFX_SAMPLER_2D_TEXT		"sampler2D"
-#define	FG_GFX_SAMPLER_CUBE_TEXT	"samplerCube"
-
-//
-// Convertion from string->enum,  enum->string for data types (GFX)
-//
-
-// Convert text (literal) to corresponding enum value
-inline fgGFXenum _FG_GFX_DATA_TYPE_FROM_TEXT(const char* text) {
-	if(!text)
-		return FG_GFX_NONE;
-	FG_RETURN_ENUM_IF_TEXT_EQ(FG_GFX_FLOAT);
-	FG_RETURN_ENUM_IF_TEXT_EQ(FG_GFX_FLOAT_VEC2);
-	FG_RETURN_ENUM_IF_TEXT_EQ(FG_GFX_FLOAT_VEC3);
-	FG_RETURN_ENUM_IF_TEXT_EQ(FG_GFX_FLOAT_VEC4);
-	FG_RETURN_ENUM_IF_TEXT_EQ(FG_GFX_INT);
-	FG_RETURN_ENUM_IF_TEXT_EQ(FG_GFX_INT_VEC2);
-	FG_RETURN_ENUM_IF_TEXT_EQ(FG_GFX_INT_VEC3);
-	FG_RETURN_ENUM_IF_TEXT_EQ(FG_GFX_INT_VEC4);
-	FG_RETURN_ENUM_IF_TEXT_EQ(FG_GFX_BOOL);
-	FG_RETURN_ENUM_IF_TEXT_EQ(FG_GFX_BOOL_VEC2);
-	FG_RETURN_ENUM_IF_TEXT_EQ(FG_GFX_BOOL_VEC3);
-	FG_RETURN_ENUM_IF_TEXT_EQ(FG_GFX_BOOL_VEC4);
-	FG_RETURN_ENUM_IF_TEXT_EQ(FG_GFX_FLOAT_MAT2);
-	FG_RETURN_ENUM_IF_TEXT_EQ(FG_GFX_FLOAT_MAT3);
-	FG_RETURN_ENUM_IF_TEXT_EQ(FG_GFX_FLOAT_MAT4);
-	FG_RETURN_ENUM_IF_TEXT_EQ(FG_GFX_SAMPLER_2D);
-	FG_RETURN_ENUM_IF_TEXT_EQ(FG_GFX_SAMPLER_CUBE);
-	return FG_GFX_NONE;
-}
-
-inline const char * _FG_GFX_DATA_TYPE_TO_TEXT(fgGFXenum value) {
-	FG_RETURN_VAL_IF_EQUAL(value, FG_GFX_FLOAT,			FG_TEXT(FG_GFX_FLOAT));
-	FG_RETURN_VAL_IF_EQUAL(value, FG_GFX_FLOAT_VEC2,	FG_TEXT(FG_GFX_FLOAT_VEC2));
-	FG_RETURN_VAL_IF_EQUAL(value, FG_GFX_FLOAT_VEC3,	FG_TEXT(FG_GFX_FLOAT_VEC3));
-	FG_RETURN_VAL_IF_EQUAL(value, FG_GFX_FLOAT_VEC4,	FG_TEXT(FG_GFX_FLOAT_VEC4));
-	FG_RETURN_VAL_IF_EQUAL(value, FG_GFX_INT,			FG_TEXT(FG_GFX_INT));
-	FG_RETURN_VAL_IF_EQUAL(value, FG_GFX_INT_VEC2,		FG_TEXT(FG_GFX_INT_VEC2));
-	FG_RETURN_VAL_IF_EQUAL(value, FG_GFX_INT_VEC3,		FG_TEXT(FG_GFX_INT_VEC3));
-	FG_RETURN_VAL_IF_EQUAL(value, FG_GFX_INT_VEC4,		FG_TEXT(FG_GFX_INT_VEC4));
-	FG_RETURN_VAL_IF_EQUAL(value, FG_GFX_BOOL,			FG_TEXT(FG_GFX_BOOL));
-	FG_RETURN_VAL_IF_EQUAL(value, FG_GFX_BOOL_VEC2,		FG_TEXT(FG_GFX_BOOL_VEC2));
-	FG_RETURN_VAL_IF_EQUAL(value, FG_GFX_BOOL_VEC3,		FG_TEXT(FG_GFX_BOOL_VEC3));
-	FG_RETURN_VAL_IF_EQUAL(value, FG_GFX_BOOL_VEC4,		FG_TEXT(FG_GFX_BOOL_VEC4));
-	FG_RETURN_VAL_IF_EQUAL(value, FG_GFX_FLOAT_MAT2,	FG_TEXT(FG_GFX_FLOAT_MAT2));
-	FG_RETURN_VAL_IF_EQUAL(value, FG_GFX_FLOAT_MAT3,	FG_TEXT(FG_GFX_FLOAT_MAT3));
-	FG_RETURN_VAL_IF_EQUAL(value, FG_GFX_FLOAT_MAT4,	FG_TEXT(FG_GFX_FLOAT_MAT4));
-	FG_RETURN_VAL_IF_EQUAL(value, FG_GFX_SAMPLER_2D,	FG_TEXT(FG_GFX_SAMPLER_2D));
-	FG_RETURN_VAL_IF_EQUAL(value, FG_GFX_SAMPLER_CUBE,	FG_TEXT(FG_GFX_SAMPLER_CUBE));
-
-	return NULL;
-}
-
-// #FIXME - #P3 - string obfuscation (also for error code -> text msg translations)
-#define FG_GFX_DATA_TYPE_FROM_TEXT(text)	_FG_GFX_DATA_TYPE_FROM_TEXT(text)
-#define FG_GFX_DATA_TYPE_TO_TEXT(value)		_FG_GFX_DATA_TYPE_TO_TEXT(value)
 
 //
 enum fgGfxShaderPrecisionType {
@@ -325,12 +243,12 @@ enum fgGfxShaderPrecisionType {
 //.frag - a fragment shader
 //.comp - a compute shader
 
-#define FG_GFX_SHADER_FRAGMENT_STD_SUFFIX				"frag"
-#define FG_GFX_SHADER_VERTEX_STD_SUFFIX					"vert"
-#define FG_GFX_SHADER_TESS_CONTROL_STD_SUFFIX			"tesc"
-#define FG_GFX_SHADER_TESS_EVALUATION_STD_SUFFIX		"tese"
-#define FG_GFX_SHADER_GEOMETRY_STD_SUFFIX				"geom"
-#define FG_GFX_SHADER_COMPUTE_STD_SUFFIX				"comp"
+#define FG_GFX_SHADER_FRAGMENT_STD_SUFFIX			"frag"
+#define FG_GFX_SHADER_VERTEX_STD_SUFFIX				"vert"
+#define FG_GFX_SHADER_TESS_CONTROL_STD_SUFFIX		"tesc"
+#define FG_GFX_SHADER_TESS_EVALUATION_STD_SUFFIX	"tese"
+#define FG_GFX_SHADER_GEOMETRY_STD_SUFFIX			"geom"
+#define FG_GFX_SHADER_COMPUTE_STD_SUFFIX			"comp"
 
 #define FG_GFX_SHADER_CONFIG_PROGRAM_STD_SUFFIX			"program.ini"
 #define FG_GFX_SHADER_CONFIG_FRAGMENT_STD_SUFFIX		"frag.shader.ini"
@@ -355,13 +273,13 @@ const char * const g_fgGfxShaderCfgSuffixes[] = {
 };
 
 inline const char * _FG_GFX_SHADER_CFG_STD_SUFFIX(fgGfxShaderType _type) {
-	FG_RETURN_VAL_IF_EQUAL(_type, FG_GFX_SHADER_FRAGMENT, FG_GFX_SHADER_CONFIG_FRAGMENT_STD_SUFFIX);
-	FG_RETURN_VAL_IF_EQUAL(_type, FG_GFX_SHADER_VERTEX, FG_GFX_SHADER_CONFIG_VERTEX_STD_SUFFIX);
+	FG_RETURN_VAL_IF_EQUAL(_type, FG_GFX_SHADER_FRAGMENT,           FG_GFX_SHADER_CONFIG_FRAGMENT_STD_SUFFIX);
+	FG_RETURN_VAL_IF_EQUAL(_type, FG_GFX_SHADER_VERTEX,             FG_GFX_SHADER_CONFIG_VERTEX_STD_SUFFIX);
 #if defined FG_USING_OPENGL
-	FG_RETURN_VAL_IF_EQUAL(_type, FG_GFX_SHADER_TESS_CONTROL, FG_GFX_SHADER_CONFIG_TESS_CONTROL_STD_SUFFIX);
-	FG_RETURN_VAL_IF_EQUAL(_type, FG_GFX_SHADER_TESS_EVALUATION, FG_GFX_SHADER_CONFIG_TESS_EVALUATION_STD_SUFFIX);
-	FG_RETURN_VAL_IF_EQUAL(_type, FG_GFX_SHADER_GEOMETRY, FG_GFX_SHADER_CONFIG_GEOMETRY_STD_SUFFIX);
-	FG_RETURN_VAL_IF_EQUAL(_type, FG_GFX_SHADER_COMPUTE, FG_GFX_SHADER_CONFIG_COMPUTE_STD_SUFFIX);
+	FG_RETURN_VAL_IF_EQUAL(_type, FG_GFX_SHADER_TESS_CONTROL,       FG_GFX_SHADER_CONFIG_TESS_CONTROL_STD_SUFFIX);
+	FG_RETURN_VAL_IF_EQUAL(_type, FG_GFX_SHADER_TESS_EVALUATION,    FG_GFX_SHADER_CONFIG_TESS_EVALUATION_STD_SUFFIX);
+	FG_RETURN_VAL_IF_EQUAL(_type, FG_GFX_SHADER_GEOMETRY,           FG_GFX_SHADER_CONFIG_GEOMETRY_STD_SUFFIX);
+	FG_RETURN_VAL_IF_EQUAL(_type, FG_GFX_SHADER_COMPUTE,            FG_GFX_SHADER_CONFIG_COMPUTE_STD_SUFFIX);
 #endif
 	return NULL;
 };
@@ -370,41 +288,47 @@ inline const char * _FG_GFX_SHADER_CFG_STD_SUFFIX(fgGfxShaderType _type) {
 
 //
 enum fgGfxUniformType {
-	FG_GFX_UNIFORM_INVALID,			// Invalid uniform type
-	FG_GFX_MV_MATRIX,				// ModelView matrix
-	FG_GFX_MVP_MATRIX,				// ModelViewProjection matrix
-	FG_GFX_ENVIRONMENT_MAP,			// Environment map
-	FG_GFX_NORMAL_MAP,				// Normal map
-	FG_GFX_BUMP_MAP,				// Bump map
-	FG_GFX_PLAIN_TEXTURE,			// First (plain) texture
-	FG_GFX_DIRECTIONAL_LIGHT,		// Directional light (need probably a little more of those)
-	FG_GFX_MATERIAL,				// Material to be used
+	FG_GFX_UNIFORM_INVALID,		// Invalid uniform type
+	FG_GFX_M_MATRIX,			// Model matrix
+	FG_GFX_MV_MATRIX,			// ModelView matrix
+	FG_GFX_MVP_MATRIX,			// ModelViewProjection matrix
+	FG_GFX_ENVIRONMENT_MAP,		// Environment map
+	FG_GFX_NORMAL_MAP,			// Normal map
+	FG_GFX_BUMP_MAP,			// Bump map
+	FG_GFX_PLAIN_TEXTURE,		// First (plain) texture
+	FG_GFX_DIRECTIONAL_LIGHT,	// Directional light (need probably a little more of those)
+	FG_GFX_MATERIAL,			// Material to be used
 	FG_GFX_PHASE,
 	FG_GFX_DELTA_TIME,
 	FG_GFX_TIMESTAMP,
-	FG_GFX_CUSTOM_COLOR,			// global color
-	FG_GFX_CUSTOM,					// Custom uniform - can be any type (only one per shader program)
-
+	FG_GFX_CUSTOM_COLOR,		// global color
+	FG_GFX_ATTRIB_MASK,			// attribute mask
+	FG_GFX_USE_TEXTURE,			// whether the texture is used, >0.5 texture used (true), <0.5 false
+	FG_GFX_CUSTOM				// Custom uniform - can be any type (only one per shader program)
 };
 
+#define FG_GFX_M_MATRIX_TEXT			"ModelMatrix"
 #define FG_GFX_MV_MATRIX_TEXT			"ModelViewMatrix"
 #define FG_GFX_MVP_MATRIX_TEXT			"ModelViewProjectionMatrix"
 #define FG_GFX_ENVIRONMENT_MAP_TEXT		"EnvironmentMap"
 #define FG_GFX_NORMAL_MAP_TEXT			"NormalMap"
 #define FG_GFX_BUMP_MAP_TEXT			"BumpMap"
 #define FG_GFX_PLAIN_TEXTURE_TEXT		"PlainTexture"
-#define FG_GFX_DIRECTIONAL_LIGHT_TEXT	"DirectionalLight"
+#define FG_GFX_DIRECTIONAL_LIGHT_TEXT   "DirectionalLight"
 #define FG_GFX_MATERIAL_TEXT			"Material"
 #define FG_GFX_PHASE_TEXT				"Phase"
 #define FG_GFX_DELTA_TIME_TEXT			"DeltaTime"
 #define FG_GFX_TIMESTAMP_TEXT			"Timestamp"
 #define FG_GFX_CUSTOM_COLOR_TEXT		"CustomColor"
+#define FG_GFX_ATTRIB_MASK_TEXT			"AttribMask"
+#define FG_GFX_USE_TEXTURE_TEXT			"UseTexture"
 #define FG_GFX_CUSTOM_TEXT				"Custom"
 
 // Convert text (literal) to corresponding enum value
 inline fgGfxUniformType _FG_GFX_UNIFORM_TYPE_FROM_TEXT(const char* text) {
 	if(!text)
 		return FG_GFX_UNIFORM_INVALID;
+	FG_RETURN_ENUM_IF_TEXT_EQ(FG_GFX_M_MATRIX);
 	FG_RETURN_ENUM_IF_TEXT_EQ(FG_GFX_MV_MATRIX);
 	FG_RETURN_ENUM_IF_TEXT_EQ(FG_GFX_MVP_MATRIX);
 	FG_RETURN_ENUM_IF_TEXT_EQ(FG_GFX_ENVIRONMENT_MAP);
@@ -417,11 +341,14 @@ inline fgGfxUniformType _FG_GFX_UNIFORM_TYPE_FROM_TEXT(const char* text) {
 	FG_RETURN_ENUM_IF_TEXT_EQ(FG_GFX_DELTA_TIME);
 	FG_RETURN_ENUM_IF_TEXT_EQ(FG_GFX_TIMESTAMP);
 	FG_RETURN_ENUM_IF_TEXT_EQ(FG_GFX_CUSTOM_COLOR);
+	FG_RETURN_ENUM_IF_TEXT_EQ(FG_GFX_ATTRIB_MASK);
+	FG_RETURN_ENUM_IF_TEXT_EQ(FG_GFX_USE_TEXTURE);
 	FG_RETURN_ENUM_IF_TEXT_EQ(FG_GFX_CUSTOM);
 	return FG_GFX_UNIFORM_INVALID;
 }
 
 inline const char * _FG_GFX_UNIFORM_TYPE_TO_TEXT(fgGfxUniformType value) {
+	FG_RETURN_VAL_IF_EQUAL(value, FG_GFX_M_MATRIX,			FG_TEXT(FG_GFX_M_MATRIX));
 	FG_RETURN_VAL_IF_EQUAL(value, FG_GFX_MV_MATRIX,			FG_TEXT(FG_GFX_MV_MATRIX));
 	FG_RETURN_VAL_IF_EQUAL(value, FG_GFX_MVP_MATRIX,		FG_TEXT(FG_GFX_MVP_MATRIX));
 	FG_RETURN_VAL_IF_EQUAL(value, FG_GFX_ENVIRONMENT_MAP,	FG_TEXT(FG_GFX_ENVIRONMENT_MAP));
@@ -434,6 +361,8 @@ inline const char * _FG_GFX_UNIFORM_TYPE_TO_TEXT(fgGfxUniformType value) {
 	FG_RETURN_VAL_IF_EQUAL(value, FG_GFX_DELTA_TIME,		FG_TEXT(FG_GFX_DELTA_TIME));
 	FG_RETURN_VAL_IF_EQUAL(value, FG_GFX_TIMESTAMP,			FG_TEXT(FG_GFX_TIMESTAMP));
 	FG_RETURN_VAL_IF_EQUAL(value, FG_GFX_CUSTOM_COLOR,		FG_TEXT(FG_GFX_CUSTOM_COLOR));
+	FG_RETURN_VAL_IF_EQUAL(value, FG_GFX_ATTRIB_MASK,		FG_TEXT(FG_GFX_ATTRIB_MASK));
+	FG_RETURN_VAL_IF_EQUAL(value, FG_GFX_USE_TEXTURE,		FG_TEXT(FG_GFX_USE_TEXTURE));
 	FG_RETURN_VAL_IF_EQUAL(value, FG_GFX_CUSTOM,			FG_TEXT(FG_GFX_CUSTOM));
 	return NULL;
 }
@@ -445,18 +374,20 @@ inline const char * _FG_GFX_UNIFORM_TYPE_TO_TEXT(fgGfxUniformType value) {
 // Attribute type also corresponds to bound attribute location
 enum fgGfxAttributeType {
 	FG_GFX_ATTRIBUTE_INVALID = -1,
-	FG_GFX_POSITION		=	FG_GFX_ATTRIB_POS_LOCATION,
-	FG_GFX_NORMAL		=	FG_GFX_ATTRIB_NORM_LOCATION,
-	FG_GFX_TEXTURE_COORD=	FG_GFX_ATTRIB_UVS_LOCATION,
-	FG_GFX_COLOR		=	FG_GFX_ATTRIB_COLOR_LOCATION,
-	FG_GFX_TANGENT		=	FG_GFX_ATTRIB_TANGENT_LOCATION
+	FG_GFX_POSITION			=	FG_GFX_ATTRIB_POS_LOCATION,
+	FG_GFX_NORMAL			=	FG_GFX_ATTRIB_NORM_LOCATION,
+	FG_GFX_TEXTURE_COORD    =	FG_GFX_ATTRIB_UVS_LOCATION,
+	FG_GFX_COLOR			=	FG_GFX_ATTRIB_COLOR_LOCATION,
+	FG_GFX_TANGENT			=	FG_GFX_ATTRIB_TANGENT_LOCATION
 };
 
-#define FG_GFX_POSITION_TEXT		"Position"			// Position (vec3)
-#define FG_GFX_NORMAL_TEXT			"Normal"			// Normal (vec3)
-#define FG_GFX_TEXTURE_COORD_TEXT	"TextureCoord"		// UV - tex coord (vec2)
-#define FG_GFX_COLOR_TEXT			"Color"				// Color (vec4)
-#define FG_GFX_TANGENT_TEXT			"Tangent"			// Tangent ?
+#define FG_GFX_ATTRIBUTE_COUNT	5 // #FIXME
+
+#define FG_GFX_POSITION_TEXT		"Position"		// Position (vec3)
+#define FG_GFX_NORMAL_TEXT			"Normal"		// Normal (vec3)
+#define FG_GFX_TEXTURE_COORD_TEXT	"TextureCoord"	// UV - tex coord (vec2)
+#define FG_GFX_COLOR_TEXT			"Color"			// Color (vec4)
+#define FG_GFX_TANGENT_TEXT			"Tangent"		// Tangent ?
 
 // Convert text (literal) to corresponding enum value
 inline fgGfxAttributeType _FG_GFX_ATTRIBUTE_TYPE_FROM_TEXT(const char* text) {
@@ -508,11 +439,11 @@ inline fgGFXenum _FG_GFX_ATTRIB_DATA_TYPE_FROM_TYPE(fgGfxAttributeType value) {
 
 //
 struct fgGfxUniformBind {
-	fgGFXint					location;
-	fgGfxUniformType			type;
-	fgGFXenum					dataType;
-	fgGfxPrecision				precision;
-	std::string					variableName;
+	fgGFXint			location;
+	fgGfxUniformType	type;
+	fgGFXenum			dataType;
+	fgGfxPrecision		precision;
+	std::string			variableName;
 
 	fgGfxUniformBind() : 
 		location(-1),
@@ -527,10 +458,10 @@ struct fgGfxUniformBind {
 		variableName.clear();
 	}
 
-	inline int operator==(const fgGfxUniformBind &b) {
+	inline int operator==(const fgGfxUniformBind &b) const {
 		return (b.variableName.compare(this->variableName) == 0 && b.type == this->type);
 	}
-	inline int operator!=(const fgGfxUniformBind &b) {
+	inline int operator!=(const fgGfxUniformBind &b) const {
 		return !(b.variableName.compare(this->variableName) == 0 && b.type == this->type);
 	}
 };
@@ -580,11 +511,11 @@ struct fgGfxAttributeBind
 		dataType = FG_GFX_ATTRIB_DATA_TYPE_FROM_TYPE(type);
 	}
 
-	inline int operator==(const fgGfxAttributeBind &b) {
+	inline int operator==(const fgGfxAttributeBind &b) const {
 		return (b.variableName.compare(this->variableName) == 0 && b.type == this->type);
 	}
 
-	inline int operator!=(const fgGfxAttributeBind &b) {
+	inline int operator!=(const fgGfxAttributeBind &b) const {
 		return !(b.variableName.compare(this->variableName) == 0 && b.type == this->type);
 	}
 
@@ -614,7 +545,7 @@ struct fgGfxAttributeData
 	/// Index of the generic vertex attribute to be modifed.
 	fgGFXint	index;
 	/// Number of components per generic vertex attribute. 
-	/// Must be 1,2,3 or 4. (default is 4)
+	/// Must be 1,2,3 or 4. (default is 3)
 	fgGFXint	size;
 	// The engine specific attribute type
 	fgGfxAttributeType	type;
@@ -644,6 +575,47 @@ struct fgGfxAttributeData
 	fgGFXboolean isBO;
 	/// Is this attribute enabled?
 	fgGFXboolean isEnabled;
+	///
+	fgGFXuint buffer;
+
+	fgGfxAttributeData() :
+		index(0),
+		size(3),
+		type(FG_GFX_POSITION),
+		dataType(FG_GFX_FLOAT),
+		stride(0),
+		pointer(NULL),
+		isNormalized(FG_FALSE),
+		isInterleaved(FG_TRUE),
+		isBO(FG_FALSE),
+		isEnabled(FG_FALSE),
+		buffer(0)
+	{
+	}
+
+	inline int operator==(const fgGfxAttributeData& b) const {
+		return (b.index == this->index);
+	}
+
+	inline int operator!=(const fgGfxAttributeData& b) const {
+		return !(b.index == this->index);
+	}
+
+	inline bool operator>(const fgGfxAttributeData& a) const {
+		return (int)(this->index) > (int)(a.index);
+    }
+
+	inline bool operator<(const fgGfxAttributeData& a) const {
+		return (int)(this->index) < (int)(a.index);
+    }
+
+	inline bool operator>=(const fgGfxAttributeData& a) const {
+		return (int)(this->index) >= (int)(a.index);
+    }
+
+	inline bool operator<=(const fgGfxAttributeData& a) const {
+		return (int)(this->index) <= (int)(a.index);
+    }
 };
 
 //

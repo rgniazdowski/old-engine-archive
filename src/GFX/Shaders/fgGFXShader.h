@@ -30,9 +30,9 @@ class fgGfxShader : public fgGfxShaderBase, protected fgFile
 {
 	friend class fgGfxShaderProgram;
 public:
-	typedef fgVector<std::string>	defineStrVec;
+	typedef fgVector<std::string>		defineStrVec;
 	typedef defineStrVec::iterator		defineStrVecItor;
-	typedef fgVector<std::string>	includeStrVec;
+	typedef fgVector<std::string>		includeStrVec;
 	typedef includeStrVec::iterator		includeStrVecItor;
 
 protected:
@@ -47,6 +47,8 @@ protected:
 	///
 	int m_numSources;
 	///
+	unsigned int m_sourceSize;
+	///
 	char const ** m_sources;
 	///
 	char * m_fileSource;
@@ -54,6 +56,7 @@ protected:
 	fgGfxShaderPrecision m_precision;
 	///
 	fgBool m_isSourceLoaded;
+
 public:
 	// 
 	fgGfxShader(fgGfxShaderType type);

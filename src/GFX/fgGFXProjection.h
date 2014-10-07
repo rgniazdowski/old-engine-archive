@@ -69,6 +69,10 @@ public:
 	float * getProjMatPtr(void) {
 		return glm::value_ptr(m_projMatrix);
 	}
+
+	void identity(void) {
+		m_projMatrix = fgMatrix4f();
+	}
 };
 
 #endif /* _FG_GFX_PROJECTION_H_ */

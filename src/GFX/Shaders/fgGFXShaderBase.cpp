@@ -53,11 +53,13 @@ void fgGfxShaderBase::updateLog(void)
 	{
 		if(m_log)
 			fgFree(m_log);
-		char *buffer = (char*)fgMalloc(sizeof(char)*length);
+		char *buffer = fgMalloc<char>(length);
 		if(m_baseType == FG_GFX_BASE_TYPE_SHADER) {
 			glGetShaderInfoLog(m_gfxID, length, NULL, buffer);
+			fgGLError("glGetShaderInfoLog"); // ?
 		} else if(m_baseType == FG_GFX_BASE_TYPE_PROGRAM) {
 			glGetProgramInfoLog(m_gfxID, length, NULL, buffer);
+			fgGLError("glGetProgramInfoLog"); // ?
 		}
 		m_log = buffer;
 	}
@@ -77,8 +79,10 @@ void fgGfxShaderBase::updateParams(void)
 	for(;itor!=end;itor++) {
 		if(m_baseType == FG_GFX_BASE_TYPE_SHADER) {
 			glGetShaderiv(m_gfxID, (fgGFXenum)itor->first, &value);
+			fgGLError("glGetShaderiv");
 		} else if(m_baseType == FG_GFX_BASE_TYPE_PROGRAM) {
 			glGetProgramiv(m_gfxID, (fgGFXenum)itor->first, &value);
+			fgGLError("glGetProgramiv");
 		} else {
 			continue;
 		}

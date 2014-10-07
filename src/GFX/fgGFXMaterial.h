@@ -12,8 +12,6 @@
 
 #include "fgCommon.h"
 #include "fgGFXTypes.h"
-#include "tiny_obj_loader.h"
-
 #include <string>
 
 #include "Resource/fgResource.h"
@@ -60,6 +58,8 @@ public:
 	// Handle for the normal texture
 	FG_RHANDLE normalTexHandle;
 
+    std::map<std::string, std::string> unknownParam;
+
 	fgGfxMaterial()
 	{
 	}
@@ -75,7 +75,29 @@ public:
 		return size;
 	}
 
+	fgGfxMaterial(const fgGfxMaterial & material)
+	{
+		this->name = material.name;
+		this->ambient = material.ambient;
+		this->diffuse = material.diffuse;
+		this->specular = material.specular;
+		this->transmittance = material.transmittance;
+		this->emission = material.emission;
+		this->shininess = material.shininess;
+		this->ior = material.ior;
+		this->dissolve = material.dissolve;
+		this->illuminationModel = material.illuminationModel;
+
+		this->ambientTexName = material.ambientTexName;
+		this->diffuseTexName = material.diffuseTexName;
+		this->specularTexName = material.specularTexName;
+		this->normalTexName = material.normalTexName;
+
+		this->unknownParam = material.unknownParam;
+	}
+
 	// #FIXME #SERIOUSLY
+#if 0
 	fgGfxMaterial(tinyobj::material_t & material)
 	{
 		name = material.name;
@@ -98,7 +120,7 @@ public:
 		specularTexName = material.specular_texname;
 		normalTexName = material.normal_texname;
 	}
-
+#endif
 	~fgGfxMaterial()
 	{
 		clear();

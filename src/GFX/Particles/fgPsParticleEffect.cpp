@@ -62,7 +62,6 @@ void ParticleEffect::setMaxCount(int max_count)
     // Prepare for new amount of data
     m_particles.reserve( max_count );
     m_maxCount = max_count;
-
 	if(m_colorStream)
 		fgFree(m_colorStream);
 	if(m_vertStream2D)
@@ -82,10 +81,10 @@ void ParticleEffect::setMaxCount(int max_count)
 
 	// #FIXME This allocations need to be in DrawingBatch or SimpleDrawer, need to think about it
 
-	m_colorStream = (fgColor *) fgMalloc(sizeof(fgColor) * 4 * max_count);
-	m_vertStream2D = (fgVector2i *) fgMalloc(sizeof(fgVector2i) * 4 * max_count);
-	m_vertStream3D = (fgVector3f *) fgMalloc(sizeof(fgVector3f) * 4 * max_count);
-	m_UVStream = (fgVector2f *) fgMalloc(sizeof(fgVector2f) * 4 * max_count);
+	m_colorStream = fgMalloc<fgColor>(4 * max_count);
+	m_vertStream2D = fgMalloc<fgVector2i>(4 * max_count);
+	m_vertStream3D = fgMalloc<fgVector3f>(4 * max_count);
+	m_UVStream = fgMalloc<fgVector2f>(4 * max_count);
 	// #FIXME
 	//m_material = new CIwMaterial();
 	//m_material->SetCullMode(CIwMaterial::CULL_NONE);

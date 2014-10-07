@@ -20,7 +20,7 @@
 
 class fgTextureManager;
 
-#define FG_TAG_TEXTURE_MANAGER_NAME	"TextureManager"
+#define FG_TAG_TEXTURE_MANAGER_NAME		"GfxTextureManager"
 //#define FG_TAG_MANAGER_BASE_ID		20 //#FIXME - something automatic maybe?
 #define FG_TAG_TEXTURE_MANAGER			FG_TAG_TYPE(fgTextureManager)
 
@@ -29,6 +29,8 @@ FG_TAG_TEMPLATE_ID_AUTO(fgTextureManager, FG_TAG_TEXTURE_MANAGER_NAME);
 
 // Special handle type for manager base
 typedef FG_TAG_TEXTURE_MANAGER fgTextureManagerTag;
+
+#define FG_MANAGER_TEXTURE	0x00000004
 
 /**
  * Class that allows to perform GROUP OPERATIONS on all textures. 
@@ -66,7 +68,7 @@ public:
      * - no image being already loaded,
      * - force option given.
      */
-    fgBool allToVRAM(void);
+    fgBool allToVRAM(fgBool reupload = FG_FALSE);
 
     // Releases all non GFX (i.e. non VRAM) data
     void allReleaseNonGFX(void);

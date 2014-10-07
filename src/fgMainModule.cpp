@@ -26,7 +26,7 @@
 
 #include "fgLog.h"
 #include "Event/fgEventManager.h"
-#include "Input/fgTouchReceiver.h"
+#include "Input/fgPointerInputReceiver.h"
 #include "Hardware/fgHardwareState.h"
 
 class MainModule;
@@ -42,11 +42,9 @@ private:
 public:
 	static int32_t pauseHandler(void *systemData, void *userData);
 	static int32_t unpauseHandler(void *systemData, void *userData);
+	static int32_t suspendGfxHandler(void *systemData, void *userData);
+	static int32_t resumeGfxHandler(void *systemData, void *userData);
 	static int32_t keyStateChangedHandler(void *systemData, void *userData);
-	static int32_t multiTouchButtonHandler(void* systemData, void* userData);
-	static int32_t multiTouchMotionHandler(void* systemData, void* userData);
-	static int32_t singleTouchButtonHandler(void* systemData, void* userData);
-	static int32_t singleTouchMotionHandler(void* systemData, void* userData);
 };
 
 #endif /* FG_USING_MARMALADE */
@@ -68,7 +66,8 @@ protected:
 		m_appInit(FG_FALSE),
 		m_slow(FG_FALSE),
 		m_isExit(FG_FALSE),
-		m_gameMain(NULL)
+		m_gameMain(NULL),
+		m_eventMgr(NULL)
 	{
 		memset(&m_touches, 0, sizeof(m_touches));
 	}
@@ -90,8 +89,41 @@ public:
 		return m_isExit;
 	}
 
+	static fgBool eventSwipe(fgArgumentList *argv)
 	{
+		if(!argv)
+			return FG_FALSE;
+		fgEventBase *event = (fgEventBase *) argv->getArgumentValueByID(0);
+		if(!event)
+			return FG_FALSE;
+		fgEventType type = event->eventType;
+		static int lastx = 128000;
+		static int lasty = 128000;
+		int xRel=0, yRel=0;
+
+		if(type == FG_EVENT_TOUCH_MOTION) {
+			fgTouchEvent *touch = (fgTouchEvent *) argv->getArgumentValueByID(0);
+			if(lastx > 100000 && lasty > 100000) {
+				lastx = touch->x;
+				lasty = touch->y;
+			}
+			xRel = -(lastx - touch->x);
+			yRel = -(lasty - touch->y);
+			lastx = touch->x;
+			lasty = touch->y;
+			//printf("TOUCH MOTION: X: %d Y: %d | xRel: %d | yRel: %d \n", touch->x, touch->y, xRel, yRel);
+			cameraAnim->update((float)xRel, (float)yRel);
+		} else if(0) {
+			fgSwipeEvent *swipe = (fgSwipeEvent *) argv->getArgumentValueByID(0);
+			//printf("EVENT SWIPE: Xoff: %d | Yoff: %d | myX: %d | myY: %d | stepsX: %d | stepsY: %d\n",
+				//swipe->swipeXOffset, 
+				//swipe->swipeYOffset,
+				//swipe->xStart-swipe->xEnd,
+				//swipe->yStart-swipe->xEnd,
+				//swipe->swipeXSteps,
+				//swipe->swipeYSteps);
 		}
+		return FG_TRUE;
 	}
 
 	/**
@@ -100,33 +132,37 @@ public:
 	 */
 	fgBool initProgram()
 	{
-#if defined FG_USING_MARMALADE
-		s3eSurfaceSetInt(S3E_SURFACE_DEVICE_ORIENTATION_LOCK, S3E_SURFACE_LANDSCAPE_FIXED);
-		// Register for keyboard
-		s3eKeyboardRegister(S3E_KEYBOARD_KEY_EVENT, &fgMarmaladeHandlers::keyStateChangedHandler, (void *)this);
-		// Register for touches
-		m_useMultitouch = s3ePointerGetInt(S3E_POINTER_MULTI_TOUCH_AVAILABLE) ? FG_TRUE : FG_FALSE;
-		if(m_useMultitouch) {
-			s3ePointerRegister(S3E_POINTER_TOUCH_EVENT, &fgMarmaladeHandlers::multiTouchButtonHandler, (void *)this);
-			s3ePointerRegister(S3E_POINTER_TOUCH_MOTION_EVENT, &fgMarmaladeHandlers::multiTouchMotionHandler, (void *)this);
-		} else {
-			s3ePointerRegister(S3E_POINTER_BUTTON_EVENT, &fgMarmaladeHandlers::singleTouchButtonHandler, (void *)this);
-			s3ePointerRegister(S3E_POINTER_MOTION_EVENT, &fgMarmaladeHandlers::singleTouchMotionHandler, (void *)this);
+		if(m_appInit) {
+			// already initialized
+			return FG_TRUE;
 		}
 
+#if defined FG_USING_MARMALADE
+		s3eSurfaceSetInt(S3E_SURFACE_DEVICE_ORIENTATION_LOCK, S3E_SURFACE_LANDSCAPE_FIXED);
+		// ?
+		//s3eKeyboardSetInt(S3E_KEYBOARD_GET_CHAR, 1);
+		// Register for keyboard
+		s3eKeyboardRegister(S3E_KEYBOARD_KEY_EVENT, &fgMarmaladeHandlers::keyStateChangedHandler, (void *)this);
+	
 		// DEVICE FOCUS – called on any device
 		s3eDeviceRegister (S3E_DEVICE_PAUSE, &fgMarmaladeHandlers::pauseHandler, (void *)this);
 		s3eDeviceRegister (S3E_DEVICE_UNPAUSE, &fgMarmaladeHandlers::unpauseHandler, (void *)this);
+		int32 mustSuspend = s3eGLGetInt(S3E_GL_MUST_SUSPEND); // S3E_GL_VERSION // S3E_EGL_VERSION
+		s3eGLRegister (S3E_GL_SUSPEND, &fgMarmaladeHandlers::suspendGfxHandler, (void *)this);
+		s3eGLRegister (S3E_GL_RESUME, &fgMarmaladeHandlers::resumeGfxHandler, (void *)this);
 
 #endif /* FG_USING_MARMALADE */
 
-		if(m_gameMain) {
-			// already initialized ?
-			return FG_FALSE;
+		if(!m_gameMain)
+			m_gameMain = new fgGameMain();
+		if(!m_eventMgr) {
+			m_eventMgr = new fgEventManager();
+			if(!m_eventMgr->initialize()) {
+				// Should check?
+			}
 		}
-		m_gameMain = new fgGameMain();
-
-		// FIXME
+		m_gameMain->setEventManager(m_eventMgr);
+		
 		// Well the whole configuration process should update the screen (swap buffers)
 		// this is needed to display splash screen (after marmalade splash screen) and
 		// show the game initialization process by displaying the progress bar
@@ -141,7 +177,10 @@ public:
 		if(!m_gameMain->loadResources()) {
 			return FG_FALSE;
 		}
-
+		//FG_EventManager->addEventCallback(FG_EVENT_SWIPE_X, &MainModule::eventSwipe);
+		//FG_EventManager->addEventCallback(FG_EVENT_SWIPE_Y, &MainModule::eventSwipe);
+		//FG_EventManager->addEventCallback(FG_EVENT_SWIPE_XY, &MainModule::eventSwipe);
+		m_eventMgr->addEventCallback(FG_EVENT_TOUCH_MOTION, &MainModule::eventSwipe);
 		m_appInit = FG_TRUE;
 		return FG_TRUE;
 	}
@@ -167,7 +206,20 @@ public:
 			FG_LOG::PrintDebug("ENTER PRESSED...");
 			return FG_FALSE;
 		}
-#endif // FG_USING_MARMALADE
+		// #TODELETE - camera animation test
+		if(s3eKeyboardGetState(s3eKeyW) & S3E_KEY_STATE_DOWN) {
+			cameraAnim->moveForward();
+		}
+		if(s3eKeyboardGetState(s3eKeyS) & S3E_KEY_STATE_DOWN) {
+			cameraAnim->moveBackward();
+		}
+		if(s3eKeyboardGetState(s3eKeyA) & S3E_KEY_STATE_DOWN) {
+			cameraAnim->moveLeft();
+		}
+		if(s3eKeyboardGetState(s3eKeyD) & S3E_KEY_STATE_DOWN) {
+			cameraAnim->moveRight();
+		}
+#endif /* FG_USING_MARMALADE */
 		if (m_isExit) {
 			m_appInit = FG_FALSE;
 			FG_LOG::PrintDebug("EXIT IS ACTIVATED - break loop main ! bye!");
@@ -194,22 +246,49 @@ public:
 	 */
 	void closeProgram() {
 		FG_LOG::PrintDebug("closeEvent()");
-		m_gameMain->releaseResources();
+		if(m_gameMain)
+			m_gameMain->releaseResources();
 
 		// This frees all the data used by singletons and other nonresource data
 		// after that only things left to free are FG_GameMain and MainModule
-		m_gameMain->closeSybsystems();
-		delete m_gameMain;
+		if(m_gameMain) {
+			m_gameMain->closeSybsystems();
+			delete m_gameMain;
+		}
 		m_gameMain = NULL;
+		if(m_eventMgr) {
+			delete m_eventMgr;
+			m_eventMgr = NULL;
+		}
 		m_appInit = FG_FALSE;
 	}
 
 private:
 	/**
 	 * DEVICE PAUSE event
+	 */
+	void suspendGfxEvent(void)
+	{
+		FG_LOG::PrintDebug(">>> SUSPEND GFX SUBSYSTEM()");
+		if(m_gameMain)
+			m_gameMain->getGfxMain()->suspendGFX();
+	}
+
+	/**
+	 * DEVICE unpause event
+	 */
+	void resumeGfxEvent(void)
+	{
+		FG_LOG::PrintDebug(">>> RESUME GFX SUBSYSTEM()");
+		if(m_gameMain)
+			m_gameMain->getGfxMain()->resumeGFX();		
+	}
+
+	/**
+	 * DEVICE PAUSE event
 	 * (not the GL pause event)
 	 */
-	void focusLostEvent()
+	void focusLostEvent(void)
 	{
 		FG_LOG::PrintDebug("focusLostEvent()");
 
@@ -231,7 +310,7 @@ private:
 	 * DEVICE unpause event
 	 * (not the GL unpause event)
 	 */
-	void focusGainedEvent()
+	void focusGainedEvent(void)
 	{
 		FG_LOG::PrintDebug("focusGainedEvent()");
 	}
@@ -240,55 +319,26 @@ private:
 	 * Handle PRESSING and RELEASING keys
 	 */
 	void keyStateChangedEvent(s3eKeyboardEvent* event) {
-		if( !m_appInit )
+		if( !m_appInit || !m_eventMgr)
 			return;
-		if (event->m_Pressed) {
-			FG_EventManager->addKeyDown((int)event->m_Key);
-		} else {
-			FG_EventManager->addKeyUp((int)event->m_Key);
+#if 0
+		char dst[100];
+		s3eWChar wchar1 = s3eKeyboardGetChar();
+		int printable = (int)wchar1;
+		if(printable < 255) {
+			printf("printable: '%c'\n", (char)printable);
 		}
-		FG_LOG::PrintDebug("FG_EventManager - keyboard - %d is pressed? - code: %d", (int)event->m_Pressed, (int)event->m_Key);
+		s3eKeyboardGetDisplayName(dst, event->m_Key);
+		printf("'%s'\n", dst);
+#endif
+		if (event->m_Pressed) {
+			m_eventMgr->addKeyDown((int)event->m_Key);
+		} else {
+			m_eventMgr->addKeyUp((int)event->m_Key);
+		}
+		//FG_LOG::PrintDebug("FG_EventManager - keyboard - %d is pressed? - code: %d", (int)event->m_Pressed, (int)event->m_Key);
 	}
 #endif /* FG_USING_MARMALADE */
-
-	/**
-	 * This function is called with a coordinate when the screen is touched.
-	 * The touch id will remain the same as long as this touch is active.
-	 */
-	void multiTouchPressEvent(int x, int y, unsigned int touchId)
-	{
-		if( !m_appInit )
-			return;
-
-		m_touches[touchId] = FG_TRUE;
-		FG_TouchReceiver->handlePointerPressed(fgVector2i(x,y), touchId);
-	}
-
-	/**
-	 *  This method is called with a coordinate when an active touch moves.
-	 */
-	void multiTouchMoveEvent(int x, int y, unsigned int touchId)
-	{
-		if( !m_appInit )
-			return;
-
-		if(m_touches[touchId] == FG_TRUE)
-			FG_TouchReceiver->handlePointerMoved(fgVector2i(x,y), touchId);
-	}
-
-	/**
-	 *  This method is called with a coordinate when the screen isn't touched
-	 *  anymore. This touch id will be deleted and will be reused when a new
-	 *  touch is initiated.
-	 */
-	void multiTouchReleaseEvent(int x, int y, int touchId)
-	{
-		if( !m_appInit )
-			return;
-
-		m_touches[touchId] = FG_FALSE;
-		FG_TouchReceiver->handlePointerReleased(fgVector2i(x,y),touchId);
-	}
 
 private:
 	enum {NUM_TOUCHES = 10};
@@ -314,6 +364,9 @@ private:
 	/// changing name to fgApplication - or extending fgApplication class
 	/// #TODO - support threads
 	fgGameMain *m_gameMain;
+	/// Main event manager, it's going to be initialized in main module class
+	/// then passed down to the GameMain class
+	fgEventManager *m_eventMgr;
 };
 
 #if 0
@@ -357,8 +410,8 @@ static bool set_allow_loop_handler(void) {
 #if defined FG_USING_MARMALADE
 
 /**
-	* Focus lost HANDLER
-	*/
+ * Focus lost HANDLER
+ */
 int32_t fgMarmaladeHandlers::pauseHandler(void *systemData, void *userData) 
 {
 	if(!userData)
@@ -369,8 +422,8 @@ int32_t fgMarmaladeHandlers::pauseHandler(void *systemData, void *userData)
 }
 
 /**
-	* Focus restored HANDLER
-	*/
+ * Focus restored HANDLER
+ */
 int32_t fgMarmaladeHandlers::unpauseHandler(void *systemData, void *userData) 
 {
 	if(!userData)
@@ -380,9 +433,34 @@ int32_t fgMarmaladeHandlers::unpauseHandler(void *systemData, void *userData)
 	return 0;
 }
 
+
 /**
-* Key state changed HANDLER
-*/
+ * Focus lost HANDLER
+ */
+int32_t fgMarmaladeHandlers::suspendGfxHandler(void *systemData, void *userData) 
+{
+	if(!userData)
+		return 0;
+	MainModule *mainModule = (MainModule *)userData;
+	mainModule->suspendGfxEvent();
+	return 0;
+}
+
+/**
+ * Focus restored HANDLER
+ */
+int32_t fgMarmaladeHandlers::resumeGfxHandler(void *systemData, void *userData) 
+{
+	if(!userData)
+		return 0;
+	MainModule *mainModule = (MainModule *)userData;
+	mainModule->resumeGfxEvent();
+	return 0;
+}
+
+/**
+ * Key state changed HANDLER
+ */
 int32_t fgMarmaladeHandlers::keyStateChangedHandler(void *systemData, void *userData)
 {
 	if(!userData)
@@ -390,66 +468,6 @@ int32_t fgMarmaladeHandlers::keyStateChangedHandler(void *systemData, void *user
 	MainModule *mainModule = (MainModule *)userData;
 	s3eKeyboardEvent* event = (s3eKeyboardEvent*)systemData;
 	mainModule->keyStateChangedEvent(event);
-	return 0;
-}
-
-/**
-	* Touch press/release HANDLER
-	*/
-int32_t fgMarmaladeHandlers::multiTouchButtonHandler(void* systemData, void* userData)
-{
-	if(!userData)
-		return 0;
-	MainModule *mainModule = (MainModule *)userData;
-	s3ePointerTouchEvent* event = (s3ePointerTouchEvent*) systemData;
-	if(event->m_Pressed) {
-		mainModule->multiTouchPressEvent(event->m_x, event->m_y, event->m_TouchID);
-	} else {
-		mainModule->multiTouchReleaseEvent(event->m_x, event->m_y, event->m_TouchID);
-	}
-	return 0;
-}
-
-/**
-	* Touch motion HANDLER
-	*/
-int32_t fgMarmaladeHandlers::multiTouchMotionHandler(void* systemData, void* userData)
-{
-	if(!userData)
-		return 0;
-	MainModule *mainModule = (MainModule *)userData;
-	s3ePointerTouchMotionEvent* event = (s3ePointerTouchMotionEvent*) systemData;
-	mainModule->multiTouchMoveEvent(event->m_x, event->m_y, event->m_TouchID);
-	return 0;
-}
-
-/**
-	* Single press/release HANDLER
-	*/
-int32_t fgMarmaladeHandlers::singleTouchButtonHandler(void* systemData, void* userData)
-{
-	if(!userData)
-		return 0;
-	MainModule *mainModule = (MainModule *)userData;
-	s3ePointerEvent* event = (s3ePointerEvent*) systemData;
-	if(event->m_Pressed) {
-		mainModule->multiTouchPressEvent(event->m_x, event->m_y, 0);
-	} else {
-		mainModule->multiTouchReleaseEvent(event->m_x, event->m_y, 0);
-	}
-	return 0;
-}
-
-/**
-	* Single motion HANDLER
-	*/
-int32_t fgMarmaladeHandlers::singleTouchMotionHandler(void* systemData, void* userData)
-{
-	if(!userData)
-		return 0;
-	MainModule *mainModule = (MainModule *)userData;
-	s3ePointerMotionEvent* event = (s3ePointerMotionEvent*) systemData;
-	mainModule->multiTouchMoveEvent(event->m_x, event->m_y, 0);
 	return 0;
 }
 
@@ -462,61 +480,67 @@ extern "C" int main()
 {
 #if defined FG_USING_MARMALADE
 	IwUtilInit();
-#endif // FG_USING_MARMALADE
-	//IwMemBucketDebugSetBreakpoint(1964);
-	//IwMemBucketDebugSetBreakpoint(177);
+#endif /* FG_USING_MARMALADE */
+
+	//IwMemBucketDebugSetBreakpoint(580);
+	//IwMemBucketDebugSetBreakpoint(580);
 	/*fgDeviceQuery* dev = fgDeviceQuery::getInstance();
 
 	if ( dev->iOS() &&
-		( (dev->deviceClass() == FG_DEVICE_CLASS_IPAD && dev->deviceGeneration() == FG_DEVICE_GENERATION_FIRST) ||
-		(dev->deviceClass() == FG_DEVICE_CLASS_IPOD && dev->deviceGeneration() < FG_DEVICE_GENERATION_FOURTH) ||
-		(dev->deviceClass() == FG_DEVICE_CLASS_IPHONE && dev->deviceGeneration() < FG_DEVICE_GENERATION_FOURTH)
-		)
-		)
+	( (dev->deviceClass() == FG_DEVICE_CLASS_IPAD && dev->deviceGeneration() == FG_DEVICE_GENERATION_FIRST) ||
+	(dev->deviceClass() == FG_DEVICE_CLASS_IPOD && dev->deviceGeneration() < FG_DEVICE_GENERATION_FOURTH) ||
+	(dev->deviceClass() == FG_DEVICE_CLASS_IPHONE && dev->deviceGeneration() < FG_DEVICE_GENERATION_FOURTH)
+	)
+	)
 	{
-		FG_MainModule->setSlow(true);
+	FG_MainModule->setSlow(true);
 	} else {
-		FG_MainModule->setSlow(false);
+	FG_MainModule->setSlow(false);
 	}
 	*/
 	MainModule *mainModule = new MainModule();
 
 	if(!mainModule->initProgram()) {
 		mainModule->closeProgram();
-	#if defined FG_USING_MARMALADE
+		delete mainModule;
+#if defined FG_USING_MARMALADE
 		IwUtilTerminate();
 		s3eDeviceExit(0);
-	#endif // FG_USING_MARMALADE
+#endif /* FG_USING_MARMALADE */		
+		return 1;
 	}
 	FG_HardwareState->deviceYield(0);
 
 	/*if( FG_MainModule->isSlow() ) {
-		// USE FPS LIMIT
-		FG_LOG::PrintDebug("USING FPS LIMIT FOR DEVICE GEN: %d", dev->deviceGeneration());
+	// USE FPS LIMIT
+	FG_LOG::PrintDebug("USING FPS LIMIT FOR DEVICE GEN: %d", dev->deviceGeneration());
 
-		if(!set_allow_loop_handler()) {
-			FG_LOG::PrintError("FATAL ERROR #1: EXITING");
-			s3eDeviceExit(1);
-		}
-		while(1) {
-			if ( g_allowLoop ) {
-				g_allowLoop = false;
-				FG_MainModule->mainLoopStep();
-			}
-			FG_HardwareState->deviceYield(10);
-		}
+	if(!set_allow_loop_handler()) {
+	FG_LOG::PrintError("FATAL ERROR #1: EXITING");
+	s3eDeviceExit(1);
+	}
+	while(1) {
+	if ( g_allowLoop ) {
+	g_allowLoop = false;
+	FG_MainModule->mainLoopStep();
+	}
+	FG_HardwareState->deviceYield(10);
+	}
 	} else {
-		// NO FPS LIMIT
-		FG_LOG::PrintDebug("NO FPS LIMIT FOR DEVICE GEN: %d", dev->deviceGeneration());
-		while(1) {
-			FG_MainModule->mainLoopStep();
-			FG_HardwareState->deviceYield(0);
-		}
+	// NO FPS LIMIT
+	FG_LOG::PrintDebug("NO FPS LIMIT FOR DEVICE GEN: %d", dev->deviceGeneration());
+	while(1) {
+	FG_MainModule->mainLoopStep();
+	FG_HardwareState->deviceYield(0);
+	}
 	}*/
 
 	while(true)	{
 		fgBool status = mainModule->mainLoopStep();
 		FG_HardwareState->deviceYield(1);
+#if defined FG_USING_MARMALADE
+		s3eDeviceBacklightOn(); // #FIXME // need to wrap it in something else
+#endif /* FG_USING_MARMALADE */
 		if(status == FG_FALSE)
 			break;
 	}
@@ -527,6 +551,6 @@ extern "C" int main()
 #if defined FG_USING_MARMALADE
 	IwUtilTerminate();
 	s3eDeviceExit(0);
-#endif // FG_USING_MARMALADE
+#endif /* FG_USING_MARMALADE */
 	return 0;
 }

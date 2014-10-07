@@ -45,6 +45,41 @@ OBJECTFILES= \
 	${OBJECTDIR}/_ext/1650758620/fgSFXMusicResource.o \
 	${OBJECTDIR}/_ext/1654483616/fgArgumentList.o \
 	${OBJECTDIR}/_ext/1654483616/fgEventManager.o \
+	${OBJECTDIR}/_ext/293675389/fgParticleSystem.o \
+	${OBJECTDIR}/_ext/293675389/fgPsExplosionEffect.o \
+	${OBJECTDIR}/_ext/293675389/fgPsFlashEffect.o \
+	${OBJECTDIR}/_ext/293675389/fgPsFlyingDebrisEffect.o \
+	${OBJECTDIR}/_ext/293675389/fgPsObjectPulseEffect.o \
+	${OBJECTDIR}/_ext/293675389/fgPsParticleDrawer.o \
+	${OBJECTDIR}/_ext/293675389/fgPsParticleEffect.o \
+	${OBJECTDIR}/_ext/293675389/fgPsParticleEffectCircular.o \
+	${OBJECTDIR}/_ext/293675389/fgPsParticleEffectLimited.o \
+	${OBJECTDIR}/_ext/293675389/fgPsSequentialEffect.o \
+	${OBJECTDIR}/_ext/960776194/fgGFXShader.o \
+	${OBJECTDIR}/_ext/960776194/fgGFXShaderBase.o \
+	${OBJECTDIR}/_ext/960776194/fgGFXShaderConfig.o \
+	${OBJECTDIR}/_ext/960776194/fgGFXShaderManager.o \
+	${OBJECTDIR}/_ext/960776194/fgGFXShaderProgram.o \
+	${OBJECTDIR}/_ext/34731496/fgTextureLoader.o \
+	${OBJECTDIR}/_ext/34731496/fgTextureManager.o \
+	${OBJECTDIR}/_ext/34731496/fgTextureResource.o \
+	${OBJECTDIR}/_ext/534590209/fgGFX2DScene.o \
+	${OBJECTDIR}/_ext/534590209/fgGFX3DScene.o \
+	${OBJECTDIR}/_ext/534590209/fgGFXCamera.o \
+	${OBJECTDIR}/_ext/534590209/fgGFXCameraAnimation.o \
+	${OBJECTDIR}/_ext/534590209/fgGFXDrawCall.o \
+	${OBJECTDIR}/_ext/534590209/fgGFXDrawingBatch.o \
+	${OBJECTDIR}/_ext/534590209/fgGFXLight.o \
+	${OBJECTDIR}/_ext/534590209/fgGFXMain.o \
+	${OBJECTDIR}/_ext/534590209/fgGFXMaterial.o \
+	${OBJECTDIR}/_ext/534590209/fgGFXModelResource.o \
+	${OBJECTDIR}/_ext/534590209/fgGFXObject.o \
+	${OBJECTDIR}/_ext/534590209/fgGFXOctreeBase.o \
+	${OBJECTDIR}/_ext/534590209/fgGFXPrimitives.o \
+	${OBJECTDIR}/_ext/534590209/fgGFXQuadtreeBase.o \
+	${OBJECTDIR}/_ext/534590209/fgGFXSceneManager.o \
+	${OBJECTDIR}/_ext/534590209/fgGFXSimpleDrawer.o \
+	${OBJECTDIR}/_ext/534590209/fgGFXTexturing.o \
 	${OBJECTDIR}/_ext/534589759/fgFontDrawer.o \
 	${OBJECTDIR}/_ext/534589759/fgFontResource.o \
 	${OBJECTDIR}/_ext/534589759/fgGuiButton.o \
@@ -52,78 +87,59 @@ OBJECTFILES= \
 	${OBJECTDIR}/_ext/534589759/fgGuiConsole.o \
 	${OBJECTDIR}/_ext/534589759/fgGuiContainer.o \
 	${OBJECTDIR}/_ext/534589759/fgGuiDrawer.o \
+	${OBJECTDIR}/_ext/534589759/fgGuiFrame.o \
 	${OBJECTDIR}/_ext/534589759/fgGuiLabel.o \
 	${OBJECTDIR}/_ext/534589759/fgGuiLoader.o \
 	${OBJECTDIR}/_ext/534589759/fgGuiMain.o \
 	${OBJECTDIR}/_ext/534589759/fgGuiMenu.o \
 	${OBJECTDIR}/_ext/534589759/fgGuiMessageBox.o \
+	${OBJECTDIR}/_ext/534589759/fgGuiPopup.o \
 	${OBJECTDIR}/_ext/534589759/fgGuiPrimitives.o \
 	${OBJECTDIR}/_ext/534589759/fgGuiProgressBar.o \
 	${OBJECTDIR}/_ext/534589759/fgGuiScreenGrid.o \
 	${OBJECTDIR}/_ext/534589759/fgGuiStructureSheet.o \
-	${OBJECTDIR}/_ext/534589759/fgGuiStructureSheetInterpreter.o \
-	${OBJECTDIR}/_ext/534589759/fgGuiStyleSheet.o \
-	${OBJECTDIR}/_ext/534589759/fgGuiStyleSheetInterpreter.o \
+	${OBJECTDIR}/_ext/534589759/fgGuiStructureSheetParser.o \
+	${OBJECTDIR}/_ext/534589759/fgGuiStyle.o \
+	${OBJECTDIR}/_ext/534589759/fgGuiStyleContent.o \
+	${OBJECTDIR}/_ext/534589759/fgGuiStyleSheetParser.o \
+	${OBJECTDIR}/_ext/534589759/fgGuiTable.o \
+	${OBJECTDIR}/_ext/534589759/fgGuiText.o \
+	${OBJECTDIR}/_ext/534589759/fgGuiTextArea.o \
+	${OBJECTDIR}/_ext/534589759/fgGuiToggleButton.o \
 	${OBJECTDIR}/_ext/534589759/fgGuiWidget.o \
+	${OBJECTDIR}/_ext/534589759/fgGuiWidgetFactory.o \
 	${OBJECTDIR}/_ext/477241454/fgGameLogic.o \
-	${OBJECTDIR}/_ext/135315005/fgParticleSystem.o \
-	${OBJECTDIR}/_ext/135315005/fgPsExplosionEffect.o \
-	${OBJECTDIR}/_ext/135315005/fgPsFlashEffect.o \
-	${OBJECTDIR}/_ext/135315005/fgPsFlyingDebrisEffect.o \
-	${OBJECTDIR}/_ext/135315005/fgPsObjectPulseEffect.o \
-	${OBJECTDIR}/_ext/135315005/fgPsParticleDrawer.o \
-	${OBJECTDIR}/_ext/135315005/fgPsParticleEffect.o \
-	${OBJECTDIR}/_ext/135315005/fgPsParticleEffectCircular.o \
-	${OBJECTDIR}/_ext/135315005/fgPsParticleEffectLimited.o \
-	${OBJECTDIR}/_ext/135315005/fgPsSequentialEffect.o \
-	${OBJECTDIR}/_ext/1960555746/fgTextureLoader.o \
-	${OBJECTDIR}/_ext/1960555746/fgTextureManager.o \
-	${OBJECTDIR}/_ext/1960555746/fgTextureResource.o \
-	${OBJECTDIR}/_ext/500601659/fgGFX2DScene.o \
-	${OBJECTDIR}/_ext/500601659/fgGFX3DScene.o \
-	${OBJECTDIR}/_ext/500601659/fgGFXCamera.o \
-	${OBJECTDIR}/_ext/500601659/fgGFXCameraAnimation.o \
-	${OBJECTDIR}/_ext/500601659/fgGFXDrawingBatch.o \
-	${OBJECTDIR}/_ext/500601659/fgGFXLight.o \
-	${OBJECTDIR}/_ext/500601659/fgGFXMain.o \
-	${OBJECTDIR}/_ext/500601659/fgGFXMaterial.o \
-	${OBJECTDIR}/_ext/500601659/fgGFXModelOBJResource.o \
-	${OBJECTDIR}/_ext/500601659/fgGFXModelResource.o \
-	${OBJECTDIR}/_ext/500601659/fgGFXObject.o \
-	${OBJECTDIR}/_ext/500601659/fgGFXOctreeBase.o \
-	${OBJECTDIR}/_ext/500601659/fgGFXPrimitives.o \
-	${OBJECTDIR}/_ext/500601659/fgGFXQuadtreeBase.o \
-	${OBJECTDIR}/_ext/500601659/fgGFXSceneManager.o \
-	${OBJECTDIR}/_ext/500601659/fgGFXShader.o \
-	${OBJECTDIR}/_ext/500601659/fgGFXShaderManager.o \
-	${OBJECTDIR}/_ext/500601659/fgGFXShaderProgram.o \
-	${OBJECTDIR}/_ext/500601659/fgGFXSimpleDrawer.o \
-	${OBJECTDIR}/_ext/500601659/fgGFXTexturing.o \
 	${OBJECTDIR}/_ext/484399070/fgDeviceQuery.o \
 	${OBJECTDIR}/_ext/484399070/fgHardwareState.o \
 	${OBJECTDIR}/_ext/484399070/fgQualityManager.o \
 	${OBJECTDIR}/_ext/484399070/fgSensors.o \
 	${OBJECTDIR}/_ext/1657950160/fgTouchReceiver.o \
-	${OBJECTDIR}/_ext/1386528437/MainModule.o \
 	${OBJECTDIR}/_ext/607778370/fgKalmanFilter.o \
+	${OBJECTDIR}/_ext/942373304/fgResource.o \
+	${OBJECTDIR}/_ext/942373304/fgResourceFactory.o \
+	${OBJECTDIR}/_ext/942373304/fgResourceGroup.o \
+	${OBJECTDIR}/_ext/942373304/fgResourceManager.o \
 	${OBJECTDIR}/_ext/1210739651/fgScriptManager.o \
 	${OBJECTDIR}/_ext/1210739651/fgScriptResource.o \
+	${OBJECTDIR}/_ext/608034620/fgConfig.o \
+	${OBJECTDIR}/_ext/608034620/fgConfigParser.o \
+	${OBJECTDIR}/_ext/608034620/fgConfigWriter.o \
+	${OBJECTDIR}/_ext/608034620/fgDirent.o \
+	${OBJECTDIR}/_ext/608034620/fgFile.o \
+	${OBJECTDIR}/_ext/608034620/fgPath.o \
+	${OBJECTDIR}/_ext/608034620/fgProfiling.o \
+	${OBJECTDIR}/_ext/608034620/fgSettings.o \
+	${OBJECTDIR}/_ext/608034620/fgTime.o \
+	${OBJECTDIR}/_ext/534573667/fgXMLParser.o \
 	${OBJECTDIR}/_ext/1386528437/fgBuildConfig.o \
 	${OBJECTDIR}/_ext/1386528437/fgCommon.o \
-	${OBJECTDIR}/_ext/1386528437/fgDirent.o \
-	${OBJECTDIR}/_ext/1386528437/fgFile.o \
+	${OBJECTDIR}/_ext/1386528437/fgErrno.o \
+	${OBJECTDIR}/_ext/1386528437/fgErrorCodes.o \
 	${OBJECTDIR}/_ext/1386528437/fgGameMain.o \
 	${OBJECTDIR}/_ext/1386528437/fgLog.o \
+	${OBJECTDIR}/_ext/1386528437/fgMainModule.o \
 	${OBJECTDIR}/_ext/1386528437/fgMessageSubsystem.o \
-	${OBJECTDIR}/_ext/1386528437/fgPath.o \
-	${OBJECTDIR}/_ext/1386528437/fgProfiling.o \
-	${OBJECTDIR}/_ext/1386528437/fgResource.o \
-	${OBJECTDIR}/_ext/1386528437/fgResourceFactory.o \
-	${OBJECTDIR}/_ext/1386528437/fgResourceGroup.o \
-	${OBJECTDIR}/_ext/1386528437/fgResourceManager.o \
-	${OBJECTDIR}/_ext/1386528437/fgSettings.o \
-	${OBJECTDIR}/_ext/1386528437/fgTime.o \
-	${OBJECTDIR}/_ext/1386528437/fgXMLParser.o
+	${OBJECTDIR}/_ext/1386528437/fgStatusReporter.o
 
 
 # C Compiler Flags
@@ -153,447 +169,527 @@ ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/flexigame_nb: ${OBJECTFILES}
 ${OBJECTDIR}/_ext/1279852618/tiny_obj_loader.o: ../../../modules/tinyobj/upstream/tiny_obj_loader.cpp 
 	${MKDIR} -p ${OBJECTDIR}/_ext/1279852618
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1279852618/tiny_obj_loader.o ../../../modules/tinyobj/upstream/tiny_obj_loader.cpp
+	$(COMPILE.cc) -O2 -DTIXML_USE_STL -DFG_USING_SDL2 -DFG_USING_OPENGL -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_TINYXML -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1279852618/tiny_obj_loader.o ../../../modules/tinyobj/upstream/tiny_obj_loader.cpp
 
 ${OBJECTDIR}/_ext/538025686/tinystr.o: ../../../modules/tinyxml/upstream/tinystr.cpp 
 	${MKDIR} -p ${OBJECTDIR}/_ext/538025686
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/538025686/tinystr.o ../../../modules/tinyxml/upstream/tinystr.cpp
+	$(COMPILE.cc) -O2 -DTIXML_USE_STL -DFG_USING_SDL2 -DFG_USING_OPENGL -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_TINYXML -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/538025686/tinystr.o ../../../modules/tinyxml/upstream/tinystr.cpp
 
 ${OBJECTDIR}/_ext/538025686/tinyxml.o: ../../../modules/tinyxml/upstream/tinyxml.cpp 
 	${MKDIR} -p ${OBJECTDIR}/_ext/538025686
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/538025686/tinyxml.o ../../../modules/tinyxml/upstream/tinyxml.cpp
+	$(COMPILE.cc) -O2 -DTIXML_USE_STL -DFG_USING_SDL2 -DFG_USING_OPENGL -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_TINYXML -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/538025686/tinyxml.o ../../../modules/tinyxml/upstream/tinyxml.cpp
 
 ${OBJECTDIR}/_ext/538025686/tinyxmlerror.o: ../../../modules/tinyxml/upstream/tinyxmlerror.cpp 
 	${MKDIR} -p ${OBJECTDIR}/_ext/538025686
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/538025686/tinyxmlerror.o ../../../modules/tinyxml/upstream/tinyxmlerror.cpp
+	$(COMPILE.cc) -O2 -DTIXML_USE_STL -DFG_USING_SDL2 -DFG_USING_OPENGL -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_TINYXML -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/538025686/tinyxmlerror.o ../../../modules/tinyxml/upstream/tinyxmlerror.cpp
 
 ${OBJECTDIR}/_ext/538025686/tinyxmlparser.o: ../../../modules/tinyxml/upstream/tinyxmlparser.cpp 
 	${MKDIR} -p ${OBJECTDIR}/_ext/538025686
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/538025686/tinyxmlparser.o ../../../modules/tinyxml/upstream/tinyxmlparser.cpp
+	$(COMPILE.cc) -O2 -DTIXML_USE_STL -DFG_USING_SDL2 -DFG_USING_OPENGL -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_TINYXML -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/538025686/tinyxmlparser.o ../../../modules/tinyxml/upstream/tinyxmlparser.cpp
 
 ${OBJECTDIR}/_ext/1650758620/fgSFXAudioResource.o: ../../../src/Audio/fgSFXAudioResource.cpp 
 	${MKDIR} -p ${OBJECTDIR}/_ext/1650758620
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1650758620/fgSFXAudioResource.o ../../../src/Audio/fgSFXAudioResource.cpp
+	$(COMPILE.cc) -O2 -DTIXML_USE_STL -DFG_USING_SDL2 -DFG_USING_OPENGL -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_TINYXML -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1650758620/fgSFXAudioResource.o ../../../src/Audio/fgSFXAudioResource.cpp
 
 ${OBJECTDIR}/_ext/1650758620/fgSFXManager.o: ../../../src/Audio/fgSFXManager.cpp 
 	${MKDIR} -p ${OBJECTDIR}/_ext/1650758620
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1650758620/fgSFXManager.o ../../../src/Audio/fgSFXManager.cpp
+	$(COMPILE.cc) -O2 -DTIXML_USE_STL -DFG_USING_SDL2 -DFG_USING_OPENGL -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_TINYXML -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1650758620/fgSFXManager.o ../../../src/Audio/fgSFXManager.cpp
 
 ${OBJECTDIR}/_ext/1650758620/fgSFXMusicResource.o: ../../../src/Audio/fgSFXMusicResource.cpp 
 	${MKDIR} -p ${OBJECTDIR}/_ext/1650758620
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1650758620/fgSFXMusicResource.o ../../../src/Audio/fgSFXMusicResource.cpp
+	$(COMPILE.cc) -O2 -DTIXML_USE_STL -DFG_USING_SDL2 -DFG_USING_OPENGL -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_TINYXML -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1650758620/fgSFXMusicResource.o ../../../src/Audio/fgSFXMusicResource.cpp
 
 ${OBJECTDIR}/_ext/1654483616/fgArgumentList.o: ../../../src/Event/fgArgumentList.cpp 
 	${MKDIR} -p ${OBJECTDIR}/_ext/1654483616
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1654483616/fgArgumentList.o ../../../src/Event/fgArgumentList.cpp
+	$(COMPILE.cc) -O2 -DTIXML_USE_STL -DFG_USING_SDL2 -DFG_USING_OPENGL -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_TINYXML -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1654483616/fgArgumentList.o ../../../src/Event/fgArgumentList.cpp
 
 ${OBJECTDIR}/_ext/1654483616/fgEventManager.o: ../../../src/Event/fgEventManager.cpp 
 	${MKDIR} -p ${OBJECTDIR}/_ext/1654483616
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1654483616/fgEventManager.o ../../../src/Event/fgEventManager.cpp
+	$(COMPILE.cc) -O2 -DTIXML_USE_STL -DFG_USING_SDL2 -DFG_USING_OPENGL -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_TINYXML -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1654483616/fgEventManager.o ../../../src/Event/fgEventManager.cpp
+
+${OBJECTDIR}/_ext/293675389/fgParticleSystem.o: ../../../src/GFX/Particles/fgParticleSystem.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/293675389
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -DTIXML_USE_STL -DFG_USING_SDL2 -DFG_USING_OPENGL -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_TINYXML -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/293675389/fgParticleSystem.o ../../../src/GFX/Particles/fgParticleSystem.cpp
+
+${OBJECTDIR}/_ext/293675389/fgPsExplosionEffect.o: ../../../src/GFX/Particles/fgPsExplosionEffect.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/293675389
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -DTIXML_USE_STL -DFG_USING_SDL2 -DFG_USING_OPENGL -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_TINYXML -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/293675389/fgPsExplosionEffect.o ../../../src/GFX/Particles/fgPsExplosionEffect.cpp
+
+${OBJECTDIR}/_ext/293675389/fgPsFlashEffect.o: ../../../src/GFX/Particles/fgPsFlashEffect.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/293675389
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -DTIXML_USE_STL -DFG_USING_SDL2 -DFG_USING_OPENGL -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_TINYXML -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/293675389/fgPsFlashEffect.o ../../../src/GFX/Particles/fgPsFlashEffect.cpp
+
+${OBJECTDIR}/_ext/293675389/fgPsFlyingDebrisEffect.o: ../../../src/GFX/Particles/fgPsFlyingDebrisEffect.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/293675389
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -DTIXML_USE_STL -DFG_USING_SDL2 -DFG_USING_OPENGL -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_TINYXML -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/293675389/fgPsFlyingDebrisEffect.o ../../../src/GFX/Particles/fgPsFlyingDebrisEffect.cpp
+
+${OBJECTDIR}/_ext/293675389/fgPsObjectPulseEffect.o: ../../../src/GFX/Particles/fgPsObjectPulseEffect.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/293675389
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -DTIXML_USE_STL -DFG_USING_SDL2 -DFG_USING_OPENGL -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_TINYXML -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/293675389/fgPsObjectPulseEffect.o ../../../src/GFX/Particles/fgPsObjectPulseEffect.cpp
+
+${OBJECTDIR}/_ext/293675389/fgPsParticleDrawer.o: ../../../src/GFX/Particles/fgPsParticleDrawer.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/293675389
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -DTIXML_USE_STL -DFG_USING_SDL2 -DFG_USING_OPENGL -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_TINYXML -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/293675389/fgPsParticleDrawer.o ../../../src/GFX/Particles/fgPsParticleDrawer.cpp
+
+${OBJECTDIR}/_ext/293675389/fgPsParticleEffect.o: ../../../src/GFX/Particles/fgPsParticleEffect.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/293675389
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -DTIXML_USE_STL -DFG_USING_SDL2 -DFG_USING_OPENGL -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_TINYXML -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/293675389/fgPsParticleEffect.o ../../../src/GFX/Particles/fgPsParticleEffect.cpp
+
+${OBJECTDIR}/_ext/293675389/fgPsParticleEffectCircular.o: ../../../src/GFX/Particles/fgPsParticleEffectCircular.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/293675389
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -DTIXML_USE_STL -DFG_USING_SDL2 -DFG_USING_OPENGL -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_TINYXML -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/293675389/fgPsParticleEffectCircular.o ../../../src/GFX/Particles/fgPsParticleEffectCircular.cpp
+
+${OBJECTDIR}/_ext/293675389/fgPsParticleEffectLimited.o: ../../../src/GFX/Particles/fgPsParticleEffectLimited.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/293675389
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -DTIXML_USE_STL -DFG_USING_SDL2 -DFG_USING_OPENGL -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_TINYXML -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/293675389/fgPsParticleEffectLimited.o ../../../src/GFX/Particles/fgPsParticleEffectLimited.cpp
+
+${OBJECTDIR}/_ext/293675389/fgPsSequentialEffect.o: ../../../src/GFX/Particles/fgPsSequentialEffect.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/293675389
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -DTIXML_USE_STL -DFG_USING_SDL2 -DFG_USING_OPENGL -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_TINYXML -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/293675389/fgPsSequentialEffect.o ../../../src/GFX/Particles/fgPsSequentialEffect.cpp
+
+${OBJECTDIR}/_ext/960776194/fgGFXShader.o: ../../../src/GFX/Shaders/fgGFXShader.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/960776194
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -DTIXML_USE_STL -DFG_USING_SDL2 -DFG_USING_OPENGL -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_TINYXML -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/960776194/fgGFXShader.o ../../../src/GFX/Shaders/fgGFXShader.cpp
+
+${OBJECTDIR}/_ext/960776194/fgGFXShaderBase.o: ../../../src/GFX/Shaders/fgGFXShaderBase.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/960776194
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -DTIXML_USE_STL -DFG_USING_SDL2 -DFG_USING_OPENGL -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_TINYXML -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/960776194/fgGFXShaderBase.o ../../../src/GFX/Shaders/fgGFXShaderBase.cpp
+
+${OBJECTDIR}/_ext/960776194/fgGFXShaderConfig.o: ../../../src/GFX/Shaders/fgGFXShaderConfig.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/960776194
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -DTIXML_USE_STL -DFG_USING_SDL2 -DFG_USING_OPENGL -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_TINYXML -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/960776194/fgGFXShaderConfig.o ../../../src/GFX/Shaders/fgGFXShaderConfig.cpp
+
+${OBJECTDIR}/_ext/960776194/fgGFXShaderManager.o: ../../../src/GFX/Shaders/fgGFXShaderManager.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/960776194
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -DTIXML_USE_STL -DFG_USING_SDL2 -DFG_USING_OPENGL -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_TINYXML -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/960776194/fgGFXShaderManager.o ../../../src/GFX/Shaders/fgGFXShaderManager.cpp
+
+${OBJECTDIR}/_ext/960776194/fgGFXShaderProgram.o: ../../../src/GFX/Shaders/fgGFXShaderProgram.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/960776194
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -DTIXML_USE_STL -DFG_USING_SDL2 -DFG_USING_OPENGL -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_TINYXML -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/960776194/fgGFXShaderProgram.o ../../../src/GFX/Shaders/fgGFXShaderProgram.cpp
+
+${OBJECTDIR}/_ext/34731496/fgTextureLoader.o: ../../../src/GFX/Textures/fgTextureLoader.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/34731496
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -DTIXML_USE_STL -DFG_USING_SDL2 -DFG_USING_OPENGL -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_TINYXML -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/34731496/fgTextureLoader.o ../../../src/GFX/Textures/fgTextureLoader.cpp
+
+${OBJECTDIR}/_ext/34731496/fgTextureManager.o: ../../../src/GFX/Textures/fgTextureManager.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/34731496
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -DTIXML_USE_STL -DFG_USING_SDL2 -DFG_USING_OPENGL -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_TINYXML -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/34731496/fgTextureManager.o ../../../src/GFX/Textures/fgTextureManager.cpp
+
+${OBJECTDIR}/_ext/34731496/fgTextureResource.o: ../../../src/GFX/Textures/fgTextureResource.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/34731496
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -DTIXML_USE_STL -DFG_USING_SDL2 -DFG_USING_OPENGL -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_TINYXML -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/34731496/fgTextureResource.o ../../../src/GFX/Textures/fgTextureResource.cpp
+
+${OBJECTDIR}/_ext/534590209/fgGFX2DScene.o: ../../../src/GFX/fgGFX2DScene.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/534590209
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -DTIXML_USE_STL -DFG_USING_SDL2 -DFG_USING_OPENGL -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_TINYXML -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534590209/fgGFX2DScene.o ../../../src/GFX/fgGFX2DScene.cpp
+
+${OBJECTDIR}/_ext/534590209/fgGFX3DScene.o: ../../../src/GFX/fgGFX3DScene.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/534590209
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -DTIXML_USE_STL -DFG_USING_SDL2 -DFG_USING_OPENGL -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_TINYXML -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534590209/fgGFX3DScene.o ../../../src/GFX/fgGFX3DScene.cpp
+
+${OBJECTDIR}/_ext/534590209/fgGFXCamera.o: ../../../src/GFX/fgGFXCamera.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/534590209
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -DTIXML_USE_STL -DFG_USING_SDL2 -DFG_USING_OPENGL -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_TINYXML -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534590209/fgGFXCamera.o ../../../src/GFX/fgGFXCamera.cpp
+
+${OBJECTDIR}/_ext/534590209/fgGFXCameraAnimation.o: ../../../src/GFX/fgGFXCameraAnimation.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/534590209
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -DTIXML_USE_STL -DFG_USING_SDL2 -DFG_USING_OPENGL -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_TINYXML -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534590209/fgGFXCameraAnimation.o ../../../src/GFX/fgGFXCameraAnimation.cpp
+
+${OBJECTDIR}/_ext/534590209/fgGFXDrawCall.o: ../../../src/GFX/fgGFXDrawCall.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/534590209
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -DTIXML_USE_STL -DFG_USING_SDL2 -DFG_USING_OPENGL -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_TINYXML -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534590209/fgGFXDrawCall.o ../../../src/GFX/fgGFXDrawCall.cpp
+
+${OBJECTDIR}/_ext/534590209/fgGFXDrawingBatch.o: ../../../src/GFX/fgGFXDrawingBatch.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/534590209
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -DTIXML_USE_STL -DFG_USING_SDL2 -DFG_USING_OPENGL -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_TINYXML -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534590209/fgGFXDrawingBatch.o ../../../src/GFX/fgGFXDrawingBatch.cpp
+
+${OBJECTDIR}/_ext/534590209/fgGFXLight.o: ../../../src/GFX/fgGFXLight.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/534590209
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -DTIXML_USE_STL -DFG_USING_SDL2 -DFG_USING_OPENGL -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_TINYXML -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534590209/fgGFXLight.o ../../../src/GFX/fgGFXLight.cpp
+
+${OBJECTDIR}/_ext/534590209/fgGFXMain.o: ../../../src/GFX/fgGFXMain.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/534590209
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -DTIXML_USE_STL -DFG_USING_SDL2 -DFG_USING_OPENGL -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_TINYXML -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534590209/fgGFXMain.o ../../../src/GFX/fgGFXMain.cpp
+
+${OBJECTDIR}/_ext/534590209/fgGFXMaterial.o: ../../../src/GFX/fgGFXMaterial.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/534590209
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -DTIXML_USE_STL -DFG_USING_SDL2 -DFG_USING_OPENGL -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_TINYXML -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534590209/fgGFXMaterial.o ../../../src/GFX/fgGFXMaterial.cpp
+
+${OBJECTDIR}/_ext/534590209/fgGFXModelResource.o: ../../../src/GFX/fgGFXModelResource.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/534590209
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -DTIXML_USE_STL -DFG_USING_SDL2 -DFG_USING_OPENGL -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_TINYXML -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534590209/fgGFXModelResource.o ../../../src/GFX/fgGFXModelResource.cpp
+
+${OBJECTDIR}/_ext/534590209/fgGFXObject.o: ../../../src/GFX/fgGFXObject.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/534590209
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -DTIXML_USE_STL -DFG_USING_SDL2 -DFG_USING_OPENGL -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_TINYXML -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534590209/fgGFXObject.o ../../../src/GFX/fgGFXObject.cpp
+
+${OBJECTDIR}/_ext/534590209/fgGFXOctreeBase.o: ../../../src/GFX/fgGFXOctreeBase.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/534590209
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -DTIXML_USE_STL -DFG_USING_SDL2 -DFG_USING_OPENGL -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_TINYXML -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534590209/fgGFXOctreeBase.o ../../../src/GFX/fgGFXOctreeBase.cpp
+
+${OBJECTDIR}/_ext/534590209/fgGFXPrimitives.o: ../../../src/GFX/fgGFXPrimitives.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/534590209
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -DTIXML_USE_STL -DFG_USING_SDL2 -DFG_USING_OPENGL -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_TINYXML -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534590209/fgGFXPrimitives.o ../../../src/GFX/fgGFXPrimitives.cpp
+
+${OBJECTDIR}/_ext/534590209/fgGFXQuadtreeBase.o: ../../../src/GFX/fgGFXQuadtreeBase.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/534590209
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -DTIXML_USE_STL -DFG_USING_SDL2 -DFG_USING_OPENGL -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_TINYXML -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534590209/fgGFXQuadtreeBase.o ../../../src/GFX/fgGFXQuadtreeBase.cpp
+
+${OBJECTDIR}/_ext/534590209/fgGFXSceneManager.o: ../../../src/GFX/fgGFXSceneManager.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/534590209
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -DTIXML_USE_STL -DFG_USING_SDL2 -DFG_USING_OPENGL -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_TINYXML -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534590209/fgGFXSceneManager.o ../../../src/GFX/fgGFXSceneManager.cpp
+
+${OBJECTDIR}/_ext/534590209/fgGFXSimpleDrawer.o: ../../../src/GFX/fgGFXSimpleDrawer.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/534590209
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -DTIXML_USE_STL -DFG_USING_SDL2 -DFG_USING_OPENGL -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_TINYXML -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534590209/fgGFXSimpleDrawer.o ../../../src/GFX/fgGFXSimpleDrawer.cpp
+
+${OBJECTDIR}/_ext/534590209/fgGFXTexturing.o: ../../../src/GFX/fgGFXTexturing.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/534590209
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -DTIXML_USE_STL -DFG_USING_SDL2 -DFG_USING_OPENGL -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_TINYXML -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534590209/fgGFXTexturing.o ../../../src/GFX/fgGFXTexturing.cpp
 
 ${OBJECTDIR}/_ext/534589759/fgFontDrawer.o: ../../../src/GUI/fgFontDrawer.cpp 
 	${MKDIR} -p ${OBJECTDIR}/_ext/534589759
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534589759/fgFontDrawer.o ../../../src/GUI/fgFontDrawer.cpp
+	$(COMPILE.cc) -O2 -DTIXML_USE_STL -DFG_USING_SDL2 -DFG_USING_OPENGL -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_TINYXML -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534589759/fgFontDrawer.o ../../../src/GUI/fgFontDrawer.cpp
 
 ${OBJECTDIR}/_ext/534589759/fgFontResource.o: ../../../src/GUI/fgFontResource.cpp 
 	${MKDIR} -p ${OBJECTDIR}/_ext/534589759
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534589759/fgFontResource.o ../../../src/GUI/fgFontResource.cpp
+	$(COMPILE.cc) -O2 -DTIXML_USE_STL -DFG_USING_SDL2 -DFG_USING_OPENGL -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_TINYXML -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534589759/fgFontResource.o ../../../src/GUI/fgFontResource.cpp
 
 ${OBJECTDIR}/_ext/534589759/fgGuiButton.o: ../../../src/GUI/fgGuiButton.cpp 
 	${MKDIR} -p ${OBJECTDIR}/_ext/534589759
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534589759/fgGuiButton.o ../../../src/GUI/fgGuiButton.cpp
+	$(COMPILE.cc) -O2 -DTIXML_USE_STL -DFG_USING_SDL2 -DFG_USING_OPENGL -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_TINYXML -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534589759/fgGuiButton.o ../../../src/GUI/fgGuiButton.cpp
 
 ${OBJECTDIR}/_ext/534589759/fgGuiCallback.o: ../../../src/GUI/fgGuiCallback.cpp 
 	${MKDIR} -p ${OBJECTDIR}/_ext/534589759
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534589759/fgGuiCallback.o ../../../src/GUI/fgGuiCallback.cpp
+	$(COMPILE.cc) -O2 -DTIXML_USE_STL -DFG_USING_SDL2 -DFG_USING_OPENGL -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_TINYXML -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534589759/fgGuiCallback.o ../../../src/GUI/fgGuiCallback.cpp
 
 ${OBJECTDIR}/_ext/534589759/fgGuiConsole.o: ../../../src/GUI/fgGuiConsole.cpp 
 	${MKDIR} -p ${OBJECTDIR}/_ext/534589759
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534589759/fgGuiConsole.o ../../../src/GUI/fgGuiConsole.cpp
+	$(COMPILE.cc) -O2 -DTIXML_USE_STL -DFG_USING_SDL2 -DFG_USING_OPENGL -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_TINYXML -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534589759/fgGuiConsole.o ../../../src/GUI/fgGuiConsole.cpp
 
 ${OBJECTDIR}/_ext/534589759/fgGuiContainer.o: ../../../src/GUI/fgGuiContainer.cpp 
 	${MKDIR} -p ${OBJECTDIR}/_ext/534589759
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534589759/fgGuiContainer.o ../../../src/GUI/fgGuiContainer.cpp
+	$(COMPILE.cc) -O2 -DTIXML_USE_STL -DFG_USING_SDL2 -DFG_USING_OPENGL -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_TINYXML -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534589759/fgGuiContainer.o ../../../src/GUI/fgGuiContainer.cpp
 
 ${OBJECTDIR}/_ext/534589759/fgGuiDrawer.o: ../../../src/GUI/fgGuiDrawer.cpp 
 	${MKDIR} -p ${OBJECTDIR}/_ext/534589759
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534589759/fgGuiDrawer.o ../../../src/GUI/fgGuiDrawer.cpp
+	$(COMPILE.cc) -O2 -DTIXML_USE_STL -DFG_USING_SDL2 -DFG_USING_OPENGL -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_TINYXML -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534589759/fgGuiDrawer.o ../../../src/GUI/fgGuiDrawer.cpp
+
+${OBJECTDIR}/_ext/534589759/fgGuiFrame.o: ../../../src/GUI/fgGuiFrame.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/534589759
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -DTIXML_USE_STL -DFG_USING_SDL2 -DFG_USING_OPENGL -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_TINYXML -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534589759/fgGuiFrame.o ../../../src/GUI/fgGuiFrame.cpp
 
 ${OBJECTDIR}/_ext/534589759/fgGuiLabel.o: ../../../src/GUI/fgGuiLabel.cpp 
 	${MKDIR} -p ${OBJECTDIR}/_ext/534589759
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534589759/fgGuiLabel.o ../../../src/GUI/fgGuiLabel.cpp
+	$(COMPILE.cc) -O2 -DTIXML_USE_STL -DFG_USING_SDL2 -DFG_USING_OPENGL -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_TINYXML -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534589759/fgGuiLabel.o ../../../src/GUI/fgGuiLabel.cpp
 
 ${OBJECTDIR}/_ext/534589759/fgGuiLoader.o: ../../../src/GUI/fgGuiLoader.cpp 
 	${MKDIR} -p ${OBJECTDIR}/_ext/534589759
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534589759/fgGuiLoader.o ../../../src/GUI/fgGuiLoader.cpp
+	$(COMPILE.cc) -O2 -DTIXML_USE_STL -DFG_USING_SDL2 -DFG_USING_OPENGL -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_TINYXML -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534589759/fgGuiLoader.o ../../../src/GUI/fgGuiLoader.cpp
 
 ${OBJECTDIR}/_ext/534589759/fgGuiMain.o: ../../../src/GUI/fgGuiMain.cpp 
 	${MKDIR} -p ${OBJECTDIR}/_ext/534589759
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534589759/fgGuiMain.o ../../../src/GUI/fgGuiMain.cpp
+	$(COMPILE.cc) -O2 -DTIXML_USE_STL -DFG_USING_SDL2 -DFG_USING_OPENGL -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_TINYXML -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534589759/fgGuiMain.o ../../../src/GUI/fgGuiMain.cpp
 
 ${OBJECTDIR}/_ext/534589759/fgGuiMenu.o: ../../../src/GUI/fgGuiMenu.cpp 
 	${MKDIR} -p ${OBJECTDIR}/_ext/534589759
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534589759/fgGuiMenu.o ../../../src/GUI/fgGuiMenu.cpp
+	$(COMPILE.cc) -O2 -DTIXML_USE_STL -DFG_USING_SDL2 -DFG_USING_OPENGL -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_TINYXML -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534589759/fgGuiMenu.o ../../../src/GUI/fgGuiMenu.cpp
 
 ${OBJECTDIR}/_ext/534589759/fgGuiMessageBox.o: ../../../src/GUI/fgGuiMessageBox.cpp 
 	${MKDIR} -p ${OBJECTDIR}/_ext/534589759
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534589759/fgGuiMessageBox.o ../../../src/GUI/fgGuiMessageBox.cpp
+	$(COMPILE.cc) -O2 -DTIXML_USE_STL -DFG_USING_SDL2 -DFG_USING_OPENGL -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_TINYXML -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534589759/fgGuiMessageBox.o ../../../src/GUI/fgGuiMessageBox.cpp
+
+${OBJECTDIR}/_ext/534589759/fgGuiPopup.o: ../../../src/GUI/fgGuiPopup.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/534589759
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -DTIXML_USE_STL -DFG_USING_SDL2 -DFG_USING_OPENGL -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_TINYXML -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534589759/fgGuiPopup.o ../../../src/GUI/fgGuiPopup.cpp
 
 ${OBJECTDIR}/_ext/534589759/fgGuiPrimitives.o: ../../../src/GUI/fgGuiPrimitives.cpp 
 	${MKDIR} -p ${OBJECTDIR}/_ext/534589759
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534589759/fgGuiPrimitives.o ../../../src/GUI/fgGuiPrimitives.cpp
+	$(COMPILE.cc) -O2 -DTIXML_USE_STL -DFG_USING_SDL2 -DFG_USING_OPENGL -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_TINYXML -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534589759/fgGuiPrimitives.o ../../../src/GUI/fgGuiPrimitives.cpp
 
 ${OBJECTDIR}/_ext/534589759/fgGuiProgressBar.o: ../../../src/GUI/fgGuiProgressBar.cpp 
 	${MKDIR} -p ${OBJECTDIR}/_ext/534589759
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534589759/fgGuiProgressBar.o ../../../src/GUI/fgGuiProgressBar.cpp
+	$(COMPILE.cc) -O2 -DTIXML_USE_STL -DFG_USING_SDL2 -DFG_USING_OPENGL -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_TINYXML -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534589759/fgGuiProgressBar.o ../../../src/GUI/fgGuiProgressBar.cpp
 
 ${OBJECTDIR}/_ext/534589759/fgGuiScreenGrid.o: ../../../src/GUI/fgGuiScreenGrid.cpp 
 	${MKDIR} -p ${OBJECTDIR}/_ext/534589759
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534589759/fgGuiScreenGrid.o ../../../src/GUI/fgGuiScreenGrid.cpp
+	$(COMPILE.cc) -O2 -DTIXML_USE_STL -DFG_USING_SDL2 -DFG_USING_OPENGL -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_TINYXML -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534589759/fgGuiScreenGrid.o ../../../src/GUI/fgGuiScreenGrid.cpp
 
 ${OBJECTDIR}/_ext/534589759/fgGuiStructureSheet.o: ../../../src/GUI/fgGuiStructureSheet.cpp 
 	${MKDIR} -p ${OBJECTDIR}/_ext/534589759
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534589759/fgGuiStructureSheet.o ../../../src/GUI/fgGuiStructureSheet.cpp
+	$(COMPILE.cc) -O2 -DTIXML_USE_STL -DFG_USING_SDL2 -DFG_USING_OPENGL -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_TINYXML -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534589759/fgGuiStructureSheet.o ../../../src/GUI/fgGuiStructureSheet.cpp
 
-${OBJECTDIR}/_ext/534589759/fgGuiStructureSheetInterpreter.o: ../../../src/GUI/fgGuiStructureSheetInterpreter.cpp 
+${OBJECTDIR}/_ext/534589759/fgGuiStructureSheetParser.o: ../../../src/GUI/fgGuiStructureSheetParser.cpp 
 	${MKDIR} -p ${OBJECTDIR}/_ext/534589759
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534589759/fgGuiStructureSheetInterpreter.o ../../../src/GUI/fgGuiStructureSheetInterpreter.cpp
+	$(COMPILE.cc) -O2 -DTIXML_USE_STL -DFG_USING_SDL2 -DFG_USING_OPENGL -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_TINYXML -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534589759/fgGuiStructureSheetParser.o ../../../src/GUI/fgGuiStructureSheetParser.cpp
 
-${OBJECTDIR}/_ext/534589759/fgGuiStyleSheet.o: ../../../src/GUI/fgGuiStyleSheet.cpp 
+${OBJECTDIR}/_ext/534589759/fgGuiStyle.o: ../../../src/GUI/fgGuiStyle.cpp 
 	${MKDIR} -p ${OBJECTDIR}/_ext/534589759
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534589759/fgGuiStyleSheet.o ../../../src/GUI/fgGuiStyleSheet.cpp
+	$(COMPILE.cc) -O2 -DTIXML_USE_STL -DFG_USING_SDL2 -DFG_USING_OPENGL -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_TINYXML -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534589759/fgGuiStyle.o ../../../src/GUI/fgGuiStyle.cpp
 
-${OBJECTDIR}/_ext/534589759/fgGuiStyleSheetInterpreter.o: ../../../src/GUI/fgGuiStyleSheetInterpreter.cpp 
+${OBJECTDIR}/_ext/534589759/fgGuiStyleContent.o: ../../../src/GUI/fgGuiStyleContent.cpp 
 	${MKDIR} -p ${OBJECTDIR}/_ext/534589759
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534589759/fgGuiStyleSheetInterpreter.o ../../../src/GUI/fgGuiStyleSheetInterpreter.cpp
+	$(COMPILE.cc) -O2 -DTIXML_USE_STL -DFG_USING_SDL2 -DFG_USING_OPENGL -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_TINYXML -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534589759/fgGuiStyleContent.o ../../../src/GUI/fgGuiStyleContent.cpp
+
+${OBJECTDIR}/_ext/534589759/fgGuiStyleSheetParser.o: ../../../src/GUI/fgGuiStyleSheetParser.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/534589759
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -DTIXML_USE_STL -DFG_USING_SDL2 -DFG_USING_OPENGL -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_TINYXML -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534589759/fgGuiStyleSheetParser.o ../../../src/GUI/fgGuiStyleSheetParser.cpp
+
+${OBJECTDIR}/_ext/534589759/fgGuiTable.o: ../../../src/GUI/fgGuiTable.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/534589759
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -DTIXML_USE_STL -DFG_USING_SDL2 -DFG_USING_OPENGL -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_TINYXML -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534589759/fgGuiTable.o ../../../src/GUI/fgGuiTable.cpp
+
+${OBJECTDIR}/_ext/534589759/fgGuiText.o: ../../../src/GUI/fgGuiText.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/534589759
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -DTIXML_USE_STL -DFG_USING_SDL2 -DFG_USING_OPENGL -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_TINYXML -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534589759/fgGuiText.o ../../../src/GUI/fgGuiText.cpp
+
+${OBJECTDIR}/_ext/534589759/fgGuiTextArea.o: ../../../src/GUI/fgGuiTextArea.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/534589759
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -DTIXML_USE_STL -DFG_USING_SDL2 -DFG_USING_OPENGL -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_TINYXML -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534589759/fgGuiTextArea.o ../../../src/GUI/fgGuiTextArea.cpp
+
+${OBJECTDIR}/_ext/534589759/fgGuiToggleButton.o: ../../../src/GUI/fgGuiToggleButton.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/534589759
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -DTIXML_USE_STL -DFG_USING_SDL2 -DFG_USING_OPENGL -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_TINYXML -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534589759/fgGuiToggleButton.o ../../../src/GUI/fgGuiToggleButton.cpp
 
 ${OBJECTDIR}/_ext/534589759/fgGuiWidget.o: ../../../src/GUI/fgGuiWidget.cpp 
 	${MKDIR} -p ${OBJECTDIR}/_ext/534589759
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534589759/fgGuiWidget.o ../../../src/GUI/fgGuiWidget.cpp
+	$(COMPILE.cc) -O2 -DTIXML_USE_STL -DFG_USING_SDL2 -DFG_USING_OPENGL -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_TINYXML -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534589759/fgGuiWidget.o ../../../src/GUI/fgGuiWidget.cpp
+
+${OBJECTDIR}/_ext/534589759/fgGuiWidgetFactory.o: ../../../src/GUI/fgGuiWidgetFactory.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/534589759
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -DTIXML_USE_STL -DFG_USING_SDL2 -DFG_USING_OPENGL -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_TINYXML -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534589759/fgGuiWidgetFactory.o ../../../src/GUI/fgGuiWidgetFactory.cpp
 
 ${OBJECTDIR}/_ext/477241454/fgGameLogic.o: ../../../src/GameLogic/fgGameLogic.cpp 
 	${MKDIR} -p ${OBJECTDIR}/_ext/477241454
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/477241454/fgGameLogic.o ../../../src/GameLogic/fgGameLogic.cpp
-
-${OBJECTDIR}/_ext/135315005/fgParticleSystem.o: ../../../src/Graphics/Particles/fgParticleSystem.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/135315005
-	${RM} "$@.d"
-	$(COMPILE.cc) -O2 `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/135315005/fgParticleSystem.o ../../../src/Graphics/Particles/fgParticleSystem.cpp
-
-${OBJECTDIR}/_ext/135315005/fgPsExplosionEffect.o: ../../../src/Graphics/Particles/fgPsExplosionEffect.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/135315005
-	${RM} "$@.d"
-	$(COMPILE.cc) -O2 `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/135315005/fgPsExplosionEffect.o ../../../src/Graphics/Particles/fgPsExplosionEffect.cpp
-
-${OBJECTDIR}/_ext/135315005/fgPsFlashEffect.o: ../../../src/Graphics/Particles/fgPsFlashEffect.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/135315005
-	${RM} "$@.d"
-	$(COMPILE.cc) -O2 `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/135315005/fgPsFlashEffect.o ../../../src/Graphics/Particles/fgPsFlashEffect.cpp
-
-${OBJECTDIR}/_ext/135315005/fgPsFlyingDebrisEffect.o: ../../../src/Graphics/Particles/fgPsFlyingDebrisEffect.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/135315005
-	${RM} "$@.d"
-	$(COMPILE.cc) -O2 `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/135315005/fgPsFlyingDebrisEffect.o ../../../src/Graphics/Particles/fgPsFlyingDebrisEffect.cpp
-
-${OBJECTDIR}/_ext/135315005/fgPsObjectPulseEffect.o: ../../../src/Graphics/Particles/fgPsObjectPulseEffect.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/135315005
-	${RM} "$@.d"
-	$(COMPILE.cc) -O2 `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/135315005/fgPsObjectPulseEffect.o ../../../src/Graphics/Particles/fgPsObjectPulseEffect.cpp
-
-${OBJECTDIR}/_ext/135315005/fgPsParticleDrawer.o: ../../../src/Graphics/Particles/fgPsParticleDrawer.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/135315005
-	${RM} "$@.d"
-	$(COMPILE.cc) -O2 `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/135315005/fgPsParticleDrawer.o ../../../src/Graphics/Particles/fgPsParticleDrawer.cpp
-
-${OBJECTDIR}/_ext/135315005/fgPsParticleEffect.o: ../../../src/Graphics/Particles/fgPsParticleEffect.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/135315005
-	${RM} "$@.d"
-	$(COMPILE.cc) -O2 `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/135315005/fgPsParticleEffect.o ../../../src/Graphics/Particles/fgPsParticleEffect.cpp
-
-${OBJECTDIR}/_ext/135315005/fgPsParticleEffectCircular.o: ../../../src/Graphics/Particles/fgPsParticleEffectCircular.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/135315005
-	${RM} "$@.d"
-	$(COMPILE.cc) -O2 `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/135315005/fgPsParticleEffectCircular.o ../../../src/Graphics/Particles/fgPsParticleEffectCircular.cpp
-
-${OBJECTDIR}/_ext/135315005/fgPsParticleEffectLimited.o: ../../../src/Graphics/Particles/fgPsParticleEffectLimited.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/135315005
-	${RM} "$@.d"
-	$(COMPILE.cc) -O2 `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/135315005/fgPsParticleEffectLimited.o ../../../src/Graphics/Particles/fgPsParticleEffectLimited.cpp
-
-${OBJECTDIR}/_ext/135315005/fgPsSequentialEffect.o: ../../../src/Graphics/Particles/fgPsSequentialEffect.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/135315005
-	${RM} "$@.d"
-	$(COMPILE.cc) -O2 `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/135315005/fgPsSequentialEffect.o ../../../src/Graphics/Particles/fgPsSequentialEffect.cpp
-
-${OBJECTDIR}/_ext/1960555746/fgTextureLoader.o: ../../../src/Graphics/Textures/fgTextureLoader.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/1960555746
-	${RM} "$@.d"
-	$(COMPILE.cc) -O2 `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1960555746/fgTextureLoader.o ../../../src/Graphics/Textures/fgTextureLoader.cpp
-
-${OBJECTDIR}/_ext/1960555746/fgTextureManager.o: ../../../src/Graphics/Textures/fgTextureManager.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/1960555746
-	${RM} "$@.d"
-	$(COMPILE.cc) -O2 `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1960555746/fgTextureManager.o ../../../src/Graphics/Textures/fgTextureManager.cpp
-
-${OBJECTDIR}/_ext/1960555746/fgTextureResource.o: ../../../src/Graphics/Textures/fgTextureResource.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/1960555746
-	${RM} "$@.d"
-	$(COMPILE.cc) -O2 `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1960555746/fgTextureResource.o ../../../src/Graphics/Textures/fgTextureResource.cpp
-
-${OBJECTDIR}/_ext/500601659/fgGFX2DScene.o: ../../../src/Graphics/fgGFX2DScene.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/500601659
-	${RM} "$@.d"
-	$(COMPILE.cc) -O2 `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/500601659/fgGFX2DScene.o ../../../src/Graphics/fgGFX2DScene.cpp
-
-${OBJECTDIR}/_ext/500601659/fgGFX3DScene.o: ../../../src/Graphics/fgGFX3DScene.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/500601659
-	${RM} "$@.d"
-	$(COMPILE.cc) -O2 `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/500601659/fgGFX3DScene.o ../../../src/Graphics/fgGFX3DScene.cpp
-
-${OBJECTDIR}/_ext/500601659/fgGFXCamera.o: ../../../src/Graphics/fgGFXCamera.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/500601659
-	${RM} "$@.d"
-	$(COMPILE.cc) -O2 `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/500601659/fgGFXCamera.o ../../../src/Graphics/fgGFXCamera.cpp
-
-${OBJECTDIR}/_ext/500601659/fgGFXCameraAnimation.o: ../../../src/Graphics/fgGFXCameraAnimation.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/500601659
-	${RM} "$@.d"
-	$(COMPILE.cc) -O2 `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/500601659/fgGFXCameraAnimation.o ../../../src/Graphics/fgGFXCameraAnimation.cpp
-
-${OBJECTDIR}/_ext/500601659/fgGFXDrawingBatch.o: ../../../src/Graphics/fgGFXDrawingBatch.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/500601659
-	${RM} "$@.d"
-	$(COMPILE.cc) -O2 `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/500601659/fgGFXDrawingBatch.o ../../../src/Graphics/fgGFXDrawingBatch.cpp
-
-${OBJECTDIR}/_ext/500601659/fgGFXLight.o: ../../../src/Graphics/fgGFXLight.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/500601659
-	${RM} "$@.d"
-	$(COMPILE.cc) -O2 `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/500601659/fgGFXLight.o ../../../src/Graphics/fgGFXLight.cpp
-
-${OBJECTDIR}/_ext/500601659/fgGFXMain.o: ../../../src/Graphics/fgGFXMain.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/500601659
-	${RM} "$@.d"
-	$(COMPILE.cc) -O2 `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/500601659/fgGFXMain.o ../../../src/Graphics/fgGFXMain.cpp
-
-${OBJECTDIR}/_ext/500601659/fgGFXMaterial.o: ../../../src/Graphics/fgGFXMaterial.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/500601659
-	${RM} "$@.d"
-	$(COMPILE.cc) -O2 `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/500601659/fgGFXMaterial.o ../../../src/Graphics/fgGFXMaterial.cpp
-
-${OBJECTDIR}/_ext/500601659/fgGFXModelOBJResource.o: ../../../src/Graphics/fgGFXModelOBJResource.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/500601659
-	${RM} "$@.d"
-	$(COMPILE.cc) -O2 `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/500601659/fgGFXModelOBJResource.o ../../../src/Graphics/fgGFXModelOBJResource.cpp
-
-${OBJECTDIR}/_ext/500601659/fgGFXModelResource.o: ../../../src/Graphics/fgGFXModelResource.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/500601659
-	${RM} "$@.d"
-	$(COMPILE.cc) -O2 `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/500601659/fgGFXModelResource.o ../../../src/Graphics/fgGFXModelResource.cpp
-
-${OBJECTDIR}/_ext/500601659/fgGFXObject.o: ../../../src/Graphics/fgGFXObject.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/500601659
-	${RM} "$@.d"
-	$(COMPILE.cc) -O2 `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/500601659/fgGFXObject.o ../../../src/Graphics/fgGFXObject.cpp
-
-${OBJECTDIR}/_ext/500601659/fgGFXOctreeBase.o: ../../../src/Graphics/fgGFXOctreeBase.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/500601659
-	${RM} "$@.d"
-	$(COMPILE.cc) -O2 `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/500601659/fgGFXOctreeBase.o ../../../src/Graphics/fgGFXOctreeBase.cpp
-
-${OBJECTDIR}/_ext/500601659/fgGFXPrimitives.o: ../../../src/Graphics/fgGFXPrimitives.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/500601659
-	${RM} "$@.d"
-	$(COMPILE.cc) -O2 `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/500601659/fgGFXPrimitives.o ../../../src/Graphics/fgGFXPrimitives.cpp
-
-${OBJECTDIR}/_ext/500601659/fgGFXQuadtreeBase.o: ../../../src/Graphics/fgGFXQuadtreeBase.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/500601659
-	${RM} "$@.d"
-	$(COMPILE.cc) -O2 `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/500601659/fgGFXQuadtreeBase.o ../../../src/Graphics/fgGFXQuadtreeBase.cpp
-
-${OBJECTDIR}/_ext/500601659/fgGFXSceneManager.o: ../../../src/Graphics/fgGFXSceneManager.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/500601659
-	${RM} "$@.d"
-	$(COMPILE.cc) -O2 `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/500601659/fgGFXSceneManager.o ../../../src/Graphics/fgGFXSceneManager.cpp
-
-${OBJECTDIR}/_ext/500601659/fgGFXShader.o: ../../../src/Graphics/fgGFXShader.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/500601659
-	${RM} "$@.d"
-	$(COMPILE.cc) -O2 `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/500601659/fgGFXShader.o ../../../src/Graphics/fgGFXShader.cpp
-
-${OBJECTDIR}/_ext/500601659/fgGFXShaderManager.o: ../../../src/Graphics/fgGFXShaderManager.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/500601659
-	${RM} "$@.d"
-	$(COMPILE.cc) -O2 `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/500601659/fgGFXShaderManager.o ../../../src/Graphics/fgGFXShaderManager.cpp
-
-${OBJECTDIR}/_ext/500601659/fgGFXShaderProgram.o: ../../../src/Graphics/fgGFXShaderProgram.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/500601659
-	${RM} "$@.d"
-	$(COMPILE.cc) -O2 `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/500601659/fgGFXShaderProgram.o ../../../src/Graphics/fgGFXShaderProgram.cpp
-
-${OBJECTDIR}/_ext/500601659/fgGFXSimpleDrawer.o: ../../../src/Graphics/fgGFXSimpleDrawer.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/500601659
-	${RM} "$@.d"
-	$(COMPILE.cc) -O2 `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/500601659/fgGFXSimpleDrawer.o ../../../src/Graphics/fgGFXSimpleDrawer.cpp
-
-${OBJECTDIR}/_ext/500601659/fgGFXTexturing.o: ../../../src/Graphics/fgGFXTexturing.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/500601659
-	${RM} "$@.d"
-	$(COMPILE.cc) -O2 `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/500601659/fgGFXTexturing.o ../../../src/Graphics/fgGFXTexturing.cpp
+	$(COMPILE.cc) -O2 -DTIXML_USE_STL -DFG_USING_SDL2 -DFG_USING_OPENGL -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_TINYXML -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/477241454/fgGameLogic.o ../../../src/GameLogic/fgGameLogic.cpp
 
 ${OBJECTDIR}/_ext/484399070/fgDeviceQuery.o: ../../../src/Hardware/fgDeviceQuery.cpp 
 	${MKDIR} -p ${OBJECTDIR}/_ext/484399070
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/484399070/fgDeviceQuery.o ../../../src/Hardware/fgDeviceQuery.cpp
+	$(COMPILE.cc) -O2 -DTIXML_USE_STL -DFG_USING_SDL2 -DFG_USING_OPENGL -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_TINYXML -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/484399070/fgDeviceQuery.o ../../../src/Hardware/fgDeviceQuery.cpp
 
 ${OBJECTDIR}/_ext/484399070/fgHardwareState.o: ../../../src/Hardware/fgHardwareState.cpp 
 	${MKDIR} -p ${OBJECTDIR}/_ext/484399070
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/484399070/fgHardwareState.o ../../../src/Hardware/fgHardwareState.cpp
+	$(COMPILE.cc) -O2 -DTIXML_USE_STL -DFG_USING_SDL2 -DFG_USING_OPENGL -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_TINYXML -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/484399070/fgHardwareState.o ../../../src/Hardware/fgHardwareState.cpp
 
 ${OBJECTDIR}/_ext/484399070/fgQualityManager.o: ../../../src/Hardware/fgQualityManager.cpp 
 	${MKDIR} -p ${OBJECTDIR}/_ext/484399070
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/484399070/fgQualityManager.o ../../../src/Hardware/fgQualityManager.cpp
+	$(COMPILE.cc) -O2 -DTIXML_USE_STL -DFG_USING_SDL2 -DFG_USING_OPENGL -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_TINYXML -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/484399070/fgQualityManager.o ../../../src/Hardware/fgQualityManager.cpp
 
 ${OBJECTDIR}/_ext/484399070/fgSensors.o: ../../../src/Hardware/fgSensors.cpp 
 	${MKDIR} -p ${OBJECTDIR}/_ext/484399070
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/484399070/fgSensors.o ../../../src/Hardware/fgSensors.cpp
+	$(COMPILE.cc) -O2 -DTIXML_USE_STL -DFG_USING_SDL2 -DFG_USING_OPENGL -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_TINYXML -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/484399070/fgSensors.o ../../../src/Hardware/fgSensors.cpp
 
 ${OBJECTDIR}/_ext/1657950160/fgTouchReceiver.o: ../../../src/Input/fgTouchReceiver.cpp 
 	${MKDIR} -p ${OBJECTDIR}/_ext/1657950160
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1657950160/fgTouchReceiver.o ../../../src/Input/fgTouchReceiver.cpp
-
-${OBJECTDIR}/_ext/1386528437/MainModule.o: ../../../src/MainModule.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/1386528437
-	${RM} "$@.d"
-	$(COMPILE.cc) -O2 `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1386528437/MainModule.o ../../../src/MainModule.cpp
+	$(COMPILE.cc) -O2 -DTIXML_USE_STL -DFG_USING_SDL2 -DFG_USING_OPENGL -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_TINYXML -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1657950160/fgTouchReceiver.o ../../../src/Input/fgTouchReceiver.cpp
 
 ${OBJECTDIR}/_ext/607778370/fgKalmanFilter.o: ../../../src/Math/fgKalmanFilter.cpp 
 	${MKDIR} -p ${OBJECTDIR}/_ext/607778370
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/607778370/fgKalmanFilter.o ../../../src/Math/fgKalmanFilter.cpp
+	$(COMPILE.cc) -O2 -DTIXML_USE_STL -DFG_USING_SDL2 -DFG_USING_OPENGL -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_TINYXML -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/607778370/fgKalmanFilter.o ../../../src/Math/fgKalmanFilter.cpp
+
+${OBJECTDIR}/_ext/942373304/fgResource.o: ../../../src/Resource/fgResource.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/942373304
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -DTIXML_USE_STL -DFG_USING_SDL2 -DFG_USING_OPENGL -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_TINYXML -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/942373304/fgResource.o ../../../src/Resource/fgResource.cpp
+
+${OBJECTDIR}/_ext/942373304/fgResourceFactory.o: ../../../src/Resource/fgResourceFactory.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/942373304
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -DTIXML_USE_STL -DFG_USING_SDL2 -DFG_USING_OPENGL -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_TINYXML -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/942373304/fgResourceFactory.o ../../../src/Resource/fgResourceFactory.cpp
+
+${OBJECTDIR}/_ext/942373304/fgResourceGroup.o: ../../../src/Resource/fgResourceGroup.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/942373304
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -DTIXML_USE_STL -DFG_USING_SDL2 -DFG_USING_OPENGL -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_TINYXML -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/942373304/fgResourceGroup.o ../../../src/Resource/fgResourceGroup.cpp
+
+${OBJECTDIR}/_ext/942373304/fgResourceManager.o: ../../../src/Resource/fgResourceManager.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/942373304
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -DTIXML_USE_STL -DFG_USING_SDL2 -DFG_USING_OPENGL -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_TINYXML -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/942373304/fgResourceManager.o ../../../src/Resource/fgResourceManager.cpp
 
 ${OBJECTDIR}/_ext/1210739651/fgScriptManager.o: ../../../src/Scripting/fgScriptManager.cpp 
 	${MKDIR} -p ${OBJECTDIR}/_ext/1210739651
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1210739651/fgScriptManager.o ../../../src/Scripting/fgScriptManager.cpp
+	$(COMPILE.cc) -O2 -DTIXML_USE_STL -DFG_USING_SDL2 -DFG_USING_OPENGL -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_TINYXML -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1210739651/fgScriptManager.o ../../../src/Scripting/fgScriptManager.cpp
 
 ${OBJECTDIR}/_ext/1210739651/fgScriptResource.o: ../../../src/Scripting/fgScriptResource.cpp 
 	${MKDIR} -p ${OBJECTDIR}/_ext/1210739651
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1210739651/fgScriptResource.o ../../../src/Scripting/fgScriptResource.cpp
+	$(COMPILE.cc) -O2 -DTIXML_USE_STL -DFG_USING_SDL2 -DFG_USING_OPENGL -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_TINYXML -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1210739651/fgScriptResource.o ../../../src/Scripting/fgScriptResource.cpp
+
+${OBJECTDIR}/_ext/608034620/fgConfig.o: ../../../src/Util/fgConfig.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/608034620
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -DTIXML_USE_STL -DFG_USING_SDL2 -DFG_USING_OPENGL -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_TINYXML -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/608034620/fgConfig.o ../../../src/Util/fgConfig.cpp
+
+${OBJECTDIR}/_ext/608034620/fgConfigParser.o: ../../../src/Util/fgConfigParser.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/608034620
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -DTIXML_USE_STL -DFG_USING_SDL2 -DFG_USING_OPENGL -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_TINYXML -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/608034620/fgConfigParser.o ../../../src/Util/fgConfigParser.cpp
+
+${OBJECTDIR}/_ext/608034620/fgConfigWriter.o: ../../../src/Util/fgConfigWriter.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/608034620
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -DTIXML_USE_STL -DFG_USING_SDL2 -DFG_USING_OPENGL -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_TINYXML -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/608034620/fgConfigWriter.o ../../../src/Util/fgConfigWriter.cpp
+
+${OBJECTDIR}/_ext/608034620/fgDirent.o: ../../../src/Util/fgDirent.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/608034620
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -DTIXML_USE_STL -DFG_USING_SDL2 -DFG_USING_OPENGL -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_TINYXML -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/608034620/fgDirent.o ../../../src/Util/fgDirent.cpp
+
+${OBJECTDIR}/_ext/608034620/fgFile.o: ../../../src/Util/fgFile.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/608034620
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -DTIXML_USE_STL -DFG_USING_SDL2 -DFG_USING_OPENGL -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_TINYXML -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/608034620/fgFile.o ../../../src/Util/fgFile.cpp
+
+${OBJECTDIR}/_ext/608034620/fgPath.o: ../../../src/Util/fgPath.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/608034620
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -DTIXML_USE_STL -DFG_USING_SDL2 -DFG_USING_OPENGL -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_TINYXML -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/608034620/fgPath.o ../../../src/Util/fgPath.cpp
+
+${OBJECTDIR}/_ext/608034620/fgProfiling.o: ../../../src/Util/fgProfiling.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/608034620
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -DTIXML_USE_STL -DFG_USING_SDL2 -DFG_USING_OPENGL -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_TINYXML -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/608034620/fgProfiling.o ../../../src/Util/fgProfiling.cpp
+
+${OBJECTDIR}/_ext/608034620/fgSettings.o: ../../../src/Util/fgSettings.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/608034620
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -DTIXML_USE_STL -DFG_USING_SDL2 -DFG_USING_OPENGL -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_TINYXML -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/608034620/fgSettings.o ../../../src/Util/fgSettings.cpp
+
+${OBJECTDIR}/_ext/608034620/fgTime.o: ../../../src/Util/fgTime.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/608034620
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -DTIXML_USE_STL -DFG_USING_SDL2 -DFG_USING_OPENGL -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_TINYXML -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/608034620/fgTime.o ../../../src/Util/fgTime.cpp
+
+${OBJECTDIR}/_ext/534573667/fgXMLParser.o: ../../../src/XML/fgXMLParser.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/534573667
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -DTIXML_USE_STL -DFG_USING_SDL2 -DFG_USING_OPENGL -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_TINYXML -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534573667/fgXMLParser.o ../../../src/XML/fgXMLParser.cpp
 
 ${OBJECTDIR}/_ext/1386528437/fgBuildConfig.o: ../../../src/fgBuildConfig.cpp 
 	${MKDIR} -p ${OBJECTDIR}/_ext/1386528437
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1386528437/fgBuildConfig.o ../../../src/fgBuildConfig.cpp
+	$(COMPILE.cc) -O2 -DTIXML_USE_STL -DFG_USING_SDL2 -DFG_USING_OPENGL -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_TINYXML -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1386528437/fgBuildConfig.o ../../../src/fgBuildConfig.cpp
 
 ${OBJECTDIR}/_ext/1386528437/fgCommon.o: ../../../src/fgCommon.cpp 
 	${MKDIR} -p ${OBJECTDIR}/_ext/1386528437
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1386528437/fgCommon.o ../../../src/fgCommon.cpp
+	$(COMPILE.cc) -O2 -DTIXML_USE_STL -DFG_USING_SDL2 -DFG_USING_OPENGL -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_TINYXML -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1386528437/fgCommon.o ../../../src/fgCommon.cpp
 
-${OBJECTDIR}/_ext/1386528437/fgDirent.o: ../../../src/fgDirent.cpp 
+${OBJECTDIR}/_ext/1386528437/fgErrno.o: ../../../src/fgErrno.cpp 
 	${MKDIR} -p ${OBJECTDIR}/_ext/1386528437
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1386528437/fgDirent.o ../../../src/fgDirent.cpp
+	$(COMPILE.cc) -O2 -DTIXML_USE_STL -DFG_USING_SDL2 -DFG_USING_OPENGL -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_TINYXML -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1386528437/fgErrno.o ../../../src/fgErrno.cpp
 
-${OBJECTDIR}/_ext/1386528437/fgFile.o: ../../../src/fgFile.cpp 
+${OBJECTDIR}/_ext/1386528437/fgErrorCodes.o: ../../../src/fgErrorCodes.cpp 
 	${MKDIR} -p ${OBJECTDIR}/_ext/1386528437
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1386528437/fgFile.o ../../../src/fgFile.cpp
+	$(COMPILE.cc) -O2 -DTIXML_USE_STL -DFG_USING_SDL2 -DFG_USING_OPENGL -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_TINYXML -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1386528437/fgErrorCodes.o ../../../src/fgErrorCodes.cpp
 
 ${OBJECTDIR}/_ext/1386528437/fgGameMain.o: ../../../src/fgGameMain.cpp 
 	${MKDIR} -p ${OBJECTDIR}/_ext/1386528437
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1386528437/fgGameMain.o ../../../src/fgGameMain.cpp
+	$(COMPILE.cc) -O2 -DTIXML_USE_STL -DFG_USING_SDL2 -DFG_USING_OPENGL -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_TINYXML -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1386528437/fgGameMain.o ../../../src/fgGameMain.cpp
 
 ${OBJECTDIR}/_ext/1386528437/fgLog.o: ../../../src/fgLog.cpp 
 	${MKDIR} -p ${OBJECTDIR}/_ext/1386528437
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1386528437/fgLog.o ../../../src/fgLog.cpp
+	$(COMPILE.cc) -O2 -DTIXML_USE_STL -DFG_USING_SDL2 -DFG_USING_OPENGL -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_TINYXML -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1386528437/fgLog.o ../../../src/fgLog.cpp
+
+${OBJECTDIR}/_ext/1386528437/fgMainModule.o: ../../../src/fgMainModule.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/1386528437
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -DTIXML_USE_STL -DFG_USING_SDL2 -DFG_USING_OPENGL -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_TINYXML -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1386528437/fgMainModule.o ../../../src/fgMainModule.cpp
 
 ${OBJECTDIR}/_ext/1386528437/fgMessageSubsystem.o: ../../../src/fgMessageSubsystem.cpp 
 	${MKDIR} -p ${OBJECTDIR}/_ext/1386528437
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1386528437/fgMessageSubsystem.o ../../../src/fgMessageSubsystem.cpp
+	$(COMPILE.cc) -O2 -DTIXML_USE_STL -DFG_USING_SDL2 -DFG_USING_OPENGL -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_TINYXML -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1386528437/fgMessageSubsystem.o ../../../src/fgMessageSubsystem.cpp
 
-${OBJECTDIR}/_ext/1386528437/fgPath.o: ../../../src/fgPath.cpp 
+${OBJECTDIR}/_ext/1386528437/fgStatusReporter.o: ../../../src/fgStatusReporter.cpp 
 	${MKDIR} -p ${OBJECTDIR}/_ext/1386528437
 	${RM} "$@.d"
-	$(COMPILE.cc) -O2 `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1386528437/fgPath.o ../../../src/fgPath.cpp
-
-${OBJECTDIR}/_ext/1386528437/fgProfiling.o: ../../../src/fgProfiling.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/1386528437
-	${RM} "$@.d"
-	$(COMPILE.cc) -O2 `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1386528437/fgProfiling.o ../../../src/fgProfiling.cpp
-
-${OBJECTDIR}/_ext/1386528437/fgResource.o: ../../../src/fgResource.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/1386528437
-	${RM} "$@.d"
-	$(COMPILE.cc) -O2 `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1386528437/fgResource.o ../../../src/fgResource.cpp
-
-${OBJECTDIR}/_ext/1386528437/fgResourceFactory.o: ../../../src/fgResourceFactory.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/1386528437
-	${RM} "$@.d"
-	$(COMPILE.cc) -O2 `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1386528437/fgResourceFactory.o ../../../src/fgResourceFactory.cpp
-
-${OBJECTDIR}/_ext/1386528437/fgResourceGroup.o: ../../../src/fgResourceGroup.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/1386528437
-	${RM} "$@.d"
-	$(COMPILE.cc) -O2 `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1386528437/fgResourceGroup.o ../../../src/fgResourceGroup.cpp
-
-${OBJECTDIR}/_ext/1386528437/fgResourceManager.o: ../../../src/fgResourceManager.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/1386528437
-	${RM} "$@.d"
-	$(COMPILE.cc) -O2 `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1386528437/fgResourceManager.o ../../../src/fgResourceManager.cpp
-
-${OBJECTDIR}/_ext/1386528437/fgSettings.o: ../../../src/fgSettings.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/1386528437
-	${RM} "$@.d"
-	$(COMPILE.cc) -O2 `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1386528437/fgSettings.o ../../../src/fgSettings.cpp
-
-${OBJECTDIR}/_ext/1386528437/fgTime.o: ../../../src/fgTime.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/1386528437
-	${RM} "$@.d"
-	$(COMPILE.cc) -O2 `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1386528437/fgTime.o ../../../src/fgTime.cpp
-
-${OBJECTDIR}/_ext/1386528437/fgXMLParser.o: ../../../src/fgXMLParser.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/1386528437
-	${RM} "$@.d"
-	$(COMPILE.cc) -O2 `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1386528437/fgXMLParser.o ../../../src/fgXMLParser.cpp
+	$(COMPILE.cc) -O2 -DTIXML_USE_STL -DFG_USING_SDL2 -DFG_USING_OPENGL -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_TINYXML -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1386528437/fgStatusReporter.o ../../../src/fgStatusReporter.cpp
 
 # Subprojects
 .build-subprojects:

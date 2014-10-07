@@ -7,8 +7,8 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-#ifndef _FG_TEXTURE_RESOURCE_H
-#define _FG_TEXTURE_RESOURCE_H
+#ifndef _FG_TEXTURE_RESOURCE_H_
+#define _FG_TEXTURE_RESOURCE_H_
 
 #include "fgBuildConfig.h"
 #include "Resource/fgResource.h"
@@ -21,13 +21,14 @@
 typedef fgGFXuint fgTextureGfxID;
 #else
 typedef unsigned int fgTextureGfxID;
-#endif // FG_USING_OPENGL_ES || FG_USING_OPENGL
+#endif /* FG_USING_OPENGL_ES || FG_USING_OPENGL */
 
 /*
  *
  */
 class fgTextureResource : public fgResource
 {
+	friend class fgTextureManager;
 public:
 	// Base constructor of the texture resource object
 	fgTextureResource();
@@ -57,26 +58,7 @@ public:
 
 protected:
 	// 
-	fgBool setFileTypeFromFilePath(std::string &path) {
-		if(path.empty())
-			return FG_FALSE;
-		// #FIXME - this should be extracted to other file (used for some basic file operation, pathext or whatnot #P3 #TODO)
-		std::string ext = path.substr(path.find_last_of(".") + 1);
-		if(strncasecmp(ext.c_str(), FG_TEXTURE_FILE_EXTENSION_BMP, strlen(FG_TEXTURE_FILE_EXTENSION_BMP)) == 0) {
-			this->m_fileType = FG_TEXTURE_FILE_BMP;
-		} else if(strncasecmp(ext.c_str(), FG_TEXTURE_FILE_EXTENSION_RAW, strlen(FG_TEXTURE_FILE_EXTENSION_RAW)) == 0) {
-			this->m_fileType = FG_TEXTURE_FILE_RAW;
-		} else if(strncasecmp(ext.c_str(), FG_TEXTURE_FILE_EXTENSION_JPEG, strlen(FG_TEXTURE_FILE_EXTENSION_JPEG)) == 0) {
-			this->m_fileType = FG_TEXTURE_FILE_JPEG;
-		} else if(strncasecmp(ext.c_str(), FG_TEXTURE_FILE_EXTENSION_PNG, strlen(FG_TEXTURE_FILE_EXTENSION_PNG)) == 0) {
-			this->m_fileType = FG_TEXTURE_FILE_PNG;
-		} else if(strncasecmp(ext.c_str(), FG_TEXTURE_FILE_EXTENSION_TGA, strlen(FG_TEXTURE_FILE_EXTENSION_TGA)) == 0) {
-			this->m_fileType = FG_TEXTURE_FILE_TGA;
-		} else {
-			this->m_fileType = FG_TEXTURE_FILE_OTHER;
-		}
-		return FG_TRUE;
-	}
+	fgBool setFileTypeFromFilePath(std::string &path);
 
 	//
 	fgBool setFileTypeFromFilePath(void) {
@@ -148,33 +130,41 @@ public:
 		m_pixelFormat = pixelFormat;
 	}
 
+	//
+	fgBool isInVRAM(void) const {
+		return m_isInVRAM;
+	}
 
+protected:
+	//
 	void setIsInVRAM(fgBool toggle) {
 		m_isInVRAM = toggle;
 	}
 
-	fgBool isInVRAM(void) const {
-		return m_isInVRAM;
-	}
 protected:
-	// Texture file type (by extension)
+	/// Texture file type (by extension)
 	fgTextureFileType		m_fileType;
-	// Texture type and possible usage
+	/// Texture type and possible usage
 	fgTextureType			m_textureType;
-	// Final texture pixel format (data pixel format)
+	/// Final texture pixel format (data pixel format)
 	fgTexturePixelFormat	m_pixelFormat;
-	// Storage for raw pixel data
+	/// Storage for raw pixel data
     unsigned char*			m_rawData;
-	// Width of the texture in pixels
+	/// Width of the texture in pixels
     int m_width;
-	// Height of the texture in pixels
+	/// Height of the texture in pixels
 	int m_height;
-	// Number of color components (grayscale, RGB, RGBA)
+	/// Number of color components (grayscale, RGB, RGBA)
     int m_components;
-	// OpenGL texture id handle
+	/// OpenGL texture id handle
 	fgTextureGfxID m_textureGfxID;
 private:
+	/// This is special trigger, it tells if texture was uploaded to VRAM
+	/// When set to TRUE, even if gfxID is invalid it tells that texture
+	/// needs to be reuploaded
+	///
+	/// On GL suspend all gfx IDs (including shaders, vbos and others become invalid)
 	fgBool m_isInVRAM;
 };
 
-#endif
+#endif /* _FG_TEXTURE_RESOURCE_H_ */

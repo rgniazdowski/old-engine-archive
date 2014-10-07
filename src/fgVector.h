@@ -7,8 +7,8 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-#ifndef _FG_ARRAY_VECTOR_H_
-#define _FG_ARRAY_VECTOR_H_
+#ifndef _FG_VECTOR_H_
+#define _FG_VECTOR_H_
 
 #include "fgBuildConfig.h"
 
@@ -26,13 +26,16 @@ public:
 	}
 };
 #else
+
 #include <vector>
+
 template <class T, class Alloc = std::allocator<T> >
 class fgVector : public std::vector<T, Alloc> {
 public:
 	void clear_optimised()
 	{
-		std::vector<T, Alloc>::clear();
+            //std::vector<T, Alloc>::clear();
+            this->clear();
 	}
 
 	int find(T const & value) const
@@ -65,4 +68,4 @@ public:
 #include <string>
 typedef fgVector<std::string> fgStringVector;
 
-#endif /* _FG_ARRAY_VECTOR_H_ */
+#endif /* _FG_VECTOR_H_ */

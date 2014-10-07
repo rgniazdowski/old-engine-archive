@@ -10,17 +10,23 @@
 #include "fgBuildConfig.h"
 #include "fgCommon.h"
 #include "fgGFXMain.h"
+#include "fgGFXMVPMatrix.h"
+#include "fgGFXModelResource.h"
 #include "Textures/fgTextureResource.h"
 #include "Hardware/fgHardwareState.h"
+
+#include "fgGFXErrorCodes.h"
 
 #if defined FG_USING_MARMALADE
 #include "s3e.h"
 #include "s3eTypes.h"
-//#include "IwUtil.h" // ?
-//#include "s3eDevice.h" // ?
 #endif
 
 #include "fgLog.h"
+fgGfxMVPMatrix *MVP = NULL;
+fgGfxCameraAnimation *cameraAnim = NULL;
+fgGFXuint vboIds[4] = {0,0,0,0};
+
 /*
  *
  */
@@ -28,13 +34,12 @@ fgGfxMain::fgGfxMain() :
 	m_textureMgr(NULL),
 	m_resourceMgr(NULL),
 	m_shaderMgr(NULL),
-	m_EGLSurface(NULL),
-	m_EGLDisplay(NULL),
-	m_EGLContext(NULL),
-	m_screenW(-1),
-	m_screenH(-1),
+	m_mainWindow(NULL),
+	m_gfxContext(NULL),
 	m_init(FG_FALSE)
 {
+	cameraAnim = new fgGfxCameraAnimation(); // #FIXME
+	MVP = new fgGfxMVPMatrix(); // #FIXME !
 }
 
 /*
@@ -42,123 +47,79 @@ fgGfxMain::fgGfxMain() :
  */
 fgGfxMain::~fgGfxMain()
 {
-	FG_LOG::PrintInfo("BEG: >>> fgGfxMain::~fgGfxMain();");
+	if(glIsBuffer(vboIds[0]))
+		glDeleteBuffers(1, &vboIds[0]);
+	if(glIsBuffer(vboIds[1]))
+		glDeleteBuffers(1, &vboIds[1]);
+	if(MVP)
+		delete MVP;
+	MVP = NULL;
+	if(cameraAnim)
+		delete cameraAnim;
+	cameraAnim = NULL; // #FIXME
 	if(m_init)
 		closeGFX();
 	if(m_textureMgr)
 		delete m_textureMgr;
 	if(m_shaderMgr)
 		delete m_shaderMgr;
+	if(m_mainWindow)
+		delete m_mainWindow;
 
 	m_textureMgr = NULL;
 	m_resourceMgr = NULL;
 	m_shaderMgr = NULL;
-	
-	FG_LOG::PrintDebug("END: <<< fgGfxMain::~fgGfxMain();");
+	m_mainWindow = NULL;
 }
-
-
 
 /*
  *
  */
 fgBool fgGfxMain::initGFX(void)
 {
-	FG_LOG::PrintDebug("BEG: >>> fgGfxMain::initGFX();");
+	fgStatusReporter::clearStatus();
+	fgBool status = FG_TRUE;
 
-#if defined FG_USING_MARMALADE_EGL
-	EGLint major;
-	EGLint minor;
-	EGLint numFound = 0;
-	EGLConfig configList[FG_EGL_MAX_CONFIG];
-
-	m_EGLDisplay = eglGetDisplay(EGL_DEFAULT_DISPLAY);
-	if (!m_EGLDisplay)
-	{
-		//s3eDebugErrorShow(S3E_MESSAGE_CONTINUE, "eglGetDisplay failed");
-		FG_LOG::PrintError("eglGetDisplay failed");
-		return FG_FALSE;
+	if(!fgGfxPlatform::initialize()) {
+		// ERROR
+		status = FG_FALSE;
 	}
-	EGLBoolean res = eglInitialize(m_EGLDisplay, &major, &minor);
-	if (!res)
-	{
-		//s3eDebugErrorShow(S3E_MESSAGE_CONTINUE, "eglInitialize failed");
-		FG_LOG::PrintError("eglInitialize failed");
-		return FG_FALSE;
+	if(status) {
+		m_gfxContext = fgGfxPlatform::context();
 	}
-	eglGetConfigs(m_EGLDisplay, configList, FG_EGL_MAX_CONFIG, &numFound);
-	if (!numFound)
-	{
-		//s3eDebugErrorShow(S3E_MESSAGE_CONTINUE, "eglGetConfigs failed to find any configs");
-		FG_LOG::PrintError("eglGetConfigs failed to find any configs");
-		return FG_FALSE;
+	if(!m_mainWindow && status) {
+		m_mainWindow = new fgGfxWindow();
 	}
-	int config = -1;
-	FG_LOG::PrintInfo("found %d configs\n", numFound);
-	for (int i = 0; i < numFound; i++)
-	{
-		EGLint renderable = 0;
-		eglGetConfigAttrib(m_EGLDisplay, configList[i], EGL_RENDERABLE_TYPE, &renderable);
-		if (renderable & EGL_OPENGL_ES2_BIT)
-		{
-			config = i;
-			break;
+	if(m_mainWindow && status) {
+		// #FIXME - resolution FIXME!
+		if(!m_mainWindow->setup(FG_PACKAGE_FULL_TEXT, 1024, 768)) {
+			delete m_mainWindow;
+			m_mainWindow = NULL;
+			status = FG_FALSE;
 		}
 	}
-	if (config == -1)
-	{
-		//s3eDebugErrorShow(S3E_MESSAGE_CONTINUE, "No GLES2 configs reported.  Trying random config");
-		FG_LOG::PrintError("No GLES2 configs reported.  Trying random config");
-		config = 0;
-	}
-	int version = s3eGLGetInt(S3E_GL_VERSION)>>8;
-	FG_LOG::PrintInfo("requesting GL version: %d\n", version);
-	FG_LOG::PrintInfo("choosing config: %d\n", config);
-	EGLint attribs[] = { EGL_CONTEXT_CLIENT_VERSION, version, EGL_NONE, };
-	m_EGLContext = eglCreateContext(m_EGLDisplay, configList[config], NULL, attribs);
-	if (!m_EGLContext)
-	{
-		//s3eDebugErrorShow(S3E_MESSAGE_CONTINUE, "eglCreateContext failed");
-		FG_LOG::PrintError("eglCreateContext failed");
-		return FG_FALSE;
-	}
-	version = s3eGLGetInt(S3E_GL_VERSION)>>8;
-	if (version != 2)
-	{
-		FG_LOG::PrintInfo("reported GL version: %d", version);
-		FG_LOG::PrintError("Required GLES v2.x");
-		//s3eDebugErrorShow(S3E_MESSAGE_CONTINUE, "Required GLES v2.x");
-		return FG_FALSE;
-	}
-	void* nativeWindow = s3eGLGetNativeWindow();
-	m_EGLSurface = eglCreateWindowSurface(m_EGLDisplay, configList[config], nativeWindow, NULL);
-	eglMakeCurrent(m_EGLDisplay, m_EGLSurface, m_EGLSurface, m_EGLContext);
-	
-	glViewport(0,0,getScreenWidth(), getScreenHeight());
-	FG_LOG::PrintInfo("Screen BPP: %d", s3eSurfaceGetInt(S3E_SURFACE_PIXEL_TYPE) & S3E_SURFACE_PIXEL_SIZE_MASK);
-	FG_LOG::PrintInfo("Vendor : %s", (const char*)glGetString( GL_VENDOR ) );
-	FG_LOG::PrintInfo("Renderer : %s", (const char*)glGetString( GL_RENDERER ) );
-	FG_LOG::PrintInfo("Version : %s", (const char*)glGetString( GL_VERSION ) );
-	FG_LOG::PrintInfo("Shading Lang Version : %s", (const char*)glGetString( GL_SHADING_LANGUAGE_VERSION ) );
+	//FG_LOG::PrintInfo("S3E Screen BPP: %d", s3eSurfaceGetInt(S3E_SURFACE_PIXEL_TYPE) & S3E_SURFACE_PIXEL_SIZE_MASK);
+	if(status) {
+		if(!m_shaderMgr)
+			m_shaderMgr = new fgGfxShaderManager();
 
-	FG_LOG::PrintInfo("Extensions : %s\n", (const char*)glGetString( GL_EXTENSIONS ) );
-
-	if(!m_shaderMgr)
-		m_shaderMgr = new fgGfxShaderManager();
-	#if defined FG_USING_OPENGL_ES
-        glClearDepthf(1.0f);
-    #else
-        glClearDepth(1.0f);
-    #endif
-	glEnable(GL_DEPTH_TEST);
-	glDepthFunc(GL_LESS);
-	m_init = FG_TRUE;
-	FG_LOG::PrintDebug("END: <<< fgGfxMain::initGFX();");
-	return FG_TRUE;
-#elif defined FG_USING_MARMALADE_IWGL
-	// #FIXME ! m_init = FG_TRUE
-	return IwGLInit();
-#endif
+		FG_LOG::PrintDebug("GFX: Setting viewport (0, 0, %d, %d)", m_mainWindow->getWidth(), m_mainWindow->getHeight());
+		m_gfxContext->viewport(0, 0, m_mainWindow->getWidth(), m_mainWindow->getHeight());
+		m_gfxContext->clearDepth(1.0f);
+		m_gfxContext->setDepthTest(FG_TRUE);
+		m_gfxContext->depthFunc(GL_LEQUAL);
+		m_gfxContext->setCullFace(FG_TRUE);
+		m_gfxContext->frontFace(GL_CCW);
+		m_gfxContext->cullFace(GL_BACK);
+		m_gfxContext->setScissorTest(FG_TRUE);
+		m_gfxContext->scissor(0, 0, m_mainWindow->getWidth(), m_mainWindow->getHeight());
+		MVP->setPerspective(45.0f, m_mainWindow->getAspect());
+		m_init = FG_TRUE;
+	}
+	if(status) {
+		reportSuccess(FG_ERRNO_GFX_OK, "GFX subsystem initialized successfully");
+	}
+	return status;
 }
 
 /*
@@ -168,20 +129,10 @@ void fgGfxMain::closeGFX(void)
 {
 	if(m_init) 
 	{
-		m_resourceMgr = NULL;
-		
-#if defined FG_USING_MARMALADE_EGL
-		if (m_EGLDisplay)
-		{
-			eglMakeCurrent(m_EGLDisplay, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
-			eglDestroySurface(m_EGLDisplay, m_EGLSurface);
-			eglDestroyContext(m_EGLDisplay, m_EGLContext);
-		}
-		eglTerminate(m_EGLDisplay);
-		m_EGLDisplay = NULL;
-#elif defined FG_USING_MARMALADE_IWGL
-		IwGLTerminate();
-#endif
+		if(m_mainWindow)
+			m_mainWindow->close();
+		fgGfxPlatform::quit();
+		m_gfxContext = NULL;
 	}
 	m_init = FG_FALSE;
 }
@@ -189,113 +140,427 @@ void fgGfxMain::closeGFX(void)
 /*
  *
  */
-void fgGfxMain::swapBuffers(void)
+fgBool fgGfxMain::suspendGFX(void)
 {
-#if defined FG_USING_MARMALADE_EGL
-	eglSwapBuffers(g_EGLDisplay, g_EGLSurface);
-#elif defined FG_USING_MARMALADE_IWGL
-	IwGLSwapBuffers();
-#endif
+	fgBool status = FG_TRUE;
+	if(!m_init) {
+		status = FG_FALSE;
+	}
+	if(m_textureMgr && status)
+		m_textureMgr->allReleaseGFX();
+	if(m_shaderMgr && status) {
+		if(!m_shaderMgr->allReleaseGFX())
+			status = FG_FALSE;
+	}
+	{
+		// FIXME
+		if(glIsBuffer(vboIds[0]) && glIsBuffer(vboIds[1])) {
+			glDeleteBuffers(2, vboIds);
+			FG_LOG::PrintDebug("GFX: VBOS RELEASE... RESET.");
+
+		}
+		memset(vboIds, 0, sizeof(vboIds));
+		// FIXME
+	}
+	if(status)
+		closeGFX();
+	if(!status)
+		reportWarning(FG_ERRNO_GFX_OK, "Suspension of GFX subsystem finished with errors");
+	else
+		reportWarning(FG_ERRNO_GFX_OK, "Suspension of GFX subsystem finished with no errors");
+	return status;
 }
 
 /*
  *
  */
-int fgGfxMain::getScreenHeight(void)
+fgBool fgGfxMain::resumeGFX(void)
 {
-#if defined FG_USING_MARMALADE_EGL
-	EGLint h = -1;
-	eglQuerySurface(g_EGLDisplay,g_EGLSurface,EGL_HEIGHT,&h);
-#elif defined FG_USING_MARMALADE_IWGL
-	int h = IwGLGetInt(IW_GL_HEIGHT);
-#else
-	int h = 0;
-#endif
-	return (int)h;
-}
+	fgBool status = FG_TRUE;
+	if(!fgGfxMain::initGFX())
+		status = FG_FALSE;
+	if(m_textureMgr && status)
+		if(!m_textureMgr->allToVRAM(FG_TRUE))
+			status = FG_FALSE;
+	// This will compile all shaders, not just the used ones
+	// #FIXME #P1
+	if(m_shaderMgr && m_textureMgr) {
+		if(!m_shaderMgr->compileShaders())
+			status = FG_FALSE;
+		if(!m_shaderMgr->linkShaders())
+			status = FG_FALSE;
+	}
+	// REGENERATE VBOS #TODO
 
-/*
- *
- */
-int fgGfxMain::getScreenWidth(void)
-{
-#if defined FG_USING_MARMALADE_EGL
-	EGLint w = -1;
-	eglQuerySurface(g_EGLDisplay,g_EGLSurface,EGL_WIDTH,&w);
-#elif defined FG_USING_MARMALADE_IWGL
-	int w = IwGLGetInt(IW_GL_WIDTH);
-#else
-	int w = 0;
-#endif
-	return w;
+	if(!status)
+		reportWarning(FG_ERRNO_GFX_OK, "Resume of GFX subsystem finished with errors");
+	else
+		reportWarning(FG_ERRNO_GFX_OK, "Resume of GFX subsystem finished with no errors");
+	return status;
 }
-
-/*
- *
- */
-void fgGfxMain::clearScreen(void)
-{
-#if defined FG_USING_OPENGL || defined FG_USING_OPENGL_ES
-	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-#endif
-}
-
 
 /*
  *
  */
 void fgGfxMain::display(void)
 {
+	if(!m_gfxContext)
+		return;
 }
 
+void drawModel(fgGfxModelResource *model, fgGfxShaderProgram *program, fgTextureResource *texture = NULL)
+{
+	static fgBool buffInit = FG_FALSE;
+	if(!model)
+		return;
+
+	GLuint offset = 0;
+	fgGFXint vtxStride = sizeof(fgVertex3);
+	if(model->getRefShapes().empty()) {
+		return;
+	}
+	fgGfxMeshBase *mesh = model->getRefShapes()[0]->mesh;
+	if(mesh->isSoA() == FG_TRUE) {
+		fgGfxMeshSoA *soa = (fgGfxMeshSoA *)mesh;
+		fgGFXint numVertices = soa->getNumVertices();
+		fgGFXint numNormals = soa->getNumNormals();
+		fgGFXint numUVs = soa->getNumUVs();
+		fgGFXint numIndices = soa->getNumIndices();
+
+		fgGfxPlatform::context()->bindBuffer(GL_ARRAY_BUFFER, 0);
+		fgGfxPlatform::context()->bindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+		//glEnableVertexAttribArray(FG_GFX_ATTRIB_POS_LOCATION);
+		//glEnableVertexAttribArray(FG_GFX_ATTRIB_NORM_LOCATION);
+		//glEnableVertexAttribArray(FG_GFX_ATTRIB_UVS_LOCATION);
+		fgGfxPlatform::context()->diffVertexAttribArrayMask(soa->getAttribMask());
+		fgGfxPlatform::context()->vertexAttribPointer(FG_GFX_ATTRIB_POS_LOCATION, 3 /* VEC3 */,
+			FG_GFX_FLOAT, GL_FALSE, sizeof(fgVector3f),	(void*)(&soa->vertices.front()));
+
+		offset += 3 /* VEC3 */ * sizeof(fgGFXfloat);
+	
+		fgGfxPlatform::context()->vertexAttribPointer(FG_GFX_ATTRIB_NORM_LOCATION,	3 /* VEC3 */,
+		FG_GFX_FLOAT, GL_FALSE, sizeof(fgVector3f), (void*)(&soa->normals.front()));
+
+		offset += 3 /* VEC3 */ * sizeof(fgGFXfloat);
+
+		fgGfxPlatform::context()->vertexAttribPointer(FG_GFX_ATTRIB_UVS_LOCATION,	2 /* VEC2 */,
+		FG_GFX_FLOAT, GL_FALSE, sizeof(fgVector2f), (void*)(&soa->uvs.front()));
+
+		if(texture && program) {
+		// Bind our texture in Texture Unit 0
+			glActiveTexture(GL_TEXTURE0);
+			glBindTexture(GL_TEXTURE_2D, texture->getTextureGfxID());
+			fgGFXint TextureID = glGetUniformLocation(program->getGfxID(), "s_texture");
+			// Set our "myTextureSampler" sampler to user Texture Unit 0
+			glUniform1i(TextureID, 0);
+		}
+
+		glDrawElements(GL_TRIANGLES, numIndices, GL_UNSIGNED_SHORT, (const void*)(&soa->indices.front()));
+		fgGLError("GL_TRIANGLES glDrawElements");
+		glDisableVertexAttribArray(FG_GFX_ATTRIB_POS_LOCATION);
+		glDisableVertexAttribArray(FG_GFX_ATTRIB_NORM_LOCATION);
+		glDisableVertexAttribArray(FG_GFX_ATTRIB_UVS_LOCATION);
+
+		return;
+	}
+	fgGfxMeshAoS *aos = (fgGfxMeshAoS *)mesh;
+	fgGFXint numVertices = aos->getNumVertices();
+	fgGFXint numIndices = aos->getNumIndices();
+	// vboIds[0] - used to store vertex attribute data
+	// vboIds[l] - used to store element indices
+	fgGFXvoid *vtxBuf = (fgGFXvoid *)(&aos->vertices.front());
+	fgGFXvoid *indices = (fgGFXvoid *)(&aos->indices.front());
+	if(!glIsBuffer(vboIds[0]) || !glIsBuffer(vboIds[1])) {
+		buffInit = FG_FALSE;
+		FG_LOG::PrintDebug("GFX: VBOS NOT PROPER, BUFF INIT FALSE...");
+	}
+	if ( vboIds[0] == 0 && vboIds[1] == 0  && !buffInit)
+	{
+		// Only allocate on the first draw
+		glGenBuffers(2, vboIds);
+		glBindBuffer(GL_ARRAY_BUFFER, vboIds[0]);
+		glBufferData(GL_ARRAY_BUFFER, vtxStride * numVertices, vtxBuf, GL_STATIC_DRAW);
+
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vboIds[1]);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER,	sizeof(fgGFXushort) * numIndices, indices, GL_STATIC_DRAW);
+
+		buffInit = FG_TRUE;
+		FG_LOG::PrintDebug("GFX: GENERATING VBOS...");
+		FG_LOG::PrintDebug("GFX: VBO[0] = %d", vboIds[0]);
+		FG_LOG::PrintDebug("GFX: VBO[1] = %d", vboIds[1]);
+	}
+	if(!buffInit) {
+		FG_LOG::PrintDebug("GFX: NO BUFFERS. EXIT DRAW...");
+		return;
+	}
+	glBindBuffer(GL_ARRAY_BUFFER, vboIds[0]);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vboIds[1]);
+
+	glEnableVertexAttribArray(FG_GFX_ATTRIB_POS_LOCATION);
+	glEnableVertexAttribArray(FG_GFX_ATTRIB_NORM_LOCATION);
+	glEnableVertexAttribArray(FG_GFX_ATTRIB_UVS_LOCATION);
+
+	glVertexAttribPointer(FG_GFX_ATTRIB_POS_LOCATION, 3 /* VEC3 */,
+	FG_GFX_FLOAT, GL_FALSE, vtxStride,	(const void*)offset);
+	fgGLError("Position glVertexAttribPointer");
+
+	offset += 3 /* VEC3 */ * sizeof(fgGFXfloat);
+	
+	glVertexAttribPointer(FG_GFX_ATTRIB_NORM_LOCATION,	3 /* VEC3 */,
+	FG_GFX_FLOAT, GL_FALSE, vtxStride, (const void*)offset);
+	fgGLError("Normals glVertexAttribPointer");
+
+	offset += 3 /* VEC3 */ * sizeof(fgGFXfloat);
+
+	glVertexAttribPointer(FG_GFX_ATTRIB_UVS_LOCATION,	2 /* VEC2 */,
+	FG_GFX_FLOAT, GL_FALSE, vtxStride, (const void*)offset);
+	fgGLError("UVs glVertexAttribPointer");
+
+	if(texture && program) {
+	// Bind our texture in Texture Unit 0
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, texture->getTextureGfxID());
+		fgGFXint TextureID = glGetUniformLocation(program->getGfxID(), "s_texture");
+		// Set our "myTextureSampler" sampler to user Texture Unit 0
+		glUniform1i(TextureID, 0);
+	}
+
+	glDrawElements(GL_TRIANGLES, numIndices, GL_UNSIGNED_SHORT, 0);
+	fgGLError("GL_TRIANGLES glDrawElements");
+	glDisableVertexAttribArray(FG_GFX_ATTRIB_POS_LOCATION);
+	glDisableVertexAttribArray(FG_GFX_ATTRIB_NORM_LOCATION);
+	glDisableVertexAttribArray(FG_GFX_ATTRIB_UVS_LOCATION);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+	fgGLError("glBindBuffer");
+}
+
+void dumpMatrix(const float *mat, const char *title)
+{
+	if(title)
+		printf("%s MATRIX:\n", title);
+	printf("{ %.2f %.2f %.2f %.2f }\n", mat[0], mat[1], mat[2], mat[3]);
+	printf("{ %.2f %.2f %.2f %.2f }\n", mat[4], mat[5], mat[6], mat[7]);
+	printf("{ %.2f %.2f %.2f %.2f }\n", mat[8], mat[9], mat[10], mat[11]);
+	printf("{ %.2f %.2f %.2f %.2f }\n\n", mat[12], mat[13], mat[14], mat[15]);
+	
+}
+#include "fgGFXPrimitives.h"
+#include "GUI/fgFontDrawer.h"
 /*
  *
  */
 void fgGfxMain::render(void)
 {
-	// #TODO / #FIXME - all the crap with FG_GFX namespace should be somehow put into classes
-	// currently the model for handling different rendering APIs sux so much its too hard
-	// to put it in words - however its still not clear whether to stay with the namespace tag name
-	clearScreen();
+	static int cnt = 0;
+	static float posx = 0;
+	static float posy = 0;
+	static float offset = 0.0f;
+	static fgGfxModelResource *model = NULL;
+	static float rotxyz = 0.0f;
+	static float ro2 = 0.0f;
+	static float scale = 1.0f;
+	static float sign = -1.0f;
+	bool loadModel = true;
+	int cha = 0;
+	glm::mat4 Model;
 
-	// #MARKED
-	// proper rendering calls go here
-	// render something and shit
+	if(!m_mainWindow || !m_gfxContext) {
+		FG_LOG::PrintError("Main window / context is NULL");
+		return;
+	}
+	fgGLError();
+	m_mainWindow->clearColor();
+	fgResourceManager *rm = NULL;
+	
+	std::string sPlainEasyShaderName("sPlainEasy");
+	std::string sOrthoEasyShaderName("sOrthoEasy");
+	std::string modelname("CobraBomber");
+	std::string texname("CobraBomberTexture");
+	//std::string texname2("MainBackgroundTexture");
+	//std::string texname3("Splash");
+	std::string texname4("TrueCrimes");
+	std::string top("HudTopTex");
+	std::string bottom("HudBottomTex");
+	std::string lines("HudLinesTex");
 
-	// #CRAP
-	// the code below should be removed
-#if 0
-	// V- & T-database INDEXES
-	GLushort defaultIndices[] = { 0, 1, 3, 2 };
+	offset = fmodf(offset + 0.2f, 2*3.141f);
+	if(!m_textureMgr || !m_shaderMgr) {
+		FG_LOG::PrintError("No texture / shader manager");
+		
+		return;
 
-	float size_x = 100.0f;
-	float size_y = 150.0f;
+	}
+	rm = m_textureMgr->getResourceManager();
+	if(!rm) {
+		FG_LOG::PrintError("Cant access resource manager.");
 
-	fgVector2f vertexArray[] = {
-		fgVector2f(0.0f, 0.0f),
-		fgVector2f(size_x, 0.0f),
-		fgVector2f(size_x, size_y),
-		fgVector2f(0.0f, size_y)
-	};
+		return;
+	}
+#if 1
+	loadModel = false;
+	if(loadModel) {
+		if(!model)
+			model = (fgGfxModelResource *)rm->get(modelname);
+		if(!model) {
+			printf ("NO MODEL\n");
+			return;
+		}
+	
+	}
+	cameraAnim->setDT((float)FG_HardwareState->getDelta());
+	cameraAnim->update();
+	fgMatrix4f modelMat = glm::rotate(glm::mat4(1.0f), rotxyz, glm::vec3(1.0f, 1.0f, 1.0f));//fgMath::translate(fgMatrix4f(1.0f), fgVector3f(0.0f, 0.0f, -5.0f));
+	
+	MVP->setPerspective(45.0f, m_mainWindow->getAspect());
+	MVP->calculate(cameraAnim, modelMat);
 
-	glLoadIdentity();
-	glTranslatef(FG_GFX::getScreenWidth()/2.0f, FG_GFX::getScreenHeight()/2.0f, 0.0f);
-	glRotatef((FG_GetTicks()/4)%360, 0.0f, 0.0f, 1.0f);
-	// Activate and specify pointer to vertex array
-	glEnableClientState(GL_VERTEX_ARRAY);
-	glColor4f(1.0f, 0.25f, 0.25f, 1.0f);
-	glVertexPointer(2, GL_FLOAT, 0, (GLvoid *)vertexArray);
+	fgGfxMVMatrix *MV = (fgGfxMVMatrix *)(MVP);
 
-    // DRAW
-	glDrawElements(GL_TRIANGLE_STRIP, 4, GL_UNSIGNED_SHORT, defaultIndices);
+	fgGfxShaderProgram *program = m_shaderMgr->get(sPlainEasyShaderName);
+	m_shaderMgr->useProgram(program);
+	if(!program) {
+		FG_LOG::PrintError("Cant access sPlainEasy shader program.");
+		return;
+	}
 
-	// glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-	// Deactivate vertex arrays after drawing
-	glDisableClientState(GL_VERTEX_ARRAY);
+	fgTextureResource *texture = (fgTextureResource *) rm->get(texname);
+	program->setUniform(FG_GFX_PHASE, offset);
+	program->setUniform(MVP);
+	program->setUniform(FG_GFX_CUSTOM_COLOR, 1.0f, 0.0f, 0.0f, 1.0f);
+
+	rotxyz += 0.0094525f;
+	if(rotxyz > M_PI*2.0f)
+		rotxyz = 0.0f;
+
+	if(loadModel)
+		drawModel(model, program,  texture);
 #endif
-	// After rendering swap buffers so the changes are visible on the screen
-	swapBuffers();
+	fgGfxShaderProgram *program2 = m_shaderMgr->get(sOrthoEasyShaderName);
+	if(!program2) {
+		FG_LOG::PrintError("Cant access sOrthoEasy shader program.");
+		return;
+	}
+	m_shaderMgr->useProgram(program2);
+	if(s3eKeyboardGetState(s3eKeyLeft) & S3E_KEY_STATE_DOWN) {
+		posx-=10.0f;
+		cha = 1;
+	}
+	if(s3eKeyboardGetState(s3eKeyRight) & S3E_KEY_STATE_DOWN) {
+		posx+=10.0f;
+		cha = 1;
+	}
+	if(s3eKeyboardGetState(s3eKeyUp) & S3E_KEY_STATE_DOWN) {
+		posy-=10.0f;
+		cha = 1;
+	}
+	if(s3eKeyboardGetState(s3eKeyDown) & S3E_KEY_STATE_DOWN) {
+		posy+=10.0f;
+		cha = 1;
+	}
+
+	if(s3eKeyboardGetState(s3eKeySpace) & S3E_KEY_STATE_DOWN) {
+		ro2 += 0.01f;
+	}
+	if(s3eKeyboardGetState(s3eKeyRightShift) & S3E_KEY_STATE_DOWN) {
+		scale += 0.01f;
+	}
+	fgGfxPlatform::context()->setBlend(FG_TRUE);
+	fgGfxPlatform::context()->blendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
+
+	if(s3eKeyboardGetState(s3eKeyMenu) & S3E_KEY_STATE_PRESSED) {
+		sign = sign * -1.0f;
+	}
+
+	if(s3eKeyboardGetState(s3eKeyMenu) & S3E_KEY_STATE_DOWN) {
+		posx += 3.0f * sign;
+		posy += 5.0f * sign;
+	//	cameraAnim->moveBackward();
+	}
+	Model = glm::translate(Model, glm::vec3(posx, posy, 0.0f));
+	//Model = glm::rotate(Model, ro2, glm::vec3(0, 0, 1.0f));
+	//Model = glm::translate(Model, glm::vec3(-sizex/2, -sizey/2, 0.0f)); // test
+	//Model = glm::scale(Model, glm::vec3(scale, scale, 1.0f));
+
+	fgTextureResource *texsplash = NULL;// (fgTextureResource *) rm->get("loading_screen0");
+	MVP->identity();
+	MVP->setOrtho(0, (float)m_mainWindow->getWidth(), (float)m_mainWindow->getHeight(), 0.0f);
+	MVP->calculate(Model);
+	fgFontResource *ftex = (fgFontResource *) rm->get(texname4);
+	program2->setUniform(MVP);
+	if(program2 && glIsTexture(ftex->getTextureGfxID())) {
+		m_gfxContext->activeTexture(GL_TEXTURE0);
+		m_gfxContext->bindTexture2D(ftex->getTextureGfxID());
+		fgGFXint TextureID = glGetUniformLocation(program2->getGfxID(), "s_texture");
+		fgGLError("glGetUniformLocation");
+		glUniform1i(TextureID, 0);
+		fgGLError("glUniform1i");
+	}
+	//glScissor(0, 0, m_mainWindow->getWidth()/2, m_mainWindow->getHeight());
+	FG_HardwareState->calculateDT();
+	FG_HardwareState->calculateFPS();
+	fgTextureResource *textop = (fgTextureResource *) rm->get(top);
+	fgTextureResource *texbottom = (fgTextureResource *) rm->get(bottom);
+	fgTextureResource *texlines = (fgTextureResource *) rm->get(lines);
+#if 0
+	//glDisable(GL_CULL_FACE);
+	if(textop && texbottom && texlines && program2 && 0) {
+		float topw, toph, botw, both, linh, linw;
+		linw = (float)m_mainWindow->getWidth();
+		linh = (float)m_mainWindow->getHeight();
+
+		topw = linw;
+		botw = linw;
+
+		toph = (float)textop->getHeight()/(float)textop->getWidth()*topw;
+		both = (float)texbottom->getHeight()/(float)texbottom->getWidth()*botw;
+		float botrelpos = linh - both;
+
+		if(glIsTexture(textop->getTextureGfxID())) {
+			glActiveTexture(GL_TEXTURE0);
+			glBindTexture(GL_TEXTURE_2D, textop->getTextureGfxID());
+			fgGLError("glBindTexture");
+		}
+		fgVector<fgVertex3> vecs;
+		fgGfxPrimitives::appendRect2D(vecs, fgVec2f(0.0f,0.0f), fgVec2f(topw, toph), fgVec2f(0,1), fgVec2f(1,0), FG_GFX_TRIANGLES, FG_FALSE);
+		fgGfxPrimitives::drawArray2D(vecs);
+		vecs.clear();
+		if(glIsTexture(texbottom->getTextureGfxID())) {
+			glActiveTexture(GL_TEXTURE0);
+			glBindTexture(GL_TEXTURE_2D, texbottom->getTextureGfxID());
+			fgGLError("glBindTexture");
+		}
+		fgGfxPrimitives::appendRect2D(vecs, fgVec2f(0.0f,botrelpos), fgVec2f(botw, both), fgVec2f(0,1), fgVec2f(1,0), FG_GFX_TRIANGLES, FG_FALSE);
+		fgGfxPrimitives::drawArray2D(vecs);
+		vecs.clear();
+		if(glIsTexture(texlines->getTextureGfxID())) {
+			glActiveTexture(GL_TEXTURE0);
+			glBindTexture(GL_TEXTURE_2D, texlines->getTextureGfxID());
+			fgGLError("glBindTexture");
+		}
+		fgGfxPrimitives::appendRect2D(vecs, fgVec2f(0.0f,0.0f), fgVec2f(linw, linh), fgVec2f(0,1), fgVec2f(1,0), FG_GFX_TRIANGLES, FG_FALSE);
+		fgGfxPrimitives::drawArray2D(vecs);
+		vecs.clear();
+		//glScissor(m_mainWindow->getWidth()/2, 0, m_mainWindow->getWidth()/2, m_mainWindow->getHeight());
+		if(0) {
+			if(texsplash && glIsTexture(texsplash->getTextureGfxID())) {
+				glActiveTexture(GL_TEXTURE1);
+				glBindTexture(GL_TEXTURE_2D, texsplash->getTextureGfxID());
+				fgGLError("glBindTexture");
+				fgGFXint TextureID = glGetUniformLocation(program2->getGfxID(), "s_texture");
+				fgGLError("glGetUniformLocation");
+				glUniform1i(TextureID, 1);
+				fgGLError("glUniform1i");
+			}
+			fgGfxPrimitives::appendRect2D(vecs, fgVec2f(150,100.0f), fgVec2f(1024.0f/5.0f, 768.0f/5.0f), fgVec2f(0,1), fgVec2f(1,0), FG_GFX_TRIANGLES, FG_FALSE);
+			fgGfxPrimitives::drawArray2D(vecs);
+			vecs.clear();
+		}
+	}
+#endif
+	fgGfxPlatform::context()->setBlend(FG_FALSE);
+	fgGfxPlatform::context()->scissor(0, 0, m_mainWindow->getWidth(), m_mainWindow->getHeight());
+	
 }
 
 /*
@@ -305,16 +570,17 @@ fgBool fgGfxMain::setResourceManager(fgManagerBase *resourceManager)
 {
 	if(!resourceManager)
 		return FG_FALSE;
-	if(m_textureMgr) {
-		// #ERROR - already initialized ?
+	if(resourceManager->getManagerType() != FG_MANAGER_RESOURCE) {
 		return FG_FALSE;
 	}
-	m_textureMgr = new fgTextureManager(resourceManager);
+	
+	if(!m_textureMgr)
+		m_textureMgr = new fgTextureManager(resourceManager);
+	else
+		m_textureMgr->setResourceManager(resourceManager);
 	m_resourceMgr = resourceManager;
 
-	// should initialize ?
-
-	return m_textureMgr->initialize();
+	return m_textureMgr->initialize(); // #FIXME - texture mgr init ?
 }
 
 /*
@@ -336,6 +602,14 @@ fgGfxShaderManager *fgGfxMain::getShaderManager(void) const
 /*
  *
  */
+fgGfxWindow *fgGfxMain::getMainWindow(void) const
+{
+	return m_mainWindow;
+}
+
+/*
+ *
+ */
 fgBool fgGfxMain::preLoadShaders(void) const 
 {
 	if(!m_shaderMgr) {
@@ -345,16 +619,16 @@ fgBool fgGfxMain::preLoadShaders(void) const
 }
 
 /*
- *
+ * #FIXME
  */
 fgBool fgGfxMain::releaseTextures(void)
 {
-	if(m_textureManager) {
-		m_textureManager->allReleaseGFX();
-		m_textureManager->allReleaseNonGFX();
-		delete m_textureManager;
-		m_textureManager = NULL;
+	if(m_textureMgr) {
+		m_textureMgr->allReleaseGFX();
+		m_textureMgr->allReleaseNonGFX();
+		delete m_textureMgr;
+		m_textureMgr = NULL;
 	}
-	m_resourceManager = NULL;
+	m_resourceMgr = NULL;
 	return FG_TRUE;
 }

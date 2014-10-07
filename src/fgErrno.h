@@ -200,7 +200,7 @@ namespace FG_ERRNO_MAIN {
 		FG_ERRNO_WRONG_PATH_TEXT
 	};
 
-	static void __registerAll(void) {		
+	inline void __registerAll(void) {		
 		for(int code=FG_ERRNO_BASE_CODE(0), i=0; code<=FG_ERRNO_LAST_CODE; code++, i++) {
 			FG_ERRNO_REGISTER(code, FG_ERRNO_MAIN::__allErrVec[i]);
 		}

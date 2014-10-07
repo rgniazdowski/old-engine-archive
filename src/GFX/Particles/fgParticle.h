@@ -40,7 +40,18 @@ struct Particle
 	// Wskaznik do dodatkowych danych
 	void *data;
 
-	Particle() : position(0.0f,0.0f,0.0f), velocity(0.0f,0.0f,0.0f), rotation(0.0f,0.0f,0.0f), angularVelocity(0.0f,0.0f,0.0f), size(0.0f), life(0.0f), fade_speed(0.0f), ttl(0), spawn_time(0), texture_id(0), data(NULL)
+	Particle() : 
+		position(0.0f,0.0f,0.0f), 
+		velocity(0.0f,0.0f,0.0f),
+		rotation(0.0f,0.0f,0.0f),
+		angularVelocity(0.0f,0.0f,0.0f), 
+		size(0.0f),
+		life(0.0f), 
+		fade_speed(0.0f), 
+		ttl(0), 
+		spawn_time(0),
+		texture_id(0),
+		data(NULL)
     {
     
 	}

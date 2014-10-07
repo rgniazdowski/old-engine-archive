@@ -51,6 +51,11 @@ public:
 	float * getModelViewProjMatPtr(void) {
 		return glm::value_ptr(m_modelViewProjMatrix);
 	}
+	void identity(void) {
+		fgGfxMVMatrix::identity();
+		fgGfxProjection::identity();
+		m_modelViewProjMatrix = fgMatrix4f();
+	}
 protected:
 	fgMatrix4f m_modelViewProjMatrix;
 };

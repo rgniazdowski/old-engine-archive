@@ -22,7 +22,6 @@ must not be misrepresented as being the original software.
 distribution.
 */
 
-
 #ifndef TINYXML_INCLUDED
 #define TINYXML_INCLUDED
 
@@ -44,11 +43,17 @@ distribution.
 #endif
 
 #ifdef TIXML_USE_STL
+#if defined _DEBUG
+#pragma message("TinyXML : Using std::string - TIXML_USE_STL is defined")
+#endif
 	#include <string>
  	#include <iostream>
 	#include <sstream>
 	#define TIXML_STRING		std::string
 #else
+#if defined _DEBUG
+#pragma message("TinyXML : Using TiXmlString - TIXML_USE_STL is not defined")
+#endif
 	#include "tinystr.h"
 	#define TIXML_STRING		TiXmlString
 #endif

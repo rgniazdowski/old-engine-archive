@@ -34,7 +34,9 @@ typedef fgHandle<fgGfxShaderTag> fgGfxShaderHandle;
  */
 class fgGfxShaderBase : public fgDataObjectBase<fgGfxShaderHandle, fgQuality>
 {
+	friend class fgGfxShader;
 	friend class fgGfxShaderProgram;
+	friend class fgGfxShaderManager;
 protected:
 	typedef std::map<fgGFXuint, fgGFXint>	objParamMap;
 	typedef objParamMap::iterator			objParamMapItor;
@@ -54,13 +56,23 @@ protected:
 	fgGFXuint	m_gfxID;
 	/// 
 	shaderBaseType m_baseType;
-	
+	/// #FIXME ?
+	fgBool m_isManaged;
+
+protected:
+	void setManaged(fgBool toggle = FG_TRUE) {
+		m_isManaged = toggle;
+	}
 
 public:
 	//
 	fgGfxShaderBase();
 	// 
 	virtual ~fgGfxShaderBase();
+
+	fgBool isManaged(void) const {
+		return m_isManaged;
+	}
 
 	// 
 	fgGFXuint getGfxID(void) const {

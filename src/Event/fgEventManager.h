@@ -12,7 +12,7 @@
 
 #include "fgBuildConfig.h"
 #include "fgTypes.h"
-#include "fgSingleton.h"
+#include "fgManagerBase.h"
 
 #include "fgEventDefinitions.h"
 #include "fgEventHelper.h"
@@ -37,62 +37,85 @@
 	throwEvent(BUTTON_CLICKED, argv);
 */
 
+#define FG_MANAGER_EVENT	0x00000008
+
 /*
  * Event manager main class definition.
  * 
  */
-class fgEventManager : public fgSingleton<fgEventManager>
+class fgEventManager : public fgManagerBase
 {
-	friend class fgSingleton<fgEventManager>;
-
 private:
-	// 
+	///
 	fgVector<int> m_keysDownPool;
-	// 
+	///
 	fgVector<int> m_keysUpPool;
-
-	// int - keyCode, value - vector of callbacks to call
-	// Binding for key down events
+	/// int - keyCode, value - vector of callbacks to call
+	/// Binding for key down events
 	fgCallbackBinding m_keyDownBinds;
-	// Binding for key up binds - note that this will only work if
-	// previously key was released
+	/// Binding for key up binds - note that this will only work if
+	/// previously key was released
 	fgCallbackBinding m_keyUpBinds;
-	// int - eventCode
-	// Binding for all global events
+	/// int - eventCode
+	/// Binding for all global events
 	fgCallbackBinding m_eventBinds;
-	// Events queue (message queue so to speak)
+	/// Events queue (message queue so to speak)
 	fgEventsQueue m_eventsQueue;
-	// Special pool with timeout callbacks (timers)
+	/// Special pool with timeout callbacks (timers)
 	fgTimeoutCallbacksPool m_timeoutCallbacks;
-	// Pool with cyclic timeout callbacks (repeat timers, self reset)
+	/// Pool with cyclic timeout callbacks (repeat timers, self reset)
 	fgCyclicCallbacksPool m_cyclicCallbacks;
 
-protected:
+public:
 	// Default constructor for Event Manager object
 	fgEventManager();
 	// Default destructor for Event Manager object
-	~fgEventManager();
+	virtual ~fgEventManager();
+
+protected:
+	//
+	virtual void clear(void);
 
 public:
+
 	// Initialize the Event Manager object
-	void initialize(void);
+	virtual fgBool initialize(void);
+
+	//
+	virtual fgBool destroy(void);
 
 	// This adds event to the waiting queue, the *list object needs to be allocated before,
 	// after event callback execution argument list must be freed
 	void throwEvent(fgEventType eventCode, fgArgumentList *list);
 	//
-	void addKeyDownCallback(int keyCode, fgCallbackFunction *callback);
+	fgFunctionCallback* addKeyDownCallback(int keyCode, fgFunctionCallback *callback);
 	//
-	void addKeyUpCallback(int keyCode, fgCallbackFunction *callback);
-	//
-	void addEventCallback(fgEventType eventCode, fgCallbackFunction *callback);
-	//
-	void addEventCallback(fgEventType eventCode, fgCallbackFunction::fgFunction function);
+	fgFunctionCallback* addKeyUpCallback(int keyCode, fgFunctionCallback *callback);
 
 	//
-	void addTimeoutCallback(fgCallbackFunction *callback, int timeout, fgArgumentList *argList);
+	fgFunctionCallback* addEventCallback(fgEventType eventCode, fgFunctionCallback *callback);
+	//
+	fgFunctionCallback* addEventCallback(fgEventType eventCode, fgFunctionCallback::fgFunction function);
+	//
+	template < class Class >
+	fgFunctionCallback* addEventCallback(
+		fgEventType eventCode,
+		typename fgClassCallback<Class>::fgClassMethod method,
+		Class* class_instance);
+
+	fgBool removeEventCallback(fgEventType eventCode, fgFunctionCallback *callback);
+
+	//
+	fgFunctionCallback* addTimeoutCallback(
+		fgFunctionCallback *callback, 
+		int timeout,
+		fgArgumentList *argList);
 	// 
-	void addCyclicCallback(fgCallbackFunction *callback, int repeats, int interval, fgArgumentList *argList);
+	fgFunctionCallback* addCyclicCallback(
+		fgFunctionCallback *callback, 
+		int repeats,
+		int interval,
+		fgArgumentList *argList);
 
 	// This adds key code to the pool of pressed down keys
 	void addKeyDown(int keyCode);
@@ -104,7 +127,20 @@ public:
 	void executeEvents(void);
 };
 
-// Get singleton instance of the Event Manager class object
-#define FG_EventManager fgEventManager::getInstance()
+template < class Class >
+/*
+ *
+ */
+fgFunctionCallback* fgEventManager::addEventCallback(
+	fgEventType eventCode,
+	typename fgClassCallback<Class>::fgClassMethod method, 
+	Class* class_instance)
+{
+	if(!method || (int)eventCode < 0 || !class_instance)
+		return NULL;
+	fgFunctionCallback *callback = new fgClassCallback<Class>(class_instance, method);
+	m_eventBinds[eventCode].push_back(callback);
+	return callback;
+}
 
 #endif /* _FG_EVENT_MANAGER_H_ */

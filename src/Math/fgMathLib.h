@@ -10,9 +10,9 @@
 #ifndef _FG_MATHLIB_H_
 #define _FG_MATHLIB_H_
 
+#include "fgBuildConfig.h"
 #include <cmath>
 
-#include "fgBuildConfig.h"
 #if defined FG_USING_GLM
 #include "glm/common.hpp"
 #include "glm/vec2.hpp"
@@ -54,7 +54,6 @@
 
 #ifndef FG_MATH_GLM_VECTOR_MASK
 #define FG_MATH_GLM_VECTOR_MASK
-
 typedef glm::bvec2 fgVector2b;
 typedef glm::bvec3 fgVector3b;
 typedef glm::bvec4 fgVector4b;
@@ -70,11 +69,14 @@ typedef glm::ivec4 fgVector4i;
 typedef glm::vec2 fgVector2f;
 typedef glm::vec3 fgVector3f;
 typedef glm::vec4 fgVector4f;
+
+typedef glm::dvec2 fgVector2d;
+typedef glm::dvec3 fgVector3d;
+typedef glm::dvec4 fgVector4d;
 #endif
 
 #ifndef FG_MATH_GLM_MATRIX_MASK
 #define FG_MATH_GLM_MATRIX_MASK
-
 typedef glm::mat2 fgMatrix2f;
 typedef glm::mat3 fgMatrix3f;
 typedef glm::mat4 fgMatrix4f;
@@ -82,15 +84,12 @@ typedef glm::mat4 fgMatrix4f;
 typedef glm::dmat2 fgMatrix2d;
 typedef glm::dmat3 fgMatrix3d;
 typedef glm::dmat4 fgMatrix4d;
-
 #endif
 
 #ifndef FG_MATH_GLM_QUAT_MASK
 #define FG_MATH_GLM_QUAT_MASK
-
 typedef glm::quat fgQuaternionf;
 typedef glm::dquat fgQuaterniond;
-
 #endif
 
 #else /* FG_USING_GLM */
@@ -964,8 +963,7 @@ struct fgQuaterionf {
 };
 #endif /* FG_USING_GLM */
 
-// #FIXME
-
+#ifdef FG_MATH_GLM_VECTOR_MASK
 typedef fgVector2b	fgVec2b;
 typedef fgVector3b	fgVec3b;
 typedef fgVector4b	fgVec4b;
@@ -982,6 +980,12 @@ typedef fgVector2f	fgVec2f;
 typedef fgVector3f	fgVec3f;
 typedef fgVector4f	fgVec4f;
 
+typedef fgVector2d	fgVec2d;
+typedef fgVector3d	fgVec3d;
+typedef fgVector4d	fgVec4d;
+#endif /* FG_MATH_GLM_VECTOR_MASK */
+
+#ifdef FG_MATH_GLM_MATRIX_MASK
 typedef fgMatrix2f	fgMat2f;
 typedef fgMatrix3f	fgMat3f;
 typedef fgMatrix4f	fgMat4f;
@@ -989,8 +993,11 @@ typedef fgMatrix4f	fgMat4f;
 typedef fgMatrix2d	fgMat2d;
 typedef fgMatrix3d	fgMat3d;
 typedef fgMatrix4d	fgMat4d;
+#endif /* FG_MATH_GLM_MATRIX_MASK */
 
+#ifdef FG_MATH_GLM_QUAT_MASK
 typedef fgQuaternionf	fgQuatf;
 typedef fgQuaterniond	fgQuatd;
+#endif /* FG_MATH_GLM_QUAT_MASK */
 
 #endif /* _FG_MATHLIB_H_ */

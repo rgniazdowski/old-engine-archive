@@ -11,27 +11,26 @@
 #define _FG_CALLBACK_H_
 
 #include "fgTypes.h"
-
-#include <iostream>
-
 #include "fgArgumentList.h"
 
 /*
  *
  */
-class fgCallbackFunction
+class fgFunctionCallback
 {
 public:
 	// This is function pointer (to global or static member function)
 	typedef fgBool (*fgFunction)(fgArgumentList *argv);
 
 	//
-	fgCallbackFunction() { }
+	fgFunctionCallback() { }
 	// 
-	virtual ~fgCallbackFunction() {	}
+	virtual ~fgFunctionCallback() {	
+		m_function = NULL;
+	}
 
 	// 
-	fgCallbackFunction(fgFunction function)
+	fgFunctionCallback(fgFunction function)
 	{
 		m_function = function;
 	}
@@ -58,33 +57,99 @@ public:
 		return FG_FALSE;
 	}
 	
-private:
+protected:
 	fgFunction m_function;
 };
 
 /*
  *
  */
-template < class Class >
-class fgCallback : public fgCallbackFunction
+class fgPlainFunctionCallback : public fgFunctionCallback
 {
 public:
-	typedef fgBool (Class::*fgMethod)(fgArgumentList *argv);
+	// This is function pointer (to global or static member function)
+	typedef fgBool (*fgPlainFunction)(void *userData);
+
+	//
+	fgPlainFunctionCallback() { }
 
 	// 
-	fgCallback(Class* class_instance, fgMethod method)
+	virtual ~fgPlainFunctionCallback() {	
+		m_function = NULL;
+	}
+
+	// 
+	fgPlainFunctionCallback(fgPlainFunction function)
+	{
+		m_function = function;
+	}
+
+	// 
+	void setFunction(fgPlainFunction function)
+	{
+		m_function = function;
+	}
+
+	// 
+	virtual fgBool Call(void)
+	{
+		if(m_function != NULL)
+			return m_function(NULL);
+		return FG_FALSE;
+	}
+
+	// 
+	virtual fgBool Call(fgArgumentList *argv)
+	{
+		if(m_function != NULL)
+			return m_function((void *)argv);
+		return FG_FALSE;
+	}
+
+	// 
+	virtual fgBool Call(void *argv)
+	{
+		if(m_function != NULL)
+			return m_function(argv);
+		return FG_FALSE;
+	}
+	
+protected:
+	fgPlainFunction m_function;
+};
+
+/*
+ *
+ */
+template < class Class >
+class fgClassCallback : public fgFunctionCallback
+{
+public:
+	typedef fgBool (Class::*fgClassMethod)(fgArgumentList *argv);
+
+	// 
+	fgClassCallback(Class* class_instance, fgClassMethod method)
 	{
 		m_classInstance = class_instance;
 		m_method = method;
 	}	
 	//
-	~fgCallback() {	}
+	virtual ~fgClassCallback() {	
+		m_classInstance = NULL;
+		m_method = NULL;
+	}
 
 	//
-	void setMethod(fgMethod method)
+	void setMethod(fgClassMethod method)
 	{
 		m_classInstance = NULL;
 		m_method = method;
+	}
+
+	//
+	void setClass(Class* class_instance)
+	{
+		m_classInstance = class_instance;
 	}
 
 	// 
@@ -119,11 +184,11 @@ public:
 		return FG_FALSE;
 	}
 	
-private:
+protected:
 	// 
 	Class*		m_classInstance;
 	// 
-	fgMethod	m_method;
+	fgClassMethod	m_method;
 };
 
 #endif /* _FG_CALLBACK_H_ */

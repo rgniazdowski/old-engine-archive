@@ -1,0 +1,107 @@
+/*******************************************************
+ * Copyright (C) 2014 Radoslaw Gniazdowski <r.gniazdowski@gmail.com>. All rights reserved.
+ *
+ * This file is part of FlexiGame: Flexible Game Engine
+ *
+ * FlexiGame source code and any related files can not be copied, modified
+ * and/or distributed without the express or written consent from the author.
+ *******************************************************/
+
+#ifndef _FG_POINTER_DATA_H_
+#define _FG_POINTER_DATA_H_
+
+#ifndef _FG_BUILD_CONFIG_H_
+#include "fgBuildConfig.h"
+#endif
+
+#ifndef _FG_BOOL_H_
+#include "fgBool.h"
+#endif
+
+#if defined(FG_USING_MARMALADE)
+
+#include "s3ePointer.h"
+#define FG_POINTER_BUTTON_SELECT			((unsigned int)S3E_POINTER_BUTTON_SELECT)
+#define FG_POINTER_BUTTON_LEFTMOUSE			((unsigned int)S3E_POINTER_BUTTON_LEFTMOUSE)
+#define FG_POINTER_BUTTON_RIGHTMOUSE		((unsigned int)S3E_POINTER_BUTTON_RIGHTMOUSE)
+#define FG_POINTER_BUTTON_MIDDLEMOUSE		((unsigned int)S3E_POINTER_BUTTON_MIDDLEMOUSE)
+#define FG_POINTER_BUTTON_MOUSEWHEELUP		((unsigned int)S3E_POINTER_BUTTON_MOUSEWHEELUP)
+#define FG_POINTER_BUTTON_MOUSEWHEELDOWN	((unsigned int)S3E_POINTER_BUTTON_MOUSEWHEELDOWN)
+
+#define FG_POINTER_STATE_UP					((unsigned int)S3E_POINTER_STATE_UP)
+#define FG_POINTER_STATE_DOWN				((unsigned int)S3E_POINTER_STATE_DOWN)
+#define FG_POINTER_STATE_PRESSED			((unsigned int)S3E_POINTER_STATE_PRESSED)
+#define FG_POINTER_STATE_RELEASED			((unsigned int)S3E_POINTER_STATE_RELEASED)
+#define FG_POINTER_STATE_UNKNOWN			((unsigned int)S3E_POINTER_STATE_UNKNOWN)
+
+#elif defined(FG_USING_SDL2)
+
+#define FG_POINTER_BUTTON_SELECT			0
+#define FG_POINTER_BUTTON_LEFTMOUSE			0
+#define FG_POINTER_BUTTON_RIGHTMOUSE		1
+#define FG_POINTER_BUTTON_MIDDLEMOUSE		2
+#define FG_POINTER_BUTTON_MOUSEWHEELUP		3
+#define FG_POINTER_BUTTON_MOUSEWHEELDOWN	4
+
+#define FG_POINTER_STATE_UP					0
+#define FG_POINTER_STATE_DOWN				1
+#define FG_POINTER_STATE_PRESSED			2
+#define FG_POINTER_STATE_RELEASED			4
+#define FG_POINTER_STATE_UNKNOWN			5
+
+#else
+
+#define FG_POINTER_BUTTON_SELECT			0
+#define FG_POINTER_BUTTON_LEFTMOUSE			0
+#define FG_POINTER_BUTTON_RIGHTMOUSE		1
+#define FG_POINTER_BUTTON_MIDDLEMOUSE		2
+#define FG_POINTER_BUTTON_MOUSEWHEELUP		3
+#define FG_POINTER_BUTTON_MOUSEWHEELDOWN	4
+
+#define FG_POINTER_STATE_UP					0
+#define FG_POINTER_STATE_DOWN				1
+#define FG_POINTER_STATE_PRESSED			2
+#define FG_POINTER_STATE_RELEASED			4
+#define FG_POINTER_STATE_UNKNOWN			5
+
+#endif
+
+typedef unsigned int fgTouchID;
+typedef unsigned int fgPointerID;
+typedef unsigned int fgButtonID;
+
+typedef unsigned int fgPointerState;
+
+struct fgPointerData
+{
+	union {
+		fgTouchID	m_touchID;
+		fgButtonID	m_buttonID;
+		fgPointerID	m_pointerID;
+	};
+	fgPointerState m_state;
+	union {
+		int m_moveX;
+		int m_x;
+	};
+	union {
+		int m_moveY;
+		int m_y;
+	};
+	union {
+		fgBool m_pressed;
+		fgBool m_active;
+	};
+	fgBool m_pointerTap;
+
+	fgPointerData() : 
+		m_touchID(0),
+		m_state(FG_POINTER_STATE_UP),
+		m_x(0), m_y(0),
+		m_active(FG_FALSE),
+		m_pointerTap(FG_FALSE)
+	{
+	}
+};
+
+#endif /* _FG_POINTER_DATA_H_ */

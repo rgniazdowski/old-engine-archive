@@ -8,6 +8,8 @@
  *******************************************************/
 
 #include "fgErrno.h"
+#include <cstring>
+#include <cstdlib>
 
 fgErrno::strErrMap fgErrno::s_errorMap;
 int fgErrno::s_errno = 0;

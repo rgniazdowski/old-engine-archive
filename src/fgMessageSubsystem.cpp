@@ -20,7 +20,6 @@ fgMessageSubsystem *fgSingleton<fgMessageSubsystem>::instance = NULL;
  */
 fgMessageSubsystem::fgMessageSubsystem()
 {
-	setReportToMsgSystem(FG_FALSE);
 }
 
 /** \brief
@@ -39,12 +38,14 @@ void fgMessageSubsystem::clear(void) {
 
 /** \brief
  */
-void fgMessageSubsystem::destroy(void) {
+fgBool fgMessageSubsystem::destroy(void) 
+{
 	flushAll();
 
 	m_logAll.close();
 	m_logError.close();
 	m_logDebug.close();
+	return FG_TRUE;
 }
 
 /** \brief

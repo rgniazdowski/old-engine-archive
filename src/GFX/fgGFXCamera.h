@@ -11,7 +11,8 @@
 #define _FG_GFX_CAMERA_H_
 
 #include "Math/fgMathLib.h"
-
+// #FIXME printf
+#include <cstdio>
 class fgGfxCamera
 {
 public:
@@ -28,7 +29,7 @@ public:
 		i++;
 		m_viewMatrix = glm::lookAt(m_eye, m_center, m_up);
 		if(i==1000) {
-			printf("update camera: %.2f\n", getViewMatPtr()[0]);
+			//printf("update camera: %.2f\n", getViewMatPtr()[0]);
 			i = 0;
 		}
 		return getViewMatPtr();
@@ -81,6 +82,10 @@ public:
 	// 
 	float * getPtrUp(void) {
 		return glm::value_ptr(m_up);
+	}
+
+	void identity(void) {
+		m_viewMatrix = fgMatrix4f();
 	}
 
 protected:

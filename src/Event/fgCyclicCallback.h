@@ -7,17 +7,15 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-#ifndef _CYCLIC_CALLBACK_H
-#define _CYCLIC_CALLBACK_H
-
-#include <iostream>
+#ifndef _FG_CYCLIC_CALLBACK_H_
+#define _FG_CYCLIC_CALLBACK_H_
 
 #include "fgCallback.h"
 #include "fgArgumentList.h"
 
 struct fgCyclicCallback
 {
-	fgCallbackFunction *callback;
+	fgFunctionCallback *callback;
 	int repeats; // -1 means infinite 
 	int interval; // interval in miliseconds
 	unsigned long int timestamp;
@@ -27,7 +25,7 @@ struct fgCyclicCallback
 	{
 	}
 
-	fgCyclicCallback(fgCallbackFunction *_callback, int _repeats, int _interval, fgArgumentList *_argList)
+	fgCyclicCallback(fgFunctionCallback *_callback, int _repeats, int _interval, fgArgumentList *_argList)
 	{
 		callback = _callback;
 		repeats = _repeats;
@@ -35,7 +33,6 @@ struct fgCyclicCallback
 		timestamp = 0;
 		argList = _argList;
 	}
-
 };
 
-#endif
+#endif /* _FG_CYCLIC_CALLBACK_H_ */

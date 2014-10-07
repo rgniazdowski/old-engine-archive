@@ -23,38 +23,40 @@ enum fgEventType {
 	FG_EVENT_TOUCH_RELEASED		=	2,
 	FG_EVENT_TOUCH_MOTION		=	3,
 	FG_EVENT_TOUCH_TAP_FINISHED	=	4,
+	FG_EVENT_TOUCH				=	5,
 
-	FG_EVENT_MOUSE_PRESSED		=	5,
-	FG_EVENT_MOUSE_RELEASED		=	6,
-	FG_EVENT_MOUSE_MOTION		=	7,
+	FG_EVENT_MOUSE_PRESSED		=	6,
+	FG_EVENT_MOUSE_RELEASED		=	7,
+	FG_EVENT_MOUSE_MOTION		=	8,
+	FG_EVENT_MOUSE				=	9,
 
-	FG_EVENT_SWIPE_X			=	8,
-	FG_EVENT_SWIPE_Y			=	9,
-	FG_EVENT_SWIPE_XY			=	10,
-	FG_EVENT_SWIPE_ANGLE		=	10,
+	FG_EVENT_SWIPE_X			=	10,
+	FG_EVENT_SWIPE_Y			=	11,
+	FG_EVENT_SWIPE_XY			=	12,
+	FG_EVENT_SWIPE_ANGLE		=	12,
 
-	FG_EVENT_SWIPE_PINCH		=	12,
+	FG_EVENT_SWIPE_PINCH		=	14,
 
-	FG_EVENT_MULTI_SWIPE_ROTATE	=	13,
+	FG_EVENT_MULTI_SWIPE_ROTATE	=	15,
 
-	FG_EVENT_KEY_DOWN			=	14,
-	FG_EVENT_KEY_UP				=	15,
+	FG_EVENT_KEY_DOWN			=	16,
+	FG_EVENT_KEY_UP				=	17,
 
-	FG_EVENT_RESOURCE_LOADED	=	16,
-	FG_EVENT_RESOURCE_RELEASED	=	17,
-	FG_EVENT_RESOURCE_REQUESTED	=	18,
+	FG_EVENT_RESOURCE_LOADED	=	18,
+	FG_EVENT_RESOURCE_RELEASED	=	19,
+	FG_EVENT_RESOURCE_REQUESTED	=	20,
 
-	FG_EVENT_PROGRAM_INIT		=	19,
+	FG_EVENT_PROGRAM_INIT		=	21,
 
-	FG_EVENT_VERTEX_STREAM_READY=	20,
-	FG_EVENT_CAMERA_CHANGED		=	21,
+	FG_EVENT_VERTEX_STREAM_READY=	22,
+	FG_EVENT_CAMERA_CHANGED		=	23,
 	
-	FG_EVENT_SOUND_PLAYED		=	22,
+	FG_EVENT_SOUND_PLAYED		=	24,
 
-	FG_EVENT_MENU_CHANGED		=	23,
-	FG_EVENT_WIDGET_STATE_CHANGED=	24,
+	FG_EVENT_MENU_CHANGED		=	25,
+	FG_EVENT_WIDGET_STATE_CHANGED=	26,
 
-	FG_EVENT_SENSORS_CHANGED	=	25,
+	FG_EVENT_SENSORS_CHANGED	=	27,
 
 	FG_EVENT_RESERVED1,
 	FG_EVENT_RESERVED2,
@@ -86,11 +88,17 @@ enum fgResourceStatus
 	FG_RESOURCE_REQUESTED
 };
 
+/*
+ *
+ */
 struct fgEventBase {
 	fgEventType eventType;
 	unsigned long int timeStamp;
 };
 
+/*
+ *
+ */
 struct fgTouchEvent : fgEventBase {	
 	int x;
 	int y;
@@ -98,6 +106,9 @@ struct fgTouchEvent : fgEventBase {
 	unsigned int touchID;
 };
 
+/*
+ *
+ */
 struct fgMouseEvent : fgEventBase {
 	int x;
 	int y;
@@ -105,6 +116,9 @@ struct fgMouseEvent : fgEventBase {
 	unsigned int buttonID;
 };
 
+/*
+ *
+ */
 struct fgSwipeEvent : fgEventBase {
 	fgSwipeDirection swipeDirection;
 	int xStart;
@@ -115,9 +129,11 @@ struct fgSwipeEvent : fgEventBase {
 	int swipeYOffset;
 	int swipeXSteps;
 	int swipeYSteps;
-
 };
 
+/*
+ *
+ */
 struct fgSwipePinchEvent : fgEventBase {
 	fgPinchDirection pinchDirection;
 	int x;
@@ -129,6 +145,9 @@ struct fgSwipePinchEvent : fgEventBase {
 	int pinchSize;
 };
 
+/*
+ *
+ */
 struct fgSwipeRotateEvent : fgEventBase {
 	int x;
 	int y;
@@ -137,6 +156,9 @@ struct fgSwipeRotateEvent : fgEventBase {
 	float angle;
 };
 
+/*
+ *
+ */
 struct fgKeyEvent : fgEventBase {
 	int keyCode;
 	fgBool pressed;
@@ -174,6 +196,9 @@ struct fgWidgetEvent : fgEventBase {
 	//fgResource
 };
 
+/*
+ *
+ */
 struct fgSensorsEvent : fgEventBase {
 	// int type; or fgSensorType type;
 	union {
@@ -184,23 +209,26 @@ struct fgSensorsEvent : fgEventBase {
 	};
 };
 
+/*
+ *
+ */
 struct fgEvent {
 	union {
-		fgEventType eventType;
+		fgEventType			eventType;
 
-		fgTouchEvent touchEvent;
-		fgMouseEvent mouseEvent;
-		fgSwipeEvent swipeEvent;
-		fgSwipePinchEvent swipePinchEvent;
-		fgSwipeRotateEvent swipeRotateEvent;
-		fgKeyEvent keyEvent;
-		fgResourceEvent resourceEvent;
-		fgVertexStreamEvent vertexStreamEvent;
-		fgCameraEvent cameraEvent;
-		fgSoundEvent soundEvent;
-		fgMenuChangedEvent menuChangedEvent;
-		fgWidgetEvent widgetEvent;
-		fgSensorsEvent sensorsEvent;
+		fgTouchEvent		touchEvent;
+		fgMouseEvent		mouseEvent;
+		fgSwipeEvent		swipeEvent;
+		fgSwipePinchEvent	swipePinchEvent;
+		fgSwipeRotateEvent	swipeRotateEvent;
+		fgKeyEvent			keyEvent;
+		fgResourceEvent		resourceEvent;
+		fgVertexStreamEvent	vertexStreamEvent;
+		fgCameraEvent		cameraEvent;
+		fgSoundEvent		soundEvent;
+		fgMenuChangedEvent	menuChangedEvent;
+		fgWidgetEvent		widgetEvent;
+		fgSensorsEvent		sensorsEvent;
 	};
 };
 

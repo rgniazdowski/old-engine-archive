@@ -16,15 +16,15 @@ fgGfxCameraAnimation::fgGfxCameraAnimation() :
 	m_type(FG_GFX_CAMERA_FREE),
 	m_hAngle((fgGFXfloat)M_PI),
 	m_vAngle(0.0f),
-	m_speed(0.5f),
+	m_speed(0.15f),
 	m_mouseSpeed(0.002f),
 	m_zoom(1.0f),
 	m_distance(1.0f),
 	m_dt(0.0f),
-	m_screenW(480),
-	m_screenH(320)
+	m_screenW(1024),
+	m_screenH(768)
 {
-	glm::vec3 position = glm::vec3( 0, 0, 25 ); 
+	glm::vec3 position = glm::vec3( 0, 0, 55 ); 
 	m_eye = position;
 }
 
@@ -70,7 +70,7 @@ float *fgGfxCameraAnimation::update(fgGFXfloat mouseXrel, fgGFXfloat mouseYrel)
 		m_hAngle += m_mouseSpeed * mouseXrel;
 		m_vAngle += m_mouseSpeed * mouseYrel;
 
-		printf("Camera anim updated: h:%.3f v:%.3f\n", m_hAngle, m_vAngle);
+		//printf("Camera anim updated: h:%.3f v:%.3f\n", m_hAngle, m_vAngle);
 	}
 	return fgGfxCameraAnimation::update();
 }
@@ -81,7 +81,7 @@ float *fgGfxCameraAnimation::update(fgGFXfloat mouseXrel, fgGFXfloat mouseYrel)
 void fgGfxCameraAnimation::moveLeft(void)
 {
 	m_eye -= m_right * m_dt * m_speed;
-	printf("EYE: %.2f %.2f %.2f\n", m_eye[0], m_eye[1], m_eye[2]);
+	//printf("EYE: %.2f %.2f %.2f\n", m_eye[0], m_eye[1], m_eye[2]);
 }
 
 /*
@@ -90,7 +90,7 @@ void fgGfxCameraAnimation::moveLeft(void)
 void fgGfxCameraAnimation::moveRight(void)
 {
 	m_eye += m_right * m_dt * m_speed;
-	printf("EYE: %.2f %.2f %.2f\n", m_eye[0], m_eye[1], m_eye[2]);
+	//printf("EYE: %.2f %.2f %.2f\n", m_eye[0], m_eye[1], m_eye[2]);
 }
 
 /*
@@ -99,7 +99,7 @@ void fgGfxCameraAnimation::moveRight(void)
 void fgGfxCameraAnimation::moveForward(void)
 {
 	m_eye += m_direction * m_dt * m_speed;
-	printf("EYE: %.2f %.2f %.2f\n", m_eye[0], m_eye[1], m_eye[2]);
+	//printf("EYE: %.2f %.2f %.2f\n", m_eye[0], m_eye[1], m_eye[2]);
 }
 
 /*
@@ -108,7 +108,7 @@ void fgGfxCameraAnimation::moveForward(void)
 void fgGfxCameraAnimation::moveBackward(void)
 {
 	m_eye -= m_direction * m_dt * m_speed;
-	printf("EYE: %.2f %.2f %.2f\n", m_eye[0], m_eye[1], m_eye[2]);
+	//printf("EYE: %.2f %.2f %.2f\n", m_eye[0], m_eye[1], m_eye[2]);
 }
 
 /*

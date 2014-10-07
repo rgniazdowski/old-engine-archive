@@ -33,32 +33,42 @@
 #include "Hardware/fgHardwareState.h"
 
 #include "GFX/fgGFXMain.h"
+#include "GFX/fgGFXModelResource.h"
 #include "GFX/Textures/fgTextureManager.h"
 #include "GFX/Particles/fgParticleSystem.h"
 #include "GUI/fgFontResource.h"
 
 #include "Audio/fgSFXManager.h"
 #include "Event/fgEventManager.h"
-#include "Input/fgTouchReceiver.h"
+#include "Input/fgPointerInputReceiver.h"
 #include "XML/fgXMLParser.h"
 
 #include "fgMessageSubsystem.h"
 #include "fgErrorCodes.h"
+
+#include "GUI/fgFontDrawer.h"
 
 /*
  * Default constructor for the Game Main object
  */
 fgGameMain::fgGameMain() :
 	m_gfxMain(NULL),
+	m_guiMain(NULL),
 	m_settings(NULL),
 	m_mainConfig(NULL),
 	m_resourceMgr(NULL),
-	m_resourceFactory(NULL)
+	m_resourceFactory(NULL),
+	m_eventMgr(NULL),
+	m_pointerInputReceiver(NULL)
 {
-	srand(time(NULL));
-	fgErrorCodes::registerAll();
-	fgTime::init();
+	srand(time(NULL));	// #FIXME srand init ?
+	fgErrorCodes::registerAll();	// #FIXME error codes registry place
+	// #FIXME - getcwd / get exec path / paths management / etc
+	FG_MessageSubsystem->initialize(); // ? #FIXME message subsystem
+	FG_MessageSubsystem->setLogPaths("all.log", "error.log", "debug.log");
+	fgTime::init();	// #FIXME global time init?
 	FG_LOG::PrintDebug("fgGameMain::fgGameMain();");
+	m_pointerInputReceiver = new fgPointerInputReceiver();
 }
 
 /*
@@ -82,16 +92,43 @@ fgGameMain::~fgGameMain()
 	if(m_resourceFactory)
 		delete m_resourceFactory;
 	m_resourceFactory = NULL;
+	if(m_pointerInputReceiver)
+		delete m_pointerInputReceiver;
+	m_pointerInputReceiver = NULL;
+	m_eventMgr = NULL; // this event mgr is not owned by game main
+	if(m_guiMain) {
+		delete m_guiMain;
+	}
+	m_guiMain = NULL;
 	fgErrorCodes::unregisterAll();
 	FG_LOG::PrintDebug("END: fgGameMain::~fgGameMain();");
+	FG_MessageSubsystem->deleteInstance();
 }
-
+#include "GFX/Shaders/fgGFXShaderProgram.h"
+#include "GUI/fgGuiStyle.h"
 /*
  * This needs to be called first before everything else.
  * Function creates and initializes subsystems
  */
 fgBool fgGameMain::initSubsystems(void)
 {
+	
+#if 0
+	// Resource group config file is in XML format
+	fgXMLParser *xmlParser = new fgXMLParser();
+	fgGuiStructureSheetParser *contentHandler = new fgGuiStructureSheetParser();
+	xmlParser->setContentHandler(contentHandler);
+
+	if(!xmlParser->loadXML("gui/mainmenu.xml")) {
+		return FG_FALSE;
+	}
+	xmlParser->parseWithHandler();
+	delete xmlParser;
+	delete contentHandler;
+	xmlParser = NULL;
+#endif
+	//return FG_FALSE;
+	///////////////////////////////////////////////////////
 	FG_HardwareState->deviceYield(0);	// #FIXME - device yield...
 	if(m_gfxMain)
 		return FG_FALSE;
@@ -102,6 +139,10 @@ fgBool fgGameMain::initSubsystems(void)
 		// FIXME
 		return FG_FALSE;
 	}
+	////
+	// INITIALIZE GUI
+	if(!m_guiMain)
+		m_guiMain = new fgGuiMain();
 	FG_HardwareState->deviceYield(0);	// #FIXME - device yield...
 #if defined FG_USING_MARMALADE
 	FG_DeviceQuery->computeDevice();
@@ -109,20 +150,22 @@ fgBool fgGameMain::initSubsystems(void)
 
 	FG_HardwareState->deviceYield(0);	// #FIXME - device yield...
 
-	int w = m_gfxMain->getScreenWidth();
-	int h = m_gfxMain->getScreenHeight();
+	int w = m_gfxMain->getMainWindow()->getWidth();
+	int h = m_gfxMain->getMainWindow()->getHeight();
 
 	FG_HardwareState->setScreenDimensions(w, h);
 	FG_HardwareState->deviceYield(0);	// #FIXME - device yield...
+#if defined FG_USING_MARMALADE
 	FG_HardwareState->initDPI();
+#endif
 	FG_HardwareState->deviceYield(0);	// #FIXME - device yield...
 
 	FG_QualityManager->determineQuality();
 	FG_HardwareState->deviceYield(0);	// #FIXME - device yield...
 
-	FG_EventManager->initialize();
 	FG_HardwareState->deviceYield(0);	// #FIXME - device yield...
-	FG_TouchReceiver->initialize();
+	if(m_pointerInputReceiver)
+		m_pointerInputReceiver->initialize();
 	FG_HardwareState->deviceYield(0);	// #FIXME - device yield...
 
 	if(!m_resourceFactory)
@@ -140,7 +183,10 @@ fgBool fgGameMain::initSubsystems(void)
 	s3eMemoryGetInt(S3E_MEMORY_FREE);*/
 	// #FIXME - for linux/windows (non marmalade build) memory management would be useful, buckets anyone?
 	// #FIXME
-	m_resourceMgr = new fgResourceManager(m_resourceFactory);
+	if(!m_resourceMgr)
+		m_resourceMgr = new fgResourceManager(m_resourceFactory);
+	else
+		m_resourceMgr->setResourceFactory(m_resourceFactory);
 #ifdef FG_USING_MARMALADE
 	FG_LOG::PrintDebug("MARMALADE CURRENT HEAP MEMORY: TOTAL: %.3f, FREE: %.3f, USED: %.3f, LARGEST FREE BLOCK: %.3f\n",
 		(float)s3eMemoryGetInt(S3E_MEMORY_SIZE)/1024.0f/1024.0f, (float)s3eMemoryGetInt(S3E_MEMORY_FREE)/1024.0f/1024.0f, (float)s3eMemoryGetInt(S3E_MEMORY_USED)/1024.0f/1024.0f, (float)s3eMemoryGetInt(S3E_MEMORY_LFB)/1024.0f/1024.0f);
@@ -152,51 +198,120 @@ fgBool fgGameMain::initSubsystems(void)
 #endif // FG_USING_MARMALADE
 
 	m_gfxMain->setResourceManager(m_resourceMgr);
+	m_guiMain->setResourceManager(m_resourceMgr);
+	m_guiMain->setShaderManager(m_gfxMain->getShaderManager());
+	m_guiMain->setPointerInputReceiver(m_pointerInputReceiver);
+	if(m_eventMgr) {
+		m_guiMain->setEventManager(m_eventMgr);
+		m_pointerInputReceiver->setEventManager(m_eventMgr);
+	}
 	FG_HardwareState->deviceYield(0);	// #FIXME - device yield...
 
-//	FG_GFX::setOrthoView(FG_OGL_ORTHO_ZNEAR_DEFAULT, FG_OGL_ORTHO_ZFAR_DEFAULT);
-//	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-//	glShadeModel(GL_SMOOTH);
-#if 0
-	// FIXME well this functions should be just called elsewhere
-	// also they should be wrapped - basically all functions gl* or
-	// IwGL* need to be called in the OpenGL/OGL* code
+	/////////////////////////////////////////////////////
+	FG_HardwareState->deviceYield(0);	// #FIXME - device yield...
 
-	// Set the GL view port to be the entire screen
-	//setViewport();
-
-	// Texturing is enabled by default
-	//glEnable(GL_TEXTURE_2D);
-	//glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-
-	//glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-	//glShadeModel(GL_SMOOTH);
-	//glClearDepthf(1.0f);
-
-	// Ensure that Z-buffer is disabled
-	//glDepthFunc(GL_ALWAYS);
-	//glDisable(GL_DEPTH_TEST);
-	//glDepthMask(false);
-
-	//glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_FASTEST);
-	//glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
-	//glHint(GL_POINT_SMOOTH_HINT, GL_NICEST);
-#endif
-	// #FIXME - this is not a place where this should be
+	m_gfxMain->getShaderManager()->setShadersPath("shaders/");
+	m_gfxMain->preLoadShaders();
+	std::string sPlainEasyShaderName("sPlainEasy");
+	fgGfxShaderProgram *program = m_gfxMain->getShaderManager()->get(sPlainEasyShaderName);
+	FG_HardwareState->deviceYield(0);	// #FIXME - device yield...
+	FG_LOG::PrintDebug("Will now try to compile and link 'sPlainEasy' shader program");
+	if(program) {
+		program->compile();
+		program->link(); // this will also bind attributes and after successfull link - bind uniforms
+	}
+	program->use();
 	
+	{
+		std::string sOrthoEasyShaderName("sOrthoEasy");
+		fgGfxShaderProgram *program = m_gfxMain->getShaderManager()->get(sOrthoEasyShaderName);
+		FG_HardwareState->deviceYield(0);	// #FIXME - device yield...
+		FG_LOG::PrintDebug("Will now try to compile and link 'sOrthoEasyShader' shader program");
+		if(program) {
+			program->compile();
+			program->link(); // this will also bind attributes and after successfull link - bind uniforms
+		}
+	}
 	FG_HardwareState->deviceYield(0);	// #FIXME - device yield...
-
 #if 0
-	fgConfig *config = new fgConfig("main.config.ini");
-	config->setParameterBool("Settings.game", "programTitle", FG_TRUE);
-	config->setParameterFloat("Settings.game", "defaultProfileName", 123.444555666f);
-	config->setParameterInt("Settings.game", "defaultProfileNameASDASD", 1236666);
-	config->setParameterString("Settings.game", "newEntry", "This is new entry. YOLO!");
-	config->setParameterString("Settings.newEntry.YOLO", "YOLO1", "HAHAHAHA");
-	config->save("test.new.config.ini");
-	config->clearAll();
-	delete config;
+	float t1 = fgTime::ms();
+	FG_LOG::PrintDebug("Will now try load object CobraBomber.obj");
+	std::string modelname("CobraBomber");
+	fgGfxModelResource *model = (fgGfxModelResource *) m_resourceMgr->get(modelname);
+	model->create();
+	float t2 = fgTime::ms();
+	FG_LOG::PrintDebug("WHOLE OBJECT CREATION TOOK: %.2f seconds", (t2-t1)/1000.0f);
 #endif
+	FG_LOG::PrintDebug("Will now try load texture for CobraBomber");
+
+	std::string texname("CobraBomberTexture");
+	fgTextureResource *texture = (fgTextureResource *) m_resourceMgr->get(texname);
+	if(texture) {
+		texture->create();
+		m_gfxMain->getTextureManager()->uploadToVRAM(texture, FG_TRUE);
+	}
+
+	texname = "MainBackgroundTexture";
+	texture = (fgTextureResource *) m_resourceMgr->get(texname);
+	//texture = (fgTextureResource *) m_resourceMgr->request(std::string("loading_screen0"), FG_RESOURCE_TEXTURE);
+	if(texture) {
+		texture->create();
+		m_gfxMain->getTextureManager()->uploadToVRAM(texture, FG_TRUE);
+	}
+
+	texname = "PopupBG";
+	texture = (fgTextureResource *) m_resourceMgr->get(texname);
+	if(texture) {
+		texture->create();
+		m_gfxMain->getTextureManager()->uploadToVRAM(texture, FG_TRUE);
+	}
+
+	//texname = "Splash";
+	//texture = (fgTextureResource *) m_resourceMgr->get(texname);
+	//if(texture) {
+	//	texture->create();
+	//	m_gfxMain->getTextureManager()->uploadToVRAM(texture, FG_TRUE);
+//	}
+
+	texname = "Loaded";
+	fgFontResource *font = (fgFontResource *) m_resourceMgr->get("Loaded");
+	if(font) {
+		font->create();
+		m_gfxMain->getTextureManager()->uploadToVRAM(font, FG_TRUE);
+
+	}
+
+	{
+		std::string top("HudTopTex");
+		std::string bottom("HudBottomTex");
+		std::string lines("HudLinesTex");
+		fgTextureResource *textop = (fgTextureResource *) m_resourceMgr->get(top);
+		fgTextureResource *texbottom = (fgTextureResource *) m_resourceMgr->get(bottom);
+		fgTextureResource *texlines = (fgTextureResource *) m_resourceMgr->get(lines);
+
+		if(textop && texbottom && texlines) {
+			texlines->create();
+			textop->create();
+			texbottom->create();
+			m_gfxMain->getTextureManager()->uploadToVRAM(texlines, FG_TRUE);
+			m_gfxMain->getTextureManager()->uploadToVRAM(textop, FG_TRUE);
+			m_gfxMain->getTextureManager()->uploadToVRAM(texbottom, FG_TRUE);
+		}		
+	}
+	fgGuiStyle *style = new fgGuiStyle();
+	style->setName("DefaultStyle");
+	if(!style->load("gui/main.style.ini")) {
+		printf("FAILED TO LOAD MAIN STYLE\n");
+
+	}
+
+	if(!m_guiMain->getStyleManager()->insertStyle(style->getRefHandle(), style)) {
+		printf("FAILED TO INSERT MAIN STYLE\n");
+	}
+	if(!m_guiMain->getWidgetManager()->loadStructureSheet("gui/menu.xml"))
+	{
+		printf("FAILED TO LOAD MAIN MENU STRUCTURE SHEET\n");
+	}
 	return FG_TRUE;
 }
 
@@ -206,9 +321,7 @@ fgBool fgGameMain::initSubsystems(void)
  */
 fgBool fgGameMain::loadConfiguration(void)
 {
-	// #FIXME - getcwd / get exec path / paths management / etc
-	FG_MessageSubsystem->initialize(); // ?
-	FG_MessageSubsystem->setLogPaths("all.log", "error.log", "debug.log");
+
 	if(!m_settings)
 		m_settings = new fgSettings();
 	if(!m_settings->load("settings.xml")) { // #FIXME - universal, cross solution - path management
@@ -230,7 +343,9 @@ fgBool fgGameMain::loadResources(void)
  */
 fgBool fgGameMain::releaseResources(void)
 {
-	return m_resourceMgr->destroy();
+    if(m_resourceMgr)
+		return m_resourceMgr->destroy();
+    return FG_FALSE;
 }
 
 /*
@@ -241,19 +356,19 @@ fgBool fgGameMain::closeSybsystems(void)
 {
 	// #TODO - KILLALLSINGLETONS
 	// KILL ALL SINGLETONS
-	m_gfxMain->releaseTextures();
+    if(m_gfxMain)
+		m_gfxMain->releaseTextures();
 
 	fgGameMain::releaseResources();
+	if(m_pointerInputReceiver)
+		m_pointerInputReceiver->setEventManager(NULL);
 	FG_HardwareState->deleteInstance();
-	FG_TouchReceiver->deleteInstance();
-	FG_EventManager->deleteInstance();
 #if defined FG_USING_MARMALADE
 	FG_DeviceQuery->deleteInstance();
 #endif // FG_USING_MARMALADE
 	FG_QualityManager->deleteInstance();
-	FG_MessageSubsystem->deleteInstance();
-
-	m_gfxMain->closeGFX();
+    if(m_gfxMain)
+		m_gfxMain->closeGFX();
 
 	return FG_TRUE;
 }
@@ -279,6 +394,7 @@ fgBool fgGameMain::quit(void)
 void fgGameMain::display(void)
 {
 	m_gfxMain->display();
+	m_guiMain->display();
 }
 
 /*
@@ -287,6 +403,8 @@ void fgGameMain::display(void)
 void fgGameMain::render(void)
 {
 	m_gfxMain->render();
+	m_guiMain->render();
+	m_gfxMain->getMainWindow()->swapBuffers();
 }
 
 /*
@@ -301,11 +419,13 @@ void fgGameMain::update(void)
 
 	// TouchReceiver processes the data received from marmalade/system event
 	// callbacks and throws proper events
-	FG_TouchReceiver->processData();
+	if(m_pointerInputReceiver)
+		m_pointerInputReceiver->processData();
 	FG_HardwareState->deviceYield(0);
 	// Well this is really useful system, in the end GUI and others will be hooked
 	// to EventManager so everything what needs to be done is done in this function
-	FG_EventManager->executeEvents();
+	if(m_eventMgr)
+		m_eventMgr->executeEvents();
 	FG_HardwareState->deviceYield(0);
 	// This must be called  when you wish the manager to check for discardable
 	// resources.  Resources will only be swapped out if the maximum allowable
@@ -408,23 +528,6 @@ int applicationInit(void)
 	//g_particleSystem = fgParticleSystem::getInstance(); // FIXME
 
 	return true;
-}
-
-/**
-* End of the game, the exit from app.
-*/
-void applicationEnd(void)
-{
-
-	// FIXME - now that just needs fixing
-	// everything (including singletons) needs to be freed in this function in proper order
-
-	// Stop and release all audio
-	fgSFXManager::getInstance()->deleteInstance();
-
-	fgTouchReceiver::deleteInstance();
-	fgQualityManager::deleteInstance();
-	fgTextureManager::deleteInstance();
 }
 
 #endif

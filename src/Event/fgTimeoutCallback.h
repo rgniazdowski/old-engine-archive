@@ -7,33 +7,33 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-#ifndef _FG_TIMEOUT_CALLBACK_H
-#define _FG_TIMEOUT_CALLBACK_H
-
-#include <iostream>
+#ifndef _FG_TIMEOUT_CALLBACK_H_
+#define _FG_TIMEOUT_CALLBACK_H_
 
 #include "fgCallback.h"
 #include "fgArgumentList.h"
 
+/*
+ *
+ */
 struct fgTimeoutCallback
 {
-	fgCallbackFunction *callback;
-	fgArgumentList *argList;
-	int timeout;
-	unsigned long int timestamp;
+	fgFunctionCallback	*callback;
+	fgArgumentList		*argList;
+	int					timeout;
+	unsigned long int	timestamp;
 
 	fgTimeoutCallback() : callback(NULL), argList(NULL), timeout(0), timestamp(0)
 	{
 	}
 
-	fgTimeoutCallback(fgCallbackFunction *_callback, int _timeout, fgArgumentList *_argList)
+	fgTimeoutCallback(fgFunctionCallback *_callback, int _timeout, fgArgumentList *_argList)
 	{
 		callback = _callback;
 		timeout = _timeout;
 		timestamp = 0;
 		argList = _argList;
 	}
-
 };
 
-#endif
+#endif /* _FG_TIMEOUT_CALLBACK_H_ */

@@ -76,7 +76,7 @@ namespace FG_ERRNO_GFX {
 		FG_ERRNO_GFX_SHADER_NO_TYPE_TEXT
 	};
 
-	static void __registerAll(void) {		
+	inline void __registerAll(void) {		
 		for(int code=FG_ERRNO_GFX_BASE_CODE(0), i=0; code<=FG_ERRNO_GFX_LAST_CODE; code++, i++) {
 			FG_ERRNO_REGISTER(code, FG_ERRNO_GFX::__allErrVec[i]);
 		}

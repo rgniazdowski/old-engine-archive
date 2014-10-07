@@ -35,7 +35,7 @@ void SequentialEffect::setMaxCount(int max_count)
 	if(m_data == NULL) {
 		ParticleEffect::setMaxCount(max_count);
 		m_maxCountData = max_count;
-		m_data = (AdditionalData *) fgMalloc(max_count * sizeof(AdditionalData));
+		m_data = fgMalloc<AdditionalData>(max_count);
 		m_countData = 0;
 	}
 }
@@ -117,7 +117,7 @@ void SequentialEffect::calculate(void)
 	for(int i=0;i<m_countData;i++)
 	{
 		particle = &(particlesData()[i]);
-		if( FG_HardwareState->getTS() - m_data[i].time_last_frame >= m_data[i].frame_duration )
+		if( (int64_t)FG_HardwareState->getTS() - m_data[i].time_last_frame >= m_data[i].frame_duration )
 		{
 			particle->texture_id++;
 			if(particle->texture_id >= m_data[i].count_frames) {

@@ -278,7 +278,7 @@ fgBool fgGfxShaderConfig::_parseData(fgGfxShadingLanguageVersion SLver)
 		fgBool foundQuality = FG_FALSE, foundFile = FG_FALSE;
 		if((param = cfgSpecSection->getParameter("quality", FG_CFG_PARAMETER_STRING)) != NULL) {
 			std::string _q_vec = param->string;
-			fgStrings::split(_q_vec, ';', _helperVec);
+			fgStrings::split(_q_vec, ',', _helperVec);
 			m_qualities.clear_optimised();
 			for(int i=0;i<(int)_helperVec.size();i++) {
 				m_qualities.push_back(FG_QUALITY_FROM_TEXT(_helperVec[i].c_str()));
@@ -291,7 +291,7 @@ fgBool fgGfxShaderConfig::_parseData(fgGfxShadingLanguageVersion SLver)
 		} 
 		if((param = cfgSpecSection->getParameter("file", FG_CFG_PARAMETER_STRING)) != NULL) {
 			std::string _f_vec = param->string;
-			fgStrings::split(_f_vec, ';', _helperVec);
+			fgStrings::split(_f_vec, ',', _helperVec);
 			m_files.clear_optimised();
 			for(int i=0;i<(int)_helperVec.size();i++) {
 				m_files.push_back(_helperVec[i]);
@@ -405,8 +405,8 @@ fgBool fgGfxShaderConfig::_parseData(fgGfxShadingLanguageVersion SLver)
 		else if(FG_BUILD_CONFIG.usingOpenGL)
 			nmax = 6;	// #FIXME - need global GFX config array (like with build config)
 						// for various runtime / etc info on GFX subsystem (no of shader types supported ?)
-		if(nmax > sizeof(g_fgGfxSupportedShaderTypes)/sizeof(g_fgGfxSupportedShaderTypes[0]))
-			nmax = sizeof(g_fgGfxSupportedShaderTypes)/sizeof(g_fgGfxSupportedShaderTypes[0]); // #FIXME - ugly...
+		if(nmax > (int)sizeof(g_fgGfxSupportedShaderTypes)/(int)sizeof(g_fgGfxSupportedShaderTypes[0]))
+			nmax = (int)sizeof(g_fgGfxSupportedShaderTypes)/(int)sizeof(g_fgGfxSupportedShaderTypes[0]); // #FIXME - ugly...
 		for(int i=0;i<nmax;i++) {
 			std::string qstr = "has";
 			qstr.append(g_fgGfxSupportedShaderTypesText[i]);

@@ -22,6 +22,10 @@
 
 #include "GFX/fgGFXMVPMatrix.h"
 
+#ifndef _FG_MANAGER_BASE_H_
+#include "fgManagerBase.h"
+#endif
+
 class fgGfxShaderProgram;
 
 #define FG_TAG_GFX_SHADER_PROGRAM_NAME	"GfxShaderProgram"
@@ -104,27 +108,31 @@ protected:
 	}
 
 public:
-	typedef fgVector<fgGfxShader *>	shaderVec;
-	typedef shaderVec::iterator				shaderVecItor;
+	typedef fgVector<fgGfxShader *>				shaderVec;
+	typedef shaderVec::iterator					shaderVecItor;
 	typedef fgGfxShaderConfig::shaderUniformBindVec		uniformBindVec;
 	typedef uniformBindVec::iterator					uniformBindVecItor;
 	typedef fgGfxShaderConfig::shaderAttributeBindVec	attributeBindVec;
 	typedef attributeBindVec::iterator					attributeBindVecItor;
+
 protected:
-	///
+	/// Vector holding shaders (vertex/fragment/etc..) that 
+	/// will be used to link the shader program
 	shaderVec					m_shaders;
-	///
+	/// Special vector with uniforms binds for this shader program
 	uniformBindVec				m_uniformBinds;
-	///
+	/// Vector with attribute binds for this shader program
 	attributeBindVec			m_attrBinds;
-	///
+	/// Helper class for loading special shader configs
 	fgGfxShaderConfig*			m_config;
-	///
+	/// Are the special config files loaded?
 	fgBool						m_isPreLoaded;
-	///
+	/// Did compilation for this shader program ended successfully
 	fgBool						m_isCompiled;
-	///
+	/// Is the shader program linked and ready to use
 	fgBool						m_isLinked;
+	///
+	fgManagerBase				*m_manager;
 public:
 	//
 	fgGfxShaderProgram();
@@ -148,6 +156,11 @@ protected:
 	fgBool _attachShaders(void);
 
 	//
+	fgBool _deleteShader(fgGfxShader *shader);
+	//
+	fgBool _deleteShaders(void);
+
+	//
 	fgBool _detachShader(fgGfxShader *shader);
 	//
 	fgBool _detachShaders(void);
@@ -157,10 +170,18 @@ protected:
 	//
 	fgGFXint updateValidateStatus(void);
 
+	//
+	fgBool releaseGFX(void);
+
+	//
+	fgBool setManager(fgManagerBase *pManager);
+
 public:
-	//
+	// Create the shader program with direct GL calls
+	// Gfx ID will become valid if this function is successfull
 	fgGFXuint create(void);
-	//
+	// Try to compile the shaders for this shader program
+	// If needed the source code files will be loaded
 	fgBool compile(void);
 	//
 	fgBool link(void);
@@ -175,6 +196,8 @@ public:
 	//
 	void clearAll(void);
 
+	//
+	fgBool isUsed(void);
 public:
 	//
 	shaderVec & getRefShaderVec(void) {

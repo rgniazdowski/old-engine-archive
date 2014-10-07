@@ -15,6 +15,8 @@
 #include "fgMessageCommon.h"
 #include "Util/fgTime.h"
 
+#include <cstdarg>
+
 // ? the hell?
 typedef unsigned char fgMask8;
 
@@ -42,9 +44,8 @@ struct fgStatus
 	long timestamp;
 
 	// Default constructor
-	fgStatus() : mask(0), isManaged(FG_FALSE), errCode(FG_ERRNO_OK)
+	fgStatus() : mask(0), message(NULL), isManaged(FG_FALSE), errCode(FG_ERRNO_OK)
 	{
-		message = NULL;
 		timestamp = fgTime::seconds();
 	}
 
@@ -67,6 +68,7 @@ struct fgStatus
 	// Default destructor
 	~fgStatus()
 	{
+		message = NULL;
 		// Do not free *message
 		// overloaded assignment operators in fgStatus and fgMessage
 		// take care of it (it's taking over the ownership)
@@ -84,27 +86,31 @@ struct fgStatus
 	// Assignment operator. If source has message allocated it will be
 	// taken over by this fgStatus structure. Pointer in source will be deleted.
 	// #FIXME - this wont be needed (I think) - need further testing
-	fgStatus& operator= (fgStatus source)
-	{
-		if(this == &source)
-			return *this;
+	//fgStatus& operator= (fgStatus source)
+	//{
+	//	if(this == &source)
+	//		return *this;
+	//	printf("fgStatus operator = with code %d | message: '%s'\n", source.code(), fgErrno::strError(source.errCode));
+	//	errCode = source.errCode;
+	//	mask = source.mask;
+	//	isManaged = source.isManaged;
+	//	if(source.message && !message) {
+	//		message = new fgMessage();
+	//		*message = *source.message;
+	//		if(!source.isManaged) // #FIXME #ERROR possible
+	//			source.clearMessage();
+	//		//message = source.message;
+	//	} else if(source.message) {
+	//		*message = *source.message;
+	//		if(!source.isManaged) // #FIXME #ERROR possible
+	//			source.clearMessage();
+	//	}
+	//	else {
+	//		message = NULL;
+	//	}
 
-		errCode = source.errCode;
-		mask = source.mask;
-		isManaged = source.isManaged;
-		if(source.message && !message) {
-			message = source.message;
-		} else if(source.message) {
-			*message = *source.message;
-			if(!source.isManaged) // #FIXME #ERROR possible
-				source.clearMessage();
-		}
-		else {
-			message = NULL;
-		}
-
-		return *this;
-	}
+	//	return *this;
+	//}
 
 	// Clear message contents (delete)
 	void clearMessage(void) {

@@ -50,24 +50,21 @@ container, which you can get via:
 
 inline void fgGfxComputeNormal(const fgVector3f & v1, const fgVector3f & v2, const fgVector3f & v3, fgVector3f & normal)
 {
-	//glm::vec3 const & a = Triangle.Position[0];
-	//glm::vec3 const & b = Triangle.Position[1];
-	//glm::vec3 const & c = Triangle.Position[2];
 	normal = glm::normalize(glm::cross(v3 - v1, v2 - v1));
 } 
 
 /*
  *
  */
-struct fgGfxMeshBase
+struct fgGfxMeshBase : public fgVertexDataBase
 {
 	virtual ~fgGfxMeshBase() { };
 	virtual void clear(void) = 0;
-	virtual fgBool isSoA(void) const = 0;
-	virtual size_t getSize(void) = 0;
+	virtual size_t getDataSize(void) = 0;
 	virtual fgGFXuint getNumVertices(void) const = 0;
 	virtual fgGFXuint getNumNormals(void) const = 0;
 	virtual fgGFXuint getNumUVs(void) const = 0;
+	virtual fgGFXuint getNumColors(void) const = 0;
 	virtual fgGFXuint getNumIndices(void) const = 0;
 };
 
@@ -79,10 +76,11 @@ struct fgGfxMeshSoA : fgGfxMeshBase
 	fgVector<fgGFXfloat>	vertices;  //3
 	fgVector<fgGFXfloat>	normals;   //3
 	fgVector<fgGFXfloat>	uvs;       //2
-	fgVector<fgGFXuint>		indices;
+	fgVector<fgGFXushort>	indices;
 
-	fgGfxMeshSoA() {}
+	fgGfxMeshSoA() { }
 	// #FIXME #SERIOUSLY
+#if 0
 	fgGfxMeshSoA(tinyobj::mesh_t & mesh)
 	{
 		int n = mesh.positions.size();
@@ -95,7 +93,7 @@ struct fgGfxMeshSoA : fgGfxMeshBase
 		for(int i=0;i<n;i++) {
 			normals.push_back(mesh.normals[i]);
 		}
-		if(normals.empty()) {
+		if(normals.empty() && 0) {
 			n = mesh.positions.size();
 			for(int i=0;i<n/9;i+=9) {
 				fgVector3f normal;
@@ -116,10 +114,10 @@ struct fgGfxMeshSoA : fgGfxMeshBase
 		n = mesh.indices.size();
 		indices.reserve(n);
 		for(int i=0;i<n;i++) {
-			indices.push_back(mesh.indices[i]);
+			indices.push_back((fgGFXushort)mesh.indices[i]);
 		}
 	}
-
+#endif
 	virtual ~fgGfxMeshSoA() 
 	{
 		clear();
@@ -137,16 +135,21 @@ struct fgGfxMeshSoA : fgGfxMeshBase
 	// 
 	virtual fgBool isSoA(void) const {
 		return FG_TRUE;
+	}
+
+	// 
+	virtual fgBool isAoS(void) const {
+		return FG_FALSE;
 	}	
 
 	//
-	virtual size_t getSize(void) {
+	virtual size_t getDataSize(void) {
 		size_t size = 0;
 		size += sizeof(vertices) + sizeof(normals) + sizeof(uvs) + sizeof(indices);
 		size += sizeof(fgGFXfloat) * vertices.size();
 		size += sizeof(fgGFXfloat) * normals.size();
 		size += sizeof(fgGFXfloat) * uvs.size();
-		size += sizeof(fgGFXuint) * indices.size();
+		size += sizeof(fgGFXushort) * indices.size();
 		return size;
 	}
 
@@ -162,8 +165,135 @@ struct fgGfxMeshSoA : fgGfxMeshBase
 		return (fgGFXuint)uvs.size();
 	}
 
+	virtual fgGFXuint getNumColors(void) const {
+		return 0;
+	}
+
 	virtual fgGFXuint getNumIndices(void) const {
 		return (fgGFXuint)indices.size();
+	}
+
+	//
+	virtual void append(const fgVector3f &pos)
+	{
+		vertices.push_back(pos.x);
+		vertices.push_back(pos.y);
+		vertices.push_back(pos.z);
+		//fgVertex3 vertex;
+		//vertex.position = pos;
+		//vertex.normal = fgVector3f(1.0f, 1.0f, 1.0f);
+		//vertex.uv = fgVector2f(1.0f, 1.0f);
+		//fgVector<fgVertex3>::push_back(vertex);
+	}
+
+	//
+	virtual void append(
+		const fgVector3f &pos, 
+		const fgVector2f &uv)
+	{
+		vertices.push_back(pos.x);
+		vertices.push_back(pos.y);
+		vertices.push_back(pos.z);
+		uvs.push_back(uv.x);
+		uvs.push_back(uv.y);
+		/*fgVertex3 vertex;
+		vertex.position = pos;
+		vertex.normal = fgVector3f(1.0f, 1.0f, 1.0f);
+		vertex.uv = uv;
+		fgVector<fgVertex3>::push_back(vertex);*/
+	}
+
+	//
+	virtual void append(
+		const fgVector3f &pos, 
+		const fgVector3f &normal,
+		const fgVector2f &uv)
+	{
+		vertices.push_back(pos.x);
+		vertices.push_back(pos.y);
+		vertices.push_back(pos.z);
+		normals.push_back(normal.x);
+		normals.push_back(normal.y);
+		normals.push_back(normal.z);
+		uvs.push_back(uv.x);
+		uvs.push_back(uv.y);
+		/*fgVertex3 vertex;
+		vertex.position = pos;
+		vertex.normal = normal;
+		vertex.uv = uv;
+		fgVector<fgVertex3>::push_back(vertex);*/
+	}
+
+	//
+	virtual void append(
+		const fgVector3f &pos, 
+		const fgVector3f &normal,
+		const fgVector2f &uv, 
+		const fgColor3f &color)
+	{
+		append(pos, normal, uv);
+	}
+
+	//
+	virtual void append(
+		const fgVector3f &pos,
+		const fgVector3f &normal, 
+		const fgVector2f &uv,
+		const fgColor4f &color)
+	{
+		append(pos, normal, uv);
+	}
+
+	//
+	virtual void pop_back(void)
+	{
+		vertices.pop_back();
+		vertices.pop_back();
+		vertices.pop_back();
+		normals.pop_back();
+		normals.pop_back();
+		normals.pop_back();
+		uvs.pop_back();
+		uvs.pop_back();
+		//fgVector<fgVertex3>::pop_back();
+	}
+
+	//
+	virtual fgGFXvoid *back(void) const
+	{
+		//return (fgGFXvoid *)(&fgVector<fgVertex3>::front());
+		return (fgGFXvoid *)(&vertices.back());
+	}
+
+	//
+	virtual fgGFXvoid *front(void) const
+	{
+		//return (fgGFXvoid *)(&fgVector<fgVertex3>::front());
+		return (fgGFXvoid *)(&vertices.front());
+	}
+
+	//
+	virtual fgGFXuint size(void) const
+	{
+		return vertices.size();
+	}
+
+	//
+	virtual fgGFXsizei stride(void) const
+	{
+		return 0;//sizeof(fgVertex3);
+	}
+
+	//
+	virtual fgGFXuint attribMask(void) const
+	{
+		return FG_GFX_POSITION_BIT | FG_GFX_NORMAL_BIT | FG_GFX_UVS_BIT;
+	}
+
+	//
+	virtual bool empty(void) const
+	{
+		return (bool) vertices.empty();
 	}
 };
 
@@ -172,12 +302,14 @@ struct fgGfxMeshSoA : fgGfxMeshBase
  */
 struct fgGfxMeshAoS : fgGfxMeshBase
 {
-	fgVector<fgVertex3>	vertices;
-	fgVector<fgGFXuint>	indices;
+	fgVertexData3			vertices;
+	// #FIXME Need to check for OGL version, ushort is mandatory on ES2
+	fgVector<fgGFXushort>	indices;
 
 	fgGfxMeshAoS() { }
 
 	// #FIXME #SERIOUSLY
+#if 0
 	fgGfxMeshAoS(tinyobj::mesh_t & mesh) 
 	{
 		// pos, norm, uv
@@ -185,12 +317,7 @@ struct fgGfxMeshAoS : fgGfxMeshBase
 		int nnorm = mesh.normals.size();
 		int nuvs = mesh.texcoords.size();
 		int nind = mesh.indices.size();
-		FG_LOG::PrintDebug("fgGfxMeshAoS(tinyobj::mesh_t & mesh): npos: %d, nnorm: %d, nuvs: %d, nind: %d",
-			npos,
-			nnorm,
-			nuvs,
-			nind);
-		vertices.reserve(npos);
+		vertices.reserve(npos/3);
 		for(int i=0,k=0;i<npos;i+=3,k+=2) {
 			fgVertex3 vertex;
 			for(int j=0;j<3;j++)
@@ -199,14 +326,12 @@ struct fgGfxMeshAoS : fgGfxMeshBase
 			for(int j=0;j<3 && i+j<nnorm;j++)
 				vertex.normal[j] = mesh.normals[i+j];
 			
-			for(int j=0;j<2 && k+j<nuvs;j++)
+			for(int j=0;j<2 && k+j<nuvs;j++) {
 				vertex.uv[j] = mesh.texcoords[k+j];
-			//vertices.push_back(mesh.positions[i]);
-			if(vertices.size() < 15) {
-			printf("Vertex[%d] pos:  {%.2f, %.2f, %.2f}\n", vertices.size(), vertex.position[0], vertex.position[1], vertex.position[2]);
-			printf("Vertex[%d] norm: {%.2f, %.2f, %.2f}\n", vertices.size(), vertex.normal[0], vertex.normal[1], vertex.normal[2]);
-			printf("Vertex[%d] uv:   {%.2f, %.2f}\n", vertices.size(), vertex.uv[0], vertex.uv[1]);
-			} 
+				// FLIP TEXTURE
+				vertex.uv[j+1] = 1.0f-mesh.texcoords[k+j+1];
+				break;
+			}
 			vertices.push_back(vertex);
 		}
 		if(nnorm == 0) {
@@ -217,18 +342,15 @@ struct fgGfxMeshAoS : fgGfxMeshBase
 		}
 		indices.reserve(nind);
 		for(int i=0;i<nind;i++) {
-			indices.push_back(mesh.indices[i]);
-			if(i < 15)
-				printf("Index[%d] %d\n", i, mesh.indices[i]);
+			indices.push_back((fgGFXushort)mesh.indices[i]);
 		}
 	}
-	
+#endif
 	virtual ~fgGfxMeshAoS()
 	{
 		clear();
 	}
 
-	//
 	virtual void clear(void)
 	{
 		vertices.clear_optimised();
@@ -240,8 +362,12 @@ struct fgGfxMeshAoS : fgGfxMeshBase
 		return FG_FALSE;
 	}
 
-	//
-	virtual size_t getSize(void) {
+	// 
+	virtual fgBool isAoS(void) const {
+		return FG_TRUE;
+	}	
+
+	virtual size_t getDataSize(void) {
 		size_t size = 0;
 		size += sizeof(vertices) + sizeof(indices);
 		size += sizeof(fgVertex3) * vertices.size();
@@ -264,6 +390,89 @@ struct fgGfxMeshAoS : fgGfxMeshBase
 	virtual fgGFXuint getNumIndices(void) const {
 		return (fgGFXuint)indices.size();
 	}
+
+	virtual fgGFXuint attribMask(void) const {
+		return vertices.attribMask();
+	}
+
+	//
+	virtual void append(const fgVector3f &pos)
+	{
+		vertices.append(pos);
+	}
+
+	//
+	virtual void append(
+		const fgVector3f &pos, 
+		const fgVector2f &uv)
+	{
+		vertices.append(pos, uv);
+	}
+
+	//
+	virtual void append(
+		const fgVector3f &pos, 
+		const fgVector3f &normal,
+		const fgVector2f &uv)
+	{
+		vertices.append(pos, normal, uv);
+	}
+
+	//
+	virtual void append(
+		const fgVector3f &pos, 
+		const fgVector3f &normal,
+		const fgVector2f &uv, 
+		const fgColor3f &color)
+	{
+		vertices.append(pos, normal, uv);
+	}
+
+	//
+	virtual void append(
+		const fgVector3f &pos,
+		const fgVector3f &normal, 
+		const fgVector2f &uv,
+		const fgColor4f &color)
+	{
+		vertices.append(pos, normal, uv);
+	}
+
+	//
+	virtual void pop_back(void)
+	{
+		vertices.pop_back();
+	}
+
+	//
+	virtual fgGFXvoid *back(void) const
+	{
+		return vertices.back();
+	}
+
+	//
+	virtual fgGFXvoid *front(void) const
+	{
+		return vertices.front();
+	}
+
+	//
+	virtual fgGFXuint size(void) const
+	{
+		return vertices.size();
+	}
+
+	//
+	virtual fgGFXsizei stride(void) const
+	{
+		return vertices.stride();
+	}
+
+	//
+	virtual bool empty(void) const
+	{
+		return (bool) vertices.empty();
+	}
 };
 
 /*
@@ -278,7 +487,6 @@ struct fgGfxShape
 	fgGfxShape() : material(NULL), mesh(NULL) { }
 	~fgGfxShape() { clear(); }
 
-	//
 	void clear(void)
 	{
 		if(material)
@@ -291,8 +499,7 @@ struct fgGfxShape
 		name.clear();
 	}
 
-	//
-	size_t getSize(void)
+	size_t getDataSize(void)
 	{
 		size_t size = 0;
 		size += name.length();
@@ -300,7 +507,7 @@ struct fgGfxShape
 		if(material)
 			size += material->getSize();
 		if(mesh)
-			size += mesh->getSize();
+			size += mesh->getDataSize();
 		return size;
 	}
 };

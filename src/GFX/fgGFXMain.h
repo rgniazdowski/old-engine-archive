@@ -14,11 +14,13 @@
 #include "fgCommon.h"
 #include "fgGFXStdInc.h"
 
+#include "fgGFXWindow.h"
+#include "fgGFXCameraAnimation.h"
+#include "Shaders/fgGFXShaderManager.h"
+#include "Textures/fgTextureManager.h"
+
 #include "fgStatusReporter.h"
 #include "Util/fgTag.h"
-#include "fgManagerBase.h"
-#include "Textures/fgTextureManager.h"
-#include "Shaders/fgGFXShaderManager.h"
 
 class fgGfxMain;
 #define FG_TAG_GFX_MAIN_NAME	"GfxMain"
@@ -26,23 +28,19 @@ class fgGfxMain;
 FG_TAG_TEMPLATE_ID_AUTO(fgGfxMain, FG_TAG_GFX_MAIN_NAME);
 typedef FG_TAG_GFX_MAIN fgGfxMainTag;
 
+extern fgGfxCameraAnimation * cameraAnim;
+extern fgGFXuint vboIds[4];
+
 /*
  *
  */
 class fgGfxMain : public fgStatusReporter<fgGfxMainTag>
 {
-protected:
-	// fgGfxRenderer *m_renderer; // #TODO ?
-	// should gfx main contain pointers to outside managers? like...
-	// resource manager / texture manager
-	// hardware state?
-	// quality manager?
-
 public:
 	// 
 	fgGfxMain();
 	// 
-	~fgGfxMain();
+	virtual ~fgGfxMain();
 
 	// 
 	fgBool setResourceManager(fgManagerBase *resourceManager);
@@ -52,14 +50,10 @@ public:
 	// Close the subsystem - destroy the graphics context
 	void closeGFX(void);
 
-	// Swap the screen buffers
-	void swapBuffers(void);
-	// Return the screen height in pixels
-	int getScreenHeight(void);
-	// Return the screen width in pixels
-	int getScreenWidth(void);
-	// Clear the screen and depth buffer
-	void clearScreen(void);
+	// Suspend event
+	fgBool suspendGFX(void);
+	// Resume event, restore state & context
+	fgBool resumeGFX(void);
 
 	// Now main display function creates the buffer (vertex/color/texture coords buffers) 
 	// to be displayed in current frame. The real drawing of created buffers is inside the
@@ -78,26 +72,22 @@ public:
 	fgGfxShaderManager *getShaderManager(void) const;
 	//
 	fgBool preLoadShaders(void) const;
+	//
+	fgGfxWindow *getMainWindow(void) const;
 
 private:
 	/// 
-	fgTextureManager *m_textureMgr;
+	fgTextureManager	*m_textureMgr;
 	///
-	fgManagerBase *m_resourceMgr;
+	fgManagerBase		*m_resourceMgr;
 	///
-	fgGfxShaderManager *m_shaderMgr;
-#if defined FG_USING_EGL
-	EGLSurface m_EGLSurface;
-	EGLDisplay m_EGLDisplay;
-	EGLContext m_EGLContext;
-#endif
-	// FIXME
-	int m_screenW;
-	// FIXME
-	int m_screenH;
-	// 
-	fgBool m_init;
-	
+	fgGfxShaderManager	*m_shaderMgr;
+	///
+	fgGfxWindow			*m_mainWindow;
+	///
+	fgGfxContext		*m_gfxContext;
+	///
+	fgBool m_init;	
 };
 
 #endif /* _FG_GFX_MAIN_H_ */

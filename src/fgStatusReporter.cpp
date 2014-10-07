@@ -9,9 +9,15 @@
 
 #include "fgStatusReporter.h"
 #include "fgMessageSubsystem.h"
+#include "fgLog.h"
 
 namespace FG_STATUS {
 	void reportToMessageSubsystem(fgStatus *_status) {
 		FG_MessageSubsystem->pushStatus(_status);
+	}
+
+	void printStatus(fgStatus *_status) {
+		if(_status)
+			FG_LOG::PrintStatus(_status);
 	}
 };

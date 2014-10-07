@@ -61,6 +61,28 @@ public:
 };
 #endif /* FG_PTR_GREATER_DEFINED_ */
 
+#ifndef FG_LESS_DEFINED_
+#define FG_LESS_DEFINED_
+template <class T>
+class fgLess
+{
+public:
+	inline bool operator ()(T left, T right)
+	{  return ((left) < (right));  }
+};
+#endif /* FG_LESS_DEFINED_ */
+
+#ifndef FG_GREATER_DEFINED_
+#define FG_GREATER_DEFINED_
+template <class T>
+class fgGreater
+{
+public:
+	inline bool operator ()(T left, T right)
+	{  return !((left) < (right));  }
+};
+#endif /* FG_GREATER_DEFINED_ */
+
 /**
  * Random int from [a,b]
  */

@@ -16,9 +16,11 @@
 
 #include <stack>
 #include <typeinfo>
+#include <cstdarg>
 
 namespace FG_STATUS {
 	void reportToMessageSubsystem(fgStatus *_status);
+        void printStatus(fgStatus *_status);
 };
 
 /*
@@ -48,8 +50,8 @@ public:
 	}
 	//
 	int getLastErrorCode(void) const {
-		if(!m_statusStack.empty())
-			return m_statusStack.top()->code();
+		if(!m_statusVec.empty())
+			return m_statusVec.back()->code();
 		return m_errCode;
 	}
 
@@ -60,24 +62,24 @@ public:
 
 	//
 	fgStatus *getLastStatus(void) const {
-		if(!m_statusStack.empty())
-			return m_statusStack.top();
+		if(!m_statusVec.empty())
+			return m_statusVec.back();
 		return NULL;
 	}
 
 	//
 	void clearStatus(void) {
-		while(!m_statusStack.empty()) {
-			fgStatus *top = m_statusStack.top();
+ 		while(!m_statusVec.empty()) {
+			fgStatus *back = m_statusVec.back();
 			// Remove the message only if it's not managed
-			if(top->message) {
-				if(!top->message->isManaged)
-					top->clearMessage();
+			if(back->message) {
+				if(!back->message->isManaged)
+					back->clearMessage();
 			}
 			// Delete the status (when not managed)
-			if(!top->isManaged)
-				delete top;
-			m_statusStack.pop();
+			if(!back->isManaged)
+				delete back;
+			m_statusVec.pop_back();
 		}
 		m_errCode = FG_ERRNO_OK;
 	}
@@ -104,27 +106,23 @@ protected:
 		if(_status->hasMessage()) {
 			char tmp[64];
 			// #FIXME ?
-			snprintf(tmp, 63, "%s: ", typeid(typename TagType::_type).name());
+			//snprintf(tmp, 63, "%s: ", typeid(typename TagType::_type).name());
+			snprintf(tmp, 63, "%s: ", TagType::name());
 			_status->message->data.insert(0, tmp);
 		}
 
 		// Remember that this takes over the ownership of fgStatus object
-		m_statusStack.push(_status);
+		m_statusVec.push_back(_status);
 
 		// Report further to message subsystem:
 		// Based on the status code and message, subsystem will print
 		// it in proper place, save to corresponding file and take ownership
 		if(_status->isManaged) {
 			FG_STATUS::reportToMessageSubsystem(_status);
+		} else {
+			FG_STATUS::printStatus(_status);
 		}
 	}
-
-	//
-	/*void reportStatus(fgStatus& _status) { // #FIXME
-		fgStatus* newStatus(&_status);
-		_status.clearMessage();
-		reportStatus(newStatus);
-	}*/
 
 	//
 	void reportSuccess(int _code = FG_ERRNO_OK, const char *fmt = NULL, ...) {
@@ -192,7 +190,7 @@ protected:
 	///
 	fgBool	m_reportToMsgSystem;
 	///
-	std::stack<fgStatus *> m_statusStack;
+	fgVector<fgStatus *> m_statusVec;
 };
 
 #endif /* _FG_STATUS_REPORTER_H_ */

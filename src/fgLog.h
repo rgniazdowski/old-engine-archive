@@ -20,31 +20,33 @@
 
 #define FG_LOG_DEFAULT_PREFIX	
 
-#define FG_LOG_BUF_MAX			1024
+#define FG_LOG_BUF_MAX			4096
 
-namespace FG_LOG {
+namespace FG_LOG 
+{
 
-// 
-void PrintInfo(const char *fmt, ...);
-// 
-void PrintError(const char *fmt, ...);
-// 
-void PrintDebug(const char *fmt, ...);
-// 
-void PrintWarning(const char *fmt, ...);
+    // 
+    void PrintInfo(const char *fmt, ...);
+    // 
+    void PrintError(const char *fmt, ...);
+    // 
+    void PrintDebug(const char *fmt, ...);
+    // 
+    void PrintWarning(const char *fmt, ...);
 
-// 
-void WriteToLog(fgFile *file, const char *fmt, ...);
+    // 
+    void WriteToLog(fgFile *file, const char *fmt, ...);
 
-// 
-void PrintMessage(fgMessage *message, long timestamp = -1);
-// 
-void PrintMessageToLog(fgFile *file, fgMessage *message, long timestamp = -1);
+    // 
+    void PrintMessage(fgMessage *message, long timestamp = -1);
+    // 
+    void PrintMessageToLog(fgFile *file, fgMessage *message, long timestamp = -1);
 
-// 
-void PrintStatus(fgStatus *status);
-//
-void PrintStatusToLog(fgFile *file, fgStatus *status);
+    // 
+    void PrintStatus(fgStatus *status);
+    //
+    void PrintStatusToLog(fgFile *file, fgStatus *status);
+
 };
 
 #endif /* _FG_LOG_H_ */

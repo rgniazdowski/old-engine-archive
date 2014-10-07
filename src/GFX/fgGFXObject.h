@@ -10,6 +10,14 @@
 #ifndef _FG_GFX_OBJECT_H_
 #define _FG_GFX_OBJECT_H_
 
+class fgGfxObject 
+{
+public:
+	fgGfxObject() {}
+	~fgGfxObject() {}
 
+protected:
+
+};
 
 #endif /* _FG_GFX_OBJECT_H_ */
