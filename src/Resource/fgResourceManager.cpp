@@ -14,9 +14,11 @@
 #include "fgResourceManager.h"
 #include "fgResourceErrorCodes.h"
 #include "fgResourceFactory.h"
+#include "fgResourceConfigParser.h"
 
 #include <queue>
 
+#include "Util/fgStrings.h"
 #include "Util/fgDirent.h"
 #include "Util/fgPath.h"
 #include "fgLog.h"
@@ -24,20 +26,8 @@
 /*
  *
  */
-fgResourceManager::fgResourceManager() :
-	m_resourceFactory(NULL),
-	m_nCurrentUsedMemory(0),
-	m_nMaximumMemory(0),
-	m_bResourceReserved(FG_FALSE)
-{
-	m_currentResource = getRefDataVector().end();
-	m_resourceGroupHandles.clear_optimised();
-}
-
-/*
- *
- */
 fgResourceManager::fgResourceManager(fgResourceFactory *resourceFactory) :
+	m_dataDir(NULL),
 	m_nCurrentUsedMemory(0),
 	m_nMaximumMemory(0),
 	m_bResourceReserved(FG_FALSE)
@@ -45,6 +35,7 @@ fgResourceManager::fgResourceManager(fgResourceFactory *resourceFactory) :
 	m_currentResource = getRefDataVector().end();
 	m_resourceGroupHandles.clear_optimised();
 	setResourceFactory(resourceFactory);
+	m_managerType = FG_MANAGER_RESOURCE;
 }
 
 /*
@@ -52,7 +43,7 @@ fgResourceManager::fgResourceManager(fgResourceFactory *resourceFactory) :
  */
 fgResourceManager::~fgResourceManager()
 {
-	destroy();
+	fgResourceManager::destroy();
 }
 
 /*
@@ -86,6 +77,7 @@ void fgResourceManager::clear(void)
 	m_resourceGroupHandles.clear_optimised();
 	m_init = FG_FALSE;
 	m_resourceFactory = NULL;
+	m_managerType = FG_MANAGER_RESOURCE;
 }
 
 /*
@@ -129,9 +121,13 @@ fgBool fgResourceManager::destroy(void)
 			if((*itor) == NULL)
 				continue;
 			delete (*itor);
+			*itor = NULL;
 		}
 		fgResourceManager::clear();
 	}
+	if(m_dataDir)
+		delete m_dataDir;
+	m_dataDir = NULL;
 	return FG_TRUE;
 }
 
@@ -148,41 +144,36 @@ fgBool fgResourceManager::initialize(void)
 		// the resource factory is not set
 		return FG_FALSE;
 	}
-	m_init = FG_FALSE;
+	if(!m_dataDir)
+		m_dataDir = new fgDirent();
+	// Fix me - universal paths - use pwd or something
+	// #FIXME - compatibility for different platforms
+	m_dataDir->readDirectory("./", FG_TRUE);
+	m_dataDir->rewind();
 	FG_LOG::PrintDebug("Initializing resource manager\nCurrent maximum memory: %.2f", (float)m_nMaximumMemory/1024.0/1024.0); // #TODELETE
 	// First of all load any resource group configs,
 	// file extension is *.rgrp and it's a xml file.
-	fgDirent *datadir = new fgDirent();
-	datadir->readDirectory(".\\");
-	const char *filename = NULL;
+	std::string filepath;
 	fgStringVector resGroupFiles;
 	// #FIXME - well this looks kinda bad, probably loading
 	// resource groups files should look different - must be
 	// more universal - platform independent, check for
 	// correct paths in the environment, etc.
-	while((filename = datadir->getNextFile()) != NULL)
+	while(m_dataDir->searchForFile(filepath, std::string("./"), std::string("*group.xml;*group.ini"), FG_FALSE).length())
 	{
-		// #FIXME - this should check for string length errors (?)
-		const char *ext = fgPath::fileExt(filename, FG_TRUE);
-		if(!ext)
-			continue;
-		if(strcasecmp(ext, "group.xml") == 0 || strcasecmp(ext, "group.ini") == 0) {
-			resGroupFiles.push_back(std::string(filename));
-		}
+		resGroupFiles.push_back(filepath);
 	}
-	delete datadir;
-	filename = NULL;
 
 	if(resGroupFiles.size() == 0) {
 		reportWarning(FG_ERRNO_RESOURCE_NO_GROUPS, FG_MSG_IN_FUNCTION);
 		return FG_FALSE;
 	}
-
+	const char *filename;
 	for(unsigned int i=0;i<resGroupFiles.size();i++)
 	{
 		// #FIXME - should resource manager hold separate array for res groups IDS ? oh my ...
 		FG_RHANDLE grpUniqueID;
-		filename = resGroupFiles[i].c_str();
+		filename = fgPath::fileName(resGroupFiles[i].c_str());
 		fgResourceGroup *resGroup = new fgResourceGroup(m_resourceFactory);
 		// #TODO this will not always look like this - requires full path (cross platform)
 		resGroup->setFilePath(filename); 
@@ -244,10 +235,10 @@ fgBool fgResourceManager::goToNext(fgResourceType resType)
 	while(FG_TRUE) {
 		m_currentResource++;
 		if(!isValid()) {
-			return FG_FALSE;
+			break;
 		}
 		if((*m_currentResource)->getResourceType() == resType) {
-			return FG_TRUE;
+			break;
 		}
 	}
 
@@ -292,11 +283,11 @@ fgBool fgResourceManager::goToNext(fgResourceType resType, fgQuality quality)
 	while(FG_TRUE) {
 		goToNext();
 		if(!isValid()) {
-			return FG_FALSE;
+			break;
 		}
 		if((*m_currentResource)->getResourceType() == resType) {
 			if((*m_currentResource)->getQuality() == quality) {
-				return FG_TRUE;
+				break;
 			}
 		}
 	}
@@ -333,7 +324,7 @@ fgBool fgResourceManager::insertResource(FG_RHANDLE& rhUniqueID, fgResource* pRe
 /*
  * Insert resource group into manager
  */
-fgBool fgResourceManager::insertResourceGroup(FG_RHANDLE rhUniqueID, fgResource* pResource)
+fgBool fgResourceManager::insertResourceGroup(const FG_RHANDLE& rhUniqueID, fgResource* pResource)
 {
 	if(!fgDataManagerBase::isManaged(pResource)) {
 		return FG_FALSE;
@@ -350,7 +341,7 @@ fgBool fgResourceManager::insertResourceGroup(FG_RHANDLE rhUniqueID, fgResource*
 /*
  * Removes an object completely from the manager.
  */
-fgBool fgResourceManager::remove(FG_RHANDLE rhUniqueID)
+fgBool fgResourceManager::remove(const FG_RHANDLE& rhUniqueID)
 {
 	return fgResourceManager::remove(fgDataManagerBase::get(rhUniqueID));
 }
@@ -358,7 +349,15 @@ fgBool fgResourceManager::remove(FG_RHANDLE rhUniqueID)
 /*
  * Removes an object completely from the manager.
  */
-fgBool fgResourceManager::remove(std::string& nameTag)
+fgBool fgResourceManager::remove(const std::string& nameTag)
+{
+	return fgResourceManager::remove(fgDataManagerBase::get(nameTag));
+}
+
+/*
+ * Removes an object completely from the manager.
+ */
+fgBool fgResourceManager::remove(const char *nameTag)
 {
 	return fgResourceManager::remove(fgDataManagerBase::get(nameTag));
 }
@@ -386,7 +385,7 @@ fgBool fgResourceManager::remove(fgResource* pResource)
 /*
  * Disposes of the resource (frees memory) - does not remove resource from the manager
  */
-fgBool fgResourceManager::dispose(FG_RHANDLE rhUniqueID)
+fgBool fgResourceManager::dispose(const FG_RHANDLE& rhUniqueID)
 {
 	return dispose(fgDataManagerBase::get(rhUniqueID));
 }
@@ -394,7 +393,15 @@ fgBool fgResourceManager::dispose(FG_RHANDLE rhUniqueID)
 /*
  * Disposes of the resource (frees memory) - does not remove resource from the manager
  */
-fgBool fgResourceManager::dispose(std::string& nameTag)
+fgBool fgResourceManager::dispose(const std::string& nameTag)
+{
+	return dispose(fgDataManagerBase::get(nameTag));
+}
+
+/*
+ * Disposes of the resource (frees memory) - does not remove resource from the manager
+ */
+fgBool fgResourceManager::dispose(const char *nameTag)
 {
 	return dispose(fgDataManagerBase::get(nameTag));
 }
@@ -431,7 +438,7 @@ fgBool fgResourceManager::dispose(fgResource* pResource)
  * object.  If the resource has been disposed, it will be recreated
  * before it has been returned.
  */
-fgResource* fgResourceManager::get(FG_RHANDLE rhUniqueID)
+fgResource* fgResourceManager::get(const FG_RHANDLE& rhUniqueID, const fgQuality quality)
 {
 	fgResource *pResource = fgDataManagerBase::get(rhUniqueID);
 	if(!pResource) {
@@ -446,6 +453,7 @@ fgResource* fgResourceManager::get(FG_RHANDLE rhUniqueID)
 	// Recreate the object before giving it to the application
 	if(pResource->isDisposed())
 	{
+		pResource->setQuality(quality);
 		pResource->recreate();
 		addMemory(pResource->getSize());
 
@@ -466,7 +474,7 @@ fgResource* fgResourceManager::get(FG_RHANDLE rhUniqueID)
  * object.  If the resource has been disposed, it will be recreated
  * before it has been returned.
  */
-fgResource* fgResourceManager::get(std::string& nameTag)
+fgResource* fgResourceManager::get(const std::string& nameTag, const fgQuality quality)
 {
 	fgResource *pResource = fgDataManagerBase::get(nameTag);
 	if(!pResource) {
@@ -481,6 +489,7 @@ fgResource* fgResourceManager::get(std::string& nameTag)
 	// Recreate the object before giving it to the application
 	if(pResource->isDisposed())
 	{
+		pResource->setQuality(quality); // FIXME
 		pResource->recreate();
 		addMemory(pResource->getSize());
 
@@ -496,13 +505,170 @@ fgResource* fgResourceManager::get(std::string& nameTag)
 }
 
 /*
+ * Get the resource pointer (object) via resource handle ID
+ * Using GetResource tells the manager that you are about to access the
+ * object.  If the resource has been disposed, it will be recreated
+ * before it has been returned.
+ */
+fgResource* fgResourceManager::get(const char *nameTag, const fgQuality quality)
+{
+	return fgResourceManager::get(std::string(nameTag), quality);
+}
+
+/*
+ *
+ */
+fgResource* fgResourceManager::request(const std::string& info)
+{
+	return request(info, FG_RESOURCE_AUTO);
+}
+
+/*
+ *
+ */
+fgResource* fgResourceManager::request(const char *info)
+{
+	return request(std::string(info), FG_RESOURCE_AUTO);
+}
+
+/*
+ *
+ */
+fgResource* fgResourceManager::request(const std::string& info, const fgResourceType forcedType)
+{
+	if(!m_dataDir || !m_init || !m_resourceFactory)
+		return NULL;
+	fgResource *resourcePtr = NULL;
+	// This is a fallback, if such resource already exists in the resource manager
+	// it should not be searched and reloaded - however do not use request() in a main
+	// loop as it may be slower
+	resourcePtr = fgResourceManager::get(info); 
+	if(resourcePtr)
+		return resourcePtr;
+	// info cannot be a path, it has to be resource name or config name
+	// required file will be found
+	if(fgStrings::contains(info, std::string("/\\")))
+		return NULL;
+	std::string pattern;
+	std::string filePath;
+	fgResourceType resExtType = FG_RESOURCE_INVALID;
+	fgBool infoAsName = FG_FALSE;
+	fgBool isFound = FG_FALSE;
+	fgBool isConfig = FG_FALSE;
+	
+	const char *iext = fgPath::fileExt(info.c_str(), FG_TRUE);
+	if(!iext) // no extension given so... search all
+	{
+		infoAsName = FG_TRUE;
+		pattern.append(info).append("*;");
+	} else { // extension is given, search for exact file
+		pattern.append(info);
+	}
+	m_dataDir->rewind();
+
+	while(m_dataDir->searchForFile(filePath, "./", pattern, FG_TRUE).length()) {
+		const char *fext = NULL;
+		if(iext) {
+			fext = iext;
+		} else {
+			 fext = fgPath::fileExt(filePath.c_str(), FG_TRUE);
+		}
+		if(strcasecmp(fext, "res.ini") == 0) {
+			isConfig = FG_TRUE;
+		} else if(strcasecmp(fext, "tga") == 0) {
+			resExtType = FG_RESOURCE_TEXTURE;
+		} else if(strcasecmp(fext, "jpg") == 0) {
+			resExtType = FG_RESOURCE_TEXTURE;
+		} else if(strcasecmp(fext, "png") == 0) {
+			resExtType = FG_RESOURCE_TEXTURE;
+		} else if(strcasecmp(fext, "obj") == 0) {
+			resExtType = FG_RESOURCE_3D_MODEL;
+		} else if(strcasecmp(fext, "wav") == 0) {
+			resExtType = FG_RESOURCE_SOUND;
+		} else if(strcasecmp(fext, "mp3") == 0) {
+			resExtType = FG_RESOURCE_MUSIC;
+		} else if(strcasecmp(fext, "mod") == 0) {
+			resExtType = FG_RESOURCE_MUSIC;
+		} else if(strcasecmp(fext, "raw") == 0) {
+			//resExtType = FG_RESOURCE_SOUND;
+		} else {
+		}
+
+		if(resExtType != FG_RESOURCE_INVALID || isConfig) {
+			isFound = FG_TRUE;
+			break;
+		}
+	};
+
+	if(!isFound)
+		return NULL;
+	if(isConfig) {
+		fgResourceConfig *resCfg = new fgResourceConfig();
+		// This references to external config file, config should be loaded and proper resource created
+		if(!resCfg->load(filePath.c_str())) {
+			delete resCfg;
+			// MESSAGE?
+			return NULL;
+		}
+		// THIS CODE IS REALLY SIMILAR TO THE ONE IN RESOURCE GROUP
+		// NEED TO THINK OF A WAY TO NOT REPEAT THIS CHUNK OF CODE
+		// SHOULD RESOURCE GROUP HAVE SOME ACCESS TO THIS RES MGR?
+		fgResourceHeader *header = &resCfg->getRefHeader();
+		if(m_resourceFactory->isRegistered(header->resType)) {
+			resourcePtr = m_resourceFactory->createResource(header->resType);
+			resourcePtr->setName(header->name);
+			resourcePtr->setPriority(header->priority);
+			resourcePtr->setQuality(header->quality);
+			
+			if(header->paths.size() != header->qualities.size()) {
+				FG_LOG::PrintError("Group config: number of qualities doesn't match number of files for: '%s'", header->name.c_str());
+				delete resourcePtr;
+				if(resCfg)
+					delete resCfg;
+				return NULL;
+			}
+			for(int i=0;i<(int)header->paths.size();i++) {
+				resourcePtr->setFilePath(header->paths[i],header->qualities[i]);
+			}
+			resourcePtr->setDefaultID(header->quality);
+		}
+		delete resCfg;
+	} else if(resExtType != FG_RESOURCE_INVALID) {
+		if(forcedType != FG_RESOURCE_AUTO)
+			resExtType = forcedType;
+		if(m_resourceFactory->isRegistered(resExtType)) {
+			resourcePtr = m_resourceFactory->createResource(resExtType);
+			resourcePtr->setName(info);
+			resourcePtr->setPriority(FG_RES_PRIORITY_LOW);
+			resourcePtr->setQuality(FG_QUALITY_UNIVERSAL);
+			resourcePtr->setDefaultID(FG_QUALITY_UNIVERSAL);
+			resourcePtr->setFilePath(filePath);
+		}
+	}
+
+	if(resourcePtr) {
+		fgResourceManager::insertResource(resourcePtr->getRefHandle(), resourcePtr);
+	}
+
+	return resourcePtr;
+}
+
+/*
+ *
+ */
+fgResource* fgResourceManager::request(const char *info, const fgResourceType forcedType)
+{
+	return request(std::string(info), forcedType);
+}
+
+/*
  * Locking the resource ensures that the resource does not get managed by
  * the Resource Manager.  You can use this to ensure that a surface does not
  * get swapped out, for instance.  The resource contains a reference count
  * to ensure that numerous locks can be safely made.
  * #FIXME #TODO #P3 - locking/unlocking is based on counter - DEPRECATED.
  */
-fgResource* fgResourceManager::lockResource(FG_RHANDLE rhUniqueID)
+fgResource* fgResourceManager::lockResource(const FG_RHANDLE& rhUniqueID)
 {
 	fgResource *pResource = fgDataManagerBase::get(rhUniqueID);
 	lockResource(pResource);
@@ -539,7 +705,7 @@ fgBool fgResourceManager::lockResource(fgResource *pResource)
  * either by handle or by the object's pointer.
  * #FIXME #TODO #P3 - locking/unlocking is based on counter - DEPRECATED.
  */
-fgResource* fgResourceManager::unlockResource(FG_RHANDLE rhUniqueID)
+fgResource* fgResourceManager::unlockResource(const FG_RHANDLE& rhUniqueID)
 {
 	fgResource *pResource = fgDataManagerBase::get(rhUniqueID);
 	pResource->Unlock();
@@ -594,6 +760,8 @@ fgBool fgResourceManager::checkForOverallocation(void)
 		// exclude those that are current disposed or are locked
 		for(hmDataVecItor itor = begin; itor != end; ++itor)
 		{
+			if(!(*itor))
+				continue;
 			addMemory((*itor)->getSize());
 			if(!(*itor)->isDisposed() && !(*itor)->isLocked())
 				PriQueue.push(*itor);

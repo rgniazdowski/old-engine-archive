@@ -102,7 +102,7 @@ public:
 	fgCfgSection *getSection(const char *sectionName);
 
 	// Return pointer to section structure
-	fgCfgSection *getSection(std::string & sectionName);
+	fgCfgSection *getSection(const std::string & sectionName);
 
 	// Return the reference to the given sections parameter map
 	fgCfgTypes::parameterMap & getRefSectionsParameterMap(const char *sectionName);

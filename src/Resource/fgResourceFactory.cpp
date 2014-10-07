@@ -39,14 +39,14 @@ void fgResourceFactory::clear(void)
 /*
  * Register resource create function based on resource type
  */
-fgBool fgResourceFactory::registerResource(fgResourceType type, fgCreateResourceFn function)
+fgBool fgResourceFactory::registerResource(const fgResourceType type, fgCreateResourceFn function)
 {
 	if(!function)
 		return FG_FALSE;
-	rfFactoryPair query_pair;
+	factoryPair query_pair;
 	query_pair.first = type;
 	query_pair.second = function;
-	std::pair<rfFactoryMapItor, bool> result = m_factoryMap.insert(query_pair);
+	std::pair<factoryMapItor, bool> result = m_factoryMap.insert(query_pair);
 	//rfFactoryMapItor it = result.first;
 	if(result.second == false) {
 		// Existed
@@ -60,9 +60,9 @@ fgBool fgResourceFactory::registerResource(fgResourceType type, fgCreateResource
 /*
  * Call specific create function for given resource
  */
-fgResource* fgResourceFactory::createResource(fgResourceType type)
+fgResource* fgResourceFactory::createResource(const fgResourceType type)
 {
-	rfFactoryMapItor it = m_factoryMap.find(type);
+	factoryMapItor it = m_factoryMap.find(type);
 	if(it != m_factoryMap.end()) {
 		if(it->second != NULL)
 			return it->second();
@@ -73,9 +73,9 @@ fgResource* fgResourceFactory::createResource(fgResourceType type)
 /*
  * Check if given resource type constructor/create function is registered in factory
  */
-fgBool fgResourceFactory::isRegistered(fgResourceType type)
+fgBool fgResourceFactory::isRegistered(const fgResourceType type)
 {
-	rfFactoryMapItor it = m_factoryMap.find(type);
+	factoryMapItor it = m_factoryMap.find(type);
 	if(it != m_factoryMap.end()) {
 		return FG_TRUE;
 	}

@@ -68,14 +68,14 @@ struct fgCfgParameter
 
 	// Union for storing different values
 	union {
-		int int_val;
-		long int long_val;
-		float float_val;
-		fgBool bool_val;
 		char string[FG_CFG_PARAMATER_STRING_MAX];
+                long int long_val;
+                float float_val;
+                int int_val;		
+		fgBool bool_val;		
 	};
 
-	fgCfgParameter() : int_val(0), type(FG_CFG_PARAMETER_NONE) {
+	fgCfgParameter() : type(FG_CFG_PARAMETER_NONE) {
 		memset(string, 0, FG_CFG_PARAMATER_STRING_MAX);
 	}
 

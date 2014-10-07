@@ -9,10 +9,10 @@
 
 #include "fgResourceGroup.h"
 #include "fgResourceFactory.h"
+#include "fgResourceConfigParser.h"
 
 #include "fgLog.h"
 #include "Util/fgPath.h"
-#include "Util/fgConfig.h"
 #include "Util/fgStrings.h"
 
 /**********************************************************
@@ -25,7 +25,6 @@
 fgResourceGroupContentHandler::fgResourceGroupContentHandler() : m_resourceGroup(NULL),
 	m_resType(FG_RESOURCE_INVALID),
 	m_resourcePtr(NULL),
-	m_curResName(NULL),
 	m_isMapped(FG_FALSE),
 	m_isFileQualityMapTag(FG_FALSE),
 	m_curResPriority(FG_RES_PRIORITY_INVALID)
@@ -51,18 +50,54 @@ void fgResourceGroupContentHandler::endElement(const char *localName, fgXMLEleme
 	// If the resource was created...
 	if(m_resourcePtr && (rtype != FG_RESOURCE_GROUP && rtype != FG_RESOURCE_INVALID)) {
 		m_resourcePtr->setPriority(m_curResPriority);
-		if(m_curResName)
-			m_resourcePtr->setName(m_curResName);
 		// ...then it can be added to the Resource Groups' list.
 		this->m_resourceGroup->getRefResourceFiles().push_back(m_resourcePtr);
 		m_resType = FG_RESOURCE_INVALID;
 		m_resourcePtr = NULL;
 		m_isMapped = FG_FALSE;
 		m_isFileQualityMapTag = FG_FALSE;
-		m_curResName = NULL;
 		m_curResPriority = FG_RES_PRIORITY_INVALID;
 	}
 	//FG_LOG::PrintDebug("END ELEMENT: %s\n", localName);
+}
+
+/*
+ *
+ */
+fgBool fgResourceGroupContentHandler::loadResConfig(const char *path)
+{
+	if(!path)
+		return FG_FALSE;
+	fgResourceConfig *resCfg = new fgResourceConfig();
+	// This references to external config file, config should be loaded and proper resource created
+	if(!resCfg->load(path)) {
+		delete resCfg;
+		// MESSAGE?
+		return FG_FALSE;
+	}
+	fgResourceHeader *header = &resCfg->getRefHeader();
+	if(m_resourceGroup->getResourceFactory()->isRegistered(m_resType)) {
+		m_resourcePtr = m_resourceGroup->getResourceFactory()->createResource(m_resType);
+		m_resourcePtr->setName(header->name);
+		m_resourcePtr->setPriority(header->priority);
+		m_resourcePtr->setQuality(header->quality);
+		m_curResPriority = header->priority;
+		if(header->paths.size() != header->qualities.size()) {
+			FG_LOG::PrintError("Group config: number of qualities doesn't match number of files for: '%s'", header->name.c_str());
+			delete m_resourcePtr;
+			m_resourcePtr = NULL;
+			if(resCfg)
+				delete resCfg;
+			return FG_FALSE;
+		}
+		for(int i=0;i<(int)header->paths.size();i++) {
+			m_resourcePtr->setFilePath(header->paths[i],header->qualities[i]);
+			//FG_LOG::PrintDebug("Setting path: '%s', for resource: '%s', quality='%d'", pathVec[i].c_str(), name.c_str(), (int)qualityVec[i]);
+		}
+		m_resourcePtr->setDefaultID(header->quality);
+	}
+	delete resCfg;
+	return FG_TRUE;;
 }
 
 /*
@@ -108,48 +143,48 @@ void fgResourceGroupContentHandler::startElement(const char *localName, fgXMLEle
 	} else if(m_resType == FG_RESOURCE_INVALID) {
 		if(strncasecmp(localName, FG_FILE_QUALITY_MAPPING_TEXT, strlen(FG_FILE_QUALITY_MAPPING_TEXT)) == 0) {
 			m_isFileQualityMapTag = FG_TRUE;
-		} else if(true) {
-		}
+		} 
 	}
-
+	m_curResPriority = FG_RES_PRIORITY_LOW;
+	fgQuality resQuality = FG_QUALITY_UNIVERSAL;
 	// Here are common attributes for every resource tag in resource group
 	// Path to the resource
 	const char *resPath = NULL;
 	// Resource name (ID/TAG string)
 	const char *resName = NULL;
-	// Priority for the resource stored as a string
-	const char *resPriorityStr = NULL;
-	// Quality for the resource stored as a string
-	const char *resQualityStr = NULL;
 	// Pointer to the first attribute for checking
 	fgXMLAttribute *attribute = firstAttribute;
 	if(m_resType != FG_RESOURCE_GROUP && (m_resType != FG_RESOURCE_INVALID || m_isFileQualityMapTag)) {
 		while(attribute) {
 			const char *attrname = attribute->Name();
 			const char *attrvalue = attribute->Value();
+			if(strncasecmp(attrname, "config", 6) == 0) {
+				if(!loadResConfig(attrvalue)) {
+					continue;
+				} else {
+					return;
+				}
+				break;
+			}
+
 			if(strncasecmp(attrname, "path", 4) == 0) {
 				resPath = attrvalue;
 			} else if(strncasecmp(attrname, "name", 4) == 0) {
 				resName = attrvalue;
-				m_curResName = resName;
 			} else if(strncasecmp(attrname, "priority", 8) == 0) {
-				resPriorityStr = attrvalue;
+				m_curResPriority = FG_RES_PRIORITY_FROM_TEXT(attrvalue);
 			} else if(strncasecmp(attrname, "quality", 7) == 0) {
-				resQualityStr = attrvalue;
+				resQuality = FG_QUALITY_FROM_TEXT(attrvalue);
 			} else if(strncasecmp(attrname, "ismapped", 8) == 0) {
 				m_isMapped = FG_BOOL_FROM_TEXT(attrvalue);
 			}
-			if(!resQualityStr)
-				resQualityStr = "universal";
 			attribute = attribute->Next();
 		}
 	}
-	if(resPriorityStr)
-		m_curResPriority = FG_RES_PRIORITY_FROM_TEXT(resPriorityStr);
 	if(m_resType == FG_RESOURCE_INVALID) {
 		if(m_resourcePtr && m_isFileQualityMapTag && resPath) {
 			//FG_LOG::PrintDebug("Setting path: '%s', for resource: '%s', quality='%s'", resPath, m_curResName, resQualityStr);
-			m_resourcePtr->setFilePath(resPath, FG_QUALITY_FROM_TEXT(resQualityStr));
+			m_resourcePtr->setFilePath(resPath, resQuality);
 		}
 		return;
 	}
@@ -161,6 +196,7 @@ void fgResourceGroupContentHandler::startElement(const char *localName, fgXMLEle
 	} else {
 		m_resourcePtr = m_resourceGroup->getResourceFactory()->createResource(m_resType);
 		m_resourcePtr->setFilePath(resPath);
+		m_resourcePtr->setName(resName);
 	}
 }
 
@@ -186,6 +222,7 @@ fgResourceGroup::fgResourceGroup(fgResourceFactory *resourceFactory)
 fgResourceGroup::~fgResourceGroup()
 {
 	destroy();
+	FG_LOG::PrintDebug("fgResourceGroup::~~fgResourceGroup(); END");
 }
 
 /*
@@ -210,6 +247,7 @@ fgResourceFactory *fgResourceGroup::getResourceFactory(void) const
  */
 void fgResourceGroup::clear(void)
 {
+	FG_LOG::PrintDebug("fgResourceGroup::clear();");
 	fgResource::clear();
 	m_rHandles.clear_optimised();
 	m_resourceFiles.clear_optimised();
@@ -267,6 +305,7 @@ fgBool fgResourceGroup::recreate(void)
 void fgResourceGroup::dispose(void)
 {
 	//FG_LOG::PrintDebug("fgResourceGroup::~dispose();");
+	FG_LOG::PrintDebug("fgResourceGroup::dispose();");
 	if(m_resourceFiles.empty())
 		return;
 	for(rgResVecItor it = m_resourceFiles.begin(); it != m_resourceFiles.end(); it++) {
@@ -299,149 +338,66 @@ fgBool fgResourceGroup::_parseIniConfig(void)
 	}
 	if(m_filePath.empty())
 		return FG_FALSE;
-	fgConfig *config = new fgConfig();
-	config->load(m_filePath.c_str());
-	fgCfgTypes::sectionMap &sectionMap = config->getRefSectionMap();
-	if(sectionMap.empty()) {
+	fgResourceConfig *config = new fgResourceConfig();
+	if(!config->load(m_filePath.c_str())) {
 		delete config;
 		return FG_FALSE;
 	}
-	fgCfgTypes::sectionMapItor smit = sectionMap.begin(),
-		end = sectionMap.end();
-	for(;smit!=end;smit++)
+	fgResourceConfig::resourceHeaderMap &headerMap = config->getRefResourceHeaders();
+	fgResourceConfig::resourceHeaderMapItor rhit = headerMap.begin(),
+		end = headerMap.end();
+	this->setName(config->getName());
+	this->setPriority(config->getPriority());
+	for(;rhit!=end;rhit++)
 	{
-		fgCfgSection *section = smit->second;
-		
-		if(strncasecmp(section->name.c_str(), FG_RESOURCE_GROUP_TEXT, strlen(FG_RESOURCE_GROUP_TEXT)) == 0) {
-			fgCfgParameter *param = NULL;
-			if((param = section->getParameter("name")) != NULL) {
-				if(param->type == FG_CFG_PARAMETER_STRING)
-					setName(param->string);
-
-				//FG_LOG::PrintInfo("RESOURCE GROUP NAME: %s\n", param->string);
-			} else {
+		fgResourceHeader &headerRef = rhit->second;
+		fgResourceHeader *header = NULL;
+		fgResourceConfig *resCfg = NULL;
+		if(headerRef.isConfig) {
+			resCfg = new fgResourceConfig();
+			// This references to external config file, config should be loaded and proper resource created
+			if(!resCfg->load(headerRef.configPath.c_str())) {
+				delete resCfg;
+				// MESSAGE?
+				continue;
 			}
-			if((param = section->getParameter("priority")) != NULL) {
-				if(param->type == FG_CFG_PARAMETER_STRING)
-					setPriority(FG_RES_PRIORITY_FROM_TEXT(param->string));
-			} else {
-			}
+			header = &resCfg->getRefHeader();
 		} else {
-			fgBool foundName = FG_TRUE, foundType = FG_TRUE, foundQuality = FG_TRUE, foundPath = FG_TRUE, foundPriority = FG_TRUE;
-			std::string name;
-			std::string path;
-			fgResourceType type = FG_RESOURCE_INVALID;
-			fgCfgParameter *param = NULL;
-			fgQuality quality = FG_QUALITY_UNIVERSAL;
-			fgResPriorityType priority = FG_RES_PRIORITY_LOW;
-			fgBool isMapped = FG_FALSE;
-			fgVector<fgQuality> qualityVec;
-			fgVector<std::string> pathVec;
-			fgVector<std::string> _helperVec;
+			header = &headerRef;
+		}
+		if(!m_resourceFactory->isRegistered(header->resType) || header->resType == FG_RESOURCE_GROUP) {
+			if(resCfg)
+				delete resCfg;
+			continue;
+		}
+		
+		fgResource *resource = m_resourceFactory->createResource(header->resType);
+		if(!resource) {
+			if(resCfg)
+				delete resCfg;
+			continue;
+		}
+		resource->setName(header->name);
+		resource->setPriority(header->priority);
+		resource->setQuality(header->quality);
 
-			/// Get the resource name
-			if((param = section->getParameter("name")) != NULL) {
-				if(param->type == FG_CFG_PARAMETER_STRING)
-					name = param->string;
-			} else {
-				foundName = FG_FALSE;
-			}
-			// Get the resource type
-			if((param = section->getParameter("type")) != NULL) {
-				if(param->type == FG_CFG_PARAMETER_STRING)
-					type = FG_RESOURCE_TYPE_FROM_TEXT(param->string);
-			} else {
-				foundType = FG_FALSE;
-			}
-			// Get the resource priority
-			if((param = section->getParameter("priority")) != NULL) {
-				if(param->type == FG_CFG_PARAMETER_STRING)
-					priority = FG_RES_PRIORITY_FROM_TEXT(param->string);
-			} else {
-				foundPriority = FG_FALSE;
-			}
-			// Check if the resource has files mapped to different qualities
-			if((param = section->getParameter("isMapped")) != NULL) {
-				if(param->type == FG_CFG_PARAMETER_BOOL)
-					isMapped = param->bool_val;
-			} else {
-				isMapped = FG_FALSE;
-			}
-			// When isMapped is true, then check for different parameters names
-			// indicating that the values stored inside are separated by ';' char (array/vector)
-			if(isMapped) {
-				// Get the parameter: quality vector
-				if((param = section->getParameter("qualityVec", FG_CFG_PARAMETER_STRING)) != NULL) {
-					std::string _q_vec = param->string;
-					_helperVec.clear_optimised();
-					fgStrings::split(_q_vec, ';', _helperVec);
-					for(int i=0;i<(int)_helperVec.size();i++) {
-						qualityVec.push_back(FG_QUALITY_FROM_TEXT(_helperVec[i].c_str()));
-					}
-					if(qualityVec.empty())
-						foundQuality = FG_FALSE;
-					_q_vec.clear();
-					_helperVec.clear_optimised();
-				} else {
-					foundQuality = FG_FALSE;
-				}
-				if((param = section->getParameter("pathVec", FG_CFG_PARAMETER_STRING)) != NULL) {
-					std::string _p_vec = param->string;
-					_helperVec.clear_optimised();
-					fgStrings::split(_p_vec, ';', _helperVec);
-					for(int i=0;i<(int)_helperVec.size();i++) {
-						pathVec.push_back(_helperVec[i]);
-					}
-					if(pathVec.empty())
-						foundPath = FG_FALSE;
-					_p_vec.clear();
-					_helperVec.clear_optimised();
-				} else {
-					foundPath = FG_FALSE;
-				}
-				// In other case, the resource has single quality selected and stores single file
-			} else {
-				if((param = section->getParameter("quality", FG_CFG_PARAMETER_STRING)) != NULL) {
-					quality = FG_QUALITY_FROM_TEXT(param->string);
-				} else {
-					quality = FG_QUALITY_UNIVERSAL;
-				}
-				if((param = section->getParameter("path", FG_CFG_PARAMETER_STRING)) != NULL) {
-					path = param->string;
-				} else {
-					foundPath = FG_FALSE;
-				}
-			}
-			if(!foundPath || !foundType || !foundName || !foundQuality)
-				continue;
-			if(!m_resourceFactory->isRegistered(type) || type == FG_RESOURCE_GROUP) {
-				continue;
-			}
-			fgResource *resource = m_resourceFactory->createResource(type);
-			if(!resource)
-				continue;
-			resource->setName(name);
-			if(foundPriority)
-				resource->setPriority(priority);
-			if(isMapped) {
-				if(pathVec.size() != qualityVec.size()) {
-					// ERROR #TODO
-					qualityVec.clear_optimised();
-					pathVec.clear_optimised();
-					delete resource;
-					continue;
-				}
-				for(int i=0;i<(int)pathVec.size();i++) {
-					resource->setFilePath(pathVec[i],qualityVec[i]);
-					//FG_LOG::PrintDebug("Setting path: '%s', for resource: '%s', quality='%d'", pathVec[i].c_str(), name.c_str(), (int)qualityVec[i]);
-				}
-			} else {
-				resource->setFilePath(path);
-			}
-			m_resourceFiles.push_back(resource);
-			// Finish
-		} // else if ( name == RESOURCE_GROUP )
-	} // iteration through section map
+		if(header->paths.size() != header->qualities.size()) {
+			FG_LOG::PrintError("Group config: number of qualities doesn't match number of files for: '%s'", header->name.c_str());
+			delete resource;
+			if(resCfg)
+				delete resCfg;
+			continue;
+		}
+		for(int i=0;i<(int)header->paths.size();i++) {
+			resource->setFilePath(header->paths[i],header->qualities[i]);
+			//FG_LOG::PrintDebug("Setting path: '%s', for resource: '%s', quality='%d'", pathVec[i].c_str(), name.c_str(), (int)qualityVec[i]);
+		}
+		resource->setDefaultID(header->quality); // #FIXME - watch out! retarded function name!
+		m_resourceFiles.push_back(resource);
+		if(resCfg)
+			delete resCfg;
+		resCfg = NULL;
+	}
 	
 	delete config;
 	config = NULL;

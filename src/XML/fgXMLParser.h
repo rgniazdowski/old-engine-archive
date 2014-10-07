@@ -10,11 +10,9 @@
 #ifndef _FG_XML_PARSER_H_
 #define _FG_XML_PARSER_H_
 
-#include "fgCommon.h"
-
-#ifdef FG_USING_TINYXML
-#include "tinyxml.h"
-#endif
+#ifndef _FG_XML_TYPES_WRAP_H_
+#include "fgXMLTypesWrap.h"
+#endif 
 
 #include <string>
 #include <cstring>
@@ -23,7 +21,6 @@
 #include "fgStatus.h"
 #include "Util/fgFile.h"
 
-#include "fgXMLTypesWrap.h"
 #include "fgXMLDefaultHandler.h"
 
 // This class extends the fgFile, so it can load the proper XML file
@@ -74,18 +71,19 @@ public:
 	/*
 	 * Default empty constructor
 	 */
-	fgXMLParser() : m_fileSize(0), m_fileBuffer(NULL),
+	fgXMLParser() : m_fileSize(0), m_fileBuffer(NULL), m_xmlDocument(),
 		m_rootXMLElement(NULL), m_currentXMLNode(NULL),
-		m_currentXMLAttribute(NULL), m_contentHandler(NULL)
+		m_currentXMLAttribute(NULL), m_parsingStack(), m_contentHandler(NULL)
 	{
 	}
 
 	/*
 	 * Constructor with file path parameter - loads the xml file
 	 */
-	fgXMLParser(const char *filePath) : m_fileSize(0), m_fileBuffer(NULL),
+	fgXMLParser(const char *filePath) : fgFile(filePath), m_fileSize(0), m_fileBuffer(NULL), m_xmlDocument(),
 		m_rootXMLElement(NULL), m_currentXMLNode(NULL),
-		m_currentXMLAttribute(NULL), m_contentHandler(NULL), fgFile(filePath)
+		m_currentXMLAttribute(NULL), m_parsingStack(),
+                m_contentHandler(NULL)
 	{
 		loadXML(filePath);
 	}
@@ -93,7 +91,7 @@ public:
 	/*
 	 * Main destructor - frees all data
 	 */
-	~fgXMLParser() {
+	virtual ~fgXMLParser() {
 		freeXML();
 	}
 

@@ -166,7 +166,8 @@ fgBool fgConfigParser::parseData(const char *data, fgCfgTypes::sectionMap &secti
 				// it's probably an int value
 				parameter->set(atoi(parameterValue.c_str()));
 			} else {
-				parameter->set(FG_CFG_DEFAULT_VALUE); // #FIXME
+				//parameter->set(FG_CFG_DEFAULT_VALUE); // #FIXME
+				parameter->set(parameterValue.c_str());
 			}
 			fgCfgTypes::parameterMapKey key = parameterName;
 			if(newSection) {

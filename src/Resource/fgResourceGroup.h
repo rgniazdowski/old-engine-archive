@@ -50,8 +50,6 @@ private:
 	fgBool m_isMapped;
 	// Is current xml used for mapping file to quality?
 	fgBool m_isFileQualityMapTag;
-	// Current resource name (tag id, #FIXME)
-	const char *m_curResName;
 	// Element stack (not used yet, #FIXME)
 	std::stack<fgXMLElement *> m_elemStack;
 
@@ -62,6 +60,8 @@ private:
 protected:
 	// Set pointer to resource group object - this group is being parsed
 	void setResourceGroupPointer(fgResourceGroup *group) { m_resourceGroup = group; }
+
+	fgBool loadResConfig(const char *path);
 public:
 	// Receive notification of the end of the document.
 	virtual void endDocument(fgXMLDocument *document)
@@ -82,7 +82,7 @@ public:
 	virtual void startElement(const char *localName, fgXMLElement *elementPtr, fgXMLNodeType nodeType, fgXMLAttribute *firstAttribute, int depth = 0);
 
 	// Receive notification of character data inside an element or comment
-	virtual void characters(const char ch[], int start, int length, int depth = 0)
+	virtual void characters(const char ch[], int start, int length, fgXMLNodeType nodeType, int depth = 0)
 	{
 		// Characters - wont be needed
 	}

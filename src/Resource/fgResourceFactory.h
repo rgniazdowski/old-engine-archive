@@ -15,17 +15,17 @@
 #include "fgResourceFactoryTypes.h"
 
 #include <map>
-
+// Need general template ?
 /*
  *
  */
 class fgResourceFactory
 {
 public:
-	typedef std::map<fgResourceType, fgCreateResourceFn> rfFactoryMap;
-	typedef std::pair<fgResourceType, fgCreateResourceFn> rfFactoryPair;
-	typedef rfFactoryMap::iterator rfFactoryMapItor;
-	typedef rfFactoryMap::const_iterator rfFactoryMapConstItor;
+	typedef std::map<fgResourceType, fgCreateResourceFn> factoryMap;
+	typedef std::pair<fgResourceType, fgCreateResourceFn> factoryPair;
+	typedef factoryMap::iterator factoryMapItor;
+	typedef factoryMap::const_iterator factoryMapConstItor;
 
 public:
 	// Default empty constructor for Resource Factory object
@@ -37,17 +37,17 @@ public:
 	void clear(void);
 
 	// Register resource create function based on resource type
-	fgBool registerResource(fgResourceType type, fgCreateResourceFn function);
+	fgBool registerResource(const fgResourceType type, fgCreateResourceFn function);
 	
 	// Call specific create function for given resource
-	fgResource* createResource(fgResourceType type);
+	fgResource* createResource(const fgResourceType type);
 	
 	// Check if given resource type constructor/create function is registered in factory
-	fgBool isRegistered(fgResourceType type);
+	fgBool isRegistered(const fgResourceType type);
 
 private:
 	// Map storing create functions for given resource types
-	rfFactoryMap m_factoryMap;
+	factoryMap m_factoryMap;
 };
 
 #endif /* _FG_RESOURCE_FACTORY_H_ */

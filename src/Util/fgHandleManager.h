@@ -37,10 +37,10 @@ namespace std
 	};
 };
 
-#endif // FG_HASH_STD_STRING_TEMPLATE_DEFINED_
+#endif /* FG_HASH_STD_STRING_TEMPLATE_DEFINED_ */
 #else
 #include <unordered_map>
-#endif // FG_USING_MARMALADE
+#endif /* FG_USING_MARMALADE */
 
 // HandleType HAS TO BE template of fgHandle
 
@@ -78,55 +78,45 @@ private:
     typedef fgVector <fgRawMagic>	hmMagicVec;
 	typedef fgVector <hashKey>		hmNameVec;
     typedef fgVector <unsigned int> hmFreeSlotsVec;
-	// Data storage
+
+	/// Data storage
     hmDataVec  m_managedData;
-	// Corresponding magic numbers
+	/// Corresponding magic numbers
     hmMagicVec m_magicData;
-	// Free slots in the database
+	/// Free slots in the database
     hmFreeSlotsVec  m_freeSlots;
-	// Map for name (string) IDs
+	/// Map for name (string) IDs
 	hmNameMap m_nameMap;
-	// Vector for storing string IDs
+	/// Vector for storing string IDs
 	hmNameVec m_nameVec;
-	// Check for reassignment?
-	fgBool m_checkReassignment;
+
 protected:
 	// Reset internal data
 	void clear(void);
 public:
 	// Default constructor for Handle Manager object
-	fgHandleManager() : m_checkReassignment(FG_TRUE) { clear(); }
+	fgHandleManager() { clear(); }
 	// Default destructor for Handle Manager object
 	~fgHandleManager() { clear(); }
 
 	//
     fgBool acquireHandle(HandleType& rHandle, DataType pResource);
 	//
-	fgBool setupName(std::string& name, HandleType rHandle);
+	fgBool setupName(const std::string& name, const HandleType& rHandle);
 	//
-	fgBool setupName(const char* name, HandleType rHandle);
+	fgBool setupName(const char* name, const HandleType& rHandle);
 	//
-    fgBool releaseHandle(HandleType handle);
+    fgBool releaseHandle(const HandleType& handle);
 	//
 	void releaseAllHandles(void);
 
 	//
-    DataType dereference(HandleType handle);
+    DataType dereference(const HandleType& handle);
 	//
-    DataType dereference(std::string& name);
+    DataType dereference(const std::string& name);
 	//
     DataType dereference(const char* name);
-    //const DataType* Dereference( HandleType handle ) const;
-
-	//
-	void setReassignmentCheck(fgBool toggle) {
-		m_checkReassignment = toggle;
-	}
-
-	fgBool isReassignmentAllowed(void) const {
-		return !m_checkReassignment;
-	}
-
+   
 	//
     unsigned int getUsedHandleCount(void) const {
 		return ( m_magicData.size() - m_freeSlots.size());
@@ -145,7 +135,7 @@ public:
 	//
 	fgBool isDataManaged(DataType pData);
 	//
-	fgBool isHandleValid(HandleType handle);
+	fgBool isHandleValid(const HandleType& handle);
 };
 
 /*
@@ -172,7 +162,6 @@ fgBool fgHandleManager<DataType, HandleType>::acquireHandle(HandleType& rHandle,
     if(m_freeSlots.empty()) {
         index = m_magicData.size();
         if(!rHandle.init(index))
-			if(m_checkReassignment)
 				return FG_FALSE;
         m_managedData.push_back(pResource);
         m_magicData.push_back(rHandle.getMagic());
@@ -180,7 +169,6 @@ fgBool fgHandleManager<DataType, HandleType>::acquireHandle(HandleType& rHandle,
     } else {
         index = m_freeSlots.back();
 		if(!rHandle.init(index))
-			if(m_checkReassignment)
 				return FG_FALSE;
         m_freeSlots.pop_back();
 		m_managedData[index] = pResource;
@@ -194,7 +182,7 @@ fgBool fgHandleManager<DataType, HandleType>::acquireHandle(HandleType& rHandle,
  *
  */
 template <typename DataType, typename HandleType>
-fgBool fgHandleManager<DataType, HandleType>::setupName(std::string& name, HandleType rHandle)
+fgBool fgHandleManager<DataType, HandleType>::setupName(const std::string& name, const HandleType& rHandle)
 {
 	if(!isHandleValid(rHandle))
 		return FG_FALSE;
@@ -206,7 +194,6 @@ fgBool fgHandleManager<DataType, HandleType>::setupName(std::string& name, Handl
 	if(!m_nameVec[index].empty()) {
 		FG_LOG::PrintError("%s(%d): There is name tag already in the vector on index: '%d', name tag: '%s' - in function %s.", fgPath::fileName(__FILE__), __LINE__-1,index,name.c_str(),__FUNCTION__);
 		// There is already some set on the current index
-		// No reassignment is allowed
 		return FG_FALSE;
 	}
 	m_nameMap[name] = index;
@@ -218,7 +205,7 @@ fgBool fgHandleManager<DataType, HandleType>::setupName(std::string& name, Handl
  *
  */
 template <typename DataType, typename HandleType>
-fgBool fgHandleManager<DataType, HandleType>::setupName(const char* name, HandleType rHandle)
+fgBool fgHandleManager<DataType, HandleType>::setupName(const char* name, const HandleType& rHandle)
 {
 	if(!isHandleValid(rHandle))
 		return FG_FALSE;
@@ -240,7 +227,7 @@ fgBool fgHandleManager<DataType, HandleType>::setupName(const char* name, Handle
  *
  */
 template <typename DataType, typename HandleType>
-fgBool fgHandleManager<DataType, HandleType>::releaseHandle(HandleType handle)
+fgBool fgHandleManager<DataType, HandleType>::releaseHandle(const HandleType& handle)
 {
 	if(!isHandleValid(handle)) {
 		FG_LOG::PrintError("releaseHandle() - handle is invalid.");
@@ -276,7 +263,7 @@ void fgHandleManager<DataType, HandleType>::releaseAllHandles(void)
  *
  */
 template <typename DataType, typename HandleType>
-inline DataType fgHandleManager<DataType, HandleType>::dereference(HandleType handle)
+inline DataType fgHandleManager<DataType, HandleType>::dereference(const HandleType& handle)
 {
 	if(!isHandleValid(handle))
 		return NULL;
@@ -288,8 +275,11 @@ inline DataType fgHandleManager<DataType, HandleType>::dereference(HandleType ha
  *
  */
 template <typename DataType, typename HandleType>
-inline DataType fgHandleManager<DataType, HandleType>::dereference(std::string& name)
+inline DataType fgHandleManager<DataType, HandleType>::dereference(const std::string& name)
 {
+	if(name.empty())
+		return NULL;
+
 	typename hmNameMap::iterator it = m_nameMap.find(name);
 	if(it == m_nameMap.end()) {
 		return NULL;
@@ -311,20 +301,10 @@ inline DataType fgHandleManager<DataType, HandleType>::dereference(std::string& 
 template <typename DataType, typename HandleType>
 inline DataType fgHandleManager<DataType, HandleType>::dereference(const char* name)
 {
+	if(name == NULL)
+		return NULL;
 	std::string key = name;
-	typename hmNameMap::iterator it = m_nameMap.find(key);
-	if(it == m_nameMap.end()) {
-		return NULL;
-	}
-	fgRawIndex index = (*it).second;
-	if(index >= m_managedData.size()) {
-		return NULL;
-	}
-	if(m_nameVec[index].compare(key) == 0) {
-		return *(m_managedData.begin() + index);
-	} else {
-		return NULL;
-	}
+	return fgHandleManager<DataType, HandleType>::dereference(key);
 }
 
 /*
@@ -342,7 +322,7 @@ inline fgBool fgHandleManager<DataType, HandleType>::isDataManaged(DataType pDat
  *
  */
 template <typename DataType, typename HandleType>
-inline fgBool fgHandleManager<DataType, HandleType>::isHandleValid(HandleType handle)
+inline fgBool fgHandleManager<DataType, HandleType>::isHandleValid(const HandleType& handle)
 {
 	if(handle.isNull())
 		return FG_FALSE;

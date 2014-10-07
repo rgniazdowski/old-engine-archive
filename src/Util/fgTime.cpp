@@ -87,7 +87,7 @@ float fgTime::elapsed(void)
  */
 float fgTime::exact(void)
 {
-	#ifdef FG_USING_PLATFORM_WINDOWS
+#ifdef FG_USING_PLATFORM_WINDOWS
 	//SYSTEMTIME time;
 	//GetSystemTime(&time);
 	//WORD millis = (time.wSeconds * 1000) + time.wMilliseconds;

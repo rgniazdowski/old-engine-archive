@@ -54,9 +54,9 @@ public:
 	static void split(std::string &path, std::string &dirpath, std::string &filename);
 
 	// Join the path elements
-	static std::string& join(std::string &path, std::string &dirpath, std::string &filename);
+	static std::string& join(std::string &path, const std::string &dirpath, const std::string &filename);
 	
-	static std::string join(std::string &dirpath, std::string &filename);
+	static std::string join(const std::string &dirpath, const std::string &filename);
 
 	// Join the path from parts
 	static void join(std::string &path, fgStringVector &parts);

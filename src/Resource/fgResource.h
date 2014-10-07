@@ -73,6 +73,8 @@ typedef fgHandle<fgResourceTag> fgResourceHandle;
 // used in the game engine
 typedef unsigned int fgResourceType;
 
+#define FG_RESOURCE_AUTO				0x0000
+
 #define FG_RESOURCE_INVALID				0x0000
 #define	FG_RESOURCE_SOUND				0x0AB0
 #define	FG_RESOURCE_MUSIC				0x0AB1
@@ -103,6 +105,9 @@ typedef unsigned int fgResourceType;
 #define FG_RESOURCE_RESERVED6			0x0ACF
 
 #define FG_NUM_RESOURCE_TYPES			(1)
+
+#define FG_RESOURCE						0x0BBB
+#define FG_RESOURCE_TEXT				"Resource"
 
 /*
  *

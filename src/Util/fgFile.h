@@ -19,7 +19,7 @@
 class fgFile;
 
 #define FG_TAG_FILE_NAME	"File"
-#define FG_TAG_FILE			FG_TAG_TYPE(fgFile)
+#define FG_TAG_FILE		FG_TAG_TYPE(fgFile)
 
 FG_TAG_TEMPLATE_ID_AUTO(fgFile, FG_TAG_FILE_NAME);
 typedef FG_TAG_FILE fgFileTag;

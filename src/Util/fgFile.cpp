@@ -24,8 +24,12 @@
  */
 fgBool fgFile::exists(const char *filePath)
 {
+#if defined FG_USING_MARMALADE
+	return (fgBool)s3eFileCheckExists(filePath);
+#else
 	std::ifstream fileCheck(filePath);
 	return (fgBool)fileCheck.good();
+#endif
 }
 
 /*
@@ -52,7 +56,6 @@ fgFile::fgFile(const char *filePath) : m_file(NULL),
 	m_modeFlags(FG_FILE_MODE_READ | FG_FILE_MODE_BINARY)
 {
 	m_filePath = filePath;
-	exists();
 }
 
 /*

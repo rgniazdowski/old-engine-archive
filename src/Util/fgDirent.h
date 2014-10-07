@@ -17,6 +17,7 @@
 #else
 #include <cstdio>
 #include <dirent.h>
+#include <sys/stat.h>
 #endif
 
 // #TODO - need to decide should I use everywhere stl string,
@@ -51,55 +52,59 @@ class fgDirent
 {
 public:
 	// Default empty constructor
-	fgDirent()
-	{
-#ifdef FG_USING_MARMALADE
-		m_fileList = NULL;
-#else
-		m_curDir = NULL;
-		m_curEntry = NULL;
-#endif
-		m_dirPath.clear();
-		m_fileNames.clear_optimised();
-		m_fileIt = m_fileNames.end();
-	}
+	fgDirent();
+	
 	// Default constructor with the specified directory path
 	// Please note that this constructor will also call the
-	// read directory function.
+	// read directory function - however not recursively.
 	fgDirent(const char *dirPath);
-	fgDirent(std::string &dirPath);
+	fgDirent(const std::string &dirPath);
 
 	// The default deconstructor
-	~fgDirent()
-	{
-#ifdef FG_USING_MARMALADE
-	// ?
-#else
-	// ?
-#endif
-		m_dirPath.clear();
-		m_fileNames.clear_optimised();
-	}
+	~fgDirent();
 
 	// Reads the directory that was specified earlier
-	fgBool readDirectory(void);
+	// If additional option is specified it will
+	// read the directory recursively - the difference is 
+	// that now quering for next file in the list will always
+	// return the full path to it. The file list will not contain
+	// names of the folders (just file paths)
+	fgBool readDirectory(fgBool recursive = FG_FALSE);
 	// Reads the specified directory creating the list of files
 	// to be processed later
-	fgBool readDirectory(const char *dirPath);
+	fgBool readDirectory(const char *dirPath, fgBool recursive);
 	// Reads the specified directory creating the list of files
 	// to be processed later
-	fgBool readDirectory(std::string &dirPath);
+	fgBool readDirectory(const std::string &dirPath, fgBool recursive = FG_FALSE);
 
 	// Returns the next file name
 	const char *getNextFile(void);
+	
+	// Returns the path (full) to the next file
+	std::string &getNextFilePath(std::string &path);
+	
+	// Returns the path to the next file which matches the criteria
+	std::string &searchForFile(std::string &output,
+		const std::string &basePath,
+		const std::string &pattern,
+		const fgBool deep = FG_FALSE);
+
+	// Returns all loaded files (directory listing)
+	fgStringVector &getRefFiles(void);
+
 	// This function rewinds to the beginning the file pointer (in the list)
 	fgBool rewind(void);
+
+	// Clears all the loaded data (file list will be empty)
+	void clearList(void);
 protected:
 	// The whole path to the directory
 	std::string m_dirPath;
+	
 	// List/vector with the file names in the specified directory #FIXME
-	fgVector<std::string> m_fileNames;
-	fgVector<std::string>::iterator m_fileIt;
+	fgStringVector m_fileNames;
+	// iterator to the element in the string vector (file path/name)
+	fgStringVector::iterator m_fileIt;
 #ifdef FG_USING_MARMALADE
 	// Marmalade specific structure for reading directory contents
 	s3eFileList *m_fileList;
@@ -107,6 +112,7 @@ protected:
 	DIR *m_curDir;
 	struct dirent *m_curEntry;
 #endif
+	fgBool m_isRecursive;
 };
 
 #endif

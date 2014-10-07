@@ -63,7 +63,7 @@ char *fgPath::dirName(const char *path)
 	int npath = strlen(path);
 	int nfile = strlen(filename);
 	int newlen = npath-nfile;
-	char *buf = (char *)fgMalloc(sizeof(char) * (newlen+1));
+	char *buf = fgMalloc<char>(newlen+1);
 	strncpy(buf, path, newlen);
 	buf[newlen] = 0;
 	return buf;
@@ -105,7 +105,7 @@ void fgPath::split(std::string &path, std::string &dirpath, std::string &filenam
 /*
  *
  */
-std::string& fgPath::join(std::string &path, std::string &dirpath, std::string &filename)
+std::string& fgPath::join(std::string &path, const std::string &dirpath, const std::string &filename)
 {
 	// path - here is the result stored
 	
@@ -114,7 +114,7 @@ std::string& fgPath::join(std::string &path, std::string &dirpath, std::string &
 	path = dirpath;
 	if(path[dirlen-1] == FG_PATH_DELIMC || path[dirlen-1] == FG_PATH_DELIM2C)
 		path[dirlen-1] = FG_PATH_DELIMC;
-	else
+	else if(dirlen)
 		path.append(FG_PATH_DELIM);
 	path.append(filename);
 	return path;
@@ -123,7 +123,7 @@ std::string& fgPath::join(std::string &path, std::string &dirpath, std::string &
 /*
  *
  */
-std::string fgPath::join(std::string &dirpath, std::string &filename)
+std::string fgPath::join(const std::string &dirpath, const std::string &filename)
 {
 	std::string path;
 	fgPath::join(path, dirpath, filename);

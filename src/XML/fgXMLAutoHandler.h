@@ -86,7 +86,7 @@ template <> struct fgXMLAutoElement<_type> { \
 #define FG_XML_AUTO_TEMPLATE_CHARACTERS_BEGIN(_type) \
 template <> struct fgXMLAutoCharacters<_type> { \
 	typedef _type type; \
-	static void characters(const char ch[], int start, int length, type *_target, fgXMLElement *_elemPtr) { \
+	static void characters(const char ch[], int start, int length, fgXMLNodeType nodeType, type *_target, fgXMLElement *_elemPtr) { \
 		if(!_target || !_elemPtr || !length) return; \
 		const char  *localName = _elemPtr->Value()
 
@@ -163,21 +163,19 @@ public:
 	}
 
 	// Receive notification of character data inside an element or comment
-	virtual void characters(const char ch[], int start, int length, int depth = 0)
+	virtual void characters(const char ch[], int start, int length, fgXMLNodeType nodeType, int depth = 0)
 	{
 		if(m_isFailure)
 			return;
 		fgXMLElement *elementPtr = NULL;
 		if(!m_elemStack.empty())
 			elementPtr = m_elemStack.top();
-		fgXMLAutoCharacters<Target>::characters(ch, start, length, m_target, elementPtr);
+		fgXMLAutoCharacters<Target>::characters(ch, start, length, nodeType, m_target, elementPtr);
 	}
 
 	virtual void setTarget(Target *target) {
 		m_target = target;
 	}
-
-
 
 protected:
 	fgBool m_isFailure;

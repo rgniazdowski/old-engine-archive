@@ -18,10 +18,16 @@
 
 #define FG_FILE_QUALITY_MAPPING_TEXT "FileQualityMap"
 
-/*
- *
- */
 template<typename HandleType, typename MapKeyType>
+/*
+ * This is the base class for  data  objects  that are meant
+ * to be handle in DataManager. It's for data that is loaded
+ * from disk/storage. It's  also  designed  to hold multiple 
+ * file paths depending  on the  MapKey type.  In most cases
+ * the ID refers  to  the used  quality level throughout the 
+ * project.  Quality  depends on some  explicit  settings or
+ * device hardware  on which the program is being  executed.
+ */
 class fgDataObjectBase 
 {
 public:
@@ -46,7 +52,7 @@ public:
 		m_fileMapping[m_defaultID] = path;
 	}
 	// Set file path to this resource
-	virtual void setFilePath(std::string& path) {
+	virtual void setFilePath(const std::string& path) {
 		m_filePath.clear();
 		m_filePath = path;
 		m_fileMapping[m_defaultID] = path;
@@ -113,13 +119,11 @@ public:
 
 	// Set resource name (string TAG/ID)
 	inline void setName(const char *name) {
-		m_nameTag.clear();
 		m_nameTag = name;
 	}
 	// Set resource name (string TAG/ID)
-	inline void setName(std::string& name) {
-		m_nameTag.clear();
-		m_nameTag.append(name);
+	inline void setName(const std::string& name) {
+		m_nameTag = name;
 	}
 
 	// Get resource name string
@@ -145,19 +149,21 @@ public:
 		m_handle = handle;
 	}
 
+	// Returns the reference to the data handle
 	HandleType& getRefHandle(void) {
 		return m_handle;
 	}
 
 protected:
-	// File mapping
+	/// File mapping
 	std::map<MapKeyType, std::string>	m_fileMapping;
-	// File path as separate string (by default this is for universal quality)
+	/// File path as separate string (by default this is for universal quality)
 	std::string					m_filePath;
-	// Name of the data, string ID
+	/// Name of the data, string ID
 	std::string					m_nameTag;
+	/// Default ID to write to
 	MapKeyType					m_defaultID;
-	// Unique handle number
+	/// Unique handle number
 	HandleType					m_handle;
 };
 

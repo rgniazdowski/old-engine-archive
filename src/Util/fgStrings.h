@@ -120,6 +120,83 @@ public:
 		}
 		return (fgBool)(((int)string.size()>minSize) && it == string.end() && decimalPoint);
 	}
+
+	static fgBool startsWith(const std::string& input,
+		const std::string& pattern,
+		fgBool caseSensitive = FG_TRUE)
+	{
+		if(input.length() < pattern.length() || pattern.empty() || input.empty())
+			return FG_FALSE;
+		int plen = pattern.length();
+		for(int i=0;i<plen;i++) {
+			if( (caseSensitive && input[i] != pattern[i]) ||
+				(!caseSensitive && tolower(input[i]) != tolower(pattern[i])) ) {
+				return FG_FALSE;
+			}
+		}
+		return FG_TRUE;
+	}
+
+	static fgBool startsWith(const char *input,
+		const char *pattern,
+		fgBool caseSensitive = FG_TRUE)
+	{
+		if(!input || !pattern)
+			return FG_FALSE;
+		int plen = strlen(pattern);
+		int ilen = strlen(input);
+		if(ilen < plen || !ilen || !plen
+			)
+			return FG_FALSE;
+		for(int i=0;i<plen;i++) {
+			if( (caseSensitive && input[i] != pattern[i]) ||
+				(!caseSensitive && tolower(input[i]) != tolower(pattern[i])) ) {
+				return FG_FALSE;
+			}
+		}
+		return FG_TRUE;
+	}
+
+	static fgBool endsWith(const std::string& input,
+		const std::string& pattern,
+		fgBool caseSensitive = FG_TRUE)
+	{
+		if(input.length() < pattern.length() || pattern.empty() || input.empty())
+			return FG_FALSE;
+		int plen = pattern.length();
+		int ilen = input.length();
+		for(int i=ilen-1, p=plen-1;i>=0 && p>=0;i--,p--) {
+			if( (caseSensitive && input[i] != pattern[p]) ||
+				(!caseSensitive && tolower(input[i]) != tolower(pattern[p])) ) {
+				return FG_FALSE;
+			}
+		}
+		return FG_TRUE;
+	}
+
+	static fgBool endsWith(const char *input,
+		const char *pattern,
+		fgBool caseSensitive = FG_TRUE)
+	{
+		if(!input || !pattern)
+			return FG_FALSE;
+		int plen = strlen(pattern);
+		int ilen = strlen(input);
+		if(ilen < plen || !plen || !ilen)
+			return FG_FALSE;
+		for(int i=ilen-1, p=plen-1;i>=0 && p>=0;i--,p--) {
+			if( (caseSensitive && input[i] != pattern[p]) ||
+				(!caseSensitive && tolower(input[i]) != tolower(pattern[p])) ) {
+				return FG_FALSE;
+			}
+		}
+		return FG_TRUE;
+	}
+
+	static fgBool contains(const std::string& input, const std::string& chars)
+	{
+		return (input.find_first_of(chars) != std::string::npos);
+	}
 };
 
 #endif /* _FG_STRINGS_H_ */

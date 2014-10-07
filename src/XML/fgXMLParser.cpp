@@ -116,7 +116,7 @@ fgBool fgXMLParser::_parseDeep(fgXMLNode *cnode, int depth)
 				this->m_contentHandler->endElement(currentNodeValue, elementPtr, (fgXMLNodeType)elementPtr->Type(), depth);
 			} else if(this->isCurrentText() || this->isCurrentComment()) {
 				// This will be probably comment element or text between tags (start / end)
-				this->m_contentHandler->characters(currentNodeValue, 0, strlen(currentNodeValue), depth);
+				this->m_contentHandler->characters(currentNodeValue, 0, strlen(currentNodeValue), (fgXMLNodeType)m_currentXMLNode->Type(), depth);
 			}
 		} while(this->goToNextNode());
 		this->goHigher(); depth--;

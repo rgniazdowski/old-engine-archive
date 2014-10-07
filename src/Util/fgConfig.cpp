@@ -24,7 +24,7 @@ fgConfig::fgConfig() : m_parser(NULL), m_writer(NULL)
 fgConfig::fgConfig(const char *filePath) : m_parser(NULL), m_writer(NULL)
 {
 	if(filePath)
-		load(filePath);
+		fgConfig::load(filePath); // #FIXME
 }
 
 /*
@@ -148,7 +148,7 @@ fgCfgSection *fgConfig::getSection(const char *sectionName)
 /*
  *
  */
-fgCfgSection *fgConfig::getSection(std::string & sectionName)
+fgCfgSection *fgConfig::getSection(const std::string & sectionName)
 {
 	return getSection(sectionName.c_str());
 }

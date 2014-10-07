@@ -25,6 +25,7 @@ fgResource::fgResource() :
 	m_size(0),
 	m_isReady(FG_FALSE)
 {
+	setDefaultID(FG_QUALITY_UNIVERSAL);
 	FG_LOG::PrintDebug("fgResource::fgResource();");
 }
 
@@ -40,6 +41,7 @@ fgResource::fgResource(const char *path) :
 	m_size(0),
 	m_isReady(FG_FALSE)
 {
+	setDefaultID(FG_QUALITY_UNIVERSAL);
 	FG_LOG::PrintDebug("fgResource::fgResource(const char *path);");
 	setFilePath(path);
 }
@@ -56,6 +58,7 @@ fgResource::fgResource(std::string& path) :
 	m_size(0),
 	m_isReady(FG_FALSE)
 {
+	setDefaultID(FG_QUALITY_UNIVERSAL);
 	FG_LOG::PrintDebug("fgResource::fgResource(std::string& path);");
 	setFilePath(path);
 }
