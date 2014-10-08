@@ -1,0 +1,47 @@
+includepaths
+{
+   	"usascii/StbTimes"
+	"usascii/StbArialBold"
+	"usascii/StbCourier"
+	"usascii/StbConsolasBold"
+	"usascii/StbTimesBold"
+	"usascii/StbArial"
+	"usascii/StbConsolas"
+	"usascii/StbCourierBold"
+	"usascii"
+}
+
+files
+{
+	[TimesNewRoman]
+	("usascii/StbTimes")
+	"*.inl"
+
+	[ArialBold]
+	("usascii/StbArialBold")
+	"*.inl"
+	
+	[Courier]
+	("usascii/StbCourier")
+	"*.inl"
+	
+	[ConsolasBold]
+	("usascii/StbConsolasBold")
+	"*.inl"
+	
+	[TimesBold]
+	("usascii/StbTimesBold")
+	"*.inl"
+	
+	[Arial]
+	("usascii/StbArial")
+	"*.inl"
+	
+	[Consolas]
+	("usascii/StbConsolas")
+	"*.inl"
+	
+	[CourierBold]
+	("usascii/StbCourierBold")
+	"*.inl"
+}

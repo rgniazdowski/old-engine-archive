@@ -11,7 +11,7 @@
 #define _FG_GUI_DRAWER_H_
 
 #ifndef _FG_FONT_DRAWER_H_
-#include "fgFontDrawer.h"
+#include "Font/fgFontDrawer.h"
 #endif
 
 #ifndef _FG_GFX_DRAWING_BATCH_H_
@@ -26,6 +26,9 @@
 #include "fgGuiStyleContent.h"
 #endif
 
+/*
+ *
+ */
 class fgGuiDrawer : protected fgGfxDrawingBatch
 {
 	friend class fgGuiMain;
@@ -37,9 +40,11 @@ private:
 	fgResourceManager *m_resourceMgr;
 	///
 	fgColor4f m_color;
-	fgGfxShaderManager *mgr;
+
 public:
+	//
 	fgGuiDrawer();
+	//
 	virtual ~fgGuiDrawer();
 
 public:
@@ -53,20 +58,24 @@ public:
 	//
 	virtual void setShaderManager(fgManagerBase *shaderMgr);
 
+	//
 	virtual int getZIndex(void) const {
 		return m_zIndex;
 	}
 
+	//
 	virtual void setZIndex(const int zIndex) {
 		m_zIndex = zIndex;
 		m_fontDrawer->setZIndex(zIndex);
 	}
 
+	//
 	virtual void upZIndex(void) {
 		m_zIndex++;
 		m_fontDrawer->setZIndex(m_zIndex);
 	}
 
+	//
 	virtual void downZIndex(void){
 		m_zIndex--;
 		m_fontDrawer->setZIndex(m_zIndex);

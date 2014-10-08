@@ -574,6 +574,7 @@ static unsigned short stb__consolas_bold_32_usascii_a[95]={ 282,282,282,282,282,
 //    height: STB_FONT_consolas_bold_32_usascii_BITMAP_HEIGHT or STB_FONT_consolas_bold_32_usascii_BITMAP_HEIGHT_POW2
 //    return value: spacing between lines
 static void stb_font_consolas_bold_32_usascii(stb_fontchar font[STB_FONT_consolas_bold_32_usascii_NUM_CHARS],
+                //unsigned char **data,
                 unsigned char data[STB_FONT_consolas_bold_32_usascii_BITMAP_HEIGHT][STB_FONT_consolas_bold_32_usascii_BITMAP_WIDTH],
                 int height)
 {

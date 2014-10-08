@@ -232,7 +232,7 @@ void drawModel(fgGfxModelResource *model, fgGfxShaderProgram *program, fgTexture
 		//glEnableVertexAttribArray(FG_GFX_ATTRIB_POS_LOCATION);
 		//glEnableVertexAttribArray(FG_GFX_ATTRIB_NORM_LOCATION);
 		//glEnableVertexAttribArray(FG_GFX_ATTRIB_UVS_LOCATION);
-		fgGfxPlatform::context()->diffVertexAttribArrayMask(soa->getAttribMask());
+		fgGfxPlatform::context()->diffVertexAttribArrayMask(soa->attribMask());
 		fgGfxPlatform::context()->vertexAttribPointer(FG_GFX_ATTRIB_POS_LOCATION, 3 /* VEC3 */,
 			FG_GFX_FLOAT, GL_FALSE, sizeof(fgVector3f),	(void*)(&soa->vertices.front()));
 
@@ -268,7 +268,7 @@ void drawModel(fgGfxModelResource *model, fgGfxShaderProgram *program, fgTexture
 	fgGFXint numIndices = aos->getNumIndices();
 	// vboIds[0] - used to store vertex attribute data
 	// vboIds[l] - used to store element indices
-	fgGFXvoid *vtxBuf = (fgGFXvoid *)(&aos->vertices.front());
+	fgGFXvoid *vtxBuf = aos->vertices.front();
 	fgGFXvoid *indices = (fgGFXvoid *)(&aos->indices.front());
 	if(!glIsBuffer(vboIds[0]) || !glIsBuffer(vboIds[1])) {
 		buffInit = FG_FALSE;
@@ -346,23 +346,19 @@ void dumpMatrix(const float *mat, const char *title)
 	
 }
 #include "fgGFXPrimitives.h"
-#include "GUI/fgFontDrawer.h"
+#include "GUI/Font/fgFontDrawer.h"
 /*
  *
  */
 void fgGfxMain::render(void)
 {
-	static int cnt = 0;
 	static float posx = 0;
 	static float posy = 0;
 	static float offset = 0.0f;
 	static fgGfxModelResource *model = NULL;
 	static float rotxyz = 0.0f;
-	static float ro2 = 0.0f;
 	static float scale = 1.0f;
-	static float sign = -1.0f;
 	bool loadModel = true;
-	int cha = 0;
 	glm::mat4 Model;
 
 	if(!m_mainWindow || !m_gfxContext) {
@@ -377,17 +373,11 @@ void fgGfxMain::render(void)
 	std::string sOrthoEasyShaderName("sOrthoEasy");
 	std::string modelname("CobraBomber");
 	std::string texname("CobraBomberTexture");
-	//std::string texname2("MainBackgroundTexture");
-	//std::string texname3("Splash");
 	std::string texname4("TrueCrimes");
-	std::string top("HudTopTex");
-	std::string bottom("HudBottomTex");
-	std::string lines("HudLinesTex");
 
 	offset = fmodf(offset + 0.2f, 2*3.141f);
 	if(!m_textureMgr || !m_shaderMgr) {
 		FG_LOG::PrintError("No texture / shader manager");
-		
 		return;
 
 	}
@@ -415,8 +405,6 @@ void fgGfxMain::render(void)
 	MVP->setPerspective(45.0f, m_mainWindow->getAspect());
 	MVP->calculate(cameraAnim, modelMat);
 
-	fgGfxMVMatrix *MV = (fgGfxMVMatrix *)(MVP);
-
 	fgGfxShaderProgram *program = m_shaderMgr->get(sPlainEasyShaderName);
 	m_shaderMgr->useProgram(program);
 	if(!program) {
@@ -442,25 +430,18 @@ void fgGfxMain::render(void)
 		return;
 	}
 	m_shaderMgr->useProgram(program2);
+
 	if(s3eKeyboardGetState(s3eKeyLeft) & S3E_KEY_STATE_DOWN) {
 		posx-=10.0f;
-		cha = 1;
 	}
 	if(s3eKeyboardGetState(s3eKeyRight) & S3E_KEY_STATE_DOWN) {
 		posx+=10.0f;
-		cha = 1;
 	}
 	if(s3eKeyboardGetState(s3eKeyUp) & S3E_KEY_STATE_DOWN) {
 		posy-=10.0f;
-		cha = 1;
 	}
 	if(s3eKeyboardGetState(s3eKeyDown) & S3E_KEY_STATE_DOWN) {
 		posy+=10.0f;
-		cha = 1;
-	}
-
-	if(s3eKeyboardGetState(s3eKeySpace) & S3E_KEY_STATE_DOWN) {
-		ro2 += 0.01f;
 	}
 	if(s3eKeyboardGetState(s3eKeyRightShift) & S3E_KEY_STATE_DOWN) {
 		scale += 0.01f;
@@ -468,99 +449,17 @@ void fgGfxMain::render(void)
 	fgGfxPlatform::context()->setBlend(FG_TRUE);
 	fgGfxPlatform::context()->blendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
 
-	if(s3eKeyboardGetState(s3eKeyMenu) & S3E_KEY_STATE_PRESSED) {
-		sign = sign * -1.0f;
-	}
-
-	if(s3eKeyboardGetState(s3eKeyMenu) & S3E_KEY_STATE_DOWN) {
-		posx += 3.0f * sign;
-		posy += 5.0f * sign;
-	//	cameraAnim->moveBackward();
-	}
 	Model = glm::translate(Model, glm::vec3(posx, posy, 0.0f));
-	//Model = glm::rotate(Model, ro2, glm::vec3(0, 0, 1.0f));
-	//Model = glm::translate(Model, glm::vec3(-sizex/2, -sizey/2, 0.0f)); // test
-	//Model = glm::scale(Model, glm::vec3(scale, scale, 1.0f));
 
-	fgTextureResource *texsplash = NULL;// (fgTextureResource *) rm->get("loading_screen0");
 	MVP->identity();
 	MVP->setOrtho(0, (float)m_mainWindow->getWidth(), (float)m_mainWindow->getHeight(), 0.0f);
 	MVP->calculate(Model);
-	fgFontResource *ftex = (fgFontResource *) rm->get(texname4);
 	program2->setUniform(MVP);
-	if(program2 && glIsTexture(ftex->getTextureGfxID())) {
-		m_gfxContext->activeTexture(GL_TEXTURE0);
-		m_gfxContext->bindTexture2D(ftex->getTextureGfxID());
-		fgGFXint TextureID = glGetUniformLocation(program2->getGfxID(), "s_texture");
-		fgGLError("glGetUniformLocation");
-		glUniform1i(TextureID, 0);
-		fgGLError("glUniform1i");
-	}
-	//glScissor(0, 0, m_mainWindow->getWidth()/2, m_mainWindow->getHeight());
+	
 	FG_HardwareState->calculateDT();
 	FG_HardwareState->calculateFPS();
-	fgTextureResource *textop = (fgTextureResource *) rm->get(top);
-	fgTextureResource *texbottom = (fgTextureResource *) rm->get(bottom);
-	fgTextureResource *texlines = (fgTextureResource *) rm->get(lines);
-#if 0
-	//glDisable(GL_CULL_FACE);
-	if(textop && texbottom && texlines && program2 && 0) {
-		float topw, toph, botw, both, linh, linw;
-		linw = (float)m_mainWindow->getWidth();
-		linh = (float)m_mainWindow->getHeight();
-
-		topw = linw;
-		botw = linw;
-
-		toph = (float)textop->getHeight()/(float)textop->getWidth()*topw;
-		both = (float)texbottom->getHeight()/(float)texbottom->getWidth()*botw;
-		float botrelpos = linh - both;
-
-		if(glIsTexture(textop->getTextureGfxID())) {
-			glActiveTexture(GL_TEXTURE0);
-			glBindTexture(GL_TEXTURE_2D, textop->getTextureGfxID());
-			fgGLError("glBindTexture");
-		}
-		fgVector<fgVertex3> vecs;
-		fgGfxPrimitives::appendRect2D(vecs, fgVec2f(0.0f,0.0f), fgVec2f(topw, toph), fgVec2f(0,1), fgVec2f(1,0), FG_GFX_TRIANGLES, FG_FALSE);
-		fgGfxPrimitives::drawArray2D(vecs);
-		vecs.clear();
-		if(glIsTexture(texbottom->getTextureGfxID())) {
-			glActiveTexture(GL_TEXTURE0);
-			glBindTexture(GL_TEXTURE_2D, texbottom->getTextureGfxID());
-			fgGLError("glBindTexture");
-		}
-		fgGfxPrimitives::appendRect2D(vecs, fgVec2f(0.0f,botrelpos), fgVec2f(botw, both), fgVec2f(0,1), fgVec2f(1,0), FG_GFX_TRIANGLES, FG_FALSE);
-		fgGfxPrimitives::drawArray2D(vecs);
-		vecs.clear();
-		if(glIsTexture(texlines->getTextureGfxID())) {
-			glActiveTexture(GL_TEXTURE0);
-			glBindTexture(GL_TEXTURE_2D, texlines->getTextureGfxID());
-			fgGLError("glBindTexture");
-		}
-		fgGfxPrimitives::appendRect2D(vecs, fgVec2f(0.0f,0.0f), fgVec2f(linw, linh), fgVec2f(0,1), fgVec2f(1,0), FG_GFX_TRIANGLES, FG_FALSE);
-		fgGfxPrimitives::drawArray2D(vecs);
-		vecs.clear();
-		//glScissor(m_mainWindow->getWidth()/2, 0, m_mainWindow->getWidth()/2, m_mainWindow->getHeight());
-		if(0) {
-			if(texsplash && glIsTexture(texsplash->getTextureGfxID())) {
-				glActiveTexture(GL_TEXTURE1);
-				glBindTexture(GL_TEXTURE_2D, texsplash->getTextureGfxID());
-				fgGLError("glBindTexture");
-				fgGFXint TextureID = glGetUniformLocation(program2->getGfxID(), "s_texture");
-				fgGLError("glGetUniformLocation");
-				glUniform1i(TextureID, 1);
-				fgGLError("glUniform1i");
-			}
-			fgGfxPrimitives::appendRect2D(vecs, fgVec2f(150,100.0f), fgVec2f(1024.0f/5.0f, 768.0f/5.0f), fgVec2f(0,1), fgVec2f(1,0), FG_GFX_TRIANGLES, FG_FALSE);
-			fgGfxPrimitives::drawArray2D(vecs);
-			vecs.clear();
-		}
-	}
-#endif
 	fgGfxPlatform::context()->setBlend(FG_FALSE);
 	fgGfxPlatform::context()->scissor(0, 0, m_mainWindow->getWidth(), m_mainWindow->getHeight());
-	
 }
 
 /*

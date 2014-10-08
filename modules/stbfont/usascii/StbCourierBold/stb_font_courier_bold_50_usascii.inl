@@ -917,7 +917,8 @@ static unsigned short stb__courier_bold_50_usascii_a[95]={ 424,424,424,424,424,4
 //    height: STB_FONT_courier_bold_50_usascii_BITMAP_HEIGHT or STB_FONT_courier_bold_50_usascii_BITMAP_HEIGHT_POW2
 //    return value: spacing between lines
 static void stb_font_courier_bold_50_usascii(stb_fontchar font[STB_FONT_courier_bold_50_usascii_NUM_CHARS],
-                unsigned char data[STB_FONT_courier_bold_50_usascii_BITMAP_HEIGHT][STB_FONT_courier_bold_50_usascii_BITMAP_WIDTH],
+                //unsigned char data[STB_FONT_courier_bold_50_usascii_BITMAP_HEIGHT][STB_FONT_courier_bold_50_usascii_BITMAP_WIDTH],
+				unsigned char **data,
                 int height)
 {
     int i,j;

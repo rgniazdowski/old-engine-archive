@@ -140,14 +140,13 @@ void fgGuiDrawer::appendText2D(const fgVec2f &blockPos, const fgVec2f &blockSize
 	if(resFont->getResourceType() != FG_RESOURCE_FONT)
 		return;
 	fgFontResource *fontResProper = (fgFontResource *)resFont;
-
+	m_fontDrawer->setFont(fontResProper);
+	m_fontDrawer->setColor(fg.color);
 	fgGuiAlign textAlign = style.getTextAlign();
 	fgGuiPadding &padding = style.getPadding();
 	fgVector2f outPos = blockPos;
 	fgVector2f textSize = m_fontDrawer->size(buf, fg.textSize);
 	style.applyPosAlign(style.getTextAlign(), outPos, textSize, blockSize);
-	m_fontDrawer->setFont(fontResProper);
-	m_fontDrawer->setColor(fg.color);
 	m_fontDrawer->print(outPos.x, outPos.y, buf, fg.textSize);
 }
 

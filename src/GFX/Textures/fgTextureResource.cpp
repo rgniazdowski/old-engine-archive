@@ -38,6 +38,7 @@ bool fgTexture::checkGlError(const char* fname) {
  * Base constructor of the texture resource object
  */
 fgTextureResource::fgTextureResource() :
+	fgResource(),
 	m_fileType(FG_TEXTURE_FILE_INVALID),
 	m_textureType(FG_TEXTURE_PLAIN),
 	m_pixelFormat(FG_TEXTURE_PIXEL_INVALID),
