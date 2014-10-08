@@ -93,8 +93,12 @@ files
 	Audio/fgSFXMusicResource.cpp
 	Audio/fgSFXMusicResource.h
 
-	["FlexiGame/BaseCode/Threads"]
-	Threads/fgThread.h
+	["FlexiGame/BaseCode/Thread"]
+	Thread/fgThread.cpp
+	Thread/fgThread.h
+	Thread/fgThreadLock.h
+	Thread/fgThreadSem.cpp
+	Thread/fgThreadSem.h
 
 	["FlexiGame/GameLogic"]
 	GameLogic/fgGameLogic.cpp
