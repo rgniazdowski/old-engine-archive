@@ -108,6 +108,9 @@ public:
 	//
 	virtual fgBool Call(fgGuiWidget *widget)
 	{
+		if(m_guiMethod != NULL && m_classInstance != NULL && m_guiMainPtr != NULL)
+			return (m_classInstance->*m_guiMethod)(m_guiMainPtr, widget);
+		return FG_FALSE;
 	}
 
 	//

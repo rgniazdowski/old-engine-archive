@@ -12,7 +12,8 @@
 /*
  *
  */
-fgGuiContainer::fgGuiContainer()
+fgGuiContainer::fgGuiContainer() :
+	fgGuiWidget()
 {	
 	fgGuiContainer::setDefaults();
 }
@@ -36,6 +37,9 @@ void fgGuiContainer::setDefaults(void)
 	m_typeTraits = FG_GUI_CONTAINER | FG_GUI_WIDGET;
 }
 
+/*
+ *
+ */
 void fgGuiContainer::display(fgGfxLayer *guiLayer)
 {
 	if(!guiLayer)

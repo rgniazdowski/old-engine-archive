@@ -12,7 +12,8 @@
 /*
  *
  */
-fgGuiConsole::fgGuiConsole()
+fgGuiConsole::fgGuiConsole() : 
+	fgGuiTextArea()
 {
 	fgGuiConsole::setDefaults();
 }

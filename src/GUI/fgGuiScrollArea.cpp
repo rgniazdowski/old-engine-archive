@@ -12,7 +12,8 @@
 /*
  *
  */
-fgGuiScrollArea::fgGuiScrollArea()
+fgGuiScrollArea::fgGuiScrollArea() : 
+	fgGuiContainer()
 {
 	fgGuiScrollArea::setDefaults();
 }

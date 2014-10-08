@@ -10,7 +10,6 @@
 #include "fgGuiWidget.h"
 #include "fgGuiDrawer.h"
 #include "Resource/fgResource.h"
-#include "fgFontResource.h"
 
 /*
  *
@@ -25,6 +24,7 @@ fgGuiWidget::fgGuiWidget() :
 	m_config(),
 	m_text(),
 	m_relPos(),
+	m_bbox(),
 	m_onFocus(NULL),
 	m_onFocusLost(NULL),
 	m_onClick(NULL),
@@ -42,7 +42,12 @@ fgGuiWidget::fgGuiWidget() :
 	m_isActive(FG_TRUE),
 	m_ignoreState(FG_FALSE)
 {
-
+	m_bbox.pos.x = -1.0f;
+	m_bbox.pos.y = -1.0f;
+	m_bbox.pos.z = -1.0f;
+	m_bbox.size.x = -1.0f;
+	m_bbox.size.y = -1.0f;
+	m_bbox.size.z = -1.0f;
 }
 
 /*

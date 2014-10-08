@@ -12,7 +12,8 @@
 /*
  *
  */
-fgGuiTextArea::fgGuiTextArea()
+fgGuiTextArea::fgGuiTextArea() :
+	fgGuiScrollArea()
 {
 	fgGuiTextArea::setDefaults();
 }

@@ -13,6 +13,7 @@
  *
  */
 fgGuiButton::fgGuiButton() : 
+	fgGuiWidget(),
 	m_label(NULL)
 {
 	fgGuiButton::setDefaults();
