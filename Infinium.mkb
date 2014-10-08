@@ -245,12 +245,33 @@ files
 	GFX/Particles/fgPsSequentialEffect.h
 	GFX/Particles/fgPsSpecialEffect.h
 
+	["FlexiGame/GUI/Font"]
+	GUI/Font/fgFontBuiltIn.cpp
+	GUI/Font/fgFontBuiltIn.h
+	GUI/Font/fgFontBuiltInTypes.h
+	GUI/Font/fgFontDrawer.cpp
+	GUI/Font/fgFontDrawer.h
+	GUI/Font/fgFontResource.cpp
+	GUI/Font/fgFontResource.h
+	GUI/Font/fgFontStbArialBold.cpp
+	GUI/Font/fgFontStbArialBold.h
+	GUI/Font/fgFontStbArial.cpp
+	GUI/Font/fgFontStbArial.h
+	GUI/Font/fgFontStbConsolasBold.cpp
+	GUI/Font/fgFontStbConsolasBold.h
+	GUI/Font/fgFontStbConsolas.cpp
+	GUI/Font/fgFontStbConsolas.h
+	GUI/Font/fgFontStbCourierBold.cpp
+	GUI/Font/fgFontStbCourierBold.h
+	GUI/Font/fgFontStbCourier.cpp
+	GUI/Font/fgFontStbCourier.h
+	GUI/Font/fgFontStbTimesBold.cpp
+	GUI/Font/fgFontStbTimesBold.h
+	GUI/Font/fgFontStbTimes.cpp
+	GUI/Font/fgFontStbTimes.h
+	
 	["FlexiGame/GUI"]
 	GUI/fgGuiErrorCodes.h
-	GUI/fgFontDrawer.cpp
-	GUI/fgFontDrawer.h
-	GUI/fgFontResource.cpp
-	GUI/fgFontResource.h
 	GUI/fgGuiBase.h
 	GUI/fgGuiButton.cpp
 	GUI/fgGuiButton.h
@@ -469,6 +490,7 @@ subprojects
 	dpi
 	tinyobj
 	tinyxml
+	stbfont
 }
 
 includepaths
