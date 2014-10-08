@@ -12,6 +12,7 @@
 
 #include "fgBuildConfig.h"
 #include "fgBool.h"
+#include <cstring>
 
 #ifdef FG_USING_MARMALADE
 

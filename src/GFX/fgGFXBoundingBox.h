@@ -12,11 +12,14 @@
 
 #include "fgBuildConfig.h"
 #include "fgBool.h"
-
+//#include "StbConsolasBold/stb_font_consolas_bold_32_usascii.inl"
 #if defined(FG_USING_GLM)
 #include "glm/vec2.hpp"
 #include "glm/vec3.hpp"
 #endif
+
+template <class DataType> struct fgBoundingBox2D;
+template <class DataType> struct fgBoundingBox3D;
 
 template <class BoxType, class VecType, class DataType>
 struct fgBoundingBox
@@ -118,17 +121,17 @@ template <class DataType>
 /*
  *
  */
-struct fgBoundingBox2D : fgBoundingBox<fgBoundingBox2D<DataType>, glm::detail::tvec2 <DataType, glm::precision::defaultp> , DataType>
+struct fgBoundingBox2D : fgBoundingBox<fgBoundingBox2D<DataType>, glm::detail::tvec2<DataType, glm::defaultp>, DataType>
 {
-	typedef fgBoundingBox<fgBoundingBox2D<DataType>, glm::detail::tvec2 <DataType, glm::precision::defaultp> , DataType> baseType;
-	typedef glm::detail::tvec2<DataType, glm::precision::defaultp> vecType;
+	typedef fgBoundingBox<fgBoundingBox2D<DataType>, glm::detail::tvec2<DataType, glm::defaultp>, DataType> baseType;
+	typedef glm::detail::tvec2<DataType, glm::defaultp> vecType;
 
-	fgBoundingBox2D() : fgBoundingBox<fgBoundingBox2D<DataType>, glm::detail::tvec2 <DataType, glm::precision::defaultp> , DataType>()
+	fgBoundingBox2D() : fgBoundingBox<fgBoundingBox2D<DataType>, glm::detail::tvec2<DataType, glm::defaultp>, DataType>()
 	{
 	}
 
 	fgBoundingBox2D(const vecType &_pos, const vecType &_size) :
-		fgBoundingBox<fgBoundingBox2D<DataType>, glm::detail::tvec2 <DataType, glm::precision::defaultp> , DataType>(_pos, _size)
+		fgBoundingBox<fgBoundingBox2D<DataType>, glm::detail::tvec2<DataType, glm::defaultp>, DataType>(_pos, _size)
 	{
 	}
 
@@ -162,17 +165,18 @@ template <class DataType>
 /*
  *
  */
-struct fgBoundingBox3D : fgBoundingBox<fgBoundingBox3D<DataType>, glm::detail::tvec3 <DataType, glm::precision::defaultp> , DataType>
+struct fgBoundingBox3D : 
+	fgBoundingBox<fgBoundingBox3D<DataType>, glm::detail::tvec3<DataType, glm::defaultp>, DataType>
 {
-	typedef fgBoundingBox<fgBoundingBox3D<DataType>, glm::detail::tvec3 <DataType, glm::precision::defaultp> , DataType> baseType;
-	typedef glm::detail::tvec3<DataType, glm::precision::defaultp> vecType;
+	typedef fgBoundingBox<fgBoundingBox3D<DataType>, glm::detail::tvec3<DataType, glm::defaultp>, DataType> baseType;
+	typedef glm::detail::tvec3<DataType, glm::defaultp> vecType;
 
-	fgBoundingBox3D() : fgBoundingBox<fgBoundingBox3D<DataType>, glm::detail::tvec3 <DataType, glm::precision::defaultp> , DataType>()
+	fgBoundingBox3D() : fgBoundingBox<fgBoundingBox3D<DataType>, glm::detail::tvec3 <DataType, glm::defaultp>, DataType>()
 	{
 	}
 
 	fgBoundingBox3D(const vecType &_pos, const vecType &_size) :
-		fgBoundingBox<fgBoundingBox3D<DataType>, glm::detail::tvec3 <DataType, glm::precision::defaultp> , DataType>(_pos, _size)
+		fgBoundingBox<fgBoundingBox3D<DataType>, glm::detail::tvec3 <DataType, glm::defaultp> , DataType>(_pos, _size)
 	{
 	}
 

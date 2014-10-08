@@ -402,7 +402,7 @@ void fgPointerInputReceiver::processData(void)
 #if defined(FG_USING_MARMALADE)
 	s3ePointerUpdate();
 #endif
-	for(int i=0;i<MAX_TOUCH_POINTS;i++)
+	for(unsigned int i=0;i<MAX_TOUCH_POINTS;i++)
 	{
 		int touchID = i;
 		fgPointerRawData & touchPtr =  m_rawTouches[i];

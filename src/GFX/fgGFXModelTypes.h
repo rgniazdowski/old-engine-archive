@@ -387,6 +387,10 @@ struct fgGfxMeshAoS : fgGfxMeshBase
 		return (fgGFXuint)vertices.size();
 	}
 
+	virtual fgGFXuint getNumColors(void) const {
+		return 0;
+	}
+
 	virtual fgGFXuint getNumIndices(void) const {
 		return (fgGFXuint)indices.size();
 	}

@@ -370,3 +370,47 @@ unsigned char *fgTextureLoader::loadTGA(fgFile *fileStream, int &width, int &hei
 	FG_LOG::PrintInfo("TGA LOAD: %s, %dx%d, data=%p;", fileStream->getPath(), w,h, data);
 	return data;
 }
+
+/*
+ *
+ */
+fgBool fgTextureLoader::saveTGA(const char *path, const unsigned char *data, const int width, const int height) 
+{
+	int i,j;
+	unsigned char *buf;
+	FILE *file = fopen(path, "wb");
+	if(!file) {
+		fprintf(stderr,"Texture::save_tga(): error create \"%s\" file\n", path);
+		return 0;
+	}
+	buf = new unsigned char[18 + width * height * 4];
+	memset(buf,0,18);
+	buf[2] = 2;
+	buf[12] = width % 256;
+	buf[13] = width / 256;
+	buf[14] = height % 256;
+	buf[15] = height / 256;
+	buf[16] = 32;
+	buf[17] = 0x28;
+	fgBool yolo1 = FG_FALSE;
+	if(!yolo1) {
+		memcpy(buf + 18,data,width * height * 4);
+	} else {
+		int k = 0;
+		for(i = 0 ; i< width * height; i++, k+=4) {
+			buf[k + 0 + 18] = data[i];
+			buf[k + 1 + 18] = data[i];
+			buf[k + 2 + 18] = data[i];
+			buf[k + 3 + 18] = 255;
+		}
+	}
+	for(i = 18; i < 18 + width * height * 4; i += 4) {
+		j = buf[i];
+		buf[i] = buf[i + 2];
+		buf[i + 2] = j;
+	}
+	fwrite(buf,1,18 + width * height * 4,file);
+	fclose(file);
+	delete buf;
+	return 1;
+}

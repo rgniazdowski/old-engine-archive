@@ -179,6 +179,11 @@
 #define FG_USING_SENSORS
 #endif
 
+#ifdef FG_USING_MARMALADE_THREADS
+#ifndef FG_USING_THREADS
+#define FG_USING_THREADS
+#endif
+#endif
 
 /*************************** GRAPHICS SPECIFIC ***************************/
 

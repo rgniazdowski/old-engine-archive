@@ -319,7 +319,7 @@ fgBool fgGfxShaderProgram::use(void)
 		if(shaderMgr->isProgramUsed(this))
 			return FG_FALSE;
 	}
-	glUseProgram(m_gfxID);
+	fgGfxPlatform::context()->useProgram(m_gfxID);
 	fgGLError("glUseProgram"); // #FIXME - GL error reporting - rtard?
 	return FG_TRUE;
 }
@@ -649,7 +649,9 @@ fgGFXint fgGfxShaderProgram::getUniformLocation(fgGfxUniformType type)
  */
 fgGFXint fgGfxShaderProgram::getUniformLocation(std::string variableName)
 {
-	return -1;
+	if(!m_gfxID || variableName.empty())
+		return -1;
+	return glGetUniformLocation(m_gfxID, variableName.c_str());
 }
 
 ///////////////////////////////////////////////////////////

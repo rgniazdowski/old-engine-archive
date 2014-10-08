@@ -370,7 +370,9 @@ void fgGfxDrawCall::draw(void)
 	} else if(m_program) {
 		m_program->setUniform(FG_GFX_USE_TEXTURE, 0.0f);
 	}
+	//fgGfxPlatform::context()->setBlend(FG_FALSE);
 	fgGfxPrimitives::drawArray2D(m_vecDataBase, m_attribMask, m_primMode);
+	//fgGfxPlatform::context()->setBlend(FG_TRUE);
 }
 
 /*

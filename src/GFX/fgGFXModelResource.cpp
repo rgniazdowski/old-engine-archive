@@ -108,7 +108,7 @@ fgBool fgGfxModelResource::_loadOBJ(void)
 			m_numUVs += shape->mesh->getNumUVs();
 			m_numIndices += shape->mesh->getNumIndices();
 		}
-		m_size += shape->getSize();
+		m_size += shape->getDataSize();
 	}
 	if(!m_materialOverride)
 		m_materialOverride = new fgGfxMaterial();

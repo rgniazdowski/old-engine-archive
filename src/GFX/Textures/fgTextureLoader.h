@@ -51,6 +51,8 @@ public:
 	static unsigned char *loadTGA(const char *path, int &width, int &height);
 	// Loads a TGA file and returns unsigned char array with raw data
 	static unsigned char *loadTGA(fgFile *fileStream, int &width, int &height);
+
+	static fgBool saveTGA(const char *path, const unsigned char* data, const int width, const int height);
 };
 
 #endif

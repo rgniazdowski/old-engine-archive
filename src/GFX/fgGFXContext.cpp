@@ -1111,7 +1111,7 @@ void fgGfxContext::blendEquation(const fgGFXenum mode)
 {
 	fgGfxContextParam& modeRGB = m_params[GL_BLEND_EQUATION_RGB];
 	fgGfxContextParam& modeAlpha = m_params[GL_BLEND_EQUATION_ALPHA];
-	if(modeRGB.intVal != mode || modeAlpha.intVal != mode) {
+	if(modeRGB.intVal != (fgGFXint)mode || modeAlpha.intVal != (fgGFXint)mode) {
 		modeAlpha = modeRGB = mode;
 		glBlendEquationSeparate(mode, mode);
 	}
@@ -1127,10 +1127,10 @@ void fgGfxContext::blendFunc(const fgGFXenum sfactor, const fgGFXenum dfactor)
 	fgGfxContextParam& srcAlpha = m_params[GL_BLEND_SRC_ALPHA];
 	fgGfxContextParam& dstAlpha = m_params[GL_BLEND_DST_ALPHA];
 
-	if(srcRGB.intVal != sfactor ||
-		srcAlpha.intVal != sfactor ||
-		dstRGB.intVal != dfactor ||
-		dstAlpha.intVal != dfactor) {
+	if(srcRGB.intVal != (fgGFXint)sfactor ||
+		srcAlpha.intVal != (fgGFXint)sfactor ||
+		dstRGB.intVal != (fgGFXint)dfactor ||
+		dstAlpha.intVal != (fgGFXint)dfactor) {
 		glBlendFuncSeparate(srcRGB, dstRGB, srcAlpha, dstAlpha);
 		srcRGB.intVal = sfactor;
 		dstRGB.intVal = dfactor;
@@ -1148,10 +1148,10 @@ void fgGfxContext::blendFunc(const fgGFXenum srcRGB, const fgGFXenum dstRGB, con
 	fgGfxContextParam& dstRGBparam = m_params[GL_BLEND_DST_RGB];
 	fgGfxContextParam& srcAlphaparam = m_params[GL_BLEND_SRC_ALPHA];
 	fgGfxContextParam& dstAlphaparam = m_params[GL_BLEND_DST_ALPHA];
-	if(srcRGBparam.intVal != srcRGB ||
-		srcAlphaparam.intVal != srcAlpha ||
-		dstRGBparam.intVal != dstRGB ||
-		dstAlphaparam.intVal != dstAlpha) {
+	if(srcRGBparam.intVal != (fgGFXint)srcRGB ||
+		srcAlphaparam.intVal != (fgGFXint)srcAlpha ||
+		dstRGBparam.intVal != (fgGFXint)dstRGB ||
+		dstAlphaparam.intVal != (fgGFXint)dstAlpha) {
 		glBlendFuncSeparate(srcRGBparam, dstRGBparam, srcAlphaparam, dstAlphaparam);
 		srcRGBparam.intVal = srcRGB;
 		dstRGBparam.intVal = dstRGB;
@@ -1166,7 +1166,7 @@ void fgGfxContext::blendFunc(const fgGFXenum srcRGB, const fgGFXenum dstRGB, con
  */
 void fgGfxContext::useProgram(const fgGFXuint program)
 {
-	if(m_params[GL_CURRENT_PROGRAM].intVal != program) {
+	if(m_params[GL_CURRENT_PROGRAM].intVal != (fgGFXint)program) {
 		m_params[GL_CURRENT_PROGRAM].set((fgGFXint)program);
 	}
 }

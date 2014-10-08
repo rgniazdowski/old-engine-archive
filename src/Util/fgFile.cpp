@@ -225,7 +225,7 @@ char *fgFile::load(const char *filePath)
 		return NULL;
 	}
 	// #FIXME
-	char *fileBuffer = (char *) fgMalloc(sizeof(char) * (fileSize+1));
+	char *fileBuffer = fgMalloc<char>(fileSize+1);
 	if(fileBuffer == NULL) {
 		reportError(FG_ERRNO); // #FIXME - memory error codes
 		close();
