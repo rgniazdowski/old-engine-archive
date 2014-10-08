@@ -131,12 +131,18 @@ fgBool fgTextureManager::uploadToVRAM(fgTextureResource *texture, fgBool force)
 		return FG_FALSE;
 	}
 	fgBool result = FG_TRUE;
+	fgTextureGfxID& texGfxID = texture->getRefTextureGfxID();
+	if(glIsTexture(texGfxID) == GL_TRUE && !force) {
+		return result;
+	}
 	FG_LOG::PrintDebug("GFX: Is texture '%s' locked? [%d]", texture->getNameStr(), texture->isLocked());
 	if(texture->isLocked() || force) {
 		FG_LOG::PrintDebug("GFX: Going to upload texture to VRAM - '%s'", texture->getNameStr());
-		fgTextureGfxID& texGfxID = texture->getRefTextureGfxID();
 		FG_LOG::PrintDebug("GFX: Is Texture? [%d] ; Was in VRAM? [%d]", (int)glIsTexture(texGfxID), texture->isInVRAM());
-		if(glIsTexture(texGfxID) == GL_FALSE || !texture->hasOwnedRAM()) {
+		if(glIsTexture(texGfxID) == GL_TRUE) {
+			releaseGFX(texture);
+		}
+		if(!texture->hasOwnedRAM()) {
 			if(!texture->create()) {
 				FG_LOG::PrintError("GFX: Could not recreate texture '%s'", texture->getFilePathStr());
 				result = FG_FALSE;
@@ -154,6 +160,33 @@ fgBool fgTextureManager::uploadToVRAM(fgTextureResource *texture, fgBool force)
 		}
 	} // else: if resource is not locked then most likely it is not needed
 	return result;
+}
+
+/*
+ *
+ */
+fgBool fgTextureManager::uploadToVRAM(const std::string& nameTag, fgBool force)
+{
+	if(!m_resourceManager)
+		return FG_FALSE;
+	
+	return uploadToVRAM(nameTag.c_str(), force);
+}
+
+/*
+ *
+ */
+fgBool fgTextureManager::uploadToVRAM(const char *nameTag, fgBool force)
+{
+	if(!m_resourceManager)
+		return FG_FALSE;
+	fgResource *resource = m_resourceManager->get(nameTag);
+	if(!resource)
+		return FG_FALSE;
+	if(resource->getResourceType() != FG_RESOURCE_TEXTURE || resource->getResourceType() != FG_RESOURCE_FONT)
+		return FG_FALSE;
+	fgTextureResource *texture = (fgTextureResource *)resource;
+	return uploadToVRAM(texture, force);
 }
 
 /**
@@ -224,6 +257,25 @@ void fgTextureManager::allReleaseGFX(void) {
 	m_resourceManager->refreshMemory();
 }
 
+/*
+ *
+ */
+void fgTextureManager::releaseGFX(fgTextureResource *texture)
+{
+	if(!texture)
+		return;
+	fgResourceType resType = texture->getResourceType();
+	if(resType == FG_RESOURCE_TEXTURE || resType == FG_RESOURCE_FONT) {
+		fgTextureGfxID& texGfxID = texture->getRefTextureGfxID();
+		if(glIsTexture(texGfxID) == GL_TRUE) {
+			// There is a texture to release from GFX
+			glDeleteTextures(1, &texGfxID);
+			texGfxID = 0;
+			texture->setTextureGfxID(0);
+		}
+	}
+}
+
 /**
  * Uploads image to VRAM as a texture
  *
@@ -258,7 +310,7 @@ fgBool fgTextureManager::makeTexture(fgTextureResource *pTexture)
     }
 	fgBool status = FG_TRUE;
 	std::string failedFuncs;
-    glBindTexture(GL_TEXTURE_2D, idRef);
+	fgGfxPlatform::context()->bindTexture2D(idRef);
 	if(fgGLError("glBindTexture")) {
 		status = FG_FALSE;
 		failedFuncs.append("glBindTexture, ");
@@ -266,14 +318,28 @@ fgBool fgTextureManager::makeTexture(fgTextureResource *pTexture)
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
 	if(fgGLError("glTexParameteri")) {
 		status = FG_FALSE;
 		failedFuncs.append("glTexParameteri, ");
 	}
     // Upload
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, pTexture->getWidth(), pTexture->getHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, pTexture->getRawData());
+	fgGFXint internalformat = GL_RGBA;
+	fgGFXint dataformat = GL_RGBA;
+	glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
+	if(pTexture->getComponents() == 4) {
+		internalformat = GL_RGBA;
+		dataformat = GL_RGBA;
+	} else if(pTexture->getComponents() == 3) {
+		internalformat = GL_RGB;
+		dataformat = GL_RGB;
+	} else if(pTexture->getComponents() == 1) {
+		internalformat = GL_ALPHA;
+		dataformat = GL_ALPHA;
+		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+	}
+	glTexImage2D(GL_TEXTURE_2D, 0, internalformat, pTexture->getWidth(), pTexture->getHeight(), 0, dataformat, GL_UNSIGNED_BYTE, pTexture->getRawData());
 	if(fgGLError("glTexImage2D")) {
 		status = FG_FALSE;
 		failedFuncs.append("glTexImage2D, ");
@@ -284,6 +350,8 @@ fgBool fgTextureManager::makeTexture(fgTextureResource *pTexture)
 		failedFuncs.clear();
 	} else {
 		FG_LOG::PrintDebug("GFX: Texture [%s] uploaded successfully: gfxID=%d;", pTexture->getNameStr(), pTexture->getTextureGfxID());
+		FG_LOG::PrintDebug("GFX: Texture [%s] dimensions: %dx%d", pTexture->getNameStr(), pTexture->getWidth(), pTexture->getHeight());
 	}
+	glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
     return status;
 }

@@ -36,7 +36,6 @@ typedef FG_TAG_TEXTURE_MANAGER fgTextureManagerTag;
  * Class that allows to perform GROUP OPERATIONS on all textures. 
  */
 class fgTextureManager : public fgManagerBase, public fgStatusReporter<fgTextureManagerTag> {
-    friend class MainModule; // ?? ?? ??
 public:
 	// Default constructor for Texture Manager object
     fgTextureManager(fgManagerBase *resourceManager);
@@ -82,7 +81,15 @@ public:
 	static GLint translateInternalPixelFormat(fgTextureInternalPixelFormat internalPixelFormat);
 #endif
 
+	//
 	fgBool uploadToVRAM(fgTextureResource *texture, fgBool force = FG_FALSE);
+	//
+	fgBool uploadToVRAM(const std::string& nameTag, fgBool force = FG_FALSE);
+	//
+	fgBool uploadToVRAM(const char *nameTag, fgBool force = FG_FALSE);
+
+	//
+	void releaseGFX(fgTextureResource *texture);
 
 private:
     /**
@@ -100,7 +107,9 @@ private:
     fgBool makeTexture(fgTextureResource *textureResource);	
 
 private:
+	///
 	fgResourceManager *m_resourceManager;
+	///
 	fgBool m_allInVRAM;
 };
 
