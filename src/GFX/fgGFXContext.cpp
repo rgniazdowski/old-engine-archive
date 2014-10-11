@@ -895,20 +895,43 @@ m_attribMask(0),
 m_boundTexture(0) {
 
 #if defined(FG_USING_SDL2)
+    SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 8);
+    SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 8);
+    SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 8);
+    SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE, 8);
+    SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 16);
+    SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+     
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
+   
+    //SDL_GL_SetAttribute(SDL_GL_ACCELERATED_VISUAL, 1);
+    //SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+    //SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_FORWARD_COMPATIBLE_FLAG);
+
     // #FIXME seriously, this context should be created somewhere else, gfx Main ?
     m_GLContext = SDL_GL_CreateContext(m_sdlWindow);
     if(!m_GLContext) {
         FG_LOG::PrintError("GFX: Couldn't create GL context: %s", SDL_GetError());
         SDL_ClearError();
-        return;
+        // Failed so try again with least possible GL version
+        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 0);
+        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
+        m_GLContext = SDL_GL_CreateContext(m_sdlWindow);
+        if(!m_GLContext) {
+            return;
+        }
     }
-    int r, g, b;
+    int r, g, b, major, minor;
     SDL_GL_MakeCurrent(m_sdlWindow, m_GLContext);
 
     SDL_GL_GetAttribute(SDL_GL_RED_SIZE,    &r);
     SDL_GL_GetAttribute(SDL_GL_GREEN_SIZE,  &g);
     SDL_GL_GetAttribute(SDL_GL_BLUE_SIZE,   &b);
+    SDL_GL_GetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, &major);
+    SDL_GL_GetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, &minor);
 
+    FG_LOG::PrintDebug("GFX: GL version %d.%d", major, minor);
     FG_LOG::PrintDebug("GFX: GL color buffer: red size: %d, green size: %d, blue size: %d", r, g, b);
     
 #if defined(FG_USING_GL_BINDING)
