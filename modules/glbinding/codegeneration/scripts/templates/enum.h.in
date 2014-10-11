@@ -1,0 +1,19 @@
+#pragma once
+
+#include <glbinding/%a/nogl.h>
+#include <glbinding/%a/types.h>
+
+
+namespace %a
+{
+
+enum class GLenum : unsigned int
+{
+%s
+};
+
+// import enums to namespace
+
+%s
+
+} // namespace %a

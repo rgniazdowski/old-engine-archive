@@ -41,53 +41,50 @@ template<class Type>
  * Instead of size there is count which specifies number of 
  * copies. Size = Count * sizeof(Type)
  */
-inline Type *fgMalloc(const int count = 1, const fgBool clear = FG_TRUE)
-{
-	if(count <= 0)
-		return NULL;
-	size_t size = count * sizeof(Type);
-	Type *data = (Type *) fgMalloc_sys_(size);
-	if(!data)
-		return NULL;
-	if(clear) {
-		memset((void *)data, 0, size);
-	}
-	return data;
+inline Type *fgMalloc(const int count = 1, const fgBool clear = FG_TRUE) {
+    if (count <= 0)
+        return NULL;
+    size_t size = count * sizeof (Type);
+    Type *data = (Type *) fgMalloc_sys_(size);
+    if (!data)
+        return NULL;
+    if (clear) {
+        memset((void *) data, 0, size);
+    }
+    return data;
 }
 
 /*
  *
  */
-inline void fgFree(void *& item, const int size = -1, const fgBool clear = FG_FALSE)
-{
-	if(!item)
-		return;
+inline void fgFree(void *& item, const int size = -1, const fgBool clear = FG_FALSE) {
+    if (!item)
+        return;
 
-	if(clear && size > 0) {
-		memset(item, 0, (size_t)size);
-	}
+    if (clear && size > 0) {
+        memset(item, 0, (size_t) size);
+    }
 
-	fgFree_sys_(item);
+    fgFree_sys_(item);
 
-	item = NULL;
+    item = NULL;
 }
 
 template<class Type>
 /*
  *
  */
-inline void fgFree(Type *& item, const fgBool clear = FG_FALSE)
-{
-	if(!item)
-		return;
-	size_t size = sizeof(Type);
-	if(clear && size > 0) {
-		memset(item, 0, size);
-	}
+inline void fgFree(Type *& item, const fgBool clear = FG_FALSE) {
+    if (!item)
+        return;
+    size_t size = sizeof (Type);
+    if (clear && size > 0) {
+        memset(item, 0, size);
+    }
 
-	fgFree_sys_((void *)item);
+    fgFree_sys_((void *) item);
 
-	item = NULL;
+    item = NULL;
 }
 
 #define fgRealloc fgRealloc_sys_

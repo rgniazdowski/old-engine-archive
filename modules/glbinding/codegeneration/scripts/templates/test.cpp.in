@@ -1,0 +1,4 @@
+
+#include <glbinding/%a/gl.h>
+
+%s

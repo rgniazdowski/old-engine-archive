@@ -209,15 +209,15 @@ public:
 			return false;
 		else
 		{
-			if(this->m_texture < a.m_texture)
+			if(this->m_zIndex < a.m_zIndex)
 				return true;
-			else if(this->m_texture  > a.m_texture)
+			else if(this->m_zIndex > a.m_zIndex)
 				return false;
 			else
 			{
-				if(this->m_zIndex < a.m_zIndex)
+				if(this->m_texture < a.m_texture)
 					return true;
-				else if(this->m_zIndex > a.m_zIndex)
+				else if(this->m_texture  > a.m_texture)
 					return false;
 				else
 				{ 
@@ -238,15 +238,15 @@ public:
 			return true;
 		else
 		{
-			if(this->m_texture < a.m_texture)
+			if(this->m_zIndex < a.m_zIndex)
 				return false;
-			else if(this->m_texture  > a.m_texture)
+			else if(this->m_zIndex > a.m_zIndex)
 				return true;
 			else
 			{
-				if(this->m_zIndex < a.m_zIndex)
+				if(this->m_texture < a.m_texture)
 					return false;
-				else if(this->m_zIndex > a.m_zIndex)
+				else if(this->m_texture  > a.m_texture)
 					return true;
 				else
 				{ 
@@ -267,15 +267,15 @@ public:
 			return false;
 		else
 		{
-			if(this->m_texture < a.m_texture)
+			if(this->m_zIndex < a.m_zIndex)
 				return true;
-			else if(this->m_texture  > a.m_texture)
+			else if(this->m_zIndex > a.m_zIndex)
 				return false;
 			else
 			{
-				if(this->m_zIndex < a.m_zIndex)
+				if(this->m_texture < a.m_texture)
 					return true;
-				else if(this->m_zIndex > a.m_zIndex)
+				else if(this->m_texture  > a.m_texture)
 					return false;
 				else
 				{ 
@@ -296,15 +296,15 @@ public:
 			return true;
 		else
 		{
-			if(this->m_texture < a.m_texture)
+			if(this->m_zIndex < a.m_zIndex)
 				return false;
-			else if(this->m_texture  > a.m_texture)
+			else if(this->m_zIndex > a.m_zIndex)
 				return true;
 			else
 			{
-				if(this->m_zIndex < a.m_zIndex)
+				if(this->m_texture < a.m_texture)
 					return false;
-				else if(this->m_zIndex > a.m_zIndex)
+				else if(this->m_texture  > a.m_texture)
 					return true;
 				else
 				{ 

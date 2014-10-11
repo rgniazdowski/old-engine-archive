@@ -7,68 +7,15 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-/* // Example usage:
-
-static stb_fontchar fontdata[STB_SOMEFONT_NUM_CHARS];
-
-static void init(void)
-{
-    // optionally replace both STB_SOMEFONT_BITMAP_HEIGHT with STB_SOMEFONT_BITMAP_HEIGHT_POW2
-    static unsigned char fontpixels[STB_SOMEFONT_BITMAP_HEIGHT][STB_SOMEFONT_BITMAP_WIDTH];
-    STB_SOMEFONT_CREATE(fontdata, fontpixels, STB_SOMEFONT_BITMAP_HEIGHT);
-    ... create texture ...
-    // for best results rendering 1:1 pixels texels, use nearest-neighbor sampling
-    // if allowed to scale up, use bilerp
-}
-
-// This function positions characters on integer coordinates, and assumes 1:1 texels to pixels
-// Appropriate if nearest-neighbor sampling is used
-static void draw_string_integer(int x, int y, char *str) // draw with top-left point x,y
-{
-    ... use texture ...
-    ... turn on alpha blending and gamma-correct alpha blending ...
-    glBegin(GL_QUADS);
-    while (*str) {
-        int char_codepoint = *str++;
-        stb_fontchar *cd = &fontdata[char_codepoint - STB_SOMEFONT_FIRST_CHAR];
-        glTexCoord2f(cd->s0, cd->t0); glVertex2i(x + cd->x0, y + cd->y0);
-        glTexCoord2f(cd->s1, cd->t0); glVertex2i(x + cd->x1, y + cd->y0);
-        glTexCoord2f(cd->s1, cd->t1); glVertex2i(x + cd->x1, y + cd->y1);
-        glTexCoord2f(cd->s0, cd->t1); glVertex2i(x + cd->x0, y + cd->y1);
-        // if bilerping, in D3D9 you'll need a half-pixel offset here for 1:1 to behave correct
-        x += cd->advance_int;
-    }
-    glEnd();
-}
-
-// This function positions characters on float coordinates, and doesn't require 1:1 texels to pixels
-// Appropriate if bilinear filtering is used
-static void draw_string_float(float x, float y, char *str) // draw with top-left point x,y
-{
-    ... use texture ...
-    ... turn on alpha blending and gamma-correct alpha blending ...
-    glBegin(GL_QUADS);
-    while (*str) {
-        int char_codepoint = *str++;
-        stb_fontchar *cd = &fontdata[char_codepoint - STB_SOMEFONT_FIRST_CHAR];
-        glTexCoord2f(cd->s0f, cd->t0f); glVertex2f(x + cd->x0f, y + cd->y0f);
-        glTexCoord2f(cd->s1f, cd->t0f); glVertex2f(x + cd->x1f, y + cd->y0f);
-        glTexCoord2f(cd->s1f, cd->t1f); glVertex2f(x + cd->x1f, y + cd->y1f);
-        glTexCoord2f(cd->s0f, cd->t1f); glVertex2f(x + cd->x0f, y + cd->y1f);
-        // if bilerping, in D3D9 you'll need a half-pixel offset here for 1:1 to behave correct
-        x += cd->advance;
-    }
-    glEnd();
-}
-*/
-
 #ifndef _FG_FONT_BUILT_IN_TYPES_H_
 #define _FG_FONT_BUILT_IN_TYPES_H_
 
+#ifndef NULL
 #ifndef __cplusplus
 #define NULL ((void *)0)
 #else
 #define NULL 0
+#endif
 #endif
 
 #include "Util/fgMemory.h"

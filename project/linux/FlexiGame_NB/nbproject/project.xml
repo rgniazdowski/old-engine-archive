@@ -6,7 +6,7 @@
             <name>FlexiGame_NB</name>
             <c-extensions/>
             <cpp-extensions>cpp</cpp-extensions>
-            <header-extensions>h</header-extensions>
+            <header-extensions>h,hpp</header-extensions>
             <sourceEncoding>UTF-8</sourceEncoding>
             <make-dep-projects/>
             <sourceRootList>
@@ -14,6 +14,7 @@
                 <sourceRootElem>../../../modules/glm</sourceRootElem>
                 <sourceRootElem>../../../modules/tinyobj</sourceRootElem>
                 <sourceRootElem>../../../modules/tinyxml</sourceRootElem>
+                <sourceRootElem>../../../modules/glbinding/source/glbinding</sourceRootElem>
             </sourceRootList>
             <confList>
                 <confElem>
@@ -22,6 +23,22 @@
                 </confElem>
                 <confElem>
                     <name>Release</name>
+                    <type>1</type>
+                </confElem>
+                <confElem>
+                    <name>Debug_GLEW_SDL2</name>
+                    <type>1</type>
+                </confElem>
+                <confElem>
+                    <name>Debug_GLBIND_SDL2</name>
+                    <type>1</type>
+                </confElem>
+                <confElem>
+                    <name>Release_GLBIND_SDL2</name>
+                    <type>1</type>
+                </confElem>
+                <confElem>
+                    <name>Release_GLEW_SDL2</name>
                     <type>1</type>
                 </confElem>
             </confList>

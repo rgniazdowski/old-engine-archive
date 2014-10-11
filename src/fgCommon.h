@@ -47,7 +47,6 @@ public:
 	{  return ((*left) < (*right));  }
 };
 #endif /* FG_PTR_LESS_DEFINED_ */
-
 #ifndef FG_PTR_GREATER_DEFINED_
 #define FG_PTR_GREATER_DEFINED_
 // This class allows an STL object to compare the objects instead of
@@ -61,6 +60,35 @@ public:
 };
 #endif /* FG_PTR_GREATER_DEFINED_ */
 
+
+
+#ifndef FG_PTR_LESS_EQ__DEFINED_
+#define FG_PTR_LESS_EQ_DEFINED_
+// This class allows an STL object to compare the objects instead of
+// comparing the value of the objects' pointers.
+template <class T>
+class fgPtrLessEq
+{
+public:
+	inline bool operator ()(T left, T right)
+	{  return ((*left) <= (*right));  }
+};
+#endif /* FG_PTR_LESS_DEFINED_ */
+#ifndef FG_PTR_GREATER_EQ_DEFINED_
+#define FG_PTR_GREATER_EQ_DEFINED_
+// This class allows an STL object to compare the objects instead of
+// comparing the value of the objects' pointers.
+template <class T>
+class fgPtrGreaterEq
+{
+public:
+	inline bool operator ()(T left, T right)
+	{  return !((*left) <= (*right));  }
+};
+#endif /* FG_PTR_GREATER_DEFINED_ */
+
+
+
 #ifndef FG_LESS_DEFINED_
 #define FG_LESS_DEFINED_
 template <class T>
@@ -71,7 +99,6 @@ public:
 	{  return ((left) < (right));  }
 };
 #endif /* FG_LESS_DEFINED_ */
-
 #ifndef FG_GREATER_DEFINED_
 #define FG_GREATER_DEFINED_
 template <class T>
@@ -80,6 +107,28 @@ class fgGreater
 public:
 	inline bool operator ()(T left, T right)
 	{  return !((left) < (right));  }
+};
+#endif /* FG_GREATER_DEFINED_ */
+
+
+#ifndef FG_LESS_EQ_DEFINED_
+#define FG_LESS_EQ_DEFINED_
+template <class T>
+class fgLessEq
+{
+public:
+	inline bool operator ()(T left, T right)
+	{  return ((left) <= (right));  }
+};
+#endif /* FG_LESS_DEFINED_ */
+#ifndef FG_GREATER_EQ_DEFINED_
+#define FG_GREATER_EQ_DEFINED_
+template <class T>
+class fgGreaterEq
+{
+public:
+	inline bool operator ()(T left, T right)
+	{  return !((left) <= (right));  }
 };
 #endif /* FG_GREATER_DEFINED_ */
 

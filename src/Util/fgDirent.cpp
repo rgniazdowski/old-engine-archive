@@ -291,7 +291,9 @@ fgBool fgDirent::rewind(void)
 void fgDirent::clearList(void)
 {
 	m_isRecursive = FG_FALSE;
+#ifdef FG_USING_MARMALADE
 	m_fileList = NULL;
+#endif
 	m_fileNames.clear_optimised();
 	m_fileIt = m_fileNames.end();
 }

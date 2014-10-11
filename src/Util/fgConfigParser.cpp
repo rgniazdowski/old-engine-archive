@@ -104,7 +104,8 @@ fgBool fgConfigParser::parseData(const char *data, fgCfgTypes::sectionMap &secti
 		next = input.find("\n", cur);
 
 		std::string line = input.substr(cur, next - cur);
-
+                if(line.empty())
+                    continue;
 		line = fgStrings::trim(line);
 		if(line[0] == ';' ||
 			line[0] == '#' || 

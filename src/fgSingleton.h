@@ -10,56 +10,42 @@
 #ifndef _FG_SINGLETON_H_
 #define _FG_SINGLETON_H_
 
-#include <cstdio>
-#include <typeinfo>
-
-// #FIXME - this is temporary...
-#include "fgLog.h"
-
 template<typename Class>
-class fgSingleton
-{
+class fgSingleton {
 private:
-	static bool instanceFlag;
-	static Class *instance;
+    static bool instanceFlag;
+    static Class *instance;
 
-protected:	
-	fgSingleton()
-	{
-	}
+protected:
+
+    fgSingleton() {
+    }
 
 public:
-	static Class *getInstance()
-	{
-		if(!instanceFlag || !instance)
-		{
-			if(!instance)
-				instance = new Class();
-			instanceFlag = true;
-			FG_LOG::PrintDebug(">>>>>>>>>> Created instance of type: '%s'\n", typeid(instance).name());
-			return instance;
-		} else {
-			return instance;
-		}
-	}
-	
-	static void deleteInstance()
-	{
-		if(instanceFlag || instance)
-		{
-			instanceFlag = false;
-			FG_LOG::PrintDebug(">>>>>>>>>> Deleted instance of type: '%s'\n", typeid(instance).name());
-			if(instance)
-				delete instance;
-			instance = NULL;
-		}
-	}
 
-	~fgSingleton()
-	{
-		FG_LOG::PrintDebug(">>>>>>>>>> Deleted instance of Singleton - ~ destructor called.");
-		instanceFlag = false;
-	}
+    static Class *getInstance() {
+        if (!instanceFlag || !instance) {
+            if (!instance)
+                instance = new Class();
+            instanceFlag = true;
+            return instance;
+        } else {
+            return instance;
+        }
+    }
+
+    static void deleteInstance() {
+        if (instanceFlag || instance) {
+            instanceFlag = false;
+            if (instance)
+                delete instance;
+            instance = 0;
+        }
+    }
+
+    ~fgSingleton() {
+        instanceFlag = false;
+    }
 };
 
 #endif /* _FG_SINGLETON_H_ */

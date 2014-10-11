@@ -2,343 +2,83 @@
 files
 {
 	(src)
-	
+
 	["FlexiGame/BaseCode"]
-	fgMainModule.cpp
-	fgVector.h
-	fgBool.h
-	fgBuildConfig.h
-	fgBuildConfig.cpp
-	fgCommon.cpp
-	fgCommon.h
-	fgErrno.h
-	fgErrno.cpp
-	fgErrorCodes.cpp
-	fgErrorCodes.h
-	fgException.h
-	fgGameMain.cpp
-	fgGameMain.h
-	fgGameErrorCodes.h
-	fgLog.cpp
-	fgLog.h
-	fgManagerBase.h
-	fgMessageCommon.h
-	fgMessageSubsystem.cpp
-	fgMessageSubsystem.h
-	fgSingleton.h
-	fgStatus.h
-	fgStatusReporter.cpp
-	fgStatusReporter.h
-	fgTypes.h
-	fgUnistd.h
+	"*.cpp"
+	"*.h"
 
 	["FlexiGame/BaseCode/Util"]
-	Util/fgConfig.cpp
-	Util/fgConfig.h
-	Util/fgConfigParser.cpp
-	Util/fgConfigParser.h
-	Util/fgConfigStruct.h
-	Util/fgConfigWriter.cpp
-	Util/fgConfigWriter.h
-	Util/fgHandle.h
-	Util/fgHandleManager.h
-	Util/fgPath.cpp
-	Util/fgPath.h
-	Util/fgFile.cpp
-	Util/fgFile.h
-	Util/fgFileErrorCodes.h
-	Util/fgDirent.cpp
-	Util/fgDirent.h
-	Util/fgMemory.h
-	Util/fgMemoryErrorCodes.h
-	Util/fgProfiling.cpp
-	Util/fgProfiling.h
-	Util/fgSettings.cpp
-	Util/fgSettings.h
-	Util/fgStrings.h
-	Util/fgTime.cpp
-	Util/fgTime.h
-	Util/fgTag.h
+	"Util/*.cpp"
+	"Util/*.h"
 
 	["FlexiGame/BaseCode/XML"]
-	XML/fgXMLAutoHandler.h
-	XML/fgXMLDefaultHandler.h
-	XML/fgXMLErrorCodes.h
-	XML/fgXMLParser.cpp
-	XML/fgXMLParser.h
-	XML/fgXMLTypesWrap.h
+	"XML/*.cpp"
+	"XML/*.h"
 
 	["FlexiGame/BaseCode/Resources"]
-	Resource/fgDataManagerBase.h
-	Resource/fgDataObjectBase.h
-	Resource/fgResource.cpp
-	Resource/fgResource.h
-	Resource/fgResourceConfigParser.cpp
-	Resource/fgResourceConfigParser.h
-	Resource/fgResourceFactory.cpp
-	Resource/fgResourceFactory.h
-	Resource/fgResourceFactoryTypes.h
-	Resource/fgResourceGroup.cpp
-	Resource/fgResourceGroup.h
-	Resource/fgResourceManager.cpp
-	Resource/fgResourceManager.h
-	Resource/fgResourceErrorCodes.h
+	"Resource/*.cpp"
+	"Resource/*.h"
 
 	["FlexiGame/BaseCode/Audio"]
-	Audio/fgSFXErrorCodes.h
-	Audio/fgSFXAudioResource.cpp
-	Audio/fgSFXAudioResource.h
-	Audio/fgSFXManager.cpp
-	Audio/fgSFXManager.h
-	Audio/fgSFXMusicResource.cpp
-	Audio/fgSFXMusicResource.h
+	"Audio/*.cpp"
+	"Audio/*.h"
 
 	["FlexiGame/BaseCode/Thread"]
-	Thread/fgThread.cpp
-	Thread/fgThread.h
-	Thread/fgThreadLock.h
-	Thread/fgThreadSem.cpp
-	Thread/fgThreadSem.h
+	"Thread/*.cpp"
+	"Thread/*.h"
 
 	["FlexiGame/GameLogic"]
-	GameLogic/fgGameLogic.cpp
-	GameLogic/fgGameLogic.h
-
+	"GameLogic/*.cpp"
+	"GameLogic/*.h"
 
 	["FlexiGame/Event"]
-	Event/fgEventErrorCodes.h
-	Event/fgEventHelper.h
-	Event/fgEventDefinitions.h
-	Event/fgArgumentList.cpp
-	Event/fgArgumentList.h
-	Event/fgThrownEvent.h
-	Event/fgCyclicCallback.h
-	Event/fgTimeoutCallback.h
-	Event/fgCallback.h
-	Event/fgEventManager.cpp
-	Event/fgEventManager.h
+	"Event/*.cpp"
+	"Event/*.h"
 
 	["FlexiGame/Scripting"]
-	Scripting/fgScriptErrorCodes.h
-	Scripting/fgScriptManager.cpp
-	Scripting/fgScriptManager.h
-	Scripting/fgScriptResource.cpp
-	Scripting/fgScriptResource.h
+	"Scripting/*.cpp"
+	"Scripting/*.h"
 
 	["FlexiGame/Input"]
-	Input/fgPointerData.h
-	Input/fgPointerRawData.h
-	Input/fgPointerInputReceiver.cpp
-	Input/fgPointerInputReceiver.h
+	"Input/*.cpp"
+	"Input/*.h"
 
 	["FlexiGame/Hardware"]
-	Hardware/fgDeviceQuery.cpp
-	Hardware/fgDeviceQuery.h
-	Hardware/fgHardwareState.cpp
-	Hardware/fgHardwareState.h
-	Hardware/fgQualityManager.cpp
-	Hardware/fgQualityManager.h
-	Hardware/fgQualityTypes.h
-	Hardware/fgSensors.cpp
-	Hardware/fgSensors.h
-	
+	"Hardware/*.cpp"
+	"Hardware/*.h"
+
 	["FlexiGame/Math"]
-	Math/fgKalmanFilter.cpp
-	Math/fgKalmanFilter.h
-	Math/fgMathLib.h	
+	"Math/*.cpp"
+	"Math/*.h"
 
 	["FlexiGame/GFX"]
-	GFX/fgGFXGL.h
-	GFX/fgGFXBoundingBox.h
-	GFX/fgGFXColor.h
-	GFX/fgGFXContext.cpp
-	GFX/fgGFXContext.h
-	GFX/fgGFXErrorCodes.h
-	GFX/fgGFXTypes.h
-	GFX/fgGFX2DScene.cpp
-	GFX/fgGFX2DScene.h
-	GFX/fgGFX3DScene.cpp
-	GFX/fgGFX3DScene.h
-	GFX/fgGFXCamera.cpp
-	GFX/fgGFXCamera.h
-	GFX/fgGFXCameraAnimation.cpp
-	GFX/fgGFXCameraAnimation.h
-	GFX/fgGFXDrawCall.cpp
-	GFX/fgGFXDrawCall.h
-	GFX/fgGFXDrawingBatch.cpp
-	GFX/fgGFXDrawingBatch.h
-	GFX/fgGFXLayer.h
-	GFX/fgGFXMain.cpp
-	GFX/fgGFXMain.h
-	GFX/fgGFXMaterial.cpp
-	GFX/fgGFXMaterial.h
-	GFX/fgGFXModelTypes.h
-	GFX/fgGFXModelResource.cpp
-	GFX/fgGFXModelResource.h
-	GFX/fgGFXMVMatrix.h
-	GFX/fgGFXMVPMatrix.h
-	GFX/fgGFXObject.cpp
-	GFX/fgGFXObject.h
-	GFX/fgGFXOctreeBase.cpp
-	GFX/fgGFXOctreeBase.h
-	GFX/fgGFXPrimitives.cpp
-	GFX/fgGFXPrimitives.h
-	GFX/fgGFXProjection.h
-	GFX/fgGFXQuadtreeBase.cpp
-	GFX/fgGFXQuadtreeBase.h
-	GFX/fgGFXSceneManager.cpp
-	GFX/fgGFXSceneManager.h	
-	GFX/fgGFXSimpleDrawer.cpp
-	GFX/fgGFXSimpleDrawer.h
-	GFX/fgGFXTexturing.cpp
-	GFX/fgGFXTexturing.h
-	GFX/fgGFXStdInc.h
-	GFX/fgGFXWindow.cpp
-	GFX/fgGFXWindow.h
-	GFX/fgGFXPlatform.cpp
-	GFX/fgGFXPlatform.h
+	"GFX/*.cpp"
+	"GFX/*.h"
 
 	["FlexiGame/GFX/Shaders"]
-	GFX/Shaders/fgGFXShaderBase.cpp
-	GFX/Shaders/fgGFXShaderBase.h
-	GFX/Shaders/fgGFXShader.cpp
-	GFX/Shaders/fgGFXShader.h
-	GFX/Shaders/fgGFXShaderConfig.cpp
-	GFX/Shaders/fgGFXShaderConfig.h
-	GFX/Shaders/fgGFXShaderManager.cpp
-	GFX/Shaders/fgGFXShaderManager.h
-	GFX/Shaders/fgGFXShaderProgram.cpp
-	GFX/Shaders/fgGFXShaderProgram.h
-	GFX/Shaders/fgGFXShaderDefs.h
+	"GFX/Shaders/*.cpp"
+	"GFX/Shaders/*.h"
 
 	["FlexiGame/GFX/Textures"]
-	GFX/Textures/fgTextureErrorCodes.h
-	GFX/Textures/fgTextureLoader.cpp
-	GFX/Textures/fgTextureLoader.h
-	GFX/Textures/fgTextureManager.cpp
-	GFX/Textures/fgTextureManager.h
-	GFX/Textures/fgTextureResource.cpp
-	GFX/Textures/fgTextureResource.h
-	GFX/Textures/fgTextureTypes.h
+	"GFX/Textures/*.cpp"
+	"GFX/Textures/*.h"
 
 	["FlexiGame/GFX/Particles"]
-	GFX/Particles/fgParticle.h
-	GFX/Particles/fgParticleSystem.cpp
-	GFX/Particles/fgParticleSystem.h
-	GFX/Particles/fgPsExplosionEffect.cpp
-	GFX/Particles/fgPsExplosionEffect.h
-	GFX/Particles/fgPsFlashEffect.cpp
-	GFX/Particles/fgPsFlashEffect.h
-	GFX/Particles/fgPsFlyingDebrisEffect.cpp
-	GFX/Particles/fgPsFlyingDebrisEffect.h
-	GFX/Particles/fgPsObjectPulseEffect.cpp
-	GFX/Particles/fgPsObjectPulseEffect.h
-	GFX/Particles/fgPsParticleDrawer.cpp
-	GFX/Particles/fgPsParticleDrawer.h
-	GFX/Particles/fgPsParticleEffect.cpp
-	GFX/Particles/fgPsParticleEffect.h
-	GFX/Particles/fgPsParticleEffectCircular.cpp
-	GFX/Particles/fgPsParticleEffectCircular.h
-	GFX/Particles/fgPsParticleEffectLimited.cpp
-	GFX/Particles/fgPsParticleEffectLimited.h
-	GFX/Particles/fgPsSequentialEffect.cpp
-	GFX/Particles/fgPsSequentialEffect.h
-	GFX/Particles/fgPsSpecialEffect.h
+	"GFX/Particles/*.cpp"
+	"GFX/Particles/*.h"
 
 	["FlexiGame/GUI/Font"]
-	GUI/Font/fgFontBuiltIn.cpp
-	GUI/Font/fgFontBuiltIn.h
-	GUI/Font/fgFontBuiltInTypes.h
-	GUI/Font/fgFontDrawer.cpp
-	GUI/Font/fgFontDrawer.h
-	GUI/Font/fgFontResource.cpp
-	GUI/Font/fgFontResource.h
-	GUI/Font/fgFontStbArialBold.cpp
-	GUI/Font/fgFontStbArialBold.h
-	GUI/Font/fgFontStbArial.cpp
-	GUI/Font/fgFontStbArial.h
-	GUI/Font/fgFontStbConsolasBold.cpp
-	GUI/Font/fgFontStbConsolasBold.h
-	GUI/Font/fgFontStbConsolas.cpp
-	GUI/Font/fgFontStbConsolas.h
-	GUI/Font/fgFontStbCourierBold.cpp
-	GUI/Font/fgFontStbCourierBold.h
-	GUI/Font/fgFontStbCourier.cpp
-	GUI/Font/fgFontStbCourier.h
-	GUI/Font/fgFontStbTimesBold.cpp
-	GUI/Font/fgFontStbTimesBold.h
-	GUI/Font/fgFontStbTimes.cpp
-	GUI/Font/fgFontStbTimes.h
-	
+	"GUI/Font/*.cpp"
+	"GUI/Font/*.h"
+
 	["FlexiGame/GUI"]
-	GUI/fgGuiErrorCodes.h
-	GUI/fgGuiBase.h
-	GUI/fgGuiButton.cpp
-	GUI/fgGuiButton.h
-	GUI/fgGuiCallback.cpp
-	GUI/fgGuiCallback.h
-	GUI/fgGuiConsole.cpp
-	GUI/fgGuiConsole.h
-	GUI/fgGuiContainer.cpp
-	GUI/fgGuiContainer.h
-	GUI/fgGuiDrawer.cpp
-	GUI/fgGuiDrawer.h
-	GUI/fgGuiFrame.cpp
-	GUI/fgGuiFrame.h
-	GUI/fgGuiLabel.cpp
-	GUI/fgGuiLabel.h
-	GUI/fgGuiLoader.cpp
-	GUI/fgGuiLoader.h
-	GUI/fgGuiMain.cpp
-	GUI/fgGuiMain.h
-	GUI/fgGuiMenu.cpp
-	GUI/fgGuiMenu.h
-	GUI/fgGuiMessageBox.cpp
-	GUI/fgGuiMessageBox.h
-	GUI/fgGuiPopup.cpp
-	GUI/fgGuiPopup.h
-	GUI/fgGuiPrimitives.cpp
-	GUI/fgGuiPrimitives.h
-	GUI/fgGuiProgressBar.cpp
-	GUI/fgGuiProgressBar.h
-	GUI/fgGuiScreenGrid.cpp
-	GUI/fgGuiScreenGrid.h
-	GUI/fgGuiScrollArea.cpp
-	GUI/fgGuiScrollArea.h
-	GUI/fgGuiStructureSheet.cpp
-	GUI/fgGuiStructureSheet.h
-	GUI/fgGuiStructureSheetParser.cpp
-	GUI/fgGuiStructureSheetParser.h
-	GUI/fgGuiStyle.cpp
-	GUI/fgGuiStyle.h
-	GUI/fgGuiStyleContent.cpp
-	GUI/fgGuiStyleContent.h
-	GUI/fgGuiStyleSheetConfig.cpp
-	GUI/fgGuiStyleSheetConfig.h
-	GUI/fgGuiTable.cpp
-	GUI/fgGuiTable.h
-	GUI/fgGuiEditableText.cpp
-	GUI/fgGuiEditableText.h
-	GUI/fgGuiTextArea.cpp
-	GUI/fgGuiTextArea.h
-	GUI/fgGuiToggleButton.cpp
-	GUI/fgGuiToggleButton.h
-	GUI/fgGuiWindow.cpp
-	GUI/fgGuiWindow.h
-	GUI/fgGuiWidget.cpp
-	GUI/fgGuiWidget.h
-	GUI/fgGuiWidgetFactory.cpp
-	GUI/fgGuiWidgetFactory.h
-	GUI/fgGuiWidgetFactoryTypes.h
-	GUI/fgGuiWidgetManager.cpp
-	GUI/fgGuiWidgetManager.h
-	GUI/fgGuiStyleManager.cpp
-	GUI/fgGuiStyleManager.h
+	"GUI/*.cpp"
+	"GUI/*.h"
 }
 
 assets
 {
-	(data)	
+	(data)
 	sound/c.raw
 	sound/m.raw
 	sound/p.raw
@@ -401,7 +141,7 @@ assets
 	fonts/TrueCrimes_512.tga
 
 	(data)
-	obj/CobraBomber/CobraBomber_512.png	
+	obj/CobraBomber/CobraBomber_512.png
 	obj/CobraBomber/CobraBomber_1024.png
 	obj/CobraBomber/CobraBomber.mtl
 	obj/CobraBomber/CobraBomber.obj
@@ -419,11 +159,11 @@ assets
 	audio.group.xml
 	settings.xml
 	textures.group.xml
-	
+
 	(data)
 	shaders/sVertexLighting.frag
 	shaders/sVertexLighting.vert
-	
+
 	(data)
 	shaders/sPlainEasy.frag
 	shaders/sPlainEasy.vert
@@ -436,29 +176,29 @@ assets
 	shaders/sOrthoEasy.vert
 	shaders/sOrthoEasy.program.ini
 	shaders/sOrthoEasy.frag.shader.ini
-	shaders/sOrthoEasy.vert.shader.ini	
+	shaders/sOrthoEasy.vert.shader.ini
 
 	(data)
 	shaders/sSlowBumpMapping.frag
 	shaders/sSlowBumpMapping.vert
-	shaders/sSlowBumpMapping.program.ini	
+	shaders/sSlowBumpMapping.program.ini
 	shaders/sSlowBumpMapping.frag.shader.ini
 	shaders/sSlowBumpMapping.vert.shader.ini
-	
+
 	(data)
 	shaders/sEnvironmentMapping.frag
 	shaders/sEnvironmentMapping.vert
 	shaders/sEnvironmentMapping.program.ini
 	shaders/sEnvironmentMapping.frag.shader.ini
 	shaders/sEnvironmentMapping.vert.shader.ini
-	
+
 	(data)
 	shaders/sFragmentLighting.frag
 	shaders/sFragmentLighting.vert
 	shaders/sFragmentLighting.program.ini
 	shaders/sFragmentLighting.frag.shader.ini
 	shaders/sFragmentLighting.vert.shader.ini
-	
+
 }
 
 defines
@@ -477,7 +217,7 @@ options
 	buildenv=VC11
 }
 
-packages 
+packages
 {
 	libjpeg
 	libpng

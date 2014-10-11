@@ -151,30 +151,26 @@ void fgGfxPrimitives::drawArray2D(const fgVector<fgVertex2> &inputData,
 		return;
 	fgGfxPlatform::context()->diffVertexAttribArrayMask(attribMask);
 
-	int offset = ((int)&inputData.front());
+	uintptr_t offset = (uintptr_t)((unsigned int*)&inputData.front());
 	if(attribMask & FG_GFX_POSITION_BIT) {
-	//	glEnableVertexAttribArray(FG_GFX_ATTRIB_POS_LOCATION);
 		fgGfxPlatform::context()->vertexAttribPointer(FG_GFX_ATTRIB_POS_LOCATION, 
 			3, 
 			GL_FLOAT,
-			FG_FALSE,
+			FG_GFX_FALSE,
 			sizeof(fgVertex2),
-			reinterpret_cast<void*>(offset));
+			reinterpret_cast<fgGFXvoid*>(offset));
 	}
 	offset += sizeof(fgVector3f); 
 	if(attribMask & FG_GFX_UVS_BIT) {
-		//glEnableVertexAttribArray(FG_GFX_ATTRIB_UVS_LOCATION);
 		fgGfxPlatform::context()->vertexAttribPointer(FG_GFX_ATTRIB_UVS_LOCATION, 
 			2,
 			GL_FLOAT,
-			FG_FALSE,
+			FG_GFX_FALSE,
 			sizeof(fgVertex2),
-			reinterpret_cast<void*>(offset));
+			reinterpret_cast<fgGFXvoid*>(offset));
 	}
 	glDrawArrays((GLenum)mode, 0, inputData.size());
 	fgGLError("glDrawArrays");
-
-	//fgGfxPlatform::context()->disableVertexAttribArrayMask(attribMask);
 }
 
 /*
@@ -190,47 +186,36 @@ void fgGfxPrimitives::drawArray2D(const fgVector<fgVertex3> &inputData,
 	// VertexAttrib arrays locations do not need to be enabled/disabled
 	// every time, this may cause some slow down - find a way to remember the 
 	// state of the active attribute arrays...
-	int offset = ((int)&inputData.front());
+	uintptr_t offset = (uintptr_t)((unsigned int*)&inputData.front());
 	fgGfxPlatform::context()->diffVertexAttribArrayMask(attribMask);
 	if(attribMask & FG_GFX_POSITION_BIT) {
-		//glEnableVertexAttribArray(FG_GFX_ATTRIB_POS_LOCATION);
 		fgGfxPlatform::context()->vertexAttribPointer(FG_GFX_ATTRIB_POS_LOCATION, 
 			3,
 			GL_FLOAT,
-			FG_FALSE,
+			FG_GFX_FALSE,
 			sizeof(fgVertex3),
-			reinterpret_cast<void*>(offset));
+			reinterpret_cast<fgGFXvoid*>(offset));
 	}
 	offset += sizeof(fgVector3f); 
 	if(attribMask & FG_GFX_NORMAL_BIT) {
-		//glEnableVertexAttribArray(FG_GFX_ATTRIB_NORM_LOCATION);
 		fgGfxPlatform::context()->vertexAttribPointer(FG_GFX_ATTRIB_NORM_LOCATION, 
 			3,
 			GL_FLOAT,
-			FG_FALSE,
+			FG_GFX_FALSE,
 			sizeof(fgVertex3),
-			reinterpret_cast<void*>(offset));
+			reinterpret_cast<fgGFXvoid*>(offset));
 	}
 	offset += sizeof(fgVector3f); 
 	if(attribMask & FG_GFX_UVS_BIT) {
-		//glEnableVertexAttribArray(FG_GFX_ATTRIB_UVS_LOCATION);
 		fgGfxPlatform::context()->vertexAttribPointer(FG_GFX_ATTRIB_UVS_LOCATION, 
 			2,
 			GL_FLOAT,
-			FG_FALSE, 
+			FG_GFX_FALSE, 
 			sizeof(fgVertex3),
-			reinterpret_cast<void*>(offset));
+			reinterpret_cast<fgGFXvoid*>(offset));
 	}
 	glDrawArrays((GLenum)mode, 0, inputData.size());
 	fgGLError("glDrawArrays");
-
-	/*if(attribMask & FG_GFX_POSITION_BIT)
-		glDisableVertexAttribArray(FG_GFX_ATTRIB_POS_LOCATION);
-	if(attribMask & FG_GFX_NORMAL_BIT)
-		glDisableVertexAttribArray(FG_GFX_ATTRIB_NORM_LOCATION);
-	if(attribMask & FG_GFX_UVS_BIT)
-		glDisableVertexAttribArray(FG_GFX_ATTRIB_UVS_LOCATION);*/
-	//fgGfxPlatform::context()->disableVertexAttribArrayMask(attribMask);
 }
 
 /*
@@ -243,59 +228,45 @@ void fgGfxPrimitives::drawArray2D(const fgVector<fgVertex4> &inputData,
 	if(inputData.empty() || !attribMask)
 		return;
 
-	int offset = ((int)&inputData.front());
+	uintptr_t offset = (uintptr_t)((unsigned int*)&inputData.front());
 	fgGfxPlatform::context()->diffVertexAttribArrayMask(attribMask);
 	if(attribMask & FG_GFX_POSITION_BIT) {
-		//glEnableVertexAttribArray(FG_GFX_ATTRIB_POS_LOCATION);
 		fgGfxPlatform::context()->vertexAttribPointer(FG_GFX_ATTRIB_POS_LOCATION,
 			3, 
 			GL_FLOAT, 
-			FG_FALSE,
+			FG_GFX_FALSE,
 			sizeof(fgVertex4),
-			reinterpret_cast<void*>(offset));
+			reinterpret_cast<fgGFXvoid*>(offset));
 	}
 	offset += sizeof(fgVector3f); 
 	if(attribMask & FG_GFX_NORMAL_BIT) {
-		//glEnableVertexAttribArray(FG_GFX_ATTRIB_NORM_LOCATION);
 		fgGfxPlatform::context()->vertexAttribPointer(FG_GFX_ATTRIB_NORM_LOCATION,
 			3, 
 			GL_FLOAT, 
-			FG_FALSE, 
+			FG_GFX_FALSE, 
 			sizeof(fgVertex4),
-			reinterpret_cast<void*>(offset));
+			reinterpret_cast<fgGFXvoid*>(offset));
 	}
 	offset += sizeof(fgVector3f); 
 	if(attribMask & FG_GFX_UVS_BIT) {
-		//glEnableVertexAttribArray(FG_GFX_ATTRIB_UVS_LOCATION);
 		fgGfxPlatform::context()->vertexAttribPointer(FG_GFX_ATTRIB_UVS_LOCATION,
 			2,
 			GL_FLOAT,
-			FG_FALSE,
+			FG_GFX_FALSE,
 			sizeof(fgVertex4),
-			reinterpret_cast<void*>(offset));
+			reinterpret_cast<fgGFXvoid*>(offset));
 	}
 	offset += sizeof(fgVector2f); 
 	if(attribMask & FG_GFX_COLOR_BIT) {
-		//glEnableVertexAttribArray(FG_GFX_ATTRIB_COLOR_LOCATION);
 		fgGfxPlatform::context()->vertexAttribPointer(FG_GFX_ATTRIB_COLOR_LOCATION, 
 			4,
 			GL_FLOAT,
-			FG_FALSE,
+			FG_GFX_FALSE,
 			sizeof(fgVertex4),
-			reinterpret_cast<void*>(offset));
+			reinterpret_cast<fgGFXvoid*>(offset));
 	}
 	glDrawArrays((GLenum)mode, 0, inputData.size());
 	fgGLError("glDrawArrays");
-
-	/* if(attribMask & FG_GFX_POSITION_BIT)
-		glDisableVertexAttribArray(FG_GFX_ATTRIB_POS_LOCATION);
-	if(attribMask & FG_GFX_NORMAL_BIT)
-		glDisableVertexAttribArray(FG_GFX_ATTRIB_NORM_LOCATION);
-	if(attribMask & FG_GFX_UVS_BIT)
-		glDisableVertexAttribArray(FG_GFX_ATTRIB_UVS_LOCATION);
-	if(attribMask & FG_GFX_COLOR_BIT)
-		glDisableVertexAttribArray(FG_GFX_ATTRIB_COLOR_LOCATION);
-	*/
 }
 
 void fgGfxPrimitives::drawArray2D(const fgVertexDataBase *inputData,
@@ -308,14 +279,14 @@ void fgGfxPrimitives::drawArray2D(const fgVertexDataBase *inputData,
 		return;
 	unsigned int andMask = (attribMask & inputData->attribMask());
 	fgGfxPlatform::context()->diffVertexAttribArrayMask(andMask);
-	int offset = ((int)inputData->front());
+	uintptr_t offset = (uintptr_t)((unsigned int*)inputData->front());
 	if(andMask & FG_GFX_POSITION_BIT) {
 		fgGfxPlatform::context()->vertexAttribPointer(FG_GFX_ATTRIB_POS_LOCATION,
 			3, 
 			GL_FLOAT, 
-			FG_FALSE,
+			FG_GFX_FALSE,
 			inputData->stride(),
-			reinterpret_cast<void*>(offset));
+			reinterpret_cast<fgGFXvoid*>(offset));
 	}
 	if(inputData->attribMask() & FG_GFX_POSITION_BIT)
 		offset += sizeof(fgVector3f); 
@@ -323,9 +294,9 @@ void fgGfxPrimitives::drawArray2D(const fgVertexDataBase *inputData,
 		fgGfxPlatform::context()->vertexAttribPointer(FG_GFX_ATTRIB_NORM_LOCATION,
 			3, 
 			GL_FLOAT, 
-			FG_FALSE, 
+			FG_GFX_FALSE, 
 			inputData->stride(),
-			reinterpret_cast<void*>(offset));
+			reinterpret_cast<fgGFXvoid*>(offset));
 	}
 	if(inputData->attribMask() & FG_GFX_UVS_BIT)
 		offset += sizeof(fgVector3f); 
@@ -333,9 +304,9 @@ void fgGfxPrimitives::drawArray2D(const fgVertexDataBase *inputData,
 		fgGfxPlatform::context()->vertexAttribPointer(FG_GFX_ATTRIB_UVS_LOCATION,
 			2,
 			GL_FLOAT,
-			FG_FALSE,
+			FG_GFX_FALSE,
 			inputData->stride(),
-			reinterpret_cast<void*>(offset));
+			reinterpret_cast<fgGFXvoid*>(offset));
 	}
 	if(inputData->attribMask() & FG_GFX_COLOR_BIT)
 		offset += sizeof(fgVector2f); 
@@ -343,21 +314,13 @@ void fgGfxPrimitives::drawArray2D(const fgVertexDataBase *inputData,
 		fgGfxPlatform::context()->vertexAttribPointer(FG_GFX_ATTRIB_COLOR_LOCATION, 
 			4, 
 			GL_FLOAT, 
-			FG_FALSE, 
+			FG_GFX_FALSE, 
 			inputData->stride(),
-			reinterpret_cast<void*>(offset));
+			reinterpret_cast<fgGFXvoid*>(offset));
 	}
-	glDrawArrays((GLenum)mode, 0, inputData->size());
+	glDrawArrays((fgGFXenum)mode, 0, inputData->size());
 	fgGLError("glDrawArrays");
 
-	/*if(attribMask & FG_GFX_POSITION_BIT)
-		glDisableVertexAttribArray(FG_GFX_ATTRIB_POS_LOCATION);
-	if(attribMask & FG_GFX_NORMAL_BIT)
-		glDisableVertexAttribArray(FG_GFX_ATTRIB_NORM_LOCATION);
-	if(attribMask & FG_GFX_UVS_BIT)
-		glDisableVertexAttribArray(FG_GFX_ATTRIB_UVS_LOCATION);
-	if(attribMask & FG_GFX_COLOR_BIT)
-		glDisableVertexAttribArray(FG_GFX_ATTRIB_COLOR_LOCATION);*/
 }
 
 /*
@@ -366,30 +329,22 @@ void fgGfxPrimitives::drawArray2D(const fgVertexDataBase *inputData,
 void fgGfxPrimitives::drawRect2D(void)
 {
 	fgGfxPlatform::context()->diffVertexAttribArrayMask(FG_GFX_POSITION_BIT | FG_GFX_UVS_BIT);
-	//fgGfxPlatform::context()->enableVertexAttribArray(FG_GFX_ATTRIB_POS_LOCATION);
-	//glDisableVertexAttribArray(FG_GFX_ATTRIB_NORM_LOCATION);
-	//fgGfxPlatform::context()->enableVertexAttribArray(FG_GFX_ATTRIB_UVS_LOCATION);
-
 	fgGfxPlatform::context()->vertexAttribPointer(FG_GFX_ATTRIB_POS_LOCATION, 
 		3,
 		GL_FLOAT,
-		FG_FALSE,
+		FG_GFX_FALSE,
 		sizeof(fgVertex3),
-		(void *)c_stripRect3x1);
-
-	int offset = ((int)&c_stripRect3x1[0]) + sizeof(fgGFXfloat) * 6;
+		(fgGFXvoid *)c_stripRect3x1);
+        
+	uintptr_t offset = (uintptr_t)((unsigned int*)&c_stripRect3x1[0]) + sizeof(fgGFXfloat) * 6;
 	fgGfxPlatform::context()->vertexAttribPointer(FG_GFX_ATTRIB_UVS_LOCATION,
 		2,
 		GL_FLOAT,
-		FG_FALSE,
+		FG_GFX_FALSE,
 		sizeof(fgVertex3),
-		(void*)offset);
+		(fgGFXvoid*)offset);
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, sizeof(c_stripRect3x1)/sizeof(fgVertex3)); 
 	fgGLError("glDrawArrays");
-
-	//glDisableVertexAttribArray(FG_GFX_ATTRIB_POS_LOCATION);
-	//glDisableVertexAttribArray(FG_GFX_ATTRIB_NORM_LOCATION);
-	//glDisableVertexAttribArray(FG_GFX_ATTRIB_UVS_LOCATION);
 }
 
 /*
@@ -459,14 +414,14 @@ void fgGfxPrimitives::appendRect2D(fgVertexDataBase *outputData,
 	}*/
 	x1+=relPos.x; y1+=relPos.y;
 	fgVector3f norm = fgVector3f(1.0f, 1.0f, 1.0f);
-	if(mode == FG_GFX_TRIANGLE_STRIP || mode == FG_GFX_TRIANGLES) {
+	if(mode == fgGfxPrimitiveMode::FG_GFX_TRIANGLE_STRIP || mode == fgGfxPrimitiveMode::FG_GFX_TRIANGLES) {
 		
 		fgVertex2 v1, v2;
 		v1.position = fgVec3f(x1, y1, 0.0f);
 		v1.uv = fgVec2f(uv1.x, 1-uv1.y);
 		v2.position = fgVec3f(x1, y1+size.y, 0.0f);
 		v2.uv = fgVec2f(uv1.x, 1-uv2.y);
-		if(mode == FG_GFX_TRIANGLE_STRIP && outputData->empty()) {
+		if(mode == fgGfxPrimitiveMode::FG_GFX_TRIANGLE_STRIP && outputData->empty()) {
 			fgVertex3 v3, v4;
 			v3.position = fgVec3f(x1+size.x, y1, 0.0f);
 			v3.uv = fgVec2f(uv2.x, 1-uv1.y);
@@ -478,7 +433,7 @@ void fgGfxPrimitives::appendRect2D(fgVertexDataBase *outputData,
 			outputData->append(v3.position, norm, v3.uv, color);
 			outputData->append(v4.position, norm, v4.uv, color);
 		} else {
-			if(mode == FG_GFX_TRIANGLE_STRIP) {
+			if(mode == fgGfxPrimitiveMode::FG_GFX_TRIANGLE_STRIP) {
 				v1.position[0] += size.x;
 				v2.position[0] += size.x;
 			}
@@ -487,7 +442,7 @@ void fgGfxPrimitives::appendRect2D(fgVertexDataBase *outputData,
 		}
 
 		
-		if(mode == FG_GFX_TRIANGLES) {
+		if(mode == fgGfxPrimitiveMode::FG_GFX_TRIANGLES) {
 			fgVertex2 v3, v4;
 			fgVertex2 v5, v6;
 			v3.position = fgVec3f(x1+size.x, y1, 0.0f);

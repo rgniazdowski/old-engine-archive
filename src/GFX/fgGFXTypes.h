@@ -90,6 +90,53 @@ typedef int         fgGFXfixed;
 #endif
 
 //
+// Buffer / Texture / ... binding helper structures
+//
+
+struct fgGfxBufferID
+{
+	fgGFXuint id;
+	fgGFXenum target;
+	fgGFXenum usage;
+
+	operator fgGFXint() const	{ return (fgGFXint)id; }
+	operator fgGFXuint() const	{ return id; }
+
+	fgGFXuint& refID(void) {
+		return id;
+	}
+
+	fgGFXuint* ptrID(void) {
+		return &id;
+	}
+
+	fgGfxBufferID(fgGFXuint _id = 0, fgGFXenum _target = (fgGFXenum)0) :
+		id(_id), target(_target) {
+	}
+};
+
+struct fgGfxTextureID
+{
+	fgGFXuint id;
+	fgGFXenum target;
+
+	operator fgGFXint() const	{ return (fgGFXint)id; }
+	operator fgGFXuint() const	{ return id; }
+
+	fgGFXuint& refID(void) {
+		return id;
+	}
+
+	fgGFXuint* ptrID(void) {
+		return &id;
+	}
+
+	fgGfxTextureID(fgGFXuint _id = 0, fgGFXenum _target = GL_TEXTURE_2D) :
+		id(_id), target(_target) {
+	}
+};
+
+//
 // Data types
 //
 
@@ -158,7 +205,7 @@ typedef int         fgGFXfixed;
 // Convert text (literal) to corresponding enum value
 inline fgGFXenum _FG_GFX_DATA_TYPE_FROM_TEXT(const char* text) {
 	if(!text)
-		return FG_GFX_NONE;
+		return (fgGFXenum)FG_GFX_NONE;
 	FG_RETURN_ENUM_IF_TEXT_EQ(FG_GFX_FLOAT);
 	FG_RETURN_ENUM_IF_TEXT_EQ(FG_GFX_FLOAT_VEC2);
 	FG_RETURN_ENUM_IF_TEXT_EQ(FG_GFX_FLOAT_VEC3);
@@ -176,7 +223,7 @@ inline fgGFXenum _FG_GFX_DATA_TYPE_FROM_TEXT(const char* text) {
 	FG_RETURN_ENUM_IF_TEXT_EQ(FG_GFX_FLOAT_MAT4);
 	FG_RETURN_ENUM_IF_TEXT_EQ(FG_GFX_SAMPLER_2D);
 	FG_RETURN_ENUM_IF_TEXT_EQ(FG_GFX_SAMPLER_CUBE);
-	return FG_GFX_NONE;
+	return (fgGFXenum)FG_GFX_NONE;
 }
 
 inline const char * _FG_GFX_DATA_TYPE_TO_TEXT(fgGFXenum value) {

@@ -31,7 +31,7 @@ DEFAULTCONF=Debug
 CONF=${DEFAULTCONF}
 
 # All Configurations
-ALLCONFS=Debug Release 
+ALLCONFS=Debug Release Debug_GLEW_SDL2 Debug_GLBIND_SDL2 Release_GLBIND_SDL2 Release_GLEW_SDL2 
 
 
 # build

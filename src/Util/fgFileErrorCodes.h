@@ -84,7 +84,7 @@ namespace FG_ERRNO_FILE {
 		FG_ERRNO_FILE_ERROR_TELL_TEXT
 	};
 
-	static void __registerAll(void) {		
+	inline void __registerAll(void) {		
 		for(int code=FG_ERRNO_FILE_BASE_CODE(0), i=0; code<=FG_ERRNO_FILE_LAST_CODE; code++, i++) {
 			FG_ERRNO_REGISTER(code, FG_ERRNO_FILE::__allErrVec[i]);
 		}

@@ -17,12 +17,6 @@
 #include "fgTextureTypes.h"
 #include "GFX/fgGFXStdInc.h"
 
-#if defined FG_USING_OPENGL_ES || defined FG_USING_OPENGL
-typedef fgGFXuint fgTextureGfxID;
-#else
-typedef unsigned int fgTextureGfxID;
-#endif /* FG_USING_OPENGL_ES || FG_USING_OPENGL */
-
 /*
  *
  */
@@ -80,17 +74,18 @@ public:
 		return FG_TRUE;
     }
 
-	// Get the texture id used by the low level graphics system - handle in OpenGL
-    fgTextureGfxID getTextureGfxID() const {
-        return m_textureGfxID;
-    }
 	// Get reference tothe texture id used by the low level graphics system - handle in OpenGL
-    fgTextureGfxID& getRefTextureGfxID() {
+    fgGfxTextureID& getRefGfxID() {
         return m_textureGfxID;
     }
+
+	fgGfxTextureID* getPtrGfxID() {
+		return &m_textureGfxID;
+    }
+
 	// Set the texture id used by the low level graphics system
-	void setTextureGfxID(fgTextureGfxID id) {
-		m_textureGfxID = id;
+	void setGfxID(fgGFXuint id) {
+		m_textureGfxID.id = id;
 	}
 
 	// Get width of the texture in pixels
@@ -157,7 +152,7 @@ protected:
 	/// Number of color components (grayscale, RGB, RGBA)
     int m_components;
 	/// OpenGL texture id handle
-	fgTextureGfxID m_textureGfxID;
+	fgGfxTextureID m_textureGfxID;
 private:
 	/// This is special trigger, it tells if texture was uploaded to VRAM
 	/// When set to TRUE, even if gfxID is invalid it tells that texture

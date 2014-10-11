@@ -74,8 +74,8 @@ protected:
 	};
 #endif
 public:
-#ifdef FG_USING_MARMALADE
-	typedef std::string hashKey;
+        typedef std::string hashKey;
+#ifdef FG_USING_MARMALADE	
 	typedef std::hash<std::string> hashFunc;
 	// Type for map, assigning style content value to string ID (case sensitive)
 	typedef std::hash_map <hashKey, fgGuiStyleContent, hashFunc, smEqualTo> styleNameMap;

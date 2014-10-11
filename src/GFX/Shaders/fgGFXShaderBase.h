@@ -32,78 +32,82 @@ typedef fgHandle<fgGfxShaderTag> fgGfxShaderHandle;
 /*
  *
  */
-class fgGfxShaderBase : public fgDataObjectBase<fgGfxShaderHandle, fgQuality>
-{
-	friend class fgGfxShader;
-	friend class fgGfxShaderProgram;
-	friend class fgGfxShaderManager;
+class fgGfxShaderBase : public fgDataObjectBase<fgGfxShaderHandle, fgQuality> {
+    friend class fgGfxShader;
+    friend class fgGfxShaderProgram;
+    friend class fgGfxShaderManager;
 protected:
-	typedef std::map<fgGFXuint, fgGFXint>	objParamMap;
-	typedef objParamMap::iterator			objParamMapItor;
+    typedef std::map<fgGFXenum, fgGFXint> objParamMap;
+    typedef objParamMap::iterator objParamMapItor;
 
-	enum shaderBaseType {
-		FG_GFX_BASE_TYPE_INVALID	= 0,
-		FG_GFX_BASE_TYPE_SHADER		= 1,
-		FG_GFX_BASE_TYPE_PROGRAM	= 2
-	};
-
-protected:
-	///
-	objParamMap	m_params;
-	///
-	char *m_log;
-	///
-	fgGFXuint	m_gfxID;
-	/// 
-	shaderBaseType m_baseType;
-	/// #FIXME ?
-	fgBool m_isManaged;
+    enum shaderBaseType {
+        FG_GFX_BASE_TYPE_INVALID = 0,
+        FG_GFX_BASE_TYPE_SHADER = 1,
+        FG_GFX_BASE_TYPE_PROGRAM = 2
+    };
 
 protected:
-	void setManaged(fgBool toggle = FG_TRUE) {
-		m_isManaged = toggle;
-	}
+    ///
+    objParamMap m_params;
+    ///
+    char *m_log;
+    ///
+    fgGFXuint m_gfxID;
+    /// 
+    shaderBaseType m_baseType;
+    /// #FIXME ?
+    fgBool m_isManaged;
+
+protected:
+
+    void setManaged(fgBool toggle = FG_TRUE) {
+        m_isManaged = toggle;
+    }
 
 public:
-	//
-	fgGfxShaderBase();
-	// 
-	virtual ~fgGfxShaderBase();
+    //
+    fgGfxShaderBase();
+    // 
+    virtual ~fgGfxShaderBase();
 
-	fgBool isManaged(void) const {
-		return m_isManaged;
-	}
+    fgBool isManaged(void) const {
+        return m_isManaged;
+    }
 
-	// 
-	fgGFXuint getGfxID(void) const {
-		return m_gfxID;
-	}
+    // 
 
-	//
-	fgGFXuint & getRefGfxID(void) {
-		return m_gfxID;
-	}
+    fgGFXuint getGfxID(void) const {
+        return m_gfxID;
+    }
 
-	//
-	fgGFXint getParam(fgGFXuint pname) {
-		return m_params[pname];
-	}
+    //
 
-	//
-	const char *getLog(void) const {
-		return m_log;
-	}
+    fgGFXuint & getRefGfxID(void) {
+        return m_gfxID;
+    }
 
-	//
-	virtual void clearAll(void) = 0;
+    //
+
+    fgGFXint getParam(fgGFXenum pname) {
+        return m_params[pname];
+    }
+
+    //
+
+    const char *getLog(void) const {
+        return m_log;
+    }
+
+    //
+    virtual void clearAll(void) = 0;
 
 protected:
-	//
-	void updateLog(void);
-	//
-	void updateParams(void);
-	//
-	fgGFXint updateParam(fgGFXuint pname);
+    //
+    void updateLog(void);
+    //
+    void updateParams(void);
+    //
+    fgGFXint updateParam(fgGFXenum pname);
 };
 
 #endif /*_FG_GFX_SHADER_BASE_H_ */

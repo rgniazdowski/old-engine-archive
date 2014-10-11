@@ -30,6 +30,10 @@ float fgTime::s_start = -1.0;
 float fgTime::s_current = -1.0;
 float fgTime::s_lastTick = -1.0;
 
+#if defined(FG_USING_SDL2)
+#include <SDL2/SDL_timer.h>
+#endif
+
 /*
  * First initial time stamp
  */

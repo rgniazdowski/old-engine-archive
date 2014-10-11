@@ -43,7 +43,7 @@ protected:
 	///
 	includeStrVec m_includeStrVec;
 	///
-	fgGfxShadingLanguageVersion m_version;
+	fgGfxSLVersion m_version;
 	///
 	int m_numSources;
 	///
@@ -56,6 +56,8 @@ protected:
 	fgGfxShaderPrecision m_precision;
 	///
 	fgBool m_isSourceLoaded;
+        ///
+        fgBool m_isAttached;
 
 public:
 	// 
@@ -64,7 +66,7 @@ public:
 	virtual ~fgGfxShader();
 
 	//
-	fgBool setVersion(fgGfxShadingLanguageVersion slVer);
+	fgBool setVersion(fgGfxSLVersion slVer);
 	//
 	void appendDefine(fgGfxShaderConstantDef constantDef);
 	//

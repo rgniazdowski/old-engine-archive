@@ -29,7 +29,7 @@ namespace FG_ERRNO_GAME {
 		FG_ERRNO_GAME_OK_TEXT
 	};
 
-	static void __registerAll(void) {		
+	inline void __registerAll(void) {		
 		for(int code=FG_ERRNO_GAME_BASE_CODE(0), i=0; code<=FG_ERRNO_GAME_LAST_CODE; code++, i++) {
 			FG_ERRNO_REGISTER(code, FG_ERRNO_GAME::__allErrVec[i]);
 		}

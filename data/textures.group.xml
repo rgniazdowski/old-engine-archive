@@ -23,6 +23,7 @@
 	<Texture config="textures/gui/hud/HudLines.res.ini" />
 	<Texture config="textures/MetalGrill.res.ini" />
 	<Texture config="textures/gui/PopupBG.res.ini" />
+	<Texture config="textures/gui/MenuBG.res.ini" />
 <!--
 	<Texture name="HudBottomTexture" isMapped="true">
 		<FileQualityMap path="textures/gui/hud/hud_bottom_1024.tga" quality="universal" />

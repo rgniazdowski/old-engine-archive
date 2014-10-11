@@ -1,8 +1,8 @@
 <GUIStructure>
 
-	<Menu name="MainMenu" ignoreState="true" size="700,600">
+	<Menu name="MainMenu" ignoreState="true" size="960,640">
 		<!--		<Container name="MainContainer"> -->
-			<Button name="StartGameButton" pos="50,100" size="400,50">START GAME</Button>
+			<Button name="StartGameButton" pos="400,100" size="400,50">START GAME</Button>
 			<Button name="HighscoresButton" pos="50,200" size="400,50">HIGH SCORES</Button>
 			<Button name="OptionsButton" pos="50,300" size="400,50" link="Options">OPTIONS</Button>
 			<Button name="StatsButton" pos="50,400" size="400,50" link="Stats" active="false">STATISTICS</Button>

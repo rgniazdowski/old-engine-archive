@@ -16,220 +16,263 @@
 //
 
 // Event Type enumeration
+
 enum fgEventType {
-	FG_EVENT_INVALID			=	0,
+    FG_EVENT_INVALID = 0,
 
-	FG_EVENT_TOUCH_PRESSED		=	1,
-	FG_EVENT_TOUCH_RELEASED		=	2,
-	FG_EVENT_TOUCH_MOTION		=	3,
-	FG_EVENT_TOUCH_TAP_FINISHED	=	4,
-	FG_EVENT_TOUCH				=	5,
+    FG_EVENT_TOUCH_PRESSED = 1,
+    FG_EVENT_TOUCH_RELEASED = 2,
+    FG_EVENT_TOUCH_MOTION = 3,
+    FG_EVENT_TOUCH_TAP_FINISHED = 4,
+    FG_EVENT_TOUCH = 5,
 
-	FG_EVENT_MOUSE_PRESSED		=	6,
-	FG_EVENT_MOUSE_RELEASED		=	7,
-	FG_EVENT_MOUSE_MOTION		=	8,
-	FG_EVENT_MOUSE				=	9,
+    FG_EVENT_MOUSE_PRESSED = 6,
+    FG_EVENT_MOUSE_RELEASED = 7,
+    FG_EVENT_MOUSE_MOTION = 8,
+    FG_EVENT_MOUSE = 9,
 
-	FG_EVENT_SWIPE_X			=	10,
-	FG_EVENT_SWIPE_Y			=	11,
-	FG_EVENT_SWIPE_XY			=	12,
-	FG_EVENT_SWIPE_ANGLE		=	12,
+    FG_EVENT_SWIPE_X = 10,
+    FG_EVENT_SWIPE_Y = 11,
+    FG_EVENT_SWIPE_XY = 12,
+    FG_EVENT_SWIPE_ANGLE = 12,
 
-	FG_EVENT_SWIPE_PINCH		=	14,
+    FG_EVENT_SWIPE_PINCH = 14,
 
-	FG_EVENT_MULTI_SWIPE_ROTATE	=	15,
+    FG_EVENT_MULTI_SWIPE_ROTATE = 15,
 
-	FG_EVENT_KEY_DOWN			=	16,
-	FG_EVENT_KEY_UP				=	17,
+    FG_EVENT_KEY_DOWN = 16,
+    FG_EVENT_KEY_UP = 17,
 
-	FG_EVENT_RESOURCE_LOADED	=	18,
-	FG_EVENT_RESOURCE_RELEASED	=	19,
-	FG_EVENT_RESOURCE_REQUESTED	=	20,
+    FG_EVENT_RESOURCE_LOADED = 18,
+    FG_EVENT_RESOURCE_RELEASED = 19,
+    FG_EVENT_RESOURCE_REQUESTED = 20,
 
-	FG_EVENT_PROGRAM_INIT		=	21,
+    FG_EVENT_PROGRAM_INIT = 21,
 
-	FG_EVENT_VERTEX_STREAM_READY=	22,
-	FG_EVENT_CAMERA_CHANGED		=	23,
-	
-	FG_EVENT_SOUND_PLAYED		=	24,
+    FG_EVENT_VERTEX_STREAM_READY = 22,
+    FG_EVENT_CAMERA_CHANGED = 23,
 
-	FG_EVENT_MENU_CHANGED		=	25,
-	FG_EVENT_WIDGET_STATE_CHANGED=	26,
+    FG_EVENT_SOUND_PLAYED = 24,
 
-	FG_EVENT_SENSORS_CHANGED	=	27,
+    FG_EVENT_MENU_CHANGED = 25,
+    FG_EVENT_WIDGET_STATE_CHANGED = 26,
 
-	FG_EVENT_RESERVED1,
-	FG_EVENT_RESERVED2,
-	FG_NUM_EVENT_TYPES
+    FG_EVENT_SENSORS_CHANGED = 27,
+    
+    FG_EVENT_GAME_CONTROLLER_ADDED = 28,
+    FG_EVENT_GAME_CONTROLLER_REMOVED = 29,
+    FG_EVENT_GAME_CONTROLLER_BUTTON = 30,
+    FG_EVENT_GAME_CONTROLLER_AXIS = 31,
+
+    FG_EVENT_RESERVED1,
+    FG_EVENT_RESERVED2,
+    FG_NUM_EVENT_TYPES
 };
 
-enum fgSwipeDirection
-{
-	FG_SWIPE_INVALID,
-	FG_SWIPE_LEFT,
-	FG_SWIPE_RIGHT,
-	FG_SWIPE_UP,
-	FG_SWIPE_DOWN,
-	FG_SWIPE_ANGLE
+enum fgSwipeDirection {
+    FG_SWIPE_INVALID,
+    FG_SWIPE_LEFT,
+    FG_SWIPE_RIGHT,
+    FG_SWIPE_UP,
+    FG_SWIPE_DOWN,
+    FG_SWIPE_ANGLE
 };
 
-enum fgPinchDirection
-{
-	FG_PINCH_INVALID,
-	FG_PINCH_IN,
-	FG_PINCH_OUT
+enum fgPinchDirection {
+    FG_PINCH_INVALID,
+    FG_PINCH_IN,
+    FG_PINCH_OUT
 };
 
 // FIXME this should be declared in the ResourceManager header file - well I think so...
-enum fgResourceStatus
-{
-	FG_RESOURCE_LOADED,
-	FG_RESOURCE_RELEASED,
-	FG_RESOURCE_REQUESTED
+
+enum fgResourceStatus {
+    FG_RESOURCE_LOADED,
+    FG_RESOURCE_RELEASED,
+    FG_RESOURCE_REQUESTED
 };
 
 /*
  *
  */
 struct fgEventBase {
-	fgEventType eventType;
-	unsigned long int timeStamp;
+    fgEventType eventType;
+    unsigned long int timeStamp;
 };
 
 /*
  *
  */
-struct fgTouchEvent : fgEventBase {	
-	int x;
-	int y;
-	fgBool pressed;
-	unsigned int touchID;
+struct fgControllerDeviceEvent : fgEventBase {
+    int which; // The joystick device index
+};
+
+/*
+ *
+ */
+struct fgControllerButtonEvent : fgEventBase {
+    int which; // The joystick instance id
+    unsigned short button;
+    unsigned short state;
+    unsigned short pad1;
+    unsigned short pad2;
+};
+
+/*
+ *
+ */
+struct fgControllerAxisEvent : fgEventBase {
+    int which; // The joystick instance id
+    unsigned short axis; // Controller axis
+    unsigned short pad1;
+    unsigned short pad2;
+    unsigned short pad3;
+    short int value;
+    unsigned short pad4;
+};
+
+/*
+ *
+ */
+struct fgTouchEvent : fgEventBase {
+    int x;
+    int y;
+    unsigned int touchID;
+    fgBool pressed;
+
 };
 
 /*
  *
  */
 struct fgMouseEvent : fgEventBase {
-	int x;
-	int y;
-	fgBool pressed;
-	unsigned int buttonID;
+    int x;
+    int y;
+    unsigned int buttonID;
+    fgBool pressed;
+
 };
 
 /*
  *
  */
 struct fgSwipeEvent : fgEventBase {
-	fgSwipeDirection swipeDirection;
-	int xStart;
-	int yStart;
-	int xEnd;
-	int yEnd;
-	int swipeXOffset;
-	int swipeYOffset;
-	int swipeXSteps;
-	int swipeYSteps;
+    fgSwipeDirection swipeDirection;
+    int xStart;
+    int yStart;
+    int xEnd;
+    int yEnd;
+    int swipeXOffset;
+    int swipeYOffset;
+    int swipeXSteps;
+    int swipeYSteps;
 };
 
 /*
  *
  */
 struct fgSwipePinchEvent : fgEventBase {
-	fgPinchDirection pinchDirection;
-	int x;
-	int y;
-	int x2;
-	int y2;
-	int pinchXOffset;
-	int pinchYOffset;
-	int pinchSize;
+    fgPinchDirection pinchDirection;
+    int x;
+    int y;
+    int x2;
+    int y2;
+    int pinchXOffset;
+    int pinchYOffset;
+    int pinchSize;
 };
 
 /*
  *
  */
 struct fgSwipeRotateEvent : fgEventBase {
-	int x;
-	int y;
-	int x2;
-	int y2;
-	float angle;
+    int x;
+    int y;
+    int x2;
+    int y2;
+    float angle;
 };
 
 /*
  *
  */
 struct fgKeyEvent : fgEventBase {
-	int keyCode;
-	fgBool pressed;
+    int keyCode;
+    fgBool pressed;
 };
 
 struct fgResourceEvent : fgEventBase {
-	fgResourceStatus resourceStatus;
-	//fgResource *resourceHolder;
-	//FG_RHANDLE resourceHandle;
+    fgResourceStatus resourceStatus;
+    //fgResource *resourceHolder;
+    //FG_RHANDLE resourceHandle;
 };
 
 struct fgVertexStreamEvent : fgEventBase {
-	//FG_GFXHANDLE vertexStreamHandle;
-	//fgVertexStream *vertexStreamHolder;
+    //FG_GFXHANDLE vertexStreamHandle;
+    //fgVertexStream *vertexStreamHolder;
 };
 
 struct fgCameraEvent : fgEventBase {
-	//GfxCamera *cameraHolder;
-	//FG_GFXHANDLE cameraHandle;
+    //GfxCamera *cameraHolder;
+    //FG_GFXHANDLE cameraHandle;
 };
 
 struct fgSoundEvent : fgEventBase {
-	//FG_RHANDLE soundHandle;
-	//fgResource *soundHolder;
+    //FG_RHANDLE soundHandle;
+    //fgResource *soundHolder;
 };
 
 struct fgMenuChangedEvent : fgEventBase {
-	//GUIHANDLE 
-	//
+    //GUIHANDLE 
+    //
 };
 
 struct fgWidgetEvent : fgEventBase {
-	//FG_GUIHANDLE widgetHandle;
-	//fgWidget
-	//fgResource
+    //FG_GUIHANDLE widgetHandle;
+    //fgWidget
+    //fgResource
 };
 
 /*
  *
  */
 struct fgSensorsEvent : fgEventBase {
-	// int type; or fgSensorType type;
-	union {
-		struct {
-			float  x,y,z;
-		};
-		float data[3];
-	};
+    // int type; or fgSensorType type;
+
+    union {
+
+        struct {
+            float x, y, z;
+        };
+        float data[3];
+    };
 };
 
 /*
  *
  */
 struct fgEvent {
-	union {
-		fgEventType			eventType;
 
-		fgTouchEvent		touchEvent;
-		fgMouseEvent		mouseEvent;
-		fgSwipeEvent		swipeEvent;
-		fgSwipePinchEvent	swipePinchEvent;
-		fgSwipeRotateEvent	swipeRotateEvent;
-		fgKeyEvent			keyEvent;
-		fgResourceEvent		resourceEvent;
-		fgVertexStreamEvent	vertexStreamEvent;
-		fgCameraEvent		cameraEvent;
-		fgSoundEvent		soundEvent;
-		fgMenuChangedEvent	menuChangedEvent;
-		fgWidgetEvent		widgetEvent;
-		fgSensorsEvent		sensorsEvent;
-	};
+    union {
+        fgEventType         eventType;
+
+        fgTouchEvent        touchEvent;
+        fgMouseEvent        mouseEvent;
+        fgSwipeEvent        swipeEvent;
+        fgSwipePinchEvent   swipePinchEvent;
+        fgSwipeRotateEvent  swipeRotateEvent;
+        fgKeyEvent          keyEvent;
+        fgResourceEvent     resourceEvent;
+        fgVertexStreamEvent vertexStreamEvent;
+        fgCameraEvent       cameraEvent;
+        fgSoundEvent        soundEvent;
+        fgMenuChangedEvent  menuChangedEvent;
+        fgWidgetEvent       widgetEvent;
+        fgSensorsEvent      sensorsEvent;
+        fgControllerDeviceEvent controllerEvent;
+        fgControllerButtonEvent controllerButtonEvent;
+        fgControllerAxisEvent   controllerAxisEvent;
+    };
 };
 
 #endif /* _FG_EVENT_DEFINITIONS_H_ */

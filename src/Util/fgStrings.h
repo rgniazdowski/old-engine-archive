@@ -28,7 +28,7 @@ public:
 					 const std::string& whitespace = " \t")
 	{
 		const unsigned int strBegin = str.find_first_not_of(whitespace);
-		if (strBegin == std::string::npos)
+		if (strBegin == std::string::npos || strBegin > str.length())
 			return ""; // no content
 
 		const unsigned int strEnd = str.find_last_not_of(whitespace);
@@ -113,14 +113,38 @@ public:
 			if(*it == '.') {
 				if(!decimalPoint) decimalPoint = FG_TRUE;
 				else break;
-			} else if(!std::isdigit(*it) && ((*it!='f') || it+1 != string.end() || !decimalPoint)) {
+			} else if(!std::isdigit(*it) && (it+1 != string.end() || !decimalPoint)) {
 				break;
 			}
 			++it;
 		}
 		return (fgBool)(((int)string.size()>minSize) && it == string.end() && decimalPoint);
 	}
-
+        
+        /*
+         *
+         */
+        static fgBool isNumber(const std::string& string) 
+        {
+            std::string::const_iterator it = string.begin();
+            fgBool decimalPoint = FG_FALSE;
+            int minSize = 0;
+            if(string.size()>0 && (string[0] == '-' || string[0] == '+')){
+                    it++;
+                    minSize++;
+            }
+            while(it != string.end()) {
+                if(*it == '.') {
+                    if(!decimalPoint) decimalPoint = FG_TRUE;
+                    else break;
+                } else if(!std::isdigit(*it)) {
+                    break;
+                }
+                ++it;
+            }
+            return (fgBool)(((int)string.size()>minSize) && it == string.end());
+        }
+        
 	static fgBool startsWith(const std::string& input,
 		const std::string& pattern,
 		fgBool caseSensitive = FG_TRUE)

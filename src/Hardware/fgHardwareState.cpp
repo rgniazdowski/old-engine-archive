@@ -10,6 +10,7 @@
 #include "fgBuildConfig.h"
 #include "fgCommon.h"
 #include "fgHardwareState.h"
+#include "fgLog.h"
 
 #include <cstdlib>
 #include <cmath>

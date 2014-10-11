@@ -29,7 +29,7 @@ namespace FG_ERRNO_MEMORY {
 		FG_ERRNO_MEMORY_OK_TEXT
 	};
 
-	static void __registerAll(void) {		
+	inline void __registerAll(void) {		
 		for(int code=FG_ERRNO_MEMORY_BASE_CODE(0), i=0; code<=FG_ERRNO_MEMORY_LAST_CODE; code++, i++) {
 			FG_ERRNO_REGISTER(code, FG_ERRNO_MEMORY::__allErrVec[i]);
 		}

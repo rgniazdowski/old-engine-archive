@@ -35,58 +35,62 @@
  * This is bound to change in the future
  * Let's call this version v0.1
  */
-class fgQualityManager : public fgSingleton<fgQualityManager> 
-{
-	friend class fgSingleton<fgQualityManager>;	
+class fgQualityManager : public fgSingleton<fgQualityManager> {
+    friend class fgSingleton<fgQualityManager>;
 private:
-	// Temporary map for storing display area sizes and corresponding quality
-	// This will work only for mobile platforms (iOS especially)
-	// Here the power of the given device is determined by max screen resolution
-	// This can apply only to phones/tablets. On PC platforms there will be needed
-	// some deeper checking / benchmarking...
-	std::map<int, fgQuality> m_displayAreaQuality;
-	// Hardware quality - this is determined by display area (mobile platforms)
-	fgQuality m_hardwareQuality;
-	// Forced quality - quality can be forced
-	fgQuality m_forcedQuality;
-	// Selected quality (this quality is reported outside)
-	fgQuality m_selectedQuality;
+    // Temporary map for storing display area sizes and corresponding quality
+    // This will work only for mobile platforms (iOS especially)
+    // Here the power of the given device is determined by max screen resolution
+    // This can apply only to phones/tablets. On PC platforms there will be needed
+    // some deeper checking / benchmarking...
+    std::map<int, fgQuality> m_displayAreaQuality;
+    // Hardware quality - this is determined by display area (mobile platforms)
+    fgQuality m_hardwareQuality;
+    // Forced quality - quality can be forced
+    fgQuality m_forcedQuality;
+    // Selected quality (this quality is reported outside)
+    fgQuality m_selectedQuality;
 
 protected:
-	// Default constructor for Quality Manager object
-	fgQualityManager();
-	// Default destructor for Quality Manager object
-	~fgQualityManager();
+    // Default constructor for Quality Manager object
+    fgQualityManager();
+    // Default destructor for Quality Manager object
+    ~fgQualityManager();
 
 public:
-	// Determine quality via screen resolution (this is bound to change in the future)
-	void determineQuality(void);
+    // Determine quality via screen resolution (this is bound to change in the future)
+    void determineQuality(void);
 
-	// Set value for forced quality (set quality upfront)
-	void setForcedQuality(fgQuality forceQuality) {
-		m_forcedQuality = forceQuality;
-		m_selectedQuality = m_forcedQuality;
-	}
+    // Set value for forced quality (set quality upfront)
 
-	// Set currently selected quality to determined via hardware (screen resolution)
-	void setHardwareQuality(void) {
-		m_selectedQuality = m_hardwareQuality;
-	}
+    void setForcedQuality(fgQuality forceQuality) {
+        m_forcedQuality = forceQuality;
+        m_selectedQuality = m_forcedQuality;
+    }
 
-	// Return true if currently set quality is hardware
-	fgBool isHardwareQuality(void) const {
-		return (fgBool)(m_hardwareQuality == m_selectedQuality);
-	}
+    // Set currently selected quality to determined via hardware (screen resolution)
 
-	// Get currently selected quality
-	fgQuality getQuality(void) const {
+    void setHardwareQuality(void) {
+        m_selectedQuality = m_hardwareQuality;
+    }
+
+    // Return true if currently set quality is hardware
+
+    fgBool isHardwareQuality(void) const {
+        return (fgBool) (m_hardwareQuality == m_selectedQuality);
+    }
+
+    // Get currently selected quality
+
+    fgQuality getQuality(void) const {
         return m_selectedQuality;
     }
 
-	// Get value for hardware quality
-	fgQuality getHardwareQuality(void) const {
-		return m_hardwareQuality;
-	}
+    // Get value for hardware quality
+
+    fgQuality getHardwareQuality(void) const {
+        return m_hardwareQuality;
+    }
 };
 
 #define FG_QualityManager fgQualityManager::getInstance()

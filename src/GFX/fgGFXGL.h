@@ -31,14 +31,32 @@
 #	if defined FG_USING_OPENGL
 
 #		ifndef FG_USING_SDL2
+#                   if !defined(FG_USING_GL_BINDING)
 #                       define GL_GLEXT_PROTOTYPES
-#			include <GL/gl.h>
-#			include <GL/glext.h>
-#			define _FG_INCLUDED_GL_
+#                       include <GL/gl.h>
+#                       include <GL/glext.h>
+#                   elif defined(FG_USING_OPENGL_GLEW)
+#                       include <GL/glew.h>
+#                   elif defined(FG_USING_GL_BINDING)
+#                       include "glbinding/gl/gl.h"
+#                       include "glbinding/Binding.h"
+                        using namespace gl;
+#                   endif
+#		    define _FG_INCLUDED_GL_
 #		else /* FG_USING_SDL2 */
 // if defined SDL2 - then use specific GL code for SDL2
-#			include <SDL2/SDL.h>
-#			include <SDL2/SDL_opengl.h>
+#		    include <SDL2/SDL.h>
+#                   if !defined(FG_USING_GL_BINDING) && !defined(FG_USING_OPENGL_GLEW)
+#                       include <SDL2/SDL_opengl.h>
+#                   elif defined(FG_USING_OPENGL_GLEW)
+#                    include <GL/glew.h>
+#                   elif defined(FG_USING_GL_BINDING)
+//#                     include "glbinding/gl/gl30.h"
+#                       include "glbinding/gl/gl.h"                            
+#                       include "glbinding/Binding.h"
+                        using namespace gl;
+#                   endif
+#                   define _FG_INCLUDED_GL_
 #		endif
 
 #	else /* FG_USING_OPENGL */
@@ -56,6 +74,7 @@
 #		if defined FG_USINGL_SDL2
 #			include <SDL2/SDL.h>
 #			include <SDL2/SDL_opengles2.h>
+#			define _FG_INCLUDED_GL_
 #		else /* if SDL2 is not defined - native GLES2 support ? */
 #			include <GLES2/gl2.h>
 #			include <GLES2/gl2ext.h>
@@ -72,22 +91,64 @@
 
 #endif /* FG_GFX_GL_INCLUDES_FINISHED */
 
+
+//GLSL Version      OpenGL Version
+//1.10				2.0
+//1.20				2.1
+//1.30				3.0
+//1.40				3.1
+//1.50				3.2
+//3.30				3.3
+//4.00				4.0
+//4.10				4.1
+//4.20				4.2
+//4.30				4.3
+//4.40				4.4
+//4.50                          4.5
+
+                        
+enum fgGfxSLVersion
+{
+	FG_GFX_SHADING_LANGUAGE_INVALID	= 0,
+	FG_GFX_ESSL_100		=	100,
+	FG_GFX_ESSL_300		=	300,
+	FG_GFX_GLSL_110		=	110,
+	FG_GFX_GLSL_120		=	120,
+	FG_GFX_GLSL_130		=	130,
+	FG_GFX_GLSL_140		=	140,
+	FG_GFX_GLSL_150		=	150,
+	FG_GFX_GLSL_330		=	330,
+	FG_GFX_GLSL_400		=	400,
+	FG_GFX_GLSL_410		=	410,
+	FG_GFX_GLSL_420		=	420,
+	FG_GFX_GLSL_430		=	430,
+	FG_GFX_GLSL_440		=	440,
+        FG_GFX_GLSL_450         =       450
+};
+
+#if defined FG_USING_OPENGL_ES
+#define FG_GFX_SHADING_LANG_VERSION_DEFAULT FG_GFX_ESSL_100
+#else
+#define FG_GFX_SHADING_LANG_VERSION_DEFAULT FG_GFX_GLSL_330 // ?
+#endif
+
+
 // #FIXME | this can be also used for EGL / SDL ? make it universal?
 inline unsigned int fgGLError(const char *afterFunc = NULL) 
 {
 	static unsigned int repeatCnt = 0;
-	static const char *lastError = NULL;
-	static unsigned int lastCode = 0;
+//	static const char *lastError = NULL;
+	static GLenum lastCode = GL_NO_ERROR;
 
 	const char * invalidEnum = "An unacceptable value is specified for an enumerated argument.";
 	const char * invalidValue = "A numeric argument is out of range.";
 	const char * invalidOperation = "The specified operation is not allowed in the current state.";
 	const char * outOfMemory = "There is not enough memory left to execute the command. The state of the GL is undefined";
 	const char * invalidFBOp = "The command is trying to render to or read from the framebuffer while the currently bound framebuffer is not framebuffer complete (i.e. the return value from glCheckFramebufferStatus is not GL_FRAMEBUFFER_COMPLETE).";
-	unsigned int retCode = 0;
+	GLenum retCode = GL_NO_ERROR;
 	if(afterFunc == NULL)
 		afterFunc = "gl*";
-	unsigned int code = 0;
+	GLenum code = GL_NO_ERROR;
 
 	while(FG_TRUE) {
 		code = glGetError();
@@ -130,14 +191,15 @@ inline unsigned int fgGLError(const char *afterFunc = NULL)
 		lastCode = code;
 		// ?
 		if(afterFunc) {
-			lastError = afterFunc;
+		//	lastError = afterFunc;
 		} else {
-			lastError = NULL;
+		//	lastError = NULL;
 		}
 	}
-	return retCode;
+	return (unsigned int)retCode;
 }
 
+#if defined(FG_USING_EGL) || defined(FG_USING_MARMALADE_EGL)
 // #FIXME | this can be also used for EGL / SDL ? make it universal?
 inline unsigned int fgEGLError(const char *afterFunc = NULL) 
 {
@@ -233,13 +295,14 @@ inline unsigned int fgEGLError(const char *afterFunc = NULL)
 	}
 	return retCode;
 }
+#endif /* FG_USING_EGL || FG_USING_MARMALADE_EGL */
 
 #ifndef FG_GFX_FALSE
 #define FG_GFX_FALSE	GL_FALSE
 #endif
 
 #ifndef FG_GFX_TRUE
-#define FG_GFX_TRUE		GL_TRUE
+#define FG_GFX_TRUE	GL_TRUE
 #endif
 
 #endif /* _FG_GFX_GL_H_ */

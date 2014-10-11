@@ -22,7 +22,7 @@
 class fgGfxDrawingBatch : public fgGfxLayer
 {
 private:
-	typedef std::priority_queue<fgGfxDrawCall*, std::deque<fgGfxDrawCall*>, fgPtrGreater<fgGfxDrawCall*> > batchPriorityQueue;
+	typedef std::priority_queue<fgGfxDrawCall*, std::deque<fgGfxDrawCall*>, fgPtrLessEq<fgGfxDrawCall*> > batchPriorityQueue;
 
 	//
 	batchPriorityQueue			m_priorityBatch;

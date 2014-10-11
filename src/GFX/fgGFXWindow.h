@@ -57,6 +57,20 @@ public:
 		return m_isOpen;
 	}
 
+#if defined(FG_USING_SDL2)
+        SDL_Window* getSysPtr(void) const {
+            return m_sdlWindow;
+        }
+#elif defined(FG_USING_EGL)
+        EGLSurface getSysPtr(void) const {
+            return m_EGLSurface;
+        }
+#else
+        void *getSysPtr(void) const {
+            return NULL;
+        }
+#endif
+        
 private:
 	//
 	fgBool refreshFS(void);
@@ -67,9 +81,8 @@ private:
 #if defined FG_USING_EGL
 	EGLSurface	m_EGLSurface;
 #elif defined FG_USING_SDL2
-	SDL_Window*		m_sdlWindow;
-	SDL_GLContext	m_GLContext;	// FIXME - context can be separate? ... P4
-	Uint32			m_sdlFlags;
+	SDL_Window*	m_sdlWindow;	
+	Uint32		m_sdlFlags;
 #endif
 	/// 
 	unsigned int m_width;

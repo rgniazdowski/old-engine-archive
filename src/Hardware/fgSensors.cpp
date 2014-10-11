@@ -9,6 +9,7 @@
 
 #include "fgBuildConfig.h"
 #include "fgCommon.h"
+#include "fgLog.h"
 
 #include <cmath>
 #include <cstring>

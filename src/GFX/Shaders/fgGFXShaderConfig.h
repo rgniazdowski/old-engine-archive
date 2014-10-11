@@ -97,7 +97,7 @@ protected:
 	///
 	std::string				m_programName;
 
-	fgGfxShadingLanguageVersion	m_preferredSLVersion; // FIXME - this sould be probably somewhere else
+	fgGfxSLVersion	m_preferredSLVersion; // FIXME - this sould be probably somewhere else
 
 	///
 	fgGfxShaderPrecision	m_defaultPrecision;
@@ -113,7 +113,7 @@ public:
 	virtual void clearAll(void);
 
 	// 
-	fgBool load(const char *filePath = NULL, fgGfxShadingLanguageVersion SLver = FG_GFX_SHADING_LANGUAGE_INVALID);
+	fgBool load(const char *filePath = NULL, fgGfxSLVersion SLver = FG_GFX_SHADING_LANGUAGE_INVALID);
 
 	//
 	fgGfxShaderConfigType getType(void) const {
@@ -166,13 +166,13 @@ public:
 	}
 
 	//
-	void setPreferredSLVersion(fgGfxShadingLanguageVersion _ver) {
+	void setPreferredSLVersion(fgGfxSLVersion _ver) {
 		m_preferredSLVersion = _ver;
 	}
 
 private:
 	// 
-	fgBool _parseData(fgGfxShadingLanguageVersion SLver);
+	fgBool _parseData(fgGfxSLVersion SLver);
 	//
 	fgBool _parseDefines(fgCfgSection *_definesSection);
 	//

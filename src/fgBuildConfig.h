@@ -52,6 +52,7 @@
 #undef FG_USING_OPENGL_GLU				//	Is the GLU library used in this build?
 #undef FG_USING_OPENGL_GLUT				//	Is the GLUT library used?
 #undef FG_USING_OPENGL_GLEW				//	Is the GLEW library used?
+#undef FG_USING_GL_BINDING                              //      Is the glbinding module used?
 #undef FG_USING_GLM						//	Is the OpenGL Mathemathics library (GLM) used? 
 #undef FG_USING_SDL						//  Is the SDL1.x used?
 #undef FG_USING_SDL2					//  Is the latest SDL2 used in this build?
@@ -369,13 +370,13 @@ extern struct fgBuildConfig g_fgBuildConfig;
 #define FG_BUILD_VERSION_TEXT	FG_XSTR(FG_BUILD_VERSION_MAJ)"." FG_XSTR(FG_BUILD_VERSION_MIN)"." FG_XSTR(FG_BUILD_VERSION_REV)
 
 // Package name - name of the engine
-#define FG_PACKAGE_NAME			"FlexiGame"
+#define FG_PACKAGE_NAME		"FlexiGame"
 // Code name of this version
 #define FG_PROJECT_CODE_NAME	"Infinium"
-#define FG_PREFIX				"fg"
+#define FG_PREFIX		"fg"
 
 // Package name with version and codename
-#define FG_PACKAGE_FULL_TEXT	FG_PACKAGE_NAME" v" FG_BUILD_VERSION_TEXT" codename: " FG_PROJECT_CODE_NAME
+#define FG_PACKAGE_FULL_TEXT            FG_PACKAGE_NAME" v" FG_BUILD_VERSION_TEXT" codename: " FG_PROJECT_CODE_NAME
 
 // Full name of the project
 #define FG_FULL_NAME			"Flexible Game Engine"
@@ -385,17 +386,17 @@ extern struct fgBuildConfig g_fgBuildConfig;
 // Copyright text
 #define FG_COPYRIGHT			"Copyright (C) Radoslaw Gniazdowski. All rights reserved."
 // Copying text
-#define FG_COPYING				FG_PACKAGE_NAME" source code and any related files can not be copied, modified and/or distributed without the express or written permission from the author."
+#define FG_COPYING			FG_PACKAGE_NAME" source code and any related files can not be copied, modified and/or distributed without the express or written permission from the author."
 // License type
-#define FG_LICENSE				"Proprietary license" 
+#define FG_LICENSE			"Proprietary license" 
 // Home page address
-#define FG_HOMEPAGE				"http://flexigame.com"
+#define FG_HOMEPAGE			"http://flexigame.com"
 
 #define FG_ENGINE
 #define FG_FLEXIGAME
 #define FG_JUST_FOR_FUN
 
-#define FG_MOTTO				"The spice is vital for space travel"
+#define FG_MOTTO			"The spice is vital for space travel"
 
 #endif /* _FG_BUILD_CONFIG_H_ */
 /*************************** END MAIN MARMALADE BUILD CONFIG ***************************/
