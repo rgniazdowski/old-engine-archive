@@ -1,4 +1,4 @@
 #!/bin/sh
 
-cd /home/vigilant/infinium/data
+cd /home/vigilant/develop/flexigame/data
 ../project/linux/FlexiGame_NB/dist/Release_GLEW_SDL2/GNU-Linux-x86/flexigame_nb

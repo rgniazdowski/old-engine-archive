@@ -1,5 +1,8 @@
 build_infinium_vc11
 data-ram
+data/all.log
+data/error.log
+data/debug.log
 project/linux/FlexiGame/obj
 project/linux/FlexiGame/bin
 project/linux/foobar-cpp
