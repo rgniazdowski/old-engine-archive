@@ -438,7 +438,8 @@ private:
     fgGFXuint       m_boundTexture;
     /// Supported shading language version
     fgGfxSLVersion  m_SLVersion;
-
+    ///
+    fgBool m_init;
 protected:
     //
 #if defined(FG_USING_SDL2)
@@ -454,6 +455,9 @@ protected:
     void updateAttribMask(const fgGFXuint index);
 
 public:
+    fgBool isInit(void) const {
+        return m_init;
+    }
     // Return version ID for shading language currently supported by the graphics context
     fgGfxSLVersion getSLVersion(void) const {
         return m_SLVersion;

@@ -98,6 +98,14 @@ fgBool fgGfxMain::initGFX(void) {
     }
     if(status) {
         m_gfxContext = fgGfxPlatform::context();
+        if(!m_gfxContext) {
+            status = FG_FALSE;
+        } else if(!m_gfxContext->isInit()) {
+            status = FG_FALSE;
+        }
+        if(!status) {
+            FG_LOG::PrintError("GFX: Unable to initialize any kind of context");
+        }
     }
     if(status) {
         if(!m_shaderMgr)

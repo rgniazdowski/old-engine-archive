@@ -892,7 +892,9 @@ m_sdlWindow(sdlWindow),
 m_viewportAreaQ(0),
 m_scissorAreaQ(0),
 m_attribMask(0),
-m_boundTexture(0) {
+m_boundTexture(0),
+m_SLVersion(FG_GFX_SHADING_LANGUAGE_INVALID),
+m_init(FG_FALSE) {
 
 #if defined(FG_USING_SDL2)
     SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 8);
@@ -912,13 +914,19 @@ m_boundTexture(0) {
     // #FIXME seriously, this context should be created somewhere else, gfx Main ?
     m_GLContext = SDL_GL_CreateContext(m_sdlWindow);
     if(!m_GLContext) {
-        FG_LOG::PrintError("GFX: Couldn't create GL context: %s", SDL_GetError());
+        FG_LOG::PrintError("GFX: Couldn't create GL context: '%s'", SDL_GetError());
         SDL_ClearError();
         // Failed so try again with least possible GL version
+        FG_LOG::PrintInfo("GFX: Will try to create any kind of GL context...");
         SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 0);
         SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
+        SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, 0);
+        SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, 0);
+
         m_GLContext = SDL_GL_CreateContext(m_sdlWindow);
         if(!m_GLContext) {
+            FG_LOG::PrintError("GFX: RETRY: Couldn't create GL context: '%s'", SDL_GetError());
+            SDL_ClearError();
             return;
         }
     }
@@ -941,20 +949,21 @@ m_boundTexture(0) {
     //    //glbinding::Binding::initialize((glbinding::ContextHandle)m_GLContext, true, true);
     glbinding::Binding::initialize();
 #elif defined(FG_USING_OPENGL_GLEW)
-    FG_LOG::PrintDebug("Initializing GLEW...");
+    FG_LOG::PrintDebug("GFX: Initializing GLEW...");
     glewExperimental = FG_GFX_TRUE;
     fgGFXenum glewInitResult = glewInit();
     if(glewInitResult != GLEW_OK) {
-        FG_LOG::PrintError("GFX: GLEW initialization error error '%s' \n", glewGetErrorString(glewInitResult));
-        exit(-1);
+        FG_LOG::PrintError("GFX: GLEW initialization error error '%s'", glewGetErrorString(glewInitResult));
+        m_init = FG_FALSE;
+        return;
     } else {
-    
+        FG_LOG::PrintDebug("GFX: GLEW init completed successfully.");
     }
-    fgGLError("glewInit");
-    fgGFXenum errorCheckValue = glGetError();
+    fgGFXenum errorCheckValue = fgGLError("glewInit");
     if(errorCheckValue != GL_NO_ERROR) {
-        FG_LOG::PrintError("GFX: Context error 'x' \n");//, gluErrorString(errorCheckValue));
-        exit(-1);
+        FG_LOG::PrintError("GFX: Context error, failed to initialize.");//, gluErrorString(errorCheckValue));
+        m_init = FG_FALSE;
+        return;
     }
     //glewIsSupported("GL_VERSION_3_0");
 #endif
@@ -1138,7 +1147,7 @@ m_boundTexture(0) {
             break;
     }
     
-    
+    m_init = FG_TRUE;
 }
 
 /*
@@ -1151,6 +1160,7 @@ fgGfxContext::~fgGfxContext() {
     m_GLContext = NULL;
 #endif
     m_params.clear();
+    m_init = FG_FALSE;
 }
 
 /*
