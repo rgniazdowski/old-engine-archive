@@ -295,7 +295,9 @@ private:
         static int lasty = 128000;
         int xRel = 0, yRel = 0;
 
-        if(type == FG_EVENT_TOUCH_MOTION) {
+        if(type == FG_EVENT_TOUCH_MOTION || 
+            type == FG_EVENT_TOUCH_PRESSED || 
+            type == FG_EVENT_TOUCH_RELEASED) {
             fgTouchEvent *touch = (fgTouchEvent *)argv->getArgumentValueByID(0);
             if(lastx > 100000 && lasty > 100000) {
                 lastx = touch->x;
@@ -308,6 +310,10 @@ private:
             //printf("TOUCH MOTION: X: %d Y: %d | xRel: %d | yRel: %d \n", touch->x, touch->y, xRel, yRel);
             if(touch->pressed)
                 cameraAnim->update((float)xRel, (float)yRel);
+            if(type == FG_EVENT_TOUCH_RELEASED) {
+                lastx = 128000;
+                lasty = 128000;
+            }
         } else if(0) {
             fgSwipeEvent *swipe = (fgSwipeEvent *)argv->getArgumentValueByID(0);
             //printf("EVENT SWIPE: Xoff: %d | Yoff: %d | myX: %d | myY: %d | stepsX: %d | stepsY: %d\n",
@@ -378,6 +384,8 @@ private:
         //FG_EventManager->addEventCallback(FG_EVENT_SWIPE_Y, &MainModule::eventSwipe);
         //FG_EventManager->addEventCallback(FG_EVENT_SWIPE_XY, &MainModule::eventSwipe);
         m_eventMgr->addEventCallback(FG_EVENT_TOUCH_MOTION, &MainModule::eventSwipe);
+        m_eventMgr->addEventCallback(FG_EVENT_TOUCH_PRESSED, &MainModule::eventSwipe);
+        m_eventMgr->addEventCallback(FG_EVENT_TOUCH_RELEASED, &MainModule::eventSwipe);
         m_appInit = FG_TRUE;
         return FG_TRUE;
     }

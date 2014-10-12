@@ -606,7 +606,7 @@ void fgGfxMain::render(void) {
         posy += 10.0f;
     }
     if(s3eKeyboardGetState(s3eKeyRightShift) & S3E_KEY_STATE_DOWN) {
-        scale += 0.01f;
+//        scale += 0.01f;
     }
 #endif
     Model = glm::translate(Model, glm::vec3(posx, posy, 0.0f));
