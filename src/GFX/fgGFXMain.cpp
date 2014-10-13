@@ -87,7 +87,7 @@ fgBool fgGfxMain::initGFX(void) {
     }
     if(m_mainWindow && status) {
         // #FIXME - resolution FIXME!
-        if(!m_mainWindow->setup(FG_PACKAGE_FULL_TEXT, 1024, 768)) {
+        if(!m_mainWindow->setup(FG_PACKAGE_FULL_TEXT, 800, 600)) {
             delete m_mainWindow;
             m_mainWindow = NULL;
             status = FG_FALSE;

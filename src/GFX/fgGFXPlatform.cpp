@@ -8,6 +8,7 @@
  *******************************************************/
 
 #include "fgGFXPlatform.h"
+#include "Util/fgMemory.h"
 
 /// Main gfx context (server/client state cache)
 fgGfxContext *fgGfxPlatform::m_gfxContext = NULL;
@@ -47,7 +48,6 @@ fgBool fgGfxPlatform::initialize(fgBool reinit) {
         // Need to reinitialize
         fgGfxPlatform::quit(); // ?
     }
-    FG_LOG::PrintDebug("BEG: >>> fgGfxPlatform::initialize();");
     fgBool status = FG_TRUE;
 #if defined FG_USING_EGL || defined FG_USING_MARMALADE_EGL
     EGLint major;
@@ -139,22 +139,46 @@ fgBool fgGfxPlatform::initialize(fgBool reinit) {
     //#include "SDL.h"
     // SDL_SetMainReady();
     if(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS) != 0) {
-        FG_LOG::PrintError("Couldn't initialize SDL2's: %s", SDL_GetError());
+        FG_LOG::PrintError("GFX: Couldn't initialize SDL2: '%s'", SDL_GetError());
         SDL_ClearError();
         return FG_FALSE;
     }
 
-    //SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
-
-    /*SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);*/
-
-    // #FIXME
-    // SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 8);
-    // SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 8);
-    // SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 8);
-    // SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 16);
-
+    SDL_DisplayMode *desktopMode;
+    int displayCount=0;
+   
+    if ((displayCount = SDL_GetNumVideoDisplays()) < 1) {
+        FG_LOG::PrintError("GFX: Couldn't retrieve number of displays: '%s'", SDL_GetError());
+    }
+    if(displayCount) {
+        desktopMode = fgMalloc<SDL_DisplayMode>(displayCount);
+    }
+    for(int displayIdx=0;displayIdx<displayCount;displayIdx++) {
+        int modeCount;
+        if(SDL_GetDesktopDisplayMode(0, &desktopMode[displayIdx]) != 0) {
+            FG_LOG::PrintError("GFX: Couldn't get desktop display mode for display %d: '%s'", displayIdx, SDL_GetError());
+        } else {
+            const char *displayName = SDL_GetDisplayName(displayIdx);
+            if(!displayName)
+                displayName = "unknown";
+            FG_LOG::PrintDebug("GFX: Display %d name: '%s'", displayIdx, displayName);
+            FG_LOG::PrintDebug("GFX: Display %d current mode: %dx%d@%dHz\t%d BPP", displayIdx, desktopMode[displayIdx].w, desktopMode[displayIdx].h, desktopMode[displayIdx].refresh_rate, SDL_BITSPERPIXEL(desktopMode[displayIdx].format));
+        }
+        if((modeCount = SDL_GetNumDisplayModes(displayIdx)) < 0) {
+            FG_LOG::PrintError("GFX: Couldn't retrieve number of display mode for display %d: '%s'", displayIdx, SDL_GetError());
+            continue;
+        } else {            
+            for(int modeIdx=0;modeIdx<modeCount;modeIdx++) {
+                SDL_DisplayMode displayMode;
+                memset(&displayMode, 0, sizeof(SDL_DisplayMode));
+                if(SDL_GetDisplayMode(displayIdx, modeIdx, &displayMode) != 0) {
+                    FG_LOG::PrintError("GFX: Couldn't get display mode for display %d: '%s'", displayIdx, SDL_GetError());
+                    continue;
+                }
+                FG_LOG::PrintDebug("GFX: Display %d, mode %.02d: %dx%d@%dHz\t%d BPP", displayIdx, modeIdx, displayMode.w, displayMode.h, displayMode.refresh_rate, SDL_BITSPERPIXEL(displayMode.format));
+            }
+        }
+    }
     // SDL_bool SDL_GL_ExtensionSupported(const char* extension)
     // int SDL_GL_LoadLibrary(const char* path)
     // const char* SDL_GetError(void)
@@ -196,7 +220,6 @@ fgBool fgGfxPlatform::initialize(fgBool reinit) {
 #endif
     if(status)
         fgGfxPlatform::m_init = FG_TRUE;
-    FG_LOG::PrintDebug("END: >>> fgGfxPlatform::initialize();");
     return status;
 }
 

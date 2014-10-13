@@ -14,7 +14,7 @@
 #include "fgBuildConfig.h"
 #endif
 
-#if defined FG_USING_MARMALADE || defined FG_USING_PLATFORM_LINUX
+#if defined(FG_USING_MARMALADE) || defined(FG_USING_PLATFORM_LINUX)
 #include <unistd.h>
 #else 
 
