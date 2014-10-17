@@ -13,27 +13,6 @@
     #include "fgGFXTypes.h"
     #include "fgGFXMaterial.h"
 
-// This needs fixing ! ! ! - but dont want to fuck with this any longer
-// -- -- Need more generic class/struct for holding 3D data
-// can also hold aos/soa in one struct (as a union)
-/* Something like:
-struct static3DData {
-        union {
-                struct soa {
-                        fgVector<fgGFXfloat>	vertices;  //3
-                        fgVector<fgGFXfloat>	normals;   //3
-                        fgVector<fgGFXfloat>	uvs;       //2
-                        fgVector<fgGFXuint>		indices;
-                };
-                struct aos {
-                        fgVector<fgVertex3>	vertices;
-                        fgVector<fgGFXuint>	indices;
-                };
-        };
- *getVertices*()
- ***
-};
- */
 /*
 Assuming the container has at least one element in it, you 
 need to get the address of the initial element of the 
@@ -45,15 +24,15 @@ container, which you can get via:
 (the address of the element pointed to by the iterator returned by begin()).
         &*something.begin() 
 
-
  */
 
+// #DAFUQ?
 inline void fgGfxComputeNormal(const fgVector3f & v1, const fgVector3f & v2, const fgVector3f & v3, fgVector3f & normal) {
     normal = glm::normalize(glm::cross(v3 - v1, v2 - v1));
 }
 
 /*
- *
+ * Base abstract class type for Mesh data
  */
 struct fgGfxMeshBase : public fgVertexData {
     virtual ~fgGfxMeshBase() { };
@@ -67,21 +46,22 @@ struct fgGfxMeshBase : public fgVertexData {
 };
 
 /*
- *
+ * Special class for holding mesh data as SoA
+ * - structure of arrays
  */
 struct fgGfxMeshSoA : fgGfxMeshBase {
-    ///
+    /// Vector holding floats representing position (vertices)
     fgVector<fgGFXfloat> vertices; //3
-    ///
+    /// Vector holding floats for normals
     fgVector<fgGFXfloat> normals; //3
-    ///
+    /// Vector holding texture coords
     fgVector<fgGFXfloat> uvs; //2
-    ///
+    /// Vector holding indices
     fgVector<fgGFXushort> indices;
 
-    //
+    // Default constructor
     fgGfxMeshSoA() { }
-    // #FIXME #SERIOUSLY
+
     #if 0
     fgGfxMeshSoA(tinyobj::mesh_t & mesh) {
         int n = mesh.positions.size();
@@ -119,27 +99,29 @@ struct fgGfxMeshSoA : fgGfxMeshBase {
         }
     }
     #endif
-    //
+    // Default virtual destructor
     virtual ~fgGfxMeshSoA() {
         clear();
         destroyBuffers();
     }
 
-    //
+    // Returns whether the vertex data supports/generates VBOs
     virtual fgBool hasVBO(void) const {
         return FG_TRUE;
     }
-    
     //
+    virtual fgGFXboolean setupAttributes(fgGfxAttributeData *pDataArray);
+    
+    // Generates the GFX buffers (VBO)
     virtual fgGFXboolean genBuffers(void);
 
-    //
+    // Deletes/releases the GFX buffers (VBO)
     virtual fgGFXboolean deleteBuffers(void);
 
-    //
+    // Releases the GFX buffers and frees the ID array
     virtual fgGFXboolean destroyBuffers(void);
 
-    //
+    // Clears the vertex data
     virtual void clear(void) {
         vertices.clear_optimised();
         normals.clear_optimised();
@@ -147,17 +129,17 @@ struct fgGfxMeshSoA : fgGfxMeshBase {
         indices.clear_optimised();
     }
 
-    // 
+    // Returns whether the vertex data is SoA (structure of arrays)
     virtual fgBool isSoA(void) const {
         return FG_TRUE;
     }
 
-    // 
+    // Returns whether the vertex data is AoS (array of structures)
     virtual fgBool isAoS(void) const {
         return FG_FALSE;
     }
 
-    //
+    // Returns the data size in bytes (something like sizeof) 
     virtual size_t getDataSize(void) {
         size_t size = 0;
         size += sizeof (vertices) + sizeof (normals) + sizeof (uvs) + sizeof (indices);
@@ -168,32 +150,32 @@ struct fgGfxMeshSoA : fgGfxMeshBase {
         return size;
     }
 
-    //
+    // Returns the number of vertices
     virtual fgGFXuint getNumVertices(void) const {
         return (fgGFXuint)vertices.size();
     }
 
-    //
+    // Returns the number of normals
     virtual fgGFXuint getNumNormals(void) const {
         return (fgGFXuint)normals.size();
     }
 
-    //
+    // Returns the number of texture coords
     virtual fgGFXuint getNumUVs(void) const {
         return (fgGFXuint)uvs.size();
     }
 
-    //
+    // Returns the number of colors in the data
     virtual fgGFXuint getNumColors(void) const {
         return 0;
     }
 
-    //
+    // Returns the number of indices
     virtual fgGFXuint getNumIndices(void) const {
         return (fgGFXuint)indices.size();
     }
 
-    //
+    // Append the vertex data (position)
     virtual void append(const fgVector3f &pos) {
         vertices.push_back(pos.x);
         vertices.push_back(pos.y);
@@ -205,7 +187,7 @@ struct fgGfxMeshSoA : fgGfxMeshBase {
         //fgVector<fgVertex3>::push_back(vertex);
     }
 
-    //
+    // Append to the vertex data (position and uv)
     virtual void append(
                         const fgVector3f &pos,
                         const fgVector2f &uv) {
@@ -221,7 +203,7 @@ struct fgGfxMeshSoA : fgGfxMeshBase {
         fgVector<fgVertex3>::push_back(vertex);*/
     }
 
-    //
+    // Append to the vertex data (position, normal and uv)
     virtual void append(
                         const fgVector3f &pos,
                         const fgVector3f &normal,
@@ -241,7 +223,7 @@ struct fgGfxMeshSoA : fgGfxMeshBase {
         fgVector<fgVertex3>::push_back(vertex);*/
     }
 
-    //
+    // Append to the vertex data (position, normal and uv). Color will be ignored
     virtual void append(
                         const fgVector3f &pos,
                         const fgVector3f &normal,
@@ -250,7 +232,7 @@ struct fgGfxMeshSoA : fgGfxMeshBase {
         append(pos, normal, uv);
     }
 
-    //
+    // Append to the vertex data (position, normal and uv). Color will be ignored
     virtual void append(
                         const fgVector3f &pos,
                         const fgVector3f &normal,
@@ -259,7 +241,7 @@ struct fgGfxMeshSoA : fgGfxMeshBase {
         append(pos, normal, uv);
     }
 
-    //
+    // Remove one vertex (removes positions, normals and uv)
     virtual void pop_back(void) {
         vertices.pop_back();
         vertices.pop_back();
@@ -272,34 +254,34 @@ struct fgGfxMeshSoA : fgGfxMeshBase {
         //fgVector<fgVertex3>::pop_back();
     }
 
-    //
+    // Pointer to the back (vertices array - positions)
     virtual fgGFXvoid *back(void) const {
         //return (fgGFXvoid *)(&fgVector<fgVertex3>::front());
         return (fgGFXvoid *)(&vertices.back());
     }
 
-    //
+    // Pointer to the front (vertices array - positions)
     virtual fgGFXvoid *front(void) const {
         //return (fgGFXvoid *)(&fgVector<fgVertex3>::front());
         return (fgGFXvoid *)(&vertices.front());
     }
 
-    //
+    // Returns the size of the data (here: number of positions)
     virtual fgGFXuint size(void) const {
         return vertices.size();
     }
 
-    //
+    // Returns the stride of the data (here: 0)
     virtual fgGFXsizei stride(void) const {
         return 0; //sizeof(fgVertex3);
     }
 
-    //
+    // Returns the attribute mask
     virtual fgGFXuint attribMask(void) const {
         return FG_GFX_POSITION_BIT | FG_GFX_NORMAL_BIT | FG_GFX_UVS_BIT;
     }
 
-    //
+    // Returns whether the data is empty (positions)
     virtual bool empty(void) const {
         return (bool) vertices.empty();
     }
@@ -373,10 +355,16 @@ struct fgGfxMeshAoS : fgGfxMeshBase {
     }
     
     //
+    virtual fgGFXboolean setupAttributes(fgGfxAttributeData *pDataArray) {
+        return vertices.setupAttributes(pDataArray);
+    }
+        
+    //
     virtual int getVBOCount(void) const {
         return vertices.getVBOCount();
     }
     
+    //
     virtual int& getRefVBOCount(void) {
         return vertices.getRefVBOCount();
     }

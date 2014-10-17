@@ -46,5 +46,42 @@
                 <project-formatting-style>false</project-formatting-style>
             </formatting>
         </data>
+        <spellchecker-wordlist xmlns="http://www.netbeans.org/ns/spellchecker-wordlist/1">
+            <word>app</word>
+            <word>attrib</word>
+            <word>bitplanes</word>
+            <word>bool</word>
+            <word>bvec</word>
+            <word>coords</word>
+            <word>dfactor</word>
+            <word>drawcall</word>
+            <word>eg</word>
+            <word>enum</word>
+            <word>foreach</word>
+            <word>framebuffer</word>
+            <word>func</word>
+            <word>gfx</word>
+            <word>glbinding</word>
+            <word>Gniazdowski</word>
+            <word>idx</word>
+            <word>int</word>
+            <word>itor</word>
+            <word>ivec</word>
+            <word>multitextured</word>
+            <word>multitexturing</word>
+            <word>param</word>
+            <word>params</word>
+            <word>pos</word>
+            <word>printf</word>
+            <word>Radoslaw</word>
+            <word>s'</word>
+            <word>sfactor</word>
+            <word>struct</word>
+            <word>structs</word>
+            <word>uv</word>
+            <word>vec</word>
+            <word>zfail</word>
+            <word>zpass</word>
+        </spellchecker-wordlist>
     </configuration>
 </project>

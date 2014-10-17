@@ -34,28 +34,28 @@ m_zIndex(0) {
     m_attrData[FG_GFX_ATTRIB_NORM_LOCATION].type = FG_GFX_NORMAL;
     m_attrData[FG_GFX_ATTRIB_NORM_LOCATION].dataType = FG_GFX_FLOAT;
     m_attrData[FG_GFX_ATTRIB_NORM_LOCATION].stride = sizeof (fgVertex3v);
-    m_attrData[FG_GFX_ATTRIB_POS_LOCATION].isEnabled = FG_GFX_FALSE;
+    m_attrData[FG_GFX_ATTRIB_NORM_LOCATION].isEnabled = FG_GFX_FALSE;
 
     m_attrData[FG_GFX_ATTRIB_UVS_LOCATION].index = FG_GFX_ATTRIB_UVS_LOCATION;
     m_attrData[FG_GFX_ATTRIB_UVS_LOCATION].size = 2;
     m_attrData[FG_GFX_ATTRIB_UVS_LOCATION].type = FG_GFX_TEXTURE_COORD;
     m_attrData[FG_GFX_ATTRIB_UVS_LOCATION].dataType = FG_GFX_FLOAT;
     m_attrData[FG_GFX_ATTRIB_UVS_LOCATION].stride = sizeof (fgVertex3v);
-    m_attrData[FG_GFX_ATTRIB_POS_LOCATION].isEnabled = FG_GFX_TRUE;
+    m_attrData[FG_GFX_ATTRIB_UVS_LOCATION].isEnabled = FG_GFX_TRUE;
 
     m_attrData[FG_GFX_ATTRIB_COLOR_LOCATION].index = FG_GFX_ATTRIB_COLOR_LOCATION;
     m_attrData[FG_GFX_ATTRIB_COLOR_LOCATION].size = 4;
     m_attrData[FG_GFX_ATTRIB_COLOR_LOCATION].type = FG_GFX_COLOR;
     m_attrData[FG_GFX_ATTRIB_COLOR_LOCATION].dataType = FG_GFX_FLOAT;
     m_attrData[FG_GFX_ATTRIB_COLOR_LOCATION].stride = sizeof (fgVertex4v);
-    m_attrData[FG_GFX_ATTRIB_POS_LOCATION].isEnabled = FG_GFX_FALSE;
+    m_attrData[FG_GFX_ATTRIB_COLOR_LOCATION].isEnabled = FG_GFX_FALSE;
 
     m_attrData[FG_GFX_ATTRIB_TANGENT_LOCATION].index = FG_GFX_ATTRIB_TANGENT_LOCATION;
     m_attrData[FG_GFX_ATTRIB_TANGENT_LOCATION].size = 3;
     m_attrData[FG_GFX_ATTRIB_TANGENT_LOCATION].type = FG_GFX_TANGENT;
     m_attrData[FG_GFX_ATTRIB_TANGENT_LOCATION].dataType = FG_GFX_FLOAT;
     m_attrData[FG_GFX_ATTRIB_TANGENT_LOCATION].stride = 0; // Stride when using tangent?
-    m_attrData[FG_GFX_ATTRIB_POS_LOCATION].isEnabled = FG_GFX_FALSE;
+    m_attrData[FG_GFX_ATTRIB_TANGENT_LOCATION].isEnabled = FG_GFX_FALSE;
 
     setupVertexData(m_attribMask);
     m_color = fgColor4f(1.0f, 1.0f, 1.0f, 1.0f);

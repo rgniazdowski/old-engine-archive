@@ -56,13 +56,14 @@
  *
  */
 struct fgGfxContextParam {
-    /// 
+    /// Parameter name (special enum value)
     fgGFXenum pname;
-    /// 
+    /// Generic type of the data storing information/values
     fgGFXenum type;
-    /// 
+    /// Special parameter type, for determining special 
+    /// functions to use when setting parameter value
     fgGFXuint paramType;
-    /// 
+    /// Size of the data (eg. one float, two floats, etc...)
     int count;
 
     union {
@@ -73,65 +74,91 @@ struct fgGfxContextParam {
         fgGFXint ints[12];
         fgGFXint intVal;
     };
+    
+    // Special overload operator for GFX integer type
     operator fgGFXint() const {
         return intVal;
     }
+    
+    // Special overload operator for GFX float type
     operator fgGFXfloat() const {
         return floatVal;
     }
+    
+    // Special overload operator for GFX boolean type (it's unsigned char mostly)
     operator fgGFXboolean() const {
         return boolVal;
     }
+    
+    // Special overload operator for GFX unsigned int type
     operator fgGFXuint() const {
         return (fgGFXuint)intVal;
     }
+    
     #if defined(FG_USING_GL_BINDING)
+    // Special overload operator for GFX enum type (when using glbinding,
+    // the GFXenum type is actually an enum class, so overloading needs to
+    // be done explictly)
     operator fgGFXenum() const {
         return (fgGFXenum)intVal;
     }
     #endif
+    // Special overload operator for the builtin bool type
     operator bool() const {
         return ( intVal ? true : false);
     }
+    
+    // Comparison operator for integer type
     inline bool operator ==(fgGFXint a) const {
         return (intVal == a);
     }
+    // Not equal operator for integer type
     inline bool operator !=(fgGFXint a) const {
         return (intVal != a);
     }
+    // Greater than operator for integer type
     inline bool operator >(fgGFXint a) const {
         return (intVal > a);
     }
+    // Less than operator for integer type
     inline bool operator <(fgGFXint a) const {
         return (intVal < a);
     }
+    //
     inline bool operator ==(fgGFXfloat a) const {
         return (floatVal == a);
     }
+    //
     inline bool operator !=(fgGFXfloat a) const {
         return (floatVal != a);
     }
+    //
     inline bool operator >(fgGFXfloat a) const {
         return (floatVal > a);
     }
+    //
     inline bool operator <(fgGFXfloat a) const {
         return (floatVal < a);
     }
+    //
     inline bool operator ==(fgGFXuint a) const {
         return ((fgGFXuint)intVal == a);
     }
+    //
     inline bool operator !=(fgGFXuint a) const {
         return ((fgGFXuint)intVal != a);
     }
+    //
     inline bool operator >(fgGFXuint a) const {
         return ((fgGFXuint)intVal > a);
     }
+    //
     inline bool operator <(fgGFXuint a) const {
         return ((fgGFXuint)intVal < a);
     }
 
     // 
-    void load(void) {
+    inline void load(void) {
         if(paramType == FG_GFX_PARAM_INVALID)
             return;
         switch(type) {
@@ -152,8 +179,10 @@ struct fgGfxContextParam {
         };
     }
 
+    // Determines the special parameter type based on parameter name enumerator
     void determineParamType(void);
 
+    // Updates the values on the server side
     fgBool update(void);
 
     // 
@@ -239,6 +268,8 @@ struct fgGfxContextParam {
                 this->update();
         }
     }
+    
+    //
     inline void set(const fgGFXint _i0, const fgGFXint _i1, const fgGFXint _i2, const fgGFXint _i3, const fgBool update = FG_TRUE) {
         type = FG_GFX_INT;
         count = 4;
@@ -254,6 +285,8 @@ struct fgGfxContextParam {
                 this->update();
         }
     }
+    
+    //
     inline void set(const fgGFXfloat _f0, const fgGFXfloat _f1, const fgGFXfloat _f2, const fgGFXfloat _f3, const fgBool update = FG_TRUE) {
         type = FG_GFX_INT;
         count = 4;
@@ -341,24 +374,13 @@ struct fgGfxContextParam {
     }
 };
 
-struct fgGfxAttrInfo {
-    fgGFXuint index;
-    fgGFXint size;
-    fgGFXenum type;
-    fgGFXboolean normalized;
-    fgGFXsizei stride;
-    fgGFXvoid* ptr;
-    fgBool enabled;
-    fgGFXuint bufferBind;
-};
-
 /*
- *
+ * Special class for holding information about current GFX context.
+ * Works as a special kind of cache for client and server side.
  */
 class fgGfxContext {
     friend class fgGfxPlatform;
 public:
-    //typedef std::map<fgGFXenum, fgGfxContextParam> gfxParamMap;
     typedef std::map<fgGFXuint, fgGfxContextParam> gfxParamMap;
     typedef gfxParamMap::iterator gfxParamMapItor;
 
@@ -398,21 +420,23 @@ private:
     /// Currently used attribute mask
     fgGFXuint m_attribMask;
     ///
-    fgGfxAttrInfo m_attrInfo[12]; // #FIXME - attribute count ... why here?  hello?
+    fgGfxAttributeData m_attrInfo[FG_GFX_ATTRIBUTE_DATA_MAX]; // #FIXME - attribute count ... why here?  hello?
     /// Currently bound texture ID
     fgGFXuint m_boundTexture;
     /// Supported shading language version
     fgGfxSLVersion m_SLVersion;
-    ///
+    /// Is context ready? Is initialization successful?
     fgBool m_init;
+    
 protected:
-    //
     #if defined(FG_USING_SDL2)
+    // Default constructor for the SDL build
     fgGfxContext(SDL_Window *sdlWindow);
     #else
+    // Default constructor
     fgGfxContext();
     #endif
-    //
+    // Default destructor for the GFX context object
     virtual ~fgGfxContext();
 
     // This function will set or unset given attrib bits
@@ -490,111 +514,119 @@ public:
     // Delete/release all registered textures
     void deleteAllTextures(void);
 
-    //
+    // Generate given number of texture objects
     void genTextures(const int count, fgGfxTextureID* textures, const fgGFXenum target = GL_TEXTURE_2D);
-    //
+    // Generate texture and store information in special structure
     void genTexture(fgGfxTextureID* texture, const fgGFXenum target = GL_TEXTURE_2D);
 
-    //
+    // Delete the specified number of textures based on info in special array
     void deleteTextures(const int count, fgGfxTextureID* textures);
-    //
+    // Delete the given texture based on the special information struct
     void deleteTexture(fgGfxTextureID& textureID);
 
-    //
+    // Bind texture to 2D
     void bindTexture2D(const fgGFXuint texID);
-    //
+    // Bind texture to 3D
     void bindTexture3D(const fgGFXuint texID);
-    //
+    // Bind texture to given target
     void bindTexture(fgGfxTextureID& textureID, const fgGFXenum target = (fgGFXenum)0);
 
-    //
+    // Specify the blend equation mode
     void blendEquation(const fgGFXenum mode);
-    //
+    // Specify the blend equation mode separately for RGB and alpha channels
     void blendEquation(const fgGFXenum modeRGB, const fgGFXenum modeAlpha);
-    //
+    // Specify the blend functions for source and destination
     void blendFunc(const fgGFXenum sfactor, const fgGFXenum dfactor);
-    //
+    // Specify the blend functions for source and destination separately for RGB and alpha channels
     void blendFunc(const fgGFXenum srcRGB, const fgGFXenum dstRGB, const fgGFXenum srcAlpha, const fgGFXenum dstAlpha);
 
-    //
+    // Use specified shader program
     void useProgram(const fgGFXuint program);
-    //
+    // Returns the index to currently active vertex program
     fgGFXuint activeProgram(void);
 
-    //
+    // Set the viewport dimensions
     void viewport(const fgGFXint x, const fgGFXint y, const fgGFXint width, const fgGFXint height);
-    //
+    // Set the viewport dimensions
     void viewport(const fgVector2i& pos, const fgVector2i& size);
-    //
+    // Set the viewport dimensions
     void viewport(const fgVector4i& dimensions);
 
-    //
+    // Set the scissor box dimensions
     void scissor(const fgGFXint x, const fgGFXint y, const fgGFXint width, const fgGFXint height);
-    //
+    // Set the scissor box dimensions
     void scissor(const fgVector2i& pos, const fgVector2i& size);
-    //
+    // Set the scissor box dimensions
     void scissor(const fgVector4i& dimensions);
 
-    //
+    // Toggle scissor test capability
     void setScissorTest(const fgBool toggle = FG_TRUE);
-    //
+    // Toggle depth testing
     void setDepthTest(const fgBool toggle = FG_TRUE);
-    //
+    // Toggle cull face elimination
     void setCullFace(const fgBool toggle = FG_TRUE);
-    //
+    // Toggle blending
     void setBlend(const fgBool toggle = FG_TRUE);
-    //
+    // Set the front face
     void frontFace(const fgGFXenum mode = GL_CCW);
-    //
+    // Set the cull face
     void cullFace(const fgGFXenum mode = GL_BACK);
-    //
+    // Set the depth function
     void depthFunc(const fgGFXenum func);
-    //
+    // Set the clear depth value
     void clearDepth(const fgGFXfloat depth = 1.0f);
-    //
+    // Set the clear color
     void clearColor(const fgGFXfloat red, const fgGFXfloat green, const fgGFXfloat blue, const fgGFXfloat alpha);
-    //
+    // Set the clear stencil value
     void clearStencil(const fgGFXint s);
-    //
+    // Set the pixel unpacking alignment
     void pixelStoreUnPack(const fgGFXint param = 4);
-    //
+    // Set the pixel packing alignment
     void pixelStorePack(const fgGFXint param = 4);
 
-    //
+    // Returns the currently active vertex attribute mask
     fgGFXuint activeVertexAttribArrayMask(void) const;
-    //
+    // Returns whether given index vertex attrib array is activated
     fgBool isVertexAttribArrayActive(const fgGFXuint index) const;
 
     // https://www.khronos.org/opengles/sdk/docs/man/xhtml/glEnableVertexAttribArray.xml
+    // Enable the given vertex attrib array index and also by default update the current attrib mask
     void enableVertexAttribArray(const fgGFXuint index, const fgBool updateMask = FG_TRUE);
-    //
+    // Disable the given vertex attrib array index and also by default update the current attrib mask
     void disableVertexAttribArray(const fgGFXuint index, const fgBool updateMask = FG_TRUE);
-    //
+    // Enable the vertex attrib arrays based on the given attrib mask
+    // Attributes not in the mask will not be deactivated
     void enableVertexAttribArrayMask(const fgGFXuint mask);
-    //
+    // Disable the vertex attrib arrays based on the given attrib mask
     void disableVertexAttribArrayMask(const fgGFXuint mask);
-    //
+    // Disable or enable given vertex attrib arrays based on the given mask
+    // Attributes not in the mask will be deactivated
     void diffVertexAttribArrayMask(const fgGFXuint mask);
 
 
     // https://www.khronos.org/opengles/sdk/docs/man/xhtml/glGetVertexAttrib.xml
+    // Retuns the buffer (VBO) index currently bound to given vertex attrib index
     fgGFXuint getVertexAttribBufferBinding(const fgGFXuint index);
     //
     fgGFXuint getVertexAttribSize(const fgGFXuint index);
-    //
+    // Returns the vertex attrib data stride for the given index
     fgGFXuint getVertexAttribStride(const fgGFXuint index);
-    //
+    // Returns the vertex attrib data type
     fgGFXenum getVertexAttribType(const fgGFXuint index);
-    //
+    // Returns whether the given attrib array is normalized
     fgGFXboolean getVertexAttribNormalized(const fgGFXuint index);
 
     // https://www.khronos.org/opengles/sdk/docs/man/xhtml/glVertexAttribPointer.xml
+    // Sets the various data details for given vertex attribute index
     void vertexAttribPointer(fgGFXuint index,
                              fgGFXint size,
                              fgGFXenum type,
                              fgGFXboolean normalized,
                              fgGFXsizei stride,
                              fgGFXvoid* ptr);
+    
+    // Sets the various data details based on a special attribute data struct
+    void vertexAttribPointer(fgGfxAttributeData& attrData);
 
 };
 

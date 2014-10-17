@@ -884,6 +884,7 @@ fgBool fgGfxContextParam::update(void) {
 #if defined(FG_USING_SDL2)
 fgGfxContext::fgGfxContext(SDL_Window *sdlWindow) :
 #else
+
 fgGfxContext::fgGfxContext() :
 #endif
 #if defined(FG_USING_SDL2)
@@ -904,10 +905,10 @@ m_init(FG_FALSE) {
     //SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE, 8);
     SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
     //SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-     
-   SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
-   SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
-   
+
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
+
     //SDL_GL_SetAttribute(SDL_GL_ACCELERATED_VISUAL, 1);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_COMPATIBILITY);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_FORWARD_COMPATIBLE_FLAG);
@@ -934,17 +935,17 @@ m_init(FG_FALSE) {
     int r, g, b, a, d, major, minor;
     SDL_GL_MakeCurrent(m_sdlWindow, m_GLContext);
 
-    SDL_GL_GetAttribute(SDL_GL_RED_SIZE,    &r);
-    SDL_GL_GetAttribute(SDL_GL_GREEN_SIZE,  &g);
-    SDL_GL_GetAttribute(SDL_GL_BLUE_SIZE,   &b);
-    SDL_GL_GetAttribute(SDL_GL_ALPHA_SIZE,   &a);
-    SDL_GL_GetAttribute(SDL_GL_DEPTH_SIZE,   &d);
+    SDL_GL_GetAttribute(SDL_GL_RED_SIZE, &r);
+    SDL_GL_GetAttribute(SDL_GL_GREEN_SIZE, &g);
+    SDL_GL_GetAttribute(SDL_GL_BLUE_SIZE, &b);
+    SDL_GL_GetAttribute(SDL_GL_ALPHA_SIZE, &a);
+    SDL_GL_GetAttribute(SDL_GL_DEPTH_SIZE, &d);
     SDL_GL_GetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, &major);
     SDL_GL_GetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, &minor);
 
     FG_LOG::PrintDebug("GFX: GL version %d.%d", major, minor);
     FG_LOG::PrintDebug("GFX: GL color buffer: red: %d, green: %d, blue: %d, alpha: %d, depth: %d,", r, g, b, a, d);
-    
+
 #if defined(FG_USING_GL_BINDING)
     FG_LOG::PrintDebug("Initializing GL bindings...");
     //    //glbinding::Binding::initialize((glbinding::ContextHandle)m_GLContext, true, true);
@@ -962,13 +963,13 @@ m_init(FG_FALSE) {
     }
     fgGFXenum errorCheckValue = fgGLError("glewInit");
     if(errorCheckValue != GL_NO_ERROR) {
-        FG_LOG::PrintError("GFX: Context error, failed to initialize.");//, gluErrorString(errorCheckValue));
+        FG_LOG::PrintError("GFX: Context error, failed to initialize."); //, gluErrorString(errorCheckValue));
         m_init = FG_FALSE;
         return;
     }
     //glewIsSupported("GL_VERSION_3_0");
 #endif
-    
+
 #endif
     FG_LOG::PrintDebug("GFX: Initializing GL parameter list...");
     m_params[(fgGFXuint)GL_ACTIVE_TEXTURE] = fgGfxContextParam(GL_ACTIVE_TEXTURE);
@@ -1059,30 +1060,30 @@ m_init(FG_FALSE) {
     m_params[(fgGFXuint)GL_VIEWPORT] = fgGfxContextParam(GL_VIEWPORT);
 
     memset(m_attrInfo, 0, sizeof (m_attrInfo));
-    
+
     std::string glVendor = (const char*)glGetString(GL_VENDOR);
     std::string glRenderer = (const char *)glGetString(GL_RENDERER);
     std::string glVersion = (const char *)glGetString(GL_VERSION);
     std::string glSLVersion = (const char *)glGetString(GL_SHADING_LANGUAGE_VERSION);
     std::string glExtensions;
-    
+
 #if defined(FG_USING_MARMALADE)
-    glExtensions = (const char*) glGetString(GL_EXTENSIONS);
+    glExtensions = (const char*)glGetString(GL_EXTENSIONS);
 #elif defined(FG_USING_OPENGL_GLEW)
     if(glewIsSupported("GL_VERSION_3_0") || glewIsSupported("GL_VERSION_3_2") || glewIsSupported("GL_VERSION_3_2")) {
         int max = 0;
         glGetIntegerv(GL_NUM_EXTENSIONS, &max);
-        for(int i=0;i<max;i++) {
+        for(int i = 0; i < max; i++) {
             glExtensions.append((const char*)glGetStringi(GL_EXTENSIONS, i)).append(" ");
         }
     }
 #endif
-    
-    FG_LOG::PrintDebug("GFX: GL vendor:    %s", glVendor.c_str());
-    FG_LOG::PrintDebug("GFX: GL renderer:  %s", glRenderer.c_str());
-    FG_LOG::PrintDebug("GFX: GL version:   %s", glVersion.c_str());
-    FG_LOG::PrintDebug("GFX: GL Shading Lang version: %s", glSLVersion.c_str());
-    FG_LOG::PrintDebug("GFX: Extensions:   %s", (const char*)glExtensions.c_str());
+
+    FG_LOG::PrintDebug("GFX: GL vendor:     %s", glVendor.c_str());
+    FG_LOG::PrintDebug("GFX: GL renderer:   %s", glRenderer.c_str());
+    FG_LOG::PrintDebug("GFX: GL version:    %s", glVersion.c_str());
+    FG_LOG::PrintDebug("GFX: GLSL version:  %s", glSLVersion.c_str());
+    FG_LOG::PrintDebug("GFX: Extensions:    %s", (const char*)glExtensions.c_str());
     //glGetStringi(GL_EXTENSIONS, 0);
     fgStringVector vparts;
     fgStrings::split(glVersion, ' ', vparts);
@@ -1105,7 +1106,7 @@ m_init(FG_FALSE) {
     //4.30		4.3
     //4.40		4.4
     //4.50              4.5
-    
+
     vparts.clear();
     m_SLVersion = FG_GFX_SHADING_LANGUAGE_INVALID;
     fgStrings::split(glSLVersion, ' ', vparts);
@@ -1147,7 +1148,7 @@ m_init(FG_FALSE) {
         if(m_SLVersion != FG_GFX_SHADING_LANGUAGE_INVALID)
             break;
     }
-    
+
     m_init = FG_TRUE;
 }
 
@@ -1720,7 +1721,7 @@ fgGFXuint fgGfxContext::activeVertexAttribArrayMask(void) const {
  *
  */
 fgBool fgGfxContext::isVertexAttribArrayActive(const fgGFXuint index) const {
-    return m_attrInfo[index].enabled;
+    return m_attrInfo[index].isEnabled;
 }
 
 /*
@@ -1744,8 +1745,8 @@ void fgGfxContext::updateAttribMask(const fgGFXuint index) {
  * https://www.khronos.org/opengles/sdk/docs/man/xhtml/glEnableVertexAttribArray.xml
  */
 void fgGfxContext::enableVertexAttribArray(const fgGFXuint index, const fgBool updateMask) {
-    if(!m_attrInfo[index].enabled) {
-        m_attrInfo[index].enabled = FG_TRUE;
+    if(!m_attrInfo[index].isEnabled) {
+        m_attrInfo[index].isEnabled = FG_GFX_TRUE;
         glEnableVertexAttribArray(index);
         if(updateMask)
             updateAttribMask(index);
@@ -1756,8 +1757,8 @@ void fgGfxContext::enableVertexAttribArray(const fgGFXuint index, const fgBool u
  *
  */
 void fgGfxContext::disableVertexAttribArray(const fgGFXuint index, const fgBool updateMask) {
-    if(m_attrInfo[index].enabled) {
-        m_attrInfo[index].enabled = FG_FALSE;
+    if(m_attrInfo[index].isEnabled) {
+        m_attrInfo[index].isEnabled = FG_GFX_FALSE;
         glDisableVertexAttribArray(index);
         if(updateMask)
             updateAttribMask(index);
@@ -1839,7 +1840,7 @@ void fgGfxContext::diffVertexAttribArrayMask(const fgGFXuint mask) {
  * https://www.khronos.org/opengles/sdk/docs/man/xhtml/glGetVertexAttrib.xml
  */
 fgGFXuint fgGfxContext::getVertexAttribBufferBinding(const fgGFXuint index) {
-    return m_attrInfo[index].bufferBind;
+    return m_attrInfo[index].buffer;
 }
 
 /*
@@ -1874,7 +1875,7 @@ fgGFXboolean fgGfxContext::getVertexAttribNormalized(const fgGFXuint index) {
     // #FIXME checks
     if(index >= 12)
         return FG_GFX_FALSE;
-    return m_attrInfo[index].normalized;
+    return m_attrInfo[index].isNormalized;
 }
 
 /*
@@ -1894,14 +1895,35 @@ void fgGfxContext::vertexAttribPointer(fgGFXuint index,
     // # mirror
     // # usage of main attrib array in other places
     //
-    fgGfxAttrInfo &attr = m_attrInfo[index];
+    fgGfxAttributeData &attr = m_attrInfo[index];
     attr.index = index;
     attr.size = size;
-    attr.type = type;
-    attr.normalized = normalized;
+    attr.dataType = type;
+    attr.isNormalized = normalized;
     attr.stride = stride;
-    attr.ptr = ptr;
-    attr.bufferBind = m_params[(fgGFXuint)GL_ARRAY_BUFFER_BINDING];
+    attr.pointer = ptr;
+    attr.buffer = m_params[(fgGFXuint)GL_ARRAY_BUFFER_BINDING];
     glVertexAttribPointer(index, size, type, normalized, stride, ptr);
+    fgGLError("glVertexAttribPointer"); // #FIXME
+}
+
+/*
+ *
+ */
+void fgGfxContext::vertexAttribPointer(fgGfxAttributeData& attrData) {
+    fgGFXint index = attrData.index;
+    if(index < 0)
+        return;
+    fgGFXboolean isEnabled = m_attrInfo[index].isEnabled;
+    m_attrInfo[index] = attrData;
+    m_attrInfo[index].isEnabled = isEnabled;
+    m_attrInfo[index].buffer = m_params[(fgGFXuint)GL_ARRAY_BUFFER_BINDING];
+    
+    glVertexAttribPointer(attrData.index,
+                          attrData.size,
+                          attrData.dataType,
+                          attrData.isNormalized,
+                          attrData.stride,
+                          attrData.pointer);
     fgGLError("glVertexAttribPointer"); // #FIXME
 }

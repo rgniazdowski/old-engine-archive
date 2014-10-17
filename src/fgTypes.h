@@ -96,7 +96,9 @@ inline Type& operator	&= (Type& x, Type y)		{	x = x & y;	return x;	} \
 inline Type& operator	|= (Type& x, Type y)		{	x = x | y;	return x;	} \
 inline Type& operator	^= (Type& x, Type y)		{	x = x ^ y;	return x;	}
 
+#ifndef _FG_VECTOR_H_
 #include "fgVector.h"
+#endif
 
 #undef _FG_TYPES_BLOCK__
 #endif /* _FG_TYPES_H_ */

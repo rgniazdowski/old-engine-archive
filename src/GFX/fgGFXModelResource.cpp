@@ -10,6 +10,7 @@
 #include "fgGFXModelResource.h"
 #include "fgTinyObj.h"
 #include "Resource/fgResourceErrorCodes.h"
+#include "Particles/fgPsExplosionEffect.h"
 
 /*
  *
@@ -68,8 +69,9 @@ void fgGfxModelResource::clear(void) {
     memset(m_numData, 0, sizeof (m_numData));
 }
 
-// !@
-
+/*
+ *
+ */
 fgBool fgGfxModelResource::_loadOBJ(void) {
     if(getFilePath(m_quality).empty()) {
         return FG_FALSE;
@@ -224,4 +226,36 @@ void fgGfxModelResource::dispose(void) {
  */
 fgBool fgGfxModelResource::isDisposed(void) const {
     return (fgBool)(m_shapes.empty());
+}
+
+/*
+ *
+ */
+fgBool fgGfxModelResource::genBuffers(void) {
+    if(m_shapes.empty()) {
+        return FG_FALSE;
+    }
+    int n = m_shapes.size();
+    for(int i=0;i<n;i++) {
+        if(m_shapes[i]->mesh) {
+            m_shapes[i]->mesh->genBuffers();
+        }
+    }
+    return FG_TRUE;
+}
+
+/*
+ *
+ */
+fgBool fgGfxModelResource::deleteBuffers(void) {
+    if(m_shapes.empty()) {
+        return FG_FALSE;
+    }
+    int n = m_shapes.size();
+    for(int i=0;i<n;i++) {
+        if(m_shapes[i]->mesh) {
+            m_shapes[i]->mesh->deleteBuffers();
+        }
+    }
+    return FG_TRUE;
 }

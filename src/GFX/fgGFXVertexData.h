@@ -32,6 +32,9 @@
         #include "fgGFXVertex.h"
     #endif
 
+    #ifndef _FG_GFX_ATTRIBUTE_DATA_H_
+        #include "fgGFXAttributeData.h"
+    #endif
 /*
  *
  */
@@ -69,6 +72,9 @@ public:
     virtual fgGfxBufferID*& getRefPtrVBO(void) {
         return m_VBO;
     }
+    
+    //
+    virtual fgGFXboolean setupAttributes(fgGfxAttributeData *pDataArray) = 0;
     
     //
     virtual fgGFXboolean genBuffers(void) = 0;
@@ -163,6 +169,9 @@ public:
     virtual fgBool isAoS(void) const {
         return FG_TRUE;
     }
+    
+    //
+    virtual fgGFXboolean setupAttributes(fgGfxAttributeData *pDataArray);
     
     //
     virtual fgGFXboolean genBuffers(void);
@@ -282,6 +291,9 @@ public:
     virtual fgBool isAoS(void) const {
         return FG_TRUE;
     }
+    
+    //
+    virtual fgGFXboolean setupAttributes(fgGfxAttributeData *pDataArray);
     
     //
     virtual fgGFXboolean genBuffers(void);
@@ -408,6 +420,9 @@ public:
     virtual fgBool isAoS(void) const {
         return FG_TRUE;
     }
+    
+    //
+    virtual fgGFXboolean setupAttributes(fgGfxAttributeData *pDataArray);
     
     //
     virtual fgGFXboolean genBuffers(void);

@@ -321,6 +321,46 @@ typedef GLfixed fgGFXfixed;
 typedef int fgGFXfixed;
         #endif
 
-    #endif
+    #endif /* FG_GFX_GL_MASK_TYPEDEFS_DEFINED && _FG_INCLUDED_GL_ */
+    
+//
+// Data types
+//
+
+//	bool	-	a conditional type, taking on values of true or false
+//	int	-	a signed integer
+//	float	-	a single floating-point scalar
+//	vec2	-	a two component floating-point vector
+//	vec3	-	a three component floating-point vector
+//	vec4	-	a four component floating-point vector
+//	bvec2	-	a two component Boolean vector
+//	bvec3	-	a three component Boolean vector
+//	bvec4	-	a four component Boolean vector
+//	ivec2	-	a two component integer vector
+//	ivec3	-	a three component integer vector
+//	ivec4	-	a four component integer vector
+//	mat2	-	a 2x2 floating-point matrix
+//	mat3	-	a 3x3 floating-point matrix
+//	mat4	-	a 4x4 floating-point matrix
+//	sampler2D	-	a handle for accessing a 2D texture
+//	samplerCube	-	a handle for accessing a cube mapped texture
+
+    #define FG_GFX_FLOAT                GL_FLOAT
+    #define FG_GFX_FLOAT_VEC2           GL_FLOAT_VEC2
+    #define FG_GFX_FLOAT_VEC3           GL_FLOAT_VEC3
+    #define FG_GFX_FLOAT_VEC4           GL_FLOAT_VEC4
+    #define FG_GFX_INT                  GL_INT
+    #define FG_GFX_INT_VEC2             GL_INT_VEC2
+    #define FG_GFX_INT_VEC3             GL_INT_VEC3
+    #define FG_GFX_INT_VEC4             GL_INT_VEC4
+    #define FG_GFX_BOOL                 GL_BOOL
+    #define FG_GFX_BOOL_VEC2            GL_BOOL_VEC2
+    #define FG_GFX_BOOL_VEC3            GL_BOOL_VEC3
+    #define FG_GFX_BOOL_VEC4            GL_BOOL_VEC4
+    #define FG_GFX_FLOAT_MAT2           GL_FLOAT_MAT2
+    #define FG_GFX_FLOAT_MAT3           GL_FLOAT_MAT3
+    #define FG_GFX_FLOAT_MAT4           GL_FLOAT_MAT4	
+    #define FG_GFX_SAMPLER_2D           GL_SAMPLER_2D
+    #define FG_GFX_SAMPLER_CUBE         GL_SAMPLER_CUBE
 
 #endif /* _FG_GFX_GL_H_ */

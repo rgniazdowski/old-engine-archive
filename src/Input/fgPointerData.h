@@ -8,64 +8,64 @@
  *******************************************************/
 
 #ifndef _FG_POINTER_DATA_H_
-#define _FG_POINTER_DATA_H_
+    #define _FG_POINTER_DATA_H_
 
-#ifndef _FG_BUILD_CONFIG_H_
-#include "fgBuildConfig.h"
-#endif
+    #ifndef _FG_BUILD_CONFIG_H_
+        #include "fgBuildConfig.h"
+    #endif
 
-#ifndef _FG_BOOL_H_
-#include "fgBool.h"
-#endif
+    #ifndef _FG_BOOL_H_
+        #include "fgBool.h"
+    #endif
 
-#if defined(FG_USING_MARMALADE)
+    #if defined(FG_USING_MARMALADE)
 
-#include "s3ePointer.h"
-#define FG_POINTER_BUTTON_SELECT		((unsigned int)S3E_POINTER_BUTTON_SELECT)
-#define FG_POINTER_BUTTON_LEFTMOUSE             ((unsigned int)S3E_POINTER_BUTTON_LEFTMOUSE)
-#define FG_POINTER_BUTTON_RIGHTMOUSE		((unsigned int)S3E_POINTER_BUTTON_RIGHTMOUSE)
-#define FG_POINTER_BUTTON_MIDDLEMOUSE		((unsigned int)S3E_POINTER_BUTTON_MIDDLEMOUSE)
-#define FG_POINTER_BUTTON_MOUSEWHEELUP		((unsigned int)S3E_POINTER_BUTTON_MOUSEWHEELUP)
-#define FG_POINTER_BUTTON_MOUSEWHEELDOWN	((unsigned int)S3E_POINTER_BUTTON_MOUSEWHEELDOWN)
+        #include "s3ePointer.h"
+        #define FG_POINTER_BUTTON_SELECT		((unsigned int)S3E_POINTER_BUTTON_SELECT)
+        #define FG_POINTER_BUTTON_LEFTMOUSE             ((unsigned int)S3E_POINTER_BUTTON_LEFTMOUSE)
+        #define FG_POINTER_BUTTON_RIGHTMOUSE		((unsigned int)S3E_POINTER_BUTTON_RIGHTMOUSE)
+        #define FG_POINTER_BUTTON_MIDDLEMOUSE		((unsigned int)S3E_POINTER_BUTTON_MIDDLEMOUSE)
+        #define FG_POINTER_BUTTON_MOUSEWHEELUP		((unsigned int)S3E_POINTER_BUTTON_MOUSEWHEELUP)
+        #define FG_POINTER_BUTTON_MOUSEWHEELDOWN	((unsigned int)S3E_POINTER_BUTTON_MOUSEWHEELDOWN)
 
-#define FG_POINTER_STATE_UP			((unsigned int)S3E_POINTER_STATE_UP)
-#define FG_POINTER_STATE_DOWN			((unsigned int)S3E_POINTER_STATE_DOWN)
-#define FG_POINTER_STATE_PRESSED		((unsigned int)S3E_POINTER_STATE_PRESSED)
-#define FG_POINTER_STATE_RELEASED		((unsigned int)S3E_POINTER_STATE_RELEASED)
-#define FG_POINTER_STATE_UNKNOWN		((unsigned int)S3E_POINTER_STATE_UNKNOWN)
+        #define FG_POINTER_STATE_UP			((unsigned int)S3E_POINTER_STATE_UP)
+        #define FG_POINTER_STATE_DOWN			((unsigned int)S3E_POINTER_STATE_DOWN)
+        #define FG_POINTER_STATE_PRESSED		((unsigned int)S3E_POINTER_STATE_PRESSED)
+        #define FG_POINTER_STATE_RELEASED		((unsigned int)S3E_POINTER_STATE_RELEASED)
+        #define FG_POINTER_STATE_UNKNOWN		((unsigned int)S3E_POINTER_STATE_UNKNOWN)
 
-#elif defined(FG_USING_SDL2)
-#include "SDL2/SDL_mouse.h"
-#include "SDL2/SDL_events.h"
-#define FG_POINTER_BUTTON_SELECT            SDL_BUTTON_LEFT
-#define FG_POINTER_BUTTON_LEFT              SDL_BUTTON_LEFT
-#define FG_POINTER_BUTTON_RIGHT             SDL_BUTTON_RIGHT
-#define FG_POINTER_BUTTON_MIDDLE            SDL_BUTTON_MIDDLE
-#define FG_POINTER_BUTTON_WHEELUP           10	
-#define FG_POINTER_BUTTON_WHEELDOWN         11
+    #elif defined(FG_USING_SDL2)
+        #include "SDL2/SDL_mouse.h"
+        #include "SDL2/SDL_events.h"
+        #define FG_POINTER_BUTTON_SELECT            SDL_BUTTON_LEFT
+        #define FG_POINTER_BUTTON_LEFT              SDL_BUTTON_LEFT
+        #define FG_POINTER_BUTTON_RIGHT             SDL_BUTTON_RIGHT
+        #define FG_POINTER_BUTTON_MIDDLE            SDL_BUTTON_MIDDLE
+        #define FG_POINTER_BUTTON_WHEELUP           10	
+        #define FG_POINTER_BUTTON_WHEELDOWN         11
 
-#define FG_POINTER_STATE_UP                 0x4
-#define FG_POINTER_STATE_DOWN               0x2
-#define FG_POINTER_STATE_PRESSED            SDL_PRESSED     // 1 0x1
-#define FG_POINTER_STATE_RELEASED           SDL_RELEASED    // 0 0x0
-#define FG_POINTER_STATE_UNKNOWN            0x7
+        #define FG_POINTER_STATE_UP                 0x4
+        #define FG_POINTER_STATE_DOWN               0x2
+        #define FG_POINTER_STATE_PRESSED            SDL_PRESSED     // 1 0x1
+        #define FG_POINTER_STATE_RELEASED           SDL_RELEASED    // 0 0x0
+        #define FG_POINTER_STATE_UNKNOWN            0x7
 
-#else
+    #else
 
-#define FG_POINTER_BUTTON_SELECT            0
-#define FG_POINTER_BUTTON_LEFTMOUSE         0
-#define FG_POINTER_BUTTON_RIGHTMOUSE        1
-#define FG_POINTER_BUTTON_MIDDLEMOUSE       2
-#define FG_POINTER_BUTTON_MOUSEWHEELUP      3
-#define FG_POINTER_BUTTON_MOUSEWHEELDOWN    4
+        #define FG_POINTER_BUTTON_SELECT            0
+        #define FG_POINTER_BUTTON_LEFTMOUSE         0
+        #define FG_POINTER_BUTTON_RIGHTMOUSE        1
+        #define FG_POINTER_BUTTON_MIDDLEMOUSE       2
+        #define FG_POINTER_BUTTON_MOUSEWHEELUP      3
+        #define FG_POINTER_BUTTON_MOUSEWHEELDOWN    4
 
-#define FG_POINTER_STATE_UP                 0
-#define FG_POINTER_STATE_DOWN               1
-#define FG_POINTER_STATE_PRESSED            2
-#define FG_POINTER_STATE_RELEASED           4
-#define FG_POINTER_STATE_UNKNOWN            5
+        #define FG_POINTER_STATE_UP                 0
+        #define FG_POINTER_STATE_DOWN               1
+        #define FG_POINTER_STATE_PRESSED            2
+        #define FG_POINTER_STATE_RELEASED           4
+        #define FG_POINTER_STATE_UNKNOWN            5
 
-#endif
+    #endif
 
 typedef unsigned int fgTouchID;
 typedef unsigned int fgPointerID;
@@ -73,36 +73,36 @@ typedef unsigned int fgButtonID;
 
 typedef unsigned int fgPointerState;
 
-struct fgPointerData
-{
-	union {
-		fgTouchID	m_touchID;
-		fgButtonID	m_buttonID;
-		fgPointerID	m_pointerID;
-	};
-	fgPointerState m_state;
-	union {
-		int m_moveX;
-		int m_x;
-	};
-	union {
-		int m_moveY;
-		int m_y;
-	};
-	union {
-		fgBool m_pressed;
-		fgBool m_active;
-	};
-	fgBool m_pointerTap;
+struct fgPointerData {
 
-	fgPointerData() : 
-		m_touchID(0),
-		m_state(FG_POINTER_STATE_UP),
-		m_x(0), m_y(0),
-		m_active(FG_FALSE),
-		m_pointerTap(FG_FALSE)
-	{
-	}
+    union {
+        fgTouchID m_touchID;
+        fgButtonID m_buttonID;
+        fgPointerID m_pointerID;
+    };
+    fgPointerState m_state;
+
+    union {
+        int m_moveX;
+        int m_x;
+    };
+
+    union {
+        int m_moveY;
+        int m_y;
+    };
+
+    union {
+        fgBool m_pressed;
+        fgBool m_active;
+    };
+    fgBool m_pointerTap;
+    fgPointerData() :
+    m_touchID(0),
+    m_state(FG_POINTER_STATE_UP),
+    m_x(0), m_y(0),
+    m_active(FG_FALSE),
+    m_pointerTap(FG_FALSE) { }
 };
 
 #endif /* _FG_POINTER_DATA_H_ */
