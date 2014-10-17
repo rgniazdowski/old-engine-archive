@@ -10,7 +10,9 @@
 #ifndef _FG_VECTOR_H_
 #define _FG_VECTOR_H_
 
+#ifndef _FG_BUILD_CONFIG_H_
 #include "fgBuildConfig.h"
+#endif
 
 #if defined FG_USING_MARMALADE
 #include "IwUtil.h"

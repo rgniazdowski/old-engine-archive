@@ -334,7 +334,9 @@
           <itemPath>../../../src/GFX/fgGFX2DScene.h</itemPath>
           <itemPath>../../../src/GFX/fgGFX3DScene.cpp</itemPath>
           <itemPath>../../../src/GFX/fgGFX3DScene.h</itemPath>
+          <itemPath>../../../src/GFX/fgGFXAttribBits.h</itemPath>
           <itemPath>../../../src/GFX/fgGFXBoundingBox.h</itemPath>
+          <itemPath>../../../src/GFX/fgGFXBufferID.h</itemPath>
           <itemPath>../../../src/GFX/fgGFXCamera.cpp</itemPath>
           <itemPath>../../../src/GFX/fgGFXCamera.h</itemPath>
           <itemPath>../../../src/GFX/fgGFXCameraAnimation.cpp</itemPath>
@@ -359,6 +361,7 @@
           <itemPath>../../../src/GFX/fgGFXMaterial.h</itemPath>
           <itemPath>../../../src/GFX/fgGFXModelResource.cpp</itemPath>
           <itemPath>../../../src/GFX/fgGFXModelResource.h</itemPath>
+          <itemPath>../../../src/GFX/fgGFXModelTypes.cpp</itemPath>
           <itemPath>../../../src/GFX/fgGFXModelTypes.h</itemPath>
           <itemPath>../../../src/GFX/fgGFXObject.cpp</itemPath>
           <itemPath>../../../src/GFX/fgGFXObject.h</itemPath>
@@ -376,9 +379,13 @@
           <itemPath>../../../src/GFX/fgGFXSimpleDrawer.cpp</itemPath>
           <itemPath>../../../src/GFX/fgGFXSimpleDrawer.h</itemPath>
           <itemPath>../../../src/GFX/fgGFXStdInc.h</itemPath>
+          <itemPath>../../../src/GFX/fgGFXTextureID.h</itemPath>
           <itemPath>../../../src/GFX/fgGFXTexturing.cpp</itemPath>
           <itemPath>../../../src/GFX/fgGFXTexturing.h</itemPath>
           <itemPath>../../../src/GFX/fgGFXTypes.h</itemPath>
+          <itemPath>../../../src/GFX/fgGFXVertex.h</itemPath>
+          <itemPath>../../../src/GFX/fgGFXVertexData.cpp</itemPath>
+          <itemPath>../../../src/GFX/fgGFXVertexData.h</itemPath>
           <itemPath>../../../src/GFX/fgGFXWindow.cpp</itemPath>
           <itemPath>../../../src/GFX/fgGFXWindow.h</itemPath>
         </logicalFolder>
@@ -2196,10 +2203,14 @@
       </item>
       <item path="../../../src/GFX/fgGFX3DScene.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../../../src/GFX/fgGFXAttribBits.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../../../src/GFX/fgGFXBoundingBox.h"
             ex="false"
             tool="3"
             flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGFXBufferID.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGFXCamera.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -2267,6 +2278,11 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/GFX/fgGFXModelTypes.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
       <item path="../../../src/GFX/fgGFXModelTypes.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGFXObject.cpp" ex="false" tool="1" flavor2="0">
@@ -2325,6 +2341,8 @@
       </item>
       <item path="../../../src/GFX/fgGFXStdInc.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../../../src/GFX/fgGFXTextureID.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../../../src/GFX/fgGFXTexturing.cpp"
             ex="false"
             tool="1"
@@ -2333,6 +2351,15 @@
       <item path="../../../src/GFX/fgGFXTexturing.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGFXTypes.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGFXVertex.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGFXVertexData.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGFXVertexData.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGFXWindow.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -4536,10 +4563,14 @@
       </item>
       <item path="../../../src/GFX/fgGFX3DScene.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../../../src/GFX/fgGFXAttribBits.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../../../src/GFX/fgGFXBoundingBox.h"
             ex="false"
             tool="3"
             flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGFXBufferID.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGFXCamera.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -4607,6 +4638,11 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/GFX/fgGFXModelTypes.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
       <item path="../../../src/GFX/fgGFXModelTypes.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGFXObject.cpp" ex="false" tool="1" flavor2="0">
@@ -4665,6 +4701,8 @@
       </item>
       <item path="../../../src/GFX/fgGFXStdInc.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../../../src/GFX/fgGFXTextureID.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../../../src/GFX/fgGFXTexturing.cpp"
             ex="false"
             tool="1"
@@ -4673,6 +4711,15 @@
       <item path="../../../src/GFX/fgGFXTexturing.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGFXTypes.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGFXVertex.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGFXVertexData.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGFXVertexData.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGFXWindow.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -6900,10 +6947,14 @@
       </item>
       <item path="../../../src/GFX/fgGFX3DScene.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../../../src/GFX/fgGFXAttribBits.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../../../src/GFX/fgGFXBoundingBox.h"
             ex="false"
             tool="3"
             flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGFXBufferID.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGFXCamera.cpp" ex="false" tool="1" flavor2="8">
       </item>
@@ -6971,6 +7022,11 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/GFX/fgGFXModelTypes.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
       <item path="../../../src/GFX/fgGFXModelTypes.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGFXObject.cpp" ex="false" tool="1" flavor2="8">
@@ -7029,6 +7085,8 @@
       </item>
       <item path="../../../src/GFX/fgGFXStdInc.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../../../src/GFX/fgGFXTextureID.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../../../src/GFX/fgGFXTexturing.cpp"
             ex="false"
             tool="1"
@@ -7037,6 +7095,15 @@
       <item path="../../../src/GFX/fgGFXTexturing.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGFXTypes.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGFXVertex.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGFXVertexData.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGFXVertexData.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGFXWindow.cpp" ex="false" tool="1" flavor2="8">
       </item>
@@ -9263,10 +9330,14 @@
       </item>
       <item path="../../../src/GFX/fgGFX3DScene.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../../../src/GFX/fgGFXAttribBits.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../../../src/GFX/fgGFXBoundingBox.h"
             ex="false"
             tool="3"
             flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGFXBufferID.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGFXCamera.cpp" ex="false" tool="1" flavor2="8">
       </item>
@@ -9334,6 +9405,11 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/GFX/fgGFXModelTypes.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
       <item path="../../../src/GFX/fgGFXModelTypes.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGFXObject.cpp" ex="false" tool="1" flavor2="8">
@@ -9392,6 +9468,8 @@
       </item>
       <item path="../../../src/GFX/fgGFXStdInc.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../../../src/GFX/fgGFXTextureID.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../../../src/GFX/fgGFXTexturing.cpp"
             ex="false"
             tool="1"
@@ -9400,6 +9478,15 @@
       <item path="../../../src/GFX/fgGFXTexturing.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGFXTypes.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGFXVertex.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGFXVertexData.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGFXVertexData.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGFXWindow.cpp" ex="false" tool="1" flavor2="8">
       </item>
@@ -11603,10 +11690,14 @@
       </item>
       <item path="../../../src/GFX/fgGFX3DScene.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../../../src/GFX/fgGFXAttribBits.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../../../src/GFX/fgGFXBoundingBox.h"
             ex="false"
             tool="3"
             flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGFXBufferID.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGFXCamera.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -11674,6 +11765,11 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/GFX/fgGFXModelTypes.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
       <item path="../../../src/GFX/fgGFXModelTypes.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGFXObject.cpp" ex="false" tool="1" flavor2="0">
@@ -11732,6 +11828,8 @@
       </item>
       <item path="../../../src/GFX/fgGFXStdInc.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../../../src/GFX/fgGFXTextureID.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../../../src/GFX/fgGFXTexturing.cpp"
             ex="false"
             tool="1"
@@ -11740,6 +11838,15 @@
       <item path="../../../src/GFX/fgGFXTexturing.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGFXTypes.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGFXVertex.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGFXVertexData.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGFXVertexData.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGFXWindow.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -13945,10 +14052,14 @@
       </item>
       <item path="../../../src/GFX/fgGFX3DScene.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../../../src/GFX/fgGFXAttribBits.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../../../src/GFX/fgGFXBoundingBox.h"
             ex="false"
             tool="3"
             flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGFXBufferID.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGFXCamera.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -14016,6 +14127,11 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/GFX/fgGFXModelTypes.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
       <item path="../../../src/GFX/fgGFXModelTypes.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGFXObject.cpp" ex="false" tool="1" flavor2="0">
@@ -14074,6 +14190,8 @@
       </item>
       <item path="../../../src/GFX/fgGFXStdInc.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../../../src/GFX/fgGFXTextureID.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../../../src/GFX/fgGFXTexturing.cpp"
             ex="false"
             tool="1"
@@ -14082,6 +14200,15 @@
       <item path="../../../src/GFX/fgGFXTexturing.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGFXTypes.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGFXVertex.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGFXVertexData.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGFXVertexData.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGFXWindow.cpp" ex="false" tool="1" flavor2="0">
       </item>

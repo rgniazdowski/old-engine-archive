@@ -45,16 +45,14 @@ m_init(FG_FALSE) {
  *
  */
 fgGfxMain::~fgGfxMain() {
-    if(FG_GFX_TRUE == glIsBuffer(vboIds[0]))
-        glDeleteBuffers(1, &vboIds[0]);
-    if(FG_GFX_TRUE == glIsBuffer(vboIds[1]))
-        glDeleteBuffers(1, &vboIds[1]);
     if(MVP)
         delete MVP;
     MVP = NULL;
     if(cameraAnim)
         delete cameraAnim;
     cameraAnim = NULL; // #FIXME
+    if(m_gfxContext)
+        m_gfxContext->deleteAllBuffers();
     if(m_init)
         closeGFX();
     if(m_textureMgr)
@@ -68,6 +66,8 @@ fgGfxMain::~fgGfxMain() {
     m_resourceMgr = NULL;
     m_shaderMgr = NULL;
     m_mainWindow = NULL;
+    m_gfxContext = NULL;
+    
 }
 
 /*
@@ -160,14 +160,8 @@ fgBool fgGfxMain::suspendGFX(void) {
             status = FG_FALSE;
     }
     {
-        // FIXME
-        if(FG_GFX_TRUE == glIsBuffer(vboIds[0]) && FG_GFX_TRUE == glIsBuffer(vboIds[1])) {
-            glDeleteBuffers(2, vboIds);
-            FG_LOG::PrintDebug("GFX: VBOS RELEASE... RESET.");
-
-        }
-        memset(vboIds, 0, sizeof (vboIds));
-        // FIXME
+        if(m_gfxContext)
+            m_gfxContext->deleteAllBuffers();
     }
     if(status)
         closeGFX();
@@ -197,7 +191,18 @@ fgBool fgGfxMain::resumeGFX(void) {
             status = FG_FALSE;
     }
     // REGENERATE VBOS #TODO
-
+    // #FIXME lol
+    {
+        fgGfxModelResource *model = NULL;
+        std::string modelname("CobraBomber");
+        model = (fgGfxModelResource *)m_textureMgr->getResourceManager()->get(modelname);
+        if(model) {
+            if(model->getRefShapes().size()) {
+                model->getRefShapes()[0]->mesh->genBuffers();
+            }
+        }
+    }
+    
     if(!status)
         reportWarning(FG_ERRNO_GFX_OK, "Resume of GFX subsystem finished with errors");
     else
@@ -214,38 +219,50 @@ void fgGfxMain::display(void) {
 }
 
 void drawModel(fgGfxModelResource *model, fgGfxShaderProgram *program, fgTextureResource *texture = NULL) {
-    static fgBool buffInit = FG_FALSE;
+    //static fgBool buffInit = FG_FALSE;
     if(!model)
         return;
 
     uintptr_t offset = 0;
-    fgGFXint vtxStride = sizeof (fgVertex3);
+    
     if(model->getRefShapes().empty()) {
         return;
     }
     fgGfxMeshBase *mesh = model->getRefShapes()[0]->mesh;
-    if(mesh->isSoA() == FG_TRUE) {
+    if(mesh->isSoA() == FG_TRUE) { // #FIXME - SOA needs testing!
         fgGfxMeshSoA *soa = (fgGfxMeshSoA *)mesh;
-        fgGFXint numVertices = soa->getNumVertices();
-        fgGFXint numNormals = soa->getNumNormals();
-        fgGFXint numUVs = soa->getNumUVs();
+        //fgGFXint numVertices = soa->getNumVertices();
+        //fgGFXint numNormals = soa->getNumNormals();
+        //fgGFXint numUVs = soa->getNumUVs();
         fgGFXint numIndices = soa->getNumIndices();
 
         fgGfxPlatform::context()->bindBuffer(GL_ARRAY_BUFFER, 0);
         fgGfxPlatform::context()->bindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
         fgGfxPlatform::context()->diffVertexAttribArrayMask(soa->attribMask());
-        fgGfxPlatform::context()->vertexAttribPointer(FG_GFX_ATTRIB_POS_LOCATION, 3 /* VEC3 */,
-                                                      FG_GFX_FLOAT, GL_FALSE, sizeof (fgVector3f), (void*)(&soa->vertices.front()));
+        fgGfxPlatform::context()->vertexAttribPointer(FG_GFX_ATTRIB_POS_LOCATION,
+                                                      3 /* VEC3 */,
+                                                      FG_GFX_FLOAT,
+                                                      GL_FALSE,
+                                                      sizeof (fgVector3f),
+                                                      (void*)(&soa->vertices.front()));
 
         offset += 3 /* VEC3 */ * sizeof (fgGFXfloat);
 
-        fgGfxPlatform::context()->vertexAttribPointer(FG_GFX_ATTRIB_NORM_LOCATION, 3 /* VEC3 */,
-                                                      FG_GFX_FLOAT, GL_FALSE, sizeof (fgVector3f), (void*)(&soa->normals.front()));
+        fgGfxPlatform::context()->vertexAttribPointer(FG_GFX_ATTRIB_NORM_LOCATION,
+                                                      3 /* VEC3 */,
+                                                      FG_GFX_FLOAT,
+                                                      GL_FALSE,
+                                                      sizeof (fgVector3f),
+                                                      (void*)(&soa->normals.front()));
 
         offset += 3 /* VEC3 */ * sizeof (fgGFXfloat);
 
-        fgGfxPlatform::context()->vertexAttribPointer(FG_GFX_ATTRIB_UVS_LOCATION, 2 /* VEC2 */,
-                                                      FG_GFX_FLOAT, GL_FALSE, sizeof (fgVector2f), (void*)(&soa->uvs.front()));
+        fgGfxPlatform::context()->vertexAttribPointer(FG_GFX_ATTRIB_UVS_LOCATION,
+                                                      2 /* VEC2 */,
+                                                      FG_GFX_FLOAT,
+                                                      GL_FALSE, 
+                                                      sizeof (fgVector2f), 
+                                                      (void*)(&soa->uvs.front()));
 
         if(texture && program) {
             // Bind our texture in Texture Unit 0
@@ -261,18 +278,20 @@ void drawModel(fgGfxModelResource *model, fgGfxShaderProgram *program, fgTexture
         return;
     }
     fgGfxMeshAoS *aos = (fgGfxMeshAoS *)mesh;
-    fgGFXint numVertices = aos->getNumVertices();
+    //fgGFXint numVertices = aos->getNumVertices();
     fgGFXint numIndices = aos->getNumIndices();
     // vboIds[0] - used to store vertex attribute data
     // vboIds[l] - used to store element indices
-    fgGFXvoid *vtxBuf = aos->vertices.front();
-    fgGFXvoid *indices = (fgGFXvoid *)(&aos->indices.front());
-    uintptr_t offsetui = (uintptr_t)((unsigned int*)&aos->indices.front());
-    if(FG_GFX_FALSE == glIsBuffer(vboIds[0]) || FG_GFX_FALSE == glIsBuffer(vboIds[1])) {
-        buffInit = FG_FALSE;
-        FG_LOG::PrintDebug("GFX: VBOS NOT PROPER, BUFF INIT FALSE...");
-    }
-    if(vboIds[0] == 0 && vboIds[1] == 0 && !buffInit) {
+    //fgGFXvoid *vtxBuf = aos->vertices.front();
+    //fgGFXvoid *indices = (fgGFXvoid *)(&aos->indices.front());
+    //uintptr_t offsetui = (uintptr_t)((unsigned int*)&aos->indices.front());
+    fgGFXint vtxStride = sizeof (fgVertex3v);
+    vtxStride = aos->stride();
+    //if(FG_GFX_FALSE == glIsBuffer(vboIds[0]) || FG_GFX_FALSE == glIsBuffer(vboIds[1])) {
+    //    buffInit = FG_FALSE;
+    //    FG_LOG::PrintDebug("GFX: VBOS NOT PROPER, BUFF INIT FALSE...");
+    //}
+   /* if(vboIds[0] == 0 && vboIds[1] == 0 && !buffInit) {
         // Only allocate on the first draw
         glGenBuffers(2, vboIds);
         glBindBuffer(GL_ARRAY_BUFFER, vboIds[0]);
@@ -285,7 +304,6 @@ void drawModel(fgGfxModelResource *model, fgGfxShaderProgram *program, fgTexture
         glBufferData(GL_ELEMENT_ARRAY_BUFFER,
                      sizeof (fgGFXushort) * numIndices,
                      indices,
-					 //(fgGFXvoid *)offsetui,
                      GL_STATIC_DRAW);
 
         buffInit = FG_TRUE;
@@ -296,9 +314,14 @@ void drawModel(fgGfxModelResource *model, fgGfxShaderProgram *program, fgTexture
     if(!buffInit) {
         FG_LOG::PrintDebug("GFX: NO BUFFERS. EXIT DRAW...");
         return;
+    }*/
+    if(!aos->getPtrVBO() || !fgGfxPlatform::context()->isBuffer(aos->getRefPtrVBO()[0])) {
+        FG_LOG::PrintDebug("GFX: NO BUFFERS. EXIT DRAW...");
+        return;
     }
-    fgGfxPlatform::context()->bindBuffer(GL_ARRAY_BUFFER, vboIds[0]);
-    fgGfxPlatform::context()->bindBuffer(GL_ELEMENT_ARRAY_BUFFER, vboIds[1]);
+    offset = 0;
+    fgGfxPlatform::context()->bindBuffer(aos->getPtrVBO()[0]);
+    fgGfxPlatform::context()->bindBuffer(aos->getPtrVBO()[1]);
 
     fgGfxPlatform::context()->diffVertexAttribArrayMask(aos->attribMask());
     fgGfxPlatform::context()->vertexAttribPointer(FG_GFX_ATTRIB_POS_LOCATION, 3 /* VEC3 */,

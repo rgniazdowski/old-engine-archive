@@ -340,6 +340,8 @@ inline const char * _FG_GFX_UNIFORM_TYPE_TO_TEXT(fgGfxUniformType value) {
 #define FG_GFX_UNIFORM_TYPE_FROM_TEXT(text)	_FG_GFX_UNIFORM_TYPE_FROM_TEXT(text)
 #define FG_GFX_UNIFORM_TYPE_TO_TEXT(value)	_FG_GFX_UNIFORM_TYPE_TO_TEXT(value)
 
+#ifndef FG_GFX_ATTR_TYPE_DEFINED
+    #define FG_GFX_ATTR_TYPE_DEFINED
 // Attribute type also corresponds to bound attribute location
 enum fgGfxAttributeType {
 	FG_GFX_ATTRIBUTE_INVALID = -1,
@@ -349,8 +351,11 @@ enum fgGfxAttributeType {
 	FG_GFX_COLOR			=	FG_GFX_ATTRIB_COLOR_LOCATION,
 	FG_GFX_TANGENT			=	FG_GFX_ATTRIB_TANGENT_LOCATION
 };
+#endif
 
+#ifndef FG_GFX_ATTRIBUTE_COUNT
 #define FG_GFX_ATTRIBUTE_COUNT	5 // #FIXME
+#endif
 
 #define FG_GFX_POSITION_TEXT		"Position"		// Position (vec3)
 #define FG_GFX_NORMAL_TEXT		"Normal"		// Normal (vec3)
@@ -501,89 +506,6 @@ struct fgGfxAttributeBind {
 
     inline bool operator<=(const fgGfxAttributeBind& a) const {
         return (int) (this->type) <= (int) (a.type);
-    }
-};
-
-/*
- *  Attribute raw data parameters
- * This is not to use within the shader / shader program structure
- * This data is used for draw calls. Shader hold more general data
- * about the attribute binds (location)
- */
-struct fgGfxAttributeData {
-    /// Index of the generic vertex attribute to be modifed.
-    fgGFXint index;
-    /// Number of components per generic vertex attribute. 
-    /// Must be 1,2,3 or 4. (default is 3)
-    fgGFXint size;
-    // The engine specific attribute type
-    fgGfxAttributeType type;
-    /// Specifies the data type of each component in the array.
-    /// Possible values: BYTE, UNSIGNED_BYTE, SHORT, UNSIGNED_SHORT, FIXED and FLOAT.
-    fgGFXenum dataType;
-    /// The byte offset between between consecutive generic vertex attributes.
-    /// For structures and interleaved data this will be sizeof(struct/Vertex)
-    fgGFXsizei stride;
-
-    union {
-        // Pointer to the vertex data
-        fgGFXvoid *pointer;
-        // Offset if vertex buffer object is used
-        fgGFXvoid *offset;
-    };
-    /// Specifies whether data values should be normalized
-    fgGFXboolean isNormalized;
-    /// Is data interleaved? This is important, if data is not interleaved then
-    /// it means that vertices, normals, UVS, colors etc are in separate arrays
-    /// (Struct of arrays) and/or separate buffer objects (isBO).
-    /// If true then Array of structs is used and one vertex buffer (additionally
-    /// another buffer for indeces)
-    fgGFXboolean isInterleaved;
-    /// Is attribute data bound to vertex/index buffer?
-    /// Note: attribute data used for index buffer cannot be bound to attribute in the shader
-    /// It is used for indexed drawing - it's additional 3D data (glDrawElements)
-    fgGFXboolean isBO;
-    /// Is this attribute enabled?
-    fgGFXboolean isEnabled;
-    /// Bound buffer id
-    fgGFXuint buffer;
-
-    fgGfxAttributeData() :
-    index(0),
-    size(3),
-    type(FG_GFX_POSITION),
-    dataType(FG_GFX_FLOAT),
-    stride(0),
-    pointer(NULL),
-    isNormalized(FG_GFX_FALSE),
-    isInterleaved(FG_GFX_TRUE),
-    isBO(FG_GFX_FALSE),
-    isEnabled(FG_GFX_FALSE),
-    buffer(0) {
-    }
-
-    inline int operator==(const fgGfxAttributeData& b) const {
-        return (b.index == this->index);
-    }
-
-    inline int operator!=(const fgGfxAttributeData& b) const {
-        return !(b.index == this->index);
-    }
-
-    inline bool operator>(const fgGfxAttributeData& a) const {
-        return (int) (this->index) > (int) (a.index);
-    }
-
-    inline bool operator<(const fgGfxAttributeData& a) const {
-        return (int) (this->index) < (int) (a.index);
-    }
-
-    inline bool operator>=(const fgGfxAttributeData& a) const {
-        return (int) (this->index) >= (int) (a.index);
-    }
-
-    inline bool operator<=(const fgGfxAttributeData& a) const {
-        return (int) (this->index) <= (int) (a.index);
     }
 };
 

@@ -49,7 +49,7 @@ private:
 	/// Attribute binding data // Need to think what do with indices ?
 	fgGfxAttributeData m_attrData[FG_GFX_ATTRIBUTE_COUNT];
 	///
-	fgVertexDataBase *m_vecDataBase;
+	fgVertexData *m_vecDataBase;
 	/// Pointer to the shader program used in this draw call
 	/// It can be set to NULL, then the draw call will use
 	/// last active shader program. The pointer to the shader

@@ -12,7 +12,7 @@
 /*
  *
  */
-const fgVertex3 c_stripCube1x1[] = {
+const fgVertex3v c_stripCube1x1[] = {
          // Vertex data for face 0
          {fgVector3f(-0.5f, -0.5f,  0.5f)}, //  v0
          {fgVector3f( 0.5f, -0.5f,  0.5f)}, //  v1
@@ -113,7 +113,7 @@ static const GLfloat c_trisCube1x1[] = {
  * Square is size of 1.0fx1.0f, point 0.0 is centered (0.0 is center mass),
  * triangle strip format, no index, CCW
  */
-const fgVertex3 c_stripSquare1x1[] = {
+const fgVertex3v c_stripSquare1x1[] = {
 	{fgVector3f(-0.5f, 0.5f, 0.f), fgVector3f(0.f,0.f,0.f), fgVector2f(0.f, 1.f)},
 	{fgVector3f(-0.5f,-0.5f, 0.f), fgVector3f(0.f,0.f,0.f), fgVector2f(0.f, 0.f)},
 	{fgVector3f( 0.5f, 0.5f, 0.f), fgVector3f(0.f,0.f,0.f), fgVector2f(1.f, 1.f)},
@@ -124,7 +124,7 @@ const fgVertex3 c_stripSquare1x1[] = {
  * Rectangle, size 1.0fx1.0f, made of 3 quads (3x1) in triangle strip, (6 triangles)
  * mass centered, CCW, texture coords, no normals, no index
  */
-const fgVertex3 c_stripRect3x1[] = {
+const fgVertex3v c_stripRect3x1[] = {
 	{fgVector3f(-0.5f,	 0.5f,		0.f), fgVector3f(0.f,0.f,0.f), fgVector2f(0.f, 1.f)},
 	{fgVector3f(-0.5f,	-0.5f,		0.f), fgVector3f(0.f,0.f,0.f), fgVector2f(0.f, 0.f)},
 	{fgVector3f(-0.5f/3, 0.5f,		0.f), fgVector3f(0.f,0.f,0.f), fgVector2f(1.f/3, 1.f)},
@@ -143,7 +143,7 @@ const fgVertex3 c_stripRect3x1[] = {
 /*
  *
  */
-void fgGfxPrimitives::drawArray2D(const fgVector<fgVertex2> &inputData,
+void fgGfxPrimitives::drawArray2D(const fgVector<fgVertex2v> &inputData,
 								  const unsigned int attribMask,
 								  const fgGfxPrimitiveMode mode)
 {
@@ -157,7 +157,7 @@ void fgGfxPrimitives::drawArray2D(const fgVector<fgVertex2> &inputData,
 			3, 
 			GL_FLOAT,
 			FG_GFX_FALSE,
-			sizeof(fgVertex2),
+			sizeof(fgVertex2v),
 			reinterpret_cast<fgGFXvoid*>(offset));
 	}
 	offset += sizeof(fgVector3f); 
@@ -166,7 +166,7 @@ void fgGfxPrimitives::drawArray2D(const fgVector<fgVertex2> &inputData,
 			2,
 			GL_FLOAT,
 			FG_GFX_FALSE,
-			sizeof(fgVertex2),
+			sizeof(fgVertex2v),
 			reinterpret_cast<fgGFXvoid*>(offset));
 	}
 	glDrawArrays((GLenum)mode, 0, inputData.size());
@@ -176,7 +176,7 @@ void fgGfxPrimitives::drawArray2D(const fgVector<fgVertex2> &inputData,
 /*
  *
  */
-void fgGfxPrimitives::drawArray2D(const fgVector<fgVertex3> &inputData,
+void fgGfxPrimitives::drawArray2D(const fgVector<fgVertex3v> &inputData,
 								  const unsigned int attribMask,
 								  const fgGfxPrimitiveMode mode)
 {
@@ -193,7 +193,7 @@ void fgGfxPrimitives::drawArray2D(const fgVector<fgVertex3> &inputData,
 			3,
 			GL_FLOAT,
 			FG_GFX_FALSE,
-			sizeof(fgVertex3),
+			sizeof(fgVertex3v),
 			reinterpret_cast<fgGFXvoid*>(offset));
 	}
 	offset += sizeof(fgVector3f); 
@@ -202,7 +202,7 @@ void fgGfxPrimitives::drawArray2D(const fgVector<fgVertex3> &inputData,
 			3,
 			GL_FLOAT,
 			FG_GFX_FALSE,
-			sizeof(fgVertex3),
+			sizeof(fgVertex3v),
 			reinterpret_cast<fgGFXvoid*>(offset));
 	}
 	offset += sizeof(fgVector3f); 
@@ -211,7 +211,7 @@ void fgGfxPrimitives::drawArray2D(const fgVector<fgVertex3> &inputData,
 			2,
 			GL_FLOAT,
 			FG_GFX_FALSE, 
-			sizeof(fgVertex3),
+			sizeof(fgVertex3v),
 			reinterpret_cast<fgGFXvoid*>(offset));
 	}
 	glDrawArrays((GLenum)mode, 0, inputData.size());
@@ -221,7 +221,7 @@ void fgGfxPrimitives::drawArray2D(const fgVector<fgVertex3> &inputData,
 /*
  *
  */
-void fgGfxPrimitives::drawArray2D(const fgVector<fgVertex4> &inputData,
+void fgGfxPrimitives::drawArray2D(const fgVector<fgVertex4v> &inputData,
 								  const unsigned int attribMask,
 								  const fgGfxPrimitiveMode mode)
 {
@@ -235,7 +235,7 @@ void fgGfxPrimitives::drawArray2D(const fgVector<fgVertex4> &inputData,
 			3, 
 			GL_FLOAT, 
 			FG_GFX_FALSE,
-			sizeof(fgVertex4),
+			sizeof(fgVertex4v),
 			reinterpret_cast<fgGFXvoid*>(offset));
 	}
 	offset += sizeof(fgVector3f); 
@@ -244,7 +244,7 @@ void fgGfxPrimitives::drawArray2D(const fgVector<fgVertex4> &inputData,
 			3, 
 			GL_FLOAT, 
 			FG_GFX_FALSE, 
-			sizeof(fgVertex4),
+			sizeof(fgVertex4v),
 			reinterpret_cast<fgGFXvoid*>(offset));
 	}
 	offset += sizeof(fgVector3f); 
@@ -253,7 +253,7 @@ void fgGfxPrimitives::drawArray2D(const fgVector<fgVertex4> &inputData,
 			2,
 			GL_FLOAT,
 			FG_GFX_FALSE,
-			sizeof(fgVertex4),
+			sizeof(fgVertex4v),
 			reinterpret_cast<fgGFXvoid*>(offset));
 	}
 	offset += sizeof(fgVector2f); 
@@ -262,14 +262,14 @@ void fgGfxPrimitives::drawArray2D(const fgVector<fgVertex4> &inputData,
 			4,
 			GL_FLOAT,
 			FG_GFX_FALSE,
-			sizeof(fgVertex4),
+			sizeof(fgVertex4v),
 			reinterpret_cast<fgGFXvoid*>(offset));
 	}
 	glDrawArrays((GLenum)mode, 0, inputData.size());
 	fgGLError("glDrawArrays");
 }
 
-void fgGfxPrimitives::drawArray2D(const fgVertexDataBase *inputData,
+void fgGfxPrimitives::drawArray2D(const fgVertexData *inputData,
 								  const unsigned int attribMask,
 								  const fgGfxPrimitiveMode mode)
 {
@@ -333,7 +333,7 @@ void fgGfxPrimitives::drawRect2D(void)
 		3,
 		GL_FLOAT,
 		FG_GFX_FALSE,
-		sizeof(fgVertex3),
+		sizeof(fgVertex3v),
 		(fgGFXvoid *)c_stripRect3x1);
         
 	uintptr_t offset = (uintptr_t)((unsigned int*)&c_stripRect3x1[0]) + sizeof(fgGFXfloat) * 6;
@@ -341,16 +341,16 @@ void fgGfxPrimitives::drawRect2D(void)
 		2,
 		GL_FLOAT,
 		FG_GFX_FALSE,
-		sizeof(fgVertex3),
+		sizeof(fgVertex3v),
 		(fgGFXvoid*)offset);
-	glDrawArrays(GL_TRIANGLE_STRIP, 0, sizeof(c_stripRect3x1)/sizeof(fgVertex3)); 
+	glDrawArrays(GL_TRIANGLE_STRIP, 0, sizeof(c_stripRect3x1)/sizeof(fgVertex3v)); 
 	fgGLError("glDrawArrays");
 }
 
 /*
  *
  */
-void fgGfxPrimitives::appendRect2D(fgVertexDataBase *outputData,
+void fgGfxPrimitives::appendRect2D(fgVertexData *outputData,
 								   const fgVec2f &size,
 								   const fgVec2f &uv1, 
 								   const fgVec2f &uv2,
@@ -364,7 +364,7 @@ void fgGfxPrimitives::appendRect2D(fgVertexDataBase *outputData,
 /*
  *
  */
-void fgGfxPrimitives::appendRect2D(fgVertexDataBase *outputData,
+void fgGfxPrimitives::appendRect2D(fgVertexData *outputData,
 								   float sizex, 
 								   float sizey, 
 								   const fgVec2f &uv1,
@@ -381,7 +381,7 @@ void fgGfxPrimitives::appendRect2D(fgVertexDataBase *outputData,
  * (does not use indexing, quad is specified via 6 vertices - two separate triangles)
  * Currently specifing UVs for Triangle strip is not obvious (it's tricky, needs changing)
  */
-void fgGfxPrimitives::appendRect2D(fgVertexDataBase *outputData,
+void fgGfxPrimitives::appendRect2D(fgVertexData *outputData,
 								   const fgVec2f &relPos,
 								   const fgVec2f &size,
 								   const fgVec2f &uv1,
@@ -416,13 +416,13 @@ void fgGfxPrimitives::appendRect2D(fgVertexDataBase *outputData,
 	fgVector3f norm = fgVector3f(1.0f, 1.0f, 1.0f);
 	if(mode == fgGfxPrimitiveMode::FG_GFX_TRIANGLE_STRIP || mode == fgGfxPrimitiveMode::FG_GFX_TRIANGLES) {
 		
-		fgVertex2 v1, v2;
+		fgVertex2v v1, v2;
 		v1.position = fgVec3f(x1, y1, 0.0f);
 		v1.uv = fgVec2f(uv1.x, 1-uv1.y);
 		v2.position = fgVec3f(x1, y1+size.y, 0.0f);
 		v2.uv = fgVec2f(uv1.x, 1-uv2.y);
 		if(mode == fgGfxPrimitiveMode::FG_GFX_TRIANGLE_STRIP && outputData->empty()) {
-			fgVertex3 v3, v4;
+			fgVertex3v v3, v4;
 			v3.position = fgVec3f(x1+size.x, y1, 0.0f);
 			v3.uv = fgVec2f(uv2.x, 1-uv1.y);
 
@@ -443,8 +443,8 @@ void fgGfxPrimitives::appendRect2D(fgVertexDataBase *outputData,
 
 		
 		if(mode == fgGfxPrimitiveMode::FG_GFX_TRIANGLES) {
-			fgVertex2 v3, v4;
-			fgVertex2 v5, v6;
+			fgVertex2v v3, v4;
+			fgVertex2v v5, v6;
 			v3.position = fgVec3f(x1+size.x, y1, 0.0f);
 			v3.uv = fgVec2f(uv2.x, 1-uv1.y);
 

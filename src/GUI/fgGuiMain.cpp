@@ -113,7 +113,6 @@ fgGuiMain::~fgGuiMain() {
  *
  */
 void fgGuiMain::registerGuiCallbacks(void) {
-    printf("void fgGuiMain::registerGuiCallbacks(void)\n");
     if(!m_eventMgr)
         return;
 
@@ -137,7 +136,6 @@ void fgGuiMain::registerGuiCallbacks(void) {
  *
  */
 void fgGuiMain::unregisterGuiCallbacks(void) {
-    printf("void fgGuiMain::unregisterGuiCallbacks(void)\n");
     if(!m_eventMgr)
         return;
 

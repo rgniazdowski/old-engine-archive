@@ -99,6 +99,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/_ext/534590209/fgGFXMain.o \
 	${OBJECTDIR}/_ext/534590209/fgGFXMaterial.o \
 	${OBJECTDIR}/_ext/534590209/fgGFXModelResource.o \
+	${OBJECTDIR}/_ext/534590209/fgGFXModelTypes.o \
 	${OBJECTDIR}/_ext/534590209/fgGFXObject.o \
 	${OBJECTDIR}/_ext/534590209/fgGFXOctreeBase.o \
 	${OBJECTDIR}/_ext/534590209/fgGFXPlatform.o \
@@ -107,6 +108,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/_ext/534590209/fgGFXSceneManager.o \
 	${OBJECTDIR}/_ext/534590209/fgGFXSimpleDrawer.o \
 	${OBJECTDIR}/_ext/534590209/fgGFXTexturing.o \
+	${OBJECTDIR}/_ext/534590209/fgGFXVertexData.o \
 	${OBJECTDIR}/_ext/534590209/fgGFXWindow.o \
 	${OBJECTDIR}/_ext/1216539907/fgFontBuiltIn.o \
 	${OBJECTDIR}/_ext/1216539907/fgFontDrawer.o \
@@ -531,6 +533,11 @@ ${OBJECTDIR}/_ext/534590209/fgGFXModelResource.o: ../../../src/GFX/fgGFXModelRes
 	${RM} "$@.d"
 	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_NO_UNDEF -DFG_USING_GLEW -DFG_USING_GLM -DFG_USING_OPENGL -DFG_USING_OPENGL_GLEW -DFG_USING_SDL2 -DFG_USING_TINYXML -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont `pkg-config --cflags gl` `pkg-config --cflags sdl2` `pkg-config --cflags SDL2_mixer` `pkg-config --cflags libpng` `pkg-config --cflags glew` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534590209/fgGFXModelResource.o ../../../src/GFX/fgGFXModelResource.cpp
 
+${OBJECTDIR}/_ext/534590209/fgGFXModelTypes.o: ../../../src/GFX/fgGFXModelTypes.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/534590209
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_NO_UNDEF -DFG_USING_GLEW -DFG_USING_GLM -DFG_USING_OPENGL -DFG_USING_OPENGL_GLEW -DFG_USING_SDL2 -DFG_USING_TINYXML -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont `pkg-config --cflags gl` `pkg-config --cflags sdl2` `pkg-config --cflags SDL2_mixer` `pkg-config --cflags libpng` `pkg-config --cflags glew` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534590209/fgGFXModelTypes.o ../../../src/GFX/fgGFXModelTypes.cpp
+
 ${OBJECTDIR}/_ext/534590209/fgGFXObject.o: ../../../src/GFX/fgGFXObject.cpp 
 	${MKDIR} -p ${OBJECTDIR}/_ext/534590209
 	${RM} "$@.d"
@@ -570,6 +577,11 @@ ${OBJECTDIR}/_ext/534590209/fgGFXTexturing.o: ../../../src/GFX/fgGFXTexturing.cp
 	${MKDIR} -p ${OBJECTDIR}/_ext/534590209
 	${RM} "$@.d"
 	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_NO_UNDEF -DFG_USING_GLEW -DFG_USING_GLM -DFG_USING_OPENGL -DFG_USING_OPENGL_GLEW -DFG_USING_SDL2 -DFG_USING_TINYXML -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont `pkg-config --cflags gl` `pkg-config --cflags sdl2` `pkg-config --cflags SDL2_mixer` `pkg-config --cflags libpng` `pkg-config --cflags glew` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534590209/fgGFXTexturing.o ../../../src/GFX/fgGFXTexturing.cpp
+
+${OBJECTDIR}/_ext/534590209/fgGFXVertexData.o: ../../../src/GFX/fgGFXVertexData.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/534590209
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_NO_UNDEF -DFG_USING_GLEW -DFG_USING_GLM -DFG_USING_OPENGL -DFG_USING_OPENGL_GLEW -DFG_USING_SDL2 -DFG_USING_TINYXML -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont `pkg-config --cflags gl` `pkg-config --cflags sdl2` `pkg-config --cflags SDL2_mixer` `pkg-config --cflags libpng` `pkg-config --cflags glew` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534590209/fgGFXVertexData.o ../../../src/GFX/fgGFXVertexData.cpp
 
 ${OBJECTDIR}/_ext/534590209/fgGFXWindow.o: ../../../src/GFX/fgGFXWindow.cpp 
 	${MKDIR} -p ${OBJECTDIR}/_ext/534590209

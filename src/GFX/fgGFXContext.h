@@ -8,49 +8,49 @@
  *******************************************************/
 
 #ifndef _FG_GFX_CONTEXT_H_
-#define _FG_GFX_CONTEXT_H_
+    #define _FG_GFX_CONTEXT_H_
 
-#ifndef _FG_GFX_GL_H_
-#include "fgGFXGL.h"
-#endif
+    #ifndef _FG_GFX_GL_H_
+        #include "fgGFXGL.h"
+    #endif
 
-#ifndef _FG_GFX_TYPES_H_
-#include "fgGFXTypes.h"
-#endif
+    #ifndef _FG_GFX_TYPES_H_
+        #include "fgGFXTypes.h"
+    #endif
 
-#define FG_GFX_PARAM_INVALID			0
-#define FG_GFX_PARAM_BOOL			1
-#define FG_GFX_PARAM_FLOAT			2
-#define FG_GFX_PARAM_INT			3
-#define FG_GFX_PARAM_ATTRIB			4
-#define FG_GFX_PARAM_BLEND_FUNC			5
-#define FG_GFX_PARAM_BLEND_EQ			6
-#define FG_GFX_PARAM_BLEND_COLOR		7
-#define FG_GFX_PARAM_VIEWPORT			8
-#define FG_GFX_PARAM_SCISSOR			9
-#define FG_GFX_PARAM_TEXTURE_2D			10
-#define FG_GFX_PARAM_TEXTURE_3D			11
-#define FG_GFX_PARAM_TEXTURE			12
-#define FG_GFX_PARAM_VERT_BUFFER_BIND           13
-#define FG_GFX_PARAM_ELEM_BUFFER_BIND           14
-#define FG_GFX_PARAM_CLEAR_DEPTH		15
-#define FG_GFX_PARAM_CLEAR_COLOR		16
-#define FG_GFX_PARAM_COLOR_MASK			17
-#define FG_GFX_PARAM_FRONT_FACE			18
-#define FG_GFX_PARAM_CULL_FACE			19
-#define FG_GFX_PARAM_PROGRAM			20
-#define FG_GFX_PARAM_DEPTH_FUNC			21
-#define FG_GFX_PARAM_DEPTH_RANGE		22
-#define FG_GFX_PARAM_DEPTH_MASK			23
-#define FG_GFX_PARAM_FRAME_BUFFER_BIND          24
-#define FG_GFX_PARAM_RENDER_BUFFER_BIND         25
-#define FG_GFX_PARAM_HINT                       26
-#define FG_GFX_PARAM_SAMPLE_COVERAGE            27
-#define FG_GFX_PARAM_STENCIL_FUNC		28
-#define FG_GFX_PARAM_STENCIL_OP			29
-#define FG_GFX_PARAM_STENCIL_MASK		30
-#define FG_GFX_PARAM_CLEAR_STENCIL		31
-#define FG_GFX_PARAM_PIXEL_STORE		32
+    #define FG_GFX_PARAM_INVALID                0
+    #define FG_GFX_PARAM_BOOL                   1
+    #define FG_GFX_PARAM_FLOAT                  2
+    #define FG_GFX_PARAM_INT                    3
+    #define FG_GFX_PARAM_ATTRIB                 4
+    #define FG_GFX_PARAM_BLEND_FUNC             5
+    #define FG_GFX_PARAM_BLEND_EQ               6
+    #define FG_GFX_PARAM_BLEND_COLOR            7
+    #define FG_GFX_PARAM_VIEWPORT               8
+    #define FG_GFX_PARAM_SCISSOR                9
+    #define FG_GFX_PARAM_TEXTURE_2D             10
+    #define FG_GFX_PARAM_TEXTURE_3D             11
+    #define FG_GFX_PARAM_TEXTURE                12
+    #define FG_GFX_PARAM_VERT_BUFFER_BIND       13
+    #define FG_GFX_PARAM_ELEM_BUFFER_BIND       14
+    #define FG_GFX_PARAM_CLEAR_DEPTH            15
+    #define FG_GFX_PARAM_CLEAR_COLOR            16
+    #define FG_GFX_PARAM_COLOR_MASK		17
+    #define FG_GFX_PARAM_FRONT_FACE		18
+    #define FG_GFX_PARAM_CULL_FACE		19
+    #define FG_GFX_PARAM_PROGRAM		20
+    #define FG_GFX_PARAM_DEPTH_FUNC		21
+    #define FG_GFX_PARAM_DEPTH_RANGE		22
+    #define FG_GFX_PARAM_DEPTH_MASK		23
+    #define FG_GFX_PARAM_FRAME_BUFFER_BIND      24
+    #define FG_GFX_PARAM_RENDER_BUFFER_BIND     25
+    #define FG_GFX_PARAM_HINT                   26
+    #define FG_GFX_PARAM_SAMPLE_COVERAGE        27
+    #define FG_GFX_PARAM_STENCIL_FUNC		28
+    #define FG_GFX_PARAM_STENCIL_OP		29
+    #define FG_GFX_PARAM_STENCIL_MASK		30
+    #define FG_GFX_PARAM_CLEAR_STENCIL		31
+    #define FG_GFX_PARAM_PIXEL_STORE		32
 
 /*
  *
@@ -73,87 +73,68 @@ struct fgGfxContextParam {
         fgGFXint ints[12];
         fgGFXint intVal;
     };
-
     operator fgGFXint() const {
         return intVal;
     }
-
     operator fgGFXfloat() const {
         return floatVal;
     }
-
     operator fgGFXboolean() const {
         return boolVal;
     }
-
     operator fgGFXuint() const {
-        return (fgGFXuint) intVal;
+        return (fgGFXuint)intVal;
     }
-#if defined(FG_USING_GL_BINDING)
-
+    #if defined(FG_USING_GL_BINDING)
     operator fgGFXenum() const {
-        return (fgGFXenum) intVal;
+        return (fgGFXenum)intVal;
     }
-#endif
-
+    #endif
     operator bool() const {
         return ( intVal ? true : false);
     }
-
-    inline bool operator==(fgGFXint a) const {
+    inline bool operator ==(fgGFXint a) const {
         return (intVal == a);
     }
-
-    inline bool operator!=(fgGFXint a) const {
+    inline bool operator !=(fgGFXint a) const {
         return (intVal != a);
     }
-
-    inline bool operator>(fgGFXint a) const {
+    inline bool operator >(fgGFXint a) const {
         return (intVal > a);
     }
-
-    inline bool operator<(fgGFXint a) const {
+    inline bool operator <(fgGFXint a) const {
         return (intVal < a);
     }
-
-    inline bool operator==(fgGFXfloat a) const {
+    inline bool operator ==(fgGFXfloat a) const {
         return (floatVal == a);
     }
-
-    inline bool operator!=(fgGFXfloat a) const {
+    inline bool operator !=(fgGFXfloat a) const {
         return (floatVal != a);
     }
-
-    inline bool operator>(fgGFXfloat a) const {
+    inline bool operator >(fgGFXfloat a) const {
         return (floatVal > a);
     }
-
-    inline bool operator<(fgGFXfloat a) const {
+    inline bool operator <(fgGFXfloat a) const {
         return (floatVal < a);
     }
-
-    inline bool operator==(fgGFXuint a) const {
-        return ((fgGFXuint) intVal == a);
+    inline bool operator ==(fgGFXuint a) const {
+        return ((fgGFXuint)intVal == a);
     }
-
-    inline bool operator!=(fgGFXuint a) const {
-        return ((fgGFXuint) intVal != a);
+    inline bool operator !=(fgGFXuint a) const {
+        return ((fgGFXuint)intVal != a);
     }
-
-    inline bool operator>(fgGFXuint a) const {
-        return ((fgGFXuint) intVal > a);
+    inline bool operator >(fgGFXuint a) const {
+        return ((fgGFXuint)intVal > a);
     }
-
-    inline bool operator<(fgGFXuint a) const {
-        return ((fgGFXuint) intVal < a);
+    inline bool operator <(fgGFXuint a) const {
+        return ((fgGFXuint)intVal < a);
     }
 
     // 
-
     void load(void) {
-        if (paramType == FG_GFX_PARAM_INVALID)
+        if(paramType == FG_GFX_PARAM_INVALID)
             return;
-        switch (type) {
+        switch(type) {
             case FG_GFX_BOOL:
                 glGetBooleanv(pname, booleans);
                 fgGLError("glGetBooleanv");
@@ -176,8 +157,7 @@ struct fgGfxContextParam {
     fgBool update(void);
 
     // 
-
-    fgGfxContextParam(const fgGFXenum _pname = (fgGFXenum) 0) :
+    fgGfxContextParam(const fgGFXenum _pname = (fgGFXenum)0) :
     pname(_pname),
     type(FG_GFX_BOOL),
     paramType(FG_GFX_PARAM_INVALID),
@@ -187,7 +167,6 @@ struct fgGfxContextParam {
     }
 
     // 
-
     fgGfxContextParam(const fgGFXenum _pname, const fgGFXfloat _fval) :
     pname(_pname),
     type(FG_GFX_FLOAT),
@@ -197,7 +176,6 @@ struct fgGfxContextParam {
     }
 
     // 
-
     fgGfxContextParam(const fgGFXenum _pname, const fgGFXint _ival) :
     pname(_pname),
     type(FG_GFX_INT),
@@ -207,7 +185,6 @@ struct fgGfxContextParam {
     }
 
     // 
-
     fgGfxContextParam(const fgGFXenum _pname, const fgGFXboolean _bval) :
     pname(_pname),
     type(FG_GFX_BOOL),
@@ -218,7 +195,6 @@ struct fgGfxContextParam {
     }
 
     // 
-
     fgGfxContextParam(const fgGFXenum _pname, const int _count, const fgGFXfloat *_fvals) :
     pname(_pname),
     count(_count) {
@@ -227,7 +203,6 @@ struct fgGfxContextParam {
     }
 
     // 
-
     fgGfxContextParam(const fgGFXenum _pname, const int _count, const fgGFXint *_ivals) :
     pname(_pname),
     count(_count) {
@@ -236,7 +211,6 @@ struct fgGfxContextParam {
     }
 
     // 
-
     fgGfxContextParam(const fgGFXenum _pname, const int _count, const fgGFXboolean *_bvals) :
     pname(_pname),
     count(_count) {
@@ -245,33 +219,30 @@ struct fgGfxContextParam {
     }
 
     // 
-
-    void set(const fgGFXfloat _fval, const fgBool update = FG_TRUE) {
+    inline void set(const fgGFXfloat _fval, const fgBool update = FG_TRUE) {
         type = FG_GFX_FLOAT;
         count = 1;
-        if (fabsf(floats[0] - _fval) > FG_EPSILON) {
+        if(fabsf(floats[0] - _fval) > FG_EPSILON) {
             floats[0] = _fval;
-            if (update)
+            if(update)
                 this->update();
         }
     }
 
     // 
-
-    void set(const fgGFXint _ival, const fgBool update = FG_TRUE) {
+    inline void set(const fgGFXint _ival, const fgBool update = FG_TRUE) {
         type = FG_GFX_INT;
         count = 1;
-        if (ints[0] != _ival) {
+        if(ints[0] != _ival) {
             ints[0] = _ival;
-            if (update)
+            if(update)
                 this->update();
         }
     }
-
-    void set(const fgGFXint _i0, const fgGFXint _i1, const fgGFXint _i2, const fgGFXint _i3, const fgBool update = FG_TRUE) {
+    inline void set(const fgGFXint _i0, const fgGFXint _i1, const fgGFXint _i2, const fgGFXint _i3, const fgBool update = FG_TRUE) {
         type = FG_GFX_INT;
         count = 4;
-        if (ints[0] != _i0 ||
+        if(ints[0] != _i0 ||
                 ints[1] != _i1 ||
                 ints[2] != _i2 ||
                 ints[3] != _i3) {
@@ -279,15 +250,14 @@ struct fgGfxContextParam {
             ints[1] = _i1;
             ints[2] = _i2;
             ints[3] = _i3;
-            if (update)
+            if(update)
                 this->update();
         }
     }
-
-    void set(const fgGFXfloat _f0, const fgGFXfloat _f1, const fgGFXfloat _f2, const fgGFXfloat _f3, const fgBool update = FG_TRUE) {
+    inline void set(const fgGFXfloat _f0, const fgGFXfloat _f1, const fgGFXfloat _f2, const fgGFXfloat _f3, const fgBool update = FG_TRUE) {
         type = FG_GFX_INT;
         count = 4;
-        if (floats[0] != _f0 ||
+        if(floats[0] != _f0 ||
                 floats[1] != _f1 ||
                 floats[2] != _f2 ||
                 floats[3] != _f3) {
@@ -295,96 +265,91 @@ struct fgGfxContextParam {
             floats[1] = _f1;
             floats[2] = _f2;
             floats[3] = _f3;
-            if (update)
+            if(update)
                 this->update();
         }
     }
 
     // 
-
-    void set(const fgGFXboolean _bval, const fgBool update = FG_TRUE) {
+    inline void set(const fgGFXboolean _bval, const fgBool update = FG_TRUE) {
         type = FG_GFX_BOOL;
-        if (booleans[0] != _bval) {
+        if(booleans[0] != _bval) {
             booleans[0] = _bval;
-            if (update)
+            if(update)
                 this->update();
         }
     }
 
     // 
-
-    void set(const fgGFXfloat *_fvals, const fgBool update = FG_TRUE) {
-        if (!_fvals)
+    inline void set(const fgGFXfloat *_fvals, const fgBool update = FG_TRUE) {
+        if(!_fvals)
             return;
         type = FG_GFX_FLOAT;
         fgBool diff = FG_FALSE;
-        for (int i = 0; i < count; i++) {
-            if (diff || fabs(floats[i] - _fvals[i]) > FG_EPSILON) {
+        for(int i = 0; i < count; i++) {
+            if(diff || fabs(floats[i] - _fvals[i]) > FG_EPSILON) {
                 floats[i] = _fvals[i];
                 diff = FG_TRUE;
             }
         }
-        if (update && diff)
+        if(update && diff)
             this->update();
     }
 
     // 
-
-    void set(const fgGFXint *_ivals, const fgBool update = FG_TRUE) {
-        if (!_ivals)
+    inline void set(const fgGFXint *_ivals, const fgBool update = FG_TRUE) {
+        if(!_ivals)
             return;
         type = FG_GFX_INT;
         fgBool diff = FG_FALSE;
-        for (int i = 0; i < count; i++) {
-            if (diff || ints[i] != _ivals[i]) {
+        for(int i = 0; i < count; i++) {
+            if(diff || ints[i] != _ivals[i]) {
                 ints[i] = _ivals[i];
                 diff = FG_TRUE;
             }
         }
-        if (update && diff)
+        if(update && diff)
             this->update();
     }
 
     // 
-
-    void set(const fgGFXboolean *_bvals, const fgBool update = FG_TRUE) {
-        if (!_bvals)
+    inline void set(const fgGFXboolean *_bvals, const fgBool update = FG_TRUE) {
+        if(!_bvals)
             return;
         type = FG_GFX_BOOL;
         fgBool diff = FG_FALSE;
-        for (int i = 0; i < count; i++) {
-            if (booleans[i] != _bvals[i]) {
+        for(int i = 0; i < count; i++) {
+            if(booleans[i] != _bvals[i]) {
                 booleans[i] = _bvals[i];
                 diff = FG_TRUE;
             }
         }
-        if (update && diff)
+        if(update && diff)
             this->update();
     }
 
     // 
-
-    void *get(fgGFXenum *_type = NULL) {
-        if (_type)
+    inline void *get(fgGFXenum *_type = NULL) {
+        if(_type)
             *_type = type;
 
-        if (type == FG_GFX_FLOAT)
-            return (void *) floats;
-        else if (type == FG_GFX_INT)
-            return (void *) ints;
-        return (void *) booleans;
+        if(type == FG_GFX_FLOAT)
+            return (void *)floats;
+        else if(type == FG_GFX_INT)
+            return (void *)ints;
+        return (void *)booleans;
     }
 };
 
 struct fgGfxAttrInfo {
-    fgGFXuint   index;
-    fgGFXint    size;
-    fgGFXenum   type;
+    fgGFXuint index;
+    fgGFXint size;
+    fgGFXenum type;
     fgGFXboolean normalized;
-    fgGFXsizei  stride;
-    fgGFXvoid*  ptr;
-    fgBool      enabled;
-    fgGFXuint   bufferBind;
+    fgGFXsizei stride;
+    fgGFXvoid* ptr;
+    fgBool enabled;
+    fgGFXuint bufferBind;
 };
 
 /*
@@ -404,52 +369,52 @@ public:
     typedef gfxBufferMap::iterator gfxBufferMapItor;
 
 private:
-#if defined(FG_USING_SDL2)
-    SDL_GLContext   m_GLContext;  // #FIXME - context can be separate? ... P4
-    SDL_Window*     m_sdlWindow;    // #FIXME - NOPE, NOPE, NOPE
-#endif
+    #if defined(FG_USING_SDL2)
+    SDL_GLContext m_GLContext; // #FIXME - context can be separate? ... P4
+    SDL_Window* m_sdlWindow; // #FIXME - NOPE, NOPE, NOPE
+    #endif
     /// Special parameter map used for caching and fast value check
     /// It's used for not calling redundant GL functions, like:
     /// glGet/glEnable/glDisable/glIsEnabled and so on. Also for
     /// functions like activating proper vertex attrib array idx,
     /// bounding textures... any kind of function that changes internal
     /// state values.
-    gfxParamMap     m_params;
+    gfxParamMap m_params;
     /// Special map used for holding valid texture IDs
     /// Every texture needs to be created/deleted through
     /// this class. When texture is deleted its' ID is zeroed
     /// in every place in the app. Therefore there's no need to
     /// often call glIsTexture. If gfx ID is not zero the texture
     /// is surely valid.
-    gfxTextureMap   m_textures;
+    gfxTextureMap m_textures;
     /// Special map used for holding valid VBO IDs. Use case
     /// is the same as for textures.
-    gfxBufferMap    m_buffers;
+    gfxBufferMap m_buffers;
     /// Viewport area (used for fast check if viewport changed)
-    fgGFXuint       m_viewportAreaQ;
+    fgGFXuint m_viewportAreaQ;
     /// Scissor area
-    fgGFXuint       m_scissorAreaQ;
+    fgGFXuint m_scissorAreaQ;
 
     /// Currently used attribute mask
-    fgGFXuint       m_attribMask;
+    fgGFXuint m_attribMask;
     ///
-    fgGfxAttrInfo   m_attrInfo[12];   // #FIXME - attribute count ... why here?  hello?
+    fgGfxAttrInfo m_attrInfo[12]; // #FIXME - attribute count ... why here?  hello?
     /// Currently bound texture ID
-    fgGFXuint       m_boundTexture;
+    fgGFXuint m_boundTexture;
     /// Supported shading language version
-    fgGfxSLVersion  m_SLVersion;
+    fgGfxSLVersion m_SLVersion;
     ///
     fgBool m_init;
 protected:
     //
-#if defined(FG_USING_SDL2)
+    #if defined(FG_USING_SDL2)
     fgGfxContext(SDL_Window *sdlWindow);
-#else
+    #else
     fgGfxContext();
-#endif
+    #endif
     //
     virtual ~fgGfxContext();
-    
+
     // This function will set or unset given attrib bits
     // depending on the current mask value
     void updateAttribMask(const fgGFXuint index);
@@ -462,7 +427,7 @@ public:
     fgGfxSLVersion getSLVersion(void) const {
         return m_SLVersion;
     }
-    
+
     // Initialize the context and internal parameter state
     void initialize(void);
     // Get parameter structure
@@ -487,20 +452,20 @@ public:
     void deleteAllBuffers(void);
 
     // Generate given number of buffers
-    fgGFXboolean genBuffers(const int count, fgGfxBufferID* buffers, const fgGFXenum usage = GL_STATIC_DRAW);
+    fgGFXboolean genBuffers(const int count, fgGfxBufferID*& buffers, const fgGFXenum usage = GL_STATIC_DRAW);
 
     // Set buffer data
     void bufferData(
-            fgGfxBufferID& bufferID,
-            const fgGFXsizei size,
-            const fgGFXvoid* data,
-            const fgGFXenum target = GL_ARRAY_BUFFER,
-            const fgGFXenum usage = (fgGFXenum) 0);
+                    fgGfxBufferID& bufferID,
+                    const fgGFXsizei size,
+                    const fgGFXvoid* data,
+                    const fgGFXenum target = GL_ARRAY_BUFFER,
+                    const fgGFXenum usage = (fgGFXenum)0);
 
     // Bind given buffer ID to target array
     void bindBuffer(const fgGFXenum target, const fgGFXuint buffer);
     // Bind given buffer ID to target array
-    void bindBuffer(fgGfxBufferID& bufferID, const fgGFXenum target = (fgGFXenum) 0);
+    void bindBuffer(fgGfxBufferID& bufferID, const fgGFXenum target = (fgGFXenum)0);
     // Return currently bound buffer
     fgGFXuint boundBuffer(const fgGFXenum target = GL_ARRAY_BUFFER);
 
@@ -540,7 +505,7 @@ public:
     //
     void bindTexture3D(const fgGFXuint texID);
     //
-    void bindTexture(fgGfxTextureID& textureID, const fgGFXenum target = (fgGFXenum) 0);
+    void bindTexture(fgGfxTextureID& textureID, const fgGFXenum target = (fgGFXenum)0);
 
     //
     void blendEquation(const fgGFXenum mode);
@@ -625,11 +590,11 @@ public:
 
     // https://www.khronos.org/opengles/sdk/docs/man/xhtml/glVertexAttribPointer.xml
     void vertexAttribPointer(fgGFXuint index,
-            fgGFXint size,
-            fgGFXenum type,
-            fgGFXboolean normalized,
-            fgGFXsizei stride,
-            fgGFXvoid* ptr);
+                             fgGFXint size,
+                             fgGFXenum type,
+                             fgGFXboolean normalized,
+                             fgGFXsizei stride,
+                             fgGFXvoid* ptr);
 
 };
 

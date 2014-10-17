@@ -18,38 +18,37 @@
  *
  */
 fgGfxWindow::fgGfxWindow() :
-    m_title(),
-#if defined FG_USING_EGL
-    m_EGLSurface(0),
-#elif defined FG_USING_SDL2
-    m_sdlWindow(NULL),    
-    m_sdlFlags(0),
+m_title(),
+#if defined(FG_USING_EGL)
+m_EGLSurface(0),
+#elif defined(FG_USING_SDL2)
+m_sdlWindow(NULL),
+m_sdlFlags(0),
 #endif
-    m_width(0),
-    m_height(0),
-    m_isFullscreen(FG_FALSE),
-    m_isHW(FG_FALSE),
-    m_isDB(FG_FALSE),
-    m_isOpen(FG_FALSE) { }
+m_width(0),
+m_height(0),
+m_isFullscreen(FG_FALSE),
+m_isHW(FG_FALSE),
+m_isDB(FG_FALSE),
+m_isOpen(FG_FALSE) { }
 
 /*
  *
  */
-fgGfxWindow::fgGfxWindow(const char *title, unsigned int width, unsigned int height) : 
-	m_title(),
-#if defined FG_USING_EGL
-    m_EGLSurface(0),
-#elif defined FG_USING_SDL2
-    m_sdlWindow(NULL),    
-    m_sdlFlags(0),
+fgGfxWindow::fgGfxWindow(const char *title, unsigned int width, unsigned int height) :
+m_title(),
+#if defined(FG_USING_EGL)
+m_EGLSurface(0),
+#elif defined(FG_USING_SDL2)
+m_sdlWindow(NULL),
+m_sdlFlags(0),
 #endif
-    m_width(0),
-    m_height(0),
-    m_isFullscreen(FG_FALSE),
-    m_isHW(FG_FALSE),
-    m_isDB(FG_FALSE),
-    m_isOpen(FG_FALSE)
-{
+m_width(0),
+m_height(0),
+m_isFullscreen(FG_FALSE),
+m_isHW(FG_FALSE),
+m_isDB(FG_FALSE),
+m_isOpen(FG_FALSE) {
     fgGfxWindow::setup(title, width, height);
 }
 
@@ -117,7 +116,7 @@ fgBool fgGfxWindow::setup(const char *title, unsigned int width, unsigned int he
     m_height = IwGLGetInt(IW_GL_HEIGHT);
 
 #elif defined FG_USING_SDL2
-    
+
     m_width = width;
     m_height = height;
     if(!title)
@@ -126,18 +125,18 @@ fgBool fgGfxWindow::setup(const char *title, unsigned int width, unsigned int he
     //SDL_InitSubSystem() // SDL_INIT_AUDIO | SDL_INIT_GAMECONTROLLER | SDL_INIT_JOYSTICK 
     m_sdlFlags = SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL;
     m_sdlWindow = SDL_CreateWindow(title,
-                                   SDL_WINDOWPOS_UNDEFINED,
-                                   SDL_WINDOWPOS_UNDEFINED,
+                                   SDL_WINDOWPOS_CENTERED,
+                                   SDL_WINDOWPOS_CENTERED,
                                    m_width,
                                    m_height,
                                    m_sdlFlags);
 
     if(!m_sdlWindow) {
-        FG_LOG::PrintError("Couldn't create SDL window: %s", SDL_GetError());
+        FG_LOG::PrintError("Couldn't create SDL window: '%s'", SDL_GetError());
         SDL_ClearError();
         return FG_FALSE;
     }
-    
+
 
 #endif
     if(status)

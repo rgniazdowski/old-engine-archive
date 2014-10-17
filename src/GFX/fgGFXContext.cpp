@@ -9,6 +9,7 @@
 
 #include "fgGFXContext.h"
 #include "Util/fgStrings.h"
+#include "Util/fgMemory.h"
 
 /*
  *
@@ -1258,15 +1259,19 @@ void fgGfxContext::deleteAllBuffers(void) {
  *
  */
 fgGFXboolean fgGfxContext::genBuffers(const int count,
-                                      fgGfxBufferID* buffers,
+                                      fgGfxBufferID*& buffers,
                                       const fgGFXenum usage) {
-    if(!buffers)
+    if(count <= 0)
         return FG_GFX_FALSE;
+    if(!buffers) {
+        buffers = fgMalloc<fgGfxBufferID>(count);
+    }
     for(int i = 0; i < count; i++) {
         fgGfxBufferID &buffer = buffers[i];
         buffer.usage = usage;
         buffer.target = (fgGFXenum)0;
-        glGenBuffers(1, buffer.ptrID());
+        if(!isBuffer(buffer))
+            glGenBuffers(1, buffer.ptrID());
         if(buffer.id)
             m_buffers[buffer.id] = &buffers[i];
     }
@@ -1283,12 +1288,17 @@ void fgGfxContext::bufferData(fgGfxBufferID& bufferID,
                               const fgGFXenum usage) {
     if(!data)
         return;
-    if((fgGFXenum)0 == target || (fgGFXenum)0 == bufferID.target)
+    if((fgGFXenum)0 == target || (fgGFXenum)0 == bufferID.target) {
         bufferID.target = GL_ARRAY_BUFFER;
-    if(m_params[(fgGFXuint)GL_ARRAY_BUFFER_BINDING] == bufferID.id && bufferID.target == GL_ARRAY_BUFFER)
+    }
+    if(m_params[(fgGFXuint)GL_ARRAY_BUFFER_BINDING] != bufferID.id && bufferID.target == GL_ARRAY_BUFFER) {
+        FG_LOG::PrintError("GFX: Invalid buffer bound, can't set buffer data");
         return;
-    if(m_params[(fgGFXuint)GL_ELEMENT_ARRAY_BUFFER_BINDING] == bufferID.id && bufferID.target == GL_ELEMENT_ARRAY_BUFFER)
+    }
+    if(m_params[(fgGFXuint)GL_ELEMENT_ARRAY_BUFFER_BINDING] != bufferID.id && bufferID.target == GL_ELEMENT_ARRAY_BUFFER) {
+        FG_LOG::PrintError("GFX: Invalid buffer bound, can't set buffer data");
         return;
+    }
     if(usage != (fgGFXenum)0)
         bufferID.usage = usage;
     if((fgGFXenum)0 == bufferID.usage)

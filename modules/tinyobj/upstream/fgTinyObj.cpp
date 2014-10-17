@@ -213,7 +213,7 @@ static unsigned int updateVertex(
  */ 
 static unsigned int updateVertex(
 	std::map<vertex_index, unsigned int>& vertexCache,
-	fgVector<fgVertex3> & vertices,
+	fgVector<fgVertex3v> & vertices,
 	const fgVector<float>& in_positions,
 	const fgVector<float>& in_normals,
 	const fgVector<float>& in_texcoords,
@@ -227,7 +227,7 @@ static unsigned int updateVertex(
 	}
 
 	assert(in_positions.size() > (unsigned int) (3*i.v_idx+2));
-	fgVertex3 vertex;
+	fgVertex3v vertex;
 
 	vertex.position[0] = (in_positions[3*i.v_idx+0]);
 	vertex.position[1] = (in_positions[3*i.v_idx+1]);
@@ -276,7 +276,7 @@ static fgBool exportFaceGroupToShape(fgGfxShape *shape,
 	fgVector<float> texcoords;
 	std::map<vertex_index, unsigned int> vertexCache;
 	fgVector<fgGFXushort> indices; // unsigned short FIXME ! 
-	fgVector<fgVertex3> vertices;
+	fgVector<fgVertex3v> vertices;
 	// Flatten vertices and indices
 	for (size_t i = 0; i < faceGroup.size(); i++) {
 		const fgVector<vertex_index>& face = faceGroup[i];

@@ -55,7 +55,7 @@ private:
 	///
 	fgResourceManager *m_resourceMgr;
 	///
-	fgGuiDrawer		*m_guiDrawer;
+	fgGuiDrawer *m_guiDrawer;
 	///
 	fgManagerBase *m_shaderMgr;
 	///

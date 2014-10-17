@@ -272,7 +272,10 @@ fgBool fgGfxPlatform::quit(void) {
 fgBool fgGfxPlatform::initializeMainContext(SDL_Window* sdlWindow) {
     if(!m_gfxContext)
         m_gfxContext = new fgGfxContext(sdlWindow);
+    if(!m_gfxContext->isInit())
+        return FG_FALSE;
     m_gfxContext->initialize();
+    return FG_TRUE;
 }
 #endif
 
