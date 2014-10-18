@@ -24,34 +24,73 @@
  *
  */
 struct fgGfxTextureID {
-    ///
+    /// Texture GFX ID - internal texture identifier
     fgGFXuint id;
-    ///
+    /// Texture target - 2D/3D
     fgGFXenum target;
     
-    //
+    // Cast operator to GFX integer - will return texture internal ID
     operator fgGFXint() const {
         return (fgGFXint) id;
     }
     
-    //
+    // Cast operator to GFX unsigned integer - will retrun texture internal ID
     operator fgGFXuint() const {
         return id;
     }
     
-    //
+    // Returns the reference to the ID
     fgGFXuint& refID(void) {
         return id;
     }
     
-    //
+    // Returns the const reference to the ID
+    const fgGFXuint& refID(void) const {
+        return id;
+    }
+    
+    // Returns pointer to the ID
     fgGFXuint* ptrID(void) {
         return &id;
     }
     
-    //
+    // Default constructor for the texture ID struct
     fgGfxTextureID(fgGFXuint _id = 0, fgGFXenum _target = GL_TEXTURE_2D) :
     id(_id), target(_target) {
+    }
+    
+    // Comparison operator
+    inline int operator ==(const fgGfxTextureID& b) const {
+        if(b.id == this->id)
+            return 1;
+        return 0;
+    }
+    
+    //
+    inline int operator !=(const fgGfxTextureID& b) const {
+        if(b.id != this->id)
+            return 1;
+        return 0;
+    }
+    
+    //
+    inline bool operator <(const fgGfxTextureID& a) const {
+        return (bool)(this->id < a.id);
+    }
+    
+    //
+    inline bool operator >(const fgGfxTextureID& a) const {
+        return (bool)(this->id > a.id);
+    }
+    
+    //
+    inline bool operator <=(const fgGfxTextureID& a) const {
+        return (bool)(this->id <= a.id);
+    }
+    
+    //
+    inline bool operator >=(const fgGfxTextureID& a) const {
+        return (bool)(this->id >= a.id);
     }
 };
 

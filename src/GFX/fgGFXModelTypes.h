@@ -59,6 +59,13 @@ struct fgGfxMeshSoA : fgGfxMeshBase {
     /// Vector holding indices
     fgVector<fgGFXushort> indices;
 
+    static const unsigned short POSITIONS_VBO_ARRAY_IDX;
+    static const unsigned short VERTICES_VBO_ARRAY_IDX;
+    static const unsigned short NORMALS_VBO_ARRAY_IDX;
+    static const unsigned short TEX_COORDS_VBO_ARRAY_IDX;
+    static const unsigned short UVS_VBO_ARRAY_IDX;
+    static const unsigned short INDICES_VBO_ARRAY_IDX;
+    
     // Default constructor
     fgGfxMeshSoA() { }
 
@@ -106,11 +113,24 @@ struct fgGfxMeshSoA : fgGfxMeshBase {
     }
 
     // Returns whether the vertex data supports/generates VBOs
-    virtual fgBool hasVBO(void) const {
+    virtual fgBool supportsVBO(void) const {
         return FG_TRUE;
     }
+    
+    // Returns whether the vertex data superclass has information on indices
+    virtual fgBool hasIndices(void) const {
+        return FG_TRUE;
+    }
+    
+    // Returns raw ID for indices VBO (0 if invalid or not generated)
+    virtual fgGFXuint getIndicesVBO(void) const;
+    
+    // Return GFX pointer to indices array, may be 0 if VBO
+    // is generated or there are no indices at all
+    virtual fgGFXvoid *getIndicesPointer(void) const;
+    
     //
-    virtual fgGFXboolean setupAttributes(fgGfxAttributeData *pDataArray);
+    virtual fgGFXboolean setupAttributes(fgGfxAttributeData *pDataArray) const;
     
     // Generates the GFX buffers (VBO)
     virtual fgGFXboolean genBuffers(void);
@@ -291,13 +311,21 @@ struct fgGfxMeshSoA : fgGfxMeshBase {
  *
  */
 struct fgGfxMeshAoS : fgGfxMeshBase {
-    ///
+    /// Vertex data - AoS
     fgVertexData3v vertices;
-    ///
+    /// Special indices array
     // #FIXME Need to check for OGL version, ushort is mandatory on ES2
     fgVector<fgGFXushort> indices;
 
-    //
+    
+    static const unsigned short POSITIONS_VBO_ARRAY_IDX;
+    static const unsigned short VERTICES_VBO_ARRAY_IDX;
+    static const unsigned short NORMALS_VBO_ARRAY_IDX;
+    static const unsigned short TEX_COORDS_VBO_ARRAY_IDX;
+    static const unsigned short UVS_VBO_ARRAY_IDX;
+    static const unsigned short INDICES_VBO_ARRAY_IDX;
+    
+    // Default empty constructor for Mesh AoS object
     fgGfxMeshAoS() { }
 
     // #FIXME #SERIOUSLY
@@ -337,28 +365,48 @@ struct fgGfxMeshAoS : fgGfxMeshBase {
         }
     }
     #endif
-    //
+    // Default destructor for Mesh AoS object
     virtual ~fgGfxMeshAoS() {
         clear();
         destroyBuffers();
     }
 
-    //
+    // Clear the internal data arrays
     virtual void clear(void) {
         vertices.clear_optimised();
         indices.clear_optimised();
     }
 
-    //
-    virtual fgBool hasVBO(void) const {
+    // Returns true if this vertex data structure supports VBOs
+    virtual fgBool supportsVBO(void) const {
         return FG_TRUE;
     }
     
-    //
-    virtual fgGFXboolean setupAttributes(fgGfxAttributeData *pDataArray) {
+    // Returns whether the vertex data superclass has information on indices
+    virtual fgBool hasIndices(void) const {
+        return FG_TRUE;
+    }
+    
+    // Returns raw ID for indices VBO (0 if invalid or not generated)
+    virtual fgGFXuint getIndicesVBO(void) const;
+    
+    // Return GFX pointer to indices array, may be 0 if VBO
+    // is generated or there are no indices at all
+    virtual fgGFXvoid *getIndicesPointer(void) const;
+    
+    // Attributes for mesh AoS is done the same way as for vertexData v3
+    // There is still needed fix for indices special array. It's because
+    // indices are not treated as an attribute. It's a special parameter
+    // used directly with drawing function (as pointer to array or VBOs)
+    virtual fgGFXboolean setupAttributes(fgGfxAttributeData *pDataArray) const {
         return vertices.setupAttributes(pDataArray);
     }
-        
+    
+    //
+    virtual fgBool hasVBO(void) const {
+        return vertices.hasVBO();
+    }
+    
     //
     virtual int getVBOCount(void) const {
         return vertices.getVBOCount();

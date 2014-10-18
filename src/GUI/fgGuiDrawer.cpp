@@ -152,7 +152,7 @@ void fgGuiDrawer::appendBackground2D(const fgVec2f &pos, const fgVec2f &size, fg
         if(pResource) {
             if(pResource->getResourceType() == FG_RESOURCE_TEXTURE) {
                 fgTextureResource *pTexture = (fgTextureResource *)pResource;
-                drawCall->setTexture(pTexture);
+                drawCall->setTexture(pTexture->getRefGfxID());
             }
         }
     }

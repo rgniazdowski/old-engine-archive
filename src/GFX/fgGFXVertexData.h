@@ -35,12 +35,15 @@
     #ifndef _FG_GFX_ATTRIBUTE_DATA_H_
         #include "fgGFXAttributeData.h"
     #endif
+    
 /*
  *
  */
 class fgVertexData {
 private:
+    /// Array holding information about generated VBOs
     fgGfxBufferID *m_VBO;
+    /// Number of VBO objects within this vertex data
     int m_VBOCount;
 
 public:
@@ -49,15 +52,40 @@ public:
     //
     virtual ~fgVertexData() {}
 
-    //
-    virtual fgBool hasVBO(void) const = 0;
+    // Returns whether the superclass supports/generates VBOs
+    virtual fgBool supportsVBO(void) const = 0;
+    
+    // Returns whether VBOs were generated (are valid somehow)
+    virtual fgBool hasVBO(void) const {
+        if(!m_VBO)
+            return FG_FALSE;
+        if(!m_VBOCount)
+            return FG_FALSE;
+        return FG_TRUE;
+    }
+    
+    // Returns whether the vertex data superclass has information on indices
+    virtual fgBool hasIndices(void) const {
+        return FG_FALSE;
+    }
+    
+    // Returns raw ID for indices VBO (0 if invalid or not generated)
+    virtual fgGFXuint getIndicesVBO(void) const {
+        return 0;
+    }
+    
+    // Return GFX pointer to indices array, may be 0 if VBO
+    // is generated or there are no indices at all
+    virtual fgGFXvoid *getIndicesPointer(void) const {
+        return (fgGFXvoid *)0;
+    }
 
     //
     virtual int getVBOCount(void) const {
         return m_VBOCount;
     }
-public: // FIXME?
-    //
+public: // #FIXME? #FUBAR
+    // Returns the reference to the number of VBOs
     virtual int& getRefVBOCount(void) {
         return m_VBOCount;
     }
@@ -74,7 +102,7 @@ public:
     }
     
     //
-    virtual fgGFXboolean setupAttributes(fgGfxAttributeData *pDataArray) = 0;
+    virtual fgGFXboolean setupAttributes(fgGfxAttributeData *pDataArray) const = 0;
     
     //
     virtual fgGFXboolean genBuffers(void) = 0;
@@ -156,7 +184,7 @@ public:
     virtual ~fgVertexData2v() { destroyBuffers(); }
 
     //
-    virtual fgBool hasVBO(void) const {
+    virtual fgBool supportsVBO(void) const {
         return FG_TRUE;
     }
 
@@ -171,7 +199,7 @@ public:
     }
     
     //
-    virtual fgGFXboolean setupAttributes(fgGfxAttributeData *pDataArray);
+    virtual fgGFXboolean setupAttributes(fgGfxAttributeData *pDataArray) const;
     
     //
     virtual fgGFXboolean genBuffers(void);
@@ -278,7 +306,7 @@ public:
     virtual ~fgVertexData3v() { destroyBuffers(); }
 
     //
-    virtual fgBool hasVBO(void) const {
+    virtual fgBool supportsVBO(void) const {
         return FG_TRUE;
     }
 
@@ -293,7 +321,7 @@ public:
     }
     
     //
-    virtual fgGFXboolean setupAttributes(fgGfxAttributeData *pDataArray);
+    virtual fgGFXboolean setupAttributes(fgGfxAttributeData *pDataArray) const;
     
     //
     virtual fgGFXboolean genBuffers(void);
@@ -407,7 +435,7 @@ public:
     virtual ~fgVertexData4v() { destroyBuffers(); }
 
     //
-    virtual fgBool hasVBO(void) const {
+    virtual fgBool supportsVBO(void) const {
         return FG_TRUE;
     }
 
@@ -422,7 +450,7 @@ public:
     }
     
     //
-    virtual fgGFXboolean setupAttributes(fgGfxAttributeData *pDataArray);
+    virtual fgGFXboolean setupAttributes(fgGfxAttributeData *pDataArray) const;
     
     //
     virtual fgGFXboolean genBuffers(void);

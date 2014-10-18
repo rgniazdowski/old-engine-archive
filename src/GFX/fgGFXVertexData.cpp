@@ -16,7 +16,7 @@
  * @param pDataArray
  * @return 
  */
-fgGFXboolean fgVertexData2v::setupAttributes(fgGfxAttributeData *pDataArray)
+fgGFXboolean fgVertexData2v::setupAttributes(fgGfxAttributeData *pDataArray) const
 {
     if(!pDataArray)
         return FG_GFX_FALSE;
@@ -37,7 +37,7 @@ fgGFXboolean fgVertexData2v::setupAttributes(fgGfxAttributeData *pDataArray)
     pDataArray[index].isNormalized = FG_FALSE;
     if(getPtrVBO() && getVBOCount()) {
         pDataArray[index].isBO = FG_TRUE;
-        pDataArray[index].buffer = getRefPtrVBO()[0].id;
+        pDataArray[index].buffer = getPtrVBO()[0].id;
         pDataArray[index].offset = (fgGFXvoid *)offset;
     } else {
         pDataArray[index].isBO = FG_FALSE;
@@ -63,7 +63,7 @@ fgGFXboolean fgVertexData2v::setupAttributes(fgGfxAttributeData *pDataArray)
     pDataArray[index].isNormalized = FG_FALSE;    
     if(getPtrVBO() && getVBOCount()) {
         pDataArray[index].isBO = FG_TRUE;
-        pDataArray[index].buffer = getRefPtrVBO()[0].id;
+        pDataArray[index].buffer = getPtrVBO()[0].id;
         pDataArray[index].offset = (fgGFXvoid *)offset;
     } else {
         pDataArray[index].isBO = FG_FALSE;
@@ -126,7 +126,7 @@ fgGFXboolean fgVertexData2v::destroyBuffers(void) {
  * @param pDataArray
  * @return 
  */
-fgGFXboolean fgVertexData3v::setupAttributes(fgGfxAttributeData *pDataArray)
+fgGFXboolean fgVertexData3v::setupAttributes(fgGfxAttributeData *pDataArray) const
 {
     if(!pDataArray)
         return FG_GFX_FALSE;
@@ -147,7 +147,7 @@ fgGFXboolean fgVertexData3v::setupAttributes(fgGfxAttributeData *pDataArray)
     pDataArray[index].isNormalized = FG_FALSE;
     if(getPtrVBO() && getVBOCount()) {
         pDataArray[index].isBO = FG_TRUE;
-        pDataArray[index].buffer = getRefPtrVBO()[0].id;
+        pDataArray[index].buffer = getPtrVBO()[0].id;
         pDataArray[index].offset = (fgGFXvoid *)offset;
     } else {
         pDataArray[index].isBO = FG_FALSE;
@@ -170,7 +170,7 @@ fgGFXboolean fgVertexData3v::setupAttributes(fgGfxAttributeData *pDataArray)
     pDataArray[index].isNormalized = FG_FALSE;
     if(getPtrVBO() && getVBOCount()) {
         pDataArray[index].isBO = FG_TRUE;
-        pDataArray[index].buffer = getRefPtrVBO()[0].id;
+        pDataArray[index].buffer = getPtrVBO()[0].id;
         pDataArray[index].offset = (fgGFXvoid *)offset;
     } else {
         pDataArray[index].isBO = FG_FALSE;
@@ -193,7 +193,7 @@ fgGFXboolean fgVertexData3v::setupAttributes(fgGfxAttributeData *pDataArray)
     pDataArray[index].isNormalized = FG_FALSE;    
     if(getPtrVBO() && getVBOCount()) {
         pDataArray[index].isBO = FG_TRUE;
-        pDataArray[index].buffer = getRefPtrVBO()[0].id;
+        pDataArray[index].buffer = getPtrVBO()[0].id;
         pDataArray[index].offset = (fgGFXvoid *)offset;
     } else {
         pDataArray[index].isBO = FG_FALSE;
@@ -256,7 +256,7 @@ fgGFXboolean fgVertexData3v::destroyBuffers(void) {
  * @param pDataArray
  * @return 
  */
-fgGFXboolean fgVertexData4v::setupAttributes(fgGfxAttributeData *pDataArray)
+fgGFXboolean fgVertexData4v::setupAttributes(fgGfxAttributeData *pDataArray) const
 {
     if(!pDataArray)
         return FG_GFX_FALSE;
@@ -277,7 +277,7 @@ fgGFXboolean fgVertexData4v::setupAttributes(fgGfxAttributeData *pDataArray)
     pDataArray[index].isNormalized = FG_FALSE;
     if(getPtrVBO() && getVBOCount()) {
         pDataArray[index].isBO = FG_TRUE;
-        pDataArray[index].buffer = getRefPtrVBO()[0].id;
+        pDataArray[index].buffer = getPtrVBO()[0].id;
         pDataArray[index].offset = (fgGFXvoid *)offset;
     } else {
         pDataArray[index].isBO = FG_FALSE;
@@ -300,7 +300,7 @@ fgGFXboolean fgVertexData4v::setupAttributes(fgGfxAttributeData *pDataArray)
     pDataArray[index].isNormalized = FG_FALSE;
     if(getPtrVBO() && getVBOCount()) {
         pDataArray[index].isBO = FG_TRUE;
-        pDataArray[index].buffer = getRefPtrVBO()[0].id;
+        pDataArray[index].buffer = getPtrVBO()[0].id;
         pDataArray[index].offset = (fgGFXvoid *)offset;
     } else {
         pDataArray[index].isBO = FG_FALSE;
@@ -323,7 +323,7 @@ fgGFXboolean fgVertexData4v::setupAttributes(fgGfxAttributeData *pDataArray)
     pDataArray[index].isNormalized = FG_FALSE;    
     if(getPtrVBO() && getVBOCount()) {
         pDataArray[index].isBO = FG_TRUE;
-        pDataArray[index].buffer = getRefPtrVBO()[0].id;
+        pDataArray[index].buffer = getPtrVBO()[0].id;
         pDataArray[index].offset = (fgGFXvoid *)offset;
     } else {
         pDataArray[index].isBO = FG_FALSE;
@@ -347,7 +347,7 @@ fgGFXboolean fgVertexData4v::setupAttributes(fgGfxAttributeData *pDataArray)
     pDataArray[index].isNormalized = FG_FALSE;    
     if(getPtrVBO() && getVBOCount()) {
         pDataArray[index].isBO = FG_TRUE;
-        pDataArray[index].buffer = getRefPtrVBO()[0].id;
+        pDataArray[index].buffer = getPtrVBO()[0].id;
         pDataArray[index].offset = (fgGFXvoid *)offset;
     } else {
         pDataArray[index].isBO = FG_FALSE;

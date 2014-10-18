@@ -199,5 +199,33 @@ struct fgArea {
         #include "fgGFXVertexData.h"
     #endif
 
+/*
+ * This is quick drawing info, it's a helper, needs refactoring
+ * It provides info for direct drawing functions (like DrawElements
+ * or DrawArrays from gl). Because of the parameters it's easy to
+ * check what drawing function to use.
+ * #FIXME plox...
+ */
+struct fgGfxDrawingInfo {
+    union {
+        ///
+        fgGFXvoid *pointer;
+        ///
+        fgGFXvoid *offset;
+    } indices;
+    ///
+    fgGFXuint buffer;
+    ///
+    fgGFXuint count;
+    
+    //
+    fgGfxDrawingInfo() {
+        indices.pointer = 0;
+        indices.offset = 0;
+        buffer = 0;
+        count = 0;
+    }
+};
+
     #undef _FG_GFX_TYPES_BLOCK__
 #endif /* _FG_GFX_TYPES_H_ */

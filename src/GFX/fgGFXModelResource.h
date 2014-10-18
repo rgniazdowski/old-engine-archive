@@ -11,7 +11,9 @@
     #define _FG_GFX_MODEL_RESOURCE_H_
 
     #include "fgTypes.h"
-    #include "fgGFXModelTypes.h"
+    #ifndef _FG_GFX_MODEL_TYPES_H_
+        #include "fgGFXModelTypes.h"
+    #endif
     #include "Resource/fgResource.h"
 
 // invalid / not selected file format
@@ -114,6 +116,12 @@ public:
     modelShapes & getRefShapes(void) {
         return m_shapes;
     }
+    
+    const modelShapes & getRefShapes(void) const {
+        //return (const_cast<fgDataObjectBase<HandleType, MapKeyType>*>(this)->getFilePath(id));
+        //return (const_cast<fgGfxModelResource *>(this)->getRefShapes());
+        return m_shapes;
+    }
 
     // Generates the GFX buffers (VBO) from the model data
     fgBool genBuffers(void);
@@ -131,7 +139,7 @@ public:
         return m_modelType;
     }
 
-    // Returns whether the model is mutli-textured
+    // Returns whether the model is multi-textured
     fgBool isMultitextured(void) const {
         return m_isMultitextured;
     }

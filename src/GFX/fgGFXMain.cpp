@@ -272,7 +272,6 @@ void drawModel(fgGfxModelResource *model, fgGfxShaderProgram *program, fgTexture
             // Set our "myTextureSampler" sampler to user Texture Unit 0
             glUniform1i(TextureID, 0);
         }
-
         glDrawElements(GL_TRIANGLES, numIndices, GL_UNSIGNED_SHORT, (const void*)(&soa->indices.front()));
         fgGLError("GL_TRIANGLES glDrawElements");
         return;
@@ -362,6 +361,7 @@ void dumpMatrix(const float *mat, const char *title) {
 
 }
 #include "fgGFXPrimitives.h"
+#include "fgGFXDrawingBatch.h"
 
 /*
  *
@@ -440,18 +440,32 @@ void fgGfxMain::render(void) {
         FG_LOG::PrintError("Cant access sPlainEasy shader program.");
         return;
     }
-
+    m_gfxContext->activeTexture(GL_TEXTURE0);
     fgTextureResource *texture = (fgTextureResource *)rm->get(texname);
     //program->setUniform(FG_GFX_PHASE, offset);
     program->setUniform(MVP);
     //program->setUniform(FG_GFX_CUSTOM_COLOR, 1.0f, 0.0f, 0.0f, 1.0f);
-
+    program->setUniform(FG_GFX_PLAIN_TEXTURE, 0);
     rotxyz += 0.0094525f;
     if(rotxyz > M_PI * 2.0f)
         rotxyz = 0.0f;
 
-    if(loadModel)
-        drawModel(model, program, texture);
+    if(loadModel) {
+        // MY BULLSHIT DETECTOR IS OFF THE CHARTS!
+        fgGfxDrawingBatch batch;
+        fgGfxDrawCall *call = new fgGfxDrawCall(FG_GFX_DRAW_CALL_MODEL);
+        call->setupFromModel(model);
+        call->setShaderProgram(program);
+        call->setTexture(texture->getRefGfxID());
+        call->setMVP(MVP);
+        call->setModelMatrix(modelMat);
+        
+        batch.appendDrawCall(call, FG_TRUE, FG_TRUE);
+        batch.appendDrawCall(call, FG_TRUE, FG_FALSE);
+        batch.sortCalls();
+        batch.render();
+        batch.flush();
+    }
 #endif
     fgGfxShaderProgram *program2 = m_shaderMgr->get(sOrthoEasyShaderName);
     if(!program2) {
@@ -616,7 +630,7 @@ void fgGfxMain::render(void) {
         if(yolox)
             printf("Setting blending to new: (SRC, DST) = (%s, %s)\n", srcEnumsNames[srcID], dstEnumsNames[dstID]);
         if(yoloy)
-            printf("Setting bleding func eq: (EQFUNC) = (%s)\n", eqEnumsName[funcID]);
+            printf("Setting blending func eq: (EQFUNC) = (%s)\n", eqEnumsName[funcID]);
         printf("-------------------------------------------------\n\n");
     }
     fgGfxPlatform::context()->setBlend(FG_TRUE);
@@ -646,6 +660,7 @@ void fgGfxMain::render(void) {
     MVP->setOrtho(0, (float)m_mainWindow->getWidth(), (float)m_mainWindow->getHeight(), 0.0f);
     MVP->calculate(Model);
     if(!program2->setUniform(MVP)) {
+        printf("RYPIE SIE p2 MVP\n");
 	}
 
     fgGfxPlatform::context()->scissor(0, 0, m_mainWindow->getWidth(), m_mainWindow->getHeight());

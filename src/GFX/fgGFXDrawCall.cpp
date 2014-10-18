@@ -12,16 +12,17 @@
 /*
  *
  */
-fgGfxDrawCall::fgGfxDrawCall() :
+fgGfxDrawCall::fgGfxDrawCall(const fgGfxDrawCallType type, const fgGFXuint attribMask) :
 m_vecDataBase(NULL),
 m_program(NULL),
-m_texture(NULL),
+m_textureID(),
 m_MVP(NULL),
-m_attribMask(FG_GFX_POSITION_BIT | FG_GFX_UVS_BIT),
-m_drawCallType(FG_GFX_DRAW_CALL_CUSTOM_ARRAY),
+m_attribMask(attribMask),
+m_drawCallType(type),
 m_drawAppendMode(FG_GFX_DRAW_APPEND_ABSOLUTE),
 m_primMode(fgGfxPrimitiveMode::FG_GFX_TRIANGLES),
-m_zIndex(0) {
+m_zIndex(0),
+m_isManaged(0) {
     m_attrData[FG_GFX_ATTRIB_POS_LOCATION].index = FG_GFX_ATTRIB_POS_LOCATION;
     m_attrData[FG_GFX_ATTRIB_POS_LOCATION].size = 3;
     m_attrData[FG_GFX_ATTRIB_POS_LOCATION].type = FG_GFX_POSITION;
@@ -66,13 +67,28 @@ m_zIndex(0) {
  */
 fgGfxDrawCall::~fgGfxDrawCall() {
     m_program = NULL;
-    m_texture = NULL;
     m_MVP = NULL;
     if(m_vecDataBase) {
         m_vecDataBase->clear();
         delete m_vecDataBase;
     }
     m_vecDataBase = NULL;
+}
+
+/**
+ * 
+ * @param toggle
+ */
+void fgGfxDrawCall::setManaged(const fgBool toggle) {
+    m_isManaged = toggle;
+}
+
+/**
+ * 
+ * @return 
+ */
+fgBool fgGfxDrawCall::isManaged() const {
+    return m_isManaged;
 }
 
 /*
@@ -98,6 +114,75 @@ void fgGfxDrawCall::setupVertexData(fgGFXuint attribMask) {
     } else {
         m_vecDataBase = new fgVertexData2v();
     }
+    if(m_drawCallType == FG_GFX_DRAW_CALL_CUSTOM_ARRAY) {
+        memset(&m_drawingInfo, 0, sizeof(m_drawingInfo));
+    }
+}
+
+/**
+ * 
+ * @param pModelRes
+ */
+void fgGfxDrawCall::setupFromModel(const fgGfxModelResource* pModelRes) {
+    if(!pModelRes)
+        return;
+    if(pModelRes->getRefShapes().empty())
+        return;
+    
+    const fgGfxModelResource::modelShapes &shapes = pModelRes->getRefShapes();
+    fgGfxShape *shape = shapes[0];
+    // Can also set other information... like textures
+    setupFromMesh(shape->mesh);    
+    m_drawCallType = FG_GFX_DRAW_CALL_MODEL;
+}
+
+/**
+ * 
+ * @param pMesh
+ */
+void fgGfxDrawCall::setupFromMesh(const fgGfxMeshBase* pMesh) {
+    if(!pMesh)
+        return;
+    pMesh->setupAttributes(m_attrData);
+    m_drawCallType = FG_GFX_DRAW_CALL_MESH;
+    m_attribMask = pMesh->attribMask();
+    if(pMesh->hasIndices()) {
+        m_drawingInfo.buffer = pMesh->getIndicesVBO();
+        m_drawingInfo.indices.pointer = pMesh->getIndicesPointer();
+        if(!m_drawingInfo.buffer && !m_drawingInfo.indices.pointer)
+            m_drawingInfo.count = pMesh->getNumVertices();
+        else
+            m_drawingInfo.count = pMesh->getNumIndices();
+        // If both pointer/offset and buffer are zero
+        // then it means that there is no indices array
+    }
+}
+
+
+//void setupFromObject(const void *pGfxObject) { }
+
+/**
+ * 
+ * @return 
+ */
+fgMatrix4f& fgGfxDrawCall::getModelMatrix(void) {
+    return m_modelMat;
+}
+
+/**
+ * 
+ * @return 
+ */
+const fgMatrix4f& fgGfxDrawCall::getModelMatrix(void) const {
+    return m_modelMat;
+}
+
+/**
+ * 
+ * @param modelMat
+ */
+void fgGfxDrawCall::setModelMatrix(const fgMatrix4f& modelMat) {
+    m_modelMat = modelMat;
 }
 
 /*
@@ -257,15 +342,22 @@ fgGfxShaderProgram *fgGfxDrawCall::getShaderProgram(void) const {
 /*
  *
  */
-void fgGfxDrawCall::setTexture(fgTextureResource *texture) {
-    m_texture = texture;
+void fgGfxDrawCall::setTexture(const fgGfxTextureID& textureID) {
+    m_textureID = textureID;
 }
 
 /*
  *
  */
-fgTextureResource *fgGfxDrawCall::getTexture(void) const {
-    return m_texture;
+const fgGfxTextureID& fgGfxDrawCall::getTexture(void) const {
+    return m_textureID;
+}
+
+/*
+ *
+ */
+fgGfxTextureID& fgGfxDrawCall::getTexture(void) {
+    return m_textureID;
 }
 
 /*
@@ -304,6 +396,38 @@ void fgGfxDrawCall::appendRect2D(const fgVec2f &relPos, const fgVec2f &size,
     fgGfxPrimitives::appendRect2D(m_vecDataBase, pos, size, uv1, uv2, m_color, m_primMode, rewind);
 }
 
+/**
+ * 
+ */
+void fgGfxDrawCall::applyAttributeData(void) {
+    if(m_drawCallType == FG_GFX_DRAW_CALL_MESH || m_drawCallType == FG_GFX_DRAW_CALL_MODEL) {
+        fgGfxPlatform::context()->diffVertexAttribArrayMask(m_attribMask);
+        if(m_attrData[0].isInterleaved == FG_TRUE && m_attrData[0].isBO) {
+            fgGfxPlatform::context()->bindBuffer(GL_ARRAY_BUFFER, m_attrData[0].buffer);
+        } else {
+            fgGfxPlatform::context()->bindBuffer(GL_ARRAY_BUFFER, 0);
+        }
+        for(int i = 0; i < FG_GFX_ATTRIBUTE_COUNT; i++) {
+            if(m_attrData[i].isEnabled) {
+                if(m_attrData[i].isInterleaved == FG_FALSE && m_attrData[i].isBO) {
+                    fgGfxPlatform::context()->bindBuffer(GL_ARRAY_BUFFER, m_attrData[i].buffer);
+                }
+                fgGfxPlatform::context()->vertexAttribPointer(m_attrData[i].index,
+                                                              m_attrData[i].size,
+                                                              m_attrData[i].dataType,
+                                                              m_attrData[i].isNormalized,
+                                                              m_attrData[i].stride,
+                                                              m_attrData[i].offset);
+            }
+        }
+        if(m_drawingInfo.buffer) {
+            fgGfxPlatform::context()->bindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_drawingInfo.buffer);
+        } else {
+            fgGfxPlatform::context()->bindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+        }
+    }
+}
+
 /*
  *
  */
@@ -315,6 +439,7 @@ void fgGfxDrawCall::draw(void) {
         m_program->setUniform(m_MVP);
     }
     // OH MAN, MY BULLSHIT DETECTOR IS OFF THE CHARTS!
+#if 0
     if(m_vecDataBase->attribMask() & FG_GFX_COLOR_BIT && m_vecDataBase->size()) {
         fgVertexData4v *vData = (fgVertexData4v *)m_vecDataBase;
         if(vData->begin()->color.a < 1.0f) {
@@ -325,22 +450,32 @@ void fgGfxDrawCall::draw(void) {
     } else {
         //fgGfxPlatform::context()->blendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     }
-    if(m_texture) {
-        //if(m_program && m_texture) {
-        // CHECK FOR ACTIVE TEXTURE ID
-        // NEED GL STATE GHRHDFHASDH
-        fgGfxPlatform::context()->bindTexture(m_texture->getRefGfxID());
+#endif
+    if(m_textureID.id) {
+        fgGfxPlatform::context()->bindTexture(m_textureID);
         if(m_program) {
             //fgGfxPlatform::context()->activeTexture(GL_TEXTURE0);
             m_program->setUniform(FG_GFX_USE_TEXTURE, 1.0f);
         }
-
     } else if(m_program) {
         m_program->setUniform(FG_GFX_USE_TEXTURE, 0.0f);
     }
-    //fgGfxPlatform::context()->setBlend(FG_FALSE);
     fgGfxPrimitives::drawArray2D(m_vecDataBase, m_attribMask, m_primMode);
-    //fgGfxPlatform::context()->setBlend(FG_TRUE);
+    
+    // Will now draw data from Other types ...
+    if(m_drawCallType == FG_GFX_DRAW_CALL_MESH || m_drawCallType == FG_GFX_DRAW_CALL_MODEL) {
+        // attribute data array is set
+        applyAttributeData();
+        if(m_drawingInfo.buffer) {
+            glDrawElements((fgGFXenum)m_primMode, m_drawingInfo.count, GL_UNSIGNED_SHORT, m_drawingInfo.indices.pointer);
+        } else {
+            // #FIXME
+            glDrawArrays((fgGFXenum)m_primMode, 0, m_drawingInfo.count);
+        }
+        // #FIXME
+        fgGfxPlatform::context()->bindBuffer(GL_ARRAY_BUFFER, 0);
+        fgGfxPlatform::context()->bindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+    }
 }
 
 /*

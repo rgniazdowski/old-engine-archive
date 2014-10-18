@@ -49,17 +49,10 @@ fgGfxDrawCall *fgGfxDrawingBatch::createDrawCall(int &index, fgGfxDrawCallType t
     if(m_shaderMgr) {
         fgGfxShaderManager *shaderMgrPtr = (fgGfxShaderManager *)getShaderManager();
         drawCall->setShaderProgram(shaderMgrPtr->getCurrentProgram());
-        static int i = 0;
-        i++;
-        if(i > 300) {
-            if(shaderMgrPtr->getCurrentProgram())
-                //printf("Setting shader in draw call to: '%s'\n", shaderMgrPtr->getCurrentProgram()->getNameStr());
-            i = 0;
-
-        }
     }
     drawCall->setDrawCallType(type);
     drawCall->setZIndex(m_zIndex);
+    drawCall->setManaged(FG_TRUE);
     index = m_drawCalls.size();
     m_drawCalls.push_back(drawCall);
     return drawCall;
@@ -71,7 +64,6 @@ fgGfxDrawCall *fgGfxDrawingBatch::createDrawCall(int &index, fgGfxDrawCallType t
 fgGfxDrawCall *fgGfxDrawingBatch::getDrawCall(int index) {
     if(index < 0 || index >= (int)m_drawCalls.size())
         return NULL;
-
     return m_drawCalls[index];
 }
 
@@ -87,16 +79,24 @@ fgGfxDrawCall *fgGfxDrawingBatch::getLastDrawCall(void) {
 /*
  *
  */
-int fgGfxDrawingBatch::appendDrawCall(fgGfxDrawCall* drawCall, fgBool check) {
+int fgGfxDrawingBatch::appendDrawCall(fgGfxDrawCall* drawCall, fgBool manage, fgBool check) {
     if(!drawCall)
         return -1;
     if(check && !m_drawCalls.empty()) {
         if(m_drawCalls.find(drawCall) != -1)
             return -1;
-    }
+    } 
+    
     drawCall->setZIndex(m_zIndex);
+    drawCall->setManaged(manage);
     int index = m_drawCalls.size();
     m_drawCalls.push_back(drawCall);
+    if(!check) {
+        // This draw call will not be checked for repetition in the batch
+        // Need to remember this draw call to manage erasing/deletion
+        if(m_duplicates.find(drawCall) == -1)
+            m_duplicates.push_back(drawCall);
+    }
     return index;
 }
 
@@ -108,23 +108,33 @@ fgGfxDrawCall *fgGfxDrawingBatch::removeDrawCall(int index) {
         return NULL;
     fgVector<fgGfxDrawCall *>::iterator itor = m_drawCalls.begin() + index;
     fgGfxDrawCall *drawCall = *itor;
-    *itor = NULL;
-    m_drawCalls.erase(itor);
+    removeDrawCall(drawCall);
     return drawCall;
 }
 
-/*
- *
+/**
+ * Removes the specified draw call from the drawing batch
+ * @param drawCall
+ * @return 
  */
 fgBool fgGfxDrawingBatch::removeDrawCall(fgGfxDrawCall *drawCall) {
     if(!drawCall)
         return FG_FALSE;
-    fgVector<fgGfxDrawCall *>::iterator itor = m_drawCalls.begin(), end = m_drawCalls.end();
+    int dupIdx = -1;
+    if((dupIdx = m_duplicates.find(drawCall)) != -1) {
+        m_duplicates[dupIdx] = NULL;
+    }
+    drawCallVecItor itor = m_drawCalls.begin(), end = m_drawCalls.end();
     for(; itor != end; itor++) {
         if(*itor == drawCall) {
+            drawCall->setManaged(FG_FALSE);
             m_drawCalls.erase(itor);
-            return FG_TRUE;
-            break;
+            if(dupIdx < 0) {
+                return FG_TRUE;
+            } else {
+                itor--;
+                end = m_drawCalls.end();
+            }
         }
     }
     return FG_FALSE;
@@ -137,7 +147,11 @@ fgBool fgGfxDrawingBatch::deleteDrawCall(int index) {
     fgGfxDrawCall *drawCall = fgGfxDrawingBatch::removeDrawCall(index);
     if(!drawCall)
         return FG_FALSE;
-    delete drawCall;
+    if(drawCall->isManaged()) {
+        delete drawCall;
+    } else {
+        return FG_FALSE;
+    }
     return FG_TRUE;
 }
 
@@ -148,8 +162,12 @@ fgBool fgGfxDrawingBatch::deleteDrawCall(fgGfxDrawCall*& drawCall) {
     if(!drawCall || !fgGfxDrawingBatch::removeDrawCall(drawCall)) {
         return FG_FALSE;
     }
-    delete drawCall;
-    drawCall = NULL;
+    if(drawCall->isManaged()) {
+        delete drawCall;
+        drawCall = NULL;
+    } else {
+        return FG_FALSE;
+    }
     return FG_TRUE;
 }
 
@@ -159,14 +177,29 @@ fgBool fgGfxDrawingBatch::deleteDrawCall(fgGfxDrawCall*& drawCall) {
 void fgGfxDrawingBatch::flush(void) {
     while(!m_priorityBatch.empty())
         m_priorityBatch.pop();
-
-    for(int i = 0; i < (int)m_drawCalls.size(); i++) {
-        fgGfxDrawCall *drawCall = m_drawCalls[i];
-        m_drawCalls[i] = NULL;
-        if(drawCall)
-            delete drawCall;
+    
+    drawCallVecItor it = m_duplicates.begin(), end = m_duplicates.end();
+    for(;it!=end;it++) {
+        fgBool managed = FG_FALSE;
+        if(*it) {
+            fgGfxDrawCall *drawCall = *it;
+            if(drawCall->isManaged())
+                managed = FG_TRUE;
+            removeDrawCall(drawCall);
+            if(managed)
+                delete drawCall;
+            m_duplicates.erase(it);
+            it--;
+            end = m_duplicates.end();
+        }
     }
-    m_drawCalls.clear();
+    while(!m_drawCalls.empty()) {
+        fgGfxDrawCall *& drawCall = m_drawCalls.back();
+        if(drawCall->isManaged())
+            delete drawCall;
+        drawCall = NULL;
+        m_drawCalls.pop_back();
+    }
     m_zIndex = 0;
 }
 
@@ -176,7 +209,7 @@ void fgGfxDrawingBatch::flush(void) {
 void fgGfxDrawingBatch::sortCalls(void) {
     while(!m_priorityBatch.empty())
         m_priorityBatch.pop();
-    fgVector<fgGfxDrawCall *>::iterator itor = m_drawCalls.begin(), end = m_drawCalls.end();
+    drawCallVecItor itor = m_drawCalls.begin(), end = m_drawCalls.end();
     for(; itor != end; itor++) {
         if(*itor)
             m_priorityBatch.push(*itor);

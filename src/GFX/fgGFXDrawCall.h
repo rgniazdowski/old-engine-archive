@@ -18,6 +18,8 @@
     #define FG_GFX_DRAW_CALL_VERTEX_BUFFER  1
     #define FG_GFX_DRAW_CALL_CUSTOM_ARRAY   2
     #define FG_GFX_DRAW_CALL_OBJECT         3
+    #define FG_GFX_DRAW_CALL_MODEL          4
+    #define FG_GFX_DRAW_CALL_MESH           5
 
     #ifndef _FG_GFX_SHADER_DEFS_H_
         #include "GFX/Shaders/fgGFXShaderDefs.h"
@@ -29,16 +31,16 @@
         #include "fgGFXTypes.h"
     #endif
 
-    #ifndef _FG_TEXTURE_RESOURCE_H_
-        #include "Textures/fgTextureResource.h"
-    #endif
-
     #ifndef _FG_GFX_MVP_MATRIX_H_
         #include "fgGFXMVPMatrix.h"
     #endif
     
     #ifndef _FG_GFX_MODEL_RESOURCE_H_
         #include "fgGFXModelResource.h"
+    #endif
+    
+    #ifndef _FG_GFX_MODEL_TYPES_H_
+        #include "fgGFXModelTypes.h"
     #endif
 
 // Draw call type
@@ -49,13 +51,19 @@ typedef unsigned int fgGfxDrawAppendMode;
     #define FG_GFX_DRAW_APPEND_ABSOLUTE 0
     #define FG_GFX_DRAW_APPEND_RELATIVE 1
 
+class fgGfxDrawingBatch;
+
 /*
  * Special class representing a single draw call
  */
 class fgGfxDrawCall {
+    friend class fgGfxDrawingBatch;
 private:
     /// Attribute binding data // Need to think what do with indices ?
     fgGfxAttributeData m_attrData[FG_GFX_ATTRIBUTE_COUNT];
+    /// Information on indices used in this draw call
+    /// Pointers within must be always valid
+    fgGfxDrawingInfo m_drawingInfo;
     /// Special vector data
     fgVertexData *m_vecDataBase;
     /// Pointer to the shader program used in this draw call
@@ -68,7 +76,7 @@ private:
     /// can be updated). However this is not always required.
     /// If there is no multitexturing then there's always one
     /// texture active (TEXTURE0).
-    fgTextureResource *m_texture;
+    fgGfxTextureID m_textureID;
     /// Pointer to external MVP matrix to use
     /// this will need to be updated for every drawcall made
     /// because the model matrix would change
@@ -96,19 +104,48 @@ private:
     fgVector3f m_relMove;
     /// Holds value for special Z index used for more direct sorting
     int m_zIndex;
+    /// Is this draw call managed by the drawing batch? 
+    /// Or any other mechanism? If true then when on drawing batch flush
+    /// this draw call will be destroyed. If false no destructor will be called.
+    /// Use with caution, if set to false wrongfully it may cause overallocation
+    /// and memory leaks.
+    fgBool m_isManaged;
 
 private:
     //
     void setupVertexData(fgGFXuint attribMask);
-
+    //
+    void applyAttributeData(void);
+    
+protected:
+    // Toggle the managed flag
+    void setManaged(const fgBool toggle = FG_TRUE);
+    
 public:
     // Default constructor
-    fgGfxDrawCall();
+    fgGfxDrawCall(const fgGfxDrawCallType type = FG_GFX_DRAW_CALL_CUSTOM_ARRAY,
+                  const fgGFXuint attribMask = FG_GFX_POSITION_BIT | FG_GFX_UVS_BIT);
     // Default destructor for the draw call object
     virtual ~fgGfxDrawCall();
 
+    //
+    void setupFromModel(const fgGfxModelResource* pModelRes);
+    //
+    void setupFromMesh(const fgGfxMeshBase* pMesh);
+    //
+    void setupFromObject(const void *pGfxObject) { }
+    
+    //
+    fgMatrix4f& getModelMatrix(void);
+    //
+    const fgMatrix4f& getModelMatrix(void) const;
+    //
+    void setModelMatrix(const fgMatrix4f& modelMat);
+    
     // Returns the current Z index
     int getZIndex(void) const;
+    // Returns whether the draw call is managed
+    fgBool isManaged(void) const;
     // Returns the pointer to the attribute data array
     fgGfxAttributeData* getAttributeData(void);
     // Returns currently active attribute mask
@@ -156,13 +193,12 @@ public:
     fgGfxShaderProgram *getShaderProgram(void) const;
 
     // Sets the texture pointer
-    void setTexture(fgTextureResource *texture = NULL);
-    // Returns the texture resource pointer
-    fgTextureResource *getTexture(void) const;
+    void setTexture(const fgGfxTextureID& textureID);
+    // Returns the texture ID reference
+    const fgGfxTextureID& getTexture(void) const;
+    // Returns the texture ID reference
+    fgGfxTextureID& getTexture(void);
 
-    // Set the model resource pointer
-    void setModelResPointer(const fgGfxModelResource *pModelRes);
-    
     // Clear the buffers
     virtual void flush(void);
     
@@ -191,7 +227,7 @@ public:
     //
     inline int operator ==(const fgGfxDrawCall& b) const {
         if(b.m_program == this->m_program) {
-            if(b.m_texture == this->m_texture) {
+            if(b.m_textureID == this->m_textureID) {
                 if(b.m_attribMask == this->m_attribMask) {
                     return 1;
                 }
@@ -205,7 +241,7 @@ public:
         if(b.m_program != this->m_program)
             return 1;
 
-        if(b.m_texture != this->m_texture)
+        if(b.m_textureID != this->m_textureID)
             return 1;
 
         if(b.m_attribMask != this->m_attribMask)
@@ -227,9 +263,9 @@ public:
             else if(this->m_zIndex > a.m_zIndex)
                 return false;
             else {
-                if(this->m_texture < a.m_texture)
+                if(this->m_textureID < a.m_textureID)
                     return true;
-                else if(this->m_texture > a.m_texture)
+                else if(this->m_textureID > a.m_textureID)
                     return false;
                 else {
                     if(this->m_attribMask < a.m_attribMask)
@@ -254,9 +290,9 @@ public:
             else if(this->m_zIndex > a.m_zIndex)
                 return true;
             else {
-                if(this->m_texture < a.m_texture)
+                if(this->m_textureID < a.m_textureID)
                     return false;
-                else if(this->m_texture > a.m_texture)
+                else if(this->m_textureID > a.m_textureID)
                     return true;
                 else {
                     if(this->m_attribMask < a.m_attribMask)
@@ -281,9 +317,9 @@ public:
             else if(this->m_zIndex > a.m_zIndex)
                 return false;
             else {
-                if(this->m_texture < a.m_texture)
+                if(this->m_textureID < a.m_textureID)
                     return true;
-                else if(this->m_texture > a.m_texture)
+                else if(this->m_textureID > a.m_textureID)
                     return false;
                 else {
                     if(this->m_attribMask < a.m_attribMask)
@@ -308,9 +344,9 @@ public:
             else if(this->m_zIndex > a.m_zIndex)
                 return true;
             else {
-                if(this->m_texture < a.m_texture)
+                if(this->m_textureID < a.m_textureID)
                     return false;
-                else if(this->m_texture > a.m_texture)
+                else if(this->m_textureID > a.m_textureID)
                     return true;
                 else {
                     if(this->m_attribMask < a.m_attribMask)

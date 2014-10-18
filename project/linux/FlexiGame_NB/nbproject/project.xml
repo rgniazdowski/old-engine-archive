@@ -47,11 +47,13 @@
             </formatting>
         </data>
         <spellchecker-wordlist xmlns="http://www.netbeans.org/ns/spellchecker-wordlist/1">
+            <word>aos</word>
             <word>app</word>
             <word>attrib</word>
             <word>bitplanes</word>
             <word>bool</word>
             <word>bvec</word>
+            <word>const</word>
             <word>coords</word>
             <word>dfactor</word>
             <word>drawcall</word>
@@ -61,6 +63,7 @@
             <word>framebuffer</word>
             <word>func</word>
             <word>gfx</word>
+            <word>gl</word>
             <word>glbinding</word>
             <word>Gniazdowski</word>
             <word>idx</word>
@@ -69,15 +72,19 @@
             <word>ivec</word>
             <word>multitextured</word>
             <word>multitexturing</word>
+            <word>overallocation</word>
             <word>param</word>
             <word>params</word>
+            <word>plox</word>
             <word>pos</word>
             <word>printf</word>
             <word>Radoslaw</word>
             <word>s'</word>
             <word>sfactor</word>
+            <word>soa</word>
             <word>struct</word>
             <word>structs</word>
+            <word>ushort</word>
             <word>uv</word>
             <word>vec</word>
             <word>zfail</word>

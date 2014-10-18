@@ -24,21 +24,34 @@
  *
  */
 struct fgGfxBufferID {
+    ///
     fgGFXuint id;
+    ///
     fgGFXenum target;
+    ///
     fgGFXenum usage;
+    
+    //
     operator fgGFXint() const {
         return (fgGFXint) id;
     }
+    
+    //
     operator fgGFXuint() const {
         return id;
     }
+    
+    //
     fgGFXuint& refID(void) {
         return id;
     }
+    
+    //
     fgGFXuint* ptrID(void) {
         return &id;
     }
+    
+    //
     fgGfxBufferID(fgGFXuint _id = 0, fgGFXenum _target = (fgGFXenum) 0) :
     id(_id), target(_target) {
     }
