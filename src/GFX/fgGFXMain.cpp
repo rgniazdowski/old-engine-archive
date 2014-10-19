@@ -206,7 +206,7 @@ fgBool fgGfxMain::resumeGFX(void) {
             }
         }
     }
-    
+
     if(!status)
         reportWarning(FG_ERRNO_GFX_OK, "Resume of GFX subsystem finished with errors");
     else
@@ -254,7 +254,7 @@ void fgGfxMain::render(void) {
     fgGLError();
     m_mainWindow->clearColor();
     fgResourceManager *rm = NULL;
-    static int a[10] = {0,0,0,0,0,0,0,0,0,0};
+    static int a[10] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 #if defined(FG_USING_SDL2)
     const Uint8 *state = SDL_GetKeyboardState(NULL);
 #endif
@@ -275,27 +275,27 @@ void fgGfxMain::render(void) {
 
         return;
     }
-    
+
 #if defined(FG_USING_SDL2)
     if(state[SDL_SCANCODE_SPACE] == SDL_PRESSED && !a[6]) {
         a[6]++;
         loadModel = !loadModel;
-    } else if(state[SDL_SCANCODE_SPACE] == SDL_RELEASED){
+    } else if(state[SDL_SCANCODE_SPACE] == SDL_RELEASED) {
         a[6] = 0;
     }
 #endif
 #if defined(FG_USING_MARMALADE)
     if(s3eKeyboardGetState(s3eKeySpace) & S3E_KEY_STATE_PRESSED) {
-		loadModel = !loadModel;
-	}
+        loadModel = !loadModel;
+    }
 #endif
     if(loadModel) {
-        if(!model) 
+        if(!model)
             model = (fgGfxModelResource *)rm->get(modelname);
         if(!model) {
             printf("NO MODEL\n");
             return;
-        }       
+        }
     }
     //m_3DScene->getCamera()->setDT((float)FG_HardwareState->getDelta());
     //m_3DScene->getCamera()->update();
@@ -330,7 +330,7 @@ void fgGfxMain::render(void) {
     }
     // RENDER THE 3D SCENE
     m_3DScene->render();
-    
+
     //////////////////////////////////////////////////////////////
     // 2D LAYER DRAWING TEST - NEEDS TO WORK DIFFERENTLY
     // THIS IS FOR GUI DRAWING - SPECIAL ORTHO SHADER
@@ -359,7 +359,7 @@ void fgGfxMain::render(void) {
         posy += 10.0f;
     }
     if(s3eKeyboardGetState(s3eKeyRightShift) & S3E_KEY_STATE_DOWN) {
-//        scale += 0.01f;
+        //        scale += 0.01f;
     }
 #endif
     Model = glm::translate(Model, glm::vec3(posx, posy, 0.0f));

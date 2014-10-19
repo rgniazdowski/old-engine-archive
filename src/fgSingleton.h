@@ -8,7 +8,7 @@
  *******************************************************/
 
 #ifndef _FG_SINGLETON_H_
-#define _FG_SINGLETON_H_
+    #define _FG_SINGLETON_H_
 
 template<typename Class>
 class fgSingleton {
@@ -17,15 +17,12 @@ private:
     static Class *instance;
 
 protected:
-
-    fgSingleton() {
-    }
+    fgSingleton() { }
 
 public:
-
     static Class *getInstance() {
-        if (!instanceFlag || !instance) {
-            if (!instance)
+        if(!instanceFlag || !instance) {
+            if(!instance)
                 instance = new Class();
             instanceFlag = true;
             return instance;
@@ -33,16 +30,14 @@ public:
             return instance;
         }
     }
-
     static void deleteInstance() {
-        if (instanceFlag || instance) {
+        if(instanceFlag || instance) {
             instanceFlag = false;
-            if (instance)
+            if(instance)
                 delete instance;
             instance = 0;
         }
     }
-
     ~fgSingleton() {
         instanceFlag = false;
     }

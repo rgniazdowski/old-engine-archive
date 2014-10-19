@@ -71,13 +71,12 @@ public:
     void reset(void) {
         m_handle = FG_INVALID_HANDLE;
     }
-
     void copyFrom(const fgHandle<TagType>& source) {
         this->m_handle = source.getHandle();
         this->m_magic = source.getMagic();
         this->m_index = source.getIndex();
     }
-    
+
     // Init handle with given index
     fgBool init(fgRawIndex index);
 

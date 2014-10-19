@@ -8,38 +8,37 @@
  *******************************************************/
 
 #ifndef _FG_GUI_TOGGLE_BUTTON_H_
-#define _FG_GUI_TOGGLE_BUTTON_H_
+    #define _FG_GUI_TOGGLE_BUTTON_H_
 
-#include "fgGuiButton.h"
-#include "fgGuiWidgetFactoryTypes.h"
+    #include "fgGuiButton.h"
+    #include "fgGuiWidgetFactoryTypes.h"
 
-#define FG_GUI_TOGGLE_BUTTON		0x00000008
-#define FG_GUI_TOGGLE_BUTTON_NAME	"ToggleButton"
+    #define FG_GUI_TOGGLE_BUTTON		0x00000008
+    #define FG_GUI_TOGGLE_BUTTON_NAME	"ToggleButton"
 
 /*
  *
  */
-class fgGuiToggleButton : public fgGuiButton
-{
+class fgGuiToggleButton : public fgGuiButton {
 private:
 protected:
 
 protected:
-	// 
-	virtual void setDefaults(void);
+    // 
+    virtual void setDefaults(void);
 
 public:
-	// 
-	fgGuiToggleButton();
-	// 
-	virtual ~fgGuiToggleButton();
+    // 
+    fgGuiToggleButton();
+    // 
+    virtual ~fgGuiToggleButton();
 
-	FG_GUI_WIDGET_FACTORY_CREATE_FUNCTION(fgGuiToggleButton);
+    FG_GUI_WIDGET_FACTORY_CREATE_FUNCTION(fgGuiToggleButton);
 
-	// 
-	virtual fgBoundingBox3Df& updateSize(void);
-	// 
-	virtual void refresh(void);
+    // 
+    virtual fgBoundingBox3Df& updateSize(void);
+    // 
+    virtual void refresh(void);
 
 };
 

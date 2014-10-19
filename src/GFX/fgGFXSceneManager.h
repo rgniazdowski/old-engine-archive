@@ -38,12 +38,12 @@ public:
 
     //
     virtual void setShaderManager(fgManagerBase *pShaderMgr);
-    
+
     // Set internal pointer to the main resource manager
     void setResourceManager(fgManagerBase *pResourceMgr);
     // Get internal pointer to the main resource manager
     fgManagerBase *getResourceManager(void) const;
-    
+
     //
     virtual int getZIndex(void) const {
         return m_zIndex;
@@ -72,7 +72,7 @@ public:
 
     //
     virtual void render(void);
-        
+
     // 
     virtual fgBool addObject(fgGfxObjectHandle& oUniqueID, fgGfxObject *pObj, fgGfxObject *oFatherObj = NULL);
     //
@@ -115,14 +115,14 @@ public:
     virtual fgBool isManaged(const std::string& nameTag);
     // 
     virtual fgBool isManaged(const char *nameTag);
-    
+
     //
     inline fgGfxObject *get(const int index) {
         if(index < 0 || index >= (int)fgHandleManager::getRefDataVector().size())
             return NULL;
         return fgHandleManager::getRefDataVector()[index];
     }
-    
+
     // 
     fgGfxDrawCall *getDrawCall(const fgGfxObject* pObj);
     // 
@@ -131,38 +131,38 @@ public:
     fgGfxDrawCall *getDrawCall(const std::string& nameTag);
     // 
     fgGfxDrawCall *getDrawCall(const char *nameTag);
-    
+
     // This is special array like operator
     // Note that there is no boundaries checking
     fgGfxObject *operator [](size_t n) {
         return fgHandleManager::getRefDataVector()[n];
     }
-    
+
     // This is special array like operator
     // Note that there is no boundaries checking
     const fgGfxObject *operator [](size_t n) const {
         return fgHandleManager::getRefDataVector()[n];
     }
-    
+
     // Returns the number of valid handles used within the handle 
     // manager. This value should not be used for any kind of iteration
     // through the internal data vector
     unsigned int count(void) const {
         return fgHandleManager::getUsedHandleCount();
     }
-    
+
     // This will return the size of the internal data vector
     // Returned value takes into account also empty slots, so
     // this is the real size of the internal data array
     unsigned int size(void) const {
         return fgHandleManager::getRefDataVector().size();
     }
-    
+
     //
     inline fgGfxCameraAnimation *getCamera(void) {
         return &m_camera;
     }
-    
+
     //
     inline void applyCamera(const fgGfxCamera* pCamera) {
         m_camera.setEye(pCamera->getRefEye());

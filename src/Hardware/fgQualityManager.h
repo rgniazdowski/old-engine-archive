@@ -8,15 +8,15 @@
  *******************************************************/
 
 #ifndef _FG_QUALITY_MANAGER_H_
-#define _FG_QUALITY_MANAGER_H_
+    #define _FG_QUALITY_MANAGER_H_
 
-#include "fgSingleton.h"
-#include "fgQualityTypes.h"
+    #include "fgSingleton.h"
+    #include "fgQualityTypes.h"
 
-#include <map>
-#include <string>
+    #include <map>
+    #include <string>
 
-#define FG_QUALITY_DEFAULT FG_QUALITY_MEDIUM
+    #define FG_QUALITY_DEFAULT FG_QUALITY_MEDIUM
 
 /*
  * Class QualityManager
@@ -62,37 +62,32 @@ public:
     void determineQuality(void);
 
     // Set value for forced quality (set quality upfront)
-
     void setForcedQuality(fgQuality forceQuality) {
         m_forcedQuality = forceQuality;
         m_selectedQuality = m_forcedQuality;
     }
 
     // Set currently selected quality to determined via hardware (screen resolution)
-
     void setHardwareQuality(void) {
         m_selectedQuality = m_hardwareQuality;
     }
 
     // Return true if currently set quality is hardware
-
     fgBool isHardwareQuality(void) const {
-        return (fgBool) (m_hardwareQuality == m_selectedQuality);
+        return (fgBool)(m_hardwareQuality == m_selectedQuality);
     }
 
     // Get currently selected quality
-
     fgQuality getQuality(void) const {
         return m_selectedQuality;
     }
 
     // Get value for hardware quality
-
     fgQuality getHardwareQuality(void) const {
         return m_hardwareQuality;
     }
 };
 
-#define FG_QualityManager fgQualityManager::getInstance()
+    #define FG_QualityManager fgQualityManager::getInstance()
 
 #endif /* _FG_QUALITY_MANAGER_H_ */

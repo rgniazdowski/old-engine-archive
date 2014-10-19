@@ -35,17 +35,14 @@ fgHardwareState *fgSingleton<fgHardwareState>::instance = NULL;
  * Private constructor
  */
 fgHardwareState::fgHardwareState() : m_TS(0), m_screenHeight(0), m_screenWidth(0),
-	m_dispArea(0), m_DT(0), m_DT2(0), m_fps(0.0f), m_dpi(0)
-{
-}
+m_dispArea(0), m_DT(0), m_DT2(0), m_fps(0.0f), m_dpi(0) { }
 
 /**
  * Private destructor
  */
-fgHardwareState::~fgHardwareState()
-{
+fgHardwareState::~fgHardwareState() {
 #if defined FG_USING_DPI_INFO
-    if( 0 != m_dpi ) {
+    if(0 != m_dpi) {
         DPI::dpiTerminate();
     }
 #endif // FG_USING_DPI_INFO
@@ -54,8 +51,7 @@ fgHardwareState::~fgHardwareState()
 /**
  * Inits DPI. Called from GL init code, when display is ready
  */
-void fgHardwareState::initDPI()
-{
+void fgHardwareState::initDPI() {
 #if defined FG_USING_DPI_INFO
     DPI::dpiInit();
 
@@ -63,7 +59,7 @@ void fgHardwareState::initDPI()
 
     FG_LOG::PrintDebug("### SCREEN DPI IS: %d ###", m_dpi);
 
-    if( 0 == m_dpi ) {
+    if(0 == m_dpi) {
         FG_LOG::PrintError("DPI extension returned dpi=0. Overwriting with 163");
         m_dpi = 163;
     }
@@ -71,7 +67,7 @@ void fgHardwareState::initDPI()
     m_dpi = 163; // #FIXME
 #endif // FG_USING_DPI_INFO
 
-    if( 0 == m_screenWidth || 0 == m_screenHeight ) {
+    if(0 == m_screenWidth || 0 == m_screenHeight) {
         FG_LOG::PrintError("initDPI called when no screen width & height being set!");
         exit(5);
     }
@@ -80,8 +76,7 @@ void fgHardwareState::initDPI()
     m_dpiAndAreaCoef = sqrtf(float(display_area)) / m_dpi;
 }
 
-void fgHardwareState::deviceYield(int ms)
-{
+void fgHardwareState::deviceYield(int ms) {
 #if defined FG_USING_MARMALADE
     s3eDeviceYield(ms);
 #endif // FG_USING_MARMALADE
@@ -90,37 +85,34 @@ void fgHardwareState::deviceYield(int ms)
 /**
  * Computes "DeltaTime" (the time flow)
  */
-void fgHardwareState::calculateDT(void)
-{
-	static unsigned long int t1=FG_GetTicks(), t2=FG_GetTicks();
-	t2 = FG_GetTicks();
+void fgHardwareState::calculateDT(void) {
+    static unsigned long int t1 = FG_GetTicks(), t2 = FG_GetTicks();
+    t2 = FG_GetTicks();
 
-    m_TS = t2;		// Time stamp update
-	m_DT = t2-t1;	// Delta time (length of the single frame)
-	m_DT2 = t2-t1;	// Delta time used in animations - easy pause -> just set to 0 and animations/movement will stop
+    m_TS = t2; // Time stamp update
+    m_DT = t2 - t1; // Delta time (length of the single frame)
+    m_DT2 = t2 - t1; // Delta time used in animations - easy pause -> just set to 0 and animations/movement will stop
 
-	// #FIXME
-	// This is some fallback when fps is lower than 30
-	// Animation will be smoother but slower
-	if( m_DT2 >= 30 )
-		m_DT2 = 15;
+    // #FIXME
+    // This is some fallback when fps is lower than 30
+    // Animation will be smoother but slower
+    if(m_DT2 >= 30)
+        m_DT2 = 15;
 
-	t1=t2;
+    t1 = t2;
 }
 
 /**
  * Compute FPS
  */
-float fgHardwareState::calculateFPS(void)
-{
-	static int nframes = 0;
-	static float fps_time = 0.0f;
-	nframes++;
-	if(nframes == FG_FRAMES_COUNT_LIMIT)
-	{
-		m_fps = ((float)FG_FRAMES_COUNT_LIMIT) / (((float)FG_GetTicks()) / 1000.0f - fps_time);
-		fps_time = ((float)FG_GetTicks()) / 1000.0f;
-		nframes = 0;
-	}
-	return m_fps;
+float fgHardwareState::calculateFPS(void) {
+    static int nframes = 0;
+    static float fps_time = 0.0f;
+    nframes++;
+    if(nframes == FG_FRAMES_COUNT_LIMIT) {
+        m_fps = ((float)FG_FRAMES_COUNT_LIMIT) / (((float)FG_GetTicks()) / 1000.0f - fps_time);
+        fps_time = ((float)FG_GetTicks()) / 1000.0f;
+        nframes = 0;
+    }
+    return m_fps;
 }

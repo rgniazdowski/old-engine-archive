@@ -145,15 +145,15 @@ fgBool fgGfxPlatform::initialize(fgBool reinit) {
     }
 
     SDL_DisplayMode *desktopMode;
-    int displayCount=0;
-   
-    if ((displayCount = SDL_GetNumVideoDisplays()) < 1) {
+    int displayCount = 0;
+
+    if((displayCount = SDL_GetNumVideoDisplays()) < 1) {
         FG_LOG::PrintError("GFX: Couldn't retrieve number of displays: '%s'", SDL_GetError());
     }
     if(displayCount) {
         desktopMode = fgMalloc<SDL_DisplayMode>(displayCount);
     }
-    for(int displayIdx=0;displayIdx<displayCount;displayIdx++) {
+    for(int displayIdx = 0; displayIdx < displayCount; displayIdx++) {
         int modeCount;
         if(SDL_GetDesktopDisplayMode(0, &desktopMode[displayIdx]) != 0) {
             FG_LOG::PrintError("GFX: Couldn't get desktop display mode for display %d: '%s'", displayIdx, SDL_GetError());
@@ -167,10 +167,10 @@ fgBool fgGfxPlatform::initialize(fgBool reinit) {
         if((modeCount = SDL_GetNumDisplayModes(displayIdx)) < 0) {
             FG_LOG::PrintError("GFX: Couldn't retrieve number of display mode for display %d: '%s'", displayIdx, SDL_GetError());
             continue;
-        } else {            
-            for(int modeIdx=0;modeIdx<modeCount;modeIdx++) {
+        } else {
+            for(int modeIdx = 0; modeIdx < modeCount; modeIdx++) {
                 SDL_DisplayMode displayMode;
-                memset(&displayMode, 0, sizeof(SDL_DisplayMode));
+                memset(&displayMode, 0, sizeof (SDL_DisplayMode));
                 if(SDL_GetDisplayMode(displayIdx, modeIdx, &displayMode) != 0) {
                     FG_LOG::PrintError("GFX: Couldn't get display mode for display %d: '%s'", displayIdx, SDL_GetError());
                     continue;

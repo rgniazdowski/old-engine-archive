@@ -8,6 +8,6 @@
  *******************************************************/
 
 #ifndef _FG_PS_PARTICLE_DRAWER_H_
-#define _FG_PS_PARTICLE_DRAWER_H_
+    #define _FG_PS_PARTICLE_DRAWER_H_
 
 #endif

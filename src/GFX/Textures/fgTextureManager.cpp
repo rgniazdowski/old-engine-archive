@@ -64,6 +64,7 @@ fgBool fgTextureManager::initialize(void) {
 }
 
 //
+
 void fgTextureManager::setResourceManager(fgManagerBase *pResourceMgr) {
     if(!pResourceMgr)
         return;
@@ -72,6 +73,7 @@ void fgTextureManager::setResourceManager(fgManagerBase *pResourceMgr) {
 }
 
 //
+
 fgManagerBase *fgTextureManager::getResourceManager(void) const {
     return m_resourceMgr;
 }

@@ -8,25 +8,25 @@
  *******************************************************/
 
 #ifndef _FG_GAME_MAIN_H_
-#define _FG_GAME_MAIN_H_
+    #define _FG_GAME_MAIN_H_
 
-#include "fgBuildConfig.h"
-#include "fgCommon.h"
-#include "fgStatusReporter.h"
-#include "Util/fgSettings.h"
-#include "Util/fgConfig.h"
-#include "Util/fgTag.h"
-#include "Resource/fgResourceManager.h"
-#include "Resource/fgResourceFactory.h"
-#include "Input/fgPointerInputReceiver.h"
-#include "Input/fgJoypadController.h"
+    #include "fgBuildConfig.h"
+    #include "fgCommon.h"
+    #include "fgStatusReporter.h"
+    #include "Util/fgSettings.h"
+    #include "Util/fgConfig.h"
+    #include "Util/fgTag.h"
+    #include "Resource/fgResourceManager.h"
+    #include "Resource/fgResourceFactory.h"
+    #include "Input/fgPointerInputReceiver.h"
+    #include "Input/fgJoypadController.h"
 
-#include "GFX/fgGFXMain.h"
-#include "GUI/fgGuiMain.h"
+    #include "GFX/fgGFXMain.h"
+    #include "GUI/fgGuiMain.h"
 
 class fgGameMain;
-#define FG_TAG_GAME_MAIN_NAME		"GameMain"
-#define FG_TAG_GAME_MAIN			FG_TAG_TYPE(fgGameMain)
+    #define FG_TAG_GAME_MAIN_NAME		"GameMain"
+    #define FG_TAG_GAME_MAIN			FG_TAG_TYPE(fgGameMain)
 FG_TAG_TEMPLATE_ID_AUTO(fgGameMain, FG_TAG_GAME_MAIN_NAME);
 typedef FG_TAG_GAME_MAIN fgGameMainTag;
 
@@ -73,55 +73,47 @@ public:
     void update(void);
 
     //
-
     fgGfxMain *getGfxMain(void) const {
         return m_gfxMain;
     }
 
     //
-
     fgSettings *getSettings(void) const {
         return m_settings;
     }
 
     //
-
     fgConfig *getMainConfig(void) const {
         return m_mainConfig;
     }
 
     //
-
     fgResourceManager *getResourceManager(void) const {
         return m_resourceMgr;
     }
 
     //
-
     fgEventManager *getEventManager(void) const {
         return m_eventMgr;
     }
 
     //
-
-    void setEventManager(fgEventManager *eventMgr) {        
+    void setEventManager(fgEventManager *eventMgr) {
         m_eventMgr = eventMgr;
-        if (m_pointerInputReceiver)
+        if(m_pointerInputReceiver)
             m_pointerInputReceiver->setEventManager(m_eventMgr);
-        if (m_joypadController)
+        if(m_joypadController)
             m_joypadController->setEventManager(m_eventMgr);
-        if (m_guiMain) {
+        if(m_guiMain) {
             m_guiMain->setEventManager(m_eventMgr);
             m_guiMain->setPointerInputReceiver(m_pointerInputReceiver);
         }
     }
 
     //
-
     fgPointerInputReceiver *getPointerInputReceiver(void) const {
         return m_pointerInputReceiver;
     }
-    
     fgJoypadController *getJoypadController(void) const {
         return m_joypadController;
     }

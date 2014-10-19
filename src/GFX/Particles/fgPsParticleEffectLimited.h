@@ -8,12 +8,11 @@
  *******************************************************/
 
 #ifndef _FG_PS_PARTICLE_EFFECT_LIMITED_H_
-#define _FG_PS_PARTICLE_EFFECT_LIMITED_H_
+    #define _FG_PS_PARTICLE_EFFECT_LIMITED_H_
 
-#include "fgPsParticleEffect.h"
+    #include "fgPsParticleEffect.h"
 
 class ParticleEffectLimited : public ParticleEffect {
-
 public:
     /**
      * Public constructor

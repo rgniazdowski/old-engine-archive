@@ -8,11 +8,11 @@
  *******************************************************/
 
 #ifndef _FG_GFX_PLATFORM_H_
-#define _FG_GFX_PLATFORM_H_
+    #define _FG_GFX_PLATFORM_H_
 
-#ifndef _FG_GFX_CONTEXT_H_
-#include "fgGFXContext.h"
-#endif
+    #ifndef _FG_GFX_CONTEXT_H_
+        #include "fgGFXContext.h"
+    #endif
 
 /*
  *
@@ -42,12 +42,12 @@ public:
     //
     static fgGfxContext* context(void);
 
-#if defined(FG_USING_SDL2)
+    #if defined(FG_USING_SDL2)
     // initializing main context with sdl window
     static fgBool initializeMainContext(SDL_Window* sdlWindow);
-#endif
+    #endif
 private:
-#if defined FG_USING_EGL
+    #if defined FG_USING_EGL
 
     struct fgEGLCfgAttrib {
         EGLint id; // enumaration id value
@@ -56,7 +56,7 @@ private:
         EGLint value;
     };
     static void _eglDumpConfig(EGLDisplay display, EGLConfig config);
-#endif
+    #endif
 
 private:
     /// Main gfx context (server/client state cache)

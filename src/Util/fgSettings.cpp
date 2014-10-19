@@ -12,8 +12,7 @@
 /*
  *
  */
-fgSettings::fgSettings() : m_parser(NULL) {
- }
+fgSettings::fgSettings() : m_parser(NULL) { }
 
 /*
  *

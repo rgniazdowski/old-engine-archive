@@ -23,13 +23,12 @@ fgGfxSceneManager() {
 /**
  * 
  */
-fgGfx3DScene::~fgGfx3DScene() { 
-}
+fgGfx3DScene::~fgGfx3DScene() { }
 
 /**
  * 
  */
-void fgGfx3DScene::flush(void) { 
+void fgGfx3DScene::flush(void) {
     fgGfxSceneManager::flush();
 }
 

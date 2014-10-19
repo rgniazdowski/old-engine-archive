@@ -13,70 +13,64 @@
 /*
  * Default empty constructor for Resource Factory object
  */
-fgGuiWidgetFactory::fgGuiWidgetFactory()
-{
-	FG_LOG::PrintError("fgGuiWidgetFactory::fgGuiWidgetFactory()");
+fgGuiWidgetFactory::fgGuiWidgetFactory() {
+    FG_LOG::PrintError("fgGuiWidgetFactory::fgGuiWidgetFactory()");
 }
 
 /*
  * Default destructor for Resource Factory object
  */
-fgGuiWidgetFactory::~fgGuiWidgetFactory()
-{
-	FG_LOG::PrintError("fgGuiWidgetFactory::~fgGuiWidgetFactory()");
-	clear();
+fgGuiWidgetFactory::~fgGuiWidgetFactory() {
+    FG_LOG::PrintError("fgGuiWidgetFactory::~fgGuiWidgetFactory()");
+    clear();
 }
 
 /*
  * Clear all registered resource creators
  */
-void fgGuiWidgetFactory::clear(void) 
-{
-	FG_LOG::PrintError("fgGuiWidgetFactory::clear()");
-	m_factoryMap.clear(); 
+void fgGuiWidgetFactory::clear(void) {
+    FG_LOG::PrintError("fgGuiWidgetFactory::clear()");
+    m_factoryMap.clear();
 }
 
 /*
  * Register resource create function based on resource type
  */
-fgBool fgGuiWidgetFactory::registerWidget(const fgGuiWidgetType type, fgCreateGuiWidgetFn function)
-{
-	if(!function)
-		return FG_FALSE;
-	factoryPair query_pair;
-	query_pair.first = type;
-	query_pair.second = function;
-	std::pair<factoryMapItor, bool> result = m_factoryMap.insert(query_pair);
-	if(result.second == false) {
-		// Existed
-		return FG_FALSE;
-	} else {
-		// New insertion
-	}
-	return FG_TRUE;
+fgBool fgGuiWidgetFactory::registerWidget(const fgGuiWidgetType type, fgCreateGuiWidgetFn function) {
+    if(!function)
+        return FG_FALSE;
+    factoryPair query_pair;
+    query_pair.first = type;
+    query_pair.second = function;
+    std::pair<factoryMapItor, bool> result = m_factoryMap.insert(query_pair);
+    if(result.second == false) {
+        // Existed
+        return FG_FALSE;
+    } else {
+        // New insertion
+    }
+    return FG_TRUE;
 }
 
 /*
  * Call specific create function for given widget
  */
-fgGuiWidget* fgGuiWidgetFactory::createWidget(const fgGuiWidgetType type)
-{
-	factoryMapItor it = m_factoryMap.find(type);
-	if(it != m_factoryMap.end()) {
-		if(it->second != NULL)
-			return it->second();
-	}
-	return NULL;
+fgGuiWidget* fgGuiWidgetFactory::createWidget(const fgGuiWidgetType type) {
+    factoryMapItor it = m_factoryMap.find(type);
+    if(it != m_factoryMap.end()) {
+        if(it->second != NULL)
+            return it->second();
+    }
+    return NULL;
 }
 
 /*
  * Check if given widget type constructor/create function is registered in factory
  */
-fgBool fgGuiWidgetFactory::isRegistered(const fgGuiWidgetType type)
-{
-	factoryMapItor it = m_factoryMap.find(type);
-	if(it != m_factoryMap.end()) {
-		return FG_TRUE;
-	}
-	return FG_FALSE;
+fgBool fgGuiWidgetFactory::isRegistered(const fgGuiWidgetType type) {
+    factoryMapItor it = m_factoryMap.find(type);
+    if(it != m_factoryMap.end()) {
+        return FG_TRUE;
+    }
+    return FG_FALSE;
 }

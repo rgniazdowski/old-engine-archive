@@ -8,49 +8,43 @@
  *******************************************************/
 
 #ifndef _FG_EXCEPTION_H_
-#define _FG_EXCEPTION_H_
+    #define _FG_EXCEPTION_H_
 
-#include "fgBool.h"
-#include "fgErrno.h"
-#include "fgMessageCommon.h"
-#include <string>
+    #include "fgBool.h"
+    #include "fgErrno.h"
+    #include "fgMessageCommon.h"
+    #include <string>
 
 /*
  *
  */
-struct fgException : fgError
-{
-	std::string data;
-
-	fgException() {
-		type = FG_MESSAGE_ERROR;
-		critical = FG_TRUE;
-	}
-
-	fgException(const char *_data) {
-		type = FG_MESSAGE_ERROR;
-		critical = FG_TRUE;
-		data = _data;
-		code = FG_ERRNO_OK;
-	}
-
-	fgException(const char *_data, int _code) {
-		type = FG_MESSAGE_ERROR;
-		critical = FG_TRUE;
-		data = _data;
-		code = _code;
-	}
-
-	fgException(int _code) {
-		type = FG_MESSAGE_ERROR;
-		critical = FG_TRUE;
-		code = _code;
-		data = FG_ERRNO_STR(_code); // #FIXME
-	}
-
-	~fgException() {
-		data.clear();
-	}
+struct fgException : fgError {
+    std::string data;
+    fgException() {
+        type = FG_MESSAGE_ERROR;
+        critical = FG_TRUE;
+    }
+    fgException(const char *_data) {
+        type = FG_MESSAGE_ERROR;
+        critical = FG_TRUE;
+        data = _data;
+        code = FG_ERRNO_OK;
+    }
+    fgException(const char *_data, int _code) {
+        type = FG_MESSAGE_ERROR;
+        critical = FG_TRUE;
+        data = _data;
+        code = _code;
+    }
+    fgException(int _code) {
+        type = FG_MESSAGE_ERROR;
+        critical = FG_TRUE;
+        code = _code;
+        data = FG_ERRNO_STR(_code); // #FIXME
+    }
+    ~fgException() {
+        data.clear();
+    }
 };
 
 #endif /* _FG_EXCEPTION_H_ */

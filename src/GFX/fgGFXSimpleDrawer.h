@@ -8,6 +8,6 @@
  *******************************************************/
 
 #ifndef _FG_GFX_SIMPLE_DRAWER_H_
-#define _FG_GFX_SIMPLE_DRAWER_H_
+    #define _FG_GFX_SIMPLE_DRAWER_H_
 
 #endif /* _FG_GFX_SIMPLE_DRAWER_H_ */

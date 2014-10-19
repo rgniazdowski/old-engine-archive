@@ -322,7 +322,7 @@ typedef int fgGFXfixed;
         #endif
 
     #endif /* FG_GFX_GL_MASK_TYPEDEFS_DEFINED && _FG_INCLUDED_GL_ */
-    
+
 //
 // Data types
 //

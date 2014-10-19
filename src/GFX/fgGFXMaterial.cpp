@@ -27,8 +27,7 @@
 /**
  * 
  */
-fgGfxMaterial::fgGfxMaterial() {
-}
+fgGfxMaterial::fgGfxMaterial() { }
 
 /**
  * 

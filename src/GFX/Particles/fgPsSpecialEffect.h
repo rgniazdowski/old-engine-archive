@@ -8,21 +8,20 @@
  *******************************************************/
 
 #ifndef _FG_PS_SPECIAL_EFFECT_H_
-#define _FG_PS_SPECIAL_EFFECT_H_
+    #define _FG_PS_SPECIAL_EFFECT_H_
 
 /**
  *
  */
-class SpecialEffect
-{
+class SpecialEffect {
 private:
 
 public:
-	SpecialEffect() {};
-	virtual ~SpecialEffect() {};
+    SpecialEffect() { };
+    virtual ~SpecialEffect() { };
 
-	virtual void calculate(void) = 0;
-	virtual void draw(void) = 0;
+    virtual void calculate(void) = 0;
+    virtual void draw(void) = 0;
 };
 
 #endif

@@ -12,7 +12,7 @@
 
     #include "Math/fgMathLib.h"
     #include "Util/fgTag.h"
-    
+
     #include "fgGFXModelResource.h"
 
 class fgGfxObject;
@@ -48,18 +48,18 @@ private:
     fgGfxObjectHandle m_handle;
     ///
     fgBool m_isManaged;
-    
+
 public:
     //
-    fgGfxObject() : m_nameTag(), 
+    fgGfxObject() : m_nameTag(),
     m_modelMat(),
     m_type(0),
     m_model(NULL),
     m_isManaged(FG_FALSE) { }
-    
+
     //
     virtual ~fgGfxObject() { }
-    
+
     // Set object name (string TAG/ID)
     inline void setName(const char *name) {
         m_nameTag = name;
@@ -95,47 +95,47 @@ public:
     inline fgGfxObjectHandle& getRefHandle(void) {
         return m_handle;
     }
-    
+
     //
     inline const fgGfxObjectHandle& getRefHandle(void) const {
         return m_handle;
     }
-    
+
     //
     inline void setManaged(const fgBool toggle = FG_TRUE) {
         m_isManaged = toggle;
     }
-    
+
     //
     inline fgBool isManaged(void) const {
         return m_isManaged;
     }
-    
+
     //
     inline fgGfxModelResource* getModel(void) const {
         return m_model;
     }
-    
+
     //
     inline void setModel(fgGfxModelResource *model) {
         m_model = model;
     }
-    
+
     //
     inline fgMatrix4f& getRefModelMatrix(void) {
         return m_modelMat;
     }
-    
+
     //
     inline const fgMatrix4f& getRefModelMatrix(void) const {
         return m_modelMat;
     }
-    
+
     //
     inline void setModelMatrix(const fgMatrix4f& modelMat) {
         m_modelMat = modelMat;
     }
-    
+
 protected:
 
 };

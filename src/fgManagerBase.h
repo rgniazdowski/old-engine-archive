@@ -8,44 +8,42 @@
  *******************************************************/
 
 #ifndef _FG_MANAGER_BASE_H_
-#define _FG_MANAGER_BASE_H_
+    #define _FG_MANAGER_BASE_H_
 
-#include "fgBool.h"
+    #include "fgBool.h"
 
 typedef unsigned int fgManagerType;
 
-#define FG_MANAGER_INVALID	0x00000000
+    #define FG_MANAGER_INVALID	0x00000000
 
 /*
  *
  */
-class fgManagerBase
-{
+class fgManagerBase {
 public:
-	// 
-	fgManagerBase() : 
-		m_init(FG_FALSE),
-		m_managerType(FG_MANAGER_INVALID) {
-	}
-	// 
-	virtual ~fgManagerBase() {}
+    // 
+    fgManagerBase() :
+    m_init(FG_FALSE),
+    m_managerType(FG_MANAGER_INVALID) { }
+    // 
+    virtual ~fgManagerBase() { }
 
 protected:
-	//
-	virtual void clear(void) = 0;
+    //
+    virtual void clear(void) = 0;
 
 public:
-	//
-	virtual fgBool destroy(void) = 0;
-	//
-	virtual fgBool initialize(void) = 0;
-	//
-	fgManagerType getManagerType(void) const {
-		return m_managerType;
-	}
+    //
+    virtual fgBool destroy(void) = 0;
+    //
+    virtual fgBool initialize(void) = 0;
+    //
+    fgManagerType getManagerType(void) const {
+        return m_managerType;
+    }
 protected:
-	fgBool			m_init;
-	fgManagerType	m_managerType;
+    fgBool m_init;
+    fgManagerType m_managerType;
 };
 
 #endif /* _FG_MANAGER_BASE_H_ */

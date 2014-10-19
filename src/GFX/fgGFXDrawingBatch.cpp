@@ -85,8 +85,8 @@ int fgGfxDrawingBatch::appendDrawCall(fgGfxDrawCall* drawCall, fgBool manage, fg
     if(check && !m_drawCalls.empty()) {
         if(m_drawCalls.find(drawCall) != -1)
             return -1;
-    } 
-    
+    }
+
     drawCall->setZIndex(m_zIndex);
     drawCall->setManaged(manage);
     int index = m_drawCalls.size();
@@ -177,9 +177,9 @@ fgBool fgGfxDrawingBatch::deleteDrawCall(fgGfxDrawCall*& drawCall) {
 void fgGfxDrawingBatch::flush(void) {
     while(!m_priorityBatch.empty())
         m_priorityBatch.pop();
-    
+
     drawCallVecItor it = m_duplicates.begin(), end = m_duplicates.end();
-    for(;it!=end;it++) {
+    for(; it != end; it++) {
         fgBool managed = FG_FALSE;
         if(*it) {
             fgGfxDrawCall *drawCall = *it;

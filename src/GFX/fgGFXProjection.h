@@ -31,7 +31,7 @@ class fgGfxProjection {
 protected:
     ///
     fgMatrix4f m_projMatrix;
-    
+
 public:
     //
     fgGfxProjection() { }
@@ -68,7 +68,7 @@ public:
     inline float * getProjMatPtr(void) {
         return glm::value_ptr(m_projMatrix);
     }
-    
+
     //
     inline void identity(void) {
         m_projMatrix = fgMatrix4f();

@@ -34,11 +34,11 @@
     #ifndef _FG_GFX_MVP_MATRIX_H_
         #include "fgGFXMVPMatrix.h"
     #endif
-    
+
     #ifndef _FG_GFX_MODEL_RESOURCE_H_
         #include "fgGFXModelResource.h"
     #endif
-    
+
     #ifndef _FG_GFX_MODEL_TYPES_H_
         #include "fgGFXModelTypes.h"
     #endif
@@ -116,11 +116,11 @@ private:
     void setupVertexData(fgGFXuint attribMask);
     //
     void applyAttributeData(void);
-    
+
 protected:
     // Toggle the managed flag
     void setManaged(const fgBool toggle = FG_TRUE);
-    
+
 public:
     // Default constructor
     fgGfxDrawCall(const fgGfxDrawCallType type = FG_GFX_DRAW_CALL_CUSTOM_ARRAY,
@@ -134,14 +134,14 @@ public:
     void setupFromMesh(const fgGfxMeshBase* pMesh);
     //
     void setupFromObject(const void *pGfxObject) { }
-    
+
     //
     fgMatrix4f& getModelMatrix(void);
     //
     const fgMatrix4f& getModelMatrix(void) const;
     //
     void setModelMatrix(const fgMatrix4f& modelMat);
-    
+
     // Returns the current Z index
     int getZIndex(void) const;
     // Returns whether the draw call is managed
@@ -201,7 +201,7 @@ public:
 
     // Clear the buffers
     virtual void flush(void);
-    
+
     // Append simple rectangle next to the last one
     void appendRect2D(const fgVec2f &size,
                       const fgVec2f &uv1, const fgVec2f &uv2,
@@ -223,7 +223,7 @@ public:
 
     ///////////////////////////////////////////////////////
     // COMPARISON OPERATORS
-    
+
     //
     inline int operator ==(const fgGfxDrawCall& b) const {
         if(b.m_program == this->m_program) {
@@ -235,7 +235,7 @@ public:
         }
         return 0;
     }
-    
+
     //
     inline int operator !=(const fgGfxDrawCall& b) const {
         if(b.m_program != this->m_program)
@@ -250,7 +250,7 @@ public:
 
         return 0;
     }
-    
+
     //
     inline bool operator <(const fgGfxDrawCall& a) const {
         if(this->m_program < a.m_program)
@@ -277,7 +277,7 @@ public:
         }
         return false;
     }
-    
+
     //
     inline bool operator >(const fgGfxDrawCall& a) const {
         if(this->m_program < a.m_program)
@@ -304,7 +304,7 @@ public:
         }
         return false;
     }
-    
+
     //
     inline bool operator <=(const fgGfxDrawCall& a) const {
         if(this->m_program < a.m_program)
@@ -331,7 +331,7 @@ public:
         }
         return true;
     }
-    
+
     //
     inline bool operator >=(const fgGfxDrawCall& a) const {
         if(this->m_program < a.m_program)

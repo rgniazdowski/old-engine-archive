@@ -12,88 +12,75 @@
 /*
  *
  */
-fgGuiMenu::fgGuiMenu()
-{
-	fgGuiMenu::setDefaults();
+fgGuiMenu::fgGuiMenu() {
+    fgGuiMenu::setDefaults();
 }
 
 /*
  *
  */
-fgGuiMenu::~fgGuiMenu()
-{
+fgGuiMenu::~fgGuiMenu() { }
+
+/*
+ *
+ */
+void fgGuiMenu::setDefaults(void) {
+    m_type = FG_GUI_MENU;
+    m_typeName = FG_GUI_MENU_NAME;
+    m_typeTraits = FG_GUI_MENU | FG_GUI_CONTAINER | FG_GUI_WIDGET;
 }
 
 /*
  *
  */
-void fgGuiMenu::setDefaults(void)
-{
-	m_type = FG_GUI_MENU;
-	m_typeName = FG_GUI_MENU_NAME;
-	m_typeTraits = FG_GUI_MENU | FG_GUI_CONTAINER | FG_GUI_WIDGET;
+fgBoundingBox3Df& fgGuiMenu::updateSize(void) {
+    return fgGuiContainer::updateSize();
 }
 
 /*
  *
  */
-fgBoundingBox3Df& fgGuiMenu::updateSize(void)
-{
-	return fgGuiContainer::updateSize();
-}
-
-/*
- *
- */
-void fgGuiMenu::refresh(void)
-{
-}
+void fgGuiMenu::refresh(void) { }
 
 /////////////////////////////////////////////////////////////////////
 
 /**
  *
  */
-void Menu::getSignals(void)
-{
-	/*
-	std::map<int, Widget*>::iterator childIt;
+void Menu::getSignals(void) {
+    /*
+    std::map<int, Widget*>::iterator childIt;
 
-	for(childIt = m_children.begin(); childIt != m_children.end(); childIt++)
-	{
-		childIt->second->getSignals(this);
-	}
-	*/
-}
+    for(childIt = m_children.begin(); childIt != m_children.end(); childIt++)
+    {
+            childIt->second->getSignals(this);
+    }
+     */ }
 
 /**
  *
  */
-void Menu::draw(void)
-{
-	/*
-	std::map<int, Widget*>::iterator childIt;
+void Menu::draw(void) {
+    /*
+    std::map<int, Widget*>::iterator childIt;
 
-	for(childIt = m_children.begin(); childIt != m_children.end(); childIt++)
-	{
-		childIt->second->show();
-	}
-	*/
-}
+    for(childIt = m_children.begin(); childIt != m_children.end(); childIt++)
+    {
+            childIt->second->show();
+    }
+     */ }
 
 /**
  *
  */
-void Menu::releaseAllWidgets(void)
-{
-	/*
-	std::map<int, Widget*>::iterator childIt;
+void Menu::releaseAllWidgets(void) {
+    /*
+    std::map<int, Widget*>::iterator childIt;
 
-	for(childIt = m_children.begin(); childIt != m_children.end(); childIt++)
-	{
-		delete childIt->second;
-		m_children[childIt->first] = NULL;
-	}
-	m_children.clear();
-	*/
-}
+    for(childIt = m_children.begin(); childIt != m_children.end(); childIt++)
+    {
+            delete childIt->second;
+            m_children[childIt->first] = NULL;
+    }
+    m_children.clear();
+     */ }

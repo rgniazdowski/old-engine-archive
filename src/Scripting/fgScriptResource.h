@@ -8,6 +8,6 @@
  *******************************************************/
 
 #ifndef _FG_SCRIPT_RESOURCE_H_
-#define _FG_SCRIPT_RESOURCE_H_
+    #define _FG_SCRIPT_RESOURCE_H_
 
 #endif

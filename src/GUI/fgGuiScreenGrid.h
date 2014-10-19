@@ -14,77 +14,75 @@
 // resolution / platform is used
 
 #ifndef _FG_GUI_SCREEN_GRID_H_
-#define _FG_GUI_SCREEN_GRID_H_
+    #define _FG_GUI_SCREEN_GRID_H_
 
-#include "Math/fgMathLib.h"
-#include "fgSingleton.h"
+    #include "Math/fgMathLib.h"
+    #include "fgSingleton.h"
 
-class fgGuiScreenGrid : fgSingleton<fgGuiScreenGrid>
-{
-	friend class fgSingleton<fgGuiScreenGrid>;
+class fgGuiScreenGrid : fgSingleton<fgGuiScreenGrid> {
+    friend class fgSingleton<fgGuiScreenGrid>;
 private:
-	/* By default maximum screen grid height is 40
-	   this makes positioning of the screen elements quite easier */
-	static const float DEFAULT_GRID_H;
-	/* This currently is just a dummy - game will support only portrait orientation */
-	int screenOrientation;
-	/* Aspect ratio - larger value divided by smaller value -  aspect > 1.0f */
-	float aspectRatio;
-	/* Reversed aspect ratio - smaller value divided by larger value (of the screen size in pixels) */
-	float aspectRatioI;
-	/* This holds the smaller size of the screen (if the orientation is portrait it will hold the screen width) */
-	float minSize;
-	/* This holds the larger size of the screen */
-	float maxSize;
-	/* Indicates the screen block size (the block is square) */
-	float gridCellSize;
-	/* Indicates the screen width in blocks */
-	float screenGridW;
-	/* Indicates the screen height in blocks (by default 40.0f) */
-	float screenGridH;
-	/* The same as above but stored as integer */
-	int screenGridX;
-	int screenGridY;
+    /* By default maximum screen grid height is 40
+       this makes positioning of the screen elements quite easier */
+    static const float DEFAULT_GRID_H;
+    /* This currently is just a dummy - game will support only portrait orientation */
+    int screenOrientation;
+    /* Aspect ratio - larger value divided by smaller value -  aspect > 1.0f */
+    float aspectRatio;
+    /* Reversed aspect ratio - smaller value divided by larger value (of the screen size in pixels) */
+    float aspectRatioI;
+    /* This holds the smaller size of the screen (if the orientation is portrait it will hold the screen width) */
+    float minSize;
+    /* This holds the larger size of the screen */
+    float maxSize;
+    /* Indicates the screen block size (the block is square) */
+    float gridCellSize;
+    /* Indicates the screen width in blocks */
+    float screenGridW;
+    /* Indicates the screen height in blocks (by default 40.0f) */
+    float screenGridH;
+    /* The same as above but stored as integer */
+    int screenGridX;
+    int screenGridY;
 
 protected:
-		fgGuiScreenGrid();
-		~fgGuiScreenGrid();
+    fgGuiScreenGrid();
+    ~fgGuiScreenGrid();
 public:
+    float getAspectRatio(void) const {
+        return aspectRatio;
+    }
+    float getScreenGridW(void) const {
+        return screenGridW;
+    }
+    float getScreenGridH(void) const {
+        return screenGridH;
+    }
+    float getMinSize(void) const {
+        return minSize;
+    }
+    float getMaxSize(void) const {
+        return maxSize;
+    }
+    float getGridCellSize(void) const {
+        return gridCellSize;
+    }
+    float cellSize(void) const {
+        return gridCellSize;
+    }
 
-		float getAspectRatio(void) const {
-			return aspectRatio;
-		}
-		float getScreenGridW(void) const {
-			return screenGridW;
-		}
-		float getScreenGridH(void) const {
-			return screenGridH;
-		}
-		float getMinSize(void) const {
-			return minSize;
-		}
-		float getMaxSize(void) const {
-			return maxSize;
-		}
-		float getGridCellSize(void) const {
-			return gridCellSize;
-		}
-		float cellSize(void) const {
-			return gridCellSize;
-		}
+    float transformToPixels(int grid_position) const;
+    float transformToPixels(float grid_position) const;
 
-		float transformToPixels(int grid_position) const;
-		float transformToPixels(float grid_position) const;
-
-		fgVector2f transform(fgVector2f grid_position) const;
-		fgVector2f transform(float grid_position_x, float grid_position_y) const;
+    fgVector2f transform(fgVector2f grid_position) const;
+    fgVector2f transform(float grid_position_x, float grid_position_y) const;
 };
 
-#define SCREEN_TRANSFORM(POS) fgGuiScreenGrid::getInstance()->transformToPixels(POS)
-#define SCREEN_TRANSFORM_POS(STRUCT_) fgGuiScreenGrid::getInstance()->transform(STRUCT_)
-#define SCREEN_TRANSFORM_2D(POSX, POSY) fgGuiScreenGrid::getInstance()->transform(POSX, POSY)
+    #define SCREEN_TRANSFORM(POS) fgGuiScreenGrid::getInstance()->transformToPixels(POS)
+    #define SCREEN_TRANSFORM_POS(STRUCT_) fgGuiScreenGrid::getInstance()->transform(STRUCT_)
+    #define SCREEN_TRANSFORM_2D(POSX, POSY) fgGuiScreenGrid::getInstance()->transform(POSX, POSY)
 
-#define FG_GuiScreenGrid	fgGuiScreenGrid::getInstance();
+    #define FG_GuiScreenGrid	fgGuiScreenGrid::getInstance();
 
 #endif /* _FG_GUI_SCREEN_GRID_H_ */
 

@@ -64,25 +64,25 @@ public:
     }
 
     FG_RESOURCE_FACTORY_CREATE_FUNCTION(fgGfxModelResource)
-    
+
 protected:
     // Clears the class data, this actually does not free allocated memory,
     // just resets base class attributes
     virtual void clear(void);
-    
+
 public:
     // Create function loads/interprets data from file in ROM and place it in RAM memory.
     virtual fgBool create(void);
-    
+
     // Destroy all loaded data including additional metadata (called with deconstructor)
     virtual void destroy(void);
-    
+
     // Reloads any data, recreates the resource (refresh)
     virtual fgBool recreate(void);
-    
+
     // Dispose completely of the all loaded data, free all memory
     virtual void dispose(void);
-    
+
     // Check if resource is disposed (not loaded yet or disposed after)
     virtual fgBool isDisposed(void) const;
 
@@ -105,7 +105,6 @@ public:
     modelShapes & getRefShapes(void) {
         return m_shapes;
     }
-    
     const modelShapes & getRefShapes(void) const {
         //return (const_cast<fgDataObjectBase<HandleType, MapKeyType>*>(this)->getFilePath(id));
         //return (const_cast<fgGfxModelResource *>(this)->getRefShapes());
@@ -114,10 +113,10 @@ public:
 
     // Generates the GFX buffers (VBO) from the model data
     fgBool genBuffers(void);
-    
+
     // Deletes/releases the GFX buffers (VBO)
     fgBool deleteBuffers(void);
-    
+
     // Returns the pointer to the main material (override)
     fgGfxMaterial* getMainMaterial(void) const {
         return m_materialOverride;

@@ -53,13 +53,13 @@ public:
     inline float * getModelViewMatPtr(void) {
         return glm::value_ptr(m_modelViewMatrix);
     }
-    
+
     //
     inline void identity(void) {
         fgGfxCamera::identity();
         m_modelViewMatrix = fgMatrix4f();
     }
-    
+
 protected:
     /// 
     fgMatrix4f m_modelViewMatrix;

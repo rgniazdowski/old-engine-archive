@@ -8,41 +8,40 @@
  *******************************************************/
 
 #ifndef _FG_GUI_BUTTON_H_
-#define _FG_GUI_BUTTON_H_
+    #define _FG_GUI_BUTTON_H_
 
-#include "fgGuiWidget.h"
-#include "fgGuiLabel.h"
-#include "fgGuiWidgetFactoryTypes.h"
+    #include "fgGuiWidget.h"
+    #include "fgGuiLabel.h"
+    #include "fgGuiWidgetFactoryTypes.h"
 
-#define FG_GUI_BUTTON		0x00000004
-#define FG_GUI_BUTTON_NAME	"Button"
+    #define FG_GUI_BUTTON		0x00000004
+    #define FG_GUI_BUTTON_NAME	"Button"
 
 /*
  *
  */
-class fgGuiButton : public fgGuiWidget
-{
+class fgGuiButton : public fgGuiWidget {
 private:
 protected:
-	/// 
-	fgGuiLabel *m_label;
+    /// 
+    fgGuiLabel *m_label;
 
 protected:
-	// 
-	virtual void setDefaults(void);
+    // 
+    virtual void setDefaults(void);
 
 public:
-	// 
-	fgGuiButton();
-	// 
-	virtual ~fgGuiButton();
+    // 
+    fgGuiButton();
+    // 
+    virtual ~fgGuiButton();
 
-	FG_GUI_WIDGET_FACTORY_CREATE_FUNCTION(fgGuiButton);
+    FG_GUI_WIDGET_FACTORY_CREATE_FUNCTION(fgGuiButton);
 
-	// 
-	virtual fgBoundingBox3Df& updateSize(void);
-	//
-	virtual void refresh(void);
+    // 
+    virtual fgBoundingBox3Df& updateSize(void);
+    //
+    virtual void refresh(void);
 };
 
 #endif /* _FG_GUI_BUTTON_H_ */ 

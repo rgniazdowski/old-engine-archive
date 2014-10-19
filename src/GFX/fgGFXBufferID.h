@@ -16,9 +16,9 @@
 #ifndef _FG_GFX_BUFFERID_H_
     #define	_FG_GFX_BUFFERID_H_
 
-#ifndef _FG_GFX_GL_H_
-#include "fgGFXGL.h"
-#endif
+    #ifndef _FG_GFX_GL_H_
+        #include "fgGFXGL.h"
+    #endif
 
 /*
  *
@@ -30,31 +30,30 @@ struct fgGfxBufferID {
     fgGFXenum target;
     ///
     fgGFXenum usage;
-    
+
     //
     operator fgGFXint() const {
-        return (fgGFXint) id;
+        return (fgGFXint)id;
     }
-    
+
     //
     operator fgGFXuint() const {
         return id;
     }
-    
+
     //
     fgGFXuint& refID(void) {
         return id;
     }
-    
+
     //
     fgGFXuint* ptrID(void) {
         return &id;
     }
-    
+
     //
-    fgGfxBufferID(fgGFXuint _id = 0, fgGFXenum _target = (fgGFXenum) 0) :
-    id(_id), target(_target) {
-    }
+    fgGfxBufferID(fgGFXuint _id = 0, fgGFXenum _target = (fgGFXenum)0) :
+    id(_id), target(_target) { }
 };
 
 #endif	/* _FG_GFX_BUFFERID_H_ */

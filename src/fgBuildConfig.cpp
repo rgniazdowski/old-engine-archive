@@ -11,239 +11,239 @@
 
 struct fgBuildConfig g_fgBuildConfig = {
 #ifdef FG_DEBUG
-	true,
+    true,
 #else
-	false,
+    false,
 #endif
 #ifdef FG_VERBOSE
-	true,
+    true,
 #else
-	false,
+    false,
 #endif
 #ifdef FG_VERBOSE_LEVEL
-	FG_VERBOSE_LEVEL,
+    FG_VERBOSE_LEVEL,
 #else
-	0,
+    0,
 #endif
 #ifdef FG_USING_MARMALADE
-	true,
+    true,
 #else
-	false,
+    false,
 #endif
 #ifdef FG_USING_MARMALADE_SENSORS
-	true,
+    true,
 #else
-	false,
+    false,
 #endif
 #ifdef FG_USING_MARMALADE_KEYBOARD
-	true,
+    true,
 #else
-	false,
+    false,
 #endif
 #ifdef FG_USING_MARMALADE_SOUND
-	true,
+    true,
 #else
-	false,
+    false,
 #endif
 #ifdef FG_USING_MARMALADE_AUDIO
-	true,
+    true,
 #else
-	false,
+    false,
 #endif
 #ifdef FG_USING_MARMALADE_THREADS
-	true,
+    true,
 #else
-	false,
+    false,
 #endif
 #ifdef FG_USING_MARMALADE_IWGX
-	true,
+    true,
 #else
-	false,
+    false,
 #endif
 #ifdef FG_USING_MARMALADE_IWGL
-	true,
+    true,
 #else
-	false,
+    false,
 #endif
 #ifdef FG_USING_MARMALADE_OPENGL_ES
-	true,
+    true,
 #else
-	false,
+    false,
 #endif
 #ifdef FG_USING_OPENGL_ES
-	true,
+    true,
 #else
-	false,
+    false,
 #endif
 #ifdef FG_USING_OPENGL
-	true,
+    true,
 #else
-	false,
+    false,
 #endif
 #ifdef FG_USING_OPENGL_GLU
-	true,
+    true,
 #else
-	false,
+    false,
 #endif
 #ifdef FG_USING_OPENGL_GLUT
-	true,
+    true,
 #else
-	false,
+    false,
 #endif
 #ifdef FG_USING_OPENGL_GLEW
-	true,
+    true,
 #else
-	false,
+    false,
 #endif
 #ifdef FG_USING_GLM
-	true,
+    true,
 #else
-	false,
+    false,
 #endif
 #ifdef FG_USING_SDL
-	true,
+    true,
 #else
-	false,
+    false,
 #endif
 #ifdef FG_USING_SDL2
-	true,
+    true,
 #else
-	false,
+    false,
 #endif
 #ifdef FG_USING_OPENAL
-	true,
+    true,
 #else
-	false,
+    false,
 #endif
 #ifdef FG_USING_MARMALADE_EGL
-	true,
+    true,
 #else
-	false,
+    false,
 #endif
 #ifdef FG_USING_EGL
-	true,
+    true,
 #else
-	false,
+    false,
 #endif
 #ifdef FG_USING_SENSORS
-	true,
+    true,
 #else
-	false,
+    false,
 #endif
 #ifdef FG_USING_AUDIO
-	true,
+    true,
 #else
-	false,
+    false,
 #endif
 #ifdef FG_USING_THREADS
-	true,
+    true,
 #else
-	false,
+    false,
 #endif
 #ifdef FG_USING_DIRECTX
-	true,
+    true,
 #else
-	false,
+    false,
 #endif
 #ifdef FG_USING_DIRECTSOUND
-	true,
+    true,
 #else
-	false,
+    false,
 #endif
 #ifdef FG_USING_DPI_INFO
-	true,
+    true,
 #else
-	false,
+    false,
 #endif
 #ifdef FG_USING_TINYXML
-	true,
+    true,
 #else
-	false,
+    false,
 #endif
 #ifdef FG_USING_LUA_PLUS
-	true,
+    true,
 #else
-	false,
+    false,
 #endif
 #ifdef FG_USING_LUA
-	true,
+    true,
 #else
-	false,
+    false,
 #endif
 #ifdef FG_USING_BULLET
-	true,
+    true,
 #else
-	false,
+    false,
 #endif
 #ifdef FG_USING_PLATFORM_WINDOWS
-	true,
+    true,
 #else
-	false,
+    false,
 #endif
 #ifdef FG_USING_PLATFORM_LINUX
-	true,
+    true,
 #else
-	false,
+    false,
 #endif
 #ifdef FG_USING_PLATFORM_ANDROID
-	true,
+    true,
 #else
-	false,
+    false,
 #endif
 #ifdef FG_USING_PLATFORM_IOS
-	true,
+    true,
 #else
-	false,
+    false,
 #endif
 #ifdef FG_USING_PLATFORM_MACOSX
-	true,
+    true,
 #else
-	false,
+    false,
 #endif
 #ifdef FG_USING_CYGWIN
-	true,
+    true,
 #else
-	false,
+    false,
 #endif
 #ifdef FG_USING_MINGW
-	true,
+    true,
 #else
-	false,
+    false,
 #endif
 #ifdef FG_USING_VISUAL_STUDIO
-	true,
+    true,
 #else
-	false,
+    false,
 #endif
 #ifdef FG_USING_QT
-	true,
+    true,
 #else
-	false,
+    false,
 #endif
 #ifdef FG_USING_PLUGINS
-	true,
+    true,
 #else
-	false,
+    false,
 #endif
 #ifdef FG_USING_WXWIDGETS
-	true,
+    true,
 #else
-	false,
+    false,
 #endif
 #ifdef FG_SUPPORT_WXWIDGETS
-	true,
+    true,
 #else
-	false,
+    false,
 #endif
-	FG_BUILD_VERSION,		// Build version number (for example 100)
-	FG_BUILD_VERSION_MAJ,	// Major part of version
-	FG_BUILD_VERSION_MIN,	// Minor part
-	FG_BUILD_VERSION_REV,	// Revision
-	FG_BUILD_DATE,		// date
-	FG_BUILD_TIME,		// local time
-	FG_BUILD_VERSION_TEXT,
-	FG_PACKAGE_NAME,
-	FG_PACKAGE_FULL_TEXT,
-	///
-	0 // empty
+    FG_BUILD_VERSION, // Build version number (for example 100)
+                                        FG_BUILD_VERSION_MAJ, // Major part of version
+                                        FG_BUILD_VERSION_MIN, // Minor part
+                                        FG_BUILD_VERSION_REV, // Revision
+                                        FG_BUILD_DATE, // date
+                                        FG_BUILD_TIME, // local time
+                                        FG_BUILD_VERSION_TEXT,
+                                        FG_PACKAGE_NAME,
+                                        FG_PACKAGE_FULL_TEXT,
+                                        ///
+                                        0 // empty
 };

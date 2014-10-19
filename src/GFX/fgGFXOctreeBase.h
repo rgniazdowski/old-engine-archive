@@ -8,6 +8,6 @@
  *******************************************************/
 
 #ifndef _FG_GFX_OCTREE_BASE_H_
-#define _FG_GFX_OCTREE_BASE_H_
+    #define _FG_GFX_OCTREE_BASE_H_
 
 #endif /* _FG_GFX_OCTREE_BASE_H_ */

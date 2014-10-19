@@ -8,6 +8,6 @@
  *******************************************************/
 
 #ifndef _FG_GFX_2D_SCENE_H_
-#define _FG_GFX_2D_SCENE_H_
+    #define _FG_GFX_2D_SCENE_H_
 
 #endif /* _FG_GFX_2D_SCENE_H_ */

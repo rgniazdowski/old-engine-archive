@@ -8,6 +8,6 @@
  *******************************************************/
 
 #ifndef _FG_PS_FLYING_DEBRIS_EFFECT_H_
-#define _FG_PS_FLYING_DEBRIS_EFFECT_H_
+    #define _FG_PS_FLYING_DEBRIS_EFFECT_H_
 
 #endif

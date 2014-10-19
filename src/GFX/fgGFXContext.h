@@ -74,27 +74,27 @@ struct fgGfxContextParam {
         fgGFXint ints[12];
         fgGFXint intVal;
     };
-    
+
     // Special overload operator for GFX integer type
     operator fgGFXint() const {
         return intVal;
     }
-    
+
     // Special overload operator for GFX float type
     operator fgGFXfloat() const {
         return floatVal;
     }
-    
+
     // Special overload operator for GFX boolean type (it's unsigned char mostly)
     operator fgGFXboolean() const {
         return boolVal;
     }
-    
+
     // Special overload operator for GFX unsigned int type
     operator fgGFXuint() const {
         return (fgGFXuint)intVal;
     }
-    
+
     #if defined(FG_USING_GL_BINDING)
     // Special overload operator for GFX enum type (when using glbinding,
     // the GFXenum type is actually an enum class, so overloading needs to
@@ -107,7 +107,7 @@ struct fgGfxContextParam {
     operator bool() const {
         return ( intVal ? true : false);
     }
-    
+
     // Comparison operator for integer type
     inline bool operator ==(fgGFXint a) const {
         return (intVal == a);
@@ -268,7 +268,7 @@ struct fgGfxContextParam {
                 this->update();
         }
     }
-    
+
     //
     inline void set(const fgGFXint _i0, const fgGFXint _i1, const fgGFXint _i2, const fgGFXint _i3, const fgBool update = FG_TRUE) {
         type = FG_GFX_INT;
@@ -285,7 +285,7 @@ struct fgGfxContextParam {
                 this->update();
         }
     }
-    
+
     //
     inline void set(const fgGFXfloat _f0, const fgGFXfloat _f1, const fgGFXfloat _f2, const fgGFXfloat _f3, const fgBool update = FG_TRUE) {
         type = FG_GFX_INT;
@@ -427,7 +427,7 @@ private:
     fgGfxSLVersion m_SLVersion;
     /// Is context ready? Is initialization successful?
     fgBool m_init;
-    
+
 protected:
     #if defined(FG_USING_SDL2)
     // Default constructor for the SDL build
@@ -551,7 +551,7 @@ public:
     void viewport(const fgVector2i& pos, const fgVector2i& size);
     // Set the viewport dimensions
     void viewport(const fgVector4i& dimensions);
-    
+
     // Returns the viewport aspect ratio
     inline fgGFXfloat getViewportAspect(void) {
         fgGFXfloat y = (fgGFXfloat)m_params[(fgGFXuint)GL_VIEWPORT].ints[1];
@@ -566,13 +566,13 @@ public:
     void scissor(const fgVector2i& pos, const fgVector2i& size);
     // Set the scissor box dimensions
     void scissor(const fgVector4i& dimensions);
-    
+
     // Returns the scissor box aspect ratio
     inline fgGFXfloat getScissorAspect(void) {
         fgGFXfloat y = (fgGFXfloat)m_params[(fgGFXuint)GL_SCISSOR_BOX].ints[1];
         if(y <= FG_EPSILON)
             return 1.0f;
-        return (fgGFXfloat)m_params[(fgGFXuint)GL_SCISSOR_BOX].ints[0]/y;
+        return (fgGFXfloat)m_params[(fgGFXuint)GL_SCISSOR_BOX].ints[0] / y;
     }
 
     // Toggle scissor test capability
@@ -640,7 +640,7 @@ public:
                              fgGFXboolean normalized,
                              fgGFXsizei stride,
                              fgGFXvoid* ptr);
-    
+
     // Sets the various data details based on a special attribute data struct
     void vertexAttribPointer(fgGfxAttributeData& attrData);
 

@@ -29,10 +29,10 @@ static fgBool isBADA();
 static fgBool isBB();
 
 static fgBool try_device(const char* dev_id, const char* base_name, fgDeviceClass givenClass, fgDeviceClass& tryClass, int& tryVersion);
-static fgDeviceGeneration computeGeneration(const char* dev_id, fgDeviceClass dev_class, int dev_version );
+static fgDeviceGeneration computeGeneration(const char* dev_id, fgDeviceClass dev_class, int dev_version);
 
 // enum DeviceClass { UNKNOWN, IPHONE, IPOD, IPAD, ANDROID };
-static const char* class_to_name[5] = { "UNKNOWN", "IPHONE", "IPOD", "IPAD", "ANDROID" };
+static const char* class_to_name[5] = {"UNKNOWN", "IPHONE", "IPOD", "IPAD", "ANDROID"};
 
 template <>
 bool fgSingleton<fgDeviceQuery>::instanceFlag = false;
@@ -40,25 +40,20 @@ bool fgSingleton<fgDeviceQuery>::instanceFlag = false;
 template <>
 fgDeviceQuery *fgSingleton<fgDeviceQuery>::instance = NULL;
 
-
-
 fgDeviceQuery::fgDeviceQuery() : m_deviceString(NULL), m_deviceVersion(0),
-	m_deviceClass(FG_DEVICE_CLASS_UNKNOWN),
-	m_deviceGeneration(FG_DEVICE_GENERATION_UNKNOWN),
-	m_android(FG_FALSE), m_iOS(FG_FALSE), m_computed(FG_FALSE)
-{
+m_deviceClass(FG_DEVICE_CLASS_UNKNOWN),
+m_deviceGeneration(FG_DEVICE_GENERATION_UNKNOWN),
+m_android(FG_FALSE), m_iOS(FG_FALSE), m_computed(FG_FALSE) {
     // Compute Device is not being called here - it is done at first query!
 }
 
-fgDeviceQuery::~fgDeviceQuery()
-{
-}
+fgDeviceQuery::~fgDeviceQuery() { }
 
 /**
  * Prepares every needed data
  */
 void fgDeviceQuery::computeDevice() {
-    if ( m_computed ) {
+    if(m_computed) {
         return;
     }
 
@@ -79,13 +74,13 @@ void fgDeviceQuery::computeDevice() {
     int tryVersion = 0;
     fgDeviceClass tryClass = FG_DEVICE_CLASS_UNKNOWN;
 
-    if ( try_device(dev_id, "iPhone", FG_DEVICE_CLASS_IPHONE, tryClass, tryVersion) ) {
+    if(try_device(dev_id, "iPhone", FG_DEVICE_CLASS_IPHONE, tryClass, tryVersion)) {
         // OK, found :]
-    } else if ( try_device(dev_id, "iPod", FG_DEVICE_CLASS_IPOD, tryClass, tryVersion) ) {
+    } else if(try_device(dev_id, "iPod", FG_DEVICE_CLASS_IPOD, tryClass, tryVersion)) {
         // OK, found :]
-    } else if ( try_device(dev_id, "iPad", FG_DEVICE_CLASS_IPAD, tryClass, tryVersion) ) {
+    } else if(try_device(dev_id, "iPad", FG_DEVICE_CLASS_IPAD, tryClass, tryVersion)) {
         // OK, found :]
-    } else if ( try_device(dev_id, "Android", FG_DEVICE_CLASS_ANDROID, tryClass, tryVersion) ) {
+    } else if(try_device(dev_id, "Android", FG_DEVICE_CLASS_ANDROID, tryClass, tryVersion)) {
         // OK, found :]
     } else {
         // NOT FOUND
@@ -109,7 +104,7 @@ void fgDeviceQuery::computeDevice() {
 /**
  * Detects generation of the device
  */
-static fgDeviceGeneration computeGeneration(const char* dev_id, fgDeviceClass dev_class, int dev_version ) {
+static fgDeviceGeneration computeGeneration(const char* dev_id, fgDeviceClass dev_class, int dev_version) {
 
     /*
      * iOS Devices:
@@ -126,14 +121,14 @@ static fgDeviceGeneration computeGeneration(const char* dev_id, fgDeviceClass de
 
     switch(dev_class) {
         case FG_DEVICE_CLASS_IPHONE:
-            if( NULL != strstr(dev_id, "iPhone1,2") ) {
+            if(NULL != strstr(dev_id, "iPhone1,2")) {
                 // iPhone 3G
                 gen = FG_DEVICE_GENERATION_SECOND;
                 FG_LOG::PrintError("Unsupported iPhone 3G detected!");
-            } else if( NULL != strstr(dev_id, "iPhone2,1") ) {
+            } else if(NULL != strstr(dev_id, "iPhone2,1")) {
                 // iPhone 3GS
                 gen = FG_DEVICE_GENERATION_THIRD;
-            } else if( NULL != strstr(dev_id, "iPhone3,1") ) {
+            } else if(NULL != strstr(dev_id, "iPhone3,1")) {
                 // iPhone 4
                 gen = FG_DEVICE_GENERATION_FOURTH;
             } else {
@@ -142,15 +137,15 @@ static fgDeviceGeneration computeGeneration(const char* dev_id, fgDeviceClass de
             }
             break;
         case FG_DEVICE_CLASS_IPOD:
-            if( NULL != strstr(dev_id, "iPod1,1") ) {
+            if(NULL != strstr(dev_id, "iPod1,1")) {
                 // iPod 1G
                 gen = FG_DEVICE_GENERATION_FIRST;
                 FG_LOG::PrintError("Unsupported iPod 1G detected!");
-            } else if( NULL != strstr(dev_id, "iPod2,1") ) {
+            } else if(NULL != strstr(dev_id, "iPod2,1")) {
                 // iPod 2G
                 gen = FG_DEVICE_GENERATION_SECOND;
                 FG_LOG::PrintError("Unsupported iPod 2G detected!");
-            } else if( NULL != strstr(dev_id, "iPod3,1") ) {
+            } else if(NULL != strstr(dev_id, "iPod3,1")) {
                 // iPod 3G
                 gen = FG_DEVICE_GENERATION_THIRD;
             } else {
@@ -159,7 +154,7 @@ static fgDeviceGeneration computeGeneration(const char* dev_id, fgDeviceClass de
             }
             break;
         case FG_DEVICE_CLASS_IPAD:
-            if( NULL != strstr(dev_id, "iPad1,1") ) {
+            if(NULL != strstr(dev_id, "iPad1,1")) {
                 // iPad 1G
                 gen = FG_DEVICE_GENERATION_FIRST;
             } else {
@@ -186,29 +181,29 @@ fgBool try_device(const char* dev_id, const char* base_name, fgDeviceClass given
     name[18] = '\0';
     name[19] = '\0';
     int base_len = strlen(name);
-    name[base_len+1] = '\0';
+    name[base_len + 1] = '\0';
 
     int version_found = 0;
 
     // Search for e.g. iPad1, iPad2, ...,
-    for ( int i=0; i<6; i++ ) {
-        name[base_len] = '1'+i;
-        if(NULL != strstr(dev_id, name) ) {
+    for(int i = 0; i < 6; i++) {
+        name[base_len] = '1' + i;
+        if(NULL != strstr(dev_id, name)) {
             FG_LOG::PrintDebug("try_device(): FOUND name=%s in dev_id=%s", name, dev_id);
-            version_found = 1+i;
+            version_found = 1 + i;
             break;
         }
     }
 
     // FOUND
-    if (version_found) {
+    if(version_found) {
         tryVersion = version_found;
         tryClass = givenClass;
         return FG_TRUE;
     }
 
     tryVersion = 0;
-	tryClass = FG_DEVICE_CLASS_UNKNOWN;
+    tryClass = FG_DEVICE_CLASS_UNKNOWN;
     return FG_FALSE;
 }
 
@@ -216,7 +211,7 @@ fgBool try_device(const char* dev_id, const char* base_name, fgDeviceClass given
  * Can query any OS - basic function
  */
 static fgBool isPlatform(s3eDeviceOSID os) {
-    return (fgBool)( os == s3eDeviceGetInt(S3E_DEVICE_OS) );
+    return (fgBool)(os == s3eDeviceGetInt(S3E_DEVICE_OS));
 }
 
 /**
@@ -224,7 +219,7 @@ static fgBool isPlatform(s3eDeviceOSID os) {
  * @return true if the platform is Android, false otherwise.
  */
 static fgBool isAndroid() {
-    return isPlatform( S3E_OS_ID_ANDROID );
+    return isPlatform(S3E_OS_ID_ANDROID);
 }
 
 /**
@@ -232,29 +227,29 @@ static fgBool isAndroid() {
  * @return true if the platform is iOS, false otherwise.
  */
 static fgBool isiOS() {
-	return isPlatform( S3E_OS_ID_IPHONE );
+    return isPlatform(S3E_OS_ID_IPHONE);
 }
 
 /**
  * Detects if the current platform is BADA
  */
 static fgBool isBADA() {
-//    return isPlatform( S3E_OS_ID_BADA );
-	return false;
+    //    return isPlatform( S3E_OS_ID_BADA );
+    return false;
 }
 
 /**
  * Detects if the current platform is OSX
  */
 static fgBool isOSX() {
-    return isPlatform( S3E_OS_ID_OSX );
+    return isPlatform(S3E_OS_ID_OSX);
 }
 
 /**
  * Detects if the current platform is BB
  */
 static fgBool isBB() {
-    return isPlatform( S3E_OS_ID_QNX );
+    return isPlatform(S3E_OS_ID_QNX);
 }
 
 #endif

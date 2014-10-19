@@ -35,8 +35,7 @@
  */
 fgGuiWidgetManager::fgGuiWidgetManager(fgGuiWidgetFactory *widgetFactory, fgGuiStyleManager *styleMgr) :
 m_widgetFactory(widgetFactory),
-m_styleMgr(styleMgr) {
- }
+m_styleMgr(styleMgr) { }
 
 /*
  *

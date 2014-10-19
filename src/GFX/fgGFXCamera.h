@@ -9,8 +9,8 @@
 
 #ifndef _FG_GFX_CAMERA_H_
     #define _FG_GFX_CAMERA_H_
-    
-    // FIXME! #mathlib too big?
+
+// FIXME! #mathlib too big?
     #include "Math/fgMathLib.h"
 
 /*
@@ -21,7 +21,7 @@ class fgGfxCamera {
 public:
     // Default constructor for camera object
     fgGfxCamera() : m_up(0.0f, 1.0f, 0.0f) { }
-    
+
     // Default destructor for camera object
     virtual ~fgGfxCamera() { }
 
@@ -29,7 +29,7 @@ public:
     inline fgMatrix4f & getRefViewMatrix(void) {
         return m_viewMatrix;
     }
-    
+
     // Updates the view matrix based on the internal vector values
     virtual float * update(void) {
         m_viewMatrix = glm::lookAt(m_eye, m_center, m_up);
@@ -40,7 +40,7 @@ public:
     inline const float * getViewMatPtr(void) const {
         return glm::value_ptr(m_viewMatrix);
     }
-    
+
     // Returns the pointer to the view matrix
     inline float * getViewMatPtr(void) {
         return glm::value_ptr(m_viewMatrix);
@@ -50,17 +50,17 @@ public:
     inline void setEye(const fgVec3f& eye) {
         m_eye = eye;
     }
-    
+
     //
     inline void setCenter(const fgVec3f& center) {
         m_center = center;
     }
-    
+
     //
     inline void setUp(const fgVec3f& up) {
         m_up = up;
     }
-    
+
     // Returns the reference to the eye vector
     inline fgVec3f & getRefEye(void) {
         return m_eye;
@@ -73,7 +73,7 @@ public:
     inline fgVec3f & getRefUp(void) {
         return m_up;
     }
-    
+
     // Returns the reference to the eye vector
     inline const fgVec3f & getRefEye(void) const {
         return m_eye;
@@ -91,7 +91,7 @@ public:
     inline const float * getPtrEye(void) const {
         return glm::value_ptr(m_eye);
     }
-    
+
     // Returns the pointer to the eye vector data
     inline float * getPtrEye(void) {
         return glm::value_ptr(m_eye);
@@ -101,7 +101,7 @@ public:
     inline const float * getPtrCenter(void) const {
         return glm::value_ptr(m_center);
     }
-    
+
     // Returns the pointer to the center vector data
     inline float * getPtrCenter(void) {
         return glm::value_ptr(m_center);
@@ -111,12 +111,12 @@ public:
     inline const float * getPtrUp(void) const {
         return glm::value_ptr(m_up);
     }
-    
+
     // Returns the pointer to the up vector data
     inline float * getPtrUp(void) {
         return glm::value_ptr(m_up);
     }
-    
+
     // Resets the internal view matrix
     // The internal vectors (eye,...) are unchanged
     inline void identity(void) {
@@ -131,7 +131,7 @@ protected:
     /// Where the camera is looking?
     fgVec3f m_center;
     /// Head by default will be up (0,1,0)
-    fgVec3f m_up; 
+    fgVec3f m_up;
 };
 
 #endif /* _FG_GFX_CAMERA_H_ */

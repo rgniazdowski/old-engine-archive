@@ -8,6 +8,6 @@
  *******************************************************/
 
 #ifndef _FG_THREAD_SEM_H_
-#define _FG_THREAD_SEM_H_
+    #define _FG_THREAD_SEM_H_
 
 #endif /* _FG_THREAD_SEM_H_ */

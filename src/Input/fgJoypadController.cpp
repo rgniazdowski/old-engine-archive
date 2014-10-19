@@ -23,14 +23,12 @@ m_haptic(NULL),
 m_instanceID(-1),
 m_eventMgr(eventMgr),
 m_isConnected(FG_FALSE) {
-    
-}
+ }
 
 /*
  *
  */
-fgJoypadController::~fgJoypadController() {
-}
+fgJoypadController::~fgJoypadController() { }
 
 /*
  *  Opens the joystick controller
@@ -120,7 +118,7 @@ void fgJoypadController::quit(void) {
         SDL_GameControllerEventState(SDL_IGNORE);
         SDL_QuitSubSystem(SDL_INIT_GAMECONTROLLER | SDL_INIT_JOYSTICK | SDL_INIT_HAPTIC);
         FG_LOG::PrintDebug("SDL: Closing GameController.");
-        
+
     }
 #endif
 }
@@ -144,8 +142,8 @@ fgBool fgJoypadController::initialize(void) {
         m_init = FG_TRUE;
         SDL_GameControllerEventState(SDL_ENABLE);
         SDL_JoystickEventState(SDL_ENABLE);
-        
-        for(int i=0;i<joys;i++) {
+
+        for(int i = 0; i < joys; i++) {
             fgJoypadController& jc = m_controllers[i];
             jc.open(i);
             if(m_eventMgr) {
@@ -158,7 +156,7 @@ fgBool fgJoypadController::initialize(void) {
                 m_eventMgr->throwEvent(fgevent->eventType, list);
             }
         }
-        
+
 
     } else {
         FG_LOG::PrintDebug("SDL: GameController already initialized.");

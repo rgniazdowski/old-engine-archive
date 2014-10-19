@@ -8,19 +8,19 @@
  *******************************************************/
 
 #ifndef _FG_EVENT_MANAGER_H_
-#define _FG_EVENT_MANAGER_H_
+    #define _FG_EVENT_MANAGER_H_
 
-#include "fgBuildConfig.h"
-#include "fgTypes.h"
-#include "fgManagerBase.h"
+    #include "fgBuildConfig.h"
+    #include "fgTypes.h"
+    #include "fgManagerBase.h"
 
-#include "fgEventDefinitions.h"
-#include "fgEventHelper.h"
-#include "fgThrownEvent.h"
-#include "fgTimeoutCallback.h"
-#include "fgCyclicCallback.h"
+    #include "fgEventDefinitions.h"
+    #include "fgEventHelper.h"
+    #include "fgThrownEvent.h"
+    #include "fgTimeoutCallback.h"
+    #include "fgCyclicCallback.h"
 
-#include "fgCallback.h"
+    #include "fgCallback.h"
 
 // #FIXME #TODO #P3 key codes standard mapping / translation
 // #TODO #P2 change std::vector to standard FG shadow type
@@ -37,7 +37,7 @@
         throwEvent(BUTTON_CLICKED, argv);
  */
 
-#define FG_MANAGER_EVENT	0x00000008
+    #define FG_MANAGER_EVENT	0x00000008
 
 /*
  * Event manager main class definition.
@@ -98,23 +98,23 @@ public:
     //
     template < class Class >
     fgFunctionCallback* addEventCallback(
-            fgEventType eventCode,
-            typename fgClassCallback<Class>::fgClassMethod method,
-            Class* class_instance);
+                                         fgEventType eventCode,
+                                         typename fgClassCallback<Class>::fgClassMethod method,
+                                         Class* class_instance);
 
     fgBool removeEventCallback(fgEventType eventCode, fgFunctionCallback *callback);
 
     //
     fgFunctionCallback* addTimeoutCallback(
-            fgFunctionCallback *callback,
-            int timeout,
-            fgArgumentList *argList);
+                                           fgFunctionCallback *callback,
+                                           int timeout,
+                                           fgArgumentList *argList);
     // 
     fgFunctionCallback* addCyclicCallback(
-            fgFunctionCallback *callback,
-            int repeats,
-            int interval,
-            fgArgumentList *argList);
+                                          fgFunctionCallback *callback,
+                                          int repeats,
+                                          int interval,
+                                          fgArgumentList *argList);
 
     // This adds key code to the pool of pressed down keys
     void addKeyDown(int keyCode);
@@ -125,16 +125,15 @@ public:
     // This function must be called in every frame in one of the threads (or just the main thread)
     void executeEvents(void);
 };
-
 template < class Class >
 /*
  *
  */
 fgFunctionCallback* fgEventManager::addEventCallback(
-        fgEventType eventCode,
-        typename fgClassCallback<Class>::fgClassMethod method,
-        Class* class_instance) {
-    if (!method || (int) eventCode < 0 || !class_instance)
+                                                     fgEventType eventCode,
+                                                     typename fgClassCallback<Class>::fgClassMethod method,
+                                                     Class* class_instance) {
+    if(!method || (int)eventCode < 0 || !class_instance)
         return NULL;
     fgFunctionCallback *callback = new fgClassCallback<Class>(class_instance, method);
     m_eventBinds[eventCode].push_back(callback);

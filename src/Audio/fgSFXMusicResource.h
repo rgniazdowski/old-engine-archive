@@ -8,6 +8,6 @@
  *******************************************************/
 
 #ifndef _FG_SFX_MUSIC_RESOURCE_H_
-#define _FG_SFX_MUSIC_RESOURCE_H_
+    #define _FG_SFX_MUSIC_RESOURCE_H_
 
 #endif

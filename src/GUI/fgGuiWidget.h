@@ -211,7 +211,7 @@ public:
 
     //
     virtual int updateState(const fgPointerData *pointerData);
-    
+
     //
     inline fgGuiWidget *getFather(void) const {
         return m_fatherPtr;
@@ -579,7 +579,7 @@ public:
     inline fgGuiWidgetHandle& getRefHandle(void) {
         return m_handle;
     }
-    
+
     //
     inline const fgGuiWidgetHandle& getRefHandle(void) const {
         return m_handle;

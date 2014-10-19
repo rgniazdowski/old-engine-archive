@@ -8,7 +8,7 @@
  *******************************************************/
 
 #ifndef _FG_GUI_STYLE_SHEET_CONFIG_H_
-#define _FG_GUI_STYLE_SHEET_CONFIG_H_
+    #define _FG_GUI_STYLE_SHEET_CONFIG_H_
 
 #endif /* _FG_GUI_STYLE_SHEET_CONFIG_H_ */
 

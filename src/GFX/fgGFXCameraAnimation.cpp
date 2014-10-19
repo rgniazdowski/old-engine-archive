@@ -100,6 +100,6 @@ void fgGfxCameraAnimation::moveUp(void) {
 /*
  *
  */
-void fgGfxCameraAnimation::moveDown(void) { 
+void fgGfxCameraAnimation::moveDown(void) {
     m_eye -= m_up * m_dt * m_speed;
 }

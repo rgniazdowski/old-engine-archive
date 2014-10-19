@@ -26,21 +26,21 @@ m_objDrawCalls() {
 /**
  * 
  */
-fgGfxSceneManager::~fgGfxSceneManager() { 
+fgGfxSceneManager::~fgGfxSceneManager() {
     fgGfxDrawingBatch::flush();
     //objectVecItor oit = m_objects.begin(), oend = m_objects.end();
     drawCallVecItor dit = m_objDrawCalls.begin(), dend = m_objDrawCalls.end();
-    
+
     // Delete all gfx objects in the scene
     /*for(;oit!=oend;oit++) {
         if(*oit) {
             if((*oit)->isManaged() == FG_TRUE)
                 delete (*oit);
-            *oit = NULL;
+     *oit = NULL;
         }
     }
     m_objects.clear_optimised(); */
-    
+
     // The piece of code seems to repeat itself
     // Maybe even the handle manager can have this piece of code?
     // Delete all gfx objects in the scene
@@ -56,9 +56,9 @@ fgGfxSceneManager::~fgGfxSceneManager() {
         *itor = NULL;
     }
     fgHandleManager::clear();
-    
+
     // Delete all gfx draw calls (they match objects in the scene)
-    for(;dit!=dend;dit++) {
+    for(; dit != dend; dit++) {
         if(*dit) {
             if((*dit)->isManaged() == FG_FALSE)
                 delete (*dit);
@@ -99,7 +99,7 @@ fgManagerBase *fgGfxSceneManager::getResourceManager(void) const {
 /**
  * 
  */
-void fgGfxSceneManager::flush(void) { 
+void fgGfxSceneManager::flush(void) {
     fgGfxSceneManager::flush();
 }
 
@@ -115,7 +115,7 @@ void fgGfxSceneManager::sortCalls(void) {
     drawCallVecItor objDrawIt = m_objDrawCalls.begin(), objDrawEnd = m_objDrawCalls.end();
     //objectVecItor objVecIt = m_objects.begin(), objVecEnd = m_objects.end();
     hmDataVecItor itor = getRefDataVector().begin(), end = getRefDataVector().end();
-    
+
     for(; itor != end; itor++) {
         if(!(*itor))
             continue;
@@ -124,11 +124,11 @@ void fgGfxSceneManager::sortCalls(void) {
         if(!pDrawCall)
             continue;
         if(!pDrawCall->getShaderProgram())
-                pDrawCall->setShaderProgram(((fgGfxShaderManager *)getShaderManager())->getCurrentProgram());
-            pDrawCall->setModelMatrix(pObj->getRefModelMatrix());
+            pDrawCall->setShaderProgram(((fgGfxShaderManager *)getShaderManager())->getCurrentProgram());
+        pDrawCall->setModelMatrix(pObj->getRefModelMatrix());
         getRefPriorityQueue().push(pDrawCall);
     }
-    
+
     /*for(; objDrawIt != objDrawEnd, objVecIt != objVecEnd; objDrawIt++, objVecIt++) {
         if(*objDrawIt && *objVecIt) {
             fgGfxObject *obj = (*objVecIt);
@@ -150,6 +150,7 @@ void fgGfxSceneManager::render(void) {
 }
 
 #if 0
+
 /**
  * 
  * @param pObj
@@ -195,9 +196,9 @@ int fgGfxSceneManager::appendObject(fgGfxObject *pObj, fgBool manage) {
  * @param manage
  * @return 
  */
-fgGfxObject *fgGfxSceneManager::appendModel(int& index, 
-                                       fgGfxModelResource* pModelRes, 
-                                       fgBool manage) {
+fgGfxObject *fgGfxSceneManager::appendModel(int& index,
+                                            fgGfxModelResource* pModelRes,
+                                            fgBool manage) {
     if(!pModelRes) {
         index = -1;
         return NULL;
@@ -219,7 +220,7 @@ fgGfxObject *fgGfxSceneManager::appendModel(int& index,
  */
 fgBool fgGfxSceneManager::addObject(fgGfxObjectHandle& oUniqueID,
                                     fgGfxObject *pObj,
-                                    fgGfxObject *oFatherObj) { 
+                                    fgGfxObject *oFatherObj) {
     if(!pObj) {
         // Empty pointer - return
         FG_LOG::PrintError("GFX.SceneManager: // Empty pointer - exit... no addition made");
@@ -251,9 +252,9 @@ fgBool fgGfxSceneManager::addObject(fgGfxObjectHandle& oUniqueID,
         FG_LOG::PrintError("GFX.SceneManager: // Could not setup handle string tag/name for the object: '%s'", pObj->getNameStr());
     }
     unsigned int index = pObj->getHandle().getIndex();
-    
+
     // FIXME
-    
+
     fgGfxDrawCall *drawCall = new fgGfxDrawCall(FG_GFX_DRAW_CALL_MODEL);
     drawCall->setupFromModel(pObj->getModel());
     if(getShaderManager())
@@ -275,7 +276,7 @@ fgBool fgGfxSceneManager::addObject(fgGfxObjectHandle& oUniqueID,
     // 2nd argument tells that this draw call should not be managed
     // meaning: destructor wont be called on flush()
     fgGfxDrawingBatch::appendDrawCall(drawCall, FG_FALSE);
-    
+
     return FG_TRUE;
 }
 
@@ -288,7 +289,7 @@ fgBool fgGfxSceneManager::addObject(fgGfxObjectHandle& oUniqueID,
  */
 fgBool fgGfxSceneManager::addObject(fgGfxObjectHandle& oUniqueID,
                                     fgGfxObject *pObj,
-                                    const fgGfxObjectHandle& oFatherUniqueID) { 
+                                    const fgGfxObjectHandle& oFatherUniqueID) {
     return addObject(oUniqueID, pObj, fgHandleManager::dereference(oFatherUniqueID));
 }
 
@@ -323,7 +324,7 @@ fgBool fgGfxSceneManager::addObject(fgGfxObjectHandle& oUniqueID,
  * @param pObj
  * @return 
  */
-fgBool fgGfxSceneManager::remove(fgGfxObject *pObj) { 
+fgBool fgGfxSceneManager::remove(fgGfxObject *pObj) {
     if(!pObj || !isManaged(pObj)) {
         return FG_FALSE;
     }
@@ -340,7 +341,7 @@ fgBool fgGfxSceneManager::remove(fgGfxObject *pObj) {
  * @param oUniqueID
  * @return 
  */
-fgBool fgGfxSceneManager::remove(const fgGfxObjectHandle& oUniqueID) { 
+fgBool fgGfxSceneManager::remove(const fgGfxObjectHandle& oUniqueID) {
     return remove(fgHandleManager::dereference(oUniqueID));
 }
 
@@ -349,7 +350,7 @@ fgBool fgGfxSceneManager::remove(const fgGfxObjectHandle& oUniqueID) {
  * @param nameTag
  * @return 
  */
-fgBool fgGfxSceneManager::remove(const std::string& nameTag) { 
+fgBool fgGfxSceneManager::remove(const std::string& nameTag) {
     return remove(fgHandleManager::dereference(nameTag));
 }
 
@@ -358,7 +359,7 @@ fgBool fgGfxSceneManager::remove(const std::string& nameTag) {
  * @param nameTag
  * @return 
  */
-fgBool fgGfxSceneManager::remove(const char *nameTag) { 
+fgBool fgGfxSceneManager::remove(const char *nameTag) {
     return remove(fgHandleManager::dereference(nameTag));
 }
 
@@ -391,7 +392,7 @@ fgBool fgGfxSceneManager::destroyObject(const fgGfxObjectHandle& oUniqueID) {
  * @param nameTag
  * @return 
  */
-fgBool fgGfxSceneManager::destroyObject(const std::string& nameTag) { 
+fgBool fgGfxSceneManager::destroyObject(const std::string& nameTag) {
     fgGfxObject *pObj = fgHandleManager::dereference(nameTag);
     return destroyObject(pObj);
 }
@@ -401,7 +402,7 @@ fgBool fgGfxSceneManager::destroyObject(const std::string& nameTag) {
  * @param nameTag
  * @return 
  */
-fgBool fgGfxSceneManager::destroyObject(const char *nameTag) { 
+fgBool fgGfxSceneManager::destroyObject(const char *nameTag) {
     fgGfxObject *pObj = fgHandleManager::dereference(nameTag);
     return destroyObject(pObj);
 }
@@ -411,7 +412,7 @@ fgBool fgGfxSceneManager::destroyObject(const char *nameTag) {
  * @param oUniqueID
  * @return 
  */
-fgGfxObject* fgGfxSceneManager::get(const fgGfxObjectHandle& oUniqueID) { 
+fgGfxObject* fgGfxSceneManager::get(const fgGfxObjectHandle& oUniqueID) {
     return fgHandleManager::dereference(oUniqueID);
 }
 
@@ -420,7 +421,7 @@ fgGfxObject* fgGfxSceneManager::get(const fgGfxObjectHandle& oUniqueID) {
  * @param nameTag
  * @return 
  */
-fgGfxObject* fgGfxSceneManager::get(const std::string& nameTag) { 
+fgGfxObject* fgGfxSceneManager::get(const std::string& nameTag) {
     return fgHandleManager::dereference(nameTag);
 }
 
@@ -438,7 +439,7 @@ fgGfxObject* fgGfxSceneManager::get(const char *nameTag) {
  * @param pObj
  * @return 
  */
-fgBool fgGfxSceneManager::isManaged(const fgGfxObject *pObj) { 
+fgBool fgGfxSceneManager::isManaged(const fgGfxObject *pObj) {
     if(!pObj) {
         return FG_FALSE;
     }
@@ -468,7 +469,7 @@ fgBool fgGfxSceneManager::isManaged(const fgGfxObjectHandle& oUniqueID) {
  * @param nameTag
  * @return 
  */
-fgBool fgGfxSceneManager::isManaged(const std::string& nameTag) { 
+fgBool fgGfxSceneManager::isManaged(const std::string& nameTag) {
     fgGfxObject *pObj = get(nameTag);
     return (fgBool)(pObj != NULL);
 }
@@ -478,7 +479,7 @@ fgBool fgGfxSceneManager::isManaged(const std::string& nameTag) {
  * @param nameTag
  * @return 
  */
-fgBool fgGfxSceneManager::isManaged(const char *nameTag) { 
+fgBool fgGfxSceneManager::isManaged(const char *nameTag) {
     fgGfxObject *pObj = get(nameTag);
     return (fgBool)(pObj != NULL);
 }
@@ -491,7 +492,7 @@ fgBool fgGfxSceneManager::isManaged(const char *nameTag) {
 fgGfxDrawCall *fgGfxSceneManager::getDrawCall(const fgGfxObject* pObj) {
     if(!isManaged(pObj))
         return NULL;
-    
+
     unsigned int index = pObj->getHandle().getIndex();
     if(index >= m_objDrawCalls.size())
         return NULL;

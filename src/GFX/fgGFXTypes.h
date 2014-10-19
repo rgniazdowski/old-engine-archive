@@ -207,6 +207,7 @@ struct fgArea {
  * #FIXME plox...
  */
 struct fgGfxDrawingInfo {
+
     union {
         ///
         fgGFXvoid *pointer;
@@ -217,7 +218,7 @@ struct fgGfxDrawingInfo {
     fgGFXuint buffer;
     ///
     fgGFXuint count;
-    
+
     //
     fgGfxDrawingInfo() {
         indices.pointer = 0;

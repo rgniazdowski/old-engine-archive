@@ -8,113 +8,103 @@
  *******************************************************/
 
 #ifndef _FG_ARGUMENT_LIST_H_
-#define _FG_ARGUMENT_LIST_H_
+    #define _FG_ARGUMENT_LIST_H_
 
-#include "fgTypes.h"
+    #include "fgTypes.h"
 
-#define FG_ARGUMENT_DEFAULT_COUNT	8
-#define FG_ARGUMENT_MAX_STRING		256
+    #define FG_ARGUMENT_DEFAULT_COUNT	8
+    #define FG_ARGUMENT_MAX_STRING		256
 
 /*
  *
  */
-enum fgArgumentType
-{
-	// Integer
-	FG_ARGUMENT_INTEGER,
-	// Double number
-	FG_ARGUMENT_DOUBLE,
-	// Float number
-	FG_ARGUMENT_FLOAT,
-	// Char string array
-	FG_ARGUMENT_STRING,
-	// Void* pointer to any kind of data
-	FG_ARGUMENT_POINTER,
-	// Pointer to allocated structure, structure needs to be allocated by 'malloc' and freed using the 'free' function
-	FG_ARGUMENT_STRUCT,
-	// No argument
-	FG_ARGUMENT_NONE
+enum fgArgumentType {
+    // Integer
+    FG_ARGUMENT_INTEGER,
+    // Double number
+    FG_ARGUMENT_DOUBLE,
+    // Float number
+    FG_ARGUMENT_FLOAT,
+    // Char string array
+    FG_ARGUMENT_STRING,
+    // Void* pointer to any kind of data
+    FG_ARGUMENT_POINTER,
+    // Pointer to allocated structure, structure needs to be allocated by 'malloc' and freed using the 'free' function
+    FG_ARGUMENT_STRUCT,
+    // No argument
+    FG_ARGUMENT_NONE
 };
 
 /*
  *
  */
-struct fgArgument
-{
-	fgArgumentType type;
-	union
-	{
-		int int_val;
-		double double_val;
-		float float_val;
-		char string[FG_ARGUMENT_MAX_STRING];
-		void *custom_pointer;
-	};
+struct fgArgument {
+    fgArgumentType type;
 
-	fgArgument() : type(FG_ARGUMENT_NONE), int_val(0) {
-	}
-
-	void reset(void) {
-		type = FG_ARGUMENT_NONE;
-		int_val = 0;
-	}
+    union {
+        int int_val;
+        double double_val;
+        float float_val;
+        char string[FG_ARGUMENT_MAX_STRING];
+        void *custom_pointer;
+    };
+    fgArgument() : type(FG_ARGUMENT_NONE), int_val(0) { }
+    void reset(void) {
+        type = FG_ARGUMENT_NONE;
+        int_val = 0;
+    }
 };
 
-class fgArgumentList
-{
-	private:
-		fgVector<fgArgument> m_argv;
-		int m_argc;
-		int m_maxArgs;
-		int m_currentArg;
-		fgArgument m_emptyArgument;
-	public:
-		fgArgumentList();
-		fgArgumentList(int _max);
+class fgArgumentList {
+private:
+    fgVector<fgArgument> m_argv;
+    int m_argc;
+    int m_maxArgs;
+    int m_currentArg;
+    fgArgument m_emptyArgument;
+public:
+    fgArgumentList();
+    fgArgumentList(int _max);
 
-		~fgArgumentList();
+    ~fgArgumentList();
 
-		inline void setMaxArgumentCount(int _max);
-		inline int getMaxArgumentCount();
+    inline void setMaxArgumentCount(int _max);
+    inline int getMaxArgumentCount();
 
-		void pushArgument(fgArgumentType _type, void *_value);
-		void pushArgument(int int_val);
-		void pushArgument(double double_val);
-		void pushArgument(float float_val);
-		void pushArgument(const char *string);
-		void pushArgument(void *custom_pointer);
+    void pushArgument(fgArgumentType _type, void *_value);
+    void pushArgument(int int_val);
+    void pushArgument(double double_val);
+    void pushArgument(float float_val);
+    void pushArgument(const char *string);
+    void pushArgument(void *custom_pointer);
 
-		inline int getArgumentCount();
+    inline int getArgumentCount();
 
-		inline void reset();
-		inline fgBool isThereNextArgument();
+    inline void reset();
+    inline fgBool isThereNextArgument();
 
-		void *getNextArgumentValue(fgArgumentType *_type = NULL);
-		void *getArgumentValueByID(int ID, fgArgumentType *_type = NULL);
+    void *getNextArgumentValue(fgArgumentType *_type = NULL);
+    void *getArgumentValueByID(int ID, fgArgumentType *_type = NULL);
 
-		fgArgument getNextArgumentStruct();
-		fgArgument getArgumentStructByID(int ID);
+    fgArgument getNextArgumentStruct();
+    fgArgument getArgumentStructByID(int ID);
 
-		inline int getCurrentID();
+    inline int getCurrentID();
 
-		void clearArguments();
-
-		inline fgArgument &operator[](int i) 
-		{
-			m_emptyArgument.reset();
-			if((int)m_argv.size() > i)
-				return m_argv[i]; 
-			else 
-				return m_emptyArgument;
-		}
-
-		inline const fgArgument operator[](int i) const 
-		{
-			if((int)m_argv.size() > i)
-				return m_argv[i];
-			else 
-				return m_emptyArgument; 
-		}
+    void clearArguments();
+    inline fgArgument &operator [](int i) {
+        m_emptyArgument.reset();
+        if((int)m_argv.size() > i)
+            return m_argv[i];
+        else
+            return m_emptyArgument;
+    }
+    inline const fgArgument operator [](int i)const {
+        if((int)m_argv.size() > i)
+            return m_argv[i];
+        else
+            return m_emptyArgument;
+    }
 };
 
 

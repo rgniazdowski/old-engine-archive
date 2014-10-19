@@ -12,31 +12,25 @@
 /*
  *
  */
-fgGuiLabel::fgGuiLabel()
-{
+fgGuiLabel::fgGuiLabel() { }
+
+/*
+ *
+ */
+fgGuiLabel::~fgGuiLabel() { }
+
+/*
+ *
+ */
+void fgGuiLabel::setDefaults(void) {
+    m_type = FG_GUI_LABEL;
+    m_typeName = FG_GUI_LABEL_NAME;
+    m_typeTraits = FG_GUI_LABEL | FG_GUI_WIDGET;
 }
 
 /*
  *
  */
-fgGuiLabel::~fgGuiLabel()
-{
-}
-
-/*
- *
- */
-void fgGuiLabel::setDefaults(void)
-{
-	m_type = FG_GUI_LABEL;
-	m_typeName = FG_GUI_LABEL_NAME;
-	m_typeTraits = FG_GUI_LABEL | FG_GUI_WIDGET;
-}
-
-/*
- *
- */
-fgBoundingBox3Df& fgGuiLabel::updateSize(void)
-{
-	return fgGuiWidget::updateSize();
+fgBoundingBox3Df& fgGuiLabel::updateSize(void) {
+    return fgGuiWidget::updateSize();
 }

@@ -8,7 +8,7 @@
  *******************************************************/
 
 #ifndef _FG_EVENT_DEFINITIONS_H_
-#define _FG_EVENT_DEFINITIONS_H_
+    #define _FG_EVENT_DEFINITIONS_H_
 
 //
 // This file will contain all basic events occuring in the game engine
@@ -58,7 +58,7 @@ enum fgEventType {
     FG_EVENT_WIDGET_STATE_CHANGED = 26,
 
     FG_EVENT_SENSORS_CHANGED = 27,
-    
+
     FG_EVENT_GAME_CONTROLLER_ADDED = 28,
     FG_EVENT_GAME_CONTROLLER_REMOVED = 29,
     FG_EVENT_GAME_CONTROLLER_BUTTON = 30,
@@ -254,24 +254,24 @@ struct fgSensorsEvent : fgEventBase {
 struct fgEvent {
 
     union {
-        fgEventType         eventType;
+        fgEventType eventType;
 
-        fgTouchEvent        touchEvent;
-        fgMouseEvent        mouseEvent;
-        fgSwipeEvent        swipeEvent;
-        fgSwipePinchEvent   swipePinchEvent;
-        fgSwipeRotateEvent  swipeRotateEvent;
-        fgKeyEvent          keyEvent;
-        fgResourceEvent     resourceEvent;
+        fgTouchEvent touchEvent;
+        fgMouseEvent mouseEvent;
+        fgSwipeEvent swipeEvent;
+        fgSwipePinchEvent swipePinchEvent;
+        fgSwipeRotateEvent swipeRotateEvent;
+        fgKeyEvent keyEvent;
+        fgResourceEvent resourceEvent;
         fgVertexStreamEvent vertexStreamEvent;
-        fgCameraEvent       cameraEvent;
-        fgSoundEvent        soundEvent;
-        fgMenuChangedEvent  menuChangedEvent;
-        fgWidgetEvent       widgetEvent;
-        fgSensorsEvent      sensorsEvent;
+        fgCameraEvent cameraEvent;
+        fgSoundEvent soundEvent;
+        fgMenuChangedEvent menuChangedEvent;
+        fgWidgetEvent widgetEvent;
+        fgSensorsEvent sensorsEvent;
         fgControllerDeviceEvent controllerEvent;
         fgControllerButtonEvent controllerButtonEvent;
-        fgControllerAxisEvent   controllerAxisEvent;
+        fgControllerAxisEvent controllerAxisEvent;
     };
 };
 

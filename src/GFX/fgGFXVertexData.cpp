@@ -16,8 +16,7 @@
  * @param pDataArray
  * @return 
  */
-fgGFXboolean fgVertexData2v::setupAttributes(fgGfxAttributeData *pDataArray) const
-{
+fgGFXboolean fgVertexData2v::setupAttributes(fgGfxAttributeData *pDataArray) const {
     if(!pDataArray)
         return FG_GFX_FALSE;
     // 2V - pos + uv
@@ -44,13 +43,13 @@ fgGFXboolean fgVertexData2v::setupAttributes(fgGfxAttributeData *pDataArray) con
         pDataArray[index].buffer = 0;
         pDataArray[index].pointer = (fgGFXvoid *)pointer;
     }
-    
+
     // Normals - there are no normals, this attribute will be disabled
     pDataArray[FG_GFX_ATTRIB_NORM_LOCATION] = fgGfxAttributeData(FG_GFX_NORMAL);
-    
+
     // Move offset to UVs (first is position of type fgVector3f)
-    offset += sizeof(fgVector3f);
-    pointer += sizeof(fgVector3f);
+    offset += sizeof (fgVector3f);
+    pointer += sizeof (fgVector3f);
     // Texture coordinates
     index = FG_GFX_ATTRIB_UVS_LOCATION;
     pDataArray[index].index = index;
@@ -60,7 +59,7 @@ fgGFXboolean fgVertexData2v::setupAttributes(fgGfxAttributeData *pDataArray) con
     pDataArray[index].stride = this->stride();
     pDataArray[index].isEnabled = FG_TRUE;
     pDataArray[index].isInterleaved = FG_TRUE;
-    pDataArray[index].isNormalized = FG_FALSE;    
+    pDataArray[index].isNormalized = FG_FALSE;
     if(getPtrVBO() && getVBOCount()) {
         pDataArray[index].isBO = FG_TRUE;
         pDataArray[index].buffer = getPtrVBO()[0].id;
@@ -70,13 +69,13 @@ fgGFXboolean fgVertexData2v::setupAttributes(fgGfxAttributeData *pDataArray) con
         pDataArray[index].buffer = 0;
         pDataArray[index].pointer = (fgGFXvoid *)pointer;
     }
-    
+
     // Colors = there are no colors, this attribute will be disabled
     pDataArray[FG_GFX_ATTRIB_COLOR_LOCATION] = fgGfxAttributeData(FG_GFX_COLOR);
-    
+
     // Tangents - this attribute will be disabled
     pDataArray[FG_GFX_ATTRIB_TANGENT_LOCATION] = fgGfxAttributeData(FG_GFX_TANGENT);
-    
+
     return FG_GFX_TRUE;
 }
 
@@ -91,7 +90,7 @@ fgGFXboolean fgVertexData2v::genBuffers(void) {
     count = 1;
     fgGfxPlatform::context()->genBuffers(count, getRefPtrVBO(), GL_STATIC_DRAW);
     fgGfxPlatform::context()->bindBuffer(getRefPtrVBO()[0], GL_ARRAY_BUFFER);
-    fgGfxPlatform::context()->bufferData(getRefPtrVBO()[0], this->stride()*this->size(), fgVertexData2v::front());
+    fgGfxPlatform::context()->bufferData(getRefPtrVBO()[0], this->stride() * this->size(), fgVertexData2v::front());
     return FG_GFX_TRUE;
 }
 
@@ -126,8 +125,7 @@ fgGFXboolean fgVertexData2v::destroyBuffers(void) {
  * @param pDataArray
  * @return 
  */
-fgGFXboolean fgVertexData3v::setupAttributes(fgGfxAttributeData *pDataArray) const
-{
+fgGFXboolean fgVertexData3v::setupAttributes(fgGfxAttributeData *pDataArray) const {
     if(!pDataArray)
         return FG_GFX_FALSE;
     // 3V - pos + norm + uv
@@ -154,10 +152,10 @@ fgGFXboolean fgVertexData3v::setupAttributes(fgGfxAttributeData *pDataArray) con
         pDataArray[index].buffer = 0;
         pDataArray[index].pointer = (fgGFXvoid *)pointer;
     }
-    
+
     // Move offset to normals (first is position of type fgVector3f)
-    offset += sizeof(fgVector3f);
-    pointer += sizeof(fgVector3f);
+    offset += sizeof (fgVector3f);
+    pointer += sizeof (fgVector3f);
     // Normals coords - activated
     index = FG_GFX_ATTRIB_NORM_LOCATION;
     pDataArray[index].index = index;
@@ -177,10 +175,10 @@ fgGFXboolean fgVertexData3v::setupAttributes(fgGfxAttributeData *pDataArray) con
         pDataArray[index].buffer = 0;
         pDataArray[index].pointer = (fgGFXvoid *)pointer;
     }
-    
+
     // Move offset to UVs (second is normal of type fgVector3f)
-    offset += sizeof(fgVector3f);
-    pointer += sizeof(fgVector3f);
+    offset += sizeof (fgVector3f);
+    pointer += sizeof (fgVector3f);
     // Texture coordinates
     index = FG_GFX_ATTRIB_UVS_LOCATION;
     pDataArray[index].index = index;
@@ -190,7 +188,7 @@ fgGFXboolean fgVertexData3v::setupAttributes(fgGfxAttributeData *pDataArray) con
     pDataArray[index].stride = this->stride();
     pDataArray[index].isEnabled = FG_TRUE;
     pDataArray[index].isInterleaved = FG_TRUE;
-    pDataArray[index].isNormalized = FG_FALSE;    
+    pDataArray[index].isNormalized = FG_FALSE;
     if(getPtrVBO() && getVBOCount()) {
         pDataArray[index].isBO = FG_TRUE;
         pDataArray[index].buffer = getPtrVBO()[0].id;
@@ -201,13 +199,13 @@ fgGFXboolean fgVertexData3v::setupAttributes(fgGfxAttributeData *pDataArray) con
         pDataArray[index].pointer = (fgGFXvoid *)pointer;
 
     }
-    
+
     // Colors = there are no colors, this attribute will be disabled
     pDataArray[FG_GFX_ATTRIB_COLOR_LOCATION] = fgGfxAttributeData(FG_GFX_COLOR);
-    
+
     // Tangents - this attribute will be disabled
     pDataArray[FG_GFX_ATTRIB_TANGENT_LOCATION] = fgGfxAttributeData(FG_GFX_TANGENT);
-    
+
     return FG_GFX_TRUE;
 }
 
@@ -222,7 +220,7 @@ fgGFXboolean fgVertexData3v::genBuffers(void) {
     count = 1;
     fgGfxPlatform::context()->genBuffers(count, getRefPtrVBO(), GL_STATIC_DRAW);
     fgGfxPlatform::context()->bindBuffer(getRefPtrVBO()[0], GL_ARRAY_BUFFER);
-    fgGfxPlatform::context()->bufferData(getRefPtrVBO()[0], this->stride()*this->size(), fgVertexData3v::front());
+    fgGfxPlatform::context()->bufferData(getRefPtrVBO()[0], this->stride() * this->size(), fgVertexData3v::front());
     return FG_GFX_TRUE;
 }
 
@@ -256,8 +254,7 @@ fgGFXboolean fgVertexData3v::destroyBuffers(void) {
  * @param pDataArray
  * @return 
  */
-fgGFXboolean fgVertexData4v::setupAttributes(fgGfxAttributeData *pDataArray) const
-{
+fgGFXboolean fgVertexData4v::setupAttributes(fgGfxAttributeData *pDataArray) const {
     if(!pDataArray)
         return FG_GFX_FALSE;
     // 3V - pos + norm + uv + color
@@ -284,10 +281,10 @@ fgGFXboolean fgVertexData4v::setupAttributes(fgGfxAttributeData *pDataArray) con
         pDataArray[index].buffer = 0;
         pDataArray[index].pointer = (fgGFXvoid *)pointer;
     }
-    
+
     // Move offset to normals (first is position of type fgVector3f)
-    offset += sizeof(fgVector3f);
-    pointer += sizeof(fgVector3f);
+    offset += sizeof (fgVector3f);
+    pointer += sizeof (fgVector3f);
     // Normals coords - activated
     index = FG_GFX_ATTRIB_NORM_LOCATION;
     pDataArray[index].index = index;
@@ -307,10 +304,10 @@ fgGFXboolean fgVertexData4v::setupAttributes(fgGfxAttributeData *pDataArray) con
         pDataArray[index].buffer = 0;
         pDataArray[index].pointer = (fgGFXvoid *)pointer;
     }
-    
+
     // Move offset to UVs (second is normal of type fgVector3f)
-    offset += sizeof(fgVector3f);
-    pointer += sizeof(fgVector3f);
+    offset += sizeof (fgVector3f);
+    pointer += sizeof (fgVector3f);
     // Texture coordinates
     index = FG_GFX_ATTRIB_UVS_LOCATION;
     pDataArray[index].index = index;
@@ -320,7 +317,7 @@ fgGFXboolean fgVertexData4v::setupAttributes(fgGfxAttributeData *pDataArray) con
     pDataArray[index].stride = this->stride();
     pDataArray[index].isEnabled = FG_TRUE;
     pDataArray[index].isInterleaved = FG_TRUE;
-    pDataArray[index].isNormalized = FG_FALSE;    
+    pDataArray[index].isNormalized = FG_FALSE;
     if(getPtrVBO() && getVBOCount()) {
         pDataArray[index].isBO = FG_TRUE;
         pDataArray[index].buffer = getPtrVBO()[0].id;
@@ -330,11 +327,11 @@ fgGFXboolean fgVertexData4v::setupAttributes(fgGfxAttributeData *pDataArray) con
         pDataArray[index].buffer = 0;
         pDataArray[index].pointer = (fgGFXvoid *)pointer;
     }
-    
+
     // Move offset to Colors (last one was uv of type fgVector2f)
-    offset += sizeof(fgVector2f); // 2UVs
-    pointer += sizeof(fgVector2f);
-    
+    offset += sizeof (fgVector2f); // 2UVs
+    pointer += sizeof (fgVector2f);
+
     // Colors = there are no colors, this attribute will be disabled
     index = FG_GFX_ATTRIB_COLOR_LOCATION;
     pDataArray[index].index = index;
@@ -344,7 +341,7 @@ fgGFXboolean fgVertexData4v::setupAttributes(fgGfxAttributeData *pDataArray) con
     pDataArray[index].stride = this->stride();
     pDataArray[index].isEnabled = FG_TRUE;
     pDataArray[index].isInterleaved = FG_TRUE;
-    pDataArray[index].isNormalized = FG_FALSE;    
+    pDataArray[index].isNormalized = FG_FALSE;
     if(getPtrVBO() && getVBOCount()) {
         pDataArray[index].isBO = FG_TRUE;
         pDataArray[index].buffer = getPtrVBO()[0].id;
@@ -354,10 +351,10 @@ fgGFXboolean fgVertexData4v::setupAttributes(fgGfxAttributeData *pDataArray) con
         pDataArray[index].buffer = 0;
         pDataArray[index].pointer = (fgGFXvoid *)pointer;
     }
-    
+
     // Tangents - this attribute will be disabled - not yet supported
     pDataArray[FG_GFX_ATTRIB_TANGENT_LOCATION] = fgGfxAttributeData(FG_GFX_TANGENT);
-    
+
     return FG_GFX_TRUE;
 }
 
@@ -372,7 +369,7 @@ fgGFXboolean fgVertexData4v::genBuffers(void) {
     count = 1;
     fgGfxPlatform::context()->genBuffers(count, getRefPtrVBO(), GL_STATIC_DRAW);
     fgGfxPlatform::context()->bindBuffer(getRefPtrVBO()[0], GL_ARRAY_BUFFER);
-    fgGfxPlatform::context()->bufferData(getRefPtrVBO()[0], this->stride()*this->size(), fgVertexData4v::front());
+    fgGfxPlatform::context()->bufferData(getRefPtrVBO()[0], this->stride() * this->size(), fgVertexData4v::front());
     return FG_GFX_TRUE;
 }
 

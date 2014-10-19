@@ -15,21 +15,21 @@
 /*
 void FlashEffect::calculate(void) 
 {
-	if(m_active)
-	{
-		if(m_fade_direction == IN) {
-			m_alpha += 1.0f/m_duration_ms * FG_HardwareState->DT2();
-			if(m_alpha > 1.0f)
-				m_active = false;
-		} else if(m_fade_direction == OUT) {
-			m_alpha -= 1.0f/m_duration_ms * FG_HardwareState->DT2();
-			if(m_alpha < 0.0f)
-				m_active = false;
-		} else if(m_fade_direction == NONE) {
-			if( FG_HardwareState->TS() - int64(m_time_ms) >= int64(m_duration_ms) )
-				m_active = false;
-		}
-		m_color.a = m_alpha;
-	}
+        if(m_active)
+        {
+                if(m_fade_direction == IN) {
+                        m_alpha += 1.0f/m_duration_ms * FG_HardwareState->DT2();
+                        if(m_alpha > 1.0f)
+                                m_active = false;
+                } else if(m_fade_direction == OUT) {
+                        m_alpha -= 1.0f/m_duration_ms * FG_HardwareState->DT2();
+                        if(m_alpha < 0.0f)
+                                m_active = false;
+                } else if(m_fade_direction == NONE) {
+                        if( FG_HardwareState->TS() - int64(m_time_ms) >= int64(m_duration_ms) )
+                                m_active = false;
+                }
+                m_color.a = m_alpha;
+        }
 }
-*/
+ */

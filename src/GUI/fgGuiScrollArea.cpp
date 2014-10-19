@@ -12,40 +12,33 @@
 /*
  *
  */
-fgGuiScrollArea::fgGuiScrollArea() : 
-	fgGuiContainer()
-{
-	fgGuiScrollArea::setDefaults();
+fgGuiScrollArea::fgGuiScrollArea() :
+fgGuiContainer() {
+    fgGuiScrollArea::setDefaults();
 }
 
 /*
  *
  */
-fgGuiScrollArea::~fgGuiScrollArea()
-{
+fgGuiScrollArea::~fgGuiScrollArea() { }
+
+/*
+ *
+ */
+void fgGuiScrollArea::setDefaults(void) {
+    m_type = FG_GUI_SCROLL_AREA;
+    m_typeName = FG_GUI_SCROLL_AREA_NAME;
+    m_typeTraits = FG_GUI_SCROLL_AREA | FG_GUI_CONTAINER | FG_GUI_WIDGET;
 }
 
 /*
  *
  */
-void fgGuiScrollArea::setDefaults(void)
-{
-	m_type = FG_GUI_SCROLL_AREA;
-	m_typeName = FG_GUI_SCROLL_AREA_NAME;
-	m_typeTraits = FG_GUI_SCROLL_AREA | FG_GUI_CONTAINER | FG_GUI_WIDGET;
+fgBoundingBox3Df& fgGuiScrollArea::updateSize(void) {
+    return fgGuiContainer::updateSize();
 }
 
 /*
  *
  */
-fgBoundingBox3Df& fgGuiScrollArea::updateSize(void)
-{
-	return fgGuiContainer::updateSize();
-}
-
-/*
- *
- */
-void fgGuiScrollArea::refresh(void)
-{
-}
+void fgGuiScrollArea::refresh(void) { }

@@ -8,38 +8,37 @@
  *******************************************************/
 
 #ifndef _FG_GUI_WINDOW_H_
-#define _FG_GUI_WINDOW_H_
+    #define _FG_GUI_WINDOW_H_
 
-#include "fgGuiContainer.h"
-#include "fgGuiWidgetFactoryTypes.h"
+    #include "fgGuiContainer.h"
+    #include "fgGuiWidgetFactoryTypes.h"
 
-#define FG_GUI_WINDOW		0x00004000
-#define FG_GUI_WINDOW_NAME	"Window"
+    #define FG_GUI_WINDOW		0x00004000
+    #define FG_GUI_WINDOW_NAME	"Window"
 
 /*
  *
  */
-class fgGuiWindow : public fgGuiContainer
-{
+class fgGuiWindow : public fgGuiContainer {
 private:
 protected:
 
 protected:
-	// 
-	virtual void setDefaults(void);
+    // 
+    virtual void setDefaults(void);
 
 public:
-	// 
-	fgGuiWindow();
-	// 
-	virtual ~fgGuiWindow();
+    // 
+    fgGuiWindow();
+    // 
+    virtual ~fgGuiWindow();
 
-	FG_GUI_WIDGET_FACTORY_CREATE_FUNCTION(fgGuiWindow);
+    FG_GUI_WIDGET_FACTORY_CREATE_FUNCTION(fgGuiWindow);
 
-	// 
-	virtual fgBoundingBox3Df& updateSize(void);
-	// 
-	virtual void refresh(void);
+    // 
+    virtual fgBoundingBox3Df& updateSize(void);
+    // 
+    virtual void refresh(void);
 
 };
 

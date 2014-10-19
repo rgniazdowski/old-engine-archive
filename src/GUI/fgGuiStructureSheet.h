@@ -8,7 +8,7 @@
  *******************************************************/
 
 #ifndef _FG_GUI_STRUCTURE_SHEET_H_
-#define _FG_GUI_STRUCTURE_SHEET_H_
+    #define _FG_GUI_STRUCTURE_SHEET_H_
 
 #endif /* _FG_GUI_STRUCTURE_SHEET_H_ */
 

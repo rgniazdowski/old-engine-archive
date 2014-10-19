@@ -8,8 +8,8 @@
  *******************************************************/
 
 #ifndef _FG_SCRIPT_MANAGER_H_
-#define _FG_SCRIPT_MANAGER_H_
+    #define _FG_SCRIPT_MANAGER_H_
 
-#include "fgScriptResource.h"
+    #include "fgScriptResource.h"
 
 #endif

@@ -8,42 +8,42 @@
  *******************************************************/
 
 #ifndef _FG_XML_TYPES_WRAP_H_
-#define _FG_XML_TYPES_WRAP_H_
+    #define _FG_XML_TYPES_WRAP_H_
 
-#include "fgCommon.h"
+    #include "fgCommon.h"
 
-#ifdef FG_USING_TINYXML
-#ifndef TINYXML_INCLUDED
-#include "tinyxml.h"
-#endif
+    #ifdef FG_USING_TINYXML
+        #ifndef TINYXML_INCLUDED
+            #include "tinyxml.h"
+        #endif
 
 /* Simple wrappers for tiny xml structure types */
-typedef TiXmlAttribute		fgXMLAttribute;
-typedef TiXmlAttributeSet	fgXMLAttributeSet;
-typedef TiXmlBase			fgXMLBase;
-typedef TiXmlComment		fgXMLComment;
-typedef TiXmlCursor			fgXMLCursor;
-typedef TiXmlDeclaration	fgXMLDeclaration;
-typedef TiXmlDocument		fgXMLDocument;
-typedef TiXmlElement		fgXMLElement;
-typedef TiXmlHandle			fgXMLHandle;
-typedef TiXmlNode			fgXMLNode;
-#ifdef TIXML_USE_STL
-#else
-typedef TiXmlOutStream		fgXMLOutStream;
-#endif
-typedef TiXmlParsingData	fgXMLParsingData;
-typedef TiXmlPrinter		fgXMLPrinter;
-#ifdef TIXML_USE_STL
-typedef std::string         fgXMLString;
-#else
-typedef TiXmlString			fgXMLString;
-#endif
-typedef TiXmlText			fgXMLText;
-typedef TiXmlUnknown		fgXMLUnknown;
-typedef TiXmlVisitor		fgXMLVisitor;
+typedef TiXmlAttribute fgXMLAttribute;
+typedef TiXmlAttributeSet fgXMLAttributeSet;
+typedef TiXmlBase fgXMLBase;
+typedef TiXmlComment fgXMLComment;
+typedef TiXmlCursor fgXMLCursor;
+typedef TiXmlDeclaration fgXMLDeclaration;
+typedef TiXmlDocument fgXMLDocument;
+typedef TiXmlElement fgXMLElement;
+typedef TiXmlHandle fgXMLHandle;
+typedef TiXmlNode fgXMLNode;
+        #ifdef TIXML_USE_STL
+        #else
+typedef TiXmlOutStream fgXMLOutStream;
+        #endif
+typedef TiXmlParsingData fgXMLParsingData;
+typedef TiXmlPrinter fgXMLPrinter;
+        #ifdef TIXML_USE_STL
+typedef std::string fgXMLString;
+        #else
+typedef TiXmlString fgXMLString;
+        #endif
+typedef TiXmlText fgXMLText;
+typedef TiXmlUnknown fgXMLUnknown;
+typedef TiXmlVisitor fgXMLVisitor;
 typedef TiXmlNode::NodeType fgXMLNodeType;
 
-#endif
+    #endif
 
 #endif /* _FG_XML_TYPES_WRAP_H_ */

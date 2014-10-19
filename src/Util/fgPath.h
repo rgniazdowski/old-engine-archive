@@ -8,58 +8,55 @@
  *******************************************************/
 
 #ifndef _FG_PATH_H_
-#define _FG_PATH_H_
+    #define _FG_PATH_H_
 
-#include "fgBuildConfig.h"
-#include "fgBool.h"
-#include "fgVector.h"
-#include <string>
+    #include "fgBuildConfig.h"
+    #include "fgBool.h"
+    #include "fgVector.h"
+    #include <string>
 
-#if defined FG_USING_PLATFORM_WINDOWS
-#define FG_PATH_DELIM "\\"
-#define FG_PATH_DELIMC '\\'
-#define FG_PATH_DELIM2 "/"
-#define FG_PATH_DELIM2C '/'
-#else
-#define FG_PATH_DELIM "/"
-#define FG_PATH_DELIMC '/'
-#define FG_PATH_DELIM2 "\\"
-#define FG_PATH_DELIM2C '\\'
-#endif
+    #if defined FG_USING_PLATFORM_WINDOWS
+        #define FG_PATH_DELIM "\\"
+        #define FG_PATH_DELIMC '\\'
+        #define FG_PATH_DELIM2 "/"
+        #define FG_PATH_DELIM2C '/'
+    #else
+        #define FG_PATH_DELIM "/"
+        #define FG_PATH_DELIMC '/'
+        #define FG_PATH_DELIM2 "\\"
+        #define FG_PATH_DELIM2C '\\'
+    #endif
 
-
-
-class fgPath
-{
+class fgPath {
 private:
-	fgPath() {}
-	~fgPath() {}
+    fgPath() { }
+    ~fgPath() { }
 public:
-	// Return the file extension //fgPath::fileExt
-	static const char* fileExt(const char *path, fgBool fullExt = FG_FALSE);
+    // Return the file extension //fgPath::fileExt
+    static const char* fileExt(const char *path, fgBool fullExt = FG_FALSE);
 
-	// Return the file name in path //fgPath::fileName
-	static const char* fileName(const char* path);
+    // Return the file name in path //fgPath::fileName
+    static const char* fileName(const char* path);
 
-	// Retrieve the dirname in path - this will change the input string (fill last part with \0)
-	static void dirName(char* path);
-	// Retrieve the dirname in path - remember that this function allocates a new string
-	static char *dirName(const char* path);
-	//
-	static std::string dirName(std::string &path);
-	//
-	static std::string& dirName(std::string &path, std::string &dir);
+    // Retrieve the dirname in path - this will change the input string (fill last part with \0)
+    static void dirName(char* path);
+    // Retrieve the dirname in path - remember that this function allocates a new string
+    static char *dirName(const char* path);
+    //
+    static std::string dirName(std::string &path);
+    //
+    static std::string& dirName(std::string &path, std::string &dir);
 
-	// Split the path and save parts (dirname, filename) in input parameters
-	static void split(std::string &path, std::string &dirpath, std::string &filename);
+    // Split the path and save parts (dirname, filename) in input parameters
+    static void split(std::string &path, std::string &dirpath, std::string &filename);
 
-	// Join the path elements
-	static std::string& join(std::string &path, const std::string &dirpath, const std::string &filename);
-	
-	static std::string join(const std::string &dirpath, const std::string &filename);
+    // Join the path elements
+    static std::string& join(std::string &path, const std::string &dirpath, const std::string &filename);
 
-	// Join the path from parts
-	static void join(std::string &path, fgStringVector &parts);
+    static std::string join(const std::string &dirpath, const std::string &filename);
+
+    // Join the path from parts
+    static void join(std::string &path, fgStringVector &parts);
 };
 
 #endif /* _FG_PATH_H_ */

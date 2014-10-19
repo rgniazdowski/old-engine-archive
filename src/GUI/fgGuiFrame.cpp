@@ -12,39 +12,32 @@
 /*
  *
  */
-fgGuiFrame::fgGuiFrame()
-{
-	fgGuiFrame::setDefaults();
+fgGuiFrame::fgGuiFrame() {
+    fgGuiFrame::setDefaults();
 }
 
 /*
  *
  */
-fgGuiFrame::~fgGuiFrame()
-{
+fgGuiFrame::~fgGuiFrame() { }
+
+/*
+ *
+ */
+void fgGuiFrame::setDefaults(void) {
+    m_type = FG_GUI_FRAME;
+    m_typeName = FG_GUI_FRAME_NAME;
+    m_typeTraits = FG_GUI_FRAME | FG_GUI_CONTAINER | FG_GUI_WIDGET;
 }
 
 /*
  *
  */
-void fgGuiFrame::setDefaults(void)
-{
-	m_type = FG_GUI_FRAME;
-	m_typeName = FG_GUI_FRAME_NAME;
-	m_typeTraits = FG_GUI_FRAME | FG_GUI_CONTAINER | FG_GUI_WIDGET;
+fgBoundingBox3Df& fgGuiFrame::updateSize(void) {
+    return fgGuiContainer::updateSize();
 }
 
 /*
  *
  */
-fgBoundingBox3Df& fgGuiFrame::updateSize(void)
-{
-	return fgGuiContainer::updateSize();
-}
-
-/*
- *
- */
-void fgGuiFrame::refresh(void)
-{
-}
+void fgGuiFrame::refresh(void) { }

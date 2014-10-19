@@ -32,6 +32,7 @@ class MainModule;
 extern "C" int main();
 
 #if defined FG_USING_MARMALADE
+
 class fgMarmaladeHandlers
 {
 private:
@@ -63,16 +64,16 @@ protected:
     /**
      * Initialize rendering parameters.
      */
-    MainModule() : 
+    MainModule() :
     m_appInit(FG_FALSE),
     m_slow(FG_FALSE),
     m_isExit(FG_FALSE),
     m_gameMain(NULL),
-    m_eventMgr(NULL) {
-    }
+    m_eventMgr(NULL) { }
 
 protected:
 #if defined(FG_USING_SDL2)
+
     SDL_EventType checkSDLEvents(void) {
         SDL_Event event;
         SDL_EventType status = SDL_FIRSTEVENT;
@@ -128,7 +129,7 @@ protected:
                     break;
 
                     /* Keyboard events */
-                case SDL_KEYDOWN: /**< Key pressed */    
+                case SDL_KEYDOWN: /**< Key pressed */
                     if(m_eventMgr) {
                         // #FIXME
                         if(!event.key.repeat)
@@ -167,7 +168,7 @@ protected:
                 case SDL_MOUSEWHEEL: /**< Mouse wheel motion */
                     break;
 #endif /* PLATFORM SPECIFIC */
-                    
+
                     /* Joystick events #FIXME */
                 case SDL_JOYAXISMOTION: /**< Joystick axis motion */
                     printf("SDL_JOYAXISMOTION\n");
@@ -207,16 +208,16 @@ protected:
                     break;
                 case SDL_CONTROLLERDEVICEREMOVED: /**< An opened Game controller has been removed */
                     printf("SDL_CONTROLLERDEVICEREMOVED\n");
-                    {
-                        if(!m_gameMain)
-                            continue;
-                        fgJoypadController *joypadController = this->m_gameMain->getJoypadController();
-                        if(joypadController) {
-                            joypadController->processEvent(event);
-                        }
+                {
+                    if(!m_gameMain)
+                        continue;
+                    fgJoypadController *joypadController = this->m_gameMain->getJoypadController();
+                    if(joypadController) {
+                        joypadController->processEvent(event);
                     }
+                }
                     break;
-                
+
                 case SDL_CONTROLLERDEVICEREMAPPED: /**< The controller mapping was updated */
                     printf("SDL_CONTROLLERDEVICEREMAPPED\n");
                     break;
@@ -228,7 +229,7 @@ protected:
                     break;
                 case SDL_FINGERMOTION:
                     break;
-                    
+
                     /* Gesture events */
                 case SDL_DOLLARGESTURE:
                     break;
@@ -248,7 +249,7 @@ protected:
                     /* Render events */
                 case SDL_RENDER_TARGETS_RESET: /**< The render targets have been reset */
                     break;
-                    
+
                 default:
                     if(event.type >= SDL_CONTROLLERAXISMOTION && event.type <= SDL_CONTROLLERDEVICEREMAPPED) {
                         if(!m_gameMain)
@@ -264,7 +265,7 @@ protected:
         return status;
     }
 #endif
-    
+
 public:
 
     fgBool isSlow(void) const {
@@ -283,7 +284,7 @@ private:
     void setExit(fgBool exit) {
         m_isExit = exit;
     }
-    
+
     static fgBool eventSwipe(fgArgumentList *argv) {
         if(!argv)
             return FG_FALSE;
@@ -295,9 +296,9 @@ private:
         static int lasty = 128000;
         int xRel = 0, yRel = 0;
 
-        if(type == FG_EVENT_TOUCH_MOTION || 
-            type == FG_EVENT_TOUCH_PRESSED || 
-            type == FG_EVENT_TOUCH_RELEASED) {
+        if(type == FG_EVENT_TOUCH_MOTION ||
+           type == FG_EVENT_TOUCH_PRESSED ||
+           type == FG_EVENT_TOUCH_RELEASED) {
             fgTouchEvent *touch = (fgTouchEvent *)argv->getArgumentValueByID(0);
             if(lastx > 100000 && lasty > 100000) {
                 lastx = touch->x;
@@ -309,7 +310,7 @@ private:
             lasty = touch->y;
             //printf("TOUCH MOTION: X: %d Y: %d | xRel: %d | yRel: %d \n", touch->x, touch->y, xRel, yRel);
             if(touch->pressed)
-                
+
                 cameraAnim->update((float)xRel, (float)yRel);
             if(type == FG_EVENT_TOUCH_RELEASED) {
                 lastx = 128000;
@@ -399,7 +400,7 @@ private:
         if(!m_appInit) {
             return FG_FALSE;
         }
-        
+
         // #FIXME
 #if defined(FG_USING_SDL2)
         if(checkSDLEvents() == SDL_QUIT) {
@@ -421,19 +422,19 @@ private:
             FG_LOG::PrintDebug("ENTER PRESSED...");
             return FG_FALSE;
         }
-		// #TODELETE - camera animation test
-		if(s3eKeyboardGetState(s3eKeyW) & S3E_KEY_STATE_DOWN) {
-			cameraAnim->moveForward();
-		}
-		if(s3eKeyboardGetState(s3eKeyS) & S3E_KEY_STATE_DOWN) {
-			cameraAnim->moveBackward();
-		}
-		if(s3eKeyboardGetState(s3eKeyA) & S3E_KEY_STATE_DOWN) {
-			cameraAnim->moveLeft();
-		}
-		if(s3eKeyboardGetState(s3eKeyD) & S3E_KEY_STATE_DOWN) {
-			cameraAnim->moveRight();
-		}
+        // #TODELETE - camera animation test
+        if(s3eKeyboardGetState(s3eKeyW) & S3E_KEY_STATE_DOWN) {
+            cameraAnim->moveForward();
+        }
+        if(s3eKeyboardGetState(s3eKeyS) & S3E_KEY_STATE_DOWN) {
+            cameraAnim->moveBackward();
+        }
+        if(s3eKeyboardGetState(s3eKeyA) & S3E_KEY_STATE_DOWN) {
+            cameraAnim->moveLeft();
+        }
+        if(s3eKeyboardGetState(s3eKeyD) & S3E_KEY_STATE_DOWN) {
+            cameraAnim->moveRight();
+        }
 #endif /* FG_USING_MARMALADE */
         if(m_isExit) {
             m_appInit = FG_FALSE;

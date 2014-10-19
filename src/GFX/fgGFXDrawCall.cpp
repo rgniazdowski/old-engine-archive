@@ -115,7 +115,7 @@ void fgGfxDrawCall::setupVertexData(fgGFXuint attribMask) {
         m_vecDataBase = new fgVertexData2v();
     }
     if(m_drawCallType == FG_GFX_DRAW_CALL_CUSTOM_ARRAY) {
-        memset(&m_drawingInfo, 0, sizeof(m_drawingInfo));
+        memset(&m_drawingInfo, 0, sizeof (m_drawingInfo));
     }
 }
 
@@ -128,11 +128,11 @@ void fgGfxDrawCall::setupFromModel(const fgGfxModelResource* pModelRes) {
         return;
     if(pModelRes->getRefShapes().empty())
         return;
-    
+
     const fgGfxModelResource::modelShapes &shapes = pModelRes->getRefShapes();
     fgGfxShape *shape = shapes[0];
     // Can also set other information... like textures
-    setupFromMesh(shape->mesh);    
+    setupFromMesh(shape->mesh);
     m_drawCallType = FG_GFX_DRAW_CALL_MODEL;
 }
 
@@ -461,7 +461,7 @@ void fgGfxDrawCall::draw(void) {
         m_program->setUniform(FG_GFX_USE_TEXTURE, 0.0f);
     }
     fgGfxPrimitives::drawArray2D(m_vecDataBase, m_attribMask, m_primMode);
-    
+
     // Will now draw data from Other types ...
     if(m_drawCallType == FG_GFX_DRAW_CALL_MESH || m_drawCallType == FG_GFX_DRAW_CALL_MODEL) {
         // attribute data array is set

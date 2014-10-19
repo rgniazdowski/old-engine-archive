@@ -48,8 +48,7 @@ fgGFXvoid *fgGfxMeshSoA::getIndicesPointer(void) const {
  * @param pDataArray
  * @return 
  */
-fgGFXboolean fgGfxMeshSoA::setupAttributes(fgGfxAttributeData *pDataArray) const
-{
+fgGFXboolean fgGfxMeshSoA::setupAttributes(fgGfxAttributeData *pDataArray) const {
     if(!pDataArray)
         return FG_GFX_FALSE;
     // 3V - pos + norm + uv
@@ -64,7 +63,7 @@ fgGFXboolean fgGfxMeshSoA::setupAttributes(fgGfxAttributeData *pDataArray) const
     pDataArray[index].size = 3;
     pDataArray[index].type = FG_GFX_POSITION;
     pDataArray[index].dataType = FG_GFX_FLOAT;
-    pDataArray[index].stride = sizeof(fgVector3f);
+    pDataArray[index].stride = sizeof (fgVector3f);
     pDataArray[index].isEnabled = FG_TRUE;
     pDataArray[index].isInterleaved = FG_FALSE; // SoA is not interleaved
     pDataArray[index].isNormalized = FG_FALSE;
@@ -77,7 +76,7 @@ fgGFXboolean fgGfxMeshSoA::setupAttributes(fgGfxAttributeData *pDataArray) const
         pDataArray[index].buffer = 0;
         pDataArray[index].pointer = (fgGFXvoid *)pointer;
     }
-    
+
     // Set pointer to normals array
     // Offset is 0 because it is a separate VBO
     offset = 0;
@@ -88,7 +87,7 @@ fgGFXboolean fgGfxMeshSoA::setupAttributes(fgGfxAttributeData *pDataArray) const
     pDataArray[index].size = 3;
     pDataArray[index].type = FG_GFX_NORMAL;
     pDataArray[index].dataType = FG_GFX_FLOAT;
-    pDataArray[index].stride = sizeof(fgVector3f);
+    pDataArray[index].stride = sizeof (fgVector3f);
     pDataArray[index].isEnabled = FG_TRUE;
     pDataArray[index].isInterleaved = FG_FALSE; // SoA is not interleaved
     pDataArray[index].isNormalized = FG_FALSE;
@@ -101,7 +100,7 @@ fgGFXboolean fgGfxMeshSoA::setupAttributes(fgGfxAttributeData *pDataArray) const
         pDataArray[index].buffer = 0;
         pDataArray[index].pointer = (fgGFXvoid *)pointer;
     }
-    
+
     // Move offset to UVs (second is normal of type fgVector3f)
     offset = 0;
     pointer = (uintptr_t)((unsigned int*)&uvs.front());
@@ -111,10 +110,10 @@ fgGFXboolean fgGfxMeshSoA::setupAttributes(fgGfxAttributeData *pDataArray) const
     pDataArray[index].size = 2;
     pDataArray[index].type = FG_GFX_TEXTURE_COORD;
     pDataArray[index].dataType = FG_GFX_FLOAT;
-    pDataArray[index].stride = sizeof(fgVector2f);
+    pDataArray[index].stride = sizeof (fgVector2f);
     pDataArray[index].isEnabled = FG_TRUE;
     pDataArray[index].isInterleaved = FG_FALSE; // SoA is not interleaved
-    pDataArray[index].isNormalized = FG_FALSE;    
+    pDataArray[index].isNormalized = FG_FALSE;
     if(getPtrVBO() && getVBOCount()) {
         pDataArray[index].isBO = FG_TRUE;
         pDataArray[index].buffer = getPtrVBO()[TEX_COORDS_VBO_ARRAY_IDX].id;
@@ -124,15 +123,15 @@ fgGFXboolean fgGfxMeshSoA::setupAttributes(fgGfxAttributeData *pDataArray) const
         pDataArray[index].buffer = 0;
         pDataArray[index].pointer = (fgGFXvoid *)pointer;
     }
-    
+
     // Colors = there are no colors, this attribute will be disabled
     pDataArray[FG_GFX_ATTRIB_COLOR_LOCATION] = fgGfxAttributeData(FG_GFX_COLOR);
     pDataArray[FG_GFX_ATTRIB_COLOR_LOCATION].isInterleaved = FG_FALSE;
-    
+
     // Tangents - this attribute will be disabled
     pDataArray[FG_GFX_ATTRIB_TANGENT_LOCATION] = fgGfxAttributeData(FG_GFX_TANGENT);
     pDataArray[FG_GFX_ATTRIB_TANGENT_LOCATION].isInterleaved = FG_FALSE;
-    
+
     return FG_GFX_TRUE;
 }
 
@@ -230,6 +229,7 @@ fgGFXvoid *fgGfxMeshAoS::getIndicesPointer(void) const {
         return (fgGFXvoid *)((unsigned int*)&indices.front());
     return (fgGFXvoid *)0;
 }
+
 /**
  * 
  * @return  GFX_TRUE if buffers (VBO) were generated successfully

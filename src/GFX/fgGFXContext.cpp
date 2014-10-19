@@ -1918,7 +1918,7 @@ void fgGfxContext::vertexAttribPointer(fgGfxAttributeData& attrData) {
     m_attrInfo[index] = attrData;
     m_attrInfo[index].isEnabled = isEnabled;
     m_attrInfo[index].buffer = m_params[(fgGFXuint)GL_ARRAY_BUFFER_BINDING];
-    
+
     glVertexAttribPointer(attrData.index,
                           attrData.size,
                           attrData.dataType,

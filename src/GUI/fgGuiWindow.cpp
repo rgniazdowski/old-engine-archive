@@ -12,39 +12,32 @@
 /*
  *
  */
-fgGuiWindow::fgGuiWindow()
-{
-	fgGuiWindow::setDefaults();
+fgGuiWindow::fgGuiWindow() {
+    fgGuiWindow::setDefaults();
 }
 
 /*
  *
  */
-fgGuiWindow::~fgGuiWindow()
-{
+fgGuiWindow::~fgGuiWindow() { }
+
+/*
+ *
+ */
+void fgGuiWindow::setDefaults(void) {
+    m_type = FG_GUI_WINDOW;
+    m_typeName = FG_GUI_WINDOW_NAME;
+    m_typeTraits = FG_GUI_WINDOW | FG_GUI_CONTAINER | FG_GUI_WIDGET;
 }
 
 /*
  *
  */
-void fgGuiWindow::setDefaults(void)
-{
-	m_type = FG_GUI_WINDOW;
-	m_typeName = FG_GUI_WINDOW_NAME;
-	m_typeTraits = FG_GUI_WINDOW | FG_GUI_CONTAINER | FG_GUI_WIDGET;
+fgBoundingBox3Df& fgGuiWindow::updateSize(void) {
+    return fgGuiContainer::updateSize();
 }
 
 /*
  *
  */
-fgBoundingBox3Df& fgGuiWindow::updateSize(void)
-{
-	return fgGuiContainer::updateSize();
-}
-
-/*
- *
- */
-void fgGuiWindow::refresh(void)
-{
-}
+void fgGuiWindow::refresh(void) { }

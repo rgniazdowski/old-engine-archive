@@ -8,20 +8,20 @@
  *******************************************************/
 
 #ifndef _FG_GFX_SHADER_BASE_H_
-#define _FG_GFX_SHADER_BASE_H_
+    #define _FG_GFX_SHADER_BASE_H_
 
-#include "fgGFXShaderDefs.h"
+    #include "fgGFXShaderDefs.h"
 
-#include "Hardware/fgQualityTypes.h"
-#include "Resource/fgDataObjectBase.h"
-#include "Util/fgHandle.h"
-#include "Util/fgTag.h"
-#include <map>
+    #include "Hardware/fgQualityTypes.h"
+    #include "Resource/fgDataObjectBase.h"
+    #include "Util/fgHandle.h"
+    #include "Util/fgTag.h"
+    #include <map>
 
 class fgGfxShader;
 
-#define FG_TAG_GFX_SHADER_NAME	"GfxShader"
-#define FG_TAG_GFX_SHADER		FG_TAG_TYPE(fgGfxShader)
+    #define FG_TAG_GFX_SHADER_NAME	"GfxShader"
+    #define FG_TAG_GFX_SHADER		FG_TAG_TYPE(fgGfxShader)
 
 FG_TAG_TEMPLATE_ID_AUTO(fgGfxShader, FG_TAG_GFX_SHADER_NAME);
 typedef FG_TAG_GFX_SHADER fgGfxShaderTag;
@@ -59,7 +59,6 @@ protected:
     fgBool m_isManaged;
 
 protected:
-
     void setManaged(fgBool toggle = FG_TRUE) {
         m_isManaged = toggle;
     }
@@ -69,31 +68,26 @@ public:
     fgGfxShaderBase();
     // 
     virtual ~fgGfxShaderBase();
-
     fgBool isManaged(void) const {
         return m_isManaged;
     }
 
     // 
-
     fgGFXuint getGfxID(void) const {
         return m_gfxID;
     }
 
     //
-
     fgGFXuint & getRefGfxID(void) {
         return m_gfxID;
     }
 
     //
-
     fgGFXint getParam(fgGFXenum pname) {
         return m_params[pname];
     }
 
     //
-
     const char *getLog(void) const {
         return m_log;
     }

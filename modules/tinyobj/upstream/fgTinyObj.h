@@ -4,106 +4,102 @@
 // Licensed under 2-clause BSD liecense.
 //
 #ifndef _FG_TINY_OBJ_LOADER_H_
-#define _FG_TINY_OBJ_LOADER_H_
+    #define _FG_TINY_OBJ_LOADER_H_
 
-#include <string>
-#include <vector>
-#include <map>
+    #include <string>
+    #include <vector>
+    #include <map>
 
-#include "GFX/fgGFXModelTypes.h"
+    #include "GFX/fgGFXModelTypes.h"
 
 namespace fgTinyObj {
 
-namespace tinyobj_old {
-typedef struct
-{
-    std::string name;
+    namespace tinyobj_old {
 
-    float ambient[3];
-    float diffuse[3];
-    float specular[3];
-    float transmittance[3];
-    float emission[3];
-    float shininess;
-    float ior;                // index of refraction
-    float dissolve;           // 1 == opaque; 0 == fully transparent
-    // illumination model (see http://www.fileformat.info/format/material/)
-    int illum;
+        typedef struct {
+            std::string name;
 
-    std::string ambient_texname;
-    std::string diffuse_texname;
-    std::string specular_texname;
-    std::string normal_texname;
-    std::map<std::string, std::string> unknown_parameter;
-} material_t;
+            float ambient[3];
+            float diffuse[3];
+            float specular[3];
+            float transmittance[3];
+            float emission[3];
+            float shininess;
+            float ior; // index of refraction
+            float dissolve; // 1 == opaque; 0 == fully transparent
+            // illumination model (see http://www.fileformat.info/format/material/)
+            int illum;
 
-typedef struct
-{
-    std::vector<float>          positions;
-    std::vector<float>          normals;
-    std::vector<float>          texcoords;
-    std::vector<unsigned int>   indices;
-} mesh_t;
+            std::string ambient_texname;
+            std::string diffuse_texname;
+            std::string specular_texname;
+            std::string normal_texname;
+            std::map<std::string, std::string> unknown_parameter;
+        } material_t;
 
-typedef struct
-{
-    std::string  name;
-    material_t   material;
-    mesh_t       mesh;
-} shape_t;
+        typedef struct {
+            std::vector<float> positions;
+            std::vector<float> normals;
+            std::vector<float> texcoords;
+            std::vector<unsigned int> indices;
+        } mesh_t;
 
-};
+        typedef struct {
+            std::string name;
+            material_t material;
+            mesh_t mesh;
+        } shape_t;
 
-class MaterialReader
-{
-public:
-    MaterialReader(){}
-    virtual ~MaterialReader(){}
+    };
 
-    virtual std::string operator() (
-        const std::string& matId,
-		std::map<std::string, fgGfxMaterial>& matMap) = 0;
-};
-
-class MaterialFileReader:
-  public MaterialReader
-{
+    class MaterialReader {
     public:
-        MaterialFileReader(const std::string& mtl_basepath): m_mtlBasePath(mtl_basepath) {}
-        virtual ~MaterialFileReader() {}
-        virtual std::string operator() (
-          const std::string& matId,
-          std::map<std::string, fgGfxMaterial>& matMap);
+        MaterialReader() { }
+        virtual ~MaterialReader() { }
+
+        virtual std::string operator ()(
+                const std::string& matId,
+                std::map<std::string, fgGfxMaterial>& matMap) = 0;
+    };
+
+    class MaterialFileReader :
+    public MaterialReader {
+    public:
+        MaterialFileReader(const std::string& mtl_basepath) : m_mtlBasePath(mtl_basepath) { }
+        virtual ~MaterialFileReader() { }
+        virtual std::string operator ()(
+                const std::string& matId,
+                std::map<std::string, fgGfxMaterial>& matMap);
 
     private:
         std::string m_mtlBasePath;
-};
+    };
 
-/// Loads .obj from a file.
-/// 'shapes' will be filled with parsed shape data
-/// The function returns error string.
-/// Returns empty string when loading .obj success.
-/// 'mtl_basepath' is optional, and used for base path for .mtl file.
-std::string LoadObj(
-	fgVector<fgGfxShape *>& shapes,   // [output]
-    const char* filename,
-    const char* mtl_basepath = NULL,
-	fgBool forceAoS = FG_TRUE);
+    /// Loads .obj from a file.
+    /// 'shapes' will be filled with parsed shape data
+    /// The function returns error string.
+    /// Returns empty string when loading .obj success.
+    /// 'mtl_basepath' is optional, and used for base path for .mtl file.
+    std::string LoadObj(
+                        fgVector<fgGfxShape *>& shapes, // [output]
+                        const char* filename,
+                        const char* mtl_basepath = NULL,
+                        fgBool forceAoS = FG_TRUE);
 
-/// Loads object from a std::istream, uses GetMtlIStreamFn to retrieve
-/// std::istream for materials.
-/// Returns empty string when loading .obj success.
-std::string LoadObj(
-    fgVector<fgGfxShape *>& shapes,   // [output]
-    std::istream& inStream,
-    MaterialReader& readMatFn,
-	fgBool forceAoS = FG_TRUE);
+    /// Loads object from a std::istream, uses GetMtlIStreamFn to retrieve
+    /// std::istream for materials.
+    /// Returns empty string when loading .obj success.
+    std::string LoadObj(
+                        fgVector<fgGfxShape *>& shapes, // [output]
+                        std::istream& inStream,
+                        MaterialReader& readMatFn,
+                        fgBool forceAoS = FG_TRUE);
 
-/// Loads materials into std::map
-/// Returns an empty string if successful
-std::string LoadMtl (
-  std::map<std::string, fgGfxMaterial>& material_map,
-  std::istream& inStream);
+    /// Loads materials into std::map
+    /// Returns an empty string if successful
+    std::string LoadMtl(
+                        std::map<std::string, fgGfxMaterial>& material_map,
+                        std::istream& inStream);
 }
 
 #endif  /* _FG_TINY_OBJ_LOADER_H_ */

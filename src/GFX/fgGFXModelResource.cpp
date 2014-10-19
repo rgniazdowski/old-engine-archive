@@ -12,6 +12,7 @@
 #include "Resource/fgResourceErrorCodes.h"
 #include "Util/fgPath.h"
 #include "Resource/fgResourceManager.h"
+
 /*
  *
  */
@@ -151,7 +152,7 @@ fgBool fgGfxModelResource::_loadOBJ(void) {
             m_numUVs += shape->mesh->getNumUVs();
             m_numIndices += shape->mesh->getNumIndices();
             // #FIXME
-            m_numTriangles += shape->mesh->getNumIndices()/3;
+            m_numTriangles += shape->mesh->getNumIndices() / 3;
         }
         m_size += shape->getDataSize();
     }

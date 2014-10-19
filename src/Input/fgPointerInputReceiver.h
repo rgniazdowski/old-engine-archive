@@ -8,27 +8,27 @@
  *******************************************************/
 
 #ifndef _FG_POINTER_INPUT_RECEIVER_H_
-#define _FG_POINTER_INPUT_RECEIVER_H_
+    #define _FG_POINTER_INPUT_RECEIVER_H_
 
-#include "fgBuildConfig.h"
+    #include "fgBuildConfig.h"
 
-#include "fgPointerRawData.h"
-#include "Math/fgMathLib.h"
-#include "Event/fgEventManager.h"
+    #include "fgPointerRawData.h"
+    #include "Math/fgMathLib.h"
+    #include "Event/fgEventManager.h"
 
-#include <map>
+    #include <map>
 
-#define FG_INPUT_MAX_TOUCH_POINTS 10
+    #define FG_INPUT_MAX_TOUCH_POINTS 10
 
-#if defined(FG_USING_MARMALADE)
-#include "s3eTypes.h"
-#endif
+    #if defined(FG_USING_MARMALADE)
+        #include "s3eTypes.h"
+    #endif
 
-#if defined(FG_USING_SDL2)
+    #if defined(FG_USING_SDL2)
 class MainModule;
 
-#include "SDL2/SDL_events.h"
-#endif /* FG_USING_SDL2 */
+        #include "SDL2/SDL_events.h"
+    #endif /* FG_USING_SDL2 */
 
 /*
  * TouchReceiver receives touch events directly from the callbacks
@@ -37,9 +37,9 @@ class MainModule;
  * (triggers/throws) proper events. It comunicates directly to the EventManager
  */
 class fgPointerInputReceiver {
-#if defined(FG_USING_SDL2)
+    #if defined(FG_USING_SDL2)
     friend class MainModule;
-#endif
+    #endif
 private:
     int MIN_OFFSET_FOR_SWIPE_X;
     int MIN_OFFSET_FOR_SWIPE_Y;
@@ -80,12 +80,12 @@ private:
 
     //
     void interpretSwipes(int min_offset_for_swipe,
-            int startPointer,
-            int endPointer,
-            int initialPointer,
-            fgBool* minusSwipe,
-            fgBool* plusSwipe,
-            int* swipeSize);
+                         int startPointer,
+                         int endPointer,
+                         int initialPointer,
+                         fgBool* minusSwipe,
+                         fgBool* plusSwipe,
+                         int* swipeSize);
 
 public:
     //
@@ -97,19 +97,16 @@ public:
     void initialize(void);
 
     //
-
     int pixelsPerStepX(void) const {
         return PIXELS_PER_STEP_X;
     }
 
     //
-
     int pixelsPerStepY(void) const {
         return PIXELS_PER_STEP_Y;
     }
 
     //
-
     int maxOffsetForTap(void) const {
         return MAX_OFFSET_FOR_TAP;
     }
@@ -132,13 +129,11 @@ public:
     void processData(void);
 
     //
-
     fgEventManager *getEventManager(void) const {
         return m_eventMgr;
     }
 
     //
-
     void setEventManager(fgEventManager *eventMgr) {
         m_eventMgr = eventMgr;
     }

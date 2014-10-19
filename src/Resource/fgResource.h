@@ -250,13 +250,13 @@ public:
     inline fgResourceType getResourceType() const {
         return m_resType;
     }
-    
+
 protected:
     // Set the reference counter for the resource
     void setReferenceCount(unsigned int nCount) {
         m_nRefCount = nCount;
     }
-    
+
 public:
     //
     inline fgManagerBase *getManager(void) const {
@@ -333,7 +333,7 @@ protected:
     size_t m_size;
     /// Is the resource loaded and ready to be used in program?
     fgBool m_isReady;
-    
+
 };
 
 #endif /* _FG_RESOURCE_H_ */

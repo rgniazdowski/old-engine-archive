@@ -8,24 +8,24 @@
  *******************************************************/
 
 #ifndef _FG_RESOURCE_FACTORY_TYPES_H_
-#define _FG_RESOURCE_FACTORY_TYPES_H_
+    #define _FG_RESOURCE_FACTORY_TYPES_H_
 
 class fgResource;
 
-#if __cplusplus > 199711L
+    #if __cplusplus > 199711L
 using fgCreateResourceFn = fgResource* (*)(void);
-#else
+    #else
 typedef fgResource* (*fgCreateResourceFn)(void);
-#endif
+    #endif
 
-#ifndef FG_FACTORY_CREATE_FUNCTION
-#define FG_FACTORY_CREATE_FUNCTION(RETURNTYPE, CREATETYPE) \
+    #ifndef FG_FACTORY_CREATE_FUNCTION
+        #define FG_FACTORY_CREATE_FUNCTION(RETURNTYPE, CREATETYPE) \
 static RETURNTYPE * createResource(void) { return new CREATETYPE(); }
-#endif
+    #endif
 
-#ifndef FG_RESOURCE_FACTORY_CREATE_FUNCTION
-#define FG_RESOURCE_FACTORY_CREATE_FUNCTION(CREATETYPE) \
+    #ifndef FG_RESOURCE_FACTORY_CREATE_FUNCTION
+        #define FG_RESOURCE_FACTORY_CREATE_FUNCTION(CREATETYPE) \
 static fgResource * createResource(void) { return new CREATETYPE(); }
-#endif
+    #endif
 
 #endif /* _FG_RESOURCE_FACTORY_TYPES_H_ */

@@ -514,7 +514,7 @@ fgResource* fgResourceManager::request(const std::string& info, const fgResource
     // required file will be found
     if(fgStrings::contains(info, std::string("/\\")))
         return NULL;
-    
+
     std::string pattern;
     std::string filePath;
     fgResourceType resExtType = FG_RESOURCE_INVALID;
@@ -529,7 +529,7 @@ fgResource* fgResourceManager::request(const std::string& info, const fgResource
     } else { // extension is given, search for exact file
         pattern.append(info);
     }
-    
+
     if(!infoAsName && iext) {
         // This is special search for filename within already loaded resources
         goToBegin();
@@ -539,21 +539,21 @@ fgResource* fgResourceManager::request(const std::string& info, const fgResource
                 break;
             fgResource::fileMapping &files = res->getFileMapping();
             fgResource::fileMappingItor fit = files.begin(), fend = files.end();
-            for(;fit!=fend;fit++) {
+            for(; fit != fend; fit++) {
                 // Comparing using endsWith - resource contains relative file paths
                 // not just file name - this request function takes in just file names
                 // resource names or patterns (wildcards for extensions)
                 if(fgStrings::endsWith(fit->second, pattern, FG_TRUE)) {
                     //if(fit->second.compare(pattern) == 0) {
                     // Found resource containing specified file
-                    
+
                     return res;
                 }
             }
             goToNext();
         }
     }
-    
+
     m_dataDir->rewind();
     while(m_dataDir->searchForFile(filePath, "./", pattern, FG_TRUE).length()) {
         const char *fext = NULL;

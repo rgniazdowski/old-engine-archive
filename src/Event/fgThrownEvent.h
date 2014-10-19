@@ -8,28 +8,24 @@
  *******************************************************/
 
 #ifndef _FG_THROWN_EVENT_H_
-#define _FG_THROWN_EVENT_H_
+    #define _FG_THROWN_EVENT_H_
 
-#include "fgEventDefinitions.h"
-#include "fgArgumentList.h"
+    #include "fgEventDefinitions.h"
+    #include "fgArgumentList.h"
 
 /*
  *
  */
-struct fgThrownEvent
-{
-	fgEventType eventCode;
-	fgArgumentList *argList;
-	void *systemData;
-	void *userData;
-
-	fgThrownEvent() : eventCode(FG_EVENT_INVALID), argList(NULL) {
-	}
-
-	fgThrownEvent(fgEventType _eventCode, fgArgumentList *_argList) {
-		eventCode = _eventCode;
-		argList = _argList;
-	}
+struct fgThrownEvent {
+    fgEventType eventCode;
+    fgArgumentList *argList;
+    void *systemData;
+    void *userData;
+    fgThrownEvent() : eventCode(FG_EVENT_INVALID), argList(NULL) { }
+    fgThrownEvent(fgEventType _eventCode, fgArgumentList *_argList) {
+        eventCode = _eventCode;
+        argList = _argList;
+    }
 };
 
 #endif /* _FG_THROWN_EVENT_H_ */

@@ -8,38 +8,37 @@
  *******************************************************/
 
 #ifndef _FG_GUI_PROGRESS_BAR_H_
-#define _FG_GUI_PROGRESS_BAR_H_
+    #define _FG_GUI_PROGRESS_BAR_H_
 
-#include "fgGuiWidget.h"
-#include "fgGuiWidgetFactoryTypes.h"
+    #include "fgGuiWidget.h"
+    #include "fgGuiWidgetFactoryTypes.h"
 
-#define FG_GUI_PROGRESS_BAR			0x00040000
-#define FG_GUI_PROGRESS_BAR_NAME	"ProgressBar"
+    #define FG_GUI_PROGRESS_BAR			0x00040000
+    #define FG_GUI_PROGRESS_BAR_NAME	"ProgressBar"
 
 /*
  *
  */
-class fgGuiProgressBar : public fgGuiWidget
-{
+class fgGuiProgressBar : public fgGuiWidget {
 private:
 protected:
 
 protected:
-	// 
-	virtual void setDefaults(void);
+    // 
+    virtual void setDefaults(void);
 
 public:
-	// 
-	fgGuiProgressBar();
-	// 
-	virtual ~fgGuiProgressBar();
+    // 
+    fgGuiProgressBar();
+    // 
+    virtual ~fgGuiProgressBar();
 
-	FG_GUI_WIDGET_FACTORY_CREATE_FUNCTION(fgGuiProgressBar);
-	
-	// 
-	virtual fgBoundingBox3Df& updateSize(void);
-	// 
-	virtual void refresh(void);
+    FG_GUI_WIDGET_FACTORY_CREATE_FUNCTION(fgGuiProgressBar);
+
+    // 
+    virtual fgBoundingBox3Df& updateSize(void);
+    // 
+    virtual void refresh(void);
 
 };
 

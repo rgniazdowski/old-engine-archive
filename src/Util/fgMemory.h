@@ -8,32 +8,31 @@
  *******************************************************/
 
 #ifndef _FG_MEMORY_H
-#define _FG_MEMORY_H
+    #define _FG_MEMORY_H
 
-#include "fgBuildConfig.h"
-#include "fgBool.h"
-#include <cstring>
+    #include "fgBuildConfig.h"
+    #include "fgBool.h"
+    #include <cstring>
 
-#ifdef FG_USING_MARMALADE
+    #ifdef FG_USING_MARMALADE
 
-#include "s3eMemory.h"
+        #include "s3eMemory.h"
 
-#define fgMalloc_sys_	s3eMalloc
-#define fgFree_sys_		s3eFree
-#define fgRealloc_sys_	s3eRealloc
+        #define fgMalloc_sys_	s3eMalloc
+        #define fgFree_sys_		s3eFree
+        #define fgRealloc_sys_	s3eRealloc
 
 // FIXME need more wrappers for marmalade's heap memory handling
 
-#else
+    #else
 
-#include <malloc.h>
+        #include <malloc.h>
 
-#define fgMalloc_sys_	malloc
-#define fgFree_sys_		free
-#define fgRealloc_sys_	realloc
+        #define fgMalloc_sys_	malloc
+        #define fgFree_sys_		free
+        #define fgRealloc_sys_	realloc
 
-#endif
-
+    #endif
 template<class Type>
 /*
  * This is a special template function for allocating memory.
@@ -42,51 +41,49 @@ template<class Type>
  * copies. Size = Count * sizeof(Type)
  */
 inline Type *fgMalloc(const int count = 1, const fgBool clear = FG_TRUE) {
-    if (count <= 0)
+    if(count <= 0)
         return NULL;
     size_t size = count * sizeof (Type);
-    Type *data = (Type *) fgMalloc_sys_(size);
-    if (!data)
+    Type *data = (Type *)fgMalloc_sys_(size);
+    if(!data)
         return NULL;
-    if (clear) {
-        memset((void *) data, 0, size);
+    if(clear) {
+        memset((void *)data, 0, size);
     }
     return data;
 }
-
 /*
  *
  */
 inline void fgFree(void *& item, const int size = -1, const fgBool clear = FG_FALSE) {
-    if (!item)
+    if(!item)
         return;
 
-    if (clear && size > 0) {
-        memset(item, 0, (size_t) size);
+    if(clear && size > 0) {
+        memset(item, 0, (size_t)size);
     }
 
     fgFree_sys_(item);
 
     item = NULL;
 }
-
 template<class Type>
 /*
  *
  */
 inline void fgFree(Type *& item, const fgBool clear = FG_FALSE) {
-    if (!item)
+    if(!item)
         return;
     size_t size = sizeof (Type);
-    if (clear && size > 0) {
+    if(clear && size > 0) {
         memset(item, 0, size);
     }
 
-    fgFree_sys_((void *) item);
+    fgFree_sys_((void *)item);
 
     item = NULL;
 }
 
-#define fgRealloc fgRealloc_sys_
+    #define fgRealloc fgRealloc_sys_
 
 #endif

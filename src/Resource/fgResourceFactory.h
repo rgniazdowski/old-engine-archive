@@ -8,46 +8,46 @@
  *******************************************************/
 
 #ifndef _FG_RESOURCE_FACTORY_H_
-#define _FG_RESOURCE_FACTORY_H_
+    #define _FG_RESOURCE_FACTORY_H_
 
-#include "fgCommon.h"
-#include "fgResource.h"
-#include "fgResourceFactoryTypes.h"
+    #include "fgCommon.h"
+    #include "fgResource.h"
+    #include "fgResourceFactoryTypes.h"
 
-#include <map>
+    #include <map>
 // Need general template ?
+
 /*
  *
  */
-class fgResourceFactory
-{
+class fgResourceFactory {
 public:
-	typedef std::map<fgResourceType, fgCreateResourceFn> factoryMap;
-	typedef std::pair<fgResourceType, fgCreateResourceFn> factoryPair;
-	typedef factoryMap::iterator factoryMapItor;
-	typedef factoryMap::const_iterator factoryMapConstItor;
+    typedef std::map<fgResourceType, fgCreateResourceFn> factoryMap;
+    typedef std::pair<fgResourceType, fgCreateResourceFn> factoryPair;
+    typedef factoryMap::iterator factoryMapItor;
+    typedef factoryMap::const_iterator factoryMapConstItor;
 
 public:
-	// Default empty constructor for Resource Factory object
-	fgResourceFactory();
-	// Default destructor for Resource Factory object
-	~fgResourceFactory();
+    // Default empty constructor for Resource Factory object
+    fgResourceFactory();
+    // Default destructor for Resource Factory object
+    ~fgResourceFactory();
 
-	// Clear all registered resource creators
-	void clear(void);
+    // Clear all registered resource creators
+    void clear(void);
 
-	// Register resource create function based on resource type
-	fgBool registerResource(const fgResourceType type, fgCreateResourceFn function);
-	
-	// Call specific create function for given resource
-	fgResource* createResource(const fgResourceType type);
-	
-	// Check if given resource type constructor/create function is registered in factory
-	fgBool isRegistered(const fgResourceType type);
+    // Register resource create function based on resource type
+    fgBool registerResource(const fgResourceType type, fgCreateResourceFn function);
+
+    // Call specific create function for given resource
+    fgResource* createResource(const fgResourceType type);
+
+    // Check if given resource type constructor/create function is registered in factory
+    fgBool isRegistered(const fgResourceType type);
 
 private:
-	// Map storing create functions for given resource types
-	factoryMap m_factoryMap;
+    // Map storing create functions for given resource types
+    factoryMap m_factoryMap;
 };
 
 #endif /* _FG_RESOURCE_FACTORY_H_ */

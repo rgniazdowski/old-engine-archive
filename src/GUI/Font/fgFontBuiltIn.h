@@ -8,51 +8,52 @@
  *******************************************************/
 
 #ifndef _FG_FONT_BUILT_IN_H_
-#define _FG_FONT_BUILT_IN_H_
+    #define _FG_FONT_BUILT_IN_H_
 
-#include "fgFontResource.h"
-#include "fgFontBuiltInTypes.h"
+    #include "fgFontResource.h"
+    #include "fgFontBuiltInTypes.h"
 
 /*
  *
  */
-class fgFontBuiltInResource : public fgFontResource
-{
+class fgFontBuiltInResource : public fgFontResource {
 public:
-	//
-	fgFontBuiltInResource();
-	//
-	fgFontBuiltInResource(fgFontBuiltInRawData *rawFontData);
-	//
-	virtual ~fgFontBuiltInResource() { destroy(); }
+    //
+    fgFontBuiltInResource();
+    //
+    fgFontBuiltInResource(fgFontBuiltInRawData *rawFontData);
+    //
+    virtual ~fgFontBuiltInResource() {
+        destroy();
+    }
 
 protected:
-	//
-	virtual void clear(void);
+    //
+    virtual void clear(void);
 
 public:
-	//
-	virtual fgBool create(void);
-	//
-	virtual void destroy(void);
-	//
-	virtual fgBool recreate(void);
-	//
-	virtual void dispose(void);
-	//
-	virtual fgBool isDisposed(void) const;
-	//
-	void setBuiltInRawFontData(fgFontBuiltInRawData *rawFontData);
+    //
+    virtual fgBool create(void);
+    //
+    virtual void destroy(void);
+    //
+    virtual fgBool recreate(void);
+    //
+    virtual void dispose(void);
+    //
+    virtual fgBool isDisposed(void) const;
+    //
+    void setBuiltInRawFontData(fgFontBuiltInRawData *rawFontData);
 
-	//
-	fgFontBuiltInRawData *getRawFontData(void) const {
-		return m_rawFontData;
-	}
+    //
+    fgFontBuiltInRawData *getRawFontData(void) const {
+        return m_rawFontData;
+    }
 
 private:
-	fgFontBuiltInRawData *m_rawFontData;
+    fgFontBuiltInRawData *m_rawFontData;
 };
 
-#define FG_FONT_TYPE_STB_BUILTIN	0x0040
+    #define FG_FONT_TYPE_STB_BUILTIN	0x0040
 
 #endif /* _FG_FONT_BUILT_IN_H_ */

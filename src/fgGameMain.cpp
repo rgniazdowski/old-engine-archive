@@ -143,9 +143,9 @@ fgBool fgGameMain::initSubsystems(void) {
     int h = m_gfxMain->getMainWindow()->getHeight();
     FG_HardwareState->setScreenDimensions(w, h);
     FG_HardwareState->deviceYield(0); // #FIXME - device yield...
-//#if defined(FG_USING_MARMALADE)
+    //#if defined(FG_USING_MARMALADE)
     FG_HardwareState->initDPI();
-//#endif
+    //#endif
     FG_HardwareState->deviceYield(0); // #FIXME - device yield...
     FG_QualityManager->determineQuality();
     FG_HardwareState->deviceYield(0); // #FIXME - device yield...
@@ -397,10 +397,10 @@ void fgGameMain::display(void) {
  */
 void fgGameMain::render(void) {
     m_gfxMain->render();
-    fgGfxPlatform::context()->setBlend(FG_TRUE);    
+    fgGfxPlatform::context()->setBlend(FG_TRUE);
     //fgGfxPlatform::context()->setDepthTest(FG_FALSE);
     m_guiMain->render();
-    fgGfxPlatform::context()->setBlend(FG_FALSE);  
+    fgGfxPlatform::context()->setBlend(FG_FALSE);
     //fgGfxPlatform::context()->setDepthTest(FG_TRUE);
     m_gfxMain->getMainWindow()->swapBuffers();
 }

@@ -8,94 +8,92 @@
  *******************************************************/
 
 #ifndef _FG_GFX_WINDOW_H_
-#define _FG_GFX_WINDOW_H_
+    #define _FG_GFX_WINDOW_H_
 
-#include "fgGFXStdInc.h"
+    #include "fgGFXStdInc.h"
 
 /*
  *
  */
-class fgGfxWindow
-{
+class fgGfxWindow {
 public:
-	// 
-	fgGfxWindow();
-	// 
-	fgGfxWindow(const char *title, unsigned int width, unsigned int height);
+    // 
+    fgGfxWindow();
+    // 
+    fgGfxWindow(const char *title, unsigned int width, unsigned int height);
 
-	//
-	~fgGfxWindow();
+    //
+    ~fgGfxWindow();
 
-	//
-	fgBool setup(const char *title, unsigned int width, unsigned int height);
+    //
+    fgBool setup(const char *title, unsigned int width, unsigned int height);
 
-	//
-	fgBool close(void);
+    //
+    fgBool close(void);
 
-	//
-	int getWidth(void) const {
-		return m_width;
-	}
-	//
-	int getHeight(void) const {
-		return m_height;
-	}
-	//
-	float getAspect(void) const {
-		return (float)m_width/(float)m_height;
-	}
+    //
+    int getWidth(void) const {
+        return m_width;
+    }
+    //
+    int getHeight(void) const {
+        return m_height;
+    }
+    //
+    float getAspect(void) const {
+        return (float)m_width / (float)m_height;
+    }
 
-	//
-	void setFullscreen(fgBool toggle = FG_TRUE);
+    //
+    void setFullscreen(fgBool toggle = FG_TRUE);
 
-	// #FIXME
-	fgBool swapBuffers(void);
-	//
-	void clearColor(void);
+    // #FIXME
+    fgBool swapBuffers(void);
+    //
+    void clearColor(void);
+    fgBool isOpen(void) const {
+        return m_isOpen;
+    }
 
-	fgBool isOpen(void) const {
-		return m_isOpen;
-	}
-
-#if defined(FG_USING_SDL2)
-        SDL_Window* getSysPtr(void) const {
-            return m_sdlWindow;
-        }
-#elif defined(FG_USING_EGL)
-        EGLSurface getSysPtr(void) const {
-            return m_EGLSurface;
-        }
-#else
-        void *getSysPtr(void) const {
-            return NULL;
-        }
-#endif
-        
-private:
-	//
-	fgBool refreshFS(void);
+    #if defined(FG_USING_SDL2)
+    SDL_Window* getSysPtr(void) const {
+        return m_sdlWindow;
+    }
+    #elif defined(FG_USING_EGL)
+    EGLSurface getSysPtr(void) const {
+        return m_EGLSurface;
+    }
+    #else
+    void *getSysPtr(void) const {
+        return NULL;
+    }
+    #endif
 
 private:
-	/// 
-	std::string m_title;
-#if defined FG_USING_EGL
-	EGLSurface	m_EGLSurface;
-#elif defined FG_USING_SDL2
-	SDL_Window*	m_sdlWindow;	
-	Uint32		m_sdlFlags;
-#endif
-	/// 
-	unsigned int m_width;
-	/// 
-	unsigned int m_height;
-	///
-	fgBool m_isFullscreen;
-	///
-	fgBool m_isHW;
-	///
-	fgBool m_isDB;
-	///
-	fgBool m_isOpen;
+    //
+    fgBool refreshFS(void);
+
+private:
+    /// 
+    std::string m_title;
+    #if defined FG_USING_EGL
+    EGLSurface m_EGLSurface;
+    #elif defined FG_USING_SDL2
+    SDL_Window* m_sdlWindow;
+    Uint32 m_sdlFlags;
+    #endif
+    /// 
+    unsigned int m_width;
+    /// 
+    unsigned int m_height;
+    ///
+    fgBool m_isFullscreen;
+    ///
+    fgBool m_isHW;
+    ///
+    fgBool m_isDB;
+    ///
+    fgBool m_isOpen;
 };
 
 #endif /* _FG_GFX_WINDOW_H_ */

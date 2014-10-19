@@ -132,7 +132,7 @@ protected:
     fgBool m_isLinked;
     ///
     fgManagerBase *m_manager;
-    
+
 public:
     //
     fgGfxShaderProgram();
@@ -198,7 +198,7 @@ public:
 
     //
     fgBool isUsed(void);
-    
+
 public:
     //
     inline shaderVec & getRefShaderVec(void) {

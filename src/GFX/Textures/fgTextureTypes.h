@@ -1,103 +1,107 @@
 /*******************************************************
-* Copyright (C) 2014 Radoslaw Gniazdowski <r.gniazdowski@gmail.com>. All rights reserved.
-* 
-* This file is part of FlexiGame: Flexible Game Engine
-* 
-* FlexiGame source code and any related files can not be copied, modified 
-* and/or distributed without the express or written permission from the author.
-*******************************************************/
+ * Copyright (C) 2014 Radoslaw Gniazdowski <r.gniazdowski@gmail.com>. All rights reserved.
+ * 
+ * This file is part of FlexiGame: Flexible Game Engine
+ * 
+ * FlexiGame source code and any related files can not be copied, modified 
+ * and/or distributed without the express or written permission from the author.
+ *******************************************************/
 
 #ifndef _FG_TEXTURE_TYPES_H_
-#define _FG_TEXTURE_TYPES_H_
+    #define _FG_TEXTURE_TYPES_H_
 
 
 // Extension (held as string) for BMP file format
-#define FG_TEXTURE_FILE_EXTENSION_BMP	"bmp"
+    #define FG_TEXTURE_FILE_EXTENSION_BMP	"bmp"
 // Extension (held as string) for RAW file format
-#define FG_TEXTURE_FILE_EXTENSION_RAW	"raw"
+    #define FG_TEXTURE_FILE_EXTENSION_RAW	"raw"
 // Extension (held as string) for JPEG file format
-#define FG_TEXTURE_FILE_EXTENSION_JPEG	"jpg"
+    #define FG_TEXTURE_FILE_EXTENSION_JPEG	"jpg"
 // Extension (held as string) for PNG file format
-#define FG_TEXTURE_FILE_EXTENSION_PNG	"png"
+    #define FG_TEXTURE_FILE_EXTENSION_PNG	"png"
 // Extension (held as string) for TGA file format
-#define FG_TEXTURE_FILE_EXTENSION_TGA	"tga"
+    #define FG_TEXTURE_FILE_EXTENSION_TGA	"tga"
 
 // Texture file type enumeration. Supported file formats (current & future):
 // bmp, raw, jpg, png, tga
+
 enum fgTextureFileType {
-	FG_TEXTURE_FILE_BMP,
-	FG_TEXTURE_FILE_RAW,
-	FG_TEXTURE_FILE_JPEG,
-	FG_TEXTURE_FILE_PNG,
-	FG_TEXTURE_FILE_TGA,
-	FG_TEXTURE_FILE_OTHER,
-	
-	FG_TEXTURE_FILE_INVALID,
-	FG_NUM_TEXTURE_FILE_TYPES
+    FG_TEXTURE_FILE_BMP,
+    FG_TEXTURE_FILE_RAW,
+    FG_TEXTURE_FILE_JPEG,
+    FG_TEXTURE_FILE_PNG,
+    FG_TEXTURE_FILE_TGA,
+    FG_TEXTURE_FILE_OTHER,
+
+    FG_TEXTURE_FILE_INVALID,
+    FG_NUM_TEXTURE_FILE_TYPES
 };
 
 // Texture type enumeration, defines the type of the texture and
 // possible usage because of this
-enum fgTextureType {
-	FG_TEXTURE_PLAIN,
-	FG_TEXTURE_BUMP,
-	FG_TEXTURE_NORMAL,
-	FG_TEXTURE_RAW,
-	FG_TEXTURE_FONT,
 
-	FG_TEXTURE_INVALID,
-	FG_NUM_TEXTURE_TYPES
+enum fgTextureType {
+    FG_TEXTURE_PLAIN,
+    FG_TEXTURE_BUMP,
+    FG_TEXTURE_NORMAL,
+    FG_TEXTURE_RAW,
+    FG_TEXTURE_FONT,
+
+    FG_TEXTURE_INVALID,
+    FG_NUM_TEXTURE_TYPES
 };
 
 // Texture internal pixel format
-enum fgTextureInternalPixelFormat {
-#if defined(FG_USING_OPENGL_ES)
-	FG_TEXTURE_INTERNAL_PIXEL_ALPHA,
-	FG_TEXTURE_INTERNAL_PIXEL_RGB,
-	FG_TEXTURE_INTERNAL_PIXEL_RGBA,
-	FG_TEXTURE_INTERNAL_PIXEL_LUMINANCE,
-	FG_TEXTURE_INTERNAL_PIXEL_LUMINANCE_ALPHA,
-#elif defined(FG_USING_OPENGL)
-	FG_TEXTURE_INTERNAL_PIXEL_DEPTH_COMPONENT,
-	FG_TEXTURE_INTERNAL_PIXEL_DEPTH_STENCIL,
-	FG_TEXTURE_INTERNAL_PIXEL_RED,
-	FG_TEXTURE_INTERNAL_PIXEL_RG,
-	FG_TEXTURE_INTERNAL_PIXEL_RGB,
-	FG_TEXTURE_INTERNAL_PIXEL_RGBA,
-#endif
 
-	FG_TEXTURE_INTERNAL_PIXEL_INVALID,
-	FG_NUM_TEXTURE_INTERNAL_PIXEL_FORMATS
+enum fgTextureInternalPixelFormat {
+    #if defined(FG_USING_OPENGL_ES)
+    FG_TEXTURE_INTERNAL_PIXEL_ALPHA,
+    FG_TEXTURE_INTERNAL_PIXEL_RGB,
+    FG_TEXTURE_INTERNAL_PIXEL_RGBA,
+    FG_TEXTURE_INTERNAL_PIXEL_LUMINANCE,
+    FG_TEXTURE_INTERNAL_PIXEL_LUMINANCE_ALPHA,
+    #elif defined(FG_USING_OPENGL)
+    FG_TEXTURE_INTERNAL_PIXEL_DEPTH_COMPONENT,
+    FG_TEXTURE_INTERNAL_PIXEL_DEPTH_STENCIL,
+    FG_TEXTURE_INTERNAL_PIXEL_RED,
+    FG_TEXTURE_INTERNAL_PIXEL_RG,
+    FG_TEXTURE_INTERNAL_PIXEL_RGB,
+    FG_TEXTURE_INTERNAL_PIXEL_RGBA,
+    #endif
+
+    FG_TEXTURE_INTERNAL_PIXEL_INVALID,
+    FG_NUM_TEXTURE_INTERNAL_PIXEL_FORMATS
 };
 
 // Texture pixel format (data storage)
-enum fgTexturePixelFormat {
-#if defined(FG_USING_OPENGL_ES)
-	FG_TEXTURE_PIXEL_ALPHA,
-	FG_TEXTURE_PIXEL_RGB,
-	FG_TEXTURE_PIXEL_RGBA,
-	FG_TEXTURE_PIXEL_LUMINANCE,
-	FG_TEXTURE_PIXEL_LUMINANCE_ALPHA,
-#elif defined(FG_USING_OPENGL)
-	FG_TEXTURE_PIXEL_DEPTH_COMPONENT,
-	FG_TEXTURE_PIXEL_DEPTH_STENCIL,
-	FG_TEXTURE_PIXEL_RED,
-	FG_TEXTURE_PIXEL_RG,
-	FG_TEXTURE_PIXEL_RGB,
-	FG_TEXTURE_PIXEL_RGBA,
-	FG_TEXTURE_PIXEL_BGR,
-	FG_TEXTURE_PIXEL_BGRA,
-	FG_TEXTURE_PIXEL_RED_INTEGER,
-	FG_TEXTURE_PIXEL_RG_INTEGER,
-	FG_TEXTURE_PIXEL_RGB_INTEGER,
-	FG_TEXTURE_PIXEL_BGR_INTEGER, 
-	FG_TEXTURE_PIXEL_RGBA_INTEGER, 
-	FG_TEXTURE_PIXEL_BGRA_INTEGER,
-	FG_TEXTURE_PIXEL_STENCIL_INDEX,
-#endif
 
-	FG_TEXTURE_PIXEL_INVALID,
-	FG_NUM_TEXTURE_PIXEL_FORMATS
+enum fgTexturePixelFormat {
+    #if defined(FG_USING_OPENGL_ES)
+    FG_TEXTURE_PIXEL_ALPHA,
+    FG_TEXTURE_PIXEL_RGB,
+    FG_TEXTURE_PIXEL_RGBA,
+    FG_TEXTURE_PIXEL_LUMINANCE,
+    FG_TEXTURE_PIXEL_LUMINANCE_ALPHA,
+    #elif defined(FG_USING_OPENGL)
+    FG_TEXTURE_PIXEL_DEPTH_COMPONENT,
+    FG_TEXTURE_PIXEL_DEPTH_STENCIL,
+    FG_TEXTURE_PIXEL_RED,
+    FG_TEXTURE_PIXEL_RG,
+    FG_TEXTURE_PIXEL_RGB,
+    FG_TEXTURE_PIXEL_RGBA,
+    FG_TEXTURE_PIXEL_BGR,
+    FG_TEXTURE_PIXEL_BGRA,
+    FG_TEXTURE_PIXEL_RED_INTEGER,
+    FG_TEXTURE_PIXEL_RG_INTEGER,
+    FG_TEXTURE_PIXEL_RGB_INTEGER,
+    FG_TEXTURE_PIXEL_BGR_INTEGER,
+    FG_TEXTURE_PIXEL_RGBA_INTEGER,
+    FG_TEXTURE_PIXEL_BGRA_INTEGER,
+    FG_TEXTURE_PIXEL_STENCIL_INDEX,
+    #endif
+
+    FG_TEXTURE_PIXEL_INVALID,
+    FG_NUM_TEXTURE_PIXEL_FORMATS
 };
 
 // ///////////////////////////////////////////////////////////////////////
@@ -164,12 +168,12 @@ enum fgTexturePixelFormat {
 //
 // ///////////////////////////////////////////////////////////////////////
 
-#define FG_TEXTURE_COMP_INVALID			0
-#define FG_TEXTURE_COMP_GRAYSCALE		1
-#define FG_TEXTURE_COMP_GRAYSCALE_ALPHA 2
-#define FG_TEXTURE_COMP_RGB				3
-#define FG_TEXTURE_COMP_RGBA			4
+    #define FG_TEXTURE_COMP_INVALID			0
+    #define FG_TEXTURE_COMP_GRAYSCALE		1
+    #define FG_TEXTURE_COMP_GRAYSCALE_ALPHA 2
+    #define FG_TEXTURE_COMP_RGB				3
+    #define FG_TEXTURE_COMP_RGBA			4
 
-#define FG_TEXTURE_DEFAULT_PIXEL_FORMAT FG_TEXTURE_PIXEL_RGBA
+    #define FG_TEXTURE_DEFAULT_PIXEL_FORMAT FG_TEXTURE_PIXEL_RGBA
 
 #endif /* _FG_TEXTURE_TYPES_H_ */

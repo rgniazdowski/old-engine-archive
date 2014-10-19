@@ -12,39 +12,32 @@
 /*
  *
  */
-fgGuiPopup::fgGuiPopup()
-{
-	fgGuiPopup::setDefaults();
+fgGuiPopup::fgGuiPopup() {
+    fgGuiPopup::setDefaults();
 }
 
 /*
  *
  */
-fgGuiPopup::~fgGuiPopup()
-{
+fgGuiPopup::~fgGuiPopup() { }
+
+/*
+ *
+ */
+void fgGuiPopup::setDefaults(void) {
+    m_type = FG_GUI_POPUP;
+    m_typeName = FG_GUI_POPUP_NAME;
+    m_typeTraits = FG_GUI_POPUP | FG_GUI_WINDOW | FG_GUI_CONTAINER | FG_GUI_WIDGET;
 }
 
 /*
  *
  */
-void fgGuiPopup::setDefaults(void)
-{
-	m_type = FG_GUI_POPUP;
-	m_typeName = FG_GUI_POPUP_NAME;
-	m_typeTraits = FG_GUI_POPUP | FG_GUI_WINDOW | FG_GUI_CONTAINER | FG_GUI_WIDGET;
+fgBoundingBox3Df& fgGuiPopup::updateSize(void) {
+    return fgGuiWindow::updateSize();
 }
 
 /*
  *
  */
-fgBoundingBox3Df& fgGuiPopup::updateSize(void)
-{
-	return fgGuiWindow::updateSize();
-}
-
-/*
- *
- */
-void fgGuiPopup::refresh(void)
-{
-}
+void fgGuiPopup::refresh(void) { }

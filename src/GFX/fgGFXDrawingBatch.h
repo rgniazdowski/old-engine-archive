@@ -22,8 +22,8 @@
 class fgGfxDrawingBatch : public fgGfxLayer {
 protected:
     typedef std::priority_queue<fgGfxDrawCall*, std::deque<fgGfxDrawCall*>, fgPtrLessEq<fgGfxDrawCall*> > batchPriorityQueue;
-    typedef fgVector<fgGfxDrawCall *>   drawCallVec;
-    typedef drawCallVec::iterator   drawCallVecItor;
+    typedef fgVector<fgGfxDrawCall *> drawCallVec;
+    typedef drawCallVec::iterator drawCallVecItor;
 
 private:
     ///
@@ -36,13 +36,13 @@ private:
 protected:
     ///
     fgManagerBase *m_shaderMgr;
-    
+
 protected:
     //
     inline batchPriorityQueue& getRefPriorityQueue(void) {
         return m_priorityBatch;
     }
-    
+
     //
     inline drawCallVec& getRefDrawCalls(void) {
         return m_drawCalls;
@@ -86,7 +86,7 @@ public:
     unsigned int count(void) const {
         return m_drawCalls.size();
     }
-    
+
     //
     unsigned int size(void) const {
         return m_drawCalls.size();
@@ -96,7 +96,7 @@ public:
     fgBool empty(void) const {
         return (fgBool)m_drawCalls.empty();
     }
-    
+
     // 
     virtual void flush(void);
 
@@ -105,17 +105,17 @@ public:
 
     //
     virtual void render(void);
-    
+
     //
     fgGfxDrawCall *operator [](size_t n) {
         return m_drawCalls[n];
     }
-    
+
     //
     const fgGfxDrawCall *operator [](size_t n) const {
         return m_drawCalls[n];
     }
-    
+
 
 };
 

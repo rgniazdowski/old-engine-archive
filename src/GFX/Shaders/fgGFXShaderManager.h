@@ -8,25 +8,25 @@
  *******************************************************/
 
 #ifndef _FG_GFX_SHADER_MANAGER_H_
-#define _FG_GFX_SHADER_MANAGER_H_
+    #define _FG_GFX_SHADER_MANAGER_H_
 
-#ifdef _FG_GFX_STD_INC_BLOCK__
-#error "FG_GFX_STD_INC_BLOCK constant is defined. Do not include GfxShaderManager inside of Gfx Standard Include header."
-#endif
+    #ifdef _FG_GFX_STD_INC_BLOCK__
+        #error "FG_GFX_STD_INC_BLOCK constant is defined. Do not include GfxShaderManager inside of Gfx Standard Include header."
+    #endif
 
-#include "GFX/fgGFXStdInc.h"
-#include "fgManagerBase.h"
-#include "Resource/fgDataManagerBase.h"
+    #include "GFX/fgGFXStdInc.h"
+    #include "fgManagerBase.h"
+    #include "Resource/fgDataManagerBase.h"
 
-#include "Util/fgHandleManager.h"
-#include "Util/fgTag.h"
-#include "fgGFXShaderProgram.h"
+    #include "Util/fgHandleManager.h"
+    #include "Util/fgTag.h"
+    #include "fgGFXShaderProgram.h"
 
 class fgGfxShaderManager;
 
-#define FG_TAG_SHADER_MANAGER_NAME		"GfxShaderManager"
+    #define FG_TAG_SHADER_MANAGER_NAME		"GfxShaderManager"
 //#define FG_TAG_MANAGER_BASE_ID		20 //#FIXME - something automatic maybe?
-#define FG_TAG_SHADER_MANAGER			FG_TAG_TYPE(fgGfxShaderManager)
+    #define FG_TAG_SHADER_MANAGER			FG_TAG_TYPE(fgGfxShaderManager)
 
 //FG_TAG_TEMPLATE(fgResourceManager, FG_TAG_MANAGER_BASE_NAME, FG_TAG_MANAGER_BASE_ID);
 FG_TAG_TEMPLATE_ID_AUTO(fgGfxShaderManager, FG_TAG_SHADER_MANAGER_NAME);
@@ -34,88 +34,87 @@ FG_TAG_TEMPLATE_ID_AUTO(fgGfxShaderManager, FG_TAG_SHADER_MANAGER_NAME);
 // Special handle type for manager base
 typedef FG_TAG_SHADER_MANAGER fgGfxShaderManagerTag;
 
-#define FG_MANAGER_GFX_SHADER	0x00000002
+    #define FG_MANAGER_GFX_SHADER	0x00000002
 
 /*
  *
  */
-class fgGfxShaderManager : public fgDataManagerBase<fgGfxShaderProgram*, fgGfxShaderHandle, fgGfxShaderManagerTag>
-{
+class fgGfxShaderManager : public fgDataManagerBase<fgGfxShaderProgram*, fgGfxShaderHandle, fgGfxShaderManagerTag> {
 protected:
-	typedef hmDataVec					smProgramVec;
-	typedef hmDataVec::iterator		smProgramVecItor;
+    typedef hmDataVec smProgramVec;
+    typedef hmDataVec::iterator smProgramVecItor;
 public:
-	// Default constructor for the shader manager object
-	fgGfxShaderManager();
-	// Default destructor for the shader manager object
-	virtual ~fgGfxShaderManager();
+    // Default constructor for the shader manager object
+    fgGfxShaderManager();
+    // Default destructor for the shader manager object
+    virtual ~fgGfxShaderManager();
 
 protected:
-	//	
-	void clear(void);
+    //	
+    void clear(void);
 
 public:
-	// Destroy the shader manager and all managed data (destructors called - every handle becomes invalid)
-	fgBool destroy(void);
+    // Destroy the shader manager and all managed data (destructors called - every handle becomes invalid)
+    fgBool destroy(void);
 
-	// Initialize the shader manager
-	fgBool initialize(void);
-	
-	// Pre load / pre cache the required shaders
-	fgBool preLoadShaders(void);
+    // Initialize the shader manager
+    fgBool initialize(void);
 
-	// This will compile all shader programs (no linking will occur)
-	fgBool compileShaders(void);
+    // Pre load / pre cache the required shaders
+    fgBool preLoadShaders(void);
 
-	// This will link all shader programs (compile will occur if needed)
-	fgBool linkShaders(void);
+    // This will compile all shader programs (no linking will occur)
+    fgBool compileShaders(void);
 
-	// This will make all gfx IDs invalid (free gfx side data)
-	fgBool allReleaseGFX(void);
+    // This will link all shader programs (compile will occur if needed)
+    fgBool linkShaders(void);
 
-	//
-	fgBool isProgramUsed(fgGfxShaderProgram *pProgram);
-	//
-	fgBool isProgramUsed(fgGfxShaderHandle spUniqueID);
-	//
-	fgBool isProgramUsed(const std::string &nameTag);
-	//
-	fgBool isProgramUsed(const char *nameTag);
+    // This will make all gfx IDs invalid (free gfx side data)
+    fgBool allReleaseGFX(void);
 
-	//
-	fgBool useProgram(fgGfxShaderProgram *pProgram);
-	//
-	fgBool useProgram(fgGfxShaderHandle spUniqueID);
-	//
-	fgBool useProgram(const std::string &nameTag);
-	//
-	fgBool useProgram(const char *nameTag);
+    //
+    fgBool isProgramUsed(fgGfxShaderProgram *pProgram);
+    //
+    fgBool isProgramUsed(fgGfxShaderHandle spUniqueID);
+    //
+    fgBool isProgramUsed(const std::string &nameTag);
+    //
+    fgBool isProgramUsed(const char *nameTag);
 
-	//
-	virtual fgBool insert(fgGfxShaderHandle& phUniqueID, fgGfxShaderProgram *pProgram, const std::string& nameTag);
+    //
+    fgBool useProgram(fgGfxShaderProgram *pProgram);
+    //
+    fgBool useProgram(fgGfxShaderHandle spUniqueID);
+    //
+    fgBool useProgram(const std::string &nameTag);
+    //
+    fgBool useProgram(const char *nameTag);
 
-	// Insert the specified shader program into the manager
-	virtual fgBool insertProgram(fgGfxShaderHandle& phUniqueID, fgGfxShaderProgram *pProgram);
+    //
+    virtual fgBool insert(fgGfxShaderHandle& phUniqueID, fgGfxShaderProgram *pProgram, const std::string& nameTag);
 
-	//
-	void setShadersPath(const std::string &path);
-	//
-	void setShadersPath(const char *path);
+    // Insert the specified shader program into the manager
+    virtual fgBool insertProgram(fgGfxShaderHandle& phUniqueID, fgGfxShaderProgram *pProgram);
 
-	// 
-	virtual fgGfxShaderProgram *request(const std::string& info);
-	// 
-	virtual fgGfxShaderProgram *request(const char *info);
+    //
+    void setShadersPath(const std::string &path);
+    //
+    void setShadersPath(const char *path);
 
-	fgGfxShaderProgram *getCurrentProgram(void) const;
+    // 
+    virtual fgGfxShaderProgram *request(const std::string& info);
+    // 
+    virtual fgGfxShaderProgram *request(const char *info);
+
+    fgGfxShaderProgram *getCurrentProgram(void) const;
 private:
-	//
-	std::string		m_shadersPath;
-	/// Pointer to shader program object which is being currently used
-	/// For double checking - after GFX suspend/resume program ID
-	/// will become invalid, need to set this pointer to NULL on suspend
-	fgGfxShaderProgram *m_currentProgram;
-	
+    //
+    std::string m_shadersPath;
+    /// Pointer to shader program object which is being currently used
+    /// For double checking - after GFX suspend/resume program ID
+    /// will become invalid, need to set this pointer to NULL on suspend
+    fgGfxShaderProgram *m_currentProgram;
+
 };
 
 #endif /* _FG_GFX_SHADER_MANAGER_H_ */

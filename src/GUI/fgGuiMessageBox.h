@@ -8,38 +8,37 @@
  *******************************************************/
 
 #ifndef _FG_GUI_MESSAGE_BOX_H_
-#define _FG_GUI_MESSAGE_BOX_H_
+    #define _FG_GUI_MESSAGE_BOX_H_
 
-#include "fgGuiWindow.h"
-#include "fgGuiWidgetFactoryTypes.h"
+    #include "fgGuiWindow.h"
+    #include "fgGuiWidgetFactoryTypes.h"
 
-#define FG_GUI_MESSAGE_BOX		0x00008000
-#define FG_GUI_MESSAGE_BOX_NAME	"MessageBox"
+    #define FG_GUI_MESSAGE_BOX		0x00008000
+    #define FG_GUI_MESSAGE_BOX_NAME	"MessageBox"
 
 /*
  *
  */
-class fgGuiMessageBox : public fgGuiWindow
-{
+class fgGuiMessageBox : public fgGuiWindow {
 private:
 protected:
 
 protected:
-	// 
-	virtual void setDefaults(void);
+    // 
+    virtual void setDefaults(void);
 
 public:
-	// 
-	fgGuiMessageBox();
-	// 
-	virtual ~fgGuiMessageBox();
+    // 
+    fgGuiMessageBox();
+    // 
+    virtual ~fgGuiMessageBox();
 
-	FG_GUI_WIDGET_FACTORY_CREATE_FUNCTION(fgGuiMessageBox);
-	
-	// 
-	virtual fgBoundingBox3Df& updateSize(void);
-	// 
-	virtual void refresh(void);
+    FG_GUI_WIDGET_FACTORY_CREATE_FUNCTION(fgGuiMessageBox);
+
+    // 
+    virtual fgBoundingBox3Df& updateSize(void);
+    // 
+    virtual void refresh(void);
 
 };
 

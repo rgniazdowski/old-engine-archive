@@ -96,7 +96,7 @@ fgBool fgDirent::readDirectory(fgBool recursive) {
             continue;
 
         while((m_curEntry = readdir(m_curDir)) != NULL) {
-            fileName = m_curEntry->d_name;            
+            fileName = m_curEntry->d_name;
 #endif
             if(fileName.compare(".") == 0 || fileName.compare("..") == 0)
                 continue;

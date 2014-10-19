@@ -8,22 +8,21 @@
  *******************************************************/
 
 #ifndef _FG_LOG_H_
-#define _FG_LOG_H_
+    #define _FG_LOG_H_
 
-#include "fgBuildConfig.h"
-#include "fgMessageCommon.h"
-#include "fgStatus.h"
-#include "Util/fgFile.h"
+    #include "fgBuildConfig.h"
+    #include "fgMessageCommon.h"
+    #include "fgStatus.h"
+    #include "Util/fgFile.h"
 
 // #FIXME #TODO things like that should be in xml config file, settings or whatever
-#define FG_LOG_DEFAULT_FOLDER	"log"
+    #define FG_LOG_DEFAULT_FOLDER	"log"
 
-#define FG_LOG_DEFAULT_PREFIX	
+    #define FG_LOG_DEFAULT_PREFIX	
 
-#define FG_LOG_BUF_MAX			4096
+    #define FG_LOG_BUF_MAX			4096
 
-namespace FG_LOG 
-{
+namespace FG_LOG {
 
     // 
     void PrintInfo(const char *fmt, ...);

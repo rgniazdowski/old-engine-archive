@@ -23,7 +23,6 @@ public:
 
     // 
     virtual ~fgGfxMVPMatrix() { }
-
     /**
      * 
      * @param modelMatrix

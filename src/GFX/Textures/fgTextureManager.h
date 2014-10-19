@@ -50,7 +50,7 @@ public:
     virtual fgBool destroy(void);
     //
     virtual fgBool initialize(void);
-    
+
     //
     void setResourceManager(fgManagerBase *pResourceMgr);
     //

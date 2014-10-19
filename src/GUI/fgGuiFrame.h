@@ -8,38 +8,37 @@
  *******************************************************/
 
 #ifndef _FG_GUI_FRAME_H_
-#define _FG_GUI_FRAME_H_
+    #define _FG_GUI_FRAME_H_
 
-#include "fgGuiContainer.h"
-#include "fgGuiWidgetFactoryTypes.h"
+    #include "fgGuiContainer.h"
+    #include "fgGuiWidgetFactoryTypes.h"
 
-#define FG_GUI_FRAME		0x00000080
-#define FG_GUI_FRAME_NAME	"Frame"
+    #define FG_GUI_FRAME		0x00000080
+    #define FG_GUI_FRAME_NAME	"Frame"
 
 /*
  *
  */
-class fgGuiFrame : public fgGuiContainer
-{
+class fgGuiFrame : public fgGuiContainer {
 private:
 protected:
 
 protected:
-	// 
-	virtual void setDefaults(void);
+    // 
+    virtual void setDefaults(void);
 
 public:
-	// 
-	fgGuiFrame();
-	// 
-	virtual ~fgGuiFrame();
+    // 
+    fgGuiFrame();
+    // 
+    virtual ~fgGuiFrame();
 
-	FG_GUI_WIDGET_FACTORY_CREATE_FUNCTION(fgGuiFrame);
-	
-	// 
-	virtual fgBoundingBox3Df& updateSize(void);
-	// 
-	virtual void refresh(void);
+    FG_GUI_WIDGET_FACTORY_CREATE_FUNCTION(fgGuiFrame);
+
+    // 
+    virtual fgBoundingBox3Df& updateSize(void);
+    // 
+    virtual void refresh(void);
 
 };
 

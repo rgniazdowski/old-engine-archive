@@ -8,35 +8,34 @@
  *******************************************************/
 
 #ifndef _FG_GUI_SCROLL_AREA_H_
-#define _FG_GUI_SCROLL_AREA_H_
+    #define _FG_GUI_SCROLL_AREA_H_
 
-#include "fgGuiContainer.h"
-#include "fgGuiWidgetFactoryTypes.h"
+    #include "fgGuiContainer.h"
+    #include "fgGuiWidgetFactoryTypes.h"
 
-#define FG_GUI_SCROLL_AREA		0x00000200
-#define FG_GUI_SCROLL_AREA_NAME	"ScrollArea"
+    #define FG_GUI_SCROLL_AREA		0x00000200
+    #define FG_GUI_SCROLL_AREA_NAME	"ScrollArea"
 
-class fgGuiScrollArea : public fgGuiContainer
-{
+class fgGuiScrollArea : public fgGuiContainer {
 private:
 protected:
 
 protected:
-	// 
-	virtual void setDefaults(void);
+    // 
+    virtual void setDefaults(void);
 
 public:
-	// 
-	fgGuiScrollArea();
-	// 
-	virtual ~fgGuiScrollArea();
+    // 
+    fgGuiScrollArea();
+    // 
+    virtual ~fgGuiScrollArea();
 
-	FG_GUI_WIDGET_FACTORY_CREATE_FUNCTION(fgGuiScrollArea);
-	
-	// 
-	virtual fgBoundingBox3Df& updateSize(void);
-	// 
-	virtual void refresh(void);
+    FG_GUI_WIDGET_FACTORY_CREATE_FUNCTION(fgGuiScrollArea);
+
+    // 
+    virtual fgBoundingBox3Df& updateSize(void);
+    // 
+    virtual void refresh(void);
 
 };
 

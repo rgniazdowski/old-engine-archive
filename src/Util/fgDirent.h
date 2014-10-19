@@ -8,22 +8,22 @@
  *******************************************************/
 
 #ifndef _FG_DIRENT_H_
-#define _FG_DIRENT_H_
+    #define _FG_DIRENT_H_
 
-#include "fgCommon.h"
+    #include "fgCommon.h"
 
-#ifdef FG_USING_MARMALADE
-#include "s3eFile.h"
-#else
-#include <cstdio>
-#include <dirent.h>
-#include <sys/stat.h>
-#endif
+    #ifdef FG_USING_MARMALADE
+        #include "s3eFile.h"
+    #else
+        #include <cstdio>
+        #include <dirent.h>
+        #include <sys/stat.h>
+    #endif
 
 // #TODO - need to decide should I use everywhere stl string,
 // standard char array or my own wrapper - time will show 
 // which will be more crossplatform friendly
-#include <string>
+    #include <string>
 
 /* WINDOWS/LINUX solution using dirent.h 
 DIR *dir;
@@ -84,9 +84,9 @@ public:
 
     // Returns the path to the next file which matches the criteria
     std::string &searchForFile(std::string &output,
-            const std::string &basePath,
-            const std::string &pattern,
-            const fgBool deep = FG_FALSE);
+                               const std::string &basePath,
+                               const std::string &pattern,
+                               const fgBool deep = FG_FALSE);
 
     // Returns all loaded files (directory listing)
     fgStringVector &getRefFiles(void);
@@ -104,13 +104,13 @@ protected:
     fgStringVector m_fileNames;
     // iterator to the element in the string vector (file path/name)
     fgStringVector::iterator m_fileIt;
-#ifdef FG_USING_MARMALADE
+    #ifdef FG_USING_MARMALADE
     // Marmalade specific structure for reading directory contents
     s3eFileList *m_fileList;
-#else
+    #else
     DIR *m_curDir;
     struct dirent *m_curEntry;
-#endif
+    #endif
     fgBool m_isRecursive;
 };
 

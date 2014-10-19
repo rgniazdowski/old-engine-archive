@@ -68,7 +68,7 @@ public:
     #else
     typedef std::unordered_map <hashKey, fgRawIndex> hmNameMap;
     #endif
-    
+
 private:
     typedef fgVector <fgRawMagic> hmMagicVec;
     typedef fgVector <hashKey> hmNameVec;
@@ -130,7 +130,7 @@ public:
     hmDataVec& getRefDataVector(void) {
         return m_managedData;
     }
-    
+
     //
     const hmDataVec& getRefDataVector(void) const {
         return m_managedData;
@@ -320,7 +320,7 @@ inline fgBool fgHandleManager<DataType, HandleType>::isHandleValid(const HandleT
 }
 
     #if 0
-    template <typename DataType, typename HandleType>
+template <typename DataType, typename HandleType>
 inline const DataType* fgHandleManager <DataType, HandleType>
 ::Dereference(HandleType handle) const {
     // this lazy cast is ok - non-const version does not modify anything

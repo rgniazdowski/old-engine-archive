@@ -8,17 +8,16 @@
  *******************************************************/
 
 #ifndef _FG_PS_PARTICLE_EFFECT_CIRCULAR_H_
-#define _FG_PS_PARTICLE_EFFECT_CIRCULAR_H_
+    #define _FG_PS_PARTICLE_EFFECT_CIRCULAR_H_
 
-#include <limits.h>
-#include "fgPsParticleEffect.h"
-#include "fgLog.h"
+    #include <limits.h>
+    #include "fgPsParticleEffect.h"
+    #include "fgLog.h"
 
 /*
  *
  */
 class ParticleEffectCircular : public ParticleEffect {
-
 protected:
     // The CIRCULAR insert index
     int m_current_insert_idx;
@@ -42,7 +41,6 @@ public:
      * Public destructor
      */
     ~ParticleEffectCircular();
-
     /**
      * Make add_custom() call to OVERWRITE last Particle
      * This will be used to solve the TRAIL - EDGE gap!
@@ -55,14 +53,13 @@ public:
      * Sets m_maxCount, which implies resetting the object
      */
     void setMaxCount(int max_count);
-
     /**
      * Oblicza indeks pierwszej (czyli: najstarszej) Particle
      * Bufor jest cykliczny, i trzeba "zawijac" indeks
      */
     int firstAliveIdx() const {
-        unsigned int ualive = (unsigned int) aliveCount();
-        unsigned int uidx = (unsigned int) m_current_insert_idx;
+        unsigned int ualive = (unsigned int)aliveCount();
+        unsigned int uidx = (unsigned int)m_current_insert_idx;
         unsigned int umax_count = maxCount();
 
         uidx = (uidx - ualive) % umax_count;
@@ -71,40 +68,36 @@ public:
 
         return int(uidx);
     }
-
     /**
      * Returns n.of ALIVE cells
      */
     int aliveCount() const {
         return maxCount() - m_dummy_count;
     }
-
     /**
      * Checks if particle [idx] is INACTIVE FILLER
      */
     bool isDummy(int idx) const {
         return m_particles[idx].size > float(INT_MAX) / 2.0f;
     }
-
     /**
      * Sets particle [idx] to INACTIVE FILLER
      */
     bool setDummy(int idx) {
-        if( int(m_particles.size()) != maxCount() || idx >= maxCount() ) {
+        if(int(m_particles.size()) != maxCount() || idx >= maxCount()) {
             FG_LOG::PrintError("########## Inconsistent ParticleEffectCircular: size[%d], maxCount[%d], which[%d] ##########", m_particles.size(), maxCount(), idx);
             return false;
         }
 
         // DUMMY particle will be written, check if any ALIVE will be deleted
-        if( !isDummy(idx) ) {
-            m_dummy_count ++;
+        if(!isDummy(idx)) {
+            m_dummy_count++;
         }
 
         m_particles[idx].size = float(INT_MAX);
 
         return true;
     }
-
     /**
      * SETDUMMY ALIAS
      * Circular buffer does not remove elements

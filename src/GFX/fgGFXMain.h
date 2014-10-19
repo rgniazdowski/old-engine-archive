@@ -18,7 +18,7 @@
     #include "fgGFXCameraAnimation.h"
     #include "Shaders/fgGFXShaderManager.h"
     #include "Textures/fgTextureManager.h"
-    
+
     #include "fgGFX3DScene.h"
 
     #include "fgStatusReporter.h"

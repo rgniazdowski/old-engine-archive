@@ -24,7 +24,7 @@ protected:
     //
     ~fgStrings() { }
 
-public:    
+public:
     /**
      * 
      * @param str
@@ -42,7 +42,6 @@ public:
 
         return str.substr(strBegin, strRange);
     }
-   
     /**
      * 
      * @param str
@@ -70,7 +69,6 @@ public:
 
         return result;
     }
-    
     /**
      * 
      * @param s
@@ -87,7 +85,6 @@ public:
         }
         return elems;
     }
-    
     /**
      * 
      * @param s
@@ -99,7 +96,6 @@ public:
         fgStrings::split(s, delim, elems);
         return elems;
     }
-    
     /**
      * 
      * @param string
@@ -134,7 +130,6 @@ public:
         }
         return (fgBool)(((int)string.size() > minSize) && it == string.end() && decimalPoint);
     }
-    
     /**
      * 
      * @param string
@@ -159,7 +154,6 @@ public:
         }
         return (fgBool)(((int)string.size() > minSize) && it == string.end());
     }
-    
     /**
      * 
      * @param input
@@ -181,7 +175,6 @@ public:
         }
         return FG_TRUE;
     }
-    
     /**
      * 
      * @param input
@@ -207,7 +200,6 @@ public:
         }
         return FG_TRUE;
     }
-    
     /**
      * 
      * @param input
@@ -230,7 +222,6 @@ public:
         }
         return FG_TRUE;
     }
-    
     /**
      * 
      * @param input
@@ -255,7 +246,6 @@ public:
         }
         return FG_TRUE;
     }
-    
     /**
      * 
      * @param input

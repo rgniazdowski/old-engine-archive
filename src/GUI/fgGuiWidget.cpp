@@ -137,7 +137,7 @@ int fgGuiWidget::updateState(const fgPointerData *pointerData) {
     }
 
     if(m_state == FG_GUI_WIDGET_STATE_FOCUS) {
-        
+
         if(pointerData->m_state & FG_POINTER_STATE_PRESSED)//|| pointerData->m_state & FG_POINTER_STATE_DOWN) 
         {
             m_state = FG_GUI_WIDGET_STATE_PRESSED;

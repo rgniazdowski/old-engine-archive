@@ -8,17 +8,17 @@
  *******************************************************/
 
 #ifndef _FG_EVENT_HELPER_H_
-#define _FG_EVENT_HELPER_H_
+    #define _FG_EVENT_HELPER_H_
 
-#include "fgVector.h"
-#include "fgCallback.h"
+    #include "fgVector.h"
+    #include "fgCallback.h"
 
-#include "fgThrownEvent.h"
-#include "fgTimeoutCallback.h"
-#include "fgCyclicCallback.h"
+    #include "fgThrownEvent.h"
+    #include "fgTimeoutCallback.h"
+    #include "fgCyclicCallback.h"
 
-#include <map>
-#include <queue>
+    #include <map>
+    #include <queue>
 
 // #FIXME #TODO #P2 check if it is not deprecated (in Marmalade) to use the standard data types
 //		 it can be necessary to use Marmalade specific wrappers

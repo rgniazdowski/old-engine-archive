@@ -8,24 +8,24 @@
  *******************************************************/
 
 #ifndef _FG_GUI_WIDGET_FACTORY_TYPES_H_
-#define _FG_GUI_WIDGET_FACTORY_TYPES_H_
+    #define _FG_GUI_WIDGET_FACTORY_TYPES_H_
 
 class fgGuiWidget;
 
-#if __cplusplus > 199711L
+    #if __cplusplus > 199711L
 using fgCreateGuiWidgetFn = fgGuiWidget* (*)(void);
-#else
+    #else
 typedef fgGuiWidget* (*fgCreateGuiWidgetFn)(void);
-#endif
+    #endif
 
-#ifndef FG_GUI_FACTORY_CREATE_FUNCTION
-#define FG_GUI_FACTORY_CREATE_FUNCTION(RETURNTYPE, CREATETYPE) \
+    #ifndef FG_GUI_FACTORY_CREATE_FUNCTION
+        #define FG_GUI_FACTORY_CREATE_FUNCTION(RETURNTYPE, CREATETYPE) \
 static RETURNTYPE * createWidget(void) { return new CREATETYPE(); }
-#endif
+    #endif
 
-#ifndef FG_GUI_WIDGET_FACTORY_CREATE_FUNCTION
-#define FG_GUI_WIDGET_FACTORY_CREATE_FUNCTION(CREATETYPE) \
+    #ifndef FG_GUI_WIDGET_FACTORY_CREATE_FUNCTION
+        #define FG_GUI_WIDGET_FACTORY_CREATE_FUNCTION(CREATETYPE) \
 static fgGuiWidget * createWidget(void) { return new CREATETYPE(); }
-#endif
+    #endif
 
 #endif /* _FG_GUI_WIDGET_FACTORY_TYPES_H_ */

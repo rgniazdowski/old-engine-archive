@@ -8,16 +8,15 @@
  *******************************************************/
 
 #ifndef _FG_GUI_BASE_H_
-#define _FG_GUI_BASE_H_
+    #define _FG_GUI_BASE_H_
 
 /*
  *
  */
-class fgGuiBase
-{
+class fgGuiBase {
 public:
-	fgGuiBase() {}
-	virtual ~fgGuiBase() {}
+    fgGuiBase() { }
+    virtual ~fgGuiBase() { }
 
 };
 

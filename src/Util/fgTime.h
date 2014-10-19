@@ -8,42 +8,41 @@
  *******************************************************/
 
 #ifndef _FG_TIME_H_
-#define _FG_TIME_H_
+    #define _FG_TIME_H_
 
-#include <ctime>
+    #include <ctime>
 
-#define FG_TIME_MIN_TICK	0.001f
-#define FG_CLOCKS_PER_SEC	CLOCKS_PER_SEC
+    #define FG_TIME_MIN_TICK	0.001f
+    #define FG_CLOCKS_PER_SEC	CLOCKS_PER_SEC
 
-class fgTime 
-{
+class fgTime {
 private:
-	// Time marking start (init function)
-	static float s_start;
-	static float s_current;
-	static float s_lastTick;
+    // Time marking start (init function)
+    static float s_start;
+    static float s_current;
+    static float s_lastTick;
 
-	// Private constructor
-	fgTime() {}
-	// Private destructor
-	~fgTime() {}
+    // Private constructor
+    fgTime() { }
+    // Private destructor
+    ~fgTime() { }
 public:
-	// First initial time stamp
-	static void init(void);
-	// Mark current time
-	static void markTick(void);
+    // First initial time stamp
+    static void init(void);
+    // Mark current time
+    static void markTick(void);
 
-	// Return elapsed time since last tick (seconds)
-	static float elapsed(void);
-	// Get exact time since init (seconds)
-	static float exact(void);
-	// Get clock ticks
-	static float ticks(void);
-	// Get time since init in miliseconds
-	static float ms(void);
-	// Get the number of seconds since 00:00 hours, Jan 1, 1970 UTC
-	// (i.e., the current unix timestamp). Uses time(null)
-	static long seconds(void);
+    // Return elapsed time since last tick (seconds)
+    static float elapsed(void);
+    // Get exact time since init (seconds)
+    static float exact(void);
+    // Get clock ticks
+    static float ticks(void);
+    // Get time since init in miliseconds
+    static float ms(void);
+    // Get the number of seconds since 00:00 hours, Jan 1, 1970 UTC
+    // (i.e., the current unix timestamp). Uses time(null)
+    static long seconds(void);
 };
 
 // Platform independent function for getting time in miliseconds

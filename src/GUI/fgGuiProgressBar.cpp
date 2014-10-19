@@ -12,39 +12,32 @@
 /*
  *
  */
-fgGuiProgressBar::fgGuiProgressBar()
-{
-	fgGuiProgressBar::setDefaults();
+fgGuiProgressBar::fgGuiProgressBar() {
+    fgGuiProgressBar::setDefaults();
 }
 
 /*
  *
  */
-fgGuiProgressBar::~fgGuiProgressBar()
-{
+fgGuiProgressBar::~fgGuiProgressBar() { }
+
+/*
+ *
+ */
+void fgGuiProgressBar::setDefaults(void) {
+    m_type = FG_GUI_PROGRESS_BAR;
+    m_typeName = FG_GUI_PROGRESS_BAR_NAME;
+    m_typeTraits = FG_GUI_PROGRESS_BAR | FG_GUI_WIDGET;
 }
 
 /*
  *
  */
-void fgGuiProgressBar::setDefaults(void)
-{
-	m_type = FG_GUI_PROGRESS_BAR;
-	m_typeName = FG_GUI_PROGRESS_BAR_NAME;
-	m_typeTraits = FG_GUI_PROGRESS_BAR | FG_GUI_WIDGET;
+fgBoundingBox3Df& fgGuiProgressBar::updateSize(void) {
+    return fgGuiWidget::updateSize();
 }
 
 /*
  *
  */
-fgBoundingBox3Df& fgGuiProgressBar::updateSize(void)
-{
-	return fgGuiWidget::updateSize();
-}
-
-/*
- *
- */
-void fgGuiProgressBar::refresh(void)
-{
-}
+void fgGuiProgressBar::refresh(void) { }

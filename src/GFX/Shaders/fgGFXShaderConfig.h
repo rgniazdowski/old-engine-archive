@@ -8,41 +8,40 @@
  *******************************************************/
 
 #ifndef _FG_GFX_SHADER_CONFIG_H_
-#define _FG_GFX_SHADER_CONFIG_H_
+    #define _FG_GFX_SHADER_CONFIG_H_
 
-#ifdef _FG_GFX_STD_INC_BLOCK__
-#error "FG_GFX_STD_INC_BLOCK constant is defined. Do not include GfxShaderConfig inside of Gfx Standard Include header."
-#endif
-#include "fgGFXShaderDefs.h"
-#include "fgStatusReporter.h"
-#include "Hardware/fgQualityTypes.h"
-#include "Util/fgConfig.h"
-#include "Util/fgTag.h"
+    #ifdef _FG_GFX_STD_INC_BLOCK__
+        #error "FG_GFX_STD_INC_BLOCK constant is defined. Do not include GfxShaderConfig inside of Gfx Standard Include header."
+    #endif
+    #include "fgGFXShaderDefs.h"
+    #include "fgStatusReporter.h"
+    #include "Hardware/fgQualityTypes.h"
+    #include "Util/fgConfig.h"
+    #include "Util/fgTag.h"
 
-enum fgGfxShaderConfigType
-{
-	FG_GFX_SHADER_CONFIG_INVALID	= 0,
-	FG_GFX_SHADER_CONFIG_PROGRAM	= 1,
-	FG_GFX_SHADER_CONFIG_FRAGMENT	= 2,
-	FG_GFX_SHADER_CONFIG_VERTEX     = 3
-#if defined FG_USING_OPENGL
-	,
-	FG_GFX_SHADER_CONFIG_TESS_CONTROL       =   4,
-	FG_GFX_SHADER_CONFIG_TESS_EVALUATION    =   5,
-	FG_GFX_SHADER_CONFIG_GEOMETRY           =   6,
-	FG_GFX_SHADER_CONFIG_COMPUTE            =   7
-#endif
+enum fgGfxShaderConfigType {
+    FG_GFX_SHADER_CONFIG_INVALID = 0,
+    FG_GFX_SHADER_CONFIG_PROGRAM = 1,
+    FG_GFX_SHADER_CONFIG_FRAGMENT = 2,
+    FG_GFX_SHADER_CONFIG_VERTEX = 3
+    #if defined FG_USING_OPENGL
+    ,
+    FG_GFX_SHADER_CONFIG_TESS_CONTROL = 4,
+    FG_GFX_SHADER_CONFIG_TESS_EVALUATION = 5,
+    FG_GFX_SHADER_CONFIG_GEOMETRY = 6,
+    FG_GFX_SHADER_CONFIG_COMPUTE = 7
+    #endif
 };
 
-#define FG_GFX_SHADER_CONFIG_PROGRAM_SECTION_NAME	"ShaderProgramConfig"
-#define FG_GFX_SHADER_CONFIG_BASIC_SECTION_NAME		"ShaderConfig"
+    #define FG_GFX_SHADER_CONFIG_PROGRAM_SECTION_NAME	"ShaderProgramConfig"
+    #define FG_GFX_SHADER_CONFIG_BASIC_SECTION_NAME		"ShaderConfig"
 
 class fgGfxShaderConfig;
-#define FG_TAG_GFX_SHADER_CONFIG_NAME	"GfxShaderConfig"
-#define FG_TAG_GFX_SHADER_CONFIG	FG_TAG_TYPE(fgGfxShaderConfig)
+    #define FG_TAG_GFX_SHADER_CONFIG_NAME	"GfxShaderConfig"
+    #define FG_TAG_GFX_SHADER_CONFIG	FG_TAG_TYPE(fgGfxShaderConfig)
 
-FG_TAG_TEMPLATE_ID_AUTO(fgGfxShaderConfig,  FG_TAG_GFX_SHADER_CONFIG_NAME);
-typedef FG_TAG_GFX_SHADER_CONFIG            fgGfxShaderConfigTag;
+FG_TAG_TEMPLATE_ID_AUTO(fgGfxShaderConfig, FG_TAG_GFX_SHADER_CONFIG_NAME);
+typedef FG_TAG_GFX_SHADER_CONFIG fgGfxShaderConfigTag;
 
 /*
  * Shader config mission is to read special configs (INI) holding information
@@ -62,121 +61,120 @@ typedef FG_TAG_GFX_SHADER_CONFIG            fgGfxShaderConfigTag;
  * This class can load and parse only one config at one time, and
  * will provide that data for only one config type.
  */
-class fgGfxShaderConfig : protected fgConfig, public fgStatusReporter<fgGfxShaderConfigTag> 
-{
+class fgGfxShaderConfig : protected fgConfig, public fgStatusReporter<fgGfxShaderConfigTag> {
 public:
-	typedef fgVector<fgGfxShaderType>		shaderTypeVec;
-	typedef fgVector<fgGfxUniformBind>		shaderUniformBindVec;
-	typedef fgVector<fgGfxAttributeBind>	shaderAttributeBindVec;
-	typedef fgVector<std::string>			shaderIncludeNameVec;
-	typedef fgVector<std::string>			shaderFileVec;
-	typedef fgVector<fgQuality>			shaderQualityVec;
-	typedef fgVector<fgGfxShaderConstantDef>	shaderConstantVec;
+    typedef fgVector<fgGfxShaderType> shaderTypeVec;
+    typedef fgVector<fgGfxUniformBind> shaderUniformBindVec;
+    typedef fgVector<fgGfxAttributeBind> shaderAttributeBindVec;
+    typedef fgVector<std::string> shaderIncludeNameVec;
+    typedef fgVector<std::string> shaderFileVec;
+    typedef fgVector<fgQuality> shaderQualityVec;
+    typedef fgVector<fgGfxShaderConstantDef> shaderConstantVec;
 
 protected:
-	///
-	fgGfxShaderConfigType	m_configType;
-	///
-	shaderTypeVec			m_shaderTypes;
+    ///
+    fgGfxShaderConfigType m_configType;
+    ///
+    shaderTypeVec m_shaderTypes;
 
-	/// 
-	shaderUniformBindVec	m_uniformBinds;
-	///
-	shaderAttributeBindVec	m_attributeBinds;
-	///
-	shaderIncludeNameVec	m_includes;
-	///
-	shaderFileVec			m_files;
-	///
-	shaderQualityVec		m_qualities;
-	///
-	shaderConstantVec		m_constants;
-	
-	///
-	std::string				m_selectedConfigName;
-	///
-	std::string				m_programName;
+    /// 
+    shaderUniformBindVec m_uniformBinds;
+    ///
+    shaderAttributeBindVec m_attributeBinds;
+    ///
+    shaderIncludeNameVec m_includes;
+    ///
+    shaderFileVec m_files;
+    ///
+    shaderQualityVec m_qualities;
+    ///
+    shaderConstantVec m_constants;
 
-	fgGfxSLVersion	m_preferredSLVersion; // FIXME - this sould be probably somewhere else
+    ///
+    std::string m_selectedConfigName;
+    ///
+    std::string m_programName;
 
-	///
-	fgGfxShaderPrecision	m_defaultPrecision;
+    fgGfxSLVersion m_preferredSLVersion; // FIXME - this sould be probably somewhere else
+
+    ///
+    fgGfxShaderPrecision m_defaultPrecision;
 public:
-	//
-	fgGfxShaderConfig();
-	// 
-	fgGfxShaderConfig(const char *filePath);
-	// 
-	virtual ~fgGfxShaderConfig();
+    //
+    fgGfxShaderConfig();
+    // 
+    fgGfxShaderConfig(const char *filePath);
+    // 
+    virtual ~fgGfxShaderConfig();
 
-	//
-	virtual void clearAll(void);
+    //
+    virtual void clearAll(void);
 
-	// 
-	fgBool load(const char *filePath = NULL, fgGfxSLVersion SLver = FG_GFX_SHADING_LANGUAGE_INVALID);
+    // 
+    fgBool load(const char *filePath = NULL, fgGfxSLVersion SLver = FG_GFX_SHADING_LANGUAGE_INVALID);
 
-	//
-	fgGfxShaderConfigType getType(void) const {
-		return m_configType;
-	}
+    //
+    fgGfxShaderConfigType getType(void) const {
+        return m_configType;
+    }
 
-	//
-	shaderTypeVec & getRefShaderTypes(void) {
-		return m_shaderTypes;
-	}
+    //
+    shaderTypeVec & getRefShaderTypes(void) {
+        return m_shaderTypes;
+    }
 
-	//
-	shaderUniformBindVec & getRefUniformBinds(void) {
-		return m_uniformBinds;
-	}
+    //
+    shaderUniformBindVec & getRefUniformBinds(void) {
+        return m_uniformBinds;
+    }
 
-	//
-	shaderAttributeBindVec & getRefAttributeBinds(void) {
-		return m_attributeBinds;
-	}
+    //
+    shaderAttributeBindVec & getRefAttributeBinds(void) {
+        return m_attributeBinds;
+    }
 
-	//
-	shaderIncludeNameVec & getRefIncludes(void) {
-		return m_includes;
-	}
+    //
+    shaderIncludeNameVec & getRefIncludes(void) {
+        return m_includes;
+    }
 
-	//
-	shaderFileVec & getRefFiles(void) {
-		return m_files;
-	}
+    //
+    shaderFileVec & getRefFiles(void) {
+        return m_files;
+    }
 
-	//
-	shaderQualityVec & getRefQualities(void) {
-		return m_qualities;
-	}
+    //
+    shaderQualityVec & getRefQualities(void) {
+        return m_qualities;
+    }
 
-	//
-	shaderConstantVec & getRefConstants(void) {
-		return m_constants;
-	}
+    //
+    shaderConstantVec & getRefConstants(void) {
+        return m_constants;
+    }
 
-	//
-	std::string & getProgramName(void) {
-		return m_programName;
-	}
+    //
+    std::string & getProgramName(void) {
+        return m_programName;
+    }
 
-	//
-	std::string & getSelectedConfigName(void) {
-		return m_selectedConfigName;
-	}
+    //
+    std::string & getSelectedConfigName(void) {
+        return m_selectedConfigName;
+    }
 
-	//
-	void setPreferredSLVersion(fgGfxSLVersion _ver) {
-		m_preferredSLVersion = _ver;
-	}
+    //
+    void setPreferredSLVersion(fgGfxSLVersion _ver) {
+        m_preferredSLVersion = _ver;
+    }
 
 private:
-	// 
-	fgBool _parseData(fgGfxSLVersion SLver);
-	//
-	fgBool _parseDefines(fgCfgSection *_definesSection);
-	//
-	fgBool _parseInclude(fgCfgSection *_includeSection);
+    // 
+    fgBool _parseData(fgGfxSLVersion SLver);
+    //
+    fgBool _parseDefines(fgCfgSection *_definesSection);
+    //
+    fgBool _parseInclude(fgCfgSection *_includeSection);
 
 };
 

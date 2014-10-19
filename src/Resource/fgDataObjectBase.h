@@ -32,7 +32,7 @@ class fgDataObjectBase {
 public:
     typedef std::map<MapKeyType, std::string> fileMapping;
     typedef typename fileMapping::iterator fileMappingItor;
-        
+
 public:
     // Default empty constructor for resource base object
     fgDataObjectBase() : m_defaultID((MapKeyType) - 1) {
@@ -73,12 +73,12 @@ public:
     inline const char* getFilePathStr(void) const {
         return m_filePath.c_str();
     }
-    
+
     //   
     inline fileMapping& getFileMapping(void) {
         return m_fileMapping;
     }
-    
+
     //
     inline unsigned int getFilesCount(void) const {
         return m_fileMapping.size();

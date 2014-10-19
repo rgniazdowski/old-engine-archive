@@ -12,41 +12,34 @@
 /*
  *
  */
-fgGuiButton::fgGuiButton() : 
-	fgGuiWidget(),
-	m_label(NULL)
-{
-	fgGuiButton::setDefaults();
+fgGuiButton::fgGuiButton() :
+fgGuiWidget(),
+m_label(NULL) {
+    fgGuiButton::setDefaults();
 }
 
 /*
  *
  */
-fgGuiButton::~fgGuiButton()
-{
+fgGuiButton::~fgGuiButton() { }
+
+/*
+ *
+ */
+void fgGuiButton::setDefaults(void) {
+    m_type = FG_GUI_BUTTON;
+    m_typeName = FG_GUI_BUTTON_NAME;
+    m_typeTraits = FG_GUI_BUTTON | FG_GUI_WIDGET;
 }
 
 /*
  *
  */
-void fgGuiButton::setDefaults(void)
-{
-	m_type = FG_GUI_BUTTON;
-	m_typeName = FG_GUI_BUTTON_NAME;
-	m_typeTraits = FG_GUI_BUTTON | FG_GUI_WIDGET;
+fgBoundingBox3Df& fgGuiButton::updateSize(void) {
+    return fgGuiWidget::updateSize();
 }
 
 /*
  *
  */
-fgBoundingBox3Df& fgGuiButton::updateSize(void)
-{
-	return fgGuiWidget::updateSize();
-}
-
-/*
- *
- */
-void fgGuiButton::refresh(void)
-{
-}
+void fgGuiButton::refresh(void) { }

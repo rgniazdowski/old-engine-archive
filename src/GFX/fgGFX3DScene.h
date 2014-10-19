@@ -8,7 +8,7 @@
  *******************************************************/
 
 #ifndef _FG_GFX_3D_SCENE_H_
-#define _FG_GFX_3D_SCENE_H_
+    #define _FG_GFX_3D_SCENE_H_
 
     #include "fgGFXSceneManager.h"
 
@@ -17,7 +17,7 @@
  */
 class fgGfx3DScene : public fgGfxSceneManager {
 private:
-    
+
 public:
     //
     fgGfx3DScene();
@@ -34,7 +34,7 @@ public:
 
     //
     virtual void render(void);
-    
+
     //
     fgGfxObject *addFromModel(fgGfxModelResource *pModelRes, const std::string& nameTag);
 };

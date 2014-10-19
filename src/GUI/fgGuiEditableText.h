@@ -8,38 +8,37 @@
  *******************************************************/
 
 #ifndef _FG_GUI_EDITABLE_TEXT_H_
-#define _FG_GUI_EDITABLE_TEXT_H_
+    #define _FG_GUI_EDITABLE_TEXT_H_
 
-#include "fgGuiTextArea.h"
-#include "fgGuiWidgetFactoryTypes.h"
+    #include "fgGuiTextArea.h"
+    #include "fgGuiWidgetFactoryTypes.h"
 
-#define FG_GUI_EDITABLE_TEXT		0x00000800
-#define FG_GUI_EDITABLE_TEXT_NAME	"EditableText"
+    #define FG_GUI_EDITABLE_TEXT		0x00000800
+    #define FG_GUI_EDITABLE_TEXT_NAME	"EditableText"
 
 /*
  *
  */
-class fgGuiEditableText : public fgGuiTextArea
-{
+class fgGuiEditableText : public fgGuiTextArea {
 private:
 protected:
 
 protected:
-	// 
-	virtual void setDefaults(void);
+    // 
+    virtual void setDefaults(void);
 
 public:
-	// 
-	fgGuiEditableText();
-	// 
-	virtual ~fgGuiEditableText();
+    // 
+    fgGuiEditableText();
+    // 
+    virtual ~fgGuiEditableText();
 
-	FG_GUI_WIDGET_FACTORY_CREATE_FUNCTION(fgGuiEditableText);
-	
-	// 
-	virtual fgBoundingBox3Df& updateSize(void);
-	// 
-	virtual void refresh(void);
+    FG_GUI_WIDGET_FACTORY_CREATE_FUNCTION(fgGuiEditableText);
+
+    // 
+    virtual fgBoundingBox3Df& updateSize(void);
+    // 
+    virtual void refresh(void);
 
 };
 

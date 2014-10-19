@@ -12,28 +12,26 @@
 /*
  *
  */
-void fgErrorCodes::registerAll(void)
-{
-	FG_ERRNO_MAIN::__registerAll();
+void fgErrorCodes::registerAll(void) {
+    FG_ERRNO_MAIN::__registerAll();
 
-	FG_ERRNO_SFX::__registerAll();
-	FG_ERRNO_EVENT::__registerAll();
-	FG_ERRNO_GFX::__registerAll();
-	FG_ERRNO_TEXTURE::__registerAll();
-	FG_ERRNO_GUI::__registerAll();
-	FG_ERRNO_RESOURCE::__registerAll();
-	FG_ERRNO_SCRIPT::__registerAll();
-	FG_ERRNO_FILE::__registerAll();
-	FG_ERRNO_MEMORY::__registerAll();
-	FG_ERRNO_XML::__registerAll();
+    FG_ERRNO_SFX::__registerAll();
+    FG_ERRNO_EVENT::__registerAll();
+    FG_ERRNO_GFX::__registerAll();
+    FG_ERRNO_TEXTURE::__registerAll();
+    FG_ERRNO_GUI::__registerAll();
+    FG_ERRNO_RESOURCE::__registerAll();
+    FG_ERRNO_SCRIPT::__registerAll();
+    FG_ERRNO_FILE::__registerAll();
+    FG_ERRNO_MEMORY::__registerAll();
+    FG_ERRNO_XML::__registerAll();
 
-	FG_ERRNO_GAME::__registerAll();
+    FG_ERRNO_GAME::__registerAll();
 }
 
 /*
  *
  */
-void fgErrorCodes::unregisterAll(void)
-{
-	fgErrno::reset();
+void fgErrorCodes::unregisterAll(void) {
+    fgErrno::reset();
 }

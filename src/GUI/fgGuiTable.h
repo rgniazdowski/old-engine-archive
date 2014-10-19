@@ -8,35 +8,34 @@
  *******************************************************/
 
 #ifndef _FG_GUI_TABLE_H_
-#define _FG_GUI_TABLE_H_
+    #define _FG_GUI_TABLE_H_
 
-#include "fgGuiContainer.h"
-#include "fgGuiWidgetFactoryTypes.h"
+    #include "fgGuiContainer.h"
+    #include "fgGuiWidgetFactoryTypes.h"
 
-#define FG_GUI_TABLE		0x00080000
-#define FG_GUI_TABLE_NAME	"Table"
+    #define FG_GUI_TABLE		0x00080000
+    #define FG_GUI_TABLE_NAME	"Table"
 
-class fgGuiTable : public fgGuiContainer
-{
+class fgGuiTable : public fgGuiContainer {
 private:
 protected:
 
 protected:
-	// 
-	virtual void setDefaults(void);
+    // 
+    virtual void setDefaults(void);
 
 public:
-	// 
-	fgGuiTable();
-	// 
-	virtual ~fgGuiTable();
+    // 
+    fgGuiTable();
+    // 
+    virtual ~fgGuiTable();
 
-	FG_GUI_WIDGET_FACTORY_CREATE_FUNCTION(fgGuiTable);
+    FG_GUI_WIDGET_FACTORY_CREATE_FUNCTION(fgGuiTable);
 
-	// 
-	virtual fgBoundingBox3Df& updateSize(void);
-	// 
-	virtual void refresh(void);
+    // 
+    virtual fgBoundingBox3Df& updateSize(void);
+    // 
+    virtual void refresh(void);
 
 };
 

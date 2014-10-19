@@ -8,33 +8,31 @@
  *******************************************************/
 
 #ifndef _FG_FONT_STB_TIMES_H_
-#define _FG_FONT_STB_TIMES_H_
+    #define _FG_FONT_STB_TIMES_H_
 
-#ifndef _FG_FONT_BUILT_IN_TYPES_H_
-#include "fgFontBuiltInTypes.h"
-#endif
+    #ifndef _FG_FONT_BUILT_IN_TYPES_H_
+        #include "fgFontBuiltInTypes.h"
+    #endif
 
-#ifndef FG_STB_FONT_PTR
-#define FG_STB_FONT_PTR(_font_name, _param) stb__ ## _font_name ## _usascii_ ## _param
-#endif
+    #ifndef FG_STB_FONT_PTR
+        #define FG_STB_FONT_PTR(_font_name, _param) stb__ ## _font_name ## _usascii_ ## _param
+    #endif
 
-#ifndef FG_STB_FONT_CONST
-#define FG_STB_FONT_CONST(_font_name, _const_name) STB_FONT_ ## _font_name ## _usascii_ ## _const_name
-#endif
+    #ifndef FG_STB_FONT_CONST
+        #define FG_STB_FONT_CONST(_font_name, _const_name) STB_FONT_ ## _font_name ## _usascii_ ## _const_name
+    #endif
 
-namespace fgFontBuiltIn 
-{
-	class StbTimes
-	{
-	public:
-		static fgFontBuiltInRawData* getRawData(const int size = 50);
-		
-	private:
-		static fgFontBuiltInRawData m_stbFontRawData;
+namespace fgFontBuiltIn {
 
-		StbTimes() {}
-		~StbTimes() {}
-	};
+    class StbTimes {
+    public:
+        static fgFontBuiltInRawData* getRawData(const int size = 50);
+
+    private:
+        static fgFontBuiltInRawData m_stbFontRawData;
+        StbTimes() { }
+        ~StbTimes() { }
+    };
 };
 
 #endif /* _FG_FONT_STB_TIMES_H_ */
