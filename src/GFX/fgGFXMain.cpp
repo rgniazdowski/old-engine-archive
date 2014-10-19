@@ -39,16 +39,12 @@ m_3DScene(NULL),
 m_init(FG_FALSE) {
     m_3DScene = new fgGfx3DScene();
     cameraAnim = new fgGfxCameraAnimation(); // #FIXME
-    //MVP = new fgGfxMVPMatrix(); // #FIXME !
 }
 
 /*
  *
  */
 fgGfxMain::~fgGfxMain() {
-    //if(MVP)
-//        delete MVP;
-//    MVP = NULL;
     if(cameraAnim)
         delete cameraAnim;
     cameraAnim = NULL; // #FIXME
@@ -234,8 +230,8 @@ void dumpMatrix(const float *mat, const char *title) {
     printf("{ %.2f %.2f %.2f %.2f }\n", mat[4], mat[5], mat[6], mat[7]);
     printf("{ %.2f %.2f %.2f %.2f }\n", mat[8], mat[9], mat[10], mat[11]);
     printf("{ %.2f %.2f %.2f %.2f }\n\n", mat[12], mat[13], mat[14], mat[15]);
-
 }
+
 #include "fgGFXPrimitives.h"
 #include "fgGFXDrawingBatch.h"
 
@@ -321,14 +317,13 @@ void fgGfxMain::render(void) {
     }
     // #FIXME - this of course needs to be somewhere else 
     if(model && m_3DScene) {
-        if(!m_3DScene->getObject(0)) {
-            int index = -1;
-            m_3DScene->appendModel(index, model, FG_TRUE);
+        if(!m_3DScene->count()) {
+            m_3DScene->addFromModel(model, std::string("PlayerFighter"));
         }
     }
     // #FIXME
     if(m_3DScene) {
-        fgGfxObject *obj1 = m_3DScene->getObject(0);
+        fgGfxObject *obj1 = m_3DScene->get("PlayerFighter");
         if(obj1) {
             obj1->setModelMatrix(modelMat);
         }

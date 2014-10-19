@@ -88,7 +88,7 @@ class fgGuiWidget;
 FG_TAG_TEMPLATE_ID_AUTO(fgGuiWidget, FG_TAG_GUI_WIDGET_NAME);
 typedef FG_TAG_GUI_WIDGET fgGuiWidgetTag;
 
-// Special handle type for shader program
+// Special handle type for gui widget (used mainly for widget manager)
 typedef fgHandle<fgGuiWidgetTag> fgGuiWidgetHandle;
 
     #define FG_GUI_WIDGET_DEFAULT_STYLE "DefaultStyle"
@@ -547,12 +547,12 @@ public:
     inline void setName(const char *name) {
         m_nameTag = name;
     }
-    // Set resource name (string TAG/ID)
+    // Set widget name (string TAG/ID)
     inline void setName(const std::string& name) {
         m_nameTag = name;
     }
 
-    // Get resource name string
+    // Get widget name string
     inline std::string getName(void) const {
         return m_nameTag;
     }
@@ -571,12 +571,17 @@ public:
     }
 
     // Set the widget handle ID 
-    inline void setHandle(fgGuiWidgetHandle handle) {
+    inline void setHandle(const fgGuiWidgetHandle& handle) {
         m_handle = handle;
     }
 
     //
     inline fgGuiWidgetHandle& getRefHandle(void) {
+        return m_handle;
+    }
+    
+    //
+    inline const fgGuiWidgetHandle& getRefHandle(void) const {
         return m_handle;
     }
 };

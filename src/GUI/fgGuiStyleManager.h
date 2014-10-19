@@ -8,53 +8,52 @@
  *******************************************************/
 
 #ifndef _FG_GUI_STYLE_MANAGER_H_
-#define _FG_GUI_STYLE_MANAGER_H_
+    #define _FG_GUI_STYLE_MANAGER_H_
 
-#include "Resource/fgDataManagerBase.h"
-#include "fgGuiStyle.h"
+    #include "Resource/fgDataManagerBase.h"
+    #include "fgGuiStyle.h"
 
-#define FG_MANAGER_GUI_STYLE	0x00000040
-
+    #define FG_MANAGER_GUI_STYLE	0x00000040
 
 /*
  *
  */
-class fgGuiStyleManager : public fgDataManagerBase<fgGuiStyle*, fgGuiStyleHandle, fgGuiStyleTag>
-{
+class fgGuiStyleManager : public fgDataManagerBase<fgGuiStyle*, fgGuiStyleHandle, fgGuiStyleTag> {
 protected:
-	typedef hmDataVec		smStyleVec;
-	typedef hmDataVecItor	smStyleVecItor;
+    typedef hmDataVec smStyleVec;
+    typedef hmDataVecItor smStyleVecItor;
 public:
-	//
-	fgGuiStyleManager();
-	//
-	virtual ~fgGuiStyleManager();
+    //
+    fgGuiStyleManager();
+    //
+    virtual ~fgGuiStyleManager();
 
 protected:
-	//
-	virtual void clear(void);
+    //
+    virtual void clear(void);
 
 public:
-	//
-	virtual fgBool destroy(void);
-	//
-	virtual fgBool initialize(void);
+    //
+    virtual fgBool destroy(void);
+    //
+    virtual fgBool initialize(void);
 
-	//
-	virtual fgBool insertStyle(fgGuiStyleHandle& shUniqueID, fgGuiStyle *pStyle);
+    //
+    virtual fgBool insertStyle(fgGuiStyleHandle& shUniqueID, fgGuiStyle *pStyle);
 
-	//
-	virtual fgGuiStyle* request(const std::string& info);
-	//
-	virtual fgGuiStyle* request(const char *info);
+    //
+    virtual fgGuiStyle* request(const std::string& info);
+    //
+    virtual fgGuiStyle* request(const char *info);
 
-	//
-	void setStylesPath(const std::string &path);
-	//
-	void setStylesPath(const char *path);
+    //
+    void setStylesPath(const std::string &path);
+    //
+    void setStylesPath(const char *path);
 
 private:
-	std::string m_stylesPath;
+    ///
+    std::string m_stylesPath;
 
 };
 #endif /* _FG_GUI_STYLE_MANAGER_H_ */

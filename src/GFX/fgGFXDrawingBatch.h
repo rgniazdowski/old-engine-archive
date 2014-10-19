@@ -86,6 +86,11 @@ public:
     unsigned int count(void) const {
         return m_drawCalls.size();
     }
+    
+    //
+    unsigned int size(void) const {
+        return m_drawCalls.size();
+    }
 
     //
     fgBool empty(void) const {
