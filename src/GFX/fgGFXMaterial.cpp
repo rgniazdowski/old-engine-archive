@@ -23,3 +23,55 @@
  * *
  * * To ma sens przy scenach z duza iloscia obiektow - zostawiam na pozniej - P4
  */
+
+/**
+ * 
+ */
+fgGfxMaterial::fgGfxMaterial() {
+}
+
+/**
+ * 
+ * @return 
+ */
+size_t fgGfxMaterial::getDataSize(void) {
+    size_t size = sizeof (fgGfxMaterial);
+    size += name.length() +
+            ambientTexName.length() +
+            diffuseTexName.length() +
+            specularTexName.length() +
+            normalTexName.length();
+    size += unknownParam.size() * (sizeof (std::string) * 2);
+    return size;
+}
+
+/**
+ * 
+ * @param material
+ */
+fgGfxMaterial::fgGfxMaterial(const fgGfxMaterial & material) {
+    //*this = material;
+
+    this->ambientTexHandle.copyFrom(material.ambientTexHandle);
+    this->diffuseTexHandle.copyFrom(material.diffuseTexHandle);
+    this->specularTexHandle.copyFrom(material.specularTexHandle);
+    this->normalTexHandle.copyFrom(material.normalTexHandle);
+
+    this->name = material.name;
+    this->ambient = material.ambient;
+    this->diffuse = material.diffuse;
+    this->specular = material.specular;
+    this->transmittance = material.transmittance;
+    this->emission = material.emission;
+    this->shininess = material.shininess;
+    this->ior = material.ior;
+    this->dissolve = material.dissolve;
+    this->illuminationModel = material.illuminationModel;
+
+    this->ambientTexName = material.ambientTexName;
+    this->diffuseTexName = material.diffuseTexName;
+    this->specularTexName = material.specularTexName;
+    this->normalTexName = material.normalTexName;
+
+    this->unknownParam = material.unknownParam;
+}

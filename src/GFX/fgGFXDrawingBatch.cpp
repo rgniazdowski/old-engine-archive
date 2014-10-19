@@ -33,12 +33,12 @@ fgManagerBase *fgGfxDrawingBatch::getShaderManager(void) const {
 /*
  *
  */
-void fgGfxDrawingBatch::setShaderManager(fgManagerBase *shaderMgr) {
-    if(shaderMgr) {
-        if(shaderMgr->getManagerType() != FG_MANAGER_GFX_SHADER)
+void fgGfxDrawingBatch::setShaderManager(fgManagerBase *pShaderMgr) {
+    if(pShaderMgr) {
+        if(pShaderMgr->getManagerType() != FG_MANAGER_GFX_SHADER)
             return;
     }
-    m_shaderMgr = shaderMgr;
+    m_shaderMgr = pShaderMgr;
 }
 
 /*
@@ -221,7 +221,7 @@ void fgGfxDrawingBatch::sortCalls(void) {
  */
 void fgGfxDrawingBatch::render(void) {
     if(m_priorityBatch.empty())
-        fgGfxDrawingBatch::sortCalls();
+        sortCalls();
 
     while(!m_priorityBatch.empty()) {
         fgGfxDrawCall *drawCall = m_priorityBatch.top();

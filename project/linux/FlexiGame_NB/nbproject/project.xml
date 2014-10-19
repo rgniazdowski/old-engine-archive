@@ -53,6 +53,9 @@
             <word>bitplanes</word>
             <word>bool</word>
             <word>bvec</word>
+            <word>callbacks</word>
+            <word>config</word>
+            <word>configs</word>
             <word>const</word>
             <word>coords</word>
             <word>dfactor</word>
@@ -66,12 +69,16 @@
             <word>gl</word>
             <word>glbinding</word>
             <word>Gniazdowski</word>
+            <word>gui</word>
             <word>idx</word>
+            <word>ini</word>
+            <word>init</word>
             <word>int</word>
             <word>itor</word>
             <word>ivec</word>
             <word>multitextured</word>
             <word>multitexturing</word>
+            <word>obj</word>
             <word>overallocation</word>
             <word>param</word>
             <word>params</word>
@@ -81,12 +88,16 @@
             <word>Radoslaw</word>
             <word>s'</word>
             <word>sfactor</word>
+            <word>shaders</word>
             <word>soa</word>
+            <word>std</word>
             <word>struct</word>
             <word>structs</word>
+            <word>tga</word>
             <word>ushort</word>
             <word>uv</word>
             <word>vec</word>
+            <word>xml</word>
             <word>zfail</word>
             <word>zpass</word>
         </spellchecker-wordlist>

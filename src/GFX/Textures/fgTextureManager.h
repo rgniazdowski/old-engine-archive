@@ -8,21 +8,21 @@
  *******************************************************/
 
 #ifndef _FG_TEXTURE_MANAGER_H_
-#define _FG_TEXTURE_MANAGER_H_
+    #define _FG_TEXTURE_MANAGER_H_
 
-#include "fgCommon.h"
-#include "fgManagerBase.h"
-#include "fgTextureResource.h"
-#include "fgTextureTypes.h"
-#include "fgStatusReporter.h"
-#include "Resource/fgResourceManager.h"
-#include "Util/fgTag.h"
+    #include "fgBuildConfig.h"
+    #include "fgBool.h"
+    #include "fgManagerBase.h"
+    #include "fgTextureResource.h"
+    #include "fgTextureTypes.h"
+    #include "fgStatusReporter.h"
+    #include "Util/fgTag.h"
 
 class fgTextureManager;
 
-#define FG_TAG_TEXTURE_MANAGER_NAME		"GfxTextureManager"
+    #define FG_TAG_TEXTURE_MANAGER_NAME		"GfxTextureManager"
 //#define FG_TAG_MANAGER_BASE_ID		20 //#FIXME - something automatic maybe?
-#define FG_TAG_TEXTURE_MANAGER			FG_TAG_TYPE(fgTextureManager)
+    #define FG_TAG_TEXTURE_MANAGER			FG_TAG_TYPE(fgTextureManager)
 
 //FG_TAG_TEMPLATE(fgResourceManager, FG_TAG_MANAGER_BASE_NAME, FG_TAG_MANAGER_BASE_ID);
 FG_TAG_TEMPLATE_ID_AUTO(fgTextureManager, FG_TAG_TEXTURE_MANAGER_NAME);
@@ -30,35 +30,31 @@ FG_TAG_TEMPLATE_ID_AUTO(fgTextureManager, FG_TAG_TEXTURE_MANAGER_NAME);
 // Special handle type for manager base
 typedef FG_TAG_TEXTURE_MANAGER fgTextureManagerTag;
 
-#define FG_MANAGER_TEXTURE	0x00000004
+    #define FG_MANAGER_TEXTURE	0x00000004
 
 /**
  * Class that allows to perform GROUP OPERATIONS on all textures. 
  */
 class fgTextureManager : public fgManagerBase, public fgStatusReporter<fgTextureManagerTag> {
 public:
-	// Default constructor for Texture Manager object
-    fgTextureManager(fgManagerBase *resourceManager);
-	// Default destructor for Texture Manager object
+    // Default constructor for Texture Manager object
+    fgTextureManager(fgManagerBase *pResourceMgr);
+    // Default destructor for Texture Manager object
     virtual ~fgTextureManager();
 
 protected:
-	virtual void clear(void);
+    virtual void clear(void);
 
 public:
-	//
-	virtual fgBool destroy(void);
-	//
-	virtual fgBool initialize(void);
-
-	void setResourceManager(fgManagerBase *resourceManager) {
-		if(resourceManager)
-			m_resourceManager = static_cast<fgResourceManager *>(resourceManager);
-	}
-
-	fgResourceManager *getResourceManager(void) const {
-		return m_resourceManager;
-	}
+    //
+    virtual fgBool destroy(void);
+    //
+    virtual fgBool initialize(void);
+    
+    //
+    void setResourceManager(fgManagerBase *pResourceMgr);
+    //
+    fgManagerBase *getResourceManager(void) const;
 
     /**
      * RAM -> VRAM.
@@ -75,21 +71,21 @@ public:
     // Releases all GFX (i.e. texture ids) data
     void allReleaseGFX(void);
 
-	// #FIXME #TODO #P2
-#if defined(FG_USING_OPENGL_ES) || defined(FG_USING_OPENGL)
-	static GLint translatePixelFormat(fgTexturePixelFormat pixelFormat);
-	static GLint translateInternalPixelFormat(fgTextureInternalPixelFormat internalPixelFormat);
-#endif
+    // #FIXME #TODO #P2
+    #if defined(FG_USING_OPENGL_ES) || defined(FG_USING_OPENGL)
+    static GLint translatePixelFormat(fgTexturePixelFormat pixelFormat);
+    static GLint translateInternalPixelFormat(fgTextureInternalPixelFormat internalPixelFormat);
+    #endif
 
-	//
-	fgBool uploadToVRAM(fgTextureResource *texture, fgBool force = FG_FALSE);
-	//
-	fgBool uploadToVRAM(const std::string& nameTag, fgBool force = FG_FALSE);
-	//
-	fgBool uploadToVRAM(const char *nameTag, fgBool force = FG_FALSE);
+    //
+    fgBool uploadToVRAM(fgTextureResource *texture, fgBool force = FG_FALSE);
+    //
+    fgBool uploadToVRAM(const std::string& nameTag, fgBool force = FG_FALSE);
+    //
+    fgBool uploadToVRAM(const char *nameTag, fgBool force = FG_FALSE);
 
-	//
-	void releaseGFX(fgTextureResource *texture);
+    //
+    void releaseGFX(fgTextureResource *texture);
 
 private:
     /**
@@ -104,13 +100,13 @@ private:
      * leave filename intact. It is however not needed, and should not
      * be used).
      */
-    fgBool makeTexture(fgTextureResource *textureResource);	
+    fgBool makeTexture(fgTextureResource *textureResource);
 
 private:
-	///
-	fgResourceManager *m_resourceManager;
-	///
-	fgBool m_allInVRAM;
+    ///
+    fgManagerBase *m_resourceMgr;
+    ///
+    fgBool m_allInVRAM;
 };
 
 #endif /* _FG_TEXTURE_MANAGER_H_ */

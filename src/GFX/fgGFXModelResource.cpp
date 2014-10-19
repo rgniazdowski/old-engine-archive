@@ -10,12 +10,13 @@
 #include "fgGFXModelResource.h"
 #include "fgTinyObj.h"
 #include "Resource/fgResourceErrorCodes.h"
-#include "Particles/fgPsExplosionEffect.h"
-
+#include "Util/fgPath.h"
+#include "Resource/fgResourceManager.h"
 /*
  *
  */
 fgGfxModelResource::fgGfxModelResource() :
+fgResource(),
 m_materialOverride(NULL),
 m_modelType(FG_GFX_MODEL_RES_INVALID),
 m_isMultitextured(FG_FALSE),
@@ -69,6 +70,24 @@ void fgGfxModelResource::clear(void) {
     memset(m_numData, 0, sizeof (m_numData));
 }
 
+/**
+ * 
+ * @param path
+ * @return 
+ */
+fgBool fgGfxModelResource::setModelTypeFromFilePath(std::string &path) {
+    const char *ext = fgPath::fileExt(path.c_str());
+    if(!ext)
+        return FG_FALSE;
+    m_modelType = FG_GFX_MODEL_RES_INVALID;
+    if(strcasecmp(ext, FG_GFX_MODEL_RES_3DS_EXTENSION) == 0) {
+        m_modelType = FG_GFX_MODEL_RES_3DS;
+    } else if(strcasecmp(ext, FG_GFX_MODEL_RES_OBJ_EXTENSION) == 0) {
+        m_modelType = FG_GFX_MODEL_RES_OBJ;
+    }
+    return FG_TRUE;
+}
+
 /*
  *
  */
@@ -99,20 +118,50 @@ fgBool fgGfxModelResource::_loadOBJ(void) {
         fgGfxShape *shape = (*itor);
         FG_LOG::PrintDebug("Model '%s': found shape '%s'", getNameStr(), shape->name.c_str());
         FG_LOG::PrintDebug("Shape '%s': nvec: %d, nnorm: %d, nuvs: %d", shape->name.c_str(), shape->mesh->getNumVertices(), shape->mesh->getNumNormals(), shape->mesh->getNumUVs());
-        if(shape->material)
+        if(shape->material) {
             m_numMaterials++;
+            if(m_manager) {
+                fgResource *tex = NULL;
+                // Ambient texture handle lookup
+                tex = ((fgResourceManager *)m_manager)->request(shape->material->ambientTexName);
+                if(tex) {
+                    shape->material->ambientTexHandle = tex->getHandle();
+                }
+                // Diffuse texture handle lookup
+                tex = ((fgResourceManager *)m_manager)->request(shape->material->diffuseTexName);
+                if(tex) {
+                    shape->material->diffuseTexHandle = tex->getHandle();
+                }
+                // Specular texture handle lookup
+                tex = ((fgResourceManager *)m_manager)->request(shape->material->specularTexName);
+                if(tex) {
+                    shape->material->specularTexHandle = tex->getHandle();
+                }
+                // Normal texture handle lookup
+                tex = ((fgResourceManager *)m_manager)->request(shape->material->normalTexName);
+                if(tex) {
+                    shape->material->normalTexHandle = tex->getHandle();
+                }
+            }
+        }
 
         if(shape->mesh) {
             m_numVertices += shape->mesh->getNumVertices();
             m_numNormals += shape->mesh->getNumNormals();
             m_numUVs += shape->mesh->getNumUVs();
             m_numIndices += shape->mesh->getNumIndices();
+            // #FIXME
+            m_numTriangles += shape->mesh->getNumIndices()/3;
         }
         m_size += shape->getDataSize();
     }
-    if(!m_materialOverride)
-        m_materialOverride = new fgGfxMaterial();
-    m_size += m_materialOverride->getSize();
+    if(!m_materialOverride) {
+        if(!m_numShapes)
+            m_materialOverride = new fgGfxMaterial();
+        else
+            m_materialOverride = new fgGfxMaterial(*this->m_shapes[0]->material);
+    }
+    m_size += m_materialOverride->getDataSize();
     FG_LOG::PrintDebug("Model '%s': vertices: %d, normals: %d, indices: %d, uvs: %d", getNameStr(),
                        m_numVertices, m_numNormals, m_numIndices, m_numUVs);
     return FG_TRUE;
@@ -236,7 +285,7 @@ fgBool fgGfxModelResource::genBuffers(void) {
         return FG_FALSE;
     }
     int n = m_shapes.size();
-    for(int i=0;i<n;i++) {
+    for(int i = 0; i < n; i++) {
         if(m_shapes[i]->mesh) {
             m_shapes[i]->mesh->genBuffers();
         }
@@ -252,7 +301,7 @@ fgBool fgGfxModelResource::deleteBuffers(void) {
         return FG_FALSE;
     }
     int n = m_shapes.size();
-    for(int i=0;i<n;i++) {
+    for(int i = 0; i < n; i++) {
         if(m_shapes[i]->mesh) {
             m_shapes[i]->mesh->deleteBuffers();
         }

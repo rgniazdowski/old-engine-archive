@@ -88,18 +88,7 @@ public:
 
 protected:
     // Determine the model type identifier from the file extension
-    fgBool setModelTypeFromFilePath(std::string &path) {
-        const char *ext = fgPath::fileExt(path.c_str());
-        if(!ext)
-            return FG_FALSE;
-        m_modelType = FG_GFX_MODEL_RES_INVALID;
-        if(strcasecmp(ext, FG_GFX_MODEL_RES_3DS_EXTENSION) == 0) {
-            m_modelType = FG_GFX_MODEL_RES_3DS;
-        } else if(strcasecmp(ext, FG_GFX_MODEL_RES_OBJ_EXTENSION) == 0) {
-            m_modelType = FG_GFX_MODEL_RES_OBJ;
-        }
-        return FG_TRUE;
-    }
+    fgBool setModelTypeFromFilePath(std::string &path);
 
     // Determine the model type identifier from the file extension
     fgBool setModelTypeFromFilePath(void) {

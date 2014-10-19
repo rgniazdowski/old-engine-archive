@@ -551,6 +551,14 @@ public:
     void viewport(const fgVector2i& pos, const fgVector2i& size);
     // Set the viewport dimensions
     void viewport(const fgVector4i& dimensions);
+    
+    // Returns the viewport aspect ratio
+    inline fgGFXfloat getViewportAspect(void) {
+        fgGFXfloat y = (fgGFXfloat)m_params[(fgGFXuint)GL_VIEWPORT].ints[1];
+        if(y <= FG_EPSILON)
+            return 1.0f;
+        return (fgGFXfloat)m_params[(fgGFXuint)GL_VIEWPORT].ints[0] / y;
+    }
 
     // Set the scissor box dimensions
     void scissor(const fgGFXint x, const fgGFXint y, const fgGFXint width, const fgGFXint height);
@@ -558,6 +566,14 @@ public:
     void scissor(const fgVector2i& pos, const fgVector2i& size);
     // Set the scissor box dimensions
     void scissor(const fgVector4i& dimensions);
+    
+    // Returns the scissor box aspect ratio
+    inline fgGFXfloat getScissorAspect(void) {
+        fgGFXfloat y = (fgGFXfloat)m_params[(fgGFXuint)GL_SCISSOR_BOX].ints[1];
+        if(y <= FG_EPSILON)
+            return 1.0f;
+        return (fgGFXfloat)m_params[(fgGFXuint)GL_SCISSOR_BOX].ints[0]/y;
+    }
 
     // Toggle scissor test capability
     void setScissorTest(const fgBool toggle = FG_TRUE);
@@ -605,7 +621,7 @@ public:
 
 
     // https://www.khronos.org/opengles/sdk/docs/man/xhtml/glGetVertexAttrib.xml
-    // Retuns the buffer (VBO) index currently bound to given vertex attrib index
+    // Returns the buffer (VBO) index currently bound to given vertex attrib index
     fgGFXuint getVertexAttribBufferBinding(const fgGFXuint index);
     //
     fgGFXuint getVertexAttribSize(const fgGFXuint index);

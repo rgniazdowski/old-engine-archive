@@ -14,7 +14,7 @@
 #include "fgGFXModelResource.h"
 #include "Textures/fgTextureResource.h"
 #include "Hardware/fgHardwareState.h"
-
+#include "Resource/fgResourceManager.h"
 #include "fgGFXErrorCodes.h"
 
 #if defined FG_USING_MARMALADE
@@ -23,9 +23,8 @@
 #endif
 
 #include "fgLog.h"
-fgGfxMVPMatrix *MVP = NULL;
+
 fgGfxCameraAnimation *cameraAnim = NULL;
-fgGFXuint vboIds[4] = {0, 0, 0, 0};
 
 /*
  *
@@ -36,21 +35,25 @@ m_resourceMgr(NULL),
 m_shaderMgr(NULL),
 m_mainWindow(NULL),
 m_gfxContext(NULL),
+m_3DScene(NULL),
 m_init(FG_FALSE) {
+    m_3DScene = new fgGfx3DScene();
     cameraAnim = new fgGfxCameraAnimation(); // #FIXME
-    MVP = new fgGfxMVPMatrix(); // #FIXME !
+    //MVP = new fgGfxMVPMatrix(); // #FIXME !
 }
 
 /*
  *
  */
 fgGfxMain::~fgGfxMain() {
-    if(MVP)
-        delete MVP;
-    MVP = NULL;
+    //if(MVP)
+//        delete MVP;
+//    MVP = NULL;
     if(cameraAnim)
         delete cameraAnim;
     cameraAnim = NULL; // #FIXME
+    if(m_3DScene)
+        delete m_3DScene;
     if(m_gfxContext)
         m_gfxContext->deleteAllBuffers();
     if(m_init)
@@ -67,7 +70,7 @@ fgGfxMain::~fgGfxMain() {
     m_shaderMgr = NULL;
     m_mainWindow = NULL;
     m_gfxContext = NULL;
-    
+    m_3DScene = NULL;
 }
 
 /*
@@ -110,6 +113,7 @@ fgBool fgGfxMain::initGFX(void) {
     if(status) {
         if(!m_shaderMgr)
             m_shaderMgr = new fgGfxShaderManager();
+        m_3DScene->setShaderManager(m_shaderMgr);
 
         FG_LOG::PrintDebug("GFX: Setting viewport (0, 0, %d, %d)", m_mainWindow->getWidth(), m_mainWindow->getHeight());
         m_gfxContext->viewport(0, 0, m_mainWindow->getWidth(), m_mainWindow->getHeight());
@@ -122,8 +126,12 @@ fgBool fgGfxMain::initGFX(void) {
         m_gfxContext->setScissorTest(FG_TRUE);
         m_gfxContext->setBlend(FG_FALSE);
         m_gfxContext->blendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        m_gfxContext->blendEquation(GL_FUNC_ADD);
+        m_gfxContext->activeTexture(GL_TEXTURE0);
+        m_gfxContext->bindTexture2D(0);
+        m_gfxContext->bindTexture3D(0);
         m_gfxContext->scissor(0, 0, m_mainWindow->getWidth(), m_mainWindow->getHeight());
-        MVP->setPerspective(45.0f, m_mainWindow->getAspect());
+        //MVP->setPerspective(45.0f, m_mainWindow->getAspect());
         m_init = FG_TRUE;
     }
     if(status) {
@@ -195,7 +203,7 @@ fgBool fgGfxMain::resumeGFX(void) {
     {
         fgGfxModelResource *model = NULL;
         std::string modelname("CobraBomber");
-        model = (fgGfxModelResource *)m_textureMgr->getResourceManager()->get(modelname);
+        model = (fgGfxModelResource *)((fgResourceManager *)m_textureMgr->getResourceManager())->get(modelname);
         if(model) {
             if(model->getRefShapes().size()) {
                 model->getRefShapes()[0]->mesh->genBuffers();
@@ -216,139 +224,7 @@ fgBool fgGfxMain::resumeGFX(void) {
 void fgGfxMain::display(void) {
     if(!m_gfxContext)
         return;
-}
-
-void drawModel(fgGfxModelResource *model, fgGfxShaderProgram *program, fgTextureResource *texture = NULL) {
-    //static fgBool buffInit = FG_FALSE;
-    if(!model)
-        return;
-
-    uintptr_t offset = 0;
-    
-    if(model->getRefShapes().empty()) {
-        return;
-    }
-    fgGfxMeshBase *mesh = model->getRefShapes()[0]->mesh;
-    if(mesh->isSoA() == FG_TRUE) { // #FIXME - SOA needs testing!
-        fgGfxMeshSoA *soa = (fgGfxMeshSoA *)mesh;
-        //fgGFXint numVertices = soa->getNumVertices();
-        //fgGFXint numNormals = soa->getNumNormals();
-        //fgGFXint numUVs = soa->getNumUVs();
-        fgGFXint numIndices = soa->getNumIndices();
-
-        fgGfxPlatform::context()->bindBuffer(GL_ARRAY_BUFFER, 0);
-        fgGfxPlatform::context()->bindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-        fgGfxPlatform::context()->diffVertexAttribArrayMask(soa->attribMask());
-        fgGfxPlatform::context()->vertexAttribPointer(FG_GFX_ATTRIB_POS_LOCATION,
-                                                      3 /* VEC3 */,
-                                                      FG_GFX_FLOAT,
-                                                      GL_FALSE,
-                                                      sizeof (fgVector3f),
-                                                      (void*)(&soa->vertices.front()));
-
-        offset += 3 /* VEC3 */ * sizeof (fgGFXfloat);
-
-        fgGfxPlatform::context()->vertexAttribPointer(FG_GFX_ATTRIB_NORM_LOCATION,
-                                                      3 /* VEC3 */,
-                                                      FG_GFX_FLOAT,
-                                                      GL_FALSE,
-                                                      sizeof (fgVector3f),
-                                                      (void*)(&soa->normals.front()));
-
-        offset += 3 /* VEC3 */ * sizeof (fgGFXfloat);
-
-        fgGfxPlatform::context()->vertexAttribPointer(FG_GFX_ATTRIB_UVS_LOCATION,
-                                                      2 /* VEC2 */,
-                                                      FG_GFX_FLOAT,
-                                                      GL_FALSE, 
-                                                      sizeof (fgVector2f), 
-                                                      (void*)(&soa->uvs.front()));
-
-        if(texture && program) {
-            // Bind our texture in Texture Unit 0
-            fgGfxPlatform::context()->activeTexture(GL_TEXTURE0);
-            fgGfxPlatform::context()->bindTexture(texture->getRefGfxID());
-            fgGFXint TextureID = glGetUniformLocation(program->getGfxID(), "s_texture");
-            // Set our "myTextureSampler" sampler to user Texture Unit 0
-            glUniform1i(TextureID, 0);
-        }
-        glDrawElements(GL_TRIANGLES, numIndices, GL_UNSIGNED_SHORT, (const void*)(&soa->indices.front()));
-        fgGLError("GL_TRIANGLES glDrawElements");
-        return;
-    }
-    fgGfxMeshAoS *aos = (fgGfxMeshAoS *)mesh;
-    //fgGFXint numVertices = aos->getNumVertices();
-    fgGFXint numIndices = aos->getNumIndices();
-    // vboIds[0] - used to store vertex attribute data
-    // vboIds[l] - used to store element indices
-    //fgGFXvoid *vtxBuf = aos->vertices.front();
-    //fgGFXvoid *indices = (fgGFXvoid *)(&aos->indices.front());
-    //uintptr_t offsetui = (uintptr_t)((unsigned int*)&aos->indices.front());
-    fgGFXint vtxStride = sizeof (fgVertex3v);
-    vtxStride = aos->stride();
-    //if(FG_GFX_FALSE == glIsBuffer(vboIds[0]) || FG_GFX_FALSE == glIsBuffer(vboIds[1])) {
-    //    buffInit = FG_FALSE;
-    //    FG_LOG::PrintDebug("GFX: VBOS NOT PROPER, BUFF INIT FALSE...");
-    //}
-   /* if(vboIds[0] == 0 && vboIds[1] == 0 && !buffInit) {
-        // Only allocate on the first draw
-        glGenBuffers(2, vboIds);
-        glBindBuffer(GL_ARRAY_BUFFER, vboIds[0]);
-        glBufferData(GL_ARRAY_BUFFER,
-                     vtxStride*numVertices,
-                     vtxBuf,
-                     GL_STATIC_DRAW);
-
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vboIds[1]);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER,
-                     sizeof (fgGFXushort) * numIndices,
-                     indices,
-                     GL_STATIC_DRAW);
-
-        buffInit = FG_TRUE;
-        FG_LOG::PrintDebug("GFX: GENERATING VBOS...");
-        FG_LOG::PrintDebug("GFX: VBO[0] = %d", vboIds[0]);
-        FG_LOG::PrintDebug("GFX: VBO[1] = %d", vboIds[1]);
-    }
-    if(!buffInit) {
-        FG_LOG::PrintDebug("GFX: NO BUFFERS. EXIT DRAW...");
-        return;
-    }*/
-    if(!aos->getPtrVBO() || !fgGfxPlatform::context()->isBuffer(aos->getRefPtrVBO()[0])) {
-        FG_LOG::PrintDebug("GFX: NO BUFFERS. EXIT DRAW...");
-        return;
-    }
-    offset = 0;
-    fgGfxPlatform::context()->bindBuffer(aos->getPtrVBO()[0]);
-    fgGfxPlatform::context()->bindBuffer(aos->getPtrVBO()[1]);
-
-    fgGfxPlatform::context()->diffVertexAttribArrayMask(aos->attribMask());
-    fgGfxPlatform::context()->vertexAttribPointer(FG_GFX_ATTRIB_POS_LOCATION, 3 /* VEC3 */,
-                          FG_GFX_FLOAT, GL_FALSE, vtxStride, (void*)offset);
-
-    offset += 3 /* VEC3 */ * sizeof (fgGFXfloat);
-
-    fgGfxPlatform::context()->vertexAttribPointer(FG_GFX_ATTRIB_NORM_LOCATION, 3 /* VEC3 */,
-                          FG_GFX_FLOAT, GL_FALSE, vtxStride, (void*)offset);
-
-    offset += 3 /* VEC3 */ * sizeof (fgGFXfloat);
-
-    fgGfxPlatform::context()->vertexAttribPointer(FG_GFX_ATTRIB_UVS_LOCATION, 2 /* VEC2 */,
-                          FG_GFX_FLOAT, GL_FALSE, vtxStride, (void*)offset);
-
-    if(texture && program) {
-        // Bind our texture in Texture Unit 0
-        fgGfxPlatform::context()->activeTexture(GL_TEXTURE0);
-        fgGfxPlatform::context()->bindTexture(texture->getRefGfxID());
-
-        fgGFXint TextureID = glGetUniformLocation(program->getGfxID(), "s_texture");
-        // Set our "myTextureSampler" sampler to user Texture Unit 0
-        glUniform1i(TextureID, 0);
-    }
-    glDrawElements(GL_TRIANGLES, numIndices, GL_UNSIGNED_SHORT, 0);
-    fgGLError("GL_TRIANGLES glDrawElements");
-    fgGfxPlatform::context()->bindBuffer(GL_ARRAY_BUFFER, 0);
-    fgGfxPlatform::context()->bindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+    m_3DScene->sortCalls();
 }
 
 void dumpMatrix(const float *mat, const char *title) {
@@ -397,14 +273,13 @@ void fgGfxMain::render(void) {
         return;
 
     }
-    rm = m_textureMgr->getResourceManager();
+    rm = (fgResourceManager *)m_textureMgr->getResourceManager();
     if(!rm) {
         FG_LOG::PrintError("Cant access resource manager.");
 
         return;
     }
-#if 1
-    //loadModel = true;
+    
 #if defined(FG_USING_SDL2)
     if(state[SDL_SCANCODE_SPACE] == SDL_PRESSED && !a[6]) {
         a[6]++;
@@ -419,223 +294,61 @@ void fgGfxMain::render(void) {
 	}
 #endif
     if(loadModel) {
-        if(!model)
+        if(!model) 
             model = (fgGfxModelResource *)rm->get(modelname);
         if(!model) {
             printf("NO MODEL\n");
             return;
-        }
-
+        }       
     }
+    //m_3DScene->getCamera()->setDT((float)FG_HardwareState->getDelta());
+    //m_3DScene->getCamera()->update();
     cameraAnim->setDT((float)FG_HardwareState->getDelta());
     cameraAnim->update();
+    m_3DScene->applyCamera(cameraAnim);
+    rotxyz += 0.0094525f;
+    if(rotxyz > M_PI * 2.0f)
+        rotxyz = 0.0f;
     fgMatrix4f modelMat = glm::rotate(glm::mat4(1.0f), rotxyz, glm::vec3(1.0f, 1.0f, 1.0f)); //fgMath::translate(fgMatrix4f(1.0f), fgVector3f(0.0f, 0.0f, -5.0f));
 
-    MVP->setPerspective(45.0f, m_mainWindow->getAspect());
-    MVP->calculate(cameraAnim, modelMat);
-
+    m_3DScene->getMVP()->setPerspective(45.0f, m_mainWindow->getAspect());
     fgGfxShaderProgram *program = m_shaderMgr->get(sPlainEasyShaderName);
     m_shaderMgr->useProgram(program);
+    //program->setUniform(FG_GFX_PLAIN_TEXTURE, 0);
     if(!program) {
         FG_LOG::PrintError("Cant access sPlainEasy shader program.");
         return;
     }
-    m_gfxContext->activeTexture(GL_TEXTURE0);
-    fgTextureResource *texture = (fgTextureResource *)rm->get(texname);
-    //program->setUniform(FG_GFX_PHASE, offset);
-    program->setUniform(MVP);
-    //program->setUniform(FG_GFX_CUSTOM_COLOR, 1.0f, 0.0f, 0.0f, 1.0f);
-    program->setUniform(FG_GFX_PLAIN_TEXTURE, 0);
-    rotxyz += 0.0094525f;
-    if(rotxyz > M_PI * 2.0f)
-        rotxyz = 0.0f;
-
-    if(loadModel) {
-        // MY BULLSHIT DETECTOR IS OFF THE CHARTS!
-        fgGfxDrawingBatch batch;
-        fgGfxDrawCall *call = new fgGfxDrawCall(FG_GFX_DRAW_CALL_MODEL);
-        call->setupFromModel(model);
-        call->setShaderProgram(program);
-        call->setTexture(texture->getRefGfxID());
-        call->setMVP(MVP);
-        call->setModelMatrix(modelMat);
-        
-        batch.appendDrawCall(call, FG_TRUE, FG_TRUE);
-        batch.appendDrawCall(call, FG_TRUE, FG_FALSE);
-        batch.sortCalls();
-        batch.render();
-        batch.flush();
+    // #FIXME - this of course needs to be somewhere else 
+    if(model && m_3DScene) {
+        if(!m_3DScene->getObject(0)) {
+            int index = -1;
+            m_3DScene->appendModel(index, model, FG_TRUE);
+        }
     }
-#endif
+    // #FIXME
+    if(m_3DScene) {
+        fgGfxObject *obj1 = m_3DScene->getObject(0);
+        if(obj1) {
+            obj1->setModelMatrix(modelMat);
+        }
+    }
+    // RENDER THE 3D SCENE
+    m_3DScene->render();
+    
+    //////////////////////////////////////////////////////////////
+    // 2D LAYER DRAWING TEST - NEEDS TO WORK DIFFERENTLY
+    // THIS IS FOR GUI DRAWING - SPECIAL ORTHO SHADER
+    //////////////////////////////////////////////////////////////
     fgGfxShaderProgram *program2 = m_shaderMgr->get(sOrthoEasyShaderName);
     if(!program2) {
         FG_LOG::PrintError("Cant access sOrthoEasy shader program.");
         return;
     }
-    const fgGFXenum dstEnums[] = {
-                                  GL_ZERO, // 0
-                                  GL_ONE, // 1
-                                  GL_SRC_COLOR, // 2
-                                  GL_ONE_MINUS_SRC_COLOR, // 3
-                                  GL_SRC_ALPHA, // 4
-                                  GL_ONE_MINUS_SRC_ALPHA, // 5
-                                  GL_DST_ALPHA, // 6
-                                  GL_ONE_MINUS_DST_ALPHA, // 7
-    };
-    const fgGFXenum srcEnums[] = {
-                                  GL_ZERO, // 0
-                                  GL_ONE, // 1
-                                  GL_DST_COLOR, // 2
-                                  GL_ONE_MINUS_DST_COLOR, // 3
-                                  GL_SRC_ALPHA_SATURATE, // 4
-                                  GL_SRC_ALPHA, // 5
-                                  GL_ONE_MINUS_SRC_ALPHA, // 6
-                                  GL_DST_ALPHA, // 7
-                                  GL_ONE_MINUS_DST_ALPHA // 8
-    };
-    const char *dstEnumsNames[] = {
-                                   "GL_ZERO", // 0
-                                   "GL_ONE", // 1
-                                   "GL_SRC_COLOR", // 2
-                                   "GL_ONE_MINUS_SRC_COLOR", // 3
-                                   "GL_SRC_ALPHA", // 4
-                                   "GL_ONE_MINUS_SRC_ALPHA", // 5
-                                   "GL_DST_ALPHA", // 6
-                                   "GL_ONE_MINUS_DST_ALPHA", // 7
-    };
-    const char *srcEnumsNames[] = {
-                                   "GL_ZERO", // 0
-                                   "GL_ONE", // 1
-                                   "GL_DST_COLOR", // 2
-                                   "GL_ONE_MINUS_DST_COLOR", // 3
-                                   "GL_SRC_ALPHA_SATURATE", // 4
-                                   "GL_SRC_ALPHA", // 5
-                                   "GL_ONE_MINUS_SRC_ALPHA", // 6
-                                   "GL_DST_ALPHA", // 7
-                                   "GL_ONE_MINUS_DST_ALPHA" // 8
-    };
-    static int srcID = 6;
-    static int dstID = 5;
-    const int srcNum = 9;
-    const int dstNum = 8;
     m_shaderMgr->useProgram(program2);
-    int yolox = 0;
-    int yoloy = 0;
-    //static int a[10] = {0,0,0,0,0,0,0,0,0,0};
-    //const Uint8 *state = SDL_GetKeyboardState(NULL);
-#if defined(FG_USING_SDL2)
-    if (state[SDL_SCANCODE_S] == SDL_PRESSED && !a[0]) {
-        printf("<S> is pressed.\n");
-        srcID++;
-        if(srcID >= srcNum)
-            srcID = 0;
-        yolox++;
-        a[0]++;
-    } else if(state[SDL_SCANCODE_S] == SDL_RELEASED) {
-        a[0]=0;
-    }
-    
-    
-    if (state[SDL_SCANCODE_D] == SDL_PRESSED && !a[1]) {
-        printf("<D> is pressed.\n");
-        a[1]++;
-        yolox++;
-        dstID++;
-        if(dstID >= dstNum)
-            dstID = 0;
-    } else if(state[SDL_SCANCODE_D] == SDL_RELEASED) {
-        a[1]=0;
-    }
-    
-    
-    if (state[SDL_SCANCODE_X] == SDL_PRESSED && !a[2]) {
-        printf("<X> is pressed.\n");
-        yolox++;
-        srcID--;
-        if(srcID < 0)
-            srcID = srcNum - 1;
-        a[2]++;
-    } else if(state[SDL_SCANCODE_X] == SDL_RELEASED) {
-        a[2]=0;
-    }
-    
-    
-    if (state[SDL_SCANCODE_C] == SDL_PRESSED && !a[3]) {
-        printf("<C> is pressed.\n");
-        a[3]++;
-        yolox++;
-        dstID--;
-        if(dstID < 0)
-            dstID = dstNum - 1;
-    } else if(state[SDL_SCANCODE_C] == SDL_RELEASED) {
-        a[3]=0;
-    }
-#endif
-#if defined(FG_USING_MARMALADE)
-    if(s3eKeyboardGetState(s3eKeyS) & S3E_KEY_STATE_PRESSED) {
-        srcID++;
-        if(srcID >= srcNum)
-            srcID = 0;
-        yolox++;
-    }
-    if(s3eKeyboardGetState(s3eKeyD) & S3E_KEY_STATE_PRESSED) {
-        yolox++;
-        dstID++;
-        if(dstID >= dstNum)
-            dstID = 0;
-    }
-    if(s3eKeyboardGetState(s3eKeyX) & S3E_KEY_STATE_PRESSED) {
-        yolox++;
-        srcID--;
-        if(srcID < 0)
-            srcID = srcNum - 1;
-    }
-    if(s3eKeyboardGetState(s3eKeyC) & S3E_KEY_STATE_PRESSED) {
-        yolox++;
-        dstID--;
-        if(dstID < 0)
-            dstID = dstNum - 1;
-    }
-#endif
-    const fgGFXenum eqEnums[] = {
-                                 GL_FUNC_ADD,
-                                 GL_FUNC_SUBTRACT,
-                                 GL_FUNC_REVERSE_SUBTRACT
-    };
-    const char * eqEnumsName[] = {
-                                  "GL_FUNC_ADD",
-                                  "GL_FUNC_SUBTRACT",
-                                  "GL_FUNC_REVERSE_SUBTRACT"
-    };
-    static int funcID = 0;
-#if defined(FG_USING_MARMALADE)
-    if(s3eKeyboardGetState(s3eKeyA) & S3E_KEY_STATE_PRESSED) {
-        yoloy++;
-        funcID++;
-        if(funcID >= 3)
-            funcID = 0;
-    }
-    if(s3eKeyboardGetState(s3eKeyZ) & S3E_KEY_STATE_PRESSED) {
-        yoloy++;
-        funcID--;
-        if(funcID < 0)
-            funcID = 2;
-    }
-#endif
-    fgGFXenum src = srcEnums[srcID];
-    fgGFXenum dst = dstEnums[dstID];
-    fgGFXenum func = eqEnums[funcID];
-    if(yolox > 0 || yoloy > 0) {
-        printf("\n-------------------------------------------------\n");
-        if(yolox)
-            printf("Setting blending to new: (SRC, DST) = (%s, %s)\n", srcEnumsNames[srcID], dstEnumsNames[dstID]);
-        if(yoloy)
-            printf("Setting blending func eq: (EQFUNC) = (%s)\n", eqEnumsName[funcID]);
-        printf("-------------------------------------------------\n\n");
-    }
+
     fgGfxPlatform::context()->setBlend(FG_TRUE);
-    fgGfxPlatform::context()->blendFunc(src, dst);
-    fgGfxPlatform::context()->blendEquation(func);
+    fgGfxPlatform::context()->blendFunc(GL_ONE_MINUS_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     //fgGfxPlatform::context()->blendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 #if defined(FG_USING_MARMALADE)
     if(s3eKeyboardGetState(s3eKeyLeft) & S3E_KEY_STATE_DOWN) {
@@ -655,13 +368,13 @@ void fgGfxMain::render(void) {
     }
 #endif
     Model = glm::translate(Model, glm::vec3(posx, posy, 0.0f));
-
+    // #FIXME !
+    fgGfxMVPMatrix mvp_lol;
+    fgGfxMVPMatrix *MVP = &mvp_lol;
     MVP->identity();
     MVP->setOrtho(0, (float)m_mainWindow->getWidth(), (float)m_mainWindow->getHeight(), 0.0f);
     MVP->calculate(Model);
-    if(!program2->setUniform(MVP)) {
-        printf("RYPIE SIE p2 MVP\n");
-	}
+    program2->setUniform(MVP);
 
     fgGfxPlatform::context()->scissor(0, 0, m_mainWindow->getWidth(), m_mainWindow->getHeight());
 }
@@ -681,7 +394,8 @@ fgBool fgGfxMain::setResourceManager(fgManagerBase *resourceManager) {
     else
         m_textureMgr->setResourceManager(resourceManager);
     m_resourceMgr = resourceManager;
-
+    if(m_3DScene)
+        m_3DScene->setResourceManager(m_resourceMgr);
     return m_textureMgr->initialize(); // #FIXME - texture mgr init ?
 }
 
@@ -704,6 +418,22 @@ fgGfxShaderManager *fgGfxMain::getShaderManager(void) const {
  */
 fgGfxWindow *fgGfxMain::getMainWindow(void) const {
     return m_mainWindow;
+}
+
+/*
+ *
+ */
+fgGfx3DScene *fgGfxMain::get3DScene(void) const {
+    return m_3DScene;
+}
+
+/*
+ *
+ */
+fgGfxCameraAnimation *fgGfxMain::get3DSceneCamera(void) const {
+    if(!m_3DScene)
+        return NULL;
+    return m_3DScene->getCamera();
 }
 
 /*

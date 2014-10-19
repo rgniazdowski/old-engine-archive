@@ -24,18 +24,24 @@ public:
     // 
     virtual ~fgGfxMVPMatrix() { }
 
-    //
-    virtual float *calculate(fgMatrix4f & modelMatrix) {
+    /**
+     * 
+     * @param modelMatrix
+     * @return 
+     */
+    virtual float *calculate(const fgMatrix4f & modelMatrix) {
         fgGfxMVMatrix::calculate(modelMatrix);
         m_modelViewProjMatrix = m_projMatrix * m_modelViewMatrix;
         return getModelViewProjMatPtr();
     }
 
     //
-    virtual float *calculate(fgGfxCamera *camera, fgMatrix4f & modelMatrix, fgBool updateMatrix = FG_TRUE) {
+    virtual float *calculate(fgGfxCamera *camera,
+                             const fgMatrix4f & modelMatrix,
+                             fgBool updateMatrix = FG_TRUE) {
         fgGfxMVMatrix::calculate(camera, modelMatrix);
         // argument updateMatrix is ignored, MVP matrix will be always updated
-        m_modelViewProjMatrix = m_projMatrix * m_viewMatrix * modelMatrix;
+        //m_modelViewProjMatrix = m_projMatrix * m_viewMatrix * modelMatrix;
         m_modelViewProjMatrix = m_projMatrix * m_modelViewMatrix;
         return getModelViewProjMatPtr();
     }
@@ -63,6 +69,7 @@ public:
     }
 
 protected:
+    /// 
     fgMatrix4f m_modelViewProjMatrix;
 };
 

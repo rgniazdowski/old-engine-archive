@@ -30,6 +30,10 @@ template<typename HandleType, typename MapKeyType>
  */
 class fgDataObjectBase {
 public:
+    typedef std::map<MapKeyType, std::string> fileMapping;
+    typedef typename fileMapping::iterator fileMappingItor;
+        
+public:
     // Default empty constructor for resource base object
     fgDataObjectBase() : m_defaultID((MapKeyType) - 1) {
         m_filePath.clear();
@@ -58,16 +62,26 @@ public:
     }
 
     // Get resource file path string
-    std::string getFilePath(void) const {
+    inline std::string getFilePath(void) const {
         return m_filePath;
     }
     // Get reference to resource file path string
-    std::string& getFilePath(void) {
+    inline std::string& getFilePath(void) {
         return m_filePath;
     }
     // Get resource file path as C-like string (char array)
-    const char* getFilePathStr(void) const {
+    inline const char* getFilePathStr(void) const {
         return m_filePath.c_str();
+    }
+    
+    //   
+    inline fileMapping& getFileMapping(void) {
+        return m_fileMapping;
+    }
+    
+    //
+    inline unsigned int getFilesCount(void) const {
+        return m_fileMapping.size();
     }
 
     // Set file path to this resource
@@ -90,13 +104,13 @@ public:
     }
 
     // Get resource file path string
-    std::string getFilePath(MapKeyType id) const {
+    inline std::string getFilePath(MapKeyType id) const {
         // this lazy cast is ok - non-const version does not modify anything
         return (const_cast<fgDataObjectBase<HandleType, MapKeyType>*>(this)->getFilePath(id));
     }
 
     // Get reference to resource file path string
-    std::string& getFilePath(MapKeyType id) {
+    inline std::string& getFilePath(MapKeyType id) {
         if(m_fileMapping.find(id) == m_fileMapping.end()) {
             return m_filePath;
         }
@@ -104,7 +118,7 @@ public:
     }
 
     // Get resource file path as C-like string (char array)
-    const char* getFilePathStr(MapKeyType id) {
+    inline const char* getFilePathStr(MapKeyType id) {
         if(m_fileMapping.find(id) == m_fileMapping.end()) {
             return m_filePath.c_str();
         }
@@ -112,7 +126,7 @@ public:
     }
 
     // Set default ID
-    void setDefaultID(MapKeyType id) {
+    inline void setDefaultID(MapKeyType id) {
         m_defaultID = id;
     }
 
@@ -126,36 +140,36 @@ public:
     }
 
     // Get resource name string
-    std::string getName(void) const {
+    inline std::string getName(void) const {
         return m_nameTag;
     }
     // Get reference to resource name string
-    std::string& getName(void) {
+    inline std::string& getName(void) {
         return m_nameTag;
     }
     // Get resource name (TAG/string ID) as C-like string (char array)
-    const char* getNameStr(void) const {
+    inline const char* getNameStr(void) const {
         return m_nameTag.c_str();
     }
 
     // Return the data handle ID
-    HandleType getHandle(void) const {
+    inline HandleType getHandle(void) const {
         return m_handle;
     }
 
     // Set the data handle ID 
-    void setHandle(HandleType handle) {
+    inline void setHandle(HandleType handle) {
         m_handle = handle;
     }
 
     // Returns the reference to the data handle
-    HandleType& getRefHandle(void) {
+    inline HandleType& getRefHandle(void) {
         return m_handle;
     }
 
 protected:
     /// File mapping
-    std::map<MapKeyType, std::string> m_fileMapping;
+    fileMapping m_fileMapping;
     /// File path as separate string (by default this is for universal quality)
     std::string m_filePath;
     /// Name of the data, string ID

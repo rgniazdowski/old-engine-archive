@@ -309,6 +309,7 @@ private:
             lasty = touch->y;
             //printf("TOUCH MOTION: X: %d Y: %d | xRel: %d | yRel: %d \n", touch->x, touch->y, xRel, yRel);
             if(touch->pressed)
+                
                 cameraAnim->update((float)xRel, (float)yRel);
             if(type == FG_EVENT_TOUCH_RELEASED) {
                 lastx = 128000;

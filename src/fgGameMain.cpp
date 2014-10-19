@@ -73,7 +73,6 @@ m_pointerInputReceiver(NULL) {
     FG_MessageSubsystem->initialize(); // ? #FIXME message subsystem
     FG_MessageSubsystem->setLogPaths("all.log", "error.log", "debug.log");
     fgTime::init(); // #FIXME global time init?
-    FG_LOG::PrintDebug("fgGameMain::fgGameMain();");
     m_pointerInputReceiver = new fgPointerInputReceiver();
     m_joypadController = new fgJoypadController();
     if(eventMgr) {
@@ -86,7 +85,6 @@ m_pointerInputReceiver(NULL) {
  * Default destructor for the Game Main object
  */
 fgGameMain::~fgGameMain() {
-    FG_LOG::PrintDebug("BEGIN: fgGameMain::~fgGameMain();");
     if(m_settings)
         delete m_settings;
     m_settings = NULL;
@@ -116,7 +114,6 @@ fgGameMain::~fgGameMain() {
     }
     m_guiMain = NULL;
     fgErrorCodes::unregisterAll();
-    FG_LOG::PrintDebug("END: fgGameMain::~fgGameMain();");
     FG_MessageSubsystem->deleteInstance();
 }
 
@@ -197,7 +194,7 @@ fgBool fgGameMain::initSubsystems(void) {
     FG_LOG::PrintDebug("Will now try to compile and link 'sPlainEasy' shader program");
     if(program) {
         program->compile();
-        program->link(); // this will also bind attributes and after successfull link - bind uniforms
+        program->link(); // this will also bind attributes and after successful link - bind uniforms
     }
     {
         std::string sOrthoEasyShaderName("sOrthoEasy");
@@ -206,7 +203,7 @@ fgBool fgGameMain::initSubsystems(void) {
         FG_LOG::PrintDebug("Will now try to compile and link 'sOrthoEasyShader' shader program");
         if(program) {
             program->compile();
-            program->link(); // this will also bind attributes and after successfull link - bind uniforms
+            program->link(); // this will also bind attributes and after successful link - bind uniforms
         }
     }
     FG_HardwareState->deviceYield(0); // #FIXME - device yield...
@@ -466,7 +463,7 @@ int applicationInit(void) {
     // FIXME - Initialization of TouchReceiver needed :D
 
     // FIXME: Textures need to be loaded in different way
-    // For now textures (file names etc.) are hardcoded within the source code - file names and handles should be read from XML/CSS configuration files
+    // For now textures (file names etc.) are hard coded within the source code - file names and handles should be read from XML/CSS configuration files
     // TEXTURES
     FG_LOG::PrintDebug("Initializing textures..");
     if(!fgTextureManager::getInstance()->allToVRAM()) {

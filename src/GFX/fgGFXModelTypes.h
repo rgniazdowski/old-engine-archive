@@ -10,9 +10,12 @@
 #ifndef _FG_GFX_MODEL_TYPES_H_
     #define _FG_GFX_MODEL_TYPES_H_
 
-    #include "fgGFXTypes.h"
-    #include "fgGFXMaterial.h"
-
+    #ifndef _FG_GFX_TYPES_H_
+        #include "fgGFXTypes.h"
+    #endif
+    #ifndef _FG_GFX_MATERIAL_H_
+        #include "fgGFXMaterial.h"
+    #endif
 /*
 Assuming the container has at least one element in it, you 
 need to get the address of the initial element of the 
@@ -65,7 +68,7 @@ struct fgGfxMeshSoA : fgGfxMeshBase {
     static const unsigned short TEX_COORDS_VBO_ARRAY_IDX;
     static const unsigned short UVS_VBO_ARRAY_IDX;
     static const unsigned short INDICES_VBO_ARRAY_IDX;
-    
+
     // Default constructor
     fgGfxMeshSoA() { }
 
@@ -116,22 +119,22 @@ struct fgGfxMeshSoA : fgGfxMeshBase {
     virtual fgBool supportsVBO(void) const {
         return FG_TRUE;
     }
-    
+
     // Returns whether the vertex data superclass has information on indices
     virtual fgBool hasIndices(void) const {
         return FG_TRUE;
     }
-    
+
     // Returns raw ID for indices VBO (0 if invalid or not generated)
     virtual fgGFXuint getIndicesVBO(void) const;
-    
+
     // Return GFX pointer to indices array, may be 0 if VBO
     // is generated or there are no indices at all
     virtual fgGFXvoid *getIndicesPointer(void) const;
-    
+
     //
     virtual fgGFXboolean setupAttributes(fgGfxAttributeData *pDataArray) const;
-    
+
     // Generates the GFX buffers (VBO)
     virtual fgGFXboolean genBuffers(void);
 
@@ -317,14 +320,14 @@ struct fgGfxMeshAoS : fgGfxMeshBase {
     // #FIXME Need to check for OGL version, ushort is mandatory on ES2
     fgVector<fgGFXushort> indices;
 
-    
+
     static const unsigned short POSITIONS_VBO_ARRAY_IDX;
     static const unsigned short VERTICES_VBO_ARRAY_IDX;
     static const unsigned short NORMALS_VBO_ARRAY_IDX;
     static const unsigned short TEX_COORDS_VBO_ARRAY_IDX;
     static const unsigned short UVS_VBO_ARRAY_IDX;
     static const unsigned short INDICES_VBO_ARRAY_IDX;
-    
+
     // Default empty constructor for Mesh AoS object
     fgGfxMeshAoS() { }
 
@@ -381,19 +384,19 @@ struct fgGfxMeshAoS : fgGfxMeshBase {
     virtual fgBool supportsVBO(void) const {
         return FG_TRUE;
     }
-    
+
     // Returns whether the vertex data superclass has information on indices
     virtual fgBool hasIndices(void) const {
         return FG_TRUE;
     }
-    
+
     // Returns raw ID for indices VBO (0 if invalid or not generated)
     virtual fgGFXuint getIndicesVBO(void) const;
-    
+
     // Return GFX pointer to indices array, may be 0 if VBO
     // is generated or there are no indices at all
     virtual fgGFXvoid *getIndicesPointer(void) const;
-    
+
     // Attributes for mesh AoS is done the same way as for vertexData v3
     // There is still needed fix for indices special array. It's because
     // indices are not treated as an attribute. It's a special parameter
@@ -401,32 +404,32 @@ struct fgGfxMeshAoS : fgGfxMeshBase {
     virtual fgGFXboolean setupAttributes(fgGfxAttributeData *pDataArray) const {
         return vertices.setupAttributes(pDataArray);
     }
-    
+
     //
     virtual fgBool hasVBO(void) const {
         return vertices.hasVBO();
     }
-    
+
     //
     virtual int getVBOCount(void) const {
         return vertices.getVBOCount();
     }
-    
+
     //
     virtual int& getRefVBOCount(void) {
         return vertices.getRefVBOCount();
     }
-    
+
     //
     virtual fgGfxBufferID* getPtrVBO(void) const {
         return vertices.getPtrVBO();
     }
-    
+
     //
     virtual fgGfxBufferID*& getRefPtrVBO(void) {
         return vertices.getRefPtrVBO();
     }
-    
+
     //
     virtual fgGFXboolean genBuffers(void);
 
@@ -435,7 +438,7 @@ struct fgGfxMeshAoS : fgGfxMeshBase {
 
     //
     virtual fgGFXboolean destroyBuffers(void);
-    
+
     //
     virtual fgBool isSoA(void) const {
         return FG_FALSE;
@@ -591,7 +594,7 @@ struct fgGfxShape {
         size += name.length();
         size += sizeof (fgGfxShape);
         if(material)
-            size += material->getSize();
+            size += material->getDataSize();
         if(mesh)
             size += mesh->getDataSize();
         return size;

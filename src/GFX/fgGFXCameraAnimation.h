@@ -8,174 +8,161 @@
  *******************************************************/
 
 #ifndef _FG_GFX_CAMERA_ANIMATION_H_
-#define _FG_GFX_CAMERA_ANIMATION_H_
+    #define _FG_GFX_CAMERA_ANIMATION_H_
 
-#include "fgGFXCamera.h"
-#include "fgGFXTypes.h"
+    #include "fgGFXCamera.h"
+    #include "fgGFXTypes.h"
 
 typedef unsigned int fgGfxCameraType;
 
 // Fly mode (like in noclip :)
-#define FG_GFX_CAMERA_FREE			1
+    #define FG_GFX_CAMERA_FREE		1
 // Locked/centered to some point, eye can change (rotate above the center point)
-#define FG_GFX_CAMERA_CENTER_LOCKED	2
+    #define FG_GFX_CAMERA_CENTER_LOCKED	2
 // Locked to look at some object, follows it at the distance if it moves
 // position of the eye changes automatically
-#define FG_GFX_CAMERA_FOLLOW	3
+    #define FG_GFX_CAMERA_FOLLOW	3
 // Camera walks the specified path (checkpoints)
-#define FG_GFX_CAMERA_PATH		4
+    #define FG_GFX_CAMERA_PATH		4
 
 /*
  *
  */
-class fgGfxCameraAnimation : public fgGfxCamera
-{
+class fgGfxCameraAnimation : public fgGfxCamera {
 public:
-	//
-	fgGfxCameraAnimation();
-	//
-	virtual ~fgGfxCameraAnimation();
+    //
+    fgGfxCameraAnimation(const fgGfxCameraType type = FG_GFX_CAMERA_FREE);
+    //
+    virtual ~fgGfxCameraAnimation();
 
-	//
-	virtual float * update(void);
+    //
+    virtual float * update(void);
 
-	//
-	virtual float * update(fgGFXfloat mouseXrel, fgGFXfloat mouseYrel);
+    //
+    virtual float * update(fgGFXfloat mouseXrel, fgGFXfloat mouseYrel);
 
-	//
-	void moveLeft(void);
+    //
+    void moveLeft(void);
 
-	//
-	void moveRight(void);
+    //
+    void moveRight(void);
 
-	//
-	void moveForward(void);
+    //
+    void moveForward(void);
 
-	//
-	void moveBackward(void);
+    //
+    void moveBackward(void);
 
-	//
-	void moveUp(void);
+    //
+    void moveUp(void);
 
-	//
-	void moveDown(void);
+    //
+    void moveDown(void);
 
-	//
-	void setType(fgGfxCameraType type) {
-		m_type = type;
-	}
-	//
-	fgGfxCameraType getType(void) const {
-		return m_type;
-	}
+    //
+    inline void setType(fgGfxCameraType type) {
+        m_type = type;
+    }
+    //
+    inline fgGfxCameraType getType(void) const {
+        return m_type;
+    }
 
-	//
-	fgVec3f getDirection(void) const {
-		return m_direction;
-	}
+    //
+    inline fgVec3f& getRefDirection(void) {
+        return m_direction;
+    }
 
-	//
-	fgVec3f getRight(void) const {
-		return m_right;
-	}
+    //
+    inline fgVec3f& getRefRight(void) {
+        return m_right;
+    }
 
-	//
-	void setAngleH(fgGFXfloat angle) {
-		m_hAngle = angle;
-	}
-	//
-	fgGFXfloat getAngleH(void) const {
-		return m_hAngle;
-	}
+    //
+    inline void setAngleH(fgGFXfloat angle) {
+        m_hAngle = angle;
+    }
+    //
+    inline fgGFXfloat getAngleH(void) const {
+        return m_hAngle;
+    }
 
-	//
-	void setAngleV(fgGFXfloat angle) {
-		m_vAngle = angle;
-	}
-	//
-	fgGFXfloat getAngleV(void) const {
-		return m_vAngle;
-	}
+    //
+    inline void setAngleV(fgGFXfloat angle) {
+        m_vAngle = angle;
+    }
+    //
+    inline fgGFXfloat getAngleV(void) const {
+        return m_vAngle;
+    }
 
-	//
-	void setSpeed(fgGFXfloat speed) {
-		m_speed = speed;
-	}
-	//
-	fgGFXfloat getSpeed(void) const {
-		return m_speed;
-	}
+    //
+    inline void setSpeed(fgGFXfloat speed) {
+        m_speed = speed;
+    }
+    //
+    inline fgGFXfloat getSpeed(void) const {
+        return m_speed;
+    }
 
-	//
-	void setMouseSpeed(fgGFXfloat mouseSpeed) {
-		m_mouseSpeed = mouseSpeed;
-	}
-	//
-	fgGFXfloat getMouseSpeed(void) const {
-		return m_mouseSpeed;
-	}
+    //
+    inline void setMouseSpeed(fgGFXfloat mouseSpeed) {
+        m_mouseSpeed = mouseSpeed;
+    }
+    //
+    inline fgGFXfloat getMouseSpeed(void) const {
+        return m_mouseSpeed;
+    }
 
-	//
-	void setZoom(fgGFXfloat zoom) {
-		m_zoom = zoom;
-	}
-	//
-	fgGFXfloat getZoom(void) const {
-		return m_mouseSpeed;
-	}
+    //
+    inline void setZoom(fgGFXfloat zoom) {
+        m_zoom = zoom;
+    }
+    //
+    inline fgGFXfloat getZoom(void) const {
+        return m_mouseSpeed;
+    }
 
-	//
-	void setDistance(fgGFXfloat distance) {
-		m_distance = distance;
-	}
-	//
-	fgGFXfloat getDistance(void) const {
-		return m_distance;
-	}
+    //
+    inline void setDistance(fgGFXfloat distance) {
+        m_distance = distance;
+    }
+    //
+    inline fgGFXfloat getDistance(void) const {
+        return m_distance;
+    }
 
-	//
-	void setDT(fgGFXfloat dt) {
-		m_dt = dt;
-	}
-
-	//
-	void setScreenW(fgGFXint width) {
-		m_screenW = width;
-	}
-	//
-	void setScreenH(fgGFXint height) {
-		m_screenH = height;
-	}
+    //
+    inline void setDT(fgGFXfloat dt) {
+        m_dt = dt;
+    }
 
 private:
-	///
-	fgGfxCameraType	m_type;
-	///
-	fgVec3f			m_direction;
-	///
-	fgVec3f			m_right;
-	///
-	fgGFXfloat		m_hAngle;
-	///
-	fgGFXfloat		m_vAngle;
-	///
-	fgGFXfloat		m_speed;
-	///
-	fgGFXfloat		m_mouseSpeed;
-	///
-	fgGFXfloat		m_zoom;
-	union {
-		///
-		fgGFXfloat		m_distance;
-		///
-		fgGFXfloat		m_radius;
-	};
-	///
-	fgGFXfloat		m_dt;
-	///
-	fgGFXint		m_screenW;
-	///
-	fgGFXint		m_screenH;
+    ///
+    fgGfxCameraType m_type;
+    ///
+    fgVec3f m_direction;
+    ///
+    fgVec3f m_right;
+    ///
+    fgGFXfloat m_hAngle;
+    ///
+    fgGFXfloat m_vAngle;
+    ///
+    fgGFXfloat m_speed;
+    ///
+    fgGFXfloat m_mouseSpeed;
+    ///
+    fgGFXfloat m_zoom;
+
+    union {
+        ///
+        fgGFXfloat m_distance;
+        ///
+        fgGFXfloat m_radius;
+    };
+    ///
+    fgGFXfloat m_dt;
 };
 
 #endif /* _FG_GFX_CAMERA_ANIMATION_H_ */
