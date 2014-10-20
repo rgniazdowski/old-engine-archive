@@ -16,6 +16,9 @@
     #define FG_GUI_TEXT_AREA		0x00000400
     #define FG_GUI_TEXT_AREA_NAME	"TextArea"
 
+/**
+ * 
+ */
 class fgGuiTextArea : public fgGuiScrollArea {
 private:
 protected:

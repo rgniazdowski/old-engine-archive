@@ -134,6 +134,7 @@ fgBool fgGfxMain::initGFX(void) {
  *
  */
 void fgGfxMain::closeGFX(void) {
+    FG_LOG::PrintDebug("Closing GFX subsystem...");
     if(m_init) {
         if(m_mainWindow)
             m_mainWindow->close();

@@ -237,6 +237,7 @@ fgBool fgGameMain::initSubsystems(void) {
     FG_HardwareState->deviceYield(0); // #FIXME - device yield...
     int w = m_gfxMain->getMainWindow()->getWidth();
     int h = m_gfxMain->getMainWindow()->getHeight();
+    m_guiMain->setScreenSize(w, h);
     FG_HardwareState->setScreenDimensions(w, h);
     FG_HardwareState->deviceYield(0); // #FIXME - device yield...
     //#if defined(FG_USING_MARMALADE)
@@ -446,6 +447,7 @@ fgBool fgGameMain::releaseResources(void) {
  * must be called after releaseResources
  */
 fgBool fgGameMain::closeSybsystems(void) {
+    FG_LOG::PrintDebug("Closing subsystems...");
     // #TODO - KILLALLSINGLETONS
     // KILL ALL SINGLETONS
     if(m_gfxMain)
@@ -636,30 +638,6 @@ int applicationInit(void) {
     FG_LOG::PrintDebug("Initializing Sensors..");
     fgSensors::getInstance()->startSensors();
 
-    // FIXME - Initialization of TouchReceiver needed :D
-
-    // FIXME: Textures need to be loaded in different way
-    // For now textures (file names etc.) are hard coded within the source code - file names and handles should be read from XML/CSS configuration files
-    // TEXTURES
-    FG_LOG::PrintDebug("Initializing textures..");
-    if(!fgTextureManager::getInstance()->allToVRAM()) {
-        FG_LOG::PrintError("diskToVram failed");
-        return false;
-    }
-
-    // FONTS - FIXME
-    /*FG_LOG::PrintDebug("Initializing fonts..");
-    if(!loadFonts()) {
-    FG_LOG::PrintError("loadFonts failed");
-    return false;
-    }
-     */
-
-    // FIXME - texture manager is just wrong
-    // UNUSED MEMORY – after textures and fonts are uploaded to VRAM
-    FG_LOG::PrintDebug("Initializing releasing non-GL memory..");
-    fgTextureManager::getInstance()->allReleaseNonGl();
-
     // AUDIO - FIXME - now that just needs a lot of fixing (personally I would just delete it and rewrote it from scratch using s3eSound)
     // actually now the Audio subsystem loads the .raw (sfx) and .mp3 (music) files
     // it needs to work like new texture subsystem - load audio file names and handles from XML files
@@ -694,10 +672,6 @@ int applicationInit(void) {
 
     // FIXME - although particle system initialization is OK, particle emitters configuration needs to be loaded from XML files or Lua
     // and also textures used in particles also need to be specified within XML/Lua files for further loading/processing.
-
-    // PARTICLE SYSTEM
-    //FG_LOG::PrintDebug("Initializing fgParticleSystem.."); // FIXME - also all debug text messages printed to the console need to be stored in internal buffer for further processing and display (in-program console)
-    //g_particleSystem = fgParticleSystem::getInstance(); // FIXME
 
     return true;
 }

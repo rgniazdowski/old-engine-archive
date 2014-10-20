@@ -43,7 +43,8 @@ m_guiDrawer(NULL),
 m_shaderMgr(NULL),
 m_pointerInputReceiver(NULL),
 m_guiTouchCallback(NULL),
-m_guiMouseCallback(NULL) {
+m_guiMouseCallback(NULL),
+m_screenBox() {
     m_widgetFactory = new fgGuiWidgetFactory();
     m_styleMgr = new fgGuiStyleManager();
     m_widgetMgr = new fgGuiWidgetManager(m_widgetFactory, m_styleMgr);
@@ -179,6 +180,7 @@ void fgGuiMain::display(void) {
         return;
     if(!(mainMenu->getTypeTraits() & FG_GUI_CONTAINER))
         return;
+    mainMenu->updateSize(m_screenBox);
     mainMenu->display(m_guiDrawer);
 }
 
