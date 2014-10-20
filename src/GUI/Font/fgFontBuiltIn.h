@@ -24,7 +24,7 @@ public:
     fgFontBuiltInResource(fgFontBuiltInRawData *rawFontData);
     //
     virtual ~fgFontBuiltInResource() {
-        destroy();
+        fgFontBuiltInResource::destroy();
     }
 
 protected:

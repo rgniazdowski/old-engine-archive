@@ -8,16 +8,19 @@
  *******************************************************/
 
 #include "fgGuiContainer.h"
+#include "Util/fgStrings.h"
 
-/*
+/**
  *
  */
 fgGuiContainer::fgGuiContainer() :
-fgGuiWidget() {
+fgGuiWidget(),
+m_packMethod(FG_GUI_CONTAINER_PACK_FREE),
+m_packAlign(FG_GUI_CONTAINER_PACK_ALIGN_NONE) {
     fgGuiContainer::setDefaults();
 }
 
-/*
+/**
  *
  */
 fgGuiContainer::~fgGuiContainer() {
@@ -25,7 +28,7 @@ fgGuiContainer::~fgGuiContainer() {
     m_childrenMap.clear();
 }
 
-/*
+/**
  *
  */
 void fgGuiContainer::setDefaults(void) {
@@ -34,8 +37,53 @@ void fgGuiContainer::setDefaults(void) {
     m_typeTraits = FG_GUI_CONTAINER | FG_GUI_WIDGET;
 }
 
-/*
- *
+/**
+ * 
+ * @param flags
+ */
+void fgGuiContainer::setFlags(const std::string& flags) {
+    if(flags.empty() || flags.length() < 5)
+        return;
+    m_packMethod = FG_GUI_CONTAINER_PACK_FREE;
+    m_packAlign = FG_GUI_CONTAINER_PACK_ALIGN_NONE;
+    fgStringVector flagsVec;
+    fgStrings::split(flags, ' ', flagsVec);
+    if(flagsVec.empty())
+        return;
+    unsigned int n = (unsigned int)flagsVec.size();
+    for(unsigned int i = 0; i < n; i++) {
+        if(flagsVec[i].compare("packfree") == 0) {
+            m_packMethod = FG_GUI_CONTAINER_PACK_FREE;
+        } else if(flagsVec[i].compare("packhorizontal") == 0) {
+            m_packMethod = FG_GUI_CONTAINER_PACK_HORIZONTAL;
+        } else if(flagsVec[i].compare("packvertical") == 0) {
+            m_packMethod = FG_GUI_CONTAINER_PACK_VERTICAL;
+        } else if(flagsVec[i].compare("none") == 0) {
+            m_packAlign = FG_GUI_CONTAINER_PACK_ALIGN_NONE;
+        } else if(flagsVec[i].compare("left") == 0) {
+            m_packAlign |= FG_GUI_CONTAINER_PACK_ALIGN_LEFT;
+        } else if(flagsVec[i].compare("right") == 0) {
+            m_packAlign |= FG_GUI_CONTAINER_PACK_ALIGN_RIGHT;
+        } else if(flagsVec[i].compare("top") == 0) {
+            m_packAlign |= FG_GUI_CONTAINER_PACK_ALIGN_TOP;
+        } else if(flagsVec[i].compare("bottom") == 0) {
+            m_packAlign |= FG_GUI_CONTAINER_PACK_ALIGN_BOTTOM;
+        } else if(flagsVec[i].compare("vcenter") == 0) {
+            m_packAlign |= FG_GUI_CONTAINER_PACK_ALIGN_VCENTER;
+        } else if(flagsVec[i].compare("hcenter") == 0) {
+            m_packAlign |= FG_GUI_CONTAINER_PACK_ALIGN_HCENTER;
+        } else if(flagsVec[i].compare("center") == 0) {
+            m_packAlign |= FG_GUI_CONTAINER_PACK_ALIGN_CENTER;
+        } else if(flagsVec[i].compare("middle") == 0) {
+            m_packAlign = FG_GUI_CONTAINER_PACK_ALIGN_MIDDLE;
+        }
+    }
+    flagsVec.clear();
+}
+
+/**
+ * 
+ * @param guiLayer
  */
 void fgGuiContainer::display(fgGfxLayer *guiLayer) {
     if(!guiLayer)
@@ -49,8 +97,9 @@ void fgGuiContainer::display(fgGfxLayer *guiLayer) {
     }
 }
 
-/*
- *
+/**
+ * 
+ * @return 
  */
 fgBoundingBox3Df& fgGuiContainer::updateSize(void) {
     if(m_children.empty()) {
@@ -58,19 +107,44 @@ fgBoundingBox3Df& fgGuiContainer::updateSize(void) {
     }
     fgBoundingBox3Df area = m_bbox;
     fgBoundingBox3Df tmpArea = m_bbox;
+    fgBoundingBox3Df positionAndSize;
+    positionAndSize.zero();
     fgVector3f step = m_bbox.size / (float)m_children.size();
     for(int i = 0; i < (int)m_children.size(); i++) {
         fgGuiWidget *child = m_children[i];
         if(!child)
             continue;
 
-        tmpArea.pos = m_bbox.pos;
-        tmpArea.size = m_bbox.size;
-        fgBoundingBox3Df positionAndSize = child->updateSize(tmpArea);
+        //tmpArea.pos = m_bbox.pos;
+        //tmpArea.size = m_bbox.size;
+        if(this->m_packMethod == FG_GUI_CONTAINER_PACK_HORIZONTAL) {
+            if(i > 0 && this->m_bbox.pos.x + step.x * i < positionAndSize.pos.x + positionAndSize.size.x)
+                tmpArea.pos.x = positionAndSize.pos.x + positionAndSize.size.x;
+            else
+                tmpArea.pos.x = this->m_bbox.pos.x + step.x * i;
+
+            tmpArea.pos.y = this->m_bbox.pos.y; //FIXME
+            tmpArea.size.x = step.x;
+            tmpArea.size.y = this->m_bbox.size.y; //FIXME
+        } else if(this->m_packMethod == FG_GUI_CONTAINER_PACK_VERTICAL) {
+            if(i > 0 && this->m_bbox.pos.y + step.y * i < positionAndSize.pos.y + positionAndSize.size.y)
+                tmpArea.pos.y = positionAndSize.pos.y + positionAndSize.size.y;
+            else
+                tmpArea.pos.y = this->m_bbox.pos.y + step.y * i;
+
+            tmpArea.pos.x = this->m_bbox.pos.x; //FIXME                    
+            tmpArea.size.x = this->m_bbox.size.x;
+            tmpArea.size.y = step.y; //FIXME
+        } else {
+            // #FIXME !
+            tmpArea.pos = m_bbox.pos;
+            tmpArea.size = m_bbox.size;
+        }
+        positionAndSize = child->updateSize(tmpArea);
 
         area.merge(positionAndSize);
         area.merge(tmpArea);
-        m_bbox = area;
+        
 #if 0
         Vector4 area = new Vector4();
 
@@ -150,7 +224,7 @@ fgBoundingBox3Df& fgGuiContainer::updateSize(void) {
         return area;
 #endif 
     }
-
+    m_bbox = area;
     return m_bbox;
 }
 
@@ -167,8 +241,10 @@ void fgGuiContainer::refresh(void) {
     }
 }
 
-/*
- *
+/**
+ * 
+ * @param pointerData
+ * @return 
  */
 int fgGuiContainer::updateState(const fgPointerData *pointerData) {
     if(fgGuiWidget::updateState(pointerData) == FG_GUI_WIDGET_STATE_NONE);
@@ -182,8 +258,10 @@ int fgGuiContainer::updateState(const fgPointerData *pointerData) {
     return m_state;
 }
 
-/*
- *
+/**
+ * 
+ * @param nameTag
+ * @return 
  */
 fgGuiWidget *fgGuiContainer::getChild(const std::string& nameTag) {
     if(nameTag.empty())
@@ -195,29 +273,35 @@ fgGuiWidget *fgGuiContainer::getChild(const std::string& nameTag) {
     return pWidget;
 }
 
-/*
- *
+/**
+ * 
+ * @param nameTag
+ * @return 
  */
 fgGuiWidget *fgGuiContainer::getChild(const char *nameTag) {
     return getChild(std::string(nameTag));
 }
 
-/*
- *
+/**
+ * 
+ * @return 
  */
 fgGuiContainer::childrenVec& fgGuiContainer::getChildren(void) {
     return m_children;
 }
 
-/*
- *
+/**
+ * 
+ * @return 
  */
 fgGuiContainer::childrenMap& fgGuiContainer::getChildrenMap(void) {
     return m_childrenMap;
 }
 
-/*
- *
+/**
+ * 
+ * @param pWidget
+ * @return 
  */
 fgBool fgGuiContainer::addChild(fgGuiWidget *pWidget) {
     if(m_children.find(pWidget) == -1) {
@@ -229,8 +313,10 @@ fgBool fgGuiContainer::addChild(fgGuiWidget *pWidget) {
     return FG_TRUE;
 }
 
-/*
- *
+/**
+ * 
+ * @param pWidget
+ * @return 
  */
 fgBool fgGuiContainer::removeChild(fgGuiWidget *pWidget) {
     if(!pWidget)
@@ -238,8 +324,10 @@ fgBool fgGuiContainer::removeChild(fgGuiWidget *pWidget) {
     return removeChild(pWidget->getName());
 }
 
-/*
- *
+/**
+ * 
+ * @param nameTag
+ * @return 
  */
 fgBool fgGuiContainer::removeChild(const std::string& nameTag) {
     if(nameTag.empty())
@@ -260,8 +348,10 @@ fgBool fgGuiContainer::removeChild(const std::string& nameTag) {
     return FG_FALSE;
 }
 
-/*
- *
+/**
+ * 
+ * @param nameTag
+ * @return 
  */
 fgBool fgGuiContainer::removeChild(const char *nameTag) {
     if(!nameTag)

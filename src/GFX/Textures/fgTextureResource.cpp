@@ -169,7 +169,7 @@ fgBool fgTextureResource::create(void) {
 void fgTextureResource::destroy(void) {
     FG_LOG::PrintDebug("fgTextureResource::destroy();");
     releaseNonGFX();
-    clear();
+    fgTextureResource::clear();
 }
 
 /*

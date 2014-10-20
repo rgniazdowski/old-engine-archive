@@ -9,6 +9,7 @@
 
 #include "fgGuiStyleContent.h"
 #include "Util/fgStrings.h"
+#include "fgColors.h"
 
 /*
  *
@@ -20,10 +21,17 @@ fgGuiStyleContent::fgGuiStyleContent() { }
  */
 fgGuiStyleContent::~fgGuiStyleContent() { }
 
-/*
- *
+/**
+ * 
+ * @param align
+ * @param pos
+ * @param size
+ * @param boundSize
  */
-void fgGuiStyleContent::applyPosAlign(const fgGuiAlign align, fgVector3f& pos, const fgVector3f& size, const fgVector3f& boundSize) {
+void fgGuiStyleContent::applyPosAlign(const fgGuiAlign align,
+                                      fgVector3f& pos,
+                                      const fgVector3f& size,
+                                      const fgVector3f& boundSize) {
     if(align == FG_GUI_ALIGN_NONE) {
         pos.x += m_padding.left;
         pos.y += m_padding.top;
@@ -44,10 +52,17 @@ void fgGuiStyleContent::applyPosAlign(const fgGuiAlign align, fgVector3f& pos, c
     }
 }
 
-/*
- *
+/**
+ * 
+ * @param align
+ * @param pos
+ * @param size
+ * @param boundSize
  */
-void fgGuiStyleContent::applyPosAlign(const fgGuiAlign align, fgVector2f& pos, const fgVector2f& size, const fgVector2f& boundSize) {
+void fgGuiStyleContent::applyPosAlign(const fgGuiAlign align,
+                                      fgVector2f& pos,
+                                      const fgVector2f& size,
+                                      const fgVector2f& boundSize) {
     if(align == FG_GUI_ALIGN_NONE) {
         pos.x += m_padding.left;
         pos.y += m_padding.top;
@@ -68,11 +83,12 @@ void fgGuiStyleContent::applyPosAlign(const fgGuiAlign align, fgVector2f& pos, c
     }
 }
 
-/*
- *
+/**
+ * 
+ * @param value
+ * @return 
  */
 fgColor4f fgGuiStyleContent::parseColor(const char *value) {
-    // NEED STANDARD COLOR CONST ARRAY ! ! ! ! ! WHERE?
     if(!value)
         return FG_GUI_DEFAULT_FG_COLOR;
     std::string colorStr = value;
@@ -81,22 +97,31 @@ fgColor4f fgGuiStyleContent::parseColor(const char *value) {
     colorStr = fgStrings::trim(colorStr);
     if(fgStrings::startsWith(colorStr.c_str(), "rgba", FG_TRUE)) {
         sscanf(colorStr.c_str(), "rgba(%d,%d,%d,%d)", &r, &g, &b, &a);
+        retColor.r = (float)r / 255.0f;
+        retColor.g = (float)g / 255.0f;
+        retColor.b = (float)b / 255.0f;
+        retColor.a = (float)a / 255.0f;
     } else if(fgStrings::startsWith(colorStr.c_str(), "rgb", FG_TRUE)) {
         sscanf(colorStr.c_str(), "rgb(%d,%d,%d)", &r, &g, &b);
-    } else if(fgStrings::startsWith(colorStr.c_str(), "#", FG_TRUE)) {
+        retColor.r = (float)r / 255.0f;
+        retColor.g = (float)g / 255.0f;
+        retColor.b = (float)b / 255.0f;
+        retColor.a = (float)a / 255.0f;
+    } else if(fgStrings::startsWith(colorStr.c_str(), "#", FG_TRUE) || fgStrings::startsWith(colorStr.c_str(), "0x", FG_FALSE)) {
         // HEX!
+        retColor = fgColors::parseHEX(colorStr);
     } else {
         // readable human name !
+        retColor = fgColors::getColorFromName(colorStr);
     }
-    retColor.r = (float)r / 255.0f;
-    retColor.g = (float)g / 255.0f;
-    retColor.b = (float)b / 255.0f;
-    retColor.a = (float)a / 255.0f;
+
     return retColor;
 }
 
-/*
- *
+/**
+ * 
+ * @param value
+ * @return 
  */
 fgGuiBorderStyle fgGuiStyleContent::parseBorderStyle(const char *value) {
     if(!value)
@@ -114,8 +139,10 @@ fgGuiBorderStyle fgGuiStyleContent::parseBorderStyle(const char *value) {
     return style;
 }
 
-/*
- *
+/**
+ * 
+ * @param value
+ * @return 
  */
 fgGuiBorder fgGuiStyleContent::parseBorder(const char *value) {
     fgGuiBorder border;
@@ -137,7 +164,10 @@ fgGuiBorder fgGuiStyleContent::parseBorder(const char *value) {
             parts[i] = fgStrings::trim(parts[i]);
             if(isdigit((int)parts[i].c_str()[0])) {
                 border.width = (float)atof(parts[i].c_str());
-            } else if(fgStrings::startsWith(parts[i].c_str(), "rgb", FG_FALSE)) {
+            } else if(fgStrings::startsWith(parts[i].c_str(), "rgb", FG_FALSE) ||
+                      fgStrings::startsWith(parts[i].c_str(), "#") ||
+                      fgStrings::startsWith(parts[i].c_str(), "0x", FG_FALSE) ||
+                      i == 2) {
                 border.color = parseColor(parts[i].c_str());
             } else {
                 border.style = parseBorderStyle(parts[i].c_str());
@@ -147,8 +177,10 @@ fgGuiBorder fgGuiStyleContent::parseBorder(const char *value) {
     return border;
 }
 
-/*
- *
+/**
+ * 
+ * @param value
+ * @return 
  */
 fgGuiPositionStyle fgGuiStyleContent::parsePositionStyle(const char *value) {
     if(!value)
@@ -168,8 +200,10 @@ fgGuiPositionStyle fgGuiStyleContent::parsePositionStyle(const char *value) {
     return style;
 }
 
-/*
- *
+/**
+ * 
+ * @param value
+ * @return 
  */
 fgGuiAlign fgGuiStyleContent::parseAlign(const char *value) {
     fgGuiAlign align = FG_GUI_ALIGN_CENTER;
@@ -196,8 +230,10 @@ fgGuiAlign fgGuiStyleContent::parseAlign(const char *value) {
     return align;
 }
 
-/*
- *
+/**
+ * 
+ * @param value
+ * @return 
  */
 fgGuiBackgroundStyle fgGuiStyleContent::parseBackgroundStyle(const char *value) {
     fgGuiBackgroundStyle style = FG_GUI_BACKGROUND_MAX;
@@ -206,8 +242,39 @@ fgGuiBackgroundStyle fgGuiStyleContent::parseBackgroundStyle(const char *value) 
     return style;
 }
 
-/*
- *
+/**
+ * 
+ * @param value
+ * @param type
+ * @return 
+ */
+float fgGuiStyleContent::parseLength(const char *value, fgGuiUnitType &type) {
+    if(!value)
+        return 0.0f;
+    float length = 0.0f;
+    std::string lengthStr;
+    if(fgStrings::contains(value, "%")) {
+        type = FG_GUI_PERCENTS;
+        lengthStr = fgStrings::trim(std::string(value), std::string(" %"));
+    } else if(fgStrings::contains(value, "b", FG_FALSE)) {
+        type = FG_GUI_BLOCKS;
+        lengthStr = fgStrings::trim(std::string(value), std::string(" bB"));
+    } else if(fgStrings::contains(value, "i", FG_FALSE)) {
+        type = FG_GUI_INCHES;
+        lengthStr = fgStrings::trim(std::string(value), std::string(" iI"));
+    } else {
+        type = FG_GUI_PIXELS;
+        lengthStr = fgStrings::trim(std::string(value), std::string(" fF"));
+    }
+    length = (float)atof(lengthStr.c_str());
+    return length;
+}
+
+/**
+ * 
+ * @param params
+ * @param merge
+ * @return 
  */
 fgBool fgGuiStyleContent::initializeFromConfig(fgCfgTypes::parameterVec &params, fgBool merge) {
     if(params.empty())
@@ -405,18 +472,36 @@ fgBool fgGuiStyleContent::initializeFromConfig(fgCfgTypes::parameterVec &params,
             // #FIXME
             if(param->type == FG_CFG_PARAMETER_FLOAT) {
                 this->m_size.x = param->float_val;
+                this->m_size.style = FG_GUI_SIZE_PIXELS;
             } else if(param->type == FG_CFG_PARAMETER_INT) {
                 this->m_size.x = (float)param->int_val;
+                this->m_size.style = FG_GUI_SIZE_PIXELS;
             } else if(param->type == FG_CFG_PARAMETER_STRING) {
+                fgGuiUnitType unit = FG_GUI_PIXELS;
+                this->m_size.x = parseLength(param->string, unit);
+                this->m_size.style = (fgGuiSizeStyle)unit;
+                if(this->m_size.x >= 100.0f && unit == FG_GUI_PERCENTS)
+                    this->m_size.style = FG_GUI_SIZE_MAX;
+                else if(this->m_size.x <= FG_EPSILON + 1.0f && unit == FG_GUI_PERCENTS)
+                    this->m_size.style = FG_GUI_SIZE_MIN;
             }
 
         } else if(param->name.compare("height") == 0) {
             // #FIXME
             if(param->type == FG_CFG_PARAMETER_FLOAT) {
                 this->m_size.y = param->float_val;
+                this->m_size.style = FG_GUI_SIZE_PIXELS;
             } else if(param->type == FG_CFG_PARAMETER_INT) {
                 this->m_size.y = (float)param->int_val;
+                this->m_size.style = FG_GUI_SIZE_PIXELS;
             } else if(param->type == FG_CFG_PARAMETER_STRING) {
+                fgGuiUnitType unit;
+                this->m_size.y = parseLength(param->string, unit);
+                this->m_size.style = (fgGuiSizeStyle)unit;
+                if(this->m_size.y >= 100.0f && unit == FG_GUI_PERCENTS)
+                    this->m_size.style = FG_GUI_SIZE_MAX;
+                else if(this->m_size.y <= FG_EPSILON + 1.0f && unit == FG_GUI_PERCENTS)
+                    this->m_size.style = FG_GUI_SIZE_MIN;
             }
 
         } else if(param->name.compare("shader") == 0) {
@@ -428,132 +513,180 @@ fgBool fgGuiStyleContent::initializeFromConfig(fgCfgTypes::parameterVec &params,
                 m_effect = param->string;
         }
     }
-
     return FG_TRUE;
 }
 
-//
-
+/**
+ * 
+ * @return 
+ */
 fgGuiBackground& fgGuiStyleContent::getBackground(void) {
     return m_bg;
 }
 
-//
-
+/**
+ * 
+ * @return 
+ */
 fgGuiForeground& fgGuiStyleContent::getForeground(void) {
     return m_fg;
 }
 
-//
-
+/**
+ * 
+ * @return 
+ */
 fgGuiMargin& fgGuiStyleContent::getMargin(void) {
     return m_margin;
 }
 
-//
-
+/**
+ * 
+ * @return 
+ */
 fgGuiPadding& fgGuiStyleContent::getPadding(void) {
     return m_padding;
 }
 
-//
-
+/**
+ * 
+ * @return 
+ */
 fgGuiBorderInfo& fgGuiStyleContent::getBorder(void) {
     return m_border;
 }
 
-//
-
+/**
+ * 
+ * @return 
+ */
 fgGuiPosition& fgGuiStyleContent::getPosition(void) {
     return m_position;
 }
 
-//
-
+/**
+ * 
+ * @return 
+ */
 fgGuiAlign fgGuiStyleContent::getAlign(void) const {
     return m_align;
 }
 
-//
-
+/**
+ * 
+ * @return 
+ */
 fgGuiAlign fgGuiStyleContent::getVAlign(void) const {
     return m_valign;
 }
 
-//
-
+/**
+ * 
+ * @return 
+ */
 fgGuiAlign fgGuiStyleContent::getTextAlign(void) const {
     return m_textAlign;
 }
 
-//
-
-fgVector2f& fgGuiStyleContent::getSize(void) {
+/**
+ * 
+ * @return 
+ */
+fgGuiSize& fgGuiStyleContent::getSize(void) {
     return m_size;
 }
 
-//
-
+/**
+ * 
+ * @return 
+ */
 std::string& fgGuiStyleContent::getShader(void) {
     return m_shader;
 }
 
-//
-
+/**
+ * 
+ * @return 
+ */
 std::string& fgGuiStyleContent::getEffect(void) {
     return m_effect;
 }
 
-//
-
+/**
+ * 
+ * @param style
+ * @return 
+ */
 fgGuiStyleContent& fgGuiStyleContent::setBackground(const fgGuiBackgroundStyle style) {
     m_bg.style = style;
     return (*this);
 }
 
-//
-
+/**
+ * 
+ * @param color
+ * @return 
+ */
 fgGuiStyleContent& fgGuiStyleContent::setBackground(const fgColor4f& color) {
     m_bg.color = color;
     return (*this);
 }
 
-//
-
+/**
+ * 
+ * @param texture
+ * @return 
+ */
 fgGuiStyleContent& fgGuiStyleContent::setBackground(const std::string& texture) {
     m_bg.texture = texture;
     return (*this);
 }
 
-//
-
+/**
+ * 
+ * @param textSize
+ * @return 
+ */
 fgGuiStyleContent& fgGuiStyleContent::setForeground(const float textSize) {
     m_fg.textSize = textSize;
     return (*this);
 }
 
-//
-
+/**
+ * 
+ * @param color
+ * @return 
+ */
 fgGuiStyleContent& fgGuiStyleContent::setForeground(const fgColor4f& color) {
     m_fg.color = color;
     return (*this);
 }
 
-//
-
+/**
+ * 
+ * @param font
+ * @return 
+ */
 fgGuiStyleContent& fgGuiStyleContent::setForeground(const std::string& font) {
     m_fg.font = font;
     return (*this);
 }
 
-//
-
+/**
+ * 
+ * @param size
+ * @return 
+ */
 fgGuiStyleContent& fgGuiStyleContent::setMargin(const float size) {
     return setMargin(FG_GUI_MARGIN_ALL, size);
 }
 
-//
-
+/**
+ * 
+ * @param which
+ * @param size
+ * @return 
+ */
 fgGuiStyleContent& fgGuiStyleContent::setMargin(const fgGuiMarginWhich which, const float size) {
     if(which & FG_GUI_MARGIN_LEFT)
         m_margin.left = size;
@@ -568,14 +701,21 @@ fgGuiStyleContent& fgGuiStyleContent::setMargin(const fgGuiMarginWhich which, co
     return (*this);
 }
 
-//
-
+/**
+ * 
+ * @param size
+ * @return 
+ */
 fgGuiStyleContent& fgGuiStyleContent::setPadding(const float size) {
     return setPadding(FG_GUI_PADDING_ALL, size);
 }
 
-//
-
+/**
+ * 
+ * @param which
+ * @param size
+ * @return 
+ */
 fgGuiStyleContent& fgGuiStyleContent::setPadding(const fgGuiPaddingWhich which, const float size) {
     if(which & FG_GUI_PADDING_LEFT)
         m_padding.left = size;
@@ -590,26 +730,39 @@ fgGuiStyleContent& fgGuiStyleContent::setPadding(const fgGuiPaddingWhich which, 
     return (*this);
 }
 
-//
-
+/**
+ * 
+ * @param style
+ * @return 
+ */
 fgGuiStyleContent& fgGuiStyleContent::setBorder(const fgGuiBorderStyle style) {
     return setBorder(FG_GUI_BORDER_ALL, style);
 }
 
-//
-
+/**
+ * 
+ * @param color
+ * @return 
+ */
 fgGuiStyleContent& fgGuiStyleContent::setBorder(const fgColor4f& color) {
     return setBorder(FG_GUI_BORDER_ALL, color);
 }
 
-//
-
+/**
+ * 
+ * @param width
+ * @return 
+ */
 fgGuiStyleContent& fgGuiStyleContent::setBorder(const float width) {
     return setBorder(FG_GUI_BORDER_ALL, width);
 }
 
-//
-
+/**
+ * 
+ * @param which
+ * @param style
+ * @return 
+ */
 fgGuiStyleContent& fgGuiStyleContent::setBorder(const fgGuiBorderWhich which, const fgGuiBorderStyle style) {
     if(which & FG_GUI_BORDER_LEFT)
         m_border.left.style = style;
@@ -624,8 +777,12 @@ fgGuiStyleContent& fgGuiStyleContent::setBorder(const fgGuiBorderWhich which, co
     return (*this);
 }
 
-//
-
+/**
+ * 
+ * @param which
+ * @param color
+ * @return 
+ */
 fgGuiStyleContent& fgGuiStyleContent::setBorder(const fgGuiBorderWhich which, const fgColor4f& color) {
     if(which & FG_GUI_BORDER_LEFT)
         m_border.left.color = color;
@@ -640,8 +797,12 @@ fgGuiStyleContent& fgGuiStyleContent::setBorder(const fgGuiBorderWhich which, co
     return (*this);
 }
 
-//
-
+/**
+ * 
+ * @param which
+ * @param width
+ * @return 
+ */
 fgGuiStyleContent& fgGuiStyleContent::setBorder(const fgGuiBorderWhich which, const float width) {
     if(which & FG_GUI_BORDER_LEFT)
         m_border.left.width = width;
@@ -656,21 +817,32 @@ fgGuiStyleContent& fgGuiStyleContent::setBorder(const fgGuiBorderWhich which, co
     return (*this);
 }
 
-//
-
+/**
+ * 
+ * @param style
+ * @return 
+ */
 fgGuiStyleContent& fgGuiStyleContent::setPosition(const fgGuiPositionStyle style) {
     m_position.style = style;
     return (*this);
 }
 
-//
-
-fgGuiStyleContent& fgGuiStyleContent::setPosition(const fgGuiPositionStyle style, const fgVector2f& modPos) {
+/**
+ * 
+ * @param style
+ * @param modPos
+ * @return 
+ */
+fgGuiStyleContent& fgGuiStyleContent::setPosition(const fgGuiPositionStyle style,
+                                                  const fgVector2f& modPos) {
     return setPosition(style).setPosition(modPos);
 }
 
-//
-
+/**
+ * 
+ * @param modPos
+ * @return 
+ */
 fgGuiStyleContent& fgGuiStyleContent::setPosition(const fgVector2f& modPos) {
     if(m_position.style != FG_GUI_POS_STATIC) {
         if(modPos.x <= 0.0f)
@@ -685,51 +857,198 @@ fgGuiStyleContent& fgGuiStyleContent::setPosition(const fgVector2f& modPos) {
     return (*this);
 }
 
-//
+/**
+ * 
+ * @param style
+ * @param modPos
+ * @return 
+ */
+fgGuiStyleContent& fgGuiStyleContent::setPosition(const fgGuiPositionStyle style,
+                                                  const fgVector3f& modPos) {
+    return setPosition(style).setPosition(modPos);
+}
 
+/**
+ * 
+ * @param modPos
+ * @return 
+ */
+fgGuiStyleContent& fgGuiStyleContent::setPosition(const fgVector3f& modPos) {
+    if(m_position.style != FG_GUI_POS_STATIC) {
+        if(modPos.x <= 0.0f)
+            m_position.left = fabsf(modPos.x);
+        else
+            m_position.right = modPos.x;
+        if(modPos.y <= 0.0f)
+            m_position.top = fabsf(modPos.y);
+        else
+            m_position.bottom = modPos.y;
+        if(modPos.z <= 0.0f)
+            m_position.front = fabsf(modPos.z); // #FIXME
+        else
+            m_position.back = modPos.z;
+    }
+    return (*this);
+}
+
+/**
+ * 
+ * @param align
+ * @return 
+ */
 fgGuiStyleContent& fgGuiStyleContent::setAlign(const fgGuiAlign align) {
     m_align = align;
     return (*this);
 }
 
-//
-
+/**
+ * 
+ * @param vAlign
+ * @return 
+ */
 fgGuiStyleContent& fgGuiStyleContent::setVAlign(const fgGuiAlign vAlign) {
     m_valign = vAlign;
     return (*this);
 }
 
-//
-
+/**
+ * 
+ * @param textAlign
+ * @return 
+ */
 fgGuiStyleContent& fgGuiStyleContent::setTextAlign(const fgGuiAlign textAlign) {
     m_textAlign = textAlign;
     return (*this);
 }
 
-//
+/**
+ * 
+ * @param style
+ * @return 
+ */
+fgGuiStyleContent& fgGuiStyleContent::setSize(const fgGuiSizeStyle style) {
+    m_size.style = style;
+    return (*this);
+}
 
+/**
+ * 
+ * @param style
+ * @param x
+ * @param y
+ * @return 
+ */
+fgGuiStyleContent& fgGuiStyleContent::setSize(const fgGuiSizeStyle style,
+                                              const float x,
+                                              const float y) {
+    return setSize(style).setSize(x, y);
+}
+
+/**
+ * 
+ * @param style
+ * @param size
+ * @return 
+ */
+fgGuiStyleContent& fgGuiStyleContent::setSize(const fgGuiSizeStyle style,
+                                              const fgVector2f& size) {
+
+    return setSize(style).setSize(size);
+}
+
+/**
+ * 
+ * @param style
+ * @param x
+ * @param y
+ * @param z
+ * @return 
+ */
+fgGuiStyleContent& fgGuiStyleContent::setSize(const fgGuiSizeStyle style,
+                                              const float x,
+                                              const float y,
+                                              const float z) {
+
+    return setSize(style).setSize(x, y, z);
+}
+
+/**
+ * 
+ * @param style
+ * @param size
+ * @return 
+ */
+fgGuiStyleContent& fgGuiStyleContent::setSize(const fgGuiSizeStyle style,
+                                              const fgVector3f& size) {
+    return setSize(style).setSize(size);
+}
+
+/**
+ * 
+ * @param x
+ * @param y
+ * @return 
+ */
 fgGuiStyleContent& fgGuiStyleContent::setSize(const float x, const float y) {
     m_size.x = x;
     m_size.y = y;
     return (*this);
 }
 
-//
-
+/**
+ * 
+ * @param size
+ * @return 
+ */
 fgGuiStyleContent& fgGuiStyleContent::setSize(const fgVector2f& size) {
-    m_size = size;
+    m_size.x = size.x;
+    m_size.y = size.y;
     return (*this);
 }
 
-//
+/**
+ * 
+ * @param x
+ * @param y
+ * @param z
+ * @return 
+ */
+fgGuiStyleContent& fgGuiStyleContent::setSize(const float x,
+                                              const float y,
+                                              const float z) {
+    m_size.x = x;
+    m_size.y = y;
+    m_size.z = z;
+    return (*this);
+}
 
+/**
+ * 
+ * @param size
+ * @return 
+ */
+fgGuiStyleContent& fgGuiStyleContent::setSize(const fgVector3f& size) {
+    m_size.x = size.x;
+    m_size.y = size.y;
+    m_size.z = size.z;
+    return (*this);
+}
+
+/**
+ * 
+ * @param shader
+ * @return 
+ */
 fgGuiStyleContent& fgGuiStyleContent::setShader(const std::string& shader) {
     m_shader = shader;
     return (*this);
 }
 
-//
-
+/**
+ * 
+ * @param effect
+ * @return 
+ */
 fgGuiStyleContent& fgGuiStyleContent::setEffect(const std::string& effect) {
     m_effect = effect;
     return (*this);

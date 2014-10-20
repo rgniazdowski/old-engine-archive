@@ -22,7 +22,7 @@ protected:
     virtual ~fgXMLDefaultHandler() { }
 public:
     // Receive notification of character data inside an element or comment
-    virtual void characters(const char ch[], int start, int length, fgXMLNodeType nodeType, int depth = 0) { }
+    virtual void characters(const char *ch, int start, int length, fgXMLNodeType nodeType, int depth = 0) { }
     // Receive notification of the end of the document.
     virtual void endDocument(fgXMLDocument *document) = 0;
     // Receive notification of the end of an element.
@@ -32,7 +32,7 @@ public:
     // Report a fatal XML parsing error.
     //void fatalError(exception e)
     // Receive notification of ignorable whitespace in element content.
-    virtual void ignorableWhitespace(char ch[], int start, int length) { }
+    virtual void ignorableWhitespace(char *ch, int start, int length) { }
     // Receive notification of the beginning of the document.
     virtual void startDocument(fgXMLDocument *document) = 0;
     // Receive notification of the start of an element.

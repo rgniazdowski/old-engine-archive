@@ -192,7 +192,7 @@ public:
     fgResource(std::string& path);
     // Base destructor of the resource object
     virtual ~fgResource() {
-        destroy();
+        fgResource::destroy();
     }
 
 protected:
@@ -209,7 +209,7 @@ public:
     virtual fgBool create(void) = 0;
     // Destroy all loaded data including additional metadata (called with deconstructor)
     virtual void destroy(void) {
-        clear();
+        fgResource::clear();
     };
     // Dispose and recreate must be able to discard and then completely recreate
     // the data contained in the class with no additional parameters

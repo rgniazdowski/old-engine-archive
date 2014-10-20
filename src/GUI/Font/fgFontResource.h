@@ -37,7 +37,7 @@ public:
     fgFontResource(std::string& path);
     // Base destructor of the font resource object
     virtual ~fgFontResource() {
-        destroy();
+        fgFontResource::destroy();
     }
 
     FG_RESOURCE_FACTORY_CREATE_FUNCTION(fgFontResource)

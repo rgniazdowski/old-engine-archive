@@ -54,15 +54,16 @@ m_ignoreState(FG_FALSE) {
  */
 fgGuiWidget::~fgGuiWidget() { }
 
-/*
- *
+/**
+ * 
+ * @param guiLayer
  */
 void fgGuiWidget::display(fgGfxLayer *guiLayer) {
     if(!guiLayer)
         return;
     fgGuiDrawer *guiDrawer = (fgGuiDrawer *)guiLayer;
-    if(!guiDrawer->getResourceManager())
-        return;
+    //if(!guiDrawer->getResourceManager())
+        //return;
     guiDrawer->downZIndex();
     fgVec2f blockPos = fgVec2f(m_bbox.pos.x, m_bbox.pos.y);
     fgVec2f blockSize = fgVec2f(m_bbox.size.x, m_bbox.size.y);
@@ -73,20 +74,33 @@ void fgGuiWidget::display(fgGfxLayer *guiLayer) {
     }
 }
 
-/*
- *
+/**
+ * 
+ * @return 
  */
 fgBoundingBox3Df& fgGuiWidget::updateSize(void) {
     return m_bbox;
 }
 
-/*
- *
+/**
+ * 
+ * @param bounds
+ * @return 
  */
 fgBoundingBox3Df& fgGuiWidget::updateSize(const fgBoundingBox3Df &bounds) {
-    updateSize();
     fgGuiStyleContent &style = m_styles[m_state];
     fgGuiPositionStyle posStyle = style.getPosition().style;
+    fgGuiSize &size= style.getSize();
+    if(size.style == FG_GUI_SIZE_MAX) {
+        m_bbox.size.x = bounds.size.x;
+        m_bbox.size.y = bounds.size.y;
+    } else if(size.style == FG_GUI_SIZE_PERCENTS) {
+        m_bbox.size.x = size.x / 100.0f * bounds.size.x;
+        m_bbox.size.y = size.y / 100.0f * bounds.size.y;
+    }
+    updateSize();
+    
+    
     // Margin?
     if(posStyle == FG_GUI_POS_STATIC) {
         m_bbox.pos = bounds.pos;
@@ -120,8 +134,10 @@ fgBoundingBox3Df& fgGuiWidget::updateSize(const fgBoundingBox3Df &bounds) {
  */
 void fgGuiWidget::refresh(void) { }
 
-/*
- *
+/**
+ * 
+ * @param pointerData
+ * @return 
  */
 int fgGuiWidget::updateState(const fgPointerData *pointerData) {
     if(!pointerData)

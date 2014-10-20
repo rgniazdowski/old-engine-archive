@@ -31,7 +31,7 @@ public:
     fgTextureResource(std::string& path);
     // Base destructor of the texture resource object
     virtual ~fgTextureResource() {
-        destroy();
+        fgTextureResource::destroy();
     }
 
     FG_RESOURCE_FACTORY_CREATE_FUNCTION(fgTextureResource)

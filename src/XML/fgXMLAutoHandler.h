@@ -165,7 +165,7 @@ public:
     }
 
     // Receive notification of character data inside an element or comment
-    virtual void characters(const char ch[], int start, int length, fgXMLNodeType nodeType, int depth = 0) {
+    virtual void characters(const char *ch, int start, int length, fgXMLNodeType nodeType, int depth = 0) {
         if(m_isFailure)
             return;
         fgXMLElement *elementPtr = NULL;

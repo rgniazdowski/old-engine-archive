@@ -13,7 +13,7 @@
     #include "fgGuiTextArea.h"
     #include "fgGuiWidgetFactoryTypes.h"
 
-    #define FG_GUI_CONSOLE			0x00002000
+    #define FG_GUI_CONSOLE		0x00002000
     #define FG_GUI_CONSOLE_NAME		"Console"
 
 /*

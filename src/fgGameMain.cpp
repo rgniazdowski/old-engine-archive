@@ -55,6 +55,8 @@
 #include "GUI/Font/fgFontStbArialBold.h"
 #include "GUI/Font/fgFontBuiltIn.h"
 
+#include "fgColors.h"
+
 /*
  * Default constructor for the Game Main object
  */
@@ -72,6 +74,7 @@ m_gameMouseCallback(NULL),
 m_gameFreeLookCallback(NULL) {
     srand(time(NULL)); // #FIXME srand init ?
     fgErrorCodes::registerAll(); // #FIXME error codes registry place
+    fgColors::initialize();
     // #FIXME - getcwd / get exec path / paths management / etc
     FG_MessageSubsystem->initialize(); // ? #FIXME message subsystem
     FG_MessageSubsystem->setLogPaths("all.log", "error.log", "debug.log");
@@ -82,6 +85,7 @@ m_gameFreeLookCallback(NULL) {
         this->setEventManager(eventMgr);
     }
     m_joypadController->initialize(); // #FIXME
+    
 }
 
 /*
@@ -126,6 +130,7 @@ fgGameMain::~fgGameMain() {
         delete m_guiMain;
     }
     m_guiMain = NULL;
+    fgColors::freeColors();
     fgErrorCodes::unregisterAll();
     FG_MessageSubsystem->deleteInstance();
 }
@@ -383,7 +388,6 @@ fgBool fgGameMain::initSubsystems(void) {
     style->setName("DefaultStyle");
     if(!style->load("gui/main.style.ini")) {
         printf("FAILED TO LOAD MAIN STYLE\n");
-
     }
 
     fgFontBuiltInResource *consolasBold = new fgFontBuiltInResource(fgFontBuiltIn::StbConsolasBold::getRawData(32));
@@ -395,7 +399,7 @@ fgBool fgGameMain::initSubsystems(void) {
     fgFontBuiltInResource *courier = new fgFontBuiltInResource(fgFontBuiltIn::StbCourier::getRawData(50));
     courier->setName("StbCourier");
     courier->create();
-    fgTextureLoader::saveTGA("yolo1.tga", courier->getRawData(), courier->getWidth(), courier->getHeight());
+    //fgTextureLoader::saveTGA("yolo1.tga", courier->getRawData(), courier->getWidth(), courier->getHeight());
     m_resourceMgr->insertResource(courier->getRefHandle(), courier);
     m_gfxMain->getTextureManager()->uploadToVRAM(courier, FG_TRUE);
 

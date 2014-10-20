@@ -12,6 +12,7 @@
 
     #include "fgVector.h"
     #include <string>
+    #include <cstring>
     #include <sstream>
 
 /**
@@ -41,6 +42,34 @@ public:
         const unsigned int strRange = strEnd - strBegin + 1;
 
         return str.substr(strBegin, strRange);
+    }
+    /**
+     * 
+     * @param str
+     * @param whitespace
+     * @return 
+     */
+    static std::string trim(const std::string& str,
+                            const char *whitespace) {
+        std::string whitespaceStr;
+        if(!whitespace)
+            whitespaceStr = " \t";
+        return fgStrings::trim(str, whitespaceStr);
+    }
+    /**
+     * 
+     * @param str
+     * @param whitespace
+     * @return 
+     */
+    static std::string trim(const char *str,
+                            const char *whitespace) {
+        if(!str)
+            return std::string();
+        std::string whitespaceStr;
+        if(!whitespace)
+            whitespaceStr = " \t";
+        return fgStrings::trim(std::string(str), whitespaceStr);
     }
     /**
      * 
@@ -161,9 +190,37 @@ public:
      * @param caseSensitive
      * @return 
      */
+    static fgBool isEqual(const std::string& input,
+                          const std::string& pattern,
+                          const fgBool caseSensitive = FG_TRUE) {
+        if(pattern.length() != input.length())
+            return FG_FALSE;
+        return fgStrings::startsWith(input, pattern, caseSensitive);
+    }
+    /**
+     * 
+     * @param input
+     * @param pattern
+     * @param caseSensitive
+     * @return 
+     */
+    static fgBool isEqual(const char *input,
+                          const char *pattern,
+                          const fgBool caseSensitive = FG_TRUE) {
+        if(strlen(pattern) != strlen(input))
+            return FG_FALSE;
+        return fgStrings::startsWith(input, pattern, caseSensitive);
+    }
+    /**
+     * 
+     * @param input
+     * @param pattern
+     * @param caseSensitive
+     * @return 
+     */
     static fgBool startsWith(const std::string& input,
                              const std::string& pattern,
-                             fgBool caseSensitive = FG_TRUE) {
+                             const fgBool caseSensitive = FG_TRUE) {
         if(input.length() < pattern.length() || pattern.empty() || input.empty())
             return FG_FALSE;
         int plen = pattern.length();
@@ -254,6 +311,32 @@ public:
      */
     static fgBool contains(const std::string& input, const std::string& chars) {
         return (input.find_first_of(chars) != std::string::npos);
+    }
+    /**
+     * 
+     * @param input
+     * @param chars
+     * @param caseSensitive
+     * @return 
+     */
+    static fgBool contains(const char *input,
+                           const char *chars,
+                           const fgBool caseSensitive = FG_TRUE) {
+        if(!input || !chars)
+            return FG_FALSE;
+        int i = 0, j = 0;
+        int ilen = strlen(input), clen = strlen(chars);
+        if(!ilen || !clen)
+            return FG_FALSE;
+        for(; i < ilen; i++) {
+            for(j = 0; j < clen; j++) {
+                if((caseSensitive && input[i] == chars[j]) ||
+                        (!caseSensitive && tolower(input[i]) == tolower(chars[j]))) {
+                    return FG_TRUE;
+                }
+            }
+        }
+        return FG_FALSE;
     }
 };
 

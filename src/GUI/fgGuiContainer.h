@@ -22,6 +22,7 @@
     #define FG_GUI_CONTAINER_PACK_ALIGN
 
 enum fgGuiContainerPackMethod {
+    FG_GUI_CONTAINER_PACK_FREE,
     FG_GUI_CONTAINER_PACK_HORIZONTAL,
     FG_GUI_CONTAINER_PACK_VERTICAL
 };
@@ -54,7 +55,12 @@ public:
 protected:
     /// 
     childrenMap m_childrenMap;
+    ///
     childrenVec m_children;
+    ///
+    fgGuiContainerPackMethod m_packMethod;
+    ///
+    fgGuiContainerPackAlign m_packAlign;
 
 protected:
     // 
@@ -67,7 +73,9 @@ public:
     virtual ~fgGuiContainer();
 
     FG_GUI_WIDGET_FACTORY_CREATE_FUNCTION(fgGuiContainer);
-
+    
+    virtual void setFlags(const std::string& flags);
+    
     //
     virtual void display(fgGfxLayer *guiLayer);
 

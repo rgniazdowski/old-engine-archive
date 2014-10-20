@@ -72,7 +72,7 @@ public:
     virtual void startElement(const char *localName, fgXMLElement *elementPtr, fgXMLNodeType nodeType, fgXMLAttribute *firstAttribute, int depth = 0);
 
     // Receive notification of character data inside an element or comment
-    virtual void characters(const char ch[], int start, int length, fgXMLNodeType nodeType, int depth = 0);
+    virtual void characters(const char *ch, int start, int length, fgXMLNodeType nodeType, int depth = 0);
 };
 
 #endif /* _FG_GUI_STRUCTURE_SHEET_PARSER_H_ */

@@ -22,12 +22,13 @@
 /*
  * Base constructor of the resource group content handler object
  */
-fgResourceGroupContentHandler::fgResourceGroupContentHandler() : m_resourceGroup(NULL),
+fgResourceGroupContentHandler::fgResourceGroupContentHandler() :
+m_resourceGroup(NULL),
 m_resType(FG_RESOURCE_INVALID),
 m_resourcePtr(NULL),
+m_curResPriority(FG_RES_PRIORITY_INVALID),
 m_isMapped(FG_FALSE),
-m_isFileQualityMapTag(FG_FALSE),
-m_curResPriority(FG_RES_PRIORITY_INVALID) { }
+m_isFileQualityMapTag(FG_FALSE) { }
 
 /*
  * Base destructor of the resource group content handler object
@@ -213,7 +214,7 @@ fgResourceGroup::fgResourceGroup(fgResourceFactory *resourceFactory) {
  * Base destructor of the resource group object
  */
 fgResourceGroup::~fgResourceGroup() {
-    destroy();
+    fgResourceGroup::destroy();
     FG_LOG::PrintDebug("fgResourceGroup::~~fgResourceGroup(); END");
 }
 

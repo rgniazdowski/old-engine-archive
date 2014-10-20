@@ -66,7 +66,7 @@ class MainModule
 protected:
 
     /**
-     * Initialize rendering parameters.
+     * Initialize main module
      */
     MainModule(int argc, char *argv[]) :
     m_argc(argc),
@@ -279,19 +279,35 @@ protected:
 
 public:
 
+    /**
+     * 
+     * @return 
+     */
     fgBool isSlow(void) const {
         return m_slow;
     }
 
+    /**
+     * 
+     * @return 
+     */
     fgBool isExit(void) const {
         return m_isExit;
     }
 private:
 
+    /**
+     * 
+     * @param slow
+     */
     void setSlow(fgBool slow) {
         m_slow = slow;
     }
 
+    /**
+     * 
+     * @param exit
+     */
     void setExit(fgBool exit) {
         m_isExit = exit;
     }
@@ -299,6 +315,8 @@ private:
     /**
      * Called when a fullscreen window with an OpenGL context
      * has been created and is ready to be used.
+     * 
+     * @return 
      */
     fgBool initProgram() {
         FG_LOG::PrintDebug("Init program main...");
@@ -349,9 +367,6 @@ private:
         if(!m_gameMain->loadResources()) {
             return FG_FALSE;
         }
-        //FG_EventManager->addEventCallback(FG_EVENT_SWIPE_X, &MainModule::eventSwipe);
-        //FG_EventManager->addEventCallback(FG_EVENT_SWIPE_Y, &MainModule::eventSwipe);
-        //FG_EventManager->addEventCallback(FG_EVENT_SWIPE_XY, &MainModule::eventSwipe);
         m_appInit = FG_TRUE;
         return FG_TRUE;
     }
@@ -412,10 +427,7 @@ private:
      * The way to exit from the app
      */
     void closeProgram() {
-        FG_LOG::PrintDebug("closeEvent()");
-        if(m_gameMain)
-            m_gameMain->releaseResources();
-
+        FG_LOG::PrintDebug("Closing program...");
         // This frees all the data used by singletons and other nonresource data
         // after that only things left to free are FG_GameMain and MainModule
         if(m_gameMain) {
@@ -636,7 +648,6 @@ extern "C" int main() {
 
 extern "C" int main(int argc, char *argv[]) {
 #endif /* FG_USING_MARMALADE */
-
     //IwMemBucketDebugSetBreakpoint(580);
     //IwMemBucketDebugSetBreakpoint(580);
     /*fgDeviceQuery* dev = fgDeviceQuery::getInstance();
@@ -697,16 +708,20 @@ extern "C" int main(int argc, char *argv[]) {
 #if defined FG_USING_MARMALADE
         s3eDeviceBacklightOn(); // #FIXME // need to wrap it in something else
 #endif /* FG_USING_MARMALADE */
-        if(status == FG_FALSE)
+        if(status == FG_FALSE) {
+            FG_LOG::PrintDebug("Main loop break...");
             break;
+        }
     }
 
     mainModule->closeProgram();
+    FG_LOG::PrintDebug("Deleting main module...");
     delete mainModule;
 
 #if defined FG_USING_MARMALADE
     IwUtilTerminate();
     s3eDeviceExit(0);
 #endif /* FG_USING_MARMALADE */
+    FG_LOG::PrintDebug("Successfully closed program");
     return 0;
 }

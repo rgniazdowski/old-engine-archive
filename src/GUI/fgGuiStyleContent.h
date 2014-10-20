@@ -20,6 +20,19 @@
     #include "GFX/fgGFXColor.h"
     #include "GFX/fgGFXBoundingBox.h"
 
+/**
+ *
+ */
+enum fgGuiUnitType {
+    FG_GUI_PIXELS,
+    FG_GUI_INCHES,
+    FG_GUI_BLOCKS,
+    FG_GUI_PERCENTS
+};
+
+/**
+ *
+ */
 enum fgGuiBorderStyle {
     FG_GUI_BORDER_NONE,
     FG_GUI_BORDER_DOTTED,
@@ -27,6 +40,9 @@ enum fgGuiBorderStyle {
     FG_GUI_BORDER_SOLID
 };
 
+/**
+ *
+ */
 enum fgGuiBorderWhich {
     FG_GUI_BORDER_LEFT = 0x0001,
     FG_GUI_BORDER_RIGHT = 0x0002,
@@ -40,6 +56,9 @@ FG_ENUM_FLAGS(fgGuiBorderWhich);
     #define FG_GUI_DEFAULT_BORDER_COLOR	fgColor4f(1.0f, 1.0f, 1.0f, 1.0f)
     #define FG_GUI_DEFAULT_BORDER_WIDTH	2.0f
 
+/**
+ *
+ */
 struct fgGuiBorder {
     fgGuiBorderStyle style;
     fgColor4f color;
@@ -50,6 +69,9 @@ struct fgGuiBorder {
     width(_width) { }
 };
 
+/**
+ *
+ */
 enum fgGuiBackgroundStyle {
     FG_GUI_BACKGROUND_NONE,
     FG_GUI_BACKGROUND_NORMAL,
@@ -57,6 +79,9 @@ enum fgGuiBackgroundStyle {
     FG_GUI_BACKGROUND_TILED
 };
 
+/**
+ *
+ */
 struct fgGuiBackground {
     fgGuiBackgroundStyle style;
     fgColor4f color;
@@ -68,9 +93,12 @@ struct fgGuiBackground {
 };
 
     #define FG_GUI_DEFAULT_TEXT_SIZE	16.0f
-    #define FG_GUI_DEFAULT_FONT			"DefaultFont"
-    #define FG_GUI_DEFAULT_FG_COLOR		fgColor4f(0.9f, 0.9f, 0.9f, 1.0f)
+    #define FG_GUI_DEFAULT_FONT		"DefaultFont"
+    #define FG_GUI_DEFAULT_FG_COLOR	fgColor4f(0.9f, 0.9f, 0.9f, 1.0f)
 
+/**
+ *
+ */
 struct fgGuiForeground {
     float textSize;
     fgColor4f color;
@@ -84,12 +112,24 @@ struct fgGuiForeground {
     #define FG_GUI_DEFAULT_MARGIN 8.0f
     #define FG_GUI_DEFAULT_PADDING 8.0f
 
+/**
+ *
+ */
 struct fgGuiMargin {
+    ///
     float value;
+    ///
     float left;
+    ///
     float right;
+    ///
     float top;
+    ///
     float bottom;
+    
+    /**
+     * 
+     */
     fgGuiMargin() :
     value(FG_GUI_DEFAULT_MARGIN),
     left(FG_GUI_DEFAULT_MARGIN),
@@ -98,6 +138,9 @@ struct fgGuiMargin {
     bottom(FG_GUI_DEFAULT_MARGIN) { }
 };
 
+/**
+ *
+ */
 enum fgGuiMarginWhich {
     FG_GUI_MARGIN_LEFT = 0x0001,
     FG_GUI_MARGIN_RIGHT = 0x0002,
@@ -107,12 +150,24 @@ enum fgGuiMarginWhich {
 };
 FG_ENUM_FLAGS(fgGuiMarginWhich);
 
+/**
+ * 
+ */
 struct fgGuiBorderInfo {
+    ///
     fgGuiBorder all;
+    ///
     fgGuiBorder left;
+    ///
     fgGuiBorder right;
+    ///
     fgGuiBorder top;
+    ///
     fgGuiBorder bottom;
+    
+    /**
+     * 
+     */
     fgGuiBorderInfo() :
     all(FG_GUI_DEFAULT_BORDER_WIDTH),
     left(FG_GUI_DEFAULT_BORDER_WIDTH),
@@ -123,6 +178,9 @@ struct fgGuiBorderInfo {
 
 typedef fgGuiMargin fgGuiPadding;
 
+/**
+ *
+ */
 enum fgGuiPaddingWhich {
     FG_GUI_PADDING_LEFT = 0x0001,
     FG_GUI_PADDING_RIGHT = 0x0002,
@@ -132,6 +190,9 @@ enum fgGuiPaddingWhich {
 };
 FG_ENUM_FLAGS(fgGuiPaddingWhich);
 
+/**
+ *
+ */
 enum fgGuiAlign {
     FG_GUI_ALIGN_NONE = 0x0000,
     FG_GUI_ALIGN_LEFT = 0x0001,
@@ -147,6 +208,9 @@ FG_ENUM_FLAGS(fgGuiAlign);
     #define FG_GUI_DEFAULT_VALIGN	FG_GUI_ALIGN_MIDDLE
     #define FG_GUI_DEFAULT_TEXT_ALIGN (FG_GUI_ALIGN_CENTER | FG_GUI_ALIGN_MIDDLE)
 
+/**
+ *
+ */
 enum fgGuiPositionStyle {
     FG_GUI_POS_STATIC,
     FG_GUI_POS_FIXED,
@@ -162,21 +226,86 @@ enum fgGuiPositionStyle {
     #define FG_GUI_DEFAULT_POSITION_FRONT	0.0f
     #define FG_GUI_DEFAULT_POSITION_BACK	0.0f
 
+/**
+ *
+ */
 struct fgGuiPosition {
+    ///
     fgGuiPositionStyle style;
-    //fgVector3f 
+    ///
     float left;
+    ///
     float right;
+    ///
     float top;
+    ///
     float bottom;
-    //float			front;
-    //float			back;
+    ///
+    float front;
+    ///
+    float back;
+    
+    /**
+     * 
+     */
     fgGuiPosition() :
     style(FG_GUI_DEFAULT_POSITION_STYLE),
     left(FG_GUI_DEFAULT_POSITION_LEFT),
     right(FG_GUI_DEFAULT_POSITION_RIGTH),
     top(FG_GUI_DEFAULT_POSITION_TOP),
-    bottom(FG_GUI_DEFAULT_POSITION_BOTTOM) { }
+    bottom(FG_GUI_DEFAULT_POSITION_BOTTOM),
+    front(FG_GUI_DEFAULT_POSITION_FRONT),
+    back(FG_GUI_DEFAULT_POSITION_BACK) { }
+};
+
+/**
+ *
+ */
+enum fgGuiSizeStyle {
+    FG_GUI_SIZE_PIXELS = FG_GUI_PIXELS,
+    FG_GUI_SIZE_INCHES = FG_GUI_INCHES,
+    FG_GUI_SIZE_BLOCKS = FG_GUI_BLOCKS,
+    FG_GUI_SIZE_PERCENTS = FG_GUI_PERCENTS,
+    FG_GUI_SIZE_MAX,
+    FG_GUI_SIZE_MIN
+
+};
+
+    #define FG_GUI_DEFAULT_SIZE_STYLE   FG_GUI_SIZE_PERCENTS
+    #define FG_GUI_DEFAULT_SIZE_X       10.0f
+    #define FG_GUI_DEFAULT_SIZE_Y       5.0f
+    #define FG_GUI_DEFAULT_SIZE_Z       1.0f
+
+/**
+ *
+ */
+struct fgGuiSize {
+    ///
+    fgGuiSizeStyle style;
+
+    union {
+        float w;
+        float x;
+    };
+
+    union {
+        float h;
+        float y;
+    };
+
+    union {
+        float d;
+        float z;
+    };
+    
+    /**
+     * 
+     */
+    fgGuiSize() :
+    style(FG_GUI_DEFAULT_SIZE_STYLE),
+    x(FG_GUI_DEFAULT_SIZE_X),
+    y(FG_GUI_DEFAULT_SIZE_Y),
+    z(FG_GUI_DEFAULT_SIZE_Z) { }
 };
 
     #include "Util/fgConfigStruct.h"
@@ -192,7 +321,7 @@ private:
     ///
     std::string m_effect;
     ///
-    fgVector2f m_size;
+    fgGuiSize m_size;
     ///
     fgGuiBackground m_bg;
     ///
@@ -216,13 +345,14 @@ public:
     //
     fgGuiStyleContent();
     //
-    ~fgGuiStyleContent();
+    virtual ~fgGuiStyleContent();
 
     //
     fgBool initializeFromConfig(fgCfgTypes::parameterVec &params, fgBool merge = FG_FALSE);
 
     //
     void applyPosAlign(const fgGuiAlign align, fgVector3f& pos, const fgVector3f& size, const fgVector3f& boundSize);
+    //
     void applyPosAlign(const fgGuiAlign align, fgVector2f& pos, const fgVector2f& size, const fgVector2f& boundSize);
 
     //
@@ -237,6 +367,8 @@ public:
     static fgGuiAlign parseAlign(const char *value);
     //
     static fgGuiBackgroundStyle parseBackgroundStyle(const char *value);
+    //
+    static float parseLength(const char *value, fgGuiUnitType &type);
 
     //
     fgGuiBackground& getBackground(void);
@@ -257,7 +389,7 @@ public:
     //
     fgGuiAlign getTextAlign(void) const;
     //
-    fgVector2f& getSize(void);
+    fgGuiSize& getSize(void);
     //
     std::string& getShader(void);
     //
@@ -307,6 +439,10 @@ public:
     fgGuiStyleContent& setPosition(const fgGuiPositionStyle style, const fgVector2f& modPos);
     //
     fgGuiStyleContent& setPosition(const fgVector2f& modPos);
+    //
+    fgGuiStyleContent& setPosition(const fgGuiPositionStyle style, const fgVector3f& modPos);
+    //
+    fgGuiStyleContent& setPosition(const fgVector3f& modPos);
 
     //
     fgGuiStyleContent& setAlign(const fgGuiAlign align);
@@ -316,9 +452,23 @@ public:
     fgGuiStyleContent& setTextAlign(const fgGuiAlign textAlign);
 
     //
+    fgGuiStyleContent& setSize(const fgGuiSizeStyle style);
+    //
+    fgGuiStyleContent& setSize(const fgGuiSizeStyle style, const float x, const float y);
+    //
+    fgGuiStyleContent& setSize(const fgGuiSizeStyle style, const fgVector2f& size);
+    //
+    fgGuiStyleContent& setSize(const fgGuiSizeStyle style, const float x, const float y, const float z);
+    //
+    fgGuiStyleContent& setSize(const fgGuiSizeStyle style, const fgVector3f& size);
+    //
     fgGuiStyleContent& setSize(const float x, const float y);
     //
     fgGuiStyleContent& setSize(const fgVector2f& size);
+    //
+    fgGuiStyleContent& setSize(const float x, const float y, const float z);
+    //
+    fgGuiStyleContent& setSize(const fgVector3f& size);
 
     //
     fgGuiStyleContent& setShader(const std::string& shader);

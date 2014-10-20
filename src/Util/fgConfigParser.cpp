@@ -28,7 +28,7 @@ fgConfigParser::~fgConfigParser() {
  */
 fgBool fgConfigParser::splitSectionName(std::string &fullSectionName, std::string &sectionName, std::string &subSectionName) {
     fgBool isSection = FG_TRUE;
-    fullSectionName = fgStrings::trim(fullSectionName, "[]");
+    fullSectionName = fgStrings::trim(fullSectionName, std::string("[]"));
     fgVector<std::string> splitSection;
     splitSection.reserve(4);
     fgStrings::split(fullSectionName, '.', splitSection);
@@ -106,7 +106,7 @@ fgBool fgConfigParser::parseData(const char *data, fgCfgTypes::sectionMap &secti
            (line[0] == '/' && line[1] == '/')) // Ignore comments
             continue;
         if(line[0] == '[') {
-            fullSectionName = fgStrings::trim(line, "[]");
+            fullSectionName = fgStrings::trim(line, std::string("[]"));
             isSection = fgConfigParser::splitSectionName(fullSectionName, sectionName, subSectionName);
             if(newSection) {
                 newSection = NULL;
@@ -146,7 +146,7 @@ fgBool fgConfigParser::parseData(const char *data, fgCfgTypes::sectionMap &secti
             // Does the string contain quotes?
             if(quotepos != (int)std::string::npos) {
                 // it's a string value
-                parameterValue = fgStrings::trim(parameterValue, "'\"");
+                parameterValue = fgStrings::trim(parameterValue, std::string("'\""));
                 parameter->set(parameterValue.c_str());
             } else if(bool_value != FG_BOOL_INVALID) {
                 // it's a bool value

@@ -19,6 +19,8 @@
     #ifndef _FG_GFX_COLOR_H_
         #include "GFX/fgGFXColor.h"
     #endif
+    
+    #include "fgBool.h"
 
     #include <string>
 /**
@@ -27,22 +29,31 @@
 class fgColors {
 private:
     //
-    fgColors() {}
+    fgColors();
     //
-    virtual ~fgColors() {}
+    virtual ~fgColors();
     
 public:
     
     //
-    static fgColor4f getColorFromName(const char *name) {}
+    static void initialize(void);
+    
     //
-    static fgColor4f getColorFromName(const std::string& name) {}
+    static void freeColors(void);
+    
     //
-    static fgColor4f parseHEX(const char *value) {}
+    static fgColor4f getColorFromName(const char *name);
     //
-    static fgColor4f parseHEX(const std::string& value) {}
+    static fgColor4f getColorFromName(const std::string& name);
     //
-    static fgColor4f parseHEX(unsigned long int value, const unsigned char comp = 4) {}
+    static fgColor4f parseHEX(const char *value);
+    //
+    static fgColor4f parseHEX(const std::string& value);
+    //
+    static fgColor4f parseHEX(unsigned long int value, const unsigned char comp = 4);
+    
+private:
+    static fgBool s_isInit;
 };
 
 #endif	/* _FG_COLORS_H_ */

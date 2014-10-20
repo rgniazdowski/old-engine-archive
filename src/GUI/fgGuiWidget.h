@@ -77,7 +77,7 @@ typedef unsigned int fgGuiWidgetType;
 typedef unsigned int fgGuiWidgetState;
 
     #define FG_GUI_WIDGET_UNKNOWN	0x00000000
-    #define FG_GUI_WIDGET			0x00000001
+    #define FG_GUI_WIDGET		0x00000001
     #define FG_GUI_WIDGET_NAME		"Widget"
 
 class fgGuiWidget;
@@ -198,9 +198,17 @@ public:
     fgGuiWidget();
     //
     virtual ~fgGuiWidget();
-
     //
     virtual void display(fgGfxLayer *guiLayer);
+    
+    //
+    inline virtual void setFlags(const char *flags) {
+        setFlags(std::string(flags));
+    }
+    
+    //
+    inline virtual void setFlags(const std::string& flags) {
+    }
 
     //
     virtual fgBoundingBox3Df& updateSize(void);

@@ -116,7 +116,11 @@ fgBool fgGuiStructureSheetParser::parseWidgetAttributes(fgGuiWidget *pWidget, fg
             pWidget->setName(attrvalue);
             hasName = FG_TRUE;
         } else if(strcasecmp(attrname, "flags") == 0) {
-            //pWidget->setFlags(attrvalue);
+            // This can be special field, it'll be a string
+            // which cointains widget specific parameters
+            // Given widget will parse it properly
+            pWidget->setFlags(attrvalue);
+            //printf("LASDLASDLASDLLADSLDS\n");
             // #FIXME - widget struct flags translation
         } else if(strcasecmp(attrname, "active") == 0) {
             pWidget->setActive(FG_BOOL_FROM_TEXT(attrvalue));
@@ -243,15 +247,15 @@ void fgGuiStructureSheetParser::endElement(const char *localName, fgXMLElement *
 /*
  *
  */
-void fgGuiStructureSheetParser::characters(const char ch[], int start, int length, fgXMLNodeType nodeType, int depth) {
-    if(m_isFailure)
+void fgGuiStructureSheetParser::characters(const char *ch, int start, int length, fgXMLNodeType nodeType, int depth) {
+    if(m_isFailure || !ch)
         return;
     if(nodeType == fgXMLNode::TINYXML_TEXT && !m_widgetStack.empty()) {
         fgGuiWidget *pWidget = m_widgetStack.top();
         if(!pWidget)
             return;
-        pWidget->setText(ch);
         printf("characters: This node is a text: %s\n", ch);
+        pWidget->setText(ch);
     }
 }
 
