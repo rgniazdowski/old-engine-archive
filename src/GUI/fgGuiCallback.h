@@ -118,6 +118,16 @@ public:
         return FG_FALSE;
     }
 
+    //
+    inline fgGuiMethod & getGuiMethod(void) {
+        return m_guiMethod;
+    }
+    
+    //
+    inline const fgGuiMethod & getGuiMethod(void) const {
+        return m_guiMethod;
+    }
+    
 private:
     // 
     Class* m_classInstance;
@@ -175,6 +185,16 @@ public:
         return FG_FALSE;
     }
 
+    //
+    inline fgGuiFunction & getGuiFunction(void) {
+        return m_guiFunction;
+    }
+    
+    //
+    inline const fgGuiFunction & getGuiFunction(void) const {
+        return m_guiFunction;
+    }
+    
 private:
     // 
     fgGuiFunction m_guiFunction;

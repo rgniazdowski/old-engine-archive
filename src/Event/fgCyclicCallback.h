@@ -13,13 +13,25 @@
     #include "fgCallback.h"
     #include "fgArgumentList.h"
 
+/**
+ * 
+ */
 struct fgCyclicCallback {
+    ///
     fgFunctionCallback *callback;
+    ///
     int repeats; // -1 means infinite 
-    int interval; // interval in miliseconds
+    /// Interval in miliseconds
+    int interval;
+    ///
     unsigned long int timestamp;
+    ///
     fgArgumentList *argList;
+    
+    //
     fgCyclicCallback() : callback(NULL), repeats(-1), interval(0), timestamp(0), argList(NULL) { }
+    
+    //
     fgCyclicCallback(fgFunctionCallback *_callback, int _repeats, int _interval, fgArgumentList *_argList) {
         callback = _callback;
         repeats = _repeats;

@@ -29,9 +29,9 @@
 #include "Hardware/fgHardwareState.h"
 
 class MainModule;
-extern "C" int main();
 
 #if defined FG_USING_MARMALADE
+extern "C" int main();
 
 class fgMarmaladeHandlers
 {
@@ -48,6 +48,8 @@ public:
     static int32_t resumeGfxHandler(void *systemData, void *userData);
     static int32_t keyStateChangedHandler(void *systemData, void *userData);
 };
+#else
+extern "C" int main(int argc, char *argv[]);
 #endif /* FG_USING_MARMALADE */
 
 /**
@@ -57,14 +59,18 @@ class MainModule
 {
 #if defined FG_USING_MARMALADE
     friend class fgMarmaladeHandlers;
-#endif /* FG_USING_MARMALADE */
     friend int main();
+#else
+    friend int main(int argc, char *argv[]);
+#endif /* FG_USING_MARMALADE */
 protected:
 
     /**
      * Initialize rendering parameters.
      */
-    MainModule() :
+    MainModule(int argc, char *argv[]) :
+    m_argc(argc),
+    m_argv(argv),
     m_appInit(FG_FALSE),
     m_slow(FG_FALSE),
     m_isExit(FG_FALSE),
@@ -74,6 +80,11 @@ protected:
 protected:
 #if defined(FG_USING_SDL2)
 
+    /**
+     * #FIXME - this needs to be maintained differently
+     * - maybe add some SDL2 event watches?
+     * @return 
+     */
     SDL_EventType checkSDLEvents(void) {
         SDL_Event event;
         SDL_EventType status = SDL_FIRSTEVENT;
@@ -285,50 +296,6 @@ private:
         m_isExit = exit;
     }
 
-    static fgBool eventSwipe(fgArgumentList *argv) {
-        if(!argv)
-            return FG_FALSE;
-        fgEventBase *event = (fgEventBase *)argv->getArgumentValueByID(0);
-        if(!event)
-            return FG_FALSE;
-        fgEventType type = event->eventType;
-        static int lastx = 128000;
-        static int lasty = 128000;
-        int xRel = 0, yRel = 0;
-
-        if(type == FG_EVENT_TOUCH_MOTION ||
-           type == FG_EVENT_TOUCH_PRESSED ||
-           type == FG_EVENT_TOUCH_RELEASED) {
-            fgTouchEvent *touch = (fgTouchEvent *)argv->getArgumentValueByID(0);
-            if(lastx > 100000 && lasty > 100000) {
-                lastx = touch->x;
-                lasty = touch->y;
-            }
-            xRel = -(lastx - touch->x);
-            yRel = -(lasty - touch->y);
-            lastx = touch->x;
-            lasty = touch->y;
-            //printf("TOUCH MOTION: X: %d Y: %d | xRel: %d | yRel: %d \n", touch->x, touch->y, xRel, yRel);
-            if(touch->pressed)
-
-                cameraAnim->update((float)xRel, (float)yRel);
-            if(type == FG_EVENT_TOUCH_RELEASED) {
-                lastx = 128000;
-                lasty = 128000;
-            }
-        } else if(0) {
-            fgSwipeEvent *swipe = (fgSwipeEvent *)argv->getArgumentValueByID(0);
-            //printf("EVENT SWIPE: Xoff: %d | Yoff: %d | myX: %d | myY: %d | stepsX: %d | stepsY: %d\n",
-            //swipe->swipeXOffset, 
-            //swipe->swipeYOffset,
-            //swipe->xStart-swipe->xEnd,
-            //swipe->yStart-swipe->xEnd,
-            //swipe->swipeXSteps,
-            //swipe->swipeYSteps);
-        }
-        return FG_TRUE;
-    }
-
     /**
      * Called when a fullscreen window with an OpenGL context
      * has been created and is ready to be used.
@@ -385,9 +352,6 @@ private:
         //FG_EventManager->addEventCallback(FG_EVENT_SWIPE_X, &MainModule::eventSwipe);
         //FG_EventManager->addEventCallback(FG_EVENT_SWIPE_Y, &MainModule::eventSwipe);
         //FG_EventManager->addEventCallback(FG_EVENT_SWIPE_XY, &MainModule::eventSwipe);
-        m_eventMgr->addEventCallback(FG_EVENT_TOUCH_MOTION, &MainModule::eventSwipe);
-        m_eventMgr->addEventCallback(FG_EVENT_TOUCH_PRESSED, &MainModule::eventSwipe);
-        m_eventMgr->addEventCallback(FG_EVENT_TOUCH_RELEASED, &MainModule::eventSwipe);
         m_appInit = FG_TRUE;
         return FG_TRUE;
     }
@@ -421,19 +385,6 @@ private:
             m_appInit = FG_FALSE;
             FG_LOG::PrintDebug("ENTER PRESSED...");
             return FG_FALSE;
-        }
-        // #TODELETE - camera animation test
-        if(s3eKeyboardGetState(s3eKeyW) & S3E_KEY_STATE_DOWN) {
-            cameraAnim->moveForward();
-        }
-        if(s3eKeyboardGetState(s3eKeyS) & S3E_KEY_STATE_DOWN) {
-            cameraAnim->moveBackward();
-        }
-        if(s3eKeyboardGetState(s3eKeyA) & S3E_KEY_STATE_DOWN) {
-            cameraAnim->moveLeft();
-        }
-        if(s3eKeyboardGetState(s3eKeyD) & S3E_KEY_STATE_DOWN) {
-            cameraAnim->moveRight();
         }
 #endif /* FG_USING_MARMALADE */
         if(m_isExit) {
@@ -555,15 +506,16 @@ private:
 #endif /* FG_USING_MARMALADE */
 
 private:
+    /// Number of arguments passed to program
+    int m_argc;
+    /// Array of arguments passed to program
+    char **m_argv;
     /// Is app fully initialized?
     fgBool m_appInit;
-
     /// Is the device slow?
     fgBool m_slow;
-
     /// Is exit activated?
     fgBool m_isExit;
-
     /// Game main class - this is for initialization procedures
     /// contains also functions for handling events, drawing, etc #TODO
     /// Needs refactoring, some level of merging within main module or
@@ -676,9 +628,13 @@ int32_t fgMarmaladeHandlers::keyStateChangedHandler(void *systemData, void *user
 /**
  * Main function that is called when the program starts.
  */
-extern "C" int main() {
 #if defined FG_USING_MARMALADE
+
+extern "C" int main() {
     IwUtilInit();
+#else
+
+extern "C" int main(int argc, char *argv[]) {
 #endif /* FG_USING_MARMALADE */
 
     //IwMemBucketDebugSetBreakpoint(580);
@@ -698,7 +654,7 @@ extern "C" int main() {
     }
      */
     FG_LOG::PrintDebug("%s: Start up", FG_PACKAGE_FULL_TEXT);
-    MainModule *mainModule = new MainModule();
+    MainModule *mainModule = new MainModule(argc, argv);
 
     if(!mainModule->initProgram()) {
         mainModule->closeProgram();

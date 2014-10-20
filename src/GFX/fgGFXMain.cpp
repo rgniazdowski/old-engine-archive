@@ -24,8 +24,6 @@
 
 #include "fgLog.h"
 
-fgGfxCameraAnimation *cameraAnim = NULL;
-
 /*
  *
  */
@@ -38,16 +36,12 @@ m_gfxContext(NULL),
 m_3DScene(NULL),
 m_init(FG_FALSE) {
     m_3DScene = new fgGfx3DScene();
-    cameraAnim = new fgGfxCameraAnimation(); // #FIXME
 }
 
 /*
  *
  */
 fgGfxMain::~fgGfxMain() {
-    if(cameraAnim)
-        delete cameraAnim;
-    cameraAnim = NULL; // #FIXME
     if(m_3DScene)
         delete m_3DScene;
     if(m_gfxContext)
@@ -297,11 +291,11 @@ void fgGfxMain::render(void) {
             return;
         }
     }
-    //m_3DScene->getCamera()->setDT((float)FG_HardwareState->getDelta());
-    //m_3DScene->getCamera()->update();
-    cameraAnim->setDT((float)FG_HardwareState->getDelta());
-    cameraAnim->update();
-    m_3DScene->applyCamera(cameraAnim);
+    m_3DScene->getCamera()->setDT((float)FG_HardwareState->getDelta());
+    m_3DScene->getCamera()->update();
+    //cameraAnim->setDT((float)FG_HardwareState->getDelta());
+    //cameraAnim->update();
+    //m_3DScene->applyCamera(cameraAnim);
     rotxyz += 0.0094525f;
     if(rotxyz > M_PI * 2.0f)
         rotxyz = 0.0f;

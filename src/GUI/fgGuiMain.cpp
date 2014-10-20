@@ -148,6 +148,9 @@ void fgGuiMain::unregisterGuiCallbacks(void) {
     m_eventMgr->removeEventCallback(FG_EVENT_MOUSE_MOTION, m_guiMouseCallback);
 }
 
+/**
+ * 
+ */
 void fgGuiMain::updateState(void) {
     if(!m_widgetMgr || !m_resourceMgr || !m_pointerInputReceiver)
         return;

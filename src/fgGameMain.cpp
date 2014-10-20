@@ -66,7 +66,10 @@ m_mainConfig(NULL),
 m_resourceMgr(NULL),
 m_resourceFactory(NULL),
 m_eventMgr(NULL),
-m_pointerInputReceiver(NULL) {
+m_pointerInputReceiver(NULL),
+m_gameTouchCallback(NULL),
+m_gameMouseCallback(NULL),
+m_gameFreeLookCallback(NULL) {
     srand(time(NULL)); // #FIXME srand init ?
     fgErrorCodes::registerAll(); // #FIXME error codes registry place
     // #FIXME - getcwd / get exec path / paths management / etc
@@ -78,13 +81,14 @@ m_pointerInputReceiver(NULL) {
     if(eventMgr) {
         this->setEventManager(eventMgr);
     }
-    m_joypadController->initialize();
+    m_joypadController->initialize(); // #FIXME
 }
 
 /*
  * Default destructor for the Game Main object
  */
 fgGameMain::~fgGameMain() {
+    unregisterGameCallbacks();
     if(m_settings)
         delete m_settings;
     m_settings = NULL;
@@ -107,6 +111,15 @@ fgGameMain::~fgGameMain() {
         m_joypadController->quit();
         delete m_joypadController;
     }
+    if(m_gameTouchCallback)
+        delete m_gameTouchCallback;
+    if(m_gameMouseCallback)
+        delete m_gameMouseCallback;
+    if(m_gameFreeLookCallback)
+        delete m_gameFreeLookCallback;
+    m_gameMouseCallback = NULL;
+    m_gameTouchCallback = NULL;
+    m_gameFreeLookCallback = NULL;
     m_joypadController = NULL;
     m_eventMgr = NULL; // this event mgr is not owned by game main
     if(m_guiMain) {
@@ -115,6 +128,89 @@ fgGameMain::~fgGameMain() {
     m_guiMain = NULL;
     fgErrorCodes::unregisterAll();
     FG_MessageSubsystem->deleteInstance();
+}
+
+/*
+ *
+ */
+void fgGameMain::registerGameCallbacks(void) {
+    if(!m_eventMgr)
+        return;
+
+    if(!m_gameTouchCallback)
+        m_gameTouchCallback = new fgClassCallback<fgGameMain>(this, &fgGameMain::gameTouchHandler);
+
+    m_eventMgr->addEventCallback(FG_EVENT_TOUCH_PRESSED, m_gameTouchCallback);
+    m_eventMgr->addEventCallback(FG_EVENT_TOUCH_RELEASED, m_gameTouchCallback);
+    m_eventMgr->addEventCallback(FG_EVENT_TOUCH_MOTION, m_gameTouchCallback);
+    m_eventMgr->addEventCallback(FG_EVENT_TOUCH_TAP_FINISHED, m_gameTouchCallback);
+
+    if(!m_gameMouseCallback)
+        m_gameMouseCallback = new fgClassCallback<fgGameMain>(this, &fgGameMain::gameMouseHandler);
+
+    m_eventMgr->addEventCallback(FG_EVENT_MOUSE_PRESSED, m_gameMouseCallback);
+    m_eventMgr->addEventCallback(FG_EVENT_MOUSE_RELEASED, m_gameMouseCallback);
+    m_eventMgr->addEventCallback(FG_EVENT_MOUSE_MOTION, m_gameMouseCallback);
+
+    if(!m_gameFreeLookCallback)
+        m_gameFreeLookCallback = new fgClassCallback<fgGameMain>(this, &fgGameMain::gameFreeLookHandler);
+
+    m_eventMgr->addEventCallback(FG_EVENT_TOUCH_PRESSED, m_gameFreeLookCallback);
+    m_eventMgr->addEventCallback(FG_EVENT_TOUCH_RELEASED, m_gameFreeLookCallback);
+    m_eventMgr->addEventCallback(FG_EVENT_TOUCH_MOTION, m_gameFreeLookCallback);
+    m_eventMgr->addEventCallback(FG_EVENT_TOUCH_TAP_FINISHED, m_gameFreeLookCallback);
+    m_eventMgr->addEventCallback(FG_EVENT_MOUSE_PRESSED, m_gameFreeLookCallback);
+    m_eventMgr->addEventCallback(FG_EVENT_MOUSE_RELEASED, m_gameFreeLookCallback);
+    m_eventMgr->addEventCallback(FG_EVENT_MOUSE_MOTION, m_gameFreeLookCallback);
+}
+
+/*
+ *
+ */
+void fgGameMain::unregisterGameCallbacks(void) {
+    if(!m_eventMgr)
+        return;
+
+    m_eventMgr->removeEventCallback(FG_EVENT_TOUCH_PRESSED, m_gameTouchCallback);
+    m_eventMgr->removeEventCallback(FG_EVENT_TOUCH_RELEASED, m_gameTouchCallback);
+    m_eventMgr->removeEventCallback(FG_EVENT_TOUCH_MOTION, m_gameTouchCallback);
+    m_eventMgr->removeEventCallback(FG_EVENT_TOUCH_TAP_FINISHED, m_gameTouchCallback);
+
+    m_eventMgr->removeEventCallback(FG_EVENT_MOUSE_PRESSED, m_gameMouseCallback);
+    m_eventMgr->removeEventCallback(FG_EVENT_MOUSE_RELEASED, m_gameMouseCallback);
+    m_eventMgr->removeEventCallback(FG_EVENT_MOUSE_MOTION, m_gameMouseCallback);
+
+    m_eventMgr->removeEventCallback(FG_EVENT_TOUCH_PRESSED, m_gameFreeLookCallback);
+    m_eventMgr->removeEventCallback(FG_EVENT_TOUCH_RELEASED, m_gameFreeLookCallback);
+    m_eventMgr->removeEventCallback(FG_EVENT_TOUCH_MOTION, m_gameFreeLookCallback);
+    m_eventMgr->removeEventCallback(FG_EVENT_TOUCH_TAP_FINISHED, m_gameFreeLookCallback);
+    m_eventMgr->removeEventCallback(FG_EVENT_MOUSE_PRESSED, m_gameFreeLookCallback);
+    m_eventMgr->removeEventCallback(FG_EVENT_MOUSE_RELEASED, m_gameFreeLookCallback);
+    m_eventMgr->removeEventCallback(FG_EVENT_MOUSE_MOTION, m_gameFreeLookCallback);
+}
+
+/**
+ * 
+ * @param eventMgr
+ */
+void fgGameMain::setEventManager(fgEventManager *eventMgr) {
+    if(!eventMgr) {
+        unregisterGameCallbacks();
+    } else if(m_eventMgr && m_eventMgr != eventMgr) {
+        unregisterGameCallbacks();
+    }
+    m_eventMgr = eventMgr;
+    if(m_pointerInputReceiver)
+        m_pointerInputReceiver->setEventManager(m_eventMgr);
+    if(m_joypadController)
+        m_joypadController->setEventManager(m_eventMgr);
+    if(m_guiMain) {
+        m_guiMain->setEventManager(m_eventMgr);
+        m_guiMain->setPointerInputReceiver(m_pointerInputReceiver);
+    }
+    if(m_eventMgr) {
+        registerGameCallbacks();
+    }
 }
 
 #include "GFX/Shaders/fgGFXShaderProgram.h"
@@ -436,6 +532,86 @@ void fgGameMain::update(void) {
     // that is no longer needed regardless of the actual overallocation - resources
     // can be tagged for deletion when no longer needed (eg. new map/level is loaded)
     //FG_ResourceManager->checkForOverallocation();
+}
+
+/*
+ *
+ */
+fgBool fgGameMain::gameTouchHandler(fgArgumentList *argv) {
+    if(!argv)
+        return FG_FALSE;
+    fgEventBase *event = (fgEventBase *)argv->getArgumentValueByID(0);
+    if(!event)
+        return FG_FALSE;
+    fgEventType type = event->eventType;
+
+    return FG_TRUE;
+}
+
+/*
+ *
+ */
+fgBool fgGameMain::gameMouseHandler(fgArgumentList *argv) {
+    if(!argv)
+        return FG_FALSE;
+    fgEventBase *event = (fgEventBase *)argv->getArgumentValueByID(0);
+    if(!event)
+        return FG_FALSE;
+    //fgEventType type = event->eventType;
+    //fgMouseEvent *mouseEvent = (fgMouseEvent *)event;
+    //this->updateState();
+    return FG_TRUE;
+}
+
+/**
+ *
+ */
+fgBool fgGameMain::gameFreeLookHandler(fgArgumentList* argv) {
+    if(!argv || !this->m_gfxMain)
+        return FG_FALSE;
+    if(!this->m_gfxMain->get3DSceneCamera())
+        return FG_FALSE;
+    fgEventBase *event = (fgEventBase *)argv->getArgumentValueByID(0);
+    if(!event)
+        return FG_FALSE;
+    fgEventType type = event->eventType;
+    static int lastx = 128000;
+    static int lasty = 128000;
+    int xRel = 0, yRel = 0, x = 0, y = 0;
+    fgBool pressed = FG_FALSE;
+
+    if(type == FG_EVENT_TOUCH_MOTION ||
+       type == FG_EVENT_TOUCH_PRESSED ||
+       type == FG_EVENT_TOUCH_RELEASED) {
+        fgTouchEvent *touch = (fgTouchEvent *)event;
+        x = touch->x;
+        y = touch->y;
+        pressed = touch->pressed;
+    } else if(type == FG_EVENT_MOUSE_MOTION ||
+              type == FG_EVENT_MOUSE_PRESSED ||
+              type == FG_EVENT_MOUSE_RELEASED) {
+        fgMouseEvent *mouse = (fgMouseEvent *)event;
+        x = mouse->x;
+        y = mouse->y;
+        pressed = mouse->pressed;
+    } else {
+        return FG_FALSE;
+    }
+    if(lastx > 100000 && lasty > 100000) {
+        lastx = x;
+        lasty = y;
+    }
+    xRel = -(lastx - x);
+    yRel = -(lasty - y);
+    lastx = x;
+    lasty = y;
+    if(pressed)
+        this->m_gfxMain->get3DSceneCamera()->update((float)xRel, (float)yRel);
+    if(type == FG_EVENT_TOUCH_RELEASED || type == FG_EVENT_MOUSE_RELEASED) {
+        lastx = 128000;
+        lasty = 128000;
+    }
+    return FG_TRUE;
 }
 
 #if 0

@@ -51,9 +51,21 @@ public:
             return m_function(argv);
         return FG_FALSE;
     }
+    
+    //
+    inline fgFunction & getFunction(void) {
+        return m_function;
+    }
+    
+    //
+    inline const fgFunction & getFunction(void) const {
+        return m_function;
+    }
 
-protected:
+private:
+    ///
     fgFunction m_function;
+
 };
 
 /*
@@ -102,8 +114,17 @@ public:
             return m_function(argv);
         return FG_FALSE;
     }
-
-protected:
+   
+    //
+    inline fgPlainFunction & getPlainFunction(void) {
+        return m_function;
+    }
+    
+    //
+    inline const fgPlainFunction & getPlainFunction(void) const {
+        return m_function;
+    }
+private:
     fgPlainFunction m_function;
 };
 
@@ -164,8 +185,18 @@ public:
             return (class_instance->*m_method)(argv);
         return FG_FALSE;
     }
+    
+    //
+    inline fgClassMethod & getMethod(void) {
+        return m_method;
+    }
+    
+    //
+    inline const fgClassMethod & getMethod(void) const {
+        return m_method;
+    }
 
-protected:
+private:
     // 
     Class* m_classInstance;
     // 

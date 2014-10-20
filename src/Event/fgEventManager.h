@@ -61,9 +61,9 @@ private:
     /// Events queue (message queue so to speak)
     fgEventsQueue m_eventsQueue;
     /// Special pool with timeout callbacks (timers)
-    fgTimeoutCallbacksPool m_timeoutCallbacks;
+    fgTimeoutCallbacksVec m_timeoutCallbacks;
     /// Pool with cyclic timeout callbacks (repeat timers, self reset)
-    fgCyclicCallbacksPool m_cyclicCallbacks;
+    fgCyclicCallbacksVec m_cyclicCallbacks;
 
 public:
     // Default constructor for Event Manager object

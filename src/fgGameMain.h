@@ -40,6 +40,14 @@ public:
     // Default destructor for the Game Main object
     virtual ~fgGameMain();
 
+protected:
+    //
+    void registerGameCallbacks(void);
+    //
+    void unregisterGameCallbacks(void);
+    
+public:
+    
     // This needs to be called first before everything else.
     // Function creates and initializes subsystems
     fgBool initSubsystems(void);
@@ -73,52 +81,56 @@ public:
     void update(void);
 
     //
-    fgGfxMain *getGfxMain(void) const {
+    inline fgGfxMain *getGfxMain(void) const {
         return m_gfxMain;
+    }
+    
+    //
+    inline fgGuiMain *getGuiMain(void) const {
+        return m_guiMain;
     }
 
     //
-    fgSettings *getSettings(void) const {
+    inline fgSettings *getSettings(void) const {
         return m_settings;
     }
 
     //
-    fgConfig *getMainConfig(void) const {
+    inline fgConfig *getMainConfig(void) const {
         return m_mainConfig;
     }
 
     //
-    fgResourceManager *getResourceManager(void) const {
+    inline fgResourceManager *getResourceManager(void) const {
         return m_resourceMgr;
     }
 
     //
-    fgEventManager *getEventManager(void) const {
+    inline fgEventManager *getEventManager(void) const {
         return m_eventMgr;
     }
 
     //
-    void setEventManager(fgEventManager *eventMgr) {
-        m_eventMgr = eventMgr;
-        if(m_pointerInputReceiver)
-            m_pointerInputReceiver->setEventManager(m_eventMgr);
-        if(m_joypadController)
-            m_joypadController->setEventManager(m_eventMgr);
-        if(m_guiMain) {
-            m_guiMain->setEventManager(m_eventMgr);
-            m_guiMain->setPointerInputReceiver(m_pointerInputReceiver);
-        }
-    }
+    void setEventManager(fgEventManager *eventMgr);
 
     //
-    fgPointerInputReceiver *getPointerInputReceiver(void) const {
+    inline fgPointerInputReceiver *getPointerInputReceiver(void) const {
         return m_pointerInputReceiver;
     }
-    fgJoypadController *getJoypadController(void) const {
+    
+    //
+    inline fgJoypadController *getJoypadController(void) const {
         return m_joypadController;
     }
+    
+    //
+    fgBool gameTouchHandler(fgArgumentList *argv);
+    //
+    fgBool gameMouseHandler(fgArgumentList *argv);
+    //
+    fgBool gameFreeLookHandler(fgArgumentList *argv);
 
-protected:
+private:
     /// 
     fgGfxMain *m_gfxMain;
     ///
@@ -137,6 +149,13 @@ protected:
     fgPointerInputReceiver *m_pointerInputReceiver;
     ///
     fgJoypadController *m_joypadController;
+    
+    ///
+    fgFunctionCallback *m_gameTouchCallback;
+    ///
+    fgFunctionCallback *m_gameMouseCallback;
+    ///
+    fgFunctionCallback *m_gameFreeLookCallback;
 };
 
 #endif /* _FG_GAME_MAIN_H_ */
