@@ -573,6 +573,8 @@
         <itemPath>../../../src/fgBool.h</itemPath>
         <itemPath>../../../src/fgBuildConfig.cpp</itemPath>
         <itemPath>../../../src/fgBuildConfig.h</itemPath>
+        <itemPath>../../../src/fgColors.cpp</itemPath>
+        <itemPath>../../../src/fgColors.h</itemPath>
         <itemPath>../../../src/fgCommon.cpp</itemPath>
         <itemPath>../../../src/fgCommon.h</itemPath>
         <itemPath>../../../src/fgErrno.cpp</itemPath>
@@ -2974,6 +2976,10 @@
       </item>
       <item path="../../../src/fgBuildConfig.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../../../src/fgColors.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../../src/fgColors.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../../../src/fgCommon.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="../../../src/fgCommon.h" ex="false" tool="3" flavor2="0">
@@ -5338,6 +5344,10 @@
       <item path="../../../src/fgBuildConfig.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="../../../src/fgBuildConfig.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/fgColors.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../../src/fgColors.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/fgCommon.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -7728,6 +7738,10 @@
       </item>
       <item path="../../../src/fgBuildConfig.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../../../src/fgColors.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../../src/fgColors.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../../../src/fgCommon.cpp" ex="false" tool="1" flavor2="8">
       </item>
       <item path="../../../src/fgCommon.h" ex="false" tool="3" flavor2="0">
@@ -10116,6 +10130,10 @@
       </item>
       <item path="../../../src/fgBuildConfig.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../../../src/fgColors.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../../src/fgColors.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../../../src/fgCommon.cpp" ex="false" tool="1" flavor2="8">
       </item>
       <item path="../../../src/fgCommon.h" ex="false" tool="3" flavor2="0">
@@ -12480,6 +12498,10 @@
       <item path="../../../src/fgBuildConfig.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="../../../src/fgBuildConfig.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/fgColors.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../../src/fgColors.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/fgCommon.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -14847,6 +14869,10 @@
       <item path="../../../src/fgBuildConfig.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="../../../src/fgBuildConfig.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/fgColors.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../../src/fgColors.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/fgCommon.cpp" ex="false" tool="1" flavor2="0">
       </item>

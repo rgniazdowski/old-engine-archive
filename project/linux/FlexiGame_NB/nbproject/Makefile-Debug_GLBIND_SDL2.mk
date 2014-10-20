@@ -179,6 +179,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/_ext/608034620/fgTime.o \
 	${OBJECTDIR}/_ext/534573667/fgXMLParser.o \
 	${OBJECTDIR}/_ext/1386528437/fgBuildConfig.o \
+	${OBJECTDIR}/_ext/1386528437/fgColors.o \
 	${OBJECTDIR}/_ext/1386528437/fgCommon.o \
 	${OBJECTDIR}/_ext/1386528437/fgErrno.o \
 	${OBJECTDIR}/_ext/1386528437/fgErrorCodes.o \
@@ -932,6 +933,11 @@ ${OBJECTDIR}/_ext/1386528437/fgBuildConfig.o: ../../../src/fgBuildConfig.cpp
 	${MKDIR} -p ${OBJECTDIR}/_ext/1386528437
 	${RM} "$@.d"
 	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_GL_BINDING -DFG_USING_OPENGL -DFG_USING_SDL2 -DFG_USING_TINYXML -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/glbinding/source/glbinding/include `pkg-config --cflags gl` `pkg-config --cflags sdl2` `pkg-config --cflags SDL2_mixer` `pkg-config --cflags libpng` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1386528437/fgBuildConfig.o ../../../src/fgBuildConfig.cpp
+
+${OBJECTDIR}/_ext/1386528437/fgColors.o: ../../../src/fgColors.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/1386528437
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_GL_BINDING -DFG_USING_OPENGL -DFG_USING_SDL2 -DFG_USING_TINYXML -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/glbinding/source/glbinding/include `pkg-config --cflags gl` `pkg-config --cflags sdl2` `pkg-config --cflags SDL2_mixer` `pkg-config --cflags libpng` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1386528437/fgColors.o ../../../src/fgColors.cpp
 
 ${OBJECTDIR}/_ext/1386528437/fgCommon.o: ../../../src/fgCommon.cpp 
 	${MKDIR} -p ${OBJECTDIR}/_ext/1386528437
