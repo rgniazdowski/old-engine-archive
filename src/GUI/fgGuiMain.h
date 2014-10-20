@@ -10,6 +10,8 @@
 #ifndef _FG_GUI_MAIN_H_
     #define _FG_GUI_MAIN_H_
 
+    #include "fgManagerBase.h"
+
     #include "fgGuiBase.h"
     #include "fgGuiWidget.h"
     #include "fgGuiMenu.h"
@@ -38,10 +40,12 @@ class fgGuiMain;
 //FG_EVENT_MOUSE_RELEASED	=	6,
 //FG_EVENT_MOUSE_MOTION		=	7,
 
+    #define FG_MANAGER_GUI_MAIN 0x00000400
+
 /**
  *
  */
-class fgGuiMain : public fgGuiBase {
+class fgGuiMain : public fgManagerBase, public fgGuiBase {
 private:
     /// GUI style manager - loads and manages styles
     fgGuiStyleManager *m_styleMgr;
@@ -52,15 +56,15 @@ private:
     /// Widget factory 
     fgGuiWidgetFactory *m_widgetFactory;
     /// Pointer to external event manager class
-    fgEventManager *m_eventMgr;
+    fgEventManager *m_pEventMgr;
     /// Pointer to external resource manager
-    fgResourceManager *m_resourceMgr;
+    fgResourceManager *m_pResourceMgr;
     /// GUI drawer special drawing batch
     fgGuiDrawer *m_guiDrawer;
     /// Pointer to external shader manager class
-    fgManagerBase *m_shaderMgr;
+    fgManagerBase *m_pShaderMgr;
     /// Pointer to external input receiver - touch/mouse/keyboard
-    fgPointerInputReceiver *m_pointerInputReceiver;
+    fgPointerInputReceiver *m_pPointerInputReceiver;
 
     /// Special callback for receiving touch events
     fgFunctionCallback *m_guiTouchCallback;
@@ -77,7 +81,9 @@ protected:
     void registerGuiCallbacks(void);
     //
     void unregisterGuiCallbacks(void);
-
+    //
+    virtual void clear(void);
+    
 public:
     //
     fgGuiMain(fgEventManager *eventMgr = NULL, fgResourceManager *resourceMgr = NULL);
@@ -89,6 +95,11 @@ public:
         m_screenBox.size.x = (float)w;
         m_screenBox.size.y = (float)h;
     }
+    
+    //
+    virtual fgBool destroy(void);
+    //
+    virtual fgBool initialize(void);
 
     //
     fgGuiWidgetManager *getWidgetManager(void) const;
@@ -106,11 +117,11 @@ public:
     fgPointerInputReceiver *getPointerInputReceiver(void) const;
 
     //
-    void setEventManager(fgEventManager *eventMgr);
+    void setEventManager(fgEventManager *pEventMgr);
     //
-    void setResourceManager(fgResourceManager *resourceMgr);
+    void setResourceManager(fgResourceManager *pResourceMgr);
     //
-    void setShaderManager(fgManagerBase *shaderMgr);
+    void setShaderManager(fgManagerBase *pShaderMgr);
     //
     void setPointerInputReceiver(fgPointerInputReceiver *pointerInputReceiver);
 

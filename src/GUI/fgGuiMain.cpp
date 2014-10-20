@@ -30,6 +30,16 @@
 #include "fgGuiTable.h"
 #include "fgGuiLoader.h"
 
+#include "GUI/Font/fgFontStbConsolasBold.h"
+#include "GUI/Font/fgFontStbCourier.h"
+#include "GUI/Font/fgFontStbCourierBold.h"
+#include "GUI/Font/fgFontStbTimes.h"
+#include "GUI/Font/fgFontStbArial.h"
+#include "GUI/Font/fgFontStbArialBold.h"
+#include "GUI/Font/fgFontBuiltIn.h"
+
+#include "fgColors.h"
+
 /*
  *
  */
@@ -37,11 +47,11 @@ fgGuiMain::fgGuiMain(fgEventManager *eventMgr, fgResourceManager *resourceMgr) :
 m_styleMgr(NULL),
 m_widgetMgr(NULL),
 m_widgetFactory(NULL),
-m_eventMgr(eventMgr),
-m_resourceMgr(resourceMgr),
+m_pEventMgr(eventMgr),
+m_pResourceMgr(resourceMgr),
 m_guiDrawer(NULL),
-m_shaderMgr(NULL),
-m_pointerInputReceiver(NULL),
+m_pShaderMgr(NULL),
+m_pPointerInputReceiver(NULL),
 m_guiTouchCallback(NULL),
 m_guiMouseCallback(NULL),
 m_screenBox() {
@@ -51,6 +61,74 @@ m_screenBox() {
     m_guiDrawer = new fgGuiDrawer();
     m_guiDrawer->setResourceManager(resourceMgr);
 
+    if(m_pEventMgr)
+        registerGuiCallbacks();
+
+    // #FIXME
+    m_styleMgr->setStylesPath("gui");
+    m_widgetMgr->setWidgetsPath("gui");
+}
+
+/*
+ *
+ */
+fgGuiMain::~fgGuiMain() {
+    fgGuiMain::destroy();
+}
+
+/**
+ * 
+ */
+void fgGuiMain::clear(void) { }
+
+/**
+ * 
+ */
+fgBool fgGuiMain::destroy(void) {
+    unregisterGuiCallbacks();
+
+    if(m_widgetMgr)
+        delete m_widgetMgr;
+    m_widgetMgr = NULL;
+
+    if(m_widgetFactory)
+        delete m_widgetFactory;
+    m_widgetFactory = NULL;
+
+    if(m_styleMgr)
+        delete m_styleMgr;
+    m_styleMgr = NULL;
+
+    if(m_guiDrawer)
+        delete m_guiDrawer;
+    m_guiDrawer = NULL;
+
+    if(m_guiMouseCallback)
+        delete m_guiMouseCallback;
+    m_guiMouseCallback = NULL;
+
+    if(m_guiTouchCallback)
+        delete m_guiTouchCallback;
+    m_guiTouchCallback = NULL;
+
+    m_pPointerInputReceiver = NULL;
+    m_pShaderMgr = NULL;
+    m_pEventMgr = NULL;
+    m_pResourceMgr = NULL;
+    return FG_TRUE;
+}
+
+/**
+ * 
+ */
+fgBool fgGuiMain::initialize(void) {
+    if(m_init)
+        return FG_TRUE;
+    if(!m_pEventMgr || !m_pResourceMgr || !m_pShaderMgr || !m_pPointerInputReceiver) {
+        FG_LOG::PrintError("GUI: Initialization of main GUI module failed - not all external pointers are set");
+        m_init = FG_FALSE;
+        return FG_FALSE;
+    }
     //m_widgetFactory->registerWidget(FG_GUI_WIDGET,		&fgGuiWidget::createWidget);
     m_widgetFactory->registerWidget(FG_GUI_LABEL, &fgGuiLabel::createWidget);
     m_widgetFactory->registerWidget(FG_GUI_BUTTON, &fgGuiButton::createWidget);
@@ -69,91 +147,75 @@ m_screenBox() {
     m_widgetFactory->registerWidget(FG_GUI_TABLE, &fgGuiTable::createWidget);
     m_widgetFactory->registerWidget(FG_GUI_LOADER, &fgGuiLoader::createWidget);
 
-    if(m_eventMgr)
-        registerGuiCallbacks();
-}
+    FG_LOG::PrintDebug("GUI: Initializing builtin fonts...");
+    fgFontBuiltInResource *consolasBold = new fgFontBuiltInResource(fgFontBuiltIn::StbConsolasBold::getRawData(32));
+    consolasBold->setName("StbConsolasBold");
+    consolasBold->create();
+    m_pResourceMgr->insertResource(consolasBold->getRefHandle(), consolasBold);
+    //m_gfxMain->getTextureManager()->uploadToVRAM(consolasBold, FG_TRUE);
 
-/*
- *
- */
-fgGuiMain::~fgGuiMain() {
-    unregisterGuiCallbacks();
-
-    if(m_widgetMgr)
-        delete m_widgetMgr;
-    m_widgetMgr = NULL;
-
-    if(m_widgetFactory)
-        delete m_widgetFactory;
-    m_widgetFactory = NULL;
-
-    if(m_styleMgr)
-        delete m_styleMgr;
-
-    if(m_guiDrawer)
-        delete m_guiDrawer;
-
-    m_styleMgr = NULL;
-    m_eventMgr = NULL;
-    m_resourceMgr = NULL;
-    m_guiDrawer = NULL;
-
-    if(m_guiMouseCallback)
-        delete m_guiMouseCallback;
-    m_guiMouseCallback = NULL;
-
-    if(m_guiTouchCallback)
-        delete m_guiTouchCallback;
-    m_guiTouchCallback = NULL;
-
-    m_pointerInputReceiver = NULL;
-    m_shaderMgr = NULL;
+    fgFontBuiltInResource *courier = new fgFontBuiltInResource(fgFontBuiltIn::StbCourier::getRawData(50));
+    courier->setName("StbCourier");
+    courier->create();
+    m_pResourceMgr->insertResource(courier->getRefHandle(), courier);
+    //m_gfxMain->getTextureManager()->uploadToVRAM(courier, FG_TRUE);
+    
+    //
+    if(!m_styleMgr->initialize()) {
+        
+    }
+    //
+    if(!m_widgetMgr->initialize()) {
+        
+    }
+    m_init = FG_TRUE;
+    return FG_TRUE;
 }
 
 /*
  *
  */
 void fgGuiMain::registerGuiCallbacks(void) {
-    if(!m_eventMgr)
+    if(!m_pEventMgr)
         return;
 
     if(!m_guiTouchCallback)
         m_guiTouchCallback = new fgClassCallback<fgGuiMain>(this, &fgGuiMain::guiTouchHandler);
 
-    m_eventMgr->addEventCallback(FG_EVENT_TOUCH_PRESSED, m_guiTouchCallback);
-    m_eventMgr->addEventCallback(FG_EVENT_TOUCH_RELEASED, m_guiTouchCallback);
-    m_eventMgr->addEventCallback(FG_EVENT_TOUCH_MOTION, m_guiTouchCallback);
-    m_eventMgr->addEventCallback(FG_EVENT_TOUCH_TAP_FINISHED, m_guiTouchCallback);
+    m_pEventMgr->addEventCallback(FG_EVENT_TOUCH_PRESSED, m_guiTouchCallback);
+    m_pEventMgr->addEventCallback(FG_EVENT_TOUCH_RELEASED, m_guiTouchCallback);
+    m_pEventMgr->addEventCallback(FG_EVENT_TOUCH_MOTION, m_guiTouchCallback);
+    m_pEventMgr->addEventCallback(FG_EVENT_TOUCH_TAP_FINISHED, m_guiTouchCallback);
 
     if(!m_guiMouseCallback)
         m_guiMouseCallback = new fgClassCallback<fgGuiMain>(this, &fgGuiMain::guiMouseHandler);
 
-    m_eventMgr->addEventCallback(FG_EVENT_MOUSE_PRESSED, m_guiMouseCallback);
-    m_eventMgr->addEventCallback(FG_EVENT_MOUSE_RELEASED, m_guiMouseCallback);
-    m_eventMgr->addEventCallback(FG_EVENT_MOUSE_MOTION, m_guiMouseCallback);
+    m_pEventMgr->addEventCallback(FG_EVENT_MOUSE_PRESSED, m_guiMouseCallback);
+    m_pEventMgr->addEventCallback(FG_EVENT_MOUSE_RELEASED, m_guiMouseCallback);
+    m_pEventMgr->addEventCallback(FG_EVENT_MOUSE_MOTION, m_guiMouseCallback);
 }
 
 /*
  *
  */
 void fgGuiMain::unregisterGuiCallbacks(void) {
-    if(!m_eventMgr)
+    if(!m_pEventMgr)
         return;
 
-    m_eventMgr->removeEventCallback(FG_EVENT_TOUCH_PRESSED, m_guiTouchCallback);
-    m_eventMgr->removeEventCallback(FG_EVENT_TOUCH_RELEASED, m_guiTouchCallback);
-    m_eventMgr->removeEventCallback(FG_EVENT_TOUCH_MOTION, m_guiTouchCallback);
-    m_eventMgr->removeEventCallback(FG_EVENT_TOUCH_TAP_FINISHED, m_guiTouchCallback);
-    m_eventMgr->removeEventCallback(FG_EVENT_MOUSE_PRESSED, m_guiMouseCallback);
-    m_eventMgr->removeEventCallback(FG_EVENT_MOUSE_RELEASED, m_guiMouseCallback);
-    m_eventMgr->removeEventCallback(FG_EVENT_MOUSE_MOTION, m_guiMouseCallback);
+    m_pEventMgr->removeEventCallback(FG_EVENT_TOUCH_PRESSED, m_guiTouchCallback);
+    m_pEventMgr->removeEventCallback(FG_EVENT_TOUCH_RELEASED, m_guiTouchCallback);
+    m_pEventMgr->removeEventCallback(FG_EVENT_TOUCH_MOTION, m_guiTouchCallback);
+    m_pEventMgr->removeEventCallback(FG_EVENT_TOUCH_TAP_FINISHED, m_guiTouchCallback);
+    m_pEventMgr->removeEventCallback(FG_EVENT_MOUSE_PRESSED, m_guiMouseCallback);
+    m_pEventMgr->removeEventCallback(FG_EVENT_MOUSE_RELEASED, m_guiMouseCallback);
+    m_pEventMgr->removeEventCallback(FG_EVENT_MOUSE_MOTION, m_guiMouseCallback);
 }
 
 /**
  * 
  */
 void fgGuiMain::updateState(void) {
-    if(!m_widgetMgr || !m_resourceMgr || !m_pointerInputReceiver)
+    if(!m_widgetMgr || !m_pResourceMgr || !m_pPointerInputReceiver)
         return;
     fgGuiWidgetManager::widgetVec & roots = m_widgetMgr->getRefRootWidgets();
     if(roots.empty())
@@ -163,14 +225,14 @@ void fgGuiMain::updateState(void) {
         return;
     if(!(mainMenu->getTypeTraits() & FG_GUI_CONTAINER))
         return;
-    mainMenu->updateState(m_pointerInputReceiver->getPointerData());
+    mainMenu->updateState(m_pPointerInputReceiver->getPointerData());
 }
 
 /*
  *
  */
 void fgGuiMain::display(void) {
-    if(!m_widgetMgr || !m_resourceMgr)
+    if(!m_widgetMgr || !m_pResourceMgr)
         return;
     fgGuiWidgetManager::widgetVec & roots = m_widgetMgr->getRefRootWidgets();
     if(roots.empty())
@@ -218,71 +280,71 @@ fgGuiStyleManager *fgGuiMain::getStyleManager(void) const {
  *
  */
 fgEventManager *fgGuiMain::getEventManager(void) const {
-    return m_eventMgr;
+    return m_pEventMgr;
 }
 
 /*
  *
  */
 fgResourceManager *fgGuiMain::getResourceManager(void) const {
-    return m_resourceMgr;
+    return m_pResourceMgr;
 }
 
 /*
  *
  */
 fgManagerBase *fgGuiMain::getShaderManager(void) const {
-    return m_shaderMgr;
+    return m_pShaderMgr;
 }
 
 /*
  *
  */
 fgPointerInputReceiver *fgGuiMain::getPointerInputReceiver(void) const {
-    return m_pointerInputReceiver;
+    return m_pPointerInputReceiver;
 }
 
 /*
  *
  */
-void fgGuiMain::setEventManager(fgEventManager *eventMgr) {
-    if(!eventMgr) {
+void fgGuiMain::setEventManager(fgEventManager *pEventMgr) {
+    if(!pEventMgr) {
         unregisterGuiCallbacks();
-    } else if(m_eventMgr && m_eventMgr != eventMgr) {
+    } else if(m_pEventMgr && m_pEventMgr != pEventMgr) {
         unregisterGuiCallbacks();
     }
-    m_eventMgr = eventMgr;
-    if(m_eventMgr)
+    m_pEventMgr = pEventMgr;
+    if(m_pEventMgr)
         registerGuiCallbacks();
 }
 
 /*
  *
  */
-void fgGuiMain::setResourceManager(fgResourceManager *resourceMgr) {
-    m_resourceMgr = resourceMgr;
+void fgGuiMain::setResourceManager(fgResourceManager *pResourceMgr) {
+    m_pResourceMgr = pResourceMgr;
     if(m_guiDrawer)
-        m_guiDrawer->setResourceManager(resourceMgr);
+        m_guiDrawer->setResourceManager(pResourceMgr);
 }
 
 /*
  *
  */
-void fgGuiMain::setShaderManager(fgManagerBase *shaderMgr) {
-    if(shaderMgr) {
-        if(shaderMgr->getManagerType() != FG_MANAGER_GFX_SHADER)
+void fgGuiMain::setShaderManager(fgManagerBase *pShaderMgr) {
+    if(pShaderMgr) {
+        if(pShaderMgr->getManagerType() != FG_MANAGER_GFX_SHADER)
             return;
     }
-    m_shaderMgr = shaderMgr;
+    m_pShaderMgr = pShaderMgr;
     if(m_guiDrawer)
-        m_guiDrawer->setShaderManager(m_shaderMgr);
+        m_guiDrawer->setShaderManager(m_pShaderMgr);
 }
 
 /*
  *
  */
 void fgGuiMain::setPointerInputReceiver(fgPointerInputReceiver *pointerInputReceiver) {
-    m_pointerInputReceiver = pointerInputReceiver;
+    m_pPointerInputReceiver = pointerInputReceiver;
 }
 
 /*

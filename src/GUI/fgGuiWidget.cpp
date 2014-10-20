@@ -25,6 +25,7 @@ m_config(),
 m_text(),
 m_relPos(),
 m_bbox(),
+m_textSize(),
 m_onFocus(NULL),
 m_onFocusLost(NULL),
 m_onClick(NULL),
@@ -63,14 +64,14 @@ void fgGuiWidget::display(fgGfxLayer *guiLayer) {
         return;
     fgGuiDrawer *guiDrawer = (fgGuiDrawer *)guiLayer;
     //if(!guiDrawer->getResourceManager())
-        //return;
+    //return;
     guiDrawer->downZIndex();
     fgVec2f blockPos = fgVec2f(m_bbox.pos.x, m_bbox.pos.y);
     fgVec2f blockSize = fgVec2f(m_bbox.size.x, m_bbox.size.y);
     guiDrawer->appendBackground2D(blockPos, blockSize, m_styles[m_state]);
     guiDrawer->appendBorder2D(blockPos, blockSize, m_styles[m_state]);
     if(m_text.length()) {
-        guiDrawer->appendText2D(blockPos, blockSize, m_styles[m_state], getTextStr());
+        guiDrawer->appendText2D(m_textSize, blockPos, blockSize, m_styles[m_state], getTextStr());
     }
 }
 
@@ -79,6 +80,13 @@ void fgGuiWidget::display(fgGfxLayer *guiLayer) {
  * @return 
  */
 fgBoundingBox3Df& fgGuiWidget::updateSize(void) {
+    fgGuiPadding &padding = m_styles[m_state].getPadding();
+    if(m_bbox.size.x < m_textSize.x) {
+        m_bbox.size.x = m_textSize.x + padding.left + padding.right;
+    }
+    if(m_bbox.size.y < m_textSize.y) {
+        m_bbox.size.y = m_textSize.y + padding.top + padding.bottom;
+    }
     return m_bbox;
 }
 
@@ -90,7 +98,7 @@ fgBoundingBox3Df& fgGuiWidget::updateSize(void) {
 fgBoundingBox3Df& fgGuiWidget::updateSize(const fgBoundingBox3Df &bounds) {
     fgGuiStyleContent &style = m_styles[m_state];
     fgGuiPositionStyle posStyle = style.getPosition().style;
-    fgGuiSize &size= style.getSize();
+    fgGuiSize &size = style.getSize();
     if(size.style == FG_GUI_SIZE_MAX) {
         m_bbox.size.x = bounds.size.x;
         m_bbox.size.y = bounds.size.y;
@@ -99,8 +107,8 @@ fgBoundingBox3Df& fgGuiWidget::updateSize(const fgBoundingBox3Df &bounds) {
         m_bbox.size.y = size.y / 100.0f * bounds.size.y;
     }
     updateSize();
-    
-    
+
+
     // Margin?
     if(posStyle == FG_GUI_POS_STATIC) {
         m_bbox.pos = bounds.pos;

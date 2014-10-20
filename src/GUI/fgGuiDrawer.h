@@ -97,7 +97,7 @@ public:
     virtual void render(void);
 
     //
-    virtual void appendText2D(const fgVec2f &blockPos, const fgVec2f &blockSize, fgGuiStyleContent& style, const char *fmt, ...);
+    virtual void appendText2D(fgVec2f& outTextSize, const fgVec2f &blockPos, const fgVec2f &blockSize, fgGuiStyleContent& style, const char *fmt, ...);
 
     //
     virtual void appendBackground2D(const fgVec2f &pos, const fgVec2f &size, fgGuiStyleContent& style);

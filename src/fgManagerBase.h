@@ -42,7 +42,9 @@ public:
         return m_managerType;
     }
 protected:
+    ///
     fgBool m_init;
+    ///
     fgManagerType m_managerType;
 };
 

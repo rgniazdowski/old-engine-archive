@@ -192,8 +192,8 @@ inline const char * _FG_GFX_PRECISION_TYPE_TO_TEXT(fgGfxPrecision value) {
 }
 
 // #FIXME - #P3 - string obfuscation (also for error code -> text msg translations)
-    #define FG_GFX_PRECISION_FROM_TEXT(text)	_FG_GFX_PRECISION_FROM_TEXT(text)
-    #define FG_GFX_PRECISION_TYPE_TO_TEXT(value)	_FG_GFX_PRECISION_TYPE_TO_TEXT(value)
+    #define FG_GFX_PRECISION_FROM_TEXT(text)        _FG_GFX_PRECISION_FROM_TEXT(text)
+    #define FG_GFX_PRECISION_TYPE_TO_TEXT(value)    _FG_GFX_PRECISION_TYPE_TO_TEXT(value)
 
 //
 
@@ -214,21 +214,21 @@ enum class fgGfxShaderPrecisionType {
 //.comp - a compute shader
 
     #define FG_GFX_SHADER_FRAGMENT_STD_SUFFIX		"frag"
-    #define FG_GFX_SHADER_VERTEX_STD_SUFFIX			"vert"
-    #define FG_GFX_SHADER_TESS_CONTROL_STD_SUFFIX		"tesc"
+    #define FG_GFX_SHADER_VERTEX_STD_SUFFIX		"vert"
+    #define FG_GFX_SHADER_TESS_CONTROL_STD_SUFFIX	"tesc"
     #define FG_GFX_SHADER_TESS_EVALUATION_STD_SUFFIX	"tese"
     #define FG_GFX_SHADER_GEOMETRY_STD_SUFFIX		"geom"
     #define FG_GFX_SHADER_COMPUTE_STD_SUFFIX		"comp"
 
-    #define FG_GFX_SHADER_CONFIG_PROGRAM_STD_SUFFIX		"program.ini"
-    #define FG_GFX_SHADER_CONFIG_FRAGMENT_STD_SUFFIX	"frag.shader.ini"
-    #define FG_GFX_SHADER_CONFIG_VERTEX_STD_SUFFIX		"vert.shader.ini"
-    #define FG_GFX_SHADER_CONFIG_TESS_CONTROL_STD_SUFFIX	"tesc.shader.ini"
-    #define FG_GFX_SHADER_CONFIG_TESS_EVALUATION_STD_SUFFIX	"tese.shader.ini"
-    #define FG_GFX_SHADER_CONFIG_GEOMETRY_STD_SUFFIX	"geom.shader.ini"
-    #define FG_GFX_SHADER_CONFIG_COMPUTE_STD_SUFFIX		"comp.shader.ini"
+    #define FG_GFX_SHADER_CONFIG_PROGRAM_STD_SUFFIX         "program.ini"
+    #define FG_GFX_SHADER_CONFIG_FRAGMENT_STD_SUFFIX        "frag.shader.ini"
+    #define FG_GFX_SHADER_CONFIG_VERTEX_STD_SUFFIX          "vert.shader.ini"
+    #define FG_GFX_SHADER_CONFIG_TESS_CONTROL_STD_SUFFIX    "tesc.shader.ini"
+    #define FG_GFX_SHADER_CONFIG_TESS_EVALUATION_STD_SUFFIX "tese.shader.ini"
+    #define FG_GFX_SHADER_CONFIG_GEOMETRY_STD_SUFFIX        "geom.shader.ini"
+    #define FG_GFX_SHADER_CONFIG_COMPUTE_STD_SUFFIX         "comp.shader.ini"
 
-    #define FG_GFX_SHADER_CONFIG_STD_SUFFIX			"shader.ini"
+    #define FG_GFX_SHADER_CONFIG_STD_SUFFIX                 "shader.ini"
 
 const char * const g_fgGfxShaderCfgSuffixes[] = {
                                                  FG_GFX_SHADER_CONFIG_FRAGMENT_STD_SUFFIX,
@@ -277,21 +277,21 @@ enum fgGfxUniformType {
     FG_GFX_CUSTOM // Custom uniform - can be any type (only one per shader program)
 };
 
-    #define FG_GFX_M_MATRIX_TEXT			"ModelMatrix"
-    #define FG_GFX_MV_MATRIX_TEXT			"ModelViewMatrix"
-    #define FG_GFX_MVP_MATRIX_TEXT			"ModelViewProjectionMatrix"
+    #define FG_GFX_M_MATRIX_TEXT		"ModelMatrix"
+    #define FG_GFX_MV_MATRIX_TEXT		"ModelViewMatrix"
+    #define FG_GFX_MVP_MATRIX_TEXT		"ModelViewProjectionMatrix"
     #define FG_GFX_ENVIRONMENT_MAP_TEXT		"EnvironmentMap"
-    #define FG_GFX_NORMAL_MAP_TEXT			"NormalMap"
-    #define FG_GFX_BUMP_MAP_TEXT			"BumpMap"
+    #define FG_GFX_NORMAL_MAP_TEXT		"NormalMap"
+    #define FG_GFX_BUMP_MAP_TEXT		"BumpMap"
     #define FG_GFX_PLAIN_TEXTURE_TEXT		"PlainTexture"
-    #define FG_GFX_DIRECTIONAL_LIGHT_TEXT           "DirectionalLight"
-    #define FG_GFX_MATERIAL_TEXT			"Material"
+    #define FG_GFX_DIRECTIONAL_LIGHT_TEXT       "DirectionalLight"
+    #define FG_GFX_MATERIAL_TEXT		"Material"
     #define FG_GFX_PHASE_TEXT			"Phase"
-    #define FG_GFX_DELTA_TIME_TEXT			"DeltaTime"
-    #define FG_GFX_TIMESTAMP_TEXT			"Timestamp"
+    #define FG_GFX_DELTA_TIME_TEXT		"DeltaTime"
+    #define FG_GFX_TIMESTAMP_TEXT		"Timestamp"
     #define FG_GFX_CUSTOM_COLOR_TEXT		"CustomColor"
-    #define FG_GFX_ATTRIB_MASK_TEXT			"AttribMask"
-    #define FG_GFX_USE_TEXTURE_TEXT			"UseTexture"
+    #define FG_GFX_ATTRIB_MASK_TEXT		"AttribMask"
+    #define FG_GFX_USE_TEXTURE_TEXT		"UseTexture"
     #define FG_GFX_CUSTOM_TEXT			"Custom"
 
 // Convert text (literal) to corresponding enum value

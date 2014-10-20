@@ -133,7 +133,9 @@ protected:
     fgVector3f m_relPos;
     /// Position (this is where the widget is currently drawn) and size of the widget
     fgBoundingBox3Df m_bbox;
-
+    /// Current text size
+    fgVector2f m_textSize;
+    
     /// This callback will be executed when widget is focused
     fgGuiCallback *m_onFocus;
     /// Callback to call when the focus is lost

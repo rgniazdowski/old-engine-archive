@@ -91,6 +91,20 @@ public:
     fgVector2f size(float charSize, const char *fmt, ...);
     //
     fgVector2f size(const char *string, float charSize);
+    
+    //
+    static float width(fgFontResource *font, float charSize, const char *fmt, ...);
+    //
+    static float width(fgFontResource *font, const char *string, float charSize);
+    //
+    static float height(fgFontResource *font, float charSize, const char *fmt, ...);
+    //
+    static float height(fgFontResource *font, const char *string, float charSize);
+    //
+    static fgVector2f size(fgFontResource *font, float charSize, const char *fmt, ...);
+    
+    //
+    static fgVector2f size(fgFontResource *font, const char *string, float charSize);
 
     // Set current font used for drawing
     fgBool setFont(fgFontResource *font);

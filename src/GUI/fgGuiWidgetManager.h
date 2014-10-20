@@ -12,25 +12,37 @@
 
     #include "fgGuiWidget.h"
     #include "Util/fgHandleManager.h"
+    #include "fgManagerBase.h"
     #include "fgGuiWidgetFactory.h"
 
     #ifndef _FG_GUI_STYLE_MANAGER_H_
         #include "fgGuiStyleManager.h"
     #endif
 
-/* 
+    #define FG_MANAGER_GUI_WIDGET   0x00000200  
+
+/**
  *
  */
-class fgGuiWidgetManager : protected fgHandleManager<fgGuiWidget *, fgGuiWidgetHandle> {
+class fgGuiWidgetManager : public fgManagerBase, protected fgHandleManager<fgGuiWidget *, fgGuiWidgetHandle> {
 public:
     typedef fgVector<fgGuiWidget *> widgetVec;
     typedef widgetVec::iterator widgetVecItor;
-
+    
+protected:
+    //
+    virtual void clear(void);
+    
 public:
     //
     fgGuiWidgetManager(fgGuiWidgetFactory *widgetFactory = NULL, fgGuiStyleManager *styleMgr = NULL);
     //
     virtual ~fgGuiWidgetManager();
+    
+    //
+    virtual fgBool destroy(void);
+    //
+    virtual fgBool initialize(void);
 
     //
     static fgGuiWidgetType widgetTypeFromName(const char *typeName);
@@ -98,6 +110,11 @@ public:
     //
     widgetVec& getRefRootWidgets(void);
 
+    //
+    void setWidgetsPath(const std::string &path);
+    //
+    void setWidgetsPath(const char *path);
+    
 private:
     /// Pointer to the external widget factory
     fgGuiWidgetFactory *m_widgetFactory;
@@ -105,6 +122,8 @@ private:
     fgGuiStyleManager *m_styleMgr;
     /// Widgets that have no fathers. For example a main screen, window, menu, etc
     widgetVec m_rootWidgets;
+    /// Widgets structure files base path
+    std::string m_widgetsPath;
 };
 
 #endif /* _FG_GUI_WIDGET_MANAGER_H_ */

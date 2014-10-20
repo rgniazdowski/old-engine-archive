@@ -29,18 +29,31 @@
 
 #include "XML/fgXMLParser.h"
 #include "fgGuiStructureSheetParser.h"
+#include "Util/fgDirent.h"
 
-/*
- *
+/**
+ * 
+ * @param widgetFactory
+ * @param styleMgr
  */
 fgGuiWidgetManager::fgGuiWidgetManager(fgGuiWidgetFactory *widgetFactory, fgGuiStyleManager *styleMgr) :
 m_widgetFactory(widgetFactory),
-m_styleMgr(styleMgr) { }
+m_styleMgr(styleMgr) {
+    m_managerType = FG_MANAGER_GUI_WIDGET;
+}
 
-/*
- *
+/**
+ * 
  */
 fgGuiWidgetManager::~fgGuiWidgetManager() {
+    fgGuiWidgetManager::destroy();
+}
+
+/**
+ * 
+ * @return 
+ */
+fgBool fgGuiWidgetManager::destroy(void) {
     hmDataVecItor begin, end, itor;
     begin = getRefDataVector().begin();
     end = getRefDataVector().end();
@@ -57,8 +70,53 @@ fgGuiWidgetManager::~fgGuiWidgetManager() {
     m_widgetFactory = NULL;
 }
 
-/*
- *
+/**
+ * 
+ * @return 
+ */
+fgBool fgGuiWidgetManager::initialize(void) {
+    FG_LOG::PrintDebug("GUI: Initializing Widget manager...");
+    if(!m_widgetFactory || !m_styleMgr) {
+        FG_LOG::PrintError("GUI: Failed to initialize widget manager - not all external pointers are set");
+        return FG_FALSE;
+    }
+    if(m_widgetsPath.empty()) {
+        FG_LOG::PrintError("GUI: Default path for widgets directory is not set");
+        return FG_FALSE;
+    }
+    // Will now preload all required styles
+    fgDirent widgetsDir;
+    const char *filename = NULL;
+    widgetsDir.readDirectory(m_widgetsPath, FG_TRUE);
+    while((filename = widgetsDir.getNextFile()) != NULL) {
+        const char *ext = fgPath::fileExt(filename, FG_TRUE);
+        if(!ext)
+            continue;
+        if(strcasecmp(ext, "gui.xml") == 0) {
+            FG_LOG::PrintDebug("GUI: Loading gui widget struct file: '%s'", filename);
+            if(!loadStructureSheet(filename)) {
+                FG_LOG::PrintError("GUI: Failed to load gui widget struct: '%s'", filename);
+                continue;
+            }
+            FG_LOG::PrintDebug("GUI: Successfully loaded structure file '%s' to the database", filename);
+        }
+    }
+    widgetsDir.clearList();
+    m_init = FG_TRUE;
+    return FG_TRUE;
+}
+
+/**
+ * 
+ */
+void fgGuiWidgetManager::clear(void) {
+    fgHandleManager::clear();
+}
+
+/**
+ * 
+ * @param typeName
+ * @return 
  */
 fgGuiWidgetType fgGuiWidgetManager::widgetTypeFromName(const char *typeName) {
     if(!typeName)
@@ -66,8 +124,10 @@ fgGuiWidgetType fgGuiWidgetManager::widgetTypeFromName(const char *typeName) {
     return widgetTypeFromName(std::string(typeName));
 }
 
-/*
- *
+/**
+ * 
+ * @param typeName
+ * @return 
  */
 fgGuiWidgetType fgGuiWidgetManager::widgetTypeFromName(const std::string& typeName) {
     if(typeName.empty())
@@ -110,43 +170,66 @@ fgGuiWidgetType fgGuiWidgetManager::widgetTypeFromName(const std::string& typeNa
     return FG_GUI_WIDGET_UNKNOWN;
 }
 
-/*
- *
+/**
+ * 
+ * @param path
+ */
+void fgGuiWidgetManager::setWidgetsPath(const std::string& path) {
+    m_widgetsPath = path;
+}
+
+/**
+ * 
+ * @param path
+ */
+void fgGuiWidgetManager::setWidgetsPath(const char* path) {
+    m_widgetsPath = path;
+}
+
+/**
+ * 
+ * @return 
  */
 fgGuiWidgetManager::widgetVec& fgGuiWidgetManager::getRefRootWidgets(void) {
     return m_rootWidgets;
 }
 
-/*
- *
+/**
+ * 
+ * @param widgetFactory
  */
 void fgGuiWidgetManager::setWidgetFactory(fgGuiWidgetFactory *widgetFactory) {
     m_widgetFactory = widgetFactory;
 }
 
-/*
- *
+/**
+ * 
+ * @return 
  */
 fgGuiWidgetFactory *fgGuiWidgetManager::getWidgetFactory(void) const {
     return m_widgetFactory;
 }
 
-/*
- *
+/**
+ * 
+ * @param styleMgr
  */
 void fgGuiWidgetManager::setStyleManager(fgGuiStyleManager *styleMgr) {
     m_styleMgr = styleMgr;
 }
 
-/*
- *
+/**
+ * 
+ * @return 
  */
 fgGuiStyleManager *fgGuiWidgetManager::getStyleManager(void) const {
     return m_styleMgr;
 }
 
-/*
- *
+/**
+ * 
+ * @param filePath
+ * @return 
  */
 fgBool fgGuiWidgetManager::loadStructureSheet(const std::string& filePath) {
     if(filePath.empty()) {
@@ -155,8 +238,10 @@ fgBool fgGuiWidgetManager::loadStructureSheet(const std::string& filePath) {
     return fgGuiWidgetManager::loadStructureSheet(filePath.c_str());
 }
 
-/*
- *
+/**
+ * 
+ * @param filePath
+ * @return 
  */
 fgBool fgGuiWidgetManager::loadStructureSheet(const char *filePath) {
     if(!filePath) {
@@ -183,8 +268,12 @@ fgBool fgGuiWidgetManager::loadStructureSheet(const char *filePath) {
     return FG_TRUE;
 }
 
-/*
- *
+/**
+ * 
+ * @param wUniqueID
+ * @param pWidget
+ * @param pFatherWidget
+ * @return 
  */
 fgBool fgGuiWidgetManager::addWidget(fgGuiWidgetHandle& wUniqueID, fgGuiWidget *pWidget, fgGuiWidget *pFatherWidget) {
     if(!pWidget) {
@@ -257,29 +346,43 @@ fgBool fgGuiWidgetManager::addWidget(fgGuiWidgetHandle& wUniqueID, fgGuiWidget *
     return FG_TRUE;
 }
 
-/*
- *
+/**
+ * 
+ * @param wUniqueID
+ * @param pWidget
+ * @param wFatherUniqueID
+ * @return 
  */
 fgBool fgGuiWidgetManager::addWidget(fgGuiWidgetHandle& wUniqueID, fgGuiWidget *pWidget, const fgGuiWidgetHandle& wFatherUniqueID) {
     return addWidget(wUniqueID, pWidget, fgHandleManager::dereference(wFatherUniqueID));
 }
 
-/*
- *
+/**
+ * 
+ * @param wUniqueID
+ * @param pWidget
+ * @param wFatherNameTag
+ * @return 
  */
 fgBool fgGuiWidgetManager::addWidget(fgGuiWidgetHandle& wUniqueID, fgGuiWidget *pWidget, const std::string& wFatherNameTag) {
     return addWidget(wUniqueID, pWidget, fgHandleManager::dereference(wFatherNameTag));
 }
 
-/*
- *
+/**
+ * 
+ * @param wUniqueID
+ * @param pWidget
+ * @param wFatherNameTag
+ * @return 
  */
 fgBool fgGuiWidgetManager::addWidget(fgGuiWidgetHandle& wUniqueID, fgGuiWidget *pWidget, const char* wFatherNameTag) {
     return addWidget(wUniqueID, pWidget, fgHandleManager::dereference(wFatherNameTag));
 }
 
-/*
- *
+/**
+ * 
+ * @param pWidget
+ * @return 
  */
 fgBool fgGuiWidgetManager::remove(fgGuiWidget *pWidget) {
     if(!fgGuiWidgetManager::isManaged(pWidget)) {
@@ -288,8 +391,10 @@ fgBool fgGuiWidgetManager::remove(fgGuiWidget *pWidget) {
     return fgHandleManager::releaseHandle(pWidget->getHandle());
 }
 
-/*
- *
+/**
+ * 
+ * @param wUniqueID
+ * @return 
  */
 fgBool fgGuiWidgetManager::remove(const fgGuiWidgetHandle& wUniqueID) {
     fgGuiWidget *pWidget = dereference(wUniqueID);
@@ -298,8 +403,10 @@ fgBool fgGuiWidgetManager::remove(const fgGuiWidgetHandle& wUniqueID) {
     return fgHandleManager::releaseHandle(pWidget->getHandle());
 }
 
-/*
- *
+/**
+ * 
+ * @param nameTag
+ * @return 
  */
 fgBool fgGuiWidgetManager::remove(const std::string& nameTag) {
     fgGuiWidget *pWidget = dereference(nameTag);
@@ -308,8 +415,10 @@ fgBool fgGuiWidgetManager::remove(const std::string& nameTag) {
     return fgHandleManager::releaseHandle(pWidget->getHandle());
 }
 
-/*
- *
+/**
+ * 
+ * @param nameTag
+ * @return 
  */
 fgBool fgGuiWidgetManager::remove(const char *nameTag) {
     fgGuiWidget *pWidget = dereference(nameTag);
@@ -318,8 +427,10 @@ fgBool fgGuiWidgetManager::remove(const char *nameTag) {
     return fgHandleManager::releaseHandle(pWidget->getHandle());
 }
 
-/*
- *
+/**
+ * 
+ * @param pWidget
+ * @return 
  */
 fgBool fgGuiWidgetManager::destroyWidget(fgGuiWidget* & pWidget) {
     if(!fgGuiWidgetManager::remove(pWidget)) {
@@ -330,53 +441,67 @@ fgBool fgGuiWidgetManager::destroyWidget(fgGuiWidget* & pWidget) {
     return FG_TRUE;
 }
 
-/*
- *
+/**
+ * 
+ * @param wUniqueID
+ * @return 
  */
 fgBool fgGuiWidgetManager::destroyWidget(const fgGuiWidgetHandle& wUniqueID) {
     fgGuiWidget *pWidget = dereference(wUniqueID);
     return destroyWidget(pWidget);
 }
 
-/*
- *
+/**
+ * 
+ * @param nameTag
+ * @return 
  */
 fgBool fgGuiWidgetManager::destroyWidget(const std::string& nameTag) {
     fgGuiWidget *pWidget = dereference(nameTag);
     return destroyWidget(pWidget);
 }
 
-/*
- *
+/**
+ * 
+ * @param nameTag
+ * @return 
  */
 fgBool fgGuiWidgetManager::destroyWidget(const char *nameTag) {
     fgGuiWidget *pWidget = dereference(nameTag);
     return destroyWidget(pWidget);
 }
 
-/*
- *
+/**
+ * 
+ * @param wUniqueID
+ * @return 
  */
 fgGuiWidget* fgGuiWidgetManager::get(const fgGuiWidgetHandle& wUniqueID) {
     return fgHandleManager::dereference(wUniqueID);
 }
 
-/*
- *
+/**
+ * 
+ * @param nameTag
+ * @return 
  */
 fgGuiWidget* fgGuiWidgetManager::get(const std::string& nameTag) {
     return fgHandleManager::dereference(nameTag);
 }
 
-/*
- *
+/**
+ * 
+ * @param nameTag
+ * @return 
  */
 fgGuiWidget* fgGuiWidgetManager::get(const char *nameTag) {
     return fgHandleManager::dereference(nameTag);
 }
 
-/*
- *
+/**
+ * 
+ * @param pWidget
+ * @return 
  */
 fgBool fgGuiWidgetManager::isManaged(fgGuiWidget *pWidget) {
     if(!pWidget) {
@@ -392,24 +517,30 @@ fgBool fgGuiWidgetManager::isManaged(fgGuiWidget *pWidget) {
     return FG_TRUE;
 }
 
-/*
- *
+/**
+ * 
+ * @param wUniqueID
+ * @return 
  */
 fgBool fgGuiWidgetManager::isManaged(const fgGuiWidgetHandle& wUniqueID) {
     fgGuiWidget *pWidget = get(wUniqueID);
     return (fgBool)(pWidget != NULL);
 }
 
-/*
- *
+/**
+ * 
+ * @param nameTag
+ * @return 
  */
 fgBool fgGuiWidgetManager::isManaged(const std::string& nameTag) {
     fgGuiWidget *pWidget = get(nameTag);
     return (fgBool)(pWidget != NULL);
 }
 
-/*
- *
+/**
+ * 
+ * @param nameTag
+ * @return 
  */
 fgBool fgGuiWidgetManager::isManaged(const char *nameTag) {
     fgGuiWidget *pWidget = get(nameTag);

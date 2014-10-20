@@ -120,8 +120,6 @@ fgBool fgGuiStructureSheetParser::parseWidgetAttributes(fgGuiWidget *pWidget, fg
             // which cointains widget specific parameters
             // Given widget will parse it properly
             pWidget->setFlags(attrvalue);
-            //printf("LASDLASDLASDLLADSLDS\n");
-            // #FIXME - widget struct flags translation
         } else if(strcasecmp(attrname, "active") == 0) {
             pWidget->setActive(FG_BOOL_FROM_TEXT(attrvalue));
         } else if(strcasecmp(attrname, "visible") == 0) {

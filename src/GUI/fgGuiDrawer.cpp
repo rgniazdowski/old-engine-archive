@@ -109,7 +109,7 @@ void fgGuiDrawer::render(void) {
 /*
  *
  */
-void fgGuiDrawer::appendText2D(const fgVec2f &blockPos, const fgVec2f &blockSize, fgGuiStyleContent& style, const char *fmt, ...) {
+void fgGuiDrawer::appendText2D(fgVec2f& outTextSize, const fgVec2f &blockPos, const fgVec2f &blockSize, fgGuiStyleContent& style, const char *fmt, ...) {
     if(!m_resourceMgr || !fmt)
         return;
     char buf[FG_FONT_DRAW_STRING_BUF_MAX];
@@ -132,8 +132,8 @@ void fgGuiDrawer::appendText2D(const fgVec2f &blockPos, const fgVec2f &blockSize
     fgGuiAlign textAlign = style.getTextAlign();
     fgGuiPadding &padding = style.getPadding();
     fgVector2f outPos = blockPos;
-    fgVector2f textSize = m_fontDrawer->size(buf, fg.textSize);
-    style.applyPosAlign(style.getTextAlign(), outPos, textSize, blockSize);
+    outTextSize = fgFontDrawer::size(fontResProper, buf, fg.textSize);
+    style.applyPosAlign(style.getTextAlign(), outPos, outTextSize, blockSize);
     m_fontDrawer->print(outPos.x, outPos.y, buf, fg.textSize);
 }
 

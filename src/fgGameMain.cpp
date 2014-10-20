@@ -47,12 +47,6 @@
 #include "fgErrorCodes.h"
 
 #include "GUI/Font/fgFontDrawer.h"
-#include "GUI/Font/fgFontStbConsolasBold.h"
-#include "GUI/Font/fgFontStbCourier.h"
-#include "GUI/Font/fgFontStbCourierBold.h"
-#include "GUI/Font/fgFontStbTimes.h"
-#include "GUI/Font/fgFontStbArial.h"
-#include "GUI/Font/fgFontStbArialBold.h"
 #include "GUI/Font/fgFontBuiltIn.h"
 
 #include "fgColors.h"
@@ -85,7 +79,7 @@ m_gameFreeLookCallback(NULL) {
         this->setEventManager(eventMgr);
     }
     m_joypadController->initialize(); // #FIXME
-    
+
 }
 
 /*
@@ -244,16 +238,10 @@ fgBool fgGameMain::initSubsystems(void) {
     int h = m_gfxMain->getMainWindow()->getHeight();
     m_guiMain->setScreenSize(w, h);
     FG_HardwareState->setScreenDimensions(w, h);
-    FG_HardwareState->deviceYield(0); // #FIXME - device yield...
-    //#if defined(FG_USING_MARMALADE)
     FG_HardwareState->initDPI();
-    //#endif
-    FG_HardwareState->deviceYield(0); // #FIXME - device yield...
     FG_QualityManager->determineQuality();
-    FG_HardwareState->deviceYield(0); // #FIXME - device yield...
     if(m_pointerInputReceiver)
         m_pointerInputReceiver->initialize();
-    FG_HardwareState->deviceYield(0); // #FIXME - device yield...
     if(!m_resourceFactory)
         m_resourceFactory = new fgResourceFactory();
     else
@@ -283,132 +271,12 @@ fgBool fgGameMain::initSubsystems(void) {
         m_guiMain->setEventManager(m_eventMgr);
         m_pointerInputReceiver->setEventManager(m_eventMgr);
     }
-    FG_HardwareState->deviceYield(0); // #FIXME - device yield...
-
-    /////////////////////////////////////////////////////
-    FG_HardwareState->deviceYield(0); // #FIXME - device yield...
-
-    m_gfxMain->getShaderManager()->setShadersPath("shaders/");
-    m_gfxMain->preLoadShaders();
-    std::string sPlainEasyShaderName("sPlainEasy");
-    fgGfxShaderProgram *program = m_gfxMain->getShaderManager()->get(sPlainEasyShaderName);
-    FG_HardwareState->deviceYield(0); // #FIXME - device yield...
-    FG_LOG::PrintDebug("Will now try to compile and link 'sPlainEasy' shader program");
-    if(program) {
-        program->compile();
-        program->link(); // this will also bind attributes and after successful link - bind uniforms
-    }
-    {
-        std::string sOrthoEasyShaderName("sOrthoEasy");
-        fgGfxShaderProgram *program = m_gfxMain->getShaderManager()->get(sOrthoEasyShaderName);
-        FG_HardwareState->deviceYield(0); // #FIXME - device yield...
-        FG_LOG::PrintDebug("Will now try to compile and link 'sOrthoEasyShader' shader program");
-        if(program) {
-            program->compile();
-            program->link(); // this will also bind attributes and after successful link - bind uniforms
-        }
+    // When GUI MAIN has set the resource manager - it can preload builtin fonts
+    if(!m_guiMain->initialize()) {
+        FG_LOG::PrintError("GUI: Main module initialized with errors");
     }
     FG_HardwareState->deviceYield(0); // #FIXME - device yield...
-#if 1
-    float t1 = fgTime::ms();
-    FG_LOG::PrintDebug("Will now try load object CobraBomber.obj");
-    std::string modelname("CobraBomber");
-    fgGfxModelResource *model = (fgGfxModelResource *)m_resourceMgr->get(modelname);
-    model->create();
-    if(model) {
-        if(model->getRefShapes().size()) {
-            model->getRefShapes()[0]->mesh->genBuffers();
-        }
-    }
-    float t2 = fgTime::ms();
-    FG_LOG::PrintDebug("WHOLE OBJECT CREATION TOOK: %.2f seconds", (t2 - t1) / 1000.0f);
-#endif
-    FG_LOG::PrintDebug("Will now try load texture for CobraBomber");
 
-    std::string texname("CobraBomberTexture");
-    fgTextureResource *texture = (fgTextureResource *)m_resourceMgr->get(texname);
-    if(texture) {
-        texture->create();
-        m_gfxMain->getTextureManager()->uploadToVRAM(texture, FG_TRUE);
-    }
-
-    texname = "MainBackgroundTexture";
-    texture = (fgTextureResource *)m_resourceMgr->get(texname);
-    //texture = (fgTextureResource *) m_resourceMgr->request(std::string("loading_screen0"), FG_RESOURCE_TEXTURE);
-    if(texture) {
-        texture->create();
-        m_gfxMain->getTextureManager()->uploadToVRAM(texture, FG_TRUE);
-    }
-
-    texname = "PopupBG";
-    texture = (fgTextureResource *)m_resourceMgr->get(texname);
-    if(texture) {
-        texture->create();
-        m_gfxMain->getTextureManager()->uploadToVRAM(texture, FG_TRUE);
-    }
-    texname = "MenuBG";
-    texture = (fgTextureResource *)m_resourceMgr->get(texname);
-    if(texture) {
-        texture->create();
-        m_gfxMain->getTextureManager()->uploadToVRAM(texture, FG_TRUE);
-    }
-    texname = "Splash";
-    texture = (fgTextureResource *)m_resourceMgr->get(texname);
-    if(texture) {
-        texture->create();
-        m_gfxMain->getTextureManager()->uploadToVRAM(texture, FG_TRUE);
-    }
-
-    texname = "Loaded";
-    fgFontResource *font = (fgFontResource *)m_resourceMgr->get("Loaded");
-    if(font) {
-        font->create();
-        m_gfxMain->getTextureManager()->uploadToVRAM(font, FG_TRUE);
-
-    }
-
-    {
-        std::string top("HudTopTex");
-        std::string bottom("HudBottomTex");
-        std::string lines("HudLinesTex");
-        fgTextureResource *textop = (fgTextureResource *)m_resourceMgr->get(top);
-        fgTextureResource *texbottom = (fgTextureResource *)m_resourceMgr->get(bottom);
-        fgTextureResource *texlines = (fgTextureResource *)m_resourceMgr->get(lines);
-
-        if(textop && texbottom && texlines) {
-            texlines->create();
-            textop->create();
-            texbottom->create();
-            m_gfxMain->getTextureManager()->uploadToVRAM(texlines, FG_TRUE);
-            m_gfxMain->getTextureManager()->uploadToVRAM(textop, FG_TRUE);
-            m_gfxMain->getTextureManager()->uploadToVRAM(texbottom, FG_TRUE);
-        }
-    }
-    fgGuiStyle *style = new fgGuiStyle();
-    style->setName("DefaultStyle");
-    if(!style->load("gui/main.style.ini")) {
-        printf("FAILED TO LOAD MAIN STYLE\n");
-    }
-
-    fgFontBuiltInResource *consolasBold = new fgFontBuiltInResource(fgFontBuiltIn::StbConsolasBold::getRawData(32));
-    consolasBold->setName("StbConsolasBold");
-    consolasBold->create();
-    m_resourceMgr->insertResource(consolasBold->getRefHandle(), consolasBold);
-    m_gfxMain->getTextureManager()->uploadToVRAM(consolasBold, FG_TRUE);
-
-    fgFontBuiltInResource *courier = new fgFontBuiltInResource(fgFontBuiltIn::StbCourier::getRawData(50));
-    courier->setName("StbCourier");
-    courier->create();
-    //fgTextureLoader::saveTGA("yolo1.tga", courier->getRawData(), courier->getWidth(), courier->getHeight());
-    m_resourceMgr->insertResource(courier->getRefHandle(), courier);
-    m_gfxMain->getTextureManager()->uploadToVRAM(courier, FG_TRUE);
-
-    if(!m_guiMain->getStyleManager()->insertStyle(style->getRefHandle(), style)) {
-        printf("FAILED TO INSERT MAIN STYLE\n");
-    }
-    if(!m_guiMain->getWidgetManager()->loadStructureSheet("gui/menu.xml")) {
-        printf("FAILED TO LOAD MAIN MENU STRUCTURE SHEET\n");
-    }
     return FG_TRUE;
 }
 
@@ -432,6 +300,132 @@ fgBool fgGameMain::loadConfiguration(void) {
  */
 fgBool fgGameMain::loadResources(void) {
     FG_LOG::PrintDebug("Loading resources...");
+    std::string texname;
+    fgTextureResource *texture = NULL;
+    
+    ////////////////////////////////////////////////////////////////////////////
+    m_gfxMain->getShaderManager()->setShadersPath("shaders/");
+    m_gfxMain->preLoadShaders();
+    std::string sPlainEasyShaderName("sPlainEasy");
+    fgGfxShaderProgram *program = m_gfxMain->getShaderManager()->get(sPlainEasyShaderName);
+    FG_HardwareState->deviceYield(0); // #FIXME - device yield...
+    FG_LOG::PrintDebug("Will now try to compile and link 'sPlainEasy' shader program");
+    if(program) {
+        program->compile();
+        program->link(); // this will also bind attributes and after successful link - bind uniforms
+    }
+    {
+        std::string sOrthoEasyShaderName("sOrthoEasy");
+        fgGfxShaderProgram *program = m_gfxMain->getShaderManager()->get(sOrthoEasyShaderName);
+        FG_HardwareState->deviceYield(0); // #FIXME - device yield...
+        FG_LOG::PrintDebug("Will now try to compile and link 'sOrthoEasyShader' shader program");
+        if(program) {
+            program->compile();
+            program->link(); // this will also bind attributes and after successful link - bind uniforms
+        }
+    }
+    FG_HardwareState->deviceYield(0); // #FIXME - device yield...
+#if 1
+    ////////////////////////////////////////////////////////////////////////////
+    {
+        float t1 = fgTime::ms();
+        FG_LOG::PrintDebug("Will now try load object CobraBomber.obj");
+        std::string modelname("CobraBomber");
+        fgGfxModelResource *model = (fgGfxModelResource *)m_resourceMgr->get(modelname);
+        model->create();
+        if(model) {
+            if(model->getRefShapes().size()) {
+                model->getRefShapes()[0]->mesh->genBuffers();
+            }
+        }
+        float t2 = fgTime::ms();
+        FG_LOG::PrintDebug("WHOLE OBJECT CREATION TOOK: %.2f seconds", (t2 - t1) / 1000.0f);
+    }
+    ////////////////////////////////////////////////////////////////////////////
+#endif
+    {
+        FG_LOG::PrintDebug("Will now try load texture for CobraBomber");
+        texname = "CobraBomberTexture";
+        texture = (fgTextureResource *)m_resourceMgr->get(texname);
+        if(texture) {
+            texture->create();
+            m_gfxMain->getTextureManager()->uploadToVRAM(texture, FG_TRUE);
+        }
+    }
+    {
+        texname = "MainBackgroundTexture";
+        texture = (fgTextureResource *)m_resourceMgr->get(texname);
+        //texture = (fgTextureResource *) m_resourceMgr->request(std::string("loading_screen0"), FG_RESOURCE_TEXTURE);
+        if(texture) {
+            texture->create();
+            m_gfxMain->getTextureManager()->uploadToVRAM(texture, FG_TRUE);
+        }
+    }
+    {
+        texname = "PopupBG";
+        texture = (fgTextureResource *)m_resourceMgr->get(texname);
+        if(texture) {
+            texture->create();
+            m_gfxMain->getTextureManager()->uploadToVRAM(texture, FG_TRUE);
+        }
+    }
+    {
+        texname = "MenuBG";
+        texture = (fgTextureResource *)m_resourceMgr->get(texname);
+        if(texture) {
+            texture->create();
+            m_gfxMain->getTextureManager()->uploadToVRAM(texture, FG_TRUE);
+        }
+    }
+    {
+        texname = "Splash";
+        texture = (fgTextureResource *)m_resourceMgr->get(texname);
+        if(texture) {
+            texture->create();
+            m_gfxMain->getTextureManager()->uploadToVRAM(texture, FG_TRUE);
+        }
+    }
+    {
+        texname = "Loaded";
+        fgFontResource *font = (fgFontResource *)m_resourceMgr->get("Loaded");
+        if(font) {
+            font->create();
+            m_gfxMain->getTextureManager()->uploadToVRAM(font, FG_TRUE);
+
+        }
+    }
+    {
+        std::string top("HudTopTex");
+        std::string bottom("HudBottomTex");
+        std::string lines("HudLinesTex");
+        fgTextureResource *textop = (fgTextureResource *)m_resourceMgr->get(top);
+        fgTextureResource *texbottom = (fgTextureResource *)m_resourceMgr->get(bottom);
+        fgTextureResource *texlines = (fgTextureResource *)m_resourceMgr->get(lines);
+
+        if(textop && texbottom && texlines) {
+            texlines->create();
+            textop->create();
+            texbottom->create();
+            m_gfxMain->getTextureManager()->uploadToVRAM(texlines, FG_TRUE);
+            m_gfxMain->getTextureManager()->uploadToVRAM(textop, FG_TRUE);
+            m_gfxMain->getTextureManager()->uploadToVRAM(texbottom, FG_TRUE);
+        }
+    }
+    ////////////////////////////////////////////////////////////////////////////
+
+    // Upload to VRAM - #FIXME
+    {
+        fgFontBuiltInResource *consolasBold = (fgFontBuiltInResource *)m_resourceMgr->get("StbConsolasBold");
+        if(consolasBold) {
+            m_gfxMain->getTextureManager()->uploadToVRAM(consolasBold, FG_TRUE);
+        }
+    }
+    {
+        fgFontBuiltInResource *courier = (fgFontBuiltInResource *)m_resourceMgr->get("StbCourier");
+        if(courier) {
+            m_gfxMain->getTextureManager()->uploadToVRAM(courier, FG_TRUE);
+        }
+    }
     return FG_TRUE;
 }
 
