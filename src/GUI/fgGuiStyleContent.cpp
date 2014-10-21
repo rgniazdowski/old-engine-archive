@@ -243,10 +243,10 @@ fgGuiBackgroundStyle fgGuiStyleContent::parseBackgroundStyle(const char *value) 
 }
 
 /**
- * 
- * @param value
- * @param type
- * @return 
+ * Parses the length stored as string
+ * @param value     Input length to parsed stored as C-like string
+ * @param type      Type of the unit, can be percents, inches, blocks or pixels
+ * @return          Floating point value of the parsed length
  */
 float fgGuiStyleContent::parseLength(const char *value, fgGuiUnitType &type) {
     if(!value)
@@ -271,9 +271,9 @@ float fgGuiStyleContent::parseLength(const char *value, fgGuiUnitType &type) {
 }
 
 /**
- * 
- * @param params
- * @param merge
+ * Initializes the style content from ini style parameters
+ * @param params    Style parameters from given section, taken directly from ini
+ * @param merge     If true the styles will be merged, if false - overwritten
  * @return 
  */
 fgBool fgGuiStyleContent::initializeFromConfig(fgCfgTypes::parameterVec &params, fgBool merge) {
@@ -285,97 +285,116 @@ fgBool fgGuiStyleContent::initializeFromConfig(fgCfgTypes::parameterVec &params,
     end = params.end();
     itor = begin;
 
+    // Iterate through all style parameters
+    // Parameters are taken directly from ini config file
     for(; itor != end; itor++) {
         fgCfgParameter *param = *itor;
         if(!param)
             continue;
 
+            // BACKGROUND COLOR PARAMETER
         if(param->name.compare("bg-color") == 0) {
             if(param->type == FG_CFG_PARAMETER_STRING)
                 m_bg.color = parseColor(param->string);
 
+            // FOREGROUND COLOR
         } else if(param->name.compare("fg-color") == 0) {
             if(param->type == FG_CFG_PARAMETER_STRING)
                 m_fg.color = parseColor(param->string);
 
+            // BACKGROUND TEXTURE NAME
         } else if(param->name.compare("bg-texture") == 0) {
             if(param->type == FG_CFG_PARAMETER_STRING)
                 m_bg.texture = param->string;
 
+            // BACKGROUND STYLE MODIFIER
         } else if(param->name.compare("bg-style") == 0) {
             if(param->type == FG_CFG_PARAMETER_STRING)
                 m_bg.style = parseBackgroundStyle(param->string);
 
+            // TEXT SIZE PARAMETER
         } else if(param->name.compare("textSize") == 0) {
             if(param->type == FG_CFG_PARAMETER_FLOAT)
                 m_fg.textSize = param->float_val;
             else if(param->type == FG_CFG_PARAMETER_INT)
                 m_fg.textSize = (float)param->int_val;
 
+            // FONT NAME PARAMETER
         } else if(param->name.compare("font") == 0) {
             if(param->type == FG_CFG_PARAMETER_STRING)
                 m_fg.font = param->string;
 
+            // MARGIN MODIFIER - APPLIES TO ALL
         } else if(param->name.compare("margin") == 0) {
             if(param->type == FG_CFG_PARAMETER_FLOAT)
                 this->setMargin(FG_GUI_MARGIN_ALL, param->float_val);
             else if(param->type == FG_CFG_PARAMETER_INT)
                 this->setMargin(FG_GUI_MARGIN_ALL, (float)param->int_val);
 
+            // LEFT MARGIN MODIFIER
         } else if(param->name.compare("margin-left") == 0) {
             if(param->type == FG_CFG_PARAMETER_FLOAT)
                 this->setMargin(FG_GUI_MARGIN_LEFT, param->float_val);
             else if(param->type == FG_CFG_PARAMETER_INT)
                 this->setMargin(FG_GUI_MARGIN_LEFT, (float)param->int_val);
 
+            // RIGHT MARGIN MODIFIER
         } else if(param->name.compare("margin-right") == 0) {
             if(param->type == FG_CFG_PARAMETER_FLOAT)
                 this->setMargin(FG_GUI_MARGIN_RIGHT, param->float_val);
             else if(param->type == FG_CFG_PARAMETER_INT)
                 this->setMargin(FG_GUI_MARGIN_RIGHT, (float)param->int_val);
 
+            // TOP MARGIN MODIFIER
         } else if(param->name.compare("margin-top") == 0) {
             if(param->type == FG_CFG_PARAMETER_FLOAT)
                 this->setMargin(FG_GUI_MARGIN_TOP, param->float_val);
             else if(param->type == FG_CFG_PARAMETER_INT)
                 this->setMargin(FG_GUI_MARGIN_TOP, (float)param->int_val);
 
+            // BOTTOM MARGIN MODIFIER
         } else if(param->name.compare("margin-bottom") == 0) {
             if(param->type == FG_CFG_PARAMETER_FLOAT)
                 this->setMargin(FG_GUI_MARGIN_BOTTOM, param->float_val);
             else if(param->type == FG_CFG_PARAMETER_INT)
                 this->setMargin(FG_GUI_MARGIN_BOTTOM, (float)param->int_val);
 
+            // PADDING MODIFIER - APPLIES TO ALL
         } else if(param->name.compare("padding") == 0) {
             if(param->type == FG_CFG_PARAMETER_FLOAT)
                 this->setPadding(FG_GUI_PADDING_ALL, param->float_val);
             else if(param->type == FG_CFG_PARAMETER_INT)
                 this->setPadding(FG_GUI_PADDING_ALL, (float)param->int_val);
 
+            // LEFT PADDING MODIFIER
         } else if(param->name.compare("padding-left") == 0) {
             if(param->type == FG_CFG_PARAMETER_FLOAT)
                 this->setPadding(FG_GUI_PADDING_LEFT, param->float_val);
             else if(param->type == FG_CFG_PARAMETER_INT)
                 this->setPadding(FG_GUI_PADDING_LEFT, (float)param->int_val);
 
+            // RIGHT PADDING MODIFIER
         } else if(param->name.compare("padding-right") == 0) {
             if(param->type == FG_CFG_PARAMETER_FLOAT)
                 this->setPadding(FG_GUI_PADDING_RIGHT, param->float_val);
             else if(param->type == FG_CFG_PARAMETER_INT)
                 this->setPadding(FG_GUI_PADDING_RIGHT, (float)param->int_val);
 
+            // TOP PADDING MODIFIER
         } else if(param->name.compare("padding-top") == 0) {
             if(param->type == FG_CFG_PARAMETER_FLOAT)
                 this->setPadding(FG_GUI_PADDING_TOP, param->float_val);
             else if(param->type == FG_CFG_PARAMETER_INT)
                 this->setPadding(FG_GUI_PADDING_TOP, (float)param->int_val);
 
+            // BOTTOM PADDING MODIFIER
         } else if(param->name.compare("padding-bottom") == 0) {
             if(param->type == FG_CFG_PARAMETER_FLOAT)
                 this->setPadding(FG_GUI_PADDING_BOTTOM, param->float_val);
             else if(param->type == FG_CFG_PARAMETER_INT)
                 this->setPadding(FG_GUI_PADDING_BOTTOM, (float)param->int_val);
 
+            // BORDER PARAMETER - APPLIES TO ALL BORDERS
         } else if(param->name.compare("border") == 0) {
             if(param->type == FG_CFG_PARAMETER_STRING) {
                 fgGuiBorder border = parseBorder(param->string);
@@ -392,6 +411,7 @@ fgBool fgGuiStyleContent::initializeFromConfig(fgCfgTypes::parameterVec &params,
                 this->setBorder(FG_GUI_BORDER_ALL, FG_GUI_BORDER_SOLID);
             }
 
+            // LEFT BORDER PARAMETER
         } else if(param->name.compare("border-left") == 0) {
             if(param->type == FG_CFG_PARAMETER_STRING) {
                 fgGuiBorder border = parseBorder(param->string);
@@ -404,6 +424,7 @@ fgBool fgGuiStyleContent::initializeFromConfig(fgCfgTypes::parameterVec &params,
                 this->setBorder(FG_GUI_BORDER_LEFT, FG_GUI_BORDER_SOLID);
             }
 
+            // RIGHT BORDER PARAMETER
         } else if(param->name.compare("border-right") == 0) {
             if(param->type == FG_CFG_PARAMETER_STRING) {
                 fgGuiBorder border = parseBorder(param->string);
@@ -416,6 +437,7 @@ fgBool fgGuiStyleContent::initializeFromConfig(fgCfgTypes::parameterVec &params,
                 this->setBorder(FG_GUI_BORDER_RIGHT, FG_GUI_BORDER_SOLID);
             }
 
+            // TOP BORDER PARAMETER
         } else if(param->name.compare("border-top") == 0) {
             if(param->type == FG_CFG_PARAMETER_STRING) {
                 fgGuiBorder border = parseBorder(param->string);
@@ -427,7 +449,8 @@ fgBool fgGuiStyleContent::initializeFromConfig(fgCfgTypes::parameterVec &params,
                 this->setBorder(FG_GUI_BORDER_TOP, (float)param->int_val);
                 this->setBorder(FG_GUI_BORDER_TOP, FG_GUI_BORDER_SOLID);
             }
-
+            
+            // BOTTOM BORDER PARAMETER
         } else if(param->name.compare("border-bottom") == 0) {
             if(param->type == FG_CFG_PARAMETER_STRING) {
                 fgGuiBorder border = parseBorder(param->string);
@@ -440,34 +463,111 @@ fgBool fgGuiStyleContent::initializeFromConfig(fgCfgTypes::parameterVec &params,
                 this->setBorder(FG_GUI_BORDER_BOTTOM, FG_GUI_BORDER_SOLID);
             }
 
+            // POSITON STYLE
         } else if(param->name.compare("position") == 0) {
             if(param->type == FG_CFG_PARAMETER_STRING)
                 this->setPosition(parsePositionStyle(param->string));
 
+            // LEFT POSITION (X) LEFT
         } else if(param->name.compare("left") == 0) {
+            if(param->type == FG_CFG_PARAMETER_FLOAT) {
+                this->m_position.left = param->float_val;
+                this->m_position.unit = FG_GUI_PIXELS;
+            } else if(param->type == FG_CFG_PARAMETER_INT) {
+                this->m_position.left = (float)param->int_val;
+                this->m_position.unit = FG_GUI_PIXELS;
+            } else if(param->type == FG_CFG_PARAMETER_STRING) {
+                fgGuiUnitType unit = FG_GUI_PIXELS;
+                this->m_position.left = parseLength(param->string, unit);
+                this->m_position.unit = unit;
+            }
 
+            // RIGHT POSITION (X) MODIFIER
         } else if(param->name.compare("right") == 0) {
+            if(param->type == FG_CFG_PARAMETER_FLOAT) {
+                this->m_position.right = param->float_val;
+                this->m_position.unit = FG_GUI_PIXELS;
+            } else if(param->type == FG_CFG_PARAMETER_INT) {
+                this->m_position.right = (float)param->int_val;
+                this->m_position.unit = FG_GUI_PIXELS;
+            } else if(param->type == FG_CFG_PARAMETER_STRING) {
+                fgGuiUnitType unit = FG_GUI_PIXELS;
+                this->m_position.right = parseLength(param->string, unit);
+                this->m_position.unit = unit;
+            }
 
+            // TOP POSITION (Y) MODIFIER
         } else if(param->name.compare("top") == 0) {
+            if(param->type == FG_CFG_PARAMETER_FLOAT) {
+                this->m_position.top = param->float_val;
+                this->m_position.unit = FG_GUI_PIXELS;
+            } else if(param->type == FG_CFG_PARAMETER_INT) {
+                this->m_position.top = (float)param->int_val;
+                this->m_position.unit = FG_GUI_PIXELS;
+            } else if(param->type == FG_CFG_PARAMETER_STRING) {
+                fgGuiUnitType unit = FG_GUI_PIXELS;
+                this->m_position.top = parseLength(param->string, unit);
+                this->m_position.unit = unit;
+            }
 
+            // BOTTOM POSITION (Y) MODIFIER
         } else if(param->name.compare("bottom") == 0) {
+            if(param->type == FG_CFG_PARAMETER_FLOAT) {
+                this->m_position.bottom = param->float_val;
+                this->m_position.unit = FG_GUI_PIXELS;
+            } else if(param->type == FG_CFG_PARAMETER_INT) {
+                this->m_position.bottom = (float)param->int_val;
+                this->m_position.unit = FG_GUI_PIXELS;
+            } else if(param->type == FG_CFG_PARAMETER_STRING) {
+                fgGuiUnitType unit = FG_GUI_PIXELS;
+                this->m_position.bottom = parseLength(param->string, unit);
+                this->m_position.unit = unit;
+            }
 
+            // FRONT POSITION (Z) MODIFIER
         } else if(param->name.compare("front") == 0) {
+            if(param->type == FG_CFG_PARAMETER_FLOAT) {
+                this->m_position.front = param->float_val;
+                this->m_position.unit = FG_GUI_PIXELS;
+            } else if(param->type == FG_CFG_PARAMETER_INT) {
+                this->m_position.front = (float)param->int_val;
+                this->m_position.unit = FG_GUI_PIXELS;
+            } else if(param->type == FG_CFG_PARAMETER_STRING) {
+                fgGuiUnitType unit = FG_GUI_PIXELS;
+                this->m_position.front = parseLength(param->string, unit);
+                this->m_position.unit = unit;
+            }
 
+            // BACK POSITION (Z) MODIFIER
         } else if(param->name.compare("back") == 0) {
+            if(param->type == FG_CFG_PARAMETER_FLOAT) {
+                this->m_position.back = param->float_val;
+                this->m_position.unit = FG_GUI_PIXELS;
+            } else if(param->type == FG_CFG_PARAMETER_INT) {
+                this->m_position.back = (float)param->int_val;
+                this->m_position.unit = FG_GUI_PIXELS;
+            } else if(param->type == FG_CFG_PARAMETER_STRING) {
+                fgGuiUnitType unit = FG_GUI_PIXELS;
+                this->m_position.back = parseLength(param->string, unit);
+                this->m_position.unit = unit;
+            }
 
+            // HORIZONTAL ALIGN
         } else if(param->name.compare("align") == 0) {
             if(param->type == FG_CFG_PARAMETER_STRING)
                 this->m_align = parseAlign(param->string);
 
+            // VERTICAL ALIGN
         } else if(param->name.compare("valign") == 0) {
             if(param->type == FG_CFG_PARAMETER_STRING)
                 this->m_valign = parseAlign(param->string);
 
+            // TEXT ALIGN
         } else if(param->name.compare("text-align") == 0) {
             if(param->type == FG_CFG_PARAMETER_STRING)
                 this->m_textAlign = parseAlign(param->string);
 
+            // WIDTH
         } else if(param->name.compare("width") == 0) {
             // #FIXME
             if(param->type == FG_CFG_PARAMETER_FLOAT) {
@@ -486,6 +586,7 @@ fgBool fgGuiStyleContent::initializeFromConfig(fgCfgTypes::parameterVec &params,
                     this->m_size.style = FG_GUI_SIZE_MIN;
             }
 
+            // HEIGHT
         } else if(param->name.compare("height") == 0) {
             // #FIXME
             if(param->type == FG_CFG_PARAMETER_FLOAT) {
@@ -504,10 +605,12 @@ fgBool fgGuiStyleContent::initializeFromConfig(fgCfgTypes::parameterVec &params,
                     this->m_size.style = FG_GUI_SIZE_MIN;
             }
 
+            // USED SHADER FOR EFFECTS
         } else if(param->name.compare("shader") == 0) {
             if(param->type == FG_CFG_PARAMETER_STRING)
                 m_shader = param->string;
 
+            // APPLIED EFFECT - SIMILAR TO PARTICLE EFFECT
         } else if(param->name.compare("effect") == 0) {
             if(param->type == FG_CFG_PARAMETER_STRING)
                 m_effect = param->string;

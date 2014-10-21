@@ -8,6 +8,7 @@ project/linux/FlexiGame/bin
 project/linux/foobar-cpp
 project/linux/FlexiGame_NB/build
 project/linux/FlexiGame_NB/dist
+project/linux/FlexiGame_NB/nbproject/private
 project/linux/FlexiGame_NB/nbproject/private/private.xml
 log
 modules/bullet/modified/

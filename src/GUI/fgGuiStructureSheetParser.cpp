@@ -129,6 +129,7 @@ fgBool fgGuiStructureSheetParser::parseWidgetAttributes(fgGuiWidget *pWidget, fg
         } else if(strcasecmp(attrname, "pos") == 0 || strcasecmp(attrname, "position") == 0) {
             fgVector3f pos = parseSpatialData(attrvalue);
             pWidget->setPosition(pos);
+            pWidget->setRelativePos(pos);
         } else if(strcasecmp(attrname, "size") == 0) {
             fgVector3f size = parseSpatialData(attrvalue);
             pWidget->setSize(size);

@@ -42,4 +42,6 @@ fgBoundingBox3Df& fgGuiButton::updateSize(void) {
 /*
  *
  */
-void fgGuiButton::refresh(void) { }
+void fgGuiButton::refresh(void) { 
+    fgGuiWidget::refresh();
+}

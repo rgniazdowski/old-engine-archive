@@ -8,11 +8,12 @@
  *******************************************************/
 
 #include "fgGuiMenu.h"
+#include "Util/fgStrings.h"
 
 /*
  *
  */
-fgGuiMenu::fgGuiMenu() {
+fgGuiMenu::fgGuiMenu() : m_isMainMenu(FG_FALSE) {
     fgGuiMenu::setDefaults();
 }
 
@@ -20,6 +21,29 @@ fgGuiMenu::fgGuiMenu() {
  *
  */
 fgGuiMenu::~fgGuiMenu() { }
+
+/**
+ * 
+ * @param flags
+ */
+void fgGuiMenu::setFlags(const std::string& flags) {
+    if(flags.empty() || flags.length() < 5)
+        return;
+    // This is important - always call setFlags for the base class
+    fgGuiContainer::setFlags(flags);
+    m_isMainMenu = FG_FALSE;
+    fgStringVector flagsVec;
+    fgStrings::split(flags, ' ', flagsVec);
+    if(flagsVec.empty())
+        return;
+    unsigned int n = (unsigned int)flagsVec.size();
+    for(unsigned int i = 0; i < n; i++) {
+        if(flagsVec[i].compare("mainmenu") == 0) {
+            m_isMainMenu = FG_TRUE;
+        } 
+    }
+    flagsVec.clear();
+}
 
 /*
  *
@@ -40,47 +64,6 @@ fgBoundingBox3Df& fgGuiMenu::updateSize(void) {
 /*
  *
  */
-void fgGuiMenu::refresh(void) { }
-
-/////////////////////////////////////////////////////////////////////
-
-/**
- *
- */
-void Menu::getSignals(void) {
-    /*
-    std::map<int, Widget*>::iterator childIt;
-
-    for(childIt = m_children.begin(); childIt != m_children.end(); childIt++)
-    {
-            childIt->second->getSignals(this);
-    }
-     */ }
-
-/**
- *
- */
-void Menu::draw(void) {
-    /*
-    std::map<int, Widget*>::iterator childIt;
-
-    for(childIt = m_children.begin(); childIt != m_children.end(); childIt++)
-    {
-            childIt->second->show();
-    }
-     */ }
-
-/**
- *
- */
-void Menu::releaseAllWidgets(void) {
-    /*
-    std::map<int, Widget*>::iterator childIt;
-
-    for(childIt = m_children.begin(); childIt != m_children.end(); childIt++)
-    {
-            delete childIt->second;
-            m_children[childIt->first] = NULL;
-    }
-    m_children.clear();
-     */ }
+void fgGuiMenu::refresh(void) {
+    fgGuiContainer::refresh();
+}

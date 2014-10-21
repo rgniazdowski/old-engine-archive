@@ -341,6 +341,7 @@ fgBool fgGuiWidgetManager::addWidget(fgGuiWidgetHandle& wUniqueID, fgGuiWidget *
             style->copyFullContent(pWidget->getStyleContents(),
                                    FG_GUI_WIDGET_STATE_COUNT,
                                    pWidget->getTypeName());
+            pWidget->refresh();
         }
     }
     return FG_TRUE;

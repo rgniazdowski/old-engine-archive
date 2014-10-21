@@ -44,6 +44,8 @@ void fgGuiContainer::setDefaults(void) {
 void fgGuiContainer::setFlags(const std::string& flags) {
     if(flags.empty() || flags.length() < 5)
         return;
+    // This is important - always call setFlags for the base class
+    fgGuiWidget::setFlags(flags);
     m_packMethod = FG_GUI_CONTAINER_PACK_FREE;
     m_packAlign = FG_GUI_CONTAINER_PACK_ALIGN_NONE;
     fgStringVector flagsVec;
@@ -109,28 +111,40 @@ fgBoundingBox3Df& fgGuiContainer::updateSize(void) {
     fgBoundingBox3Df tmpArea = m_bbox;
     fgBoundingBox3Df positionAndSize;
     positionAndSize.zero();
-    fgVector3f step = m_bbox.size / (float)m_children.size();
-    for(int i = 0; i < (int)m_children.size(); i++) {
+    int nChildren = m_children.size();
+    int nStaticChildren = nChildren;
+    for(int i = 0; i < nStaticChildren; i++) {
+        if(m_children[i]->getStyleContent().getPosition().style != FG_GUI_POS_STATIC) {
+            nStaticChildren--;
+        }
+    }
+    fgVector3f step = m_bbox.size / (float)nStaticChildren;
+
+    for(int i = 0, j = 0; i < nChildren; i++, j++) {
         fgGuiWidget *child = m_children[i];
         if(!child)
             continue;
-
+        fgBool skip = FG_FALSE;
+        if(child->getStyleContent().getPosition().style != FG_GUI_POS_STATIC) {
+            j--;
+            skip = FG_TRUE;
+        }
         //tmpArea.pos = m_bbox.pos;
         //tmpArea.size = m_bbox.size;
-        if(this->m_packMethod == FG_GUI_CONTAINER_PACK_HORIZONTAL) {
-            if(i > 0 && this->m_bbox.pos.x + step.x * i < positionAndSize.pos.x + positionAndSize.size.x)
+        if(this->m_packMethod == FG_GUI_CONTAINER_PACK_HORIZONTAL && !skip) {
+            if(j > 0 && this->m_bbox.pos.x + step.x * j < positionAndSize.pos.x + positionAndSize.size.x)
                 tmpArea.pos.x = positionAndSize.pos.x + positionAndSize.size.x;
             else
-                tmpArea.pos.x = this->m_bbox.pos.x + step.x * i;
+                tmpArea.pos.x = this->m_bbox.pos.x + step.x * j;
 
             tmpArea.pos.y = this->m_bbox.pos.y; //FIXME
             tmpArea.size.x = step.x;
             tmpArea.size.y = this->m_bbox.size.y; //FIXME
-        } else if(this->m_packMethod == FG_GUI_CONTAINER_PACK_VERTICAL) {
-            if(i > 0 && this->m_bbox.pos.y + step.y * i < positionAndSize.pos.y + positionAndSize.size.y)
+        } else if(this->m_packMethod == FG_GUI_CONTAINER_PACK_VERTICAL && !skip) {
+            if(j > 0 && this->m_bbox.pos.y + step.y * j < positionAndSize.pos.y + positionAndSize.size.y)
                 tmpArea.pos.y = positionAndSize.pos.y + positionAndSize.size.y;
             else
-                tmpArea.pos.y = this->m_bbox.pos.y + step.y * i;
+                tmpArea.pos.y = this->m_bbox.pos.y + step.y * j;
 
             tmpArea.pos.x = this->m_bbox.pos.x; //FIXME                    
             tmpArea.size.x = this->m_bbox.size.x;
@@ -144,84 +158,22 @@ fgBoundingBox3Df& fgGuiContainer::updateSize(void) {
 
         area.merge(positionAndSize);
         area.merge(tmpArea);
-        
+
 #if 0
-        Vector4 area = new Vector4();
+        positionAndSize = oneChild.UpdateSize(tmpPosition, tmpSize);
+        Vector4 returnArea = GameGUI.MergeArea(area, positionAndSize);
+        returnArea = GameGUI.MergeArea(returnArea, GameGUI.MergeVector2D(tmpPosition, tmpSize));
 
-        area = GameGUI.MergeVector2D(this.Position, this.Size);
-        Vector4 positionAndSize = Vector4.Zero;
-
-        int i = 0;
-
-        Vector2 tmpPosition = new Vector2();
-        Vector2 tmpSize = new Vector2();
-
-        float stepX;
-        float stepY;
-        stepX = this.Size.X / childsPool.Count;
-        stepY = this.Size.Y / childsPool.Count;
-
-        foreach(Widget oneChild in childsPool) {
-            // Ustawianie rozmiaru kontenera na podstawie rozmiaru
-            // oraz ustawienia 'dzieci'
-            if(this.PackMethod == "none") {
-                tmpPosition.X = this.Position.X;
-                tmpPosition.Y = this.Position.Y;
-                tmpSize.X = this.Size.X;
-                tmpSize.Y = this.Size.Y;
-            } else if(this.PackMethod == "horizontal") {
-                if(i > 0 && this.Position.X + stepX * i < positionAndSize.X + positionAndSize.Z)
-                    tmpPosition.X = positionAndSize.X + positionAndSize.Z;
-                else
-                    tmpPosition.X = this.Position.X + stepX * i;
-
-                tmpPosition.Y = this.Position.Y; //FIXME
-                tmpSize.X = stepX;
-                tmpSize.Y = this.Size.Y; //FIXME
-            } else if(this.PackMethod == "vertical") {
-                /*tmp_pos.X = this.pos.X;
-                tmp_pos.Y = this.pos.Y + stepy * i; //FIXME
-                tmp_size.X = this.size.X;
-                tmp_size.Y = stepy;//FIXME*/
-
-                if(i > 0 && this.Position.Y + stepY * i < positionAndSize.Y + positionAndSize.W)
-                    tmpPosition.Y = positionAndSize.Y + positionAndSize.W;
-                else
-                    tmpPosition.Y = this.Position.Y + stepY * i;
-
-                tmpPosition.X = this.Position.X; //FIXME                    
-                tmpSize.X = this.Size.X;
-                tmpSize.Y = stepY; //FIXME
-            }
-
-            positionAndSize = oneChild.UpdateSize(tmpPosition, tmpSize);
-
-            Vector4 returnArea = GameGUI.MergeArea(area, positionAndSize);
-            returnArea = GameGUI.MergeArea(returnArea, GameGUI.MergeVector2D(tmpPosition, tmpSize));
-
-            area.X = returnArea.X;
-            area.Y = returnArea.Y;
-            area.Z = returnArea.Z;
-            area.W = returnArea.W;
-
-            //this.gui.primBatch.DrawBorder(new Vector2(ret_val.X, ret_val.Y), new Vector2(ret_val.Z, ret_val.W), Color.Red, 1); 
-            /*  if (this.pos.X + this.size.X < positionAndSize.X + positionAndSize.Z)
-                  this.size.X = positionAndSize.X + positionAndSize.Z - this.pos.X;
-              if (this.pos.Y + this.size.Y < positionAndSize.Y + positionAndSize.W)
-                  this.size.Y = positionAndSize.Y + positionAndSize.W - this.pos.Y;*/
-            i++;
-        }
+        area.X = returnArea.X; area.Y = returnArea.Y; 
+        area.Z = returnArea.Z; area.W = returnArea.W;
+        /*  if (this.pos.X + this.size.X < positionAndSize.X + positionAndSize.Z)
+              this.size.X = positionAndSize.X + positionAndSize.Z - this.pos.X;
+          if (this.pos.Y + this.size.Y < positionAndSize.Y + positionAndSize.W)
+              this.size.Y = positionAndSize.Y + positionAndSize.W - this.pos.Y;*/
         this.Position.X = area.X;
         this.Position.Y = area.Y;
         this.Size.X = area.Z;
         this.Size.Y = area.W;
-
-        /*area.X = pos.X;
-        area.Y = pos.Y;
-        area.Z = size.X;
-        area.W = size.Y;*/
-
-        return area;
 #endif 
     }
     m_bbox = area;

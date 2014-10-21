@@ -20,6 +20,10 @@
     #include "GFX/fgGFXColor.h"
     #include "GFX/fgGFXBoundingBox.h"
 
+    #define FG_GUI_FLOAT_UNIT_INVALID       1280000.0f
+    #define FG_GUI_FLOAT_UNIT_TEST_VALUE    1000000.0f
+    #define FG_GUI_CHECK_FLOAT(value)   (value < FG_GUI_FLOAT_UNIT_TEST_VALUE)
+
 /**
  *
  */
@@ -126,7 +130,6 @@ struct fgGuiMargin {
     float top;
     ///
     float bottom;
-    
     /**
      * 
      */
@@ -164,7 +167,6 @@ struct fgGuiBorderInfo {
     fgGuiBorder top;
     ///
     fgGuiBorder bottom;
-    
     /**
      * 
      */
@@ -219,12 +221,12 @@ enum fgGuiPositionStyle {
 };
 
     #define FG_GUI_DEFAULT_POSITION_STYLE	FG_GUI_POS_STATIC
-    #define FG_GUI_DEFAULT_POSITION_LEFT	0.0f
-    #define FG_GUI_DEFAULT_POSITION_RIGTH	0.0f
-    #define FG_GUI_DEFAULT_POSITION_TOP		0.0f
-    #define FG_GUI_DEFAULT_POSITION_BOTTOM	0.0f
-    #define FG_GUI_DEFAULT_POSITION_FRONT	0.0f
-    #define FG_GUI_DEFAULT_POSITION_BACK	0.0f
+    #define FG_GUI_DEFAULT_POSITION_LEFT	FG_GUI_FLOAT_UNIT_INVALID
+    #define FG_GUI_DEFAULT_POSITION_RIGTH	FG_GUI_FLOAT_UNIT_INVALID
+    #define FG_GUI_DEFAULT_POSITION_TOP		FG_GUI_FLOAT_UNIT_INVALID
+    #define FG_GUI_DEFAULT_POSITION_BOTTOM	FG_GUI_FLOAT_UNIT_INVALID
+    #define FG_GUI_DEFAULT_POSITION_FRONT	FG_GUI_FLOAT_UNIT_INVALID
+    #define FG_GUI_DEFAULT_POSITION_BACK	FG_GUI_FLOAT_UNIT_INVALID
 
 /**
  *
@@ -232,6 +234,8 @@ enum fgGuiPositionStyle {
 struct fgGuiPosition {
     ///
     fgGuiPositionStyle style;
+    ///
+    fgGuiUnitType unit;
     ///
     float left;
     ///
@@ -244,18 +248,25 @@ struct fgGuiPosition {
     float front;
     ///
     float back;
-    
     /**
      * 
      */
     fgGuiPosition() :
     style(FG_GUI_DEFAULT_POSITION_STYLE),
+    unit(FG_GUI_PIXELS),
     left(FG_GUI_DEFAULT_POSITION_LEFT),
     right(FG_GUI_DEFAULT_POSITION_RIGTH),
     top(FG_GUI_DEFAULT_POSITION_TOP),
     bottom(FG_GUI_DEFAULT_POSITION_BOTTOM),
     front(FG_GUI_DEFAULT_POSITION_FRONT),
-    back(FG_GUI_DEFAULT_POSITION_BACK) { }
+    back(FG_GUI_DEFAULT_POSITION_BACK) {
+        left = FG_GUI_FLOAT_UNIT_INVALID;
+        right = left;
+        top = left;
+        bottom = left;
+        front = left;
+        back = left;
+    }
 };
 
 /**
@@ -297,7 +308,6 @@ struct fgGuiSize {
         float d;
         float z;
     };
-    
     /**
      * 
      */

@@ -108,7 +108,6 @@ fgBoundingBox3Df& fgGuiWidget::updateSize(const fgBoundingBox3Df &bounds) {
     }
     updateSize();
 
-
     // Margin?
     if(posStyle == FG_GUI_POS_STATIC) {
         m_bbox.pos = bounds.pos;
@@ -140,7 +139,14 @@ fgBoundingBox3Df& fgGuiWidget::updateSize(const fgBoundingBox3Df &bounds) {
 /*
  *
  */
-void fgGuiWidget::refresh(void) { }
+void fgGuiWidget::refresh(void) {
+    if(m_styles[m_state].getPosition().style != FG_GUI_POS_STATIC) {
+        if(FG_GUI_CHECK_FLOAT(m_styles[m_state].getPosition().left))
+            m_relPos.x = m_styles[m_state].getPosition().left;
+        if(FG_GUI_CHECK_FLOAT(m_styles[m_state].getPosition().top))
+            m_relPos.y = m_styles[m_state].getPosition().top;
+    }
+}
 
 /**
  * 
@@ -154,6 +160,7 @@ int fgGuiWidget::updateState(const fgPointerData *pointerData) {
         m_state = FG_GUI_WIDGET_STATE_DEACTIVATED;
         return m_state;
     }
+    fgGuiWidgetState lastState = m_state;
     m_state = FG_GUI_WIDGET_STATE_NONE;
     if(m_bbox.test((float)pointerData->m_x, (float)pointerData->m_y)) {
         m_state = FG_GUI_WIDGET_STATE_FOCUS;
@@ -173,5 +180,12 @@ int fgGuiWidget::updateState(const fgPointerData *pointerData) {
 
     if(m_ignoreState)
         m_state = FG_GUI_WIDGET_STATE_NONE;
+    if(m_state != lastState && m_styles[m_state].getPosition().style == FG_GUI_POS_RELATIVE) {
+        if(FG_GUI_CHECK_FLOAT(m_styles[m_state].getPosition().left)) {
+            m_relPos.x = m_styles[m_state].getPosition().left;
+        } if(FG_GUI_CHECK_FLOAT(m_styles[m_state].getPosition().top)) {
+            m_relPos.y = m_styles[m_state].getPosition().top;
+        }
+    }
     return m_state;
 }

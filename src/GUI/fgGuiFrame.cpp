@@ -12,7 +12,8 @@
 /*
  *
  */
-fgGuiFrame::fgGuiFrame() {
+fgGuiFrame::fgGuiFrame() :
+fgGuiContainer() {
     fgGuiFrame::setDefaults();
 }
 
@@ -40,4 +41,6 @@ fgBoundingBox3Df& fgGuiFrame::updateSize(void) {
 /*
  *
  */
-void fgGuiFrame::refresh(void) { }
+void fgGuiFrame::refresh(void) { 
+    fgGuiContainer::refresh();
+}

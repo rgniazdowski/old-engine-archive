@@ -137,6 +137,10 @@ inline const char * _FG_GFX_DATA_TYPE_TO_TEXT(fgGFXenum value) {
     #ifndef M_PIF
         #define M_PIF 3.14159265358979323846f
     #endif
+    
+    #ifndef M_PI2XF
+        #define M_PI2XF 6.28318530717958647692f
+    #endif
 
     #ifndef FG_DEG2RAD
         #define FG_DEG2RAD (M_PIF / 180.0f)

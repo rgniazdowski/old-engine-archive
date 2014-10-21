@@ -321,6 +321,11 @@ public:
     }
 
     //
+    inline void setRelativePos(const fgVector3f& relPos) {
+        m_relPos = relPos;
+    }
+    
+    //
     inline void setSize(const fgVector3f& size) {
         m_bbox.size = size;
     }

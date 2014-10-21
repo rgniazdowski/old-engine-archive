@@ -162,11 +162,11 @@ fgBool fgGuiMain::initialize(void) {
     
     //
     if(!m_styleMgr->initialize()) {
-        
+        FG_LOG::PrintError("GUI: Style manager not initialized");
     }
     //
     if(!m_widgetMgr->initialize()) {
-        
+        FG_LOG::PrintError("GUI: Widget manager not initialized");
     }
     m_init = FG_TRUE;
     return FG_TRUE;

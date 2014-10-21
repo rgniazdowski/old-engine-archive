@@ -12,7 +12,8 @@
 /*
  *
  */
-fgGuiEditableText::fgGuiEditableText() {
+fgGuiEditableText::fgGuiEditableText() :
+fgGuiTextArea() {
     fgGuiEditableText::setDefaults();
 }
 
@@ -40,4 +41,6 @@ fgBoundingBox3Df& fgGuiEditableText::updateSize(void) {
 /*
  *
  */
-void fgGuiEditableText::refresh(void) { }
+void fgGuiEditableText::refresh(void) { 
+    fgGuiTextArea::refresh();
+}

@@ -50,6 +50,7 @@
             <word>aos</word>
             <word>app</word>
             <word>attrib</word>
+            <word>bbox</word>
             <word>bitplanes</word>
             <word>bool</word>
             <word>bvec</word>
@@ -72,6 +73,7 @@
             <word>glbinding</word>
             <word>Gniazdowski</word>
             <word>gui</word>
+            <word>hcenter</word>
             <word>idx</word>
             <word>ini</word>
             <word>init</word>
@@ -82,6 +84,9 @@
             <word>multitexturing</word>
             <word>obj</word>
             <word>overallocation</word>
+            <word>packfree</word>
+            <word>packhorizontal</word>
+            <word>packvertical</word>
             <word>param</word>
             <word>params</word>
             <word>plox</word>
@@ -89,6 +94,7 @@
             <word>preload</word>
             <word>printf</word>
             <word>Radoslaw</word>
+            <word>rgb</word>
             <word>s'</word>
             <word>sfactor</word>
             <word>shaders</word>
@@ -99,6 +105,8 @@
             <word>tga</word>
             <word>ushort</word>
             <word>uv</word>
+            <word>valign</word>
+            <word>vcenter</word>
             <word>vec</word>
             <word>xml</word>
             <word>zfail</word>

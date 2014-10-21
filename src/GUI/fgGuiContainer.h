@@ -52,6 +52,7 @@ public:
 
     typedef fgVector<fgGuiWidget *> childrenVec;
     typedef childrenVec::iterator childrenVecItor;
+    
 protected:
     /// 
     childrenMap m_childrenMap;
@@ -74,6 +75,7 @@ public:
 
     FG_GUI_WIDGET_FACTORY_CREATE_FUNCTION(fgGuiContainer);
     
+    //
     virtual void setFlags(const std::string& flags);
     
     //
@@ -95,6 +97,7 @@ public:
     childrenVec& getChildren(void);
     //
     childrenMap& getChildrenMap(void);
+    
     //
     fgBool addChild(fgGuiWidget *pWidget);
     //

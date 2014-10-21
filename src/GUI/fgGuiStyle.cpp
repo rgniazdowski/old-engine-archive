@@ -194,6 +194,8 @@ fgGuiStyleContent &fgGuiStyle::getContent(const std::string& info) {
             return itor2->second;
         } else if(itor1 != end && itor2 == end) {
             return itor1->second;
+        } else if(itor1 != end && itor2 != end) {
+            return itor1->second;
         }
     }
     return m_styleContent["main"];

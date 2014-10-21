@@ -12,7 +12,10 @@
 /*
  *
  */
-fgGuiLabel::fgGuiLabel() { }
+fgGuiLabel::fgGuiLabel() : 
+fgGuiWidget() {
+    fgGuiLabel::setDefaults();
+}
 
 /*
  *
