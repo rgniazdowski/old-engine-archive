@@ -25,6 +25,12 @@ m_packAlign(FG_GUI_CONTAINER_PACK_ALIGN_NONE) {
  *
  */
 fgGuiContainer::~fgGuiContainer() {
+    // What about freeing children widgets?
+    // There should be some way to mark widgets for deletion (removal)
+    // From the widget manager
+
+    // Also if container has widgets that are not managed (not in manager)
+    // Should container delete (call destructors) them? My guess... yes.
     m_children.clear_optimised();
     m_childrenMap.clear();
 }
@@ -57,9 +63,9 @@ void fgGuiContainer::setFlags(const std::string& flags) {
     for(unsigned int i = 0; i < n; i++) {
         if(flagsVec[i].compare("packfree") == 0) {
             m_packMethod = FG_GUI_CONTAINER_PACK_FREE;
-        } else if(flagsVec[i].compare("packhorizontal") == 0) {
+        } else if(flagsVec[i].compare("packhorizontal") == 0 || flagsVec[i].compare("packh") == 0) {
             m_packMethod = FG_GUI_CONTAINER_PACK_HORIZONTAL;
-        } else if(flagsVec[i].compare("packvertical") == 0) {
+        } else if(flagsVec[i].compare("packvertical") == 0 || flagsVec[i].compare("packv") == 0) {
             m_packMethod = FG_GUI_CONTAINER_PACK_VERTICAL;
         } else if(flagsVec[i].compare("none") == 0) {
             m_packAlign = FG_GUI_CONTAINER_PACK_ALIGN_NONE;
@@ -154,6 +160,12 @@ fgBoundingBox3Df fgGuiContainer::updateSize(void) {
     // Pointer to the last static positioned widget
     fgGuiWidget *lastWidget = NULL;
 
+    // Calculate the current innerBox for comparison
+    innerBox.pos.x = m_bbox.pos.x + containerPadding.left;
+    innerBox.pos.y = m_bbox.pos.y + containerPadding.top;
+    innerBox.size.x = m_bbox.size.x - containerPadding.right - containerPadding.left;
+    innerBox.size.y = m_bbox.size.y - containerPadding.bottom - containerPadding.top;
+
     // Calculate currently covered area by all children widgets
     // Ignore non static widgets (positioning)
     // Also calculate the max/min widget size
@@ -172,17 +184,12 @@ fgBoundingBox3Df fgGuiContainer::updateSize(void) {
             fgBoundingBox3Df childBox = child->updateSize(innerBox);
             // Now if this widget is relatively position it can exceed the boundaries
             // of this container - so we need to merge this innerbox with childsbox
-
-            //if(innerBox.pos.x + innerBox.size.x < childBox.pos.x + childBox.size.x)
-            //    innerBox.size.x = childBox.pos.x + childBox.size.x - innerBox.pos.x;
-            //if(innerBox.pos.y + innerBox.size.y < childBox.pos.y + childBox.size.y)
-            //    innerBox.size.y = childBox.pos.y + childBox.size.y - innerBox.pos.y;
-
-            // Update childSize properly
-            childSize.x = childBox.size.x + childBox.pos.x - innerBox.pos.x;
-            childSize.y = childBox.size.y + childBox.pos.y - innerBox.pos.y;
-            // Is this really necessary (we have childSize updated...)
+            //if(innerBox.pos.x > childBox.pos.x)
+            //    innerBox.pos.x = childBox.pos.x;
+            //if(innerBox.pos.y > childBox.pos.y)
+            //    innerBox.pos.y = childBox.pos.y;
             innerBox.merge(childBox);
+            continue;
         } else {
             childSize = child->getSize();
             childSize.x += child->getStyleContent().getMargin().right + child->getStyleContent().getMargin().left;
@@ -219,22 +226,21 @@ fgBoundingBox3Df fgGuiContainer::updateSize(void) {
     // it's calculated with all valid margins, this is also 
     // the minimal size required for the innerBox of the container
 
-    // Calculate the current innerBox for comparison
-    innerBox.pos.x = m_bbox.pos.x + containerPadding.left;
-    innerBox.pos.y = m_bbox.pos.y + containerPadding.top;
-    innerBox.size.x = m_bbox.size.x - containerPadding.right - containerPadding.left;
-    innerBox.size.y = m_bbox.size.y - containerPadding.bottom - containerPadding.top;
-
     // Check for the minimal required size and update inner/outer/bbox
     if(innerBox.size.x < childrenSize.x) {
         innerBox.size.x = childrenSize.x;
-        m_bbox.size.x = innerBox.size.x + containerPadding.right + containerPadding.left;
-    } else if(innerBox.size.y < childrenSize.y) {
-        innerBox.size.y = childrenSize.y;
-        m_bbox.size.y = innerBox.size.y + containerPadding.bottom + containerPadding.top;
     }
+    if(innerBox.size.y < childrenSize.y) {
+        innerBox.size.y = childrenSize.y;
+    }
+    //m_bbox.pos.x = innerBox.pos.x - containerPadding.left;
+    //m_bbox.pos.y = innerBox.pos.y - containerPadding.top;
+    m_bbox.size.x = innerBox.size.x + containerPadding.right + containerPadding.left;
+    m_bbox.size.y = innerBox.size.y + containerPadding.bottom + containerPadding.top;
     outerBox.size.x = m_bbox.size.x + containerMargin.right + containerMargin.left;
     outerBox.size.y = m_bbox.size.y + containerMargin.bottom + containerMargin.top;
+    //outerBox.pos.x = m_bbox.pos.x - containerMargin.left;
+    //outerBox.pos.y = m_bbox.pos.y - containerMargin.top;
     // Update widgetBox position
     widgetBox.pos = innerBox.pos; // #FIXME - is this really necessary? MAYBE
     // Calculate spacingXY
@@ -243,7 +249,6 @@ fgBoundingBox3Df fgGuiContainer::updateSize(void) {
     // Calculate steppingXY
     // Equation: (InnerContainerSize / ChildrenCount)
     stepping = (innerBox.size / (float)nStaticChildren);
-
     // Helper vector - size of the last widget
     fgVector3f lastChildSize;
 
