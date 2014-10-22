@@ -31,24 +31,41 @@ fgGuiStyleContent::~fgGuiStyleContent() { }
 void fgGuiStyleContent::applyPosAlign(const fgGuiAlign align,
                                       fgVector3f& pos,
                                       const fgVector3f& size,
-                                      const fgVector3f& boundSize) {
-    if(align == FG_GUI_ALIGN_NONE) {
-        pos.x += m_padding.left;
-        pos.y += m_padding.top;
+                                      const fgVector3f& boundPos,
+                                      const fgVector3f& boundSize,
+                                      const fgBool isInside) {
+    // Margin is outside of the border
+    // Padding is inside of the border
+
+    fgGuiMargin *offset = NULL;
+    if(isInside) {
+        offset = (fgGuiMargin *) & m_padding;
+    } else {
+        offset = (fgGuiMargin *) & m_margin;
     }
+
+    if(align == FG_GUI_ALIGN_NONE) {
+        pos.x = boundPos.x + offset->left;
+        pos.y = boundPos.y + offset->top;
+    }
+
     if(align & FG_GUI_ALIGN_LEFT) {
-        pos.x += m_padding.left;
+        pos.x = boundPos.x + offset->left;
     } else if(align & FG_GUI_ALIGN_RIGHT) {
-        pos.x += boundSize.x - size.x - m_padding.right;
+        if(boundSize.x >= size.x)
+            pos.x = boundPos.x + boundSize.x - size.x - offset->right;
     } else if(align & FG_GUI_ALIGN_CENTER) {
-        pos.x += boundSize.x / 2.0f - size.x / 2.0f;
+        if(boundSize.x >= size.x)
+            pos.x = boundPos.x + boundSize.x / 2.0f - size.x / 2.0f;
     }
     if(align & FG_GUI_ALIGN_MIDDLE) {
-        pos.y += boundSize.y / 2.0f - size.y / 2.0f;
+        if(boundSize.y >= size.y)
+            pos.y = boundPos.y + boundSize.y / 2.0f - size.y / 2.0f;
     } else if(align & FG_GUI_ALIGN_TOP) {
-        pos.y += m_padding.top;
+        pos.y = boundPos.y + offset->top;
     } else if(align & FG_GUI_ALIGN_BOTTOM) {
-        pos.y += boundSize.y - size.y - m_padding.bottom;
+        if(boundSize.y > size.y)
+            pos.y = (boundPos.y + boundSize.y) - size.y - offset->bottom;
     }
 }
 
@@ -62,24 +79,40 @@ void fgGuiStyleContent::applyPosAlign(const fgGuiAlign align,
 void fgGuiStyleContent::applyPosAlign(const fgGuiAlign align,
                                       fgVector2f& pos,
                                       const fgVector2f& size,
-                                      const fgVector2f& boundSize) {
+                                      const fgVector2f& boundPos,
+                                      const fgVector2f& boundSize,
+                                      const fgBool isInside) {
+    // Margin is outside of the border
+    // Padding is inside of the border
+
+    fgGuiMargin *offset = NULL;
+    if(isInside) {
+        offset = (fgGuiMargin *) & m_padding;
+    } else {
+        offset = (fgGuiMargin *) & m_margin;
+    }
+
     if(align == FG_GUI_ALIGN_NONE) {
-        pos.x += m_padding.left;
-        pos.y += m_padding.top;
+        pos.x += offset->left;
+        pos.y += offset->top;
     }
     if(align & FG_GUI_ALIGN_LEFT) {
-        pos.x += m_padding.left;
+        pos.x = boundPos.x + offset->left;
     } else if(align & FG_GUI_ALIGN_RIGHT) {
-        pos.x += boundSize.x - size.x - m_padding.right;
+        if(boundSize.x >= size.x)
+            pos.x = boundPos.x + boundSize.x - size.x - offset->right;
     } else if(align & FG_GUI_ALIGN_CENTER) {
-        pos.x += boundSize.x / 2.0f - size.x / 2.0f;
+        if(boundSize.x >= size.x)
+            pos.x = boundPos.x + boundSize.x / 2.0f - size.x / 2.0f;
     }
     if(align & FG_GUI_ALIGN_MIDDLE) {
-        pos.y += boundSize.y / 2.0f - size.y / 2.0f;
+        if(boundSize.y >= size.y)
+            pos.y = boundPos.y + boundSize.y / 2.0f - size.y / 2.0f;
     } else if(align & FG_GUI_ALIGN_TOP) {
-        pos.y += m_padding.top;
+        pos.y = boundPos.y + offset->top;
     } else if(align & FG_GUI_ALIGN_BOTTOM) {
-        pos.y += boundSize.y - size.y - m_padding.bottom;
+        if(boundSize.y >= size.y)
+            pos.y = (boundPos.y + boundSize.y) - size.y - offset->bottom;
     }
 }
 
@@ -292,7 +325,7 @@ fgBool fgGuiStyleContent::initializeFromConfig(fgCfgTypes::parameterVec &params,
         if(!param)
             continue;
 
-            // BACKGROUND COLOR PARAMETER
+        // BACKGROUND COLOR PARAMETER
         if(param->name.compare("bg-color") == 0) {
             if(param->type == FG_CFG_PARAMETER_STRING)
                 m_bg.color = parseColor(param->string);
@@ -449,7 +482,7 @@ fgBool fgGuiStyleContent::initializeFromConfig(fgCfgTypes::parameterVec &params,
                 this->setBorder(FG_GUI_BORDER_TOP, (float)param->int_val);
                 this->setBorder(FG_GUI_BORDER_TOP, FG_GUI_BORDER_SOLID);
             }
-            
+
             // BOTTOM BORDER PARAMETER
         } else if(param->name.compare("border-bottom") == 0) {
             if(param->type == FG_CFG_PARAMETER_STRING) {

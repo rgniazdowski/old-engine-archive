@@ -34,7 +34,7 @@ void fgGuiConsole::setDefaults(void) {
 /*
  *
  */
-fgBoundingBox3Df& fgGuiConsole::updateSize(void) {
+fgBoundingBox3Df fgGuiConsole::updateSize(void) {
     return fgGuiTextArea::updateSize();
 }
 

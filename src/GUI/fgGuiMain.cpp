@@ -211,6 +211,8 @@ void fgGuiMain::unregisterGuiCallbacks(void) {
     m_pEventMgr->removeEventCallback(FG_EVENT_MOUSE_MOTION, m_guiMouseCallback);
 }
 
+extern float guiScale;
+
 /**
  * 
  */
@@ -225,7 +227,12 @@ void fgGuiMain::updateState(void) {
         return;
     if(!(mainMenu->getTypeTraits() & FG_GUI_CONTAINER))
         return;
-    mainMenu->updateState(m_pPointerInputReceiver->getPointerData());
+    fgPointerData *pt = m_pPointerInputReceiver->getPointerData();
+    if(pt) {
+        pt->m_x = (int)((float)pt->m_x * ((1.0f - guiScale)/guiScale + 1.0f));
+        pt->m_y = (int)((float)pt->m_y * ((1.0f - guiScale)/guiScale + 1.0f));
+    }
+    mainMenu->updateState(pt);
 }
 
 /*
@@ -242,6 +249,17 @@ void fgGuiMain::display(void) {
         return;
     if(!(mainMenu->getTypeTraits() & FG_GUI_CONTAINER))
         return;
+    static float r = 0.0f;
+    r+=0.0125f;
+    if(r>=M_PI2XF) {
+        r = 0.0f;
+    }
+    float toggle = 0.0f;
+    mainMenu->getStyleContent().getPadding().right = 25 + 25 * fabs(sinf(r)) * toggle;
+    mainMenu->getStyleContent().getPadding().top = 25 + 25 * fabs(sinf(r)) * toggle;
+    mainMenu->getStyleContent().getPadding().left = 25 + 25 * fabs(sinf(r)) * toggle;
+    mainMenu->getStyleContent().getPadding().bottom = 25 + 25 * fabs(sinf(r)) * toggle;
+    //mainMenu->getRelativePos().y = 150.0f * sinf(r);
     mainMenu->updateSize(m_screenBox);
     mainMenu->display(m_guiDrawer);
 }

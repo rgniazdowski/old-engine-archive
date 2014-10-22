@@ -213,9 +213,9 @@ public:
     }
 
     //
-    virtual fgBoundingBox3Df& updateSize(void);
+    virtual fgBoundingBox3Df updateSize(void);
     //
-    virtual fgBoundingBox3Df& updateSize(const fgBoundingBox3Df &bbox);
+    virtual fgBoundingBox3Df updateSize(const fgBoundingBox3Df &bbox);
     //
     virtual void refresh(void);
 

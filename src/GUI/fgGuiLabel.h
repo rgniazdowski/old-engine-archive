@@ -38,7 +38,7 @@ public:
     FG_GUI_WIDGET_FACTORY_CREATE_FUNCTION(fgGuiLabel);
 
     // 
-    virtual fgBoundingBox3Df& updateSize(void);
+    virtual fgBoundingBox3Df updateSize(void);
 };
 
 #endif /* _FG_GUI_LABEL_H_ */

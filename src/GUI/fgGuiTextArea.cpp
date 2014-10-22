@@ -34,7 +34,7 @@ void fgGuiTextArea::setDefaults(void) {
 /*
  *
  */
-fgBoundingBox3Df& fgGuiTextArea::updateSize(void) {
+fgBoundingBox3Df fgGuiTextArea::updateSize(void) {
     return fgGuiScrollArea::updateSize();
 }
 

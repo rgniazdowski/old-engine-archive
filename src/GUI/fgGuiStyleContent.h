@@ -282,7 +282,7 @@ enum fgGuiSizeStyle {
 
 };
 
-    #define FG_GUI_DEFAULT_SIZE_STYLE   FG_GUI_SIZE_PERCENTS
+    #define FG_GUI_DEFAULT_SIZE_STYLE   FG_GUI_SIZE_PIXELS
     #define FG_GUI_DEFAULT_SIZE_X       10.0f
     #define FG_GUI_DEFAULT_SIZE_Y       5.0f
     #define FG_GUI_DEFAULT_SIZE_Z       1.0f
@@ -361,9 +361,9 @@ public:
     fgBool initializeFromConfig(fgCfgTypes::parameterVec &params, fgBool merge = FG_FALSE);
 
     //
-    void applyPosAlign(const fgGuiAlign align, fgVector3f& pos, const fgVector3f& size, const fgVector3f& boundSize);
+    void applyPosAlign(const fgGuiAlign align, fgVector3f& pos, const fgVector3f& size, const fgVector3f& boundPos, const fgVector3f& boundSize, const fgBool isInside = FG_TRUE);
     //
-    void applyPosAlign(const fgGuiAlign align, fgVector2f& pos, const fgVector2f& size, const fgVector2f& boundSize);
+    void applyPosAlign(const fgGuiAlign align, fgVector2f& pos, const fgVector2f& size, const fgVector2f& boundPos, const fgVector2f& boundSize, const fgBool isInside = FG_TRUE);
 
     //
     static fgColor4f parseColor(const char *value);

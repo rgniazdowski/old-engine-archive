@@ -36,7 +36,7 @@ public:
     FG_GUI_WIDGET_FACTORY_CREATE_FUNCTION(fgGuiPopup);
 
     // 
-    virtual fgBoundingBox3Df& updateSize(void);
+    virtual fgBoundingBox3Df updateSize(void);
     // 
     virtual void refresh(void);
 

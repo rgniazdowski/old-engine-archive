@@ -229,6 +229,7 @@ void dumpMatrix(const float *mat, const char *title) {
 
 #include "fgGFXPrimitives.h"
 #include "fgGFXDrawingBatch.h"
+float guiScale = 1.0f;
 
 /*
  *
@@ -356,8 +357,22 @@ void fgGfxMain::render(void) {
     if(s3eKeyboardGetState(s3eKeyRightShift) & S3E_KEY_STATE_DOWN) {
         //        scale += 0.01f;
     }
+#else
+    if(state[SDL_SCANCODE_LEFT] == SDL_PRESSED) {
+        posx -= 10.0f;
+    }
+    if(state[SDL_SCANCODE_RIGHT] == SDL_PRESSED) {
+        posx += 10.0f;
+    }
+    if(state[SDL_SCANCODE_UP] == SDL_PRESSED) {
+        posy -= 10.0f;
+    }
+    if(state[SDL_SCANCODE_DOWN] == SDL_PRESSED) {
+        posy += 10.0f;
+    }
 #endif
     Model = glm::translate(Model, glm::vec3(posx, posy, 0.0f));
+    Model = glm::scale(Model, glm::vec3(guiScale, guiScale, 0.0f));
     // #FIXME !
     fgGfxMVPMatrix mvp_lol;
     fgGfxMVPMatrix *MVP = &mvp_lol;

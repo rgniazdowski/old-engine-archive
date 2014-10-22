@@ -1,0 +1,77 @@
+
+1. Wpierw nalezy obliczyc rozmiar wszystkich dzieci wewnatrz kontenera
+	- nalezy juz tutaj uwzglednic rodzaj pakowania w kontenerze
+	- rozmiar dzieci uwzgledniac wraz z marginesem
+	- znalezc najwieksze rozmiary oraz najmniejsze (wys/szer)
+	- jesli aktualny rozmiar kontenera (uwzgledniajac wewnetrzny margines
+	  padding) jest mniejszy - nalezy go juz teraz powiekszyc odpowiednio
+
+2. obliczyc spacingXY
+	- nalezy go obliczyc wg wzoru:
+		(ROZMIAR_KONTENERA - ROZMIAR_DZIECI)/(ILOSC_DZIECI*2)
+	- spacingXY nie okresla sredniego rozmiaru pola dla pojedynczego widgeta
+	- spacingXY okresla sredni rozmiar przerwy przed oraz po widgecie dziecka
+	- przyklad:
+		container size = 16
+		no children    = 4
+		children size = 11
+		children[] sizes = {2, 3, 3, 3}
+		spacing = (16-11)/8.0 = 0.625
+
+		size distribution:
+
+		s + 2 + s + s + 3 + s + s + 3 + s + s + 3 + s = 16
+
+		chilren sizes take into account self.margin
+
+3. obliczyc steppingXY #FIXME #OHRLY?
+	- obliczane od rozmiary uzytecznego pola kontenera:
+		-   size = size - padding
+		-	pos = pos + padding
+		-	bounding box now covers usable area of the widget
+	- wzor:
+		(ROZMIAR_POLA_KONTENERA/ILOSC_DZIECI)
+
+	- jest to sredni rozmiar pola ktore jest wykorzystane przez jeden widget
+
+	- MOZLIWE ZE TO NIE BEDZIE POTRZEBNE BIORAC POD UWAGE SPACINGXY
+
+
+4. iteracja przez dzieci - ignorowanie dzieci ktore maja positioning != static
+
+5. update pola kontenera nie jest juz tak konieczny
+	- przeciez kontener zarzadza pozycja i rozmiarem dzieci
+	- jakas roznica moze wynikac z pozycjonowania fixed
+	- mozliwe ze pozycjonowanie fixed dziala jak relative
+		ale uwzglednia rozmiar pojedynczego pola ? NOPE
+
+6. mozliwe ze juz w tym punkcie nie jest potrzebne nie wiadomo jaki update pola
+	(bounding box) kontenera - wszystko jest juz obliczone
+
+7. wyswietlanie dzieci widgetow odbywa sie w prostej petli
+	- rozmiar pola do wykorzystania przez 1 widget child:
+		spacingXY + child->size
+	- rozmiarXY (odwrotny do pozycjonowania) - jest brany z rozmiaru uzytecznego
+
+DISCLAIMER:
+ - jest tutaj pewna niedogodnosc, cos co moze powodowac zbyt czeste obliczanie
+   funkcji calculate size
+ - skoro chcemy juz na poczatku pobrac rozmiar widgetow oznacza to ze powinien
+   on byc juz obliczony. Stanowi to problem nawet dla przyciskow poniewaz dopiero
+   po wywolaniu funkcji updateSize() bez parametrow dla Buttona jest obliczany
+   minimalny rozmiar (na podstawie tekstu wewnatrz i aktualnego stylu)
+   - Podobnie sprawa wyglada dla contenerow
+   - Przy tym aktualnym algorytmie obliczenie prawidlowego rozmiaru moze trwac
+	 wiecej niz jedna klatke (frame), moze tez spowodowac ciagle rozciaganie
+	 kontenerow
+
+   - Mozliwe ze jest konieczne wywolywanie dwa razy w jednym ciagu funkcji
+     updateSize() - wpierw bez parametru, potem z parametrem
+	 1 raz zeby obliczyc prawidlowy minimalny i prawidlowy rozmiar widgetu
+	 2 raz zeby dostosowac pozycje wzgledem pojedynczego pola w kontenerze
+
+	SOLUTION:
+	 To nie tak powinno dzialac. Mozliwe ze po zaladowaniu i przetworzeniu
+	 structure sheet jest wywolywane updateSize/refresh cokolwiek dla kazdego
+	 widget (oraz ojca). Oraz kazdorazowo po dodaniu widgeta do managera.
+

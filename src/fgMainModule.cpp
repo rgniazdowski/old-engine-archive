@@ -29,7 +29,7 @@
 #include "Hardware/fgHardwareState.h"
 
 class MainModule;
-
+extern float guiScale;
 #if defined FG_USING_MARMALADE
 extern "C" int main();
 
@@ -177,6 +177,7 @@ protected:
                     this->m_gameMain->getPointerInputReceiver()->singleTouchButtonHandler((void *)&event.button, this->m_gameMain->getPointerInputReceiver());
                     break;
                 case SDL_MOUSEWHEEL: /**< Mouse wheel motion */
+                    guiScale += 0.05f * (float)event.wheel.y;
                     break;
 #endif /* PLATFORM SPECIFIC */
 

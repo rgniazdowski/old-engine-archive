@@ -1,11 +1,32 @@
 <GUIStructure>
 
-	<Menu name="MainMenu" ignoreState="false" flags="packvertical right mainmenu">
+	<Menu name="MainMenu" ignoreState="true" flags="packvertical right mainmenu">
 		<!--		<Container name="MainContainer"> -->
-			<Button name="StartGameButton" size="400,50" style="RelButton">START GAME </Button>
-			<Button name="HighscoresButton" size="400,50">HIGH SCORES</Button>
-			<Button name="OptionsButton" size="400,50" link="Options">OPTIONS</Button>
-			<Button name="StatsButton" size="400,50" link="Stats" active="false">STATISTICS</Button>
+			<Button name="StartGameButton" size="200,50">START GAME </Button>
+			<Button name="HighscoresButton" size="250,100">HIGH SCORES</Button>
+				
+			<Container name="TestContainer" ignoreState="true" style="FrameStyle" flags="packhorizontal center">
+				<Button name="Test1Button" size="200,60">TEST1 BUTTON</Button>
+				<Button name="Test2Button" size="200,60">TEST2 BUTTON</Button>
+			</Container>
+			<Container name="TY" ignoreState="true" style="FrameStyle" flags="packvertical">
+				<Container name="TX1" ignoreState="true" style="FrameStyle" flags="packhorizontal">
+					<Button name="T1" size="50,50">T1</Button>
+					<Button name="T2" size="50,50">T2</Button>
+				</Container>
+				<Container name="TX2" ignoreState="true" style="FrameStyle" flags="packhorizontal">
+					<Button name="T3" size="50,50">T3</Button>
+					<Button name="T4" size="50,50">T4</Button>
+				</Container>
+			</Container>
+			<!--
+			<Container name="TestContainer2" ignoreState="true" style="FrameStyle" flags="packhorizontal center">
+				<Button name="Test3Button" size="300,70">TEST3 BUTTON</Button>
+				<Button name="Test4Button" size="300,70" pos="100,90">TEST4 REL BUTTON</Button>
+			</Container>
+			-->
+			<Button name="StatsButton" size="130,100" link="Stats" active="false">STATISTICS</Button>
+			<Button name="OptionsButton" size="300,50" link="Options">OPTIONS</Button>
 			<!--		</Container> -->
 	</Menu>
 

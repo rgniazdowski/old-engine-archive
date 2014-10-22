@@ -18,6 +18,8 @@
         #include "glm/vec3.hpp"
     #endif
 
+    #include <cmath>
+
 //
 template <class DataType> struct fgBoundingBox2D;
 //
@@ -205,6 +207,7 @@ struct fgBoundingBox2D : fgBoundingBox<fgBoundingBox2D<DataType>, glm::detail::t
      */
     fgBoundingBox2D(const vecType &_pos, const vecType &_size) :
     fgBoundingBox<fgBoundingBox2D<DataType>, glm::detail::tvec2<DataType, glm::defaultp>, DataType>(_pos, _size) { }
+    #if 0
     /**
      * 
      * @param a
@@ -230,6 +233,36 @@ struct fgBoundingBox2D : fgBoundingBox<fgBoundingBox2D<DataType>, glm::detail::t
             this->size.x = a.pos.x + a.size.x - this->pos.x;
         if(this->pos.y + this->size.y < a.pos.y + a.size.y)
             this->size.y = a.pos.y + a.size.y - this->pos.y;
+        return (*this);
+    }
+    #endif
+    fgBoundingBox2D &merge(const fgBoundingBox2D &a, const fgBoundingBox2D &b) {
+        this->pos = a.pos;
+        this->size = a.size;
+
+        if(a.pos.x + a.size.x < b.pos.x + b.size.x)
+            this->size.x = b.pos.x + b.size.x - a.pos.x;
+        if(a.pos.y + a.size.y < b.pos.y + b.size.y)
+            this->size.y = b.pos.y + b.size.y - a.pos.y;
+        return (*this);
+    }
+    /**
+     * 
+     * @param a
+     * @return 
+     */
+    fgBoundingBox2D &merge(const fgBoundingBox2D &a) {
+        //if(firstArea.X + firstArea.Z < secondArea.X + secondArea.Z)
+        //    firstArea.Z = secondArea.X + secondArea.Z - firstArea.X;
+        //
+        //if(firstArea.Y + firstArea.W < secondArea.Y + secondArea.W)
+        //    firstArea.W = secondArea.Y + secondArea.W - firstArea.Y;
+        if(this->pos.x + this->size.x < a.pos.x + a.size.x)
+            this->size.x = a.pos.x + a.size.x - this->pos.x;
+
+        if(this->pos.y + this->size.y < a.pos.y + a.size.y)
+            this->size.y = a.pos.y + a.size.y - this->pos.y;
+
         return (*this);
     }
     /**
@@ -357,12 +390,31 @@ fgBoundingBox<fgBoundingBox3D<DataType>, glm::detail::tvec3<DataType, glm::defau
      * @return 
      */
     fgBoundingBox3D &merge(const fgBoundingBox3D &a) {
-        if(this->pos.x + this->size.x < a.pos.x + a.size.x)
+        //if(firstArea.X + firstArea.Z < secondArea.X + secondArea.Z)
+        //    firstArea.Z = secondArea.X + secondArea.Z - firstArea.X;
+        //
+        //if(firstArea.Y + firstArea.W < secondArea.Y + secondArea.W)
+        //    firstArea.W = secondArea.Y + secondArea.W - firstArea.Y;
+        //if(this->pos.x > a.pos.x && a.pos.x > 0)
+        //    this->pos.x = a.pos.x;
+        //if(this->pos.y > a.pos.y && a.pos.y > 0)
+        //    this->pos.y = a.pos.y;
+        
+        if(this->pos.x + this->size.x < a.pos.x + a.size.x) {
             this->size.x = a.pos.x + a.size.x - this->pos.x;
-        if(this->pos.y + this->size.y < a.pos.y + a.size.y)
+            //this->size.y += a.pos.x) + a.size.x) - (this->pos.x) + this->size.x));
+        }
+
+        if(this->pos.y + this->size.y < a.pos.y + a.size.y) {
             this->size.y = a.pos.y + a.size.y - this->pos.y;
-        if(this->pos.z + this->size.z < a.pos.z + a.size.z)
+            //this->size.y += a.pos.y) + a.size.y) - (this->pos.y) + this->size.y));
+        }
+
+        if(this->pos.z + this->size.z < a.pos.z + a.size.z) {
             this->size.z = a.pos.z + a.size.z - this->pos.z;
+        }
+        
+        
         return (*this);
     }
     /**

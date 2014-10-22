@@ -63,15 +63,57 @@ void fgGuiWidget::display(fgGfxLayer *guiLayer) {
     if(!guiLayer)
         return;
     fgGuiDrawer *guiDrawer = (fgGuiDrawer *)guiLayer;
-    //if(!guiDrawer->getResourceManager())
-    //return;
     guiDrawer->downZIndex();
     fgVec2f blockPos = fgVec2f(m_bbox.pos.x, m_bbox.pos.y);
     fgVec2f blockSize = fgVec2f(m_bbox.size.x, m_bbox.size.y);
-    guiDrawer->appendBackground2D(blockPos, blockSize, m_styles[m_state]);
+    fgColor4f &bgColor = m_styles[m_state].getBackground().color;
+    if(bgColor.r > FG_EPSILON && bgColor.g > FG_EPSILON && bgColor.b > FG_EPSILON && bgColor.a > FG_EPSILON)
+        guiDrawer->appendBackground2D(blockPos, blockSize, m_styles[m_state]);
     guiDrawer->appendBorder2D(blockPos, blockSize, m_styles[m_state]);
+
+    // BLOCK SIZE / POS DEBUG PRINT
+    {
+        char buf[256];
+        snprintf(buf, 255, "%.1fx%.1f [%.1fx%.1f]", blockPos.x, blockPos.y, blockSize.x, blockSize.y);
+        float tSize = m_styles[m_state].getForeground().textSize;
+        fgColor4f tColor = m_styles[m_state].getForeground().color;
+        std::string tFont = m_styles[m_state].getForeground().font;
+        m_styles[m_state].getForeground().textSize = 20.0f;
+        m_styles[m_state].getForeground().font = "StbConsolasBold";
+        m_styles[m_state].getForeground().color = fgColor4f(.8f, .8f, .8f, 1.0f);
+        blockSize.y = 10.0f;
+        guiDrawer->appendText2D(m_textSize, blockPos, blockSize, m_styles[m_state], buf);
+        m_styles[m_state].getForeground().textSize = tSize;
+        m_styles[m_state].getForeground().font = tFont;
+        m_styles[m_state].getForeground().color = tColor;
+    }
+    
     if(m_text.length()) {
+        // #FIXME
+        blockPos = fgVec2f(m_bbox.pos.x, m_bbox.pos.y);
+        blockSize = fgVec2f(m_bbox.size.x, m_bbox.size.y);
         guiDrawer->appendText2D(m_textSize, blockPos, blockSize, m_styles[m_state], getTextStr());
+    }
+    
+    // PADDING DEBUG - INNER BORDER
+    {
+        blockPos = fgVec2f(m_bbox.pos.x, m_bbox.pos.y);
+        blockSize = fgVec2f(m_bbox.size.x, m_bbox.size.y);
+        blockPos.x += m_styles[m_state].getPadding().left;
+        blockPos.y += m_styles[m_state].getPadding().top;
+        blockSize.x -= m_styles[m_state].getPadding().right + m_styles[m_state].getPadding().left;
+        blockSize.y -= m_styles[m_state].getPadding().bottom + m_styles[m_state].getPadding().top;
+        guiDrawer->appendBorder2D(blockPos, blockSize, m_styles[0]);
+    }
+    // MARGIN DEBUG - OUTER BORDER
+    {
+        blockPos = fgVec2f(m_bbox.pos.x, m_bbox.pos.y);
+        blockSize = fgVec2f(m_bbox.size.x, m_bbox.size.y);
+        blockPos.x -= m_styles[m_state].getMargin().left;
+        blockPos.y -= m_styles[m_state].getMargin().top;
+        blockSize.x += m_styles[m_state].getMargin().right + m_styles[m_state].getMargin().left;
+        blockSize.y += m_styles[m_state].getMargin().bottom + m_styles[m_state].getMargin().top;
+        guiDrawer->appendBorder2D(blockPos, blockSize, m_styles[0]);
     }
 }
 
@@ -79,15 +121,28 @@ void fgGuiWidget::display(fgGfxLayer *guiLayer) {
  * 
  * @return 
  */
-fgBoundingBox3Df& fgGuiWidget::updateSize(void) {
-    fgGuiPadding &padding = m_styles[m_state].getPadding();
-    if(m_bbox.size.x < m_textSize.x) {
-        m_bbox.size.x = m_textSize.x + padding.left + padding.right;
+fgBoundingBox3Df fgGuiWidget::updateSize(void) {
+    fgGuiStyleContent &style = m_styles[m_state];
+    fgGuiPadding &padding = style.getPadding();
+    // Padding is inside of the border - it applies to the contents inside
+    // of the widget, in this case the lowest (most deep) content is initial
+    // text / label 
+    fgVector3f minSize;
+    minSize.x = m_textSize.x + padding.left + padding.right;
+    minSize.y = m_textSize.y + padding.top + padding.bottom;
+    if(m_bbox.size.x < minSize.x) {
+        m_bbox.size.x = minSize.x;
     }
-    if(m_bbox.size.y < m_textSize.y) {
-        m_bbox.size.y = m_textSize.y + padding.top + padding.bottom;
+    if(m_bbox.size.y < minSize.y) {
+        m_bbox.size.y = minSize.y;
     }
-    return m_bbox;
+    fgBoundingBox3Df positionAndSize = m_bbox;
+    positionAndSize.pos.x -= style.getMargin().left;
+    positionAndSize.pos.y -= style.getMargin().top;
+    positionAndSize.size.x += style.getMargin().right + style.getMargin().left;
+    positionAndSize.size.y += style.getMargin().bottom + style.getMargin().top;
+    //printf("updateSize: %.2f %.2f [%.2f %.2f]\n", m_bbox.pos.x, m_bbox.pos.y, m_bbox.size.x, m_bbox.size.y);
+    return positionAndSize;
 }
 
 /**
@@ -95,24 +150,28 @@ fgBoundingBox3Df& fgGuiWidget::updateSize(void) {
  * @param bounds
  * @return 
  */
-fgBoundingBox3Df& fgGuiWidget::updateSize(const fgBoundingBox3Df &bounds) {
+fgBoundingBox3Df fgGuiWidget::updateSize(const fgBoundingBox3Df &bounds) {
     fgGuiStyleContent &style = m_styles[m_state];
     fgGuiPositionStyle posStyle = style.getPosition().style;
     fgGuiSize &size = style.getSize();
     if(size.style == FG_GUI_SIZE_MAX) {
-        m_bbox.size.x = bounds.size.x;
-        m_bbox.size.y = bounds.size.y;
+        m_bbox.size.x = bounds.size.x - style.getMargin().left - style.getMargin().right;
+        m_bbox.size.y = bounds.size.y - style.getMargin().bottom - style.getMargin().top;
     } else if(size.style == FG_GUI_SIZE_PERCENTS) {
-        m_bbox.size.x = size.x / 100.0f * bounds.size.x;
-        m_bbox.size.y = size.y / 100.0f * bounds.size.y;
+        m_bbox.size.x = size.x / 100.0f * bounds.size.x - style.getMargin().left - style.getMargin().right;
+        m_bbox.size.y = size.y / 100.0f * bounds.size.y - style.getMargin().bottom - style.getMargin().top;
     }
-    updateSize();
+    fgBoundingBox3Df positionAndSize = updateSize();
 
     // Margin?
     if(posStyle == FG_GUI_POS_STATIC) {
         m_bbox.pos = bounds.pos;
-        style.applyPosAlign(style.getAlign(), m_bbox.pos, m_bbox.size, bounds.size);
-        style.applyPosAlign(style.getVAlign(), m_bbox.pos, m_bbox.size, bounds.size);
+        // Padding is inside of the border
+        // Margin is outside of the border
+        m_bbox.pos.x += style.getMargin().left;
+        m_bbox.pos.y += style.getMargin().top;
+        style.applyPosAlign(style.getAlign(), m_bbox.pos, m_bbox.size, bounds.pos, bounds.size, FG_FALSE);
+        style.applyPosAlign(style.getVAlign(), m_bbox.pos, m_bbox.size, bounds.pos, bounds.size, FG_FALSE);
     } else if(posStyle == FG_GUI_POS_FIXED) {
         // nothing to change
     } else if(posStyle == FG_GUI_POS_RELATIVE) {
@@ -133,7 +192,24 @@ fgBoundingBox3Df& fgGuiWidget::updateSize(const fgBoundingBox3Df &bounds) {
     if((bound_pos.Y + bound_size.Y) - (this.Position.Y + this.Size.Y) < this.EditableStyle.CurrentStyle.Spacing)
         positionAndSize.W += this.EditableStyle.CurrentStyle.Spacing/*- 0 * ((bound_pos.Y + bound_size.Y) - (this.pos.Y + this.size.Y))*/;
 #endif
-    return m_bbox;
+    
+
+//    if(m_bbox.pos.x - bounds.pos.x < style.getMargin().left + style.getMargin().right)
+//        m_bbox.pos.x += style.getMargin().left + style.getMargin().right - (m_bbox.pos.x - bounds.pos.x);
+//    if(m_bbox.pos.y - bounds.pos.y < style.getMargin().top + style.getMargin().bottom)
+//        m_bbox.pos.y += style.getMargin().top + style.getMargin().bottom - (m_bbox.pos.y - bounds.pos.y);
+    
+//    if((bounds.pos.x + bounds.size.x) - (m_bbox.pos.x + m_bbox.size.x) < style.getMargin().left+style.getMargin().right)
+        //positionAndSize.size.x += style.getMargin().left+style.getMargin().right;
+//    if((bounds.pos.y + bounds.size.y) - (m_bbox.pos.y + m_bbox.size.y) < style.getMargin().top+style.getMargin().bottom)
+      //  positionAndSize.size.y += style.getMargin().top+style.getMargin().bottom;
+    
+    positionAndSize.pos = m_bbox.pos;
+    positionAndSize.pos.x -= style.getMargin().left;
+    positionAndSize.pos.y -= style.getMargin().top;
+    //positionAndSize.size.x += style.getMargin().right + style.getMargin().left;
+    //positionAndSize.size.y += style.getMargin().bottom + style.getMargin().top;
+    return positionAndSize;
 }
 
 /*
@@ -183,7 +259,8 @@ int fgGuiWidget::updateState(const fgPointerData *pointerData) {
     if(m_state != lastState && m_styles[m_state].getPosition().style == FG_GUI_POS_RELATIVE) {
         if(FG_GUI_CHECK_FLOAT(m_styles[m_state].getPosition().left)) {
             m_relPos.x = m_styles[m_state].getPosition().left;
-        } if(FG_GUI_CHECK_FLOAT(m_styles[m_state].getPosition().top)) {
+        }
+        if(FG_GUI_CHECK_FLOAT(m_styles[m_state].getPosition().top)) {
             m_relPos.y = m_styles[m_state].getPosition().top;
         }
     }

@@ -43,7 +43,7 @@ public:
     virtual void setFlags(const std::string& flags);
     
     // 
-    virtual fgBoundingBox3Df& updateSize(void);
+    virtual fgBoundingBox3Df updateSize(void);
     // 
     virtual void refresh(void);
 

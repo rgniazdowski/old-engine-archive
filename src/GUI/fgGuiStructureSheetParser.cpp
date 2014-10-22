@@ -239,8 +239,14 @@ void fgGuiStructureSheetParser::endElement(const char *localName, fgXMLElement *
     if(m_isFailure)
         return;
     printf("GUI ELEMENT END: %s\n", localName);
-    if(!m_widgetStack.empty())
+    if(!m_widgetStack.empty()) {
+        fgGuiWidget *pWidget = m_widgetStack.top();
+        if(pWidget) {
+            // Is this really necessary?
+            pWidget->updateSize();
+        }
         m_widgetStack.pop();
+    }
 }
 
 /*

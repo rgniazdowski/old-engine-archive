@@ -34,7 +34,7 @@ void fgGuiLoader::setDefaults(void) {
 /*
  *
  */
-fgBoundingBox3Df& fgGuiLoader::updateSize(void) {
+fgBoundingBox3Df fgGuiLoader::updateSize(void) {
     return fgGuiWidget::updateSize();
 }
 

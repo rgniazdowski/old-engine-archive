@@ -327,9 +327,7 @@ fgBool fgGuiWidgetManager::addWidget(fgGuiWidgetHandle& wUniqueID, fgGuiWidget *
                                pFatherWidget->getTypeNameStr());
         }
     }
-    pWidget->setManaged(FG_TRUE);
-    if(pFatherWidget)
-        pFatherWidget->setManaged(FG_TRUE);
+    // Update and set widget style content
     if(m_styleMgr) {
         std::string styleName = pWidget->getStyleName();
         fgGuiStyle *style = m_styleMgr->get(styleName);
@@ -342,7 +340,15 @@ fgBool fgGuiWidgetManager::addWidget(fgGuiWidgetHandle& wUniqueID, fgGuiWidget *
                                    FG_GUI_WIDGET_STATE_COUNT,
                                    pWidget->getTypeName());
             pWidget->refresh();
+            pWidget->updateSize();
         }
+    }
+    // Mark widget as managed
+    pWidget->setManaged(FG_TRUE);
+    if(pFatherWidget) {
+        pFatherWidget->setManaged(FG_TRUE);
+        // Update size of the parent widget
+        pFatherWidget->updateSize();
     }
     return FG_TRUE;
 }

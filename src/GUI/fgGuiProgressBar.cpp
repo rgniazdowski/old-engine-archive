@@ -33,7 +33,7 @@ void fgGuiProgressBar::setDefaults(void) {
 /*
  *
  */
-fgBoundingBox3Df& fgGuiProgressBar::updateSize(void) {
+fgBoundingBox3Df fgGuiProgressBar::updateSize(void) {
     return fgGuiWidget::updateSize();
 }
 

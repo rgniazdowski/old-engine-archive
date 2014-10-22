@@ -34,6 +34,6 @@ void fgGuiLabel::setDefaults(void) {
 /*
  *
  */
-fgBoundingBox3Df& fgGuiLabel::updateSize(void) {
+fgBoundingBox3Df fgGuiLabel::updateSize(void) {
     return fgGuiWidget::updateSize();
 }

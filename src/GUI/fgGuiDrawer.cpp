@@ -133,7 +133,7 @@ void fgGuiDrawer::appendText2D(fgVec2f& outTextSize, const fgVec2f &blockPos, co
     fgGuiPadding &padding = style.getPadding();
     fgVector2f outPos = blockPos;
     outTextSize = fgFontDrawer::size(fontResProper, buf, fg.textSize);
-    style.applyPosAlign(style.getTextAlign(), outPos, outTextSize, blockSize);
+    style.applyPosAlign(style.getTextAlign(), outPos, outTextSize, blockPos, blockSize, FG_TRUE);
     m_fontDrawer->print(outPos.x, outPos.y, buf, fg.textSize);
 }
 
