@@ -78,7 +78,7 @@ public:
      * Checks if particle [idx] is INACTIVE FILLER
      */
     bool isDummy(int idx) const {
-        return m_particles[idx].size > float(INT_MAX) / 2.0f;
+        return m_particles[idx].bbox.size.x > float(INT_MAX) / 2.0f;
     }
     /**
      * Sets particle [idx] to INACTIVE FILLER
@@ -94,7 +94,7 @@ public:
             m_dummy_count++;
         }
 
-        m_particles[idx].size = float(INT_MAX);
+        m_particles[idx].bbox.size.x = float(INT_MAX);
 
         return true;
     }
@@ -116,22 +116,22 @@ public:
      * e. Then, m_current_index_idx ++ MODULO m_maxCount
      *
      */
-    virtual fgBool add(Particle* particle);
+    virtual fgBool add(fgParticle* particle);
 
     /**
      * Batch-add. Number of inserts is limited to maxCount()
      */
-    virtual fgBool addGroup(Particle *particles, int count);
+    virtual fgBool addGroup(fgParticle *particles, int count);
 
     /**
      * Adds random Particle, built upon values in [from->some_field, to->some_field]
      */
-    virtual fgBool addRandom(Particle *from, Particle *to);
+    virtual fgBool addRandom(fgParticle *from, fgParticle *to);
 
     /**
      * Batch-add with randomization
      */
-    fgBool addRandomGroup(Particle *from, Particle *to, int count);
+    fgBool addRandomGroup(fgParticle *from, fgParticle *to, int count);
 
 };
 

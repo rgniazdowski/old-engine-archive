@@ -260,8 +260,25 @@ void fgGuiMain::display(void) {
     mainMenu->getStyleContent().getPadding().left = 25 + 25 * fabs(sinf(r)) * toggle;
     mainMenu->getStyleContent().getPadding().bottom = 25 + 25 * fabs(sinf(r)) * toggle;
     //mainMenu->getRelativePos().y = 150.0f * sinf(r);
-    mainMenu->updateSize(m_screenBox);
+    mainMenu->updateBounds(m_screenBox);
     mainMenu->display(m_guiDrawer);
+    static float posx=0.0f, posy=0.0f;
+        const Uint8 *state = SDL_GetKeyboardState(NULL);
+    if(state[SDL_SCANCODE_LEFT] == SDL_PRESSED) {
+        posx -= 10.0f;
+    }
+    if(state[SDL_SCANCODE_RIGHT] == SDL_PRESSED) {
+        posx += 10.0f;
+    }
+    if(state[SDL_SCANCODE_UP] == SDL_PRESSED) {
+        posy -= 10.0f;
+    }
+    if(state[SDL_SCANCODE_DOWN] == SDL_PRESSED) {
+        posy += 10.0f;
+    }
+    m_widgetMgr->get("StartGameButton")->getRelativePos().x = posx;
+    m_widgetMgr->get("StartGameButton")->getRelativePos().y = posy;
+
 }
 
 /*

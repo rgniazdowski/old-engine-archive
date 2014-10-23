@@ -66,7 +66,7 @@ fgGfxSceneManager::~fgGfxSceneManager() {
         }
     }
     m_objDrawCalls.clear_optimised();
-    m_resourceMgr = NULL;
+    m_pResourceMgr = NULL;
 }
 
 /**
@@ -85,15 +85,7 @@ void fgGfxSceneManager::setResourceManager(fgManagerBase *pResourceMgr) {
     if(!pResourceMgr)
         return;
     if(pResourceMgr->getManagerType() == FG_MANAGER_RESOURCE)
-        m_resourceMgr = pResourceMgr;
-}
-
-/**
- * 
- * @return 
- */
-fgManagerBase *fgGfxSceneManager::getResourceManager(void) const {
-    return m_resourceMgr;
+        m_pResourceMgr = pResourceMgr;
 }
 
 /**
@@ -259,10 +251,10 @@ fgBool fgGfxSceneManager::addObject(fgGfxObjectHandle& oUniqueID,
     drawCall->setupFromModel(pObj->getModel());
     if(getShaderManager())
         drawCall->setShaderProgram(((fgGfxShaderManager *)getShaderManager())->getCurrentProgram());
-    if(m_resourceMgr) {
+    if(m_pResourceMgr) {
         fgGfxMaterial *pMainMaterial = pObj->getModel()->getMainMaterial();
         if(pMainMaterial) {
-            fgTextureResource *pTexRes = (fgTextureResource *)((fgResourceManager *)m_resourceMgr)->get(pMainMaterial->ambientTexHandle);
+            fgTextureResource *pTexRes = (fgTextureResource *)((fgResourceManager *)m_pResourceMgr)->get(pMainMaterial->ambientTexHandle);
             if(pTexRes)
                 drawCall->setTexture(pTexRes->getRefGfxID());
         }

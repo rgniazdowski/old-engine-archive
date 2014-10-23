@@ -33,7 +33,7 @@ public:
     FG_GUI_WIDGET_FACTORY_CREATE_FUNCTION(fgGuiTable);
 
     // 
-    virtual fgBoundingBox3Df updateSize(void);
+    virtual fgBoundingBox3Df updateBounds(void);
     // 
     virtual void refresh(void);
 

@@ -86,7 +86,7 @@ protected:
 
 protected:
     /// Array – serves as NORMAL or CIRCULAR buffer for Particle objects
-    fgVector<Particle> m_particles;
+    fgVector<fgParticle> m_particles;
     /// The color stream
     fgColor *m_colorStream;
     /// The vertices stream in 2D space (XY)
@@ -213,7 +213,7 @@ public:
     /**
      * Pointer to array storing the particle data
      */
-    Particle * particlesData(void) {
+    fgParticle * particlesData(void) {
         /// Marmalades IwArray<> should guaranteed to use continuous block of memory
         return &m_particles[0];
     }
@@ -419,28 +419,28 @@ public:
     /**
      * Add prepare particle
      */
-    virtual fgBool add(Particle* particle) = 0;
+    virtual fgBool add(fgParticle* particle) = 0;
 
     /**
      * Does the same as above, but multiple (count) times
      */
-    virtual fgBool addGroup(Particle *particles, int count) = 0;
+    virtual fgBool addGroup(fgParticle *particles, int count) = 0;
 
     /**
      * Adds ONE particle, with fields set to RANDOM on interval [from.the_field, to_the_field]
      */
-    virtual fgBool addRandom(Particle *from, Particle *to) = 0;
+    virtual fgBool addRandom(fgParticle *from, fgParticle *to) = 0;
 
     /**
      * Does the same as above, but multiple times
      */
-    virtual fgBool addRandomGroup(Particle *from, Particle *to, int count) = 0;
+    virtual fgBool addRandomGroup(fgParticle *from, fgParticle *to, int count) = 0;
 
     /**
      * Takes two particles, does randomization on [from->some_val, to->some_val]
      * and stores new random values to *from
      */
-    virtual void randomizeOnPair(Particle* from, Particle* to, Particle *result);
+    virtual void randomizeOnPair(fgParticle* from, fgParticle* to, fgParticle *result);
 };
 
 #endif

@@ -34,8 +34,8 @@ void fgGuiFrame::setDefaults(void) {
 /*
  *
  */
-fgBoundingBox3Df fgGuiFrame::updateSize(void) {
-    return fgGuiContainer::updateSize();
+fgBoundingBox3Df fgGuiFrame::updateBounds(void) {
+    return fgGuiContainer::updateBounds();
 }
 
 /*

@@ -18,15 +18,8 @@
 #include <cmath>
 #include <cstring>
 #include <cstdlib>
-#ifdef FG_USING_MARMALADE
-#include "s3eTimer.h"
-#endif
 
-template <>
-bool fgSingleton<fgParticleSystem>::instanceFlag = false;
 
-template <>
-fgParticleSystem *fgSingleton<fgParticleSystem>::instance = NULL;
 
 fgParticleSystem::fgParticleSystem() {
     /*
@@ -115,13 +108,6 @@ void fgParticleSystem::addParticleEffect(int effect_id, ParticleEffect *particle
     m_particleEffects[effect_id] = particle_effect;
 }
 
-/*
-void fgParticleSystem::addFlashEffect(int effect_id, FlashEffect *flash_effect)
-{
-        m_flashEffects[effect_id] = flash_effect;
-}
- */
-
 void fgParticleSystem::addSpecialEffect(int effect_id, SpecialEffect *special_effect) {
     m_specialEffects[effect_id] = special_effect;
 }
@@ -133,17 +119,6 @@ ParticleEffect *fgParticleSystem::particleEffect(int effect_id) {
     }
     return NULL;
 }
-
-/*
-FlashEffect *fgParticleSystem::flashEffect(int effect_id)
-{
-        std::map<int, FlashEffect *>::iterator pointer = m_flashEffects.find(effect_id);
-        if(pointer != m_flashEffects.end()) {
-                return pointer->second;
-        }
-        return NULL;
-}
- */
 
 SpecialEffect *fgParticleSystem::specialEffect(int effect_id) {
     std::map<int, SpecialEffect *>::iterator pointer = m_specialEffects.find(effect_id);
@@ -158,15 +133,6 @@ void fgParticleSystem::removeParticleEffect(int effect_id) {
     m_particleEffects[effect_id] = NULL;
     m_particleEffects.erase(effect_id);
 }
-
-/*
-void fgParticleSystem::removeFlashEffect(int effect_id)
-{
-        delete m_flashEffects[effect_id];
-        m_flashEffects[effect_id] = NULL;
-        m_flashEffects.erase(effect_id);
-}
- */
 
 void fgParticleSystem::removeSpecialEffect(int effect_id) {
     delete m_specialEffects[effect_id];
@@ -204,7 +170,6 @@ void fgParticleSystem::calculateGroup(int group_id) {
         iter != (*pointer).second.end();
         iter++) {
         calculateParticleEffect(*iter);
-        //calculateFlashEffect(*iter);
         calculateSpecialEffect(*iter);
     }
 }
@@ -217,7 +182,6 @@ void fgParticleSystem::drawGroup(int group_id) {
         iter != (*pointer).second.end();
         iter++) {
         drawParticleEffect(*iter);
-        //drawFlashEffect(*iter);
         drawSpecialEffect(*iter);
     }
 }
@@ -228,16 +192,6 @@ void fgParticleSystem::calculateParticleEffect(int effect_id) {
         (*pointer).second->calculate();
     }
 }
-
-/*
-void fgParticleSystem::calculateFlashEffect(int effect_id)
-{
-        std::map<int, FlashEffect *>::iterator pointer = m_flashEffects.find(effect_id);
-        if(pointer != m_flashEffects.end()) {
-                (*pointer).second->calculate();
-        }
-}
- */
 
 void fgParticleSystem::calculateSpecialEffect(int effect_id) {
     std::map<int, SpecialEffect *>::iterator pointer = m_specialEffects.find(effect_id);
@@ -252,16 +206,6 @@ void fgParticleSystem::drawParticleEffect(int effect_id) {
         (*pointer).second->draw();
     }
 }
-
-/*
-void fgParticleSystem::drawFlashEffect(int effect_id)
-{
-        std::map<int, FlashEffect *>::iterator pointer = m_flashEffects.find(effect_id);
-        if(pointer != m_flashEffects.end()) {
-                (*pointer).second->draw();
-        }
-}
- */
 
 void fgParticleSystem::drawSpecialEffect(int effect_id) {
     std::map<int, SpecialEffect *>::iterator pointer = m_specialEffects.find(effect_id);

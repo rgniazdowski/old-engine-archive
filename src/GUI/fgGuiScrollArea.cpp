@@ -34,8 +34,8 @@ void fgGuiScrollArea::setDefaults(void) {
 /*
  *
  */
-fgBoundingBox3Df fgGuiScrollArea::updateSize(void) {
-    return fgGuiContainer::updateSize();
+fgBoundingBox3Df fgGuiScrollArea::updateBounds(void) {
+    return fgGuiContainer::updateBounds();
 }
 
 /*

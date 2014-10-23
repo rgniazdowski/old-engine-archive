@@ -32,7 +32,7 @@
 [X] klasa do ladowania pliku XML - plus wspieranie parsowania (w jakis 
     latwiejszy i bardziej oczywisty sposob - opcjonalnie)
 
-[ ] ladowanie pliku Settings XML - Settings jako Resource File? nie (po 
+[X] ladowanie pliku Settings XML - Settings jako Resource File? nie (po 
     parsowaniu i tak text data jest zwalniane, pliki config nie sa resourcami)
 
 [ 50% / ? ] obsluga ladowania tekstury do karty graficznej - nakladka na OGL i GFX
@@ -43,13 +43,13 @@
 [ ] P4 - Stworzenie klasy Material w glownym podsystemie GFX (wazne - 
     tablice wierzcholkow/kolorow/koordynatow tekstur sa grupowane wg uzytego materialu)
 
-[ ] stworzenie podstawowego systemu rysowania 2D z buforowaniem i 
+[X] stworzenie podstawowego systemu rysowania 2D z buforowaniem i 
     dzieleniem buforow pod wzgledem uzytej tekstury (materialu)
 
-[0] - todo - przejscie na ogles2.x, teraz bedzie troche inaczej - 
+[X] - todo - przejscie na ogles2.x, teraz bedzie troche inaczej - 
     obsluga frustum i ortho view - podstawowa inicjalizacja + nakladki na OGL
 
-[ ] podstawowa wersja klasy Camera
+[X] podstawowa wersja klasy Camera
 
 [ ] poprawienie systemu particles - narazie nic nie bedzie dzialac i tak 
     - konieczny jest dzialajacy podsystem rysowania
@@ -58,10 +58,10 @@
 
 [ ] podstawowe wsparcie oswietlenia 
 
-[ ] podstawowa wersja GUI
-[ ] podstawowe definicje klas / obiektow GUI
-[ ] ladowanie pliku konfiguracyjnego Gui Structure
-[ ] ladowanie pliku konf. Gui Style Sheet
+[X] podstawowa wersja GUI
+[X] podstawowe definicje klas / obiektow GUI
+[X] ladowanie pliku konfiguracyjnego Gui Structure
+[X] ladowanie pliku konf. Gui Style Sheet
 [ ] podpiecie GUI pod resource manager
 [ ] Loading Screen z paskiem postepu (wymagana podstawowa wersja GUI)
 	[ ] Potrzebne przy tym jest rowniez wpelni dzialajacy podsystem Zasobow,

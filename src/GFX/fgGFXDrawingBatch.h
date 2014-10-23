@@ -35,35 +35,64 @@ private:
 
 protected:
     ///
-    fgManagerBase *m_shaderMgr;
+    fgManagerBase *m_pShaderMgr;
 
 protected:
-    //
+    /**
+     * 
+     * @return 
+     */
     inline batchPriorityQueue& getRefPriorityQueue(void) {
         return m_priorityBatch;
     }
-
-    //
+    /**
+     * 
+     * @return 
+     */
     inline drawCallVec& getRefDrawCalls(void) {
         return m_drawCalls;
     }
 
 public:
-    // 
+    /**
+     * 
+     */
     fgGfxDrawingBatch();
-    // 
+    /**
+     * 
+     */
     virtual ~fgGfxDrawingBatch();
 
-    //
-    fgManagerBase *getShaderManager(void) const;
-    //
-    virtual void setShaderManager(fgManagerBase *pShaderMgr);
+    /**
+     * 
+     * @return 
+     */
+    inline fgManagerBase *getShaderManager(void) const {
+        return m_pShaderMgr;
+    }
 
-    //
+    /**
+     * 
+     * @param pShaderMgr
+     */
+    virtual void setShaderManager(fgManagerBase *pShaderMgr);
+    
+    /**
+     * 
+     * @param index
+     * @return 
+     */
     fgGfxDrawCall *createDrawCall(int &index, fgGfxDrawCallType type = FG_GFX_DRAW_CALL_CUSTOM_ARRAY);
-    //
+    /**
+     * 
+     * @param index
+     * @return 
+     */
     fgGfxDrawCall *getDrawCall(int index);
-    //
+    /**
+     * 
+     * @return 
+     */
     fgGfxDrawCall *getLastDrawCall(void);
     // Appends the specified draw call to the drawing batch
     // The check flag is used for
@@ -75,48 +104,78 @@ public:
      *              if index was out of bounds (or the batch is empty)
      */
     fgGfxDrawCall *removeDrawCall(int index);
-    //
+    /**
+     * 
+     * @param drawCall
+     * @return 
+     */
     fgBool removeDrawCall(fgGfxDrawCall *drawCall);
-    //
+    /**
+     * 
+     * @param index
+     * @return 
+     */
     fgBool deleteDrawCall(int index);
-    //
+    /**
+     * 
+     * @param drawCall
+     * @return 
+     */
     fgBool deleteDrawCall(fgGfxDrawCall*& drawCall);
 
-    //
+    /**
+     * 
+     * @return 
+     */
     unsigned int count(void) const {
         return m_drawCalls.size();
     }
 
-    //
+    /**
+     * 
+     * @return 
+     */
     unsigned int size(void) const {
         return m_drawCalls.size();
     }
 
-    //
+    /**
+     * 
+     * @return 
+     */
     fgBool empty(void) const {
         return (fgBool)m_drawCalls.empty();
     }
 
-    // 
+    /**
+     * 
+     */
     virtual void flush(void);
-
-    //
+    /**
+     * 
+     */
     virtual void sortCalls(void);
-
-    //
+    /**
+     * 
+     */
     virtual void render(void);
 
-    //
+    /**
+     * 
+     * @param n
+     * @return 
+     */
     fgGfxDrawCall *operator [](size_t n) {
         return m_drawCalls[n];
     }
-
-    //
+    /**
+     * 
+     * @param n
+     * @return 
+     */
     const fgGfxDrawCall *operator [](size_t n) const {
         return m_drawCalls[n];
     }
-
-
 };
 
 #endif /* _FG_GFX_DRAWING_BATCH_H_ */

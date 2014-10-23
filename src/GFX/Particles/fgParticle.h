@@ -12,69 +12,102 @@
 
     #include "Math/fgMathLib.h"
     #include "GFX/fgGFXTypes.h"
+    #include "GFX/fgGFXBoundingBox.h"
 
-struct Particle {
-    // Aktualna pozycja
-    fgVector3f position;
-    // Predkosc (o ile czasteczka ma sie przesunac w ciagu jednej sekundy)
+/**
+ *
+ */
+struct fgParticle {
+    // Current position of the single particle in 3D space
+    // Current size of the particle
+    // Position and size is stored in special bounding box
+    fgBoundingBox3Df bbox;
+    // Velocity of a particle (per second)
     fgVector3f velocity;
-    // Aktualny obrot w 3 osiach, podany w stopniach
+    // Actual rotation in 3 angles, given in radians 
     fgVector3f rotation;
-    // Predkosc katowa rowniez podana w stopniach (o ile stopni czasteczka ma sie obrocic w ciagu jednej sekundy)
+    // Angular velocity (per second), given in radians
     fgVector3f angularVelocity;
-    // Zakladamy ze kazdy particle jest kwadratowy wiec potrzebna jest tylko jedna zmienna do przechowania rozmiaru
-    float size;
-    // Zycie danej czasteczki (gdy <=0 czasteczka jest usuwana)
+    // Current life of the particle (if equal to zero the particle will be deleted)
     float life;
-    // Predkosc zamierania danej czasteczki
-    float fade_speed;
-    // Time to live (milisekundy), ustawianie wartosci TTL zmienia wartosc life i fade_speed - ustawiac przez funkcje setTTL
+    // Speed of dying
+    float fadeSpeed;
+    // Time to live (milliseconds), setting the value for TTL changes the life and fade speed values - needs to be set via function
     int ttl;
-    // Czas stworzenia danej czasteczki
+    // Time of creation
     unsigned long int spawn_time;
-    // ID textury z tablicy tekstur
-    int texture_id;
-    // Kolor zapisany za pomoca float dla wiekszej precyzji przy przejsciach
-    fgColor color;
-    // Wskaznik do dodatkowych danych
+    // Color of the particle, stored as float for bigger precision
+    fgColor4f color;
+    // Pointer to additional data structure (if any is needed)
     void *data;
-    Particle() :
-    position(0.0f, 0.0f, 0.0f),
-    velocity(0.0f, 0.0f, 0.0f),
-    rotation(0.0f, 0.0f, 0.0f),
-    angularVelocity(0.0f, 0.0f, 0.0f),
-    size(0.0f),
-    life(0.0f),
-    fade_speed(0.0f),
-    ttl(0),
-    spawn_time(0),
-    texture_id(0),
-    data(NULL) {
- }
-    void setColor(fgColor inColor) {
+    
+    /**
+     * 
+     */
+    fgParticle() { }
+    
+    /**
+     * 
+     * @param inColor
+     */
+    void setColor(const fgColor4f inColor) {
         color = inColor;
     }
-    void setColor(unsigned char r, unsigned char g, unsigned char b, unsigned char a) {
+    
+    /**
+     * 
+     * @param r
+     * @param g
+     * @param b
+     * @param a
+     */
+    void setColor(const unsigned char r, const unsigned char g, const unsigned char b, const unsigned char a) {
         color.r = (float)r / 255.0f;
         color.g = (float)g / 255.0f;
         color.b = (float)b / 255.0f;
         color.a = (float)a / 255.0f;
     }
-    void setColor(float r, float g, float b, float a) {
+    
+    /**
+     * 
+     * @param r
+     * @param g
+     * @param b
+     * @param a
+     */
+    void setColor(const float r, const float g, const float b, const float a) {
         color.r = r;
         color.g = g;
         color.b = b;
         color.a = a;
     }
-    void setTTL(int ttl_value) {
-        ttl = ttl_value;
+    
+    /**
+     * 
+     * @param _ttl
+     */
+    void setTTL(const int _ttl) {
+        // _ttl stores the time to live in milliseconds
+        // It will be easier to just store TTL and every
+        // frame decrement the ttl with the DT time
+        // However life value adjusted for range <0,X> 
+        // is useful for some scaling effects
+        // This also means that fadeSpeed/life need
+        // to be stored as float values
+        ttl = _ttl;
         life = 1000.0f;
-        fade_speed = life / ttl_value * 1000.0f;
+        fadeSpeed = life / ttl * 1000.0f;
     }
-    void setLife(float life_value, float fade_speed_value) {
-        life = life_value;
-        fade_speed = fade_speed_value;
-        ttl = life / fade_speed;
+    
+    /**
+     * 
+     * @param _life
+     * @param _fadeSpeed
+     */
+    void setLife(const float _life, const float _fadeSpeed) {
+        life = _life;
+        fadeSpeed = _fadeSpeed;
+        ttl = life / fadeSpeed;
     }
 };
 

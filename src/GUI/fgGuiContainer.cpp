@@ -112,14 +112,14 @@ void fgGuiContainer::display(fgGfxLayer *guiLayer) {
  * 
  * @return 
  */
-fgBoundingBox3Df fgGuiContainer::updateSize(void) {
+fgBoundingBox3Df fgGuiContainer::updateBounds(void) {
     if(m_children.empty()) {
-        return fgGuiWidget::updateSize();
+        return fgGuiWidget::updateBounds();
     }
     // Update this container size (#FIXME)
     // This is just for reference, it will
     // set the minimal size
-    fgGuiWidget::updateSize();
+    fgGuiWidget::updateBounds();
     // Current container style 
     fgGuiStyleContent &containerStyle = m_styles[m_state];
     // Current container padding (inner border)
@@ -181,7 +181,7 @@ fgBoundingBox3Df fgGuiContainer::updateSize(void) {
             // and position with the main (container) innerBox constraint
             // #FIXME - this should be done before, relatively/fixed positioned
             // child widget can update bounds of the parent container differently
-            fgBoundingBox3Df childBox = child->updateSize(innerBox);
+            fgBoundingBox3Df childBox = child->updateBounds(innerBox);
             // Now if this widget is relatively position it can exceed the boundaries
             // of this container - so we need to merge this innerbox with childsbox
             //if(innerBox.pos.x > childBox.pos.x)
@@ -285,7 +285,7 @@ fgBoundingBox3Df fgGuiContainer::updateSize(void) {
         }
 
         // No need to update inner/outer area, just update position of the child
-        fgBoundingBox3Df childBox = child->updateSize(widgetBox);
+        fgBoundingBox3Df childBox = child->updateBounds(widgetBox);
 
         {
             fgVec2f blockPos = fgVec2f(widgetBox.pos.x, widgetBox.pos.y);

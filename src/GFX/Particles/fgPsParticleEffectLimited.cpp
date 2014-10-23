@@ -45,7 +45,7 @@ void ParticleEffectLimited::remove(int which) {
 /**
  * NORMAL MODE particle insert - can decline insertion
  */
-fgBool ParticleEffectLimited::add(Particle *particle) {
+fgBool ParticleEffectLimited::add(fgParticle *particle) {
     // Normal insert – only when there is free space
     if(int(m_particles.size()) >= maxCount())
         return FG_FALSE;
@@ -62,7 +62,7 @@ fgBool ParticleEffectLimited::add(Particle *particle) {
 /**
  * Batch-add
  */
-fgBool ParticleEffectLimited::addGroup(Particle *particles, int count) {
+fgBool ParticleEffectLimited::addGroup(fgParticle *particles, int count) {
     if(int(m_particles.size()) >= maxCount() || count <= 0)
         return FG_FALSE;
 
@@ -83,14 +83,14 @@ fgBool ParticleEffectLimited::addGroup(Particle *particles, int count) {
 /**
  * Adds random Particle, built upon values in [from->some_field, to->some_field]
  */
-fgBool ParticleEffectLimited::addRandom(Particle *from, Particle *to) {
+fgBool ParticleEffectLimited::addRandom(fgParticle *from, fgParticle *to) {
     if(int(m_particles.size()) >= maxCount())
         return FG_FALSE;
 
     if(from == NULL || to == NULL)
         return FG_FALSE;
 
-    Particle result;
+    fgParticle result;
 
     randomizeOnPair(from, to, &result);
 
@@ -100,7 +100,7 @@ fgBool ParticleEffectLimited::addRandom(Particle *from, Particle *to) {
 /**
  * Batch-add with randomization
  */
-fgBool ParticleEffectLimited::addRandomGroup(Particle *from, Particle *to, int count) {
+fgBool ParticleEffectLimited::addRandomGroup(fgParticle *from, fgParticle *to, int count) {
     if(int(m_particles.size()) >= maxCount() || count <= 0)
         return FG_FALSE;
     if(from == NULL || to == NULL)

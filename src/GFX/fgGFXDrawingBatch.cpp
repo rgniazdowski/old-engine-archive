@@ -14,7 +14,7 @@
  *
  */
 fgGfxDrawingBatch::fgGfxDrawingBatch() :
-m_shaderMgr(NULL) { }
+m_pShaderMgr(NULL) { }
 
 /*
  *
@@ -26,19 +26,12 @@ fgGfxDrawingBatch::~fgGfxDrawingBatch() {
 /*
  *
  */
-fgManagerBase *fgGfxDrawingBatch::getShaderManager(void) const {
-    return m_shaderMgr;
-}
-
-/*
- *
- */
 void fgGfxDrawingBatch::setShaderManager(fgManagerBase *pShaderMgr) {
     if(pShaderMgr) {
         if(pShaderMgr->getManagerType() != FG_MANAGER_GFX_SHADER)
             return;
     }
-    m_shaderMgr = pShaderMgr;
+    m_pShaderMgr = pShaderMgr;
 }
 
 /*
@@ -46,8 +39,8 @@ void fgGfxDrawingBatch::setShaderManager(fgManagerBase *pShaderMgr) {
  */
 fgGfxDrawCall *fgGfxDrawingBatch::createDrawCall(int &index, fgGfxDrawCallType type) {
     fgGfxDrawCall *drawCall = new fgGfxDrawCall();
-    if(m_shaderMgr) {
-        fgGfxShaderManager *shaderMgrPtr = (fgGfxShaderManager *)getShaderManager();
+    if(m_pShaderMgr) {
+        fgGfxShaderManager *shaderMgrPtr = static_cast<fgGfxShaderManager *>(getShaderManager());
         drawCall->setShaderProgram(shaderMgrPtr->getCurrentProgram());
     }
     drawCall->setDrawCallType(type);

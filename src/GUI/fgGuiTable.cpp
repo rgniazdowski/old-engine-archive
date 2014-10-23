@@ -33,8 +33,8 @@ void fgGuiTable::setDefaults(void) {
 /*
  *
  */
-fgBoundingBox3Df fgGuiTable::updateSize(void) {
-    return fgGuiContainer::updateSize();
+fgBoundingBox3Df fgGuiTable::updateBounds(void) {
+    return fgGuiContainer::updateBounds();
 }
 
 /*

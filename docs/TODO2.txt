@@ -3,3 +3,84 @@
 	[X] - oddzielna klasa helper - jak w javie - saxp reader
 
 
+[X] GFX - 3D Scene / Scene manager potrzebuje Resource Managera
+[ ] GFX/GUI/Other - uzywanie w seterach dla managerow (wszelkich) bazowego wskaznika
+	[ ] dodanie funkcji template zeby od razu zwracac poprawny wskaznic 
+
+[ ] bazowy interfejse (base class) zwraca typ + type traits (podobnie jak widget - wydzielic to)
+
+
+
+*** Mozliwe ze warto dodac wiecej bazowych klas do widgeta
+	GuiStyleable
+	GuiDrawable
+	GuiTriggable ?
+
+
+[ ] - Event - potrzeba oddzielnego obiektu/klasy/whatever sluzacego tylko
+		do rzucania / sygnalowania eventow (fronted dla event managera)
+			- chodzi o utworzenie jednokierunkowej relacji do event managera
+
+[ ] - Event - ujednolicic uzycie PointerReceivera, zmiana nazwy
+		- klasa ta bedzie sluzyc do uzyskiwania info na temat akcji wejscia
+			- myszka / dotyk
+			- klawiatura
+			- joystick
+			- game pad
+			- zewnetrzny program ? cos jak kontroler przez bluetooth
+
+[ ] - Event - obsluga klawiszy
+
+[ ] - Event - potrzeba innego standardu dla ArgumentList, mozliwe ze ThrownEvent
+				moze wykrywac jaki typ argumentu przekazac do thrown event
+				- argument list
+				- NULL
+				- jeden *void
+				- dwa *void (system data, user data)
+
+				- potrzeba jakiegos rodzaju standardu, chodzi o latwiejsze
+				  rzucanie zdarzen, na chwile obecna trzeba alokowac dwie struktury
+				  - jedna jest dla argument list
+				  - druga w zaleznosci od uzycia, zwykle fgEventBase *
+
+
+[ ] - Event - podpiecie w jakis standardowy sposob resource managera do
+			eventmanagera - resource manager bedzie wyrzucac odpowiedni event
+			za kazdym razem jak jest stworzony resource (add/create/release/dispose/delete)
+			- Moze to stanowczo spowolnic prace, trzeba innego rodzaju
+			  standardowy parametr dla callbacka, oraz sprawnie go wykrywac
+
+[ ] - Event - w podobny sposob mozna sygnalizowac stworzenie tekstury i automatycznie
+			uploadowac ja do systemu GFX
+
+[ ] - Najwiekszy problem aktualnie z event managerem jest argument list 
+		mozliwe ze to nie zdalo egzaminu, trzeba alokowac ta strukture, ustawiac
+		przekazywac wskaznic a gdy dane wywolanie sie zakonczy - zwalniac ta strukture
+
+		- ciezko powiedziec czy jest to szybsze, moze szybciej by bylo po prostu
+		rzucac event i podawac wskaznic bezposrednio do wytworzonej struktury
+		
+
+[ ] - Event - przez event managera mozna rozniez sygnalizowac potrzebe odtworzenia
+			jakiegos dzwieku - sound play request - podaje sie tylko nazwe 
+			- jednak to by bylo retarded, przed zagraniem dzwieku trzeba
+			  utworzyc jakas strukture itp itd
+
+			  - Mozna utworzyc zewnetrzna klase, zamiast uzywac SFXManagera zeby
+			  odtworzyc zwykly dzwiek, mozna wykorzystac SFXPlayer czy cos
+			  SFX player potrzebuje po prostu EventManagera lub interfejsu do niego
+
+[ ] - GUI - more gui definitions
+
+[ ] - GUI - gui callbacks
+
+[ ] - GUI - gui effect
+
+
+[ ] - Particles - load particle config file
+
+[ ] - Particles - reinforce/refactor particle system
+
+[ ] - Particles - use drawing batch for particles
+
+

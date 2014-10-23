@@ -214,6 +214,7 @@ void fgGuiStructureSheetParser::startElement(const char *localName, fgXMLElement
             }
         }
     }
+    // Adding widget to the manager updates it's style
     if(!m_widgetMgr->addWidget(pWidget->getRefHandle(), pWidget, pFatherWidget)) {
         if(pFatherWidget && pFatherContainer) {
             pFatherContainer->removeChild(pWidget);
@@ -243,7 +244,7 @@ void fgGuiStructureSheetParser::endElement(const char *localName, fgXMLElement *
         fgGuiWidget *pWidget = m_widgetStack.top();
         if(pWidget) {
             // Is this really necessary?
-            pWidget->updateSize();
+            pWidget->updateBounds();
         }
         m_widgetStack.pop();
     }

@@ -31,105 +31,228 @@ public:
     typedef objectVec::iterator objectVecItor;
 
 public:
-    //
+    /**
+     * 
+     */
     fgGfxSceneManager();
-    //
+    /**
+     * 
+     */
     virtual ~fgGfxSceneManager();
 
-    //
+    /**
+     * 
+     * @param pShaderMgr
+     */
     virtual void setShaderManager(fgManagerBase *pShaderMgr);
 
     // Set internal pointer to the main resource manager
     void setResourceManager(fgManagerBase *pResourceMgr);
+    
     // Get internal pointer to the main resource manager
-    fgManagerBase *getResourceManager(void) const;
+    fgManagerBase *getResourceManager(void) const {
+        return m_pResourceMgr;
+    }
 
-    //
+    /**
+     * 
+     * @return 
+     */
     virtual int getZIndex(void) const {
         return m_zIndex;
     }
-
-    //
+    /**
+     * 
+     * @param zIndex
+     */
     virtual void setZIndex(const int zIndex) {
         m_zIndex = zIndex;
     }
-
-    //
+    /**
+     * 
+     */
     virtual void upZIndex(void) {
         m_zIndex++;
     }
-
-    //
+    /**
+     * 
+     */
     virtual void downZIndex(void) {
         m_zIndex--;
     }
 
-    //
+    /**
+     * 
+     */
     virtual void flush(void);
-
-    //
+    /**
+     * 
+     */
     virtual void sortCalls(void);
-
-    //
+    /**
+     * 
+     */
     virtual void render(void);
 
-    // 
+    /**
+     * 
+     * @param oUniqueID
+     * @param pObj
+     * @param oFatherObj
+     * @return 
+     */
     virtual fgBool addObject(fgGfxObjectHandle& oUniqueID, fgGfxObject *pObj, fgGfxObject *oFatherObj = NULL);
-    //
+    /**
+     * 
+     * @param oUniqueID
+     * @param pObj
+     * @param oFatherUniqueID
+     * @return 
+     */
     virtual fgBool addObject(fgGfxObjectHandle& oUniqueID, fgGfxObject *pObj, const fgGfxObjectHandle& oFatherUniqueID);
-    //
+    /**
+     * 
+     * @param oUniqueID
+     * @param pObj
+     * @param oFatherNameTag
+     * @return 
+     */
     virtual fgBool addObject(fgGfxObjectHandle& oUniqueID, fgGfxObject *pObj, const std::string& oFatherNameTag);
-    //
+    /**
+     * 
+     * @param oUniqueID
+     * @param pObj
+     * @param oFatherNameTag
+     * @return 
+     */
     virtual fgBool addObject(fgGfxObjectHandle& oUniqueID, fgGfxObject *pObj, const char* oFatherNameTag);
 
-    // 
+    /**
+     * 
+     * @param pObj
+     * @return 
+     */
     virtual fgBool remove(fgGfxObject *pObj);
-    // 
+    /**
+     * 
+     * @param oUniqueID
+     * @return 
+     */
     virtual fgBool remove(const fgGfxObjectHandle& oUniqueID);
-    // 
+    /**
+     * 
+     * @param nameTag
+     * @return 
+     */
     virtual fgBool remove(const std::string& nameTag);
-    //
+    /**
+     * 
+     * @param nameTag
+     * @return 
+     */
     virtual fgBool remove(const char *nameTag);
 
-    // 
+    /**
+     * 
+     * @param pObj
+     * @return 
+     */
     virtual fgBool destroyObject(fgGfxObject*& pObj);
-    // 
+    /**
+     * 
+     * @param oUniqueID
+     * @return 
+     */
     virtual fgBool destroyObject(const fgGfxObjectHandle& oUniqueID);
-    // 
+    /**
+     * 
+     * @param nameTag
+     * @return 
+     */
     virtual fgBool destroyObject(const std::string& nameTag);
-    // 
+    /**
+     * 
+     * @param nameTag
+     * @return 
+     */
     virtual fgBool destroyObject(const char *nameTag);
 
-    // 
+    /**
+     * 
+     * @param oUniqueID
+     * @return 
+     */ 
     virtual fgGfxObject* get(const fgGfxObjectHandle& oUniqueID);
-    // 
+    /**
+     * 
+     * @param nameTag
+     * @return 
+     */ 
     virtual fgGfxObject* get(const std::string& nameTag);
-    // 
+    /**
+     * 
+     * @param nameTag
+     * @return 
+     */
     virtual fgGfxObject* get(const char *nameTag);
 
-    // 
+    /**
+     * 
+     * @param pObj
+     * @return 
+     */
     virtual fgBool isManaged(const fgGfxObject *pObj);
-    // 
+    /**
+     * 
+     * @param oUniqueID
+     * @return 
+     */
     virtual fgBool isManaged(const fgGfxObjectHandle& oUniqueID);
-    // 
+    /**
+     * 
+     * @param nameTag
+     * @return 
+     */ 
     virtual fgBool isManaged(const std::string& nameTag);
-    // 
+    /**
+     * 
+     * @param nameTag
+     * @return 
+     */ 
     virtual fgBool isManaged(const char *nameTag);
 
-    //
+    /**
+     * 
+     * @param index
+     * @return 
+     */
     inline fgGfxObject *get(const int index) {
         if(index < 0 || index >= (int)fgHandleManager::getRefDataVector().size())
             return NULL;
         return fgHandleManager::getRefDataVector()[index];
     }
 
-    // 
+    /**
+     * 
+     */
     fgGfxDrawCall *getDrawCall(const fgGfxObject* pObj);
-    // 
+    /**
+     * 
+     * @param oUniqueID
+     * @return 
+     */
     fgGfxDrawCall *getDrawCall(const fgGfxObjectHandle& oUniqueID);
-    // 
+    /**
+     * 
+     * @param nameTag
+     * @return 
+     */
     fgGfxDrawCall *getDrawCall(const std::string& nameTag);
-    // 
+    /**
+     * 
+     * @param nameTag
+     * @return 
+     */
     fgGfxDrawCall *getDrawCall(const char *nameTag);
 
     // This is special array like operator
@@ -157,20 +280,26 @@ public:
     unsigned int size(void) const {
         return fgHandleManager::getRefDataVector().size();
     }
-
-    //
+    /**
+     * 
+     */
     inline fgGfxCameraAnimation *getCamera(void) {
         return &m_camera;
     }
-
-    //
+    /**
+     * 
+     * @param pCamera
+     */
     inline void applyCamera(const fgGfxCamera* pCamera) {
         m_camera.setEye(pCamera->getRefEye());
         m_camera.setCenter(pCamera->getRefCenter());
         m_camera.setUp(pCamera->getRefUp());
     }
 
-    //
+    /**
+     * 
+     * @return 
+     */
     inline fgGfxMVPMatrix *getMVP(void) {
         return &m_MVP;
     }
@@ -184,9 +313,8 @@ private:
     /// to overload more methods from drawing batch.... P3
     /// #FIXME - redundancy 
     drawCallVec m_objDrawCalls;
-    /// ?
-    fgManagerBase *m_resourceMgr;
+    /// Pointer to the external resource manager - dont know if this is necessary
+    fgManagerBase *m_pResourceMgr;
 };
-
 
 #endif /* _FG_GFX_SCENE_MANAGER_H_ */

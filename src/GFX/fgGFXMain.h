@@ -41,7 +41,7 @@ public:
     virtual ~fgGfxMain();
 
     // Sets the pointer to the external resource manager
-    fgBool setResourceManager(fgManagerBase *resourceManager);
+    fgBool setResourceManager(fgManagerBase *pResourceManager);
 
     // Init the whole GFX subsystem - set the screen
     fgBool initGFX(void);
@@ -81,7 +81,7 @@ private:
     /// Texture manager for GFX upload/reload - works with Resource manager
     fgTextureManager *m_textureMgr;
     /// Pointer to the resource manager - defined and managed outside
-    fgManagerBase *m_resourceMgr;
+    fgManagerBase *m_pResourceMgr;
     /// Main GFX shader manager
     fgGfxShaderManager *m_shaderMgr;
     /// Main GFX OS specific window

@@ -50,6 +50,7 @@
             <word>aos</word>
             <word>app</word>
             <word>attrib</word>
+            <word>Autodesk</word>
             <word>bbox</word>
             <word>bitplanes</word>
             <word>bool</word>
@@ -62,6 +63,7 @@
             <word>Cornsilk</word>
             <word>dfactor</word>
             <word>drawcall</word>
+            <word>ds</word>
             <word>eg</word>
             <word>enum</word>
             <word>foreach</word>
@@ -80,6 +82,8 @@
             <word>int</word>
             <word>itor</word>
             <word>ivec</word>
+            <word>Lightwave</word>
+            <word>metadata</word>
             <word>multitextured</word>
             <word>multitexturing</word>
             <word>obj</word>
@@ -95,6 +99,7 @@
             <word>printf</word>
             <word>Radoslaw</word>
             <word>rgb</word>
+            <word>rgba</word>
             <word>s'</word>
             <word>sfactor</word>
             <word>shaders</word>
@@ -103,6 +108,7 @@
             <word>struct</word>
             <word>structs</word>
             <word>tga</word>
+            <word>ttl</word>
             <word>ushort</word>
             <word>uv</word>
             <word>valign</word>

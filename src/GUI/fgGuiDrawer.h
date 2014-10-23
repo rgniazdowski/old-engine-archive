@@ -18,12 +18,12 @@
         #include "GFX/fgGFXDrawingBatch.h"
     #endif 
 
-    #ifndef _FG_RESOURCE_MANAGER_H_
-        #include "Resource/fgResourceManager.h"
-    #endif 
-
     #ifndef _FG_GUI_STYLE_CONTENT_H_
         #include "fgGuiStyleContent.h"
+    #endif
+
+    #ifndef _FG_MANAGER_BASE_H_
+        #include "fgManagerBase.h"
     #endif
 
 /*
@@ -33,12 +33,12 @@ class fgGuiDrawer : protected fgGfxDrawingBatch {
     friend class fgGuiMain;
     friend class fgGuiWidgetManager;
 private:
-    ///
+    /// Internal font drawer - this is separate drawing batch
     fgFontDrawer *m_fontDrawer;
-    ///
-    fgResourceManager *m_resourceMgr;
-    ///
-    fgColor4f m_color;
+    /// Pointer to the external resource manager
+    /// Required for fast font/texture lookup
+    /// #FIXME - should this be replaced with texture manager?
+    fgManagerBase *m_pResourceMgr;
 
 public:
     //
@@ -47,62 +47,98 @@ public:
     virtual ~fgGuiDrawer();
 
 public:
-    //
+    /**
+     * 
+     * @return 
+     */
     fgFontDrawer *getFontDrawer(void) const;
-    //
-    fgResourceManager *getResourceManager(void) const;
-    //
-    virtual void setResourceManager(fgResourceManager *resourceMgr);
+    
+    /**
+     * 
+     * @return 
+     */
+    fgManagerBase *getResourceManager(void) const {
+        return m_pResourceMgr;
+    }
+    
+    /**
+     * 
+     * @param pResourceMgr
+     */
+    virtual void setResourceManager(fgManagerBase *pResourceMgr);
+    /**
+     * 
+     * @param pShaderMgr
+     */
+    virtual void setShaderManager(fgManagerBase *pShaderMgr);
 
-    //
-    virtual void setShaderManager(fgManagerBase *shaderMgr);
-
-    //
+    /**
+     * 
+     * @return 
+     */
     virtual int getZIndex(void) const {
         return m_zIndex;
     }
-
-    //
+    /**
+     * 
+     * @param zIndex
+     */
     virtual void setZIndex(const int zIndex) {
         m_zIndex = zIndex;
         m_fontDrawer->setZIndex(zIndex);
     }
-
-    //
+    /**
+     * 
+     */
     virtual void upZIndex(void) {
         m_zIndex++;
         m_fontDrawer->setZIndex(m_zIndex);
     }
-
-    //
+    /**
+     * 
+     */
     virtual void downZIndex(void) {
         m_zIndex--;
         m_fontDrawer->setZIndex(m_zIndex);
     }
 
-    // Set active color for the next data
-    virtual void setColor(const fgColor3f& color);
-    // Set active color for the next data
-    virtual void setColor(const fgColor4f& color);
-    // This will reset used color
-    virtual void resetColor(void);
-
-    //
+    /**
+     * 
+     */
     virtual void flush(void);
-
-    //
+    /**
+     * 
+     */
     virtual void sortCalls(void);
-
-    //
+    /**
+     * 
+     */
     virtual void render(void);
 
-    //
+    /**
+     * 
+     * @param outTextSize
+     * @param blockPos
+     * @param blockSize
+     * @param style
+     * @param fmt
+     */
     virtual void appendText2D(fgVec2f& outTextSize, const fgVec2f &blockPos, const fgVec2f &blockSize, fgGuiStyleContent& style, const char *fmt, ...);
 
-    //
+    /**
+     * 
+     * @param pos
+     * @param size
+     * @param style
+     */
     virtual void appendBackground2D(const fgVec2f &pos, const fgVec2f &size, fgGuiStyleContent& style);
 
-    //
+    /**
+     * 
+     * @param pos
+     * @param size
+     * @param style
+     */
     virtual void appendBorder2D(const fgVec2f &pos, const fgVec2f &size, fgGuiStyleContent& style);
 };
 

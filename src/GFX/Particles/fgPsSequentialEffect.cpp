@@ -68,7 +68,7 @@ int SequentialEffect::addSequence(float x, float y, float z, float size, int cou
         return -1;
 
     idx = m_countData;
-    Particle particle;
+    fgParticle particle;
 
     m_countData++;
 
@@ -86,29 +86,34 @@ int SequentialEffect::addSequence(float x, float y, float z, float size, int cou
     particle.velocity.x = 0.0f;
     particle.velocity.y = 0.0f;
     particle.velocity.z = 0.0f;
-    particle.fade_speed = 0.0f;
+    particle.fadeSpeed = 0.0f;
     particle.life = size;
-    particle.size = size;
+    //particle.size = size;
+    particle.bbox.size.x = size;
+    particle.bbox.size.y = size;
+    particle.bbox.size.z = size;
     particle.rotation.x = 0.0f;
     particle.rotation.y = 0.0f;
     particle.rotation.z = 0.0f;
     particle.angularVelocity.x = 0.0f;
     particle.angularVelocity.y = 0.0f;
     particle.angularVelocity.z = 0.0f;
-    particle.position.x = x;
-    particle.position.y = y;
-    particle.position.z = z;
-    particle.texture_id = 0;
+    particle.bbox.pos.x = x;
+    particle.bbox.pos.y = y;
+    particle.bbox.pos.z = z;
+    //particle.texture_id = 0;
 
     ParticleEffectLimited::add(&particle);
     return idx;
 }
 
 void SequentialEffect::calculate(void) {
-    Particle *particle;
+    return;
+    fgParticle *particle;
     for(int i = 0; i < m_countData; i++) {
         particle = &(particlesData()[i]);
         if((int64_t)FG_HardwareState->getTS() - m_data[i].time_last_frame >= m_data[i].frame_duration) {
+#if 0
             particle->texture_id++;
             if(particle->texture_id >= m_data[i].count_frames) {
                 if(m_data[i].loop == false) {
@@ -118,6 +123,7 @@ void SequentialEffect::calculate(void) {
                     m_data[i].delete_mark = false;
                 }
             }
+#endif
             m_data[i].time_last_frame = FG_HardwareState->getTS();
         }
         if(m_data[i].delete_mark) {

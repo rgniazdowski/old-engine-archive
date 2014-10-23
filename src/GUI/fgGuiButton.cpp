@@ -35,8 +35,8 @@ void fgGuiButton::setDefaults(void) {
 /*
  *
  */
-fgBoundingBox3Df fgGuiButton::updateSize(void) {
-    return fgGuiWidget::updateSize();
+fgBoundingBox3Df fgGuiButton::updateBounds(void) {
+    return fgGuiWidget::updateBounds();
 }
 
 /*

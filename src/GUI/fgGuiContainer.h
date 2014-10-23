@@ -82,7 +82,7 @@ public:
     virtual void display(fgGfxLayer *guiLayer);
 
     // 
-    virtual fgBoundingBox3Df updateSize(void);
+    virtual fgBoundingBox3Df updateBounds(void);
     // 
     virtual void refresh(void);
 

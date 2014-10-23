@@ -12,10 +12,9 @@
  *  Created on: 17-06-2012
  *      Author: Vigilant
  */
+
 #ifndef _FG_PARTICLE_SYSTEM_H_
     #define _FG_PARTICLE_SYSTEM_H_
-
-    #include "fgSingleton.h"
 
     #include <map>
 
@@ -49,8 +48,7 @@
 /**
  *
  */
-class fgParticleSystem : public fgSingleton<fgParticleSystem> {
-    friend class fgSingleton<fgParticleSystem>;
+class fgParticleSystem {
 
 private:
     std::map<int, ParticleEffect *> m_particleEffects;
@@ -58,21 +56,18 @@ private:
     std::map<int, SpecialEffect *> m_specialEffects;
     std::map<int, fgVector<int> > m_effectGroups;
 
-protected:
+public:
     fgParticleSystem();
-    ~fgParticleSystem();
+    virtual ~fgParticleSystem();
 
 public:
     void addParticleEffect(int effect_id, ParticleEffect *particle_effect);
-    //void addFlashEffect(int effect_id, FlashEffect *flash_effect);
     void addSpecialEffect(int effect_id, SpecialEffect *special_effect);
 
     ParticleEffect *particleEffect(int effect_id);
-    //FlashEffect *flashEffect(int effect_id);
     SpecialEffect *specialEffect(int effect_id);
 
     void removeParticleEffect(int effect_id);
-    //void removeFlashEffect(int effect_id);
     void removeSpecialEffect(int effect_id);
 
     void addEffectToGroup(int group_id, int effect_id);
@@ -82,29 +77,13 @@ public:
     void drawGroup(int group_id);
 
     void calculateParticleEffect(int effect_id);
-    //void calculateFlashEffect(int effect_id);
     void calculateSpecialEffect(int effect_id);
 
     void drawParticleEffect(int effect_id);
-    //void drawFlashEffect(int effect_id);
     void drawSpecialEffect(int effect_id);
 
     void clearGroups();
     void clearAll();
 };
-
-    #define PARTICLE(EFFECT_ID)					((ParticleEffect *)fgParticleSystem::getInstance()->particleEffect(EFFECT_ID))
-//#define EXPLOSION(EFFECT_ID)				((ExplosionEffect *)fgParticleSystem::getInstance()->particleEffect(EFFECT_ID))
-//#define ELLIPSE_FLAME(EFFECT_ID)			((EllipseFlameEffect*)fgParticleSystem::getInstance()->particleEffect(EFFECT_ID))
-    #define SEQUENCE(EFFECT_ID)					((SequentialEffect *)fgParticleSystem::getInstance()->particleEffect(EFFECT_ID))
-//#define MENU_BACKGROUND(EFFECT_ID)			((MenuBackgroundEffect *)fgParticleSystem::getInstance()->particleEffect(EFFECT_ID))
-
-//#define FLASH(EFFECT_ID)					((FlashEffect *)fgParticleSystem::getInstance()->flashEffect(EFFECT_ID))
-//#define SCREEN_FLASH(EFFECT_ID)				((ScreenFlashEffect *)fgParticleSystem::getInstance()->flashEffect(EFFECT_ID))
-
-    #define SPECIAL(EFFECT_ID)					((SpecialEffect *)fgParticleSystem::getInstance()->specialEffect(EFFECT_ID))
-    #define EXPLOSION(EFFECT_ID)				((ExplosionEffect *)fgParticleSystem::getInstance()->specialEffect(EFFECT_ID))
-
-    #define FG_ParticleSystem fgParticleSystem::getInstance()
 
 #endif /* PARTICLESYSTEM_H_ */

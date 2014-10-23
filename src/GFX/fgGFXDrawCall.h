@@ -112,9 +112,14 @@ private:
     fgBool m_isManaged;
 
 private:
-    //
+    /**
+     * 
+     * @param attribMask
+     */
     void setupVertexData(fgGFXuint attribMask);
-    //
+    /**
+     * 
+     */
     void applyAttributeData(void);
 
 protected:
@@ -122,24 +127,48 @@ protected:
     void setManaged(const fgBool toggle = FG_TRUE);
 
 public:
-    // Default constructor
+    /**
+     * Default constructor
+     * @param type
+     * @param attribMask
+     */
     fgGfxDrawCall(const fgGfxDrawCallType type = FG_GFX_DRAW_CALL_CUSTOM_ARRAY,
                   const fgGFXuint attribMask = FG_GFX_POSITION_BIT | FG_GFX_UVS_BIT);
-    // Default destructor for the draw call object
+    /**
+     * Default destructor for the draw call object
+     */
     virtual ~fgGfxDrawCall();
 
-    //
+    /**
+     * 
+     * @param pModelRes
+     */
     void setupFromModel(const fgGfxModelResource* pModelRes);
-    //
+    /**
+     * 
+     * @param pMesh
+     */
     void setupFromMesh(const fgGfxMeshBase* pMesh);
-    //
+    /**
+     * 
+     * @param pGfxObject
+     */
     void setupFromObject(const void *pGfxObject) { }
 
-    //
+    /**
+     * 
+     * @return 
+     */
     fgMatrix4f& getModelMatrix(void);
-    //
+    /**
+     * 
+     * @return 
+     */
     const fgMatrix4f& getModelMatrix(void) const;
-    //
+    /**
+     * 
+     * @param modelMat
+     */
     void setModelMatrix(const fgMatrix4f& modelMat);
 
     // Returns the current Z index

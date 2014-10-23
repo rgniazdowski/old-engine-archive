@@ -2,7 +2,7 @@
 
 	<Menu name="MainMenu" ignoreState="true" flags="packvertical right mainmenu">
 		<!--		<Container name="MainContainer"> -->
-			<Button name="StartGameButton" size="200,50">START GAME </Button>
+			<Button name="StartGameButton" size="200,50" style="RelButton">START GAME </Button>
 			<Button name="HighscoresButton" size="250,100">HIGH SCORES</Button>
 				
 			<Container name="TestContainer" ignoreState="true" style="FrameStyle" flags="packhorizontal center">

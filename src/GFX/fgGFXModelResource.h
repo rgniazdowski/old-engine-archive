@@ -16,7 +16,7 @@
     #endif
     #include "Resource/fgResource.h"
 
-// invalid / not selected file format
+// Invalid / not selected file format
     #define FG_GFX_MODEL_RES_INVALID	0x000
 // Custom 3d model file format
     #define	FG_GFX_MODEL_RES_CUSTOM		0x0F0
@@ -52,13 +52,23 @@ public:
     typedef modelShapes::iterator modelShapesItor;
 
 public:
-    //
+    /**
+     * 
+     */
     fgGfxModelResource();
-    //
+    /**
+     * 
+     * @param path
+     */
     fgGfxModelResource(const char *path);
-    //
+    /**
+     * 
+     * @param path
+     */
     fgGfxModelResource(std::string& path);
-    //
+    /**
+     * 
+     */
     virtual ~fgGfxModelResource() {
         destroy();
     }
@@ -66,88 +76,150 @@ public:
     FG_RESOURCE_FACTORY_CREATE_FUNCTION(fgGfxModelResource)
 
 protected:
-    // Clears the class data, this actually does not free allocated memory,
-    // just resets base class attributes
+    /**
+     * Clears the class data, this actually does not free allocated memory,
+     * just resets base class attributes
+     */
     virtual void clear(void);
 
 public:
-    // Create function loads/interprets data from file in ROM and place it in RAM memory.
+    /**
+     * Create function loads/interprets data from file in ROM and place it in RAM memory.
+     * @return 
+     */
     virtual fgBool create(void);
-
-    // Destroy all loaded data including additional metadata (called with deconstructor)
+    /**
+     * Destroy all loaded data including additional metadata (called with destructor)
+     */
     virtual void destroy(void);
-
-    // Reloads any data, recreates the resource (refresh)
+    /**
+     * Reloads any data, recreates the resource (refresh)
+     * @return 
+     */
     virtual fgBool recreate(void);
-
-    // Dispose completely of the all loaded data, free all memory
+    /**
+     * Dispose completely of the all loaded data, free all memory
+     */
     virtual void dispose(void);
-
-    // Check if resource is disposed (not loaded yet or disposed after)
+    /**
+     * Checks if resource is disposed (not loaded yet or disposed after)
+     * @return  FG_TRUE if resource is disposed, FG_FALSE otherwise
+     */
     virtual fgBool isDisposed(void) const;
 
 protected:
-    // Determine the model type identifier from the file extension
+    /**
+     * Determines the model type identifier from the file extension
+     * @param path  Path to check for file extension
+     * @return      FG_TRUE if the path pointed to valid 3d model file,
+     *              FG_FALSE otherwise
+     */
     fgBool setModelTypeFromFilePath(std::string &path);
-
-    // Determine the model type identifier from the file extension
+    /**
+     * Determines the model type identifier from the file extension,
+     * it uses the currently set path for the resource (based on the quality)
+     * @return      FG_TRUE if the path pointed to valid 3d model file,
+     *              FG_FALSE otherwise
+     */
     fgBool setModelTypeFromFilePath(void) {
         if(getFilePath(m_quality).empty())
             return FG_FALSE;
         return setModelTypeFromFilePath(getFilePath(m_quality));
     }
 
-    // This helper function loads the proper .OBJ model file
+    /**
+     * Helper function for loading the proper .OBJ model file
+     * @return  FG_TRUE if the load was successful, FG_FALSE otherwise
+     */
     fgBool _loadOBJ(void);
 
 public:
-    // Returns the reference to the shapes' array
+    /**
+     * Returns the reference to the shapes array
+     * @return  Reference to the shapes array
+     */
     modelShapes & getRefShapes(void) {
         return m_shapes;
     }
+    /**
+     * Returns the reference to the shapes array
+     * @return  Reference to the shapes array
+     */
     const modelShapes & getRefShapes(void) const {
         //return (const_cast<fgDataObjectBase<HandleType, MapKeyType>*>(this)->getFilePath(id));
         //return (const_cast<fgGfxModelResource *>(this)->getRefShapes());
         return m_shapes;
     }
 
-    // Generates the GFX buffers (VBO) from the model data
+    /**
+     * Generates the GFX buffers (VBO) from the model data, this is for all shapes
+     * in the model. Also depending functions will be called for any kind of data
+     * (AoS/SoA/Triangles/TriangleStrip)
+     * @return      FG_TRUE if the buffers were generated successfully, FG_FALSE
+     *              otherwise
+     */
     fgBool genBuffers(void);
 
-    // Deletes/releases the GFX buffers (VBO)
+    /**
+     * Deletes/releases the GFX buffers (VBO)
+     * @return      FG_TRUE if the buffers were released successfully, FG_FALSE
+     *              otherwise. In most cases FG_FALSE will be returned if the 
+     *              model data was not even loaded or the buffers were not valid
+     */
     fgBool deleteBuffers(void);
 
-    // Returns the pointer to the main material (override)
+    /**
+     * Gets the main override material of the model resource
+     * @return      Pointer to the override material for all shapes
+     */
     fgGfxMaterial* getMainMaterial(void) const {
         return m_materialOverride;
     }
-
-    // Returns the specific model type identifier
+    /**
+     * Gets the specific model type identifier
+     * @return  Unsigned int value indicating model type (based of file extension)
+     */
     fgGFXuint getModelType(void) const {
         return m_modelType;
     }
-
-    // Returns whether the model is multi-textured
+    /**
+     * Returns whether the model is multi-textured
+     * @return  FG_TRUE if the model is multi-textured, FG_FALSE otherwise
+     */
     fgBool isMultitextured(void) const {
         return m_isMultitextured;
-    }
-
-    // Returns whether model is textured
+    } 
+    /**
+     * Returns whether model is textured
+     * @return  FG_TRUE if the model has any kind of texture in it (and likely
+     *          texture coordinates data), FG_FALSE otherwise
+     */
     fgBool isTextured(void) const {
         return m_isTextured;
     }
-
-    // Returns whether the model has any kind of material
+    /**
+     * Returns whether the model has any kind of material
+     * @return  FG_TRUE if the loaded model defined any kind of material,
+     *          FG_FALSE otherwise. Note that when this function returns FG_FALSE,
+     *          the main material (override) is still available and set to defaults
+     */
     fgBool hasMaterial(void) const {
         return m_hasMaterial;
     }
-
-    // Returns whether the data in the model is interleaved
+    /**
+     * Returns whether the data in the model is interleaved
+     * @return  FG_TRUE if the data is interleaved, FG_FALSE otherwise
+     */
     fgBool isInterleaved(void) const {
         return m_isInterleaved;
     }
 
-    // Set data to be interleaved (requires explicit reload of the data from file)
+    /**
+     * Sets the data to be interleaved 
+     * @param toggle    Boolean parameter to which the internal flag will be set.
+     * @remarks         If the value was changed, the change in the data to take
+     *                  effect requires explicit reload of the model file
+     */
     void setInterleaved(fgBool toggle = FG_TRUE) {
         m_isInterleaved = toggle;
     }

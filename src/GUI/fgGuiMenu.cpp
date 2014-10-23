@@ -57,8 +57,8 @@ void fgGuiMenu::setDefaults(void) {
 /*
  *
  */
-fgBoundingBox3Df fgGuiMenu::updateSize(void) {
-    return fgGuiContainer::updateSize();
+fgBoundingBox3Df fgGuiMenu::updateBounds(void) {
+    return fgGuiContainer::updateBounds();
 }
 
 /*

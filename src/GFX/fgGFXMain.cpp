@@ -29,7 +29,7 @@
  */
 fgGfxMain::fgGfxMain() :
 m_textureMgr(NULL),
-m_resourceMgr(NULL),
+m_pResourceMgr(NULL),
 m_shaderMgr(NULL),
 m_mainWindow(NULL),
 m_gfxContext(NULL),
@@ -56,7 +56,7 @@ fgGfxMain::~fgGfxMain() {
         delete m_mainWindow;
 
     m_textureMgr = NULL;
-    m_resourceMgr = NULL;
+    m_pResourceMgr = NULL;
     m_shaderMgr = NULL;
     m_mainWindow = NULL;
     m_gfxContext = NULL;
@@ -370,8 +370,9 @@ void fgGfxMain::render(void) {
     if(state[SDL_SCANCODE_DOWN] == SDL_PRESSED) {
         posy += 10.0f;
     }
+    
 #endif
-    Model = glm::translate(Model, glm::vec3(posx, posy, 0.0f));
+    Model = glm::translate(Model, glm::vec3(posx*0.0f, posy*0.0f, 0.0f));
     Model = glm::scale(Model, glm::vec3(guiScale, guiScale, 0.0f));
     // #FIXME !
     fgGfxMVPMatrix mvp_lol;
@@ -387,20 +388,20 @@ void fgGfxMain::render(void) {
 /*
  *
  */
-fgBool fgGfxMain::setResourceManager(fgManagerBase *resourceManager) {
-    if(!resourceManager)
+fgBool fgGfxMain::setResourceManager(fgManagerBase *pResourceManager) {
+    if(!pResourceManager)
         return FG_FALSE;
-    if(resourceManager->getManagerType() != FG_MANAGER_RESOURCE) {
+    if(pResourceManager->getManagerType() != FG_MANAGER_RESOURCE) {
         return FG_FALSE;
     }
 
     if(!m_textureMgr)
-        m_textureMgr = new fgTextureManager(resourceManager);
+        m_textureMgr = new fgTextureManager(pResourceManager);
     else
-        m_textureMgr->setResourceManager(resourceManager);
-    m_resourceMgr = resourceManager;
+        m_textureMgr->setResourceManager(pResourceManager);
+    m_pResourceMgr = pResourceManager;
     if(m_3DScene)
-        m_3DScene->setResourceManager(m_resourceMgr);
+        m_3DScene->setResourceManager(m_pResourceMgr);
     return m_textureMgr->initialize(); // #FIXME - texture mgr init ?
 }
 
@@ -461,6 +462,6 @@ fgBool fgGfxMain::releaseTextures(void) {
         delete m_textureMgr;
         m_textureMgr = NULL;
     }
-    m_resourceMgr = NULL;
+    m_pResourceMgr = NULL;
     return FG_TRUE;
 }

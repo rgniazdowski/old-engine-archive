@@ -121,7 +121,7 @@ void fgGuiWidget::display(fgGfxLayer *guiLayer) {
  * 
  * @return 
  */
-fgBoundingBox3Df fgGuiWidget::updateSize(void) {
+fgBoundingBox3Df fgGuiWidget::updateBounds(void) {
     fgGuiStyleContent &style = m_styles[m_state];
     fgGuiPadding &padding = style.getPadding();
     // Padding is inside of the border - it applies to the contents inside
@@ -150,7 +150,7 @@ fgBoundingBox3Df fgGuiWidget::updateSize(void) {
  * @param bounds
  * @return 
  */
-fgBoundingBox3Df fgGuiWidget::updateSize(const fgBoundingBox3Df &bounds) {
+fgBoundingBox3Df fgGuiWidget::updateBounds(const fgBoundingBox3Df &bounds) {
     fgGuiStyleContent &style = m_styles[m_state];
     fgGuiPositionStyle posStyle = style.getPosition().style;
     fgGuiSize &size = style.getSize();
@@ -161,7 +161,7 @@ fgBoundingBox3Df fgGuiWidget::updateSize(const fgBoundingBox3Df &bounds) {
         m_bbox.size.x = size.x / 100.0f * bounds.size.x - style.getMargin().left - style.getMargin().right;
         m_bbox.size.y = size.y / 100.0f * bounds.size.y - style.getMargin().bottom - style.getMargin().top;
     }
-    fgBoundingBox3Df positionAndSize = updateSize();
+    fgBoundingBox3Df positionAndSize = updateBounds();
 
     // Margin?
     if(posStyle == FG_GUI_POS_STATIC) {

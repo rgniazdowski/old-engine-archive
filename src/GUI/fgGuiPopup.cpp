@@ -33,8 +33,8 @@ void fgGuiPopup::setDefaults(void) {
 /*
  *
  */
-fgBoundingBox3Df fgGuiPopup::updateSize(void) {
-    return fgGuiWindow::updateSize();
+fgBoundingBox3Df fgGuiPopup::updateBounds(void) {
+    return fgGuiWindow::updateBounds();
 }
 
 /*

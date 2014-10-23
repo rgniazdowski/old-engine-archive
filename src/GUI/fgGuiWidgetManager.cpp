@@ -340,7 +340,7 @@ fgBool fgGuiWidgetManager::addWidget(fgGuiWidgetHandle& wUniqueID, fgGuiWidget *
                                    FG_GUI_WIDGET_STATE_COUNT,
                                    pWidget->getTypeName());
             pWidget->refresh();
-            pWidget->updateSize();
+            pWidget->updateBounds();
         }
     }
     // Mark widget as managed
@@ -348,7 +348,7 @@ fgBool fgGuiWidgetManager::addWidget(fgGuiWidgetHandle& wUniqueID, fgGuiWidget *
     if(pFatherWidget) {
         pFatherWidget->setManaged(FG_TRUE);
         // Update size of the parent widget
-        pFatherWidget->updateSize();
+        pFatherWidget->updateBounds();
     }
     return FG_TRUE;
 }

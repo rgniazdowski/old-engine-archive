@@ -34,8 +34,8 @@ void fgGuiEditableText::setDefaults(void) {
 /*
  *
  */
-fgBoundingBox3Df fgGuiEditableText::updateSize(void) {
-    return fgGuiTextArea::updateSize();
+fgBoundingBox3Df fgGuiEditableText::updateBounds(void) {
+    return fgGuiTextArea::updateBounds();
 }
 
 /*

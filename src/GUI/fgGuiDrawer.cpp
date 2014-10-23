@@ -9,14 +9,14 @@
 
 #include "fgGuiDrawer.h"
 #include "GFX/Shaders/fgGFXShaderManager.h"
+#include "Resource/fgResourceManager.h"
 
 /*
  *
  */
 fgGuiDrawer::fgGuiDrawer() :
 m_fontDrawer(NULL),
-m_resourceMgr(NULL),
-m_color(1.0f, 1.0f, 1.0f, 1.0f) {
+m_pResourceMgr(NULL) {
     m_fontDrawer = new fgFontDrawer();
 }
 
@@ -27,7 +27,7 @@ fgGuiDrawer::~fgGuiDrawer() {
     if(m_fontDrawer)
         delete m_fontDrawer;
     m_fontDrawer = NULL;
-    m_resourceMgr = NULL;
+    m_pResourceMgr = NULL;
 }
 
 /*
@@ -40,47 +40,17 @@ fgFontDrawer *fgGuiDrawer::getFontDrawer(void) const {
 /*
  *
  */
-fgResourceManager *fgGuiDrawer::getResourceManager(void) const {
-    return m_resourceMgr;
+void fgGuiDrawer::setResourceManager(fgManagerBase *pResourceMgr) {
+    m_pResourceMgr = pResourceMgr;
 }
 
 /*
  *
  */
-void fgGuiDrawer::setResourceManager(fgResourceManager *resourceMgr) {
-    m_resourceMgr = resourceMgr;
-}
-
-/*
- *
- */
-void fgGuiDrawer::setShaderManager(fgManagerBase *shaderMgr) {
-    fgGfxDrawingBatch::setShaderManager(shaderMgr);
+void fgGuiDrawer::setShaderManager(fgManagerBase *pShaderMgr) {
+    fgGfxDrawingBatch::setShaderManager(pShaderMgr);
     if(m_fontDrawer)
-        m_fontDrawer->setShaderManager(shaderMgr);
-}
-
-/*
- * Set active color for the next data
- */
-void fgGuiDrawer::setColor(const fgColor3f& color) {
-    m_fontDrawer->setColor(color);
-    m_color = fgColor4f(color.r, color.g, color.b, 1.0f);
-}
-
-/*
- * Set active color for the next data
- */
-void fgGuiDrawer::setColor(const fgColor4f& color) {
-    m_fontDrawer->setColor(color);
-    m_color = color;
-}
-
-/*
- * This will reset used color
- */
-void fgGuiDrawer::resetColor(void) {
-    m_color = fgColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+        m_fontDrawer->setShaderManager(pShaderMgr);
 }
 
 /*
@@ -110,7 +80,7 @@ void fgGuiDrawer::render(void) {
  *
  */
 void fgGuiDrawer::appendText2D(fgVec2f& outTextSize, const fgVec2f &blockPos, const fgVec2f &blockSize, fgGuiStyleContent& style, const char *fmt, ...) {
-    if(!m_resourceMgr || !fmt)
+    if(!m_pResourceMgr || !fmt)
         return;
     char buf[FG_FONT_DRAW_STRING_BUF_MAX];
     va_list args;
@@ -119,9 +89,9 @@ void fgGuiDrawer::appendText2D(fgVec2f& outTextSize, const fgVec2f &blockPos, co
     vsnprintf(buf, FG_FONT_DRAW_STRING_BUF_MAX - 1, fmt, args);
     va_end(args);
     buf[FG_FONT_DRAW_STRING_BUF_MAX - 1] = '\0';
-
+    
     fgGuiForeground &fg = style.getForeground();
-    fgResource *resFont = m_resourceMgr->get(fg.font);
+    fgResource *resFont = static_cast<fgResourceManager *>(m_pResourceMgr)->get(fg.font);
     if(!resFont)
         return;
     if(resFont->getResourceType() != FG_RESOURCE_FONT)
@@ -141,14 +111,14 @@ void fgGuiDrawer::appendText2D(fgVec2f& outTextSize, const fgVec2f &blockPos, co
  *
  */
 void fgGuiDrawer::appendBackground2D(const fgVec2f &pos, const fgVec2f &size, fgGuiStyleContent& style) {
-    if(!m_resourceMgr)
+    if(!m_pResourceMgr)
         return;
     int index;
     fgGfxDrawCall *drawCall = createDrawCall(index, FG_GFX_DRAW_CALL_CUSTOM_ARRAY);
     drawCall->setComponentActive(0);
     drawCall->setComponentActive(FG_GFX_POSITION_BIT | FG_GFX_UVS_BIT | FG_GFX_COLOR_BIT);
-    if(m_resourceMgr && !style.getBackground().texture.empty()) {
-        fgResource *pResource = m_resourceMgr->get(style.getBackground().texture);
+    if(m_pResourceMgr && !style.getBackground().texture.empty()) {
+        fgResource *pResource = static_cast<fgResourceManager *>(m_pResourceMgr)->get(style.getBackground().texture);
         if(pResource) {
             if(pResource->getResourceType() == FG_RESOURCE_TEXTURE) {
                 fgTextureResource *pTexture = (fgTextureResource *)pResource;
@@ -164,7 +134,7 @@ void fgGuiDrawer::appendBackground2D(const fgVec2f &pos, const fgVec2f &size, fg
  *
  */
 void fgGuiDrawer::appendBorder2D(const fgVec2f &pos, const fgVec2f &size, fgGuiStyleContent& style) {
-    if(!m_resourceMgr)
+    if(!m_pResourceMgr)
         return;
     fgGuiBorderInfo &border = style.getBorder();
     if(border.left.style == FG_GUI_BORDER_NONE &&

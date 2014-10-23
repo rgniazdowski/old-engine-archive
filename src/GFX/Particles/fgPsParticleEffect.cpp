@@ -21,7 +21,7 @@
 ParticleEffect::~ParticleEffect() {
     // Love to do destroying manually.. Although it isn't necessary
     m_particles.clear();
-    fgVector<Particle> tmpv;
+    fgVector<fgParticle> tmpv;
     m_particles.swap(tmpv);
 
     if(m_colorStream)
@@ -32,8 +32,6 @@ ParticleEffect::~ParticleEffect() {
         fgFree(m_vertStream3D);
     if(m_UVStream)
         fgFree(m_UVStream);
-    //if(m_material)
-    //	delete m_material; // #FIXME
 
     m_colorStream = NULL;
     m_vertStream2D = NULL;
@@ -54,7 +52,7 @@ void ParticleEffect::setMaxCount(int max_count) {
 
     // This will fully erase the array
     m_particles.clear();
-    fgVector<Particle> tmpv;
+    fgVector<fgParticle> tmpv;
     m_particles.swap(tmpv);
 
     // Prepare for new amount of data
@@ -68,8 +66,6 @@ void ParticleEffect::setMaxCount(int max_count) {
         fgFree(m_vertStream3D);
     if(m_UVStream)
         fgFree(m_UVStream);
-    //if(m_material)
-    //		delete m_material; // #FIXME
 
     m_colorStream = NULL;
     m_vertStream2D = NULL;
@@ -78,20 +74,14 @@ void ParticleEffect::setMaxCount(int max_count) {
     m_material = NULL;
 
     // #FIXME This allocations need to be in DrawingBatch or SimpleDrawer, need to think about it
-
     m_colorStream = fgMalloc<fgColor>(4 * max_count);
     m_vertStream2D = fgMalloc<fgVector2i>(4 * max_count);
     m_vertStream3D = fgMalloc<fgVector3f>(4 * max_count);
     m_UVStream = fgMalloc<fgVector2f>(4 * max_count);
-    // #FIXME
-    //m_material = new CIwMaterial();
-    //m_material->SetCullMode(CIwMaterial::CULL_NONE);
-    //m_modelMatrix.SetIdentity();
-    //m_emitterOrigin = CIwFVec3::g_Zero;
 }
 
 fgBool ParticleEffect::addParameterized(float x, float y, float z, int count) {
-    Particle from, to;
+    fgParticle from, to;
     int i;
 
     if(count <= 0)
@@ -107,7 +97,9 @@ fgBool ParticleEffect::addParameterized(float x, float y, float z, int count) {
     from.velocity.y = -m_spreadSpeed;
     from.velocity.z = 0.0f;
 
-    from.size = m_startSize;
+    from.bbox.size.x = m_startSize;
+    from.bbox.size.y = m_startSize;
+    from.bbox.size.z = m_startSize;
 
     // m_lowLife holds life for the particle where value 10.0f is equal to 1000ms TTL
     from.setTTL(m_lowLife / 10.0f * 1000.0f);
@@ -120,21 +112,19 @@ fgBool ParticleEffect::addParameterized(float x, float y, float z, int count) {
     from.angularVelocity.y = 0.0f;
     from.angularVelocity.z = 0.0f;
 
-    from.position.x = x;
-    from.position.y = y;
-    from.position.z = z;
+    from.bbox.pos.x = x;
+    from.bbox.pos.y = y;
+    from.bbox.pos.z = z;
 
-    from.texture_id = 0;
-
-
-    //to.color = m_startColor;
     to.setColor(m_startColor);
     to.data = NULL;
     to.velocity.x = m_spreadSpeed;
     to.velocity.y = m_spreadSpeed;
     to.velocity.z = 0.0f;
 
-    to.size = m_startSize;
+    to.bbox.size.x = m_startSize;
+    to.bbox.size.y = m_startSize;
+    to.bbox.size.z = m_startSize;
 
     // m_highLife holds life for the particle where value 10.0f is equal to 1000ms TTL
     to.setTTL(m_highLife / 10.0f * 1000.0f);
@@ -150,11 +140,11 @@ fgBool ParticleEffect::addParameterized(float x, float y, float z, int count) {
     to.angularVelocity.y = 0.0f;
     to.angularVelocity.z = 0.0f;
 
-    to.position.x = x;
-    to.position.y = y;
-    to.position.z = z;
+    to.bbox.pos.x = x;
+    to.bbox.pos.y = y;
+    to.bbox.pos.z = z;
 
-    to.texture_id = m_textureXSize * m_textureYSize - 1;
+    //to.texture_id = m_textureXSize * m_textureYSize - 1;
 
     for(i = 0; i < count; i++) {
         if(!addRandom(&from, &to))
@@ -188,9 +178,9 @@ void ParticleEffect::calculate(void) {
 
     for(int i = 0; i<int(m_particles.size()); i++) {
         // MOVEMENT
-        m_particles[i].position.x += m_particles[i].velocity.x / 1000.0f * DT2;
-        m_particles[i].position.y += m_particles[i].velocity.y / 1000.0f * DT2;
-        m_particles[i].position.z += m_particles[i].velocity.z / 1000.0f * DT2;
+        m_particles[i].bbox.pos.x += m_particles[i].velocity.x / 1000.0f * DT2;
+        m_particles[i].bbox.pos.y += m_particles[i].velocity.y / 1000.0f * DT2;
+        m_particles[i].bbox.pos.z += m_particles[i].velocity.z / 1000.0f * DT2;
 
         // ROTATION
         m_particles[i].rotation.x += m_particles[i].angularVelocity.x / 1000.0f * DT2;
@@ -198,11 +188,14 @@ void ParticleEffect::calculate(void) {
         m_particles[i].rotation.z += m_particles[i].angularVelocity.z / 1000.0f * DT2;
 
         // FADE
-        m_particles[i].life -= m_particles[i].fade_speed / 1000.0f * DT2;
+        m_particles[i].life -= m_particles[i].fadeSpeed / 1000.0f * DT2;
 
         // LIFE AS SIZE
-        if(m_lifeAsSize)
-            m_particles[i].size = fabsf(m_particles[i].life);
+        if(m_lifeAsSize) {
+            m_particles[i].bbox.size.x = fabs(m_particles[i].life);
+            m_particles[i].bbox.size.y = fabs(m_particles[i].life);
+            m_particles[i].bbox.size.z = fabs(m_particles[i].life);
+        }
 
         // ONLY FOR Z ROTATION
         if(m_facingVelocity) {
@@ -216,29 +209,31 @@ void ParticleEffect::calculate(void) {
 
             if(m_drawMode == MODE_2D) {
                 if(a > 0.0f && b > 0.0f)
-                    m_particles[i].rotation.z = 90.0f + fabsf(angle);
+                    m_particles[i].rotation.z = 90.0f + fabs(angle);
                 else if(a < 0.0f && b > 0.0f)
-                    m_particles[i].rotation.z = 270.0f - fabsf(angle);
+                    m_particles[i].rotation.z = 270.0f - fabs(angle);
                 else if(a < 0.0f && b < 0.0f)
-                    m_particles[i].rotation.z = 270.0f + fabsf(angle);
+                    m_particles[i].rotation.z = 270.0f + fabs(angle);
                 else // if(a > 0.0f && b < 0.0f)
-                    m_particles[i].rotation.z = 90.0f - fabsf(angle);
+                    m_particles[i].rotation.z = 90.0f - fabs(angle);
             } else {
                 if(a > 0.0f && b > 0.0f)
-                    m_particles[i].rotation.z = -90.0f - fabsf(angle);
+                    m_particles[i].rotation.z = -90.0f - fabs(angle);
                 else if(a < 0.0f && b > 0.0f)
-                    m_particles[i].rotation.z = 90.0f + fabsf(angle);
+                    m_particles[i].rotation.z = 90.0f + fabs(angle);
                 else if(a < 0.0f && b < 0.0f)
-                    m_particles[i].rotation.z = 90.0f - fabsf(angle);
+                    m_particles[i].rotation.z = 90.0f - fabs(angle);
                 else // if(a > 0.0f && b < 0.0f)
-                    m_particles[i].rotation.z = -(90.0f - fabsf(angle));
+                    m_particles[i].rotation.z = -(90.0f - fabs(angle));
             }
         }
 
         if(m_paramsActive) {
             // This actions will work properly only if the particle TTL parameter is set
             // Size
-            m_particles[i].size += (m_endSize - m_startSize) / m_particles[i].ttl * DT2;
+            m_particles[i].bbox.size.x += (m_endSize - m_startSize) / m_particles[i].ttl * DT2;
+            m_particles[i].bbox.size.y += (m_endSize - m_startSize) / m_particles[i].ttl * DT2;
+            //m_particles[i].bbox.size.z += (m_endSize - m_startSize) / m_particles[i].ttl * DT2;
 
             /*fgColor color = m_particles[i].color;
 
@@ -299,9 +294,9 @@ void ParticleEffect::calculate(void) {
             // Checking the particle area which means checking and bouncing off particles of the area edges
         } else if(m_areaSet == FG_TRUE && m_areaCheck == FG_TRUE && m_drawMode == MODE_2D) {
             // Particle X position is within the boundaries so we can check the Y position
-            if(m_particles[i].position.x >= float(m_particleArea.x) && m_particles[i].position.x + m_particles[i].size <= float(m_particleArea.x + m_particleArea.w)) {
+            if(m_particles[i].bbox.pos.x >= float(m_particleArea.x) && m_particles[i].bbox.pos.x + m_particles[i].bbox.size.x <= float(m_particleArea.x + m_particleArea.w)) {
                 // The UPPER and LOWER boundary
-                if(m_particles[i].position.y <= float(m_particleArea.y) || m_particles[i].position.y + m_particles[i].size >= float(m_particleArea.y + m_particleArea.h))
+                if(m_particles[i].bbox.pos.y <= float(m_particleArea.y) || m_particles[i].bbox.pos.y + m_particles[i].bbox.size.y >= float(m_particleArea.y + m_particleArea.h))
                     m_particles[i].velocity.y *= -1.0f;
                 // Particle X position is out of boundaries so we can change it's direction
             } else {
@@ -309,23 +304,23 @@ void ParticleEffect::calculate(void) {
                 // FIXME
             }
 
-            if(m_particles[i].position.y + m_particles[i].size > float(m_particleArea.y + m_particleArea.h)) {
-                float diff = fabsf(float(m_particleArea.y + m_particleArea.h) - (m_particles[i].position.y + m_particles[i].size));
-                m_particles[i].position.y -= diff + m_particles[i].size / 4.0f;
+            if(m_particles[i].bbox.pos.y + m_particles[i].bbox.size.y > float(m_particleArea.y + m_particleArea.h)) {
+                float diff = fabs(float(m_particleArea.y + m_particleArea.h) - (m_particles[i].bbox.pos.y + m_particles[i].bbox.size.y));
+                m_particles[i].bbox.pos.y -= diff + m_particles[i].bbox.size.y / 4.0f;
             }
 
-            if(m_particles[i].position.x < float(m_particleArea.x))
-                m_particles[i].position.x += fabsf(m_particles[i].position.x - float(m_particleArea.x));
+            if(m_particles[i].bbox.pos.x < float(m_particleArea.x))
+                m_particles[i].bbox.pos.x += fabs(m_particles[i].bbox.pos.x - float(m_particleArea.x));
 
-            if(m_particles[i].position.x + m_particles[i].size > float(m_particleArea.x + m_particleArea.w)) {
-                float diff = fabsf(float(m_particleArea.x + m_particleArea.w) - (m_particles[i].position.x + m_particles[i].size));
-                m_particles[i].position.x -= diff + m_particles[i].size / 4.0f;
+            if(m_particles[i].bbox.pos.x + m_particles[i].bbox.size.x > float(m_particleArea.x + m_particleArea.w)) {
+                float diff = fabs(float(m_particleArea.x + m_particleArea.w) - (m_particles[i].bbox.pos.x + m_particles[i].bbox.size.x));
+                m_particles[i].bbox.pos.x -= diff + m_particles[i].bbox.size.x / 4.0f;
             }
             // Deleting particles fully offscreen
         } else if(m_areaCheck == false && m_drawMode == MODE_2D) {
-            if(m_particles[i].position.x + m_particles[i].size / 2 >= float(screenArea.x) && m_particles[i].position.x - m_particles[i].size / 2 <= float(screenArea.x + screenArea.w)) {
+            if(m_particles[i].bbox.pos.x + m_particles[i].bbox.size.x / 2 >= float(screenArea.x) && m_particles[i].bbox.pos.x - m_particles[i].bbox.size.x / 2 <= float(screenArea.x + screenArea.w)) {
                 // The UPPER and LOWER boundary
-                if(m_particles[i].position.y + m_particles[i].size / 2 <= float(screenArea.y) || m_particles[i].position.y - m_particles[i].size / 2 >= float(screenArea.y + screenArea.h))
+                if(m_particles[i].bbox.pos.y + m_particles[i].bbox.size.y / 2 <= float(screenArea.y) || m_particles[i].bbox.pos.y - m_particles[i].bbox.size.y / 2 >= float(screenArea.y + screenArea.h))
                     remove(i);
                 // Particle X position is out of boundaries so we can delete it
             } else {
@@ -346,15 +341,15 @@ void ParticleEffect::draw(void) {
     };
 
     for(i = 0; i<int(m_particles.size()); i++) {
-        int w = m_particles[i].size;
-        int h = w;
+        int w = m_particles[i].bbox.size.x;
+        int h = m_particles[i].bbox.size.y;
 
         // Setting up the particle position
         fgVector2i origin2D;
-        origin2D.x = m_emitterOrigin.x + m_particles[i].position.x;
-        origin2D.y = m_emitterOrigin.y + m_particles[i].position.y;
+        origin2D.x = m_emitterOrigin.x + m_particles[i].bbox.pos.x;
+        origin2D.y = m_emitterOrigin.y + m_particles[i].bbox.pos.y;
         fgVector3f origin3D;
-        origin3D = m_particles[i].position + m_emitterOrigin;
+        origin3D = m_particles[i].bbox.pos + m_emitterOrigin;
 
         // Setting up the VERTICES STREAM
         if(m_drawMode == MODE_2D) {
@@ -368,12 +363,13 @@ void ParticleEffect::draw(void) {
             m_vertStream3D[i * 4 + 2] = fgVector3f(w / 2, h / 2, 0.0f);
             m_vertStream3D[i * 4 + 3] = fgVector3f(w / 2, -h / 2, 0.0f);
         }
-        if(m_particles[i].texture_id < 0)
-            m_particles[i].texture_id = 0;
-        if(m_particles[i].texture_id >= m_textureXSize * m_textureYSize)
-            m_particles[i].texture_id = 0;
-        int x = m_particles[i].texture_id % m_textureXSize;
-        int y = m_particles[i].texture_id / m_textureYSize;
+//        if(m_particles[i].texture_id < 0)
+//            m_particles[i].texture_id = 0;
+//        if(m_particles[i].texture_id >= m_textureXSize * m_textureYSize)
+//            m_particles[i].texture_id = 0;
+//        int x = m_particles[i].texture_id % m_textureXSize;
+//        int y = m_particles[i].texture_id / m_textureYSize;
+        int x = 1, y = 1;
         float s = (float)x / m_textureXSize;
         float t = (float)y / m_textureYSize;
         float ds = 1.0f / m_textureXSize;
@@ -391,86 +387,31 @@ void ParticleEffect::draw(void) {
         m_colorStream[i * 4 + 1] = color;
         m_colorStream[i * 4 + 2] = color;
         m_colorStream[i * 4 + 3] = color;
-
-        /*	if(m_drawMode == MODE_2D) {
-                        // Setting up the 2D ROTATION
-                        int rotation = m_particles[i].rotation.z;
-                        CIwMat2D m;
-                        m.SetIdentity();
-                        m.SetRot(IW_ANGLE_FROM_DEGREES(rotation));
-                        m.SetTrans(origin2D);
-                        for(uint32 j = 0; j < 4; j++) {
-                                m_vertStream2D[i*4+j] = m.TransformVec(m_vertStream2D[i*4+j]);
-                        }
-                } else {
-                        // Setting up the 3D ROTATION
-                        CIwFMat m;
-                        CIwFMat rotX, rotY, rotZ;
-                        m.SetIdentity();
-                        rotX.SetIdentity();
-                        rotY.SetIdentity();
-                        rotZ.SetIdentity();
-
-                        rotX.SetRotX(m_particles[i].rotation.x*(float)M_PI/180.0f);
-                        rotY.SetRotY(m_particles[i].rotation.y*(float)M_PI/180.0f);
-                        rotZ.SetRotZ(m_particles[i].rotation.z*(float)M_PI/180.0f);
-                        m.CopyRot(rotX * rotY * rotZ);
-                        m.SetTrans(origin3D);
-
-                        for(uint32 j = 0; j < 4; j++) {
-                                m_vertStream3D[i*4+j] = m.TransformVec(m_vertStream3D[i*4+j]);
-                        }
-                }	*/
     }
-    // PLEASE FIX ME FIX ME FIX ME FIX ME FIX ME
-    /*
-    // Setting up the material
-    IwGxSetMaterial( m_material );
-
-    // Setting up the color stream
-    IwGxSetColStream( m_colorStream, int(m_particles.size())*4 );
-    // Screen space origin (0,0)
-    IwGxSetScreenSpaceOrg( &CIwSVec2::g_Zero );
-
-    // Setting up the vertices stream, in 2D or 3D space
-    if(m_drawMode == MODE_2D) {
-            IwGxSetVertStreamScreenSpace( m_vertStream2D, int(m_particles.size())*4 );
-    } else {
-            IwGxSetModelMatrix(&m_modelMatrix);
-            IwGxSetVertStreamModelSpace( m_vertStream3D, int(m_particles.size())*4 );
-    }
-
-    // Setting up the UV stream
-    IwGxSetUVStream(m_UVStream);
-
-    // DRAW
-    IwGxDrawPrims( IW_GX_QUAD_LIST, NULL, int(m_particles.size())*4 );
-
-    IwGxSetColStream(NULL);*/
 }
 
 /**
  * Takes two particles, does randomization on [from->some_val, to->some_val]
  * and stores new random values to Particle* from
  */
-void ParticleEffect::randomizeOnPair(Particle* from, Particle* to, Particle *result) {
+void ParticleEffect::randomizeOnPair(fgParticle* from, fgParticle* to, fgParticle *result) {
     int from_val, to_val;
-    Particle* target = result;
+    fgParticle* target = result;
 
     // Position X
-    from_val = (int)(from->position.x * 1000);
-    to_val = (int)(to->position.x * 1000);
-    target->position.x = FG_Rand(from_val, to_val) / 1000.0f;
+    from_val = (int)(from->bbox.pos.x * 1000);
+    to_val = (int)(to->bbox.pos.x * 1000);
+    target->bbox.pos.x = FG_Rand(from_val, to_val) / 1000.0f;
 
     // Position Y
-    from_val = (int)(from->position.y * 1000);
-    to_val = (int)(to->position.y * 1000);
-    target->position.y = FG_Rand(from_val, to_val) / 1000.0f;
+    from_val = (int)(from->bbox.pos.y * 1000);
+    to_val = (int)(to->bbox.pos.y * 1000);
+    target->bbox.pos.y = FG_Rand(from_val, to_val) / 1000.0f;
 
     // Position Z
-    from_val = (int)(from->position.z * 1000);
-    to_val = (int)(to->position.z * 1000);
-    target->position.z = FG_Rand(from_val, to_val) / 1000.0f;
+    from_val = (int)(from->bbox.pos.z * 1000);
+    to_val = (int)(to->bbox.pos.z * 1000);
+    target->bbox.pos.z = FG_Rand(from_val, to_val) / 1000.0f;
 
     // Velocity X
     from_val = (int)(from->velocity.x * 1000);
@@ -488,9 +429,9 @@ void ParticleEffect::randomizeOnPair(Particle* from, Particle* to, Particle *res
     target->velocity.z = FG_Rand(from_val, to_val) / 1000.0f;
 
     // Fade speed
-    from_val = (int)(from->fade_speed * 1000);
-    to_val = (int)(to->fade_speed * 1000);
-    target->fade_speed = FG_Rand(from_val, to_val) / 1000.0f;
+    from_val = (int)(from->fadeSpeed * 1000);
+    to_val = (int)(to->fadeSpeed * 1000);
+    target->fadeSpeed = FG_Rand(from_val, to_val) / 1000.0f;
 
     // Life
     from_val = (int)(from->life * 1000);
@@ -510,10 +451,25 @@ void ParticleEffect::randomizeOnPair(Particle* from, Particle* to, Particle *res
     }
 
     // Size
-    from_val = (int)(from->size * 1000);
-    to_val = (int)(to->size * 1000);
-    target->size = FG_Rand(from_val, to_val) / 1000.0f;
+    // from_val = (int)(from->size * 1000);
+    // to_val = (int)(to->size * 1000);
+    // target->size = FG_Rand(from_val, to_val) / 1000.0f;
 
+    // Size X
+    from_val = (int)(from->bbox.size.x * 1000);
+    to_val = (int)(to->bbox.size.x * 1000);
+    target->bbox.size.x = FG_Rand(from_val, to_val) / 1000.0f;
+
+    // Size Y
+    from_val = (int)(from->bbox.size.y * 1000);
+    to_val = (int)(to->bbox.size.y * 1000);
+    target->bbox.size.y = FG_Rand(from_val, to_val) / 1000.0f;
+
+    // Size Z
+    from_val = (int)(from->bbox.size.z * 1000);
+    to_val = (int)(to->bbox.size.z * 1000);
+    target->bbox.size.z = FG_Rand(from_val, to_val) / 1000.0f;
+    
     // Rotation X
     from_val = (int)(from->rotation.x * 1000);
     to_val = (int)(to->rotation.x * 1000);
@@ -545,9 +501,9 @@ void ParticleEffect::randomizeOnPair(Particle* from, Particle* to, Particle *res
     target->angularVelocity.z = FG_Rand(from_val, to_val) / 1000.0f;
 
     // Texture id
-    from_val = (int)from->texture_id;
-    to_val = (int)to->texture_id;
-    target->texture_id = FG_Rand(from_val, to_val);
+    // from_val = (int)from->texture_id;
+    // to_val = (int)to->texture_id;
+    // target->texture_id = FG_Rand(from_val, to_val);
 
     // Data
     target->data = NULL;

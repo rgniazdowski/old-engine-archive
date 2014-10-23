@@ -33,8 +33,8 @@ void fgGuiMessageBox::setDefaults(void) {
 /*
  *
  */
-fgBoundingBox3Df fgGuiMessageBox::updateSize(void) {
-    return fgGuiWindow::updateSize();
+fgBoundingBox3Df fgGuiMessageBox::updateBounds(void) {
+    return fgGuiWindow::updateBounds();
 }
 
 /*
