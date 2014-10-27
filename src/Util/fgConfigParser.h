@@ -20,10 +20,11 @@
  */
 class fgConfigParser : protected fgFile {
 protected:
-    // Loaded file size
+    /// Loaded file size
     unsigned int m_fileSize;
-    // Data buffer
+    /// Data buffer
     char *m_fileBuffer;
+    
 public:
     // Default constructor for config parser object
     fgConfigParser();
@@ -40,19 +41,20 @@ public:
     // Parse data and store parameters in given section map (reference)
     fgBool parseData(const char *data, fgCfgTypes::sectionMap &sectionMap);
 
-    // Free all data assiocated with the config
+    // Free all data of the config
     void freeData(void);
 
     // Return the file size (in bytes)
     unsigned int getFileSize(void) const {
         return m_fileSize;
     }
+    
     /*******************************************************
      * These function are here because ConfigParser extends
      * fgFile with access level protected. Need to make
      * public methods of status reporter available. #FIXME
      */
-
+    // THIS SUX
     fgBool isError(void) const {
         return fgStatusReporter::isError();
     }

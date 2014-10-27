@@ -76,6 +76,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/_ext/293675389/fgPsParticleEffect.o \
 	${OBJECTDIR}/_ext/293675389/fgPsParticleEffectCircular.o \
 	${OBJECTDIR}/_ext/293675389/fgPsParticleEffectLimited.o \
+	${OBJECTDIR}/_ext/293675389/fgPsParticleEmitter.o \
 	${OBJECTDIR}/_ext/293675389/fgPsSequentialEffect.o \
 	${OBJECTDIR}/_ext/960776194/fgGFXShader.o \
 	${OBJECTDIR}/_ext/960776194/fgGFXShaderBase.o \
@@ -415,6 +416,11 @@ ${OBJECTDIR}/_ext/293675389/fgPsParticleEffectLimited.o: ../../../src/GFX/Partic
 	${MKDIR} -p ${OBJECTDIR}/_ext/293675389
 	${RM} "$@.d"
 	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_NO_UNDEF -DFG_USING_GLEW -DFG_USING_GLM -DFG_USING_OPENGL -DFG_USING_OPENGL_GLEW -DFG_USING_SDL2 -DFG_USING_TINYXML -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont `pkg-config --cflags gl` `pkg-config --cflags sdl2` `pkg-config --cflags SDL2_mixer` `pkg-config --cflags libpng` `pkg-config --cflags glew` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/293675389/fgPsParticleEffectLimited.o ../../../src/GFX/Particles/fgPsParticleEffectLimited.cpp
+
+${OBJECTDIR}/_ext/293675389/fgPsParticleEmitter.o: ../../../src/GFX/Particles/fgPsParticleEmitter.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/293675389
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_NO_UNDEF -DFG_USING_GLEW -DFG_USING_GLM -DFG_USING_OPENGL -DFG_USING_OPENGL_GLEW -DFG_USING_SDL2 -DFG_USING_TINYXML -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont `pkg-config --cflags gl` `pkg-config --cflags sdl2` `pkg-config --cflags SDL2_mixer` `pkg-config --cflags libpng` `pkg-config --cflags glew` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/293675389/fgPsParticleEmitter.o ../../../src/GFX/Particles/fgPsParticleEmitter.cpp
 
 ${OBJECTDIR}/_ext/293675389/fgPsSequentialEffect.o: ../../../src/GFX/Particles/fgPsSequentialEffect.cpp 
 	${MKDIR} -p ${OBJECTDIR}/_ext/293675389

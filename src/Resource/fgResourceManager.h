@@ -39,7 +39,7 @@ FG_TAG_TEMPLATE_ID_AUTO(fgResourceManager, FG_TAG_RESOURCE_MANAGER_NAME);
 // Special handle type for manager base
 typedef FG_TAG_RESOURCE_MANAGER fgResourceManagerTag;
 
-    #define FG_MANAGER_RESOURCE	0x00000020
+    #define FG_MANAGER_RESOURCE     0x00000020
 
 //
 // The resource manager handles all the external resources. It takes care of the memory

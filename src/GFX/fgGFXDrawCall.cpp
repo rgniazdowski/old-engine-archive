@@ -227,6 +227,14 @@ fgGfxPrimitiveMode fgGfxDrawCall::getPrimitiveMode(void) const {
     return m_primMode;
 }
 
+/**
+ * 
+ * @return 
+ */
+fgVertexData *fgGfxDrawCall::getVertexData(void) const {
+    return m_vecDataBase;
+}
+
 /*
  *
  */
@@ -460,6 +468,7 @@ void fgGfxDrawCall::draw(void) {
     } else if(m_program) {
         m_program->setUniform(FG_GFX_USE_TEXTURE, 0.0f);
     }
+    // #FIXME - need to use attribute data array
     fgGfxPrimitives::drawArray2D(m_vecDataBase, m_attribMask, m_primMode);
 
     // Will now draw data from Other types ...

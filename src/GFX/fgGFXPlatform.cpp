@@ -30,16 +30,24 @@ void *fgGfxPlatform::m_defaultConfig = 0;
 #include "s3eTypes.h"
 #endif
 
+/**
+ * 
+ */
 fgGfxPlatform::fgGfxPlatform() { }
 
+/**
+ * 
+ */
 fgGfxPlatform::~fgGfxPlatform() {
     if(m_gfxContext)
         delete m_gfxContext;
     m_gfxContext = NULL;
 }
 
-/*
- *
+/**
+ * 
+ * @param reinit
+ * @return 
  */
 fgBool fgGfxPlatform::initialize(fgBool reinit) {
     if(fgGfxPlatform::m_init && !reinit)
@@ -223,8 +231,9 @@ fgBool fgGfxPlatform::initialize(fgBool reinit) {
     return status;
 }
 
-/*
- *
+/**
+ * 
+ * @return 
  */
 fgBool fgGfxPlatform::quit(void) {
     fgBool status = FG_TRUE;
@@ -269,6 +278,11 @@ fgBool fgGfxPlatform::quit(void) {
 
 #if defined(FG_USING_SDL2)
 
+/**
+ * 
+ * @param sdlWindow
+ * @return 
+ */
 fgBool fgGfxPlatform::initializeMainContext(SDL_Window* sdlWindow) {
     if(!m_gfxContext)
         m_gfxContext = new fgGfxContext(sdlWindow);
@@ -279,36 +293,41 @@ fgBool fgGfxPlatform::initializeMainContext(SDL_Window* sdlWindow) {
 }
 #endif
 
-/*
- *
+/**
+ * 
+ * @return 
  */
 fgGfxContext *fgGfxPlatform::context(void) {
     return m_gfxContext;
 }
 
-/*
- *
+/**
+ * 
+ * @return 
  */
 fgBool fgGfxPlatform::isInit(void) {
     return fgGfxPlatform::m_init;
 }
 
-/*
- *
+/**
+ * 
+ * @return 
  */
 void *fgGfxPlatform::getDefaultDisplay(void) {
     return fgGfxPlatform::m_defaultDisplay;
 }
 
-/*
- *
+/**
+ * 
+ * @return 
  */
 void *fgGfxPlatform::getDefaultContext(void) {
     return fgGfxPlatform::m_defaultContext;
 }
 
-/*
- *
+/**
+ * 
+ * @return 
  */
 void *fgGfxPlatform::getDefaultConfig(void) {
     return fgGfxPlatform::m_defaultConfig;

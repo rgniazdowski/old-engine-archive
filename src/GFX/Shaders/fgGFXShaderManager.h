@@ -34,7 +34,7 @@ FG_TAG_TEMPLATE_ID_AUTO(fgGfxShaderManager, FG_TAG_SHADER_MANAGER_NAME);
 // Special handle type for manager base
 typedef FG_TAG_SHADER_MANAGER fgGfxShaderManagerTag;
 
-    #define FG_MANAGER_GFX_SHADER	0x00000002
+    #define FG_MANAGER_GFX_SHADER   0x00000002
 
 /*
  *

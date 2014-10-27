@@ -92,7 +92,7 @@ fgBool fgResourceConfig::parseData(void) {
         return FG_FALSE;
     }
     std::string dirPath;
-    fgPath::dirName(m_filePath, dirPath);
+    fgPath::dirName(m_configPath, dirPath);
     fgCfgTypes::sectionMapItor smit = m_sectionMap.begin(),
             end = m_sectionMap.end();
     for(; smit != end; smit++) {

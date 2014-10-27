@@ -1545,11 +1545,15 @@ void fgGfxContext::blendFunc(const fgGFXenum sfactor, const fgGFXenum dfactor) {
        srcAlpha.intVal != (fgGFXint)sfactor ||
        dstRGB.intVal != (fgGFXint)dfactor ||
        dstAlpha.intVal != (fgGFXint)dfactor) {
-        glBlendFuncSeparate((fgGFXenum)srcRGB, (fgGFXenum)dstRGB, (fgGFXenum)srcAlpha, (fgGFXenum)dstAlpha);
+        
         srcRGB.intVal = (fgGFXint)sfactor;
         dstRGB.intVal = (fgGFXint)dfactor;
         srcAlpha.intVal = (fgGFXint)sfactor;
         dstAlpha.intVal = (fgGFXint)dfactor;
+        glBlendFuncSeparate((fgGFXenum)srcRGB,
+                            (fgGFXenum)dstRGB,
+                            (fgGFXenum)srcAlpha,
+                            (fgGFXenum)dstAlpha);
     }
 }
 
@@ -1561,15 +1565,20 @@ void fgGfxContext::blendFunc(const fgGFXenum srcRGB, const fgGFXenum dstRGB, con
     fgGfxContextParam& dstRGBparam = m_params[(fgGFXuint)GL_BLEND_DST_RGB];
     fgGfxContextParam& srcAlphaparam = m_params[(fgGFXuint)GL_BLEND_SRC_ALPHA];
     fgGfxContextParam& dstAlphaparam = m_params[(fgGFXuint)GL_BLEND_DST_ALPHA];
+    
     if(srcRGBparam.intVal != (fgGFXint)srcRGB ||
        srcAlphaparam.intVal != (fgGFXint)srcAlpha ||
        dstRGBparam.intVal != (fgGFXint)dstRGB ||
        dstAlphaparam.intVal != (fgGFXint)dstAlpha) {
-        glBlendFuncSeparate((fgGFXenum)srcRGBparam, (fgGFXenum)dstRGBparam, (fgGFXenum)srcAlphaparam, (fgGFXenum)dstAlphaparam);
         srcRGBparam.intVal = (fgGFXint)srcRGB;
         dstRGBparam.intVal = (fgGFXint)dstRGB;
         srcAlphaparam.intVal = (fgGFXint)srcAlpha;
         dstAlphaparam.intVal = (fgGFXint)dstAlpha;
+        
+        glBlendFuncSeparate((fgGFXenum)srcRGBparam,
+                            (fgGFXenum)dstRGBparam,
+                            (fgGFXenum)srcAlphaparam,
+                            (fgGFXenum)dstAlphaparam);
     }
 }
 

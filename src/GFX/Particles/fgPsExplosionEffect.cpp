@@ -10,21 +10,21 @@
 #include <cstdlib>
 #include <cmath>
 #include <cstring>
-
+#if 0
 #include "fgPsExplosionEffect.h"
 #include "GFX/Textures/fgTextureManager.h"
 
 /*
  * The default constructor for the particle explosion special effect
  */
-ExplosionEffect::ExplosionEffect(ParticleEffect::DrawMode drawMode, float scale) {
+ExplosionEffect::ExplosionEffect(fgParticleEffect::DrawMode drawMode, float scale) {
     if(scale <= 0.0f)
         scale = 1.0f;
     m_scale = scale;
     /*
      * Flame/Smoke Emitter
      */
-    m_flameEmitter = new ParticleEffectLimited();
+    m_flameEmitter = new fgParticleEffectLimited();
     m_flameEmitter->setMaxCount(EXPLOSION_FLAME_EMITTER_MAX);
     m_flameEmitter->setAreaCheck(false);
     m_flameEmitter->setAlphaActive(true);
@@ -52,7 +52,7 @@ ExplosionEffect::ExplosionEffect(ParticleEffect::DrawMode drawMode, float scale)
      * Flash Emitter
      */
 
-    m_flashEmitter = new ParticleEffectLimited();
+    m_flashEmitter = new fgParticleEffectLimited();
     m_flashEmitter->setMaxCount(EXPLOSION_FLASH_EMITTER_MAX);
     m_flashEmitter->setAreaCheck(false);
     m_flashEmitter->setAlphaActive(true);
@@ -79,7 +79,7 @@ ExplosionEffect::ExplosionEffect(ParticleEffect::DrawMode drawMode, float scale)
      * Flying Sparks Emitter
      */
 
-    m_sparksEmitter = new ParticleEffectLimited();
+    m_sparksEmitter = new fgParticleEffectLimited();
     m_sparksEmitter->setMaxCount(EXPLOSION_SPARKS_EMITTER_MAX);
 
     m_sparksEmitter->setAreaCheck(false);
@@ -107,7 +107,7 @@ ExplosionEffect::ExplosionEffect(ParticleEffect::DrawMode drawMode, float scale)
      * Smoke Trails Emitter
      */
 
-    m_smokeTrailsEmitter = new ParticleEffectLimited();
+    m_smokeTrailsEmitter = new fgParticleEffectLimited();
     m_smokeTrailsEmitter->setMaxCount(EXPLOSION_SMOKE_TRAILS_EMITTER_MAX);
 
     m_smokeTrailsEmitter->setAreaCheck(false);
@@ -135,7 +135,7 @@ ExplosionEffect::ExplosionEffect(ParticleEffect::DrawMode drawMode, float scale)
      * Round Sparks Emitter
      */
 
-    m_roundSparksEmitter = new ParticleEffectLimited();
+    m_roundSparksEmitter = new fgParticleEffectLimited();
     m_roundSparksEmitter->setMaxCount(EXPLOSION_ROUND_SPARKS_EMITTER_MAX);
 
     m_roundSparksEmitter->setAreaCheck(false);
@@ -163,7 +163,7 @@ ExplosionEffect::ExplosionEffect(ParticleEffect::DrawMode drawMode, float scale)
      * Debris emitter
      */
 
-    m_debrisEmitter = new ParticleEffectLimited();
+    m_debrisEmitter = new fgParticleEffectLimited();
     m_debrisEmitter->setMaxCount(EXPLOSION_DEBRIS_EMITTER_MAX);
 
     m_debrisEmitter->setAreaCheck(false);
@@ -191,7 +191,7 @@ ExplosionEffect::ExplosionEffect(ParticleEffect::DrawMode drawMode, float scale)
     /*
      * Shockwave Emitter
      */
-    m_shockwaveEmitter = new ParticleEffectLimited();
+    m_shockwaveEmitter = new fgParticleEffectLimited();
     m_shockwaveEmitter->setMaxCount(EXPLOSION_SHOCKWAVE_EMITTER_MAX);
 
     m_shockwaveEmitter->setAreaCheck(false);
@@ -345,3 +345,4 @@ void ExplosionEffect::draw(void) {
     m_debrisEmitter->draw();
     m_shockwaveEmitter->draw();
 }
+#endif

@@ -30,7 +30,7 @@ FG_TAG_TEMPLATE_ID_AUTO(fgTextureManager, FG_TAG_TEXTURE_MANAGER_NAME);
 // Special handle type for manager base
 typedef FG_TAG_TEXTURE_MANAGER fgTextureManagerTag;
 
-    #define FG_MANAGER_TEXTURE	0x00000004
+    #define FG_MANAGER_TEXTURE      0x00000004
 
 /**
  * Class that allows to perform GROUP OPERATIONS on all textures. 

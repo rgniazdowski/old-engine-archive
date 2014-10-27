@@ -22,14 +22,24 @@
 
     #include "fgGFXObject.h"
 
+    #include "fgManagerBase.h"
+    
+    #define FG_MANAGER_SCENE        0x00001000
+
 /* 
  *
  */
-class fgGfxSceneManager : protected fgGfxDrawingBatch, protected fgHandleManager<fgGfxObject *, fgGfxObjectHandle> {
+class fgGfxSceneManager : public fgManagerBase, protected fgGfxDrawingBatch, protected fgHandleManager<fgGfxObject *, fgGfxObjectHandle> {
 public:
     typedef fgVector<fgGfxObject *> objectVec;
     typedef objectVec::iterator objectVecItor;
 
+protected:
+    /**
+     * 
+     */
+    virtual void clear(void);
+    
 public:
     /**
      * 
@@ -40,6 +50,17 @@ public:
      */
     virtual ~fgGfxSceneManager();
 
+    /**
+     * 
+     * @return 
+     */
+    virtual fgBool destroy(void);
+    /**
+     * 
+     * @return 
+     */
+    virtual fgBool initialize(void);
+    
     /**
      * 
      * @param pShaderMgr

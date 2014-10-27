@@ -1,0 +1,24 @@
+<ResourceGroup name="ParticleTextures" priority="high">
+	<!-- PulseTex size 1x1 -->
+	<Texture path="textures/particle/shockwave1.tga" name="PulseTex" quality="universal" />
+	<!-- DebrisSheetTex size 3x3 -->
+	<Texture path="textures/particle/debris0_sheet.tga" name="DebrisSheetTex" quality="universal" />
+	<!-- FlameSheetTex size 2x2 -->
+	<Texture path="textures/particle/flame0_sheet.tga" name="FlameSheetTex" quality="universal" />
+	<!-- FlashSheetTex size 2x2 -->
+	<Texture path="textures/particle/flash0_sheet.tga" name="FlashSheetTex" quality="universal" />
+	<!-- SmokeTrailTex size 1x1 -->
+	<Texture path="textures/particle/smoketrail0.tga" name="SmokeTrailTex" quality="universal" />
+	<!-- RoundSparkTex size 1x1 -->
+	<Texture path="textures/particle/roundspark0.tga" name="RoundSparkTex" quality="universal" />
+	<!-- ShockWaveTex size 1x1 -->
+	<Texture path="textures/particle/shockwave0.tga" name="ShockWaveTex" quality="universal" />
+	<!-- SparkTex size 1x1 -->
+	<Texture path="textures/particle/spark0.tga" name="SparkTex" quality="universal" />
+	<!-- ExplosionSeqTex size 8x8 -->
+	<Texture path="textures/particle/explosion1_1024.tga" name="ExplosionSeqTex" quality="universal" />
+	<!-- FireSequenceTex size 5x5 -->
+	<Texture path="textures/particle/fire1_512.tga" name="FireSequenceTex" quality="universal" />
+
+	<Texture config="textures/particle/CloudsSheet.res.ini" />
+</ResourceGroup>

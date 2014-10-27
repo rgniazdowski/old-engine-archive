@@ -26,7 +26,6 @@ typedef FG_TAG_GFX_OBJECT fgGfxObjectTag;
 // Special handle type for gfx object (scene object)
 typedef fgHandle<fgGfxObjectTag> fgGfxObjectHandle;
 
-// BULLSHIT
 typedef unsigned int fgGfxObjectType;
 
     #define FG_GFX_OBJECT_MODEL 0 // BULLSHIT
@@ -34,104 +33,64 @@ typedef unsigned int fgGfxObjectType;
 /*
  *
  */
-class fgGfxObject {
+class fgGfxObject : public fgManagedObjectBase<fgGfxObjectHandle> {
 private:
-    /// Name of the gfx object (used mainly for the scene representation)
-    std::string m_nameTag;
     /// Internal object specific model matrix
     fgMatrix4f m_modelMat;
     ///
     fgGfxObjectType m_type;
-    ///
+    /// #FIXME
     fgGfxModelResource *m_model;
-    ///
-    fgGfxObjectHandle m_handle;
-    ///
-    fgBool m_isManaged;
 
 public:
-    //
-    fgGfxObject() : m_nameTag(),
-    m_modelMat(),
+    /**
+     * 
+     */
+    fgGfxObject() : m_modelMat(),
     m_type(0),
-    m_model(NULL),
-    m_isManaged(FG_FALSE) { }
+    m_model(NULL) { }
 
-    //
+    /**
+     * 
+     */
     virtual ~fgGfxObject() { }
 
-    // Set object name (string TAG/ID)
-    inline void setName(const char *name) {
-        m_nameTag = name;
-    }
-    // Set object name (string TAG/ID)
-    inline void setName(const std::string& name) {
-        m_nameTag = name;
-    }
-    // Get object name string
-    inline std::string getName(void) const {
-        return m_nameTag;
-    }
-    // Get reference to object name string
-    inline std::string& getName(void) {
-        return m_nameTag;
-    }
-    // Get object name (TAG/string ID) as C-like string (char array)
-    inline const char* getNameStr(void) const {
-        return m_nameTag.c_str();
-    }
-
-    // Return the object handle ID
-    inline fgGfxObjectHandle getHandle(void) const {
-        return m_handle;
-    }
-
-    // Set the object handle ID 
-    inline void setHandle(const fgGfxObjectHandle& handle) {
-        m_handle = handle;
-    }
-
-    //
-    inline fgGfxObjectHandle& getRefHandle(void) {
-        return m_handle;
-    }
-
-    //
-    inline const fgGfxObjectHandle& getRefHandle(void) const {
-        return m_handle;
-    }
-
-    //
-    inline void setManaged(const fgBool toggle = FG_TRUE) {
-        m_isManaged = toggle;
-    }
-
-    //
-    inline fgBool isManaged(void) const {
-        return m_isManaged;
-    }
-
-    //
+    /**
+     * 
+     * @return 
+     */
     inline fgGfxModelResource* getModel(void) const {
         return m_model;
     }
 
-    //
+    /**
+     * 
+     * @param model
+     */
     inline void setModel(fgGfxModelResource *model) {
         m_model = model;
     }
 
-    //
+    /**
+     * 
+     * @return 
+     */
     inline fgMatrix4f& getRefModelMatrix(void) {
         return m_modelMat;
     }
 
-    //
+    /**
+     * 
+     * @return 
+     */
     inline const fgMatrix4f& getRefModelMatrix(void) const {
         return m_modelMat;
     }
 
-    //
+    /**
+     * 
+     * @param modelMat
+     */
     inline void setModelMatrix(const fgMatrix4f& modelMat) {
         m_modelMat = modelMat;
     }

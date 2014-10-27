@@ -297,6 +297,8 @@
             <itemPath>../../../src/GFX/Particles/fgPsParticleEffectCircular.h</itemPath>
             <itemPath>../../../src/GFX/Particles/fgPsParticleEffectLimited.cpp</itemPath>
             <itemPath>../../../src/GFX/Particles/fgPsParticleEffectLimited.h</itemPath>
+            <itemPath>../../../src/GFX/Particles/fgPsParticleEmitter.cpp</itemPath>
+            <itemPath>../../../src/GFX/Particles/fgPsParticleEmitter.h</itemPath>
             <itemPath>../../../src/GFX/Particles/fgPsSequentialEffect.cpp</itemPath>
             <itemPath>../../../src/GFX/Particles/fgPsSequentialEffect.h</itemPath>
             <itemPath>../../../src/GFX/Particles/fgPsSpecialEffect.h</itemPath>
@@ -500,7 +502,8 @@
         </logicalFolder>
         <logicalFolder name="Resource" displayName="Resource" projectFiles="true">
           <itemPath>../../../src/Resource/fgDataManagerBase.h</itemPath>
-          <itemPath>../../../src/Resource/fgDataObjectBase.h</itemPath>
+          <itemPath>../../../src/Resource/fgManagedDataFileBase.h</itemPath>
+          <itemPath>../../../src/Resource/fgManagedObjectBase.h</itemPath>
           <itemPath>../../../src/Resource/fgResource.cpp</itemPath>
           <itemPath>../../../src/Resource/fgResource.h</itemPath>
           <itemPath>../../../src/Resource/fgResourceConfigParser.cpp</itemPath>
@@ -551,6 +554,7 @@
           <itemPath>../../../src/Util/fgProfiling.h</itemPath>
           <itemPath>../../../src/Util/fgSettings.cpp</itemPath>
           <itemPath>../../../src/Util/fgSettings.h</itemPath>
+          <itemPath>../../../src/Util/fgStringParser.h</itemPath>
           <itemPath>../../../src/Util/fgStrings.h</itemPath>
           <itemPath>../../../src/Util/fgTag.h</itemPath>
           <itemPath>../../../src/Util/fgTime.cpp</itemPath>
@@ -2052,6 +2056,16 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/GFX/Particles/fgPsParticleEmitter.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Particles/fgPsParticleEmitter.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../src/GFX/Particles/fgPsSequentialEffect.cpp"
             ex="false"
             tool="1"
@@ -2749,7 +2763,12 @@
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/Resource/fgDataObjectBase.h"
+      <item path="../../../src/Resource/fgManagedDataFileBase.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Resource/fgManagedObjectBase.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -2907,6 +2926,8 @@
       <item path="../../../src/Util/fgSettings.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="../../../src/Util/fgSettings.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Util/fgStringParser.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/Util/fgStrings.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -4391,6 +4412,16 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/GFX/Particles/fgPsParticleEmitter.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Particles/fgPsParticleEmitter.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../src/GFX/Particles/fgPsSequentialEffect.cpp"
             ex="false"
             tool="1"
@@ -5088,7 +5119,12 @@
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/Resource/fgDataObjectBase.h"
+      <item path="../../../src/Resource/fgManagedDataFileBase.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Resource/fgManagedObjectBase.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -5246,6 +5282,8 @@
       <item path="../../../src/Util/fgSettings.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="../../../src/Util/fgSettings.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Util/fgStringParser.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/Util/fgStrings.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -6754,6 +6792,16 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/GFX/Particles/fgPsParticleEmitter.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Particles/fgPsParticleEmitter.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../src/GFX/Particles/fgPsSequentialEffect.cpp"
             ex="false"
             tool="1"
@@ -7451,7 +7499,12 @@
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/Resource/fgDataObjectBase.h"
+      <item path="../../../src/Resource/fgManagedDataFileBase.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Resource/fgManagedObjectBase.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -7609,6 +7662,8 @@
       <item path="../../../src/Util/fgSettings.cpp" ex="false" tool="1" flavor2="8">
       </item>
       <item path="../../../src/Util/fgSettings.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Util/fgStringParser.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/Util/fgStrings.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -9116,6 +9171,16 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/GFX/Particles/fgPsParticleEmitter.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Particles/fgPsParticleEmitter.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../src/GFX/Particles/fgPsSequentialEffect.cpp"
             ex="false"
             tool="1"
@@ -9813,7 +9878,12 @@
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/Resource/fgDataObjectBase.h"
+      <item path="../../../src/Resource/fgManagedDataFileBase.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Resource/fgManagedObjectBase.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -9971,6 +10041,8 @@
       <item path="../../../src/Util/fgSettings.cpp" ex="false" tool="1" flavor2="8">
       </item>
       <item path="../../../src/Util/fgSettings.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Util/fgStringParser.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/Util/fgStrings.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -11455,6 +11527,16 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/GFX/Particles/fgPsParticleEmitter.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Particles/fgPsParticleEmitter.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../src/GFX/Particles/fgPsSequentialEffect.cpp"
             ex="false"
             tool="1"
@@ -12152,7 +12234,12 @@
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/Resource/fgDataObjectBase.h"
+      <item path="../../../src/Resource/fgManagedDataFileBase.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Resource/fgManagedObjectBase.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -12310,6 +12397,8 @@
       <item path="../../../src/Util/fgSettings.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="../../../src/Util/fgSettings.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Util/fgStringParser.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/Util/fgStrings.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -13796,6 +13885,16 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/GFX/Particles/fgPsParticleEmitter.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Particles/fgPsParticleEmitter.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../src/GFX/Particles/fgPsSequentialEffect.cpp"
             ex="false"
             tool="1"
@@ -14493,7 +14592,12 @@
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/Resource/fgDataObjectBase.h"
+      <item path="../../../src/Resource/fgManagedDataFileBase.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Resource/fgManagedObjectBase.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -14651,6 +14755,8 @@
       <item path="../../../src/Util/fgSettings.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="../../../src/Util/fgSettings.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Util/fgStringParser.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/Util/fgStrings.h" ex="false" tool="3" flavor2="0">
       </item>

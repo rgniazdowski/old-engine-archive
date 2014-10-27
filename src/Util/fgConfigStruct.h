@@ -52,21 +52,20 @@ enum fgCfgParameterType {
     FG_CFG_PARAMETER_NONE // No value specified - unknow
 };
 
-/*
+/**
  *
  */
 struct fgCfgParameter {
-    // Name of the parameter
+    /// Name of the parameter
     std::string name;
-    // Name of the section
+    /// Name of the section
     std::string sectionName;
-    // Name of the subsection in which the parameter resides
+    /// Name of the subsection in which the parameter resides
     std::string subSectionName;
-    // Parameter type (type of the value stored)
+    /// Parameter type (type of the value stored)
     fgCfgParameterType type;
 
     // Union for storing different values
-
     union {
         char string[FG_CFG_PARAMATER_STRING_MAX];
         long int long_val;

@@ -20,9 +20,13 @@
  */
 class fgStrings {
 protected:
-    //
+    /**
+     * 
+     */
     fgStrings() { }
-    //
+    /**
+     * 
+     */
     ~fgStrings() { }
 
 public:

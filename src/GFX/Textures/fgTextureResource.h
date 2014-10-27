@@ -42,7 +42,7 @@ protected:
 public:
     // Create function loads/interprets data from file in ROM and place it in RAM memory.
     virtual fgBool create(void);
-    // Destroy all loaded data including additional metadata (called with deconstructor)
+    // Destroy all loaded data including additional metadata (called with destructor)
     virtual void destroy(void);
     // Reloads any data, recreates the resource (refresh)
     virtual fgBool recreate(void);

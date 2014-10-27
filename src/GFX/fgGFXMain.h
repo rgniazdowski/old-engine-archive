@@ -20,10 +20,13 @@
     #include "Textures/fgTextureManager.h"
 
     #include "fgGFX3DScene.h"
+    #include "fgGFX2DScene.h"
 
     #include "fgStatusReporter.h"
     #include "Util/fgTag.h"
 
+    #include "Particles/fgParticleSystem.h"
+    
 class fgGfxMain;
     #define FG_TAG_GFX_MAIN_NAME	"GfxMain"
     #define FG_TAG_GFX_MAIN		FG_TAG_TYPE(fgGfxMain)
@@ -74,9 +77,13 @@ public:
     fgGfxWindow *getMainWindow(void) const;
     // Returns the pointer to the main 3D scene - may be NULL
     fgGfx3DScene *get3DScene(void) const;
+    // Returns the pointer to the main 2D scene - may be NULL
+    fgGfx2DScene *get2DScene(void) const;
     // Returns the pointer to the main 3D scene camera - may be NULL
     fgGfxCameraAnimation *get3DSceneCamera(void) const;
-
+    //
+    fgParticleSystem *getParticleSystem(void) const;
+    
 private:
     /// Texture manager for GFX upload/reload - works with Resource manager
     fgTextureManager *m_textureMgr;
@@ -90,6 +97,10 @@ private:
     fgGfxContext *m_gfxContext;
     /// Main 3D scene management
     fgGfx3DScene *m_3DScene;
+    /// Main 2D scene management
+    fgGfx2DScene *m_2DScene;
+    /// Main Particle System
+    fgParticleSystem *m_particleSystem;
     /// Is GFX init properly?
     fgBool m_init;
 };

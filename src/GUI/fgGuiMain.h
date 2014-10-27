@@ -40,7 +40,7 @@ class fgGuiMain;
 //FG_EVENT_MOUSE_RELEASED	=	6,
 //FG_EVENT_MOUSE_MOTION		=	7,
 
-    #define FG_MANAGER_GUI_MAIN 0x00000400
+    #define FG_MANAGER_GUI_MAIN     0x00000400
 
 /**
  *

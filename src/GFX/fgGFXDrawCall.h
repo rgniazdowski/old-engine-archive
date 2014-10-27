@@ -185,6 +185,8 @@ public:
     fgGfxDrawAppendMode getDrawAppendMode(void) const;
     // Returns the primitive mode used for drawing
     fgGfxPrimitiveMode getPrimitiveMode(void) const;
+    //
+    fgVertexData *getVertexData(void) const;
 
     // Sets the Z index to specified value
     void setZIndex(const int zIndex);

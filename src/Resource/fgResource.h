@@ -22,7 +22,7 @@
     #include <cstring>
 
     #include "fgManagerBase.h"
-    #include "fgDataObjectBase.h"
+    #include "fgManagedDataFileBase.h"
     #include "Util/fgHandle.h"
     #include "Util/fgTag.h"
 
@@ -48,7 +48,7 @@ typedef fgHandle<fgResourceTag> fgResourceHandle;
     #endif
 
 // Maximum length of the path string for resource file
-    #define FG_RESOURCE_PATH_MAX	FG_PATH_MAX
+    #define FG_RESOURCE_PATH_MAX                FG_PATH_MAX
 
     #define FG_RESOURCE_INVALID_TEXT		"Invalid"
     #define FG_RESOURCE_SOUND_TEXT		"Sound"
@@ -57,9 +57,9 @@ typedef fgHandle<fgResourceTag> fgResourceHandle;
     #define FG_RESOURCE_TEXTURE_TEXT		"Texture"
     #define FG_RESOURCE_FONT_TEXT		"Font"
     #define FG_RESOURCE_SAVE_FILE_TEXT		"SaveFile"
-    #define FG_RESOURCE_GUI_STRUCTURE_SHEET_TEXT    "GuiStructureSheet"
-    #define FG_RESOURCE_GUI_STYLE_SHEET_TEXT        "GuiStyleSheet"
-    #define FG_RESOURCE_SHADER_TEXT		"Shader" // #FIXME
+    //#define FG_RESOURCE_GUI_STRUCTURE_SHEET_TEXT    "GuiStructureSheet"
+    //#define FG_RESOURCE_GUI_STYLE_SHEET_TEXT        "GuiStyleSheet"
+    //#define FG_RESOURCE_SHADER_TEXT		"Shader" // #FIXME
     #define FG_RESOURCE_SCENE_TEXT		"Scene"
     #define FG_RESOURCE_SCRIPT_TEXT		"Script"
     #define FG_RESOURCE_GROUP_TEXT		"ResourceGroup"
@@ -69,46 +69,48 @@ typedef fgHandle<fgResourceTag> fgResourceHandle;
     #define FG_RESOURCE_PLUGIN_TEXT 		"Plugin"
     #define FG_RESOURCE_CUSTOM_TEXT 		"Custom"
     #define FG_RESOURCE_ZIP_PACK_TEXT		"ZipPack"
+    #define FG_RESOURCE_PARTICLE_EFFECT_TEXT    "ParticleEffect"
 
 // Enum type holding all possible resource types
 // used in the game engine
 typedef unsigned int fgResourceType;
 
-    #define FG_RESOURCE_AUTO				0x0000
+    #define FG_RESOURCE_AUTO                    0x0000
 
-    #define FG_RESOURCE_INVALID				0x0000
-    #define	FG_RESOURCE_SOUND			0x0AB0
-    #define	FG_RESOURCE_MUSIC			0x0AB1
-    #define	FG_RESOURCE_3D_MODEL			0x0AB2
-    #define	FG_RESOURCE_TEXTURE			0x0AB3
-    #define	FG_RESOURCE_FONT			0x0AB4
-    #define	FG_RESOURCE_SAVE_FILE			0x0AB5
-    #define	FG_RESOURCE_GUI_STRUCTURE_SHEET         0x0AB6
-    #define	FG_RESOURCE_GUI_STYLE_SHEET		0x0AB7
-    #define	FG_RESOURCE_SHADER			0x0AB8	// #FIXME
-    #define	FG_RESOURCE_SCENE			0x0AB9
-    #define	FG_RESOURCE_SCRIPT			0x0ABA
-    #define	FG_RESOURCE_GROUP			0x0ABB
-    #define	FG_RESOURCE_VARIA			0x0ABC
-    #define	FG_RESOURCE_BINARY			0x0ABD
-    #define	FG_RESOURCE_LIBRARY			0x0ABE
-    #define	FG_RESOURCE_PLUGIN			0x0ABF
-    #define	FG_RESOURCE_CUSTOM			0x0AC0
-    #define	FG_RESOURCE_ZIP_PACK			0x0AC1
+    #define FG_RESOURCE_INVALID                 0x0000
+    #define FG_RESOURCE_SOUND                   0x0AB0
+    #define FG_RESOURCE_MUSIC                   0x0AB1
+    #define FG_RESOURCE_3D_MODEL                0x0AB2
+    #define FG_RESOURCE_TEXTURE                 0x0AB3
+    #define FG_RESOURCE_FONT                    0x0AB4
+    #define FG_RESOURCE_SAVE_FILE               0x0AB5
+    //#define FG_RESOURCE_GUI_STRUCTURE_SHEET     0x0AB6
+    //#define FG_RESOURCE_GUI_STYLE_SHEET         0x0AB7
+    //#define FG_RESOURCE_SHADER                  0x0AB8	// #FIXME
+    #define FG_RESOURCE_SCENE                   0x0AB9
+    #define FG_RESOURCE_SCRIPT                  0x0ABA
+    #define FG_RESOURCE_GROUP                   0x0ABB
+    #define FG_RESOURCE_VARIA                   0x0ABC
+    #define FG_RESOURCE_BINARY                  0x0ABD
+    #define FG_RESOURCE_LIBRARY                 0x0ABE
+    #define FG_RESOURCE_PLUGIN                  0x0ABF
+    #define FG_RESOURCE_CUSTOM                  0x0AC0
+    #define FG_RESOURCE_ZIP_PACK                0x0AC1
+    #define FG_RESOURCE_PARTICLE_EFFECT         0x0AC2
 
-    #define FG_NUM_RESOURCE_BASIC_TYPES                 (FG_RESOURCE_ZIP_PACK-FG_RESOURCE_SOUND)
+    #define FG_NUM_RESOURCE_BASIC_TYPES         (FG_RESOURCE_ZIP_PACK-FG_RESOURCE_SOUND)
 
-    #define FG_RESOURCE_RESERVED1			0x0ACA
-    #define FG_RESOURCE_RESERVED2			0x0ACB
-    #define FG_RESOURCE_RESERVED3			0x0ACC
-    #define FG_RESOURCE_RESERVED4			0x0ACD
-    #define FG_RESOURCE_RESERVED5			0x0ACE
-    #define FG_RESOURCE_RESERVED6			0x0ACF
+    #define FG_RESOURCE_RESERVED1               0x0ACA
+    #define FG_RESOURCE_RESERVED2               0x0ACB
+    #define FG_RESOURCE_RESERVED3               0x0ACC
+    #define FG_RESOURCE_RESERVED4               0x0ACD
+    #define FG_RESOURCE_RESERVED5               0x0ACE
+    #define FG_RESOURCE_RESERVED6               0x0ACF
 
-    #define FG_NUM_RESOURCE_TYPES			(FG_RESOURCE_RESERVED6-FG_RESOURCE_SOUND)
+    #define FG_NUM_RESOURCE_TYPES               (FG_RESOURCE_RESERVED6-FG_RESOURCE_SOUND)
 
-    #define FG_RESOURCE					0x0BBB
-    #define FG_RESOURCE_TEXT				"Resource"
+    #define FG_RESOURCE                         0x0BBB
+    #define FG_RESOURCE_TEXT                    "Resource"
 /*
  *
  */
@@ -123,9 +125,9 @@ inline fgResourceType _FG_RESOURCE_TYPE_FROM_TEXT(const char* text) {
     FG_RETURN_ENUM_IF_TEXT_EQ(FG_RESOURCE_TEXTURE);
     FG_RETURN_ENUM_IF_TEXT_EQ(FG_RESOURCE_FONT);
     FG_RETURN_ENUM_IF_TEXT_EQ(FG_RESOURCE_SAVE_FILE);
-    FG_RETURN_ENUM_IF_TEXT_EQ(FG_RESOURCE_GUI_STRUCTURE_SHEET);
-    FG_RETURN_ENUM_IF_TEXT_EQ(FG_RESOURCE_GUI_STYLE_SHEET);
-    FG_RETURN_ENUM_IF_TEXT_EQ(FG_RESOURCE_SHADER);
+    //FG_RETURN_ENUM_IF_TEXT_EQ(FG_RESOURCE_GUI_STRUCTURE_SHEET);   // #FIXME
+    //FG_RETURN_ENUM_IF_TEXT_EQ(FG_RESOURCE_GUI_STYLE_SHEET);       // #FIXME
+    //FG_RETURN_ENUM_IF_TEXT_EQ(FG_RESOURCE_SHADER);                // #FIXME
     FG_RETURN_ENUM_IF_TEXT_EQ(FG_RESOURCE_SCENE);
     FG_RETURN_ENUM_IF_TEXT_EQ(FG_RESOURCE_SCRIPT);
     FG_RETURN_ENUM_IF_TEXT_EQ(FG_RESOURCE_GROUP);
@@ -135,6 +137,7 @@ inline fgResourceType _FG_RESOURCE_TYPE_FROM_TEXT(const char* text) {
     FG_RETURN_ENUM_IF_TEXT_EQ(FG_RESOURCE_PLUGIN);
     FG_RETURN_ENUM_IF_TEXT_EQ(FG_RESOURCE_CUSTOM);
     FG_RETURN_ENUM_IF_TEXT_EQ(FG_RESOURCE_ZIP_PACK);
+    FG_RETURN_ENUM_IF_TEXT_EQ(FG_RESOURCE_PARTICLE_EFFECT);
     return FG_RESOURCE_INVALID;
 }
 // #FIXME - #P3 - string obfuscation (also for error code -> text msg translations)
@@ -180,24 +183,36 @@ inline fgResPriorityType _FG_RES_PRIORITY_FROM_TEXT(const char* text) {
 /*
  * Base class for resource
  */
-class fgResource : public fgDataObjectBase<fgResourceHandle, fgQuality>, public fgStatusReporter<fgResourceTag> {
+class fgResource : public fgManagedDataFileBase<fgResourceHandle, fgQuality>, public fgStatusReporter<fgResourceTag> {
     friend class fgResourceManager;
     friend class fgResourceGroup;
 public:
-    // Base constructor of the resource object
+    /**
+     *  Base constructor of the resource object
+     */
     fgResource();
-    // Constructor with additional parameter (path)
+    /**
+     * Constructor with additional parameter (path)
+     * @param path
+     */
     fgResource(const char *path);
-    // Constructor with additional parameter (path)
+    /**
+     * Constructor with additional parameter (path)
+     * @param path
+     */
     fgResource(std::string& path);
-    // Base destructor of the resource object
+    /**
+     * Base destructor of the resource object
+     */
     virtual ~fgResource() {
         fgResource::destroy();
     }
 
 protected:
-    // Clears the class data, this actually does not free allocated memory,
-    // just resets base class attributes
+    /**
+     * Clears the class data, this actually does not free allocated memory,
+     * just resets base class attributes
+     */
     virtual void clear(void);
 
 public:
@@ -252,13 +267,19 @@ public:
     }
 
 protected:
-    // Set the reference counter for the resource
+    /**
+     * Set the reference counter for the resource
+     * @param nCount
+     */
     void setReferenceCount(unsigned int nCount) {
         m_nRefCount = nCount;
     }
 
 public:
-    //
+    /**
+     * 
+     * @return 
+     */
     inline fgManagerBase *getManager(void) const {
         return m_manager;
     }
@@ -299,7 +320,6 @@ protected:
         if(m_nRefCount > 0) m_nRefCount--;
         return m_nRefCount;
     }
-
     // Lock the resource (reference counter +1)
     virtual unsigned int Lock(void) {
         return upRef();

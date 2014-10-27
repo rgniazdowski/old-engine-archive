@@ -15,7 +15,7 @@
  *
  */
 fgGuiWidget::fgGuiWidget() :
-m_nameTag(),
+fgManagedObjectBase(),
 m_typeName(),
 m_styleName(FG_GUI_WIDGET_DEFAULT_STYLE),
 m_link(),
@@ -38,7 +38,6 @@ m_fatherPtr(),
 m_type(FG_GUI_WIDGET_UNKNOWN),
 m_typeTraits(FG_GUI_WIDGET_UNKNOWN),
 m_state(FG_GUI_WIDGET_STATE_NONE),
-m_isManaged(FG_FALSE),
 m_isVisible(FG_TRUE),
 m_isActive(FG_TRUE),
 m_ignoreState(FG_FALSE) {

@@ -10,9 +10,7 @@
 #ifndef _FG_DATA_OBJECT_BASE_H_
     #define _FG_DATA_OBJECT_BASE_H_
 
-// Global include needed (it defines the parameters of the build)
-    #include "fgBuildConfig.h"
-
+    #include "fgManagedObjectBase.h"
     #include <map>
     #include <string>
 
@@ -28,25 +26,32 @@ template<typename HandleType, typename MapKeyType>
  * project.  Quality  depends on some  explicit  settings or
  * device hardware  on which the program is being  executed.
  */
-class fgDataObjectBase {
+class fgManagedDataFileBase : public fgManagedObjectBase<HandleType> {
 public:
     typedef std::map<MapKeyType, std::string> fileMapping;
     typedef typename fileMapping::iterator fileMappingItor;
 
 public:
-    // Default empty constructor for resource base object
-    fgDataObjectBase() : m_defaultID((MapKeyType) - 1) {
+    /**
+     * Default empty constructor for resource base object
+     */
+    fgManagedDataFileBase() : m_defaultID((MapKeyType) - 1) {
         m_filePath.clear();
         m_fileMapping.clear();
     }
 
-    // Default empty destructor for resource base object
-    virtual ~fgDataObjectBase() {
+    /**
+     * Default empty destructor for resource base object
+     */
+    virtual ~fgManagedDataFileBase() {
         m_filePath.clear();
         m_fileMapping.clear();
     }
 public:
-    // Set file path to this resource
+    /**
+     * 
+     * @param path
+     */
     virtual void setFilePath(const char *path) {
         if(!path)
             return;
@@ -54,37 +59,56 @@ public:
         m_filePath = path;
         m_fileMapping[m_defaultID] = path;
     }
-    // Set file path to this resource
+    /**
+     * Set file path for this data
+     * @param path
+     */
     virtual void setFilePath(const std::string& path) {
         m_filePath.clear();
         m_filePath = path;
         m_fileMapping[m_defaultID] = path;
     }
 
-    // Get resource file path string
-    inline std::string getFilePath(void) const {
-        return m_filePath;
-    }
-    // Get reference to resource file path string
+    /**
+     * Get reference to data file path string
+     * @return 
+     */
     inline std::string& getFilePath(void) {
         return m_filePath;
     }
-    // Get resource file path as C-like string (char array)
+    /**
+     * Get reference to data file path string
+     * @return 
+     */
+    inline const std::string& getFilePath(void) const {
+        return m_filePath;
+    }
+    /**
+     * Gets data file path 
+     * @return  Data file path as C-like string (char array)
+     */
     inline const char* getFilePathStr(void) const {
         return m_filePath.c_str();
     }
-
-    //   
+    /**
+     * 
+     * @return 
+     */
     inline fileMapping& getFileMapping(void) {
         return m_fileMapping;
     }
-
-    //
+    /**
+     * 
+     * @return 
+     */
     inline unsigned int getFilesCount(void) const {
         return m_fileMapping.size();
     }
-
-    // Set file path to this resource
+    /**
+     * Set file path to this resource
+     * @param path
+     * @param id
+     */
     virtual void setFilePath(const char *path, MapKeyType id) {
         if(!path)
             return;
@@ -94,7 +118,11 @@ public:
         else if(m_filePath.empty())
             m_filePath = path;
     }
-    // Set file path to this resource
+    /**
+     * 
+     * @param path
+     * @param id
+     */
     virtual void setFilePath(std::string& path, MapKeyType id) {
         m_fileMapping[id] = path;
         if(id == m_defaultID)
@@ -103,13 +131,21 @@ public:
             m_filePath = path;
     }
 
-    // Get resource file path string
+    /**
+     * 
+     * @param id
+     * @return 
+     */
     inline std::string getFilePath(MapKeyType id) const {
         // this lazy cast is ok - non-const version does not modify anything
-        return (const_cast<fgDataObjectBase<HandleType, MapKeyType>*>(this)->getFilePath(id));
+        return (const_cast<fgManagedDataFileBase<HandleType, MapKeyType>*>(this)->getFilePath(id));
     }
 
-    // Get reference to resource file path string
+    /**
+     * 
+     * @param id
+     * @return 
+     */
     inline std::string& getFilePath(MapKeyType id) {
         if(m_fileMapping.find(id) == m_fileMapping.end()) {
             return m_filePath;
@@ -117,7 +153,11 @@ public:
         return m_fileMapping[id];
     }
 
-    // Get resource file path as C-like string (char array)
+    /**
+     * 
+     * @param id
+     * @return 
+     */
     inline const char* getFilePathStr(MapKeyType id) {
         if(m_fileMapping.find(id) == m_fileMapping.end()) {
             return m_filePath.c_str();
@@ -125,46 +165,12 @@ public:
         return m_fileMapping[id].c_str();
     }
 
-    // Set default ID
+    /**
+     * 
+     * @param id
+     */
     inline void setDefaultID(MapKeyType id) {
         m_defaultID = id;
-    }
-
-    // Set resource name (string TAG/ID)
-    inline void setName(const char *name) {
-        m_nameTag = name;
-    }
-    // Set resource name (string TAG/ID)
-    inline void setName(const std::string& name) {
-        m_nameTag = name;
-    }
-
-    // Get resource name string
-    inline std::string getName(void) const {
-        return m_nameTag;
-    }
-    // Get reference to resource name string
-    inline std::string& getName(void) {
-        return m_nameTag;
-    }
-    // Get resource name (TAG/string ID) as C-like string (char array)
-    inline const char* getNameStr(void) const {
-        return m_nameTag.c_str();
-    }
-
-    // Return the data handle ID
-    inline HandleType getHandle(void) const {
-        return m_handle;
-    }
-
-    // Set the data handle ID 
-    inline void setHandle(HandleType handle) {
-        m_handle = handle;
-    }
-
-    // Returns the reference to the data handle
-    inline HandleType& getRefHandle(void) {
-        return m_handle;
     }
 
 protected:
@@ -172,12 +178,8 @@ protected:
     fileMapping m_fileMapping;
     /// File path as separate string (by default this is for universal quality)
     std::string m_filePath;
-    /// Name of the data, string ID
-    std::string m_nameTag;
     /// Default ID to write to
     MapKeyType m_defaultID;
-    /// Unique handle number
-    HandleType m_handle;
 };
 
 #endif /* _FG_DATA_OBJECT_BASE_H_ */

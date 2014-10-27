@@ -98,7 +98,7 @@ fgBool fgGuiStyleManager::insertStyle(fgGuiStyleHandle& shUniqueID, fgGuiStyle *
     if(!insert(shUniqueID, pStyle, pStyle->getName())) {
         return FG_FALSE;
     }
-    //style->setManaged(); // ?
+    pStyle->setManaged(FG_TRUE);
     return FG_TRUE;
 }
 
@@ -106,13 +106,14 @@ fgBool fgGuiStyleManager::insertStyle(fgGuiStyleHandle& shUniqueID, fgGuiStyle *
  *
  */
 fgGuiStyle* fgGuiStyleManager::request(const std::string& info) {
-    return NULL;
+    // #FIXME
 }
 
 /*
  *
  */
 fgGuiStyle* fgGuiStyleManager::request(const char *info) {
+    // #FIXME
     return NULL;
 }
 

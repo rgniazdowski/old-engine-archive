@@ -41,8 +41,10 @@ namespace std {
     #endif /* FG_USING_MARMALADE */
 
 // HandleType HAS TO BE template of fgHandle
-
 template <typename DataType, typename HandleType>
+/**
+ *
+ */
 class fgHandleManager {
     #ifdef FG_USING_MARMALADE
 protected:
@@ -86,63 +88,123 @@ private:
     hmNameVec m_nameVec;
 
 protected:
-    // Reset internal data
+    /**
+     * Reset internal data
+     */
     void clear(void);
 public:
-    // Default constructor for Handle Manager object
+    /**
+     * Default constructor for Handle Manager object
+     */
     fgHandleManager() {
         clear();
     }
-    // Default destructor for Handle Manager object
+    /**
+     * Default destructor for Handle Manager object
+     */
     ~fgHandleManager() {
         clear();
     }
 
-    //
+    /**
+     * 
+     * @param rHandle
+     * @param pResource
+     * @return 
+     */
     fgBool acquireHandle(HandleType& rHandle, DataType pResource);
-    //
+    /**
+     * 
+     * @param name
+     * @param rHandle
+     * @return 
+     */
     fgBool setupName(const std::string& name, const HandleType& rHandle);
-    //
+    /**
+     * 
+     * @param name
+     * @param rHandle
+     * @return 
+     */
     fgBool setupName(const char* name, const HandleType& rHandle);
-    //
+    /**
+     * 
+     * @param handle
+     * @return 
+     */
     fgBool releaseHandle(const HandleType& handle);
-    //
+    /**
+     * 
+     */
     void releaseAllHandles(void);
 
-    //
+    /**
+     * 
+     * @param handle
+     * @return 
+     */
     DataType dereference(const HandleType& handle);
-    //
+    /**
+     * 
+     * @param name
+     * @return 
+     */
     DataType dereference(const std::string& name);
-    //
+    /**
+     * 
+     * @param name
+     * @return 
+     */
     DataType dereference(const char* name);
 
-    //
+    /**
+     * 
+     * @return 
+     */
     unsigned int getUsedHandleCount(void) const {
         return ( m_magicData.size() - m_freeSlots.size());
     }
 
-    //
+    /**
+     * 
+     * @return 
+     */
     fgBool hasUsedHandles(void) const {
         return (fgBool)(!!getUsedHandleCount());
     }
 
-    //
+    /**
+     * 
+     * @return 
+     */
     hmDataVec& getRefDataVector(void) {
         return m_managedData;
     }
 
-    //
+    /**
+     * 
+     * @return 
+     */
     const hmDataVec& getRefDataVector(void) const {
         return m_managedData;
     }
 
-    //
+    /**
+     * 
+     * @param pData
+     * @return 
+     */
     fgBool isDataManaged(DataType pData);
-    //
+    /**
+     * 
+     * @param handle
+     * @return 
+     */
     fgBool isHandleValid(const HandleType& handle);
 };
-/*
- *
+
+/**
+ * 
  */
 template <typename DataType, typename HandleType>
 void fgHandleManager<DataType, HandleType>::clear(void) {
@@ -152,8 +214,12 @@ void fgHandleManager<DataType, HandleType>::clear(void) {
     m_nameVec.clear_optimised();
     m_nameMap.clear();
 }
-/*
- *
+
+/**
+ * 
+ * @param rHandle
+ * @param pResource
+ * @return 
  */
 template <typename DataType, typename HandleType>
 fgBool fgHandleManager<DataType, HandleType>::acquireHandle(HandleType& rHandle, DataType pResource) {
@@ -177,8 +243,12 @@ fgBool fgHandleManager<DataType, HandleType>::acquireHandle(HandleType& rHandle,
     }
     return FG_TRUE;
 }
-/*
- *
+
+/**
+ * 
+ * @param name
+ * @param rHandle
+ * @return 
  */
 template <typename DataType, typename HandleType>
 fgBool fgHandleManager<DataType, HandleType>::setupName(const std::string& name, const HandleType& rHandle) {
@@ -198,8 +268,12 @@ fgBool fgHandleManager<DataType, HandleType>::setupName(const std::string& name,
     m_nameVec[index] = name;
     return FG_TRUE;
 }
-/*
- *
+
+/**
+ * 
+ * @param name
+ * @param rHandle
+ * @return 
  */
 template <typename DataType, typename HandleType>
 fgBool fgHandleManager<DataType, HandleType>::setupName(const char* name, const HandleType& rHandle) {
@@ -218,8 +292,11 @@ fgBool fgHandleManager<DataType, HandleType>::setupName(const char* name, const 
     m_nameVec[index] = std::string(name);
     return FG_TRUE;
 }
-/*
- *
+
+/**
+ * 
+ * @param handle
+ * @return 
  */
 template <typename DataType, typename HandleType>
 fgBool fgHandleManager<DataType, HandleType>::releaseHandle(const HandleType& handle) {
@@ -243,15 +320,18 @@ fgBool fgHandleManager<DataType, HandleType>::releaseHandle(const HandleType& ha
     }
     return FG_TRUE;
 }
-/*
- *
+
+/**
+ * 
  */
 template <typename DataType, typename HandleType>
 void fgHandleManager<DataType, HandleType>::releaseAllHandles(void) {
     clear();
 }
-/*
- *
+/**
+ * 
+ * @param handle
+ * @return 
  */
 template <typename DataType, typename HandleType>
 inline DataType fgHandleManager<DataType, HandleType>::dereference(const HandleType& handle) {
@@ -260,8 +340,11 @@ inline DataType fgHandleManager<DataType, HandleType>::dereference(const HandleT
     fgRawIndex index = handle.getIndex();
     return *(m_managedData.begin() + index);
 }
-/*
- *
+
+/**
+ * 
+ * @param name
+ * @return 
  */
 template <typename DataType, typename HandleType>
 inline DataType fgHandleManager<DataType, HandleType>::dereference(const std::string& name) {
@@ -282,8 +365,11 @@ inline DataType fgHandleManager<DataType, HandleType>::dereference(const std::st
         return NULL;
     }
 }
-/*
- *
+
+/**
+ * 
+ * @param name
+ * @return 
  */
 template <typename DataType, typename HandleType>
 inline DataType fgHandleManager<DataType, HandleType>::dereference(const char* name) {
@@ -292,8 +378,11 @@ inline DataType fgHandleManager<DataType, HandleType>::dereference(const char* n
     std::string key = name;
     return fgHandleManager<DataType, HandleType>::dereference(key);
 }
-/*
- *
+
+/**
+ * 
+ * @param pData
+ * @return 
  */
 template <typename DataType, typename HandleType>
 inline fgBool fgHandleManager<DataType, HandleType>::isDataManaged(DataType pData) {
@@ -301,8 +390,11 @@ inline fgBool fgHandleManager<DataType, HandleType>::isDataManaged(DataType pDat
         return FG_TRUE;
     return FG_FALSE;
 }
-/*
- *
+
+/**
+ * 
+ * @param handle
+ * @return 
  */
 template <typename DataType, typename HandleType>
 inline fgBool fgHandleManager<DataType, HandleType>::isHandleValid(const HandleType& handle) {

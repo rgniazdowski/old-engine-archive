@@ -293,6 +293,22 @@ struct fgGfxMeshSoA : fgGfxMeshBase {
     virtual fgGFXuint size(void) const {
         return vertices.size();
     }
+    
+    //
+    virtual void reserve(const unsigned int newSize) {
+        this->vertices.reserve(newSize);
+        //this->indices.reserve(newSize);
+        this->normals.reserve(newSize);
+        this->uvs.reserve(newSize);
+    }
+    
+    //
+    virtual void resize(const unsigned int newSize) {
+        this->vertices.resize(newSize);
+        //this->indices.resize(newSize);
+        this->normals.resize(newSize);
+        this->uvs.resize(newSize);
+    }
 
     // Returns the stride of the data (here: 0)
     virtual fgGFXsizei stride(void) const {
@@ -546,6 +562,22 @@ struct fgGfxMeshAoS : fgGfxMeshBase {
         return vertices.size();
     }
 
+    //
+    virtual void reserve(const unsigned int newSize) {
+        this->vertices.reserve(newSize);
+        //this->indices.reserve(newSize);
+        //this->normals.reserve(newSize);
+        //this->uvs.reserve(newSize);
+    }
+    
+    //
+    virtual void resize(const unsigned int newSize) {
+        this->vertices.resize(newSize);
+        //this->indices.resize(newSize);
+        //this->normals.resize(newSize);
+        //this->uvs.resize(newSize);
+    }
+    
     //
     virtual fgGFXsizei stride(void) const {
         return vertices.stride();

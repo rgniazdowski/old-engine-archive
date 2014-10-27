@@ -128,12 +128,12 @@ fgBool fgGfxShaderConfig::_parseData(fgGfxSLVersion SLver) {
         reportError(FG_ERRNO_GFX_SHADER_INVALID_SLVER);
         return FG_FALSE;
     }
-    if(m_filePath.empty()) {
+    if(m_configPath.empty()) {
         reportError(FG_ERRNO_WRONG_PATH);
         return FG_FALSE;
     }
 
-    const char *ext = fgPath::fileExt(m_filePath.c_str(), FG_TRUE);
+    const char *ext = fgPath::fileExt(m_configPath.c_str(), FG_TRUE);
     if(!ext) {
         reportError(FG_ERRNO_WRONG_PATH);
         return FG_FALSE;

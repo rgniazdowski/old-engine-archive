@@ -61,6 +61,7 @@
             <word>const</word>
             <word>coords</word>
             <word>Cornsilk</word>
+            <word>destructors</word>
             <word>dfactor</word>
             <word>drawcall</word>
             <word>ds</word>
@@ -84,12 +85,15 @@
             <word>ivec</word>
             <word>Lightwave</word>
             <word>metadata</word>
+            <word>ms</word>
             <word>multitextured</word>
             <word>multitexturing</word>
             <word>obj</word>
             <word>overallocation</word>
             <word>packfree</word>
+            <word>packh</word>
             <word>packhorizontal</word>
+            <word>packv</word>
             <word>packvertical</word>
             <word>param</word>
             <word>params</word>

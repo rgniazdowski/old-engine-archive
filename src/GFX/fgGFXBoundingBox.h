@@ -30,6 +30,12 @@ template <class BoxType, class VecType, class DataType>
  *
  */
 struct fgBoundingBox {
+    typedef fgBoundingBox<BoxType, VecType, DataType> type;
+    typedef DataType value_type;
+    typedef VecType vector_type;
+    typedef BoxType box_type;
+    typedef int size_type;
+
     VecType pos;
     VecType size;
     /**
@@ -46,6 +52,43 @@ struct fgBoundingBox {
     fgBoundingBox(const VecType &_pos, const VecType &_size) :
     pos(_pos),
     size(_size) { }
+    /**
+     * 
+     * @return 
+     */
+    virtual int length(void) const {
+        return this->pos.length() + this->size.length();
+    }
+    /**
+     * 
+     * @param i
+     * @return 
+     */
+    DataType & operator [](int i) {
+        if(i > this->length())
+            i = 0;
+        if(i >= this->pos.length()) {
+            i -= this->pos.length();
+            return this->size[i];
+        } else {
+            return this->pos[i];
+        }
+    }
+    /**
+     * 
+     * @param i
+     * @return 
+     */
+    DataType const & operator [](int i)const {
+        if(i > this->length())
+            i = 0;
+        if(i >= this->pos.length()) {
+            i -= this->pos.length();
+            return this->size[i];
+        } else {
+            return this->pos[i];
+        }
+    }
     /**
      * 
      */
@@ -399,7 +442,7 @@ fgBoundingBox<fgBoundingBox3D<DataType>, glm::detail::tvec3<DataType, glm::defau
         //    this->pos.x = a.pos.x;
         //if(this->pos.y > a.pos.y && a.pos.y > 0)
         //    this->pos.y = a.pos.y;
-        
+
         if(this->pos.x + this->size.x < a.pos.x + a.size.x) {
             this->size.x = a.pos.x + a.size.x - this->pos.x;
             //this->size.y += a.pos.x) + a.size.x) - (this->pos.x) + this->size.x));
@@ -413,8 +456,8 @@ fgBoundingBox<fgBoundingBox3D<DataType>, glm::detail::tvec3<DataType, glm::defau
         if(this->pos.z + this->size.z < a.pos.z + a.size.z) {
             this->size.z = a.pos.z + a.size.z - this->pos.z;
         }
-        
-        
+
+
         return (*this);
     }
     /**

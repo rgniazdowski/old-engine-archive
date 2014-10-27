@@ -13,9 +13,9 @@
     #include "Resource/fgDataManagerBase.h"
     #include "fgGuiStyle.h"
 
-    #define FG_MANAGER_GUI_STYLE	0x00000040
+    #define FG_MANAGER_GUI_STYLE    0x00000040
 
-/*
+/**
  *
  */
 class fgGuiStyleManager : public fgDataManagerBase<fgGuiStyle*, fgGuiStyleHandle, fgGuiStyleTag> {
@@ -23,37 +23,68 @@ protected:
     typedef hmDataVec smStyleVec;
     typedef hmDataVecItor smStyleVecItor;
 public:
-    //
+    /**
+     * 
+     */
     fgGuiStyleManager();
-    //
+    /**
+     * 
+     */
     virtual ~fgGuiStyleManager();
 
 protected:
-    //
+    /**
+     * 
+     */
     virtual void clear(void);
 
 public:
-    //
+    /**
+     * 
+     * @return 
+     */
     virtual fgBool destroy(void);
-    //
+    /**
+     * 
+     * @return 
+     */
     virtual fgBool initialize(void);
 
-    //
+    /**
+     * 
+     * @param shUniqueID
+     * @param pStyle
+     * @return 
+     */
     virtual fgBool insertStyle(fgGuiStyleHandle& shUniqueID, fgGuiStyle *pStyle);
 
-    //
+    /**
+     * 
+     * @param info
+     * @return 
+     */
     virtual fgGuiStyle* request(const std::string& info);
-    //
+    /**
+     * 
+     * @param info
+     * @return 
+     */
     virtual fgGuiStyle* request(const char *info);
 
-    //
+    /**
+     * 
+     * @param path
+     */
     void setStylesPath(const std::string &path);
-    //
+    /**
+     * 
+     * @param path
+     */
     void setStylesPath(const char *path);
 
 private:
-    ///
+    /// Current path to GUIs style path
     std::string m_stylesPath;
-
 };
+
 #endif /* _FG_GUI_STYLE_MANAGER_H_ */

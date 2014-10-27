@@ -14,8 +14,8 @@
 
 typedef unsigned int fgManagerType;
 
-    #define FG_MANAGER_INVALID	0x00000000
-    #define FG_MANAGER_BASE     0x00000000
+    #define FG_MANAGER_INVALID      0x00000000
+    #define FG_MANAGER_BASE         0x00000000
 
 /*
  *

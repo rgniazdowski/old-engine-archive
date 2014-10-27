@@ -15,7 +15,7 @@
     #include "fgResourceErrorCodes.h"
     #include "fgStatusReporter.h"
 
-    #define FG_MANAGER_DATA_BASE	0x00000080
+    #define FG_MANAGER_DATA_BASE    0x00000080
 
 template <typename DataType, typename HandleType, typename TagType>
 /*
@@ -23,76 +23,166 @@ template <typename DataType, typename HandleType, typename TagType>
  */
 class fgDataManagerBase : public fgManagerBase, public fgStatusReporter<TagType>, protected fgHandleManager<DataType, HandleType> {
 public:
-    // 
+    /**
+     * 
+     */
     fgDataManagerBase() {
         m_managerType = FG_MANAGER_DATA_BASE;
     }
-    // 
+    /**
+     * 
+     */
     virtual ~fgDataManagerBase() {
         clear();
     }
 
 protected:
-    // 
+    /**
+     * 
+     */
     virtual void clear(void);
 
 public:
-    // 
+    /**
+     * 
+     * @return 
+     */
     virtual fgBool destroy(void) = 0;
-    // 
+    /**
+     * 
+     * @return 
+     */
     virtual fgBool initialize(void) = 0;
 
-    // 
+    /**
+     * 
+     * @param dhUniqueID
+     * @param pData
+     * @param nameTag
+     * @return 
+     */
     virtual fgBool insert(HandleType& dhUniqueID, DataType pData, const std::string& nameTag);
 
-    // 
+    /**
+     * 
+     * @param pData
+     * @return 
+     */
     virtual fgBool remove(DataType pData);
-    // 
+    /**
+     * 
+     * @param dhUniqueID
+     * @return 
+     */
     virtual fgBool remove(const HandleType& dhUniqueID);
-    // 
+    /**
+     * 
+     * @param nameTag
+     * @return 
+     */
     virtual fgBool remove(const std::string& nameTag);
-    //
+    /**
+     * 
+     * @param nameTag
+     * @return 
+     */
     virtual fgBool remove(const char *nameTag);
 
-    // 
+    /**
+     * 
+     * @param pData
+     * @return 
+     */ 
     virtual fgBool destroyData(DataType& pData);
-    // 
+    /**
+     * 
+     * @param dhUniqueID
+     * @return 
+     */
     virtual fgBool destroyData(const HandleType& dhUniqueID);
-    // 
+    /**
+     * 
+     * @param nameTag
+     * @return 
+     */
     virtual fgBool destroyData(const std::string& nameTag);
-    // 
+    /**
+     * 
+     * @param nameTag
+     * @return 
+     */
     virtual fgBool destroyData(const char *nameTag);
 
-    // 
+    /**
+     * 
+     * @param dhUniqueID
+     * @return 
+     */
     virtual DataType get(const HandleType& dhUniqueID);
-    // 
+    /**
+     * 
+     * @param nameTag
+     * @return 
+     */
     virtual DataType get(const std::string& nameTag);
-    // 
+    /**
+     * 
+     * @param nameTag
+     * @return 
+     */
     virtual DataType get(const char *nameTag);
 
-    // 
+    /**
+     * 
+     * @param info
+     * @return 
+     */
     virtual DataType request(const std::string& info) = 0;
-    // 
+    /**
+     * 
+     * @param info
+     * @return 
+     */
     virtual DataType request(const char *info) = 0;
 
-    // 
+    /**
+     * 
+     * @param pData
+     * @return 
+     */
     virtual fgBool isManaged(DataType pData);
-    // 
+    /**
+     * 
+     * @param dhUniqueID
+     * @return 
+     */
     virtual fgBool isManaged(const HandleType& dhUniqueID);
-    // 
+    /**
+     * 
+     * @param nameTag
+     * @return 
+     */
     virtual fgBool isManaged(const std::string& nameTag);
-    // 
+    /**
+     * 
+     * @param nameTag
+     * @return 
+     */
     virtual fgBool isManaged(const char *nameTag);
 };
-/*
- *
+/**
+ * 
  */
 template <typename DataType, typename HandleType, typename TagType>
 void fgDataManagerBase<DataType, HandleType, TagType>::clear(void) {
     fgHandleManager<DataType, HandleType>::releaseAllHandles();
 }
-/*
- *
+/**
+ * 
+ * @param dhUniqueID
+ * @param pData
+ * @param nameTag
+ * @return 
  */
 template <typename DataType, typename HandleType, typename TagType>
 fgBool fgDataManagerBase<DataType, HandleType, TagType>::insert(HandleType& dhUniqueID, DataType pData, const std::string& nameTag) {
@@ -126,8 +216,10 @@ fgBool fgDataManagerBase<DataType, HandleType, TagType>::insert(HandleType& dhUn
     }
     return FG_TRUE;
 }
-/*
- *
+/**
+ * 
+ * @param pData
+ * @return 
  */
 template <typename DataType, typename HandleType, typename TagType>
 fgBool fgDataManagerBase<DataType, HandleType, TagType>::remove(DataType pData) {
@@ -136,8 +228,10 @@ fgBool fgDataManagerBase<DataType, HandleType, TagType>::remove(DataType pData) 
     }
     return fgHandleManager<DataType, HandleType>::releaseHandle(pData->getHandle());
 }
-/*
- *
+/**
+ * 
+ * @param dhUniqueID
+ * @return 
  */
 template <typename DataType, typename HandleType, typename TagType>
 fgBool fgDataManagerBase<DataType, HandleType, TagType>::remove(const HandleType& dhUniqueID) {
@@ -146,8 +240,10 @@ fgBool fgDataManagerBase<DataType, HandleType, TagType>::remove(const HandleType
         return FG_FALSE;
     return fgHandleManager<DataType, HandleType>::releaseHandle(pData->getHandle());
 }
-/*
- *
+/**
+ * 
+ * @param nameTag
+ * @return 
  */
 template <typename DataType, typename HandleType, typename TagType>
 fgBool fgDataManagerBase<DataType, HandleType, TagType>::remove(const std::string& nameTag) {
@@ -156,8 +252,10 @@ fgBool fgDataManagerBase<DataType, HandleType, TagType>::remove(const std::strin
         return FG_FALSE;
     return fgHandleManager<DataType, HandleType>::releaseHandle(pData->getHandle());
 }
-/*
- *
+/**
+ * 
+ * @param nameTag
+ * @return 
  */
 template <typename DataType, typename HandleType, typename TagType>
 fgBool fgDataManagerBase<DataType, HandleType, TagType>::remove(const char *nameTag) {
@@ -166,8 +264,10 @@ fgBool fgDataManagerBase<DataType, HandleType, TagType>::remove(const char *name
         return FG_FALSE;
     return fgHandleManager<DataType, HandleType>::releaseHandle(pData->getHandle());
 }
-/*
- *
+/**
+ * 
+ * @param pData
+ * @return 
  */
 template <typename DataType, typename HandleType, typename TagType>
 fgBool fgDataManagerBase<DataType, HandleType, TagType>::destroyData(DataType& pData) {
@@ -179,8 +279,10 @@ fgBool fgDataManagerBase<DataType, HandleType, TagType>::destroyData(DataType& p
     pData = NULL;
     return FG_TRUE;
 }
-/*
- *
+/**
+ * 
+ * @param dhUniqueID
+ * @return 
  */
 template <typename DataType, typename HandleType, typename TagType>
 fgBool fgDataManagerBase<DataType, HandleType, TagType>::destroyData(const HandleType& dhUniqueID) {
@@ -192,8 +294,10 @@ fgBool fgDataManagerBase<DataType, HandleType, TagType>::destroyData(const Handl
     delete pData;
     return FG_TRUE;
 }
-/*
- *
+/**
+ * 
+ * @param nameTag
+ * @return 
  */
 template <typename DataType, typename HandleType, typename TagType>
 fgBool fgDataManagerBase<DataType, HandleType, TagType>::destroyData(const std::string& nameTag) {
@@ -205,8 +309,10 @@ fgBool fgDataManagerBase<DataType, HandleType, TagType>::destroyData(const std::
     delete pData;
     return FG_TRUE;
 }
-/*
- *
+/**
+ * 
+ * @param nameTag
+ * @return 
  */
 template <typename DataType, typename HandleType, typename TagType>
 fgBool fgDataManagerBase<DataType, HandleType, TagType>::destroyData(const char *nameTag) {
@@ -218,16 +324,20 @@ fgBool fgDataManagerBase<DataType, HandleType, TagType>::destroyData(const char 
     delete pData;
     return FG_TRUE;
 }
-/*
- *
+/**
+ * 
+ * @param dhUniqueID
+ * @return 
  */
 template <typename DataType, typename HandleType, typename TagType>
 DataType fgDataManagerBase<DataType, HandleType, TagType>::get(const HandleType& dhUniqueID) {
     DataType pData = fgHandleManager<DataType, HandleType>::dereference(dhUniqueID);
     return pData;
 }
-/*
- *
+/**
+ * 
+ * @param nameTag
+ * @return 
  */
 template <typename DataType, typename HandleType, typename TagType>
 DataType fgDataManagerBase<DataType, HandleType, TagType>::get(const std::string& nameTag) {
@@ -242,16 +352,20 @@ DataType fgDataManagerBase<DataType, HandleType, TagType>::get(const std::string
     }
     return pData;
 }
-/*
- *
+/**
+ * 
+ * @param nameTag
+ * @return 
  */
 template <typename DataType, typename HandleType, typename TagType>
 DataType fgDataManagerBase<DataType, HandleType, TagType>::get(const char *nameTag) {
     DataType pData = fgHandleManager<DataType, HandleType>::dereference(nameTag);
     return pData;
 }
-/*
- *
+/**
+ * 
+ * @param pData
+ * @return 
  */
 template <typename DataType, typename HandleType, typename TagType>
 fgBool fgDataManagerBase<DataType, HandleType, TagType>::isManaged(DataType pData) {
@@ -270,16 +384,31 @@ fgBool fgDataManagerBase<DataType, HandleType, TagType>::isManaged(DataType pDat
     }
     return FG_TRUE;
 }
+/**
+ * 
+ * @param dhUniqueID
+ * @return 
+ */
 template <typename DataType, typename HandleType, typename TagType>
 fgBool fgDataManagerBase<DataType, HandleType, TagType>::isManaged(const HandleType& dhUniqueID) {
     DataType pData = fgDataManagerBase<DataType, HandleType, TagType>::get(dhUniqueID);
     return (fgBool)(pData != NULL);
 }
+/**
+ * 
+ * @param nameTag
+ * @return 
+ */
 template <typename DataType, typename HandleType, typename TagType>
 fgBool fgDataManagerBase<DataType, HandleType, TagType>::isManaged(const std::string& nameTag) {
     DataType pData = fgDataManagerBase<DataType, HandleType, TagType>::get(nameTag);
     return (fgBool)(pData != NULL);
 }
+/**
+ * 
+ * @param nameTag
+ * @return 
+ */
 template <typename DataType, typename HandleType, typename TagType>
 fgBool fgDataManagerBase<DataType, HandleType, TagType>::isManaged(const char *nameTag) {
     DataType pData = fgDataManagerBase<DataType, HandleType, TagType>::get(nameTag);

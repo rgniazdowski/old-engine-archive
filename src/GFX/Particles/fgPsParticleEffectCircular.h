@@ -10,14 +10,15 @@
 #ifndef _FG_PS_PARTICLE_EFFECT_CIRCULAR_H_
     #define _FG_PS_PARTICLE_EFFECT_CIRCULAR_H_
 
-    #include <limits.h>
+    #include <climits>
     #include "fgPsParticleEffect.h"
     #include "fgLog.h"
-
+    
+    #if 0
 /*
  *
  */
-class ParticleEffectCircular : public ParticleEffect {
+class ParticleEffectCircular : public fgParticleEffect {
 protected:
     // The CIRCULAR insert index
     int m_current_insert_idx;
@@ -35,12 +36,12 @@ public:
     /**
      * Public constructor
      */
-    ParticleEffectCircular();
+    fgParticleEffectCircular();
 
     /**
      * Public destructor
      */
-    ~ParticleEffectCircular();
+    ~fgParticleEffectCircular();
     /**
      * Make add_custom() call to OVERWRITE last Particle
      * This will be used to solve the TRAIL - EDGE gap!
@@ -134,5 +135,5 @@ public:
     fgBool addRandomGroup(fgParticle *from, fgParticle *to, int count);
 
 };
-
+    #endif
 #endif

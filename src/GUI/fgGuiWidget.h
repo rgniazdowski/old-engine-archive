@@ -24,6 +24,7 @@
 
     #include "Util/fgTag.h"
     #include "Util/fgHandle.h"
+    #include "Resource/fgManagedObjectBase.h"
 
     #include "fgGuiStyleContent.h"
     #include "fgGuiCallback.h"
@@ -43,30 +44,6 @@ typedef unsigned int fgGuiWidgetType;
     #ifndef _FG_POINTER_DATA_H_
         #include "Input/fgPointerData.h"
     #endif
-
-// some other base class would be useful for that ... hmmm
-// i mean additional functions / interfaces, like hmmm  nameable ? stringify? heh
-// serializable? readable?
-// XML element? lol? Attribute?
-
-// need automation for xml reading - xml auto parser would be very useful
-// changes for auto parser --- need to specify custom body function / external 
-// instead of just putting blindly those macros for every structure element/member.
-
-// First of all, in XML structure when there's text inside of a tag - it always
-// means that this text is a LABEL - elements inside (tags) - are children,
-// therefore widget containing them must be... extending fgGuiContainer
-
-// well if widget is TextArea then text inside the tag is... a VALUE, oh...
-// how to unify this?
-
-// when it's element of an array... well it's like textArea
-// so... now hwat?
-//
-// wat?
-
-// -- for some widgets text inside tag means : LABEL
-// -- for other : VALUE / TEXT
 
     #define FG_GUI_WIDGET_STATE_NONE		0	// main
     #define FG_GUI_WIDGET_STATE_FOCUS		1	// focus
@@ -93,18 +70,16 @@ typedef fgHandle<fgGuiWidgetTag> fgGuiWidgetHandle;
 
     #define FG_GUI_WIDGET_DEFAULT_STYLE "DefaultStyle"
 
-/*
+/**
  *
+ * @see fgManagedObjectBase
  */
-class fgGuiWidget {
+class fgGuiWidget : public fgManagedObjectBase<fgGuiWidgetHandle> {
     friend class fgGuiMain;
     friend class fgGuiWidgetManager;
     friend class fgGuiStructureSheetParser;
 private:
 protected:
-    /// Unique name for the current widget object. Used to identify
-    // and find the exact widget object in the GUI flow
-    std::string m_nameTag;
     /// Human readable name of the widget type
     std::string m_typeName;
     /// The name of the currently used style. May be empty.
@@ -133,7 +108,7 @@ protected:
     fgVector3f m_relPos;
     /// Position (this is where the widget is currently drawn) and size of the widget
     fgBoundingBox3Df m_bbox;
-    /// Current text size
+    /// Current text size, this is updated automatically via appendText functions
     fgVector2f m_textSize;
     
     /// This callback will be executed when widget is focused
@@ -158,9 +133,6 @@ protected:
     /// Pointer to the widget in which this one resides
     fgGuiWidget *m_fatherPtr;
 
-    /// Unique handle number for the widget
-    fgGuiWidgetHandle m_handle;
-
     /// Holds single value indicating the main type of the widget
     fgGuiWidgetType m_type;
     /// Holds OR'd value indicating all types which currently are 
@@ -170,10 +142,6 @@ protected:
     /// Current event state of the widget
     fgGuiWidgetState m_state;
 
-    /// Is widget managed inside of the widget manager?
-    fgBool m_isManaged;
-
-    ///  If 'false' the widget will not be drawn (however it could affect
     // size and position of other widgets nearby). Default: true.
     fgBool m_isVisible;
     /// If widget is not active it cannot be clicked, activated,
@@ -188,89 +156,127 @@ protected:
     fgBool m_ignoreState;
 
 protected:
-    //
+    /**
+     * 
+     */
     virtual void setDefaults(void) = 0;
 
-    //
+    /**
+     * 
+     * @param widget
+     */
     void setFather(fgGuiWidget *widget) {
         m_fatherPtr = widget;
     }
 public:
-    //
+    /**
+     * 
+     */
     fgGuiWidget();
-    //
+    /**
+     * 
+     */
     virtual ~fgGuiWidget();
-    //
+    /**
+     * 
+     * @param guiLayer
+     */
     virtual void display(fgGfxLayer *guiLayer);
     
-    //
+    /**
+     * 
+     * @param flags
+     */
     inline virtual void setFlags(const char *flags) {
         setFlags(std::string(flags));
     }
-    
-    //
+    /**
+     * 
+     * @param flags
+     */
     inline virtual void setFlags(const std::string& flags) {
     }
 
-    //
+    /**
+     * 
+     * @return 
+     */
     virtual fgBoundingBox3Df updateBounds(void);
-    //
+    /**
+     * 
+     * @param bbox
+     * @return 
+     */
     virtual fgBoundingBox3Df updateBounds(const fgBoundingBox3Df &bbox);
-    //
+    /**
+     * 
+     */
     virtual void refresh(void);
 
-    //
+    /**
+     * 
+     * @param pointerData
+     * @return 
+     */
     virtual int updateState(const fgPointerData *pointerData);
 
-    //
+    /**
+     * 
+     * @return 
+     */
     inline fgGuiWidget *getFather(void) const {
         return m_fatherPtr;
     }
-
-    //
+    /**
+     * 
+     * @return 
+     */
     inline fgGuiWidgetType getType(void) const {
         return m_type;
     }
-
-    //
+    /**
+     * 
+     * @return 
+     */
     inline fgGuiWidgetType getTypeTraits(void) const {
         return m_typeTraits;
     }
-
-    //
+    /**
+     * 
+     * @return 
+     */
     inline std::string &getTypeName(void) {
         return m_typeName;
     }
-
-    //
+    /**
+     * 
+     * @return 
+     */
     inline const char *getTypeNameStr(void) const {
         return m_typeName.c_str();
     }
 
-protected:
-    // This will set the 'managed' flag to true if the widget
-    // is managed inside of the widget manager (is not standalone)
-    inline void setManaged(fgBool toggle = FG_TRUE) {
-        m_isManaged = toggle;
-    }
-
 public:
-    // Returns whether widget is managed in widget manager
-    inline fgBool isManaged(void) const {
-        return m_isManaged;
-    }
-
-    // Sets the visibility flag of the widget
+    /**
+     * Sets the visibility flag of the widget
+     * @param toggle
+     */
     inline void setVisible(fgBool toggle = FG_TRUE) {
         m_isVisible = toggle;
     }
 
-    // Returns whether widget is visible (should be displayed?)
+    /**
+     * Returns whether widget is visible (should be displayed?)
+     * @return 
+     */
     inline fgBool isVisible(void) const {
         return m_isVisible;
     }
 
-    // Sets the active flag of the widget
+    /**
+     * Sets the active flag of the widget
+     * @param toggle
+     */
     inline void setActive(fgBool toggle = FG_TRUE) {
         m_isActive = toggle;
         if(m_isActive) {
@@ -280,324 +286,411 @@ public:
         }
     }
 
-    // Returns whether widget is active
+    /**
+     * Returns whether widget is active
+     * @return 
+     */
     inline fgBool isActive(void) const {
         return m_isActive;
     }
 
-    // Sets the ignoreState flag for the widget
+    /**
+     * Sets the ignoreState flag for the widget
+     * @param toggle
+     */
     inline void setIgnoreState(fgBool toggle = FG_TRUE) {
         m_ignoreState = toggle;
     }
 
-    //
+    /**
+     *
+     */
     inline fgBool doesIgnoreState(void) const {
         return m_ignoreState;
     }
-
-    //
+    /**
+     * 
+     * @return 
+     */
     inline fgBool isIgnoreState(void) const {
         return m_ignoreState;
     }
 
-    //
+    /**
+     * 
+     * @return 
+     */
     inline fgGuiWidgetState getState(void) const {
         return m_state;
     }
 
-    //
+    /**
+     * 
+     * @param pos
+     */
     virtual void setPosition(const fgVector3f& pos) {
         m_bbox.pos = pos;
     }
-
-    //
+    /**
+     * 
+     * @return 
+     */
     virtual fgVector3f& getPosition(void) {
         return m_bbox.pos;
     }
-
-    //
+    /**
+     * 
+     * @return 
+     */
     inline fgVector3f& getRelativePos(void) {
         return m_relPos;
     }
-
-    //
+    /**
+     * 
+     * @param relPos
+     */
     inline void setRelativePos(const fgVector3f& relPos) {
         m_relPos = relPos;
     }
     
-    //
+    /**
+     * 
+     * @param size
+     */
     inline void setSize(const fgVector3f& size) {
         m_bbox.size = size;
     }
-
-    // Returns the reference to the vector holding widget size 
+    /**
+     * Returns the reference to the vector holding widget size
+     * @return 
+     */
     inline fgVector3f& getSize(void) {
         return m_bbox.size;
     }
 
-    //
+    /**
+     * 
+     * @return 
+     */
     inline std::string& getLink(void) {
         return m_link;
     }
-
-    //
+    /**
+     * 
+     * @return 
+     */
     inline const char *getLinkStr(void) const {
         return m_link.c_str();
     }
 
-    //
+    /**
+     * 
+     * @return 
+     */
     inline std::string& getScript(void) {
         return m_script;
     }
-
-    //
+    /**
+     * 
+     * @return 
+     */
     inline const char *getScriptStr(void) const {
         return m_script.c_str();
     }
 
-    //
+    /**
+     * 
+     * @return 
+     */
     inline std::string& getAction(void) {
         return m_action;
     }
-
-    //
+    /**
+     * 
+     * @return 
+     */
     inline const char *getActionStr(void) const {
         return m_action.c_str();
     }
 
-    //
+    /**
+     * 
+     * @return 
+     */
     inline std::string& getConfig(void) {
         return m_config;
     }
-
-    //
+    /**
+     * 
+     * @return 
+     */
     inline const char *getConfigStr(void) const {
         return m_config.c_str();
     }
 
-    //
+    /**
+     * 
+     * @return 
+     */
     virtual std::string& getText(void) {
         return m_text;
     }
-
-    //
+    /**
+     * 
+     * @return 
+     */
     virtual const char *getTextStr(void) const {
         return m_text.c_str();
     }
 
-    //
+    /**
+     * 
+     * @param link
+     */
     inline void setLink(const std::string &link) {
         m_link = link;
     }
-
-    //
+    /**
+     * 
+     * @param link
+     */
     inline void setLink(const char *link) {
         if(link)
             m_link = link;
     }
 
-    //
+    /**
+     * 
+     * @param script
+     */
     inline void setScript(const std::string &script) {
         m_script = script;
     }
-
-    //
+    /**
+     * 
+     * @param script
+     */
     inline void setScript(const char *script) {
         if(script)
             m_script = script;
     }
 
-    //
+    /**
+     * 
+     * @param action
+     */
     inline void setAction(const std::string &action) {
         m_action = action;
     }
-
-    //
+    /**
+     * 
+     * @param action
+     */
     inline void setAction(const char *action) {
         if(action)
             m_action = action;
     }
 
-    //
+    /**
+     * 
+     * @param config
+     */
     inline void setConfig(const std::string &config) {
         m_config = config;
     }
-
-    //
+    /**
+     * 
+     * @param config
+     */
     inline void setConfig(const char *config) {
         if(config)
             m_config = config;
     }
 
-    //
+    /**
+     * 
+     * @param text
+     */
     virtual void setText(const std::string &text) {
         m_text = text;
     }
-
-    //
+    /**
+     * 
+     * @param text
+     */
     virtual void setText(const char *text) {
         if(text)
             m_text = text;
     }
 
-    //
+    /**
+     * 
+     * @return 
+     */
     inline std::string &getStyleName(void) {
         return m_styleName;
     }
-
-    //
+    /**
+     * 
+     * @return 
+     */
     inline const char *getStyleNameStr(void) const {
         return m_styleName.c_str();
     }
 
-    //
+    /**
+     * 
+     * @param style
+     */
     inline void setStyleName(const std::string &style) {
         m_styleName = style;
     }
-
-    //
+    /**
+     * 
+     * @param style
+     */
     inline void setStyleName(const char *style) {
         m_styleName = style; // #FIXME
     }
-    //
+    
+    /**
+     * 
+     * @return 
+     */
     inline fgGuiStyleContent* getStyleContents(void) {
         return m_styles;
     }
-
-    //
+    /**
+     * 
+     * @return 
+     */
     inline fgGuiStyleContent& getStyleContent(void) {
         if(m_state >= FG_GUI_WIDGET_STATE_COUNT || m_state < 0)
             return m_styles[0];
         return m_styles[m_state];
     }
-
-    //
+    /**
+     * 
+     * @param state
+     * @return 
+     */
     inline fgGuiStyleContent& getStyleContent(fgGuiWidgetState state) {
         if(state >= FG_GUI_WIDGET_STATE_COUNT || state < 0)
             return m_styles[0];
         return m_styles[state];
     }
-
-    //
+    
+    /**
+     * 
+     * @param callback
+     */
     inline void setOnFocusCallback(fgGuiCallback *callback) {
         m_onFocus = callback;
     }
-
-    //
+    /**
+     * 
+     * @param callback
+     */
     inline void setOnFocusLostCallback(fgGuiCallback *callback) {
         m_onFocusLost = callback;
     }
-
-    //
+    /**
+     * 
+     * @param callback
+     */
     inline void setOnClickCallback(fgGuiCallback *callback) {
         m_onClick = callback;
     }
-
-    //
+    /**
+     * 
+     * @param callback
+     */
     inline void setOnActivateCallback(fgGuiCallback *callback) {
         m_onActivate = callback;
     }
-
-    //
+    /**
+     * 
+     * @param callback
+     */
     inline void setOnDeactivateCallback(fgGuiCallback *callback) {
         m_onDeactivate = callback;
     }
-
-    //
+    /**
+     * 
+     * @param callback
+     */
     inline void setOnKeyCallback(fgGuiCallback *callback) {
         m_onKey = callback;
     }
-
-    //
+    /**
+     *
+     */
     inline void setOnMouseCallback(fgGuiCallback *callback) {
         m_onMouse = callback;
     }
-
-    //
+    /**
+     * 
+     * @param callback
+     */
     inline void setOnChangeStateCallback(fgGuiCallback *callback) {
         m_onChangeState = callback;
     }
-
-    //
+    
+    /**
+     * 
+     * @return 
+     */
     inline fgGuiCallback *getOnFocusCallback(void) const {
         return m_onFocus;
     }
-
-    //
+    /**
+     * 
+     * @return 
+     */
     inline fgGuiCallback *getOnFocusLostCallback(void) const {
         return m_onFocusLost;
     }
-
-    //
+    /**
+     * 
+     * @return 
+     */
     inline fgGuiCallback *getOnClickCallback(void) const {
         return m_onClick;
     }
-
-    //
+    /**
+     * 
+     * @return 
+     */
     inline fgGuiCallback *getOnActivateCallback(void) const {
         return m_onActivate;
     }
-
-    //
+    /**
+     * 
+     * @return 
+     */
     inline fgGuiCallback *getOnDeactivateCallback(void) const {
         return m_onDeactivate;
     }
-
-    //
+    /**
+     * 
+     * @return 
+     */
     inline fgGuiCallback *getOnKeyCallback(void) const {
         return m_onKey;
     }
-
-    //
+    /**
+     * 
+     * @return 
+     */
     inline fgGuiCallback *getOnMouseCallback(void) const {
         return m_onMouse;
     }
-
-    //
+    /**
+     * 
+     * @return 
+     */
     inline fgGuiCallback *getOnChangeStateCallback(void) const {
         return m_onChangeState;
-    }
-
-    // Set widget name (string TAG/ID)
-    inline void setName(const char *name) {
-        m_nameTag = name;
-    }
-    // Set widget name (string TAG/ID)
-    inline void setName(const std::string& name) {
-        m_nameTag = name;
-    }
-
-    // Get widget name string
-    inline std::string getName(void) const {
-        return m_nameTag;
-    }
-    // Get reference to resource name string
-    inline std::string& getName(void) {
-        return m_nameTag;
-    }
-    // Get resource name (TAG/string ID) as C-like string (char array)
-    inline const char* getNameStr(void) const {
-        return m_nameTag.c_str();
-    }
-
-    // Return the widget handle ID
-    inline fgGuiWidgetHandle getHandle(void) const {
-        return m_handle;
-    }
-
-    // Set the widget handle ID 
-    inline void setHandle(const fgGuiWidgetHandle& handle) {
-        m_handle = handle;
-    }
-
-    //
-    inline fgGuiWidgetHandle& getRefHandle(void) {
-        return m_handle;
-    }
-
-    //
-    inline const fgGuiWidgetHandle& getRefHandle(void) const {
-        return m_handle;
     }
 };
 

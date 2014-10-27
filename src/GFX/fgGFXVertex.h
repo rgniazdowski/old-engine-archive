@@ -99,7 +99,7 @@ struct fgVertex4v {
     }
 
     //
-    static fgGFXuint getAttribMask(void) {
+    static fgGFXuint attribMask(void) {
         return FG_GFX_POSITION_BIT | FG_GFX_NORMAL_BIT | FG_GFX_UVS_BIT | FG_GFX_COLOR_BIT;
     }
 };
@@ -120,7 +120,7 @@ struct fgVertex3v {
     }
 
     //
-    static fgGFXuint getAttribMask(void) {
+    static fgGFXuint attribMask(void) {
         return FG_GFX_POSITION_BIT | FG_GFX_NORMAL_BIT | FG_GFX_UVS_BIT;
     }
 };
@@ -140,7 +140,7 @@ struct fgVertex2v {
     }
 
     //
-    static fgGFXuint getAttribMask(void) {
+    static fgGFXuint attribMask(void) {
         return FG_GFX_POSITION_BIT | FG_GFX_UVS_BIT;
     }
 };

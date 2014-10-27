@@ -8,101 +8,274 @@
  *******************************************************/
 
 #include "fgPsParticleEffect.h"
+#include "Util/fgConfig.h"
+#include "Util/fgStringParser.h"
 
-#include <cmath>
-#include <cstring>
-#include <cstdlib>
-
-#include "fgParticleSystem.h"
-#include "fgCommon.h"
-#include "Util/fgMemory.h"
-#include "Hardware/fgHardwareState.h"
-
-ParticleEffect::~ParticleEffect() {
-    // Love to do destroying manually.. Although it isn't necessary
-    m_particles.clear();
-    fgVector<fgParticle> tmpv;
-    m_particles.swap(tmpv);
-
-    if(m_colorStream)
-        fgFree(m_colorStream);
-    if(m_vertStream2D)
-        fgFree(m_vertStream2D);
-    if(m_vertStream3D)
-        fgFree(m_vertStream3D);
-    if(m_UVStream)
-        fgFree(m_UVStream);
-
-    m_colorStream = NULL;
-    m_vertStream2D = NULL;
-    m_vertStream3D = NULL;
-    m_UVStream = NULL;
-    m_material = NULL;
-
-    m_maxCount = 0;
+/**
+ * 
+ */
+fgParticleEffect::fgParticleEffect() : fgResource() {
+    m_resType = FG_RESOURCE_PARTICLE_EFFECT;
+    m_textureIDRange.x = 0;
+    m_textureIDRange.y = 0;
 }
 
 /**
- * Sets m_maxCount, which implies resetting the object
+ * 
  */
-void ParticleEffect::setMaxCount(int max_count) {
-    if(max_count <= 0) {
-        exit(4);
-    }
-
-    // This will fully erase the array
-    m_particles.clear();
-    fgVector<fgParticle> tmpv;
-    m_particles.swap(tmpv);
-
-    // Prepare for new amount of data
-    m_particles.reserve(max_count);
-    m_maxCount = max_count;
-    if(m_colorStream)
-        fgFree(m_colorStream);
-    if(m_vertStream2D)
-        fgFree(m_vertStream2D);
-    if(m_vertStream3D)
-        fgFree(m_vertStream3D);
-    if(m_UVStream)
-        fgFree(m_UVStream);
-
-    m_colorStream = NULL;
-    m_vertStream2D = NULL;
-    m_vertStream3D = NULL;
-    m_UVStream = NULL;
-    m_material = NULL;
-
-    // #FIXME This allocations need to be in DrawingBatch or SimpleDrawer, need to think about it
-    m_colorStream = fgMalloc<fgColor>(4 * max_count);
-    m_vertStream2D = fgMalloc<fgVector2i>(4 * max_count);
-    m_vertStream3D = fgMalloc<fgVector3f>(4 * max_count);
-    m_UVStream = fgMalloc<fgVector2f>(4 * max_count);
+fgParticleEffect::~fgParticleEffect() {
+    fgParticleEffect::destroy();
 }
 
-fgBool ParticleEffect::addParameterized(float x, float y, float z, int count) {
+/**
+ * 
+ */
+void fgParticleEffect::clear(void) {
+    fgResource::clear();
+    m_resType = FG_RESOURCE_PARTICLE_EFFECT;
+}
+
+/**
+ *
+ */
+fgBool fgParticleEffect::initializeFromConfig(fgCfgTypes::parameterVec& params) {
+    if(params.empty())
+        return FG_FALSE;
+
+    fgCfgTypes::parameterVecItor begin, end, itor;
+    begin = params.begin();
+    end = params.end();
+    itor = begin;
+
+    // Iterate through all style parameters
+    // Parameters are taken directly from ini config file
+    for(; itor != end; itor++) {
+        fgCfgParameter *param = *itor;
+        if(!param)
+            continue;
+        // name – string –
+        if(param->name.compare("name") == 0) {
+            if(param->type == FG_CFG_PARAMETER_STRING)
+                this->setName(param->string);
+
+        } else if(param->name.compare("max-count") == 0) {
+            // max - count – integer –
+            if(param->type == FG_CFG_PARAMETER_INT)
+                this->setMaxCount(param->int_val);
+            else if(param->type == FG_CFG_PARAMETER_STRING)
+                this->setMaxCount(atoi(param->string));
+
+            // particle - area – boundingbox –
+        } else if(param->name.compare("particle-area") == 0) {
+            if(param->type == FG_CFG_PARAMETER_STRING) {
+                fgStringParser::parseVector<fgBoundingBox3Df>(m_particleArea, param->string);
+                this->m_isAreaSet = FG_TRUE;
+            }
+
+            // area - check – bool –
+        } else if(param->name.compare("area-check") == 0) {
+            if(param->type == FG_CFG_PARAMETER_BOOL)
+                this->m_isAreaCheck = param->bool_val;
+
+            // random - velocity – bool –
+        } else if(param->name.compare("random-velocity") == 0) {
+            if(param->type == FG_CFG_PARAMETER_BOOL)
+                setFlag(FG_PARTICLE_RANDOM_VELOCITY, param->bool_val);
+
+            // random - angle – bool –
+        } else if(param->name.compare("random-angle") == 0) {
+            if(param->type == FG_CFG_PARAMETER_BOOL)
+                setFlag(FG_PARTICLE_RANDOM_ANGLE, param->bool_val);
+
+            // life - as - size – bool –
+        } else if(param->name.compare("life-as-size") == 0) {
+            if(param->type == FG_CFG_PARAMETER_BOOL)
+                setFlag(FG_PARTICLE_LIFE_AS_SIZE, param->bool_val);
+
+            // facing - velocity – bool –
+        } else if(param->name.compare("facing-velocity") == 0) {
+            if(param->type == FG_CFG_PARAMETER_BOOL)
+                setFlag(FG_PARTICLE_FACING_VELOCITY, param->bool_val);
+
+            // params - active – bool –
+        } else if(param->name.compare("params-active") == 0) {
+            if(param->type == FG_CFG_PARAMETER_BOOL)
+                setFlag(FG_PARTICLE_PARAMS_ACTIVE, param->bool_val);
+
+            // start - size – vector –
+        } else if(param->name.compare("start-size") == 0) {
+            if(param->type == FG_CFG_PARAMETER_STRING)
+                fgStringParser::parseVector<fgVector3f>(m_startSize, param->string);
+
+            // end - size – vector –
+        } else if(param->name.compare("end-size") == 0) {
+            if(param->type == FG_CFG_PARAMETER_STRING)
+                fgStringParser::parseVector<fgVector3f>(m_endSize, param->string);
+
+            // spread - speed – vector –
+        } else if(param->name.compare("spread-speed") == 0) {
+            if(param->type == FG_CFG_PARAMETER_STRING)
+                fgStringParser::parseVector<fgVector3f>(m_spreadSpeed, param->string);
+
+            // life - range – vector –
+        } else if(param->name.compare("life-range") == 0) {
+            if(param->type == FG_CFG_PARAMETER_STRING)
+                fgStringParser::parseVector<fgVector2f>(m_lifeRange, param->string);
+
+            // ttl - range – vector –
+        } else if(param->name.compare("ttl-range") == 0) {
+            if(param->type == FG_CFG_PARAMETER_STRING)
+                fgStringParser::parseVector<fgVector2i>(m_ttlRange, param->string);
+
+            // fade - speed - range – vector –
+        } else if(param->name.compare("fadeSpeedRange") == 0) {
+            if(param->type == FG_CFG_PARAMETER_STRING)
+                fgStringParser::parseVector<fgVector2f>(m_fadeSpeedRange, param->string);
+
+            // start - color – color –
+        } else if(param->name.compare("start-color") == 0) {
+            if(param->type == FG_CFG_PARAMETER_STRING)
+                m_startColor = fgStringParser::parseColor(param->string);
+
+            // end - color – color –
+        } else if(param->name.compare("end-color") == 0) {
+            if(param->type == FG_CFG_PARAMETER_STRING)
+                m_endColor = fgStringParser::parseColor(param->string);
+
+            // texture – string –
+        } else if(param->name.compare("texture") == 0 ||
+                  param->name.compare("texture-name") == 0) {
+            if(param->type == FG_CFG_PARAMETER_STRING)
+                m_textureName = param->string;
+
+            // textureSize – vector –
+        } else if(param->name.compare("texture-size") == 0 ||
+                  param->name.compare("texture-sheet-size") == 0) {
+            if(param->type == FG_CFG_PARAMETER_STRING)
+                fgStringParser::parseVector<fgVector2i>(m_textureSheetSize, param->string);
+
+            // textureIDRange – vector –
+        } else if(param->name.compare("texture-id-range") == 0) {
+            if(param->type == FG_CFG_PARAMETER_STRING)
+                fgStringParser::parseVector<fgVector2i>(m_textureIDRange, param->string);
+        }
+    }
+    if(this->getName().empty() || m_maxCount <= 0)
+        return FG_FALSE;
+    return FG_TRUE;
+}
+
+/**
+ * Create function loads/interprets data from file in ROM and place it in RAM memory.
+ * @return 
+ */
+fgBool fgParticleEffect::create(void) {
+    if(m_isReady) {
+        return FG_TRUE;
+    }
+    if(getFilePath().empty()) {
+        FG_LOG::PrintError("GFX: Unable to create a ParticleEffect: the path is empty");
+        return FG_FALSE;
+    }
+    fgConfig config(getFilePathStr());
+    if(!config.isLoaded()) {
+        FG_LOG::PrintError("GFX: Failed to load particle effect config: '%s'", getFilePathStr());
+        return FG_FALSE;
+    }
+    fgCfgTypes::sectionMap &sections = config.getRefSectionMap();
+    fgCfgTypes::sectionMapItor sitor = sections.begin(), send = sections.end();
+
+    if(sections.empty()) {
+        FG_LOG::PrintError("GFX: Particle config file has no valid sections: '%s'", getFilePathStr());
+        return FG_FALSE;
+    }
+    fgCfgSection *mainSection = config.getSection(FG_RESOURCE_PARTICLE_EFFECT_TEXT);
+    if(!mainSection) {
+        FG_LOG::PrintError("GFX: Particle config is malformed: '%s'", getFilePathStr());
+        return FG_FALSE;
+    }
+
+    // Initialize internal parameters from config parameter list
+    if(!initializeFromConfig(mainSection->parameters)) {
+        FG_LOG::PrintError("GFX: Failed to initialize ParticleEffect from config: '%s'", getFilePathStr());
+        return FG_FALSE;
+    }
+
+    // Iterate through other effects #FIXME
+    for(; sitor != send; sitor++) {
+        // #FIXME
+    }
+
+    m_size = sizeof (fgParticleEffect);
+    m_resType = FG_RESOURCE_PARTICLE_EFFECT;
+    m_isReady = FG_TRUE;
+    return FG_TRUE;
+}
+
+/**
+ * Destroy all loaded data including additional metadata (called with destructor)
+ */
+void fgParticleEffect::destroy(void) {
+    m_isReady = FG_FALSE;
+}
+
+/**
+ * Reloads any data, recreates the resource (refresh)
+ * @return 
+ */
+fgBool fgParticleEffect::recreate(void) {
+    dispose();
+    m_isReady = FG_FALSE;
+    return create();
+}
+
+/**
+ * Dispose completely of the all loaded data, free all memory
+ */
+void fgParticleEffect::dispose(void) {
+    m_isReady = FG_FALSE;
+}
+
+/**
+ * Check if resource is disposed (not loaded yet or disposed after)
+ * @return 
+ */
+fgBool fgParticleEffect::isDisposed(void) const {
+    return !m_isReady;
+}
+
+/**
+ * 
+ * @param outputParticle
+ * @param randomizePosition
+ * @param position
+ */
+void fgParticleEffect::initializeParticle(fgParticle *outputParticle,
+                                          const fgBool randomizePosition,
+                                          const fgVector3f & position) {
+    if(!outputParticle)
+        return;
+
     fgParticle from, to;
-    int i;
 
-    if(count <= 0)
-        return FG_FALSE;
-
-    if(int(m_particles.size()) >= maxCount())
-        return FG_FALSE;
-
-    //from.color = m_startColor;
+    //
+    // FROM
+    //
     from.setColor(m_startColor);
     from.data = NULL;
-    from.velocity.x = -m_spreadSpeed;
-    from.velocity.y = -m_spreadSpeed;
-    from.velocity.z = 0.0f;
 
-    from.bbox.size.x = m_startSize;
-    from.bbox.size.y = m_startSize;
-    from.bbox.size.z = m_startSize;
+    from.velocity = -m_spreadSpeed;
+    //from.velocity.x = -m_spreadSpeed;
+    //from.velocity.y = -m_spreadSpeed;
+    //from.velocity.z = 0.0f;
+
+    //from.bbox.size.x = m_startSize;
+    //from.bbox.size.y = m_startSize;
+    //from.bbox.size.z = m_startSize;
+    from.bbox.size = m_startSize;
 
     // m_lowLife holds life for the particle where value 10.0f is equal to 1000ms TTL
-    from.setTTL(m_lowLife / 10.0f * 1000.0f);
+    from.setTTL(m_lifeRange.x / 10.0f * 1000.0f);
 
     from.rotation.x = 0.0f;
     from.rotation.y = 0.0f;
@@ -112,26 +285,36 @@ fgBool ParticleEffect::addParameterized(float x, float y, float z, int count) {
     from.angularVelocity.y = 0.0f;
     from.angularVelocity.z = 0.0f;
 
-    from.bbox.pos.x = x;
-    from.bbox.pos.y = y;
-    from.bbox.pos.z = z;
+    if(randomizePosition) {
+        from.bbox.pos = fgVector3f(0.0f, 0.0f, 0.0f);
+    } else {
+        from.bbox.pos = position;
+    }
 
+    from.texIndex = m_textureIDRange.x;
+
+    //
+    // TO
+    //
     to.setColor(m_startColor);
     to.data = NULL;
-    to.velocity.x = m_spreadSpeed;
-    to.velocity.y = m_spreadSpeed;
-    to.velocity.z = 0.0f;
 
-    to.bbox.size.x = m_startSize;
-    to.bbox.size.y = m_startSize;
-    to.bbox.size.z = m_startSize;
+    to.velocity = m_spreadSpeed;
+    //to.velocity.x = m_spreadSpeed;
+    //to.velocity.y = m_spreadSpeed;
+    //to.velocity.z = 0.0f;
+
+    //to.bbox.size.x = m_startSize;
+    //to.bbox.size.y = m_startSize;
+    //to.bbox.size.z = m_startSize;
+    to.bbox.size = m_startSize;
 
     // m_highLife holds life for the particle where value 10.0f is equal to 1000ms TTL
-    to.setTTL(m_highLife / 10.0f * 1000.0f);
+    to.setTTL(m_lifeRange.y / 10.0f * 1000.0f);
 
     to.rotation.x = 0.0f;
     to.rotation.y = 0.0f;
-    if(m_randomAngle)
+    if(m_flags & FG_PARTICLE_RANDOM_ANGLE)
         to.rotation.z = 360.0f;
     else
         to.rotation.z = 0.0f;
@@ -140,40 +323,30 @@ fgBool ParticleEffect::addParameterized(float x, float y, float z, int count) {
     to.angularVelocity.y = 0.0f;
     to.angularVelocity.z = 0.0f;
 
-    to.bbox.pos.x = x;
-    to.bbox.pos.y = y;
-    to.bbox.pos.z = z;
+    to.bbox.pos = position;
+    to.texIndex = m_textureIDRange.y;
 
-    //to.texture_id = m_textureXSize * m_textureYSize - 1;
-
-    for(i = 0; i < count; i++) {
-        if(!addRandom(&from, &to))
-            return FG_FALSE;
-        if(m_randomVelocity == FG_FALSE) {
-            int idx = m_particles.size() - 1;
-            int r = FG_Rand(0, 1);
-            if(r == 1) {
-                if(m_particles[idx].velocity.x < 0.0f)
-                    m_particles[idx].velocity.x = -m_spreadSpeed;
-                else
-                    m_particles[idx].velocity.x = m_spreadSpeed;
-            } else {
-                if(m_particles[idx].velocity.y < 0.0f)
-                    m_particles[idx].velocity.y = -m_spreadSpeed;
-                else
-                    m_particles[idx].velocity.y = m_spreadSpeed;
-            }
+    randomizeOnPair(&from, &to, outputParticle);
+    if((m_flags & FG_PARTICLE_RANDOM_VELOCITY) == 0) {
+        int r = FG_Rand(0, 1);
+        if(r == 1) {
+            if(outputParticle->velocity.x < 0.0f)
+                outputParticle->velocity.x = -m_spreadSpeed.x;
+            else
+                outputParticle->velocity.x = m_spreadSpeed.x;
+        } else {
+            if(outputParticle->velocity.y < 0.0f)
+                outputParticle->velocity.y = -m_spreadSpeed.y;
+            else
+                outputParticle->velocity.y = m_spreadSpeed.y;
         }
     }
-    return FG_TRUE;
+    return;
 }
 
-void ParticleEffect::calculate(void) {
-    fgArea screenArea;
-    screenArea.x = 0;
-    screenArea.y = 0;
-    screenArea.w = FG_HardwareState->getScreenWidth();
-    screenArea.h = FG_HardwareState->getScreenHeight();
+#if 0
+
+void fgParticleEffect::calculate(void) {
     float DT2 = (float)FG_HardwareState->getDelta2();
 
     for(int i = 0; i<int(m_particles.size()); i++) {
@@ -292,7 +465,7 @@ void ParticleEffect::calculate(void) {
         if(m_particles[i].life <= 0.0f) {
             remove(i);
             // Checking the particle area which means checking and bouncing off particles of the area edges
-        } else if(m_areaSet == FG_TRUE && m_areaCheck == FG_TRUE && m_drawMode == MODE_2D) {
+        } else if(m_isAreaSet == FG_TRUE && m_isAreaCheck == FG_TRUE && m_drawMode == MODE_2D) {
             // Particle X position is within the boundaries so we can check the Y position
             if(m_particles[i].bbox.pos.x >= float(m_particleArea.x) && m_particles[i].bbox.pos.x + m_particles[i].bbox.size.x <= float(m_particleArea.x + m_particleArea.w)) {
                 // The UPPER and LOWER boundary
@@ -317,7 +490,7 @@ void ParticleEffect::calculate(void) {
                 m_particles[i].bbox.pos.x -= diff + m_particles[i].bbox.size.x / 4.0f;
             }
             // Deleting particles fully offscreen
-        } else if(m_areaCheck == false && m_drawMode == MODE_2D) {
+        } else if(m_isAreaCheck == false && m_drawMode == MODE_2D) {
             if(m_particles[i].bbox.pos.x + m_particles[i].bbox.size.x / 2 >= float(screenArea.x) && m_particles[i].bbox.pos.x - m_particles[i].bbox.size.x / 2 <= float(screenArea.x + screenArea.w)) {
                 // The UPPER and LOWER boundary
                 if(m_particles[i].bbox.pos.y + m_particles[i].bbox.size.y / 2 <= float(screenArea.y) || m_particles[i].bbox.pos.y - m_particles[i].bbox.size.y / 2 >= float(screenArea.y + screenArea.h))
@@ -330,7 +503,7 @@ void ParticleEffect::calculate(void) {
     }
 }
 
-void ParticleEffect::draw(void) {
+void fgParticleEffect::draw(void) {
     int i = 0;
 
     static fgVector2f defaultTexCoords[ 4 ] = {
@@ -363,16 +536,16 @@ void ParticleEffect::draw(void) {
             m_vertStream3D[i * 4 + 2] = fgVector3f(w / 2, h / 2, 0.0f);
             m_vertStream3D[i * 4 + 3] = fgVector3f(w / 2, -h / 2, 0.0f);
         }
-//        if(m_particles[i].texture_id < 0)
-//            m_particles[i].texture_id = 0;
-//        if(m_particles[i].texture_id >= m_textureXSize * m_textureYSize)
-//            m_particles[i].texture_id = 0;
-//        int x = m_particles[i].texture_id % m_textureXSize;
-//        int y = m_particles[i].texture_id / m_textureYSize;
+        //        if(m_particles[i].texture_id < 0)
+        //            m_particles[i].texture_id = 0;
+        //        if(m_particles[i].texture_id >= m_textureXSize * m_textureYSize)
+        //            m_particles[i].texture_id = 0;
+        //        int x = m_particles[i].texture_id % m_textureXSize;
+        //        int y = m_particles[i].texture_id / m_textureYSize;
         int x = 1, y = 1;
-        float s = (float)x / m_textureXSize;
+        float s = (float)x / m_texSheetSize;
         float t = (float)y / m_textureYSize;
-        float ds = 1.0f / m_textureXSize;
+        float ds = 1.0f / m_texSheetSize;
         float dt = 1.0f / m_textureYSize;
 
         // Setting up the UV STREAM
@@ -389,12 +562,15 @@ void ParticleEffect::draw(void) {
         m_colorStream[i * 4 + 3] = color;
     }
 }
+#endif
 
 /**
  * Takes two particles, does randomization on [from->some_val, to->some_val]
  * and stores new random values to Particle* from
  */
-void ParticleEffect::randomizeOnPair(fgParticle* from, fgParticle* to, fgParticle *result) {
+void fgParticleEffect::randomizeOnPair(const fgParticle* from,
+                                       const fgParticle* to,
+                                       fgParticle * result) {
     int from_val, to_val;
     fgParticle* target = result;
 
@@ -469,7 +645,7 @@ void ParticleEffect::randomizeOnPair(fgParticle* from, fgParticle* to, fgParticl
     from_val = (int)(from->bbox.size.z * 1000);
     to_val = (int)(to->bbox.size.z * 1000);
     target->bbox.size.z = FG_Rand(from_val, to_val) / 1000.0f;
-    
+
     // Rotation X
     from_val = (int)(from->rotation.x * 1000);
     to_val = (int)(to->rotation.x * 1000);
@@ -501,38 +677,136 @@ void ParticleEffect::randomizeOnPair(fgParticle* from, fgParticle* to, fgParticl
     target->angularVelocity.z = FG_Rand(from_val, to_val) / 1000.0f;
 
     // Texture id
-    // from_val = (int)from->texture_id;
-    // to_val = (int)to->texture_id;
-    // target->texture_id = FG_Rand(from_val, to_val);
+    from_val = (int)from->texIndex;
+    to_val = (int)to->texIndex;
+    target->texIndex = FG_Rand(from_val, to_val);
 
     // Data
     target->data = NULL;
 
     // Spawn Time
-    target->spawn_time = FG_HardwareState->getTS();
+    //    target->spawn_time = FG_HardwareState->getTS();
+    // #FIXME - time usage
 
-    fgColor color;
+    fgColor4f color;
 
     // Color R
-    from_val = (int)(from->color.r);
-    to_val = (int)(to->color.r);
-    color.r = (float)FG_Rand(from_val, to_val) / 255.0f;
+    from_val = (int)(from->color.r * 1000);
+    to_val = (int)(to->color.r * 1000);
+    color.r = (float)FG_Rand(from_val, to_val) / 1000.0f;
 
     // Color G
-    from_val = (int)(from->color.g);
-    to_val = (int)(to->color.g);
-    color.g = (float)FG_Rand(from_val, to_val) / 255.0f;
+    from_val = (int)(from->color.g * 1000);
+    to_val = (int)(to->color.g * 1000);
+    color.g = (float)FG_Rand(from_val, to_val) / 1000.0f;
 
     // Color B
-    from_val = (int)(from->color.b);
-    to_val = (int)(to->color.b);
-    color.b = (float)FG_Rand(from_val, to_val) / 255.0f;
+    from_val = (int)(from->color.b * 1000);
+    to_val = (int)(to->color.b * 1000);
+    color.b = (float)FG_Rand(from_val, to_val) / 1000.0f;
 
     // Color A
-    from_val = (int)(from->color.a);
-    to_val = (int)(to->color.a);
-    color.a = (float)FG_Rand(from_val, to_val) / 255.0f;
+    from_val = (int)(from->color.a * 1000);
+    to_val = (int)(to->color.a * 1000);
+    color.a = (float)FG_Rand(from_val, to_val) / 1000.0f;
 
     target->setColor(color);
 }
 
+/**
+ * 
+ * @param outputParticle
+ */
+void fgParticleEffect::basicCalculate(fgParticle* outputParticle) {
+    // MOVEMENT
+    outputParticle->bbox.pos.x += outputParticle->velocity.x * fgTime::elapsed();
+    outputParticle->bbox.pos.y += outputParticle->velocity.y * fgTime::elapsed();
+    outputParticle->bbox.pos.z += outputParticle->velocity.z * fgTime::elapsed();
+
+    // ROTATION
+    outputParticle->rotation.x += outputParticle->angularVelocity.x * fgTime::elapsed();
+    outputParticle->rotation.y += outputParticle->angularVelocity.y * fgTime::elapsed();
+    outputParticle->rotation.z += outputParticle->angularVelocity.z * fgTime::elapsed();
+
+    // FADE
+    outputParticle->life -= outputParticle->fadeSpeed * fgTime::elapsed();
+
+    // LIFE AS SIZE
+    if(isLifeAsSize()) {
+        outputParticle->bbox.size.x = fabs(outputParticle->life);
+        outputParticle->bbox.size.y = fabs(outputParticle->life);
+        outputParticle->bbox.size.z = fabs(outputParticle->life);
+    }
+
+    // ONLY FOR Z ROTATION
+    if(isFacingVelocity()) {
+        float r = sqrt(outputParticle->velocity.x * outputParticle->velocity.x + outputParticle->velocity.y * outputParticle->velocity.y);
+        float a = outputParticle->velocity.x;
+        float b = outputParticle->velocity.y;
+        float sina = b / r;
+
+        double radians = asin(sina);
+        float angle = (float)radians / (float)M_PI * 180.0f;
+
+#if 0
+        if(m_drawMode == MODE_2D) {
+            if(a > 0.0f && b > 0.0f)
+                outputParticle->rotation.z = 90.0f + fabs(angle);
+            else if(a < 0.0f && b > 0.0f)
+                outputParticle->rotation.z = 270.0f - fabs(angle);
+            else if(a < 0.0f && b < 0.0f)
+                outputParticle->rotation.z = 270.0f + fabs(angle);
+            else // if(a > 0.0f && b < 0.0f)
+                outputParticle->rotation.z = 90.0f - fabs(angle);
+        } else {
+            if(a > 0.0f && b > 0.0f)
+                outputParticle->rotation.z = -90.0f - fabs(angle);
+            else if(a < 0.0f && b > 0.0f)
+                outputParticle->rotation.z = 90.0f + fabs(angle);
+            else if(a < 0.0f && b < 0.0f)
+                outputParticle->rotation.z = 90.0f - fabs(angle);
+            else // if(a > 0.0f && b < 0.0f)
+                outputParticle->rotation.z = -(90.0f - fabs(angle));
+        }
+#endif
+    }
+
+    if(isParamsActive()) {
+        // This actions will work properly only if the particle TTL parameter is set
+        // Size
+        float elapsed = fgTime::elapsed();
+        float ttl = (float)outputParticle->ttl / 1000.0f;
+        outputParticle->bbox.size += (m_endSize - m_startSize) / ttl * elapsed;
+        //outputParticle->bbox.size.x += (m_endSize.x - m_startSize.x) / ((float)outputParticle->ttl * fgTime::elapsed());
+        //outputParticle->bbox.size.y += (m_endSize.y - m_startSize.y) / (float)outputParticle->ttl * fgTime::elapsed();
+        //outputParticle->bbox.size.z += (m_endSize.z - m_startSize.z) / (float)outputParticle->ttl * fgTime::elapsed();
+
+        fgColor4f &color = outputParticle->color;
+
+        color += (m_endColor - m_startColor) / ttl * elapsed;
+        
+        //color.r += ((float(m_endColor.r - m_startColor.r)) / (float)outputParticle->ttl * fgTime::elapsed());
+        if(color.r < 0.0f)
+            color.r = 0.0f;
+        if(color.r > 1.0f)
+            color.r = 1.0f;
+
+        //color.g += ((float(m_endColor.g - m_startColor.g)) / (float)outputParticle->ttl * fgTime::elapsed());
+        if(color.g < 0.0f)
+            color.g = 0.0f;
+        if(color.g > 1.0f)
+            color.g = 1.0f;
+
+        //color.b += ((float(m_endColor.b - m_startColor.b)) / (float)outputParticle->ttl * fgTime::elapsed());
+        if(color.b < 0.0f)
+            color.b = 0.0f;
+        if(color.b > 1.0f)
+            color.b = 1.0f;
+
+        //color.a += ((float(m_endColor.a - m_startColor.a)) / (float)outputParticle->ttl * fgTime::elapsed());
+        if(color.a < 0.0f)
+            color.a = 0.0f;
+        if(color.a > 1.0f)
+            color.a = 1.0f;
+    }
+}

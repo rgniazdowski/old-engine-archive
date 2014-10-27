@@ -250,6 +250,7 @@ fgBool fgGameMain::initSubsystems(void) {
     m_resourceFactory->registerResource(FG_RESOURCE_FONT, &fgFontResource::createResource);
     m_resourceFactory->registerResource(FG_RESOURCE_GROUP, &fgResourceGroup::createResource);
     m_resourceFactory->registerResource(FG_RESOURCE_3D_MODEL, &fgGfxModelResource::createResource);
+    m_resourceFactory->registerResource(FG_RESOURCE_PARTICLE_EFFECT, &fgParticleEffect::createResource);
     FG_HardwareState->deviceYield(0); // #FIXME - device yield...
     if(!m_resourceMgr)
         m_resourceMgr = new fgResourceManager(m_resourceFactory);
@@ -263,7 +264,9 @@ fgBool fgGameMain::initSubsystems(void) {
     m_resourceMgr->initialize();
 #endif // FG_USING_MARMALADE
 
+    // Setup GFX Main external pointers
     m_gfxMain->setResourceManager(m_resourceMgr);
+    // Setup GUI Main external pointers
     m_guiMain->setResourceManager(m_resourceMgr);
     m_guiMain->setShaderManager(m_gfxMain->getShaderManager());
     m_guiMain->setPointerInputReceiver(m_pointerInputReceiver);
@@ -387,10 +390,28 @@ fgBool fgGameMain::loadResources(void) {
     }
     {
         texname = "Loaded";
-        fgFontResource *font = (fgFontResource *)m_resourceMgr->get("Loaded");
+        fgFontResource *font = (fgFontResource *)m_resourceMgr->get(texname);
         if(font) {
             font->create();
             m_gfxMain->getTextureManager()->uploadToVRAM(font, FG_TRUE);
+
+        }
+    }
+    {
+        texname = "DebrisSheetTex";
+        texture = (fgTextureResource *)m_resourceMgr->get(texname);
+        if(texture) {
+            texture->create();
+            m_gfxMain->getTextureManager()->uploadToVRAM(texture, FG_TRUE);
+
+        }
+    }
+    {
+        texname = "FlameSheetTex";
+        texture = (fgTextureResource *)m_resourceMgr->get(texname);
+        if(texture) {
+            texture->create();
+            m_gfxMain->getTextureManager()->uploadToVRAM(texture, FG_TRUE);
 
         }
     }
@@ -426,6 +447,8 @@ fgBool fgGameMain::loadResources(void) {
             m_gfxMain->getTextureManager()->uploadToVRAM(courier, FG_TRUE);
         }
     }
+    
+    m_gfxMain->getParticleSystem()->insertParticleEmitter("ExplosionEffect", "ExplosionEffect", fgVector3f(0.0f, 0.0f, 0.0f));
     return FG_TRUE;
 }
 
@@ -544,7 +567,17 @@ fgBool fgGameMain::gameTouchHandler(fgArgumentList *argv) {
     if(!event)
         return FG_FALSE;
     fgEventType type = event->eventType;
-
+    if(type == FG_EVENT_TOUCH_TAP_FINISHED && this->m_gfxMain) {
+        
+        fgTouchEvent *touch = (fgTouchEvent *) event;
+        fgParticleEmitter *pEmitter = this->m_gfxMain->getParticleSystem()->getParticleEmitter("ExplosionEffect");
+        if(!pEmitter) {
+            printf("NO SUCH EMITTER FOUND\n");
+            return FG_FALSE;
+        }
+        printf("ADDING 25 particles: %d %d\n", touch->x, touch->y);
+        pEmitter->addParticles(25, fgVector3f((float)touch->x, (float)touch->y, 0.0f));
+    }
     return FG_TRUE;
 }
 

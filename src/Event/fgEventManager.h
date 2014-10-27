@@ -37,11 +37,10 @@
         throwEvent(BUTTON_CLICKED, argv);
  */
 
-    #define FG_MANAGER_EVENT	0x00000008
+    #define FG_MANAGER_EVENT        0x00000008
 
-/*
+/**
  * Event manager main class definition.
- * 
  */
 class fgEventManager : public fgManagerBase {
 private:
@@ -66,50 +65,111 @@ private:
     fgCyclicCallbacksVec m_cyclicCallbacks;
 
 public:
-    // Default constructor for Event Manager object
+    /**
+     * Default constructor for Event Manager object
+     */
     fgEventManager();
-    // Default destructor for Event Manager object
+    /**
+     * Default destructor for Event Manager object
+     */
     virtual ~fgEventManager();
 
 protected:
-    //
+    /**
+     * 
+     */
     virtual void clear(void);
 
 public:
 
-    // Initialize the Event Manager object
+    /**
+     * Initialize the Event Manager object
+     * @return 
+     */
     virtual fgBool initialize(void);
 
-    //
+    /**
+     * 
+     * @return 
+     */
     virtual fgBool destroy(void);
 
-    // This adds event to the waiting queue, the *list object needs to be allocated before,
-    // after event callback execution argument list must be freed
+    /**
+     * This adds event to the waiting queue, the *list object needs to be allocated before,
+     * after event callback execution argument list must be freed
+     * @param eventCode
+     * @param list
+     */
     void throwEvent(fgEventType eventCode, fgArgumentList *list);
-    //
+    /**
+     * 
+     * @param keyCode
+     * @param callback
+     * @return 
+     */
     fgFunctionCallback* addKeyDownCallback(int keyCode, fgFunctionCallback *callback);
-    //
+    /**
+     * 
+     * @param keyCode
+     * @param callback
+     * @return 
+     */
     fgFunctionCallback* addKeyUpCallback(int keyCode, fgFunctionCallback *callback);
 
-    //
+    /**
+     * 
+     * @param eventCode
+     * @param callback
+     * @return 
+     */
     fgFunctionCallback* addEventCallback(fgEventType eventCode, fgFunctionCallback *callback);
-    //
+    /**
+     * 
+     * @param eventCode
+     * @param function
+     * @return 
+     */
     fgFunctionCallback* addEventCallback(fgEventType eventCode, fgFunctionCallback::fgFunction function);
-    //
+    /**
+     * 
+     * @param eventCode
+     * @param method
+     * @param class_instance
+     * @return 
+     */
     template < class Class >
     fgFunctionCallback* addEventCallback(
                                          fgEventType eventCode,
                                          typename fgClassCallback<Class>::fgClassMethod method,
                                          Class* class_instance);
 
+    /**
+     * 
+     * @param eventCode
+     * @param callback
+     * @return 
+     */
     fgBool removeEventCallback(fgEventType eventCode, fgFunctionCallback *callback);
 
-    //
+    /**
+     * 
+     * @param callback
+     * @param timeout
+     * @param argList
+     * @return 
+     */
     fgFunctionCallback* addTimeoutCallback(
                                            fgFunctionCallback *callback,
                                            int timeout,
                                            fgArgumentList *argList);
-    // 
+    /**
+     * 
+     * @param callback
+     * @param repeats
+     * @param interval
+     * @param argList
+     * @return 
+     */
     fgFunctionCallback* addCyclicCallback(
                                           fgFunctionCallback *callback,
                                           int repeats,
@@ -121,14 +181,22 @@ public:
     // This adds key code to the pool of released (up) keys
     void addKeyUp(int keyCode);
 
-    // Execute (finalized) all events waiting in a queue
-    // This function must be called in every frame in one of the threads (or just the main thread)
+    /**
+     * Execute (finalized) all events waiting in a queue
+     * This function must be called in every frame in one of the threads
+     * (or just the main thread)
+     */
     void executeEvents(void);
 };
-template < class Class >
-/*
- *
+
+/**
+ * 
+ * @param eventCode
+ * @param method
+ * @param class_instance
+ * @return 
  */
+template <class Class>
 fgFunctionCallback* fgEventManager::addEventCallback(
                                                      fgEventType eventCode,
                                                      typename fgClassCallback<Class>::fgClassMethod method,

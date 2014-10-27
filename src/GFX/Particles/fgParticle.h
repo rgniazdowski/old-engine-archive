@@ -36,8 +36,12 @@ struct fgParticle {
     int ttl;
     // Time of creation
     unsigned long int spawn_time;
-    // Color of the particle, stored as float for bigger precision
+    // Color of the particle, stored as float for better precision
     fgColor4f color;
+    // Textture index - this is not texture ID from GFX subsystem
+    // used for binding - it is more of index of the texture in 
+    // the particle texture sheet (many images in one file, tiled)
+    unsigned int texIndex;
     // Pointer to additional data structure (if any is needed)
     void *data;
     

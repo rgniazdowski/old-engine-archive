@@ -28,31 +28,61 @@
  */
 class fgColors {
 private:
-    //
+    /**
+     * 
+     */
     fgColors();
-    //
+    /**
+     * 
+     */
     virtual ~fgColors();
     
 public:
     
-    //
+    /**
+     * 
+     */
     static void initialize(void);
     
-    //
+    /**
+     * 
+     */
     static void freeColors(void);
     
-    //
+    /**
+     * 
+     * @param name
+     * @return 
+     */
     static fgColor4f getColorFromName(const char *name);
-    //
+    /**
+     * 
+     * @param name
+     * @return 
+     */
     static fgColor4f getColorFromName(const std::string& name);
-    //
+    /**
+     * 
+     * @param value
+     * @return 
+     */
     static fgColor4f parseHEX(const char *value);
-    //
+    /**
+     * 
+     * @param value
+     * @return 
+     */
     static fgColor4f parseHEX(const std::string& value);
-    //
+    /**
+     * 
+     * @param value
+     * @param comp
+     * @return 
+     */
     static fgColor4f parseHEX(unsigned long int value, const unsigned char comp = 4);
     
 private:
+    /// Are color tables initialized?
     static fgBool s_isInit;
 };
 

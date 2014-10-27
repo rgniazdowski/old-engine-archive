@@ -12,23 +12,25 @@
 
 #include <cstdlib>
 
+#if 0
+
 /**
  * Public constructor
  */
-ParticleEffectLimited::ParticleEffectLimited() {
+fgParticleEffectLimited::fgParticleEffectLimited() {
     m_type = LIMITED;
 }
 
 /**
  * Public destructor
  */
-ParticleEffectLimited::~ParticleEffectLimited() {
+fgParticleEffectLimited::~fgParticleEffectLimited() {
  }
 
 /**
  * Removes given index
  */
-void ParticleEffectLimited::remove(int which) {
+void fgParticleEffectLimited::remove(int which) {
     if(which > int(m_particles.size()) - 1) {
         FG_LOG::PrintError("Invalid index [which:%d] given to Limited::remove! Size:%d", which, m_particles.size());
         return;
@@ -45,7 +47,7 @@ void ParticleEffectLimited::remove(int which) {
 /**
  * NORMAL MODE particle insert - can decline insertion
  */
-fgBool ParticleEffectLimited::add(fgParticle *particle) {
+fgBool fgParticleEffectLimited::add(fgParticle *particle) {
     // Normal insert – only when there is free space
     if(int(m_particles.size()) >= maxCount())
         return FG_FALSE;
@@ -62,7 +64,7 @@ fgBool ParticleEffectLimited::add(fgParticle *particle) {
 /**
  * Batch-add
  */
-fgBool ParticleEffectLimited::addGroup(fgParticle *particles, int count) {
+fgBool fgParticleEffectLimited::addGroup(fgParticle *particles, int count) {
     if(int(m_particles.size()) >= maxCount() || count <= 0)
         return FG_FALSE;
 
@@ -83,7 +85,7 @@ fgBool ParticleEffectLimited::addGroup(fgParticle *particles, int count) {
 /**
  * Adds random Particle, built upon values in [from->some_field, to->some_field]
  */
-fgBool ParticleEffectLimited::addRandom(fgParticle *from, fgParticle *to) {
+fgBool fgParticleEffectLimited::addRandom(fgParticle *from, fgParticle *to) {
     if(int(m_particles.size()) >= maxCount())
         return FG_FALSE;
 
@@ -100,7 +102,7 @@ fgBool ParticleEffectLimited::addRandom(fgParticle *from, fgParticle *to) {
 /**
  * Batch-add with randomization
  */
-fgBool ParticleEffectLimited::addRandomGroup(fgParticle *from, fgParticle *to, int count) {
+fgBool fgParticleEffectLimited::addRandomGroup(fgParticle *from, fgParticle *to, int count) {
     if(int(m_particles.size()) >= maxCount() || count <= 0)
         return FG_FALSE;
     if(from == NULL || to == NULL)
@@ -116,3 +118,5 @@ fgBool ParticleEffectLimited::addRandomGroup(fgParticle *from, fgParticle *to, i
 
     return FG_TRUE;
 }
+
+#endif

@@ -16,16 +16,17 @@
  */
 fgConfig::fgConfig() : m_parser(NULL), m_writer(NULL) { }
 
-/*
- *
+/**
+ * 
+ * @param filePath
  */
-fgConfig::fgConfig(const char *filePath) : m_parser(NULL), m_writer(NULL) {
-    if(filePath)
-        fgConfig::load(filePath); // #FIXME
+fgConfig::fgConfig(const char *configPath) : m_parser(NULL), m_writer(NULL) {
+    if(configPath)
+        fgConfig::load(configPath); // #FIXME
 }
 
-/*
- *
+/**
+ * 
  */
 fgConfig::~fgConfig() {
     if(m_parser)
@@ -37,8 +38,8 @@ fgConfig::~fgConfig() {
     clearAll();
 }
 
-/*
- *
+/**
+ * 
  */
 void fgConfig::refreshParameterVec(void) {
     m_parameterVec.clear_optimised();
@@ -53,41 +54,45 @@ void fgConfig::refreshParameterVec(void) {
     }
 }
 
-/*
- *
+/**
+ * 
+ * @param filePath
+ * @return 
  */
-fgBool fgConfig::load(const char *filePath) {
-    if(!filePath) {
-        if(m_filePath.empty())
+fgBool fgConfig::load(const char *configPath) {
+    if(!configPath) {
+        if(m_configPath.empty())
             return FG_FALSE;
-        filePath = m_filePath.c_str();
+        configPath = m_configPath.c_str();
     } else {
-        m_filePath.clear();
-        m_filePath = filePath;
+        m_configPath.clear();
+        m_configPath = configPath;
     }
 
     if(!m_parser)
         m_parser = new fgConfigParser();
     fgConfig::clearAll();
-    if(!m_parser->load(filePath, m_sectionMap)) {
+    if(!m_parser->load(configPath, m_sectionMap)) {
         return FG_FALSE;
     }
-
+    m_isLoaded = FG_TRUE;
     refreshParameterVec();
     return FG_TRUE;
 }
 
-/*
- *
+/**
+ * 
+ * @param filePath
+ * @return 
  */
 fgBool fgConfig::save(const char *filePath) {
     if(!filePath) {
-        if(m_filePath.empty())
+        if(m_configPath.empty())
             return FG_FALSE;
-        filePath = m_filePath.c_str();
+        filePath = m_configPath.c_str();
     } else {
-        m_filePath.clear();
-        m_filePath = filePath;
+        m_configPath.clear();
+        m_configPath = filePath;
     }
 
     if(!m_writer)
@@ -100,12 +105,12 @@ fgBool fgConfig::save(const char *filePath) {
     return FG_TRUE;
 }
 
-/*
- *
+/**
+ * 
  */
 void fgConfig::clearAll(void) {
     if(!m_sectionMap.empty()) {
-        m_filePath.clear();
+        m_configPath.clear();
         fgCfgTypes::sectionMapItor it = m_sectionMap.begin(),
                 end = m_sectionMap.end();
         for(; it != end; it++) {
@@ -117,10 +122,13 @@ void fgConfig::clearAll(void) {
     }
     m_sectionMap.clear();
     m_parameterVec.clear_optimised();
+    m_isLoaded = FG_FALSE;
 }
 
-/*
- *
+/**
+ * 
+ * @param sectionName
+ * @return 
  */
 fgCfgSection *fgConfig::getSection(const char *sectionName) {
     if(!sectionName)
@@ -135,15 +143,20 @@ fgCfgSection *fgConfig::getSection(const char *sectionName) {
     return smit->second;
 }
 
-/*
- *
+/**
+ * 
+ * @param sectionName
+ * @return 
  */
 fgCfgSection *fgConfig::getSection(const std::string & sectionName) {
     return getSection(sectionName.c_str());
 }
 
-/*
- *
+/**
+ * 
+ * @param sectionsVec
+ * @param sectionNameBegin
+ * @return 
  */
 int fgConfig::getSectionsWith(fgCfgTypes::sectionVec & sectionsVec, const char *sectionNameBegin) {
     if(!sectionNameBegin || m_sectionMap.empty()) {
@@ -161,8 +174,10 @@ int fgConfig::getSectionsWith(fgCfgTypes::sectionVec & sectionsVec, const char *
     return sectionsVec.size();
 }
 
-/*
- *
+/**
+ * 
+ * @param sectionName
+ * @return 
  */
 fgCfgTypes::parameterMap & fgConfig::getRefSectionsParameterMap(const char *sectionName) {
     if(!sectionName)
@@ -173,8 +188,10 @@ fgCfgTypes::parameterMap & fgConfig::getRefSectionsParameterMap(const char *sect
     return section->parametersMap;
 }
 
-/*
- *
+/**
+ * 
+ * @param sectionName
+ * @return 
  */
 fgCfgTypes::parameterVec & fgConfig::getRefSectionsParameterVec(const char *sectionName) {
     if(!sectionName)
@@ -185,8 +202,11 @@ fgCfgTypes::parameterVec & fgConfig::getRefSectionsParameterVec(const char *sect
     return section->parameters;
 }
 
-/*
- *
+/**
+ * 
+ * @param sectionName
+ * @param parameterName
+ * @return 
  */
 void *fgConfig::getParameterValue(const char *sectionName, const char *parameterName) {
     if(!sectionName || !parameterName)

@@ -10,6 +10,7 @@
 #include "fgGuiStyle.h"
 #include "Util/fgConfig.h"
 #include "Util/fgStrings.h"
+#include "fgLog.h"
 
 /*
  *
@@ -31,7 +32,7 @@ fgBool fgGuiStyle::load(void) {
         return FG_FALSE;
     fgConfig *config = new fgConfig();
     if(!config->load(getFilePathStr())) {
-        // ERROR
+        FG_LOG::PrintError("GUI: Couldn't load style content file: '%s'", getFilePathStr());
         delete config;
         return FG_FALSE;
     }

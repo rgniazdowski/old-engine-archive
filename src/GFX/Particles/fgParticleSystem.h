@@ -16,74 +16,219 @@
 #ifndef _FG_PARTICLE_SYSTEM_H_
     #define _FG_PARTICLE_SYSTEM_H_
 
-    #include <map>
-
-    #include "fgPsFlashEffect.h"
-    #include "fgPsSpecialEffect.h"
-    #include "fgPsExplosionEffect.h"
-    #include "fgPsSequentialEffect.h"
+    #include "fgBool.h"
     #include "fgPsParticleEffect.h"
+    #include "fgPsParticleEmitter.h"
+    #include "Util/fgTag.h"
+    
+class fgParticleSystem;
 
-// FIXME
+    #define FG_TAG_PARTICLE_SYSTEM_NAME     "ParticleSystem"
+    #define FG_TAG_PARTICLE_SYSTEM          FG_TAG_TYPE(fgParticleSystem)
 
-// Efekt flasha na ekranie
-    #define EFFECT_FLASH_SCREEN	 			1
-// Efekt przejscia miedzy ekranami menu
-    #define EFFECT_MENU_TRANSITION			2
-// Efekt sekwencyjny ekslozji, klatkowa animacja
-    #define EFFECT_SEQUENTIAL_EXPLOSION		4
-// Efekt specjalny zbudowany z roznych rodzajow particle emiterow
-    #define EFFECT_EXPLOSION				5
+FG_TAG_TEMPLATE_ID_AUTO(fgParticleSystem, FG_TAG_PARTICLE_SYSTEM_NAME);
 
+// Special handle type for Particle Effect
+typedef FG_TAG_PARTICLE_SYSTEM fgParticleSystemTag;
 
-// Efekt dotyczy glownego ekranu menu (rowniez ekran w trakcie gry)
-    #define GROUP_MENU_EFFECT				0
-
-// Efekt dotyczy tla glownego menu (bez ekranu w trakcie gry)
-    #define GROUP_BACKGROUND_MENU_EFFECT	1
-
-// Efekt dotyczy tylko ekranu gry
-    #define GROUP_GAME_STAGE_EFFECT			2
+    #define FG_MANAGER_PARTICLE     0x00000800
 
 /**
  *
  */
-class fgParticleSystem {
-
-private:
-    std::map<int, ParticleEffect *> m_particleEffects;
-    //std::map<int, FlashEffect *> m_flashEffects;
-    std::map<int, SpecialEffect *> m_specialEffects;
-    std::map<int, fgVector<int> > m_effectGroups;
-
+class fgParticleSystem : public fgManagerBase  {
 public:
-    fgParticleSystem();
+    typedef fgVector<fgParticleEmitter *> emittersVec;
+    typedef emittersVec::iterator emittersVecItor;
+    
+private:
+    /// Pointer to the external resource manager
+    fgManagerBase *m_pResourceMgr;
+    /// Pointer to the external scene manager
+    fgManagerBase *m_pSceneMgr;
+    /// Emitters vector
+    emittersVec m_emitters;
+    
+public:
+    /**
+     * 
+     */
+    fgParticleSystem(fgManagerBase *pResourceMgr = NULL, fgManagerBase *pSceneMgr = NULL);
+    /**
+     * 
+     */
     virtual ~fgParticleSystem();
 
+protected:
+    /**
+     * 
+     */
+    virtual void clear(void);
+    
+    /**
+     * 
+     * @param pEmitter
+     * @return 
+     */
+    fgBool isEmitterInTheArray(fgParticleEmitter *pEmitter);
+    
+    /**
+     * 
+     * @param emitterNameTag
+     * @return 
+     */
+    fgBool isEmitterInTheArray(const std::string& emitterNameTag);
+    
+    /**
+     * 
+     * @param emitterNameTag
+     * @return 
+     */
+    fgBool isEmitterInTheArray(const char *emitterNameTag);
+    
 public:
-    void addParticleEffect(int effect_id, ParticleEffect *particle_effect);
-    void addSpecialEffect(int effect_id, SpecialEffect *special_effect);
 
-    ParticleEffect *particleEffect(int effect_id);
-    SpecialEffect *specialEffect(int effect_id);
+    /**
+     * 
+     * @param pResourceMgr
+     */
+    inline void setResourceManager(fgManagerBase *pResourceMgr) {
+        m_pResourceMgr = pResourceMgr;
+    }
+    /**
+     * 
+     * @return 
+     */
+    inline fgManagerBase *getResourceManager(void) const {
+        return m_pResourceMgr;
+    }
+    /**
+     * 
+     * @param pSceneMgr
+     */
+    inline void setSceneManager(fgManagerBase *pSceneMgr) {
+        m_pSceneMgr = pSceneMgr;
+    }
+    /**
+     * 
+     * @return 
+     */
+    inline fgManagerBase *getSceneManager(void) const {
+        return m_pSceneMgr;
+    }
+    
+    /**
+     * 
+     * @param pEmitter
+     * @return 
+     */
+    fgBool isEmitterInTheScene(const fgParticleEmitter *pEmitter);
+    
+    /**
+     * 
+     * @param emitterNameTag
+     * @return 
+     */
+    fgBool isEmitterInTheScene(const std::string& emitterNameTag);
+    
+    /**
+     * 
+     * @param emitterNameTag
+     * @return 
+     */
+    fgBool isEmitterInTheScene(const char *emitterNameTag);
+    
+    /**
+     * 
+     * @param emitterNameTag
+     * @return 
+     */
+    fgParticleEmitter *getParticleEmitter(const std::string& emitterNameTag);
+    
+    /**
+     * 
+     * @param emitterNameTag
+     * @return 
+     */
+    fgParticleEmitter *getParticleEmitter(const char *emitterNameTag);
+    
+    /**
+     * 
+     * @return 
+     */
+    virtual fgBool destroy(void);
+    /**
+     * 
+     * @return 
+     */
+    virtual fgBool initialize(void);
 
-    void removeParticleEffect(int effect_id);
-    void removeSpecialEffect(int effect_id);
+    /**
+     * 
+     * @param dhUniqueID
+     * @param pData
+     * @param nameTag
+     * @return 
+     */
+    virtual fgBool insert(fgResourceHandle& peUniqueID, fgParticleEffect* pEffect, const std::string& nameTag);
 
-    void addEffectToGroup(int group_id, int effect_id);
-    void removeEffectFromGroup(int group_id, int effect_id);
+    /**
+     * 
+     * @param shUniqueID
+     * @param pStyle
+     * @return 
+     */
+    virtual fgBool insertParticleEffect(fgResourceHandle& peUniqueID, fgParticleEffect *pEffect);
 
-    void calculateGroup(int group_id);
-    void drawGroup(int group_id);
+    /**
+     * 
+     * @param info
+     * @return 
+     */
+    virtual fgParticleEffect* request(const std::string& info);
+    /**
+     * 
+     * @param info
+     * @return 
+     */
+    virtual fgParticleEffect* request(const char *info);
+    
+    /**
+     * 
+     * @param particleEffectNameTag
+     * @param particleEmitterNameTag
+     * @param emitterOrigin
+     * @return 
+     */
+    virtual fgParticleEmitter* insertParticleEmitter(const std::string& particleEffectNameTag,
+                                                     const std::string& particleEmitterNameTag,
+                                                     const fgVector3f& emitterOrigin);
+    
+    /**
+     * 
+     * @param particleEffectNameTag
+     * @param particleEmitterNameTag
+     * @param emitterOrigin
+     * @return 
+     */
+    virtual fgParticleEmitter* insertParticleEmitter(const char *particleEffectNameTag,
+                                                     const char *particleEmitterNameTag,
+                                                     const fgVector3f& emitterOrigin);
+    
+    /**
+     * 
+     * @param pParticleEmitter
+     * @param particleEffectNameTag
+     * @return 
+     */
+    virtual fgBool insertParticleEmitter(const fgParticleEmitter* pParticleEmitter,
+                                         const std::string& particleEffectNameTag);
+    
+    /**
+     * 
+     */
+    virtual void calculate(void);
 
-    void calculateParticleEffect(int effect_id);
-    void calculateSpecialEffect(int effect_id);
-
-    void drawParticleEffect(int effect_id);
-    void drawSpecialEffect(int effect_id);
-
-    void clearGroups();
-    void clearAll();
 };
 
 #endif /* PARTICLESYSTEM_H_ */

@@ -34,14 +34,25 @@ m_shaderMgr(NULL),
 m_mainWindow(NULL),
 m_gfxContext(NULL),
 m_3DScene(NULL),
+m_2DScene(NULL),
+m_particleSystem(NULL),
 m_init(FG_FALSE) {
     m_3DScene = new fgGfx3DScene();
+    m_2DScene = new fgGfx2DScene();
+    m_particleSystem = new fgParticleSystem();
+    m_particleSystem->setSceneManager(m_2DScene);
+
+    m_shaderMgr = new fgGfxShaderManager();
+    m_3DScene->setShaderManager(m_shaderMgr);
+    m_2DScene->setShaderManager(m_shaderMgr);
 }
 
 /*
  *
  */
 fgGfxMain::~fgGfxMain() {
+    if(m_particleSystem)
+        delete m_particleSystem;
     if(m_3DScene)
         delete m_3DScene;
     if(m_gfxContext)
@@ -55,6 +66,8 @@ fgGfxMain::~fgGfxMain() {
     if(m_mainWindow)
         delete m_mainWindow;
 
+
+    m_particleSystem = NULL;
     m_textureMgr = NULL;
     m_pResourceMgr = NULL;
     m_shaderMgr = NULL;
@@ -101,10 +114,6 @@ fgBool fgGfxMain::initGFX(void) {
         }
     }
     if(status) {
-        if(!m_shaderMgr)
-            m_shaderMgr = new fgGfxShaderManager();
-        m_3DScene->setShaderManager(m_shaderMgr);
-
         FG_LOG::PrintDebug("GFX: Setting viewport (0, 0, %d, %d)", m_mainWindow->getWidth(), m_mainWindow->getHeight());
         m_gfxContext->viewport(0, 0, m_mainWindow->getWidth(), m_mainWindow->getHeight());
         m_gfxContext->clearDepth(1.0f);
@@ -121,7 +130,7 @@ fgBool fgGfxMain::initGFX(void) {
         m_gfxContext->bindTexture2D(0);
         m_gfxContext->bindTexture3D(0);
         m_gfxContext->scissor(0, 0, m_mainWindow->getWidth(), m_mainWindow->getHeight());
-        //MVP->setPerspective(45.0f, m_mainWindow->getAspect());
+        m_2DScene->getMVP()->setOrtho(0.0f, (float)m_mainWindow->getWidth(), (float)m_mainWindow->getHeight(), 0.0f);
         m_init = FG_TRUE;
     }
     if(status) {
@@ -215,7 +224,11 @@ fgBool fgGfxMain::resumeGFX(void) {
 void fgGfxMain::display(void) {
     if(!m_gfxContext)
         return;
+    if(m_particleSystem) {
+        m_particleSystem->calculate();
+    }
     m_3DScene->sortCalls();
+    m_2DScene->sortCalls();
 }
 
 void dumpMatrix(const float *mat, const char *title) {
@@ -370,9 +383,9 @@ void fgGfxMain::render(void) {
     if(state[SDL_SCANCODE_DOWN] == SDL_PRESSED) {
         posy += 10.0f;
     }
-    
+
 #endif
-    Model = glm::translate(Model, glm::vec3(posx*0.0f, posy*0.0f, 0.0f));
+    Model = glm::translate(Model, glm::vec3(posx * 0.0f, posy * 0.0f, 0.0f));
     Model = glm::scale(Model, glm::vec3(guiScale, guiScale, 0.0f));
     // #FIXME !
     fgGfxMVPMatrix mvp_lol;
@@ -381,6 +394,14 @@ void fgGfxMain::render(void) {
     MVP->setOrtho(0, (float)m_mainWindow->getWidth(), (float)m_mainWindow->getHeight(), 0.0f);
     MVP->calculate(Model);
     program2->setUniform(MVP);
+
+    fgGfxPlatform::context()->blendFunc(GL_SRC_ALPHA, GL_ONE);
+    //fgGfxPlatform::context()->blendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    // LOL LOL LOL #FIXME
+    m_2DScene->render();
+    
+    program2->setUniform(MVP);
+    fgGfxPlatform::context()->blendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     fgGfxPlatform::context()->scissor(0, 0, m_mainWindow->getWidth(), m_mainWindow->getHeight());
 }
@@ -402,6 +423,11 @@ fgBool fgGfxMain::setResourceManager(fgManagerBase *pResourceManager) {
     m_pResourceMgr = pResourceManager;
     if(m_3DScene)
         m_3DScene->setResourceManager(m_pResourceMgr);
+    if(m_particleSystem) {
+        m_particleSystem->setResourceManager(m_pResourceMgr);
+        m_particleSystem->setSceneManager(m_2DScene);
+        m_particleSystem->initialize();
+    }
     return m_textureMgr->initialize(); // #FIXME - texture mgr init ?
 }
 
@@ -436,10 +462,25 @@ fgGfx3DScene *fgGfxMain::get3DScene(void) const {
 /*
  *
  */
+fgGfx2DScene *fgGfxMain::get2DScene(void) const {
+    return m_2DScene;
+}
+
+/*
+ *
+ */
 fgGfxCameraAnimation *fgGfxMain::get3DSceneCamera(void) const {
     if(!m_3DScene)
         return NULL;
     return m_3DScene->getCamera();
+}
+
+/**
+ * 
+ * @return 
+ */
+fgParticleSystem *fgGfxMain::getParticleSystem(void) const {
+    return m_particleSystem;
 }
 
 /*

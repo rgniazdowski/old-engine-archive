@@ -236,7 +236,7 @@ std::string &fgDirent::searchForFile(std::string &output,
             stop = FG_TRUE;
         if(!stop && fgStrings::startsWith(foundPath, searchPath)) {
             subPath = foundPath.c_str() + searchPath.length();
-            if(!deep && fgStrings::contains(subPath, std::string("/\\")))
+            if(!deep && fgStrings::contains(subPath, "/\\"))
                 continue;
             if(patternVec.empty())
                 output = foundPath;

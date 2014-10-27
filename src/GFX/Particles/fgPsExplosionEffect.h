@@ -38,14 +38,14 @@ protected:
      * flame turns to smoke. The overall lifespan of the sprites should be roughly .5 seconds. 
      * Used texture: flame0_sheet.tga (FLAME_SHEET_TEXTURE)
      */
-    ParticleEffectLimited *m_flameEmitter;
+    fgParticleEffectLimited *m_flameEmitter;
 
     /*
      * This emitter uses the star-shaped textures (flash0_sheet.tga) and should grow almost instantly and fade just as 
      * quickly. It should be bright yellow- almost white and should last about .2 seconds. It�s possible to  get by with
      * just the Flash and Flame/Smoke Emitters, if you want to keep the overall effect simple. (FLASH_SHEET_TEXTURE)
      */
-    ParticleEffectLimited *m_flashEmitter;
+    fgParticleEffectLimited *m_flashEmitter;
 
     /*
      * This emitter should be long and thin. Instead of facing the camera, the sprites should be oriented along the direction
@@ -53,7 +53,7 @@ protected:
      * looks gold. The speed should be around 10 meters per second. The lifetime can vary from .5 seconds to 1.5 seconds,
      * depending on how far you want the sparks to travel from the explosion. Used texture: spark0.tga (SPARK_TEXTURE)
      */
-    ParticleEffectLimited *m_sparksEmitter;
+    fgParticleEffectLimited *m_sparksEmitter;
 
     /*
      * Like the Flying Sparks emitter, the Smoke Trails Emitter should be long and thin and be oriented along a path radiating 
@@ -61,14 +61,14 @@ protected:
      * should move slowly, and grow quickly from the center of the overall effect by changing the scale over time. The lifetime
      * should be about .4 seconds. Used texture: smoketrail0_sheet.tga (SMOKETRAIL_SHEET_TEXTURE)
      */
-    ParticleEffectLimited *m_smokeTrailsEmitter;
+    fgParticleEffectLimited *m_smokeTrailsEmitter;
 
     /*
      * This emitter is similar to the Flame/Smoke Emitter and once again, the sprites fall up instead of down by using a negative
      * number in the gravity setting (-0.2). The sprites from this emitter should drift apart slightly as they rise.
      * Used texture: roundspark0.tga (ROUNDSPARK_TEXTURE)
      */
-    ParticleEffectLimited *m_roundSparksEmitter;
+    fgParticleEffectLimited *m_roundSparksEmitter;
 
     /*
      * These fast moving sprites should fly out from the center of the overall emitter. If possible, aim for the camera for dramatic
@@ -78,18 +78,18 @@ protected:
      * falling slower than normal.
      * Used texture: debris0_sheet.tga (DEBRIS_SHEET_TEXTURE)
      */
-    ParticleEffectLimited *m_debrisEmitter;
+    fgParticleEffectLimited *m_debrisEmitter;
 
     /*
      * This emitter consists of only one sprite that lies parallel to the ground. The sprite should grow quickly from the center and
      * fade out just as quickly. It�s best when this sprite is kept very subtle and transparent. Used texture: shockwave0.tga (SHOCKWAVE_TEXTURE)
      */
-    ParticleEffectLimited *m_shockwaveEmitter;
+    fgParticleEffectLimited *m_shockwaveEmitter;
 public:
     /*
      * Default constructor
      */
-    ExplosionEffect(ParticleEffect::DrawMode drawMode, float scale);
+    ExplosionEffect(fgParticleEffect::DrawMode drawMode, float scale);
     ~ExplosionEffect();
     /*
      * Returns the scale of the effect

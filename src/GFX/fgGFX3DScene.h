@@ -12,7 +12,7 @@
 
     #include "fgGFXSceneManager.h"
 
-/* 
+/**
  *
  */
 class fgGfx3DScene : public fgGfxSceneManager {

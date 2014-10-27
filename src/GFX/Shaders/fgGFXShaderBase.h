@@ -13,7 +13,7 @@
     #include "fgGFXShaderDefs.h"
 
     #include "Hardware/fgQualityTypes.h"
-    #include "Resource/fgDataObjectBase.h"
+    #include "Resource/fgManagedDataFileBase.h"
     #include "Util/fgHandle.h"
     #include "Util/fgTag.h"
     #include <map>
@@ -29,10 +29,10 @@ typedef FG_TAG_GFX_SHADER fgGfxShaderTag;
 // Special handle type for shader program
 typedef fgHandle<fgGfxShaderTag> fgGfxShaderHandle;
 
-/*
+/**
  *
  */
-class fgGfxShaderBase : public fgDataObjectBase<fgGfxShaderHandle, fgQuality> {
+class fgGfxShaderBase : public fgManagedDataFileBase<fgGfxShaderHandle, fgQuality> {
     friend class fgGfxShader;
     friend class fgGfxShaderProgram;
     friend class fgGfxShaderManager;
@@ -55,52 +55,65 @@ protected:
     fgGFXuint m_gfxID;
     /// 
     shaderBaseType m_baseType;
-    /// #FIXME ?
-    fgBool m_isManaged;
-
-protected:
-    void setManaged(fgBool toggle = FG_TRUE) {
-        m_isManaged = toggle;
-    }
 
 public:
-    //
+    /**
+     * 
+     */
     fgGfxShaderBase();
-    // 
+    /**
+     * 
+     */
     virtual ~fgGfxShaderBase();
-    fgBool isManaged(void) const {
-        return m_isManaged;
-    }
 
-    // 
+    /**
+     * 
+     * @return 
+     */
     fgGFXuint getGfxID(void) const {
         return m_gfxID;
     }
-
-    //
+    /**
+     * 
+     * @return 
+     */
     fgGFXuint & getRefGfxID(void) {
         return m_gfxID;
     }
-
-    //
+    /**
+     * 
+     * @param pname
+     * @return 
+     */
     fgGFXint getParam(fgGFXenum pname) {
         return m_params[pname];
     }
-
-    //
+    /**
+     * 
+     * @return 
+     */
     const char *getLog(void) const {
         return m_log;
     }
-
-    //
+    /**
+     * 
+     */
     virtual void clearAll(void) = 0;
 
 protected:
-    //
+    /**
+     * 
+     */
     void updateLog(void);
-    //
+    /**
+     * 
+     */
     void updateParams(void);
-    //
+    /**
+     * 
+     * @param pname
+     * @return 
+     */
     fgGFXint updateParam(fgGFXenum pname);
 };
 

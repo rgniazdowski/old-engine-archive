@@ -12,7 +12,7 @@
 
     #include "fgBuildConfig.h"
     #include "fgGuiStyleContent.h"
-    #include "Resource/fgDataObjectBase.h"
+    #include "Resource/fgManagedDataFileBase.h"
     #include "Util/fgHandle.h"
     #include "Util/fgTag.h"
     #include "Hardware/fgQualityTypes.h" // #FIXME
@@ -53,7 +53,7 @@ namespace std {
 /*
  *
  */
-class fgGuiStyle : public fgDataObjectBase<fgGuiStyleHandle, fgQuality> {
+class fgGuiStyle : public fgManagedDataFileBase<fgGuiStyleHandle, fgQuality> {
     friend class fgGuiStyleManager;
     #ifdef FG_USING_MARMALADE
 protected:
@@ -81,25 +81,60 @@ private:
     styleNameMap m_styleContent;
 
 public:
-    //
+    /**
+     * 
+     */
     fgGuiStyle();
-    //
+    /**
+     * 
+     */
     virtual ~fgGuiStyle();
 
-    //
+    /**
+     * 
+     * @return 
+     */
     fgBool load(void);
-    //
+    /**
+     * 
+     * @param path
+     * @return 
+     */
     fgBool load(const std::string& path);
-    //
+    /**
+     * 
+     * @param path
+     * @return 
+     */
     fgBool load(const char *path);
 
-    //
+    /**
+     * 
+     * @param info
+     * @return 
+     */
     fgGuiStyleContent &getContent(const std::string& info);
-    //
+    /**
+     * 
+     * @param info
+     * @return 
+     */
     fgGuiStyleContent &getContent(const char *info);
-    //
+    /**
+     * 
+     * @param contents
+     * @param num
+     * @param info
+     * @return 
+     */
     fgBool copyFullContent(fgGuiStyleContent *contents, int num, const std::string& info);
-    //
+    /**
+     * 
+     * @param contents
+     * @param num
+     * @param info
+     * @return 
+     */
     fgBool copyFullContent(fgGuiStyleContent *contents, int num, const char *info);
 
 };

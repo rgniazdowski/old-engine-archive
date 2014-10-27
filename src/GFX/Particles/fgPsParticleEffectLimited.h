@@ -11,18 +11,18 @@
     #define _FG_PS_PARTICLE_EFFECT_LIMITED_H_
 
     #include "fgPsParticleEffect.h"
-
-class ParticleEffectLimited : public ParticleEffect {
+    #if 0
+class fgParticleEffectLimited : public fgParticleEffect {
 public:
     /**
      * Public constructor
      */
-    ParticleEffectLimited();
+    fgParticleEffectLimited();
 
     /**
      * Public destructor
      */
-    virtual ~ParticleEffectLimited();
+    virtual ~fgParticleEffectLimited();
 
     /**
      * Removes given index. The element
@@ -52,5 +52,6 @@ public:
     fgBool addRandomGroup(fgParticle *from, fgParticle *to, int count);
 
 };
+    #endif
 
 #endif

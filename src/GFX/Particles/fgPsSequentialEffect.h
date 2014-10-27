@@ -14,8 +14,8 @@
     #include "fgPsParticleEffectLimited.h"
 
     #define OBJECT_SEQUENCE_MAX 16
-
-class SequentialEffect : public ParticleEffectLimited {
+    #if 0
+class SequentialEffect : public fgParticleEffectLimited {
 private:
 
     struct AdditionalData {
@@ -43,5 +43,5 @@ public:
 
     void calculate(void);
 };
-
+    #endif
 #endif

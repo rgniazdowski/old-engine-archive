@@ -21,12 +21,33 @@ m_MVP(),
 m_camera(FG_GFX_CAMERA_FREE),
 m_objDrawCalls() {
     m_objDrawCalls.reserve(16);
+    m_managerType = FG_MANAGER_SCENE;
 }
 
 /**
  * 
  */
 fgGfxSceneManager::~fgGfxSceneManager() {
+    fgGfxSceneManager::destroy();
+}
+
+/**
+ *
+ */
+void fgGfxSceneManager::clear(void) {
+    releaseAllHandles();
+    m_managerType = FG_MANAGER_SCENE;
+    m_pResourceMgr = NULL;
+    m_objDrawCalls.clear_optimised();
+    m_objDrawCalls.reserve(0);
+    m_objDrawCalls.resize(0);
+}
+
+/**
+ * 
+ * @return 
+ */
+fgBool fgGfxSceneManager::destroy(void) {
     fgGfxDrawingBatch::flush();
     //objectVecItor oit = m_objects.begin(), oend = m_objects.end();
     drawCallVecItor dit = m_objDrawCalls.begin(), dend = m_objDrawCalls.end();
@@ -49,14 +70,14 @@ fgGfxSceneManager::~fgGfxSceneManager() {
     end = getRefDataVector().end();
     itor = begin;
     for(; itor != end; itor++) {
-        if((*itor) == NULL)
+        fgGfxObject *pObj = *itor;
+        if(pObj == NULL)
             continue;
 
-        delete (*itor);
+        if(pObj->isManaged())
+            delete pObj;
         *itor = NULL;
     }
-    fgHandleManager::clear();
-
     // Delete all gfx draw calls (they match objects in the scene)
     for(; dit != dend; dit++) {
         if(*dit) {
@@ -65,8 +86,17 @@ fgGfxSceneManager::~fgGfxSceneManager() {
             *dit = NULL;
         }
     }
-    m_objDrawCalls.clear_optimised();
-    m_pResourceMgr = NULL;
+    fgGfxSceneManager::clear();
+    return FG_TRUE;
+}
+
+/**
+ * 
+ * @return 
+ */
+fgBool fgGfxSceneManager::initialize(void) {
+    m_objDrawCalls.reserve(16);
+    return FG_TRUE;
 }
 
 /**
@@ -92,7 +122,7 @@ void fgGfxSceneManager::setResourceManager(fgManagerBase *pResourceMgr) {
  * 
  */
 void fgGfxSceneManager::flush(void) {
-    fgGfxSceneManager::flush();
+    fgGfxDrawingBatch::flush();
 }
 
 /**
@@ -237,6 +267,9 @@ fgBool fgGfxSceneManager::addObject(fgGfxObjectHandle& oUniqueID,
         return FG_FALSE;
     }
     pObj->setHandle(oUniqueID);
+    // By default object is set to be managed
+    // However in some cases the 'managed' flag will
+    // be set to FG_FALSE after addition
     pObj->setManaged(FG_TRUE);
 
     if(!fgHandleManager::setupName(pObj->getName(), oUniqueID)) {
@@ -245,30 +278,35 @@ fgBool fgGfxSceneManager::addObject(fgGfxObjectHandle& oUniqueID,
     }
     unsigned int index = pObj->getHandle().getIndex();
 
+    fgGfxDrawCall *drawCall = NULL;
     // FIXME
+    if(pObj->getModel()) {
+        drawCall = new fgGfxDrawCall(FG_GFX_DRAW_CALL_MODEL);
+        drawCall->setupFromModel(pObj->getModel());
 
-    fgGfxDrawCall *drawCall = new fgGfxDrawCall(FG_GFX_DRAW_CALL_MODEL);
-    drawCall->setupFromModel(pObj->getModel());
-    if(getShaderManager())
-        drawCall->setShaderProgram(((fgGfxShaderManager *)getShaderManager())->getCurrentProgram());
-    if(m_pResourceMgr) {
-        fgGfxMaterial *pMainMaterial = pObj->getModel()->getMainMaterial();
-        if(pMainMaterial) {
-            fgTextureResource *pTexRes = (fgTextureResource *)((fgResourceManager *)m_pResourceMgr)->get(pMainMaterial->ambientTexHandle);
-            if(pTexRes)
-                drawCall->setTexture(pTexRes->getRefGfxID());
+        if(getShaderManager())
+            drawCall->setShaderProgram(((fgGfxShaderManager *)getShaderManager())->getCurrentProgram());
+        if(m_pResourceMgr) {
+            fgGfxMaterial *pMainMaterial = pObj->getModel()->getMainMaterial();
+            if(pMainMaterial) {
+                fgTextureResource *pTexRes = (fgTextureResource *)((fgResourceManager *)m_pResourceMgr)->get(pMainMaterial->ambientTexHandle);
+                if(pTexRes)
+                    drawCall->setTexture(pTexRes->getRefGfxID());
+            }
         }
+    } else {
+        drawCall = new fgGfxDrawCall(FG_GFX_DRAW_CALL_CUSTOM_ARRAY);
     }
+
     drawCall->setMVP(&m_MVP);
     drawCall->setModelMatrix(pObj->getRefModelMatrix());
     if(index >= m_objDrawCalls.size()) {
-        m_objDrawCalls.resize(index, NULL);
+        m_objDrawCalls.resize((unsigned int)(index+1), NULL);
     }
     m_objDrawCalls[index] = drawCall;
     // 2nd argument tells that this draw call should not be managed
     // meaning: destructor wont be called on flush()
     fgGfxDrawingBatch::appendDrawCall(drawCall, FG_FALSE);
-
     return FG_TRUE;
 }
 

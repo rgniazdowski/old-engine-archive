@@ -115,8 +115,8 @@ fgBool fgResourceManager::destroy(void) {
             delete (*itor);
             *itor = NULL;
         }
-        fgResourceManager::clear();
     }
+    fgResourceManager::clear();
     if(m_dataDir)
         delete m_dataDir;
     m_dataDir = NULL;

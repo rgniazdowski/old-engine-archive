@@ -161,6 +161,12 @@ public:
 
     //
     virtual fgGFXuint size(void) const = 0;
+    
+    //
+    virtual void reserve(const unsigned int newSize) = 0;
+    
+    //
+    virtual void resize(const unsigned int newSize) = 0;
 
     //
     virtual fgGFXsizei stride(void) const = 0;
@@ -279,6 +285,16 @@ public:
     virtual fgGFXuint size(void) const {
         return fgVector<fgVertex2v>::size();
     }
+    
+    //
+    virtual void reserve(const unsigned int newSize) {
+        fgVector<fgVertex2v>::reserve(newSize);
+    }
+    
+    //
+    virtual void resize(const unsigned int newSize) {
+        fgVector<fgVertex2v>::resize(newSize);
+    }
 
     //
     virtual fgGFXsizei stride(void) const {
@@ -287,7 +303,7 @@ public:
 
     //
     virtual fgGFXuint attribMask(void) const {
-        return (fgGFXuint)fgVertex2v::getAttribMask();
+        return (fgGFXuint)fgVertex2v::attribMask();
     }
 
     //
@@ -409,6 +425,16 @@ public:
     virtual fgGFXuint size(void) const {
         return fgVector<fgVertex3v>::size();
     }
+    
+    //
+    virtual void reserve(const unsigned int newSize) {
+        fgVector<fgVertex3v>::reserve(newSize);
+    }
+    
+    //
+    virtual void resize(const unsigned int newSize) {
+        fgVector<fgVertex3v>::resize(newSize);
+    }
 
     //
     virtual fgGFXsizei stride(void) const {
@@ -417,7 +443,7 @@ public:
 
     //
     virtual fgGFXuint attribMask(void) const {
-        return (fgGFXuint)fgVertex3v::getAttribMask();
+        return (fgGFXuint)fgVertex3v::attribMask();
     }
 
     //
@@ -554,13 +580,23 @@ public:
     }
 
     //
+    virtual void reserve(const unsigned int newSize) {
+        fgVector<fgVertex4v>::reserve(newSize);
+    }
+    
+    //
+    virtual void resize(const unsigned int newSize) {
+        fgVector<fgVertex4v>::resize(newSize);
+    }
+    
+    //
     virtual fgGFXsizei stride(void) const {
         return sizeof (fgVertex4v);
     }
 
     //
     virtual fgGFXuint attribMask(void) const {
-        return (fgGFXuint)fgVertex4v::getAttribMask();
+        return (fgGFXuint)fgVertex4v::attribMask();
     }
 
     //

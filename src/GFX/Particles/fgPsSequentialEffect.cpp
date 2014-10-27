@@ -15,6 +15,7 @@
 #include "Hardware/fgHardwareState.h"
 #include "Util/fgMemory.h"
 
+#if 0
 SequentialEffect::~SequentialEffect() {
     fgFree(m_data);
     m_data = NULL;
@@ -29,7 +30,7 @@ SequentialEffect::SequentialEffect(int max_count) : m_data(NULL), m_countData(0)
 
 void SequentialEffect::setMaxCount(int max_count) {
     if(m_data == NULL) {
-        ParticleEffect::setMaxCount(max_count);
+        fgParticleEffect::setMaxCount(max_count);
         m_maxCountData = max_count;
         m_data = fgMalloc<AdditionalData>(max_count);
         m_countData = 0;
@@ -40,7 +41,7 @@ void SequentialEffect::removeAll(void) {
     int l_count = m_countData;
     for(int i = 0; i < l_count; i++) {
         SequentialEffect::remove(0);
-        ParticleEffectLimited::remove(0);
+        fgParticleEffectLimited::remove(0);
     }
     m_countData = 0;
 }
@@ -59,7 +60,7 @@ void SequentialEffect::remove(int which) {
         m_data[which] = m_data[m_countData - 1];
         m_countData--;
     }
-    ParticleEffectLimited::remove(which);
+    fgParticleEffectLimited::remove(which);
 }
 
 int SequentialEffect::addSequence(float x, float y, float z, float size, int count_frames, int frame_duration, bool loop) {
@@ -103,7 +104,7 @@ int SequentialEffect::addSequence(float x, float y, float z, float size, int cou
     particle.bbox.pos.z = z;
     //particle.texture_id = 0;
 
-    ParticleEffectLimited::add(&particle);
+    fgParticleEffectLimited::add(&particle);
     return idx;
 }
 
@@ -130,5 +131,7 @@ void SequentialEffect::calculate(void) {
             SequentialEffect::remove(i);
         }
     }
-    ParticleEffect::calculate();
+    fgParticleEffect::calculate();
 }
+
+#endif

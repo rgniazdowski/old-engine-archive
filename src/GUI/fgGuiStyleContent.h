@@ -21,8 +21,7 @@
     #include "GFX/fgGFXBoundingBox.h"
 
     #define FG_GUI_FLOAT_UNIT_INVALID       1280000.0f
-    #define FG_GUI_FLOAT_UNIT_TEST_VALUE    1000000.0f
-    #define FG_GUI_CHECK_FLOAT(value)   (value < FG_GUI_FLOAT_UNIT_TEST_VALUE)
+    #define FG_GUI_CHECK_FLOAT(value)   (value < FG_GUI_FLOAT_UNIT_INVALID)
 
 /**
  *
@@ -352,17 +351,42 @@ private:
     fgGuiAlign m_textAlign;
 
 public:
-    //
+    /**
+     * 
+     */
     fgGuiStyleContent();
-    //
+    /**
+     * 
+     */
     virtual ~fgGuiStyleContent();
 
-    //
+    /**
+     * 
+     * @param params
+     * @param merge
+     * @return 
+     */
     fgBool initializeFromConfig(fgCfgTypes::parameterVec &params, fgBool merge = FG_FALSE);
 
-    //
+    /**
+     * 
+     * @param align
+     * @param pos
+     * @param size
+     * @param boundPos
+     * @param boundSize
+     * @param isInside
+     */
     void applyPosAlign(const fgGuiAlign align, fgVector3f& pos, const fgVector3f& size, const fgVector3f& boundPos, const fgVector3f& boundSize, const fgBool isInside = FG_TRUE);
-    //
+    /**
+     * 
+     * @param align
+     * @param pos
+     * @param size
+     * @param boundPos
+     * @param boundSize
+     * @param isInside
+     */
     void applyPosAlign(const fgGuiAlign align, fgVector2f& pos, const fgVector2f& size, const fgVector2f& boundPos, const fgVector2f& boundSize, const fgBool isInside = FG_TRUE);
 
     //
@@ -480,9 +504,17 @@ public:
     //
     fgGuiStyleContent& setSize(const fgVector3f& size);
 
-    //
+    /**
+     * 
+     * @param shader
+     * @return 
+     */
     fgGuiStyleContent& setShader(const std::string& shader);
-    //
+    /**
+     * 
+     * @param effect
+     * @return 
+     */
     fgGuiStyleContent& setEffect(const std::string& effect);
 
 };
