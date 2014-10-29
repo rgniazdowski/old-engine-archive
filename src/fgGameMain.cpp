@@ -598,13 +598,13 @@ fgBool fgGameMain::gameTouchHandler(fgArgumentList *argv) {
         {
             pEmitter = this->m_gfxMain->getParticleSystem()->getParticleEmitter("ExplosionFlash");
             if(pEmitter) {
-                pEmitter->addParticles(2, fgVector3f((float)touch->x, (float)touch->y, 0.0f));
+                pEmitter->addParticles(1, fgVector3f((float)touch->x, (float)touch->y, 0.0f));
             }
         }
         {
             pEmitter = this->m_gfxMain->getParticleSystem()->getParticleEmitter("ExplosionRoundSparks");
             if(pEmitter) {
-                pEmitter->addParticles(5, fgVector3f((float)touch->x, (float)touch->y, 0.0f));
+                pEmitter->addParticles(6, fgVector3f((float)touch->x, (float)touch->y, 0.0f));
             }
         }
         {
@@ -616,19 +616,19 @@ fgBool fgGameMain::gameTouchHandler(fgArgumentList *argv) {
         {
             pEmitter = this->m_gfxMain->getParticleSystem()->getParticleEmitter("ExplosionSmoke");
             if(pEmitter) {
-                pEmitter->addParticles(15, fgVector3f((float)touch->x, (float)touch->y, 0.0f));
+                pEmitter->addParticles(16, fgVector3f((float)touch->x, (float)touch->y, 0.0f));
             }
         }
         {
             pEmitter = this->m_gfxMain->getParticleSystem()->getParticleEmitter("ExplosionSmokeTrails");
             if(pEmitter) {
-                pEmitter->addParticles(25, fgVector3f((float)touch->x, (float)touch->y, 0.0f));
+                pEmitter->addParticles(32, fgVector3f((float)touch->x, (float)touch->y, 0.0f));
             }
         }
         {
             pEmitter = this->m_gfxMain->getParticleSystem()->getParticleEmitter("ExplosionSparks");
             if(pEmitter) {
-                pEmitter->addParticles(25, fgVector3f((float)touch->x, (float)touch->y, 0.0f));
+                pEmitter->addParticles(32, fgVector3f((float)touch->x, (float)touch->y, 0.0f));
             }
         }
 

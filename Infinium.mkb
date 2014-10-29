@@ -87,6 +87,34 @@ assets
 	sound/d.raw
 	sound/m1.mp3
 
+    (data)
+    CobraBomber.group.ini
+    CobraFighter.group.ini
+    CobraInterceptor.group.ini
+    DerelictMiningStation.group.ini
+    explosionDebris.particle.ini
+    ExplosionDebris.res.ini
+    ExplosionEffect.res.ini
+    explosionFlash.particle.ini
+    ExplosionFlash.res.ini
+    explosion.particle.ini
+    explosionRoundSparks.particle.ini
+    ExplosionRoundSparks.res.ini
+    explosionShockwave.particle.ini
+    ExplosionShockwave.res.ini
+    explosionSmoke.particle.ini
+    ExplosionSmoke.res.ini
+    explosionSmokeTrails.particle.ini
+    ExplosionSmokeTrails.res.ini
+    explosionSparks.particle.ini
+    ExplosionSparks.res.ini
+    fonts.group.ini
+    main.config.ini
+    audio.group.xml
+    particle_textures.group.xml
+    settings.xml
+    textures.group.xml
+
 	(data)
 	textures/splash/bg_biohazard0_1920x1200.jpg
 	textures/splash/loading_screen0.jpg
@@ -97,12 +125,16 @@ assets
 	textures/skybox/plasma_galaxy_1024.jpg
 
 	(data)
+    textures/particle/CloudsSheet.res.ini
+    textures/particle/clouds0_sheet_1024.tga
+    textures/particle/clouds0_sheet_512.tga
 	textures/particle/shockwave1.tga
 	textures/particle/shockwave0.tga
 	textures/particle/smoketrail0.tga
 	textures/particle/flame0_sheet.tga
 	textures/particle/flash0_sheet.tga
 	textures/particle/spark0.tga
+    textures/particle/roundspark0.tga
 	textures/particle/explosion1_1024.tga
 	textures/particle/fire1_512.tga
 	textures/particle/debris0_sheet.tga
@@ -120,9 +152,31 @@ assets
 	textures/gui/hud/HudCenter.res.ini
 	textures/gui/hud/hud_center_512.tga
 	textures/gui/hud/hud_center_1024.tga
+    textures/gui/MenuBG.res.ini
+    textures/gui/PopupBG.res.ini
+    textures/gui/MenuBGx1024.png
+    textures/gui/MenuBGx512.png
+    textures/gui/PopupBackground_1024x512.tga
+    textures/gui/TitleBar_1024x64.jpg
+
+    (data)
+    textures/Grill_1024x512.tga
+    textures/GrillSquare1_512.tga
+    textures/MetGrill_512.tga
+    textures/MetGrill_1024.tga
+    textures/MetalGrill.res.ini
 
 	(data)
 	textures/other/BackgroundCrate_1024x512.jpg
+    textures/gui/BackgroundCrate_1024x512.jpg
+
+    (data)
+    gui/frame.style.ini
+    gui/main.style.ini
+    gui/menu.gui.xml
+    gui/relbutton.style.ini
+    gui/test.style.ini
+    gui/yolo.style.ini
 
 	(data)
 	fonts/CaptureIt.res.ini
@@ -140,6 +194,11 @@ assets
 	fonts/TrueCrimes_2048.tga
 	fonts/TrueCrimes_512.tga
 
+    fonts/Loaded.res.ini
+	fonts/Loaded_1024.tga
+	fonts/Loaded_2048.tga
+	fonts/Loaded_512.tga
+
 	(data)
 	obj/CobraBomber/CobraBomber_512.png
 	obj/CobraBomber/CobraBomber_1024.png
@@ -151,14 +210,6 @@ assets
 	obj/MalHideout/MalHideout_1024.jpg
 	obj/MalHideout/MalHideout.mtl
 	obj/MalHideout/MalHideout.obj
-
-	(data)
-	CobraBomber.group.ini
-	fonts.group.ini
-	main.config.ini
-	audio.group.xml
-	settings.xml
-	textures.group.xml
 
 	(data)
 	shaders/sVertexLighting.frag
@@ -215,6 +266,7 @@ options
 	enable-exceptions
 	warn-level=2
 	buildenv=VC11
+    cflags="-std=c++11"
 }
 
 packages

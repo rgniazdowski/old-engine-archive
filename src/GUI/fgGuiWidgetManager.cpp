@@ -68,6 +68,7 @@ fgBool fgGuiWidgetManager::destroy(void) {
     fgHandleManager::clear();
     m_styleMgr = NULL;
     m_widgetFactory = NULL;
+    return FG_TRUE;
 }
 
 /**

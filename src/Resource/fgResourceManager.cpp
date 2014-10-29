@@ -525,7 +525,7 @@ fgResource* fgResourceManager::request(const std::string& info, const fgResource
     const char *iext = fgPath::fileExt(info.c_str(), FG_TRUE);
     if(!iext) { // no extension given so... search all
         infoAsName = FG_TRUE;
-        pattern.append(info).append("*;");
+        pattern.append(info).append(".*;");
     } else { // extension is given, search for exact file
         pattern.append(info);
     }
@@ -580,6 +580,8 @@ fgResource* fgResourceManager::request(const std::string& info, const fgResource
             resExtType = FG_RESOURCE_MUSIC;
         } else if(strcasecmp(fext, "raw") == 0) {
             //resExtType = FG_RESOURCE_SOUND;
+        } else if(strcasecmp(fext, "particle.ini") == 0) {
+            resExtType = FG_RESOURCE_PARTICLE_EFFECT;
         } else {
         }
 

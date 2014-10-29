@@ -645,12 +645,16 @@ int32_t fgMarmaladeHandlers::keyStateChangedHandler(void *systemData, void *user
 
 extern "C" int main() {
     IwUtilInit();
+    int argc = 0;
+    char *argv[] = { NULL, NULL };
 #else
 
 extern "C" int main(int argc, char *argv[]) {
 #endif /* FG_USING_MARMALADE */
     //IwMemBucketDebugSetBreakpoint(580);
     //IwMemBucketDebugSetBreakpoint(580);
+    //IwMemBucketDebugSetBreakpoint(1541);
+
     /*fgDeviceQuery* dev = fgDeviceQuery::getInstance();
 
     if ( dev->iOS() &&

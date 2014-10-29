@@ -245,12 +245,12 @@ std::string &fgDirent::searchForFile(std::string &output,
                 if(pattern.length()) {
                     const char *filename = fgPath::fileName(subPath);
                     if(pattern[0] == '*') {
-                        if(fgStrings::endsWith(filename, (pattern.c_str() + 1))) {
+                        if(fgStrings::endsWith(filename, (pattern.c_str() + 1), FG_FALSE)) {
                             output = foundPath;
                         }
                     } else if(pattern[pattern.length() - 1] == '*') {
                         std::string _tmp = pattern.substr(0, pattern.length() - 1);
-                        if(fgStrings::startsWith(filename, _tmp.c_str())) {
+                        if(fgStrings::startsWith(filename, _tmp.c_str(), FG_FALSE)) {
                             output = foundPath;
                         }
                     } else {

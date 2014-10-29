@@ -331,7 +331,8 @@ fgBool fgGfxShaderProgram::use(void) {
  */
 fgBool fgGfxShaderProgram::deleteProgram(void) {
     if(FG_GFX_TRUE == glIsProgram(m_gfxID)) {
-        _detachShaders(); // status?
+        // #FIXME
+        //_detachShaders(); // status?
         glDeleteProgram(m_gfxID);
         m_gfxID = 0;
         m_isLinked = FG_FALSE;

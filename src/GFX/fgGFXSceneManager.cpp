@@ -301,7 +301,11 @@ fgBool fgGfxSceneManager::addObject(fgGfxObjectHandle& oUniqueID,
     drawCall->setMVP(&m_MVP);
     drawCall->setModelMatrix(pObj->getRefModelMatrix());
     if(index >= m_objDrawCalls.size()) {
+#if defined(FG_USING_MARMALADE)
+        m_objDrawCalls.resize((unsigned int)(index+1));
+#else
         m_objDrawCalls.resize((unsigned int)(index+1), NULL);
+#endif
     }
     m_objDrawCalls[index] = drawCall;
     // 2nd argument tells that this draw call should not be managed

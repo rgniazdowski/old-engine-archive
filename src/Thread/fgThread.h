@@ -36,9 +36,9 @@ public:
     typedef pthread_t nativeHandle;
         #endif
         #if __cplusplus > 199711L
-    using threadStartFuncPtr = void* (*)(void);
+    using threadStartFuncPtr = void* (*)(void *);
         #else
-    typedef void* (*threadStartFuncPtr)(void*);
+    typedef void* (*threadStartFuncPtr)(void *);
         #endif
 protected:
 

@@ -179,6 +179,7 @@ fgBool fgParticleSystem::destroy(void) {
             continue;
         }
         if(!m_emitters[i]->isManaged()) {
+            static_cast<fgGfxSceneManager *>(m_pSceneMgr)->remove(static_cast<fgGfxObject *>(m_emitters[i]));
             delete m_emitters[i];
             m_emitters[i] = NULL;
         }

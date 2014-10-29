@@ -107,6 +107,7 @@ fgBool fgGuiStyleManager::insertStyle(fgGuiStyleHandle& shUniqueID, fgGuiStyle *
  */
 fgGuiStyle* fgGuiStyleManager::request(const std::string& info) {
     // #FIXME
+    return NULL;
 }
 
 /*

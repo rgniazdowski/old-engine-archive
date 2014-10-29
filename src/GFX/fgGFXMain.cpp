@@ -55,6 +55,8 @@ fgGfxMain::~fgGfxMain() {
         delete m_particleSystem;
     if(m_3DScene)
         delete m_3DScene;
+    if(m_2DScene)
+        delete m_2DScene;
     if(m_gfxContext)
         m_gfxContext->deleteAllBuffers();
     if(m_init)
@@ -66,7 +68,6 @@ fgGfxMain::~fgGfxMain() {
     if(m_mainWindow)
         delete m_mainWindow;
 
-
     m_particleSystem = NULL;
     m_textureMgr = NULL;
     m_pResourceMgr = NULL;
@@ -74,6 +75,7 @@ fgGfxMain::~fgGfxMain() {
     m_mainWindow = NULL;
     m_gfxContext = NULL;
     m_3DScene = NULL;
+    m_2DScene = NULL;
 }
 
 /*

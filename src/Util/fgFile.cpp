@@ -110,22 +110,22 @@ const char *fgFile::modeStr(fgFileMode mode) {
  */
 fgBool fgFile::open(const char *filePath, fgFileMode mode) {
     if(filePath == NULL) {
-        reportWarning(FG_ERRNO_FILE_NO_PATH);
+        reportWarning(FG_ERRNO_FILE_NO_PATH, "%s", filePath);
         return FG_FALSE;
     }
     if(m_file != NULL) {
-        reportError(FG_ERRNO_FILE_ALREADY_OPEN);
+        reportError(FG_ERRNO_FILE_ALREADY_OPEN, "%s", filePath);
         return FG_FALSE;
     }
     if(strlen(filePath) <= 1) {
-        reportWarning(FG_ERRNO_FILE_NO_PATH);
+        reportWarning(FG_ERRNO_FILE_NO_PATH, "%s", filePath);
         return FG_FALSE;
     }
     if(mode == FG_FILE_MODE_READ ||
        mode == (FG_FILE_MODE_READ | FG_FILE_MODE_BINARY) ||
        mode & FG_FILE_MODE_READ_UPDATE) {
         if(!exists(filePath)) {
-            reportError(FG_ERRNO_FILE_DOESNT_EXIST);
+            reportError(FG_ERRNO_FILE_DOESNT_EXIST, "%s", filePath);
             return FG_FALSE;
         }
     }
@@ -135,9 +135,9 @@ fgBool fgFile::open(const char *filePath, fgFileMode mode) {
 
     if(m_file == NULL) {
         if(FG_ERRNO)
-            reportError(FG_ERRNO);
+            reportError(FG_ERRNO, "%s", filePath);
         else
-            reportError(FG_ERRNO_FILE_OPEN_FAILED);
+            reportError(FG_ERRNO_FILE_OPEN_FAILED, "%s", filePath);
         return FG_FALSE;
     }
     setPath(filePath);
@@ -150,7 +150,7 @@ fgBool fgFile::open(const char *filePath, fgFileMode mode) {
  */
 fgBool fgFile::open(fgFileMode mode) {
     if(mode == FG_FILE_MODE_NONE) {
-        reportWarning(FG_ERRNO_FILE_WRONG_MODE);
+        reportWarning(FG_ERRNO_FILE_WRONG_MODE, "%s", m_filePath.c_str());
         return FG_FALSE;
     }
     return open(m_filePath.c_str(), mode);
@@ -176,9 +176,9 @@ fgBool fgFile::close(void) {
     if(m_file != NULL) {
         if(fclose(m_file) == FG_EOF) {
             if(FG_ERRNO)
-                reportError(FG_ERRNO);
+                reportError(FG_ERRNO, "%s", m_filePath.c_str());
             else
-                reportError(FG_ERRNO_FILE_CLOSING);
+                reportError(FG_ERRNO_FILE_CLOSING, "%s", m_filePath.c_str());
             m_file = NULL;
             return FG_FALSE;
         }
@@ -202,20 +202,20 @@ fgBool fgFile::isOpen(void) const {
  */
 char *fgFile::load(const char *filePath) {
     if(!isOpen() && !open(filePath, FG_FILE_MODE_READ | FG_FILE_MODE_BINARY)) {
-        reportWarning(FG_ERRNO_FILE_ALREADY_OPEN);
+        reportWarning(FG_ERRNO_FILE_ALREADY_OPEN, "%s", filePath);
         return NULL;
     }
 
     int fileSize = getSize();
     if(fileSize < 0) {
-        reportWarning(FG_ERRNO_FILE_ERROR_SIZE);
+        reportWarning(FG_ERRNO_FILE_ERROR_SIZE, "%s", filePath);
         close();
         return NULL;
     }
     // #FIXME
     char *fileBuffer = fgMalloc<char>(fileSize + 1);
     if(fileBuffer == NULL) {
-        reportError(FG_ERRNO); // #FIXME - memory error codes
+        reportError(FG_ERRNO, "%s", filePath); // #FIXME - memory error codes
         close();
         return NULL;
     }
@@ -223,7 +223,7 @@ char *fgFile::load(const char *filePath) {
     int bytesRead = read(fileBuffer, 1, fileSize);
     fileBuffer[fileSize] = '\0';
     if(bytesRead != (int)fileSize) {
-        reportWarning(FG_ERRNO_FILE_READ_COUNT);
+        reportWarning(FG_ERRNO_FILE_READ_COUNT, "%s", filePath);
         fgFree(fileBuffer);
         fileBuffer = NULL;
         fileSize = 0;
@@ -239,7 +239,7 @@ char *fgFile::load(const char *filePath) {
  */
 char *fgFile::load(void) {
     if(m_filePath.empty()) {
-        reportWarning(FG_ERRNO_FILE_NO_PATH);
+        reportWarning(FG_ERRNO_FILE_NO_PATH, "%s", m_filePath.c_str());
         return NULL;
     }
     return load(m_filePath.c_str());
@@ -250,7 +250,7 @@ char *fgFile::load(void) {
  */
 int fgFile::read(void *buffer, unsigned int elemsize, unsigned int elemcount) {
     if(buffer == NULL || elemsize == 0 || elemcount == 0 || m_file == NULL) {
-        reportWarning(FG_ERRNO_FILE_WRONG_PARAMETERS);
+        reportWarning(FG_ERRNO_FILE_WRONG_PARAMETERS, "%s", m_filePath.c_str());
         return 0;
     }
     FG_ERRNO_CLEAR();
@@ -259,8 +259,8 @@ int fgFile::read(void *buffer, unsigned int elemsize, unsigned int elemcount) {
 
     if(elemRead != elemcount) {
         if(ferror(m_file) && FG_ERRNO)
-            reportError(FG_ERRNO);
-        reportWarning(FG_ERRNO_FILE_READ_COUNT);
+            reportError(FG_ERRNO, "%s", m_filePath.c_str());
+        reportWarning(FG_ERRNO_FILE_READ_COUNT, "%s", m_filePath.c_str());
     }
     return elemRead;
 }
