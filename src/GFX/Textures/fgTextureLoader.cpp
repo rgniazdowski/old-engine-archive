@@ -339,10 +339,17 @@ unsigned char *fgTextureLoader::loadTGA(fgFile *fileStream, int &width, int &hei
         data[j] = buffer[i + 2];
         data[j + 1] = buffer[i + 1];
         data[j + 2] = buffer[i];
+        unsigned char _r = data[j];
+        unsigned char _g = data[j + 1];
+        unsigned char _b = data[j + 2];
         if(components == 4) {
             data[j + 3] = buffer[i + 3];
         } else {
-            data[j + 3] = 255;
+            if(_r < 16 && _g < 16 && _b < 16) {
+                data[j + 3] = 0;
+            } else {
+                data[j + 3] = (_r + _g + _b) / 3;
+            }
         }
     }
     if(!(info[17] & 0x20)) {
@@ -357,7 +364,7 @@ unsigned char *fgTextureLoader::loadTGA(fgFile *fileStream, int &width, int &hei
     delete [] buffer;
     width = w;
     height = h;
-    FG_LOG::PrintInfo("TGA LOAD: %s, %dx%d, data=%p;", fileStream->getPath(), w, h, data);
+    FG_LOG::PrintInfo("TGA LOAD: %s, %dx%d, data=%p; comp=%d;", fileStream->getPath(), w, h, data, components);
     return data;
 }
 
