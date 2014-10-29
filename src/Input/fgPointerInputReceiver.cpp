@@ -684,11 +684,10 @@ int32_t fgPointerInputReceiver::singleTouchButtonHandler(void* systemData, void*
     }
 #elif defined(FG_USING_SDL2)
     SDL_MouseButtonEvent *event = (SDL_MouseButtonEvent *)systemData;
-    //if(event->type == SDL_PRESSED) { 
     if(event->type == SDL_MOUSEBUTTONDOWN) {
-        inputReceiver->handlePointerPressed(fgVector2i(event->x, event->y)); //, (unsigned int)event->button);
+        inputReceiver->handlePointerPressed(fgVector2i(event->x, event->y), (unsigned int)event->button);
     } else {
-        inputReceiver->handlePointerReleased(fgVector2i(event->x, event->y)); //, (unsigned int)event->button);
+        inputReceiver->handlePointerReleased(fgVector2i(event->x, event->y), (unsigned int)event->button);
     }
 #endif
     return 0;
@@ -710,7 +709,7 @@ int32_t fgPointerInputReceiver::singleTouchMotionHandler(void* systemData, void*
 #elif defined(FG_USING_SDL2)
     SDL_MouseMotionEvent *event = (SDL_MouseMotionEvent *)systemData;
 
-    inputReceiver->handlePointerMoved(fgVector2i(event->x, event->y)/*, need ID? */, 0, event->state);
+    inputReceiver->handlePointerMoved(fgVector2i(event->x, event->y)/*, need ID? */, FG_DEFAULT_POINTER_ID, event->state);
 #endif
     return 0;
 }

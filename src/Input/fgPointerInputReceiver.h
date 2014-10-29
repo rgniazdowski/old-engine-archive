@@ -22,12 +22,14 @@
 
     #if defined(FG_USING_MARMALADE)
         #include "s3eTypes.h"
+        #define FG_DEFAULT_POINTER_ID 0
     #endif
 
     #if defined(FG_USING_SDL2)
 class MainModule;
 
         #include "SDL2/SDL_events.h"
+        #define FG_DEFAULT_POINTER_ID 1
     #endif /* FG_USING_SDL2 */
 
 /*
@@ -114,16 +116,16 @@ public:
     // This function will probably be useful only in debugging
     // There's no need to check the data manually - proper events 
     // are being thrown from processData method
-    fgPointerRawData *getPointerRawData(fgPointerID pointerID = 0);
+    fgPointerRawData *getPointerRawData(fgPointerID pointerID = FG_DEFAULT_POINTER_ID);
     //
-    fgPointerData *getPointerData(fgPointerID pointerID = 0);
+    fgPointerData *getPointerData(fgPointerID pointerID = FG_DEFAULT_POINTER_ID);
 
     //
-    fgPointerState getPointerState(fgPointerID pointerID = 0);
+    fgPointerState getPointerState(fgPointerID pointerID = FG_DEFAULT_POINTER_ID);
     //
-    int getPointerX(fgPointerID pointerID = 0);
+    int getPointerX(fgPointerID pointerID = FG_DEFAULT_POINTER_ID);
     //
-    int getPointerY(fgPointerID pointerID = 0);
+    int getPointerY(fgPointerID pointerID = FG_DEFAULT_POINTER_ID);
 
     //
     void processData(void);
@@ -140,11 +142,11 @@ public:
 
 protected:
     //
-    void handlePointerPressed(fgVector2i point, unsigned int touchID = 0);
+    void handlePointerPressed(fgVector2i point, unsigned int touchID = FG_DEFAULT_POINTER_ID);
     //
-    void handlePointerMoved(fgVector2i point, unsigned int touchID = 0, fgPointerState state = FG_POINTER_STATE_RELEASED);
+    void handlePointerMoved(fgVector2i point, unsigned int touchID = FG_DEFAULT_POINTER_ID, fgPointerState state = FG_POINTER_STATE_RELEASED);
     //
-    void handlePointerReleased(fgVector2i point, unsigned int touchID = 0);
+    void handlePointerReleased(fgVector2i point, unsigned int touchID = FG_DEFAULT_POINTER_ID);
 
 protected:
     //
