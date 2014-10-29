@@ -18,7 +18,12 @@
 /**
  * 
  */
-fgParticleEmitter::fgParticleEmitter() { }
+fgParticleEmitter::fgParticleEmitter() :
+m_effects(),
+m_origin(),
+m_particles(),
+m_numParticles(0),
+m_maxCount(0) { }
 
 /**
  * 
@@ -33,10 +38,11 @@ fgParticleEmitter::~fgParticleEmitter() {
  * @param which
  */
 void fgParticleEmitter::removeParticle(const unsigned int which) {
-    if(which >= m_particles.size())
+    if(which >= m_numParticles)
         return;
-    m_particles[which] = m_particles.back();
-    m_particles.resize(m_particles.size() - 1);
+    m_particles[which] = m_particles[(m_numParticles - 1)];
+    //m_particles.resize(m_particles.size() - 1);
+    m_numParticles--;
 }
 
 /**
@@ -54,10 +60,11 @@ void fgParticleEmitter::addParticles(const unsigned int count, const fgVector3f&
     }
     fgParticle particle;
     for(unsigned int i = 0; i < count; i++) {
-        if(m_particles.size() >= m_maxCount)
+        if(m_numParticles >= m_maxCount)
             return;
         pParticleEffect->initializeParticle(&particle, FG_FALSE, customOrigin);
-        m_particles.push_back(particle);
+        m_particles[m_numParticles] = particle;
+        m_numParticles++;
     }
 }
 
@@ -92,20 +99,24 @@ void fgParticleEmitter::calculate(fgVertexData *pVertexData) {
     if(m_effects.empty()) {
         return;
     }
-    // #FIXME
+    // #FIXME just one effect ? :(
     fgParticleEffect *pEffect = m_effects.back();
     fgVertexData4v *pData4v = static_cast<fgVertexData4v *>(pVertexData);
 
-    unsigned int nParticles = m_particles.size();
-    for(int i = 0; i < (unsigned int)nParticles; i++) {
-        fgParticle &particle = m_particles[i];
+    for(int i = 0; i < (int)m_numParticles; i++) {
         pEffect->basicCalculate(&m_particles[i]);
-        
-        
+        if(m_particles[i].life <= 0.0f) {
+            removeParticle(i);
+            //continue;
+        }
+        fgParticle &particle = m_particles[i];
+        //
+        // Calculate the texture coords based on texture sheet parameters
+        //
         fgVector2i &texSheetSize = pEffect->getTextureSheetSize();
         if(particle.texIndex < 0)
             particle.texIndex = 0;
-        if(particle.texIndex >= texSheetSize.x * texSheetSize.y)
+        if(particle.texIndex >= (unsigned int)texSheetSize.x * texSheetSize.y)
             particle.texIndex = 0;
         int x = particle.texIndex % texSheetSize.x;
         int y = particle.texIndex / texSheetSize.y;
@@ -114,17 +125,11 @@ void fgParticleEmitter::calculate(fgVertexData *pVertexData) {
         float ds = 1.0f / (float)texSheetSize.x;
         float dt = 1.0f / (float)texSheetSize.y;
 
-        // Setting up the UV STREAM
-        //m_UVStream[i * 4 + 0] = fgVector2f(s, t);
-        //m_UVStream[i * 4 + 1] = fgVector2f(s, t + dt);
-        //m_UVStream[i * 4 + 2] = fgVector2f(s + ds, t + dt);
-        //m_UVStream[i * 4 + 3] = fgVector2f(s + ds, t);
-        
         //
         // Update the vertex data
         //
         int j = i * 6;
-        if(pData4v->size() <= j)
+        if(pData4v->size() <= (unsigned int)j)
             break;
         fgVertex4v &v1 = pData4v->at(j + 0);
         fgVertex4v &v2 = pData4v->at(j + 1);
@@ -138,38 +143,64 @@ void fgParticleEmitter::calculate(fgVertexData *pVertexData) {
         fgVector3f &size = particle.bbox.size;
         fgVector2f uv1 = fgVec2f(s, t + dt);
         fgVector2f uv2 = fgVec2f(s + ds, t);
+
         float w2 = size.x / 2.0f;
         float h2 = size.y / 2.0f;
 
-        v1.position = fgVec3f(x1 - w2, y1 - h2, 0.0f);
-        v1.uv = fgVec2f(uv1.x, 1.0f - uv1.y);
+        fgMatrix4f mat;
+        mat = glm::rotate(mat, particle.rotation.z, fgVector3f(0.0f, 0.0f, 1.0f));
+        //mat = glm::lookAt(particle.bbox.pos, particle.bbox.pos + particle.velocity, particle.velocity);
+        float z = -1.0f;
 
-        v2.position = fgVec3f(x1 - w2, y1 + h2, 0.0f);
-        v2.uv = fgVec2f(uv1.x, 1.0f - uv2.y);
+        fgVec4f V1(0 * x1 - w2, 0 * y1 - h2, z, 0.0f); // V1
+        fgVec4f V2(0 * x1 - w2, 0 * y1 + h2, z, 0.0f); // V2 = V4
+        fgVec4f V3(0 * x1 + w2, 0 * y1 - h2, z, 0.0f); // V3 = V6
+        fgVec4f V5(0 * x1 + w2, 0 * y1 + h2, z, 0.0f); // V5
 
-        v3.position = fgVec3f(x1 + w2, y1 - h2, 0.0f);
-        v3.uv = fgVec2f(uv2.x, 1.0f - uv1.y);
+        //fgVec3f V1(0 * x1 - w2, 0 * y1 - h2, z); // V1
+        //fgVec3f V2(0 * x1 - w2, 0 * y1 + h2, z); // V2 = V4
+        //fgVec3f V3(0 * x1 + w2, 0 * y1 - h2, z); // V3 = V6
+        //fgVec3f V5(0 * x1 + w2, 0 * y1 + h2, z); // V5
 
-        v4.position = fgVec3f(x1 - w2, y1 + h2, 0.0f);
-        v4.uv = fgVec2f(uv1.x, 1.0f - uv2.y);
+        V1 = mat * V1;
+        V2 = mat * V2;
+        V3 = mat * V3;
+        V5 = mat * V5;
 
-        v5.position = fgVec3f(x1 + w2, y1 + h2, 0.0f);
-        v5.uv = fgVec2f(uv2.x, 1.0f - uv2.y);
+        //v1.position = fgVec3f(x1 - w2, y1 - h2, z); // V1
+        v1.uv = fgVec2f(uv1.x, 1.0f - uv1.y); // V1
+        //v2.position = fgVec3f(x1 - w2, y1 + h2, z); // V2 = V4
+        v2.uv = fgVec2f(uv1.x, 1.0f - uv2.y); // V2 = V4
+        //v3.position = fgVec3f(x1 + w2, y1 - h2, z); // V3 = V6
+        v3.uv = fgVec2f(uv2.x, 1.0f - uv1.y); // V3 = V6
+        //v4.position = fgVec3f(x1 - w2, y1 + h2, z); // V2 = V4
+        v4.uv = fgVec2f(uv1.x, 1.0f - uv2.y); // V2 = V4
+        //v5.position = fgVec3f(x1 + w2, y1 + h2, z); // V5
+        v5.uv = fgVec2f(uv2.x, 1.0f - uv2.y); // V5
+        //v6.position = fgVec3f(x1 + w2, y1 - h2, z); // V3 = V6
+        v6.uv = fgVec2f(uv2.x, 1.0f - uv1.y); // V3 = V6
 
-        v6.position = fgVec3f(x1 + w2, y1 - h2, 0.0f);
-        v6.uv = fgVec2f(uv2.x, 1.0f - uv1.y);
+        v1.position = fgVec3f(x1 + V1.x, y1 + V1.y, V1.z); // V1
+        v2.position = fgVec3f(x1 + V2.x, y1 + V2.y, V2.z); // V2 = V4
+        v3.position = fgVec3f(x1 + V3.x, y1 + V3.y, V3.z); // V3 = V6
+        v4.position = v2.position; // V2 = V4
+        v5.position = fgVec3f(x1 + V5.x, y1 + V5.y, V5.z); // V5
+        v6.position = v3.position; // V3 = V6
 
-        v1.color = particle.color;
-        v2.color = particle.color;
-        v3.color = particle.color;
-        v4.color = particle.color;
-        v5.color = particle.color;
-        v6.color = particle.color;
-        
-        if(particle.life <= 0.0f) {
-            removeParticle(i);
-            nParticles--;
-            continue;
-        }
+        //The variable ranges from zero (trans-parency blending) to one (additive blending).
+        float burn = particle.burn; // #FIXME
+
+        fgVector4f rgb = particle.color;
+        float alpha = rgb.a;
+        fgVector4f fgc = rgb * alpha;
+        float alphac = alpha * (1.0f - burn);
+        fgColor4f color(fgc[0], fgc[1], fgc[2], alphac);
+        v1.color = color; // V1
+        v2.color = color; // V2 = V4
+        v4.color = color; // V2 = V4
+        v5.color = color; // V5
+        v3.color = color; // V3 = V6
+        v6.color = color; // V3 = V6
     }
+    pData4v->resize(m_numParticles * 6);
 }

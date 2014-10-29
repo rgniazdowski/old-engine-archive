@@ -18,6 +18,9 @@ fgParticleEffect::fgParticleEffect() : fgResource() {
     m_resType = FG_RESOURCE_PARTICLE_EFFECT;
     m_textureIDRange.x = 0;
     m_textureIDRange.y = 0;
+    m_burnoutDelay = 0;
+    m_burnRange.x = 1.0f;
+    m_burnRange.y = 1.0f;
 }
 
 /**
@@ -57,6 +60,16 @@ fgBool fgParticleEffect::initializeFromConfig(fgCfgTypes::parameterVec& params) 
         if(param->name.compare("name") == 0) {
             if(param->type == FG_CFG_PARAMETER_STRING)
                 this->setName(param->string);
+
+        } else if(param->name.compare("type") == 0) {
+            if(param->type == FG_CFG_PARAMETER_STRING) {
+                //this->setName(param->string);
+                if(strcasecmp(param->string, "group") == 0) {
+                    this->setFlag(FG_PARTICLE_GROUP_EFFECT, FG_TRUE);
+                } else if(FG_FALSE && strcasecmp(param->string, "single") == 0) {
+
+                }
+            }
 
         } else if(param->name.compare("max-count") == 0) {
             // max - count – integer –
@@ -128,7 +141,7 @@ fgBool fgParticleEffect::initializeFromConfig(fgCfgTypes::parameterVec& params) 
                 fgStringParser::parseVector<fgVector2i>(m_ttlRange, param->string);
 
             // fade - speed - range – vector –
-        } else if(param->name.compare("fadeSpeedRange") == 0) {
+        } else if(param->name.compare("fade-speed-range") == 0) {
             if(param->type == FG_CFG_PARAMETER_STRING)
                 fgStringParser::parseVector<fgVector2f>(m_fadeSpeedRange, param->string);
 
@@ -158,6 +171,24 @@ fgBool fgParticleEffect::initializeFromConfig(fgCfgTypes::parameterVec& params) 
         } else if(param->name.compare("texture-id-range") == 0) {
             if(param->type == FG_CFG_PARAMETER_STRING)
                 fgStringParser::parseVector<fgVector2i>(m_textureIDRange, param->string);
+
+            // Burnout delay (milliseconds)
+        } else if(param->name.compare("burnout-delay") == 0) {
+            if(param->type == FG_CFG_PARAMETER_INT) {
+                if(param->int_val >= 0) {
+                    this->m_burnoutDelay = (unsigned int)param->int_val;
+                }
+            } else if(param->type == FG_CFG_PARAMETER_FLOAT) {
+                if(param->float_val >= 0.0f) {
+                    this->m_burnoutDelay = (unsigned int)param->float_val;
+                }
+            }
+
+            // Burnout range (floats, valid values 0.0f-1.0f)
+        } else if(param->name.compare("burn-range") == 0 ||
+                  param->name.compare("burnout-range") == 0) {
+            if(param->type == FG_CFG_PARAMETER_STRING)
+                fgStringParser::parseVector<fgVector2f>(m_burnRange, param->string);
         }
     }
     if(this->getName().empty() || m_maxCount <= 0)
@@ -262,6 +293,7 @@ void fgParticleEffect::initializeParticle(fgParticle *outputParticle,
     // FROM
     //
     from.setColor(m_startColor);
+    from.burn = m_burnRange.x;
     from.data = NULL;
 
     from.velocity = -m_spreadSpeed;
@@ -297,6 +329,7 @@ void fgParticleEffect::initializeParticle(fgParticle *outputParticle,
     // TO
     //
     to.setColor(m_startColor);
+    to.burn = m_burnRange.x; // Y ?
     to.data = NULL;
 
     to.velocity = m_spreadSpeed;
@@ -574,6 +607,12 @@ void fgParticleEffect::randomizeOnPair(const fgParticle* from,
     int from_val, to_val;
     fgParticle* target = result;
 
+    // Burn parameter
+    // Position X
+    from_val = (int)(from->burn * 1000);
+    to_val = (int)(to->burn * 1000);
+    target->burn = FG_Rand(from_val, to_val) / 1000.0f;
+
     // Position X
     from_val = (int)(from->bbox.pos.x * 1000);
     to_val = (int)(to->bbox.pos.x * 1000);
@@ -730,7 +769,7 @@ void fgParticleEffect::basicCalculate(fgParticle* outputParticle) {
 
     // FADE
     outputParticle->life -= outputParticle->fadeSpeed * fgTime::elapsed();
-
+    
     // LIFE AS SIZE
     if(isLifeAsSize()) {
         outputParticle->bbox.size.x = fabs(outputParticle->life);
@@ -744,31 +783,30 @@ void fgParticleEffect::basicCalculate(fgParticle* outputParticle) {
         float a = outputParticle->velocity.x;
         float b = outputParticle->velocity.y;
         float sina = b / r;
-
         double radians = asin(sina);
         float angle = (float)radians / (float)M_PI * 180.0f;
-
-#if 0
-        if(m_drawMode == MODE_2D) {
-            if(a > 0.0f && b > 0.0f)
-                outputParticle->rotation.z = 90.0f + fabs(angle);
-            else if(a < 0.0f && b > 0.0f)
-                outputParticle->rotation.z = 270.0f - fabs(angle);
-            else if(a < 0.0f && b < 0.0f)
-                outputParticle->rotation.z = 270.0f + fabs(angle);
-            else // if(a > 0.0f && b < 0.0f)
-                outputParticle->rotation.z = 90.0f - fabs(angle);
-        } else {
-            if(a > 0.0f && b > 0.0f)
-                outputParticle->rotation.z = -90.0f - fabs(angle);
-            else if(a < 0.0f && b > 0.0f)
-                outputParticle->rotation.z = 90.0f + fabs(angle);
-            else if(a < 0.0f && b < 0.0f)
-                outputParticle->rotation.z = 90.0f - fabs(angle);
-            else // if(a > 0.0f && b < 0.0f)
-                outputParticle->rotation.z = -(90.0f - fabs(angle));
+        // #FIXME - RADIANS
+        if(1) {
+            if(a > 0.0f && b > 0.0f) {
+                outputParticle->rotation.z = FG_DEG2RAD * (90.0f + fabs(angle));
+            } else if(a < 0.0f && b > 0.0f) {
+                outputParticle->rotation.z = FG_DEG2RAD * (270.0f - fabs(angle));
+            } else if(a < 0.0f && b < 0.0f) {
+                outputParticle->rotation.z = FG_DEG2RAD * (270.0f + fabs(angle));
+            } else { // if(a > 0.0f && b < 0.0f)
+                outputParticle->rotation.z = FG_DEG2RAD * (90.0f - fabs(angle));
+            }
         }
-#endif
+        if(0) {
+            if(a > 0.0f && b > 0.0f)
+                outputParticle->rotation.z = FG_DEG2RAD * (-90.0f - fabs(angle));
+            else if(a < 0.0f && b > 0.0f)
+                outputParticle->rotation.z = FG_DEG2RAD * (90.0f + fabs(angle));
+            else if(a < 0.0f && b < 0.0f)
+                outputParticle->rotation.z = FG_DEG2RAD * (90.0f - fabs(angle));
+            else // if(a > 0.0f && b < 0.0f)
+                outputParticle->rotation.z = FG_DEG2RAD * (-(90.0f - fabs(angle)));
+        }
     }
 
     if(isParamsActive()) {
@@ -777,33 +815,23 @@ void fgParticleEffect::basicCalculate(fgParticle* outputParticle) {
         float elapsed = fgTime::elapsed();
         float ttl = (float)outputParticle->ttl / 1000.0f;
         outputParticle->bbox.size += (m_endSize - m_startSize) / ttl * elapsed;
-        //outputParticle->bbox.size.x += (m_endSize.x - m_startSize.x) / ((float)outputParticle->ttl * fgTime::elapsed());
-        //outputParticle->bbox.size.y += (m_endSize.y - m_startSize.y) / (float)outputParticle->ttl * fgTime::elapsed();
-        //outputParticle->bbox.size.z += (m_endSize.z - m_startSize.z) / (float)outputParticle->ttl * fgTime::elapsed();
-
         fgColor4f &color = outputParticle->color;
-
         color += (m_endColor - m_startColor) / ttl * elapsed;
-        
-        //color.r += ((float(m_endColor.r - m_startColor.r)) / (float)outputParticle->ttl * fgTime::elapsed());
         if(color.r < 0.0f)
             color.r = 0.0f;
         if(color.r > 1.0f)
             color.r = 1.0f;
 
-        //color.g += ((float(m_endColor.g - m_startColor.g)) / (float)outputParticle->ttl * fgTime::elapsed());
         if(color.g < 0.0f)
             color.g = 0.0f;
         if(color.g > 1.0f)
             color.g = 1.0f;
 
-        //color.b += ((float(m_endColor.b - m_startColor.b)) / (float)outputParticle->ttl * fgTime::elapsed());
         if(color.b < 0.0f)
             color.b = 0.0f;
         if(color.b > 1.0f)
             color.b = 1.0f;
 
-        //color.a += ((float(m_endColor.a - m_startColor.a)) / (float)outputParticle->ttl * fgTime::elapsed());
         if(color.a < 0.0f)
             color.a = 0.0f;
         if(color.a > 1.0f)

@@ -12,45 +12,86 @@
 
     #include "fgGFXStdInc.h"
 
-/*
+/**
  *
  */
 class fgGfxWindow {
 public:
-    // 
+    /**
+     *
+     */
     fgGfxWindow();
-    // 
+    /**
+     * 
+     * @param title
+     * @param width
+     * @param height
+     */
     fgGfxWindow(const char *title, unsigned int width, unsigned int height);
 
-    //
+    /**
+     * 
+     */
     ~fgGfxWindow();
 
-    //
+    /**
+     * 
+     * @param title
+     * @param width
+     * @param height
+     * @return 
+     */
     fgBool setup(const char *title, unsigned int width, unsigned int height);
 
-    //
+    /**
+     * 
+     * @return 
+     */
     fgBool close(void);
 
-    //
+    /**
+     * 
+     * @return 
+     */
     int getWidth(void) const {
         return m_width;
     }
-    //
+    /**
+     * 
+     * @return 
+     */
     int getHeight(void) const {
         return m_height;
     }
-    //
+    /**
+     * 
+     * @return 
+     */
     float getAspect(void) const {
         return (float)m_width / (float)m_height;
     }
 
-    //
+    /**
+     * 
+     * @param toggle
+     */
     void setFullscreen(fgBool toggle = FG_TRUE);
 
-    // #FIXME
+    /**
+     * 
+     * @return 
+     */
     fgBool swapBuffers(void);
-    //
+    
+    /**
+     * 
+     */
     void clearColor(void);
+    
+    /**
+     * 
+     * @return 
+     */
     fgBool isOpen(void) const {
         return m_isOpen;
     }

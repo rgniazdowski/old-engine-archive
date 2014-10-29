@@ -25,5 +25,5 @@ void main()
 	
 	v_position = a_position.xyz;
 	v_texCoord = a_texCoord;
-	v_color = vec4(a_color.x, a_color.y, a_color.z, 1.0);
+	v_color = a_color;
 }

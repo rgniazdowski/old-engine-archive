@@ -305,7 +305,7 @@ fgBool fgGameMain::loadResources(void) {
     FG_LOG::PrintDebug("Loading resources...");
     std::string texname;
     fgTextureResource *texture = NULL;
-    
+
     ////////////////////////////////////////////////////////////////////////////
     m_gfxMain->getShaderManager()->setShadersPath("shaders/");
     m_gfxMain->preLoadShaders();
@@ -397,24 +397,30 @@ fgBool fgGameMain::loadResources(void) {
 
         }
     }
-    {
-        texname = "DebrisSheetTex";
+    ////////////////////////////////////////////////////////////////////////////
+    // #FIXME #OMG #BULLSHIT detector is off the charts!
+    const char * particleTex[] = {
+                                  "PulseTex",
+                                  "DebrisSheetTex",
+                                  "FlameSheetTex",
+                                  "FlashSheetTex",
+                                  "SmokeTrailTex",
+                                  "RoundSparkTex",
+                                  "ShockWaveTex",
+                                  "SparkTex",
+                                  "ExplosionSeqTex",
+                                  "FireSequenceTex"
+    };
+    int n = 10;
+    for(int i = 0; i < n; i++) {
+        texname = particleTex[i];
         texture = (fgTextureResource *)m_resourceMgr->get(texname);
         if(texture) {
             texture->create();
             m_gfxMain->getTextureManager()->uploadToVRAM(texture, FG_TRUE);
-
         }
     }
-    {
-        texname = "FlameSheetTex";
-        texture = (fgTextureResource *)m_resourceMgr->get(texname);
-        if(texture) {
-            texture->create();
-            m_gfxMain->getTextureManager()->uploadToVRAM(texture, FG_TRUE);
-
-        }
-    }
+    ////////////////////////////////////////////////////////////////////////////
     {
         std::string top("HudTopTex");
         std::string bottom("HudBottomTex");
@@ -447,8 +453,16 @@ fgBool fgGameMain::loadResources(void) {
             m_gfxMain->getTextureManager()->uploadToVRAM(courier, FG_TRUE);
         }
     }
-    
+
     m_gfxMain->getParticleSystem()->insertParticleEmitter("ExplosionEffect", "ExplosionEffect", fgVector3f(0.0f, 0.0f, 0.0f));
+
+    m_gfxMain->getParticleSystem()->insertParticleEmitter("ExplosionDebris", "ExplosionDebris", fgVector3f(0.0f, 0.0f, 0.0f));
+    m_gfxMain->getParticleSystem()->insertParticleEmitter("ExplosionFlash", "ExplosionFlash", fgVector3f(0.0f, 0.0f, 0.0f));
+    m_gfxMain->getParticleSystem()->insertParticleEmitter("ExplosionRoundSparks", "ExplosionRoundSparks", fgVector3f(0.0f, 0.0f, 0.0f));
+    m_gfxMain->getParticleSystem()->insertParticleEmitter("ExplosionShockwave", "ExplosionShockwave", fgVector3f(0.0f, 0.0f, 0.0f));
+    m_gfxMain->getParticleSystem()->insertParticleEmitter("ExplosionSmoke", "ExplosionSmoke", fgVector3f(0.0f, 0.0f, 0.0f));
+    m_gfxMain->getParticleSystem()->insertParticleEmitter("ExplosionSmokeTrails", "ExplosionSmokeTrails", fgVector3f(0.0f, 0.0f, 0.0f));
+    m_gfxMain->getParticleSystem()->insertParticleEmitter("ExplosionSparks", "ExplosionSparks", fgVector3f(0.0f, 0.0f, 0.0f));
     return FG_TRUE;
 }
 
@@ -568,15 +582,56 @@ fgBool fgGameMain::gameTouchHandler(fgArgumentList *argv) {
         return FG_FALSE;
     fgEventType type = event->eventType;
     if(type == FG_EVENT_TOUCH_TAP_FINISHED && this->m_gfxMain) {
-        
-        fgTouchEvent *touch = (fgTouchEvent *) event;
+
+        fgTouchEvent *touch = (fgTouchEvent *)event;
         fgParticleEmitter *pEmitter = this->m_gfxMain->getParticleSystem()->getParticleEmitter("ExplosionEffect");
-        if(!pEmitter) {
-            printf("NO SUCH EMITTER FOUND\n");
-            return FG_FALSE;
+        if(pEmitter) {
+            //return FG_FALSE;
+            //pEmitter->addParticles(50, fgVector3f((float)touch->x, (float)touch->y, 0.0f));
         }
-        printf("ADDING 25 particles: %d %d\n", touch->x, touch->y);
-        pEmitter->addParticles(25, fgVector3f((float)touch->x, (float)touch->y, 0.0f));
+        {
+            pEmitter = this->m_gfxMain->getParticleSystem()->getParticleEmitter("ExplosionDebris");
+            if(pEmitter) {
+                pEmitter->addParticles(20, fgVector3f((float)touch->x, (float)touch->y, 0.0f));
+            }
+        }
+        {
+            pEmitter = this->m_gfxMain->getParticleSystem()->getParticleEmitter("ExplosionFlash");
+            if(pEmitter) {
+                pEmitter->addParticles(2, fgVector3f((float)touch->x, (float)touch->y, 0.0f));
+            }
+        }
+        {
+            pEmitter = this->m_gfxMain->getParticleSystem()->getParticleEmitter("ExplosionRoundSparks");
+            if(pEmitter) {
+                pEmitter->addParticles(5, fgVector3f((float)touch->x, (float)touch->y, 0.0f));
+            }
+        }
+        {
+            pEmitter = this->m_gfxMain->getParticleSystem()->getParticleEmitter("ExplosionShockwave");
+            if(pEmitter) {
+                pEmitter->addParticles(1, fgVector3f((float)touch->x, (float)touch->y, 0.0f));
+            }
+        }
+        {
+            pEmitter = this->m_gfxMain->getParticleSystem()->getParticleEmitter("ExplosionSmoke");
+            if(pEmitter) {
+                pEmitter->addParticles(15, fgVector3f((float)touch->x, (float)touch->y, 0.0f));
+            }
+        }
+        {
+            pEmitter = this->m_gfxMain->getParticleSystem()->getParticleEmitter("ExplosionSmokeTrails");
+            if(pEmitter) {
+                pEmitter->addParticles(25, fgVector3f((float)touch->x, (float)touch->y, 0.0f));
+            }
+        }
+        {
+            pEmitter = this->m_gfxMain->getParticleSystem()->getParticleEmitter("ExplosionSparks");
+            if(pEmitter) {
+                pEmitter->addParticles(25, fgVector3f((float)touch->x, (float)touch->y, 0.0f));
+            }
+        }
+
     }
     return FG_TRUE;
 }

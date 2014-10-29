@@ -57,9 +57,11 @@ enum fgParticleEffectFlags {
     FG_PARTICLE_FACING_VELOCITY = 0x00000004,
     /// The particle sprite is rotated at a random angle when it is emitted
     FG_PARTICLE_RANDOM_ANGLE = 0x00000008,
+    /// Is the current particle grouped? #FIXME
+    FG_PARTICLE_GROUP_EFFECT = 0x00000010,
     /// Are parameters (start/end size, start/end color) taken into account 
     /// when calculating the particles. LifeAsSize will be overridden.
-    FG_PARTICLE_PARAMS_ACTIVE = 0x00000010
+    FG_PARTICLE_PARAMS_ACTIVE = 0x00000020
 };
 FG_ENUM_FLAGS(fgParticleEffectFlags);
 
@@ -162,6 +164,11 @@ private:
     fgColor4f m_startColor;
     /// The end color of the animated particle. The particle will reach the end color in TTL miliseconds
     fgColor4f m_endColor;
+    
+    /// 
+    unsigned int m_burnoutDelay;
+    ///
+    fgVector2f m_burnRange;
 
 protected:
     /**

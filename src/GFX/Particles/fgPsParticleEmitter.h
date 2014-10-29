@@ -39,6 +39,8 @@ private:
     ///
     particleData m_particles;
     ///
+    unsigned int m_numParticles;
+    ///
     unsigned int m_maxCount;
     
 public:
@@ -59,6 +61,7 @@ public:
     void setMaxCount(const unsigned int maxCount) {
         if(maxCount) {
             m_particles.reserve(maxCount);
+            m_particles.resize(maxCount);
             m_maxCount = maxCount;
         }
     }
@@ -94,7 +97,7 @@ public:
      * @return 
      */
     inline unsigned int getParticleCount(void) const {
-        return m_particles.size();
+        return m_numParticles;
     }
     
     /**

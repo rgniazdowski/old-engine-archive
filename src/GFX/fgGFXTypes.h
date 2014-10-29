@@ -144,9 +144,11 @@ inline const char * _FG_GFX_DATA_TYPE_TO_TEXT(fgGFXenum value) {
 
     #ifndef FG_DEG2RAD
         #define FG_DEG2RAD (M_PIF / 180.0f)
+        #define FG_DEG2RAD_FUNC(_ANGLE) (_ANGLE * FG_DEG2RAD)
     #endif
     #ifndef FG_RAD2DEG
         #define FG_RAD2DEG (180.0f / M_PIF)
+        #define FG_RAD2DEG_FUNC(_RADIANS) (_RADIANS * FG_RAD2DEG)
     #endif
 
 struct fgArea {

@@ -398,7 +398,6 @@ void fgParticleSystem::calculate(void) {
                 // #FIXME
                 // multiply by 6 - two triangles per particle
                 pVertexData->reserve(pEmitter->getMaxCount()*6);
-                pVertexData->resize(pEmitter->getParticleCount()*6);
                 //pVertexData->
             }
         }

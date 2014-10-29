@@ -1560,7 +1560,10 @@ void fgGfxContext::blendFunc(const fgGFXenum sfactor, const fgGFXenum dfactor) {
 /*
  *
  */
-void fgGfxContext::blendFunc(const fgGFXenum srcRGB, const fgGFXenum dstRGB, const fgGFXenum srcAlpha, const fgGFXenum dstAlpha) {
+void fgGfxContext::blendFunc(const fgGFXenum srcRGB,
+                             const fgGFXenum dstRGB,
+                             const fgGFXenum srcAlpha,
+                             const fgGFXenum dstAlpha) {
     fgGfxContextParam& srcRGBparam = m_params[(fgGFXuint)GL_BLEND_SRC_RGB];
     fgGfxContextParam& dstRGBparam = m_params[(fgGFXuint)GL_BLEND_DST_RGB];
     fgGfxContextParam& srcAlphaparam = m_params[(fgGFXuint)GL_BLEND_SRC_ALPHA];
