@@ -87,7 +87,7 @@ fgBool fgFontBuiltInResource::create(void) {
                     data[idx + 0] = (unsigned char)((bitpack & 7) * 0x20 + 0x1f);
                     data[idx + 1] = data[idx];
                     data[idx + 2] = data[idx];
-                    data[idx + 3] = 255;
+                    data[idx + 3] = FG_TEXTURE_ALPHA_FIX_VALUE_LIMIT(data[idx], data[idx], data[idx], 8);
                     bitpack >>= 3, numbits -= 3;
                 } else {
                     data[idx] = 0;

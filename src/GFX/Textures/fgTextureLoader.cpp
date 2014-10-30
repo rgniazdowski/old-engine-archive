@@ -113,7 +113,7 @@ unsigned char *fgTextureLoader::loadJPEG(fgFile *fileStream, int &width, int &he
                 data[j] = dataBuffer[i];
                 data[j + 1] = dataBuffer[i + 1];
                 data[j + 2] = dataBuffer[i + 2];
-                data[j + 3] = 255;
+                data[j + 3] = FG_TEXTURE_ALPHA_FIX_VALUE(data[j], data[j + 1], data[j + 2]);
             }
             break;
         default:
@@ -227,7 +227,7 @@ unsigned char *fgTextureLoader::loadPNG(fgFile *fileStream, int &width, int &hei
                     data[k + 0] = img[l + 0];
                     data[k + 1] = img[l + 1];
                     data[k + 2] = img[l + 2];
-                    data[k + 3] = 255;
+                    data[k + 3] = FG_TEXTURE_ALPHA_FIX_VALUE(data[k + 0], data[k + 1], data[k + 2]);
                 }
             break;
     }
@@ -339,17 +339,10 @@ unsigned char *fgTextureLoader::loadTGA(fgFile *fileStream, int &width, int &hei
         data[j] = buffer[i + 2];
         data[j + 1] = buffer[i + 1];
         data[j + 2] = buffer[i];
-        unsigned char _r = data[j];
-        unsigned char _g = data[j + 1];
-        unsigned char _b = data[j + 2];
         if(components == 4) {
             data[j + 3] = buffer[i + 3];
         } else {
-            if(_r < 16 && _g < 16 && _b < 16) {
-                data[j + 3] = 0;
-            } else {
-                data[j + 3] = (_r + _g + _b) / 3;
-            }
+            data[j + 3] = FG_TEXTURE_ALPHA_FIX_VALUE(data[j], data[j + 1], data[j + 2]);
         }
     }
     if(!(info[17] & 0x20)) {

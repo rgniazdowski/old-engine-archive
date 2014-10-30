@@ -17,6 +17,11 @@ extern "C" {
     #include "jpeglib.h"
 }
 
+    #ifndef FG_TEXTURE_ALPHA_FIX_VALUE
+    #define FG_TEXTURE_ALPHA_FIX_VALUE(_R, _G, _B) \
+            ((_G < 16 && _R < 16 && _B < 16) ? 0 : (_R + _G + _B) / 3)
+    #endif
+
 /*
  * Class contains static functions for loading image files as textures.
  * Every loading function returns an unsigned char array (1 dimension)

@@ -10,6 +10,13 @@
 #ifndef _FG_TEXTURE_TYPES_H_
     #define _FG_TEXTURE_TYPES_H_
 
+    #ifndef FG_TEXTURE_ALPHA_FIX_VALUE
+        #define FG_TEXTURE_ALPHA_FIX_VALUE(_R, _G, _B) \
+            ((_G < 16 && _R < 16 && _B < 16) ? 0 : (_R + _G + _B) / 3)
+
+        #define FG_TEXTURE_ALPHA_FIX_VALUE_LIMIT(_R, _G, _B, _LIMIT) \
+            ((_G < _LIMIT && _R < _LIMIT && _B < _LIMIT) ? 0 : (_R + _G + _B) / 3)
+    #endif
 
 // Extension (held as string) for BMP file format
     #define FG_TEXTURE_FILE_EXTENSION_BMP	"bmp"
