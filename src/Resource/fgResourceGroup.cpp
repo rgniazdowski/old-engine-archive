@@ -156,6 +156,7 @@ void fgResourceGroupContentHandler::startElement(const char *localName, fgXMLEle
             const char *attrvalue = attribute->Value();
             if(strncasecmp(attrname, "config", 6) == 0) {
                 if(!loadResConfig(attrvalue)) {
+                    attribute = attribute->Next();
                     continue;
                 } else {
                     return;

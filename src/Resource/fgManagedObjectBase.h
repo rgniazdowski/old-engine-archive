@@ -41,7 +41,8 @@ public:
      * @param name
      */
     inline void setName(const char *name) {
-        m_nameTag = name;
+        if(name)
+            m_nameTag = name;
     }
     /**
      * 
