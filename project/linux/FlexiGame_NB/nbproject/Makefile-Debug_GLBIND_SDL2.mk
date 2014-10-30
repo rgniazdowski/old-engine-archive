@@ -71,11 +71,8 @@ OBJECTFILES= \
 	${OBJECTDIR}/_ext/1654483616/fgArgumentList.o \
 	${OBJECTDIR}/_ext/1654483616/fgEventManager.o \
 	${OBJECTDIR}/_ext/293675389/fgParticleSystem.o \
-	${OBJECTDIR}/_ext/293675389/fgPsExplosionEffect.o \
-	${OBJECTDIR}/_ext/293675389/fgPsParticleDrawer.o \
 	${OBJECTDIR}/_ext/293675389/fgPsParticleEffect.o \
 	${OBJECTDIR}/_ext/293675389/fgPsParticleEffectCircular.o \
-	${OBJECTDIR}/_ext/293675389/fgPsParticleEffectLimited.o \
 	${OBJECTDIR}/_ext/293675389/fgPsParticleEmitter.o \
 	${OBJECTDIR}/_ext/293675389/fgPsSequentialEffect.o \
 	${OBJECTDIR}/_ext/960776194/fgGFXShader.o \
@@ -392,16 +389,6 @@ ${OBJECTDIR}/_ext/293675389/fgParticleSystem.o: ../../../src/GFX/Particles/fgPar
 	${RM} "$@.d"
 	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_GL_BINDING -DFG_USING_OPENGL -DFG_USING_SDL2 -DFG_USING_TINYXML -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/glbinding/source/glbinding/include `pkg-config --cflags gl` `pkg-config --cflags sdl2` `pkg-config --cflags SDL2_mixer` `pkg-config --cflags libpng` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/293675389/fgParticleSystem.o ../../../src/GFX/Particles/fgParticleSystem.cpp
 
-${OBJECTDIR}/_ext/293675389/fgPsExplosionEffect.o: ../../../src/GFX/Particles/fgPsExplosionEffect.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/293675389
-	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_GL_BINDING -DFG_USING_OPENGL -DFG_USING_SDL2 -DFG_USING_TINYXML -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/glbinding/source/glbinding/include `pkg-config --cflags gl` `pkg-config --cflags sdl2` `pkg-config --cflags SDL2_mixer` `pkg-config --cflags libpng` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/293675389/fgPsExplosionEffect.o ../../../src/GFX/Particles/fgPsExplosionEffect.cpp
-
-${OBJECTDIR}/_ext/293675389/fgPsParticleDrawer.o: ../../../src/GFX/Particles/fgPsParticleDrawer.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/293675389
-	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_GL_BINDING -DFG_USING_OPENGL -DFG_USING_SDL2 -DFG_USING_TINYXML -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/glbinding/source/glbinding/include `pkg-config --cflags gl` `pkg-config --cflags sdl2` `pkg-config --cflags SDL2_mixer` `pkg-config --cflags libpng` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/293675389/fgPsParticleDrawer.o ../../../src/GFX/Particles/fgPsParticleDrawer.cpp
-
 ${OBJECTDIR}/_ext/293675389/fgPsParticleEffect.o: ../../../src/GFX/Particles/fgPsParticleEffect.cpp 
 	${MKDIR} -p ${OBJECTDIR}/_ext/293675389
 	${RM} "$@.d"
@@ -411,11 +398,6 @@ ${OBJECTDIR}/_ext/293675389/fgPsParticleEffectCircular.o: ../../../src/GFX/Parti
 	${MKDIR} -p ${OBJECTDIR}/_ext/293675389
 	${RM} "$@.d"
 	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_GL_BINDING -DFG_USING_OPENGL -DFG_USING_SDL2 -DFG_USING_TINYXML -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/glbinding/source/glbinding/include `pkg-config --cflags gl` `pkg-config --cflags sdl2` `pkg-config --cflags SDL2_mixer` `pkg-config --cflags libpng` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/293675389/fgPsParticleEffectCircular.o ../../../src/GFX/Particles/fgPsParticleEffectCircular.cpp
-
-${OBJECTDIR}/_ext/293675389/fgPsParticleEffectLimited.o: ../../../src/GFX/Particles/fgPsParticleEffectLimited.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/293675389
-	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_GL_BINDING -DFG_USING_OPENGL -DFG_USING_SDL2 -DFG_USING_TINYXML -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/glbinding/source/glbinding/include `pkg-config --cflags gl` `pkg-config --cflags sdl2` `pkg-config --cflags SDL2_mixer` `pkg-config --cflags libpng` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/293675389/fgPsParticleEffectLimited.o ../../../src/GFX/Particles/fgPsParticleEffectLimited.cpp
 
 ${OBJECTDIR}/_ext/293675389/fgPsParticleEmitter.o: ../../../src/GFX/Particles/fgPsParticleEmitter.cpp 
 	${MKDIR} -p ${OBJECTDIR}/_ext/293675389

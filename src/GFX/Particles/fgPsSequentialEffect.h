@@ -11,7 +11,7 @@
     #define _FG_PS_SEQUENTIAL_EFFECT_H_
 
 // The limited-buffer (not circular-buffer) ParticleEffect* class
-    #include "fgPsParticleEffectLimited.h"
+    //#include "fgPsParticleEffectLimited.h"
 
     #define OBJECT_SEQUENCE_MAX 16
     #if 0

@@ -287,16 +287,10 @@
             <itemPath>../../../src/GFX/Particles/fgParticle.h</itemPath>
             <itemPath>../../../src/GFX/Particles/fgParticleSystem.cpp</itemPath>
             <itemPath>../../../src/GFX/Particles/fgParticleSystem.h</itemPath>
-            <itemPath>../../../src/GFX/Particles/fgPsExplosionEffect.cpp</itemPath>
-            <itemPath>../../../src/GFX/Particles/fgPsExplosionEffect.h</itemPath>
-            <itemPath>../../../src/GFX/Particles/fgPsParticleDrawer.cpp</itemPath>
-            <itemPath>../../../src/GFX/Particles/fgPsParticleDrawer.h</itemPath>
             <itemPath>../../../src/GFX/Particles/fgPsParticleEffect.cpp</itemPath>
             <itemPath>../../../src/GFX/Particles/fgPsParticleEffect.h</itemPath>
             <itemPath>../../../src/GFX/Particles/fgPsParticleEffectCircular.cpp</itemPath>
             <itemPath>../../../src/GFX/Particles/fgPsParticleEffectCircular.h</itemPath>
-            <itemPath>../../../src/GFX/Particles/fgPsParticleEffectLimited.cpp</itemPath>
-            <itemPath>../../../src/GFX/Particles/fgPsParticleEffectLimited.h</itemPath>
             <itemPath>../../../src/GFX/Particles/fgPsParticleEmitter.cpp</itemPath>
             <itemPath>../../../src/GFX/Particles/fgPsParticleEmitter.h</itemPath>
             <itemPath>../../../src/GFX/Particles/fgPsSequentialEffect.cpp</itemPath>
@@ -2006,26 +2000,6 @@
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Particles/fgPsExplosionEffect.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="../../../src/GFX/Particles/fgPsExplosionEffect.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../../../src/GFX/Particles/fgPsParticleDrawer.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="../../../src/GFX/Particles/fgPsParticleDrawer.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
       <item path="../../../src/GFX/Particles/fgPsParticleEffect.cpp"
             ex="false"
             tool="1"
@@ -2042,16 +2016,6 @@
             flavor2="0">
       </item>
       <item path="../../../src/GFX/Particles/fgPsParticleEffectCircular.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../../../src/GFX/Particles/fgPsParticleEffectLimited.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="../../../src/GFX/Particles/fgPsParticleEffectLimited.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -4362,26 +4326,6 @@
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Particles/fgPsExplosionEffect.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="../../../src/GFX/Particles/fgPsExplosionEffect.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../../../src/GFX/Particles/fgPsParticleDrawer.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="../../../src/GFX/Particles/fgPsParticleDrawer.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
       <item path="../../../src/GFX/Particles/fgPsParticleEffect.cpp"
             ex="false"
             tool="1"
@@ -4398,16 +4342,6 @@
             flavor2="0">
       </item>
       <item path="../../../src/GFX/Particles/fgPsParticleEffectCircular.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../../../src/GFX/Particles/fgPsParticleEffectLimited.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="../../../src/GFX/Particles/fgPsParticleEffectLimited.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -6742,26 +6676,6 @@
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Particles/fgPsExplosionEffect.cpp"
-            ex="false"
-            tool="1"
-            flavor2="8">
-      </item>
-      <item path="../../../src/GFX/Particles/fgPsExplosionEffect.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../../../src/GFX/Particles/fgPsParticleDrawer.cpp"
-            ex="false"
-            tool="1"
-            flavor2="8">
-      </item>
-      <item path="../../../src/GFX/Particles/fgPsParticleDrawer.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
       <item path="../../../src/GFX/Particles/fgPsParticleEffect.cpp"
             ex="false"
             tool="1"
@@ -6778,16 +6692,6 @@
             flavor2="8">
       </item>
       <item path="../../../src/GFX/Particles/fgPsParticleEffectCircular.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../../../src/GFX/Particles/fgPsParticleEffectLimited.cpp"
-            ex="false"
-            tool="1"
-            flavor2="8">
-      </item>
-      <item path="../../../src/GFX/Particles/fgPsParticleEffectLimited.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -9121,26 +9025,6 @@
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Particles/fgPsExplosionEffect.cpp"
-            ex="false"
-            tool="1"
-            flavor2="8">
-      </item>
-      <item path="../../../src/GFX/Particles/fgPsExplosionEffect.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../../../src/GFX/Particles/fgPsParticleDrawer.cpp"
-            ex="false"
-            tool="1"
-            flavor2="8">
-      </item>
-      <item path="../../../src/GFX/Particles/fgPsParticleDrawer.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
       <item path="../../../src/GFX/Particles/fgPsParticleEffect.cpp"
             ex="false"
             tool="1"
@@ -9157,16 +9041,6 @@
             flavor2="8">
       </item>
       <item path="../../../src/GFX/Particles/fgPsParticleEffectCircular.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../../../src/GFX/Particles/fgPsParticleEffectLimited.cpp"
-            ex="false"
-            tool="1"
-            flavor2="8">
-      </item>
-      <item path="../../../src/GFX/Particles/fgPsParticleEffectLimited.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -11477,26 +11351,6 @@
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Particles/fgPsExplosionEffect.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="../../../src/GFX/Particles/fgPsExplosionEffect.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../../../src/GFX/Particles/fgPsParticleDrawer.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="../../../src/GFX/Particles/fgPsParticleDrawer.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
       <item path="../../../src/GFX/Particles/fgPsParticleEffect.cpp"
             ex="false"
             tool="1"
@@ -11513,16 +11367,6 @@
             flavor2="0">
       </item>
       <item path="../../../src/GFX/Particles/fgPsParticleEffectCircular.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../../../src/GFX/Particles/fgPsParticleEffectLimited.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="../../../src/GFX/Particles/fgPsParticleEffectLimited.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -13835,26 +13679,6 @@
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Particles/fgPsExplosionEffect.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="../../../src/GFX/Particles/fgPsExplosionEffect.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../../../src/GFX/Particles/fgPsParticleDrawer.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="../../../src/GFX/Particles/fgPsParticleDrawer.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
       <item path="../../../src/GFX/Particles/fgPsParticleEffect.cpp"
             ex="false"
             tool="1"
@@ -13871,16 +13695,6 @@
             flavor2="0">
       </item>
       <item path="../../../src/GFX/Particles/fgPsParticleEffectCircular.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../../../src/GFX/Particles/fgPsParticleEffectLimited.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="../../../src/GFX/Particles/fgPsParticleEffectLimited.h"
             ex="false"
             tool="3"
             flavor2="0">

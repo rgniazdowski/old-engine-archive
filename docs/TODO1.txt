@@ -35,7 +35,7 @@
 [X] ladowanie pliku Settings XML - Settings jako Resource File? nie (po 
     parsowaniu i tak text data jest zwalniane, pliki config nie sa resourcami)
 
-[ 50% / ? ] obsluga ladowania tekstury do karty graficznej - nakladka na OGL i GFX
+[X] obsluga ladowania tekstury do karty graficznej - nakladka na OGL i GFX
 
 [X] poprawne zamykanie aplikacji czyli zwalnianie wszystkich zasobow w 
     poprawnej kolejnosci w tym wszystkich singletonow
@@ -51,9 +51,9 @@
 
 [X] podstawowa wersja klasy Camera
 
-[ ] poprawienie systemu particles - narazie nic nie bedzie dzialac i tak 
+[X] poprawienie systemu particles - narazie nic nie bedzie dzialac i tak 
     - konieczny jest dzialajacy podsystem rysowania
-[ ] dodanie drawera do particles - 
+[X] dodanie drawera do particles - 
     wymagany juz dzialajacy (glownie 2D) podsystem GFX
 
 [ ] podstawowe wsparcie oswietlenia 

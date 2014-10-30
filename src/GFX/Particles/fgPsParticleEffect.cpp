@@ -237,7 +237,7 @@ fgBool fgParticleEffect::create(void) {
         // #FIXME
     }
 
-    m_size = sizeof (fgParticleEffect);
+    m_size = sizeof (fgParticleEffect) + m_nameTag.length() + m_textureName.length();
     m_resType = FG_RESOURCE_PARTICLE_EFFECT;
     m_isReady = FG_TRUE;
     return FG_TRUE;
@@ -248,6 +248,7 @@ fgBool fgParticleEffect::create(void) {
  */
 void fgParticleEffect::destroy(void) {
     m_isReady = FG_FALSE;
+    m_size = 0;
 }
 
 /**
@@ -265,6 +266,7 @@ fgBool fgParticleEffect::recreate(void) {
  */
 void fgParticleEffect::dispose(void) {
     m_isReady = FG_FALSE;
+    m_size = 0;
 }
 
 /**
@@ -297,13 +299,6 @@ void fgParticleEffect::initializeParticle(fgParticle *outputParticle,
     from.data = NULL;
 
     from.velocity = -m_spreadSpeed;
-    //from.velocity.x = -m_spreadSpeed;
-    //from.velocity.y = -m_spreadSpeed;
-    //from.velocity.z = 0.0f;
-
-    //from.bbox.size.x = m_startSize;
-    //from.bbox.size.y = m_startSize;
-    //from.bbox.size.z = m_startSize;
     from.bbox.size = m_startSize;
 
     // m_lowLife holds life for the particle where value 10.0f is equal to 1000ms TTL
@@ -322,7 +317,6 @@ void fgParticleEffect::initializeParticle(fgParticle *outputParticle,
     } else {
         from.bbox.pos = position;
     }
-
     from.texIndex = m_textureIDRange.x;
 
     //
@@ -333,13 +327,6 @@ void fgParticleEffect::initializeParticle(fgParticle *outputParticle,
     to.data = NULL;
 
     to.velocity = m_spreadSpeed;
-    //to.velocity.x = m_spreadSpeed;
-    //to.velocity.y = m_spreadSpeed;
-    //to.velocity.z = 0.0f;
-
-    //to.bbox.size.x = m_startSize;
-    //to.bbox.size.y = m_startSize;
-    //to.bbox.size.z = m_startSize;
     to.bbox.size = m_startSize;
 
     // m_highLife holds life for the particle where value 10.0f is equal to 1000ms TTL
@@ -380,121 +367,6 @@ void fgParticleEffect::initializeParticle(fgParticle *outputParticle,
 #if 0
 
 void fgParticleEffect::calculate(void) {
-    float DT2 = (float)FG_HardwareState->getDelta2();
-
-    for(int i = 0; i<int(m_particles.size()); i++) {
-        // MOVEMENT
-        m_particles[i].bbox.pos.x += m_particles[i].velocity.x / 1000.0f * DT2;
-        m_particles[i].bbox.pos.y += m_particles[i].velocity.y / 1000.0f * DT2;
-        m_particles[i].bbox.pos.z += m_particles[i].velocity.z / 1000.0f * DT2;
-
-        // ROTATION
-        m_particles[i].rotation.x += m_particles[i].angularVelocity.x / 1000.0f * DT2;
-        m_particles[i].rotation.y += m_particles[i].angularVelocity.y / 1000.0f * DT2;
-        m_particles[i].rotation.z += m_particles[i].angularVelocity.z / 1000.0f * DT2;
-
-        // FADE
-        m_particles[i].life -= m_particles[i].fadeSpeed / 1000.0f * DT2;
-
-        // LIFE AS SIZE
-        if(m_lifeAsSize) {
-            m_particles[i].bbox.size.x = fabs(m_particles[i].life);
-            m_particles[i].bbox.size.y = fabs(m_particles[i].life);
-            m_particles[i].bbox.size.z = fabs(m_particles[i].life);
-        }
-
-        // ONLY FOR Z ROTATION
-        if(m_facingVelocity) {
-            float r = sqrt(m_particles[i].velocity.x * m_particles[i].velocity.x + m_particles[i].velocity.y * m_particles[i].velocity.y);
-            float a = m_particles[i].velocity.x;
-            float b = m_particles[i].velocity.y;
-            float sina = b / r;
-
-            double radians = asin(sina);
-            float angle = (float)radians / (float)M_PI * 180.0f;
-
-            if(m_drawMode == MODE_2D) {
-                if(a > 0.0f && b > 0.0f)
-                    m_particles[i].rotation.z = 90.0f + fabs(angle);
-                else if(a < 0.0f && b > 0.0f)
-                    m_particles[i].rotation.z = 270.0f - fabs(angle);
-                else if(a < 0.0f && b < 0.0f)
-                    m_particles[i].rotation.z = 270.0f + fabs(angle);
-                else // if(a > 0.0f && b < 0.0f)
-                    m_particles[i].rotation.z = 90.0f - fabs(angle);
-            } else {
-                if(a > 0.0f && b > 0.0f)
-                    m_particles[i].rotation.z = -90.0f - fabs(angle);
-                else if(a < 0.0f && b > 0.0f)
-                    m_particles[i].rotation.z = 90.0f + fabs(angle);
-                else if(a < 0.0f && b < 0.0f)
-                    m_particles[i].rotation.z = 90.0f - fabs(angle);
-                else // if(a > 0.0f && b < 0.0f)
-                    m_particles[i].rotation.z = -(90.0f - fabs(angle));
-            }
-        }
-
-        if(m_paramsActive) {
-            // This actions will work properly only if the particle TTL parameter is set
-            // Size
-            m_particles[i].bbox.size.x += (m_endSize - m_startSize) / m_particles[i].ttl * DT2;
-            m_particles[i].bbox.size.y += (m_endSize - m_startSize) / m_particles[i].ttl * DT2;
-            //m_particles[i].bbox.size.z += (m_endSize - m_startSize) / m_particles[i].ttl * DT2;
-
-            /*fgColor color = m_particles[i].color;
-
-            // Color
-            color.r += ((float(m_endColor.r-m_startColor.r)/255.0f)/(float)m_particles[i].ttl * FG_HardwareState->DT2());
-            if(color.r < 0.0f)
-                    color.r = 0.0f;
-            if(color.r > 1.0f)
-                    color.r = 1.0f;
-
-            color.g += ((float(m_endColor.g-m_startColor.g)/255.0f)/(float)m_particles[i].ttl * FG_HardwareState->DT2());
-            if(color.g < 0.0f)
-                    color.g = 0.0f;
-            if(color.g > 1.0f)
-                    color.g = 1.0f;
-
-            color.b += ((float(m_endColor.b-m_startColor.b)/255.0f)/(float)m_particles[i].ttl * FG_HardwareState->DT2());
-            if(color.b < 0.0f)
-                    color.b = 0.0f;
-            if(color.b > 1.0f)
-                    color.b = 1.0f;
-
-            color.a += ((float(m_endColor.a-m_startColor.a)/255.0f)/(float)m_particles[i].ttl * FG_HardwareState->DT2());
-            if(color.a < 0.0f)
-                    color.a = 0.0f;
-            if(color.a > 1.0f)
-                    color.a = 1.0f;
-
-            m_particles[i].setColor(color);*/
-
-            /*m_particles[i].color.r += (uint8)((float)(m_endColor.r-m_startColor.r)/(float)m_particles[i].ttl * FG_HardwareState->DT2());
-            if(m_particles[i].color.r < 0)
-                    m_particles[i].color.r = 0;
-            if(m_particles[i].color.r > 255)
-                    m_particles[i].color.r = 255;
-
-            m_particles[i].color.g += (uint8)((float)(m_endColor.g-m_startColor.g)/(float)m_particles[i].ttl * FG_HardwareState->DT2());
-            if(m_particles[i].color.g < 0)
-                    m_particles[i].color.g = 0;
-            if(m_particles[i].color.g > 255)
-                    m_particles[i].color.g = 255;
-
-            m_particles[i].color.b += (uint8)((float)(m_endColor.b-m_startColor.b)/(float)m_particles[i].ttl * FG_HardwareState->DT2());
-            if(m_particles[i].color.b < 0)
-                    m_particles[i].color.b = 0;
-            if(m_particles[i].color.b > 255)
-                    m_particles[i].color.b = 255;
-
-            m_particles[i].color.a += (uint8)(ceilf((float)(m_endColor.a-m_startColor.a)/(float)m_particles[i].ttl * FG_HardwareState->DT2()));
-            if(m_particles[i].color.a < 0)
-                    m_particles[i].color.a = 0;
-            if(m_particles[i].color.a > 255)
-                    m_particles[i].color.a = 255; */
-        }
-
         if(m_particles[i].life <= 0.0f) {
             remove(i);
             // Checking the particle area which means checking and bouncing off particles of the area edges
@@ -535,66 +407,6 @@ void fgParticleEffect::calculate(void) {
         }
     }
 }
-
-void fgParticleEffect::draw(void) {
-    int i = 0;
-
-    static fgVector2f defaultTexCoords[ 4 ] = {
-                                               fgVector2f(0.0f, 0.0f), // 0.x 0.y
-                                               fgVector2f(0.0f, 1.0f), // 1.x 1.y
-                                               fgVector2f(1.0f, 1.0f), // 2.x 2.y
-                                               fgVector2f(1.0f, 0.0f), // 3.x 3.y
-    };
-
-    for(i = 0; i<int(m_particles.size()); i++) {
-        int w = m_particles[i].bbox.size.x;
-        int h = m_particles[i].bbox.size.y;
-
-        // Setting up the particle position
-        fgVector2i origin2D;
-        origin2D.x = m_emitterOrigin.x + m_particles[i].bbox.pos.x;
-        origin2D.y = m_emitterOrigin.y + m_particles[i].bbox.pos.y;
-        fgVector3f origin3D;
-        origin3D = m_particles[i].bbox.pos + m_emitterOrigin;
-
-        // Setting up the VERTICES STREAM
-        if(m_drawMode == MODE_2D) {
-            m_vertStream2D[i * 4 + 0] = fgVector2i(-w / 2, -h / 2);
-            m_vertStream2D[i * 4 + 1] = fgVector2i(-w / 2, h / 2);
-            m_vertStream2D[i * 4 + 2] = fgVector2i(w / 2, h / 2);
-            m_vertStream2D[i * 4 + 3] = fgVector2i(w / 2, -h / 2);
-        } else {
-            m_vertStream3D[i * 4 + 0] = fgVector3f(-w / 2, -h / 2, 0.0f);
-            m_vertStream3D[i * 4 + 1] = fgVector3f(-w / 2, h / 2, 0.0f);
-            m_vertStream3D[i * 4 + 2] = fgVector3f(w / 2, h / 2, 0.0f);
-            m_vertStream3D[i * 4 + 3] = fgVector3f(w / 2, -h / 2, 0.0f);
-        }
-        //        if(m_particles[i].texture_id < 0)
-        //            m_particles[i].texture_id = 0;
-        //        if(m_particles[i].texture_id >= m_textureXSize * m_textureYSize)
-        //            m_particles[i].texture_id = 0;
-        //        int x = m_particles[i].texture_id % m_textureXSize;
-        //        int y = m_particles[i].texture_id / m_textureYSize;
-        int x = 1, y = 1;
-        float s = (float)x / m_texSheetSize;
-        float t = (float)y / m_textureYSize;
-        float ds = 1.0f / m_texSheetSize;
-        float dt = 1.0f / m_textureYSize;
-
-        // Setting up the UV STREAM
-        m_UVStream[i * 4 + 0] = fgVector2f(s, t);
-        m_UVStream[i * 4 + 1] = fgVector2f(s, t + dt);
-        m_UVStream[i * 4 + 2] = fgVector2f(s + ds, t + dt);
-        m_UVStream[i * 4 + 3] = fgVector2f(s + ds, t);
-
-        // Setting up the COLOR STREAM
-        fgColor color = m_particles[i].color;
-        m_colorStream[i * 4 + 0] = color;
-        m_colorStream[i * 4 + 1] = color;
-        m_colorStream[i * 4 + 2] = color;
-        m_colorStream[i * 4 + 3] = color;
-    }
-}
 #endif
 
 /**
@@ -608,7 +420,6 @@ void fgParticleEffect::randomizeOnPair(const fgParticle* from,
     fgParticle* target = result;
 
     // Burn parameter
-    // Position X
     from_val = (int)(from->burn * 1000);
     to_val = (int)(to->burn * 1000);
     target->burn = FG_Rand(from_val, to_val) / 1000.0f;
@@ -664,11 +475,6 @@ void fgParticleEffect::randomizeOnPair(const fgParticle* from,
         int ttl = FG_Rand(from_val, to_val);
         target->setTTL(ttl);
     }
-
-    // Size
-    // from_val = (int)(from->size * 1000);
-    // to_val = (int)(to->size * 1000);
-    // target->size = FG_Rand(from_val, to_val) / 1000.0f;
 
     // Size X
     from_val = (int)(from->bbox.size.x * 1000);

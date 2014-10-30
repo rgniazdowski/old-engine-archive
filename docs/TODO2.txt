@@ -5,7 +5,6 @@
 
 [X] GFX - 3D Scene / Scene manager potrzebuje Resource Managera
 [ ] GFX/GUI/Other - uzywanie w seterach dla managerow (wszelkich) bazowego wskaznika
-	[ ] dodanie funkcji template zeby od razu zwracac poprawny wskaznic 
 
 [ ] bazowy interfejse (base class) zwraca typ + type traits (podobnie jak widget - wydzielic to)
 
@@ -77,10 +76,16 @@
 [ ] - GUI - gui effect
 
 
-[ ] - Particles - load particle config file
+[X] - Particles - load particle config file
 
-[ ] - Particles - reinforce/refactor particle system
+[X] - Particles - reinforce/refactor particle system
 
-[ ] - Particles - use drawing batch for particles
+[X] - Particles - use drawing batch for particles
+
+[X] - Particles - hook particle emitters as scene objects - managed via scene mgr
+
+
+[ ] - Event / Texture - hook texture / font creation as event - throw it
+		- texture mgr can listen to this events and automatically reupload GFX
 
 

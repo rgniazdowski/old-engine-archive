@@ -18,33 +18,33 @@
  *
  */
 struct fgParticle {
-    // Current position of the single particle in 3D space
-    // Current size of the particle
-    // Position and size is stored in special bounding box
+    /// Current position of the single particle in 3D space
+    /// Current size of the particle
+    /// Position and size is stored in special bounding box
     fgBoundingBox3Df bbox;
-    // Velocity of a particle (per second)
+    /// Velocity of a particle (per second)
     fgVector3f velocity;
-    // Actual rotation in 3 angles, given in radians 
+    /// Actual rotation in 3 angles, given in radians 
     fgVector3f rotation;
-    // Angular velocity (per second), given in radians
+    /// Angular velocity (per second), given in radians
     fgVector3f angularVelocity;
-    // Current life of the particle (if equal to zero the particle will be deleted)
+    /// Current life of the particle (if equal to zero the particle will be deleted)
     float life;
-    // Speed of dying
+    /// Speed of dying
     float fadeSpeed;
-    // Time to live (milliseconds), setting the value for TTL changes the life and fade speed values - needs to be set via function
+    /// Time to live (milliseconds), setting the value for TTL changes the life and fade speed values - needs to be set via function
     int ttl;
-    // Time of creation
+    /// Time of creation
     unsigned long int spawnTime;
-    // Color of the particle, stored as float for better precision
+    /// Color of the particle, stored as float for better precision
     fgColor4f color;
-    // Textture index - this is not texture ID from GFX subsystem
-    // used for binding - it is more of index of the texture in 
-    // the particle texture sheet (many images in one file, tiled)
+    /// Texture index - this is not texture ID from GFX subsystem
+    /// used for binding - it is more of index of the texture in 
+    /// the particle texture sheet (many images in one file, tiled)
     unsigned int texIndex;
-    // Burning parameter - used for transition between additive and modulate blending
+    /// Burning parameter - used for transition between additive and modulate blending
     float burn;
-    // Pointer to additional data structure (if any is needed)
+    /// Pointer to additional data structure (if any is needed)
     void *data;
     
     /**
