@@ -125,7 +125,7 @@ fgGameMain::~fgGameMain() {
     m_joypadController = NULL;
     if(m_qualityMgr)
         delete m_qualityMgr;
-    m_qualityMgr = NULL;            
+    m_qualityMgr = NULL;
     // this event mgr is not owned by game main
     m_pEventMgr = NULL;
     if(m_guiMain) {
@@ -203,10 +203,13 @@ void fgGameMain::unregisterGameCallbacks(void) {
 void fgGameMain::setEventManager(fgEventManager *pEventMgr) {
     if(!pEventMgr) {
         unregisterGameCallbacks();
+        m_pEventMgr = NULL;
     } else if(m_pEventMgr && m_pEventMgr != pEventMgr) {
         unregisterGameCallbacks();
     }
     m_pEventMgr = pEventMgr;
+    if(m_pEventMgr)
+        registerGameCallbacks();
     if(m_pointerInputReceiver)
         m_pointerInputReceiver->setEventManager(m_pEventMgr);
     if(m_joypadController)
@@ -217,9 +220,6 @@ void fgGameMain::setEventManager(fgEventManager *pEventMgr) {
     }
     if(m_resourceMgr) {
         m_resourceMgr->setEventManager(pEventMgr);
-    }
-    if(m_pEventMgr) {
-        registerGameCallbacks();
     }
 }
 
@@ -341,6 +341,8 @@ fgBool fgGameMain::loadResources(void) {
     FG_HardwareState->deviceYield(0); // #FIXME - device yield...
 #if 1
     ////////////////////////////////////////////////////////////////////////////
+    // Can also create special event for GFX - upload static vertex data
+    // Create vertex buffers on event - not explicitly 
     {
         float t1 = fgTime::ms();
         FG_LOG::PrintDebug("Will now try load object CobraBomber.obj");
@@ -357,113 +359,6 @@ fgBool fgGameMain::loadResources(void) {
     }
     ////////////////////////////////////////////////////////////////////////////
 #endif
-    {
-        FG_LOG::PrintDebug("Will now try load texture for CobraBomber");
-        texname = "CobraBomberTexture";
-        texture = (fgTextureResource *)m_resourceMgr->get(texname);
-        if(texture) {
-            texture->create();
-            m_gfxMain->getTextureManager()->uploadToVRAM(texture, FG_TRUE);
-        }
-    }
-    {
-        texname = "MainBackgroundTexture";
-        texture = (fgTextureResource *)m_resourceMgr->get(texname);
-        //texture = (fgTextureResource *) m_resourceMgr->request(std::string("loading_screen0"), FG_RESOURCE_TEXTURE);
-        if(texture) {
-            texture->create();
-            m_gfxMain->getTextureManager()->uploadToVRAM(texture, FG_TRUE);
-        }
-    }
-    {
-        texname = "PopupBG";
-        texture = (fgTextureResource *)m_resourceMgr->get(texname);
-        if(texture) {
-            texture->create();
-            m_gfxMain->getTextureManager()->uploadToVRAM(texture, FG_TRUE);
-        }
-    }
-    {
-        texname = "MenuBG";
-        texture = (fgTextureResource *)m_resourceMgr->get(texname);
-        if(texture) {
-            texture->create();
-            m_gfxMain->getTextureManager()->uploadToVRAM(texture, FG_TRUE);
-        }
-    }
-    {
-        texname = "Splash";
-        texture = (fgTextureResource *)m_resourceMgr->get(texname);
-        if(texture) {
-            texture->create();
-            m_gfxMain->getTextureManager()->uploadToVRAM(texture, FG_TRUE);
-        }
-    }
-    {
-        texname = "Loaded";
-        fgFontResource *font = (fgFontResource *)m_resourceMgr->get(texname);
-        if(font) {
-            font->create();
-            m_gfxMain->getTextureManager()->uploadToVRAM(font, FG_TRUE);
-
-        }
-    }
-    ////////////////////////////////////////////////////////////////////////////
-    // #FIXME #OMG #BULLSHIT detector is off the charts!
-    const char * particleTex[] = {
-                                  "PulseTex",
-                                  "DebrisSheetTex",
-                                  "FlameSheetTex",
-                                  "FlashSheetTex",
-                                  "SmokeTrailTex",
-                                  "RoundSparkTex",
-                                  "ShockWaveTex",
-                                  "SparkTex",
-                                  "ExplosionSeqTex",
-                                  "FireSequenceTex"
-    };
-    int n = 10;
-    for(int i = 0; i < n; i++) {
-        texname = particleTex[i];
-        texture = (fgTextureResource *)m_resourceMgr->get(texname);
-        if(texture) {
-            texture->create();
-            m_gfxMain->getTextureManager()->uploadToVRAM(texture, FG_TRUE);
-        }
-    }
-    ////////////////////////////////////////////////////////////////////////////
-    {
-        std::string top("HudTopTex");
-        std::string bottom("HudBottomTex");
-        std::string lines("HudLinesTex");
-        fgTextureResource *textop = (fgTextureResource *)m_resourceMgr->get(top);
-        fgTextureResource *texbottom = (fgTextureResource *)m_resourceMgr->get(bottom);
-        fgTextureResource *texlines = (fgTextureResource *)m_resourceMgr->get(lines);
-
-        if(textop && texbottom && texlines) {
-            texlines->create();
-            textop->create();
-            texbottom->create();
-            m_gfxMain->getTextureManager()->uploadToVRAM(texlines, FG_TRUE);
-            m_gfxMain->getTextureManager()->uploadToVRAM(textop, FG_TRUE);
-            m_gfxMain->getTextureManager()->uploadToVRAM(texbottom, FG_TRUE);
-        }
-    }
-    ////////////////////////////////////////////////////////////////////////////
-
-    // Upload to VRAM - #FIXME
-    {
-        fgFontBuiltInResource *consolasBold = (fgFontBuiltInResource *)m_resourceMgr->get("StbConsolasBold");
-        if(consolasBold) {
-            m_gfxMain->getTextureManager()->uploadToVRAM(consolasBold, FG_TRUE);
-        }
-    }
-    {
-        fgFontBuiltInResource *courier = (fgFontBuiltInResource *)m_resourceMgr->get("StbCourier");
-        if(courier) {
-            m_gfxMain->getTextureManager()->uploadToVRAM(courier, FG_TRUE);
-        }
-    }
 
     m_gfxMain->getParticleSystem()->insertParticleEmitter("ExplosionEffect", "ExplosionEffect", fgVector3f(0.0f, 0.0f, 0.0f));
 

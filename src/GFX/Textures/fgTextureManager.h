@@ -17,6 +17,8 @@
     #include "fgTextureTypes.h"
     #include "fgStatusReporter.h"
     #include "Util/fgTag.h"
+    #include "Event/fgArgumentList.h"
+    #include "Event/fgCallback.h"
 
 class fgTextureManager;
 
@@ -43,7 +45,19 @@ public:
     virtual ~fgTextureManager();
 
 protected:
+    /**
+     * 
+     */
     virtual void clear(void);
+    
+    /**
+     * 
+     */
+    void registerResourceCallbacks(void);
+    /**
+     * 
+     */
+    void unregisterResourceCallbacks(void);
 
 public:
     //
@@ -101,10 +115,21 @@ private:
      * be used).
      */
     fgBool makeTexture(fgTextureResource *textureResource);
+    
+    /**
+     * 
+     * @param argv
+     * @return 
+     */
+    fgBool resourceCreatedHandler(fgArgumentList *argv);
 
 private:
     ///
-    fgManagerBase *m_resourceMgr;
+    fgManagerBase *m_pResourceMgr;
+    ///
+    fgManagerBase *m_pEventMgr;
+    ///
+    fgFunctionCallback *m_resourceCreatedCallback;
     ///
     fgBool m_allInVRAM;
 };

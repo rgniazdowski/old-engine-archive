@@ -284,6 +284,7 @@ fgBool fgResourceManager::insertResource(FG_RHANDLE& rhUniqueID, fgResource* pRe
     if(!insert(rhUniqueID, pResource, pResource->getName())) {
         return FG_FALSE;
     }
+    pResource->setManaged(FG_TRUE);
     // Get the memory and add it to the catalog total.  Note that we only have
     // to check for memory overallocation if we haven't preallocated memory
     if(!m_bResourceReserved) {

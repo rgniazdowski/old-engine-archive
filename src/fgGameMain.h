@@ -142,6 +142,7 @@ public:
         return m_joypadController;
     }
 
+protected:
     /**
      * 
      * @param argv
