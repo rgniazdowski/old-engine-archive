@@ -22,18 +22,24 @@
 #include "Util/fgDirent.h"
 #include "Util/fgPath.h"
 #include "fgLog.h"
+#include "Hardware/fgQualityManager.h"
+#include "Event/fgEventManager.h"
+#include "Util/fgMemory.h"
 
-/*
- *
+/**
+ * 
+ * @param resourceFactory
  */
-fgResourceManager::fgResourceManager(fgResourceFactory *resourceFactory) :
+fgResourceManager::fgResourceManager(fgResourceFactory *pResourceFactory, fgManagerBase *pQualityMgr, fgManagerBase *pEventMgr) :
+m_pResourceFactory(pResourceFactory),
+m_pQualityMgr(pQualityMgr),
+m_pEventMgr(pEventMgr),
 m_dataDir(NULL),
 m_nCurrentUsedMemory(0),
 m_nMaximumMemory(0),
 m_bResourceReserved(FG_FALSE) {
     m_currentResource = getRefDataVector().end();
     m_resourceGroupHandles.clear_optimised();
-    setResourceFactory(resourceFactory);
     m_managerType = FG_MANAGER_RESOURCE;
 }
 
@@ -42,21 +48,6 @@ m_bResourceReserved(FG_FALSE) {
  */
 fgResourceManager::~fgResourceManager() {
     fgResourceManager::destroy();
-}
-
-/*
- *
- */
-void fgResourceManager::setResourceFactory(fgResourceFactory *resourceFactory) {
-    if(resourceFactory)
-        m_resourceFactory = resourceFactory;
-}
-
-/*
- *
- */
-fgResourceFactory *fgResourceManager::getResourceFactory(void) const {
-    return m_resourceFactory;
 }
 
 /*
@@ -70,7 +61,9 @@ void fgResourceManager::clear(void) {
     m_currentResource = getRefDataVector().end();
     m_resourceGroupHandles.clear_optimised();
     m_init = FG_FALSE;
-    m_resourceFactory = NULL;
+    m_pResourceFactory = NULL;
+    m_pQualityMgr = NULL;
+    m_pEventMgr = NULL;
     m_managerType = FG_MANAGER_RESOURCE;
 }
 
@@ -131,7 +124,7 @@ fgBool fgResourceManager::initialize(void) {
         // double initialization ?
         return FG_FALSE;
     }
-    if(!m_resourceFactory) {
+    if(!m_pResourceFactory || !m_pQualityMgr) {
         // the resource factory is not set
         return FG_FALSE;
     }
@@ -163,7 +156,7 @@ fgBool fgResourceManager::initialize(void) {
         // #FIXME - should resource manager hold separate array for res groups IDS ? oh my ...
         FG_RHANDLE grpUniqueID;
         filename = fgPath::fileName(resGroupFiles[i].c_str());
-        fgResourceGroup *resGroup = new fgResourceGroup(m_resourceFactory);
+        fgResourceGroup *resGroup = new fgResourceGroup(m_pResourceFactory);
         // #TODO this will not always look like this - requires full path (cross platform)
         resGroup->setFilePath(filename);
         if(!resGroup->preLoadConfig()) {
@@ -183,6 +176,7 @@ fgBool fgResourceManager::initialize(void) {
         insertResourceGroup(grpUniqueID, resGroup);
         fgResourceGroup::rgResVec& resInGrp = resGroup->getRefResourceFiles();
         for(fgResourceGroup::rgResVecItor it = resInGrp.begin(); it != resInGrp.end(); it++) {
+            (*it)->setQuality(static_cast<fgQualityManager *>(m_pQualityMgr)->getQuality());
             insertResource((*it)->getRefHandle(), (*it));
         }
         // This is really important - refresh array with resource handles
@@ -293,7 +287,7 @@ fgBool fgResourceManager::insertResource(FG_RHANDLE& rhUniqueID, fgResource* pRe
     // Get the memory and add it to the catalog total.  Note that we only have
     // to check for memory overallocation if we haven't preallocated memory
     if(!m_bResourceReserved) {
-        addMemory(pResource->getSize());
+        addMemory(pResource->getSize()); // ? nope
         // check to see if any overallocation has taken place
         if(!checkForOverallocation())
             return FG_FALSE;
@@ -405,36 +399,60 @@ fgBool fgResourceManager::dispose(fgResource* pResource) {
     return FG_TRUE;
 }
 
+/**
+ * 
+ * @param pResource
+ */
+void fgResourceManager::refreshResource(fgResource* pResource) {
+    if(!pResource)
+        return;
+
+    // You may need to add your own OS dependent method of getting
+    // the current time to set your resource access time
+
+    // Set the current time as the last time the object was accessed
+    pResource->setLastAccess(time(0));
+
+    // Recreate the object before giving it to the application
+    if(pResource->isDisposed()) {
+        if(m_pQualityMgr)
+            pResource->setQuality(static_cast<fgQualityManager *>(m_pQualityMgr)->getQuality());
+
+        pResource->recreate();
+        if(!pResource->isDisposed() && m_pEventMgr) {
+            fgResourceEvent *resEvent = fgMalloc<fgResourceEvent>();
+            resEvent->eventType = FG_EVENT_RESOURCE_CREATED;
+            resEvent->timeStamp = FG_GetTicks();
+            resEvent->status = FG_RESOURCE_CREATED;
+            resEvent->resource = pResource;
+            resEvent->handle.copyFrom(pResource->getHandle());
+
+            fgArgumentList *argList = new fgArgumentList();
+            argList->pushArgument(FG_ARGUMENT_STRUCT, (void *)resEvent);
+            static_cast<fgEventManager *>(m_pEventMgr)->throwEvent(FG_EVENT_RESOURCE_CREATED, argList);
+        }
+        addMemory(pResource->getSize());
+
+        // check to see if any overallocation has taken place, but
+        // make sure we don't swap out the same resource.
+        pResource->Lock();
+        checkForOverallocation();
+        pResource->Unlock();
+    }
+}
+
 /*
  * Get the resource pointer (object) via resource handle ID
  * Using GetResource tells the manager that you are about to access the
  * object.  If the resource has been disposed, it will be recreated
  * before it has been returned.
  */
-fgResource* fgResourceManager::get(const FG_RHANDLE& rhUniqueID, const fgQuality quality) {
+fgResource* fgResourceManager::get(const FG_RHANDLE& rhUniqueID) {
     fgResource *pResource = fgDataManagerBase::get(rhUniqueID);
     if(!pResource) {
         return NULL;
     }
-    // You may need to add your own OS dependent method of getting
-    // the current time to set your resource access time
-
-    // Set the current time as the last time the object was accessed
-    pResource->setLastAccess(time(0));
-
-    // Recreate the object before giving it to the application
-    if(pResource->isDisposed()) {
-        pResource->setQuality(quality);
-        pResource->recreate();
-        addMemory(pResource->getSize());
-
-        // check to see if any overallocation has taken place, but
-        // make sure we don't swap out the same resource.
-        pResource->Lock();
-        checkForOverallocation();
-        pResource->Unlock();
-    }
-
+    fgResourceManager::refreshResource(pResource);
     // return the object pointer
     return pResource;
 }
@@ -445,30 +463,12 @@ fgResource* fgResourceManager::get(const FG_RHANDLE& rhUniqueID, const fgQuality
  * object.  If the resource has been disposed, it will be recreated
  * before it has been returned.
  */
-fgResource* fgResourceManager::get(const std::string& nameTag, const fgQuality quality) {
+fgResource* fgResourceManager::get(const std::string& nameTag) {
     fgResource *pResource = fgDataManagerBase::get(nameTag);
     if(!pResource) {
         return NULL;
     }
-    // You may need to add your own OS dependent method of getting
-    // the current time to set your resource access time
-
-    // Set the current time as the last time the object was accessed
-    pResource->setLastAccess(time(0));
-
-    // Recreate the object before giving it to the application
-    if(pResource->isDisposed()) {
-        pResource->setQuality(quality); // FIXME
-        pResource->recreate();
-        addMemory(pResource->getSize());
-
-        // check to see if any overallocation has taken place, but
-        // make sure we don't swap out the same resource.
-        pResource->Lock();
-        checkForOverallocation();
-        pResource->Unlock();
-    }
-
+    fgResourceManager::refreshResource(pResource);
     // return the object pointer
     return pResource;
 }
@@ -479,29 +479,36 @@ fgResource* fgResourceManager::get(const std::string& nameTag, const fgQuality q
  * object.  If the resource has been disposed, it will be recreated
  * before it has been returned.
  */
-fgResource* fgResourceManager::get(const char *nameTag, const fgQuality quality) {
-    return fgResourceManager::get(std::string(nameTag), quality);
+fgResource* fgResourceManager::get(const char *nameTag) {
+    return fgResourceManager::get(std::string(nameTag));
 }
 
-/*
- *
+/**
+ * 
+ * @param info
+ * @return 
  */
 fgResource* fgResourceManager::request(const std::string& info) {
     return request(info, FG_RESOURCE_AUTO);
 }
 
-/*
- *
+/**
+ * 
+ * @param info
+ * @return 
  */
 fgResource* fgResourceManager::request(const char *info) {
     return request(std::string(info), FG_RESOURCE_AUTO);
 }
 
-/*
- *
+/**
+ * 
+ * @param info
+ * @param forcedType
+ * @return 
  */
 fgResource* fgResourceManager::request(const std::string& info, const fgResourceType forcedType) {
-    if(!m_dataDir || !m_init || !m_resourceFactory || info.empty())
+    if(!m_dataDir || !m_init || !m_pResourceFactory || info.empty())
         return NULL;
     fgResource *resourcePtr = NULL;
     // This is a fallback, if such resource already exists in the resource manager
@@ -530,6 +537,7 @@ fgResource* fgResourceManager::request(const std::string& info, const fgResource
         pattern.append(info);
     }
 
+    // Search file names of resources already in cache
     if(!infoAsName && iext) {
         // This is special search for filename within already loaded resources
         goToBegin();
@@ -546,7 +554,7 @@ fgResource* fgResourceManager::request(const std::string& info, const fgResource
                 if(fgStrings::endsWith(fit->second, pattern, FG_TRUE)) {
                     //if(fit->second.compare(pattern) == 0) {
                     // Found resource containing specified file
-
+                    fgResourceManager::refreshResource(res);
                     return res;
                 }
             }
@@ -605,8 +613,8 @@ fgResource* fgResourceManager::request(const std::string& info, const fgResource
         // NEED TO THINK OF A WAY TO NOT REPEAT THIS CHUNK OF CODE
         // SHOULD RESOURCE GROUP HAVE SOME ACCESS TO THIS RES MGR?
         fgResourceHeader *header = &resCfg->getRefHeader();
-        if(m_resourceFactory->isRegistered(header->resType)) {
-            resourcePtr = m_resourceFactory->createResource(header->resType);
+        if(m_pResourceFactory->isRegistered(header->resType)) {
+            resourcePtr = m_pResourceFactory->createResource(header->resType);
             resourcePtr->setName(header->name);
             resourcePtr->setPriority(header->priority);
             resourcePtr->setQuality(header->quality);
@@ -627,25 +635,46 @@ fgResource* fgResourceManager::request(const std::string& info, const fgResource
     } else if(resExtType != FG_RESOURCE_INVALID) {
         if(forcedType != FG_RESOURCE_AUTO)
             resExtType = forcedType;
-        if(m_resourceFactory->isRegistered(resExtType)) {
-            resourcePtr = m_resourceFactory->createResource(resExtType);
+        if(m_pResourceFactory->isRegistered(resExtType)) {
+            resourcePtr = m_pResourceFactory->createResource(resExtType);
             resourcePtr->setName(info);
             resourcePtr->setPriority(FG_RES_PRIORITY_LOW);
             resourcePtr->setQuality(FG_QUALITY_UNIVERSAL);
             resourcePtr->setDefaultID(FG_QUALITY_UNIVERSAL);
             resourcePtr->setFilePath(filePath);
+
+
         }
     }
 
     if(resourcePtr) {
         fgResourceManager::insertResource(resourcePtr->getRefHandle(), resourcePtr);
+        // This will recreate the resource if necessary and throw proper event
+        // if the pointer to the external event manager is set.
+        fgResourceManager::refreshResource(resourcePtr);
+        if(m_pEventMgr) {
+            // #FIXME ! ! ! !
+            fgResourceEvent *resEvent = fgMalloc<fgResourceEvent>();
+            resEvent->eventType = FG_EVENT_RESOURCE_REQUESTED;
+            resEvent->timeStamp = FG_GetTicks();
+            resEvent->status = FG_RESOURCE_REQUESTED;
+            resEvent->resource = resourcePtr;
+            resEvent->handle.copyFrom(resourcePtr->getHandle());
+
+            fgArgumentList *argList = new fgArgumentList();
+            argList->pushArgument(FG_ARGUMENT_STRUCT, (void *)resEvent);
+            static_cast<fgEventManager *>(m_pEventMgr)->throwEvent(FG_EVENT_RESOURCE_REQUESTED, argList);
+        }
     }
 
     return resourcePtr;
 }
 
-/*
- *
+/**
+ * 
+ * @param info
+ * @param forcedType
+ * @return 
  */
 fgResource* fgResourceManager::request(const char *info, const fgResourceType forcedType) {
     return request(std::string(info), forcedType);
@@ -665,8 +694,10 @@ fgResource* fgResourceManager::lockResource(const FG_RHANDLE& rhUniqueID) {
     return pResource;
 }
 
-/*
- * Lock the resource
+/**
+ * 
+ * @param pResource
+ * @return 
  */
 fgBool fgResourceManager::lockResource(fgResource *pResource) {
     if(!fgDataManagerBase::isManaged(pResource)) {
@@ -720,6 +751,8 @@ void fgResourceManager::refreshMemory(void) {
     resetMemory();
     hmDataVecItor begin = getRefDataVector().begin(), end = getRefDataVector().end();
     for(hmDataVecItor itor = begin; itor != end; ++itor) {
+        if(!(*itor))
+            continue;
         addMemory((*itor)->getSize());
     }
 }

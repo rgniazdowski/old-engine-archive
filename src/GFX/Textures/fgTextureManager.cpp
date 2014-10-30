@@ -36,15 +36,16 @@ fgTextureManager::~fgTextureManager() {
     destroy();
 }
 
-/*
- *
+/**
+ * 
  */
 void fgTextureManager::clear(void) {
     m_managerType = FG_MANAGER_TEXTURE;
 }
 
-/*
- *
+/**
+ * 
+ * @return 
  */
 fgBool fgTextureManager::destroy(void) {
     m_resourceMgr = NULL;
@@ -52,8 +53,9 @@ fgBool fgTextureManager::destroy(void) {
     return FG_TRUE;
 }
 
-/*
- *
+/**
+ * 
+ * @return 
  */
 fgBool fgTextureManager::initialize(void) {
     if(!m_resourceMgr)
@@ -63,8 +65,10 @@ fgBool fgTextureManager::initialize(void) {
     return FG_TRUE;
 }
 
-//
-
+/**
+ * 
+ * @param pResourceMgr
+ */
 void fgTextureManager::setResourceManager(fgManagerBase *pResourceMgr) {
     if(!pResourceMgr)
         return;
@@ -72,8 +76,10 @@ void fgTextureManager::setResourceManager(fgManagerBase *pResourceMgr) {
         m_resourceMgr = pResourceMgr;
 }
 
-//
-
+/**
+ * 
+ * @return 
+ */
 fgManagerBase *fgTextureManager::getResourceManager(void) const {
     return m_resourceMgr;
 }
@@ -105,7 +111,7 @@ fgBool fgTextureManager::allToVRAM(fgBool reupload) {
         fgResourceType resType = resource->getResourceType();
         fgQuality quality = resource->getQuality();
         if((resType == FG_RESOURCE_TEXTURE || resType == FG_RESOURCE_FONT) &&
-           (quality == FG_QualityManager->getQuality() ||
+           (FG_TRUE/* #FIXME quality == FG_QualityManager->getQuality()*/ ||
             quality == FG_QUALITY_UNIVERSAL)) {
             fgBool force = FG_FALSE;
             fgTextureResource *textureResource = (fgTextureResource *)resource;
@@ -119,8 +125,11 @@ fgBool fgTextureManager::allToVRAM(fgBool reupload) {
     return result;
 }
 
-/*
- *
+/**
+ * 
+ * @param texture
+ * @param force
+ * @return 
  */
 fgBool fgTextureManager::uploadToVRAM(fgTextureResource *texture, fgBool force) {
     if(!((fgResourceManager *)m_resourceMgr) || !texture)
@@ -162,8 +171,11 @@ fgBool fgTextureManager::uploadToVRAM(fgTextureResource *texture, fgBool force) 
     return result;
 }
 
-/*
- *
+/**
+ * 
+ * @param nameTag
+ * @param force
+ * @return 
  */
 fgBool fgTextureManager::uploadToVRAM(const std::string& nameTag, fgBool force) {
     if(!m_resourceMgr)
@@ -172,8 +184,11 @@ fgBool fgTextureManager::uploadToVRAM(const std::string& nameTag, fgBool force) 
     return uploadToVRAM(nameTag.c_str(), force);
 }
 
-/*
- *
+/**
+ * 
+ * @param nameTag
+ * @param force
+ * @return 
  */
 fgBool fgTextureManager::uploadToVRAM(const char *nameTag, fgBool force) {
     if(!m_resourceMgr)
@@ -246,8 +261,9 @@ void fgTextureManager::allReleaseGFX(void) {
     ((fgResourceManager *)m_resourceMgr)->refreshMemory();
 }
 
-/*
- *
+/**
+ * 
+ * @param texture
  */
 void fgTextureManager::releaseGFX(fgTextureResource *texture) {
     if(!texture)

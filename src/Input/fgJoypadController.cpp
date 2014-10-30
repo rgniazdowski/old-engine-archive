@@ -49,7 +49,7 @@ void fgJoypadController::open(const int device) {
     if(isGameController) {
         m_gamepad = SDL_GameControllerOpen(device);
         if(!m_gamepad) {
-            FG_LOG::PrintError("SDL: Error occured for game controller: '%s'", SDL_GetError());
+            FG_LOG::PrintError("SDL: Error occurred for game controller: '%s'", SDL_GetError());
             SDL_ClearError();
         }
         j = SDL_GameControllerGetJoystick(m_gamepad);
@@ -206,10 +206,6 @@ int fgJoypadController::processEvent(const SDL_Event& event) {
                 fgControllerAxisEvent *fgevent = fgMalloc<fgControllerAxisEvent>();
                 fgArgumentList *list = new fgArgumentList(1);
                 fgevent->axis = caxis.axis;
-                fgevent->pad1 = caxis.padding1;
-                fgevent->pad2 = caxis.padding2;
-                fgevent->pad3 = caxis.padding3;
-                fgevent->pad4 = caxis.padding4;
                 fgevent->value = caxis.value;
                 fgevent->which = caxis.which;
                 fgevent->timeStamp = caxis.timestamp;
@@ -233,8 +229,6 @@ int fgJoypadController::processEvent(const SDL_Event& event) {
                 fgControllerButtonEvent *fgevent = fgMalloc<fgControllerButtonEvent>();
                 fgArgumentList *list = new fgArgumentList(1);
                 fgevent->state = cbutton.state;
-                fgevent->pad1 = cbutton.padding1;
-                fgevent->pad2 = cbutton.padding2;
                 fgevent->button = cbutton.button;
                 fgevent->which = cbutton.which;
                 fgevent->timeStamp = cbutton.timestamp;

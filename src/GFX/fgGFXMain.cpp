@@ -393,7 +393,7 @@ void fgGfxMain::render(void) {
     MVP->setOrtho(0, (float)m_mainWindow->getWidth(), (float)m_mainWindow->getHeight(), 0.0f);
     MVP->calculate(Model);
     program2->setUniform(MVP);
-    //fgGfxPlatform::context()->blendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
     fgGfxPlatform::context()->blendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
     m_2DScene->render();
     

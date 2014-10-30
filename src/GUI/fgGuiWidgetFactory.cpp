@@ -14,14 +14,12 @@
  * Default empty constructor for Resource Factory object
  */
 fgGuiWidgetFactory::fgGuiWidgetFactory() {
-    FG_LOG::PrintError("fgGuiWidgetFactory::fgGuiWidgetFactory()");
 }
 
 /*
  * Default destructor for Resource Factory object
  */
 fgGuiWidgetFactory::~fgGuiWidgetFactory() {
-    FG_LOG::PrintError("fgGuiWidgetFactory::~fgGuiWidgetFactory()");
     clear();
 }
 
@@ -29,7 +27,6 @@ fgGuiWidgetFactory::~fgGuiWidgetFactory() {
  * Clear all registered resource creators
  */
 void fgGuiWidgetFactory::clear(void) {
-    FG_LOG::PrintError("fgGuiWidgetFactory::clear()");
     m_factoryMap.clear();
 }
 

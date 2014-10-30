@@ -19,49 +19,77 @@
 #include <ctime>
 #include <cstring>
 #include "fgLog.h"
-#include "fgCommon.h"
 #include "fgHardwareState.h"
-
-template <>
-bool fgSingleton<fgQualityManager>::instanceFlag = false;
-
-template <>
-fgQualityManager *fgSingleton<fgQualityManager>::instance = NULL;
 
 /*
  * Default constructor for Quality Manager object
  */
-fgQualityManager::fgQualityManager() : m_hardwareQuality(FG_QUALITY_DEFAULT),
-m_forcedQuality(FG_QUALITY_DEFAULT), m_selectedQuality(FG_QUALITY_DEFAULT) { }
+fgQualityManager::fgQualityManager(const int dispArea) :
+m_hardwareQuality(FG_QUALITY_DEFAULT),
+m_forcedQuality(FG_QUALITY_DEFAULT),
+m_selectedQuality(FG_QUALITY_DEFAULT),
+m_currentDispArea(dispArea) {
+
+    if(dispArea < 0)
+        m_currentDispArea = 1024 * 768;
+    m_managerType = FG_MANAGER_QUALITY;
+    initialize();
+}
 
 /*
  * Default destructor for Quality Manager object
  */
 fgQualityManager::~fgQualityManager() {
+    destroy();
+}
+
+/**
+ * 
+ */
+void fgQualityManager::clear(void) {
     m_displayAreaQuality.clear();
+    m_managerType = FG_MANAGER_QUALITY;
+}
+
+/**
+ * 
+ * @return 
+ */
+fgBool fgQualityManager::destroy(void) {
+    fgQualityManager::clear();
+    m_init = FG_FALSE;
+}
+
+/**
+ * 
+ * @return 
+ */
+fgBool fgQualityManager::initialize(void) {
+    determineQuality();
+    m_init = FG_TRUE;
+    return FG_TRUE;
 }
 
 /*
  * Determine quality via screen resolution (this is bound to change in the future)
  */
 void fgQualityManager::determineQuality(void) {
-    int DispArea = FG_HardwareState->getDisplayArea();
     /*
     #low
-    240�320		{[S3E]DispAreaQ==76800}
-    320x480		{[S3E]DispAreaQ==153600}
-    400x800		{[S3E]DispAreaQ==320000}
-    480x800		{[S3E]DispAreaQ==384000}
+    240�320     {[S3E]DispAreaQ==76800}
+    320x480     {[S3E]DispAreaQ==153600}
+    400x800     {[S3E]DispAreaQ==320000}
+    480x800     {[S3E]DispAreaQ==384000}
     #medium
-    540x960		{[S3E]DispAreaQ==518400}
-    640x960		{[S3E]DispAreaQ==614400}
-    600x1024	{[S3E]DispAreaQ==614400}
-    768x1024	{[S3E]DispAreaQ==786432}
-    768x1280	{[S3E]DispAreaQ==983040}
-    800x1280	{[S3E]DispAreaQ==1024000}
+    540x960     {[S3E]DispAreaQ==518400}
+    640x960     {[S3E]DispAreaQ==614400}
+    600x1024    {[S3E]DispAreaQ==614400}
+    768x1024    {[S3E]DispAreaQ==786432}
+    768x1280    {[S3E]DispAreaQ==983040}
+    800x1280    {[S3E]DispAreaQ==1024000}
     #high
-    1200x1920	{[S3E]DispAreaQ==2304000}
-    1536x2048	{[S3E]DispAreaQ==3145728}
+    1200x1920   {[S3E]DispAreaQ==2304000}
+    1536x2048   {[S3E]DispAreaQ==3145728}
      */
     // 320x240
     m_displayAreaQuality[76800] = FG_QUALITY_LOW;
@@ -72,6 +100,10 @@ void fgQualityManager::determineQuality(void) {
     // 800x480
     m_displayAreaQuality[384000] = FG_QUALITY_LOW;
 
+    // X
+    m_displayAreaQuality[400000] = FG_QUALITY_MEDIUM;
+    // 800x600
+    m_displayAreaQuality[480000] = FG_QUALITY_MEDIUM;
     // 960x540
     m_displayAreaQuality[518400] = FG_QUALITY_MEDIUM;
     // 1024x600 / 960x640
@@ -83,6 +115,8 @@ void fgQualityManager::determineQuality(void) {
     // 1280x800
     m_displayAreaQuality[1024000] = FG_QUALITY_MEDIUM;
 
+    // 1920x1080
+    m_displayAreaQuality[2073600] = FG_QUALITY_HIGH;
     // 1920x1200
     m_displayAreaQuality[2304000] = FG_QUALITY_HIGH;
     // 2048x1536
@@ -90,18 +124,17 @@ void fgQualityManager::determineQuality(void) {
 
     // PRETEND insertion of the SEARCHED key
     std::pair<int, fgQuality> query_pair;
-    query_pair.first = DispArea;
+    query_pair.first = m_currentDispArea;
     query_pair.second = FG_QUALITY_MEDIUM;
-    typedef std::map<int, fgQuality> MyMap;
-    std::pair < MyMap::iterator, bool> result = m_displayAreaQuality.insert(query_pair);
+    std::pair < areaQMapItor, bool> result = m_displayAreaQuality.insert(query_pair);
 
-    MyMap::iterator it = result.first;
+    areaQMapItor it = result.first;
     if(false == result.second) {
         // EXISTED
         m_selectedQuality = it->second;
     } else {
         // NEW INSERTION
-        MyMap::iterator it_offset = it;
+        areaQMapItor it_offset = it;
         it_offset++;
         if(it_offset != m_displayAreaQuality.end()) {
             // NEXT IS FINE

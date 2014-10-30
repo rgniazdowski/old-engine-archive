@@ -164,7 +164,7 @@ fgBool fgTextureResource::create(void) {
 }
 
 /*
- * Destroy all loaded data including additional metadata (called with deconstructor)
+ * Destroy all loaded data including additional metadata (called with destructor)
  */
 void fgTextureResource::destroy(void) {
     FG_LOG::PrintDebug("fgTextureResource::destroy();");

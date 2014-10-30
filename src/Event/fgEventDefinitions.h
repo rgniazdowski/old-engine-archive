@@ -10,6 +10,10 @@
 #ifndef _FG_EVENT_DEFINITIONS_H_
     #define _FG_EVENT_DEFINITIONS_H_
 
+    #ifndef _FG_RESOURCE_H_
+        #include "Resource/fgResource.h"
+    #endif
+
 //
 // This file will contain all basic events occuring in the game engine
 // also defines standard event structures holding info about the event
@@ -24,12 +28,12 @@ enum fgEventType {
     FG_EVENT_TOUCH_RELEASED = 2,
     FG_EVENT_TOUCH_MOTION = 3,
     FG_EVENT_TOUCH_TAP_FINISHED = 4,
-    FG_EVENT_TOUCH = 5,
+    //FG_EVENT_TOUCH = 5,
 
     FG_EVENT_MOUSE_PRESSED = 6,
     FG_EVENT_MOUSE_RELEASED = 7,
     FG_EVENT_MOUSE_MOTION = 8,
-    FG_EVENT_MOUSE = 9,
+    //FG_EVENT_MOUSE = 9,
 
     FG_EVENT_SWIPE_X = 10,
     FG_EVENT_SWIPE_Y = 11,
@@ -43,7 +47,7 @@ enum fgEventType {
     FG_EVENT_KEY_DOWN = 16,
     FG_EVENT_KEY_UP = 17,
 
-    FG_EVENT_RESOURCE_LOADED = 18,
+    FG_EVENT_RESOURCE_CREATED = 18,
     FG_EVENT_RESOURCE_RELEASED = 19,
     FG_EVENT_RESOURCE_REQUESTED = 20,
 
@@ -87,7 +91,7 @@ enum fgPinchDirection {
 // FIXME this should be declared in the ResourceManager header file - well I think so...
 
 enum fgResourceStatus {
-    FG_RESOURCE_LOADED,
+    FG_RESOURCE_CREATED,
     FG_RESOURCE_RELEASED,
     FG_RESOURCE_REQUESTED
 };
@@ -114,8 +118,6 @@ struct fgControllerButtonEvent : fgEventBase {
     int which; // The joystick instance id
     unsigned short button;
     unsigned short state;
-    unsigned short pad1;
-    unsigned short pad2;
 };
 
 /*
@@ -124,11 +126,7 @@ struct fgControllerButtonEvent : fgEventBase {
 struct fgControllerAxisEvent : fgEventBase {
     int which; // The joystick instance id
     unsigned short axis; // Controller axis
-    unsigned short pad1;
-    unsigned short pad2;
-    unsigned short pad3;
     short int value;
-    unsigned short pad4;
 };
 
 /*
@@ -202,9 +200,9 @@ struct fgKeyEvent : fgEventBase {
 };
 
 struct fgResourceEvent : fgEventBase {
-    fgResourceStatus resourceStatus;
-    //fgResource *resourceHolder;
-    //FG_RHANDLE resourceHandle;
+    fgResourceStatus status; // ?
+    fgResource *resource;
+    fgResourceHandle handle;
 };
 
 struct fgVertexStreamEvent : fgEventBase {
@@ -240,7 +238,6 @@ struct fgSensorsEvent : fgEventBase {
     // int type; or fgSensorType type;
 
     union {
-
         struct {
             float x, y, z;
         };
@@ -256,22 +253,22 @@ struct fgEvent {
     union {
         fgEventType eventType;
 
-        fgTouchEvent touchEvent;
-        fgMouseEvent mouseEvent;
-        fgSwipeEvent swipeEvent;
-        fgSwipePinchEvent swipePinchEvent;
-        fgSwipeRotateEvent swipeRotateEvent;
-        fgKeyEvent keyEvent;
-        fgResourceEvent resourceEvent;
-        fgVertexStreamEvent vertexStreamEvent;
-        fgCameraEvent cameraEvent;
-        fgSoundEvent soundEvent;
-        fgMenuChangedEvent menuChangedEvent;
-        fgWidgetEvent widgetEvent;
-        fgSensorsEvent sensorsEvent;
-        fgControllerDeviceEvent controllerEvent;
-        fgControllerButtonEvent controllerButtonEvent;
-        fgControllerAxisEvent controllerAxisEvent;
+        fgTouchEvent touch;
+        fgMouseEvent mouse;
+        fgSwipeEvent swipe;
+        fgSwipePinchEvent swipePinch;
+        fgSwipeRotateEvent swipeRotate;
+        fgKeyEvent key;
+        fgResourceEvent resource;
+        fgVertexStreamEvent vertexStream;
+        fgCameraEvent camera;
+        fgSoundEvent sound;
+        fgMenuChangedEvent menuChanged;
+        fgWidgetEvent widget;
+        fgSensorsEvent sensors;
+        fgControllerDeviceEvent controller;
+        fgControllerButtonEvent controllerButton;
+        fgControllerAxisEvent controllerAxis;
     };
 };
 

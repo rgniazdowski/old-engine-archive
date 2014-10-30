@@ -132,7 +132,6 @@ void fgPointerInputReceiver::initialize(void) {
     //
     // STORE COMPUTED VALUES
     //
-    //if()
 
     MAX_OFFSET_FOR_TAP = tap_size;
     MIN_OFFSET_FOR_SWIPE_X = x_threshold;
@@ -224,7 +223,7 @@ void fgPointerInputReceiver::handlePointerPressed(fgVector2i point, unsigned int
     // Throwing the proper event
     //
     if(m_eventMgr) { // #FIXME
-        fgTouchEvent *touchEvent = new fgTouchEvent();
+        fgTouchEvent *touchEvent = fgMalloc<fgTouchEvent>();
         touchEvent->eventType = FG_EVENT_TOUCH_PRESSED;
         touchEvent->timeStamp = FG_GetTicks();
         touchEvent->pressed = FG_TRUE;
@@ -237,10 +236,10 @@ void fgPointerInputReceiver::handlePointerPressed(fgVector2i point, unsigned int
         m_eventMgr->throwEvent(FG_EVENT_TOUCH_PRESSED, argList);
 
         // Throw also more general event
-        touchEvent = new fgTouchEvent(*touchEvent);
-        argList = new fgArgumentList();
-        argList->pushArgument(FG_ARGUMENT_STRUCT, (void *)touchEvent);
-        m_eventMgr->throwEvent(FG_EVENT_TOUCH, argList);
+        //touchEvent = new fgTouchEvent(*touchEvent);
+        //argList = new fgArgumentList();
+        //argList->pushArgument(FG_ARGUMENT_STRUCT, (void *)touchEvent);
+        //m_eventMgr->throwEvent(FG_EVENT_TOUCH, argList);
     }
 }
 
@@ -265,7 +264,7 @@ void fgPointerInputReceiver::handlePointerMoved(fgVector2i point, unsigned int t
     // Throwing the proper event
     //
     if(m_eventMgr) {
-        fgTouchEvent *touchEvent = new fgTouchEvent();
+        fgTouchEvent *touchEvent = fgMalloc<fgTouchEvent>();
         touchEvent->eventType = FG_EVENT_TOUCH_MOTION;
         touchEvent->timeStamp = FG_GetTicks();
         touchEvent->pressed = m_rawTouches[touchID].m_pressed;
@@ -278,10 +277,10 @@ void fgPointerInputReceiver::handlePointerMoved(fgVector2i point, unsigned int t
         m_eventMgr->throwEvent(FG_EVENT_TOUCH_MOTION, argList);
 
         // Throw also more general event
-        touchEvent = new fgTouchEvent(*touchEvent);
-        argList = new fgArgumentList();
-        argList->pushArgument(FG_ARGUMENT_STRUCT, (void *)touchEvent);
-        m_eventMgr->throwEvent(FG_EVENT_TOUCH, argList);
+        //touchEvent = new fgTouchEvent(*touchEvent);
+        //argList = new fgArgumentList();
+        //argList->pushArgument(FG_ARGUMENT_STRUCT, (void *)touchEvent);
+        //m_eventMgr->throwEvent(FG_EVENT_TOUCH, argList);
     }
 }
 
@@ -333,10 +332,10 @@ void fgPointerInputReceiver::handlePointerReleased(fgVector2i point, unsigned in
         m_eventMgr->throwEvent(FG_EVENT_TOUCH_RELEASED, argList);
 
         // Throw also more general event
-        touchEvent = new fgTouchEvent(*touchEvent);
-        argList = new fgArgumentList();
-        argList->pushArgument(FG_ARGUMENT_STRUCT, (void *)touchEvent);
-        m_eventMgr->throwEvent(FG_EVENT_TOUCH, argList);
+        //touchEvent = new fgTouchEvent(*touchEvent);
+        //argList = new fgArgumentList();
+        //argList->pushArgument(FG_ARGUMENT_STRUCT, (void *)touchEvent);
+        //m_eventMgr->throwEvent(FG_EVENT_TOUCH, argList);
     }
 }
 
@@ -432,10 +431,10 @@ void fgPointerInputReceiver::processData(void) {
                         argList->pushArgument(FG_ARGUMENT_STRUCT, (void *)touchEvent);
                         m_eventMgr->throwEvent(FG_EVENT_TOUCH_TAP_FINISHED, argList);
 
-                        touchEvent = new fgTouchEvent(*touchEvent);
-                        argList = new fgArgumentList();
-                        argList->pushArgument(FG_ARGUMENT_STRUCT, (void *)touchEvent);
-                        m_eventMgr->throwEvent(FG_EVENT_TOUCH, argList);
+                        //touchEvent = new fgTouchEvent(*touchEvent);
+                        //argList = new fgArgumentList();
+                        //argList->pushArgument(FG_ARGUMENT_STRUCT, (void *)touchEvent);
+                        //m_eventMgr->throwEvent(FG_EVENT_TOUCH, argList);
                     }
 
                 } else {

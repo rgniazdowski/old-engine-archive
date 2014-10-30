@@ -28,9 +28,9 @@ typedef FG_RAW_HANDLE_TYPE fgRawMagic;
 
     #ifndef FG_INVALID_HANDLE
 // All bits filled defines an invalid resource handle
-        #define FG_INVALID_HANDLE			0xFFFFFFFFUL
-        #define FG_IS_INVALID_HANDLE(_rh)	( _rh.isNull() )
-        #define FG_IS_VALID_HANDLE(_rh)	( !_rh.isNull() )
+        #define FG_INVALID_HANDLE               0xFFFFFFFFUL
+        #define FG_IS_INVALID_HANDLE(_rh)       ( _rh.isNull() )
+        #define FG_IS_VALID_HANDLE(_rh)         ( !_rh.isNull() )
     #endif
 
 /*
@@ -71,6 +71,10 @@ public:
     void reset(void) {
         m_handle = FG_INVALID_HANDLE;
     }
+    /**
+     * 
+     * @param source
+     */
     void copyFrom(const fgHandle<TagType>& source) {
         this->m_handle = source.getHandle();
         this->m_magic = source.getMagic();

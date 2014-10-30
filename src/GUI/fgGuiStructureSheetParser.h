@@ -27,17 +27,17 @@ class fgGuiStructureSheetParser : public fgXMLDefaultHandler {
     friend class fgGuiMain;
 
 private:
-    //
+    ///
     std::stack<fgXMLElement *> m_elemStack;
-    //
+    ///
     std::stack<fgGuiWidget *> m_widgetStack;
-    //
+    ///
     fgGuiWidgetFactory *m_widgetFactory;
-    //
+    ///
     fgGuiWidgetManager *m_widgetMgr;
-    //
+    ///
     fgBool m_isFailure;
-    //
+    ///
     int m_count;
 protected:
     // Base constructor of the resource group content handler object

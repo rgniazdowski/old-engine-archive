@@ -54,13 +54,22 @@ protected:
     typedef rmHandleVec::iterator rmHandleVecItor;
 
 public:
-    // Constructor with default resource factory to be used within the resource manager
-    fgResourceManager(fgResourceFactory *resourceFactory = NULL);
-    // Default destructor for resource manager
+    /**
+     * Constructor with default resource factory to be used within the resource manager
+     * @param pResourceFactory  Pointer to the external resource factory object. This is mandatory.
+     * @param pQualityMgr       Pointer to the external quality manager object. This is mandatory.
+     * @param pEventMgr         Pointer to the external event manager object. This is optional. Default: NULL
+     */
+    fgResourceManager(fgResourceFactory *pResourceFactory, fgManagerBase *pQualityMgr, fgManagerBase *pEventMgr = NULL);
+    /**
+     * Default destructor for resource manager
+     */
     virtual ~fgResourceManager();
 
 protected:
-    // Reset local parameters
+    /**
+     * Reset local parameters
+     */
     virtual void clear(void);
 
 public:
@@ -69,11 +78,32 @@ public:
     fgBool destroy(void);
     // This will pre-load any required data
     fgBool initialize(void);
+    /**
+     * 
+     * @param pEventMgr
+     */
+    void setEventManager(fgManagerBase *pEventMgr) {
+        m_pEventMgr = pEventMgr;
+    }
+    /**
+     * 
+     * @return 
+     */
+    fgManagerBase *getEventManager(void) const {
+        return m_pEventMgr;
+    }
+    /**
+     * 
+     * @return 
+     */
+    fgManagerBase *getQualityManager(void) const {
+        return m_pQualityMgr;
+    }
 
-    // Set the default resource factory - this is mandatory 
-    // without factory set the resource manager will fail to initialize
-    void setResourceFactory(fgResourceFactory *resourceFactory);
-    //
+    /**
+     * 
+     * @return 
+     */
     fgResourceFactory *getResourceFactory(void) const;
 
     // --------------------------------------------------------------------------
@@ -139,6 +169,10 @@ public:
 protected:
     // Insert resource group into manager
     fgBool insertResourceGroup(const FG_RHANDLE& rhUniqueID, fgResource* pResource);
+
+    //
+    void refreshResource(fgResource *pResource);
+
 public:
 
     // ! Important !
@@ -195,17 +229,17 @@ public:
     // Using GetResource tells the manager that you are about to access the
     // object.  If the resource has been disposed, it will be recreated
     // before it has been returned.
-    fgResource* get(const FG_RHANDLE& rhUniqueID, const fgQuality quality = FG_QUALITY_UNIVERSAL);
+    virtual fgResource* get(const FG_RHANDLE& rhUniqueID);
 
     // Using GetResource tells the manager that you are about to access the
     // object.  If the resource has been disposed, it will be recreated
     // before it has been returned.
-    fgResource* get(const std::string& nameTag, const fgQuality quality = FG_QUALITY_UNIVERSAL);
+    virtual fgResource* get(const std::string& nameTag);
 
     // Using GetResource tells the manager that you are about to access the
     // object.  If the resource has been disposed, it will be recreated
     // before it has been returned.
-    fgResource* get(const char *nameTag, const fgQuality quality = FG_QUALITY_UNIVERSAL);
+    virtual fgResource* get(const char *nameTag);
 
     // Locking the resource ensures that the resource does not get managed by
     // the Resource Manager.  You can use this to ensure that a surface does not
@@ -243,7 +277,7 @@ protected:
     inline void addMemory(size_t nMem) {
         m_nCurrentUsedMemory += nMem;
     }
-    // Substract given value from used memory counter
+    // Subtract given value from used memory counter
     inline void removeMemory(size_t nMem) {
         m_nCurrentUsedMemory -= nMem;
     }
@@ -254,7 +288,11 @@ private:
     /// Array holding handles to resource groups
     rmHandleVec m_resourceGroupHandles;
     ///
-    fgResourceFactory *m_resourceFactory;
+    fgResourceFactory *m_pResourceFactory;
+    ///
+    fgManagerBase *m_pQualityMgr;
+    ///
+    fgManagerBase *m_pEventMgr;
     ///
     fgDirent *m_dataDir;
     /// Size of the current used memory by the managed resources

@@ -24,9 +24,11 @@
     #include "GFX/fgGFXMain.h"
     #include "GUI/fgGuiMain.h"
 
+    #include "Hardware/fgQualityManager.h"
+
 class fgGameMain;
-    #define FG_TAG_GAME_MAIN_NAME		"GameMain"
-    #define FG_TAG_GAME_MAIN			FG_TAG_TYPE(fgGameMain)
+    #define FG_TAG_GAME_MAIN_NAME       "GameMain"
+    #define FG_TAG_GAME_MAIN            FG_TAG_TYPE(fgGameMain)
 FG_TAG_TEMPLATE_ID_AUTO(fgGameMain, FG_TAG_GAME_MAIN_NAME);
 typedef FG_TAG_GAME_MAIN fgGameMainTag;
 
@@ -36,18 +38,22 @@ typedef FG_TAG_GAME_MAIN fgGameMainTag;
 class fgGameMain : public fgStatusReporter<fgGameMainTag> {
 public:
     // Default constructor for the Game Main object
-    fgGameMain(fgEventManager* eventMgr = NULL);
+    fgGameMain(fgEventManager* pEventMgr);
     // Default destructor for the Game Main object
     virtual ~fgGameMain();
 
 protected:
-    //
+    /**
+     *
+     */
     void registerGameCallbacks(void);
-    //
+    /**
+     * 
+     */
     void unregisterGameCallbacks(void);
-    
+
 public:
-    
+
     // This needs to be called first before everything else.
     // Function creates and initializes subsystems
     fgBool initSubsystems(void);
@@ -79,56 +85,88 @@ public:
 
     // Update - all event handling, calling scripts, AI, game logic and etc
     void update(void);
-
-    //
+    /**
+     * 
+     * @return 
+     */
     inline fgGfxMain *getGfxMain(void) const {
         return m_gfxMain;
     }
-    
-    //
+    /**
+     * 
+     * @return 
+     */
     inline fgGuiMain *getGuiMain(void) const {
         return m_guiMain;
     }
-
-    //
+    /**
+     * 
+     * @return 
+     */
     inline fgSettings *getSettings(void) const {
         return m_settings;
     }
-
-    //
+    /**
+     * 
+     * @return 
+     */
     inline fgConfig *getMainConfig(void) const {
         return m_mainConfig;
     }
-
-    //
+    /**
+     * 
+     * @return 
+     */
     inline fgResourceManager *getResourceManager(void) const {
         return m_resourceMgr;
     }
-
-    //
+    /**
+     * 
+     * @return 
+     */
     inline fgEventManager *getEventManager(void) const {
-        return m_eventMgr;
+        return m_pEventMgr;
     }
-
-    //
-    void setEventManager(fgEventManager *eventMgr);
-
-    //
+    /**
+     * 
+     * @return 
+     */
     inline fgPointerInputReceiver *getPointerInputReceiver(void) const {
         return m_pointerInputReceiver;
     }
-    
-    //
+    /**
+     * 
+     * @return 
+     */
     inline fgJoypadController *getJoypadController(void) const {
         return m_joypadController;
     }
-    
-    //
+
+    /**
+     * 
+     * @param argv
+     * @return 
+     */
     fgBool gameTouchHandler(fgArgumentList *argv);
-    //
+    /**
+     * 
+     * @param argv
+     * @return 
+     */
     fgBool gameMouseHandler(fgArgumentList *argv);
-    //
+    /**
+     * 
+     * @param argv
+     * @return 
+     */
     fgBool gameFreeLookHandler(fgArgumentList *argv);
+
+protected:
+    /**
+     * 
+     * @param eventMgr
+     */
+    void setEventManager(fgEventManager *pEventMgr);
 
 private:
     /// 
@@ -140,16 +178,18 @@ private:
     /// 
     fgConfig *m_mainConfig;
     ///
+    fgQualityManager *m_qualityMgr;
+    ///
     fgResourceManager *m_resourceMgr;
     ///
     fgResourceFactory *m_resourceFactory;
     ///
-    fgEventManager *m_eventMgr;
+    fgEventManager *m_pEventMgr;
     ///
     fgPointerInputReceiver *m_pointerInputReceiver;
     ///
     fgJoypadController *m_joypadController;
-    
+
     ///
     fgFunctionCallback *m_gameTouchCallback;
     ///
