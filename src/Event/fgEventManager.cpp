@@ -233,6 +233,11 @@ void fgEventManager::addKeyUp(int keyCode) {
  * also executes callbacks from cyclics and timeouts
  */
 void fgEventManager::executeEvents(void) {
+    static int yolo = 0;
+    yolo ++;
+    if(yolo < 3) {
+        printf("###########################################################\n#################### EXECUTE EVENTS #######################\n###########################################################\n");
+    }
     // Phase 1: execute keyboard callbacks
     for(int i = 0; i < (int)m_keysDownPool.size(); i++) {
         int keyCode = m_keysDownPool[i];

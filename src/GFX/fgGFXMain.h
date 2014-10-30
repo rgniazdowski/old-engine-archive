@@ -11,7 +11,6 @@
     #define _FG_GFX_MAIN_H_
 
     #include "fgBuildConfig.h"
-    #include "fgCommon.h"
     #include "fgGFXStdInc.h"
 
     #include "fgGFXWindow.h"
@@ -26,6 +25,8 @@
     #include "Util/fgTag.h"
 
     #include "Particles/fgParticleSystem.h"
+    #include "Event/fgArgumentList.h"
+    #include "Event/fgCallback.h"
     
 class fgGfxMain;
     #define FG_TAG_GFX_MAIN_NAME	"GfxMain"
@@ -33,16 +34,39 @@ class fgGfxMain;
 FG_TAG_TEMPLATE_ID_AUTO(fgGfxMain, FG_TAG_GFX_MAIN_NAME);
 typedef FG_TAG_GFX_MAIN fgGfxMainTag;
 
-/*
+/**
  *
  */
 class fgGfxMain : public fgStatusReporter<fgGfxMainTag> {
 public:
-    // Default constructor for the GFX main object
+    /**
+     * Default constructor for the GFX main object
+     */
     fgGfxMain();
-    // Default destructor for the GFX main object
+    /**
+     * Default destructor for the GFX main object
+     */
     virtual ~fgGfxMain();
 
+protected:
+    /**
+     * 
+     */
+    void registerResourceCallbacks(void);
+    /**
+     * 
+     */
+    void unregisterResourceCallbacks(void);
+    
+    /**
+     * 
+     * @param argv
+     * @return 
+     */
+    fgBool resourceCreatedHandler(fgArgumentList *argv);
+    
+public:
+    
     // Sets the pointer to the external resource manager
     fgBool setResourceManager(fgManagerBase *pResourceManager);
 
@@ -89,6 +113,8 @@ private:
     fgTextureManager *m_textureMgr;
     /// Pointer to the resource manager - defined and managed outside
     fgManagerBase *m_pResourceMgr;
+    /// Pointer to the external event manager
+    fgManagerBase *m_pEventMgr;
     /// Main GFX shader manager
     fgGfxShaderManager *m_shaderMgr;
     /// Main GFX OS specific window
@@ -101,6 +127,8 @@ private:
     fgGfx2DScene *m_2DScene;
     /// Main Particle System
     fgParticleSystem *m_particleSystem;
+    /// 
+    fgFunctionCallback *m_resourceCreatedCallback;
     /// Is GFX init properly?
     fgBool m_init;
 };

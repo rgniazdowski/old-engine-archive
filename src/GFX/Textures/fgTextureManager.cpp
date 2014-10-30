@@ -94,6 +94,9 @@ void fgTextureManager::clear(void) {
  */
 fgBool fgTextureManager::destroy(void) {
     unregisterResourceCallbacks();
+    if(m_resourceCreatedCallback)
+        delete m_resourceCreatedCallback;
+    m_resourceCreatedCallback = NULL;
     m_pResourceMgr = NULL;
     m_pEventMgr = NULL;
     m_init = FG_FALSE;
@@ -121,7 +124,7 @@ void fgTextureManager::setResourceManager(fgManagerBase *pResourceMgr) {
         return;
     if(pResourceMgr->getManagerType() == FG_MANAGER_RESOURCE) {
         m_pResourceMgr = pResourceMgr;
-        fgManagerBase *pEventMgr = static_cast<fgResourceManager *>(pResourceMgr)->getEventManager();
+        fgManagerBase *pEventMgr = static_cast<fgResourceManager *>(m_pResourceMgr)->getEventManager();
         if(!pEventMgr) {
             unregisterResourceCallbacks();
             m_pEventMgr = NULL;

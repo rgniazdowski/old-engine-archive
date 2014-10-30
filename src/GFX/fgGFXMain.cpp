@@ -15,6 +15,7 @@
 #include "Textures/fgTextureResource.h"
 #include "Hardware/fgHardwareState.h"
 #include "Resource/fgResourceManager.h"
+#include "Event/fgEventManager.h"
 #include "fgGFXErrorCodes.h"
 
 #if defined FG_USING_MARMALADE
@@ -30,12 +31,14 @@
 fgGfxMain::fgGfxMain() :
 m_textureMgr(NULL),
 m_pResourceMgr(NULL),
+m_pEventMgr(NULL),
 m_shaderMgr(NULL),
 m_mainWindow(NULL),
 m_gfxContext(NULL),
 m_3DScene(NULL),
 m_2DScene(NULL),
 m_particleSystem(NULL),
+m_resourceCreatedCallback(NULL),
 m_init(FG_FALSE) {
     m_3DScene = new fgGfx3DScene();
     m_2DScene = new fgGfx2DScene();
@@ -51,6 +54,7 @@ m_init(FG_FALSE) {
  *
  */
 fgGfxMain::~fgGfxMain() {
+    unregisterResourceCallbacks();
     if(m_particleSystem)
         delete m_particleSystem;
     if(m_3DScene)
@@ -67,15 +71,42 @@ fgGfxMain::~fgGfxMain() {
         delete m_shaderMgr;
     if(m_mainWindow)
         delete m_mainWindow;
-
+    if(m_resourceCreatedCallback)
+        delete m_resourceCreatedCallback;
+    memset(this, 0, sizeof (fgGfxMain)); // ?
+    m_resourceCreatedCallback = NULL;
     m_particleSystem = NULL;
     m_textureMgr = NULL;
     m_pResourceMgr = NULL;
+    m_pEventMgr = NULL;
     m_shaderMgr = NULL;
     m_mainWindow = NULL;
     m_gfxContext = NULL;
     m_3DScene = NULL;
     m_2DScene = NULL;
+}
+
+/*
+ *
+ */
+void fgGfxMain::registerResourceCallbacks(void) {
+    if(!m_pEventMgr)
+        return;
+
+    if(!m_resourceCreatedCallback)
+        m_resourceCreatedCallback = new fgClassCallback<fgGfxMain>(this, &fgGfxMain::resourceCreatedHandler);
+
+    static_cast<fgEventManager *>(m_pEventMgr)->addEventCallback(FG_EVENT_RESOURCE_CREATED, m_resourceCreatedCallback);
+}
+
+/*
+ *
+ */
+void fgGfxMain::unregisterResourceCallbacks(void) {
+    if(!m_pEventMgr)
+        return;
+
+    static_cast<fgEventManager *>(m_pEventMgr)->removeEventCallback(FG_EVENT_RESOURCE_CREATED, m_resourceCreatedCallback);
 }
 
 /*
@@ -150,6 +181,7 @@ void fgGfxMain::closeGFX(void) {
         if(m_mainWindow)
             m_mainWindow->close();
         fgGfxPlatform::quit();
+        unregisterResourceCallbacks();
         m_gfxContext = NULL;
     }
     m_init = FG_FALSE;
@@ -245,6 +277,7 @@ void dumpMatrix(const float *mat, const char *title) {
 #include "fgGFXPrimitives.h"
 #include "fgGFXDrawingBatch.h"
 float guiScale = 1.0f;
+
 /*
  *
  */
@@ -396,7 +429,7 @@ void fgGfxMain::render(void) {
 
     fgGfxPlatform::context()->blendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
     m_2DScene->render();
-    
+
     program2->setUniform(MVP);
     fgGfxPlatform::context()->blendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     fgGfxPlatform::context()->scissor(0, 0, m_mainWindow->getWidth(), m_mainWindow->getHeight());
@@ -411,7 +444,6 @@ fgBool fgGfxMain::setResourceManager(fgManagerBase *pResourceManager) {
     if(pResourceManager->getManagerType() != FG_MANAGER_RESOURCE) {
         return FG_FALSE;
     }
-
     if(!m_textureMgr)
         m_textureMgr = new fgTextureManager(pResourceManager);
     else
@@ -419,11 +451,23 @@ fgBool fgGfxMain::setResourceManager(fgManagerBase *pResourceManager) {
     m_pResourceMgr = pResourceManager;
     if(m_3DScene)
         m_3DScene->setResourceManager(m_pResourceMgr);
+    if(m_2DScene)
+        m_2DScene->setResourceManager(m_pResourceMgr);
     if(m_particleSystem) {
         m_particleSystem->setResourceManager(m_pResourceMgr);
         m_particleSystem->setSceneManager(m_2DScene);
         m_particleSystem->initialize();
     }
+    fgManagerBase *pEventMgr = static_cast<fgResourceManager *>(m_pResourceMgr)->getEventManager();
+    if(!pEventMgr) {
+        unregisterResourceCallbacks();
+        m_pEventMgr = NULL;
+    } else if(m_pEventMgr && m_pEventMgr != pEventMgr) {
+        unregisterResourceCallbacks();
+    }
+    m_pEventMgr = pEventMgr;
+    if(m_pEventMgr)
+        registerResourceCallbacks();
     return m_textureMgr->initialize(); // #FIXME - texture mgr init ?
 }
 
@@ -500,5 +544,46 @@ fgBool fgGfxMain::releaseTextures(void) {
         m_textureMgr = NULL;
     }
     m_pResourceMgr = NULL;
+    return FG_TRUE;
+}
+
+/**
+ * 
+ * @param argv
+ * @return 
+ */
+fgBool fgGfxMain::resourceCreatedHandler(fgArgumentList * argv) {
+    if(!argv)
+        return FG_FALSE;
+    fgEventBase *event = (fgEventBase *)argv->getArgumentValueByID(0);
+    if(!event)
+        return FG_FALSE;
+    fgEventType type = event->eventType;
+    if(type != FG_EVENT_RESOURCE_CREATED)
+        return FG_FALSE;
+    fgResourceEvent *resourceEvent = (fgResourceEvent *)event;
+    fgResource *pResource = resourceEvent->resource;
+    if(!pResource)
+        return FG_FALSE;
+
+    if(pResource->getResourceType() != FG_RESOURCE_3D_MODEL)
+        return FG_FALSE;
+    fgGfxModelResource *pModel = (fgGfxModelResource *)pResource;
+    fgGfxModelResource::modelShapes &shapes = pModel->getRefShapes();
+    int n = shapes.size();
+    if(n) {
+        FG_LOG::PrintDebug("GFX: Uploading static vertex data to VBO for model: '%s'", pModel->getNameStr());
+    }
+    for(int i = 0; i < n; i++) {
+        fgGfxShape *shape = shapes[i];
+        if(!shape)
+            continue;
+        if(!shape->mesh)
+            continue;
+        if(!fgGfxPlatform::context()->isBuffer(shape->mesh->getPtrVBO())) {
+            FG_LOG::PrintDebug("GFX: Uploading static vertex data to VBO for shape: '%s'", shape->name.c_str());
+            shape->mesh->genBuffers();
+        }
+    }
     return FG_TRUE;
 }

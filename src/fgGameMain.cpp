@@ -348,12 +348,6 @@ fgBool fgGameMain::loadResources(void) {
         FG_LOG::PrintDebug("Will now try load object CobraBomber.obj");
         std::string modelname("CobraBomber");
         fgGfxModelResource *model = (fgGfxModelResource *)m_resourceMgr->get(modelname);
-        model->create();
-        if(model) {
-            if(model->getRefShapes().size()) {
-                model->getRefShapes()[0]->mesh->genBuffers();
-            }
-        }
         float t2 = fgTime::ms();
         FG_LOG::PrintDebug("WHOLE OBJECT CREATION TOOK: %.2f seconds", (t2 - t1) / 1000.0f);
     }

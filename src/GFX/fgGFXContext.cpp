@@ -1212,8 +1212,10 @@ fgGFXboolean fgGfxContext::isDisabled(const fgGFXenum pname) {
     return (fgGFXboolean)(FG_GFX_FALSE == m_params[(fgGFXuint)pname].boolVal);
 }
 
-/*
- *
+/**
+ * 
+ * @param buffer
+ * @return 
  */
 fgGFXboolean fgGfxContext::isBuffer(const fgGFXuint buffer) {
     if(buffer == 0)
@@ -1225,12 +1227,26 @@ fgGFXboolean fgGfxContext::isBuffer(const fgGFXuint buffer) {
     return FG_GFX_TRUE;
 }
 
-/*
- *
+/**
+ * 
+ * @param bufferID
+ * @return 
  */
 fgGFXboolean fgGfxContext::isBuffer(const fgGfxBufferID& bufferID) {
     return isBuffer(bufferID.id);
 }
+
+/**
+ * 
+ * @param bufferID
+ * @return 
+ */
+fgGFXboolean fgGfxContext::isBuffer(const fgGfxBufferID* bufferID) {
+    if(!bufferID)
+        return FG_GFX_FALSE;
+    return isBuffer(bufferID->id);
+}
+
 //
 //#define foreach(_container_type, _variable_scan) \
 //	_container_type::iterator itor = _variable_scan.begin(), \

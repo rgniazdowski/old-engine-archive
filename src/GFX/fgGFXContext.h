@@ -471,6 +471,8 @@ public:
     fgGFXboolean isBuffer(const fgGFXuint buffer);
     // Is given buffer ID struct valid?
     fgGFXboolean isBuffer(const fgGfxBufferID& bufferID);
+    // Is given pointer to buffer ID struct valid?
+    fgGFXboolean isBuffer(const fgGfxBufferID* bufferID);
 
     // Delete/release all buffers registered within this context
     void deleteAllBuffers(void);
