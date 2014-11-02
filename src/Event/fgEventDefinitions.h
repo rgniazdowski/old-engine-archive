@@ -202,7 +202,6 @@ struct fgKeyEvent : fgEventBase {
 struct fgResourceEvent : fgEventBase {
     fgResourceStatus status; // ?
     fgResource *resource;
-    fgResourceHandle handle;
 };
 
 struct fgVertexStreamEvent : fgEventBase {

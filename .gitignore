@@ -1,4 +1,5 @@
 build_infinium_vc11
+build_infinium_vc12
 data-ram
 data/all.log
 data/error.log
@@ -29,3 +30,6 @@ modules/glm/test
 modules/glm/util
 modules/glm/CMakeLists.txt
 modules/glm/CTestConfig.cmake
+modules/ng_luaplus/build_ng_luaplus_vc11
+modules/ng_luaplus/build_ng_luaplus_vc12
+modules/ng_luaplus/lib

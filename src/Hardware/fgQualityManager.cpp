@@ -58,6 +58,7 @@ void fgQualityManager::clear(void) {
 fgBool fgQualityManager::destroy(void) {
     fgQualityManager::clear();
     m_init = FG_FALSE;
+    return FG_TRUE;
 }
 
 /**

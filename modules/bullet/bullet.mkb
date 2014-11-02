@@ -1,3 +1,5 @@
+#!/usr/bin/env mkb
+
 upstream
 {
 	url="https://github.com/bulletphysics/bullet3/archive/master.zip"
@@ -13,6 +15,9 @@ options
 	arm-cpu=6
 	arm-fpu=vfp
 	optimise-speed
+	warn-level=2
+	buildenv=VC11
+    cflags="-std=c++11"
 }
 
 defines

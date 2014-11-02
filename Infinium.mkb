@@ -283,6 +283,7 @@ subprojects
 	tinyobj
 	tinyxml
 	stbfont
+	ng_luaplus
 }
 
 includepaths

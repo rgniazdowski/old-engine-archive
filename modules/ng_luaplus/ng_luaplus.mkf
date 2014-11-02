@@ -1,12 +1,6 @@
-option lib
-subproject ng_luaplus
-
-options
+library
 {
-	strict=0
-	arm-cpu=6
-	arm-fpu=vfp
-	optimise-speed
+	".,ng_luaplus"
 }
 
 defines
@@ -18,20 +12,22 @@ defines
 includepaths
 {
 	"../luaplus51-all/Src"
+	"../luaplus51-all/Src/LuaPlus/lua52-luaplus/src"
 }
 
 files
 {
 	[docs]
 	("docs")
-	luaplus51-all.defines.txt
+	ng_luaplus.defines.txt
 
 	[LuaPlus]
 	(../luaplus51-all/Src/LuaPlus)
-	"*.cpp"
-	"*.c"
+	"*.h"
+	"*.inl"
 	
 	[Lua523-LuaPlus]
 	(../luaplus51-all/Src/LuaPlus/lua52-luaplus/src)
-	"*.c"
+	"*.h"
+	"lua.hpp"
 }

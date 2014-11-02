@@ -426,7 +426,6 @@ void fgResourceManager::refreshResource(fgResource* pResource) {
             resEvent->timeStamp = FG_GetTicks();
             resEvent->status = FG_RESOURCE_CREATED;
             resEvent->resource = pResource;
-            resEvent->handle.copyFrom(pResource->getHandle());
 
             fgArgumentList *argList = new fgArgumentList();
             argList->pushArgument(FG_ARGUMENT_STRUCT, (void *)resEvent);
@@ -660,7 +659,6 @@ fgResource* fgResourceManager::request(const std::string& info, const fgResource
             resEvent->timeStamp = FG_GetTicks();
             resEvent->status = FG_RESOURCE_REQUESTED;
             resEvent->resource = resourcePtr;
-            resEvent->handle.copyFrom(resourcePtr->getHandle());
 
             fgArgumentList *argList = new fgArgumentList();
             argList->pushArgument(FG_ARGUMENT_STRUCT, (void *)resEvent);
