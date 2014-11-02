@@ -10,6 +10,10 @@ project/linux/FlexiGame_NB/build
 project/linux/FlexiGame_NB/dist
 project/linux/FlexiGame_NB/nbproject/private
 project/linux/FlexiGame_NB/nbproject/private/private.xml
+project/linux/LuaPlusNextGen_NB/build
+project/linux/LuaPlusNextGen_NB/dist
+project/linux/LuaPlusNextGen_NB/nbproject/private
+project/linux/LuaPlusNextGen_NB/nbproject/private/private.xml
 log
 modules/bullet/modified/
 modules/lua_514/src

@@ -43,13 +43,13 @@
 				  - druga w zaleznosci od uzycia, zwykle fgEventBase *
 
 
-[ ] - Event - podpiecie w jakis standardowy sposob resource managera do
+[X] - Event - podpiecie w jakis standardowy sposob resource managera do
 			eventmanagera - resource manager bedzie wyrzucac odpowiedni event
 			za kazdym razem jak jest stworzony resource (add/create/release/dispose/delete)
 			- Moze to stanowczo spowolnic prace, trzeba innego rodzaju
 			  standardowy parametr dla callbacka, oraz sprawnie go wykrywac
 
-[ ] - Event - w podobny sposob mozna sygnalizowac stworzenie tekstury i automatycznie
+[X] - Event - w podobny sposob mozna sygnalizowac stworzenie tekstury i automatycznie
 			uploadowac ja do systemu GFX
 
 [ ] - Najwiekszy problem aktualnie z event managerem jest argument list 
@@ -85,7 +85,7 @@
 [X] - Particles - hook particle emitters as scene objects - managed via scene mgr
 
 
-[ ] - Event / Texture - hook texture / font creation as event - throw it
+[X] - Event / Texture - hook texture / font creation as event - throw it
 		- texture mgr can listen to this events and automatically reupload GFX
 
 

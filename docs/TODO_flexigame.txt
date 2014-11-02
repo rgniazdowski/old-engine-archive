@@ -79,20 +79,20 @@
 [ ] - nastepnie napisanie tych wrapperow dla plikow:
 [ ]  - resource
 [X]  - resource group [ DONE ]
-[ ]  - shader config
-[ ]  - main configuration
+[X]  - shader config
+[X]  - main configuration
 [ ]  - save game state (much later)
 
 ** w przypadku Resource Manager'a
   - rowniez napisanie w pelni resource'a dla:
-[ ]    - obiektu 3D - obj
+[X]    - obiektu 3D - obj
 [X]	- grup (ResourceGroup)
 [X] - font (texture based) - FontResource
 [X]	- tekstur (TextureResource)
 [ ]	- dzwiekow, muzyki
-[ ]	- menu, gui (pozniej, gdy rozpocznie sie praca z GUI)
-[ ]	- shaderow
-[ ]	  - obsluga shaderow moze byc napisana w pewnym stopniu na poczatku nawet
+[X]	- menu, gui (pozniej, gdy rozpocznie sie praca z GUI)
+[X]	- shaderow
+[X]	  - obsluga shaderow moze byc napisana w pewnym stopniu na poczatku nawet
 		jesli nie jest jeszcze do konca jasna struktura silnika 3D i menagera scen
 		- shader bedzie jednostka w pewnym stopniu autonomiczna, nie zalezy zbyt
 		  od modelu wyswietlania itp itd - poniewaz to reszta podsystemow bedzie
@@ -110,7 +110,7 @@
 [X] - przy teksturach nie wystarczy zaladowac RAW data do pamieci (ROM -> RAM)
 [X]  - nalezy rowniez uzyc funkcji GL w celu stworzenia prawdziwej tekstury
 	   w pamieci karty graficznej - to juz jest podsystem GFX
-[ ] - ladowanie plikow OBJ (warto tutaj zadbac od razu o wszelkie dane w tym
+[X] - ladowanie plikow OBJ (warto tutaj zadbac od razu o wszelkie dane w tym
       material
 [ ] - podlaczenie material z teksturami
 - OFC: polaczenie z RM i wczytywanie XML
@@ -127,7 +127,7 @@
   - quadtree
   - portale
 
-** drawing batch -- bardzo podstawowy
+** drawing batch -- bardzo podstawowy [X]
   - proste sortowanie wedlug uzytego materialu, na poczatek nawet nie bedzie to
 	testowane
   - wystarczy napisac tego pewien szablon
@@ -136,8 +136,8 @@
 ** GUI:
 - zalezny od GFX + Resource Manager + tekstury + dzwieki + system XML i LUA
 - wpierw napisanie, zaprojektowanie wiekszosci potrzebnych klas
-[ ] - zdefiniowanie formatu XML dla definicji menu oraz wygladu
-[ ] - XML/HTML + CSS
+[X] - zdefiniowanie formatu XML dla definicji menu oraz wygladu
+[X] - XML/HTML + INI-style
 [ ] - LUA (opcjonalne)
 [ ] - definicja rysowania prymitywnych konstrukcji (primitives) - 
     czyli: kwadraty, prostokaty, zaokraglenia, krawedzie, linie, tabele
@@ -149,15 +149,15 @@
     (frustum), wymiarow, by pracowac na menu w pikselach/procentach (rozmiar) - 
     jednak juz obiekty beda wyswietlane odpowiednio na ekranie (potrzeba ogarnac
     wymagane do tego wzory) - trudne
-[ ] - automatyczne dostosowywanie rozmiaru, dzialanie na %
-[ ] - style (podstawy)
+[X] - automatyczne dostosowywanie rozmiaru, dzialanie na %
+[X] - style (podstawy)
 
 ** Podsystem GFX - Particle System
 - silnie zalezny od GFX
-[ ] - wymagany dzialajacy juz Resource Manager + GFX
-[ ] - wymagany dzialajacy Scene Manager 
+[X] - wymagany dzialajacy juz Resource Manager + GFX
+[X] - wymagany dzialajacy Scene Manager 
 [ ] - shadery ?
-- ladowanie definicji z XML
+- ladowanie definicji z XML/INI
 [ ]  - definicja zawiera parametry, nazwe kodowa, ID
 [ ]   - potrzebne tekstury i dzwieki
 [ ]   - forma wyswietlania
@@ -166,10 +166,10 @@
 [ ]   - parametry fizyczne i podstawowe efekty (takie jak np. obracanie sie w 
       kierunku lotu/poruszania sie)
 [ ]  - wykrywanie kolizji ze swiatem on/off
-[ ]  - czas zycia
+[X]  - czas zycia
 [ ]  - rodzaj efektu
-[ ]  - parametry ilosciowe
-[ ]  - kolory
+[X]  - parametry ilosciowe
+[X]  - kolory
 [ ]  - parametry, limity losowania parametrow przy aktywacji
 [ ]  - cyklicznosc
 [ ]  - INFO: pozycja poczatkowa ustawiana jest zwykle z zewnatrz
