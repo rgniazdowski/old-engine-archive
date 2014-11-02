@@ -8,7 +8,9 @@
             <cpp-extensions>cpp</cpp-extensions>
             <header-extensions>h,hpp</header-extensions>
             <sourceEncoding>UTF-8</sourceEncoding>
-            <make-dep-projects/>
+            <make-dep-projects>
+                <make-dep-project>../LuaPlusNextGen_NB</make-dep-project>
+            </make-dep-projects>
             <sourceRootList>
                 <sourceRootElem>../../../src</sourceRootElem>
                 <sourceRootElem>../../../modules/glm</sourceRootElem>
@@ -18,6 +20,14 @@
             </sourceRootList>
             <confList>
                 <confElem>
+                    <name>Debug_GLEW_SDL2</name>
+                    <type>1</type>
+                </confElem>
+                <confElem>
+                    <name>Release_GLEW_SDL2</name>
+                    <type>1</type>
+                </confElem>
+                <confElem>
                     <name>Debug</name>
                     <type>1</type>
                 </confElem>
@@ -26,19 +36,11 @@
                     <type>1</type>
                 </confElem>
                 <confElem>
-                    <name>Debug_GLEW_SDL2</name>
-                    <type>1</type>
-                </confElem>
-                <confElem>
                     <name>Debug_GLBIND_SDL2</name>
                     <type>1</type>
                 </confElem>
                 <confElem>
                     <name>Release_GLBIND_SDL2</name>
-                    <type>1</type>
-                </confElem>
-                <confElem>
-                    <name>Release_GLEW_SDL2</name>
                     <type>1</type>
                 </confElem>
             </confList>
@@ -71,6 +73,7 @@
             <word>framebuffer</word>
             <word>func</word>
             <word>Gainsboro</word>
+            <word>gc</word>
             <word>gfx</word>
             <word>gl</word>
             <word>glbinding</word>

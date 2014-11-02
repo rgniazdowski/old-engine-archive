@@ -199,11 +199,13 @@ FFLAGS=
 ASFLAGS=
 
 # Link Libraries and Options
-LDLIBSOPTIONS=`pkg-config --libs libpng` -lm  -ljpeg `pkg-config --libs gl`  
+LDLIBSOPTIONS=`pkg-config --libs libpng` -lm  -ljpeg `pkg-config --libs gl` ../LuaPlusNextGen_NB/dist/Release/GNU-Linux-x86/libluaplusnextgen_nb.a  
 
 # Build Targets
 .build-conf: ${BUILD_SUBPROJECTS}
 	"${MAKE}"  -f nbproject/Makefile-${CND_CONF}.mk ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/flexigame_nb
+
+${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/flexigame_nb: ../LuaPlusNextGen_NB/dist/Release/GNU-Linux-x86/libluaplusnextgen_nb.a
 
 ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/flexigame_nb: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
@@ -951,6 +953,7 @@ ${OBJECTDIR}/_ext/1386528437/fgStatusReporter.o: ../../../src/fgStatusReporter.c
 
 # Subprojects
 .build-subprojects:
+	cd ../LuaPlusNextGen_NB && ${MAKE}  -f Makefile CONF=Release
 
 # Clean Targets
 .clean-conf: ${CLEAN_SUBPROJECTS}
@@ -959,6 +962,7 @@ ${OBJECTDIR}/_ext/1386528437/fgStatusReporter.o: ../../../src/fgStatusReporter.c
 
 # Subprojects
 .clean-subprojects:
+	cd ../LuaPlusNextGen_NB && ${MAKE}  -f Makefile CONF=Release clean
 
 # Enable dependency checking
 .dep.inc: .depcheck-impl

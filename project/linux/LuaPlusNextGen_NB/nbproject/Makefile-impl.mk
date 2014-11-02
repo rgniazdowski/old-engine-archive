@@ -24,14 +24,14 @@ CLEAN_SUBPROJECTS=${CLEAN_SUBPROJECTS_${SUBPROJECTS}}
 
 
 # Project Name
-PROJECTNAME=FlexiGame_NB
+PROJECTNAME=LuaPlusNextGen_NB
 
 # Active Configuration
-DEFAULTCONF=Debug_GLEW_SDL2
+DEFAULTCONF=Debug
 CONF=${DEFAULTCONF}
 
 # All Configurations
-ALLCONFS=Debug_GLEW_SDL2 Release_GLEW_SDL2 Debug Release Debug_GLBIND_SDL2 Release_GLBIND_SDL2 
+ALLCONFS=Debug Release Debug_DYNAMIC Release_DYNAMIC 
 
 
 # build

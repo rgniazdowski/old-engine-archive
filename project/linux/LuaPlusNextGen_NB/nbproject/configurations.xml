@@ -1,0 +1,1947 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configurationDescriptor version="95">
+  <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
+    <logicalFolder name="HeaderFiles"
+                   displayName="Header Files"
+                   projectFiles="true">
+    </logicalFolder>
+    <logicalFolder name="ResourceFiles"
+                   displayName="Resource Files"
+                   projectFiles="true">
+    </logicalFolder>
+    <logicalFolder name="SourceFiles"
+                   displayName="Source Files"
+                   projectFiles="true">
+      <logicalFolder name="LuaPlus" displayName="LuaPlus" projectFiles="true">
+        <itemPath>../../../modules/luaplus51-all/Src/LuaPlus/LuaAutoBlock.h</itemPath>
+        <itemPath>../../../modules/luaplus51-all/Src/LuaPlus/LuaCall.h</itemPath>
+        <itemPath>../../../modules/luaplus51-all/Src/LuaPlus/LuaCall.inl</itemPath>
+        <itemPath>../../../modules/luaplus51-all/Src/LuaPlus/LuaFunction.h</itemPath>
+        <itemPath>../../../modules/luaplus51-all/Src/LuaPlus/LuaHelper.h</itemPath>
+        <itemPath>../../../modules/luaplus51-all/Src/LuaPlus/LuaHelper_Object.h</itemPath>
+        <itemPath>../../../modules/luaplus51-all/Src/LuaPlus/LuaHelper_StackObject.h</itemPath>
+        <itemPath>../../../modules/luaplus51-all/Src/LuaPlus/LuaObject.h</itemPath>
+        <itemPath>../../../modules/luaplus51-all/Src/LuaPlus/LuaObject.inl</itemPath>
+        <itemPath>../../../modules/luaplus51-all/Src/LuaPlus/LuaPlus.cpp</itemPath>
+        <itemPath>../../../modules/luaplus51-all/Src/LuaPlus/LuaPlus.h</itemPath>
+        <itemPath>../../../modules/luaplus51-all/Src/LuaPlus/LuaPlusAddons.c</itemPath>
+        <itemPath>../../../modules/luaplus51-all/Src/LuaPlus/LuaPlusCD.h</itemPath>
+        <itemPath>../../../modules/luaplus51-all/Src/LuaPlus/LuaPlusConfig.h</itemPath>
+        <itemPath>../../../modules/luaplus51-all/Src/LuaPlus/LuaPlusInternal.h</itemPath>
+        <itemPath>../../../modules/luaplus51-all/Src/LuaPlus/LuaStackObject.h</itemPath>
+        <itemPath>../../../modules/luaplus51-all/Src/LuaPlus/LuaStackObject.inl</itemPath>
+        <itemPath>../../../modules/luaplus51-all/Src/LuaPlus/LuaStackTableIterator.h</itemPath>
+        <itemPath>../../../modules/luaplus51-all/Src/LuaPlus/LuaStackTableIterator.inl</itemPath>
+        <itemPath>../../../modules/luaplus51-all/Src/LuaPlus/LuaState.h</itemPath>
+        <itemPath>../../../modules/luaplus51-all/Src/LuaPlus/LuaState.inl</itemPath>
+        <itemPath>../../../modules/luaplus51-all/Src/LuaPlus/LuaStateCD.h</itemPath>
+        <itemPath>../../../modules/luaplus51-all/Src/LuaPlus/LuaStateOutFile.h</itemPath>
+        <itemPath>../../../modules/luaplus51-all/Src/LuaPlus/LuaStateOutString.h</itemPath>
+        <itemPath>../../../modules/luaplus51-all/Src/LuaPlus/LuaState_DumpObject.cpp</itemPath>
+        <itemPath>../../../modules/luaplus51-all/Src/LuaPlus/LuaTableIterator.h</itemPath>
+      </logicalFolder>
+      <logicalFolder name="src" displayName="src" projectFiles="true">
+        <itemPath>../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lapi.c</itemPath>
+        <itemPath>../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lapi.h</itemPath>
+        <itemPath>../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lauxlib.c</itemPath>
+        <itemPath>../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lauxlib.h</itemPath>
+        <itemPath>../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lbaselib.c</itemPath>
+        <itemPath>../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lbitlib.c</itemPath>
+        <itemPath>../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lcode.c</itemPath>
+        <itemPath>../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lcode.h</itemPath>
+        <itemPath>../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lcorolib.c</itemPath>
+        <itemPath>../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lctype.c</itemPath>
+        <itemPath>../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lctype.h</itemPath>
+        <itemPath>../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/ldblib.c</itemPath>
+        <itemPath>../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/ldebug.c</itemPath>
+        <itemPath>../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/ldebug.h</itemPath>
+        <itemPath>../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/ldo.c</itemPath>
+        <itemPath>../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/ldo.h</itemPath>
+        <itemPath>../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/ldump.c</itemPath>
+        <itemPath>../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lfunc.c</itemPath>
+        <itemPath>../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lfunc.h</itemPath>
+        <itemPath>../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lgc.c</itemPath>
+        <itemPath>../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lgc.h</itemPath>
+        <itemPath>../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/linit.c</itemPath>
+        <itemPath>../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/liolib.c</itemPath>
+        <itemPath>../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/llex.c</itemPath>
+        <itemPath>../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/llex.h</itemPath>
+        <itemPath>../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/llimits.h</itemPath>
+        <itemPath>../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lmathlib.c</itemPath>
+        <itemPath>../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lmem.c</itemPath>
+        <itemPath>../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lmem.h</itemPath>
+        <itemPath>../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/loadlib.c</itemPath>
+        <itemPath>../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lobject.c</itemPath>
+        <itemPath>../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lobject.h</itemPath>
+        <itemPath>../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lopcodes.c</itemPath>
+        <itemPath>../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lopcodes.h</itemPath>
+        <itemPath>../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/loslib.c</itemPath>
+        <itemPath>../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lparser.c</itemPath>
+        <itemPath>../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lparser.h</itemPath>
+        <itemPath>../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lstate.c</itemPath>
+        <itemPath>../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lstate.h</itemPath>
+        <itemPath>../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lstring.c</itemPath>
+        <itemPath>../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lstring.h</itemPath>
+        <itemPath>../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lstrlib.c</itemPath>
+        <itemPath>../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/ltable.c</itemPath>
+        <itemPath>../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/ltable.h</itemPath>
+        <itemPath>../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/ltablib.c</itemPath>
+        <itemPath>../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/ltm.c</itemPath>
+        <itemPath>../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/ltm.h</itemPath>
+        <itemPath>../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lua.c</itemPath>
+        <itemPath>../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lua.h</itemPath>
+        <itemPath>../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lua.hpp</itemPath>
+        <itemPath>../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/luac.c</itemPath>
+        <itemPath>../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/luaconf.h</itemPath>
+        <itemPath>../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lualib.h</itemPath>
+        <itemPath>../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lundump.c</itemPath>
+        <itemPath>../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lundump.h</itemPath>
+        <itemPath>../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lvm.c</itemPath>
+        <itemPath>../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lvm.h</itemPath>
+        <itemPath>../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lzio.c</itemPath>
+        <itemPath>../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lzio.h</itemPath>
+      </logicalFolder>
+    </logicalFolder>
+    <logicalFolder name="TestFiles"
+                   displayName="Test Files"
+                   projectFiles="false"
+                   kind="TEST_LOGICAL_FOLDER">
+    </logicalFolder>
+    <logicalFolder name="ExternalFiles"
+                   displayName="Important Files"
+                   projectFiles="false"
+                   kind="IMPORTANT_FILES_FOLDER">
+      <itemPath>Makefile</itemPath>
+    </logicalFolder>
+  </logicalFolder>
+  <sourceRootList>
+    <Elem>../../../modules/luaplus51-all/Src/LuaPlus</Elem>
+  </sourceRootList>
+  <projectmakefile>Makefile</projectmakefile>
+  <confs>
+    <conf name="Debug" type="3">
+      <toolsSet>
+        <compilerSet>default</compilerSet>
+        <dependencyChecking>true</dependencyChecking>
+        <rebuildPropChanged>false</rebuildPropChanged>
+      </toolsSet>
+      <compileType>
+        <cTool>
+          <preprocessorList>
+            <Elem>DEBUG</Elem>
+            <Elem>FG_DEBUG</Elem>
+            <Elem>LUAPLUS_DUMPOBJECT</Elem>
+            <Elem>LUA_OPNAMES</Elem>
+            <Elem>_DEBUG</Elem>
+          </preprocessorList>
+          <warningLevel>2</warningLevel>
+        </cTool>
+        <ccTool>
+          <preprocessorList>
+            <Elem>DEBUG</Elem>
+            <Elem>FG_DEBUG</Elem>
+            <Elem>LUAPLUS_DUMPOBJECT</Elem>
+            <Elem>LUA_OPNAMES</Elem>
+            <Elem>_DEBUG</Elem>
+          </preprocessorList>
+          <warningLevel>2</warningLevel>
+        </ccTool>
+        <archiverTool>
+        </archiverTool>
+      </compileType>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/LuaAutoBlock.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/LuaCall.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/LuaCall.inl"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/LuaFunction.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/LuaHelper.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/LuaHelper_Object.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/LuaHelper_StackObject.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/LuaObject.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/LuaObject.inl"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/LuaPlus.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/LuaPlus.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/LuaPlusAddons.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/LuaPlusCD.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/LuaPlusConfig.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/LuaPlusInternal.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/LuaStackObject.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/LuaStackObject.inl"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/LuaStackTableIterator.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/LuaStackTableIterator.inl"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/LuaState.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/LuaState.inl"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/LuaStateCD.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/LuaStateOutFile.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/LuaStateOutString.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/LuaState_DumpObject.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/LuaTableIterator.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lapi.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lapi.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lauxlib.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lauxlib.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lbaselib.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lbitlib.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lcode.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lcode.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lcorolib.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lctype.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lctype.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/ldblib.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/ldebug.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/ldebug.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/ldo.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/ldo.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/ldump.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lfunc.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lfunc.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lgc.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lgc.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/linit.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/liolib.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/llex.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/llex.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/llimits.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lmathlib.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lmem.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lmem.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/loadlib.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lobject.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lobject.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lopcodes.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lopcodes.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/loslib.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lparser.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lparser.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lstate.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lstate.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lstring.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lstring.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lstrlib.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/ltable.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/ltable.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/ltablib.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/ltm.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/ltm.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lua.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lua.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lua.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/luac.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/luaconf.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lualib.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lundump.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lundump.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lvm.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lvm.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lzio.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lzio.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+    </conf>
+    <conf name="Release" type="3">
+      <toolsSet>
+        <compilerSet>default</compilerSet>
+        <dependencyChecking>true</dependencyChecking>
+        <rebuildPropChanged>false</rebuildPropChanged>
+      </toolsSet>
+      <compileType>
+        <cTool>
+          <developmentMode>5</developmentMode>
+          <preprocessorList>
+            <Elem>LUAPLUS_DUMPOBJECT</Elem>
+            <Elem>LUA_OPNAMES</Elem>
+          </preprocessorList>
+          <warningLevel>2</warningLevel>
+        </cTool>
+        <ccTool>
+          <developmentMode>5</developmentMode>
+          <preprocessorList>
+            <Elem>LUAPLUS_DUMPOBJECT</Elem>
+            <Elem>LUA_OPNAMES</Elem>
+          </preprocessorList>
+          <warningLevel>2</warningLevel>
+        </ccTool>
+        <fortranCompilerTool>
+          <developmentMode>5</developmentMode>
+        </fortranCompilerTool>
+        <asmTool>
+          <developmentMode>5</developmentMode>
+        </asmTool>
+        <archiverTool>
+        </archiverTool>
+      </compileType>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/LuaAutoBlock.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/LuaCall.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/LuaCall.inl"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/LuaFunction.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/LuaHelper.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/LuaHelper_Object.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/LuaHelper_StackObject.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/LuaObject.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/LuaObject.inl"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/LuaPlus.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/LuaPlus.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/LuaPlusAddons.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/LuaPlusCD.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/LuaPlusConfig.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/LuaPlusInternal.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/LuaStackObject.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/LuaStackObject.inl"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/LuaStackTableIterator.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/LuaStackTableIterator.inl"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/LuaState.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/LuaState.inl"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/LuaStateCD.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/LuaStateOutFile.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/LuaStateOutString.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/LuaState_DumpObject.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/LuaTableIterator.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lapi.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lapi.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lauxlib.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lauxlib.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lbaselib.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lbitlib.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lcode.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lcode.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lcorolib.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lctype.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lctype.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/ldblib.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/ldebug.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/ldebug.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/ldo.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/ldo.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/ldump.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lfunc.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lfunc.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lgc.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lgc.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/linit.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/liolib.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/llex.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/llex.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/llimits.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lmathlib.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lmem.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lmem.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/loadlib.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lobject.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lobject.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lopcodes.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lopcodes.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/loslib.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lparser.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lparser.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lstate.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lstate.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lstring.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lstring.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lstrlib.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/ltable.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/ltable.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/ltablib.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/ltm.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/ltm.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lua.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lua.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lua.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/luac.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/luaconf.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lualib.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lundump.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lundump.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lvm.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lvm.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lzio.c"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lzio.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+    </conf>
+    <conf name="Debug_DYNAMIC" type="2">
+      <toolsSet>
+        <compilerSet>default</compilerSet>
+        <dependencyChecking>true</dependencyChecking>
+        <rebuildPropChanged>false</rebuildPropChanged>
+      </toolsSet>
+      <compileType>
+        <cTool>
+          <preprocessorList>
+            <Elem>DEBUG</Elem>
+            <Elem>FG_DEBUG</Elem>
+            <Elem>LUA_BUILD_AS_DLL</Elem>
+            <Elem>LUA_OPNAMES</Elem>
+            <Elem>_DEBUG</Elem>
+          </preprocessorList>
+          <warningLevel>2</warningLevel>
+        </cTool>
+        <ccTool>
+          <preprocessorList>
+            <Elem>DEBUG</Elem>
+            <Elem>FG_DEBUG</Elem>
+            <Elem>LUA_BUILD_AS_DLL</Elem>
+            <Elem>LUA_OPNAMES</Elem>
+            <Elem>_DEBUG</Elem>
+          </preprocessorList>
+          <warningLevel>2</warningLevel>
+        </ccTool>
+      </compileType>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/LuaAutoBlock.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/LuaCall.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/LuaCall.inl"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/LuaFunction.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/LuaHelper.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/LuaHelper_Object.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/LuaHelper_StackObject.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/LuaObject.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/LuaObject.inl"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/LuaPlus.cpp"
+            ex="false"
+            tool="1"
+            flavor2="9">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/LuaPlus.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/LuaPlusAddons.c"
+            ex="false"
+            tool="0"
+            flavor2="9">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/LuaPlusCD.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/LuaPlusConfig.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/LuaPlusInternal.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/LuaStackObject.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/LuaStackObject.inl"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/LuaStackTableIterator.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/LuaStackTableIterator.inl"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/LuaState.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/LuaState.inl"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/LuaStateCD.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/LuaStateOutFile.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/LuaStateOutString.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/LuaState_DumpObject.cpp"
+            ex="false"
+            tool="1"
+            flavor2="9">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/LuaTableIterator.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lapi.c"
+            ex="false"
+            tool="0"
+            flavor2="9">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lapi.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lauxlib.c"
+            ex="false"
+            tool="0"
+            flavor2="9">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lauxlib.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lbaselib.c"
+            ex="false"
+            tool="0"
+            flavor2="9">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lbitlib.c"
+            ex="false"
+            tool="0"
+            flavor2="9">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lcode.c"
+            ex="false"
+            tool="0"
+            flavor2="9">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lcode.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lcorolib.c"
+            ex="false"
+            tool="0"
+            flavor2="9">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lctype.c"
+            ex="false"
+            tool="0"
+            flavor2="9">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lctype.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/ldblib.c"
+            ex="false"
+            tool="0"
+            flavor2="9">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/ldebug.c"
+            ex="false"
+            tool="0"
+            flavor2="9">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/ldebug.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/ldo.c"
+            ex="false"
+            tool="0"
+            flavor2="9">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/ldo.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/ldump.c"
+            ex="false"
+            tool="0"
+            flavor2="9">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lfunc.c"
+            ex="false"
+            tool="0"
+            flavor2="9">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lfunc.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lgc.c"
+            ex="false"
+            tool="0"
+            flavor2="9">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lgc.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/linit.c"
+            ex="false"
+            tool="0"
+            flavor2="9">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/liolib.c"
+            ex="false"
+            tool="0"
+            flavor2="9">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/llex.c"
+            ex="false"
+            tool="0"
+            flavor2="9">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/llex.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/llimits.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lmathlib.c"
+            ex="false"
+            tool="0"
+            flavor2="9">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lmem.c"
+            ex="false"
+            tool="0"
+            flavor2="9">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lmem.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/loadlib.c"
+            ex="false"
+            tool="0"
+            flavor2="9">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lobject.c"
+            ex="false"
+            tool="0"
+            flavor2="9">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lobject.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lopcodes.c"
+            ex="false"
+            tool="0"
+            flavor2="9">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lopcodes.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/loslib.c"
+            ex="false"
+            tool="0"
+            flavor2="9">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lparser.c"
+            ex="false"
+            tool="0"
+            flavor2="9">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lparser.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lstate.c"
+            ex="false"
+            tool="0"
+            flavor2="9">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lstate.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lstring.c"
+            ex="false"
+            tool="0"
+            flavor2="9">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lstring.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lstrlib.c"
+            ex="false"
+            tool="0"
+            flavor2="9">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/ltable.c"
+            ex="false"
+            tool="0"
+            flavor2="9">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/ltable.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/ltablib.c"
+            ex="false"
+            tool="0"
+            flavor2="9">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/ltm.c"
+            ex="false"
+            tool="0"
+            flavor2="9">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/ltm.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lua.c"
+            ex="false"
+            tool="0"
+            flavor2="9">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lua.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lua.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/luac.c"
+            ex="false"
+            tool="0"
+            flavor2="9">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/luaconf.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lualib.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lundump.c"
+            ex="false"
+            tool="0"
+            flavor2="9">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lundump.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lvm.c"
+            ex="false"
+            tool="0"
+            flavor2="9">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lvm.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lzio.c"
+            ex="false"
+            tool="0"
+            flavor2="9">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lzio.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+    </conf>
+    <conf name="Release_DYNAMIC" type="2">
+      <toolsSet>
+        <compilerSet>default</compilerSet>
+        <dependencyChecking>true</dependencyChecking>
+        <rebuildPropChanged>false</rebuildPropChanged>
+      </toolsSet>
+      <compileType>
+        <cTool>
+          <developmentMode>5</developmentMode>
+          <preprocessorList>
+            <Elem>LUA_BUILD_AS_DLL</Elem>
+            <Elem>LUA_OPNAMES</Elem>
+          </preprocessorList>
+          <warningLevel>2</warningLevel>
+        </cTool>
+        <ccTool>
+          <developmentMode>5</developmentMode>
+          <preprocessorList>
+            <Elem>LUA_BUILD_AS_DLL</Elem>
+            <Elem>LUA_OPNAMES</Elem>
+          </preprocessorList>
+          <warningLevel>2</warningLevel>
+        </ccTool>
+        <fortranCompilerTool>
+          <developmentMode>5</developmentMode>
+        </fortranCompilerTool>
+        <asmTool>
+          <developmentMode>5</developmentMode>
+        </asmTool>
+      </compileType>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/LuaAutoBlock.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/LuaCall.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/LuaCall.inl"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/LuaFunction.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/LuaHelper.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/LuaHelper_Object.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/LuaHelper_StackObject.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/LuaObject.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/LuaObject.inl"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/LuaPlus.cpp"
+            ex="false"
+            tool="1"
+            flavor2="9">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/LuaPlus.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/LuaPlusAddons.c"
+            ex="false"
+            tool="0"
+            flavor2="9">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/LuaPlusCD.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/LuaPlusConfig.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/LuaPlusInternal.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/LuaStackObject.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/LuaStackObject.inl"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/LuaStackTableIterator.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/LuaStackTableIterator.inl"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/LuaState.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/LuaState.inl"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/LuaStateCD.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/LuaStateOutFile.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/LuaStateOutString.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/LuaState_DumpObject.cpp"
+            ex="false"
+            tool="1"
+            flavor2="9">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/LuaTableIterator.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lapi.c"
+            ex="false"
+            tool="0"
+            flavor2="9">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lapi.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lauxlib.c"
+            ex="false"
+            tool="0"
+            flavor2="9">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lauxlib.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lbaselib.c"
+            ex="false"
+            tool="0"
+            flavor2="9">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lbitlib.c"
+            ex="false"
+            tool="0"
+            flavor2="9">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lcode.c"
+            ex="false"
+            tool="0"
+            flavor2="9">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lcode.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lcorolib.c"
+            ex="false"
+            tool="0"
+            flavor2="9">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lctype.c"
+            ex="false"
+            tool="0"
+            flavor2="9">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lctype.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/ldblib.c"
+            ex="false"
+            tool="0"
+            flavor2="9">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/ldebug.c"
+            ex="false"
+            tool="0"
+            flavor2="9">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/ldebug.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/ldo.c"
+            ex="false"
+            tool="0"
+            flavor2="9">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/ldo.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/ldump.c"
+            ex="false"
+            tool="0"
+            flavor2="9">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lfunc.c"
+            ex="false"
+            tool="0"
+            flavor2="9">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lfunc.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lgc.c"
+            ex="false"
+            tool="0"
+            flavor2="9">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lgc.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/linit.c"
+            ex="false"
+            tool="0"
+            flavor2="9">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/liolib.c"
+            ex="false"
+            tool="0"
+            flavor2="9">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/llex.c"
+            ex="false"
+            tool="0"
+            flavor2="9">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/llex.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/llimits.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lmathlib.c"
+            ex="false"
+            tool="0"
+            flavor2="9">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lmem.c"
+            ex="false"
+            tool="0"
+            flavor2="9">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lmem.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/loadlib.c"
+            ex="false"
+            tool="0"
+            flavor2="9">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lobject.c"
+            ex="false"
+            tool="0"
+            flavor2="9">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lobject.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lopcodes.c"
+            ex="false"
+            tool="0"
+            flavor2="9">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lopcodes.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/loslib.c"
+            ex="false"
+            tool="0"
+            flavor2="9">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lparser.c"
+            ex="false"
+            tool="0"
+            flavor2="9">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lparser.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lstate.c"
+            ex="false"
+            tool="0"
+            flavor2="9">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lstate.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lstring.c"
+            ex="false"
+            tool="0"
+            flavor2="9">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lstring.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lstrlib.c"
+            ex="false"
+            tool="0"
+            flavor2="9">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/ltable.c"
+            ex="false"
+            tool="0"
+            flavor2="9">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/ltable.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/ltablib.c"
+            ex="false"
+            tool="0"
+            flavor2="9">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/ltm.c"
+            ex="false"
+            tool="0"
+            flavor2="9">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/ltm.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lua.c"
+            ex="false"
+            tool="0"
+            flavor2="9">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lua.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lua.hpp"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/luac.c"
+            ex="false"
+            tool="0"
+            flavor2="9">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/luaconf.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lualib.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lundump.c"
+            ex="false"
+            tool="0"
+            flavor2="9">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lundump.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lvm.c"
+            ex="false"
+            tool="0"
+            flavor2="9">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lvm.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lzio.c"
+            ex="false"
+            tool="0"
+            flavor2="9">
+      </item>
+      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lzio.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+    </conf>
+  </confs>
+</configurationDescriptor>
