@@ -102,7 +102,7 @@ fgBool fgDirent::readDirectory(fgBool recursive) {
                 continue;
             if(recursive) {
                 fgPath::join(filePath, curDir, fileName);
-                printf("%s\n", filePath.c_str());
+                //printf("%s\n", filePath.c_str());
                 fgBool isDir = FG_FALSE;
 #if defined(FG_USING_MARMALADE)
                 isDir = (fgBool)s3eFileGetFileInt(filePath.c_str(), S3E_FILE_ISDIR);
@@ -118,7 +118,7 @@ fgBool fgDirent::readDirectory(fgBool recursive) {
                 }
             } else {
                 m_fileNames.push_back(fileName);
-                printf("%s\n", fileName.c_str());
+                //printf("%s\n", fileName.c_str());
             }
         }
         curDir.clear();

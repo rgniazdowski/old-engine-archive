@@ -19,15 +19,15 @@ enum fgScreenOrientation {
     FG_SCREEN_ORIENTATION_LANDSCAPE
 };
 
-    #define FG_ORIENTATION_PORTRAIT	0
-    #define FG_ORIENTATION_LANDSCAPE	1
+    #define FG_ORIENTATION_PORTRAIT     0
+    #define FG_ORIENTATION_LANDSCAPE    1
 
-    #define FG_FRAMES_COUNT_LIMIT	20
-    #define FG_FRAMES_LIMIT		FG_FRAMES_COUNT_LIMIT
-    #define FG_MAX_FPS			60.0
-    #define FG_FPS_LIMIT		FG_MAX_FPS
+    #define FG_FRAMES_COUNT_LIMIT       20
+    #define FG_FRAMES_LIMIT             FG_FRAMES_COUNT_LIMIT
+    #define FG_MAX_FPS                  60.0
+    #define FG_FPS_LIMIT                FG_MAX_FPS
 
-    #define FG_DEVICE_ORIENTATION FG_ORIENTATION_LANDSCAPE
+    #define FG_DEVICE_ORIENTATION       FG_ORIENTATION_LANDSCAPE
 
 /** #FIXME
  * The class holds only SIMPLE states, i.e. it does not
@@ -59,7 +59,7 @@ protected:
     // Default constructor for Hardware State object
     fgHardwareState();
     // Default destructor for Hardware State object
-    ~fgHardwareState();
+    virtual ~fgHardwareState();
 
 public:
     // Inits DPI. Called from GL init code, when display is ready

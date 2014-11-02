@@ -1,0 +1,37 @@
+option lib
+subproject ng_luaplus
+
+options
+{
+	strict=0
+	arm-cpu=6
+	arm-fpu=vfp
+	optimise-speed
+}
+
+defines
+{
+	LUAPLUS_DUMPOBJECT
+	LUA_OPNAMES
+}
+
+includepaths
+{
+	"../luaplus51-all/Src"
+}
+
+files
+{
+	[docs]
+	("docs")
+	luaplus51-all.defines.txt
+
+	[LuaPlus]
+	(../luaplus51-all/Src/LuaPlus)
+	"*.cpp"
+	"*.c"
+	
+	[Lua523-LuaPlus]
+	(../luaplus51-all/Src/LuaPlus/lua52-luaplus/src)
+	"*.c"
+}
