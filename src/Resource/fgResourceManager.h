@@ -165,12 +165,31 @@ public:
     // If you pass in the pointer to resource handle, the Resource Manager
     // will provide a unique handle for you.
     fgBool insertResource(FG_RHANDLE& rhUniqueID, fgResource* pResource);
+    
+    /**
+     * 
+     * @param pResource
+     * @return 
+     */
+    inline fgBool insertResource(fgResource* pResource) {
+        if(!pResource)
+            return FG_FALSE;
+        return fgResourceManager::insertResource(pResource->getRefHandle(), pResource);
+    }
 
 protected:
-    // Insert resource group into manager
+    /**
+     * Insert resource group into manager
+     * @param rhUniqueID
+     * @param pResource
+     * @return 
+     */
     fgBool insertResourceGroup(const FG_RHANDLE& rhUniqueID, fgResource* pResource);
 
-    //
+    /**
+     * 
+     * @param pResource
+     */
     void refreshResource(fgResource *pResource);
 
 public:

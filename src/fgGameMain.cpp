@@ -76,7 +76,6 @@ m_gameFreeLookCallback(NULL) {
     // #FIXME - getcwd / get exec path / paths management / etc
     FG_MessageSubsystem->initialize(); // ? #FIXME message subsystem
     FG_MessageSubsystem->setLogPaths("all.log", "error.log", "debug.log");
-    fgTime::init(); // #FIXME global time init?
     m_pointerInputReceiver = new fgPointerInputReceiver();
     m_joypadController = new fgJoypadController(); // #FIXME - joypad part of input receiver?
     m_scriptSubsystem = new fgScriptSubsystem();
@@ -103,6 +102,10 @@ fgGameMain::~fgGameMain() {
     if(m_resourceMgr)
         delete m_resourceMgr;
     m_resourceMgr = NULL;
+    m_scriptSubsystem->setResourceManager(NULL);
+    m_scriptSubsystem->setShaderManager(NULL);
+    m_scriptSubsystem->set2DSceneManager(NULL);
+    m_scriptSubsystem->set3DSceneManager(NULL);
     if(m_resourceFactory)
         delete m_resourceFactory;
     m_resourceFactory = NULL;
@@ -131,6 +134,8 @@ fgGameMain::~fgGameMain() {
     if(m_guiMain) {
         delete m_guiMain;
     }
+    m_scriptSubsystem->setWidgetManager(NULL);
+    m_scriptSubsystem->setStyleManager(NULL);
     m_guiMain = NULL;
     if(m_scriptSubsystem) {
         delete m_scriptSubsystem;
@@ -239,6 +244,7 @@ void fgGameMain::setEventManager(fgEventManager *pEventMgr) {
  * Function creates and initializes subsystems
  */
 fgBool fgGameMain::initSubsystems(void) {
+    float t1 = fgTime::ms();
     FG_HardwareState->deviceYield(0); // #FIXME - device yield...
     if(m_gfxMain)
         return FG_FALSE;
@@ -310,7 +316,8 @@ fgBool fgGameMain::initSubsystems(void) {
         FG_LOG::PrintError("Script: Initialization of Script module finished with errors");
     }
     FG_HardwareState->deviceYield(0); // #FIXME - device yield...
-
+    float t2 = fgTime::ms();
+    FG_LOG::PrintDebug("Main: All subsystems initialized in %.2f seconds", (t2 - t1) / 1000.0f);
     return FG_TRUE;
 }
 
@@ -333,7 +340,18 @@ fgBool fgGameMain::loadConfiguration(void) {
  * This loads resources specified in configuration files
  */
 fgBool fgGameMain::loadResources(void) {
+    float t1 = fgTime::ms();
     FG_LOG::PrintDebug("Loading resources...");
+
+    LuaPlus::LuaState *state = m_scriptSubsystem->getLuaState();
+    if(state) {
+        if(state->DoFile("main.lua")) {
+            // An error occured
+            if(state->GetTop() == 1)
+                std::cout << "An error occurred: " << state->CheckString(1) << std::endl;
+        }
+        state->GC(LUA_GCCOLLECT, 0);
+    }
 
     ////////////////////////////////////////////////////////////////////////////
     m_gfxMain->getShaderManager()->setShadersPath("shaders/");
@@ -384,6 +402,8 @@ fgBool fgGameMain::loadResources(void) {
     m_gfxMain->getParticleSystem()->insertParticleEmitter("ExplosionSmoke", "ExplosionSmoke", fgVector3f(0.0f, 0.0f, 0.0f));
     m_gfxMain->getParticleSystem()->insertParticleEmitter("ExplosionSmokeTrails", "ExplosionSmokeTrails", fgVector3f(0.0f, 0.0f, 0.0f));
     m_gfxMain->getParticleSystem()->insertParticleEmitter("ExplosionSparks", "ExplosionSparks", fgVector3f(0.0f, 0.0f, 0.0f));
+    float t2 = fgTime::ms();
+    FG_LOG::PrintDebug("Main: Resources loaded in %.2f seconds", (t2 - t1) / 1000.0f);
     return FG_TRUE;
 }
 

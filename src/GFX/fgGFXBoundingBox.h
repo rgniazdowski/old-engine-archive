@@ -31,13 +31,20 @@ template <class DataType> struct fgBoundingBox3D;
  */
 template <class BoxType, class VecType, class DataType>
 struct fgBoundingBox {
+    ///
     typedef fgBoundingBox<BoxType, VecType, DataType> type;
+    ///
     typedef DataType value_type;
+    ///
     typedef VecType vector_type;
+    ///
     typedef BoxType box_type;
+    ///
     typedef int size_type;
-
+    
+    ///
     VecType pos;
+    ///
     VecType size;
     /**
      * 
@@ -230,14 +237,14 @@ struct fgBoundingBox {
 
 };
 
-template <class DataType>
 /**
  *
  */
+template <class DataType>
 struct fgBoundingBox2D : fgBoundingBox<fgBoundingBox2D<DataType>, glm::detail::tvec2<DataType, glm::defaultp>, DataType> {
-    //
+    ///
     typedef fgBoundingBox<fgBoundingBox2D<DataType>, glm::detail::tvec2<DataType, glm::defaultp>, DataType> base_type;
-    //
+    ///
     typedef glm::detail::tvec2<DataType, glm::defaultp> vecType;
 
     /**

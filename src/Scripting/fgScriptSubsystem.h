@@ -15,6 +15,9 @@
 
     #include "fgManagerBase.h"
 
+    #include "GFX/fgGFXTypes.h"
+    #include "GFX/Textures/fgTextureResource.h"
+
     #define FG_MANAGER_SCRIPT       0x00004000
     #define FG_SUBSYSTEM_SCRIPT     0x00004000
 
@@ -31,43 +34,118 @@ struct lua_State {
 
     #include <map>
 
+    #if defined(FG_USING_LUA_PLUS)
+namespace LPCD {
+
+    template<> struct Type<fgVector3f> {
+        static inline void Push(lua_State* L, const fgVector3f& value) {
+            LuaState* state = lua_State_to_LuaState(L);
+            LuaObject obj = state->BoxPointer((void*)&value);
+            obj.SetMetatable(state->GetRegistry()["fgVector3fMETATABLE"]);
+        }
+        static inline bool Match(lua_State* L, int idx) {
+            LuaState* state = lua_State_to_LuaState(L);
+            LuaObject obj = state->Stack(idx);
+            return obj.GetMetatable() == state->GetRegistry()["fgVector3fMETATABLE"];
+        }
+        static inline fgVector3f Get(lua_State* L, int idx) {
+            LuaState* state = lua_State_to_LuaState(L);
+            return *(fgVector3f*)state->UnBoxPointer(idx);
+        }
+    };
+
+    template<> struct Type<fgVector3f&> : public Type<fgVector3f> {
+    };
+
+    template<> struct Type<const fgVector3f&> : public Type<fgVector3f> {
+    };
+}
+
+/*
+namespace LPCD {
+
+    template<> struct Type<fgTextureResource *> {
+        static inline void Push(lua_State* L, const fgTextureResource *& value) {
+            LuaState* state = lua_State_to_LuaState(L);
+            LuaObject obj = state->BoxPointer((void*)&value);
+            obj.SetMetatable(state->GetRegistry()["fgTextureResourceMETATABLE"]);
+        }
+        static inline bool Match(lua_State* L, int idx) {
+            LuaState* state = lua_State_to_LuaState(L);
+            LuaObject obj = state->Stack(idx);
+            return obj.GetMetatable() == state->GetRegistry()["fgTextureResourceMETATABLE"];
+        }
+        static inline fgTextureResource *Get(lua_State* L, int idx) {
+            LuaState* state = lua_State_to_LuaState(L);
+            return (fgTextureResource *)state->UnBoxPointer(idx);
+        }
+    };
+
+    template<> struct Type<fgVector3f&> : public Type<fgVector3f> {
+    };
+
+    template<> struct Type<const fgVector3f&> : public Type<fgVector3f> {
+    };
+}
+*/
+    #endif /* FG_USING_LUA_PLUS */
+
 /**
  * 
  */
 class fgScriptSubsystem : public fgManagerBase {
 private:
-#if defined(FG_USING_LUA_PLUS)
+    #if defined(FG_USING_LUA_PLUS)
     typedef std::map<uintptr_t, LuaPlus::LuaObject> userDataObjectMap;
-#else
+    #else
     typedef std::map<uintptr_t, void *> userDataObjectMap;
-#endif
+    #endif
     typedef userDataObjectMap::iterator userDataObjectMapItor;
 
-#if defined(FG_USING_LUA_PLUS)
+    #if defined(FG_USING_LUA_PLUS)
     /// Main global state for LUA
     static LuaPlus::LuaState *m_luaState;
     /// Globals table
     static LuaPlus::LuaObject m_globals;
-#endif
-    
+
+    /// Lua metatable for the external event manager
+    LuaPlus::LuaObject m_metatableEventMgr;
+    /// Lua metatable for the external resource manager
+    LuaPlus::LuaObject m_metatableResourceMgr;
+    /// Lua metatable for the external shader manager
+    LuaPlus::LuaObject m_metatableShaderMgr;
+    /// Lua metatable for the external 2D Scene manager
+    LuaPlus::LuaObject m_metatable2DSceneMgr;
+    /// Lua metatable for the external 3D Scene manager
+    LuaPlus::LuaObject m_metatable3DSceneMgr;
+    /// Lua metatable for the external particle manager
+    LuaPlus::LuaObject m_metatableParticleMgr;
+    /// Lua metatable for the external widget manager
+    LuaPlus::LuaObject m_metatableWidgetMgr;
+    /// Lua metatable for the external style manager
+    LuaPlus::LuaObject m_metatableStyleMgr;
+    /// Lua metatable for the external sound manager
+    LuaPlus::LuaObject m_metatableSoundMgr;
+    #endif
+
     /// Pointer to the external event manager
-    fgManagerBase *m_pEventMgr;
+    static fgManagerBase *m_pEventMgr;
     /// Pointer to the external resource manager
-    fgManagerBase *m_pResourceMgr;
+    static fgManagerBase *m_pResourceMgr;
     /// Pointer to the external shader manager
-    fgManagerBase *m_pShaderMgr;
+    static fgManagerBase *m_pShaderMgr;
     /// Pointer to the external 2D Scene manager
-    fgManagerBase *m_p2DSceneMgr;
+    static fgManagerBase *m_p2DSceneMgr;
     /// Pointer to the external 3D Scene manager
-    fgManagerBase *m_p3DSceneMgr;
+    static fgManagerBase *m_p3DSceneMgr;
     /// Pointer to the external particle manager
-    fgManagerBase *m_pParticleMgr;
+    static fgManagerBase *m_pParticleMgr;
     /// Pointer to the external widget manager
-    fgManagerBase *m_pWidgetMgr;
+    static fgManagerBase *m_pWidgetMgr;
     /// Pointer to the external style manager
-    fgManagerBase *m_pStyleMgr;
+    static fgManagerBase *m_pStyleMgr;
     /// Pointer to the external sound manager
-    fgManagerBase *m_pSoundMgr;
+    static fgManagerBase *m_pSoundMgr;
 
     ///
     static fgBool m_isBindingComplete;
@@ -167,7 +245,7 @@ public:
     virtual fgBool initialize(void);
 
 public:
-#if defined(FG_USING_LUA_PLUS)
+    #if defined(FG_USING_LUA_PLUS)
     /**
      * 
      * @return 
@@ -175,7 +253,7 @@ public:
     static LuaPlus::LuaState *getLuaState(void) {
         return m_luaState;
     }
-#endif
+    #endif
     /**
      * 
      * @return 
@@ -185,7 +263,7 @@ public:
             return (lua_State *)NULL;
         return m_luaState->GetCState();
     }
-#if defined(FG_USING_LUA_PLUS)
+    #if defined(FG_USING_LUA_PLUS)
     /**
      * 
      * @return 
@@ -193,15 +271,39 @@ public:
     static LuaPlus::LuaObject& getGlobals(void) {
         return m_globals;
     }
-#endif
-    
+    #endif
+
 protected:
+    /**
+     * 
+     * @param L
+     * @return 
+     */
     static int simpleGCEvent(lua_State* L);
-
+    /**
+     * 
+     * @param L
+     * @return 
+     */
     static int simpleInPlaceGCEvent(lua_State* L);
-
-    static int managedGCEvent(lua_State* L);
-
+    /**
+     * 
+     * @param L
+     * @return 
+     */
+    static int managedResourceGCEvent(lua_State* L);
+    #if defined(FG_USING_LUA_PLUS)
+    /**
+     * 
+     * @param state
+     * @return 
+     */
+    static int newResourceWrapper(LuaPlus::LuaState* state);
+    
+    #endif /* FG_USING_LUA_PLUS */
+    
+    static fgBool managedObjectDestructorCallback(void *systemData, void *userData);
+    
 private:
     /**
      * 

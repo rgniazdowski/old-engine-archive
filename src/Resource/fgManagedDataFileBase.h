@@ -159,11 +159,11 @@ public:
      * @param id
      * @return 
      */
-    inline const char* getFilePathStr(MapKeyType id) {
+    inline const char* getFilePathStr(MapKeyType id) const {
         if(m_fileMapping.find(id) == m_fileMapping.end()) {
             return m_filePath.c_str();
         }
-        return m_fileMapping[id].c_str();
+        return m_fileMapping.at(id).c_str();
     }
 
     /**

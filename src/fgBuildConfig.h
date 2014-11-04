@@ -391,7 +391,7 @@ extern struct fgBuildConfig g_fgBuildConfig;
     #define FG_PACKAGE_NAME		"FlexiGame"
 // Code name of this version
     #define FG_PROJECT_CODE_NAME	"Infinium"
-    #define FG_PREFIX		"fg"
+    #define FG_PREFIX                   "fg"
 
 // Package name with version and codename
     #define FG_PACKAGE_FULL_TEXT            FG_PACKAGE_NAME" v" FG_BUILD_VERSION_TEXT" codename: " FG_PROJECT_CODE_NAME

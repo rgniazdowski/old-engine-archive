@@ -113,6 +113,7 @@ void fgGfxMain::unregisterResourceCallbacks(void) {
  *
  */
 fgBool fgGfxMain::initGFX(void) {
+    float t1 = fgTime::ms();
     fgStatusReporter::clearStatus();
     fgBool status = FG_TRUE;
 
@@ -169,6 +170,8 @@ fgBool fgGfxMain::initGFX(void) {
     if(status) {
         reportSuccess(FG_ERRNO_GFX_OK, "GFX subsystem initialized successfully");
     }
+    float t2 = fgTime::ms();
+    FG_LOG::PrintDebug("GFX: Initialized in %.2f seconds", (t2 - t1) / 1000.0f);
     return status;
 }
 
