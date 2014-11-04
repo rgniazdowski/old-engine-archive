@@ -100,36 +100,60 @@ public:
      * @param eventCode
      * @param list
      */
-    void throwEvent(fgEventType eventCode, fgArgumentList *list);
+    void throwEvent(fgEventType eventCode,
+                    fgArgumentList *list);
+    
+    /**
+     * 
+     * @param eventCode
+     * @param pSystemData
+     */
+    void throwEvent(fgEventType eventCode,
+                    void *pSystemData);
     /**
      * 
      * @param keyCode
-     * @param callback
+     * @param pCallback
      * @return 
      */
-    fgFunctionCallback* addKeyDownCallback(int keyCode, fgFunctionCallback *callback);
+    fgFunctionCallback* addKeyDownCallback(int keyCode,
+                                           fgFunctionCallback *pCallback);
     /**
      * 
      * @param keyCode
-     * @param callback
+     * @param pCallback
      * @return 
      */
-    fgFunctionCallback* addKeyUpCallback(int keyCode, fgFunctionCallback *callback);
+    fgFunctionCallback* addKeyUpCallback(int keyCode,
+                                         fgFunctionCallback *pCallback);
 
     /**
      * 
      * @param eventCode
-     * @param callback
+     * @param pCallback
      * @return 
      */
-    fgFunctionCallback* addEventCallback(fgEventType eventCode, fgFunctionCallback *callback);
+    fgFunctionCallback* addEventCallback(fgEventType eventCode,
+                                         fgFunctionCallback *pCallback);
     /**
      * 
      * @param eventCode
-     * @param function
+     * @param pFunction
      * @return 
      */
-    fgFunctionCallback* addEventCallback(fgEventType eventCode, fgFunctionCallback::fgFunction function);
+    fgFunctionCallback* addEventCallback(fgEventType eventCode,
+                                         fgFunctionCallback::fgFunction pFunction);
+    
+    /**
+     * 
+     * @param eventCode
+     * @param pPlainFunction
+     * @param pUserData
+     * @return 
+     */
+    fgFunctionCallback* addEventCallback(fgEventType eventCode,
+                                         fgPlainFunctionCallback::fgPlainFunction pPlainFunction,
+                                         void *pUserData = NULL);
     /**
      * 
      * @param eventCode
@@ -140,8 +164,8 @@ public:
     template < class Class >
     fgFunctionCallback* addEventCallback(
                                          fgEventType eventCode,
-                                         typename fgClassCallback<Class>::fgClassMethod method,
-                                         Class* class_instance);
+                                         typename fgClassCallback<Class>::fgClassMethod pMethod,
+                                         Class* pClassInstance);
 
     /**
      * 
@@ -149,7 +173,7 @@ public:
      * @param callback
      * @return 
      */
-    fgBool removeEventCallback(fgEventType eventCode, fgFunctionCallback *callback);
+    fgBool removeEventCallback(fgEventType eventCode, fgFunctionCallback *pCallback);
 
     /**
      * 
@@ -199,11 +223,11 @@ public:
 template <class Class>
 fgFunctionCallback* fgEventManager::addEventCallback(
                                                      fgEventType eventCode,
-                                                     typename fgClassCallback<Class>::fgClassMethod method,
-                                                     Class* class_instance) {
-    if(!method || (int)eventCode < 0 || !class_instance)
+                                                     typename fgClassCallback<Class>::fgClassMethod pMethod,
+                                                     Class* pClassInstance) {
+    if(!pMethod || (int)eventCode < 0 || !pClassInstance)
         return NULL;
-    fgFunctionCallback *callback = new fgClassCallback<Class>(class_instance, method);
+    fgFunctionCallback *callback = new fgClassCallback<Class>(pClassInstance, pMethod);
     m_eventBinds[eventCode].push_back(callback);
     return callback;
 }

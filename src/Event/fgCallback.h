@@ -13,52 +13,76 @@
     #include "fgTypes.h"
     #include "fgArgumentList.h"
 
-/*
+/**
  *
  */
 class fgFunctionCallback {
 public:
     // This is function pointer (to global or static member function)
     typedef fgBool(*fgFunction)(fgArgumentList *argv);
-
-    //
-    fgFunctionCallback() { }
-    // 
-    virtual ~fgFunctionCallback() {
-        m_function = NULL;
-    }
-
-    // 
+    /**
+     * 
+     */
+    fgFunctionCallback() : m_function(NULL) { }
+    /**
+     * 
+     * @param function
+     */
     fgFunctionCallback(fgFunction function) {
         m_function = function;
     }
-
-    // 
+    /**
+     * 
+     */
+    virtual ~fgFunctionCallback() {
+        m_function = NULL;
+    }
+    /**
+     * 
+     * @param function
+     */
     void setFunction(fgFunction function) {
         m_function = function;
     }
-
-    // 
+    /**
+     * 
+     * @return 
+     */
     virtual fgBool Call(void) {
         if(m_function != NULL)
             return m_function(NULL);
         return FG_FALSE;
     }
-
-    // 
+    /**
+     * 
+     * @param argv
+     * @return 
+     */
     virtual fgBool Call(fgArgumentList *argv) {
         if(m_function != NULL)
             return m_function(argv);
         return FG_FALSE;
     }
-    
-    //
+    /**
+     * 
+     * @param pSystemData
+     * @return 
+     */
+    virtual fgBool Call(void *pSystemData) {
+        return FG_FALSE;
+    }
+    /**
+     * 
+     * @return 
+     */
     inline fgFunction & getFunction(void) {
         return m_function;
     }
-    
-    //
-    inline const fgFunction & getFunction(void) const {
+    /**
+     * 
+     * @return 
+     */
+    inline fgFunction const & getFunction(void) const {
         return m_function;
     }
 
@@ -68,138 +92,197 @@ private:
 
 };
 
-/*
+/**
  *
  */
 class fgPlainFunctionCallback : public fgFunctionCallback {
 public:
     // This is function pointer (to global or static member function)
-    typedef fgBool(*fgPlainFunction)(void *userData);
-
-    //
-    fgPlainFunctionCallback() { }
-
-    // 
+    typedef fgBool(*fgPlainFunction)(void *systemData, void *userData);
+    /**
+     * 
+     */
+    fgPlainFunctionCallback() :
+    fgFunctionCallback(),
+    m_plainFunction(NULL),
+    m_pUserData(NULL) { }
+    /**
+     * 
+     * @param function
+     */
+    fgPlainFunctionCallback(fgPlainFunction pPlainFunction, void *pUserData = NULL) {
+        m_plainFunction = pPlainFunction;
+        m_pUserData = pUserData;
+    }
+    /**
+     * 
+     */
     virtual ~fgPlainFunctionCallback() {
-        m_function = NULL;
+        m_plainFunction = NULL;
+        m_pUserData = NULL;
     }
-
-    // 
-    fgPlainFunctionCallback(fgPlainFunction function) {
-        m_function = function;
+    /**
+     * 
+     * @param function
+     */
+    void setFunction(fgPlainFunction pPlainFunction) {
+        m_plainFunction = pPlainFunction;
     }
-
-    // 
-    void setFunction(fgPlainFunction function) {
-        m_function = function;
+    /**
+     * 
+     * @param pUserData
+     */
+    void setUserData(void *pUserData) {
+        m_pUserData = pUserData;
     }
-
-    // 
+    /**
+     * 
+     * @return 
+     */
     virtual fgBool Call(void) {
-        if(m_function != NULL)
-            return m_function(NULL);
+        if(m_plainFunction != NULL)
+            return m_plainFunction(NULL, m_pUserData);
         return FG_FALSE;
     }
-
-    // 
-    virtual fgBool Call(fgArgumentList *argv) {
-        if(m_function != NULL)
-            return m_function((void *)argv);
+    /**
+     * 
+     * @param argv
+     * @return 
+     */
+    virtual fgBool Call(fgArgumentList *pArgv) {
+        // #FIXME - this is for compatibility with other functions
+        if(m_plainFunction != NULL)
+            return m_plainFunction(NULL, NULL);
         return FG_FALSE;
     }
-
-    // 
-    virtual fgBool Call(void *argv) {
-        if(m_function != NULL)
-            return m_function(argv);
+    /**
+     * 
+     * @param argv
+     * @return 
+     */
+    virtual fgBool Call(void *pSystemData) {
+        if(m_plainFunction != NULL)
+            return m_plainFunction(pSystemData, m_pUserData);
         return FG_FALSE;
     }
-   
-    //
+    /**
+     * 
+     * @return 
+     */
     inline fgPlainFunction & getPlainFunction(void) {
-        return m_function;
+        return m_plainFunction;
     }
-    
-    //
-    inline const fgPlainFunction & getPlainFunction(void) const {
-        return m_function;
+    /**
+     * 
+     * @return 
+     */
+    inline fgPlainFunction const & getPlainFunction(void) const {
+        return m_plainFunction;
     }
 private:
-    fgPlainFunction m_function;
+    ///
+    fgPlainFunction m_plainFunction;
+    ///
+    void *m_pUserData;
 };
 
-/*
+/**
  *
  */
 template < class Class >
 class fgClassCallback : public fgFunctionCallback {
 public:
     typedef fgBool(Class::*fgClassMethod)(fgArgumentList *argv);
-
-    // 
-    fgClassCallback(Class* class_instance, fgClassMethod method) {
-        m_classInstance = class_instance;
-        m_method = method;
-    }
-    //
+    /**
+     * 
+     * @param class_instance
+     * @param method
+     */
+    fgClassCallback(Class* pClassInstance, fgClassMethod pMethod) :
+    fgFunctionCallback(),
+    m_pClassInstance(pClassInstance),
+    m_method(pMethod) { }
+    /**
+     * 
+     */
     virtual ~fgClassCallback() {
-        m_classInstance = NULL;
+        m_pClassInstance = NULL;
         m_method = NULL;
     }
-
-    //
-    void setMethod(fgClassMethod method) {
-        m_classInstance = NULL;
-        m_method = method;
+    /**
+     * 
+     * @param method
+     */
+    void setMethod(fgClassMethod pMethod) {
+        m_pClassInstance = NULL;
+        m_method = pMethod;
     }
-
-    //
+    /**
+     * 
+     * @param class_instance
+     */
     void setClass(Class* class_instance) {
-        m_classInstance = class_instance;
+        m_pClassInstance = class_instance;
     }
-
-    // 
+    /**
+     * 
+     * @return 
+     */
     virtual fgBool Call(void) {
-        if(m_method != NULL && m_classInstance != NULL)
-            return (m_classInstance->*m_method)(NULL);
+        if(m_method != NULL && m_pClassInstance != NULL)
+            return (m_pClassInstance->*m_method)(NULL);
         return FG_FALSE;
     }
-
-    // 
+    /**
+     * 
+     * @param argv
+     * @return 
+     */
     virtual fgBool Call(fgArgumentList *argv) {
-        if(m_method != NULL && m_classInstance != NULL)
-            return (m_classInstance->*m_method)(argv);
+        if(m_method != NULL && m_pClassInstance != NULL)
+            return (m_pClassInstance->*m_method)(argv);
         return FG_FALSE;
     }
-
-    // 
+    /**
+     * 
+     * @param class_instance
+     * @return 
+     */
     fgBool Call(Class *class_instance) {
         if(m_method != NULL && class_instance != NULL)
             return (class_instance->*m_method)(NULL);
         return FG_FALSE;
     }
-
-    // 
+    /**
+     * 
+     * @param class_instance
+     * @param argv
+     * @return 
+     */
     fgBool Call(Class *class_instance, fgArgumentList *argv) {
         if(m_method != NULL && class_instance != NULL)
             return (class_instance->*m_method)(argv);
         return FG_FALSE;
     }
-    
-    //
+    /**
+     * 
+     * @return 
+     */
     inline fgClassMethod & getMethod(void) {
         return m_method;
     }
-    
-    //
-    inline const fgClassMethod & getMethod(void) const {
+    /**
+     * 
+     * @return 
+     */
+    inline fgClassMethod const & getMethod(void) const {
         return m_method;
     }
 
 private:
-    // 
-    Class* m_classInstance;
-    // 
+    /// 
+    Class* m_pClassInstance;
+    ///
     fgClassMethod m_method;
 };
 

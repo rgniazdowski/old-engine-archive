@@ -204,9 +204,7 @@ public:
     /**
      * Base destructor of the resource object
      */
-    virtual ~fgResource() {
-        fgResource::destroy();
-    }
+    virtual ~fgResource() { }
 
 protected:
     /**

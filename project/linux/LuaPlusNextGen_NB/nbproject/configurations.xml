@@ -88,10 +88,8 @@
         <itemPath>../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/ltablib.c</itemPath>
         <itemPath>../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/ltm.c</itemPath>
         <itemPath>../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/ltm.h</itemPath>
-        <itemPath>../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lua.c</itemPath>
         <itemPath>../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lua.h</itemPath>
         <itemPath>../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lua.hpp</itemPath>
-        <itemPath>../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/luac.c</itemPath>
         <itemPath>../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/luaconf.h</itemPath>
         <itemPath>../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lualib.h</itemPath>
         <itemPath>../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lundump.c</itemPath>
@@ -132,6 +130,7 @@
             <Elem>FG_DEBUG</Elem>
             <Elem>LUAPLUS_DUMPOBJECT</Elem>
             <Elem>LUA_OPNAMES</Elem>
+            <Elem>LUA_USE_MKSTEMP</Elem>
             <Elem>_DEBUG</Elem>
           </preprocessorList>
           <warningLevel>2</warningLevel>
@@ -142,6 +141,7 @@
             <Elem>FG_DEBUG</Elem>
             <Elem>LUAPLUS_DUMPOBJECT</Elem>
             <Elem>LUA_OPNAMES</Elem>
+            <Elem>LUA_USE_MKSTEMP</Elem>
             <Elem>_DEBUG</Elem>
           </preprocessorList>
           <warningLevel>2</warningLevel>
@@ -514,11 +514,6 @@
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lua.c"
-            ex="false"
-            tool="0"
-            flavor2="0">
-      </item>
       <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lua.h"
             ex="false"
             tool="3"
@@ -527,11 +522,6 @@
       <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lua.hpp"
             ex="false"
             tool="3"
-            flavor2="0">
-      </item>
-      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/luac.c"
-            ex="false"
-            tool="0"
             flavor2="0">
       </item>
       <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/luaconf.h"
@@ -584,17 +574,22 @@
       <compileType>
         <cTool>
           <developmentMode>5</developmentMode>
+          <stripSymbols>true</stripSymbols>
+          <commandLine>-ffunction-sections -fdata-sections -Os</commandLine>
           <preprocessorList>
             <Elem>LUAPLUS_DUMPOBJECT</Elem>
             <Elem>LUA_OPNAMES</Elem>
+            <Elem>LUA_USE_MKSTEMP</Elem>
           </preprocessorList>
           <warningLevel>2</warningLevel>
         </cTool>
         <ccTool>
           <developmentMode>5</developmentMode>
+          <commandLine>-ffunction-sections -fdata-sections -Os</commandLine>
           <preprocessorList>
             <Elem>LUAPLUS_DUMPOBJECT</Elem>
             <Elem>LUA_OPNAMES</Elem>
+            <Elem>LUA_USE_MKSTEMP</Elem>
           </preprocessorList>
           <warningLevel>2</warningLevel>
         </ccTool>
@@ -972,11 +967,6 @@
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lua.c"
-            ex="false"
-            tool="0"
-            flavor2="0">
-      </item>
       <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lua.h"
             ex="false"
             tool="3"
@@ -985,11 +975,6 @@
       <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lua.hpp"
             ex="false"
             tool="3"
-            flavor2="0">
-      </item>
-      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/luac.c"
-            ex="false"
-            tool="0"
             flavor2="0">
       </item>
       <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/luaconf.h"
@@ -1046,6 +1031,7 @@
             <Elem>FG_DEBUG</Elem>
             <Elem>LUA_BUILD_AS_DLL</Elem>
             <Elem>LUA_OPNAMES</Elem>
+            <Elem>LUA_USE_MKSTEMP</Elem>
             <Elem>_DEBUG</Elem>
           </preprocessorList>
           <warningLevel>2</warningLevel>
@@ -1056,6 +1042,7 @@
             <Elem>FG_DEBUG</Elem>
             <Elem>LUA_BUILD_AS_DLL</Elem>
             <Elem>LUA_OPNAMES</Elem>
+            <Elem>LUA_USE_MKSTEMP</Elem>
             <Elem>_DEBUG</Elem>
           </preprocessorList>
           <warningLevel>2</warningLevel>
@@ -1426,11 +1413,6 @@
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lua.c"
-            ex="false"
-            tool="0"
-            flavor2="9">
-      </item>
       <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lua.h"
             ex="false"
             tool="3"
@@ -1440,11 +1422,6 @@
             ex="false"
             tool="3"
             flavor2="0">
-      </item>
-      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/luac.c"
-            ex="false"
-            tool="0"
-            flavor2="9">
       </item>
       <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/luaconf.h"
             ex="false"
@@ -1499,6 +1476,7 @@
           <preprocessorList>
             <Elem>LUA_BUILD_AS_DLL</Elem>
             <Elem>LUA_OPNAMES</Elem>
+            <Elem>LUA_USE_MKSTEMP</Elem>
           </preprocessorList>
           <warningLevel>2</warningLevel>
         </cTool>
@@ -1507,6 +1485,7 @@
           <preprocessorList>
             <Elem>LUA_BUILD_AS_DLL</Elem>
             <Elem>LUA_OPNAMES</Elem>
+            <Elem>LUA_USE_MKSTEMP</Elem>
           </preprocessorList>
           <warningLevel>2</warningLevel>
         </ccTool>
@@ -1882,11 +1861,6 @@
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lua.c"
-            ex="false"
-            tool="0"
-            flavor2="9">
-      </item>
       <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lua.h"
             ex="false"
             tool="3"
@@ -1896,11 +1870,6 @@
             ex="false"
             tool="3"
             flavor2="0">
-      </item>
-      <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/luac.c"
-            ex="false"
-            tool="0"
-            flavor2="9">
       </item>
       <item path="../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/luaconf.h"
             ex="false"

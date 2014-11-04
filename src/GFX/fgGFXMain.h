@@ -34,6 +34,8 @@ class fgGfxMain;
 FG_TAG_TEMPLATE_ID_AUTO(fgGfxMain, FG_TAG_GFX_MAIN_NAME);
 typedef FG_TAG_GFX_MAIN fgGfxMainTag;
 
+// Manager base?
+
 /**
  *
  */

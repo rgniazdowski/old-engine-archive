@@ -38,49 +38,49 @@
         #undef FG_VERBOSE
         #undef FG_VERBOSE_LEVEL
 
-        #undef FG_USING_MARMALADE				//	Is Marmalade framework used in this build?
-        #undef FG_USING_MARMALADE_SENSORS		//	Is Marmalades' sensor subsystem used?
-        #undef FG_USING_MARMALADE_KEYBOARD		//	Is Marmalades' keyboard event handled in this build?
-        #undef FG_USING_MARMALADE_SOUND			//	Is the s3eSound used?
-        #undef FG_USING_MARMALADE_AUDIO			//	Is the s3eAudio used?
-        #undef FG_USING_MARMALADE_THREADS		//	Are Marmalades' threads used in this build?
-        #undef FG_USING_MARMALADE_IWGX			//	Is the IwGX subproject used?
-        #undef FG_USING_MARMALADE_IWGL			//	Is the IwGL subproject used in this build?
-        #undef FG_USING_MARMALADE_OPENGL_ES		//	Is the OpenGL ES used via Marmalade?
-        #undef FG_USING_OPENGL_ES				//	Is the OpenGL ES used (will be also set when using OpenGL ES via Marmalade)?
-        #undef FG_USING_OPENGL					//	Is the plain OpenGL used in this build?
-        #undef FG_USING_OPENGL_GLU				//	Is the GLU library used in this build?
-        #undef FG_USING_OPENGL_GLUT				//	Is the GLUT library used?
-        #undef FG_USING_OPENGL_GLEW				//	Is the GLEW library used?
-        #undef FG_USING_GL_BINDING                              //      Is the glbinding module used?
-        #undef FG_USING_GLM						//	Is the OpenGL Mathemathics library (GLM) used? 
-        #undef FG_USING_SDL						//  Is the SDL1.x used?
-        #undef FG_USING_SDL2					//  Is the latest SDL2 used in this build?
-        #undef FG_USING_OPENAL					//	Is the OpenAL library used (for sound system) in this build?
-        #undef FG_USING_MARMALADE_EGL			//	Is the EGL used via Marmalade in this build?
-        #undef FG_USING_EGL						//	Is the EGL library used in this build?
-        #undef FG_USING_SENSORS					//	Are sensors used in this build?
-        #undef FG_USING_AUDIO					//	Is audio used at all?
-        #undef FG_USING_THREADS					//	Are threads (non-Marmalade) used at all?
-        #undef FG_USING_DIRECTX					//	Is the DirectX (any version) used in this build?
-        #undef FG_USING_DIRECTSOUND				//	Is the DirectSound used?
-        #undef FG_USING_DPI_INFO				//	Is the DPI Info extension used (Marmalade needed)?
-        #undef FG_USING_TINYXML					//	Is the tinyxml library used in this build?
-        #undef FG_USING_LUA_PLUS				//	Is the enhanced Lua C API used?
-        #undef FG_USING_LUA						//	Is the original Lua C API used?
-        #undef FG_USING_BULLET					//	Is the Bullet (physics engine) library used in this build?
-        #undef FG_USING_PLATFORM_WINDOWS		//	Is the target platform Windows in this build?
-        #undef FG_USING_PLATFORM_LINUX			//	Is the target platform Linux?
-        #undef FG_USING_PLATFORM_ANDROID		//	Is the target platform Android?
-        #undef FG_USING_PLATFORM_IOS			//	Is the target platform iOS?
-        #undef FG_USING_PLATFORM_MACOSX			//	Is the target platform MACOS/X
-        #undef FG_USING_CYGWIN					//	Is Cygwin used for current build?
-        #undef FG_USING_MINGW					//	Is MinGW used for current build?
-        #undef FG_USING_VISUAL_STUDIO			//  Does the build system run under Visual Studio (any version)?
-        #undef FG_USING_QT						//	Does the build system run under QtCreator (any version)?
-        #undef FG_USING_PLUGINS					//	Is Plugin Subsystem used in this build?
-        #undef FG_USING_WXWIDGETS				//  Is wxWidgets GUI library used in this build?
-        #undef FG_SUPPORT_WXWIDGETS				//  Is wxWidgets enabled/supported in this build?
+        #undef FG_USING_MARMALADE                       //  Is Marmalade framework used in this build?
+        #undef FG_USING_MARMALADE_SENSORS               //  Is Marmalades' sensor subsystem used?
+        #undef FG_USING_MARMALADE_KEYBOARD              //  Is Marmalades' keyboard event handled in this build?
+        #undef FG_USING_MARMALADE_SOUND                 //  Is the s3eSound used?
+        #undef FG_USING_MARMALADE_AUDIO                 //  Is the s3eAudio used?
+        #undef FG_USING_MARMALADE_THREADS               //  Are Marmalades' threads used in this build?
+        #undef FG_USING_MARMALADE_IWGX                  //  Is the IwGX subproject used?
+        #undef FG_USING_MARMALADE_IWGL                  //  Is the IwGL subproject used in this build?
+        #undef FG_USING_MARMALADE_OPENGL_ES             //  Is the OpenGL ES used via Marmalade?
+        #undef FG_USING_OPENGL_ES                       //  Is the OpenGL ES used (will be also set when using OpenGL ES via Marmalade)?
+        #undef FG_USING_OPENGL                          //  Is the plain OpenGL used in this build?
+        #undef FG_USING_OPENGL_GLU                      //  Is the GLU library used in this build?
+        #undef FG_USING_OPENGL_GLUT                     //  Is the GLUT library used?
+        #undef FG_USING_OPENGL_GLEW                     //  Is the GLEW library used?
+        #undef FG_USING_GL_BINDING                      //  Is the glbinding module used?
+        #undef FG_USING_GLM                             //  Is the OpenGL Mathemathics library (GLM) used? 
+        #undef FG_USING_SDL                             //  Is the SDL1.x used?
+        #undef FG_USING_SDL2                            //  Is the latest SDL2 used in this build?
+        #undef FG_USING_OPENAL                          //  Is the OpenAL library used (for sound system) in this build?
+        #undef FG_USING_MARMALADE_EGL                   //  Is the EGL used via Marmalade in this build?
+        #undef FG_USING_EGL                             //  Is the EGL library used in this build?
+        #undef FG_USING_SENSORS                         //  Are sensors used in this build?
+        #undef FG_USING_AUDIO                           //  Is audio used at all?
+        #undef FG_USING_THREADS                         //  Are threads (non-Marmalade) used at all?
+        #undef FG_USING_DIRECTX                         //  Is the DirectX (any version) used in this build?
+        #undef FG_USING_DIRECTSOUND                     //  Is the DirectSound used?
+        #undef FG_USING_DPI_INFO                        //  Is the DPI Info extension used (Marmalade needed)?
+        #undef FG_USING_TINYXML                         //  Is the tinyxml library used in this build?
+        #undef FG_USING_LUA_PLUS                        //  Is the enhanced Lua C API used?
+        #undef FG_USING_LUA                             //  Is the original Lua C API used?
+        #undef FG_USING_BULLET                          //  Is the Bullet (physics engine) library used in this build?
+        #undef FG_USING_PLATFORM_WINDOWS                //  Is the target platform Windows in this build?
+        #undef FG_USING_PLATFORM_LINUX                  //  Is the target platform Linux?
+        #undef FG_USING_PLATFORM_ANDROID                //  Is the target platform Android?
+        #undef FG_USING_PLATFORM_IOS                    //  Is the target platform iOS?
+        #undef FG_USING_PLATFORM_MACOSX                 //  Is the target platform MACOS/X
+        #undef FG_USING_CYGWIN                          //  Is Cygwin used for current build?
+        #undef FG_USING_MINGW                           //  Is MinGW used for current build?
+        #undef FG_USING_VISUAL_STUDIO                   //  Does the build system run under Visual Studio (any version)?
+        #undef FG_USING_QT                              //  Does the build system run under QtCreator (any version)?
+        #undef FG_USING_PLUGINS                         //  Is Plugin Subsystem used in this build?
+        #undef FG_USING_WXWIDGETS                       //  Is wxWidgets GUI library used in this build?
+        #undef FG_SUPPORT_WXWIDGETS                     //  Is wxWidgets enabled/supported in this build?
 
     #endif /* FG_NO_UNDEF */
 /*************************** CURRENT TARGET PLATFORM / BUILD SYSTEM ***************************/
@@ -91,23 +91,23 @@
         #define FG_USING_MARMALADE
     #endif
 
-    #if defined I3D_ARCH_X86
+    #if defined(I3D_ARCH_X86)
         #define FG_USING_X86
     #endif
 
-    #if defined S3E_ANDROID_X86
+    #if defined(S3E_ANDROID_X86)
         #define FG_USING_PLATFORM_ANDROID
     #endif
 
-    #if defined __gnu_linux__ || defined __linux__ || defined linux || defined __linux
+    #if defined(__gnu_linux__) || defined(__linux__) || defined(linux) || defined(__linux)
         #define FG_USING_PLATFORM_LINUX
     #endif
 
-    #if defined __CYGWIN__
+    #if defined(__CYGWIN__)
         #define FG_USING_CYGWIN
     #endif
 
-    #if defined __MINGW__ || defined __MINGW32__ || defined __MINGW64__
+    #if defined(__MINGW__) || defined(__MINGW32__) || defined(__MINGW64__)
         #define FG_USING_MINGW
     #endif
 
@@ -273,6 +273,23 @@
         #endif
     #endif
 
+/********************************* SCRIPTING / LUA SUPPORT ****************************/
+
+    #if defined(FG_USING_LUA_PLUS)
+        #if !defined(LUAPLUS_DUMPOBJECT)
+            #define LUAPLUS_DUMPOBJECT 1
+        #endif
+    #endif
+    
+    #if defined(FG_USING_LUA) || defined(FG_USING_LUA_PLUS)
+        #if !defined(LUA_OPNAMES)
+            #define LUA_OPNAMES 1
+        #endif
+        #if !defined(LUA_USE_MKSTEMP) && defined(FG_USING_PLATFORM_LINUX)
+            #define LUA_USE_MKSTEMP 1
+        #endif
+    #endif
+
 /*************************** OTHER DEFINITIONS / STRUCTURES ***************************/
 
 //
@@ -342,8 +359,8 @@ extern struct fgBuildConfig g_fgBuildConfig;
     #define FG_BUILD		g_fgBuildConfig
     #define FG_BUILD_CONFIG	g_fgBuildConfig
 
-    #define FG_BUILD_DATE			__DATE__
-    #define FG_BUILD_TIME			__TIME__
+    #define FG_BUILD_DATE	__DATE__
+    #define FG_BUILD_TIME	__TIME__
 
     #define FG_XSTR(S)	FG_STR(S)
     #define FG_STR(S)	#S
@@ -380,12 +397,12 @@ extern struct fgBuildConfig g_fgBuildConfig;
     #define FG_PACKAGE_FULL_TEXT            FG_PACKAGE_NAME" v" FG_BUILD_VERSION_TEXT" codename: " FG_PROJECT_CODE_NAME
 
 // Full name of the project
-    #define FG_FULL_NAME			"Flexible Game Engine"
-    #define FG_AUTHOR_ALIAS			""
+    #define FG_FULL_NAME                "Flexible Game Engine"
+    #define FG_AUTHOR_ALIAS		""
     #define FG_PACKAGE_ALIAS		""
 
 // Copyright text
-    #define FG_COPYRIGHT			"Copyright (C) Radoslaw Gniazdowski. All rights reserved."
+    #define FG_COPYRIGHT		"Copyright (C) Radoslaw Gniazdowski. All rights reserved."
 // Copying text
     #define FG_COPYING			FG_PACKAGE_NAME" source code and any related files can not be copied, modified and/or distributed without the express or written permission from the author."
 // License type

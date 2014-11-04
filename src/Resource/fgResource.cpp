@@ -74,11 +74,14 @@ void fgResource::clear(void) {
     m_size = 0;
     m_fileMapping.clear();
     m_filePath.clear();
+    m_manager = NULL;
     FG_LOG::PrintDebug("fgResource::clear(void);");
 }
 
-/*
- *
+/**
+ * 
+ * @param container
+ * @return 
  */
 bool fgResource::operator <(fgResource& container) {
     if(getPriority() < container.getPriority())
@@ -101,7 +104,9 @@ bool fgResource::operator <(fgResource& container) {
 }
 
 /**
- *
+ * 
+ * @param container
+ * @return 
  */
 bool fgResource::operator >(fgResource& container) {
     if(getPriority() < container.getPriority())

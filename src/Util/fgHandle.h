@@ -132,13 +132,71 @@ fgBool fgHandle<TagType>::init(fgRawIndex index) {
     m_magic = s_autoMagic;
     return FG_TRUE;
 }
+
+/**
+ * 
+ * @param l
+ * @param r
+ * @return 
+ */
 template <typename TagType>
 inline bool operator !=(fgHandle <TagType> l, fgHandle <TagType> r) {
     return ( l.getHandle() != r.getHandle());
 }
+
+/**
+ * 
+ * @param l
+ * @param r
+ * @return 
+ */
 template <typename TagType>
 inline bool operator ==(fgHandle <TagType> l, fgHandle <TagType> r) {
     return ( l.getHandle() == r.getHandle());
+}
+
+/**
+ * 
+ * @param l
+ * @param r
+ * @return 
+ */
+template <typename TagType>
+inline bool operator >(fgHandle <TagType> l, fgHandle <TagType> r) {
+    return ( l.getHandle() > r.getHandle());
+}
+
+/**
+ * 
+ * @param l
+ * @param r
+ * @return 
+ */
+template <typename TagType>
+inline bool operator <(fgHandle <TagType> l, fgHandle <TagType> r) {
+    return ( l.getHandle() < r.getHandle());
+}
+
+/**
+ * 
+ * @param l
+ * @param r
+ * @return 
+ */
+template <typename TagType>
+inline bool operator >=(fgHandle <TagType> l, fgHandle <TagType> r) {
+    return ( l.getHandle() >= r.getHandle());
+}
+
+/**
+ * 
+ * @param l
+ * @param r
+ * @return 
+ */
+template <typename TagType>
+inline bool operator <=(fgHandle <TagType> l, fgHandle <TagType> r) {
+    return ( l.getHandle() <= r.getHandle());
 }
 
 #endif /* _FG_HANDLE_H_ */

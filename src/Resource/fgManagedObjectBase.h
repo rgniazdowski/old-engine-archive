@@ -18,6 +18,7 @@
 
     #include "fgBool.h"
     #include <string>
+    #include <cstdio>
 
 /**
  * 
@@ -25,17 +26,53 @@
 template<typename HandleType>
 class fgManagedObjectBase {
 public:
-    /**
-     * Default empty constructor for resource base object
-     */
-    fgManagedObjectBase() : m_nameTag(), m_isManaged(FG_FALSE) { }
-
-    /**
-     * Default empty destructor for resource base object
-     */
-    virtual ~fgManagedObjectBase() {}
+    // System data is always set to (void *)this
+    typedef fgBool(*callbackPtr)(void *systemData, void *userData);
     
 public:
+    /**
+     * Default empty constructor for managed base object
+     */
+    fgManagedObjectBase() : m_nameTag(), m_isManaged(FG_FALSE) { }
+    /**
+     * Default empty destructor for managed base object
+     */
+    virtual ~fgManagedObjectBase() {
+        // Now call the special destructor callbacks
+        int n = m_onDestructorCallbacks.size();
+        for(int i = 0; i < n; i++) {
+            callbackData &info = m_onDestructorCallbacks[i];
+            if(info.callback) {
+                info.callback((void *)this, (void *)info.userData);
+                info.callback = NULL;
+                info.userData = NULL;
+            }
+        }
+        m_onDestructorCallbacks.clear_optimised();
+        //m_onDestructorCallbacks.resize(0);
+    }
+
+public:
+    /**
+     * 
+     * @param pCallback
+     * @param pUserData
+     * @return 
+     */
+    fgBool registerOnDestruct(callbackPtr pCallback, void *pUserData = NULL) {
+        if(!pCallback)
+            return FG_FALSE;
+        int n = m_onDestructorCallbacks.size();
+        // Check for duplicates
+        for(int i = 0; i < n; i++) {
+            callbackData &info = m_onDestructorCallbacks[i];
+            if(info.callback == pCallback)
+                return FG_FALSE;
+        }
+        callbackData callbackInfo(pCallback, pUserData);
+        m_onDestructorCallbacks.push_back(callbackInfo);
+        return FG_TRUE;
+    }
     /**
      * Set resource name (string TAG/ID)
      * @param name
@@ -72,7 +109,6 @@ public:
     inline const char* getNameStr(void) const {
         return m_nameTag.c_str();
     }
-
     /**
      * Return the data handle ID
      * @return 
@@ -80,7 +116,6 @@ public:
     inline HandleType getHandle(void) const {
         return m_handle;
     }
-
     /**
      * Set the data handle ID 
      * @param handle
@@ -88,7 +123,6 @@ public:
     inline void setHandle(const HandleType handle) {
         m_handle = handle;
     }
-
     /**
      * Gets the reference to the data handle
      * @return Reference to the data handle
@@ -125,6 +159,35 @@ protected:
     HandleType m_handle;
     /// Is this data currently managed inside of any kind manager?
     fgBool m_isManaged;
+
+private:
+
+    /**
+     *
+     */
+    struct callbackData {
+        ///
+        callbackPtr callback;
+        ///
+        void *userData;
+        /**
+         * 
+         */
+        callbackData() : userData(NULL), callback(NULL) { }
+        /**
+         * 
+         * @param pUserData
+         * @param pCallback
+         */
+        callbackData(callbackPtr pCallback, void *pUserData) :
+        callback(pCallback),
+        userData(pUserData) { }
+    };
+
+    typedef fgVector<callbackData> callbackVec;
+    typedef typename callbackVec::iterator callbackVecItor;
+    /// Callbacks to call when the destructor is called
+    callbackVec m_onDestructorCallbacks;
 };
 
 #endif /* _FG_MANAGED_OBJECT_BASE_H_ */

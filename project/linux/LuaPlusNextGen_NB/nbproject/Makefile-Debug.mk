@@ -67,8 +67,6 @@ OBJECTFILES= \
 	${OBJECTDIR}/_ext/1617192163/ltable.o \
 	${OBJECTDIR}/_ext/1617192163/ltablib.o \
 	${OBJECTDIR}/_ext/1617192163/ltm.o \
-	${OBJECTDIR}/_ext/1617192163/lua.o \
-	${OBJECTDIR}/_ext/1617192163/luac.o \
 	${OBJECTDIR}/_ext/1617192163/lundump.o \
 	${OBJECTDIR}/_ext/1617192163/lvm.o \
 	${OBJECTDIR}/_ext/1617192163/lzio.o
@@ -103,187 +101,177 @@ ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libluaplusnextgen_nb.a: ${OBJECTFILES
 ${OBJECTDIR}/_ext/1575965373/LuaPlus.o: ../../../modules/luaplus51-all/Src/LuaPlus/LuaPlus.cpp 
 	${MKDIR} -p ${OBJECTDIR}/_ext/1575965373
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DLUA_OPNAMES -DLUAPLUS_DUMPOBJECT -DDEBUG -D_DEBUG -DFG_DEBUG -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1575965373/LuaPlus.o ../../../modules/luaplus51-all/Src/LuaPlus/LuaPlus.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DLUAPLUS_DUMPOBJECT -DLUA_OPNAMES -D_DEBUG -DLUA_USE_MKSTEMP -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1575965373/LuaPlus.o ../../../modules/luaplus51-all/Src/LuaPlus/LuaPlus.cpp
 
 ${OBJECTDIR}/_ext/1575965373/LuaPlusAddons.o: ../../../modules/luaplus51-all/Src/LuaPlus/LuaPlusAddons.c 
 	${MKDIR} -p ${OBJECTDIR}/_ext/1575965373
 	${RM} "$@.d"
-	$(COMPILE.c) -g -Wall -DLUA_OPNAMES -DLUAPLUS_DUMPOBJECT -DDEBUG -D_DEBUG -DFG_DEBUG -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1575965373/LuaPlusAddons.o ../../../modules/luaplus51-all/Src/LuaPlus/LuaPlusAddons.c
+	$(COMPILE.c) -g -Wall -DDEBUG -DFG_DEBUG -DLUAPLUS_DUMPOBJECT -DLUA_OPNAMES -D_DEBUG -DLUA_USE_MKSTEMP -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1575965373/LuaPlusAddons.o ../../../modules/luaplus51-all/Src/LuaPlus/LuaPlusAddons.c
 
 ${OBJECTDIR}/_ext/1575965373/LuaState_DumpObject.o: ../../../modules/luaplus51-all/Src/LuaPlus/LuaState_DumpObject.cpp 
 	${MKDIR} -p ${OBJECTDIR}/_ext/1575965373
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DLUA_OPNAMES -DLUAPLUS_DUMPOBJECT -DDEBUG -D_DEBUG -DFG_DEBUG -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1575965373/LuaState_DumpObject.o ../../../modules/luaplus51-all/Src/LuaPlus/LuaState_DumpObject.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DLUAPLUS_DUMPOBJECT -DLUA_OPNAMES -D_DEBUG -DLUA_USE_MKSTEMP -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1575965373/LuaState_DumpObject.o ../../../modules/luaplus51-all/Src/LuaPlus/LuaState_DumpObject.cpp
 
 ${OBJECTDIR}/_ext/1617192163/lapi.o: ../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lapi.c 
 	${MKDIR} -p ${OBJECTDIR}/_ext/1617192163
 	${RM} "$@.d"
-	$(COMPILE.c) -g -Wall -DLUA_OPNAMES -DLUAPLUS_DUMPOBJECT -DDEBUG -D_DEBUG -DFG_DEBUG -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1617192163/lapi.o ../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lapi.c
+	$(COMPILE.c) -g -Wall -DDEBUG -DFG_DEBUG -DLUAPLUS_DUMPOBJECT -DLUA_OPNAMES -D_DEBUG -DLUA_USE_MKSTEMP -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1617192163/lapi.o ../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lapi.c
 
 ${OBJECTDIR}/_ext/1617192163/lauxlib.o: ../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lauxlib.c 
 	${MKDIR} -p ${OBJECTDIR}/_ext/1617192163
 	${RM} "$@.d"
-	$(COMPILE.c) -g -Wall -DLUA_OPNAMES -DLUAPLUS_DUMPOBJECT -DDEBUG -D_DEBUG -DFG_DEBUG -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1617192163/lauxlib.o ../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lauxlib.c
+	$(COMPILE.c) -g -Wall -DDEBUG -DFG_DEBUG -DLUAPLUS_DUMPOBJECT -DLUA_OPNAMES -D_DEBUG -DLUA_USE_MKSTEMP -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1617192163/lauxlib.o ../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lauxlib.c
 
 ${OBJECTDIR}/_ext/1617192163/lbaselib.o: ../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lbaselib.c 
 	${MKDIR} -p ${OBJECTDIR}/_ext/1617192163
 	${RM} "$@.d"
-	$(COMPILE.c) -g -Wall -DLUA_OPNAMES -DLUAPLUS_DUMPOBJECT -DDEBUG -D_DEBUG -DFG_DEBUG -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1617192163/lbaselib.o ../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lbaselib.c
+	$(COMPILE.c) -g -Wall -DDEBUG -DFG_DEBUG -DLUAPLUS_DUMPOBJECT -DLUA_OPNAMES -D_DEBUG -DLUA_USE_MKSTEMP -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1617192163/lbaselib.o ../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lbaselib.c
 
 ${OBJECTDIR}/_ext/1617192163/lbitlib.o: ../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lbitlib.c 
 	${MKDIR} -p ${OBJECTDIR}/_ext/1617192163
 	${RM} "$@.d"
-	$(COMPILE.c) -g -Wall -DLUA_OPNAMES -DLUAPLUS_DUMPOBJECT -DDEBUG -D_DEBUG -DFG_DEBUG -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1617192163/lbitlib.o ../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lbitlib.c
+	$(COMPILE.c) -g -Wall -DDEBUG -DFG_DEBUG -DLUAPLUS_DUMPOBJECT -DLUA_OPNAMES -D_DEBUG -DLUA_USE_MKSTEMP -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1617192163/lbitlib.o ../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lbitlib.c
 
 ${OBJECTDIR}/_ext/1617192163/lcode.o: ../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lcode.c 
 	${MKDIR} -p ${OBJECTDIR}/_ext/1617192163
 	${RM} "$@.d"
-	$(COMPILE.c) -g -Wall -DLUA_OPNAMES -DLUAPLUS_DUMPOBJECT -DDEBUG -D_DEBUG -DFG_DEBUG -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1617192163/lcode.o ../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lcode.c
+	$(COMPILE.c) -g -Wall -DDEBUG -DFG_DEBUG -DLUAPLUS_DUMPOBJECT -DLUA_OPNAMES -D_DEBUG -DLUA_USE_MKSTEMP -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1617192163/lcode.o ../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lcode.c
 
 ${OBJECTDIR}/_ext/1617192163/lcorolib.o: ../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lcorolib.c 
 	${MKDIR} -p ${OBJECTDIR}/_ext/1617192163
 	${RM} "$@.d"
-	$(COMPILE.c) -g -Wall -DLUA_OPNAMES -DLUAPLUS_DUMPOBJECT -DDEBUG -D_DEBUG -DFG_DEBUG -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1617192163/lcorolib.o ../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lcorolib.c
+	$(COMPILE.c) -g -Wall -DDEBUG -DFG_DEBUG -DLUAPLUS_DUMPOBJECT -DLUA_OPNAMES -D_DEBUG -DLUA_USE_MKSTEMP -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1617192163/lcorolib.o ../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lcorolib.c
 
 ${OBJECTDIR}/_ext/1617192163/lctype.o: ../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lctype.c 
 	${MKDIR} -p ${OBJECTDIR}/_ext/1617192163
 	${RM} "$@.d"
-	$(COMPILE.c) -g -Wall -DLUA_OPNAMES -DLUAPLUS_DUMPOBJECT -DDEBUG -D_DEBUG -DFG_DEBUG -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1617192163/lctype.o ../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lctype.c
+	$(COMPILE.c) -g -Wall -DDEBUG -DFG_DEBUG -DLUAPLUS_DUMPOBJECT -DLUA_OPNAMES -D_DEBUG -DLUA_USE_MKSTEMP -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1617192163/lctype.o ../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lctype.c
 
 ${OBJECTDIR}/_ext/1617192163/ldblib.o: ../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/ldblib.c 
 	${MKDIR} -p ${OBJECTDIR}/_ext/1617192163
 	${RM} "$@.d"
-	$(COMPILE.c) -g -Wall -DLUA_OPNAMES -DLUAPLUS_DUMPOBJECT -DDEBUG -D_DEBUG -DFG_DEBUG -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1617192163/ldblib.o ../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/ldblib.c
+	$(COMPILE.c) -g -Wall -DDEBUG -DFG_DEBUG -DLUAPLUS_DUMPOBJECT -DLUA_OPNAMES -D_DEBUG -DLUA_USE_MKSTEMP -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1617192163/ldblib.o ../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/ldblib.c
 
 ${OBJECTDIR}/_ext/1617192163/ldebug.o: ../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/ldebug.c 
 	${MKDIR} -p ${OBJECTDIR}/_ext/1617192163
 	${RM} "$@.d"
-	$(COMPILE.c) -g -Wall -DLUA_OPNAMES -DLUAPLUS_DUMPOBJECT -DDEBUG -D_DEBUG -DFG_DEBUG -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1617192163/ldebug.o ../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/ldebug.c
+	$(COMPILE.c) -g -Wall -DDEBUG -DFG_DEBUG -DLUAPLUS_DUMPOBJECT -DLUA_OPNAMES -D_DEBUG -DLUA_USE_MKSTEMP -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1617192163/ldebug.o ../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/ldebug.c
 
 ${OBJECTDIR}/_ext/1617192163/ldo.o: ../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/ldo.c 
 	${MKDIR} -p ${OBJECTDIR}/_ext/1617192163
 	${RM} "$@.d"
-	$(COMPILE.c) -g -Wall -DLUA_OPNAMES -DLUAPLUS_DUMPOBJECT -DDEBUG -D_DEBUG -DFG_DEBUG -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1617192163/ldo.o ../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/ldo.c
+	$(COMPILE.c) -g -Wall -DDEBUG -DFG_DEBUG -DLUAPLUS_DUMPOBJECT -DLUA_OPNAMES -D_DEBUG -DLUA_USE_MKSTEMP -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1617192163/ldo.o ../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/ldo.c
 
 ${OBJECTDIR}/_ext/1617192163/ldump.o: ../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/ldump.c 
 	${MKDIR} -p ${OBJECTDIR}/_ext/1617192163
 	${RM} "$@.d"
-	$(COMPILE.c) -g -Wall -DLUA_OPNAMES -DLUAPLUS_DUMPOBJECT -DDEBUG -D_DEBUG -DFG_DEBUG -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1617192163/ldump.o ../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/ldump.c
+	$(COMPILE.c) -g -Wall -DDEBUG -DFG_DEBUG -DLUAPLUS_DUMPOBJECT -DLUA_OPNAMES -D_DEBUG -DLUA_USE_MKSTEMP -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1617192163/ldump.o ../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/ldump.c
 
 ${OBJECTDIR}/_ext/1617192163/lfunc.o: ../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lfunc.c 
 	${MKDIR} -p ${OBJECTDIR}/_ext/1617192163
 	${RM} "$@.d"
-	$(COMPILE.c) -g -Wall -DLUA_OPNAMES -DLUAPLUS_DUMPOBJECT -DDEBUG -D_DEBUG -DFG_DEBUG -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1617192163/lfunc.o ../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lfunc.c
+	$(COMPILE.c) -g -Wall -DDEBUG -DFG_DEBUG -DLUAPLUS_DUMPOBJECT -DLUA_OPNAMES -D_DEBUG -DLUA_USE_MKSTEMP -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1617192163/lfunc.o ../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lfunc.c
 
 ${OBJECTDIR}/_ext/1617192163/lgc.o: ../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lgc.c 
 	${MKDIR} -p ${OBJECTDIR}/_ext/1617192163
 	${RM} "$@.d"
-	$(COMPILE.c) -g -Wall -DLUA_OPNAMES -DLUAPLUS_DUMPOBJECT -DDEBUG -D_DEBUG -DFG_DEBUG -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1617192163/lgc.o ../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lgc.c
+	$(COMPILE.c) -g -Wall -DDEBUG -DFG_DEBUG -DLUAPLUS_DUMPOBJECT -DLUA_OPNAMES -D_DEBUG -DLUA_USE_MKSTEMP -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1617192163/lgc.o ../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lgc.c
 
 ${OBJECTDIR}/_ext/1617192163/linit.o: ../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/linit.c 
 	${MKDIR} -p ${OBJECTDIR}/_ext/1617192163
 	${RM} "$@.d"
-	$(COMPILE.c) -g -Wall -DLUA_OPNAMES -DLUAPLUS_DUMPOBJECT -DDEBUG -D_DEBUG -DFG_DEBUG -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1617192163/linit.o ../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/linit.c
+	$(COMPILE.c) -g -Wall -DDEBUG -DFG_DEBUG -DLUAPLUS_DUMPOBJECT -DLUA_OPNAMES -D_DEBUG -DLUA_USE_MKSTEMP -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1617192163/linit.o ../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/linit.c
 
 ${OBJECTDIR}/_ext/1617192163/liolib.o: ../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/liolib.c 
 	${MKDIR} -p ${OBJECTDIR}/_ext/1617192163
 	${RM} "$@.d"
-	$(COMPILE.c) -g -Wall -DLUA_OPNAMES -DLUAPLUS_DUMPOBJECT -DDEBUG -D_DEBUG -DFG_DEBUG -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1617192163/liolib.o ../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/liolib.c
+	$(COMPILE.c) -g -Wall -DDEBUG -DFG_DEBUG -DLUAPLUS_DUMPOBJECT -DLUA_OPNAMES -D_DEBUG -DLUA_USE_MKSTEMP -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1617192163/liolib.o ../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/liolib.c
 
 ${OBJECTDIR}/_ext/1617192163/llex.o: ../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/llex.c 
 	${MKDIR} -p ${OBJECTDIR}/_ext/1617192163
 	${RM} "$@.d"
-	$(COMPILE.c) -g -Wall -DLUA_OPNAMES -DLUAPLUS_DUMPOBJECT -DDEBUG -D_DEBUG -DFG_DEBUG -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1617192163/llex.o ../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/llex.c
+	$(COMPILE.c) -g -Wall -DDEBUG -DFG_DEBUG -DLUAPLUS_DUMPOBJECT -DLUA_OPNAMES -D_DEBUG -DLUA_USE_MKSTEMP -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1617192163/llex.o ../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/llex.c
 
 ${OBJECTDIR}/_ext/1617192163/lmathlib.o: ../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lmathlib.c 
 	${MKDIR} -p ${OBJECTDIR}/_ext/1617192163
 	${RM} "$@.d"
-	$(COMPILE.c) -g -Wall -DLUA_OPNAMES -DLUAPLUS_DUMPOBJECT -DDEBUG -D_DEBUG -DFG_DEBUG -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1617192163/lmathlib.o ../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lmathlib.c
+	$(COMPILE.c) -g -Wall -DDEBUG -DFG_DEBUG -DLUAPLUS_DUMPOBJECT -DLUA_OPNAMES -D_DEBUG -DLUA_USE_MKSTEMP -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1617192163/lmathlib.o ../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lmathlib.c
 
 ${OBJECTDIR}/_ext/1617192163/lmem.o: ../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lmem.c 
 	${MKDIR} -p ${OBJECTDIR}/_ext/1617192163
 	${RM} "$@.d"
-	$(COMPILE.c) -g -Wall -DLUA_OPNAMES -DLUAPLUS_DUMPOBJECT -DDEBUG -D_DEBUG -DFG_DEBUG -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1617192163/lmem.o ../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lmem.c
+	$(COMPILE.c) -g -Wall -DDEBUG -DFG_DEBUG -DLUAPLUS_DUMPOBJECT -DLUA_OPNAMES -D_DEBUG -DLUA_USE_MKSTEMP -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1617192163/lmem.o ../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lmem.c
 
 ${OBJECTDIR}/_ext/1617192163/loadlib.o: ../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/loadlib.c 
 	${MKDIR} -p ${OBJECTDIR}/_ext/1617192163
 	${RM} "$@.d"
-	$(COMPILE.c) -g -Wall -DLUA_OPNAMES -DLUAPLUS_DUMPOBJECT -DDEBUG -D_DEBUG -DFG_DEBUG -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1617192163/loadlib.o ../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/loadlib.c
+	$(COMPILE.c) -g -Wall -DDEBUG -DFG_DEBUG -DLUAPLUS_DUMPOBJECT -DLUA_OPNAMES -D_DEBUG -DLUA_USE_MKSTEMP -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1617192163/loadlib.o ../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/loadlib.c
 
 ${OBJECTDIR}/_ext/1617192163/lobject.o: ../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lobject.c 
 	${MKDIR} -p ${OBJECTDIR}/_ext/1617192163
 	${RM} "$@.d"
-	$(COMPILE.c) -g -Wall -DLUA_OPNAMES -DLUAPLUS_DUMPOBJECT -DDEBUG -D_DEBUG -DFG_DEBUG -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1617192163/lobject.o ../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lobject.c
+	$(COMPILE.c) -g -Wall -DDEBUG -DFG_DEBUG -DLUAPLUS_DUMPOBJECT -DLUA_OPNAMES -D_DEBUG -DLUA_USE_MKSTEMP -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1617192163/lobject.o ../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lobject.c
 
 ${OBJECTDIR}/_ext/1617192163/lopcodes.o: ../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lopcodes.c 
 	${MKDIR} -p ${OBJECTDIR}/_ext/1617192163
 	${RM} "$@.d"
-	$(COMPILE.c) -g -Wall -DLUA_OPNAMES -DLUAPLUS_DUMPOBJECT -DDEBUG -D_DEBUG -DFG_DEBUG -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1617192163/lopcodes.o ../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lopcodes.c
+	$(COMPILE.c) -g -Wall -DDEBUG -DFG_DEBUG -DLUAPLUS_DUMPOBJECT -DLUA_OPNAMES -D_DEBUG -DLUA_USE_MKSTEMP -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1617192163/lopcodes.o ../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lopcodes.c
 
 ${OBJECTDIR}/_ext/1617192163/loslib.o: ../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/loslib.c 
 	${MKDIR} -p ${OBJECTDIR}/_ext/1617192163
 	${RM} "$@.d"
-	$(COMPILE.c) -g -Wall -DLUA_OPNAMES -DLUAPLUS_DUMPOBJECT -DDEBUG -D_DEBUG -DFG_DEBUG -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1617192163/loslib.o ../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/loslib.c
+	$(COMPILE.c) -g -Wall -DDEBUG -DFG_DEBUG -DLUAPLUS_DUMPOBJECT -DLUA_OPNAMES -D_DEBUG -DLUA_USE_MKSTEMP -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1617192163/loslib.o ../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/loslib.c
 
 ${OBJECTDIR}/_ext/1617192163/lparser.o: ../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lparser.c 
 	${MKDIR} -p ${OBJECTDIR}/_ext/1617192163
 	${RM} "$@.d"
-	$(COMPILE.c) -g -Wall -DLUA_OPNAMES -DLUAPLUS_DUMPOBJECT -DDEBUG -D_DEBUG -DFG_DEBUG -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1617192163/lparser.o ../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lparser.c
+	$(COMPILE.c) -g -Wall -DDEBUG -DFG_DEBUG -DLUAPLUS_DUMPOBJECT -DLUA_OPNAMES -D_DEBUG -DLUA_USE_MKSTEMP -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1617192163/lparser.o ../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lparser.c
 
 ${OBJECTDIR}/_ext/1617192163/lstate.o: ../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lstate.c 
 	${MKDIR} -p ${OBJECTDIR}/_ext/1617192163
 	${RM} "$@.d"
-	$(COMPILE.c) -g -Wall -DLUA_OPNAMES -DLUAPLUS_DUMPOBJECT -DDEBUG -D_DEBUG -DFG_DEBUG -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1617192163/lstate.o ../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lstate.c
+	$(COMPILE.c) -g -Wall -DDEBUG -DFG_DEBUG -DLUAPLUS_DUMPOBJECT -DLUA_OPNAMES -D_DEBUG -DLUA_USE_MKSTEMP -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1617192163/lstate.o ../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lstate.c
 
 ${OBJECTDIR}/_ext/1617192163/lstring.o: ../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lstring.c 
 	${MKDIR} -p ${OBJECTDIR}/_ext/1617192163
 	${RM} "$@.d"
-	$(COMPILE.c) -g -Wall -DLUA_OPNAMES -DLUAPLUS_DUMPOBJECT -DDEBUG -D_DEBUG -DFG_DEBUG -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1617192163/lstring.o ../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lstring.c
+	$(COMPILE.c) -g -Wall -DDEBUG -DFG_DEBUG -DLUAPLUS_DUMPOBJECT -DLUA_OPNAMES -D_DEBUG -DLUA_USE_MKSTEMP -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1617192163/lstring.o ../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lstring.c
 
 ${OBJECTDIR}/_ext/1617192163/lstrlib.o: ../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lstrlib.c 
 	${MKDIR} -p ${OBJECTDIR}/_ext/1617192163
 	${RM} "$@.d"
-	$(COMPILE.c) -g -Wall -DLUA_OPNAMES -DLUAPLUS_DUMPOBJECT -DDEBUG -D_DEBUG -DFG_DEBUG -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1617192163/lstrlib.o ../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lstrlib.c
+	$(COMPILE.c) -g -Wall -DDEBUG -DFG_DEBUG -DLUAPLUS_DUMPOBJECT -DLUA_OPNAMES -D_DEBUG -DLUA_USE_MKSTEMP -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1617192163/lstrlib.o ../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lstrlib.c
 
 ${OBJECTDIR}/_ext/1617192163/ltable.o: ../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/ltable.c 
 	${MKDIR} -p ${OBJECTDIR}/_ext/1617192163
 	${RM} "$@.d"
-	$(COMPILE.c) -g -Wall -DLUA_OPNAMES -DLUAPLUS_DUMPOBJECT -DDEBUG -D_DEBUG -DFG_DEBUG -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1617192163/ltable.o ../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/ltable.c
+	$(COMPILE.c) -g -Wall -DDEBUG -DFG_DEBUG -DLUAPLUS_DUMPOBJECT -DLUA_OPNAMES -D_DEBUG -DLUA_USE_MKSTEMP -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1617192163/ltable.o ../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/ltable.c
 
 ${OBJECTDIR}/_ext/1617192163/ltablib.o: ../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/ltablib.c 
 	${MKDIR} -p ${OBJECTDIR}/_ext/1617192163
 	${RM} "$@.d"
-	$(COMPILE.c) -g -Wall -DLUA_OPNAMES -DLUAPLUS_DUMPOBJECT -DDEBUG -D_DEBUG -DFG_DEBUG -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1617192163/ltablib.o ../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/ltablib.c
+	$(COMPILE.c) -g -Wall -DDEBUG -DFG_DEBUG -DLUAPLUS_DUMPOBJECT -DLUA_OPNAMES -D_DEBUG -DLUA_USE_MKSTEMP -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1617192163/ltablib.o ../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/ltablib.c
 
 ${OBJECTDIR}/_ext/1617192163/ltm.o: ../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/ltm.c 
 	${MKDIR} -p ${OBJECTDIR}/_ext/1617192163
 	${RM} "$@.d"
-	$(COMPILE.c) -g -Wall -DLUA_OPNAMES -DLUAPLUS_DUMPOBJECT -DDEBUG -D_DEBUG -DFG_DEBUG -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1617192163/ltm.o ../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/ltm.c
-
-${OBJECTDIR}/_ext/1617192163/lua.o: ../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lua.c 
-	${MKDIR} -p ${OBJECTDIR}/_ext/1617192163
-	${RM} "$@.d"
-	$(COMPILE.c) -g -Wall -DLUA_OPNAMES -DLUAPLUS_DUMPOBJECT -DDEBUG -D_DEBUG -DFG_DEBUG -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1617192163/lua.o ../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lua.c
-
-${OBJECTDIR}/_ext/1617192163/luac.o: ../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/luac.c 
-	${MKDIR} -p ${OBJECTDIR}/_ext/1617192163
-	${RM} "$@.d"
-	$(COMPILE.c) -g -Wall -DLUA_OPNAMES -DLUAPLUS_DUMPOBJECT -DDEBUG -D_DEBUG -DFG_DEBUG -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1617192163/luac.o ../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/luac.c
+	$(COMPILE.c) -g -Wall -DDEBUG -DFG_DEBUG -DLUAPLUS_DUMPOBJECT -DLUA_OPNAMES -D_DEBUG -DLUA_USE_MKSTEMP -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1617192163/ltm.o ../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/ltm.c
 
 ${OBJECTDIR}/_ext/1617192163/lundump.o: ../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lundump.c 
 	${MKDIR} -p ${OBJECTDIR}/_ext/1617192163
 	${RM} "$@.d"
-	$(COMPILE.c) -g -Wall -DLUA_OPNAMES -DLUAPLUS_DUMPOBJECT -DDEBUG -D_DEBUG -DFG_DEBUG -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1617192163/lundump.o ../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lundump.c
+	$(COMPILE.c) -g -Wall -DDEBUG -DFG_DEBUG -DLUAPLUS_DUMPOBJECT -DLUA_OPNAMES -D_DEBUG -DLUA_USE_MKSTEMP -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1617192163/lundump.o ../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lundump.c
 
 ${OBJECTDIR}/_ext/1617192163/lvm.o: ../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lvm.c 
 	${MKDIR} -p ${OBJECTDIR}/_ext/1617192163
 	${RM} "$@.d"
-	$(COMPILE.c) -g -Wall -DLUA_OPNAMES -DLUAPLUS_DUMPOBJECT -DDEBUG -D_DEBUG -DFG_DEBUG -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1617192163/lvm.o ../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lvm.c
+	$(COMPILE.c) -g -Wall -DDEBUG -DFG_DEBUG -DLUAPLUS_DUMPOBJECT -DLUA_OPNAMES -D_DEBUG -DLUA_USE_MKSTEMP -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1617192163/lvm.o ../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lvm.c
 
 ${OBJECTDIR}/_ext/1617192163/lzio.o: ../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lzio.c 
 	${MKDIR} -p ${OBJECTDIR}/_ext/1617192163
 	${RM} "$@.d"
-	$(COMPILE.c) -g -Wall -DLUA_OPNAMES -DLUAPLUS_DUMPOBJECT -DDEBUG -D_DEBUG -DFG_DEBUG -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1617192163/lzio.o ../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lzio.c
+	$(COMPILE.c) -g -Wall -DDEBUG -DFG_DEBUG -DLUAPLUS_DUMPOBJECT -DLUA_OPNAMES -D_DEBUG -DLUA_USE_MKSTEMP -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1617192163/lzio.o ../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src/lzio.c
 
 # Subprojects
 .build-subprojects:

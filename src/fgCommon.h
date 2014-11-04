@@ -96,7 +96,7 @@ public:
     #ifndef FG_LESS_DEFINED_
         #define FG_LESS_DEFINED_
 
-        template <class T>
+template <class T>
 class fgLess {
 public:
     inline bool operator ()(T left, T right) {
@@ -107,7 +107,7 @@ public:
     #ifndef FG_GREATER_DEFINED_
         #define FG_GREATER_DEFINED_
 
-        template <class T>
+template <class T>
 class fgGreater {
 public:
     inline bool operator ()(T left, T right) {
@@ -120,7 +120,7 @@ public:
     #ifndef FG_LESS_EQ_DEFINED_
         #define FG_LESS_EQ_DEFINED_
 
-        template <class T>
+template <class T>
 class fgLessEq {
 public:
     inline bool operator ()(T left, T right) {
@@ -131,7 +131,7 @@ public:
     #ifndef FG_GREATER_EQ_DEFINED_
         #define FG_GREATER_EQ_DEFINED_
 
-        template <class T>
+template <class T>
 class fgGreaterEq {
 public:
     inline bool operator ()(T left, T right) {

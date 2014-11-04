@@ -14,22 +14,23 @@
 
 #include "Hardware/fgHardwareState.h"
 
-/*
+/**
  * Default constructor for Event Manager object
  */
 fgEventManager::fgEventManager() {
     m_managerType = FG_MANAGER_EVENT;
 }
 
-/*
+/**
  * Default destructor for Event Manager object
  */
 fgEventManager::~fgEventManager() {
     fgEventManager::destroy();
 }
 
-/*
- *
+/**
+ * 
+ * @return 
  */
 fgBool fgEventManager::destroy(void) {
     for(fgCallbackBinding::iterator it = m_keyDownBinds.begin(); it != m_keyDownBinds.end(); it++) {
@@ -86,7 +87,7 @@ fgBool fgEventManager::destroy(void) {
     return FG_TRUE;
 }
 
-/*
+/**
  *
  */
 void fgEventManager::clear(void) {
@@ -101,14 +102,15 @@ void fgEventManager::clear(void) {
     m_managerType = FG_MANAGER_EVENT;
 }
 
-/*
- *
+/**
+ * 
+ * @return 
  */
 fgBool fgEventManager::initialize(void) {
     return FG_TRUE;
 }
 
-/*
+/**
  *
  */
 void fgEventManager::throwEvent(fgEventType eventCode, fgArgumentList *list) {
@@ -116,8 +118,22 @@ void fgEventManager::throwEvent(fgEventType eventCode, fgArgumentList *list) {
     m_eventsQueue.push(event);
 }
 
-/*
- *
+/**
+ * 
+ * @param eventCode
+ * @param pSystemData
+ */
+void fgEventManager::throwEvent(fgEventType eventCode,
+                void *pSystemData) {
+    fgThrownEvent event(eventCode, (void *)pSystemData);
+    m_eventsQueue.push(event);
+}
+
+/**
+ * 
+ * @param keyCode
+ * @param callback
+ * @return 
  */
 fgFunctionCallback* fgEventManager::addKeyDownCallback(int keyCode, fgFunctionCallback *callback) {
     if(!callback || keyCode <= 0)
@@ -129,8 +145,11 @@ fgFunctionCallback* fgEventManager::addKeyDownCallback(int keyCode, fgFunctionCa
     return callback;
 }
 
-/*
- *
+/**
+ * 
+ * @param keyCode
+ * @param callback
+ * @return 
  */
 fgFunctionCallback* fgEventManager::addKeyUpCallback(int keyCode, fgFunctionCallback *callback) {
     if(!callback || keyCode <= 0)
@@ -142,46 +161,75 @@ fgFunctionCallback* fgEventManager::addKeyUpCallback(int keyCode, fgFunctionCall
     return callback;
 }
 
-/*
- *
+/**
+ * 
+ * @param eventCode
+ * @param pCallback
+ * @return 
  */
-fgFunctionCallback* fgEventManager::addEventCallback(fgEventType eventCode, fgFunctionCallback *callback) {
-    if(!callback || (int)eventCode < 0)
+fgFunctionCallback* fgEventManager::addEventCallback(fgEventType eventCode,
+                                                     fgFunctionCallback *pCallback) {
+    if(!pCallback || (int)eventCode < 0)
         return NULL;
     // Duplicate callbacks are not allowed for the same event
-    if(m_eventBinds[eventCode].find(callback) >= 0) {
+    if(m_eventBinds[eventCode].find(pCallback) >= 0) {
         return NULL;
     }
-    m_eventBinds[eventCode].push_back(callback);
-    return callback;
+    m_eventBinds[eventCode].push_back(pCallback);
+    return pCallback;
 }
 
-/*
- *
+/**
+ * 
+ * @param eventCode
+ * @param pFunction
+ * @return 
  */
-fgFunctionCallback* fgEventManager::addEventCallback(fgEventType eventCode, fgFunctionCallback::fgFunction function) {
-    if(!function || (int)eventCode < 0)
+fgFunctionCallback* fgEventManager::addEventCallback(fgEventType eventCode,
+                                                     fgFunctionCallback::fgFunction pFunction) {
+    if(!pFunction || (int)eventCode < 0)
         return NULL;
     // !! !!
     // Need to check somehow for duplicates #FIXME
-    fgFunctionCallback *callback = new fgFunctionCallback(function);
-    m_eventBinds[eventCode].push_back(callback);
-    return callback;
+    fgFunctionCallback *pCallback = new fgFunctionCallback(pFunction);
+    m_eventBinds[eventCode].push_back(pCallback);
+    return pCallback;
 }
 
-/*
- *
+/**
+ * 
+ * @param eventCode
+ * @param pPlainFunction
+ * @param pUserData
+ * @return 
  */
-fgBool fgEventManager::removeEventCallback(fgEventType eventCode, fgFunctionCallback *callback) {
-    if(!callback || (int)eventCode < 0)
+fgFunctionCallback* fgEventManager::addEventCallback(fgEventType eventCode,
+                                                     fgPlainFunctionCallback::fgPlainFunction pPlainFunction,
+                                                     void *pUserData) {
+    if((int)eventCode < 0 || !pPlainFunction)
+        return NULL;
+
+    fgFunctionCallback *pCallback = new fgPlainFunctionCallback(pPlainFunction, pUserData);
+    m_eventBinds[eventCode].push_back(pCallback);
+    return pCallback;
+}
+
+/**
+ * 
+ * @param eventCode
+ * @param pCallback
+ * @return 
+ */
+fgBool fgEventManager::removeEventCallback(fgEventType eventCode, fgFunctionCallback *pCallback) {
+    if(!pCallback || (int)eventCode < 0)
         return FG_FALSE;
-    
+
     fgCallbacksVec &callbacksVec = m_eventBinds[eventCode];
     if(callbacksVec.empty())
         return FG_FALSE;
     fgCallbacksPoolItor cit = callbacksVec.begin(), end = callbacksVec.end();
     for(; cit != end; cit++) {
-        if(*cit == callback) {
+        if(*cit == pCallback) {
             m_eventBinds[eventCode].erase(cit);
             return FG_TRUE;
             break;
@@ -190,39 +238,55 @@ fgBool fgEventManager::removeEventCallback(fgEventType eventCode, fgFunctionCall
     return FG_TRUE;
 }
 
-/*
- *
+/**
+ * 
+ * @param pCallback
+ * @param timeout
+ * @param pArgList
+ * @return 
  */
-fgFunctionCallback* fgEventManager::addTimeoutCallback(fgFunctionCallback *callback, int timeout, fgArgumentList *argList) {
-    if(!callback)
+fgFunctionCallback* fgEventManager::addTimeoutCallback(fgFunctionCallback *pCallback,
+                                                       int timeout,
+                                                       fgArgumentList *pArgList) {
+    if(!pCallback)
         return NULL;
-    fgTimeoutCallback timeoutCallback(callback, timeout, argList);
+    fgTimeoutCallback timeoutCallback(pCallback, timeout, pArgList);
     timeoutCallback.timestamp = FG_GetTicks();
     m_timeoutCallbacks.push_back(timeoutCallback);
-    return callback;
+    return pCallback;
 }
 
-/*
- *
+/**
+ * 
+ * @param pCallback
+ * @param repeats
+ * @param interval
+ * @param pArgList
+ * @return 
  */
-fgFunctionCallback* fgEventManager::addCyclicCallback(fgFunctionCallback *callback, int repeats, int interval, fgArgumentList *argList) {
-    if(!callback)
+fgFunctionCallback* fgEventManager::addCyclicCallback(fgFunctionCallback *pCallback,
+                                                      int repeats,
+                                                      int interval,
+                                                      fgArgumentList *pArgList) {
+    if(!pCallback)
         return NULL;
-    fgCyclicCallback cyclicCallback(callback, repeats, interval, argList);
+    fgCyclicCallback cyclicCallback(pCallback, repeats, interval, pArgList);
     cyclicCallback.timestamp = FG_GetTicks();
     m_cyclicCallbacks.push_back(cyclicCallback);
-    return callback;
+    return pCallback;
 }
 
-/*
+/**
  * This adds key code to the pool of pressed down keys
+ * @param keyCode
  */
 void fgEventManager::addKeyDown(int keyCode) {
     m_keysDownPool.push_back(keyCode);
 }
 
-/*
+/**
  * This adds key code to the pool of released (up) keys
+ * @param keyCode
  */
 void fgEventManager::addKeyUp(int keyCode) {
     m_keysUpPool.push_back(keyCode);
@@ -230,14 +294,14 @@ void fgEventManager::addKeyUp(int keyCode) {
 
 /* 
  * This function calls all callbacks from the triggered/thrown events
- * also executes callbacks from cyclics and timeouts
+ * also executes callbacks from cyclical and timeouts
  */
 void fgEventManager::executeEvents(void) {
-    static int yolo = 0;
-    yolo ++;
-    if(yolo < 3) {
-        printf("###########################################################\n#################### EXECUTE EVENTS #######################\n###########################################################\n");
-    }
+    //    static int yolo = 0;
+    //    yolo ++;
+    //    if(yolo < 3) {
+    //        printf("###########################################################\n#################### EXECUTE EVENTS #######################\n###########################################################\n");
+    //    }
     // Phase 1: execute keyboard callbacks
     for(int i = 0; i < (int)m_keysDownPool.size(); i++) {
         int keyCode = m_keysDownPool[i];
@@ -278,8 +342,13 @@ void fgEventManager::executeEvents(void) {
         }
 
         for(int j = 0; j < (int)m_eventBinds[eventCode].size(); j++) {
-            if(m_eventBinds[eventCode][j])
-                m_eventBinds[eventCode][j]->Call(event.argList);
+            if(m_eventBinds[eventCode][j]) {
+                if(event.argList) {
+                    m_eventBinds[eventCode][j]->Call(event.argList);
+                } else {
+                    m_eventBinds[eventCode][j]->Call((void*)event.systemData);
+                }
+            }
         }
 
         // Free the argument list as it is no longer need - one allocation for one call
@@ -297,6 +366,7 @@ void fgEventManager::executeEvents(void) {
         if(TS - it->timestamp >= (unsigned long int)it->timeout) {
             if(it->callback) {
                 it->callback->Call(it->argList);
+
                 delete it->callback;
                 it->callback = NULL;
             }

@@ -13,18 +13,41 @@
     #include "fgEventDefinitions.h"
     #include "fgArgumentList.h"
 
-/*
+/**
  *
  */
 struct fgThrownEvent {
+    ///
     fgEventType eventCode;
+    ///
     fgArgumentList *argList;
+    ///
     void *systemData;
-    void *userData;
+    
+    /**
+     * 
+     */
     fgThrownEvent() : eventCode(FG_EVENT_INVALID), argList(NULL) { }
+    
+    /**
+     * 
+     * @param _eventCode
+     * @param _argList
+     */
     fgThrownEvent(fgEventType _eventCode, fgArgumentList *_argList) {
         eventCode = _eventCode;
         argList = _argList;
+    }
+    
+    /**
+     * 
+     * @param _eventCode
+     * @param _systemData
+     */
+    fgThrownEvent(fgEventType _eventCode, void *_systemData) {
+        eventCode = _eventCode;
+        argList = NULL;
+        systemData = _systemData;
     }
 };
 
