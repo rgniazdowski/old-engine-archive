@@ -31,6 +31,7 @@ public:
     typedef std::map<MapKeyType, std::string> fileMapping;
     typedef typename fileMapping::iterator fileMappingItor;
 
+    typedef fgManagedObjectBase<HandleType> base_type;
 public:
     /**
      * Default empty constructor for resource base object

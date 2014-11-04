@@ -25,10 +25,11 @@ template <class DataType> struct fgBoundingBox2D;
 //
 template <class DataType> struct fgBoundingBox3D;
 
-template <class BoxType, class VecType, class DataType>
+
 /**
  *
  */
+template <class BoxType, class VecType, class DataType>
 struct fgBoundingBox {
     typedef fgBoundingBox<BoxType, VecType, DataType> type;
     typedef DataType value_type;
@@ -235,9 +236,10 @@ template <class DataType>
  */
 struct fgBoundingBox2D : fgBoundingBox<fgBoundingBox2D<DataType>, glm::detail::tvec2<DataType, glm::defaultp>, DataType> {
     //
-    typedef fgBoundingBox<fgBoundingBox2D<DataType>, glm::detail::tvec2<DataType, glm::defaultp>, DataType> baseType;
+    typedef fgBoundingBox<fgBoundingBox2D<DataType>, glm::detail::tvec2<DataType, glm::defaultp>, DataType> base_type;
     //
     typedef glm::detail::tvec2<DataType, glm::defaultp> vecType;
+
     /**
      * 
      */
@@ -335,7 +337,7 @@ template <class DataType>
 struct fgBoundingBox3D :
 fgBoundingBox<fgBoundingBox3D<DataType>, glm::detail::tvec3<DataType, glm::defaultp>, DataType> {
     //
-    typedef fgBoundingBox<fgBoundingBox3D<DataType>, glm::detail::tvec3<DataType, glm::defaultp>, DataType> baseType;
+    typedef fgBoundingBox<fgBoundingBox3D<DataType>, glm::detail::tvec3<DataType, glm::defaultp>, DataType> base_type;
     //
     typedef glm::detail::tvec3<DataType, glm::defaultp> vecType;
     /**
@@ -475,7 +477,7 @@ fgBoundingBox<fgBoundingBox3D<DataType>, glm::detail::tvec3<DataType, glm::defau
      * @return 
      */
     virtual fgBool test(const DataType x, const DataType y) const {
-        return baseType::test(x, y);
+        return base_type::test(x, y);
     }
     /**
      * 

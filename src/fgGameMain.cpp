@@ -78,12 +78,12 @@ m_gameFreeLookCallback(NULL) {
     FG_MessageSubsystem->setLogPaths("all.log", "error.log", "debug.log");
     fgTime::init(); // #FIXME global time init?
     m_pointerInputReceiver = new fgPointerInputReceiver();
-    m_joypadController = new fgJoypadController();
+    m_joypadController = new fgJoypadController(); // #FIXME - joypad part of input receiver?
+    m_scriptSubsystem = new fgScriptSubsystem();
     if(pEventMgr) {
         this->setEventManager(pEventMgr);
     }
     m_joypadController->initialize(); // #FIXME
-
 }
 
 /*
@@ -132,9 +132,13 @@ fgGameMain::~fgGameMain() {
         delete m_guiMain;
     }
     m_guiMain = NULL;
+    if(m_scriptSubsystem) {
+        delete m_scriptSubsystem;
+    }
+    m_scriptSubsystem = NULL;
     fgColors::freeColors();
-    fgErrorCodes::unregisterAll();
-    FG_MessageSubsystem->deleteInstance();
+    fgErrorCodes::unregisterAll(); // #FIXME - error codes
+    FG_MessageSubsystem->deleteInstance(); // #FIXME - message subsystem singleton
 }
 
 /*
@@ -221,6 +225,9 @@ void fgGameMain::setEventManager(fgEventManager *pEventMgr) {
     if(m_resourceMgr) {
         m_resourceMgr->setEventManager(pEventMgr);
     }
+    if(m_scriptSubsystem) {
+        m_scriptSubsystem->setEventManager(pEventMgr);
+    }
 }
 
 #include "GFX/Shaders/fgGFXShaderProgram.h"
@@ -289,6 +296,19 @@ fgBool fgGameMain::initSubsystems(void) {
     if(!m_guiMain->initialize()) {
         FG_LOG::PrintError("GUI: Main module initialized with errors");
     }
+    // Setup Script Subsystem external pointers
+    m_scriptSubsystem->setEventManager(m_pEventMgr);
+    m_scriptSubsystem->setResourceManager(m_resourceMgr);
+    m_scriptSubsystem->setParticleSystem(m_gfxMain->getParticleSystem());
+    m_scriptSubsystem->set2DSceneManager(m_gfxMain->get2DScene());
+    m_scriptSubsystem->set3DSceneManager(m_gfxMain->get3DScene());
+    m_scriptSubsystem->setShaderManager(static_cast<fgManagerBase *>(m_gfxMain->getShaderManager()));
+    //m_scriptSubsystem->setSoundManager(NULL);
+    m_scriptSubsystem->setStyleManager(static_cast<fgManagerBase *>(m_guiMain->getStyleManager()));
+    m_scriptSubsystem->setWidgetManager(static_cast<fgManagerBase *>(m_guiMain->getWidgetManager()));
+    if(!m_scriptSubsystem->initialize()) {
+        FG_LOG::PrintError("Script: Initialization of Script module finished with errors");
+    }
     FG_HardwareState->deviceYield(0); // #FIXME - device yield...
 
     return FG_TRUE;
@@ -314,8 +334,6 @@ fgBool fgGameMain::loadConfiguration(void) {
  */
 fgBool fgGameMain::loadResources(void) {
     FG_LOG::PrintDebug("Loading resources...");
-    std::string texname;
-    fgTextureResource *texture = NULL;
 
     ////////////////////////////////////////////////////////////////////////////
     m_gfxMain->getShaderManager()->setShadersPath("shaders/");
@@ -325,8 +343,10 @@ fgBool fgGameMain::loadResources(void) {
     FG_HardwareState->deviceYield(0); // #FIXME - device yield...
     FG_LOG::PrintDebug("Will now try to compile and link 'sPlainEasy' shader program");
     if(program) {
+        // Compile all required shaders
         program->compile();
-        program->link(); // this will also bind attributes and after successful link - bind uniforms
+        // this will also bind attributes and after successful link - bind uniforms
+        program->link();
     }
     {
         std::string sOrthoEasyShaderName("sOrthoEasy");
@@ -354,6 +374,7 @@ fgBool fgGameMain::loadResources(void) {
     ////////////////////////////////////////////////////////////////////////////
 #endif
 
+    // #FIXME
     m_gfxMain->getParticleSystem()->insertParticleEmitter("ExplosionEffect", "ExplosionEffect", fgVector3f(0.0f, 0.0f, 0.0f));
 
     m_gfxMain->getParticleSystem()->insertParticleEmitter("ExplosionDebris", "ExplosionDebris", fgVector3f(0.0f, 0.0f, 0.0f));
@@ -383,17 +404,15 @@ fgBool fgGameMain::releaseResources(void) {
  */
 fgBool fgGameMain::closeSybsystems(void) {
     FG_LOG::PrintDebug("Closing subsystems...");
-    // #TODO - KILLALLSINGLETONS
-    // KILL ALL SINGLETONS
     if(m_gfxMain)
         m_gfxMain->releaseTextures();
 
     fgGameMain::releaseResources();
     if(m_pointerInputReceiver)
         m_pointerInputReceiver->setEventManager(NULL);
-    FG_HardwareState->deleteInstance();
+    FG_HardwareState->deleteInstance(); // #KILL_ALL_SINGLETONS
 #if defined FG_USING_MARMALADE
-    FG_DeviceQuery->deleteInstance();
+    FG_DeviceQuery->deleteInstance(); // #KILL_ALL_SINGLETONS
 #endif // FG_USING_MARMALADE
     if(m_gfxMain)
         m_gfxMain->closeGFX();
@@ -428,12 +447,19 @@ void fgGameMain::display(void) {
  * Begins the proper render of the created buffers
  */
 void fgGameMain::render(void) {
+    // #FIXME
+    static int fpsc = 0;
+    if(fpsc == FG_FRAMES_COUNT_LIMIT + 2) {
+        printf("# FPS: %.2f\n", FG_HardwareState->getFPS());
+    }
+    if(fpsc > 256) {
+        fpsc = 0;
+    }
+    fpsc++;
     m_gfxMain->render();
-    fgGfxPlatform::context()->setBlend(FG_TRUE);
-    //fgGfxPlatform::context()->setDepthTest(FG_FALSE);
+    fgGfxPlatform::context()->setBlend(FG_TRUE); // #FIXME
     m_guiMain->render();
-    fgGfxPlatform::context()->setBlend(FG_FALSE);
-    //fgGfxPlatform::context()->setDepthTest(FG_TRUE);
+    fgGfxPlatform::context()->setBlend(FG_FALSE); // #FIXME
     m_gfxMain->getMainWindow()->swapBuffers();
 }
 
@@ -443,11 +469,15 @@ void fgGameMain::render(void) {
  */
 void fgGameMain::update(void) {
     fgTime::markTick();
-    FG_HardwareState->calculateDT();
-    FG_HardwareState->calculateFPS();
+    FG_HardwareState->calculateDT(); // #FIXME
+    FG_HardwareState->calculateFPS(); // #FIXME
 
     // TouchReceiver processes the data received from marmalade/system event
     // callbacks and throws proper events
+    // Pointer input receiver needs name change #FIXME - need some
+    // special object for managing input - mouse / joystick / keyboard / touch
+    // InputReceiver ? #FIXME
+    // Also SDL events throwing needs some fixing
     if(m_pointerInputReceiver)
         m_pointerInputReceiver->processData();
     FG_HardwareState->deviceYield(0);
@@ -483,11 +513,7 @@ fgBool fgGameMain::gameTouchHandler(fgArgumentList *argv) {
     if(type == FG_EVENT_TOUCH_TAP_FINISHED && this->m_gfxMain) {
 
         fgTouchEvent *touch = (fgTouchEvent *)event;
-        fgParticleEmitter *pEmitter = this->m_gfxMain->getParticleSystem()->getParticleEmitter("ExplosionEffect");
-        if(pEmitter) {
-            //return FG_FALSE;
-            //pEmitter->addParticles(50, fgVector3f((float)touch->x, (float)touch->y, 0.0f));
-        }
+        fgParticleEmitter *pEmitter = NULL;
         {
             pEmitter = this->m_gfxMain->getParticleSystem()->getParticleEmitter("ExplosionDebris");
             if(pEmitter) {
@@ -566,7 +592,7 @@ fgBool fgGameMain::gameFreeLookHandler(fgArgumentList* argv) {
     static int lasty = 128000;
     int xRel = 0, yRel = 0, x = 0, y = 0;
     fgBool pressed = FG_FALSE;
-
+    // #FIXME - camera free management
     if(type == FG_EVENT_TOUCH_MOTION ||
        type == FG_EVENT_TOUCH_PRESSED ||
        type == FG_EVENT_TOUCH_RELEASED) {

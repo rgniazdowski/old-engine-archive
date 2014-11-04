@@ -159,8 +159,8 @@ OBJECTFILES= \
 	${OBJECTDIR}/_ext/942373304/fgResourceFactory.o \
 	${OBJECTDIR}/_ext/942373304/fgResourceGroup.o \
 	${OBJECTDIR}/_ext/942373304/fgResourceManager.o \
-	${OBJECTDIR}/_ext/1210739651/fgScriptManager.o \
 	${OBJECTDIR}/_ext/1210739651/fgScriptResource.o \
+	${OBJECTDIR}/_ext/1210739651/fgScriptSubsystem.o \
 	${OBJECTDIR}/_ext/166270660/fgThread.o \
 	${OBJECTDIR}/_ext/166270660/fgThreadSem.o \
 	${OBJECTDIR}/_ext/608034620/fgConfig.o \
@@ -209,7 +209,7 @@ ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/flexigame_nb: ../LuaPlusNextGen_NB/di
 
 ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/flexigame_nb: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
-	${LINK.cc} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/flexigame_nb ${OBJECTFILES} ${LDLIBSOPTIONS}
+	${LINK.cc} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/flexigame_nb ${OBJECTFILES} ${LDLIBSOPTIONS} -s
 
 ${OBJECTDIR}/_ext/1690346760/AbstractFunction.o: ../../../modules/glbinding/source/glbinding/source/AbstractFunction.cpp 
 	${MKDIR} -p ${OBJECTDIR}/_ext/1690346760
@@ -831,15 +831,15 @@ ${OBJECTDIR}/_ext/942373304/fgResourceManager.o: ../../../src/Resource/fgResourc
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_GL_BINDING -DFG_USING_OPENGL -DFG_USING_SDL2 -DFG_USING_TINYXML -DTIXML_USE_STL -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/glbinding/source/glbinding/include `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/942373304/fgResourceManager.o ../../../src/Resource/fgResourceManager.cpp
 
-${OBJECTDIR}/_ext/1210739651/fgScriptManager.o: ../../../src/Scripting/fgScriptManager.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/1210739651
-	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_GL_BINDING -DFG_USING_OPENGL -DFG_USING_SDL2 -DFG_USING_TINYXML -DTIXML_USE_STL -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/glbinding/source/glbinding/include `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1210739651/fgScriptManager.o ../../../src/Scripting/fgScriptManager.cpp
-
 ${OBJECTDIR}/_ext/1210739651/fgScriptResource.o: ../../../src/Scripting/fgScriptResource.cpp 
 	${MKDIR} -p ${OBJECTDIR}/_ext/1210739651
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_GL_BINDING -DFG_USING_OPENGL -DFG_USING_SDL2 -DFG_USING_TINYXML -DTIXML_USE_STL -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/glbinding/source/glbinding/include `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1210739651/fgScriptResource.o ../../../src/Scripting/fgScriptResource.cpp
+
+${OBJECTDIR}/_ext/1210739651/fgScriptSubsystem.o: ../../../src/Scripting/fgScriptSubsystem.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/1210739651
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_GL_BINDING -DFG_USING_OPENGL -DFG_USING_SDL2 -DFG_USING_TINYXML -DTIXML_USE_STL -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/glbinding/source/glbinding/include `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1210739651/fgScriptSubsystem.o ../../../src/Scripting/fgScriptSubsystem.cpp
 
 ${OBJECTDIR}/_ext/166270660/fgThread.o: ../../../src/Thread/fgThread.cpp 
 	${MKDIR} -p ${OBJECTDIR}/_ext/166270660

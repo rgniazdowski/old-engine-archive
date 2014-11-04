@@ -17,10 +17,10 @@
 
     #include "fgErrno.h"
 
-    #define FG_ERRNO_SCRIPT_BASE_CODE(_code)		(FG_ERRNO_BASE_CODE(700)+_code)
+    #define FG_ERRNO_SCRIPT_BASE_CODE(_code)    (FG_ERRNO_BASE_CODE(700)+_code)
 
-    #define FG_ERRNO_SCRIPT_OK						FG_ERRNO_SCRIPT_BASE_CODE(0)
-    #define FG_ERRNO_SCRIPT_LAST_CODE				FG_ERRNO_SCRIPT_BASE_CODE(0)
+    #define FG_ERRNO_SCRIPT_OK                  FG_ERRNO_SCRIPT_BASE_CODE(0)
+    #define FG_ERRNO_SCRIPT_LAST_CODE           FG_ERRNO_SCRIPT_BASE_CODE(0)
 
     #define FG_ERRNO_SCRIPT_OK_TEXT "No error"
 

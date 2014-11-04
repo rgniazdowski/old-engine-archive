@@ -25,6 +25,7 @@
     #include "GUI/fgGuiMain.h"
 
     #include "Hardware/fgQualityManager.h"
+    #include "Scripting/fgScriptSubsystem.h"
 
 class fgGameMain;
     #define FG_TAG_GAME_MAIN_NAME       "GameMain"
@@ -190,6 +191,8 @@ private:
     fgPointerInputReceiver *m_pointerInputReceiver;
     ///
     fgJoypadController *m_joypadController;
+    ///
+    fgScriptSubsystem *m_scriptSubsystem;
 
     ///
     fgFunctionCallback *m_gameTouchCallback;

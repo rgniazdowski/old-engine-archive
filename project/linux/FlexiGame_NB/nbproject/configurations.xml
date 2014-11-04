@@ -513,10 +513,10 @@
         </logicalFolder>
         <logicalFolder name="Scripting" displayName="Scripting" projectFiles="true">
           <itemPath>../../../src/Scripting/fgScriptErrorCodes.h</itemPath>
-          <itemPath>../../../src/Scripting/fgScriptManager.cpp</itemPath>
-          <itemPath>../../../src/Scripting/fgScriptManager.h</itemPath>
           <itemPath>../../../src/Scripting/fgScriptResource.cpp</itemPath>
           <itemPath>../../../src/Scripting/fgScriptResource.h</itemPath>
+          <itemPath>../../../src/Scripting/fgScriptSubsystem.cpp</itemPath>
+          <itemPath>../../../src/Scripting/fgScriptSubsystem.h</itemPath>
         </logicalFolder>
         <logicalFolder name="Thread" displayName="Thread" projectFiles="true">
           <itemPath>../../../src/Thread/fgThread.cpp</itemPath>
@@ -655,6 +655,7 @@
             <Elem>FG_NO_UNDEF</Elem>
             <Elem>FG_USING_GLEW</Elem>
             <Elem>FG_USING_GLM</Elem>
+            <Elem>FG_USING_LUA_PLUS</Elem>
             <Elem>FG_USING_OPENGL</Elem>
             <Elem>FG_USING_OPENGL_GLEW</Elem>
             <Elem>FG_USING_SDL2</Elem>
@@ -680,6 +681,7 @@
             <Elem>FG_NO_UNDEF</Elem>
             <Elem>FG_USING_GLEW</Elem>
             <Elem>FG_USING_GLM</Elem>
+            <Elem>FG_USING_LUA_PLUS</Elem>
             <Elem>FG_USING_OPENGL</Elem>
             <Elem>FG_USING_OPENGL_GLEW</Elem>
             <Elem>FG_USING_SDL2</Elem>
@@ -2821,22 +2823,22 @@
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/Scripting/fgScriptManager.cpp"
-            ex="false"
-            tool="1"
-            flavor2="8">
-      </item>
-      <item path="../../../src/Scripting/fgScriptManager.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
       <item path="../../../src/Scripting/fgScriptResource.cpp"
             ex="false"
             tool="1"
             flavor2="8">
       </item>
       <item path="../../../src/Scripting/fgScriptResource.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Scripting/fgScriptSubsystem.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+      </item>
+      <item path="../../../src/Scripting/fgScriptSubsystem.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -3012,6 +3014,7 @@
       <compileType>
         <cTool>
           <developmentMode>5</developmentMode>
+          <stripSymbols>true</stripSymbols>
           <incDir>
             <pElem>../../../src</pElem>
             <pElem>../../../modules/glm</pElem>
@@ -3021,6 +3024,17 @@
             <pElem>../../../modules/stbfont</pElem>
             <pElem>../../../modules/luaplus51-all/Src</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>FG_NO_UNDEF</Elem>
+            <Elem>FG_USING_GLEW</Elem>
+            <Elem>FG_USING_GLM</Elem>
+            <Elem>FG_USING_LUA_PLUS</Elem>
+            <Elem>FG_USING_OPENGL</Elem>
+            <Elem>FG_USING_OPENGL_GLEW</Elem>
+            <Elem>FG_USING_SDL2</Elem>
+            <Elem>FG_USING_TINYXML</Elem>
+            <Elem>TIXML_USE_STL</Elem>
+          </preprocessorList>
         </cTool>
         <ccTool>
           <developmentMode>5</developmentMode>
@@ -3039,6 +3053,7 @@
             <Elem>FG_NO_UNDEF</Elem>
             <Elem>FG_USING_GLEW</Elem>
             <Elem>FG_USING_GLM</Elem>
+            <Elem>FG_USING_LUA_PLUS</Elem>
             <Elem>FG_USING_OPENGL</Elem>
             <Elem>FG_USING_OPENGL_GLEW</Elem>
             <Elem>FG_USING_SDL2</Elem>
@@ -3053,6 +3068,7 @@
           <developmentMode>5</developmentMode>
         </asmTool>
         <linkerTool>
+          <stripSymbols>true</stripSymbols>
           <linkerLibItems>
             <linkerOptionItem>`pkg-config --libs libpng`</linkerOptionItem>
             <linkerLibStdlibItem>Mathematics</linkerLibStdlibItem>
@@ -3073,6 +3089,7 @@
               </makeArtifact>
             </linkerLibProjectItem>
           </linkerLibItems>
+          <commandLine>-Wl,--gc-sections</commandLine>
         </linkerTool>
       </compileType>
       <item path="../../../modules/glbinding/source/glbinding/CMakeLists.txt"
@@ -5172,22 +5189,22 @@
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/Scripting/fgScriptManager.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="../../../src/Scripting/fgScriptManager.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
       <item path="../../../src/Scripting/fgScriptResource.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
       <item path="../../../src/Scripting/fgScriptResource.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Scripting/fgScriptSubsystem.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Scripting/fgScriptSubsystem.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -7521,22 +7538,22 @@
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/Scripting/fgScriptManager.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="../../../src/Scripting/fgScriptManager.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
       <item path="../../../src/Scripting/fgScriptResource.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
       <item path="../../../src/Scripting/fgScriptResource.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Scripting/fgScriptSubsystem.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Scripting/fgScriptSubsystem.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -7742,6 +7759,7 @@
           <developmentMode>5</developmentMode>
         </asmTool>
         <linkerTool>
+          <stripSymbols>true</stripSymbols>
           <linkerLibItems>
             <linkerOptionItem>`pkg-config --libs libpng`</linkerOptionItem>
             <linkerLibStdlibItem>Mathematics</linkerLibStdlibItem>
@@ -9847,22 +9865,22 @@
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/Scripting/fgScriptManager.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="../../../src/Scripting/fgScriptManager.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
       <item path="../../../src/Scripting/fgScriptResource.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
       <item path="../../../src/Scripting/fgScriptResource.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Scripting/fgScriptSubsystem.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Scripting/fgScriptSubsystem.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -12196,22 +12214,22 @@
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/Scripting/fgScriptManager.cpp"
-            ex="false"
-            tool="1"
-            flavor2="8">
-      </item>
-      <item path="../../../src/Scripting/fgScriptManager.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
       <item path="../../../src/Scripting/fgScriptResource.cpp"
             ex="false"
             tool="1"
             flavor2="8">
       </item>
       <item path="../../../src/Scripting/fgScriptResource.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Scripting/fgScriptSubsystem.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+      </item>
+      <item path="../../../src/Scripting/fgScriptSubsystem.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -12417,6 +12435,7 @@
           <developmentMode>5</developmentMode>
         </asmTool>
         <linkerTool>
+          <stripSymbols>true</stripSymbols>
           <linkerLibItems>
             <linkerOptionItem>`pkg-config --libs libpng`</linkerOptionItem>
             <linkerLibStdlibItem>Mathematics</linkerLibStdlibItem>
@@ -14534,22 +14553,22 @@
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/Scripting/fgScriptManager.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="../../../src/Scripting/fgScriptManager.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
       <item path="../../../src/Scripting/fgScriptResource.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
       <item path="../../../src/Scripting/fgScriptResource.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Scripting/fgScriptSubsystem.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Scripting/fgScriptSubsystem.h"
             ex="false"
             tool="3"
             flavor2="0">

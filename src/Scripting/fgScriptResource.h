@@ -10,4 +10,6 @@
 #ifndef _FG_SCRIPT_RESOURCE_H_
     #define _FG_SCRIPT_RESOURCE_H_
 
+    // #FIXME - quite possible that the script does not require resource layer
+
 #endif

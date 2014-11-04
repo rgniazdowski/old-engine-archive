@@ -187,6 +187,9 @@ class fgResource : public fgManagedDataFileBase<fgResourceHandle, fgQuality>, pu
     friend class fgResourceManager;
     friend class fgResourceGroup;
 public:
+    typedef fgManagedDataFileBase<fgResourceHandle, fgQuality> base_type;
+    
+public:
     /**
      *  Base constructor of the resource object
      */
