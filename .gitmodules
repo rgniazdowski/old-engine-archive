@@ -1,0 +1,4 @@
+[submodule "luaplus51-all"]
+	path = modules/luaplus51-all
+	url = https://github.com/jjensen/luaplus51-all.git
+	branch = nextgen

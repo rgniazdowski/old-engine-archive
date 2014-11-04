@@ -248,6 +248,12 @@ int fgScriptSubsystem::managedResourceGCEvent(lua_State* L) {
     return 0;
 }
 
+/**
+ * 
+ * @param systemData
+ * @param userData
+ * @return 
+ */
 fgBool fgScriptSubsystem::managedObjectDestructorCallback(void *systemData, void *userData) {
     if(!systemData)
         return FG_FALSE;
