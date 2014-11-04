@@ -58,12 +58,24 @@ public:
     virtual void dispose(void);
     // Check if resource is disposed (not loaded yet or disposed after)
     virtual fgBool isDisposed(void) const;
+    /**
+     * 
+     * @return 
+     */
     virtual int getStep(void) const {
         return m_step;
     }
+    /**
+     * 
+     * @return 
+     */
     fgFontType getFontType(void) const {
         return m_fontType;
     }
+    /**
+     * 
+     * @return 
+     */
     fgFontDataInfo &getDataInfo(void) {
         return m_info;
     }

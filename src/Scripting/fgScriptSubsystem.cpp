@@ -17,6 +17,7 @@
 #include "GFX/Particles/fgParticleSystem.h"
 #include "GUI/fgGuiWidgetManager.h"
 #include "GUI/fgGuiStyleManager.h"
+#include "GUI/Font/fgFontResource.h"
 
 #if defined(FG_USING_LUA_PLUS)
 ///
@@ -229,6 +230,8 @@ int fgScriptSubsystem::managedResourceGCEvent(lua_State* L) {
     // Mainly for resources ?
     LuaPlus::LuaState* state = lua_State_to_LuaState(L);
     //get the pointer lua is trying to delete.
+    if(!state->IsUserdata(1))
+        return 0;
     void *unboxed = state->UnBoxPointer(1);
     if(!unboxed)
         return 0;
@@ -253,6 +256,13 @@ fgBool fgScriptSubsystem::managedObjectDestructorCallback(void *systemData, void
     userDataObjectMapItor it = m_userDataObjectMap.find(offset);
     if(it != m_userDataObjectMap.end()) {
         // This pointer was stored - erase it
+#if defined(FG_USING_LUA_PLUS)
+        if((*it).second.GetRef() > 0) {
+            (*it).second.SetMetatable(LuaPlus::LuaObject());
+            (*it).second.AssignNil();
+        }
+        (*it).second.Reset();
+#endif /* FG_USING_LUA_PLUS */
         FG_LOG::PrintDebug("Managed Resource Destructor Callback: pointer is registered - will be deleted [offset: %lu]", offset);
         m_userDataObjectMap.erase(it);
     }
@@ -398,20 +408,98 @@ fgBool fgScriptSubsystem::registerResourceManager(void) {
     m_globals.SetObject("ResourceManager", resourceMgrObj);
     m_userDataObjectMap[offset] = resourceMgrObj;
 
+    // Register Base Resource metatable
     LPCD::Class(m_luaState->GetCState(), "fgResourceMETATABLE")
             .ObjectDirect("getName", (fgResource::base_type::base_type *)0, &fgResource::base_type::base_type::getNameStr)
+            .ObjectDirect("isManaged", (fgResource::base_type::base_type *)0, &fgResource::base_type::base_type::isManaged)
             .ObjectDirect("getFilePath",
                           (fgResource::base_type *)0,
-                          static_cast<getFilePathStrType>(&fgResource::base_type::getFilePathStr));
+                          static_cast<getFilePathStrType>(&fgResource::base_type::getFilePathStr))
+            .ObjectDirect("getSize", (fgResource *)0, &fgResource::getSize)
+            .ObjectDirect("getLastAccess", (fgResource *)0, &fgResource::getLastAccess)
+            .ObjectDirect("isDisposed", (fgResource *)0, &fgResource::isDisposed)
+            .ObjectDirect("isLocked", (fgResource *)0, &fgResource::isLocked);
     //.MetatableFunction("__gc", &fgScriptSubsystem::managedResourceGCEvent);
 
-    // Register Texture Resource metatable / object
+    // Register Texture Resource metatable
     LPCD::Class(m_luaState->GetCState(), "fgTextureResourceMETATABLE", "fgResourceMETATABLE")
             .ObjectDirect("getWidth", (fgTextureResource *)0, &fgTextureResource::getWidth)
             .ObjectDirect("getHeight", (fgTextureResource *)0, &fgTextureResource::getHeight)
+            .ObjectDirect("getComponents", (fgTextureResource *)0, &fgTextureResource::getComponents)
             .MetatableFunction("__gc", &fgScriptSubsystem::managedResourceGCEvent);
 
-    m_globals.Register("Texture", &fgScriptSubsystem::newResourceWrapper);
+    // Register Font Resource metatable
+    LPCD::Class(m_luaState->GetCState(), "fgFontResourceMETATABLE", "fgTextureResourceMETATABLE")
+            .ObjectDirect("getFontType", (fgFontResource *)0, &fgFontResource::getFontType)
+            .ObjectDirect("getStep", (fgFontResource *)0, &fgFontResource::getStep)
+            .MetatableFunction("__gc", &fgScriptSubsystem::managedResourceGCEvent);
+
+    // Register Gfx Model Resource metatable
+    LPCD::Class(m_luaState->GetCState(), "fgGfxModelResourceMETATABLE", "fgResourceMETATABLE")
+            .ObjectDirect("getModelType", (fgGfxModelResource *)0, &fgGfxModelResource::getModelType)
+            .ObjectDirect("getNumIndices", (fgGfxModelResource *)0, &fgGfxModelResource::getNumIndices)
+            .ObjectDirect("getNumMaterials", (fgGfxModelResource *)0, &fgGfxModelResource::getNumMaterials)
+            .ObjectDirect("getNumNormals", (fgGfxModelResource *)0, &fgGfxModelResource::getNumNormals)
+            .ObjectDirect("getNumPolygons", (fgGfxModelResource *)0, &fgGfxModelResource::getNumPolygons)
+            .ObjectDirect("getNumShapes", (fgGfxModelResource *)0, &fgGfxModelResource::getNumShapes)
+            .ObjectDirect("getNumTriangles", (fgGfxModelResource *)0, &fgGfxModelResource::getNumTriangles)
+            .ObjectDirect("getNumUVs", (fgGfxModelResource *)0, &fgGfxModelResource::getNumUVs)
+            .ObjectDirect("getNumVertices", (fgGfxModelResource *)0, &fgGfxModelResource::getNumVertices)
+            .ObjectDirect("isInterleaved", (fgGfxModelResource *)0, &fgGfxModelResource::isInterleaved)
+            .ObjectDirect("isTextured", (fgGfxModelResource *)0, &fgGfxModelResource::isTextured)
+            .ObjectDirect("isMultitextured", (fgGfxModelResource *)0, &fgGfxModelResource::isMultitextured)
+            .ObjectDirect("hasMaterial", (fgGfxModelResource *)0, &fgGfxModelResource::hasMaterial)
+            .MetatableFunction("__gc", &fgScriptSubsystem::managedResourceGCEvent);
+
+    // Register Particle Effect Resource metatable
+    LPCD::Class(m_luaState->GetCState(), "fgParticleEffectResourceMETATABLE", "fgResourceMETATABLE")
+            .ObjectDirect("setMaxCount", (fgParticleEffect *)0, &fgParticleEffect::setMaxCount)
+            .ObjectDirect("getMaxCount", (fgParticleEffect *)0, &fgParticleEffect::getMaxCount)
+            .ObjectDirect("isAreaCheck", (fgParticleEffect *)0, &fgParticleEffect::isAreaCheck)
+            .ObjectDirect("isAreaSet", (fgParticleEffect *)0, &fgParticleEffect::isAreaSet)
+            .ObjectDirect("unsetParticleArea", (fgParticleEffect *)0, &fgParticleEffect::unsetParticleArea)
+            //.ObjectDirect("setParticleArea", (fgParticleEffect *)0, &fgParticleEffect::setParticleArea)
+            .ObjectDirect("setAreaCheck", (fgParticleEffect *)0, &fgParticleEffect::setAreaCheck)
+            .ObjectDirect("setTextureXSize", (fgParticleEffect *)0, &fgParticleEffect::setTextureXSize)
+            .ObjectDirect("setTextureYSize", (fgParticleEffect *)0, &fgParticleEffect::setTextureYSize)
+            //.ObjectDirect("setTextureIDRange", (fgParticleEffect *)0, &fgParticleEffect::setTextureIDRange)
+            .ObjectDirect("setParamsActive", (fgParticleEffect *)0, &fgParticleEffect::setParamsActive)
+            .ObjectDirect("setRandomVelocity", (fgParticleEffect *)0, &fgParticleEffect::setRandomVelocity)
+            .ObjectDirect("setLifeAsSize", (fgParticleEffect *)0, &fgParticleEffect::setLifeAsSize)
+            .ObjectDirect("setFacingVelocity", (fgParticleEffect *)0, &fgParticleEffect::setFacingVelocity)
+            .ObjectDirect("setRandomAngle", (fgParticleEffect *)0, &fgParticleEffect::setRandomAngle)
+            //.ObjectDirect("setSpreadSpeed", (fgParticleEffect *)0, &fgParticleEffect::setSpreadSpeed)
+            //.ObjectDirect("setStartSize", (fgParticleEffect *)0, &fgParticleEffect::setStartSize)
+            //.ObjectDirect("setEndSize", (fgParticleEffect *)0, &fgParticleEffect::setEndSize)
+            .ObjectDirect("setLowLife", (fgParticleEffect *)0, &fgParticleEffect::setLowLife)
+            .ObjectDirect("setHighLife", (fgParticleEffect *)0, &fgParticleEffect::setHighLife)
+            //.ObjectDirect("setLifeRange", (fgParticleEffect *)0, &fgParticleEffect::setLifeRange)
+            //.ObjectDirect("setTTLRange", (fgParticleEffect *)0, &fgParticleEffect::setTTLRange)
+            //.ObjectDirect("setStartColor", (fgParticleEffect *)0, &fgParticleEffect::setStartColor)
+            //.ObjectDirect("setEndColor", (fgParticleEffect *)0, &fgParticleEffect::setEndColor)
+            //.ObjectDirect("setFadeSpeedRange", (fgParticleEffect *)0, &fgParticleEffect::setFadeSpeedRange)
+            //.ObjectDirect("setTextureName", (fgParticleEffect *)0, &fgParticleEffect::setTextureName)
+            //.ObjectDirect("getFlags", (fgParticleEffect *)0, &fgParticleEffect::getFlags)
+            //.ObjectDirect("getParticleArea", (fgParticleEffect *)0, &fgParticleEffect::getParticleArea)
+            //.ObjectDirect("getTextureNameStr", (fgParticleEffect *)0, &fgParticleEffect::getTextureNameStr)
+            //.ObjectDirect("getTextureSheetSize", (fgParticleEffect *)0, &fgParticleEffect::getTextureSheetSize)
+            //.ObjectDirect("getTextureIDRange", (fgParticleEffect *)0, &fgParticleEffect::getTextureIDRange)
+            //.ObjectDirect("getStartSize", (fgParticleEffect *)0, &fgParticleEffect::getStartSize)
+            //.ObjectDirect("getEndSize", (fgParticleEffect *)0, &fgParticleEffect::getEndSize)
+            //.ObjectDirect("getSpreadSpeed", (fgParticleEffect *)0, &fgParticleEffect::getSpreadSpeed)
+            //.ObjectDirect("getLifeRange", (fgParticleEffect *)0, &fgParticleEffect::getLifeRange)
+            //.ObjectDirect("getTTLRange", (fgParticleEffect *)0, &fgParticleEffect::getTTLRange)
+            //.ObjectDirect("getFadeSpeedRange", (fgParticleEffect *)0, &fgParticleEffect::getFadeSpeedRange)
+            //.ObjectDirect("getStartColor", (fgParticleEffect *)0, &fgParticleEffect::getStartColor)
+            //.ObjectDirect("getEndColor", (fgParticleEffect *)0, &fgParticleEffect::getEndColor)
+            .ObjectDirect("isParamsActive", (fgParticleEffect *)0, &fgParticleEffect::isParamsActive)
+            .ObjectDirect("isRandomVelocity", (fgParticleEffect *)0, &fgParticleEffect::isRandomVelocity)
+            .ObjectDirect("isLifeAsSize", (fgParticleEffect *)0, &fgParticleEffect::isLifeAsSize)
+            .ObjectDirect("isFacingVelocity", (fgParticleEffect *)0, &fgParticleEffect::isFacingVelocity)
+            .ObjectDirect("isRandomAngle", (fgParticleEffect *)0, &fgParticleEffect::isRandomAngle)
+            .MetatableFunction("__gc", &fgScriptSubsystem::managedResourceGCEvent);
+
+    //m_globals.Register("Texture", &fgScriptSubsystem::newResourceWrapper);
 #endif /* FG_USING_LUA_PLUS */    
     return FG_TRUE;
 }

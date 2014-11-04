@@ -542,6 +542,13 @@ public:
      * 
      * @return 
      */
+    inline const char * getTextureNameStr(void) const {
+        return m_textureName.c_str();
+    }
+    /**
+     * 
+     * @return 
+     */
     inline fgGfxTextureID& getTextureGfxID(void) {
         return m_textureGfxID;
     }
