@@ -36,6 +36,10 @@
         #define FG_NONE 0
     #endif
 
+    #if !defined(FG_RAND)
+        #define FG_RAND(_A, _B) (_A + (int)(((float)(_B - _A + 1)) * rand() / (((float)RAND_MAX) + 1.0f)))
+    #endif
+
 // Special macros for checking text/string value, in context of converting to enums/ints etc.
 //
 // Need to create other method for literals - need obfuscation #FIXME #TODO #P3

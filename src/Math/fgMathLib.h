@@ -13,6 +13,10 @@
     #include "fgBuildConfig.h"
     #include <cmath>
 
+    #if !defined(FG_RAND)
+        #define FG_RAND(_A, _B) (_A + (int)(((float)(_B - _A + 1)) * rand() / (((float)RAND_MAX) + 1.0f)))
+    #endif
+
     #if defined FG_USING_GLM
         #include "glm/common.hpp"
         #include "glm/vec2.hpp"
