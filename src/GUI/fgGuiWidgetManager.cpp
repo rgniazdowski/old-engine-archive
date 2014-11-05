@@ -271,18 +271,27 @@ fgBool fgGuiWidgetManager::loadStructureSheet(const char *filePath) {
 
 /**
  * 
+ * @param pWidget
+ * @return 
+ */
+fgBool fgGuiWidgetManager::addWidget(fgGuiWidget *pWidget) {
+    return addWidget(pWidget, (fgGuiWidget *)NULL);
+}
+
+/**
+ * 
  * @param wUniqueID
  * @param pWidget
  * @param pFatherWidget
  * @return 
  */
-fgBool fgGuiWidgetManager::addWidget(fgGuiWidgetHandle& wUniqueID, fgGuiWidget *pWidget, fgGuiWidget *pFatherWidget) {
+fgBool fgGuiWidgetManager::addWidget(fgGuiWidget *pWidget, fgGuiWidget *pFatherWidget) {
     if(!pWidget) {
         // Empty pointer - return
         FG_LOG::PrintError("WidgetManager: // Empty pointer - exit... no addition made");
         return FG_FALSE;
     }
-
+    fgGuiWidgetHandle wUniqueID;
     if(fgHandleManager::isDataManaged(pWidget)) {
         // Widget is already managed in the handle manager
         FG_LOG::PrintError("WidgetManager: // Widget is already managed in the handle manager: '%s' of type '%s'", pWidget->getNameStr(), pWidget->getTypeNameStr());
@@ -361,8 +370,8 @@ fgBool fgGuiWidgetManager::addWidget(fgGuiWidgetHandle& wUniqueID, fgGuiWidget *
  * @param wFatherUniqueID
  * @return 
  */
-fgBool fgGuiWidgetManager::addWidget(fgGuiWidgetHandle& wUniqueID, fgGuiWidget *pWidget, const fgGuiWidgetHandle& wFatherUniqueID) {
-    return addWidget(wUniqueID, pWidget, fgHandleManager::dereference(wFatherUniqueID));
+fgBool fgGuiWidgetManager::addWidget(fgGuiWidget *pWidget, const fgGuiWidgetHandle& wFatherUniqueID) {
+    return addWidget(pWidget, fgHandleManager::dereference(wFatherUniqueID));
 }
 
 /**
@@ -372,8 +381,8 @@ fgBool fgGuiWidgetManager::addWidget(fgGuiWidgetHandle& wUniqueID, fgGuiWidget *
  * @param wFatherNameTag
  * @return 
  */
-fgBool fgGuiWidgetManager::addWidget(fgGuiWidgetHandle& wUniqueID, fgGuiWidget *pWidget, const std::string& wFatherNameTag) {
-    return addWidget(wUniqueID, pWidget, fgHandleManager::dereference(wFatherNameTag));
+fgBool fgGuiWidgetManager::addWidget(fgGuiWidget *pWidget, const std::string& wFatherNameTag) {
+    return addWidget(pWidget, fgHandleManager::dereference(wFatherNameTag));
 }
 
 /**
@@ -383,8 +392,8 @@ fgBool fgGuiWidgetManager::addWidget(fgGuiWidgetHandle& wUniqueID, fgGuiWidget *
  * @param wFatherNameTag
  * @return 
  */
-fgBool fgGuiWidgetManager::addWidget(fgGuiWidgetHandle& wUniqueID, fgGuiWidget *pWidget, const char* wFatherNameTag) {
-    return addWidget(wUniqueID, pWidget, fgHandleManager::dereference(wFatherNameTag));
+fgBool fgGuiWidgetManager::addWidget(fgGuiWidget *pWidget, const char* wFatherNameTag) {
+    return addWidget(pWidget, fgHandleManager::dereference(wFatherNameTag));
 }
 
 /**

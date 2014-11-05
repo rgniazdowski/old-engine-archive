@@ -212,13 +212,13 @@ fgBool fgParticleSystem::initialize(void) {
  * @param nameTag
  * @return 
  */
-fgBool fgParticleSystem::insert(fgResourceHandle& peUniqueID, fgParticleEffect* pEffect, const std::string& nameTag) {
+fgBool fgParticleSystem::insert(fgParticleEffect* pEffect, const std::string& nameTag) {
     if(nameTag.empty() || !pEffect)
         return FG_FALSE;
     if(!m_pResourceMgr)
         return FG_FALSE;
-    if(static_cast<fgResourceManager *>(m_pResourceMgr)->insert(peUniqueID, pEffect, nameTag)) {
-        pEffect->setManaged();
+    if(static_cast<fgResourceManager *>(m_pResourceMgr)->insert(pEffect, nameTag)) {
+        pEffect->setManaged(FG_TRUE);
         return FG_TRUE;
     }
     return FG_FALSE;
@@ -230,10 +230,10 @@ fgBool fgParticleSystem::insert(fgResourceHandle& peUniqueID, fgParticleEffect* 
  * @param pStyle
  * @return 
  */
-fgBool fgParticleSystem::insertParticleEffect(fgResourceHandle& peUniqueID, fgParticleEffect *pEffect) {
+fgBool fgParticleSystem::insertParticleEffect(fgParticleEffect *pEffect) {
     if(!pEffect)
         return FG_FALSE;
-    return insert(peUniqueID, pEffect, pEffect->getName());
+    return insert(pEffect, pEffect->getName());
 }
 
 /**

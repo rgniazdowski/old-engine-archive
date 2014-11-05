@@ -170,14 +170,14 @@ fgBool fgResourceManager::initialize(void) {
         // for overallocation, they will not be purged if the
         // resource group is still being used (and locked)
         // Locking resource group - locks all the resources
-        insertResource(resGroup->getRefHandle(), resGroup);
+        insertResource(resGroup);
         grpUniqueID = resGroup->getHandle();
         // There is a separate holder for resource group
         insertResourceGroup(grpUniqueID, resGroup);
         fgResourceGroup::rgResVec& resInGrp = resGroup->getRefResourceFiles();
         for(fgResourceGroup::rgResVecItor it = resInGrp.begin(); it != resInGrp.end(); it++) {
             (*it)->setQuality(static_cast<fgQualityManager *>(m_pQualityMgr)->getQuality());
-            insertResource((*it)->getRefHandle(), (*it));
+            insertResource((*it));
         }
         // This is really important - refresh array with resource handles
         resGroup->refreshArrays();
@@ -277,11 +277,11 @@ fgBool fgResourceManager::goToNext(fgResourceType resType, fgQuality quality) {
  * Insert resource group into manager, if you pass in the pointer to
  * resource handle, the Resource Manager will provide a unique handle for you.
  */
-fgBool fgResourceManager::insertResource(FG_RHANDLE& rhUniqueID, fgResource* pResource) {
+fgBool fgResourceManager::insertResource(fgResource* pResource) {
     if(!pResource) {
         return FG_FALSE;
     }
-    if(!insert(rhUniqueID, pResource, pResource->getName())) {
+    if(!insert(pResource, pResource->getName())) {
         return FG_FALSE;
     }
     pResource->setManaged(FG_TRUE);
@@ -305,7 +305,6 @@ fgBool fgResourceManager::insertResourceGroup(const FG_RHANDLE& rhUniqueID, fgRe
     if(!fgDataManagerBase::isManaged(pResource)) {
         return FG_FALSE;
     }
-
     if(m_resourceGroupHandles.find(rhUniqueID) != -1) {
         reportError(FG_ERRNO_RESOURCE_GROUP_IN_VECTOR, FG_MSG_IN_FUNCTION);
         return FG_FALSE;
@@ -648,7 +647,7 @@ fgResource* fgResourceManager::request(const std::string& info, const fgResource
     }
 
     if(resourcePtr) {
-        fgResourceManager::insertResource(resourcePtr->getRefHandle(), resourcePtr);
+        fgResourceManager::insertResource(resourcePtr);
         // This will recreate the resource if necessary and throw proper event
         // if the pointer to the external event manager is set.
         fgResourceManager::refreshResource(resourcePtr);

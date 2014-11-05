@@ -61,7 +61,7 @@ public:
      * @param nameTag
      * @return 
      */
-    virtual fgBool insert(HandleType& dhUniqueID, DataType pData, const std::string& nameTag);
+    virtual fgBool insert(DataType pData, const std::string& nameTag);
 
     /**
      * 
@@ -92,7 +92,7 @@ public:
      * 
      * @param pData
      * @return 
-     */ 
+     */
     virtual fgBool destroyData(DataType& pData);
     /**
      * 
@@ -185,12 +185,12 @@ void fgDataManagerBase<DataType, HandleType, TagType>::clear(void) {
  * @return 
  */
 template <typename DataType, typename HandleType, typename TagType>
-fgBool fgDataManagerBase<DataType, HandleType, TagType>::insert(HandleType& dhUniqueID, DataType pData, const std::string& nameTag) {
+fgBool fgDataManagerBase<DataType, HandleType, TagType>::insert(DataType pData, const std::string& nameTag) {
     if(!pData) {
         this->reportWarning(FG_ERRNO_RESOURCE_PARAMETER_NULL, FG_MSG_IN_FUNCTION);
         return FG_FALSE;
     }
-
+    HandleType dhUniqueID;
     if(fgHandleManager<DataType, HandleType>::isDataManaged(pData)) {
         this->reportError(FG_ERRNO_RESOURCE_ALREADY_MANAGED, FG_MSG_IN_FUNCTION);
         return FG_FALSE;
@@ -208,6 +208,7 @@ fgBool fgDataManagerBase<DataType, HandleType, TagType>::insert(HandleType& dhUn
         this->reportError(FG_ERRNO_RESOURCE_ACQUIRE_HANDLE, FG_MSG_IN_FUNCTION);
         return FG_FALSE;
     }
+    // This is important - on addition need to update the handle
     pData->setHandle(dhUniqueID);
     if(!fgHandleManager<DataType, HandleType>::setupName(nameTag, dhUniqueID)) {
         // Could not setup handle string tag/name for the resource

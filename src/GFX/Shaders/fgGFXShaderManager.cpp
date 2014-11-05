@@ -99,7 +99,7 @@ fgBool fgGfxShaderManager::preLoadShaders(void) {
             pProgram = NULL;
             continue;
         }
-        if(!insertProgram(pProgram->getRefHandle(), pProgram)) {
+        if(!insertProgram(pProgram)) {
             releaseHandle(pProgram->getHandle());
             delete pProgram;
             pProgram = NULL;
@@ -114,10 +114,11 @@ fgBool fgGfxShaderManager::preLoadShaders(void) {
 /*
  *
  */
-fgBool fgGfxShaderManager::insert(fgGfxShaderHandle& phUniqueID, fgGfxShaderProgram *pProgram, const std::string& nameTag) {
+fgBool fgGfxShaderManager::insert(fgGfxShaderProgram *pProgram, const std::string& nameTag) {
     if(!pProgram)
         return FG_FALSE;
-    if(fgDataManagerBase::insert(phUniqueID, pProgram, nameTag)) {
+    if(fgDataManagerBase::insert(pProgram, nameTag)) {
+        pProgram->setName(nameTag); // ?
         pProgram->setManaged(FG_TRUE);
         pProgram->setManager(this);
         return FG_TRUE;
@@ -128,8 +129,8 @@ fgBool fgGfxShaderManager::insert(fgGfxShaderHandle& phUniqueID, fgGfxShaderProg
 /*
  *
  */
-fgBool fgGfxShaderManager::insertProgram(fgGfxShaderHandle& phUniqueID, fgGfxShaderProgram *pProgram) {
-    return insert(phUniqueID, pProgram, pProgram->getName());
+fgBool fgGfxShaderManager::insertProgram(fgGfxShaderProgram *pProgram) {
+    return insert(pProgram, pProgram->getName());
 }
 
 /*

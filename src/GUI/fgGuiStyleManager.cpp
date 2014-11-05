@@ -72,7 +72,7 @@ fgBool fgGuiStyleManager::initialize(void) {
                 delete style;
                 continue;
             } else {
-                if(!insertStyle(style->getRefHandle(), style)) {
+                if(!insertStyle(style)) {
                     FG_LOG::PrintError("GUI: Insertion to database failed for style: '%s'", style->getNameStr());
                     // # remember to ALWAYS try to release the handle after failed insertion
                     releaseHandle(style->getRefHandle());
@@ -88,14 +88,25 @@ fgBool fgGuiStyleManager::initialize(void) {
     return FG_TRUE;
 }
 
+fgBool fgGuiStyleManager::insert(fgGuiStyle *pStyle, const std::string& nameTag) {
+    if(!pStyle)
+        return FG_FALSE;
+    if(fgDataManagerBase::insert(pStyle, nameTag)) {
+        pStyle->setName(nameTag);
+        pStyle->setManaged(FG_TRUE);
+        return FG_TRUE;
+    }
+    return FG_FALSE;
+}
+
 /*
  *
  */
-fgBool fgGuiStyleManager::insertStyle(fgGuiStyleHandle& shUniqueID, fgGuiStyle *pStyle) {
+fgBool fgGuiStyleManager::insertStyle(fgGuiStyle *pStyle) {
     if(!pStyle) {
         return FG_FALSE;
     }
-    if(!insert(shUniqueID, pStyle, pStyle->getName())) {
+    if(!insert(pStyle, pStyle->getName())) {
         return FG_FALSE;
     }
     pStyle->setManaged(FG_TRUE);

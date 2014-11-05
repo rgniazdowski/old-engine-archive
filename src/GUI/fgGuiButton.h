@@ -14,7 +14,7 @@
     #include "fgGuiLabel.h"
     #include "fgGuiWidgetFactoryTypes.h"
 
-    #define FG_GUI_BUTTON		0x00000004
+    #define FG_GUI_BUTTON	0x00000004
     #define FG_GUI_BUTTON_NAME	"Button"
 
 /*

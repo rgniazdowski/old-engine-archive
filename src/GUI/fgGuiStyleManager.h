@@ -52,11 +52,18 @@ public:
 
     /**
      * 
+     * @param pStyle
+     * @param nameTag
+     * @return 
+     */
+    virtual fgBool insert(fgGuiStyle *pStyle, const std::string& nameTag);
+    /**
+     * 
      * @param shUniqueID
      * @param pStyle
      * @return 
      */
-    virtual fgBool insertStyle(fgGuiStyleHandle& shUniqueID, fgGuiStyle *pStyle);
+    virtual fgBool insertStyle(fgGuiStyle *pStyle);
 
     /**
      * 

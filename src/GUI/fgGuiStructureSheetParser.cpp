@@ -215,7 +215,7 @@ void fgGuiStructureSheetParser::startElement(const char *localName, fgXMLElement
         }
     }
     // Adding widget to the manager updates it's style
-    if(!m_widgetMgr->addWidget(pWidget->getRefHandle(), pWidget, pFatherWidget)) {
+    if(!m_widgetMgr->addWidget(pWidget, pFatherWidget)) {
         if(pFatherWidget && pFatherContainer) {
             pFatherContainer->removeChild(pWidget);
         }

@@ -91,10 +91,10 @@ public:
     fgBool useProgram(const char *nameTag);
 
     //
-    virtual fgBool insert(fgGfxShaderHandle& phUniqueID, fgGfxShaderProgram *pProgram, const std::string& nameTag);
+    virtual fgBool insert(fgGfxShaderProgram *pProgram, const std::string& nameTag);
 
     // Insert the specified shader program into the manager
-    virtual fgBool insertProgram(fgGfxShaderHandle& phUniqueID, fgGfxShaderProgram *pProgram);
+    virtual fgBool insertProgram(fgGfxShaderProgram *pProgram);
 
     //
     void setShadersPath(const std::string &path);

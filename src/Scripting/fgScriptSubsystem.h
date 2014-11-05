@@ -426,7 +426,7 @@ protected:
      * @param L
      * @return 
      */
-    template<class Type> 
+    template<class Type>
     static int simpleTypedFreeGCEvent(lua_State* L);
 
     /**
@@ -442,7 +442,7 @@ protected:
      * @param L
      * @return 
      */
-    template<class Type> 
+    template<class Type>
     static int simpleInPlaceTypedGCEvent(lua_State* L);
 
     /**
@@ -958,6 +958,29 @@ namespace LPCD {
     };
 
     template<> struct Type<const fgVector4f&> : public Type<fgVector4f> {
+    };
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+namespace LPCD {
+
+    template<> struct Type<std::string> {
+        static inline void Push(lua_State* L, const std::string& value) {
+            lua_pushstring(L, value.c_str());
+        }
+        static inline bool Match(lua_State* L, int idx) {
+            return lua_type(L, idx) == LUA_TSTRING;
+        }
+        static inline std::string Get(lua_State* L, int idx) {
+            return lua_tostring(L, idx);
+        }
+    };
+
+    template<> struct Type<std::string&> : public Type<std::string> {
+    };
+
+    template<> struct Type<const std::string&> : public Type<std::string> {
     };
 }
 

@@ -150,13 +150,13 @@ fgBool fgGuiMain::initialize(void) {
     FG_LOG::PrintDebug("GUI: Initializing builtin fonts...");
     fgFontBuiltInResource *consolasBold = new fgFontBuiltInResource(fgFontBuiltIn::StbConsolasBold::getRawData(32));
     consolasBold->setName("StbConsolasBold");
-    m_pResourceMgr->insertResource(consolasBold->getRefHandle(), consolasBold);
+    m_pResourceMgr->insertResource(consolasBold);
     // This will automatically create the resource and also throw event for GFX upload
     m_pResourceMgr->get(consolasBold->getRefHandle());
 
     fgFontBuiltInResource *courier = new fgFontBuiltInResource(fgFontBuiltIn::StbCourier::getRawData(50));
     courier->setName("StbCourier");
-    m_pResourceMgr->insertResource(courier->getRefHandle(), courier);
+    m_pResourceMgr->insertResource(courier);
     m_pResourceMgr->get(courier->getRefHandle());
     
     //

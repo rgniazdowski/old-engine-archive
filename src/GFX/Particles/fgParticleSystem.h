@@ -170,7 +170,7 @@ public:
      * @param nameTag
      * @return 
      */
-    virtual fgBool insert(fgResourceHandle& peUniqueID, fgParticleEffect* pEffect, const std::string& nameTag);
+    virtual fgBool insert(fgParticleEffect* pEffect, const std::string& nameTag);
 
     /**
      * 
@@ -178,7 +178,7 @@ public:
      * @param pStyle
      * @return 
      */
-    virtual fgBool insertParticleEffect(fgResourceHandle& peUniqueID, fgParticleEffect *pEffect);
+    virtual fgBool insertParticleEffect(fgParticleEffect *pEffect);
 
     /**
      * 
