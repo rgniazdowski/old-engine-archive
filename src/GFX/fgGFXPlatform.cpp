@@ -152,7 +152,7 @@ fgBool fgGfxPlatform::initialize(fgBool reinit) {
         return FG_FALSE;
     }
 
-    SDL_DisplayMode *desktopMode;
+    SDL_DisplayMode *desktopMode = NULL;
     int displayCount = 0;
 
     if((displayCount = SDL_GetNumVideoDisplays()) < 1) {
@@ -187,6 +187,8 @@ fgBool fgGfxPlatform::initialize(fgBool reinit) {
             }
         }
     }
+    // #FIXME
+    fgFree(desktopMode);
     // SDL_bool SDL_GL_ExtensionSupported(const char* extension)
     // int SDL_GL_LoadLibrary(const char* path)
     // const char* SDL_GetError(void)

@@ -18,6 +18,8 @@
     #include "GFX/fgGFXTypes.h"
     #include "GFX/Textures/fgTextureResource.h"
 
+    #include "Util/fgMemory.h"
+
     #define FG_MANAGER_SCRIPT       0x00004000
     #define FG_SUBSYSTEM_SCRIPT     0x00004000
 
@@ -34,33 +36,8 @@ struct lua_State {
 
     #include <map>
 
+
     #if defined(FG_USING_LUA_PLUS)
-namespace LPCD {
-
-    template<> struct Type<fgVector3f> {
-        static inline void Push(lua_State* L, const fgVector3f& value) {
-            LuaState* state = lua_State_to_LuaState(L);
-            LuaObject obj = state->BoxPointer((void*)&value);
-            obj.SetMetatable(state->GetRegistry()["fgVector3fMETATABLE"]);
-        }
-        static inline bool Match(lua_State* L, int idx) {
-            LuaState* state = lua_State_to_LuaState(L);
-            LuaObject obj = state->Stack(idx);
-            return obj.GetMetatable() == state->GetRegistry()["fgVector3fMETATABLE"];
-        }
-        static inline fgVector3f Get(lua_State* L, int idx) {
-            LuaState* state = lua_State_to_LuaState(L);
-            return *(fgVector3f*)state->UnBoxPointer(idx);
-        }
-    };
-
-    template<> struct Type<fgVector3f&> : public Type<fgVector3f> {
-    };
-
-    template<> struct Type<const fgVector3f&> : public Type<fgVector3f> {
-    };
-}
-
 /*
 namespace LPCD {
 
@@ -87,20 +64,162 @@ namespace LPCD {
     template<> struct Type<const fgVector3f&> : public Type<fgVector3f> {
     };
 }
-*/
+ */
     #endif /* FG_USING_LUA_PLUS */
 
 /**
  * 
  */
 class fgScriptSubsystem : public fgManagerBase {
+public:
+
+    enum METAID {
+        EMPTY_METATABLE_ID = 0,
+        VECTOR2I_METATABLE_ID = 1,
+        VECTOR2F_METATABLE_ID = 2,
+        VECTOR3I_METATABLE_ID = 3,
+        VECTOR3F_METATABLE_ID = 4,
+        VECTOR4I_METATABLE_ID = 5,
+        VECTOR4F_METATABLE_ID = 6,
+        ERROR_METATABLE_ID = 7,
+        EVENT_MANAGER_METATABLE_ID = 8,
+        RESOURCE_MANAGER_METATABLE_ID = 9,
+        SHADER_MANAGER_METATABLE_ID = 10,
+        SCENE2D_MANAGER_METATABLE_ID = 11,
+        SCENE3D_MANAGER_METATABLE_ID = 12,
+        PARTICLE_SYSTEM_METATABLE_ID = 13,
+        WIDGET_MANAGER_METATABLE_ID = 14,
+        STYLE_MANAGER_METATABLE_ID = 15,
+        SOUND_MANAGER_METATABLE_ID = 16,
+        RESOURCE_METATABLE_ID = 17,
+        TEXTURE_RESOURCE_METATABLE_ID = 18,
+        FONT_RESOURCE_METATABLE_ID = 19,
+        GFX_MODEL_RESOURCE_METATABLE_ID = 20,
+        PARTICLE_EFFECT_RESOURCE_METATABLE_ID = 21,
+        SOUND_RESOURCE_METATABLE_ID = 22,
+        MUSIC_RESOURCE_METATABLE_ID = 23,
+        PLUGIN_RESOURCE_METATABLE_ID = 24,
+        SAVE_FILE_RESOURCE_METATABLE_ID = 25,
+        CONFIG_METATABLE_ID = 26,
+        SETTINGS_METATABLE_ID = 27,
+        GUI_WIDGET_METATABLE_ID = 28,
+        GUI_BUTTON_METATABLE_ID = 29,
+        GUI_CONSOLE_METATABLE_ID = 30,
+        GUI_CONTAINER_METATABLE_ID = 31,
+        GUI_FRAME_METATABLE_ID = 32,
+        GUI_LABEL_METATABLE_ID = 33,
+        GUI_LOADER_METATABLE_ID = 34,
+        GUI_MENU_METATABLE_ID = 35,
+        GUI_MESSAGE_BOX_METATABLE_ID = 36,
+        GUI_POPUP_METATABLE_ID = 37,
+        GUI_PROGRESS_BAR_METATABLE_ID = 38,
+        GUI_SCROLL_AREA_METATABLE_ID = 39,
+        GUI_STYLE_METATABLE_ID = 40,
+        GUI_STYLE_CONTENT_METATABLE_ID = 41,
+        GUI_TABLE_METATABLE_ID = 42,
+        GUI_TEXT_AREA_METATABLE_ID = 43,
+        GUI_TOGGLE_BUTTON_METATABLE_ID = 44,
+        GUI_WINDOW_METATABLE_ID = 45
+    };
 private:
     #if defined(FG_USING_LUA_PLUS)
+    ///
     typedef std::map<uintptr_t, LuaPlus::LuaObject> userDataObjectMap;
     #else
+    ///
     typedef std::map<uintptr_t, void *> userDataObjectMap;
     #endif
+    ///
     typedef userDataObjectMap::iterator userDataObjectMapItor;
+
+    /**
+     * 
+     */
+    struct metatableInfo {
+        ///
+        static const unsigned char NAME_MAX_LENGTH = 24;
+        ///
+        int id;
+        ///
+        char name[NAME_MAX_LENGTH];
+        /**
+         * 
+         */
+        metatableInfo() : id(0) {
+            randomizeName();
+        }
+        /**
+         * 
+         * @param _id
+         * @param _name
+         */
+        metatableInfo(const int _id, const char *_name) : id(_id) {
+            if(_name)
+                strncpy(name, _name, (int)NAME_MAX_LENGTH);
+            else
+                memset(name, 0, (int)NAME_MAX_LENGTH);
+        }
+        /**
+         * 
+         * @param _id
+         * @param prefix
+         * @param suffix
+         */
+        metatableInfo(const int _id, const char *prefix, const char *suffix) : id(_id) {
+            randomizeName(prefix, suffix);
+        }
+        /**
+         * 
+         * @param prefix
+         * @param suffix
+         */
+        char* randomizeName(const char *prefix = NULL, const char *suffix = NULL) {
+            if(!name)
+                return name;
+            memset(name, 0, (int)NAME_MAX_LENGTH);
+            int i = 0, j = 0, suflen = 0, limit = NAME_MAX_LENGTH - 1;
+            // Numbers 0 - 9 ASCII 48 to 57
+            // Uppercase letters A - Z ASCII 65 - 90
+            // Lowercase letters a - z ASCII 97 to 122
+            int _n[2] = {48, 57};
+            int _u[2] = {65, 90};
+            int _l[2] = {97, 122};
+            int *_c[3] = {_n, _u, _l};
+            if(prefix) {
+                sprintf(name, "%s", prefix);
+                i = strlen(name);
+            } else {
+                // without prefix need to ensure that beginning is alpha
+                for(; i < 3; i++) {
+                    j = 1;
+                    name[i] = (char)FG_RAND(_c[j][0], _c[j][1]);
+                }
+            }
+            name[i] = '_', i++;
+            if(suffix) {
+                suflen = (int)strlen(suffix);
+                limit -= suflen;
+            } else {
+                limit++;
+            }
+            for(; i < limit - 1; i++) {
+                j = FG_RAND(0, 2);
+                name[i] = (char)FG_RAND(_c[j][0], _c[j][1]);
+            }
+            if(suffix) {
+                name[i] = '_', i++;
+                for(j = 0; i < NAME_MAX_LENGTH - 1 && j < suflen; i++, j++) {
+                    name[i] = suffix[j];
+                }
+            }
+            return name;
+        }
+    };
+
+    ///
+    typedef std::map<unsigned short, metatableInfo> scriptMetatableInfoMap;
+    ///
+    typedef scriptMetatableInfoMap::iterator scriptMetatableInfoMapItor;
 
     #if defined(FG_USING_LUA_PLUS)
     /// Main global state for LUA
@@ -151,6 +270,9 @@ private:
     static fgBool m_isBindingComplete;
     ///
     static userDataObjectMap m_userDataObjectMap;
+    ///
+    static scriptMetatableInfoMap m_scriptMetatableInfoMap;
+
 public:
     /**
      * 
@@ -160,6 +282,23 @@ public:
      * 
      */
     virtual ~fgScriptSubsystem();
+
+public:
+    /**
+     * 
+     * @param metatableID
+     * @return 
+     */
+    static const char *getMetatableName(const unsigned short metatableID) {
+        const char *failedName = "__NO_B33F_";
+        if(m_scriptMetatableInfoMap.empty())
+            return failedName; // #FIXME
+
+        scriptMetatableInfoMapItor it = m_scriptMetatableInfoMap.find(metatableID);
+        if(it == m_scriptMetatableInfoMap.end())
+            return failedName;
+        return (*it).second.name;
+    }
 
 public:
     /**
@@ -276,16 +415,38 @@ public:
 protected:
     /**
      * 
-     * @param L
+     * @param state
      * @return 
      */
-    static int simpleGCEvent(lua_State* L);
+    template<class Type, METAID METATABLE_ID> static int simpleTypedNewEvent(LuaPlus::LuaState* state);
+
     /**
      * 
      * @param L
      * @return 
      */
-    static int simpleInPlaceGCEvent(lua_State* L);
+    template<class Type> static int simpleTypedGCEvent(lua_State* L);
+    
+    /**
+     * 
+     * @param state
+     * @return 
+     */
+    template<class Type, METAID METATABLE_ID> static int simpleInPlaceTypedNewEvent(LuaPlus::LuaState* state);
+
+    /**
+     * 
+     * @param L
+     * @return 
+     */
+    template<class Type> static int simpleInPlaceTypedGCEvent(lua_State* L);
+    
+    /**
+     * 
+     * @param L
+     * @return 
+     */
+    static int simpleGCEvent(lua_State* L);
     /**
      * 
      * @param L
@@ -299,18 +460,22 @@ protected:
      * @return 
      */
     static int newResourceWrapper(LuaPlus::LuaState* state);
-    
+
     #endif /* FG_USING_LUA_PLUS */
-    
+
     static fgBool managedObjectDestructorCallback(void *systemData, void *userData);
-    
+
 private:
     /**
      * 
      * @return 
      */
     fgBool registerConstants(void);
-
+    /**
+     * 
+     * @return 
+     */
+    fgBool registerAdditionalTypes(void);
     /**
      * 
      * @return 
@@ -357,5 +522,332 @@ private:
      */
     fgBool registerSoundManager(void);
 };
+
+    #if defined(FG_USING_LUA_PLUS)
+template<class Type, fgScriptSubsystem::METAID METATABLE_ID>
+int fgScriptSubsystem::simpleTypedNewEvent(LuaPlus::LuaState* state) {
+    if(!state)
+        return 1;
+    LuaPlus::LuaStack args(state);
+    if(!m_isBindingComplete) {
+        LuaPlus::LuaObject nilObj = state->BoxPointer(0);
+        nilObj.SetMetatable(LuaPlus::LuaObject());
+        nilObj.AssignNil();
+        return 1;
+    }
+    // This will not check for any arguments...
+    // Simple allocation via fgMalloc
+    Type *ptr = fgMalloc<Type>();
+    if(!ptr) {
+        LuaPlus::LuaObject nilObj = state->BoxPointer(0);
+        nilObj.SetMetatable(LuaPlus::LuaObject());
+        nilObj.AssignNil();
+        return 1;
+    }
+    new (ptr)Type();
+    LuaPlus::LuaObject newObj = state->BoxPointer(ptr);
+    uintptr_t offset = (uintptr_t)ptr;
+    userDataObjectMapItor it = m_userDataObjectMap.find(offset);
+    FG_LOG::PrintDebug("Script: Simple allocation, pointer: %p [offset=%lu]", ptr, offset);
+    if(it == m_userDataObjectMap.end() && offset) {
+        m_userDataObjectMap[offset] = newObj;
+    }
+    const char *metatableName = getMetatableName(METATABLE_ID);
+    if(!metatableName) {
+        newObj.SetMetatable(LuaPlus::LuaObject());
+    } else {
+        newObj.SetMetatable(state->GetRegistry()[metatableName]);
+        FG_LOG::PrintDebug("Script: Setting metatable.%d=[%s]", METATABLE_ID, metatableName);
+    }
+    return 1;
+}
+    #endif /* FG_USING_LUA_PLUS */
+/**
+ * 
+ * @param L
+ * @return 
+ */
+template<class Type>
+int fgScriptSubsystem::simpleTypedGCEvent(lua_State* L) {
+    if(!L)
+        return 0;
+    #if defined(FG_USING_LUA_PLUS)
+
+    // Mainly for resources ?
+    LuaPlus::LuaState* state = lua_State_to_LuaState(L);
+    //get the pointer lua is trying to delete.
+    if(!state->IsUserdata(1))
+        return 0;
+    void *unboxed = state->UnBoxPointer(1);
+    if(!unboxed)
+        return 0;
+    uintptr_t offset = (uintptr_t)unboxed;
+    userDataObjectMapItor it = m_userDataObjectMap.find(offset);
+    if(it == m_userDataObjectMap.end()) {
+        // The pointer is not registered
+        FG_LOG::PrintDebug("Simple Typed GC: pointer is not registered %p [offset: %lu]", unboxed, offset);
+        return 0;
+    } else {
+        m_userDataObjectMap.erase(it);
+    }
+    FG_LOG::PrintDebug("Simple Typed GC: called destructor, freeing memory %p [offset: %lu]", unboxed, offset);
+    Type *ptrObj = (Type *) unboxed;
+    ptrObj->~Type();
+    fgFree<Type>(ptrObj, FG_TRUE);
+    #endif /* FG_USING_LUA_PLUS */
+    return 0;
+}
+////////////////////////////////////////////////////////////////////////////////
+
+#if defined(FG_USING_LUA_PLUS)
+template<class Type, fgScriptSubsystem::METAID METATABLE_ID>
+int fgScriptSubsystem::simpleInPlaceTypedNewEvent(LuaPlus::LuaState* state) {
+    if(!state)
+        return 1;
+    LuaPlus::LuaStack args(state);
+    if(!m_isBindingComplete) {
+        LuaPlus::LuaObject nilObj = state->BoxPointer(0);
+        nilObj.SetMetatable(LuaPlus::LuaObject());
+        nilObj.AssignNil();
+        return 1;
+    }
+    // This will not check for any arguments...
+    // Simple allocation via fgMalloc
+    //    new (ptr)Type();
+    LuaPlus::LuaObject newObj = state->NewUserdata(sizeof(Type));
+    void *ptr = newObj.GetUserdata();
+    if(!ptr) {
+        newObj.SetMetatable(LuaPlus::LuaObject());
+        newObj.AssignNil();
+        return 1;
+    }
+    // Create constructor - creates object in specified memory holder (Lua side)
+    new (ptr) Type();
+    uintptr_t offset = (uintptr_t)ptr;
+    userDataObjectMapItor it = m_userDataObjectMap.find(offset);
+    FG_LOG::PrintDebug("Script: Simple typed in place  allocation, pointer: %p [offset=%lu]", ptr, offset);
+    if(it == m_userDataObjectMap.end() && offset) {
+        m_userDataObjectMap[offset] = newObj;
+    }
+    const char *metatableName = getMetatableName(METATABLE_ID);
+    if(!metatableName) {
+        newObj.SetMetatable(LuaPlus::LuaObject());
+    } else {
+        newObj.SetMetatable(state->GetRegistry()[metatableName]);
+        FG_LOG::PrintDebug("Script: Setting metatable.%d=[%s]", METATABLE_ID, metatableName);
+    }
+    return 1;
+}
+    #endif /* FG_USING_LUA_PLUS */
+/**
+ * 
+ * @param L
+ * @return 
+ */
+template<class Type>
+int fgScriptSubsystem::simpleInPlaceTypedGCEvent(lua_State* L) {
+    if(!L)
+        return 0;
+    #if defined(FG_USING_LUA_PLUS)
+
+    // Mainly for resources ?
+    LuaPlus::LuaState* state = lua_State_to_LuaState(L);
+    //get the pointer lua is trying to delete.
+    if(!state->IsUserdata(1))
+        return 0;
+    void *unboxed = state->UnBoxPointer(1);
+    if(!unboxed) {
+        FG_LOG::PrintDebug("Simple typed in place GC: unboxed pointer is [%p]", unboxed);
+        return 0;
+    }
+    uintptr_t offset = (uintptr_t)unboxed;
+    userDataObjectMapItor it = m_userDataObjectMap.find(offset);
+    if(it == m_userDataObjectMap.end()) {
+        // The pointer is not registered
+        FG_LOG::PrintDebug("Simple typed in place GC: pointer is not registered %p [offset: %lu]", unboxed, offset);
+        return 0;
+    } else {
+        m_userDataObjectMap.erase(it);
+    }
+    FG_LOG::PrintDebug("Simple typed in place GC: called destructor on memory %p [offset: %lu]", unboxed, offset);
+    Type *ptrObj = (Type *) unboxed;
+    ptrObj->~Type();
+    #endif /* FG_USING_LUA_PLUS */
+    return 0;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+    #if defined(FG_USING_LUA_PLUS)
+    
+namespace LPCD {
+    
+    /***************************************************************************
+     * FG VECTOR 2I
+     **************************************************************************/
+    
+    template<> struct Type<fgVector2i> {
+        static inline void Push(lua_State* L, const fgVector2i& value) {
+            LuaPlus::LuaState* state = lua_State_to_LuaState(L);
+            LuaPlus::LuaObject obj = state->BoxPointer((void*)&value);
+            obj.SetMetatable(state->GetRegistry()[fgScriptSubsystem::getMetatableName(fgScriptSubsystem::VECTOR2I_METATABLE_ID)]);
+        }
+        static inline bool Match(lua_State* L, int idx) {
+            LuaPlus::LuaState* state = lua_State_to_LuaState(L);
+            LuaPlus::LuaObject obj = state->Stack(idx);
+            return obj.GetMetatable() == state->GetRegistry()[fgScriptSubsystem::getMetatableName(fgScriptSubsystem::VECTOR2I_METATABLE_ID)];
+        }
+        static inline fgVector2i Get(lua_State* L, int idx) {
+            LuaPlus::LuaState* state = lua_State_to_LuaState(L);
+            return *(fgVector2i*)state->UnBoxPointer(idx);
+        }
+    };
+
+    template<> struct Type<fgVector2i&> : public Type<fgVector2i> {
+    };
+
+    template<> struct Type<const fgVector2i&> : public Type<fgVector2i> {
+    };
+    
+    /***************************************************************************
+     * FG VECTOR 2F
+     **************************************************************************/
+    
+    template<> struct Type<fgVector2f> {
+        static inline void Push(lua_State* L, const fgVector2f& value) {
+            LuaPlus::LuaState* state = lua_State_to_LuaState(L);
+            LuaPlus::LuaObject obj = state->BoxPointer((void*)&value);
+            obj.SetMetatable(state->GetRegistry()[fgScriptSubsystem::getMetatableName(fgScriptSubsystem::VECTOR2F_METATABLE_ID)]);
+        }
+        static inline bool Match(lua_State* L, int idx) {
+            LuaPlus::LuaState* state = lua_State_to_LuaState(L);
+            LuaPlus::LuaObject obj = state->Stack(idx);
+            return obj.GetMetatable() == state->GetRegistry()[fgScriptSubsystem::getMetatableName(fgScriptSubsystem::VECTOR2F_METATABLE_ID)];
+        }
+        static inline fgVector2f Get(lua_State* L, int idx) {
+            LuaPlus::LuaState* state = lua_State_to_LuaState(L);
+            fgVector2f* ptr = (fgVector2f *)state->UnBoxPointer(idx);
+            return *ptr;
+        }
+    };
+
+    template<> struct Type<fgVector2f&> : public Type<fgVector2f> {
+    };
+
+    template<> struct Type<const fgVector2f&> : public Type<fgVector2f> {
+    }; 
+    
+    /***************************************************************************
+     * FG VECTOR 3I
+     **************************************************************************/
+    
+    template<> struct Type<fgVector3i> {
+        static inline void Push(lua_State* L, const fgVector3i& value) {
+            LuaPlus::LuaState* state = lua_State_to_LuaState(L);
+            LuaPlus::LuaObject obj = state->BoxPointer((void*)&value);
+            obj.SetMetatable(state->GetRegistry()[fgScriptSubsystem::getMetatableName(fgScriptSubsystem::VECTOR3I_METATABLE_ID)]);
+        }
+        static inline bool Match(lua_State* L, int idx) {
+            LuaPlus::LuaState* state = lua_State_to_LuaState(L);
+            LuaPlus::LuaObject obj = state->Stack(idx);
+            return obj.GetMetatable() == state->GetRegistry()[fgScriptSubsystem::getMetatableName(fgScriptSubsystem::VECTOR3I_METATABLE_ID)];
+        }
+        static inline fgVector3i Get(lua_State* L, int idx) {
+            LuaPlus::LuaState* state = lua_State_to_LuaState(L);
+            return *(fgVector3i*)state->UnBoxPointer(idx);
+        }
+    };
+
+    template<> struct Type<fgVector3i&> : public Type<fgVector3i> {
+    };
+
+    template<> struct Type<const fgVector3i&> : public Type<fgVector3i> {
+    };
+    
+    /***************************************************************************
+     * FG VECTOR 3F
+     **************************************************************************/
+    
+    template<> struct Type<fgVector3f> {
+        static inline void Push(lua_State* L, const fgVector3f& value) {
+            LuaPlus::LuaState* state = lua_State_to_LuaState(L);
+            LuaPlus::LuaObject obj = state->BoxPointer((void*)&value);
+            obj.SetMetatable(state->GetRegistry()[fgScriptSubsystem::getMetatableName(fgScriptSubsystem::VECTOR3F_METATABLE_ID)]);
+        }
+        static inline bool Match(lua_State* L, int idx) {
+            LuaPlus::LuaState* state = lua_State_to_LuaState(L);
+            LuaPlus::LuaObject obj = state->Stack(idx);
+            return obj.GetMetatable() == state->GetRegistry()[fgScriptSubsystem::getMetatableName(fgScriptSubsystem::VECTOR3F_METATABLE_ID)];
+        }
+        static inline fgVector3f Get(lua_State* L, int idx) {
+            LuaPlus::LuaState* state = lua_State_to_LuaState(L);
+            return *(fgVector3f*)state->UnBoxPointer(idx);
+        }
+    };
+
+    template<> struct Type<fgVector3f&> : public Type<fgVector3f> {
+    };
+
+    template<> struct Type<const fgVector3f&> : public Type<fgVector3f> {
+    };
+    
+    /***************************************************************************
+     * FG VECTOR 4I
+     **************************************************************************/
+    
+    template<> struct Type<fgVector4i> {
+        static inline void Push(lua_State* L, const fgVector4i& value) {
+            LuaPlus::LuaState* state = lua_State_to_LuaState(L);
+            LuaPlus::LuaObject obj = state->BoxPointer((void*)&value);
+            obj.SetMetatable(state->GetRegistry()[fgScriptSubsystem::getMetatableName(fgScriptSubsystem::VECTOR4I_METATABLE_ID)]);
+        }
+        static inline bool Match(lua_State* L, int idx) {
+            LuaPlus::LuaState* state = lua_State_to_LuaState(L);
+            LuaPlus::LuaObject obj = state->Stack(idx);
+            return obj.GetMetatable() == state->GetRegistry()[fgScriptSubsystem::getMetatableName(fgScriptSubsystem::VECTOR4I_METATABLE_ID)];
+        }
+        static inline fgVector4i Get(lua_State* L, int idx) {
+            LuaPlus::LuaState* state = lua_State_to_LuaState(L);
+            return *(fgVector4i*)state->UnBoxPointer(idx);
+        }
+    };
+
+    template<> struct Type<fgVector4i&> : public Type<fgVector4i> {
+    };
+
+    template<> struct Type<const fgVector4i&> : public Type<fgVector4i> {
+    };
+    
+    /***************************************************************************
+     * FG VECTOR 4F
+     **************************************************************************/
+    
+    template<> struct Type<fgVector4f> {
+        static inline void Push(lua_State* L, const fgVector4f& value) {
+            LuaPlus::LuaState* state = lua_State_to_LuaState(L);
+            LuaPlus::LuaObject obj = state->BoxPointer((void*)&value);
+            obj.SetMetatable(state->GetRegistry()[fgScriptSubsystem::getMetatableName(fgScriptSubsystem::VECTOR4F_METATABLE_ID)]);
+        }
+        static inline bool Match(lua_State* L, int idx) {
+            LuaPlus::LuaState* state = lua_State_to_LuaState(L);
+            LuaPlus::LuaObject obj = state->Stack(idx);
+            return obj.GetMetatable() == state->GetRegistry()[fgScriptSubsystem::getMetatableName(fgScriptSubsystem::VECTOR4F_METATABLE_ID)];
+        }
+        static inline fgVector4f Get(lua_State* L, int idx) {
+            LuaPlus::LuaState* state = lua_State_to_LuaState(L);
+            return *(fgVector4f*)state->UnBoxPointer(idx);
+        }
+    };
+
+    template<> struct Type<fgVector4f&> : public Type<fgVector4f> {
+    };
+
+    template<> struct Type<const fgVector4f&> : public Type<fgVector4f> {
+    };
+}
+
+    #endif /* FG_USING_LUA_PLUS */
+
+////////////////////////////////////////////////////////////////////////////////
 
 #endif /* _FG_SCRIPT_SUBSYSTEM_H_ */

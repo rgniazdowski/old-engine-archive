@@ -33,13 +33,14 @@
         #define fgRealloc_sys_	realloc
 
     #endif
-template<class Type>
+
 /*
  * This is a special template function for allocating memory.
  * The size argument differs from the standard implementation.
  * Instead of size there is count which specifies number of 
  * copies. Size = Count * sizeof(Type)
  */
+template<class Type>
 inline Type *fgMalloc(const int count = 1, const fgBool clear = FG_TRUE) {
     if(count <= 0)
         return NULL;
@@ -52,6 +53,7 @@ inline Type *fgMalloc(const int count = 1, const fgBool clear = FG_TRUE) {
     }
     return data;
 }
+
 /*
  *
  */
@@ -67,10 +69,11 @@ inline void fgFree(void *& item, const int size = -1, const fgBool clear = FG_FA
 
     item = NULL;
 }
-template<class Type>
+
 /*
  *
  */
+template<class Type>
 inline void fgFree(Type *& item, const fgBool clear = FG_FALSE) {
     if(!item)
         return;
