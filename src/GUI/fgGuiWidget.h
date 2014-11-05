@@ -78,6 +78,8 @@ class fgGuiWidget : public fgManagedObjectBase<fgGuiWidgetHandle> {
     friend class fgGuiMain;
     friend class fgGuiWidgetManager;
     friend class fgGuiStructureSheetParser;
+public:
+    typedef fgManagedObjectBase<fgGuiWidgetHandle> base_type;
 private:
 protected:
     /// Human readable name of the widget type

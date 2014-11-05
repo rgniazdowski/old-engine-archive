@@ -418,51 +418,74 @@ protected:
      * @param state
      * @return 
      */
-    template<class Type, METAID METATABLE_ID> static int simpleTypedNewEvent(LuaPlus::LuaState* state);
+    template<class Type, METAID METATABLE_ID>
+    static int simpleTypedMallocEvent(lua_State* L);
 
     /**
      * 
      * @param L
      * @return 
      */
-    template<class Type> static int simpleTypedGCEvent(lua_State* L);
-    
+    template<class Type> 
+    static int simpleTypedFreeGCEvent(lua_State* L);
+
     /**
      * 
      * @param state
      * @return 
      */
-    template<class Type, METAID METATABLE_ID> static int simpleInPlaceTypedNewEvent(LuaPlus::LuaState* state);
+    template<class Type, METAID METATABLE_ID>
+    static int simpleInPlaceTypedNewEvent(lua_State* L);
 
     /**
      * 
      * @param L
      * @return 
      */
-    template<class Type> static int simpleInPlaceTypedGCEvent(lua_State* L);
-    
+    template<class Type> 
+    static int simpleInPlaceTypedGCEvent(lua_State* L);
+
     /**
      * 
      * @param L
      * @return 
      */
-    static int simpleGCEvent(lua_State* L);
+    static int simpleFreeGCEvent(lua_State* L);
+
+    /**
+     * 
+     * @param L
+     * @return 
+     */
+    template<class Type, METAID METATABLE_ID>
+    static int managedObjectTypedNewEvent(lua_State *L);
+
+    /**
+     * 
+     * @param L
+     * @return 
+     */
+    template<class HandleType>
+    static int managedObjectTypedGCEvent(lua_State* L);
     /**
      * 
      * @param L
      * @return 
      */
     static int managedResourceGCEvent(lua_State* L);
-    #if defined(FG_USING_LUA_PLUS)
     /**
      * 
      * @param state
      * @return 
      */
-    static int newResourceWrapper(LuaPlus::LuaState* state);
+    static int newResourceWrapper(lua_State *L);
 
-    #endif /* FG_USING_LUA_PLUS */
-
+    /**
+     * 
+     * @param systemData
+     * @param userData
+     * @return 
+     */
     static fgBool managedObjectDestructorCallback(void *systemData, void *userData);
 
 private:
@@ -522,12 +545,100 @@ private:
      */
     fgBool registerSoundManager(void);
 };
-
-    #if defined(FG_USING_LUA_PLUS)
+/**
+ * 
+ * @param L
+ * @return 
+ */
 template<class Type, fgScriptSubsystem::METAID METATABLE_ID>
-int fgScriptSubsystem::simpleTypedNewEvent(LuaPlus::LuaState* state) {
-    if(!state)
+int fgScriptSubsystem::managedObjectTypedNewEvent(lua_State* L) {
+    if(!L)
         return 1;
+    #if defined(FG_USING_LUA_PLUS)
+    LuaPlus::LuaState* state = lua_State_to_LuaState(L);
+    LuaPlus::LuaStack args(state);
+    if(!m_isBindingComplete) {
+        LuaPlus::LuaObject nilObj = state->BoxPointer(0);
+        nilObj.SetMetatable(LuaPlus::LuaObject());
+        nilObj.AssignNil();
+        return 1;
+    }
+    // Using new operator to create data
+    Type *ptr = new Type();
+    if(!ptr) {
+        LuaPlus::LuaObject nilObj = state->BoxPointer(0);
+        nilObj.SetMetatable(LuaPlus::LuaObject());
+        nilObj.AssignNil();
+        return 1;
+    }
+    LuaPlus::LuaObject newObj = state->BoxPointer(ptr);
+    uintptr_t offset = (uintptr_t)ptr;
+    userDataObjectMapItor it = m_userDataObjectMap.find(offset);
+    FG_LOG::PrintDebug("Script: Simple Typed New, pointer: %p [offset=%lu]", ptr, offset);
+    if(it == m_userDataObjectMap.end() && offset) {
+        m_userDataObjectMap[offset] = newObj;
+    }
+    const char *metatableName = getMetatableName(METATABLE_ID);
+    if(!metatableName) {
+        newObj.SetMetatable(LuaPlus::LuaObject());
+    } else {
+        newObj.SetMetatable(state->GetRegistry()[metatableName]);
+        FG_LOG::PrintDebug("Script: Setting metatable.%d=[%s]", METATABLE_ID, metatableName);
+        ptr->registerOnDestruct(&fgScriptSubsystem::managedObjectDestructorCallback, NULL);
+
+    }
+    #endif /* FG_USING_LUA_PLUS */
+    return 1;
+}
+/**
+ * 
+ * @param L
+ * @return 
+ */
+template<class HandleType>
+int fgScriptSubsystem::managedObjectTypedGCEvent(lua_State* L) {
+    if(!L)
+        return 0;
+    #if defined(FG_USING_LUA_PLUS)
+    // Mainly for resources ?
+    LuaPlus::LuaState* state = lua_State_to_LuaState(L);
+    //get the pointer lua is trying to delete.
+    if(!state->IsUserdata(1))
+        return 0;
+    void *unboxed = state->UnBoxPointer(1);
+    if(!unboxed)
+        return 0;
+    typedef fgManagedObjectBase<HandleType> object_type;
+    object_type *pManagedObject = (object_type *)unboxed;
+    uintptr_t offset = (uintptr_t)pManagedObject;
+    userDataObjectMapItor it = m_userDataObjectMap.find(offset);
+    if(it == m_userDataObjectMap.end()) {
+        // The pointer is not registered
+        FG_LOG::PrintDebug("Managed Object Typed GC: pointer is not registered %p [offset: %lu]", unboxed, offset);
+        return 0;
+    } else {
+        m_userDataObjectMap.erase(it);
+    }
+    FG_LOG::PrintDebug("Script: GC event for Managed Object: '%s'", pManagedObject->getNameStr());
+    if(pManagedObject->isManaged() == FG_FALSE) {
+        // Object is not managed in some manager
+        // Can call destructors
+        delete pManagedObject;
+    }
+    #endif /* FG_USING_LUA_PLUS */
+    return 0;
+}
+/**
+ * 
+ * @param L
+ * @return 
+ */
+template<class Type, fgScriptSubsystem::METAID METATABLE_ID>
+int fgScriptSubsystem::simpleTypedMallocEvent(lua_State* L) {
+    if(!L)
+        return 1;
+    #if defined(FG_USING_LUA_PLUS)
+    LuaPlus::LuaState* state = lua_State_to_LuaState(L);
     LuaPlus::LuaStack args(state);
     if(!m_isBindingComplete) {
         LuaPlus::LuaObject nilObj = state->BoxPointer(0);
@@ -548,7 +659,7 @@ int fgScriptSubsystem::simpleTypedNewEvent(LuaPlus::LuaState* state) {
     LuaPlus::LuaObject newObj = state->BoxPointer(ptr);
     uintptr_t offset = (uintptr_t)ptr;
     userDataObjectMapItor it = m_userDataObjectMap.find(offset);
-    FG_LOG::PrintDebug("Script: Simple allocation, pointer: %p [offset=%lu]", ptr, offset);
+    FG_LOG::PrintDebug("Script: Simple Typed malloc, pointer: %p [offset=%lu]", ptr, offset);
     if(it == m_userDataObjectMap.end() && offset) {
         m_userDataObjectMap[offset] = newObj;
     }
@@ -559,20 +670,19 @@ int fgScriptSubsystem::simpleTypedNewEvent(LuaPlus::LuaState* state) {
         newObj.SetMetatable(state->GetRegistry()[metatableName]);
         FG_LOG::PrintDebug("Script: Setting metatable.%d=[%s]", METATABLE_ID, metatableName);
     }
+    #endif /* FG_USING_LUA_PLUS */
     return 1;
 }
-    #endif /* FG_USING_LUA_PLUS */
 /**
  * 
  * @param L
  * @return 
  */
 template<class Type>
-int fgScriptSubsystem::simpleTypedGCEvent(lua_State* L) {
+int fgScriptSubsystem::simpleTypedFreeGCEvent(lua_State* L) {
     if(!L)
         return 0;
     #if defined(FG_USING_LUA_PLUS)
-
     // Mainly for resources ?
     LuaPlus::LuaState* state = lua_State_to_LuaState(L);
     //get the pointer lua is trying to delete.
@@ -591,19 +701,24 @@ int fgScriptSubsystem::simpleTypedGCEvent(lua_State* L) {
         m_userDataObjectMap.erase(it);
     }
     FG_LOG::PrintDebug("Simple Typed GC: called destructor, freeing memory %p [offset: %lu]", unboxed, offset);
-    Type *ptrObj = (Type *) unboxed;
+    Type *ptrObj = (Type *)unboxed;
     ptrObj->~Type();
     fgFree<Type>(ptrObj, FG_TRUE);
     #endif /* FG_USING_LUA_PLUS */
     return 0;
 }
 ////////////////////////////////////////////////////////////////////////////////
-
-#if defined(FG_USING_LUA_PLUS)
+/**
+ * 
+ * @param L
+ * @return 
+ */
 template<class Type, fgScriptSubsystem::METAID METATABLE_ID>
-int fgScriptSubsystem::simpleInPlaceTypedNewEvent(LuaPlus::LuaState* state) {
-    if(!state)
+int fgScriptSubsystem::simpleInPlaceTypedNewEvent(lua_State* L) {
+    if(!L)
         return 1;
+    #if defined(FG_USING_LUA_PLUS)
+    LuaPlus::LuaState* state = lua_State_to_LuaState(L);
     LuaPlus::LuaStack args(state);
     if(!m_isBindingComplete) {
         LuaPlus::LuaObject nilObj = state->BoxPointer(0);
@@ -614,7 +729,7 @@ int fgScriptSubsystem::simpleInPlaceTypedNewEvent(LuaPlus::LuaState* state) {
     // This will not check for any arguments...
     // Simple allocation via fgMalloc
     //    new (ptr)Type();
-    LuaPlus::LuaObject newObj = state->NewUserdata(sizeof(Type));
+    LuaPlus::LuaObject newObj = state->NewUserdata(sizeof (Type));
     void *ptr = newObj.GetUserdata();
     if(!ptr) {
         newObj.SetMetatable(LuaPlus::LuaObject());
@@ -622,7 +737,7 @@ int fgScriptSubsystem::simpleInPlaceTypedNewEvent(LuaPlus::LuaState* state) {
         return 1;
     }
     // Create constructor - creates object in specified memory holder (Lua side)
-    new (ptr) Type();
+    new (ptr)Type();
     uintptr_t offset = (uintptr_t)ptr;
     userDataObjectMapItor it = m_userDataObjectMap.find(offset);
     FG_LOG::PrintDebug("Script: Simple typed in place  allocation, pointer: %p [offset=%lu]", ptr, offset);
@@ -636,9 +751,9 @@ int fgScriptSubsystem::simpleInPlaceTypedNewEvent(LuaPlus::LuaState* state) {
         newObj.SetMetatable(state->GetRegistry()[metatableName]);
         FG_LOG::PrintDebug("Script: Setting metatable.%d=[%s]", METATABLE_ID, metatableName);
     }
+    #endif /* FG_USING_LUA_PLUS */
     return 1;
 }
-    #endif /* FG_USING_LUA_PLUS */
 /**
  * 
  * @param L
@@ -670,7 +785,7 @@ int fgScriptSubsystem::simpleInPlaceTypedGCEvent(lua_State* L) {
         m_userDataObjectMap.erase(it);
     }
     FG_LOG::PrintDebug("Simple typed in place GC: called destructor on memory %p [offset: %lu]", unboxed, offset);
-    Type *ptrObj = (Type *) unboxed;
+    Type *ptrObj = (Type *)unboxed;
     ptrObj->~Type();
     #endif /* FG_USING_LUA_PLUS */
     return 0;
@@ -679,13 +794,13 @@ int fgScriptSubsystem::simpleInPlaceTypedGCEvent(lua_State* L) {
 ////////////////////////////////////////////////////////////////////////////////
 
     #if defined(FG_USING_LUA_PLUS)
-    
+
 namespace LPCD {
-    
+
     /***************************************************************************
      * FG VECTOR 2I
      **************************************************************************/
-    
+
     template<> struct Type<fgVector2i> {
         static inline void Push(lua_State* L, const fgVector2i& value) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
@@ -708,11 +823,11 @@ namespace LPCD {
 
     template<> struct Type<const fgVector2i&> : public Type<fgVector2i> {
     };
-    
+
     /***************************************************************************
      * FG VECTOR 2F
      **************************************************************************/
-    
+
     template<> struct Type<fgVector2f> {
         static inline void Push(lua_State* L, const fgVector2f& value) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
@@ -735,12 +850,12 @@ namespace LPCD {
     };
 
     template<> struct Type<const fgVector2f&> : public Type<fgVector2f> {
-    }; 
-    
+    };
+
     /***************************************************************************
      * FG VECTOR 3I
      **************************************************************************/
-    
+
     template<> struct Type<fgVector3i> {
         static inline void Push(lua_State* L, const fgVector3i& value) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
@@ -763,11 +878,11 @@ namespace LPCD {
 
     template<> struct Type<const fgVector3i&> : public Type<fgVector3i> {
     };
-    
+
     /***************************************************************************
      * FG VECTOR 3F
      **************************************************************************/
-    
+
     template<> struct Type<fgVector3f> {
         static inline void Push(lua_State* L, const fgVector3f& value) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
@@ -790,11 +905,11 @@ namespace LPCD {
 
     template<> struct Type<const fgVector3f&> : public Type<fgVector3f> {
     };
-    
+
     /***************************************************************************
      * FG VECTOR 4I
      **************************************************************************/
-    
+
     template<> struct Type<fgVector4i> {
         static inline void Push(lua_State* L, const fgVector4i& value) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
@@ -817,11 +932,11 @@ namespace LPCD {
 
     template<> struct Type<const fgVector4i&> : public Type<fgVector4i> {
     };
-    
+
     /***************************************************************************
      * FG VECTOR 4F
      **************************************************************************/
-    
+
     template<> struct Type<fgVector4f> {
         static inline void Push(lua_State* L, const fgVector4f& value) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);

@@ -84,6 +84,7 @@ fgGfxMain::~fgGfxMain() {
     m_gfxContext = NULL;
     m_3DScene = NULL;
     m_2DScene = NULL;
+    clearStatus(); // #FIXME
 }
 
 /*

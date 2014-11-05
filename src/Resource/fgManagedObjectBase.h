@@ -191,5 +191,3 @@ private:
 };
 
 #endif /* _FG_MANAGED_OBJECT_BASE_H_ */
-
-

@@ -92,6 +92,7 @@
             <word>Lua</word>
             <word>metadata</word>
             <word>metatable</word>
+            <word>metatables</word>
             <word>ms</word>
             <word>multitextured</word>
             <word>multitexturing</word>
@@ -105,6 +106,7 @@
             <word>param</word>
             <word>params</word>
             <word>plox</word>
+            <word>Popup</word>
             <word>pos</word>
             <word>preload</word>
             <word>printf</word>
