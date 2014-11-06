@@ -13,14 +13,12 @@
     #include "fgGuiTextArea.h"
     #include "fgGuiWidgetFactoryTypes.h"
 
-    #define FG_GUI_EDITABLE_TEXT		0x00000800
-    #define FG_GUI_EDITABLE_TEXT_NAME	"EditableText"
-
 /*
  *
  */
 class fgGuiEditableText : public fgGuiTextArea {
-private:
+public:
+    typedef fgGuiTextArea base_type;
 protected:
 
 protected:

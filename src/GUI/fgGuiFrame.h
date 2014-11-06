@@ -13,14 +13,12 @@
     #include "fgGuiContainer.h"
     #include "fgGuiWidgetFactoryTypes.h"
 
-    #define FG_GUI_FRAME		0x00000080
-    #define FG_GUI_FRAME_NAME	"Frame"
-
 /*
  *
  */
 class fgGuiFrame : public fgGuiContainer {
-private:
+public:
+    typedef fgGuiContainer base_type;
 protected:
 
 protected:

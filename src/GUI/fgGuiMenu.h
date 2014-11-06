@@ -16,17 +16,16 @@
     #include "fgGuiContainer.h"
     #include "fgGuiWidgetFactoryTypes.h"
 
-    #define FG_GUI_MENU         0x00000040
-    #define FG_GUI_MENU_NAME    "Menu"
-
 /**
  * 
  */
 class fgGuiMenu : public fgGuiContainer {
+public:
+    typedef fgGuiContainer base_type;
 private:
     ///
     fgBool m_isMainMenu;
-    
+
 protected:
     // 
     virtual void setDefaults(void);
@@ -41,7 +40,7 @@ public:
 
     //
     virtual void setFlags(const std::string& flags);
-    
+
     // 
     virtual fgBoundingBox3Df updateBounds(void);
     // 

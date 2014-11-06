@@ -13,9 +13,6 @@
     #include "fgGuiWidget.h"
     #include "fgGuiWidgetFactoryTypes.h"
 
-    #define FG_GUI_CONTAINER		0x00000020
-    #define FG_GUI_CONTAINER_NAME	"Container"
-
 /* horizontal, vertical */
     #define FG_GUI_CONTAINER_PACK_METHOD
 /* left, center, right, top, bottom | combined */
@@ -47,6 +44,8 @@ FG_ENUM_FLAGS(fgGuiContainerPackAlign);
  */
 class fgGuiContainer : public fgGuiWidget {
 public:
+    typedef fgGuiWidget base_type;
+    
     typedef std::map<std::string, fgGuiWidget*> childrenMap;
     typedef childrenMap::iterator childrenMapItor;
 

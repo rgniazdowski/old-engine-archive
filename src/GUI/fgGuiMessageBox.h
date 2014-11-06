@@ -13,14 +13,12 @@
     #include "fgGuiWindow.h"
     #include "fgGuiWidgetFactoryTypes.h"
 
-    #define FG_GUI_MESSAGE_BOX		0x00008000
-    #define FG_GUI_MESSAGE_BOX_NAME	"MessageBox"
-
 /*
  *
  */
 class fgGuiMessageBox : public fgGuiWindow {
-private:
+public:
+    typedef fgGuiWindow base_type;
 protected:
 
 protected:

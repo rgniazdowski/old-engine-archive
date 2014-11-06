@@ -13,15 +13,13 @@
     #include "fgGuiButton.h"
     #include "fgGuiWidgetFactoryTypes.h"
 
-    #define FG_GUI_TOGGLE_BUTTON	0x00000008
-    #define FG_GUI_TOGGLE_BUTTON_NAME	"ToggleButton"
-
 /*
  *
  */
 class fgGuiToggleButton : public fgGuiButton {
+public:
+    typedef fgGuiButton base_type;
 private:
-protected:
 
 protected:
     // 

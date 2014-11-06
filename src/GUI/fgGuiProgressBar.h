@@ -13,14 +13,12 @@
     #include "fgGuiWidget.h"
     #include "fgGuiWidgetFactoryTypes.h"
 
-    #define FG_GUI_PROGRESS_BAR			0x00040000
-    #define FG_GUI_PROGRESS_BAR_NAME	"ProgressBar"
-
 /*
  *
  */
 class fgGuiProgressBar : public fgGuiWidget {
-private:
+public:
+    typedef fgGuiWidget base_type;
 protected:
 
 protected:

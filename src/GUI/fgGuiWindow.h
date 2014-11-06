@@ -13,14 +13,12 @@
     #include "fgGuiContainer.h"
     #include "fgGuiWidgetFactoryTypes.h"
 
-    #define FG_GUI_WINDOW		0x00004000
-    #define FG_GUI_WINDOW_NAME	"Window"
-
 /*
  *
  */
 class fgGuiWindow : public fgGuiContainer {
-private:
+public:
+    typedef fgGuiContainer base_type;
 protected:
 
 protected:

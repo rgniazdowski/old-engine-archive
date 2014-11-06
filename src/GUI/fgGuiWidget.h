@@ -9,6 +9,7 @@
 
 #ifndef _FG_GUI_WIDGET_H_
     #define _FG_GUI_WIDGET_H_
+    #define _FG_GUI_WIDGET_H_BLOCK_
 
     #ifndef _FG_BUILD_CONFIG_H_
         #include "fgBuildConfig.h"
@@ -21,6 +22,8 @@
     #ifndef _FG_MATHLIB_H_
         #include "Math/fgMathLib.h"
     #endif
+    
+    #include "fgGuiWidgetTypes.h"
 
     #include "Util/fgTag.h"
     #include "Util/fgHandle.h"
@@ -30,8 +33,6 @@
     #include "fgGuiCallback.h"
 
     #include <string>
-
-typedef unsigned int fgGuiWidgetType;
 
     #ifndef _FG_GFX_LAYER_H_
         #include "GFX/fgGFXLayer.h"
@@ -52,10 +53,6 @@ typedef unsigned int fgGuiWidgetType;
     #define FG_GUI_WIDGET_STATE_DEACTIVATED	4	// deactivated
     #define FG_GUI_WIDGET_STATE_COUNT		5
 typedef unsigned int fgGuiWidgetState;
-
-    #define FG_GUI_WIDGET_UNKNOWN	0x00000000
-    #define FG_GUI_WIDGET		0x00000001
-    #define FG_GUI_WIDGET_NAME		"Widget"
 
 class fgGuiWidget;
 
@@ -669,5 +666,5 @@ public:
         return m_onChangeState;
     }
 };
-
+    #undef _FG_GUI_WIDGET_H_BLOCK_
 #endif /* _FG_GUI_WIDGET_H_ */

@@ -9,6 +9,15 @@
 
 #ifndef _FG_GUI_MAIN_H_
     #define _FG_GUI_MAIN_H_
+    #define _FG_GUI_MAIN_H_BLOCK_
+
+    #if defined(_FG_SCRIPT_SUBSYSTEM_H_BLOCK_)
+        #error "FG_SCRIPT_SUBSYSTEM_H_BLOCK is defined: Do not include GuiMain inside of ScriptSubsystem header"
+    #endif
+    
+    #if defined(_FG_GUI_WIDGET_H_BLOCK_)
+        #error "FG_GUI_WIDGET_H_BLOCK is defined: Do not include GuiMain inside of Widget header"
+    #endif
 
     #include "fgManagerBase.h"
 
@@ -139,5 +148,7 @@ public:
     //
     fgBool guiMouseHandler(fgArgumentList *argv);
 };
+
+    #undef _FG_GUI_MAIN_H_BLOCK_
 
 #endif /* _FG_GUI_MAIN_H_ */

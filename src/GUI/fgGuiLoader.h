@@ -13,14 +13,12 @@
     #include "fgGuiWidget.h"
     #include "fgGuiWidgetFactoryTypes.h"
 
-    #define FG_GUI_LOADER		0x00200000
-    #define FG_GUI_LOADER_NAME	"Loader"
-
 /*
  *
  */
 class fgGuiLoader : public fgGuiWidget {
-private:
+public:
+    typedef fgGuiWidget base_type;
 protected:
     /// 
     std::string m_text;

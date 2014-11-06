@@ -13,14 +13,12 @@
     #include "fgGuiScrollArea.h"
     #include "fgGuiWidgetFactoryTypes.h"
 
-    #define FG_GUI_TEXT_AREA		0x00000400
-    #define FG_GUI_TEXT_AREA_NAME	"TextArea"
-
 /**
  * 
  */
 class fgGuiTextArea : public fgGuiScrollArea {
-private:
+public:
+    typedef fgGuiScrollArea base_type;
 protected:
 
 protected:

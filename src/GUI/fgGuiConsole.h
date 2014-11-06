@@ -13,14 +13,12 @@
     #include "fgGuiTextArea.h"
     #include "fgGuiWidgetFactoryTypes.h"
 
-    #define FG_GUI_CONSOLE		0x00002000
-    #define FG_GUI_CONSOLE_NAME		"Console"
-
 /*
  *
  */
 class fgGuiConsole : public fgGuiTextArea {
-private:
+public:
+    typedef fgGuiTextArea base_type;
 protected:
 
 protected:

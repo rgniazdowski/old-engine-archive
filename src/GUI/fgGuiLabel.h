@@ -13,14 +13,12 @@
     #include "fgGuiWidget.h"
     #include "fgGuiWidgetFactoryTypes.h"
 
-    #define FG_GUI_LABEL		0x00000002
-    #define FG_GUI_LABEL_NAME	"Label"
-
 /*
  *
  */
 class fgGuiLabel : public fgGuiWidget {
-private:
+public:
+    typedef fgGuiWidget base_type;
 protected:
     /// 
     std::string m_text;

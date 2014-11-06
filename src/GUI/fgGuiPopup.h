@@ -13,14 +13,12 @@
     #include "fgGuiWindow.h"
     #include "fgGuiWidgetFactoryTypes.h"
 
-    #define FG_GUI_POPUP		0x00020000
-    #define FG_GUI_POPUP_NAME	"Popup"
-
 /*
  *
  */
 class fgGuiPopup : public fgGuiWindow {
-private:
+public:
+    typedef fgGuiWindow base_type;
 protected:
 
 protected:

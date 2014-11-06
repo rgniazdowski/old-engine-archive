@@ -13,11 +13,9 @@
     #include "fgGuiContainer.h"
     #include "fgGuiWidgetFactoryTypes.h"
 
-    #define FG_GUI_TABLE		0x00080000
-    #define FG_GUI_TABLE_NAME	"Table"
-
 class fgGuiTable : public fgGuiContainer {
-private:
+public:
+    typedef fgGuiContainer base_type;
 protected:
 
 protected:

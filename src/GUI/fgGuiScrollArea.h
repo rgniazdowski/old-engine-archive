@@ -13,11 +13,9 @@
     #include "fgGuiContainer.h"
     #include "fgGuiWidgetFactoryTypes.h"
 
-    #define FG_GUI_SCROLL_AREA		0x00000200
-    #define FG_GUI_SCROLL_AREA_NAME	"ScrollArea"
-
 class fgGuiScrollArea : public fgGuiContainer {
-private:
+public:
+    typedef fgGuiContainer base_type;
 protected:
 
 protected:
