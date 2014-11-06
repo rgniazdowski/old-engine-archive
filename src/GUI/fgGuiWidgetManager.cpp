@@ -330,6 +330,9 @@ fgBool fgGuiWidgetManager::addWidget(fgGuiWidget *pWidget, fgGuiWidget *pFatherW
             pWidget->setFather(NULL); // #FIXME
         } else {
             pWidget->setFather(pFatherWidget);
+            if(pFatherWidget->getTypeTraits() & FG_GUI_CONTAINER) {
+                //static_cast<fgGuiContainer *>(pFatherWidget)->addChild(pWidget);    
+            }
             FG_LOG::PrintDebug("Widget '%s' of type '%s', has a father '%s' of type '%s'",
                                pWidget->getNameStr(),
                                pWidget->getTypeNameStr(),
@@ -405,7 +408,12 @@ fgBool fgGuiWidgetManager::remove(fgGuiWidget *pWidget) {
     if(!fgGuiWidgetManager::isManaged(pWidget)) {
         return FG_FALSE;
     }
-    return fgHandleManager::releaseHandle(pWidget->getHandle());
+    if(fgHandleManager::releaseHandle(pWidget->getHandle())) {
+        pWidget->setManaged(FG_FALSE);
+        return FG_TRUE;
+    } else {
+        return FG_FALSE;
+    }
 }
 
 /**
@@ -417,7 +425,12 @@ fgBool fgGuiWidgetManager::remove(const fgGuiWidgetHandle& wUniqueID) {
     fgGuiWidget *pWidget = dereference(wUniqueID);
     if(!pWidget)
         return FG_FALSE;
-    return fgHandleManager::releaseHandle(pWidget->getHandle());
+    if(fgHandleManager::releaseHandle(pWidget->getHandle())) {
+        pWidget->setManaged(FG_FALSE);
+        return FG_TRUE;
+    } else {
+        return FG_FALSE;
+    }
 }
 
 /**
@@ -429,7 +442,12 @@ fgBool fgGuiWidgetManager::remove(const std::string& nameTag) {
     fgGuiWidget *pWidget = dereference(nameTag);
     if(!pWidget)
         return FG_FALSE;
-    return fgHandleManager::releaseHandle(pWidget->getHandle());
+    if(fgHandleManager::releaseHandle(pWidget->getHandle())) {
+        pWidget->setManaged(FG_FALSE);
+        return FG_TRUE;
+    } else {
+        return FG_FALSE;
+    }
 }
 
 /**
@@ -441,7 +459,12 @@ fgBool fgGuiWidgetManager::remove(const char *nameTag) {
     fgGuiWidget *pWidget = dereference(nameTag);
     if(!pWidget)
         return FG_FALSE;
-    return fgHandleManager::releaseHandle(pWidget->getHandle());
+    if(fgHandleManager::releaseHandle(pWidget->getHandle())) {
+        pWidget->setManaged(FG_FALSE);
+        return FG_TRUE;
+    } else {
+        return FG_FALSE;
+    }
 }
 
 /**

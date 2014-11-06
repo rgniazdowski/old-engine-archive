@@ -18,6 +18,7 @@
     #include "GFX/fgGFXTypes.h"
     #include "GFX/Textures/fgTextureResource.h"
 
+    #include "GUI/fgGuiWidget.h"
     #include "Util/fgMemory.h"
 
     #define FG_MANAGER_SCRIPT       0x00004000
@@ -299,6 +300,9 @@ public:
             return failedName;
         return (*it).second.name;
     }
+    
+    // #FIXME - FOOBBAR!@
+    static METAID getMetatableIDFromWidgetType(const fgGuiWidget *pWidget);
 
 public:
     /**
@@ -981,6 +985,43 @@ namespace LPCD {
     };
 
     template<> struct Type<const std::string&> : public Type<std::string> {
+    };
+
+    //
+    // fgGuiWidget pointer parameter *
+    //
+
+    template<> struct Type<fgGuiWidget *> {
+        static inline void Push(lua_State* L, const fgGuiWidget * value) {
+            LuaPlus::LuaState* state = lua_State_to_LuaState(L);
+            LuaPlus::LuaObject obj = state->BoxPointer((void*)value);            
+            fgScriptSubsystem::METAID metaID = fgScriptSubsystem::getMetatableIDFromWidgetType(value);
+            const char *metatableName = fgScriptSubsystem::getMetatableName(metaID);
+            FG_LOG::PrintDebug("Script: LPCD Push: pointer: %p [offset=%lu] [widget: %s][%s]", value, (uintptr_t)value, value->getNameStr(), value->getTypeNameStr());
+            // This wont work - this simply packs widget that will have
+            // unregistered pointer / need to add some wrapper over this
+            // lua side object __GC callback will exit without doing anything
+            obj.SetMetatable(state->GetRegistry()[metatableName]);
+        }
+        static inline bool Match(lua_State* L, int idx) {
+            LuaPlus::LuaState* state = lua_State_to_LuaState(L);
+            LuaPlus::LuaObject obj = state->Stack(idx);
+            bool result = (obj.GetMetatable() == state->GetRegistry()[fgScriptSubsystem::getMetatableName(fgScriptSubsystem::GUI_WIDGET_METATABLE_ID)]);
+            // This is foobar
+            result = (bool) obj.IsUserdata();
+            return result;
+        }
+        static inline fgGuiWidget * Get(lua_State* L, int idx) {
+            LuaPlus::LuaState* state = lua_State_to_LuaState(L);
+            fgGuiWidget *pWidget = (fgGuiWidget *)state->UnBoxPointer(idx);
+            return pWidget;
+        }
+    };
+
+    template<> struct Type<fgGuiWidget *&> : public Type<fgGuiWidget *> {
+    };
+
+    template<> struct Type<const fgGuiWidget *&> : public Type<fgGuiWidget *> {
     };
 }
 

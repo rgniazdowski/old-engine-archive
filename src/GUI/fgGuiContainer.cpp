@@ -387,7 +387,6 @@ fgGuiWidget *fgGuiContainer::getChild(const char *nameTag) {
  * @return 
  */
 fgGuiContainer::childrenVec& fgGuiContainer::getChildren(void) {
-
     return m_children;
 }
 
@@ -396,7 +395,6 @@ fgGuiContainer::childrenVec& fgGuiContainer::getChildren(void) {
  * @return 
  */
 fgGuiContainer::childrenMap& fgGuiContainer::getChildrenMap(void) {
-
     return m_childrenMap;
 }
 
@@ -410,7 +408,6 @@ fgBool fgGuiContainer::addChild(fgGuiWidget *pWidget) {
         m_childrenMap[pWidget->getName()] = pWidget;
         m_children.push_back(pWidget);
     } else {
-
         return FG_FALSE;
     }
     return FG_TRUE;
