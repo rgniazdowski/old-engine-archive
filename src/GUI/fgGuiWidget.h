@@ -112,7 +112,7 @@ protected:
     fgBoundingBox3Df m_bbox;
     /// Current text size, this is updated automatically via appendText functions
     fgVector2f m_textSize;
-    
+
     /// This callback will be executed when widget is focused
     fgGuiCallback *m_onFocus;
     /// Callback to call when the focus is lost
@@ -162,7 +162,6 @@ protected:
      * 
      */
     virtual void setDefaults(void) = 0;
-
     /**
      * 
      * @param widget
@@ -184,7 +183,6 @@ public:
      * @param guiLayer
      */
     virtual void display(fgGfxLayer *guiLayer);
-    
     /**
      * 
      * @param flags
@@ -196,8 +194,7 @@ public:
      * 
      * @param flags
      */
-    inline virtual void setFlags(const std::string& flags) {
-    }
+    inline virtual void setFlags(const std::string& flags) { }
 
     /**
      * 
@@ -221,7 +218,6 @@ public:
      * @return 
      */
     virtual int updateState(const fgPointerData *pointerData);
-
     /**
      * 
      * @return 
@@ -266,7 +262,6 @@ public:
     inline void setVisible(fgBool toggle = FG_TRUE) {
         m_isVisible = toggle;
     }
-
     /**
      * Returns whether widget is visible (should be displayed?)
      * @return 
@@ -274,7 +269,6 @@ public:
     inline fgBool isVisible(void) const {
         return m_isVisible;
     }
-
     /**
      * Sets the active flag of the widget
      * @param toggle
@@ -287,7 +281,6 @@ public:
             m_state = FG_GUI_WIDGET_STATE_DEACTIVATED;
         }
     }
-
     /**
      * Returns whether widget is active
      * @return 
@@ -295,7 +288,6 @@ public:
     inline fgBool isActive(void) const {
         return m_isActive;
     }
-
     /**
      * Sets the ignoreState flag for the widget
      * @param toggle
@@ -303,7 +295,6 @@ public:
     inline void setIgnoreState(fgBool toggle = FG_TRUE) {
         m_ignoreState = toggle;
     }
-
     /**
      *
      */
@@ -317,7 +308,6 @@ public:
     inline fgBool isIgnoreState(void) const {
         return m_ignoreState;
     }
-
     /**
      * 
      * @return 
@@ -325,7 +315,6 @@ public:
     inline fgGuiWidgetState getState(void) const {
         return m_state;
     }
-
     /**
      * 
      * @param pos
@@ -354,7 +343,6 @@ public:
     inline void setRelativePos(const fgVector3f& relPos) {
         m_relPos = relPos;
     }
-    
     /**
      * 
      * @param size
@@ -369,7 +357,6 @@ public:
     inline fgVector3f& getSize(void) {
         return m_bbox.size;
     }
-
     /**
      * 
      * @return 
@@ -384,7 +371,6 @@ public:
     inline const char *getLinkStr(void) const {
         return m_link.c_str();
     }
-
     /**
      * 
      * @return 
@@ -399,7 +385,6 @@ public:
     inline const char *getScriptStr(void) const {
         return m_script.c_str();
     }
-
     /**
      * 
      * @return 
@@ -414,7 +399,6 @@ public:
     inline const char *getActionStr(void) const {
         return m_action.c_str();
     }
-
     /**
      * 
      * @return 
@@ -429,7 +413,6 @@ public:
     inline const char *getConfigStr(void) const {
         return m_config.c_str();
     }
-
     /**
      * 
      * @return 
@@ -444,7 +427,6 @@ public:
     virtual const char *getTextStr(void) const {
         return m_text.c_str();
     }
-
     /**
      * 
      * @param link
@@ -460,7 +442,6 @@ public:
         if(link)
             m_link = link;
     }
-
     /**
      * 
      * @param script
@@ -476,7 +457,6 @@ public:
         if(script)
             m_script = script;
     }
-
     /**
      * 
      * @param action
@@ -492,7 +472,6 @@ public:
         if(action)
             m_action = action;
     }
-
     /**
      * 
      * @param config
@@ -508,7 +487,6 @@ public:
         if(config)
             m_config = config;
     }
-
     /**
      * 
      * @param text
@@ -524,7 +502,6 @@ public:
         if(text)
             m_text = text;
     }
-
     /**
      * 
      * @return 
@@ -539,7 +516,6 @@ public:
     inline const char *getStyleNameStr(void) const {
         return m_styleName.c_str();
     }
-
     /**
      * 
      * @param style
@@ -554,7 +530,6 @@ public:
     inline void setStyleName(const char *style) {
         m_styleName = style; // #FIXME
     }
-    
     /**
      * 
      * @return 
@@ -564,24 +539,24 @@ public:
     }
     /**
      * 
+     * @param state
      * @return 
      */
-    inline fgGuiStyleContent& getStyleContent(void) {
-        if(m_state >= FG_GUI_WIDGET_STATE_COUNT || m_state < 0)
-            return m_styles[0];
-        return m_styles[m_state];
+    inline fgGuiStyleContent& getStyleContent(fgGuiWidgetState state = FG_GUI_WIDGET_STATE_NONE) {
+        if(state >= FG_GUI_WIDGET_STATE_COUNT || state < 0)
+            return m_styles[FG_GUI_WIDGET_STATE_NONE];
+        return m_styles[state];
     }
     /**
      * 
      * @param state
      * @return 
      */
-    inline fgGuiStyleContent& getStyleContent(fgGuiWidgetState state) {
+    inline fgGuiStyleContent *getStyleContentPtr(fgGuiWidgetState state = FG_GUI_WIDGET_STATE_NONE) {
         if(state >= FG_GUI_WIDGET_STATE_COUNT || state < 0)
-            return m_styles[0];
-        return m_styles[state];
+            return &m_styles[FG_GUI_WIDGET_STATE_NONE];
+        return &m_styles[state];
     }
-    
     /**
      * 
      * @param callback
@@ -637,7 +612,6 @@ public:
     inline void setOnChangeStateCallback(fgGuiCallback *callback) {
         m_onChangeState = callback;
     }
-    
     /**
      * 
      * @return 

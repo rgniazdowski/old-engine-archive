@@ -63,12 +63,19 @@ FG_ENUM_FLAGS(fgGuiBorderWhich);
  *
  */
 struct fgGuiBorder {
-    fgGuiBorderStyle style;
+    ///
     fgColor4f color;
+    ///
+    fgGuiBorderStyle style;
+    ///
     float width;
+    /**
+     * 
+     * @param _width
+     */
     fgGuiBorder(const float _width = FG_GUI_DEFAULT_BORDER_WIDTH) :
-    style(FG_GUI_DEFAULT_BORDER_STYLE),
     color(FG_GUI_DEFAULT_BORDER_COLOR),
+    style(FG_GUI_DEFAULT_BORDER_STYLE),
     width(_width) { }
 };
 
@@ -86,13 +93,19 @@ enum fgGuiBackgroundStyle {
  *
  */
 struct fgGuiBackground {
-    fgGuiBackgroundStyle style;
-    fgColor4f color;
+    ///
     std::string texture;
+    ///
+    fgColor4f color;
+    ///
+    fgGuiBackgroundStyle style;
+    /**
+     * 
+     */
     fgGuiBackground() :
-    style(FG_GUI_BACKGROUND_MAX),
+    texture(),
     color(0.4f, 0.4f, 0.4f, 0.8f), // Default predefs..
-    texture() { }
+    style(FG_GUI_BACKGROUND_MAX) { }
 };
 
     #define FG_GUI_DEFAULT_TEXT_SIZE	16.0f
@@ -103,17 +116,24 @@ struct fgGuiBackground {
  *
  */
 struct fgGuiForeground {
-    float textSize;
-    fgColor4f color;
+    ///
     std::string font;
+    ///
+    fgColor4f color;
+    ///
+    float textSize;
+    /**
+     * 
+     */
     fgGuiForeground() :
-    textSize(FG_GUI_DEFAULT_TEXT_SIZE), // FIXME
+    font(FG_GUI_DEFAULT_FONT),
     color(FG_GUI_DEFAULT_FG_COLOR),
-    font(FG_GUI_DEFAULT_FONT) { }
+    textSize(FG_GUI_DEFAULT_TEXT_SIZE) // FIXME
+    { }
 };
 
-    #define FG_GUI_DEFAULT_MARGIN 8.0f
-    #define FG_GUI_DEFAULT_PADDING 8.0f
+    #define FG_GUI_DEFAULT_MARGIN   8.0f
+    #define FG_GUI_DEFAULT_PADDING  8.0f
 
 /**
  *
@@ -175,6 +195,8 @@ struct fgGuiBorderInfo {
     right(FG_GUI_DEFAULT_BORDER_WIDTH),
     top(FG_GUI_DEFAULT_BORDER_WIDTH),
     bottom(FG_GUI_DEFAULT_BORDER_WIDTH) { }
+    
+    // maybe some functions ?
 };
 
 typedef fgGuiMargin fgGuiPadding;
@@ -427,7 +449,11 @@ public:
     //
     std::string& getShader(void);
     //
+    const char *getShaderStr(void) const;
+    //
     std::string& getEffect(void);
+    //
+    const char *getEffectStr(void) const;
 
     //
     fgGuiStyleContent& setBackground(const fgGuiBackgroundStyle style);
@@ -435,6 +461,8 @@ public:
     fgGuiStyleContent& setBackground(const fgColor4f& color);
     //
     fgGuiStyleContent& setBackground(const std::string& texture);
+    //
+    fgGuiStyleContent& setBackground(const char *texture);
 
     //
     fgGuiStyleContent& setForeground(const float textSize);
@@ -442,6 +470,8 @@ public:
     fgGuiStyleContent& setForeground(const fgColor4f& color);
     //
     fgGuiStyleContent& setForeground(const std::string& font);
+    //
+    fgGuiStyleContent& setForeground(const char *font);
 
     //
     fgGuiStyleContent& setMargin(const float size);
@@ -512,11 +542,23 @@ public:
     fgGuiStyleContent& setShader(const std::string& shader);
     /**
      * 
+     * @param shader
+     * @return 
+     */
+    fgGuiStyleContent& setShader(const char *shader);
+
+    /**
+     * 
      * @param effect
      * @return 
      */
     fgGuiStyleContent& setEffect(const std::string& effect);
-
+    /**
+     * 
+     * @param effect
+     * @return 
+     */
+    fgGuiStyleContent& setEffect(const char *effect);
 };
 
 #endif /* _FG_GUI_STYLE_CONTENT_H_ */

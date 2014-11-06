@@ -49,7 +49,7 @@ fgBool fgScriptSubsystem::m_isBindingComplete = FG_FALSE;
 ///
 fgScriptSubsystem::userDataObjectMap fgScriptSubsystem::m_userDataObjectMap;
 ///
-fgScriptSubsystem::scriptMetatableInfoMap fgScriptSubsystem::m_scriptMetatableInfoMap;
+fgScriptSubsystem::scriptMetatableInfoVec fgScriptSubsystem::m_scriptMetatableInfoVec;
 
 /// Pointer to the external event manager
 fgManagerBase *fgScriptSubsystem::m_pEventMgr = NULL;
@@ -179,9 +179,9 @@ fgBool fgScriptSubsystem::destroy(void) {
     m_userDataObjectMap.clear();
     userDataObjectMap dmmap;
     m_userDataObjectMap.swap(dmmap);
-    m_scriptMetatableInfoMap.clear();
-    scriptMetatableInfoMap smmap;
-    m_scriptMetatableInfoMap.swap(smmap);
+    m_scriptMetatableInfoVec.clear();
+    scriptMetatableInfoVec smvec;
+    m_scriptMetatableInfoVec.swap(smvec);
     fgScriptSubsystem::clear();
     return FG_TRUE;
 }
@@ -213,59 +213,75 @@ fgBool fgScriptSubsystem::initialize(void) {
 
     {
         // Initializing metatable map
-        m_scriptMetatableInfoMap.clear();
+        m_scriptMetatableInfoVec.clear();
+        m_scriptMetatableInfoVec.reserve(METATABLE_SIZE);
+        //m_scriptMetatableInfoVec.resize(METATABLE_SIZE);
+        m_scriptMetatableInfoVec.resize(METATABLE_SIZE);
 
         // can generate random IDS? YEP :D
         // Numbers 0 - 9 ASCII 48 to 57
         // Lowercase letters a - z ASCII 97 to 122
         // Uppercase letters A - Z ASCII 65 - 90
 
-        m_scriptMetatableInfoMap[EMPTY_METATABLE_ID] = metatableInfo(EMPTY_METATABLE_ID, "FG_L_EMPTY_META_TAB");
-        m_scriptMetatableInfoMap[VECTOR2I_METATABLE_ID] = metatableInfo(VECTOR2I_METATABLE_ID, "FG_L_", "_TAB");
-        m_scriptMetatableInfoMap[VECTOR2F_METATABLE_ID] = metatableInfo(VECTOR2F_METATABLE_ID, "FG_L_", "_TAB");
-        m_scriptMetatableInfoMap[VECTOR3I_METATABLE_ID] = metatableInfo(VECTOR3I_METATABLE_ID, "FG_L_", "_TAB");
-        m_scriptMetatableInfoMap[VECTOR3F_METATABLE_ID] = metatableInfo(VECTOR3F_METATABLE_ID, "FG_L_", "_TAB");
-        m_scriptMetatableInfoMap[VECTOR4I_METATABLE_ID] = metatableInfo(VECTOR4I_METATABLE_ID, "FG_L_", "_TAB");
-        m_scriptMetatableInfoMap[VECTOR4F_METATABLE_ID] = metatableInfo(VECTOR4F_METATABLE_ID, "FG_L_", "_TAB");
-        m_scriptMetatableInfoMap[ERROR_METATABLE_ID] = metatableInfo(ERROR_METATABLE_ID, "FG_L_", "_TAB");
-        m_scriptMetatableInfoMap[EVENT_MANAGER_METATABLE_ID] = metatableInfo(EVENT_MANAGER_METATABLE_ID, "FG_L_", "_TAB");
-        m_scriptMetatableInfoMap[RESOURCE_MANAGER_METATABLE_ID] = metatableInfo(RESOURCE_MANAGER_METATABLE_ID, "FG_L_", "_TAB");
-        m_scriptMetatableInfoMap[SHADER_MANAGER_METATABLE_ID] = metatableInfo(SHADER_MANAGER_METATABLE_ID, "FG_L_", "_TAB");
-        m_scriptMetatableInfoMap[SCENE2D_MANAGER_METATABLE_ID] = metatableInfo(SCENE2D_MANAGER_METATABLE_ID, "FG_L_", "_TAB");
-        m_scriptMetatableInfoMap[SCENE3D_MANAGER_METATABLE_ID] = metatableInfo(SCENE3D_MANAGER_METATABLE_ID, "FG_L_", "_TAB");
-        m_scriptMetatableInfoMap[PARTICLE_SYSTEM_METATABLE_ID] = metatableInfo(PARTICLE_SYSTEM_METATABLE_ID, "FG_L_", "_TAB");
-        m_scriptMetatableInfoMap[WIDGET_MANAGER_METATABLE_ID] = metatableInfo(WIDGET_MANAGER_METATABLE_ID, "FG_L_", "_TAB");
-        m_scriptMetatableInfoMap[STYLE_MANAGER_METATABLE_ID] = metatableInfo(STYLE_MANAGER_METATABLE_ID, "FG_L_", "_TAB");
-        m_scriptMetatableInfoMap[SOUND_MANAGER_METATABLE_ID] = metatableInfo(SOUND_MANAGER_METATABLE_ID, "FG_L_", "_TAB");
-        m_scriptMetatableInfoMap[RESOURCE_METATABLE_ID] = metatableInfo(RESOURCE_METATABLE_ID, "FG_L_", "_TAB");
-        m_scriptMetatableInfoMap[TEXTURE_RESOURCE_METATABLE_ID] = metatableInfo(TEXTURE_RESOURCE_METATABLE_ID, "FG_L_", "_TAB");
-        m_scriptMetatableInfoMap[FONT_RESOURCE_METATABLE_ID] = metatableInfo(FONT_RESOURCE_METATABLE_ID, "FG_L_", "_TAB");
-        m_scriptMetatableInfoMap[GFX_MODEL_RESOURCE_METATABLE_ID] = metatableInfo(GFX_MODEL_RESOURCE_METATABLE_ID, "FG_L_", "_TAB");
-        m_scriptMetatableInfoMap[PARTICLE_EFFECT_RESOURCE_METATABLE_ID] = metatableInfo(PARTICLE_EFFECT_RESOURCE_METATABLE_ID, "FG_L_", "_TAB");
-        m_scriptMetatableInfoMap[SOUND_RESOURCE_METATABLE_ID] = metatableInfo(SOUND_RESOURCE_METATABLE_ID, "FG_L_", "_TAB");
-        m_scriptMetatableInfoMap[MUSIC_RESOURCE_METATABLE_ID] = metatableInfo(MUSIC_RESOURCE_METATABLE_ID, "FG_L_", "_TAB");
-        m_scriptMetatableInfoMap[PLUGIN_RESOURCE_METATABLE_ID] = metatableInfo(PLUGIN_RESOURCE_METATABLE_ID, "FG_L_", "_TAB");
-        m_scriptMetatableInfoMap[SAVE_FILE_RESOURCE_METATABLE_ID] = metatableInfo(SAVE_FILE_RESOURCE_METATABLE_ID, "FG_L_", "_TAB");
-        m_scriptMetatableInfoMap[CONFIG_METATABLE_ID] = metatableInfo(CONFIG_METATABLE_ID, "FG_L_", "_TAB");
-        m_scriptMetatableInfoMap[SETTINGS_METATABLE_ID] = metatableInfo(SETTINGS_METATABLE_ID, "FG_L_", "_TAB");
-        m_scriptMetatableInfoMap[GUI_WIDGET_METATABLE_ID] = metatableInfo(GUI_WIDGET_METATABLE_ID, "FG_L_", "_TAB");
-        m_scriptMetatableInfoMap[GUI_BUTTON_METATABLE_ID] = metatableInfo(GUI_BUTTON_METATABLE_ID, "FG_L_", "_TAB");
-        m_scriptMetatableInfoMap[GUI_CONSOLE_METATABLE_ID] = metatableInfo(GUI_CONSOLE_METATABLE_ID, "FG_L_", "_TAB");
-        m_scriptMetatableInfoMap[GUI_CONTAINER_METATABLE_ID] = metatableInfo(GUI_CONTAINER_METATABLE_ID, "FG_L_", "_TAB");
-        m_scriptMetatableInfoMap[GUI_FRAME_METATABLE_ID] = metatableInfo(GUI_FRAME_METATABLE_ID, "FG_L_", "_TAB");
-        m_scriptMetatableInfoMap[GUI_LABEL_METATABLE_ID] = metatableInfo(GUI_LABEL_METATABLE_ID, "FG_L_", "_TAB");
-        m_scriptMetatableInfoMap[GUI_LOADER_METATABLE_ID] = metatableInfo(GUI_LOADER_METATABLE_ID, "FG_L_", "_TAB");
-        m_scriptMetatableInfoMap[GUI_MENU_METATABLE_ID] = metatableInfo(GUI_MENU_METATABLE_ID, "FG_L_", "_TAB");
-        m_scriptMetatableInfoMap[GUI_MESSAGE_BOX_METATABLE_ID] = metatableInfo(GUI_MESSAGE_BOX_METATABLE_ID, "FG_L_", "_TAB");
-        m_scriptMetatableInfoMap[GUI_POPUP_METATABLE_ID] = metatableInfo(GUI_POPUP_METATABLE_ID, "FG_L_", "_TAB");
-        m_scriptMetatableInfoMap[GUI_PROGRESS_BAR_METATABLE_ID] = metatableInfo(GUI_PROGRESS_BAR_METATABLE_ID, "FG_L_", "_TAB");
-        m_scriptMetatableInfoMap[GUI_SCROLL_AREA_METATABLE_ID] = metatableInfo(GUI_SCROLL_AREA_METATABLE_ID, "FG_L_", "_TAB");
-        m_scriptMetatableInfoMap[GUI_STYLE_METATABLE_ID] = metatableInfo(GUI_STYLE_METATABLE_ID, "FG_L_", "_TAB");
-        m_scriptMetatableInfoMap[GUI_STYLE_CONTENT_METATABLE_ID] = metatableInfo(GUI_STYLE_CONTENT_METATABLE_ID, "FG_L_", "_TAB");
-        m_scriptMetatableInfoMap[GUI_TABLE_METATABLE_ID] = metatableInfo(GUI_TABLE_METATABLE_ID, "FG_L_", "_TAB");
-        m_scriptMetatableInfoMap[GUI_TEXT_AREA_METATABLE_ID] = metatableInfo(GUI_TEXT_AREA_METATABLE_ID, "FG_L_", "_TAB");
-        m_scriptMetatableInfoMap[GUI_TOGGLE_BUTTON_METATABLE_ID] = metatableInfo(GUI_TOGGLE_BUTTON_METATABLE_ID, "FG_L_", "_TAB");
-        m_scriptMetatableInfoMap[GUI_WINDOW_METATABLE_ID] = metatableInfo(GUI_WINDOW_METATABLE_ID, "FG_L_", "_TAB");
+        m_scriptMetatableInfoVec[EMPTY_METATABLE_ID] = metatableInfo("FG", "X");
+        m_scriptMetatableInfoVec[VECTOR2I_METATABLE_ID] = metatableInfo("FGX", "T");
+        m_scriptMetatableInfoVec[VECTOR2F_METATABLE_ID] = metatableInfo("FGX", "T");
+        m_scriptMetatableInfoVec[VECTOR3I_METATABLE_ID] = metatableInfo("FGX", "T");
+        m_scriptMetatableInfoVec[VECTOR3F_METATABLE_ID] = metatableInfo("FGX", "T");
+        m_scriptMetatableInfoVec[VECTOR4I_METATABLE_ID] = metatableInfo("FGX", "T");
+        m_scriptMetatableInfoVec[VECTOR4F_METATABLE_ID] = metatableInfo("FGX", "T");
+        m_scriptMetatableInfoVec[ERROR_METATABLE_ID] = metatableInfo("FGX", "T");
+        m_scriptMetatableInfoVec[EVENT_MANAGER_METATABLE_ID] = metatableInfo("FGX", "T");
+        m_scriptMetatableInfoVec[RESOURCE_MANAGER_METATABLE_ID] = metatableInfo("FGX", "T");
+        m_scriptMetatableInfoVec[SHADER_MANAGER_METATABLE_ID] = metatableInfo("FGX", "T");
+        m_scriptMetatableInfoVec[SCENE2D_MANAGER_METATABLE_ID] = metatableInfo("FGX", "T");
+        m_scriptMetatableInfoVec[SCENE3D_MANAGER_METATABLE_ID] = metatableInfo("FGX", "T");
+        m_scriptMetatableInfoVec[PARTICLE_SYSTEM_METATABLE_ID] = metatableInfo("FGX", "T");
+        m_scriptMetatableInfoVec[WIDGET_MANAGER_METATABLE_ID] = metatableInfo("FGX", "T");
+        m_scriptMetatableInfoVec[STYLE_MANAGER_METATABLE_ID] = metatableInfo("FGX", "T");
+        m_scriptMetatableInfoVec[SOUND_MANAGER_METATABLE_ID] = metatableInfo("FGX", "T");
+        m_scriptMetatableInfoVec[RESOURCE_METATABLE_ID] = metatableInfo("FGX", "T");
+        m_scriptMetatableInfoVec[TEXTURE_RESOURCE_METATABLE_ID] = metatableInfo("FGX", "T");
+        m_scriptMetatableInfoVec[FONT_RESOURCE_METATABLE_ID] = metatableInfo("FGX", "T");
+        m_scriptMetatableInfoVec[GFX_MODEL_RESOURCE_METATABLE_ID] = metatableInfo("FGX", "T");
+        m_scriptMetatableInfoVec[PARTICLE_EFFECT_RESOURCE_METATABLE_ID] = metatableInfo("FGX", "T");
+        m_scriptMetatableInfoVec[SOUND_RESOURCE_METATABLE_ID] = metatableInfo("FGX", "T");
+        m_scriptMetatableInfoVec[MUSIC_RESOURCE_METATABLE_ID] = metatableInfo("FGX", "T");
+        m_scriptMetatableInfoVec[PLUGIN_RESOURCE_METATABLE_ID] = metatableInfo("FGX", "T");
+        m_scriptMetatableInfoVec[SAVE_FILE_RESOURCE_METATABLE_ID] = metatableInfo("FGX", "T");
+        m_scriptMetatableInfoVec[CONFIG_METATABLE_ID] = metatableInfo("FGX", "T");
+        m_scriptMetatableInfoVec[SETTINGS_METATABLE_ID] = metatableInfo("FGX", "T");
+        m_scriptMetatableInfoVec[GUI_WIDGET_METATABLE_ID] = metatableInfo("FGX", "T");
+        m_scriptMetatableInfoVec[GUI_BUTTON_METATABLE_ID] = metatableInfo("FGX", "T");
+        m_scriptMetatableInfoVec[GUI_CONSOLE_METATABLE_ID] = metatableInfo("FGX", "T");
+        m_scriptMetatableInfoVec[GUI_CONTAINER_METATABLE_ID] = metatableInfo("FGX", "T");
+        m_scriptMetatableInfoVec[GUI_FRAME_METATABLE_ID] = metatableInfo("FGX", "T");
+        m_scriptMetatableInfoVec[GUI_LABEL_METATABLE_ID] = metatableInfo("FGX", "T");
+        m_scriptMetatableInfoVec[GUI_LOADER_METATABLE_ID] = metatableInfo("FGX", "T");
+        m_scriptMetatableInfoVec[GUI_MENU_METATABLE_ID] = metatableInfo("FGX", "T");
+        m_scriptMetatableInfoVec[GUI_MESSAGE_BOX_METATABLE_ID] = metatableInfo("FGX", "T");
+        m_scriptMetatableInfoVec[GUI_POPUP_METATABLE_ID] = metatableInfo("FGX", "T");
+        m_scriptMetatableInfoVec[GUI_PROGRESS_BAR_METATABLE_ID] = metatableInfo("FGX", "T");
+        m_scriptMetatableInfoVec[GUI_SCROLL_AREA_METATABLE_ID] = metatableInfo("FGX", "T");
+        m_scriptMetatableInfoVec[GUI_STYLE_METATABLE_ID] = metatableInfo("FGX", "T");
+        m_scriptMetatableInfoVec[GUI_STYLE_CONTENT_METATABLE_ID] = metatableInfo("FGX", "T");
+
+        m_scriptMetatableInfoVec[GUI_STYLE_SIZE_METATABLE_ID] = metatableInfo("FGX", "T");
+        m_scriptMetatableInfoVec[GUI_STYLE_BACKGROUND_METATABLE_ID] = metatableInfo("FGX", "T");
+        m_scriptMetatableInfoVec[GUI_STYLE_FOREGROUND_METATABLE_ID] = metatableInfo("FGX", "T");
+        m_scriptMetatableInfoVec[GUI_STYLE_MARGIN_METATABLE_ID] = metatableInfo("FGX", "T");
+        m_scriptMetatableInfoVec[GUI_STYLE_BORDER_INFO_METATABLE_ID] = metatableInfo("FGX", "T");
+        m_scriptMetatableInfoVec[GUI_STYLE_BORDER_METATABLE_ID] = metatableInfo("FGX", "T");
+        m_scriptMetatableInfoVec[GUI_STYLE_POSITION_METATABLE_ID] = metatableInfo("FGX", "T");
+
+        m_scriptMetatableInfoVec[GUI_TABLE_METATABLE_ID] = metatableInfo("FGX", "T");
+        m_scriptMetatableInfoVec[GUI_TEXT_AREA_METATABLE_ID] = metatableInfo("FGX", "T");
+        m_scriptMetatableInfoVec[GUI_TOGGLE_BUTTON_METATABLE_ID] = metatableInfo("FGX", "T");
+        m_scriptMetatableInfoVec[GUI_WINDOW_METATABLE_ID] = metatableInfo("FGX", "T");
+
+        for(int i = 0; i < (int)METATABLE_SIZE; i++) {
+            m_scriptMetatableInfoVec[i].id = (unsigned short int)i;
+        }
     }
 
     if(!registerConstants()) {
@@ -338,10 +354,10 @@ int fgScriptSubsystem::simpleFreeGCEvent(lua_State* L) {
         int isLightuserdata = (int)state->IsLightUserdata(1);
         int isUserdata = 0;
         FG_LOG_DEBUG("Script: Simple Free GC: not compatible: lightuserdata[%d], userdata[%d], table[%d], none/nil[%d]",
-                           isLightuserdata,
-                           isUserdata,
-                           isTable,
-                           isNoneOrNil);
+                     isLightuserdata,
+                     isUserdata,
+                     isTable,
+                     isNoneOrNil);
         return 0;
     }
     void *unboxed = state->UnBoxPointer(1);
@@ -383,10 +399,10 @@ int fgScriptSubsystem::managedResourceGCEvent(lua_State* L) {
         int isLightuserdata = (int)state->IsLightUserdata(1);
         int isUserdata = 0;
         FG_LOG_DEBUG("Script: Managed Resource GC: not compatible: lightuserdata[%d], userdata[%d], table[%d], none/nil[%d]",
-                           isLightuserdata,
-                           isUserdata,
-                           isTable,
-                           isNoneOrNil);
+                     isLightuserdata,
+                     isUserdata,
+                     isTable,
+                     isNoneOrNil);
         return 0;
     }
     void *unboxed = state->UnBoxPointer(1);
@@ -450,7 +466,87 @@ fgBool fgScriptSubsystem::registerConstants(void) {
     if(m_globals.GetRef() < 0)
         return FG_FALSE;
 
+    //
+    // #STRINGS #OBFUSCATION #FIXME #TODO
+    //
+
     m_globals.SetInteger("FG_BUILD_VERSION", (int)FG_BUILD_VERSION);
+
+    //
+    // GUI STYLE CONSTANTS
+    //
+    m_globals.SetInteger("FG_GUI_FLOAT_UNIT_INVALID", (float)FG_GUI_FLOAT_UNIT_INVALID);
+
+    // fgGuiUnitType
+    m_globals.SetInteger("FG_GUI_PIXELS", (int)FG_GUI_PIXELS);
+    m_globals.SetInteger("FG_GUI_INCHES", (int)FG_GUI_INCHES);
+    m_globals.SetInteger("FG_GUI_BLOCKS", (int)FG_GUI_BLOCKS);
+    m_globals.SetInteger("FG_GUI_PERCENTS", (int)FG_GUI_PERCENTS);
+    // fgGuiBorderStyle
+    m_globals.SetInteger("FG_GUI_BORDER_NONE", (int)FG_GUI_BORDER_NONE);
+    m_globals.SetInteger("FG_GUI_BORDER_DOTTED", (int)FG_GUI_BORDER_DOTTED);
+    m_globals.SetInteger("FG_GUI_BORDER_DASHED", (int)FG_GUI_BORDER_DASHED);
+    m_globals.SetInteger("FG_GUI_BORDER_SOLID", (int)FG_GUI_BORDER_SOLID);
+
+    // fgGuiBorderWhich
+    m_globals.SetInteger("FG_GUI_BORDER_LEFT", (int)FG_GUI_BORDER_LEFT);
+    m_globals.SetInteger("FG_GUI_BORDER_RIGHT", (int)FG_GUI_BORDER_RIGHT);
+    m_globals.SetInteger("FG_GUI_BORDER_TOP", (int)FG_GUI_BORDER_TOP);
+    m_globals.SetInteger("FG_GUI_BORDER_BOTTOM", (int)FG_GUI_BORDER_BOTTOM);
+    m_globals.SetInteger("FG_GUI_BORDER_ALL", (int)FG_GUI_BORDER_ALL);
+
+    // fgGuiBackgroundStyle
+    m_globals.SetInteger("FG_GUI_BACKGROUND_NONE", (int)FG_GUI_BACKGROUND_NONE);
+    m_globals.SetInteger("FG_GUI_BACKGROUND_NORMAL", (int)FG_GUI_BACKGROUND_NORMAL);
+    m_globals.SetInteger("FG_GUI_BACKGROUND_MAX", (int)FG_GUI_BACKGROUND_MAX);
+    m_globals.SetInteger("FG_GUI_BACKGROUND_TILED", (int)FG_GUI_BACKGROUND_TILED);
+
+    // fgGuiMarginWhich
+    m_globals.SetInteger("FG_GUI_MARGIN_LEFT", (int)FG_GUI_MARGIN_LEFT);
+    m_globals.SetInteger("FG_GUI_MARGIN_RIGHT", (int)FG_GUI_MARGIN_RIGHT);
+    m_globals.SetInteger("FG_GUI_MARGIN_TOP", (int)FG_GUI_MARGIN_TOP);
+    m_globals.SetInteger("FG_GUI_MARGIN_BOTTOM", (int)FG_GUI_MARGIN_BOTTOM);
+    m_globals.SetInteger("FG_GUI_MARGIN_ALL", (int)FG_GUI_MARGIN_ALL);
+
+    // fgGuiPaddingWhich
+    m_globals.SetInteger("FG_GUI_PADDING_LEFT", (int)FG_GUI_PADDING_LEFT);
+    m_globals.SetInteger("FG_GUI_PADDING_RIGHT", (int)FG_GUI_PADDING_RIGHT);
+    m_globals.SetInteger("FG_GUI_PADDING_TOP", (int)FG_GUI_PADDING_TOP);
+    m_globals.SetInteger("FG_GUI_PADDING_BOTTOM", (int)FG_GUI_PADDING_BOTTOM);
+    m_globals.SetInteger("FG_GUI_PADDING_ALL", (int)FG_GUI_PADDING_ALL);
+
+    // fgGuiAlign
+    m_globals.SetInteger("FG_GUI_ALIGN_NONE", (int)FG_GUI_ALIGN_NONE);
+    m_globals.SetInteger("FG_GUI_ALIGN_LEFT", (int)FG_GUI_ALIGN_LEFT);
+    m_globals.SetInteger("FG_GUI_ALIGN_RIGHT", (int)FG_GUI_ALIGN_RIGHT);
+    m_globals.SetInteger("FG_GUI_ALIGN_CENTER", (int)FG_GUI_ALIGN_CENTER);
+    m_globals.SetInteger("FG_GUI_ALIGN_MIDDLE", (int)FG_GUI_ALIGN_MIDDLE);
+    m_globals.SetInteger("FG_GUI_ALIGN_TOP", (int)FG_GUI_ALIGN_TOP);
+    m_globals.SetInteger("FG_GUI_ALIGN_BOTTOM", (int)FG_GUI_ALIGN_BOTTOM);
+
+    // fgGuiPositionStyle
+    m_globals.SetInteger("FG_GUI_POS_STATIC", (int)FG_GUI_POS_STATIC);
+    m_globals.SetInteger("FG_GUI_POS_FIXED", (int)FG_GUI_POS_FIXED);
+    m_globals.SetInteger("FG_GUI_POS_RELATIVE", (int)FG_GUI_POS_RELATIVE);
+    m_globals.SetInteger("FG_GUI_POS_ABSOLUTE", (int)FG_GUI_POS_ABSOLUTE);
+    
+    // fgGuiSizeStyle
+    m_globals.SetInteger("FG_GUI_SIZE_PIXELS", (int)FG_GUI_SIZE_PIXELS);
+    m_globals.SetInteger("FG_GUI_SIZE_INCHES", (int)FG_GUI_SIZE_INCHES);
+    m_globals.SetInteger("FG_GUI_SIZE_BLOCKS", (int)FG_GUI_SIZE_BLOCKS);
+    m_globals.SetInteger("FG_GUI_SIZE_PERCENTS", (int)FG_GUI_SIZE_PERCENTS);
+    m_globals.SetInteger("FG_GUI_SIZE_MAX", (int)FG_GUI_SIZE_MAX);
+    m_globals.SetInteger("FG_GUI_SIZE_MIN", (int)FG_GUI_SIZE_MIN);
+
+    //
+    // GUI WIDGET CONSTANTS
+    //
+    m_globals.SetInteger("FG_GUI_WIDGET_STATE_NONE", (int)FG_GUI_WIDGET_STATE_NONE);
+    m_globals.SetInteger("FG_GUI_WIDGET_STATE_FOCUS", (int)FG_GUI_WIDGET_STATE_FOCUS);
+    m_globals.SetInteger("FG_GUI_WIDGET_STATE_PRESSED", (int)FG_GUI_WIDGET_STATE_PRESSED);
+    m_globals.SetInteger("FG_GUI_WIDGET_STATE_ACTIVATED", (int)FG_GUI_WIDGET_STATE_ACTIVATED);
+    m_globals.SetInteger("FG_GUI_WIDGET_STATE_DEACTIVATED", (int)FG_GUI_WIDGET_STATE_DEACTIVATED);
+    m_globals.SetInteger("FG_GUI_WIDGET_STATE_COUNT", (int)FG_GUI_WIDGET_STATE_COUNT);
 
 #endif /* FG_USING_LUA_PLUS */
     return FG_TRUE;
@@ -517,6 +613,7 @@ fgBool fgScriptSubsystem::registerAdditionalTypes(void) {
             .Property("t", &fgVector3f::t)
             .MetatableFunction("__gc", &fgScriptSubsystem::simpleFreeGCEvent); // simpleTypedGCEvent<fgVector3f>
     m_globals.Register("Vector3f", &fgScriptSubsystem::simpleTypedMallocEvent<fgVector3f, VECTOR3F_METATABLE_ID>);
+    m_globals.Register("Color3f", &fgScriptSubsystem::simpleTypedMallocEvent<fgVector3f, VECTOR3F_METATABLE_ID>);
     FG_LOG_DEBUG("Script: Register metatable '%s' for Vector3f", getMetatableName(VECTOR3F_METATABLE_ID));
 
     // fgVector4i | FG VECTOR 4I 
@@ -533,6 +630,7 @@ fgBool fgScriptSubsystem::registerAdditionalTypes(void) {
             .Property("t", &fgVector4i::t)
             .MetatableFunction("__gc", &fgScriptSubsystem::simpleFreeGCEvent); // simpleTypedGCEvent<fgVector4i>
     m_globals.Register("Vector4i", &fgScriptSubsystem::simpleTypedMallocEvent<fgVector4i, VECTOR4I_METATABLE_ID>);
+    //m_globals.Register("Color4i", &fgScriptSubsystem::simpleTypedMallocEvent<fgVector4i, VECTOR4I_METATABLE_ID>);
     FG_LOG_DEBUG("Script: Register metatable '%s' for Vector4i", getMetatableName(VECTOR4I_METATABLE_ID));
 
     // fgVector4f | FG VECTOR 4F    
@@ -549,6 +647,7 @@ fgBool fgScriptSubsystem::registerAdditionalTypes(void) {
             .Property("t", &fgVector4f::t)
             .MetatableFunction("__gc", &fgScriptSubsystem::simpleFreeGCEvent); // simpleTypedGCEvent<fgVector4f>
     m_globals.Register("Vector4f", &fgScriptSubsystem::simpleTypedMallocEvent<fgVector4f, VECTOR4F_METATABLE_ID>);
+    m_globals.Register("Color4f", &fgScriptSubsystem::simpleTypedMallocEvent<fgVector4f, VECTOR4F_METATABLE_ID>);
     FG_LOG_DEBUG("Script: Register metatable '%s' for Vector4f", getMetatableName(VECTOR4F_METATABLE_ID));
 #endif /* FG_USING_LUA_PLUS */
     return FG_TRUE;
@@ -996,7 +1095,7 @@ fgBool fgScriptSubsystem::registerWidgetManager(void) {
 
     typedef void (fgGuiWidget::*GW_void_C_STR_IN)(const char *);
     typedef void (fgGuiWidget::base_type::*GW_BASE_void_C_STR_IN)(const char *);
-    typedef fgGuiWidget *(fgGuiWidget::*GW_Widget_void)(void) const;
+    typedef fgGuiWidget * (fgGuiWidget::*GW_Widget_void)(void)const;
 
     const char *metatableNameWidget = getMetatableName(GUI_WIDGET_METATABLE_ID);
     const char *metatableName = NULL;
@@ -1017,7 +1116,7 @@ fgBool fgScriptSubsystem::registerWidgetManager(void) {
 
             .ObjectDirect("refresh", (fgGuiWidget *)0, &fgGuiWidget::refresh)
             //.ObjectDirect("updateState", (fgGuiWidget *)0, &fgGuiWidget::updateState)
-            .ObjectDirect("getFather", 
+            .ObjectDirect("getFather",
                           (fgGuiWidget *)0,
                           static_cast<GW_Widget_void>(&fgGuiWidget::getFather))
             .ObjectDirect("getType", (fgGuiWidget *)0, &fgGuiWidget::getType)
@@ -1050,7 +1149,7 @@ fgBool fgScriptSubsystem::registerWidgetManager(void) {
             .ObjectDirect("getStyleName", (fgGuiWidget *)0, &fgGuiWidget::getStyleNameStr)
             .ObjectDirect("setStyleName", (fgGuiWidget *)0, static_cast<GW_void_C_STR_IN>(&fgGuiWidget::setStyleName))
             //.ObjectDirect("getStyleContents", (fgGuiWidget *)0, &fgGuiWidget::getStyleContents)
-            //.ObjectDirect("getStyleContent", (fgGuiWidget *)0, &fgGuiWidget::getStyleContent)
+            .ObjectDirect("getStyleContent", (fgGuiWidget *)0, &fgGuiWidget::getStyleContentPtr)
             //.ObjectDirect("refresh", (fgGuiWidget *)0, &fgGuiWidget::setOnFocusCallback)
             ;
     //.MetatableFunction("__gc", &fgScriptSubsystem::managedResourceGCEvent);
@@ -1180,6 +1279,139 @@ fgBool fgScriptSubsystem::registerWidgetManager(void) {
             .MetatableFunction("__gc", &fgScriptSubsystem::managedObjectTypedGCEvent<fgGuiWidgetHandle>);
     m_globals.Register("Console", &fgScriptSubsystem::managedObjectTypedNewEvent<fgGuiConsole, GUI_CONSOLE_METATABLE_ID>);
 
+    //
+    // Styles / Style Content and other builtin
+    // Some of these (StyleContent and inside types) cannot be
+    // created via constructor inside of the script, only referenced
+    // The metatable for these will not have __gc function set
+    // #SAFEDESIGN #FIXME #PTRSAFE
+    //
+    typedef void (fgGuiStyle::*GS_void_C_STR_IN)(const char *);
+    typedef void (fgGuiStyle::base_type::base_type::*GS_BASE_void_C_STR_IN)(const char *);
+    typedef fgGuiStyleContent * (fgGuiStyle::*GS_StyleContent_C_STR_IN)(const char *);
+
+    // Register Gui Style metatable
+    //
+    // #FIXME - will need to create base metatable for ManagedObject
+    // because there are many types that shader that base class
+    // Thanks to this there will be less copy pasting of the same 
+    // function pointers definitions ...
+    // 
+    const char *metatableNameStyle = getMetatableName(GUI_STYLE_METATABLE_ID);
+    LPCD::Class(m_luaState->GetCState(), metatableNameStyle)
+            .ObjectDirect("getName",
+                          (fgGuiStyle::base_type::base_type *)0,
+                          &fgGuiStyle::base_type::base_type::getNameStr)
+            .ObjectDirect("setName",
+                          (fgGuiStyle::base_type::base_type *)0,
+                          static_cast<GS_BASE_void_C_STR_IN>(&fgGuiStyle::base_type::base_type::setName))
+    
+            .ObjectDirect("getContentByName",
+                          (fgGuiStyle *)0,
+                          static_cast<GS_StyleContent_C_STR_IN>(&fgGuiStyle::getContentPtr))
+    ;
+    // fgGuiStyle FUBAR ^ ^ ^ ^ ^ ^ ^ ^ ^
+
+    // Register Built in types for fgGuiStyleContent
+    // Remember: Need definitions for special functions in LPCD namespace
+    // Templates for Push/Match/Get -- types like: fgGuiSize/Background/Border
+    // fgGuiAlign is an enum (not strong typed) so it will be implicitly cast to int
+
+    // Register fgGuiSize structure ...
+    // This structure cannot be created inside of lua, only received via reference
+    // from style content obj
+    LPCD::Class(m_luaState->GetCState(), getMetatableName(GUI_STYLE_SIZE_METATABLE_ID))
+            .Property("style", &fgGuiSize::style)
+            .Property("x", &fgGuiSize::x)
+            .Property("y", &fgGuiSize::y)
+            .Property("z", &fgGuiSize::z)
+            .Property("w", &fgGuiSize::w)
+            .Property("h", &fgGuiSize::h)
+            .Property("d", &fgGuiSize::d);
+    // MetatableFunction("__gc") // Nope
+
+    // Register fgGuiBackground structure
+    LPCD::Class(m_luaState->GetCState(), getMetatableName(GUI_STYLE_BACKGROUND_METATABLE_ID))
+            .Property("texture", &fgGuiBackground::texture) // std::string
+            .Property("color", &fgGuiBackground::color) // color is fgColor4f/fgVector4f (glm)
+            .Property("style", &fgGuiBackground::style) // enum fgGuiBackgroundStyle (int)
+            ;
+    // MetatableFunction("__gc") // Nope
+
+    // Register fgGuiForeground structure
+    LPCD::Class(m_luaState->GetCState(), getMetatableName(GUI_STYLE_FOREGROUND_METATABLE_ID))
+            .Property("font", &fgGuiForeground::font) // std::string - font name
+            .Property("color", &fgGuiForeground::color) // color is fgColor4f/fgVector4f (glm)
+            .Property("textSize", &fgGuiForeground::textSize) // float
+            ;
+    // MetatableFunction("__gc") // Nope
+
+    // Register fgGuiMargin/fgGuiPadding structure
+    LPCD::Class(m_luaState->GetCState(), getMetatableName(GUI_STYLE_MARGIN_METATABLE_ID))
+            .Property("left", &fgGuiMargin::left) // float
+            .Property("right", &fgGuiMargin::right) // float
+            .Property("top", &fgGuiMargin::top) // float
+            .Property("bottom", &fgGuiMargin::bottom) // float
+            ;
+    // MetatableFunction("__gc") // Nope
+
+    // Register fgGuiBorder structure
+    LPCD::Class(m_luaState->GetCState(), getMetatableName(GUI_STYLE_BORDER_METATABLE_ID))
+            .Property("color", &fgGuiBorder::color) // color is fgColor4f/fgVector4f (glm)
+            .Property("style", &fgGuiBorder::style) // enum fgGuiBorderStyle (int)
+            .Property("width", &fgGuiBorder::width) // float
+            ;
+    // MetatableFunction("__gc") // Nope
+
+    // Register fgGuiBorderInfo structure (stores info for all borders)
+    LPCD::Class(m_luaState->GetCState(), getMetatableName(GUI_STYLE_BORDER_INFO_METATABLE_ID))
+            .Property("left", &fgGuiBorderInfo::left) // structure fgGuiBorder
+            .Property("right", &fgGuiBorderInfo::right) // structure fgGuiBorder 
+            .Property("top", &fgGuiBorderInfo::top) // structure fgGuiBorder
+            .Property("bottom", &fgGuiBorderInfo::bottom) // structure fgGuiBorder
+            ;
+    // MetatableFunction("__gc") // Nope
+
+    // Register fgGuiPosition structure
+    LPCD::Class(m_luaState->GetCState(), getMetatableName(GUI_STYLE_POSITION_METATABLE_ID))
+            .Property("style", &fgGuiPosition::style) // enum fgGuiPositionStyle (int)
+            .Property("unit", &fgGuiPosition::unit) // enum fgGuiUnitType (int)
+            .Property("left", &fgGuiPosition::left) // float
+            .Property("right", &fgGuiPosition::right) // float
+            .Property("top", &fgGuiPosition::top) // float
+            .Property("bottom", &fgGuiPosition::bottom) // float
+            .Property("front", &fgGuiPosition::front) // float
+            .Property("back", &fgGuiPosition::back) // float
+            ;
+    // MetatableFunction("__gc") // Nope
+
+    // Register Gui Style Content metatable - this metatable is without GC ! ! !
+    //    
+    const char *metatableNameStyleContent = getMetatableName(GUI_STYLE_CONTENT_METATABLE_ID);
+    LPCD::Class(m_luaState->GetCState(), metatableNameStyleContent)
+            //.Property("shader", &fgGuiStyle) // NOPE ?
+            .ObjectDirect("getBackground", (fgGuiStyleContent *)0, &fgGuiStyleContent::getBackground)
+            .ObjectDirect("getForeground", (fgGuiStyleContent *)0, &fgGuiStyleContent::getForeground)
+            .ObjectDirect("getMargin", (fgGuiStyleContent *)0, &fgGuiStyleContent::getMargin)
+            .ObjectDirect("getPadding", (fgGuiStyleContent *)0, &fgGuiStyleContent::getPadding)
+            .ObjectDirect("getBorderInfo", (fgGuiStyleContent *)0, &fgGuiStyleContent::getBorder)
+            .ObjectDirect("getBorder", (fgGuiStyleContent *)0, &fgGuiStyleContent::getBorder)
+            .ObjectDirect("getPosition", (fgGuiStyleContent *)0, &fgGuiStyleContent::getPosition)
+            .ObjectDirect("getAlign", (fgGuiStyleContent *)0, &fgGuiStyleContent::getAlign)
+            .ObjectDirect("getVAlign", (fgGuiStyleContent *)0, &fgGuiStyleContent::getVAlign)
+            .ObjectDirect("getTextAlign", (fgGuiStyleContent *)0, &fgGuiStyleContent::getTextAlign)
+            .ObjectDirect("getSize", (fgGuiStyleContent *)0, &fgGuiStyleContent::getSize)
+            .ObjectDirect("getShaderStr", (fgGuiStyleContent *)0, &fgGuiStyleContent::getShaderStr)
+            .ObjectDirect("getEffectStr", (fgGuiStyleContent *)0, &fgGuiStyleContent::getEffectStr)
+            //.ObjectDirect("", (fgGuiStyleContent *)0, &fgGuiStyleContent::)
+            // Will not add any other functions (setters) because they return reference to self
+            // This will force Lua to create an object which will be GCed quite fast
+            // Need to reinforce StyleContent somehow
+            ;
+
+    // MetatableFunction("__gc") // Nope
+    // No GC for Style Content ....
+    // Whenever ! Wherever !
 #endif /* FG_USING_LUA_PLUS */
     return FG_TRUE;
 }

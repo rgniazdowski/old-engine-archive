@@ -68,6 +68,7 @@ protected:
     };
     #endif
 public:
+    typedef fgManagedDataFileBase<fgGuiStyleHandle, fgQuality> base_type;
     typedef std::string hashKey;
     #ifdef FG_USING_MARMALADE	
     typedef std::hash<std::string> hashFunc;
@@ -120,6 +121,23 @@ public:
      * @return 
      */
     fgGuiStyleContent &getContent(const char *info);
+    /**
+     * 
+     * @param info
+     * @return 
+     */
+    fgGuiStyleContent *getContentPtr(const std::string& info) {
+        return &getContent(info);
+    }
+    /**
+     * 
+     * @param info
+     * @return 
+     */
+    fgGuiStyleContent *getContentPtr(const char *info) {
+        return &getContent(info);
+    }
+    
     /**
      * 
      * @param contents

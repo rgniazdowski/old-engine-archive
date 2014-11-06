@@ -744,8 +744,24 @@ std::string& fgGuiStyleContent::getShader(void) {
  * 
  * @return 
  */
+const char *fgGuiStyleContent::getShaderStr(void) const {
+    return m_shader.c_str();
+}
+
+/**
+ * 
+ * @return 
+ */
 std::string& fgGuiStyleContent::getEffect(void) {
     return m_effect;
+}
+
+/**
+ * 
+ * @return 
+ */
+const char *fgGuiStyleContent::getEffectStr(void) const {
+    return m_effect.c_str();
 }
 
 /**
@@ -780,6 +796,16 @@ fgGuiStyleContent& fgGuiStyleContent::setBackground(const std::string& texture) 
 
 /**
  * 
+ * @param texture
+ * @return 
+ */
+fgGuiStyleContent& fgGuiStyleContent::setBackground(const char *texture) {
+    m_bg.texture = texture;
+    return (*this);
+}
+
+/**
+ * 
  * @param textSize
  * @return 
  */
@@ -804,6 +830,16 @@ fgGuiStyleContent& fgGuiStyleContent::setForeground(const fgColor4f& color) {
  * @return 
  */
 fgGuiStyleContent& fgGuiStyleContent::setForeground(const std::string& font) {
+    m_fg.font = font;
+    return (*this);
+}
+
+/**
+ * 
+ * @param font
+ * @return 
+ */
+fgGuiStyleContent& fgGuiStyleContent::setForeground(const char *font) {
     m_fg.font = font;
     return (*this);
 }
@@ -1182,10 +1218,30 @@ fgGuiStyleContent& fgGuiStyleContent::setShader(const std::string& shader) {
 
 /**
  * 
+ * @param shader
+ * @return 
+ */
+fgGuiStyleContent& fgGuiStyleContent::setShader(const char *shader) {
+    m_shader = shader;
+    return (*this);
+}
+
+/**
+ * 
  * @param effect
  * @return 
  */
 fgGuiStyleContent& fgGuiStyleContent::setEffect(const std::string& effect) {
+    m_effect = effect;
+    return (*this);
+}
+
+/**
+ * 
+ * @param effect
+ * @return 
+ */
+fgGuiStyleContent& fgGuiStyleContent::setEffect(const char *effect) {
     m_effect = effect;
     return (*this);
 }

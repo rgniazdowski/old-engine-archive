@@ -25,7 +25,7 @@ m_config(),
 m_text(),
 m_relPos(),
 m_bbox(),
-m_textSize(),
+m_textSize(0.0f, 0.0f),
 m_onFocus(NULL),
 m_onFocusLost(NULL),
 m_onClick(NULL),
@@ -52,7 +52,9 @@ m_ignoreState(FG_FALSE) {
 /*
  *
  */
-fgGuiWidget::~fgGuiWidget() { }
+fgGuiWidget::~fgGuiWidget() { 
+    //printf("WIDGET DEL: %s [%s]\n", m_nameTag.c_str(), m_typeName.c_str());
+}
 
 /**
  * 
@@ -66,7 +68,7 @@ void fgGuiWidget::display(fgGfxLayer *guiLayer) {
     fgVec2f blockPos = fgVec2f(m_bbox.pos.x, m_bbox.pos.y);
     fgVec2f blockSize = fgVec2f(m_bbox.size.x, m_bbox.size.y);
     fgColor4f &bgColor = m_styles[m_state].getBackground().color;
-    if(bgColor.r > FG_EPSILON && bgColor.g > FG_EPSILON && bgColor.b > FG_EPSILON && bgColor.a > FG_EPSILON)
+    if(bgColor.a > FG_EPSILON)
         guiDrawer->appendBackground2D(blockPos, blockSize, m_styles[m_state]);
     guiDrawer->appendBorder2D(blockPos, blockSize, m_styles[m_state]);
 
@@ -140,7 +142,6 @@ fgBoundingBox3Df fgGuiWidget::updateBounds(void) {
     positionAndSize.pos.y -= style.getMargin().top;
     positionAndSize.size.x += style.getMargin().right + style.getMargin().left;
     positionAndSize.size.y += style.getMargin().bottom + style.getMargin().top;
-    //printf("updateSize: %.2f %.2f [%.2f %.2f]\n", m_bbox.pos.x, m_bbox.pos.y, m_bbox.size.x, m_bbox.size.y);
     return positionAndSize;
 }
 
@@ -161,7 +162,6 @@ fgBoundingBox3Df fgGuiWidget::updateBounds(const fgBoundingBox3Df &bounds) {
         m_bbox.size.y = size.y / 100.0f * bounds.size.y - style.getMargin().bottom - style.getMargin().top;
     }
     fgBoundingBox3Df positionAndSize = updateBounds();
-
     // Margin?
     if(posStyle == FG_GUI_POS_STATIC) {
         m_bbox.pos = bounds.pos;
