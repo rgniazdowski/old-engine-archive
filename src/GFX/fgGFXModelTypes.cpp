@@ -254,11 +254,11 @@ fgGFXboolean fgGfxMeshAoS::genBuffers(void) {
                                          sizeof (fgGFXushort) * indices.size(),
                                          (fgGFXvoid *)(&indices.front()));
 
-    FG_LOG::PrintDebug("GFX: MESH: binding buffer id: %d", (int)getRefPtrVBO()[VERTICES_VBO_ARRAY_IDX].id);
-    FG_LOG::PrintDebug("GFX: MESH: buffer id: %d, data: %p, stride: %d, size: %d",
+    FG_LOG_DEBUG("GFX: MESH: binding buffer id: %d", (int)getRefPtrVBO()[VERTICES_VBO_ARRAY_IDX].id);
+    FG_LOG_DEBUG("GFX: MESH: buffer id: %d, data: %p, stride: %d, size: %d",
                        (int)getRefPtrVBO()[VERTICES_VBO_ARRAY_IDX].id, front(), stride(), size());
-    FG_LOG::PrintDebug("GFX: MESH: binding buffer id: %d", (int)getRefPtrVBO()[INDICES_VBO_ARRAY_IDX].id);
-    FG_LOG::PrintDebug("GFX: MESH: buffer id: %d, data: %p, size(B): %d, size: %d",
+    FG_LOG_DEBUG("GFX: MESH: binding buffer id: %d", (int)getRefPtrVBO()[INDICES_VBO_ARRAY_IDX].id);
+    FG_LOG_DEBUG("GFX: MESH: buffer id: %d, data: %p, size(B): %d, size: %d",
                        (int)getRefPtrVBO()[INDICES_VBO_ARRAY_IDX].id,
                        (fgGFXvoid *)(&indices.front()),
                        sizeof (fgGFXushort) * indices.size(),

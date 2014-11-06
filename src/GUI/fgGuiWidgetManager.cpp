@@ -76,7 +76,7 @@ fgBool fgGuiWidgetManager::destroy(void) {
  * @return 
  */
 fgBool fgGuiWidgetManager::initialize(void) {
-    FG_LOG::PrintDebug("GUI: Initializing Widget manager...");
+    FG_LOG_DEBUG("GUI: Initializing Widget manager...");
     if(!m_widgetFactory || !m_styleMgr) {
         FG_LOG::PrintError("GUI: Failed to initialize widget manager - not all external pointers are set");
         return FG_FALSE;
@@ -94,12 +94,12 @@ fgBool fgGuiWidgetManager::initialize(void) {
         if(!ext)
             continue;
         if(strcasecmp(ext, "gui.xml") == 0) {
-            FG_LOG::PrintDebug("GUI: Loading gui widget struct file: '%s'", filename);
+            FG_LOG_DEBUG("GUI: Loading gui widget struct file: '%s'", filename);
             if(!loadStructureSheet(filename)) {
                 FG_LOG::PrintError("GUI: Failed to load gui widget struct: '%s'", filename);
                 continue;
             }
-            FG_LOG::PrintDebug("GUI: Successfully loaded structure file '%s' to the database", filename);
+            FG_LOG_DEBUG("GUI: Successfully loaded structure file '%s' to the database", filename);
         }
     }
     widgetsDir.clearList();
@@ -333,7 +333,7 @@ fgBool fgGuiWidgetManager::addWidget(fgGuiWidget *pWidget, fgGuiWidget *pFatherW
             if(pFatherWidget->getTypeTraits() & FG_GUI_CONTAINER) {
                 //static_cast<fgGuiContainer *>(pFatherWidget)->addChild(pWidget);    
             }
-            FG_LOG::PrintDebug("Widget '%s' of type '%s', has a father '%s' of type '%s'",
+            FG_LOG_DEBUG("Widget '%s' of type '%s', has a father '%s' of type '%s'",
                                pWidget->getNameStr(),
                                pWidget->getTypeNameStr(),
                                pFatherWidget->getNameStr(),
@@ -345,7 +345,7 @@ fgBool fgGuiWidgetManager::addWidget(fgGuiWidget *pWidget, fgGuiWidget *pFatherW
         std::string styleName = pWidget->getStyleName();
         fgGuiStyle *style = m_styleMgr->get(styleName);
         if(style) {
-            FG_LOG::PrintDebug("WidgetManager: Copying style to widget: '%s' of type: '%s'",
+            FG_LOG_DEBUG("WidgetManager: Copying style to widget: '%s' of type: '%s'",
                                pWidget->getNameStr(),
                                pWidget->getTypeNameStr());
 

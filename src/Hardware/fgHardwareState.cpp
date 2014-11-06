@@ -57,7 +57,7 @@ void fgHardwareState::initDPI() {
 
     m_dpi = DPI::dpiGetScreenDPI(m_screenWidth, m_screenHeight);
 
-    FG_LOG::PrintDebug("### SCREEN DPI IS: %d ###", m_dpi);
+    FG_LOG_DEBUG("### SCREEN DPI IS: %d ###", m_dpi);
 
     if(0 == m_dpi) {
         FG_LOG::PrintError("DPI extension returned dpi=0. Overwriting with 163");

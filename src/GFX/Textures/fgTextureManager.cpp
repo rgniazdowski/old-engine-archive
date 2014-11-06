@@ -195,7 +195,7 @@ fgBool fgTextureManager::allToVRAM(fgBool reupload) {
     // right now it's just bollocks
     //
     if(reupload) {
-        FG_LOG::PrintDebug("GFX: Will now reupload textures that were previously in VRAM...");
+        FG_LOG_DEBUG("GFX: Will now reupload textures that were previously in VRAM...");
     }
     ((fgResourceManager *)m_pResourceMgr)->goToBegin();
     while(((fgResourceManager *)m_pResourceMgr)->isValid()) {
@@ -233,7 +233,7 @@ fgBool fgTextureManager::uploadToVRAM(fgTextureResource *texture, fgBool force) 
     fgResourceType resType = texture->getResourceType();
     fgQuality quality = texture->getQuality();
     if(!((resType == FG_RESOURCE_TEXTURE || resType == FG_RESOURCE_FONT))) {
-        FG_LOG::PrintDebug("GFX: Resource '%s' is not texture?", texture->getNameStr());
+        FG_LOG_DEBUG("GFX: Resource '%s' is not texture?", texture->getNameStr());
         return FG_FALSE;
     }
     fgBool result = FG_TRUE;
@@ -241,10 +241,10 @@ fgBool fgTextureManager::uploadToVRAM(fgTextureResource *texture, fgBool force) 
     if(fgGfxPlatform::context()->isTexture(texGfxID) == FG_GFX_TRUE && !force) {
         return result;
     }
-    FG_LOG::PrintDebug("GFX: Is texture '%s' locked? [%d]", texture->getNameStr(), texture->isLocked());
+    FG_LOG_DEBUG("GFX: Is texture '%s' locked? [%d]", texture->getNameStr(), texture->isLocked());
     if(texture->isLocked() || force) {
-        FG_LOG::PrintDebug("GFX: Going to upload texture to VRAM - '%s'", texture->getNameStr());
-        FG_LOG::PrintDebug("GFX: Is Texture? [%d] ; Was in VRAM? [%d]", (int)glIsTexture(texGfxID), texture->isInVRAM());
+        FG_LOG_DEBUG("GFX: Going to upload texture to VRAM - '%s'", texture->getNameStr());
+        FG_LOG_DEBUG("GFX: Is Texture? [%d] ; Was in VRAM? [%d]", (int)glIsTexture(texGfxID), texture->isInVRAM());
         if(glIsTexture(texGfxID) == GL_TRUE) {
             fgTextureManager::releaseGFX(texture);
         }
@@ -396,7 +396,7 @@ fgBool fgTextureManager::makeTexture(fgTextureResource * pTexture) {
         FG_LOG::PrintError("GFX: Cannot upload texture - texture resource is disposed / empty");
         return FG_FALSE;
     }
-    FG_LOG::PrintDebug("GFX: Preparing for texture upload [%s]...", pTexture->getNameStr());
+    FG_LOG_DEBUG("GFX: Preparing for texture upload [%s]...", pTexture->getNameStr());
     fgGfxTextureID& texGfxID = pTexture->getRefGfxID();
     // Generate texture object ONLY IF NEEDED
     if(FG_GFX_FALSE == fgGfxPlatform::context()->isTexture(texGfxID)) {
@@ -444,8 +444,8 @@ fgBool fgTextureManager::makeTexture(fgTextureResource * pTexture) {
         FG_LOG::PrintError("GFX: Errors on texture '%s' upload. Failing functions: %s", pTexture->getNameStr(), failedFuncs.substr(0, failedFuncs.length() - 2).c_str());
         failedFuncs.clear();
     } else {
-        FG_LOG::PrintDebug("GFX: Texture [%s] uploaded successfully: gfxID=%d;", pTexture->getNameStr(), pTexture->getRefGfxID().id);
-        FG_LOG::PrintDebug("GFX: Texture [%s] dimensions: %dx%d", pTexture->getNameStr(), pTexture->getWidth(), pTexture->getHeight());
+        FG_LOG_DEBUG("GFX: Texture [%s] uploaded successfully: gfxID=%d;", pTexture->getNameStr(), pTexture->getRefGfxID().id);
+        FG_LOG_DEBUG("GFX: Texture [%s] dimensions: %dx%d", pTexture->getNameStr(), pTexture->getWidth(), pTexture->getHeight());
     }
     glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
     return status;

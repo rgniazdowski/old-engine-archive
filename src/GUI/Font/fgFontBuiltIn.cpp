@@ -42,7 +42,7 @@ void fgFontBuiltInResource::clear(void) {
  *
  */
 fgBool fgFontBuiltInResource::create(void) {
-    FG_LOG::PrintDebug("fgFontBuiltInResource::create();");
+    FG_LOG_DEBUG("fgFontBuiltInResource::create();");
     if(!m_rawFontData)
         return FG_FALSE;
     if(!m_rawFontData->xPtr ||

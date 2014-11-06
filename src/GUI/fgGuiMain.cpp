@@ -147,7 +147,7 @@ fgBool fgGuiMain::initialize(void) {
     m_widgetFactory->registerWidget(FG_GUI_TABLE, &fgGuiTable::createWidget);
     m_widgetFactory->registerWidget(FG_GUI_LOADER, &fgGuiLoader::createWidget);
 
-    FG_LOG::PrintDebug("GUI: Initializing builtin fonts...");
+    FG_LOG_DEBUG("GUI: Initializing builtin fonts...");
     fgFontBuiltInResource *consolasBold = new fgFontBuiltInResource(fgFontBuiltIn::StbConsolasBold::getRawData(32));
     consolasBold->setName("StbConsolasBold");
     m_pResourceMgr->insertResource(consolasBold);

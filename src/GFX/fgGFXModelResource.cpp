@@ -117,8 +117,8 @@ fgBool fgGfxModelResource::_loadOBJ(void) {
     for(; itor != end; itor++) {
         m_numShapes++;
         fgGfxShape *shape = (*itor);
-        FG_LOG::PrintDebug("Model '%s': found shape '%s'", getNameStr(), shape->name.c_str());
-        FG_LOG::PrintDebug("Shape '%s': nvec: %d, nnorm: %d, nuvs: %d", shape->name.c_str(), shape->mesh->getNumVertices(), shape->mesh->getNumNormals(), shape->mesh->getNumUVs());
+        FG_LOG_DEBUG("Model '%s': found shape '%s'", getNameStr(), shape->name.c_str());
+        FG_LOG_DEBUG("Shape '%s': nvec: %d, nnorm: %d, nuvs: %d", shape->name.c_str(), shape->mesh->getNumVertices(), shape->mesh->getNumNormals(), shape->mesh->getNumUVs());
         if(shape->material) {
             m_numMaterials++;
             if(m_manager) {
@@ -163,7 +163,7 @@ fgBool fgGfxModelResource::_loadOBJ(void) {
             m_materialOverride = new fgGfxMaterial(*this->m_shapes[0]->material);
     }
     m_size += m_materialOverride->getDataSize();
-    FG_LOG::PrintDebug("Model '%s': vertices: %d, normals: %d, indices: %d, uvs: %d", getNameStr(),
+    FG_LOG_DEBUG("Model '%s': vertices: %d, normals: %d, indices: %d, uvs: %d", getNameStr(),
                        m_numVertices, m_numNormals, m_numIndices, m_numUVs);
     return FG_TRUE;
 }
@@ -196,7 +196,7 @@ fgBool fgGfxModelResource::create(void) {
             break;
 
         case FG_GFX_MODEL_RES_OBJ:
-            FG_LOG::PrintDebug("Preparing to load an OBJ file for model: '%s'", getNameStr());
+            FG_LOG_DEBUG("Preparing to load an OBJ file for model: '%s'", getNameStr());
             if(!_loadOBJ()) {
                 return FG_FALSE;
             }

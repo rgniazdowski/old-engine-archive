@@ -123,13 +123,13 @@
         #define FG_USING_VISUAL_STUDIO
     #endif
 
-    #if defined _DEBUG || defined DEBUG || defined IW_DEBUG
+    #if defined (_DEBUG) || defined(DEBUG) || defined(IW_DEBUG)
         #undef	DEBUG
         #define DEBUG		1
         #define FG_DEBUG	1
     #endif
 
-    #if defined FG_DEBUG
+    #if defined(FG_DEBUG)
         #ifndef FG_VERBOSE_LEVEL
             #define FG_VERBOSE_LEVEL FG_VERBOSE_LVL_HIGH
             #define FG_VERBOSE
@@ -139,6 +139,16 @@
             #define FG_VERBOSE_LEVEL FG_VERBOSE_LVL_LOW
             #define FG_VERBOSE
         #endif
+    #endif
+    
+    #if defined(_RELEASE) || defined(__release) || !defined(FG_DEBUG)
+        #define FG_RELEASE
+    #endif
+    
+    #if defined(FG_RELEASE)
+        #undef FG_RELEASE
+        #define FG_RELEASE 1
+        #undef FG_DEBUG
     #endif
 
 /*************************** SUBSYSTEM / INPUT / AUDIO SUPPORT ***************************/

@@ -86,7 +86,7 @@ fgBool fgGfxPlatform::initialize(fgBool reinit) {
         return FG_FALSE;
     }
 
-    FG_LOG::PrintDebug("EGL: found %d configs", numFound);
+    FG_LOG_DEBUG("EGL: found %d configs", numFound);
     for(int i = 0; i < numFound; i++) {
         EGLint renderable = 0;
         EGLint depthSize = 0;
@@ -114,8 +114,8 @@ fgBool fgGfxPlatform::initialize(fgBool reinit) {
         FG_LOG::PrintError("GFX: required GLES v2.x");
         return FG_FALSE;
     }
-    FG_LOG::PrintDebug("EGL: requesting GL version: %d", glVersion);
-    FG_LOG::PrintDebug("EGL: choosing config: %d", config);
+    FG_LOG_DEBUG("EGL: requesting GL version: %d", glVersion);
+    FG_LOG_DEBUG("EGL: choosing config: %d", config);
     EGLint attribs[] = {EGL_CONTEXT_CLIENT_VERSION, glVersion, EGL_NONE,};
     m_defaultContext = eglCreateContext(m_defaultDisplay, configList[config], NULL, attribs);
     if(!m_defaultContext) {
@@ -128,15 +128,15 @@ fgBool fgGfxPlatform::initialize(fgBool reinit) {
 
     EGLenum boundAPI = eglQueryAPI();
     if(boundAPI != EGL_OPENGL_ES_API) {
-        FG_LOG::PrintDebug("EGL is not bound to OpenGL ES api");
+        FG_LOG_DEBUG("EGL is not bound to OpenGL ES api");
     } else {
-        FG_LOG::PrintDebug("EGL bound to OpenGL ES api");
+        FG_LOG_DEBUG("EGL bound to OpenGL ES api");
     }
 
-    FG_LOG::PrintDebug("EGL vendor:      %s", eglQueryString(m_defaultDisplay, EGL_VENDOR));
-    FG_LOG::PrintDebug("EGL version:     %s", eglQueryString(m_defaultDisplay, EGL_VERSION));
-    FG_LOG::PrintDebug("EGL extensions:  %s", eglQueryString(m_defaultDisplay, EGL_EXTENSIONS));
-    FG_LOG::PrintDebug("EGL client APIs: %s", eglQueryString(m_defaultDisplay, EGL_CLIENT_APIS));
+    FG_LOG_DEBUG("EGL vendor:      %s", eglQueryString(m_defaultDisplay, EGL_VENDOR));
+    FG_LOG_DEBUG("EGL version:     %s", eglQueryString(m_defaultDisplay, EGL_VERSION));
+    FG_LOG_DEBUG("EGL extensions:  %s", eglQueryString(m_defaultDisplay, EGL_EXTENSIONS));
+    FG_LOG_DEBUG("EGL client APIs: %s", eglQueryString(m_defaultDisplay, EGL_CLIENT_APIS));
 
 #elif defined FG_USING_MARMALADE_IWGL
 
@@ -169,8 +169,8 @@ fgBool fgGfxPlatform::initialize(fgBool reinit) {
             const char *displayName = SDL_GetDisplayName(displayIdx);
             if(!displayName)
                 displayName = "unknown";
-            FG_LOG::PrintDebug("GFX: Display %d name: '%s'", displayIdx, displayName);
-            FG_LOG::PrintDebug("GFX: Display %d current mode: %dx%d@%dHz\t%d BPP", displayIdx, desktopMode[displayIdx].w, desktopMode[displayIdx].h, desktopMode[displayIdx].refresh_rate, SDL_BITSPERPIXEL(desktopMode[displayIdx].format));
+            FG_LOG_DEBUG("GFX: Display %d name: '%s'", displayIdx, displayName);
+            FG_LOG_DEBUG("GFX: Display %d current mode: %dx%d@%dHz\t%d BPP", displayIdx, desktopMode[displayIdx].w, desktopMode[displayIdx].h, desktopMode[displayIdx].refresh_rate, SDL_BITSPERPIXEL(desktopMode[displayIdx].format));
         }
         if((modeCount = SDL_GetNumDisplayModes(displayIdx)) < 0) {
             FG_LOG::PrintError("GFX: Couldn't retrieve number of display mode for display %d: '%s'", displayIdx, SDL_GetError());
@@ -183,7 +183,7 @@ fgBool fgGfxPlatform::initialize(fgBool reinit) {
                     FG_LOG::PrintError("GFX: Couldn't get display mode for display %d: '%s'", displayIdx, SDL_GetError());
                     continue;
                 }
-                FG_LOG::PrintDebug("GFX: Display %d, mode %.02d: %dx%d@%dHz\t%d BPP", displayIdx, modeIdx, displayMode.w, displayMode.h, displayMode.refresh_rate, SDL_BITSPERPIXEL(displayMode.format));
+                FG_LOG_DEBUG("GFX: Display %d, mode %.02d: %dx%d@%dHz\t%d BPP", displayIdx, modeIdx, displayMode.w, displayMode.h, displayMode.refresh_rate, SDL_BITSPERPIXEL(displayMode.format));
             }
         }
     }
@@ -258,7 +258,7 @@ fgBool fgGfxPlatform::quit(void) {
         if(m_gfxContext)
             delete m_gfxContext;
         m_gfxContext = NULL;
-        FG_LOG::PrintDebug("Quitting main SDL");
+        FG_LOG_DEBUG("Quitting main SDL");
         SDL_Quit();
         //#define SDL_MAIN_HANDLED
         //#include "SDL.h"
@@ -388,7 +388,7 @@ void fgGfxPlatform::_eglDumpConfig(EGLDisplay display, EGLConfig config) {
         {EGL_CONFORMANT, "EGL_CONFORMANT", "Bitmask indicating which client API contexts created with respect to this config are conformant.", 0},
         {0, 0, 0, 0}
     };
-    FG_LOG::PrintDebug("EGL: Attributes for currently selected config:");
+    FG_LOG_DEBUG("EGL: Attributes for currently selected config:");
     int nAttribs = sizeof (attribs) / sizeof (attribs[0]);
     for(int i = 0; i < nAttribs; i++) {
         EGLBoolean status = eglGetConfigAttrib(display, config, attribs[i].id, &attribs[i].value);
@@ -410,7 +410,7 @@ void fgGfxPlatform::_eglDumpConfig(EGLDisplay display, EGLConfig config) {
                     _tmp.append("OpenGL, ");
                 if(!_tmp.empty())
                     _tmp = _tmp.substr(0, _tmp.length() - 2);
-                FG_LOG::PrintDebug("EGL: [%s] %s: %s", attrib.enumName, attrib.comment, _tmp.c_str());
+                FG_LOG_DEBUG("EGL: [%s] %s: %s", attrib.enumName, attrib.comment, _tmp.c_str());
                 break;
             case EGL_COLOR_BUFFER_TYPE:
                 _tmp.clear();
@@ -420,7 +420,7 @@ void fgGfxPlatform::_eglDumpConfig(EGLDisplay display, EGLConfig config) {
                     _tmp.append("Luminance");
                 else
                     _tmp.append("None");
-                FG_LOG::PrintDebug("EGL: [%s] %s: %s", attrib.enumName, attrib.comment, _tmp.c_str());
+                FG_LOG_DEBUG("EGL: [%s] %s: %s", attrib.enumName, attrib.comment, _tmp.c_str());
                 break;
             case EGL_TRANSPARENT_TYPE:
                 _tmp.clear();
@@ -428,7 +428,7 @@ void fgGfxPlatform::_eglDumpConfig(EGLDisplay display, EGLConfig config) {
                     _tmp.append("Transparent RGB");
                 else if(attrib.value == EGL_NONE)
                     _tmp.append("None");
-                FG_LOG::PrintDebug("EGL: [%s] %s: %s", attrib.enumName, attrib.comment, _tmp.c_str());
+                FG_LOG_DEBUG("EGL: [%s] %s: %s", attrib.enumName, attrib.comment, _tmp.c_str());
                 break;
             case EGL_CONFIG_CAVEAT:
                 //EGL_NONE, EGL_SLOW_CONFIG, and EGL_NON_CONFORMANT
@@ -439,7 +439,7 @@ void fgGfxPlatform::_eglDumpConfig(EGLDisplay display, EGLConfig config) {
                     _tmp.append("Slow config");
                 else if(attrib.value == EGL_NONE)
                     _tmp.append("None");
-                FG_LOG::PrintDebug("EGL: [%s] %s: %s", attrib.enumName, attrib.comment, _tmp.c_str());
+                FG_LOG_DEBUG("EGL: [%s] %s: %s", attrib.enumName, attrib.comment, _tmp.c_str());
                 break;
             case EGL_SURFACE_TYPE:
                 if(attrib.value & EGL_PBUFFER_BIT)
@@ -459,13 +459,13 @@ void fgGfxPlatform::_eglDumpConfig(EGLDisplay display, EGLConfig config) {
 
                 if(!_tmp.empty())
                     _tmp = _tmp.substr(0, _tmp.length() - 2);
-                FG_LOG::PrintDebug("EGL: [%s] %s: %s", attrib.enumName, attrib.comment, _tmp.c_str());
+                FG_LOG_DEBUG("EGL: [%s] %s: %s", attrib.enumName, attrib.comment, _tmp.c_str());
                 break;
             case EGL_CONFORMANT:
                 // ?
                 break;
             default:
-                FG_LOG::PrintDebug("EGL: [%s] %s: %d", attrib.enumName, attrib.comment, (int)attrib.value);
+                FG_LOG_DEBUG("EGL: [%s] %s: %d", attrib.enumName, attrib.comment, (int)attrib.value);
                 break;
         };
     }

@@ -37,13 +37,13 @@ void fgJoypadController::open(const int device) {
 #if defined(FG_USING_SDL2)
     fgBool isGameController = FG_FALSE;
     if(SDL_IsGameController(device)) {
-        FG_LOG::PrintDebug("SDL: Device(%d) is a game controller.", device);
+        FG_LOG_DEBUG("SDL: Device(%d) is a game controller.", device);
         isGameController = FG_TRUE;
     } else {
-        FG_LOG::PrintDebug("SDL: Device(%d) is not a game controller.", device);
+        FG_LOG_DEBUG("SDL: Device(%d) is not a game controller.", device);
     }
     if(SDL_JoystickNameForIndex(device)) {
-        FG_LOG::PrintDebug("SDL: Device(%d) name: '%s'", device, SDL_JoystickNameForIndex(device));
+        FG_LOG_DEBUG("SDL: Device(%d) name: '%s'", device, SDL_JoystickNameForIndex(device));
     }
     SDL_Joystick *j = NULL;
     if(isGameController) {
@@ -56,7 +56,7 @@ void fgJoypadController::open(const int device) {
     } else {
         j = SDL_JoystickOpen(device);
         if(j) {
-            FG_LOG::PrintDebug("SDL: Successfully opened joystick [%d] '%s'", device, SDL_JoystickNameForIndex(device));
+            FG_LOG_DEBUG("SDL: Successfully opened joystick [%d] '%s'", device, SDL_JoystickNameForIndex(device));
         }
     }
     if(!j) {
@@ -67,11 +67,11 @@ void fgJoypadController::open(const int device) {
     m_isConnected = FG_TRUE;
     if(SDL_JoystickIsHaptic(j)) {
         m_haptic = SDL_HapticOpenFromJoystick(j);
-        FG_LOG::PrintDebug("SDL: Haptic Effects: %d", SDL_HapticNumEffects(m_haptic));
-        FG_LOG::PrintDebug("SDL: Haptic Query: %x", SDL_HapticQuery(m_haptic));
+        FG_LOG_DEBUG("SDL: Haptic Effects: %d", SDL_HapticNumEffects(m_haptic));
+        FG_LOG_DEBUG("SDL: Haptic Query: %x", SDL_HapticQuery(m_haptic));
         if(SDL_HapticRumbleSupported(m_haptic)) {
             if(SDL_HapticRumbleInit(m_haptic) != 0) {
-                FG_LOG::PrintDebug("SDL: Haptic Rumble Init: %s", SDL_GetError());
+                FG_LOG_DEBUG("SDL: Haptic Rumble Init: %s", SDL_GetError());
                 SDL_HapticClose(m_haptic);
                 m_haptic = 0;
             }
@@ -117,7 +117,7 @@ void fgJoypadController::quit(void) {
         SDL_JoystickEventState(SDL_IGNORE);
         SDL_GameControllerEventState(SDL_IGNORE);
         SDL_QuitSubSystem(SDL_INIT_GAMECONTROLLER | SDL_INIT_JOYSTICK | SDL_INIT_HAPTIC);
-        FG_LOG::PrintDebug("SDL: Closing GameController.");
+        FG_LOG_DEBUG("SDL: Closing GameController.");
 
     }
 #endif
@@ -138,7 +138,7 @@ fgBool fgJoypadController::initialize(void) {
             return FG_FALSE;
         }
         int joys = SDL_NumJoysticks();
-        FG_LOG::PrintDebug("SDL: GameController initialized successfully. Number of joysticks: %d", joys);
+        FG_LOG_DEBUG("SDL: GameController initialized successfully. Number of joysticks: %d", joys);
         m_init = FG_TRUE;
         SDL_GameControllerEventState(SDL_ENABLE);
         SDL_JoystickEventState(SDL_ENABLE);
@@ -159,7 +159,7 @@ fgBool fgJoypadController::initialize(void) {
 
 
     } else {
-        FG_LOG::PrintDebug("SDL: GameController already initialized.");
+        FG_LOG_DEBUG("SDL: GameController already initialized.");
     }
 #endif
     return m_init;

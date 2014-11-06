@@ -320,14 +320,14 @@ namespace fgTinyObj {
             if(!shape->mesh) {
                 shape->mesh = new fgGfxMeshAoS();
             }
-            FG_LOG::PrintDebug("fgTinyObj: Constructing AoS mesh in shape: '%s'", shape->name.c_str());
+            FG_LOG_DEBUG("fgTinyObj: Constructing AoS mesh in shape: '%s'", shape->name.c_str());
             ((fgGfxMeshAoS *)shape->mesh)->vertices.swap(vertices);
             ((fgGfxMeshAoS *)shape->mesh)->indices.swap(indices);
         } else {
             if(!shape->mesh) {
                 shape->mesh = new fgGfxMeshSoA();
             }
-            FG_LOG::PrintDebug("fgTinyObj: Constructing SoA mesh in shape: '%s'", shape->name.c_str());
+            FG_LOG_DEBUG("fgTinyObj: Constructing SoA mesh in shape: '%s'", shape->name.c_str());
             ((fgGfxMeshSoA *)shape->mesh)->vertices.swap(positions);
             ((fgGfxMeshSoA *)shape->mesh)->normals.swap(normals);
             ((fgGfxMeshSoA *)shape->mesh)->uvs.swap(texcoords);
@@ -766,20 +766,20 @@ namespace fgTinyObj {
             // Ignore unknown command.
         } // while (inStream.peek() != -1)
         float l2 = fgTime::ms();
-        FG_LOG::PrintDebug("fgTinyObj: load raw data: %.2f seconds", (l2 - l1) / 1000.0f);
+        FG_LOG_DEBUG("fgTinyObj: load raw data: %.2f seconds", (l2 - l1) / 1000.0f);
 
         fgGfxShape *shape = new fgGfxShape();
         float e1 = fgTime::ms();
         fgBool ret = exportFaceGroupToShape(shape, v, vn, vt, faceGroup, material, name, is_material_seted, forceAoS);
         float e2 = fgTime::ms();
-        FG_LOG::PrintDebug("fgTinyObj: exportFaceGroupToShape: %.2f seconds", (e2 - e1) / 1000.0f);
+        FG_LOG_DEBUG("fgTinyObj: exportFaceGroupToShape: %.2f seconds", (e2 - e1) / 1000.0f);
         if(ret) {
             shapes.push_back(shape);
         }
         is_material_seted = FG_FALSE; // for safety
         faceGroup.clear(); // for safety
         float t2 = fgTime::ms();
-        FG_LOG::PrintDebug("fgTinyObj: total %.2f seconds", (t2 - t1) / 1000.0f);
+        FG_LOG_DEBUG("fgTinyObj: total %.2f seconds", (t2 - t1) / 1000.0f);
 
         return err.str();
     }

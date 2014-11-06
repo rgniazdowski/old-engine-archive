@@ -174,7 +174,7 @@ fgGFXuint fgGfxShaderProgram::create(void) {
     if(!m_gfxID || FG_GFX_FALSE == glIsProgram(m_gfxID)) {
         m_gfxID = glCreateProgram();
         fgGLError("glCreateShader");
-        FG_LOG::PrintDebug("GFX: Created shader program '%s', gfxID: %d [is shader program? = %d]", getNameStr(), m_gfxID, glIsProgram(m_gfxID));
+        FG_LOG_DEBUG("GFX: Created shader program '%s', gfxID: %d [is shader program? = %d]", getNameStr(), m_gfxID, glIsProgram(m_gfxID));
     }
     return m_gfxID;
 }
@@ -202,7 +202,7 @@ fgBool fgGfxShaderProgram::compile(void) {
         if(!(*itor))
             continue;
         fgGfxShader *shader = *itor;
-        FG_LOG::PrintDebug("Attempting to compile shader: %s", shader->getFilePathStr());
+        FG_LOG_DEBUG("Attempting to compile shader: %s", shader->getFilePathStr());
         if(!shader->compile()) {
             updateParams();
             updateLog();
@@ -266,7 +266,7 @@ fgBool fgGfxShaderProgram::link(void) {
         status = FG_FALSE;
     }
     {
-        FG_LOG::PrintDebug("GFX: Validating bound locations of attributes...");
+        FG_LOG_DEBUG("GFX: Validating bound locations of attributes...");
         attributeBindVecItor begin, end, itor;
         begin = m_attrBinds.begin();
         end = m_attrBinds.end();
@@ -276,7 +276,7 @@ fgBool fgGfxShaderProgram::link(void) {
             if(bind.location == -1 || bind.type == FG_GFX_ATTRIBUTE_INVALID)
                 continue;
             int boundLoc = glGetAttribLocation(m_gfxID, bind.variableName.c_str());
-            FG_LOG::PrintDebug("GFX: Bound attribute '%s' to location %d (should be %d)",
+            FG_LOG_DEBUG("GFX: Bound attribute '%s' to location %d (should be %d)",
                                bind.variableName.c_str(), boundLoc, (int)bind.type);
             fgGLError("glGetAttribLocation");
         }
@@ -556,7 +556,7 @@ fgBool fgGfxShaderProgram::bindAttributes(void) {
         // ? NEED STANDARD LOCATIONS
         if(bind.location == -1 || bind.type == FG_GFX_ATTRIBUTE_INVALID)
             continue;
-        FG_LOG::PrintDebug("GFX: Binding attribute '%s' of type: '%s'(%d), in shader program: '%s' to location: %d",
+        FG_LOG_DEBUG("GFX: Binding attribute '%s' of type: '%s'(%d), in shader program: '%s' to location: %d",
                            bind.variableName.c_str(),
                            FG_GFX_ATTRIBUTE_TYPE_TO_TEXT(bind.type),
                            (int)bind.type,
@@ -588,9 +588,9 @@ fgBool fgGfxShaderProgram::bindUniforms(void) {
         fgGfxUniformBind & bind = *itor;
         if(bind.type == FG_GFX_UNIFORM_INVALID)
             continue;
-        FG_LOG::PrintDebug("GFX: Preparing for binding uniform '%s' of type: '%s' (%d)", bind.variableName.c_str(), FG_GFX_UNIFORM_TYPE_TO_TEXT(bind.type), (int)bind.type);
+        FG_LOG_DEBUG("GFX: Preparing for binding uniform '%s' of type: '%s' (%d)", bind.variableName.c_str(), FG_GFX_UNIFORM_TYPE_TO_TEXT(bind.type), (int)bind.type);
         bind.location = glGetUniformLocation(m_gfxID, bind.variableName.c_str());
-        FG_LOG::PrintDebug("GFX: Bound uniform '%s' to location: %d", bind.variableName.c_str(), bind.location);
+        FG_LOG_DEBUG("GFX: Bound uniform '%s' to location: %d", bind.variableName.c_str(), bind.location);
         fgGLError("glGetUniformLocation");
     }
     return FG_TRUE;

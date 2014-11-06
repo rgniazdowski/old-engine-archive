@@ -300,7 +300,7 @@ public:
             return failedName;
         return (*it).second.name;
     }
-    
+
     // #FIXME - FOOBBAR!@
     static METAID getMetatableIDFromWidgetType(const fgGuiWidget *pWidget);
 
@@ -578,16 +578,17 @@ int fgScriptSubsystem::managedObjectTypedNewEvent(lua_State* L) {
     LuaPlus::LuaObject newObj = state->BoxPointer(ptr);
     uintptr_t offset = (uintptr_t)ptr;
     userDataObjectMapItor it = m_userDataObjectMap.find(offset);
-    FG_LOG::PrintDebug("Script: Simple Typed New, pointer: %p [offset=%lu]", ptr, offset);
+    FG_LOG_DEBUG("Script: Simple Typed New: ptr[%p], [offset=%lu]", ptr, offset);
     if(it == m_userDataObjectMap.end() && offset) {
         m_userDataObjectMap[offset] = newObj;
     }
     const char *metatableName = getMetatableName(METATABLE_ID);
     if(!metatableName) {
         newObj.SetMetatable(LuaPlus::LuaObject());
+        FG_LOG_DEBUG("Script: Simple Typed New: metatable will be empty");
     } else {
         newObj.SetMetatable(state->GetRegistry()[metatableName]);
-        FG_LOG::PrintDebug("Script: Setting metatable.%d=[%s]", METATABLE_ID, metatableName);
+        FG_LOG_DEBUG("Script: Simple Typed New: metatable: id[%d], name[%s]", METATABLE_ID, metatableName);
         ptr->registerOnDestruct(&fgScriptSubsystem::managedObjectDestructorCallback, NULL);
 
     }
@@ -607,26 +608,41 @@ int fgScriptSubsystem::managedObjectTypedGCEvent(lua_State* L) {
     // Mainly for resources ?
     LuaPlus::LuaState* state = lua_State_to_LuaState(L);
     //get the pointer lua is trying to delete.
-    if(!state->IsUserdata(1))
+    if(!state->IsUserdata(1)) {
+        int isTable = (int)state->IsTable(1);
+        int isNoneOrNil = (int)state->IsNoneOrNil(1);
+        int isLightuserdata = (int)state->IsLightUserdata(1);
+        int isUserdata = 0;
+        FG_LOG_DEBUG("Script: Managed Object Typed GC: not compatible: lightuserdata[%d], userdata[%d], table[%d], none/nil[%d],  HandleType[%s]",
+                           isLightuserdata,
+                           isUserdata,
+                           isTable,
+                           isNoneOrNil,
+                           HandleType::getTagName());
+
         return 0;
+    }
     void *unboxed = state->UnBoxPointer(1);
-    if(!unboxed)
+    if(!unboxed) {
+        FG_LOG_DEBUG("Script: Managed Object Typed GC: unboxed.ptr[%p]", unboxed);
         return 0;
+    }
     typedef fgManagedObjectBase<HandleType> object_type;
     object_type *pManagedObject = (object_type *)unboxed;
     uintptr_t offset = (uintptr_t)pManagedObject;
     userDataObjectMapItor it = m_userDataObjectMap.find(offset);
     if(it == m_userDataObjectMap.end()) {
         // The pointer is not registered
-        FG_LOG::PrintDebug("Managed Object Typed GC: pointer is not registered %p [offset: %lu]", unboxed, offset);
+        FG_LOG_DEBUG("Script: Managed Object Typed GC: pointer is not registered: ptr[%p], [offset: %lu], HandleType[%s]", unboxed, offset, HandleType::getTagName());
         return 0;
     } else {
         m_userDataObjectMap.erase(it);
     }
-    FG_LOG::PrintDebug("Script: GC event for Managed Object: '%s'", pManagedObject->getNameStr());
+    FG_LOG_DEBUG("Script: GC event for Managed Object: name[%s], HandleType[%s]", pManagedObject->getNameStr(), HandleType::getTagName());
     if(pManagedObject->isManaged() == FG_FALSE) {
         // Object is not managed in some manager
         // Can call destructors
+        FG_LOG_DEBUG("Script: Managed Object Typed GC: Object is not managed, will be deleted name[%s], ptr[%p], offset[%lu]", pManagedObject->getNameStr(), pManagedObject, offset);
         delete pManagedObject;
     }
     #endif /* FG_USING_LUA_PLUS */
@@ -663,16 +679,17 @@ int fgScriptSubsystem::simpleTypedMallocEvent(lua_State* L) {
     LuaPlus::LuaObject newObj = state->BoxPointer(ptr);
     uintptr_t offset = (uintptr_t)ptr;
     userDataObjectMapItor it = m_userDataObjectMap.find(offset);
-    FG_LOG::PrintDebug("Script: Simple Typed malloc, pointer: %p [offset=%lu]", ptr, offset);
+    FG_LOG_DEBUG("Script: Simple Typed Malloc: ptr[%p], offset[%lu]", ptr, offset);
     if(it == m_userDataObjectMap.end() && offset) {
         m_userDataObjectMap[offset] = newObj;
     }
     const char *metatableName = getMetatableName(METATABLE_ID);
     if(!metatableName) {
         newObj.SetMetatable(LuaPlus::LuaObject());
+        FG_LOG_DEBUG("Script: Simple Typed Malloc: metatable will be empty");
     } else {
         newObj.SetMetatable(state->GetRegistry()[metatableName]);
-        FG_LOG::PrintDebug("Script: Setting metatable.%d=[%s]", METATABLE_ID, metatableName);
+        FG_LOG_DEBUG("Script: Simple Typed Malloc: metatable: id[%d], name[%s]", METATABLE_ID, metatableName);
     }
     #endif /* FG_USING_LUA_PLUS */
     return 1;
@@ -690,21 +707,33 @@ int fgScriptSubsystem::simpleTypedFreeGCEvent(lua_State* L) {
     // Mainly for resources ?
     LuaPlus::LuaState* state = lua_State_to_LuaState(L);
     //get the pointer lua is trying to delete.
-    if(!state->IsUserdata(1))
+    if(!state->IsUserdata(1)) {
+        int isTable = (int)state->IsTable(1);
+        int isNoneOrNil = (int)state->IsNoneOrNil(1);
+        int isLightuserdata = (int)state->IsLightUserdata(1);
+        int isUserdata = 0;
+        FG_LOG_DEBUG("Script: Simple Typed GC: not compatible: lightuserdata[%d], userdata[%d], table[%d], none/nil[%d]",
+                           isLightuserdata,
+                           isUserdata,
+                           isTable,
+                           isNoneOrNil);
         return 0;
+    }
     void *unboxed = state->UnBoxPointer(1);
-    if(!unboxed)
+    if(!unboxed) {
+        FG_LOG_DEBUG("Script: Simple Typed GC: unboxed.ptr[%p]", unboxed);
         return 0;
+    }
     uintptr_t offset = (uintptr_t)unboxed;
     userDataObjectMapItor it = m_userDataObjectMap.find(offset);
     if(it == m_userDataObjectMap.end()) {
         // The pointer is not registered
-        FG_LOG::PrintDebug("Simple Typed GC: pointer is not registered %p [offset: %lu]", unboxed, offset);
+        FG_LOG_DEBUG("Script: Simple Typed GC: pointer is not registered: ptr[%p], offset[%lu]", unboxed, offset);
         return 0;
     } else {
         m_userDataObjectMap.erase(it);
     }
-    FG_LOG::PrintDebug("Simple Typed GC: called destructor, freeing memory %p [offset: %lu]", unboxed, offset);
+    FG_LOG_DEBUG("Script: Simple Typed GC: calling destructor, freeing memory: ptr[%p], offset[%lu]", unboxed, offset);
     Type *ptrObj = (Type *)unboxed;
     ptrObj->~Type();
     fgFree<Type>(ptrObj, FG_TRUE);
@@ -744,7 +773,7 @@ int fgScriptSubsystem::simpleInPlaceTypedNewEvent(lua_State* L) {
     new (ptr)Type();
     uintptr_t offset = (uintptr_t)ptr;
     userDataObjectMapItor it = m_userDataObjectMap.find(offset);
-    FG_LOG::PrintDebug("Script: Simple typed in place  allocation, pointer: %p [offset=%lu]", ptr, offset);
+    FG_LOG_DEBUG("Script: Simple In Place Typed New: ptr[%p], offset[%lu]", ptr, offset);
     if(it == m_userDataObjectMap.end() && offset) {
         m_userDataObjectMap[offset] = newObj;
     }
@@ -753,7 +782,7 @@ int fgScriptSubsystem::simpleInPlaceTypedNewEvent(lua_State* L) {
         newObj.SetMetatable(LuaPlus::LuaObject());
     } else {
         newObj.SetMetatable(state->GetRegistry()[metatableName]);
-        FG_LOG::PrintDebug("Script: Setting metatable.%d=[%s]", METATABLE_ID, metatableName);
+        FG_LOG_DEBUG("Script: Simple In Place Typed New: metatable: id[%d], name[%s]", METATABLE_ID, metatableName);
     }
     #endif /* FG_USING_LUA_PLUS */
     return 1;
@@ -772,23 +801,33 @@ int fgScriptSubsystem::simpleInPlaceTypedGCEvent(lua_State* L) {
     // Mainly for resources ?
     LuaPlus::LuaState* state = lua_State_to_LuaState(L);
     //get the pointer lua is trying to delete.
-    if(!state->IsUserdata(1))
+    if(!state->IsUserdata(1)) {
+        int isTable = (int)state->IsTable(1);
+        int isNoneOrNil = (int)state->IsNoneOrNil(1);
+        int isLightuserdata = (int)state->IsLightUserdata(1);
+        int isUserdata = 0;
+        FG_LOG_DEBUG("Script: Simple Typed GC: not compatible: lightuserdata[%d], userdata[%d], table[%d], none/nil[%d]",
+                           isLightuserdata,
+                           isUserdata,
+                           isTable,
+                           isNoneOrNil);
         return 0;
+    }
     void *unboxed = state->UnBoxPointer(1);
     if(!unboxed) {
-        FG_LOG::PrintDebug("Simple typed in place GC: unboxed pointer is [%p]", unboxed);
+        FG_LOG_DEBUG("Script: Simple In Place Typed GC: unboxed.ptr[%p]", unboxed);
         return 0;
     }
     uintptr_t offset = (uintptr_t)unboxed;
     userDataObjectMapItor it = m_userDataObjectMap.find(offset);
     if(it == m_userDataObjectMap.end()) {
         // The pointer is not registered
-        FG_LOG::PrintDebug("Simple typed in place GC: pointer is not registered %p [offset: %lu]", unboxed, offset);
+        FG_LOG_DEBUG("Script: Simple In Place Typed GC: pointer is not registered: ptr[%p], offset[%lu]", unboxed, offset);
         return 0;
     } else {
         m_userDataObjectMap.erase(it);
     }
-    FG_LOG::PrintDebug("Simple typed in place GC: called destructor on memory %p [offset: %lu]", unboxed, offset);
+    FG_LOG_DEBUG("Script: Simple In Place Typed GC: calling destructor: ptr[%p], offset[%lu]", unboxed, offset);
     Type *ptrObj = (Type *)unboxed;
     ptrObj->~Type();
     #endif /* FG_USING_LUA_PLUS */
@@ -808,7 +847,11 @@ namespace LPCD {
     template<> struct Type<fgVector2i> {
         static inline void Push(lua_State* L, const fgVector2i& value) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
-            LuaPlus::LuaObject obj = state->BoxPointer((void*)&value);
+            void *ptr = (void*)&value;
+            LuaPlus::LuaObject obj = state->BoxPointer(ptr);
+        #if defined(FG_DEBUG)
+            FG_LOG_DEBUG("Script: LPCD Push: ptr[%p], offset[%lu], type_name[fgVector2i]", ptr, (uintptr_t)ptr);
+        #endif
             obj.SetMetatable(state->GetRegistry()[fgScriptSubsystem::getMetatableName(fgScriptSubsystem::VECTOR2I_METATABLE_ID)]);
         }
         static inline bool Match(lua_State* L, int idx) {
@@ -835,7 +878,11 @@ namespace LPCD {
     template<> struct Type<fgVector2f> {
         static inline void Push(lua_State* L, const fgVector2f& value) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
-            LuaPlus::LuaObject obj = state->BoxPointer((void*)&value);
+            void *ptr = (void*)&value;
+            LuaPlus::LuaObject obj = state->BoxPointer(ptr);
+        #if defined(FG_DEBUG)
+            FG_LOG_DEBUG("Script: LPCD Push: ptr[%p], offset[%lu], type_name[fgVector2f]", ptr, (uintptr_t)ptr);
+        #endif
             obj.SetMetatable(state->GetRegistry()[fgScriptSubsystem::getMetatableName(fgScriptSubsystem::VECTOR2F_METATABLE_ID)]);
         }
         static inline bool Match(lua_State* L, int idx) {
@@ -863,7 +910,11 @@ namespace LPCD {
     template<> struct Type<fgVector3i> {
         static inline void Push(lua_State* L, const fgVector3i& value) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
-            LuaPlus::LuaObject obj = state->BoxPointer((void*)&value);
+            void *ptr = (void*)&value;
+            LuaPlus::LuaObject obj = state->BoxPointer(ptr);
+        #if defined(FG_DEBUG)
+            FG_LOG_DEBUG("Script: LPCD Push: ptr[%p], offset[%lu], type_name[fgVector3i]", ptr, (uintptr_t)ptr);
+        #endif
             obj.SetMetatable(state->GetRegistry()[fgScriptSubsystem::getMetatableName(fgScriptSubsystem::VECTOR3I_METATABLE_ID)]);
         }
         static inline bool Match(lua_State* L, int idx) {
@@ -890,7 +941,11 @@ namespace LPCD {
     template<> struct Type<fgVector3f> {
         static inline void Push(lua_State* L, const fgVector3f& value) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
-            LuaPlus::LuaObject obj = state->BoxPointer((void*)&value);
+            void *ptr = (void*)&value;
+            LuaPlus::LuaObject obj = state->BoxPointer(ptr);
+        #if defined(FG_DEBUG)
+            FG_LOG_DEBUG("Script: LPCD Push: ptr[%p], offset[%lu], type_name[fgVector3f]", ptr, (uintptr_t)ptr);
+        #endif
             obj.SetMetatable(state->GetRegistry()[fgScriptSubsystem::getMetatableName(fgScriptSubsystem::VECTOR3F_METATABLE_ID)]);
         }
         static inline bool Match(lua_State* L, int idx) {
@@ -917,7 +972,11 @@ namespace LPCD {
     template<> struct Type<fgVector4i> {
         static inline void Push(lua_State* L, const fgVector4i& value) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
-            LuaPlus::LuaObject obj = state->BoxPointer((void*)&value);
+            void *ptr = (void*)&value;
+            LuaPlus::LuaObject obj = state->BoxPointer(ptr);
+        #if defined(FG_DEBUG)
+            FG_LOG_DEBUG("Script: LPCD Push: ptr[%p], offset[%lu], type_name[fgVector4i]", ptr, (uintptr_t)ptr);
+        #endif
             obj.SetMetatable(state->GetRegistry()[fgScriptSubsystem::getMetatableName(fgScriptSubsystem::VECTOR4I_METATABLE_ID)]);
         }
         static inline bool Match(lua_State* L, int idx) {
@@ -944,7 +1003,11 @@ namespace LPCD {
     template<> struct Type<fgVector4f> {
         static inline void Push(lua_State* L, const fgVector4f& value) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
-            LuaPlus::LuaObject obj = state->BoxPointer((void*)&value);
+            void *ptr = (void*)&value;
+            LuaPlus::LuaObject obj = state->BoxPointer(ptr);
+        #if defined(FG_DEBUG)
+            FG_LOG_DEBUG("Script: LPCD Push: ptr[%p], offset[%lu], type_name[fgVector4f]", ptr, (uintptr_t)ptr);
+        #endif
             obj.SetMetatable(state->GetRegistry()[fgScriptSubsystem::getMetatableName(fgScriptSubsystem::VECTOR4F_METATABLE_ID)]);
         }
         static inline bool Match(lua_State* L, int idx) {
@@ -994,10 +1057,12 @@ namespace LPCD {
     template<> struct Type<fgGuiWidget *> {
         static inline void Push(lua_State* L, const fgGuiWidget * value) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
-            LuaPlus::LuaObject obj = state->BoxPointer((void*)value);            
+            LuaPlus::LuaObject obj = state->BoxPointer((void*)value);
             fgScriptSubsystem::METAID metaID = fgScriptSubsystem::getMetatableIDFromWidgetType(value);
             const char *metatableName = fgScriptSubsystem::getMetatableName(metaID);
-            FG_LOG::PrintDebug("Script: LPCD Push: pointer: %p [offset=%lu] [widget: %s][%s]", value, (uintptr_t)value, value->getNameStr(), value->getTypeNameStr());
+        #if defined(FG_DEBUG)
+            FG_LOG_DEBUG("Script: LPCD Push: ptr[%p], offset[%lu], name[%s], type_name[%s]", value, (uintptr_t)value, value->getNameStr(), value->getTypeNameStr());
+        #endif
             // This wont work - this simply packs widget that will have
             // unregistered pointer / need to add some wrapper over this
             // lua side object __GC callback will exit without doing anything

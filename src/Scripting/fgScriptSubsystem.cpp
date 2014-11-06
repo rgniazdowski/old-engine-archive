@@ -313,7 +313,7 @@ fgBool fgScriptSubsystem::initialize(void) {
         FG_LOG::PrintError("Script: Failed to register SoundManager object");
     }
     float t2 = fgTime::ms();
-    FG_LOG::PrintDebug("Script: ScriptSubsystem initialized in %.2f seconds", (t2 - t1) / 1000.0f);
+    FG_LOG_DEBUG("Script: ScriptSubsystem initialized in %.2f seconds", (t2 - t1) / 1000.0f);
     m_init = FG_TRUE;
     m_isBindingComplete = FG_TRUE;
     m_managerType = FG_MANAGER_SCRIPT;
@@ -332,21 +332,33 @@ int fgScriptSubsystem::simpleFreeGCEvent(lua_State* L) {
     // Mainly for resources ?
     LuaPlus::LuaState* state = lua_State_to_LuaState(L);
     //get the pointer lua is trying to delete.
-    if(!state->IsUserdata(1))
+    if(!state->IsUserdata(1)) {
+        int isTable = (int)state->IsTable(1);
+        int isNoneOrNil = (int)state->IsNoneOrNil(1);
+        int isLightuserdata = (int)state->IsLightUserdata(1);
+        int isUserdata = 0;
+        FG_LOG_DEBUG("Script: Simple Free GC: not compatible: lightuserdata[%d], userdata[%d], table[%d], none/nil[%d]",
+                           isLightuserdata,
+                           isUserdata,
+                           isTable,
+                           isNoneOrNil);
         return 0;
+    }
     void *unboxed = state->UnBoxPointer(1);
-    if(!unboxed)
+    if(!unboxed) {
+        FG_LOG_DEBUG("Script: Simple Free GC: unboxed.ptr[nil]");
         return 0;
+    }
     uintptr_t offset = (uintptr_t)unboxed;
     userDataObjectMapItor it = m_userDataObjectMap.find(offset);
     if(it == m_userDataObjectMap.end()) {
         // The pointer is not registered
-        FG_LOG::PrintDebug("Simple GC: pointer is not registered %p [offset: %lu]", unboxed, offset);
+        FG_LOG_DEBUG("Script: Simple Free GC: pointer is not registered: ptr[%p], offset[%lu]", unboxed, offset);
         return 0;
     } else {
         m_userDataObjectMap.erase(it);
     }
-    FG_LOG::PrintDebug("Simple GC: freeing memory %p [offset: %lu]", unboxed, offset);
+    FG_LOG_DEBUG("Script: Simple Free GC: freeing memory: ptr[%p], offset[%lu]", unboxed, offset);
     fgFree(unboxed);
 
 #endif /* FG_USING_LUA_PLUS */
@@ -365,21 +377,32 @@ int fgScriptSubsystem::managedResourceGCEvent(lua_State* L) {
     // Mainly for resources ?
     LuaPlus::LuaState* state = lua_State_to_LuaState(L);
     //get the pointer lua is trying to delete.
-    if(!state->IsUserdata(1))
+    if(!state->IsUserdata(1)) {
+        int isTable = (int)state->IsTable(1);
+        int isNoneOrNil = (int)state->IsNoneOrNil(1);
+        int isLightuserdata = (int)state->IsLightUserdata(1);
+        int isUserdata = 0;
+        FG_LOG_DEBUG("Script: Managed Resource GC: not compatible: lightuserdata[%d], userdata[%d], table[%d], none/nil[%d]",
+                           isLightuserdata,
+                           isUserdata,
+                           isTable,
+                           isNoneOrNil);
         return 0;
+    }
     void *unboxed = state->UnBoxPointer(1);
-    if(!unboxed)
+    if(!unboxed) {
         return 0;
+    }
     fgResource *pResource = (fgResource *)unboxed;
     uintptr_t offset = (uintptr_t)pResource;
     userDataObjectMapItor it = m_userDataObjectMap.find(offset);
     if(it == m_userDataObjectMap.end()) {
         // The pointer is not registered
-        FG_LOG::PrintDebug("Managed Resource GC: pointer is not registered %p [offset: %lu]", unboxed, offset);
+        FG_LOG_DEBUG("Script: Managed Resource GC: pointer is not registered: ptr[%p], offset[%lu]", unboxed, offset);
         return 0;
     }
     pResource->dispose();
-    FG_LOG::PrintDebug("Called gc_event from lua for some Resource '%s'", pResource->getNameStr());
+    FG_LOG_DEBUG("Script: Managed Resource GC: called dispose: name[%s], ptr[%p], offset[%lu]", pResource->getNameStr(), pResource, offset);
 #endif /* FG_USING_LUA_PLUS */
     return 0;
 }
@@ -405,7 +428,7 @@ fgBool fgScriptSubsystem::managedObjectDestructorCallback(void *systemData, void
         }
         (*it).second.Reset();
 #endif /* FG_USING_LUA_PLUS */
-        FG_LOG::PrintDebug("Managed Object Destructor Callback: pointer is registered - will be deleted [offset: %lu]", offset);
+        FG_LOG_DEBUG("GC: Managed Object Destructor Callback: pointer is registered - will be deleted: ptr[%p], offset[%lu]", systemData, offset);
         m_userDataObjectMap.erase(it);
     }
 
@@ -456,7 +479,7 @@ fgBool fgScriptSubsystem::registerAdditionalTypes(void) {
             .Property("t", &fgVector2i::t)
             .MetatableFunction("__gc", &fgScriptSubsystem::simpleFreeGCEvent); // simpleTypedGCEvent<fgVector2i>
     m_globals.Register("Vector2i", &fgScriptSubsystem::simpleTypedMallocEvent<fgVector2i, VECTOR2I_METATABLE_ID>);
-    FG_LOG::PrintDebug("Script: Register metatable '%s' for Vector2i", getMetatableName(VECTOR2I_METATABLE_ID));
+    FG_LOG_DEBUG("Script: Register metatable '%s' for Vector2i", getMetatableName(VECTOR2I_METATABLE_ID));
 
     // fgVector2f | FG VECTOR 2F
     LPCD::Class(m_luaState->GetCState(), getMetatableName(VECTOR2F_METATABLE_ID))
@@ -466,7 +489,7 @@ fgBool fgScriptSubsystem::registerAdditionalTypes(void) {
             .Property("t", &fgVector2f::t)
             .MetatableFunction("__gc", &fgScriptSubsystem::simpleFreeGCEvent); // simpleTypedGCEvent<fgVector2f>
     m_globals.Register("Vector2f", &fgScriptSubsystem::simpleTypedMallocEvent<fgVector2f, VECTOR2F_METATABLE_ID>);
-    FG_LOG::PrintDebug("Script: Register metatable '%s' for Vector2f", getMetatableName(VECTOR2F_METATABLE_ID));
+    FG_LOG_DEBUG("Script: Register metatable '%s' for Vector2f", getMetatableName(VECTOR2F_METATABLE_ID));
 
     // fgVector3i | FG VECTOR 3I    
     LPCD::Class(m_luaState->GetCState(), getMetatableName(VECTOR3I_METATABLE_ID))
@@ -480,7 +503,7 @@ fgBool fgScriptSubsystem::registerAdditionalTypes(void) {
             .Property("t", &fgVector3i::t)
             .MetatableFunction("__gc", &fgScriptSubsystem::simpleFreeGCEvent); // simpleTypedGCEvent<fgVector3i>
     m_globals.Register("Vector3i", &fgScriptSubsystem::simpleTypedMallocEvent<fgVector3i, VECTOR3I_METATABLE_ID>);
-    FG_LOG::PrintDebug("Script: Register metatable '%s' for Vector3i", getMetatableName(VECTOR3I_METATABLE_ID));
+    FG_LOG_DEBUG("Script: Register metatable '%s' for Vector3i", getMetatableName(VECTOR3I_METATABLE_ID));
 
     // fgVector3f | FG VECTOR 3F    
     LPCD::Class(m_luaState->GetCState(), getMetatableName(VECTOR3F_METATABLE_ID))
@@ -494,7 +517,7 @@ fgBool fgScriptSubsystem::registerAdditionalTypes(void) {
             .Property("t", &fgVector3f::t)
             .MetatableFunction("__gc", &fgScriptSubsystem::simpleFreeGCEvent); // simpleTypedGCEvent<fgVector3f>
     m_globals.Register("Vector3f", &fgScriptSubsystem::simpleTypedMallocEvent<fgVector3f, VECTOR3F_METATABLE_ID>);
-    FG_LOG::PrintDebug("Script: Register metatable '%s' for Vector3f", getMetatableName(VECTOR3F_METATABLE_ID));
+    FG_LOG_DEBUG("Script: Register metatable '%s' for Vector3f", getMetatableName(VECTOR3F_METATABLE_ID));
 
     // fgVector4i | FG VECTOR 4I 
     LPCD::Class(m_luaState->GetCState(), getMetatableName(VECTOR4I_METATABLE_ID))
@@ -510,7 +533,7 @@ fgBool fgScriptSubsystem::registerAdditionalTypes(void) {
             .Property("t", &fgVector4i::t)
             .MetatableFunction("__gc", &fgScriptSubsystem::simpleFreeGCEvent); // simpleTypedGCEvent<fgVector4i>
     m_globals.Register("Vector4i", &fgScriptSubsystem::simpleTypedMallocEvent<fgVector4i, VECTOR4I_METATABLE_ID>);
-    FG_LOG::PrintDebug("Script: Register metatable '%s' for Vector4i", getMetatableName(VECTOR4I_METATABLE_ID));
+    FG_LOG_DEBUG("Script: Register metatable '%s' for Vector4i", getMetatableName(VECTOR4I_METATABLE_ID));
 
     // fgVector4f | FG VECTOR 4F    
     LPCD::Class(m_luaState->GetCState(), getMetatableName(VECTOR4F_METATABLE_ID))
@@ -526,7 +549,7 @@ fgBool fgScriptSubsystem::registerAdditionalTypes(void) {
             .Property("t", &fgVector4f::t)
             .MetatableFunction("__gc", &fgScriptSubsystem::simpleFreeGCEvent); // simpleTypedGCEvent<fgVector4f>
     m_globals.Register("Vector4f", &fgScriptSubsystem::simpleTypedMallocEvent<fgVector4f, VECTOR4F_METATABLE_ID>);
-    FG_LOG::PrintDebug("Script: Register metatable '%s' for Vector4f", getMetatableName(VECTOR4F_METATABLE_ID));
+    FG_LOG_DEBUG("Script: Register metatable '%s' for Vector4f", getMetatableName(VECTOR4F_METATABLE_ID));
 #endif /* FG_USING_LUA_PLUS */
     return FG_TRUE;
 }
@@ -597,7 +620,7 @@ int fgScriptSubsystem::newResourceWrapper(lua_State* L) {
     }
     uintptr_t offset = (uintptr_t)pResource;
     userDataObjectMapItor it = m_userDataObjectMap.find(offset);
-    FG_LOG::PrintDebug("Script: New resource, pointer: %p [offset=%lu]", pResource, offset);
+    FG_LOG_DEBUG("Script: New Resource: ptr[%p], offset[%lu]", pResource, offset);
     fgResourceType resType = pResource->getResourceType();
     METAID metaID = EMPTY_METATABLE_ID;
     const char *metatableName = NULL;
@@ -617,11 +640,11 @@ int fgScriptSubsystem::newResourceWrapper(lua_State* L) {
         resourceObj.SetMetatable(LuaPlus::LuaObject());
         resourceObj.AssignNil();
         status = FG_FALSE;
-        FG_LOG::PrintDebug("Script: Unknown resource type requested / not supported [resType=%d]", resType);
+        FG_LOG_DEBUG("Script: New Resource: Unknown resource type requested / not supported: resType[%d]", resType);
     }
     if(status) {
         resourceObj.SetMetatable(state->GetRegistry()[metatableName]);
-        FG_LOG::PrintDebug("Script: Setting special metatable.%d=[%s]", metaID, metatableName);
+        FG_LOG_DEBUG("Script: New Resource: metatable: id[%d], name[%s]", metaID, metatableName);
     }
     if(it == m_userDataObjectMap.end() && offset) {
         m_userDataObjectMap[offset] = resourceObj;
@@ -973,6 +996,7 @@ fgBool fgScriptSubsystem::registerWidgetManager(void) {
 
     typedef void (fgGuiWidget::*GW_void_C_STR_IN)(const char *);
     typedef void (fgGuiWidget::base_type::*GW_BASE_void_C_STR_IN)(const char *);
+    typedef fgGuiWidget *(fgGuiWidget::*GW_Widget_void)(void) const;
 
     const char *metatableNameWidget = getMetatableName(GUI_WIDGET_METATABLE_ID);
     const char *metatableName = NULL;
@@ -993,7 +1017,9 @@ fgBool fgScriptSubsystem::registerWidgetManager(void) {
 
             .ObjectDirect("refresh", (fgGuiWidget *)0, &fgGuiWidget::refresh)
             //.ObjectDirect("updateState", (fgGuiWidget *)0, &fgGuiWidget::updateState)
-            //.ObjectDirect("getFather", (fgGuiWidget *)0, &fgGuiWidget::refresh)
+            .ObjectDirect("getFather", 
+                          (fgGuiWidget *)0,
+                          static_cast<GW_Widget_void>(&fgGuiWidget::getFather))
             .ObjectDirect("getType", (fgGuiWidget *)0, &fgGuiWidget::getType)
             .ObjectDirect("getTypeTraits", (fgGuiWidget *)0, &fgGuiWidget::getTypeTraits)
             .ObjectDirect("getTypeName", (fgGuiWidget *)0, &fgGuiWidget::getTypeNameStr)
@@ -1003,7 +1029,7 @@ fgBool fgScriptSubsystem::registerWidgetManager(void) {
             .ObjectDirect("isActive", (fgGuiWidget *)0, &fgGuiWidget::isActive)
             .ObjectDirect("setIgnoreState", (fgGuiWidget *)0, &fgGuiWidget::setIgnoreState)
             .ObjectDirect("isIgnoreState", (fgGuiWidget *)0, &fgGuiWidget::isIgnoreState)
-            //.ObjectDirect("refresh", (fgGuiWidget *)0, &fgGuiWidget::doesIgnoreState)
+            //.ObjectDirect("doesIgnoreState", (fgGuiWidget *)0, &fgGuiWidget::doesIgnoreState)
             .ObjectDirect("getState", (fgGuiWidget *)0, &fgGuiWidget::getState)
             .ObjectDirect("setPosition", (fgGuiWidget *)0, &fgGuiWidget::setPosition)
             .ObjectDirect("getPosition", (fgGuiWidget *)0, &fgGuiWidget::getPosition)

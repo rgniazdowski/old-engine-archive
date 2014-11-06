@@ -72,7 +72,7 @@ void fgResourceManager::clear(void) {
  * manager itself (including resources)
  */
 fgBool fgResourceManager::destroy(void) {
-    FG_LOG::PrintDebug(">>>>> fgResourceManager::destroy(void); GROUPS"); // #TODELETE
+    FG_LOG_DEBUG(">>>>> fgResourceManager::destroy(void); GROUPS"); // #TODELETE
     {
         rmHandleVecItor begin = m_resourceGroupHandles.begin();
         rmHandleVecItor end = m_resourceGroupHandles.end();
@@ -98,7 +98,7 @@ fgBool fgResourceManager::destroy(void) {
         m_resourceGroupHandles.clear_optimised();
     }
 
-    FG_LOG::PrintDebug(">>>>> fgResourceManager::destroy(void); RESOURCES"); // #TODELETE
+    FG_LOG_DEBUG(">>>>> fgResourceManager::destroy(void); RESOURCES"); // #TODELETE
     {
         hmDataVecItor begin = getRefDataVector().begin();
         hmDataVecItor end = getRefDataVector().end();
@@ -134,7 +134,7 @@ fgBool fgResourceManager::initialize(void) {
     // #FIXME - compatibility for different platforms
     m_dataDir->readDirectory("./", FG_TRUE);
     m_dataDir->rewind();
-    FG_LOG::PrintDebug("Initializing resource manager\nCurrent maximum memory: %.2f", (float)m_nMaximumMemory / 1024.0 / 1024.0); // #TODELETE
+    FG_LOG_DEBUG("Initializing resource manager\nCurrent maximum memory: %.2f", (float)m_nMaximumMemory / 1024.0 / 1024.0); // #TODELETE
     // First of all load any resource group configs,
     // file extension is *.rgrp and it's a xml file.
     std::string filepath;

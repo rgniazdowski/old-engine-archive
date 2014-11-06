@@ -68,13 +68,13 @@ fgSFXManager::fgSFXManager() {
 #ifdef FG_USING_MARMALADE_AUDIO
     m_mp3 = (fgBool)s3eAudioIsCodecSupported(S3E_AUDIO_CODEC_MP3);
     if(m_mp3) {
-        FG_LOG::PrintDebug("MP3 codec supported");
+        FG_LOG_DEBUG("MP3 codec supported");
     } else {
         FG_LOG::PrintError("No MP3 support!");
     }
     m_pcm = (fgBool)s3eAudioIsCodecSupported(S3E_AUDIO_CODEC_PCM);
     if(m_pcm) {
-        FG_LOG::PrintDebug("PCM codec supported");
+        FG_LOG_DEBUG("PCM codec supported");
     } else {
         FG_LOG::PrintError("No PCM support!");
     }
@@ -110,7 +110,7 @@ bool fgSFXManager::loadAudioFile(const char* name, unsigned char* & out_buffer, 
         return false;
     }
 
-    FG_LOG::PrintDebug("Read %d bytes of '%s', buffer = %p", fileSize, name, buffer);
+    FG_LOG_DEBUG("Read %d bytes of '%s', buffer = %p", fileSize, name, buffer);
 
     out_buffer = buffer;
     out_size = fileSize;

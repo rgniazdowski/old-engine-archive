@@ -98,7 +98,7 @@ void fgDeviceQuery::computeDevice() {
 
     m_computed = FG_TRUE;
 
-    FG_LOG::PrintDebug("Detected [%s] DEVICE: %s, VERSION: %d, GENERATION: %d", dev_id, class_to_name[m_deviceClass], m_deviceVersion, m_deviceGeneration);
+    FG_LOG_DEBUG("Detected [%s] DEVICE: %s, VERSION: %d, GENERATION: %d", dev_id, class_to_name[m_deviceClass], m_deviceVersion, m_deviceGeneration);
 }
 
 /**
@@ -163,7 +163,7 @@ static fgDeviceGeneration computeGeneration(const char* dev_id, fgDeviceClass de
             break;
     }
 
-    FG_LOG::PrintDebug("Device [%s] generation is: %dG", dev_id, gen);
+    FG_LOG_DEBUG("Device [%s] generation is: %dG", dev_id, gen);
     return gen;
 }
 
@@ -173,7 +173,7 @@ static fgDeviceGeneration computeGeneration(const char* dev_id, fgDeviceClass de
  * The main version may be unusable in practice, as generation is what matters.
  */
 fgBool try_device(const char* dev_id, const char* base_name, fgDeviceClass givenClass, fgDeviceClass& tryClass, int& tryVersion) {
-    FG_LOG::PrintDebug("try_device(): Searching for %s VER in string: %s", base_name, dev_id);
+    FG_LOG_DEBUG("try_device(): Searching for %s VER in string: %s", base_name, dev_id);
 
     // Copy  the base name. Ensure there are two free bytes at the end.
     char name[20];
@@ -189,7 +189,7 @@ fgBool try_device(const char* dev_id, const char* base_name, fgDeviceClass given
     for(int i = 0; i < 6; i++) {
         name[base_len] = '1' + i;
         if(NULL != strstr(dev_id, name)) {
-            FG_LOG::PrintDebug("try_device(): FOUND name=%s in dev_id=%s", name, dev_id);
+            FG_LOG_DEBUG("try_device(): FOUND name=%s in dev_id=%s", name, dev_id);
             version_found = 1 + i;
             break;
         }

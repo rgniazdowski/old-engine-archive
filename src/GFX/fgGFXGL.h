@@ -93,18 +93,18 @@ using namespace gl;
 
 
 //GLSL Version      OpenGL Version
-//1.10				2.0
-//1.20				2.1
-//1.30				3.0
-//1.40				3.1
-//1.50				3.2
-//3.30				3.3
-//4.00				4.0
-//4.10				4.1
-//4.20				4.2
-//4.30				4.3
-//4.40				4.4
-//4.50                          4.5
+//1.10              2.0
+//1.20              2.1
+//1.30              3.0
+//1.40              3.1
+//1.50              3.2
+//3.30              3.3
+//4.00              4.0
+//4.10              4.1
+//4.20              4.2
+//4.30              4.3
+//4.40              4.4
+//4.50              4.5
 
 enum fgGfxSLVersion {
     FG_GFX_SHADING_LANGUAGE_INVALID = 0,
@@ -159,23 +159,23 @@ inline unsigned int fgGLError(const char *afterFunc = NULL) {
         }
         switch(code) {
             case GL_INVALID_ENUM:
-                FG_LOG::PrintError("GFX: GL error GL_INVALID_ENUM after %s(): '%s'", afterFunc, invalidEnum);
+                FG_LOG_ERROR("GFX: GL error GL_INVALID_ENUM after %s(): '%s'", afterFunc, invalidEnum);
                 retCode = code;
                 break;
             case GL_INVALID_VALUE:
-                FG_LOG::PrintError("GFX: GL error GL_INVALID_VALUE after %s(): '%s'", afterFunc, invalidValue);
+                FG_LOG_ERROR("GFX: GL error GL_INVALID_VALUE after %s(): '%s'", afterFunc, invalidValue);
                 retCode = code;
                 break;
             case GL_INVALID_OPERATION:
-                FG_LOG::PrintError("GFX: GL error GL_INVALID_OPERATION after %s(): '%s'", afterFunc, invalidOperation);
+                FG_LOG_ERROR("GFX: GL error GL_INVALID_OPERATION after %s(): '%s'", afterFunc, invalidOperation);
                 retCode = code;
                 break;
             case GL_OUT_OF_MEMORY:
-                FG_LOG::PrintError("GFX: GL error GL_OUT_OF_MEMORY after %s(): '%s'", afterFunc, outOfMemory);
+                FG_LOG_ERROR("GFX: GL error GL_OUT_OF_MEMORY after %s(): '%s'", afterFunc, outOfMemory);
                 retCode = code;
                 break;
             case GL_INVALID_FRAMEBUFFER_OPERATION:
-                FG_LOG::PrintError("GFX: GL error GL_INVALID_FRAMEBUFFER_OPERATION after %s(): '%s'", afterFunc, invalidFBOp);
+                FG_LOG_ERROR("GFX: GL error GL_INVALID_FRAMEBUFFER_OPERATION after %s(): '%s'", afterFunc, invalidFBOp);
                 retCode = code;
                 break;
             default:
@@ -227,63 +227,63 @@ inline unsigned int fgEGLError(const char *afterFunc = NULL) {
             break;
         switch(code) {
             case EGL_NOT_INITIALIZED:
-                FG_LOG::PrintError("EGL error NOT_INITIALIZED after %s(): %s", afterFunc, errMap[code]);
+                FG_LOG_ERROR("EGL error NOT_INITIALIZED after %s(): %s", afterFunc, errMap[code]);
                 retCode = code;
                 break;
             case EGL_BAD_ACCESS:
-                FG_LOG::PrintError("EGL error BAD_ACCESS after %s(): %s", afterFunc, errMap[code]);
+                FG_LOG_ERROR("EGL error BAD_ACCESS after %s(): %s", afterFunc, errMap[code]);
                 retCode = code;
                 break;
             case EGL_BAD_ALLOC:
-                FG_LOG::PrintError("EGL error BAD_ALLOC after %s(): %s", afterFunc, errMap[code]);
+                FG_LOG_ERROR("EGL error BAD_ALLOC after %s(): %s", afterFunc, errMap[code]);
                 retCode = code;
                 break;
             case EGL_BAD_ATTRIBUTE:
-                FG_LOG::PrintError("EGL error BAD_ATTRIBUTE after %s(): %s", afterFunc, errMap[code]);
+                FG_LOG_ERROR("EGL error BAD_ATTRIBUTE after %s(): %s", afterFunc, errMap[code]);
                 retCode = code;
                 break;
             case EGL_BAD_CONTEXT:
-                FG_LOG::PrintError("EGL error BAD_CONTEXT after %s(): %s", afterFunc, errMap[code]);
+                FG_LOG_ERROR("EGL error BAD_CONTEXT after %s(): %s", afterFunc, errMap[code]);
                 retCode = code;
                 break;
             case EGL_BAD_CONFIG:
-                FG_LOG::PrintError("EGL error BAD_CONFIG after %s(): %s", afterFunc, errMap[code]);
+                FG_LOG_ERROR("EGL error BAD_CONFIG after %s(): %s", afterFunc, errMap[code]);
                 retCode = code;
                 break;
             case EGL_BAD_CURRENT_SURFACE:
-                FG_LOG::PrintError("EGL error BAD_CURRENT_SURFACE after %s(): %s", afterFunc, errMap[code]);
+                FG_LOG_ERROR("EGL error BAD_CURRENT_SURFACE after %s(): %s", afterFunc, errMap[code]);
                 retCode = code;
                 break;
             case EGL_BAD_DISPLAY:
-                FG_LOG::PrintError("EGL error BAD_DISPLAY after %s(): %s", afterFunc, errMap[code]);
+                FG_LOG_ERROR("EGL error BAD_DISPLAY after %s(): %s", afterFunc, errMap[code]);
                 retCode = code;
                 break;
             case EGL_BAD_SURFACE:
-                FG_LOG::PrintError("EGL error BAD_SURFACE after %s(): %s", afterFunc, errMap[code]);
+                FG_LOG_ERROR("EGL error BAD_SURFACE after %s(): %s", afterFunc, errMap[code]);
                 retCode = code;
                 break;
             case EGL_BAD_MATCH:
-                FG_LOG::PrintError("EGL error BAD_MATCH after %s(): %s", afterFunc, errMap[code]);
+                FG_LOG_ERROR("EGL error BAD_MATCH after %s(): %s", afterFunc, errMap[code]);
                 retCode = code;
                 break;
             case EGL_BAD_PARAMETER:
-                FG_LOG::PrintError("EGL error BAD_PARAMETER after %s(): %s", afterFunc, errMap[code]);
+                FG_LOG_ERROR("EGL error BAD_PARAMETER after %s(): %s", afterFunc, errMap[code]);
                 retCode = code;
                 break;
             case EGL_BAD_NATIVE_PIXMAP:
-                FG_LOG::PrintError("EGL error BAD_NATIVE_PIXMAP after %s(): %s", afterFunc, errMap[code]);
+                FG_LOG_ERROR("EGL error BAD_NATIVE_PIXMAP after %s(): %s", afterFunc, errMap[code]);
                 retCode = code;
                 break;
             case EGL_BAD_NATIVE_WINDOW:
-                FG_LOG::PrintError("EGL error BAD_NATIVE_WINDOW after %s(): %s", afterFunc, errMap[code]);
+                FG_LOG_ERROR("EGL error BAD_NATIVE_WINDOW after %s(): %s", afterFunc, errMap[code]);
                 retCode = code;
                 break;
             case EGL_CONTEXT_LOST:
-                FG_LOG::PrintError("EGL error CONTEXT_LOST after %s(): %s", afterFunc, errMap[code]);
+                FG_LOG_ERROR("EGL error CONTEXT_LOST after %s(): %s", afterFunc, errMap[code]);
                 retCode = code;
                 break;
             default:
-                FG_LOG::PrintError("EGL error after %s(): %s", afterFunc, errMap[code]);
+                FG_LOG_ERROR("EGL error after %s(): %s", afterFunc, errMap[code]);
                 break;
         }
     }

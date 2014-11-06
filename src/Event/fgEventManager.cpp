@@ -332,7 +332,7 @@ void fgEventManager::executeEvents(void) {
     while(!m_eventsQueue.empty()) {
         fgThrownEvent &event = m_eventsQueue.front();
         int eventCode = event.eventCode;
-        //FG_LOG::PrintDebug("Event code thrown %d | list: %p", eventCode, event.argList);
+        //FG_LOG_DEBUG("Event code thrown %d | list: %p", eventCode, event.argList);
         fgCallbackBinding::iterator found = m_eventBinds.find(eventCode);
         if(found == m_eventBinds.end()) {
             if(event.argList)

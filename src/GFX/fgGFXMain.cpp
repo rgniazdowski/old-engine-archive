@@ -149,7 +149,7 @@ fgBool fgGfxMain::initGFX(void) {
         }
     }
     if(status) {
-        FG_LOG::PrintDebug("GFX: Setting viewport (0, 0, %d, %d)", m_mainWindow->getWidth(), m_mainWindow->getHeight());
+        FG_LOG_DEBUG("GFX: Setting viewport (0, 0, %d, %d)", m_mainWindow->getWidth(), m_mainWindow->getHeight());
         m_gfxContext->viewport(0, 0, m_mainWindow->getWidth(), m_mainWindow->getHeight());
         m_gfxContext->clearDepth(1.0f);
         m_gfxContext->setDepthTest(FG_TRUE);
@@ -172,7 +172,7 @@ fgBool fgGfxMain::initGFX(void) {
         reportSuccess(FG_ERRNO_GFX_OK, "GFX subsystem initialized successfully");
     }
     float t2 = fgTime::ms();
-    FG_LOG::PrintDebug("GFX: Initialized in %.2f seconds", (t2 - t1) / 1000.0f);
+    FG_LOG_DEBUG("GFX: Initialized in %.2f seconds", (t2 - t1) / 1000.0f);
     return status;
 }
 
@@ -180,7 +180,7 @@ fgBool fgGfxMain::initGFX(void) {
  *
  */
 void fgGfxMain::closeGFX(void) {
-    FG_LOG::PrintDebug("Closing GFX subsystem...");
+    FG_LOG_DEBUG("Closing GFX subsystem...");
     if(m_init) {
         if(m_mainWindow)
             m_mainWindow->close();
@@ -576,7 +576,7 @@ fgBool fgGfxMain::resourceCreatedHandler(fgArgumentList * argv) {
     fgGfxModelResource::modelShapes &shapes = pModel->getRefShapes();
     int n = shapes.size();
     if(n) {
-        FG_LOG::PrintDebug("GFX: Uploading static vertex data to VBO for model: '%s'", pModel->getNameStr());
+        FG_LOG_DEBUG("GFX: Uploading static vertex data to VBO for model: '%s'", pModel->getNameStr());
     }
     for(int i = 0; i < n; i++) {
         fgGfxShape *shape = shapes[i];
@@ -585,7 +585,7 @@ fgBool fgGfxMain::resourceCreatedHandler(fgArgumentList * argv) {
         if(!shape->mesh)
             continue;
         if(!fgGfxPlatform::context()->isBuffer(shape->mesh->getPtrVBO())) {
-            FG_LOG::PrintDebug("GFX: Uploading static vertex data to VBO for shape: '%s'", shape->name.c_str());
+            FG_LOG_DEBUG("GFX: Uploading static vertex data to VBO for shape: '%s'", shape->name.c_str());
             shape->mesh->genBuffers();
         }
     }

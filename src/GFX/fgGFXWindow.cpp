@@ -109,7 +109,7 @@ fgBool fgGfxWindow::setup(const char *title, unsigned int width, unsigned int he
     m_width = w;
     m_height = h;
 
-    FG_LOG::PrintDebug("EGL: Window surface created. Dimensions: %dx%d", w, h);
+    FG_LOG_DEBUG("EGL: Window surface created. Dimensions: %dx%d", w, h);
 
 #elif defined FG_USING_MARMALADE_IWGL
     m_width = IwGLGetInt(IW_GL_WIDTH);

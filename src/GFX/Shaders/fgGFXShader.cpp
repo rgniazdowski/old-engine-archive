@@ -32,7 +32,7 @@ m_isSourceLoaded(FG_FALSE) {
     m_params[FG_GFX_SHADER_INFO_LOG_LENGTH] = 0;
     m_params[FG_GFX_SHADER_SOURCE_LENGTH] = 0;
     m_baseType = FG_GFX_BASE_TYPE_SHADER;
-    //FG_LOG::PrintDebug("fgGfxShader::fgGfxShader();");
+    //FG_LOG_DEBUG("fgGfxShader::fgGfxShader();");
 }
 
 /*
@@ -186,7 +186,7 @@ fgGFXuint fgGfxShader::create(void) {
     if(!m_gfxID || (glIsShader(m_gfxID) == FG_GFX_FALSE)) {
         m_gfxID = glCreateShader((fgGFXenum)m_type);
         fgGLError("glCreateShader");
-        FG_LOG::PrintDebug("GFX: Created shader: %s, gfxID: %d [is shader? = %d]", FG_GFX_SHADER_TYPE_TO_TEXT(m_type), m_gfxID, (int)glIsShader(m_gfxID));
+        FG_LOG_DEBUG("GFX: Created shader: %s, gfxID: %d [is shader? = %d]", FG_GFX_SHADER_TYPE_TO_TEXT(m_type), m_gfxID, (int)glIsShader(m_gfxID));
     }
     return m_gfxID;
 }
@@ -217,7 +217,7 @@ fgBool fgGfxShader::compile(void) {
     if(!m_params[FG_GFX_SHADER_COMPILE_STATUS]) {
         FG_LOG::PrintError("GFX: compilation failed -  %s", getFilePath().c_str());
     } else {
-        FG_LOG::PrintDebug("GFX: Successfully compiled shader: '%s', type: '%s'", getFilePathStr(), FG_GFX_SHADER_TYPE_TO_TEXT(m_type));
+        FG_LOG_DEBUG("GFX: Successfully compiled shader: '%s', type: '%s'", getFilePathStr(), FG_GFX_SHADER_TYPE_TO_TEXT(m_type));
     }
     return (fgBool)m_params[FG_GFX_SHADER_COMPILE_STATUS];
 }

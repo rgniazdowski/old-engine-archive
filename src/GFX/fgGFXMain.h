@@ -1,4 +1,4 @@
-/*******************************************************
+ /*******************************************************
  * Copyright (C) 2014 Radoslaw Gniazdowski <r.gniazdowski@gmail.com>. All rights reserved.
  *
  * This file is part of FlexiGame: Flexible Game Engine

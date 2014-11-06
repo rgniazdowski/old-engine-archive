@@ -311,7 +311,7 @@ fgBool fgHandleManager<DataType, HandleType>::releaseHandle(const HandleType& ha
     m_managedData[index] = NULL;
     if(!m_nameVec[index].empty()) {
         m_nameMap.erase(m_nameVec[index]);
-        FG_LOG::PrintDebug(">> Erasing %s from handle map...", m_nameVec[index].c_str());
+        FG_LOG_DEBUG(">> Erasing %s from handle map...", m_nameVec[index].c_str());
     }
     m_nameVec[index].clear();
     m_freeSlots.push_back(index);

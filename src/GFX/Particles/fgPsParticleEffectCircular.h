@@ -65,7 +65,7 @@ public:
 
         uidx = (uidx - ualive) % umax_count;
 
-        //FG_LOG::PrintDebug("firstAliveIdx computed: %d  [alive:%d, idx:%d, max:%d]", int(uidx), aliveCount(), m_current_insert_idx, maxCount() );
+        //FG_LOG_DEBUG("firstAliveIdx computed: %d  [alive:%d, idx:%d, max:%d]", int(uidx), aliveCount(), m_current_insert_idx, maxCount() );
 
         return int(uidx);
     }

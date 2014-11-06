@@ -25,7 +25,7 @@ m_lastAccess(0),
 m_size(0),
 m_isReady(FG_FALSE) {
     setDefaultID(FG_QUALITY_UNIVERSAL);
-    FG_LOG::PrintDebug("fgResource::fgResource();");
+    FG_LOG_DEBUG("fgResource::fgResource();");
 }
 
 /*
@@ -40,7 +40,7 @@ m_lastAccess(0),
 m_size(0),
 m_isReady(FG_FALSE) {
     setDefaultID(FG_QUALITY_UNIVERSAL);
-    FG_LOG::PrintDebug("fgResource::fgResource(const char *path);");
+    FG_LOG_DEBUG("fgResource::fgResource(const char *path);");
     setFilePath(path);
 }
 
@@ -56,7 +56,7 @@ m_lastAccess(0),
 m_size(0),
 m_isReady(FG_FALSE) {
     setDefaultID(FG_QUALITY_UNIVERSAL);
-    FG_LOG::PrintDebug("fgResource::fgResource(std::string& path);");
+    FG_LOG_DEBUG("fgResource::fgResource(std::string& path);");
     setFilePath(path);
 }
 
@@ -75,7 +75,7 @@ void fgResource::clear(void) {
     m_fileMapping.clear();
     m_filePath.clear();
     m_manager = NULL;
-    FG_LOG::PrintDebug("fgResource::clear(void);");
+    FG_LOG_DEBUG("fgResource::clear(void);");
 }
 
 /**

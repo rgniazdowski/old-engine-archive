@@ -161,6 +161,6 @@ void fgQualityManager::determineQuality(void) {
         qualityname = "FG_QUALITY_HIGH";
     else
         qualityname = "FG_QUALITY_INVALID";
-    FG_LOG::PrintDebug("QUALITY MANAGER - Detected quality: %s, Area: %d", qualityname.c_str(), it->first);
+    FG_LOG_DEBUG("QUALITY MANAGER - Detected quality: %s, Area: %d", qualityname.c_str(), it->first);
     qualityname.clear();
 }

@@ -66,7 +66,7 @@ m_components(-1),
 m_textureGfxID(0),
 m_isInVRAM(FG_FALSE) {
     m_resType = FG_RESOURCE_TEXTURE;
-    FG_LOG::PrintDebug("fgTextureResource(const char *path)");
+    FG_LOG_DEBUG("fgTextureResource(const char *path)");
 }
 
 /*
@@ -84,7 +84,7 @@ m_components(-1),
 m_textureGfxID(0),
 m_isInVRAM(FG_FALSE) {
     m_resType = FG_RESOURCE_TEXTURE;
-    FG_LOG::PrintDebug("fgTextureResource(std::string& path)");
+    FG_LOG_DEBUG("fgTextureResource(std::string& path)");
 }
 
 /*
@@ -92,7 +92,7 @@ m_isInVRAM(FG_FALSE) {
  * just resets base class attributes
  */
 void fgTextureResource::clear(void) {
-    FG_LOG::PrintDebug("fgTextureResource::clear();");
+    FG_LOG_DEBUG("fgTextureResource::clear();");
     fgResource::clear();
     m_fileType = FG_TEXTURE_FILE_INVALID;
     m_textureType = FG_TEXTURE_INVALID;
@@ -167,7 +167,7 @@ fgBool fgTextureResource::create(void) {
  * Destroy all loaded data including additional metadata (called with destructor)
  */
 void fgTextureResource::destroy(void) {
-    FG_LOG::PrintDebug("fgTextureResource::destroy();");
+    FG_LOG_DEBUG("fgTextureResource::destroy();");
     releaseNonGFX();
     fgTextureResource::clear();
 }
@@ -188,7 +188,7 @@ fgBool fgTextureResource::recreate(void) {
  * Releases non-GPU side of resources
  */
 void fgTextureResource::dispose(void) {
-    FG_LOG::PrintDebug("fgTextureResource::~dispose();");
+    FG_LOG_DEBUG("fgTextureResource::~dispose();");
     releaseNonGFX();
 }
 
@@ -201,7 +201,7 @@ fgBool fgTextureResource::isDisposed(void) const {
     // If it is, then it means that the texture is uploaded and
     // ready to use. If GfxID is invalid than we can assume that
     // resource is disposed. This is kinda tricky one.
-    //FG_LOG::PrintDebug("fgTextureResource::isDisposed();   p_rawData=%p;", m_rawData);
+    //FG_LOG_DEBUG("fgTextureResource::isDisposed();   p_rawData=%p;", m_rawData);
     if(m_isInVRAM)
         return FG_FALSE;
     else
@@ -236,7 +236,7 @@ fgBool fgTextureResource::setFileTypeFromFilePath(std::string &path) {
  * Releases non-GPU side of resources
  */
 void fgTextureResource::releaseNonGFX(void) {
-    FG_LOG::PrintDebug("fgTextureResource::releaseNonGFX();   p_rawData=%p;", m_rawData);
+    FG_LOG_DEBUG("fgTextureResource::releaseNonGFX();   p_rawData=%p;", m_rawData);
 
     if(m_rawData)
         delete [] m_rawData;

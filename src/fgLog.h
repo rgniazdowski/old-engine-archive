@@ -48,4 +48,16 @@ namespace FG_LOG {
 
 };
 
+    #if defined(FG_DEBUG)
+        #define FG_LOG_INFO(...) FG_LOG::PrintInfo(__VA_ARGS__)
+        #define FG_LOG_DEBUG(...) FG_LOG::PrintDebug(__VA_ARGS__)
+        #define FG_LOG_ERROR(...) FG_LOG::PrintError(__VA_ARGS__)
+        #define FG_LOG_WARNING(...) FG_LOG::PrintWarning(__VA_ARGS__)
+    #else
+        #define FG_LOG_INFO(...) FG_LOG::PrintInfo(__VA_ARGS__)
+        #define FG_LOG_DEBUG(...) ((void)0)
+        #define FG_LOG_ERROR(...) FG_LOG::PrintError(__VA_ARGS__)
+        #define FG_LOG_WARNING(...) FG_LOG::PrintWarning(__VA_ARGS__)
+    #endif
+
 #endif /* _FG_LOG_H_ */

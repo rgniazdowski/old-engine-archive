@@ -943,15 +943,15 @@ m_init(FG_FALSE) {
     SDL_GL_GetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, &major);
     SDL_GL_GetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, &minor);
 
-    FG_LOG::PrintDebug("GFX: GL version %d.%d", major, minor);
-    FG_LOG::PrintDebug("GFX: GL color buffer: red: %d, green: %d, blue: %d, alpha: %d, depth: %d,", r, g, b, a, d);
+    FG_LOG_DEBUG("GFX: GL version %d.%d", major, minor);
+    FG_LOG_DEBUG("GFX: GL color buffer: red: %d, green: %d, blue: %d, alpha: %d, depth: %d,", r, g, b, a, d);
 
 #if defined(FG_USING_GL_BINDING)
-    FG_LOG::PrintDebug("Initializing GL bindings...");
+    FG_LOG_DEBUG("Initializing GL bindings...");
     //    //glbinding::Binding::initialize((glbinding::ContextHandle)m_GLContext, true, true);
     glbinding::Binding::initialize();
 #elif defined(FG_USING_OPENGL_GLEW)
-    FG_LOG::PrintDebug("GFX: Initializing GLEW...");
+    FG_LOG_DEBUG("GFX: Initializing GLEW...");
     glewExperimental = FG_GFX_TRUE;
     fgGFXenum glewInitResult = glewInit();
     if(glewInitResult != GLEW_OK) {
@@ -959,7 +959,7 @@ m_init(FG_FALSE) {
         m_init = FG_FALSE;
         return;
     } else {
-        FG_LOG::PrintDebug("GFX: GLEW init completed successfully.");
+        FG_LOG_DEBUG("GFX: GLEW init completed successfully.");
     }
     fgGFXenum errorCheckValue = fgGLError("glewInit");
     if(errorCheckValue != GL_NO_ERROR) {
@@ -971,7 +971,7 @@ m_init(FG_FALSE) {
 #endif
 
 #endif
-    FG_LOG::PrintDebug("GFX: Initializing GL parameter list...");
+    FG_LOG_DEBUG("GFX: Initializing GL parameter list...");
     m_params[(fgGFXuint)GL_ACTIVE_TEXTURE] = fgGfxContextParam(GL_ACTIVE_TEXTURE);
     m_params[(fgGFXuint)GL_ALIASED_LINE_WIDTH_RANGE] = fgGfxContextParam(GL_ALIASED_LINE_WIDTH_RANGE);
     m_params[(fgGFXuint)GL_ALIASED_POINT_SIZE_RANGE] = fgGfxContextParam(GL_ALIASED_POINT_SIZE_RANGE);
@@ -1079,11 +1079,11 @@ m_init(FG_FALSE) {
     }
 #endif
 
-    FG_LOG::PrintDebug("GFX: GL vendor:     %s", glVendor.c_str());
-    FG_LOG::PrintDebug("GFX: GL renderer:   %s", glRenderer.c_str());
-    FG_LOG::PrintDebug("GFX: GL version:    %s", glVersion.c_str());
-    FG_LOG::PrintDebug("GFX: GLSL version:  %s", glSLVersion.c_str());
-    FG_LOG::PrintDebug("GFX: Extensions:    %s", (const char*)glExtensions.c_str());
+    FG_LOG_DEBUG("GFX: GL vendor:     %s", glVendor.c_str());
+    FG_LOG_DEBUG("GFX: GL renderer:   %s", glRenderer.c_str());
+    FG_LOG_DEBUG("GFX: GL version:    %s", glVersion.c_str());
+    FG_LOG_DEBUG("GFX: GLSL version:  %s", glSLVersion.c_str());
+    FG_LOG_DEBUG("GFX: Extensions:    %s", (const char*)glExtensions.c_str());
     //glGetStringi(GL_EXTENSIONS, 0);
     fgStringVector vparts;
     fgStrings::split(glVersion, ' ', vparts);

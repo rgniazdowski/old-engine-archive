@@ -23,7 +23,7 @@ m_fontType(FG_FONT_TYPE_TEXTURE),
 m_info(),
 m_step(0) {
     m_resType = FG_RESOURCE_FONT;
-    FG_LOG::PrintDebug("fgFontResource::fgFontResource()");
+    FG_LOG_DEBUG("fgFontResource::fgFontResource()");
 }
 
 /*
@@ -35,7 +35,7 @@ m_fontType(FG_FONT_TYPE_TEXTURE),
 m_info(),
 m_step(0) {
     m_resType = FG_RESOURCE_FONT;
-    FG_LOG::PrintDebug("fgFontResource::fgFontResource()");
+    FG_LOG_DEBUG("fgFontResource::fgFontResource()");
 }
 
 /*
@@ -47,7 +47,7 @@ m_fontType(FG_FONT_TYPE_TEXTURE),
 m_info(),
 m_step(0) {
     m_resType = FG_RESOURCE_FONT;
-    FG_LOG::PrintDebug("fgFontResource::fgFontResource()");
+    FG_LOG_DEBUG("fgFontResource::fgFontResource()");
 }
 
 /*
@@ -55,7 +55,7 @@ m_step(0) {
  * just resets base class attributes
  */
 void fgFontResource::clear(void) {
-    FG_LOG::PrintDebug("fgFontResource::clear();");
+    FG_LOG_DEBUG("fgFontResource::clear();");
     fgTextureResource::clear();
     m_step = 0;
     m_resType = FG_RESOURCE_FONT;
@@ -66,7 +66,7 @@ void fgFontResource::clear(void) {
  * Create function loads/interprets data from file in ROM and place it in RAM memory.
  */
 fgBool fgFontResource::create(void) {
-    FG_LOG::PrintDebug("fgFontResource::create();");
+    FG_LOG_DEBUG("fgFontResource::create();");
     m_textureType = FG_TEXTURE_FONT;
     if(!fgTextureResource::create()) {
         // #TODO error handling / reporting
@@ -82,7 +82,7 @@ fgBool fgFontResource::create(void) {
     float space0 = 0.0f, space1 = 0.0f;
     unsigned char *ptr = NULL;
     dt = 1.0f / 16.0f;
-    FG_LOG::PrintDebug("FONT CREATE 'Tex::ID=%s'; size=%dx%d; step=%d;", this->m_nameTag.c_str(), m_width, m_width, m_step);
+    FG_LOG_DEBUG("FONT CREATE 'Tex::ID=%s'; size=%dx%d; step=%d;", this->m_nameTag.c_str(), m_width, m_width, m_step);
     if(!m_info.charInfo) {
         m_info.charInfo = fgMalloc<fgFontCharInfo>(FG_FONT_STANDARD_ASCII_SIZE);
     }
@@ -145,7 +145,7 @@ void fgFontResource::destroy(void) {
  * Reloads any data, recreates the resource (refresh)
  */
 fgBool fgFontResource::recreate(void) {
-    FG_LOG::PrintDebug("fgFontResource::recreate();");
+    FG_LOG_DEBUG("fgFontResource::recreate();");
     fgFontResource::dispose();
     return fgFontResource::create();
 }
@@ -154,7 +154,7 @@ fgBool fgFontResource::recreate(void) {
  * Dispose completely of the all loaded data, free all memory
  */
 void fgFontResource::dispose(void) {
-    FG_LOG::PrintDebug("fgFontResource::~dispose();");
+    FG_LOG_DEBUG("fgFontResource::~dispose();");
     fgTextureResource::dispose();
     m_step = 0;
     m_info.destroy();

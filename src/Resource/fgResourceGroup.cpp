@@ -55,7 +55,7 @@ void fgResourceGroupContentHandler::endElement(const char *localName, fgXMLEleme
         m_isFileQualityMapTag = FG_FALSE;
         m_curResPriority = FG_RES_PRIORITY_INVALID;
     }
-    //FG_LOG::PrintDebug("END ELEMENT: %s\n", localName);
+    //FG_LOG_DEBUG("END ELEMENT: %s\n", localName);
 }
 
 /*
@@ -88,7 +88,7 @@ fgBool fgResourceGroupContentHandler::loadResConfig(const char *path) {
         }
         for(int i = 0; i < (int)header->paths.size(); i++) {
             m_resourcePtr->setFilePath(header->paths[i], header->qualities[i]);
-            //FG_LOG::PrintDebug("Setting path: '%s', for resource: '%s', quality='%d'", pathVec[i].c_str(), name.c_str(), (int)qualityVec[i]);
+            //FG_LOG_DEBUG("Setting path: '%s', for resource: '%s', quality='%d'", pathVec[i].c_str(), name.c_str(), (int)qualityVec[i]);
         }
         m_resourcePtr->setDefaultID(header->quality);
     }
@@ -102,7 +102,7 @@ fgBool fgResourceGroupContentHandler::loadResConfig(const char *path) {
  * This function will add to the specified resource group any identified resources.
  */
 void fgResourceGroupContentHandler::startElement(const char *localName, fgXMLElement *elementPtr, fgXMLNodeType nodeType, fgXMLAttribute *firstAttribute, int depth) {
-    //FG_LOG::PrintDebug("START ELEMENT: %s", localName);
+    //FG_LOG_DEBUG("START ELEMENT: %s", localName);
     // Sound
     // Music
     // 3DModel
@@ -180,7 +180,7 @@ void fgResourceGroupContentHandler::startElement(const char *localName, fgXMLEle
     }
     if(m_resType == FG_RESOURCE_INVALID) {
         if(m_resourcePtr && m_isFileQualityMapTag && resPath) {
-            //FG_LOG::PrintDebug("Setting path: '%s', for resource: '%s', quality='%s'", resPath, m_curResName, resQualityStr);
+            //FG_LOG_DEBUG("Setting path: '%s', for resource: '%s', quality='%s'", resPath, m_curResName, resQualityStr);
             m_resourcePtr->setFilePath(resPath, resQuality);
         }
         return;
@@ -216,7 +216,7 @@ fgResourceGroup::fgResourceGroup(fgResourceFactory *resourceFactory) {
  */
 fgResourceGroup::~fgResourceGroup() {
     fgResourceGroup::destroy();
-    FG_LOG::PrintDebug("fgResourceGroup::~~fgResourceGroup(); END");
+    FG_LOG_DEBUG("fgResourceGroup::~~fgResourceGroup(); END");
 }
 
 /*
@@ -238,7 +238,7 @@ fgResourceFactory *fgResourceGroup::getResourceFactory(void) const {
  * Clears the class data, this actually does not free allocated memory, just resets base class attributes
  */
 void fgResourceGroup::clear(void) {
-    FG_LOG::PrintDebug("fgResourceGroup::clear();");
+    FG_LOG_DEBUG("fgResourceGroup::clear();");
     fgResource::clear();
     m_rHandles.clear_optimised();
     m_resourceFiles.clear_optimised();
@@ -265,7 +265,7 @@ fgBool fgResourceGroup::create(void) {
  * Destroy all loaded data including additional metadata (called with deconstructor)
  */
 void fgResourceGroup::destroy(void) {
-    FG_LOG::PrintDebug("fgResourceGroup::destroy();");
+    FG_LOG_DEBUG("fgResourceGroup::destroy();");
     ZeroLock();
     dispose();
     clear();
@@ -275,7 +275,7 @@ void fgResourceGroup::destroy(void) {
  * Reloads any data, recreates the resource (refresh)
  */
 fgBool fgResourceGroup::recreate(void) {
-    //FG_LOG::PrintDebug("fgResourceGroup::recreate();");
+    //FG_LOG_DEBUG("fgResourceGroup::recreate();");
     if(m_resourceFiles.empty())
         return FG_FALSE;
     fgBool status = FG_TRUE;
@@ -291,8 +291,8 @@ fgBool fgResourceGroup::recreate(void) {
  * Dispose completely of the all loaded data, free all memory
  */
 void fgResourceGroup::dispose(void) {
-    //FG_LOG::PrintDebug("fgResourceGroup::~dispose();");
-    FG_LOG::PrintDebug("fgResourceGroup::dispose();");
+    //FG_LOG_DEBUG("fgResourceGroup::~dispose();");
+    FG_LOG_DEBUG("fgResourceGroup::dispose();");
     if(m_resourceFiles.empty())
         return;
     for(rgResVecItor it = m_resourceFiles.begin(); it != m_resourceFiles.end(); it++) {
@@ -374,7 +374,7 @@ fgBool fgResourceGroup::_parseIniConfig(void) {
         }
         for(int i = 0; i < (int)header->paths.size(); i++) {
             resource->setFilePath(header->paths[i], header->qualities[i]);
-            //FG_LOG::PrintDebug("Setting path: '%s', for resource: '%s', quality='%d'", pathVec[i].c_str(), name.c_str(), (int)qualityVec[i]);
+            //FG_LOG_DEBUG("Setting path: '%s', for resource: '%s', quality='%d'", pathVec[i].c_str(), name.c_str(), (int)qualityVec[i]);
         }
         resource->setDefaultID(header->quality); // #FIXME - watch out! retarded function name!
         m_resourceFiles.push_back(resource);
