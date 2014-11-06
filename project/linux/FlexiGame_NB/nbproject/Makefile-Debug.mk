@@ -159,6 +159,8 @@ OBJECTFILES= \
 	${OBJECTDIR}/_ext/942373304/fgResourceFactory.o \
 	${OBJECTDIR}/_ext/942373304/fgResourceGroup.o \
 	${OBJECTDIR}/_ext/942373304/fgResourceManager.o \
+	${OBJECTDIR}/_ext/1210739651/fgScriptCallback.o \
+	${OBJECTDIR}/_ext/1210739651/fgScriptMetatables.o \
 	${OBJECTDIR}/_ext/1210739651/fgScriptResource.o \
 	${OBJECTDIR}/_ext/1210739651/fgScriptSubsystem.o \
 	${OBJECTDIR}/_ext/166270660/fgThread.o \
@@ -828,6 +830,16 @@ ${OBJECTDIR}/_ext/942373304/fgResourceManager.o: ../../../src/Resource/fgResourc
 	${MKDIR} -p ${OBJECTDIR}/_ext/942373304
 	${RM} "$@.d"
 	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_GL_BINDING -DFG_USING_OPENGL -DFG_USING_SDL2 -DFG_USING_TINYXML -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src `pkg-config --cflags gl` `pkg-config --cflags sdl2` `pkg-config --cflags SDL2_mixer` `pkg-config --cflags libpng` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/942373304/fgResourceManager.o ../../../src/Resource/fgResourceManager.cpp
+
+${OBJECTDIR}/_ext/1210739651/fgScriptCallback.o: ../../../src/Scripting/fgScriptCallback.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/1210739651
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_GL_BINDING -DFG_USING_OPENGL -DFG_USING_SDL2 -DFG_USING_TINYXML -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src `pkg-config --cflags gl` `pkg-config --cflags sdl2` `pkg-config --cflags SDL2_mixer` `pkg-config --cflags libpng` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1210739651/fgScriptCallback.o ../../../src/Scripting/fgScriptCallback.cpp
+
+${OBJECTDIR}/_ext/1210739651/fgScriptMetatables.o: ../../../src/Scripting/fgScriptMetatables.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/1210739651
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_GL_BINDING -DFG_USING_OPENGL -DFG_USING_SDL2 -DFG_USING_TINYXML -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src `pkg-config --cflags gl` `pkg-config --cflags sdl2` `pkg-config --cflags SDL2_mixer` `pkg-config --cflags libpng` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1210739651/fgScriptMetatables.o ../../../src/Scripting/fgScriptMetatables.cpp
 
 ${OBJECTDIR}/_ext/1210739651/fgScriptResource.o: ../../../src/Scripting/fgScriptResource.cpp 
 	${MKDIR} -p ${OBJECTDIR}/_ext/1210739651

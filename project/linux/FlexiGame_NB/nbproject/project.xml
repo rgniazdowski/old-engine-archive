@@ -51,6 +51,7 @@
         <spellchecker-wordlist xmlns="http://www.netbeans.org/ns/spellchecker-wordlist/1">
             <word>aos</word>
             <word>app</word>
+            <word>argc</word>
             <word>attrib</word>
             <word>Autodesk</word>
             <word>bbox</word>
@@ -63,6 +64,7 @@
             <word>const</word>
             <word>coords</word>
             <word>Cornsilk</word>
+            <word>cpp</word>
             <word>destructors</word>
             <word>dfactor</word>
             <word>drawcall</word>
@@ -71,15 +73,19 @@
             <word>enum</word>
             <word>foreach</word>
             <word>framebuffer</word>
+            <word>fubar</word>
             <word>func</word>
             <word>Gainsboro</word>
             <word>gc</word>
             <word>gfx</word>
             <word>gl</word>
             <word>glbinding</word>
+            <word>glm</word>
             <word>Gniazdowski</word>
             <word>gui</word>
+            <word>hacky</word>
             <word>hcenter</word>
+            <word>ids</word>
             <word>idx</word>
             <word>ini</word>
             <word>init</word>
@@ -88,14 +94,18 @@
             <word>ismapped</word>
             <word>itor</word>
             <word>ivec</word>
+            <word>lightuserdata</word>
             <word>Lightwave</word>
+            <word>lu</word>
             <word>Lua</word>
+            <word>malloc</word>
             <word>metadata</word>
             <word>metatable</word>
             <word>metatables</word>
             <word>ms</word>
             <word>multitextured</word>
             <word>multitexturing</word>
+            <word>namespace</word>
             <word>obj</word>
             <word>overallocation</word>
             <word>packfree</word>
@@ -110,6 +120,7 @@
             <word>pos</word>
             <word>preload</word>
             <word>printf</word>
+            <word>ptr</word>
             <word>Radoslaw</word>
             <word>rgb</word>
             <word>rgba</word>
@@ -122,6 +133,8 @@
             <word>structs</word>
             <word>tga</word>
             <word>ttl</word>
+            <word>unboxed</word>
+            <word>userdata</word>
             <word>ushort</word>
             <word>uv</word>
             <word>valign</word>

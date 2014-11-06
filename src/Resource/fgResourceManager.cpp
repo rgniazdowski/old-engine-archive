@@ -427,7 +427,7 @@ void fgResourceManager::refreshResource(fgResource* pResource) {
             resEvent->resource = pResource;
 
             fgArgumentList *argList = new fgArgumentList();
-            argList->pushArgument(FG_ARGUMENT_STRUCT, (void *)resEvent);
+            argList->pushArgument(FG_ARGUMENT_TEMP_POINTER, (void *)resEvent);
             static_cast<fgEventManager *>(m_pEventMgr)->throwEvent(FG_EVENT_RESOURCE_CREATED, argList);
         }
         addMemory(pResource->getSize());
@@ -660,7 +660,7 @@ fgResource* fgResourceManager::request(const std::string& info, const fgResource
             resEvent->resource = resourcePtr;
 
             fgArgumentList *argList = new fgArgumentList();
-            argList->pushArgument(FG_ARGUMENT_STRUCT, (void *)resEvent);
+            argList->pushArgument(FG_ARGUMENT_TEMP_POINTER, (void *)resEvent);
             static_cast<fgEventManager *>(m_pEventMgr)->throwEvent(FG_EVENT_RESOURCE_REQUESTED, argList);
         }
     }

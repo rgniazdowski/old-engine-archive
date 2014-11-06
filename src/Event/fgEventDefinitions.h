@@ -9,6 +9,7 @@
 
 #ifndef _FG_EVENT_DEFINITIONS_H_
     #define _FG_EVENT_DEFINITIONS_H_
+    #define _FG_EVENT_DEFINITIONS_H_BLOCK_
 
     #ifndef _FG_RESOURCE_H_
         #include "Resource/fgResource.h"
@@ -187,7 +188,7 @@ struct fgSwipePinchEvent : fgEventBase {
 /*
  *
  */
-struct fgSwipeRotateEvent : fgEventBase {
+struct fgSwipeRotateEvent : fgEventBase { // Should extend SwipeEvent?
     int x;
     int y;
     int x2;
@@ -199,7 +200,11 @@ struct fgSwipeRotateEvent : fgEventBase {
  *
  */
 struct fgKeyEvent : fgEventBase {
-    int keyCode;
+
+    union {
+        int keyCode;
+        int which;
+    };
     fgBool pressed;
 };
 
@@ -241,6 +246,7 @@ struct fgSensorsEvent : fgEventBase {
     // int type; or fgSensorType type;
 
     union {
+
         struct {
             float x, y, z;
         };
@@ -274,5 +280,7 @@ struct fgEvent {
         fgControllerAxisEvent controllerAxis;
     };
 };
+
+    #undef _FG_EVENT_DEFINITIONS_H_BLOCK_
 
 #endif /* _FG_EVENT_DEFINITIONS_H_ */

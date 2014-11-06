@@ -467,6 +467,7 @@
           <itemPath>../../../src/GUI/fgGuiWidgetFactoryTypes.h</itemPath>
           <itemPath>../../../src/GUI/fgGuiWidgetManager.cpp</itemPath>
           <itemPath>../../../src/GUI/fgGuiWidgetManager.h</itemPath>
+          <itemPath>../../../src/GUI/fgGuiWidgetTypes.h</itemPath>
           <itemPath>../../../src/GUI/fgGuiWindow.cpp</itemPath>
           <itemPath>../../../src/GUI/fgGuiWindow.h</itemPath>
         </logicalFolder>
@@ -512,7 +513,12 @@
           <itemPath>../../../src/Resource/fgResourceManager.h</itemPath>
         </logicalFolder>
         <logicalFolder name="Scripting" displayName="Scripting" projectFiles="true">
+          <itemPath>../../../src/Scripting/fgScriptCD.h</itemPath>
+          <itemPath>../../../src/Scripting/fgScriptCallback.cpp</itemPath>
+          <itemPath>../../../src/Scripting/fgScriptCallback.h</itemPath>
           <itemPath>../../../src/Scripting/fgScriptErrorCodes.h</itemPath>
+          <itemPath>../../../src/Scripting/fgScriptMetatables.cpp</itemPath>
+          <itemPath>../../../src/Scripting/fgScriptMetatables.h</itemPath>
           <itemPath>../../../src/Scripting/fgScriptResource.cpp</itemPath>
           <itemPath>../../../src/Scripting/fgScriptResource.h</itemPath>
           <itemPath>../../../src/Scripting/fgScriptSubsystem.cpp</itemPath>
@@ -2654,6 +2660,11 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/GUI/fgGuiWidgetTypes.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../src/GUI/fgGuiWindow.cpp" ex="false" tool="1" flavor2="8">
       </item>
       <item path="../../../src/GUI/fgGuiWindow.h" ex="false" tool="3" flavor2="0">
@@ -2818,7 +2829,32 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/Scripting/fgScriptCD.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Scripting/fgScriptCallback.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Scripting/fgScriptCallback.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../src/Scripting/fgScriptErrorCodes.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Scripting/fgScriptMetatables.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Scripting/fgScriptMetatables.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -5020,6 +5056,11 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/GUI/fgGuiWidgetTypes.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../src/GUI/fgGuiWindow.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="../../../src/GUI/fgGuiWindow.h" ex="false" tool="3" flavor2="0">
@@ -5184,7 +5225,32 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/Scripting/fgScriptCD.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Scripting/fgScriptCallback.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Scripting/fgScriptCallback.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../src/Scripting/fgScriptErrorCodes.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Scripting/fgScriptMetatables.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Scripting/fgScriptMetatables.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -7369,6 +7435,11 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/GUI/fgGuiWidgetTypes.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../src/GUI/fgGuiWindow.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="../../../src/GUI/fgGuiWindow.h" ex="false" tool="3" flavor2="0">
@@ -7533,7 +7604,32 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/Scripting/fgScriptCD.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Scripting/fgScriptCallback.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Scripting/fgScriptCallback.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../src/Scripting/fgScriptErrorCodes.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Scripting/fgScriptMetatables.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Scripting/fgScriptMetatables.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -9696,6 +9792,11 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/GUI/fgGuiWidgetTypes.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../src/GUI/fgGuiWindow.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="../../../src/GUI/fgGuiWindow.h" ex="false" tool="3" flavor2="0">
@@ -9860,7 +9961,32 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/Scripting/fgScriptCD.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Scripting/fgScriptCallback.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Scripting/fgScriptCallback.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../src/Scripting/fgScriptErrorCodes.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Scripting/fgScriptMetatables.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Scripting/fgScriptMetatables.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -12045,6 +12171,11 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/GUI/fgGuiWidgetTypes.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../src/GUI/fgGuiWindow.cpp" ex="false" tool="1" flavor2="8">
       </item>
       <item path="../../../src/GUI/fgGuiWindow.h" ex="false" tool="3" flavor2="0">
@@ -12209,7 +12340,32 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/Scripting/fgScriptCD.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Scripting/fgScriptCallback.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Scripting/fgScriptCallback.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../src/Scripting/fgScriptErrorCodes.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Scripting/fgScriptMetatables.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Scripting/fgScriptMetatables.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -14384,6 +14540,11 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/GUI/fgGuiWidgetTypes.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../src/GUI/fgGuiWindow.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="../../../src/GUI/fgGuiWindow.h" ex="false" tool="3" flavor2="0">
@@ -14548,7 +14709,32 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/Scripting/fgScriptCD.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Scripting/fgScriptCallback.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Scripting/fgScriptCallback.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../src/Scripting/fgScriptErrorCodes.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Scripting/fgScriptMetatables.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Scripting/fgScriptMetatables.h"
             ex="false"
             tool="3"
             flavor2="0">

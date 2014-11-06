@@ -43,14 +43,14 @@ fgArgumentList::~fgArgumentList() {
 /*
  *
  */
-inline void fgArgumentList::setMaxArgumentCount(int _max) {
+void fgArgumentList::setMaxArgumentCount(int _max) {
     m_maxArgs = _max;
 }
 
 /*
  *
  */
-inline int fgArgumentList::getMaxArgumentCount() {
+int fgArgumentList::getMaxArgumentCount() {
     return m_maxArgs;
 }
 
@@ -75,7 +75,7 @@ void fgArgumentList::pushArgument(fgArgumentType _type, void *_value) {
             snprintf(new_argument.string, FG_ARGUMENT_MAX_STRING, (char *)_value);
             break;
         case FG_ARGUMENT_POINTER:
-        case FG_ARGUMENT_STRUCT:
+        case FG_ARGUMENT_TEMP_POINTER:
             new_argument.custom_pointer = _value;
             break;
         default:
@@ -161,7 +161,7 @@ void fgArgumentList::pushArgument(void *custom_pointer) {
 /*
  *
  */
-inline int fgArgumentList::getArgumentCount() {
+int fgArgumentList::getArgumentCount() {
     m_argc = m_argv.size();
     return m_argc;
 }
@@ -169,7 +169,7 @@ inline int fgArgumentList::getArgumentCount() {
 /*
  *
  */
-inline void fgArgumentList::reset() {
+void fgArgumentList::reset() {
     m_currentArg = -1; // FIXME
 }
 
@@ -210,7 +210,7 @@ void* fgArgumentList::getArgumentValueByID(int ID, fgArgumentType *_type) {
                 return (void *)m_argv[ID].string;
                 break;
             case FG_ARGUMENT_POINTER:
-            case FG_ARGUMENT_STRUCT:
+            case FG_ARGUMENT_TEMP_POINTER:
                 return m_argv[ID].custom_pointer;
                 break;
             default:
@@ -256,7 +256,7 @@ fgArgument fgArgumentList::getArgumentStructByID(int ID) {
 /*
  *
  */
-inline fgBool fgArgumentList::isThereNextArgument() {
+fgBool fgArgumentList::isThereNextArgument() {
     if((m_currentArg + 1) >= getArgumentCount())
         return FG_FALSE;
     else
@@ -266,7 +266,7 @@ inline fgBool fgArgumentList::isThereNextArgument() {
 /*
  *
  */
-inline int fgArgumentList::getCurrentID() {
+int fgArgumentList::getCurrentID() {
     return m_currentArg;
 }
 
@@ -280,12 +280,12 @@ void fgArgumentList::clearArguments() {
     reset();
     while(isThereNextArgument()) {
         fgArgument arg = getNextArgumentStruct();
-        // ARGUMENT STRUCT is a special kind of argument
-        // it means that if it's past as a argument (pointer to struvt / object)
+        // ARGUMENT TEMP POINTER is a special kind of argument
+        // it means that if it's past as a argument (pointer to struct / object)
         // it needs to be freed together with the argument list (argument list takes the ownership)
         // This still needs fixing because no destructor is called (free function instead)
         // That is deprecated. Handling allocator maybe?
-        if(arg.type == FG_ARGUMENT_STRUCT) {
+        if(arg.type == FG_ARGUMENT_TEMP_POINTER) {
             if(arg.custom_pointer != NULL) {
                 fgFree(arg.custom_pointer);
             }

@@ -9,7 +9,7 @@
 
 #ifndef _FG_TYPES_H_
     #define _FG_TYPES_H_
-    #define _FG_TYPES_BLOCK__
+    #define _FG_TYPES_H_BLOCK_
 
     #include "fgBuildConfig.h"
     #include "fgBool.h"
@@ -103,5 +103,5 @@ inline Type& operator	^= (Type& x, Type y)		{	x = x ^ y;	return x;	}
         #include "fgVector.h"
     #endif
 
-    #undef _FG_TYPES_BLOCK__
+    #undef _FG_TYPES_H_BLOCK_
 #endif /* _FG_TYPES_H_ */

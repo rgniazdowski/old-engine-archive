@@ -152,7 +152,7 @@ fgBool fgJoypadController::initialize(void) {
                 fgevent->which = i;
                 fgevent->timeStamp = 0; // #FIXME
                 fgevent->eventType = FG_EVENT_GAME_CONTROLLER_ADDED;
-                list->pushArgument(FG_ARGUMENT_STRUCT, (void*)fgevent);
+                list->pushArgument(FG_ARGUMENT_TEMP_POINTER, (void*)fgevent);
                 m_eventMgr->throwEvent(fgevent->eventType, list);
             }
         }
@@ -210,7 +210,7 @@ int fgJoypadController::processEvent(const SDL_Event& event) {
                 fgevent->which = caxis.which;
                 fgevent->timeStamp = caxis.timestamp;
                 fgevent->eventType = FG_EVENT_GAME_CONTROLLER_AXIS;
-                list->pushArgument(FG_ARGUMENT_STRUCT, (void*)fgevent);
+                list->pushArgument(FG_ARGUMENT_TEMP_POINTER, (void*)fgevent);
                 m_eventMgr->throwEvent(fgevent->eventType, list);
             }
             break;
@@ -233,7 +233,7 @@ int fgJoypadController::processEvent(const SDL_Event& event) {
                 fgevent->which = cbutton.which;
                 fgevent->timeStamp = cbutton.timestamp;
                 fgevent->eventType = FG_EVENT_GAME_CONTROLLER_BUTTON;
-                list->pushArgument(FG_ARGUMENT_STRUCT, (void*)fgevent);
+                list->pushArgument(FG_ARGUMENT_TEMP_POINTER, (void*)fgevent);
                 m_eventMgr->throwEvent(fgevent->eventType, list);
             }
             break;
@@ -250,7 +250,7 @@ int fgJoypadController::processEvent(const SDL_Event& event) {
                     fgevent->which = event.cdevice.which;
                     fgevent->timeStamp = event.cdevice.timestamp;
                     fgevent->eventType = FG_EVENT_GAME_CONTROLLER_ADDED;
-                    list->pushArgument(FG_ARGUMENT_STRUCT, (void*)fgevent);
+                    list->pushArgument(FG_ARGUMENT_TEMP_POINTER, (void*)fgevent);
                     m_eventMgr->throwEvent(fgevent->eventType, list);
                 }
             }
@@ -269,7 +269,7 @@ int fgJoypadController::processEvent(const SDL_Event& event) {
                 fgevent->which = event.cdevice.which;
                 fgevent->timeStamp = event.cdevice.timestamp;
                 fgevent->eventType = FG_EVENT_GAME_CONTROLLER_REMOVED;
-                list->pushArgument(FG_ARGUMENT_STRUCT, (void*)fgevent);
+                list->pushArgument(FG_ARGUMENT_TEMP_POINTER, (void*)fgevent);
                 m_eventMgr->throwEvent(fgevent->eventType, list);
             }
             break;

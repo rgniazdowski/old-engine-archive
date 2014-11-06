@@ -11,7 +11,7 @@
     #define _FG_GFX_TYPES_H_
     #define _FG_GFX_TYPES_BLOCK__
 
-    #ifdef _FG_TYPES_BLOCK__
+    #ifdef _FG_TYPES_H_BLOCK_
         #error "FG_TYPES_BLOCK constant is defined. Do not include fgGfxTypes header inside of fgTypes header."
     #endif
 

@@ -232,7 +232,7 @@ void fgPointerInputReceiver::handlePointerPressed(fgVector2i point, unsigned int
         touchEvent->y = point.y;
 
         fgArgumentList *argList = new fgArgumentList();
-        argList->pushArgument(FG_ARGUMENT_STRUCT, (void *)touchEvent);
+        argList->pushArgument(FG_ARGUMENT_TEMP_POINTER, (void *)touchEvent);
         m_eventMgr->throwEvent(FG_EVENT_TOUCH_PRESSED, argList);
 
         // Throw also more general event
@@ -273,7 +273,7 @@ void fgPointerInputReceiver::handlePointerMoved(fgVector2i point, unsigned int t
         touchEvent->y = point.y;
 
         fgArgumentList *argList = new fgArgumentList();
-        argList->pushArgument(FG_ARGUMENT_STRUCT, (void *)touchEvent);
+        argList->pushArgument(FG_ARGUMENT_TEMP_POINTER, (void *)touchEvent);
         m_eventMgr->throwEvent(FG_EVENT_TOUCH_MOTION, argList);
 
         // Throw also more general event
@@ -328,7 +328,7 @@ void fgPointerInputReceiver::handlePointerReleased(fgVector2i point, unsigned in
         touchEvent->y = point.y;
 
         fgArgumentList *argList = new fgArgumentList();
-        argList->pushArgument(FG_ARGUMENT_STRUCT, (void *)touchEvent);
+        argList->pushArgument(FG_ARGUMENT_TEMP_POINTER, (void *)touchEvent);
         m_eventMgr->throwEvent(FG_EVENT_TOUCH_RELEASED, argList);
 
         // Throw also more general event
@@ -428,7 +428,7 @@ void fgPointerInputReceiver::processData(void) {
                         touchEvent->y = touchPtr.m_tapY;
 
                         fgArgumentList *argList = new fgArgumentList();
-                        argList->pushArgument(FG_ARGUMENT_STRUCT, (void *)touchEvent);
+                        argList->pushArgument(FG_ARGUMENT_TEMP_POINTER, (void *)touchEvent);
                         m_eventMgr->throwEvent(FG_EVENT_TOUCH_TAP_FINISHED, argList);
 
                         //touchEvent = new fgTouchEvent(*touchEvent);
@@ -522,7 +522,7 @@ void fgPointerInputReceiver::processData(void) {
                     swipeEvent->yEnd = touchPtr.m_pointerYEnd;
 
                     fgArgumentList *argList = new fgArgumentList();
-                    argList->pushArgument(FG_ARGUMENT_STRUCT, (void *)swipeEvent);
+                    argList->pushArgument(FG_ARGUMENT_TEMP_POINTER, (void *)swipeEvent);
 
                     if(X && Y) {
                         swipeEvent->eventType = FG_EVENT_SWIPE_XY;
