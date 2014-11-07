@@ -64,7 +64,7 @@ m_argc(_argc) {
  * @return 
  */
 fgBool fgScriptCallback::Call(void) {
-    if(m_type == INVALID || !m_luaState)
+    if(m_type == INVALID || !m_luaState || !m_function)
         return FG_FALSE;
     if(m_argc > 0 && m_type != SCRIPT) {
         // This callback requires at least one argument
@@ -72,7 +72,9 @@ fgBool fgScriptCallback::Call(void) {
         return FG_FALSE;
     }
 #if defined(FG_USING_LUA_PLUS)
-    if(m_type == GUI_CALLBACK) {
+    if(!m_argc) {
+        (*m_function)(); // No return value expected
+    } else if(m_type == GUI_CALLBACK) {
         // Standard mode is that Lua/Script callback get only one parameter
         // In case of Event this will be proper event structure
         // With GUI this will be proper pointer to Widget
@@ -107,6 +109,9 @@ fgBool fgScriptCallback::Call(fgArgumentList *argv) {
     if(!argv->getArgumentCount()) {
         // This is hacky, what if script callback is to function that takes
         // some number of arguments?
+        return Call();
+    }
+    if(!m_argc) {
         return Call();
     }
 #if defined(FG_USING_LUA_PLUS)

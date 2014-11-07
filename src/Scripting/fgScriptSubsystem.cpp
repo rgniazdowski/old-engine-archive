@@ -661,6 +661,21 @@ int fgScriptSubsystem::addEventCallbackWrapper(lua_State *L) {
         FG_LOG_DEBUG("Script: EventWrapper: empty argument list");
         return 0;
     }
+
+    //
+    // Need some automation for checking the list of arguments
+    //
+    //LUA_TNONE         (-1)
+    //LUA_TNIL           0
+    //LUA_TBOOLEAN       1
+    //LUA_TLIGHTUSERDATA 2
+    //LUA_TNUMBER        3
+    //LUA_TSTRING        4
+    //LUA_TTABLE         5
+    //LUA_TFUNCTION      6
+    //LUA_TUSERDATA      7
+    //LUA_TTHREAD        8
+
     FG_LOG_DEBUG("Script: addEventCallbackWrapper: argc[%d]", args.Count());
     if(args.Count() >= 2) {
         int id = 1;
@@ -669,7 +684,7 @@ int fgScriptSubsystem::addEventCallbackWrapper(lua_State *L) {
             if(iVal < (int)FG_NUM_EVENT_TYPES)
                 eventType = (fgEventType)iVal;
             FG_LOG_DEBUG("Script: EventWrapper: eventType[%d]", iVal);
-        } 
+        }
         id++;
         if(args[id].IsFunction()) {
             objFunction = args[id];
@@ -677,7 +692,7 @@ int fgScriptSubsystem::addEventCallbackWrapper(lua_State *L) {
         } else if(args[id].IsString()) {
             script = args[id].GetString();
             FG_LOG_DEBUG("Script: EventWrapper: 2nd argument is a string[%s]", script);
-        } 
+        }
         id++;
         if(args.Count() >= 3) {
             if(args[id].IsInteger()) {
@@ -694,7 +709,6 @@ int fgScriptSubsystem::addEventCallbackWrapper(lua_State *L) {
         FG_LOG_DEBUG("Script: EventWrapper: No script nor function specified");
         return 0;
     }
-    fgBool status = FG_TRUE;
     if(!m_pEventMgr)
         return 0;
     //if(m_pEventMgr->isInit()) {}
@@ -711,6 +725,148 @@ int fgScriptSubsystem::addEventCallbackWrapper(lua_State *L) {
         FG_LOG_DEBUG("Script: Successfully added callback for event[%d]", eventType);
     } else {
         FG_LOG_DEBUG("Script: Failed to add callback for event[%d]", eventType);
+    }
+    // Can also return this pointer for future reference - so it is possible to remove
+    // callback for given event type
+#endif
+    return 0;
+}
+
+/**
+ * 
+ * @param L
+ * @return 
+ */
+int fgScriptSubsystem::addTimeoutCallbackWrapper(lua_State *L) {
+#if defined(FG_USING_LUA_PLUS)
+    LuaPlus::LuaState* state = lua_State_to_LuaState(L);
+    LuaPlus::LuaStack args(state);
+    const char *script = NULL;
+    int timeout = -1;
+    LuaPlus::LuaObject objFunction;
+    fgBool hasFunction = FG_FALSE;
+    int argc = 0;
+    if(args.Count() == 0) {
+        FG_LOG_DEBUG("Script: TimeoutWrapper: empty argument list");
+        return 0;
+    }
+    FG_LOG_DEBUG("Script: addTimeoutCallbackWrapper: argc[%d]", args.Count());
+    if(args.Count() >= 1) {
+        int id = 1;
+
+        if(args[id].IsFunction()) {
+            objFunction = args[id];
+            hasFunction = FG_TRUE;
+        } else if(args[id].IsString()) {
+            script = args[id].GetString();
+            FG_LOG_DEBUG("Script: TimeoutWrapper: 1st argument is a string[%s]", script);
+        }
+        id++;
+        if(args.Count() >= 2) {
+            if(args[id].IsInteger()) {
+                timeout = abs(args[id].GetInteger());
+                FG_LOG_DEBUG("Script: TimeoutWrapper: 2nd argument: timeout[%d]", timeout);
+            }
+        }
+    }
+    if(!script && !hasFunction) {
+        FG_LOG_DEBUG("Script: EventWrapper: No script nor function specified");
+        return 0;
+    }
+    if(!m_pEventMgr)
+        return 0;
+    //if(m_pEventMgr->isInit()) {}
+    if(m_pEventMgr->getManagerType() != FG_MANAGER_EVENT)
+        return 0;
+    if(timeout < 0)
+        timeout = FG_TIMEOUT_CALLBACK_DEFAULT_TIMEOUT;
+    fgFunctionCallback *callback = NULL;
+    if(script) {
+        callback = new fgScriptCallback(L, script, 0, fgScriptCallback::SCRIPT);
+    } else if(hasFunction) {
+        callback = new fgScriptCallback(L, objFunction, argc, fgScriptCallback::EVENT_CALLBACK);
+    }
+    if(static_cast<fgEventManager *>(m_pEventMgr)->addTimeoutCallback(callback, timeout, NULL)) {
+        FG_LOG_DEBUG("Script: Successfully added timeout callback");
+    } else {
+        FG_LOG_DEBUG("Script: Failed to add timeout callback");
+    }
+    // Can also return this pointer for future reference - so it is possible to remove
+    // callback for given event type
+#endif
+    return 0;
+}
+
+/**
+ * 
+ * @param L
+ * @return 
+ */
+int fgScriptSubsystem::addCyclicCallbackWrapper(lua_State *L) {
+#if defined(FG_USING_LUA_PLUS)
+    LuaPlus::LuaState* state = lua_State_to_LuaState(L);
+    LuaPlus::LuaStack args(state);
+    const char *script = NULL;
+    int interval = -1;
+    int repeats = 0;
+    LuaPlus::LuaObject objFunction;
+    fgBool hasFunction = FG_FALSE;
+    int argc = 0;
+    if(args.Count() == 0) {
+        FG_LOG_DEBUG("Script: CyclicWrapper: empty argument list");
+        return 0;
+    }
+    FG_LOG_DEBUG("Script: addCyclicCallbackWrapper: argc[%d]", args.Count());
+    if(args.Count() >= 1) {
+        int id = 1;
+        // Function
+        if(args[id].IsFunction()) {
+            objFunction = args[id];
+            hasFunction = FG_TRUE;
+        } else if(args[id].IsString()) {
+            script = args[id].GetString();
+            FG_LOG_DEBUG("Script: CyclicWrapper: 1st argument is a string[%s]", script);
+        }
+        id++;
+        // Repeats
+        if(args.Count() >= 2) {
+            if(args[id].IsInteger()) {
+                repeats = abs(args[id].GetInteger());
+                FG_LOG_DEBUG("Script: CyclicWrapper: 2nd argument: repeats[%d]", repeats);
+            }
+        }
+        id++;
+        // Interval
+        if(args.Count() >= 2) {
+            if(args[id].IsInteger()) {
+                interval = abs(args[id].GetInteger());
+                FG_LOG_DEBUG("Script: CyclicWrapper: 3rd argument: interval[%d]", interval);
+            }
+        }
+    }
+    if(!script && !hasFunction) {
+        FG_LOG_DEBUG("Script: CyclicWrapper: No script nor function specified");
+        return 0;
+    }
+    if(!m_pEventMgr)
+        return 0;
+    //if(m_pEventMgr->isInit()) {}
+    if(m_pEventMgr->getManagerType() != FG_MANAGER_EVENT)
+        return 0;
+    if(interval < 0)
+        interval = FG_CYCLIC_CALLBACK_DEFAULT_INTERVAL;
+    if(!repeats)
+        repeats = FG_CYCLIC_CALLBACK_DEFAULT_REPEAT;
+    fgFunctionCallback *callback = NULL;
+    if(script) {
+        callback = new fgScriptCallback(L, script, 0, fgScriptCallback::SCRIPT);
+    } else if(hasFunction) {
+        callback = new fgScriptCallback(L, objFunction, argc, fgScriptCallback::EVENT_CALLBACK);
+    }
+    if(static_cast<fgEventManager *>(m_pEventMgr)->addCyclicCallback(callback, repeats, interval, NULL)) {
+        FG_LOG_DEBUG("Script: Successfully added cyclic callback");
+    } else {
+        FG_LOG_DEBUG("Script: Failed to add cyclic callback");
     }
     // Can also return this pointer for future reference - so it is possible to remove
     // callback for given event type
@@ -739,7 +895,10 @@ fgBool fgScriptSubsystem::registerEventManager(void) {
     m_metatableEventMgr = m_globals.CreateTable(fgScriptMetatables::getMetatableName(fgScriptMetatables::EVENT_MANAGER_MT_ID));
     m_metatableEventMgr.SetObject("__index", m_metatableEventMgr);
     //m_metatableEventMgr.RegisterObjectDirect("");
+    // Could use Register direct? hmm?
     m_metatableEventMgr.Register("addEventCallback", &addEventCallbackWrapper);
+    m_metatableEventMgr.Register("addTimeoutCallback", &addTimeoutCallbackWrapper);
+    m_metatableEventMgr.Register("addCyclicCallback", &addCyclicCallbackWrapper);
 
     uintptr_t offset = (uintptr_t)m_pEventMgr;
     userDataObjectMapItor it = m_userDataObjectMap.find(offset);
@@ -978,8 +1137,7 @@ int fgScriptSubsystem::newResourceWrapper(lua_State* L) {
     FG_LOG_DEBUG("Script: New Resource: ptr[%p], offset[%lu]", pResource, offset);
     fgResourceType resType = pResource->getResourceType();
     fgScriptMetatables::METAID metaID = fgScriptMetatables::getMetatableIDFromResourceType(resType);
-    if(metaID == fgScriptMetatables::EMPTY_MT_ID)
-    {
+    if(metaID == fgScriptMetatables::EMPTY_MT_ID) {
         resourceObj.SetMetatable(LuaPlus::LuaObject());
         resourceObj.AssignNil();
         status = FG_FALSE;

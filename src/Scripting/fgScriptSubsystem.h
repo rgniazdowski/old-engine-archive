@@ -310,6 +310,20 @@ protected:
      * @return 
      */
     static int addEventCallbackWrapper(lua_State *L);
+    
+    /**
+     * 
+     * @param L
+     * @return 
+     */
+    static int addTimeoutCallbackWrapper(lua_State *L);
+    
+    /**
+     * 
+     * @param L
+     * @return 
+     */
+    static int addCyclicCallbackWrapper(lua_State *L);
 
     /**
      * 

@@ -9,9 +9,15 @@
 
 #ifndef _FG_CYCLIC_CALLBACK_H_
     #define _FG_CYCLIC_CALLBACK_H_
+    #define _FG_CYCLIC_CALLBACK_H_BLOCK_
+
 
     #include "fgCallback.h"
     #include "fgArgumentList.h"
+
+    #define FG_CYCLIC_CALLBACK_DEFAULT_REPEAT   10
+    #define FG_CYCLIC_CALLBACK_INFINITE_REPEAT  -1
+    #define FG_CYCLIC_CALLBACK_DEFAULT_INTERVAL 2500
 
 /**
  * 
@@ -19,26 +25,47 @@
 struct fgCyclicCallback {
     ///
     fgFunctionCallback *callback;
-    ///
-    int repeats; // -1 means infinite 
-    /// Interval in miliseconds
+    /// -1 means infinite 
+    int repeats;
+    /// Interval in milliseconds
     int interval;
     ///
-    unsigned long int timestamp;
+    unsigned long int timeStamp;
     ///
     fgArgumentList *argList;
-    
-    //
-    fgCyclicCallback() : callback(NULL), repeats(-1), interval(0), timestamp(0), argList(NULL) { }
-    
-    //
-    fgCyclicCallback(fgFunctionCallback *_callback, int _repeats, int _interval, fgArgumentList *_argList) {
+    /**
+     * 
+     */
+    fgCyclicCallback() :
+    callback(NULL),
+    repeats(-1),
+    interval(0),
+    timeStamp(0),
+    argList(NULL) { }
+    /**
+     * 
+     * @param _callback
+     * @param _repeats
+     * @param _interval
+     * @param _argList
+     */
+    fgCyclicCallback(fgFunctionCallback *_callback,
+                     int _repeats = FG_CYCLIC_CALLBACK_DEFAULT_REPEAT,
+                     int _interval = FG_CYCLIC_CALLBACK_DEFAULT_INTERVAL,
+                     fgArgumentList *_argList = NULL) {
+        if(!_callback) {
+            callback = NULL;
+            repeats = 0;
+            argList = 0;
+            return;
+        }
         callback = _callback;
         repeats = _repeats;
         interval = _interval;
-        timestamp = 0;
+        timeStamp = 0;
         argList = _argList;
     }
 };
 
+    #undef _FG_CYCLIC_CALLBACK_H_BLOCK_
 #endif /* _FG_CYCLIC_CALLBACK_H_ */

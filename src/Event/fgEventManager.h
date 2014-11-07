@@ -182,8 +182,7 @@ public:
      * @param argList
      * @return 
      */
-    fgFunctionCallback* addTimeoutCallback(
-                                           fgFunctionCallback *callback,
+    fgFunctionCallback* addTimeoutCallback(fgFunctionCallback *callback,
                                            int timeout,
                                            fgArgumentList *argList);
     /**
@@ -194,11 +193,10 @@ public:
      * @param argList
      * @return 
      */
-    fgFunctionCallback* addCyclicCallback(
-                                          fgFunctionCallback *callback,
-                                          int repeats,
-                                          int interval,
-                                          fgArgumentList *argList);
+    fgFunctionCallback* addCyclicCallback(fgFunctionCallback *callback,
+                                          int repeats = FG_CYCLIC_CALLBACK_INFINITE_REPEAT,
+                                          int interval = FG_CYCLIC_CALLBACK_DEFAULT_INTERVAL,
+                                          fgArgumentList *argList = NULL);
 
     // This adds key code to the pool of pressed down keys
     void addKeyDown(int keyCode);

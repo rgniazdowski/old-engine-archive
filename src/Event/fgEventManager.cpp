@@ -251,7 +251,7 @@ fgFunctionCallback* fgEventManager::addTimeoutCallback(fgFunctionCallback *pCall
     if(!pCallback)
         return NULL;
     fgTimeoutCallback timeoutCallback(pCallback, timeout, pArgList);
-    timeoutCallback.timestamp = FG_GetTicks();
+    timeoutCallback.timeStamp = FG_GetTicks();
     m_timeoutCallbacks.push_back(timeoutCallback);
     return pCallback;
 }
@@ -271,7 +271,7 @@ fgFunctionCallback* fgEventManager::addCyclicCallback(fgFunctionCallback *pCallb
     if(!pCallback)
         return NULL;
     fgCyclicCallback cyclicCallback(pCallback, repeats, interval, pArgList);
-    cyclicCallback.timestamp = FG_GetTicks();
+    cyclicCallback.timeStamp = FG_GetTicks();
     m_cyclicCallbacks.push_back(cyclicCallback);
     return pCallback;
 }
@@ -363,7 +363,7 @@ void fgEventManager::executeEvents(void) {
     // After timeout is executed it needs to be deleted from the timeouts pool - also the callback pointer must 
     // be freed with the argument list as they no longer needed
     for(fgTimeoutCallbacksVec::iterator it = m_timeoutCallbacks.begin(); it != m_timeoutCallbacks.end(); it++) {
-        if(TS - it->timestamp >= (unsigned long int)it->timeout) {
+        if(TS - it->timeStamp >= (unsigned long int)it->timeout) {
             if(it->callback) {
                 it->callback->Call(it->argList);
 
@@ -383,10 +383,10 @@ void fgEventManager::executeEvents(void) {
 
     // Phase 4: Cyclic callbacks
     for(fgCyclicCallbacksVec::iterator it = m_cyclicCallbacks.begin(); it != m_cyclicCallbacks.end(); it++) {
-        if(TS - it->timestamp >= (unsigned long int)it->interval) {
+        if(TS - it->timeStamp >= (unsigned long int)it->interval) {
             if(it->callback && (it->repeats || it->repeats == -1)) {
                 it->callback->Call(it->argList);
-                it->timestamp = TS;
+                it->timeStamp = TS;
                 if(it->repeats != 0)
                     it->repeats--;
             }

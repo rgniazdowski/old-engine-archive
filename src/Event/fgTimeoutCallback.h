@@ -13,19 +13,40 @@
     #include "fgCallback.h"
     #include "fgArgumentList.h"
 
-/*
+    #define FG_TIMEOUT_CALLBACK_DEFAULT_TIMEOUT 2500
+
+/**
  *
  */
 struct fgTimeoutCallback {
+    ///
     fgFunctionCallback *callback;
+    ///
     fgArgumentList *argList;
+    ///
     int timeout;
-    unsigned long int timestamp;
-    fgTimeoutCallback() : callback(NULL), argList(NULL), timeout(0), timestamp(0) { }
-    fgTimeoutCallback(fgFunctionCallback *_callback, int _timeout, fgArgumentList *_argList) {
+    ///
+    unsigned long int timeStamp;
+    /**
+     * 
+     */
+    fgTimeoutCallback() :
+    callback(NULL),
+    argList(NULL),
+    timeout(FG_TIMEOUT_CALLBACK_DEFAULT_TIMEOUT),
+    timeStamp(0) { }
+    /**
+     * 
+     * @param _callback
+     * @param _timeout
+     * @param _argList
+     */
+    fgTimeoutCallback(fgFunctionCallback *_callback,
+                      int _timeout = FG_TIMEOUT_CALLBACK_DEFAULT_TIMEOUT,
+                      fgArgumentList *_argList = NULL) {
         callback = _callback;
         timeout = _timeout;
-        timestamp = 0;
+        timeStamp = 0;
         argList = _argList;
     }
 };
