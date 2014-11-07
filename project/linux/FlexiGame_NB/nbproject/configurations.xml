@@ -546,6 +546,8 @@
           <itemPath>../../../src/Util/fgFileErrorCodes.h</itemPath>
           <itemPath>../../../src/Util/fgHandle.h</itemPath>
           <itemPath>../../../src/Util/fgHandleManager.h</itemPath>
+          <itemPath>../../../src/Util/fgHashFunc.cpp</itemPath>
+          <itemPath>../../../src/Util/fgHashFunc.h</itemPath>
           <itemPath>../../../src/Util/fgMemory.h</itemPath>
           <itemPath>../../../src/Util/fgMemoryErrorCodes.h</itemPath>
           <itemPath>../../../src/Util/fgPath.cpp</itemPath>
@@ -2931,6 +2933,10 @@
             ex="false"
             tool="3"
             flavor2="0">
+      </item>
+      <item path="../../../src/Util/fgHashFunc.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../../src/Util/fgHashFunc.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/Util/fgMemory.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -5328,6 +5334,10 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/Util/fgHashFunc.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../../src/Util/fgHashFunc.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../../../src/Util/fgMemory.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/Util/fgMemoryErrorCodes.h"
@@ -7707,6 +7717,10 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/Util/fgHashFunc.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../../src/Util/fgHashFunc.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../../../src/Util/fgMemory.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/Util/fgMemoryErrorCodes.h"
@@ -10063,6 +10077,10 @@
             ex="false"
             tool="3"
             flavor2="0">
+      </item>
+      <item path="../../../src/Util/fgHashFunc.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../../src/Util/fgHashFunc.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/Util/fgMemory.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -12443,6 +12461,10 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/Util/fgHashFunc.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../../src/Util/fgHashFunc.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../../../src/Util/fgMemory.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/Util/fgMemoryErrorCodes.h"
@@ -14811,6 +14833,10 @@
             ex="false"
             tool="3"
             flavor2="0">
+      </item>
+      <item path="../../../src/Util/fgHashFunc.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../../src/Util/fgHashFunc.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/Util/fgMemory.h" ex="false" tool="3" flavor2="0">
       </item>
