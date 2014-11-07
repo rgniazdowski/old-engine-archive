@@ -32,6 +32,7 @@ fgScriptCallback::fgScriptCallback(lua_State *L,
                                    ScriptCallbackType _type) :
 m_luaState(L),
 m_script(),
+m_function(NULL),
 m_type(_type),
 m_argc(_argc) {
     if(!info || !L) {
@@ -45,11 +46,13 @@ m_argc(_argc) {
         LuaPlus::LuaState *state = lua_State_to_LuaState(m_luaState);
         if(!state)
             return;
+        m_function = fgMalloc<function_type>();
         // info is function name
-        m_function = new function_type(state, info);
+        *m_function = function_type(state, info);
         FG_LOG_DEBUG("ScriptCallback: Initializing with Lua Function: '%s'", info);
 #endif /* FG_USING_LUA_PLUS */
     } else if(_type == SCRIPT) {
+        m_function = NULL;
         // Initialize buffer of script to execute
         m_script = info;
         FG_LOG_DEBUG("ScriptCallback: Initializing with script: '%s'", info);
@@ -128,6 +131,7 @@ fgBool fgScriptCallback::Call(fgArgumentList *argv) {
         //
         // #FIXME -- need to automate this somehow ... cant quite see if it's possible
         //
+#if 0
         fgEventType eType = pEvent->eventType;
         switch(eType) {
             case FG_EVENT_TOUCH_PRESSED:
@@ -148,7 +152,7 @@ fgBool fgScriptCallback::Call(fgArgumentList *argv) {
             case FG_EVENT_SWIPE_X:
             case FG_EVENT_SWIPE_Y:
             case FG_EVENT_SWIPE_XY:
-            //case FG_EVENT_SWIPE_ANGLE:
+                //case FG_EVENT_SWIPE_ANGLE:
                 //fgSwipeEvent
                 break;
 
@@ -172,7 +176,7 @@ fgBool fgScriptCallback::Call(fgArgumentList *argv) {
             case FG_EVENT_RESOURCE_REQUESTED:
                 //fgResourceEvent
                 break;
-                
+
             case FG_EVENT_PROGRAM_INIT:
                 // ??
                 break;
@@ -184,7 +188,7 @@ fgBool fgScriptCallback::Call(fgArgumentList *argv) {
                 // ???
                 // fgCameraEvent
                 break;
-                
+
             case FG_EVENT_SOUND_PLAYED:
                 // fgSoundEvent ??
                 break;
@@ -192,7 +196,7 @@ fgBool fgScriptCallback::Call(fgArgumentList *argv) {
             case FG_EVENT_MENU_CHANGED:
                 // fgMenuChangedEvent ??
                 break;
-            case FG_EVENT_WIDGET_STATE_CHANGED: 
+            case FG_EVENT_WIDGET_STATE_CHANGED:
                 // fgWidgetEvent
                 break;
 
@@ -214,12 +218,13 @@ fgBool fgScriptCallback::Call(fgArgumentList *argv) {
                 return FG_FALSE;
                 break;
         };
+#endif
         // Need to cast to proper pointer already
         // Some helper ?
         //m_function((fgMouseEvent *));
         // fgEvent is just one big union, first bytes point
         // to the same thing in every event structure - eventType + timeStamp
-        (*m_function)((fgEvent *)pEvent); 
+        (*m_function)((fgEvent *)pEvent);
         return FG_TRUE;
     } else if(m_type == SCRIPT) {
         if(m_script.empty())

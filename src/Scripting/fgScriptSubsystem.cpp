@@ -669,13 +669,7 @@ int fgScriptSubsystem::addEventCallbackWrapper(lua_State *L) {
             if(iVal < (int)FG_NUM_EVENT_TYPES)
                 eventType = (fgEventType)iVal;
             FG_LOG_DEBUG("Script: EventWrapper: eventType[%d]", iVal);
-        } else {
-            int isNumber = (int)args[id].IsNumber();
-            int isBoolen = (int)args[id].IsBoolean();
-            int isNone = (int)args[id].IsNone();
-            LuaPlus::LuaObject TEST = args[id];
-            FG_LOG_DEBUG("Script: EventWrapper: 1st argument is not a integer [%s]", TEST.TypeName());
-        }
+        } 
         id++;
         if(args[id].IsFunction()) {
             objFunction = args[id];
@@ -683,10 +677,7 @@ int fgScriptSubsystem::addEventCallbackWrapper(lua_State *L) {
         } else if(args[id].IsString()) {
             script = args[id].GetString();
             FG_LOG_DEBUG("Script: EventWrapper: 2nd argument is a string[%s]", script);
-        } else {
-            LuaPlus::LuaObject TEST = args[id];
-            FG_LOG_DEBUG("Script: EventWrapper: 1st argument is not valid [%s]", TEST.TypeName());
-        }
+        } 
         id++;
         if(args.Count() >= 3) {
             if(args[id].IsInteger()) {
@@ -711,19 +702,18 @@ int fgScriptSubsystem::addEventCallbackWrapper(lua_State *L) {
         return 0;
 
     fgFunctionCallback *callback = NULL;
-
     if(script) {
         callback = new fgScriptCallback(L, script, 0, fgScriptCallback::SCRIPT);
     } else if(hasFunction) {
         callback = new fgScriptCallback(L, objFunction, argc, fgScriptCallback::EVENT_CALLBACK);
     }
-    //if(callback) {
     if(static_cast<fgEventManager *>(m_pEventMgr)->addEventCallback(eventType, callback)) {
         FG_LOG_DEBUG("Script: Successfully added callback for event[%d]", eventType);
     } else {
         FG_LOG_DEBUG("Script: Failed to add callback for event[%d]", eventType);
     }
-
+    // Can also return this pointer for future reference - so it is possible to remove
+    // callback for given event type
 #endif
     return 0;
 }
@@ -875,7 +865,7 @@ fgBool fgScriptSubsystem::registerEventManager(void) {
     metatableName = fgScriptMetatables::getMetatableName(fgScriptMetatables::EVENT_RESOURCE_MT_ID);
     LPCD::Class(m_luaState->GetCState(), metatableName, metatableNameEventBase)
             .Property("status", &fgResourceEvent::status)
-            //.Property("resource", &fgResourceEvent::resource) // need LPCD for fgResource * + type check
+            .Property("resource", &fgResourceEvent::resource) // need LPCD for fgResource * + type check
             ;
     // __gc ? nope
 
@@ -987,26 +977,15 @@ int fgScriptSubsystem::newResourceWrapper(lua_State* L) {
     userDataObjectMapItor it = m_userDataObjectMap.find(offset);
     FG_LOG_DEBUG("Script: New Resource: ptr[%p], offset[%lu]", pResource, offset);
     fgResourceType resType = pResource->getResourceType();
-    fgScriptMetatables::METAID metaID = fgScriptMetatables::EMPTY_MT_ID;
-    const char *metatableName = NULL;
-    if(resType == FG_RESOURCE_TEXTURE) {
-        metaID = fgScriptMetatables::TEXTURE_RESOURCE_MT_ID;
-        metatableName = fgScriptMetatables::getMetatableName(metaID);
-    } else if(resType == FG_RESOURCE_FONT) {
-        metaID = fgScriptMetatables::FONT_RESOURCE_MT_ID;
-        metatableName = fgScriptMetatables::getMetatableName(metaID);
-    } else if(resType == FG_RESOURCE_3D_MODEL) {
-        metaID = fgScriptMetatables::GFX_MODEL_RESOURCE_MT_ID;
-        metatableName = fgScriptMetatables::getMetatableName(metaID);
-    } else if(resType == FG_RESOURCE_PARTICLE_EFFECT) {
-        metaID = fgScriptMetatables::PARTICLE_EFFECT_RESOURCE_MT_ID;
-        metatableName = fgScriptMetatables::getMetatableName(metaID);
-    } else {
+    fgScriptMetatables::METAID metaID = fgScriptMetatables::getMetatableIDFromResourceType(resType);
+    if(metaID == fgScriptMetatables::EMPTY_MT_ID)
+    {
         resourceObj.SetMetatable(LuaPlus::LuaObject());
         resourceObj.AssignNil();
         status = FG_FALSE;
         FG_LOG_DEBUG("Script: New Resource: Unknown resource type requested / not supported: resType[%d]", resType);
     }
+    const char *metatableName = fgScriptMetatables::getMetatableName(metaID);
     if(status) {
         resourceObj.SetMetatable(state->GetRegistry()[metatableName]);
         FG_LOG_DEBUG("Script: New Resource: metatable: id[%d], name[%s]", metaID, metatableName);
@@ -1283,7 +1262,7 @@ fgBool fgScriptSubsystem::registerParticleSystem(void) {
     if(m_globals.GetRef() < 0)
         return FG_FALSE;
 
-    // Particle sysyem/manager metatable
+    // Particle system/manager metatable
     m_metatableParticleMgr = m_globals.CreateTable(fgScriptMetatables::getMetatableName(fgScriptMetatables::PARTICLE_SYSTEM_MT_ID));
     m_metatableParticleMgr.SetObject("__index", m_metatableParticleMgr);
     //m_metatableParticleMgr.Register("request", &fgScriptSubsystem::newResourceWrapper);

@@ -27,6 +27,8 @@
         #include "LuaPlus/LuaPlus.h"
     #endif
 
+    #include "Util/fgMemory.h"
+
 /**
  * 
  * @return 
@@ -66,9 +68,13 @@ public:
                      const ScriptCallbackType _type = EVENT_CALLBACK) :
     m_luaState(L),
     m_script(),
+    m_function(NULL),
     m_type(_type),
     m_argc(_argc) {
-        m_function = new function_type(function);
+        // Will use simple malloc because there's no need to call destructor
+        // on this type
+        m_function = fgMalloc<function_type>();
+        *m_function = function_type(function);
     }
     #endif /* FG_USING_LUA_PLUS */
     /**
@@ -86,8 +92,9 @@ public:
      */
     virtual ~fgScriptCallback() {
         m_luaState = NULL;
-        if(m_function)
-            delete m_function;
+        if(m_function) {
+            fgFree(m_function);
+        }
         m_function = NULL;
         m_script.clear();
     }
@@ -104,10 +111,14 @@ public:
      */
     #if defined(FG_USING_LUA_PLUS)
     void setFunction(const LuaPlus::LuaObject& function) {
-        if(m_function)
-            delete m_function;
-
-        m_function = new function_type(function);
+        if(!m_function) {
+            m_function = fgMalloc<function_type>();
+        }
+        if(!function.GetCState())
+            return;
+        if(!m_luaState)
+            m_luaState = function.GetCState();
+        *m_function = function_type(function);
         if(m_type == INVALID)
             m_type = EVENT_CALLBACK;
     }

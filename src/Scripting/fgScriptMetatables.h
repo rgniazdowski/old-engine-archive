@@ -309,6 +309,31 @@ public:
      * @return 
      */
     static METAID getMetatableIDFromWidgetType(const unsigned int widgetType);
+    
+    /**
+     * 
+     * @param widgetType
+     * @return 
+     */
+    static inline const char *getMetatableNameFromWidgetType(const unsigned int widgetType) {
+        return getMetatableName(getMetatableIDFromWidgetType(widgetType));
+    }
+    
+    /**
+     * 
+     * @param resourceType
+     * @return 
+     */    
+    static METAID getMetatableIDFromResourceType(const unsigned int resourceType);
+    
+    /**
+     * 
+     * @param resourceType
+     * @return 
+     */
+    static inline const char *getMetatableNameFromResourceType(const unsigned int resourceType) {
+        return getMetatableName(getMetatableIDFromResourceType(resourceType));
+    }
 
 };
 

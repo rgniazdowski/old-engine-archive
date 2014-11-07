@@ -20,7 +20,7 @@
     #if defined(_FG_SCRIPT_METATABLES_H_BLOCK_)
         #error "FG_SCRIPT_METATABLES_H_BLOCK is defined: Do not include ScriptCD header inside of ScriptMetatables header"
     #endif
-    
+
     #if defined(_FG_EVENT_DEFINITIONS_H_BLOCK_)
         #error "FG_EVENT_DEFINITIONS_H_BLOCK is defined: Do not include ScriptCD header inside of EventDefinitions header"
     #endif
@@ -42,10 +42,10 @@
     #ifndef _FG_GUI_WIDGET_H_
         #include "GUI/fgGuiWidget.h"
     #endif
-    
-#ifndef _FG_EVENT_DEFINITIONS_H_
-    #include "Event/fgEventDefinitions.h"
-#endif
+
+    #ifndef _FG_EVENT_DEFINITIONS_H_
+        #include "Event/fgEventDefinitions.h"
+    #endif
 
     #include "fgLog.h"
 
@@ -286,6 +286,51 @@ namespace LPCD {
     template<> struct Type<const std::string&> : public Type<std::string> {
     };
 
+    ////////////////////////////////////////////////////////////////////////////
+
+    /***************************************************************************
+     * fgResource pointer parameter *
+     **************************************************************************/
+
+    template<> struct Type<fgResource *> {
+        static inline void Push(lua_State* L, const fgResource * value) {
+            LuaPlus::LuaState* state = lua_State_to_LuaState(L);
+            LuaPlus::LuaObject obj = state->BoxPointer((void*)value);
+            // Can check the pointer (offset) and instead of creating new object
+            // (BoxPointer) simply push already existing pointer
+            // Maybe create something like universal Push?
+            // #FIXME - some checking if the pointer isn't null (!)
+            fgScriptMetatables::METAID metaID = fgScriptMetatables::getMetatableIDFromResourceType(value->getResourceType());
+            const char *metatableName = fgScriptMetatables::getMetatableName(metaID);
+        #if defined(FG_DEBUG)
+            FG_LOG_DEBUG("Script: LPCD Push: ptr[%p], offset[%lu], name[%s]", value, (uintptr_t)value, value->getNameStr());
+        #endif
+            // This wont work - this simply packs widget that will have
+            // unregistered pointer / need to add some wrapper over this
+            // lua side object __GC callback will exit without doing anything
+            obj.SetMetatable(state->GetRegistry()[metatableName]);
+        }
+        static inline bool Match(lua_State* L, int idx) {
+            LuaPlus::LuaState* state = lua_State_to_LuaState(L);
+            LuaPlus::LuaObject obj = state->Stack(idx);
+            bool result;// = (obj.GetMetatable() == state->GetRegistry()[fgScriptMetatables::getMetatableName(fgScriptMetatables::GUI_WIDGET_MT_ID)]);
+            // This is fubar. No, really fucked up
+            result = (bool) obj.IsUserdata();
+            return result;
+        }
+        static inline fgResource * Get(lua_State* L, int idx) {
+            LuaPlus::LuaState* state = lua_State_to_LuaState(L);
+            fgResource *pResource = (fgResource *)state->UnBoxPointer(idx);
+            return pResource;
+        }
+    };
+
+    template<> struct Type<fgResource *&> : public Type<fgResource *> {
+    };
+
+    template<> struct Type<const fgResource *&> : public Type<fgResource *> {
+    };
+
     /***************************************************************************
      * fgGuiWidget pointer parameter *
      **************************************************************************/
@@ -310,7 +355,7 @@ namespace LPCD {
         static inline bool Match(lua_State* L, int idx) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
             LuaPlus::LuaObject obj = state->Stack(idx);
-            bool result = (obj.GetMetatable() == state->GetRegistry()[fgScriptMetatables::getMetatableName(fgScriptMetatables::GUI_WIDGET_MT_ID)]);
+            bool result;// = (obj.GetMetatable() == state->GetRegistry()[fgScriptMetatables::getMetatableName(fgScriptMetatables::GUI_WIDGET_MT_ID)]);
             // This is fubar
             result = (bool) obj.IsUserdata();
             return result;

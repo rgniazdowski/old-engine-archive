@@ -15,6 +15,7 @@
 
 #include "fgScriptMetatables.h"
 #include "GUI/fgGuiWidgetTypes.h"
+#include "Resource/fgResource.h"
 
 ///
 fgScriptMetatables::metatableInfoVec fgScriptMetatables::m_metatableInfoVec;
@@ -80,6 +81,27 @@ fgScriptMetatables::METAID fgScriptMetatables::getMetatableIDFromWidgetType(cons
 
 /**
  * 
+ * @param resourceType
+ * @return 
+ */
+fgScriptMetatables::METAID fgScriptMetatables::getMetatableIDFromResourceType(const unsigned int resourceType) {
+    METAID metaID;
+    if(resourceType == FG_RESOURCE_TEXTURE) {
+        metaID = fgScriptMetatables::TEXTURE_RESOURCE_MT_ID;
+    } else if(resourceType == FG_RESOURCE_FONT) {
+        metaID = fgScriptMetatables::FONT_RESOURCE_MT_ID;
+    } else if(resourceType == FG_RESOURCE_3D_MODEL) {
+        metaID = fgScriptMetatables::GFX_MODEL_RESOURCE_MT_ID;
+    } else if(resourceType == FG_RESOURCE_PARTICLE_EFFECT) {
+        metaID = fgScriptMetatables::PARTICLE_EFFECT_RESOURCE_MT_ID;
+    } else { 
+        metaID = fgScriptMetatables::EMPTY_MT_ID;
+    }
+    return metaID;
+}
+
+/**
+ * 
  */
 void fgScriptMetatables::generateMetatableNames(void) {
     // Initializing metatable map
@@ -93,18 +115,18 @@ void fgScriptMetatables::generateMetatableNames(void) {
     // Lowercase letters a - z ASCII 97 to 122
     // Uppercase letters A - Z ASCII 65 - 90
 #if 1
-    
+
     m_metatableInfoVec[EMPTY_MT_ID] = metatableInfo("FG", "X");
-    
+
     m_metatableInfoVec[VECTOR2I_MT_ID] = metatableInfo("FGX", "T");
     m_metatableInfoVec[VECTOR2F_MT_ID] = metatableInfo("FGX", "T");
     m_metatableInfoVec[VECTOR3I_MT_ID] = metatableInfo("FGX", "T");
     m_metatableInfoVec[VECTOR3F_MT_ID] = metatableInfo("FGX", "T");
     m_metatableInfoVec[VECTOR4I_MT_ID] = metatableInfo("FGX", "T");
     m_metatableInfoVec[VECTOR4F_MT_ID] = metatableInfo("FGX", "T");
-    
+
     m_metatableInfoVec[ERROR_MT_ID] = metatableInfo("FGX", "T");
-    
+
     m_metatableInfoVec[EVENT_MANAGER_MT_ID] = metatableInfo("FGX", "T");
     m_metatableInfoVec[RESOURCE_MANAGER_MT_ID] = metatableInfo("FGX", "T");
     m_metatableInfoVec[SHADER_MANAGER_MT_ID] = metatableInfo("FGX", "T");
@@ -114,7 +136,7 @@ void fgScriptMetatables::generateMetatableNames(void) {
     m_metatableInfoVec[WIDGET_MANAGER_MT_ID] = metatableInfo("FGX", "T");
     m_metatableInfoVec[STYLE_MANAGER_MT_ID] = metatableInfo("FGX", "T");
     m_metatableInfoVec[SOUND_MANAGER_MT_ID] = metatableInfo("FGX", "T");
-    
+
     m_metatableInfoVec[RESOURCE_MT_ID] = metatableInfo("FGX", "T");
     m_metatableInfoVec[TEXTURE_RESOURCE_MT_ID] = metatableInfo("FGX", "T");
     m_metatableInfoVec[FONT_RESOURCE_MT_ID] = metatableInfo("FGX", "T");
@@ -124,10 +146,10 @@ void fgScriptMetatables::generateMetatableNames(void) {
     m_metatableInfoVec[MUSIC_RESOURCE_MT_ID] = metatableInfo("FGX", "T");
     m_metatableInfoVec[PLUGIN_RESOURCE_MT_ID] = metatableInfo("FGX", "T");
     m_metatableInfoVec[SAVE_FILE_RESOURCE_MT_ID] = metatableInfo("FGX", "T");
-    
+
     m_metatableInfoVec[CONFIG_MT_ID] = metatableInfo("FGX", "T");
     m_metatableInfoVec[SETTINGS_MT_ID] = metatableInfo("FGX", "T");
-    
+
     m_metatableInfoVec[GUI_WIDGET_MT_ID] = metatableInfo("FGX", "T");
     m_metatableInfoVec[GUI_BUTTON_MT_ID] = metatableInfo("FGX", "T");
     m_metatableInfoVec[GUI_CONSOLE_MT_ID] = metatableInfo("FGX", "T");
@@ -144,7 +166,7 @@ void fgScriptMetatables::generateMetatableNames(void) {
     m_metatableInfoVec[GUI_TEXT_AREA_MT_ID] = metatableInfo("FGX", "T");
     m_metatableInfoVec[GUI_TOGGLE_BUTTON_MT_ID] = metatableInfo("FGX", "T");
     m_metatableInfoVec[GUI_WINDOW_MT_ID] = metatableInfo("FGX", "T");
-    
+
     m_metatableInfoVec[GUI_STYLE_MT_ID] = metatableInfo("FGX", "T");
     m_metatableInfoVec[GUI_STYLE_CONTENT_MT_ID] = metatableInfo("FGX", "T");
     m_metatableInfoVec[GUI_STYLE_SIZE_MT_ID] = metatableInfo("FGX", "T");
@@ -173,11 +195,11 @@ void fgScriptMetatables::generateMetatableNames(void) {
     m_metatableInfoVec[EVENT_WIDGET_MT_ID] = metatableInfo("FGX", "T");
     m_metatableInfoVec[EVENT_SENSORS_MT_ID] = metatableInfo("FGX", "T");
     m_metatableInfoVec[EVENT_MAIN_MT_ID] = metatableInfo("FGX", "T");
-    
+
     m_metatableInfoVec[SCRIPT_CALLBACK_MT_ID] = metatableInfo("FGX", "T");
-    
+
 #endif
-    
+
     for(int i = 0; i < (int)METATABLE_SIZE; i++) {
         m_metatableInfoVec[i].id = (unsigned short int)i;
     }
