@@ -157,7 +157,7 @@ fgBool fgScriptSubsystem::cyclicGCFunction(void* systemData, void* userData) {
     int bytesBefore = m_luaState->GC(LUA_GCCOUNTB, 0);
     m_luaState->GC(LUA_GCCOLLECT, 0);
     int bytesAfter = m_luaState->GC(LUA_GCCOUNTB, 0);
-    FG_LOG_DEBUG("Script: GC: before[%d], after[%d]\n", bytesBefore, bytesAfter);
+    FG_LOG_DEBUG("Script: GC: before[%d], after[%d]", bytesBefore, bytesAfter);
 #endif /* FG_USING_LUA_PLUS */
 }
 
@@ -192,7 +192,7 @@ fgBool fgScriptSubsystem::destroy(void) {
             end = m_userDataObjectMap.end();
     for(; it != end; it++) {
         userDataObjectMap::value_type &pair = *it;
-        pair.second.Reset();
+        pair.second.obj.Reset();
     }
     if(m_luaState)
         LuaPlus::LuaState::Destroy(m_luaState);
@@ -288,14 +288,14 @@ fgBool fgScriptSubsystem::initialize(void) {
     m_init = FG_TRUE;
     m_isBindingComplete = FG_TRUE;
     m_managerType = FG_MANAGER_SCRIPT;
-    
+
     if(m_cyclicGCCallback) {
         static_cast<fgEventManager *>(m_pEventMgr)->addCyclicCallback(m_cyclicGCCallback,
                                                                       FG_CYCLIC_CALLBACK_INFINITE_REPEAT,
-                                                                      5000,
+                                                                      FG_SCRIPT_DEFAULT_GC_INTERVAL,
                                                                       NULL);
     }
-    
+
     return FG_TRUE;
 }
 
@@ -368,20 +368,30 @@ int fgScriptSubsystem::managedResourceGCEvent(lua_State* L) {
                      isNoneOrNil);
         return 0;
     }
+    
     void *unboxed = state->UnBoxPointer(1);
     if(!unboxed) {
         return 0;
     }
+    fgBool isRegistered = FG_TRUE;
     fgResource *pResource = (fgResource *)unboxed;
     uintptr_t offset = (uintptr_t)pResource;
     userDataObjectMapItor it = m_userDataObjectMap.find(offset);
     if(it == m_userDataObjectMap.end()) {
+        isRegistered = FG_FALSE;        
+    }
+    if(isRegistered) {
+        if(!((*it).second.isBound)) {
+            isRegistered = FG_FALSE;
+        }
+    }
+    if(!isRegistered) {
         // The pointer is not registered
-        FG_LOG_DEBUG("Script: Managed Resource GC: pointer is not registered: ptr[%p], offset[%lu]", unboxed, offset);
+        FG_LOG_DEBUG("Script: Managed Resource GC: pointer is not registered: ptr[%p], offset[%lu], name[%s]", unboxed, offset, pResource->getNameStr());
         return 0;
     }
-    pResource->dispose();
-    FG_LOG_DEBUG("Script: Managed Resource GC: called dispose: name[%s], ptr[%p], offset[%lu]", pResource->getNameStr(), pResource, offset);
+    //pResource->dispose();
+    //FG_LOG_DEBUG("Script: Managed Resource GC: called dispose: name[%s], ptr[%p], offset[%lu]", pResource->getNameStr(), pResource, offset);
 #endif /* FG_USING_LUA_PLUS */
     return 0;
 }
@@ -400,12 +410,13 @@ fgBool fgScriptSubsystem::managedObjectDestructorCallback(void *systemData, void
     userDataObjectMapItor it = m_userDataObjectMap.find(offset);
     if(it != m_userDataObjectMap.end()) {
         // This pointer was stored - erase it
+        
 #if defined(FG_USING_LUA_PLUS)
-        if((*it).second.GetRef() > 0) {
-            (*it).second.SetMetatable(LuaPlus::LuaObject());
-            (*it).second.AssignNil();
+        if((*it).second.obj.GetRef() > 0 && (*it).second.isBound) {
+            (*it).second.obj.SetMetatable(LuaPlus::LuaObject());
+            (*it).second.obj.AssignNil();
         }
-        (*it).second.Reset();
+        (*it).second.obj.Reset();
 #endif /* FG_USING_LUA_PLUS */
         FG_LOG_DEBUG("GC: Managed Object Destructor Callback: pointer is registered - will be deleted: ptr[%p], offset[%lu]", systemData, offset);
         m_userDataObjectMap.erase(it);
@@ -1190,7 +1201,7 @@ int fgScriptSubsystem::newResourceWrapper(lua_State* L) {
         FG_LOG_DEBUG("Script: New Resource: metatable: id[%d], name[%s]", metaID, metatableName);
     }
     if(it == m_userDataObjectMap.end() && offset) {
-        m_userDataObjectMap[offset] = resourceObj;
+        m_userDataObjectMap[offset] = userDataObject(resourceObj, FG_TRUE);
     }
     if(status) {
         pResource->registerOnDestruct(&fgScriptSubsystem::managedObjectDestructorCallback, NULL);
@@ -1250,7 +1261,7 @@ fgBool fgScriptSubsystem::registerResourceManager(void) {
             .ObjectDirect("isDisposed", (fgResource *)0, &fgResource::isDisposed)
             .ObjectDirect("isLocked", (fgResource *)0, &fgResource::isLocked)
             .ObjectDirect("dispose", (fgResource *)0, &fgResource::dispose);
-    //.MetatableFunction("__gc", &fgScriptSubsystem::managedResourceGCEvent);
+    //.MetatableFunction("__gc", &fgScriptSubsystem::managedResourceGCEvent); // #DELETE
 
     // Register Texture Resource metatable
     LPCD::Class(m_luaState->GetCState(), fgScriptMT::getMetatableName(fgScriptMT::TEXTURE_RESOURCE_MT_ID), fgScriptMT::getMetatableName(fgScriptMT::RESOURCE_MT_ID))

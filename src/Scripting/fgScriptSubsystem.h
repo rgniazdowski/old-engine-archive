@@ -30,7 +30,7 @@
     #if defined(FG_USING_LUA_PLUS)
         #include "LuaPlus/LuaPlus.h"
     #endif
-    // Metatables info
+// Metatables info
     #include "fgScriptMT.h"
     #include "fgLog.h"
 
@@ -43,15 +43,15 @@ struct lua_State {
     #endif
 
     #include <map>
-    
-    // #FIXME
-    //#include "fgScriptCD.h"
+
+// #FIXME
+//#include "fgScriptCD.h"
     #include "Resource/fgManagedObjectBase.h"
-    
+
     #include "Event/fgCallback.h"
 
 
-    // Every 60s call global GC request
+// Every 60s call global GC request
     #define FG_SCRIPT_DEFAULT_GC_INTERVAL 60000
 
 /**
@@ -61,13 +61,26 @@ class fgScriptSubsystem : public fgManagerBase {
 public:
     typedef fgManagerBase base_type;
 private:
+
+    struct userDataObject {
     #if defined(FG_USING_LUA_PLUS)
-    ///
-    typedef std::map<uintptr_t, LuaPlus::LuaObject> userDataObjectMap;
+        ///
+        LuaPlus::LuaObject obj;
+        ///
+        fgBool isBound;
+        /**
+         * 
+         */
+        userDataObject() : obj(), isBound(FG_FALSE) { }
+        userDataObject(LuaPlus::LuaObject &_obj, fgBool _isBound = FG_FALSE) :
+        isBound(_isBound) {
+            obj = _obj;
+        }
     #else
-    ///
-    typedef std::map<uintptr_t, void *> userDataObjectMap;
     #endif
+    };
+    ///
+    typedef std::map<uintptr_t, userDataObject> userDataObjectMap;
     ///
     typedef userDataObjectMap::iterator userDataObjectMapItor;
 
@@ -120,7 +133,7 @@ private:
     static fgBool m_isBindingComplete;
     ///
     static userDataObjectMap m_userDataObjectMap;
-    
+
     ///
     fgFunctionCallback *m_cyclicGCCallback;
 
@@ -204,7 +217,7 @@ protected:
      * 
      */
     virtual void clear(void);
-    
+
     /**
      * 
      * @param systemData
@@ -321,21 +334,21 @@ protected:
      * @return 
      */
     static int newResourceWrapper(lua_State *L);
-    
+
     /**
      * 
      * @param L
      * @return 
      */
     static int addEventCallbackWrapper(lua_State *L);
-    
+
     /**
      * 
      * @param L
      * @return 
      */
     static int addTimeoutCallbackWrapper(lua_State *L);
-    
+
     /**
      * 
      * @param L
