@@ -7,15 +7,15 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 /* 
- * File:   fgScriptMetatables.h
+ * File:   fgScriptMT.h
  * Author: vigilant
  *
  * Created on November 6, 2014, 4:49 PM
  */
 
-#ifndef _FG_SCRIPT_METATABLES_H_
-    #define _FG_SCRIPT_METATABLES_H_
-    #define _FG_SCRIPT_METATABLES_H_BLOCK_
+#ifndef _FG_SCRIPT_MT_H_
+    #define _FG_SCRIPT_MT_H_
+    #define _FG_SCRIPT_MT_H_BLOCK_
 
     #ifndef _FG_TYPES_H_
         #include "fgTypes.h"
@@ -26,7 +26,7 @@ class fgScriptSubsystem;
 /**
  * 
  */
-class fgScriptMetatables {
+class fgScriptMT {
     friend class fgScriptSubsystem;
 public:
 
@@ -264,16 +264,16 @@ private:
     /**
      * 
      */
-    fgScriptMetatables();
+    fgScriptMT();
     /**
      * 
      * @param orig
      */
-    fgScriptMetatables(const fgScriptMetatables& orig);
+    fgScriptMT(const fgScriptMT& orig);
     /**
      * 
      */
-    virtual ~fgScriptMetatables();
+    virtual ~fgScriptMT();
 
 private:
     /**
@@ -337,6 +337,6 @@ public:
 
 };
 
-    #undef _FG_SCRIPT_METATABLES_H_BLOCK_
-#endif	/* _FG_SCRIPT_METATABLES_H_ */
+    #undef _FG_SCRIPT_MT_H_BLOCK_
+#endif	/* _FG_SCRIPT_MT_H_ */
 

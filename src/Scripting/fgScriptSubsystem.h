@@ -31,7 +31,7 @@
         #include "LuaPlus/LuaPlus.h"
     #endif
 
-    #include "fgScriptMetatables.h"
+    #include "fgScriptMT.h"
     #include "fgLog.h"
 
     #if !defined(FG_USING_LUA) && !defined(FG_USING_LUA_PLUS)
@@ -242,7 +242,7 @@ protected:
      * @param state
      * @return 
      */
-    template<class Type, fgScriptMetatables::METAID METATABLE_ID>
+    template<class Type, fgScriptMT::METAID METATABLE_ID>
     static int simpleTypedMallocEvent(lua_State* L);
 
     /**
@@ -258,7 +258,7 @@ protected:
      * @param state
      * @return 
      */
-    template<class Type, fgScriptMetatables::METAID METATABLE_ID>
+    template<class Type, fgScriptMT::METAID METATABLE_ID>
     static int simpleInPlaceTypedNewEvent(lua_State* L);
 
     /**
@@ -281,7 +281,7 @@ protected:
      * @param L
      * @return 
      */
-    template<class Type, fgScriptMetatables::METAID METATABLE_ID>
+    template<class Type, fgScriptMT::METAID METATABLE_ID>
     static int managedObjectTypedNewEvent(lua_State *L);
 
     /**
@@ -395,7 +395,7 @@ private:
  * @param L
  * @return 
  */
-template<class Type, fgScriptMetatables::METAID METATABLE_ID>
+template<class Type, fgScriptMT::METAID METATABLE_ID>
 int fgScriptSubsystem::managedObjectTypedNewEvent(lua_State* L) {
     if(!L)
         return 1;
@@ -423,7 +423,7 @@ int fgScriptSubsystem::managedObjectTypedNewEvent(lua_State* L) {
     if(it == m_userDataObjectMap.end() && offset) {
         m_userDataObjectMap[offset] = newObj;
     }
-    const char *metatableName = fgScriptMetatables::getMetatableName(METATABLE_ID);
+    const char *metatableName = fgScriptMT::getMetatableName(METATABLE_ID);
     if(!metatableName) {
         newObj.SetMetatable(LuaPlus::LuaObject());
         FG_LOG_DEBUG("Script: Simple Typed New: metatable will be empty");
@@ -494,7 +494,7 @@ int fgScriptSubsystem::managedObjectTypedGCEvent(lua_State* L) {
  * @param L
  * @return 
  */
-template<class Type, fgScriptMetatables::METAID METATABLE_ID>
+template<class Type, fgScriptMT::METAID METATABLE_ID>
 int fgScriptSubsystem::simpleTypedMallocEvent(lua_State* L) {
     if(!L)
         return 1;
@@ -524,7 +524,7 @@ int fgScriptSubsystem::simpleTypedMallocEvent(lua_State* L) {
     if(it == m_userDataObjectMap.end() && offset) {
         m_userDataObjectMap[offset] = newObj;
     }
-    const char *metatableName = fgScriptMetatables::getMetatableName(METATABLE_ID);
+    const char *metatableName = fgScriptMT::getMetatableName(METATABLE_ID);
     if(!metatableName) {
         newObj.SetMetatable(LuaPlus::LuaObject());
         FG_LOG_DEBUG("Script: Simple Typed Malloc: metatable will be empty");
@@ -587,7 +587,7 @@ int fgScriptSubsystem::simpleTypedFreeGCEvent(lua_State* L) {
  * @param L
  * @return 
  */
-template<class Type, fgScriptMetatables::METAID METATABLE_ID>
+template<class Type, fgScriptMT::METAID METATABLE_ID>
 int fgScriptSubsystem::simpleInPlaceTypedNewEvent(lua_State* L) {
     if(!L)
         return 1;
@@ -618,7 +618,7 @@ int fgScriptSubsystem::simpleInPlaceTypedNewEvent(lua_State* L) {
     if(it == m_userDataObjectMap.end() && offset) {
         m_userDataObjectMap[offset] = newObj;
     }
-    const char *metatableName = fgScriptMetatables::getMetatableName(METATABLE_ID);
+    const char *metatableName = fgScriptMT::getMetatableName(METATABLE_ID);
     if(!metatableName) {
         newObj.SetMetatable(LuaPlus::LuaObject());
     } else {

@@ -517,8 +517,8 @@
           <itemPath>../../../src/Scripting/fgScriptCallback.cpp</itemPath>
           <itemPath>../../../src/Scripting/fgScriptCallback.h</itemPath>
           <itemPath>../../../src/Scripting/fgScriptErrorCodes.h</itemPath>
-          <itemPath>../../../src/Scripting/fgScriptMetatables.cpp</itemPath>
-          <itemPath>../../../src/Scripting/fgScriptMetatables.h</itemPath>
+          <itemPath>../../../src/Scripting/fgScriptMT.cpp</itemPath>
+          <itemPath>../../../src/Scripting/fgScriptMT.h</itemPath>
           <itemPath>../../../src/Scripting/fgScriptResource.cpp</itemPath>
           <itemPath>../../../src/Scripting/fgScriptResource.h</itemPath>
           <itemPath>../../../src/Scripting/fgScriptSubsystem.cpp</itemPath>
@@ -2851,12 +2851,12 @@
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/Scripting/fgScriptMetatables.cpp"
+      <item path="../../../src/Scripting/fgScriptMT.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
-      <item path="../../../src/Scripting/fgScriptMetatables.h"
+      <item path="../../../src/Scripting/fgScriptMT.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -5251,12 +5251,12 @@
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/Scripting/fgScriptMetatables.cpp"
+      <item path="../../../src/Scripting/fgScriptMT.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
-      <item path="../../../src/Scripting/fgScriptMetatables.h"
+      <item path="../../../src/Scripting/fgScriptMT.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -7634,12 +7634,12 @@
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/Scripting/fgScriptMetatables.cpp"
+      <item path="../../../src/Scripting/fgScriptMT.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
-      <item path="../../../src/Scripting/fgScriptMetatables.h"
+      <item path="../../../src/Scripting/fgScriptMT.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -9995,12 +9995,12 @@
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/Scripting/fgScriptMetatables.cpp"
+      <item path="../../../src/Scripting/fgScriptMT.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
-      <item path="../../../src/Scripting/fgScriptMetatables.h"
+      <item path="../../../src/Scripting/fgScriptMT.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -12378,12 +12378,12 @@
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/Scripting/fgScriptMetatables.cpp"
+      <item path="../../../src/Scripting/fgScriptMT.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
-      <item path="../../../src/Scripting/fgScriptMetatables.h"
+      <item path="../../../src/Scripting/fgScriptMT.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -14751,12 +14751,12 @@
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/Scripting/fgScriptMetatables.cpp"
+      <item path="../../../src/Scripting/fgScriptMT.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
-      <item path="../../../src/Scripting/fgScriptMetatables.h"
+      <item path="../../../src/Scripting/fgScriptMT.h"
             ex="false"
             tool="3"
             flavor2="0">

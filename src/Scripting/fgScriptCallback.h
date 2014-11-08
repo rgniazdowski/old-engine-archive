@@ -16,8 +16,8 @@
 #ifndef _FG_SCRIPT_CALLBACK_H_
     #define	_FG_SCRIPT_CALLBACK_H_
 
-    #if defined(_FG_SCRIPT_METATABLES_H_BLOCK_)
-        #error "FG_SCRIPT_METATABLES_H_BLOCK is defined: Do not include ScriptCallback header inside of ScriptMetatables header"
+    #if defined(_FG_SCRIPT_MT_H_BLOCK_)
+        #error "FG_SCRIPT_MT_H_BLOCK is defined: Do not include ScriptCallback header inside of ScriptMetatables header"
     #endif
 
     #include "fgBuildConfig.h"
