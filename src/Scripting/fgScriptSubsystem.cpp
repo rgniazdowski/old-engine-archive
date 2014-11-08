@@ -34,7 +34,9 @@
  ******************************************************************************/
 
 // All metatables info - just names / ids generation
-#include "fgScriptMT.h"
+//#include "fgScriptMT.h"
+// Callback dispatcher template specializations
+#include "fgScriptCD.h"
 // Event manager
 #include "Event/fgEventManager.h"
 // Resource management
@@ -119,6 +121,7 @@ m_metatableSoundMgr()
 #endif /* FG_USING_LUA_PLUS */
 {
     m_managerType = FG_MANAGER_SCRIPT;
+    m_cyclicGCCallback = new fgPlainFunctionCallback(&fgScriptSubsystem::cyclicGCFunction, NULL);
 }
 
 /**
@@ -138,11 +141,41 @@ void fgScriptSubsystem::clear(void) {
 
 /**
  * 
+ * @param systemData
+ * @param userData
+ * @return 
+ */
+fgBool fgScriptSubsystem::cyclicGCFunction(void* systemData, void* userData) {
+    if(!m_luaState)
+        return FG_FALSE;
+    if(!m_isBindingComplete)
+        return FG_FALSE;
+
+#if defined(FG_USING_LUA_PLUS)
+    //m_luaState->GC();
+    FG_LOG_DEBUG("Script: GC: Calling Garbage Collector...");
+    int bytesBefore = m_luaState->GC(LUA_GCCOUNTB, 0);
+    m_luaState->GC(LUA_GCCOLLECT, 0);
+    int bytesAfter = m_luaState->GC(LUA_GCCOUNTB, 0);
+    FG_LOG_DEBUG("Script: GC: before[%d], after[%d]\n", bytesBefore, bytesAfter);
+#endif /* FG_USING_LUA_PLUS */
+}
+
+/**
+ * 
  * @return 
  */
 fgBool fgScriptSubsystem::destroy(void) {
     if(!m_init)
         return FG_FALSE;
+
+    if(m_pEventMgr) {
+        if(m_cyclicGCCallback) {
+            static_cast<fgEventManager *>(m_pEventMgr)->removeCyclicCallback(m_cyclicGCCallback);
+            delete m_cyclicGCCallback;
+        }
+        m_cyclicGCCallback = NULL;
+    }
 
 #if defined(FG_USING_LUA_PLUS)
     m_globals.Reset();
@@ -255,6 +288,14 @@ fgBool fgScriptSubsystem::initialize(void) {
     m_init = FG_TRUE;
     m_isBindingComplete = FG_TRUE;
     m_managerType = FG_MANAGER_SCRIPT;
+    
+    if(m_cyclicGCCallback) {
+        static_cast<fgEventManager *>(m_pEventMgr)->addCyclicCallback(m_cyclicGCCallback,
+                                                                      FG_CYCLIC_CALLBACK_INFINITE_REPEAT,
+                                                                      5000,
+                                                                      NULL);
+    }
+    
     return FG_TRUE;
 }
 

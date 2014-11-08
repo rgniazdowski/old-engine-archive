@@ -30,7 +30,7 @@
     #if defined(FG_USING_LUA_PLUS)
         #include "LuaPlus/LuaPlus.h"
     #endif
-
+    // Metatables info
     #include "fgScriptMT.h"
     #include "fgLog.h"
 
@@ -45,7 +45,14 @@ struct lua_State {
     #include <map>
     
     // #FIXME
-    #include "fgScriptCD.h"
+    //#include "fgScriptCD.h"
+    #include "Resource/fgManagedObjectBase.h"
+    
+    #include "Event/fgCallback.h"
+
+
+    // Every 60s call global GC request
+    #define FG_SCRIPT_DEFAULT_GC_INTERVAL 60000
 
 /**
  * 
@@ -113,6 +120,9 @@ private:
     static fgBool m_isBindingComplete;
     ///
     static userDataObjectMap m_userDataObjectMap;
+    
+    ///
+    fgFunctionCallback *m_cyclicGCCallback;
 
 public:
     /**
@@ -194,6 +204,14 @@ protected:
      * 
      */
     virtual void clear(void);
+    
+    /**
+     * 
+     * @param systemData
+     * @param userData
+     * @return 
+     */
+    static fgBool cyclicGCFunction(void *systemData, void *userData);
 
 public:
     /**
