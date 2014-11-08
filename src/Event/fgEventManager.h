@@ -50,13 +50,13 @@ private:
     fgVector<int> m_keysUpPool;
     /// int - keyCode, value - vector of callbacks to call
     /// Binding for key down events
-    fgCallbackBinding m_keyDownBinds;
+    fgCallbackBindingMap m_keyDownBinds;
     /// Binding for key up binds - note that this will only work if
     /// previously key was released
-    fgCallbackBinding m_keyUpBinds;
+    fgCallbackBindingMap m_keyUpBinds;
     /// int - eventCode
     /// Binding for all global events
-    fgCallbackBinding m_eventBinds;
+    fgCallbackBindingMap m_eventBinds;
     /// Events queue (message queue so to speak)
     fgEventsQueue m_eventsQueue;
     /// Special pool with timeout callbacks (timers)
@@ -182,9 +182,17 @@ public:
      * @param argList
      * @return 
      */
-    fgFunctionCallback* addTimeoutCallback(fgFunctionCallback *callback,
-                                           int timeout,
-                                           fgArgumentList *argList);
+    fgFunctionCallback* addTimeoutCallback(fgFunctionCallback *pCallback,
+                                           const int timeout,
+                                           fgArgumentList *pArgList);
+    
+    /**
+     * 
+     * @param pCallback
+     * @return 
+     */
+    fgBool removeTimeoutCallback(fgFunctionCallback *pCallback);
+    
     /**
      * 
      * @param callback
@@ -193,11 +201,18 @@ public:
      * @param argList
      * @return 
      */
-    fgFunctionCallback* addCyclicCallback(fgFunctionCallback *callback,
-                                          int repeats = FG_CYCLIC_CALLBACK_INFINITE_REPEAT,
-                                          int interval = FG_CYCLIC_CALLBACK_DEFAULT_INTERVAL,
-                                          fgArgumentList *argList = NULL);
+    fgFunctionCallback* addCyclicCallback(fgFunctionCallback *pCallback,
+                                          const int repeats = FG_CYCLIC_CALLBACK_INFINITE_REPEAT,
+                                          const int interval = FG_CYCLIC_CALLBACK_DEFAULT_INTERVAL,
+                                          fgArgumentList *pArgList = NULL);
 
+    /**
+     * 
+     * @param pCallback
+     * @return 
+     */
+    fgBool removeCyclicCallback(fgFunctionCallback *pCallback);
+    
     // This adds key code to the pool of pressed down keys
     void addKeyDown(int keyCode);
     // This adds key code to the pool of released (up) keys

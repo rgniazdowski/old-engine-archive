@@ -20,16 +20,30 @@
     #include <map>
     #include <queue>
 
-// #FIXME #TODO #P2 check if it is not deprecated (in Marmalade) to use the standard data types
-//		 it can be necessary to use Marmalade specific wrappers
-typedef std::map<int, fgVector<fgFunctionCallback *> > fgCallbackBinding;
+///
+typedef std::map<int, fgVector<fgFunctionCallback *> > fgCallbackBindingMap;
+///
+typedef fgCallbackBindingMap::iterator fgCallbackBindingMapItor;
+
+///
 typedef fgVector<fgFunctionCallback *> fgCallbacksVec;
 
-typedef fgVector<fgFunctionCallback *>::iterator fgCallbacksPoolItor;
-typedef fgVector<fgFunctionCallback *>::const_iterator fgCallbacksPoolConstItor;
+///
+typedef fgCallbacksVec::iterator fgCallbacksVecItor;
+///
+typedef fgCallbacksVec::const_iterator fgCallbacksVecConstItor;
 
+///
 typedef std::queue<fgThrownEvent> fgEventsQueue;
+
+///
 typedef fgVector<fgTimeoutCallback> fgTimeoutCallbacksVec;
+///
+typedef fgTimeoutCallbacksVec::iterator fgTimeoutCallbacksVecItor;
+
+///
 typedef fgVector<fgCyclicCallback> fgCyclicCallbacksVec;
+///
+typedef fgCyclicCallbacksVec::iterator fgCyclicCallbacksVecItor;
 
 #endif /* _FG_EVENT_HELPER_H_ */

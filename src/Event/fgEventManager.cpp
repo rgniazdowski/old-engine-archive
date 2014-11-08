@@ -33,7 +33,7 @@ fgEventManager::~fgEventManager() {
  * @return 
  */
 fgBool fgEventManager::destroy(void) {
-    for(fgCallbackBinding::iterator it = m_keyDownBinds.begin(); it != m_keyDownBinds.end(); it++) {
+    for(fgCallbackBindingMap::iterator it = m_keyDownBinds.begin(); it != m_keyDownBinds.end(); it++) {
         for(int i = 0; i < (int)it->second.size(); i++) {
             delete it->second[i];
             it->second[i] = NULL;
@@ -41,7 +41,7 @@ fgBool fgEventManager::destroy(void) {
         it->second.clear();
     }
 
-    for(fgCallbackBinding::iterator it = m_keyUpBinds.begin(); it != m_keyUpBinds.end(); it++) {
+    for(fgCallbackBindingMap::iterator it = m_keyUpBinds.begin(); it != m_keyUpBinds.end(); it++) {
         for(int i = 0; i < (int)it->second.size(); i++) {
             delete it->second[i];
             it->second[i] = NULL;
@@ -49,7 +49,7 @@ fgBool fgEventManager::destroy(void) {
         it->second.clear();
     }
 
-    for(fgCallbackBinding::iterator it = m_eventBinds.begin(); it != m_eventBinds.end(); it++) {
+    for(fgCallbackBindingMap::iterator it = m_eventBinds.begin(); it != m_eventBinds.end(); it++) {
         for(int i = 0; i < (int)it->second.size(); i++) {
             if(it->second[i])
                 delete it->second[i];
@@ -124,7 +124,7 @@ void fgEventManager::throwEvent(fgEventType eventCode, fgArgumentList *list) {
  * @param pSystemData
  */
 void fgEventManager::throwEvent(fgEventType eventCode,
-                void *pSystemData) {
+                                void *pSystemData) {
     fgThrownEvent event(eventCode, (void *)pSystemData);
     m_eventsQueue.push(event);
 }
@@ -227,7 +227,7 @@ fgBool fgEventManager::removeEventCallback(fgEventType eventCode, fgFunctionCall
     fgCallbacksVec &callbacksVec = m_eventBinds[eventCode];
     if(callbacksVec.empty())
         return FG_FALSE;
-    fgCallbacksPoolItor cit = callbacksVec.begin(), end = callbacksVec.end();
+    fgCallbacksVecItor cit = callbacksVec.begin(), end = callbacksVec.end();
     for(; cit != end; cit++) {
         if(*cit == pCallback) {
             m_eventBinds[eventCode].erase(cit);
@@ -246,7 +246,7 @@ fgBool fgEventManager::removeEventCallback(fgEventType eventCode, fgFunctionCall
  * @return 
  */
 fgFunctionCallback* fgEventManager::addTimeoutCallback(fgFunctionCallback *pCallback,
-                                                       int timeout,
+                                                       const int timeout,
                                                        fgArgumentList *pArgList) {
     if(!pCallback)
         return NULL;
@@ -259,14 +259,40 @@ fgFunctionCallback* fgEventManager::addTimeoutCallback(fgFunctionCallback *pCall
 /**
  * 
  * @param pCallback
+ * @return 
+ */
+fgBool fgEventManager::removeTimeoutCallback(fgFunctionCallback *pCallback) {
+    if(!pCallback)
+        return FG_FALSE;
+    fgBool status = FG_FALSE;
+    fgTimeoutCallbacksVecItor begin = m_timeoutCallbacks.begin();
+    fgTimeoutCallbacksVecItor it = begin,
+            end = m_timeoutCallbacks.end();
+    for(; it != end; it++) {
+        fgTimeoutCallback &timeout = (*it);
+        if(timeout.callback == pCallback) {
+            timeout.callback = NULL;
+            timeout.argList = NULL;
+            status = FG_TRUE;
+            m_timeoutCallbacks.erase(it);
+            it--;
+            end = m_timeoutCallbacks.end();
+        }
+    }
+    return status;
+}
+
+/**
+ * 
+ * @param pCallback
  * @param repeats
  * @param interval
  * @param pArgList
  * @return 
  */
 fgFunctionCallback* fgEventManager::addCyclicCallback(fgFunctionCallback *pCallback,
-                                                      int repeats,
-                                                      int interval,
+                                                      const int repeats,
+                                                      const int interval,
                                                       fgArgumentList *pArgList) {
     if(!pCallback)
         return NULL;
@@ -274,6 +300,32 @@ fgFunctionCallback* fgEventManager::addCyclicCallback(fgFunctionCallback *pCallb
     cyclicCallback.timeStamp = FG_GetTicks();
     m_cyclicCallbacks.push_back(cyclicCallback);
     return pCallback;
+}
+
+/**
+ * 
+ * @param pCallback
+ * @return 
+ */
+fgBool fgEventManager::removeCyclicCallback(fgFunctionCallback *pCallback) {
+    if(!pCallback)
+        return FG_FALSE;
+    fgBool status = FG_FALSE;
+    fgCyclicCallbacksVecItor begin = m_cyclicCallbacks.begin();
+    fgCyclicCallbacksVecItor it = begin,
+            end = m_cyclicCallbacks.end();
+    for(; it != end; it++) {
+        fgCyclicCallback &cyclic = (*it);
+        if(cyclic.callback == pCallback) {
+            cyclic.callback = NULL;
+            cyclic.argList = NULL;
+            status = FG_TRUE;
+            m_cyclicCallbacks.erase(it);
+            it--;
+            end = m_cyclicCallbacks.end();
+        }
+    }
+    return status;
 }
 
 /**
@@ -305,7 +357,7 @@ void fgEventManager::executeEvents(void) {
     // Phase 1: execute keyboard callbacks
     for(int i = 0; i < (int)m_keysDownPool.size(); i++) {
         int keyCode = m_keysDownPool[i];
-        fgCallbackBinding::iterator found = m_keyDownBinds.find(keyCode);
+        fgCallbackBindingMap::iterator found = m_keyDownBinds.find(keyCode);
         if(found == m_keyDownBinds.end())
             continue;
         for(int j = 0; j < (int)m_keyDownBinds[keyCode].size(); j++) {
@@ -317,7 +369,7 @@ void fgEventManager::executeEvents(void) {
 
     for(int i = 0; i < (int)m_keysUpPool.size(); i++) {
         int keyCode = m_keysUpPool[i];
-        fgCallbackBinding::iterator found = m_keyUpBinds.find(keyCode);
+        fgCallbackBindingMap::iterator found = m_keyUpBinds.find(keyCode);
         if(found == m_keyUpBinds.end())
             continue;
         for(int j = 0; j < (int)m_keyUpBinds[keyCode].size(); j++) {
@@ -333,7 +385,7 @@ void fgEventManager::executeEvents(void) {
         fgThrownEvent &event = m_eventsQueue.front();
         int eventCode = event.eventCode;
         //FG_LOG_DEBUG("Event code thrown %d | list: %p", eventCode, event.argList);
-        fgCallbackBinding::iterator found = m_eventBinds.find(eventCode);
+        fgCallbackBindingMap::iterator found = m_eventBinds.find(eventCode);
         if(found == m_eventBinds.end()) {
             if(event.argList)
                 delete event.argList;
@@ -362,7 +414,7 @@ void fgEventManager::executeEvents(void) {
 
     // After timeout is executed it needs to be deleted from the timeouts pool - also the callback pointer must 
     // be freed with the argument list as they no longer needed
-    for(fgTimeoutCallbacksVec::iterator it = m_timeoutCallbacks.begin(); it != m_timeoutCallbacks.end(); it++) {
+    for(fgTimeoutCallbacksVecItor it = m_timeoutCallbacks.begin(); it != m_timeoutCallbacks.end(); it++) {
         if(TS - it->timeStamp >= (unsigned long int)it->timeout) {
             if(it->callback) {
                 it->callback->Call(it->argList);
@@ -382,7 +434,7 @@ void fgEventManager::executeEvents(void) {
     }
 
     // Phase 4: Cyclic callbacks
-    for(fgCyclicCallbacksVec::iterator it = m_cyclicCallbacks.begin(); it != m_cyclicCallbacks.end(); it++) {
+    for(fgCyclicCallbacksVecItor it = m_cyclicCallbacks.begin(); it != m_cyclicCallbacks.end(); it++) {
         if(TS - it->timeStamp >= (unsigned long int)it->interval) {
             if(it->callback && (it->repeats || it->repeats == -1)) {
                 it->callback->Call(it->argList);
