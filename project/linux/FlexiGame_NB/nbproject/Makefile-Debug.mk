@@ -65,9 +65,9 @@ OBJECTFILES= \
 	${OBJECTDIR}/_ext/538025686/tinyxml.o \
 	${OBJECTDIR}/_ext/538025686/tinyxmlerror.o \
 	${OBJECTDIR}/_ext/538025686/tinyxmlparser.o \
-	${OBJECTDIR}/_ext/1650758620/fgSFXAudioResource.o \
 	${OBJECTDIR}/_ext/1650758620/fgSFXManager.o \
 	${OBJECTDIR}/_ext/1650758620/fgSFXMusicResource.o \
+	${OBJECTDIR}/_ext/1650758620/fgSFXSoundResource.o \
 	${OBJECTDIR}/_ext/1654483616/fgArgumentList.o \
 	${OBJECTDIR}/_ext/1654483616/fgEventManager.o \
 	${OBJECTDIR}/_ext/293675389/fgParticleSystem.o \
@@ -362,11 +362,6 @@ ${OBJECTDIR}/_ext/538025686/tinyxmlparser.o: ../../../modules/tinyxml/upstream/t
 	${RM} "$@.d"
 	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_GL_BINDING -DFG_USING_OPENGL -DFG_USING_SDL2 -DFG_USING_TINYXML -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src `pkg-config --cflags gl` `pkg-config --cflags sdl2` `pkg-config --cflags SDL2_mixer` `pkg-config --cflags libpng` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/538025686/tinyxmlparser.o ../../../modules/tinyxml/upstream/tinyxmlparser.cpp
 
-${OBJECTDIR}/_ext/1650758620/fgSFXAudioResource.o: ../../../src/Audio/fgSFXAudioResource.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/1650758620
-	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_GL_BINDING -DFG_USING_OPENGL -DFG_USING_SDL2 -DFG_USING_TINYXML -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src `pkg-config --cflags gl` `pkg-config --cflags sdl2` `pkg-config --cflags SDL2_mixer` `pkg-config --cflags libpng` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1650758620/fgSFXAudioResource.o ../../../src/Audio/fgSFXAudioResource.cpp
-
 ${OBJECTDIR}/_ext/1650758620/fgSFXManager.o: ../../../src/Audio/fgSFXManager.cpp 
 	${MKDIR} -p ${OBJECTDIR}/_ext/1650758620
 	${RM} "$@.d"
@@ -376,6 +371,11 @@ ${OBJECTDIR}/_ext/1650758620/fgSFXMusicResource.o: ../../../src/Audio/fgSFXMusic
 	${MKDIR} -p ${OBJECTDIR}/_ext/1650758620
 	${RM} "$@.d"
 	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_GL_BINDING -DFG_USING_OPENGL -DFG_USING_SDL2 -DFG_USING_TINYXML -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src `pkg-config --cflags gl` `pkg-config --cflags sdl2` `pkg-config --cflags SDL2_mixer` `pkg-config --cflags libpng` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1650758620/fgSFXMusicResource.o ../../../src/Audio/fgSFXMusicResource.cpp
+
+${OBJECTDIR}/_ext/1650758620/fgSFXSoundResource.o: ../../../src/Audio/fgSFXSoundResource.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/1650758620
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_GL_BINDING -DFG_USING_OPENGL -DFG_USING_SDL2 -DFG_USING_TINYXML -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src `pkg-config --cflags gl` `pkg-config --cflags sdl2` `pkg-config --cflags SDL2_mixer` `pkg-config --cflags libpng` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1650758620/fgSFXSoundResource.o ../../../src/Audio/fgSFXSoundResource.cpp
 
 ${OBJECTDIR}/_ext/1654483616/fgArgumentList.o: ../../../src/Event/fgArgumentList.cpp 
 	${MKDIR} -p ${OBJECTDIR}/_ext/1654483616

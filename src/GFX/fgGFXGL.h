@@ -30,7 +30,7 @@
 
             #if defined FG_USING_OPENGL
 
-                #ifndef FG_USING_SDL2
+                #if !defined(FG_USING_SDL2)
                     #if !defined(FG_USING_GL_BINDING)
                         #define GL_GLEXT_PROTOTYPES
                         #include <GL/gl.h>

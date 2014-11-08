@@ -72,6 +72,8 @@
 #include "GUI/fgGuiWindow.h"
 // Special Script Callback
 #include "fgScriptCallback.h"
+#include "Audio/fgSFXMusicResource.h"
+#include "Audio/fgSFXManager.h"
 
 #if defined(FG_USING_LUA_PLUS)
 ///
@@ -368,7 +370,7 @@ int fgScriptSubsystem::managedResourceGCEvent(lua_State* L) {
                      isNoneOrNil);
         return 0;
     }
-    
+
     void *unboxed = state->UnBoxPointer(1);
     if(!unboxed) {
         return 0;
@@ -378,7 +380,7 @@ int fgScriptSubsystem::managedResourceGCEvent(lua_State* L) {
     uintptr_t offset = (uintptr_t)pResource;
     userDataObjectMapItor it = m_userDataObjectMap.find(offset);
     if(it == m_userDataObjectMap.end()) {
-        isRegistered = FG_FALSE;        
+        isRegistered = FG_FALSE;
     }
     if(isRegistered) {
         if(!((*it).second.isBound)) {
@@ -387,7 +389,7 @@ int fgScriptSubsystem::managedResourceGCEvent(lua_State* L) {
     }
     if(!isRegistered) {
         // The pointer is not registered
-        FG_LOG_DEBUG("Script: Managed Resource GC: pointer is not registered: ptr[%p], offset[%lu], name[%s]", unboxed, offset, pResource->getNameStr());
+        FG_LOG_DEBUG("Script: Managed Resource GC: pointer is not registered: ptr[%p], offset[%lu]", unboxed, offset);
         return 0;
     }
     //pResource->dispose();
@@ -410,7 +412,7 @@ fgBool fgScriptSubsystem::managedObjectDestructorCallback(void *systemData, void
     userDataObjectMapItor it = m_userDataObjectMap.find(offset);
     if(it != m_userDataObjectMap.end()) {
         // This pointer was stored - erase it
-        
+
 #if defined(FG_USING_LUA_PLUS)
         if((*it).second.obj.GetRef() > 0 && (*it).second.isBound) {
             (*it).second.obj.SetMetatable(LuaPlus::LuaObject());
@@ -1301,8 +1303,9 @@ fgBool fgScriptSubsystem::registerResourceManager(void) {
     typedef void (fgParticleEffect::*PE_void_Vec2i_IN)(const fgVector2i&);
     typedef void (fgParticleEffect::*PE_void_C_STR_IN)(const char *);
 
+    //
     // Register Particle Effect Resource metatable
-
+    //
     LPCD::Class(m_luaState->GetCState(), fgScriptMT::getMetatableName(fgScriptMT::PARTICLE_EFFECT_RESOURCE_MT_ID), fgScriptMT::getMetatableName(fgScriptMT::RESOURCE_MT_ID))
             .ObjectDirect("setMaxCount", (fgParticleEffect *)0, &fgParticleEffect::setMaxCount)
             .ObjectDirect("getMaxCount", (fgParticleEffect *)0, &fgParticleEffect::getMaxCount)
@@ -1392,6 +1395,27 @@ fgBool fgScriptSubsystem::registerResourceManager(void) {
             .MetatableFunction("__gc", &fgScriptSubsystem::managedResourceGCEvent);
 
     //m_globals.Register("Texture", &fgScriptSubsystem::newResourceWrapper);
+
+    //
+    // Register Music (SFX) Resource metatable
+    //
+    LPCD::Class(m_luaState->GetCState(), fgScriptMT::getMetatableName(fgScriptMT::AUDIO_BASE_RES_MT_ID), fgScriptMT::getMetatableName(fgScriptMT::RESOURCE_MT_ID))
+            .ObjectDirect("play", (fgAudioBase *)0, &fgAudioBase::play)
+            .ObjectDirect("pause", (fgAudioBase *)0, &fgAudioBase::pause)
+            .ObjectDirect("resume", (fgAudioBase *)0, &fgAudioBase::resume)
+            .ObjectDirect("rewind", (fgAudioBase *)0, &fgAudioBase::rewind)
+            .ObjectDirect("stop", (fgAudioBase *)0, &fgAudioBase::stop)
+            .ObjectDirect("halt", (fgAudioBase *)0, &fgAudioBase::halt)
+            .ObjectDirect("isPaused", (fgAudioBase *)0, &fgAudioBase::isPaused)
+            .ObjectDirect("setVolume", (fgAudioBase *)0, &fgAudioBase::setVolume)
+            .ObjectDirect("getVolume", (fgAudioBase *)0, &fgAudioBase::getVolume);
+
+    LPCD::Class(m_luaState->GetCState(), fgScriptMT::getMetatableName(fgScriptMT::MUSIC_RESOURCE_MT_ID), fgScriptMT::getMetatableName(fgScriptMT::AUDIO_BASE_RES_MT_ID))
+    .MetatableFunction("__gc", &fgScriptSubsystem::managedResourceGCEvent);
+    
+    LPCD::Class(m_luaState->GetCState(), fgScriptMT::getMetatableName(fgScriptMT::SOUND_RESOURCE_MT_ID), fgScriptMT::getMetatableName(fgScriptMT::AUDIO_BASE_RES_MT_ID))
+    .MetatableFunction("__gc", &fgScriptSubsystem::managedResourceGCEvent);
+
 #endif /* FG_USING_LUA_PLUS */    
     return FG_TRUE;
 }
@@ -1900,13 +1924,57 @@ fgBool fgScriptSubsystem::registerSoundManager(void) {
         return FG_TRUE;
     if(!m_pSoundMgr)
         return FG_FALSE;
+    if(m_pSoundMgr->getManagerType() != FG_MANAGER_SOUND)
+        return FG_FALSE;
 
 #if defined(FG_USING_LUA_PLUS)
     if(m_metatableSoundMgr.GetRef() >= 0)
         return FG_TRUE;
     if(m_globals.GetRef() < 0)
         return FG_FALSE;
+    typedef fgBool(fgSFXManager::*SFX_Bool_C_STR_IN)(const char *);
 
+    // Sound manager metatable
+    m_metatableSoundMgr = m_globals.CreateTable(fgScriptMT::getMetatableName(fgScriptMT::SOUND_MANAGER_MT_ID));
+    m_metatableSoundMgr.SetObject("__index", m_metatableSoundMgr);
+    m_metatableSoundMgr.RegisterObjectDirect("play", 
+                                             static_cast<fgSFXManager *>(0),
+                                             static_cast<SFX_Bool_C_STR_IN>(&fgSFXManager::play));
+    m_metatableSoundMgr.RegisterObjectDirect("pause", 
+                                             static_cast<fgSFXManager *>(0),
+                                             static_cast<SFX_Bool_C_STR_IN>(&fgSFXManager::pause));
+    m_metatableSoundMgr.RegisterObjectDirect("resume", 
+                                             static_cast<fgSFXManager *>(0),
+                                             static_cast<SFX_Bool_C_STR_IN>(&fgSFXManager::resume));
+    m_metatableSoundMgr.RegisterObjectDirect("rewind", 
+                                             static_cast<fgSFXManager *>(0),
+                                             static_cast<SFX_Bool_C_STR_IN>(&fgSFXManager::rewind));
+    m_metatableSoundMgr.RegisterObjectDirect("stop", 
+                                             static_cast<fgSFXManager *>(0),
+                                             static_cast<SFX_Bool_C_STR_IN>(&fgSFXManager::stop));
+    m_metatableSoundMgr.RegisterObjectDirect("isPlaying",
+                                             static_cast<fgSFXManager *>(0),
+                                             static_cast<SFX_Bool_C_STR_IN>(&fgSFXManager::isPlaying));
+    m_metatableSoundMgr.RegisterObjectDirect("isPaused",
+                                             static_cast<fgSFXManager *>(0),
+                                             static_cast<SFX_Bool_C_STR_IN>(&fgSFXManager::isPaused));
+    m_metatableSoundMgr.RegisterObjectDirect("stopAll", static_cast<fgSFXManager *>(0), &fgSFXManager::stopAll);
+    m_metatableSoundMgr.RegisterObjectDirect("setSfxVolume", static_cast<fgSFXManager *>(0), &fgSFXManager::setSfxVolume);
+    m_metatableSoundMgr.RegisterObjectDirect("getSfxVolume", static_cast<fgSFXManager *>(0), &fgSFXManager::getSfxVolume);
+    m_metatableSoundMgr.RegisterObjectDirect("setMusicVolume", static_cast<fgSFXManager *>(0), &fgSFXManager::setMusicVolume);
+    m_metatableSoundMgr.RegisterObjectDirect("getMusicVolume", static_cast<fgSFXManager *>(0), &fgSFXManager::getMusicVolume);
+
+    uintptr_t offset = (uintptr_t)m_pSoundMgr;
+    userDataObjectMapItor it = m_userDataObjectMap.find(offset);
+    if(it != m_userDataObjectMap.end()) {
+        return FG_FALSE;
+    }
+    // Create lua object for resource manager global
+    LuaPlus::LuaObject soundMgrObj = m_luaState->BoxPointer((void *)m_pSoundMgr);
+    soundMgrObj.SetMetatable(m_metatableSoundMgr);
+    m_globals.SetObject("SoundManager", soundMgrObj);
+    m_userDataObjectMap[offset] = soundMgrObj;
+    
 #endif /* FG_USING_LUA_PLUS */
     return FG_TRUE;
 }

@@ -244,7 +244,7 @@
 //#define FG_USING_BULLET
 
 // Use TinyXML even on Linux
-    #ifdef FG_USING_PLATFORM_LINUX
+    #if defined(FG_USING_PLATFORM_LINUX)
         #ifndef FG_USING_TINYXML
             #define FG_USING_TINYXML
         #endif
@@ -277,9 +277,25 @@
     #endif
 
 // Force TinyXml to use STL
-    #ifdef FG_USING_TINYXML
-        #ifndef TIXML_USE_STL
+    #if defined(FG_USING_TINYXML)
+        #if !defined(TIXML_USE_STL)
             #define TIXML_USE_STL
+        #endif
+    #endif
+    
+/************************************* AUDIO / SOUND FIX ******************************/
+
+    #if defined(FG_USING_SDL2)
+        #if !defined(FG_USING_AUDIO)
+            #define FG_USING_AUDIO
+            #define FG_USING_SDL_MIXER
+        #endif
+    #endif
+    
+    #if defined(FG_USING_SDL)
+        #if !defined(FG_USING_AUDIO)
+            #define FG_USING_AUDIO
+            #define FG_USING_SDL_MIXER
         #endif
     #endif
 

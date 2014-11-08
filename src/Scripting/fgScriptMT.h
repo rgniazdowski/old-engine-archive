@@ -36,111 +36,112 @@ public:
         //
         // Vectors / Color
         //
-        VECTOR2I_MT_ID = 1, // #used
-        VECTOR2F_MT_ID = 2, // #used
-        VECTOR3I_MT_ID = 3, // #used
-        VECTOR3F_MT_ID = 4, // #used
-        VECTOR4I_MT_ID = 5, // #used
-        VECTOR4F_MT_ID = 6, // #used
+        VECTOR2I_MT_ID, // #used
+        VECTOR2F_MT_ID, // #used
+        VECTOR3I_MT_ID, // #used
+        VECTOR3F_MT_ID, // #used
+        VECTOR4I_MT_ID, // #used
+        VECTOR4F_MT_ID, // #used
 
-        ERROR_MT_ID = 7,
+        ERROR_MT_ID,
 
         //
         // Main managers
         //
-        EVENT_MANAGER_MT_ID = 8,
-        RESOURCE_MANAGER_MT_ID = 9, // #used
-        SHADER_MANAGER_MT_ID = 10,
-        SCENE2D_MANAGER_MT_ID = 11,
-        SCENE3D_MANAGER_MT_ID = 12,
-        PARTICLE_SYSTEM_MT_ID = 13,
-        WIDGET_MANAGER_MT_ID = 14, // #used
-        STYLE_MANAGER_MT_ID = 15,
-        SOUND_MANAGER_MT_ID = 16,
+        EVENT_MANAGER_MT_ID,
+        RESOURCE_MANAGER_MT_ID, // #used
+        SHADER_MANAGER_MT_ID,
+        SCENE2D_MANAGER_MT_ID,
+        SCENE3D_MANAGER_MT_ID,
+        PARTICLE_SYSTEM_MT_ID,
+        WIDGET_MANAGER_MT_ID, // #used
+        STYLE_MANAGER_MT_ID,
+        SOUND_MANAGER_MT_ID,
 
         //
         // Resources 
         //
-        RESOURCE_MT_ID = 17, // #used
-        TEXTURE_RESOURCE_MT_ID = 18, // #used
-        FONT_RESOURCE_MT_ID = 19, // #used
-        GFX_MODEL_RESOURCE_MT_ID = 20, // #used
-        PARTICLE_EFFECT_RESOURCE_MT_ID = 21, // #used
-        SOUND_RESOURCE_MT_ID = 22,
-        MUSIC_RESOURCE_MT_ID = 23,
-        PLUGIN_RESOURCE_MT_ID = 24,
-        SAVE_FILE_RESOURCE_MT_ID = 25,
+        RESOURCE_MT_ID, // #used
+        TEXTURE_RESOURCE_MT_ID, // #used
+        FONT_RESOURCE_MT_ID, // #used
+        GFX_MODEL_RESOURCE_MT_ID, // #used
+        PARTICLE_EFFECT_RESOURCE_MT_ID, // #used
+        AUDIO_BASE_RES_MT_ID,
+        SOUND_RESOURCE_MT_ID,
+        MUSIC_RESOURCE_MT_ID,
+        PLUGIN_RESOURCE_MT_ID,
+        SAVE_FILE_RESOURCE_MT_ID,
 
         //
         // Settings / Config
         //
 
-        CONFIG_MT_ID = 26,
-        SETTINGS_MT_ID = 27,
+        CONFIG_MT_ID,
+        SETTINGS_MT_ID,
 
         //
         // GUI Objects/Widgets
         //
-        GUI_WIDGET_MT_ID = 28, // #used
-        GUI_BUTTON_MT_ID = 29, // #used
-        GUI_CONSOLE_MT_ID = 30, // #used
-        GUI_CONTAINER_MT_ID = 31, // #used
-        GUI_FRAME_MT_ID = 32, // #used
-        GUI_LABEL_MT_ID = 33, // #used
-        GUI_LOADER_MT_ID = 34, // #used
-        GUI_MENU_MT_ID = 35, // #used
-        GUI_MESSAGE_BOX_MT_ID = 36, // #used
-        GUI_POPUP_MT_ID = 37, // #used
-        GUI_PROGRESS_BAR_MT_ID = 38, // #used
-        GUI_SCROLL_AREA_MT_ID = 39, // #used
-        GUI_TABLE_MT_ID = 48, // #used
-        GUI_TEXT_AREA_MT_ID = 49, // #used
-        GUI_TOGGLE_BUTTON_MT_ID = 50, // #used
-        GUI_WINDOW_MT_ID = 51, // #used
+        GUI_WIDGET_MT_ID, // #used
+        GUI_BUTTON_MT_ID, // #used
+        GUI_CONSOLE_MT_ID, // #used
+        GUI_CONTAINER_MT_ID, // #used
+        GUI_FRAME_MT_ID, // #used
+        GUI_LABEL_MT_ID, // #used
+        GUI_LOADER_MT_ID, // #used
+        GUI_MENU_MT_ID, // #used
+        GUI_MESSAGE_BOX_MT_ID, // #used
+        GUI_POPUP_MT_ID, // #used
+        GUI_PROGRESS_BAR_MT_ID, // #used
+        GUI_SCROLL_AREA_MT_ID, // #used
+        GUI_TABLE_MT_ID, // #used
+        GUI_TEXT_AREA_MT_ID, // #used
+        GUI_TOGGLE_BUTTON_MT_ID, // #used
+        GUI_WINDOW_MT_ID, // #used
 
         //
         // GUI Style / Style Content
         //
 
-        GUI_STYLE_MT_ID = 40, // base style meta
-        GUI_STYLE_CONTENT_MT_ID = 41,
-        GUI_STYLE_SIZE_MT_ID = 42,
-        GUI_STYLE_BACKGROUND_MT_ID = 43,
-        GUI_STYLE_FOREGROUND_MT_ID = 44,
-        GUI_STYLE_MARGIN_MT_ID = 45,
-        //GUI_STYLE_PADDING_MT_ID = 45, // this is the same as margin
-        GUI_STYLE_BORDER_INFO_MT_ID = 46,
-        GUI_STYLE_BORDER_MT_ID = 46,
-        GUI_STYLE_POSITION_MT_ID = 47,
+        GUI_STYLE_MT_ID, // base style meta
+        GUI_STYLE_CONTENT_MT_ID,
+        GUI_STYLE_SIZE_MT_ID,
+        GUI_STYLE_BACKGROUND_MT_ID,
+        GUI_STYLE_FOREGROUND_MT_ID,
+        GUI_STYLE_MARGIN_MT_ID,
+        //GUI_STYLE_PADDING_MT_ID, // this is the same as margin
+        GUI_STYLE_BORDER_INFO_MT_ID,
+        GUI_STYLE_BORDER_MT_ID,
+        GUI_STYLE_POSITION_MT_ID,
         //GUI_STYLE_ALIGN_MT_ID = XX, // this is enum ...
 
         //
         // Event structures
         //
 
-        EVENT_BASE_MT_ID = 52, // fgEventbase
-        EVENT_CONTROLLER_DEVICE_MT_ID = 53, // fgControllerDeviceEvent
-        EVENT_CONTROLLER_BUTTON_MT_ID = 54, // fgControllerButtonEvent
-        EVENT_CONTROLLER_AXIS_MT_ID = 55, // fgControllerAxisEvent
-        EVENT_TOUCH_MT_ID = 56, // fgTouchEvent
-        EVENT_MOUSE_MT_ID = 57, // fgMouseEvent
-        EVENT_SWIPE_MT_ID = 58, // fgSwipeEvent
-        EVENT_SWIPE_PINCH_MT_ID = 59, // fgSwipePinch
-        EVENT_SWIPE_ROTATE_MT_ID = 60, // fgSwipeRotate
-        EVENT_KEY_MT_ID = 61, // fgKeyEvent
-        EVENT_RESOURCE_MT_ID = 62, // fgResourceEvent
-        EVENT_VERTEX_STREAM_MT_ID = 63, // fgVertexStream
-        EVENT_CAMERA_MT_ID = 64, // fgCameraEvent
-        EVENT_SOUND_MT_ID = 65, // fgSoundEvent
-        EVENT_MENU_CHANGED_MT_ID = 66, // fgMenuChangedEvent
-        EVENT_WIDGET_MT_ID = 67, // fgWidgetEvent
-        EVENT_SENSORS_MT_ID = 68, // fgSensorsEvent
-        EVENT_MAIN_MT_ID = 69, // union struct: fgEvent
+        EVENT_BASE_MT_ID, // fgEventbase
+        EVENT_CONTROLLER_DEVICE_MT_ID, // fgControllerDeviceEvent
+        EVENT_CONTROLLER_BUTTON_MT_ID, // fgControllerButtonEvent
+        EVENT_CONTROLLER_AXIS_MT_ID, // fgControllerAxisEvent
+        EVENT_TOUCH_MT_ID, // fgTouchEvent
+        EVENT_MOUSE_MT_ID, // fgMouseEvent
+        EVENT_SWIPE_MT_ID, // fgSwipeEvent
+        EVENT_SWIPE_PINCH_MT_ID, // fgSwipePinch
+        EVENT_SWIPE_ROTATE_MT_ID, // fgSwipeRotate
+        EVENT_KEY_MT_ID, // fgKeyEvent
+        EVENT_RESOURCE_MT_ID, // fgResourceEvent
+        EVENT_VERTEX_STREAM_MT_ID, // fgVertexStream
+        EVENT_CAMERA_MT_ID, // fgCameraEvent
+        EVENT_SOUND_MT_ID, // fgSoundEvent
+        EVENT_MENU_CHANGED_MT_ID, // fgMenuChangedEvent
+        EVENT_WIDGET_MT_ID, // fgWidgetEvent
+        EVENT_SENSORS_MT_ID, // fgSensorsEvent
+        EVENT_MAIN_MT_ID, // union struct: fgEvent
 
         //
         // Special Callback type 
         //
-        SCRIPT_CALLBACK_MT_ID = 70,
+        SCRIPT_CALLBACK_MT_ID,
 
         METATABLE_SIZE
     };

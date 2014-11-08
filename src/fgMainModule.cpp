@@ -30,7 +30,7 @@
 
 class MainModule;
 extern float guiScale;
-#if defined FG_USING_MARMALADE
+#if defined(FG_USING_MARMALADE)
 extern "C" int main();
 
 class fgMarmaladeHandlers
@@ -320,7 +320,9 @@ private:
      * @return 
      */
     fgBool initProgram() {
-        FG_LOG::PrintDebug("Init program main...");
+        fgTime::init(); // #FIXME global time init?
+        float t1 = fgTime::ms();
+        FG_LOG_DEBUG("Init program main...");
         if(m_appInit) {
             // already initialized
             return FG_TRUE;
@@ -342,17 +344,16 @@ private:
 
 #endif /* FG_USING_MARMALADE */
         if(!m_eventMgr) {
-            FG_LOG::PrintDebug("Creating event manager...");
+            FG_LOG_DEBUG("Creating event manager...");
             m_eventMgr = new fgEventManager();
             if(!m_eventMgr->initialize()) {
                 // Should check?
             }
         }
         if(!m_gameMain) {
-            FG_LOG::PrintDebug("Creating game main object...");
+            FG_LOG_DEBUG("Creating game main object...");
             m_gameMain = new fgGameMain(m_eventMgr);
         }
-        //m_gameMain->setEventManager(m_eventMgr);
 
         // Well the whole configuration process should update the screen (swap buffers)
         // this is needed to display splash screen (after marmalade splash screen) and
@@ -369,6 +370,8 @@ private:
             return FG_FALSE;
         }
         m_appInit = FG_TRUE;
+        float t2 = fgTime::ms();
+        FG_LOG_DEBUG("Main: Program initialized in %.2f seconds", (t2 - t1) / 1000.0f);
         return FG_TRUE;
     }
 
@@ -386,9 +389,6 @@ private:
         if(checkSDLEvents() == SDL_QUIT) {
             return FG_FALSE;
         }
-        //if(SDL_QuitRequested() == SDL_TRUE) {
-        //return FG_FALSE;
-        //}
 #endif
 
 #if defined(FG_USING_MARMALADE)
@@ -399,13 +399,13 @@ private:
         }
         if(s3eKeyboardGetState(s3eKeyEnter) & S3E_KEY_STATE_PRESSED) {
             m_appInit = FG_FALSE;
-            FG_LOG::PrintDebug("ENTER PRESSED...");
+            FG_LOG_DEBUG("ENTER PRESSED...");
             return FG_FALSE;
         }
 #endif /* FG_USING_MARMALADE */
         if(m_isExit) {
             m_appInit = FG_FALSE;
-            FG_LOG::PrintDebug("EXIT IS ACTIVATED - break loop main ! bye!");
+            FG_LOG_DEBUG("EXIT IS ACTIVATED - break loop main ! bye!");
             return FG_FALSE;
         }
 
@@ -414,7 +414,7 @@ private:
         FG_HardwareState->deviceYield(0);
 
         // well for now drawing and all update functions will be called in one place (one thread)
-        // however it neads changing
+        // however it needs changing
         m_gameMain->display();
         FG_HardwareState->deviceYield(0);
 
@@ -425,10 +425,10 @@ private:
     }
 
     /**
-     * The way to exit from the app
+     * The way to exit from the application
      */
     void closeProgram() {
-        FG_LOG::PrintDebug("Closing program...");
+        FG_LOG_DEBUG("Closing program...");
         // This frees all the data used by singletons and other nonresource data
         // after that only things left to free are FG_GameMain and MainModule
         if(m_gameMain) {
@@ -449,7 +449,7 @@ private:
      * DEVICE PAUSE event
      */
     void suspendGfxEvent(void) {
-        FG_LOG::PrintDebug(">>> SUSPEND GFX SUBSYSTEM()");
+        FG_LOG_DEBUG(">>> SUSPEND GFX SUBSYSTEM()");
         if(m_gameMain)
             m_gameMain->getGfxMain()->suspendGFX();
     }
@@ -458,7 +458,7 @@ private:
      * DEVICE unpause event
      */
     void resumeGfxEvent(void) {
-        FG_LOG::PrintDebug(">>> RESUME GFX SUBSYSTEM()");
+        FG_LOG_DEBUG(">>> RESUME GFX SUBSYSTEM()");
         if(m_gameMain)
             m_gameMain->getGfxMain()->resumeGFX();
     }
@@ -468,7 +468,7 @@ private:
      * (not the GL pause event)
      */
     void focusLostEvent(void) {
-        FG_LOG::PrintDebug("focusLostEvent()");
+        FG_LOG_DEBUG("focusLostEvent()");
 
         // Brak focus czyli:
         // - wyswietlenie menu
@@ -489,9 +489,9 @@ private:
      * (not the GL unpause event)
      */
     void focusGainedEvent(void) {
-        FG_LOG::PrintDebug("focusGainedEvent()");
+        FG_LOG_DEBUG("focusGainedEvent()");
     }
-#if defined FG_USING_MARMALADE
+#if defined(FG_USING_MARMALADE)
 
     /**
      * Handle PRESSING and RELEASING keys
@@ -514,7 +514,7 @@ private:
         } else {
             m_eventMgr->addKeyUp((int)event->m_Key);
         }
-        //FG_LOG::PrintDebug("FG_EventManager - keyboard - %d is pressed? - code: %d", (int)event->m_Pressed, (int)event->m_Key);
+        //FG_LOG_DEBUG("FG_EventManager - keyboard - %d is pressed? - code: %d", (int)event->m_Pressed, (int)event->m_Key);
     }
 #endif /* FG_USING_MARMALADE */
 
@@ -539,44 +539,6 @@ private:
     /// then passed down to the GameMain class
     fgEventManager *m_eventMgr;
 };
-
-#if 0
-
-/// Sets FPS-limit HANDLER
-static bool set_allow_loop_handler(void);
-
-/// TRUE triggers MainModule::loop() call in the while (1)
-bool g_allowLoop = true;
-
-/**
- * Sets g_allowLoop to true - next main's while(1)
- * execution will call MainModule::loop() !
- */
-static int32 allow_moblet_loop(void* systemData, void* userData) {
-    g_allowLoop = true;
-    // Renew the timer
-    bool result = set_allow_loop_handler();
-    s3eDeviceUnYield();
-
-    return result;
-}
-
-/**
- * Sets timeout - to delay MainModule::loop()
- * execution - to obtain expected FPS!
- */
-static bool set_allow_loop_handler(void) {
-    float fps = 30.0;
-    float milisec = (1.0f / fps) * 1000.0f;
-    int result = s3eTimerSetTimer(milisec, &allow_moblet_loop, NULL);
-    if(result == S3E_RESULT_ERROR) {
-        FG_LOG::PrintError("Setting Moblet::loop callback failed!");
-        return false;
-    }
-    return true;
-}
-
-#endif
 
 #if defined FG_USING_MARMALADE
 
@@ -646,36 +608,28 @@ int32_t fgMarmaladeHandlers::keyStateChangedHandler(void *systemData, void *user
 extern "C" int main() {
     IwUtilInit();
     int argc = 0;
-    char *argv[] = { NULL, NULL };
+    char *argv[] = {NULL, NULL};
 #else
 
 extern "C" int main(int argc, char *argv[]) {
 #endif /* FG_USING_MARMALADE */
-    //IwMemBucketDebugSetBreakpoint(580);
-    //IwMemBucketDebugSetBreakpoint(580);
     //IwMemBucketDebugSetBreakpoint(1541);
+#if defined(FG_USING_MARMALADE)
+    IwUtilTerminate();
+    s3eDeviceExit(0);
+#endif /* FG_USING_MARMALADE */	
+    //return 1;
+    //getc(stdin);
 
-    /*fgDeviceQuery* dev = fgDeviceQuery::getInstance();
-
-    if ( dev->iOS() &&
-    ( (dev->deviceClass() == FG_DEVICE_CLASS_IPAD && dev->deviceGeneration() == FG_DEVICE_GENERATION_FIRST) ||
-    (dev->deviceClass() == FG_DEVICE_CLASS_IPOD && dev->deviceGeneration() < FG_DEVICE_GENERATION_FOURTH) ||
-    (dev->deviceClass() == FG_DEVICE_CLASS_IPHONE && dev->deviceGeneration() < FG_DEVICE_GENERATION_FOURTH)
-    )
-    )
-    {
-    FG_MainModule->setSlow(true);
-    } else {
-    FG_MainModule->setSlow(false);
-    }
-     */
-    FG_LOG::PrintDebug("%s: Start up", FG_PACKAGE_FULL_TEXT);
+    FG_LOG_DEBUG("%s: Start up", FG_PACKAGE_FULL_TEXT);
     MainModule *mainModule = new MainModule(argc, argv);
 
     if(!mainModule->initProgram()) {
         mainModule->closeProgram();
+        FG_LOG_DEBUG("Deleting main module...");
         delete mainModule;
-#if defined FG_USING_MARMALADE
+        FG_LOG::PrintError("Initialization failed, closing program with error");
+#if defined(FG_USING_MARMALADE)
         IwUtilTerminate();
         s3eDeviceExit(0);
 #endif /* FG_USING_MARMALADE */		
@@ -683,50 +637,26 @@ extern "C" int main(int argc, char *argv[]) {
     }
     FG_HardwareState->deviceYield(0);
 
-    /*if( FG_MainModule->isSlow() ) {
-    // USE FPS LIMIT
-    FG_LOG::PrintDebug("USING FPS LIMIT FOR DEVICE GEN: %d", dev->deviceGeneration());
-
-    if(!set_allow_loop_handler()) {
-    FG_LOG::PrintError("FATAL ERROR #1: EXITING");
-    s3eDeviceExit(1);
-    }
-    while(1) {
-    if ( g_allowLoop ) {
-    g_allowLoop = false;
-    FG_MainModule->mainLoopStep();
-    }
-    FG_HardwareState->deviceYield(10);
-    }
-    } else {
-    // NO FPS LIMIT
-    FG_LOG::PrintDebug("NO FPS LIMIT FOR DEVICE GEN: %d", dev->deviceGeneration());
-    while(1) {
-    FG_MainModule->mainLoopStep();
-    FG_HardwareState->deviceYield(0);
-    }
-    }*/
-
-    while(true) {
+    while(FG_TRUE) {
         fgBool status = mainModule->mainLoopStep();
         FG_HardwareState->deviceYield(1);
-#if defined FG_USING_MARMALADE
+#if defined(FG_USING_MARMALADE)
         s3eDeviceBacklightOn(); // #FIXME // need to wrap it in something else
 #endif /* FG_USING_MARMALADE */
         if(status == FG_FALSE) {
-            FG_LOG::PrintDebug("Main loop break...");
+            FG_LOG_DEBUG("Main loop break...");
             break;
         }
     }
 
     mainModule->closeProgram();
-    FG_LOG::PrintDebug("Deleting main module...");
+    FG_LOG_DEBUG("Deleting main module...");
     delete mainModule;
 
 #if defined FG_USING_MARMALADE
     IwUtilTerminate();
     s3eDeviceExit(0);
 #endif /* FG_USING_MARMALADE */
-    FG_LOG::PrintDebug("Successfully closed program");
+    FG_LOG_DEBUG("Successfully closed program");
     return 0;
 }

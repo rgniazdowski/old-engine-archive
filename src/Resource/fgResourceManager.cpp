@@ -514,12 +514,17 @@ fgResource* fgResourceManager::request(const std::string& info, const fgResource
     // it should not be searched and reloaded - however do not use request() in a main
     // loop as it may be slower
     resourcePtr = fgResourceManager::get(info);
-    if(resourcePtr)
+    if(resourcePtr) {
+        // This print will flood output
+        //FG_LOG_DEBUG("Resource: Found requested resource: name[%s], request[%s]", resourcePtr->getNameStr(), info.c_str());
         return resourcePtr;
+    }
     // info cannot be a path, it has to be resource name or config name
     // required file will be found
-    if(fgStrings::contains(info, std::string("/\\")))
+    if(fgStrings::contains(info, std::string("/\\"))) {
+        FG_LOG_ERROR("Resource: Request cannot contain full path: '%s'", info.c_str());
         return NULL;
+    }
 
     std::string pattern;
     std::string filePath;
@@ -569,25 +574,26 @@ fgResource* fgResourceManager::request(const std::string& info, const fgResource
         } else {
             fext = fgPath::fileExt(filePath.c_str(), FG_TRUE);
         }
-        if(strcasecmp(fext, "res.ini") == 0) {
+        
+        if(fgStrings::endsWith(fext, "res.ini", FG_TRUE)) {
             isConfig = FG_TRUE;
-        } else if(strcasecmp(fext, "tga") == 0) {
+        } else if(fgStrings::endsWith(fext, "tga", FG_TRUE)) {
             resExtType = FG_RESOURCE_TEXTURE;
-        } else if(strcasecmp(fext, "jpg") == 0) {
+        } else if(fgStrings::endsWith(fext, "jpg", FG_TRUE)) {
             resExtType = FG_RESOURCE_TEXTURE;
-        } else if(strcasecmp(fext, "png") == 0) {
+        } else if(fgStrings::endsWith(fext, "png", FG_TRUE)) {
             resExtType = FG_RESOURCE_TEXTURE;
-        } else if(strcasecmp(fext, "obj") == 0) {
+        } else if(fgStrings::endsWith(fext, "obj", FG_TRUE)) {
             resExtType = FG_RESOURCE_3D_MODEL;
-        } else if(strcasecmp(fext, "wav") == 0) {
+        } else if(fgStrings::endsWith(fext, "wav", FG_TRUE)) {
             resExtType = FG_RESOURCE_SOUND;
-        } else if(strcasecmp(fext, "mp3") == 0) {
+        } else if(fgStrings::endsWith(fext, "mp3", FG_TRUE)) {
             resExtType = FG_RESOURCE_MUSIC;
-        } else if(strcasecmp(fext, "mod") == 0) {
+        } else if(fgStrings::endsWith(fext, "mod", FG_TRUE)) {
             resExtType = FG_RESOURCE_MUSIC;
-        } else if(strcasecmp(fext, "raw") == 0) {
+        } else if(fgStrings::endsWith(fext, "raw", FG_TRUE)) {
             //resExtType = FG_RESOURCE_SOUND;
-        } else if(strcasecmp(fext, "particle.ini") == 0) {
+        } else if(fgStrings::endsWith(fext, "particle.ini", FG_TRUE)) {
             resExtType = FG_RESOURCE_PARTICLE_EFFECT;
         } else {
         }
@@ -619,7 +625,7 @@ fgResource* fgResourceManager::request(const std::string& info, const fgResource
             resourcePtr->setQuality(header->quality);
 
             if(header->paths.size() != header->qualities.size()) {
-                FG_LOG::PrintError("Group config: number of qualities doesn't match number of files for: '%s'", header->name.c_str());
+                FG_LOG_ERROR("Group config: number of qualities doesn't match number of files for: '%s'", header->name.c_str());
                 delete resourcePtr;
                 if(resCfg)
                     delete resCfg;
@@ -641,8 +647,7 @@ fgResource* fgResourceManager::request(const std::string& info, const fgResource
             resourcePtr->setQuality(FG_QUALITY_UNIVERSAL);
             resourcePtr->setDefaultID(FG_QUALITY_UNIVERSAL);
             resourcePtr->setFilePath(filePath);
-
-
+            FG_LOG_DEBUG("Resource: Requested resource: '%s'", filePath.c_str());
         }
     }
 

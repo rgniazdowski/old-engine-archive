@@ -34,7 +34,7 @@ fgBool fgFile::exists(const char *filePath) {
 /*
  *
  */
-fgBool fgFile::exists(std::string &filePath) {
+fgBool fgFile::exists(const std::string &filePath) {
     return fgFile::exists(filePath.c_str());
 }
 

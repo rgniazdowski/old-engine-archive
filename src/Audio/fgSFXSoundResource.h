@@ -7,9 +7,9 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-#ifndef _FG_SFX_MUSIC_RESOURCE_H_
-    #define _FG_SFX_MUSIC_RESOURCE_H_
-    #define _FG_SFX_MUSIC_RESOURCE_H_BLOCK_
+#ifndef _FG_SFX_SOUND_RESOURCE_H_
+    #define _FG_SFX_SOUND_RESOURCE_H_
+    #define _FG_SFX_SOUND_RESOURCE_H_BLOCK_
 
     #include "fgBuildConfig.h"
 
@@ -21,18 +21,18 @@
         #include <SDL/SDL_mixer.h>
     #elif defined(FG_USING_MARMALADE)
         #warning "TODO: Music/Audio support for Marmalade based build!"
-//      #include "s3eFile.h"
-        #ifdef FG_USING_MARMALADE_AUDIO
-            #include "s3eAudio.h" // s3eAudio can play music files
-        #endif /* FG_USING_MARMALADE_AUDIO */
+        #include "s3eFile.h"
+        #ifdef FG_USING_MARMALADE_SOUND
+            #include "s3eSound.h"
+        #endif /* FG_USING_MARMALADE_SOUND */
     #endif
 
     #include "Resource/fgResource.h"
 
     #if defined(FG_USING_SDL_MIXER)
-        #define FG_MUSIC_RESOURCE_DEFAULT_VOLUME MIX_MAX_VOLUME
+        #define FG_SOUND_RESOURCE_DEFAULT_VOLUME MIX_MAX_VOLUME
     #elif defined(FG_USING_MARMALADE)
-        #define FG_MUSIC_RESOURCE_DEFAULT_VOLUME 0 // #FIXME
+        #define FG_SOUND_RESOURCE_DEFAULT_VOLUME 0 // #FIXME
     #endif
 
     #include "fgSFXAudioBase.h"
@@ -41,44 +41,49 @@
 /**
  * 
  */
-class fgMusicResource : public fgResource, public fgAudioBase {
+class fgSoundResource : public fgResource, public fgAudioBase {
 public:
     typedef fgResource base_type;
     typedef fgAudioBase base_audio_type;
 private:
     #if defined(FG_USING_SDL_MIXER)
     ///
-    Mix_Music *m_musData;
+    Mix_Chunk *m_chunkData;
     #elif defined(FG_USING_MARMALADE) // AUDIO / SOUND
     #else
-    void *m_musData;
+    void *m_chunkData;
     #endif
     ///
     unsigned char *m_rawData;
+    ///
+    int m_channel;
+
+protected:
+    fgBool loadRawData(void);
 
 public:
     /**
      * 
      */
-    fgMusicResource();
+    fgSoundResource();
     /**
      * 
      * @param path
      */
-    fgMusicResource(const char *path);
+    fgSoundResource(const char *path);
     /**
      * 
      * @param path
      */
-    fgMusicResource(std::string& path);
+    fgSoundResource(std::string& path);
     /**
      * 
      */
-    virtual ~fgMusicResource() {
-        fgMusicResource::destroy();
+    virtual ~fgSoundResource() {
+        fgSoundResource::destroy();
     }
 
-    FG_RESOURCE_FACTORY_CREATE_FUNCTION(fgMusicResource);
+    FG_RESOURCE_FACTORY_CREATE_FUNCTION(fgSoundResource);
 
 
 protected:
@@ -151,7 +156,13 @@ public:
      * @param volume
      */
     void setVolume(FG_SFX_VOLUME_TYPE volume);
+
+    /**
+     * 
+     * @return 
+     */
+    int getCurrentChannel(void);
 };
 
-    #undef _FG_SFX_MUSIC_RESOURCE_H_BLOCK_
-#endif /* _FG_SFX_MUSIC_RESOURCE_H_ */
+    #undef _FG_SFX_SOUND_RESOURCE_H_BLOCK_
+#endif /* _FG_SFX_SOUND_RESOURCE_H_ */

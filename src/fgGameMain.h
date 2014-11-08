@@ -20,6 +20,7 @@
     #include "Resource/fgResourceFactory.h"
     #include "Input/fgPointerInputReceiver.h"
     #include "Input/fgJoypadController.h"
+    #include "Audio/fgSFXManager.h"
 
     #include "GFX/fgGFXMain.h"
     #include "GUI/fgGuiMain.h"
@@ -142,6 +143,20 @@ public:
     inline fgJoypadController *getJoypadController(void) const {
         return m_joypadController;
     }
+    /**
+     * 
+     * @return 
+     */
+    inline fgScriptSubsystem *getScriptSubsystem(void) const {
+        return m_scriptSubsystem;
+    }
+    /**
+     * 
+     * @return 
+     */
+    inline fgSFXManager *getSoundManager(void) const {
+        return m_soundMgr;
+    }
 
 protected:
     /**
@@ -193,6 +208,8 @@ private:
     fgJoypadController *m_joypadController;
     ///
     fgScriptSubsystem *m_scriptSubsystem;
+    ///
+    fgSFXManager *m_soundMgr;
 
     ///
     fgFunctionCallback *m_gameTouchCallback;

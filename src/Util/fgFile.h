@@ -129,7 +129,7 @@ public:
     static fgBool exists(const char *filePath);
 
     // Check if file exists
-    static fgBool exists(std::string &filePath);
+    static fgBool exists(const std::string &filePath);
 
     // Check if file exists
     fgBool exists(void) {

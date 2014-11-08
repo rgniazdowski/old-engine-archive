@@ -59,6 +59,7 @@
             <word>bool</word>
             <word>bvec</word>
             <word>callbacks</word>
+            <word>codec</word>
             <word>config</word>
             <word>configs</word>
             <word>const</word>
@@ -67,6 +68,7 @@
             <word>cpp</word>
             <word>destructors</word>
             <word>dfactor</word>
+            <word>dragonsfunk</word>
             <word>drawcall</word>
             <word>ds</word>
             <word>eg</word>
@@ -94,6 +96,7 @@
             <word>ismapped</word>
             <word>itor</word>
             <word>ivec</word>
+            <word>jpg</word>
             <word>lightuserdata</word>
             <word>Lightwave</word>
             <word>lu</word>
@@ -102,6 +105,7 @@
             <word>metadata</word>
             <word>metatable</word>
             <word>metatables</word>
+            <word>mp</word>
             <word>ms</word>
             <word>multitextured</word>
             <word>multitexturing</word>
@@ -116,6 +120,7 @@
             <word>param</word>
             <word>params</word>
             <word>plox</word>
+            <word>png</word>
             <word>Popup</word>
             <word>pos</word>
             <word>preload</word>
@@ -140,6 +145,7 @@
             <word>valign</word>
             <word>vcenter</word>
             <word>vec</word>
+            <word>wav</word>
             <word>xml</word>
             <word>zfail</word>
             <word>zpass</word>

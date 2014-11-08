@@ -7,10 +7,9 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-#include "fgBuildConfig.h"
-#include "fgCommon.h"
+/// Main include
 #include "fgGameMain.h"
-
+/// Standard includes
 #include <cstdlib>
 #include <cstdio>
 #include <cmath>
@@ -20,38 +19,45 @@
 #include "Hardware/fgDeviceQuery.h"
 #endif // FG_USING_MARMALADE
 
+/// Various utilities
 #include "Util/fgSettings.h"
 #include "Util/fgConfig.h"
 #include "Util/fgTime.h"
-
+/// Game logic
 #include "GameLogic/fgGameLogic.h"
+/// Resource management
 #include "Resource/fgResourceManager.h"
 #include "Resource/fgResourceFactory.h"
-
+/// Hardware capabilities
 #include "Hardware/fgSensors.h"
 #include "Hardware/fgQualityManager.h"
 #include "Hardware/fgHardwareState.h"
-
+/// Required GFX modules
 #include "GFX/fgGFXMain.h"
 #include "GFX/fgGFXModelResource.h"
+#include "GFX/Shaders/fgGFXShaderProgram.h"
 #include "GFX/Textures/fgTextureManager.h"
+#include "GFX/Textures/fgTextureLoader.h"
 #include "GFX/Particles/fgParticleSystem.h"
+/// GUI Fonts
 #include "GUI/Font/fgFontResource.h"
-
-#include "Audio/fgSFXManager.h"
-#include "Event/fgEventManager.h"
-#include "Input/fgPointerInputReceiver.h"
-#include "XML/fgXMLParser.h"
-
-#include "fgMessageSubsystem.h"
-#include "fgErrorCodes.h"
-
 #include "GUI/Font/fgFontDrawer.h"
 #include "GUI/Font/fgFontBuiltIn.h"
-
+#include "GUI/fgGuiStyle.h"
+/// Event management
+#include "Event/fgEventManager.h"
+/// User raw input (mouse/touch/)
+#include "Input/fgPointerInputReceiver.h"
+/// XML parsing
+#include "XML/fgXMLParser.h"
+/// Message subsystem
+#include "fgMessageSubsystem.h"
+/// Error codes
+#include "fgErrorCodes.h"
+/// Standard color array - format based on GFX color/vec4
 #include "fgColors.h"
 
-/*
+/**
  * Default constructor for the Game Main object
  */
 fgGameMain::fgGameMain(fgEventManager* pEventMgr) :
@@ -79,43 +85,64 @@ m_gameFreeLookCallback(NULL) {
     m_pointerInputReceiver = new fgPointerInputReceiver();
     m_joypadController = new fgJoypadController(); // #FIXME - joypad part of input receiver?
     m_scriptSubsystem = new fgScriptSubsystem();
+    m_soundMgr = new fgSFXManager();
     if(pEventMgr) {
         this->setEventManager(pEventMgr);
     }
     m_joypadController->initialize(); // #FIXME
 }
 
-/*
+/**
  * Default destructor for the Game Main object
  */
 fgGameMain::~fgGameMain() {
+    // Unregister any required callbacks
     unregisterGameCallbacks();
+    // Global settings
     if(m_settings)
         delete m_settings;
     m_settings = NULL;
+    // Main configuration file
     if(m_mainConfig)
         delete m_mainConfig;
     m_mainConfig = NULL;
+    // Destroy GFX Main object
     if(m_gfxMain)
         delete m_gfxMain;
     m_gfxMain = NULL;
+    m_guiMain->setShaderManager(NULL);
+    // Destroy SFX/Sound manager object
+    if(m_soundMgr)
+        delete m_soundMgr;
+    m_soundMgr = NULL;
+    // Destroy resource manager object
+    // This will also destroy any left resources
     if(m_resourceMgr)
         delete m_resourceMgr;
     m_resourceMgr = NULL;
+    m_guiMain->setResourceManager(NULL);
+    // Reset external pointers
     m_scriptSubsystem->setResourceManager(NULL);
     m_scriptSubsystem->setShaderManager(NULL);
     m_scriptSubsystem->set2DSceneManager(NULL);
     m_scriptSubsystem->set3DSceneManager(NULL);
+    // Destroy the resource factory object
     if(m_resourceFactory)
         delete m_resourceFactory;
     m_resourceFactory = NULL;
+    // Input receiver
     if(m_pointerInputReceiver)
         delete m_pointerInputReceiver;
     m_pointerInputReceiver = NULL;
+    m_guiMain->setPointerInputReceiver(NULL);
+    // Joystick controller
     if(m_joypadController) {
         m_joypadController->quit();
         delete m_joypadController;
     }
+    m_joypadController = NULL;
+    // Remove any callbacks
+    // They're already unregistered
     if(m_gameTouchCallback)
         delete m_gameTouchCallback;
     if(m_gameMouseCallback)
@@ -125,18 +152,21 @@ fgGameMain::~fgGameMain() {
     m_gameMouseCallback = NULL;
     m_gameTouchCallback = NULL;
     m_gameFreeLookCallback = NULL;
-    m_joypadController = NULL;
+    // Destroy the quality manager
     if(m_qualityMgr)
         delete m_qualityMgr;
     m_qualityMgr = NULL;
     // this event mgr is not owned by game main
     m_pEventMgr = NULL;
+    // Main GUI class 
+    // Do not reset the pointer... needs it to unregister callbacks
+    //m_guiMain->setEventManager(NULL);    
     if(m_guiMain) {
         delete m_guiMain;
-    }
+    }    
+    m_guiMain = NULL;
     m_scriptSubsystem->setWidgetManager(NULL);
     m_scriptSubsystem->setStyleManager(NULL);
-    m_guiMain = NULL;
     if(m_scriptSubsystem) {
         delete m_scriptSubsystem;
     }
@@ -146,7 +176,7 @@ fgGameMain::~fgGameMain() {
     FG_MessageSubsystem->deleteInstance(); // #FIXME - message subsystem singleton
 }
 
-/*
+/**
  *
  */
 void fgGameMain::registerGameCallbacks(void) {
@@ -180,7 +210,7 @@ void fgGameMain::registerGameCallbacks(void) {
     m_pEventMgr->addEventCallback(FG_EVENT_MOUSE_MOTION, m_gameFreeLookCallback);
 }
 
-/*
+/**
  *
  */
 void fgGameMain::unregisterGameCallbacks(void) {
@@ -235,10 +265,6 @@ void fgGameMain::setEventManager(fgEventManager *pEventMgr) {
     }
 }
 
-#include "GFX/Shaders/fgGFXShaderProgram.h"
-#include "GUI/fgGuiStyle.h"
-#include "GFX/Textures/fgTextureLoader.h"
-
 /*
  * This needs to be called first before everything else.
  * Function creates and initializes subsystems
@@ -276,6 +302,8 @@ fgBool fgGameMain::initSubsystems(void) {
     m_resourceFactory->registerResource(FG_RESOURCE_GROUP, &fgResourceGroup::createResource);
     m_resourceFactory->registerResource(FG_RESOURCE_3D_MODEL, &fgGfxModelResource::createResource);
     m_resourceFactory->registerResource(FG_RESOURCE_PARTICLE_EFFECT, &fgParticleEffect::createResource);
+    m_resourceFactory->registerResource(FG_RESOURCE_MUSIC, &fgMusicResource::createResource);
+    m_resourceFactory->registerResource(FG_RESOURCE_SOUND, &fgSoundResource::createResource);
     FG_HardwareState->deviceYield(0); // #FIXME - device yield...
     if(!m_resourceMgr)
         m_resourceMgr = new fgResourceManager(m_resourceFactory, m_qualityMgr, m_pEventMgr);
@@ -287,6 +315,12 @@ fgBool fgGameMain::initSubsystems(void) {
     m_resourceMgr->initialize();
 #endif // FG_USING_MARMALADE
 
+    // Setup SFX manager external pointer - resource manager
+    if(m_soundMgr)
+        m_soundMgr->setResourceManager(m_resourceMgr);
+    if(!m_soundMgr->initialize()) {
+        FG_LOG_ERROR("SFX: Initialization of Sound module finished with errors");
+    }
     // Setup GFX Main external pointers
     m_gfxMain->setResourceManager(m_resourceMgr);
     // Setup GUI Main external pointers
@@ -300,7 +334,7 @@ fgBool fgGameMain::initSubsystems(void) {
     }
     // When GUI MAIN has set the resource manager - it can preload builtin fonts
     if(!m_guiMain->initialize()) {
-        FG_LOG::PrintError("GUI: Main module initialized with errors");
+        FG_LOG_ERROR("GUI: Main module initialized with errors");
     }
     // Setup Script Subsystem external pointers
     m_scriptSubsystem->setEventManager(m_pEventMgr);
@@ -309,15 +343,15 @@ fgBool fgGameMain::initSubsystems(void) {
     m_scriptSubsystem->set2DSceneManager(m_gfxMain->get2DScene());
     m_scriptSubsystem->set3DSceneManager(m_gfxMain->get3DScene());
     m_scriptSubsystem->setShaderManager(static_cast<fgManagerBase *>(m_gfxMain->getShaderManager()));
-    //m_scriptSubsystem->setSoundManager(NULL);
+    m_scriptSubsystem->setSoundManager(static_cast<fgManagerBase *>(m_soundMgr));
     m_scriptSubsystem->setStyleManager(static_cast<fgManagerBase *>(m_guiMain->getStyleManager()));
     m_scriptSubsystem->setWidgetManager(static_cast<fgManagerBase *>(m_guiMain->getWidgetManager()));
     if(!m_scriptSubsystem->initialize()) {
-        FG_LOG::PrintError("Script: Initialization of Script module finished with errors");
+        FG_LOG_ERROR("Script: Initialization of Script module finished with errors");
     }
     FG_HardwareState->deviceYield(0); // #FIXME - device yield...
     float t2 = fgTime::ms();
-    FG_LOG::PrintDebug("Main: All subsystems initialized in %.2f seconds", (t2 - t1) / 1000.0f);
+    FG_LOG_DEBUG("Main: All subsystems initialized in %.2f seconds", (t2 - t1) / 1000.0f);
     return FG_TRUE;
 }
 
@@ -326,7 +360,7 @@ fgBool fgGameMain::initSubsystems(void) {
  * of game initialization
  */
 fgBool fgGameMain::loadConfiguration(void) {
-    FG_LOG::PrintDebug("Loading configuration...");
+    FG_LOG_DEBUG("Loading configuration...");
     if(!m_settings)
         m_settings = new fgSettings();
     if(!m_settings->load("settings.xml")) { // #FIXME - universal, cross solution - path management
@@ -341,16 +375,15 @@ fgBool fgGameMain::loadConfiguration(void) {
  */
 fgBool fgGameMain::loadResources(void) {
     float t1 = fgTime::ms();
-    FG_LOG::PrintDebug("Loading resources...");
+    FG_LOG_DEBUG("Loading resources...");
 
     LuaPlus::LuaState *state = m_scriptSubsystem->getLuaState();
     if(state) {
         if(state->DoFile("main.lua")) {
-            // An error occured
+            // An error occurred
             if(state->GetTop() == 1)
                 std::cout << "An error occurred: " << state->CheckString(1) << std::endl;
         }
-        state->GC(LUA_GCCOLLECT, 0);
     }
 
     ////////////////////////////////////////////////////////////////////////////
@@ -359,7 +392,7 @@ fgBool fgGameMain::loadResources(void) {
     std::string sPlainEasyShaderName("sPlainEasy");
     fgGfxShaderProgram *program = m_gfxMain->getShaderManager()->get(sPlainEasyShaderName);
     FG_HardwareState->deviceYield(0); // #FIXME - device yield...
-    FG_LOG::PrintDebug("Will now try to compile and link 'sPlainEasy' shader program");
+    FG_LOG_DEBUG("Will now try to compile and link 'sPlainEasy' shader program");
     if(program) {
         // Compile all required shaders
         program->compile();
@@ -370,7 +403,7 @@ fgBool fgGameMain::loadResources(void) {
         std::string sOrthoEasyShaderName("sOrthoEasy");
         fgGfxShaderProgram *program = m_gfxMain->getShaderManager()->get(sOrthoEasyShaderName);
         FG_HardwareState->deviceYield(0); // #FIXME - device yield...
-        FG_LOG::PrintDebug("Will now try to compile and link 'sOrthoEasyShader' shader program");
+        FG_LOG_DEBUG("Will now try to compile and link 'sOrthoEasyShader' shader program");
         if(program) {
             program->compile();
             program->link(); // this will also bind attributes and after successful link - bind uniforms
@@ -383,11 +416,11 @@ fgBool fgGameMain::loadResources(void) {
     // Create vertex buffers on event - not explicitly 
     {
         float t1 = fgTime::ms();
-        FG_LOG::PrintDebug("Will now try load object CobraBomber.obj");
+        FG_LOG_DEBUG("Will now try load object CobraBomber.obj");
         std::string modelname("CobraBomber");
         fgGfxModelResource *model = (fgGfxModelResource *)m_resourceMgr->get(modelname);
         float t2 = fgTime::ms();
-        FG_LOG::PrintDebug("WHOLE OBJECT CREATION TOOK: %.2f seconds", (t2 - t1) / 1000.0f);
+        FG_LOG_DEBUG("WHOLE OBJECT CREATION TOOK: %.2f seconds", (t2 - t1) / 1000.0f);
     }
     ////////////////////////////////////////////////////////////////////////////
 #endif
@@ -403,7 +436,8 @@ fgBool fgGameMain::loadResources(void) {
     m_gfxMain->getParticleSystem()->insertParticleEmitter("ExplosionSmokeTrails", "ExplosionSmokeTrails", fgVector3f(0.0f, 0.0f, 0.0f));
     m_gfxMain->getParticleSystem()->insertParticleEmitter("ExplosionSparks", "ExplosionSparks", fgVector3f(0.0f, 0.0f, 0.0f));
     float t2 = fgTime::ms();
-    FG_LOG::PrintDebug("Main: Resources loaded in %.2f seconds", (t2 - t1) / 1000.0f);
+    FG_LOG_DEBUG("Main: Resources loaded in %.2f seconds", (t2 - t1) / 1000.0f);
+
     return FG_TRUE;
 }
 
@@ -411,8 +445,9 @@ fgBool fgGameMain::loadResources(void) {
  * This unloads, frees and deletes all data from fgResourceManager subsystem
  */
 fgBool fgGameMain::releaseResources(void) {
+
     if(m_resourceMgr) {
-        FG_LOG::PrintDebug("Releasing resources...");
+        FG_LOG_DEBUG("Releasing resources...");
         return m_resourceMgr->destroy();
     }
     return FG_FALSE;
@@ -423,7 +458,7 @@ fgBool fgGameMain::releaseResources(void) {
  * must be called after releaseResources
  */
 fgBool fgGameMain::closeSybsystems(void) {
-    FG_LOG::PrintDebug("Closing subsystems...");
+    FG_LOG_DEBUG("Closing subsystems...");
     if(m_gfxMain)
         m_gfxMain->releaseTextures();
 
@@ -444,7 +479,7 @@ fgBool fgGameMain::closeSybsystems(void) {
  * This function releases the resources and closes the subsystems
  */
 fgBool fgGameMain::quit(void) {
-    FG_LOG::PrintDebug("Game main quit requested");
+    FG_LOG_DEBUG("Game main quit requested");
     fgBool status = FG_TRUE;
     if(!releaseResources())
         status = FG_FALSE;
@@ -520,8 +555,10 @@ void fgGameMain::update(void) {
     //FG_ResourceManager->checkForOverallocation();
 }
 
-/*
- *
+/**
+ * 
+ * @param argv
+ * @return 
  */
 fgBool fgGameMain::gameTouchHandler(fgArgumentList *argv) {
     if(!argv)
@@ -576,13 +613,23 @@ fgBool fgGameMain::gameTouchHandler(fgArgumentList *argv) {
                 pEmitter->addParticles(32, fgVector3f((float)touch->x, (float)touch->y, 0.0f));
             }
         }
-
+        {
+            //fgSoundResource *sound = (fgSoundResource *)m_resourceMgr->request("explode.wav");
+            //if(sound) {
+            //    sound->play();
+            //}
+        }
     }
     return FG_TRUE;
 }
 
 /*
  *
+ */
+/**
+ * 
+ * @param argv
+ * @return 
  */
 fgBool fgGameMain::gameMouseHandler(fgArgumentList *argv) {
     if(!argv)
@@ -597,7 +644,9 @@ fgBool fgGameMain::gameMouseHandler(fgArgumentList *argv) {
 }
 
 /**
- *
+ * 
+ * @param argv
+ * @return 
  */
 fgBool fgGameMain::gameFreeLookHandler(fgArgumentList* argv) {
     if(!argv || !this->m_gfxMain)
@@ -666,21 +715,21 @@ int applicationInit(void) {
     // Object of ProgramMain class will be created in MainModule etc.
 
     /// SENSORS
-    FG_LOG::PrintDebug("Initializing Sensors..");
+    FG_LOG_DEBUG("Initializing Sensors..");
     fgSensors::getInstance()->startSensors();
 
     // AUDIO - FIXME - now that just needs a lot of fixing (personally I would just delete it and rewrote it from scratch using s3eSound)
     // actually now the Audio subsystem loads the .raw (sfx) and .mp3 (music) files
     // it needs to work like new texture subsystem - load audio file names and handles from XML files
     // also it should be dependent (like other file loading subsystems) from fgResourceManager main class
-    //FG_LOG::PrintDebug( "Initializing Audio.." );
+    //FG_LOG_DEBUG( "Initializing Audio.." );
     /*fgSFXManager *audio = fgSFXManager::getInstance();
     if( !audio ) {
     FG_LOG::PrintError( "init_audio failed" );
     return false;
     } else {
     // LOAD MUS & SFX
-    FG_LOG::PrintDebug( "Initializing SFX & MUS.." );
+    FG_LOG_DEBUG( "Initializing SFX & MUS.." );
     if( !audio->loadMusFiles() || !audio->loadSfxFiles() ) {
     FG_LOG::PrintError( "load{Mus,Sfx}Files failed!" );
     return false;

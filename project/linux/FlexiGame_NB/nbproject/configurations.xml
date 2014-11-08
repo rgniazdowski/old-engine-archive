@@ -257,13 +257,14 @@
       </logicalFolder>
       <logicalFolder name="src" displayName="src" projectFiles="true">
         <logicalFolder name="Audio" displayName="Audio" projectFiles="true">
-          <itemPath>../../../src/Audio/fgSFXAudioResource.cpp</itemPath>
-          <itemPath>../../../src/Audio/fgSFXAudioResource.h</itemPath>
+          <itemPath>../../../src/Audio/fgSFXAudioBase.h</itemPath>
           <itemPath>../../../src/Audio/fgSFXErrorCodes.h</itemPath>
           <itemPath>../../../src/Audio/fgSFXManager.cpp</itemPath>
           <itemPath>../../../src/Audio/fgSFXManager.h</itemPath>
           <itemPath>../../../src/Audio/fgSFXMusicResource.cpp</itemPath>
           <itemPath>../../../src/Audio/fgSFXMusicResource.h</itemPath>
+          <itemPath>../../../src/Audio/fgSFXSoundResource.cpp</itemPath>
+          <itemPath>../../../src/Audio/fgSFXSoundResource.h</itemPath>
         </logicalFolder>
         <logicalFolder name="Event" displayName="Event" projectFiles="true">
           <itemPath>../../../src/Event/fgArgumentList.cpp</itemPath>
@@ -1939,12 +1940,7 @@
             tool="1"
             flavor2="8">
       </item>
-      <item path="../../../src/Audio/fgSFXAudioResource.cpp"
-            ex="false"
-            tool="1"
-            flavor2="8">
-      </item>
-      <item path="../../../src/Audio/fgSFXAudioResource.h"
+      <item path="../../../src/Audio/fgSFXAudioBase.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -1967,6 +1963,16 @@
             flavor2="8">
       </item>
       <item path="../../../src/Audio/fgSFXMusicResource.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Audio/fgSFXSoundResource.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+      </item>
+      <item path="../../../src/Audio/fgSFXSoundResource.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -4339,12 +4345,7 @@
             tool="1"
             flavor2="0">
       </item>
-      <item path="../../../src/Audio/fgSFXAudioResource.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="../../../src/Audio/fgSFXAudioResource.h"
+      <item path="../../../src/Audio/fgSFXAudioBase.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -4367,6 +4368,16 @@
             flavor2="0">
       </item>
       <item path="../../../src/Audio/fgSFXMusicResource.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Audio/fgSFXSoundResource.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Audio/fgSFXSoundResource.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -6722,12 +6733,7 @@
             tool="1"
             flavor2="0">
       </item>
-      <item path="../../../src/Audio/fgSFXAudioResource.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="../../../src/Audio/fgSFXAudioResource.h"
+      <item path="../../../src/Audio/fgSFXAudioBase.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -6750,6 +6756,16 @@
             flavor2="0">
       </item>
       <item path="../../../src/Audio/fgSFXMusicResource.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Audio/fgSFXSoundResource.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Audio/fgSFXSoundResource.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -9083,12 +9099,7 @@
             tool="1"
             flavor2="0">
       </item>
-      <item path="../../../src/Audio/fgSFXAudioResource.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="../../../src/Audio/fgSFXAudioResource.h"
+      <item path="../../../src/Audio/fgSFXAudioBase.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -9111,6 +9122,16 @@
             flavor2="0">
       </item>
       <item path="../../../src/Audio/fgSFXMusicResource.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Audio/fgSFXSoundResource.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Audio/fgSFXSoundResource.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -11466,12 +11487,7 @@
             tool="1"
             flavor2="8">
       </item>
-      <item path="../../../src/Audio/fgSFXAudioResource.cpp"
-            ex="false"
-            tool="1"
-            flavor2="8">
-      </item>
-      <item path="../../../src/Audio/fgSFXAudioResource.h"
+      <item path="../../../src/Audio/fgSFXAudioBase.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -11494,6 +11510,16 @@
             flavor2="8">
       </item>
       <item path="../../../src/Audio/fgSFXMusicResource.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Audio/fgSFXSoundResource.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+      </item>
+      <item path="../../../src/Audio/fgSFXSoundResource.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -13839,12 +13865,7 @@
             tool="1"
             flavor2="0">
       </item>
-      <item path="../../../src/Audio/fgSFXAudioResource.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="../../../src/Audio/fgSFXAudioResource.h"
+      <item path="../../../src/Audio/fgSFXAudioBase.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -13867,6 +13888,16 @@
             flavor2="0">
       </item>
       <item path="../../../src/Audio/fgSFXMusicResource.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Audio/fgSFXSoundResource.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Audio/fgSFXSoundResource.h"
             ex="false"
             tool="3"
             flavor2="0">

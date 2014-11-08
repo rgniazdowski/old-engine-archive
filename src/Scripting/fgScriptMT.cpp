@@ -94,7 +94,11 @@ fgScriptMT::METAID fgScriptMT::getMetatableIDFromResourceType(const unsigned int
         metaID = fgScriptMT::GFX_MODEL_RESOURCE_MT_ID;
     } else if(resourceType == FG_RESOURCE_PARTICLE_EFFECT) {
         metaID = fgScriptMT::PARTICLE_EFFECT_RESOURCE_MT_ID;
-    } else { 
+    } else if(resourceType == FG_RESOURCE_MUSIC) {
+        metaID = fgScriptMT::MUSIC_RESOURCE_MT_ID;
+    } else if(resourceType == FG_RESOURCE_SOUND) {
+        metaID = fgScriptMT::SOUND_RESOURCE_MT_ID;
+    } else {
         metaID = fgScriptMT::EMPTY_MT_ID;
     }
     return metaID;

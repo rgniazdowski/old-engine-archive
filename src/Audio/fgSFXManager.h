@@ -9,92 +9,295 @@
 
 #ifndef _FG_SFX_MANAGER_H_
     #define _FG_SFX_MANAGER_H_
+    #define _FG_SFX_MANAGER_H_BLOCK_
 
-    #include "fgSingleton.h"
+    #include "fgBuildConfig.h"
     #include "fgTypes.h"
+    #include "fgManagerBase.h"
 
-// This class needs total refactoring to make it somehow compatible with ResourceManager
+    #include "fgSFXSoundResource.h"
+    #include "fgSFXMusicResource.h"
 
-class fgSFXManager : public fgSingleton<fgSFXManager> {
-    friend class fgSingleton<fgSFXManager>;
+    #if !defined(FG_SFX_VOLUME_TYPE) || !defined(FG_SFX_VOLUME_TYPE_DECLARED)
+        #define FG_SFX_VOLUME_TYPE_DECLARED
+        #if defined(FG_USING_SDL_MIXER) || defined(FG_USING_SDL) || defined(FG_USING_SDL2)
+            #define FG_SFX_VOLUME_TYPE unsigned short int
+        #elif defined(FG_USING_MARMALADE)
+            #define FG_SFX_VOLUME_TYPE float
+        #endif
+    #endif
+
+    #if !defined(FG_MANAGER_SOUND)
+        #define FG_MANAGER_SOUND        0x00008000
+    #endif
+
+/**
+ * 
+ */
+class fgSFXManager : public fgManagerBase {
+public:
+    typedef fgManagerBase base_type;
+    typedef FG_SFX_VOLUME_TYPE volume_type;
 private:
+    ///
+    volume_type m_sfxVolume;
+    ///
+    volume_type m_musVolume;
+    #if defined(FG_USING_MARMALADE)
     fgBool m_mp3;
     fgBool m_pcm;
+    #endif /* FG_USING_MARMALADE */
+    ///
+    fgManagerBase *m_pResourceMgr;
 
 public:
-    /// Identifiers of SFX sounds. Every array obeys the order and indices
-
-    enum {
-        CLICK = 0, SPRING = 1, TURN_ON_DEVICE = 2, PLACED = 3, COMM_DEVICE = 4, DELIKATE = 5
-    };
-
-    enum {
-        SFX_COUNT = 6
-    };
-
-private:
-    /// Resources for SFX sounds
-    static const char* m_sfxResources[ SFX_COUNT ];
-    unsigned char* m_sfxBuffers[ SFX_COUNT ];
-    int m_sfxBuffersSizes[ SFX_COUNT ];
-
-public:
-    /// Identifiers of MUSIC sounds. Every array obeys the order and indices
-
-    enum {
-        MUS_TRACK_AMBIENT1 = 0
-    };
-
-    enum {
-        MUS_COUNT = 1
-    };
-
-    /// Resources for SFX sounds
-    static const char* m_musResources[ MUS_COUNT ];
-
-    float m_sfxVolume;
-    float m_musVolume;
+    /**
+     * 
+     */
+    fgSFXManager(fgManagerBase *pResourceMgr = NULL);
+    /**
+     * 
+     */
+    virtual ~fgSFXManager();
 
 protected:
-    fgSFXManager();
-    ~fgSFXManager();
+    /**
+     * 
+     * @param volume
+     */
+    virtual void clear(void);
 
-private:
-    bool loadAudioFile(const char* name, unsigned char* & out_buffer, int & out_size);
+    /**
+     * 
+     * @param nameTag
+     * @return 
+     */
+    fgAudioBase *get(const char *nameTag);
+    /**
+     * 
+     * @param nameTag
+     * @return 
+     */
+    fgAudioBase *get(const std::string& nameTag);
+    /**
+     * 
+     * @param soundHandle
+     * @return 
+     */
+    fgAudioBase *get(const fgResourceHandle& soundHandle);
+    /**
+     * 
+     * @param info
+     * @return 
+     */
+    fgAudioBase *request(const char *info);
+    /**
+     * 
+     * @param info
+     * @return 
+     */
+    fgAudioBase *request(const std::string& info);
 
 public:
     /**
-     * Load all SFX files
+     * 
+     * @param pResourceMgr
      */
-    bool loadSfxFiles();
+    void setResourceManager(fgManagerBase *pResourceMgr);
+    /**
+     * 
+     * @return 
+     */
+    fgManagerBase *getResourceManager(void) const {
+        return m_pResourceMgr;
+    }
+
+public:
+    /**
+     * 
+     * @return 
+     */
+    virtual fgBool destroy(void);
+    /**
+     * 
+     * @return 
+     */
+    virtual fgBool initialize(void);
+
+public:
+    /**
+     * 
+     * @param volume
+     */
+    void setSfxVolume(volume_type volume);
+    /**
+     * 
+     */
+    void applySfxVolume();
+    /**
+     * 
+     * @param volume
+     */
+    void setMusicVolume(volume_type volume);
+    /**
+     * 
+     */
+    void applyMusicVolume();
+    /**
+     * 
+     * @return 
+     */
+    volume_type getSfxVolume(void) const {
+        return m_sfxVolume;
+    }
+    /**
+     * 
+     * @return 
+     */
+    volume_type getMusicVolume(void) const {
+        return m_musVolume;
+    }
 
     /**
-     * Load all MUS files
+     * 
      */
-    bool loadMusFiles();
+    void stopAll(void);
 
-    void setSfxVolume(float volume);
+    /**
+     * 
+     * @param name
+     * @return 
+     */
+    fgBool play(const char *name);
+    /**
+     * 
+     * @param name
+     * @return 
+     */
+    fgBool play(const std::string &name);
+    /**
+     * 
+     * @param soundHandle
+     * @return 
+     */
+    fgBool play(const fgResourceHandle& soundHandle);
 
-    void applySfxVolume();
+    /**
+     * 
+     * @param name
+     * @return 
+     */
+    fgBool pause(const char *name);
+    /**
+     * 
+     * @param name
+     * @return 
+     */
+    fgBool pause(const std::string &name);
+    /**
+     * 
+     * @param soundHandle
+     * @return 
+     */
+    fgBool pause(const fgResourceHandle& soundHandle);
 
-    void play(int idx);
+    /**
+     * 
+     * @param name
+     * @return 
+     */
+    fgBool resume(const char *name);
+    /**
+     * 
+     * @param name
+     * @return 
+     */
+    fgBool resume(const std::string &name);
+    /**
+     * 
+     * @param soundHandle
+     * @return 
+     */
+    fgBool resume(const fgResourceHandle& soundHandle);
 
-    void stopAll();
+    /**
+     * 
+     * @param name
+     * @return 
+     */
+    fgBool rewind(const char *name);
+    /**
+     * 
+     * @param name
+     * @return 
+     */
+    fgBool rewind(const std::string &name);
+    /**
+     * 
+     * @param soundHandle
+     * @return 
+     */
+    fgBool rewind(const fgResourceHandle& soundHandle);
 
-    void setMusVolume(float volume);
+    /**
+     * 
+     * @param name
+     * @return 
+     */
+    fgBool stop(const char *name);
+    /**
+     * 
+     * @param name
+     * @return 
+     */
+    fgBool stop(const std::string &name);
+    /**
+     * 
+     * @param soundHandle
+     * @return 
+     */
+    fgBool stop(const fgResourceHandle& soundHandle);
 
-    void applyMusVolume();
+    /**
+     * 
+     * @param name
+     * @return 
+     */
+    fgBool isPlaying(const char *name);
+    /**
+     * 
+     * @param name
+     * @return 
+     */
+    fgBool isPlaying(const std::string &name);
+    /**
+     * 
+     * @param soundHandle
+     * @return 
+     */
+    fgBool isPlaying(const fgResourceHandle& soundHandle);
 
-    void playMus(int idx);
+    /**
+     * 
+     * @param name
+     * @return 
+     */
+    fgBool isPaused(const char *name);
+    /**
+     * 
+     * @param name
+     * @return 
+     */
+    fgBool isPaused(const std::string &name);
+    /**
+     * 
+     * @param soundHandle
+     * @return 
+     */
+    fgBool isPaused(const fgResourceHandle& soundHandle);
 
-    void pauseMus(int idx);
-
-    void stopMus(int idx);
-
-    void rewindMus(int idx);
 };
 
-    #define FG_SFXManager fgSFXManager::getInstance()
 
-#endif /* _AUDIO_H */
-
+    #undef _FG_SFX_MANAGER_H_BLOCK_
+#endif /* _FG_SFX_MANAGER_H_ */

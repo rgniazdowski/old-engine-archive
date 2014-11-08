@@ -7,8 +7,6 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-#include "fgBuildConfig.h"
-#include "fgCommon.h"
 #include "fgSFXManager.h"
 
 #include <cstring>
@@ -16,218 +14,541 @@
 #include <cerrno>
 #include <cstdio>
 
-#ifdef FG_USING_MARMALADE
-#include "s3eFile.h"
-#ifdef FG_USING_MARMALADE_SOUND
-#include "s3eSound.h"
-#endif // FG_USING_MARMALADE_SOUND
-#ifdef FG_USING_MARMALADE_AUDIO
-#include "s3eAudio.h"
-#endif // FG_USING_MARMALADE_AUDIO
-#endif // FG_USING_MARMALADE
-
 #include "fgLog.h"
-
-#define SNDDIR "sound/"
-
-const char* fgSFXManager::m_sfxResources[ fgSFXManager::SFX_COUNT ] = {SNDDIR"c.raw", SNDDIR"s.raw", SNDDIR"tod.raw", SNDDIR"p.raw", SNDDIR"m.raw", SNDDIR"d.raw"};
-const char* fgSFXManager::m_musResources[ fgSFXManager::MUS_COUNT ] = {SNDDIR"m1.mp3"};
-
-template <>
-bool fgSingleton<fgSFXManager>::instanceFlag = false;
-
-template <>
-fgSFXManager *fgSingleton<fgSFXManager>::instance = NULL;
+#include "Resource/fgResourceManager.h"
 
 /**
- * Private destructor
+ * 
  */
 fgSFXManager::~fgSFXManager() {
+    fgSFXManager::destroy();
+}
 
-    stopAll();
-#ifdef FG_USING_MARMALADE_AUDIO
-    s3eAudioStop();
-#endif // FG_USING_MARMALADE_AUDIO
+/**
+ * 
+ */
+fgSFXManager::fgSFXManager(fgManagerBase *pResourceMgr) :
+m_sfxVolume(0),
+m_musVolume(0),
+m_pResourceMgr(NULL) {
+    setResourceManager(pResourceMgr);
+    m_managerType = FG_MANAGER_SOUND;
+    m_init = FG_FALSE;
+}
 
-    for(int i = 0; i < SFX_COUNT; i++) {
-        if(m_sfxBuffers[i] && m_sfxBuffersSizes[i]) {
-            delete [] m_sfxBuffers[i];
-        }
+/**
+ * 
+ */
+void fgSFXManager::clear() {
+    m_managerType = FG_MANAGER_SOUND;
+}
+
+/**
+ * 
+ * @param nameTag
+ * @return 
+ */
+fgAudioBase *fgSFXManager::get(const char *nameTag) {
+    if(!nameTag)
+        return NULL;
+    return get(std::string(nameTag));
+}
+
+/**
+ * 
+ * @param nameTag
+ * @return 
+ */
+fgAudioBase *fgSFXManager::get(const std::string& nameTag) {
+    if(!m_pResourceMgr)
+        return NULL;
+    fgResource *pResource = static_cast<fgResourceManager *>(m_pResourceMgr)->get(nameTag);
+    if(!pResource)
+        return NULL;
+    fgAudioBase *pAudio = NULL;
+    if(pResource->getResourceType() == FG_RESOURCE_MUSIC) {
+        fgMusicResource *music = static_cast<fgMusicResource *>(pResource);
+        pAudio = static_cast<fgAudioBase *>(music);
+    } else if(pResource->getResourceType() == FG_RESOURCE_SOUND) {
+        fgSoundResource *sound = static_cast<fgSoundResource *>(pResource);
+        pAudio = static_cast<fgAudioBase *>(sound);
+    }    
+    return pAudio;
+}
+
+/**
+ * 
+ * @param soundHandle
+ * @return 
+ */
+fgAudioBase *fgSFXManager::get(const fgResourceHandle& soundHandle) {
+    if(!m_pResourceMgr)
+        return NULL;
+    fgResource *pResource = static_cast<fgResourceManager *>(m_pResourceMgr)->get(soundHandle);
+    if(!pResource)
+        return NULL;
+    fgAudioBase *pAudio = NULL;
+    if(pResource->getResourceType() == FG_RESOURCE_MUSIC) {
+        fgMusicResource *music = static_cast<fgMusicResource *>(pResource);
+        pAudio = static_cast<fgAudioBase *>(music);
+    } else if(pResource->getResourceType() == FG_RESOURCE_SOUND) {
+        fgSoundResource *sound = static_cast<fgSoundResource *>(pResource);
+        pAudio = static_cast<fgAudioBase *>(sound);
+    }
+    return pAudio;
+}
+
+/**
+ * 
+ * @param info
+ * @return 
+ */
+fgAudioBase *fgSFXManager::request(const char *info) {
+    return request(std::string(info));
+}
+
+/**
+ * 
+ * @param info
+ * @return 
+ */
+fgAudioBase *fgSFXManager::request(const std::string& info) {
+    if(!m_pResourceMgr)
+        return NULL;
+    fgResource *pResource = static_cast<fgResourceManager *>(m_pResourceMgr)->request(info);
+    if(!pResource)
+        return NULL;
+    fgAudioBase *pAudio = NULL;
+    if(pResource->getResourceType() == FG_RESOURCE_MUSIC) {
+        fgMusicResource *music = static_cast<fgMusicResource *>(pResource);
+        pAudio = static_cast<fgAudioBase *>(music);
+    } else if(pResource->getResourceType() == FG_RESOURCE_SOUND) {
+        fgSoundResource *sound = static_cast<fgSoundResource *>(pResource);
+        pAudio = static_cast<fgAudioBase *>(sound);
+    }
+    return pAudio;
+}
+
+/**
+ * 
+ * @param pResourceMgr
+ */
+void fgSFXManager::setResourceManager(fgManagerBase *pResourceMgr) {
+    if(pResourceMgr) {
+        if(pResourceMgr->getManagerType() == FG_MANAGER_RESOURCE)
+            m_pResourceMgr = pResourceMgr;
     }
 }
 
 /**
- * Private constructor
+ * 
+ * @return 
  */
-fgSFXManager::fgSFXManager() {
+fgBool fgSFXManager::initialize(void) {
+    if(m_init)
+        return FG_TRUE;
+    m_managerType = FG_MANAGER_SOUND;
+#if defined(FG_USING_SDL_MIXER)
+    if(SDL_InitSubSystem(SDL_INIT_AUDIO) != 0) {
+        FG_LOG_ERROR("SFX: SDL Init audio failed: '%s'", SDL_GetError());
+        m_init = FG_FALSE;
+        return m_init;
+    }
+    int mixflags = MIX_INIT_MP3 | MIX_INIT_OGG | MIX_INIT_MOD;
+    Mix_Init(mixflags);
+    // parameters settings
+    int frequency = 22050;
+    int channels = 2;
+    if(Mix_OpenAudio(frequency, MIX_DEFAULT_FORMAT, channels, 4096) != 0) {
+        FG_LOG_ERROR("SFX: Mix_OpenAudio: '%s'", Mix_GetError());
+        m_init = FG_FALSE;
+        return m_init;
+    } else {
+        FG_LOG_DEBUG("SFX: Successfully initialized audio: frequency[%d], channels[%d]", frequency, channels);
+        m_init = FG_TRUE;
+    }
+    // #FIXME - check for errors
+#elif defined(FG_USING_MARMALADE_AUDIO)
     m_sfxVolume = 0.5f;
     m_musVolume = 0.5f;
 
-    memset(m_sfxBuffers, 0, sizeof (m_sfxBuffers));
-    memset(m_sfxBuffersSizes, 0, sizeof (m_sfxBuffersSizes));
-#ifdef FG_USING_MARMALADE_AUDIO
     m_mp3 = (fgBool)s3eAudioIsCodecSupported(S3E_AUDIO_CODEC_MP3);
     if(m_mp3) {
-        FG_LOG_DEBUG("MP3 codec supported");
+        FG_LOG_DEBUG("SFX: MP3 codec supported");
     } else {
-        FG_LOG::PrintError("No MP3 support!");
+        FG_LOG_ERROR("SFX: No MP3 support!");
     }
     m_pcm = (fgBool)s3eAudioIsCodecSupported(S3E_AUDIO_CODEC_PCM);
     if(m_pcm) {
-        FG_LOG_DEBUG("PCM codec supported");
+        FG_LOG_DEBUG("SFX: PCM codec supported");
     } else {
-        FG_LOG::PrintError("No PCM support!");
+        FG_LOG_ERROR("SFX: No PCM support!");
     }
-#endif // FG_USING_MARMALADE_AUDIO
+    if(m_mp3 && m_pcm) {
+        m_init = FG_TRUE;
+    } else {
+        FG_LOG_ERROR("SFX: Failed to initialize Sound Manager");
+    }
+#endif
+    return m_init;
 }
 
 /**
- * Loads given file into memory
+ * 
+ * @return 
  */
-bool fgSFXManager::loadAudioFile(const char* name, unsigned char* & out_buffer, int & out_size) {
-#ifdef FG_USING_MARMALADE_AUDIO // #FIXME
-
-    out_buffer = NULL;
-    out_size = 0;
-
-    s3eFile* fileHandle = s3eFileOpen(name, "rb");
-    if(NULL == fileHandle) {
-        FG_LOG::PrintError("Unable to open audio file '%s', error code: %d", name, s3eFileGetError());
-        return false;
-    }
-
-    int fileSize = s3eFileGetSize(fileHandle);
-    unsigned char* buffer = new unsigned char[fileSize + 1];
-    buffer[fileSize] = '\0';
-    memset(buffer, 0, fileSize);
-
-    int objectsRead = s3eFileRead(buffer, fileSize, 1, fileHandle);
-    s3eFileClose(fileHandle);
-
-    if(objectsRead != 1) {
-        FG_LOG::PrintError("Should read %d bytes of an sound file, read %d instead!", fileSize, objectsRead * fileSize);
-        delete [] buffer;
-        return false;
-    }
-
-    FG_LOG_DEBUG("Read %d bytes of '%s', buffer = %p", fileSize, name, buffer);
-
-    out_buffer = buffer;
-    out_size = fileSize;
-#endif // FG_USING_MARMALADE_AUDIO
-    return true;
+fgBool fgSFXManager::destroy(void) {
+    if(!m_init)
+        return FG_FALSE;
+    stopAll();
+#if defined(FG_USING_SDL_MIXER)
+    Mix_CloseAudio();
+    SDL_QuitSubSystem(SDL_INIT_AUDIO);
+#elif defined(FG_USING_MARMALADE_AUDIO)
+    s3eAudioStop();
+#endif /* FG_USING_MARMALADE_AUDIO */
+    return FG_TRUE;
 }
 
-bool fgSFXManager::loadSfxFiles() {
-    for(int i = 0; i < SFX_COUNT; i++) {
-        if(false == loadAudioFile(m_sfxResources[i], m_sfxBuffers[i], m_sfxBuffersSizes[i])) {
-            return false;
-        }
-    }
-    return true;
-}
-
-void fgSFXManager::setSfxVolume(float volume) {
+/**
+ * 
+ * @param volume
+ */
+void fgSFXManager::setSfxVolume(fgSFXManager::volume_type volume) {
     m_sfxVolume = volume;
+#if defined(FG_USING_MARMALADE)
     if(m_sfxVolume < 0.0f)
         m_sfxVolume = 0.01f;
     if(m_sfxVolume > 1.0f)
         m_sfxVolume = 1.0f;
+#elif defined(FG_USING_SDL_MIXER)
+    if(m_sfxVolume > MIX_MAX_VOLUME)
+        m_sfxVolume = MIX_MAX_VOLUME;
+#endif
 
     applySfxVolume();
 }
 
-void fgSFXManager::applySfxVolume() {
-#ifdef FG_USING_MARMALADE_SOUND
+/**
+ * 
+ */
+void fgSFXManager::applySfxVolume(void) {
+#if defined(FG_USING_MARMALADE_SOUND)
     s3eResult result = s3eSoundSetInt(S3E_SOUND_VOLUME, int(m_sfxVolume * S3E_SOUND_MAX_VOLUME * 0.9f));
     if(S3E_RESULT_SUCCESS != result) {
-        FG_LOG::PrintError("Error when setting the sfx volume: %d", result);
+        FG_LOG_ERROR("Error when setting the sfx volume: %d", result);
     }
-#endif // FG_USING_MARMALADE_SOUND
+#elif defined(FG_USING_SDL_MIXER)
+    Mix_Volume(-1, (int)m_sfxVolume);
+#endif /* FG_USING_MARMALADE_SOUND */
 }
 
-void fgSFXManager::play(int idx) {
-#ifdef FG_USING_MARMALADE_SOUND
-
-    int channel = s3eSoundGetFreeChannel();
-    s3eSoundChannelPlay(channel, (int16*)m_sfxBuffers[idx], m_sfxBuffersSizes[idx] / 2, 1, 0);
-    // Check for error
-    s3eSoundError err = s3eSoundGetError();
-    if(err != S3E_SOUND_ERR_NONE) {
-        FG_LOG::PrintError("playSFX(%d) on channel[%d] error[%d]: %s", idx, channel, err, s3eSoundGetErrorString());
-    }
-#endif // FG_USING_MARMALADE_SOUND
-}
-
-void fgSFXManager::stopAll() {
-#ifdef FG_USING_MARMALADE_SOUND
+/**
+ * 
+ */
+void fgSFXManager::stopAll(void) {
+#if defined(FG_USING_MARMALADE_SOUND)
     s3eSoundStopAllChannels();
-#endif // FG_USING_MARMALADE_SOUND
+#elif defined(FG_USING_SDL_MIXER)
+    // Stop playback on all channels
+    Mix_HaltChannel(-1);
+#endif // FG_USING_MARMALADE_SOUND */
 }
 
-bool fgSFXManager::loadMusFiles() {
-    // No music files are being in fact loaded
-    // - play directly from file
-    return true;
-}
-
-void fgSFXManager::setMusVolume(float volume) {
+/**
+ * 
+ * @param volume
+ */
+void fgSFXManager::setMusicVolume(fgSFXManager::volume_type volume) {
     m_musVolume = volume;
+#if defined(FG_USING_MARMALADE)
     if(m_musVolume < 0.0f)
         m_musVolume = 0.01f;
     if(m_musVolume > 1.0f)
         m_musVolume = 1.0f;
-
-    applyMusVolume();
+#elif defined(FG_USING_SDL_MIXER)
+    if(m_musVolume > MIX_MAX_VOLUME)
+        m_musVolume = MIX_MAX_VOLUME;
+#endif
+    applyMusicVolume();
 }
 
-void fgSFXManager::applyMusVolume() {
-#ifdef FG_USING_MARMALADE_AUDIO
+/**
+ * 
+ */
+void fgSFXManager::applyMusicVolume() {
+#if defined(FG_USING_MARMALADE_AUDIO)
     s3eResult result = s3eAudioSetInt(S3E_AUDIO_VOLUME, int(m_musVolume * S3E_AUDIO_MAX_VOLUME * 0.85f));
-#endif // FG_USING_MARMALADE_AUDIO
+#elif defined(FG_USING_SDL_MIXER)
+    Mix_VolumeMusic(m_musVolume);
+#endif /* FG_USING_MARMALADE_AUDIO */
 }
 
-void fgSFXManager::playMus(int idx) {
-#ifdef FG_USING_MARMALADE_AUDIO
-    s3eAudioStatus status = (s3eAudioStatus)s3eAudioGetInt(S3E_AUDIO_STATUS);
-
-    if(S3E_AUDIO_PAUSED == status) {
-        // This approach allows for mismatch between
-        // paused track and parameter idx
-        s3eAudioResume();
-    } else if(S3E_AUDIO_PLAYING == status) {
-        s3eAudioStop();
-        s3eAudioPlay(m_musResources[idx], 0);
-    } else {
-        s3eAudioPlay(m_musResources[idx], 0);
-    }
-
-    // Check for error
-    s3eAudioError err = s3eAudioGetError();
-    if(err != S3E_AUDIO_ERR_NONE) {
-        FG_LOG::PrintError("playMus(%d) error[%d]: %s (also status is: %d)", idx, err, s3eAudioGetErrorString(), status);
-    }
-#endif // FG_USING_MARMALADE_AUDIO
+/**
+ * 
+ * @param name
+ * @return 
+ */
+fgBool fgSFXManager::play(const char *name) {
+    fgAudioBase *pAudio = request(name);
+    if(!pAudio)
+        return FG_FALSE;
+    pAudio->play();
+    return FG_TRUE;
 }
 
-void fgSFXManager::pauseMus(int idx) {
-#ifdef FG_USING_MARMALADE_AUDIO
-    s3eAudioPause();
-
-    // Check for error
-    s3eAudioError err = s3eAudioGetError();
-    if(err != S3E_AUDIO_ERR_NONE) {
-        FG_LOG::PrintError("pauseMus(%d) error[%d]: %s", idx, err, s3eAudioGetErrorString());
-    }
-#endif // FG_USING_MARMALADE_AUDIO
+/**
+ * 
+ * @param name
+ * @return 
+ */
+fgBool fgSFXManager::play(const std::string &name) {
+    fgAudioBase *pAudio = request(name);
+    if(!pAudio)
+        return FG_FALSE;
+    pAudio->play();
+    return FG_TRUE;
 }
 
-void fgSFXManager::stopMus(int idx) {
-#ifdef FG_USING_MARMALADE_AUDIO
-    s3eAudioStop();
-#endif // FG_USING_MARMALADE_AUDIO
+/**
+ * 
+ * @param soundHandle
+ * @return 
+ */
+fgBool fgSFXManager::play(const fgResourceHandle& soundHandle) {
+    fgAudioBase *pAudio = get(soundHandle);
+    if(!pAudio)
+        return FG_FALSE;
+    pAudio->play();
+    return FG_TRUE;
 }
 
-void fgSFXManager::rewindMus(int idx) {
-    playMus(idx);
+/**
+ * 
+ * @param name
+ * @return 
+ */
+fgBool fgSFXManager::pause(const char *name) {
+    fgAudioBase *pAudio = request(name);
+    if(!pAudio)
+        return FG_FALSE;
+    pAudio->pause();
+    return FG_TRUE;
+}
+
+/**
+ * 
+ * @param name
+ * @return 
+ */
+fgBool fgSFXManager::pause(const std::string &name) {
+    fgAudioBase *pAudio = request(name);
+    if(!pAudio)
+        return FG_FALSE;
+    pAudio->pause();
+    return FG_TRUE;
+}
+
+/**
+ * 
+ * @param soundHandle
+ * @return 
+ */
+fgBool fgSFXManager::pause(const fgResourceHandle& soundHandle) {
+    fgAudioBase *pAudio = get(soundHandle);
+    if(!pAudio)
+        return FG_FALSE;
+    pAudio->pause();
+    return FG_TRUE;
+}
+
+/**
+ * 
+ * @param name
+ * @return 
+ */
+fgBool fgSFXManager::resume(const char *name) {
+    fgAudioBase *pAudio = request(name);
+    if(!pAudio)
+        return FG_FALSE;
+    pAudio->resume();
+    return FG_TRUE;
+}
+
+/**
+ * 
+ * @param name
+ * @return 
+ */
+fgBool fgSFXManager::resume(const std::string &name) {
+    fgAudioBase *pAudio = request(name);
+    if(!pAudio)
+        return FG_FALSE;
+    pAudio->resume();
+    return FG_TRUE;
+}
+
+/**
+ * 
+ * @param soundHandle
+ * @return 
+ */
+fgBool fgSFXManager::resume(const fgResourceHandle& soundHandle) {
+    fgAudioBase *pAudio = get(soundHandle);
+    if(!pAudio)
+        return FG_FALSE;
+    pAudio->resume();
+    return FG_TRUE;
+}
+
+/**
+ * 
+ * @param name
+ * @return 
+ */
+fgBool fgSFXManager::rewind(const char *name) {
+    fgAudioBase *pAudio = request(name);
+    if(!pAudio)
+        return FG_FALSE;
+    pAudio->rewind();
+    return FG_TRUE;
+}
+
+/**
+ * 
+ * @param name
+ * @return 
+ */
+fgBool fgSFXManager::rewind(const std::string &name) {
+    fgAudioBase *pAudio = request(name);
+    if(!pAudio)
+        return FG_FALSE;
+    pAudio->rewind();
+    return FG_TRUE;
+}
+
+/**
+ * 
+ * @param soundHandle
+ * @return 
+ */
+fgBool fgSFXManager::rewind(const fgResourceHandle& soundHandle) {
+    fgAudioBase *pAudio = get(soundHandle);
+    if(!pAudio)
+        return FG_FALSE;
+    pAudio->rewind();
+    return FG_TRUE;
+}
+
+/**
+ * 
+ * @param name
+ * @return 
+ */
+fgBool fgSFXManager::stop(const char *name) {
+    fgAudioBase *pAudio = request(name);
+    if(!pAudio)
+        return FG_FALSE;
+    pAudio->stop();
+    return FG_TRUE;
+}
+
+/**
+ * 
+ * @param name
+ * @return 
+ */
+fgBool fgSFXManager::stop(const std::string &name) {
+    fgAudioBase *pAudio = request(name);
+    if(!pAudio)
+        return FG_FALSE;
+    pAudio->stop();
+    return FG_TRUE;
+}
+
+/**
+ * 
+ * @param soundHandle
+ * @return 
+ */
+fgBool fgSFXManager::stop(const fgResourceHandle& soundHandle) {
+    fgAudioBase *pAudio = get(soundHandle);
+    if(!pAudio)
+        return FG_FALSE;
+    pAudio->stop();
+    return FG_TRUE;
+}
+
+/**
+ * 
+ * @param name
+ * @return 
+ */
+fgBool fgSFXManager::isPlaying(const char *name) {
+    fgAudioBase *pAudio = request(name);
+    if(!pAudio)
+        return FG_FALSE;
+    return pAudio->isPlaying();
+}
+
+/**
+ * 
+ * @param name
+ * @return 
+ */
+fgBool fgSFXManager::isPlaying(const std::string &name) {
+    fgAudioBase *pAudio = request(name);
+    if(!pAudio)
+        return FG_FALSE;
+    return pAudio->isPlaying();
+}
+
+/**
+ * 
+ * @param soundHandle
+ * @return 
+ */
+fgBool fgSFXManager::isPlaying(const fgResourceHandle& soundHandle) {
+    fgAudioBase *pAudio = get(soundHandle);
+    if(!pAudio)
+        return FG_FALSE;
+    return pAudio->isPlaying();
+}
+
+/**
+ * 
+ * @param name
+ * @return 
+ */
+fgBool fgSFXManager::isPaused(const char *name) {
+    fgAudioBase *pAudio = request(name);
+    if(!pAudio)
+        return FG_FALSE;
+    return pAudio->isPaused();
+}
+
+/**
+ * 
+ * @param name
+ * @return 
+ */
+fgBool fgSFXManager::isPaused(const std::string &name) {
+    fgAudioBase *pAudio = request(name);
+    if(!pAudio)
+        return FG_FALSE;
+    pAudio->isPaused();
+    return FG_TRUE;
+}
+
+/**
+ * 
+ * @param soundHandle
+ * @return 
+ */
+fgBool fgSFXManager::isPaused(const fgResourceHandle& soundHandle) {
+    fgAudioBase *pAudio = get(soundHandle);
+    if(!pAudio)
+        return FG_FALSE;
+    pAudio->isPaused();
+    return FG_TRUE;
 }
