@@ -30,7 +30,7 @@
  * This binding is not automated,  there is no generator to create some classes.
  * Good. Some mechanisms in here are  not universal for  every object. Not every
  * property needs to be accessible from scratch  and not every method() needs to
- * available. 
+ * be available. 
  ******************************************************************************/
 
 // All metatables info - just names / ids generation

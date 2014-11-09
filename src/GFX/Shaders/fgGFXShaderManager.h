@@ -20,6 +20,7 @@
 
     #include "Util/fgHandleManager.h"
     #include "Util/fgTag.h"
+    #include "Util/fgDirent.h"
     #include "fgGFXShaderProgram.h"
 
 class fgGfxShaderManager;
@@ -58,7 +59,7 @@ public:
 protected:
     /**
      * 
-     */	
+     */
     void clear(void);
 
 public:
@@ -192,14 +193,25 @@ public:
      * @return 
      */
     fgGfxShaderProgram *getCurrentProgram(void) const;
+    
+    /**
+     * 
+     * @return 
+     */
+    fgBool isPreloadDone(void) const {
+        return m_isPreloadDone;
+    }
 private:
-    ///
-    std::string m_shadersPath;
     /// Pointer to shader program object which is being currently used
     /// For double checking - after GFX suspend/resume program ID
     /// will become invalid, need to set this pointer to NULL on suspend
     fgGfxShaderProgram *m_currentProgram;
-
+    ///
+    fgDirent *m_shadersDir;
+    ///
+    std::string m_shadersPath;
+    ///
+    fgBool m_isPreloadDone;
 };
 
 #endif /* _FG_GFX_SHADER_MANAGER_H_ */

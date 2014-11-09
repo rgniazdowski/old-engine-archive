@@ -58,6 +58,14 @@ public:
     fgManagerType getManagerType(void) const {
         return m_managerType;
     }
+    /**
+     * 
+     * @return 
+     */
+    fgBool isInit(void) const {
+        return m_init;
+    }
+    
 protected:
     /// Is manager initialized successfully
     fgBool m_init;

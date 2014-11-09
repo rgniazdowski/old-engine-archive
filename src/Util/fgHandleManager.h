@@ -301,7 +301,7 @@ fgBool fgHandleManager<DataType, HandleType>::setupName(const char* name, const 
 template <typename DataType, typename HandleType>
 fgBool fgHandleManager<DataType, HandleType>::releaseHandle(const HandleType& handle) {
     if(!isHandleValid(handle)) {
-        FG_LOG::PrintError("releaseHandle() - handle is invalid.");
+        FG_LOG_DEBUG("HandleManager: can't release handle - handle is invalid, tag_name[%s]", HandleType::getTagName());
         return FG_FALSE;
     }
     // which one?
@@ -309,9 +309,10 @@ fgBool fgHandleManager<DataType, HandleType>::releaseHandle(const HandleType& ha
     // ok remove it - tag as unused and add to free list
     m_magicData[index] = 0;
     m_managedData[index] = NULL;
+    FG_LOG_DEBUG("HandleManager[%s]: Releasing handle: index[%d], magic[%d], handle[%d]", HandleType::getTagName(), index, handle.getMagic(), handle.getHandle());
     if(!m_nameVec[index].empty()) {
         m_nameMap.erase(m_nameVec[index]);
-        FG_LOG_DEBUG(">> Erasing %s from handle map...", m_nameVec[index].c_str());
+        FG_LOG_DEBUG("HandleManager[%s]: erasing '%s' from handle map...", HandleType::getTagName(), m_nameVec[index].c_str());
     }
     m_nameVec[index].clear();
     m_freeSlots.push_back(index);
@@ -405,7 +406,7 @@ inline fgBool fgHandleManager<DataType, HandleType>::isHandleValid(const HandleT
     fgRawIndex index = handle.getIndex();
     if((index >= m_managedData.size()) || (m_magicData[index] != handle.getMagic())) {
         // no good! invalid handle == client programming error
-        FG_LOG::PrintError("%s(%d): Invalid handle, magic numbers don't match with index - in function %s.", fgPath::fileName(__FILE__), __LINE__ - 1, __FUNCTION__);
+        FG_LOG_DEBUG("HandleManager[%s]: invalid handle, magic numbers don't match with index: index[%d], magic[%d], handle[%d], true_magic[%d]", HandleType::getTagName(), index, handle.getMagic(), handle.getHandle(), m_magicData[index]);
         return FG_FALSE;
     }
     return FG_TRUE;

@@ -313,7 +313,7 @@ public:
      * @param chars
      * @return 
      */
-    static fgBool contains(const std::string& input, const std::string& chars) {
+    static fgBool containsChars(const std::string& input, const std::string& chars) {
         return (input.find_first_of(chars) != std::string::npos);
     }
     /**
@@ -323,9 +323,9 @@ public:
      * @param caseSensitive
      * @return 
      */
-    static fgBool contains(const char *input,
-                           const char *chars,
-                           const fgBool caseSensitive = FG_TRUE) {
+    static fgBool containsChars(const char *input,
+                                const char *chars,
+                                const fgBool caseSensitive = FG_TRUE) {
         if(!input || !chars)
             return FG_FALSE;
         int i = 0, j = 0;
@@ -341,6 +341,80 @@ public:
             }
         }
         return FG_FALSE;
+    }
+    /**
+     * 
+     * @param str
+     * @param needle
+     * @return 
+     */
+    static const char *strstr(const char *str, const char *needle) {
+        if(!needle || !*needle || !str) return str;
+        char *p1 = (char*)str, *p2 = (char*)needle;
+        char *p1Adv = (char*)str;
+        while(*++p2)
+            p1Adv++;
+        while(*p1Adv) {
+            char *p1Begin = p1;
+            p2 = (char*)needle;
+            while(*p1 && *p2 && *p1 == *p2) {
+                p1++;
+                p2++;
+            }
+            if(!*p2)
+                return p1Begin;
+            p1 = p1Begin + 1;
+            p1Adv++;
+        }
+        return NULL;
+    }
+    /**
+     * 
+     * @param str
+     * @param needle
+     * @return 
+     */
+    static inline const char *strstr(const std::string& str, const std::string& needle) {
+        if(str.empty() || needle.empty())
+            return NULL;
+        return fgStrings::strstr(str.c_str(), needle.c_str());
+    }
+    /**
+     * 
+     * @param str
+     * @param needle
+     * @return 
+     */
+    static const char *stristr(const char *str, const char *needle) {
+        if(!needle || !*needle || !str) return str;
+        char *p1 = (char*)str, *p2 = (char*)needle;
+        char *p1Adv = (char*)str;
+        while(*++p2)
+            p1Adv++;
+        while(*p1Adv) {
+            char *p1Begin = p1;
+            p2 = (char*)needle;
+            while(*p1 && *p2 && (tolower(*p1) == tolower(*p2))) {
+                p1++;
+                p2++;
+            }
+            if(!*p2)
+                return p1Begin;
+            p1 = p1Begin + 1;
+            p1Adv++;
+        }
+        return NULL;
+    }
+    /**
+     * 
+     * @param str
+     * @param needle
+     * @return 
+     */
+    static inline const char *stristr(const std::string& str, const std::string& needle) {
+        if(str.empty() || needle.empty())
+            return NULL;
+        return fgStrings::stristr(str.c_str(), needle.c_str());
     }
 };
 

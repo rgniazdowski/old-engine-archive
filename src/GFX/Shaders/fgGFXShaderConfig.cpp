@@ -32,7 +32,6 @@ fgGfxShaderConfig::fgGfxShaderConfig(const char *filePath) {
  *
  */
 fgGfxShaderConfig::~fgGfxShaderConfig() {
-    FG_LOG::PrintInfo("fgGfxShaderConfig::~fgGfxShaderConfig()\n");
     clearAll();
 }
 
@@ -192,7 +191,7 @@ fgBool fgGfxShaderConfig::_parseData(fgGfxSLVersion SLver) {
     // Check if the shader supports that shading language
     fgCfgSection *slVersionSection = getSection(slVerSubSectionName);
     if(!slVersionSection) {
-        reportError(FG_ERRNO_GFX_SHADER_NOT_SUPPORTED_SLVER);
+        reportError(FG_ERRNO_GFX_SHADER_NOT_SUPPORTED_SLVER, "path[%s]", m_configPath.c_str());
         return FG_FALSE;
     } else if(!slVersionSection->parametersMap.size()) {
         // there is such section but it does not provide the name of the valid configuration
@@ -427,6 +426,11 @@ fgBool fgGfxShaderConfig::_parseData(fgGfxSLVersion SLver) {
         // specific configuration procedures for compute shader
 #endif
     }
-    reportSuccess(FG_ERRNO_GFX_OK, "Shader config loaded successfully");
+    reportSuccess(FG_ERRNO_GFX_OK, "GFX: Shader config loaded successfully: '%s'", fgPath::fileName(m_configPath.c_str()));
+    if(m_configType == FG_GFX_SHADER_CONFIG_PROGRAM) {
+        FG_LOG_DEBUG("GFX: Shader config for program loaded; name[%s], file[%s]", m_programName.c_str(), fgPath::fileName(m_configPath.c_str()));
+    } else {
+        FG_LOG_DEBUG("GFX: Shader config loaded: file[%s]", fgPath::fileName(m_configPath.c_str()));
+    }
     return FG_TRUE;
 }

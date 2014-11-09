@@ -6,7 +6,7 @@
             <name>FlexiGame_NB</name>
             <c-extensions/>
             <cpp-extensions>cpp</cpp-extensions>
-            <header-extensions>h,hpp</header-extensions>
+            <header-extensions>h</header-extensions>
             <sourceEncoding>UTF-8</sourceEncoding>
             <make-dep-projects>
                 <make-dep-project>../LuaPlusNextGen_NB</make-dep-project>
@@ -126,6 +126,7 @@
             <word>pos</word>
             <word>preload</word>
             <word>printf</word>
+            <word>prox</word>
             <word>ptr</word>
             <word>Radoslaw</word>
             <word>rgb</word>

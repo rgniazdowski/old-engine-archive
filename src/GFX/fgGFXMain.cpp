@@ -124,7 +124,6 @@ fgBool fgGfxMain::initGFX(void) {
     }
     if(!m_mainWindow && status) {
         m_mainWindow = new fgGfxWindow();
-
     }
     if(m_mainWindow && status) {
         // #FIXME - resolution FIXME!
@@ -534,6 +533,8 @@ fgBool fgGfxMain::preLoadShaders(void) const {
     if(!m_shaderMgr) {
         return FG_FALSE;
     }
+    if(!m_shaderMgr->isInit())
+        m_shaderMgr->initialize();
     return m_shaderMgr->preLoadShaders();
 }
 

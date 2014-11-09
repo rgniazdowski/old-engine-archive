@@ -116,7 +116,7 @@ fgBool fgGfxShaderProgram::preLoadConfig(const char *path) {
         newPath.append(filePathNoExt).append(".").append(FG_GFX_SHADER_CFG_STD_SUFFIX(shaderTypes[i]));
 
         if(!m_config->load(newPath.c_str(), fgGfxPlatform::context()->getSLVersion())) {
-            FG_LOG::PrintError("loading shader config failed\n");
+            FG_LOG_ERROR("GFX: Failed to load shader program config: '%s'", newPath.c_str());
             return FG_FALSE;
         }
         fgGfxShaderType shaderType = shaderTypes[i];
@@ -153,7 +153,8 @@ fgBool fgGfxShaderProgram::preLoadConfig(const char *path) {
     delete m_config;
     m_config = NULL;
     m_isPreLoaded = FG_TRUE;
-    reportSuccess(FG_ERRNO_GFX_OK, "Shader program loaded successfully");
+    reportSuccess(FG_ERRNO_GFX_OK, "Shader program loaded successfully: '%s'", m_nameTag.c_str());
+    FG_LOG_DEBUG("GFX: Shader program loaded: name[%s], config[%s]", m_nameTag.c_str(), path);
     ///////////////////////////////////////////////////////
     return FG_TRUE;
 }

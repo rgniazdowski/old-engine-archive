@@ -34,10 +34,12 @@ typedef FG_RAW_HANDLE_TYPE fgRawMagic;
     #endif
 
 /*
- * The TagType paramater has to be one of fgTag template
+ * The TagType parameter has to be one of fgTag template
  */
 template <typename TagType>
 class fgHandle {
+public:
+    typedef TagType tag_type;
 private:
 
     enum {
@@ -132,7 +134,6 @@ fgBool fgHandle<TagType>::init(fgRawIndex index) {
     m_magic = s_autoMagic;
     return FG_TRUE;
 }
-
 /**
  * 
  * @param l
@@ -143,7 +144,6 @@ template <typename TagType>
 inline bool operator !=(fgHandle <TagType> l, fgHandle <TagType> r) {
     return ( l.getHandle() != r.getHandle());
 }
-
 /**
  * 
  * @param l
@@ -154,7 +154,6 @@ template <typename TagType>
 inline bool operator ==(fgHandle <TagType> l, fgHandle <TagType> r) {
     return ( l.getHandle() == r.getHandle());
 }
-
 /**
  * 
  * @param l
@@ -165,7 +164,6 @@ template <typename TagType>
 inline bool operator >(fgHandle <TagType> l, fgHandle <TagType> r) {
     return ( l.getHandle() > r.getHandle());
 }
-
 /**
  * 
  * @param l
@@ -176,7 +174,6 @@ template <typename TagType>
 inline bool operator <(fgHandle <TagType> l, fgHandle <TagType> r) {
     return ( l.getHandle() < r.getHandle());
 }
-
 /**
  * 
  * @param l
@@ -187,7 +184,6 @@ template <typename TagType>
 inline bool operator >=(fgHandle <TagType> l, fgHandle <TagType> r) {
     return ( l.getHandle() >= r.getHandle());
 }
-
 /**
  * 
  * @param l

@@ -286,13 +286,13 @@ float fgGuiStyleContent::parseLength(const char *value, fgGuiUnitType &type) {
         return 0.0f;
     float length = 0.0f;
     std::string lengthStr;
-    if(fgStrings::contains(value, "%")) {
+    if(fgStrings::containsChars(value, "%")) {
         type = FG_GUI_PERCENTS;
         lengthStr = fgStrings::trim(std::string(value), std::string(" %"));
-    } else if(fgStrings::contains(value, "b", FG_FALSE)) {
+    } else if(fgStrings::containsChars(value, "b", FG_FALSE)) {
         type = FG_GUI_BLOCKS;
         lengthStr = fgStrings::trim(std::string(value), std::string(" bB"));
-    } else if(fgStrings::contains(value, "i", FG_FALSE)) {
+    } else if(fgStrings::containsChars(value, "i", FG_FALSE)) {
         type = FG_GUI_INCHES;
         lengthStr = fgStrings::trim(std::string(value), std::string(" iI"));
     } else {

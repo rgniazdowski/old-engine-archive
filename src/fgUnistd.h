@@ -52,8 +52,11 @@
         #define chdir _chdir
         #define isatty _isatty
         #define lseek _lseek
-/* read, write, and close are NOT being #defined here, because while there are file handle specific versions for Windows, they probably don't work for sockets. You need to look at your app and consider whether to call e.g. closesocket(). */
-
+/* read, write, and close are NOT being #defined here, because while there are
+ * file handle specific versions for Windows, they probably don't work for
+ * sockets. You need to look at your app and consider whether to call 
+ * e.g. closesocket(). 
+ */
         #define ssize_t int
 
         #define STDIN_FILENO 0
@@ -72,3 +75,4 @@ typedef unsigned __int64 uint64_t;
     #endif /* defined MARMALADE || defined PLATFORM LINUX */
 
 #endif /* _FG_UNISTD_H_ */
+

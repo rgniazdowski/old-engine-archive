@@ -134,7 +134,7 @@ fgBool fgResourceManager::initialize(void) {
     // #FIXME - compatibility for different platforms
     m_dataDir->readDirectory("./", FG_TRUE);
     m_dataDir->rewind();
-    FG_LOG_DEBUG("Initializing resource manager\nCurrent maximum memory: %.2f", (float)m_nMaximumMemory / 1024.0 / 1024.0); // #TODELETE
+    FG_LOG_DEBUG("Resource: Initializing resource manager\nCurrent maximum memory: %.2f", (float)m_nMaximumMemory / 1024.0 / 1024.0); // #TODELETE
     // First of all load any resource group configs,
     // file extension is *.rgrp and it's a xml file.
     std::string filepath;
@@ -521,7 +521,7 @@ fgResource* fgResourceManager::request(const std::string& info, const fgResource
     }
     // info cannot be a path, it has to be resource name or config name
     // required file will be found
-    if(fgStrings::contains(info, std::string("/\\"))) {
+    if(fgStrings::containsChars(info, std::string("/\\"))) {
         FG_LOG_ERROR("Resource: Request cannot contain full path: '%s'", info.c_str());
         return NULL;
     }
@@ -547,8 +547,10 @@ fgResource* fgResourceManager::request(const std::string& info, const fgResource
         goToBegin();
         while(isValid()) {
             fgResource *res = getCurrentResource();
-            if(!res)
-                break;
+            if(!res) {
+                goToNext();
+                continue;
+            }
             fgResource::fileMapping &files = res->getFileMapping();
             fgResource::fileMappingItor fit = files.begin(), fend = files.end();
             for(; fit != fend; fit++) {
@@ -574,7 +576,7 @@ fgResource* fgResourceManager::request(const std::string& info, const fgResource
         } else {
             fext = fgPath::fileExt(filePath.c_str(), FG_TRUE);
         }
-        
+
         if(fgStrings::endsWith(fext, "res.ini", FG_TRUE)) {
             isConfig = FG_TRUE;
         } else if(fgStrings::endsWith(fext, "tga", FG_TRUE)) {
@@ -652,7 +654,12 @@ fgResource* fgResourceManager::request(const std::string& info, const fgResource
     }
 
     if(resourcePtr) {
-        fgResourceManager::insertResource(resourcePtr);
+        if(!insertResource(resourcePtr)) {
+            releaseHandle(resourcePtr->getHandle());
+            delete resourcePtr;
+            resourcePtr = NULL;
+            return NULL;
+        }
         // This will recreate the resource if necessary and throw proper event
         // if the pointer to the external event manager is set.
         fgResourceManager::refreshResource(resourcePtr);
@@ -669,7 +676,6 @@ fgResource* fgResourceManager::request(const std::string& info, const fgResource
             static_cast<fgEventManager *>(m_pEventMgr)->throwEvent(FG_EVENT_RESOURCE_REQUESTED, argList);
         }
     }
-
     return resourcePtr;
 }
 
