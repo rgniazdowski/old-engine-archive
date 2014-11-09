@@ -23,11 +23,17 @@ namespace FG_STATUS {
     void printStatus(fgStatus *_status);
 };
 
-/*
+/**
  *
  */
 template<typename TagType>
 class fgStatusReporter {
+public:
+    typedef TagType tag_type;
+    typedef fgVector<fgStatus *> statusVec;
+    typedef statusVec::iterator statusVecItor;
+    typedef fgStatus status_type;
+    
 public:
     //
     fgStatusReporter() : m_errCode(FG_ERRNO_OK),
@@ -186,7 +192,7 @@ protected:
     ///
     fgBool m_reportToMsgSystem;
     ///
-    fgVector<fgStatus *> m_statusVec;
+    statusVec m_statusVec;
 };
 
 #endif /* _FG_STATUS_REPORTER_H_ */

@@ -21,8 +21,8 @@
 
     #include "fgBuildConfig.h"
     #include "fgManagerBase.h"
-
     #include "Util/fgMemory.h"
+    #include "Util/fgTag.h"
 
     #define FG_MANAGER_SCRIPT       0x00004000
     #define FG_SUBSYSTEM_SCRIPT     0x00004000
@@ -44,12 +44,23 @@ struct lua_State {
 
     #include <map>
 
-// #FIXME
-//#include "fgScriptCD.h"
     #include "Resource/fgManagedObjectBase.h"
-
     #include "Event/fgCallback.h"
 
+class fgScriptSubsystem;
+
+    #define FG_TAG_SCRIPT_MANAGER_NAME  "ScriptSubsystem"
+    #define FG_TAG_SCRIPT_SUBSYSTEM_NAME FG_TAG_SCRIPT_MANAGER_NAME
+//#define FG_TAG_MANAGER_BASE_ID        20 //#FIXME - something automatic maybe?
+    #define FG_TAG_SCRIPT_MANAGER       FG_TAG_TYPE(fgScriptSubsystem)
+    #define FG_TAG_SCRIPT_SUBSYSTEM     FG_TAG_SCRIPT_MANAGER
+
+//FG_TAG_TEMPLATE(fgScriptSubsystem, FG_TAG_SCRIPT_MANAGER_NAME, FG_TAG_SCRIPT_MANAGER_ID);
+FG_TAG_TEMPLATE_ID_AUTO(fgScriptSubsystem, FG_TAG_SCRIPT_SUBSYSTEM_NAME);
+
+// Special handle type for script subsystem
+typedef FG_TAG_SCRIPT_SUBSYSTEM fgScriptSubsystemTag;
+//typedef FG_TAG_SCRIPT_SUBSYSTEM fgScriptSubsystemTag;
 
 // Every 60s call global GC request
     #define FG_SCRIPT_DEFAULT_GC_INTERVAL 60000
@@ -60,6 +71,7 @@ struct lua_State {
 class fgScriptSubsystem : public fgManagerBase {
 public:
     typedef fgManagerBase base_type;
+    typedef fgScriptSubsystemTag tag_type;
 private:
 
     struct userDataObject {

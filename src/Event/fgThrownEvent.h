@@ -23,32 +23,31 @@ struct fgThrownEvent {
     fgArgumentList *argList;
     ///
     void *systemData;
-    
     /**
      * 
      */
-    fgThrownEvent() : eventCode(FG_EVENT_INVALID), argList(NULL) { }
-    
+    fgThrownEvent() :
+    eventCode(FG_EVENT_INVALID), 
+    argList(NULL), 
+    systemData(NULL) { }
     /**
      * 
      * @param _eventCode
      * @param _argList
      */
-    fgThrownEvent(fgEventType _eventCode, fgArgumentList *_argList) {
-        eventCode = _eventCode;
-        argList = _argList;
-    }
-    
+    fgThrownEvent(fgEventType _eventCode, fgArgumentList *_argList) :
+    eventCode(_eventCode),
+    argList(_argList),
+    systemData(NULL) { }
     /**
      * 
      * @param _eventCode
      * @param _systemData
      */
-    fgThrownEvent(fgEventType _eventCode, void *_systemData) {
-        eventCode = _eventCode;
-        argList = NULL;
-        systemData = _systemData;
-    }
+    fgThrownEvent(fgEventType _eventCode, void *_systemData) :
+    eventCode(_eventCode),
+    argList(NULL),
+    systemData(_systemData) { }
 };
 
 #endif /* _FG_THROWN_EVENT_H_ */

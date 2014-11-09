@@ -349,11 +349,6 @@ void fgEventManager::addKeyUp(int keyCode) {
  * also executes callbacks from cyclical and timeouts
  */
 void fgEventManager::executeEvents(void) {
-    //    static int yolo = 0;
-    //    yolo ++;
-    //    if(yolo < 3) {
-    //        printf("###########################################################\n#################### EXECUTE EVENTS #######################\n###########################################################\n");
-    //    }
     // Phase 1: execute keyboard callbacks
     for(int i = 0; i < (int)m_keysDownPool.size(); i++) {
         int keyCode = m_keysDownPool[i];
@@ -379,7 +374,8 @@ void fgEventManager::executeEvents(void) {
     }
     m_keysUpPool.clear();
 
-    // Phase 2: execution of thrown events (now including the argument list). Btw after calling the proper callback,
+    // Phase 2: execution of thrown events (now including the argument list).
+    // Btw after calling the proper callback,
     // queue entry with argument list must be erased 
     while(!m_eventsQueue.empty()) {
         fgThrownEvent &event = m_eventsQueue.front();
@@ -392,13 +388,13 @@ void fgEventManager::executeEvents(void) {
             m_eventsQueue.pop();
             continue;
         }
-
-        for(int j = 0; j < (int)m_eventBinds[eventCode].size(); j++) {
-            if(m_eventBinds[eventCode][j]) {
+        fgCallbacksVec &callbacks = (*found).second;
+        for(int j = 0; j < (int)callbacks.size(); j++) {
+            if(callbacks[j]) {
                 if(event.argList) {
-                    m_eventBinds[eventCode][j]->Call(event.argList);
+                    callbacks[j]->Call(event.argList);
                 } else {
-                    m_eventBinds[eventCode][j]->Call((void*)event.systemData);
+                    callbacks[j]->Call((void*)event.systemData);
                 }
             }
         }
@@ -410,7 +406,7 @@ void fgEventManager::executeEvents(void) {
     }
 
     // Phase 3: Timeouts
-    unsigned long int TS = FG_HardwareState->getTS();
+    unsigned long int TS = FG_HardwareState->getTS(); // #FIXME - hardware state TS
 
     // After timeout is executed it needs to be deleted from the timeouts pool - also the callback pointer must 
     // be freed with the argument list as they no longer needed

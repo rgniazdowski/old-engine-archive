@@ -17,11 +17,16 @@
 
     #define FG_MANAGER_DATA_BASE    0x00000080
 
-template <typename DataType, typename HandleType, typename TagType>
-/*
+/**
  *
  */
+template <typename DataType, typename HandleType, typename TagType>
 class fgDataManagerBase : public fgManagerBase, public fgStatusReporter<TagType>, protected fgHandleManager<DataType, HandleType> {
+public:
+    typedef TagType tag_type;
+    typedef HandleType handle_type;
+    typedef fgHandleManager<DataType, HandleType> handle_mgr_type;
+        
 public:
     /**
      * 

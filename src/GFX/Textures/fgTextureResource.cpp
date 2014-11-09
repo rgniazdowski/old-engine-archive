@@ -118,13 +118,13 @@ fgBool fgTextureResource::create(void) {
     }
     FG_LOG::PrintInfo("fgTextureResource::create(void)");
     if(getFilePath(m_quality).empty()) {
-        FG_LOG::PrintError("%s(%d): file path is empty on create - in function %s.", fgPath::fileName(__FILE__), __LINE__ - 1, __FUNCTION__);
+        FG_LOG_ERROR("%s(%d): file path is empty on create - in function %s.", fgPath::fileName(__FILE__), __LINE__ - 1, __FUNCTION__);
         // #TODO error handling / reporting
         return FG_FALSE;
     }
     setFileTypeFromFilePath();
     if(m_fileType == FG_TEXTURE_FILE_INVALID) {
-        FG_LOG::PrintError("%s(%d): texture file type is invalid - in function %s.", fgPath::fileName(__FILE__), __LINE__ - 1, __FUNCTION__);
+        FG_LOG_ERROR("%s(%d): texture file type is invalid - in function %s.", fgPath::fileName(__FILE__), __LINE__ - 1, __FUNCTION__);
         // #TODO error handling / reporting
         return FG_FALSE;
     }

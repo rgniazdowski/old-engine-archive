@@ -111,14 +111,14 @@ void fgScriptMT::generateMetatableNames(void) {
     // Initializing metatable map
     m_metatableInfoVec.clear();
     m_metatableInfoVec.reserve(METATABLE_SIZE);
-    //m_metatableInfoVec.resize(METATABLE_SIZE);
     m_metatableInfoVec.resize(METATABLE_SIZE);
 
     // can generate random IDS? YEP :D
     // Numbers 0 - 9 ASCII 48 to 57
     // Lowercase letters a - z ASCII 97 to 122
     // Uppercase letters A - Z ASCII 65 - 90
-#if 1
+    
+#if !defined(FG_USING_MARMALADE)
 
     m_metatableInfoVec[EMPTY_MT_ID] = metatableInfo("FG", "X");
 
@@ -146,6 +146,7 @@ void fgScriptMT::generateMetatableNames(void) {
     m_metatableInfoVec[FONT_RESOURCE_MT_ID] = metatableInfo("FGX", "T");
     m_metatableInfoVec[GFX_MODEL_RESOURCE_MT_ID] = metatableInfo("FGX", "T");
     m_metatableInfoVec[PARTICLE_EFFECT_RESOURCE_MT_ID] = metatableInfo("FGX", "T");
+    m_metatableInfoVec[AUDIO_BASE_RES_MT_ID] = metatableInfo("FGX", "T");
     m_metatableInfoVec[SOUND_RESOURCE_MT_ID] = metatableInfo("FGX", "T");
     m_metatableInfoVec[MUSIC_RESOURCE_MT_ID] = metatableInfo("FGX", "T");
     m_metatableInfoVec[PLUGIN_RESOURCE_MT_ID] = metatableInfo("FGX", "T");
