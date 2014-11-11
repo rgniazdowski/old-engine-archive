@@ -7,6 +7,7 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
+#include "fgDebugConfig.h"
 #include "fgGuiWidget.h"
 #include "fgGuiDrawer.h"
 #include "Resource/fgResource.h"
@@ -74,9 +75,9 @@ void fgGuiWidget::display(fgGfxLayer *guiLayer) {
     if(bgColor.a > FG_EPSILON)
         guiDrawer->appendBackground2D(blockPos, blockSize, m_styles[m_state]);
     guiDrawer->appendBorder2D(blockPos, blockSize, m_styles[m_state]);
-
+#if defined(FG_DEBUG)
     // BLOCK SIZE / POS DEBUG PRINT
-    {
+    if(g_fgDebugConfig.guiBBoxShow) {
         char buf[256];
         snprintf(buf, 255, "%.1fx%.1f [%.1fx%.1f]", blockPos.x, blockPos.y, blockSize.x, blockSize.y);
         float tSize = m_styles[m_state].getForeground().textSize;
@@ -91,16 +92,16 @@ void fgGuiWidget::display(fgGfxLayer *guiLayer) {
         m_styles[m_state].getForeground().font = tFont;
         m_styles[m_state].getForeground().color = tColor;
     }
-
+#endif
     if(m_text.length()) {
         // #FIXME
         blockPos = fgVec2f(m_bbox.pos.x, m_bbox.pos.y);
         blockSize = fgVec2f(m_bbox.size.x, m_bbox.size.y);
         guiDrawer->appendText2D(m_textSize, blockPos, blockSize, m_styles[m_state], getTextStr());
     }
-
+#if defined(FG_DEBUG)
     // PADDING DEBUG - INNER BORDER
-    {
+    if(g_fgDebugConfig.guiBBoxShow) {
         blockPos = fgVec2f(m_bbox.pos.x, m_bbox.pos.y);
         blockSize = fgVec2f(m_bbox.size.x, m_bbox.size.y);
         blockPos.x += m_styles[m_state].getPadding().left;
@@ -110,7 +111,7 @@ void fgGuiWidget::display(fgGfxLayer *guiLayer) {
         guiDrawer->appendBorder2D(blockPos, blockSize, m_styles[0]);
     }
     // MARGIN DEBUG - OUTER BORDER
-    {
+    if(g_fgDebugConfig.guiBBoxShow) {
         blockPos = fgVec2f(m_bbox.pos.x, m_bbox.pos.y);
         blockSize = fgVec2f(m_bbox.size.x, m_bbox.size.y);
         blockPos.x -= m_styles[m_state].getMargin().left;
@@ -119,6 +120,7 @@ void fgGuiWidget::display(fgGfxLayer *guiLayer) {
         blockSize.y += m_styles[m_state].getMargin().bottom + m_styles[m_state].getMargin().top;
         guiDrawer->appendBorder2D(blockPos, blockSize, m_styles[0]);
     }
+#endif
 }
 
 /**

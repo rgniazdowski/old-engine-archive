@@ -24,6 +24,8 @@
 // of the engine like plugins or in a different build.
 #ifndef _FG_BUILD_CONFIG_H_
     #define _FG_BUILD_CONFIG_H_
+    #define _FG_BUILD_CONFIG_H_BLOCK_
+
 
     #define FG_VERBOSE_LVL_NONE		0 // report only critical errors - no warnings, info, status etc
     #define FG_VERBOSE_LVL_LOW		1 // report only errors
@@ -140,11 +142,11 @@
             #define FG_VERBOSE
         #endif
     #endif
-    
+
     #if defined(_RELEASE) || defined(__release) || !defined(FG_DEBUG)
         #define FG_RELEASE
     #endif
-    
+
     #if defined(FG_RELEASE)
         #undef FG_RELEASE
         #define FG_RELEASE 1
@@ -282,7 +284,7 @@
             #define TIXML_USE_STL
         #endif
     #endif
-    
+
 /************************************* AUDIO / SOUND FIX ******************************/
 
     #if defined(FG_USING_SDL2)
@@ -291,7 +293,7 @@
             #define FG_USING_SDL_MIXER
         #endif
     #endif
-    
+
     #if defined(FG_USING_SDL)
         #if !defined(FG_USING_AUDIO)
             #define FG_USING_AUDIO
@@ -306,7 +308,7 @@
             #define LUAPLUS_DUMPOBJECT 1
         #endif
     #endif
-    
+
     #if defined(FG_USING_LUA) || defined(FG_USING_LUA_PLUS)
         #if !defined(LUA_OPNAMES)
             #define LUA_OPNAMES 1
@@ -442,5 +444,6 @@ extern struct fgBuildConfig g_fgBuildConfig;
 
     #define FG_MOTTO			"The spice is vital for space travel"
 
+    #undef _FG_BUILD_CONFIG_H_BLOCK_
 #endif /* _FG_BUILD_CONFIG_H_ */
 /*************************** END MAIN MARMALADE BUILD CONFIG ***************************/

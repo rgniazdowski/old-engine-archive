@@ -89,7 +89,8 @@ void fgGuiContainer::setFlags(const std::string& flags) {
     }
     flagsVec.clear();
 }
-fgGuiDrawer *yolo = NULL;
+
+//fgGuiDrawer *yolo = NULL;
 
 /**
  * 
@@ -106,7 +107,7 @@ void fgGuiContainer::display(fgGfxLayer *guiLayer) {
         if(child->isVisible())
             child->display(guiLayer);
     }
-    yolo = (fgGuiDrawer *)guiLayer;
+    //yolo = (fgGuiDrawer *)guiLayer;
 }
 
 /**
@@ -294,7 +295,8 @@ fgBoundingBox3Df fgGuiContainer::updateBounds(void) {
         // No need to update inner/outer area, just update position of the child
         fgBoundingBox3Df childBox = child->updateBounds(widgetBox);
 
-        {
+#if 0
+        if(g_fgDebugConfig.guiBBoxShow) {
             fgVec2f blockPos = fgVec2f(widgetBox.pos.x, widgetBox.pos.y);
             fgVec2f blockSize = fgVec2f(widgetBox.size.x, widgetBox.size.y);
             int color = 1;
@@ -321,6 +323,7 @@ fgBoundingBox3Df fgGuiContainer::updateBounds(void) {
                 m_styles[color].getForeground().color = tColor;
             }
         }
+#endif
         // Update last pointer
         lastWidget = child;
         lastChildSize = childSize;
