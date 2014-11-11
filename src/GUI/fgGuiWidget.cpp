@@ -62,7 +62,7 @@ fgGuiWidget::~fgGuiWidget() {
  * 
  * @param guiLayer
  */
-void fgGuiWidget::display(fgGfxLayer *guiLayer) {
+void fgGuiWidget::display(fgGuiDrawer *guiLayer) {
     if(!guiLayer)
         return;
     if(!m_isVisible)
@@ -95,9 +95,11 @@ void fgGuiWidget::display(fgGfxLayer *guiLayer) {
 #endif
     if(m_text.length()) {
         // #FIXME
+        guiDrawer->downZIndex();
         blockPos = fgVec2f(m_bbox.pos.x, m_bbox.pos.y);
         blockSize = fgVec2f(m_bbox.size.x, m_bbox.size.y);
         guiDrawer->appendText2D(m_textSize, blockPos, blockSize, m_styles[m_state], getTextStr());
+        guiDrawer->upZIndex();
     }
 #if defined(FG_DEBUG)
     // PADDING DEBUG - INNER BORDER

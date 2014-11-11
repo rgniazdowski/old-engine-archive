@@ -166,6 +166,7 @@ fgBool fgScriptSubsystem::cyclicGCFunction(void* systemData, void* userData) {
     int bytesAfter = m_luaState->GC(LUA_GCCOUNTB, 0);
     FG_LOG_DEBUG("Script: GC: before[%d], after[%d]", bytesBefore, bytesAfter);
 #endif /* FG_USING_LUA_PLUS */
+    return FG_TRUE;
 }
 
 /**
@@ -1720,6 +1721,7 @@ fgBool fgScriptSubsystem::registerGuiMain(void) {
     m_userDataObjectMap[offset].obj = guiMainObj;
     m_userDataObjectMap[offset].isBound = FG_TRUE;
 #endif /* FG_USING_LUA_PLUS */
+    return FG_TRUE;
 }
 
 /**

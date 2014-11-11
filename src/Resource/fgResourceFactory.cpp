@@ -14,14 +14,14 @@
  * Default empty constructor for Resource Factory object
  */
 fgResourceFactory::fgResourceFactory() {
-    FG_LOG::PrintError("fgResourceFactory::fgResourceFactory()");
+    FG_LOG_DEBUG("fgResourceFactory: allocation");
 }
 
 /*
  * Default destructor for Resource Factory object
  */
 fgResourceFactory::~fgResourceFactory() {
-    FG_LOG::PrintError("fgResourceFactory::~fgResourceFactory()");
+    FG_LOG_DEBUG("fgResourceFactory: destroy");
     clear();
 }
 
@@ -29,7 +29,6 @@ fgResourceFactory::~fgResourceFactory() {
  * Clear all registered resource creators
  */
 void fgResourceFactory::clear(void) {
-    FG_LOG::PrintError("fgResourceFactory::clear()");
     m_factoryMap.clear();
 }
 

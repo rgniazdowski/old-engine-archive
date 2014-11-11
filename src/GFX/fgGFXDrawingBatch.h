@@ -62,7 +62,6 @@ public:
      * 
      */
     virtual ~fgGfxDrawingBatch();
-
     /**
      * 
      * @return 
@@ -76,13 +75,15 @@ public:
      * @param pShaderMgr
      */
     virtual void setShaderManager(fgManagerBase *pShaderMgr);
-    
+
     /**
      * 
      * @param index
      * @return 
      */
-    fgGfxDrawCall *createDrawCall(int &index, fgGfxDrawCallType type = FG_GFX_DRAW_CALL_CUSTOM_ARRAY);
+    fgGfxDrawCall *createDrawCall(int &index,
+                                  const fgGfxDrawCallType type = FG_GFX_DRAW_CALL_CUSTOM_ARRAY,
+                                  const fgGFXuint attribMask = FG_GFX_POSITION_BIT | FG_GFX_UVS_BIT);
     /**
      * 
      * @param index
@@ -122,7 +123,6 @@ public:
      * @return 
      */
     fgBool deleteDrawCall(fgGfxDrawCall*& drawCall);
-
     /**
      * 
      * @return 
@@ -130,7 +130,6 @@ public:
     unsigned int count(void) const {
         return m_drawCalls.size();
     }
-
     /**
      * 
      * @return 
@@ -138,7 +137,6 @@ public:
     unsigned int size(void) const {
         return m_drawCalls.size();
     }
-
     /**
      * 
      * @return 
@@ -159,7 +157,6 @@ public:
      * 
      */
     virtual void render(void);
-
     /**
      * 
      * @param n

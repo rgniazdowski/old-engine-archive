@@ -15,26 +15,14 @@
  *
  */
 fgGuiDrawer::fgGuiDrawer() :
-m_fontDrawer(NULL),
 m_pResourceMgr(NULL) {
-    m_fontDrawer = new fgFontDrawer();
 }
 
 /*
  *
  */
 fgGuiDrawer::~fgGuiDrawer() {
-    if(m_fontDrawer)
-        delete m_fontDrawer;
-    m_fontDrawer = NULL;
     m_pResourceMgr = NULL;
-}
-
-/*
- *
- */
-fgFontDrawer *fgGuiDrawer::getFontDrawer(void) const {
-    return m_fontDrawer;
 }
 
 /*
@@ -49,15 +37,12 @@ void fgGuiDrawer::setResourceManager(fgManagerBase *pResourceMgr) {
  */
 void fgGuiDrawer::setShaderManager(fgManagerBase *pShaderMgr) {
     fgGfxDrawingBatch::setShaderManager(pShaderMgr);
-    if(m_fontDrawer)
-        m_fontDrawer->setShaderManager(pShaderMgr);
 }
 
 /*
  *
  */
 void fgGuiDrawer::flush(void) {
-    m_fontDrawer->flush();
     fgGfxDrawingBatch::flush();
 }
 
@@ -73,13 +58,16 @@ void fgGuiDrawer::sortCalls(void) {
  */
 void fgGuiDrawer::render(void) {
     fgGfxDrawingBatch::render();
-    m_fontDrawer->render();
 }
 
 /*
  *
  */
-void fgGuiDrawer::appendText2D(fgVec2f& outTextSize, const fgVec2f &blockPos, const fgVec2f &blockSize, fgGuiStyleContent& style, const char *fmt, ...) {
+void fgGuiDrawer::appendText2D(fgVec2f& outTextSize,
+                               const fgVec2f &blockPos,
+                               const fgVec2f &blockSize,
+                               fgGuiStyleContent& style,
+                               const char *fmt, ...) {
     if(!m_pResourceMgr || !fmt)
         return;
     char buf[FG_FONT_DRAW_STRING_BUF_MAX];
@@ -97,20 +85,22 @@ void fgGuiDrawer::appendText2D(fgVec2f& outTextSize, const fgVec2f &blockPos, co
     if(resFont->getResourceType() != FG_RESOURCE_FONT)
         return;
     fgFontResource *fontResProper = (fgFontResource *)resFont;
-    m_fontDrawer->setFont(fontResProper);
-    m_fontDrawer->setColor(fg.color);
+    this->setFont(fontResProper);
+    this->setColor(fg.color);
     fgGuiAlign textAlign = style.getTextAlign();
     fgGuiPadding &padding = style.getPadding();
     fgVector2f outPos = blockPos;
     outTextSize = fgFontDrawer::size(fontResProper, buf, fg.textSize);
     style.applyPosAlign(style.getTextAlign(), outPos, outTextSize, blockPos, blockSize, FG_TRUE);
-    m_fontDrawer->print(outPos.x, outPos.y, buf, fg.textSize);
+    this->print(outPos.x, outPos.y, buf, fg.textSize);
 }
 
 /*
  *
  */
-void fgGuiDrawer::appendBackground2D(const fgVec2f &pos, const fgVec2f &size, fgGuiStyleContent& style) {
+void fgGuiDrawer::appendBackground2D(const fgVec2f &pos,
+                                     const fgVec2f &size,
+                                     fgGuiStyleContent& style) {
     if(!m_pResourceMgr)
         return;
     int index;
@@ -133,7 +123,9 @@ void fgGuiDrawer::appendBackground2D(const fgVec2f &pos, const fgVec2f &size, fg
 /*
  *
  */
-void fgGuiDrawer::appendBorder2D(const fgVec2f &pos, const fgVec2f &size, fgGuiStyleContent& style) {
+void fgGuiDrawer::appendBorder2D(const fgVec2f &pos,
+                                 const fgVec2f &size, 
+                                 fgGuiStyleContent& style) {
     if(!m_pResourceMgr)
         return;
     fgGuiBorderInfo &border = style.getBorder();

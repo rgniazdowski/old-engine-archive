@@ -29,12 +29,10 @@
 /*
  *
  */
-class fgGuiDrawer : protected fgGfxDrawingBatch {
+class fgGuiDrawer : public fgFontDrawer, protected virtual fgGfxDrawingBatch {
     friend class fgGuiMain;
     friend class fgGuiWidgetManager;
 private:
-    /// Internal font drawer - this is separate drawing batch
-    fgFontDrawer *m_fontDrawer;
     /// Pointer to the external resource manager
     /// Required for fast font/texture lookup
     /// #FIXME - should this be replaced with texture manager?
@@ -47,12 +45,6 @@ public:
     virtual ~fgGuiDrawer();
 
 public:
-    /**
-     * 
-     * @return 
-     */
-    fgFontDrawer *getFontDrawer(void) const;
-    
     /**
      * 
      * @return 
@@ -85,21 +77,18 @@ public:
      */
     virtual void setZIndex(const int zIndex) {
         m_zIndex = zIndex;
-        m_fontDrawer->setZIndex(zIndex);
     }
     /**
      * 
      */
     virtual void upZIndex(void) {
         m_zIndex++;
-        m_fontDrawer->setZIndex(m_zIndex);
     }
     /**
      * 
      */
     virtual void downZIndex(void) {
         m_zIndex--;
-        m_fontDrawer->setZIndex(m_zIndex);
     }
 
     /**

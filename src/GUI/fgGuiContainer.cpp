@@ -96,17 +96,21 @@ void fgGuiContainer::setFlags(const std::string& flags) {
  * 
  * @param guiLayer
  */
-void fgGuiContainer::display(fgGfxLayer *guiLayer) {
+void fgGuiContainer::display(fgGuiDrawer *guiLayer) {
     if(!guiLayer)
         return;
+    guiLayer->downZIndex();
     fgGuiWidget::display(guiLayer);
     for(int i = 0; i < (int)m_children.size(); i++) {
         fgGuiWidget *child = m_children[i];
         if(!child)
             continue;
+        guiLayer->downZIndex();
         if(child->isVisible())
             child->display(guiLayer);
+        guiLayer->upZIndex();
     }
+    guiLayer->upZIndex();
     //yolo = (fgGuiDrawer *)guiLayer;
 }
 

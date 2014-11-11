@@ -54,6 +54,8 @@
     #define FG_GUI_WIDGET_STATE_COUNT		5
 typedef unsigned int fgGuiWidgetState;
 
+class fgFontDrawer;
+class fgGuiDrawer;
 class fgGuiMain;
 class fgGuiWidgetManager;
 class fgGuiStructureSheetParser;
@@ -213,7 +215,7 @@ public:
      * 
      * @param guiLayer
      */
-    virtual void display(fgGfxLayer *guiLayer);
+    virtual void display(fgGuiDrawer *guiLayer);
     /**
      * 
      * @param flags
@@ -352,7 +354,7 @@ public:
      */
     virtual void setPosition(const fgVector3f& pos) {
         m_bbox.pos = pos;
-    }
+    }    
     /**
      * 
      * @return 
@@ -387,6 +389,13 @@ public:
      */
     inline fgVector3f& getSize(void) {
         return m_bbox.size;
+    }
+    /**
+     * Returns the reference to the bounding box
+     * @return 
+     */
+    inline fgBoundingBox3Df& getBBox(void) {
+        return m_bbox;
     }
     /**
      * 

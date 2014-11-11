@@ -115,6 +115,7 @@ int fgFontDrawer::print(float x0, float y0, const char *string, float charSize) 
     } else {
         m_relMove = fgVector3f(0.0f, 0.0f, 0.0f);
     }
+    setupDrawCall(m_currentFont);
     float w = 0.0f;
     for(s = string, n = 0; *s; s++) {
         n++;
@@ -196,12 +197,14 @@ void fgFontDrawer::setColor(void) {
  */
 fgGfxDrawCall *fgFontDrawer::setupDrawCall(fgTextureResource *texture) {
     int index;
-    fgGfxDrawCall *drawCall = fgGfxDrawingBatch::createDrawCall(index);
+    fgGfxDrawCall *drawCall = fgGfxDrawingBatch::createDrawCall(index,
+                                                                FG_GFX_DRAW_CALL_CUSTOM_ARRAY,
+                                                                FG_GFX_POSITION_BIT | FG_GFX_UVS_BIT | FG_GFX_COLOR_BIT);
     drawCall->setColor(m_color);
     drawCall->setTexture(texture->getRefGfxID());
-    drawCall->setPrimitiveMode(fgGfxPrimitiveMode::FG_GFX_TRIANGLES);
-    drawCall->setComponentActive(0);
-    drawCall->setComponentActive(FG_GFX_POSITION_BIT | FG_GFX_UVS_BIT | FG_GFX_COLOR_BIT);
+    //drawCall->setPrimitiveMode(fgGfxPrimitiveMode::FG_GFX_TRIANGLES);
+    //drawCall->setComponentActive(0);
+    //drawCall->setComponentActive(FG_GFX_POSITION_BIT | FG_GFX_UVS_BIT | FG_GFX_COLOR_BIT);
     drawCall->setDrawAppendMode(FG_GFX_DRAW_APPEND_ABSOLUTE);
     return drawCall;
 }

@@ -33,7 +33,7 @@ typedef unsigned int fgFontPrintMode;
 /*
  *
  */
-class fgFontDrawer : protected fgGfxDrawingBatch {
+class fgFontDrawer : protected virtual fgGfxDrawingBatch {
 public:
     /**
      *

@@ -78,7 +78,7 @@ public:
     virtual void setFlags(const std::string& flags);
     
     //
-    virtual void display(fgGfxLayer *guiLayer);
+    virtual void display(fgGuiDrawer *guiLayer);
 
     // 
     virtual fgBoundingBox3Df updateBounds(void);

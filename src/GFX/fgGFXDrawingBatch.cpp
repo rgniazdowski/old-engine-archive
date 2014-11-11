@@ -37,13 +37,14 @@ void fgGfxDrawingBatch::setShaderManager(fgManagerBase *pShaderMgr) {
 /*
  *
  */
-fgGfxDrawCall *fgGfxDrawingBatch::createDrawCall(int &index, fgGfxDrawCallType type) {
-    fgGfxDrawCall *drawCall = new fgGfxDrawCall();
+fgGfxDrawCall *fgGfxDrawingBatch::createDrawCall(int &index,
+                                                 const fgGfxDrawCallType type,
+                                                 const fgGFXuint attribMask) {
+    fgGfxDrawCall *drawCall = new fgGfxDrawCall(type, attribMask);
     if(m_pShaderMgr) {
         fgGfxShaderManager *shaderMgrPtr = static_cast<fgGfxShaderManager *>(getShaderManager());
         drawCall->setShaderProgram(shaderMgrPtr->getCurrentProgram());
     }
-    drawCall->setDrawCallType(type);
     drawCall->setZIndex(m_zIndex);
     drawCall->setManaged(FG_TRUE);
     index = m_drawCalls.size();
