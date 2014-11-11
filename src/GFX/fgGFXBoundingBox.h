@@ -9,6 +9,7 @@
 
 #ifndef _FG_GFX_BOUNDING_BOX_H_
     #define _FG_GFX_BOUNDING_BOX_H_
+    #define _FG_GFX_BOUNDING_BOX_H_BLOCK_
 
     #include "fgBuildConfig.h"
     #include "fgBool.h"
@@ -25,14 +26,15 @@ template <class DataType> struct fgBoundingBox2D;
 //
 template <class DataType> struct fgBoundingBox3D;
 
-
 /**
- *
+ * This is basic bounding box - mainly used in 2D / GUI. Depending on the usage
+ * it can also represent bounding box as center position and half-extent vectors
+ * In GUI the upper-left corner is represented as the position vector.
  */
 template <class BoxType, class VecType, class DataType>
 struct fgBoundingBox {
     ///
-    typedef fgBoundingBox<BoxType, VecType, DataType> type;
+    typedef fgBoundingBox<BoxType, VecType, DataType> self_type;
     ///
     typedef DataType value_type;
     ///
@@ -40,18 +42,45 @@ struct fgBoundingBox {
     ///
     typedef BoxType box_type;
     ///
-    typedef int size_type;
+    typedef unsigned int size_type;
+
+    ///
+
+    union {
+        VecType pos;
+        VecType center;
+        // Could have here some min/max (aabb?)
+        VecType min;
+    };
+    ///
+
+    union {
+        VecType size;
+        VecType extent;
+        VecType max; // This is for compatibility with AABB type
+    };
     
-    ///
-    VecType pos;
-    ///
-    VecType size;
+    self_type & operator= (const self_type & other)
+    {
+        if (this != &other) // protect against invalid self-assignment
+        {
+            this->pos = other.pos;
+            this->size = other.size;
+        }
+        // by convention, always return *this
+        return *this;
+    }
     /**
      * 
      */
     fgBoundingBox() :
     pos(),
     size() { }
+    
+    fgBoundingBox(const self_type & other) {
+        this->pos = other.pos;
+        this->size = other.size;
+    }
     /**
      * 
      * @param _pos
@@ -72,7 +101,7 @@ struct fgBoundingBox {
      * @param i
      * @return 
      */
-    DataType & operator [](int i) {
+    DataType & operator [](size_type i) {
         if(i > this->length())
             i = 0;
         if(i >= this->pos.length()) {
@@ -87,7 +116,7 @@ struct fgBoundingBox {
      * @param i
      * @return 
      */
-    DataType const & operator [](int i)const {
+    DataType const & operator [](size_type i)const {
         if(i > this->length())
             i = 0;
         if(i >= this->pos.length()) {
@@ -101,10 +130,13 @@ struct fgBoundingBox {
      * 
      */
     virtual void zero(void) {
-        this->pos.x = (DataType)0;
-        this->pos.y = (DataType)0;
-        this->size.x = (DataType)0;
-        this->size.y = (DataType)0;
+        // This zeroes the internal data
+        memset(&this->pos, 0, sizeof(vector_type));
+        memset(&this->size, 0, sizeof(vector_type));
+        //this->pos.x = (DataType)0;
+        //this->pos.y = (DataType)0;
+        //this->size.x = (DataType)0;
+        //this->size.y = (DataType)0;
     }
     /**
      * 
@@ -242,23 +274,25 @@ struct fgBoundingBox {
  */
 template <class DataType>
 struct fgBoundingBox2D : fgBoundingBox<fgBoundingBox2D<DataType>, glm::detail::tvec2<DataType, glm::defaultp>, DataType> {
+    typedef fgBoundingBox2D<DataType> self_type;
     ///
-    typedef fgBoundingBox<fgBoundingBox2D<DataType>, glm::detail::tvec2<DataType, glm::defaultp>, DataType> base_type;
+    typedef glm::detail::tvec2<DataType, glm::defaultp> vec_type;
     ///
-    typedef glm::detail::tvec2<DataType, glm::defaultp> vecType;
-
+    typedef fgBoundingBox<self_type, vec_type, DataType> base_type;
+    ///
+    typedef typename base_type::size_type size_type;
     /**
      * 
      */
     fgBoundingBox2D() :
-    fgBoundingBox<fgBoundingBox2D<DataType>, glm::detail::tvec2<DataType, glm::defaultp>, DataType>() { }
+    base_type() { }
     /**
      * 
      * @param _pos
      * @param _size
      */
-    fgBoundingBox2D(const vecType &_pos, const vecType &_size) :
-    fgBoundingBox<fgBoundingBox2D<DataType>, glm::detail::tvec2<DataType, glm::defaultp>, DataType>(_pos, _size) { }
+    fgBoundingBox2D(const vec_type &_pos, const vec_type &_size) :
+    base_type(_pos, _size) { }
     #if 0
     /**
      * 
@@ -328,37 +362,45 @@ struct fgBoundingBox2D : fgBoundingBox<fgBoundingBox2D<DataType>, glm::detail::t
     }
 };
 
-//
+/// Basic bounding box 2D with float data type
 typedef fgBoundingBox2D<float> fgBoundingBox2Df;
-//
+/// Basic bounding box 2D with integer data type
 typedef fgBoundingBox2D<int> fgBoundingBox2Di;
-//
+// Basic bounding box 2D with unsigned integer data type
 typedef fgBoundingBox2D<unsigned int> fgBoundingBox2Du;
-//
+// Basic bounding box 2D with double precision data type
 typedef fgBoundingBox2D<double> fgBoundingBox2Dd;
 
-template <class DataType>
+typedef fgBoundingBox2Df fgBB2Df;
+typedef fgBoundingBox2Di fgBB2Di;
+typedef fgBoundingBox2Du fgBB2Du;
+typedef fgBoundingBox2Dd fgBB2Dd;
+
 /**
  *
  */
+template <class DataType>
 struct fgBoundingBox3D :
 fgBoundingBox<fgBoundingBox3D<DataType>, glm::detail::tvec3<DataType, glm::defaultp>, DataType> {
-    //
-    typedef fgBoundingBox<fgBoundingBox3D<DataType>, glm::detail::tvec3<DataType, glm::defaultp>, DataType> base_type;
-    //
-    typedef glm::detail::tvec3<DataType, glm::defaultp> vecType;
+    typedef fgBoundingBox3D<DataType> self_type;
+    ///
+    typedef glm::detail::tvec3<DataType, glm::defaultp> vec_type;
+    ///
+    typedef fgBoundingBox<self_type, vec_type, DataType> base_type;
+    ///
+    typedef typename base_type::size_type size_type;
     /**
      * 
      */
     fgBoundingBox3D() :
-    fgBoundingBox<fgBoundingBox3D<DataType>, glm::detail::tvec3 <DataType, glm::defaultp>, DataType>() { }
+    base_type() { }
     /**
      * 
      * @param _pos
      * @param _size
      */
-    fgBoundingBox3D(const vecType &_pos, const vecType &_size) :
-    fgBoundingBox<fgBoundingBox3D<DataType>, glm::detail::tvec3 <DataType, glm::defaultp>, DataType>(_pos, _size) { }
+    fgBoundingBox3D(const vec_type &_pos, const vec_type &_size) :
+    base_type(_pos, _size) { }
     /**
      * 
      */
@@ -474,7 +516,7 @@ fgBoundingBox<fgBoundingBox3D<DataType>, glm::detail::tvec3<DataType, glm::defau
      * @param vec
      * @return 
      */
-    virtual fgBool test(const vecType& vec) const {
+    virtual fgBool test(const vec_type& vec) const {
         return this->test(vec.x, vec.y, vec.z);
     }
     /**
@@ -505,13 +547,19 @@ fgBoundingBox<fgBoundingBox3D<DataType>, glm::detail::tvec3<DataType, glm::defau
     }
 };
 
-//
+///
 typedef fgBoundingBox3D<float> fgBoundingBox3Df;
-//
+///
 typedef fgBoundingBox3D<int> fgBoundingBox3Di;
-//
+///
 typedef fgBoundingBox3D<unsigned int> fgBoundingBox3Du;
-//
+///
 typedef fgBoundingBox3D<double> fgBoundingBox3Dd;
 
+typedef fgBoundingBox3Df fgBB3Df;
+typedef fgBoundingBox3Di fgBB3Di;
+typedef fgBoundingBox3Du fgBB3Du;
+typedef fgBoundingBox3Dd fgBB3Dd;
+
+#undef _FG_GFX_BOUNDING_BOX_H_BLOCK_
 #endif /* _FG_GFX_BOUNDING_BOX_H_ */

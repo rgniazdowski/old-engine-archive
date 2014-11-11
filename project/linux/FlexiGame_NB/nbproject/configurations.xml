@@ -82,6 +82,7 @@
           <itemPath>../../../src/GFX/fgGFX2DScene.h</itemPath>
           <itemPath>../../../src/GFX/fgGFX3DScene.cpp</itemPath>
           <itemPath>../../../src/GFX/fgGFX3DScene.h</itemPath>
+          <itemPath>../../../src/GFX/fgGFXAABoundingBox.h</itemPath>
           <itemPath>../../../src/GFX/fgGFXAttribBits.h</itemPath>
           <itemPath>../../../src/GFX/fgGFXAttributeData.h</itemPath>
           <itemPath>../../../src/GFX/fgGFXBoundingBox.h</itemPath>
@@ -789,6 +790,11 @@
       <item path="../../../src/GFX/fgGFX3DScene.cpp" ex="false" tool="1" flavor2="8">
       </item>
       <item path="../../../src/GFX/fgGFX3DScene.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGFXAABoundingBox.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGFXAttribBits.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -2045,6 +2051,11 @@
       </item>
       <item path="../../../src/GFX/fgGFX3DScene.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../../../src/GFX/fgGFXAABoundingBox.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../src/GFX/fgGFXAttribBits.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGFXAttributeData.h"
@@ -3282,6 +3293,11 @@
       </item>
       <item path="../../../src/GFX/fgGFX3DScene.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../../../src/GFX/fgGFXAABoundingBox.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../src/GFX/fgGFXAttribBits.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGFXAttributeData.h"
@@ -4496,6 +4512,11 @@
       <item path="../../../src/GFX/fgGFX3DScene.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGFX3DScene.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGFXAABoundingBox.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGFXAttribBits.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -5734,6 +5755,11 @@
       </item>
       <item path="../../../src/GFX/fgGFX3DScene.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../../../src/GFX/fgGFXAABoundingBox.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../src/GFX/fgGFXAttribBits.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGFXAttributeData.h"
@@ -6960,6 +6986,11 @@
       <item path="../../../src/GFX/fgGFX3DScene.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGFX3DScene.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGFXAABoundingBox.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGFXAttribBits.h" ex="false" tool="3" flavor2="0">
       </item>
