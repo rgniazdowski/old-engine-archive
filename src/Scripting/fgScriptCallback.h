@@ -33,8 +33,15 @@
  * 
  * @return 
  */
-class fgScriptCallback : public fgFunctionCallback {
+class fgScriptCallback : public virtual fgFunctionCallback {
 public:
+
+    typedef fgFunctionCallback base_type;
+    #if defined(FG_USING_LUA_PLUS)
+    typedef LuaPlus::LuaFunctionVoid function_type;
+    #else
+    typedef void function_type; // #ERROR
+    #endif /* FG_USING_LUA_PLUS */
 
     enum ScriptCallbackType {
         SCRIPT,
@@ -42,12 +49,7 @@ public:
         GUI_CALLBACK,
         INVALID
     };
-    typedef fgFunctionCallback base_type;
-    #if defined(FG_USING_LUA_PLUS)
-    typedef LuaPlus::LuaFunctionVoid function_type;
-    #else
-    typedef void function_type; // #ERROR
-    #endif /* FG_USING_LUA_PLUS */
+public:
     /**
      * 
      */
@@ -56,7 +58,9 @@ public:
     m_script(),
     m_function(NULL),
     m_type(INVALID),
-    m_argc(0) { }
+    m_argc(0) {
+        fgFunctionCallback::setFunction((fgFunctionCallback::fgFunction)NULL);
+    }
     /**
      * 
      * @param function
@@ -137,6 +141,14 @@ public:
     }
     /**
      * 
+     * @param type
+     */
+    void setType(const ScriptCallbackType type) {
+        if(type != INVALID)
+            m_type = type;
+    }
+    /**
+     * 
      * @return 
      */
     ScriptCallbackType getType(void) const {
@@ -167,9 +179,20 @@ public:
      * @return 
      */
     virtual fgBool Call(fgArgumentList *argv);
+    /**
+     * 
+     * @param pSystemData
+     * @return 
+     */
+    virtual fgBool Call(void *pSystemData);
+
 private:
+    #if defined(FG_USING_LUA_PLUS) || defined(FG_USING_LUA)
     ///
     lua_State *m_luaState;
+    #else
+    void *m_luaState;
+    #endif /* LUA_PLUS / LUA */
     ///
     std::string m_script;
     ///
@@ -178,6 +201,81 @@ private:
     ScriptCallbackType m_type;
     ///
     unsigned short int m_argc;
+};
+
+    #include "GUI/fgGuiCallback.h"
+
+/**
+ *
+ */
+class fgScriptGuiCallback : public fgScriptCallback, public fgGuiCallback {
+public:
+    /**
+     * 
+     */
+    fgScriptGuiCallback(fgGuiMain *pGuiMain = NULL) :
+    fgScriptCallback(),
+    fgGuiCallback(pGuiMain) {
+        fgFunctionCallback::setFunction((fgFunctionCallback::fgFunction)NULL);
+    }
+    /**
+     * 
+     * @param function
+     */
+    #if defined(FG_USING_LUA_PLUS)
+    fgScriptGuiCallback(fgGuiMain *pGuiMain, lua_State *L,
+                        const LuaPlus::LuaObject& function,
+                        unsigned short int _argc = 1) :
+    fgScriptCallback(L, function, _argc, GUI_CALLBACK),
+    fgGuiCallback(pGuiMain) {
+        // Just to be sure - no harm done
+        fgFunctionCallback::setFunction((fgFunctionCallback::fgFunction)NULL);
+    }
+    #endif /* FG_USING_LUA_PLUS */
+    /**
+     * 
+     * @param L
+     * @param info
+     * @param _type
+     */
+    fgScriptGuiCallback(fgGuiMain *pGuiMain, lua_State *L,
+                        const char *info,
+                        const unsigned short int _argc = 1);
+    
+    /**
+     * 
+     * @return 
+     */
+    virtual fgBool Call(void);
+    
+    /**
+     * 
+     * @param argv
+     * @return 
+     */
+    virtual fgBool Call(fgArgumentList *argv);
+    
+    /**
+     * 
+     * @param pSystemData
+     * @return 
+     */
+    virtual fgBool Call(void *pSystemData);
+    
+    /**
+     * 
+     * @param pWidget
+     * @return 
+     */
+    virtual fgBool Call(fgGuiWidget *pWidget);
+
+    /**
+     * 
+     * @param pGuiMain
+     * @param pWidget
+     * @return 
+     */
+    virtual fgBool Call(fgGuiMain *pGuiMain, fgGuiWidget *pWidget);
 };
 
 #endif	/* _FG_SCRIPT_CALLBACK_H_ */

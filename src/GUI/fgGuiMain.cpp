@@ -54,6 +54,11 @@ m_pShaderMgr(NULL),
 m_pPointerInputReceiver(NULL),
 m_guiTouchCallback(NULL),
 m_guiMouseCallback(NULL),
+m_guiLinkCallback(NULL),
+m_changeToMenu(NULL),
+m_currentMenu(NULL),
+m_isMenuChanging(FG_FALSE),
+m_guiCallbacks(),
 m_screenBox() {
     m_widgetFactory = new fgGuiWidgetFactory();
     m_styleMgr = new fgGuiStyleManager();
@@ -67,6 +72,12 @@ m_screenBox() {
     // #FIXME
     m_styleMgr->setStylesPath("gui");
     m_widgetMgr->setWidgetsPath("gui");
+
+    m_guiCallbacks.reserve(8);
+
+    m_managerType = FG_MANAGER_GUI_MAIN;
+
+    m_guiLinkCallback = new fgGuiClassCallback<fgGuiMain>(this, this, &fgGuiMain::guiLinkHandler);
 }
 
 /*
@@ -79,13 +90,25 @@ fgGuiMain::~fgGuiMain() {
 /**
  * 
  */
-void fgGuiMain::clear(void) { }
+void fgGuiMain::clear(void) {
+    m_managerType = FG_MANAGER_GUI_MAIN;
+
+}
 
 /**
  * 
  */
 fgBool fgGuiMain::destroy(void) {
     unregisterGuiCallbacks();
+
+    int n = m_guiCallbacks.size();
+    for(int i = 0; i < n; i++) {
+        if(m_guiCallbacks[i]) {
+            delete m_guiCallbacks[i];
+            m_guiCallbacks[i] = NULL;
+        }
+    }
+    m_guiCallbacks.clear_optimised();
 
     if(m_widgetMgr)
         delete m_widgetMgr;
@@ -111,10 +134,16 @@ fgBool fgGuiMain::destroy(void) {
         delete m_guiTouchCallback;
     m_guiTouchCallback = NULL;
 
+    if(m_guiLinkCallback)
+        delete m_guiLinkCallback;
+    m_guiLinkCallback = NULL;
+
     m_pPointerInputReceiver = NULL;
     m_pShaderMgr = NULL;
     m_pEventMgr = NULL;
     m_pResourceMgr = NULL;
+    m_managerType = FG_MANAGER_GUI_MAIN;
+
     return FG_TRUE;
 }
 
@@ -158,16 +187,19 @@ fgBool fgGuiMain::initialize(void) {
     courier->setName("StbCourier");
     m_pResourceMgr->insertResource(courier);
     m_pResourceMgr->get(courier->getRefHandle());
-    
+
     //
     if(!m_styleMgr->initialize()) {
         FG_LOG::PrintError("GUI: Style manager not initialized");
     }
+    m_widgetMgr->setLinkHandler(m_guiLinkCallback);
     //
     if(!m_widgetMgr->initialize()) {
         FG_LOG::PrintError("GUI: Widget manager not initialized");
     }
     m_init = FG_TRUE;
+    m_managerType = FG_MANAGER_GUI_MAIN;
+    updateState();
     return FG_TRUE;
 }
 
@@ -210,6 +242,101 @@ void fgGuiMain::unregisterGuiCallbacks(void) {
     m_pEventMgr->removeEventCallback(FG_EVENT_MOUSE_MOTION, m_guiMouseCallback);
 }
 
+/**
+ * 
+ * @param pWidget
+ * @param pCallback
+ * @param callbackType
+ * @return 
+ */
+fgBool fgGuiMain::addWidgetCallback(fgGuiWidget *pWidget,
+                                    fgGuiCallback *pCallback,
+                                    const fgGuiWidgetCallbackType callbackType) {
+    if(!pWidget || !pCallback || !callbackType)
+        return FG_FALSE;
+    if(!pWidget->isManaged())
+        return FG_FALSE;
+    if(!m_widgetMgr->isManaged(pWidget))
+        return FG_FALSE;
+
+    switch(callbackType) {
+        case FG_GUI_WIDGET_CALLBACK_ON_FOCUS:
+            pWidget->setOnFocusCallback(pCallback);
+            break;
+            /// Callback to call when the focus is lost
+        case FG_GUI_WIDGET_CALLBACK_ON_FOCUS_LOST:
+            pWidget->setOnFocusLostCallback(pCallback);
+            break;
+            /// Callback to call when widgets state changes to 'pressed'
+        case FG_GUI_WIDGET_CALLBACK_ON_CLICK:
+            pWidget->setOnClickCallback(pCallback);
+            break;
+            /// Callback to call on widgets activation
+        case FG_GUI_WIDGET_CALLBACK_ON_ACTIVATE:
+            pWidget->setOnActivateCallback(pCallback);
+            break;
+            /// Callback to call when widget is deactivated (once)
+        case FG_GUI_WIDGET_CALLBACK_ON_DEACTIVATE:
+            pWidget->setOnDeactivateCallback(pCallback);
+            break;
+            /// Callback for handling any keyboard related events
+        case FG_GUI_WIDGET_CALLBACK_ON_KEY:
+            pWidget->setOnMouseCallback(pCallback);
+            break;
+            /// Callback for handling any mouse specific events 
+            /// - mouse motion, press and hold, swipe, etc
+        case FG_GUI_WIDGET_CALLBACK_ON_MOUSE:
+            pWidget->setOnMouseCallback(pCallback);
+            break;
+            /// This callback will be called anytime the widgets 
+            /// state has changed (there are 5 states defined currently)
+        case FG_GUI_WIDGET_CALLBACK_ON_CHANGE_STATE:
+            pWidget->setOnChangeStateCallback(pCallback);
+            break;
+        default:
+            FG_LOG_DEBUG("GUI: Invalid callback type");
+            return FG_FALSE;
+            break;
+    };
+
+    if(m_guiCallbacks.find(pCallback) < 0) {
+        m_guiCallbacks.push_back(pCallback);
+    }
+    return FG_TRUE;
+}
+
+/**
+ * 
+ * @param widgetName
+ * @param pCallback
+ * @param callbackType
+ * @return 
+ */
+fgBool fgGuiMain::addWidgetCallback(const char *widgetName,
+                                    fgGuiCallback *pCallback,
+                                    const fgGuiWidgetCallbackType callbackType) {
+    if(!widgetName || !pCallback || !callbackType)
+        return FG_FALSE;
+    if(!*widgetName)
+        return FG_FALSE;
+    return addWidgetCallback(m_widgetMgr->get(widgetName), pCallback, callbackType);
+}
+
+/**
+ * 
+ * @param widgetName
+ * @param pCallback
+ * @param callbackType
+ * @return 
+ */
+fgBool fgGuiMain::addWidgetCallback(const std::string& widgetName,
+                                    fgGuiCallback *pCallback,
+                                    const fgGuiWidgetCallbackType callbackType) {
+    if(!pCallback || !callbackType || widgetName.empty())
+        return FG_FALSE;
+    return addWidgetCallback(m_widgetMgr->get(widgetName), pCallback, callbackType);
+}
+
 extern float guiScale;
 
 /**
@@ -218,20 +345,26 @@ extern float guiScale;
 void fgGuiMain::updateState(void) {
     if(!m_widgetMgr || !m_pResourceMgr || !m_pPointerInputReceiver)
         return;
-    fgGuiWidgetManager::widgetVec & roots = m_widgetMgr->getRefRootWidgets();
-    if(roots.empty())
+    if(m_isMenuChanging)
         return;
-    fgGuiWidget *mainMenu = m_widgetMgr->get("MainMenu");
-    if(!mainMenu)
-        return;
-    if(!(mainMenu->getTypeTraits() & FG_GUI_CONTAINER))
-        return;
+    if(!m_currentMenu) {
+        // #FIXME - this needs to look a little bit differently
+        fgGuiWidgetManager::widgetVec & roots = m_widgetMgr->getRefRootWidgets();
+        if(roots.empty())
+            return;
+        fgGuiWidget *mainMenu = m_widgetMgr->get("MainMenu");
+        if(!mainMenu)
+            return;
+        if(!(mainMenu->getTypeTraits() & FG_GUI_MENU))
+            return;
+        m_currentMenu = static_cast<fgGuiMenu *>(mainMenu);
+    }
     fgPointerData *pt = m_pPointerInputReceiver->getPointerData();
     if(pt) {
-        pt->m_x = (int)((float)pt->m_x * ((1.0f - guiScale)/guiScale + 1.0f));
-        pt->m_y = (int)((float)pt->m_y * ((1.0f - guiScale)/guiScale + 1.0f));
+        pt->m_x = (int)((float)pt->m_x * ((1.0f - guiScale) / guiScale + 1.0f));
+        pt->m_y = (int)((float)pt->m_y * ((1.0f - guiScale) / guiScale + 1.0f));
     }
-    mainMenu->updateState(pt);
+    m_currentMenu->updateState(pt);
 }
 
 /*
@@ -240,28 +373,33 @@ void fgGuiMain::updateState(void) {
 void fgGuiMain::display(void) {
     if(!m_widgetMgr || !m_pResourceMgr)
         return;
-    fgGuiWidgetManager::widgetVec & roots = m_widgetMgr->getRefRootWidgets();
-    if(roots.empty())
+    if(!m_currentMenu)
         return;
-    fgGuiWidget *mainMenu = m_widgetMgr->get("MainMenu");
-    if(!mainMenu)
+    //    fgGuiWidgetManager::widgetVec & roots = m_widgetMgr->getRefRootWidgets();
+    //    if(roots.empty())
+    //        return;
+    //    fgGuiWidget *mainMenu = m_widgetMgr->get("MainMenu");
+    //    if(!mainMenu)
+    //        return;
+    //    if(!(mainMenu->getTypeTraits() & FG_GUI_CONTAINER))
+    //        return;
+    if(!(m_currentMenu->getTypeTraits() & FG_GUI_CONTAINER))
         return;
-    if(!(mainMenu->getTypeTraits() & FG_GUI_CONTAINER))
-        return;
+
     static float r = 0.0f;
-    r+=0.0125f;
-    if(r>=M_PI2XF) {
+    r += 0.0125f;
+    if(r >= M_PI2XF) {
         r = 0.0f;
     }
     float toggle = 0.0f;
-    mainMenu->getStyleContent().getPadding().right = 25 + 25 * fabs(sinf(r)) * toggle;
-    mainMenu->getStyleContent().getPadding().top = 25 + 25 * fabs(sinf(r)) * toggle;
-    mainMenu->getStyleContent().getPadding().left = 25 + 25 * fabs(sinf(r)) * toggle;
-    mainMenu->getStyleContent().getPadding().bottom = 25 + 25 * fabs(sinf(r)) * toggle;
+    m_currentMenu->getStyleContent().getPadding().right = 25 + 25 * fabs(sinf(r)) * toggle;
+    m_currentMenu->getStyleContent().getPadding().top = 25 + 25 * fabs(sinf(r)) * toggle;
+    m_currentMenu->getStyleContent().getPadding().left = 25 + 25 * fabs(sinf(r)) * toggle;
+    m_currentMenu->getStyleContent().getPadding().bottom = 25 + 25 * fabs(sinf(r)) * toggle;
     //mainMenu->getRelativePos().y = 150.0f * sinf(r);
-    mainMenu->updateBounds(m_screenBox);
-    mainMenu->display(m_guiDrawer);
-    static float posx=0.0f, posy=0.0f;
+    m_currentMenu->updateBounds(m_screenBox);
+    m_currentMenu->display(m_guiDrawer);
+    static float posx = 0.0f, posy = 0.0f;
 #if defined(FG_USING_SDL2)
     const Uint8 *state = SDL_GetKeyboardState(NULL);
     if(state[SDL_SCANCODE_LEFT] == SDL_PRESSED) {
@@ -279,7 +417,6 @@ void fgGuiMain::display(void) {
 #endif /* FG_USING_SDL2 */
     m_widgetMgr->get("StartGameButton")->getRelativePos().x = posx;
     m_widgetMgr->get("StartGameButton")->getRelativePos().y = posy;
-
 }
 
 /*
@@ -288,7 +425,6 @@ void fgGuiMain::display(void) {
 void fgGuiMain::render(void) {
     m_guiDrawer->render();
     m_guiDrawer->flush();
-
 }
 
 /*
@@ -410,5 +546,31 @@ fgBool fgGuiMain::guiMouseHandler(fgArgumentList *argv) {
     //fgEventType type = event->eventType;
     //fgMouseEvent *mouseEvent = (fgMouseEvent *)event;
     this->updateState();
+    return FG_TRUE;
+}
+
+/**
+ * 
+ * @param pGuiMain
+ * @param pWidget
+ * @return 
+ */
+fgBool fgGuiMain::guiLinkHandler(fgGuiMain* pGuiMain, fgGuiWidget* pWidget) {
+    if(!pGuiMain || !pWidget || !m_widgetMgr)
+        return FG_FALSE;
+    if(pWidget->getLink().length()) {
+        fgGuiWidget *goToWidget = m_widgetMgr->get(pWidget->getLink());
+        if(!goToWidget)
+            return FG_FALSE;
+        if(goToWidget->getTypeTraits() & FG_GUI_MENU) {
+            // NOT YET - need animation ?
+            //m_changeToMenu = static_cast<fgGuiMenu *>(goToWidget);
+            m_currentMenu = static_cast<fgGuiMenu *>(goToWidget);
+            m_isMenuChanging = FG_FALSE; // #FIXME
+            return FG_TRUE;
+        } else {
+            return FG_FALSE;
+        }
+    }
     return FG_TRUE;
 }

@@ -123,7 +123,8 @@ fgBool fgScriptCallback::Call(fgArgumentList *argv) {
         // This is all kinda hacky, what if callback does not take any arguments
         // argv contains arguments - there is a special arg type - pointer struct
         // Will need to hack it!
-
+        // This probably wont be used often or event removed as there will
+        // be separate class for this fgScriptGuiCallback
         fgGuiWidget *pWidget = (fgGuiWidget *)pArg;
         if(!pWidget)
             return FG_FALSE;
@@ -239,4 +240,128 @@ fgBool fgScriptCallback::Call(fgArgumentList *argv) {
     }
 #endif /* FG_USING_LUA_PLUS */
     return FG_FALSE;
+}
+
+/**
+ * 
+ * @return 
+ */
+fgBool fgScriptCallback::Call(void *pSystemData) {
+    if(m_type == INVALID || !m_luaState)
+        return FG_FALSE;
+    if(!pSystemData) {
+        return Call();
+    }
+    if(!m_argc) {
+        return Call();
+    }
+#if defined(FG_USING_LUA_PLUS)
+    if(m_type == GUI_CALLBACK) {
+        // This is all kinda hacky, what if callback does not take any arguments
+        // argv contains arguments - there is a special arg type - pointer struct
+        // Will need to hack it!
+        // This probably wont be used often or event removed as there will
+        // be separate class for this fgScriptGuiCallback
+        fgGuiWidget *pWidget = (fgGuiWidget *)pSystemData;
+        if(!pWidget)
+            return FG_FALSE;
+        if(!pWidget->isManaged())
+            return FG_FALSE;
+        if(pWidget->getTypeTraits() & FG_GUI_WIDGET) {
+            (*m_function)(pWidget); // No return value expected
+        }
+        return FG_TRUE;
+    } else if(m_type == EVENT_CALLBACK) {
+        fgEventBase *pEvent = (fgEventBase *)pSystemData;
+        // Need to cast to proper pointer already
+        // Some helper ?
+        //m_function((fgMouseEvent *));
+        // fgEvent is just one big union, first bytes point
+        // to the same thing in every event structure - eventType + timeStamp
+        (*m_function)((fgEvent *)pEvent);
+        return FG_TRUE;
+    } else if(m_type == SCRIPT) {
+        if(m_script.empty())
+            return FG_FALSE;
+        LuaPlus::LuaState *state = lua_State_to_LuaState(m_luaState);
+        state->DoString(m_script.c_str());
+    }
+#endif /* FG_USING_LUA_PLUS */
+    return FG_FALSE;
+}
+
+/*******************************************************************************
+ * SCRIPT GUI CALLBACK - SPECIAL CALLBACK TO BE USED IN GUI 
+ */
+
+/**
+ * 
+ * @param L
+ * @param info
+ * @param _type
+ */
+fgScriptGuiCallback::fgScriptGuiCallback(fgGuiMain *pGuiMain, lua_State *L,
+                                         const char *info,
+                                         const unsigned short int _argc) :
+fgScriptCallback(L, info, _argc, SCRIPT),
+fgGuiCallback(pGuiMain) {
+    fgFunctionCallback::setFunction((fgFunctionCallback::fgFunction)NULL);
+}
+
+/**
+ * 
+ * @return 
+ */
+fgBool fgScriptGuiCallback::Call(void) {
+    if(getType() == INVALID) {
+        return FG_FALSE;
+    } else if(getType() == GUI_CALLBACK || getType() == SCRIPT) {
+        return fgScriptCallback::Call();
+    }
+    return FG_FALSE;
+}
+
+/**
+ * 
+ * @param argv
+ * @return 
+ */
+fgBool fgScriptGuiCallback::Call(fgArgumentList *argv) {
+    if(!argv)
+        return FG_FALSE;
+    return fgScriptCallback::Call(argv);
+}
+
+/**
+ * 
+ * @param pSystemData
+ * @return 
+ */
+fgBool fgScriptGuiCallback::Call(void *pSystemData) {
+    if(!pSystemData)
+        return FG_FALSE;
+    return fgScriptCallback::Call(pSystemData);
+}
+
+/**
+ * 
+ * @param pWidget
+ * @return 
+ */
+fgBool fgScriptGuiCallback::Call(fgGuiWidget *pWidget) {
+    if(!pWidget)
+        return FG_FALSE;
+    return fgScriptCallback::Call((void *)pWidget);
+}
+
+/**
+ * 
+ * @param pGuiMain
+ * @param pWidget
+ * @return 
+ */
+fgBool fgScriptGuiCallback::Call(fgGuiMain *pGuiMain, fgGuiWidget *pWidget) {
+    if(!pWidget)
+        return FG_FALSE;
+    return fgScriptCallback::Call((void *)pWidget);
 }

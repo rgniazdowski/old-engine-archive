@@ -84,6 +84,11 @@ private:
          * 
          */
         userDataObject() : obj(), isBound(FG_FALSE) { }
+        /**
+         * 
+         * @param _obj
+         * @param _isBound
+         */
         userDataObject(LuaPlus::LuaObject &_obj, fgBool _isBound = FG_FALSE) :
         isBound(_isBound) {
             obj = _obj;
@@ -101,7 +106,11 @@ private:
     static LuaPlus::LuaState *m_luaState;
     /// Globals table
     static LuaPlus::LuaObject m_globals;
-
+    /// Lua metatable for the external gui main object
+    /// This object will mainly provide just some functions
+    /// For handling events, setting callbacks (also some
+    /// menu management)
+    LuaPlus::LuaObject m_metatableGuiMain;
     /// Lua metatable for the external event manager
     LuaPlus::LuaObject m_metatableEventMgr;
     /// Lua metatable for the external resource manager
@@ -122,6 +131,8 @@ private:
     LuaPlus::LuaObject m_metatableSoundMgr;
     #endif
 
+    /// Pointer to the external gui main object
+    static fgManagerBase *m_pGuiMain;
     /// Pointer to the external event manager
     static fgManagerBase *m_pEventMgr;
     /// Pointer to the external resource manager
@@ -201,6 +212,13 @@ public:
      */
     inline void setParticleSystem(fgManagerBase *pParticleSystem) {
         m_pParticleMgr = pParticleSystem;
+    }
+    /**
+     * 
+     * @param pGuiMain
+     */
+    inline void setGuiMain(fgManagerBase *pGuiMain) {
+        m_pGuiMain = pGuiMain;
     }
     /**
      * 
@@ -370,6 +388,13 @@ protected:
 
     /**
      * 
+     * @param L
+     * @return 
+     */
+    static int addWidgetCallbackWrapper(lua_State *L);
+    
+    /**
+     * 
      * @param systemData
      * @param userData
      * @return 
@@ -417,6 +442,11 @@ private:
      * @return
      */
     fgBool registerParticleSystem(void);
+    /**
+     * 
+     * @return 
+     */
+    fgBool registerGuiMain(void);
     /**
      * 
      * @return

@@ -14,7 +14,7 @@
     #if defined(_FG_SCRIPT_SUBSYSTEM_H_BLOCK_)
         #error "FG_SCRIPT_SUBSYSTEM_H_BLOCK is defined: Do not include GuiMain inside of ScriptSubsystem header"
     #endif
-    
+
     #if defined(_FG_GUI_WIDGET_H_BLOCK_)
         #error "FG_GUI_WIDGET_H_BLOCK is defined: Do not include GuiMain inside of Widget header"
     #endif
@@ -56,6 +56,10 @@ class fgGuiMain;
  */
 class fgGuiMain : public fgManagerBase, public fgGuiBase {
 private:
+    typedef fgVector<fgGuiCallback *> guiCallbackVec;
+    typedef guiCallbackVec::iterator guiCallbackVecItor;
+
+private:
     /// GUI style manager - loads and manages styles
     fgGuiStyleManager *m_styleMgr;
     /// Widget manager - loads structure sheets, holds handles
@@ -79,74 +83,200 @@ private:
     fgFunctionCallback *m_guiTouchCallback;
     /// Special callback for receiving mouse events
     fgFunctionCallback *m_guiMouseCallback;
+    /// Special callback for handling link events (menu navigation)
+    fgGuiCallback *m_guiLinkCallback;
+    
+    /// Next menu link (can be null if no menu change is required)
+    fgGuiMenu *m_changeToMenu;
+    /// Currently displayed menu screen
+    fgGuiMenu *m_currentMenu;
+    /// Whether there is some kind of shifting / animation
+    /// If so - no state updating will occur
+    fgBool m_isMenuChanging;
+    
+    /// Special vector for holding gui callbacks
+    /// It's used for easy free/deletion process
+    guiCallbackVec m_guiCallbacks;
     
     /// Special bounding box describing current screen/window
     /// 3D float/double type box is used for compatibility 
     /// with widget functions
     fgBoundingBox3Df m_screenBox;
-
+    
 protected:
-    // 
+    /**
+     * 
+     */
     void registerGuiCallbacks(void);
-    //
+    /**
+     * 
+     */
     void unregisterGuiCallbacks(void);
-    //
+    /**
+     * 
+     * @param eventMgr
+     * @param resourceMgr
+     */
     virtual void clear(void);
-    
+
 public:
-    //
-    fgGuiMain(fgEventManager *eventMgr = NULL, fgResourceManager *resourceMgr = NULL);
-    //
+    /**
+     * 
+     * @param pEventMgr
+     * @param pResourceMgr
+     */
+    fgGuiMain(fgEventManager *pEventMgr = NULL, fgResourceManager *pResourceMgr = NULL);
+    /**
+     * 
+     */
     virtual ~fgGuiMain();
-    
-    //
+    /**
+     * 
+     * @param w
+     * @param h
+     */
     void setScreenSize(const int w, const int h) {
         m_screenBox.size.x = (float)w;
         m_screenBox.size.y = (float)h;
     }
-    
-    //
+
+    /**
+     * 
+     * @return 
+     */
     virtual fgBool destroy(void);
-    //
+    /**
+     * 
+     * @return 
+     */
     virtual fgBool initialize(void);
 
-    //
+public:
+    /**
+     * 
+     * @param pWidget
+     * @param pCallback
+     * @param callbackType
+     * @return 
+     */
+    fgBool addWidgetCallback(fgGuiWidget *pWidget,
+                             fgGuiCallback *pCallback,
+                             const fgGuiWidgetCallbackType callbackType);
+
+    /**
+     * 
+     * @param widgetName
+     * @param pCallback
+     * @param callbackType
+     * @return 
+     */
+    fgBool addWidgetCallback(const char *widgetName,
+                             fgGuiCallback *pCallback,
+                             const fgGuiWidgetCallbackType callbackType);
+
+    /**
+     * 
+     * @param widgetName
+     * @param pCallback
+     * @param callbackType
+     * @return 
+     */
+    fgBool addWidgetCallback(const std::string& widgetName,
+                             fgGuiCallback *pCallback,
+                             const fgGuiWidgetCallbackType callbackType);
+
+public:
+    /**
+     * 
+     * @return 
+     */
     fgGuiWidgetManager *getWidgetManager(void) const;
-    //
+    /**
+     * 
+     * @return 
+     */
     fgGuiWidgetFactory *getWidgetFactory(void) const;
-    //
+    /**
+     * 
+     * @return 
+     */
     fgGuiStyleManager *getStyleManager(void) const;
-    //
+    /**
+     * 
+     * @return 
+     */
     fgEventManager *getEventManager(void) const;
-    //
+    /**
+     * 
+     * @return 
+     */
     fgResourceManager *getResourceManager(void) const;
-    //
+    /**
+     * 
+     * @return 
+     */
     fgManagerBase *getShaderManager(void) const;
-    //
+    /**
+     * 
+     * @return 
+     */
     fgPointerInputReceiver *getPointerInputReceiver(void) const;
 
-    //
+    /**
+     * 
+     * @param pEventMgr
+     */
     void setEventManager(fgEventManager *pEventMgr);
-    //
+    /**
+     * 
+     * @param pResourceMgr
+     */
     void setResourceManager(fgResourceManager *pResourceMgr);
-    //
+    /**
+     * 
+     * @param pShaderMgr
+     */
     void setShaderManager(fgManagerBase *pShaderMgr);
-    //
+    /**
+     * 
+     * @param pointerInputReceiver
+     */
     void setPointerInputReceiver(fgPointerInputReceiver *pointerInputReceiver);
 
-    //
+    /**
+     * Update state of all widgets (called only when needed)
+     */
     virtual void updateState(void);
 
-    // This generates the buffers to draw
+    /**
+     * This generates the buffers to draw
+     */
     virtual void display(void);
 
-    // This calls proper drawing functions. The screen will be updated
+    /**
+     * This calls proper drawing functions. The screen will be updated
+     */
     virtual void render(void); // #FIXME, just testing
 
-    //
+    /**
+     * 
+     * @param argv
+     * @return 
+     */
     fgBool guiTouchHandler(fgArgumentList *argv);
-    //
+    /**
+     * 
+     * @param argv
+     * @return 
+     */
     fgBool guiMouseHandler(fgArgumentList *argv);
+    /**
+     * 
+     * @param pGuiMain
+     * @param pWidget
+     * @return 
+     */
+    fgBool guiLinkHandler(fgGuiMain *pGuiMain, fgGuiWidget *pWidget);
 };
 
     #undef _FG_GUI_MAIN_H_BLOCK_

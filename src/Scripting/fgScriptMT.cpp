@@ -117,7 +117,7 @@ void fgScriptMT::generateMetatableNames(void) {
     // Numbers 0 - 9 ASCII 48 to 57
     // Lowercase letters a - z ASCII 97 to 122
     // Uppercase letters A - Z ASCII 65 - 90
-    
+
 #if !defined(FG_USING_MARMALADE)
 
     m_metatableInfoVec[EMPTY_MT_ID] = metatableInfo("FG", "X");
@@ -137,6 +137,7 @@ void fgScriptMT::generateMetatableNames(void) {
     m_metatableInfoVec[SCENE2D_MANAGER_MT_ID] = metatableInfo("FGX", "T");
     m_metatableInfoVec[SCENE3D_MANAGER_MT_ID] = metatableInfo("FGX", "T");
     m_metatableInfoVec[PARTICLE_SYSTEM_MT_ID] = metatableInfo("FGX", "T");
+    m_metatableInfoVec[GUI_MAIN_MT_ID] = metatableInfo("FGX", "T");
     m_metatableInfoVec[WIDGET_MANAGER_MT_ID] = metatableInfo("FGX", "T");
     m_metatableInfoVec[STYLE_MANAGER_MT_ID] = metatableInfo("FGX", "T");
     m_metatableInfoVec[SOUND_MANAGER_MT_ID] = metatableInfo("FGX", "T");

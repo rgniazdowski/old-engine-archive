@@ -73,6 +73,7 @@
             <word>drawcall</word>
             <word>ds</word>
             <word>eg</word>
+            <word>egl</word>
             <word>enum</word>
             <word>foreach</word>
             <word>framebuffer</word>
@@ -136,6 +137,7 @@
             <word>shaders</word>
             <word>soa</word>
             <word>std</word>
+            <word>strcasecmp</word>
             <word>struct</word>
             <word>structs</word>
             <word>tga</word>

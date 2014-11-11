@@ -34,7 +34,8 @@ m_onDeactivate(NULL),
 m_onKey(NULL),
 m_onMouse(NULL),
 m_onChangeState(NULL),
-m_fatherPtr(),
+m_onLink(NULL),
+m_fatherPtr(NULL),
 m_type(FG_GUI_WIDGET_UNKNOWN),
 m_typeTraits(FG_GUI_WIDGET_UNKNOWN),
 m_state(FG_GUI_WIDGET_STATE_NONE),
@@ -52,7 +53,7 @@ m_ignoreState(FG_FALSE) {
 /*
  *
  */
-fgGuiWidget::~fgGuiWidget() { 
+fgGuiWidget::~fgGuiWidget() {
     //printf("WIDGET DEL: %s [%s]\n", m_nameTag.c_str(), m_typeName.c_str());
 }
 
@@ -62,6 +63,8 @@ fgGuiWidget::~fgGuiWidget() {
  */
 void fgGuiWidget::display(fgGfxLayer *guiLayer) {
     if(!guiLayer)
+        return;
+    if(!m_isVisible)
         return;
     fgGuiDrawer *guiDrawer = (fgGuiDrawer *)guiLayer;
     guiDrawer->downZIndex();
@@ -88,14 +91,14 @@ void fgGuiWidget::display(fgGfxLayer *guiLayer) {
         m_styles[m_state].getForeground().font = tFont;
         m_styles[m_state].getForeground().color = tColor;
     }
-    
+
     if(m_text.length()) {
         // #FIXME
         blockPos = fgVec2f(m_bbox.pos.x, m_bbox.pos.y);
         blockSize = fgVec2f(m_bbox.size.x, m_bbox.size.y);
         guiDrawer->appendText2D(m_textSize, blockPos, blockSize, m_styles[m_state], getTextStr());
     }
-    
+
     // PADDING DEBUG - INNER BORDER
     {
         blockPos = fgVec2f(m_bbox.pos.x, m_bbox.pos.y);
@@ -191,18 +194,18 @@ fgBoundingBox3Df fgGuiWidget::updateBounds(const fgBoundingBox3Df &bounds) {
     if((bound_pos.Y + bound_size.Y) - (this.Position.Y + this.Size.Y) < this.EditableStyle.CurrentStyle.Spacing)
         positionAndSize.W += this.EditableStyle.CurrentStyle.Spacing/*- 0 * ((bound_pos.Y + bound_size.Y) - (this.pos.Y + this.size.Y))*/;
 #endif
-    
 
-//    if(m_bbox.pos.x - bounds.pos.x < style.getMargin().left + style.getMargin().right)
-//        m_bbox.pos.x += style.getMargin().left + style.getMargin().right - (m_bbox.pos.x - bounds.pos.x);
-//    if(m_bbox.pos.y - bounds.pos.y < style.getMargin().top + style.getMargin().bottom)
-//        m_bbox.pos.y += style.getMargin().top + style.getMargin().bottom - (m_bbox.pos.y - bounds.pos.y);
-    
-//    if((bounds.pos.x + bounds.size.x) - (m_bbox.pos.x + m_bbox.size.x) < style.getMargin().left+style.getMargin().right)
-        //positionAndSize.size.x += style.getMargin().left+style.getMargin().right;
-//    if((bounds.pos.y + bounds.size.y) - (m_bbox.pos.y + m_bbox.size.y) < style.getMargin().top+style.getMargin().bottom)
-      //  positionAndSize.size.y += style.getMargin().top+style.getMargin().bottom;
-    
+
+    //    if(m_bbox.pos.x - bounds.pos.x < style.getMargin().left + style.getMargin().right)
+    //        m_bbox.pos.x += style.getMargin().left + style.getMargin().right - (m_bbox.pos.x - bounds.pos.x);
+    //    if(m_bbox.pos.y - bounds.pos.y < style.getMargin().top + style.getMargin().bottom)
+    //        m_bbox.pos.y += style.getMargin().top + style.getMargin().bottom - (m_bbox.pos.y - bounds.pos.y);
+
+    //    if((bounds.pos.x + bounds.size.x) - (m_bbox.pos.x + m_bbox.size.x) < style.getMargin().left+style.getMargin().right)
+    //positionAndSize.size.x += style.getMargin().left+style.getMargin().right;
+    //    if((bounds.pos.y + bounds.size.y) - (m_bbox.pos.y + m_bbox.size.y) < style.getMargin().top+style.getMargin().bottom)
+    //  positionAndSize.size.y += style.getMargin().top+style.getMargin().bottom;
+
     positionAndSize.pos = m_bbox.pos;
     positionAndSize.pos.x -= style.getMargin().left;
     positionAndSize.pos.y -= style.getMargin().top;
@@ -233,28 +236,66 @@ int fgGuiWidget::updateState(const fgPointerData *pointerData) {
         return m_state;
     if(!m_isActive) {
         m_state = FG_GUI_WIDGET_STATE_DEACTIVATED;
+        // what about deactivate callback
+        // maybe on deactivate should be called when isActive is set to false?
         return m_state;
     }
     fgGuiWidgetState lastState = m_state;
     m_state = FG_GUI_WIDGET_STATE_NONE;
     if(m_bbox.test((float)pointerData->m_x, (float)pointerData->m_y)) {
         m_state = FG_GUI_WIDGET_STATE_FOCUS;
-        //this.TriggerEventName("onFocus");
     }
 
     if(m_state == FG_GUI_WIDGET_STATE_FOCUS) {
-
+        if(lastState == FG_GUI_WIDGET_STATE_NONE) {
+            // Focus gained
+            if(m_onFocus)
+                m_onFocus->Call(this);
+        }
         if(pointerData->m_state & FG_POINTER_STATE_PRESSED)//|| pointerData->m_state & FG_POINTER_STATE_DOWN) 
         {
             m_state = FG_GUI_WIDGET_STATE_PRESSED;
-        } else if(pointerData->m_state == FG_POINTER_STATE_RELEASED && pointerData->m_pointerTap) {
-            m_state = FG_GUI_WIDGET_STATE_ACTIVATED;
+        } else if(pointerData->m_state == FG_POINTER_STATE_RELEASED) {
+            if(lastState == FG_GUI_WIDGET_STATE_PRESSED) {
+                // On click event - does not care about tap
+                // when widget is tapped - on activate event is called
+                if(m_onClick)
+                    m_onClick->Call(this);
+            }
+            if(pointerData->m_pointerTap) {
+                m_state = FG_GUI_WIDGET_STATE_ACTIVATED;
+                if(lastState != FG_GUI_WIDGET_STATE_ACTIVATED) {
+                    if(m_onActivate && lastState != FG_GUI_WIDGET_STATE_ACTIVATED) {
+                        m_onActivate->Call(this);
+                    }
+                    if(m_onLink && m_link.length()) {
+                        // This a special callback, designed for menu navigation
+                        m_onLink->Call(this);
+                    }
+                }
+            }
         } else {
+            // que paso?
         }
+    } else if(lastState == FG_GUI_WIDGET_STATE_FOCUS) {
+        // Focus lost
+        // It may be required that this calls should be executed in a different
+        // thread or place - for now this will occur "in place" - where the widget
+        // is processed. Maybe it should be delegated up to GuiMain - put on
+        // queue or something... Update state would require additional parameter
+        // callback dispatcher ? hmm... throw callback pointer with additional params
+        // #TODO - callback dispatcher base class P2/3
+        if(m_onFocusLost)
+            m_onFocusLost->Call(this);
     }
-
+    // key events!
+    if(m_state != lastState) {
+        if(m_onChangeState)
+            m_onChangeState->Call(this);
+    }
     if(m_ignoreState)
         m_state = FG_GUI_WIDGET_STATE_NONE;
+    // #FIXME - relative positioning refresh ? why?
     if(m_state != lastState && m_styles[m_state].getPosition().style == FG_GUI_POS_RELATIVE) {
         if(FG_GUI_CHECK_FLOAT(m_styles[m_state].getPosition().left)) {
             m_relPos.x = m_styles[m_state].getPosition().left;

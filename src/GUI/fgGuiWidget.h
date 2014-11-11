@@ -22,7 +22,7 @@
     #ifndef _FG_MATHLIB_H_
         #include "Math/fgMathLib.h"
     #endif
-    
+
     #include "fgGuiWidgetTypes.h"
 
     #include "Util/fgTag.h"
@@ -54,6 +54,10 @@
     #define FG_GUI_WIDGET_STATE_COUNT		5
 typedef unsigned int fgGuiWidgetState;
 
+class fgGuiMain;
+class fgGuiWidgetManager;
+class fgGuiStructureSheetParser;
+
 class fgGuiWidget;
 
     #define FG_TAG_GUI_WIDGET_NAME	"GuiWidget"
@@ -66,6 +70,34 @@ typedef FG_TAG_GUI_WIDGET fgGuiWidgetTag;
 typedef fgHandle<fgGuiWidgetTag> fgGuiWidgetHandle;
 
     #define FG_GUI_WIDGET_DEFAULT_STYLE "DefaultStyle"
+
+/// Invalid callback
+    #define FG_GUI_WIDGET_CALLBACK_INVALID          0
+/// This callback will be executed when widget is focused
+    #define FG_GUI_WIDGET_CALLBACK_ON_FOCUS         1
+    #define FG_GUI_WIDGET_CALLBACK_ON_FOCUS_GAIN    FG_GUI_WIDGET_CALLBACK_ON_FOCUS
+
+/// Callback to call when the focus is lost
+    #define FG_GUI_WIDGET_CALLBACK_ON_FOCUS_LOST    2
+/// Callback to call when widgets state changes to 'pressed'
+    #define FG_GUI_WIDGET_CALLBACK_ON_CLICK         3
+/// Callback to call on widgets activation
+    #define FG_GUI_WIDGET_CALLBACK_ON_ACTIVATE      4
+/// Callback to call when widget is deactivated (once)
+    #define FG_GUI_WIDGET_CALLBACK_ON_DEACTIVATE    5
+/// Callback for handling any keyboard related events
+    #define FG_GUI_WIDGET_CALLBACK_ON_KEY           6
+/// Callback for handling any mouse specific events 
+/// - mouse motion, press and hold, swipe, etc
+    #define FG_GUI_WIDGET_CALLBACK_ON_MOUSE         7
+/// This callback will be called anytime the widgets 
+/// state has changed (there are 5 states defined currently)
+    #define FG_GUI_WIDGET_CALLBACK_ON_CHANGE_STATE  8
+/// number of callback types
+    #define FG_GUI_WIDGET_CALLBACK_NUM              9
+    #define FG_GUI_WIDGET_CALLBACK_MAX_ID           FG_GUI_WIDGET_CALLBACK_NUM
+
+typedef unsigned int fgGuiWidgetCallbackType;
 
 /**
  *
@@ -128,6 +160,8 @@ protected:
     /// This callback will be called anytime the widgets 
     /// state has changed (there are 5 states defined currently)
     fgGuiCallback *m_onChangeState;
+    /// Standard callback for handling goto menu action - set from guiMain
+    fgGuiCallback *m_onLink;
 
     /// Pointer to the widget in which this one resides
     fgGuiWidget *m_fatherPtr;
@@ -613,6 +647,13 @@ public:
      * 
      * @return 
      */
+    inline void setOnLinkCallback(fgGuiCallback *callback) {
+        m_onLink = callback;
+    }
+    /**
+     * 
+     * @return 
+     */
     inline fgGuiCallback *getOnFocusCallback(void) const {
         return m_onFocus;
     }
@@ -664,6 +705,13 @@ public:
      */
     inline fgGuiCallback *getOnChangeStateCallback(void) const {
         return m_onChangeState;
+    }
+    /**
+     * 
+     * @return 
+     */
+    inline fgGuiCallback *getOnLinkCallback(void) const {
+        return m_onLink;
     }
 };
     #undef _FG_GUI_WIDGET_H_BLOCK_

@@ -39,9 +39,14 @@ typedef FG_TAG_GAME_MAIN fgGameMainTag;
  */
 class fgGameMain : public fgStatusReporter<fgGameMainTag> {
 public:
-    // Default constructor for the Game Main object
+    /**
+     * Default constructor for the Game Main object
+     * @param pEventMgr
+     */
     fgGameMain(fgEventManager* pEventMgr);
-    // Default destructor for the Game Main object
+    /**
+     * Default destructor for the Game Main object
+     */
     virtual ~fgGameMain();
 
 protected:

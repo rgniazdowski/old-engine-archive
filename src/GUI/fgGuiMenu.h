@@ -31,6 +31,9 @@ protected:
     virtual void setDefaults(void);
 
 public:
+    
+    using fgGuiWidget::updateBounds;
+    
     // 
     fgGuiMenu();
     // 

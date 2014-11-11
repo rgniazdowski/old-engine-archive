@@ -50,7 +50,7 @@ private:
     #if defined FG_USING_EGL
 
     struct fgEGLCfgAttrib {
-        EGLint id; // enumaration id value
+        EGLint id; // enumeration id value
         const char *enumName;
         const char *comment;
         EGLint value;

@@ -342,6 +342,7 @@ fgBool fgGameMain::initSubsystems(void) {
     m_scriptSubsystem->setParticleSystem(m_gfxMain->getParticleSystem());
     m_scriptSubsystem->set2DSceneManager(m_gfxMain->get2DScene());
     m_scriptSubsystem->set3DSceneManager(m_gfxMain->get3DScene());
+    m_scriptSubsystem->setGuiMain(static_cast<fgManagerBase *>(m_guiMain));
     m_scriptSubsystem->setShaderManager(static_cast<fgManagerBase *>(m_gfxMain->getShaderManager()));
     m_scriptSubsystem->setSoundManager(static_cast<fgManagerBase *>(m_soundMgr));
     m_scriptSubsystem->setStyleManager(static_cast<fgManagerBase *>(m_guiMain->getStyleManager()));

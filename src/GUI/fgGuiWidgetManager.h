@@ -75,6 +75,13 @@ public:
 
     /**
      * 
+     * @param pLinkHandlerCallback
+     */
+    void setLinkHandler(fgGuiCallback *pLinkHandlerCallback) {
+        m_pGuiLinkCallback = pLinkHandlerCallback;
+    }
+    /**
+     * 
      * @param widgetFactory
      */
     void setWidgetFactory(fgGuiWidgetFactory *widgetFactory);
@@ -256,9 +263,14 @@ public:
     
 private:
     /// Pointer to the external widget factory
-    fgGuiWidgetFactory *m_widgetFactory;
+    fgGuiWidgetFactory *m_pWidgetFactory;
     /// Pointer to the external style manager
-    fgGuiStyleManager *m_styleMgr;
+    fgGuiStyleManager *m_pStyleMgr;
+    /// Pointer to the external link handler callback
+    /// Declared in GuiMain
+    fgGuiCallback *m_pGuiLinkCallback;
+
+    
     /// Widgets that have no fathers. For example a main screen, window, menu, etc
     widgetVec m_rootWidgets;
     /// Widgets structure files base path

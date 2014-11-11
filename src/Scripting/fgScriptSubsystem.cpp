@@ -47,6 +47,7 @@
 #include "GFX/Shaders/fgGFXShaderManager.h"
 #include "GFX/Particles/fgParticleSystem.h"
 // GUI - Widget/Style management
+#include "GUI/fgGuiMain.h"
 #include "GUI/fgGuiWidgetManager.h"
 #include "GUI/fgGuiStyleManager.h"
 // GUI - Font resource (?)
@@ -74,6 +75,7 @@
 #include "fgScriptCallback.h"
 #include "Audio/fgSFXMusicResource.h"
 #include "Audio/fgSFXManager.h"
+#include "Util/fgStrings.h"
 
 #if defined(FG_USING_LUA_PLUS)
 ///
@@ -87,6 +89,8 @@ fgBool fgScriptSubsystem::m_isBindingComplete = FG_FALSE;
 ///
 fgScriptSubsystem::userDataObjectMap fgScriptSubsystem::m_userDataObjectMap;
 
+/// Pointer to the external gui main object
+fgManagerBase *fgScriptSubsystem::m_pGuiMain = NULL;
 /// Pointer to the external event manager
 fgManagerBase *fgScriptSubsystem::m_pEventMgr = NULL;
 /// Pointer to the external resource manager
@@ -111,6 +115,7 @@ fgManagerBase *fgScriptSubsystem::m_pSoundMgr = NULL;
  */
 fgScriptSubsystem::fgScriptSubsystem() :
 #if defined(FG_USING_LUA_PLUS)
+m_metatableGuiMain(),
 m_metatableEventMgr(),
 m_metatableResourceMgr(),
 m_metatableShaderMgr(),
@@ -271,6 +276,10 @@ fgBool fgScriptSubsystem::initialize(void) {
 
     if(!registerParticleSystem()) {
         FG_LOG::PrintError("Script: Failed to register ParticleSystem object");
+    }
+
+    if(!registerGuiMain()) {
+        FG_LOG::PrintError("Script: Failed to register GuiMain object");
     }
 
     if(!registerWidgetManager()) {
@@ -523,6 +532,22 @@ fgBool fgScriptSubsystem::registerConstants(void) {
     m_globals.SetInteger("FG_GUI_WIDGET_STATE_ACTIVATED", (int)FG_GUI_WIDGET_STATE_ACTIVATED);
     m_globals.SetInteger("FG_GUI_WIDGET_STATE_DEACTIVATED", (int)FG_GUI_WIDGET_STATE_DEACTIVATED);
     m_globals.SetInteger("FG_GUI_WIDGET_STATE_COUNT", (int)FG_GUI_WIDGET_STATE_COUNT);
+
+    //
+    // GUI WIDGET CALLBACK TYPE CONSTANTS        
+    //
+    m_globals.SetInteger("FG_GUI_WIDGET_CALLBACK_INVALID", (int)FG_GUI_WIDGET_CALLBACK_INVALID);
+    m_globals.SetInteger("FG_GUI_WIDGET_CALLBACK_ON_FOCUS", (int)FG_GUI_WIDGET_CALLBACK_ON_FOCUS);
+    m_globals.SetInteger("FG_GUI_WIDGET_CALLBACK_ON_FOCUS_GAIN", (int)FG_GUI_WIDGET_CALLBACK_ON_FOCUS_GAIN);
+    m_globals.SetInteger("FG_GUI_WIDGET_CALLBACK_ON_FOCUS_LOST", (int)FG_GUI_WIDGET_CALLBACK_ON_FOCUS_LOST);
+    m_globals.SetInteger("FG_GUI_WIDGET_CALLBACK_ON_CLICK", (int)FG_GUI_WIDGET_CALLBACK_ON_CLICK);
+    m_globals.SetInteger("FG_GUI_WIDGET_CALLBACK_ON_ACTIVATE", (int)FG_GUI_WIDGET_CALLBACK_ON_ACTIVATE);
+    m_globals.SetInteger("FG_GUI_WIDGET_CALLBACK_ON_DEACTIVATE", (int)FG_GUI_WIDGET_CALLBACK_ON_DEACTIVATE);
+    m_globals.SetInteger("FG_GUI_WIDGET_CALLBACK_ON_KEY", (int)FG_GUI_WIDGET_CALLBACK_ON_KEY);
+    m_globals.SetInteger("FG_GUI_WIDGET_CALLBACK_ON_MOUSE", (int)FG_GUI_WIDGET_CALLBACK_ON_KEY);
+    m_globals.SetInteger("FG_GUI_WIDGET_CALLBACK_ON_CHANGE_STATE", (int)FG_GUI_WIDGET_CALLBACK_ON_KEY);
+    m_globals.SetInteger("FG_GUI_WIDGET_CALLBACK_NUM", (int)FG_GUI_WIDGET_CALLBACK_ON_KEY);
+
 
 
     //
@@ -964,7 +989,8 @@ fgBool fgScriptSubsystem::registerEventManager(void) {
     // Some functions ? anyone ? need special helper static funcs for EventMgr
     eventMgrObj.SetMetatable(m_metatableEventMgr);
     m_globals.SetObject("EventManager", eventMgrObj);
-    m_userDataObjectMap[offset] = eventMgrObj;
+    m_userDataObjectMap[offset].obj = eventMgrObj;
+    m_userDataObjectMap[offset].isBound = FG_TRUE;
 
     // Event Base structure
     const char *metatableNameEventBase = fgScriptMT::getMetatableName(fgScriptMT::EVENT_BASE_MT_ID);
@@ -1411,10 +1437,10 @@ fgBool fgScriptSubsystem::registerResourceManager(void) {
             .ObjectDirect("getVolume", (fgAudioBase *)0, &fgAudioBase::getVolume);
 
     LPCD::Class(m_luaState->GetCState(), fgScriptMT::getMetatableName(fgScriptMT::MUSIC_RESOURCE_MT_ID), fgScriptMT::getMetatableName(fgScriptMT::AUDIO_BASE_RES_MT_ID))
-    .MetatableFunction("__gc", &fgScriptSubsystem::managedResourceGCEvent);
-    
+            .MetatableFunction("__gc", &fgScriptSubsystem::managedResourceGCEvent);
+
     LPCD::Class(m_luaState->GetCState(), fgScriptMT::getMetatableName(fgScriptMT::SOUND_RESOURCE_MT_ID), fgScriptMT::getMetatableName(fgScriptMT::AUDIO_BASE_RES_MT_ID))
-    .MetatableFunction("__gc", &fgScriptSubsystem::managedResourceGCEvent);
+            .MetatableFunction("__gc", &fgScriptSubsystem::managedResourceGCEvent);
 
 #endif /* FG_USING_LUA_PLUS */    
     return FG_TRUE;
@@ -1510,10 +1536,190 @@ fgBool fgScriptSubsystem::registerParticleSystem(void) {
     LuaPlus::LuaObject particleMgrObj = m_luaState->BoxPointer((void *)m_pParticleMgr);
     particleMgrObj.SetMetatable(m_metatableParticleMgr);
     m_globals.SetObject("ParticleSystem", particleMgrObj);
-    m_userDataObjectMap[offset] = particleMgrObj;
+    m_userDataObjectMap[offset].obj = particleMgrObj;
+    m_userDataObjectMap[offset].isBound = FG_TRUE;
 
 #endif /* FG_USING_LUA_PLUS */
     return FG_TRUE;
+}
+
+/**
+ * 
+ * @param L
+ * @return 
+ */
+int fgScriptSubsystem::addWidgetCallbackWrapper(lua_State *L) {
+#if defined(FG_USING_LUA_PLUS)
+    LuaPlus::LuaState* state = lua_State_to_LuaState(L);
+    LuaPlus::LuaStack args(state);
+    const char *script = NULL;
+    unsigned int callbackType = FG_GUI_WIDGET_CALLBACK_INVALID;
+    LuaPlus::LuaObject objFunction;
+    fgBool hasFunction = FG_FALSE;
+    const char *widgetName = NULL;
+    fgGuiWidget *pWidget = NULL;
+    int argc = 1;
+    if(args.Count() == 0) {
+        FG_LOG_DEBUG("Script: WidgetCallbackWrapper: empty argument list");
+        return 0;
+    }
+
+    //
+    // Need some automation for checking the list of arguments
+    //
+    //LUA_TNONE         (-1)
+    //LUA_TNIL           0
+    //LUA_TBOOLEAN       1
+    //LUA_TLIGHTUSERDATA 2
+    //LUA_TNUMBER        3
+    //LUA_TSTRING        4
+    //LUA_TTABLE         5
+    //LUA_TFUNCTION      6
+    //LUA_TUSERDATA      7
+    //LUA_TTHREAD        8
+
+    // arguments [WidgetName/WidgetPointer][CallbackType/CallbackActionName][FunctionPointer/StringScript]
+    FG_LOG_DEBUG("Script: WidgetCallbackWrapper: argc[%d]", args.Count());
+    if(args.Count() >= 2) {
+        int id = 1;
+        // [1] Widget name or widget pointer (user data)
+        if(args[id].IsUserdata()) {
+            void *unboxed = args[id].GetUserdata();
+            if(!unboxed) {
+                FG_LOG_DEBUG("Script: WidgetCallbackWrapper: 1st argument: userdata is nil");
+                return 0;
+            }
+            pWidget = (fgGuiWidget *)unboxed;
+            FG_LOG_DEBUG("Script: WidgetCallbackWrapper: 1st argument: userData[%s]", pWidget->getNameStr());
+        } else if(args[id].IsString()) {
+            widgetName = args[id].GetString();
+            FG_LOG_DEBUG("Script: WidgetCallbackWrapper: 1st argument: widgetName[%s]", widgetName);
+
+        }
+        // [2] Callback type - integer
+        id++;
+        if(args[id].IsInteger()) {
+            int iVal = args[id].GetInteger();
+            if(iVal < (int)FG_GUI_WIDGET_CALLBACK_MAX_ID)
+                callbackType = (unsigned int)iVal;
+            FG_LOG_DEBUG("Script: WidgetCallbackWrapper: 2nd argument: callbackType[%d]", callbackType);
+        } else if(args[id].IsString()) {
+            // [2] callback type - as name (string)
+            const char *ctype = args[id].GetString();
+            if(fgStrings::isEqual(ctype, "onFocus", FG_FALSE)) {
+                callbackType = FG_GUI_WIDGET_CALLBACK_ON_FOCUS;
+
+            } else if(fgStrings::isEqual(ctype, "onFocusLost", FG_FALSE)) {
+                callbackType = FG_GUI_WIDGET_CALLBACK_ON_FOCUS_LOST;
+
+            } else if(fgStrings::isEqual(ctype, "onClick", FG_FALSE)) {
+                callbackType = FG_GUI_WIDGET_CALLBACK_ON_CLICK;
+
+            } else if(fgStrings::isEqual(ctype, "onActivate", FG_FALSE)) {
+                callbackType = FG_GUI_WIDGET_CALLBACK_ON_ACTIVATE;
+
+            } else if(fgStrings::isEqual(ctype, "onDeactivate", FG_FALSE)) {
+                callbackType = FG_GUI_WIDGET_CALLBACK_ON_DEACTIVATE;
+
+            } else if(fgStrings::isEqual(ctype, "onKey", FG_FALSE)) {
+                callbackType = FG_GUI_WIDGET_CALLBACK_ON_KEY;
+
+            } else if(fgStrings::isEqual(ctype, "onMouse", FG_FALSE)) {
+                callbackType = FG_GUI_WIDGET_CALLBACK_ON_MOUSE;
+
+            } else if(fgStrings::isEqual(ctype, "onChangeState", FG_FALSE)) {
+                callbackType = FG_GUI_WIDGET_CALLBACK_ON_CHANGE_STATE;
+            }
+            FG_LOG_DEBUG("Script: WidgetCallbackWrapper: 2nd argument: callbackType[%d][%s]", callbackType, ctype);
+        }
+        // [3] Function pointer or string script
+        id++;
+        if(args[id].IsFunction()) {
+            objFunction = args[id];
+            hasFunction = FG_TRUE;
+            FG_LOG_DEBUG("Script: WidgetCallbackWrapper: 3rd argument is a function pointer");
+        } else if(args[id].IsString()) {
+            script = args[id].GetString();
+            FG_LOG_DEBUG("Script: WidgetCallbackWrapper: 3rd argument is a string[%s]", script);
+        }
+    }
+    if(callbackType == FG_GUI_WIDGET_CALLBACK_INVALID) {
+        FG_LOG_DEBUG("Script: WidgetCallbackWrapper: callback type is invalid");
+        return 0;
+    }
+    if(!script && !hasFunction) {
+        FG_LOG_DEBUG("Script: WidgetCallbackWrapper: No script nor function specified");
+        return 0;
+    }
+    if(!widgetName && !pWidget) {
+        FG_LOG_DEBUG("Script: WidgetCallbackWrapper: No widget name nor pointer specified");
+        return 0;
+    }
+    if(!m_pGuiMain) {
+        FG_LOG_DEBUG("Script: WidgetCallbackWrapper: GUI Main is not specified");
+        return 0;
+    }
+    if(m_pGuiMain->getManagerType() != FG_MANAGER_GUI_MAIN) {
+        FG_LOG_DEBUG("Script: WidgetCallbackWrapper: GUI Main is not proper manager");
+        return 0;
+    }
+
+    fgGuiCallback *callback = NULL;
+    if(script) {
+        callback = new fgScriptGuiCallback(static_cast<fgGuiMain *>(m_pGuiMain), L, script, argc);
+    } else if(hasFunction) {
+        callback = new fgScriptGuiCallback(static_cast<fgGuiMain *>(m_pGuiMain), L, objFunction, argc);
+    }
+    fgBool status = FG_FALSE;
+    if(pWidget)
+        status = static_cast<fgGuiMain *>(m_pGuiMain)->addWidgetCallback(pWidget, callback, callbackType);
+    else if(widgetName)
+        status = static_cast<fgGuiMain *>(m_pGuiMain)->addWidgetCallback(widgetName, callback, callbackType);
+    if(status) {
+        FG_LOG_DEBUG("Script: Successfully added callback for widget[%s]", (pWidget ? pWidget->getNameStr() : widgetName));
+    } else {
+        FG_LOG_DEBUG("Script: Failed to add callback for widget[%s]", (pWidget ? pWidget->getNameStr() : widgetName));
+    }
+    // Can also return this pointer for future reference - so it is possible to remove
+    // callback for given event type
+#endif
+    return 0;
+}
+
+/**
+ * 
+ * @return 
+ */
+fgBool fgScriptSubsystem::registerGuiMain(void) {
+    if(m_isBindingComplete)
+        return FG_TRUE;
+    if(!m_pGuiMain)
+        return FG_FALSE;
+
+#if defined(FG_USING_LUA_PLUS)
+    if(m_metatableGuiMain.GetRef() >= 0)
+        return FG_TRUE;
+    if(m_globals.GetRef() < 0)
+        return FG_FALSE;
+
+    // Gui main/manager metatable
+    m_metatableGuiMain = m_globals.CreateTable(fgScriptMT::getMetatableName(fgScriptMT::GUI_MAIN_MT_ID));
+    m_metatableGuiMain.SetObject("__index", m_metatableGuiMain);
+    m_metatableGuiMain.Register("addWidgetCallback", &fgScriptSubsystem::addWidgetCallbackWrapper);
+
+    uintptr_t offset = (uintptr_t)m_pGuiMain;
+    userDataObjectMapItor it = m_userDataObjectMap.find(offset);
+    if(it != m_userDataObjectMap.end()) {
+        return FG_FALSE;
+    }
+    // Create lua object for gui main/manager global
+    LuaPlus::LuaObject guiMainObj = m_luaState->BoxPointer((void *)m_pGuiMain);
+    guiMainObj.SetMetatable(m_metatableGuiMain);
+    m_globals.SetObject("GuiMain", guiMainObj);
+    m_globals.SetObject("GUI", guiMainObj);
+    m_userDataObjectMap[offset].obj = guiMainObj;
+    m_userDataObjectMap[offset].isBound = FG_TRUE;
+#endif /* FG_USING_LUA_PLUS */
 }
 
 /**
@@ -1570,7 +1776,9 @@ fgBool fgScriptSubsystem::registerWidgetManager(void) {
     LuaPlus::LuaObject widgetMgrObj = m_luaState->BoxPointer((void *)m_pWidgetMgr);
     widgetMgrObj.SetMetatable(m_metatableWidgetMgr);
     m_globals.SetObject("WidgetManager", widgetMgrObj);
-    m_userDataObjectMap[offset] = widgetMgrObj;
+    m_userDataObjectMap[offset].obj = widgetMgrObj;
+    m_userDataObjectMap[offset].isBound = FG_TRUE;
+
 
     typedef void (fgGuiWidget::*GW_void_C_STR_IN)(const char *);
     typedef void (fgGuiWidget::base_type::*GW_BASE_void_C_STR_IN)(const char *);
@@ -1937,19 +2145,19 @@ fgBool fgScriptSubsystem::registerSoundManager(void) {
     // Sound manager metatable
     m_metatableSoundMgr = m_globals.CreateTable(fgScriptMT::getMetatableName(fgScriptMT::SOUND_MANAGER_MT_ID));
     m_metatableSoundMgr.SetObject("__index", m_metatableSoundMgr);
-    m_metatableSoundMgr.RegisterObjectDirect("play", 
+    m_metatableSoundMgr.RegisterObjectDirect("play",
                                              static_cast<fgSFXManager *>(0),
                                              static_cast<SFX_Bool_C_STR_IN>(&fgSFXManager::play));
-    m_metatableSoundMgr.RegisterObjectDirect("pause", 
+    m_metatableSoundMgr.RegisterObjectDirect("pause",
                                              static_cast<fgSFXManager *>(0),
                                              static_cast<SFX_Bool_C_STR_IN>(&fgSFXManager::pause));
-    m_metatableSoundMgr.RegisterObjectDirect("resume", 
+    m_metatableSoundMgr.RegisterObjectDirect("resume",
                                              static_cast<fgSFXManager *>(0),
                                              static_cast<SFX_Bool_C_STR_IN>(&fgSFXManager::resume));
-    m_metatableSoundMgr.RegisterObjectDirect("rewind", 
+    m_metatableSoundMgr.RegisterObjectDirect("rewind",
                                              static_cast<fgSFXManager *>(0),
                                              static_cast<SFX_Bool_C_STR_IN>(&fgSFXManager::rewind));
-    m_metatableSoundMgr.RegisterObjectDirect("stop", 
+    m_metatableSoundMgr.RegisterObjectDirect("stop",
                                              static_cast<fgSFXManager *>(0),
                                              static_cast<SFX_Bool_C_STR_IN>(&fgSFXManager::stop));
     m_metatableSoundMgr.RegisterObjectDirect("isPlaying",
@@ -1973,8 +2181,9 @@ fgBool fgScriptSubsystem::registerSoundManager(void) {
     LuaPlus::LuaObject soundMgrObj = m_luaState->BoxPointer((void *)m_pSoundMgr);
     soundMgrObj.SetMetatable(m_metatableSoundMgr);
     m_globals.SetObject("SoundManager", soundMgrObj);
-    m_userDataObjectMap[offset] = soundMgrObj;
-    
+    m_userDataObjectMap[offset].obj = soundMgrObj;
+    m_userDataObjectMap[offset].isBound = FG_TRUE;
+
 #endif /* FG_USING_LUA_PLUS */
     return FG_TRUE;
 }

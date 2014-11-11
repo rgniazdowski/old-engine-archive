@@ -103,7 +103,8 @@ void fgGuiContainer::display(fgGfxLayer *guiLayer) {
         fgGuiWidget *child = m_children[i];
         if(!child)
             continue;
-        child->display(guiLayer);
+        if(child->isVisible())
+            child->display(guiLayer);
     }
     yolo = (fgGuiDrawer *)guiLayer;
 }
@@ -172,6 +173,9 @@ fgBoundingBox3Df fgGuiContainer::updateBounds(void) {
     for(int i = 0; i < nChildren; i++) {
         fgGuiWidget *child = m_children[i];
         if(!child)
+            continue;
+        // #FIXME - not visible widgets should be completely ignored?
+        if(!child->isVisible())
             continue;
         fgVector3f childSize;
 
@@ -258,7 +262,8 @@ fgBoundingBox3Df fgGuiContainer::updateBounds(void) {
         fgGuiWidget *child = m_children[i];
         if(!child)
             continue;
-        if(child->getStyleContent().getPosition().style != FG_GUI_POS_STATIC) {
+        if(child->getStyleContent().getPosition().style != FG_GUI_POS_STATIC ||
+           !child->isVisible()) {
             j--;
             continue;
         }
@@ -282,6 +287,8 @@ fgBoundingBox3Df fgGuiContainer::updateBounds(void) {
             widgetBox.pos.y += (lastChildSize.y + spacing.y * 2.0f) * (!!j);
             widgetBox.size.x = innerBox.size.x;
             widgetBox.size.y = childSize.y + (spacing.y * 2.0f);
+        } else {
+            widgetBox = innerBox;
         }
 
         // No need to update inner/outer area, just update position of the child

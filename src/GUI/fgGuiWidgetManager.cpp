@@ -37,8 +37,9 @@
  * @param styleMgr
  */
 fgGuiWidgetManager::fgGuiWidgetManager(fgGuiWidgetFactory *widgetFactory, fgGuiStyleManager *styleMgr) :
-m_widgetFactory(widgetFactory),
-m_styleMgr(styleMgr) {
+m_pWidgetFactory(widgetFactory),
+m_pStyleMgr(styleMgr),
+m_pGuiLinkCallback(NULL) {
     m_managerType = FG_MANAGER_GUI_WIDGET;
 }
 
@@ -66,8 +67,9 @@ fgBool fgGuiWidgetManager::destroy(void) {
         *itor = NULL;
     }
     fgHandleManager::clear();
-    m_styleMgr = NULL;
-    m_widgetFactory = NULL;
+    m_pStyleMgr = NULL;
+    m_pWidgetFactory = NULL;
+    m_pGuiLinkCallback = NULL;
     return FG_TRUE;
 }
 
@@ -77,7 +79,7 @@ fgBool fgGuiWidgetManager::destroy(void) {
  */
 fgBool fgGuiWidgetManager::initialize(void) {
     FG_LOG_DEBUG("GUI: Initializing Widget manager...");
-    if(!m_widgetFactory || !m_styleMgr) {
+    if(!m_pWidgetFactory || !m_pStyleMgr) {
         FG_LOG::PrintError("GUI: Failed to initialize widget manager - not all external pointers are set");
         return FG_FALSE;
     }
@@ -200,7 +202,7 @@ fgGuiWidgetManager::widgetVec& fgGuiWidgetManager::getRefRootWidgets(void) {
  * @param widgetFactory
  */
 void fgGuiWidgetManager::setWidgetFactory(fgGuiWidgetFactory *widgetFactory) {
-    m_widgetFactory = widgetFactory;
+    m_pWidgetFactory = widgetFactory;
 }
 
 /**
@@ -208,7 +210,7 @@ void fgGuiWidgetManager::setWidgetFactory(fgGuiWidgetFactory *widgetFactory) {
  * @return 
  */
 fgGuiWidgetFactory *fgGuiWidgetManager::getWidgetFactory(void) const {
-    return m_widgetFactory;
+    return m_pWidgetFactory;
 }
 
 /**
@@ -216,7 +218,7 @@ fgGuiWidgetFactory *fgGuiWidgetManager::getWidgetFactory(void) const {
  * @param styleMgr
  */
 void fgGuiWidgetManager::setStyleManager(fgGuiStyleManager *styleMgr) {
-    m_styleMgr = styleMgr;
+    m_pStyleMgr = styleMgr;
 }
 
 /**
@@ -224,7 +226,7 @@ void fgGuiWidgetManager::setStyleManager(fgGuiStyleManager *styleMgr) {
  * @return 
  */
 fgGuiStyleManager *fgGuiWidgetManager::getStyleManager(void) const {
-    return m_styleMgr;
+    return m_pStyleMgr;
 }
 
 /**
@@ -251,7 +253,7 @@ fgBool fgGuiWidgetManager::loadStructureSheet(const char *filePath) {
     fgXMLParser *xmlParser = new fgXMLParser();
     fgGuiStructureSheetParser *contentHandler = new fgGuiStructureSheetParser();
 
-    contentHandler->setWidgetFactory(m_widgetFactory);
+    contentHandler->setWidgetFactory(m_pWidgetFactory);
     contentHandler->setWidgetManager(this);
 
     xmlParser->setContentHandler(contentHandler);
@@ -341,9 +343,9 @@ fgBool fgGuiWidgetManager::addWidget(fgGuiWidget *pWidget, fgGuiWidget *pFatherW
         }
     }
     // Update and set widget style content
-    if(m_styleMgr) {
+    if(m_pStyleMgr) {
         std::string styleName = pWidget->getStyleName();
-        fgGuiStyle *style = m_styleMgr->get(styleName);
+        fgGuiStyle *style = m_pStyleMgr->get(styleName);
         if(style) {
             FG_LOG_DEBUG("WidgetManager: Copying style to widget: '%s' of type: '%s'",
                                pWidget->getNameStr(),
@@ -363,6 +365,8 @@ fgBool fgGuiWidgetManager::addWidget(fgGuiWidget *pWidget, fgGuiWidget *pFatherW
         // Update size of the parent widget
         pFatherWidget->updateBounds();
     }
+    if(m_pGuiLinkCallback)
+        pWidget->setOnLinkCallback(m_pGuiLinkCallback);
     return FG_TRUE;
 }
 

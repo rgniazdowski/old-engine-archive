@@ -54,6 +54,7 @@ public:
         SCENE2D_MANAGER_MT_ID,
         SCENE3D_MANAGER_MT_ID,
         PARTICLE_SYSTEM_MT_ID,
+        GUI_MAIN_MT_ID,
         WIDGET_MANAGER_MT_ID, // #used
         STYLE_MANAGER_MT_ID,
         SOUND_MANAGER_MT_ID,
