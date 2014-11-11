@@ -1,0 +1,63 @@
+PLAN DZIALANIA:
+
+* ukonczenie terapii otu
+* wykonanie wymaganych aktualnie badan
+* przestrzegac zalecen dla trzezwiejacych alkoholikow
+  * HALTS
+  * 24H
+  * "I dont drink today, oh my..."
+  * abstynencja ofc
+* zerwanie z nalogiem palenia
+
+
+*** napisanie pierwszej gry przy jednoczesnym rozwijaniu wlasnego silnika gry
+  * aktualnie skupienie sie na Marmalade i jednej platformie - iOS
+  * OGLES 2.0
+  *** reszta info w flexigame.txt
+
+  * plan marketingowy
+    * sprawdzenie wszelkich tanich rodzajow promocji - marketing
+	* obliczenie kosztorysu, wstepne zalozenia - znalezienie zlotego srodka
+	  na miare mozliwosci danej gry - ocena subiektywna + w miare obiektywna
+
+  * stworzenie strony internetowej dla projektu oraz gry
+  * masa screenshotow
+  * historia gry
+  * pelen opis, opisy krotkie, szczegolowe
+  * logo
+  * wizytowki, badge
+  * motto, catch phrase
+  * filmy na youtube, gameplay, strona na YT
+  * strona na Facebooku
+  * tapety
+  * art
+  
+  ** muzyka:
+    * koniecznie dobra muzyka, stworzona samodzielnie (w koncu DJ prawda)
+	* wazne jest stworzenie samemu muzyki - rozwijanie wielu umiejetnosci
+	  * zbyt dlugo zwlekalem i sie poddawalem z tym marzeniem zeby teraz to olac
+	    i nie polaczyc dwoch marzen w jedno
+	* muzyka, gatunek: ambient, electronic ambient, chillout / downtempo
+
+  ** sound effects:
+    * znalezienie odpowiednich paczek z dzwiekami
+	* ewentualna modyfikacja, remix
+	* stworzenie nagran mowy - ivona - remix, pirate mode
+	  * modyfikacja modulacji nagranego kobiecego glosu, ewentualne efekty
+	    powodujace znikome rozpoznanie glosu jako ivona
+		* jednoczesne zachowanie wyraznosci nagrania, dalsza mozliwosc
+          zrozumienia co jest mowione
+	  * efekty takie jak reverb, echo, speed, tone, pitch, podbicie bassu
+	  * niewykluczone zapotrzebowanie na programy typu voice morph
+
+  ** shader/particle effects:
+    * podstawowe efekty eye candy przy efektach przejscia, poruszania elementow,
+	  menu, kolejnego levela
+	* intro
+	* efekty particle
+	* zasada - bez przesady - stonowane, minimalistyczne, feng shui al'a ikea
+
+  ** design:
+    * kolory: szare, biale, czarne + posrednie,
+	  pomaranczowy, zolty, ciemnoszary, brak zaograglonych rogow
+

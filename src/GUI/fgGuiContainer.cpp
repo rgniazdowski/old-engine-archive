@@ -110,7 +110,6 @@ void fgGuiContainer::display(fgGuiDrawer *guiLayer) {
             child->display(guiLayer);
         guiLayer->upZIndex();
     }
-    guiLayer->upZIndex();
     //yolo = (fgGuiDrawer *)guiLayer;
 }
 
@@ -358,11 +357,11 @@ void fgGuiContainer::refresh(void) {
  * @return 
  */
 int fgGuiContainer::updateState(const fgPointerData *pointerData) {
-    if(fgGuiWidget::updateState(pointerData) == FG_GUI_WIDGET_STATE_NONE);
+    fgGuiWidget::updateState(pointerData);
+    //if(fgGuiWidget::updateState(pointerData) == FG_GUI_WIDGET_STATE_NONE);
     //return m_state;
     for(int i = 0; i < (int)m_children.size(); i++) {
         fgGuiWidget *child = m_children[i];
-
         if(!child)
             continue;
         child->updateState(pointerData);
@@ -379,7 +378,6 @@ fgGuiWidget *fgGuiContainer::getChild(const std::string& nameTag) {
     if(nameTag.empty())
         return NULL;
     childrenMapItor itor = m_childrenMap.find(nameTag);
-
     if(itor == m_childrenMap.end())
         return NULL;
     fgGuiWidget * pWidget = itor->second;
@@ -392,7 +390,6 @@ fgGuiWidget *fgGuiContainer::getChild(const std::string& nameTag) {
  * @return 
  */
 fgGuiWidget *fgGuiContainer::getChild(const char *nameTag) {
-
     return getChild(std::string(nameTag));
 }
 
@@ -433,7 +430,6 @@ fgBool fgGuiContainer::addChild(fgGuiWidget *pWidget) {
  * @return 
  */
 fgBool fgGuiContainer::removeChild(fgGuiWidget *pWidget) {
-
     if(!pWidget)
         return FG_FALSE;
     return removeChild(pWidget->getName());
