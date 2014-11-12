@@ -11,6 +11,7 @@
 #include "Shaders/fgGFXShaderManager.h"
 #include "Textures/fgTextureResource.h"
 #include "Resource/fgResourceManager.h"
+#include "fgGFXDrawableObject.h"
 
 /**
  * 
@@ -57,9 +58,10 @@ fgGfxObject *fgGfx3DScene::addFromModel(fgGfxModelResource* pModelRes,
     if(!pModelRes) {
         return NULL;
     }
-    fgGfxObject *pObj = new fgGfxObject();
+    fgGfxObject *pObj = new fgGfxDrawableObject();
+    fgGfxDrawableObject *pDrawableObj = static_cast<fgGfxDrawableObject *>(pObj);
     pObj->setName(nameTag);
-    pObj->setModel(pModelRes);
+    pDrawableObj->setModel(pModelRes);
     if(!addObject(pObj->getRefHandle(), pObj)) {
         delete pObj;
         pObj = NULL;

@@ -15,6 +15,8 @@
     #ifndef _FG_GFX_SHADER_PROGRAM_H_
         #include "GFX/Shaders/fgGFXShaderProgram.h"
     #endif
+    
+    #include "fgGFXAABoundingBox.h"
 
 enum class fgGfxPrimitiveMode {
     FG_GFX_TRIANGLES = (fgGFXenum)GL_TRIANGLES,
@@ -41,6 +43,8 @@ public:
      */
     static void drawRect2D(void);
 
+    static void drawAABBLines(const fgAABoundingBox3Df& aabb);
+    
     /*
      *
      */

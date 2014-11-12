@@ -20,17 +20,20 @@
         #include "GFX/fgGFXCameraAnimation.h"
     #endif
 
-    #include "fgGFXObject.h"
+    #include "fgGFXDrawableObject.h"
 
     #include "fgManagerBase.h"
-    
+
     #define FG_MANAGER_SCENE        0x00001000
 
 /* 
  *
  */
-class fgGfxSceneManager : public fgManagerBase, protected fgGfxDrawingBatch, protected fgHandleManager<fgGfxObject *, fgGfxObjectHandle> {
+class fgGfxSceneManager : public fgManagerBase,
+        protected fgGfxDrawingBatch,
+        protected fgHandleManager<fgGfxObject *, fgGfxObjectHandle> {
 public:
+    typedef std::priority_queue<fgGfxDrawableObject*, std::deque<fgGfxDrawableObject*>, fgPtrLessEq<fgGfxDrawableObject*> > drawablePriorityQueue;
     typedef fgVector<fgGfxObject *> objectVec;
     typedef objectVec::iterator objectVecItor;
 
@@ -39,7 +42,7 @@ protected:
      * 
      */
     virtual void clear(void);
-    
+
 public:
     /**
      * 
@@ -60,7 +63,7 @@ public:
      * @return 
      */
     virtual fgBool initialize(void);
-    
+
     /**
      * 
      * @param pShaderMgr
@@ -69,12 +72,11 @@ public:
 
     // Set internal pointer to the main resource manager
     void setResourceManager(fgManagerBase *pResourceMgr);
-    
+
     // Get internal pointer to the main resource manager
     fgManagerBase *getResourceManager(void) const {
         return m_pResourceMgr;
     }
-
     /**
      * 
      * @return 
@@ -202,13 +204,13 @@ public:
      * 
      * @param oUniqueID
      * @return 
-     */ 
+     */
     virtual fgGfxObject* get(const fgGfxObjectHandle& oUniqueID);
     /**
      * 
      * @param nameTag
      * @return 
-     */ 
+     */
     virtual fgGfxObject* get(const std::string& nameTag);
     /**
      * 
@@ -233,15 +235,14 @@ public:
      * 
      * @param nameTag
      * @return 
-     */ 
+     */
     virtual fgBool isManaged(const std::string& nameTag);
     /**
      * 
      * @param nameTag
      * @return 
-     */ 
+     */
     virtual fgBool isManaged(const char *nameTag);
-
     /**
      * 
      * @param index
@@ -316,7 +317,6 @@ public:
         m_camera.setCenter(pCamera->getRefCenter());
         m_camera.setUp(pCamera->getRefUp());
     }
-
     /**
      * 
      * @return 
@@ -330,6 +330,8 @@ private:
     fgGfxMVPMatrix m_MVP;
     /// Internal camera
     fgGfxCameraAnimation m_camera;
+    ///
+    drawablePriorityQueue m_drawableQueue;
     /// This needs fixing - probably this won't be needed - need
     /// to overload more methods from drawing batch.... P3
     /// #FIXME - redundancy 

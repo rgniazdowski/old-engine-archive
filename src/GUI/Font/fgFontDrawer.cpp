@@ -10,17 +10,19 @@
 #include "fgFontDrawer.h"
 #include "GFX/fgGFXPrimitives.h"
 #include "GFX/Shaders/fgGFXShaderManager.h"
+#include "GFX/fgGFXAABoundingBox.h"
 
-/*
+/**
  *
  */
 fgFontDrawer::fgFontDrawer() :
 m_currentFont(NULL),
 m_color(1.0f, 1.0f, 1.0f, 1.0f),
 m_relMove(0.0f, 0.0f, 0.0f),
-m_printMode(FG_FONT_PRINT_MODE_ABSOLUTE) { }
+m_printMode(FG_FONT_PRINT_MODE_ABSOLUTE) {
+}
 
-/*
+/**
  *
  */
 fgFontDrawer::~fgFontDrawer() { }
@@ -39,7 +41,6 @@ void fgFontDrawer::setShaderManager(fgManagerBase *shaderMgr) {
  * @param y0
  * @param charSize
  * @param fmt
- * @param ...
  * @return 
  */
 int fgFontDrawer::print(float x0, float y0, float charSize, const char *fmt, ...) {
@@ -99,14 +100,14 @@ int fgFontDrawer::print(float x0, float y0, const char *string, float charSize) 
     if(!m_currentFont || !string)
         return 0;
     // main
-    float scale;
+    //float scale;
     int n = 0;
     const char *s = NULL;
     float x = x0, y = y0;
     fgBool rewind = FG_FALSE;
     if(charSize <= 0.0f)
         charSize = (float)m_currentFont->getStep();
-    scale = charSize / (float)m_currentFont->getStep(); // ? is it needed?
+    //scale = charSize / (float)m_currentFont->getStep(); // ? is it needed?
     if(m_printMode == FG_FONT_PRINT_MODE_ABSOLUTE && 0) {
         x += m_relMove.x;
         y += m_relMove.y;
@@ -279,8 +280,7 @@ float fgFontDrawer::placeChar(float xRel0, float yRel0, char letter, fgBool rewi
     if(!drawCall) {
         drawCall = setupDrawCall(m_currentFont);
     }
-    drawCall->appendRect2D(
-                           relPos,
+    drawCall->appendRect2D(relPos,
                            rectSize,
                            m_currentFont->getDataInfo().charInfo[i].uv1i,
                            m_currentFont->getDataInfo().charInfo[i].uv2i,
@@ -521,7 +521,6 @@ float fgFontDrawer::height(const char *string, float charSize) {
  * 
  * @param charSize
  * @param fmt
- * @param ...
  * @return 
  */
 fgVector2f fgFontDrawer::size(float charSize, const char *fmt, ...) {

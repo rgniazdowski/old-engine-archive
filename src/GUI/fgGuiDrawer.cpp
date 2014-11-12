@@ -60,8 +60,13 @@ void fgGuiDrawer::render(void) {
     fgGfxDrawingBatch::render();
 }
 
-/*
- *
+/**
+ * 
+ * @param outTextSize
+ * @param blockPos
+ * @param blockSize
+ * @param style
+ * @param fmt
  */
 void fgGuiDrawer::appendText2D(fgVec2f& outTextSize,
                                const fgVec2f &blockPos,
@@ -95,8 +100,11 @@ void fgGuiDrawer::appendText2D(fgVec2f& outTextSize,
     this->print(outPos.x, outPos.y, buf, fg.textSize);
 }
 
-/*
- *
+/**
+ * 
+ * @param pos
+ * @param size
+ * @param style
  */
 void fgGuiDrawer::appendBackground2D(const fgVec2f &pos,
                                      const fgVec2f &size,
@@ -120,8 +128,11 @@ void fgGuiDrawer::appendBackground2D(const fgVec2f &pos,
     drawCall->appendRect2D(pos, size, fgVec2f(0, 1), fgVec2f(1, 0), FG_FALSE);
 }
 
-/*
- *
+/**
+ * 
+ * @param pos
+ * @param size
+ * @param style
  */
 void fgGuiDrawer::appendBorder2D(const fgVec2f &pos,
                                  const fgVec2f &size, 

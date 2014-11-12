@@ -48,6 +48,74 @@ fgGFXvoid *fgGfxMeshSoA::getIndicesPointer(void) const {
  * @param pDataArray
  * @return 
  */
+fgGFXboolean fgGfxMeshSoA::refreshAttributes(fgGfxAttributeData *pDataArray) const {
+    if(!pDataArray)
+        return FG_GFX_FALSE;
+    // 3V - pos + norm + uv
+    fgGFXint index = 0;
+    // If VBO is used, offset is 0 because it'll be separate VBO
+    // Set pointer to front of vertices array (positions)
+    uintptr_t offset = 0;
+    uintptr_t pointer = (uintptr_t)((unsigned int *)&vertices.front());
+    // Position coordinates - activated
+    index = FG_GFX_ATTRIB_POS_LOCATION;
+    if(getPtrVBO() && getVBOCount()) {
+        pDataArray[index].isBO = FG_TRUE;
+        pDataArray[index].buffer = getPtrVBO()[POSITIONS_VBO_ARRAY_IDX].id;
+        pDataArray[index].offset = (fgGFXvoid *)offset;
+    } else {
+        pDataArray[index].isBO = FG_FALSE;
+        pDataArray[index].buffer = 0;
+        pDataArray[index].pointer = (fgGFXvoid *)pointer;
+    }
+
+    // Set pointer to normals array
+    // Offset is 0 because it is a separate VBO
+    offset = 0;
+    pointer = (uintptr_t)((unsigned int*)&normals.front());
+    // Normals coords - activated
+    index = FG_GFX_ATTRIB_NORM_LOCATION;
+    if(getPtrVBO() && getVBOCount()) {
+        pDataArray[index].isBO = FG_TRUE;
+        pDataArray[index].buffer = getPtrVBO()[NORMALS_VBO_ARRAY_IDX].id;
+        pDataArray[index].offset = (fgGFXvoid *)offset;
+    } else {
+        pDataArray[index].isBO = FG_FALSE;
+        pDataArray[index].buffer = 0;
+        pDataArray[index].pointer = (fgGFXvoid *)pointer;
+    }
+
+    // Move offset to UVs (second is normal of type fgVector3f)
+    offset = 0;
+    pointer = (uintptr_t)((unsigned int*)&uvs.front());
+    // Texture coordinates
+    index = FG_GFX_ATTRIB_UVS_LOCATION;
+    if(getPtrVBO() && getVBOCount()) {
+        pDataArray[index].isBO = FG_TRUE;
+        pDataArray[index].buffer = getPtrVBO()[TEX_COORDS_VBO_ARRAY_IDX].id;
+        pDataArray[index].offset = (fgGFXvoid *)offset;
+    } else {
+        pDataArray[index].isBO = FG_FALSE;
+        pDataArray[index].buffer = 0;
+        pDataArray[index].pointer = (fgGFXvoid *)pointer;
+    }
+
+    // Colors = there are no colors, this attribute will be disabled
+    pDataArray[FG_GFX_ATTRIB_COLOR_LOCATION] = fgGfxAttributeData(FG_GFX_COLOR);
+    pDataArray[FG_GFX_ATTRIB_COLOR_LOCATION].isInterleaved = FG_FALSE;
+
+    // Tangents - this attribute will be disabled
+    pDataArray[FG_GFX_ATTRIB_TANGENT_LOCATION] = fgGfxAttributeData(FG_GFX_TANGENT);
+    pDataArray[FG_GFX_ATTRIB_TANGENT_LOCATION].isInterleaved = FG_FALSE;
+
+    return FG_GFX_TRUE;
+}
+
+/**
+ * 
+ * @param pDataArray
+ * @return 
+ */
 fgGFXboolean fgGfxMeshSoA::setupAttributes(fgGfxAttributeData *pDataArray) const {
     if(!pDataArray)
         return FG_GFX_FALSE;

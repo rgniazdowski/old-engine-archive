@@ -96,8 +96,6 @@ private:
     /// optimal is the Triangle Strip - this requires however
     /// modification of the vertex data after loading
     fgGfxPrimitiveMode m_primMode;
-    /// Model matrix for current draw call
-    fgMatrix4f m_modelMat;
     /// Current color used
     fgColor4f m_color;
     /// Holds the value for the relative move
@@ -120,7 +118,7 @@ private:
     /**
      * 
      */
-    void applyAttributeData(void);
+    fgBool applyAttributeData(void);
 
 protected:
     // Toggle the managed flag
@@ -154,22 +152,6 @@ public:
      * @param pGfxObject
      */
     void setupFromObject(const void *pGfxObject) { }
-
-    /**
-     * 
-     * @return 
-     */
-    fgMatrix4f& getModelMatrix(void);
-    /**
-     * 
-     * @return 
-     */
-    const fgMatrix4f& getModelMatrix(void) const;
-    /**
-     * 
-     * @param modelMat
-     */
-    void setModelMatrix(const fgMatrix4f& modelMat);
 
     // Returns the current Z index
     int getZIndex(void) const;
@@ -246,11 +228,20 @@ public:
     // Draw
     virtual void draw(void);
     // Draw with relative 2D position
-    virtual void draw(const fgVec2f& relPos);
+    virtual inline void draw(const fgVec2f& relPos) {
+        fgGfxDrawCall::draw(fgMath::translate(fgMatrix4f(), fgVec3f(relPos.x, relPos.y, 0.0f)));
+    }
     // Draw with relative 3D position
-    virtual void draw(const fgVec3f& relPos);
+    virtual inline void draw(const fgVec3f& relPos) {
+        fgGfxDrawCall::draw(fgMath::translate(fgMatrix4f(), relPos));
+    }
     // Draw with given model matrix
-    virtual void draw(const fgMatrix4f& modelMat);
+    virtual inline void draw(const fgMatrix4f& modelMat) {
+        if(m_MVP && m_program) {
+            m_MVP->calculate(modelMat);
+        }
+        fgGfxDrawCall::draw();
+    }
 
     ///////////////////////////////////////////////////////
     // COMPARISON OPERATORS

@@ -47,6 +47,12 @@ struct fgDebugConfig {
 
 extern struct fgDebugConfig g_fgDebugConfig;
 
+    #if defined(FG_DEBUG)
+        #define FG_DEBUG_CFG_OPTION(_OPTION) ( g_fgDebugConfig._OPTION )
+    #else
+        #define FG_DEBUG_CFG_OPTION(_OPTION) (false)
+    #endif /* FG_DEBUG */
+
     #undef FG_DEBUG_CONFIG_H_BLOCK_
 #endif	/* _FG_DEBUG_CONFIG_H_ */
 

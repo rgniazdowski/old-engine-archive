@@ -102,6 +102,9 @@ public:
     }
 
     //
+    virtual fgGFXboolean refreshAttributes(fgGfxAttributeData *pDataArray) const = 0;
+    
+    //
     virtual fgGFXboolean setupAttributes(fgGfxAttributeData *pDataArray) const = 0;
 
     //
@@ -185,9 +188,13 @@ typedef fgVertexData fgGfxVertexData;
  */
 class fgVertexData2v : public fgVertexData, public fgVector<fgVertex2v> {
 public:
+    fgVertexData2v() : fgVertexData(), fgVector() {
+        reserve(4);
+    }
     //
     virtual ~fgVertexData2v() {
         destroyBuffers();
+        clear_optimised();
     }
 
     //
@@ -204,6 +211,8 @@ public:
     virtual fgBool isAoS(void) const {
         return FG_TRUE;
     }
+    
+    virtual fgGFXboolean refreshAttributes(fgGfxAttributeData *pDataArray) const;
 
     //
     virtual fgGFXboolean setupAttributes(fgGfxAttributeData *pDataArray) const;
@@ -319,9 +328,13 @@ typedef fgVertexData2v fgGfxVertexData2v;
  */
 class fgVertexData3v : public fgVertexData, public fgVector<fgVertex3v> {
 public:
+    fgVertexData3v() : fgVertexData(), fgVector() {
+        reserve(4);
+    }
     //
     virtual ~fgVertexData3v() {
         destroyBuffers();
+        clear_optimised();
     }
 
     //
@@ -339,6 +352,9 @@ public:
         return FG_TRUE;
     }
 
+    //
+    virtual fgGFXboolean refreshAttributes(fgGfxAttributeData *pDataArray) const;
+    
     //
     virtual fgGFXboolean setupAttributes(fgGfxAttributeData *pDataArray) const;
 
@@ -459,9 +475,13 @@ typedef fgVertexData3v fgGfxVertexData3v;
  */
 class fgVertexData4v : public fgVertexData, public fgVector<fgVertex4v> {
 public:
+    fgVertexData4v() : fgVertexData(), fgVector() {
+        reserve(4);
+    }
     //
     virtual ~fgVertexData4v() {
         destroyBuffers();
+        clear_optimised();
     }
 
     //
@@ -479,6 +499,9 @@ public:
         return FG_TRUE;
     }
 
+    //
+    virtual fgGFXboolean refreshAttributes(fgGfxAttributeData *pDataArray) const;
+    
     //
     virtual fgGFXboolean setupAttributes(fgGfxAttributeData *pDataArray) const;
 

@@ -11,6 +11,8 @@
 #include "Shaders/fgGFXShaderManager.h"
 #include "Textures/fgTextureResource.h"
 #include "Resource/fgResourceManager.h"
+#include "fgGFXDrawableObject.h"
+#include "fgDebugConfig.h"
 
 /**
  * 
@@ -73,7 +75,13 @@ fgBool fgGfxSceneManager::destroy(void) {
         fgGfxObject *pObj = *itor;
         if(pObj == NULL)
             continue;
-
+        if(pObj->getType() == FG_GFX_OBJECT_DRAWABLE_MODEL) {
+            //fgGfxDrawCall *pDrawCall = getDrawCall(pObj);
+            unsigned int index = pObj->getHandle().getIndex();
+            if(index < m_objDrawCalls.size()) {
+                m_objDrawCalls[index] = NULL;
+            }
+        }
         if(pObj->isManaged())
             delete pObj;
         *itor = NULL;
@@ -123,6 +131,8 @@ void fgGfxSceneManager::setResourceManager(fgManagerBase *pResourceMgr) {
  */
 void fgGfxSceneManager::flush(void) {
     fgGfxDrawingBatch::flush();
+    while(!m_drawableQueue.empty())
+        m_drawableQueue.pop();
 }
 
 /**
@@ -134,22 +144,36 @@ void fgGfxSceneManager::sortCalls(void) {
     //fgGfxDrawingBatch::sortCalls();
     while(!getRefPriorityQueue().empty())
         getRefPriorityQueue().pop();
+    while(!m_drawableQueue.empty())
+        m_drawableQueue.pop();
     drawCallVecItor objDrawIt = m_objDrawCalls.begin(), objDrawEnd = m_objDrawCalls.end();
     //objectVecItor objVecIt = m_objects.begin(), objVecEnd = m_objects.end();
     hmDataVecItor itor = getRefDataVector().begin(), end = getRefDataVector().end();
 
+#if 1
     for(; itor != end; itor++) {
         if(!(*itor))
             continue;
         fgGfxObject *pObj = (*itor);
-        fgGfxDrawCall *pDrawCall = m_objDrawCalls[pObj->getHandle().getIndex()];
+        fgGfxDrawableObject *pDrawableObj = NULL;
+        fgGfxDrawCall *pDrawCall = NULL;
+        if(pObj->getType() == FG_GFX_OBJECT_DRAWABLE_MODEL) {
+            pDrawableObj = static_cast<fgGfxDrawableObject *>(pObj);
+            m_drawableQueue.push(pDrawableObj);
+            //pDrawableObj->setManaged();            
+            pDrawCall = NULL;//static_cast<fgGfxDrawCall *>(pDrawableObj);
+        } else {
+            pDrawCall = m_objDrawCalls[pObj->getHandle().getIndex()];
+        }
         if(!pDrawCall)
             continue;
         if(!pDrawCall->getShaderProgram())
             pDrawCall->setShaderProgram(((fgGfxShaderManager *)getShaderManager())->getCurrentProgram());
-        pDrawCall->setModelMatrix(pObj->getRefModelMatrix());
+        //pDrawCall->setModelMatrix(pObj->getRefModelMatrix());
         getRefPriorityQueue().push(pDrawCall);
     }
+#endif
+    //for(; itor != end; itor++)
 
     /*for(; objDrawIt != objDrawEnd, objVecIt != objVecEnd; objDrawIt++, objVecIt++) {
         if(*objDrawIt && *objVecIt) {
@@ -168,7 +192,29 @@ void fgGfxSceneManager::sortCalls(void) {
  */
 void fgGfxSceneManager::render(void) {
     m_MVP.calculate(&m_camera, fgMatrix4f());
-    fgGfxDrawingBatch::render();
+    //fgGfxDrawingBatch::render();
+
+    if(getRefPriorityQueue().empty())
+        sortCalls();
+
+    if(true) {
+        while(!getRefPriorityQueue().empty()) {
+            fgGfxDrawCall *pDrawCall = getRefPriorityQueue().top();
+            pDrawCall->draw(); // YOLO
+            getRefPriorityQueue().pop();
+        }
+    }
+    while(!m_drawableQueue.empty()) {
+        fgGfxDrawableObject *pDrawableObj = m_drawableQueue.top();
+        pDrawableObj->draw(pDrawableObj->getRefModelMatrix());
+#if defined(FG_DEBUG)
+        if(FG_DEBUG_CFG_OPTION(gfxBBoxShow)) {
+            //g_fgDebugConfig.gfxBBoxShow
+            fgGfxPrimitives::drawAABBLines(pDrawableObj->getModel()->getRefAABB());
+        }
+#endif
+        m_drawableQueue.pop();        
+    }
 }
 
 #if 0
@@ -245,25 +291,25 @@ fgBool fgGfxSceneManager::addObject(fgGfxObjectHandle& oUniqueID,
                                     fgGfxObject *oFatherObj) {
     if(!pObj) {
         // Empty pointer - return
-        FG_LOG::PrintError("GFX.SceneManager: // Empty pointer - exit... no addition made");
+        FG_LOG_ERROR("GFX.SceneManager: // Empty pointer - exit... no addition made");
         return FG_FALSE;
     }
 
     if(fgHandleManager::isDataManaged(pObj)) {
         // Widget is already managed in the handle manager
-        FG_LOG::PrintError("GFX.SceneManager: // Object is already managed in the handle manager: '%s'", pObj->getNameStr());
+        FG_LOG_ERROR("GFX.SceneManager: // Object is already managed in the handle manager: '%s'", pObj->getNameStr());
         return FG_FALSE;
     }
 
     if(!pObj->getHandle().isNull()) {
         // Widget has already initialized handle
-        FG_LOG::PrintError("GFX.SceneManager: // Object has already initialized handle: '%s'", pObj->getNameStr());
+        FG_LOG_ERROR("GFX.SceneManager: // Object has already initialized handle: '%s'", pObj->getNameStr());
         return FG_FALSE;
     }
 
     if(!fgHandleManager::acquireHandle(oUniqueID, pObj)) {
         // Could not aquire handle for the widget
-        FG_LOG::PrintError("GFX.SceneManager: // Could not aquire handle for the object: '%s'", pObj->getNameStr());
+        FG_LOG_ERROR("GFX.SceneManager: // Could not aquire handle for the object: '%s'", pObj->getNameStr());
         return FG_FALSE;
     }
     pObj->setHandle(oUniqueID);
@@ -274,16 +320,24 @@ fgBool fgGfxSceneManager::addObject(fgGfxObjectHandle& oUniqueID,
 
     if(!fgHandleManager::setupName(pObj->getName(), oUniqueID)) {
         // Could not setup handle string tag/name for the widget
-        FG_LOG::PrintError("GFX.SceneManager: // Could not setup handle string tag/name for the object: '%s'", pObj->getNameStr());
+        FG_LOG_ERROR("GFX.SceneManager: // Could not setup handle string tag/name for the object: '%s'", pObj->getNameStr());
     }
     unsigned int index = pObj->getHandle().getIndex();
 
+    // #FIXME 
+
     fgGfxDrawCall *drawCall = NULL;
     // FIXME
-    if(pObj->getModel()) {
+    if(pObj->getModel() && pObj->getType() == FG_GFX_OBJECT_DRAWABLE_MODEL) {
+        // #FIXME ... need some mechanism for up/down casting
+        fgGfxDrawableObject *pDrawableObj = static_cast<fgGfxDrawableObject *>(pObj);
+        pDrawableObj->setManaged(FG_TRUE);
+        drawCall = static_cast<fgGfxDrawCall *>(pDrawableObj);
+    } else if(pObj->getModel() && pObj->getType() == FG_GFX_OBJECT_MODEL) {
         drawCall = new fgGfxDrawCall(FG_GFX_DRAW_CALL_MODEL);
         drawCall->setupFromModel(pObj->getModel());
-
+    }
+    if(pObj->getModel()) {
         if(getShaderManager())
             drawCall->setShaderProgram(((fgGfxShaderManager *)getShaderManager())->getCurrentProgram());
         if(m_pResourceMgr) {
@@ -299,18 +353,17 @@ fgBool fgGfxSceneManager::addObject(fgGfxObjectHandle& oUniqueID,
     }
 
     drawCall->setMVP(&m_MVP);
-    drawCall->setModelMatrix(pObj->getRefModelMatrix());
     if(index >= m_objDrawCalls.size()) {
 #if defined(FG_USING_MARMALADE)
-        m_objDrawCalls.resize((unsigned int)(index+1));
+        m_objDrawCalls.resize((unsigned int)(index + 1));
 #else
-        m_objDrawCalls.resize((unsigned int)(index+1), NULL);
+        m_objDrawCalls.resize((unsigned int)(index + 1), NULL);
 #endif
     }
     m_objDrawCalls[index] = drawCall;
     // 2nd argument tells that this draw call should not be managed
     // meaning: destructor wont be called on flush()
-    fgGfxDrawingBatch::appendDrawCall(drawCall, FG_FALSE);
+    //fgGfxDrawingBatch::appendDrawCall(drawCall, FG_FALSE); // Don't know if needed...
     return FG_TRUE;
 }
 

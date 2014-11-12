@@ -115,8 +115,10 @@ void fgGfxDrawCall::setupVertexData(fgGFXuint attribMask) {
         m_vecDataBase = new fgVertexData2v();
     }
     if(m_drawCallType == FG_GFX_DRAW_CALL_CUSTOM_ARRAY) {
+        m_vecDataBase->setupAttributes(m_attrData);
         memset(&m_drawingInfo, 0, sizeof (m_drawingInfo));
     }
+    m_attribMask = attribMask;
 }
 
 /**
@@ -160,30 +162,6 @@ void fgGfxDrawCall::setupFromMesh(const fgGfxMeshBase* pMesh) {
 
 
 //void setupFromObject(const void *pGfxObject) { }
-
-/**
- * 
- * @return 
- */
-fgMatrix4f& fgGfxDrawCall::getModelMatrix(void) {
-    return m_modelMat;
-}
-
-/**
- * 
- * @return 
- */
-const fgMatrix4f& fgGfxDrawCall::getModelMatrix(void) const {
-    return m_modelMat;
-}
-
-/**
- * 
- * @param modelMat
- */
-void fgGfxDrawCall::setModelMatrix(const fgMatrix4f& modelMat) {
-    m_modelMat = modelMat;
-}
 
 /*
  *
@@ -373,7 +351,6 @@ fgGfxTextureID& fgGfxDrawCall::getTexture(void) {
  */
 void fgGfxDrawCall::flush(void) {
     m_relMove = fgVector3f(0.0f, 0.0f, 0.0f);
-    m_modelMat = fgMatrix4f();
     if(m_vecDataBase)
         m_vecDataBase->clear();
     m_zIndex = 0;
@@ -385,6 +362,7 @@ void fgGfxDrawCall::flush(void) {
 void fgGfxDrawCall::appendRect2D(const fgVec2f &size,
                                  const fgVec2f &uv1, const fgVec2f &uv2,
                                  const fgBool rewind) {
+    // #FIXME - TOO DEEP CALL 
     fgGfxPrimitives::appendRect2D(m_vecDataBase, fgVec2f(0.0f, 0.0f), size, uv1, uv2, m_color, m_primMode, rewind);
 }
 
@@ -401,14 +379,17 @@ void fgGfxDrawCall::appendRect2D(const fgVec2f &relPos, const fgVec2f &size,
         m_relMove.x += size.x;
         m_relMove.y += size.y;
     }
+    // #FIXME - TOO DEEP CALL
     fgGfxPrimitives::appendRect2D(m_vecDataBase, pos, size, uv1, uv2, m_color, m_primMode, rewind);
 }
 
 /**
  * 
  */
-void fgGfxDrawCall::applyAttributeData(void) {
-    if(m_drawCallType == FG_GFX_DRAW_CALL_MESH || m_drawCallType == FG_GFX_DRAW_CALL_MODEL) {
+fgBool fgGfxDrawCall::applyAttributeData(void) {
+    if(m_drawCallType == FG_GFX_DRAW_CALL_MESH ||
+       m_drawCallType == FG_GFX_DRAW_CALL_MODEL ||
+       m_drawCallType == FG_GFX_DRAW_CALL_CUSTOM_ARRAY) {
         fgGfxPlatform::context()->diffVertexAttribArrayMask(m_attribMask);
         if(m_attrData[0].isInterleaved == FG_TRUE && m_attrData[0].isBO) {
             fgGfxPlatform::context()->bindBuffer(GL_ARRAY_BUFFER, m_attrData[0].buffer);
@@ -433,17 +414,20 @@ void fgGfxDrawCall::applyAttributeData(void) {
         } else {
             fgGfxPlatform::context()->bindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
         }
+    } else {
+        return FG_FALSE;
     }
+    return FG_TRUE;
 }
 
 /*
  *
  */
 void fgGfxDrawCall::draw(void) {
-    if(!m_vecDataBase)
+    if(!m_vecDataBase && m_drawCallType == FG_GFX_DRAW_CALL_CUSTOM_ARRAY) // ? ?
         return;
     if(m_MVP && m_program) {
-        m_MVP->calculate(m_modelMat);
+        //m_MVP->calculate(m_modelMat);
         m_program->setUniform(m_MVP);
     }
     // OH MAN, MY BULLSHIT DETECTOR IS OFF THE CHARTS!
@@ -469,12 +453,15 @@ void fgGfxDrawCall::draw(void) {
         m_program->setUniform(FG_GFX_USE_TEXTURE, 0.0f);
     }
     // #FIXME - need to use attribute data array
-    fgGfxPrimitives::drawArray2D(m_vecDataBase, m_attribMask, m_primMode);
-
+    //fgGfxPrimitives::drawArray2D(m_vecDataBase, m_attribMask, m_primMode);
+    if(m_drawCallType == FG_GFX_DRAW_CALL_CUSTOM_ARRAY) {
+        m_vecDataBase->refreshAttributes(m_attrData);
+        m_drawingInfo.count = m_vecDataBase->size();
+    }
     // Will now draw data from Other types ...
-    if(m_drawCallType == FG_GFX_DRAW_CALL_MESH || m_drawCallType == FG_GFX_DRAW_CALL_MODEL) {
+    if(applyAttributeData()) {
         // attribute data array is set
-        applyAttributeData();
+        // unsigned short is mainly because of ES
         if(m_drawingInfo.buffer) {
             glDrawElements((fgGFXenum)m_primMode, m_drawingInfo.count, GL_UNSIGNED_SHORT, m_drawingInfo.indices.pointer);
         } else {
@@ -485,34 +472,4 @@ void fgGfxDrawCall::draw(void) {
         fgGfxPlatform::context()->bindBuffer(GL_ARRAY_BUFFER, 0);
         fgGfxPlatform::context()->bindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
     }
-}
-
-/*
- *
- */
-void fgGfxDrawCall::draw(const fgVec2f& relPos) {
-    if(m_MVP && m_program) {
-        m_modelMat = fgMath::translate(fgMatrix4f(), fgVec3f(relPos.x, relPos.y, 0.0f));
-    }
-    fgGfxDrawCall::draw();
-}
-
-/*
- *
- */
-void fgGfxDrawCall::draw(const fgVec3f& relPos) {
-    if(m_MVP && m_program) {
-        m_modelMat = fgMath::translate(fgMatrix4f(), relPos);
-    }
-    fgGfxDrawCall::draw();
-}
-
-/*
- *
- */
-void fgGfxDrawCall::draw(const fgMatrix4f& modelMat) {
-    if(m_MVP) {
-        m_modelMat = modelMat;
-    }
-    fgGfxDrawCall::draw();
 }

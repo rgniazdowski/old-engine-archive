@@ -28,7 +28,10 @@ typedef fgHandle<fgGfxObjectTag> fgGfxObjectHandle;
 
 typedef unsigned int fgGfxObjectType;
 
-    #define FG_GFX_OBJECT_MODEL 0 // BULLSHIT
+    #define FG_GFX_OBJECT_PLAIN 0
+    #define FG_GFX_OBJECT_MODEL 1 
+    //#define FG_GFX_OBJECT_DRAWABLE_PLAIN 2
+    //#define FG_GFX_OBJECT_DRAWABLE_MODEL 3
 
 /*
  *
@@ -47,7 +50,7 @@ public:
      * 
      */
     fgGfxObject() : m_modelMat(),
-    m_type(0),
+    m_type(FG_GFX_OBJECT_PLAIN),
     m_model(NULL) { }
 
     /**
@@ -55,6 +58,13 @@ public:
      */
     virtual ~fgGfxObject() { }
 
+    /**
+     * 
+     * @return 
+     */
+    inline fgGfxObjectType getType(void) const {
+        return m_type;
+    }
     /**
      * 
      * @return 
@@ -67,8 +77,9 @@ public:
      * 
      * @param model
      */
-    inline void setModel(fgGfxModelResource *model) {
-        m_model = model;
+    virtual inline void setModel(fgGfxModelResource *pModel) {
+        m_model = pModel;
+        m_type = FG_GFX_OBJECT_MODEL;
     }
 
     /**
@@ -96,7 +107,13 @@ public:
     }
 
 protected:
-
+    /**
+     * 
+     * @param objectType
+     */
+    inline void setType(const fgGfxObjectType objectType) {
+        m_type = objectType;
+    }
 };
 
 #endif /* _FG_GFX_OBJECT_H_ */

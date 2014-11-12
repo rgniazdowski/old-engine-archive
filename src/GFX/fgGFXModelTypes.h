@@ -148,6 +148,9 @@ struct fgGfxMeshSoA : fgGfxMeshBase {
     virtual fgGFXvoid *getIndicesPointer(void) const;
 
     //
+    virtual fgGFXboolean refreshAttributes(fgGfxAttributeData *pDataArray) const;
+    
+    //
     virtual fgGFXboolean setupAttributes(fgGfxAttributeData *pDataArray) const;
 
     // Generates the GFX buffers (VBO)
@@ -437,6 +440,11 @@ struct fgGfxMeshAoS : fgGfxMeshBase {
     // is generated or there are no indices at all
     virtual fgGFXvoid *getIndicesPointer(void) const;
 
+    //
+    virtual fgGFXboolean refreshAttributes(fgGfxAttributeData *pDataArray) const {
+        return vertices.refreshAttributes(pDataArray);
+    }
+    
     // Attributes for mesh AoS is done the same way as for vertexData v3
     // There is still needed fix for indices special array. It's because
     // indices are not treated as an attribute. It's a special parameter

@@ -139,6 +139,64 @@ const fgVertex3v c_stripRect3x1[] = {
 
 #include "GFX/Shaders/fgGFXShaderDefs.h"
 #include "GFX/Shaders/fgGFXShaderProgram.h"
+#include "fgGFXAABoundingBox.h"
+
+void fgGfxPrimitives::drawAABBLines(const fgAABoundingBox3Df& aabb) {
+    fgGfxPlatform::context()->diffVertexAttribArrayMask(FG_GFX_POSITION_BIT);
+
+    fgVec3f center = 0.5f * (aabb.min + aabb.max);
+    fgVec3f extent = 0.5f * (aabb.max - aabb.min);
+
+    fgVec3f v[8] = {
+                    fgVec3f(center.x - extent.x, center.y - extent.y, center.z + extent.z), // 1 -x, -y, +z
+                    fgVec3f(center.x + extent.x, center.y - extent.y, center.z + extent.z), // 2 +x, -y, +z
+                    fgVec3f(center.x + extent.x, center.y + extent.y, center.z + extent.z), // 3 +x, +y, +z
+                    fgVec3f(center.x - extent.x, center.y + extent.y, center.z + extent.z), // 4 -x, +y, +z
+
+                    fgVec3f(center.x - extent.x, center.y + extent.y, center.z - extent.z), // 5 -x, +y, -z
+                    fgVec3f(center.x + extent.x, center.y + extent.y, center.z - extent.z), // 6 +x, +y, -z
+                    fgVec3f(center.x + extent.x, center.y - extent.y, center.z - extent.z), // 7 +x, -y, -z
+                    fgVec3f(center.x - extent.x, center.y - extent.y, center.z - extent.z) // 8 -x, -y, -z
+    };
+#define _id_vec(_X) v[(_X-1)]
+    const fgVector3f aabbLineStripBuf[] = {
+                                           // 1st face
+                                           _id_vec(4),
+                                           _id_vec(1),
+                                           _id_vec(2),
+                                           _id_vec(4),
+                                           _id_vec(3),
+                                           _id_vec(2),
+
+                                           // 2nd face
+                                           _id_vec(7),
+                                           _id_vec(3),
+                                           _id_vec(6),
+                                           _id_vec(7),
+
+                                           // 3rd face
+                                           _id_vec(8),
+                                           _id_vec(6),
+                                           _id_vec(5),
+                                           _id_vec(8),
+
+                                           // 4th face
+                                           _id_vec(1),
+                                           _id_vec(5),
+                                           _id_vec(4),
+
+    };
+#undef _id_vec
+    uintptr_t offset = (uintptr_t)((unsigned int*)&aabbLineStripBuf[0]);
+    fgGfxPlatform::context()->vertexAttribPointer(FG_GFX_ATTRIB_POS_LOCATION,
+                                                  3,
+                                                  GL_FLOAT,
+                                                  FG_GFX_FALSE,
+                                                  sizeof (fgVector3f),
+                                                  reinterpret_cast<fgGFXvoid*>(offset));
+    glDrawArrays((GLenum)fgGfxPrimitiveMode::FG_GFX_LINE_STRIP, 0, sizeof(aabbLineStripBuf)/sizeof(aabbLineStripBuf[0]));
+
+}
 
 /*
  *
