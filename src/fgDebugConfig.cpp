@@ -16,11 +16,10 @@
 #include "fgDebugConfig.h"
 
 struct fgDebugConfig g_fgDebugConfig = {
-#ifdef FG_DEBUG
-    true,
+#ifndef FG_DEBUG
+    false
 #else
-    false,
-#endif
+    true,
 #ifdef FG_VERBOSE
     true,
 #else
@@ -41,4 +40,5 @@ struct fgDebugConfig g_fgDebugConfig = {
     false, //dumpConfig;        // Dump configs on load?
     false, //forceFullscreen;   // Is fullscreen forced?
     0 //empty;
+#endif /* FG_DEBUG */
 };
