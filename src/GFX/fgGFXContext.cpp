@@ -1248,14 +1248,14 @@ fgGFXboolean fgGfxContext::isBuffer(const fgGfxBufferID* bufferID) {
 }
 
 //
-//#define foreach(_container_type, _variable_scan) \
-//	_container_type::iterator itor = _variable_scan.begin(), \
-//	end = _variable_scan.end(); \
+//#define foreach(_container_type, _variable_scan) 
+//	_container_type::iterator itor = _variable_scan.begin(), 
+//	end = _variable_scan.end(); 
 //	for(;itor!=end;itor++) 
 //
 
-/*
- *
+/**
+ * 
  */
 void fgGfxContext::deleteAllBuffers(void) {
     if(m_buffers.empty())
@@ -1272,8 +1272,12 @@ void fgGfxContext::deleteAllBuffers(void) {
     m_buffers.clear();
 }
 
-/*
- *
+/**
+ * 
+ * @param count
+ * @param buffers
+ * @param usage
+ * @return 
  */
 fgGFXboolean fgGfxContext::genBuffers(const int count,
                                       fgGfxBufferID*& buffers,
@@ -1295,8 +1299,13 @@ fgGFXboolean fgGfxContext::genBuffers(const int count,
     return FG_GFX_TRUE;
 }
 
-/*
- *
+/**
+ * 
+ * @param bufferID
+ * @param size
+ * @param data
+ * @param target
+ * @param usage
  */
 void fgGfxContext::bufferData(fgGfxBufferID& bufferID,
                               const fgGFXsizei size,
@@ -1324,8 +1333,10 @@ void fgGfxContext::bufferData(fgGfxBufferID& bufferID,
     fgGLError("glBufferData");
 }
 
-/*
- *
+/**
+ * 
+ * @param bufferID
+ * @param target
  */
 void fgGfxContext::bindBuffer(fgGfxBufferID& bufferID, const fgGFXenum target) {
     if(bufferID.id == 0)
@@ -1337,8 +1348,10 @@ void fgGfxContext::bindBuffer(fgGfxBufferID& bufferID, const fgGFXenum target) {
     bindBuffer(bufferID.target, bufferID.id);
 }
 
-/*
- *
+/**
+ * 
+ * @param target
+ * @param buffer
  */
 void fgGfxContext::bindBuffer(const fgGFXenum target, const fgGFXuint buffer) {
     if(target == GL_ARRAY_BUFFER || target == GL_ARRAY_BUFFER_BINDING) {
@@ -1348,8 +1361,10 @@ void fgGfxContext::bindBuffer(const fgGFXenum target, const fgGFXuint buffer) {
     }
 }
 
-/*
- *
+/**
+ * 
+ * @param target
+ * @return 
  */
 fgGFXuint fgGfxContext::boundBuffer(const fgGFXenum target) {
     if(target == GL_ARRAY_BUFFER || target == GL_ARRAY_BUFFER_BINDING) {
@@ -1360,8 +1375,9 @@ fgGFXuint fgGfxContext::boundBuffer(const fgGFXenum target) {
     return 0;
 }
 
-/*
- *
+/**
+ * 
+ * @param bufferID
  */
 void fgGfxContext::deleteBuffer(fgGfxBufferID& bufferID) {
     if(bufferID.id == 0)
@@ -1376,8 +1392,10 @@ void fgGfxContext::deleteBuffer(fgGfxBufferID& bufferID) {
     m_buffers.erase(itor);
 }
 
-/*
- *
+/**
+ * 
+ * @param count
+ * @param buffers
  */
 void fgGfxContext::deleteBuffers(const int count, fgGfxBufferID* buffers) {
     if(count <= 0 || !buffers)
@@ -1386,29 +1404,34 @@ void fgGfxContext::deleteBuffers(const int count, fgGfxBufferID* buffers) {
         deleteBuffer(buffers[i]);
 }
 
-/*
- *
+/**
+ * 
+ * @return 
  */
 fgGFXuint fgGfxContext::boundTexture(void) const {
     return m_boundTexture;
 }
 
-/*
- *
+/**
+ * 
+ * @return 
  */
 fgGFXuint fgGfxContext::activeTexture(void) {
     return m_params[(fgGFXuint)GL_ACTIVE_TEXTURE];
 }
 
-/*
- *
+/**
+ * 
+ * @param texture
  */
 void fgGfxContext::activeTexture(const fgGFXenum texture) {
     m_params[(fgGFXuint)GL_ACTIVE_TEXTURE].set((fgGFXint)texture);
 }
 
-/*
- *
+/**
+ * 
+ * @param texture
+ * @return 
  */
 fgGFXboolean fgGfxContext::isTexture(const fgGFXuint texture) {
     if(texture == 0)
@@ -1420,15 +1443,17 @@ fgGFXboolean fgGfxContext::isTexture(const fgGFXuint texture) {
     return FG_GFX_TRUE;
 }
 
-/*
- *
+/**
+ * 
+ * @param textureID
+ * @return 
  */
 fgGFXboolean fgGfxContext::isTexture(const fgGfxTextureID& textureID) {
     return isTexture(textureID.id);
 }
 
-/*
- *
+/**
+ * 
  */
 void fgGfxContext::deleteAllTextures(void) {
     if(m_textures.empty())
@@ -1445,8 +1470,11 @@ void fgGfxContext::deleteAllTextures(void) {
     m_textures.clear();
 }
 
-/*
- *
+/**
+ * 
+ * @param count
+ * @param textures
+ * @param target
  */
 void fgGfxContext::genTextures(const int count,
                                fgGfxTextureID* textures,
@@ -1460,8 +1488,10 @@ void fgGfxContext::genTextures(const int count,
     }
 }
 
-/*
- *
+/**
+ * 
+ * @param texture
+ * @param target
  */
 void fgGfxContext::genTexture(fgGfxTextureID* texture,
                               const fgGFXenum target/* = GL_TEXTURE_2D*/) {
@@ -1475,8 +1505,10 @@ void fgGfxContext::genTexture(fgGfxTextureID* texture,
         m_textures[texture->id] = texture;
 }
 
-/*
- *
+/**
+ * 
+ * @param count
+ * @param textures
  */
 void fgGfxContext::deleteTextures(const int count, fgGfxTextureID* textures) {
     if(count <= 0 || !textures)
@@ -1485,8 +1517,9 @@ void fgGfxContext::deleteTextures(const int count, fgGfxTextureID* textures) {
         deleteTexture(textures[i]);
 }
 
-/*
- *
+/**
+ * 
+ * @param textureID
  */
 void fgGfxContext::deleteTexture(fgGfxTextureID& textureID) {
     if(textureID.id == 0)
@@ -1503,8 +1536,10 @@ void fgGfxContext::deleteTexture(fgGfxTextureID& textureID) {
     m_textures.erase(itor);
 }
 
-/*
- *
+/**
+ * 
+ * @param textureID
+ * @param target
  */
 void fgGfxContext::bindTexture(fgGfxTextureID& textureID, const fgGFXenum target/*=0*/) {
     if(textureID.id == 0)
@@ -1520,24 +1555,27 @@ void fgGfxContext::bindTexture(fgGfxTextureID& textureID, const fgGFXenum target
     }
 }
 
-/*
- *
+/**
+ * 
+ * @param texID
  */
 void fgGfxContext::bindTexture2D(const fgGFXuint texID) {
     m_params[(fgGFXuint)GL_TEXTURE_BINDING_2D].set((fgGFXint)texID);
     m_boundTexture = texID;
 }
 
-/*
- *
+/**
+ * 
+ * @param texID
  */
 void fgGfxContext::bindTexture3D(const fgGFXuint texID) {
     m_params[(fgGFXuint)GL_TEXTURE_BINDING_CUBE_MAP].set((fgGFXint)texID);
     m_boundTexture = texID;
 }
 
-/*
- *
+/**
+ * 
+ * @param mode
  */
 void fgGfxContext::blendEquation(const fgGFXenum mode) {
     fgGfxContextParam& modeRGB = m_params[(fgGFXuint)GL_BLEND_EQUATION_RGB];
@@ -1548,8 +1586,10 @@ void fgGfxContext::blendEquation(const fgGFXenum mode) {
     }
 }
 
-/*
- *
+/**
+ * 
+ * @param sfactor
+ * @param dfactor
  */
 void fgGfxContext::blendFunc(const fgGFXenum sfactor, const fgGFXenum dfactor) {
     fgGfxContextParam& srcRGB = m_params[(fgGFXuint)GL_BLEND_SRC_RGB];
@@ -1573,8 +1613,12 @@ void fgGfxContext::blendFunc(const fgGFXenum sfactor, const fgGFXenum dfactor) {
     }
 }
 
-/*
- *
+/**
+ * 
+ * @param srcRGB
+ * @param dstRGB
+ * @param srcAlpha
+ * @param dstAlpha
  */
 void fgGfxContext::blendFunc(const fgGFXenum srcRGB,
                              const fgGFXenum dstRGB,
@@ -1601,8 +1645,9 @@ void fgGfxContext::blendFunc(const fgGFXenum srcRGB,
     }
 }
 
-/*
- *
+/**
+ * 
+ * @param program
  */
 void fgGfxContext::useProgram(const fgGFXuint program) {
     if(m_params[(fgGFXuint)GL_CURRENT_PROGRAM].intVal != (fgGFXint)program) {
@@ -1610,15 +1655,20 @@ void fgGfxContext::useProgram(const fgGFXuint program) {
     }
 }
 
-/*
- *
+/**
+ * 
+ * @return 
  */
 fgGFXuint fgGfxContext::activeProgram(void) {
     return m_params[(fgGFXuint)GL_CURRENT_PROGRAM];
 }
 
-/*
- *
+/**
+ * 
+ * @param x
+ * @param y
+ * @param width
+ * @param height
  */
 void fgGfxContext::viewport(const fgGFXint x, const fgGFXint y, const fgGFXint width, const fgGFXint height) {
     fgGFXuint areaQ = x * y + width*height;
@@ -1628,22 +1678,29 @@ void fgGfxContext::viewport(const fgGFXint x, const fgGFXint y, const fgGFXint w
     }
 }
 
-/*
- *
+/**
+ * 
+ * @param pos
+ * @param size
  */
 void fgGfxContext::viewport(const fgVector2i& pos, const fgVector2i& size) {
     viewport(pos.x, pos.y, size.x, size.y);
 }
 
-/*
- *
+/**
+ * 
+ * @param dimensions
  */
 void fgGfxContext::viewport(const fgVector4i& dimensions) {
     viewport(dimensions.x, dimensions.y, dimensions.z, dimensions.w);
 }
 
-/*
- *
+/**
+ * 
+ * @param x
+ * @param y
+ * @param width
+ * @param height
  */
 void fgGfxContext::scissor(const fgGFXint x, const fgGFXint y, const fgGFXint width, const fgGFXint height) {
     fgGFXuint areaQ = x * y + width*height;
@@ -1653,44 +1710,51 @@ void fgGfxContext::scissor(const fgGFXint x, const fgGFXint y, const fgGFXint wi
     }
 }
 
-/*
- *
+/**
+ * 
+ * @param pos
+ * @param size
  */
 void fgGfxContext::scissor(const fgVector2i& pos, const fgVector2i& size) {
     scissor(pos.x, pos.y, size.x, size.y);
 }
 
-/*
- *
+/**
+ * 
+ * @param dimensions
  */
 void fgGfxContext::scissor(const fgVector4i& dimensions) {
     scissor(dimensions.x, dimensions.y, dimensions.z, dimensions.w);
 }
 
-/*
- *
+/**
+ * 
+ * @param toggle
  */
 void fgGfxContext::setScissorTest(const fgBool toggle) {
     m_params[(fgGFXuint)GL_SCISSOR_TEST].set((fgGFXboolean)toggle);
 }
 
-/*
- *
+/**
+ * 
+ * @param toggle
  */
 void fgGfxContext::setDepthTest(const fgBool toggle) {
     m_params[(fgGFXuint)GL_DEPTH_TEST].set((fgGFXboolean)toggle);
 }
 
-/*
- *
+/**
+ * 
+ * @param toggle
  */
 void fgGfxContext::setCullFace(const fgBool toggle) {
     //gfxParamMapItor itor = m_params.find((fgGFXuint)GL_CULL_FACE);
     m_params[(fgGFXuint)GL_CULL_FACE].set((fgGFXboolean)toggle);
 }
 
-/*
- *
+/**
+ * 
+ * @param toggle
  */
 void fgGfxContext::setBlend(const fgBool toggle) {
     m_params[(fgGFXuint)GL_BLEND].set((fgGFXboolean)toggle);
@@ -1772,6 +1836,11 @@ void fgGfxContext::updateAttribMask(const fgGFXuint index) {
 /*
  * https://www.khronos.org/opengles/sdk/docs/man/xhtml/glEnableVertexAttribArray.xml
  */
+/**
+ * 
+ * @param index
+ * @param updateMask
+ */
 void fgGfxContext::enableVertexAttribArray(const fgGFXuint index, const fgBool updateMask) {
     if(!m_attrInfo[index].isEnabled) {
         m_attrInfo[index].isEnabled = FG_GFX_TRUE;
@@ -1781,8 +1850,10 @@ void fgGfxContext::enableVertexAttribArray(const fgGFXuint index, const fgBool u
     }
 }
 
-/*
- *
+/**
+ * 
+ * @param index
+ * @param updateMask
  */
 void fgGfxContext::disableVertexAttribArray(const fgGFXuint index, const fgBool updateMask) {
     if(m_attrInfo[index].isEnabled) {
@@ -1935,8 +2006,9 @@ void fgGfxContext::vertexAttribPointer(fgGFXuint index,
     fgGLError("glVertexAttribPointer"); // #FIXME
 }
 
-/*
- *
+/**
+ * 
+ * @param attrData
  */
 void fgGfxContext::vertexAttribPointer(fgGfxAttributeData& attrData) {
     fgGFXint index = attrData.index;

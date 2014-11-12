@@ -14,55 +14,58 @@
     #include "fgBuildConfig.h"
     #include "fgBool.h"
 
-    #if defined(FG_USING_GLM)
-        #include "glm/vec2.hpp"
-        #include "glm/vec3.hpp"
-    #endif
+    #include "fgGFXVertex.h"
 
     #include <cmath>
 
-//
-template <class DataType> struct fgBoundingBox2D;
-//
-template <class DataType> struct fgBoundingBox3D;
+// Forward declaration for plain bounding box 2D
+template <class ValueType> struct fgBoundingBox2DT;
+// Forward declaration for plain bounding box 3D
+template <class ValueType> struct fgBoundingBox3DT;
 
 /**
  * This is basic bounding box - mainly used in 2D / GUI. Depending on the usage
  * it can also represent bounding box as center position and half-extent vectors
  * In GUI the upper-left corner is represented as the position vector.
  */
-template <class BoxType, class VecType, class DataType>
-struct fgBoundingBox {
+template <class BoxType, class VecType, class ValueType>
+struct fgBoundingBoxT {
     ///
-    typedef fgBoundingBox<BoxType, VecType, DataType> self_type;
-    ///
-    typedef DataType value_type;
-    ///
+    typedef fgBoundingBoxT<BoxType, VecType, ValueType> self_type;
+    /// Typedef for the value type - float/int/double in vector
+    typedef ValueType value_type;
+    /// Typedef for the vector type - anything, needs to have 3 values - x,y,z
     typedef VecType vector_type;
-    ///
+    /// Bounding box type - the extended type
     typedef BoxType box_type;
-    ///
+    /// Type used for indexing
     typedef unsigned int size_type;
 
-    ///
-
     union {
+        /// Position vector - depends on the usage
         VecType pos;
+        /// Center position - used together with half-extent
         VecType center;
-        // Could have here some min/max (aabb?)
+        /// Could have here some min/max (aabb?)
         VecType min;
     };
-    ///
 
     union {
+        /// Size vector - depends on the usage
         VecType size;
+        /// Half-extent vector
         VecType extent;
-        VecType max; // This is for compatibility with AABB type
+        /// This is for compatibility with AABB type
+        VecType max;
     };
-    
-    self_type & operator= (const self_type & other)
-    {
-        if (this != &other) // protect against invalid self-assignment
+    /**
+     * Overloaded assignment operator - needs to be implemented
+     * because of the use of union with complex types
+     * @param other
+     * @return 
+     */
+    self_type & operator =(const self_type & other) {
+        if(this != &other) // protect against invalid self-assignment
         {
             this->pos = other.pos;
             this->size = other.size;
@@ -73,11 +76,15 @@ struct fgBoundingBox {
     /**
      * 
      */
-    fgBoundingBox() :
+    fgBoundingBoxT() :
     pos(),
     size() { }
-    
-    fgBoundingBox(const self_type & other) {
+    /**
+     * Overloaded copy constructor - needs to be implemented
+     * explicitly because of the union containing complex types
+     * @param other
+     */
+    fgBoundingBoxT(const self_type & other) {
         this->pos = other.pos;
         this->size = other.size;
     }
@@ -86,23 +93,25 @@ struct fgBoundingBox {
      * @param _pos
      * @param _size
      */
-    fgBoundingBox(const VecType &_pos, const VecType &_size) :
+    fgBoundingBoxT(const VecType &_pos, const VecType &_size) :
     pos(_pos),
     size(_size) { }
     /**
      * 
      * @return 
      */
-    virtual int length(void) const {
+    virtual size_type length(void) const {
         return this->pos.length() + this->size.length();
     }
     /**
-     * 
+     * Overloaded array operator - used for simplicity
+     * Allows array-like access to values. For 2D bounding box max length
+     * is 4 elements (x,y,w,h) or equivalent. This is safe
      * @param i
      * @return 
      */
-    DataType & operator [](size_type i) {
-        if(i > this->length())
+    value_type & operator [](size_type i) {
+        if(i >= this->length())
             i = 0;
         if(i >= this->pos.length()) {
             i -= this->pos.length();
@@ -116,8 +125,8 @@ struct fgBoundingBox {
      * @param i
      * @return 
      */
-    DataType const & operator [](size_type i)const {
-        if(i > this->length())
+    value_type const & operator [](size_type i)const {
+        if(i >= this->length())
             i = 0;
         if(i >= this->pos.length()) {
             i -= this->pos.length();
@@ -131,8 +140,8 @@ struct fgBoundingBox {
      */
     virtual void zero(void) {
         // This zeroes the internal data
-        memset(&this->pos, 0, sizeof(vector_type));
-        memset(&this->size, 0, sizeof(vector_type));
+        memset(&this->pos, 0, sizeof (vector_type));
+        memset(&this->size, 0, sizeof (vector_type));
         //this->pos.x = (DataType)0;
         //this->pos.y = (DataType)0;
         //this->size.x = (DataType)0;
@@ -142,42 +151,42 @@ struct fgBoundingBox {
      * 
      * @return 
      */
-    DataType left(void) const {
+    value_type left(void) const {
         return this->pos.x;
     }
     /**
      * 
      * @return 
      */
-    DataType right(void) const {
+    value_type right(void) const {
         return this->pos.x + this->size.x;
     }
     /**
      * 
      * @return 
      */
-    DataType top(void) const {
+    value_type top(void) const {
         return this->pos.y;
     }
     /**
      * 
      * @return 
      */
-    DataType bottom(void) const {
+    value_type bottom(void) const {
         return this->pos.y + this->size.y;
     }
     /**
      * 
      * @return 
      */
-    DataType width(void) const {
+    value_type width(void) const {
         return this->size.x;
     }
     /**
      * 
      * @return 
      */
-    DataType height(void) const {
+    value_type height(void) const {
         return this->size.y;
     }
     /**
@@ -185,7 +194,7 @@ struct fgBoundingBox {
      * @param left
      * @return 
      */
-    BoxType &setLeft(DataType left) {
+    box_type &setLeft(value_type left) {
         this->pos.x = left;
         return (*this);
     }
@@ -194,7 +203,7 @@ struct fgBoundingBox {
      * @param right
      * @return 
      */
-    BoxType &setRight(DataType right) {
+    box_type &setRight(value_type right) {
         this->size.x = right - this->pos.x;
         return (*this);
     }
@@ -203,7 +212,7 @@ struct fgBoundingBox {
      * @param top
      * @return 
      */
-    BoxType &setTop(DataType top) {
+    box_type &setTop(value_type top) {
         this->pos.y = top;
         return (*this);
     }
@@ -212,7 +221,7 @@ struct fgBoundingBox {
      * @param back
      * @return 
      */
-    BoxType &setBottom(DataType back) {
+    box_type &setBottom(value_type back) {
         this->size.y = back - this->pos.y;
         return (*this);
     }
@@ -221,7 +230,7 @@ struct fgBoundingBox {
      * @param width
      * @return 
      */
-    BoxType &setWidth(DataType width) {
+    box_type &setWidth(value_type width) {
         this->size.x = width;
         return (*this);
     }
@@ -230,7 +239,7 @@ struct fgBoundingBox {
      * @param height
      * @return 
      */
-    BoxType &setHeight(DataType height) {
+    box_type &setHeight(value_type height) {
         this->size.y = height;
         return (*this);
     }
@@ -239,7 +248,7 @@ struct fgBoundingBox {
      * @param vec
      * @return 
      */
-    virtual fgBool test(const VecType& vec) const {
+    virtual inline fgBool test(const vector_type& vec) const {
         return this->test(vec.x, vec.y);
     }
     /**
@@ -248,7 +257,7 @@ struct fgBoundingBox {
      * @param y
      * @return 
      */
-    virtual fgBool test(const DataType x, const DataType y) const {
+    virtual inline fgBool test(const value_type x, const value_type y) const {
         if(x > this->pos.x && x < (this->pos.x + this->size.x)) {
             if(y > this->pos.y && y < (this->pos.y + this->size.y)) {
                 return FG_TRUE;
@@ -263,35 +272,59 @@ struct fgBoundingBox {
      * @param z
      * @return 
      */
-    virtual fgBool test(const DataType x, const DataType y, const DataType z) const {
+    virtual inline fgBool test(const value_type x, const value_type y, const value_type z) const {
         return this->test(x, y);
     }
-
+    /**
+     * 
+     * @param a
+     * @param b
+     * @return 
+     */
+    virtual box_type &merge(const box_type &a, const box_type &b) = 0;
+    /**
+     * 
+     * @param a
+     * @return 
+     */
+    virtual box_type &merge(const box_type &a) = 0;
+    
+    /**
+     * 
+     * @param data
+     * @param count
+     * @return 
+     */
+    virtual box_type &setBoundsFromData(vector_type *data, const size_type count = 1) = 0;
 };
 
 /**
  *
  */
-template <class DataType>
-struct fgBoundingBox2D : fgBoundingBox<fgBoundingBox2D<DataType>, glm::detail::tvec2<DataType, glm::defaultp>, DataType> {
-    typedef fgBoundingBox2D<DataType> self_type;
+template <class ValueType>
+struct fgBoundingBox2DT : fgBoundingBoxT<fgBoundingBox2DT<ValueType>, fgVector2T<ValueType>, ValueType> {
+    typedef fgBoundingBox2DT<ValueType> self_type;
     ///
-    typedef glm::detail::tvec2<DataType, glm::defaultp> vec_type;
+    typedef fgVector2T<ValueType> vec_type;
     ///
-    typedef fgBoundingBox<self_type, vec_type, DataType> base_type;
+    typedef fgBoundingBoxT<self_type, vec_type, ValueType> base_type;
     ///
     typedef typename base_type::size_type size_type;
+    ///
+    typedef typename base_type::value_type value_type;
+    ///
+    typedef typename base_type::vector_type vector_type;
     /**
      * 
      */
-    fgBoundingBox2D() :
+    fgBoundingBox2DT() :
     base_type() { }
     /**
      * 
      * @param _pos
      * @param _size
      */
-    fgBoundingBox2D(const vec_type &_pos, const vec_type &_size) :
+    fgBoundingBox2DT(const vec_type &_pos, const vec_type &_size) :
     base_type(_pos, _size) { }
     #if 0
     /**
@@ -300,7 +333,7 @@ struct fgBoundingBox2D : fgBoundingBox<fgBoundingBox2D<DataType>, glm::detail::t
      * @param b
      * @return 
      */
-    fgBoundingBox2D &merge(const fgBoundingBox2D &a, const fgBoundingBox2D &b) {
+    fgBoundingBox2DT &merge(const fgBoundingBox2DT &a, const fgBoundingBox2DT &b) {
         this->pos = a.pos;
         this->size = a.size;
         if(a.pos.x + a.size.x < b.pos.x + b.size.x)
@@ -314,7 +347,7 @@ struct fgBoundingBox2D : fgBoundingBox<fgBoundingBox2D<DataType>, glm::detail::t
      * @param a
      * @return 
      */
-    fgBoundingBox2D &merge(const fgBoundingBox2D &a) {
+    fgBoundingBox2DT &merge(const fgBoundingBox2DT &a) {
         if(this->pos.x + this->size.x < a.pos.x + a.size.x)
             this->size.x = a.pos.x + a.size.x - this->pos.x;
         if(this->pos.y + this->size.y < a.pos.y + a.size.y)
@@ -322,7 +355,13 @@ struct fgBoundingBox2D : fgBoundingBox<fgBoundingBox2D<DataType>, glm::detail::t
         return (*this);
     }
     #endif
-    fgBoundingBox2D &merge(const fgBoundingBox2D &a, const fgBoundingBox2D &b) {
+    /**
+     * 
+     * @param a
+     * @param b
+     * @return 
+     */
+    virtual self_type &merge(const self_type &a, const self_type &b) {
         this->pos = a.pos;
         this->size = a.size;
 
@@ -337,7 +376,7 @@ struct fgBoundingBox2D : fgBoundingBox<fgBoundingBox2D<DataType>, glm::detail::t
      * @param a
      * @return 
      */
-    fgBoundingBox2D &merge(const fgBoundingBox2D &a) {
+    virtual self_type &merge(const self_type &a) {
         //if(firstArea.X + firstArea.Z < secondArea.X + secondArea.Z)
         //    firstArea.Z = secondArea.X + secondArea.Z - firstArea.X;
         //
@@ -353,23 +392,33 @@ struct fgBoundingBox2D : fgBoundingBox<fgBoundingBox2D<DataType>, glm::detail::t
     }
     /**
      * 
+     * @param data
+     * @param count
+     * @return 
+     */
+    virtual self_type &setBoundsFromData(vector_type *data, const size_type count = 1) {
+        // need to implement
+        return (*this);
+    }
+    /**
+     * 
      */
     virtual void zero(void) {
-        this->pos.x = (DataType)0;
-        this->pos.y = (DataType)0;
-        this->size.x = (DataType)0;
-        this->size.y = (DataType)0;
+        this->pos.x = (value_type)0;
+        this->pos.y = (value_type)0;
+        this->size.x = (value_type)0;
+        this->size.y = (value_type)0;
     }
 };
 
 /// Basic bounding box 2D with float data type
-typedef fgBoundingBox2D<float> fgBoundingBox2Df;
+typedef fgBoundingBox2DT<float> fgBoundingBox2Df;
 /// Basic bounding box 2D with integer data type
-typedef fgBoundingBox2D<int> fgBoundingBox2Di;
+typedef fgBoundingBox2DT<int> fgBoundingBox2Di;
 // Basic bounding box 2D with unsigned integer data type
-typedef fgBoundingBox2D<unsigned int> fgBoundingBox2Du;
+typedef fgBoundingBox2DT<unsigned int> fgBoundingBox2Du;
 // Basic bounding box 2D with double precision data type
-typedef fgBoundingBox2D<double> fgBoundingBox2Dd;
+typedef fgBoundingBox2DT<double> fgBoundingBox2Dd;
 
 typedef fgBoundingBox2Df fgBB2Df;
 typedef fgBoundingBox2Di fgBB2Di;
@@ -379,58 +428,64 @@ typedef fgBoundingBox2Dd fgBB2Dd;
 /**
  *
  */
-template <class DataType>
-struct fgBoundingBox3D :
-fgBoundingBox<fgBoundingBox3D<DataType>, glm::detail::tvec3<DataType, glm::defaultp>, DataType> {
-    typedef fgBoundingBox3D<DataType> self_type;
+template <class ValueType>
+struct fgBoundingBox3DT :
+fgBoundingBoxT<fgBoundingBox3DT<ValueType>, fgVector3T<ValueType>, ValueType> {
     ///
-    typedef glm::detail::tvec3<DataType, glm::defaultp> vec_type;
+    typedef fgBoundingBox3DT<ValueType> self_type;
     ///
-    typedef fgBoundingBox<self_type, vec_type, DataType> base_type;
+    typedef fgVector3T<ValueType> vec_type;
+    ///
+    typedef fgBoundingBoxT<self_type, vec_type, ValueType> base_type;
     ///
     typedef typename base_type::size_type size_type;
+    ///
+    typedef typename base_type::value_type value_type;
+    ///
+    typedef typename base_type::vector_type vector_type;
+    
     /**
      * 
      */
-    fgBoundingBox3D() :
+    fgBoundingBox3DT() :
     base_type() { }
     /**
      * 
      * @param _pos
      * @param _size
      */
-    fgBoundingBox3D(const vec_type &_pos, const vec_type &_size) :
+    fgBoundingBox3DT(const vec_type &_pos, const vec_type &_size) :
     base_type(_pos, _size) { }
     /**
      * 
      */
     virtual void zero(void) {
-        this->pos.x = (DataType)0;
-        this->pos.y = (DataType)0;
-        this->pos.z = (DataType)0;
-        this->size.x = (DataType)0;
-        this->size.y = (DataType)0;
-        this->size.z = (DataType)0;
+        this->pos.x = (value_type)0;
+        this->pos.y = (value_type)0;
+        this->pos.z = (value_type)0;
+        this->size.x = (value_type)0;
+        this->size.y = (value_type)0;
+        this->size.z = (value_type)0;
     }
     /**
      * 
      * @return 
      */
-    DataType front(void) const {
+    value_type front(void) const {
         return this->pos.z;
     }
     /**
      * 
      * @return 
      */
-    DataType back(void) const {
+    value_type back(void) const {
         return this->pos.z - this->size.z; // #FIXME
     }
     /**
      * 
      * @return 
      */
-    DataType depth(void) const {
+    value_type depth(void) const {
         return this->size.z;
     }
     /**
@@ -438,7 +493,7 @@ fgBoundingBox<fgBoundingBox3D<DataType>, glm::detail::tvec3<DataType, glm::defau
      * @param front
      * @return 
      */
-    fgBoundingBox3D &setFront(DataType front) {
+    self_type &setFront(value_type front) {
         this->pos.z = front;
         return (*this);
     }
@@ -447,7 +502,7 @@ fgBoundingBox<fgBoundingBox3D<DataType>, glm::detail::tvec3<DataType, glm::defau
      * @param back
      * @return 
      */
-    fgBoundingBox3D &setBack(DataType back) {
+    self_type &setBack(value_type back) {
         this->size.z = back + this->pos.z; // #FIXME
         return (*this);
     }
@@ -456,7 +511,7 @@ fgBoundingBox<fgBoundingBox3D<DataType>, glm::detail::tvec3<DataType, glm::defau
      * @param depth
      * @return 
      */
-    fgBoundingBox3D &setDepth(DataType depth) {
+    self_type &setDepth(value_type depth) {
         this->size.z = depth;
         return (*this);
     }
@@ -465,8 +520,8 @@ fgBoundingBox<fgBoundingBox3D<DataType>, glm::detail::tvec3<DataType, glm::defau
      * @param a
      * @param b
      * @return 
-     */
-    fgBoundingBox3D &merge(const fgBoundingBox3D &a, const fgBoundingBox3D &b) {
+     */ 
+    virtual self_type &merge(const self_type &a, const self_type &b) {
         this->pos = a.pos;
         this->size = a.size;
 
@@ -483,7 +538,7 @@ fgBoundingBox<fgBoundingBox3D<DataType>, glm::detail::tvec3<DataType, glm::defau
      * @param a
      * @return 
      */
-    fgBoundingBox3D &merge(const fgBoundingBox3D &a) {
+    virtual self_type &merge(const self_type &a) {
         //if(firstArea.X + firstArea.Z < secondArea.X + secondArea.Z)
         //    firstArea.Z = secondArea.X + secondArea.Z - firstArea.X;
         //
@@ -508,7 +563,16 @@ fgBoundingBox<fgBoundingBox3D<DataType>, glm::detail::tvec3<DataType, glm::defau
             this->size.z = a.pos.z + a.size.z - this->pos.z;
         }
 
-
+        return (*this);
+    }
+    /**
+     * 
+     * @param data
+     * @param count
+     * @return 
+     */
+    virtual self_type &setBoundsFromData(vector_type *data, const size_type count = 1) {
+        // need to implement
         return (*this);
     }
     /**
@@ -516,7 +580,7 @@ fgBoundingBox<fgBoundingBox3D<DataType>, glm::detail::tvec3<DataType, glm::defau
      * @param vec
      * @return 
      */
-    virtual fgBool test(const vec_type& vec) const {
+    virtual inline fgBool test(const vec_type& vec) const {
         return this->test(vec.x, vec.y, vec.z);
     }
     /**
@@ -525,7 +589,7 @@ fgBoundingBox<fgBoundingBox3D<DataType>, glm::detail::tvec3<DataType, glm::defau
      * @param y
      * @return 
      */
-    virtual fgBool test(const DataType x, const DataType y) const {
+    virtual inline fgBool test(const value_type x, const value_type y) const {
         return base_type::test(x, y);
     }
     /**
@@ -535,7 +599,7 @@ fgBoundingBox<fgBoundingBox3D<DataType>, glm::detail::tvec3<DataType, glm::defau
      * @param z
      * @return 
      */
-    virtual fgBool test(const DataType x, const DataType y, const DataType z) const {
+    virtual inline fgBool test(const value_type x, const value_type y, const value_type z) const {
         if(x > this->pos.x && x < (this->pos.x + this->size.x)) {
             if(y > this->pos.y && y < (this->pos.y + this->size.y)) {
                 if(z > this->pos.z && z < (this->pos.z + this->size.z)) {
@@ -548,18 +612,18 @@ fgBoundingBox<fgBoundingBox3D<DataType>, glm::detail::tvec3<DataType, glm::defau
 };
 
 ///
-typedef fgBoundingBox3D<float> fgBoundingBox3Df;
+typedef fgBoundingBox3DT<float> fgBoundingBox3Df;
 ///
-typedef fgBoundingBox3D<int> fgBoundingBox3Di;
+typedef fgBoundingBox3DT<int> fgBoundingBox3Di;
 ///
-typedef fgBoundingBox3D<unsigned int> fgBoundingBox3Du;
+typedef fgBoundingBox3DT<unsigned int> fgBoundingBox3Du;
 ///
-typedef fgBoundingBox3D<double> fgBoundingBox3Dd;
+typedef fgBoundingBox3DT<double> fgBoundingBox3Dd;
 
 typedef fgBoundingBox3Df fgBB3Df;
 typedef fgBoundingBox3Di fgBB3Di;
 typedef fgBoundingBox3Du fgBB3Du;
 typedef fgBoundingBox3Dd fgBB3Dd;
 
-#undef _FG_GFX_BOUNDING_BOX_H_BLOCK_
+    #undef _FG_GFX_BOUNDING_BOX_H_BLOCK_
 #endif /* _FG_GFX_BOUNDING_BOX_H_ */

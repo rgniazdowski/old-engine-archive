@@ -26,33 +26,37 @@
     #endif
 
 //
-template <class DataType> struct fgAABoundingBox2D;
+template <class ValueType> struct fgAABoundingBox2DT;
 //
-template <class DataType> struct fgAABoundingBox3D;
+template <class ValueType> struct fgAABoundingBox3DT;
 
 /**
  *
  */
-template <class DataType>
-struct fgAABoundingBox2D : fgBoundingBox<fgAABoundingBox2D<DataType>, glm::detail::tvec2<DataType, glm::defaultp>, DataType> {
-    typedef fgAABoundingBox2D<DataType> self_type;
+template <class ValueType>
+struct fgAABoundingBox2DT : fgBoundingBoxT<fgAABoundingBox2DT<ValueType>, fgVector2T<ValueType>, ValueType> {
+    typedef fgAABoundingBox2DT<ValueType> self_type;
     ///
-    typedef glm::detail::tvec2<DataType, glm::defaultp> vec_type;
+    typedef fgVector2T<ValueType> vec_type;
     ///
-    typedef fgBoundingBox<self_type, vec_type, DataType> base_type;
+    typedef fgBoundingBoxT<self_type, vec_type, ValueType> base_type;
     ///
     typedef typename base_type::size_type size_type;
+    ///
+    typedef typename base_type::value_type value_type;
+    ///
+    typedef typename base_type::vector_type vector_type;
     /**
      * 
      */
-    fgAABoundingBox2D() :
+    fgAABoundingBox2DT() :
     base_type() { }
     /**
      * 
      * @param _pos
      * @param _size
      */
-    fgAABoundingBox2D(const vec_type &_pos, const vec_type &_size) :
+    fgAABoundingBox2DT(const vec_type &_pos, const vec_type &_size) :
     base_type(_pos, _size) { }
     /**
      * 
@@ -60,7 +64,7 @@ struct fgAABoundingBox2D : fgBoundingBox<fgAABoundingBox2D<DataType>, glm::detai
      * @param b
      * @return 
      */
-    fgAABoundingBox2D &merge(const fgAABoundingBox2D &a, const fgAABoundingBox2D &b) {
+    self_type &merge(const self_type &a, const self_type &b) {
         this->zero();
 
         this->min.x = glm::min(this->min.x, a.min.x);
@@ -80,7 +84,7 @@ struct fgAABoundingBox2D : fgBoundingBox<fgAABoundingBox2D<DataType>, glm::detai
      * @param a
      * @return 
      */
-    fgAABoundingBox2D &merge(const fgAABoundingBox2D &a) {
+    virtual self_type &merge(const self_type &a) {
         // Should zero? nope!
 
         this->min.x = glm::min(this->min.x, a.min.x);
@@ -96,7 +100,7 @@ struct fgAABoundingBox2D : fgBoundingBox<fgAABoundingBox2D<DataType>, glm::detai
      * @param count
      * @return 
      */
-    fgAABoundingBox2D &merge(const fgAABoundingBox2D *aaboxes, const size_type count = 1) {
+    virtual self_type &merge(const self_type *aaboxes, const size_type count = 1) {
         if(!count || !aaboxes)
             return (*this);
         this->zero();
@@ -108,25 +112,45 @@ struct fgAABoundingBox2D : fgBoundingBox<fgAABoundingBox2D<DataType>, glm::detai
         }
         return (*this);
     }
+    
+    /**
+     * 
+     * @param data
+     * @param count
+     * @return 
+     */
+    virtual self_type &setBoundsFromData(vector_type *data, const size_type count = 1) {
+        if(!data || !count)
+            return (*this);
+        this->zero();
+        for(int i = 0; i < count; i++) {
+            this->min.x = glm::min(this->min.x, data[i].x);
+            this->min.y = glm::min(this->min.y, data[i].y);
+            this->max.x = glm::max(this->max.x, data[i].x);
+            this->max.y = glm::max(this->max.y, data[i].y);
+        }
+        return (*this);
+    }
+    
     /**
      * 
      */
     virtual void zero(void) {
-        this->pos.x = (DataType)0;
-        this->pos.y = (DataType)0;
-        this->size.x = (DataType)0;
-        this->size.y = (DataType)0;
+        this->pos.x = (value_type)0;
+        this->pos.y = (value_type)0;
+        this->size.x = (value_type)0;
+        this->size.y = (value_type)0;
     }
 };
 
 /// Basic axis-aligned bounding box 2D with float data type
-typedef fgAABoundingBox2D<float> fgAABoundingBox2Df;
+typedef fgAABoundingBox2DT<float> fgAABoundingBox2Df;
 /// Basic axis-aligned bounding box 2D with integer data type
-typedef fgAABoundingBox2D<int> fgAABoundingBox2Di;
+typedef fgAABoundingBox2DT<int> fgAABoundingBox2Di;
 // Basic axis-aligned bounding box 2D with unsigned integer data type
-typedef fgAABoundingBox2D<unsigned int> fgAABoundingBox2Du;
+typedef fgAABoundingBox2DT<unsigned int> fgAABoundingBox2Du;
 // Basic axis-aligned bounding box 2D with double precision data type
-typedef fgAABoundingBox2D<double> fgAABoundingBox2Dd;
+typedef fgAABoundingBox2DT<double> fgAABoundingBox2Dd;
 
 typedef fgAABoundingBox2Df fgAABB2Df;
 typedef fgAABoundingBox2Di fgAABB2Di;
@@ -140,26 +164,31 @@ typedef fgAABoundingBox2Dd fgAABB2Dd;
 /**
  *
  */
-template <class DataType>
-struct fgAABoundingBox3D : fgBoundingBox<fgAABoundingBox3D<DataType>, glm::detail::tvec3<DataType, glm::defaultp>, DataType> {
-    typedef fgAABoundingBox3D<DataType> self_type;
+template <class ValueType>
+struct fgAABoundingBox3DT : fgBoundingBoxT<fgAABoundingBox3DT<ValueType>, fgVector3T<ValueType>, ValueType> {
+    typedef fgAABoundingBox3DT<ValueType> self_type;
     ///
-    typedef glm::detail::tvec3<DataType, glm::defaultp> vec_type;
+    typedef fgVector3T<ValueType> vec_type;
     ///
-    typedef fgBoundingBox<self_type, vec_type, DataType> base_type;
+    typedef fgBoundingBoxT<self_type, vec_type, ValueType> base_type;
     ///
     typedef typename base_type::size_type size_type;
+    ///
+    typedef typename base_type::value_type value_type;
+    ///
+    typedef typename base_type::vector_type vector_type;
+    
     /**
      * 
      */
-    fgAABoundingBox3D() :
+    fgAABoundingBox3DT() :
     base_type() { }
     /**
      * 
      * @param _pos
      * @param _size
      */
-    fgAABoundingBox3D(const vec_type &_pos, const vec_type &_size) :
+    fgAABoundingBox3DT(const vec_type &_pos, const vec_type &_size) :
     base_type(_pos, _size) { }
     /**
      * 
@@ -167,7 +196,7 @@ struct fgAABoundingBox3D : fgBoundingBox<fgAABoundingBox3D<DataType>, glm::detai
      * @param b
      * @return 
      */
-    fgAABoundingBox3D &merge(const fgAABoundingBox3D &a, const fgAABoundingBox3D &b) {
+    virtual self_type &merge(const self_type &a, const self_type &b) {
         this->zero();
 
         this->min.x = glm::min(this->min.x, a.min.x);
@@ -192,7 +221,7 @@ struct fgAABoundingBox3D : fgBoundingBox<fgAABoundingBox3D<DataType>, glm::detai
      * @param a
      * @return 
      */
-    fgAABoundingBox3D &merge(const fgAABoundingBox3D &a) {
+    virtual self_type &merge(const self_type &a) {
         // Should zero? nope!
 
         this->min.x = glm::min(this->min.x, a.min.x);
@@ -210,7 +239,7 @@ struct fgAABoundingBox3D : fgBoundingBox<fgAABoundingBox3D<DataType>, glm::detai
      * @param count
      * @return 
      */
-    fgAABoundingBox3D &merge(const fgAABoundingBox3D *aaboxes, const size_type count = 1) {
+    virtual self_type &merge(const self_type *aaboxes, const size_type count = 1) {
         if(!count || !aaboxes)
             return (*this);
         this->zero();
@@ -225,26 +254,46 @@ struct fgAABoundingBox3D : fgBoundingBox<fgAABoundingBox3D<DataType>, glm::detai
         return (*this);
     }
     /**
+     * 
+     * @param data
+     * @param count
+     * @return 
+     */
+    virtual self_type &setBoundsFromData(vector_type *data, const size_type count = 1) {
+        if(!data || !count)
+            return (*this);
+        this->zero();
+        for(int i = 0; i < count; i++) {
+            this->min.x = glm::min(this->min.x, data[i].x);
+            this->min.y = glm::min(this->min.y, data[i].y);
+            this->min.z = glm::min(this->min.z, data[i].z);
+            this->max.x = glm::max(this->max.x, data[i].x);
+            this->max.y = glm::max(this->max.y, data[i].y);
+            this->max.z = glm::max(this->max.z, data[i].z);
+        }
+        return (*this);
+    }
+    /**
      *  
      */
     virtual void zero(void) {
-        this->min.x = (DataType)0;
-        this->min.y = (DataType)0;
-        this->min.z = (DataType)0;
-        this->max.x = (DataType)0;
-        this->max.y = (DataType)0;
-        this->max.z = (DataType)0;
+        this->min.x = (value_type)0;
+        this->min.y = (value_type)0;
+        this->min.z = (value_type)0;
+        this->max.x = (value_type)0;
+        this->max.y = (value_type)0;
+        this->max.z = (value_type)0;
     }
 };
 
 /// Basic axis-aligned bounding box 3D with float data type
-typedef fgAABoundingBox3D<float> fgAABoundingBox3Df;
+typedef fgAABoundingBox3DT<float> fgAABoundingBox3Df;
 /// Basic axis-aligned bounding box 3D with integer data type
-typedef fgAABoundingBox3D<int> fgAABoundingBox3Di;
+typedef fgAABoundingBox3DT<int> fgAABoundingBox3Di;
 // Basic axis-aligned bounding box 3D with unsigned integer data type
-typedef fgAABoundingBox3D<unsigned int> fgAABoundingBox3Du;
+typedef fgAABoundingBox3DT<unsigned int> fgAABoundingBox3Du;
 // Basic axis-aligned bounding box 3D with double precision data type
-typedef fgAABoundingBox3D<double> fgAABoundingBox3Dd;
+typedef fgAABoundingBox3DT<double> fgAABoundingBox3Dd;
 
 typedef fgAABoundingBox3Df fgAABB3Df;
 typedef fgAABoundingBox3Di fgAABB3Di;

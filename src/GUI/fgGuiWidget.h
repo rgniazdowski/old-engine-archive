@@ -38,9 +38,7 @@
         #include "GFX/fgGFXLayer.h"
     #endif
 
-    #ifndef _FG_GFX_BOUNDING_BOX_H_
-        #include "GFX/fgGFXBoundingBox.h"
-    #endif
+    #include "GFX/fgGFXBoundingBox.h"
 
     #ifndef _FG_POINTER_DATA_H_
         #include "Input/fgPointerData.h"
@@ -354,7 +352,7 @@ public:
      */
     virtual void setPosition(const fgVector3f& pos) {
         m_bbox.pos = pos;
-    }    
+    }
     /**
      * 
      * @return 

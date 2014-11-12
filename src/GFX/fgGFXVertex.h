@@ -24,13 +24,27 @@
         #include "fgGFXColor.h"
     #endif
 
-    #if defined FG_USING_GLM
+    #if defined(FG_USING_GLM)
+
         #include "glm/vec2.hpp"
         #include "glm/vec3.hpp"
         #include "glm/vec4.hpp"
 
-        #ifndef FG_MATH_GLM_VECTOR_MASK
+        #if !defined(FG_MATH_GLM_VECTOR_MASK)
             #define FG_MATH_GLM_VECTOR_MASK
+
+            #if !defined(FG_MATH_GLM_VECTOR_TEMPLATE_MASK)
+                #define FG_MATH_GLM_VECTOR_TEMPLATE_MASK
+// #FIXME - This requires c++11
+//typedef glm::detail::tvec1 fgVector1T;
+template<typename T>
+using fgVector2T = glm::detail::tvec2<T, glm::defaultp>;
+//typedef glm::detail::tvec2<typename T, glm::precision P> fgVector2T<T, P>;
+template<typename T>
+using fgVector3T = glm::detail::tvec3<T, glm::defaultp>;
+template<typename T>
+using fgVector4T = glm::detail::tvec4<T, glm::defaultp>;
+            #endif
 
 typedef glm::bvec2 fgVector2b;
 typedef glm::bvec3 fgVector3b;
@@ -54,7 +68,7 @@ typedef glm::dvec4 fgVector4d;
 
         #endif /* FG_MATH_GLM_VECTOR_MASK */
 
-        #ifdef FG_MATH_GLM_VECTOR_MASK
+        #if defined(FG_MATH_GLM_VECTOR_MASK)
 typedef fgVector2b fgVec2b;
 typedef fgVector3b fgVec3b;
 typedef fgVector4b fgVec4b;
@@ -74,6 +88,14 @@ typedef fgVector4f fgVec4f;
 typedef fgVector2d fgVec2d;
 typedef fgVector3d fgVec3d;
 typedef fgVector4d fgVec4d;
+
+            #if defined(FG_MATH_GLM_VECTOR_TEMPLATE_MASK)
+//typedef fgVector1T fgVec1T;
+// #FIXME #HAX
+                #define fgVec2T fgVector2T
+                #define fgVec3T fgVector3T
+                #define fgVec4T fgVector4T
+            #endif
         #endif /* FG_MATH_GLM_VECTOR_MASK */
 
     #else
@@ -99,7 +121,7 @@ struct fgVertex4v {
     }
 
     //
-    static fgGFXuint attribMask(void) {
+    static unsigned int attribMask(void) {
         return FG_GFX_POSITION_BIT | FG_GFX_NORMAL_BIT | FG_GFX_UVS_BIT | FG_GFX_COLOR_BIT;
     }
 };
@@ -120,7 +142,7 @@ struct fgVertex3v {
     }
 
     //
-    static fgGFXuint attribMask(void) {
+    static unsigned int attribMask(void) {
         return FG_GFX_POSITION_BIT | FG_GFX_NORMAL_BIT | FG_GFX_UVS_BIT;
     }
 };
@@ -140,7 +162,7 @@ struct fgVertex2v {
     }
 
     //
-    static fgGFXuint attribMask(void) {
+    static unsigned int attribMask(void) {
         return FG_GFX_POSITION_BIT | FG_GFX_UVS_BIT;
     }
 };

@@ -58,6 +58,20 @@
 
         #ifndef FG_MATH_GLM_VECTOR_MASK
             #define FG_MATH_GLM_VECTOR_MASK
+
+            #if !defined(FG_MATH_GLM_VECTOR_TEMPLATE_MASK)
+                #define FG_MATH_GLM_VECTOR_TEMPLATE_MASK
+// #FIXME - This requires c++11
+//typedef glm::detail::tvec1 fgVector1T;
+template<typename T>
+using fgVector2T = glm::detail::tvec2<T, glm::defaultp>;
+//typedef glm::detail::tvec2<typename T, glm::precision P> fgVector2T<T, P>;
+template<typename T>
+using fgVector3T = glm::detail::tvec3<T, glm::defaultp>;
+template<typename T>
+using fgVector4T = glm::detail::tvec4<T, glm::defaultp>;
+            #endif
+
 typedef glm::bvec2 fgVector2b;
 typedef glm::bvec3 fgVector3b;
 typedef glm::bvec4 fgVector4b;
@@ -1470,6 +1484,14 @@ typedef fgVector4f fgVec4f;
 typedef fgVector2d fgVec2d;
 typedef fgVector3d fgVec3d;
 typedef fgVector4d fgVec4d;
+
+        #if defined(FG_MATH_GLM_VECTOR_TEMPLATE_MASK)
+//typedef fgVector1T fgVec1T;
+            #define fgVec2T fgVector2T
+            #define fgVec3T fgVector3T
+            #define fgVec4T fgVector4T
+        #endif
+
     #endif /* FG_MATH_GLM_VECTOR_MASK */
 
     #ifdef FG_MATH_GLM_MATRIX_MASK
