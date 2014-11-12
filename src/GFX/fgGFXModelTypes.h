@@ -16,6 +16,9 @@
     #ifndef _FG_GFX_MATERIAL_H_
         #include "fgGFXMaterial.h"
     #endif
+    #ifndef _FG_GFX_AA_BOUNDING_BOX_H_
+        #include "fgGFXAABoundingBox.h"
+    #endif
 /*
 Assuming the container has at least one element in it, you 
 need to get the address of the initial element of the 
@@ -38,6 +41,8 @@ inline void fgGfxComputeNormal(const fgVector3f & v1, const fgVector3f & v2, con
  * Base abstract class type for Mesh data
  */
 struct fgGfxMeshBase : public fgVertexData {
+    fgAABoundingBox3Df aabb;
+    
     virtual ~fgGfxMeshBase() { };
     virtual void clear(void) = 0;
     virtual size_t getDataSize(void) = 0;
@@ -46,6 +51,7 @@ struct fgGfxMeshBase : public fgVertexData {
     virtual fgGFXuint getNumUVs(void) const = 0;
     virtual fgGFXuint getNumColors(void) const = 0;
     virtual fgGFXuint getNumIndices(void) const = 0;
+    virtual void updateAABB(void) = 0;
 };
 
 /*
@@ -54,11 +60,11 @@ struct fgGfxMeshBase : public fgVertexData {
  */
 struct fgGfxMeshSoA : fgGfxMeshBase {
     /// Vector holding floats representing position (vertices)
-    fgVector<fgGFXfloat> vertices; //3
+    fgVector<fgGFXfloat> vertices; //3 fgVector3f
     /// Vector holding floats for normals
-    fgVector<fgGFXfloat> normals; //3
+    fgVector<fgGFXfloat> normals; //3 fgVector3f
     /// Vector holding texture coords
-    fgVector<fgGFXfloat> uvs; //2
+    fgVector<fgGFXfloat> uvs; //2 fgVector2f
     /// Vector holding indices
     fgVector<fgGFXushort> indices;
 
@@ -115,6 +121,15 @@ struct fgGfxMeshSoA : fgGfxMeshBase {
         destroyBuffers();
     }
 
+    /**
+     * 
+     */
+    virtual void updateAABB(void) {        
+        const void *data = (const void *)&vertices.front();
+        // divide vertices size by 3 
+        this->aabb.setBoundsFromData(data, sizeof(fgVector3f), vertices.size()/3);
+    }
+    
     // Returns whether the vertex data supports/generates VBOs
     virtual fgBool supportsVBO(void) const {
         return FG_TRUE;
@@ -389,6 +404,15 @@ struct fgGfxMeshAoS : fgGfxMeshBase {
         clear();
         destroyBuffers();
     }
+    
+    /**
+     * 
+     */
+    virtual void updateAABB(void) {        
+        const void *data = (const void *)vertices.front();
+        // Here size does not need to be divided - AoS
+        this->aabb.setBoundsFromData(data, vertices.stride(), vertices.size());
+    }
 
     // Clear the internal data arrays
     virtual void clear(void) {
@@ -601,13 +625,18 @@ struct fgGfxShape {
     fgGfxMeshBase* mesh;
 
     //
-    fgGfxShape() : material(NULL), mesh(NULL) { }
+    fgGfxShape() : name(), material(NULL), mesh(NULL) { }
 
     //
     ~fgGfxShape() {
         clear();
     }
-
+    
+    void updateAABB(void) {
+        if(mesh)
+            mesh->updateAABB();        
+    }
+    
     //
     void clear(void) {
         if(material)

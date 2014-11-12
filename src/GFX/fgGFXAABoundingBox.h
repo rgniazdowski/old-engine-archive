@@ -25,10 +25,46 @@
         #include "fgGFXBoundingBox.h"
     #endif
 
+    #include <cfloat>
+
 //
 template <class ValueType> struct fgAABoundingBox2DT;
 //
 template <class ValueType> struct fgAABoundingBox3DT;
+
+class fgAABBHelper {
+private:
+    fgAABBHelper() {}
+    ~fgAABBHelper() {}
+    
+public:
+    template <class BoxType>
+    static BoxType &setBoundsFromData(BoxType& bbox, const void *data,
+                            const typename BoxType::size_type stride,
+                            const typename BoxType::size_type count = 1) {
+        if(!data || !count || !stride)
+            return bbox;
+        // need to reset
+        //
+        typedef typename BoxType::value_type value_type;
+        typedef typename BoxType::size_type size_type;
+        bbox.invalidate();
+        uintptr_t offset = (uintptr_t)data;
+        size_type innerMax = bbox.length() / 2;
+        for(size_type i = 0; i < count; i++) {
+            const void *cur = (const void *)(offset + i * stride);
+            value_type *values = (value_type *)cur;
+            for(size_type j = 0; j < innerMax; j++) {
+                value_type &minVal = bbox[j];
+                value_type &maxVal = bbox[j + innerMax];
+                value_type checkVal = *(values + j); // offset + sizeof(value_type)*j
+                maxVal = glm::max(maxVal, checkVal);
+                minVal = glm::min(minVal, checkVal); 
+            }
+        }
+        return bbox;
+    }
+};
 
 /**
  *
@@ -100,10 +136,11 @@ struct fgAABoundingBox2DT : fgBoundingBoxT<fgAABoundingBox2DT<ValueType>, fgVect
      * @param count
      * @return 
      */
-    virtual self_type &merge(const self_type *aaboxes, const size_type count = 1) {
+    virtual self_type &merge(const self_type *aaboxes,
+                             const size_type count = 1) {
         if(!count || !aaboxes)
             return (*this);
-        this->zero();
+        //this->zero();
         for(int i = 0; i < count; i++) {
             this->min.x = glm::min(this->min.x, aaboxes[i].min.x);
             this->min.y = glm::min(this->min.y, aaboxes[i].min.y);
@@ -112,7 +149,6 @@ struct fgAABoundingBox2DT : fgBoundingBoxT<fgAABoundingBox2DT<ValueType>, fgVect
         }
         return (*this);
     }
-    
     /**
      * 
      * @param data
@@ -123,7 +159,7 @@ struct fgAABoundingBox2DT : fgBoundingBoxT<fgAABoundingBox2DT<ValueType>, fgVect
         if(!data || !count)
             return (*this);
         this->zero();
-        for(int i = 0; i < count; i++) {
+        for(size_type i = 0; i < count; i++) {
             this->min.x = glm::min(this->min.x, data[i].x);
             this->min.y = glm::min(this->min.y, data[i].y);
             this->max.x = glm::max(this->max.x, data[i].x);
@@ -131,15 +167,36 @@ struct fgAABoundingBox2DT : fgBoundingBoxT<fgAABoundingBox2DT<ValueType>, fgVect
         }
         return (*this);
     }
+    /**
+     * 
+     * @param data
+     * @param stride
+     * @param count
+     * @return 
+     */
+    virtual inline self_type &setBoundsFromData(const void *data,
+                                         const size_type stride,
+                                         const size_type count = 1) {
+        return fgAABBHelper::setBoundsFromData((*this), data, stride, count);
+    }
     
     /**
      * 
      */
-    virtual void zero(void) {
-        this->pos.x = (value_type)0;
-        this->pos.y = (value_type)0;
-        this->size.x = (value_type)0;
-        this->size.y = (value_type)0;
+    virtual inline void zero(void) {
+        this->min.x = (value_type)0;
+        this->min.y = (value_type)0;
+        this->max.x = (value_type)0;
+        this->max.y = (value_type)0;
+    }
+    
+    /**
+     * 
+     */
+    virtual inline void invalidate(void) {
+        this->zero();
+        this->min.x = FLT_MAX;
+        this->min.y = FLT_MAX;
     }
 };
 
@@ -177,7 +234,6 @@ struct fgAABoundingBox3DT : fgBoundingBoxT<fgAABoundingBox3DT<ValueType>, fgVect
     typedef typename base_type::value_type value_type;
     ///
     typedef typename base_type::vector_type vector_type;
-    
     /**
      * 
      */
@@ -242,8 +298,8 @@ struct fgAABoundingBox3DT : fgBoundingBoxT<fgAABoundingBox3DT<ValueType>, fgVect
     virtual self_type &merge(const self_type *aaboxes, const size_type count = 1) {
         if(!count || !aaboxes)
             return (*this);
-        this->zero();
-        for(int i = 0; i < count; i++) {
+        //this->zero(); // nope
+        for(size_type i = 0; i < count; i++) {
             this->min.x = glm::min(this->min.x, aaboxes[i].min.x);
             this->min.y = glm::min(this->min.y, aaboxes[i].min.y);
             this->min.z = glm::min(this->min.z, aaboxes[i].min.z);
@@ -262,8 +318,8 @@ struct fgAABoundingBox3DT : fgBoundingBoxT<fgAABoundingBox3DT<ValueType>, fgVect
     virtual self_type &setBoundsFromData(vector_type *data, const size_type count = 1) {
         if(!data || !count)
             return (*this);
-        this->zero();
-        for(int i = 0; i < count; i++) {
+        this->invalidate();
+        for(size_type i = 0; i < count; i++) {
             this->min.x = glm::min(this->min.x, data[i].x);
             this->min.y = glm::min(this->min.y, data[i].y);
             this->min.z = glm::min(this->min.z, data[i].z);
@@ -274,15 +330,34 @@ struct fgAABoundingBox3DT : fgBoundingBoxT<fgAABoundingBox3DT<ValueType>, fgVect
         return (*this);
     }
     /**
+     * 
+     * @param data
+     * @param stride
+     * @param count
+     * @return 
+     */
+    virtual inline self_type &setBoundsFromData(const void *data,
+                                         const size_type stride,
+                                         const size_type count = 1) {
+        return fgAABBHelper::setBoundsFromData((*this), data, stride, count);
+    }
+    /**
      *  
      */
-    virtual void zero(void) {
+    virtual inline void zero(void) {
         this->min.x = (value_type)0;
         this->min.y = (value_type)0;
         this->min.z = (value_type)0;
         this->max.x = (value_type)0;
         this->max.y = (value_type)0;
         this->max.z = (value_type)0;
+    }
+    
+    virtual inline void invalidate(void) {
+        this->zero();
+        this->min.x = FLT_MAX;
+        this->min.y = FLT_MAX;
+        this->min.z = FLT_MAX;
     }
 };
 

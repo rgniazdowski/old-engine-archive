@@ -145,11 +145,32 @@ public:
      * Returns the reference to the shapes array
      * @return  Reference to the shapes array
      */
-    const modelShapes & getRefShapes(void) const {
+    modelShapes const & getRefShapes(void) const {
         //return (const_cast<fgDataObjectBase<HandleType, MapKeyType>*>(this)->getFilePath(id));
         //return (const_cast<fgGfxModelResource *>(this)->getRefShapes());
         return m_shapes;
     }
+    
+    /**
+     * 
+     * @return 
+     */
+    fgAABoundingBox3Df & getRefAABB(void) {
+        return m_aabb;
+    }
+    
+    /**
+     * 
+     * @return 
+     */
+    fgAABoundingBox3Df const & getRefAABB(void) const {
+        return m_aabb;
+    }
+    
+    /**
+     * 
+     */
+    void updateAABB(void);
 
     /**
      * Generates the GFX buffers (VBO) from the model data, this is for all shapes
@@ -266,6 +287,8 @@ protected:
     fgGfxMaterial *m_materialOverride;
     /// Array holding all basic shapes of the model
     modelShapes m_shapes;
+    /// Main bounding box - it's for whole model (all shapes)
+    fgAABoundingBox3Df m_aabb;
     /// Identifier of the model type - based on the input data file extension
     fgGFXuint m_modelType;
     /// Is model multitextured?

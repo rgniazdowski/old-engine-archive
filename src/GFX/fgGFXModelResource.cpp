@@ -164,7 +164,7 @@ fgBool fgGfxModelResource::_loadOBJ(void) {
     }
     m_size += m_materialOverride->getDataSize();
     FG_LOG_DEBUG("Model '%s': vertices: %d, normals: %d, indices: %d, uvs: %d", getNameStr(),
-                       m_numVertices, m_numNormals, m_numIndices, m_numUVs);
+                 m_numVertices, m_numNormals, m_numIndices, m_numUVs);
     return FG_TRUE;
 }
 
@@ -231,7 +231,7 @@ fgBool fgGfxModelResource::create(void) {
     };
 
     if(!m_size) return FG_FALSE;
-
+    updateAABB();
     return FG_TRUE;
 }
 
@@ -276,6 +276,23 @@ void fgGfxModelResource::dispose(void) {
  */
 fgBool fgGfxModelResource::isDisposed(void) const {
     return (fgBool)(m_shapes.empty());
+}
+
+/**
+ * 
+ */
+void fgGfxModelResource::updateAABB(void) {
+    if(m_shapes.empty()) {
+        return;
+    }
+    int n = m_shapes.size();
+    m_aabb.invalidate();
+    for(int i = 0; i < n; i++) {
+        if(m_shapes[i]->mesh) {
+           m_shapes[i]->updateAABB();
+           m_aabb.merge(m_shapes[i]->mesh->aabb);
+        }
+    }
 }
 
 /*

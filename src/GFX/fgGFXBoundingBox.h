@@ -71,7 +71,7 @@ struct fgBoundingBoxT {
             this->size = other.size;
         }
         // by convention, always return *this
-        return *this;
+        return (*this);
     }
     /**
      * 
@@ -111,9 +111,9 @@ struct fgBoundingBoxT {
      * @return 
      */
     value_type & operator [](size_type i) {
-        if(i >= this->length())
+        if(i >= (size_type)this->length())
             i = 0;
-        if(i >= this->pos.length()) {
+        if(i >= (size_type)this->pos.length()) {
             i -= this->pos.length();
             return this->size[i];
         } else {
@@ -126,9 +126,9 @@ struct fgBoundingBoxT {
      * @return 
      */
     value_type const & operator [](size_type i)const {
-        if(i >= this->length())
+        if(i >= (size_type)this->length())
             i = 0;
-        if(i >= this->pos.length()) {
+        if(i >= (size_type)this->pos.length()) {
             i -= this->pos.length();
             return this->size[i];
         } else {
@@ -142,10 +142,6 @@ struct fgBoundingBoxT {
         // This zeroes the internal data
         memset(&this->pos, 0, sizeof (vector_type));
         memset(&this->size, 0, sizeof (vector_type));
-        //this->pos.x = (DataType)0;
-        //this->pos.y = (DataType)0;
-        //this->size.x = (DataType)0;
-        //this->size.y = (DataType)0;
     }
     /**
      * 
@@ -296,6 +292,13 @@ struct fgBoundingBoxT {
      * @return 
      */
     virtual box_type &setBoundsFromData(vector_type *data, const size_type count = 1) = 0;
+    
+    /**
+     * 
+     */
+    virtual void invalidate(void) { 
+        this->zero();
+    }
 };
 
 /**

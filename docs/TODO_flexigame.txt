@@ -77,7 +77,7 @@
        w Javie - SAXP loader - klasa wrapper, pisanie wlasnych funkcji pod dany rodzaj
        pliku XML - that's the way to go
 [ ] - nastepnie napisanie tych wrapperow dla plikow:
-[ ]  - resource
+[X]  - resource
 [X]  - resource group [ DONE ]
 [X]  - shader config
 [X]  - main configuration
@@ -89,7 +89,7 @@
 [X]	- grup (ResourceGroup)
 [X] - font (texture based) - FontResource
 [X]	- tekstur (TextureResource)
-[ ]	- dzwiekow, muzyki
+[X]	- dzwiekow, muzyki
 [X]	- menu, gui (pozniej, gdy rozpocznie sie praca z GUI)
 [X]	- shaderow
 [X]	  - obsluga shaderow moze byc napisana w pewnym stopniu na poczatku nawet
@@ -138,13 +138,13 @@
 - wpierw napisanie, zaprojektowanie wiekszosci potrzebnych klas
 [X] - zdefiniowanie formatu XML dla definicji menu oraz wygladu
 [X] - XML/HTML + INI-style
-[ ] - LUA (opcjonalne)
+[X] - LUA (opcjonalne)
 [ ] - definicja rysowania prymitywnych konstrukcji (primitives) - 
     czyli: kwadraty, prostokaty, zaokraglenia, krawedzie, linie, tabele
            cienie, + czcionki
 	  * tu bedzie potrzebne drawing batch - w pewnym stopniu
       -- - - - definicja rysowania prymitowow oparta na podsystemie GFX
-[ ] - na poczatek 2.5D
+[X] - na poczatek 2.5D
 [ ]- potem konieczne jest 3D, uzywanie perspektywy, obliczanie proporcji widoku
     (frustum), wymiarow, by pracowac na menu w pikselach/procentach (rozmiar) - 
     jednak juz obiekty beda wyswietlane odpowiednio na ekranie (potrzeba ogarnac
@@ -163,18 +163,18 @@
 [ ]   - forma wyswietlania
 [ ]   - 2.5D / 3D
 [ ]   - rodzaj obiektu na ktorym jest oparte
-[ ]   - parametry fizyczne i podstawowe efekty (takie jak np. obracanie sie w 
+[X]   - parametry fizyczne i podstawowe efekty (takie jak np. obracanie sie w 
       kierunku lotu/poruszania sie)
 [ ]  - wykrywanie kolizji ze swiatem on/off
 [X]  - czas zycia
 [ ]  - rodzaj efektu
 [X]  - parametry ilosciowe
 [X]  - kolory
-[ ]  - parametry, limity losowania parametrow przy aktywacji
+[X]  - parametry, limity losowania parametrow przy aktywacji
 [ ]  - cyklicznosc
 [ ]  - INFO: pozycja poczatkowa ustawiana jest zwykle z zewnatrz
 [ ]  - i inne - pelna definicja
-[ ] - mozliwosc pelnej parametryzacji
+[X] - mozliwosc pelnej parametryzacji
 [ ] - nie jest konieczne tworzenie wlasnych sztywnych klas
 [ ] - mozliwosc tworzenia multi-efektow - grupowanie (wymagane np. w przypadku 
     eksplozji)

@@ -104,7 +104,7 @@ public:
             return;
         }
         int n = parts.size();
-        if(n > retVector.length()) {
+        if(n > (int)retVector.length()) {
             n = retVector.length();
         } else {
         }
