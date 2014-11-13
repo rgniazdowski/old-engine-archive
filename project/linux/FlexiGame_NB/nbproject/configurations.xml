@@ -96,9 +96,13 @@
           <itemPath>../../../src/GFX/fgGFXContext.h</itemPath>
           <itemPath>../../../src/GFX/fgGFXDrawCall.cpp</itemPath>
           <itemPath>../../../src/GFX/fgGFXDrawCall.h</itemPath>
+          <itemPath>../../../src/GFX/fgGFXDrawableObject.cpp</itemPath>
+          <itemPath>../../../src/GFX/fgGFXDrawableObject.h</itemPath>
           <itemPath>../../../src/GFX/fgGFXDrawingBatch.cpp</itemPath>
           <itemPath>../../../src/GFX/fgGFXDrawingBatch.h</itemPath>
           <itemPath>../../../src/GFX/fgGFXErrorCodes.h</itemPath>
+          <itemPath>../../../src/GFX/fgGFXFrustum.cpp</itemPath>
+          <itemPath>../../../src/GFX/fgGFXFrustum.h</itemPath>
           <itemPath>../../../src/GFX/fgGFXGL.h</itemPath>
           <itemPath>../../../src/GFX/fgGFXLayer.h</itemPath>
           <itemPath>../../../src/GFX/fgGFXLight.cpp</itemPath>
@@ -117,6 +121,7 @@
           <itemPath>../../../src/GFX/fgGFXObject.h</itemPath>
           <itemPath>../../../src/GFX/fgGFXOctreeBase.cpp</itemPath>
           <itemPath>../../../src/GFX/fgGFXOctreeBase.h</itemPath>
+          <itemPath>../../../src/GFX/fgGFXPlane.h</itemPath>
           <itemPath>../../../src/GFX/fgGFXPlatform.cpp</itemPath>
           <itemPath>../../../src/GFX/fgGFXPlatform.h</itemPath>
           <itemPath>../../../src/GFX/fgGFXPrimitives.cpp</itemPath>
@@ -834,6 +839,16 @@
       </item>
       <item path="../../../src/GFX/fgGFXDrawCall.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../../../src/GFX/fgGFXDrawableObject.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGFXDrawableObject.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../src/GFX/fgGFXDrawingBatch.cpp"
             ex="false"
             tool="1"
@@ -845,6 +860,10 @@
             flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGFXErrorCodes.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGFXFrustum.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGFXFrustum.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGFXGL.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -893,6 +912,8 @@
             flavor2="8">
       </item>
       <item path="../../../src/GFX/fgGFXOctreeBase.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGFXPlane.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGFXPlatform.cpp" ex="false" tool="1" flavor2="8">
       </item>
@@ -2094,6 +2115,16 @@
       </item>
       <item path="../../../src/GFX/fgGFXDrawCall.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../../../src/GFX/fgGFXDrawableObject.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGFXDrawableObject.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../src/GFX/fgGFXDrawingBatch.cpp"
             ex="false"
             tool="1"
@@ -2105,6 +2136,10 @@
             flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGFXErrorCodes.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGFXFrustum.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGFXFrustum.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGFXGL.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -2153,6 +2188,8 @@
             flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGFXOctreeBase.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGFXPlane.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGFXPlatform.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -3336,6 +3373,16 @@
       </item>
       <item path="../../../src/GFX/fgGFXDrawCall.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../../../src/GFX/fgGFXDrawableObject.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGFXDrawableObject.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../src/GFX/fgGFXDrawingBatch.cpp"
             ex="false"
             tool="1"
@@ -3347,6 +3394,10 @@
             flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGFXErrorCodes.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGFXFrustum.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGFXFrustum.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGFXGL.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -3395,6 +3446,8 @@
             flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGFXOctreeBase.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGFXPlane.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGFXPlatform.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -4556,6 +4609,16 @@
       </item>
       <item path="../../../src/GFX/fgGFXDrawCall.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../../../src/GFX/fgGFXDrawableObject.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGFXDrawableObject.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../src/GFX/fgGFXDrawingBatch.cpp"
             ex="false"
             tool="1"
@@ -4567,6 +4630,10 @@
             flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGFXErrorCodes.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGFXFrustum.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGFXFrustum.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGFXGL.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -4615,6 +4682,8 @@
             flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGFXOctreeBase.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGFXPlane.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGFXPlatform.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -5798,6 +5867,16 @@
       </item>
       <item path="../../../src/GFX/fgGFXDrawCall.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../../../src/GFX/fgGFXDrawableObject.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGFXDrawableObject.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../src/GFX/fgGFXDrawingBatch.cpp"
             ex="false"
             tool="1"
@@ -5809,6 +5888,10 @@
             flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGFXErrorCodes.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGFXFrustum.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGFXFrustum.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGFXGL.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -5857,6 +5940,8 @@
             flavor2="8">
       </item>
       <item path="../../../src/GFX/fgGFXOctreeBase.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGFXPlane.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGFXPlatform.cpp" ex="false" tool="1" flavor2="8">
       </item>
@@ -7030,6 +7115,16 @@
       </item>
       <item path="../../../src/GFX/fgGFXDrawCall.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../../../src/GFX/fgGFXDrawableObject.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGFXDrawableObject.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../src/GFX/fgGFXDrawingBatch.cpp"
             ex="false"
             tool="1"
@@ -7041,6 +7136,10 @@
             flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGFXErrorCodes.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGFXFrustum.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGFXFrustum.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGFXGL.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -7089,6 +7188,8 @@
             flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGFXOctreeBase.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGFXPlane.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGFXPlatform.cpp" ex="false" tool="1" flavor2="0">
       </item>

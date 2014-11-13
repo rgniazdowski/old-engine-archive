@@ -65,7 +65,9 @@ OBJECTFILES= \
 	${OBJECTDIR}/_ext/534590209/fgGFXCameraAnimation.o \
 	${OBJECTDIR}/_ext/534590209/fgGFXContext.o \
 	${OBJECTDIR}/_ext/534590209/fgGFXDrawCall.o \
+	${OBJECTDIR}/_ext/534590209/fgGFXDrawableObject.o \
 	${OBJECTDIR}/_ext/534590209/fgGFXDrawingBatch.o \
+	${OBJECTDIR}/_ext/534590209/fgGFXFrustum.o \
 	${OBJECTDIR}/_ext/534590209/fgGFXLight.o \
 	${OBJECTDIR}/_ext/534590209/fgGFXMain.o \
 	${OBJECTDIR}/_ext/534590209/fgGFXMaterial.o \
@@ -341,10 +343,20 @@ ${OBJECTDIR}/_ext/534590209/fgGFXDrawCall.o: ../../../src/GFX/fgGFXDrawCall.cpp
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_GL_BINDING -DFG_USING_OPENGL -DFG_USING_SDL2 -DFG_USING_TINYXML -DTIXML_USE_STL -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/glbinding/source/glbinding/include `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534590209/fgGFXDrawCall.o ../../../src/GFX/fgGFXDrawCall.cpp
 
+${OBJECTDIR}/_ext/534590209/fgGFXDrawableObject.o: ../../../src/GFX/fgGFXDrawableObject.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/534590209
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_GL_BINDING -DFG_USING_OPENGL -DFG_USING_SDL2 -DFG_USING_TINYXML -DTIXML_USE_STL -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/glbinding/source/glbinding/include `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534590209/fgGFXDrawableObject.o ../../../src/GFX/fgGFXDrawableObject.cpp
+
 ${OBJECTDIR}/_ext/534590209/fgGFXDrawingBatch.o: ../../../src/GFX/fgGFXDrawingBatch.cpp 
 	${MKDIR} -p ${OBJECTDIR}/_ext/534590209
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_GL_BINDING -DFG_USING_OPENGL -DFG_USING_SDL2 -DFG_USING_TINYXML -DTIXML_USE_STL -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/glbinding/source/glbinding/include `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534590209/fgGFXDrawingBatch.o ../../../src/GFX/fgGFXDrawingBatch.cpp
+
+${OBJECTDIR}/_ext/534590209/fgGFXFrustum.o: ../../../src/GFX/fgGFXFrustum.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/534590209
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_GL_BINDING -DFG_USING_OPENGL -DFG_USING_SDL2 -DFG_USING_TINYXML -DTIXML_USE_STL -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/glbinding/source/glbinding/include `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534590209/fgGFXFrustum.o ../../../src/GFX/fgGFXFrustum.cpp
 
 ${OBJECTDIR}/_ext/534590209/fgGFXLight.o: ../../../src/GFX/fgGFXLight.cpp 
 	${MKDIR} -p ${OBJECTDIR}/_ext/534590209

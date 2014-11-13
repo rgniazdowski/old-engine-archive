@@ -194,7 +194,7 @@ void fgGfxPrimitives::drawAABBLines(const fgAABoundingBox3Df& aabb) {
                                                   FG_GFX_FALSE,
                                                   sizeof (fgVector3f),
                                                   reinterpret_cast<fgGFXvoid*>(offset));
-    glDrawArrays((GLenum)fgGfxPrimitiveMode::FG_GFX_LINE_STRIP, 0, sizeof(aabbLineStripBuf)/sizeof(aabbLineStripBuf[0]));
+    glDrawArrays((GLenum)fgGfxPrimitiveMode::FG_GFX_LINE_STRIP, 0, sizeof (aabbLineStripBuf) / sizeof (aabbLineStripBuf[0]));
 
 }
 

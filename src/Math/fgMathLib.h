@@ -95,6 +95,19 @@ typedef glm::dvec4 fgVector4d;
 
         #ifndef FG_MATH_GLM_MATRIX_MASK
             #define FG_MATH_GLM_MATRIX_MASK
+
+            #if !defined(FG_MATH_GLM_MATRIX_TEMPLATE_MASK)
+                #define FG_MATH_GLM_MATRIX_TEMPLATE_MASK
+// #FIXME - This requires c++11
+//typedef glm::detail::tvec1 fgVector1T;
+template<typename T>
+using fgMatrix2T = glm::detail::tmat2x2<T, glm::defaultp>;
+template<typename T>
+using fgMatrix3T = glm::detail::tmat3x3<T, glm::defaultp>;
+template<typename T>
+using fgMatrix4T = glm::detail::tmat4x4<T, glm::defaultp>;
+            #endif
+
 typedef glm::mat2 fgMatrix2f;
 typedef glm::mat3 fgMatrix3f;
 typedef glm::mat4 fgMatrix4f;
@@ -109,6 +122,8 @@ typedef glm::dmat4 fgMatrix4d;
 typedef glm::quat fgQuaternionf;
 typedef glm::dquat fgQuaterniond;
         #endif
+
+
 
     #else /* FG_USING_GLM */
 

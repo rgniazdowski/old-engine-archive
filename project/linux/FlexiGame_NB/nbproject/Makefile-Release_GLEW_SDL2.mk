@@ -65,7 +65,9 @@ OBJECTFILES= \
 	${OBJECTDIR}/_ext/534590209/fgGFXCameraAnimation.o \
 	${OBJECTDIR}/_ext/534590209/fgGFXContext.o \
 	${OBJECTDIR}/_ext/534590209/fgGFXDrawCall.o \
+	${OBJECTDIR}/_ext/534590209/fgGFXDrawableObject.o \
 	${OBJECTDIR}/_ext/534590209/fgGFXDrawingBatch.o \
+	${OBJECTDIR}/_ext/534590209/fgGFXFrustum.o \
 	${OBJECTDIR}/_ext/534590209/fgGFXLight.o \
 	${OBJECTDIR}/_ext/534590209/fgGFXMain.o \
 	${OBJECTDIR}/_ext/534590209/fgGFXMaterial.o \
@@ -341,10 +343,20 @@ ${OBJECTDIR}/_ext/534590209/fgGFXDrawCall.o: ../../../src/GFX/fgGFXDrawCall.cpp
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -s -DFG_NO_UNDEF -DFG_USING_GLEW -DFG_USING_GLM -DFG_USING_LUA_PLUS -DFG_USING_OPENGL -DFG_USING_OPENGL_GLEW -DFG_USING_SDL2 -DFG_USING_TINYXML -DTIXML_USE_STL -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src `pkg-config --cflags gl` `pkg-config --cflags glew` `pkg-config --cflags sdl2` `pkg-config --cflags SDL2_mixer` `pkg-config --cflags libpng` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534590209/fgGFXDrawCall.o ../../../src/GFX/fgGFXDrawCall.cpp
 
+${OBJECTDIR}/_ext/534590209/fgGFXDrawableObject.o: ../../../src/GFX/fgGFXDrawableObject.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/534590209
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -s -DFG_NO_UNDEF -DFG_USING_GLEW -DFG_USING_GLM -DFG_USING_LUA_PLUS -DFG_USING_OPENGL -DFG_USING_OPENGL_GLEW -DFG_USING_SDL2 -DFG_USING_TINYXML -DTIXML_USE_STL -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src `pkg-config --cflags gl` `pkg-config --cflags glew` `pkg-config --cflags sdl2` `pkg-config --cflags SDL2_mixer` `pkg-config --cflags libpng` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534590209/fgGFXDrawableObject.o ../../../src/GFX/fgGFXDrawableObject.cpp
+
 ${OBJECTDIR}/_ext/534590209/fgGFXDrawingBatch.o: ../../../src/GFX/fgGFXDrawingBatch.cpp 
 	${MKDIR} -p ${OBJECTDIR}/_ext/534590209
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -s -DFG_NO_UNDEF -DFG_USING_GLEW -DFG_USING_GLM -DFG_USING_LUA_PLUS -DFG_USING_OPENGL -DFG_USING_OPENGL_GLEW -DFG_USING_SDL2 -DFG_USING_TINYXML -DTIXML_USE_STL -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src `pkg-config --cflags gl` `pkg-config --cflags glew` `pkg-config --cflags sdl2` `pkg-config --cflags SDL2_mixer` `pkg-config --cflags libpng` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534590209/fgGFXDrawingBatch.o ../../../src/GFX/fgGFXDrawingBatch.cpp
+
+${OBJECTDIR}/_ext/534590209/fgGFXFrustum.o: ../../../src/GFX/fgGFXFrustum.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/534590209
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -s -DFG_NO_UNDEF -DFG_USING_GLEW -DFG_USING_GLM -DFG_USING_LUA_PLUS -DFG_USING_OPENGL -DFG_USING_OPENGL_GLEW -DFG_USING_SDL2 -DFG_USING_TINYXML -DTIXML_USE_STL -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src `pkg-config --cflags gl` `pkg-config --cflags glew` `pkg-config --cflags sdl2` `pkg-config --cflags SDL2_mixer` `pkg-config --cflags libpng` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534590209/fgGFXFrustum.o ../../../src/GFX/fgGFXFrustum.cpp
 
 ${OBJECTDIR}/_ext/534590209/fgGFXLight.o: ../../../src/GFX/fgGFXLight.cpp 
 	${MKDIR} -p ${OBJECTDIR}/_ext/534590209

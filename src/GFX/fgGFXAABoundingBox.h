@@ -32,16 +32,33 @@ template <class ValueType> struct fgAABoundingBox2DT;
 //
 template <class ValueType> struct fgAABoundingBox3DT;
 
+/**
+ * 
+ */
 class fgAABBHelper {
 private:
-    fgAABBHelper() {}
-    ~fgAABBHelper() {}
-    
+    /**
+     * 
+     */
+    fgAABBHelper() { }
+    /**
+     * 
+     */
+    ~fgAABBHelper() { }
+
 public:
+    /**
+     * 
+     * @param bbox
+     * @param data
+     * @param stride
+     * @param count
+     * @return 
+     */
     template <class BoxType>
     static BoxType &setBoundsFromData(BoxType& bbox, const void *data,
-                            const typename BoxType::size_type stride,
-                            const typename BoxType::size_type count = 1) {
+                                      const typename BoxType::size_type stride,
+                                      const typename BoxType::size_type count = 1) {
         if(!data || !count || !stride)
             return bbox;
         // need to reset
@@ -59,7 +76,7 @@ public:
                 value_type &maxVal = bbox[j + innerMax];
                 value_type checkVal = *(values + j); // offset + sizeof(value_type)*j
                 maxVal = glm::max(maxVal, checkVal);
-                minVal = glm::min(minVal, checkVal); 
+                minVal = glm::min(minVal, checkVal);
             }
         }
         return bbox;
@@ -101,7 +118,7 @@ struct fgAABoundingBox2DT : fgBoundingBoxT<fgAABoundingBox2DT<ValueType>, fgVect
      * @return 
      */
     self_type &merge(const self_type &a, const self_type &b) {
-        this->zero();
+        this->invalidate();
 
         this->min.x = glm::min(this->min.x, a.min.x);
         this->min.y = glm::min(this->min.y, a.min.y);
@@ -158,7 +175,7 @@ struct fgAABoundingBox2DT : fgBoundingBoxT<fgAABoundingBox2DT<ValueType>, fgVect
     virtual self_type &setBoundsFromData(vector_type *data, const size_type count = 1) {
         if(!data || !count)
             return (*this);
-        this->zero();
+        this->invalidate();
         for(size_type i = 0; i < count; i++) {
             this->min.x = glm::min(this->min.x, data[i].x);
             this->min.y = glm::min(this->min.y, data[i].y);
@@ -175,11 +192,10 @@ struct fgAABoundingBox2DT : fgBoundingBoxT<fgAABoundingBox2DT<ValueType>, fgVect
      * @return 
      */
     virtual inline self_type &setBoundsFromData(const void *data,
-                                         const size_type stride,
-                                         const size_type count = 1) {
+                                                const size_type stride,
+                                                const size_type count = 1) {
         return fgAABBHelper::setBoundsFromData((*this), data, stride, count);
     }
-    
     /**
      * 
      */
@@ -189,7 +205,6 @@ struct fgAABoundingBox2DT : fgBoundingBoxT<fgAABoundingBox2DT<ValueType>, fgVect
         this->max.x = (value_type)0;
         this->max.y = (value_type)0;
     }
-    
     /**
      * 
      */
@@ -197,6 +212,54 @@ struct fgAABoundingBox2DT : fgBoundingBoxT<fgAABoundingBox2DT<ValueType>, fgVect
         this->zero();
         this->min.x = FLT_MAX;
         this->min.y = FLT_MAX;
+    }
+    /**
+     * 
+     * @return 
+     */
+    virtual inline vector_type getCenter(void) const {
+        //center = 0.5 * (min + max);
+        //extent = 0.5 * (max - min);
+        return 0.5f * (this->min + this->max);
+    }
+    /**
+     * 
+     * @return 
+     */
+    virtual inline vector_type getExtent(void) const {
+        return 0.5f * (this->max - this->min);
+    }
+    /**
+     * 
+     * @param normal
+     * @return 
+     */
+    virtual inline vector_type getVertexP(const vector_type &normal) const {
+        vector_type result = this->min;
+
+        if(normal.x >= 0)
+            result.x = this->max.x;
+
+        if(normal.y >= 0)
+            result.y = this->max.y;
+
+        return result;
+    }
+    /**
+     * 
+     * @param normal
+     * @return 
+     */
+    virtual inline vector_type getVertexN(const vector_type &normal) const {
+        vector_type result = this->max;
+
+        if(normal.x >= 0)
+            result.x = this->min.x;
+
+        if(normal.y >= 0)
+            result.y = this->min.y;
+
+        return result;
     }
 };
 
@@ -253,7 +316,7 @@ struct fgAABoundingBox3DT : fgBoundingBoxT<fgAABoundingBox3DT<ValueType>, fgVect
      * @return 
      */
     virtual self_type &merge(const self_type &a, const self_type &b) {
-        this->zero();
+        this->invalidate();
 
         this->min.x = glm::min(this->min.x, a.min.x);
         this->min.y = glm::min(this->min.y, a.min.y);
@@ -337,8 +400,8 @@ struct fgAABoundingBox3DT : fgBoundingBoxT<fgAABoundingBox3DT<ValueType>, fgVect
      * @return 
      */
     virtual inline self_type &setBoundsFromData(const void *data,
-                                         const size_type stride,
-                                         const size_type count = 1) {
+                                                const size_type stride,
+                                                const size_type count = 1) {
         return fgAABBHelper::setBoundsFromData((*this), data, stride, count);
     }
     /**
@@ -352,14 +415,101 @@ struct fgAABoundingBox3DT : fgBoundingBoxT<fgAABoundingBox3DT<ValueType>, fgVect
         this->max.y = (value_type)0;
         this->max.z = (value_type)0;
     }
-    
+    /**
+     * 
+     */
     virtual inline void invalidate(void) {
         this->zero();
         this->min.x = FLT_MAX;
         this->min.y = FLT_MAX;
         this->min.z = FLT_MAX;
     }
+    /**
+     * 
+     * @return 
+     */
+    virtual inline vector_type getCenter(void) const {
+        //center = 0.5 * (min + max);
+        //extent = 0.5 * (max - min);
+        return 0.5f * (this->min + this->max);
+    }
+    /**
+     * 
+     * @return 
+     */
+    virtual inline vector_type getExtent(void) const {
+        return 0.5f * (this->max - this->min);
+    }
+    /**
+     * 
+     * @param normal
+     * @return 
+     */
+    virtual inline vector_type getVertexP(const vector_type &normal) const {
+        vector_type result = this->min;
+
+        if(normal.x >= 0)
+            result.x = this->max.x;
+
+        if(normal.y >= 0)
+            result.y = this->max.y;
+
+        if(normal.z >= 0)
+            result.z = this->max.z;
+
+        return result;
+    }
+    /**
+     * 
+     * @param normal
+     * @return 
+     */
+    virtual inline vector_type getVertexN(const vector_type &normal) const {
+        vector_type result = this->max;
+        if(normal.x >= 0)
+            result.x = this->min.x;
+
+        if(normal.y >= 0)
+            result.y = this->min.y;
+
+        if(normal.z >= 0)
+            result.z = this->min.z;
+
+        return result;
+    }
+    /**
+     * 
+     * @param m
+     */
+    virtual void transform(fgMatrix4T<ValueType> const & m) {
+        vector_type translation(m[3]);
+        vector_type oldmin, oldmax;
+        value_type a, b;
+        int i, j;
+        // Copy box A into min and max array.
+        oldmin = this->min;
+        oldmax = this->max;
+        // Begin at T.
+        this->min = translation;
+        this->max = translation;
+        // Find extreme points by considering product of 
+        // min and max with each component of M.
+        for(j = 0; j < 3; j++) {
+            for(i = 0; i < 3; i++) {
+                a = m[i][j] * oldmin[i];
+                b = m[i][j] * oldmax[i];
+                if(a < b) {
+                    this->min[j] += a;
+                    this->max[j] += b;
+                } else {
+                    this->min[j] += b;
+                    this->max[j] += a;
+                }
+            }
+        }
+    }
 };
+    
 
 /// Basic axis-aligned bounding box 3D with float data type
 typedef fgAABoundingBox3DT<float> fgAABoundingBox3Df;

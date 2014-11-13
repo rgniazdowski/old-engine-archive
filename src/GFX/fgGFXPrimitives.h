@@ -42,7 +42,7 @@ public:
      *
      */
     static void drawRect2D(void);
-
+    
     static void drawAABBLines(const fgAABoundingBox3Df& aabb);
     
     /*
