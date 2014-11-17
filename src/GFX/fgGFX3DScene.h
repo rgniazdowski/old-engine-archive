@@ -36,7 +36,7 @@ public:
     virtual void render(void);
 
     //
-    fgGfxObject *addFromModel(fgGfxModelResource *pModelRes, const std::string& nameTag);
+    fgGfxSceneNode *addFromModel(fgGfxModelResource *pModelRes, const std::string& nameTag);
 };
 
 #endif /* _FG_GFX_3D_SCENE_H_ */

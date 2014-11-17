@@ -130,7 +130,6 @@ enum fgGfxSLVersion {
         #define FG_GFX_SHADING_LANG_VERSION_DEFAULT FG_GFX_GLSL_330 // ?
     #endif
 
-
 // #FIXME | this can be also used for EGL / SDL ? make it universal?
 inline unsigned int fgGLError(const char *afterFunc = NULL) {
     static unsigned int repeatCnt = 0;

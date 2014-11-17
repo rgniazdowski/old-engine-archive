@@ -15,7 +15,9 @@
 
 #ifndef _FG_MANAGED_OBJECT_BASE_H_
     #define _FG_MANAGED_OBJECT_BASE_H_
+    #define _FG_MANAGED_OBJECT_BASE_H_BLOCK_
 
+    #include "fgManagerBase.h"
     #include "fgBool.h"
     #include <string>
     #include <cstdio>
@@ -26,14 +28,16 @@
 template<typename HandleType>
 class fgManagedObjectBase {
 public:
+    typedef HandleType handle_type;
     // System data is always set to (void *)this
     typedef fgBool(*callbackPtr)(void *systemData, void *userData);
+    typedef callbackPtr callback_type;
     
 public:
     /**
      * Default empty constructor for managed base object
      */
-    fgManagedObjectBase() : m_nameTag(), m_isManaged(FG_FALSE) { }
+    fgManagedObjectBase() : m_pManager(NULL), m_nameTag(), m_isManaged(FG_FALSE) { }
     /**
      * Default empty destructor for managed base object
      */
@@ -151,15 +155,31 @@ public:
     inline fgBool isManaged(void) const {
         return m_isManaged;
     }
+    /**
+     * 
+     * @return 
+     */
+    inline fgManagerBase *getManager(void) const {
+        return m_pManager;
+    }
+    /**
+     * 
+     * @param pManager
+     */
+    inline void setManager(fgManagerBase *pManager) {
+        m_pManager = pManager;
+    }
 
 protected:
+    ///
+    fgManagerBase *m_pManager;
     /// Name of the data, string ID
     std::string m_nameTag;
     /// Unique handle number
     HandleType m_handle;
     /// Is this data currently managed inside of any kind manager?
     fgBool m_isManaged;
-
+    
 private:
 
     /**
@@ -190,4 +210,5 @@ private:
     callbackVec m_onDestructorCallbacks;
 };
 
+    #undef _FG_MANAGED_OBJECT_BASE_H_BLOCK_
 #endif /* _FG_MANAGED_OBJECT_BASE_H_ */

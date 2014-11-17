@@ -169,6 +169,13 @@ struct fgVertex2v {
 
 typedef fgVertex2v fgGfxVertex2v;
 
+    #include <cstdio>
+
+inline void dumpVector(const fgVector3f & vec, const char *title) {
+    printf("%s = { %.2f %.2f %.2f }\n", ( title ? title : "X"), vec.x, vec.y, vec.z);
+}
+
+
 
 #endif	/* _FG_GFX_VERTEX_H_ */
 

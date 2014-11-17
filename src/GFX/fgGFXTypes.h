@@ -155,51 +155,6 @@ inline const char * _FG_GFX_DATA_TYPE_TO_TEXT(fgGFXenum value) {
         #define FG_RAD2DEG_FUNC(_RADIANS) (_RADIANS * FG_RAD2DEG)
     #endif
 
-struct fgArea {
-    int x;
-    int y;
-    int w;
-    int h;
-    fgArea(int _x, int _y, int _w, int _h) : x(_x), y(_y), w(_w), h(_h) { }
-    fgArea() : x(0), y(0), w(0), h(0) { }
-    int left() const {
-        return x;
-    }
-    int right() const {
-        return x + w;
-    }
-    int top() const {
-        return y;
-    }
-    int bottom() const {
-        return y + h;
-    }
-    int width() const {
-        return w;
-    }
-    int height() const {
-        return h;
-    }
-    void setLeft(int l) {
-        x = l;
-    }
-    void setRight(int r) {
-        w = r - x;
-    }
-    void setTop(int t) {
-        y = t;
-    }
-    void setBottom(int b) {
-        h = b - y;
-    }
-    void setWidth(int _w) {
-        w = _w;
-    }
-    void setHeight(int _h) {
-        h = _h;
-    }
-};
-
     #ifndef _FG_GFX_VERTEX_H_
         #include "fgGFXVertex.h"
     #endif
@@ -237,6 +192,16 @@ struct fgGfxDrawingInfo {
         count = 0;
     }
 };
+
+// #FIXME #DUMP 
+inline void dumpMatrix(const float *mat, const char *title) {
+    if(title)
+        printf("%s MATRIX:\n", title);
+    printf("{ %.2f %.2f %.2f %.2f }\n", mat[0], mat[1], mat[2], mat[3]);
+    printf("{ %.2f %.2f %.2f %.2f }\n", mat[4], mat[5], mat[6], mat[7]);
+    printf("{ %.2f %.2f %.2f %.2f }\n", mat[8], mat[9], mat[10], mat[11]);
+    printf("{ %.2f %.2f %.2f %.2f }\n\n", mat[12], mat[13], mat[14], mat[15]);
+}
 
     #undef _FG_GFX_TYPES_BLOCK__
 #endif /* _FG_GFX_TYPES_H_ */

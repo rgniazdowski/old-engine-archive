@@ -147,6 +147,54 @@ fgManagerBase * fgTextureManager::getResourceManager(void) const {
 
 /**
  * 
+ * @param texHandle
+ * @return 
+ */
+fgGfxTextureID& fgTextureManager::getRefGfxID(const fgResourceHandle& texHandle) {
+    if(!m_pResourceMgr)
+        return m_emptyGfxID;
+    fgTextureResource *pTexture = (fgTextureResource *)static_cast<fgResourceManager *>(m_pResourceMgr)->get(texHandle);
+    if(!pTexture) {
+        m_emptyGfxID.reset();
+        return m_emptyGfxID;
+    }
+    return pTexture->getRefGfxID();
+}
+
+/**
+ * 
+ * @param nameTag
+ * @return 
+ */
+fgGfxTextureID& fgTextureManager::getRefGfxID(const std::string& nameTag) {
+    if(!m_pResourceMgr || nameTag.empty())
+        return m_emptyGfxID;
+    fgTextureResource *pTexture = (fgTextureResource *)static_cast<fgResourceManager *>(m_pResourceMgr)->get(nameTag);
+    if(!pTexture) {
+        m_emptyGfxID.reset();
+        return m_emptyGfxID;
+    }
+    return pTexture->getRefGfxID();
+}
+
+/**
+ * 
+ * @param nameTag
+ * @return 
+ */
+fgGfxTextureID& fgTextureManager::getRefGfxID(const char *nameTag) {
+    if(!m_pResourceMgr || !nameTag)
+        return m_emptyGfxID;
+    fgTextureResource *pTexture = (fgTextureResource *)static_cast<fgResourceManager *>(m_pResourceMgr)->get(nameTag);
+    if(!pTexture) {
+        m_emptyGfxID.reset();
+        return m_emptyGfxID;
+    }
+    return pTexture->getRefGfxID();
+}
+
+/**
+ * 
  * @param argv
  * @return 
  */

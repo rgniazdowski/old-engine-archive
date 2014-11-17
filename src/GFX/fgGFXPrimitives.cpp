@@ -161,30 +161,53 @@ void fgGfxPrimitives::drawAABBLines(const fgAABoundingBox3Df& aabb) {
 #define _id_vec(_X) v[(_X-1)]
     const fgVector3f aabbLineStripBuf[] = {
                                            // 1st face
-                                           _id_vec(4),
-                                           _id_vec(1),
-                                           _id_vec(2),
-                                           _id_vec(4),
-                                           _id_vec(3),
-                                           _id_vec(2),
+                                           _id_vec(4), // 0
+                                           _id_vec(1), // 1
+                                           _id_vec(2), // 2
+                                           _id_vec(4), // 3
+                                           _id_vec(3), // 4
+                                           _id_vec(2), // 5
 
                                            // 2nd face
-                                           _id_vec(7),
-                                           _id_vec(3),
-                                           _id_vec(6),
-                                           _id_vec(7),
+                                           _id_vec(7), // 6
+                                           _id_vec(3), // 7
+                                           _id_vec(6), // 8
+                                           _id_vec(7), // 9
 
                                            // 3rd face
-                                           _id_vec(8),
-                                           _id_vec(6),
-                                           _id_vec(5),
-                                           _id_vec(8),
+                                           _id_vec(8), // 10
+                                           _id_vec(6), // 11
+                                           _id_vec(5), // 12
+                                           _id_vec(8), // 13
 
                                            // 4th face
-                                           _id_vec(1),
-                                           _id_vec(5),
-                                           _id_vec(4),
-
+                                           _id_vec(1), // 14
+                                           _id_vec(5), // 15
+                                           _id_vec(4), // 16
+    };
+    const fgColor4f aabbColor[] = { 
+        fgColor4f(1.0f, 1.0f, 1.0f, 1.0f), 
+        fgColor4f(1.0f, 1.0f, 1.0f, 1.0f), 
+        fgColor4f(1.0f, 1.0f, 1.0f, 1.0f), 
+        fgColor4f(1.0f, 1.0f, 1.0f, 1.0f), 
+        
+        fgColor4f(1.0f, 1.0f, 1.0f, 1.0f), 
+        fgColor4f(1.0f, 1.0f, 1.0f, 1.0f), 
+        fgColor4f(1.0f, 1.0f, 1.0f, 1.0f), 
+        fgColor4f(1.0f, 1.0f, 1.0f, 1.0f), 
+        
+        fgColor4f(1.0f, 1.0f, 1.0f, 1.0f), 
+        fgColor4f(1.0f, 1.0f, 1.0f, 1.0f), 
+        fgColor4f(1.0f, 1.0f, 1.0f, 1.0f), 
+        fgColor4f(1.0f, 1.0f, 1.0f, 1.0f), 
+        
+        fgColor4f(1.0f, 1.0f, 1.0f, 1.0f), 
+        fgColor4f(1.0f, 1.0f, 1.0f, 1.0f), 
+        fgColor4f(1.0f, 1.0f, 1.0f, 1.0f), 
+        fgColor4f(1.0f, 1.0f, 1.0f, 1.0f), 
+        
+        fgColor4f(1.0f, 1.0f, 1.0f, 1.0f)
+        
     };
 #undef _id_vec
     uintptr_t offset = (uintptr_t)((unsigned int*)&aabbLineStripBuf[0]);

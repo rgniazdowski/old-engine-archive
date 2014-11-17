@@ -12,6 +12,7 @@
 
 #ifndef _FG_RESOURCE_H_
     #define _FG_RESOURCE_H_
+    #define _FG_RESOURCE_H_BLOCK_
 
     #include "fgCommon.h"
     #include "fgStatusReporter.h"
@@ -188,7 +189,10 @@ class fgResource : public fgManagedDataFileBase<fgResourceHandle, fgQuality>, pu
     friend class fgResourceGroup;
 public:
     typedef fgManagedDataFileBase<fgResourceHandle, fgQuality> base_type;
-    
+    typedef fgResourceTag tag_type;
+    typedef fgResourceHandle handle_type;
+    typedef fgQuality quality_type;
+        
 public:
     /**
      *  Base constructor of the resource object
@@ -277,13 +281,7 @@ protected:
     }
 
 public:
-    /**
-     * 
-     * @return 
-     */
-    inline fgManagerBase *getManager(void) const {
-        return m_manager;
-    }
+    
     // Return the current hit of the reference counter for the resource
     unsigned int getReferenceCount(void) const {
         return m_nRefCount;
@@ -333,13 +331,7 @@ protected:
     virtual void ZeroLock(void) {
         m_nRefCount = 0;
     }
-    // Sets the manager internal pointer
-    inline void setManager(fgManagerBase *pManager) {
-        m_manager = pManager;
-    }
 protected:
-    /// Pointer to the manager by which this resource is managed
-    fgManagerBase *m_manager;
     /// Priority of this resource
     fgResPriorityType m_priority;
     /// Quality of the resource
@@ -357,4 +349,5 @@ protected:
 
 };
 
+    #undef _FG_RESOURCE_H_BLOCK_
 #endif /* _FG_RESOURCE_H_ */

@@ -11,7 +11,7 @@
 #include "Shaders/fgGFXShaderManager.h"
 #include "Textures/fgTextureResource.h"
 #include "Resource/fgResourceManager.h"
-#include "fgGFXDrawableObject.h"
+#include "fgGFXSceneNode.h"
 
 /**
  * 
@@ -53,18 +53,17 @@ void fgGfx3DScene::render(void) {
  * @param nameTag
  * @return 
  */
-fgGfxObject *fgGfx3DScene::addFromModel(fgGfxModelResource* pModelRes,
+fgGfxSceneNode *fgGfx3DScene::addFromModel(fgGfxModelResource* pModelRes,
                                         const std::string& nameTag) {
     if(!pModelRes) {
         return NULL;
     }
-    fgGfxObject *pObj = new fgGfxDrawableObject();
-    fgGfxDrawableObject *pDrawableObj = static_cast<fgGfxDrawableObject *>(pObj);
-    pObj->setName(nameTag);
-    pDrawableObj->setModel(pModelRes);
-    if(!addObject(pObj->getRefHandle(), pObj)) {
-        delete pObj;
-        pObj = NULL;
+    fgGfxSceneNode *pNode = new fgGfxSceneNodeObject(pModelRes, NULL);
+    fgGfxSceneNodeObject *pNodeObject = static_cast<fgGfxSceneNodeObject *>(pNode);
+    pNode->setName(nameTag);
+    if(!addNode(pNode->getRefHandle(), pNode)) {
+        delete pNode;
+        pNode = NULL;
     }
-    return pObj;
+    return pNode;
 }

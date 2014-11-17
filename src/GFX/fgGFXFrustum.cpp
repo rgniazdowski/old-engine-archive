@@ -7,6 +7,7 @@
 
 #include "fgGFXFrustum.h"
 #include "Math/fgMathLib.h"
+#include "fgGFXGL.h"
 
 /**
  * 
@@ -28,47 +29,47 @@ fgGfxFrustum::~fgGfxFrustum() { }
  * 
  * @param angle
  * @param ratio
- * @param nearD
- * @param farD
+ * @param zNear
+ * @param zFar
  */
-void fgGfxFrustum::setCameraInternals(const float angle,
-                                      const float ratio,
-                                      const float nearD,
-                                      const float farD) {
+void fgGfxFrustum::setCamera(const float angle,
+                             const float ratio,
+                             const float zNear,
+                             const float zFar) {
     this->m_aspect = ratio;
     this->m_angle = angle;
-    this->m_nearD = nearD;
-    this->m_farD = farD;
+    this->m_zNear = zNear;
+    this->m_zFar = zFar;
 
     this->m_tang = (float)tan(angle * FG_DEG2RAD * 0.5);
-    this->m_nh = nearD * this->m_tang;
+    this->m_nh = zNear * this->m_tang;
     this->m_nw = m_nh * ratio;
-    this->m_fh = farD * this->m_tang;
+    this->m_fh = zFar * this->m_tang;
     this->m_fw = this->m_fh * ratio;
 }
 #include <cstdio>
 
 /**
  * 
- * @param p
- * @param l
- * @param u
+ * @param eye
+ * @param center
+ * @param up
  */
-void fgGfxFrustum::setCamera(const fgVector3f &p, const fgVector3f &l, const fgVector3f &u) {
+void fgGfxFrustum::set(const fgVector3f &eye,
+                       const fgVector3f &center,
+                       const fgVector3f &up) {
     fgVector3f dir, nc, fc, X, Y, Z;
 
-    Z = p - l;
+    Z = eye - center;
     Z = fgMath::normalize(Z);
-    //Z.normalize();
 
-    X = fgMath::cross(u, Z);
+    X = fgMath::cross(up, Z);
     X = fgMath::normalize(X);
-    //X.normalize();
 
     Y = fgMath::cross(Z, X);
 
-    nc = p - Z * m_nearD;
-    fc = p - Z * m_farD;
+    nc = eye - Z * m_zNear;
+    fc = eye - Z * m_zFar;
 
     m_point.ntl = nc + Y * m_nh - X * m_nw;
     m_point.ntr = nc + Y * m_nh + X * m_nw;
@@ -80,97 +81,165 @@ void fgGfxFrustum::setCamera(const fgVector3f &p, const fgVector3f &l, const fgV
     m_point.fbl = fc - Y * m_fh - X * m_fw;
     m_point.fbr = fc - Y * m_fh + X * m_fw;
 
-    const char *info = "TOP";
-    //    m_planes[TOP].set(m_point.ntr, m_point.ntl, m_point.ftl);
-    fgVec3f VV = m_planes[TOP].n;
-    /*
-    printf("Vec3[%s](%.2f, %.2f, %.2f)\n", info, VV.x, VV.y, VV.z);
-    printf("D: %.2f\n", m_planes[TOP].d);
-
-    info = "BOTTOM";
-    m_planes[BOTTOM].set(m_point.nbl, m_point.nbr, m_point.fbr);
-    VV = m_planes[BOTTOM].n;
-    printf("Vec3[%s](%.2f, %.2f, %.2f)\n", info, VV.x, VV.y, VV.z);
-    printf("D: %.2f\n", m_planes[BOTTOM].d);
-
-    info = "LEFT";
-    m_planes[LEFT].set(m_point.ntl, m_point.nbl, m_point.fbl);
-    VV = m_planes[LEFT].n;
-    printf("Vec3[%s](%.2f, %.2f, %.2f)\n", info, VV.x, VV.y, VV.z);
-    printf("D: %.2f\n", m_planes[LEFT].d);
-
-    info = "RIGHT";
-    m_planes[RIGHT].set(m_point.nbr, m_point.ntr, m_point.fbr);
-    VV = m_planes[RIGHT].n;
-    printf("Vec3[%s](%.2f, %.2f, %.2f)\n", info, VV.x, VV.y, VV.z);
-    printf("D: %.2f\n", m_planes[RIGHT].d);
-
-    info = "NEARP";
-    m_planes[NEARP].set(m_point.ntl, m_point.ntr, m_point.nbr);
-    VV = m_planes[NEARP].n;
-    printf("Vec3[%s](%.2f, %.2f, %.2f)\n", info, VV.x, VV.y, VV.z);
-    printf("D: %.2f\n", m_planes[NEARP].d);
-
-    info = "FARP";
-    m_planes[FARP].set(m_point.ftr, m_point.ftl, m_point.fbl);
-    VV = m_planes[FARP].n;    
-    printf("Vec3[%s](%.2f, %.2f, %.2f)\n", info, VV.x, VV.y, VV.z);
-    printf("D: %.2f\n", m_planes[FARP].d);
-     */
-
-
-    ///////////////////////////////////////////////////////////
-    //printf("\n");
-    info = "NEARP";
     m_planes[NEARP].set(-Z, nc);
-    //printf("Vec3[%s](%.2f, %.2f, %.2f)\n", info, VV.x, VV.y, VV.z);
-    //printf("D: %.2f\n", m_planes[NEARP].d);
-
-    info = "FARP";
     m_planes[FARP].set(Z, fc);
-    VV = m_planes[FARP].n;
-    //printf("Vec3[%s](%.2f, %.2f, %.2f)\n", info, VV.x, VV.y, VV.z);
-    //printf("D: %.2f\n", m_planes[FARP].d);
 
     fgVec3f aux, normal;
-
-    info = "TOP";
-    aux = (nc + Y * m_nh) - p;
+    aux = (nc + Y * m_nh) - eye;
     aux = fgMath::normalize(aux);
     normal = fgMath::cross(aux, X);
     m_planes[TOP].set(normal, nc + Y * m_nh);
-    VV = m_planes[TOP].n;
-    //printf("Vec3[%s](%.2f, %.2f, %.2f)\n", info, VV.x, VV.y, VV.z);
-    //printf("D: %.2f\n", m_planes[TOP].d);
 
-    info = "BOTTOM";
-    aux = (nc - Y * m_nh) - p;
+    aux = (nc - Y * m_nh) - eye;
     aux = fgMath::normalize(aux);
     normal = fgMath::cross(X, aux);
     m_planes[BOTTOM].set(normal, nc - Y * m_nh);
-    VV = m_planes[BOTTOM].n;
-    //printf("Vec3[%s](%.2f, %.2f, %.2f)\n", info, VV.x, VV.y, VV.z);
-    //printf("D: %.2f\n", m_planes[BOTTOM].d);
 
-    info = "LEFT";
-    aux = (nc - X * m_nw) - p;
+    aux = (nc - X * m_nw) - eye;
     aux = fgMath::normalize(aux);
     normal = fgMath::cross(aux, Y);
     m_planes[LEFT].set(normal, nc - X * m_nw);
-    VV = m_planes[LEFT].n;
-    //printf("Vec3[%s](%.2f, %.2f, %.2f)\n", info, VV.x, VV.y, VV.z);
-    //printf("D: %.2f\n", m_planes[LEFT].d);
 
-
-    info = "RIGHT";
-    aux = (nc + X * m_nw) - p;
+    aux = (nc + X * m_nw) - eye;
     aux = fgMath::normalize(aux);
-    //normal = Y * aux;
-    normal = fgMath::cross(Y, aux);
+    normal = fgMath::cross(Y, aux); //normal = Y * aux;
     m_planes[RIGHT].set(normal, nc + X * m_nw);
-    VV = m_planes[RIGHT].n;
-    //printf("Vec3[%s](%.2f, %.2f, %.2f)\n", info, VV.x, VV.y, VV.z);
-    //printf("D: %.2f\n", m_planes[RIGHT].d);
+    
+#if defined(FG_DEBUG)
+    dumpPlane(m_planes[LEFT], "LEFT");
+    dumpPlane(m_planes[RIGHT], "RIGHT");
+    dumpPlane(m_planes[TOP], "TOP");
+    dumpPlane(m_planes[BOTTOM], "BOTTOM");
+    dumpPlane(m_planes[NEARP], "NEARP");
+    dumpPlane(m_planes[FARP], "FARP");
+#endif
+}
+
+/**
+ * 
+ * @param m
+ * @return 
+ */
+void fgGfxFrustum::set(const fgMatrix4f &matrix) {
+    float a = 0.0f, b = 0.0f, c = 0.0f, d = 0.0f;
+    // The elements of the 4x4 matrix are stored in
+    // column-major order (see "OpenGL Programming Guide",
+    // 3rd edition, pp 106, glLoadMatrix).
+#if defined(FG_DEBUG)
+    dumpMatrix(fgMath::value_ptr(matrix), NULL);
+#endif
+    fgMatrix4f m = fgMath::transpose(matrix);
+    /***************************************************************************
+     * Supporting Non-Identity World and View Matrices
+     ***************************************************************************
+     * 
+     * Until now we have assumed  that both, the  world and the  view matrix are 
+     * identity matrices. However,  the goal  obviously is to make the algorithm 
+     * work for  an arbitrary view.  This is, in fact,  so easy that it’s almost 
+     * unbelievable.  If you think about it for a moment then you’ll immediately 
+     * understand it,  and that’s  why we  are not  going to explain this in any 
+     * great detail. All we are giving to you is this:
+     * 
+     * * 1. If the matrix M is equal to the projection  matrix P (i.e., M = P ), 
+     *      then the algorithm gives the clipping planes in view space 
+     *      (i.e., camera space).
+     * 
+     * * 2. If the matrix M is equal to the combined view and projection matrix,
+     *      then the algorithm gives the  clipping planes  in world space (i.e., 
+     *      M = VP, where V is the view matrix, and P is the projection matrix).
+     * 
+     * * 3. If the matrix M is equal to the combined world, view, and projection
+     *      matrices,  then the  algorithm  gives  the clipping planes in object 
+     *      space (i.e., M = W * V * P , where W  is  the world matrix, V is the 
+     *      view matrix, and P is the projection matrix).
+     * 
+     * * 4. and so on...
+     ***************************************************************************/
+#if defined(FG_USING_OPENGL) || defined(FG_USING_OPENGL_ES) || defined(FG_USING_MARMALADE_OPENGL_ES) || defined(FG_USING_MARMALADE_IWGL)
+    // Left clipping plane 
+    a = m[3][0] + m[0][0];
+    b = m[3][1] + m[0][1];
+    c = m[3][2] + m[0][2];
+    d = m[3][3] + m[0][3];
+    m_planes[LEFT].set(a, b, c, d);
+    // Right clipping plane
+    a = m[3][0] - m[0][0];
+    b = m[3][1] - m[0][1];
+    c = m[3][2] - m[0][2];
+    d = m[3][3] - m[0][3];
+    m_planes[RIGHT].set(a, b, c, d);
+    // Top clipping plane
+    a = m[3][0] - m[1][0];
+    b = m[3][1] - m[1][1];
+    c = m[3][2] - m[1][2];
+    d = m[3][3] - m[1][3];
+    m_planes[TOP].set(a, b, c, d);
+    // Bottom clipping plane
+    a = m[3][0] + m[1][0];
+    b = m[3][1] + m[1][1];
+    c = m[3][2] + m[1][2];
+    d = m[3][3] + m[1][3];
+    m_planes[BOTTOM].set(a, b, c, d);
+    // Near clipping plane
+    a = m[3][0] + m[2][0];
+    b = m[3][1] + m[2][1];
+    c = m[3][2] + m[2][2];
+    d = m[3][3] + m[2][3];
+    m_planes[NEARP].set(a, b, c, d);
+    // Far clipping plane
+    a = m[3][0] - m[2][0];
+    b = m[3][1] - m[2][1];
+    c = m[3][2] - m[2][2];
+    d = m[3][3] - m[2][3];
+    m_planes[FARP].set(a, b, c, d);
+#elif defined(FG_USING_DIRECTX) 
+    // The elements of the 4x4 matrix are stored in
+    // row-major order.
+    // Left clipping plane 
+    a = m[0][3] + m[0][0];
+    b = m[1][3] + m[1][0];
+    c = m[2][3] + m[2][0];
+    d = m[3][3] + m[3][0];
+    m_planes[LEFT].set(a, b, c, d);
+    // Right clipping plane
+    a = m[0][3] - m[0][0];
+    b = m[1][3] - m[1][0];
+    c = m[2][3] - m[2][0];
+    d = m[3][3] - m[3][0];
+    m_planes[RIGHT].set(a, b, c, d);
+    // Top clipping plane
+    a = m[0][3] - m[0][1];
+    b = m[1][3] - m[1][1];
+    c = m[2][3] - m[2][1];
+    d = m[3][3] - m[3][1];
+    m_planes[TOP].set(a, b, c, d);
+    // Bottom clipping plane
+    a = m[0][3] + m[0][1];
+    b = m[1][3] + m[1][1];
+    c = m[2][3] + m[2][1];
+    d = m[3][3] + m[3][1];
+    m_planes[BOTTOM].set(a, b, c, d);
+    // Near clipping plane
+    a = m[0][2];// + m[0][3];
+    b = m[1][2];// + m[1][3];
+    c = m[2][2];// + m[2][3];
+    d = m[3][2];// + m[3][3];
+    m_planes[NEARP].set(a, b, c, d);
+    // Far clipping plane
+    a = m[0][3] - m[0][2];
+    b = m[1][3] - m[1][2];
+    c = m[2][3] - m[2][2];
+    d = m[3][3] - m[3][2];
+    m_planes[FARP].set(a, b, c, d);
+#endif
+#if defined(FG_DEBUG)
+    dumpPlane(m_planes[LEFT], "LEFT");
+    dumpPlane(m_planes[RIGHT], "RIGHT");
+    dumpPlane(m_planes[TOP], "TOP");
+    dumpPlane(m_planes[BOTTOM], "BOTTOM");
+    dumpPlane(m_planes[NEARP], "NEARP");
+    dumpPlane(m_planes[FARP], "FARP");
+#endif
 }
 
 /**
@@ -178,11 +247,11 @@ void fgGfxFrustum::setCamera(const fgVector3f &p, const fgVector3f &l, const fgV
  * @param p
  * @return 
  */
-int fgGfxFrustum::testPoint(const fgVector3f &p) {
+int fgGfxFrustum::testPoint(const fgVector3f &point) {
     // #FIXME - OPTIMIZE!
     int result = INSIDE;
     for(int i = 0; i < 6; i++) {
-        float d = this->m_planes[i].distance(p);
+        float d = this->m_planes[i].distance(point);
         if(d < 0)
             return OUTSIDE;
     }
@@ -195,14 +264,14 @@ int fgGfxFrustum::testPoint(const fgVector3f &p) {
  * @param raio
  * @return 
  */
-int fgGfxFrustum::testSphere(const fgVector3f &p, const float radius) {
+int fgGfxFrustum::testSphere(const fgVector3f &point, const float radius) {
     // #FIXME - OPTIMIZE!
     // #FIXME - remember that for now this all works with worldspace (MVP transform)
     int result = INSIDE;
     float distance;
 
     for(int i = 0; i < NUM_PLANES; i++) {
-        distance = m_planes[i].distance(p);
+        distance = m_planes[i].distance(point);
         if(distance < -radius)
             return OUTSIDE;
         else if(distance < radius)
@@ -216,11 +285,13 @@ int fgGfxFrustum::testSphere(const fgVector3f &p, const float radius) {
  * @param b
  * @return 
  */
-int fgGfxFrustum::testAABB(const fgAABoundingBox3Df &b) {
+int fgGfxFrustum::testAABB(const fgAABoundingBox3Df &box) {
+    if(!box.isValid())
+        return OUTSIDE;
     // #FIXME - OPTIMIZE!
     int result = INSIDE;
-    fgVec3f center = b.getCenter();
-    fgVec3f extent = b.getExtent();
+    fgVec3f center = box.getCenter();
+    fgVec3f extent = box.getExtent();
 
     for(int i = 0; i < NUM_PLANES; i++) {
         //and since plane is(expected to be) constant for some number of boxes, 
@@ -233,20 +304,16 @@ int fgGfxFrustum::testAABB(const fgAABoundingBox3Df &b) {
         float d = fgMath::dot(center, m_planes[i].n);
         float r = fgMath::dot(extent, absPlane);
 
-        if(d + r < -m_planes[i].d)
+        if(d + r < -m_planes[i].d) {
             return OUTSIDE;
-        
-//        if(d - r >= -m_planes[i].d) {
-//            // fully inside
-//        } if(d + r > -m_planes[i].d) {
-//            // partially inside
-//        } else {
-//        }
+        }
 
+        // P/N vertex method is fubar, something is not working here
+        // It yields wrong results
         // P max
         //if(m_planes[i].distance(b.getVertexP(m_planes[i].n)) < 0)
         //    return OUTSIDE;
-        // M min
+        // N min
         //else if(m_planes[i].distance(b.getVertexN(m_planes[i].n)) < 0)
         //    result = INTERSECT;
     }

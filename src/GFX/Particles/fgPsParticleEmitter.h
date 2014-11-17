@@ -17,13 +17,13 @@
     #define	_FG_PS_PARTICLE_EMITTER_H_
 
     #include "fgVector.h"
-    #include "GFX/fgGFXObject.h"
+    #include "GFX/fgGFXSceneNode.h"
     #include "fgPsParticleEffect.h"
     
 /**
  * 
  */
-class fgParticleEmitter : public fgGfxObject {
+class fgParticleEmitter : public fgGfxSceneNode {
 public:
     typedef fgVector<fgParticleEffect *> particleEffects;
     typedef particleEffects::iterator    particleEffectsItor;
@@ -47,7 +47,7 @@ public:
     /**
      * 
      */
-    fgParticleEmitter();
+    fgParticleEmitter(fgParticleEffect *pParticleEffect = NULL);
     
     /**
      * 
@@ -122,7 +122,7 @@ public:
     /**
      * 
      */
-    virtual void calculate(fgVertexData *pVertexData);
+    virtual void calculate(void);
     
     
     

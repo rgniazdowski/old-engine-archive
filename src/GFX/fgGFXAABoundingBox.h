@@ -109,7 +109,8 @@ struct fgAABoundingBox2DT : fgBoundingBoxT<fgAABoundingBox2DT<ValueType>, fgVect
      * @param _pos
      * @param _size
      */
-    fgAABoundingBox2DT(const vec_type &_pos, const vec_type &_size) :
+    fgAABoundingBox2DT(const vec_type &_pos,
+                       const vec_type &_size) :
     base_type(_pos, _size) { }
     /**
      * 
@@ -117,19 +118,24 @@ struct fgAABoundingBox2DT : fgBoundingBoxT<fgAABoundingBox2DT<ValueType>, fgVect
      * @param b
      * @return 
      */
-    self_type &merge(const self_type &a, const self_type &b) {
+    virtual inline self_type &merge(self_type const &a,
+                             self_type const &b) {
         this->invalidate();
-
-        this->min.x = glm::min(this->min.x, a.min.x);
-        this->min.y = glm::min(this->min.y, a.min.y);
-        this->max.x = glm::max(this->max.x, a.max.x);
-        this->max.y = glm::max(this->max.y, a.max.y);
-
-        this->min.x = glm::min(this->min.x, b.min.x);
-        this->min.y = glm::min(this->min.y, b.min.y);
-        this->max.x = glm::max(this->max.x, b.max.x);
-        this->max.y = glm::max(this->max.y, b.max.y);
-
+        this->merge(a);
+        this->merge(b);
+        return (*this);
+    }
+    /**
+     * 
+     * @param a
+     * @param b
+     * @return 
+     */
+    virtual inline self_type &merge(fgBoundingBox2DT<ValueType> const &a,
+                             fgBoundingBox2DT<ValueType> const &b) {
+        this->invalidate();
+        this->merge(a);
+        this->merge(b);
         return (*this);
     }
     /**
@@ -137,14 +143,25 @@ struct fgAABoundingBox2DT : fgBoundingBoxT<fgAABoundingBox2DT<ValueType>, fgVect
      * @param a
      * @return 
      */
-    virtual self_type &merge(const self_type &a) {
+    virtual inline self_type &merge(self_type const &a) {
         // Should zero? nope!
-
         this->min.x = glm::min(this->min.x, a.min.x);
         this->min.y = glm::min(this->min.y, a.min.y);
         this->max.x = glm::max(this->max.x, a.max.x);
         this->max.y = glm::max(this->max.y, a.max.y);
-
+        return (*this);
+    }
+    /**
+     * 
+     * @param a
+     * @return 
+     */
+    virtual inline self_type &merge(fgBoundingBox2DT<ValueType> const &a) {
+        // Should zero? nope!
+        this->min.x = glm::min(this->min.x, a.pos.x);
+        this->min.y = glm::min(this->min.y, a.pos.y);
+        this->max.x = glm::max(this->max.x, a.pos.x + a.size.x);
+        this->max.y = glm::max(this->max.y, a.pos.y + a.size.y);
         return (*this);
     }
     /**
@@ -157,12 +174,25 @@ struct fgAABoundingBox2DT : fgBoundingBoxT<fgAABoundingBox2DT<ValueType>, fgVect
                              const size_type count = 1) {
         if(!count || !aaboxes)
             return (*this);
-        //this->zero();
+        //this->zero(); // NOPE
         for(int i = 0; i < count; i++) {
-            this->min.x = glm::min(this->min.x, aaboxes[i].min.x);
-            this->min.y = glm::min(this->min.y, aaboxes[i].min.y);
-            this->max.x = glm::max(this->max.x, aaboxes[i].max.x);
-            this->max.y = glm::max(this->max.y, aaboxes[i].max.y);
+            this->merge(aaboxes[i]);
+        }
+        return (*this);
+    }
+    /**
+     * 
+     * @param boxes
+     * @param count
+     * @return 
+     */
+    virtual self_type &merge(const fgBoundingBox2DT<ValueType> *boxes,
+                             const size_type count = 1) {
+        if(!count || !boxes)
+            return (*this);
+        //this->zero(); // NOPE
+        for(int i = 0; i < count; i++) {
+            this->merge(boxes[i]);
         }
         return (*this);
     }
@@ -261,6 +291,37 @@ struct fgAABoundingBox2DT : fgBoundingBoxT<fgAABoundingBox2DT<ValueType>, fgVect
 
         return result;
     }
+    /**
+     * 
+     * @param m
+     */
+    virtual void transform(fgMatrix3T<ValueType> const & m) {
+        vector_type translation(m[2]);
+        vector_type oldmin, oldmax;
+        value_type a, b;
+        int i, j;
+        // Copy box A into min and max array.
+        oldmin = this->min;
+        oldmax = this->max;
+        // Begin at T.
+        this->min = translation;
+        this->max = translation;
+        // Find extreme points by considering product of 
+        // min and max with each component of M.
+        for(j = 0; j < 2; j++) { // #FIXME 2 or 3 max? que paso?
+            for(i = 0; i < 2; i++) {
+                a = m[i][j] * oldmin[i];
+                b = m[i][j] * oldmax[i];
+                if(a < b) {
+                    this->min[j] += a;
+                    this->max[j] += b;
+                } else {
+                    this->min[j] += b;
+                    this->max[j] += a;
+                }
+            }
+        }
+    }
 };
 
 /// Basic axis-aligned bounding box 2D with float data type
@@ -315,23 +376,37 @@ struct fgAABoundingBox3DT : fgBoundingBoxT<fgAABoundingBox3DT<ValueType>, fgVect
      * @param b
      * @return 
      */
-    virtual self_type &merge(const self_type &a, const self_type &b) {
+    virtual inline self_type &merge(self_type const &a, self_type const &b) {
         this->invalidate();
-
+        this->merge(a);
+        this->merge(b);
+        return (*this);
+    }
+    /**
+     * 
+     * @param a
+     * @param b
+     * @return 
+     */
+    virtual inline self_type &merge(fgBoundingBox3DT<ValueType> const &a, fgBoundingBox3DT<ValueType> const &b) {
+        this->invalidate();
+        this->merge(a);
+        this->merge(b);
+        return (*this);
+    }
+    /**
+     * 
+     * @param a
+     * @return 
+     */
+    virtual inline self_type &merge(self_type const &a) {
+        // Should zero? nope!
         this->min.x = glm::min(this->min.x, a.min.x);
         this->min.y = glm::min(this->min.y, a.min.y);
         this->min.z = glm::min(this->min.z, a.min.z);
         this->max.x = glm::max(this->max.x, a.max.x);
         this->max.y = glm::max(this->max.y, a.max.y);
         this->max.z = glm::max(this->max.z, a.max.z);
-
-
-        this->min.x = glm::min(this->min.x, b.min.x);
-        this->min.y = glm::min(this->min.y, b.min.y);
-        this->min.z = glm::min(this->min.z, b.min.z);
-        this->max.x = glm::max(this->max.x, b.max.x);
-        this->max.y = glm::max(this->max.y, b.max.y);
-        this->max.z = glm::max(this->max.z, b.max.z);
 
         return (*this);
     }
@@ -340,16 +415,14 @@ struct fgAABoundingBox3DT : fgBoundingBoxT<fgAABoundingBox3DT<ValueType>, fgVect
      * @param a
      * @return 
      */
-    virtual self_type &merge(const self_type &a) {
+    virtual inline self_type &merge(fgBoundingBox3DT<ValueType> const &a) {
         // Should zero? nope!
-
-        this->min.x = glm::min(this->min.x, a.min.x);
-        this->min.y = glm::min(this->min.y, a.min.y);
-        this->min.z = glm::min(this->min.z, a.min.z);
-        this->max.x = glm::max(this->max.x, a.max.x);
-        this->max.y = glm::max(this->max.y, a.max.y);
-        this->max.z = glm::max(this->max.z, a.max.z);
-
+        this->min.x = glm::min(this->min.x, a.pos.x);
+        this->min.y = glm::min(this->min.y, a.pos.y);
+        this->min.z = glm::min(this->min.z, a.pos.z);
+        this->max.x = glm::max(this->max.x, a.pos.x + a.size.x);
+        this->max.y = glm::max(this->max.y, a.pos.y + a.size.y);
+        this->max.z = glm::max(this->max.z, a.pos.z + a.size.z);
         return (*this);
     }
     /**
@@ -363,12 +436,22 @@ struct fgAABoundingBox3DT : fgBoundingBoxT<fgAABoundingBox3DT<ValueType>, fgVect
             return (*this);
         //this->zero(); // nope
         for(size_type i = 0; i < count; i++) {
-            this->min.x = glm::min(this->min.x, aaboxes[i].min.x);
-            this->min.y = glm::min(this->min.y, aaboxes[i].min.y);
-            this->min.z = glm::min(this->min.z, aaboxes[i].min.z);
-            this->max.x = glm::max(this->max.x, aaboxes[i].max.x);
-            this->max.y = glm::max(this->max.y, aaboxes[i].max.y);
-            this->max.z = glm::max(this->max.z, aaboxes[i].max.z);
+            this->merge(aaboxes[i]);
+        }
+        return (*this);
+    }
+    /**
+     * 
+     * @param boxes
+     * @param count
+     * @return 
+     */
+    virtual self_type &merge(const fgBoundingBox3DT<ValueType> *boxes, const size_type count = 1) {
+        if(!count || !boxes)
+            return (*this);
+        //this->zero(); // nope
+        for(size_type i = 0; i < count; i++) {
+            this->merge(boxes[i]);
         }
         return (*this);
     }
@@ -424,6 +507,16 @@ struct fgAABoundingBox3DT : fgBoundingBoxT<fgAABoundingBox3DT<ValueType>, fgVect
         this->min.y = FLT_MAX;
         this->min.z = FLT_MAX;
     }
+    virtual inline fgBool isValid(void) const {
+        size_type n = this->length();
+        for(size_type i = 0; i < n; i++) {
+            if((*this)[i] == FLT_MAX) {
+                return FG_FALSE;
+            }
+        }
+        return FG_TRUE;
+    }
+    
     /**
      * 
      * @return 
@@ -509,7 +602,7 @@ struct fgAABoundingBox3DT : fgBoundingBoxT<fgAABoundingBox3DT<ValueType>, fgVect
         }
     }
 };
-    
+
 
 /// Basic axis-aligned bounding box 3D with float data type
 typedef fgAABoundingBox3DT<float> fgAABoundingBox3Df;

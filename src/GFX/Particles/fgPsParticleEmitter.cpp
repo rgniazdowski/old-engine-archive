@@ -18,12 +18,15 @@
 /**
  * 
  */
-fgParticleEmitter::fgParticleEmitter() :
+fgParticleEmitter::fgParticleEmitter(fgParticleEffect *pEffect) :
+fgGfxSceneNode(FG_GFX_SCENE_NODE_CUSTOM, NULL),
 m_effects(),
 m_origin(),
 m_particles(),
 m_numParticles(0),
-m_maxCount(0) { }
+m_maxCount(0) {
+    setupFromParticleEffect(pEffect);
+}
 
 /**
  * 
@@ -82,13 +85,22 @@ fgBool fgParticleEmitter::setupFromParticleEffect(fgParticleEffect *pParticleEff
     }
     m_effects.push_back(pParticleEffect);
     setMaxCount(pParticleEffect->getMaxCount());
+    if(m_drawCall) {
+        m_drawCall->setComponentActive(fgVertex4v::attribMask());
+        // Two triangles
+        m_drawCall->getVertexData()->reserve(this->getMaxCount()*6);
+    }
     return FG_TRUE;
 }
 
 /**
  *
  */
-void fgParticleEmitter::calculate(fgVertexData *pVertexData) {
+void fgParticleEmitter::calculate(void) {
+    fgVertexData *pVertexData = NULL;
+    if(m_drawCall) {
+        pVertexData = m_drawCall->getVertexData();
+    }
     if(!pVertexData) {
         return;
     }
@@ -102,7 +114,9 @@ void fgParticleEmitter::calculate(fgVertexData *pVertexData) {
     // #FIXME just one effect ? :(
     fgParticleEffect *pEffect = m_effects.back();
     fgVertexData4v *pData4v = static_cast<fgVertexData4v *>(pVertexData);
-
+    m_aabb.invalidate();
+    m_aabb.min.z = 0.0f;
+    
     for(int i = 0; i < (int)m_numParticles; i++) {
         pEffect->basicCalculate(&m_particles[i]);
         if(m_particles[i].life <= 0.0f) {
@@ -143,10 +157,11 @@ void fgParticleEmitter::calculate(fgVertexData *pVertexData) {
         fgVector3f &size = particle.bbox.size;
         fgVector2f uv1 = fgVec2f(s, t + dt);
         fgVector2f uv2 = fgVec2f(s + ds, t);
-
+        
         float w2 = size.x / 2.0f;
         float h2 = size.y / 2.0f;
-
+        m_aabb.merge(fgBoundingBox3Df(fgVec3f(x1-w2,y1-h2,0.0f),size));
+        
         fgMatrix4f mat;
         mat = glm::rotate(mat, particle.rotation.z, fgVector3f(0.0f, 0.0f, 1.0f));
         //mat = glm::lookAt(particle.bbox.pos, particle.bbox.pos + particle.velocity, particle.velocity);
@@ -201,6 +216,7 @@ void fgParticleEmitter::calculate(fgVertexData *pVertexData) {
         v5.color = color; // V5
         v3.color = color; // V3 = V6
         v6.color = color; // V3 = V6
+        
     }
     pData4v->resize(m_numParticles * 6);
 }

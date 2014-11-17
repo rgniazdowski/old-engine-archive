@@ -9,6 +9,7 @@
 
 #ifndef _FG_GFX_MODEL_TYPES_H_
     #define _FG_GFX_MODEL_TYPES_H_
+    #define _FG_GFX_MODEL_TYPES_H_BLOCK_
 
     #ifndef _FG_GFX_TYPES_H_
         #include "fgGFXTypes.h"
@@ -636,7 +637,7 @@ struct fgGfxShape {
     fgGfxShape() : name(), material(NULL), mesh(NULL) { }
 
     //
-    ~fgGfxShape() {
+    virtual ~fgGfxShape() {
         clear();
     }
     
@@ -691,4 +692,5 @@ struct fgGfxShape {
 // X - DirectX 3D Model
     #define	FG_GFX_MODEL_RES_X_EXTENSION		"x"
 
+    #undef _FG_GFX_MODEL_TYPES_H_BLOCK_
 #endif /* _FG_GFX_MODEL_TYPES_H_ */

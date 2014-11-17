@@ -13,6 +13,7 @@
  *
  */
 fgGfxDrawCall::fgGfxDrawCall(const fgGfxDrawCallType type, const fgGFXuint attribMask) :
+fgGfxDrawable(FG_GFX_DRAWABLE_DRAWCALL),
 m_vecDataBase(NULL),
 m_program(NULL),
 m_textureID(),
@@ -123,23 +124,6 @@ void fgGfxDrawCall::setupVertexData(fgGFXuint attribMask) {
 
 /**
  * 
- * @param pModelRes
- */
-void fgGfxDrawCall::setupFromModel(const fgGfxModelResource* pModelRes) {
-    if(!pModelRes)
-        return;
-    if(pModelRes->getRefShapes().empty())
-        return;
-
-    const fgGfxModelResource::modelShapes &shapes = pModelRes->getRefShapes();
-    fgGfxShape *shape = shapes[0];
-    // Can also set other information... like textures
-    setupFromMesh(shape->mesh);
-    m_drawCallType = FG_GFX_DRAW_CALL_MODEL;
-}
-
-/**
- * 
  * @param pMesh
  */
 void fgGfxDrawCall::setupFromMesh(const fgGfxMeshBase* pMesh) {
@@ -159,9 +143,6 @@ void fgGfxDrawCall::setupFromMesh(const fgGfxMeshBase* pMesh) {
         // then it means that there is no indices array
     }
 }
-
-
-//void setupFromObject(const void *pGfxObject) { }
 
 /*
  *
@@ -335,7 +316,7 @@ void fgGfxDrawCall::setTexture(const fgGfxTextureID& textureID) {
 /*
  *
  */
-const fgGfxTextureID& fgGfxDrawCall::getTexture(void) const {
+fgGfxTextureID const & fgGfxDrawCall::getTexture(void) const {
     return m_textureID;
 }
 
@@ -388,7 +369,6 @@ void fgGfxDrawCall::appendRect2D(const fgVec2f &relPos, const fgVec2f &size,
  */
 fgBool fgGfxDrawCall::applyAttributeData(void) {
     if(m_drawCallType == FG_GFX_DRAW_CALL_MESH ||
-       m_drawCallType == FG_GFX_DRAW_CALL_MODEL ||
        m_drawCallType == FG_GFX_DRAW_CALL_CUSTOM_ARRAY) {
         fgGfxPlatform::context()->diffVertexAttribArrayMask(m_attribMask);
         if(m_attrData[0].isInterleaved == FG_TRUE && m_attrData[0].isBO) {
@@ -430,19 +410,6 @@ void fgGfxDrawCall::draw(void) {
         //m_MVP->calculate(m_modelMat);
         m_program->setUniform(m_MVP);
     }
-    // OH MAN, MY BULLSHIT DETECTOR IS OFF THE CHARTS!
-#if 0
-    if(m_vecDataBase->attribMask() & FG_GFX_COLOR_BIT && m_vecDataBase->size()) {
-        fgVertexData4v *vData = (fgVertexData4v *)m_vecDataBase;
-        if(vData->begin()->color.a < 1.0f) {
-            //	fgGfxPlatform::context()->blendFunc(GL_SRC_ALPHA, GL_ONE);
-        } else {
-            //	fgGfxPlatform::context()->blendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        }
-    } else {
-        //fgGfxPlatform::context()->blendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    }
-#endif
     if(m_textureID.id) {
         fgGfxPlatform::context()->bindTexture(m_textureID);
         if(m_program) {

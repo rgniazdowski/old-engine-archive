@@ -1,0 +1,43 @@
+[X] - Script Subsystem initial build + test
+[X] - Script - bind most of gui functionality, events, resource
+[ ] - Script/particle - make particle effects highly configurable
+[ ] - Script - mods, init, resource preload via scripts
+[X] - Event - callbacks fix + script callbacks
+[X] - Sound - audio/sfx + music loading (res) + sound manager initial
+[ ] - Marmalade build sync + fix + device/simulator test
+[X] - GFX - Shader request automation + fix
+[ ] - GFX - primitives fix / drawcalls - too deep calling route
+[ ] - GUI - loading screen / menu control flow fix
+[ ] - GUI - custom screen keyboard + joystick emulation
+[ ] - GUI - console dropdown for debugging - hook to scripts
+[ ] - GUI - finish basic widgets definitions
+[ ] - GUI - container free flow fix - widgets cant overlap, relative positioning force
+[X] - GUI - special debug mode trigger
+[X] - GUI - events fix, callback, script callbacks
+[ ] - Logic -initial logic manager / layer
+[ ] - Plugins - initial maybe?
+[X] - GFX - Scene Manager functional + drawing batch fix
+[X] - GFX - AA Bounding Box - initial
+[X] - GFX - Initial Frustum class - functional - checking planes works
+[ ] - DO - init server, mail, git, cms, two + free
+[ ] - APP - need license for device iOS - after 15th maybe
+[ ] - APP - need email account / GP account dev?
+[ ] - O,X - VPN
+[ ] - CFG - app run config working / mod selection
+[ ] - TOOLS - some initial tools, any kind for automation
+[ ] - TOOLS - need some pkg manager - need to create proper zip file
+[ ] - TOOLS - edit marmalade config tool - create distribution/build/package details - this would be nice
+[ ] - TOOLS - some wxwidgets layer? need to write some first app with it
+[ ] - TOOLS - really, really, really need CMAKE toolchain working on this project
+[ ] - PRJ - windows build with VS - simple test, GLEW, SDL2(+SDL2_mixer), GL + windows
+[ ] - ZIPFS - need to create some library so loading from one ZIP file would work
+		- zlib may be of help, however zip file has also list of file with
+		  offsets where to find them in raw stuff
+
+[ ] - OBFS - string obfuscation, need some tool, read xml or ini file, cypher them with some key
+		- usage in the code would work with hooking up some automatically
+		  generated header file - it would contain just IDS, no string data
+		  using #define constants with some IDS - this would work
+		  - also to avoid massive project rebuild the file should be separated
+
+[X] - DEPS - remove glbinding dependency (for now)

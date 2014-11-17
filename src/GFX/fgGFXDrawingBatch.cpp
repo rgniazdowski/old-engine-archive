@@ -215,10 +215,10 @@ void fgGfxDrawingBatch::sortCalls(void) {
  */
 void fgGfxDrawingBatch::render(void) {
     if(m_priorityBatch.empty())
-        sortCalls();
+        fgGfxDrawingBatch::sortCalls();
 
     while(!m_priorityBatch.empty()) {
-        fgGfxDrawCall *drawCall = m_priorityBatch.top();
+        fgGfxDrawable *drawCall = m_priorityBatch.top();
         drawCall->draw(); // YOLO
         m_priorityBatch.pop();
     }

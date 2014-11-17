@@ -96,8 +96,7 @@
           <itemPath>../../../src/GFX/fgGFXContext.h</itemPath>
           <itemPath>../../../src/GFX/fgGFXDrawCall.cpp</itemPath>
           <itemPath>../../../src/GFX/fgGFXDrawCall.h</itemPath>
-          <itemPath>../../../src/GFX/fgGFXDrawableObject.cpp</itemPath>
-          <itemPath>../../../src/GFX/fgGFXDrawableObject.h</itemPath>
+          <itemPath>../../../src/GFX/fgGFXDrawable.h</itemPath>
           <itemPath>../../../src/GFX/fgGFXDrawingBatch.cpp</itemPath>
           <itemPath>../../../src/GFX/fgGFXDrawingBatch.h</itemPath>
           <itemPath>../../../src/GFX/fgGFXErrorCodes.h</itemPath>
@@ -117,8 +116,6 @@
           <itemPath>../../../src/GFX/fgGFXModelResource.h</itemPath>
           <itemPath>../../../src/GFX/fgGFXModelTypes.cpp</itemPath>
           <itemPath>../../../src/GFX/fgGFXModelTypes.h</itemPath>
-          <itemPath>../../../src/GFX/fgGFXObject.cpp</itemPath>
-          <itemPath>../../../src/GFX/fgGFXObject.h</itemPath>
           <itemPath>../../../src/GFX/fgGFXOctreeBase.cpp</itemPath>
           <itemPath>../../../src/GFX/fgGFXOctreeBase.h</itemPath>
           <itemPath>../../../src/GFX/fgGFXPlane.h</itemPath>
@@ -131,6 +128,12 @@
           <itemPath>../../../src/GFX/fgGFXQuadtreeBase.h</itemPath>
           <itemPath>../../../src/GFX/fgGFXSceneManager.cpp</itemPath>
           <itemPath>../../../src/GFX/fgGFXSceneManager.h</itemPath>
+          <itemPath>../../../src/GFX/fgGFXSceneNode.cpp</itemPath>
+          <itemPath>../../../src/GFX/fgGFXSceneNode.h</itemPath>
+          <itemPath>../../../src/GFX/fgGFXSceneNodeMesh.cpp</itemPath>
+          <itemPath>../../../src/GFX/fgGFXSceneNodeMesh.h</itemPath>
+          <itemPath>../../../src/GFX/fgGFXSceneNodeObject.cpp</itemPath>
+          <itemPath>../../../src/GFX/fgGFXSceneNodeObject.h</itemPath>
           <itemPath>../../../src/GFX/fgGFXSimpleDrawer.cpp</itemPath>
           <itemPath>../../../src/GFX/fgGFXSimpleDrawer.h</itemPath>
           <itemPath>../../../src/GFX/fgGFXStdInc.h</itemPath>
@@ -839,15 +842,7 @@
       </item>
       <item path="../../../src/GFX/fgGFXDrawCall.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXDrawableObject.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="../../../src/GFX/fgGFXDrawableObject.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
+      <item path="../../../src/GFX/fgGFXDrawable.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGFXDrawingBatch.cpp"
             ex="false"
@@ -902,10 +897,6 @@
       </item>
       <item path="../../../src/GFX/fgGFXModelTypes.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXObject.cpp" ex="false" tool="1" flavor2="8">
-      </item>
-      <item path="../../../src/GFX/fgGFXObject.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="../../../src/GFX/fgGFXOctreeBase.cpp"
             ex="false"
             tool="1"
@@ -944,6 +935,33 @@
             flavor2="8">
       </item>
       <item path="../../../src/GFX/fgGFXSceneManager.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGFXSceneNode.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+      </item>
+      <item path="../../../src/GFX/fgGFXSceneNode.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGFXSceneNodeMesh.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGFXSceneNodeMesh.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGFXSceneNodeObject.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGFXSceneNodeObject.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -2115,15 +2133,7 @@
       </item>
       <item path="../../../src/GFX/fgGFXDrawCall.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXDrawableObject.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="../../../src/GFX/fgGFXDrawableObject.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
+      <item path="../../../src/GFX/fgGFXDrawable.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGFXDrawingBatch.cpp"
             ex="false"
@@ -2178,10 +2188,6 @@
       </item>
       <item path="../../../src/GFX/fgGFXModelTypes.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXObject.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="../../../src/GFX/fgGFXObject.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="../../../src/GFX/fgGFXOctreeBase.cpp"
             ex="false"
             tool="1"
@@ -2220,6 +2226,33 @@
             flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGFXSceneManager.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGFXSceneNode.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGFXSceneNode.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGFXSceneNodeMesh.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGFXSceneNodeMesh.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGFXSceneNodeObject.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGFXSceneNodeObject.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -3373,15 +3406,7 @@
       </item>
       <item path="../../../src/GFX/fgGFXDrawCall.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXDrawableObject.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="../../../src/GFX/fgGFXDrawableObject.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
+      <item path="../../../src/GFX/fgGFXDrawable.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGFXDrawingBatch.cpp"
             ex="false"
@@ -3436,10 +3461,6 @@
       </item>
       <item path="../../../src/GFX/fgGFXModelTypes.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXObject.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="../../../src/GFX/fgGFXObject.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="../../../src/GFX/fgGFXOctreeBase.cpp"
             ex="false"
             tool="1"
@@ -3478,6 +3499,33 @@
             flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGFXSceneManager.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGFXSceneNode.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGFXSceneNode.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGFXSceneNodeMesh.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGFXSceneNodeMesh.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGFXSceneNodeObject.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGFXSceneNodeObject.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -4609,15 +4657,7 @@
       </item>
       <item path="../../../src/GFX/fgGFXDrawCall.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXDrawableObject.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="../../../src/GFX/fgGFXDrawableObject.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
+      <item path="../../../src/GFX/fgGFXDrawable.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGFXDrawingBatch.cpp"
             ex="false"
@@ -4672,10 +4712,6 @@
       </item>
       <item path="../../../src/GFX/fgGFXModelTypes.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXObject.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="../../../src/GFX/fgGFXObject.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="../../../src/GFX/fgGFXOctreeBase.cpp"
             ex="false"
             tool="1"
@@ -4714,6 +4750,33 @@
             flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGFXSceneManager.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGFXSceneNode.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGFXSceneNode.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGFXSceneNodeMesh.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGFXSceneNodeMesh.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGFXSceneNodeObject.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGFXSceneNodeObject.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -5867,15 +5930,7 @@
       </item>
       <item path="../../../src/GFX/fgGFXDrawCall.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXDrawableObject.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="../../../src/GFX/fgGFXDrawableObject.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
+      <item path="../../../src/GFX/fgGFXDrawable.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGFXDrawingBatch.cpp"
             ex="false"
@@ -5930,10 +5985,6 @@
       </item>
       <item path="../../../src/GFX/fgGFXModelTypes.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXObject.cpp" ex="false" tool="1" flavor2="8">
-      </item>
-      <item path="../../../src/GFX/fgGFXObject.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="../../../src/GFX/fgGFXOctreeBase.cpp"
             ex="false"
             tool="1"
@@ -5972,6 +6023,33 @@
             flavor2="8">
       </item>
       <item path="../../../src/GFX/fgGFXSceneManager.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGFXSceneNode.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+      </item>
+      <item path="../../../src/GFX/fgGFXSceneNode.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGFXSceneNodeMesh.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGFXSceneNodeMesh.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGFXSceneNodeObject.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGFXSceneNodeObject.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -7115,15 +7193,7 @@
       </item>
       <item path="../../../src/GFX/fgGFXDrawCall.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXDrawableObject.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="../../../src/GFX/fgGFXDrawableObject.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
+      <item path="../../../src/GFX/fgGFXDrawable.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGFXDrawingBatch.cpp"
             ex="false"
@@ -7178,10 +7248,6 @@
       </item>
       <item path="../../../src/GFX/fgGFXModelTypes.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXObject.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="../../../src/GFX/fgGFXObject.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="../../../src/GFX/fgGFXOctreeBase.cpp"
             ex="false"
             tool="1"
@@ -7220,6 +7286,33 @@
             flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGFXSceneManager.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGFXSceneNode.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGFXSceneNode.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGFXSceneNodeMesh.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGFXSceneNodeMesh.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGFXSceneNodeObject.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGFXSceneNodeObject.h"
             ex="false"
             tool="3"
             flavor2="0">

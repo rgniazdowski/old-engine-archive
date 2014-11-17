@@ -1,3 +1,11 @@
+/*******************************************************
+ * Copyright (C) 2014 Radoslaw Gniazdowski <r.gniazdowski@gmail.com>. All rights reserved.
+ * 
+ * This file is part of FlexiGame: Flexible Game Engine
+ * 
+ * FlexiGame source code and any related files can not be copied, modified 
+ * and/or distributed without the express or written consent from the author.
+ *******************************************************/
 /* 
  * File:   fgGFXFrustum.h
  * Author: vigilant
@@ -10,7 +18,9 @@
     #define _FG_GFX_FRUSTUM_H_BLOCK_
 
     #include "fgGFXPlane.h"
-    #include "fgGFXAABoundingBox.h"
+    #ifndef _FG_GFX_AA_BOUNDING_BOX_H_
+        #include "fgGFXAABoundingBox.h"
+    #endif
 
 /**
  * 
@@ -19,10 +29,10 @@ class fgGfxFrustum {
 public:
 
     enum {
-        TOP = 0,
-        BOTTOM = 1,
-        LEFT = 2,
-        RIGHT = 3,
+        LEFT = 0,
+        RIGHT = 1,
+        TOP = 2,
+        BOTTOM = 3,
         NEARP = 4,
         FARP = 5,
         NUM_PLANES = 6
@@ -71,39 +81,45 @@ public:
      * @param nearD
      * @param farD
      */
-    void setCameraInternals(const float angle,
-                            const float ratio,
-                            const float nearD,
-                            const float farD);
+    void setCamera(const float angle,
+                   const float ratio,
+                   const float zNear,
+                   const float zFar);
     /**
      * 
-     * @param p
-     * @param l
-     * @param u
+     * @param eye
+     * @param center
+     * @param up
      */
-    void setCamera(const fgVector3f &p,
-                   const fgVector3f &l,
-                   const fgVector3f &u);
+    void set(const fgVector3f &eye,
+             const fgVector3f &center,
+             const fgVector3f &up);
 
     /**
      * 
-     * @param p
-     * @return 
+     * @param m
      */
-    int testPoint(const fgVector3f &p);
+    void set(const fgMatrix4f &m);
+
     /**
      * 
-     * @param p
-     * @param raio
+     * @param point
      * @return 
      */
-    int testSphere(const fgVector3f &p, const float radius);
+    int testPoint(const fgVector3f &point);
     /**
      * 
-     * @param b
+     * @param point
+     * @param radius
      * @return 
      */
-    int testAABB(const fgAABoundingBox3Df &b);
+    int testSphere(const fgVector3f &point, const float radius);
+    /**
+     * 
+     * @param box
+     * @return 
+     */
+    int testAABB(const fgAABoundingBox3Df &box);
 
 public:
     /**
@@ -113,7 +129,6 @@ public:
     fgPlanef *getPlanes(void) {
         return m_planes;
     }
-    
     /**
      * 
      * @return 
@@ -121,15 +136,21 @@ public:
     fgVector3f *getFrustumPoints(void) {
         return m_points;
     }
-    
-    float getNearD(void) const {
-        return m_nearD;
+    /**
+     * 
+     * @return 
+     */
+    float getZNear(void) const {
+        return m_zNear;
     }
-    
-    float getFarD(void) const {
-        return m_farD;
+    /**
+     * 
+     * @return 
+     */
+    float getZFar(void) const {
+        return m_zFar;
     }
-    
+
 private:
     ///
     fgPlanef m_planes[NUM_PLANES];
@@ -159,9 +180,9 @@ private:
     };
 
     ///
-    float m_nearD;
+    float m_zNear;
     ///
-    float m_farD;
+    float m_zFar;
 
     union {
         ///

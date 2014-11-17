@@ -30,109 +30,170 @@ typedef unsigned int fgGfxCameraType;
  */
 class fgGfxCameraAnimation : public fgGfxCamera {
 public:
-    //
+    typedef fgGfxCamera base_type;
+public:
+    /**
+     * 
+     * @param type
+     */
     fgGfxCameraAnimation(const fgGfxCameraType type = FG_GFX_CAMERA_FREE);
-    //
+    /**
+     * 
+     */
     virtual ~fgGfxCameraAnimation();
 
-    //
+    /**
+     * 
+     * @return 
+     */
     virtual float * update(void);
-
-    //
+    /**
+     * 
+     * @param mouseXrel
+     * @param mouseYrel
+     * @return 
+     */
     virtual float * update(fgGFXfloat mouseXrel, fgGFXfloat mouseYrel);
-
-    //
+    /**
+     * 
+     */
     void moveLeft(void);
-
-    //
+    /**
+     * 
+     */
     void moveRight(void);
-
-    //
+    /**
+     * 
+     */
     void moveForward(void);
-
-    //
+    /**
+     * 
+     */
     void moveBackward(void);
-
-    //
+    /**
+     * 
+     */
     void moveUp(void);
-
-    //
+    /**
+     * 
+     */
     void moveDown(void);
-
-    //
+    /**
+     * 
+     * @param type
+     */
     inline void setType(fgGfxCameraType type) {
         m_type = type;
     }
-    //
+    /**
+     * 
+     * @return 
+     */
     inline fgGfxCameraType getType(void) const {
         return m_type;
     }
-
-    //
+    /**
+     * 
+     * @return 
+     */
     inline fgVec3f& getRefDirection(void) {
         return m_direction;
     }
-
-    //
+    /**
+     * 
+     * @return 
+     */
     inline fgVec3f& getRefRight(void) {
         return m_right;
     }
-
-    //
+    /**
+     * 
+     * @param angle
+     */
     inline void setAngleH(fgGFXfloat angle) {
         m_hAngle = angle;
     }
-    //
+    /**
+     * 
+     * @return 
+     */
     inline fgGFXfloat getAngleH(void) const {
         return m_hAngle;
     }
-
-    //
+    /**
+     * 
+     * @param angle
+     */
     inline void setAngleV(fgGFXfloat angle) {
         m_vAngle = angle;
     }
-    //
+    /**
+     * 
+     * @return 
+     */
     inline fgGFXfloat getAngleV(void) const {
         return m_vAngle;
     }
-
-    //
+    /**
+     * 
+     * @param speed
+     */
     inline void setSpeed(fgGFXfloat speed) {
         m_speed = speed;
     }
-    //
+    /**
+     * 
+     * @return 
+     */
     inline fgGFXfloat getSpeed(void) const {
         return m_speed;
     }
-
-    //
+    /**
+     * 
+     * @param mouseSpeed
+     */
     inline void setMouseSpeed(fgGFXfloat mouseSpeed) {
         m_mouseSpeed = mouseSpeed;
     }
-    //
+    /**
+     * 
+     * @return 
+     */
     inline fgGFXfloat getMouseSpeed(void) const {
         return m_mouseSpeed;
     }
-
-    //
+    /**
+     * 
+     * @param zoom
+     */
     inline void setZoom(fgGFXfloat zoom) {
         m_zoom = zoom;
     }
-    //
+    /**
+     * 
+     * @return 
+     */
     inline fgGFXfloat getZoom(void) const {
         return m_mouseSpeed;
     }
-
-    //
+    /**
+     * 
+     * @param distance
+     */
     inline void setDistance(fgGFXfloat distance) {
         m_distance = distance;
     }
-    //
+    /**
+     * 
+     * @return 
+     */
     inline fgGFXfloat getDistance(void) const {
         return m_distance;
     }
-
-    //
+    /**
+     * 
+     * @param dt
+     */
     inline void setDT(fgGFXfloat dt) {
         m_dt = dt;
     }
@@ -154,7 +215,6 @@ private:
     fgGFXfloat m_mouseSpeed;
     ///
     fgGFXfloat m_zoom;
-
     union {
         ///
         fgGFXfloat m_distance;

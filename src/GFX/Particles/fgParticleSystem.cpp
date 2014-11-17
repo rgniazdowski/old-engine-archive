@@ -141,7 +141,7 @@ fgBool fgParticleSystem::isEmitterInTheScene(const char *emitterNameTag) {
 fgParticleEmitter *fgParticleSystem::getParticleEmitter(const std::string& emitterNameTag) {
     if(emitterNameTag.empty() || !m_pSceneMgr)
         return NULL;
-    
+
     fgParticleEmitter *pEmitter = (fgParticleEmitter *)static_cast<fgGfxSceneManager *>(m_pSceneMgr)->get(emitterNameTag);
     if(pEmitter) {
         if(m_emitters.find(pEmitter) != -1)
@@ -158,7 +158,7 @@ fgParticleEmitter *fgParticleSystem::getParticleEmitter(const std::string& emitt
 fgParticleEmitter *fgParticleSystem::getParticleEmitter(const char *emitterNameTag) {
     if(!emitterNameTag || !m_pSceneMgr)
         return NULL;
-    
+
     fgParticleEmitter *pEmitter = (fgParticleEmitter *)static_cast<fgGfxSceneManager *>(m_pSceneMgr)->get(emitterNameTag);
     if(pEmitter) {
         if(m_emitters.find(pEmitter) != -1)
@@ -179,7 +179,7 @@ fgBool fgParticleSystem::destroy(void) {
             continue;
         }
         if(!m_emitters[i]->isManaged()) {
-            static_cast<fgGfxSceneManager *>(m_pSceneMgr)->remove(static_cast<fgGfxObject *>(m_emitters[i]));
+            static_cast<fgGfxSceneManager *>(m_pSceneMgr)->remove(static_cast<fgGfxSceneNode *>(m_emitters[i]));
             delete m_emitters[i];
             m_emitters[i] = NULL;
         }
@@ -297,14 +297,13 @@ fgParticleEmitter* fgParticleSystem::insertParticleEmitter(const std::string& pa
     if(pTexture) {
         pEffect->setTextureGfxID(pTexture->getRefGfxID());
     }
-    fgParticleEmitter *pEmitter = new fgParticleEmitter();
-    pEmitter->setupFromParticleEffect(pEffect);
+    fgParticleEmitter *pEmitter = new fgParticleEmitter(pEffect);
     pEmitter->setName(particleEmitterNameTag);
     //pEmitter->setOrigin()
 
-    static_cast<fgGfxSceneManager *>(m_pSceneMgr)->addObject(pEmitter->getRefHandle(),
-                                                             pEmitter,
-                                                             (fgGfxObject *)NULL);
+    static_cast<fgGfxSceneManager *>(m_pSceneMgr)->addNode(pEmitter->getRefHandle(),
+                                                           pEmitter,
+                                                           (fgGfxSceneNode *)NULL);
 
     // Set particle emitter as not managed
     // This means that particle emitter object must be freed
@@ -314,13 +313,6 @@ fgParticleEmitter* fgParticleSystem::insertParticleEmitter(const std::string& pa
     // Should now set managed to false
     // Store it in some array ?
     // Refresh?
-
-    fgGfxDrawCall *pDrawCall = static_cast<fgGfxSceneManager *>(m_pSceneMgr)->getDrawCall(static_cast<fgGfxObject *>(pEmitter));
-    if(pDrawCall) {
-        pDrawCall->setComponentActive(fgVertex4v::attribMask());
-        // Two triangles
-        pDrawCall->getVertexData()->reserve(pEmitter->getMaxCount()*6);
-    }
 
     return pEmitter;
 }
@@ -383,7 +375,7 @@ void fgParticleSystem::calculate(void) {
             continue;
         }
         // Need also to update vertex data in every draw call
-        fgGfxDrawCall *pDrawCall = static_cast<fgGfxSceneManager *>(m_pSceneMgr)->getDrawCall(static_cast<fgGfxObject *>(pEmitter));
+        fgGfxDrawCall *pDrawCall = pEmitter->getDrawCall(); //static_cast<fgGfxSceneManager *>(m_pSceneMgr)->getDrawCall(static_cast<fgGfxSceneNode *>(pEmitter));
         fgVertexData *pVertexData = NULL;
         if(pDrawCall) {
             // #FIXME
@@ -402,7 +394,6 @@ void fgParticleSystem::calculate(void) {
                 //pVertexData->
             }
         }
-
-        pEmitter->calculate(pVertexData);
+        pEmitter->calculate();
     }
 }

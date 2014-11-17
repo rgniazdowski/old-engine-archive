@@ -299,6 +299,13 @@ struct fgBoundingBoxT {
     virtual void invalidate(void) { 
         this->zero();
     }
+    /**
+     * 
+     * @return 
+     */
+    virtual inline fgBool isValid(void) const {
+        return FG_TRUE;
+    }
 };
 
 /**

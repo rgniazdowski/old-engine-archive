@@ -29,11 +29,15 @@ struct fgPlaneT {
     typedef fgVector3T<ValueType> vector_type;
     typedef ValueType value_type;
 
-    ///
+    enum Halfspace {
+        NEGATIVE = -1,
+        ON_PLANE = 0,
+        POSITIVE = 1
+    };
+
+    /// Normal vector
     vector_type n;
-    ///
-    vector_type p;
-    ///
+    /// 
     value_type d;
     /**
      * 
@@ -50,13 +54,12 @@ struct fgPlaneT {
      */
     fgPlaneT(const self_type& other) {
         this->n = other.n;
-        this->p = other.p;
         this->d = other.d;
     }
     /**
      * 
      */
-    fgPlaneT() : n(), p(), d(0) { }
+    fgPlaneT() : n(0), d(0) { }
     /**
      * 
      */
@@ -76,13 +79,8 @@ public:
         aux2 = v3 - v2;
 
         this->n = aux2 * aux1;
-
-        //normal.normalize();
-        //normalize(n);
         this->n = fgMath::normalize(this->n);
-        this->p = v2;
-        this->d = -glm::dot(this->n, this->p);
-        //d = -(normal.innerProduct(point));
+        this->d = -fgMath::dot(this->n, v2);
     }
     /**
      * 
@@ -90,11 +88,8 @@ public:
      * @param point
      */
     void set(const vector_type &normal, const vector_type &point) {
-        //this->n.copy(normal);
-        //this->normal.normalize();
-        this->n = glm::normalize(normal);
-        this->p = point;
-        this->d = -glm::dot(this->n, this->p);
+        this->n = fgMath::normalize(normal);
+        this->d = -fgMath::dot(this->n, point);
     }
     /**
      * 
@@ -103,24 +98,41 @@ public:
      * @param _c
      * @param _d
      */
-    void setCoefficients(const float _a, const float _b, const float _c, const float _d) {
+    void set(const float _a, const float _b, const float _c, const float _d) {
         // set the normal vector
-        n = vector_type(_a, _b, _c);
-        //compute the lenght of the vector
-        float l = glm::length(n);
-        // normalize the vector
-        n = vector_type(_a / l, _b / l, _c / l);
-        // and divide d by th length as well
-        this->d = d / l;
+        this->n = vector_type(_a, _b, _c);
+        this->d = _d;
+        this->normalize();
+    }
+    /**
+     * 
+     */
+    void normalize(void) {
+        float l = fgMath::length(this->n);
+        this->n.x = this->n.x / l;
+        this->n.y = this->n.y / l;
+        this->n.z = this->n.z / l;
+        this->d = this->d / l;
     }
     /**
      * 
      * @param _p
      * @return 
      */
-    float distance(const vector_type &_p) {
-        return (d + glm::dot(n, _p));
+    float distance(const vector_type &point) {
+        return (d + fgMath::dot(n, point));
         //return (d + normal.innerProduct(p));
+    }
+    /**
+     * 
+     * @param _p
+     * @return 
+     */
+    Halfspace classify(const vector_type &point) {
+        float _d = distance(point);
+        if(_d < 0) return NEGATIVE;
+        if(_d > 0) return POSITIVE;
+        return ON_PLANE;
     }
 
 };
@@ -133,6 +145,12 @@ typedef fgPlaneT<float> fgPlanef;
 typedef fgPlaneT<unsigned int> fgPlaneu;
 ///
 typedef fgPlaneT<double> fgPlaned;
+
+    #include <cstdio>
+
+inline void dumpPlane(const fgPlanef & plane, const char *title) {
+    printf("%s = { %.2f %.2f %.2f d=%.2f}\n", ( title ? title : "X"), plane.n.x, plane.n.y, plane.n.z, plane.d);
+}
 
     #undef _FG_GFX_PLANE_H_BLOCK_
 #endif	/* _FG_GFX_PLANE_H_ */

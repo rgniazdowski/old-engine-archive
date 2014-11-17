@@ -21,7 +21,7 @@ m_mouseSpeed(0.002f),
 m_zoom(1.0f),
 m_distance(1.0f),
 m_dt(0.0f) {
-    glm::vec3 position = glm::vec3(0, 0, 55);
+    fgVector3f position = fgVector3f(0, 0, 100.0f);
     m_eye = position;
 }
 
@@ -45,9 +45,14 @@ float *fgGfxCameraAnimation::update(void) {
                           cos(m_hAngle - M_PI_2)
                           );
 
-        m_up = glm::cross(m_right, m_direction);
+        m_up = fgMath::cross(m_right, m_direction);
         m_center = m_eye + m_direction;
     }
+    //printf("eye:{%.2f,%.2f,%.2f}, center:{%.2f,%.2f,%.2f}, up:{%.2f,%.2f,%.2f}, m_direction:{%.2f,%.2f,%.2f}\n",
+    //       m_eye.x, m_eye.y, m_eye.z,
+    //       m_center.x, m_center.y, m_center.z,
+    //       m_up.x, m_up.y, m_up.z,
+    //       m_direction.x, m_direction.y, m_direction.z);
     return fgGfxCamera::update();
 }
 

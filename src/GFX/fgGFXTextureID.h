@@ -58,6 +58,12 @@ struct fgGfxTextureID {
     fgGfxTextureID(fgGFXuint _id = 0, fgGFXenum _target = GL_TEXTURE_2D) :
     id(_id), target(_target) { }
 
+    //    
+    inline void reset(void) {
+        id = 0;
+        target = GL_TEXTURE_2D;
+    }
+
     // Comparison operator
     inline int operator ==(const fgGfxTextureID& b) const {
         if(b.id == this->id)

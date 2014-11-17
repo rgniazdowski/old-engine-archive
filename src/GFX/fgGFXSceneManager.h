@@ -20,21 +20,23 @@
         #include "GFX/fgGFXCameraAnimation.h"
     #endif
 
-    #include "fgGFXDrawableObject.h"
+    #include "fgGFXSceneNodeObject.h"
 
     #include "fgManagerBase.h"
 
     #define FG_MANAGER_SCENE        0x00001000
 
-/* 
+/**
  *
  */
 class fgGfxSceneManager : public fgManagerBase,
         protected fgGfxDrawingBatch,
-        protected fgHandleManager<fgGfxObject *, fgGfxObjectHandle> {
+        protected fgHandleManager<fgGfxSceneNode *, fgGfxSceneNodeHandle> {
 public:
-    typedef std::priority_queue<fgGfxDrawableObject*, std::deque<fgGfxDrawableObject*>, fgPtrLessEq<fgGfxDrawableObject*> > drawablePriorityQueue;
-    typedef fgVector<fgGfxObject *> objectVec;
+    typedef fgGfxSceneNode node_type;
+    typedef fgGfxSceneNodeHandle handle_type;
+    typedef std::priority_queue<fgGfxSceneNode*, std::deque<fgGfxSceneNode*>, fgPtrLessEq<fgGfxSceneNode*> > nodePriorityQueue;
+    typedef fgVector<fgGfxSceneNode *> objectVec;
     typedef objectVec::iterator objectVecItor;
 
 protected:
@@ -119,49 +121,57 @@ public:
 
     /**
      * 
-     * @param oUniqueID
-     * @param pObj
-     * @param oFatherObj
+     * @param nodeUniqueID
+     * @param pNode
+     * @param pFatherNode
      * @return 
      */
-    virtual fgBool addObject(fgGfxObjectHandle& oUniqueID, fgGfxObject *pObj, fgGfxObject *oFatherObj = NULL);
+    virtual fgBool addNode(fgGfxSceneNodeHandle& nodeUniqueID,
+                             fgGfxSceneNode *pNode,
+                             fgGfxSceneNode *pFatherNode = NULL);
     /**
      * 
-     * @param oUniqueID
-     * @param pObj
-     * @param oFatherUniqueID
+     * @param nodeUniqueID
+     * @param pNode
+     * @param nodeParentUniqueID
      * @return 
      */
-    virtual fgBool addObject(fgGfxObjectHandle& oUniqueID, fgGfxObject *pObj, const fgGfxObjectHandle& oFatherUniqueID);
+    virtual fgBool addNode(fgGfxSceneNodeHandle& nodeUniqueID,
+                             fgGfxSceneNode *pNode,
+                             const fgGfxSceneNodeHandle& nodeParentUniqueID);
     /**
      * 
-     * @param oUniqueID
-     * @param pObj
-     * @param oFatherNameTag
+     * @param nodeUniqueID
+     * @param pNode
+     * @param nodeParentNameTag
      * @return 
      */
-    virtual fgBool addObject(fgGfxObjectHandle& oUniqueID, fgGfxObject *pObj, const std::string& oFatherNameTag);
+    virtual fgBool addNode(fgGfxSceneNodeHandle& nodeUniqueID,
+                             fgGfxSceneNode *pNode,
+                             const std::string& nodeParentNameTag);
     /**
      * 
-     * @param oUniqueID
-     * @param pObj
-     * @param oFatherNameTag
+     * @param nodeUniqueID
+     * @param pNode
+     * @param nodeParentNameTag
      * @return 
      */
-    virtual fgBool addObject(fgGfxObjectHandle& oUniqueID, fgGfxObject *pObj, const char* oFatherNameTag);
+    virtual fgBool addNode(fgGfxSceneNodeHandle& nodeUniqueID,
+                             fgGfxSceneNode *pNode,
+                             const char* nodeParentNameTag);
 
     /**
      * 
-     * @param pObj
+     * @param pNode
      * @return 
      */
-    virtual fgBool remove(fgGfxObject *pObj);
+    virtual fgBool remove(fgGfxSceneNode *pNode);
     /**
      * 
-     * @param oUniqueID
+     * @param nodeUniqueID
      * @return 
      */
-    virtual fgBool remove(const fgGfxObjectHandle& oUniqueID);
+    virtual fgBool remove(const fgGfxSceneNodeHandle& nodeUniqueID);
     /**
      * 
      * @param nameTag
@@ -177,60 +187,60 @@ public:
 
     /**
      * 
-     * @param pObj
+     * @param pNode
      * @return 
      */
-    virtual fgBool destroyObject(fgGfxObject*& pObj);
+    virtual fgBool destroyNode(fgGfxSceneNode*& pNode);
     /**
      * 
-     * @param oUniqueID
+     * @param nodeUniqueID
      * @return 
      */
-    virtual fgBool destroyObject(const fgGfxObjectHandle& oUniqueID);
-    /**
-     * 
-     * @param nameTag
-     * @return 
-     */
-    virtual fgBool destroyObject(const std::string& nameTag);
+    virtual fgBool destroyNode(const fgGfxSceneNodeHandle& nodeUniqueID);
     /**
      * 
      * @param nameTag
      * @return 
      */
-    virtual fgBool destroyObject(const char *nameTag);
+    virtual fgBool destroyNode(const std::string& nameTag);
+    /**
+     * 
+     * @param nameTag
+     * @return 
+     */
+    virtual fgBool destroyNode(const char *nameTag);
 
     /**
      * 
-     * @param oUniqueID
+     * @param nodeUniqueID
      * @return 
      */
-    virtual fgGfxObject* get(const fgGfxObjectHandle& oUniqueID);
+    virtual fgGfxSceneNode* get(const fgGfxSceneNodeHandle& nodeUniqueID);
     /**
      * 
      * @param nameTag
      * @return 
      */
-    virtual fgGfxObject* get(const std::string& nameTag);
+    virtual fgGfxSceneNode* get(const std::string& nameTag);
     /**
      * 
      * @param nameTag
      * @return 
      */
-    virtual fgGfxObject* get(const char *nameTag);
+    virtual fgGfxSceneNode* get(const char *nameTag);
 
     /**
      * 
-     * @param pObj
+     * @param pNode
      * @return 
      */
-    virtual fgBool isManaged(const fgGfxObject *pObj);
+    virtual fgBool isManaged(const fgGfxSceneNode *pNode);
     /**
      * 
-     * @param oUniqueID
+     * @param nodeUniqueID
      * @return 
      */
-    virtual fgBool isManaged(const fgGfxObjectHandle& oUniqueID);
+    virtual fgBool isManaged(const fgGfxSceneNodeHandle& nodeUniqueID);
     /**
      * 
      * @param nameTag
@@ -248,44 +258,21 @@ public:
      * @param index
      * @return 
      */
-    inline fgGfxObject *get(const int index) {
+    inline fgGfxSceneNode *get(const int index) {
         if(index < 0 || index >= (int)fgHandleManager::getRefDataVector().size())
             return NULL;
         return fgHandleManager::getRefDataVector()[index];
     }
 
-    /**
-     * 
-     */
-    fgGfxDrawCall *getDrawCall(const fgGfxObject* pObj);
-    /**
-     * 
-     * @param oUniqueID
-     * @return 
-     */
-    fgGfxDrawCall *getDrawCall(const fgGfxObjectHandle& oUniqueID);
-    /**
-     * 
-     * @param nameTag
-     * @return 
-     */
-    fgGfxDrawCall *getDrawCall(const std::string& nameTag);
-    /**
-     * 
-     * @param nameTag
-     * @return 
-     */
-    fgGfxDrawCall *getDrawCall(const char *nameTag);
-
     // This is special array like operator
     // Note that there is no boundaries checking
-    fgGfxObject *operator [](size_t n) {
+    fgGfxSceneNode *operator [](size_t n) {
         return fgHandleManager::getRefDataVector()[n];
     }
 
     // This is special array like operator
     // Note that there is no boundaries checking
-    const fgGfxObject *operator [](size_t n) const {
+    const fgGfxSceneNode *operator [](size_t n) const {
         return fgHandleManager::getRefDataVector()[n];
     }
 
@@ -331,11 +318,7 @@ private:
     /// Internal camera
     fgGfxCameraAnimation m_camera;
     ///
-    drawablePriorityQueue m_drawableQueue;
-    /// This needs fixing - probably this won't be needed - need
-    /// to overload more methods from drawing batch.... P3
-    /// #FIXME - redundancy 
-    drawCallVec m_objDrawCalls;
+    nodePriorityQueue m_nodeQueue;
     /// Pointer to the external resource manager - dont know if this is necessary
     fgManagerBase *m_pResourceMgr;
 };

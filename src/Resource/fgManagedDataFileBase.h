@@ -30,7 +30,8 @@ class fgManagedDataFileBase : public fgManagedObjectBase<HandleType> {
 public:
     typedef std::map<MapKeyType, std::string> fileMapping;
     typedef typename fileMapping::iterator fileMappingItor;
-
+    typedef HandleType handle_type;
+    typedef MapKeyType map_key_type;
     typedef fgManagedObjectBase<HandleType> base_type;
 public:
     /**

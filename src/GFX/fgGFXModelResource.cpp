@@ -121,25 +121,25 @@ fgBool fgGfxModelResource::_loadOBJ(void) {
         FG_LOG_DEBUG("Shape '%s': nvec: %d, nnorm: %d, nuvs: %d", shape->name.c_str(), shape->mesh->getNumVertices(), shape->mesh->getNumNormals(), shape->mesh->getNumUVs());
         if(shape->material) {
             m_numMaterials++;
-            if(m_manager) {
+            if(m_pManager) {
                 fgResource *tex = NULL;
                 // Ambient texture handle lookup
-                tex = ((fgResourceManager *)m_manager)->request(shape->material->ambientTexName);
+                tex = ((fgResourceManager *)m_pManager)->request(shape->material->ambientTexName);
                 if(tex) {
                     shape->material->ambientTexHandle = tex->getHandle();
                 }
                 // Diffuse texture handle lookup
-                tex = ((fgResourceManager *)m_manager)->request(shape->material->diffuseTexName);
+                tex = ((fgResourceManager *)m_pManager)->request(shape->material->diffuseTexName);
                 if(tex) {
                     shape->material->diffuseTexHandle = tex->getHandle();
                 }
                 // Specular texture handle lookup
-                tex = ((fgResourceManager *)m_manager)->request(shape->material->specularTexName);
+                tex = ((fgResourceManager *)m_pManager)->request(shape->material->specularTexName);
                 if(tex) {
                     shape->material->specularTexHandle = tex->getHandle();
                 }
                 // Normal texture handle lookup
-                tex = ((fgResourceManager *)m_manager)->request(shape->material->normalTexName);
+                tex = ((fgResourceManager *)m_pManager)->request(shape->material->normalTexName);
                 if(tex) {
                     shape->material->normalTexHandle = tex->getHandle();
                 }

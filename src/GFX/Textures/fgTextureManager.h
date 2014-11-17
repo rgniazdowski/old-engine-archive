@@ -39,6 +39,9 @@ typedef FG_TAG_TEXTURE_MANAGER fgTextureManagerTag;
  */
 class fgTextureManager : public fgManagerBase, public fgStatusReporter<fgTextureManagerTag> {
 public:
+    typedef fgManagerBase base_type;
+    typedef fgTextureManagerTag tag_type;
+public:
     // Default constructor for Texture Manager object
     fgTextureManager(fgManagerBase *pResourceMgr);
     // Default destructor for Texture Manager object
@@ -99,8 +102,19 @@ public:
     fgBool uploadToVRAM(const char *nameTag, fgBool force = FG_FALSE);
 
     //
-    void releaseGFX(fgTextureResource *texture);
+    void releaseGFX(fgTextureResource *pTexture);
 
+    /**
+     * 
+     * @param texHandle
+     * @return 
+     */
+    fgGfxTextureID &getRefGfxID(const fgResourceHandle& texHandle);
+    
+    fgGfxTextureID &getRefGfxID(const std::string& nameTag);
+    
+    fgGfxTextureID &getRefGfxID(const char *nameTag);
+    
 private:
     /**
      * Uploads texture given via ID into VRAM.
@@ -132,6 +146,8 @@ private:
     fgFunctionCallback *m_resourceCreatedCallback;
     ///
     fgBool m_allInVRAM;
+    ///
+    fgGfxTextureID m_emptyGfxID;
 };
 
 #endif /* _FG_TEXTURE_MANAGER_H_ */

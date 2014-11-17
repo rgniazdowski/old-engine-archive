@@ -74,7 +74,7 @@ void fgResource::clear(void) {
     m_size = 0;
     m_fileMapping.clear();
     m_filePath.clear();
-    m_manager = NULL;
+    m_pManager = NULL;
     FG_LOG_DEBUG("fgResource::clear(void);");
 }
 

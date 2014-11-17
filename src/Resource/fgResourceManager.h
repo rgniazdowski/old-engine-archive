@@ -43,14 +43,19 @@ typedef FG_TAG_RESOURCE_MANAGER fgResourceManagerTag;
 
 //
 // The resource manager handles all the external resources. It takes care of the memory
-// usage and destroys all unused data. Its very convinient as after pushing resource into
+// usage and destroys all unused data. Its very convenient as after pushing resource into
 // the manager there's no additional
 //
 
 class fgResourceManager : public fgDataManagerBase<fgResource*, fgResourceHandle, fgResourceManagerTag> {
     friend class fgTextureManager;
+public:
+    typedef fgDataManagerBase<fgResource*, fgResourceHandle, fgResourceManagerTag> base_type;
+    typedef fgResourceHandle handle_type;
+    typedef fgResourceManagerTag tag_type;
+    
 protected:
-    typedef fgVector<FG_RHANDLE> rmHandleVec;
+    typedef fgVector<fgResourceHandle> rmHandleVec;
     typedef rmHandleVec::iterator rmHandleVecItor;
 
 public:

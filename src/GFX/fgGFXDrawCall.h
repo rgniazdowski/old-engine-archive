@@ -9,6 +9,7 @@
 
 #ifndef _FG_GFX_DRAW_CALL_H_
     #define _FG_GFX_DRAW_CALL_H_
+    #define _FG_GFX_DRAW_CALL_H_BLOCK_
 
     #ifndef _FG_GFX_PRIMITIVES_H_
         #include "fgGFXPrimitives.h"
@@ -17,9 +18,7 @@
     #define FG_GFX_DRAW_CALL_INVALID        0
     #define FG_GFX_DRAW_CALL_VERTEX_BUFFER  1
     #define FG_GFX_DRAW_CALL_CUSTOM_ARRAY   2
-    #define FG_GFX_DRAW_CALL_OBJECT         3
-    #define FG_GFX_DRAW_CALL_MODEL          4
-    #define FG_GFX_DRAW_CALL_MESH           5
+    #define FG_GFX_DRAW_CALL_MESH           3
 
     #ifndef _FG_GFX_SHADER_DEFS_H_
         #include "GFX/Shaders/fgGFXShaderDefs.h"
@@ -35,12 +34,12 @@
         #include "fgGFXMVPMatrix.h"
     #endif
 
-    #ifndef _FG_GFX_MODEL_RESOURCE_H_
-        #include "fgGFXModelResource.h"
-    #endif
-
     #ifndef _FG_GFX_MODEL_TYPES_H_
         #include "fgGFXModelTypes.h"
+    #endif
+
+    #ifndef _FG_GFX_DRAWABLE_H_
+        #include "fgGFXDrawable.h"
     #endif
 
 // Draw call type
@@ -51,13 +50,20 @@ typedef unsigned int fgGfxDrawAppendMode;
     #define FG_GFX_DRAW_APPEND_ABSOLUTE 0
     #define FG_GFX_DRAW_APPEND_RELATIVE 1
 
+// Drawable type
+    #define FG_GFX_DRAWABLE_DRAWCALL 1
+
+
 class fgGfxDrawingBatch;
 
 /*
  * Special class representing a single draw call
  */
-class fgGfxDrawCall {
+class fgGfxDrawCall : public fgGfxDrawable {
     friend class fgGfxDrawingBatch;
+public:
+    typedef fgGfxDrawable base_type;
+
 private:
     /// Attribute binding data // Need to think what do with indices ?
     fgGfxAttributeData m_attrData[FG_GFX_ATTRIBUTE_COUNT];
@@ -139,19 +145,9 @@ public:
 
     /**
      * 
-     * @param pModelRes
-     */
-    void setupFromModel(const fgGfxModelResource* pModelRes);
-    /**
-     * 
      * @param pMesh
      */
     void setupFromMesh(const fgGfxMeshBase* pMesh);
-    /**
-     * 
-     * @param pGfxObject
-     */
-    void setupFromObject(const void *pGfxObject) { }
 
     // Returns the current Z index
     int getZIndex(void) const;
@@ -208,7 +204,7 @@ public:
     // Sets the texture pointer
     void setTexture(const fgGfxTextureID& textureID);
     // Returns the texture ID reference
-    const fgGfxTextureID& getTexture(void) const;
+    fgGfxTextureID const & getTexture(void) const;
     // Returns the texture ID reference
     fgGfxTextureID& getTexture(void);
 
@@ -382,4 +378,59 @@ public:
     }
 };
 
+    #if 0
+        #ifndef FG_PTR_COMPARE_DRAWABLE_DEFINED_
+            #define FG_PTR_COMPARE_DRAWABLE_DEFINED_
+
+template <>
+class fgPtrLess<fgGfxDrawable *> {
+public:
+    inline bool operator ()(fgGfxDrawable * left, fgGfxDrawable * right) {
+        if(left->getDrawableType() == FG_GFX_DRAWABLE_DRAWCALL) {
+            return *(static_cast<fgGfxDrawCall *>(left)) < *(static_cast<fgGfxDrawCall *>(right));
+        }
+        //return ((*left) < (*right));
+        return false;
+    }
+};
+
+template <>
+class fgPtrGreater<fgGfxDrawable *> {
+public:
+    inline bool operator ()(fgGfxDrawable * left, fgGfxDrawable * right) {
+        if(left->getDrawableType() == FG_GFX_DRAWABLE_DRAWCALL) {
+            return !(*(static_cast<fgGfxDrawCall *>(left)) < *(static_cast<fgGfxDrawCall *>(right)));
+        }
+        //return !((*left) < (*right));
+        return false;
+    }
+};
+
+template <>
+class fgPtrLessEq<fgGfxDrawable *> {
+public:
+    inline bool operator ()(fgGfxDrawable * left, fgGfxDrawable * right) {
+        if(left->getDrawableType() == FG_GFX_DRAWABLE_DRAWCALL) {
+            return *(static_cast<fgGfxDrawCall *>(left)) <= *(static_cast<fgGfxDrawCall *>(right));
+        }
+        //return ((*left) <= (*right));
+        return false;
+    }
+};
+
+template <>
+class fgPtrGreaterEq<fgGfxDrawable *> {
+public:
+    inline bool operator ()(fgGfxDrawable * left, fgGfxDrawable * right) {
+        if(left->getDrawableType() == FG_GFX_DRAWABLE_DRAWCALL) {
+            return !(*(static_cast<fgGfxDrawCall *>(left)) <= *(static_cast<fgGfxDrawCall *>(right)));
+        }
+        return false;
+        //return !((*left) <= (*right));
+    }
+};
+        #endif /* FG_PTR_COMPARE_DRAWABLE_DEFINED_ */
+    #endif
+
+    #undef _FG_GFX_DRAW_CALL_H_BLOCK_
 #endif /* _FG_GFX_DRAW_CALL_H_ */

@@ -65,7 +65,6 @@ OBJECTFILES= \
 	${OBJECTDIR}/_ext/534590209/fgGFXCameraAnimation.o \
 	${OBJECTDIR}/_ext/534590209/fgGFXContext.o \
 	${OBJECTDIR}/_ext/534590209/fgGFXDrawCall.o \
-	${OBJECTDIR}/_ext/534590209/fgGFXDrawableObject.o \
 	${OBJECTDIR}/_ext/534590209/fgGFXDrawingBatch.o \
 	${OBJECTDIR}/_ext/534590209/fgGFXFrustum.o \
 	${OBJECTDIR}/_ext/534590209/fgGFXLight.o \
@@ -73,12 +72,14 @@ OBJECTFILES= \
 	${OBJECTDIR}/_ext/534590209/fgGFXMaterial.o \
 	${OBJECTDIR}/_ext/534590209/fgGFXModelResource.o \
 	${OBJECTDIR}/_ext/534590209/fgGFXModelTypes.o \
-	${OBJECTDIR}/_ext/534590209/fgGFXObject.o \
 	${OBJECTDIR}/_ext/534590209/fgGFXOctreeBase.o \
 	${OBJECTDIR}/_ext/534590209/fgGFXPlatform.o \
 	${OBJECTDIR}/_ext/534590209/fgGFXPrimitives.o \
 	${OBJECTDIR}/_ext/534590209/fgGFXQuadtreeBase.o \
 	${OBJECTDIR}/_ext/534590209/fgGFXSceneManager.o \
+	${OBJECTDIR}/_ext/534590209/fgGFXSceneNode.o \
+	${OBJECTDIR}/_ext/534590209/fgGFXSceneNodeMesh.o \
+	${OBJECTDIR}/_ext/534590209/fgGFXSceneNodeObject.o \
 	${OBJECTDIR}/_ext/534590209/fgGFXSimpleDrawer.o \
 	${OBJECTDIR}/_ext/534590209/fgGFXTexturing.o \
 	${OBJECTDIR}/_ext/534590209/fgGFXVertexData.o \
@@ -341,11 +342,6 @@ ${OBJECTDIR}/_ext/534590209/fgGFXDrawCall.o: ../../../src/GFX/fgGFXDrawCall.cpp
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_GL_BINDING -DFG_USING_OPENGL -DFG_USING_SDL2 -DFG_USING_TINYXML -DTIXML_USE_STL -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534590209/fgGFXDrawCall.o ../../../src/GFX/fgGFXDrawCall.cpp
 
-${OBJECTDIR}/_ext/534590209/fgGFXDrawableObject.o: ../../../src/GFX/fgGFXDrawableObject.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/534590209
-	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_GL_BINDING -DFG_USING_OPENGL -DFG_USING_SDL2 -DFG_USING_TINYXML -DTIXML_USE_STL -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534590209/fgGFXDrawableObject.o ../../../src/GFX/fgGFXDrawableObject.cpp
-
 ${OBJECTDIR}/_ext/534590209/fgGFXDrawingBatch.o: ../../../src/GFX/fgGFXDrawingBatch.cpp 
 	${MKDIR} -p ${OBJECTDIR}/_ext/534590209
 	${RM} "$@.d"
@@ -381,11 +377,6 @@ ${OBJECTDIR}/_ext/534590209/fgGFXModelTypes.o: ../../../src/GFX/fgGFXModelTypes.
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_GL_BINDING -DFG_USING_OPENGL -DFG_USING_SDL2 -DFG_USING_TINYXML -DTIXML_USE_STL -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534590209/fgGFXModelTypes.o ../../../src/GFX/fgGFXModelTypes.cpp
 
-${OBJECTDIR}/_ext/534590209/fgGFXObject.o: ../../../src/GFX/fgGFXObject.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/534590209
-	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_GL_BINDING -DFG_USING_OPENGL -DFG_USING_SDL2 -DFG_USING_TINYXML -DTIXML_USE_STL -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534590209/fgGFXObject.o ../../../src/GFX/fgGFXObject.cpp
-
 ${OBJECTDIR}/_ext/534590209/fgGFXOctreeBase.o: ../../../src/GFX/fgGFXOctreeBase.cpp 
 	${MKDIR} -p ${OBJECTDIR}/_ext/534590209
 	${RM} "$@.d"
@@ -410,6 +401,21 @@ ${OBJECTDIR}/_ext/534590209/fgGFXSceneManager.o: ../../../src/GFX/fgGFXSceneMana
 	${MKDIR} -p ${OBJECTDIR}/_ext/534590209
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_GL_BINDING -DFG_USING_OPENGL -DFG_USING_SDL2 -DFG_USING_TINYXML -DTIXML_USE_STL -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534590209/fgGFXSceneManager.o ../../../src/GFX/fgGFXSceneManager.cpp
+
+${OBJECTDIR}/_ext/534590209/fgGFXSceneNode.o: ../../../src/GFX/fgGFXSceneNode.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/534590209
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_GL_BINDING -DFG_USING_OPENGL -DFG_USING_SDL2 -DFG_USING_TINYXML -DTIXML_USE_STL -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534590209/fgGFXSceneNode.o ../../../src/GFX/fgGFXSceneNode.cpp
+
+${OBJECTDIR}/_ext/534590209/fgGFXSceneNodeMesh.o: ../../../src/GFX/fgGFXSceneNodeMesh.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/534590209
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_GL_BINDING -DFG_USING_OPENGL -DFG_USING_SDL2 -DFG_USING_TINYXML -DTIXML_USE_STL -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534590209/fgGFXSceneNodeMesh.o ../../../src/GFX/fgGFXSceneNodeMesh.cpp
+
+${OBJECTDIR}/_ext/534590209/fgGFXSceneNodeObject.o: ../../../src/GFX/fgGFXSceneNodeObject.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/534590209
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_GL_BINDING -DFG_USING_OPENGL -DFG_USING_SDL2 -DFG_USING_TINYXML -DTIXML_USE_STL -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534590209/fgGFXSceneNodeObject.o ../../../src/GFX/fgGFXSceneNodeObject.cpp
 
 ${OBJECTDIR}/_ext/534590209/fgGFXSimpleDrawer.o: ../../../src/GFX/fgGFXSimpleDrawer.cpp 
 	${MKDIR} -p ${OBJECTDIR}/_ext/534590209

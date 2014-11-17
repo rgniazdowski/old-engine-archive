@@ -15,19 +15,36 @@
 
 class fgGfxMVMatrix : public fgGfxCamera {
 public:
-    // 
-    fgGfxMVMatrix() { }
-    // 
-    virtual ~fgGfxMVMatrix() { }
+    typedef fgGfxCamera base_type;
 
-    // 
+public:
+    /**
+     * 
+     */
+    fgGfxMVMatrix() : fgGfxCamera(), m_modelViewMatrix() { }
+    /**
+     * 
+     */
+    virtual ~fgGfxMVMatrix() { }
+    /**
+     * 
+     * @param modelMatrix
+     * @return 
+     */
     virtual float *calculate(const fgMatrix4f & modelMatrix) {
         m_modelViewMatrix = m_viewMatrix * modelMatrix;
         return getModelViewMatPtr();
     }
-
-    //
-    virtual float *calculate(fgGfxCamera *camera, const fgMatrix4f & modelMatrix, fgBool updateMatrix = FG_TRUE) {
+    /**
+     * 
+     * @param camera
+     * @param modelMatrix
+     * @param updateMatrix
+     * @return 
+     */
+    virtual float *calculate(fgGfxCamera *camera,
+                             const fgMatrix4f & modelMatrix,
+                             fgBool updateMatrix = FG_TRUE) {
         if(camera) {
             m_eye = camera->getRefEye();
             m_center = camera->getRefCenter();
@@ -38,24 +55,38 @@ public:
             m_modelViewMatrix = m_viewMatrix * modelMatrix;
         return getModelViewMatPtr();
     }
-
-    //
+    /**
+     * 
+     * @return 
+     */
     inline fgMatrix4f & getRefMVMatrix(void) {
         return m_modelViewMatrix;
     }
-
-    // 
+    /**
+     * 
+     * @return 
+     */
+    inline fgMatrix4f const & getRefMVMatrix(void) const {
+        return m_modelViewMatrix;
+    }
+    /**
+     * 
+     * @return 
+     */
     inline const float * getModelViewMatPtr(void) const {
-        return glm::value_ptr(m_modelViewMatrix);
+        return fgMath::value_ptr(m_modelViewMatrix);
     }
-
-    // 
+    /**
+     * 
+     * @return 
+     */
     inline float * getModelViewMatPtr(void) {
-        return glm::value_ptr(m_modelViewMatrix);
+        return fgMath::value_ptr(m_modelViewMatrix);
     }
-
-    //
-    inline void identity(void) {
+    /**
+     * 
+     */
+    virtual inline void identity(void) {
         fgGfxCamera::identity();
         m_modelViewMatrix = fgMatrix4f();
     }

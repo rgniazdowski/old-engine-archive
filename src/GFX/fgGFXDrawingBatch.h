@@ -21,7 +21,7 @@
  */
 class fgGfxDrawingBatch : public fgGfxLayer {
 protected:
-    typedef std::priority_queue<fgGfxDrawCall*, std::deque<fgGfxDrawCall*>, fgPtrLessEq<fgGfxDrawCall*> > batchPriorityQueue;
+    typedef std::priority_queue<fgGfxDrawCall *, std::deque<fgGfxDrawCall *>, fgPtrLessEq<fgGfxDrawCall *> > batchPriorityQueue;
     typedef fgVector<fgGfxDrawCall *> drawCallVec;
     typedef drawCallVec::iterator drawCallVecItor;
 

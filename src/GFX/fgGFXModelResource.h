@@ -9,12 +9,17 @@
 
 #ifndef _FG_GFX_MODEL_RESOURCE_H_
     #define _FG_GFX_MODEL_RESOURCE_H_
+    #define _FG_GFX_MODEL_RESOURCE_H_BLOCK_
 
-    #include "fgTypes.h"
+    #ifndef _FG_TYPES_H_
+        #include "fgTypes.h"
+    #endif
     #ifndef _FG_GFX_MODEL_TYPES_H_
         #include "fgGFXModelTypes.h"
     #endif
-    #include "Resource/fgResource.h"
+    #ifndef _FG_RESOURCE_H_
+        #include "Resource/fgResource.h"
+    #endif
 
 // Invalid / not selected file format
     #define FG_GFX_MODEL_RES_INVALID	0x000
@@ -150,7 +155,6 @@ public:
         //return (const_cast<fgGfxModelResource *>(this)->getRefShapes());
         return m_shapes;
     }
-    
     /**
      * 
      * @return 
@@ -158,7 +162,6 @@ public:
     fgAABoundingBox3Df & getRefAABB(void) {
         return m_aabb;
     }
-    
     /**
      * 
      * @return 
@@ -166,7 +169,7 @@ public:
     fgAABoundingBox3Df const & getRefAABB(void) const {
         return m_aabb;
     }
-    
+
     /**
      * 
      */
@@ -188,7 +191,6 @@ public:
      *              model data was not even loaded or the buffers were not valid
      */
     fgBool deleteBuffers(void);
-
     /**
      * Gets the main override material of the model resource
      * @return      Pointer to the override material for all shapes
@@ -209,7 +211,7 @@ public:
      */
     fgBool isMultitextured(void) const {
         return m_isMultitextured;
-    } 
+    }
     /**
      * Returns whether model is textured
      * @return  FG_TRUE if the model has any kind of texture in it (and likely
@@ -234,7 +236,6 @@ public:
     fgBool isInterleaved(void) const {
         return m_isInterleaved;
     }
-
     /**
      * Sets the data to be interleaved 
      * @param toggle    Boolean parameter to which the internal flag will be set.
@@ -333,4 +334,5 @@ protected:
 
 typedef fgGfxModelResource fgGfxModel;
 
+    #undef _FG_GFX_MODEL_RESOURCE_H_BLOCK_
 #endif /* _FG_GFX_MODEL_RESOURCE_H_ */

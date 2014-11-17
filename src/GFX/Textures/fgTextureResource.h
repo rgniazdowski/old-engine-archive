@@ -162,4 +162,6 @@ private:
     fgBool m_isInVRAM;
 };
 
+typedef fgTextureResource fgGfxTexture;
+
 #endif /* _FG_TEXTURE_RESOURCE_H_ */

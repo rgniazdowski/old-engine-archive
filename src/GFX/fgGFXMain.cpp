@@ -268,25 +268,17 @@ void fgGfxMain::display(void) {
     m_2DScene->sortCalls();
 }
 
-void dumpMatrix(const float *mat, const char *title) {
-    if(title)
-        printf("%s MATRIX:\n", title);
-    printf("{ %.2f %.2f %.2f %.2f }\n", mat[0], mat[1], mat[2], mat[3]);
-    printf("{ %.2f %.2f %.2f %.2f }\n", mat[4], mat[5], mat[6], mat[7]);
-    printf("{ %.2f %.2f %.2f %.2f }\n", mat[8], mat[9], mat[10], mat[11]);
-    printf("{ %.2f %.2f %.2f %.2f }\n\n", mat[12], mat[13], mat[14], mat[15]);
-}
-
 #include "fgGFXPrimitives.h"
 #include "fgGFXDrawingBatch.h"
 float guiScale = 1.0f;
+float yolo_posx = 0;
+float yolo_posy = 0;
 
 /*
  *
  */
 void fgGfxMain::render(void) {
-    static float posx = 0;
-    static float posy = 0;
+
     static float offset = 0.0f;
     static fgGfxModelResource *model = NULL;
     static float rotxyz = 0.0f;
@@ -343,20 +335,34 @@ void fgGfxMain::render(void) {
             return;
         }
     }
+
     m_3DScene->getCamera()->setDT((float)FG_HardwareState->getDelta());
+
+    if(state[SDL_SCANCODE_W] == SDL_PRESSED)
+        m_3DScene->getCamera()->moveForward();
+
+    if(state[SDL_SCANCODE_S] == SDL_PRESSED)
+        m_3DScene->getCamera()->moveBackward();
+
+    if(state[SDL_SCANCODE_A] == SDL_PRESSED)
+        m_3DScene->getCamera()->moveLeft();
+
+    if(state[SDL_SCANCODE_D] == SDL_PRESSED)
+        m_3DScene->getCamera()->moveRight();
+    
     m_3DScene->getCamera()->update();
-    //cameraAnim->setDT((float)FG_HardwareState->getDelta());
-    //cameraAnim->update();
-    //m_3DScene->applyCamera(cameraAnim);
+    m_3DScene->getMVP()->setCamera(m_3DScene->getCamera());
+    m_3DScene->getMVP()->setPerspective(45.0f, m_mainWindow->getAspect());
+    
     rotxyz += 0.0094525f;
     if(rotxyz > M_PI * 2.0f)
         rotxyz = 0.0f;
-    fgMatrix4f modelMat = glm::rotate(glm::mat4(1.0f), rotxyz, glm::vec3(1.0f, 1.0f, 1.0f)); //fgMath::translate(fgMatrix4f(1.0f), fgVector3f(0.0f, 0.0f, -5.0f));
+    fgMatrix4f modelMat;
+    modelMat = fgMath::translate(modelMat, fgVector3f(yolo_posx, yolo_posy * 0.0f, yolo_posy));
+    modelMat = fgMath::rotate(modelMat, rotxyz, fgVector3f(1.0f, 1.0f, 1.0f)); //fgMath::translate(fgMatrix4f(1.0f), fgVector3f(0.0f, 0.0f, -5.0f));
 
-    m_3DScene->getMVP()->setPerspective(45.0f, m_mainWindow->getAspect());
     fgGfxShaderProgram *program = m_shaderMgr->get(sPlainEasyShaderName);
     m_shaderMgr->useProgram(program);
-    //program->setUniform(FG_GFX_PLAIN_TEXTURE, 0);
     if(!program) {
         FG_LOG::PrintError("Cant access sPlainEasy shader program.");
         return;
@@ -369,7 +375,7 @@ void fgGfxMain::render(void) {
     }
     // #FIXME
     if(m_3DScene) {
-        fgGfxObject *obj1 = m_3DScene->get("PlayerFighter");
+        fgGfxSceneNode *obj1 = m_3DScene->get("PlayerFighter");
         if(obj1) {
             obj1->setModelMatrix(modelMat);
         }
@@ -391,55 +397,61 @@ void fgGfxMain::render(void) {
     fgGfxPlatform::context()->setBlend(FG_TRUE);
 #if defined(FG_USING_MARMALADE)
     if(s3eKeyboardGetState(s3eKeyLeft) & S3E_KEY_STATE_DOWN) {
-        posx -= 10.0f;
+        yolo_posx -= 10.0f;
     }
     if(s3eKeyboardGetState(s3eKeyRight) & S3E_KEY_STATE_DOWN) {
-        posx += 10.0f;
+        yolo_posx += 10.0f;
     }
     if(s3eKeyboardGetState(s3eKeyUp) & S3E_KEY_STATE_DOWN) {
-        posy -= 10.0f;
+        yolo_posy -= 10.0f;
     }
     if(s3eKeyboardGetState(s3eKeyDown) & S3E_KEY_STATE_DOWN) {
-        posy += 10.0f;
+        yolo_posy += 10.0f;
     }
     if(s3eKeyboardGetState(s3eKeyRightShift) & S3E_KEY_STATE_DOWN) {
         //        scale += 0.01f;
     }
 #else
     if(state[SDL_SCANCODE_LEFT] == SDL_PRESSED) {
-        posx -= 10.0f;
+        yolo_posx -= 10.0f;
     }
     if(state[SDL_SCANCODE_RIGHT] == SDL_PRESSED) {
-        posx += 10.0f;
+        yolo_posx += 10.0f;
     }
     if(state[SDL_SCANCODE_UP] == SDL_PRESSED) {
-        posy -= 10.0f;
+        yolo_posy -= 10.0f;
     }
     if(state[SDL_SCANCODE_DOWN] == SDL_PRESSED) {
-        posy += 10.0f;
+        yolo_posy += 10.0f;
     }
 
 #endif
-    Model = glm::translate(Model, glm::vec3(posx * 0.0f, posy * 0.0f, 0.0f));
-    Model = glm::scale(Model, glm::vec3(guiScale, guiScale, 0.0f));
-    // #FIXME !
+    Model = fgMath::translate(Model, fgVec3f(yolo_posx * 0.0f, yolo_posy * 0.0f, 0.0f));
+    Model = fgMath::scale(Model, fgVec3f(guiScale, guiScale, 0.0f));
+
+    m_2DScene->getMVP()->setOrtho(0, (float)m_mainWindow->getWidth(), (float)m_mainWindow->getHeight(), 0.0f);
+    //m_2DScene->getMVP()->calculate(Model);
+    //m_2DScene->getMVP()->update();
+    //program2->setUniform(MVP);
+
+    fgGfxPlatform::context()->blendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+    m_2DScene->render();
+
+    // #FIXME ! TOTAL FUBAR SITUATION ! OMG ! OH MY !
     fgGfxMVPMatrix mvp_lol;
     fgGfxMVPMatrix *MVP = &mvp_lol;
     MVP->identity();
     MVP->setOrtho(0, (float)m_mainWindow->getWidth(), (float)m_mainWindow->getHeight(), 0.0f);
     MVP->calculate(Model);
     program2->setUniform(MVP);
-
-    fgGfxPlatform::context()->blendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-    m_2DScene->render();
-
-    program2->setUniform(MVP);
     fgGfxPlatform::context()->blendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     fgGfxPlatform::context()->scissor(0, 0, m_mainWindow->getWidth(), m_mainWindow->getHeight());
 }
 
-/*
- *
+/**
+ * 
+ * @param pResourceManager
+ * @return 
  */
 fgBool fgGfxMain::setResourceManager(fgManagerBase *pResourceManager) {
     if(!pResourceManager)
@@ -474,43 +486,49 @@ fgBool fgGfxMain::setResourceManager(fgManagerBase *pResourceManager) {
     return m_textureMgr->initialize(); // #FIXME - texture mgr init ?
 }
 
-/*
- *
+/**
+ * 
+ * @return 
  */
 fgTextureManager *fgGfxMain::getTextureManager(void) const {
     return m_textureMgr;
 }
 
-/*
- *
+/**
+ * 
+ * @return 
  */
 fgGfxShaderManager *fgGfxMain::getShaderManager(void) const {
     return m_shaderMgr;
 }
 
-/*
- *
+/**
+ * 
+ * @return 
  */
 fgGfxWindow *fgGfxMain::getMainWindow(void) const {
     return m_mainWindow;
 }
 
-/*
- *
+/**
+ * 
+ * @return 
  */
 fgGfx3DScene *fgGfxMain::get3DScene(void) const {
     return m_3DScene;
 }
 
-/*
- *
+/**
+ * 
+ * @return 
  */
 fgGfx2DScene *fgGfxMain::get2DScene(void) const {
     return m_2DScene;
 }
 
-/*
- *
+/**
+ * 
+ * @return 
  */
 fgGfxCameraAnimation *fgGfxMain::get3DSceneCamera(void) const {
     if(!m_3DScene)
