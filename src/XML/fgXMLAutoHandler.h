@@ -7,8 +7,8 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-#ifndef _FG_XML_AUTO_HANDLER_H_
-    #define _FG_XML_AUTO_HANDLER_H_
+#ifndef FG_INC_XML_AUTO_HANDLER
+    #define FG_INC_XML_AUTO_HANDLER
 
     #include "fgXMLDefaultHandler.h"
     #include <cstdlib>
@@ -183,4 +183,4 @@ protected:
     std::stack<fgXMLElement *> m_elemStack;
 };
 
-#endif /* _FG_XML_AUTO_HANDLER_H_ */
+#endif /* FG_INC_XML_AUTO_HANDLER */

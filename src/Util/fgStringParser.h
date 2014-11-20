@@ -13,8 +13,8 @@
  * Created on October 25, 2014, 4:40 PM
  */
 
-#ifndef _FG_STRING_PARSER_H_
-    #define	_FG_STRING_PARSER_H_
+#ifndef FG_INC_STRING_PARSER
+    #define	FG_INC_STRING_PARSER
 
 ///
 /// #FIXME #PLOX
@@ -133,5 +133,5 @@ public:
     }
 };
 
-#endif	/* _FG_STRING_PARSER_H_ */
+#endif	/* FG_INC_STRING_PARSER */
 

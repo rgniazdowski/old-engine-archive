@@ -7,8 +7,8 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-#ifndef _FG_GFX_MV_MATRIX_H_
-    #define _FG_GFX_MV_MATRIX_H_
+#ifndef FG_INC_GFX_MV_MATRIX
+    #define FG_INC_GFX_MV_MATRIX
 
     #include "fgGFXCamera.h"
     #include "fgBool.h"
@@ -96,4 +96,4 @@ protected:
     fgMatrix4f m_modelViewMatrix;
 };
 
-#endif /* _FG_GFX_MV_MATRIX_H_ */
+#endif /* FG_INC_GFX_MV_MATRIX */

@@ -7,8 +7,8 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-#ifndef _FG_PS_PARTICLE_EFFECT_H_
-    #define _FG_PS_PARTICLE_EFFECT_H_
+#ifndef FG_INC_PS_PARTICLE_EFFECT
+    #define FG_INC_PS_PARTICLE_EFFECT
 
     #include "fgBool.h"
     #include "GFX/fgGFXTypes.h"
@@ -689,4 +689,4 @@ public:
     void basicCalculate(fgParticle *outputParticle);
 };
 
-#endif /* _FG_PS_PARTICLE_EFFECT_H_ */
+#endif /* FG_INC_PS_PARTICLE_EFFECT */

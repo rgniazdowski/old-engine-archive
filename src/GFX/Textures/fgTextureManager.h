@@ -7,8 +7,8 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-#ifndef _FG_TEXTURE_MANAGER_H_
-    #define _FG_TEXTURE_MANAGER_H_
+#ifndef FG_INC_TEXTURE_MANAGER
+    #define FG_INC_TEXTURE_MANAGER
 
     #include "fgBuildConfig.h"
     #include "fgBool.h"
@@ -150,4 +150,4 @@ private:
     fgGfxTextureID m_emptyGfxID;
 };
 
-#endif /* _FG_TEXTURE_MANAGER_H_ */
+#endif /* FG_INC_TEXTURE_MANAGER */

@@ -7,8 +7,8 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-#ifndef _FG_THREAD_LOCK_H_
-    #define _FG_THREAD_LOCK_H_
+#ifndef FG_INC_THREAD_LOCK
+    #define FG_INC_THREAD_LOCK
 
     #include "fgBuildConfig.h"
     #include "fgBool.h"
@@ -106,4 +106,4 @@ private:
 };
 
     #endif
-#endif /* _FG_THREAD_LOCK_H_ */
+#endif /* FG_INC_THREAD_LOCK */

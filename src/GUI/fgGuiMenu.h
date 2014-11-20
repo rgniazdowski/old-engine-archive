@@ -7,8 +7,8 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-#ifndef _FG_GUI_MENU_H_
-    #define _FG_GUI_MENU_H_
+#ifndef FG_INC_GUI_MENU
+    #define FG_INC_GUI_MENU
 
     #include <map>
 
@@ -55,4 +55,4 @@ public:
     }
 };
 
-#endif /* _FG_GUI_MENU_H_ */
+#endif /* FG_INC_GUI_MENU */

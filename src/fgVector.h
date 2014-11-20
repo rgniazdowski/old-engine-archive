@@ -7,14 +7,14 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-#ifndef _FG_VECTOR_H_
-    #define _FG_VECTOR_H_
+#ifndef FG_INC_VECTOR
+    #define FG_INC_VECTOR
 
-    #ifndef _FG_BUILD_CONFIG_H_
+    #ifndef FG_INC_BUILD_CONFIG
         #include "fgBuildConfig.h"
     #endif
 
-    #if defined FG_USING_MARMALADE
+    #if defined(FG_USING_MARMALADE)
         #include "IwUtil.h"
 
 template <class X, class A = CIwAllocator<X>, class REALLOCATE = ReallocateDefault<X, A > >
@@ -64,6 +64,7 @@ public:
     #endif /* FG_USING_MARMALADE */
 
     #include <string>
+    
 typedef fgVector<std::string> fgStringVector;
 
-#endif /* _FG_VECTOR_H_ */
+#endif /* FG_INC_VECTOR */

@@ -7,8 +7,8 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-#ifndef _FG_GFX_SHADER_H_
-    #define _FG_GFX_SHADER_H_
+#ifndef FG_INC_GFX_SHADER
+    #define FG_INC_GFX_SHADER
 
     #include "fgGFXShaderDefs.h"
     #include "fgGFXShaderBase.h"
@@ -115,4 +115,4 @@ public:
     }
 };
 
-#endif /* _FG_GFX_SHADER_H_ */
+#endif /* FG_INC_GFX_SHADER */

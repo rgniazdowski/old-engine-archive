@@ -7,7 +7,7 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-#ifndef _FG_GFX_OCTREE_BASE_H_
-    #define _FG_GFX_OCTREE_BASE_H_
+#ifndef FG_INC_GFX_OCTREE_BASE
+    #define FG_INC_GFX_OCTREE_BASE
 
-#endif /* _FG_GFX_OCTREE_BASE_H_ */
+#endif /* FG_INC_GFX_OCTREE_BASE */

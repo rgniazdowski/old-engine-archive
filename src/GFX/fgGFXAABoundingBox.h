@@ -13,15 +13,15 @@
  * Created on November 11, 2014, 6:52 PM
  */
 
-#ifndef _FG_GFX_AA_BOUNDING_BOX_H_
-    #define _FG_GFX_AA_BOUNDING_BOX_H_
-    #define _FG_GFX_AA_BOUNDING_BOX_H_BLOCK_
+#ifndef FG_INC_GFX_AA_BOUNDING_BOX
+    #define FG_INC_GFX_AA_BOUNDING_BOX
+    #define FG_INC_GFX_AA_BOUNDING_BOX_BLOCK
 
-    #if defined(_FG_GFX_BOUNDING_BOX_H_BLOCK_)
-        #error "FG_GFX_BOUNDING_BOX_H_BLOCK is defined. Do not include AA Bounding Box header inside of a regular Bounding Box header!"
+    #if defined(FG_INC_GFX_BOUNDING_BOX_BLOCK)
+        #error "FG_GFX_BOUNDING_BOXBLOCK is defined. Do not include AA Bounding Box header inside of a regular Bounding Box header!"
     #endif
 
-    #ifndef _FG_GFX_BOUNDING_BOX_H_
+    #ifndef FG_INC_GFX_BOUNDING_BOX
         #include "fgGFXBoundingBox.h"
     #endif
 
@@ -618,5 +618,5 @@ typedef fgAABoundingBox3Di fgAABB3Di;
 typedef fgAABoundingBox3Du fgAABB3Du;
 typedef fgAABoundingBox3Dd fgAABB3Dd;
 
-    #undef _FG_GFX_AA_BOUNDING_BOX_H_BLOCK_
-#endif	/* _FG_GFX_AA_BOUNDING_BOX_H_ */
+    #undef FG_INC_GFX_AA_BOUNDING_BOX_BLOCK
+#endif	/* FG_INC_GFX_AA_BOUNDING_BOX */

@@ -7,8 +7,8 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-#ifndef _FG_GUI_CONTAINER_H_
-    #define _FG_GUI_CONTAINER_H_
+#ifndef FG_INC_GUI_CONTAINER
+    #define FG_INC_GUI_CONTAINER
 
     #include "fgGuiWidget.h"
     #include "fgGuiWidgetFactoryTypes.h"
@@ -107,4 +107,4 @@ public:
     fgBool removeChild(const char *nameTag);
 };
 
-#endif /* _FG_GUI_CONTAINER_H_ */
+#endif /* FG_INC_GUI_CONTAINER */

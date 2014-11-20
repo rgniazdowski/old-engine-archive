@@ -13,10 +13,10 @@
  * Created on October 17, 2014, 12:39 PM
  */
 
-#ifndef _FG_GFX_TEXTUREID_H_
-    #define	_FG_GFX_TEXTUREID_H_
+#ifndef FG_INC_GFX_TEXTUREID
+    #define	FG_INC_GFX_TEXTUREID
 
-    #ifndef _FG_GFX_GL_H_
+    #ifndef FG_INC_GFX_GL
         #include "fgGFXGL.h"
     #endif
 
@@ -99,5 +99,5 @@ struct fgGfxTextureID {
     }
 };
 
-#endif	/* _FG_GFX_TEXTUREID_H_ */
+#endif	/* FG_INC_GFX_TEXTUREID */
 

@@ -13,9 +13,9 @@
  * Created on November 7, 2014, 7:29 AM
  */
 
-#ifndef _FG_HASHFUNC_H_
-    #define _FG_HASHFUNC_H_
-    #define _FG_HASHFUNC_H_BLOCK_
+#ifndef FG_INC_HASHFUNC
+    #define FG_INC_HASHFUNC
+    #define FG_INC_HASHFUNC_BLOCK
 
     #include <string>
 /**
@@ -221,5 +221,5 @@ public:
     static unsigned int AP(const char *str);
 };
 
-    #undef _FG_HASHFUNC_H_BLOCK_
-#endif	/* _FG_HASHFUNC_H_ */
+    #undef FG_INC_HASHFUNC_BLOCK
+#endif	/* FG_INC_HASHFUNC */

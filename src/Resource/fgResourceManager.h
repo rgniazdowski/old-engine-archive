@@ -10,8 +10,8 @@
  * Portions Copyright (C) James Boer, 2000
  */
 
-#ifndef _FG_RESOURCE_MANAGER_H_
-    #define _FG_RESOURCE_MANAGER_H_
+#ifndef FG_INC_RESOURCE_MANAGER
+    #define FG_INC_RESOURCE_MANAGER
 
     #include "fgDataManagerBase.h"
     #include "fgResource.h"
@@ -316,4 +316,4 @@ private:
     fgBool m_bResourceReserved;
 };
 
-#endif /* _FG_RESOURCE_MANAGER_H_ */
+#endif /* FG_INC_RESOURCE_MANAGER */

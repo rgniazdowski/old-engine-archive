@@ -7,10 +7,10 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-#ifndef _FG_GFX_PLATFORM_H_
-    #define _FG_GFX_PLATFORM_H_
+#ifndef FG_INC_GFX_PLATFORM
+    #define FG_INC_GFX_PLATFORM
 
-    #ifndef _FG_GFX_CONTEXT_H_
+    #ifndef FG_INC_GFX_CONTEXT
         #include "fgGFXContext.h"
     #endif
 
@@ -71,4 +71,4 @@ private:
     static void* m_defaultConfig; // it's for egl only...
 };
 
-#endif /* _FG_GFX_PLATFORM_H_ */
+#endif /* FG_INC_GFX_PLATFORM */

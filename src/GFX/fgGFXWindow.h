@@ -7,8 +7,8 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-#ifndef _FG_GFX_WINDOW_H_
-    #define _FG_GFX_WINDOW_H_
+#ifndef FG_INC_GFX_WINDOW
+    #define FG_INC_GFX_WINDOW
 
     #include "fgGFXStdInc.h"
 
@@ -137,4 +137,4 @@ private:
     fgBool m_isOpen;
 };
 
-#endif /* _FG_GFX_WINDOW_H_ */
+#endif /* FG_INC_GFX_WINDOW */

@@ -7,8 +7,8 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-#ifndef _FG_GUI_WIDGET_FACTORY_TYPES_H_
-    #define _FG_GUI_WIDGET_FACTORY_TYPES_H_
+#ifndef FG_INC_GUI_WIDGET_FACTORY_TYPES
+    #define FG_INC_GUI_WIDGET_FACTORY_TYPES
 
 class fgGuiWidget;
 
@@ -28,4 +28,4 @@ static RETURNTYPE * createWidget(void) { return new CREATETYPE(); }
 static fgGuiWidget * createWidget(void) { return new CREATETYPE(); }
     #endif
 
-#endif /* _FG_GUI_WIDGET_FACTORY_TYPES_H_ */
+#endif /* FG_INC_GUI_WIDGET_FACTORY_TYPES */

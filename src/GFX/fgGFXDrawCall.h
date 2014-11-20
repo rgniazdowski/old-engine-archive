@@ -7,11 +7,11 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-#ifndef _FG_GFX_DRAW_CALL_H_
-    #define _FG_GFX_DRAW_CALL_H_
-    #define _FG_GFX_DRAW_CALL_H_BLOCK_
+#ifndef FG_INC_GFX_DRAW_CALL
+    #define FG_INC_GFX_DRAW_CALL
+    #define FG_INC_GFX_DRAW_CALL_BLOCK
 
-    #ifndef _FG_GFX_PRIMITIVES_H_
+    #ifndef FG_INC_GFX_PRIMITIVES
         #include "fgGFXPrimitives.h"
     #endif
 
@@ -20,25 +20,25 @@
     #define FG_GFX_DRAW_CALL_CUSTOM_ARRAY   2
     #define FG_GFX_DRAW_CALL_MESH           3
 
-    #ifndef _FG_GFX_SHADER_DEFS_H_
+    #ifndef FG_INC_GFX_SHADER_DEFS
         #include "GFX/Shaders/fgGFXShaderDefs.h"
     #endif
-    #ifndef _FG_GFX_SHADER_PROGRAM_H_
+    #ifndef FG_INC_GFX_SHADER_PROGRAM
         #include "GFX/Shaders/fgGFXShaderProgram.h"
     #endif
-    #ifndef _FG_GFX_TYPES_H_
+    #ifndef FG_INC_GFX_TYPES
         #include "fgGFXTypes.h"
     #endif
 
-    #ifndef _FG_GFX_MVP_MATRIX_H_
+    #ifndef FG_INC_GFX_MVP_MATRIX
         #include "fgGFXMVPMatrix.h"
     #endif
 
-    #ifndef _FG_GFX_MODEL_TYPES_H_
+    #ifndef FG_INC_GFX_MODEL_TYPES
         #include "fgGFXModelTypes.h"
     #endif
 
-    #ifndef _FG_GFX_DRAWABLE_H_
+    #ifndef FG_INC_GFX_DRAWABLE
         #include "fgGFXDrawable.h"
     #endif
 
@@ -432,5 +432,5 @@ public:
         #endif /* FG_PTR_COMPARE_DRAWABLE_DEFINED_ */
     #endif
 
-    #undef _FG_GFX_DRAW_CALL_H_BLOCK_
-#endif /* _FG_GFX_DRAW_CALL_H_ */
+    #undef FG_INC_GFX_DRAW_CALL_BLOCK
+#endif /* FG_INC_GFX_DRAW_CALL */

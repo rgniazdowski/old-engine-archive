@@ -7,8 +7,8 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-#ifndef _FG_GUI_LOADER_H_
-    #define _FG_GUI_LOADER_H_
+#ifndef FG_INC_GUI_LOADER
+    #define FG_INC_GUI_LOADER
 
     #include "fgGuiWidget.h"
     #include "fgGuiWidgetFactoryTypes.h"
@@ -41,4 +41,4 @@ public:
     virtual void refresh(void);
 };
 
-#endif /* _FG_GUI_LOADER_H_ */
+#endif /* FG_INC_GUI_LOADER */

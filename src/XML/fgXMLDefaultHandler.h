@@ -7,8 +7,8 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-#ifndef _FG_XML_DEFAULT_HANDLER_H_
-    #define _FG_XML_DEFAULT_HANDLER_H_
+#ifndef FG_INC_XML_DEFAULT_HANDLER
+    #define FG_INC_XML_DEFAULT_HANDLER
 
     #include "fgXMLTypesWrap.h"
 
@@ -41,4 +41,4 @@ public:
     //void warning(exception e); // #FIXME - the whole error reporting system...
 };
 
-#endif /* _FG_XML_DEFAULT_HANDLER_H_ */
+#endif /* FG_INC_XML_DEFAULT_HANDLER */

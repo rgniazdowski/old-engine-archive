@@ -13,14 +13,14 @@
  * Created on October 17, 2014, 7:04 PM
  */
 
-#ifndef _FG_GFX_ATTRIBUTE_DATA_H_
-    #define	_FG_GFX_ATTRIBUTE_DATA_H_
+#ifndef FG_INC_GFX_ATTRIBUTE_DATA
+    #define	FG_INC_GFX_ATTRIBUTE_DATA
 
-    #ifndef _FG_GFX_GL_H_
+    #ifndef FG_INC_GFX_GL
         #include "fgGFXGL.h"
     #endif
 
-    #ifndef _FG_GFX_ATTRIB_BITS_H_
+    #ifndef FG_INC_GFX_ATTRIB_BITS
         #include "fgGFXAttribBits.h"
     #endif
 
@@ -132,4 +132,4 @@ struct fgGfxAttributeData {
         #define FG_GFX_ATTRIBUTE_DATA_MAX 12 // #FIXME
     #endif
 
-#endif	/* _FG_GFX_ATTRIBUTE_DATA_H_ */
+#endif	/* FG_INC_GFX_ATTRIBUTE_DATA */

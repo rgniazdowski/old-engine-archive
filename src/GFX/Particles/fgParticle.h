@@ -7,8 +7,8 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-#ifndef _FG_PARTICLE_H_
-    #define _FG_PARTICLE_H_
+#ifndef FG_INC_PARTICLE
+    #define FG_INC_PARTICLE
 
     #include "Math/fgMathLib.h"
     #include "GFX/fgGFXTypes.h"

@@ -7,8 +7,8 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-#ifndef _FG_QUALITY_TYPES_H_
-    #define _FG_QUALITY_TYPES_H_
+#ifndef FG_INC_QUALITY_TYPES
+    #define FG_INC_QUALITY_TYPES
 
     #include "fgCommon.h"
 
@@ -34,7 +34,7 @@ enum fgQuality {
     #define FG_QUALITY_EXTRA_TEXT		"extra"
 
 // Convert text (literal) to corresponding enum value
-inline fgQuality _FG_QUALITY_FROM_TEXT(const char* text) {
+inline fgQuality FG_INC_QUALITY_FROM_TEXT(const char* text) {
     if(!text)
         return FG_QUALITY_UNIVERSAL;
     FG_RETURN_ENUM_IF_TEXT_EQ(FG_QUALITY_UNIVERSAL);
@@ -45,6 +45,6 @@ inline fgQuality _FG_QUALITY_FROM_TEXT(const char* text) {
     return FG_QUALITY_UNIVERSAL;
 }
 // #FIXME - #P3 - string obfuscation (also for error code -> text msg translations)
-    #define FG_QUALITY_FROM_TEXT(text) _FG_QUALITY_FROM_TEXT(text)
+    #define FG_QUALITY_FROM_TEXT(text) FG_INC_QUALITY_FROM_TEXT(text)
 
-#endif /* _FG_QUALITY_TYPES_H_ */
+#endif /* FG_INC_QUALITY_TYPES */

@@ -7,10 +7,10 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-#ifndef _FG_UNISTD_H_
-    #define _FG_UNISTD_H_
+#ifndef FG_INC_UNISTD
+    #define FG_INC_UNISTD
 
-    #ifndef _FG_BUILD_CONFIG_H_
+    #ifndef FG_INC_BUILD_CONFIG
         #include "fgBuildConfig.h"
     #endif
 
@@ -74,5 +74,5 @@ typedef unsigned __int64 uint64_t;
 
     #endif /* defined MARMALADE || defined PLATFORM LINUX */
 
-#endif /* _FG_UNISTD_H_ */
+#endif /* FG_INC_UNISTD */
 

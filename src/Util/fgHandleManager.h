@@ -10,8 +10,8 @@
  * Portions Copyright (C) Scott Bilas, 2000
  */
 
-#ifndef _FG_HANDLE_MANAGER_H_
-    #define _FG_HANDLE_MANAGER_H_
+#ifndef FG_INC_HANDLE_MANAGER
+    #define FG_INC_HANDLE_MANAGER
 
     #include "fgBuildConfig.h"
     #include "fgCommon.h"
@@ -422,4 +422,4 @@ inline const DataType* fgHandleManager <DataType, HandleType>
 }
     #endif
 
-#endif /* _FG_HANDLE_MANAGER_H_ */
+#endif /* FG_INC_HANDLE_MANAGER */

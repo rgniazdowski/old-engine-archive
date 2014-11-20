@@ -7,8 +7,8 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-#ifndef _FG_DIRENT_H_
-    #define _FG_DIRENT_H_
+#ifndef FG_INC_DIRENT
+    #define FG_INC_DIRENT
 
     #include "fgCommon.h"
 

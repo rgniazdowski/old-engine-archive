@@ -7,16 +7,16 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-#ifndef _FG_GUI_MAIN_H_
-    #define _FG_GUI_MAIN_H_
-    #define _FG_GUI_MAIN_H_BLOCK_
+#ifndef FG_INC_GUI_MAIN
+    #define FG_INC_GUI_MAIN
+    #define FG_INC_GUI_MAIN_BLOCK
 
-    #if defined(_FG_SCRIPT_SUBSYSTEM_H_BLOCK_)
-        #error "FG_SCRIPT_SUBSYSTEM_H_BLOCK is defined: Do not include GuiMain inside of ScriptSubsystem header"
+    #if defined(FG_INC_SCRIPT_SUBSYSTEM_BLOCK)
+        #error "FG_SCRIPT_SUBSYSTEMBLOCK is defined: Do not include GuiMain inside of ScriptSubsystem header"
     #endif
 
-    #if defined(_FG_GUI_WIDGET_H_BLOCK_)
-        #error "FG_GUI_WIDGET_H_BLOCK is defined: Do not include GuiMain inside of Widget header"
+    #if defined(FG_INC_GUI_WIDGET_BLOCK)
+        #error "FG_GUI_WIDGETBLOCK is defined: Do not include GuiMain inside of Widget header"
     #endif
 
     #include "fgManagerBase.h"
@@ -31,7 +31,7 @@
 
     #include "Event/fgEventManager.h"
     #include "Input/fgPointerInputReceiver.h"
-    #ifndef _FG_RESOURCE_MANAGER_H_
+    #ifndef FG_INC_RESOURCE_MANAGER
         #include "Resource/fgResourceManager.h"
     #endif
 
@@ -279,6 +279,6 @@ public:
     fgBool guiLinkHandler(fgGuiMain *pGuiMain, fgGuiWidget *pWidget);
 };
 
-    #undef _FG_GUI_MAIN_H_BLOCK_
+    #undef FG_INC_GUI_MAIN_BLOCK
 
-#endif /* _FG_GUI_MAIN_H_ */
+#endif /* FG_INC_GUI_MAIN */

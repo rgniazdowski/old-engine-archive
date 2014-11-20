@@ -7,10 +7,10 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-#ifndef _FG_FONT_STB_CONSOLAS_H_
-    #define _FG_FONT_STB_CONSOLAS_H_
+#ifndef FG_INC_FONT_STB_CONSOLAS
+    #define FG_INC_FONT_STB_CONSOLAS
 
-    #ifndef _FG_FONT_BUILT_IN_TYPES_H_
+    #ifndef FG_INC_FONT_BUILT_IN_TYPES
         #include "fgFontBuiltInTypes.h"
     #endif
 
@@ -35,4 +35,4 @@ namespace fgFontBuiltIn {
     };
 };
 
-#endif /* _FG_FONT_STB_CONSOLAS_H_ */
+#endif /* FG_INC_FONT_STB_CONSOLAS */

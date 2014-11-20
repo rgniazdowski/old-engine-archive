@@ -3,13 +3,15 @@
 	<Menu name="MainMenu" ignoreState="true" flags="packvertical right mainmenu">
 		<!--		<Container name="MainContainer"> -->
 			<Button name="StartGameButton" size="200,50" style="RelButton">START GAME </Button>
-			<Button name="HighscoresButton" size="250,100">HIGH SCORES</Button>
+			<Container name="HIGH" ignoreState="false" active="true" flags="packhorizontal center" style="FrameStyle2">
+				<Button name="HighscoresButton" size="450,60">HIGH SCORES</Button>
+			</Container>
 				
 			<Container name="TestContainer" ignoreState="true" style="FrameStyle" flags="packhorizontal center">
 				<Button name="Test1Button" size="200,60">TEST1 BUTTON</Button>
 				<Button name="Test2Button" size="200,60">TEST2 BUTTON</Button>
 			</Container>
-			<Container name="TY" ignoreState="true" style="FrameStyle" flags="packvertical">
+			<Container name="TY" ignoreState="true" style="FrameStyle" visible="false" active="false" flags="packvertical">
 				<Container name="TX1" ignoreState="true" style="FrameStyle" flags="packhorizontal">
 					<Button name="T1" size="50,50">T1</Button>
 					<Button name="T2" size="50,50">T2</Button>
@@ -30,11 +32,12 @@
 			<!--		</Container> -->
 	</Menu>
 
-	<Menu name="Options">
+	<Menu name="Options" flags="packvertical">
 		<Button name="YoloButton" pos="200,200" size="200,50">YOLO BITCHEZ</Button>
+		<Button name="OptionsBack" pos="200,350" size="200,50" link="MainMenu"> GO BACK! </Button>
 	</Menu>
 
-	<Menu name="ContextMenu" ignoreState="true" flags="packvertical center">
+	<Menu name="ContextMenu" ignoreState="true" visible="false" style="ContextMenuStyle" flags="packvertical center">
 		<Button name="CMAction1" size="200,20">Show test window</Button>
 		<Button name="CMAction2" size="200,20">Switch menu</Button>
 		<Button name="CMAction3" size="200,20">Popup test</Button>

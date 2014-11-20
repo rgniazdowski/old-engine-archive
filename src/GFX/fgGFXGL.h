@@ -7,8 +7,8 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-#ifndef _FG_GFX_GL_H_
-    #define _FG_GFX_GL_H_
+#ifndef FG_INC_GFX_GL
+    #define FG_INC_GFX_GL
 
     #include "fgBuildConfig.h"
     #include "fgBool.h"
@@ -22,7 +22,7 @@
 
             #if !defined FG_USING_MARMALADE_OPENGL_ES && defined FG_USING_MARMALADE_IWGL
                 #include <IwGL.h>
-                #define _FG_INCLUDED_GL_ // #FIXME
+                #define FG_INC_INCLUDED_GL_ // #FIXME
             #endif /* FG_USING_MARMALADE_OPENGL_ES */
 
         #elif defined FG_USING_PLATFORM_LINUX /* && !defined FG_USING_MARMALADE */
@@ -42,7 +42,7 @@
                         #include "glbinding/Binding.h"
 using namespace gl;
                     #endif
-                    #define _FG_INCLUDED_GL_
+                    #define FG_INC_INCLUDED_GL_
                 #else /* FG_USING_SDL2 */
 // if defined SDL2 - then use specific GL code for SDL2
                     #include <SDL2/SDL.h>
@@ -56,7 +56,7 @@ using namespace gl;
                         #include "glbinding/Binding.h"
 using namespace gl;
                     #endif
-                    #define _FG_INCLUDED_GL_
+                    #define FG_INC_INCLUDED_GL_
                 #endif
 
             #else /* FG_USING_OPENGL */
@@ -74,12 +74,12 @@ using namespace gl;
             #if defined FG_USINGL_SDL2
                 #include <SDL2/SDL.h>
                 #include <SDL2/SDL_opengles2.h>
-                #define _FG_INCLUDED_GL_
+                #define FG_INC_INCLUDED_GL_
             #else /* if SDL2 is not defined - native GLES2 support ? */
                 #include <GLES2/gl2.h>
                 #include <GLES2/gl2ext.h>
                 #include <GLES2/gl2platform.h>
-                #define _FG_INCLUDED_GL_
+                #define FG_INC_INCLUDED_GL_
             #endif /* defined FG_USINGL_SDL2 */
 
             #if defined FG_USING_EGL
@@ -298,7 +298,7 @@ inline unsigned int fgEGLError(const char *afterFunc = NULL) {
         #define FG_GFX_TRUE	GL_TRUE
     #endif
 
-    #if !defined(FG_GFX_GL_MASK_TYPEDEFS_DEFINED) && defined(_FG_INCLUDED_GL_)
+    #if !defined(FG_GFX_GL_MASK_TYPEDEFS_DEFINED) && defined(FG_INC_INCLUDED_GL_)
         #define FG_GFX_GL_MASK_TYPEDEFS_DEFINED
 typedef GLvoid fgGFXvoid;
 typedef GLchar fgGFXchar;
@@ -320,7 +320,7 @@ typedef GLfixed fgGFXfixed;
 typedef int fgGFXfixed;
         #endif
 
-    #endif /* FG_GFX_GL_MASK_TYPEDEFS_DEFINED && _FG_INCLUDED_GL_ */
+    #endif /* FG_GFX_GL_MASK_TYPEDEFS_DEFINED && FG_INC_INCLUDED_GL_ */
 
 //
 // Data types
@@ -362,4 +362,4 @@ typedef int fgGFXfixed;
     #define FG_GFX_SAMPLER_2D           GL_SAMPLER_2D
     #define FG_GFX_SAMPLER_CUBE         GL_SAMPLER_CUBE
 
-#endif /* _FG_GFX_GL_H_ */
+#endif /* FG_INC_GFX_GL */

@@ -7,8 +7,8 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-#ifndef _FG_STATUS_H_
-    #define _FG_STATUS_H_
+#ifndef FG_INC_STATUS
+    #define FG_INC_STATUS
 
     #include "fgTypes.h"
     #include "fgErrno.h"
@@ -281,4 +281,4 @@ struct fgStatus {
     }
 };
 
-#endif /* _FG_STATUS_H_ */
+#endif /* FG_INC_STATUS */

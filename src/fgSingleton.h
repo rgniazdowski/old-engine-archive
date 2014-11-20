@@ -7,8 +7,8 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-#ifndef _FG_SINGLETON_H_
-    #define _FG_SINGLETON_H_
+#ifndef FG_INC_SINGLETON
+    #define FG_INC_SINGLETON
 
 template<typename Class>
 class fgSingleton {
@@ -43,4 +43,4 @@ public:
     }
 };
 
-#endif /* _FG_SINGLETON_H_ */
+#endif /* FG_INC_SINGLETON */

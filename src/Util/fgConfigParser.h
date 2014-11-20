@@ -7,8 +7,8 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-#ifndef _FG_CONFIG_PARSER_H_
-    #define _FG_CONFIG_PARSER_H_
+#ifndef FG_INC_CONFIG_PARSER
+    #define FG_INC_CONFIG_PARSER
 
     #include "fgStatus.h"
     #include "fgFile.h"
@@ -72,4 +72,4 @@ public:
     }
 };
 
-#endif /* _FG_CONFIG_PARSER_H_ */
+#endif /* FG_INC_CONFIG_PARSER */

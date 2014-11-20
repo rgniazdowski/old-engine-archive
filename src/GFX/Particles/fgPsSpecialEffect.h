@@ -7,8 +7,8 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-#ifndef _FG_PS_SPECIAL_EFFECT_H_
-    #define _FG_PS_SPECIAL_EFFECT_H_
+#ifndef FG_INC_PS_SPECIAL_EFFECT
+    #define FG_INC_PS_SPECIAL_EFFECT
 
 /**
  *

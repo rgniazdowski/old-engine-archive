@@ -7,9 +7,9 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-#ifndef _FG_SFX_MANAGER_H_
-    #define _FG_SFX_MANAGER_H_
-    #define _FG_SFX_MANAGER_H_BLOCK_
+#ifndef FG_INC_SFX_MANAGER
+    #define FG_INC_SFX_MANAGER
+    #define FG_INC_SFX_MANAGER_BLOCK
 
     #include "fgBuildConfig.h"
     #include "fgTypes.h"
@@ -299,5 +299,5 @@ public:
 };
 
 
-    #undef _FG_SFX_MANAGER_H_BLOCK_
-#endif /* _FG_SFX_MANAGER_H_ */
+    #undef FG_INC_SFX_MANAGER_BLOCK
+#endif /* FG_INC_SFX_MANAGER */

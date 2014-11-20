@@ -7,8 +7,8 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-#ifndef _FG_GUI_LABEL_H_
-    #define _FG_GUI_LABEL_H_
+#ifndef FG_INC_GUI_LABEL
+    #define FG_INC_GUI_LABEL
 
     #include "fgGuiWidget.h"
     #include "fgGuiWidgetFactoryTypes.h"
@@ -39,4 +39,4 @@ public:
     virtual fgBoundingBox3Df updateBounds(void);
 };
 
-#endif /* _FG_GUI_LABEL_H_ */
+#endif /* FG_INC_GUI_LABEL */

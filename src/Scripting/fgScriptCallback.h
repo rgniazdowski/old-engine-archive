@@ -13,11 +13,11 @@
  * Created on November 6, 2014, 5:41 PM
  */
 
-#ifndef _FG_SCRIPT_CALLBACK_H_
-    #define	_FG_SCRIPT_CALLBACK_H_
+#ifndef FG_INC_SCRIPT_CALLBACK
+    #define	FG_INC_SCRIPT_CALLBACK
 
-    #if defined(_FG_SCRIPT_MT_H_BLOCK_)
-        #error "FG_SCRIPT_MT_H_BLOCK is defined: Do not include ScriptCallback header inside of ScriptMetatables header"
+    #if defined(FG_INC_SCRIPT_MT_BLOCK)
+        #error "FG_SCRIPT_MTBLOCK is defined: Do not include ScriptCallback header inside of ScriptMetatables header"
     #endif
 
     #include "fgBuildConfig.h"
@@ -278,4 +278,4 @@ public:
     virtual fgBool Call(fgGuiMain *pGuiMain, fgGuiWidget *pWidget);
 };
 
-#endif	/* _FG_SCRIPT_CALLBACK_H_ */
+#endif	/* FG_INC_SCRIPT_CALLBACK */

@@ -7,8 +7,8 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-#ifndef _FG_PATH_H_
-    #define _FG_PATH_H_
+#ifndef FG_INC_PATH
+    #define FG_INC_PATH
 
     #include "fgBuildConfig.h"
     #include "fgBool.h"
@@ -59,4 +59,4 @@ public:
     static void join(std::string &path, fgStringVector &parts);
 };
 
-#endif /* _FG_PATH_H_ */
+#endif /* FG_INC_PATH */

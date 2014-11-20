@@ -13,11 +13,11 @@
  * Created on November 6, 2014, 4:49 PM
  */
 
-#ifndef _FG_SCRIPT_MT_H_
-    #define _FG_SCRIPT_MT_H_
-    #define _FG_SCRIPT_MT_H_BLOCK_
+#ifndef FG_INC_SCRIPT_MT
+    #define FG_INC_SCRIPT_MT
+    #define FG_INC_SCRIPT_MT_BLOCK
 
-    #ifndef _FG_TYPES_H_
+    #ifndef FG_INC_TYPES
         #include "fgTypes.h"
     #endif
 
@@ -339,6 +339,6 @@ public:
 
 };
 
-    #undef _FG_SCRIPT_MT_H_BLOCK_
-#endif	/* _FG_SCRIPT_MT_H_ */
+    #undef FG_INC_SCRIPT_MT_BLOCK
+#endif	/* FG_INC_SCRIPT_MT */
 

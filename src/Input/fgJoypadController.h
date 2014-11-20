@@ -7,8 +7,8 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-#ifndef _FG_JOYPAD_CONTROLLER_H_
-    #define _FG_JOYPAD_CONTROLLER_H_
+#ifndef FG_INC_JOYPAD_CONTROLLER
+    #define FG_INC_JOYPAD_CONTROLLER
 
     #define FG_MAX_GAME_CONTROLLERS 5
 
@@ -98,4 +98,4 @@ private:
 
 };
 
-#endif /* _FG_JOYPAD_CONTROLLER_H_ */ 
+#endif /* FG_INC_JOYPAD_CONTROLLER */ 

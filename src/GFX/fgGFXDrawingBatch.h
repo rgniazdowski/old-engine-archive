@@ -7,8 +7,8 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-#ifndef _FG_GFX_DRAWING_BATCH_H_
-    #define _FG_GFX_DRAWING_BATCH_H_
+#ifndef FG_INC_GFX_DRAWING_BATCH
+    #define FG_INC_GFX_DRAWING_BATCH
 
     #include "fgGFXDrawCall.h"
     #include "fgGFXLayer.h"
@@ -175,4 +175,4 @@ public:
     }
 };
 
-#endif /* _FG_GFX_DRAWING_BATCH_H_ */
+#endif /* FG_INC_GFX_DRAWING_BATCH */

@@ -7,8 +7,8 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-#ifndef _FG_DATA_OBJECT_BASE_H_
-    #define _FG_DATA_OBJECT_BASE_H_
+#ifndef FG_INC_DATA_OBJECT_BASE
+    #define FG_INC_DATA_OBJECT_BASE
 
     #include "fgManagedObjectBase.h"
     #include <map>
@@ -184,4 +184,4 @@ protected:
     MapKeyType m_defaultID;
 };
 
-#endif /* _FG_DATA_OBJECT_BASE_H_ */
+#endif /* FG_INC_DATA_OBJECT_BASE */

@@ -7,8 +7,8 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-#ifndef _FG_GUI_BASE_H_
-    #define _FG_GUI_BASE_H_
+#ifndef FG_INC_GUI_BASE
+    #define FG_INC_GUI_BASE
 
 /*
  *
@@ -20,4 +20,4 @@ public:
 
 };
 
-#endif /* _FG_GUI_BASE_H_ */
+#endif /* FG_INC_GUI_BASE */

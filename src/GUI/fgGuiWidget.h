@@ -7,19 +7,19 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-#ifndef _FG_GUI_WIDGET_H_
-    #define _FG_GUI_WIDGET_H_
-    #define _FG_GUI_WIDGET_H_BLOCK_
+#ifndef FG_INC_GUI_WIDGET
+    #define FG_INC_GUI_WIDGET
+    #define FG_INC_GUI_WIDGET_BLOCK
 
-    #ifndef _FG_BUILD_CONFIG_H_
+    #ifndef FG_INC_BUILD_CONFIG
         #include "fgBuildConfig.h"
     #endif
 
-    #ifndef _FG_TYPES_H_
+    #ifndef FG_INC_TYPES
         #include "fgTypes.h"
     #endif
 
-    #ifndef _FG_MATHLIB_H_
+    #ifndef FG_INC_MATHLIB
         #include "Math/fgMathLib.h"
     #endif
 
@@ -34,13 +34,13 @@
 
     #include <string>
 
-    #ifndef _FG_GFX_LAYER_H_
+    #ifndef FG_INC_GFX_LAYER
         #include "GFX/fgGFXLayer.h"
     #endif
 
     #include "GFX/fgGFXBoundingBox.h"
 
-    #ifndef _FG_POINTER_DATA_H_
+    #ifndef FG_INC_POINTER_DATA
         #include "Input/fgPointerData.h"
     #endif
 
@@ -107,9 +107,12 @@ class fgGuiWidget : public fgManagedObjectBase<fgGuiWidgetHandle> {
     friend class fgGuiMain;
     friend class fgGuiWidgetManager;
     friend class fgGuiStructureSheetParser;
+
 public:
     typedef fgManagedObjectBase<fgGuiWidgetHandle> base_type;
+
 private:
+
 protected:
     /// Human readable name of the widget type
     std::string m_typeName;
@@ -721,5 +724,5 @@ public:
         return m_onLink;
     }
 };
-    #undef _FG_GUI_WIDGET_H_BLOCK_
-#endif /* _FG_GUI_WIDGET_H_ */
+    #undef FG_INC_GUI_WIDGET_BLOCK
+#endif /* FG_INC_GUI_WIDGET */

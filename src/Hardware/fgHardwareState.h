@@ -7,8 +7,8 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-#ifndef _FG_HARDWARE_STATE_H_
-    #define _FG_HARDWARE_STATE_H_
+#ifndef FG_INC_HARDWARE_STATE
+    #define FG_INC_HARDWARE_STATE
 
     #include "fgSingleton.h"
 
@@ -202,4 +202,4 @@ public:
 
     #define FG_HardwareState fgHardwareState::getInstance()
 
-#endif /* _FG_HARDWARE_STATE_H_ */
+#endif /* FG_INC_HARDWARE_STATE */

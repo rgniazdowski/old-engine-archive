@@ -7,9 +7,9 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-#ifndef _FG_TYPES_H_
-    #define _FG_TYPES_H_
-    #define _FG_TYPES_H_BLOCK_
+#ifndef FG_INC_TYPES
+    #define FG_INC_TYPES
+    #define FG_INC_TYPES_BLOCK
 
     #include "fgBuildConfig.h"
     #include "fgBool.h"
@@ -99,9 +99,9 @@ inline Type& operator	&= (Type& x, Type y)		{	x = x & y;	return x;	} \
 inline Type& operator	|= (Type& x, Type y)		{	x = x | y;	return x;	} \
 inline Type& operator	^= (Type& x, Type y)		{	x = x ^ y;	return x;	}
 
-    #ifndef _FG_VECTOR_H_
+    #ifndef FG_INC_VECTOR
         #include "fgVector.h"
     #endif
 
-    #undef _FG_TYPES_H_BLOCK_
-#endif /* _FG_TYPES_H_ */
+    #undef FG_INC_TYPES_BLOCK
+#endif /* FG_INC_TYPES */

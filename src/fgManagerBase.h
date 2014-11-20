@@ -7,8 +7,8 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-#ifndef _FG_MANAGER_BASE_H_
-    #define _FG_MANAGER_BASE_H_
+#ifndef FG_INC_MANAGER_BASE
+    #define FG_INC_MANAGER_BASE
 
     #include "fgBool.h"
 
@@ -73,4 +73,4 @@ protected:
     fgManagerType m_managerType;
 };
 
-#endif /* _FG_MANAGER_BASE_H_ */
+#endif /* FG_INC_MANAGER_BASE */

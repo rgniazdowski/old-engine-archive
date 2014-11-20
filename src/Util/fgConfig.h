@@ -7,8 +7,8 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-#ifndef _FG_CONFIG_H_
-    #define _FG_CONFIG_H_
+#ifndef FG_INC_CONFIG
+    #define FG_INC_CONFIG
 
     #include "fgConfigStruct.h"
     #include "fgConfigParser.h"
@@ -244,4 +244,4 @@ protected:
     void _dumpAllParameters(void);
 };
 
-#endif /* _FG_CONFIG_H_ */
+#endif /* FG_INC_CONFIG */

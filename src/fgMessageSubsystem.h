@@ -7,8 +7,8 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-#ifndef _FG_MESSAGE_SUBSYSTEM_H_
-    #define _FG_MESSAGE_SUBSYSTEM_H_
+#ifndef FG_INC_MESSAGE_SUBSYSTEM
+    #define FG_INC_MESSAGE_SUBSYSTEM
 
     #include "fgCommon.h"
     #include "fgSingleton.h"
@@ -80,4 +80,4 @@ protected:
 // #FIXME - here we go again with the singletons... :)
     #define FG_MessageSubsystem fgMessageSubsystem::getInstance()
 
-#endif /* _FG_MESSAGE_SUBSYSTEM_H_ */
+#endif /* FG_INC_MESSAGE_SUBSYSTEM */

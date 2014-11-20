@@ -22,9 +22,9 @@
 //
 // Build config can be also used to build dynamic or static library, and use parts
 // of the engine like plugins or in a different build.
-#ifndef _FG_BUILD_CONFIG_H_
-    #define _FG_BUILD_CONFIG_H_
-    #define _FG_BUILD_CONFIG_H_BLOCK_
+#ifndef FG_INC_BUILD_CONFIG
+    #define FG_INC_BUILD_CONFIG
+    #define FG_INC_BUILD_CONFIG_BLOCK
 
 
     #define FG_VERBOSE_LVL_NONE		0 // report only critical errors - no warnings, info, status etc
@@ -444,6 +444,6 @@ extern struct fgBuildConfig g_fgBuildConfig;
 
     #define FG_MOTTO			"The spice is vital for space travel"
 
-    #undef _FG_BUILD_CONFIG_H_BLOCK_
-#endif /* _FG_BUILD_CONFIG_H_ */
+    #undef FG_INC_BUILD_CONFIG_BLOCK
+#endif /* FG_INC_BUILD_CONFIG */
 /*************************** END MAIN MARMALADE BUILD CONFIG ***************************/

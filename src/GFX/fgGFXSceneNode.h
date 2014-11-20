@@ -7,17 +7,17 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-#ifndef _FG_GFX_SCENE_NODE_H_
-    #define _FG_GFX_SCENE_NODE_H_
-    #define _FG_GFX_SCENE_NODE_H_BLOCK_
+#ifndef FG_INC_GFX_SCENE_NODE
+    #define FG_INC_GFX_SCENE_NODE
+    #define FG_INC_GFX_SCENE_NODE_BLOCK
 
     #include "Math/fgMathLib.h"
     #include "Util/fgTag.h"
     #include "fgGFXAABoundingBox.h"
-    #ifndef _FG_GFX_DRAWABLE_H_
+    #ifndef FG_INC_GFX_DRAWABLE
         #include "fgGFXDrawable.h"
     #endif
-    #ifndef _FG_GFX_DRAW_CALL_H_
+    #ifndef FG_INC_GFX_DRAW_CALL
         #include "fgGFXDrawCall.h"
     #endif
 
@@ -449,5 +449,5 @@ protected:
     }
 };
 
-    #undef _FG_GFX_SCENE_NODE_H_BLOCK_
-#endif /* _FG_GFX_SCENE_NODE_H_ */
+    #undef FG_INC_GFX_SCENE_NODE_BLOCK
+#endif /* FG_INC_GFX_SCENE_NODE */

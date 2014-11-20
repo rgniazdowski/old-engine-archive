@@ -7,8 +7,8 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-#ifndef _FG_EXCEPTION_H_
-    #define _FG_EXCEPTION_H_
+#ifndef FG_INC_EXCEPTION
+    #define FG_INC_EXCEPTION
 
     #include "fgBool.h"
     #include "fgErrno.h"
@@ -47,4 +47,4 @@ struct fgException : fgError {
     }
 };
 
-#endif /* _FG_EXCEPTION_H_ */
+#endif /* FG_INC_EXCEPTION */

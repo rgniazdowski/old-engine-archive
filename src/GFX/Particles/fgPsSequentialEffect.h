@@ -7,8 +7,8 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-#ifndef _FG_PS_SEQUENTIAL_EFFECT_H_
-    #define _FG_PS_SEQUENTIAL_EFFECT_H_
+#ifndef FG_INC_PS_SEQUENTIAL_EFFECT
+    #define FG_INC_PS_SEQUENTIAL_EFFECT
 
 // The limited-buffer (not circular-buffer) ParticleEffect* class
     //#include "fgPsParticleEffectLimited.h"

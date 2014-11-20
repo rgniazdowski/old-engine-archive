@@ -13,10 +13,10 @@
  * Created on October 17, 2014, 12:39 PM
  */
 
-#ifndef _FG_GFX_BUFFERID_H_
-    #define	_FG_GFX_BUFFERID_H_
+#ifndef FG_INC_GFX_BUFFERID
+    #define	FG_INC_GFX_BUFFERID
 
-    #ifndef _FG_GFX_GL_H_
+    #ifndef FG_INC_GFX_GL
         #include "fgGFXGL.h"
     #endif
 
@@ -56,5 +56,5 @@ struct fgGfxBufferID {
     id(_id), target(_target) { }
 };
 
-#endif	/* _FG_GFX_BUFFERID_H_ */
+#endif	/* FG_INC_GFX_BUFFERID */
 

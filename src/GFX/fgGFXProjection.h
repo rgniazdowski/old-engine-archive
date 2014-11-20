@@ -7,14 +7,14 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-#ifndef _FG_GFX_PROJECTION_H_
-    #define _FG_GFX_PROJECTION_H_
+#ifndef FG_INC_GFX_PROJECTION
+    #define FG_INC_GFX_PROJECTION
 
     #include "fgBuildConfig.h"
     #include "Math/fgMathLib.h"
 
     #define FG_GFX_PERSPECTIVE_ZNEAR_DEFAULT	0.01f
-    #define FG_GFX_PERSPECTIVE_ZFAR_DEFAULT	1024.0f
+    #define FG_GFX_PERSPECTIVE_ZFAR_DEFAULT	4096.0f
 
     #define FG_GFX_PERSPECTIVE_FOVY_DEFAULT	45.0f
     #define FG_GFX_PERSPECTIVE_FOV_DEFAULT	45.0f
@@ -116,4 +116,4 @@ public:
     }
 };
 
-#endif /* _FG_GFX_PROJECTION_H_ */
+#endif /* FG_INC_GFX_PROJECTION */

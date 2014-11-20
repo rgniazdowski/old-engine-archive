@@ -7,8 +7,8 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-#ifndef _FG_TIME_H_
-    #define _FG_TIME_H_
+#ifndef FG_INC_TIME
+    #define FG_INC_TIME
 
     #include <ctime>
 

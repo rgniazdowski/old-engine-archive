@@ -127,7 +127,7 @@ fgBool fgGfxMain::initGFX(void) {
     }
     if(m_mainWindow && status) {
         // #FIXME - resolution FIXME!
-        if(!m_mainWindow->setup(FG_PACKAGE_FULL_TEXT, 800, 600)) {
+        if(!m_mainWindow->setup(FG_PACKAGE_FULL_TEXT, 1024, 768)) {
             delete m_mainWindow;
             m_mainWindow = NULL;
             status = FG_FALSE;
@@ -162,7 +162,7 @@ fgBool fgGfxMain::initGFX(void) {
         m_gfxContext->blendEquation(GL_FUNC_ADD);
         m_gfxContext->activeTexture(GL_TEXTURE0);
         m_gfxContext->bindTexture2D(0);
-        m_gfxContext->bindTexture3D(0);
+        m_gfxContext->bindTextureCube(0);
         m_gfxContext->scissor(0, 0, m_mainWindow->getWidth(), m_mainWindow->getHeight());
         m_2DScene->getMVP()->setOrtho(0.0f, (float)m_mainWindow->getWidth(), (float)m_mainWindow->getHeight(), 0.0f);
         m_init = FG_TRUE;
@@ -349,11 +349,11 @@ void fgGfxMain::render(void) {
 
     if(state[SDL_SCANCODE_D] == SDL_PRESSED)
         m_3DScene->getCamera()->moveRight();
-    
+
     m_3DScene->getCamera()->update();
     m_3DScene->getMVP()->setCamera(m_3DScene->getCamera());
     m_3DScene->getMVP()->setPerspective(45.0f, m_mainWindow->getAspect());
-    
+
     rotxyz += 0.0094525f;
     if(rotxyz > M_PI * 2.0f)
         rotxyz = 0.0f;
@@ -371,13 +371,58 @@ void fgGfxMain::render(void) {
     if(model && m_3DScene) {
         if(!m_3DScene->count()) {
             m_3DScene->addFromModel(model, std::string("PlayerFighter"));
+            m_3DScene->addFromModel(model, std::string("PlayerEnemy"));
         }
     }
+    static float rotation = 0.0f;
+    static float radius = 200.0f;
     // #FIXME
     if(m_3DScene) {
         fgGfxSceneNode *obj1 = m_3DScene->get("PlayerFighter");
         if(obj1) {
             obj1->setModelMatrix(modelMat);
+        }
+        fgGfxSceneNode *obj2 = m_3DScene->get("PlayerEnemy");
+        if(obj2) {
+            rotation += 0.00127f * (float)FG_HardwareState->getDelta();
+            if(rotation > M_PI * 2.0f)
+                rotation = 0.0f;
+            float rx = cos(rotation) * radius;
+            float rz = sin(rotation) * radius;
+            
+            modelMat = fgMath::translate(fgMatrix4f(), fgVector3f(rx,20.0f,rz));
+            modelMat = fgMath::rotate(modelMat, (float)M_PI/2.0f, fgVector3f(0.0f, 1.0f, 0.0f));
+            obj2->setModelMatrix(modelMat);
+        }
+    }
+    if(true)
+    {
+        //
+        // #FIXME #TODO - that kind of SkyBox display sucks ass beyond recognition
+        //
+        // Load proper texture
+        fgResource *pResourceX = static_cast<fgResourceManager *>(m_pResourceMgr)->get("PurpleNebulaCube");
+        if(pResourceX->getResourceType() == FG_RESOURCE_TEXTURE) {
+            fgGfxTexture *pTexture = static_cast<fgGfxTexture *>(pResourceX);
+            if(pTexture) {
+                fgGfxTextureID &texID = pTexture->getRefGfxID();
+                m_gfxContext->activeTexture(GL_TEXTURE1);
+                m_gfxContext->bindTexture(texID);
+                modelMat = fgMath::translate(fgMatrix4f(), m_3DScene->getCamera()->getRefEye());
+                float skyboxScale = FG_GFX_PERSPECTIVE_ZFAR_DEFAULT*1.1f;
+                modelMat = fgMath::scale(modelMat, fgVector3f(skyboxScale, skyboxScale, skyboxScale));
+                m_3DScene->getMVP()->calculate(modelMat);
+                program->setUniform(m_3DScene->getMVP());
+                program->setUniform(FG_GFX_DRAW_SKYBOX, 1.0f);
+                program->setUniform(FG_GFX_CUBE_TEXTURE, (fgGFXint)1);
+                m_gfxContext->frontFace(GL_CW); // #FUBAR
+                //m_gfxContext->setCullFace(FG_FALSE);
+                fgGfxPrimitives::drawSkyBoxOptimized();
+                m_gfxContext->frontFace(GL_CCW);
+                program->setUniform(FG_GFX_DRAW_SKYBOX, 0.0f);
+                m_gfxContext->activeTexture(GL_TEXTURE0);
+                //m_gfxContext->setCullFace(FG_TRUE);
+            }
         }
     }
     // RENDER THE 3D SCENE

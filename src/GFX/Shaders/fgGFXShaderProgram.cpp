@@ -13,7 +13,7 @@
 #include "Util/fgStrings.h"
 #include "fgLog.h"
 
-#ifndef _FG_GFX_SHADER_MANAGER_H_
+#ifndef FG_INC_GFX_SHADER_MANAGER
 #include "fgGFXShaderManager.h"
 #endif
 

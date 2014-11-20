@@ -7,8 +7,8 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-#ifndef _FG_THROWN_EVENT_H_
-    #define _FG_THROWN_EVENT_H_
+#ifndef FG_INC_THROWN_EVENT
+    #define FG_INC_THROWN_EVENT
 
     #include "fgEventDefinitions.h"
     #include "fgArgumentList.h"
@@ -50,4 +50,4 @@ struct fgThrownEvent {
     systemData(_systemData) { }
 };
 
-#endif /* _FG_THROWN_EVENT_H_ */
+#endif /* FG_INC_THROWN_EVENT */

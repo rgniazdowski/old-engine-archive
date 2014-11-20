@@ -49,7 +49,7 @@ void fgGuiContainer::setDefaults(void) {
  * @param flags
  */
 void fgGuiContainer::setFlags(const std::string& flags) {
-    if(flags.empty() || flags.length() < 5)
+    if(flags.empty() || flags.length() < 3)
         return;
     // This is important - always call setFlags for the base class
     fgGuiWidget::setFlags(flags);
@@ -61,29 +61,31 @@ void fgGuiContainer::setFlags(const std::string& flags) {
         return;
     unsigned int n = (unsigned int)flagsVec.size();
     for(unsigned int i = 0; i < n; i++) {
-        if(flagsVec[i].compare("packfree") == 0) {
+        if(fgStrings::isEqual(flagsVec[i].c_str(), "packfree", FG_FALSE)) {
             m_packMethod = FG_GUI_CONTAINER_PACK_FREE;
-        } else if(flagsVec[i].compare("packhorizontal") == 0 || flagsVec[i].compare("packh") == 0) {
+        } else if(fgStrings::isEqual(flagsVec[i].c_str(), "packhorizontal", FG_FALSE) ||
+                  fgStrings::isEqual(flagsVec[i].c_str(), "packh", FG_FALSE)) {
             m_packMethod = FG_GUI_CONTAINER_PACK_HORIZONTAL;
-        } else if(flagsVec[i].compare("packvertical") == 0 || flagsVec[i].compare("packv") == 0) {
+        } else if(fgStrings::isEqual(flagsVec[i].c_str(), "packvertical", FG_FALSE) ||
+                  fgStrings::isEqual(flagsVec[i].c_str(), "packv", FG_FALSE)) {
             m_packMethod = FG_GUI_CONTAINER_PACK_VERTICAL;
-        } else if(flagsVec[i].compare("none") == 0) {
+        } else if(fgStrings::isEqual(flagsVec[i].c_str(), "none", FG_FALSE)) {
             m_packAlign = FG_GUI_CONTAINER_PACK_ALIGN_NONE;
-        } else if(flagsVec[i].compare("left") == 0) {
+        } else if(fgStrings::isEqual(flagsVec[i].c_str(), "left", FG_FALSE)) {
             m_packAlign |= FG_GUI_CONTAINER_PACK_ALIGN_LEFT;
-        } else if(flagsVec[i].compare("right") == 0) {
+        } else if(fgStrings::isEqual(flagsVec[i].c_str(), "right", FG_FALSE)) {
             m_packAlign |= FG_GUI_CONTAINER_PACK_ALIGN_RIGHT;
-        } else if(flagsVec[i].compare("top") == 0) {
+        } else if(fgStrings::isEqual(flagsVec[i].c_str(), "top", FG_FALSE)) {
             m_packAlign |= FG_GUI_CONTAINER_PACK_ALIGN_TOP;
-        } else if(flagsVec[i].compare("bottom") == 0) {
+        } else if(fgStrings::isEqual(flagsVec[i].c_str(), "bottom", FG_FALSE)) {
             m_packAlign |= FG_GUI_CONTAINER_PACK_ALIGN_BOTTOM;
-        } else if(flagsVec[i].compare("vcenter") == 0) {
+        } else if(fgStrings::isEqual(flagsVec[i].c_str(), "vcenter", FG_FALSE)) {
             m_packAlign |= FG_GUI_CONTAINER_PACK_ALIGN_VCENTER;
-        } else if(flagsVec[i].compare("hcenter") == 0) {
+        } else if(fgStrings::isEqual(flagsVec[i].c_str(), "hcenter", FG_FALSE)) {
             m_packAlign |= FG_GUI_CONTAINER_PACK_ALIGN_HCENTER;
-        } else if(flagsVec[i].compare("center") == 0) {
+        } else if(fgStrings::isEqual(flagsVec[i].c_str(), "center", FG_FALSE)) {
             m_packAlign |= FG_GUI_CONTAINER_PACK_ALIGN_CENTER;
-        } else if(flagsVec[i].compare("middle") == 0) {
+        } else if(fgStrings::isEqual(flagsVec[i].c_str(), "middle", FG_FALSE)) {
             m_packAlign = FG_GUI_CONTAINER_PACK_ALIGN_MIDDLE;
         }
     }

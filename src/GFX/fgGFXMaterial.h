@@ -7,18 +7,18 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-#ifndef _FG_GFX_MATERIAL_H_
-    #define _FG_GFX_MATERIAL_H_
+#ifndef FG_INC_GFX_MATERIAL
+    #define FG_INC_GFX_MATERIAL
 
-    #ifndef _FG_GFX_TYPES_H_
+    #ifndef FG_INC_GFX_TYPES
         #include "fgGFXTypes.h"
     #endif
     #include <string>
 
-    #ifndef _FG_RESOURCE_H_
+    #ifndef FG_INC_RESOURCE
         #include "Resource/fgResource.h"
     #endif
-    #ifndef _FG_MATHLIB_H_
+    #ifndef FG_INC_MATHLIB
 
         #include "Math/fgMathLib.h"
     #endif
@@ -119,4 +119,4 @@ public:
     }
 };
 
-#endif /* _FG_GFX_MATERIAL_H_ */
+#endif /* FG_INC_GFX_MATERIAL */

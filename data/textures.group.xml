@@ -6,6 +6,8 @@
 
 	<!-- quality below zero tells the system that that texture must be used in
 		 every quality setup (which has not texture with the same name) -->
+	<Texture config="textures/skybox/PurpleNebula.res.ini" />
+	<Texture config="textures/skybox/PurpleNebulaCube.res.ini" />
 	<Texture config="textures/gui/hud/HudTop.res.ini" />
 	<Texture config="textures/gui/hud/HudBottom.res.ini" />
 	<Texture config="textures/gui/hud/HudCenter.res.ini" />

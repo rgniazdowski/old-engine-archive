@@ -7,8 +7,8 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-#ifndef _FG_GUI_STYLE_MANAGER_H_
-    #define _FG_GUI_STYLE_MANAGER_H_
+#ifndef FG_INC_GUI_STYLE_MANAGER
+    #define FG_INC_GUI_STYLE_MANAGER
 
     #include "Resource/fgDataManagerBase.h"
     #include "fgGuiStyle.h"
@@ -94,4 +94,4 @@ private:
     std::string m_stylesPath;
 };
 
-#endif /* _FG_GUI_STYLE_MANAGER_H_ */
+#endif /* FG_INC_GUI_STYLE_MANAGER */

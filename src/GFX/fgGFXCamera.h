@@ -7,12 +7,12 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-#ifndef _FG_GFX_CAMERA_H_
-    #define _FG_GFX_CAMERA_H_
+#ifndef FG_INC_GFX_CAMERA
+    #define FG_INC_GFX_CAMERA
 
 // FIXME! #mathlib too big?
     #include "Math/fgMathLib.h"
-    #ifndef _FG_GFX_FRUSTUM_H_
+    #ifndef FG_INC_GFX_FRUSTUM
         #include "fgGFXFrustum.h"
     #endif
 
@@ -210,4 +210,4 @@ protected:
     fgVec3f m_up;
 };
 
-#endif /* _FG_GFX_CAMERA_H_ */
+#endif /* FG_INC_GFX_CAMERA */

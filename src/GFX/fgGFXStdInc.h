@@ -7,25 +7,25 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-#ifndef _FG_GFX_STD_INC_H_
-    #define _FG_GFX_STD_INC_H_
-    #define _FG_GFX_STD_INC_BLOCK__
+#ifndef FG_INC_GFX_STD_INC
+    #define FG_INC_GFX_STD_INC
+    #define FG_INC_GFX_STD_INC_BLOCK__
 
-    #ifdef _FG_GFX_TYPES_BLOCK__
+    #ifdef FG_INC_GFX_TYPES_BLOCK__
         #error "FG_GFX_TYPES_BLOCK constant is defined. Do not include GfxStdInc inside of Gfx Types header."
     #endif
 
-    #ifndef _FG_GFX_PLATFORM_H_
+    #ifndef FG_INC_GFX_PLATFORM
         #include "fgGFXPlatform.h"
     #endif
 
-    #ifndef _FG_TYPES_H_
+    #ifndef FG_INC_TYPES
         #include "fgTypes.h"
     #endif
 
-    #ifndef _FG_GFX_TYPES_H_
+    #ifndef FG_INC_GFX_TYPES
         #include "fgGFXTypes.h"
     #endif
 
-    #undef _FG_GFX_STD_INC_BLOCK__
-#endif /* _FG_GFX_STD_INC_H_ */
+    #undef FG_INC_GFX_STD_INC_BLOCK__
+#endif /* FG_INC_GFX_STD_INC */

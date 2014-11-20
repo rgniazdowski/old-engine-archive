@@ -7,9 +7,9 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-#ifndef _FG_CYCLIC_CALLBACK_H_
-    #define _FG_CYCLIC_CALLBACK_H_
-    #define _FG_CYCLIC_CALLBACK_H_BLOCK_
+#ifndef FG_INC_CYCLIC_CALLBACK
+    #define FG_INC_CYCLIC_CALLBACK
+    #define FG_INC_CYCLIC_CALLBACK_BLOCK
 
 
     #include "fgCallback.h"
@@ -67,5 +67,5 @@ struct fgCyclicCallback {
     }
 };
 
-    #undef _FG_CYCLIC_CALLBACK_H_BLOCK_
-#endif /* _FG_CYCLIC_CALLBACK_H_ */
+    #undef FG_INC_CYCLIC_CALLBACK_BLOCK
+#endif /* FG_INC_CYCLIC_CALLBACK */

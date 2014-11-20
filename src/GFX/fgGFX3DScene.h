@@ -7,8 +7,9 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-#ifndef _FG_GFX_3D_SCENE_H_
-    #define _FG_GFX_3D_SCENE_H_
+#ifndef FG_INC_GFX_3D_SCENE
+    #define FG_INC_GFX_3D_SCENE
+    #define FG_INC_GFX_3D_SCENE_BLOCK
 
     #include "fgGFXSceneManager.h"
 
@@ -27,9 +28,6 @@ public:
 public:
 
     //
-    virtual void flush(void);
-
-    //
     virtual void sortCalls(void);
 
     //
@@ -39,4 +37,5 @@ public:
     fgGfxSceneNode *addFromModel(fgGfxModelResource *pModelRes, const std::string& nameTag);
 };
 
-#endif /* _FG_GFX_3D_SCENE_H_ */
+    #undef FG_INC_GFX_3D_SCENE_BLOCK
+#endif /* FG_INC_GFX_3D_SCENE */

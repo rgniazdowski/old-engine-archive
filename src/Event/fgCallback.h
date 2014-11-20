@@ -7,8 +7,8 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-#ifndef _FG_CALLBACK_H_
-    #define _FG_CALLBACK_H_
+#ifndef FG_INC_CALLBACK
+    #define FG_INC_CALLBACK
 
     #include "fgTypes.h"
     #include "fgArgumentList.h"
@@ -301,4 +301,4 @@ private:
     fgClassMethod m_method;
 };
 
-#endif /* _FG_CALLBACK_H_ */
+#endif /* FG_INC_CALLBACK */

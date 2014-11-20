@@ -7,8 +7,8 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-#ifndef _FG_GFX_SHADER_PROGRAM_H_
-    #define _FG_GFX_SHADER_PROGRAM_H_
+#ifndef FG_INC_GFX_SHADER_PROGRAM
+    #define FG_INC_GFX_SHADER_PROGRAM
 
     #include "fgGFXShaderDefs.h"
     #include "fgGFXShader.h"
@@ -22,7 +22,7 @@
 
     #include "GFX/fgGFXMVPMatrix.h"
 
-    #ifndef _FG_MANAGER_BASE_H_
+    #ifndef FG_INC_MANAGER_BASE
         #include "fgManagerBase.h"
     #endif
 
@@ -298,4 +298,4 @@ public:
     #endif
 };
 
-#endif /* _FG_GFX_SHADER_PROGRAM_H_ */
+#endif /* FG_INC_GFX_SHADER_PROGRAM */

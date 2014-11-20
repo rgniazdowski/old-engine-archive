@@ -153,7 +153,7 @@ fgBool fgGuiStructureSheetParser::parseWidgetAttributes(fgGuiWidget *pWidget, fg
         memset(_tmp, 0, 24);
         snprintf(_tmp, 23, "%d", m_count + rand() % 3);
         autoName.append("_").append(_tmp);
-        snprintf(_tmp, 23, "%d", __FG_TAG::_fg_tag_s_hashfn(autoName.c_str())); // #FIXME
+        snprintf(_tmp, 23, "%d", FG_TAG_HELPER::fg_tag_s_hashfn_deprecated(autoName.c_str())); // #FIXME
         autoName.append("_").append(_tmp);
     }
 

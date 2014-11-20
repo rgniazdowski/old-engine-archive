@@ -13,12 +13,12 @@
  * Created on November 13, 2014, 7:23 AM
  */
 
-#ifndef _FG_GFX_FRUSTUM_H_
-    #define _FG_GFX_FRUSTUM_H_
-    #define _FG_GFX_FRUSTUM_H_BLOCK_
+#ifndef FG_INC_GFX_FRUSTUM
+    #define FG_INC_GFX_FRUSTUM
+    #define FG_INC_GFX_FRUSTUM_BLOCK
 
     #include "fgGFXPlane.h"
-    #ifndef _FG_GFX_AA_BOUNDING_BOX_H_
+    #ifndef FG_INC_GFX_AA_BOUNDING_BOX
         #include "fgGFXAABoundingBox.h"
     #endif
 
@@ -205,6 +205,6 @@ private:
     float m_fh;
 };
 
-    #undef _FG_GFX_FRUSTUM_H_BLOCK_
-#endif	/* _FG_GFX_FRUSTUM_H_ */
+    #undef FG_INC_GFX_FRUSTUM_BLOCK
+#endif	/* FG_INC_GFX_FRUSTUM */
 

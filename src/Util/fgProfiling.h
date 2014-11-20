@@ -7,8 +7,8 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-#ifndef _FG_PROFILING_H_
-    #define _FG_PROFILING_H_
+#ifndef FG_INC_PROFILING
+    #define FG_INC_PROFILING
 
     #include "fgCommon.h"
     #include <stack>
@@ -141,4 +141,4 @@ public:
     fgBool getProfileHistory(std::string& name, float* average, float* minimum, float* maximum);
 };
 
-#endif /* _FG_PROFILING_H_ */
+#endif /* FG_INC_PROFILING */

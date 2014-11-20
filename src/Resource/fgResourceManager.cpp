@@ -623,6 +623,7 @@ fgResource* fgResourceManager::request(const std::string& info, const fgResource
         if(m_pResourceFactory->isRegistered(header->resType)) {
             resourcePtr = m_pResourceFactory->createResource(header->resType);
             resourcePtr->setName(header->name);
+            resourcePtr->setFlags(header->flags);
             resourcePtr->setPriority(header->priority);
             resourcePtr->setQuality(header->quality);
 

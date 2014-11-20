@@ -7,8 +7,8 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-#ifndef _FG_STRINGS_H_
-    #define _FG_STRINGS_H_
+#ifndef FG_INC_STRINGS
+    #define FG_INC_STRINGS
 
     #include "fgVector.h"
     #include <string>
@@ -418,4 +418,4 @@ public:
     }
 };
 
-#endif /* _FG_STRINGS_H_ */
+#endif /* FG_INC_STRINGS */

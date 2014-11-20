@@ -10,8 +10,8 @@
  * Portions Copyright (C) Scott Bilas, 2000
  */
 
-#ifndef _FG_HANDLE_H_
-    #define _FG_HANDLE_H_
+#ifndef FG_INC_HANDLE
+    #define FG_INC_HANDLE
 
     #include "fgCommon.h"
 
@@ -195,4 +195,4 @@ inline bool operator <=(fgHandle <TagType> l, fgHandle <TagType> r) {
     return ( l.getHandle() <= r.getHandle());
 }
 
-#endif /* _FG_HANDLE_H_ */
+#endif /* FG_INC_HANDLE */

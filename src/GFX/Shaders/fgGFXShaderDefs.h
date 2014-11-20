@@ -7,10 +7,10 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-#ifndef _FG_GFX_SHADER_DEFS_H_
-    #define _FG_GFX_SHADER_DEFS_H_
+#ifndef FG_INC_GFX_SHADER_DEFS
+    #define FG_INC_GFX_SHADER_DEFS
 
-    #ifdef _FG_GFX_STD_INC_BLOCK__
+    #ifdef FG_INC_GFX_STD_INC_BLOCK__
         #error "FG_GFX_STD_INC_BLOCK constant is defined. Do not include GfxShaderDefs inside of Gfx Standard Include header."
     #endif
 
@@ -266,6 +266,7 @@ enum fgGfxUniformType {
     FG_GFX_NORMAL_MAP, // Normal map
     FG_GFX_BUMP_MAP, // Bump map
     FG_GFX_PLAIN_TEXTURE, // First (plain) texture
+    FG_GFX_CUBE_TEXTURE,  // Some cube texture
     FG_GFX_DIRECTIONAL_LIGHT, // Directional light (need probably a little more of those)
     FG_GFX_MATERIAL, // Material to be used
     FG_GFX_PHASE,
@@ -274,6 +275,7 @@ enum fgGfxUniformType {
     FG_GFX_CUSTOM_COLOR, // global color
     FG_GFX_ATTRIB_MASK, // attribute mask
     FG_GFX_USE_TEXTURE, // whether the texture is used, >0.5 texture used (true), <0.5 false
+    FG_GFX_DRAW_SKYBOX, // whether the skybox is being drawn (#FIXME)
     FG_GFX_CUSTOM // Custom uniform - can be any type (only one per shader program)
 };
 
@@ -284,6 +286,7 @@ enum fgGfxUniformType {
     #define FG_GFX_NORMAL_MAP_TEXT		"NormalMap"
     #define FG_GFX_BUMP_MAP_TEXT		"BumpMap"
     #define FG_GFX_PLAIN_TEXTURE_TEXT		"PlainTexture"
+    #define FG_GFX_CUBE_TEXTURE_TEXT            "CubeTexture"
     #define FG_GFX_DIRECTIONAL_LIGHT_TEXT       "DirectionalLight"
     #define FG_GFX_MATERIAL_TEXT		"Material"
     #define FG_GFX_PHASE_TEXT			"Phase"
@@ -292,6 +295,7 @@ enum fgGfxUniformType {
     #define FG_GFX_CUSTOM_COLOR_TEXT		"CustomColor"
     #define FG_GFX_ATTRIB_MASK_TEXT		"AttribMask"
     #define FG_GFX_USE_TEXTURE_TEXT		"UseTexture"
+    #define FG_GFX_DRAW_SKYBOX_TEXT             "DrawSkyBox"
     #define FG_GFX_CUSTOM_TEXT			"Custom"
 
 // Convert text (literal) to corresponding enum value
@@ -305,6 +309,7 @@ inline fgGfxUniformType _FG_GFX_UNIFORM_TYPE_FROM_TEXT(const char* text) {
     FG_RETURN_ENUM_IF_TEXT_EQ(FG_GFX_NORMAL_MAP);
     FG_RETURN_ENUM_IF_TEXT_EQ(FG_GFX_BUMP_MAP);
     FG_RETURN_ENUM_IF_TEXT_EQ(FG_GFX_PLAIN_TEXTURE);
+    FG_RETURN_ENUM_IF_TEXT_EQ(FG_GFX_CUBE_TEXTURE);
     FG_RETURN_ENUM_IF_TEXT_EQ(FG_GFX_DIRECTIONAL_LIGHT);
     FG_RETURN_ENUM_IF_TEXT_EQ(FG_GFX_MATERIAL);
     FG_RETURN_ENUM_IF_TEXT_EQ(FG_GFX_PHASE);
@@ -313,6 +318,7 @@ inline fgGfxUniformType _FG_GFX_UNIFORM_TYPE_FROM_TEXT(const char* text) {
     FG_RETURN_ENUM_IF_TEXT_EQ(FG_GFX_CUSTOM_COLOR);
     FG_RETURN_ENUM_IF_TEXT_EQ(FG_GFX_ATTRIB_MASK);
     FG_RETURN_ENUM_IF_TEXT_EQ(FG_GFX_USE_TEXTURE);
+    FG_RETURN_ENUM_IF_TEXT_EQ(FG_GFX_DRAW_SKYBOX);
     FG_RETURN_ENUM_IF_TEXT_EQ(FG_GFX_CUSTOM);
     return FG_GFX_UNIFORM_INVALID;
 }
@@ -324,6 +330,7 @@ inline const char * _FG_GFX_UNIFORM_TYPE_TO_TEXT(fgGfxUniformType value) {
     FG_RETURN_VAL_IF_EQUAL(value, FG_GFX_NORMAL_MAP, FG_TEXT(FG_GFX_NORMAL_MAP));
     FG_RETURN_VAL_IF_EQUAL(value, FG_GFX_BUMP_MAP, FG_TEXT(FG_GFX_BUMP_MAP));
     FG_RETURN_VAL_IF_EQUAL(value, FG_GFX_PLAIN_TEXTURE, FG_TEXT(FG_GFX_PLAIN_TEXTURE));
+    FG_RETURN_VAL_IF_EQUAL(value, FG_GFX_CUBE_TEXTURE, FG_TEXT(FG_GFX_CUBE_TEXTURE));
     FG_RETURN_VAL_IF_EQUAL(value, FG_GFX_DIRECTIONAL_LIGHT, FG_TEXT(FG_GFX_DIRECTIONAL_LIGHT));
     FG_RETURN_VAL_IF_EQUAL(value, FG_GFX_MATERIAL, FG_TEXT(FG_GFX_MATERIAL));
     FG_RETURN_VAL_IF_EQUAL(value, FG_GFX_PHASE, FG_TEXT(FG_GFX_PHASE));
@@ -332,6 +339,7 @@ inline const char * _FG_GFX_UNIFORM_TYPE_TO_TEXT(fgGfxUniformType value) {
     FG_RETURN_VAL_IF_EQUAL(value, FG_GFX_CUSTOM_COLOR, FG_TEXT(FG_GFX_CUSTOM_COLOR));
     FG_RETURN_VAL_IF_EQUAL(value, FG_GFX_ATTRIB_MASK, FG_TEXT(FG_GFX_ATTRIB_MASK));
     FG_RETURN_VAL_IF_EQUAL(value, FG_GFX_USE_TEXTURE, FG_TEXT(FG_GFX_USE_TEXTURE));
+    FG_RETURN_VAL_IF_EQUAL(value, FG_GFX_DRAW_SKYBOX, FG_TEXT(FG_GFX_DRAW_SKYBOX));
     FG_RETURN_VAL_IF_EQUAL(value, FG_GFX_CUSTOM, FG_TEXT(FG_GFX_CUSTOM));
     return NULL;
 }
@@ -358,7 +366,7 @@ enum fgGfxAttributeType {
         #define FG_GFX_ATTRIBUTE_COUNT	5 // #FIXME
     #endif
 
-    #define FG_GFX_POSITION_TEXT		"Position"		// Position (vec3)
+    #define FG_GFX_POSITION_TEXT	"Position"		// Position (vec3)
     #define FG_GFX_NORMAL_TEXT		"Normal"		// Normal (vec3)
     #define FG_GFX_TEXTURE_COORD_TEXT	"TextureCoord"	// UV - tex coord (vec2)
     #define FG_GFX_COLOR_TEXT		"Color"			// Color (vec4)
@@ -515,4 +523,4 @@ struct fgGfxShaderConstantDef {
     }
 };
 
-#endif /* _FG_GFX_SHADER_DEFS_H_ */
+#endif /* FG_INC_GFX_SHADER_DEFS */

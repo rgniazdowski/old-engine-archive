@@ -7,10 +7,10 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-#ifndef _FG_GFX_SHADER_CONFIG_H_
-    #define _FG_GFX_SHADER_CONFIG_H_
+#ifndef FG_INC_GFX_SHADER_CONFIG
+    #define FG_INC_GFX_SHADER_CONFIG
 
-    #ifdef _FG_GFX_STD_INC_BLOCK__
+    #ifdef FG_INC_GFX_STD_INC_BLOCK__
         #error "FG_GFX_STD_INC_BLOCK constant is defined. Do not include GfxShaderConfig inside of Gfx Standard Include header."
     #endif
     #include "fgGFXShaderDefs.h"
@@ -178,4 +178,4 @@ private:
 
 };
 
-#endif /* _FG_GFX_SHADER_CONFIG_H_ */
+#endif /* FG_INC_GFX_SHADER_CONFIG */

@@ -29,13 +29,6 @@ fgGfx3DScene::~fgGfx3DScene() { }
 /**
  * 
  */
-void fgGfx3DScene::flush(void) {
-    fgGfxSceneManager::flush();
-}
-
-/**
- * 
- */
 void fgGfx3DScene::sortCalls(void) {
     fgGfxSceneManager::sortCalls();
 }
@@ -59,7 +52,7 @@ fgGfxSceneNode *fgGfx3DScene::addFromModel(fgGfxModelResource* pModelRes,
         return NULL;
     }
     fgGfxSceneNode *pNode = new fgGfxSceneNodeObject(pModelRes, NULL);
-    fgGfxSceneNodeObject *pNodeObject = static_cast<fgGfxSceneNodeObject *>(pNode);
+    //fgGfxSceneNodeObject *pNodeObject = static_cast<fgGfxSceneNodeObject *>(pNode);
     pNode->setName(nameTag);
     if(!addNode(pNode->getRefHandle(), pNode)) {
         delete pNode;

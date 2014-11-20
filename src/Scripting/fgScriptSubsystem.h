@@ -7,16 +7,16 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-#ifndef _FG_SCRIPT_SUBSYSTEM_H_
-    #define _FG_SCRIPT_SUBSYSTEM_H_
-    #define _FG_SCRIPT_SUBSYSTEM_H_BLOCK_
+#ifndef FG_INC_SCRIPT_SUBSYSTEM
+    #define FG_INC_SCRIPT_SUBSYSTEM
+    #define FG_INC_SCRIPT_SUBSYSTEM_BLOCK
 
-    #if defined(_FG_GUI_WIDGET_H_BLOCK_)
-        #error "FG_GUI_WIDGET_H_BLOCK is defined: Do not include ScriptSubsystem header inside of Widget header"
+    #if defined(FG_INC_GUI_WIDGET_BLOCK)
+        #error "FG_GUI_WIDGETBLOCK is defined: Do not include ScriptSubsystem header inside of Widget header"
     #endif
 
-    #if defined(_FG_GUI_MAIN_H_BLOCK_)
-        #error "FG_GUI_MAIN_H_BLOCK is defined: Do not include ScriptSubsystem header inside of GuiMain header"
+    #if defined(FG_INC_GUI_MAIN_BLOCK)
+        #error "FG_GUI_MAINBLOCK is defined: Do not include ScriptSubsystem header inside of GuiMain header"
     #endif
 
     #include "fgBuildConfig.h"
@@ -750,6 +750,6 @@ int fgScriptSubsystem::simpleInPlaceTypedGCEvent(lua_State* L) {
 
 ////////////////////////////////////////////////////////////////////////////////
 
-    #undef _FG_SCRIPT_SUBSYSTEM_H_BLOCK_
+    #undef FG_INC_SCRIPT_SUBSYSTEM_BLOCK
 
-#endif /* _FG_SCRIPT_SUBSYSTEM_H_ */
+#endif /* FG_INC_SCRIPT_SUBSYSTEM */

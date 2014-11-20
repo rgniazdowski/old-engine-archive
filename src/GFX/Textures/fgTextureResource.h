@@ -7,8 +7,8 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-#ifndef _FG_TEXTURE_RESOURCE_H_
-    #define _FG_TEXTURE_RESOURCE_H_
+#ifndef FG_INC_TEXTURE_RESOURCE
+    #define FG_INC_TEXTURE_RESOURCE
 
     #include "fgBuildConfig.h"
     #include "Resource/fgResource.h"
@@ -63,6 +63,8 @@ protected:
     }
 
 public:
+    virtual void setFlags(const std::string& flags);
+    
     // Releases non-GPU side of resources – should be
     // used to free data after uploading into VRAM
     void releaseNonGFX(void);
@@ -104,6 +106,11 @@ public:
     unsigned char* getRawData(void) const {
         return m_rawData;
     }
+    unsigned char *getCubeData(const fgTextureCubeMapID id) const {
+        if((int)id >= FG_NUM_TEXTURE_CUBE_MAPS || (int)id < 0)
+            return NULL;
+        return m_cubeData[id];
+    }
     // Get texture file type (determined from extension)
     fgTextureFileType getFileType(void) const {
         return m_fileType;
@@ -143,25 +150,37 @@ protected:
     fgTextureType m_textureType;
     /// Final texture pixel format (data pixel format)
     fgTexturePixelFormat m_pixelFormat;
+    union {
+        struct {
+            unsigned char* px;
+            unsigned char* nx;
+            unsigned char* py;
+            unsigned char* ny;
+            unsigned char* pz;
+            unsigned char* nz;
+        } m_cube;
     /// Storage for raw pixel data
-    unsigned char* m_rawData;
+        unsigned char* m_rawData;
+        unsigned char* m_cubeData[FG_NUM_TEXTURE_CUBE_MAPS];
+        unsigned char* m_texelsVec[8]; // #FIXME
+    };
     /// Width of the texture in pixels
     int m_width;
     /// Height of the texture in pixels
     int m_height;
-    /// Number of color components (grayscale, RGB, RGBA)
+    /// Number of color components (gray scale, RGB, RGBA)
     int m_components;
     /// OpenGL texture id handle
     fgGfxTextureID m_textureGfxID;
 private:
     /// This is special trigger, it tells if texture was uploaded to VRAM
     /// When set to TRUE, even if gfxID is invalid it tells that texture
-    /// needs to be reuploaded
+    /// needs to be re-uploaded
     ///
-    /// On GL suspend all gfx IDs (including shaders, vbos and others become invalid)
+    /// On GL suspend all gfx IDs (including shaders, vbo's and others become invalid)
     fgBool m_isInVRAM;
 };
 
 typedef fgTextureResource fgGfxTexture;
 
-#endif /* _FG_TEXTURE_RESOURCE_H_ */
+#endif /* FG_INC_TEXTURE_RESOURCE */

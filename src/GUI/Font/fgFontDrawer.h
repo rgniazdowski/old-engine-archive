@@ -7,8 +7,8 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-#ifndef _FG_FONT_DRAWER_H_
-    #define _FG_FONT_DRAWER_H_
+#ifndef FG_INC_FONT_DRAWER
+    #define FG_INC_FONT_DRAWER
 
     #include "fgFontResource.h"
     #include "GFX/fgGFXTypes.h"
@@ -26,7 +26,7 @@ typedef unsigned int fgFontPrintMode;
     #define FG_FONT_PRINT_MODE_ABSOLUTE		0
     #define FG_FONT_PRINT_MODE_RELATIVE		1
 
-    #ifndef _FG_GFX_DRAWING_BATCH_H_
+    #ifndef FG_INC_GFX_DRAWING_BATCH
         #include "GFX/fgGFXDrawingBatch.h"
     #endif 
 
@@ -284,4 +284,4 @@ private:
     fgFontPrintMode m_printMode;
 };
 
-#endif /* _FG_FONT_DRAWER_H_ */
+#endif /* FG_INC_FONT_DRAWER */

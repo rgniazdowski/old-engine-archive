@@ -7,15 +7,15 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-#ifndef _FG_GUI_WIDGET_MANAGER_H_
-    #define _FG_GUI_WIDGET_MANAGER_H_
+#ifndef FG_INC_GUI_WIDGET_MANAGER
+    #define FG_INC_GUI_WIDGET_MANAGER
 
     #include "fgGuiWidget.h"
     #include "Util/fgHandleManager.h"
     #include "fgManagerBase.h"
     #include "fgGuiWidgetFactory.h"
 
-    #ifndef _FG_GUI_STYLE_MANAGER_H_
+    #ifndef FG_INC_GUI_STYLE_MANAGER
         #include "fgGuiStyleManager.h"
     #endif
 
@@ -277,4 +277,4 @@ private:
     std::string m_widgetsPath;
 };
 
-#endif /* _FG_GUI_WIDGET_MANAGER_H_ */
+#endif /* FG_INC_GUI_WIDGET_MANAGER */

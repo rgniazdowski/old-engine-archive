@@ -7,19 +7,19 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-#ifndef _FG_GFX_TYPES_H_
-    #define _FG_GFX_TYPES_H_
-    #define _FG_GFX_TYPES_BLOCK__
+#ifndef FG_INC_GFX_TYPES
+    #define FG_INC_GFX_TYPES
+    #define FG_INC_GFX_TYPES_BLOCK__
 
-    #ifdef _FG_TYPES_H_BLOCK_
+    #ifdef FG_INC_TYPES_BLOCK
         #error "FG_TYPES_BLOCK constant is defined. Do not include fgGfxTypes header inside of fgTypes header."
     #endif
 
-    #ifndef _FG_GFX_GL_H_
+    #ifndef FG_INC_GFX_GL
         #include "fgGFXGL.h"
     #endif
 
-    #ifndef _FG_GFX_COLOR_H_
+    #ifndef FG_INC_GFX_COLOR
         #include "fgGFXColor.h"
     #endif
 
@@ -27,7 +27,7 @@
         #define FG_GFX_NONE 0
     #endif
 
-    #ifndef _FG_GFX_ATTRIB_BITS_H_
+    #ifndef FG_INC_GFX_ATTRIB_BITS
         #include "fgGFXAttribBits.h"
     #endif
 
@@ -112,7 +112,7 @@ inline const char * _FG_GFX_DATA_TYPE_TO_TEXT(fgGFXenum value) {
     #define FG_GFX_DATA_TYPE_FROM_TEXT(text)	_FG_GFX_DATA_TYPE_FROM_TEXT(text)
     #define FG_GFX_DATA_TYPE_TO_TEXT(value)		_FG_GFX_DATA_TYPE_TO_TEXT(value)
 
-    #ifndef _FG_GFX_ATTRIBUTE_DATA_H_
+    #ifndef FG_INC_GFX_ATTRIBUTE_DATA
         #include "fgGFXAttributeData.h"
     #endif
 
@@ -120,11 +120,11 @@ inline const char * _FG_GFX_DATA_TYPE_TO_TEXT(fgGFXenum value) {
 // Buffer / Texture / ... binding helper structures
 //
 
-    #ifndef _FG_GFX_BUFFERID_H_
+    #ifndef FG_INC_GFX_BUFFERID
         #include "fgGFXBufferID.h"
     #endif
 
-    #ifndef _FG_GFX_TEXTUREID_H_
+    #ifndef FG_INC_GFX_TEXTUREID
         #include "fgGFXTextureID.h"
     #endif
 
@@ -155,12 +155,12 @@ inline const char * _FG_GFX_DATA_TYPE_TO_TEXT(fgGFXenum value) {
         #define FG_RAD2DEG_FUNC(_RADIANS) (_RADIANS * FG_RAD2DEG)
     #endif
 
-    #ifndef _FG_GFX_VERTEX_H_
+    #ifndef FG_INC_GFX_VERTEX
         #include "fgGFXVertex.h"
     #endif
 
 
-    #ifndef _FG_GFX_VERTEX_DATA_H_
+    #ifndef FG_INC_GFX_VERTEX_DATA
         #include "fgGFXVertexData.h"
     #endif
 
@@ -203,5 +203,5 @@ inline void dumpMatrix(const float *mat, const char *title) {
     printf("{ %.2f %.2f %.2f %.2f }\n\n", mat[12], mat[13], mat[14], mat[15]);
 }
 
-    #undef _FG_GFX_TYPES_BLOCK__
-#endif /* _FG_GFX_TYPES_H_ */
+    #undef FG_INC_GFX_TYPES_BLOCK__
+#endif /* FG_INC_GFX_TYPES */

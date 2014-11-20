@@ -7,7 +7,7 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-#ifndef _FG_GFX_SIMPLE_DRAWER_H_
-    #define _FG_GFX_SIMPLE_DRAWER_H_
+#ifndef FG_INC_GFX_SIMPLE_DRAWER
+    #define FG_INC_GFX_SIMPLE_DRAWER
 
-#endif /* _FG_GFX_SIMPLE_DRAWER_H_ */
+#endif /* FG_INC_GFX_SIMPLE_DRAWER */

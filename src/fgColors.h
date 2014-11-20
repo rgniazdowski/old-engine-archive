@@ -13,10 +13,10 @@
  * Created on October 20, 2014, 4:25 PM
  */
 
-#ifndef _FG_COLORS_H_
-    #define	_FG_COLORS_H_
+#ifndef FG_INC_COLORS
+    #define	FG_INC_COLORS
 
-    #ifndef _FG_GFX_COLOR_H_
+    #ifndef FG_INC_GFX_COLOR
         #include "GFX/fgGFXColor.h"
     #endif
     
@@ -86,5 +86,5 @@ private:
     static fgBool s_isInit;
 };
 
-#endif	/* _FG_COLORS_H_ */
+#endif	/* FG_INC_COLORS */
 

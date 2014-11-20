@@ -7,22 +7,22 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-#ifndef _FG_GUI_DRAWER_H_
-    #define _FG_GUI_DRAWER_H_
+#ifndef FG_INC_GUI_DRAWER
+    #define FG_INC_GUI_DRAWER
 
-    #ifndef _FG_FONT_DRAWER_H_
+    #ifndef FG_INC_FONT_DRAWER
         #include "Font/fgFontDrawer.h"
     #endif
 
-    #ifndef _FG_GFX_DRAWING_BATCH_H_
+    #ifndef FG_INC_GFX_DRAWING_BATCH
         #include "GFX/fgGFXDrawingBatch.h"
     #endif 
 
-    #ifndef _FG_GUI_STYLE_CONTENT_H_
+    #ifndef FG_INC_GUI_STYLE_CONTENT
         #include "fgGuiStyleContent.h"
     #endif
 
-    #ifndef _FG_MANAGER_BASE_H_
+    #ifndef FG_INC_MANAGER_BASE
         #include "fgManagerBase.h"
     #endif
 
@@ -131,4 +131,4 @@ public:
     virtual void appendBorder2D(const fgVec2f &pos, const fgVec2f &size, fgGuiStyleContent& style);
 };
 
-#endif /* _FG_GUI_DRAWER_H_ */
+#endif /* FG_INC_GUI_DRAWER */

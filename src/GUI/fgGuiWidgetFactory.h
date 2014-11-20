@@ -7,8 +7,8 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-#ifndef _FG_GUI_WIDGET_FACTORY_H_
-    #define _FG_GUI_WIDGET_FACTORY_H_
+#ifndef FG_INC_GUI_WIDGET_FACTORY
+    #define FG_INC_GUI_WIDGET_FACTORY
 
     #include "fgTypes.h"
     #include "fgGuiWidget.h"
@@ -49,4 +49,4 @@ private:
     factoryMap m_factoryMap;
 };
 
-#endif /* _FG_GUI_WIDGET_FACTORY_H_ */
+#endif /* FG_INC_GUI_WIDGET_FACTORY */

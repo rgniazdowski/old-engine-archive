@@ -7,7 +7,7 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-#ifndef _FG_THREAD_SEM_H_
-    #define _FG_THREAD_SEM_H_
+#ifndef FG_INC_THREAD_SEM
+    #define FG_INC_THREAD_SEM
 
-#endif /* _FG_THREAD_SEM_H_ */
+#endif /* FG_INC_THREAD_SEM */

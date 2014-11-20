@@ -7,8 +7,8 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-#ifndef _FG_PS_PARTICLE_EFFECT_CIRCULAR_H_
-    #define _FG_PS_PARTICLE_EFFECT_CIRCULAR_H_
+#ifndef FG_INC_PS_PARTICLE_EFFECT_CIRCULAR
+    #define FG_INC_PS_PARTICLE_EFFECT_CIRCULAR
 
     #include <climits>
     #include "fgPsParticleEffect.h"

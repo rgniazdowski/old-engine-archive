@@ -7,8 +7,8 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-#ifndef _FG_MESSAGE_COMMON_H_
-    #define _FG_MESSAGE_COMMON_H_
+#ifndef FG_INC_MESSAGE_COMMON
+    #define FG_INC_MESSAGE_COMMON
 
     #include "fgBool.h"
     #include "fgErrno.h"
@@ -176,4 +176,4 @@ struct fgMessage {
     }
 };
 
-#endif /* _FG_MESSAGE_COMMON_H_ */
+#endif /* FG_INC_MESSAGE_COMMON */

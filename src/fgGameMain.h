@@ -7,8 +7,8 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-#ifndef _FG_GAME_MAIN_H_
-    #define _FG_GAME_MAIN_H_
+#ifndef FG_INC_GAME_MAIN
+    #define FG_INC_GAME_MAIN
 
     #include "fgBuildConfig.h"
     #include "fgCommon.h"
@@ -224,4 +224,4 @@ private:
     fgFunctionCallback *m_gameFreeLookCallback;
 };
 
-#endif /* _FG_GAME_MAIN_H_ */
+#endif /* FG_INC_GAME_MAIN */

@@ -13,9 +13,9 @@
  * Created on November 6, 2014, 5:03 PM
  */
 
-#ifndef FG_GUI_WIDGET_TYPES_H_
-    #define FG_GUI_WIDGET_TYPES_H_
-    #define FG_GUI_WIDGET_TYPES_H_BLOCK_
+#ifndef FG_GUI_WIDGET_TYPES
+    #define FG_GUI_WIDGET_TYPES
+    #define FG_GUI_WIDGET_TYPES_BLOCK
 
     #ifndef FG_GUI_WIDGET_TYPES_DEFINED
         #define FG_GUI_WIDGET_TYPES_DEFINED
@@ -67,6 +67,6 @@ typedef unsigned int fgGuiWidgetType;
     #endif
 
 //#define FG_GUI_STYLE_SHEET_NAME     "StyleSheet" // #FIXME - string obfuscation
-    #undef FG_GUI_WIDGET_TYPES_H_BLOCK_
-#endif	/* FG_GUI_WIDGET_TYPES_H_ */
+    #undef FG_GUI_WIDGET_TYPES_BLOCK
+#endif	/* FG_GUI_WIDGET_TYPES */
 

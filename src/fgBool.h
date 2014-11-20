@@ -7,8 +7,8 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-#ifndef _FG_BOOL_H_
-    #define _FG_BOOL_H_
+#ifndef FG_INC_BOOL
+    #define FG_INC_BOOL
 
     #include <climits>
 
@@ -47,4 +47,4 @@ typedef unsigned char fgBool;
     #define FG_WARNING_TEXT		"warning"
     #define FG_ERROR_TEXT		"error"
 
-#endif /* _FG_BOOL_H_ */
+#endif /* FG_INC_BOOL */

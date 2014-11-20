@@ -13,17 +13,17 @@
  * Created on November 12, 2014, 6:08 PM
  */
 
-#ifndef _FG_GFX_SCENE_NODE_OBJECT_H_
-    #define	_FG_GFX_SCENE_NODE_OBJECT_H_
-    #define _FG_GFX_SCENE_NODE_OBJECT_H_BLOCK_
+#ifndef FG_INC_GFX_SCENE_NODE_OBJECT
+    #define	FG_INC_GFX_SCENE_NODE_OBJECT
+    #define FG_INC_GFX_SCENE_NODE_OBJECT_BLOCK
 
-    #ifndef _FG_GFX_SCENE_NODE_H_
+    #ifndef FG_INC_GFX_SCENE_NODE
         #include "fgGFXSceneNode.h"
     #endif
-    #ifndef _FG_GFX_DRAW_CALL_H_
+    #ifndef FG_INC_GFX_DRAW_CALL
         #include "fgGFXDrawCall.h"
     #endif
-    #ifndef _FG_GFX_MODEL_RESOURCE_H_
+    #ifndef FG_INC_GFX_MODEL_RESOURCE
         #include "fgGFXModelResource.h"
     #endif
 
@@ -89,5 +89,5 @@ public:
     }
 };
 
-    #undef _FG_GFX_SCENE_NODE_OBJECT_H_BLOCK_
-#endif	/* _FG_GFX_SCENE_NODE_OBJECT_H_ */
+    #undef FG_INC_GFX_SCENE_NODE_OBJECT_BLOCK
+#endif	/* FG_INC_GFX_SCENE_NODE_OBJECT */

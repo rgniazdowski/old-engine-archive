@@ -7,8 +7,8 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-#ifndef _FG_GUI_CALLBACK_H_
-    #define _FG_GUI_CALLBACK_H_
+#ifndef FG_INC_GUI_CALLBACK
+    #define FG_INC_GUI_CALLBACK
 
     #include "Event/fgCallback.h"
 
@@ -320,4 +320,4 @@ private:
     fgGuiFunction m_guiFunction;
 };
 
-#endif /* _FG_GUI_CALLBACK_H_ */
+#endif /* FG_INC_GUI_CALLBACK */

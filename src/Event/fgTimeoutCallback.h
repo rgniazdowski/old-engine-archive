@@ -7,8 +7,8 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-#ifndef _FG_TIMEOUT_CALLBACK_H_
-    #define _FG_TIMEOUT_CALLBACK_H_
+#ifndef FG_INC_TIMEOUT_CALLBACK
+    #define FG_INC_TIMEOUT_CALLBACK
 
     #include "fgCallback.h"
     #include "fgArgumentList.h"
@@ -51,4 +51,4 @@ struct fgTimeoutCallback {
     }
 };
 
-#endif /* _FG_TIMEOUT_CALLBACK_H_ */
+#endif /* FG_INC_TIMEOUT_CALLBACK */

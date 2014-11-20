@@ -7,8 +7,8 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-#ifndef _FG_CONFIG_WRITER_H_
-    #define _FG_CONFIG_WRITER_H_
+#ifndef FG_INC_CONFIG_WRITER
+    #define FG_INC_CONFIG_WRITER
 
     #include "fgFile.h"
 
@@ -44,4 +44,4 @@ public:
     }
 };
 
-#endif /* _FG_CONFIG_WRITER_H_ */
+#endif /* FG_INC_CONFIG_WRITER */

@@ -7,8 +7,8 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-#ifndef _FG_ARGUMENT_LIST_H_
-    #define _FG_ARGUMENT_LIST_H_
+#ifndef FG_INC_ARGUMENT_LIST
+    #define FG_INC_ARGUMENT_LIST
 
     #include "fgTypes.h"
 
@@ -221,4 +221,4 @@ public:
 };
 
 
-#endif /* _FG_ARGUMENT_LIST_H_ */
+#endif /* FG_INC_ARGUMENT_LIST */

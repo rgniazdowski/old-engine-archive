@@ -7,8 +7,8 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-#ifndef _FG_FONT_BUILT_IN_H_
-    #define _FG_FONT_BUILT_IN_H_
+#ifndef FG_INC_FONT_BUILT_IN
+    #define FG_INC_FONT_BUILT_IN
 
     #include "fgFontResource.h"
     #include "fgFontBuiltInTypes.h"
@@ -56,4 +56,4 @@ private:
 
     #define FG_FONT_TYPE_STB_BUILTIN	0x0040
 
-#endif /* _FG_FONT_BUILT_IN_H_ */
+#endif /* FG_INC_FONT_BUILT_IN */

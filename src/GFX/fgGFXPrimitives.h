@@ -7,12 +7,12 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-#ifndef _FG_GFX_PRIMITIVES_H_
-    #define _FG_GFX_PRIMITIVES_H_
+#ifndef FG_INC_GFX_PRIMITIVES
+    #define FG_INC_GFX_PRIMITIVES
 
     #include "fgGFXStdInc.h"
     #include "Math/fgMathLib.h"
-    #ifndef _FG_GFX_SHADER_PROGRAM_H_
+    #ifndef FG_INC_GFX_SHADER_PROGRAM
         #include "GFX/Shaders/fgGFXShaderProgram.h"
     #endif
     
@@ -42,6 +42,8 @@ public:
      *
      */
     static void drawRect2D(void);
+    
+    static void drawSkyBoxOptimized(void);
     
     static void drawAABBLines(const fgAABoundingBox3Df& aabb);
     
@@ -174,4 +176,4 @@ public:
     #endif
 };
 
-#endif /* _FG_GFX_PRIMITIVES_H_ */
+#endif /* FG_INC_GFX_PRIMITIVES */

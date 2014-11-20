@@ -126,7 +126,7 @@ void fgGfxFrustum::set(const fgMatrix4f &matrix) {
     // column-major order (see "OpenGL Programming Guide",
     // 3rd edition, pp 106, glLoadMatrix).
 #if defined(FG_DEBUG)
-    dumpMatrix(fgMath::value_ptr(matrix), NULL);
+    //dumpMatrix(fgMath::value_ptr(matrix), NULL); // #FIXME
 #endif
     fgMatrix4f m = fgMath::transpose(matrix);
     /***************************************************************************

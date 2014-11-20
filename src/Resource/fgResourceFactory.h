@@ -7,8 +7,8 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-#ifndef _FG_RESOURCE_FACTORY_H_
-    #define _FG_RESOURCE_FACTORY_H_
+#ifndef FG_INC_RESOURCE_FACTORY
+    #define FG_INC_RESOURCE_FACTORY
 
     #include "fgCommon.h"
     #include "fgResource.h"
@@ -50,4 +50,4 @@ private:
     factoryMap m_factoryMap;
 };
 
-#endif /* _FG_RESOURCE_FACTORY_H_ */
+#endif /* FG_INC_RESOURCE_FACTORY */

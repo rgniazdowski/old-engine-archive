@@ -7,8 +7,8 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-#ifndef _FG_FONT_RESOURCE_H_
-    #define _FG_FONT_RESOURCE_H_
+#ifndef FG_INC_FONT_RESOURCE
+    #define FG_INC_FONT_RESOURCE
 
     #include "Resource/fgResource.h"
     #include "Resource/fgResourceFactoryTypes.h"
@@ -89,4 +89,4 @@ protected:
     int m_step;
 };
 
-#endif /* _FG_FONT_RESOURCE_H_ */
+#endif /* FG_INC_FONT_RESOURCE */

@@ -7,10 +7,10 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-#ifndef _FG_XML_PARSER_H_
-    #define _FG_XML_PARSER_H_
+#ifndef FG_INC_XML_PARSER
+    #define FG_INC_XML_PARSER
 
-    #ifndef _FG_XML_TYPES_WRAP_H_
+    #ifndef FG_INC_XML_TYPES_WRAP
         #include "fgXMLTypesWrap.h"
     #endif 
 
@@ -386,4 +386,4 @@ public:
 
 };
 
-#endif /* _FG_XML_PARSER_H_ */
+#endif /* FG_INC_XML_PARSER */

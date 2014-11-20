@@ -13,11 +13,11 @@
  * Created on November 11, 2014, 11:06 AM
  */
 
-#ifndef _FG_DEBUG_CONFIG_H_
-    #define _FG_DEBUG_CONFIG_H_
-    #define _FG_DEBUG_CONFIG_H_BLOCK_
+#ifndef FG_INC_DEBUG_CONFIG
+    #define FG_INC_DEBUG_CONFIG
+    #define FG_INC_DEBUG_CONFIG_BLOCK
 
-    #if !defined(_FG_BUILD_CONFIG_H_) && !defined(_FG_BUILD_CONFIG_H_BLOCK_)
+    #if !defined(FG_INC_BUILD_CONFIG) && !defined(FG_INC_BUILD_CONFIG_BLOCK)
         #include "fgBuildConfig.h"
     #endif
 
@@ -53,6 +53,6 @@ extern struct fgDebugConfig g_fgDebugConfig;
         #define FG_DEBUG_CFG_OPTION(_OPTION) (false)
     #endif /* FG_DEBUG */
 
-    #undef FG_DEBUG_CONFIG_H_BLOCK_
-#endif	/* _FG_DEBUG_CONFIG_H_ */
+    #undef FG_DEBUG_CONFIG_BLOCK
+#endif	/* FG_INC_DEBUG_CONFIG */
 

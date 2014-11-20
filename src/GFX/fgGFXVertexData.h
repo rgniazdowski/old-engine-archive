@@ -13,26 +13,26 @@
  * Created on October 17, 2014, 12:21 PM
  */
 
-#ifndef _FG_GFX_VERTEX_DATA_H_
-    #define	_FG_GFX_VERTEX_DATA_H_
+#ifndef FG_INC_GFX_VERTEX_DATA
+    #define	FG_INC_GFX_VERTEX_DATA
 
-    #ifndef _FG_GFX_GL_H_
+    #ifndef FG_INC_GFX_GL
         #include "fgGFXGL.h"
     #endif
 
-    #ifndef _FG_GFX_BUFFERID_H_
+    #ifndef FG_INC_GFX_BUFFERID
         #include "fgGFXBufferID.h"
     #endif
 
-    #ifndef _FG_VECTOR_H_
+    #ifndef FG_INC_VECTOR
         #include "fgVector.h"
     #endif
 
-    #ifndef _FG_GFX_VERTEX_H_
+    #ifndef FG_INC_GFX_VERTEX
         #include "fgGFXVertex.h"
     #endif
 
-    #ifndef _FG_GFX_ATTRIBUTE_DATA_H_
+    #ifndef FG_INC_GFX_ATTRIBUTE_DATA
         #include "fgGFXAttributeData.h"
     #endif
 
@@ -631,5 +631,5 @@ public:
 typedef fgVertexData4v fgGfxVertexData4v;
 
 
-#endif	/* _FG_GFX_VERTEX_DATA_H_ */
+#endif	/* FG_INC_GFX_VERTEX_DATA */
 

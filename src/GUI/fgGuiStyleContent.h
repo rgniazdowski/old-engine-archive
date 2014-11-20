@@ -7,13 +7,13 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-#ifndef _FG_GUI_STYLE_CONTENT_H_
-    #define _FG_GUI_STYLE_CONTENT_H_
+#ifndef FG_INC_GUI_STYLE_CONTENT
+    #define FG_INC_GUI_STYLE_CONTENT
 
     #include "fgBuildConfig.h"
     #include "fgTypes.h"
 
-    #ifndef _FG_MATHLIB_H_
+    #ifndef FG_INC_MATHLIB
         #include "Math/fgMathLib.h"
     #endif
 
@@ -561,4 +561,4 @@ public:
     fgGuiStyleContent& setEffect(const char *effect);
 };
 
-#endif /* _FG_GUI_STYLE_CONTENT_H_ */
+#endif /* FG_INC_GUI_STYLE_CONTENT */

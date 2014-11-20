@@ -7,14 +7,14 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-#ifndef _FG_POINTER_DATA_H_
-    #define _FG_POINTER_DATA_H_
+#ifndef FG_INC_POINTER_DATA
+    #define FG_INC_POINTER_DATA
 
-    #ifndef _FG_BUILD_CONFIG_H_
+    #ifndef FG_INC_BUILD_CONFIG
         #include "fgBuildConfig.h"
     #endif
 
-    #ifndef _FG_BOOL_H_
+    #ifndef FG_INC_BOOL
         #include "fgBool.h"
     #endif
 
@@ -105,4 +105,4 @@ struct fgPointerData {
     m_pointerTap(FG_FALSE) { }
 };
 
-#endif /* _FG_POINTER_DATA_H_ */
+#endif /* FG_INC_POINTER_DATA */

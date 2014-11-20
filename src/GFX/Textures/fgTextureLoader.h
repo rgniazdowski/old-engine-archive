@@ -7,8 +7,8 @@
  * and/or distributed without the express or written permission from the author.
  *******************************************************/
 
-#ifndef _FG_TEXTURE_LOADER_H_
-    #define _FG_TEXTURE_LOADER_H_
+#ifndef FG_INC_TEXTURE_LOADER
+    #define FG_INC_TEXTURE_LOADER
 
     #include "Util/fgFile.h"
 

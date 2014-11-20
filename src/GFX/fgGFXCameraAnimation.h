@@ -7,8 +7,8 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-#ifndef _FG_GFX_CAMERA_ANIMATION_H_
-    #define _FG_GFX_CAMERA_ANIMATION_H_
+#ifndef FG_INC_GFX_CAMERA_ANIMATION
+    #define FG_INC_GFX_CAMERA_ANIMATION
 
     #include "fgGFXCamera.h"
     #include "fgGFXTypes.h"
@@ -225,4 +225,4 @@ private:
     fgGFXfloat m_dt;
 };
 
-#endif /* _FG_GFX_CAMERA_ANIMATION_H_ */
+#endif /* FG_INC_GFX_CAMERA_ANIMATION */

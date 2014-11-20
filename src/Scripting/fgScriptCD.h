@@ -13,16 +13,16 @@
  * Created on November 6, 2014, 4:45 PM
  */
 
-#ifndef _FG_SCRIPT_CD_H_
-    #define _FG_SCRIPT_CD_H_
-    #define _FG_SCRIPT_CD_H_BLOCK_  
+#ifndef FG_INC_SCRIPT_CD
+    #define FG_INC_SCRIPT_CD
+    #define FG_INC_SCRIPT_CD_BLOCK  
 
-    #if defined(_FG_SCRIPT_MT_H_BLOCK_)
-        #error "FG_SCRIPT_MT_H_BLOCK is defined: Do not include ScriptCD header inside of ScriptMetatables header"
+    #if defined(FG_INC_SCRIPT_MT_BLOCK)
+        #error "FG_SCRIPT_MTBLOCK is defined: Do not include ScriptCD header inside of ScriptMetatables header"
     #endif
 
-    #if defined(_FG_EVENT_DEFINITIONS_H_BLOCK_)
-        #error "FG_EVENT_DEFINITIONS_H_BLOCK is defined: Do not include ScriptCD header inside of EventDefinitions header"
+    #if defined(FG_INC_EVENT_DEFINITIONS_BLOCK)
+        #error "FG_EVENT_DEFINITIONSBLOCK is defined: Do not include ScriptCD header inside of EventDefinitions header"
     #endif
 
     #include "fgBuildConfig.h"
@@ -31,19 +31,19 @@
         #include "LuaPlus/LuaPlus.h"
     #endif
 
-    #ifndef _FG_GFX_TYPES_H_
+    #ifndef FG_INC_GFX_TYPES
         #include "GFX/fgGFXTypes.h"
     #endif
 
-    #ifndef _FG_SCRIPT_MT_H_
+    #ifndef FG_INC_SCRIPT_MT
         #include "fgScriptMT.h"
     #endif
 
-    #ifndef _FG_GUI_WIDGET_H_
+    #ifndef FG_INC_GUI_WIDGET
         #include "GUI/fgGuiWidget.h"
     #endif
 
-    #ifndef _FG_EVENT_DEFINITIONS_H_
+    #ifndef FG_INC_EVENT_DEFINITIONS
         #include "Event/fgEventDefinitions.h"
     #endif
 
@@ -1411,6 +1411,6 @@ namespace LPCD {
 
 
 
-    #undef _FG_SCRIPT_CD_H_BLOCK_
-#endif	/* _FG_SCRIPT_CD_H_ */
+    #undef FG_INC_SCRIPT_CD_BLOCK
+#endif	/* FG_INC_SCRIPT_CD */
 

@@ -13,15 +13,15 @@
  * Created on November 14, 2014, 11:30 PM
  */
 
-#ifndef _FG_GFX_SCENE_NODE_MESH_H_
-    #define _FG_GFX_SCENE_NODE_MESH_H_
-    #define _FG_GFX_SCENE_NODE_MESH_H_BLOCK_
+#ifndef FG_INC_GFX_SCENE_NODE_MESH
+    #define FG_INC_GFX_SCENE_NODE_MESH
+    #define FG_INC_GFX_SCENE_NODE_MESH_BLOCK
 
-    #ifndef _FG_GFX_SCENE_NODE_H_
+    #ifndef FG_INC_GFX_SCENE_NODE
         #include "fgGFXSceneNode.h"
     #endif
     
-    #ifndef _FG_GFX_MODEL_TYPES_H_
+    #ifndef FG_INC_GFX_MODEL_TYPES
         #include "fgGFXModelTypes.h"
     #endif
 
@@ -64,5 +64,5 @@ private:
 
 };
 
-    #undef _FG_GFX_SCENE_NODE_MESH_H_BLOCK_
-#endif	/* _FG_GFX_SCENE_NODE_MESH_H_ */
+    #undef FG_INC_GFX_SCENE_NODE_MESH_BLOCK
+#endif	/* FG_INC_GFX_SCENE_NODE_MESH */

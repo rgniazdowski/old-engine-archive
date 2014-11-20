@@ -7,8 +7,8 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-#ifndef _FG_GUI_MESSAGE_BOX_H_
-    #define _FG_GUI_MESSAGE_BOX_H_
+#ifndef FG_INC_GUI_MESSAGE_BOX
+    #define FG_INC_GUI_MESSAGE_BOX
 
     #include "fgGuiWindow.h"
     #include "fgGuiWidgetFactoryTypes.h"
@@ -40,4 +40,4 @@ public:
 
 };
 
-#endif /* _FG_GUI_MESSAGE_BOX_H_ */ 
+#endif /* FG_INC_GUI_MESSAGE_BOX */ 

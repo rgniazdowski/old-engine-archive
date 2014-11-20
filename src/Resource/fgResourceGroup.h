@@ -7,8 +7,8 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-#ifndef _FG_RESOURCE_GROUP_H_
-    #define _FG_RESOURCE_GROUP_H_
+#ifndef FG_INC_RESOURCE_GROUP
+    #define FG_INC_RESOURCE_GROUP
 
     #include "fgCommon.h"
     #include "fgResource.h"
@@ -195,4 +195,4 @@ protected:
 
 };
 
-#endif /* _FG_RESOURCE_GROUP_H_ */
+#endif /* FG_INC_RESOURCE_GROUP */

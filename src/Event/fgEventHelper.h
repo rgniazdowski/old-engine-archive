@@ -7,8 +7,8 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-#ifndef _FG_EVENT_HELPER_H_
-    #define _FG_EVENT_HELPER_H_
+#ifndef FG_INC_EVENT_HELPER
+    #define FG_INC_EVENT_HELPER
 
     #include "fgVector.h"
     #include "fgCallback.h"
@@ -46,4 +46,4 @@ typedef fgVector<fgCyclicCallback> fgCyclicCallbacksVec;
 ///
 typedef fgCyclicCallbacksVec::iterator fgCyclicCallbacksVecItor;
 
-#endif /* _FG_EVENT_HELPER_H_ */
+#endif /* FG_INC_EVENT_HELPER */

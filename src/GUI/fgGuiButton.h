@@ -7,8 +7,8 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-#ifndef _FG_GUI_BUTTON_H_
-    #define _FG_GUI_BUTTON_H_
+#ifndef FG_INC_GUI_BUTTON
+    #define FG_INC_GUI_BUTTON
 
     #include "fgGuiWidget.h"
     #include "fgGuiLabel.h"
@@ -42,4 +42,4 @@ public:
     virtual void refresh(void);
 };
 
-#endif /* _FG_GUI_BUTTON_H_ */ 
+#endif /* FG_INC_GUI_BUTTON */ 

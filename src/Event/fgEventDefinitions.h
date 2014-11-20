@@ -7,11 +7,11 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-#ifndef _FG_EVENT_DEFINITIONS_H_
-    #define _FG_EVENT_DEFINITIONS_H_
-    #define _FG_EVENT_DEFINITIONS_H_BLOCK_
+#ifndef FG_INC_EVENT_DEFINITIONS
+    #define FG_INC_EVENT_DEFINITIONS
+    #define FG_INC_EVENT_DEFINITIONS_BLOCK
 
-    #ifndef _FG_RESOURCE_H_
+    #ifndef FG_INC_RESOURCE
         #include "Resource/fgResource.h"
     #endif
 
@@ -281,6 +281,6 @@ struct fgEvent {
     };
 };
 
-    #undef _FG_EVENT_DEFINITIONS_H_BLOCK_
+    #undef FG_INC_EVENT_DEFINITIONS_BLOCK
 
-#endif /* _FG_EVENT_DEFINITIONS_H_ */
+#endif /* FG_INC_EVENT_DEFINITIONS */

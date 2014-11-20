@@ -7,8 +7,8 @@
  * and/or distributed without the express or written permission from the author.
  *******************************************************/
 
-#ifndef _FG_TEXTURE_TYPES_H_
-    #define _FG_TEXTURE_TYPES_H_
+#ifndef FG_INC_TEXTURE_TYPES_HEADER
+    #define FG_INC_TEXTURE_TYPES_HEADER
 
     #ifndef FG_TEXTURE_ALPHA_FIX_VALUE
         #define FG_TEXTURE_ALPHA_FIX_VALUE(_R, _G, _B) \
@@ -29,18 +29,30 @@
 // Extension (held as string) for TGA file format
     #define FG_TEXTURE_FILE_EXTENSION_TGA	"tga"
 
+enum fgTextureCubeMapID {
+    FG_TEXTURE_CUBE_MAP_POSITIVE_X_ID = 0,
+    FG_TEXTURE_CUBE_MAP_NEGATIVE_X_ID = 1,
+    FG_TEXTURE_CUBE_MAP_POSITIVE_Y_ID = 2,
+    FG_TEXTURE_CUBE_MAP_NEGATIVE_Y_ID = 3,
+    FG_TEXTURE_CUBE_MAP_POSITIVE_Z_ID = 4,
+    FG_TEXTURE_CUBE_MAP_NEGATIVE_Z_ID = 5,
+    FG_NUM_TEXTURE_CUBE_MAPS = 6
+};
+
 // Texture file type enumeration. Supported file formats (current & future):
 // bmp, raw, jpg, png, tga
 
 enum fgTextureFileType {
+    FG_TEXTURE_FILE_INVALID = 0,
+
     FG_TEXTURE_FILE_BMP,
     FG_TEXTURE_FILE_RAW,
     FG_TEXTURE_FILE_JPEG,
     FG_TEXTURE_FILE_PNG,
     FG_TEXTURE_FILE_TGA,
+    FG_TEXTURE_FILE_DDS,
     FG_TEXTURE_FILE_OTHER,
 
-    FG_TEXTURE_FILE_INVALID,
     FG_NUM_TEXTURE_FILE_TYPES
 };
 
@@ -48,19 +60,24 @@ enum fgTextureFileType {
 // possible usage because of this
 
 enum fgTextureType {
-    FG_TEXTURE_PLAIN,
-    FG_TEXTURE_BUMP,
-    FG_TEXTURE_NORMAL,
-    FG_TEXTURE_RAW,
-    FG_TEXTURE_FONT,
+    FG_TEXTURE_INVALID = 0,
+    FG_TEXTURE_PLAIN = 1,
+    FG_TEXTURE_2D = FG_TEXTURE_PLAIN,
+    FG_TEXTURE_BUMP = 2,
+    FG_TEXTURE_NORMAL = 3,
+    FG_TEXTURE_RAW = 4,
+    FG_TEXTURE_FONT = 5,
+    FG_TEXTURE_CUBE = 6,
+    FG_TEXTURE_3D = 7,
 
-    FG_TEXTURE_INVALID,
-    FG_NUM_TEXTURE_TYPES
+    FG_NUM_TEXTURE_TYPES = 8
 };
 
 // Texture internal pixel format
 
 enum fgTextureInternalPixelFormat {
+    FG_TEXTURE_INTERNAL_PIXEL_INVALID = 0,
+
     #if defined(FG_USING_OPENGL_ES)
     FG_TEXTURE_INTERNAL_PIXEL_ALPHA,
     FG_TEXTURE_INTERNAL_PIXEL_RGB,
@@ -76,13 +93,14 @@ enum fgTextureInternalPixelFormat {
     FG_TEXTURE_INTERNAL_PIXEL_RGBA,
     #endif
 
-    FG_TEXTURE_INTERNAL_PIXEL_INVALID,
     FG_NUM_TEXTURE_INTERNAL_PIXEL_FORMATS
 };
 
 // Texture pixel format (data storage)
 
 enum fgTexturePixelFormat {
+    FG_TEXTURE_PIXEL_INVALID = 0,
+
     #if defined(FG_USING_OPENGL_ES)
     FG_TEXTURE_PIXEL_ALPHA,
     FG_TEXTURE_PIXEL_RGB,
@@ -107,7 +125,6 @@ enum fgTexturePixelFormat {
     FG_TEXTURE_PIXEL_STENCIL_INDEX,
     #endif
 
-    FG_TEXTURE_PIXEL_INVALID,
     FG_NUM_TEXTURE_PIXEL_FORMATS
 };
 
@@ -166,7 +183,7 @@ enum fgTexturePixelFormat {
 // GL_ALPHA, GL_LUMINANCE, GL_LUMINANCE_ALPHA, GL_RGB, GL_RGBA.
 //
 // PIXEL FORMAT (DATA):
-// The format of the texel data must match internalformat.
+// The format of the texel data must match internal format.
 //
 // PIXEL DATA TYPE:
 // Data type of the texel data. The following symbolic values are accepted:
@@ -175,12 +192,12 @@ enum fgTexturePixelFormat {
 //
 // ///////////////////////////////////////////////////////////////////////
 
-    #define FG_TEXTURE_COMP_INVALID			0
-    #define FG_TEXTURE_COMP_GRAYSCALE		1
+    #define FG_TEXTURE_COMP_INVALID     0
+    #define FG_TEXTURE_COMP_GRAYSCALE   1
     #define FG_TEXTURE_COMP_GRAYSCALE_ALPHA 2
-    #define FG_TEXTURE_COMP_RGB				3
-    #define FG_TEXTURE_COMP_RGBA			4
+    #define FG_TEXTURE_COMP_RGB         3
+    #define FG_TEXTURE_COMP_RGBA        4
 
     #define FG_TEXTURE_DEFAULT_PIXEL_FORMAT FG_TEXTURE_PIXEL_RGBA
 
-#endif /* _FG_TEXTURE_TYPES_H_ */
+#endif /* FG_INC_TEXTURE_TYPES_HEADER */

@@ -7,8 +7,8 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-#ifndef _FG_GFX_LAYER_H_
-    #define _FG_GFX_LAYER_H_
+#ifndef FG_INC_GFX_LAYER
+    #define FG_INC_GFX_LAYER
 
 /**
  *
@@ -71,4 +71,4 @@ protected:
     int m_zIndex;
 };
 
-#endif /* _FG_GFX_LAYER_H_ */
+#endif /* FG_INC_GFX_LAYER */

@@ -7,8 +7,8 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-#ifndef _FG_SETTINGS_H_
-    #define _FG_SETTINGS_H_
+#ifndef FG_INC_SETTINGS
+    #define FG_INC_SETTINGS
 
     #include "fgTypes.h"
     #include "XML/fgXMLParser.h"
@@ -272,4 +272,4 @@ FG_XML_AUTO_TEMPLATE_ATTRIBUTE_BEGIN(fgSettings::settingsData);
 FG_XML_AUTO_TEMPLATE_ATTRIBUTE_EMPTY
 FG_XML_AUTO_TEMPLATE_ATTRIBUTE_END();
 
-#endif /* _FG_SETTINGS_H_ */
+#endif /* FG_INC_SETTINGS */

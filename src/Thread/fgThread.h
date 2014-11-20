@@ -7,8 +7,8 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-#ifndef _FG_THREAD_H_
-    #define _FG_THREAD_H_
+#ifndef FG_INC_THREAD
+    #define FG_INC_THREAD
 
     #include "fgBuildConfig.h"
     #include "fgBool.h"
@@ -95,4 +95,4 @@ private:
 };
 
     #endif
-#endif /* _FG_THREAD_H_ */
+#endif /* FG_INC_THREAD */

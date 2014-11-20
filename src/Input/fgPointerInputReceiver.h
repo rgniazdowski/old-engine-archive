@@ -7,8 +7,8 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-#ifndef _FG_POINTER_INPUT_RECEIVER_H_
-    #define _FG_POINTER_INPUT_RECEIVER_H_
+#ifndef FG_INC_POINTER_INPUT_RECEIVER
+    #define FG_INC_POINTER_INPUT_RECEIVER
 
     #include "fgBuildConfig.h"
 
@@ -160,4 +160,4 @@ protected:
 
 };
 
-#endif /* _FG_POINTER_INPUT_RECEIVER_H_ */
+#endif /* FG_INC_POINTER_INPUT_RECEIVER */

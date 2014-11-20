@@ -12,14 +12,14 @@
 // throw proper events - this will be however next layer taking care of something
 // so simple like touch events (mouse events basically) - not a priority for now
 
-#ifndef _FG_POINTER_RAW_DATA_H_
-    #define _FG_POINTER_RAW_DATA_H_
+#ifndef FG_INC_POINTER_RAW_DATA
+    #define FG_INC_POINTER_RAW_DATA
 
-    #ifndef _FG_BUILD_CONFIG_H_
+    #ifndef FG_INC_BUILD_CONFIG
         #include "fgBuildConfig.h"
     #endif
 
-    #ifndef _FG_BOOL_H_
+    #ifndef FG_INC_BOOL
         #include "fgBool.h"
     #endif
 
@@ -81,4 +81,4 @@ struct fgPointerRawData : fgPointerData {
 
 };
 
-#endif /* _FG_POINTER_RAW_DATA_H_ */
+#endif /* FG_INC_POINTER_RAW_DATA */

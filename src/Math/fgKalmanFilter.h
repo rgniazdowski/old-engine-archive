@@ -14,8 +14,8 @@
  *      Author: sgniazdowski
  */
 
-#ifndef _FG_MATH_KALMAN_FILTER_H_
-    #define _FG_MATH_KALMAN_FILTER_H_
+#ifndef FG_INC_MATH_KALMAN_FILTER
+    #define FG_INC_MATH_KALMAN_FILTER
 
 struct KalmanState {
     /// Process noise covariance
@@ -70,4 +70,4 @@ public:
     }
 };
 
-#endif /* KALMANFILTER_H_ */
+#endif /* KALMANFILTER */

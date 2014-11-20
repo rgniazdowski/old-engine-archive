@@ -7,8 +7,8 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-#ifndef _FG_COMMON_H_
-    #define _FG_COMMON_H_
+#ifndef FG_INC_COMMON
+    #define FG_INC_COMMON
 
 // Global include needed (it defines the parameters of the build)
     #include "fgBuildConfig.h"
@@ -153,4 +153,4 @@ inline int FG_Rand(int a, int b) {
     #define FG_MSG_IN_FUNCTION_FULL "in function: %s - %s(%d)", __FUNCTION__, fgPath::fileName(__FILE__), __LINE__-1
     #define FG_MSG_IN_FUNCTION "in function: %s", __FUNCTION__
 
-#endif /* _FG_COMMON_H_ */
+#endif /* FG_INC_COMMON */

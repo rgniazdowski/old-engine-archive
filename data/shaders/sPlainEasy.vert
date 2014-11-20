@@ -20,12 +20,13 @@ attribute vec2 a_texCoord;
 
 void main()
 {
-    // Define position and normal in model coordinates. he?
-    vec4 mcPosition = a_position;
-    
-	  gl_Position = u_mvpMatrix * mcPosition;    
+	// Transform the points position by MVP matrix
+	gl_Position = u_mvpMatrix * a_position;    
 	
+	// varying position contains original data position
 	v_position = a_position.xyz;
+	// Texture coordinate
 	v_texCoord = a_texCoord;
+	// Normal coordinate
 	v_normal = a_normal;
 }

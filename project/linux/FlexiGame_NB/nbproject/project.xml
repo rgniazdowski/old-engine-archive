@@ -117,6 +117,9 @@
             <word>multitextured</word>
             <word>multitexturing</word>
             <word>namespace</word>
+            <word>nx</word>
+            <word>ny</word>
+            <word>nz</word>
             <word>obj</word>
             <word>overallocation</word>
             <word>packfree</word>
@@ -135,6 +138,9 @@
             <word>printf</word>
             <word>prox</word>
             <word>ptr</word>
+            <word>px</word>
+            <word>py</word>
+            <word>pz</word>
             <word>Radoslaw</word>
             <word>rgb</word>
             <word>rgba</word>
@@ -147,6 +153,7 @@
             <word>strcasecmp</word>
             <word>struct</word>
             <word>structs</word>
+            <word>texel</word>
             <word>tga</word>
             <word>ttl</word>
             <word>unboxed</word>
@@ -154,6 +161,7 @@
             <word>ushort</word>
             <word>uv</word>
             <word>valign</word>
+            <word>vbo's</word>
             <word>vcenter</word>
             <word>vec</word>
             <word>wav</word>

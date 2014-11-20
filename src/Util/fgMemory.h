@@ -7,8 +7,8 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-#ifndef _FG_MEMORY_H
-    #define _FG_MEMORY_H
+#ifndef FG_INC_MEMORY_H
+    #define FG_INC_MEMORY_H
 
     #include "fgBuildConfig.h"
     #include "fgBool.h"

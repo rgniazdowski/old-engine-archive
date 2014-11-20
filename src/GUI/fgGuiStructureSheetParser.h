@@ -7,8 +7,8 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-#ifndef _FG_GUI_STRUCTURE_SHEET_PARSER_H_
-    #define _FG_GUI_STRUCTURE_SHEET_PARSER_H_
+#ifndef FG_INC_GUI_STRUCTURE_SHEET_PARSER
+    #define FG_INC_GUI_STRUCTURE_SHEET_PARSER
 
     #include "XML/fgXMLParser.h"
     #include "XML/fgXMLDefaultHandler.h"
@@ -75,4 +75,4 @@ public:
     virtual void characters(const char *ch, int start, int length, fgXMLNodeType nodeType, int depth = 0);
 };
 
-#endif /* _FG_GUI_STRUCTURE_SHEET_PARSER_H_ */
+#endif /* FG_INC_GUI_STRUCTURE_SHEET_PARSER */

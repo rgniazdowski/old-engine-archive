@@ -7,9 +7,9 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-#ifndef _FG_SFX_SOUND_RESOURCE_H_
-    #define _FG_SFX_SOUND_RESOURCE_H_
-    #define _FG_SFX_SOUND_RESOURCE_H_BLOCK_
+#ifndef FG_INC_SFX_SOUND_RESOURCE
+    #define FG_INC_SFX_SOUND_RESOURCE
+    #define FG_INC_SFX_SOUND_RESOURCE_BLOCK
 
     #include "fgBuildConfig.h"
 
@@ -164,5 +164,5 @@ public:
     int getCurrentChannel(void);
 };
 
-    #undef _FG_SFX_SOUND_RESOURCE_H_BLOCK_
-#endif /* _FG_SFX_SOUND_RESOURCE_H_ */
+    #undef FG_INC_SFX_SOUND_RESOURCE_BLOCK
+#endif /* FG_INC_SFX_SOUND_RESOURCE */

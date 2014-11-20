@@ -7,8 +7,8 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-#ifndef _FG_FONT_BUILT_IN_TYPES_H_
-    #define _FG_FONT_BUILT_IN_TYPES_H_
+#ifndef FG_INC_FONT_BUILT_IN_TYPES
+    #define FG_INC_FONT_BUILT_IN_TYPES
 
     #ifndef NULL
         #ifndef __cplusplus
@@ -118,4 +118,4 @@ struct fgFontDataInfo {
     }
 };
 
-#endif /* _FG_FONT_BUILT_IN_TYPES_H_ */
+#endif /* FG_INC_FONT_BUILT_IN_TYPES */

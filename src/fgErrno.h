@@ -7,9 +7,9 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-#ifndef _FG_ERRNO_H_
-    #define _FG_ERRNO_H_
-    #define _FG_ERRNO_ERROR_CODES_BLOCK__
+#ifndef FG_INC_ERRNO
+    #define FG_INC_ERRNO
+    #define FG_INC_ERRNO_ERROR_CODES_BLOCK__
 
     #include <cerrno>
     #include <map>
@@ -205,5 +205,5 @@ namespace FG_ERRNO_MAIN {
     }
 };
 
-    #undef _FG_ERRNO_ERROR_CODES_BLOCK__
-#endif /* _FG_ERRNO_H_ */
+    #undef FG_INC_ERRNO_ERROR_CODES_BLOCK__
+#endif /* FG_INC_ERRNO */

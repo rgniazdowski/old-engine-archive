@@ -141,6 +141,7 @@ fgBool fgResourceConfig::parseData(void) {
 
             std::string name;
             std::string path;
+            std::string flags;
             fgResourceType type = FG_RESOURCE_INVALID;
             fgQuality quality = FG_QUALITY_UNIVERSAL;
             fgResPriorityType priority = FG_RES_PRIORITY_LOW;
@@ -149,30 +150,29 @@ fgBool fgResourceConfig::parseData(void) {
             fgVector<std::string> _helperVec;
 
             /// Get the resource name
-            if((param = section->getParameter("name")) != NULL) {
-                if(param->type == FG_CFG_PARAMETER_STRING)
-                    name = param->string;
+            if((param = section->getParameter("name", FG_CFG_PARAMETER_STRING)) != NULL) {
+                name = param->string;
             } else {
                 foundName = FG_FALSE;
             }
+            if((param = section->getParameter("flags", FG_CFG_PARAMETER_STRING)) != NULL) {
+                flags = param->string;
+            }
             // Get the resource type
-            if((param = section->getParameter("type")) != NULL) {
-                if(param->type == FG_CFG_PARAMETER_STRING)
-                    type = FG_RESOURCE_TYPE_FROM_TEXT(param->string);
+            if((param = section->getParameter("type", FG_CFG_PARAMETER_STRING)) != NULL) {
+                type = FG_RESOURCE_TYPE_FROM_TEXT(param->string);
             } else {
                 foundType = FG_FALSE;
             }
             // Get the resource priority
-            if((param = section->getParameter("priority")) != NULL) {
-                if(param->type == FG_CFG_PARAMETER_STRING)
-                    priority = FG_RES_PRIORITY_FROM_TEXT(param->string);
+            if((param = section->getParameter("priority", FG_CFG_PARAMETER_STRING)) != NULL) {
+                priority = FG_RES_PRIORITY_FROM_TEXT(param->string);
             } else {
                 foundPriority = FG_FALSE;
             }
             // Check if the resource has files mapped to different qualities
-            if((param = section->getParameter("isMapped")) != NULL) {
-                if(param->type == FG_CFG_PARAMETER_BOOL)
-                    isMapped = param->bool_val;
+            if((param = section->getParameter("isMapped", FG_CFG_PARAMETER_BOOL)) != NULL) {
+                isMapped = param->bool_val;
             } else {
                 isMapped = FG_FALSE;
             }
@@ -231,6 +231,7 @@ fgBool fgResourceConfig::parseData(void) {
                 m_header.paths.swap(pathVec);
                 m_header.qualities.swap(qualityVec);
                 m_header.resType = type;
+                m_header.flags = flags;
                 m_resources[m_header.name] = m_header;
             } else {
                 fgResourceHeader resHeader;
@@ -241,6 +242,7 @@ fgBool fgResourceConfig::parseData(void) {
                 resHeader.qualities.swap(qualityVec);
                 resHeader.quality = quality;
                 resHeader.resType = type;
+                resHeader.flags = flags;
                 m_resources[resHeader.name] = resHeader;
                 m_resNames.push_back(resHeader.name);
             }

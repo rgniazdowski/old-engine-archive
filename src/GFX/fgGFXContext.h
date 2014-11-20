@@ -7,14 +7,14 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-#ifndef _FG_GFX_CONTEXT_H_
-    #define _FG_GFX_CONTEXT_H_
+#ifndef FG_INC_GFX_CONTEXT
+    #define FG_INC_GFX_CONTEXT
 
-    #ifndef _FG_GFX_GL_H_
+    #ifndef FG_INC_GFX_GL
         #include "fgGFXGL.h"
     #endif
 
-    #ifndef _FG_GFX_TYPES_H_
+    #ifndef FG_INC_GFX_TYPES
         #include "fgGFXTypes.h"
     #endif
 
@@ -529,7 +529,7 @@ public:
     // Bind texture to 2D
     void bindTexture2D(const fgGFXuint texID);
     // Bind texture to 3D
-    void bindTexture3D(const fgGFXuint texID);
+    void bindTextureCube(const fgGFXuint texID);
     // Bind texture to given target
     void bindTexture(fgGfxTextureID& textureID, const fgGFXenum target = (fgGFXenum)0);
 
@@ -648,4 +648,4 @@ public:
 
 };
 
-#endif /* _FG_GFX_CONTEXT_H_ */
+#endif /* FG_INC_GFX_CONTEXT */

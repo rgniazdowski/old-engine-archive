@@ -7,8 +7,8 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-#ifndef _FG_MATHLIB_H_
-    #define _FG_MATHLIB_H_
+#ifndef FG_INC_MATHLIB
+    #define FG_INC_MATHLIB
 
     #include "fgBuildConfig.h"
     #include <cmath>
@@ -1528,4 +1528,4 @@ typedef fgQuaternionf fgQuatf;
 typedef fgQuaterniond fgQuatd;
     #endif /* FG_MATH_GLM_QUAT_MASK */
 
-#endif /* _FG_MATHLIB_H_ */
+#endif /* FG_INC_MATHLIB */

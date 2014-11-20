@@ -13,11 +13,11 @@
  * Created on November 14, 2014, 11:01 AM
  */
 
-#ifndef _FG_GFX_DRAWABLE_H_
-    #define _FG_GFX_DRAWABLE_H_
-    #define _FG_GFX_DRAWABLE_H_BLOCK_
+#ifndef FG_INC_GFX_DRAWABLE
+    #define FG_INC_GFX_DRAWABLE
+    #define FG_INC_GFX_DRAWABLE_BLOCK
 
-    #ifndef _FG_MATHLIB_H_
+    #ifndef FG_INC_MATHLIB
         #include "Math/fgMathLib.h"
     #endif
 
@@ -74,6 +74,6 @@ private:
 
 
 
-    #undef _FG_GFX_DRAWABLE_H_BLOCK_
-#endif	/* _FG_GFX_DRAWABLE_H_ */
+    #undef FG_INC_GFX_DRAWABLE_BLOCK
+#endif	/* FG_INC_GFX_DRAWABLE */
 

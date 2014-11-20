@@ -13,8 +13,8 @@
  * Created on October 24, 2014, 4:30 PM
  */
 
-#ifndef _FG_PS_PARTICLE_EMITTER_H_
-    #define	_FG_PS_PARTICLE_EMITTER_H_
+#ifndef FG_INC_PS_PARTICLE_EMITTER
+    #define	FG_INC_PS_PARTICLE_EMITTER
 
     #include "fgVector.h"
     #include "GFX/fgGFXSceneNode.h"
@@ -128,5 +128,5 @@ public:
     
 };
 
-#endif	/* _FG_PS_PARTICLE_EMITTER_H_ */
+#endif	/* FG_INC_PS_PARTICLE_EMITTER */
 

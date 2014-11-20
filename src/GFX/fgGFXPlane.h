@@ -13,9 +13,9 @@
  * Created on November 13, 2014, 6:55 AM
  */
 
-#ifndef _FG_GFX_PLANE_H_
-    #define _FG_GFX_PLANE_H_
-    #define _FG_GFX_PLANE_H_BLOCK_
+#ifndef FG_INC_GFX_PLANE
+    #define FG_INC_GFX_PLANE
+    #define FG_INC_GFX_PLANE_BLOCK
 
     #include "fgGFXVertex.h"
     #include "Math/fgMathLib.h"
@@ -152,6 +152,6 @@ inline void dumpPlane(const fgPlanef & plane, const char *title) {
     printf("%s = { %.2f %.2f %.2f d=%.2f}\n", ( title ? title : "X"), plane.n.x, plane.n.y, plane.n.z, plane.d);
 }
 
-    #undef _FG_GFX_PLANE_H_BLOCK_
-#endif	/* _FG_GFX_PLANE_H_ */
+    #undef FG_INC_GFX_PLANE_BLOCK
+#endif	/* FG_INC_GFX_PLANE */
 

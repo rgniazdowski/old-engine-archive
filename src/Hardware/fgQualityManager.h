@@ -7,8 +7,8 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-#ifndef _FG_QUALITY_MANAGER_H_
-    #define _FG_QUALITY_MANAGER_H_
+#ifndef FG_INC_QUALITY_MANAGER
+    #define FG_INC_QUALITY_MANAGER
 
     #include "fgQualityTypes.h"
     #include "fgManagerBase.h"
@@ -134,4 +134,4 @@ public:
     }
 };
 
-#endif /* _FG_QUALITY_MANAGER_H_ */
+#endif /* FG_INC_QUALITY_MANAGER */

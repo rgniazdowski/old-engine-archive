@@ -420,14 +420,15 @@ fgBool fgGameMain::loadResources(void) {
         FG_LOG_DEBUG("Will now try load object CobraBomber.obj");
         std::string modelname("CobraBomber");
         fgGfxModelResource *model = (fgGfxModelResource *)m_resourceMgr->get(modelname);
+        fgAABoundingBox3Df &b = model->getRefAABB();
+        printf("bbox[b]: min: {%.2f,%.2f,%.2f}, max: {%.2f,%.2f,%.2f};\n", 
+			b.min.x, b.min.y, b.min.z,
+			b.max.x, b.max.y, b.max.z);
         float t2 = fgTime::ms();
         FG_LOG_DEBUG("WHOLE OBJECT CREATION TOOK: %.2f seconds", (t2 - t1) / 1000.0f);
     }
     ////////////////////////////////////////////////////////////////////////////
 #endif
-
-    // #FIXME
-    m_gfxMain->getParticleSystem()->insertParticleEmitter("ExplosionEffect", "ExplosionEffect", fgVector3f(0.0f, 0.0f, 0.0f));
 
     m_gfxMain->getParticleSystem()->insertParticleEmitter("ExplosionDebris", "ExplosionDebris", fgVector3f(0.0f, 0.0f, 0.0f));
     m_gfxMain->getParticleSystem()->insertParticleEmitter("ExplosionFlash", "ExplosionFlash", fgVector3f(0.0f, 0.0f, 0.0f));
@@ -613,12 +614,6 @@ fgBool fgGameMain::gameTouchHandler(fgArgumentList *argv) {
             if(pEmitter) {
                 pEmitter->addParticles(32, fgVector3f((float)touch->x, (float)touch->y, 0.0f));
             }
-        }
-        {
-            //fgSoundResource *sound = (fgSoundResource *)m_resourceMgr->request("explode.wav");
-            //if(sound) {
-            //    sound->play();
-            //}
         }
     }
     return FG_TRUE;

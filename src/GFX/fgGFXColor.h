@@ -7,14 +7,14 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-#ifndef _FG_GFX_COLOR_H_
-    #define _FG_GFX_COLOR_H_
+#ifndef FG_INC_GFX_COLOR
+    #define FG_INC_GFX_COLOR
 
-    #ifndef _FG_BUILD_CONFIG_H_
+    #ifndef FG_INC_BUILD_CONFIG
         #include "fgBuildConfig.h"
     #endif
 
-    #if defined FG_USING_GLM
+    #if defined(FG_USING_GLM)
         #include "glm/vec3.hpp"
         #include "glm/vec4.hpp"
 
@@ -212,4 +212,4 @@ typedef fgColor4f fgColor;
 
     #endif /* FG_USING_GLM */
 
-#endif /* _FG_GFX_COLOR_H_ */
+#endif /* FG_INC_GFX_COLOR */

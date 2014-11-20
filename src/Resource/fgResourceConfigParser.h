@@ -7,22 +7,22 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-#ifndef _FG_RESOURCE_CONFIG_H_
-    #define _FG_RESOURCE_CONFIG_H_
+#ifndef FG_INC_RESOURCE_CONFIG
+    #define FG_INC_RESOURCE_CONFIG
 
-    #ifndef _FG_CONFIG_H_
+    #ifndef FG_INC_CONFIG
         #include "Util/fgConfig.h"
     #endif
 
-    #ifndef _FG_RESOURCE_H_
+    #ifndef FG_INC_RESOURCE
         #include "fgResource.h"
     #endif
 
 typedef unsigned int fgResourceConfigType;
 
-    #define FG_RES_CFG_INVALID			0
-    #define FG_RES_CFG_RESOURCE			FG_RESOURCE
-    #define FG_RES_CFG_RESOURCE_GROUP	FG_RESOURCE_GROUP
+    #define FG_RES_CFG_INVALID              0
+    #define FG_RES_CFG_RESOURCE             FG_RESOURCE
+    #define FG_RES_CFG_RESOURCE_GROUP       FG_RESOURCE_GROUP
 
 /*
  * Resource header is used only for config files
@@ -36,6 +36,8 @@ struct fgResourceHeader {
     ///
     std::string name;
     ///
+    std::string flags;
+    ///
     std::string configPath;
     /// Priority of this resource
     fgResPriorityType priority;
@@ -45,19 +47,27 @@ struct fgResourceHeader {
     fgResourceType resType;
     ///
     fgBool isConfig;
+    /**
+     * 
+     */
     fgResourceHeader() :
     qualities(),
     paths(),
     name(),
+    flags(),
     configPath(),
     priority(FG_RES_PRIORITY_LOW),
     quality(FG_QUALITY_UNIVERSAL),
     resType(FG_RESOURCE_INVALID),
     isConfig(FG_FALSE) { }
+    /**
+     * 
+     */
     ~fgResourceHeader() {
         paths.clear_optimised();
         qualities.clear_optimised();
         name.clear();
+        flags.clear();
         configPath.clear();
     }
 };
@@ -67,30 +77,50 @@ struct fgResourceHeader {
  */
 class fgResourceConfig : public fgConfig {
 public:
+    typedef fgConfig base_type;
     typedef std::map<std::string, fgResourceHeader> resourceHeaderMap;
     typedef resourceHeaderMap::iterator resourceHeaderMapItor;
 public:
-    //
+    /**
+     */
     fgResourceConfig();
-    //
+    /**
+     * 
+     * @param filePath
+     */
     fgResourceConfig(const char *filePath);
-    //
+    /**
+     * 
+     */
     virtual ~fgResourceConfig();
 
-    //
+    /**
+     * 
+     * @param filePath
+     * @return 
+     */
     virtual fgBool load(const char *filePath = NULL);
 
-    //
+    /**
+     * 
+     * @return 
+     */
     fgResourceType getResourceType(void) const {
         return m_header.resType;
     }
 
-    //
+    /**
+     * 
+     * @return 
+     */
     fgResourceConfigType getConfigType(void) const {
         return m_cfgType;
     }
 
-    //
+    /**
+     * 
+     * @return 
+     */
     fgCfgSection *getConfigSection(void);
 
     //
@@ -134,7 +164,10 @@ public:
         return m_header;
     }
 protected:
-    //
+    /**
+     * 
+     * @return 
+     */
     fgBool parseData(void);
 
 private:
@@ -149,7 +182,7 @@ private:
 
 };
 
-#endif /* _FG_RESOURCE_CONFIG_H_ */
+#endif /* FG_INC_RESOURCE_CONFIG */
 
-#undef	_FG_RESOURCE_CONFIG_H_SAFE_
-#define _FG_RESOURCE_CONFIG_H_SAFE_
+#undef	FG_INC_RESOURCE_CONFIGSAFE_
+#define FG_INC_RESOURCE_CONFIGSAFE_

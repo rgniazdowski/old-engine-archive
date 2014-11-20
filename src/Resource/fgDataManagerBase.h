@@ -7,8 +7,8 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-#ifndef _FG_DATA_MANAGER_BASE_H_
-    #define _FG_DATA_MANAGER_BASE_H_
+#ifndef FG_INC_DATA_MANAGER_BASE
+    #define FG_INC_DATA_MANAGER_BASE
 
     #include "fgManagerBase.h"
     #include "Util/fgHandleManager.h"
@@ -421,4 +421,4 @@ fgBool fgDataManagerBase<DataType, HandleType, TagType>::isManaged(const char *n
     return (fgBool)(pData != NULL);
 }
 
-#endif /* _FG_DATA_MANAGER_BASE_H_ */
+#endif /* FG_INC_DATA_MANAGER_BASE */

@@ -13,8 +13,8 @@
 // aspect ratio / orientation and dpi handling so the layout of menus will never broke when different
 // resolution / platform is used
 
-#ifndef _FG_GUI_SCREEN_GRID_H_
-    #define _FG_GUI_SCREEN_GRID_H_
+#ifndef FG_INC_GUI_SCREEN_GRID
+    #define FG_INC_GUI_SCREEN_GRID
 
     #include "Math/fgMathLib.h"
     #include "fgSingleton.h"
@@ -84,5 +84,5 @@ public:
 
     #define FG_GuiScreenGrid	fgGuiScreenGrid::getInstance();
 
-#endif /* _FG_GUI_SCREEN_GRID_H_ */
+#endif /* FG_INC_GUI_SCREEN_GRID */
 

@@ -13,8 +13,8 @@
  * Created on October 17, 2014, 12:32 PM
  */
 
-#ifndef _FG_GFX_ATTRIB_BITS_H_
-    #define	_FG_GFX_ATTRIB_BITS_H_
+#ifndef FG_INC_GFX_ATTRIB_BITS
+    #define	FG_INC_GFX_ATTRIB_BITS
 
     #ifndef FG_GFX_ATTRIB_POS_LOCATION
         #define FG_GFX_ATTRIB_POS_LOCATION          0
@@ -56,5 +56,5 @@
         #define FG_GFX_TANGENT_BIT             0x0020
     #endif 
 
-#endif	/* _FG_GFX_ATTRIB_BITS_H_ */
+#endif	/* FG_INC_GFX_ATTRIB_BITS */
 

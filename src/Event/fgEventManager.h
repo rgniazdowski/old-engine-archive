@@ -7,8 +7,8 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-#ifndef _FG_EVENT_MANAGER_H_
-    #define _FG_EVENT_MANAGER_H_
+#ifndef FG_INC_EVENT_MANAGER
+    #define FG_INC_EVENT_MANAGER
 
     #include "fgBuildConfig.h"
     #include "fgTypes.h"
@@ -245,4 +245,4 @@ fgFunctionCallback* fgEventManager::addEventCallback(
     return callback;
 }
 
-#endif /* _FG_EVENT_MANAGER_H_ */
+#endif /* FG_INC_EVENT_MANAGER */

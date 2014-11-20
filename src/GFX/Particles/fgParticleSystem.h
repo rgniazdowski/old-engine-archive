@@ -13,8 +13,8 @@
  *      Author: Vigilant
  */
 
-#ifndef _FG_PARTICLE_SYSTEM_H_
-    #define _FG_PARTICLE_SYSTEM_H_
+#ifndef FG_INC_PARTICLE_SYSTEM
+    #define FG_INC_PARTICLE_SYSTEM
 
     #include "fgBool.h"
     #include "fgPsParticleEffect.h"
@@ -231,4 +231,4 @@ public:
 
 };
 
-#endif /* PARTICLESYSTEM_H_ */
+#endif /* PARTICLESYSTEM */

@@ -10,9 +10,9 @@
  * Portions Copyright (C) James Boer, 2000
  */
 
-#ifndef _FG_RESOURCE_H_
-    #define _FG_RESOURCE_H_
-    #define _FG_RESOURCE_H_BLOCK_
+#ifndef FG_INC_RESOURCE
+    #define FG_INC_RESOURCE
+    #define FG_INC_RESOURCE_BLOCK
 
     #include "fgCommon.h"
     #include "fgStatusReporter.h"
@@ -245,6 +245,19 @@ public:
     // Return true if the data exists (it's loaded and ready)
     virtual fgBool isDisposed(void) const = 0;
 
+    /**
+     * 
+     * @param flags
+     */
+    inline virtual void setFlags(const char *flags) {
+        setFlags(std::string(flags));
+    }
+    /**
+     * 
+     * @param flags
+     */
+    inline virtual void setFlags(const std::string& flags) { }
+    
     // These functions set the parameters by which the sorting operator determines
     // in what order resources are discarded
 
@@ -349,5 +362,5 @@ protected:
 
 };
 
-    #undef _FG_RESOURCE_H_BLOCK_
-#endif /* _FG_RESOURCE_H_ */
+    #undef FG_INC_RESOURCE_BLOCK
+#endif /* FG_INC_RESOURCE */

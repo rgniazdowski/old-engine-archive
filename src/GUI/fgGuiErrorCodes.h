@@ -7,11 +7,11 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-#ifndef _FG_GUI_ERROR_CODES_H_
-    #define _FG_GUI_ERROR_CODES_H_
-    #define _FG_ERRNO_ERROR_CODES_BLOCK_OTHER__
+#ifndef FG_INC_GUI_ERROR_CODES
+    #define FG_INC_GUI_ERROR_CODES
+    #define FG_INC_ERRNO_ERROR_CODES_BLOCK_OTHER__
 
-    #ifdef _FG_ERRNO_ERROR_CODES_BLOCK__
+    #ifdef FG_INC_ERRNO_ERROR_CODES_BLOCK__
         #error "FG_ERRNO_ERROR_CODES_BLOCK constant is defined. Do not include error codes definition header inside of fgErrno header."
     #endif
 
@@ -35,5 +35,5 @@ namespace FG_ERRNO_GUI {
     }
 };
 
-    #undef _FG_ERRNO_ERROR_CODES_BLOCK_OTHER__
-#endif /* _FG_GUI_ERROR_CODES_H_ */
+    #undef FG_INC_ERRNO_ERROR_CODES_BLOCK_OTHER__
+#endif /* FG_INC_GUI_ERROR_CODES */

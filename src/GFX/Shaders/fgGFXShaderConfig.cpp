@@ -358,7 +358,7 @@ fgBool fgGfxShaderConfig::_parseData(fgGfxSLVersion SLver) {
             if(_bind.type == FG_GFX_UNIFORM_INVALID) {
                 // Not a valid / supported uniform type - can ignore it ? Pass empty data to it?
                 // #FIXME
-                reportWarning(FG_ERRNO_GFX_SHADER_WRONG_UNIFORM);
+                reportWarning(FG_ERRNO_GFX_SHADER_WRONG_UNIFORM, "name=[%s]", _uniforms[i]->subName.c_str());
                 continue;
             }
             fgCfgParameter *_uname = NULL, *_uprecision = NULL;
@@ -367,7 +367,7 @@ fgBool fgGfxShaderConfig::_parseData(fgGfxSLVersion SLver) {
             _uprecision = _uniforms[i]->getParameter("precision", FG_CFG_PARAMETER_STRING);
             if(!_uname) {
                 // This uniform definition section is malformed
-                reportWarning(FG_ERRNO_GFX_SHADER_WRONG_UNIFORM);
+                reportWarning(FG_ERRNO_GFX_SHADER_WRONG_UNIFORM, "name=[%s]", _uniforms[i]->subName.c_str());
                 continue;
             }
             _bind.precision = FG_GFX_PRECISION_DEFAULT;

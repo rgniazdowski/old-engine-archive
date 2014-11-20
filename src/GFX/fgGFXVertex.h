@@ -13,14 +13,14 @@
  * Created on October 17, 2014, 12:24 PM
  */
 
-#ifndef _FG_GFX_VERTEX_H_
-    #define	_FG_GFX_VERTEX_H_
+#ifndef FG_INC_GFX_VERTEX
+    #define	FG_INC_GFX_VERTEX
 
-    #ifndef _FG_BUILD_CONFIG_H_
+    #ifndef FG_INC_BUILD_CONFIG
         #include "fgBuildConfig.h"
     #endif
 
-    #ifndef _FG_GFX_COLOR_H_
+    #ifndef FG_INC_GFX_COLOR
         #include "fgGFXColor.h"
     #endif
 
@@ -102,7 +102,7 @@ typedef fgVector4d fgVec4d;
 
     #endif /* FG_USING_GLM */
 
-    #ifndef _FG_GFX_ATTRIB_BITS_H_
+    #ifndef FG_INC_GFX_ATTRIB_BITS
         #include "fgGFXAttribBits.h"
     #endif
 
@@ -177,5 +177,5 @@ inline void dumpVector(const fgVector3f & vec, const char *title) {
 
 
 
-#endif	/* _FG_GFX_VERTEX_H_ */
+#endif	/* FG_INC_GFX_VERTEX */
 

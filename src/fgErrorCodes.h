@@ -7,14 +7,14 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-#ifndef _FG_ERROR_CODES_H_
-    #define _FG_ERROR_CODES_H_
+#ifndef FG_INC_ERROR_CODES
+    #define FG_INC_ERROR_CODES
 
-    #ifdef _FG_ERRNO_ERROR_CODES_BLOCK__
+    #ifdef FG_INC_ERRNO_ERROR_CODES_BLOCK__
         #error "FG_ERRNO_ERROR_CODES_BLOCK constant is defined. Do not include ErrorCodes inside of fgErrno header."
     #endif
 
-    #ifdef _FG_ERRNO_ERROR_CODES_BLOCK_OTHER__
+    #ifdef FG_INC_ERRNO_ERROR_CODES_BLOCK_OTHER__
         #error "FG_ERRNO_ERROR_CODES_BLOCK constant is defined. Do not include fgErrorCodes.h inside of other error codes definition header."
     #endif 
 
@@ -41,4 +41,4 @@ public:
     static void unregisterAll(void);
 };
 
-#endif /* _FG_ERROR_CODES_H_ */
+#endif /* FG_INC_ERROR_CODES */

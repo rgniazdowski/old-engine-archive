@@ -7,17 +7,17 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-#ifndef _FG_GFX_MODEL_RESOURCE_H_
-    #define _FG_GFX_MODEL_RESOURCE_H_
-    #define _FG_GFX_MODEL_RESOURCE_H_BLOCK_
+#ifndef FG_INC_GFX_MODEL_RESOURCE
+    #define FG_INC_GFX_MODEL_RESOURCE
+    #define FG_INC_GFX_MODEL_RESOURCE_BLOCK
 
-    #ifndef _FG_TYPES_H_
+    #ifndef FG_INC_TYPES
         #include "fgTypes.h"
     #endif
-    #ifndef _FG_GFX_MODEL_TYPES_H_
+    #ifndef FG_INC_GFX_MODEL_TYPES
         #include "fgGFXModelTypes.h"
     #endif
-    #ifndef _FG_RESOURCE_H_
+    #ifndef FG_INC_RESOURCE
         #include "Resource/fgResource.h"
     #endif
 
@@ -334,5 +334,5 @@ protected:
 
 typedef fgGfxModelResource fgGfxModel;
 
-    #undef _FG_GFX_MODEL_RESOURCE_H_BLOCK_
-#endif /* _FG_GFX_MODEL_RESOURCE_H_ */
+    #undef FG_INC_GFX_MODEL_RESOURCE_BLOCK
+#endif /* FG_INC_GFX_MODEL_RESOURCE */

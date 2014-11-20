@@ -3,8 +3,8 @@
 //
 // Licensed under 2-clause BSD liecense.
 //
-#ifndef _FG_TINY_OBJ_LOADER_H_
-    #define _FG_TINY_OBJ_LOADER_H_
+#ifndef FG_INC_TINY_OBJ_LOADER_H_
+    #define FG_INC_TINY_OBJ_LOADER_H_
 
     #include <string>
     #include <vector>
@@ -102,4 +102,4 @@ namespace fgTinyObj {
                         std::istream& inStream);
 }
 
-#endif  /* _FG_TINY_OBJ_LOADER_H_ */
+#endif  /* FG_INC_TINY_OBJ_LOADER_H_ */

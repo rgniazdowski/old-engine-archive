@@ -13,9 +13,9 @@
  * Created on November 8, 2014, 1:37 PM
  */
 
-#ifndef _FG_SFX_AUDIO_BASE_H_
-    #define _FG_SFX_AUDIO_BASE_H_
-    #define _FG_SFX_AUDIO_BASE_H_BLOCK_
+#ifndef FG_INC_SFX_AUDIO_BASE
+    #define FG_INC_SFX_AUDIO_BASE
+    #define FG_INC_SFX_AUDIO_BASE_BLOCK
 
     #include "fgBuildConfig.h"
     #include "fgBool.h"
@@ -102,6 +102,6 @@ public:
     }
 };
 
-    #undef _FG_SFX_AUDIO_BASE_H_BLOCK_
-#endif	/* _FG_SFX_AUDIO_BASE_H_ */
+    #undef FG_INC_SFX_AUDIO_BASE_BLOCK
+#endif	/* FG_INC_SFX_AUDIO_BASE */
 

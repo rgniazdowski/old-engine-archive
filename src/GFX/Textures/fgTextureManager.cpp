@@ -457,11 +457,26 @@ fgBool fgTextureManager::makeTexture(fgTextureResource * pTexture) {
         status = FG_FALSE;
         failedFuncs.append("glBindTexture, ");
     }
+    fgGFXuint target = 0;
+    fgGFXuint cubeTargets[] = {GL_TEXTURE_CUBE_MAP_POSITIVE_X, GL_TEXTURE_CUBE_MAP_NEGATIVE_X,
+                               GL_TEXTURE_CUBE_MAP_POSITIVE_Y, GL_TEXTURE_CUBE_MAP_NEGATIVE_Y,
+                               GL_TEXTURE_CUBE_MAP_POSITIVE_Z, GL_TEXTURE_CUBE_MAP_NEGATIVE_Z};
+    fgTextureType textureType = pTexture->getTextureType();
+    if(textureType == FG_TEXTURE_PLAIN || textureType == FG_TEXTURE_FONT) {
+        target = GL_TEXTURE_2D;
+        glTexParameteri(target, GL_TEXTURE_MIN_FILTER, (fgGFXint)GL_LINEAR);
+        glTexParameteri(target, GL_TEXTURE_MAG_FILTER, (fgGFXint)GL_LINEAR);
+        glTexParameteri(target, GL_TEXTURE_WRAP_S, (fgGFXint)GL_MIRRORED_REPEAT);
+        glTexParameteri(target, GL_TEXTURE_WRAP_T, (fgGFXint)GL_MIRRORED_REPEAT);
+    } else if(textureType == FG_TEXTURE_CUBE) {
+        target = GL_TEXTURE_CUBE_MAP;
+        glTexParameteri(target, GL_TEXTURE_MIN_FILTER, (fgGFXint)GL_LINEAR);
+        glTexParameteri(target, GL_TEXTURE_MAG_FILTER, (fgGFXint)GL_LINEAR);
+        glTexParameteri(target, GL_TEXTURE_WRAP_S, (fgGFXint)GL_MIRRORED_REPEAT);
+        glTexParameteri(target, GL_TEXTURE_WRAP_T, (fgGFXint)GL_MIRRORED_REPEAT);
+        glTexParameteri(target, GL_TEXTURE_WRAP_R, (fgGFXint)GL_MIRRORED_REPEAT);
+    }
 
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, (fgGFXint)GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, (fgGFXint)GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, (fgGFXint)GL_MIRRORED_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, (fgGFXint)GL_MIRRORED_REPEAT);
     if(fgGLError("glTexParameteri")) {
         status = FG_FALSE;
         failedFuncs.append("glTexParameteri, ");
@@ -481,8 +496,21 @@ fgBool fgTextureManager::makeTexture(fgTextureResource * pTexture) {
         dataformat = (fgGFXint)GL_ALPHA;
         glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
     }
-
-    glTexImage2D(GL_TEXTURE_2D, 0, (fgGFXint)internalformat, pTexture->getWidth(), pTexture->getHeight(), 0, (fgGFXenum)dataformat, GL_UNSIGNED_BYTE, pTexture->getRawData());
+    if(textureType == FG_TEXTURE_PLAIN || textureType == FG_TEXTURE_FONT) {
+        glTexImage2D(target, 0, (fgGFXint)internalformat, pTexture->getWidth(), pTexture->getHeight(), 0, (fgGFXenum)dataformat, GL_UNSIGNED_BYTE, pTexture->getRawData());
+    } else if(textureType == FG_TEXTURE_CUBE) {
+        target = GL_TEXTURE_CUBE_MAP;
+        for(int i = 0; i < FG_NUM_TEXTURE_CUBE_MAPS; i++) {
+            glTexImage2D(cubeTargets[i], 0,
+                         (fgGFXint)internalformat,
+                         pTexture->getWidth(),
+                         pTexture->getHeight(),
+                         0,
+                         (fgGFXenum)dataformat,
+                         GL_UNSIGNED_BYTE,
+                         pTexture->getCubeData((fgTextureCubeMapID)i));
+        }
+    }
     if(fgGLError("glTexImage2D")) {
         status = FG_FALSE;
         failedFuncs.append("glTexImage2D, ");

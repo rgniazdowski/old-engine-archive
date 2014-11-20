@@ -7,16 +7,16 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-#ifndef _FG_GFX_SCENE_MANAGER_H_
-    #define _FG_GFX_SCENE_MANAGER_H_
+#ifndef FG_INC_GFX_SCENE_MANAGER
+    #define FG_INC_GFX_SCENE_MANAGER
 
     #include "Util/fgHandleManager.h"
 
-    #ifndef _FG_GFX_DRAWING_BATCH_H_
+    #ifndef FG_INC_GFX_DRAWING_BATCH
         #include "GFX/fgGFXDrawingBatch.h"
     #endif 
 
-    #ifndef _FG_GFX_CAMERA_ANIMATION_H_
+    #ifndef FG_INC_GFX_CAMERA_ANIMATION
         #include "GFX/fgGFXCameraAnimation.h"
     #endif
 
@@ -323,4 +323,4 @@ private:
     fgManagerBase *m_pResourceMgr;
 };
 
-#endif /* _FG_GFX_SCENE_MANAGER_H_ */
+#endif /* FG_INC_GFX_SCENE_MANAGER */

@@ -75,6 +75,7 @@ fgBool fgResourceGroupContentHandler::loadResConfig(const char *path) {
     if(m_resourceGroup->getResourceFactory()->isRegistered(m_resType)) {
         m_resourcePtr = m_resourceGroup->getResourceFactory()->createResource(m_resType);
         m_resourcePtr->setName(header->name);
+        m_resourcePtr->setFlags(header->flags);
         m_resourcePtr->setPriority(header->priority);
         m_resourcePtr->setQuality(header->quality);
         m_curResPriority = header->priority;
@@ -362,6 +363,7 @@ fgBool fgResourceGroup::_parseIniConfig(void) {
             continue;
         }
         resource->setName(header->name);
+        resource->setFlags(header->flags);
         resource->setPriority(header->priority);
         resource->setQuality(header->quality);
 

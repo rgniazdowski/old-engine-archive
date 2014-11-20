@@ -7,8 +7,8 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-#ifndef _FG_FILE_H_
-    #define _FG_FILE_H_
+#ifndef FG_INC_FILE
+    #define FG_INC_FILE
 
     #include "fgBuildConfig.h"
     #include "fgCommon.h"
@@ -175,4 +175,4 @@ public:
     }
 };
 
-#endif /* _FG_FILE_H_ */
+#endif /* FG_INC_FILE */

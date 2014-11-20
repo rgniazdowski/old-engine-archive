@@ -7,8 +7,8 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-#ifndef _FG_GFX_MAIN_H_
-    #define _FG_GFX_MAIN_H_
+#ifndef FG_INC_GFX_MAIN
+    #define FG_INC_GFX_MAIN
 
     #include "fgBuildConfig.h"
     #include "fgGFXStdInc.h"
@@ -135,4 +135,4 @@ private:
     fgBool m_init;
 };
 
-#endif /* _FG_GFX_MAIN_H_ */
+#endif /* FG_INC_GFX_MAIN */

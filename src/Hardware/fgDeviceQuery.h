@@ -7,8 +7,8 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-#ifndef _FG_DEVICE_QUERY_H_
-    #define _FG_DEVICE_QUERY_H_
+#ifndef FG_INC_DEVICE_QUERY
+    #define FG_INC_DEVICE_QUERY
 
     #include "fgBuildConfig.h"
     #include "fgTypes.h"
@@ -113,4 +113,4 @@ public:
 
     #endif // FG_USING_MARMALADE
 
-#endif /* _FG_DEVICE_QUERY_H_ */
+#endif /* FG_INC_DEVICE_QUERY */

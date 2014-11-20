@@ -7,8 +7,8 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-#ifndef _FG_GUI_STRUCTURE_SHEET_H_
-    #define _FG_GUI_STRUCTURE_SHEET_H_
+#ifndef FG_INC_GUI_STRUCTURE_SHEET
+    #define FG_INC_GUI_STRUCTURE_SHEET
 
-#endif /* _FG_GUI_STRUCTURE_SHEET_H_ */
+#endif /* FG_INC_GUI_STRUCTURE_SHEET */
 

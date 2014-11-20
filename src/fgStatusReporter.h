@@ -7,8 +7,8 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-#ifndef _FG_STATUS_REPORTER_H_
-    #define _FG_STATUS_REPORTER_H_
+#ifndef FG_INC_STATUS_REPORTER
+    #define FG_INC_STATUS_REPORTER
 
     #include "fgBool.h"
     #include "fgErrno.h"
@@ -195,4 +195,4 @@ protected:
     statusVec m_statusVec;
 };
 
-#endif /* _FG_STATUS_REPORTER_H_ */
+#endif /* FG_INC_STATUS_REPORTER */

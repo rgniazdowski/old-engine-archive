@@ -7,8 +7,8 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-#ifndef _FG_SCRIPT_RESOURCE_H_
-    #define _FG_SCRIPT_RESOURCE_H_
+#ifndef FG_INC_SCRIPT_RESOURCE
+    #define FG_INC_SCRIPT_RESOURCE
 
     // #FIXME - quite possible that the script does not require resource layer
 
