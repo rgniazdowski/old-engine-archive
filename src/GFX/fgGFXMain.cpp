@@ -367,6 +367,8 @@ void fgGfxMain::render(void) {
         FG_LOG::PrintError("Cant access sPlainEasy shader program.");
         return;
     }
+    program->setUniform(FG_GFX_USE_TEXTURE, 1.0f);
+    program->setUniform(FG_GFX_PLAIN_TEXTURE, (fgGFXint)0);
     // #FIXME - this of course needs to be somewhere else 
     if(model && m_3DScene) {
         if(!m_3DScene->count()) {
@@ -406,14 +408,13 @@ void fgGfxMain::render(void) {
             fgGfxTexture *pTexture = static_cast<fgGfxTexture *>(pResourceX);
             if(pTexture) {
                 fgGfxTextureID &texID = pTexture->getRefGfxID();
-                m_gfxContext->activeTexture(GL_TEXTURE1);
+                m_gfxContext->activeTexture(GL_TEXTURE1); // ? ? ? 
                 m_gfxContext->bindTexture(texID);
                 modelMat = fgMath::translate(fgMatrix4f(), m_3DScene->getCamera()->getRefEye());
                 float skyboxScale = FG_GFX_PERSPECTIVE_ZFAR_DEFAULT*1.1f;
                 modelMat = fgMath::scale(modelMat, fgVector3f(skyboxScale, skyboxScale, skyboxScale));
                 m_3DScene->getMVP()->calculate(modelMat);
                 program->setUniform(m_3DScene->getMVP());
-                program->setUniform(FG_GFX_USE_TEXTURE, 1.0f);
                 program->setUniform(FG_GFX_DRAW_SKYBOX, 1.0f);
                 program->setUniform(FG_GFX_CUBE_TEXTURE, (fgGFXint)1);
                 m_gfxContext->frontFace(GL_CW); // #FUBAR
@@ -422,7 +423,6 @@ void fgGfxMain::render(void) {
                 m_gfxContext->frontFace(GL_CCW);
                 program->setUniform(FG_GFX_DRAW_SKYBOX, 0.0f);
                 m_gfxContext->activeTexture(GL_TEXTURE0);
-                program->setUniform(FG_GFX_PLAIN_TEXTURE, (fgGFXint)0);
                 //m_gfxContext->setCullFace(FG_TRUE);
             }
         }

@@ -278,6 +278,7 @@ public:
             if(this->m_zIndex < a.m_zIndex)
                 return true;
             else if(this->m_zIndex > a.m_zIndex)
+
                 return false;
             else {
                 if(this->m_textureID < a.m_textureID)
