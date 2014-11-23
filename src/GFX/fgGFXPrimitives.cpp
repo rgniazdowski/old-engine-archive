@@ -9,45 +9,47 @@
 
 #include "fgGFXPrimitives.h"
 
+fgVector4f colorWhite(1.0f, 1.0f, 1.0f, 1.0f);
+
 /*
  *
  */
-const fgVertex3v c_stripSkyBoxOptimized[] = {
+const fgVertex4v c_stripSkyBoxOptimized[] = {
                                              // Vertex data for face 0 // Front?
-    {fgVector3f(-0.5f, -0.5f, 0.5f), fgVector3f(0.0f, 0.0f, -1.0f), fgVector2f(2.0f / 3.0f, 1.0f - 0.0f)}, //  v0
-    {fgVector3f(0.5f, -0.5f, 0.5f), fgVector3f(0.0f, 0.0f, -1.0f), fgVector2f(1.0f, 1.0f - 0.0f)}, //  v1
-    {fgVector3f(-0.5f, 0.5f, 0.5f), fgVector3f(0.0f, 0.0f, -1.0f), fgVector2f(2.0f / 3.0f, 1.0f - 1.0f / 3.0f)}, //  v2
-    {fgVector3f(0.5f, 0.5f, 0.5f), fgVector3f(0.0f, 0.0f, -1.0f), fgVector2f(1.0f, 1.0f - 1.0f / 3.0f)}, //  v3
+    {fgVector3f(-0.5f, -0.5f, 0.5f), fgVector3f(0.0f, 0.0f, -1.0f), fgVector2f(2.0f / 3.0f, 1.0f - 0.0f), colorWhite}, //  v0
+    {fgVector3f(0.5f, -0.5f, 0.5f), fgVector3f(0.0f, 0.0f, -1.0f), fgVector2f(1.0f, 1.0f - 0.0f), colorWhite}, //  v1
+    {fgVector3f(-0.5f, 0.5f, 0.5f), fgVector3f(0.0f, 0.0f, -1.0f), fgVector2f(2.0f / 3.0f, 1.0f - 1.0f / 3.0f), colorWhite}, //  v2
+    {fgVector3f(0.5f, 0.5f, 0.5f), fgVector3f(0.0f, 0.0f, -1.0f), fgVector2f(1.0f, 1.0f - 1.0f / 3.0f), colorWhite}, //  v3
 
                                              // Vertex data for face 1 // Right?
-    {fgVector3f(0.5f, -0.5f, 0.5f), fgVector3f(-1.0f, 0.0f, 0.0f), fgVector2f(1.0f, 1.0f - 1.0f / 3.0f)}, //  v4
-    {fgVector3f(0.5f, -0.5f, -0.5f), fgVector3f(-1.0f, 0.0f, 0.0f), fgVector2f(2.0f / 3.0f, 1.0f - 1.0f / 3.0f)}, //  v5
-    {fgVector3f(0.5f, 0.5f, 0.5f), fgVector3f(-1.0f, 0.0f, 0.0f), fgVector2f(1.0f, 1.0f - 2.0f / 3.0f)}, //  v6
-    {fgVector3f(0.5f, 0.5f, -0.5f), fgVector3f(-1.0f, 0.0f, 0.0f), fgVector2f(2.0f / 3.0f, 1.0f - 2.0f / 3.0f)}, //  v7
+    {fgVector3f(0.5f, -0.5f, 0.5f), fgVector3f(-1.0f, 0.0f, 0.0f), fgVector2f(1.0f, 1.0f - 1.0f / 3.0f), colorWhite}, //  v4
+    {fgVector3f(0.5f, -0.5f, -0.5f), fgVector3f(-1.0f, 0.0f, 0.0f), fgVector2f(2.0f / 3.0f, 1.0f - 1.0f / 3.0f), colorWhite}, //  v5
+    {fgVector3f(0.5f, 0.5f, 0.5f), fgVector3f(-1.0f, 0.0f, 0.0f), fgVector2f(1.0f, 1.0f - 2.0f / 3.0f), colorWhite}, //  v6
+    {fgVector3f(0.5f, 0.5f, -0.5f), fgVector3f(-1.0f, 0.0f, 0.0f), fgVector2f(2.0f / 3.0f, 1.0f - 2.0f / 3.0f), colorWhite}, //  v7
 
                                              // Vertex data for face 2 // Back?
-    {fgVector3f(0.5f, -0.5f, -0.5f), fgVector3f(0.0f, 0.0f, 1.0f), fgVector2f(2.0f / 3.0f, 1.0f - 1.0f / 3.0f)}, //  v8
-    {fgVector3f(-0.5f, -0.5f, -0.5f), fgVector3f(0.0f, 0.0f, 1.0f), fgVector2f(1.0f / 3.0f, 1.0f - 1.0f / 3.0f)}, //  v9
-    {fgVector3f(0.5f, 0.5f, -0.5f), fgVector3f(0.0f, 0.0f, 1.0f), fgVector2f(2.0f / 3.0f, 1.0f - 2.0f / 3.0f)}, // v10
-    {fgVector3f(-0.5f, 0.5f, -0.5f), fgVector3f(0.0f, 0.0f, 1.0f), fgVector2f(1.0f / 3.0f, 1.0f - 2.0f / 3.0f)}, // v11
+    {fgVector3f(0.5f, -0.5f, -0.5f), fgVector3f(0.0f, 0.0f, 1.0f), fgVector2f(2.0f / 3.0f, 1.0f - 1.0f / 3.0f), colorWhite}, //  v8
+    {fgVector3f(-0.5f, -0.5f, -0.5f), fgVector3f(0.0f, 0.0f, 1.0f), fgVector2f(1.0f / 3.0f, 1.0f - 1.0f / 3.0f), colorWhite}, //  v9
+    {fgVector3f(0.5f, 0.5f, -0.5f), fgVector3f(0.0f, 0.0f, 1.0f), fgVector2f(2.0f / 3.0f, 1.0f - 2.0f / 3.0f), colorWhite}, // v10
+    {fgVector3f(-0.5f, 0.5f, -0.5f), fgVector3f(0.0f, 0.0f, 1.0f), fgVector2f(1.0f / 3.0f, 1.0f - 2.0f / 3.0f), colorWhite}, // v11
 
                                              // Vertex data for face 3 // Left?
-    {fgVector3f(-0.5f, -0.5f, -0.5f), fgVector3f(1.0f, 0.0f, 0.0f), fgVector2f(1.0f / 3.0f, 1.0f - 1.0f / 3.0f)}, // v12
-    {fgVector3f(-0.5f, -0.5f, 0.5f), fgVector3f(1.0f, 0.0f, 0.0f), fgVector2f(0.0f, 1.0f - 1.0f / 3.0f)}, // v13
-    {fgVector3f(-0.5f, 0.5f, -0.5f), fgVector3f(1.0f, 0.0f, 0.0f), fgVector2f(1.0f / 3.0f, 1.0f - 2.0f / 3.0f)}, // v14
-    {fgVector3f(-0.5f, 0.5f, 0.5f), fgVector3f(1.0f, 0.0f, 0.0f), fgVector2f(0.0f, 1.0f - 2.0f / 3.0f)}, // v15
+    {fgVector3f(-0.5f, -0.5f, -0.5f), fgVector3f(1.0f, 0.0f, 0.0f), fgVector2f(1.0f / 3.0f, 1.0f - 1.0f / 3.0f), colorWhite}, // v12
+    {fgVector3f(-0.5f, -0.5f, 0.5f), fgVector3f(1.0f, 0.0f, 0.0f), fgVector2f(0.0f, 1.0f - 1.0f / 3.0f), colorWhite}, // v13
+    {fgVector3f(-0.5f, 0.5f, -0.5f), fgVector3f(1.0f, 0.0f, 0.0f), fgVector2f(1.0f / 3.0f, 1.0f - 2.0f / 3.0f), colorWhite}, // v14
+    {fgVector3f(-0.5f, 0.5f, 0.5f), fgVector3f(1.0f, 0.0f, 0.0f), fgVector2f(0.0f, 1.0f - 2.0f / 3.0f), colorWhite}, // v15
 
                                              // Vertex data for face 4 // Bottom?
-    {fgVector3f(-0.5f, -0.5f, -0.5f), fgVector3f(0.0f, 1.0f, 0.0f), fgVector2f(1.0f / 3.0f, 1.0f - 1.0f / 3.0f)}, // v16
-    {fgVector3f(0.5f, -0.5f, -0.5f), fgVector3f(0.0f, 1.0f, 0.0f), fgVector2f(2.0f / 3.0f, 1.0f - 1.0f / 3.0f)}, // v17
-    {fgVector3f(-0.5f, -0.5f, 0.5f), fgVector3f(0.0f, 1.0f, 0.0f), fgVector2f(1.0f / 3.0f, 1.0f - 0.0f)}, // v18
-    {fgVector3f(0.5f, -0.5f, 0.5f), fgVector3f(0.0f, 1.0f, 0.0f), fgVector2f(2.0f / 3.0f, 1.0f - 0.0f)}, // v19
+    {fgVector3f(-0.5f, -0.5f, -0.5f), fgVector3f(0.0f, 1.0f, 0.0f), fgVector2f(1.0f / 3.0f, 1.0f - 1.0f / 3.0f), colorWhite}, // v16
+    {fgVector3f(0.5f, -0.5f, -0.5f), fgVector3f(0.0f, 1.0f, 0.0f), fgVector2f(2.0f / 3.0f, 1.0f - 1.0f / 3.0f), colorWhite}, // v17
+    {fgVector3f(-0.5f, -0.5f, 0.5f), fgVector3f(0.0f, 1.0f, 0.0f), fgVector2f(1.0f / 3.0f, 1.0f - 0.0f), colorWhite}, // v18
+    {fgVector3f(0.5f, -0.5f, 0.5f), fgVector3f(0.0f, 1.0f, 0.0f), fgVector2f(2.0f / 3.0f, 1.0f - 0.0f), colorWhite}, // v19
 
                                              // Vertex data for face 5 // Top?
-    {fgVector3f(-0.5f, 0.5f, 0.5f), fgVector3f(0.0f, -1.0f, 0.0f), fgVector2f(1.0f / 3.0f, 1.0f - 1.0f)}, // v20 
-    {fgVector3f(0.5f, 0.5f, 0.5f), fgVector3f(0.0f, -1.0f, 0.0f), fgVector2f(2.0f / 3.0f, 1.0f - 1.0f)}, // v21 
-    {fgVector3f(-0.5f, 0.5f, -0.5f), fgVector3f(0.0f, -1.0f, 0.0f), fgVector2f(1.0f / 3.0f, 1.0f - 2.0f / 3.0f)}, // v22 
-    {fgVector3f(0.5f, 0.5f, -0.5f), fgVector3f(0.0f, -1.0f, 0.0f), fgVector2f(2.0f / 3.0f, 1.0f - 2.0f / 3.0f)} // v23 
+    {fgVector3f(-0.5f, 0.5f, 0.5f), fgVector3f(0.0f, -1.0f, 0.0f), fgVector2f(1.0f / 3.0f, 1.0f - 1.0f), colorWhite}, // v20 
+    {fgVector3f(0.5f, 0.5f, 0.5f), fgVector3f(0.0f, -1.0f, 0.0f), fgVector2f(2.0f / 3.0f, 1.0f - 1.0f), colorWhite}, // v21 
+    {fgVector3f(-0.5f, 0.5f, -0.5f), fgVector3f(0.0f, -1.0f, 0.0f), fgVector2f(1.0f / 3.0f, 1.0f - 2.0f / 3.0f), colorWhite}, // v22 
+    {fgVector3f(0.5f, 0.5f, -0.5f), fgVector3f(0.0f, -1.0f, 0.0f), fgVector2f(2.0f / 3.0f, 1.0f - 2.0f / 3.0f), colorWhite} // v23 
 };
 
 /*
@@ -183,21 +185,21 @@ const fgVertex3v c_stripRect3x1[] = {
 #include "fgGFXAABoundingBox.h"
 
 void fgGfxPrimitives::drawSkyBoxOptimized(void) {
-    fgGfxPlatform::context()->diffVertexAttribArrayMask(FG_GFX_POSITION_BIT | FG_GFX_UVS_BIT);
+    fgGfxPlatform::context()->diffVertexAttribArrayMask(fgVertex4v::attribMask());
 
     uintptr_t offset = (uintptr_t)((unsigned int*)&c_stripSkyBoxOptimized[0]);
     fgGfxPlatform::context()->vertexAttribPointer(FG_GFX_ATTRIB_POS_LOCATION,
                                                   3,
                                                   FG_GFX_FLOAT,
                                                   FG_GFX_FALSE,
-                                                  sizeof (fgVertex3v),
+                                                  sizeof (fgVertex4v),
                                                   reinterpret_cast<fgGFXvoid*>(offset));
     offset += sizeof (fgVector3f); // Move offset to Normals
     fgGfxPlatform::context()->vertexAttribPointer(FG_GFX_ATTRIB_NORM_LOCATION,
                                                   3,
                                                   FG_GFX_FLOAT,
                                                   FG_GFX_FALSE,
-                                                  sizeof (fgVertex3v),
+                                                  sizeof (fgVertex4v),
                                                   reinterpret_cast<fgGFXvoid*>(offset));
     
     offset += sizeof (fgVector3f); // Move offset to UVS
@@ -205,7 +207,15 @@ void fgGfxPrimitives::drawSkyBoxOptimized(void) {
                                                   2,
                                                   FG_GFX_FLOAT,
                                                   FG_GFX_FALSE,
-                                                  sizeof (fgVertex3v),
+                                                  sizeof (fgVertex4v),
+                                                  reinterpret_cast<fgGFXvoid*>(offset));
+    
+    offset += sizeof (fgVector2f); // Move offset to Color
+    fgGfxPlatform::context()->vertexAttribPointer(FG_GFX_ATTRIB_COLOR_LOCATION,
+                                                  4,
+                                                  FG_GFX_FLOAT,
+                                                  FG_GFX_FALSE,
+                                                  sizeof (fgVertex4v),
                                                   reinterpret_cast<fgGFXvoid*>(offset));
 
     //(GLenum mode, GLsizei count, GLenum type, const void *indices)

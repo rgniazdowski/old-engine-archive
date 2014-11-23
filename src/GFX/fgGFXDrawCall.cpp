@@ -410,14 +410,13 @@ void fgGfxDrawCall::draw(void) {
         //m_MVP->calculate(m_modelMat);
         m_program->setUniform(m_MVP);
     }
-    if(m_textureID.id) {
-        fgGfxPlatform::context()->bindTexture(m_textureID);
-        if(m_program) {
-            //fgGfxPlatform::context()->activeTexture(GL_TEXTURE0);
+    if(m_program) {
+        if(m_textureID.id) {
+            fgGfxPlatform::context()->bindTexture(m_textureID);
             m_program->setUniform(FG_GFX_USE_TEXTURE, 1.0f);
+        } else {
+            m_program->setUniform(FG_GFX_USE_TEXTURE, 0.0f);
         }
-    } else if(m_program) {
-        m_program->setUniform(FG_GFX_USE_TEXTURE, 0.0f);
     }
     // #FIXME - need to use attribute data array
     //fgGfxPrimitives::drawArray2D(m_vecDataBase, m_attribMask, m_primMode);

@@ -413,6 +413,7 @@ void fgGfxMain::render(void) {
                 modelMat = fgMath::scale(modelMat, fgVector3f(skyboxScale, skyboxScale, skyboxScale));
                 m_3DScene->getMVP()->calculate(modelMat);
                 program->setUniform(m_3DScene->getMVP());
+                program->setUniform(FG_GFX_USE_TEXTURE, 1.0f);
                 program->setUniform(FG_GFX_DRAW_SKYBOX, 1.0f);
                 program->setUniform(FG_GFX_CUBE_TEXTURE, (fgGFXint)1);
                 m_gfxContext->frontFace(GL_CW); // #FUBAR
@@ -421,6 +422,7 @@ void fgGfxMain::render(void) {
                 m_gfxContext->frontFace(GL_CCW);
                 program->setUniform(FG_GFX_DRAW_SKYBOX, 0.0f);
                 m_gfxContext->activeTexture(GL_TEXTURE0);
+                program->setUniform(FG_GFX_PLAIN_TEXTURE, (fgGFXint)0);
                 //m_gfxContext->setCullFace(FG_TRUE);
             }
         }

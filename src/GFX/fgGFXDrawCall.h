@@ -265,7 +265,6 @@ public:
         if(b.m_attribMask != this->m_attribMask)
             return 1;
 
-
         return 0;
     }
 

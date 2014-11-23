@@ -219,6 +219,7 @@ void fgGfxSceneManager::render(void) {
         static_cast<fgGfxShaderManager *>(m_pShaderMgr)->getCurrentProgram()->setUniform(FG_GFX_USE_TEXTURE, 0.0f);
 #if defined(FG_DEBUG)
         if(FG_DEBUG_CFG_OPTION(gfxBBoxShow) && pSceneNode->getNodeType() == FG_GFX_SCENE_NODE_OBJECT) {
+            
             fgGfxSceneNodeObject *pSceneObj = static_cast<fgGfxSceneNodeObject *>(pSceneNode);
             //g_fgDebugConfig.gfxBBoxShow
             // Current aabb - it's in model space (local)
