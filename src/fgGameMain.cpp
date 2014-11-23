@@ -23,6 +23,7 @@
 #include "Util/fgSettings.h"
 #include "Util/fgConfig.h"
 #include "Util/fgTime.h"
+#include "Util/fgProfiling.h"
 /// Game logic
 #include "GameLogic/fgGameLogic.h"
 /// Resource management
@@ -163,7 +164,7 @@ fgGameMain::~fgGameMain() {
     //m_guiMain->setEventManager(NULL);    
     if(m_guiMain) {
         delete m_guiMain;
-    }    
+    }
     m_guiMain = NULL;
     m_scriptSubsystem->setWidgetManager(NULL);
     m_scriptSubsystem->setStyleManager(NULL);
@@ -421,9 +422,9 @@ fgBool fgGameMain::loadResources(void) {
         std::string modelname("CobraBomber");
         fgGfxModelResource *model = (fgGfxModelResource *)m_resourceMgr->get(modelname);
         fgAABoundingBox3Df &b = model->getRefAABB();
-        printf("bbox[b]: min: {%.2f,%.2f,%.2f}, max: {%.2f,%.2f,%.2f};\n", 
-			b.min.x, b.min.y, b.min.z,
-			b.max.x, b.max.y, b.max.z);
+        printf("bbox[b]: min: {%.2f,%.2f,%.2f}, max: {%.2f,%.2f,%.2f};\n",
+               b.min.x, b.min.y, b.min.z,
+               b.max.x, b.max.y, b.max.z);
         float t2 = fgTime::ms();
         FG_LOG_DEBUG("WHOLE OBJECT CREATION TOOK: %.2f seconds", (t2 - t1) / 1000.0f);
     }
@@ -496,8 +497,18 @@ fgBool fgGameMain::quit(void) {
  * function (which in the future should be in separate thread)
  */
 void fgGameMain::display(void) {
+#if defined(FG_DEBUG)
+    g_debugProfiling.begin("GFX::display");
+#endif
     m_gfxMain->display();
+#if defined(FG_DEBUG)
+    g_debugProfiling.end("GFX::display");
+    g_debugProfiling.begin("GUI::display");
+#endif
     m_guiMain->display();
+#if defined(FG_DEBUG)
+    g_debugProfiling.end("GUI::display");
+#endif
 }
 
 /*
@@ -513,7 +524,13 @@ void fgGameMain::render(void) {
         fpsc = 0;
     }
     fpsc++;
+#if defined(FG_DEBUG)
+    g_debugProfiling.begin("GFX::render");
+#endif
     m_gfxMain->render();
+#if defined(FG_DEBUG)
+    g_debugProfiling.end("GFX::render");
+#endif
     fgGfxPlatform::context()->setBlend(FG_TRUE); // #FIXME
     m_guiMain->render();
     fgGfxPlatform::context()->setBlend(FG_FALSE); // #FIXME
@@ -622,6 +639,7 @@ fgBool fgGameMain::gameTouchHandler(fgArgumentList *argv) {
 /*
  *
  */
+
 /**
  * 
  * @param argv

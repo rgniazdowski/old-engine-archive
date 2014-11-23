@@ -9,6 +9,11 @@
 
 #include "fgProfiling.h"
 #include "fgTime.h"
+#include "fgFile.h"
+
+#if defined(FG_DEBUG)
+fgProfiling g_debugProfiling;
+#endif
 
 /*
  *
@@ -45,7 +50,7 @@ void fgProfiling::clear(void) {
 /*
  *
  */
-fgBool fgProfiling::begin(std::string& name) {
+fgBool fgProfiling::begin(const std::string& name) {
     if(name.empty())
         return FG_FALSE;
     profileMapPair query_pair;
@@ -95,13 +100,13 @@ fgBool fgProfiling::begin(const char* name) {
     if(!name)
         return FG_FALSE;
     std::string strName = std::string(name);
-    return begin(reinterpret_cast<std::string&>(strName));
+    return begin(strName);
 }
 
 /*
  *
  */
-fgBool fgProfiling::end(std::string& name) {
+fgBool fgProfiling::end(const std::string& name) {
     if(name.empty())
         return FG_FALSE;
     profileMapItor it = m_sampleMap.find(name);
@@ -133,7 +138,7 @@ fgBool fgProfiling::end(const char* name) {
     if(!name)
         return FG_FALSE;
     std::string strName = std::string(name);
-    return end(reinterpret_cast<std::string&>(strName));
+    return end(strName);
 }
 
 /*
@@ -157,10 +162,55 @@ void fgProfiling::updateHistory(void) {
     m_startProfile = fgTime::exact();
 }
 
+void fgProfiling::dumpToDefaultFile(void) {
+    profileVecItor begin = m_orderVec.begin(), end = m_orderVec.end(), it;
+    fgFile file;
+    file.open("defaultProfile.log", FG_FILE_MODE_WRITE);
+    long timestamp = fgTime::seconds();
+    struct tm *ti;
+    ti = localtime(&timestamp);
+
+    file.print("\n%02d/%02d/%02d %02d:%02d:%02d: Profiles Dump\n",
+               ti->tm_mday,
+               ti->tm_mon + 1,
+               ti->tm_year - 100,
+               ti->tm_hour,
+               ti->tm_min,
+               ti->tm_sec);
+    file.print("  Ave :   Min :   Max :   # : Profile Name\n");
+    file.print("--------------------------------------------\n");
+    for(it = begin; it != end; it++) {
+        fgProfileSample *sample = (*it);
+        //if(!sample->isValid)
+        //    continue;
+        unsigned int indent = 0;
+        float aveTime, minTime, maxTime;
+        char line[256], name[256], indentedName[256];
+        char ave[16], min[16], max[16], num[16];
+        this->getProfileHistory(sample->name, &aveTime, &minTime, &maxTime);
+        //Format the data
+        sprintf(ave, "%3.1f", aveTime);
+        sprintf(min, "%3.1f", minTime);
+        sprintf(max, "%3.1f", maxTime);
+        sprintf(num, "%3d", sample->numInstances);
+
+        strcpy(indentedName, sample->name.c_str());
+        for(indent = 0; indent < sample->numParents; indent++) {
+            sprintf(name, "   %s", indentedName);
+            strcpy(indentedName, name);
+        }
+
+        sprintf(line, "%5s : %5s : %5s : %3s : %s\n", ave, min, max, num, indentedName);
+        file.print(line);
+
+    }
+    file.close();
+}
+
 /*
  *
  */
-fgBool fgProfiling::storeProfileHistory(std::string& name, float percent) {
+fgBool fgProfiling::storeProfileHistory(const std::string& name, float percent) {
     if(name.empty())
         return FG_FALSE;
     float oldRatio;
@@ -209,7 +259,7 @@ fgBool fgProfiling::storeProfileHistory(std::string& name, float percent) {
 /*
  *
  */
-fgBool fgProfiling::getProfileHistory(std::string& name, float* average, float* minimum, float *maximum) {
+fgBool fgProfiling::getProfileHistory(const std::string& name, float* average, float* minimum, float *maximum) {
     if(name.empty())
         return FG_FALSE;
     historyMapItor it = m_sampleHistory.find(name);

@@ -27,6 +27,7 @@
 #include "Event/fgEventManager.h"
 #include "Input/fgPointerInputReceiver.h"
 #include "Hardware/fgHardwareState.h"
+#include "Util/fgProfiling.h"
 
 class MainModule;
 extern float guiScale;
@@ -321,6 +322,9 @@ private:
      */
     fgBool initProgram() {
         fgTime::init(); // #FIXME global time init?
+#if defined(FG_DEBUG)
+        g_debugProfiling.initialize();
+#endif
         float t1 = fgTime::ms();
         FG_LOG_DEBUG("Init program main...");
         if(m_appInit) {
@@ -328,7 +332,7 @@ private:
             return FG_TRUE;
         }
 
-#if defined FG_USING_MARMALADE
+#if defined(FG_USING_MARMALADE)
         s3eSurfaceSetInt(S3E_SURFACE_DEVICE_ORIENTATION_LOCK, S3E_SURFACE_LANDSCAPE_FIXED);
         // ?
         //s3eKeyboardSetInt(S3E_KEYBOARD_GET_CHAR, 1);
@@ -409,18 +413,36 @@ private:
             return FG_FALSE;
         }
 
+#if defined(FG_DEBUG)
+        g_debugProfiling.begin("Game::update");
+#endif
         FG_HardwareState->deviceYield(0);
         m_gameMain->update();
         FG_HardwareState->deviceYield(0);
-
+#if defined(FG_DEBUG)
+        g_debugProfiling.end("Game::update");
+        g_debugProfiling.begin("Game::display");
+#endif
         // well for now drawing and all update functions will be called in one place (one thread)
         // however it needs changing
         m_gameMain->display();
         FG_HardwareState->deviceYield(0);
-
+#if defined(FG_DEBUG)
+        g_debugProfiling.end("Game::display");
+        g_debugProfiling.begin("Game::render");
+#endif
         m_gameMain->render();
         FG_HardwareState->deviceYield(0);
-
+#if defined(FG_DEBUG)
+        g_debugProfiling.end("Game::render");
+        g_debugProfiling.updateHistory();
+        static int loopCount = 0;
+        loopCount++;
+        if(loopCount > 2) {
+            loopCount = 0;
+            g_debugProfiling.dumpToDefaultFile();
+        }
+#endif
         return FG_TRUE;
     }
 
@@ -441,6 +463,9 @@ private:
             m_eventMgr = NULL;
         }
         m_appInit = FG_FALSE;
+#if defined(FG_DEBUG)
+        g_debugProfiling.clear();
+#endif
     }
 
 private:

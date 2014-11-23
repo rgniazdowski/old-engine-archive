@@ -17,8 +17,9 @@
 #include "Resource/fgResourceManager.h"
 #include "Event/fgEventManager.h"
 #include "fgGFXErrorCodes.h"
+#include "Util/fgProfiling.h"
 
-#if defined FG_USING_MARMALADE
+#if defined(FG_USING_MARMALADE)
 #include "s3e.h"
 #include "s3eTypes.h"
 #endif
@@ -264,8 +265,18 @@ void fgGfxMain::display(void) {
     if(m_particleSystem) {
         m_particleSystem->calculate();
     }
+#if defined(FG_DEBUG)
+    g_debugProfiling.begin("GFX::3DScene::sortCalls");
+#endif
     m_3DScene->sortCalls();
+#if defined(FG_DEBUG)
+    g_debugProfiling.end("GFX::3DScene::sortCalls");
+    g_debugProfiling.begin("GFX::2DScene::sortCalls");
+#endif
     m_2DScene->sortCalls();
+#if defined(FG_DEBUG)
+    g_debugProfiling.end("GFX::2DScene::sortCalls");
+#endif
 }
 
 #include "fgGFXPrimitives.h"
@@ -391,14 +402,16 @@ void fgGfxMain::render(void) {
                 rotation = 0.0f;
             float rx = cos(rotation) * radius;
             float rz = sin(rotation) * radius;
-            
-            modelMat = fgMath::translate(fgMatrix4f(), fgVector3f(rx,20.0f,rz));
-            modelMat = fgMath::rotate(modelMat, (float)M_PI/2.0f, fgVector3f(0.0f, 1.0f, 0.0f));
+
+            modelMat = fgMath::translate(fgMatrix4f(), fgVector3f(rx, 20.0f, rz));
+            modelMat = fgMath::rotate(modelMat, (float)M_PI / 2.0f, fgVector3f(0.0f, 1.0f, 0.0f));
             obj2->setModelMatrix(modelMat);
         }
     }
-    if(true)
-    {
+    if(true) {
+#if defined(FG_DEBUG)
+        g_debugProfiling.begin("GFX::drawSkyBox");
+#endif
         //
         // #FIXME #TODO - that kind of SkyBox display sucks ass beyond recognition
         //
@@ -411,7 +424,7 @@ void fgGfxMain::render(void) {
                 m_gfxContext->activeTexture(GL_TEXTURE1); // ? ? ? 
                 m_gfxContext->bindTexture(texID);
                 modelMat = fgMath::translate(fgMatrix4f(), m_3DScene->getCamera()->getRefEye());
-                float skyboxScale = FG_GFX_PERSPECTIVE_ZFAR_DEFAULT*1.1f;
+                float skyboxScale = FG_GFX_PERSPECTIVE_ZFAR_DEFAULT * 1.1f;
                 modelMat = fgMath::scale(modelMat, fgVector3f(skyboxScale, skyboxScale, skyboxScale));
                 m_3DScene->getMVP()->calculate(modelMat);
                 program->setUniform(m_3DScene->getMVP());
@@ -426,9 +439,18 @@ void fgGfxMain::render(void) {
                 //m_gfxContext->setCullFace(FG_TRUE);
             }
         }
+#if defined(FG_DEBUG)
+        g_debugProfiling.end("GFX::drawSkyBox");
+#endif
     }
+#if defined(FG_DEBUG)
+    g_debugProfiling.begin("GFX::3DScene::render");
+#endif
     // RENDER THE 3D SCENE
     m_3DScene->render();
+#if defined(FG_DEBUG)
+    g_debugProfiling.end("GFX::3DScene::render");
+#endif
 
     //////////////////////////////////////////////////////////////
     // 2D LAYER DRAWING TEST - NEEDS TO WORK DIFFERENTLY

@@ -13,7 +13,7 @@
     #include "fgCommon.h"
     #include <stack>
 
-    #define FG_MAX_PROFILE_SAMPLES 10
+    #define FG_MAX_PROFILE_SAMPLES 16
 
 /*
  * Struct for profile sample. Holds various info: name, time started,
@@ -115,7 +115,7 @@ public:
     // Base constructor for Profiling object
     fgProfiling();
     // Base destructor for Profiling object
-    ~fgProfiling();
+    virtual ~fgProfiling();
 
     // Initialize the profiling
     void initialize(void);
@@ -123,22 +123,31 @@ public:
     void clear(void);
 
     // Open given profile (begin calculations)
-    fgBool begin(std::string& name);
+    fgBool begin(const std::string& name);
     // Open given profile (begin calculations)
     fgBool begin(const char* name);
 
     // End given profile (stop)
-    fgBool end(std::string& name);
+    fgBool end(const std::string& name);
     // End given profile (stop)
     fgBool end(const char *name);
 
     // Update the history, count average values
     void updateHistory(void);
+    
+    void dumpToDefaultFile(void);
 
     // Store the current profile in history
-    fgBool storeProfileHistory(std::string& name, float percent);
-    // Get profile informatione from history
-    fgBool getProfileHistory(std::string& name, float* average, float* minimum, float* maximum);
+    fgBool storeProfileHistory(const std::string& name, float percent);
+    // Get profile information from history
+    fgBool getProfileHistory(const std::string& name,
+                             float* average,
+                             float* minimum,
+                             float* maximum);
 };
+
+    #if defined(FG_DEBUG)
+extern fgProfiling g_debugProfiling;
+    #endif
 
 #endif /* FG_INC_PROFILING */
