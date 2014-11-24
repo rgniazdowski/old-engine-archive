@@ -273,6 +273,7 @@ void fgGfxMain::display(void) {
     g_debugProfiling.end("GFX::3DScene::sortCalls");
     g_debugProfiling.begin("GFX::2DScene::sortCalls");
 #endif
+    //printf("fgGfx2DScene::sortCalls(void)\n");
     m_2DScene->sortCalls();
 #if defined(FG_DEBUG)
     g_debugProfiling.end("GFX::2DScene::sortCalls");
@@ -416,13 +417,24 @@ void fgGfxMain::render(void) {
         // #FIXME #TODO - that kind of SkyBox display sucks ass beyond recognition
         //
         // Load proper texture
-        fgResource *pResourceX = static_cast<fgResourceManager *>(m_pResourceMgr)->get("PurpleNebulaCube");
+#if defined(FG_DEBUG)
+        g_debugProfiling.begin("GFX::drawSkyBoxTexResGet");
+#endif  
+        static fgResource *pResourceX = NULL;
+        if(!pResourceX)
+            pResourceX = static_cast<fgResourceManager *>(m_pResourceMgr)->get("PurpleNebulaCube");
+#if defined(FG_DEBUG)
+        g_debugProfiling.end("GFX::drawSkyBoxTexResGet");
+#endif
         if(pResourceX->getResourceType() == FG_RESOURCE_TEXTURE) {
             fgGfxTexture *pTexture = static_cast<fgGfxTexture *>(pResourceX);
             if(pTexture) {
                 fgGfxTextureID &texID = pTexture->getRefGfxID();
+
                 m_gfxContext->activeTexture(GL_TEXTURE1); // ? ? ? 
                 m_gfxContext->bindTexture(texID);
+
+
                 modelMat = fgMath::translate(fgMatrix4f(), m_3DScene->getCamera()->getRefEye());
                 float skyboxScale = FG_GFX_PERSPECTIVE_ZFAR_DEFAULT * 1.1f;
                 modelMat = fgMath::scale(modelMat, fgVector3f(skyboxScale, skyboxScale, skyboxScale));
@@ -431,6 +443,7 @@ void fgGfxMain::render(void) {
                 program->setUniform(FG_GFX_DRAW_SKYBOX, 1.0f);
                 program->setUniform(FG_GFX_CUBE_TEXTURE, (fgGFXint)1);
                 m_gfxContext->frontFace(GL_CW); // #FUBAR
+
                 //m_gfxContext->setCullFace(FG_FALSE);
                 fgGfxPrimitives::drawSkyBoxOptimized();
                 m_gfxContext->frontFace(GL_CCW);
@@ -504,6 +517,7 @@ void fgGfxMain::render(void) {
     //program2->setUniform(MVP);
 
     fgGfxPlatform::context()->blendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+    //printf("fgGfx2DScene::render(void)\n");
     m_2DScene->render();
 
     // #FIXME ! TOTAL FUBAR SITUATION ! OMG ! OH MY !

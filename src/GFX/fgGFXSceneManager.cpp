@@ -14,6 +14,10 @@
 #include "fgDebugConfig.h"
 #include "fgGFXFrustum.h"
 
+#if defined(FG_DEBUG)
+#include "Util/fgProfiling.h"
+#endif
+
 /**
  * 
  */
@@ -119,6 +123,7 @@ void fgGfxSceneManager::flush(void) {
 void fgGfxSceneManager::sortCalls(void) {
     if(!getShaderManager())
         return;
+    //printf("fgGfxSceneManager::sortCalls(void)\n");
     m_MVP.setCamera((fgGfxCamera *)(&m_camera));
     if(getRefPriorityQueue().empty())
         fgGfxDrawingBatch::sortCalls(); // NOPE
@@ -135,6 +140,9 @@ void fgGfxSceneManager::sortCalls(void) {
             continue;
         fgGfxSceneNode *pNode = (*itor);
         fgGfxDrawCall *pDrawCall = pNode->getDrawCall();
+#if defined(FG_DEBUG)
+        g_debugProfiling.begin("GFX::Scene::FrustumCheck");
+#endif
         // There is a problem because the bounding box needs to be modified by
         // the model matrix; maybe some operator ?
         fgAABB3Df &box = pNode->getRefAABB();
@@ -174,6 +182,13 @@ void fgGfxSceneManager::sortCalls(void) {
         } else {
             spherestatus = 2;
         }
+        if(boxstatus == 2)
+            pNode->setVisible(FG_FALSE);
+        else
+            pNode->setVisible(FG_TRUE);
+#if defined(FG_DEBUG)
+        g_debugProfiling.end("GFX::Scene::FrustumCheck");
+#endif
         printf("[%d] -> AABBox[%s] | ModelBBOX[%s] -- -- Sphere.30.0f[%s] %s\n", idx, msg[boxstatus], msg[modelstatus], msg[spherestatus], pNode->getNameStr());
         g_fgDebugConfig.gfxBBoxShow = true;
         // ? also need to push to queue more than one draw call
@@ -183,7 +198,9 @@ void fgGfxSceneManager::sortCalls(void) {
         // The aabb for each object is updated based on the children
         // Need some standard for manipulating this objects, and also for traversing
         // the tree. Also one would need some standard for special kind of tree - loose octrees? bitch?
-        m_nodeQueue.push(pNode);
+        if(pNode->isVisible()) {
+            m_nodeQueue.push(pNode);
+        }
         if(pDrawCall) {
             if(!pDrawCall->getShaderProgram())
                 pDrawCall->setShaderProgram(((fgGfxShaderManager *)getShaderManager())->getCurrentProgram());
@@ -192,34 +209,31 @@ void fgGfxSceneManager::sortCalls(void) {
         }
     }
 #endif
-    //for(; itor != end; itor++)
-
-    /*for(; objDrawIt != objDrawEnd, objVecIt != objVecEnd; objDrawIt++, objVecIt++) {
-        if(*objDrawIt && *objVecIt) {
-            fgGfxObject *obj = (*objVecIt);
-            fgGfxDrawCall *drawCall = (*objDrawIt);
-            if(!drawCall->getShaderProgram())
-                drawCall->setShaderProgram(((fgGfxShaderManager *)getShaderManager())->getCurrentProgram());
-            drawCall->setModelMatrix(obj->getRefModelMatrix());
-            getRefPriorityQueue().push(drawCall);
-        }
-    }*/
 }
 
 /**
  * 
  */
-void fgGfxSceneManager::render(void) {    
-    if(m_nodeQueue.empty())
-        fgGfxSceneManager::sortCalls();
+void fgGfxSceneManager::render(void) {
+    //printf("fgGfxSceneManager::render(void)\n");
+    //if(m_nodeQueue.empty())
+    //    fgGfxSceneManager::sortCalls();
     fgGfxDrawingBatch::render(); // #NOPE ? i don't know what i'm doing
     while(!m_nodeQueue.empty()) {
+#if defined(FG_DEBUG)
+        g_debugProfiling.begin("GFX::Scene::DrawNode");
+#endif
         fgGfxSceneNode *pSceneNode = m_nodeQueue.top();
         pSceneNode->draw();
-        static_cast<fgGfxShaderManager *>(m_pShaderMgr)->getCurrentProgram()->setUniform(FG_GFX_USE_TEXTURE, 0.0f);
 #if defined(FG_DEBUG)
+        g_debugProfiling.end("GFX::Scene::DrawNode");
+#endif
+
+#if defined(FG_DEBUG)
+        g_debugProfiling.begin("GFX::Scene::DrawAABBLines");
+        static_cast<fgGfxShaderManager *>(m_pShaderMgr)->getCurrentProgram()->setUniform(FG_GFX_USE_TEXTURE, 0.0f);
         if(FG_DEBUG_CFG_OPTION(gfxBBoxShow) && pSceneNode->getNodeType() == FG_GFX_SCENE_NODE_OBJECT) {
-            
+
             fgGfxSceneNodeObject *pSceneObj = static_cast<fgGfxSceneNodeObject *>(pSceneNode);
             //g_fgDebugConfig.gfxBBoxShow
             // Current aabb - it's in model space (local)
@@ -233,9 +247,11 @@ void fgGfxSceneManager::render(void) {
             static_cast<fgGfxShaderManager *>(m_pShaderMgr)->getCurrentProgram()->setUniform(&m_MVP);
             fgGfxPrimitives::drawAABBLines(pSceneNode->getRefAABB());
         }
+        g_debugProfiling.end("GFX::Scene::DrawAABBLines");
 #endif
         m_nodeQueue.pop();
     }
+    //printf(".\n");
 }
 
 #if 0

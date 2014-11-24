@@ -201,6 +201,7 @@ void fgGfxDrawingBatch::flush(void) {
  *
  */
 void fgGfxDrawingBatch::sortCalls(void) {
+    //printf("fgGfxDrawingBatch::sortCalls(void)\n");
     while(!m_priorityBatch.empty())
         m_priorityBatch.pop();
     drawCallVecItor itor = m_drawCalls.begin(), end = m_drawCalls.end();
@@ -214,6 +215,7 @@ void fgGfxDrawingBatch::sortCalls(void) {
  *
  */
 void fgGfxDrawingBatch::render(void) {
+    //printf("fgGfxDrawingBatch::render(void)\n");
     if(m_priorityBatch.empty())
         fgGfxDrawingBatch::sortCalls();
 

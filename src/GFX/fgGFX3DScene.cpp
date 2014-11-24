@@ -30,6 +30,7 @@ fgGfx3DScene::~fgGfx3DScene() { }
  * 
  */
 void fgGfx3DScene::sortCalls(void) {
+    //printf("fgGfx3DScene::sortCalls(void)\n");
     fgGfxSceneManager::sortCalls();
 }
 
@@ -37,6 +38,7 @@ void fgGfx3DScene::sortCalls(void) {
  * 
  */
 void fgGfx3DScene::render(void) {
+    //printf("fgGfx3DScene::render(void)\n");
     fgGfxSceneManager::render();
 }
 
@@ -47,7 +49,7 @@ void fgGfx3DScene::render(void) {
  * @return 
  */
 fgGfxSceneNode *fgGfx3DScene::addFromModel(fgGfxModelResource* pModelRes,
-                                        const std::string& nameTag) {
+                                           const std::string& nameTag) {
     if(!pModelRes) {
         return NULL;
     }

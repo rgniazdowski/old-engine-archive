@@ -387,7 +387,9 @@ private:
         if(!m_appInit) {
             return FG_FALSE;
         }
-
+#if defined(FG_DEBUG)
+        g_debugProfiling.begin("Program::loopStep");
+#endif
         // #FIXME
 #if defined(FG_USING_SDL2)
         if(checkSDLEvents() == SDL_QUIT) {
@@ -435,6 +437,7 @@ private:
         FG_HardwareState->deviceYield(0);
 #if defined(FG_DEBUG)
         g_debugProfiling.end("Game::render");
+        g_debugProfiling.end("Program::loopStep");
         g_debugProfiling.updateHistory();
         static int loopCount = 0;
         loopCount++;
@@ -442,6 +445,7 @@ private:
             loopCount = 0;
             g_debugProfiling.dumpToDefaultFile();
         }
+        
 #endif
         return FG_TRUE;
     }

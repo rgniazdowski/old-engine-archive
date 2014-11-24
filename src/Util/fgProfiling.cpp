@@ -61,7 +61,7 @@ fgBool fgProfiling::begin(const std::string& name) {
     fgProfileSample *sample = it->second;
     if(!sample)
         return FG_FALSE;
-    if(result.second == false) {
+    if(result.second == false && sample->isValid) {
         // Existed
         if(sample->numOpen) {
             // max 1 open at once
@@ -70,6 +70,7 @@ fgBool fgProfiling::begin(const std::string& name) {
         sample->numOpen++;
         sample->numInstances++;
         sample->startTime = fgTime::exact();
+        //sample->isValid = FG_TRUE;
     } else {
         // New insertion
         if(m_sampleMap.size() > FG_MAX_PROFILE_SAMPLES) {
@@ -84,7 +85,8 @@ fgBool fgProfiling::begin(const std::string& name) {
         sample->startTime = fgTime::exact();
         sample->childrenSampleTime = 0.0f;
         sample->name = name;
-        m_orderVec.push_back(sample);
+        if(result.second)
+            m_orderVec.push_back(sample);
     }
 
     if(sample)
@@ -152,7 +154,7 @@ void fgProfiling::updateHistory(void) {
         fgProfileSample *sample = (*it);
         if(!sample->isValid)
             continue;
-        sample->isValid = false;
+        sample->isValid = FG_FALSE;
         float sampleTime, percentTime, aveTime, minTime, maxTime;
         sampleTime = sample->accumulator - sample->childrenSampleTime;
         percentTime = (sampleTime / (m_endProfile - m_startProfile))*100.0f;
