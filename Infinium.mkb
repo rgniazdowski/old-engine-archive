@@ -88,16 +88,15 @@ assets
 	sound/m1.mp3
 
     (data)
-    CobraBomber.group.ini
+	Crystal1.group.ini
+	CobraBomber.group.ini
     CobraFighter.group.ini
     CobraInterceptor.group.ini
     DerelictMiningStation.group.ini
     explosionDebris.particle.ini
     ExplosionDebris.res.ini
-    ExplosionEffect.res.ini
     explosionFlash.particle.ini
     ExplosionFlash.res.ini
-    explosion.particle.ini
     explosionRoundSparks.particle.ini
     ExplosionRoundSparks.res.ini
     explosionShockwave.particle.ini
@@ -123,6 +122,25 @@ assets
 
 	(data)
 	textures/skybox/plasma_galaxy_1024.jpg
+	textures/skybox/PurpleNebulaCube.res.ini
+	textures/skybox/PurpleNebula.res.ini
+	textures/skybox/galaxy_1024.jpg
+	textures/skybox/purple-nebula-1024.jpg
+	textures/skybox/galaxy_mod_1024.jpg
+	textures/skybox/purple-nebula-2048.jpg
+	textures/skybox/nebula_1024.jpg
+	textures/skybox/pn-cube/purple-nebula-2048-pz.jpg
+	textures/skybox/pn-cube/purple-nebula-1024-px.jpg
+	textures/skybox/pn-cube/purple-nebula-2048-px.jpg
+	textures/skybox/pn-cube/purple-nebula-1024-pz.jpg
+	textures/skybox/pn-cube/purple-nebula-1024-nz.jpg
+	textures/skybox/pn-cube/purple-nebula-2048-nx.jpg
+	textures/skybox/pn-cube/purple-nebula-1024-nx.jpg
+	textures/skybox/pn-cube/purple-nebula-2048-nz.jpg
+	textures/skybox/pn-cube/purple-nebula-2048-ny.jpg
+	textures/skybox/pn-cube/purple-nebula-1024-ny.jpg
+	textures/skybox/pn-cube/purple-nebula-1024-py.jpg
+	textures/skybox/pn-cube/purple-nebula-2048-py.jpg
 
 	(data)
     textures/particle/CloudsSheet.res.ini
@@ -260,6 +278,7 @@ defines
 options
 {
 	module_path="modules"
+	arm-arch=armv6
 	arm-cpu=6
 	arm-fpu=vfp
 	optimise-speed
@@ -292,6 +311,11 @@ includepaths
 	modules/glm
 }
 
+librarypaths
+{
+	modules/ng_luaplus/lib
+}
+
 #### AUTO GENERATED deployment settings from DeployTool.exe. Do not edit below this line ####
 deployments
 {
@@ -306,18 +330,18 @@ deployments
 	android-manifest='AndroidManifest.xml'
 	android-unsigned=0
 	caption='A Flexi Game'
-	copyright='(C) FlexiGame'
+	copyright='(C) FlexiGame Software'
 	embed-icf=1
 	icon='icons/BiohazardIcon_256.png'
-	iphone-appid='biz.gniazdowski.SecondApp'
-	iphone-enable-4inch-retina=1
+	iphone-appid='com.flexigame.Infinium'
+	iphone-enable-4inch-retina='1'
 	iphone-icon='icons/ios_57x57.png'
 	iphone-icon-high-res='icons/ios_114x114.png'
 	iphone-icon-ipad='icons/ios_72x72.png'
 	iphone-icon-ipad-high-res='icons/ios_144x144.png'
 	iphone-info-plist='info_second.plist'
-	iphone-provisioning-profile='SecondApp.mobileprovision'
-	iphone-sign-for-distribution=1
+	iphone-nosign='1'
+	iphone-sign-for-distribution=0
 	iphone-splash='icons/iPhone_splash.png'
 	iphone-splashscreen-landscape='icons/iPhone_splash_landscape.png'
 	iphone-splashscreen-portrait='icons/iPhone_splash_portrait.png'
@@ -325,7 +349,7 @@ deployments
 	provider='Radoslaw Gniazdowski'
 	splashscreen='icons/splash'
 	splashscreen-auto-onblack=1
-	splashscreen-use-all='1'
+	splashscreen-use-all=1
 	version-major=1
 	version-minor=0
 	version-revision=0

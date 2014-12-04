@@ -14,8 +14,9 @@
 	<string>6.0</string>
 	<key>CFBundleResourceSpecification</key>
 	<string>ResourceRules.plist</string>
-	<key>CFBundleIconFile</key>
-	<array>${EXTRA_ICONS}</array>
+	<key>CFBundleIconFiles</key>
+	<array>${EXTRA_ICONS}
+	</array>
 	<key>CFBundleName</key>
 	<string>${APPNAME}</string>
 	<key>CFBundlePackageType</key>
@@ -23,6 +24,8 @@
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
+	<string>${APPVERSION}</string>
+	<key>CFBundleShortVersionString</key>
 	<string>${APPVERSION}</string>
 	<key>NSMainNibFile</key>
 	<string>MainWindow</string>
@@ -32,35 +35,41 @@
 	<array>
 		<string>iPhoneOS</string>
 	</array>
-	<key>UIRequiredDeviceCapabilities</key>
-	<array>
-        <string>gamekit</string>
-        <string>accelerometer</string>
-		<string>armv7</string>
-    </array>
+	<key>BuildMachineOSBuild</key>
+	<string>13C64</string>
+	<key>DTXcode</key>
+	<string>0511</string>
+	<key>DTSDKBuild</key>
+	<string>11D167</string>
+	<key>DTSDKName</key>
+	<string>iphoneos7.1</string>
 	<key>DTCompiler</key>
-	<string>4.2</string>
+	<string>com.apple.compilers.llvm.clang.1_0</string>
+	<key>DTXcodeBuild</key>
+	<string>5B1008</string>
 	<key>DTPlatformBuild</key>
-	<string>10A403</string>
+	<string>11D167</string>
 	<key>DTPlatformName</key>
 	<string>iphoneos</string>
 	<key>DTPlatformVersion</key>
-	<string>6.0</string>
-	<key>DTSDKName</key>
-	<string>iphoneos6.0</string>
-	<key>DTXcode</key>
-	<string>0450</string>
-	<key>DTXcodeBuild</key>
-	<string>4G182</string>
+	<string>7.1</string>
 	<key>UIPrerenderedIcon</key>
 	<${PRERENDERED}/>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>UIRequiredDeviceCapabilities</key>
+	<array>
+		<string>armv7</string>
+	</array>
 	<key>UIStatusBarHidden</key>
-	<true/>
+	<${HIDE_STATUS_BAR}/>
+	<key>UIStatusBarStyle</key>
+	<string>UIStatusBarStyleDefault</string>
+	<key>UIViewControllerBasedStatusBarAppearance</key>
+    <${UIVIEWCONTROLLER_BASED_STATUS_BAR}/>
 	<key>CFBundleLocalizations</key>
 	<array>
 		<string>${BUNDLELOCALE}</string>
-	</array>${EXTRA_SETTINGS}
+	</array>${EXTRA_SETTINGS}${EXTRA_LAUNCH_IMAGES}
 </dict>
 </plist>

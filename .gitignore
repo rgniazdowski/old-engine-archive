@@ -1,5 +1,9 @@
 build_infinium_vc11
 build_infinium_vc12
+deployments
+Infinium.mkb.bak
+data/defaultProfile.log
+data/test1.lua
 data-ram
 data/all.log
 data/error.log
