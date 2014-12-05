@@ -1,0 +1,32 @@
+Android:
+-----------------------------------------------
+48x48     - default icon
+192x192   - extra extra extra high dpi icon
+144x144   - extra extra high dpi icon
+96x96     - extra high dpi icon
+72x72     - high dpi icon
+48x48     - medium dpi icon
+36x36     - low dpi icon
+
+170x170   - gallery icon 
+
+
+iOS:
+-----------------------------------------------
+
+("App icon iPhone 2G/3G/3GS (iOS 6.1 and earlier)", 57, "iphone_icon", "Icon.png", False),
+("App icon iPhone 4/4S/5/5C/5S (iOS 6.1 and earlier)", 114, "iphone_icon_high_res", "Icon@2x.png", False),
+("App icon iPhone 4/4S/5/5C/5S/6 (iOS 7 and later)", 120, "iphone_icon_high_res_ios7", "Icon-60@2x.png", True),
+("App icon iPhone 6 Plus (iOS 8 and later)", 180, "iphone_icon_iphone6", "Icon-60@3x.png", True),
+("App icon iPad/iPad2/iPad Mini (iOS 6.1 and earlier)", 72, "iphone_icon_ipad", "Icon-72.png", False),
+("App icon iPad2/iPad Mini (iOS 7 and later)", 76, "iphone_icon_ipad_ios7", "Icon-76.png", True),
+("App icon iPad3/iPad4 (iOS 6.1 and earlier)", 144, "iphone_icon_ipad_high_res", "Icon-72@2x.png", False),
+("App icon iPad3/iPad4/Air/Mini (iOS 7 and later)", 152, "iphone_icon_ipad_high_res_ios7", "Icon-76@2x.png", True),
+("Settings icon iPhone 2G/3G/3GS/iPad2/iPad mini", 29, "iphone_icon_settings", "Icon-Small.png", False),
+("Settings icon iPad/iPhone w/retina (iOS7 and later)", 58, "iphone_icon_settings_high_res", "Icon-Small@2x.png", False),
+("Settings icon iPhone 6 Plus (iOS 8 and later)", 87, "iphone_icon_iphone6_settings", "Icon-Small@3x.png", False),
+("Search icon iPhone 2G/3G/3GS (iOS7 and later)", 40, "iphone_icon_ipad_search_ios7", "Icon-Small-40.png", False),
+("Search icon iPad3/4/Air/Mini w/retina (iOS7 and later)", 80, "iphone_icon_ipad_search_high_res_ios7", "Icon-Small-40@2x.png", False),
+("Search icon iPad/2/Mini (iOS 6.1 or earlier)", 50, "iphone_icon_ipad_search", "Icon-Small-50.png", False),
+("Search icon iPad3/4 (iOS 6.1 and earlier)", 100, "iphone_icon_ipad_search_high_res", "Icon-Small-50@2x.png", False),
+("Search icon iPhone 6 Plus (iOS 8 and later)", 120, "iphone_icon_iphone6_search", "Icon-40@3x.png", False)

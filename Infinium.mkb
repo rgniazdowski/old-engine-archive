@@ -1,8 +1,11 @@
 #!/usr/bin/env mkb
 files
 {
+	[docs]
+	("docs")
+	Infinium.defines.txt
+	
 	(src)
-
 	["FlexiGame/BaseCode"]
 	"*.cpp"
 	"*.h"
@@ -86,6 +89,12 @@ assets
 	sound/s.raw
 	sound/d.raw
 	sound/m1.mp3
+	sound/explode.wav
+	sound/shot.wav
+	sound/empty.wav
+	sound/mod/mod.shamrip.mod
+	sound/mod/mod.dragonsfunk.mod
+	sound/mod/mod.dragonsfunk.mp3
 
     (data)
 	Crystal1.group.ini
@@ -113,6 +122,7 @@ assets
     particle_textures.group.xml
     settings.xml
     textures.group.xml
+	main.lua
 
 	(data)
 	textures/splash/bg_biohazard0_1920x1200.jpg
@@ -272,7 +282,9 @@ assets
 
 defines
 {
+	FG_NO_UNDEF
 	TIXML_USE_STL
+	FG_USING_LUA_PLUS
 }
 
 options
@@ -326,25 +338,29 @@ deployments
 	android-icon-hdpi='icons/and_72x72.png'
 	android-icon-ldpi='icons/and_36x36.png'
 	android-icon-mdpi='icons/and_48x48.png'
+	android-icon-xhdpi='icons/and_96x96.png'
 	android-icon-xxhdpi='icons/ios_144x144.png'
+	android-icon-xxxhdpi='icons/and_192x192.png'
 	android-manifest='AndroidManifest.xml'
 	android-unsigned=0
 	caption='A Flexi Game'
 	copyright='(C) FlexiGame Software'
 	embed-icf=1
-	icon='icons/BiohazardIcon_256.png'
+	icon='icons/MainGenericIcon.jpg'
 	iphone-appid='com.flexigame.Infinium'
 	iphone-enable-4inch-retina='1'
 	iphone-icon='icons/ios_57x57.png'
+	iphone-icon-dir='icons'
 	iphone-icon-high-res='icons/ios_114x114.png'
 	iphone-icon-ipad='icons/ios_72x72.png'
 	iphone-icon-ipad-high-res='icons/ios_144x144.png'
 	iphone-info-plist='info_second.plist'
-	iphone-nosign='1'
+	iphone-launch-dir='icons/launch'
+	iphone-nosign=1
 	iphone-sign-for-distribution=0
-	iphone-splash='icons/iPhone_splash.png'
-	iphone-splashscreen-landscape='icons/iPhone_splash_landscape.png'
-	iphone-splashscreen-portrait='icons/iPhone_splash_portrait.png'
+	iphone-splash='icons/splash/iPhone_splash.png'
+	iphone-splashscreen-landscape='icons/splash/iPhone_splash_landscape.png'
+	iphone-splashscreen-portrait='icons/splash/iPhone_splash_portrait.png'
 	name='Infinium'
 	provider='Radoslaw Gniazdowski'
 	splashscreen='icons/splash'
@@ -353,6 +369,6 @@ deployments
 	version-major=1
 	version-minor=0
 	version-revision=0
-	win32-icon='icons/BiohazardIcon_256.png'
+	win32-icon='icons/MainGenericIcon.jpg'
 	win32-pref-processtitle='FlexiGame Infinium'
 }

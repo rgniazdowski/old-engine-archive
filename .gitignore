@@ -19,6 +19,10 @@ project/linux/LuaPlusNextGen_NB/build
 project/linux/LuaPlusNextGen_NB/dist
 project/linux/LuaPlusNextGen_NB/nbproject/private
 project/linux/LuaPlusNextGen_NB/nbproject/private/private.xml
+icons/spot_*
+icons/tabbar_*
+icons/webclip_*
+icons/toolbar_*
 log
 modules/bullet/modified/
 modules/lua_514/src

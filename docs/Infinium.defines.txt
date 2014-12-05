@@ -1,1 +1,45 @@
-TIXML_USE_STL	-	forces TinyXML to use STLs string
+TIXML_USE_STL			-	forces TinyXML to use STLs string
+FG_NO_UNDEF				-	When set all switches FG_USING* wont be forcefully undefined
+FG_USING_MARMALADE		-	Is Marmalade framework used in this build?
+FG_USING_MARMALADE_SENSORS	-	Is Marmalades' sensor subsystem used?
+FG_USING_MARMALADE_KEYBOARD	-	Is Marmalades' keyboard event handled in this build?
+FG_USING_MARMALADE_SOUND	-	Is the s3eSound used?
+FG_USING_MARMALADE_AUDIO	-	Is the s3eAudio used?
+FG_USING_MARMALADE_THREADS	-	Are Marmalades' threads used in this build?
+FG_USING_MARMALADE_IWGX		-	Is the IwGX subproject used?
+FG_USING_MARMALADE_IWGL		-	Is the IwGL subproject used in this build?
+FG_USING_MARMALADE_OPENGL_ES	-	Is the OpenGL ES used via Marmalade?
+FG_USING_OPENGL_ES		-	Is the OpenGL ES used (will be also set when using OpenGL ES via Marmalade)?
+FG_USING_OPENGL			-	Is the plain OpenGL used in this build?
+FG_USING_OPENGL_GLU		-	Is the GLU library used in this build?
+FG_USING_OPENGL_GLUT	-	Is the GLUT library used?
+FG_USING_OPENGL_GLEW	-	Is the GLEW library used?
+FG_USING_GL_BINDING		-	Is the glbinding module used?
+FG_USING_GLM			-	Is the OpenGL Mathemathics library (GLM) used?
+FG_USING_SDL			-	Is the SDL1.x used?
+FG_USING_SDL2			-	Is the latest SDL2 used in this build?
+FG_USING_OPENAL			-	Is the OpenAL library used (for sound system) in this build?
+FG_USING_MARMALADE_EGL	-	Is the EGL used via Marmalade in this build?
+FG_USING_EGL		-	Is the EGL library used in this build?
+FG_USING_SENSORS	-	Are sensors used in this build?
+FG_USING_AUDIO		-	Is audio used at all?
+FG_USING_THREADS	-	Are threads (non-Marmalade) used at all?
+FG_USING_DIRECTX		-	Is the DirectX (any version) used in this build?
+FG_USING_DIRECTSOUND	-	Is the DirectSound used?
+FG_USING_DPI_INFO	-	Is the DPI Info extension used (Marmalade needed)?
+FG_USING_TINYXML	-	Is the tinyxml library used in this build?
+FG_USING_LUA_PLUS	-	Is the enhanced Lua C API used?
+FG_USING_LUA		-	Is the original Lua C API used?
+FG_USING_BULLET		-	Is the Bullet (physics engine) library used in this build?
+FG_USING_PLATFORM_WINDOWS	-	Is the target platform Windows in this build?
+FG_USING_PLATFORM_LINUX		-	Is the target platform Linux?
+FG_USING_PLATFORM_ANDROID	-	Is the target platform Android?
+FG_USING_PLATFORM_IOS		-	Is the target platform iOS?
+FG_USING_PLATFORM_MACOSX	-	Is the target platform MACOS/X
+FG_USING_CYGWIN			-	Is Cygwin used for current build?
+FG_USING_MINGW			-	Is MinGW used for current build?
+FG_USING_VISUAL_STUDIO	-	Does the build system run under Visual Studio (any version)?
+FG_USING_QT				-	Does the build system run under QtCreator (any version)?
+FG_USING_PLUGINS		-	Is Plugin Subsystem used in this build?
+FG_USING_WXWIDGETS		-	Is wxWidgets GUI library used in this build?
+FG_SUPPORT_WXWIDGETS	-	Is wxWidgets enabled/supported in this build?

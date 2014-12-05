@@ -4,7 +4,7 @@ rem This script should be in 'run' directory, or any other one level deep
 set FG_CURDIR=%CD%
 cd %~dp0..
 
-echo ****************** FLEXI GAME ************************
+echo **************** FLEXI GAME ANDROID ******************
 echo ** %date% %time%
 
 IF "%S3E_DIR%" == "" (
@@ -51,22 +51,22 @@ IF NOT EXIST "%FG_BUILDDIR%\deploy_config.py" (
 
 rem ===================== create deploy package for IOS DEBUG
 echo ******************************************************
-echo ** Creating deployment for IOS - DEBUG - %FG_PROJECTNAME%
-call %S3E_DIR%\bin\s3e_deploy.bat -n -f --os=iphone --debug --arch arm --gcc %FG_BUILDDIR%\deploy_config.py
+echo ** Creating deployment for ANDROID - ARM - DEBUG - %FG_PROJECTNAME%
+call %S3E_DIR%\bin\s3e_deploy.bat -n -f --os=android --debug --arch arm --gcc %FG_BUILDDIR%\deploy_config.py
 if errorlevel 1 goto end
 
 set FG_DEBUG=debug
-set FG_DEBUGDIR=deployments\default\iphone\debug
+set FG_DEBUGDIR=deployments\default\android\debug\arm
 set FG_DEBUG_CERTS_DIR=%FG_DEBUGDIR%\certificates
-set FG_IPAFILE=%FG_DEBUGDIR%\%FG_PROJECTNAME%.ipa
-set FG_IPAFILENAME=%FG_PROJECTNAME%.ipa
-set FG_IPAFILEPATH=%FG_IPAFILE%
+set FG_PKGFILE=%FG_DEBUGDIR%\%FG_PROJECTNAME%.apk
+set FG_PKGFILENAME=%FG_PROJECTNAME%.apk
+set FG_PKGFILEPATH=%FG_PKGFILE%
 set FG_CERTS=certs
 
 echo ******************************************************
 echo ** Debug Deployment folder path: %FG_DEBUGDIR%
 echo ** Debug Deployment Certificates folder path: %FG_DEBUG_CERTS_DIR%
-echo ** Debug Deployment iOS package file: %FG_IPAFILE%
+echo ** Debug Deployment Android package file: %FG_PKGFILE%
 
 IF NOT EXIST "%FG_DEBUGDIR%" (
   echo **ERROR** Missing %FG_DEBUGDIR% directory
@@ -86,13 +86,6 @@ IF NOT EXIST "%FG_DEBUG_CERTS_DIR%" (
   echo **INFO** Directory %FG_DEBUG_CERTS_DIR% already exists, overwriting files...
   call xcopy %FG_CERTS% %FG_DEBUG_CERTS_DIR% /F /E /I /Y
 )
-
-echo ** Calling resigning tool for iOS package
-call tools\resign_run.bat development
-if errorlevel 1 goto end
-
-echo ** Calling iTunes for package upload
-"C:\Program Files\iTunes\iTunes.exe" "%CD%\%FG_IPAFILE%"
 
 :skipcerts
 

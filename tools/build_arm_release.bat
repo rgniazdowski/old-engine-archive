@@ -4,7 +4,7 @@ rem This script should be in 'run' directory, or any other one level deep
 set FG_CURDIR=%CD%
 cd %~dp0..
 
-echo ============== FLEXI GAME =================
+echo ****************** FLEXI GAME ************************
 echo %date% %time%
 
 set S3E_DIR=C:\Marmalade\7.4\s3e
@@ -24,7 +24,7 @@ IF NOT EXIST "%PROJECTNAME%.mkb" (
 )
 
 rem ===================== build project version release ARM
-echo call %S3E_DIR%\bin\mkb.bat -n --verbose=1 --make --arm --compiler=gcc %PROJECTNAME%.mkb
+call %S3E_DIR%\bin\mkb.bat -n --verbose=1 --make --arm --compiler=gcc %PROJECTNAME%.mkb
 if errorlevel 1 goto end
 
 rem ====================== build if available
