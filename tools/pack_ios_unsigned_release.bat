@@ -99,4 +99,4 @@ echo ** Calling iTunes for package upload
 :end
 
 cd %FG_CURDIR%
-@echo on
+

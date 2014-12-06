@@ -90,6 +90,7 @@ IF NOT EXIST "%FG_DEBUG_CERTS_DIR%" (
 echo ** Calling resigning tool for iOS package
 call tools\resign_run.bat development
 if errorlevel 1 goto end
+cd %~dp0..
 
 echo ** Calling iTunes for package upload
 "C:\Program Files\iTunes\iTunes.exe" "%CD%\%FG_IPAFILE%"
@@ -99,4 +100,3 @@ echo ** Calling iTunes for package upload
 :end
 
 cd %FG_CURDIR%
-@echo on

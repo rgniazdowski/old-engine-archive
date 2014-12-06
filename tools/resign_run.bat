@@ -67,4 +67,3 @@ C:\Marmalade\7.4\tools\IPhoneSigner\IPhoneSigner.exe
 :end
 
 cd %FG_CURDIR%
-@echo on
