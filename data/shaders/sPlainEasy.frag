@@ -20,8 +20,6 @@ uniform vec4  u_CustomColor;
 #endif
 
 uniform sampler2D s_texture;
-uniform samplerCube s_skybox;
-uniform float u_drawSkyBox;
 uniform float u_useTexture;
 
 void main()
@@ -29,13 +27,7 @@ void main()
 	vec4 texel;
 	
 	if(u_useTexture > 0.5) {
-		if(u_drawSkyBox < 0.5) {
-
-			texel = texture2D(s_texture, v_texCoord);
-		} else {
-			v_position.y = -1.0 * v_position.y;
-			texel = textureCube(s_skybox, v_position);
-		} 
+		texel = texture2D(s_texture, v_texCoord);
 	} else {
 		texel = vec4(1.0, 1.0, 1.0, 1.0);
 	}

@@ -18,10 +18,7 @@ attribute vec4 a_color;
 
 void main()
 {
-    // Define position and normal in model coordinates. 
-    vec4 mcPosition = a_position;
-    
-    gl_Position = u_mvpMatrix * mcPosition;    
+    gl_Position = u_mvpMatrix * a_position;
 	
 	v_position = a_position.xyz;
 	v_texCoord = a_texCoord;
