@@ -76,11 +76,29 @@ function testCallback1(event)
 	if(event.eventType == FG_EVENT_TOUCH_TAP_FINISHED) then
 		io.write("LUA TOUCH: X: ", event.touch.x, " Y: ", event.touch.y, "\n")
 	end
+	local x = event.touch.x;
+	local y = event.touch.y;
 	SoundManager:play("explode.wav")
+	if(x < 100 and y < 100) then
+		SoundManager:play("shot.wav")
+	end
+	if(x > 100 and x < 200) then
+		SoundManager:play("shot2.wav")
+	end
+	if(x > 200 and x < 300) then
+		SoundManager:play("empty.wav")
+	end
+	if(x > 300 and x < 400) then
+		SoundManager:play("shot.wav")
+	end
 --	SoundManager:play("mod.shamrip.mod")
 	local mus = "mod.dragonsfunk.mp3"
+--	SoundManager:setMusicVolume(0.5)
 	if(SoundManager:isPlaying(mus) == 0) then
---		SoundManager:play(mus)
+		io.write("MUSIC IS NOT PLAYING! GOING TO PLAY\n")
+	--	SoundManager:play(mus)
+	else
+		io.write("MUSIC IS ALREADY PLAYING!\n")
 	end
 end
 
