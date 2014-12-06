@@ -4,7 +4,7 @@ files
 	[docs]
 	("docs")
 	Infinium.defines.txt
-	
+
 	(src)
 	["FlexiGame/BaseCode"]
 	"*.cpp"
@@ -82,16 +82,25 @@ files
 assets
 {
 	(data)
-	sound/c.raw
-	sound/m.raw
-	sound/p.raw
-	sound/tod.raw
-	sound/s.raw
-	sound/d.raw
+
 	sound/m1.mp3
-	sound/explode.wav
-	sound/shot.wav
+
+	sound/beat1.raw
+	sound/bounce1.raw
+	sound/chime1.raw
+	sound/click1.raw
+	sound/electronic1.raw
+
+	sound/beat1.wav
+	sound/bounce1.wav
+	sound/chime1.wav
+	sound/click1.wav
+	sound/electronic1.wav
 	sound/empty.wav
+	sound/explode.wav
+	sound/shot2.wav
+	sound/shot.wav
+
 	sound/mod/mod.shamrip.mod
 	sound/mod/mod.dragonsfunk.mod
 	sound/mod/mod.dragonsfunk.mp3
@@ -139,18 +148,24 @@ assets
 	textures/skybox/galaxy_mod_1024.jpg
 	textures/skybox/purple-nebula-2048.jpg
 	textures/skybox/nebula_1024.jpg
-	textures/skybox/pn-cube/purple-nebula-2048-pz.jpg
-	textures/skybox/pn-cube/purple-nebula-1024-px.jpg
 	textures/skybox/pn-cube/purple-nebula-2048-px.jpg
-	textures/skybox/pn-cube/purple-nebula-1024-pz.jpg
-	textures/skybox/pn-cube/purple-nebula-1024-nz.jpg
-	textures/skybox/pn-cube/purple-nebula-2048-nx.jpg
-	textures/skybox/pn-cube/purple-nebula-1024-nx.jpg
-	textures/skybox/pn-cube/purple-nebula-2048-nz.jpg
-	textures/skybox/pn-cube/purple-nebula-2048-ny.jpg
-	textures/skybox/pn-cube/purple-nebula-1024-ny.jpg
-	textures/skybox/pn-cube/purple-nebula-1024-py.jpg
 	textures/skybox/pn-cube/purple-nebula-2048-py.jpg
+	textures/skybox/pn-cube/purple-nebula-2048-pz.jpg
+	textures/skybox/pn-cube/purple-nebula-2048-nx.jpg
+	textures/skybox/pn-cube/purple-nebula-2048-ny.jpg
+	textures/skybox/pn-cube/purple-nebula-2048-nz.jpg
+	textures/skybox/pn-cube/purple-nebula-1024-px.jpg
+	textures/skybox/pn-cube/purple-nebula-1024-py.jpg
+	textures/skybox/pn-cube/purple-nebula-1024-pz.jpg
+	textures/skybox/pn-cube/purple-nebula-1024-nx.jpg
+	textures/skybox/pn-cube/purple-nebula-1024-ny.jpg
+	textures/skybox/pn-cube/purple-nebula-1024-nz.jpg
+	textures/skybox/pn-cube/purple-nebula-512-px.jpg
+	textures/skybox/pn-cube/purple-nebula-512-py.jpg
+	textures/skybox/pn-cube/purple-nebula-512-pz.jpg
+	textures/skybox/pn-cube/purple-nebula-512-nx.jpg
+	textures/skybox/pn-cube/purple-nebula-512-ny.jpg
+	textures/skybox/pn-cube/purple-nebula-512-nz.jpg
 
 	(data)
     textures/particle/CloudsSheet.res.ini
@@ -240,8 +255,8 @@ assets
 	obj/MalHideout/MalHideout.obj
 
 	(data)
-	shaders/sVertexLighting.frag
-	shaders/sVertexLighting.vert
+	shaders/other/sVertexLighting.frag
+	shaders/other/sVertexLighting.vert
 
 	(data)
 	shaders/sPlainEasy.frag
@@ -251,6 +266,13 @@ assets
 	shaders/sPlainEasy.vert.shader.ini
 
 	(data)
+	shaders/sSkyBoxEasy.frag
+	shaders/sSkyBoxEasy.vert
+	shaders/sSkyBoxEasy.program.ini
+	shaders/sSkyBoxEasy.frag.shader.ini
+	shaders/sSkyBoxEasy.vert.shader.ini
+
+	(data)
 	shaders/sOrthoEasy.frag
 	shaders/sOrthoEasy.vert
 	shaders/sOrthoEasy.program.ini
@@ -258,25 +280,25 @@ assets
 	shaders/sOrthoEasy.vert.shader.ini
 
 	(data)
-	shaders/sSlowBumpMapping.frag
-	shaders/sSlowBumpMapping.vert
-	shaders/sSlowBumpMapping.program.ini
-	shaders/sSlowBumpMapping.frag.shader.ini
-	shaders/sSlowBumpMapping.vert.shader.ini
+	shaders/other/sSlowBumpMapping.frag
+	shaders/other/sSlowBumpMapping.vert
+	shaders/other/sSlowBumpMapping.program.ini
+	shaders/other/sSlowBumpMapping.frag.shader.ini
+	shaders/other/sSlowBumpMapping.vert.shader.ini
 
 	(data)
-	shaders/sEnvironmentMapping.frag
-	shaders/sEnvironmentMapping.vert
-	shaders/sEnvironmentMapping.program.ini
-	shaders/sEnvironmentMapping.frag.shader.ini
-	shaders/sEnvironmentMapping.vert.shader.ini
+	shaders/other/sEnvironmentMapping.frag
+	shaders/other/sEnvironmentMapping.vert
+	shaders/other/sEnvironmentMapping.program.ini
+	shaders/other/sEnvironmentMapping.frag.shader.ini
+	shaders/other/sEnvironmentMapping.vert.shader.ini
 
 	(data)
-	shaders/sFragmentLighting.frag
-	shaders/sFragmentLighting.vert
-	shaders/sFragmentLighting.program.ini
-	shaders/sFragmentLighting.frag.shader.ini
-	shaders/sFragmentLighting.vert.shader.ini
+	shaders/other/sFragmentLighting.frag
+	shaders/other/sFragmentLighting.vert
+	shaders/other/sFragmentLighting.program.ini
+	shaders/other/sFragmentLighting.frag.shader.ini
+	shaders/other/sFragmentLighting.vert.shader.ini
 
 }
 
