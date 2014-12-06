@@ -68,6 +68,7 @@
             <word>coords</word>
             <word>Cornsilk</word>
             <word>cpp</word>
+            <word>data's</word>
             <word>destructors</word>
             <word>dfactor</word>
             <word>dragonsfunk</word>
@@ -77,7 +78,9 @@
             <word>ds</word>
             <word>eg</word>
             <word>egl</word>
+            <word>endian</word>
             <word>enum</word>
+            <word>fmt</word>
             <word>foreach</word>
             <word>framebuffer</word>
             <word>fubar</word>
@@ -153,6 +156,9 @@
             <word>strcasecmp</word>
             <word>struct</word>
             <word>structs</word>
+            <word>subchun</word>
+            <word>Subchunk</word>
+            <word>subchunks</word>
             <word>texel</word>
             <word>tga</word>
             <word>ttl</word>
