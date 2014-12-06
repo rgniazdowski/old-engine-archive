@@ -26,6 +26,7 @@ fgGFXboolean fgVertexData2v::refreshAttributes(fgGfxAttributeData *pDataArray) c
     uintptr_t offset = 0;
     // Position coordinates
     index = FG_GFX_ATTRIB_POS_LOCATION;
+    pDataArray[index].index = index;
     if(getPtrVBO() && getVBOCount()) {
         pDataArray[index].isBO = FG_TRUE;
         pDataArray[index].buffer = getPtrVBO()[0].id;
@@ -44,6 +45,7 @@ fgGFXboolean fgVertexData2v::refreshAttributes(fgGfxAttributeData *pDataArray) c
     pointer += sizeof (fgVector3f);
     // Texture coordinates
     index = FG_GFX_ATTRIB_UVS_LOCATION;
+    pDataArray[index].index = index;
     if(getPtrVBO() && getVBOCount()) {
         pDataArray[index].isBO = FG_TRUE;
         pDataArray[index].buffer = getPtrVBO()[0].id;

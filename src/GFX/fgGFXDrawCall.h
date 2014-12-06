@@ -72,6 +72,12 @@ private:
     fgGfxDrawingInfo m_drawingInfo;
     /// Special vector data
     fgVertexData *m_vecDataBase;
+    ///
+    fgVertexData *m_vecData2v;
+    ///
+    fgVertexData *m_vecData3v;
+    ///
+    fgVertexData *m_vecData4v;
     /// Pointer to the shader program used in this draw call
     /// It can be set to NULL, then the draw call will use
     /// last active shader program. The pointer to the shader
@@ -180,7 +186,7 @@ public:
     void setPrimitiveMode(const fgGfxPrimitiveMode mode);
 
     // Whether to set UVs, normals or colors active
-    void setComponentActive(unsigned int component);
+    void setComponentActive(unsigned int component, const fgBool reset = FG_FALSE);
 
     // Set active color for the next data
     virtual void setColor(const fgColor3f& color);

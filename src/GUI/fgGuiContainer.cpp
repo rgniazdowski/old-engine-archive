@@ -191,14 +191,18 @@ fgBoundingBox3Df fgGuiContainer::updateBounds(void) {
             // and position with the main (container) innerBox constraint
             // #FIXME - this should be done before, relatively/fixed positioned
             // child widget can update bounds of the parent container differently
-            fgBoundingBox3Df childBox = child->updateBounds(innerBox);
+
+            //fgBoundingBox3Df childBox = child->updateBounds(innerBox); // #FIXME
+            
             // Now if this widget is relatively position it can exceed the boundaries
             // of this container - so we need to merge this innerbox with childsbox
             //if(innerBox.pos.x > childBox.pos.x)
             //    innerBox.pos.x = childBox.pos.x;
             //if(innerBox.pos.y > childBox.pos.y)
             //    innerBox.pos.y = childBox.pos.y;
-            innerBox.merge(childBox);
+            
+            //innerBox.merge(childBox);
+            innerBox.merge(child->updateBounds(innerBox));
             continue;
         } else {
             childSize = child->getSize();
@@ -298,7 +302,7 @@ fgBoundingBox3Df fgGuiContainer::updateBounds(void) {
         }
 
         // No need to update inner/outer area, just update position of the child
-        fgBoundingBox3Df childBox = child->updateBounds(widgetBox);
+        /*fgBoundingBox3Df childBox = */child->updateBounds(widgetBox);
 
 #if 0
         if(g_fgDebugConfig.guiBBoxShow) {

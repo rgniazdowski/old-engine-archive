@@ -228,8 +228,8 @@ void fgGfxPrimitives::drawSkyBoxOptimized(void) {
 void fgGfxPrimitives::drawAABBLines(const fgAABoundingBox3Df& aabb) {
     fgGfxPlatform::context()->diffVertexAttribArrayMask(FG_GFX_POSITION_BIT | FG_GFX_COLOR_BIT);
 
-    fgVec3f center = 0.5f * (aabb.min + aabb.max);
-    fgVec3f extent = 0.5f * (aabb.max - aabb.min);
+    fgVec3f center = aabb.getCenter();
+    fgVec3f extent = aabb.getExtent();
 
     fgVec3f v[8] = {
                     fgVec3f(center.x - extent.x, center.y - extent.y, center.z + extent.z), // 1 -x, -y, +z

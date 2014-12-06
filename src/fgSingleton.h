@@ -38,7 +38,7 @@ public:
             instance = 0;
         }
     }
-    ~fgSingleton() {
+    virtual ~fgSingleton() {
         instanceFlag = false;
     }
 };

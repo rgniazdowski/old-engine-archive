@@ -267,7 +267,7 @@ fgBool fgGfxSceneNode::destroyChild(fgGfxSceneNode *&pChild) {
         // This is required so the scene manager wont call again this function
         // to remove the child from it's parent
         pChild->setParent(NULL);
-        if(m_pManager) {
+        if(m_pManager && false) { // #FIXME
             if(m_pManager->getManagerType() == FG_MANAGER_SCENE) {
                 static_cast<fgGfxSceneManager *>(m_pManager)->destroyNode(pChild);
                 managerValid = FG_TRUE;

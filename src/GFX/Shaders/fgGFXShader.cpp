@@ -53,8 +53,10 @@ void fgGfxShader::clearAll(void) {
     deleteShader();
 }
 
-/*
- *
+/**
+ * 
+ * @param slVer
+ * @return 
  */
 fgBool fgGfxShader::setVersion(fgGfxSLVersion slVer) {
     if(slVer != FG_GFX_SHADING_LANGUAGE_INVALID)
@@ -85,8 +87,9 @@ void fgGfxShader::appendInclude(std::string & includeName) {
 #define _FG_GFX_SL_VERSION_ES_100 "#version 100 es\n"
 #define _FG_GFX_SL_VERSION_EMPTY "\n"
 
-/*
- *
+/**
+ * 
+ * @return 
  */
 fgBool fgGfxShader::loadSource(void) {
     fgFile::clearStatus();
@@ -108,7 +111,7 @@ fgBool fgGfxShader::loadSource(void) {
         return FG_FALSE; // PROPER ERROR CODE
     }
 
-    m_numSources = (int)m_includeStrVec.size() + m_defineStrVec.size() + 3;
+    m_numSources = (int)m_includeStrVec.size() + m_defineStrVec.size() + 2;
     m_sources = (char const **)fgMalloc<char *>(m_numSources);
     if(!m_sources) {
         reportError(FG_ERRNO_ENOMEM);
@@ -121,13 +124,6 @@ fgBool fgGfxShader::loadSource(void) {
     //_version.append("100 es\n");
     //m_sources[0] = _version.c_str();
     int n = 1;
-    // #FIXME
-    m_sources[n] = "#define FG_GFX_POSITION_BIT		0x0001\n" \
-		"#define FG_GFX_NORMAL_BIT		0x0002\n" \
-		"#define FG_GFX_UVS_BIT                 0x0004\n" \
-		"#define FG_GFX_COLOR_BIT		0x0008\n" \
-		"#define FG_GFX_TANGENT_BIT		0x0020\n";
-    n++;
     // include constant definitions (#define) into the shader source
     for(int i = 0; i < (int)m_defineStrVec.size(); i++, n++) {
         m_sources[n] = m_defineStrVec[i].c_str();
@@ -144,18 +140,21 @@ fgBool fgGfxShader::loadSource(void) {
     return FG_TRUE;
 }
 
-/*
- *
+/**
+ * 
+ * @param path
+ * @return 
  */
-
 fgBool fgGfxShader::loadSource(const char *path) {
     setFilePath(path);
     fgFile::setPath(path);
     return loadSource();
 }
 
-/*
- *
+/**
+ * 
+ * @param path
+ * @return 
  */
 fgBool fgGfxShader::loadSource(std::string & path) {
     setFilePath(path);
@@ -163,8 +162,8 @@ fgBool fgGfxShader::loadSource(std::string & path) {
     return loadSource();
 }
 
-/*
- *
+/**
+ * 
  */
 void fgGfxShader::freeSource(void) {
     if(m_fileSource)
@@ -177,8 +176,9 @@ void fgGfxShader::freeSource(void) {
     m_numSources = 0;
 }
 
-/*
- *
+/**
+ * 
+ * @return 
  */
 fgGFXuint fgGfxShader::create(void) {
     if(m_type == fgGfxShaderType::FG_GFX_SHADER_INVALID)
@@ -191,8 +191,9 @@ fgGFXuint fgGfxShader::create(void) {
     return m_gfxID;
 }
 
-/*
- *
+/**
+ * 
+ * @return 
  */
 fgBool fgGfxShader::compile(void) {
     fgFile::clearStatus();
@@ -222,8 +223,10 @@ fgBool fgGfxShader::compile(void) {
     return (fgBool)m_params[FG_GFX_SHADER_COMPILE_STATUS];
 }
 
-/*
- *
+/**
+ * 
+ * @param path
+ * @return 
  */
 fgBool fgGfxShader::compile(const char *path) {
     if(m_isSourceLoaded || m_fileSource) {
@@ -234,8 +237,10 @@ fgBool fgGfxShader::compile(const char *path) {
     return compile();
 }
 
-/*
- *
+/**
+ * 
+ * @param path
+ * @return 
  */
 fgBool fgGfxShader::compile(std::string & path) {
     if(m_isSourceLoaded || m_fileSource) {
@@ -246,8 +251,9 @@ fgBool fgGfxShader::compile(std::string & path) {
     return compile();
 }
 
-/*
- *
+/**
+ * 
+ * @return 
  */
 fgBool fgGfxShader::deleteShader(void) {
     if(glIsShader(m_gfxID) == FG_GFX_TRUE) {
@@ -260,8 +266,10 @@ fgBool fgGfxShader::deleteShader(void) {
     return FG_FALSE;
 }
 
-/*
- *
+/**
+ * 
+ * @param program
+ * @return 
  */
 fgBool fgGfxShader::attach(fgGFXuint program) {
     if((FG_GFX_TRUE == glIsProgram(program)) && (FG_GFX_TRUE == glIsShader(m_gfxID))) {
@@ -272,8 +280,10 @@ fgBool fgGfxShader::attach(fgGFXuint program) {
     return FG_FALSE;
 }
 
-/*
- *
+/**
+ * 
+ * @param program
+ * @return 
  */
 fgBool fgGfxShader::detach(fgGFXuint program) {
     if((glIsProgram(program) == FG_GFX_TRUE) && (glIsShader(m_gfxID) == FG_GFX_TRUE)) {

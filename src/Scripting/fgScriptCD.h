@@ -88,12 +88,12 @@ namespace LPCD {
         #if defined(FG_DEBUG)
             FG_LOG_DEBUG("Script: LPCD Push: ptr[%p], offset[%lu], type_name[fgVector2i]", ptr, (uintptr_t)ptr);
         #endif
-            obj.SetMetatable(state->GetRegistry()[fgScriptMT::getMetatableName(fgScriptMT::VECTOR2I_MT_ID)]);
+            obj.SetMetatable(state->GetRegistry()[fgScriptMT->getMetatableName(fgScriptMetatables::VECTOR2I_MT_ID)]);
         }
         static inline bool Match(lua_State* L, int idx) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
             LuaPlus::LuaObject obj = state->Stack(idx);
-            return obj.GetMetatable() == state->GetRegistry()[fgScriptMT::getMetatableName(fgScriptMT::VECTOR2I_MT_ID)];
+            return obj.GetMetatable() == state->GetRegistry()[fgScriptMT->getMetatableName(fgScriptMetatables::VECTOR2I_MT_ID)];
         }
         static inline fgVector2i Get(lua_State* L, int idx) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
@@ -119,12 +119,12 @@ namespace LPCD {
         #if defined(FG_DEBUG)
             FG_LOG_DEBUG("Script: LPCD Push: ptr[%p], offset[%lu], type_name[fgVector2f]", ptr, (uintptr_t)ptr);
         #endif
-            obj.SetMetatable(state->GetRegistry()[fgScriptMT::getMetatableName(fgScriptMT::VECTOR2F_MT_ID)]);
+            obj.SetMetatable(state->GetRegistry()[fgScriptMT->getMetatableName(fgScriptMetatables::VECTOR2F_MT_ID)]);
         }
         static inline bool Match(lua_State* L, int idx) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
             LuaPlus::LuaObject obj = state->Stack(idx);
-            return obj.GetMetatable() == state->GetRegistry()[fgScriptMT::getMetatableName(fgScriptMT::VECTOR2F_MT_ID)];
+            return obj.GetMetatable() == state->GetRegistry()[fgScriptMT->getMetatableName(fgScriptMetatables::VECTOR2F_MT_ID)];
         }
         static inline fgVector2f Get(lua_State* L, int idx) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
@@ -151,12 +151,12 @@ namespace LPCD {
         #if defined(FG_DEBUG)
             FG_LOG_DEBUG("Script: LPCD Push: ptr[%p], offset[%lu], type_name[fgVector3i]", ptr, (uintptr_t)ptr);
         #endif
-            obj.SetMetatable(state->GetRegistry()[fgScriptMT::getMetatableName(fgScriptMT::VECTOR3I_MT_ID)]);
+            obj.SetMetatable(state->GetRegistry()[fgScriptMT->getMetatableName(fgScriptMetatables::VECTOR3I_MT_ID)]);
         }
         static inline bool Match(lua_State* L, int idx) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
             LuaPlus::LuaObject obj = state->Stack(idx);
-            return obj.GetMetatable() == state->GetRegistry()[fgScriptMT::getMetatableName(fgScriptMT::VECTOR3I_MT_ID)];
+            return obj.GetMetatable() == state->GetRegistry()[fgScriptMT->getMetatableName(fgScriptMetatables::VECTOR3I_MT_ID)];
         }
         static inline fgVector3i Get(lua_State* L, int idx) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
@@ -182,12 +182,12 @@ namespace LPCD {
         #if defined(FG_DEBUG)
             FG_LOG_DEBUG("Script: LPCD Push: ptr[%p], offset[%lu], type_name[fgVector3f]", ptr, (uintptr_t)ptr);
         #endif
-            obj.SetMetatable(state->GetRegistry()[fgScriptMT::getMetatableName(fgScriptMT::VECTOR3F_MT_ID)]);
+            obj.SetMetatable(state->GetRegistry()[fgScriptMT->getMetatableName(fgScriptMetatables::VECTOR3F_MT_ID)]);
         }
         static inline bool Match(lua_State* L, int idx) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
             LuaPlus::LuaObject obj = state->Stack(idx);
-            return obj.GetMetatable() == state->GetRegistry()[fgScriptMT::getMetatableName(fgScriptMT::VECTOR3F_MT_ID)];
+            return obj.GetMetatable() == state->GetRegistry()[fgScriptMT->getMetatableName(fgScriptMetatables::VECTOR3F_MT_ID)];
         }
         static inline fgVector3f Get(lua_State* L, int idx) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
@@ -213,12 +213,12 @@ namespace LPCD {
         #if defined(FG_DEBUG)
             FG_LOG_DEBUG("Script: LPCD Push: ptr[%p], offset[%lu], type_name[fgVector4i]", ptr, (uintptr_t)ptr);
         #endif
-            obj.SetMetatable(state->GetRegistry()[fgScriptMT::getMetatableName(fgScriptMT::VECTOR4I_MT_ID)]);
+            obj.SetMetatable(state->GetRegistry()[fgScriptMT->getMetatableName(fgScriptMetatables::VECTOR4I_MT_ID)]);
         }
         static inline bool Match(lua_State* L, int idx) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
             LuaPlus::LuaObject obj = state->Stack(idx);
-            return obj.GetMetatable() == state->GetRegistry()[fgScriptMT::getMetatableName(fgScriptMT::VECTOR4I_MT_ID)];
+            return obj.GetMetatable() == state->GetRegistry()[fgScriptMT->getMetatableName(fgScriptMetatables::VECTOR4I_MT_ID)];
         }
         static inline fgVector4i Get(lua_State* L, int idx) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
@@ -244,12 +244,12 @@ namespace LPCD {
         #if defined(FG_DEBUG)
             FG_LOG_DEBUG("Script: LPCD Push: ptr[%p], offset[%lu], type_name[fgVector4f]", ptr, (uintptr_t)ptr);
         #endif
-            obj.SetMetatable(state->GetRegistry()[fgScriptMT::getMetatableName(fgScriptMT::VECTOR4F_MT_ID)]);
+            obj.SetMetatable(state->GetRegistry()[fgScriptMT->getMetatableName(fgScriptMetatables::VECTOR4F_MT_ID)]);
         }
         static inline bool Match(lua_State* L, int idx) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
             LuaPlus::LuaObject obj = state->Stack(idx);
-            return obj.GetMetatable() == state->GetRegistry()[fgScriptMT::getMetatableName(fgScriptMT::VECTOR4F_MT_ID)];
+            return obj.GetMetatable() == state->GetRegistry()[fgScriptMT->getMetatableName(fgScriptMetatables::VECTOR4F_MT_ID)];
         }
         static inline fgVector4f Get(lua_State* L, int idx) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
@@ -300,8 +300,8 @@ namespace LPCD {
             // (BoxPointer) simply push already existing pointer
             // Maybe create something like universal Push?
             // #FIXME - some checking if the pointer isn't null (!)
-            fgScriptMT::METAID metaID = fgScriptMT::getMetatableIDFromResourceType(value->getResourceType());
-            const char *metatableName = fgScriptMT::getMetatableName(metaID);
+            fgScriptMetatables::METAID metaID = fgScriptMT->getMetatableIDFromResourceType(value->getResourceType());
+            const char *metatableName = fgScriptMT->getMetatableName(metaID);
         #if defined(FG_DEBUG)
             FG_LOG_DEBUG("Script: LPCD Push: ptr[%p], offset[%lu], name[%s]", value, (uintptr_t)value, value->getNameStr());
         #endif
@@ -313,7 +313,7 @@ namespace LPCD {
         static inline bool Match(lua_State* L, int idx) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
             LuaPlus::LuaObject obj = state->Stack(idx);
-            bool result;// = (obj.GetMetatable() == state->GetRegistry()[fgScriptMetatables::getMetatableName(fgScriptMetatables::GUI_WIDGET_MT_ID)]);
+            bool result;// = (obj.GetMetatable() == state->GetRegistry()[fgScriptMT->getMetatableName(fgScriptMetatables::GUI_WIDGET_MT_ID)]);
             // This is fubar. No, really fucked up
             result = (bool) obj.IsUserdata();
             return result;
@@ -342,8 +342,8 @@ namespace LPCD {
             // Can check the pointer (offset) and instead of creating new object
             // (BoxPointer) simply push already existing pointer
             // Maybe create something like universal Push?
-            fgScriptMT::METAID metaID = fgScriptMT::getMetatableIDFromWidgetType(value->getType());
-            const char *metatableName = fgScriptMT::getMetatableName(metaID);
+            fgScriptMetatables::METAID metaID = fgScriptMT->getMetatableIDFromWidgetType(value->getType());
+            const char *metatableName = fgScriptMT->getMetatableName(metaID);
         #if defined(FG_DEBUG)
             FG_LOG_DEBUG("Script: LPCD Push: ptr[%p], offset[%lu], name[%s], type_name[%s]", value, (uintptr_t)value, value->getNameStr(), value->getTypeNameStr());
         #endif
@@ -355,7 +355,7 @@ namespace LPCD {
         static inline bool Match(lua_State* L, int idx) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
             LuaPlus::LuaObject obj = state->Stack(idx);
-            bool result;// = (obj.GetMetatable() == state->GetRegistry()[fgScriptMetatables::getMetatableName(fgScriptMetatables::GUI_WIDGET_MT_ID)]);
+            bool result;// = (obj.GetMetatable() == state->GetRegistry()[fgScriptMT->getMetatableName(fgScriptMetatables::GUI_WIDGET_MT_ID)]);
             // This is fubar
             result = (bool) obj.IsUserdata();
             return result;
@@ -388,8 +388,8 @@ namespace LPCD {
             // Can check the pointer (offset) and instead of creating new object
             // (BoxPointer) simply push already existing pointer
             // Maybe create something like universal Push?
-            fgScriptMT::METAID metaID = fgScriptMT::GUI_STYLE_CONTENT_MT_ID;
-            const char *metatableName = fgScriptMT::getMetatableName(metaID);
+            fgScriptMetatables::METAID metaID = fgScriptMetatables::GUI_STYLE_CONTENT_MT_ID;
+            const char *metatableName = fgScriptMT->getMetatableName(metaID);
         #if defined(FG_DEBUG)
             FG_LOG_DEBUG("Script: LPCD Push: ptr[%p], offset[%lu], type_name[fgGuiStyleContent]", value, (uintptr_t)value);
         #endif
@@ -401,7 +401,7 @@ namespace LPCD {
         static inline bool Match(lua_State* L, int idx) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
             LuaPlus::LuaObject obj = state->Stack(idx);
-            bool result = (obj.GetMetatable() == state->GetRegistry()[fgScriptMT::getMetatableName(fgScriptMT::GUI_STYLE_CONTENT_MT_ID)]);
+            bool result = (obj.GetMetatable() == state->GetRegistry()[fgScriptMT->getMetatableName(fgScriptMetatables::GUI_STYLE_CONTENT_MT_ID)]);
             // This is fubar
             //result = (bool) obj.IsUserdata();
             return result;
@@ -431,13 +431,13 @@ namespace LPCD {
         #if defined(FG_DEBUG)
             FG_LOG_DEBUG("Script: LPCD Push: ptr[%p], offset[%lu], type_name[fgGuiSize]", ptr, (uintptr_t)ptr);
         #endif
-            const char *metatableName = fgScriptMT::getMetatableName(fgScriptMT::GUI_STYLE_SIZE_MT_ID);
+            const char *metatableName = fgScriptMT->getMetatableName(fgScriptMetatables::GUI_STYLE_SIZE_MT_ID);
             obj.SetMetatable(state->GetRegistry()[metatableName]);
         }
         static inline bool Match(lua_State* L, int idx) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
             LuaPlus::LuaObject obj = state->Stack(idx);
-            return obj.GetMetatable() == state->GetRegistry()[fgScriptMT::getMetatableName(fgScriptMT::GUI_STYLE_SIZE_MT_ID)];
+            return obj.GetMetatable() == state->GetRegistry()[fgScriptMT->getMetatableName(fgScriptMetatables::GUI_STYLE_SIZE_MT_ID)];
         }
         static inline fgGuiSize Get(lua_State* L, int idx) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
@@ -464,13 +464,13 @@ namespace LPCD {
             FG_LOG_DEBUG("Script: LPCD Push: ptr[%p], offset[%lu], type_name[fgGuiBackground]", ptr, (uintptr_t)ptr);
             //FG_LOG_DEBUG("Script: LPCD Push: type_name[fgGuiBackground], color[%.2f %.2f %.2f %.2f]", value.color.r, value.color.g, value.color.b, value.color.a);
         #endif
-            const char *metatableName = fgScriptMT::getMetatableName(fgScriptMT::GUI_STYLE_BACKGROUND_MT_ID);
+            const char *metatableName = fgScriptMT->getMetatableName(fgScriptMetatables::GUI_STYLE_BACKGROUND_MT_ID);
             obj.SetMetatable(state->GetRegistry()[metatableName]);
         }
         static inline bool Match(lua_State* L, int idx) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
             LuaPlus::LuaObject obj = state->Stack(idx);
-            return obj.GetMetatable() == state->GetRegistry()[fgScriptMT::getMetatableName(fgScriptMT::GUI_STYLE_BACKGROUND_MT_ID)];
+            return obj.GetMetatable() == state->GetRegistry()[fgScriptMT->getMetatableName(fgScriptMetatables::GUI_STYLE_BACKGROUND_MT_ID)];
         }
         static inline fgGuiBackground Get(lua_State* L, int idx) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
@@ -496,13 +496,13 @@ namespace LPCD {
         #if defined(FG_DEBUG)
             FG_LOG_DEBUG("Script: LPCD Push: ptr[%p], offset[%lu], type_name[fgGuiForeground]", ptr, (uintptr_t)ptr);
         #endif
-            const char *metatableName = fgScriptMT::getMetatableName(fgScriptMT::GUI_STYLE_FOREGROUND_MT_ID);
+            const char *metatableName = fgScriptMT->getMetatableName(fgScriptMetatables::GUI_STYLE_FOREGROUND_MT_ID);
             obj.SetMetatable(state->GetRegistry()[metatableName]);
         }
         static inline bool Match(lua_State* L, int idx) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
             LuaPlus::LuaObject obj = state->Stack(idx);
-            return obj.GetMetatable() == state->GetRegistry()[fgScriptMT::getMetatableName(fgScriptMT::GUI_STYLE_FOREGROUND_MT_ID)];
+            return obj.GetMetatable() == state->GetRegistry()[fgScriptMT->getMetatableName(fgScriptMetatables::GUI_STYLE_FOREGROUND_MT_ID)];
         }
         static inline fgGuiForeground Get(lua_State* L, int idx) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
@@ -528,13 +528,13 @@ namespace LPCD {
         #if defined(FG_DEBUG)
             FG_LOG_DEBUG("Script: LPCD Push: ptr[%p], offset[%lu], type_name[fgGuiMargin]", ptr, (uintptr_t)ptr);
         #endif
-            const char *metatableName = fgScriptMT::getMetatableName(fgScriptMT::GUI_STYLE_MARGIN_MT_ID);
+            const char *metatableName = fgScriptMT->getMetatableName(fgScriptMetatables::GUI_STYLE_MARGIN_MT_ID);
             obj.SetMetatable(state->GetRegistry()[metatableName]);
         }
         static inline bool Match(lua_State* L, int idx) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
             LuaPlus::LuaObject obj = state->Stack(idx);
-            return obj.GetMetatable() == state->GetRegistry()[fgScriptMT::getMetatableName(fgScriptMT::GUI_STYLE_MARGIN_MT_ID)];
+            return obj.GetMetatable() == state->GetRegistry()[fgScriptMT->getMetatableName(fgScriptMetatables::GUI_STYLE_MARGIN_MT_ID)];
         }
         static inline fgGuiMargin Get(lua_State* L, int idx) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
@@ -560,13 +560,13 @@ namespace LPCD {
         #if defined(FG_DEBUG)
             FG_LOG_DEBUG("Script: LPCD Push: ptr[%p], offset[%lu], type_name[fgGuiBorderInfo]", ptr, (uintptr_t)ptr);
         #endif
-            const char *metatableName = fgScriptMT::getMetatableName(fgScriptMT::GUI_STYLE_BORDER_INFO_MT_ID);
+            const char *metatableName = fgScriptMT->getMetatableName(fgScriptMetatables::GUI_STYLE_BORDER_INFO_MT_ID);
             obj.SetMetatable(state->GetRegistry()[metatableName]);
         }
         static inline bool Match(lua_State* L, int idx) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
             LuaPlus::LuaObject obj = state->Stack(idx);
-            return obj.GetMetatable() == state->GetRegistry()[fgScriptMT::getMetatableName(fgScriptMT::GUI_STYLE_BORDER_INFO_MT_ID)];
+            return obj.GetMetatable() == state->GetRegistry()[fgScriptMT->getMetatableName(fgScriptMetatables::GUI_STYLE_BORDER_INFO_MT_ID)];
         }
         static inline fgGuiBorderInfo Get(lua_State* L, int idx) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
@@ -592,13 +592,13 @@ namespace LPCD {
         #if defined(FG_DEBUG)
             FG_LOG_DEBUG("Script: LPCD Push: ptr[%p], offset[%lu], type_name[fgGuiBorder]", ptr, (uintptr_t)ptr);
         #endif
-            const char *metatableName = fgScriptMT::getMetatableName(fgScriptMT::GUI_STYLE_BORDER_MT_ID);
+            const char *metatableName = fgScriptMT->getMetatableName(fgScriptMetatables::GUI_STYLE_BORDER_MT_ID);
             obj.SetMetatable(state->GetRegistry()[metatableName]);
         }
         static inline bool Match(lua_State* L, int idx) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
             LuaPlus::LuaObject obj = state->Stack(idx);
-            return obj.GetMetatable() == state->GetRegistry()[fgScriptMT::getMetatableName(fgScriptMT::GUI_STYLE_BORDER_MT_ID)];
+            return obj.GetMetatable() == state->GetRegistry()[fgScriptMT->getMetatableName(fgScriptMetatables::GUI_STYLE_BORDER_MT_ID)];
         }
         static inline fgGuiBorder Get(lua_State* L, int idx) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
@@ -624,13 +624,13 @@ namespace LPCD {
         #if defined(FG_DEBUG)
             FG_LOG_DEBUG("Script: LPCD Push: ptr[%p], offset[%lu], type_name[fgGuiPosition]", ptr, (uintptr_t)ptr);
         #endif
-            const char *metatableName = fgScriptMT::getMetatableName(fgScriptMT::GUI_STYLE_POSITION_MT_ID);
+            const char *metatableName = fgScriptMT->getMetatableName(fgScriptMetatables::GUI_STYLE_POSITION_MT_ID);
             obj.SetMetatable(state->GetRegistry()[metatableName]);
         }
         static inline bool Match(lua_State* L, int idx) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
             LuaPlus::LuaObject obj = state->Stack(idx);
-            return obj.GetMetatable() == state->GetRegistry()[fgScriptMT::getMetatableName(fgScriptMT::GUI_STYLE_POSITION_MT_ID)];
+            return obj.GetMetatable() == state->GetRegistry()[fgScriptMT->getMetatableName(fgScriptMetatables::GUI_STYLE_POSITION_MT_ID)];
         }
         static inline fgGuiPosition Get(lua_State* L, int idx) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
@@ -843,8 +843,8 @@ namespace LPCD {
             // Can check the pointer (offset) and instead of creating new object
             // (BoxPointer) simply push already existing pointer
             // Maybe create something like universal Push?
-            fgScriptMT::METAID metaID = fgScriptMT::EVENT_MAIN_MT_ID;
-            const char *metatableName = fgScriptMT::getMetatableName(metaID);
+            fgScriptMetatables::METAID metaID = fgScriptMetatables::EVENT_MAIN_MT_ID;
+            const char *metatableName = fgScriptMT->getMetatableName(metaID);
         #if defined(FG_DEBUG)
             FG_LOG_DEBUG("Script: LPCD Push: ptr[%p], offset[%lu], type_name[fgEvent].union", value, (uintptr_t)value);
         #endif
@@ -853,7 +853,7 @@ namespace LPCD {
         static inline bool Match(lua_State* L, int idx) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
             LuaPlus::LuaObject obj = state->Stack(idx);
-            bool result = (obj.GetMetatable() == state->GetRegistry()[fgScriptMT::getMetatableName(fgScriptMT::EVENT_MAIN_MT_ID)]);
+            bool result = (obj.GetMetatable() == state->GetRegistry()[fgScriptMT->getMetatableName(fgScriptMetatables::EVENT_MAIN_MT_ID)]);
             // This is fubar
             //result = (bool) obj.IsUserdata();
             return result;
@@ -885,14 +885,14 @@ namespace LPCD {
         #if defined(FG_DEBUG)
             FG_LOG_DEBUG("Script: LPCD Push: ptr[%p], offset[%lu], type_name[fgTouchEvent]", ptr, (uintptr_t)ptr);
         #endif
-            fgScriptMT::METAID metaID = fgScriptMT::EVENT_TOUCH_MT_ID;
-            const char *metatableName = fgScriptMT::getMetatableName(metaID);
+            fgScriptMetatables::METAID metaID = fgScriptMetatables::EVENT_TOUCH_MT_ID;
+            const char *metatableName = fgScriptMT->getMetatableName(metaID);
             obj.SetMetatable(state->GetRegistry()[metatableName]);
         }
         static inline bool Match(lua_State* L, int idx) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
             LuaPlus::LuaObject obj = state->Stack(idx);
-            return obj.GetMetatable() == state->GetRegistry()[fgScriptMT::getMetatableName(fgScriptMT::EVENT_TOUCH_MT_ID)];
+            return obj.GetMetatable() == state->GetRegistry()[fgScriptMT->getMetatableName(fgScriptMetatables::EVENT_TOUCH_MT_ID)];
         }
         static inline fgTouchEvent Get(lua_State* L, int idx) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
@@ -918,14 +918,14 @@ namespace LPCD {
         #if defined(FG_DEBUG)
             FG_LOG_DEBUG("Script: LPCD Push: ptr[%p], offset[%lu], type_name[fgMouseEvent]", ptr, (uintptr_t)ptr);
         #endif
-            fgScriptMT::METAID metaID = fgScriptMT::EVENT_MOUSE_MT_ID;
-            const char *metatableName = fgScriptMT::getMetatableName(metaID);
+            fgScriptMetatables::METAID metaID = fgScriptMetatables::EVENT_MOUSE_MT_ID;
+            const char *metatableName = fgScriptMT->getMetatableName(metaID);
             obj.SetMetatable(state->GetRegistry()[metatableName]);
         }
         static inline bool Match(lua_State* L, int idx) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
             LuaPlus::LuaObject obj = state->Stack(idx);
-            return obj.GetMetatable() == state->GetRegistry()[fgScriptMT::getMetatableName(fgScriptMT::EVENT_MOUSE_MT_ID)];
+            return obj.GetMetatable() == state->GetRegistry()[fgScriptMT->getMetatableName(fgScriptMetatables::EVENT_MOUSE_MT_ID)];
         }
         static inline fgMouseEvent Get(lua_State* L, int idx) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
@@ -951,14 +951,14 @@ namespace LPCD {
         #if defined(FG_DEBUG)
             FG_LOG_DEBUG("Script: LPCD Push: ptr[%p], offset[%lu], type_name[fgSwipeEvent]", ptr, (uintptr_t)ptr);
         #endif
-            fgScriptMT::METAID metaID = fgScriptMT::EVENT_SWIPE_MT_ID;
-            const char *metatableName = fgScriptMT::getMetatableName(metaID);
+            fgScriptMetatables::METAID metaID = fgScriptMetatables::EVENT_SWIPE_MT_ID;
+            const char *metatableName = fgScriptMT->getMetatableName(metaID);
             obj.SetMetatable(state->GetRegistry()[metatableName]);
         }
         static inline bool Match(lua_State* L, int idx) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
             LuaPlus::LuaObject obj = state->Stack(idx);
-            return obj.GetMetatable() == state->GetRegistry()[fgScriptMT::getMetatableName(fgScriptMT::EVENT_SWIPE_MT_ID)];
+            return obj.GetMetatable() == state->GetRegistry()[fgScriptMT->getMetatableName(fgScriptMetatables::EVENT_SWIPE_MT_ID)];
         }
         static inline fgSwipeEvent Get(lua_State* L, int idx) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
@@ -984,14 +984,14 @@ namespace LPCD {
         #if defined(FG_DEBUG)
             FG_LOG_DEBUG("Script: LPCD Push: ptr[%p], offset[%lu], type_name[fgSwipePinchEvent]", ptr, (uintptr_t)ptr);
         #endif
-            fgScriptMT::METAID metaID = fgScriptMT::EVENT_SWIPE_PINCH_MT_ID;
-            const char *metatableName = fgScriptMT::getMetatableName(metaID);
+            fgScriptMetatables::METAID metaID = fgScriptMetatables::EVENT_SWIPE_PINCH_MT_ID;
+            const char *metatableName = fgScriptMT->getMetatableName(metaID);
             obj.SetMetatable(state->GetRegistry()[metatableName]);
         }
         static inline bool Match(lua_State* L, int idx) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
             LuaPlus::LuaObject obj = state->Stack(idx);
-            return obj.GetMetatable() == state->GetRegistry()[fgScriptMT::getMetatableName(fgScriptMT::EVENT_SWIPE_PINCH_MT_ID)];
+            return obj.GetMetatable() == state->GetRegistry()[fgScriptMT->getMetatableName(fgScriptMetatables::EVENT_SWIPE_PINCH_MT_ID)];
         }
         static inline fgSwipePinchEvent Get(lua_State* L, int idx) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
@@ -1017,14 +1017,14 @@ namespace LPCD {
         #if defined(FG_DEBUG)
             FG_LOG_DEBUG("Script: LPCD Push: ptr[%p], offset[%lu], type_name[fgSwipeRotateEvent]", ptr, (uintptr_t)ptr);
         #endif
-            fgScriptMT::METAID metaID = fgScriptMT::EVENT_SWIPE_ROTATE_MT_ID;
-            const char *metatableName = fgScriptMT::getMetatableName(metaID);
+            fgScriptMetatables::METAID metaID = fgScriptMetatables::EVENT_SWIPE_ROTATE_MT_ID;
+            const char *metatableName = fgScriptMT->getMetatableName(metaID);
             obj.SetMetatable(state->GetRegistry()[metatableName]);
         }
         static inline bool Match(lua_State* L, int idx) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
             LuaPlus::LuaObject obj = state->Stack(idx);
-            return obj.GetMetatable() == state->GetRegistry()[fgScriptMT::getMetatableName(fgScriptMT::EVENT_SWIPE_ROTATE_MT_ID)];
+            return obj.GetMetatable() == state->GetRegistry()[fgScriptMT->getMetatableName(fgScriptMetatables::EVENT_SWIPE_ROTATE_MT_ID)];
         }
         static inline fgSwipeRotateEvent Get(lua_State* L, int idx) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
@@ -1050,14 +1050,14 @@ namespace LPCD {
         #if defined(FG_DEBUG)
             FG_LOG_DEBUG("Script: LPCD Push: ptr[%p], offset[%lu], type_name[fgKeyEvent]", ptr, (uintptr_t)ptr);
         #endif
-            fgScriptMT::METAID metaID = fgScriptMT::EVENT_KEY_MT_ID;
-            const char *metatableName = fgScriptMT::getMetatableName(metaID);
+            fgScriptMetatables::METAID metaID = fgScriptMetatables::EVENT_KEY_MT_ID;
+            const char *metatableName = fgScriptMT->getMetatableName(metaID);
             obj.SetMetatable(state->GetRegistry()[metatableName]);
         }
         static inline bool Match(lua_State* L, int idx) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
             LuaPlus::LuaObject obj = state->Stack(idx);
-            return obj.GetMetatable() == state->GetRegistry()[fgScriptMT::getMetatableName(fgScriptMT::EVENT_KEY_MT_ID)];
+            return obj.GetMetatable() == state->GetRegistry()[fgScriptMT->getMetatableName(fgScriptMetatables::EVENT_KEY_MT_ID)];
         }
         static inline fgKeyEvent Get(lua_State* L, int idx) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
@@ -1083,14 +1083,14 @@ namespace LPCD {
         #if defined(FG_DEBUG)
             FG_LOG_DEBUG("Script: LPCD Push: ptr[%p], offset[%lu], type_name[fgResourceEvent]", ptr, (uintptr_t)ptr);
         #endif
-            fgScriptMT::METAID metaID = fgScriptMT::EVENT_RESOURCE_MT_ID;
-            const char *metatableName = fgScriptMT::getMetatableName(metaID);
+            fgScriptMetatables::METAID metaID = fgScriptMetatables::EVENT_RESOURCE_MT_ID;
+            const char *metatableName = fgScriptMT->getMetatableName(metaID);
             obj.SetMetatable(state->GetRegistry()[metatableName]);
         }
         static inline bool Match(lua_State* L, int idx) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
             LuaPlus::LuaObject obj = state->Stack(idx);
-            return obj.GetMetatable() == state->GetRegistry()[fgScriptMT::getMetatableName(fgScriptMT::EVENT_RESOURCE_MT_ID)];
+            return obj.GetMetatable() == state->GetRegistry()[fgScriptMT->getMetatableName(fgScriptMetatables::EVENT_RESOURCE_MT_ID)];
         }
         static inline fgResourceEvent Get(lua_State* L, int idx) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
@@ -1116,14 +1116,14 @@ namespace LPCD {
         #if defined(FG_DEBUG)
             FG_LOG_DEBUG("Script: LPCD Push: ptr[%p], offset[%lu], type_name[fgVertexStreamEvent]", ptr, (uintptr_t)ptr);
         #endif
-            fgScriptMT::METAID metaID = fgScriptMT::EVENT_VERTEX_STREAM_MT_ID;
-            const char *metatableName = fgScriptMT::getMetatableName(metaID);
+            fgScriptMetatables::METAID metaID = fgScriptMetatables::EVENT_VERTEX_STREAM_MT_ID;
+            const char *metatableName = fgScriptMT->getMetatableName(metaID);
             obj.SetMetatable(state->GetRegistry()[metatableName]);
         }
         static inline bool Match(lua_State* L, int idx) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
             LuaPlus::LuaObject obj = state->Stack(idx);
-            return obj.GetMetatable() == state->GetRegistry()[fgScriptMT::getMetatableName(fgScriptMT::EVENT_VERTEX_STREAM_MT_ID)];
+            return obj.GetMetatable() == state->GetRegistry()[fgScriptMT->getMetatableName(fgScriptMetatables::EVENT_VERTEX_STREAM_MT_ID)];
         }
         static inline fgVertexStreamEvent Get(lua_State* L, int idx) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
@@ -1149,14 +1149,14 @@ namespace LPCD {
         #if defined(FG_DEBUG)
             FG_LOG_DEBUG("Script: LPCD Push: ptr[%p], offset[%lu], type_name[fgCameraEvent]", ptr, (uintptr_t)ptr);
         #endif
-            fgScriptMT::METAID metaID = fgScriptMT::EVENT_CAMERA_MT_ID;
-            const char *metatableName = fgScriptMT::getMetatableName(metaID);
+            fgScriptMetatables::METAID metaID = fgScriptMetatables::EVENT_CAMERA_MT_ID;
+            const char *metatableName = fgScriptMT->getMetatableName(metaID);
             obj.SetMetatable(state->GetRegistry()[metatableName]);
         }
         static inline bool Match(lua_State* L, int idx) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
             LuaPlus::LuaObject obj = state->Stack(idx);
-            return obj.GetMetatable() == state->GetRegistry()[fgScriptMT::getMetatableName(fgScriptMT::EVENT_CAMERA_MT_ID)];
+            return obj.GetMetatable() == state->GetRegistry()[fgScriptMT->getMetatableName(fgScriptMetatables::EVENT_CAMERA_MT_ID)];
         }
         static inline fgCameraEvent Get(lua_State* L, int idx) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
@@ -1182,14 +1182,14 @@ namespace LPCD {
         #if defined(FG_DEBUG)
             FG_LOG_DEBUG("Script: LPCD Push: ptr[%p], offset[%lu], type_name[fgSoundEvent]", ptr, (uintptr_t)ptr);
         #endif
-            fgScriptMT::METAID metaID = fgScriptMT::EVENT_SOUND_MT_ID;
-            const char *metatableName = fgScriptMT::getMetatableName(metaID);
+            fgScriptMetatables::METAID metaID = fgScriptMetatables::EVENT_SOUND_MT_ID;
+            const char *metatableName = fgScriptMT->getMetatableName(metaID);
             obj.SetMetatable(state->GetRegistry()[metatableName]);
         }
         static inline bool Match(lua_State* L, int idx) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
             LuaPlus::LuaObject obj = state->Stack(idx);
-            return obj.GetMetatable() == state->GetRegistry()[fgScriptMT::getMetatableName(fgScriptMT::EVENT_SOUND_MT_ID)];
+            return obj.GetMetatable() == state->GetRegistry()[fgScriptMT->getMetatableName(fgScriptMetatables::EVENT_SOUND_MT_ID)];
         }
         static inline fgSoundEvent Get(lua_State* L, int idx) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
@@ -1215,14 +1215,14 @@ namespace LPCD {
         #if defined(FG_DEBUG)
             FG_LOG_DEBUG("Script: LPCD Push: ptr[%p], offset[%lu], type_name[fgMenuChangedEvent]", ptr, (uintptr_t)ptr);
         #endif
-            fgScriptMT::METAID metaID = fgScriptMT::EVENT_MENU_CHANGED_MT_ID;
-            const char *metatableName = fgScriptMT::getMetatableName(metaID);
+            fgScriptMetatables::METAID metaID = fgScriptMetatables::EVENT_MENU_CHANGED_MT_ID;
+            const char *metatableName = fgScriptMT->getMetatableName(metaID);
             obj.SetMetatable(state->GetRegistry()[metatableName]);
         }
         static inline bool Match(lua_State* L, int idx) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
             LuaPlus::LuaObject obj = state->Stack(idx);
-            return obj.GetMetatable() == state->GetRegistry()[fgScriptMT::getMetatableName(fgScriptMT::EVENT_MENU_CHANGED_MT_ID)];
+            return obj.GetMetatable() == state->GetRegistry()[fgScriptMT->getMetatableName(fgScriptMetatables::EVENT_MENU_CHANGED_MT_ID)];
         }
         static inline fgMenuChangedEvent Get(lua_State* L, int idx) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
@@ -1248,14 +1248,14 @@ namespace LPCD {
         #if defined(FG_DEBUG)
             FG_LOG_DEBUG("Script: LPCD Push: ptr[%p], offset[%lu], type_name[fgWidgetEvent]", ptr, (uintptr_t)ptr);
         #endif
-            fgScriptMT::METAID metaID = fgScriptMT::EVENT_WIDGET_MT_ID;
-            const char *metatableName = fgScriptMT::getMetatableName(metaID);
+            fgScriptMetatables::METAID metaID = fgScriptMetatables::EVENT_WIDGET_MT_ID;
+            const char *metatableName = fgScriptMT->getMetatableName(metaID);
             obj.SetMetatable(state->GetRegistry()[metatableName]);
         }
         static inline bool Match(lua_State* L, int idx) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
             LuaPlus::LuaObject obj = state->Stack(idx);
-            return obj.GetMetatable() == state->GetRegistry()[fgScriptMT::getMetatableName(fgScriptMT::EVENT_WIDGET_MT_ID)];
+            return obj.GetMetatable() == state->GetRegistry()[fgScriptMT->getMetatableName(fgScriptMetatables::EVENT_WIDGET_MT_ID)];
         }
         static inline fgWidgetEvent Get(lua_State* L, int idx) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
@@ -1281,14 +1281,14 @@ namespace LPCD {
         #if defined(FG_DEBUG)
             FG_LOG_DEBUG("Script: LPCD Push: ptr[%p], offset[%lu], type_name[fgSensorsEvent]", ptr, (uintptr_t)ptr);
         #endif
-            fgScriptMT::METAID metaID = fgScriptMT::EVENT_SENSORS_MT_ID;
-            const char *metatableName = fgScriptMT::getMetatableName(metaID);
+            fgScriptMetatables::METAID metaID = fgScriptMetatables::EVENT_SENSORS_MT_ID;
+            const char *metatableName = fgScriptMT->getMetatableName(metaID);
             obj.SetMetatable(state->GetRegistry()[metatableName]);
         }
         static inline bool Match(lua_State* L, int idx) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
             LuaPlus::LuaObject obj = state->Stack(idx);
-            return obj.GetMetatable() == state->GetRegistry()[fgScriptMT::getMetatableName(fgScriptMT::EVENT_SENSORS_MT_ID)];
+            return obj.GetMetatable() == state->GetRegistry()[fgScriptMT->getMetatableName(fgScriptMetatables::EVENT_SENSORS_MT_ID)];
         }
         static inline fgSensorsEvent Get(lua_State* L, int idx) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
@@ -1314,14 +1314,14 @@ namespace LPCD {
         #if defined(FG_DEBUG)
             FG_LOG_DEBUG("Script: LPCD Push: ptr[%p], offset[%lu], type_name[fgControllerDeviceEvent]", ptr, (uintptr_t)ptr);
         #endif
-            fgScriptMT::METAID metaID = fgScriptMT::EVENT_CONTROLLER_DEVICE_MT_ID;
-            const char *metatableName = fgScriptMT::getMetatableName(metaID);
+            fgScriptMetatables::METAID metaID = fgScriptMetatables::EVENT_CONTROLLER_DEVICE_MT_ID;
+            const char *metatableName = fgScriptMT->getMetatableName(metaID);
             obj.SetMetatable(state->GetRegistry()[metatableName]);
         }
         static inline bool Match(lua_State* L, int idx) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
             LuaPlus::LuaObject obj = state->Stack(idx);
-            return obj.GetMetatable() == state->GetRegistry()[fgScriptMT::getMetatableName(fgScriptMT::EVENT_CONTROLLER_DEVICE_MT_ID)];
+            return obj.GetMetatable() == state->GetRegistry()[fgScriptMT->getMetatableName(fgScriptMetatables::EVENT_CONTROLLER_DEVICE_MT_ID)];
         }
         static inline fgControllerDeviceEvent Get(lua_State* L, int idx) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
@@ -1347,14 +1347,14 @@ namespace LPCD {
         #if defined(FG_DEBUG)
             FG_LOG_DEBUG("Script: LPCD Push: ptr[%p], offset[%lu], type_name[fgControllerButtonEvent]", ptr, (uintptr_t)ptr);
         #endif
-            fgScriptMT::METAID metaID = fgScriptMT::EVENT_CONTROLLER_BUTTON_MT_ID;
-            const char *metatableName = fgScriptMT::getMetatableName(metaID);
+            fgScriptMetatables::METAID metaID = fgScriptMetatables::EVENT_CONTROLLER_BUTTON_MT_ID;
+            const char *metatableName = fgScriptMT->getMetatableName(metaID);
             obj.SetMetatable(state->GetRegistry()[metatableName]);
         }
         static inline bool Match(lua_State* L, int idx) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
             LuaPlus::LuaObject obj = state->Stack(idx);
-            return obj.GetMetatable() == state->GetRegistry()[fgScriptMT::getMetatableName(fgScriptMT::EVENT_CONTROLLER_BUTTON_MT_ID)];
+            return obj.GetMetatable() == state->GetRegistry()[fgScriptMT->getMetatableName(fgScriptMetatables::EVENT_CONTROLLER_BUTTON_MT_ID)];
         }
         static inline fgControllerButtonEvent Get(lua_State* L, int idx) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
@@ -1380,14 +1380,14 @@ namespace LPCD {
         #if defined(FG_DEBUG)
             FG_LOG_DEBUG("Script: LPCD Push: ptr[%p], offset[%lu], type_name[fgControllerAxisEvent]", ptr, (uintptr_t)ptr);
         #endif
-            fgScriptMT::METAID metaID = fgScriptMT::EVENT_CONTROLLER_AXIS_MT_ID;
-            const char *metatableName = fgScriptMT::getMetatableName(metaID);
+            fgScriptMetatables::METAID metaID = fgScriptMetatables::EVENT_CONTROLLER_AXIS_MT_ID;
+            const char *metatableName = fgScriptMT->getMetatableName(metaID);
             obj.SetMetatable(state->GetRegistry()[metatableName]);
         }
         static inline bool Match(lua_State* L, int idx) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
             LuaPlus::LuaObject obj = state->Stack(idx);
-            return obj.GetMetatable() == state->GetRegistry()[fgScriptMT::getMetatableName(fgScriptMT::EVENT_CONTROLLER_AXIS_MT_ID)];
+            return obj.GetMetatable() == state->GetRegistry()[fgScriptMT->getMetatableName(fgScriptMetatables::EVENT_CONTROLLER_AXIS_MT_ID)];
         }
         static inline fgControllerAxisEvent Get(lua_State* L, int idx) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);

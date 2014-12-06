@@ -133,13 +133,6 @@ public:
      * 
      * @return 
      */
-    fgVector3f *getFrustumPoints(void) {
-        return m_points;
-    }
-    /**
-     * 
-     * @return 
-     */
     float getZNear(void) const {
         return m_zNear;
     }
@@ -155,30 +148,24 @@ private:
     ///
     fgPlanef m_planes[NUM_PLANES];
 
-    union {
-
-        struct {
-            /// Near Top Left
-            fgVector3f ntl;
-            /// Near Top Right
-            fgVector3f ntr;
-            /// Near Bottom Left
-            fgVector3f nbl;
-            /// Near Bottom Right
-            fgVector3f nbr;
-            /// Far Top Left
-            fgVector3f ftl;
-            /// Far Top Right
-            fgVector3f ftr;
-            /// Far Bottom Left
-            fgVector3f fbl;
-            /// Far Bottom Right
-            fgVector3f fbr;
-        } m_point;
-        ///
-        fgVector3f m_points[NUM_FRUSTUM_POINTS];
-    };
-
+	struct {
+		/// Near Top Left
+		fgVector3f ntl;
+		/// Near Top Right
+		fgVector3f ntr;
+		/// Near Bottom Left
+		fgVector3f nbl;
+		/// Near Bottom Right
+		fgVector3f nbr;
+		/// Far Top Left
+		fgVector3f ftl;
+		/// Far Top Right
+		fgVector3f ftr;
+		/// Far Bottom Left
+		fgVector3f fbl;
+		/// Far Bottom Right
+		fgVector3f fbr;
+	} m_point;
     ///
     float m_zNear;
     ///

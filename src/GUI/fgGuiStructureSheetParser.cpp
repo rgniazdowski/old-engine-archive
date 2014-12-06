@@ -166,7 +166,7 @@ fgBool fgGuiStructureSheetParser::parseWidgetAttributes(fgGuiWidget *pWidget, fg
 void fgGuiStructureSheetParser::startElement(const char *localName, fgXMLElement *elementPtr, fgXMLNodeType nodeType, fgXMLAttribute *firstAttribute, int depth) {
     m_count++;
     m_elemStack.push(elementPtr);
-    printf("GUI ELEMENT START: %s | text: %s\n", localName, elementPtr->GetText());
+    //printf("GUI ELEMENT START: %s | text: %s\n", localName, elementPtr->GetText());
     if(strcasecmp(localName, FG_GUI_STRUCTURE_SHEET_ROOT_NODE) == 0 && depth == 0) {
         return;
     } else if(depth == 0) {
@@ -239,7 +239,7 @@ void fgGuiStructureSheetParser::endElement(const char *localName, fgXMLElement *
     m_elemStack.pop();
     if(m_isFailure)
         return;
-    printf("GUI ELEMENT END: %s\n", localName);
+    //printf("GUI ELEMENT END: %s\n", localName);
     if(!m_widgetStack.empty()) {
         fgGuiWidget *pWidget = m_widgetStack.top();
         if(pWidget) {
@@ -260,7 +260,7 @@ void fgGuiStructureSheetParser::characters(const char *ch, int start, int length
         fgGuiWidget *pWidget = m_widgetStack.top();
         if(!pWidget)
             return;
-        printf("characters: This node is a text: %s\n", ch);
+        //printf("characters: This node is a text: %s\n", ch);
         pWidget->setText(ch);
     }
 }

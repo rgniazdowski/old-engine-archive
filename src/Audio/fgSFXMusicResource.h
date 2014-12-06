@@ -20,7 +20,7 @@
         #include <SDL/SDL.h>
         #include <SDL/SDL_mixer.h>
     #elif defined(FG_USING_MARMALADE)
-        #warning "TODO: Music/Audio support for Marmalade based build!"
+        //#error "TODO: Music/Audio support for Marmalade based build!"
 //      #include "s3eFile.h"
         #ifdef FG_USING_MARMALADE_AUDIO
             #include "s3eAudio.h" // s3eAudio can play music files
@@ -50,6 +50,7 @@ private:
     ///
     Mix_Music *m_musData;
     #elif defined(FG_USING_MARMALADE) // AUDIO / SOUND
+	void *m_musData;
     #else
     void *m_musData;
     #endif

@@ -19,7 +19,7 @@
         #include "s3eMemory.h"
 
         #define fgMalloc_sys_	s3eMalloc
-        #define fgFree_sys_		s3eFree
+        #define fgFree_sys_	s3eFree
         #define fgRealloc_sys_	s3eRealloc
 
 // FIXME need more wrappers for marmalade's heap memory handling
@@ -29,7 +29,7 @@
         #include <malloc.h>
 
         #define fgMalloc_sys_	malloc
-        #define fgFree_sys_		free
+        #define fgFree_sys_	free
         #define fgRealloc_sys_	realloc
 
     #endif
@@ -41,7 +41,7 @@
  * copies. Size = Count * sizeof(Type)
  */
 template<class Type>
-inline Type *fgMalloc(const int count = 1, const fgBool clear = FG_TRUE) {
+inline Type *fgMalloc(const int count = 1, const fgBool clear = FG_TRUE, Type *unused = NULL) {
     if(count <= 0)
         return NULL;
     size_t size = count * sizeof (Type);
@@ -50,6 +50,46 @@ inline Type *fgMalloc(const int count = 1, const fgBool clear = FG_TRUE) {
         return NULL;
     if(clear) {
         memset((void *)data, 0, size);
+    }
+    return data;
+}
+
+template <> inline void *fgMalloc<void>(const int count , const fgBool clear, void *unused) {
+    if(count <= 0)
+        return NULL;
+    size_t size = count;
+    void *data = (void *)fgMalloc_sys_(size);
+    if(!data)
+        return NULL;
+    if(clear) {
+        memset(data, 0, size);
+    }
+    return data;
+}
+
+template<class Type>
+inline Type *fgRealloc(Type *inptr, const int count = 1, const fgBool clear = FG_TRUE) {
+    if(count <= 0)
+        return NULL;
+    size_t size = count * sizeof (Type);
+    Type *data = (Type *)fgRealloc_sys_(inptr, size);
+    if(!data)
+        return NULL;
+    if(clear) {
+        memset((void *)data, 0, size);
+    }
+    return data;
+}
+
+template <> inline void *fgRealloc<void>(void *inptr, const int count, const fgBool clear) {
+    if(count <= 0)
+        return NULL;
+    size_t size = count;
+    void *data = (void *)fgRealloc_sys_(inptr, size);
+    if(!data)
+        return NULL;
+    if(clear) {
+        memset(data, 0, size);
     }
     return data;
 }
@@ -87,6 +127,6 @@ inline void fgFree(Type *& item, const fgBool clear = FG_FALSE) {
     item = NULL;
 }
 
-    #define fgRealloc fgRealloc_sys_
+    //#define fgRealloc fgRealloc_sys_
 
 #endif

@@ -364,7 +364,9 @@ struct fgGfxMeshAoS : fgGfxMeshBase {
     static const unsigned short INDICES_VBO_ARRAY_IDX;
 
     // Default empty constructor for Mesh AoS object
-    fgGfxMeshAoS() { }
+    fgGfxMeshAoS() {
+        vertices.reserve(1);
+    }
 
     // #FIXME #SERIOUSLY
     #if 0

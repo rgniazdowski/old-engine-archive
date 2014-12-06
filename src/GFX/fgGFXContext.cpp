@@ -1550,7 +1550,7 @@ void fgGfxContext::bindTexture(fgGfxTextureID& textureID, const fgGFXenum target
         textureID.target = GL_TEXTURE_2D;
     if(textureID.target == GL_TEXTURE_2D) {
         bindTexture2D(textureID.id);
-    } else if(textureID.target == GL_TEXTURE_3D) {
+    } else if(/*textureID.target == GL_TEXTURE_3D*/0) {
         // #FIXME
     } else if(textureID.target == GL_TEXTURE_CUBE_MAP) {
         bindTextureCube(textureID.id);

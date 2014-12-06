@@ -85,7 +85,7 @@ struct fgGfxAttributeData {
 
     // Main constructor
     fgGfxAttributeData(const fgGfxAttributeType _type = FG_GFX_POSITION) :
-    index(0),
+    index(_type),
     size(3),
     type(_type),
     dataType(FG_GFX_FLOAT),

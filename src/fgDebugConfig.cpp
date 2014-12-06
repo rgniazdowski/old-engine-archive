@@ -39,6 +39,7 @@ struct fgDebugConfig g_fgDebugConfig = {
     false, //labelsShow;        // Whether to show labels (any kind)
     false, //dumpConfig;        // Dump configs on load?
     false, //forceFullscreen;   // Is fullscreen forced?
+    false, //isDebugProfiling;  // Is debug profiling enabled?
     0 //empty;
 #endif /* FG_DEBUG */
 };

@@ -12,7 +12,7 @@
 #include "fgFile.h"
 
 #if defined(FG_DEBUG)
-fgProfiling g_debugProfiling;
+fgProfiling *g_debugProfiling = NULL;
 #endif
 
 /*
@@ -62,8 +62,10 @@ fgBool fgProfiling::begin(const std::string& name) {
     if(!sample)
         return FG_FALSE;
     if(result.second == false && sample->isValid) {
+        delete query_pair.second;
+        query_pair.second = NULL;
         // Existed
-        if(sample->numOpen) {
+        if(sample->numOpen) {            
             // max 1 open at once
             return FG_FALSE;
         }
@@ -74,6 +76,11 @@ fgBool fgProfiling::begin(const std::string& name) {
     } else {
         // New insertion
         if(m_sampleMap.size() > FG_MAX_PROFILE_SAMPLES) {
+            if(result.second) {
+                delete query_pair.second;
+                query_pair.second = NULL;
+                //it->second = NULL; // ?
+            }
             m_sampleMap.erase(it);
             return FG_FALSE;
         }
@@ -91,7 +98,7 @@ fgBool fgProfiling::begin(const std::string& name) {
 
     if(sample)
         m_profileStack.push(sample);
-
+    
     return FG_TRUE;
 }
 
@@ -111,6 +118,7 @@ fgBool fgProfiling::begin(const char* name) {
 fgBool fgProfiling::end(const std::string& name) {
     if(name.empty())
         return FG_FALSE;
+   
     profileMapItor it = m_sampleMap.find(name);
     if(it == m_sampleMap.end())
         return FG_FALSE;
@@ -139,7 +147,8 @@ fgBool fgProfiling::end(const std::string& name) {
 fgBool fgProfiling::end(const char* name) {
     if(!name)
         return FG_FALSE;
-    std::string strName = std::string(name);
+    std::string strName;
+    strName.append(name);
     return end(strName);
 }
 
@@ -230,6 +239,9 @@ fgBool fgProfiling::storeProfileHistory(const std::string& name, float percent) 
     if(!sample)
         return FG_FALSE;
     if(result.second == false) {
+		// Sample existed #FIXME -- too much allocs
+        delete query_pair.second;
+        query_pair.second = NULL;
         // Existed
         sample->average = sample->average * oldRatio + (percent * newRatio);
         if(percent < sample->minimum) {
@@ -247,6 +259,8 @@ fgBool fgProfiling::storeProfileHistory(const std::string& name, float percent) 
     } else {
         // New insertion
         if(m_sampleHistory.size() > FG_MAX_PROFILE_SAMPLES) {
+			delete it->second;
+			it->second = NULL;
             m_sampleHistory.erase(it);
             return FG_FALSE;
         }
@@ -278,3 +292,4 @@ fgBool fgProfiling::getProfileHistory(const std::string& name, float* average, f
         *maximum = entry->maximum;
     return FG_TRUE;
 }
+

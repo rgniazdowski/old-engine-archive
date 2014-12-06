@@ -28,6 +28,7 @@
 #include "Input/fgPointerInputReceiver.h"
 #include "Hardware/fgHardwareState.h"
 #include "Util/fgProfiling.h"
+#include "fgDebugConfig.h"
 
 class MainModule;
 extern float guiScale;
@@ -323,7 +324,8 @@ private:
     fgBool initProgram() {
         fgTime::init(); // #FIXME global time init?
 #if defined(FG_DEBUG)
-        g_debugProfiling.initialize();
+        g_debugProfiling = new fgProfiling();
+        g_debugProfiling->initialize();
 #endif
         float t1 = fgTime::ms();
         FG_LOG_DEBUG("Init program main...");
@@ -388,7 +390,9 @@ private:
             return FG_FALSE;
         }
 #if defined(FG_DEBUG)
-        g_debugProfiling.begin("Program::loopStep");
+        if(g_fgDebugConfig.isDebugProfiling) {
+            g_debugProfiling->begin("Program::loopStep");
+        }
 #endif
         // #FIXME
 #if defined(FG_USING_SDL2)
@@ -416,36 +420,44 @@ private:
         }
 
 #if defined(FG_DEBUG)
-        g_debugProfiling.begin("Game::update");
+        if(g_fgDebugConfig.isDebugProfiling) {
+            g_debugProfiling->begin("Game::update");
+        }
 #endif
         FG_HardwareState->deviceYield(0);
         m_gameMain->update();
         FG_HardwareState->deviceYield(0);
 #if defined(FG_DEBUG)
-        g_debugProfiling.end("Game::update");
-        g_debugProfiling.begin("Game::display");
+        if(g_fgDebugConfig.isDebugProfiling) {
+            g_debugProfiling->end("Game::update");
+            g_debugProfiling->begin("Game::display");
+        }
 #endif
         // well for now drawing and all update functions will be called in one place (one thread)
         // however it needs changing
         m_gameMain->display();
         FG_HardwareState->deviceYield(0);
 #if defined(FG_DEBUG)
-        g_debugProfiling.end("Game::display");
-        g_debugProfiling.begin("Game::render");
+        if(g_fgDebugConfig.isDebugProfiling) {
+            g_debugProfiling->end("Game::display");
+            g_debugProfiling->begin("Game::render");
+        }
 #endif
         m_gameMain->render();
         FG_HardwareState->deviceYield(0);
 #if defined(FG_DEBUG)
-        g_debugProfiling.end("Game::render");
-        g_debugProfiling.end("Program::loopStep");
-        g_debugProfiling.updateHistory();
         static int loopCount = 0;
-        loopCount++;
-        if(loopCount > 2) {
-            loopCount = 0;
-            g_debugProfiling.dumpToDefaultFile();
-        }
+        if(g_fgDebugConfig.isDebugProfiling) {
+            g_debugProfiling->end("Game::render");
+            g_debugProfiling->end("Program::loopStep");
+            g_debugProfiling->updateHistory();
         
+            loopCount++;
+            if(loopCount > 2) {
+                loopCount = 0;
+                g_debugProfiling->dumpToDefaultFile();
+            }
+        }
 #endif
         return FG_TRUE;
     }
@@ -468,7 +480,10 @@ private:
         }
         m_appInit = FG_FALSE;
 #if defined(FG_DEBUG)
-        g_debugProfiling.clear();
+        if(g_debugProfiling)
+            delete g_debugProfiling;
+        g_debugProfiling = NULL;
+        //g_debugProfiling->clear();
 #endif
     }
 
@@ -633,23 +648,17 @@ int32_t fgMarmaladeHandlers::keyStateChangedHandler(void *systemData, void *user
  * Main function that is called when the program starts.
  */
 #if defined FG_USING_MARMALADE
-
 extern "C" int main() {
     IwUtilInit();
     int argc = 0;
     char *argv[] = {NULL, NULL};
 #else
-
 extern "C" int main(int argc, char *argv[]) {
 #endif /* FG_USING_MARMALADE */
-    //IwMemBucketDebugSetBreakpoint(1541);
-#if defined(FG_USING_MARMALADE)
-    IwUtilTerminate();
-    s3eDeviceExit(0);
-#endif /* FG_USING_MARMALADE */	
-    //return 1;
-    //getc(stdin);
-
+    //IwMemBucketDebugSetBreakpoint(95281);
+    //IwMemBucketDebugSetBreakpoint(115818);
+    //IwMemBucketDebugSetBreakpoint(784334);
+    //IwMemBucketDebugSetBreakpoint(1551);
     FG_LOG_DEBUG("%s: Start up", FG_PACKAGE_FULL_TEXT);
     MainModule *mainModule = new MainModule(argc, argv);
 

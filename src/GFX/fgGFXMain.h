@@ -39,7 +39,10 @@ typedef FG_TAG_GFX_MAIN fgGfxMainTag;
 /**
  *
  */
-class fgGfxMain : public fgStatusReporter<fgGfxMainTag> {
+class fgGfxMain {
+public:
+    typedef fgGfxMain type;
+    typedef fgGfxMainTag tag_type;
 public:
     /**
      * Default constructor for the GFX main object

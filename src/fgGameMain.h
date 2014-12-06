@@ -37,7 +37,10 @@ typedef FG_TAG_GAME_MAIN fgGameMainTag;
 /*
  *
  */
-class fgGameMain : public fgStatusReporter<fgGameMainTag> {
+class fgGameMain {
+public:
+    typedef fgGameMainTag tag_type;
+
 public:
     /**
      * Default constructor for the Game Main object

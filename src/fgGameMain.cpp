@@ -57,6 +57,7 @@
 #include "fgErrorCodes.h"
 /// Standard color array - format based on GFX color/vec4
 #include "fgColors.h"
+#include "fgDebugConfig.h"
 
 /**
  * Default constructor for the Game Main object
@@ -71,6 +72,9 @@ m_resourceMgr(NULL),
 m_resourceFactory(NULL),
 m_pEventMgr(NULL),
 m_pointerInputReceiver(NULL),
+m_joypadController(NULL),
+m_scriptSubsystem(NULL),
+m_soundMgr(NULL),
 m_gameTouchCallback(NULL),
 m_gameMouseCallback(NULL),
 m_gameFreeLookCallback(NULL) {
@@ -168,12 +172,10 @@ fgGameMain::~fgGameMain() {
     m_guiMain = NULL;
     m_scriptSubsystem->setWidgetManager(NULL);
     m_scriptSubsystem->setStyleManager(NULL);
-    if(m_scriptSubsystem) {
-        delete m_scriptSubsystem;
-    }
-    m_scriptSubsystem = NULL;
     fgColors::freeColors();
     fgErrorCodes::unregisterAll(); // #FIXME - error codes
+    delete m_scriptSubsystem;
+    m_scriptSubsystem = NULL;
     FG_MessageSubsystem->deleteInstance(); // #FIXME - message subsystem singleton
 }
 
@@ -378,7 +380,7 @@ fgBool fgGameMain::loadConfiguration(void) {
 fgBool fgGameMain::loadResources(void) {
     float t1 = fgTime::ms();
     FG_LOG_DEBUG("Loading resources...");
-
+#if defined(FG_USING_LUA_PLUS)
     LuaPlus::LuaState *state = m_scriptSubsystem->getLuaState();
     if(state) {
         if(state->DoFile("main.lua")) {
@@ -387,6 +389,7 @@ fgBool fgGameMain::loadResources(void) {
                 std::cout << "An error occurred: " << state->CheckString(1) << std::endl;
         }
     }
+#endif
 
     ////////////////////////////////////////////////////////////////////////////
     m_gfxMain->getShaderManager()->setShadersPath("shaders/");
@@ -411,6 +414,16 @@ fgBool fgGameMain::loadResources(void) {
             program->link(); // this will also bind attributes and after successful link - bind uniforms
         }
     }
+    {
+        std::string sSkyBoxEasyShaderName("sSkyBoxEasy");
+        fgGfxShaderProgram *program = m_gfxMain->getShaderManager()->get(sSkyBoxEasyShaderName);
+        FG_HardwareState->deviceYield(0); // #FIXME - device yield...
+        FG_LOG_DEBUG("Will now try to compile and link 'sSkyBoxEasyShader' shader program");
+        if(program) {
+            program->compile();
+            program->link(); // this will also bind attributes and after successful link - bind uniforms
+        }
+    }
     FG_HardwareState->deviceYield(0); // #FIXME - device yield...
 #if 1
     ////////////////////////////////////////////////////////////////////////////
@@ -422,9 +435,6 @@ fgBool fgGameMain::loadResources(void) {
         std::string modelname("CobraBomber");
         fgGfxModelResource *model = (fgGfxModelResource *)m_resourceMgr->get(modelname);
         fgAABoundingBox3Df &b = model->getRefAABB();
-        printf("bbox[b]: min: {%.2f,%.2f,%.2f}, max: {%.2f,%.2f,%.2f};\n",
-               b.min.x, b.min.y, b.min.z,
-               b.max.x, b.max.y, b.max.z);
         float t2 = fgTime::ms();
         FG_LOG_DEBUG("WHOLE OBJECT CREATION TOOK: %.2f seconds", (t2 - t1) / 1000.0f);
     }
@@ -448,7 +458,6 @@ fgBool fgGameMain::loadResources(void) {
  * This unloads, frees and deletes all data from fgResourceManager subsystem
  */
 fgBool fgGameMain::releaseResources(void) {
-
     if(m_resourceMgr) {
         FG_LOG_DEBUG("Releasing resources...");
         return m_resourceMgr->destroy();
@@ -498,16 +507,21 @@ fgBool fgGameMain::quit(void) {
  */
 void fgGameMain::display(void) {
 #if defined(FG_DEBUG)
-    g_debugProfiling.begin("GFX::display");
+    if(g_fgDebugConfig.isDebugProfiling)
+        g_debugProfiling->begin("GFX::display");
 #endif
     m_gfxMain->display();
 #if defined(FG_DEBUG)
-    g_debugProfiling.end("GFX::display");
-    g_debugProfiling.begin("GUI::display");
+    if(g_fgDebugConfig.isDebugProfiling) {
+        g_debugProfiling->end("GFX::display");
+        g_debugProfiling->begin("GUI::display");
+    }
 #endif
     m_guiMain->display();
 #if defined(FG_DEBUG)
-    g_debugProfiling.end("GUI::display");
+    if(g_fgDebugConfig.isDebugProfiling) {
+        g_debugProfiling->end("GUI::display");
+    }
 #endif
 }
 
@@ -525,11 +539,15 @@ void fgGameMain::render(void) {
     }
     fpsc++;
 #if defined(FG_DEBUG)
-    g_debugProfiling.begin("GFX::render");
+    if(g_fgDebugConfig.isDebugProfiling) { 
+        g_debugProfiling->begin("GFX::render");
+    }
 #endif
     m_gfxMain->render();
 #if defined(FG_DEBUG)
-    g_debugProfiling.end("GFX::render");
+    if(g_fgDebugConfig.isDebugProfiling) {
+        g_debugProfiling->end("GFX::render");
+    }
 #endif
     fgGfxPlatform::context()->setBlend(FG_TRUE); // #FIXME
     m_guiMain->render();
@@ -563,7 +581,7 @@ void fgGameMain::update(void) {
     // This must be called  when you wish the manager to check for discardable
     // resources.  Resources will only be swapped out if the maximum allowable
     // limit has been reached, and it will discard them from lowest to highest
-    // priority, determined by the resource class's < operator.  Function will
+    // priority, determined by the resource class < operator.  Function will
     // fail if requested memory cannot be freed.
     // The question is should this function be called  in every frame, well it
     // should not - other option is to create cyclic event running  once every
@@ -636,10 +654,6 @@ fgBool fgGameMain::gameTouchHandler(fgArgumentList *argv) {
     return FG_TRUE;
 }
 
-/*
- *
- */
-
 /**
  * 
  * @param argv
@@ -709,65 +723,3 @@ fgBool fgGameMain::gameFreeLookHandler(fgArgumentList* argv) {
     }
     return FG_TRUE;
 }
-
-#if 0
-
-// FIXME retarded file - retarded functions
-
-/* Game initialization.
- * @return Successful or not.
- */
-int applicationInit(void) {
-    srand(time(NULL));
-
-    // FIXME
-    // This function is just wrong
-    // Loading procedures should look different
-    // Methods used in this function are just not actual - it will look different in the end
-
-    // Besides this function is global - it needs to be in ProgramMain class as a method.
-    // Object of ProgramMain class will be created in MainModule etc.
-
-    /// SENSORS
-    FG_LOG_DEBUG("Initializing Sensors..");
-    fgSensors::getInstance()->startSensors();
-
-    // AUDIO - FIXME - now that just needs a lot of fixing (personally I would just delete it and rewrote it from scratch using s3eSound)
-    // actually now the Audio subsystem loads the .raw (sfx) and .mp3 (music) files
-    // it needs to work like new texture subsystem - load audio file names and handles from XML files
-    // also it should be dependent (like other file loading subsystems) from fgResourceManager main class
-    //FG_LOG_DEBUG( "Initializing Audio.." );
-    /*fgSFXManager *audio = fgSFXManager::getInstance();
-    if( !audio ) {
-    FG_LOG::PrintError( "init_audio failed" );
-    return false;
-    } else {
-    // LOAD MUS & SFX
-    FG_LOG_DEBUG( "Initializing SFX & MUS.." );
-    if( !audio->loadMusFiles() || !audio->loadSfxFiles() ) {
-    FG_LOG::PrintError( "load{Mus,Sfx}Files failed!" );
-    return false;
-    }
-
-    // PLAY SFX FILES TO MAKE THEM TRULY READY
-    audio->setSfxVolume( 0.005f );
-    for( int i = 0; i < fgSFXManager::SFX_COUNT; i++ ) {
-    audio->play(i);
-    }
-
-    // MUSIC VOLUME
-    audio->playMus( fgSFXManager::MUS_TRACK_AMBIENT1 );
-    // audio->setMusVolume( g_settings_new->musicVolume() );
-
-    // NORMAL SFX STATE - after 1 second, inside a callback
-    s3eDeviceYield(0);
-    audio->stopAll();
-    }*/
-
-    // FIXME - although particle system initialization is OK, particle emitters configuration needs to be loaded from XML files or Lua
-    // and also textures used in particles also need to be specified within XML/Lua files for further loading/processing.
-
-    return true;
-}
-
-#endif

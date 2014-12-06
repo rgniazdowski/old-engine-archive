@@ -160,15 +160,15 @@ void fgMusicResource::play(void) {
         s3eAudioResume();
     } else if(S3E_AUDIO_PLAYING == status) {
         s3eAudioStop();
-        s3eAudioPlay(getFilePathStr(m_quality), 0);
+        s3eAudioPlay(getFilePathStr(m_quality), 1);
     } else {
-        s3eAudioPlay(getFilePathStr(m_quality), 0);
+        s3eAudioPlay(getFilePathStr(m_quality), 1);
     }
 
     // Check for error
     s3eAudioError err = s3eAudioGetError();
     if(err != S3E_AUDIO_ERR_NONE) {
-        FG_LOG::PrintError("playMus(%d) error[%d]: %s (also status is: %d)", idx, err, s3eAudioGetErrorString(), status);
+        FG_LOG_ERROR("SFX: play music error[%d]: %s (status is: %d)", err, s3eAudioGetErrorString(), status);
     }
 #endif
 }
@@ -194,7 +194,7 @@ void fgMusicResource::pause(void) {
     // Check for error
     s3eAudioError err = s3eAudioGetError();
     if(err != S3E_AUDIO_ERR_NONE) {
-        FG_LOG_ERROR("pauseMus(%d) error[%d]: %s", idx, err, s3eAudioGetErrorString());
+        FG_LOG_ERROR("SFX: pause music error[%d]: %s", err, s3eAudioGetErrorString());
     } else {
         m_isPaused = FG_TRUE;
     }
@@ -245,7 +245,7 @@ void fgMusicResource::rewind(void) {
     // Check for error
     s3eAudioError err = s3eAudioGetError();
     if(err != S3E_AUDIO_ERR_NONE) {
-        FG_LOG_ERROR("pauseMus(%d) error[%d]: %s", idx, err, s3eAudioGetErrorString());
+        FG_LOG_ERROR("pauseMus error[%d]: %s", err, s3eAudioGetErrorString());
     } else {
         m_isPlaying = FG_TRUE;
         m_isPaused = FG_FALSE;

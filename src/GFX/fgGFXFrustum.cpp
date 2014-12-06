@@ -105,7 +105,7 @@ void fgGfxFrustum::set(const fgVector3f &eye,
     normal = fgMath::cross(Y, aux); //normal = Y * aux;
     m_planes[RIGHT].set(normal, nc + X * m_nw);
     
-#if defined(FG_DEBUG) && false // #FIXME
+#if defined(FG_DEBUG) && 0 // #FIXME
     dumpPlane(m_planes[LEFT], "LEFT");
     dumpPlane(m_planes[RIGHT], "RIGHT");
     dumpPlane(m_planes[TOP], "TOP");
@@ -232,7 +232,7 @@ void fgGfxFrustum::set(const fgMatrix4f &matrix) {
     d = m[3][3] - m[3][2];
     m_planes[FARP].set(a, b, c, d);
 #endif
-#if defined(FG_DEBUG) && false // #FIXME
+#if defined(FG_DEBUG) && 0 // #FIXME
     dumpPlane(m_planes[LEFT], "LEFT");
     dumpPlane(m_planes[RIGHT], "RIGHT");
     dumpPlane(m_planes[TOP], "TOP");

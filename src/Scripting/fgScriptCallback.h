@@ -27,6 +27,14 @@
         #include "LuaPlus/LuaPlus.h"
     #endif
 
+    #if !defined(FG_USING_LUA) && !defined(FG_USING_LUA_PLUS) && !defined(FG_LUA_STATE_TYPEDEF_HAX)
+        #define FG_LUA_STATE_TYPEDEF_HAX
+
+    struct lua_State {
+	    void *_ptr;
+    };
+    #endif
+
     #include "Util/fgMemory.h"
 
 /**

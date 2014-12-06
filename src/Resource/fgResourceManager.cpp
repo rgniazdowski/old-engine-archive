@@ -594,7 +594,8 @@ fgResource* fgResourceManager::request(const std::string& info, const fgResource
         } else if(fgStrings::endsWith(fext, "mod", FG_TRUE)) {
             resExtType = FG_RESOURCE_MUSIC;
         } else if(fgStrings::endsWith(fext, "raw", FG_TRUE)) {
-            //resExtType = FG_RESOURCE_SOUND;
+            // marmalade #FIXME
+            resExtType = FG_RESOURCE_SOUND;
         } else if(fgStrings::endsWith(fext, "particle.ini", FG_TRUE)) {
             resExtType = FG_RESOURCE_PARTICLE_EFFECT;
         } else {

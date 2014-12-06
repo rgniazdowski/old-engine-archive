@@ -15,7 +15,7 @@
     #include "fgBool.h"
 
     #include "fgGFXVertex.h"
-
+    #include "fgLog.h"
     #include <cmath>
 
 // Forward declaration for plain bounding box 2D
@@ -41,23 +41,10 @@ struct fgBoundingBoxT {
     /// Type used for indexing
     typedef unsigned int size_type;
 
-    union {
-        /// Position vector - depends on the usage
-        VecType pos;
-        /// Center position - used together with half-extent
-        VecType center;
-        /// Could have here some min/max (aabb?)
-        VecType min;
-    };
-
-    union {
-        /// Size vector - depends on the usage
-        VecType size;
-        /// Half-extent vector
-        VecType extent;
-        /// This is for compatibility with AABB type
-        VecType max;
-    };
+    /// Position vector - depends on the usage
+    VecType pos;
+    /// Size vector - depends on the usage
+    VecType size;
     /**
      * Overloaded assignment operator - needs to be implemented
      * because of the use of union with complex types
@@ -78,24 +65,31 @@ struct fgBoundingBoxT {
      */
     fgBoundingBoxT() :
     pos(),
-    size() { }
+    size() { 
+    }
     /**
-     * Overloaded copy constructor - needs to be implemented
-     * explicitly because of the union containing complex types
-     * @param other
-     */
-    fgBoundingBoxT(const self_type & other) {
+    * Overloaded copy constructor - needs to be implemented
+    * explicitly because of the union containing complex types
+    * @param other
+    */
+    fgBoundingBoxT(const self_type & other) : pos(), size() {
         this->pos = other.pos;
         this->size = other.size;
     }
     /**
-     * 
-     * @param _pos
-     * @param _size
-     */
+    * 
+    * @param _pos
+    * @param _size
+    */
     fgBoundingBoxT(const VecType &_pos, const VecType &_size) :
-    pos(_pos),
-    size(_size) { }
+        pos(_pos),
+        size(_size) { 
+    }
+
+    /**
+     *
+     */
+    virtual ~fgBoundingBoxT() { }
     /**
      * 
      * @return 
@@ -312,10 +306,10 @@ struct fgBoundingBoxT {
  *
  */
 template <class ValueType>
-struct fgBoundingBox2DT : fgBoundingBoxT<fgBoundingBox2DT<ValueType>, fgVector2T<ValueType>, ValueType> {
+struct fgBoundingBox2DT : fgBoundingBoxT<fgBoundingBox2DT<ValueType>, typename fgVector2T<ValueType>::type, ValueType> {
     typedef fgBoundingBox2DT<ValueType> self_type;
     ///
-    typedef fgVector2T<ValueType> vec_type;
+    typedef typename fgVector2T<ValueType>::type vec_type;
     ///
     typedef fgBoundingBoxT<self_type, vec_type, ValueType> base_type;
     ///
@@ -344,8 +338,10 @@ struct fgBoundingBox2DT : fgBoundingBoxT<fgBoundingBox2DT<ValueType>, fgVector2T
      * @return 
      */
     fgBoundingBox2DT &merge(const fgBoundingBox2DT &a, const fgBoundingBox2DT &b) {
-        this->pos = a.pos;
-        this->size = a.size;
+        if(this->pos)
+            this->pos = a.pos;
+        if(this->size)
+            this->size = a.size;
         if(a.pos.x + a.size.x < b.pos.x + b.size.x)
             this->size.x = b.pos.x + b.size.x - a.pos.x;
         if(a.pos.y + a.size.y < b.pos.y + b.size.y)
@@ -440,11 +436,11 @@ typedef fgBoundingBox2Dd fgBB2Dd;
  */
 template <class ValueType>
 struct fgBoundingBox3DT :
-fgBoundingBoxT<fgBoundingBox3DT<ValueType>, fgVector3T<ValueType>, ValueType> {
+fgBoundingBoxT<fgBoundingBox3DT<ValueType>, typename fgVector3T<ValueType>::type, ValueType> {
     ///
     typedef fgBoundingBox3DT<ValueType> self_type;
     ///
-    typedef fgVector3T<ValueType> vec_type;
+    typedef typename fgVector3T<ValueType>::type vec_type;
     ///
     typedef fgBoundingBoxT<self_type, vec_type, ValueType> base_type;
     ///

@@ -129,7 +129,6 @@ void fgGfxSceneManager::sortCalls(void) {
         fgGfxDrawingBatch::sortCalls(); // NOPE
     while(!m_nodeQueue.empty())
         m_nodeQueue.pop();
-    //objectVecItor objVecIt = m_objects.begin(), objVecEnd = m_objects.end();
     hmDataVecItor itor = getRefDataVector().begin(), end = getRefDataVector().end();
     //m_MVP.calculate(&m_camera, fgMatrix4f());
     //m_MVP.getRefFrustum().set(m_MVP.getRefProjMatrix() * m_MVP.getRefViewMatrix());
@@ -141,55 +140,27 @@ void fgGfxSceneManager::sortCalls(void) {
         fgGfxSceneNode *pNode = (*itor);
         fgGfxDrawCall *pDrawCall = pNode->getDrawCall();
 #if defined(FG_DEBUG)
-        g_debugProfiling.begin("GFX::Scene::FrustumCheck");
+        if(g_fgDebugConfig.isDebugProfiling) {
+            g_debugProfiling->begin("GFX::Scene::FrustumCheck");
+        }
 #endif
         // There is a problem because the bounding box needs to be modified by
         // the model matrix; maybe some operator ?
-        fgAABB3Df &box = pNode->getRefAABB();
         pNode->updateAABB();
-        //box.min = pDrawableObj->getRefModelMatrix() * box.min;
-        //box = pDrawableObj->getRefModelMatrix() * box;
-        //box.transform(pDrawableObj->getRefModelMatrix());
-        const char *msg[] = {"INSIDE", "INTERSECT", "OUTSIDE", "[null]", "\0"};
-        int boxstatus = 0;
-        int spherestatus = 0;
-        int modelstatus = 0;
-        int boxtest = m_MVP.getRefFrustum().testAABB(box);
-        int modelboxtest = 0;
-        if(pNode->getNodeType() == FG_GFX_SCENE_NODE_OBJECT) {
-            fgGfxSceneNodeObject *pObj = static_cast<fgGfxSceneNodeObject *>(pNode);
-            modelboxtest = m_MVP.getRefFrustum().testAABB(pObj->getModel()->getRefAABB());
-        }
-        if(boxtest == fgGfxFrustum::INSIDE) {
-            boxstatus = 0;
-        } else if(boxtest == fgGfxFrustum::INTERSECT) {
-            boxstatus = 1;
-        } else {
-            boxstatus = 2;
-        }
-        if(modelboxtest == fgGfxFrustum::INSIDE) {
-            modelstatus = 0;
-        } else if(boxtest == fgGfxFrustum::INTERSECT) {
-            modelstatus = 1;
-        } else {
-            modelstatus = 2;
-        }
-        int spheretest = (int)m_MVP.getRefFrustum().testSphere(glm::vec3(pNode->getRefModelMatrix()[3]), 30.0f);
-        if(spheretest == fgGfxFrustum::INSIDE) {
-            spherestatus = 0;
-        } else if(spheretest == fgGfxFrustum::INTERSECT) {
-            spherestatus = 1;
-        } else {
-            spherestatus = 2;
-        }
-        if(boxstatus == 2)
+
+        const char *msg[] = {"OUTSIDE", "INTERSECT", "INSIDE", "[null]", "\0"};
+        int boxtest = m_MVP.getRefFrustum().testAABB(pNode->getRefAABB());
+        int spheretest = (int)m_MVP.getRefFrustum().testSphere(fgVector3f(pNode->getRefModelMatrix()[3]), 30.0f);
+        if(!boxtest)
             pNode->setVisible(FG_FALSE);
         else
             pNode->setVisible(FG_TRUE);
 #if defined(FG_DEBUG)
-        g_debugProfiling.end("GFX::Scene::FrustumCheck");
+        if(g_fgDebugConfig.isDebugProfiling) {
+            g_debugProfiling->end("GFX::Scene::FrustumCheck");
+        }
 #endif
-        printf("[%d] -> AABBox[%s] | ModelBBOX[%s] -- -- Sphere.30.0f[%s] %s\n", idx, msg[boxstatus], msg[modelstatus], msg[spherestatus], pNode->getNameStr());
+        //FG_LOG_DEBUG("[%d] -> AABBox[%s] -- -- Sphere.30.0f[%s] %s\n", idx, msg[boxtest], msg[spherestatus], pNode->getNameStr());
         g_fgDebugConfig.gfxBBoxShow = true;
         // ? also need to push to queue more than one draw call
         // And i mean... wait wut? All children are registered
@@ -221,16 +192,22 @@ void fgGfxSceneManager::render(void) {
     fgGfxDrawingBatch::render(); // #NOPE ? i don't know what i'm doing
     while(!m_nodeQueue.empty()) {
 #if defined(FG_DEBUG)
-        g_debugProfiling.begin("GFX::Scene::DrawNode");
+        if(g_fgDebugConfig.isDebugProfiling) {
+            g_debugProfiling->begin("GFX::Scene::DrawNode");
+        }
 #endif
         fgGfxSceneNode *pSceneNode = m_nodeQueue.top();
         pSceneNode->draw();
 #if defined(FG_DEBUG)
-        g_debugProfiling.end("GFX::Scene::DrawNode");
+        if(g_fgDebugConfig.isDebugProfiling) {
+            g_debugProfiling->end("GFX::Scene::DrawNode");
+        }
 #endif
 
 #if defined(FG_DEBUG)
-        g_debugProfiling.begin("GFX::Scene::DrawAABBLines");
+        if(g_fgDebugConfig.isDebugProfiling) {
+            g_debugProfiling->begin("GFX::Scene::DrawAABBLines");
+        }
         static_cast<fgGfxShaderManager *>(m_pShaderMgr)->getCurrentProgram()->setUniform(FG_GFX_USE_TEXTURE, 0.0f);
         if(FG_DEBUG_CFG_OPTION(gfxBBoxShow) && pSceneNode->getNodeType() == FG_GFX_SCENE_NODE_OBJECT) {
 
@@ -247,7 +224,9 @@ void fgGfxSceneManager::render(void) {
             static_cast<fgGfxShaderManager *>(m_pShaderMgr)->getCurrentProgram()->setUniform(&m_MVP);
             fgGfxPrimitives::drawAABBLines(pSceneNode->getRefAABB());
         }
-        g_debugProfiling.end("GFX::Scene::DrawAABBLines");
+        if(g_fgDebugConfig.isDebugProfiling) {
+            g_debugProfiling->end("GFX::Scene::DrawAABBLines");
+        }
 #endif
         m_nodeQueue.pop();
     }

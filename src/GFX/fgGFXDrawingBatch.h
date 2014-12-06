@@ -16,14 +16,21 @@
     #include <queue>
     #include <deque>
 
+#define FG_GFX_DRAWING_BATCH_DEFAULT_RESERVE 64
+
 /*
  *
  */
 class fgGfxDrawingBatch : public fgGfxLayer {
+public:
+    typedef fgGfxLayer base_type;
+
 protected:
     typedef std::priority_queue<fgGfxDrawCall *, std::deque<fgGfxDrawCall *>, fgPtrLessEq<fgGfxDrawCall *> > batchPriorityQueue;
     typedef fgVector<fgGfxDrawCall *> drawCallVec;
     typedef drawCallVec::iterator drawCallVecItor;
+    typedef fgVector<unsigned int> dbFreeSlotsVec;
+    typedef dbFreeSlotsVec::iterator dbFreeSlotsVecItor;
 
 private:
     ///
@@ -32,6 +39,18 @@ private:
     drawCallVec m_drawCalls;
     ///
     drawCallVec m_duplicates;
+    ///
+    dbFreeSlotsVec m_freeSlots;
+    ///
+    unsigned int m_numDrawCalls;
+    ///
+    unsigned int m_reservedSize;
+    ///
+    unsigned int m_numNotManaged;
+    ///
+    fgGfxDrawCallType m_defaultDrawCallType;
+    ///
+    fgGFXuint m_defaultAttribMask;
 
 protected:
     ///
@@ -53,11 +72,15 @@ protected:
         return m_drawCalls;
     }
 
+    int getFreeSlot(int maximum);
+
 public:
     /**
      * 
      */
-    fgGfxDrawingBatch();
+    fgGfxDrawingBatch(const unsigned int reservedSize = FG_GFX_DRAWING_BATCH_DEFAULT_RESERVE,
+                      const fgGfxDrawCallType drawCallType = FG_GFX_DRAW_CALL_CUSTOM_ARRAY,
+                      const fgGFXuint attribMask = FG_GFX_POSITION_BIT | FG_GFX_UVS_BIT);
     /**
      * 
      */
@@ -81,9 +104,10 @@ public:
      * @param index
      * @return 
      */
-    fgGfxDrawCall *createDrawCall(int &index,
+    fgGfxDrawCall *requestDrawCall(int &index,
                                   const fgGfxDrawCallType type = FG_GFX_DRAW_CALL_CUSTOM_ARRAY,
-                                  const fgGFXuint attribMask = FG_GFX_POSITION_BIT | FG_GFX_UVS_BIT);
+                                  const fgGFXuint attribMask = FG_GFX_POSITION_BIT | FG_GFX_UVS_BIT,
+                                  fgGfxShaderProgram *pProgram = NULL);
     /**
      * 
      * @param index
@@ -96,7 +120,7 @@ public:
      */
     fgGfxDrawCall *getLastDrawCall(void);
     // Appends the specified draw call to the drawing batch
-    // The check flag is used for
+    // The check flag is used for duplicates
     int appendDrawCall(fgGfxDrawCall* drawCall, fgBool manage = FG_TRUE, fgBool check = FG_TRUE);
     /**
      * Removes the given draw call from the drawing batch
@@ -128,21 +152,30 @@ public:
      * @return 
      */
     unsigned int count(void) const {
-        return m_drawCalls.size();
+        return m_numDrawCalls;
     }
     /**
      * 
      * @return 
      */
     unsigned int size(void) const {
-        return m_drawCalls.size();
+        return m_numDrawCalls;
     }
+    /**
+     *
+     * @return
+     */
+    unsigned int capacity(void) const {
+        return m_reservedSize;
+    }
+    
+    void reserve(unsigned int reservedSize, fgBool force = FG_FALSE);
     /**
      * 
      * @return 
      */
     fgBool empty(void) const {
-        return (fgBool)m_drawCalls.empty();
+        return (fgBool)(m_numDrawCalls == 0);
     }
 
     /**

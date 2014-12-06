@@ -112,7 +112,7 @@ void fgGuiDrawer::appendBackground2D(const fgVec2f &pos,
     if(!m_pResourceMgr)
         return;
     int index;
-    fgGfxDrawCall *drawCall = createDrawCall(index, FG_GFX_DRAW_CALL_CUSTOM_ARRAY);
+    fgGfxDrawCall *drawCall = requestDrawCall(index, FG_GFX_DRAW_CALL_CUSTOM_ARRAY);
     drawCall->setComponentActive(0);
     drawCall->setComponentActive(FG_GFX_POSITION_BIT | FG_GFX_UVS_BIT | FG_GFX_COLOR_BIT);
     if(m_pResourceMgr && !style.getBackground().texture.empty()) {
@@ -148,7 +148,7 @@ void fgGuiDrawer::appendBorder2D(const fgVec2f &pos,
     }
     int index;
     float lwidth = 0.0f, rwidth = 0.0f, twidth = 0.0f, bwidth = 0.0f;
-    fgGfxDrawCall *drawCall = createDrawCall(index, FG_GFX_DRAW_CALL_CUSTOM_ARRAY);
+    fgGfxDrawCall *drawCall = requestDrawCall(index, FG_GFX_DRAW_CALL_CUSTOM_ARRAY);
     drawCall->setComponentActive(0);
     drawCall->setComponentActive(FG_GFX_POSITION_BIT | FG_GFX_COLOR_BIT);
 

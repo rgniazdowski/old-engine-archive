@@ -15,6 +15,9 @@
 fgGfxDrawCall::fgGfxDrawCall(const fgGfxDrawCallType type, const fgGFXuint attribMask) :
 fgGfxDrawable(FG_GFX_DRAWABLE_DRAWCALL),
 m_vecDataBase(NULL),
+m_vecData2v(NULL),
+m_vecData3v(NULL),
+m_vecData4v(NULL),
 m_program(NULL),
 m_textureID(),
 m_MVP(NULL),
@@ -59,6 +62,14 @@ m_isManaged(0) {
     m_attrData[FG_GFX_ATTRIB_TANGENT_LOCATION].stride = 0; // Stride when using tangent?
     m_attrData[FG_GFX_ATTRIB_TANGENT_LOCATION].isEnabled = FG_GFX_FALSE;
 
+    m_vecData2v = new fgVertexData2v();
+    m_vecData3v = new fgVertexData3v();
+    m_vecData4v = new fgVertexData4v();
+
+    m_vecData2v->reserve(2);
+    m_vecData3v->reserve(2);
+    m_vecData4v->reserve(2);
+
     setupVertexData(m_attribMask);
     m_color = fgColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 }
@@ -69,9 +80,17 @@ m_isManaged(0) {
 fgGfxDrawCall::~fgGfxDrawCall() {
     m_program = NULL;
     m_MVP = NULL;
-    if(m_vecDataBase) {
-        m_vecDataBase->clear();
-        delete m_vecDataBase;
+    if(m_vecData2v) {
+        m_vecData2v->clear();
+        delete m_vecData2v;
+    }
+    if(m_vecData3v) {
+        m_vecData3v->clear();
+        delete m_vecData3v;
+    }
+    if(m_vecData4v) {
+        m_vecData4v->clear();
+        delete m_vecData4v;
     }
     m_vecDataBase = NULL;
 }
@@ -101,21 +120,25 @@ void fgGfxDrawCall::setupVertexData(fgGFXuint attribMask) {
     if(m_vecDataBase) {
         if(attribMask != m_vecDataBase->attribMask()) {
             m_vecDataBase->clear();
-            delete m_vecDataBase;
-            m_vecDataBase = NULL;
+            //delete m_vecDataBase;
+            //printf("delete m_vecDataBase;\n");
+            //m_vecDataBase = NULL;
         } else {
             return;
         }
     }
 
     if(attribMask & FG_GFX_COLOR_BIT) {
-        m_vecDataBase = new fgVertexData4v();
+        m_vecDataBase = m_vecData4v;//new fgVertexData4v();
     } else if(attribMask & FG_GFX_NORMAL_BIT) {
-        m_vecDataBase = new fgVertexData3v();
+        m_vecDataBase = m_vecData3v;//new fgVertexData3v();
     } else {
-        m_vecDataBase = new fgVertexData2v();
+        m_vecDataBase = m_vecData2v;//new fgVertexData2v();
     }
     if(m_drawCallType == FG_GFX_DRAW_CALL_CUSTOM_ARRAY) {
+        //if(m_vecDataBase->reserve(1))
+        //m_vecDataBase->
+        //m_vecDataBase->reserve(2);
         m_vecDataBase->setupAttributes(m_attrData);
         memset(&m_drawingInfo, 0, sizeof (m_drawingInfo));
     }
@@ -239,8 +262,8 @@ void fgGfxDrawCall::setPrimitiveMode(const fgGfxPrimitiveMode mode) {
 /*
  * Whether to set UVs, normals or colors active
  */
-void fgGfxDrawCall::setComponentActive(unsigned int component) {
-    if(!component)
+void fgGfxDrawCall::setComponentActive(unsigned int component, const fgBool reset) {
+    if(!component || reset)
         m_attribMask = 0;
     if(component & FG_GFX_POSITION_BIT)
         m_attribMask |= FG_GFX_POSITION_BIT;

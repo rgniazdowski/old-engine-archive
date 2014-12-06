@@ -287,7 +287,11 @@ public:
 
     //
     virtual fgGFXvoid *front(void) const {
+    #if defined(FG_USING_MARMALADE)
+        return (fgGFXvoid *)(fgVector<fgVertex2v>::begin());
+    #else
         return (fgGFXvoid *)(&fgVector<fgVertex2v>::front());
+    #endif /* FG_USING_MARMALADE */
     }
 
     //
@@ -434,7 +438,11 @@ public:
 
     //
     virtual fgGFXvoid *front(void) const {
+    #if defined(FG_USING_MARMALADE)
+        return (fgGFXvoid *)(fgVector<fgVertex3v>::begin());
+    #else
         return (fgGFXvoid *)(&fgVector<fgVertex3v>::front());
+    #endif /* FG_USING_MARMALADE */
     }
 
     //
@@ -594,7 +602,11 @@ public:
 
     //
     virtual fgGFXvoid *front(void) const {
+    #if defined(FG_USING_MARMALADE)
+        return (fgGFXvoid *)(fgVector<fgVertex4v>::begin());
+    #else
         return (fgGFXvoid *)(&fgVector<fgVertex4v>::front());
+    #endif /* FG_USING_MARMALADE */
     }
 
     //

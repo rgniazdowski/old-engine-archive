@@ -26,7 +26,7 @@
 template<class ValueType>
 struct fgPlaneT {
     typedef fgPlaneT<ValueType> self_type;
-    typedef fgVector3T<ValueType> vector_type;
+    typedef typename fgVector3T<ValueType>::type vector_type;
     typedef ValueType value_type;
 
     enum Halfspace {

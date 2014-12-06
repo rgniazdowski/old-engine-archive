@@ -177,34 +177,6 @@ int fgConfig::getSectionsWith(fgCfgTypes::sectionVec & sectionsVec, const char *
 /**
  * 
  * @param sectionName
- * @return 
- */
-fgCfgTypes::parameterMap & fgConfig::getRefSectionsParameterMap(const char *sectionName) {
-    if(!sectionName)
-        throw fgException(FG_ERRNO_WRONG_PARAM);
-    fgCfgSection *section = getSection(sectionName);
-    if(!section)
-        throw fgException(FG_ERRNO_NOT_FOUND);
-    return section->parametersMap;
-}
-
-/**
- * 
- * @param sectionName
- * @return 
- */
-fgCfgTypes::parameterVec & fgConfig::getRefSectionsParameterVec(const char *sectionName) {
-    if(!sectionName)
-        throw fgException(FG_ERRNO_WRONG_PARAM);
-    fgCfgSection *section = getSection(sectionName);
-    if(!section)
-        throw fgException(FG_ERRNO_NOT_FOUND);
-    return section->parameters;
-}
-
-/**
- * 
- * @param sectionName
  * @param parameterName
  * @return 
  */

@@ -223,20 +223,6 @@ public:
      */
     fgCfgSection *getSection(const std::string & sectionName);
 
-    /**
-     * Return the reference to the given sections parameter map
-     * @param sectionName
-     * @return 
-     */
-    fgCfgTypes::parameterMap & getRefSectionsParameterMap(const char *sectionName);
-
-    /**
-     * Return the reference to the given sections parameter vector
-     * @param sectionName
-     * @return 
-     */
-    fgCfgTypes::parameterVec & getRefSectionsParameterVec(const char *sectionName);
-
 protected:
     /**
      * 

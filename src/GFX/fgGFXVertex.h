@@ -37,6 +37,16 @@
                 #define FG_MATH_GLM_VECTOR_TEMPLATE_MASK
 // #FIXME - This requires c++11
 //typedef glm::detail::tvec1 fgVector1T;
+#if defined(FG_USING_MARMALADE)
+template<typename T>
+struct fgVector2T { typedef glm::detail::tvec2<T, glm::defaultp> type; };
+
+template<typename T>
+struct fgVector3T { typedef glm::detail::tvec3<T, glm::defaultp> type; };
+
+template<typename T>
+struct fgVector4T { typedef glm::detail::tvec4<T, glm::defaultp> type; };
+#else
 template<typename T>
 using fgVector2T = glm::detail::tvec2<T, glm::defaultp>;
 //typedef glm::detail::tvec2<typename T, glm::precision P> fgVector2T<T, P>;
@@ -44,6 +54,7 @@ template<typename T>
 using fgVector3T = glm::detail::tvec3<T, glm::defaultp>;
 template<typename T>
 using fgVector4T = glm::detail::tvec4<T, glm::defaultp>;
+#endif
             #endif
 
 typedef glm::bvec2 fgVector2b;

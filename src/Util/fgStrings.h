@@ -250,8 +250,7 @@ public:
             return FG_FALSE;
         int plen = strlen(pattern);
         int ilen = strlen(input);
-        if(ilen < plen || !ilen || !plen
-                )
+        if(ilen < plen || !ilen || !plen)
             return FG_FALSE;
         for(int i = 0; i < plen; i++) {
             if((caseSensitive && input[i] != pattern[i]) ||

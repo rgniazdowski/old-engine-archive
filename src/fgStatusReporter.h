@@ -38,6 +38,7 @@ public:
     //
     fgStatusReporter() : m_errCode(FG_ERRNO_OK),
     m_reportToMsgSystem(FG_TRUE) { }
+    //
     virtual ~fgStatusReporter() {
         clearStatus();
     }
@@ -84,6 +85,7 @@ public:
             m_statusVec.pop_back();
         }
         m_errCode = FG_ERRNO_OK;
+        m_statusVec.clear_optimised();
     }
 
 protected:

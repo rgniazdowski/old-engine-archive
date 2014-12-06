@@ -29,11 +29,11 @@ struct fgProfileSample {
     float childrenSampleTime; // Time taken by all children
     unsigned int numParents; // Number of profile parents
     fgProfileSample() : isValid(FG_FALSE), numInstances(0),
-    numOpen(0), startTime(-1.0f), accumulator(0.0f),
-    childrenSampleTime(-1.0f), numParents(0) { }
+    numOpen(0), name("\0"), startTime(-1.0f), accumulator(0.0f),
+    childrenSampleTime(-1.0f), numParents(0) { 
+    }
 };
 
-//
 
 struct fgProfileSampleHistory {
     fgBool isValid; // whether the data is valid
@@ -41,12 +41,13 @@ struct fgProfileSampleHistory {
     float average; // average time per frame (percentage)
     float minimum; // minimum time per frame %
     float maximum; // maximum time per frame %
-    fgProfileSampleHistory() : isValid(FG_FALSE), average(0.0f),
+    fgProfileSampleHistory() : isValid(FG_FALSE), name("\0"), average(0.0f),
     minimum(0.0f), maximum(0.0f) { }
 };
 
     #ifdef FG_USING_MARMALADE
         #include <hash_map>
+        #include <map>
 
         #ifndef FG_HASH_STD_STRING_TEMPLATE_DEFINED_
             #define FG_HASH_STD_STRING_TEMPLATE_DEFINED_
@@ -80,14 +81,25 @@ protected:
             return s1.compare(s2) == 0;
         }
     };
+    struct profileLessTo {
+        bool operator ()(const char* s1, const char* s2) const {
+            return strcmp(s1, s2) == -1;
+        }
+        bool operator ()(const std::string& s1, const std::string& s2) const {
+            return s1.compare(s2) == -1;
+        }
+    };
     #endif // FG_USING_MARMALADE
 protected:
     typedef std::stack<fgProfileSample *> profileStack;
     typedef std::string hashKey;
     #ifdef FG_USING_MARMALADE
     typedef std::hash<std::string> hashFunc;
-    typedef std::hash_map <hashKey, fgProfileSample *, hashFunc, profileEqualTo> profileMap;
-    typedef std::hash_map <hashKey, fgProfileSampleHistory *, hashFunc, profileEqualTo> historyMap;
+    //typedef std::hash_map<hashKey, fgProfileSample *, hashFunc, profileEqualTo> profileMap;   // #FIXME #WTF
+    //typedef std::hash_map<hashKey, fgProfileSampleHistory *, hashFunc, profileEqualTo> historyMap; // #FIXME #WTF
+
+    typedef std::map<hashKey, fgProfileSample *, profileLessTo> profileMap;
+    typedef std::map<hashKey, fgProfileSampleHistory *, profileLessTo> historyMap;
     #else
     typedef std::unordered_map <hashKey, fgProfileSample *> profileMap;
     typedef std::unordered_map <hashKey, fgProfileSampleHistory *> historyMap;
@@ -147,7 +159,7 @@ public:
 };
 
     #if defined(FG_DEBUG)
-extern fgProfiling g_debugProfiling;
+extern fgProfiling *g_debugProfiling;
     #endif
 
 #endif /* FG_INC_PROFILING */

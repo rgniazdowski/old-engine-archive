@@ -18,6 +18,7 @@
 #include "Event/fgEventManager.h"
 #include "fgGFXErrorCodes.h"
 #include "Util/fgProfiling.h"
+#include "fgDebugConfig.h"
 
 #if defined(FG_USING_MARMALADE)
 #include "s3e.h"
@@ -85,7 +86,6 @@ fgGfxMain::~fgGfxMain() {
     m_gfxContext = NULL;
     m_3DScene = NULL;
     m_2DScene = NULL;
-    clearStatus(); // #FIXME
 }
 
 /*
@@ -116,7 +116,6 @@ void fgGfxMain::unregisterResourceCallbacks(void) {
  */
 fgBool fgGfxMain::initGFX(void) {
     float t1 = fgTime::ms();
-    fgStatusReporter::clearStatus();
     fgBool status = FG_TRUE;
 
     if(!fgGfxPlatform::initialize()) {
@@ -169,7 +168,7 @@ fgBool fgGfxMain::initGFX(void) {
         m_init = FG_TRUE;
     }
     if(status) {
-        reportSuccess(FG_ERRNO_GFX_OK, "GFX subsystem initialized successfully");
+        FG_LOG_DEBUG("GFX: Subsystem initialized successfully");
     }
     float t2 = fgTime::ms();
     FG_LOG_DEBUG("GFX: Initialized in %.2f seconds", (t2 - t1) / 1000.0f);
@@ -212,9 +211,9 @@ fgBool fgGfxMain::suspendGFX(void) {
     if(status)
         closeGFX();
     if(!status)
-        reportWarning(FG_ERRNO_GFX_OK, "Suspension of GFX subsystem finished with errors");
+        FG_LOG_WARNING("GFX: Suspension of GFX subsystem finished with errors");
     else
-        reportWarning(FG_ERRNO_GFX_OK, "Suspension of GFX subsystem finished with no errors");
+        FG_LOG_WARNING("GFX: Suspension of GFX subsystem finished with no errors");
     return status;
 }
 
@@ -250,9 +249,9 @@ fgBool fgGfxMain::resumeGFX(void) {
     }
 
     if(!status)
-        reportWarning(FG_ERRNO_GFX_OK, "Resume of GFX subsystem finished with errors");
+        FG_LOG_WARNING("GFX: Resume of GFX subsystem finished with errors");
     else
-        reportWarning(FG_ERRNO_GFX_OK, "Resume of GFX subsystem finished with no errors");
+        FG_LOG_WARNING("GFX: Resume of GFX subsystem finished with no errors");
     return status;
 }
 
@@ -266,17 +265,23 @@ void fgGfxMain::display(void) {
         m_particleSystem->calculate();
     }
 #if defined(FG_DEBUG)
-    g_debugProfiling.begin("GFX::3DScene::sortCalls");
+    if(g_fgDebugConfig.isDebugProfiling) {
+        g_debugProfiling->begin("GFX::3DScene::sortCalls");
+    }
 #endif
     m_3DScene->sortCalls();
 #if defined(FG_DEBUG)
-    g_debugProfiling.end("GFX::3DScene::sortCalls");
-    g_debugProfiling.begin("GFX::2DScene::sortCalls");
+    if(g_fgDebugConfig.isDebugProfiling) {
+        g_debugProfiling->end("GFX::3DScene::sortCalls");
+        g_debugProfiling->begin("GFX::2DScene::sortCalls");
+    }
 #endif
     //printf("fgGfx2DScene::sortCalls(void)\n");
     m_2DScene->sortCalls();
 #if defined(FG_DEBUG)
-    g_debugProfiling.end("GFX::2DScene::sortCalls");
+    if(g_fgDebugConfig.isDebugProfiling) {
+        g_debugProfiling->end("GFX::2DScene::sortCalls");
+    }
 #endif
 }
 
@@ -310,6 +315,7 @@ void fgGfxMain::render(void) {
 #endif
     std::string sPlainEasyShaderName("sPlainEasy");
     std::string sOrthoEasyShaderName("sOrthoEasy");
+    std::string sSkyBoxEasyShaderName("sSkyBoxEasy");
     std::string modelname("CobraBomber");
     std::string texname("CobraBomberTexture");
 
@@ -349,7 +355,7 @@ void fgGfxMain::render(void) {
     }
 
     m_3DScene->getCamera()->setDT((float)FG_HardwareState->getDelta());
-
+#if defined(FG_USING_SDL2)
     if(state[SDL_SCANCODE_W] == SDL_PRESSED)
         m_3DScene->getCamera()->moveForward();
 
@@ -361,24 +367,94 @@ void fgGfxMain::render(void) {
 
     if(state[SDL_SCANCODE_D] == SDL_PRESSED)
         m_3DScene->getCamera()->moveRight();
+#else 
+    if(s3eKeyboardGetState(s3eKeyW) & S3E_KEY_STATE_DOWN)
+        m_3DScene->getCamera()->moveForward();
+    if(s3eKeyboardGetState(s3eKeyS) & S3E_KEY_STATE_DOWN)
+        m_3DScene->getCamera()->moveBackward();
+    if(s3eKeyboardGetState(s3eKeyA) & S3E_KEY_STATE_DOWN)
+        m_3DScene->getCamera()->moveLeft();
+    if(s3eKeyboardGetState(s3eKeyD) & S3E_KEY_STATE_DOWN)
+        m_3DScene->getCamera()->moveRight();
+#endif
 
     m_3DScene->getCamera()->update();
     m_3DScene->getMVP()->setCamera(m_3DScene->getCamera());
     m_3DScene->getMVP()->setPerspective(45.0f, m_mainWindow->getAspect());
+    fgMatrix4f modelMat;
+    fgGfxShaderProgram *program = m_shaderMgr->get(sSkyBoxEasyShaderName);
+    program->setUniform(FG_GFX_USE_TEXTURE, 1.0f);
+    program->setUniform(FG_GFX_CUBE_TEXTURE, (fgGFXint)0);
+
+    if(!program) {
+        FG_LOG::PrintError("Cant access sSkyBoxEasy shader program.");
+        return;
+    }
+    m_shaderMgr->useProgram(program);
+    if(true) {
+#if defined(FG_DEBUG)
+        if(g_fgDebugConfig.isDebugProfiling) {
+            g_debugProfiling->begin("GFX::drawSkyBox");
+        }
+#endif
+        //
+        // #FIXME #TODO - that kind of SkyBox display sucks ass beyond recognition
+        //
+        // Load proper texture
+#if defined(FG_DEBUG)
+        if(g_fgDebugConfig.isDebugProfiling) {
+            g_debugProfiling->begin("GFX::drawSkyBoxTexResGet");
+        }
+#endif  
+        static fgResource *pResourceX = NULL;
+        if(!pResourceX)
+            pResourceX = static_cast<fgResourceManager *>(m_pResourceMgr)->get("PurpleNebulaCube");
+#if defined(FG_DEBUG)
+        if(g_fgDebugConfig.isDebugProfiling) {
+            g_debugProfiling->end("GFX::drawSkyBoxTexResGet");
+        }
+#endif
+        if(pResourceX->getResourceType() == FG_RESOURCE_TEXTURE) {
+            fgGfxTexture *pTexture = static_cast<fgGfxTexture *>(pResourceX);
+            if(pTexture) {
+                fgGfxTextureID &texID = pTexture->getRefGfxID();
+
+                //m_gfxContext->activeTexture(GL_TEXTURE1); // ? ? ? 
+                m_gfxContext->bindTexture(texID);
+
+                modelMat = fgMath::translate(fgMatrix4f(), m_3DScene->getCamera()->getRefEye());
+                float skyboxScale = FG_GFX_PERSPECTIVE_ZFAR_DEFAULT * 1.1f;
+                modelMat = fgMath::scale(modelMat, fgVector3f(skyboxScale, skyboxScale, skyboxScale));
+                m_3DScene->getMVP()->calculate(modelMat);
+                program->setUniform(m_3DScene->getMVP());
+                m_gfxContext->frontFace(GL_CW); // #FUBAR
+                //m_gfxContext->setCullFace(FG_FALSE);
+                fgGfxPrimitives::drawSkyBoxOptimized();
+                m_gfxContext->frontFace(GL_CCW);
+                //m_gfxContext->setCullFace(FG_TRUE);
+            }
+        }
+#if defined(FG_DEBUG)
+        if(g_fgDebugConfig.isDebugProfiling) {
+            g_debugProfiling->end("GFX::drawSkyBox");
+        }
+#endif
+    }
 
     rotxyz += 0.0094525f;
     if(rotxyz > M_PI * 2.0f)
         rotxyz = 0.0f;
-    fgMatrix4f modelMat;
-    modelMat = fgMath::translate(modelMat, fgVector3f(yolo_posx, yolo_posy * 0.0f, yolo_posy));
+
+    modelMat = fgMath::translate(fgMatrix4f(), fgVector3f(yolo_posx, yolo_posy * 0.0f, yolo_posy));
     modelMat = fgMath::rotate(modelMat, rotxyz, fgVector3f(1.0f, 1.0f, 1.0f)); //fgMath::translate(fgMatrix4f(1.0f), fgVector3f(0.0f, 0.0f, -5.0f));
 
-    fgGfxShaderProgram *program = m_shaderMgr->get(sPlainEasyShaderName);
-    m_shaderMgr->useProgram(program);
+    program = m_shaderMgr->get(sPlainEasyShaderName);
+
     if(!program) {
         FG_LOG::PrintError("Cant access sPlainEasy shader program.");
         return;
     }
+    m_shaderMgr->useProgram(program);
     program->setUniform(FG_GFX_USE_TEXTURE, 1.0f);
     program->setUniform(FG_GFX_PLAIN_TEXTURE, (fgGFXint)0);
     // #FIXME - this of course needs to be somewhere else 
@@ -409,60 +485,18 @@ void fgGfxMain::render(void) {
             obj2->setModelMatrix(modelMat);
         }
     }
-    if(true) {
-#if defined(FG_DEBUG)
-        g_debugProfiling.begin("GFX::drawSkyBox");
-#endif
-        //
-        // #FIXME #TODO - that kind of SkyBox display sucks ass beyond recognition
-        //
-        // Load proper texture
-#if defined(FG_DEBUG)
-        g_debugProfiling.begin("GFX::drawSkyBoxTexResGet");
-#endif  
-        static fgResource *pResourceX = NULL;
-        if(!pResourceX)
-            pResourceX = static_cast<fgResourceManager *>(m_pResourceMgr)->get("PurpleNebulaCube");
-#if defined(FG_DEBUG)
-        g_debugProfiling.end("GFX::drawSkyBoxTexResGet");
-#endif
-        if(pResourceX->getResourceType() == FG_RESOURCE_TEXTURE) {
-            fgGfxTexture *pTexture = static_cast<fgGfxTexture *>(pResourceX);
-            if(pTexture) {
-                fgGfxTextureID &texID = pTexture->getRefGfxID();
 
-                m_gfxContext->activeTexture(GL_TEXTURE1); // ? ? ? 
-                m_gfxContext->bindTexture(texID);
-
-
-                modelMat = fgMath::translate(fgMatrix4f(), m_3DScene->getCamera()->getRefEye());
-                float skyboxScale = FG_GFX_PERSPECTIVE_ZFAR_DEFAULT * 1.1f;
-                modelMat = fgMath::scale(modelMat, fgVector3f(skyboxScale, skyboxScale, skyboxScale));
-                m_3DScene->getMVP()->calculate(modelMat);
-                program->setUniform(m_3DScene->getMVP());
-                program->setUniform(FG_GFX_DRAW_SKYBOX, 1.0f);
-                program->setUniform(FG_GFX_CUBE_TEXTURE, (fgGFXint)1);
-                m_gfxContext->frontFace(GL_CW); // #FUBAR
-
-                //m_gfxContext->setCullFace(FG_FALSE);
-                fgGfxPrimitives::drawSkyBoxOptimized();
-                m_gfxContext->frontFace(GL_CCW);
-                program->setUniform(FG_GFX_DRAW_SKYBOX, 0.0f);
-                m_gfxContext->activeTexture(GL_TEXTURE0);
-                //m_gfxContext->setCullFace(FG_TRUE);
-            }
-        }
 #if defined(FG_DEBUG)
-        g_debugProfiling.end("GFX::drawSkyBox");
-#endif
+    if(g_fgDebugConfig.isDebugProfiling) {
+        g_debugProfiling->begin("GFX::3DScene::render");
     }
-#if defined(FG_DEBUG)
-    g_debugProfiling.begin("GFX::3DScene::render");
 #endif
     // RENDER THE 3D SCENE
     m_3DScene->render();
 #if defined(FG_DEBUG)
-    g_debugProfiling.end("GFX::3DScene::render");
+    if(g_fgDebugConfig.isDebugProfiling) {
+        g_debugProfiling->end("GFX::3DScene::render");
+    }
 #endif
 
     //////////////////////////////////////////////////////////////

@@ -163,7 +163,7 @@ void fgParticleEmitter::calculate(void) {
         m_aabb.merge(fgBoundingBox3Df(fgVec3f(x1-w2,y1-h2,0.0f),size));
         
         fgMatrix4f mat;
-        mat = glm::rotate(mat, particle.rotation.z, fgVector3f(0.0f, 0.0f, 1.0f));
+        mat = fgMath::rotate(mat, particle.rotation.z, fgVector3f(0.0f, 0.0f, 1.0f));
         //mat = glm::lookAt(particle.bbox.pos, particle.bbox.pos + particle.velocity, particle.velocity);
         float z = -1.0f;
 

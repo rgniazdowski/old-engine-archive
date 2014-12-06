@@ -19,7 +19,7 @@
     #include "Math/fgMathLib.h"
     #include "fgSingleton.h"
 
-class fgGuiScreenGrid : fgSingleton<fgGuiScreenGrid> {
+class fgGuiScreenGrid : public fgSingleton<fgGuiScreenGrid> {
     friend class fgSingleton<fgGuiScreenGrid>;
 private:
     /* By default maximum screen grid height is 40
@@ -47,7 +47,8 @@ private:
 
 protected:
     fgGuiScreenGrid();
-    ~fgGuiScreenGrid();
+    ~fgGuiScreenGrid() {};
+
 public:
     float getAspectRatio(void) const {
         return aspectRatio;

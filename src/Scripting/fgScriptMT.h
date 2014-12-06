@@ -20,13 +20,15 @@
     #ifndef FG_INC_TYPES
         #include "fgTypes.h"
     #endif
+    #include "fgSingleton.h"
 
 class fgScriptSubsystem;
 
 /**
  * 
  */
-class fgScriptMT {
+class fgScriptMetatables : public fgSingleton<fgScriptMetatables> {
+    friend class fgSingleton<fgScriptMetatables>;
     friend class fgScriptSubsystem;
 public:
 
@@ -260,35 +262,30 @@ private:
 
 private:
     ///
-    static metatableInfoVec m_metatableInfoVec;
+    metatableInfoVec m_metatableInfoVec;
+
+protected:
+    /**
+     * 
+     */
+    fgScriptMetatables();
+    /**
+     * 
+     */
+    virtual ~fgScriptMetatables();
 
 private:
     /**
      * 
      */
-    fgScriptMT();
-    /**
-     * 
-     * @param orig
-     */
-    fgScriptMT(const fgScriptMT& orig);
-    /**
-     * 
-     */
-    virtual ~fgScriptMT();
-
-private:
-    /**
-     * 
-     */
-    static void generateMetatableNames(void);
+    void generateMetatableNames(void);
 
     /**
      * 
      * @param widgetType
      * @return 
      */
-    static void clearMetatableNames(void);
+    void clearMetatableNames(void);
 
 public:
     /**
@@ -296,7 +293,7 @@ public:
      * @param metatableID
      * @return 
      */
-    static inline const char *getMetatableName(const unsigned short int metatableID) {
+    inline const char *getMetatableName(const unsigned short int metatableID) {
         const char *failedName = "__NO_B33F_";
         if(m_metatableInfoVec.empty())
             return failedName; // #FIXME
@@ -310,14 +307,14 @@ public:
      * @param widgetType
      * @return 
      */
-    static METAID getMetatableIDFromWidgetType(const unsigned int widgetType);
+    METAID getMetatableIDFromWidgetType(const unsigned int widgetType);
     
     /**
      * 
      * @param widgetType
      * @return 
      */
-    static inline const char *getMetatableNameFromWidgetType(const unsigned int widgetType) {
+    inline const char *getMetatableNameFromWidgetType(const unsigned int widgetType) {
         return getMetatableName(getMetatableIDFromWidgetType(widgetType));
     }
     
@@ -326,19 +323,20 @@ public:
      * @param resourceType
      * @return 
      */    
-    static METAID getMetatableIDFromResourceType(const unsigned int resourceType);
+    METAID getMetatableIDFromResourceType(const unsigned int resourceType);
     
     /**
      * 
      * @param resourceType
      * @return 
      */
-    static inline const char *getMetatableNameFromResourceType(const unsigned int resourceType) {
+    inline const char *getMetatableNameFromResourceType(const unsigned int resourceType) {
         return getMetatableName(getMetatableIDFromResourceType(resourceType));
     }
 
 };
 
+#define fgScriptMT fgScriptMetatables::getInstance()
+
     #undef FG_INC_SCRIPT_MT_BLOCK
 #endif	/* FG_INC_SCRIPT_MT */
-

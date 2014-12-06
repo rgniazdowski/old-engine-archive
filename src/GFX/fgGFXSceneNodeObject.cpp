@@ -16,6 +16,7 @@
 #include "fgGFXSceneNodeObject.h"
 #include "fgGFXSceneNodeMesh.h"
 #include "fgGFXSceneManager.h"
+#include "fgLog.h"
 
 /**
  * 
@@ -46,6 +47,7 @@ fgGfxSceneNodeObject::fgGfxSceneNodeObject(const fgGfxSceneNodeObject& orig) { }
  * 
  */
 fgGfxSceneNodeObject::~fgGfxSceneNodeObject() {
+    FG_LOG_DEBUG("fgGfxSceneNodeObject destructor %s", this->m_nameTag.c_str());
     // Well there's no need to remove children from this destructor
     // The base class destructor (SceneNode) will take care of that
 }

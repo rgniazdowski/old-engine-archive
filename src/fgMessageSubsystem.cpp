@@ -109,11 +109,8 @@ void fgMessageSubsystem::flushAll(void) {
         //FG_LOG_DEBUG("MSG: Delete status: [%p] - msg: [%p] ", back, back->message);
         //if(back->message)
             //FG_LOG_DEBUG("MSG: Delete [%p] - [%s]", back->message, back->message->data.c_str());
-            
         back->clearMessage();
-        
         delete back;
-        
         m_statusVec.pop_back();
     }
     m_statusVec.clear_optimised();

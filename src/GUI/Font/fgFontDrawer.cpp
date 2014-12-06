@@ -198,7 +198,7 @@ void fgFontDrawer::setColor(void) {
  */
 fgGfxDrawCall *fgFontDrawer::setupDrawCall(fgTextureResource *texture) {
     int index;
-    fgGfxDrawCall *drawCall = fgGfxDrawingBatch::createDrawCall(index,
+    fgGfxDrawCall *drawCall = fgGfxDrawingBatch::requestDrawCall(index,
                                                                 FG_GFX_DRAW_CALL_CUSTOM_ARRAY,
                                                                 FG_GFX_POSITION_BIT | FG_GFX_UVS_BIT | FG_GFX_COLOR_BIT);
     drawCall->setColor(m_color);

@@ -63,6 +63,16 @@
                 #define FG_MATH_GLM_VECTOR_TEMPLATE_MASK
 // #FIXME - This requires c++11
 //typedef glm::detail::tvec1 fgVector1T;
+#if defined(FG_USING_MARMALADE)
+template<typename T>
+struct fgVector2T { typedef glm::detail::tvec2<T, glm::defaultp> type; };
+
+template<typename T>
+struct fgVector3T { typedef glm::detail::tvec3<T, glm::defaultp> type; };
+
+template<typename T>
+struct fgVector4T { typedef glm::detail::tvec4<T, glm::defaultp> type; };
+#else
 template<typename T>
 using fgVector2T = glm::detail::tvec2<T, glm::defaultp>;
 //typedef glm::detail::tvec2<typename T, glm::precision P> fgVector2T<T, P>;
@@ -70,6 +80,7 @@ template<typename T>
 using fgVector3T = glm::detail::tvec3<T, glm::defaultp>;
 template<typename T>
 using fgVector4T = glm::detail::tvec4<T, glm::defaultp>;
+#endif
             #endif
 
 typedef glm::bvec2 fgVector2b;
@@ -98,13 +109,22 @@ typedef glm::dvec4 fgVector4d;
 
             #if !defined(FG_MATH_GLM_MATRIX_TEMPLATE_MASK)
                 #define FG_MATH_GLM_MATRIX_TEMPLATE_MASK
-// #FIXME - This requires c++11
+// #FIXME - This requires c++11 - alias template/typedef cap
+#if defined(FG_USING_MARMALADE)
+template<typename T>
+struct fgMatrix2T { typedef glm::detail::tmat2x2<T, glm::defaultp> type; };
+template<typename T>
+struct fgMatrix3T { typedef glm::detail::tmat3x3<T, glm::defaultp> type; };
+template<typename T>
+struct fgMatrix4T { typedef glm::detail::tmat4x4<T, glm::defaultp> type; };
+#else
 template<typename T>
 using fgMatrix2T = glm::detail::tmat2x2<T, glm::defaultp>;
 template<typename T>
 using fgMatrix3T = glm::detail::tmat3x3<T, glm::defaultp>;
 template<typename T>
 using fgMatrix4T = glm::detail::tmat4x4<T, glm::defaultp>;
+#endif /* FG_USING_MARMALADE */
             #endif
 
 typedef glm::mat2 fgMatrix2f;
