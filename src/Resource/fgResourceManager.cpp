@@ -148,7 +148,7 @@ fgBool fgResourceManager::initialize(void) {
     }
 
     if(resGroupFiles.size() == 0) {
-        reportWarning(FG_ERRNO_RESOURCE_NO_GROUPS, FG_MSG_IN_FUNCTION);
+        FG_MessageSubsystem->reportWarning(tag_type::name(), FG_ERRNO_RESOURCE_NO_GROUPS, FG_MSG_IN_FUNCTION);
         return FG_FALSE;
     }
     const char *filename;
@@ -306,7 +306,7 @@ fgBool fgResourceManager::insertResourceGroup(const FG_RHANDLE& rhUniqueID, fgRe
         return FG_FALSE;
     }
     if(m_resourceGroupHandles.find(rhUniqueID) != -1) {
-        reportError(FG_ERRNO_RESOURCE_GROUP_IN_VECTOR, FG_MSG_IN_FUNCTION);
+        FG_MessageSubsystem->reportError(tag_type::name(), FG_ERRNO_RESOURCE_GROUP_IN_VECTOR, FG_MSG_IN_FUNCTION);
         return FG_FALSE;
     }
     m_resourceGroupHandles.push_back(rhUniqueID);
@@ -344,7 +344,7 @@ fgBool fgResourceManager::remove(fgResource* pResource) {
     // if the resource was found, check to see that it's not locked
     if(pResource->isLocked()) {
         // Can't remove a locked resource
-        reportError(FG_ERRNO_RESOURCE_LOCKED_REMOVAL, FG_MSG_IN_FUNCTION);
+        FG_MessageSubsystem->reportError(tag_type::name(), FG_ERRNO_RESOURCE_LOCKED_REMOVAL, FG_MSG_IN_FUNCTION);
         return FG_FALSE;
     }
     // Get the memory and subtract it from the manager total
@@ -383,7 +383,7 @@ fgBool fgResourceManager::dispose(fgResource* pResource) {
     // if the resource was found, check to see that it's not locked
     if(pResource->isLocked()) {
         // Can't remove a locked resource
-        reportError(FG_ERRNO_RESOURCE_LOCKED_REMOVAL, FG_MSG_IN_FUNCTION);
+        FG_MessageSubsystem->reportError(tag_type::name(), FG_ERRNO_RESOURCE_LOCKED_REMOVAL, FG_MSG_IN_FUNCTION);
         return FG_FALSE;
     }
     unsigned int nDisposalSize = pResource->getSize();
@@ -393,7 +393,7 @@ fgBool fgResourceManager::dispose(fgResource* pResource) {
         removeMemory(nDisposalSize);
     } else {
         // For some reason the resource is not disposed
-        reportWarning(FG_ERRNO_RESOURCE_NOT_DISPOSED, FG_MSG_IN_FUNCTION);
+        FG_MessageSubsystem->reportWarning(tag_type::name(), FG_ERRNO_RESOURCE_NOT_DISPOSED, FG_MSG_IN_FUNCTION);
         return FG_FALSE;
     }
     return FG_TRUE;
@@ -748,7 +748,7 @@ fgBool fgResourceManager::unlockResource(fgResource *pResource) {
         return FG_FALSE;
     }
     if(pResource->getReferenceCount() == 0) {
-        reportError(FG_ERRNO_RESOURCE_TOO_MANY_UNLOCKS, FG_MSG_IN_FUNCTION);
+        FG_MessageSubsystem->reportError(tag_type::name(), FG_ERRNO_RESOURCE_TOO_MANY_UNLOCKS, FG_MSG_IN_FUNCTION);
         return FG_FALSE;
     }
     pResource->Unlock();
@@ -806,7 +806,7 @@ fgBool fgResourceManager::checkForOverallocation(void) {
         // then we return failure.  This could happen if too many resources were locked
         // or if a resource larger than the requested maximum memory was inserted.
         if(PriQueue.empty() && (m_nCurrentUsedMemory > m_nMaximumMemory)) {
-            reportWarning(FG_ERRNO_RESOURCE_OVERALLOCATION);
+            FG_MessageSubsystem->reportWarning(tag_type::name(), FG_ERRNO_RESOURCE_OVERALLOCATION);
             return FG_FALSE;
         }
     }

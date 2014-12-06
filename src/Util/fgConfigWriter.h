@@ -18,30 +18,9 @@ class fgConfigWriter : protected fgFile {
 protected:
 public:
     fgConfigWriter();
-    ~fgConfigWriter();
+    virtual ~fgConfigWriter();
 
     fgBool save(const char *filePath, fgCfgTypes::sectionMap &sectionMap);
-    /*******************************************************
-     * These function are here because ConfigWriter extends
-     * fgFile with access level protected. Need to make
-     * public methods of status reporter available. #FIXME
-     */
-
-    fgBool isError(void) const {
-        return fgStatusReporter::isError();
-    }
-    int getErrorCode(void) const {
-        return fgStatusReporter::getErrorCode();
-    }
-    int getLastErrorCode(void) const {
-        return fgStatusReporter::getLastErrorCode();
-    }
-    void setReportToMsgSystem(fgBool _set) {
-        fgStatusReporter::setReportToMsgSystem(_set);
-    }
-    fgStatus *getLastStatus(void) const {
-        return fgStatusReporter::getLastStatus();
-    }
 };
 
 #endif /* FG_INC_CONFIG_WRITER */

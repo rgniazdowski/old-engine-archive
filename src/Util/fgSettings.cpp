@@ -34,7 +34,7 @@ fgBool fgSettings::load(const char *filePath) {
         return FG_FALSE;
     if(!m_parser) {
         m_parser = new fgXMLParser();
-        m_parser->setReportToMsgSystem(FG_FALSE);
+        //m_parser->setReportToMsgSystem(FG_FALSE); !?!
     }
     fgBool status = FG_TRUE;
     fgXMLAutoHandler<fgSettings::settingsData> *content = NULL;

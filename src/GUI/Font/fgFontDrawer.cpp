@@ -203,9 +203,6 @@ fgGfxDrawCall *fgFontDrawer::setupDrawCall(fgTextureResource *texture) {
                                                                 FG_GFX_POSITION_BIT | FG_GFX_UVS_BIT | FG_GFX_COLOR_BIT);
     drawCall->setColor(m_color);
     drawCall->setTexture(texture->getRefGfxID());
-    //drawCall->setPrimitiveMode(fgGfxPrimitiveMode::FG_GFX_TRIANGLES);
-    //drawCall->setComponentActive(0);
-    //drawCall->setComponentActive(FG_GFX_POSITION_BIT | FG_GFX_UVS_BIT | FG_GFX_COLOR_BIT);
     drawCall->setDrawAppendMode(FG_GFX_DRAW_APPEND_ABSOLUTE);
     return drawCall;
 }

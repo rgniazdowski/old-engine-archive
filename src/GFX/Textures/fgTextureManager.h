@@ -15,7 +15,6 @@
     #include "fgManagerBase.h"
     #include "fgTextureResource.h"
     #include "fgTextureTypes.h"
-    #include "fgStatusReporter.h"
     #include "Util/fgTag.h"
     #include "Event/fgArgumentList.h"
     #include "Event/fgCallback.h"
@@ -37,7 +36,7 @@ typedef FG_TAG_TEXTURE_MANAGER fgTextureManagerTag;
 /**
  * Class that allows to perform GROUP OPERATIONS on all textures. 
  */
-class fgTextureManager : public fgManagerBase, public fgStatusReporter<fgTextureManagerTag> {
+class fgTextureManager : public fgManagerBase {
 public:
     typedef fgManagerBase base_type;
     typedef fgTextureManagerTag tag_type;

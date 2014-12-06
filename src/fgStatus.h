@@ -35,18 +35,22 @@ struct fgStatus {
     fgMask8 mask;
     // Message - contains indicator code (error code, etc.) and message text.
     fgMessage *message;
-    // Is this status managed in the message subsystem?
-    fgBool isManaged;
     //  Error code
     int errCode;
     // Timestamp (seconds)
     long timestamp;
 
-    // Default constructor
-    fgStatus() : mask(0), message(NULL), isManaged(FG_FALSE), errCode(FG_ERRNO_OK) {
+    /**
+     * 
+     */
+    fgStatus() : mask(0), message(NULL), errCode(FG_ERRNO_OK) {
         timestamp = fgTime::seconds();
     }
-    fgStatus(fgMessage *msg) : mask(0), isManaged(FG_FALSE), errCode(FG_ERRNO_OK) {
+    /**
+     * 
+     * @param msg
+     */
+    fgStatus(fgMessage *msg) : mask(0), errCode(FG_ERRNO_OK) {
         mask = FG_SUCCESS;
         if(msg) {
             errCode = msg->code();
@@ -68,13 +72,6 @@ struct fgStatus {
         // overloaded assignment operators in fgStatus and fgMessage
         // take care of it (it's taking over the ownership)
         // Message from source will be cleared
-    }
-    fgStatus *setManaged(void) {
-        isManaged = FG_TRUE;
-        // If status is managed, then message needs to be also
-        if(message)
-            message->setManaged();
-        return this;
     }
 
     // Assignment operator. If source has message allocated it will be
@@ -183,8 +180,6 @@ struct fgStatus {
             }
         }
         setCode(_code);
-        if(isManaged && message)
-            message->setManaged();
         timestamp = fgTime::seconds();
         return this;
     }

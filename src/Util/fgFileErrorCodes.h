@@ -19,9 +19,9 @@
 
     #define FG_ERRNO_FILE_BASE_CODE(_code)		(FG_ERRNO_BASE_CODE(800)+_code)
 
-    #define FG_ERRNO_FILE_OK					FG_ERRNO_FILE_BASE_CODE(0)  /* No error */
+    #define FG_ERRNO_FILE_OK				FG_ERRNO_FILE_BASE_CODE(0)  /* No error */
     #define FG_ERRNO_FILE_ALREADY_OPEN			FG_ERRNO_FILE_BASE_CODE(1)  /* File is already open */
-    #define FG_ERRNO_FILE_NO_PATH				FG_ERRNO_FILE_BASE_CODE(2)  /* No file path specified */
+    #define FG_ERRNO_FILE_NO_PATH			FG_ERRNO_FILE_BASE_CODE(2)  /* No file path specified */
     #define FG_ERRNO_FILE_OPEN_FAILED			FG_ERRNO_FILE_BASE_CODE(3)  /* Failed to open file */
     #define FG_ERRNO_FILE_DOESNT_EXIST			FG_ERRNO_FILE_BASE_CODE(4)  /* File doesnt exist */
     #define FG_ERRNO_FILE_WRONG_MODE			FG_ERRNO_FILE_BASE_CODE(5)  /* Wrong file mode specified */
@@ -34,20 +34,20 @@
     #define FG_ERRNO_FILE_ERROR_WRITE			FG_ERRNO_FILE_BASE_CODE(12) /* Error while writing to file */
     #define FG_ERRNO_FILE_ERROR_READ			FG_ERRNO_FILE_BASE_CODE(13) /* Error while reading from file */
     #define FG_ERRNO_FILE_NOT_OPENED			FG_ERRNO_FILE_BASE_CODE(14) /* File is not opened */
-    #define FG_ERRNO_FILE_EOF					FG_ERRNO_FILE_BASE_CODE(15) /* End of file */
-    #define FG_ERRNO_FILE_CLOSING				FG_ERRNO_FILE_BASE_CODE(16) /* Error while closing file */
+    #define FG_ERRNO_FILE_EOF				FG_ERRNO_FILE_BASE_CODE(15) /* End of file */
+    #define FG_ERRNO_FILE_CLOSING			FG_ERRNO_FILE_BASE_CODE(16) /* Error while closing file */
     #define FG_ERRNO_FILE_ERROR_SEEK			FG_ERRNO_FILE_BASE_CODE(17) /* Error on file seek occured */
     #define FG_ERRNO_FILE_ERROR_TELL			FG_ERRNO_FILE_BASE_CODE(18) /* Error while getting file postion indicator */
 
-    #define FG_ERRNO_FILE_LAST_CODE				FG_ERRNO_FILE_BASE_CODE(18)
+    #define FG_ERRNO_FILE_LAST_CODE			FG_ERRNO_FILE_BASE_CODE(18)
 
-    #define FG_ERRNO_FILE_OK_TEXT				"No error"
+    #define FG_ERRNO_FILE_OK_TEXT                       "No error"
     #define FG_ERRNO_FILE_ALREADY_OPEN_TEXT		"File is already open"
     #define FG_ERRNO_FILE_NO_PATH_TEXT			"No file path specified"
     #define FG_ERRNO_FILE_OPEN_FAILED_TEXT		"Failed to open file"
     #define FG_ERRNO_FILE_DOESNT_EXIST_TEXT		"File doesnt exist"
     #define FG_ERRNO_FILE_WRONG_MODE_TEXT		"Wrong file mode specified"
-    #define FG_ERRNO_FILE_WRONG_PARAMETERS_TEXT	"Wrong parameters to function"
+    #define FG_ERRNO_FILE_WRONG_PARAMETERS_TEXT         "Wrong parameters to function"
     #define FG_ERRNO_FILE_READ_COUNT_TEXT		"Did not read all the elements"
     #define FG_ERRNO_FILE_WRITE_COUNT_TEXT		"Did not write all the elements"
     #define FG_ERRNO_FILE_ERROR_STRING_TEXT		"Error reading string from file"
@@ -56,7 +56,7 @@
     #define FG_ERRNO_FILE_ERROR_WRITE_TEXT		"Error while writing to file"
     #define FG_ERRNO_FILE_ERROR_READ_TEXT		"Error while reading from file"
     #define FG_ERRNO_FILE_NOT_OPENED_TEXT		"File is not opened"
-    #define FG_ERRNO_FILE_EOF_TEXT				"End of file"
+    #define FG_ERRNO_FILE_EOF_TEXT                      "End of file"
     #define FG_ERRNO_FILE_CLOSING_TEXT			"Error while closing file"
     #define FG_ERRNO_FILE_ERROR_SEEK_TEXT		"Error on file seek occured"
     #define FG_ERRNO_FILE_ERROR_TELL_TEXT		"Error while getting file postion indicator"

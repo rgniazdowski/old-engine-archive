@@ -82,76 +82,63 @@ struct fgMessage {
     };
     // Message data (text)
     std::string data;
-    // Is this status managed in the message subsystem?
-    fgBool isManaged;
 
     // Default constructor for message object
-    fgMessage() :
-    type(FG_MESSAGE_INFO),
-    isManaged(FG_FALSE) {
+    fgMessage() : type(FG_MESSAGE_INFO) {
         info.code = FG_ERRNO_OK;
         warning.serious = FG_FALSE;
     }
 
     // Default destructor for message object
-    ~fgMessage() {
+    virtual ~fgMessage() {
         data.clear();
     }
-    fgMessage(fgMessageType _type, int _code) :
-    type(_type),
-    isManaged(FG_FALSE) {
+    fgMessage(fgMessageType _type, int _code) : type(_type) {
         info.code = FG_ERRNO_OK;
         warning.serious = FG_FALSE;
     }
     fgMessage(fgMessageType _type, int _code, fgBool _critical) :
-    type(_type),
-    isManaged(FG_FALSE) {
+    type(_type) {
         info.code = _code;
         warning.serious = _critical; // this will also set similar flag in error/debug - union
     }
     fgMessage(fgMessageType _type, const char *_data) :
-    type(_type),
-    isManaged(FG_FALSE) {
+    type(_type) {
         info.code = FG_ERRNO_OK;
         warning.serious = FG_FALSE;
         if(_data)
             data = _data;
     }
     fgMessage(fgMessageType _type, const char *_data, int _code) :
-    type(_type),
-    isManaged(FG_FALSE) {
+    type(_type) {
         info.code = _code;
         warning.serious = FG_FALSE;
         if(_data)
             data = _data;
     }
     fgMessage(fgMessageType _type, const char *_data, int _code, fgBool _critical) :
-    type(_type),
-    isManaged(FG_FALSE) {
+    type(_type) {
         info.code = _code;
         warning.serious = _critical;
         if(_data)
             data = _data;
     }
     fgMessage(const char *_data) :
-    type(FG_MESSAGE_INFO),
-    isManaged(FG_FALSE) {
+    type(FG_MESSAGE_INFO) {
         info.code = FG_ERRNO_OK;
         warning.serious = FG_FALSE;
         if(_data)
             data = _data;
     }
     fgMessage(const char *_data, int _code) :
-    type(FG_MESSAGE_INFO),
-    isManaged(FG_FALSE) {
+    type(FG_MESSAGE_INFO) {
         info.code = _code;
         warning.serious = FG_FALSE;
         if(_data)
             data = _data;
     }
     fgMessage(const char *_data, int _code, fgBool _critical) :
-    type(FG_MESSAGE_INFO),
-    isManaged(FG_FALSE) {
+    type(FG_MESSAGE_INFO) {
         info.code = _code;
         warning.serious = _critical;
         if(_data)
@@ -167,12 +154,6 @@ struct fgMessage {
     // Get the message code (error code/etc)
     int code(void) const {
         return info.code;
-    }
-
-    // Set the message to be managed via message subsystem
-    fgMessage *setManaged(void) {
-        isManaged = FG_TRUE;
-        return this;
     }
 };
 

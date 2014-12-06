@@ -23,6 +23,14 @@
 
     #include "fgXMLDefaultHandler.h"
 
+class fgXMLParser;
+
+    #define FG_TAG_XML_PARSER_NAME	"XMLParser"
+    #define FG_TAG_XML_PARSER		FG_TAG_TYPE(fgXMLParser)
+
+FG_TAG_TEMPLATE_ID_AUTO(fgXMLParser, FG_TAG_XML_PARSER_NAME);
+typedef FG_TAG_XML_PARSER fgXMLParserTag;
+
 // This class extends the fgFile, so it can load the proper XML file
 // fgXMLParser contains  specialized functions for  parsing/interpreting the  data inside the XML file, its
 // a kind of a XML functions wrapper to make it easier and more intuitive to interpret and extract the data
@@ -49,6 +57,9 @@
  */
 
 class fgXMLParser : protected fgFile {
+public:
+    typedef fgFile base_type;
+    typedef fgXMLParserTag tag_type;
 protected:
     // Loaded file size
     unsigned int m_fileSize;
@@ -66,6 +77,7 @@ protected:
     std::stack<fgXMLNode *> m_parsingStack;
     // Pointer to the interface object used for automatic parsing of the XML file (handler)
     fgXMLDefaultHandler *m_contentHandler;
+    
 public:
     /*
      * Default empty constructor
@@ -362,28 +374,6 @@ public:
         else
             return FG_FALSE;
     }
-    /************************************************
-     * These function are here because XMLParser extends
-     * fgFile with access level protected. Need to make
-     * public methods of status reporter available
-     */
-
-    fgBool isError(void) const {
-        return fgStatusReporter::isError();
-    }
-    int getErrorCode(void) const {
-        return fgStatusReporter::getErrorCode();
-    }
-    int getLastErrorCode(void) const {
-        return fgStatusReporter::getLastErrorCode();
-    }
-    void setReportToMsgSystem(fgBool _set) {
-        fgStatusReporter::setReportToMsgSystem(_set);
-    }
-    fgStatus *getLastStatus(void) const {
-        return fgStatusReporter::getLastStatus();
-    }
-
 };
 
 #endif /* FG_INC_XML_PARSER */

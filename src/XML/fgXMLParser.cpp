@@ -11,14 +11,14 @@
 #include "fgXMLErrorCodes.h"
 #include "Util/fgFileErrorCodes.h"
 #include "Util/fgMemory.h"
+#include "fgMessageSubsystem.h"
 
 /*
  *
  */
 fgBool fgXMLParser::loadXML(const char *filePath) {
-    fgStatusReporter::clearStatus();
     if(filePath == NULL) {
-        reportWarning(FG_ERRNO_FILE_WRONG_PARAMETERS);
+        FG_MessageSubsystem->reportWarning(tag_type::name(), FG_ERRNO_FILE_WRONG_PARAMETERS);
         return FG_FALSE;
     }
 
@@ -29,7 +29,7 @@ fgBool fgXMLParser::loadXML(const char *filePath) {
     m_fileBuffer = load(filePath);
 
     if(!m_fileBuffer) {
-        reportError(FG_ERRNO_XML_LOAD);
+        FG_MessageSubsystem->reportError(tag_type::name(), FG_ERRNO_XML_LOAD);
         return FG_FALSE;
     }
 
@@ -39,11 +39,11 @@ fgBool fgXMLParser::loadXML(const char *filePath) {
     // Process the XML raw data
     if(!m_xmlDocument.Parse(m_fileBuffer)) {
         if(m_xmlDocument.Error()) {
-            reportError(FG_ERRNO_XML_PARSE, "id: %d - %s in line (%d,%d)",
+            FG_MessageSubsystem->reportError(tag_type::name(), FG_ERRNO_XML_PARSE, "id: %d - %s in line (%d,%d)",
                         m_xmlDocument.ErrorId(), m_xmlDocument.ErrorDesc(),
                         m_xmlDocument.ErrorRow(), m_xmlDocument.ErrorCol());
         } else {
-            reportError(FG_ERRNO_XML_PARSE);
+            FG_MessageSubsystem->reportError(tag_type::name(), FG_ERRNO_XML_PARSE);
         }
         return FG_FALSE;
     }
@@ -139,14 +139,14 @@ fgBool fgXMLParser::_parseDeep(fgXMLNode *cnode, int depth) {
  */
 fgBool fgXMLParser::parseWithHandler(void) {
     if(!m_contentHandler) {
-        reportError(FG_ERRNO_XML_NO_CONTENT_HANDLER);
+        FG_MessageSubsystem->reportError(tag_type::name(), FG_ERRNO_XML_NO_CONTENT_HANDLER);
         return FG_FALSE;
     }
     std::stack<fgXMLNode *> toVisitStack;
 
     // Parsing XML using content handler class
     if(!this->isXMLLoaded()) {
-        reportError(FG_ERRNO_XML_NOT_LOADED);
+        FG_MessageSubsystem->reportError(tag_type::name(), FG_ERRNO_XML_NOT_LOADED);
         return FG_FALSE;
     }
     // Start document parsing
@@ -154,7 +154,7 @@ fgBool fgXMLParser::parseWithHandler(void) {
     // Start deep parsing #FIXME
     fgBool pstatus = _parseDeep(NULL, 0);
     if(!pstatus) {
-        reportError(FG_ERRNO_XML_PARSE_DEEP);
+        FG_MessageSubsystem->reportError(tag_type::name(), FG_ERRNO_XML_PARSE_DEEP);
         return FG_FALSE;
     }
     m_contentHandler->endDocument(&this->m_xmlDocument);

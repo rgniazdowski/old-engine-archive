@@ -14,7 +14,6 @@
         #error "FG_GFX_STD_INC_BLOCK constant is defined. Do not include GfxShaderConfig inside of Gfx Standard Include header."
     #endif
     #include "fgGFXShaderDefs.h"
-    #include "fgStatusReporter.h"
     #include "Hardware/fgQualityTypes.h"
     #include "Util/fgConfig.h"
     #include "Util/fgTag.h"
@@ -33,12 +32,12 @@ enum fgGfxShaderConfigType {
     #endif
 };
 
-    #define FG_GFX_SHADER_CONFIG_PROGRAM_SECTION_NAME	"ShaderProgramConfig"
-    #define FG_GFX_SHADER_CONFIG_BASIC_SECTION_NAME		"ShaderConfig"
+    #define FG_GFX_SHADER_CONFIG_PROGRAM_SECTION_NAME   "ShaderProgramConfig"
+    #define FG_GFX_SHADER_CONFIG_BASIC_SECTION_NAME     "ShaderConfig"
 
 class fgGfxShaderConfig;
-    #define FG_TAG_GFX_SHADER_CONFIG_NAME	"GfxShaderConfig"
-    #define FG_TAG_GFX_SHADER_CONFIG	FG_TAG_TYPE(fgGfxShaderConfig)
+    #define FG_TAG_GFX_SHADER_CONFIG_NAME       "GfxShaderConfig"
+    #define FG_TAG_GFX_SHADER_CONFIG            FG_TAG_TYPE(fgGfxShaderConfig)
 
 FG_TAG_TEMPLATE_ID_AUTO(fgGfxShaderConfig, FG_TAG_GFX_SHADER_CONFIG_NAME);
 typedef FG_TAG_GFX_SHADER_CONFIG fgGfxShaderConfigTag;
@@ -61,8 +60,11 @@ typedef FG_TAG_GFX_SHADER_CONFIG fgGfxShaderConfigTag;
  * This class can load and parse only one config at one time, and
  * will provide that data for only one config type.
  */
-class fgGfxShaderConfig : protected fgConfig, public fgStatusReporter<fgGfxShaderConfigTag> {
+class fgGfxShaderConfig : protected fgConfig {
 public:
+    typedef fgConfig base_type;
+    typedef fgGfxShaderConfigTag tag_type;
+    
     typedef fgVector<fgGfxShaderType> shaderTypeVec;
     typedef fgVector<fgGfxUniformBind> shaderUniformBindVec;
     typedef fgVector<fgGfxAttributeBind> shaderAttributeBindVec;

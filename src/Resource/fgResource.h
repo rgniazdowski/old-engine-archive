@@ -15,7 +15,6 @@
     #define FG_INC_RESOURCE_BLOCK
 
     #include "fgCommon.h"
-    #include "fgStatusReporter.h"
     #include "Hardware/fgQualityTypes.h"
 
     #include <string>
@@ -184,7 +183,7 @@ inline fgResPriorityType _FG_RES_PRIORITY_FROM_TEXT(const char* text) {
 /*
  * Base class for resource
  */
-class fgResource : public fgManagedDataFileBase<fgResourceHandle, fgQuality>, public fgStatusReporter<fgResourceTag> {
+class fgResource : public fgManagedDataFileBase<fgResourceHandle, fgQuality> {
     friend class fgResourceManager;
     friend class fgResourceGroup;
 public:

@@ -12,7 +12,6 @@
 
     #include "fgBuildConfig.h"
     #include "fgCommon.h"
-    #include "fgStatusReporter.h"
     #include "Util/fgSettings.h"
     #include "Util/fgConfig.h"
     #include "Util/fgTag.h"

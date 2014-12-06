@@ -37,7 +37,7 @@ typedef FG_TAG_SHADER_MANAGER fgGfxShaderManagerTag;
 
     #define FG_MANAGER_GFX_SHADER   0x00000002
 
-/*
+/**
  *
  */
 class fgGfxShaderManager : public fgDataManagerBase<fgGfxShaderProgram*, fgGfxShaderHandle, fgGfxShaderManagerTag> {
@@ -47,13 +47,19 @@ public:
     typedef fgGfxShaderProgram* data_type_ptr;
     typedef fgGfxShaderHandle handle_type;
     typedef fgGfxShaderManagerTag tag_type;
+    
 protected:
     typedef hmDataVec smProgramVec;
     typedef hmDataVec::iterator smProgramVecItor;
+    
 public:
-    // Default constructor for the shader manager object
+    /**
+     * Default constructor for the shader manager object
+     */
     fgGfxShaderManager();
-    // Default destructor for the shader manager object
+    /**
+     * Default destructor for the shader manager object
+     */
     virtual ~fgGfxShaderManager();
 
 protected:

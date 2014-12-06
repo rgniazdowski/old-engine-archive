@@ -13,7 +13,8 @@
     #include "fgManagerBase.h"
     #include "Util/fgHandleManager.h"
     #include "fgResourceErrorCodes.h"
-    #include "fgStatusReporter.h"
+    
+    #include "fgMessageSubsystem.h"
 
     #define FG_MANAGER_DATA_BASE    0x00000080
 
@@ -21,7 +22,7 @@
  *
  */
 template <typename DataType, typename HandleType, typename TagType>
-class fgDataManagerBase : public fgManagerBase, public fgStatusReporter<TagType>, protected fgHandleManager<DataType, HandleType> {
+class fgDataManagerBase : public fgManagerBase, protected fgHandleManager<DataType, HandleType> {
 public:
     typedef TagType tag_type;
     typedef HandleType handle_type;
@@ -192,32 +193,32 @@ void fgDataManagerBase<DataType, HandleType, TagType>::clear(void) {
 template <typename DataType, typename HandleType, typename TagType>
 fgBool fgDataManagerBase<DataType, HandleType, TagType>::insert(DataType pData, const std::string& nameTag) {
     if(!pData) {
-        this->reportWarning(FG_ERRNO_RESOURCE_PARAMETER_NULL, FG_MSG_IN_FUNCTION);
+        FG_MessageSubsystem->reportWarning(tag_type::name(), FG_ERRNO_RESOURCE_PARAMETER_NULL, FG_MSG_IN_FUNCTION);
         return FG_FALSE;
     }
     HandleType dhUniqueID;
     if(fgHandleManager<DataType, HandleType>::isDataManaged(pData)) {
-        this->reportError(FG_ERRNO_RESOURCE_ALREADY_MANAGED, FG_MSG_IN_FUNCTION);
+        FG_MessageSubsystem->reportError(tag_type::name(), FG_ERRNO_RESOURCE_ALREADY_MANAGED, FG_MSG_IN_FUNCTION);
         return FG_FALSE;
     }
 
     if(!pData->getHandle().isNull()) {
         // Resource has already initialized handle
-        this->reportError(FG_ERRNO_RESOURCE_INITIALIZED_HANDLE, FG_MSG_IN_FUNCTION);
+        FG_MessageSubsystem->reportError(tag_type::name(), FG_ERRNO_RESOURCE_INITIALIZED_HANDLE, FG_MSG_IN_FUNCTION);
         return FG_FALSE;
     }
     // Acquire next valid resource handle
     // Insert the resource into the current catalog
     if(!fgHandleManager<DataType, HandleType>::acquireHandle(dhUniqueID, pData)) {
         // Could not aquire handle for the resource
-        this->reportError(FG_ERRNO_RESOURCE_ACQUIRE_HANDLE, FG_MSG_IN_FUNCTION);
+        FG_MessageSubsystem->reportError(tag_type::name(), FG_ERRNO_RESOURCE_ACQUIRE_HANDLE, FG_MSG_IN_FUNCTION);
         return FG_FALSE;
     }
     // This is important - on addition need to update the handle
     pData->setHandle(dhUniqueID);
     if(!fgHandleManager<DataType, HandleType>::setupName(nameTag, dhUniqueID)) {
         // Could not setup handle string tag/name for the resource
-        this->reportError(FG_ERRNO_RESOURCE_SETUP_HANDLE_NAME, FG_MSG_IN_FUNCTION);
+        FG_MessageSubsystem->reportError(tag_type::name(), FG_ERRNO_RESOURCE_SETUP_HANDLE_NAME, FG_MSG_IN_FUNCTION);
         return FG_FALSE;
     }
     return FG_TRUE;
@@ -278,7 +279,7 @@ fgBool fgDataManagerBase<DataType, HandleType, TagType>::remove(const char *name
 template <typename DataType, typename HandleType, typename TagType>
 fgBool fgDataManagerBase<DataType, HandleType, TagType>::destroyData(DataType& pData) {
     if(!remove(pData)) {
-        this->reportError(FG_ERRNO_RESOURCE_REMOVE);
+        FG_MessageSubsystem->reportError(tag_type::name(), FG_ERRNO_RESOURCE_REMOVE);
         return FG_FALSE;
     }
     delete pData;
@@ -294,7 +295,7 @@ template <typename DataType, typename HandleType, typename TagType>
 fgBool fgDataManagerBase<DataType, HandleType, TagType>::destroyData(const HandleType& dhUniqueID) {
     DataType pData = fgHandleManager<DataType, HandleType>::dereference(dhUniqueID);
     if(!remove(pData)) {
-        this->reportError(FG_ERRNO_RESOURCE_REMOVE);
+        FG_MessageSubsystem->reportError(tag_type::name(), FG_ERRNO_RESOURCE_REMOVE);
         return FG_FALSE;
     }
     delete pData;
@@ -309,7 +310,7 @@ template <typename DataType, typename HandleType, typename TagType>
 fgBool fgDataManagerBase<DataType, HandleType, TagType>::destroyData(const std::string& nameTag) {
     DataType pData = fgHandleManager<DataType, HandleType>::dereference(nameTag);
     if(!remove(pData)) {
-        this->reportError(FG_ERRNO_RESOURCE_REMOVE);
+        FG_MessageSubsystem->reportError(tag_type::name(), FG_ERRNO_RESOURCE_REMOVE);
         return FG_FALSE;
     }
     delete pData;
@@ -324,7 +325,7 @@ template <typename DataType, typename HandleType, typename TagType>
 fgBool fgDataManagerBase<DataType, HandleType, TagType>::destroyData(const char *nameTag) {
     DataType pData = fgHandleManager<DataType, HandleType>::dereference(nameTag);
     if(!remove(pData)) {
-        this->reportError(FG_ERRNO_RESOURCE_REMOVE);
+        FG_MessageSubsystem->reportError(tag_type::name(), FG_ERRNO_RESOURCE_REMOVE);
         return FG_FALSE;
     }
     delete pData;
@@ -348,12 +349,12 @@ DataType fgDataManagerBase<DataType, HandleType, TagType>::get(const HandleType&
 template <typename DataType, typename HandleType, typename TagType>
 DataType fgDataManagerBase<DataType, HandleType, TagType>::get(const std::string& nameTag) {
     if(nameTag.empty()) {
-        this->reportWarning(FG_ERRNO_RESOURCE_NAME_TAG_EMPTY, FG_MSG_IN_FUNCTION);
+        FG_MessageSubsystem->reportWarning(tag_type::name(), FG_ERRNO_RESOURCE_NAME_TAG_EMPTY, FG_MSG_IN_FUNCTION);
         return NULL;
     }
     DataType pData = fgHandleManager<DataType, HandleType>::dereference(nameTag);
     if(!pData) {
-        this->reportError(FG_ERRNO_RESOURCE_NAME_TAG_INVALID, " tag='%s', in function: %s", nameTag.c_str(), __FUNCTION__);
+        FG_MessageSubsystem->reportError(tag_type::name(), FG_ERRNO_RESOURCE_NAME_TAG_INVALID, " tag='%s', in function: %s", nameTag.c_str(), __FUNCTION__);
         return NULL;
     }
     return pData;
@@ -376,16 +377,16 @@ DataType fgDataManagerBase<DataType, HandleType, TagType>::get(const char *nameT
 template <typename DataType, typename HandleType, typename TagType>
 fgBool fgDataManagerBase<DataType, HandleType, TagType>::isManaged(DataType pData) {
     if(!pData) {
-        this->reportWarning(FG_ERRNO_RESOURCE_PARAMETER_NULL, FG_MSG_IN_FUNCTION);
+        FG_MessageSubsystem->reportWarning(tag_type::name(), FG_ERRNO_RESOURCE_PARAMETER_NULL, FG_MSG_IN_FUNCTION);
         return FG_FALSE;
     }
     if(FG_IS_INVALID_HANDLE(pData->getHandle())
             || !fgHandleManager<DataType, HandleType>::isHandleValid(pData->getHandle())) {
-        this->reportError(FG_ERRNO_RESOURCE_HANDLE_INVALID, FG_MSG_IN_FUNCTION);
+        FG_MessageSubsystem->reportError(tag_type::name(), FG_ERRNO_RESOURCE_HANDLE_INVALID, FG_MSG_IN_FUNCTION);
         return FG_FALSE;
     }
     if(!fgHandleManager<DataType, HandleType>::isDataManaged(pData)) {
-        this->reportWarning(FG_ERRNO_RESOURCE_NOT_MANAGED, FG_MSG_IN_FUNCTION);
+        FG_MessageSubsystem->reportWarning(tag_type::name(), FG_ERRNO_RESOURCE_NOT_MANAGED, FG_MSG_IN_FUNCTION);
         return FG_FALSE;
     }
     return FG_TRUE;

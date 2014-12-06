@@ -148,9 +148,9 @@ void fgGfxSceneManager::sortCalls(void) {
         // the model matrix; maybe some operator ?
         pNode->updateAABB();
 
-        const char *msg[] = {"OUTSIDE", "INTERSECT", "INSIDE", "[null]", "\0"};
+        //const char *msg[] = {"OUTSIDE", "INTERSECT", "INSIDE", "[null]", "\0"};
         int boxtest = m_MVP.getRefFrustum().testAABB(pNode->getRefAABB());
-        int spheretest = (int)m_MVP.getRefFrustum().testSphere(fgVector3f(pNode->getRefModelMatrix()[3]), 30.0f);
+        //int spheretest = (int)m_MVP.getRefFrustum().testSphere(fgVector3f(pNode->getRefModelMatrix()[3]), 30.0f);
         if(!boxtest)
             pNode->setVisible(FG_FALSE);
         else

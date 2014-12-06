@@ -9,7 +9,7 @@
 
 #include "fgGFXShaderConfig.h"
 #include "GFX/fgGFXErrorCodes.h"
-#include "fgLog.h"
+#include "fgMessageSubsystem.h"
 #include "Util/fgPath.h"
 #include "Util/fgStrings.h"
 
@@ -60,10 +60,9 @@ void fgGfxShaderConfig::clearAll(void) {
 fgBool fgGfxShaderConfig::load(const char *filePath, fgGfxSLVersion SLver) {
     fgGfxShaderConfig::clearAll();
     if(!fgConfig::load(filePath)) {
-        reportError(FG_ERRNO_GFX_SHADER_FAIL_CFG_LOAD);
+        FG_MessageSubsystem->reportError(tag_type::name(), FG_ERRNO_GFX_SHADER_FAIL_CFG_LOAD);
         return FG_FALSE;
     }
-    fgGfxShaderConfig::clearStatus();
     return _parseData(SLver);
 }
 
@@ -124,17 +123,17 @@ fgBool fgGfxShaderConfig::_parseData(fgGfxSLVersion SLver) {
     if(SLver != FG_GFX_SHADING_LANGUAGE_INVALID) {
         m_preferredSLVersion = SLver;
     } else if(m_preferredSLVersion == FG_GFX_SHADING_LANGUAGE_INVALID) {
-        reportError(FG_ERRNO_GFX_SHADER_INVALID_SLVER);
+        FG_MessageSubsystem->reportError(tag_type::name(), FG_ERRNO_GFX_SHADER_INVALID_SLVER);
         return FG_FALSE;
     }
     if(m_configPath.empty()) {
-        reportError(FG_ERRNO_WRONG_PATH);
+        FG_MessageSubsystem->reportError(tag_type::name(), FG_ERRNO_WRONG_PATH);
         return FG_FALSE;
     }
 
     const char *ext = fgPath::fileExt(m_configPath.c_str(), FG_TRUE);
     if(!ext) {
-        reportError(FG_ERRNO_WRONG_PATH);
+        FG_MessageSubsystem->reportError(tag_type::name(), FG_ERRNO_WRONG_PATH);
         return FG_FALSE;
     }
 
@@ -158,7 +157,7 @@ fgBool fgGfxShaderConfig::_parseData(fgGfxSLVersion SLver) {
     }
 
     if(m_configType == FG_GFX_SHADER_CONFIG_INVALID) {
-        reportError(FG_ERRNO_GFX_SHADER_WRONG_CFG_TYPE);
+        FG_MessageSubsystem->reportError(tag_type::name(), FG_ERRNO_GFX_SHADER_WRONG_CFG_TYPE);
         return FG_FALSE;
     }
 
@@ -171,7 +170,7 @@ fgBool fgGfxShaderConfig::_parseData(fgGfxSLVersion SLver) {
 
     if(!mainSection) {
         // No new section found, the ini config is malformed
-        reportError(FG_ERRNO_GFX_SHADER_NO_MAIN_SECTION);
+        FG_MessageSubsystem->reportError(tag_type::name(), FG_ERRNO_GFX_SHADER_NO_MAIN_SECTION);
         return FG_FALSE;
     }
     {
@@ -191,18 +190,18 @@ fgBool fgGfxShaderConfig::_parseData(fgGfxSLVersion SLver) {
     // Check if the shader supports that shading language
     fgCfgSection *slVersionSection = getSection(slVerSubSectionName);
     if(!slVersionSection) {
-        reportError(FG_ERRNO_GFX_SHADER_NOT_SUPPORTED_SLVER, "path[%s]", m_configPath.c_str());
+        FG_MessageSubsystem->reportError(tag_type::name(), FG_ERRNO_GFX_SHADER_NOT_SUPPORTED_SLVER, "path[%s]", m_configPath.c_str());
         return FG_FALSE;
     } else if(!slVersionSection->parametersMap.size()) {
         // there is such section but it does not provide the name of the valid configuration
-        reportError(FG_ERRNO_GFX_SHADER_WRONG_PARAM);
+        FG_MessageSubsystem->reportError(tag_type::name(), FG_ERRNO_GFX_SHADER_WRONG_PARAM);
         return FG_FALSE;
     }
     // Get the name of the configuration based on shading language version
     {
         fgCfgParameter *param = slVersionSection->getParameter("configuration", FG_CFG_PARAMETER_STRING);
         if(!param) {
-            reportError(FG_ERRNO_GFX_SHADER_WRONG_PARAM);
+            FG_MessageSubsystem->reportError(tag_type::name(), FG_ERRNO_GFX_SHADER_WRONG_PARAM);
             return FG_FALSE;
         }
         m_selectedConfigName = param->string;
@@ -228,12 +227,12 @@ fgBool fgGfxShaderConfig::_parseData(fgGfxSLVersion SLver) {
         if(!param) {
             // no shader type specified - it has to be explicitly stated in config
             // even if the file extension points to shader type
-            reportError(FG_ERRNO_GFX_SHADER_NO_TYPE);
+            FG_MessageSubsystem->reportError(tag_type::name(), FG_ERRNO_GFX_SHADER_NO_TYPE);
             return FG_FALSE;
         }
         fgGfxShaderType _shadertype = FG_GFX_SHADER_TYPE_FROM_TEXT(param->string);
         if(_shadertype == fgGfxShaderType::FG_GFX_SHADER_INVALID) {
-            reportError(FG_ERRNO_GFX_SHADER_WRONG_TYPE);
+            FG_MessageSubsystem->reportError(tag_type::name(), FG_ERRNO_GFX_SHADER_WRONG_TYPE);
             return FG_FALSE;
         }
         m_shaderTypes.push_back(_shadertype);
@@ -261,7 +260,7 @@ fgBool fgGfxShaderConfig::_parseData(fgGfxSLVersion SLver) {
         _tmp.clear();
         if(!cfgSpecSection) {
             // This is bad - specific config with file/quality list was not found
-            reportError(FG_ERRNO_GFX_SHADER_NO_FILE_SECTION);
+            FG_MessageSubsystem->reportError(tag_type::name(), FG_ERRNO_GFX_SHADER_NO_FILE_SECTION);
             return FG_FALSE;
         }
         fgVector<std::string> _helperVec;
@@ -294,7 +293,7 @@ fgBool fgGfxShaderConfig::_parseData(fgGfxSLVersion SLver) {
         }
         if(!foundFile || !foundQuality) {
             // Did not find parameters for quality or file
-            reportError(FG_ERRNO_GFX_SHADER_NO_FILEQ_PARAMS);
+            FG_MessageSubsystem->reportError(tag_type::name(), FG_ERRNO_GFX_SHADER_NO_FILEQ_PARAMS);
             return FG_FALSE;
         }
         //
@@ -308,7 +307,7 @@ fgBool fgGfxShaderConfig::_parseData(fgGfxSLVersion SLver) {
             getSectionsWith(_attributes, _tmp.c_str());
             if(_attributes.empty()) {
                 // error - attributes are required - minimum one
-                reportError(FG_ERRNO_GFX_SHADER_NO_ATTRIBUTES);
+                FG_MessageSubsystem->reportError(tag_type::name(), FG_ERRNO_GFX_SHADER_NO_ATTRIBUTES);
                 return FG_FALSE;
             }
             // !! data type for attribute (GL) possible values:
@@ -318,7 +317,7 @@ fgBool fgGfxShaderConfig::_parseData(fgGfxSLVersion SLver) {
                 fgGfxAttributeBind _bind;
                 _bind.type = FG_GFX_ATTRIBUTE_TYPE_FROM_TEXT(_attributes[i]->subName.c_str());
                 if(_bind.type == FG_GFX_ATTRIBUTE_INVALID) {
-                    reportWarning(FG_ERRNO_GFX_SHADER_WRONG_ATTRIBUTE);
+                    FG_MessageSubsystem->reportWarning(tag_type::name(), FG_ERRNO_GFX_SHADER_WRONG_ATTRIBUTE);
                     continue;
                 }
                 // This will also set the proper location and data type
@@ -328,7 +327,7 @@ fgBool fgGfxShaderConfig::_parseData(fgGfxSLVersion SLver) {
                 _aprecision = _attributes[i]->getParameter("precision", FG_CFG_PARAMETER_STRING);
                 if(!_aname) {
                     // This attribute definition section is malformed
-                    reportWarning(FG_ERRNO_GFX_SHADER_WRONG_ATTRIBUTE);
+                    FG_MessageSubsystem->reportWarning(tag_type::name(), FG_ERRNO_GFX_SHADER_WRONG_ATTRIBUTE);
                     continue;
                 }
                 _bind.precision = FG_GFX_PRECISION_DEFAULT;
@@ -358,7 +357,7 @@ fgBool fgGfxShaderConfig::_parseData(fgGfxSLVersion SLver) {
             if(_bind.type == FG_GFX_UNIFORM_INVALID) {
                 // Not a valid / supported uniform type - can ignore it ? Pass empty data to it?
                 // #FIXME
-                reportWarning(FG_ERRNO_GFX_SHADER_WRONG_UNIFORM, "name=[%s]", _uniforms[i]->subName.c_str());
+                FG_MessageSubsystem->reportWarning(tag_type::name(), FG_ERRNO_GFX_SHADER_WRONG_UNIFORM, "name=[%s]", _uniforms[i]->subName.c_str());
                 continue;
             }
             fgCfgParameter *_uname = NULL, *_uprecision = NULL;
@@ -367,7 +366,7 @@ fgBool fgGfxShaderConfig::_parseData(fgGfxSLVersion SLver) {
             _uprecision = _uniforms[i]->getParameter("precision", FG_CFG_PARAMETER_STRING);
             if(!_uname) {
                 // This uniform definition section is malformed
-                reportWarning(FG_ERRNO_GFX_SHADER_WRONG_UNIFORM, "name=[%s]", _uniforms[i]->subName.c_str());
+                FG_MessageSubsystem->reportWarning(tag_type::name(), FG_ERRNO_GFX_SHADER_WRONG_UNIFORM, "name=[%s]", _uniforms[i]->subName.c_str());
                 continue;
             }
             _bind.precision = FG_GFX_PRECISION_DEFAULT;
@@ -385,7 +384,7 @@ fgBool fgGfxShaderConfig::_parseData(fgGfxSLVersion SLver) {
         param = mainSection->getParameter("programName", FG_CFG_PARAMETER_STRING);
         if(!param) {
             // this is kinda big error, the program name (string handle ID) is not specified
-            reportError(FG_ERRNO_GFX_SHADER_NO_PROG_NAME);
+            FG_MessageSubsystem->reportError(tag_type::name(), FG_ERRNO_GFX_SHADER_NO_PROG_NAME);
             return FG_FALSE;
         }
         m_programName = param->string;
@@ -426,7 +425,7 @@ fgBool fgGfxShaderConfig::_parseData(fgGfxSLVersion SLver) {
         // specific configuration procedures for compute shader
 #endif
     }
-    reportSuccess(FG_ERRNO_GFX_OK, "GFX: Shader config loaded successfully: '%s'", fgPath::fileName(m_configPath.c_str()));
+    FG_MessageSubsystem->reportSuccess(tag_type::name(), FG_ERRNO_GFX_OK, "GFX: Shader config loaded successfully: '%s'", fgPath::fileName(m_configPath.c_str()));
     if(m_configType == FG_GFX_SHADER_CONFIG_PROGRAM) {
         FG_LOG_DEBUG("GFX: Shader config for program loaded; name[%s], file[%s]", m_programName.c_str(), fgPath::fileName(m_configPath.c_str()));
     } else {

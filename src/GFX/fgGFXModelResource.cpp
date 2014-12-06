@@ -175,7 +175,6 @@ fgBool fgGfxModelResource::create(void) {
     if(m_isReady || !isDisposed()) {
         return FG_TRUE;
     }
-    clearStatus();
     m_size = 0;
     if(getFilePath(m_quality).empty()) {
         FG_LOG::PrintError("%s(%d): file path is empty on create", fgPath::fileName(__FILE__), __LINE__ - 1);
@@ -201,7 +200,8 @@ fgBool fgGfxModelResource::create(void) {
                 return FG_FALSE;
             }
             m_isReady = FG_TRUE;
-            reportSuccess(FG_ERRNO_RESOURCE_OK, "Successfully loaded an OBJ model file: '%s'", getFilePathStr());
+            // #FIXME - special tag type for Gfx Model Resource !
+            FG_MessageSubsystem->reportSuccess(tag_type::name(), FG_ERRNO_RESOURCE_OK, "Successfully loaded an OBJ model file: '%s'", getFilePathStr());
             break;
 
         case FG_GFX_MODEL_RES_BLEND:

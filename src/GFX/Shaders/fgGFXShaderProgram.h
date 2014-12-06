@@ -17,7 +17,6 @@
 
     #include "Util/fgHandle.h"
     #include "Util/fgTag.h"
-    #include "fgStatusReporter.h"
     #include "fgVector.h"
 
     #include "GFX/fgGFXMVPMatrix.h"
@@ -37,30 +36,35 @@ typedef FG_TAG_GFX_SHADER_PROGRAM fgGfxShaderProgramTag;
 //
 typedef fgGFXuint fgGfxProgramObjParamType;
 
+// #FIXME
 // GL_TRUE if program is currently flagged for deletion, and GL_FALSE otherwise.
-    #define	FG_GFX_PROGRAM_DELETE_STATUS					GL_DELETE_STATUS
+    #define	FG_GFX_PROGRAM_DELETE_STATUS                GL_DELETE_STATUS
 // GL_TRUE if the last link operation on program was successful, and GL_FALSE otherwise.
-    #define	FG_GFX_PROGRAM_LINK_STATUS					GL_LINK_STATUS
+    #define	FG_GFX_PROGRAM_LINK_STATUS                  GL_LINK_STATUS
 // GL_TRUE or if the last validation operation on program was successful, and GL_FALSE otherwise.
-    #define FG_GFX_PROGRAM_VALIDATE_STATUS					GL_VALIDATE_STATUS
+    #define FG_GFX_PROGRAM_VALIDATE_STATUS                  GL_VALIDATE_STATUS
 // the number of characters in the information log for program including the null termination
-// character (i.e., the size of the character buffer required to store the informationlog). 
+// character (i.e., the size of the character buffer required to store the information log). 
 // If program has no information log, a value of 0 is returned.
-    #define FG_GFX_PROGRAM_INFO_LOG_LENGTH					GL_INFO_LOG_LENGTH
+    #define FG_GFX_PROGRAM_INFO_LOG_LENGTH                  GL_INFO_LOG_LENGTH
 // the number of shader objects attached to program.
-    #define FG_GFX_PROGRAM_ATTACHED_SHADERS					GL_ATTACHED_SHADERS
+    #define FG_GFX_PROGRAM_ATTACHED_SHADERS                 GL_ATTACHED_SHADERS
 // number of active attribute variables for program
-    #define FG_GFX_PROGRAM_ACTIVE_ATTRIBUTES				GL_ACTIVE_ATTRIBUTES
+    #define FG_GFX_PROGRAM_ACTIVE_ATTRIBUTES                GL_ACTIVE_ATTRIBUTES
 // the length of the longest active attribute name for program, including the null termination character
-    #define FG_GFX_PROGRAM_ACTIVE_ATTRIBUTE_MAX_LENGTH                      GL_ACTIVE_ATTRIBUTE_MAX_LENGTH
+    #define FG_GFX_PROGRAM_ACTIVE_ATTRIBUTE_MAX_LENGTH      GL_ACTIVE_ATTRIBUTE_MAX_LENGTH
 // the number of active uniform variables
-    #define FG_GFX_PROGRAM_ACTIVE_UNIFORMS					GL_ACTIVE_UNIFORMS
+    #define FG_GFX_PROGRAM_ACTIVE_UNIFORMS                  GL_ACTIVE_UNIFORMS
 
 /*
  *
  */
-class fgGfxShaderProgram : public fgGfxShaderBase, public fgStatusReporter<fgGfxShaderProgramTag> {
+class fgGfxShaderProgram : public fgGfxShaderBase {
     friend class fgGfxShaderManager;
+public:
+    typedef fgGfxShaderBase base_type;
+    typedef fgGfxShaderProgramTag tag_type;
+    
 protected:
 
     enum {

@@ -23,7 +23,6 @@ m_shadersPath(),
 m_isPreloadDone(FG_FALSE) {
     m_shadersDir = new fgDirent();
     m_managerType = FG_MANAGER_GFX_SHADER;
-    setReportToMsgSystem(FG_TRUE);
     m_init = FG_FALSE;
 }
 
@@ -38,7 +37,6 @@ fgGfxShaderManager::~fgGfxShaderManager() {
  *
  */
 void fgGfxShaderManager::clear(void) {
-    fgGfxShaderManager::clearStatus();
     m_currentProgram = NULL;
     m_shadersPath.clear();
     releaseAllHandles();
@@ -92,7 +90,6 @@ fgBool fgGfxShaderManager::preLoadShaders(void) {
         return FG_FALSE;
     if(m_isPreloadDone)
         return FG_TRUE;
-    fgGfxShaderManager::clearStatus();
     if(m_shadersPath.empty()) {
         FG_LOG_ERROR("GFX: Shaders path is not set");
         return FG_FALSE;
@@ -322,7 +319,6 @@ void fgGfxShaderManager::setShadersPath(const char *path) {
  *
  */
 fgBool fgGfxShaderManager::compileShaders(void) {
-    fgGfxShaderManager::clearStatus();
     if(!m_init) {
         return FG_FALSE;
     }
@@ -339,9 +335,9 @@ fgBool fgGfxShaderManager::compileShaders(void) {
         }
     }
     if(status)
-        reportSuccess(FG_ERRNO_GFX_OK, "All shader programs compiled successfully");
+        FG_MessageSubsystem->reportSuccess(tag_type::name(), FG_ERRNO_GFX_OK, "All shader programs compiled successfully");
     else
-        reportWarning(FG_ERRNO_GFX_OK, "Problem occurred when compiling shader programs");
+        FG_MessageSubsystem->reportWarning(tag_type::name(), FG_ERRNO_GFX_OK, "Problem occurred when compiling shader programs");
     return status;
 }
 
@@ -349,7 +345,6 @@ fgBool fgGfxShaderManager::compileShaders(void) {
  *
  */
 fgBool fgGfxShaderManager::linkShaders(void) {
-    fgGfxShaderManager::clearStatus();
     if(!m_init) {
         return FG_FALSE;
     }
@@ -366,9 +361,9 @@ fgBool fgGfxShaderManager::linkShaders(void) {
         }
     }
     if(status)
-        reportSuccess(FG_ERRNO_GFX_OK, "All shader programs linked successfully");
+        FG_MessageSubsystem->reportSuccess(tag_type::name(), FG_ERRNO_GFX_OK, "All shader programs linked successfully");
     else
-        reportWarning(FG_ERRNO_GFX_OK, "Problem occurred when linking shader programs");
+        FG_MessageSubsystem->reportWarning(tag_type::name(), FG_ERRNO_GFX_OK, "Problem occurred when linking shader programs");
     return status;
 }
 
@@ -376,7 +371,6 @@ fgBool fgGfxShaderManager::linkShaders(void) {
  *
  */
 fgBool fgGfxShaderManager::allReleaseGFX(void) {
-    fgGfxShaderManager::clearStatus();
     if(!m_init) {
         return FG_FALSE; // ERROR ?
     }
@@ -393,9 +387,9 @@ fgBool fgGfxShaderManager::allReleaseGFX(void) {
         }
     }
     if(status)
-        reportSuccess(FG_ERRNO_GFX_OK, "All shader programs released successfully");
+        FG_MessageSubsystem->reportSuccess(tag_type::name(), FG_ERRNO_GFX_OK, "All shader programs released successfully");
     else
-        reportWarning(FG_ERRNO_GFX_OK, "Problem occurred when releasing shader programs");
+        FG_MessageSubsystem->reportWarning(tag_type::name(), FG_ERRNO_GFX_OK, "Problem occurred when releasing shader programs");
     return status;
 }
 

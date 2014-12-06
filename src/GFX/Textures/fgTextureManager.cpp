@@ -23,10 +23,10 @@ m_pResourceMgr(NULL),
 m_pEventMgr(NULL),
 m_resourceCreatedCallback(NULL),
 m_allInVRAM(FG_FALSE) {
-    fgStatusReporter::setReportToMsgSystem(FG_TRUE);
+//    fgStatusReporter::setReportToMsgSystem(FG_TRUE);
     m_pResourceMgr = NULL;
     if(!pResourceMgr) {
-        setErrorCode(FG_ERRNO_WRONG_PARAM);
+        //setErrorCode(FG_ERRNO_WRONG_PARAM);
         m_init = FG_FALSE;
     } else if(pResourceMgr->getManagerType() == FG_MANAGER_RESOURCE) {
         m_pResourceMgr = pResourceMgr;

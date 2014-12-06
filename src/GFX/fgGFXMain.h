@@ -21,7 +21,6 @@
     #include "fgGFX3DScene.h"
     #include "fgGFX2DScene.h"
 
-    #include "fgStatusReporter.h"
     #include "Util/fgTag.h"
 
     #include "Particles/fgParticleSystem.h"

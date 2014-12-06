@@ -164,8 +164,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/_ext/1386528437/fgGameMain.o \
 	${OBJECTDIR}/_ext/1386528437/fgLog.o \
 	${OBJECTDIR}/_ext/1386528437/fgMainModule.o \
-	${OBJECTDIR}/_ext/1386528437/fgMessageSubsystem.o \
-	${OBJECTDIR}/_ext/1386528437/fgStatusReporter.o
+	${OBJECTDIR}/_ext/1386528437/fgMessageSubsystem.o
 
 
 # C Compiler Flags
@@ -843,11 +842,6 @@ ${OBJECTDIR}/_ext/1386528437/fgMessageSubsystem.o: ../../../src/fgMessageSubsyst
 	${MKDIR} -p ${OBJECTDIR}/_ext/1386528437
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -s -DFG_NO_UNDEF -DFG_USING_GLEW -DFG_USING_GLM -DFG_USING_LUA_PLUS -DFG_USING_OPENGL -DFG_USING_OPENGL_GLEW -DFG_USING_SDL2 -DFG_USING_TINYXML -DTIXML_USE_STL -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src `pkg-config --cflags gl` `pkg-config --cflags glew` `pkg-config --cflags sdl2` `pkg-config --cflags SDL2_mixer` `pkg-config --cflags libpng` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1386528437/fgMessageSubsystem.o ../../../src/fgMessageSubsystem.cpp
-
-${OBJECTDIR}/_ext/1386528437/fgStatusReporter.o: ../../../src/fgStatusReporter.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/1386528437
-	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -s -DFG_NO_UNDEF -DFG_USING_GLEW -DFG_USING_GLM -DFG_USING_LUA_PLUS -DFG_USING_OPENGL -DFG_USING_OPENGL_GLEW -DFG_USING_SDL2 -DFG_USING_TINYXML -DTIXML_USE_STL -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src `pkg-config --cflags gl` `pkg-config --cflags glew` `pkg-config --cflags sdl2` `pkg-config --cflags SDL2_mixer` `pkg-config --cflags libpng` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1386528437/fgStatusReporter.o ../../../src/fgStatusReporter.cpp
 
 # Subprojects
 .build-subprojects:

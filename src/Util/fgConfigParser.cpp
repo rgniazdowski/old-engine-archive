@@ -10,6 +10,7 @@
 #include "fgConfigParser.h"
 #include "fgMemory.h"
 #include "fgStrings.h"
+#include "fgMessageSubsystem.h"
 
 /*
  * Default constructor for config parser object
@@ -57,7 +58,6 @@ fgBool fgConfigParser::splitSectionName(std::string &fullSectionName, std::strin
  * Load config and store all parameters in given section map
  */
 fgBool fgConfigParser::load(const char *filePath, fgCfgTypes::sectionMap &sectionMap) {
-    fgStatusReporter::clearStatus();
     if(m_fileBuffer)
         fgFree(m_fileBuffer);
     if(filePath == NULL) {
@@ -78,7 +78,7 @@ fgBool fgConfigParser::load(const char *filePath, fgCfgTypes::sectionMap &sectio
 fgBool fgConfigParser::parseData(const char *data, fgCfgTypes::sectionMap &sectionMap) {
     if(!data) {
         if(!m_fileBuffer) {
-            reportError(FG_WARNING, "Parse data file buffer error - null");
+            FG_MessageSubsystem->reportError(tag_type::name(), FG_WARNING, "Parse data file buffer error - null");
             return FG_FALSE;
         }
         data = m_fileBuffer;
@@ -188,5 +188,4 @@ void fgConfigParser::freeData(void) {
         fgFree(m_fileBuffer);
     m_fileSize = 0;
     m_fileBuffer = NULL;
-    fgStatusReporter::clearStatus();
 }

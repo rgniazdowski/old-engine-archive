@@ -11,6 +11,8 @@
 #include "fgFileErrorCodes.h"
 
 #include "fgMemory.h"
+#include "fgLog.h"
+#include "fgMessageSubsystem.h"
 
 #include <cstdarg>
 #include <cstdio>
@@ -59,7 +61,6 @@ m_modeFlags(FG_FILE_MODE_READ | FG_FILE_MODE_BINARY) {
 fgFile::~fgFile() {
     close();
     m_filePath.clear();
-    clearStatus();
 }
 
 /*
@@ -110,34 +111,36 @@ const char *fgFile::modeStr(fgFileMode mode) {
  */
 fgBool fgFile::open(const char *filePath, fgFileMode mode) {
     if(filePath == NULL) {
-        reportWarning(FG_ERRNO_FILE_NO_PATH, "%s", filePath);
+        FG_MessageSubsystem->reportWarning(tag_type::name(), FG_ERRNO_FILE_NO_PATH);
+        //FG_LOG_WARNING("%s: No file path specified", tag_type::name())
         return FG_FALSE;
     }
     if(m_file != NULL) {
-        reportError(FG_ERRNO_FILE_ALREADY_OPEN, "%s", filePath);
+        FG_MessageSubsystem->reportError(tag_type::name(), FG_ERRNO_FILE_ALREADY_OPEN, "%s", filePath);
+        //FG_LOG_ERROR("%s: File is already open: '%s'");
         return FG_FALSE;
     }
     if(strlen(filePath) <= 1) {
-        reportWarning(FG_ERRNO_FILE_NO_PATH, "%s", filePath);
+        FG_MessageSubsystem->reportWarning(tag_type::name(), FG_ERRNO_FILE_NO_PATH, "%s", filePath);
         return FG_FALSE;
     }
     if(mode == FG_FILE_MODE_READ ||
        mode == (FG_FILE_MODE_READ | FG_FILE_MODE_BINARY) ||
        mode & FG_FILE_MODE_READ_UPDATE) {
         if(!exists(filePath)) {
-            reportError(FG_ERRNO_FILE_DOESNT_EXIST, "%s", filePath);
+            FG_MessageSubsystem->reportError(tag_type::name(), FG_ERRNO_FILE_DOESNT_EXIST, "%s", filePath);
             return FG_FALSE;
         }
     }
-    fgStatusReporter::clearStatus();
+    
     FG_ERRNO_CLEAR();
     m_file = fopen(filePath, modeStr(mode));
 
     if(m_file == NULL) {
         if(FG_ERRNO)
-            reportError(FG_ERRNO, "%s", filePath);
+            FG_MessageSubsystem->reportError(tag_type::name(), FG_ERRNO, "%s", filePath);
         else
-            reportError(FG_ERRNO_FILE_OPEN_FAILED, "%s", filePath);
+            FG_MessageSubsystem->reportError(tag_type::name(), FG_ERRNO_FILE_OPEN_FAILED, "%s", filePath);
         return FG_FALSE;
     }
     setPath(filePath);
@@ -150,7 +153,7 @@ fgBool fgFile::open(const char *filePath, fgFileMode mode) {
  */
 fgBool fgFile::open(fgFileMode mode) {
     if(mode == FG_FILE_MODE_NONE) {
-        reportWarning(FG_ERRNO_FILE_WRONG_MODE, "%s", m_filePath.c_str());
+        FG_MessageSubsystem->reportWarning(tag_type::name(), FG_ERRNO_FILE_WRONG_MODE, "%s", m_filePath.c_str());
         return FG_FALSE;
     }
     return open(m_filePath.c_str(), mode);
@@ -176,9 +179,9 @@ fgBool fgFile::close(void) {
     if(m_file != NULL) {
         if(fclose(m_file) == FG_EOF) {
             if(FG_ERRNO)
-                reportError(FG_ERRNO, "%s", m_filePath.c_str());
+                FG_MessageSubsystem->reportError(tag_type::name(), FG_ERRNO, "%s", m_filePath.c_str());
             else
-                reportError(FG_ERRNO_FILE_CLOSING, "%s", m_filePath.c_str());
+                FG_MessageSubsystem->reportError(tag_type::name(), FG_ERRNO_FILE_CLOSING, "%s", m_filePath.c_str());
             m_file = NULL;
             return FG_FALSE;
         }
@@ -202,20 +205,20 @@ fgBool fgFile::isOpen(void) const {
  */
 char *fgFile::load(const char *filePath) {
     if(!isOpen() && !open(filePath, FG_FILE_MODE_READ | FG_FILE_MODE_BINARY)) {
-        reportWarning(FG_ERRNO_FILE_ALREADY_OPEN, "%s", filePath);
+        FG_MessageSubsystem->reportWarning(tag_type::name(), FG_ERRNO_FILE_ALREADY_OPEN, "%s", filePath);
         return NULL;
     }
 
     int fileSize = getSize();
     if(fileSize < 0) {
-        reportWarning(FG_ERRNO_FILE_ERROR_SIZE, "%s", filePath);
+        FG_MessageSubsystem->reportWarning(tag_type::name(), FG_ERRNO_FILE_ERROR_SIZE, "%s", filePath);
         close();
         return NULL;
     }
     // #FIXME
     char *fileBuffer = fgMalloc<char>(fileSize + 1);
     if(fileBuffer == NULL) {
-        reportError(FG_ERRNO, "%s", filePath); // #FIXME - memory error codes
+        FG_MessageSubsystem->reportError(tag_type::name(), FG_ERRNO, "%s", filePath); // #FIXME - memory error codes
         close();
         return NULL;
     }
@@ -223,7 +226,7 @@ char *fgFile::load(const char *filePath) {
     int bytesRead = read(fileBuffer, 1, fileSize);
     fileBuffer[fileSize] = '\0';
     if(bytesRead != (int)fileSize) {
-        reportWarning(FG_ERRNO_FILE_READ_COUNT, "%s", filePath);
+        FG_MessageSubsystem->reportWarning(tag_type::name(), FG_ERRNO_FILE_READ_COUNT, "%s", filePath);
         fgFree(fileBuffer);
         fileBuffer = NULL;
         fileSize = 0;
@@ -239,7 +242,7 @@ char *fgFile::load(const char *filePath) {
  */
 char *fgFile::load(void) {
     if(m_filePath.empty()) {
-        reportWarning(FG_ERRNO_FILE_NO_PATH, "%s", m_filePath.c_str());
+        FG_MessageSubsystem->reportWarning(tag_type::name(), FG_ERRNO_FILE_NO_PATH, "%s", m_filePath.c_str());
         return NULL;
     }
     return load(m_filePath.c_str());
@@ -250,7 +253,7 @@ char *fgFile::load(void) {
  */
 int fgFile::read(void *buffer, unsigned int elemsize, unsigned int elemcount) {
     if(buffer == NULL || elemsize == 0 || elemcount == 0 || m_file == NULL) {
-        reportWarning(FG_ERRNO_FILE_WRONG_PARAMETERS, "%s", m_filePath.c_str());
+        FG_MessageSubsystem->reportWarning(tag_type::name(), FG_ERRNO_FILE_WRONG_PARAMETERS, "%s", m_filePath.c_str());
         return 0;
     }
     FG_ERRNO_CLEAR();
@@ -259,8 +262,8 @@ int fgFile::read(void *buffer, unsigned int elemsize, unsigned int elemcount) {
 
     if(elemRead != elemcount) {
         if(ferror(m_file) && FG_ERRNO)
-            reportError(FG_ERRNO, "%s", m_filePath.c_str());
-        reportWarning(FG_ERRNO_FILE_READ_COUNT, "%s", m_filePath.c_str());
+            FG_MessageSubsystem->reportError(tag_type::name(), FG_ERRNO, "%s", m_filePath.c_str());
+        FG_MessageSubsystem->reportWarning(tag_type::name(), FG_ERRNO_FILE_READ_COUNT, "%s", m_filePath.c_str());
     }
     return elemRead;
 }
@@ -270,7 +273,7 @@ int fgFile::read(void *buffer, unsigned int elemsize, unsigned int elemcount) {
  */
 char *fgFile::readString(char *buffer, unsigned int maxlen) {
     if(buffer == NULL || maxlen == 0 || m_file == NULL) {
-        reportWarning(FG_ERRNO_FILE_WRONG_PARAMETERS);
+        FG_MessageSubsystem->reportWarning(tag_type::name(), FG_ERRNO_FILE_WRONG_PARAMETERS);
         return NULL;
     }
     FG_ERRNO_CLEAR();
@@ -278,10 +281,10 @@ char *fgFile::readString(char *buffer, unsigned int maxlen) {
     char *retString = fgets(buffer, maxlen, m_file);
     if(retString == NULL) {
         if(ferror(m_file) && FG_ERRNO)
-            reportError(FG_ERRNO);
+            FG_MessageSubsystem->reportError(tag_type::name(), FG_ERRNO);
         else
-            reportError(FG_ERRNO_FILE_ERROR_READ);
-        reportWarning(FG_ERRNO_FILE_ERROR_STRING);
+            FG_MessageSubsystem->reportError(tag_type::name(), FG_ERRNO_FILE_ERROR_READ);
+        FG_MessageSubsystem->reportWarning(tag_type::name(), FG_ERRNO_FILE_ERROR_STRING);
     }
     return retString;
 }
@@ -291,7 +294,7 @@ char *fgFile::readString(char *buffer, unsigned int maxlen) {
  */
 int fgFile::print(const char *fmt, ...) {
     if(fmt == NULL || m_file == NULL) {
-        reportWarning(FG_ERRNO_FILE_WRONG_PARAMETERS);
+        FG_MessageSubsystem->reportWarning(tag_type::name(), FG_ERRNO_FILE_WRONG_PARAMETERS);
         return -1;
     }
 
@@ -307,9 +310,9 @@ int fgFile::print(const char *fmt, ...) {
     int charsCount = fprintf(m_file, buf);
     if(ferror(m_file)) {
         if(FG_ERRNO)
-            reportError(FG_ERRNO);
+            FG_MessageSubsystem->reportError(tag_type::name(), FG_ERRNO);
         else
-            reportError(FG_ERRNO_FILE_ERROR_WRITE);
+            FG_MessageSubsystem->reportError(tag_type::name(), FG_ERRNO_FILE_ERROR_WRITE);
     }
     return charsCount;
 }
@@ -319,7 +322,7 @@ int fgFile::print(const char *fmt, ...) {
  */
 int fgFile::write(void *buffer, unsigned int elemsize, unsigned int elemcount) {
     if(m_file == NULL || buffer == NULL || elemsize == 0 || elemcount == 0) {
-        reportWarning(FG_ERRNO_FILE_WRONG_PARAMETERS);
+        FG_MessageSubsystem->reportWarning(tag_type::name(), FG_ERRNO_FILE_WRONG_PARAMETERS);
         return -1;
     }
     FG_ERRNO_CLEAR();
@@ -327,10 +330,10 @@ int fgFile::write(void *buffer, unsigned int elemsize, unsigned int elemcount) {
     unsigned int elemWritten = (unsigned int)fwrite(buffer, elemsize, elemcount, m_file);
     if(elemWritten != elemcount) {
         if(ferror(m_file) && FG_ERRNO)
-            reportError(FG_ERRNO);
+            FG_MessageSubsystem->reportError(tag_type::name(), FG_ERRNO);
         else
-            reportError(FG_ERRNO_FILE_ERROR_WRITE);
-        reportWarning(FG_ERRNO_FILE_WRITE_COUNT);
+            FG_MessageSubsystem->reportError(tag_type::name(), FG_ERRNO_FILE_ERROR_WRITE);
+        FG_MessageSubsystem->reportWarning(tag_type::name(), FG_ERRNO_FILE_WRITE_COUNT);
     }
 
     return elemWritten;
@@ -341,11 +344,11 @@ int fgFile::write(void *buffer, unsigned int elemsize, unsigned int elemcount) {
  */
 int fgFile::puts(const char *str) {
     if(str == NULL) {
-        reportWarning(FG_ERRNO_FILE_WRONG_PARAMETERS);
+        FG_MessageSubsystem->reportWarning(tag_type::name(), FG_ERRNO_FILE_WRONG_PARAMETERS);
         return -1;
     }
     if(m_file == NULL) {
-        reportWarning(FG_ERRNO_FILE_NOT_OPENED);
+        FG_MessageSubsystem->reportWarning(tag_type::name(), FG_ERRNO_FILE_NOT_OPENED);
         return -1;
     }
 
@@ -354,9 +357,9 @@ int fgFile::puts(const char *str) {
     int status = fputs(str, m_file);
     if(status == FG_EOF) {
         if(ferror(m_file) && FG_ERRNO)
-            reportError(FG_ERRNO);
+            FG_MessageSubsystem->reportError(tag_type::name(), FG_ERRNO);
         else
-            reportError(FG_ERRNO_FILE_ERROR_WRITE);
+            FG_MessageSubsystem->reportError(tag_type::name(), FG_ERRNO_FILE_ERROR_WRITE);
     }
     return status;
 }
@@ -366,7 +369,7 @@ int fgFile::puts(const char *str) {
  */
 fgBool fgFile::isEOF(void) {
     if(m_file == NULL) {
-        reportWarning(FG_ERRNO_FILE_NOT_OPENED);
+        FG_MessageSubsystem->reportWarning(tag_type::name(), FG_ERRNO_FILE_NOT_OPENED);
         return FG_FALSE;
     }
     if(feof(m_file))
@@ -379,16 +382,16 @@ fgBool fgFile::isEOF(void) {
  */
 fgBool fgFile::flushFile(void) {
     if(m_file == NULL) {
-        reportWarning(FG_ERRNO_FILE_NOT_OPENED);
+        FG_MessageSubsystem->reportWarning(tag_type::name(), FG_ERRNO_FILE_NOT_OPENED);
         return FG_FALSE;
     }
     FG_ERRNO_CLEAR();
     clearerr(m_file);
     if(fflush(m_file) == 0) {
         if(ferror(m_file) && FG_ERRNO)
-            reportError(FG_ERRNO);
+            FG_MessageSubsystem->reportError(tag_type::name(), FG_ERRNO);
         else
-            reportError(FG_ERRNO_FILE_ERROR_FLUSH);
+            FG_MessageSubsystem->reportError(tag_type::name(), FG_ERRNO_FILE_ERROR_FLUSH);
         return FG_FALSE;
     }
     return FG_TRUE;
@@ -399,7 +402,7 @@ fgBool fgFile::flushFile(void) {
  */
 int fgFile::getChar(void) {
     if(m_file == NULL) {
-        reportWarning(FG_ERRNO_FILE_NOT_OPENED);
+        FG_MessageSubsystem->reportWarning(tag_type::name(), FG_ERRNO_FILE_NOT_OPENED);
         return -1;
     }
     FG_ERRNO_CLEAR();
@@ -407,12 +410,12 @@ int fgFile::getChar(void) {
     int charRead = fgetc(m_file);
     if(charRead == FG_EOF) {
         if(ferror(m_file) && FG_ERRNO) {
-            reportError(FG_ERRNO);
+            FG_MessageSubsystem->reportError(tag_type::name(), FG_ERRNO);
         } else {
-            reportError(FG_ERRNO_FILE_ERROR_READ);
+            FG_MessageSubsystem->reportError(tag_type::name(), FG_ERRNO_FILE_ERROR_READ);
         }
         if(feof(m_file))
-            reportWarning(FG_ERRNO_FILE_EOF);
+            FG_MessageSubsystem->reportWarning(tag_type::name(), FG_ERRNO_FILE_EOF);
     }
     return charRead;
 }
@@ -422,7 +425,7 @@ int fgFile::getChar(void) {
  */
 int fgFile::putChar(char c) {
     if(m_file == NULL) {
-        reportWarning(FG_ERRNO_FILE_NOT_OPENED);
+        FG_MessageSubsystem->reportWarning(tag_type::name(), FG_ERRNO_FILE_NOT_OPENED);
         return FG_EOF;
     }
     FG_ERRNO_CLEAR();
@@ -430,9 +433,9 @@ int fgFile::putChar(char c) {
     int charWrite = fputc(c, m_file);
     if(charWrite == FG_EOF) {
         if(ferror(m_file) && FG_ERRNO)
-            reportError(FG_ERRNO);
+            FG_MessageSubsystem->reportError(tag_type::name(), FG_ERRNO);
         else
-            reportError(FG_ERRNO_FILE_ERROR_WRITE);
+            FG_MessageSubsystem->reportError(tag_type::name(), FG_ERRNO_FILE_ERROR_WRITE);
     }
     return charWrite;
 }
@@ -442,7 +445,7 @@ int fgFile::putChar(char c) {
  */
 int fgFile::getSize(void) {
     if(m_file == NULL) {
-        reportWarning(FG_ERRNO_FILE_NOT_OPENED);
+        FG_MessageSubsystem->reportWarning(tag_type::name(), FG_ERRNO_FILE_NOT_OPENED);
         return -1;
     }
     long size = 0;
@@ -478,7 +481,7 @@ int fgFile::getSize(void) {
  */
 long fgFile::getPosition(void) {
     if(m_file == NULL) {
-        reportWarning(FG_ERRNO_FILE_NOT_OPENED);
+        FG_MessageSubsystem->reportWarning(tag_type::name(), FG_ERRNO_FILE_NOT_OPENED);
         return -1;
     }
     FG_ERRNO_CLEAR();
@@ -486,9 +489,9 @@ long fgFile::getPosition(void) {
     long position = ftell(m_file);
     if(position == -1L) {
         if(FG_ERRNO)
-            reportError(FG_ERRNO);
+            FG_MessageSubsystem->reportError(tag_type::name(), FG_ERRNO);
         else
-            reportError(FG_ERRNO_FILE_ERROR_TELL);
+            FG_MessageSubsystem->reportError(tag_type::name(), FG_ERRNO_FILE_ERROR_TELL);
         return -1L;
     }
     return position;
@@ -499,16 +502,16 @@ long fgFile::getPosition(void) {
  */
 int fgFile::setPosition(long offset, int whence) {
     if(m_file == NULL) {
-        reportWarning(FG_ERRNO_FILE_NOT_OPENED);
+        FG_MessageSubsystem->reportWarning(tag_type::name(), FG_ERRNO_FILE_NOT_OPENED);
         return -1;
     }
     FG_ERRNO_CLEAR();
     clearerr(m_file);
     if(fseek(m_file, offset, whence)) {
         if(ferror(m_file) && FG_ERRNO)
-            reportError(FG_ERRNO);
+            FG_MessageSubsystem->reportError(tag_type::name(), FG_ERRNO);
         else
-            reportError(FG_ERRNO_FILE_ERROR_SEEK);
+            FG_MessageSubsystem->reportError(tag_type::name(), FG_ERRNO_FILE_ERROR_SEEK);
         return -1;
     }
     return 0;

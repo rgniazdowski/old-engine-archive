@@ -14,7 +14,6 @@
     #include "fgCommon.h"
 
     #include "fgTag.h"
-    #include "fgStatusReporter.h"
 
 class fgFile;
 
@@ -74,7 +73,9 @@ FG_ENUM_FLAGS(fgFileMode);
 /*
  * Platform independent wrapper for basic file operations
  */
-class fgFile : public fgStatusReporter<fgFileTag> {
+class fgFile {
+public:
+    typedef fgFileTag tag_type;
 protected:
     // C standard file handle
     FILE *m_file;

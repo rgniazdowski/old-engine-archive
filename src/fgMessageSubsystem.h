@@ -15,56 +15,129 @@
     #include "fgStatus.h"
     #include "fgManagerBase.h"
 
-    #include <stack>
-    #include <map>
+    #include <stack>    
     #include "fgVector.h"
     #include "Util/fgFile.h"
 
     #include "fgLog.h"
 
-/*
+/**
  *
  */
 class fgMessageSubsystem : protected fgManagerBase, public fgSingleton<fgMessageSubsystem> {
     friend class fgSingleton<fgMessageSubsystem>;
+public:
+    typedef fgManagerBase base_type;
+    
 protected:
     typedef fgVector<fgStatus *> msStatusVec;
     typedef msStatusVec::iterator msStatusVecItor;
 
 protected:
-    // 
+    /**
+     * 
+     */
     fgMessageSubsystem();
-    // 
+    /**
+     * 
+     */
     virtual ~fgMessageSubsystem();
 
 public:
-    // 
+    /**
+     * 
+     * @return 
+     */
     fgBool initialize(void);
-    // 
+    /**
+     * 
+     */
     void clear(void);
-    // 
+    /**
+     * 
+     * @return 
+     */
     fgBool destroy(void);
 
-    //
+    /**
+     * 
+     * @param pathAll
+     * @param pathError
+     * @param pathDebug
+     */
     void setLogPaths(const char *pathAll, const char *pathError, const char *pathDebug);
-    // 
+    /**
+     * 
+     * @param pathAll
+     */
     void setLogAllPath(const char *pathAll);
-    // 
+    /**
+     * 
+     * @param pathError
+     */
     void setLogErrorPath(const char *pathError);
-    // 
+    /**
+     * 
+     * @param pathDebug
+     */
     void setLogDebugPath(const char *pathDebug);
-    // 
+    /**
+     * 
+     */
     void flushAll(void);
 
-    // 
+    /**
+     * 
+     * @param msg
+     * @return 
+     */
     fgBool pushMessage(fgMessage *msg);
-    // 
+    /**
+     * 
+     * @param status
+     * @return 
+     */
     fgBool pushStatus(fgStatus *status);
 
-    // 
+    /**
+     * 
+     * @return 
+     */
     fgStatus *getLastStatus(void);
-    // 
+    /**
+     * 
+     * @return 
+     */
     fgMessage *getLastMessage(void);
+
+    /**
+     * 
+     * @param tagName
+     * @param code
+     * @param fmt     
+     */
+    void reportSuccess(const char *tagName, int code = FG_ERRNO_OK, const char *fmt = NULL, ...);
+    /**
+     * 
+     * @param tagName
+     * @param code
+     * @param fmt     
+     */
+    void reportWarning(const char *tagName, int code = FG_ERRNO_OK, const char *fmt = NULL, ...);
+    /**
+     * 
+     * @param tagName
+     * @param code
+     * @param fmt     
+     */
+    void reportError(const char *tagName, int code = FG_ERRNO_OK, const char *fmt = NULL, ...);
+    /**
+     * 
+     * @param tagName
+     * @param code
+     * @param fmt     
+     */
+    void reportDebug(const char *tagName, int code = FG_ERRNO_OK, const char *fmt = NULL, ...);
 
 protected:
     //

@@ -10,7 +10,7 @@
 #include "fgGFXShader.h"
 #include "GFX/fgGFXErrorCodes.h"
 #include "Util/fgMemory.h"
-#include "fgLog.h"
+#include "fgMessageSubsystem.h"
 
 /*
  *
@@ -25,7 +25,7 @@ m_fileSource(NULL),
 m_precision(FG_GFX_SHADER_PRECISION_DEFAULT),
 m_isSourceLoaded(FG_FALSE) {
     if(m_type == fgGfxShaderType::FG_GFX_SHADER_INVALID)
-        reportError(FG_ERRNO_GFX_SHADER_WRONG_TYPE);
+        FG_MessageSubsystem->reportError(tag_type::name(), FG_ERRNO_GFX_SHADER_WRONG_TYPE);
     m_params[FG_GFX_SHADER_TYPE] = (int)m_type;
     m_params[FG_GFX_SHADER_DELETE_STATUS] = 0;
     m_params[FG_GFX_SHADER_COMPILE_STATUS] = 0;
@@ -92,13 +92,13 @@ void fgGfxShader::appendInclude(std::string & includeName) {
  * @return 
  */
 fgBool fgGfxShader::loadSource(void) {
-    fgFile::clearStatus();
+    
     if(getFilePath().empty()) {
-        reportWarning(FG_ERRNO_WRONG_PATH);
+        FG_MessageSubsystem->reportWarning(tag_type::name(), FG_ERRNO_WRONG_PATH);
         return FG_FALSE;
     }
     if(m_version == FG_GFX_SHADING_LANGUAGE_INVALID) {
-        reportError(FG_ERRNO_GFX_SHADER_INVALID_SLVER);
+        FG_MessageSubsystem->reportError(tag_type::name(), FG_ERRNO_GFX_SHADER_INVALID_SLVER);
         return FG_FALSE;
     }
     // do not reload the source (will need to attach again the rest of the defines / sources)
@@ -114,7 +114,7 @@ fgBool fgGfxShader::loadSource(void) {
     m_numSources = (int)m_includeStrVec.size() + m_defineStrVec.size() + 2;
     m_sources = (char const **)fgMalloc<char *>(m_numSources);
     if(!m_sources) {
-        reportError(FG_ERRNO_ENOMEM);
+        FG_MessageSubsystem->reportError(tag_type::name(), FG_ERRNO_ENOMEM);
         return FG_FALSE;
     }
     //std::string _version;
@@ -196,10 +196,9 @@ fgGFXuint fgGfxShader::create(void) {
  * @return 
  */
 fgBool fgGfxShader::compile(void) {
-    fgFile::clearStatus();
     if(!m_isSourceLoaded) {
         if(!loadSource()) {
-            reportError(FG_ERRNO_EIO, "GFX: Failed to load shader source file.");
+            FG_MessageSubsystem->reportError(tag_type::name(), FG_ERRNO_EIO, "GFX: Failed to load shader source file.");
             // Failed to load shader source
             return FG_FALSE;
         }

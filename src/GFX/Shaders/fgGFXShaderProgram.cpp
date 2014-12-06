@@ -78,19 +78,18 @@ void fgGfxShaderProgram::clearAll(void) {
  *
  */
 fgBool fgGfxShaderProgram::preLoadConfig(const char *path) {
-    clearStatus();
     if(m_isPreLoaded) {
         return FG_FALSE;
     }
     setFilePath(path);
     const char *ext = fgPath::fileExt(path, FG_TRUE);
     if(!ext) {
-        reportError(FG_ERRNO_WRONG_PATH);
+        FG_MessageSubsystem->reportError(tag_type::name(), FG_ERRNO_WRONG_PATH);
         return FG_FALSE;
     }
 
     if(strcasecmp(ext, FG_GFX_SHADER_CONFIG_PROGRAM_STD_SUFFIX) != 0) {
-        reportError(FG_ERRNO_WRONG_PATH);
+        FG_MessageSubsystem->reportError(tag_type::name(), FG_ERRNO_WRONG_PATH);
         return FG_FALSE;
     }
 
@@ -153,7 +152,7 @@ fgBool fgGfxShaderProgram::preLoadConfig(const char *path) {
     delete m_config;
     m_config = NULL;
     m_isPreLoaded = FG_TRUE;
-    reportSuccess(FG_ERRNO_GFX_OK, "Shader program loaded successfully: '%s'", m_nameTag.c_str());
+    FG_MessageSubsystem->reportSuccess(tag_type::name(), FG_ERRNO_GFX_OK, "Shader program loaded successfully: '%s'", m_nameTag.c_str());
     FG_LOG_DEBUG("GFX: Shader program loaded: name[%s], config[%s]", m_nameTag.c_str(), path);
     ///////////////////////////////////////////////////////
     return FG_TRUE;
@@ -185,11 +184,11 @@ fgGFXuint fgGfxShaderProgram::create(void) {
  */
 fgBool fgGfxShaderProgram::compile(void) {
     if(!m_isPreLoaded) {
-        reportError(FG_ERRNO_EPERM, "Compile function called without loaded shader configuration");
+        FG_MessageSubsystem->reportError(tag_type::name(), FG_ERRNO_EPERM, "Compile function called without loaded shader configuration");
         return FG_FALSE;
     }
     if(m_isCompiled && FG_GFX_TRUE == glIsProgram(m_gfxID)) {
-        reportError(FG_ERRNO_EPERM, "Shader program is already compiled. Use option for forced recompilation.");
+        FG_MessageSubsystem->reportError(tag_type::name(), FG_ERRNO_EPERM, "Shader program is already compiled. Use option for forced recompilation.");
         return FG_FALSE;
     }
     if(!create()) {
@@ -215,7 +214,7 @@ fgBool fgGfxShaderProgram::compile(void) {
     }
     _attachShaders(); // status ?
     m_isCompiled = FG_TRUE;
-    reportSuccess(FG_ERRNO_GFX_OK, "Shaders for '%s' compiled successfully", getNameStr());
+    FG_MessageSubsystem->reportSuccess(tag_type::name(), FG_ERRNO_GFX_OK, "Shaders for '%s' compiled successfully", getNameStr());
     return FG_TRUE;
 }
 
@@ -223,7 +222,6 @@ fgBool fgGfxShaderProgram::compile(void) {
  *
  */
 fgBool fgGfxShaderProgram::link(void) {
-    clearStatus();
     if(m_isLinked || !m_isPreLoaded) {
         FG_LOG::PrintError("GFX: Shader is already linked / is not preloaded on link() for program '%s'", getNameStr());
         return FG_FALSE;
@@ -258,12 +256,12 @@ fgBool fgGfxShaderProgram::link(void) {
     updateParams();
     updateLog();
     if(status) {
-        reportSuccess(FG_ERRNO_GFX_OK, "GFX: Shader program '%s' linked with no errors", getNameStr());
+        FG_MessageSubsystem->reportSuccess(tag_type::name(), FG_ERRNO_GFX_OK, "GFX: Shader program '%s' linked with no errors", getNameStr());
     }
     m_isLinked = FG_TRUE;
     if(!bindUniforms()) {
         // ERROR CODES ! ! !
-        reportWarning(FG_ERRNO_EINVAL, "GFX: Failed to bind all uniforms in shader program '%s'", getNameStr());
+        FG_MessageSubsystem->reportWarning(tag_type::name(), FG_ERRNO_EINVAL, "GFX: Failed to bind all uniforms in shader program '%s'", getNameStr());
         status = FG_FALSE;
     }
     {
@@ -683,7 +681,8 @@ fgBool fgGfxShaderProgram::setUniform(fgGfxMVMatrix *matrix) {
 /*
  *
  */
-fgBool fgGfxShaderProgram::setUniform(fgGfxUniformType type, fgGFXfloat v0) {
+fgBool fgGfxShaderProgram::setUniform(fgGfxUniformType type,
+                                      fgGFXfloat v0) {
     fgGfxUniformBind * bind = getUniformBind(type);
     if(!bind)
         return FG_FALSE;
@@ -697,7 +696,9 @@ fgBool fgGfxShaderProgram::setUniform(fgGfxUniformType type, fgGFXfloat v0) {
 /*
  *
  */
-fgBool fgGfxShaderProgram::setUniform(fgGfxUniformType type, fgGFXfloat v0, fgGFXfloat v1) {
+fgBool fgGfxShaderProgram::setUniform(fgGfxUniformType type,
+                                      fgGFXfloat v0,
+                                      fgGFXfloat v1) {
     fgGfxUniformBind * bind = getUniformBind(type);
     if(!bind)
         return FG_FALSE;
@@ -711,7 +712,10 @@ fgBool fgGfxShaderProgram::setUniform(fgGfxUniformType type, fgGFXfloat v0, fgGF
 /*
  *
  */
-fgBool fgGfxShaderProgram::setUniform(fgGfxUniformType type, fgGFXfloat v0, fgGFXfloat v1, fgGFXfloat v2) {
+fgBool fgGfxShaderProgram::setUniform(fgGfxUniformType type,
+                                      fgGFXfloat v0,
+                                      fgGFXfloat v1, 
+                                      fgGFXfloat v2) {
     fgGfxUniformBind * bind = getUniformBind(type);
     if(!bind)
         return FG_FALSE;
@@ -725,7 +729,11 @@ fgBool fgGfxShaderProgram::setUniform(fgGfxUniformType type, fgGFXfloat v0, fgGF
 /*
  *
  */
-fgBool fgGfxShaderProgram::setUniform(fgGfxUniformType type, fgGFXfloat v0, fgGFXfloat v1, fgGFXfloat v2, fgGFXfloat v3) {
+fgBool fgGfxShaderProgram::setUniform(fgGfxUniformType type, 
+                                      fgGFXfloat v0, 
+                                      fgGFXfloat v1, 
+                                      fgGFXfloat v2, 
+                                      fgGFXfloat v3) {
     fgGfxUniformBind *bind = getUniformBind(type);
     if(!bind)
         return FG_FALSE;
@@ -739,7 +747,8 @@ fgBool fgGfxShaderProgram::setUniform(fgGfxUniformType type, fgGFXfloat v0, fgGF
 /*
  *
  */
-fgBool fgGfxShaderProgram::setUniform(fgGfxUniformType type, fgGFXint v0) {
+fgBool fgGfxShaderProgram::setUniform(fgGfxUniformType type,
+                                      fgGFXint v0) {
     fgGfxUniformBind *bind = getUniformBind(type);
     if(!bind)
         return FG_FALSE;
@@ -753,7 +762,9 @@ fgBool fgGfxShaderProgram::setUniform(fgGfxUniformType type, fgGFXint v0) {
 /*
  *
  */
-fgBool fgGfxShaderProgram::setUniform(fgGfxUniformType type, fgGFXint v0, fgGFXint v1) {
+fgBool fgGfxShaderProgram::setUniform(fgGfxUniformType type,
+                                      fgGFXint v0,
+                                      fgGFXint v1) {
     fgGfxUniformBind *bind = getUniformBind(type);
     if(!bind)
         return FG_FALSE;
@@ -767,7 +778,10 @@ fgBool fgGfxShaderProgram::setUniform(fgGfxUniformType type, fgGFXint v0, fgGFXi
 /*
  *
  */
-fgBool fgGfxShaderProgram::setUniform(fgGfxUniformType type, fgGFXint v0, fgGFXint v1, fgGFXint v2) {
+fgBool fgGfxShaderProgram::setUniform(fgGfxUniformType type,
+                                      fgGFXint v0, 
+                                      fgGFXint v1, 
+                                      fgGFXint v2) {
     fgGfxUniformBind *bind = getUniformBind(type);
     if(!bind)
         return FG_FALSE;
@@ -781,7 +795,11 @@ fgBool fgGfxShaderProgram::setUniform(fgGfxUniformType type, fgGFXint v0, fgGFXi
 /*
  *
  */
-fgBool fgGfxShaderProgram::setUniform(fgGfxUniformType type, fgGFXint v0, fgGFXint v1, fgGFXint v2, fgGFXint v3) {
+fgBool fgGfxShaderProgram::setUniform(fgGfxUniformType type,
+                                      fgGFXint v0,
+                                      fgGFXint v1,
+                                      fgGFXint v2, 
+                                      fgGFXint v3) {
     fgGfxUniformBind *bind = getUniformBind(type);
     if(!bind)
         return FG_FALSE;
@@ -795,7 +813,9 @@ fgBool fgGfxShaderProgram::setUniform(fgGfxUniformType type, fgGFXint v0, fgGFXi
 /*
  *
  */
-fgBool fgGfxShaderProgram::setUniform(fgGfxUniformType type, fgGFXsizei count, const fgGFXfloat *value) {
+fgBool fgGfxShaderProgram::setUniform(fgGfxUniformType type,
+                                      fgGFXsizei count, 
+                                      const fgGFXfloat *value) {
     fgGfxUniformBind *bind = getUniformBind(type);
     if(!bind)
         return FG_FALSE;
@@ -808,7 +828,9 @@ fgBool fgGfxShaderProgram::setUniform(fgGfxUniformType type, fgGFXsizei count, c
 /*
  *
  */
-fgBool fgGfxShaderProgram::setUniform(fgGfxUniformType type, fgGFXsizei count, const fgGFXint *value) {
+fgBool fgGfxShaderProgram::setUniform(fgGfxUniformType type,
+                                      fgGFXsizei count,
+                                      const fgGFXint *value) {
     fgGfxUniformBind *bind = getUniformBind(type);
     if(!bind)
         return FG_FALSE;

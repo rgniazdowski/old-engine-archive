@@ -20,7 +20,6 @@ fgConfigWriter::fgConfigWriter() { }
 fgConfigWriter::~fgConfigWriter() { }
 
 fgBool fgConfigWriter::save(const char *filePath, fgCfgTypes::sectionMap &sectionMap) {
-    fgStatusReporter::clearStatus();
     if(filePath == NULL) {
         if(m_filePath.empty())
             return FG_FALSE;
