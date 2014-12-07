@@ -106,6 +106,7 @@ assets
 	sound/mod/mod.dragonsfunk.mp3
 
     (data)
+    Asteroids.group.ini
 	Crystal1.group.ini
 	CobraBomber.group.ini
     CobraFighter.group.ini
@@ -249,10 +250,57 @@ assets
 	obj/CobraBomber/CobraBomber.obj
 
 	(data)
-	obj/MalHideout/MalHideout_512.jpg
-	obj/MalHideout/MalHideout_1024.jpg
-	obj/MalHideout/MalHideout.mtl
-	obj/MalHideout/MalHideout.obj
+	obj/Crystal1/Crystal1.obj
+	obj/Crystal1/Crystal1.mtl
+	obj/Crystal1/Crystal_512.jpg
+	obj/Crystal1/Crystal_1024.jpg
+
+	(data)
+	obj/Rocks/rock_d_01.mtl
+	obj/Rocks/rock_d_01_normal_512.jpg
+	obj/Rocks/rock_d_01.obj
+	obj/Rocks/rock_d_01_tex_AM1_512.jpg
+	obj/Rocks/rock_d_01_tex_AM4_512.jpg
+	obj/Rocks/rock_d_01_tex_AM5_512.jpg
+
+	(data)
+	obj/Rocks/rock_d_02.mtl
+	obj/Rocks/rock_d_02_normal_512.jpg
+	obj/Rocks/rock_d_02.obj
+	obj/Rocks/rock_d_02_tex_AM1_512.jpg
+	obj/Rocks/rock_d_02_tex_AM4_512.jpg
+	obj/Rocks/rock_d_02_tex_AM5_512.jpg
+
+	(data)
+	obj/Rocks/rock_d_03.mtl
+	obj/Rocks/rock_d_03_normal_512.jpg
+	obj/Rocks/rock_d_03.obj
+	obj/Rocks/rock_d_03_tex_AM1_512.jpg
+	obj/Rocks/rock_d_03_tex_AM4_512.jpg
+	obj/Rocks/rock_d_03_tex_AM5_512.jpg
+
+	(data)
+	obj/Rocks/rock_d_05.mtl
+	obj/Rocks/rock_d_05_normal_512.jpg
+	obj/Rocks/rock_d_05.obj
+	obj/Rocks/rock_d_05_tex_AM1_512.jpg
+	obj/Rocks/rock_d_05_tex_AM4_512.jpg
+	obj/Rocks/rock_d_05_tex_AM5_512.jpg
+	obj/Rocks/rock_d_05_tex_diff_512.jpg
+
+	(data)
+	obj/Rocks/rock_d_06.mtl
+	obj/Rocks/rock_d_06_normal_512.jpg
+	obj/Rocks/rock_d_06.obj
+	obj/Rocks/rock_d_06_tex_AM1_512.jpg
+	obj/Rocks/rock_d_06_tex_AM4_512.jpg
+	obj/Rocks/rock_d_06_tex_AM5_512.jpg
+
+	#(data)
+	#obj/MalHideout/MalHideout_512.jpg
+	#obj/MalHideout/MalHideout_1024.jpg
+	#obj/MalHideout/MalHideout.mtl
+	#obj/MalHideout/MalHideout.obj
 
 	(data)
 	shaders/other/sVertexLighting.frag
