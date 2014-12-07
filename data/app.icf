@@ -74,6 +74,10 @@ MemSize=72000000
 {[S3E]DispAreaQ==786432}
 MemSize=72000000
 
+#medium 720x1280
+{[S3E]DispAreaQ==921600}
+MemSize=72000000
+
 #medium 768x1280
 {[S3E]DispAreaQ==983040}
 MemSize=72000000
