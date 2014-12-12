@@ -21,7 +21,8 @@ public:
     ///
     typedef fgGuiContainer base_type;
 protected:
-
+    /// Sliders?
+    
 protected:
     /**
      * 

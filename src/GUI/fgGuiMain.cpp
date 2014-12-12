@@ -29,6 +29,7 @@
 #include "fgGuiProgressBar.h"
 #include "fgGuiTable.h"
 #include "fgGuiLoader.h"
+#include "fgGuiSlider.h"
 
 #include "GUI/Font/fgFontStbConsolasBold.h"
 #include "GUI/Font/fgFontStbCourier.h"
@@ -185,6 +186,7 @@ fgBool fgGuiMain::initialize(void) {
     m_widgetFactory->registerWidget(FG_GUI_PROGRESS_BAR, &fgGuiProgressBar::createWidget);
     m_widgetFactory->registerWidget(FG_GUI_TABLE, &fgGuiTable::createWidget);
     m_widgetFactory->registerWidget(FG_GUI_LOADER, &fgGuiLoader::createWidget);
+    m_widgetFactory->registerWidget(FG_GUI_SLIDER, &fgGuiSlider::createWidget);
 
     FG_LOG_DEBUG("GUI: Initializing builtin fonts...");
     fgFontBuiltInResource *consolasBold = new fgFontBuiltInResource(fgFontBuiltIn::StbConsolasBold::getRawData(32));

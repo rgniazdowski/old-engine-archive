@@ -63,7 +63,7 @@ void fgGuiConsole::updateFromStatusVec(const fgVector<fgStatus *> &statusVec) {
    if(statusVec.empty())
        return;
    
-   int n = statusVec.size(), diff = 0;
+   unsigned int n = statusVec.size(), diff = 0;
    diff = abs(n - m_numConsoleRecords);
    
    if(n == m_numConsoleRecords)
@@ -87,4 +87,3 @@ void fgGuiConsole::updateFromStatusVec(const fgVector<fgStatus *> &statusVec) {
        m_numConsoleRecords = n;
    }
 }
-

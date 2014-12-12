@@ -112,6 +112,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/_ext/534589759/fgGuiProgressBar.o \
 	${OBJECTDIR}/_ext/534589759/fgGuiScreenGrid.o \
 	${OBJECTDIR}/_ext/534589759/fgGuiScrollArea.o \
+	${OBJECTDIR}/_ext/534589759/fgGuiSlider.o \
 	${OBJECTDIR}/_ext/534589759/fgGuiStructureSheet.o \
 	${OBJECTDIR}/_ext/534589759/fgGuiStructureSheetParser.o \
 	${OBJECTDIR}/_ext/534589759/fgGuiStyle.o \
@@ -576,6 +577,11 @@ ${OBJECTDIR}/_ext/534589759/fgGuiScrollArea.o: ../../../src/GUI/fgGuiScrollArea.
 	${MKDIR} -p ${OBJECTDIR}/_ext/534589759
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_GL_BINDING -DFG_USING_OPENGL -DFG_USING_SDL2 -DFG_USING_TINYXML -DTIXML_USE_STL -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534589759/fgGuiScrollArea.o ../../../src/GUI/fgGuiScrollArea.cpp
+
+${OBJECTDIR}/_ext/534589759/fgGuiSlider.o: ../../../src/GUI/fgGuiSlider.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/534589759
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_GL_BINDING -DFG_USING_OPENGL -DFG_USING_SDL2 -DFG_USING_TINYXML -DTIXML_USE_STL -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src `pkg-config --cflags libpng` `pkg-config --cflags gl` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534589759/fgGuiSlider.o ../../../src/GUI/fgGuiSlider.cpp
 
 ${OBJECTDIR}/_ext/534589759/fgGuiStructureSheet.o: ../../../src/GUI/fgGuiStructureSheet.cpp 
 	${MKDIR} -p ${OBJECTDIR}/_ext/534589759

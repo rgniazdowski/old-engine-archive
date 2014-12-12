@@ -209,6 +209,8 @@
           <itemPath>../../../src/GUI/fgGuiScreenGrid.h</itemPath>
           <itemPath>../../../src/GUI/fgGuiScrollArea.cpp</itemPath>
           <itemPath>../../../src/GUI/fgGuiScrollArea.h</itemPath>
+          <itemPath>../../../src/GUI/fgGuiSlider.cpp</itemPath>
+          <itemPath>../../../src/GUI/fgGuiSlider.h</itemPath>
           <itemPath>../../../src/GUI/fgGuiStructureSheet.cpp</itemPath>
           <itemPath>../../../src/GUI/fgGuiStructureSheet.h</itemPath>
           <itemPath>../../../src/GUI/fgGuiStructureSheetParser.cpp</itemPath>
@@ -1215,6 +1217,10 @@
             flavor2="8">
       </item>
       <item path="../../../src/GUI/fgGuiScrollArea.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/GUI/fgGuiSlider.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../../src/GUI/fgGuiSlider.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/GUI/fgGuiStructureSheet.cpp"
             ex="false"
@@ -2507,6 +2513,10 @@
       </item>
       <item path="../../../src/GUI/fgGuiScrollArea.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../../../src/GUI/fgGuiSlider.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../../src/GUI/fgGuiSlider.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../../../src/GUI/fgGuiStructureSheet.cpp"
             ex="false"
             tool="1"
@@ -3780,6 +3790,10 @@
       </item>
       <item path="../../../src/GUI/fgGuiScrollArea.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../../../src/GUI/fgGuiSlider.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../../src/GUI/fgGuiSlider.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../../../src/GUI/fgGuiStructureSheet.cpp"
             ex="false"
             tool="1"
@@ -5030,6 +5044,10 @@
             flavor2="0">
       </item>
       <item path="../../../src/GUI/fgGuiScrollArea.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/GUI/fgGuiSlider.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../../src/GUI/fgGuiSlider.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/GUI/fgGuiStructureSheet.cpp"
             ex="false"
@@ -6304,6 +6322,10 @@
       </item>
       <item path="../../../src/GUI/fgGuiScrollArea.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../../../src/GUI/fgGuiSlider.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../../src/GUI/fgGuiSlider.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../../../src/GUI/fgGuiStructureSheet.cpp"
             ex="false"
             tool="1"
@@ -7566,6 +7588,10 @@
             flavor2="0">
       </item>
       <item path="../../../src/GUI/fgGuiScrollArea.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/GUI/fgGuiSlider.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../../src/GUI/fgGuiSlider.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/GUI/fgGuiStructureSheet.cpp"
             ex="false"

@@ -168,6 +168,8 @@ fgGuiWidgetType fgGuiWidgetManager::widgetTypeFromName(const std::string& typeNa
         return FG_GUI_TABLE;
     } else if(typeName.compare(FG_GUI_LOADER_NAME) == 0) {
         return FG_GUI_LOADER;
+    } else if(typeName.compare(FG_GUI_SLIDER_NAME) == 0) {
+        return FG_GUI_SLIDER;
     }
 
     return FG_GUI_WIDGET_UNKNOWN;

@@ -40,6 +40,7 @@ typedef unsigned int fgGuiWidgetType;
         #define FG_GUI_PROGRESS_BAR     0x00040000
         #define FG_GUI_TABLE            0x00080000
         #define FG_GUI_LOADER           0x00200000
+        #define FG_GUI_SLIDER           0x00400000
 
     #endif
 
@@ -64,6 +65,7 @@ typedef unsigned int fgGuiWidgetType;
         #define FG_GUI_PROGRESS_BAR_NAME    "ProgressBar"
         #define FG_GUI_TABLE_NAME           "Table"
         #define FG_GUI_LOADER_NAME          "Loader"
+        #define FG_GUI_SLIDER_NAME          "Slider"
     #endif
 
 //#define FG_GUI_STYLE_SHEET_NAME     "StyleSheet" // #FIXME - string obfuscation
