@@ -26,7 +26,7 @@
 [X] poprawienie klasy Font - powinna uzywac systemu zasobow i tekstur (w sumie 
     klasa Font moze rozszerzac klase Texture poniewaz tak naprawde Font to tekstura)
 
-[ ] stworzenie odpowiednich klas do ladowania plikow audio oraz muzyki - oczywiscie 
+[X] stworzenie odpowiednich klas do ladowania plikow audio oraz muzyki - oczywiscie 
     z odpowiednim podpieciem pod ResourceManagera
 
 [X] klasa do ladowania pliku XML - plus wspieranie parsowania (w jakis 

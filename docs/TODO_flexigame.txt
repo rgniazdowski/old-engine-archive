@@ -145,7 +145,7 @@
 	  * tu bedzie potrzebne drawing batch - w pewnym stopniu
       -- - - - definicja rysowania prymitowow oparta na podsystemie GFX
 [X] - na poczatek 2.5D
-[ ]- potem konieczne jest 3D, uzywanie perspektywy, obliczanie proporcji widoku
+[X]- potem konieczne jest 3D, uzywanie perspektywy, obliczanie proporcji widoku
     (frustum), wymiarow, by pracowac na menu w pikselach/procentach (rozmiar) - 
     jednak juz obiekty beda wyswietlane odpowiednio na ekranie (potrzeba ogarnac
     wymagane do tego wzory) - trudne
