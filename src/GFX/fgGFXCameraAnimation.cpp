@@ -1,5 +1,5 @@
 /*******************************************************
- * Copyright (C) 2014 Radoslaw Gniazdowski <r.gniazdowski@gmail.com>. All rights reserved.
+ * Copyright (C) 2014 Radoslaw Gniazdowski <contact@flexigame.com>. All rights reserved.
  * 
  * This file is part of FlexiGame: Flexible Game Engine
  * 
@@ -21,7 +21,7 @@ m_mouseSpeed(0.002f),
 m_zoom(1.0f),
 m_distance(1.0f),
 m_dt(0.0f) {
-    fgVector3f position = fgVector3f(0, 0, 100.0f);
+    fgVector3f position = fgVector3f(0, 20.0f, 300.0f);
     m_eye = position;
 }
 
