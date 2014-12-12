@@ -778,18 +778,6 @@ namespace LPCD {
      * FG GUI ENUMERATION TYPES -> INT
      **************************************************************************/
 
-    template<> struct Type<fgEventType> : public Type<int> {
-        static inline fgEventType Get(lua_State* L, int idx) {
-            return (fgEventType)Type<int>::Get(L, idx);
-        }
-    };
-
-    template<> struct Type<fgEventType&> : public Type<fgEventType> {
-    };
-
-    template<> struct Type<const fgEventType&> : public Type<fgEventType> {
-    };
-
     ////////////////////////////////////////////////////////////////////////////
 
     template<> struct Type<fgSwipeDirection> : public Type<int> {
