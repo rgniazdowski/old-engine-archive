@@ -60,6 +60,7 @@ public:
         WIDGET_MANAGER_MT_ID, // #used
         STYLE_MANAGER_MT_ID,
         SOUND_MANAGER_MT_ID,
+        LOGIC_MANAGER_MT_ID,
 
         //
         // Resources 

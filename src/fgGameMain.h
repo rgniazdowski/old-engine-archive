@@ -26,6 +26,7 @@
 
     #include "Hardware/fgQualityManager.h"
     #include "Scripting/fgScriptSubsystem.h"
+    #include "GameLogic/fgGameLogic.h"
 
 class fgGameMain;
     #define FG_TAG_GAME_MAIN_NAME       "GameMain"
@@ -164,6 +165,13 @@ public:
     inline fgSFXManager *getSoundManager(void) const {
         return m_soundMgr;
     }
+    /**
+     * 
+     * @return 
+     */
+    inline fg::game::Logic *getLogicManager(void) const {
+        return m_logicMgr;
+    }
 
 protected:
     /**
@@ -217,6 +225,8 @@ private:
     fgScriptSubsystem *m_scriptSubsystem;
     ///
     fgSFXManager *m_soundMgr;
+    ///
+    fg::game::Logic *m_logicMgr;
 
     ///
     fgFunctionCallback *m_gameTouchCallback;

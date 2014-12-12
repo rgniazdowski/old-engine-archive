@@ -79,7 +79,10 @@ typedef unsigned int fgEventType;
 #define FG_EVENT_RESERVED1          34
 #define FG_EVENT_RESERVED2          35
 #define FG_EVENT_RESERVED3          36
-#define FG_NUM_EVENT_TYPES          37
+
+#define FG_EVENT_LAST_STANDARD_EVENT_CODE 36
+
+//#define FG_NUM_EVENT_TYPES          37
 
 enum fgSwipeDirection {
     FG_SWIPE_INVALID,

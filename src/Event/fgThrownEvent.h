@@ -26,8 +26,8 @@ struct fgThrownEvent {
     /**
      * 
      */
-    fgThrownEvent() :
-    eventCode(FG_EVENT_INVALID), 
+    fgThrownEvent(fgEventType _eventCode = FG_EVENT_INVALID) :
+    eventCode(_eventCode), 
     argList(NULL), 
     systemData(NULL) { }
     /**

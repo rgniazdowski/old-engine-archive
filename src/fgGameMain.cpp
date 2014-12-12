@@ -75,6 +75,7 @@ m_pointerInputReceiver(NULL),
 m_joypadController(NULL),
 m_scriptSubsystem(NULL),
 m_soundMgr(NULL),
+m_logicMgr(NULL),
 m_gameTouchCallback(NULL),
 m_gameMouseCallback(NULL),
 m_gameFreeLookCallback(NULL) {
@@ -101,9 +102,14 @@ m_gameFreeLookCallback(NULL) {
  * Default destructor for the Game Main object
  */
 fgGameMain::~fgGameMain() {
+    // >> Main Game Object destruction - begin
     // Unregister any required callbacks
     unregisterGameCallbacks();
-    // Global settings
+    // Main Game Logic Manager
+    if(m_logicMgr)
+        delete m_logicMgr;
+    m_logicMgr = NULL;
+    // Global Settings
     if(m_settings)
         delete m_settings;
     m_settings = NULL;
@@ -111,7 +117,7 @@ fgGameMain::~fgGameMain() {
     if(m_mainConfig)
         delete m_mainConfig;
     m_mainConfig = NULL;
-    // Destroy GFX Main object
+    // GFX Main object
     if(m_gfxMain)
         delete m_gfxMain;
     m_gfxMain = NULL;
@@ -120,7 +126,7 @@ fgGameMain::~fgGameMain() {
     if(m_soundMgr)
         delete m_soundMgr;
     m_soundMgr = NULL;
-    // Destroy resource manager object
+    // Destroy Resource Manager object
     // This will also destroy any left resources
     if(m_resourceMgr)
         delete m_resourceMgr;
@@ -131,16 +137,17 @@ fgGameMain::~fgGameMain() {
     m_scriptSubsystem->setShaderManager(NULL);
     m_scriptSubsystem->set2DSceneManager(NULL);
     m_scriptSubsystem->set3DSceneManager(NULL);
+    m_scriptSubsystem->setLogicManager(NULL);
     // Destroy the resource factory object
     if(m_resourceFactory)
         delete m_resourceFactory;
     m_resourceFactory = NULL;
-    // Input receiver
+    // Input Receiver object
     if(m_pointerInputReceiver)
         delete m_pointerInputReceiver;
     m_pointerInputReceiver = NULL;
     m_guiMain->setPointerInputReceiver(NULL);
-    // Joystick controller
+    // Joystick Controller
     if(m_joypadController) {
         m_joypadController->quit();
         delete m_joypadController;
@@ -161,7 +168,7 @@ fgGameMain::~fgGameMain() {
     if(m_qualityMgr)
         delete m_qualityMgr;
     m_qualityMgr = NULL;
-    // this event mgr is not owned by game main
+    // this event manager is not owned by game main
     m_pEventMgr = NULL;
     // Main GUI class 
     // Do not reset the pointer... needs it to unregister callbacks
@@ -170,13 +177,20 @@ fgGameMain::~fgGameMain() {
         delete m_guiMain;
     }
     m_guiMain = NULL;
+    m_scriptSubsystem->setGuiMain(NULL);
     m_scriptSubsystem->setWidgetManager(NULL);
     m_scriptSubsystem->setStyleManager(NULL);
-    fgColors::freeColors();
-    fgErrorCodes::unregisterAll(); // #FIXME - error codes
+    // Destroy the Script Subsystem object
     delete m_scriptSubsystem;
     m_scriptSubsystem = NULL;
-    FG_MessageSubsystem->deleteInstance(); // #FIXME - message subsystem singleton
+    // Free registered human readable colors - these are from HTML table
+    fgColors::freeColors();
+    // Unregister all error codes
+    fgErrorCodes::unregisterAll();
+    // Delete the global instance of Message Subsystem singleton
+    // MessageSubsystem is a special LOG wrapper
+    FG_MessageSubsystem->deleteInstance();
+    // >> Main Game object destruction - end
 }
 
 /**
@@ -324,6 +338,19 @@ fgBool fgGameMain::initSubsystems(void) {
     if(!m_soundMgr->initialize()) {
         FG_LOG_ERROR("SFX: Initialization of Sound module finished with errors");
     }
+    // Create object for Game Logic Manager
+    if(!m_logicMgr)
+        m_logicMgr = new fg::game::Logic(NULL);
+    // Setup Game Logic external pointers
+    if(m_logicMgr) {
+        m_logicMgr->setEventManager(m_pEventMgr);
+        
+        // Initialize the Game Logic object
+        if(!m_logicMgr->initialize()) {
+            FG_LOG_ERROR("Logic: Main Game Logic module initialized with errors");
+        }
+    }
+    
     // Setup GFX Main external pointers
     m_gfxMain->setResourceManager(m_resourceMgr);
     // Setup GUI Main external pointers
@@ -345,11 +372,13 @@ fgBool fgGameMain::initSubsystems(void) {
     m_scriptSubsystem->setParticleSystem(m_gfxMain->getParticleSystem());
     m_scriptSubsystem->set2DSceneManager(m_gfxMain->get2DScene());
     m_scriptSubsystem->set3DSceneManager(m_gfxMain->get3DScene());
-    m_scriptSubsystem->setGuiMain(static_cast<fgManagerBase *>(m_guiMain));
-    m_scriptSubsystem->setShaderManager(static_cast<fgManagerBase *>(m_gfxMain->getShaderManager()));
-    m_scriptSubsystem->setSoundManager(static_cast<fgManagerBase *>(m_soundMgr));
-    m_scriptSubsystem->setStyleManager(static_cast<fgManagerBase *>(m_guiMain->getStyleManager()));
-    m_scriptSubsystem->setWidgetManager(static_cast<fgManagerBase *>(m_guiMain->getWidgetManager()));
+    m_scriptSubsystem->setGuiMain(static_cast<fg::base::Manager *>(m_guiMain));
+    m_scriptSubsystem->setShaderManager(static_cast<fg::base::Manager *>(m_gfxMain->getShaderManager()));
+    m_scriptSubsystem->setSoundManager(static_cast<fg::base::Manager *>(m_soundMgr));
+    m_scriptSubsystem->setStyleManager(static_cast<fg::base::Manager *>(m_guiMain->getStyleManager()));
+    m_scriptSubsystem->setWidgetManager(static_cast<fg::base::Manager *>(m_guiMain->getWidgetManager()));
+    m_scriptSubsystem->setLogicManager(static_cast<fg::base::Manager *>(m_logicMgr));
+    
     if(!m_scriptSubsystem->initialize()) {
         FG_LOG_ERROR("Script: Initialization of Script module finished with errors");
     }
@@ -564,6 +593,9 @@ void fgGameMain::update(void) {
     FG_HardwareState->calculateDT(); // #FIXME
     FG_HardwareState->calculateFPS(); // #FIXME
 
+    // Update logic manager
+    if(m_logicMgr)
+        m_logicMgr->update();
     // TouchReceiver processes the data received from marmalade/system event
     // callbacks and throws proper events
     // Pointer input receiver needs name change #FIXME - need some

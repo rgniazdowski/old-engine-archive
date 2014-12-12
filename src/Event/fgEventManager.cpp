@@ -111,7 +111,18 @@ fgBool fgEventManager::initialize(void) {
 }
 
 /**
- *
+ * 
+ * @param eventCode
+ */
+void fgEventManager::throwEvent(fgEventType eventCode) {
+    fgThrownEvent event(eventCode);
+    m_eventsQueue.push(event);
+}
+
+/**
+ * 
+ * @param eventCode
+ * @param list
  */
 void fgEventManager::throwEvent(fgEventType eventCode, fgArgumentList *list) {
     fgThrownEvent event(eventCode, list);
@@ -393,8 +404,10 @@ void fgEventManager::executeEvents(void) {
             if(callbacks[j]) {
                 if(event.argList) {
                     callbacks[j]->Call(event.argList);
-                } else {
+                } else if(event.systemData) {
                     callbacks[j]->Call((void*)event.systemData);
+                } else {
+                    callbacks[j]->Call();
                 }
             }
         }

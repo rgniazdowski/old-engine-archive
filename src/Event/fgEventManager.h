@@ -95,6 +95,12 @@ public:
     virtual fgBool destroy(void);
 
     /**
+     * 
+     * @param eventCode
+     */
+    void throwEvent(fgEventType eventCode);
+    
+    /**
      * This adds event to the waiting queue, the *list object needs to be allocated before,
      * after event callback execution argument list must be freed
      * @param eventCode

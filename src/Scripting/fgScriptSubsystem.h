@@ -131,6 +131,8 @@ private:
     LuaPlus::LuaObject m_metatableStyleMgr;
     /// Lua metatable for the external sound manager
     LuaPlus::LuaObject m_metatableSoundMgr;
+    /// Lua metatable for the external logic manager
+    LuaPlus::LuaObject m_metatableLogicMgr;
 	#else
 	static void *m_luaState;
     #endif
@@ -155,6 +157,8 @@ private:
     static fg::base::Manager *m_pStyleMgr;
     /// Pointer to the external sound manager
     static fg::base::Manager *m_pSoundMgr;
+    /// Pointer to the external logic manager
+    static fg::base::Manager *m_pLogicMgr;
     
     ///
     static fgBool m_isBindingComplete;
@@ -243,6 +247,13 @@ public:
      */
     inline void setSoundManager(fg::base::Manager *pSoundManager) {
         m_pSoundMgr = pSoundManager;
+    }
+    /**
+     * 
+     * @param pLogicManager
+     */
+    inline void setLogicManager(fg::base::Manager *pLogicManager) {
+        m_pLogicMgr = pLogicManager;
     }
 
 protected:
@@ -469,6 +480,11 @@ private:
      * @return
      */
     fgBool registerSoundManager(void);
+    /**
+     * 
+     * @return 
+     */
+    fgBool registerLogicManager(void);
 };
 /**
  * 

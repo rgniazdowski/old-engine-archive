@@ -138,6 +138,7 @@ void fgScriptMetatables::generateMetatableNames(void) {
     m_metatableInfoVec[WIDGET_MANAGER_MT_ID] = metatableInfo("FGX", "T");
     m_metatableInfoVec[STYLE_MANAGER_MT_ID] = metatableInfo("FGX", "T");
     m_metatableInfoVec[SOUND_MANAGER_MT_ID] = metatableInfo("FGX", "T");
+    m_metatableInfoVec[LOGIC_MANAGER_MT_ID] = metatableInfo("FGX", "T");
 
     m_metatableInfoVec[RESOURCE_MT_ID] = metatableInfo("FGX", "T");
     m_metatableInfoVec[TEXTURE_RESOURCE_MT_ID] = metatableInfo("FGX", "T");
@@ -150,9 +151,13 @@ void fgScriptMetatables::generateMetatableNames(void) {
     m_metatableInfoVec[PLUGIN_RESOURCE_MT_ID] = metatableInfo("FGX", "T");
     m_metatableInfoVec[SAVE_FILE_RESOURCE_MT_ID] = metatableInfo("FGX", "T");
 
+    // INI Config / Settings XML
+    
     m_metatableInfoVec[CONFIG_MT_ID] = metatableInfo("FGX", "T");
     m_metatableInfoVec[SETTINGS_MT_ID] = metatableInfo("FGX", "T");
 
+    // GUI Widget structure metatables
+    
     m_metatableInfoVec[GUI_WIDGET_MT_ID] = metatableInfo("FGX", "T");
     m_metatableInfoVec[GUI_BUTTON_MT_ID] = metatableInfo("FGX", "T");
     m_metatableInfoVec[GUI_CONSOLE_MT_ID] = metatableInfo("FGX", "T");
@@ -170,6 +175,8 @@ void fgScriptMetatables::generateMetatableNames(void) {
     m_metatableInfoVec[GUI_TOGGLE_BUTTON_MT_ID] = metatableInfo("FGX", "T");
     m_metatableInfoVec[GUI_WINDOW_MT_ID] = metatableInfo("FGX", "T");
 
+    // GUI Style special structures
+    
     m_metatableInfoVec[GUI_STYLE_MT_ID] = metatableInfo("FGX", "T");
     m_metatableInfoVec[GUI_STYLE_CONTENT_MT_ID] = metatableInfo("FGX", "T");
     m_metatableInfoVec[GUI_STYLE_SIZE_MT_ID] = metatableInfo("FGX", "T");
@@ -180,6 +187,8 @@ void fgScriptMetatables::generateMetatableNames(void) {
     m_metatableInfoVec[GUI_STYLE_BORDER_MT_ID] = metatableInfo("FGX", "T");
     m_metatableInfoVec[GUI_STYLE_POSITION_MT_ID] = metatableInfo("FGX", "T");
 
+    // Thrown Event info structures 
+    
     m_metatableInfoVec[EVENT_BASE_MT_ID] = metatableInfo("FGX", "T");
     m_metatableInfoVec[EVENT_CONTROLLER_DEVICE_MT_ID] = metatableInfo("FGX", "T");
     m_metatableInfoVec[EVENT_CONTROLLER_BUTTON_MT_ID] = metatableInfo("FGX", "T");
@@ -199,6 +208,7 @@ void fgScriptMetatables::generateMetatableNames(void) {
     m_metatableInfoVec[EVENT_SENSORS_MT_ID] = metatableInfo("FGX", "T");
     m_metatableInfoVec[EVENT_MAIN_MT_ID] = metatableInfo("FGX", "T");
 
+    // ?
     m_metatableInfoVec[SCRIPT_CALLBACK_MT_ID] = metatableInfo("FGX", "T");
 
 #endif
