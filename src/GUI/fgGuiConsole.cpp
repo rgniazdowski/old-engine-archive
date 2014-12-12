@@ -8,12 +8,14 @@
  *******************************************************/
 
 #include "fgGuiConsole.h"
+#include "fgStatus.h"
 
 /*
  *
  */
 fgGuiConsole::fgGuiConsole() :
-fgGuiTextArea() {
+fgGuiTextArea(),
+m_numConsoleRecords(0) {
     fgGuiConsole::setDefaults();
 }
 
@@ -35,10 +37,54 @@ void fgGuiConsole::setDefaults(void) {
  *
  */
 fgBoundingBox3Df fgGuiConsole::updateBounds(void) {
-    return fgGuiTextArea::updateBounds();
+    return base_type::updateBounds();
 }
 
 /*
  *
  */
-void fgGuiConsole::refresh(void) { }
+void fgGuiConsole::refresh(void) {
+    base_type::refresh();
+}
+
+/**
+ * 
+ * @param guiLayer
+ */
+void fgGuiConsole::display(fgGuiDrawer* guiLayer) {
+    base_type::display(guiLayer);
+}
+
+/**
+ * 
+ * @param statusVec
+ */
+void fgGuiConsole::updateFromStatusVec(const fgVector<fgStatus *> &statusVec) {
+   if(statusVec.empty())
+       return;
+   
+   int n = statusVec.size(), diff = 0;
+   diff = abs(n - m_numConsoleRecords);
+   
+   if(n == m_numConsoleRecords)
+       return;
+   
+   if(n > m_numConsoleRecords) {
+       for(int i=m_numConsoleRecords;i<n;i++) {
+           fgStatus *status = statusVec[i];
+           if(!status)
+               continue;
+           if(status->hasMessage()) {
+               this->pushText(status->message->data);
+           }
+       }
+       m_numConsoleRecords = m_textData.size();
+   } else {
+       // n < m_numConsoleRecords
+       for(int i=0;i<diff;i++) {
+           m_textData.pop_back();
+       }
+       m_numConsoleRecords = n;
+   }
+}
+

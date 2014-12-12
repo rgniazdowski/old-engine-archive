@@ -39,17 +39,20 @@ FG_ENUM_FLAGS(fgGuiContainerPackAlign);
 
     #include <map>
 
-/*
+/**
  *
  */
 class fgGuiContainer : public fgGuiWidget {
 public:
+    ///
     typedef fgGuiWidget base_type;
-    
+    ///
     typedef std::map<std::string, fgGuiWidget*> childrenMap;
+    ///
     typedef childrenMap::iterator childrenMapItor;
-
+    ///
     typedef fgVector<fgGuiWidget *> childrenVec;
+    ///
     typedef childrenVec::iterator childrenVecItor;
     
 protected:
@@ -63,47 +66,102 @@ protected:
     fgGuiContainerPackAlign m_packAlign;
 
 protected:
-    // 
+    /**
+     * 
+     */
     virtual void setDefaults(void);
 
 public:
-    // 
+    /**
+     * 
+     */
     fgGuiContainer();
-    // 
+    /**
+     * 
+     */
     virtual ~fgGuiContainer();
 
+    /**
+     * 
+     * @return 
+     */
     FG_GUI_WIDGET_FACTORY_CREATE_FUNCTION(fgGuiContainer);
     
-    //
+    /**
+     * 
+     * @param flags
+     */
     virtual void setFlags(const std::string& flags);
     
-    //
+    /**
+     * 
+     * @param guiLayer
+     */
     virtual void display(fgGuiDrawer *guiLayer);
 
-    // 
+    /**
+     * 
+     * @return 
+     */
     virtual fgBoundingBox3Df updateBounds(void);
-    // 
+    /**
+     * 
+     */
     virtual void refresh(void);
 
-    // 
+    /**
+     * 
+     * @param pointerData
+     * @return 
+     */
     virtual int updateState(const fgPointerData *pointerData);
 
-    //
+    /**
+     * 
+     * @param nameTag
+     * @return 
+     */
     fgGuiWidget *getChild(const std::string& nameTag);
-    //
+    /**
+     * 
+     * @param nameTag
+     * @return 
+     */
     fgGuiWidget *getChild(const char *nameTag);
-    //
+    /**
+     * 
+     * @return 
+     */
     childrenVec& getChildren(void);
-    //
+    /**
+     * 
+     * @return 
+     */
     childrenMap& getChildrenMap(void);
     
-    //
+    /**
+     * 
+     * @param pWidget
+     * @return 
+     */
     fgBool addChild(fgGuiWidget *pWidget);
-    //
+    /**
+     * 
+     * @param pWidget
+     * @return 
+     */
     fgBool removeChild(fgGuiWidget *pWidget);
-    //
+    /**
+     * 
+     * @param nameTag
+     * @return 
+     */
     fgBool removeChild(const std::string& nameTag);
-    //
+    /**
+     * 
+     * @param nameTag
+     * @return 
+     */
     fgBool removeChild(const char *nameTag);
 };
 

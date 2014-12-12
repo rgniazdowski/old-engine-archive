@@ -24,6 +24,7 @@
     #include "fgGuiBase.h"
     #include "fgGuiWidget.h"
     #include "fgGuiMenu.h"
+    #include "fgGuiConsole.h"
 
     #include "fgGuiStyleManager.h"
     #include "fgGuiWidgetManager.h"
@@ -90,6 +91,8 @@ private:
     fgGuiMenu *m_changeToMenu;
     /// Currently displayed menu screen
     fgGuiMenu *m_currentMenu;
+    /// Special console widget
+    fgGuiConsole *m_console;
     /// Whether there is some kind of shifting / animation
     /// If so - no state updating will occur
     fgBool m_isMenuChanging;

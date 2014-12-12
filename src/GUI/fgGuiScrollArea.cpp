@@ -41,4 +41,6 @@ fgBoundingBox3Df fgGuiScrollArea::updateBounds(void) {
 /*
  *
  */
-void fgGuiScrollArea::refresh(void) { }
+void fgGuiScrollArea::refresh(void) { 
+    fgGuiContainer::refresh();
+}

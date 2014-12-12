@@ -8,12 +8,15 @@
  *******************************************************/
 
 #include "fgGuiTextArea.h"
+#include "fgGuiDrawer.h"
 
 /*
  *
  */
 fgGuiTextArea::fgGuiTextArea() :
-fgGuiScrollArea() {
+fgGuiScrollArea(),
+m_textData(),
+m_textAreaSize() {
     fgGuiTextArea::setDefaults();
 }
 
@@ -35,10 +38,47 @@ void fgGuiTextArea::setDefaults(void) {
  *
  */
 fgBoundingBox3Df fgGuiTextArea::updateBounds(void) {
+    float textSize = m_styles[m_state].getForeground().textSize;
+    fgGuiPadding &padding = m_styles[m_state].getPadding();
+    m_textAreaSize.cols = (m_bbox.size.x-padding.left-padding.right)/textSize;
+    m_textAreaSize.rows = (m_bbox.size.y-padding.bottom-padding.top)/textSize; // ? refresh ?
     return fgGuiScrollArea::updateBounds();
 }
 
 /*
  *
  */
-void fgGuiTextArea::refresh(void) { }
+void fgGuiTextArea::refresh(void) {
+    fgGuiScrollArea::refresh(); // #FIXME
+}
+
+/**
+ * 
+ * @param guiLayer
+ */
+void fgGuiTextArea::display(fgGuiDrawer* guiLayer) {
+    if(!guiLayer)
+        return;
+    if(!m_isVisible)
+        return;
+    base_type::display(guiLayer);
+
+    fgGuiDrawer *guiDrawer = (fgGuiDrawer *)guiLayer;
+    fgVec2f blockPos, blockSize, textSize;
+
+    int n = m_textData.size();
+    for(int i = 0; i < n; i++) {
+        if(m_textData[i].length()) {
+            // #FIXME
+            guiDrawer->downZIndex();
+            float charSizeY = m_styles[m_state].getForeground().textSize;
+            float newPos = m_bbox.pos.y+(m_textAreaSize.rows-1-i)*charSizeY;
+            blockPos = fgVec2f(m_bbox.pos.x, newPos);
+            blockSize = fgVec2f(m_bbox.size.x, charSizeY);
+            guiDrawer->appendText2D(m_textSize, blockPos, blockSize, m_styles[m_state], m_textData[i].c_str());
+            guiDrawer->upZIndex();
+        }
+        if(i >= m_textAreaSize.rows-1)
+            break;
+    }
+}

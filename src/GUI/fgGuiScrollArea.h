@@ -13,26 +13,45 @@
     #include "fgGuiContainer.h"
     #include "fgGuiWidgetFactoryTypes.h"
 
+/**
+ *
+ */
 class fgGuiScrollArea : public fgGuiContainer {
 public:
+    ///
     typedef fgGuiContainer base_type;
 protected:
 
 protected:
-    // 
+    /**
+     * 
+     */
     virtual void setDefaults(void);
 
 public:
-    // 
+    /**
+     * 
+     */
     fgGuiScrollArea();
-    // 
+    /**
+     * 
+     */
     virtual ~fgGuiScrollArea();
 
+    /**
+     * 
+     * @return 
+     */
     FG_GUI_WIDGET_FACTORY_CREATE_FUNCTION(fgGuiScrollArea);
 
-    // 
+    /**
+     * 
+     * @return 
+     */
     virtual fgBoundingBox3Df updateBounds(void);
-    // 
+    /**
+     * 
+     */
     virtual void refresh(void);
 
 };

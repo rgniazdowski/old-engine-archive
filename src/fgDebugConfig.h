@@ -40,6 +40,7 @@ struct fgDebugConfig {
         bool dumpConfig;        // Dump configs on load?
         bool forceFullscreen;   // Is fullscreen forced?
         bool isDebugProfiling;  // Is debug profiling enabled?
+        bool consoleShow;       // Is special console being displayed?
         int empty;
     #if !defined(FG_DEBUG)
     };

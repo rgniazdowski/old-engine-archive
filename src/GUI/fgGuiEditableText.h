@@ -13,29 +13,45 @@
     #include "fgGuiTextArea.h"
     #include "fgGuiWidgetFactoryTypes.h"
 
-/*
+/**
  *
  */
 class fgGuiEditableText : public fgGuiTextArea {
 public:
+    ///
     typedef fgGuiTextArea base_type;
 protected:
 
 protected:
-    // 
+    /**
+     * 
+     */
     virtual void setDefaults(void);
 
 public:
-    // 
+    /**
+     * 
+     */
     fgGuiEditableText();
-    // 
+    /**
+     * 
+     */
     virtual ~fgGuiEditableText();
 
+    /**
+     * 
+     * @return 
+     */
     FG_GUI_WIDGET_FACTORY_CREATE_FUNCTION(fgGuiEditableText);
 
-    // 
+    /**
+     * 
+     * @return 
+     */
     virtual fgBoundingBox3Df updateBounds(void);
-    // 
+    /**
+     * 
+     */
     virtual void refresh(void);
 
 };

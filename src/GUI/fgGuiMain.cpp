@@ -40,6 +40,8 @@
 
 #include "fgColors.h"
 
+#include "fgDebugConfig.h"
+
 /*
  *
  */
@@ -57,6 +59,7 @@ m_guiMouseCallback(NULL),
 m_guiLinkCallback(NULL),
 m_changeToMenu(NULL),
 m_currentMenu(NULL),
+m_console(NULL),
 m_isMenuChanging(FG_FALSE),
 m_guiCallbacks(),
 m_screenBox() {
@@ -78,6 +81,9 @@ m_screenBox() {
     m_managerType = FG_MANAGER_GUI_MAIN;
 
     m_guiLinkCallback = new fgGuiClassCallback<fgGuiMain>(this, this, &fgGuiMain::guiLinkHandler);
+
+    m_console = new fgGuiConsole();
+    m_console->setVisible(FG_FALSE); // #FIXME :o
 }
 
 /*
@@ -100,6 +106,10 @@ void fgGuiMain::clear(void) {
  */
 fgBool fgGuiMain::destroy(void) {
     unregisterGuiCallbacks();
+
+    if(m_console)
+        delete m_console;
+    m_console = NULL;
 
     int n = m_guiCallbacks.size();
     for(int i = 0; i < n; i++) {
@@ -197,6 +207,24 @@ fgBool fgGuiMain::initialize(void) {
     if(!m_widgetMgr->initialize()) {
         FG_LOG::PrintError("GUI: Widget manager not initialized");
     }
+
+    // Initializing console style
+    if(m_styleMgr && m_console) {
+        std::string styleName = m_console->getStyleName();
+        fgGuiStyle *style = m_styleMgr->get(styleName);
+        if(style) {
+            FG_LOG_DEBUG("WidgetManager: Copying style to widget: '%s' of type: '%s'",
+                         m_console->getNameStr(),
+                         m_console->getTypeNameStr());
+
+            style->copyFullContent(m_console->getStyleContents(),
+                                   FG_GUI_WIDGET_STATE_COUNT,
+                                   m_console->getTypeName());
+            m_console->refresh();
+            m_console->updateBounds();
+        }
+    }
+
     m_init = FG_TRUE;
     m_managerType = FG_MANAGER_GUI_MAIN;
     updateState();
@@ -365,6 +393,12 @@ void fgGuiMain::updateState(void) {
         pt->m_y = (int)((float)pt->m_y * ((1.0f - guiScale) / guiScale + 1.0f));
     }
     m_currentMenu->updateState(pt);
+
+    if(m_console) {
+        if(m_console->isVisible()) {
+            m_console->updateState(pt);
+        }
+    }
 }
 
 /*
@@ -399,20 +433,36 @@ void fgGuiMain::display(void) {
     //mainMenu->getRelativePos().y = 150.0f * sinf(r);
     m_currentMenu->updateBounds(m_screenBox);
     m_currentMenu->display(m_guiDrawer);
-    static float posx = 0.0f, posy = 0.0f;
+
+    fgGuiWidget *contextMenu = m_widgetMgr->get("ContextMenu");
+    if(contextMenu) {
+        if(contextMenu->isVisible()) {
+            contextMenu->updateBounds(m_screenBox);
+            contextMenu->display(m_guiDrawer);
+        }
+    }
 #if defined(FG_USING_SDL2)
     const Uint8 *state = SDL_GetKeyboardState(NULL);
-    if(state[SDL_SCANCODE_LEFT] == SDL_PRESSED) {
-        posx -= 10.0f;
+    static int tylda = 0;
+    if(state[SDL_SCANCODE_GRAVE] == SDL_PRESSED && !tylda) {
+        tylda++;
+
+        m_console->setVisible(!m_console->isVisible());
+        g_fgDebugConfig.consoleShow = (bool)m_console->isVisible();
+    } else if(state[SDL_SCANCODE_GRAVE] == SDL_RELEASED) {
+        tylda = 0;
     }
-    if(state[SDL_SCANCODE_RIGHT] == SDL_PRESSED) {
-        posx += 10.0f;
-    }
-    if(state[SDL_SCANCODE_UP] == SDL_PRESSED) {
-        posy -= 10.0f;
-    }
-    if(state[SDL_SCANCODE_DOWN] == SDL_PRESSED) {
-        posy += 10.0f;
+#endif
+    if(m_console) {
+        int numMessages = FG_MessageSubsystem->getStatusVec().size();
+        int consoleSize = m_console->getNumConsoleRecords();
+        if(consoleSize < numMessages) {
+            m_console->updateFromStatusVec(FG_MessageSubsystem->getStatusVec());
+        }
+        if(m_console->isVisible()) {
+            m_console->updateBounds(m_screenBox);
+            m_console->display(m_guiDrawer);
+        }
     }
 #endif /* FG_USING_SDL2 */
     m_widgetMgr->get("StartGameButton")->getRelativePos().x = posx;
@@ -427,43 +477,49 @@ void fgGuiMain::render(void) {
     m_guiDrawer->flush();
 }
 
-/*
- *
+/**
+ * 
+ * @return 
  */
 fgGuiWidgetManager *fgGuiMain::getWidgetManager(void) const {
     return m_widgetMgr;
 }
 
-/*
- *
+/**
+ * 
+ * @return 
  */
 fgGuiWidgetFactory *fgGuiMain::getWidgetFactory(void) const {
     return m_widgetFactory;
 }
 
-/*
- *
+/**
+ * 
+ * @return 
  */
 fgGuiStyleManager *fgGuiMain::getStyleManager(void) const {
     return m_styleMgr;
 }
 
-/*
- *
+/**
+ * 
+ * @return 
  */
 fgEventManager *fgGuiMain::getEventManager(void) const {
     return m_pEventMgr;
 }
 
-/*
- *
+/**
+ * 
+ * @return 
  */
 fgResourceManager *fgGuiMain::getResourceManager(void) const {
     return m_pResourceMgr;
 }
 
-/*
- *
+/**
+ * 
+ * @return 
  */
 fg::base::Manager *fgGuiMain::getShaderManager(void) const {
     return m_pShaderMgr;
@@ -476,10 +532,11 @@ fgPointerInputReceiver *fgGuiMain::getPointerInputReceiver(void) const {
     return m_pPointerInputReceiver;
 }
 
-/*
- *
+/**
+ * 
+ * @param pEventMgr
  */
-void fgGuiMain::setEventManager(fgEventManager *pEventMgr) {
+void fgGuiMain::setEventManager(fgEventManager * pEventMgr) {
     if(!pEventMgr) {
         unregisterGuiCallbacks();
     } else if(m_pEventMgr && m_pEventMgr != pEventMgr) {
@@ -490,19 +547,21 @@ void fgGuiMain::setEventManager(fgEventManager *pEventMgr) {
         registerGuiCallbacks();
 }
 
-/*
- *
+/**
+ * 
+ * @param pResourceMgr
  */
-void fgGuiMain::setResourceManager(fgResourceManager *pResourceMgr) {
+void fgGuiMain::setResourceManager(fgResourceManager * pResourceMgr) {
     m_pResourceMgr = pResourceMgr;
     if(m_guiDrawer)
         m_guiDrawer->setResourceManager(pResourceMgr);
 }
 
-/*
- *
+/**
+ * 
+ * @param pShaderMgr
  */
-void fgGuiMain::setShaderManager(fg::base::Manager *pShaderMgr) {
+void fgGuiMain::setShaderManager(fg::base::Manager * pShaderMgr) {
     if(pShaderMgr) {
         if(pShaderMgr->getManagerType() != FG_MANAGER_GFX_SHADER)
             return;
@@ -512,17 +571,20 @@ void fgGuiMain::setShaderManager(fg::base::Manager *pShaderMgr) {
         m_guiDrawer->setShaderManager(m_pShaderMgr);
 }
 
-/*
- *
+/**
+ * 
+ * @param pointerInputReceiver
  */
-void fgGuiMain::setPointerInputReceiver(fgPointerInputReceiver *pointerInputReceiver) {
+void fgGuiMain::setPointerInputReceiver(fgPointerInputReceiver * pointerInputReceiver) {
     m_pPointerInputReceiver = pointerInputReceiver;
 }
 
-/*
- *
+/**
+ * 
+ * @param argv
+ * @return 
  */
-fgBool fgGuiMain::guiTouchHandler(fgArgumentList *argv) {
+fgBool fgGuiMain::guiTouchHandler(fgArgumentList * argv) {
     if(!argv)
         return FG_FALSE;
     fgEventBase *event = (fgEventBase *)argv->getArgumentValueByID(0);
@@ -555,7 +617,7 @@ fgBool fgGuiMain::guiMouseHandler(fgArgumentList *argv) {
  * @param pWidget
  * @return 
  */
-fgBool fgGuiMain::guiLinkHandler(fgGuiMain* pGuiMain, fgGuiWidget* pWidget) {
+fgBool fgGuiMain::guiLinkHandler(fgGuiMain* pGuiMain, fgGuiWidget * pWidget) {
     if(!pGuiMain || !pWidget || !m_widgetMgr)
         return FG_FALSE;
     if(pWidget->getLink().length()) {

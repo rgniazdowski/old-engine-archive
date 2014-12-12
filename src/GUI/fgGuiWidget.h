@@ -109,6 +109,7 @@ class fgGuiWidget : public fgManagedObjectBase<fgGuiWidgetHandle> {
     friend class fgGuiStructureSheetParser;
 
 public:
+    ///
     typedef fgManagedObjectBase<fgGuiWidgetHandle> base_type;
 
 private:
@@ -534,6 +535,12 @@ public:
      */
     virtual void setText(const std::string &text) {
         m_text = text;
+    }
+    /**
+     * 
+     */
+    virtual void clearText(void) {
+       m_text.clear();
     }
     /**
      * 

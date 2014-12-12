@@ -112,6 +112,14 @@ public:
 
     /**
      * 
+     * @return 
+     */
+    msStatusVec const & getStatusVec(void) const {
+        return m_statusVec;
+    }
+    
+    /**
+     * 
      * @param tagName
      * @param code
      * @param fmt     
