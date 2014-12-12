@@ -53,6 +53,7 @@ typedef unsigned int fgGfxDrawAppendMode;
 // Drawable type
     #define FG_GFX_DRAWABLE_DRAWCALL 1
 
+    #include "Util/fgFastCmp.h"
 
 class fgGfxDrawingBatch;
 
@@ -112,6 +113,8 @@ private:
     fgColor4f m_color;
     /// Holds the value for the relative move
     fgVector3f m_relMove;
+    ///
+    fg::util::FastCmp m_fastCmp;
     /// Holds value for special Z index used for more direct sorting
     int m_zIndex;
     /// Is this draw call managed by the drawing batch? 
@@ -276,6 +279,27 @@ public:
 
     //
     inline bool operator <(const fgGfxDrawCall& a) const {
+        return fg::util::FastCmp::less32(this->m_fastCmp, a.m_fastCmp);
+    }
+
+    //
+    inline bool operator >(const fgGfxDrawCall& a) const {
+        return fg::util::FastCmp::greater32(this->m_fastCmp, a.m_fastCmp);
+    }
+
+    //
+    inline bool operator <=(const fgGfxDrawCall& a) const {
+        return fg::util::FastCmp::less_eq32(this->m_fastCmp, a.m_fastCmp);
+    }
+
+    //
+    inline bool operator >=(const fgGfxDrawCall& a) const {
+        return fg::util::FastCmp::greater_eq32(this->m_fastCmp, a.m_fastCmp);
+    }
+
+    //
+    #if 0
+    inline bool operator <(const fgGfxDrawCall& a) const {
         if(this->m_program < a.m_program)
             return true;
         else if(this->m_program > a.m_program)
@@ -382,6 +406,7 @@ public:
         }
         return true;
     }
+    #endif
 };
 
     #if 0

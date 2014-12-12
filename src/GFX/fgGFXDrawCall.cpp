@@ -25,6 +25,9 @@ m_attribMask(attribMask),
 m_drawCallType(type),
 m_drawAppendMode(FG_GFX_DRAW_APPEND_ABSOLUTE),
 m_primMode(fgGfxPrimitiveMode::FG_GFX_TRIANGLES),
+m_color(1.0f, 1.0f, 1.0f, 1.0f),
+m_relMove(0.0f, 0.0f, 0.0f),
+m_fastCmp(4, fg::util::FastCmp::CMP_DATA_32),
 m_zIndex(0),
 m_isManaged(0) {
     m_attrData[FG_GFX_ATTRIB_POS_LOCATION].index = FG_GFX_ATTRIB_POS_LOCATION;
@@ -62,6 +65,7 @@ m_isManaged(0) {
     m_attrData[FG_GFX_ATTRIB_TANGENT_LOCATION].stride = 0; // Stride when using tangent?
     m_attrData[FG_GFX_ATTRIB_TANGENT_LOCATION].isEnabled = FG_GFX_FALSE;
 
+    // #FIXME #LOL
     m_vecData2v = new fgVertexData2v();
     m_vecData3v = new fgVertexData3v();
     m_vecData4v = new fgVertexData4v();
@@ -71,7 +75,6 @@ m_isManaged(0) {
     m_vecData4v->reserve(2);
 
     setupVertexData(m_attribMask);
-    m_color = fgColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 }
 
 /*
@@ -129,11 +132,11 @@ void fgGfxDrawCall::setupVertexData(fgGFXuint attribMask) {
     }
 
     if(attribMask & FG_GFX_COLOR_BIT) {
-        m_vecDataBase = m_vecData4v;//new fgVertexData4v();
+        m_vecDataBase = m_vecData4v; //new fgVertexData4v();
     } else if(attribMask & FG_GFX_NORMAL_BIT) {
-        m_vecDataBase = m_vecData3v;//new fgVertexData3v();
+        m_vecDataBase = m_vecData3v; //new fgVertexData3v();
     } else {
-        m_vecDataBase = m_vecData2v;//new fgVertexData2v();
+        m_vecDataBase = m_vecData2v; //new fgVertexData2v();
     }
     if(m_drawCallType == FG_GFX_DRAW_CALL_CUSTOM_ARRAY) {
         //if(m_vecDataBase->reserve(1))
@@ -143,6 +146,7 @@ void fgGfxDrawCall::setupVertexData(fgGFXuint attribMask) {
         memset(&m_drawingInfo, 0, sizeof (m_drawingInfo));
     }
     m_attribMask = attribMask;
+    m_fastCmp.setPart(0, (fg::util::FastCmp::data_type_32)m_attribMask);
 }
 
 /**
@@ -155,6 +159,7 @@ void fgGfxDrawCall::setupFromMesh(const fgGfxMeshBase* pMesh) {
     pMesh->setupAttributes(m_attrData);
     m_drawCallType = FG_GFX_DRAW_CALL_MESH;
     m_attribMask = pMesh->attribMask();
+    m_fastCmp.setPart(0, (fg::util::FastCmp::data_type_32)m_attribMask);
     if(pMesh->hasIndices()) {
         m_drawingInfo.buffer = pMesh->getIndicesVBO();
         m_drawingInfo.indices.pointer = pMesh->getIndicesPointer();
@@ -222,6 +227,7 @@ fgVertexData *fgGfxDrawCall::getVertexData(void) const {
  */
 void fgGfxDrawCall::setZIndex(const int zIndex) {
     m_zIndex = zIndex;
+    m_fastCmp.setPart(2, (fg::util::FastCmp::data_type_32)m_zIndex);
 }
 
 /*
@@ -229,6 +235,7 @@ void fgGfxDrawCall::setZIndex(const int zIndex) {
  */
 void fgGfxDrawCall::upZIndex(void) {
     m_zIndex++;
+    m_fastCmp.setPart(2, (fg::util::FastCmp::data_type_32)m_zIndex);
 }
 
 /*
@@ -236,6 +243,7 @@ void fgGfxDrawCall::upZIndex(void) {
  */
 void fgGfxDrawCall::downZIndex(void) {
     m_zIndex--;
+    m_fastCmp.setPart(2, (fg::util::FastCmp::data_type_32)m_zIndex);
 }
 
 /*
@@ -320,6 +328,11 @@ fgGfxMVPMatrix *fgGfxDrawCall::getMVP(void) const {
  */
 void fgGfxDrawCall::setShaderProgram(fgGfxShaderProgram *pProgram) {
     m_program = pProgram;
+    if(m_program)
+        m_fastCmp.setPart(3, (fg::util::FastCmp::data_type_32)m_program->getHandle().getIndex());
+    else
+        m_fastCmp.setPart(3, (fg::util::FastCmp::data_type_32)0);
+    
 }
 
 /*
@@ -334,6 +347,7 @@ fgGfxShaderProgram *fgGfxDrawCall::getShaderProgram(void) const {
  */
 void fgGfxDrawCall::setTexture(const fgGfxTextureID& textureID) {
     m_textureID = textureID;
+    m_fastCmp.setPart(1, (fg::util::FastCmp::data_type_32)m_textureID.id);
 }
 
 /*

@@ -148,24 +148,24 @@ private:
     ///
     fgPlanef m_planes[NUM_PLANES];
 
-	struct {
-		/// Near Top Left
-		fgVector3f ntl;
-		/// Near Top Right
-		fgVector3f ntr;
-		/// Near Bottom Left
-		fgVector3f nbl;
-		/// Near Bottom Right
-		fgVector3f nbr;
-		/// Far Top Left
-		fgVector3f ftl;
-		/// Far Top Right
-		fgVector3f ftr;
-		/// Far Bottom Left
-		fgVector3f fbl;
-		/// Far Bottom Right
-		fgVector3f fbr;
-	} m_point;
+    struct {
+        /// Near Top Left
+        fgVector3f ntl;
+        /// Near Top Right
+        fgVector3f ntr;
+        /// Near Bottom Left
+        fgVector3f nbl;
+        /// Near Bottom Right
+        fgVector3f nbr;
+        /// Far Top Left
+        fgVector3f ftl;
+        /// Far Top Right
+        fgVector3f ftr;
+        /// Far Bottom Left
+        fgVector3f fbl;
+        /// Far Bottom Right
+        fgVector3f fbr;
+    } m_point;
     ///
     float m_zNear;
     ///

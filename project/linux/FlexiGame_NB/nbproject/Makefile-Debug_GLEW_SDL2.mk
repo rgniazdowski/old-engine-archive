@@ -148,6 +148,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/_ext/608034620/fgConfigParser.o \
 	${OBJECTDIR}/_ext/608034620/fgConfigWriter.o \
 	${OBJECTDIR}/_ext/608034620/fgDirent.o \
+	${OBJECTDIR}/_ext/608034620/fgFastCmp.o \
 	${OBJECTDIR}/_ext/608034620/fgFile.o \
 	${OBJECTDIR}/_ext/608034620/fgHashFunc.o \
 	${OBJECTDIR}/_ext/608034620/fgPath.o \
@@ -757,6 +758,11 @@ ${OBJECTDIR}/_ext/608034620/fgDirent.o: ../../../src/Util/fgDirent.cpp
 	${MKDIR} -p ${OBJECTDIR}/_ext/608034620
 	${RM} "$@.d"
 	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_NO_UNDEF -DFG_USING_GLEW -DFG_USING_GLM -DFG_USING_LUA_PLUS -DFG_USING_OPENGL -DFG_USING_OPENGL_GLEW -DFG_USING_SDL2 -DFG_USING_TINYXML -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src `pkg-config --cflags gl` `pkg-config --cflags glew` `pkg-config --cflags sdl2` `pkg-config --cflags SDL2_mixer` `pkg-config --cflags libpng` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/608034620/fgDirent.o ../../../src/Util/fgDirent.cpp
+
+${OBJECTDIR}/_ext/608034620/fgFastCmp.o: ../../../src/Util/fgFastCmp.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/608034620
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_NO_UNDEF -DFG_USING_GLEW -DFG_USING_GLM -DFG_USING_LUA_PLUS -DFG_USING_OPENGL -DFG_USING_OPENGL_GLEW -DFG_USING_SDL2 -DFG_USING_TINYXML -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src `pkg-config --cflags gl` `pkg-config --cflags glew` `pkg-config --cflags sdl2` `pkg-config --cflags SDL2_mixer` `pkg-config --cflags libpng` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/608034620/fgFastCmp.o ../../../src/Util/fgFastCmp.cpp
 
 ${OBJECTDIR}/_ext/608034620/fgFile.o: ../../../src/Util/fgFile.cpp 
 	${MKDIR} -p ${OBJECTDIR}/_ext/608034620

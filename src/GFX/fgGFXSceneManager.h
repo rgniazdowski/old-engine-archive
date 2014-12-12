@@ -9,6 +9,7 @@
 
 #ifndef FG_INC_GFX_SCENE_MANAGER
     #define FG_INC_GFX_SCENE_MANAGER
+    #define FG_INC_GFX_SCENE_MANAGER_BLOCK
 
     #include "Util/fgHandleManager.h"
 
@@ -323,4 +324,5 @@ private:
     fgManagerBase *m_pResourceMgr;
 };
 
+    #undef FG_INC_GFX_SCENE_MANAGER_BLOCK
 #endif /* FG_INC_GFX_SCENE_MANAGER */
