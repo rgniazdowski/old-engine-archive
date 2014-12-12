@@ -28,14 +28,14 @@ fgGuiDrawer::~fgGuiDrawer() {
 /*
  *
  */
-void fgGuiDrawer::setResourceManager(fgManagerBase *pResourceMgr) {
+void fgGuiDrawer::setResourceManager(fg::base::Manager *pResourceMgr) {
     m_pResourceMgr = pResourceMgr;
 }
 
 /*
  *
  */
-void fgGuiDrawer::setShaderManager(fgManagerBase *pShaderMgr) {
+void fgGuiDrawer::setShaderManager(fg::base::Manager *pShaderMgr) {
     fgGfxDrawingBatch::setShaderManager(pShaderMgr);
 }
 

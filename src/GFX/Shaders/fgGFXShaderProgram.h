@@ -135,7 +135,7 @@ protected:
     /// Is the shader program linked and ready to use
     fgBool m_isLinked;
     ///
-    fgManagerBase *m_manager;
+    fg::base::Manager *m_manager;
 
 public:
     //
@@ -178,7 +178,7 @@ protected:
     fgBool releaseGFX(void);
 
     //
-    fgBool setManager(fgManagerBase *pManager);
+    fgBool setManager(fg::base::Manager *pManager);
 
 public:
     // Create the shader program with direct GL calls

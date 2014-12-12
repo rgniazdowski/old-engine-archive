@@ -54,7 +54,7 @@ private:
 
 protected:
     ///
-    fgManagerBase *m_pShaderMgr;
+    fg::base::Manager *m_pShaderMgr;
 
 protected:
     /**
@@ -89,7 +89,7 @@ public:
      * 
      * @return 
      */
-    inline fgManagerBase *getShaderManager(void) const {
+    inline fg::base::Manager *getShaderManager(void) const {
         return m_pShaderMgr;
     }
 
@@ -97,7 +97,7 @@ public:
      * 
      * @param pShaderMgr
      */
-    virtual void setShaderManager(fgManagerBase *pShaderMgr);
+    virtual void setShaderManager(fg::base::Manager *pShaderMgr);
 
     /**
      * 

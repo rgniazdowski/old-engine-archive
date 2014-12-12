@@ -17,60 +17,65 @@ typedef unsigned int fgManagerType;
     #define FG_MANAGER_INVALID      0x00000000
     #define FG_MANAGER_BASE         0x00000000
 
-/**
- *
- */
-class fgManagerBase {
-public:
-    /**
-     * 
-     */
-    fgManagerBase() :
-    m_init(FG_FALSE),
-    m_managerType(FG_MANAGER_INVALID) { }
-    /**
-     * 
-     */
-    virtual ~fgManagerBase() { }
+namespace fg {
+    namespace base {
 
-protected:
-    /**
-     * 
-     */
-    virtual void clear(void) = 0;
+        /**
+         *
+         */
+        class Manager {
+        public:
+            /**
+             * 
+             */
+            Manager() :
+            m_init(FG_FALSE),
+            m_managerType(FG_MANAGER_INVALID) { }
+            /**
+             * 
+             */
+            virtual ~Manager() { }
 
-public:
-    /**
-     * 
-     * @return 
-     */
-    virtual fgBool destroy(void) = 0;
-    /**
-     * 
-     * @return 
-     */
-    virtual fgBool initialize(void) = 0;
-    
-    /**
-     * 
-     * @return 
-     */
-    fgManagerType getManagerType(void) const {
-        return m_managerType;
-    }
-    /**
-     * 
-     * @return 
-     */
-    fgBool isInit(void) const {
-        return m_init;
-    }
-    
-protected:
-    /// Is manager initialized successfully
-    fgBool m_init;
-    /// Current manager type (set by the most derived class))
-    fgManagerType m_managerType;
+        protected:
+            /**
+             * 
+             */
+            virtual void clear(void) = 0;
+
+        public:
+            /**
+             * 
+             * @return 
+             */
+            virtual fgBool destroy(void) = 0;
+            /**
+             * 
+             * @return 
+             */
+            virtual fgBool initialize(void) = 0;
+            /**
+             * 
+             * @return 
+             */
+            fgManagerType getManagerType(void) const {
+                return m_managerType;
+            }
+            /**
+             * 
+             * @return 
+             */
+            fgBool isInit(void) const {
+                return m_init;
+            }
+
+        protected:
+            /// Is manager initialized successfully
+            fgBool m_init;
+            /// Current manager type (set by the most derived class))
+            fgManagerType m_managerType;
+        };
+
+    };
 };
 
 #endif /* FG_INC_MANAGER_BASE */

@@ -36,7 +36,7 @@ private:
     /// Pointer to the external resource manager
     /// Required for fast font/texture lookup
     /// #FIXME - should this be replaced with texture manager?
-    fgManagerBase *m_pResourceMgr;
+    fg::base::Manager *m_pResourceMgr;
 
 public:
     //
@@ -49,7 +49,7 @@ public:
      * 
      * @return 
      */
-    fgManagerBase *getResourceManager(void) const {
+    fg::base::Manager *getResourceManager(void) const {
         return m_pResourceMgr;
     }
     
@@ -57,12 +57,12 @@ public:
      * 
      * @param pResourceMgr
      */
-    virtual void setResourceManager(fgManagerBase *pResourceMgr);
+    virtual void setResourceManager(fg::base::Manager *pResourceMgr);
     /**
      * 
      * @param pShaderMgr
      */
-    virtual void setShaderManager(fgManagerBase *pShaderMgr);
+    virtual void setShaderManager(fg::base::Manager *pShaderMgr);
 
     /**
      * 

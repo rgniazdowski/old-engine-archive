@@ -68,9 +68,9 @@ typedef FG_TAG_SCRIPT_SUBSYSTEM fgScriptSubsystemTag;
 /**
  * 
  */
-class fgScriptSubsystem : public fgManagerBase {
+class fgScriptSubsystem : public fg::base::Manager {
 public:
-    typedef fgManagerBase base_type;
+    typedef fg::base::Manager base_type;
     typedef fgScriptSubsystemTag tag_type;
 private:
 
@@ -136,26 +136,26 @@ private:
     #endif
 
     /// Pointer to the external gui main object
-    static fgManagerBase *m_pGuiMain;
+    static fg::base::Manager *m_pGuiMain;
     /// Pointer to the external event manager
-    static fgManagerBase *m_pEventMgr;
+    static fg::base::Manager *m_pEventMgr;
     /// Pointer to the external resource manager
-    static fgManagerBase *m_pResourceMgr;
+    static fg::base::Manager *m_pResourceMgr;
     /// Pointer to the external shader manager
-    static fgManagerBase *m_pShaderMgr;
+    static fg::base::Manager *m_pShaderMgr;
     /// Pointer to the external 2D Scene manager
-    static fgManagerBase *m_p2DSceneMgr;
+    static fg::base::Manager *m_p2DSceneMgr;
     /// Pointer to the external 3D Scene manager
-    static fgManagerBase *m_p3DSceneMgr;
+    static fg::base::Manager *m_p3DSceneMgr;
     /// Pointer to the external particle manager
-    static fgManagerBase *m_pParticleMgr;
+    static fg::base::Manager *m_pParticleMgr;
     /// Pointer to the external widget manager
-    static fgManagerBase *m_pWidgetMgr;
+    static fg::base::Manager *m_pWidgetMgr;
     /// Pointer to the external style manager
-    static fgManagerBase *m_pStyleMgr;
+    static fg::base::Manager *m_pStyleMgr;
     /// Pointer to the external sound manager
-    static fgManagerBase *m_pSoundMgr;
-
+    static fg::base::Manager *m_pSoundMgr;
+    
     ///
     static fgBool m_isBindingComplete;
 
@@ -178,70 +178,70 @@ public:
      * 
      * @param pEventManager
      */
-    inline void setEventManager(fgManagerBase *pEventManager) {
+    inline void setEventManager(fg::base::Manager *pEventManager) {
         m_pEventMgr = pEventManager;
     }
     /**
      * 
      * @param pResourceManager
      */
-    inline void setResourceManager(fgManagerBase *pResourceManager) {
+    inline void setResourceManager(fg::base::Manager *pResourceManager) {
         m_pResourceMgr = pResourceManager;
     }
     /**
      * 
      * @param pShaderManager
      */
-    inline void setShaderManager(fgManagerBase *pShaderManager) {
+    inline void setShaderManager(fg::base::Manager *pShaderManager) {
         m_pShaderMgr = pShaderManager;
     }
     /**
      * 
      * @param p2DSceneManager
      */
-    inline void set2DSceneManager(fgManagerBase *p2DSceneManager) {
+    inline void set2DSceneManager(fg::base::Manager *p2DSceneManager) {
         m_p2DSceneMgr = p2DSceneManager;
     }
     /**
      * 
      * @param p3DSceneManager
      */
-    inline void set3DSceneManager(fgManagerBase *p3DSceneManager) {
+    inline void set3DSceneManager(fg::base::Manager *p3DSceneManager) {
         m_p3DSceneMgr = p3DSceneManager;
     }
     /**
      * 
      * @param pParticleSystem
      */
-    inline void setParticleSystem(fgManagerBase *pParticleSystem) {
+    inline void setParticleSystem(fg::base::Manager *pParticleSystem) {
         m_pParticleMgr = pParticleSystem;
     }
     /**
      * 
      * @param pGuiMain
      */
-    inline void setGuiMain(fgManagerBase *pGuiMain) {
+    inline void setGuiMain(fg::base::Manager *pGuiMain) {
         m_pGuiMain = pGuiMain;
     }
     /**
      * 
      * @param pWidgetManager
      */
-    inline void setWidgetManager(fgManagerBase *pWidgetManager) {
+    inline void setWidgetManager(fg::base::Manager *pWidgetManager) {
         m_pWidgetMgr = pWidgetManager;
     }
     /**
      * 
      * @param pStyleManager
      */
-    inline void setStyleManager(fgManagerBase *pStyleManager) {
+    inline void setStyleManager(fg::base::Manager *pStyleManager) {
         m_pStyleMgr = pStyleManager;
     }
     /**
      * 
      * @param pSoundManager
      */
-    inline void setSoundManager(fgManagerBase *pSoundManager) {
+    inline void setSoundManager(fg::base::Manager *pSoundManager) {
         m_pSoundMgr = pSoundManager;
     }
 

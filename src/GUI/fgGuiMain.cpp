@@ -465,7 +465,7 @@ fgResourceManager *fgGuiMain::getResourceManager(void) const {
 /*
  *
  */
-fgManagerBase *fgGuiMain::getShaderManager(void) const {
+fg::base::Manager *fgGuiMain::getShaderManager(void) const {
     return m_pShaderMgr;
 }
 
@@ -502,7 +502,7 @@ void fgGuiMain::setResourceManager(fgResourceManager *pResourceMgr) {
 /*
  *
  */
-void fgGuiMain::setShaderManager(fgManagerBase *pShaderMgr) {
+void fgGuiMain::setShaderManager(fg::base::Manager *pShaderMgr) {
     if(pShaderMgr) {
         if(pShaderMgr->getManagerType() != FG_MANAGER_GFX_SHADER)
             return;

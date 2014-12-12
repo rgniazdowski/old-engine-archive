@@ -93,7 +93,7 @@ fgBool fgGfxSceneManager::initialize(void) {
  * 
  * @param shaderMgr
  */
-void fgGfxSceneManager::setShaderManager(fgManagerBase* pShaderMgr) {
+void fgGfxSceneManager::setShaderManager(fg::base::Manager* pShaderMgr) {
     fgGfxDrawingBatch::setShaderManager(pShaderMgr);
 }
 
@@ -101,7 +101,7 @@ void fgGfxSceneManager::setShaderManager(fgManagerBase* pShaderMgr) {
  * 
  * @param pResourceMgr
  */
-void fgGfxSceneManager::setResourceManager(fgManagerBase *pResourceMgr) {
+void fgGfxSceneManager::setResourceManager(fg::base::Manager *pResourceMgr) {
     if(!pResourceMgr)
         return;
     if(pResourceMgr->getManagerType() == FG_MANAGER_RESOURCE)

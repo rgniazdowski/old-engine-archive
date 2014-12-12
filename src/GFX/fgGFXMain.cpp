@@ -570,7 +570,7 @@ void fgGfxMain::render(void) {
  * @param pResourceManager
  * @return 
  */
-fgBool fgGfxMain::setResourceManager(fgManagerBase *pResourceManager) {
+fgBool fgGfxMain::setResourceManager(fg::base::Manager *pResourceManager) {
     if(!pResourceManager)
         return FG_FALSE;
     if(pResourceManager->getManagerType() != FG_MANAGER_RESOURCE) {
@@ -590,7 +590,7 @@ fgBool fgGfxMain::setResourceManager(fgManagerBase *pResourceManager) {
         m_particleSystem->setSceneManager(m_2DScene);
         m_particleSystem->initialize();
     }
-    fgManagerBase *pEventMgr = static_cast<fgResourceManager *>(m_pResourceMgr)->getEventManager();
+    fg::base::Manager *pEventMgr = static_cast<fgResourceManager *>(m_pResourceMgr)->getEventManager();
     if(!pEventMgr) {
         unregisterResourceCallbacks();
         m_pEventMgr = NULL;

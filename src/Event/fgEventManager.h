@@ -42,7 +42,7 @@
 /**
  * Event manager main class definition.
  */
-class fgEventManager : public fgManagerBase {
+class fgEventManager : public fg::base::Manager {
 private:
     ///
     fgVector<int> m_keysDownPool;

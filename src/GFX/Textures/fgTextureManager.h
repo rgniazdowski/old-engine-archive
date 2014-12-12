@@ -36,13 +36,13 @@ typedef FG_TAG_TEXTURE_MANAGER fgTextureManagerTag;
 /**
  * Class that allows to perform GROUP OPERATIONS on all textures. 
  */
-class fgTextureManager : public fgManagerBase {
+class fgTextureManager : public fg::base::Manager {
 public:
-    typedef fgManagerBase base_type;
+    typedef fg::base::Manager base_type;
     typedef fgTextureManagerTag tag_type;
 public:
     // Default constructor for Texture Manager object
-    fgTextureManager(fgManagerBase *pResourceMgr);
+    fgTextureManager(fg::base::Manager *pResourceMgr);
     // Default destructor for Texture Manager object
     virtual ~fgTextureManager();
 
@@ -68,9 +68,9 @@ public:
     virtual fgBool initialize(void);
 
     //
-    void setResourceManager(fgManagerBase *pResourceMgr);
+    void setResourceManager(fg::base::Manager *pResourceMgr);
     //
-    fgManagerBase *getResourceManager(void) const;
+    fg::base::Manager *getResourceManager(void) const;
 
     /**
      * RAM -> VRAM.
@@ -138,9 +138,9 @@ private:
 
 private:
     ///
-    fgManagerBase *m_pResourceMgr;
+    fg::base::Manager *m_pResourceMgr;
     ///
-    fgManagerBase *m_pEventMgr;
+    fg::base::Manager *m_pEventMgr;
     ///
     fgFunctionCallback *m_resourceCreatedCallback;
     ///

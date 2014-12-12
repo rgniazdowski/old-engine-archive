@@ -30,7 +30,7 @@
  * 
  * @param resourceFactory
  */
-fgResourceManager::fgResourceManager(fgResourceFactory *pResourceFactory, fgManagerBase *pQualityMgr, fgManagerBase *pEventMgr) :
+fgResourceManager::fgResourceManager(fgResourceFactory *pResourceFactory, fg::base::Manager *pQualityMgr, fg::base::Manager *pEventMgr) :
 m_pResourceFactory(pResourceFactory),
 m_pQualityMgr(pQualityMgr),
 m_pEventMgr(pEventMgr),

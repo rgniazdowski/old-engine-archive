@@ -30,7 +30,7 @@
 /**
  *
  */
-class fgGfxSceneManager : public fgManagerBase,
+class fgGfxSceneManager : public fg::base::Manager,
         protected fgGfxDrawingBatch,
         protected fgHandleManager<fgGfxSceneNode *, fgGfxSceneNodeHandle> {
 public:
@@ -71,13 +71,13 @@ public:
      * 
      * @param pShaderMgr
      */
-    virtual void setShaderManager(fgManagerBase *pShaderMgr);
+    virtual void setShaderManager(fg::base::Manager *pShaderMgr);
 
     // Set internal pointer to the main resource manager
-    void setResourceManager(fgManagerBase *pResourceMgr);
+    void setResourceManager(fg::base::Manager *pResourceMgr);
 
     // Get internal pointer to the main resource manager
-    fgManagerBase *getResourceManager(void) const {
+    fg::base::Manager *getResourceManager(void) const {
         return m_pResourceMgr;
     }
     /**
@@ -321,7 +321,7 @@ private:
     ///
     nodePriorityQueue m_nodeQueue;
     /// Pointer to the external resource manager - dont know if this is necessary
-    fgManagerBase *m_pResourceMgr;
+    fg::base::Manager *m_pResourceMgr;
 };
 
     #undef FG_INC_GFX_SCENE_MANAGER_BLOCK

@@ -91,33 +91,33 @@ void *fgScriptSubsystem::m_luaState = NULL;
 ///
 fgBool fgScriptSubsystem::m_isBindingComplete = FG_FALSE;
 
-/// Pointer to the external gui main object
-fgManagerBase *fgScriptSubsystem::m_pGuiMain = NULL;
-/// Pointer to the external event manager
-fgManagerBase *fgScriptSubsystem::m_pEventMgr = NULL;
-/// Pointer to the external resource manager
-fgManagerBase *fgScriptSubsystem::m_pResourceMgr = NULL;
-/// Pointer to the external shader manager
-fgManagerBase *fgScriptSubsystem::m_pShaderMgr = NULL;
+/// Pointer to the external GUI Main object
+fg::base::Manager *fgScriptSubsystem::m_pGuiMain = NULL;
+/// Pointer to the external Event manager
+fg::base::Manager *fgScriptSubsystem::m_pEventMgr = NULL;
+/// Pointer to the external Resource manager
+fg::base::Manager *fgScriptSubsystem::m_pResourceMgr = NULL;
+/// Pointer to the external GFX Shader manager
+fg::base::Manager *fgScriptSubsystem::m_pShaderMgr = NULL;
 /// Pointer to the external 2D Scene manager
-fgManagerBase *fgScriptSubsystem::m_p2DSceneMgr = NULL;
+fg::base::Manager *fgScriptSubsystem::m_p2DSceneMgr = NULL;
 /// Pointer to the external 3D Scene manager
-fgManagerBase *fgScriptSubsystem::m_p3DSceneMgr = NULL;
-/// Pointer to the external particle manager
-fgManagerBase *fgScriptSubsystem::m_pParticleMgr = NULL;
-/// Pointer to the external widget manager
-fgManagerBase *fgScriptSubsystem::m_pWidgetMgr = NULL;
-/// Pointer to the external style manager
-fgManagerBase *fgScriptSubsystem::m_pStyleMgr = NULL;
-/// Pointer to the external sound manager
-fgManagerBase *fgScriptSubsystem::m_pSoundMgr = NULL;
+fg::base::Manager *fgScriptSubsystem::m_p3DSceneMgr = NULL;
+/// Pointer to the external Particle manager
+fg::base::Manager *fgScriptSubsystem::m_pParticleMgr = NULL;
+/// Pointer to the external GUI Widget manager
+fg::base::Manager *fgScriptSubsystem::m_pWidgetMgr = NULL;
+/// Pointer to the external GUI Style manager
+fg::base::Manager *fgScriptSubsystem::m_pStyleMgr = NULL;
+/// Pointer to the external Sound manager
+fg::base::Manager *fgScriptSubsystem::m_pSoundMgr = NULL;
 
 /**
  * 
  */
 fgScriptSubsystem::fgScriptSubsystem()
 #if defined(FG_USING_LUA_PLUS)
-    :
+:
 m_metatableGuiMain(),
 m_metatableEventMgr(),
 m_metatableResourceMgr(),
@@ -250,52 +250,51 @@ fgBool fgScriptSubsystem::initialize(void) {
     fgScriptMT->generateMetatableNames();
 
     if(!registerConstants()) {
-        FG_LOG::PrintError("Script: Failed to register global constants");
+        FG_LOG_ERROR("Script: Failed to register global constants");
     }
 
     if(!registerAdditionalTypes()) {
-        FG_LOG::PrintError("Script: Failed to register additional types");
+        FG_LOG_ERROR("Script: Failed to register additional types");
     }
 
     if(!registerEventManager()) {
-        FG_LOG::PrintError("Script: Failed to register EventManager object");
+        FG_LOG_ERROR("Script: Failed to register EventManager object");
     }
 
     if(!registerResourceManager()) {
-        FG_LOG::PrintError("Script: Failed to register ResourceManager object");
+        FG_LOG_ERROR("Script: Failed to register ResourceManager object");
     }
 
     if(!registerShaderManager()) {
-        FG_LOG::PrintError("Script: Failed to register ShaderManager object");
+        FG_LOG_ERROR("Script: Failed to register ShaderManager object");
     }
 
     if(!register2DSceneManager()) {
-        FG_LOG::PrintError("Script: Failed to register 2DSceneManager object");
+        FG_LOG_ERROR("Script: Failed to register 2DSceneManager object");
     }
 
     if(!register3DSceneManager()) {
-        FG_LOG::PrintError("Script: Failed to register 3DSceneManager object");
+        FG_LOG_ERROR("Script: Failed to register 3DSceneManager object");
     }
 
     if(!registerParticleSystem()) {
-        FG_LOG::PrintError("Script: Failed to register ParticleSystem object");
+        FG_LOG_ERROR("Script: Failed to register ParticleSystem object");
     }
 
     if(!registerGuiMain()) {
-        FG_LOG::PrintError("Script: Failed to register GuiMain object");
+        FG_LOG_ERROR("Script: Failed to register GuiMain object");
     }
 
     if(!registerWidgetManager()) {
-        FG_LOG::PrintError("Script: Failed to register WidgetManager object");
+        FG_LOG_ERROR("Script: Failed to register WidgetManager object");
     }
 
     if(!registerStyleManager()) {
-        FG_LOG::PrintError("Script: Failed to register StyleManager object");
-
+        FG_LOG_ERROR("Script: Failed to register StyleManager object");
     }
 
     if(!registerSoundManager()) {
-        FG_LOG::PrintError("Script: Failed to register SoundManager object");
+        FG_LOG_ERROR("Script: Failed to register SoundManager object");
     }
     float t2 = fgTime::ms();
     FG_LOG_DEBUG("Script: ScriptSubsystem initialized in %.2f seconds", (t2 - t1) / 1000.0f);
@@ -763,8 +762,8 @@ int fgScriptSubsystem::addEventCallbackWrapper(lua_State *L) {
         int id = 1;
         if(args[id].IsInteger()) {
             int iVal = args[id].GetInteger();
-            if(iVal < (int)FG_NUM_EVENT_TYPES)
-                eventType = (fgEventType)iVal;
+            //if(iVal < (int)FG_NUM_EVENT_TYPES)
+            eventType = (fgEventType)iVal;
             FG_LOG_DEBUG("Script: EventWrapper: eventType[%d]", iVal);
         }
         id++;

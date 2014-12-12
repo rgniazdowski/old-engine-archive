@@ -34,9 +34,9 @@
 /**
  * 
  */
-class fgSFXManager : public fgManagerBase {
+class fgSFXManager : public fg::base::Manager {
 public:
-    typedef fgManagerBase base_type;
+    typedef fg::base::Manager base_type;
     typedef FG_SFX_VOLUME_TYPE volume_type;
 private:
     ///
@@ -48,13 +48,13 @@ private:
     fgBool m_pcm;
     #endif /* FG_USING_MARMALADE */
     ///
-    fgManagerBase *m_pResourceMgr;
+    fg::base::Manager *m_pResourceMgr;
 
 public:
     /**
      * 
      */
-    fgSFXManager(fgManagerBase *pResourceMgr = NULL);
+    fgSFXManager(fg::base::Manager *pResourceMgr = NULL);
     /**
      * 
      */
@@ -103,12 +103,12 @@ public:
      * 
      * @param pResourceMgr
      */
-    void setResourceManager(fgManagerBase *pResourceMgr);
+    void setResourceManager(fg::base::Manager *pResourceMgr);
     /**
      * 
      * @return 
      */
-    fgManagerBase *getResourceManager(void) const {
+    fg::base::Manager *getResourceManager(void) const {
         return m_pResourceMgr;
     }
 

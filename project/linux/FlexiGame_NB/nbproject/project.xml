@@ -80,6 +80,7 @@
             <word>egl</word>
             <word>endian</word>
             <word>enum</word>
+            <word>fg</word>
             <word>fmt</word>
             <word>foreach</word>
             <word>framebuffer</word>
@@ -87,6 +88,7 @@
             <word>fullscreen</word>
             <word>func</word>
             <word>Gainsboro</word>
+            <word>gameplay</word>
             <word>gc</word>
             <word>gfx</word>
             <word>gl</word>
@@ -120,6 +122,7 @@
             <word>multitextured</word>
             <word>multitexturing</word>
             <word>namespace</word>
+            <word>nongame</word>
             <word>nx</word>
             <word>ny</word>
             <word>nz</word>

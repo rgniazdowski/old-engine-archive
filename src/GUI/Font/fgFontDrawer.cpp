@@ -31,7 +31,7 @@ fgFontDrawer::~fgFontDrawer() { }
  * 
  * @param shaderMgr
  */
-void fgFontDrawer::setShaderManager(fgManagerBase *shaderMgr) {
+void fgFontDrawer::setShaderManager(fg::base::Manager *shaderMgr) {
     fgGfxDrawingBatch::setShaderManager(shaderMgr);
 }
 

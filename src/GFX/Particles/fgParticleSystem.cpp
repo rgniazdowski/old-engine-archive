@@ -21,7 +21,7 @@
 /**
  * 
  */
-fgParticleSystem::fgParticleSystem(fgManagerBase *pResourceMgr, fgManagerBase *pSceneMgr) {
+fgParticleSystem::fgParticleSystem(fg::base::Manager *pResourceMgr, fg::base::Manager *pSceneMgr) {
     setResourceManager(pResourceMgr);
     setSceneManager(pSceneMgr);
 }

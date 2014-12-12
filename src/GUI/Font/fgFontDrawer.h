@@ -55,7 +55,7 @@ protected:
 public:
     /**
      */
-    virtual void setShaderManager(fgManagerBase *shaderMgr);
+    virtual void setShaderManager(fg::base::Manager *shaderMgr);
     
     /**
      * 

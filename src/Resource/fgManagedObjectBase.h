@@ -159,20 +159,20 @@ public:
      * 
      * @return 
      */
-    inline fgManagerBase *getManager(void) const {
+    inline fg::base::Manager *getManager(void) const {
         return m_pManager;
     }
     /**
      * 
      * @param pManager
      */
-    inline void setManager(fgManagerBase *pManager) {
+    inline void setManager(fg::base::Manager *pManager) {
         m_pManager = pManager;
     }
 
 protected:
     ///
-    fgManagerBase *m_pManager;
+    fg::base::Manager *m_pManager;
     /// Name of the data, string ID
     std::string m_nameTag;
     /// Unique handle number

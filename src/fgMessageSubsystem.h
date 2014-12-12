@@ -24,10 +24,10 @@
 /**
  *
  */
-class fgMessageSubsystem : protected fgManagerBase, public fgSingleton<fgMessageSubsystem> {
+class fgMessageSubsystem : protected fg::base::Manager, public fgSingleton<fgMessageSubsystem> {
     friend class fgSingleton<fgMessageSubsystem>;
 public:
-    typedef fgManagerBase base_type;
+    typedef fg::base::Manager base_type;
     
 protected:
     typedef fgVector<fgStatus *> msStatusVec;

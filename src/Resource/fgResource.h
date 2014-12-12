@@ -14,7 +14,6 @@
     #define FG_INC_RESOURCE
     #define FG_INC_RESOURCE_BLOCK
 
-    #include "fgCommon.h"
     #include "Hardware/fgQualityTypes.h"
 
     #include <string>

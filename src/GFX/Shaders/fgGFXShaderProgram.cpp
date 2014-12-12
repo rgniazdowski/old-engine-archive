@@ -527,7 +527,7 @@ fgBool fgGfxShaderProgram::releaseGFX(void) {
 /*
  *
  */
-fgBool fgGfxShaderProgram::setManager(fgManagerBase *pManager) {
+fgBool fgGfxShaderProgram::setManager(fg::base::Manager *pManager) {
     if(!pManager)
         return FG_FALSE;
     setManaged(FG_TRUE);
