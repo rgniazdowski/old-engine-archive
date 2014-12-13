@@ -79,6 +79,7 @@ void fgGuiConsole::updateFromStatusVec(const fgVector<fgStatus *> &statusVec) {
                this->pushText(status->message->data);
            }
        }
+       m_vSlider->setCurrentValue(m_vSlider->getMaxValue(), m_vSlider->getMaxValue());
        m_numConsoleRecords = m_textData.size();
    } else {
        // n < m_numConsoleRecords

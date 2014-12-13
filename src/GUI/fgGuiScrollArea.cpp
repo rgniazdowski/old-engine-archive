@@ -213,10 +213,10 @@ int fgGuiScrollArea::updateState(const fgPointerData* pointerData) {
     if(!pointerData)
         return FG_FALSE;
 
-    if(m_hSlider) {
+    if(m_hSlider && (m_sliderSwitch & SLIDER_HORIZONTAL)) {
         m_hSlider->updateState(pointerData);
     }
-    if(m_vSlider) {
+    if(m_vSlider && (m_sliderSwitch & SLIDER_VERTICAL)) {
         m_vSlider->updateState(pointerData);
     }
     // #HAXXOR!

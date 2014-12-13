@@ -40,16 +40,22 @@ void fgGuiTextArea::setDefaults(void) {
 fgBoundingBox3Df fgGuiTextArea::updateBounds(void) {
     float textSize = m_styles[m_state].getForeground().textSize;
     fgGuiPadding &padding = m_styles[m_state].getPadding();
-    m_textAreaSize.cols = (m_bbox.size.x-padding.left-padding.right)/textSize;
-    m_textAreaSize.rows = (m_bbox.size.y-padding.bottom-padding.top)/textSize; // ? refresh ?
-    return fgGuiScrollArea::updateBounds();
+    m_textAreaSize.cols = (m_bbox.size.x - padding.left - padding.right) / textSize;
+    m_textAreaSize.rows = (m_bbox.size.y - padding.bottom - padding.top) / textSize; // ? refresh ?
+    fgBoundingBox3Df scrollAreaSize = base_type::updateBounds();
+    int n = m_textData.size();
+    if(m_vSlider) {
+        m_vSlider->setRatio(scrollAreaSize.size.y / (textSize * n));
+        m_relMove.y = (-1.0f) * (textSize * n - scrollAreaSize.size.y) * m_vSlider->getCurrentValue().y / m_vSlider->getMaxValue();
+    }
+    return scrollAreaSize;
 }
 
 /*
  *
  */
 void fgGuiTextArea::refresh(void) {
-    fgGuiScrollArea::refresh(); // #FIXME
+    base_type::refresh(); // #FIXME
 }
 
 /**
@@ -61,24 +67,30 @@ void fgGuiTextArea::display(fgGuiDrawer* guiLayer) {
         return;
     if(!m_isVisible)
         return;
+
     base_type::display(guiLayer);
 
     fgGuiDrawer *guiDrawer = (fgGuiDrawer *)guiLayer;
     fgVec2f blockPos, blockSize, textSize;
 
     int n = m_textData.size();
-    for(int i = 0; i < n; i++) {
-        if(m_textData[i].length()) {
+    //float sliderRatio = (float)m_textAreaSize.rows/(float)n;
+    //m_vSlider->setRatio(sliderRatio);
+    float ratio = m_vSlider->getCurrentValue().y / m_vSlider->getMaxValue();
+    int begin = (int)(n - m_textAreaSize.rows - 1) * ratio;
+    if(begin < 0)
+        begin = 0;
+
+    for(int i = 0, j = begin + m_textAreaSize.rows; j >= begin; j--, i++) {
+        if(m_textData[j].length()) {
             // #FIXME
             guiDrawer->downZIndex();
             float charSizeY = m_styles[m_state].getForeground().textSize;
-            float newPos = m_bbox.pos.y+(m_textAreaSize.rows-1-i)*charSizeY;
+            float newPos = m_bbox.pos.y + (m_textAreaSize.rows - 1 - i) * charSizeY;
             blockPos = fgVec2f(m_bbox.pos.x, newPos);
             blockSize = fgVec2f(m_bbox.size.x, charSizeY);
-            guiDrawer->appendText2D(m_textSize, blockPos, blockSize, m_styles[m_state], m_textData[i].c_str());
+            guiDrawer->appendText2D(m_textSize, blockPos, blockSize, m_styles[m_state], m_textData[j].c_str());
             guiDrawer->upZIndex();
         }
-        if(i >= m_textAreaSize.rows-1)
-            break;
     }
 }

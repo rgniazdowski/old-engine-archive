@@ -112,10 +112,13 @@ public:
             ratio = 1.0f;
         if(ratio < 0.15f)
             ratio = 0.15f;
-        if(m_sliderAlign & SLIDER_HORIZONTAL)
+        if(m_sliderAlign & SLIDER_HORIZONTAL) {
             m_ratio.x = ratio;
-        if(m_sliderAlign & SLIDER_VERTICAL)
+        }
+        if(m_sliderAlign & SLIDER_VERTICAL) {
             m_ratio.y = ratio;
+        }
+
     }
     /**
      * 
@@ -140,6 +143,10 @@ public:
      */
     void setRatio(const fgVector2f& ratio) {
         m_ratio = ratio;
+        if(m_ratio.x > 1.0f)
+            m_ratio.x = 1.0f;
+        if(m_ratio.y > 1.0f)
+            m_ratio.y = 1.0f;
     }
     /**
      * 
@@ -156,6 +163,7 @@ public:
     void setCurrentValue(float x, float y) {
         m_currentValue.x = x;
         m_currentValue.y = y;
+        m_pointerRatio = m_currentValue / m_maxValue;
     }
     /**
      * 
@@ -163,6 +171,7 @@ public:
      */
     void setCurrentValue(const fgVector2f& currentValue) {
         m_currentValue = currentValue;
+        m_pointerRatio = m_currentValue / m_maxValue;
     }
     /**
      * 
