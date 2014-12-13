@@ -77,6 +77,18 @@ struct fgGuiBorder {
     color(FG_GUI_DEFAULT_BORDER_COLOR),
     style(FG_GUI_DEFAULT_BORDER_STYLE),
     width(_width) { }
+    
+    operator fgColor4f() const {
+        return color;
+    }
+    
+    operator fgGuiBorderStyle() const {
+        return style;
+    }
+    
+    operator float() const {
+        return width;
+    }
 };
 
 /**
@@ -106,6 +118,18 @@ struct fgGuiBackground {
     texture(),
     color(0.4f, 0.4f, 0.4f, 0.8f), // Default predefs..
     style(FG_GUI_BACKGROUND_MAX) { }
+    
+    operator std::string() const {
+        return texture;
+    }
+    
+    operator fgColor4f() const {
+        return color;
+    }
+    
+    operator fgGuiBackgroundStyle() const {
+        return style;
+    }
 };
 
     #define FG_GUI_DEFAULT_TEXT_SIZE	16.0f
@@ -158,6 +182,10 @@ struct fgGuiMargin {
     right(FG_GUI_DEFAULT_MARGIN),
     top(FG_GUI_DEFAULT_MARGIN),
     bottom(FG_GUI_DEFAULT_MARGIN) { }
+    
+    operator float() const {
+        return value;
+    }
 };
 
 /**
