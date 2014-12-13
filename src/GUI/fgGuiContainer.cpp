@@ -15,9 +15,10 @@
  *
  */
 fgGuiContainer::fgGuiContainer() :
-fgGuiWidget(),
+base_type(),
 m_packMethod(FG_GUI_CONTAINER_PACK_FREE),
-m_packAlign(FG_GUI_CONTAINER_PACK_ALIGN_NONE) {
+m_packAlign(FG_GUI_CONTAINER_PACK_ALIGN_NONE),
+m_drawChildren(FG_TRUE) {
     fgGuiContainer::setDefaults();
 }
 
@@ -52,7 +53,7 @@ void fgGuiContainer::setFlags(const std::string& flags) {
     if(flags.empty() || flags.length() < 3)
         return;
     // This is important - always call setFlags for the base class
-    fgGuiWidget::setFlags(flags);
+    base_type::setFlags(flags);
     m_packMethod = FG_GUI_CONTAINER_PACK_FREE;
     m_packAlign = FG_GUI_CONTAINER_PACK_ALIGN_NONE;
     fgStringVector flagsVec;
@@ -102,14 +103,17 @@ void fgGuiContainer::display(fgGuiDrawer *guiLayer) {
     if(!guiLayer)
         return;
     guiLayer->downZIndex();
-    fgGuiWidget::display(guiLayer);
+    base_type::display(guiLayer);
+    if(!m_drawChildren)
+        return;
     for(int i = 0; i < (int)m_children.size(); i++) {
         fgGuiWidget *child = m_children[i];
         if(!child)
             continue;
         guiLayer->downZIndex();
-        if(child->isVisible())
+        if(child->isVisible()) {
             child->display(guiLayer);
+        }
         guiLayer->upZIndex();
     }
     //yolo = (fgGuiDrawer *)guiLayer;
@@ -121,12 +125,12 @@ void fgGuiContainer::display(fgGuiDrawer *guiLayer) {
  */
 fgBoundingBox3Df fgGuiContainer::updateBounds(void) {
     if(m_children.empty()) {
-        return fgGuiWidget::updateBounds();
+        return base_type::updateBounds();
     }
     // Update this container size (#FIXME)
     // This is just for reference, it will
     // set the minimal size
-    fgGuiWidget::updateBounds();
+    base_type::updateBounds();
     // Current container style 
     fgGuiStyleContent &containerStyle = m_styles[m_state];
     // Current container padding (inner border)
@@ -347,7 +351,7 @@ fgBoundingBox3Df fgGuiContainer::updateBounds(void) {
  *
  */
 void fgGuiContainer::refresh(void) {
-    fgGuiWidget::refresh();
+    base_type::refresh();
     for(int i = 0; i < (int)m_children.size(); i++) {
         fgGuiWidget *child = m_children[i];
 
@@ -363,7 +367,7 @@ void fgGuiContainer::refresh(void) {
  * @return 
  */
 int fgGuiContainer::updateState(const fgPointerData *pointerData) {
-    fgGuiWidget::updateState(pointerData);
+    base_type::updateState(pointerData);
     //if(fgGuiWidget::updateState(pointerData) == FG_GUI_WIDGET_STATE_NONE);
     //return m_state;
     for(int i = 0; i < (int)m_children.size(); i++) {

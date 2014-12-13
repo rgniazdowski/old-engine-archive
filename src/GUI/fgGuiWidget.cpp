@@ -168,7 +168,7 @@ fgBoundingBox3Df fgGuiWidget::updateBounds(const fgBoundingBox3Df &bounds) {
         m_bbox.size.x = size.x / 100.0f * bounds.size.x - style.getMargin().left - style.getMargin().right;
         m_bbox.size.y = size.y / 100.0f * bounds.size.y - style.getMargin().bottom - style.getMargin().top;
     }
-    fgBoundingBox3Df positionAndSize = updateBounds();
+    fgBoundingBox3Df positionAndSize = updateBounds(); // Call to the derived version
     // Margin?
     if(posStyle == FG_GUI_POS_STATIC) {
         m_bbox.pos = bounds.pos;

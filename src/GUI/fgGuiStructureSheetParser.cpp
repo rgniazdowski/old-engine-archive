@@ -13,6 +13,7 @@
 #include "fgGuiContainer.h"
 
 #include "Util/fgStrings.h"
+#include "Util/fgHashFunc.h"
 
 /*
  *
@@ -151,10 +152,12 @@ fgBool fgGuiStructureSheetParser::parseWidgetAttributes(fgGuiWidget *pWidget, fg
         std::string autoName = pWidget->getTypeName();
         char _tmp[24];
         memset(_tmp, 0, 24);
-        snprintf(_tmp, 23, "%d", m_count + rand() % 3);
+        snprintf(_tmp, 23, "%d", m_count + rand() % 2000 + (m_count/rand()%10));
         autoName.append("_").append(_tmp);
-        snprintf(_tmp, 23, "%d", FG_TAG_HELPER::fg_tag_s_hashfn_deprecated(autoName.c_str())); // #FIXME
+        
+        snprintf(_tmp, 23, "%d", fgHashFunc::SDBM(autoName.c_str())%100000+fgHashFunc::DEK(autoName.c_str())%20000); // #FIXME
         autoName.append("_").append(_tmp);
+        pWidget->setName(autoName);
     }
 
     return FG_TRUE;

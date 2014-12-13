@@ -22,8 +22,10 @@
 fgGuiSlider::fgGuiSlider() :
 base_type(),
 m_maxValue(100.0f),
-m_currentValue(0.0f),
-m_sliderType(SLIDER_VERTICAL) {
+m_currentValue(),
+m_pointerRatio(),
+m_ratio(0.2f, 0.2f),
+m_sliderAlign(SLIDER_VERTICAL) {
     fgGuiSlider::setDefaults();
 }
 
@@ -58,21 +60,57 @@ void fgGuiSlider::display(fgGuiDrawer* guiLayer) {
     /// need to normally draw Slider from base_type::display
     /// and also provide additional drawing (slider hook ?)
 
-    float borderTB = borderInfo.top.width + borderInfo.bottom.width;
-    float paddingTB = padding.top + padding.bottom;
+    fgVec2f borderXY, paddingXY;
+    borderXY.x = borderInfo.left.width + borderInfo.right.width;
+    borderXY.y = borderInfo.top.width + borderInfo.bottom.width;
+    paddingXY.y = padding.top + padding.bottom;
+    paddingXY.x = padding.left + padding.right;
 
     base_type::display(guiLayer);
-    fgVec2f ratio = fgVec2f(0.2f, 0.95f /* ?? */);
-    fgVec2f blockSize = 
-            fgVec2f(m_bbox.size.x * ratio.x,
-                    (m_bbox.size.y - borderTB - paddingTB));
-    fgVec2f blockPos = 
-            fgVec2f(m_bbox.pos.x - blockSize.x / 2.0f + (m_currentValue / m_maxValue) * m_bbox.size.x,
-                    m_bbox.pos.y + (m_bbox.size.y - blockSize.y)/2.0f);
+
+    fgVec2f blockSize;
+    fgVec2f blockPos;
+
+    if(m_sliderAlign == SLIDER_HORIZONTAL) {
+        blockSize.x = m_bbox.size.x * m_ratio.x;
+        blockSize.y = m_bbox.size.y - borderXY.y - paddingXY.y;
+
+        if(blockSize.x > m_bbox.size.x - borderXY.x - paddingXY.x)
+            blockSize.x = m_bbox.size.x - borderXY.x - paddingXY.x;
+        
+        blockPos.x = m_bbox.pos.x - blockSize.x / 2.0f + m_pointerRatio.x * m_bbox.size.x;
+        blockPos.y = m_bbox.pos.y + (m_bbox.size.y - blockSize.y) / 2.0f;
+    } else if(m_sliderAlign == SLIDER_VERTICAL) {
+        blockSize.x = m_bbox.size.x - borderXY.x - paddingXY.x;
+        blockSize.y = m_bbox.size.y * m_ratio.y;
+        
+        if(blockSize.y > m_bbox.size.y - borderXY.y - paddingXY.y)
+            blockSize.y = m_bbox.size.y - borderXY.y - paddingXY.y;
+
+        blockPos.x = m_bbox.pos.x + (m_bbox.size.x - blockSize.x) / 2.0f;
+        blockPos.y = m_bbox.pos.y - blockSize.y / 2.0f + m_pointerRatio.y * m_bbox.size.y;
+    } else {
+        blockSize.x = m_bbox.size.x * m_ratio.x;
+        blockSize.y = m_bbox.size.y * m_ratio.y;
+
+        blockPos.x = m_bbox.pos.x - blockSize.x / 2.0f + m_pointerRatio.x * m_bbox.size.x;
+        blockPos.y = m_bbox.pos.y - blockSize.y / 2.0f + m_pointerRatio.y * m_bbox.size.y;
+    }
+    
     if(blockPos.x - padding.left < m_bbox.pos.x)
         blockPos.x = m_bbox.pos.x + padding.left;
-    if(blockPos.x + blockSize.x + padding.right > m_bbox.pos.x+m_bbox.size.x)
-        blockPos.x = m_bbox.pos.x+m_bbox.size.x - blockSize.x - padding.right;
+    if(blockPos.x + blockSize.x + padding.right > m_bbox.pos.x + m_bbox.size.x)
+        blockPos.x = m_bbox.pos.x + m_bbox.size.x - blockSize.x - padding.right;
+
+    if(blockPos.y - padding.top < m_bbox.pos.y)
+        blockPos.y = m_bbox.pos.y + padding.top;
+    if(blockPos.y + blockSize.y + padding.bottom > m_bbox.pos.y + m_bbox.size.y)
+        blockPos.y = m_bbox.pos.y + m_bbox.size.y - blockSize.y - padding.bottom;
+
+    // magic... nope!
+    m_currentValue.x = m_maxValue * ((blockPos.x - padding.left - m_bbox.pos.x) / (m_bbox.size.x - paddingXY.x - blockSize.x));
+    m_currentValue.y = m_maxValue * ((blockPos.y - padding.top - m_bbox.pos.y) / (m_bbox.size.y - paddingXY.y - blockSize.y));
+
     if(bgColor.a > FG_EPSILON) {
         guiDrawer->appendBackground2D(blockPos, blockSize, m_styles[m_state]);
     }
@@ -96,31 +134,27 @@ int fgGuiSlider::updateState(const fgPointerData* pointerData) {
     base_type::updateState(pointerData);
 
     if(m_bbox.size.x < m_bbox.size.y) {
-        m_sliderType = SLIDER_VERTICAL;
+        m_sliderAlign = SLIDER_VERTICAL;
+    } else if(m_bbox.size.x > m_bbox.size.y) {
+        m_sliderAlign = SLIDER_HORIZONTAL;
     } else {
-        m_sliderType = SLIDER_HORIZONTAL;
+        m_sliderAlign = SLIDER_UNIVERSAL;
     }
-
-    float ratio = 0.0f;
 
     if(m_state == FG_GUI_WIDGET_STATE_PRESSED || m_state == FG_GUI_WIDGET_STATE_ACTIVATED) {
         // Need to update the slider value 
         // Can use focus?
 
-        if(m_sliderType == SLIDER_HORIZONTAL) {
-            ptrRelPos.x = (float)pointerData->m_x - m_bbox.pos.x;
-            if(ptrRelPos.x > m_bbox.size.x)
-                ptrRelPos.x = m_bbox.size.x;
-            ratio = ptrRelPos.x / m_bbox.size.x;
-        } else {
-            // Vertical
-            ptrRelPos.y = (float)pointerData->m_y - m_bbox.pos.y;
-            if(ptrRelPos.y > m_bbox.size.y)
-                ptrRelPos.y = m_bbox.size.y;
-            ratio = ptrRelPos.y / m_bbox.size.y;
-        }
-        // magic... nope!
-        m_currentValue = m_maxValue * ratio;
+        // Horizontal
+        ptrRelPos.x = (float)pointerData->m_x - m_bbox.pos.x;
+        if(ptrRelPos.x > m_bbox.size.x)
+            ptrRelPos.x = m_bbox.size.x;
+        m_pointerRatio.x = ptrRelPos.x / m_bbox.size.x;
+        // Vertical
+        ptrRelPos.y = (float)pointerData->m_y - m_bbox.pos.y;
+        if(ptrRelPos.y > m_bbox.size.y)
+            ptrRelPos.y = m_bbox.size.y;
+        m_pointerRatio.y = ptrRelPos.y / m_bbox.size.y;
     }
 
     m_ignoreState = ignoreStateTmp;

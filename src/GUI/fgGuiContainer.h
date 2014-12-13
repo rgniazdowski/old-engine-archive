@@ -65,6 +65,10 @@ protected:
     ///
     fgGuiContainerPackAlign m_packAlign;
 
+private:
+    ///
+    fgBool m_drawChildren;
+    
 protected:
     /**
      * 
@@ -99,6 +103,8 @@ public:
      */
     virtual void display(fgGuiDrawer *guiLayer);
 
+    using base_type::updateBounds;
+    
     /**
      * 
      * @return 
@@ -163,6 +169,23 @@ public:
      * @return 
      */
     fgBool removeChild(const char *nameTag);
+    
+public:
+    /**
+     * 
+     * @return 
+     */
+    fgBool isDrawChildren(void) const {
+        return m_drawChildren;
+    }
+    /**
+     * 
+     * @param toggle
+     * @return 
+     */
+    void setDrawChildren(fgBool toggle = FG_TRUE) {
+        m_drawChildren = toggle;
+    }
 };
 
 #endif /* FG_INC_GUI_CONTAINER */

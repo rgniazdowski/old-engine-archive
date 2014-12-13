@@ -14,7 +14,7 @@
  *
  */
 fgGuiConsole::fgGuiConsole() :
-fgGuiTextArea(),
+base_type(),
 m_numConsoleRecords(0) {
     fgGuiConsole::setDefaults();
 }
@@ -31,6 +31,7 @@ void fgGuiConsole::setDefaults(void) {
     m_type = FG_GUI_CONSOLE;
     m_typeName = FG_GUI_CONSOLE_NAME;
     m_typeTraits = FG_GUI_CONSOLE | FG_GUI_TEXT_AREA | FG_GUI_SCROLL_AREA | FG_GUI_CONTAINER | FG_GUI_WIDGET;
+    m_sliderSwitch = SLIDER_VERTICAL;
 }
 
 /*
