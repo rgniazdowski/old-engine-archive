@@ -19,6 +19,8 @@ project/linux/LuaPlusNextGen_NB/build
 project/linux/LuaPlusNextGen_NB/dist
 project/linux/LuaPlusNextGen_NB/nbproject/private
 project/linux/LuaPlusNextGen_NB/nbproject/private/private.xml
+docs/doxygen
+docs/doxygen/*
 icons/spot_*
 icons/tabbar_*
 icons/webclip_*
