@@ -33,7 +33,7 @@ typedef unsigned int fgFontPrintMode;
 /*
  *
  */
-class fgFontDrawer : protected virtual fgGfxDrawingBatch {
+class fgFontDrawer : public virtual fgGfxDrawingBatch {
 public:
     /**
      *
@@ -53,10 +53,6 @@ protected:
     fgGfxDrawCall *setupDrawCall(fgTextureResource *texture);
 
 public:
-    /**
-     */
-    virtual void setShaderManager(fg::base::Manager *shaderMgr);
-    
     /**
      * 
      * @param x0
@@ -91,33 +87,6 @@ public:
      */
     int print(const char *string, float charSize = FG_FONT_DEFAULT_CHAR_SIZE_PX);
     
-    /**
-     * 
-     * @return 
-     */
-    virtual int getZIndex(void) const {
-        return fgGfxDrawingBatch::getZIndex();
-    }
-    /**
-     * 
-     * @param zIndex
-     */
-    virtual void setZIndex(const int zIndex) {
-        fgGfxDrawingBatch::setZIndex(zIndex);
-    }
-    /**
-     * 
-     */
-    virtual void upZIndex(void) {
-        fgGfxDrawingBatch::upZIndex();
-    }
-    /**
-     * 
-     */
-    virtual void downZIndex(void) {
-        fgGfxDrawingBatch::downZIndex();
-    }
-
     /**
      * 
      * @param color
@@ -278,8 +247,6 @@ private:
     fgFontResource *m_currentFont;
     /// Currently used color for drawing
     fgColor4f m_color;
-    /// Internal relative move of the font
-    fgVector3f m_relMove;
     /// Font printing mode
     fgFontPrintMode m_printMode;
 };

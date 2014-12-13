@@ -113,6 +113,8 @@ private:
     fgColor4f m_color;
     /// Holds the value for the relative move
     fgVector3f m_relMove;
+    /// Scissor box for current draw call
+    fgVector4i m_scissorBox;
     ///
     fg::util::FastCmp m_fastCmp;
     /// Holds value for special Z index used for more direct sorting
@@ -158,6 +160,13 @@ public:
      */
     void setupFromMesh(const fgGfxMeshBase* pMesh);
 
+    /**
+     * 
+     * @return 
+     */
+    fgVector4i const & getScissorBox(void) const;
+    //
+    fgVector3f const & getRelMove(void) const;
     // Returns the current Z index
     int getZIndex(void) const;
     // Returns whether the draw call is managed
@@ -174,7 +183,36 @@ public:
     fgGfxPrimitiveMode getPrimitiveMode(void) const;
     //
     fgVertexData *getVertexData(void) const;
-
+    
+    /**
+     * 
+     * @param x
+     * @param y
+     * @param width
+     * @param height
+     */
+    void setScissorBox(const fgGFXint x, const fgGFXint y, const fgGFXint width, const fgGFXint height);
+    /**
+     * 
+     * @param pos
+     * @param size
+     */
+    void setScissorBox(const fgVector2i& pos, const fgVector2i & size);
+    /**
+     * 
+     * @param dimensions
+     */
+    void setScissorBox(const fgVector4i & dimensions);
+    /**
+     * 
+     * @param relMove
+     */
+    void setRelMove(const fgVector3f & relMove);
+    /**
+     * 
+     * @param relMove
+     */
+    void setRelMove(const fgVector2f & relMove);
     // Sets the Z index to specified value
     void setZIndex(const int zIndex);
     // Increments by 1 the Z index
@@ -192,30 +230,30 @@ public:
     void setComponentActive(unsigned int component, const fgBool reset = FG_FALSE);
 
     // Set active color for the next data
-    virtual void setColor(const fgColor3f& color);
+    virtual void setColor(const fgColor3f & color);
     // Set active color for the next data
-    virtual void setColor(const fgColor4f& color);
+    virtual void setColor(const fgColor4f & color);
     // This will reset used color
     virtual void resetColor(void);
 
     // Sets the pointer to given MVP matrix
     void setMVP(fgGfxMVPMatrix *MVP = NULL);
     // Returns the pointer to currently used MVP matrix
-    fgGfxMVPMatrix *getMVP(void) const;
+    fgGfxMVPMatrix * getMVP(void) const;
 
     // Can be null, which would mean that this draw call does not care about such thing
     // However it should be avoided. Shader program knows if it's being currently used.
     // Also only through shader manager given shader program can be set as active.
     void setShaderProgram(fgGfxShaderProgram *pProgram = NULL);
     // Returns the currently used shader program for this draw call
-    fgGfxShaderProgram *getShaderProgram(void) const;
+    fgGfxShaderProgram * getShaderProgram(void) const;
 
     // Sets the texture pointer
-    void setTexture(const fgGfxTextureID& textureID);
+    void setTexture(const fgGfxTextureID & textureID);
     // Returns the texture ID reference
     fgGfxTextureID const & getTexture(void) const;
     // Returns the texture ID reference
-    fgGfxTextureID& getTexture(void);
+    fgGfxTextureID & getTexture(void);
 
     // Clear the buffers
     virtual void flush(void);
@@ -233,15 +271,15 @@ public:
     // Draw
     virtual void draw(void);
     // Draw with relative 2D position
-    virtual inline void draw(const fgVec2f& relPos) {
+    virtual inline void draw(const fgVec2f & relPos) {
         fgGfxDrawCall::draw(fgMath::translate(fgMatrix4f(), fgVec3f(relPos.x, relPos.y, 0.0f)));
     }
     // Draw with relative 3D position
-    virtual inline void draw(const fgVec3f& relPos) {
+    virtual inline void draw(const fgVec3f & relPos) {
         fgGfxDrawCall::draw(fgMath::translate(fgMatrix4f(), relPos));
     }
     // Draw with given model matrix
-    virtual inline void draw(const fgMatrix4f& modelMat) {
+    virtual inline void draw(const fgMatrix4f & modelMat) {
         if(m_MVP && m_program) {
             m_MVP->calculate(modelMat);
         }
@@ -252,7 +290,7 @@ public:
     // COMPARISON OPERATORS
 
     //
-    inline int operator ==(const fgGfxDrawCall& b) const {
+    inline int operator ==(const fgGfxDrawCall & b) const {
         if(b.m_program == this->m_program) {
             if(b.m_textureID == this->m_textureID) {
                 if(b.m_attribMask == this->m_attribMask) {
@@ -264,7 +302,7 @@ public:
     }
 
     //
-    inline int operator !=(const fgGfxDrawCall& b) const {
+    inline int operator !=(const fgGfxDrawCall & b) const {
         if(b.m_program != this->m_program)
             return 1;
 
@@ -278,28 +316,28 @@ public:
     }
 
     //
-    inline bool operator <(const fgGfxDrawCall& a) const {
+    inline bool operator <(const fgGfxDrawCall & a) const {
         return fg::util::FastCmp::less32(this->m_fastCmp, a.m_fastCmp);
     }
 
     //
-    inline bool operator >(const fgGfxDrawCall& a) const {
+    inline bool operator >(const fgGfxDrawCall & a) const {
         return fg::util::FastCmp::greater32(this->m_fastCmp, a.m_fastCmp);
     }
 
     //
-    inline bool operator <=(const fgGfxDrawCall& a) const {
+    inline bool operator <=(const fgGfxDrawCall & a) const {
         return fg::util::FastCmp::less_eq32(this->m_fastCmp, a.m_fastCmp);
     }
 
     //
-    inline bool operator >=(const fgGfxDrawCall& a) const {
+    inline bool operator >=(const fgGfxDrawCall & a) const {
         return fg::util::FastCmp::greater_eq32(this->m_fastCmp, a.m_fastCmp);
     }
 
     //
     #if 0
-    inline bool operator <(const fgGfxDrawCall& a) const {
+    inline bool operator <(const fgGfxDrawCall & a) const {
         if(this->m_program < a.m_program)
             return true;
         else if(this->m_program > a.m_program)
@@ -327,7 +365,7 @@ public:
     }
 
     //
-    inline bool operator >(const fgGfxDrawCall& a) const {
+    inline bool operator >(const fgGfxDrawCall & a) const {
         if(this->m_program < a.m_program)
             return false;
         else if(this->m_program > a.m_program)
@@ -354,7 +392,7 @@ public:
     }
 
     //
-    inline bool operator <=(const fgGfxDrawCall& a) const {
+    inline bool operator <=(const fgGfxDrawCall & a) const {
         if(this->m_program < a.m_program)
             return true;
         else if(this->m_program > a.m_program)
@@ -381,7 +419,7 @@ public:
     }
 
     //
-    inline bool operator >=(const fgGfxDrawCall& a) const {
+    inline bool operator >=(const fgGfxDrawCall & a) const {
         if(this->m_program < a.m_program)
             return false;
         else if(this->m_program > a.m_program)

@@ -35,13 +35,6 @@ void fgGuiDrawer::setResourceManager(fg::base::Manager *pResourceMgr) {
 /*
  *
  */
-void fgGuiDrawer::setShaderManager(fg::base::Manager *pShaderMgr) {
-    fgGfxDrawingBatch::setShaderManager(pShaderMgr);
-}
-
-/*
- *
- */
 void fgGuiDrawer::flush(void) {
     fgGfxDrawingBatch::flush();
 }
@@ -116,7 +109,8 @@ void fgGuiDrawer::appendBackground2D(const fgVec2f &pos,
     drawCall->setComponentActive(0);
     drawCall->setComponentActive(FG_GFX_POSITION_BIT | FG_GFX_UVS_BIT | FG_GFX_COLOR_BIT);
     if(m_pResourceMgr && !style.getBackground().texture.empty()) {
-        fgResource *pResource = static_cast<fgResourceManager *>(m_pResourceMgr)->get(style.getBackground().texture);
+        // Get or request ?
+        fgResource *pResource = static_cast<fgResourceManager *>(m_pResourceMgr)->request(style.getBackground().texture);
         if(pResource) {
             if(pResource->getResourceType() == FG_RESOURCE_TEXTURE) {
                 fgTextureResource *pTexture = (fgTextureResource *)pResource;

@@ -18,7 +18,6 @@
 fgFontDrawer::fgFontDrawer() :
 m_currentFont(NULL),
 m_color(1.0f, 1.0f, 1.0f, 1.0f),
-m_relMove(0.0f, 0.0f, 0.0f),
 m_printMode(FG_FONT_PRINT_MODE_ABSOLUTE) {
 }
 
@@ -26,14 +25,6 @@ m_printMode(FG_FONT_PRINT_MODE_ABSOLUTE) {
  *
  */
 fgFontDrawer::~fgFontDrawer() { }
-
-/**
- * 
- * @param shaderMgr
- */
-void fgFontDrawer::setShaderManager(fg::base::Manager *shaderMgr) {
-    fgGfxDrawingBatch::setShaderManager(shaderMgr);
-}
 
 /**
  * 
@@ -108,13 +99,13 @@ int fgFontDrawer::print(float x0, float y0, const char *string, float charSize) 
     if(charSize <= 0.0f)
         charSize = (float)m_currentFont->getStep();
     //scale = charSize / (float)m_currentFont->getStep(); // ? is it needed?
-    if(m_printMode == FG_FONT_PRINT_MODE_ABSOLUTE && 0) {
-        x += m_relMove.x;
-        y += m_relMove.y;
+    //x += m_relMove.x;
+    //y += m_relMove.y;
+    if(m_printMode == FG_FONT_PRINT_MODE_ABSOLUTE && 0) {        
         m_relMove.x = -x0;
         m_relMove.y = -y0;
     } else {
-        m_relMove = fgVector3f(0.0f, 0.0f, 0.0f);
+        //m_relMove = fgVector3f(0.0f, 0.0f, 0.0f);
     }
     setupDrawCall(m_currentFont);
     float w = 0.0f;

@@ -27,6 +27,7 @@ m_drawAppendMode(FG_GFX_DRAW_APPEND_ABSOLUTE),
 m_primMode(fgGfxPrimitiveMode::FG_GFX_TRIANGLES),
 m_color(1.0f, 1.0f, 1.0f, 1.0f),
 m_relMove(0.0f, 0.0f, 0.0f),
+m_scissorBox(0, 0, 0, 0),
 m_fastCmp(4, fg::util::FastCmp::CMP_DATA_32),
 m_zIndex(0),
 m_isManaged(0) {
@@ -172,43 +173,65 @@ void fgGfxDrawCall::setupFromMesh(const fgGfxMeshBase* pMesh) {
     }
 }
 
-/*
- *
+/**
+ * 
+ * @return 
+ */
+fgVector4i const & fgGfxDrawCall::getScissorBox(void) const {
+    return m_scissorBox;
+}
+
+/**
+ * 
+ * @return 
+ */
+fgVector3f const & fgGfxDrawCall::getRelMove(void) const {
+    return m_relMove;
+}
+
+/**
+ * 
+ * @return 
  */
 int fgGfxDrawCall::getZIndex(void) const {
     return m_zIndex;
 }
 
-/*
- *
+/**
+ * 
+ * @return 
  */
 fgGfxAttributeData* fgGfxDrawCall::getAttributeData(void) {
     return m_attrData;
 }
 
-/*
- *
+/**
+ * 
+ * @return 
  */
 fgGFXuint fgGfxDrawCall::getAttribMask(void) const {
     return m_attribMask;
 }
 
-/*
- *
+/**
+ * 
+ * @return 
  */
 fgGfxDrawCallType fgGfxDrawCall::getDrawCallType(void) const {
     return m_drawCallType;
 }
 
-/*
- *
+/**
+ * 
+ * @return 
  */
 fgGfxDrawAppendMode fgGfxDrawCall::getDrawAppendMode(void) const {
     return m_drawAppendMode;
 }
 
-/*
- *
+/**
+ * 
+ * @return 
  */
 fgGfxPrimitiveMode fgGfxDrawCall::getPrimitiveMode(void) const {
     return m_primMode;
@@ -222,8 +245,61 @@ fgVertexData *fgGfxDrawCall::getVertexData(void) const {
     return m_vecDataBase;
 }
 
-/*
- *
+/**
+ * 
+ * @param x
+ * @param y
+ * @param width
+ * @param height
+ */
+void fgGfxDrawCall::setScissorBox(const fgGFXint x, const fgGFXint y, const fgGFXint width, const fgGFXint height) {
+    m_scissorBox.x = x;
+    m_scissorBox.y = y;
+    m_scissorBox.z = width;
+    m_scissorBox.w = height;
+}
+
+/**
+ * 
+ * @param pos
+ * @param size
+ */
+void fgGfxDrawCall::setScissorBox(const fgVector2i& pos, const fgVector2i & size) {
+    m_scissorBox.x = pos.x;
+    m_scissorBox.y = pos.y;
+    m_scissorBox.z = size.x;
+    m_scissorBox.w = size.y;
+}
+
+/**
+ * 
+ * @param dimensions
+ */
+void fgGfxDrawCall::setScissorBox(const fgVector4i & dimensions) {
+    m_scissorBox = dimensions;
+}
+
+/**
+ * 
+ * @param relMove
+ */
+void fgGfxDrawCall::setRelMove(const fgVector3f& relMove) {
+    m_relMove = relMove;
+}
+
+/**
+ * 
+ * @param relMove
+ */
+void fgGfxDrawCall::setRelMove(const fgVector2f& relMove) {
+    m_relMove.x = relMove.x;
+    m_relMove.y = relMove.y;
+    m_relMove.z = 0.0f;
+}
+
+/**
+ * 
+ * @param zIndex
  */
 void fgGfxDrawCall::setZIndex(const int zIndex) {
     m_zIndex = zIndex;
@@ -332,7 +408,7 @@ void fgGfxDrawCall::setShaderProgram(fgGfxShaderProgram *pProgram) {
         m_fastCmp.setPart(3, (fg::util::FastCmp::data_type_32)m_program->getHandle().getIndex());
     else
         m_fastCmp.setPart(3, (fg::util::FastCmp::data_type_32)0);
-    
+
 }
 
 /*
@@ -372,6 +448,7 @@ void fgGfxDrawCall::flush(void) {
     if(m_vecDataBase)
         m_vecDataBase->clear();
     m_zIndex = 0;
+    m_scissorBox = fgVector4i();
 }
 
 /*
@@ -391,9 +468,9 @@ void fgGfxDrawCall::appendRect2D(const fgVec2f &relPos, const fgVec2f &size,
                                  const fgVec2f &uv1, const fgVec2f &uv2,
                                  const fgBool rewind) {
     fgVec2f pos(relPos.x, relPos.y);
+    pos.x += m_relMove.x;
+    pos.y += m_relMove.y;
     if(m_drawAppendMode == FG_GFX_DRAW_APPEND_RELATIVE) {
-        pos.x += m_relMove.x;
-        pos.y += m_relMove.y;
         m_relMove.x += size.x;
         m_relMove.y += size.y;
     }
@@ -443,6 +520,12 @@ fgBool fgGfxDrawCall::applyAttributeData(void) {
 void fgGfxDrawCall::draw(void) {
     if(!m_vecDataBase && m_drawCallType == FG_GFX_DRAW_CALL_CUSTOM_ARRAY) // ? ?
         return;
+    fgBool scissorSet = FG_FALSE;
+    if(m_scissorBox.z != 0 && m_scissorBox.w != 0) {
+        // If scissor box has some kind of size then...
+        fgGfxPlatform::context()->scissor(m_scissorBox);
+        scissorSet = FG_TRUE;
+    }
     if(m_MVP && m_program) {
         //m_MVP->calculate(m_modelMat);
         m_program->setUniform(m_MVP);
@@ -474,5 +557,11 @@ void fgGfxDrawCall::draw(void) {
         // #FIXME
         fgGfxPlatform::context()->bindBuffer(GL_ARRAY_BUFFER, 0);
         fgGfxPlatform::context()->bindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+    }
+    
+    if(scissorSet) //FIXME
+    {
+        // Reset the scissor box
+        fgGfxPlatform::context()->scissor();
     }
 }

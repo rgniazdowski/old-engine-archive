@@ -16,7 +16,7 @@
     #include <queue>
     #include <deque>
 
-#define FG_GFX_DRAWING_BATCH_DEFAULT_RESERVE 64
+    #define FG_GFX_DRAWING_BATCH_DEFAULT_RESERVE 64
 
 /*
  *
@@ -51,8 +51,12 @@ private:
     fgGfxDrawCallType m_defaultDrawCallType;
     ///
     fgGFXuint m_defaultAttribMask;
+    ///
+    fgVector4i m_scissorBox;
 
 protected:
+    ///
+    fgVector3f m_relMove;
     ///
     fg::base::Manager *m_pShaderMgr;
 
@@ -105,9 +109,9 @@ public:
      * @return 
      */
     fgGfxDrawCall *requestDrawCall(int &index,
-                                  const fgGfxDrawCallType type = FG_GFX_DRAW_CALL_CUSTOM_ARRAY,
-                                  const fgGFXuint attribMask = FG_GFX_POSITION_BIT | FG_GFX_UVS_BIT,
-                                  fgGfxShaderProgram *pProgram = NULL);
+                                   const fgGfxDrawCallType type = FG_GFX_DRAW_CALL_CUSTOM_ARRAY,
+                                   const fgGFXuint attribMask = FG_GFX_POSITION_BIT | FG_GFX_UVS_BIT,
+                                   fgGfxShaderProgram *pProgram = NULL);
     /**
      * 
      * @param index
@@ -168,7 +172,7 @@ public:
     unsigned int capacity(void) const {
         return m_reservedSize;
     }
-    
+
     void reserve(unsigned int reservedSize, fgBool force = FG_FALSE);
     /**
      * 
@@ -206,6 +210,75 @@ public:
     const fgGfxDrawCall *operator [](size_t n) const {
         return m_drawCalls[n];
     }
+    /**
+     * 
+     * @return 
+     */
+    fgVector3f const & getRelMove(void) const {
+        return m_relMove;
+    }
+    /**
+     * 
+     * @param relMove
+     */
+    void setRelMove(const fgVector3f& relMove) {
+        m_relMove = relMove;
+    }
+    /**
+     * 
+     * @param relMove
+     */
+    void setRelMove(const fgVector2f& relMove) {
+        m_relMove.x = relMove.x;
+        m_relMove.y = relMove.y;
+        m_relMove.z = 0.0f;
+    }
+    /**
+     * 
+     * @return 
+     */
+    fgVector4i const & getScissorBox(void) const {
+        return m_scissorBox;
+    }
+    /**
+     * 
+     * @return 
+     */
+    fgVector2i const & getScreenSize(void) const {
+        return fgGfxPlatform::context()->getScreenSize();
+    }
+    /**
+     * 
+     * @param x
+     * @param y
+     * @param width
+     * @param height
+     */
+    void setScissorBox(const fgGFXint x, const fgGFXint y, const fgGFXint width, const fgGFXint height) {
+        m_scissorBox.x = x;
+        m_scissorBox.y = y;
+        m_scissorBox.z = width;
+        m_scissorBox.w = height;
+    }
+    /**
+     * 
+     * @param pos
+     * @param size
+     */
+    void setScissorBox(const fgVector2i& pos, const fgVector2i & size) {
+        m_scissorBox.x = pos.x;
+        m_scissorBox.y = pos.y;
+        m_scissorBox.z = size.x;
+        m_scissorBox.w = size.y;
+    }
+    /**
+     * 
+     * @param dimensions
+     */
+    void setScissorBox(const fgVector4i & dimensions) {
+        m_scissorBox = dimensions;
+    }
+
 };
 
 #endif /* FG_INC_GFX_DRAWING_BATCH */

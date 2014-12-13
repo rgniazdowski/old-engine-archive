@@ -21,7 +21,9 @@ m_reservedSize(0),
 m_numNotManaged(0),
 m_defaultDrawCallType(drawCallType),
 m_defaultAttribMask(attribMask),
-m_pShaderMgr(NULL) { 
+m_scissorBox(0,0,0,0),
+m_relMove(),
+m_pShaderMgr(NULL) {
     reserve(reservedSize);
 }
 
@@ -57,9 +59,9 @@ void fgGfxDrawingBatch::setShaderManager(fg::base::Manager *pShaderMgr) {
  *
  */
 fgGfxDrawCall *fgGfxDrawingBatch::requestDrawCall(int &index,
-                                                 const fgGfxDrawCallType type,
-                                                 const fgGFXuint attribMask, 
-                                                 fgGfxShaderProgram *pProgram) {
+                                                  const fgGfxDrawCallType type,
+                                                  const fgGFXuint attribMask,
+                                                  fgGfxShaderProgram *pProgram) {
     fgGfxDrawCall *drawCall = NULL;
     if(m_freeSlots.empty()) {
         // Increase the number of drawcalls, get the next drawcall index
@@ -68,7 +70,7 @@ fgGfxDrawCall *fgGfxDrawingBatch::requestDrawCall(int &index,
         m_numDrawCalls++;
         if(m_numDrawCalls >= m_reservedSize) {
             // Reserved size exceeded, realloc giving 30% more
-            reserve((unsigned int)((float)m_reservedSize*1.3f));        
+            reserve((unsigned int)((float)m_reservedSize * 1.3f));
         }
     } else {
         index = getFreeSlot(-1);
@@ -88,6 +90,8 @@ fgGfxDrawCall *fgGfxDrawingBatch::requestDrawCall(int &index,
     drawCall->setManaged(FG_TRUE);
     drawCall->setTexture(fgGfxTextureID());
     drawCall->setColor(fgColor3f(1.0f, 1.0f, 1.0f));
+    drawCall->setRelMove(m_relMove);
+    drawCall->setScissorBox(m_scissorBox);
     //m_drawCalls.push_back(drawCall);
     return drawCall;
 }
@@ -108,7 +112,7 @@ fgGfxDrawCall *fgGfxDrawingBatch::getLastDrawCall(void) {
     if(m_numDrawCalls == 0)
         return NULL;
     //return m_drawCalls.back();
-    return m_drawCalls[m_numDrawCalls-1];
+    return m_drawCalls[m_numDrawCalls - 1];
 }
 
 /*
@@ -129,14 +133,14 @@ int fgGfxDrawingBatch::appendDrawCall(fgGfxDrawCall* drawCall, fgBool manage, fg
     if(!m_freeSlots.empty()) {
         index = getFreeSlot(-1);
         m_drawCalls[index] = drawCall;
-    } else {        
+    } else {
         delete m_drawCalls[m_numDrawCalls];
         m_drawCalls[m_numDrawCalls] = drawCall;
         index = m_numDrawCalls;
         m_numDrawCalls++;
         if(m_numDrawCalls >= m_reservedSize) {
             // Reserved size exceeded, realloc giving 30% more
-            reserve((unsigned int)((float)m_reservedSize*1.3f));        
+            reserve((unsigned int)((float)m_reservedSize * 1.3f));
         }
         //index = m_drawCalls.size();
         //m_drawCalls.push_back(drawCall);
@@ -147,6 +151,8 @@ int fgGfxDrawingBatch::appendDrawCall(fgGfxDrawCall* drawCall, fgBool manage, fg
         if(m_duplicates.find(drawCall) == -1)
             m_duplicates.push_back(drawCall);
     }
+    drawCall->setRelMove(m_relMove);
+    drawCall->setScissorBox(m_scissorBox);
     return index;
 }
 
@@ -167,13 +173,13 @@ fgGfxDrawCall *fgGfxDrawingBatch::removeDrawCall(int index) {
     m_drawCalls[index] = NULL;
     if(drawCall->isManaged() == FG_FALSE && m_numNotManaged)
         m_numNotManaged--;
-    else 
+    else
         drawCall->setManaged(FG_FALSE);
 
     if(!dupIdx)
         return drawCall;
     // If there are duplicates - they need to be removed also
-    for(unsigned int i=0; i<m_numDrawCalls; i++) {
+    for(unsigned int i = 0; i < m_numDrawCalls; i++) {
         if(m_drawCalls[i] == drawCall) {
             m_drawCalls[i] = NULL;
             m_freeSlots.push_back(index);
@@ -210,9 +216,9 @@ fgBool fgGfxDrawingBatch::removeDrawCall(fgGfxDrawCall *drawCall) {
             if(dupIdx < 0) {
                 return FG_TRUE;
             } else {
-               // itor--;
-               // index--;
-               // end = m_drawCalls.end();
+                // itor--;
+                // index--;
+                // end = m_drawCalls.end();
             }
         }
         index++;
@@ -242,11 +248,13 @@ fgBool fgGfxDrawingBatch::deleteDrawCall(int index) {
     return FG_TRUE;
 }
 
-/*
- *
+/**
+ * 
+ * @param drawCall
+ * @return 
  */
 fgBool fgGfxDrawingBatch::deleteDrawCall(fgGfxDrawCall*& drawCall) {
-    if(!drawCall) {        
+    if(!drawCall) {
         return FG_FALSE;
     }
     // Need to remember the 'isManaged' flag before removal
@@ -264,6 +272,11 @@ fgBool fgGfxDrawingBatch::deleteDrawCall(fgGfxDrawCall*& drawCall) {
     return FG_TRUE;
 }
 
+/**
+ * 
+ * @param maximum
+ * @return 
+ */
 int fgGfxDrawingBatch::getFreeSlot(int maximum) {
     if(m_freeSlots.empty())
         return -1; // ?
@@ -273,7 +286,7 @@ int fgGfxDrawingBatch::getFreeSlot(int maximum) {
         return index;
     }
     dbFreeSlotsVecItor it = m_freeSlots.begin(), end = m_freeSlots.end();
-    for(; it!=end; it++) {
+    for(; it != end; it++) {
         if(*it <= (unsigned int)maximum) {
             int index = *it;
             m_freeSlots.erase(it);
@@ -283,6 +296,11 @@ int fgGfxDrawingBatch::getFreeSlot(int maximum) {
     return -1;
 }
 
+/**
+ * 
+ * @param reservedSize
+ * @param force
+ */
 void fgGfxDrawingBatch::reserve(unsigned int reservedSize, fgBool force) {
     if(m_reservedSize > reservedSize && force) {
         int remaining = m_numNotManaged;
@@ -292,11 +310,11 @@ void fgGfxDrawingBatch::reserve(unsigned int reservedSize, fgBool force) {
         // When the capacity of the drawing batch changes some of the remaining
         // drawcalls need to freed (delete). Not managed drawcalls need to find
         // some free spots
-        for(unsigned int i=reservedSize;i<m_reservedSize;i++) {
+        for(unsigned int i = reservedSize; i < m_reservedSize; i++) {
             if(m_drawCalls[i]) {
                 if(m_drawCalls[i]->isManaged() == FG_FALSE && reservedSize) {
                     // This drawcall is not managed so it needs to be retained
-                    int index = getFreeSlot(reservedSize-1);
+                    int index = getFreeSlot(reservedSize - 1);
                     if(index != -1) {
                         m_drawCalls[index] = m_drawCalls[i];
                         m_drawCalls[i] = NULL;
@@ -316,7 +334,7 @@ void fgGfxDrawingBatch::reserve(unsigned int reservedSize, fgBool force) {
         m_numNotManaged = 0;
         if(remaining > 0) {
             // Now will need to search for any managed call
-            for(unsigned int i=0;i<reservedSize;i++) {
+            for(unsigned int i = 0; i < reservedSize; i++) {
                 if(m_drawCalls[i]->isManaged() && !notManagedCalls.empty()) {
                     delete m_drawCalls[i];
                     m_drawCalls[i] = notManagedCalls.top();
@@ -335,19 +353,19 @@ void fgGfxDrawingBatch::reserve(unsigned int reservedSize, fgBool force) {
     } else if(m_reservedSize < reservedSize) {
         m_drawCalls.reserve(reservedSize);
         m_drawCalls.resize(reservedSize);
-        for(unsigned int i=m_reservedSize;i<reservedSize;i++) {
+        for(unsigned int i = m_reservedSize; i < reservedSize; i++) {
             m_drawCalls[i] = new fgGfxDrawCall(m_defaultDrawCallType, m_defaultAttribMask); // Preallocate space for draw calls
             m_drawCalls[i]->setManaged(FG_TRUE);
         }
         m_reservedSize = reservedSize;
-        
+
     } else /*equal*/ {
         // do nothing
     }
 }
 
-/*
- *
+/**
+ * 
  */
 void fgGfxDrawingBatch::flush(void) {
     while(!m_priorityBatch.empty())
@@ -356,7 +374,7 @@ void fgGfxDrawingBatch::flush(void) {
     // With preallocation just remove not managed drawcalls
 
     int nDuplicates = m_duplicates.size();
-    for(int i=0;i<nDuplicates;i++) {
+    for(int i = 0; i < nDuplicates; i++) {
         fgGfxDrawCall *drawCall = m_duplicates[i];
         if(drawCall) {
             if(drawCall->isManaged() == FG_FALSE)
@@ -365,7 +383,7 @@ void fgGfxDrawingBatch::flush(void) {
         }
     }
 
-    for(unsigned int i=0;i<m_numDrawCalls;i++) {
+    for(unsigned int i = 0; i < m_numDrawCalls; i++) {
         if(m_drawCalls[i] == NULL)
             continue;
         if(m_drawCalls[i]->isManaged() == FG_FALSE) {
@@ -376,7 +394,8 @@ void fgGfxDrawingBatch::flush(void) {
     }
     m_numDrawCalls = 0;
     m_zIndex = 0;
-
+    m_relMove = fgVector3f();
+    m_scissorBox = fgVector4i();
     /*
     int nDuplicates = m_duplicates.size();
     for(int i=0;i<nDuplicates;i++) {
@@ -409,8 +428,8 @@ void fgGfxDrawingBatch::sortCalls(void) {
         m_priorityBatch.pop();
     //drawCallVecItor itor = m_drawCalls.begin(), end = m_drawCalls.end();
     //for(; itor != end; itor++) {
-    for(unsigned int i=0;i<m_numDrawCalls;i++) {
-    //    if(*itor)
+    for(unsigned int i = 0; i < m_numDrawCalls; i++) {
+        //    if(*itor)
         fgGfxDrawCall *drawCall = m_drawCalls[i];
         if(drawCall)
             m_priorityBatch.push(drawCall);

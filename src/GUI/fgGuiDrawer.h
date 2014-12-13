@@ -29,7 +29,7 @@
 /*
  *
  */
-class fgGuiDrawer : public fgFontDrawer, protected virtual fgGfxDrawingBatch {
+class fgGuiDrawer : public fgFontDrawer, public virtual fgGfxDrawingBatch {
     friend class fgGuiMain;
     friend class fgGuiWidgetManager;
 private:
@@ -58,39 +58,7 @@ public:
      * @param pResourceMgr
      */
     virtual void setResourceManager(fg::base::Manager *pResourceMgr);
-    /**
-     * 
-     * @param pShaderMgr
-     */
-    virtual void setShaderManager(fg::base::Manager *pShaderMgr);
-
-    /**
-     * 
-     * @return 
-     */
-    virtual int getZIndex(void) const {
-        return m_zIndex;
-    }
-    /**
-     * 
-     * @param zIndex
-     */
-    virtual void setZIndex(const int zIndex) {
-        m_zIndex = zIndex;
-    }
-    /**
-     * 
-     */
-    virtual void upZIndex(void) {
-        m_zIndex++;
-    }
-    /**
-     * 
-     */
-    virtual void downZIndex(void) {
-        m_zIndex--;
-    }
-
+    
     /**
      * 
      */
@@ -129,6 +97,7 @@ public:
      * @param style
      */
     virtual void appendBorder2D(const fgVec2f &pos, const fgVec2f &size, fgGuiStyleContent& style);
+    
 };
 
 #endif /* FG_INC_GUI_DRAWER */
