@@ -191,7 +191,7 @@ struct fgGfxContextParam {
     type(FG_GFX_BOOL),
     paramType(FG_GFX_PARAM_INVALID),
     count(1) {
-        memset(ints, 0, 8);
+        memset(ints, 0, 12);
         determineParamType();
     }
 
@@ -200,6 +200,7 @@ struct fgGfxContextParam {
     pname(_pname),
     type(FG_GFX_FLOAT),
     count(1) {
+        memset(ints, 0, 12);
         floats[0] = _fval;
         determineParamType();
     }
@@ -209,6 +210,7 @@ struct fgGfxContextParam {
     pname(_pname),
     type(FG_GFX_INT),
     count(1) {
+        memset(ints, 0, 12);
         ints[0] = _ival;
         determineParamType();
     }
@@ -218,6 +220,7 @@ struct fgGfxContextParam {
     pname(_pname),
     type(FG_GFX_BOOL),
     count(1) {
+        memset(ints, 0, 12);
         booleans[0] = _bval;
         determineParamType();
         //update();
@@ -227,6 +230,7 @@ struct fgGfxContextParam {
     fgGfxContextParam(const fgGFXenum _pname, const int _count, const fgGFXfloat *_fvals) :
     pname(_pname),
     count(_count) {
+        memset(ints, 0, 12);
         determineParamType();
         set(_fvals, FG_FALSE);
     }
@@ -235,6 +239,7 @@ struct fgGfxContextParam {
     fgGfxContextParam(const fgGFXenum _pname, const int _count, const fgGFXint *_ivals) :
     pname(_pname),
     count(_count) {
+        memset(ints, 0, 12);
         determineParamType();
         set(_ivals, FG_FALSE);
     }
@@ -243,6 +248,7 @@ struct fgGfxContextParam {
     fgGfxContextParam(const fgGFXenum _pname, const int _count, const fgGFXboolean *_bvals) :
     pname(_pname),
     count(_count) {
+        memset(ints, 0, 12);
         determineParamType();
         set(_bvals, FG_FALSE);
     }
@@ -425,6 +431,8 @@ private:
     fgGFXuint m_boundTexture;
     /// Supported shading language version
     fgGfxSLVersion m_SLVersion;
+    ///
+    fgVector2i m_screenSize;
     /// Is context ready? Is initialization successful?
     fgBool m_init;
 
@@ -444,12 +452,51 @@ protected:
     void updateAttribMask(const fgGFXuint index);
 
 public:
+    /**
+     * 
+     * @return 
+     */
     fgBool isInit(void) const {
         return m_init;
     }
-    // Return version ID for shading language currently supported by the graphics context
+    /**
+     * Return version ID for shading language currently supported by the graphics context
+     * @return 
+     */
     fgGfxSLVersion getSLVersion(void) const {
         return m_SLVersion;
+    }
+    
+    /**
+     * 
+     * @return 
+     */
+    fgVector2i const & getScreenSize(void) const {
+        return m_screenSize;
+    }
+    /**
+     * 
+     * @param w
+     * @param h
+     */
+    void setScreenSize(const int w, const int h) {
+        m_screenSize.x = w;
+        m_screenSize.y = h;
+    }
+    /**
+     * 
+     * @param screenSize
+     */
+    void setScreenSize(const fgVector2i & screenSize) {
+        m_screenSize = screenSize;
+    } 
+    /**
+     * 
+     * @param screenSize
+     */
+    void setScreenSize(const fgVector2f & screenSize) {
+        m_screenSize.x = (int)screenSize.x;
+        m_screenSize.y = (int)screenSize.y;
     }
 
     // Initialize the context and internal parameter state
@@ -562,6 +609,10 @@ public:
         return (fgGFXfloat)m_params[(fgGFXuint)GL_VIEWPORT].ints[0] / y;
     }
 
+    // Set the scissor box to default dimensions
+    inline void scissor(void) {
+        scissor(0, 0, m_screenSize.x, m_screenSize.y);
+    }
     // Set the scissor box dimensions
     void scissor(const fgGFXint x, const fgGFXint y, const fgGFXint width, const fgGFXint height);
     // Set the scissor box dimensions

@@ -164,6 +164,7 @@ fgBool fgGfxMain::initGFX(void) {
         m_gfxContext->bindTexture2D(0);
         m_gfxContext->bindTextureCube(0);
         m_gfxContext->scissor(0, 0, m_mainWindow->getWidth(), m_mainWindow->getHeight());
+        m_gfxContext->setScreenSize(m_mainWindow->getWidth(), m_mainWindow->getHeight());
         m_2DScene->getMVP()->setOrtho(0.0f, (float)m_mainWindow->getWidth(), (float)m_mainWindow->getHeight(), 0.0f);
         m_init = FG_TRUE;
     }

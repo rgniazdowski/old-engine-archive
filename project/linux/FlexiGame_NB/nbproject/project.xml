@@ -98,6 +98,7 @@
             <word>gui</word>
             <word>hacky</word>
             <word>hcenter</word>
+            <word>hslider</word>
             <word>ids</word>
             <word>idx</word>
             <word>ini</word>
@@ -153,6 +154,9 @@
             <word>s'</word>
             <word>sfactor</word>
             <word>shaders</word>
+            <word>sliderboth</word>
+            <word>sliderhorizontal</word>
+            <word>slidervertical</word>
             <word>soa</word>
             <word>srsly</word>
             <word>std</word>
@@ -173,6 +177,7 @@
             <word>vbo's</word>
             <word>vcenter</word>
             <word>vec</word>
+            <word>vslider</word>
             <word>wav</word>
             <word>wut</word>
             <word>xml</word>

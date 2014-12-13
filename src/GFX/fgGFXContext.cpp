@@ -515,6 +515,7 @@ void fgGfxContextParam::determineParamType(void) {
             //    constants of length GL_NUM_SHADER_BINARY_FORMATS 
             //    indicating which shader binary formats are available.
             //    See glShaderBinary.
+            break;
         case GL_SHADER_BINARY_FORMATS:
             count = 1; // #FIXME
             type = FG_GFX_INT;
