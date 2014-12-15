@@ -17,7 +17,13 @@
     #define FG_INC_FAST_CMP
     #define FG_INC_FAST_CMP_BLOCK
 
+#include "fgBuildConfig.h"
+
+#if defined(FG_USING_MARMALADE)
+    #include "s3eTypes.h"
+#else
     #include <cstdint>
+#endif
     #include "fgBool.h"
 
 namespace fg {
