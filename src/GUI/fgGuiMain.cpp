@@ -200,17 +200,17 @@ fgBool fgGuiMain::initialize(void) {
     m_pResourceMgr->insertResource(courier);
     m_pResourceMgr->get(courier->getRefHandle());
 
-    //
+    // Initializing style manager
     if(!m_styleMgr->initialize()) {
         FG_LOG::PrintError("GUI: Style manager not initialized");
     }
+    // Setup link handler used in managed widgets - it's for menu navigation mostly
     m_widgetMgr->setLinkHandler(m_guiLinkCallback);
-    //
+    // Initialize the widget manager - preload data
     if(!m_widgetMgr->initialize()) {
         FG_LOG::PrintError("GUI: Widget manager not initialized");
     }
-
-    // Initializing console style
+    // Initializing console style #FIXME, this could use some optimizing
     if(m_styleMgr && m_console) {
         std::string styleName = m_console->getStyleName();
         fgGuiStyle *style = m_styleMgr->get(styleName);
@@ -233,7 +233,7 @@ fgBool fgGuiMain::initialize(void) {
     return FG_TRUE;
 }
 
-/*
+/**
  *
  */
 void fgGuiMain::registerGuiCallbacks(void) {
@@ -403,7 +403,7 @@ void fgGuiMain::updateState(void) {
     }
 }
 
-/*
+/**
  *
  */
 void fgGuiMain::display(void) {
@@ -422,39 +422,27 @@ void fgGuiMain::display(void) {
     if(!(m_currentMenu->getTypeTraits() & FG_GUI_CONTAINER))
         return;
 
-    static float r = 0.0f;
-    r += 0.0125f;
-    if(r >= M_PI2XF) {
-        r = 0.0f;
-    }
-    float toggle = 0.0f;
-    m_currentMenu->getStyleContent().getPadding().right = 25 + 25 * fabs(sinf(r)) * toggle;
-    m_currentMenu->getStyleContent().getPadding().top = 25 + 25 * fabs(sinf(r)) * toggle;
-    m_currentMenu->getStyleContent().getPadding().left = 25 + 25 * fabs(sinf(r)) * toggle;
-    m_currentMenu->getStyleContent().getPadding().bottom = 25 + 25 * fabs(sinf(r)) * toggle;
-    //mainMenu->getRelativePos().y = 150.0f * sinf(r);
+    // Maybe update bounds should be in update part? not display...
     m_currentMenu->updateBounds(m_screenBox);
     m_currentMenu->display(m_guiDrawer);
 
-    fgGuiWidget *contextMenu = m_widgetMgr->get("ContextMenu");
-    if(contextMenu) {
-        if(contextMenu->isVisible()) {
-            contextMenu->updateBounds(m_screenBox);
-            contextMenu->display(m_guiDrawer);
-        }
-    }
 #if defined(FG_USING_SDL2)
     const Uint8 *state = SDL_GetKeyboardState(NULL);
     static int tylda = 0;
     if(state[SDL_SCANCODE_GRAVE] == SDL_PRESSED && !tylda) {
         tylda++;
-
         m_console->setVisible(!m_console->isVisible());
         g_fgDebugConfig.consoleShow = (bool)m_console->isVisible();
     } else if(state[SDL_SCANCODE_GRAVE] == SDL_RELEASED) {
         tylda = 0;
     }
+#elif defined(FG_USING_MARMALADE)
+    if(s3eKeyboardGetState(s3eKeyBacktick) & S3E_KEY_STATE_PRESSED || s3eKeyboardGetState(s3eKeyTab) & S3E_KEY_STATE_PRESSED) {
+        m_console->setVisible(!m_console->isVisible());
+        g_fgDebugConfig.consoleShow = (bool)m_console->isVisible();
+    }
 #endif
+    // #FUBAR #MSG
     if(m_console) {
         int numMessages = FG_MessageSubsystem->getStatusVec().size();
         int consoleSize = m_console->getNumConsoleRecords();
@@ -466,12 +454,9 @@ void fgGuiMain::display(void) {
             m_console->display(m_guiDrawer);
         }
     }
-#endif /* FG_USING_SDL2 */
-    m_widgetMgr->get("StartGameButton")->getRelativePos().x = posx;
-    m_widgetMgr->get("StartGameButton")->getRelativePos().y = posy;
 }
 
-/*
+/**
  *
  */
 void fgGuiMain::render(void) {
@@ -593,22 +578,22 @@ fgBool fgGuiMain::guiTouchHandler(fgArgumentList * argv) {
     if(!event)
         return FG_FALSE;
     //fgEventType type = event->eventType;
-    //fgTouchEvent *touchEvent = (fgTouchEvent *)event;
     this->updateState();
     return FG_TRUE;
 }
 
-/*
- *
+/**
+ * 
+ * @param argv
+ * @return 
  */
-fgBool fgGuiMain::guiMouseHandler(fgArgumentList *argv) {
+fgBool fgGuiMain::guiMouseHandler(fgArgumentList * argv) {
     if(!argv)
         return FG_FALSE;
     fgEventBase *event = (fgEventBase *)argv->getArgumentValueByID(0);
     if(!event)
         return FG_FALSE;
     //fgEventType type = event->eventType;
-    //fgMouseEvent *mouseEvent = (fgMouseEvent *)event;
     this->updateState();
     return FG_TRUE;
 }

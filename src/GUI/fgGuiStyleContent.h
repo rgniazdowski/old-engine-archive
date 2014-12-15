@@ -133,7 +133,7 @@ struct fgGuiBackground {
 };
 
     #define FG_GUI_DEFAULT_TEXT_SIZE	16.0f
-    #define FG_GUI_DEFAULT_FONT		"DefaultFont"
+    #define FG_GUI_DEFAULT_FONT		"StbCourier"
     #define FG_GUI_DEFAULT_FG_COLOR	fgColor4f(0.9f, 0.9f, 0.9f, 1.0f)
 
 /**
@@ -141,18 +141,21 @@ struct fgGuiBackground {
  */
 struct fgGuiForeground {
     ///
+    fgGuiUnitType unit;
+    ///
+    float textSize;
+    ///
     std::string font;
     ///
     fgColor4f color;
-    ///
-    float textSize;
     /**
      * 
      */
     fgGuiForeground() :
+    unit(FG_GUI_PIXELS),
+    textSize(FG_GUI_DEFAULT_TEXT_SIZE),
     font(FG_GUI_DEFAULT_FONT),
-    color(FG_GUI_DEFAULT_FG_COLOR),
-    textSize(FG_GUI_DEFAULT_TEXT_SIZE) // FIXME
+    color(FG_GUI_DEFAULT_FG_COLOR)
     { }
 };
 

@@ -88,9 +88,12 @@ void fgGuiDrawer::appendText2D(fgVec2f& outTextSize,
     fgGuiAlign textAlign = style.getTextAlign();
     fgGuiPadding &padding = style.getPadding();
     fgVector2f outPos = blockPos;
-    outTextSize = fgFontDrawer::size(fontResProper, buf, fg.textSize);
+    float realTextSize = fg.textSize;
+    if(fg.unit == FG_GUI_PERCENTS)
+        realTextSize = fg.textSize/100.0f * getScreenSize().y;    
+    outTextSize = fgFontDrawer::size(fontResProper, buf, /*fg.textSize*/realTextSize);
     style.applyPosAlign(style.getTextAlign(), outPos, outTextSize, blockPos, blockSize, FG_TRUE);
-    this->print(outPos.x, outPos.y, buf, fg.textSize);
+    this->print(outPos.x, outPos.y, buf, /*fg.textSize*/realTextSize);
 }
 
 /**

@@ -105,7 +105,7 @@ fgVector3f fgGuiStructureSheetParser::parseSpatialData(const char *data) {
  *
  */
 fgBool fgGuiStructureSheetParser::parseWidgetAttributes(fgGuiWidget *pWidget, fgXMLAttribute *attribute) {
-    if(!pWidget || !attribute)
+    if(!pWidget)
         return FG_FALSE;
 
     fgBool hasName = FG_FALSE;
@@ -152,10 +152,10 @@ fgBool fgGuiStructureSheetParser::parseWidgetAttributes(fgGuiWidget *pWidget, fg
         std::string autoName = pWidget->getTypeName();
         char _tmp[24];
         memset(_tmp, 0, 24);
-        snprintf(_tmp, 23, "%d", m_count + rand() % 2000 + (m_count/rand()%10));
+        snprintf(_tmp, 23, "%d", m_count + rand() % 9000 + (m_count/rand()%10));
         autoName.append("_").append(_tmp);
         
-        snprintf(_tmp, 23, "%d", fgHashFunc::SDBM(autoName.c_str())%100000+fgHashFunc::DEK(autoName.c_str())%20000); // #FIXME
+        snprintf(_tmp, 23, "%d", fgHashFunc::SDBM(autoName.c_str())%200000+fgHashFunc::DEK(autoName.c_str())%30000); // #FIXME
         autoName.append("_").append(_tmp);
         pWidget->setName(autoName);
     }

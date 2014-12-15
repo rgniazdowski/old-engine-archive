@@ -347,10 +347,15 @@ fgBool fgGuiStyleContent::initializeFromConfig(fgCfgTypes::parameterVec &params,
 
             // TEXT SIZE PARAMETER
         } else if(param->name.compare("textSize") == 0) {
-            if(param->type == FG_CFG_PARAMETER_FLOAT)
-                m_fg.textSize = param->float_val;
-            else if(param->type == FG_CFG_PARAMETER_INT)
-                m_fg.textSize = (float)param->int_val;
+            fgGuiUnitType unit = FG_GUI_PIXELS;
+            if(param->type == FG_CFG_PARAMETER_FLOAT) {
+                this->m_fg.textSize = param->float_val;
+            } else if(param->type == FG_CFG_PARAMETER_INT) {
+                this->m_fg.textSize = (float)param->int_val;
+            } else if(param->type == FG_CFG_PARAMETER_STRING) {
+                this->m_fg.textSize = parseLength(param->string, unit);
+            }
+            this->m_fg.unit = unit;
 
             // FONT NAME PARAMETER
         } else if(param->name.compare("font") == 0) {
