@@ -93,7 +93,7 @@ if errorlevel 1 goto end
 cd %~dp0..
 
 echo ** Calling iTunes for package upload
-"C:\Program Files\iTunes\iTunes.exe" "%CD%\%FG_IPAFILE%"
+start "C:\Program Files\iTunes\iTunes.exe" "%CD%\%FG_IPAFILE%"
 
 :skipcerts
 

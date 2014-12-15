@@ -92,7 +92,7 @@ call tools\resign_run.bat development
 if errorlevel 1 goto end
 
 echo ** Calling iTunes for package upload
-"C:\Program Files\iTunes\iTunes.exe" "%CD%\%FG_IPAFILE%"
+start "C:\Program Files\iTunes\iTunes.exe" "%CD%\%FG_IPAFILE%"
 
 :skipcerts
 
