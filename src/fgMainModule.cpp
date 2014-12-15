@@ -451,6 +451,7 @@ private:
             g_debugProfiling->begin("Game::render");
         }
 #endif
+        FG_HardwareState->deviceYield();
         m_gameMain->render();
         FG_HardwareState->deviceYield(0);
 #if defined(FG_DEBUG)

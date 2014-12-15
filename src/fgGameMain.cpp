@@ -15,10 +15,6 @@
 #include <cmath>
 #include <cstring>
 
-#if defined FG_USING_MARMALADE
-#include "Hardware/fgDeviceQuery.h"
-#endif // FG_USING_MARMALADE
-
 /// Various utilities
 #include "Util/fgSettings.h"
 #include "Util/fgConfig.h"
@@ -297,9 +293,6 @@ fgBool fgGameMain::initSubsystems(void) {
     }
     if(!m_guiMain)
         m_guiMain = new fgGuiMain();
-#if defined FG_USING_MARMALADE
-    FG_DeviceQuery->computeDevice();
-#endif /* FG_USING_MARMALADE */
     FG_HardwareState->deviceYield(0); // #FIXME - device yield...
     int w = m_gfxMain->getMainWindow()->getWidth();
     int h = m_gfxMain->getMainWindow()->getHeight();
@@ -344,13 +337,13 @@ fgBool fgGameMain::initSubsystems(void) {
     // Setup Game Logic external pointers
     if(m_logicMgr) {
         m_logicMgr->setEventManager(m_pEventMgr);
-        
+
         // Initialize the Game Logic object
         if(!m_logicMgr->initialize()) {
             FG_LOG_ERROR("Logic: Main Game Logic module initialized with errors");
         }
     }
-    
+
     // Setup GFX Main external pointers
     m_gfxMain->setResourceManager(m_resourceMgr);
     // Setup GUI Main external pointers
@@ -378,7 +371,7 @@ fgBool fgGameMain::initSubsystems(void) {
     m_scriptSubsystem->setStyleManager(static_cast<fg::base::Manager *>(m_guiMain->getStyleManager()));
     m_scriptSubsystem->setWidgetManager(static_cast<fg::base::Manager *>(m_guiMain->getWidgetManager()));
     m_scriptSubsystem->setLogicManager(static_cast<fg::base::Manager *>(m_logicMgr));
-    
+
     if(!m_scriptSubsystem->initialize()) {
         FG_LOG_ERROR("Script: Initialization of Script module finished with errors");
     }
@@ -463,10 +456,34 @@ fgBool fgGameMain::loadResources(void) {
         FG_LOG_DEBUG("Will now try load object CobraBomber.obj");
         std::string modelname("CobraBomber");
         fgGfxModelResource *model = (fgGfxModelResource *)m_resourceMgr->get(modelname);
-        fgAABoundingBox3Df &b = model->getRefAABB();
         float t2 = fgTime::ms();
         FG_LOG_DEBUG("WHOLE OBJECT CREATION TOOK: %.2f seconds", (t2 - t1) / 1000.0f);
     }
+    {
+        FG_LOG_DEBUG("Will now try load object Rock1.obj");
+        std::string modelname("Rock1");
+        fgGfxModelResource *model = (fgGfxModelResource *)m_resourceMgr->get(modelname);
+        FG_HardwareState->deviceYield();
+    }
+    {
+        FG_LOG_DEBUG("Will now try load object Rock2.obj");
+        std::string modelname("Rock2");
+        fgGfxModelResource *model = (fgGfxModelResource *)m_resourceMgr->get(modelname);
+        FG_HardwareState->deviceYield();
+    }
+    {
+        FG_LOG_DEBUG("Will now try load object Rock3.obj");
+        std::string modelname("Rock3");
+        fgGfxModelResource *model = (fgGfxModelResource *)m_resourceMgr->get(modelname);
+        FG_HardwareState->deviceYield();
+    }
+    {
+        FG_LOG_DEBUG("Will now try load object Crystal1.obj");
+        std::string modelname("Crystal1");
+        fgGfxModelResource *model = (fgGfxModelResource *)m_resourceMgr->get(modelname);
+        FG_HardwareState->deviceYield();
+    }
+    FG_HardwareState->deviceYield();
     ////////////////////////////////////////////////////////////////////////////
 #endif
 
@@ -507,9 +524,6 @@ fgBool fgGameMain::closeSybsystems(void) {
     if(m_pointerInputReceiver)
         m_pointerInputReceiver->setEventManager(NULL);
     FG_HardwareState->deleteInstance(); // #KILL_ALL_SINGLETONS
-#if defined FG_USING_MARMALADE
-    FG_DeviceQuery->deleteInstance(); // #KILL_ALL_SINGLETONS
-#endif // FG_USING_MARMALADE
     if(m_gfxMain)
         m_gfxMain->closeGFX();
 
@@ -568,19 +582,31 @@ void fgGameMain::render(void) {
     }
     fpsc++;
 #if defined(FG_DEBUG)
-    if(g_fgDebugConfig.isDebugProfiling) { 
+    if(g_fgDebugConfig.isDebugProfiling) {
         g_debugProfiling->begin("GFX::render");
     }
 #endif
     m_gfxMain->render();
+    FG_HardwareState->deviceYield();
 #if defined(FG_DEBUG)
     if(g_fgDebugConfig.isDebugProfiling) {
         g_debugProfiling->end("GFX::render");
     }
 #endif
     fgGfxPlatform::context()->setBlend(FG_TRUE); // #FIXME
+#if defined(FG_DEBUG)
+    if(g_fgDebugConfig.isDebugProfiling) {
+        g_debugProfiling->begin("GUI::render");
+    }
+#endif
     m_guiMain->render();
+#if defined(FG_DEBUG)
+    if(g_fgDebugConfig.isDebugProfiling) {
+        g_debugProfiling->end("GUI::render");
+    }
+#endif
     fgGfxPlatform::context()->setBlend(FG_FALSE); // #FIXME
+    FG_HardwareState->deviceYield();
     m_gfxMain->getMainWindow()->swapBuffers();
 }
 

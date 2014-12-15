@@ -221,8 +221,6 @@
           <itemPath>../../../src/GUI/fgGuiStyleContent.h</itemPath>
           <itemPath>../../../src/GUI/fgGuiStyleManager.cpp</itemPath>
           <itemPath>../../../src/GUI/fgGuiStyleManager.h</itemPath>
-          <itemPath>../../../src/GUI/fgGuiStyleSheetConfig.cpp</itemPath>
-          <itemPath>../../../src/GUI/fgGuiStyleSheetConfig.h</itemPath>
           <itemPath>../../../src/GUI/fgGuiTable.cpp</itemPath>
           <itemPath>../../../src/GUI/fgGuiTable.h</itemPath>
           <itemPath>../../../src/GUI/fgGuiTextArea.cpp</itemPath>
@@ -1262,16 +1260,6 @@
             flavor2="8">
       </item>
       <item path="../../../src/GUI/fgGuiStyleManager.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../../../src/GUI/fgGuiStyleSheetConfig.cpp"
-            ex="false"
-            tool="1"
-            flavor2="8">
-      </item>
-      <item path="../../../src/GUI/fgGuiStyleSheetConfig.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -2561,16 +2549,6 @@
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GUI/fgGuiStyleSheetConfig.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="../../../src/GUI/fgGuiStyleSheetConfig.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
       <item path="../../../src/GUI/fgGuiTable.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="../../../src/GUI/fgGuiTable.h" ex="false" tool="3" flavor2="0">
@@ -3838,16 +3816,6 @@
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GUI/fgGuiStyleSheetConfig.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="../../../src/GUI/fgGuiStyleSheetConfig.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
       <item path="../../../src/GUI/fgGuiTable.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="../../../src/GUI/fgGuiTable.h" ex="false" tool="3" flavor2="0">
@@ -5089,16 +5057,6 @@
             flavor2="0">
       </item>
       <item path="../../../src/GUI/fgGuiStyleManager.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../../../src/GUI/fgGuiStyleSheetConfig.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="../../../src/GUI/fgGuiStyleSheetConfig.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -6370,16 +6328,6 @@
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GUI/fgGuiStyleSheetConfig.cpp"
-            ex="false"
-            tool="1"
-            flavor2="8">
-      </item>
-      <item path="../../../src/GUI/fgGuiStyleSheetConfig.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
       <item path="../../../src/GUI/fgGuiTable.cpp" ex="false" tool="1" flavor2="8">
       </item>
       <item path="../../../src/GUI/fgGuiTable.h" ex="false" tool="3" flavor2="0">
@@ -7633,16 +7581,6 @@
             flavor2="0">
       </item>
       <item path="../../../src/GUI/fgGuiStyleManager.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../../../src/GUI/fgGuiStyleSheetConfig.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="../../../src/GUI/fgGuiStyleSheetConfig.h"
             ex="false"
             tool="3"
             flavor2="0">

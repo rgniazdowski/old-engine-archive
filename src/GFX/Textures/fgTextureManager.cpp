@@ -11,6 +11,7 @@
 #include "fgTextureResource.h"
 
 #include "Hardware/fgQualityManager.h"
+#include "Hardware/fgHardwareState.h"
 #include "Resource/fgResourceManager.h"
 #include "Event/fgEventDefinitions.h"
 #include "Event/fgEventManager.h"
@@ -278,6 +279,7 @@ fgBool fgTextureManager::allToVRAM(fgBool reupload) {
 fgBool fgTextureManager::uploadToVRAM(fgTextureResource *texture, fgBool force) {
     if(!((fgResourceManager *)m_pResourceMgr) || !texture)
         return FG_FALSE;
+    FG_HardwareState->deviceYield();
     fgResourceType resType = texture->getResourceType();
     fgQuality quality = texture->getQuality();
     if(!((resType == FG_RESOURCE_TEXTURE || resType == FG_RESOURCE_FONT))) {
@@ -337,6 +339,7 @@ fgBool fgTextureManager::uploadToVRAM(const std::string& nameTag, fgBool force) 
 fgBool fgTextureManager::uploadToVRAM(const char *nameTag, fgBool force) {
     if(!m_pResourceMgr)
         return FG_FALSE;
+    FG_HardwareState->deviceYield();
     fgResource *resource = ((fgResourceManager *)m_pResourceMgr)->get(nameTag);
     if(!resource)
         return FG_FALSE;
@@ -429,7 +432,7 @@ void fgTextureManager::releaseGFX(fgTextureResource * texture) {
 fgBool fgTextureManager::makeTexture(fgTextureResource * pTexture) {
     if(!m_pResourceMgr)
         return FG_FALSE;
-
+    FG_HardwareState->deviceYield();
     if(!pTexture) {
         FG_LOG::PrintError("GFX: Cannot upload texture - texture resource is NULL");
         return FG_FALSE;
@@ -517,12 +520,13 @@ fgBool fgTextureManager::makeTexture(fgTextureResource * pTexture) {
     }
     ((fgResourceManager *)m_pResourceMgr)->unlockResource(pTexture);
     if(!status) {
-        FG_LOG::PrintError("GFX: Errors on texture '%s' upload. Failing functions: %s", pTexture->getNameStr(), failedFuncs.substr(0, failedFuncs.length() - 2).c_str());
+        FG_LOG_ERROR("GFX: Errors on texture '%s' upload. Failing functions: %s", pTexture->getNameStr(), failedFuncs.substr(0, failedFuncs.length() - 2).c_str());
         failedFuncs.clear();
     } else {
         FG_LOG_DEBUG("GFX: Texture [%s] uploaded successfully: gfxID=%d;", pTexture->getNameStr(), pTexture->getRefGfxID().id);
         FG_LOG_DEBUG("GFX: Texture [%s] dimensions: %dx%d", pTexture->getNameStr(), pTexture->getWidth(), pTexture->getHeight());
     }
     glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
+    FG_HardwareState->deviceYield();
     return status;
 }
