@@ -33,6 +33,12 @@ EGL_DEPTH_SIZE=24
 DispFixRot="FixedLandscape"
 SysGlesVersion=2
 MemSize=56000000
+IOSDispScaleFactor=200
+
+{ID=IPHONE "iPhone7,1"}
+[S3E]
+IOSDispScaleFactor=261
+{}
 
 #low 240x320
 {[S3E]DispAreaQ==76800}

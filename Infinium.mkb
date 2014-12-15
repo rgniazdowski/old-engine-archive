@@ -427,6 +427,7 @@ deployments
 	iphone-launch-dir='icons/launch'
 	iphone-nosign=1
 	iphone-sign-for-distribution=0
+	iphone-skip-icon-generation='0'
 	iphone-splash='icons/splash/iPhone_splash.png'
 	iphone-splashscreen-landscape='icons/splash/iPhone_splash_landscape.png'
 	iphone-splashscreen-portrait='icons/splash/iPhone_splash_portrait.png'
