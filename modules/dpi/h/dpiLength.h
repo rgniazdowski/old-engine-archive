@@ -2,7 +2,6 @@
 
 #include "dpiInfo.h"
 #include "dpiLength.h"
-//#include <iwgx.h>
 
 namespace DPI
 {
