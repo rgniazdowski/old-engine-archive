@@ -14,6 +14,8 @@ Android:
 iOS:
 -----------------------------------------------
 
+ICONS:
+
 ("App icon iPhone 2G/3G/3GS (iOS 6.1 and earlier)", 57, "iphone_icon", "Icon.png", False),
 ("App icon iPhone 4/4S/5/5C/5S (iOS 6.1 and earlier)", 114, "iphone_icon_high_res", "Icon@2x.png", False),
 ("App icon iPhone 4/4S/5/5C/5S/6 (iOS 7 and later)", 120, "iphone_icon_high_res_ios7", "Icon-60@2x.png", True),
@@ -30,3 +32,26 @@ iOS:
 ("Search icon iPad/2/Mini (iOS 6.1 or earlier)", 50, "iphone_icon_ipad_search", "Icon-Small-50.png", False),
 ("Search icon iPad3/4 (iOS 6.1 and earlier)", 100, "iphone_icon_ipad_search_high_res", "Icon-Small-50@2x.png", False),
 ("Search icon iPhone 6 Plus (iOS 8 and later)", 120, "iphone_icon_iphone6_search", "Icon-40@3x.png", False)
+
+LAUNCH IMAGES:
+
+("Launch image iPhone 2G/3G/3GS portrait",		320, 480, "iphone-splash", "Default.png", "Portrait", False, "7.0"),
+("Launch image iPhone 4/4S portrait",			640, 960, None, "Default@2x.png", "Portrait", False, "7.0"),
+("Launch image iPhone 5/5C/5S portrait",		640, 1136, None, "Default-568h@2x.png", "Portrait", True, "7.0"),
+("Launch image iPhone 6 portrait",				750, 1334, None, "Default-667h@2x.png", "Portrait", True, "8.0"),
+("Launch image iPhone 6 landscape",				1334, 750, None, "Default-Landscape-667h@2x.png", "Landscape", False, "8.0"),
+("Launch image iPhone 6 Plus portrait",			1242, 2208, None, "Default-736h@3x.png", "Portrait", True, "8.0"),
+("Launch image iPhone 6 Plus landscape",		2208, 1242, None, "Default-Landscape-736h@3x.png", "Landscape", False, "8.0"),
+("Launch image iPad/2/mini portrait (iOS 6.1 and earlier)", 	768, 1004, None, "Default-Portrait~ipad.png", "Portrait", False, "7.0"),
+("Launch image iPad/2/mini portrait", 							768, 1024, None, "Default-Portrait~ipad.png", "Portrait", False, "7.0"),
+("Launch image iPad/2/mini portrait upsidedown", 				768, 1024, "iphone-splashscreen-portrait", "Default-PortraitUpsideDown~ipad.png", "PortraitUpsideDown", False, "7.0"),
+("Launch image iPad/2/mini landscape (iOS 6.1 and earlier)", 	1024, 748, None, "Default-Landscape~ipad.png", "Landscape", False, "7.0"),
+("Launch image iPad/2/mini landscape", 							1024, 768, "iphone-splashscreen-landscape", "Default-Landscape~ipad.png", "Landscape", False, "7.0"),
+("Launch image iPad/2/mini landscape left", 					1024, 768, None, "Default-LandscapeLeft~ipad.png", "LandscapeLeft", False, "7.0"),
+("Launch image iPad/2/mini landscape right", 					1024, 768, None, "Default-LandscapeRight~ipad.png", "LandscapeRight", False, "7.0"),
+("Launch image iPad3/Air portrait", 							1536, 2048, None, "Default-Portrait@2x~ipad.png", "Portrait", False, "7.0"),
+("Launch image iPad3/Air portrait upsidedown", 					1536, 2048, None, "Default-PortraitUpsideDown@2x~ipad.png", "Portrait", False, "7.0"),
+("Launch image iPad3/4/Air landscape", 							2048, 1536, None, "Default-Landscape@2x~ipad.png", "Landscape", False, "7.0"),
+("Launch image iPad3/4/Air landscape left", 					2048, 1536, None, "Default-LandscapeLeft@2x~ipad.png", "LandscapeLeft", False, "7.0"),
+("Launch image iPad3/4/Air landscape right", 					2048, 1536, None, "Default-LandscapeRight@2x~ipad.png", "LandscapeRight", False, "7.0")
+

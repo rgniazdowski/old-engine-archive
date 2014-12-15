@@ -211,8 +211,7 @@ assets
     textures/MetalGrill.res.ini
 
 	(data)
-	textures/other/BackgroundCrate_1024x512.jpg
-    textures/gui/BackgroundCrate_1024x512.jpg
+	textures/other/BackgroundCrate_1024x512.jpg    
 
     (data)
     gui/frame.style.ini

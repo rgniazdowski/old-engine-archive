@@ -30,6 +30,10 @@
 #include "Util/fgProfiling.h"
 #include "fgDebugConfig.h"
 
+#if defined(FG_USING_MARMALADE)
+#include "Hardware/fgDeviceQuery.h"
+#endif /* FG_USING_MARMALADE */
+
 class MainModule;
 extern float guiScale;
 #if defined(FG_USING_MARMALADE)
@@ -76,6 +80,9 @@ protected:
     m_appInit(FG_FALSE),
     m_slow(FG_FALSE),
     m_isExit(FG_FALSE),
+#if defined(FG_USING_MARMALADE) // #FIXME
+    m_deviceQuery(),
+#endif /* FG_USING_MARMALADE */
     m_gameMain(NULL),
     m_eventMgr(NULL) { }
 
@@ -159,7 +166,7 @@ protected:
                 case SDL_TEXTEDITING: /**< Keyboard text editing (composition) */
                     break;
                 case SDL_TEXTINPUT: /**< Keyboard text input */
-                    printf("TEXT INPUT: '%s'\n", event.text.text);
+                    //printf("TEXT INPUT: '%s'\n", event.text.text);
                     break;
 #if defined(FG_USING_PLATFORM_LINUX) || defined(FG_USING_PLATFORM_WINDOWS)
                     /* Mouse events */
@@ -335,6 +342,7 @@ private:
         }
 
 #if defined(FG_USING_MARMALADE)
+        m_deviceQuery.computeDevice();
         s3eSurfaceSetInt(S3E_SURFACE_DEVICE_ORIENTATION_LOCK, S3E_SURFACE_LANDSCAPE_FIXED);
         // ?
         //s3eKeyboardSetInt(S3E_KEYBOARD_GET_CHAR, 1);
@@ -573,6 +581,10 @@ private:
     fgBool m_slow;
     /// Is exit activated?
     fgBool m_isExit;
+#if defined(FG_USING_MARMALADE) // #FIXME
+    ///
+    fgDeviceQuery m_deviceQuery;
+#endif /* FG_USING_MARMALADE */
     /// Game main class - this is for initialization procedures
     /// contains also functions for handling events, drawing, etc #TODO
     /// Needs refactoring, some level of merging within main module or

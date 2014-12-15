@@ -1,0 +1,11 @@
+Apple iPhone 6 Plus	5.5″	1080×1980	401	2.46
+Apple iPhone 5	4″	640×1136	326	2
+Apple iPhone 6	4.7″	750×1334	326	2
+Apple iPhone 4, 4S	3.5″	960×640	326	2
+Apple iPad mini Retina	7.9″	2048×1536	324	1
+Apple iPad 3	9.7″	2048×1536	264	2
+Apple iPad Retina	9.7″	2048×1536	264	2
+Apple iPad Air	9.7″	2048×1536	264	2
+Apple iPhone 1, 3G, 3GS	3.5″	320×480	163	1
+Apple iPad mini	7.9″	1024×768	163	1
+Apple iPad 1, 2	9.7″	1024×768	132	1
