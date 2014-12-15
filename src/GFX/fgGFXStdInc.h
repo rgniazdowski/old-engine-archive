@@ -12,7 +12,7 @@
     #define FG_INC_GFX_STD_INC_BLOCK__
 
     #ifdef FG_INC_GFX_TYPES_BLOCK__
-        #error "FG_GFX_TYPES_BLOCK constant is defined. Do not include GfxStdInc inside of Gfx Types header."
+        #error "FG_GFX_TYPES_BLOCK constant is defined. Do not include GfxStdInc inside of GfxTypes header."
     #endif
 
     #ifndef FG_INC_GFX_PLATFORM

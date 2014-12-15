@@ -9,6 +9,7 @@
 
 #ifndef FG_INC_GFX_GL
     #define FG_INC_GFX_GL
+    #define FG_INC_GFX_GL_BLOCK
 
     #include "fgBuildConfig.h"
     #include "fgBool.h"
@@ -23,6 +24,8 @@
             #if !defined FG_USING_MARMALADE_OPENGL_ES && defined FG_USING_MARMALADE_IWGL
                 #include <IwGL.h>
                 #define FG_INC_INCLUDED_GL_ // #FIXME
+            #else
+                #include "s3eGL.h"
             #endif /* FG_USING_MARMALADE_OPENGL_ES */
 
         #elif defined FG_USING_PLATFORM_LINUX /* && !defined FG_USING_MARMALADE */
@@ -362,4 +365,5 @@ typedef int fgGFXfixed;
     #define FG_GFX_SAMPLER_2D           GL_SAMPLER_2D
     #define FG_GFX_SAMPLER_CUBE         GL_SAMPLER_CUBE
 
+    #undef FG_INC_GFX_GL_BLOCK
 #endif /* FG_INC_GFX_GL */

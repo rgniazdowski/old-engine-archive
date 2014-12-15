@@ -144,7 +144,7 @@ fgBool fgGfxMain::initGFX(void) {
             status = FG_FALSE;
         }
         if(!status) {
-            FG_LOG::PrintError("GFX: Unable to initialize any kind of context");
+            FG_LOG_ERROR("GFX: Unable to initialize any kind of context");
         }
     }
     if(status) {
@@ -304,7 +304,7 @@ void fgGfxMain::render(void) {
     glm::mat4 Model;
 
     if(!m_mainWindow || !m_gfxContext) {
-        FG_LOG::PrintError("Main window / context is NULL");
+        FG_LOG_ERROR("Main window / context is NULL");
         return;
     }
     fgGLError();
@@ -322,13 +322,13 @@ void fgGfxMain::render(void) {
 
     offset = fmodf(offset + 0.2f, 2 * 3.141f);
     if(!m_textureMgr || !m_shaderMgr) {
-        FG_LOG::PrintError("No texture / shader manager");
+        FG_LOG_ERROR("No texture / shader manager");
         return;
 
     }
     rm = (fgResourceManager *)m_textureMgr->getResourceManager();
     if(!rm) {
-        FG_LOG::PrintError("Cant access resource manager.");
+        FG_LOG_ERROR("Cant access resource manager.");
 
         return;
     }
@@ -368,6 +368,12 @@ void fgGfxMain::render(void) {
 
     if(state[SDL_SCANCODE_D] == SDL_PRESSED)
         m_3DScene->getCamera()->moveRight();
+    
+    if(state[SDL_SCANCODE_SPACE] == SDL_PRESSED)
+        m_3DScene->getCamera()->moveUp();
+    
+    if(state[SDL_SCANCODE_LCTRL] == SDL_PRESSED)
+        m_3DScene->getCamera()->moveDown();
 #else 
     if(s3eKeyboardGetState(s3eKeyW) & S3E_KEY_STATE_DOWN)
         m_3DScene->getCamera()->moveForward();
@@ -388,7 +394,7 @@ void fgGfxMain::render(void) {
     program->setUniform(FG_GFX_CUBE_TEXTURE, (fgGFXint)0);
 
     if(!program) {
-        FG_LOG::PrintError("Cant access sSkyBoxEasy shader program.");
+        FG_LOG_ERROR("Cant access sSkyBoxEasy shader program.");
         return;
     }
     m_shaderMgr->useProgram(program);
@@ -452,7 +458,7 @@ void fgGfxMain::render(void) {
     program = m_shaderMgr->get(sPlainEasyShaderName);
 
     if(!program) {
-        FG_LOG::PrintError("Cant access sPlainEasy shader program.");
+        FG_LOG_ERROR("Cant access sPlainEasy shader program.");
         return;
     }
     m_shaderMgr->useProgram(program);
@@ -506,7 +512,7 @@ void fgGfxMain::render(void) {
     //////////////////////////////////////////////////////////////
     fgGfxShaderProgram *program2 = m_shaderMgr->get(sOrthoEasyShaderName);
     if(!program2) {
-        FG_LOG::PrintError("Cant access sOrthoEasy shader program.");
+        FG_LOG_ERROR("Cant access sOrthoEasy shader program.");
         return;
     }
     m_shaderMgr->useProgram(program2);
@@ -562,8 +568,8 @@ void fgGfxMain::render(void) {
     MVP->setOrtho(0, (float)m_mainWindow->getWidth(), (float)m_mainWindow->getHeight(), 0.0f);
     MVP->calculate(Model);
     program2->setUniform(MVP);
-    fgGfxPlatform::context()->blendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    fgGfxPlatform::context()->scissor(0, 0, m_mainWindow->getWidth(), m_mainWindow->getHeight());
+    m_gfxContext->blendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    m_gfxContext->scissor(0, 0, m_mainWindow->getWidth(), m_mainWindow->getHeight()); // #THA FUCK?
 }
 
 /**

@@ -9,8 +9,15 @@
 
 #ifndef FG_INC_GFX_WINDOW
     #define FG_INC_GFX_WINDOW
+    #define FG_INC_GFX_WINDOW_BLOCK
 
-    #include "fgGFXStdInc.h"
+    #ifdef FG_INC_GFX_TYPES_BLOCK__
+        #error "FG_GFX_TYPES_BLOCK constant is defined. Do not include GfxWindow inside of GfxTypes header."
+    #endif
+
+    #ifndef FG_INC_GFX_GL
+        #include "fgGFXGL.h"
+    #endif
 
 /**
  *
@@ -137,4 +144,5 @@ private:
     fgBool m_isOpen;
 };
 
+    #undef FG_INC_GFX_WINDOW_BLOCK
 #endif /* FG_INC_GFX_WINDOW */

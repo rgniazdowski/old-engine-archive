@@ -9,6 +9,7 @@
 
 #ifndef FG_INC_GFX_PLATFORM
     #define FG_INC_GFX_PLATFORM
+    #define FG_INC_GFX_PLATFORM_BLOCK
 
     #ifndef FG_INC_GFX_CONTEXT
         #include "fgGFXContext.h"
@@ -19,27 +20,48 @@
  */
 class fgGfxPlatform {
 protected:
-    //
+    /**
+     * 
+     */
     fgGfxPlatform();
-    //
+    /**
+     * 
+     */
     virtual ~fgGfxPlatform();
 
 public:
-    //
+    /**
+     * 
+     * @param reinit
+     * @return 
+     */
     static fgBool initialize(fgBool reinit = FG_FALSE);
-    //
+    /**
+     * 
+     * @return 
+     */
     static fgBool quit(void);
 
-    //
+    /**
+     * 
+     * @return 
+     */
     static fgBool isInit(void);
 
-    //
+    /**
+     * 
+     * @return 
+     */
     static void* getDefaultDisplay(void);
-    //
-    static void* getDefaultContext(void);
-    //
+    /**
+     * 
+     * @return 
+     */
     static void *getDefaultConfig(void);
-    //
+    /**
+     * 
+     * @return 
+     */
     static fgGfxContext* context(void);
 
     #if defined(FG_USING_SDL2)
@@ -64,11 +86,10 @@ private:
     /// Is platform initialized?
     static fgBool m_init;
     /// Default display pointer 
-    static void* m_defaultDisplay; // it's for egl only...
-    /// Default context pointer
-    static void* m_defaultContext; // it's for egl only...
+    static void* m_defaultDisplay; // it's for egl only...    
     /// Default config pointer
     static void* m_defaultConfig; // it's for egl only...
 };
 
+    #undef FG_INC_GFX_PLATFORM_BLOCK
 #endif /* FG_INC_GFX_PLATFORM */

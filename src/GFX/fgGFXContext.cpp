@@ -10,6 +10,7 @@
 #include "fgGFXContext.h"
 #include "Util/fgStrings.h"
 #include "Util/fgMemory.h"
+#include "fgGFXPlatform.h"
 
 /*
  *
@@ -889,8 +890,9 @@ fgGfxContext::fgGfxContext(SDL_Window *sdlWindow) :
 fgGfxContext::fgGfxContext() :
 #endif
 #if defined(FG_USING_SDL2)
-m_GLContext(0),
+
 m_sdlWindow(sdlWindow),
+m_GLContext(0),
 #endif
 m_viewportAreaQ(0),
 m_scissorAreaQ(0),
@@ -899,7 +901,43 @@ m_boundTexture(0),
 m_SLVersion(FG_GFX_SHADING_LANGUAGE_INVALID),
 m_init(FG_FALSE) {
 
-#if defined(FG_USING_SDL2)
+#if defined(FG_USING_MARMALADE_EGL) || defined(FG_USING_EGL)
+    /**********************************
+     * CONTEXT PART - GFX CONTEXT
+     */
+    // Using EGL based on Marmalade build
+    EGLDisplay eglDisplay = (EGLDisplay)fgGfxPlatform::getDefaultDisplay();
+    EGLConfig eglConfig = (EGLConfig)fgGfxPlatform::getDefaultConfig();
+
+    // #FIXME !
+#if defined FG_USING_MARMALADE
+    int glVersionN = s3eGLGetInt(S3E_GL_VERSION) >> 8;
+#else
+    int glVersionN = 2; // FIXME
+#endif
+    if(glVersionN != 2) {
+        FG_LOG_ERROR("GFX: reported GL version: %d", glVersionN);
+        FG_LOG_ERROR("GFX: required GLES v2.x");
+        return; // #FIXME
+    }
+    FG_LOG_DEBUG("EGL: requesting GL version: %d", glVersionN);
+    EGLint attribs[] = {EGL_CONTEXT_CLIENT_VERSION, glVersionN, EGL_NONE,};
+    m_GLContext = eglCreateContext(eglDisplay, eglConfig, NULL, attribs);
+    if(!m_GLContext) {
+        FG_LOG_ERROR("EGL: CreateContext failed");
+        fgEGLError("eglCreateContext");
+        return;
+    }
+    EGLenum boundAPI = eglQueryAPI();
+    if(boundAPI != EGL_OPENGL_ES_API) {
+        FG_LOG_DEBUG("EGL is not bound to OpenGL ES api");
+    } else {
+        FG_LOG_DEBUG("EGL bound to OpenGL ES api");
+    }
+#elif defined(FG_USING_SDL2)
+    /**********************************
+     * CONTEXT PART - GFX CONTEXT
+     */
     SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 8);
     SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 8);
     SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 8);
@@ -914,13 +952,17 @@ m_init(FG_FALSE) {
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_COMPATIBILITY);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_FORWARD_COMPATIBLE_FLAG);
 
-    // #FIXME seriously, this context should be created somewhere else, gfx Main ?
+    // #FIXME seriously, this context should be created somewhere else, gfx Main ? - #NOPE
+    // Well there is a difference here with the EGL - in SDL first there needs to be
+    // a window created to bound GL context to it
+    // As for the EGL on Marmalade there is no Window - there's a Surface instead, bound
+    // to the native window - the native window, the handle to it is provided via Marmalade
     m_GLContext = SDL_GL_CreateContext(m_sdlWindow);
     if(!m_GLContext) {
-        FG_LOG::PrintError("GFX: Couldn't create GL context: '%s'", SDL_GetError());
+        FG_LOG_ERROR("GFX: Couldn't create GL context: '%s'", SDL_GetError());
         SDL_ClearError();
         // Failed so try again with least possible GL version
-        FG_LOG::PrintInfo("GFX: Will try to create any kind of GL context...");
+        FG_LOG_INFO("GFX: Will try to create any kind of GL context...");
         SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 0);
         SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
         SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, 0);
@@ -928,7 +970,7 @@ m_init(FG_FALSE) {
 
         m_GLContext = SDL_GL_CreateContext(m_sdlWindow);
         if(!m_GLContext) {
-            FG_LOG::PrintError("GFX: RETRY: Couldn't create GL context: '%s'", SDL_GetError());
+            FG_LOG_ERROR("GFX: RETRY: Couldn't create GL context: '%s'", SDL_GetError());
             SDL_ClearError();
             return;
         }
@@ -947,16 +989,13 @@ m_init(FG_FALSE) {
     FG_LOG_DEBUG("GFX: GL version %d.%d", major, minor);
     FG_LOG_DEBUG("GFX: GL color buffer: red: %d, green: %d, blue: %d, alpha: %d, depth: %d,", r, g, b, a, d);
 
-#if defined(FG_USING_GL_BINDING)
-    FG_LOG_DEBUG("Initializing GL bindings...");
-    //    //glbinding::Binding::initialize((glbinding::ContextHandle)m_GLContext, true, true);
-    glbinding::Binding::initialize();
-#elif defined(FG_USING_OPENGL_GLEW)
+    // Support for GLEW is enabled?
+#if defined(FG_USING_OPENGL_GLEW)
     FG_LOG_DEBUG("GFX: Initializing GLEW...");
     glewExperimental = FG_GFX_TRUE;
     fgGFXenum glewInitResult = glewInit();
     if(glewInitResult != GLEW_OK) {
-        FG_LOG::PrintError("GFX: GLEW initialization error error '%s'", glewGetErrorString(glewInitResult));
+        FG_LOG_ERROR("GFX: GLEW initialization error error '%s'", glewGetErrorString(glewInitResult));
         m_init = FG_FALSE;
         return;
     } else {
@@ -964,7 +1003,7 @@ m_init(FG_FALSE) {
     }
     fgGFXenum errorCheckValue = fgGLError("glewInit");
     if(errorCheckValue != GL_NO_ERROR) {
-        FG_LOG::PrintError("GFX: Context error, failed to initialize."); //, gluErrorString(errorCheckValue));
+        FG_LOG_ERROR("GFX: Context error, failed to initialize."); //, gluErrorString(errorCheckValue));
         m_init = FG_FALSE;
         return;
     }
@@ -1095,18 +1134,18 @@ m_init(FG_FALSE) {
         }
     }
     //GLSL Version      OpenGL Version
-    //1.10		2.0
-    //1.20		2.1
-    //1.30		3.0
-    //1.40		3.1
-    //1.50		3.2
-    //3.30		3.3
-    //4.00		4.0
-    //4.10		4.1
-    //4.20		4.2
-    //4.30		4.3
-    //4.40		4.4
-    //4.50      4.5
+    //1.10              2.0
+    //1.20              2.1
+    //1.30              3.0
+    //1.40              3.1
+    //1.50              3.2
+    //3.30              3.3
+    //4.00              4.0
+    //4.10              4.1
+    //4.20              4.2
+    //4.30              4.3
+    //4.40              4.4
+    //4.50              4.5
 
     vparts.clear();
     m_SLVersion = FG_GFX_SHADING_LANGUAGE_INVALID;
@@ -1188,6 +1227,11 @@ fgGfxContext::~fgGfxContext() {
     if(m_GLContext)
         SDL_GL_DeleteContext(m_GLContext);
     m_GLContext = NULL;
+#elif defined(FG_USING_EGL)
+    if(m_GLContext) {
+        eglDestroyContext(fgGfxPlatform::getDefaultDisplay(), m_GLContext);
+        m_GLContext = NULL;
+    }
 #endif
     m_params.clear();
     m_init = FG_FALSE;
@@ -1631,7 +1675,7 @@ void fgGfxContext::blendFunc(const fgGFXenum sfactor, const fgGFXenum dfactor) {
        srcAlpha.intVal != (fgGFXint)sfactor ||
        dstRGB.intVal != (fgGFXint)dfactor ||
        dstAlpha.intVal != (fgGFXint)dfactor) {
-        
+
         srcRGB.intVal = (fgGFXint)sfactor;
         dstRGB.intVal = (fgGFXint)dfactor;
         srcAlpha.intVal = (fgGFXint)sfactor;
@@ -1658,7 +1702,7 @@ void fgGfxContext::blendFunc(const fgGFXenum srcRGB,
     fgGfxContextParam& dstRGBparam = m_params[(fgGFXuint)GL_BLEND_DST_RGB];
     fgGfxContextParam& srcAlphaparam = m_params[(fgGFXuint)GL_BLEND_SRC_ALPHA];
     fgGfxContextParam& dstAlphaparam = m_params[(fgGFXuint)GL_BLEND_DST_ALPHA];
-    
+
     if(srcRGBparam.intVal != (fgGFXint)srcRGB ||
        srcAlphaparam.intVal != (fgGFXint)srcAlpha ||
        dstRGBparam.intVal != (fgGFXint)dstRGB ||
@@ -1667,7 +1711,7 @@ void fgGfxContext::blendFunc(const fgGFXenum srcRGB,
         dstRGBparam.intVal = (fgGFXint)dstRGB;
         srcAlphaparam.intVal = (fgGFXint)srcAlpha;
         dstAlphaparam.intVal = (fgGFXint)dstAlpha;
-        
+
         glBlendFuncSeparate((fgGFXenum)srcRGBparam,
                             (fgGFXenum)dstRGBparam,
                             (fgGFXenum)srcAlphaparam,
@@ -1866,6 +1910,7 @@ void fgGfxContext::updateAttribMask(const fgGFXuint index) {
 /*
  * https://www.khronos.org/opengles/sdk/docs/man/xhtml/glEnableVertexAttribArray.xml
  */
+
 /**
  * 
  * @param index

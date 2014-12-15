@@ -9,6 +9,7 @@
 
 #ifndef FG_INC_GFX_CONTEXT
     #define FG_INC_GFX_CONTEXT
+    #define FG_INC_GFX_CONTEXT_BLOCK
 
     #ifndef FG_INC_GFX_GL
         #include "fgGFXGL.h"
@@ -398,8 +399,12 @@ public:
 
 private:
     #if defined(FG_USING_SDL2)
+    SDL_Window *m_sdlWindow;
     SDL_GLContext m_GLContext; // #FIXME - context can be separate? ... P4
-    SDL_Window* m_sdlWindow; // #FIXME - NOPE, NOPE, NOPE
+    #elif defined(FG_USING_EGL)    
+    void* m_GLContext; // it's for EGL only...
+    #else
+    void *m_GLContext; // ?
     #endif
     /// Special parameter map used for caching and fast value check
     /// It's used for not calling redundant GL functions, like:
@@ -465,6 +470,14 @@ public:
      */
     fgGfxSLVersion getSLVersion(void) const {
         return m_SLVersion;
+    }
+    
+    /**
+     * 
+     * @return 
+     */
+    void *getGLContext(void) const {
+        return m_GLContext;
     }
     
     /**
@@ -699,4 +712,5 @@ public:
 
 };
 
+    #undef FG_INC_GFX_CONTEXT_BLOCK
 #endif /* FG_INC_GFX_CONTEXT */

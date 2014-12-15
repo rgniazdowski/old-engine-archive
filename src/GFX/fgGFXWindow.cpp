@@ -8,6 +8,7 @@
  *******************************************************/
 
 #include "fgGFXWindow.h"
+#include "fgGFXPlatform.h"
 
 #if defined FG_USING_MARMALADE
 #include "s3e.h"
@@ -73,12 +74,12 @@ fgBool fgGfxWindow::setup(const char *title, unsigned int width, unsigned int he
     fgBool status = FG_TRUE;
 #if defined FG_USING_EGL || defined FG_USING_MARMALADE_EGL
     EGLDisplay eglDisplay = (EGLDisplay)fgGfxPlatform::getDefaultDisplay();
-    EGLContext eglContext = (EGLContext)fgGfxPlatform::getDefaultContext();
+    EGLContext eglContext = (EGLContext)fgGfxPlatform::context()->getGLContext();
     EGLConfig eglConfig = (EGLConfig)fgGfxPlatform::getDefaultConfig();
     EGLNativeWindowType eglNativeWindow = 0;
 
     if(!eglDisplay || !eglContext || !eglConfig) {
-        FG_LOG::PrintError("GfxWindow: Current configuration is malformed");
+        FG_LOG_ERROR("GfxWindow: Current configuration is malformed");
         return FG_FALSE;
     }
 
@@ -132,11 +133,10 @@ fgBool fgGfxWindow::setup(const char *title, unsigned int width, unsigned int he
                                    m_sdlFlags);
 
     if(!m_sdlWindow) {
-        FG_LOG::PrintError("Couldn't create SDL window: '%s'", SDL_GetError());
+        FG_LOG_ERROR("GFX: Couldn't create SDL window: '%s'", SDL_GetError());
         SDL_ClearError();
         return FG_FALSE;
     }
-
 
 #endif
     if(status)
@@ -149,13 +149,16 @@ fgBool fgGfxWindow::setup(const char *title, unsigned int width, unsigned int he
  */
 fgBool fgGfxWindow::close(void) {
     if(!fgGfxPlatform::isInit()) {
-        FG_LOG::PrintError("GFX: Platform not initialized.");
+        FG_LOG_ERROR("GFX: Platform not initialized.");
         return FG_FALSE;
     }
     fgBool status = FG_TRUE;
 #if defined FG_USING_EGL
     EGLDisplay eglDisplay = (EGLDisplay)fgGfxPlatform::getDefaultDisplay();
-    EGLContext eglContext = (EGLContext)fgGfxPlatform::getDefaultContext();
+    // Getting context in the gfx window makes sense under EGL - it's safe
+    // to asume (for now) that there's just one context and one window
+    // It supposed to be more flexible though
+    EGLContext eglContext = (EGLContext)fgGfxPlatform::context()->getGLContext();
     if(eglDisplay) {
         eglMakeCurrent(eglDisplay, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
         if(m_EGLSurface)
@@ -179,7 +182,7 @@ fgBool fgGfxWindow::close(void) {
     m_isHW = FG_FALSE;
     m_isDB = FG_FALSE;
     m_isOpen = FG_FALSE;
-    //m_title.clear();
+    //m_title.clear(); // ?
     return status;
 }
 
