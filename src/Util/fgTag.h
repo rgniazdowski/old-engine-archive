@@ -10,52 +10,88 @@
 #ifndef FG_INC_TAG_HEADER
     #define FG_INC_TAG_HEADER
 
+namespace fg {
+    namespace util {
+        namespace tag_helper {
+            inline unsigned int hash_func_djb(const char *_in) {
+                unsigned int hash = 5381;
+                unsigned int c = 0;
+                if(!_in) {
+                    return hash;
+                }
+
+                while((c = *_in++)) {
+                    hash = ((hash << 5) + hash) + c;
+                }
+
+                return hash;
+            }
+        };
+    };
+};
+
     #define FG_TAG_NAME_LEN_MAX	64
 
     #define FG_TAG_VOID_NAME	"tag{void}"
     #define FG_TAG_VOID_ID		-1
 
     #define FG_TAG_FUNCTION_NAME(_name) static const char *name(void) { return _name; }
-    #define FG_TAG_FUNCTION_ID(_id) static int id(void) { return _id; }
+    #define FG_TAG_FUNCTION_ID(_id) static unsigned int id(void) { return _id; }
 
-    #define FG_TAG_FUNCTION_ID_AUTO() static int id(void) { return FG_TAG_HELPER::fg_tag_s_hashfn_deprecated(name()); }
+    #define FG_TAG_FUNCTION_ID_AUTO() static unsigned int id(void) { return fg::util::tag_helper::hash_func_djb(name()); }
+    
+namespace fg {
+    namespace util {
 
-namespace FG_TAG_HELPER {
-    inline int fg_tag_s_hashfn_deprecated(const char *_in) {
-        int r = 0;
-        for(unsigned int i = 0; i < strnlen(_in, FG_TAG_NAME_LEN_MAX); i++) {
-            r += (int)_in[i];
-        }
-        return r;
-    }
+        struct TagVoid {
+        };
+
+        struct TagBase {
+        };
+
+        template<class _type> struct Tag : TagBase {
+        };
+    };
 };
 
-struct fgTagVoid {
-};
-
-struct fgTagBase {
-};
-
-template<class _type> struct fgTag : fgTagBase {
-};
-
+/**
+ * This is a special tag definition macro.
+ * Please remember to define it outside of the namespace fg scope.
+ * Tag type template will be set inside of the fg namespace.
+ */
     #define FG_TAG_TEMPLATE(_tag_type, _tag_name, _tag_id) \
-template <> struct fgTag<_tag_type> : fgTagBase { \
+namespace fg { \
+namespace util { \
+template <> struct Tag<_tag_type> : TagBase { \
 	typedef _tag_type _type; \
 	FG_TAG_FUNCTION_NAME(_tag_name) \
 	FG_TAG_FUNCTION_ID(_tag_id) \
-	}
+	}; \
+        }; \
+        }
 
+/**
+ * This is a special tag definition macro.
+ * Please remember to define it outside of the namespace fg scope.
+ * Tag type template will be set inside of the fg namespace.
+ */
     #define FG_TAG_TEMPLATE_ID_AUTO(_tag_type, _tag_name) \
-template <> struct fgTag<_tag_type> : fgTagBase { \
+namespace fg { \
+namespace util { \
+template <> struct Tag<_tag_type> : TagBase { \
 	typedef _tag_type _type; \
 	FG_TAG_FUNCTION_NAME(_tag_name) \
 	FG_TAG_FUNCTION_ID_AUTO() \
-	}
+	}; \
+        }; \
+        }
 
-FG_TAG_TEMPLATE(fgTagVoid, FG_TAG_VOID_NAME, FG_TAG_VOID_ID);
+FG_TAG_TEMPLATE(TagVoid, FG_TAG_VOID_NAME, FG_TAG_VOID_ID);
 
-    #define FG_TAG_TYPE_NAME(_tag_type) struct fgTag<_tag_type>
-    #define FG_TAG_TYPE(_tag_type)		fgTag<_tag_type>
+
+/// Special usage macro, evaluates to: struct fg::util::Tag<_tag_type>. 
+    #define FG_TAG_TYPE_NAME(_tag_type) struct fg::util::Tag<_tag_type>
+/// Evaluates to the type fg::util::Tag<_tag_type>. Useful for fast typedefs definitions
+    #define FG_TAG_TYPE(_tag_type)		fg::util::Tag<_tag_type>
 
 #endif /* FG_INC_TAG_HEADER */
