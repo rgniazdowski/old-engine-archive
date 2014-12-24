@@ -363,7 +363,7 @@ options
 	arm-cpu=6
 	arm-fpu=vfp
 	optimise-speed
-	enable-exceptions
+	#enable-exceptions
 	warn-level=2
 	buildenv=VC11
     cflags="-std=c++11"
@@ -390,11 +390,13 @@ includepaths
 {
 	src
 	modules/glm
+    modules
 }
 
 librarypaths
 {
 	modules/ng_luaplus/lib
+	modules/libjpeg/lib
 }
 
 #### AUTO GENERATED deployment settings from DeployTool.exe. Do not edit below this line ####
