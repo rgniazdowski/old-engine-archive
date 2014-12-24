@@ -10,6 +10,7 @@
             <sourceEncoding>UTF-8</sourceEncoding>
             <make-dep-projects>
                 <make-dep-project>../LuaPlusNextGen_NB</make-dep-project>
+                <make-dep-project>../MiniZipMaster_NB</make-dep-project>
             </make-dep-projects>
             <sourceRootList>
                 <sourceRootElem>../../../src</sourceRootElem>
@@ -172,6 +173,7 @@
             <word>unboxed</word>
             <word>userdata</word>
             <word>ushort</word>
+            <word>util</word>
             <word>uv</word>
             <word>valign</word>
             <word>vbo's</word>

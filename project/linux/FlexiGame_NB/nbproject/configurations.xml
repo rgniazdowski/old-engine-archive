@@ -489,6 +489,19 @@
                             OP="${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libluaplusnextgen_nb.a">
               </makeArtifact>
             </linkerLibProjectItem>
+            <linkerOptionItem>`pkg-config --libs zlib`</linkerOptionItem>
+            <linkerLibProjectItem>
+              <makeArtifact PL="../MiniZipMaster_NB"
+                            CT="3"
+                            CN="Debug"
+                            AC="true"
+                            BL="true"
+                            WD="../MiniZipMaster_NB"
+                            BC="${MAKE}  -f Makefile CONF=Debug"
+                            CC="${MAKE}  -f Makefile CONF=Debug clean"
+                            OP="${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libminizipmaster_nb.a">
+              </makeArtifact>
+            </linkerLibProjectItem>
           </linkerLibItems>
         </linkerTool>
       </compileType>
@@ -1784,6 +1797,19 @@
                             OP="${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libluaplusnextgen_nb.a">
               </makeArtifact>
             </linkerLibProjectItem>
+            <linkerOptionItem>`pkg-config --libs zlib`</linkerOptionItem>
+            <linkerLibProjectItem>
+              <makeArtifact PL="../MiniZipMaster_NB"
+                            CT="3"
+                            CN="Release"
+                            AC="false"
+                            BL="true"
+                            WD="../MiniZipMaster_NB"
+                            BC="${MAKE}  -f Makefile CONF=Release"
+                            CC="${MAKE}  -f Makefile CONF=Release clean"
+                            OP="${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libminizipmaster_nb.a">
+              </makeArtifact>
+            </linkerLibProjectItem>
           </linkerLibItems>
           <commandLine>-Wl,--gc-sections</commandLine>
         </linkerTool>
@@ -3041,6 +3067,7 @@
             <linkerOptionItem>`pkg-config --libs libpng`</linkerOptionItem>
             <linkerLibLibItem>jpeg</linkerLibLibItem>
             <linkerLibStdlibItem>Mathematics</linkerLibStdlibItem>
+            <linkerOptionItem>`pkg-config --libs zlib`</linkerOptionItem>
           </linkerLibItems>
         </linkerTool>
       </compileType>
@@ -4297,6 +4324,7 @@
             <linkerLibStdlibItem>Mathematics</linkerLibStdlibItem>
             <linkerLibLibItem>jpeg</linkerLibLibItem>
             <linkerOptionItem>`pkg-config --libs gl`</linkerOptionItem>
+            <linkerOptionItem>`pkg-config --libs zlib`</linkerOptionItem>
           </linkerLibItems>
         </linkerTool>
       </compileType>
