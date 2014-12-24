@@ -9,19 +9,32 @@
 
 #ifndef FG_INC_FILE
     #define FG_INC_FILE
+    #define FG_INC_FILE_BLOCK
 
     #include "fgBuildConfig.h"
     #include "fgCommon.h"
 
     #include "fgTag.h"
+    #include "fgFileBase.h"
 
-class fgFile;
+namespace fg {
+    namespace util {
+        class File;
+    };
+};
+//class fg::util::File;
 
     #define FG_TAG_FILE_NAME	"File"
-    #define FG_TAG_FILE		FG_TAG_TYPE(fgFile)
+    #define FG_TAG_FILE		FG_TAG_TYPE(fg::util::File)
 
-FG_TAG_TEMPLATE_ID_AUTO(fgFile, FG_TAG_FILE_NAME);
-typedef FG_TAG_FILE fgFileTag;
+FG_TAG_TEMPLATE_ID_AUTO(fg::util::File, FG_TAG_FILE_NAME);
+
+namespace fg {
+    namespace util {
+        typedef FG_TAG_FILE FileTag;
+    };
+};
+//typedef FG_TAG_FILE typename fg::util::FileTag;
 
     #include <cstdio>
     #include <string>
@@ -46,134 +59,100 @@ typedef FG_TAG_FILE fgFileTag;
 // Standard error output
     #define FG_ERR				stderr
 
-// Enumeration for standard file manipulation modes
+namespace fg {
+    namespace util {
 
-enum fgFileMode {
-    FG_FILE_MODE_NONE = 0, // No mode specified (invalid).
-    FG_FILE_MODE_READ = 1 << 0, // Open file for input operations. The file must exist.
-    FG_FILE_MODE_WRITE = 1 << 1, // Create an empty file for output operations.
-    FG_FILE_MODE_APPEND = 1 << 2, // Open file for output at the end of a file. The file is created if it does not exist.
-    FG_FILE_MODE_UPDATE = 1 << 3, // Additional update mode (both input/output).
-    FG_FILE_MODE_BINARY = 1 << 4, // Open file as a binary file.
-    // Open a file for update (both for input and output). The file must exist.
-    FG_FILE_MODE_READ_UPDATE = FG_FILE_MODE_READ + FG_FILE_MODE_UPDATE,
-    // Create an empty file and open it for update (both for input and output). 
-    // If a file with the  same name already exists its  contents are discarded 
-    // and the file is treated as a new empty file.
-    FG_FILE_MODE_WRITE_UPDATE = FG_FILE_MODE_WRITE + FG_FILE_MODE_UPDATE,
-    // Open a file for update (both for input and  output) with all output operations
-    // writing data at the end of the file. Repositioning operations (fseek, fsetpos,
-    // rewind)  affects the  next input  operations,  but  output operations move the
-    // position back to the end of file.  The file is  created if  it does not exist.
-    FG_FILE_MODE_APPEND_UPDATE = FG_FILE_MODE_APPEND + FG_FILE_MODE_UPDATE
+        /*
+         * Platform independent wrapper for basic file operations
+         */
+        class File : public fg::base::File {
+        public:
+            typedef FileTag tag_type;
+            typedef typename fg::base::File::Mode Mode;
+
+        protected:
+            /// C standard file handle
+            FILE *m_file;
+
+        public:
+            // Default constructor for File object
+            File();
+
+            // Constructor for File object with parameter (file path)
+            File(const char *filePath);
+
+            // Destructor, closes the file, frees up all buffers
+            virtual ~File();
+
+            // Get the C standard mode for fopen
+            static const char *modeStr(Mode mode);
+
+            using fg::base::File::open;
+            
+            // Open the file with already set options
+            virtual fgBool open(void);
+            // Open the file with specified mode
+            virtual fgBool open(Mode mode);
+            // Open the file (pointed to by path) with specified mode
+            virtual fgBool open(const char *filePath, Mode mode);
+            // Close the file
+            virtual fgBool close(void);
+
+            // Check if file is currently opened
+            virtual fgBool isOpen(void) const;
+
+            // Check if file exists
+            static fgBool exists(const char *filePath);
+
+            // Check if file exists
+            static fgBool exists(const std::string &filePath);
+
+            // Check if file exists
+            virtual fgBool exists(void) {
+                return File::exists(m_filePath.c_str());
+            }
+
+            using fg::base::File::load;
+            
+            // This will load the whole file into char *buffer
+            virtual char *load(void);
+
+            // This will load the whole file into char *buffer
+            virtual char *load(const char *filePath);
+
+            // Read from file
+            virtual int read(void *buffer, unsigned int elemsize, unsigned int elemcount);
+            // Read string from file
+            virtual char *readString(char *buffer, unsigned int maxlen);
+            // Write to file
+            virtual int write(void *buffer, unsigned int elemsize, unsigned int elemcount);
+            // Print to file
+            virtual int print(const char *fmt, ...);
+            // Put string to file :)
+            virtual int puts(const char *str);
+
+            // Check is it end of file
+            virtual fgBool isEOF(void);
+            // Flush file buffers
+            virtual fgBool flushFile(void);
+
+            // Get (read) single character from file
+            virtual int getChar(void);
+            // Put (write) single character to file
+            virtual int putChar(char c);
+            // Get the file size #FIXME (need to reopen in binary mode)
+            virtual int getSize(void);
+            // Get current position in file
+            virtual long getPosition(void);
+            // Set position in file
+            virtual int setPosition(long offset, int whence);
+
+            // Return the stdio FILE standard pointer
+            FILE *getFilePtr(void) const {
+                return m_file;
+            }
+        };
+    };
 };
-// Overload standard bitwise operator for enum type
-FG_ENUM_FLAGS(fgFileMode);
-
-/*
- * Platform independent wrapper for basic file operations
- */
-class fgFile {
-public:
-    typedef fgFileTag tag_type;
-protected:
-    // C standard file handle
-    FILE *m_file;
-    // File full path
-    std::string m_filePath;
-    // Current mode in which is open
-    fgFileMode m_modeFlags;
-public:
-    // Default constructor for File object
-    fgFile();
-
-    // Constructor for File object with parameter (file path)
-    fgFile(const char *filePath);
-
-    // Destructor, closes the file, frees up all buffers
-    virtual ~fgFile();
-
-    // Set the file path
-    void setPath(const char *filePath) {
-        m_filePath = filePath;
-    }
-
-    // Set the file path
-    void setPath(std::string & filePath) {
-        m_filePath = filePath;
-    }
-
-    // Return the file path (C string)
-    const char *getPath(void) const {
-        return m_filePath.c_str();
-    }
-
-    // Set file open mode
-    void setMode(fgFileMode mode);
-
-    // Get the C standard mode for fopen
-    static const char *modeStr(fgFileMode mode);
-
-    // Open the file with already set options
-    fgBool open(void);
-    // Open the file with specified mode
-    fgBool open(fgFileMode mode);
-    // Open the file (pointed to by path) with specified mode
-    fgBool open(const char *filePath, fgFileMode mode);
-    // Close the file
-    fgBool close(void);
-
-    // Check if file is currently opened
-    fgBool isOpen(void) const;
-
-    // Check if file exists
-    static fgBool exists(const char *filePath);
-
-    // Check if file exists
-    static fgBool exists(const std::string &filePath);
-
-    // Check if file exists
-    fgBool exists(void) {
-        return fgFile::exists(m_filePath.c_str());
-    }
-
-    // This will load the whole file into char *buffer
-    char *load(void);
-
-    // This will load the whole file into char *buffer
-    char *load(const char *filePath);
-
-    // Read from file
-    int read(void *buffer, unsigned int elemsize, unsigned int elemcount);
-    // Read string from file
-    char *readString(char *buffer, unsigned int maxlen);
-    // Write to file
-    int write(void *buffer, unsigned int elemsize, unsigned int elemcount);
-    // Print to file
-    int print(const char *fmt, ...);
-    // Put string to file :)
-    int puts(const char *str);
-
-    // Check is it end of file
-    fgBool isEOF(void);
-    // Flush file buffers
-    fgBool flushFile(void);
-
-    // Get (read) single character from file
-    int getChar(void);
-    // Put (write) single character to file
-    int putChar(char c);
-    // Get the file size #FIXME (need to reopen in binary mode)
-    int getSize(void);
-    // Get current position in file
-    long getPosition(void);
-    // Set position in file
-    int setPosition(long offset, int whence);
-
-    // Return the stdio FILE standard pointer
-    FILE *getFilePtr(void) const {
-        return m_file;
-    }
-};
-
+    #undef FG_INC_FILE_BLOCK
 #endif /* FG_INC_FILE */

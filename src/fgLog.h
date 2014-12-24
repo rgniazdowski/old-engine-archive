@@ -13,7 +13,7 @@
     #include "fgBuildConfig.h"
     #include "fgMessageCommon.h"
     #include "fgStatus.h"
-    #include "Util/fgFile.h"
+    #include "Util/fgFileBase.h"
 
 // #FIXME #TODO things like that should be in xml config file, settings or whatever
     #define FG_LOG_DEFAULT_FOLDER	"log"
@@ -34,17 +34,17 @@ namespace FG_LOG {
     void PrintWarning(const char *fmt, ...);
 
     // 
-    void WriteToLog(fgFile *file, const char *fmt, ...);
+    void WriteToLog(fg::base::File *file, const char *fmt, ...);
 
     // 
     void PrintMessage(fgMessage *message, long timestamp = -1);
     // 
-    void PrintMessageToLog(fgFile *file, fgMessage *message, long timestamp = -1);
+    void PrintMessageToLog(fg::base::File *file, fgMessage *message, long timestamp = -1);
 
     // 
     void PrintStatus(fgStatus *status);
     //
-    void PrintStatusToLog(fgFile *file, fgStatus *status);
+    void PrintStatusToLog(fg::base::File *file, fgStatus *status);
 
 };
 

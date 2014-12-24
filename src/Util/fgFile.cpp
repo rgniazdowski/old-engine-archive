@@ -24,7 +24,7 @@
 /*
  *
  */
-fgBool fgFile::exists(const char *filePath) {
+fgBool fg::util::File::exists(const char *filePath) {
 #if defined FG_USING_MARMALADE
     return (fgBool)s3eFileCheckExists(filePath);
 #else
@@ -36,29 +36,31 @@ fgBool fgFile::exists(const char *filePath) {
 /*
  *
  */
-fgBool fgFile::exists(const std::string &filePath) {
-    return fgFile::exists(filePath.c_str());
+fgBool fg::util::File::exists(const std::string &filePath) {
+    return fg::util::File::exists(filePath.c_str());
 }
 
 /*
  *
  */
-fgFile::fgFile() :
-m_file(NULL),
-m_modeFlags(FG_FILE_MODE_READ | FG_FILE_MODE_BINARY) { }
+fg::util::File::File() :
+m_file(NULL) {
+    m_modeFlags = Mode::READ | Mode::BINARY;
+}
 
 /*
  *
  */
-fgFile::fgFile(const char *filePath) : m_file(NULL),
-m_modeFlags(FG_FILE_MODE_READ | FG_FILE_MODE_BINARY) {
+fg::util::File::File(const char *filePath) : 
+m_file(NULL) {
+    m_modeFlags = Mode::READ | Mode::BINARY;
     m_filePath = filePath;
 }
 
 /*
  *
  */
-fgFile::~fgFile() {
+fg::util::File::~File() {
     close();
     m_filePath.clear();
 }
@@ -66,40 +68,33 @@ fgFile::~fgFile() {
 /*
  *
  */
-void fgFile::setMode(fgFileMode mode) {
-    m_modeFlags = mode;
-}
-
-/*
- *
- */
-const char *fgFile::modeStr(fgFileMode mode) {
-    if(mode == FG_FILE_MODE_NONE)
+const char *fg::util::File::modeStr(Mode mode) {
+    if(mode == Mode::NONE)
         return "";
-    if(mode & FG_FILE_MODE_READ) {
-        if(mode & FG_FILE_MODE_UPDATE && mode & FG_FILE_MODE_BINARY)
+    if(!!(mode & Mode::READ)) {
+        if((mode & Mode::UPDATE) && (mode & Mode::BINARY))
             return "r+b";
-        if(mode & FG_FILE_MODE_UPDATE)
+        if(!!(mode & Mode::UPDATE))
             return "r+";
-        if(mode & FG_FILE_MODE_BINARY)
+        if(!!(mode & Mode::BINARY))
             return "rb";
         return "r";
     }
-    if(mode & FG_FILE_MODE_WRITE) {
-        if(mode & FG_FILE_MODE_UPDATE && mode & FG_FILE_MODE_BINARY)
+    if(!!(mode & Mode::WRITE)) {
+        if(mode & Mode::UPDATE && mode & Mode::BINARY)
             return "w+b";
-        if(mode & FG_FILE_MODE_UPDATE)
+        if(!!(mode & Mode::UPDATE))
             return "w+";
-        if(mode & FG_FILE_MODE_BINARY)
+        if(!!(mode & Mode::BINARY))
             return "wb";
         return "w";
     }
-    if(mode & FG_FILE_MODE_APPEND) {
-        if(mode & FG_FILE_MODE_UPDATE && mode & FG_FILE_MODE_BINARY)
+    if(!!(mode & Mode::APPEND)) {
+        if(mode & Mode::UPDATE && mode & Mode::BINARY)
             return "a+b";
-        if(mode & FG_FILE_MODE_UPDATE)
+        if(!!(mode & Mode::UPDATE))
             return "a+";
-        if(mode & FG_FILE_MODE_BINARY)
+        if(!!(mode & Mode::BINARY))
             return "ab";
         return "a";
     }
@@ -109,7 +104,7 @@ const char *fgFile::modeStr(fgFileMode mode) {
 /*
  *
  */
-fgBool fgFile::open(const char *filePath, fgFileMode mode) {
+fgBool fg::util::File::open(const char *filePath, Mode mode) {
     if(filePath == NULL) {
         FG_MessageSubsystem->reportWarning(tag_type::name(), FG_ERRNO_FILE_NO_PATH);
         //FG_LOG_WARNING("%s: No file path specified", tag_type::name())
@@ -124,15 +119,15 @@ fgBool fgFile::open(const char *filePath, fgFileMode mode) {
         FG_MessageSubsystem->reportWarning(tag_type::name(), FG_ERRNO_FILE_NO_PATH, "%s", filePath);
         return FG_FALSE;
     }
-    if(mode == FG_FILE_MODE_READ ||
-       mode == (FG_FILE_MODE_READ | FG_FILE_MODE_BINARY) ||
-       mode & FG_FILE_MODE_READ_UPDATE) {
+    if(mode == Mode::READ ||
+       mode == (Mode::READ | Mode::BINARY) ||
+       mode & Mode::UPDATE) {
         if(!exists(filePath)) {
             FG_MessageSubsystem->reportError(tag_type::name(), FG_ERRNO_FILE_DOESNT_EXIST, "%s", filePath);
             return FG_FALSE;
         }
     }
-    
+
     FG_ERRNO_CLEAR();
     m_file = fopen(filePath, modeStr(mode));
 
@@ -151,8 +146,8 @@ fgBool fgFile::open(const char *filePath, fgFileMode mode) {
 /*
  *
  */
-fgBool fgFile::open(fgFileMode mode) {
-    if(mode == FG_FILE_MODE_NONE) {
+fgBool fg::util::File::open(Mode mode) {
+    if(mode == Mode::NONE) {
         FG_MessageSubsystem->reportWarning(tag_type::name(), FG_ERRNO_FILE_WRONG_MODE, "%s", m_filePath.c_str());
         return FG_FALSE;
     }
@@ -162,16 +157,16 @@ fgBool fgFile::open(fgFileMode mode) {
 /*
  *
  */
-fgBool fgFile::open(void) {
-    if(m_modeFlags == FG_FILE_MODE_NONE)
-        m_modeFlags = FG_FILE_MODE_READ;
+fgBool fg::util::File::open(void) {
+    if(m_modeFlags == Mode::NONE)
+        m_modeFlags = Mode::READ;
     return open(m_filePath.c_str(), m_modeFlags);
 }
 
 /*
  *
  */
-fgBool fgFile::close(void) {
+fgBool fg::util::File::close(void) {
     if(m_file) {
         FG_ERRNO_CLEAR();
         clearerr(m_file);
@@ -193,7 +188,7 @@ fgBool fgFile::close(void) {
 /*
  *
  */
-fgBool fgFile::isOpen(void) const {
+fgBool fg::util::File::isOpen(void) const {
     if(m_file)
         return FG_TRUE;
     else
@@ -203,8 +198,8 @@ fgBool fgFile::isOpen(void) const {
 /*
  *
  */
-char *fgFile::load(const char *filePath) {
-    if(!isOpen() && !open(filePath, FG_FILE_MODE_READ | FG_FILE_MODE_BINARY)) {
+char *fg::util::File::load(const char *filePath) {
+    if(!isOpen() && !open(filePath, Mode::READ | Mode::BINARY)) {
         FG_MessageSubsystem->reportWarning(tag_type::name(), FG_ERRNO_FILE_ALREADY_OPEN, "%s", filePath);
         return NULL;
     }
@@ -240,7 +235,7 @@ char *fgFile::load(const char *filePath) {
 /*
  *
  */
-char *fgFile::load(void) {
+char *fg::util::File::load(void) {
     if(m_filePath.empty()) {
         FG_MessageSubsystem->reportWarning(tag_type::name(), FG_ERRNO_FILE_NO_PATH, "%s", m_filePath.c_str());
         return NULL;
@@ -251,7 +246,7 @@ char *fgFile::load(void) {
 /*
  *
  */
-int fgFile::read(void *buffer, unsigned int elemsize, unsigned int elemcount) {
+int fg::util::File::read(void *buffer, unsigned int elemsize, unsigned int elemcount) {
     if(buffer == NULL || elemsize == 0 || elemcount == 0 || m_file == NULL) {
         FG_MessageSubsystem->reportWarning(tag_type::name(), FG_ERRNO_FILE_WRONG_PARAMETERS, "%s", m_filePath.c_str());
         return 0;
@@ -271,7 +266,7 @@ int fgFile::read(void *buffer, unsigned int elemsize, unsigned int elemcount) {
 /*
  *
  */
-char *fgFile::readString(char *buffer, unsigned int maxlen) {
+char *fg::util::File::readString(char *buffer, unsigned int maxlen) {
     if(buffer == NULL || maxlen == 0 || m_file == NULL) {
         FG_MessageSubsystem->reportWarning(tag_type::name(), FG_ERRNO_FILE_WRONG_PARAMETERS);
         return NULL;
@@ -292,7 +287,7 @@ char *fgFile::readString(char *buffer, unsigned int maxlen) {
 /*
  *
  */
-int fgFile::print(const char *fmt, ...) {
+int fg::util::File::print(const char *fmt, ...) {
     if(fmt == NULL || m_file == NULL) {
         FG_MessageSubsystem->reportWarning(tag_type::name(), FG_ERRNO_FILE_WRONG_PARAMETERS);
         return -1;
@@ -320,7 +315,7 @@ int fgFile::print(const char *fmt, ...) {
 /*
  *
  */
-int fgFile::write(void *buffer, unsigned int elemsize, unsigned int elemcount) {
+int fg::util::File::write(void *buffer, unsigned int elemsize, unsigned int elemcount) {
     if(m_file == NULL || buffer == NULL || elemsize == 0 || elemcount == 0) {
         FG_MessageSubsystem->reportWarning(tag_type::name(), FG_ERRNO_FILE_WRONG_PARAMETERS);
         return -1;
@@ -342,7 +337,7 @@ int fgFile::write(void *buffer, unsigned int elemsize, unsigned int elemcount) {
 /*
  *
  */
-int fgFile::puts(const char *str) {
+int fg::util::File::puts(const char *str) {
     if(str == NULL) {
         FG_MessageSubsystem->reportWarning(tag_type::name(), FG_ERRNO_FILE_WRONG_PARAMETERS);
         return -1;
@@ -367,7 +362,7 @@ int fgFile::puts(const char *str) {
 /*
  *
  */
-fgBool fgFile::isEOF(void) {
+fgBool fg::util::File::isEOF(void) {
     if(m_file == NULL) {
         FG_MessageSubsystem->reportWarning(tag_type::name(), FG_ERRNO_FILE_NOT_OPENED);
         return FG_FALSE;
@@ -380,7 +375,7 @@ fgBool fgFile::isEOF(void) {
 /*
  *
  */
-fgBool fgFile::flushFile(void) {
+fgBool fg::util::File::flushFile(void) {
     if(m_file == NULL) {
         FG_MessageSubsystem->reportWarning(tag_type::name(), FG_ERRNO_FILE_NOT_OPENED);
         return FG_FALSE;
@@ -400,7 +395,7 @@ fgBool fgFile::flushFile(void) {
 /*
  *
  */
-int fgFile::getChar(void) {
+int fg::util::File::getChar(void) {
     if(m_file == NULL) {
         FG_MessageSubsystem->reportWarning(tag_type::name(), FG_ERRNO_FILE_NOT_OPENED);
         return -1;
@@ -423,7 +418,7 @@ int fgFile::getChar(void) {
 /*
  *
  */
-int fgFile::putChar(char c) {
+int fg::util::File::putChar(char c) {
     if(m_file == NULL) {
         FG_MessageSubsystem->reportWarning(tag_type::name(), FG_ERRNO_FILE_NOT_OPENED);
         return FG_EOF;
@@ -443,7 +438,7 @@ int fgFile::putChar(char c) {
 /*
  * Get the file size #FIXME (need to reopen in binary mode)
  */
-int fgFile::getSize(void) {
+int fg::util::File::getSize(void) {
     if(m_file == NULL) {
         FG_MessageSubsystem->reportWarning(tag_type::name(), FG_ERRNO_FILE_NOT_OPENED);
         return -1;
@@ -479,7 +474,7 @@ int fgFile::getSize(void) {
 /*
  * Get current position in file
  */
-long fgFile::getPosition(void) {
+long fg::util::File::getPosition(void) {
     if(m_file == NULL) {
         FG_MessageSubsystem->reportWarning(tag_type::name(), FG_ERRNO_FILE_NOT_OPENED);
         return -1;
@@ -500,7 +495,7 @@ long fgFile::getPosition(void) {
 /*
  *
  */
-int fgFile::setPosition(long offset, int whence) {
+int fg::util::File::setPosition(long offset, int whence) {
     if(m_file == NULL) {
         FG_MessageSubsystem->reportWarning(tag_type::name(), FG_ERRNO_FILE_NOT_OPENED);
         return -1;

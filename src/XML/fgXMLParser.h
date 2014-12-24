@@ -56,9 +56,9 @@ typedef FG_TAG_XML_PARSER fgXMLParserTag;
         A Decleration contains: Attributes (not on tree)
  */
 
-class fgXMLParser : protected fgFile {
+class fgXMLParser : protected fg::util::File {
 public:
-    typedef fgFile base_type;
+    typedef fg::util::File base_type;
     typedef fgXMLParserTag tag_type;
 protected:
     // Loaded file size
@@ -88,7 +88,7 @@ public:
     /*
      * Constructor with file path parameter - loads the xml file
      */
-    fgXMLParser(const char *filePath) : fgFile(filePath), m_fileSize(0), m_fileBuffer(NULL), m_xmlDocument(),
+    fgXMLParser(const char *filePath) : fg::util::File(filePath), m_fileSize(0), m_fileBuffer(NULL), m_xmlDocument(),
     m_rootXMLElement(NULL), m_currentXMLNode(NULL),
     m_currentXMLAttribute(NULL), m_parsingStack(),
     m_contentHandler(NULL) {

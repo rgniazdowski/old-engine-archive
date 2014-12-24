@@ -175,8 +175,8 @@ void fgProfiling::updateHistory(void) {
 
 void fgProfiling::dumpToDefaultFile(void) {
     profileVecItor begin = m_orderVec.begin(), end = m_orderVec.end(), it;
-    fgFile file;
-    file.open("defaultProfile.log", FG_FILE_MODE_WRITE);
+    fg::util::File file;
+    file.open("defaultProfile.log", fg::util::File::Mode::WRITE);
     long timestamp = fgTime::seconds();
     struct tm *ti;
     ti = localtime(&timestamp);

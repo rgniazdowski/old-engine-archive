@@ -14,7 +14,6 @@
 #include <cstdio>
 #include <cmath>
 #include <cstring>
-
 /// Various utilities
 #include "Util/fgSettings.h"
 #include "Util/fgConfig.h"

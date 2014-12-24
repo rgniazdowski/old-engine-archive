@@ -20,7 +20,7 @@
 /**
  *
  */
-class fgConfigParser : protected fgFile {
+class fgConfigParser : protected fg::util::File {
 protected:
     /// Loaded file size
     unsigned int m_fileSize;

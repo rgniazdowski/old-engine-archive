@@ -151,11 +151,11 @@ protected:
     //
     msStatusVec m_statusVec;
     //
-    fgFile m_logAll;
+    fg::util::File m_logAll;
     //
-    fgFile m_logError;
+    fg::util::File m_logError;
     //
-    fgFile m_logDebug;
+    fg::util::File m_logDebug;
 };
 
 // #FIXME - here we go again with the singletons... :)

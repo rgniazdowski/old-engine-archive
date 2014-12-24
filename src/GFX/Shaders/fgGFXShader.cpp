@@ -106,7 +106,7 @@ fgBool fgGfxShader::loadSource(void) {
         return FG_TRUE;
     }
 
-    m_fileSource = fgFile::load(getFilePath().c_str());
+    m_fileSource = fg::util::File::load(getFilePath().c_str());
     if(!m_fileSource) {
         return FG_FALSE; // PROPER ERROR CODE
     }
@@ -147,7 +147,7 @@ fgBool fgGfxShader::loadSource(void) {
  */
 fgBool fgGfxShader::loadSource(const char *path) {
     setFilePath(path);
-    fgFile::setPath(path);
+    fg::util::File::setPath(path);
     return loadSource();
 }
 
@@ -158,7 +158,7 @@ fgBool fgGfxShader::loadSource(const char *path) {
  */
 fgBool fgGfxShader::loadSource(std::string & path) {
     setFilePath(path);
-    fgFile::setPath(path);
+    fg::util::File::setPath(path);
     return loadSource();
 }
 
@@ -232,7 +232,7 @@ fgBool fgGfxShader::compile(const char *path) {
         return FG_FALSE;
     }
     setFilePath(path);
-    fgFile::setPath(path);
+    fg::util::File::setPath(path);
     return compile();
 }
 
@@ -246,7 +246,7 @@ fgBool fgGfxShader::compile(std::string & path) {
         return FG_FALSE;
     }
     setFilePath(path);
-    fgFile::setPath(path);
+    fg::util::File::setPath(path);
     return compile();
 }
 

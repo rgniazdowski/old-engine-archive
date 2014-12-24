@@ -26,7 +26,7 @@ typedef fgGFXuint fgGfxShaderObjParamType;
 /*
  *
  */
-class fgGfxShader : public fgGfxShaderBase, protected fgFile {
+class fgGfxShader : public fgGfxShaderBase, protected fg::util::File {
     friend class fgGfxShaderProgram;
 public:
     typedef fgVector<std::string> defineStrVec;

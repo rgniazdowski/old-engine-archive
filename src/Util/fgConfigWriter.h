@@ -14,7 +14,7 @@
 
     #include "fgConfigStruct.h"
 
-class fgConfigWriter : protected fgFile {
+class fgConfigWriter : protected fg::util::File {
 protected:
 public:
     fgConfigWriter();
