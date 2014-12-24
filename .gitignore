@@ -43,3 +43,13 @@ modules/glm/CTestConfig.cmake
 modules/ng_luaplus/build_ng_luaplus_vc11
 modules/ng_luaplus/build_ng_luaplus_vc12
 modules/ng_luaplus/lib
+modules/zlib_128/build_zlib_128_vc11
+modules/zlib_128/build_zlib_128_vc12
+modules/zlib_128/lib
+modules/libjpeg/build_libjpeg_vc11
+modules/libjpeg/build_libjpeg_vc12
+modules/libjpeg/build_jpeg_vc11
+modules/libjpeg/build_jpeg_vc12
+modules/libjpeg/lib
+/project/linux/MiniZipMaster_NB/build/
+/project/linux/MiniZipMaster_NB/dist/

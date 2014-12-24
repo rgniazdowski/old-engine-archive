@@ -373,7 +373,7 @@ packages
 {
 	libjpeg
 	libpng
-	zlib
+	#zlib
 }
 
 subprojects
@@ -384,6 +384,7 @@ subprojects
 	tinyxml
 	stbfont
 	ng_luaplus
+	zlib_128
 }
 
 includepaths
@@ -396,6 +397,7 @@ includepaths
 librarypaths
 {
 	modules/ng_luaplus/lib
+	modules/zlib_128/lib
 	modules/libjpeg/lib
 }
 

@@ -1,0 +1,45 @@
+#!/usr/bin/env mkb
+option lib
+target "zlib_128"
+subproject zlib_128
+
+#upstream
+#{
+#    #original: http://www.zlib.net/zlib-1.2.3.tar.gz
+#    url="http://source.madewithmarmalade.com/upstream/zlib-1.2.3.tar.gz"
+#}
+
+#includepath "."
+
+files
+{
+    [h]
+    "*.h"
+
+    [source]
+    "*.c"
+
+	[minizip]
+	("contrib/minizip")
+	"ioapi.c"
+	"ioapi_mem.c"
+	"ioapi_buf.c"
+	#"iowin32.c"
+	#"mztools.c"
+	"unzip.c"
+	"zip.c"
+#	"miniunz.c"
+#	"minizip.c"
+#
+	[minizip/h]
+	"*.h"
+
+	[minizip/h]
+	("contrib/minizip/aes")
+	"*.c"
+
+}
+
+# TODO: Remove module_options once build machines are set to use RVCT 3.0 by default.
+# and VC6 support is dropped.
+#subproject ../../module_options

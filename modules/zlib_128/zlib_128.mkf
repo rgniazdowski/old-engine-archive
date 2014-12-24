@@ -1,0 +1,10 @@
+#includepath .
+
+files
+{
+    [h]
+    zconf.h
+    zlib.h
+}
+
+library ".,zlib_128"
