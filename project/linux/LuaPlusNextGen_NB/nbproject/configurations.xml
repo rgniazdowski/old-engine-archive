@@ -125,6 +125,7 @@
       </toolsSet>
       <compileType>
         <cTool>
+          <standard>10</standard>
           <preprocessorList>
             <Elem>DEBUG</Elem>
             <Elem>FG_DEBUG</Elem>
@@ -136,6 +137,7 @@
           <warningLevel>2</warningLevel>
         </cTool>
         <ccTool>
+          <standard>8</standard>
           <preprocessorList>
             <Elem>DEBUG</Elem>
             <Elem>FG_DEBUG</Elem>
@@ -575,21 +577,28 @@
         <cTool>
           <developmentMode>5</developmentMode>
           <stripSymbols>true</stripSymbols>
+          <standard>10</standard>
           <commandLine>-ffunction-sections -fdata-sections -Os</commandLine>
           <preprocessorList>
+            <Elem>FG_RELEASE</Elem>
             <Elem>LUAPLUS_DUMPOBJECT</Elem>
             <Elem>LUA_OPNAMES</Elem>
             <Elem>LUA_USE_MKSTEMP</Elem>
+            <Elem>RELEASE</Elem>
           </preprocessorList>
           <warningLevel>2</warningLevel>
         </cTool>
         <ccTool>
           <developmentMode>5</developmentMode>
+          <stripSymbols>true</stripSymbols>
+          <standard>8</standard>
           <commandLine>-ffunction-sections -fdata-sections -Os</commandLine>
           <preprocessorList>
+            <Elem>FG_RELEASE</Elem>
             <Elem>LUAPLUS_DUMPOBJECT</Elem>
             <Elem>LUA_OPNAMES</Elem>
             <Elem>LUA_USE_MKSTEMP</Elem>
+            <Elem>RELEASE</Elem>
           </preprocessorList>
           <warningLevel>2</warningLevel>
         </ccTool>
@@ -1037,6 +1046,7 @@
           <warningLevel>2</warningLevel>
         </cTool>
         <ccTool>
+          <standard>8</standard>
           <preprocessorList>
             <Elem>DEBUG</Elem>
             <Elem>FG_DEBUG</Elem>
@@ -1473,19 +1483,29 @@
       <compileType>
         <cTool>
           <developmentMode>5</developmentMode>
+          <stripSymbols>true</stripSymbols>
+          <standard>10</standard>
+          <commandLine>-ffunction-sections -fdata-sections -Os</commandLine>
           <preprocessorList>
+            <Elem>FG_RELEASE</Elem>
             <Elem>LUA_BUILD_AS_DLL</Elem>
             <Elem>LUA_OPNAMES</Elem>
             <Elem>LUA_USE_MKSTEMP</Elem>
+            <Elem>RELEASE</Elem>
           </preprocessorList>
           <warningLevel>2</warningLevel>
         </cTool>
         <ccTool>
           <developmentMode>5</developmentMode>
+          <stripSymbols>true</stripSymbols>
+          <standard>8</standard>
+          <commandLine>-ffunction-sections -fdata-sections -Os</commandLine>
           <preprocessorList>
+            <Elem>FG_RELEASE</Elem>
             <Elem>LUA_BUILD_AS_DLL</Elem>
             <Elem>LUA_OPNAMES</Elem>
             <Elem>LUA_USE_MKSTEMP</Elem>
+            <Elem>RELEASE</Elem>
           </preprocessorList>
           <warningLevel>2</warningLevel>
         </ccTool>
@@ -1495,6 +1515,9 @@
         <asmTool>
           <developmentMode>5</developmentMode>
         </asmTool>
+        <linkerTool>
+          <stripSymbols>true</stripSymbols>
+        </linkerTool>
       </compileType>
       <item path="../../../modules/luaplus51-all/Src/LuaPlus/LuaAutoBlock.h"
             ex="false"
