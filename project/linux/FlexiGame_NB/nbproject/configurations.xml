@@ -312,6 +312,7 @@
           <itemPath>../../../src/Util/fgFastCmp.h</itemPath>
           <itemPath>../../../src/Util/fgFile.cpp</itemPath>
           <itemPath>../../../src/Util/fgFile.h</itemPath>
+          <itemPath>../../../src/Util/fgFileBase.h</itemPath>
           <itemPath>../../../src/Util/fgFileErrorCodes.h</itemPath>
           <itemPath>../../../src/Util/fgHandle.h</itemPath>
           <itemPath>../../../src/Util/fgHandleManager.h</itemPath>
@@ -330,6 +331,8 @@
           <itemPath>../../../src/Util/fgTag.h</itemPath>
           <itemPath>../../../src/Util/fgTime.cpp</itemPath>
           <itemPath>../../../src/Util/fgTime.h</itemPath>
+          <itemPath>../../../src/Util/fgZipFile.cpp</itemPath>
+          <itemPath>../../../src/Util/fgZipFile.h</itemPath>
         </logicalFolder>
         <logicalFolder name="XML" displayName="XML" projectFiles="true">
           <itemPath>../../../src/XML/fgXMLAutoHandler.h</itemPath>
@@ -425,6 +428,7 @@
             <pElem>../../../modules/stbfont/usascii</pElem>
             <pElem>../../../modules/stbfont</pElem>
             <pElem>../../../modules/luaplus51-all/Src</pElem>
+            <pElem>../../../modules/zlib_128/contrib/minizip</pElem>
           </incDir>
           <preprocessorList>
             <Elem>DEBUG</Elem>
@@ -451,6 +455,7 @@
             <pElem>../../../modules/stbfont/usascii</pElem>
             <pElem>../../../modules/stbfont</pElem>
             <pElem>../../../modules/luaplus51-all/Src</pElem>
+            <pElem>../../../modules/zlib_128/contrib/minizip</pElem>
           </incDir>
           <preprocessorList>
             <Elem>DEBUG</Elem>
@@ -1588,6 +1593,8 @@
       </item>
       <item path="../../../src/Util/fgFile.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../../../src/Util/fgFileBase.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../../../src/Util/fgFileErrorCodes.h"
             ex="false"
             tool="3"
@@ -1632,6 +1639,10 @@
       <item path="../../../src/Util/fgTime.cpp" ex="false" tool="1" flavor2="8">
       </item>
       <item path="../../../src/Util/fgTime.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Util/fgZipFile.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../../src/Util/fgZipFile.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/XML/fgXMLAutoHandler.h"
             ex="false"
@@ -2886,6 +2897,8 @@
       </item>
       <item path="../../../src/Util/fgFile.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../../../src/Util/fgFileBase.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../../../src/Util/fgFileErrorCodes.h"
             ex="false"
             tool="3"
@@ -2930,6 +2943,10 @@
       <item path="../../../src/Util/fgTime.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="../../../src/Util/fgTime.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Util/fgZipFile.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../../src/Util/fgZipFile.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/XML/fgXMLAutoHandler.h"
             ex="false"
@@ -4154,6 +4171,8 @@
       </item>
       <item path="../../../src/Util/fgFile.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../../../src/Util/fgFileBase.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../../../src/Util/fgFileErrorCodes.h"
             ex="false"
             tool="3"
@@ -4198,6 +4217,10 @@
       <item path="../../../src/Util/fgTime.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="../../../src/Util/fgTime.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Util/fgZipFile.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../../src/Util/fgZipFile.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/XML/fgXMLAutoHandler.h"
             ex="false"
@@ -5400,6 +5423,8 @@
       </item>
       <item path="../../../src/Util/fgFile.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../../../src/Util/fgFileBase.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../../../src/Util/fgFileErrorCodes.h"
             ex="false"
             tool="3"
@@ -5444,6 +5469,10 @@
       <item path="../../../src/Util/fgTime.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="../../../src/Util/fgTime.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Util/fgZipFile.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../../src/Util/fgZipFile.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/XML/fgXMLAutoHandler.h"
             ex="false"
@@ -6667,6 +6696,8 @@
       </item>
       <item path="../../../src/Util/fgFile.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../../../src/Util/fgFileBase.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../../../src/Util/fgFileErrorCodes.h"
             ex="false"
             tool="3"
@@ -6711,6 +6742,10 @@
       <item path="../../../src/Util/fgTime.cpp" ex="false" tool="1" flavor2="8">
       </item>
       <item path="../../../src/Util/fgTime.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Util/fgZipFile.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../../src/Util/fgZipFile.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/XML/fgXMLAutoHandler.h"
             ex="false"
@@ -7924,6 +7959,8 @@
       </item>
       <item path="../../../src/Util/fgFile.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../../../src/Util/fgFileBase.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../../../src/Util/fgFileErrorCodes.h"
             ex="false"
             tool="3"
@@ -7968,6 +8005,10 @@
       <item path="../../../src/Util/fgTime.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="../../../src/Util/fgTime.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Util/fgZipFile.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../../src/Util/fgZipFile.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/XML/fgXMLAutoHandler.h"
             ex="false"

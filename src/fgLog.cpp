@@ -115,13 +115,13 @@ void FG_LOG::PrintWarning(const char *fmt, ...) {
 /*
  *
  */
-void FG_LOG::WriteToLog(fg::base::File *file, const char *fmt, ...) {
+void FG_LOG::WriteToLog(fg::util::base::File *file, const char *fmt, ...) {
     if(!file)
         return;
     if(!strlen(file->getPath()))
         return;
     if(!file->isOpen()) {
-        if(!file->open(fg::base::File::Mode::APPEND))
+        if(!file->open(fg::util::base::File::Mode::APPEND))
             return;
     }
 
@@ -229,13 +229,13 @@ void FG_LOG::PrintMessage(fgMessage *message, long timestamp) {
 /*
  *
  */
-void FG_LOG::PrintMessageToLog(fg::base::File *file, fgMessage *message, long timestamp) {
+void FG_LOG::PrintMessageToLog(fg::util::base::File *file, fgMessage *message, long timestamp) {
     if(!message || !file)
         return;
     if(!strlen(file->getPath()))
         return;
     if(!file->isOpen()) {
-        if(!file->open(fg::base::File::Mode::APPEND))
+        if(!file->open(fg::util::base::File::Mode::APPEND))
             return;
     }
     char buf[FG_LOG_BUF_MAX];
@@ -267,7 +267,7 @@ void FG_LOG::PrintStatus(fgStatus *status) {
 /*
  *
  */
-void FG_LOG::PrintStatusToLog(fg::base::File *file, fgStatus *status) {
+void FG_LOG::PrintStatusToLog(fg::util::base::File *file, fgStatus *status) {
     if(!status || !file)
         return;
     if(!strlen(file->getPath()))
@@ -276,7 +276,7 @@ void FG_LOG::PrintStatusToLog(fg::base::File *file, fgStatus *status) {
         FG_LOG::PrintMessageToLog(file, status->message, status->timestamp);
     } else {
         if(!file->isOpen()) {
-            if(!file->open(fg::base::File::Mode::APPEND))
+            if(!file->open(fg::util::base::File::Mode::APPEND))
                 return;
         }
         char buf[FG_LOG_BUF_MAX];

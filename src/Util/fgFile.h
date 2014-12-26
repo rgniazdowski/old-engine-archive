@@ -39,7 +39,7 @@ namespace fg {
     #include <cstdio>
     #include <string>
 
-    #define FG_FILE_PATH_MAX	FG_PATH_MAX
+    #define FG_FILE_PATH_MAX    FG_PATH_MAX
 
 /* Seek from beginning of file. */
     #define FG_FILE_SEEK_SET    SEEK_SET   
@@ -48,16 +48,16 @@ namespace fg {
 /* Seek from end of file. */
     #define FG_FILE_SEEK_END    SEEK_END   
 /* End of file */
-    #define FG_EOF				EOF
+    #define FG_EOF              EOF
 /* Max buffer for format string */
-    #define FG_MAX_BUFFER		8192
+    #define FG_MAX_BUFFER       8192
 
-// Standard input
-    #define FG_IN				stdin
-// Standard output
-    #define FG_OUT				stdout
-// Standard error output
-    #define FG_ERR				stderr
+/* Standard input */
+    #define FG_IN               stdin
+/* Standard output */
+    #define FG_OUT              stdout
+/* Standard error output */
+    #define FG_ERR              stderr
 
 namespace fg {
     namespace util {
@@ -65,89 +65,195 @@ namespace fg {
         /*
          * Platform independent wrapper for basic file operations
          */
-        class File : public fg::base::File {
+        class File : public fg::util::base::File {
         public:
+            typedef fg::util::base::File base_type;
             typedef FileTag tag_type;
-            typedef typename fg::base::File::Mode Mode;
+            typedef typename fg::util::base::File::Mode Mode;
 
         protected:
             /// C standard file handle
             FILE *m_file;
 
         public:
-            // Default constructor for File object
+            /**
+             * Default constructor for File object
+             */
             File();
 
-            // Constructor for File object with parameter (file path)
+            /**
+             * Constructor for File object with parameter (file path)
+             * @param filePath
+             */
             File(const char *filePath);
 
-            // Destructor, closes the file, frees up all buffers
+            /**
+             * Destructor, closes the file, frees up all buffers
+             */
             virtual ~File();
 
-            // Get the C standard mode for fopen
+            /**
+             * Get the C standard mode for fopen
+             * @param mode
+             * @return 
+             */
             static const char *modeStr(Mode mode);
 
-            using fg::base::File::open;
+            using fg::util::base::File::open;
             
-            // Open the file with already set options
+            /**
+             * Open the file with already set options
+             * @return 
+             */
             virtual fgBool open(void);
-            // Open the file with specified mode
+            /**
+             * Open the file with specified mode
+             * @param mode
+             * @return 
+             */
             virtual fgBool open(Mode mode);
-            // Open the file (pointed to by path) with specified mode
+            /**
+             * Open the file (pointed to by path) with specified mode
+             * @param filePath
+             * @param mode
+             * @return 
+             */
             virtual fgBool open(const char *filePath, Mode mode);
-            // Close the file
+            /**
+             * Close the file
+             * @return 
+             */
             virtual fgBool close(void);
 
-            // Check if file is currently opened
+            /**
+             * Check if file is currently opened
+             * @return 
+             */
             virtual fgBool isOpen(void) const;
 
-            // Check if file exists
+            /**
+             * Check if file exists
+             * @param filePath
+             * @return 
+             */
             static fgBool exists(const char *filePath);
 
-            // Check if file exists
+            /**
+             * Check if file exists
+             * @param filePath
+             * @return 
+             */
             static fgBool exists(const std::string &filePath);
 
-            // Check if file exists
+            /**
+             * Check if file exists
+             * @return 
+             */
             virtual fgBool exists(void) {
                 return File::exists(m_filePath.c_str());
             }
 
-            using fg::base::File::load;
+            using fg::util::base::File::load;
             
-            // This will load the whole file into char *buffer
+            /**
+             * This will load the whole file into char *buffer
+             * @return Newly allocated string representing the contents of the file
+             *         There is a limit for how big this buffer can be. If it's
+             *         exceeded a NULL pointer will be returned. The returned
+             *         string buffer will be null-terminated ('\0' will be appended)
+             */
             virtual char *load(void);
 
-            // This will load the whole file into char *buffer
+            /**
+             * This will load the whole file into char *buffer
+             * @param filePath
+             * @return Newly allocated string representing the contents of the file
+             *         There is a limit for how big this buffer can be. If it's
+             *         exceeded a NULL pointer will be returned. The returned
+             *         string buffer will be null-terminated ('\0' will be appended)
+             */
             virtual char *load(const char *filePath);
 
-            // Read from file
+            /**
+             * Read from file
+             * @param buffer
+             * @param elemsize
+             * @param elemcount
+             * @return 
+             */
             virtual int read(void *buffer, unsigned int elemsize, unsigned int elemcount);
-            // Read string from file
+            /**
+             * Read string from the file
+             * @param buffer
+             * @param maxlen
+             * @return 
+             */
             virtual char *readString(char *buffer, unsigned int maxlen);
-            // Write to file
+            /**
+             * Write to the file
+             * @param buffer
+             * @param elemsize
+             * @param elemcount
+             * @return 
+             */
             virtual int write(void *buffer, unsigned int elemsize, unsigned int elemcount);
-            // Print to file
+            /**
+             * Print to the file
+             * @param fmt
+             * @return 
+             */
             virtual int print(const char *fmt, ...);
-            // Put string to file :)
+            /**
+             * Put given string into the file
+             * @param str
+             * @return 
+             */
             virtual int puts(const char *str);
 
-            // Check is it end of file
+            /**
+             * Check is it end of file
+             * @return 
+             */
             virtual fgBool isEOF(void);
-            // Flush file buffers
-            virtual fgBool flushFile(void);
+            /**
+             * Flush file buffers
+             * @return 
+             */
+            virtual fgBool flush(void);
 
-            // Get (read) single character from file
+            /**
+             *  Get (read) single character from file
+             * @return 
+             */
             virtual int getChar(void);
-            // Put (write) single character to file
+            /**
+             * Put (write) single character to file
+             * @param c
+             * @return 
+             */
             virtual int putChar(char c);
-            // Get the file size #FIXME (need to reopen in binary mode)
+            /**
+             * Get the file size (in bytes)
+             * @return 
+             */
             virtual int getSize(void);
-            // Get current position in file
+            /**
+             * Get the current position in the file
+             * @return 
+             */
             virtual long getPosition(void);
-            // Set position in file
+            /**
+             * Sets the position in the currently open/selected file
+             * @param offset
+             * @param whence
+             * @return 
+             */
             virtual int setPosition(long offset, int whence);
 
-            // Return the stdio FILE standard pointer
+            /**
+             * Return the stdio FILE standard pointer
+             * @return 
+             */
             FILE *getFilePtr(void) const {
                 return m_file;
             }

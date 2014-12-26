@@ -34,17 +34,17 @@ namespace FG_LOG {
     void PrintWarning(const char *fmt, ...);
 
     // 
-    void WriteToLog(fg::base::File *file, const char *fmt, ...);
+    void WriteToLog(fg::util::base::File *file, const char *fmt, ...);
 
     // 
     void PrintMessage(fgMessage *message, long timestamp = -1);
     // 
-    void PrintMessageToLog(fg::base::File *file, fgMessage *message, long timestamp = -1);
+    void PrintMessageToLog(fg::util::base::File *file, fgMessage *message, long timestamp = -1);
 
     // 
     void PrintStatus(fgStatus *status);
     //
-    void PrintStatusToLog(fg::base::File *file, fgStatus *status);
+    void PrintStatusToLog(fg::util::base::File *file, fgStatus *status);
 
 };
 

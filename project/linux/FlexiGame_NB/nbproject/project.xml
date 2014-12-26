@@ -53,6 +53,7 @@
             <word>aabb</word>
             <word>aos</word>
             <word>app</word>
+            <word>arg</word>
             <word>argc</word>
             <word>attrib</word>
             <word>Autodesk</word>
@@ -66,12 +67,14 @@
             <word>config</word>
             <word>configs</word>
             <word>const</word>
+            <word>contrib</word>
             <word>coords</word>
             <word>Cornsilk</word>
             <word>cpp</word>
             <word>data's</word>
             <word>destructors</word>
             <word>dfactor</word>
+            <word>Dirent</word>
             <word>dragonsfunk</word>
             <word>drawcall</word>
             <word>drawcall's</word>
@@ -171,6 +174,7 @@
             <word>tga</word>
             <word>ttl</word>
             <word>unboxed</word>
+            <word>unzipping</word>
             <word>userdata</word>
             <word>ushort</word>
             <word>util</word>
@@ -184,6 +188,7 @@
             <word>wut</word>
             <word>xml</word>
             <word>zfail</word>
+            <word>Zlib</word>
             <word>zpass</word>
         </spellchecker-wordlist>
     </configuration>

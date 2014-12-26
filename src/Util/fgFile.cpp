@@ -21,8 +21,10 @@
 #include <fstream>
 #include <cerrno>
 
-/*
- *
+/**
+ * Check if file exists
+ * @param filePath
+ * @return 
  */
 fgBool fg::util::File::exists(const char *filePath) {
 #if defined FG_USING_MARMALADE
@@ -33,40 +35,45 @@ fgBool fg::util::File::exists(const char *filePath) {
 #endif
 }
 
-/*
- *
+/**
+ * Check if file exists
+ * @param filePath
+ * @return 
  */
 fgBool fg::util::File::exists(const std::string &filePath) {
     return fg::util::File::exists(filePath.c_str());
 }
 
-/*
- *
+/**
+ * Default constructor for File object
  */
 fg::util::File::File() :
 m_file(NULL) {
     m_modeFlags = Mode::READ | Mode::BINARY;
 }
 
-/*
- *
+/**
+ * Constructor for File object with parameter (file path)
+ * @param filePath
  */
-fg::util::File::File(const char *filePath) : 
+fg::util::File::File(const char *filePath) :
 m_file(NULL) {
     m_modeFlags = Mode::READ | Mode::BINARY;
     m_filePath = filePath;
 }
 
-/*
- *
+/**
+ * Destructor, closes the file, frees up all buffers
  */
 fg::util::File::~File() {
     close();
     m_filePath.clear();
 }
 
-/*
- *
+/**
+ * Get the C standard mode for fopen
+ * @param mode
+ * @return 
  */
 const char *fg::util::File::modeStr(Mode mode) {
     if(mode == Mode::NONE)
@@ -101,8 +108,11 @@ const char *fg::util::File::modeStr(Mode mode) {
     return "";
 }
 
-/*
- *
+/**
+ * Open the file (pointed to by path) with specified mode
+ * @param filePath
+ * @param mode
+ * @return 
  */
 fgBool fg::util::File::open(const char *filePath, Mode mode) {
     if(filePath == NULL) {
@@ -143,8 +153,10 @@ fgBool fg::util::File::open(const char *filePath, Mode mode) {
     return FG_TRUE;
 }
 
-/*
- *
+/**
+ * Open the file with specified mode
+ * @param mode
+ * @return 
  */
 fgBool fg::util::File::open(Mode mode) {
     if(mode == Mode::NONE) {
@@ -154,8 +166,9 @@ fgBool fg::util::File::open(Mode mode) {
     return open(m_filePath.c_str(), mode);
 }
 
-/*
- *
+/**
+ * Open the file with already set options
+ * @return 
  */
 fgBool fg::util::File::open(void) {
     if(m_modeFlags == Mode::NONE)
@@ -163,8 +176,9 @@ fgBool fg::util::File::open(void) {
     return open(m_filePath.c_str(), m_modeFlags);
 }
 
-/*
- *
+/**
+ * Close the file
+ * @return 
  */
 fgBool fg::util::File::close(void) {
     if(m_file) {
@@ -185,8 +199,9 @@ fgBool fg::util::File::close(void) {
     return FG_TRUE;
 }
 
-/*
- *
+/**
+ * Check if file is currently opened
+ * @return 
  */
 fgBool fg::util::File::isOpen(void) const {
     if(m_file)
@@ -195,8 +210,12 @@ fgBool fg::util::File::isOpen(void) const {
         return FG_FALSE;
 }
 
-/*
- *
+/**
+ * This will load the whole file into char *buffer
+ * @return Newly allocated string representing the contents of the file
+ *         There is a limit for how big this buffer can be. If it's
+ *         exceeded a NULL pointer will be returned. The returned
+ *         string buffer will be null-terminated ('\0' will be appended)
  */
 char *fg::util::File::load(const char *filePath) {
     if(!isOpen() && !open(filePath, Mode::READ | Mode::BINARY)) {
@@ -232,8 +251,13 @@ char *fg::util::File::load(const char *filePath) {
     return fileBuffer;
 }
 
-/*
- *
+/**
+ * This will load the whole file into char *buffer
+ * @param filePath
+ * @return Newly allocated string representing the contents of the file
+ *         There is a limit for how big this buffer can be. If it's
+ *         exceeded a NULL pointer will be returned. The returned
+ *         string buffer will be null-terminated ('\0' will be appended)
  */
 char *fg::util::File::load(void) {
     if(m_filePath.empty()) {
@@ -243,8 +267,12 @@ char *fg::util::File::load(void) {
     return load(m_filePath.c_str());
 }
 
-/*
- *
+/**
+ * Read from file
+ * @param buffer
+ * @param elemsize
+ * @param elemcount
+ * @return 
  */
 int fg::util::File::read(void *buffer, unsigned int elemsize, unsigned int elemcount) {
     if(buffer == NULL || elemsize == 0 || elemcount == 0 || m_file == NULL) {
@@ -263,8 +291,11 @@ int fg::util::File::read(void *buffer, unsigned int elemsize, unsigned int elemc
     return elemRead;
 }
 
-/*
- *
+/**
+ * Read string from the file
+ * @param buffer
+ * @param maxlen
+ * @return 
  */
 char *fg::util::File::readString(char *buffer, unsigned int maxlen) {
     if(buffer == NULL || maxlen == 0 || m_file == NULL) {
@@ -284,8 +315,10 @@ char *fg::util::File::readString(char *buffer, unsigned int maxlen) {
     return retString;
 }
 
-/*
- *
+/**
+ * Print to the file
+ * @param fmt
+ * @return 
  */
 int fg::util::File::print(const char *fmt, ...) {
     if(fmt == NULL || m_file == NULL) {
@@ -312,8 +345,12 @@ int fg::util::File::print(const char *fmt, ...) {
     return charsCount;
 }
 
-/*
- *
+/**
+ * Write to the file
+ * @param buffer
+ * @param elemsize
+ * @param elemcount
+ * @return 
  */
 int fg::util::File::write(void *buffer, unsigned int elemsize, unsigned int elemcount) {
     if(m_file == NULL || buffer == NULL || elemsize == 0 || elemcount == 0) {
@@ -334,8 +371,10 @@ int fg::util::File::write(void *buffer, unsigned int elemsize, unsigned int elem
     return elemWritten;
 }
 
-/*
- *
+/**
+ * Put given string into the file
+ * @param str
+ * @return 
  */
 int fg::util::File::puts(const char *str) {
     if(str == NULL) {
@@ -359,8 +398,9 @@ int fg::util::File::puts(const char *str) {
     return status;
 }
 
-/*
- *
+/**
+ * Check is it end of file
+ * @return 
  */
 fgBool fg::util::File::isEOF(void) {
     if(m_file == NULL) {
@@ -372,10 +412,11 @@ fgBool fg::util::File::isEOF(void) {
     return FG_FALSE;
 }
 
-/*
- *
+/**
+ * Flush file buffers
+ * @return 
  */
-fgBool fg::util::File::flushFile(void) {
+fgBool fg::util::File::flush(void) {
     if(m_file == NULL) {
         FG_MessageSubsystem->reportWarning(tag_type::name(), FG_ERRNO_FILE_NOT_OPENED);
         return FG_FALSE;
@@ -392,8 +433,9 @@ fgBool fg::util::File::flushFile(void) {
     return FG_TRUE;
 }
 
-/*
- *
+/**
+ *  Get (read) single character from file
+ * @return 
  */
 int fg::util::File::getChar(void) {
     if(m_file == NULL) {
@@ -415,8 +457,10 @@ int fg::util::File::getChar(void) {
     return charRead;
 }
 
-/*
- *
+/**
+ * Put (write) single character to file
+ * @param c
+ * @return 
  */
 int fg::util::File::putChar(char c) {
     if(m_file == NULL) {
@@ -435,8 +479,9 @@ int fg::util::File::putChar(char c) {
     return charWrite;
 }
 
-/*
- * Get the file size #FIXME (need to reopen in binary mode)
+/**
+ * Get the file size (in bytes)
+ * @return 
  */
 int fg::util::File::getSize(void) {
     if(m_file == NULL) {
@@ -471,8 +516,9 @@ int fg::util::File::getSize(void) {
     return (int)size;
 }
 
-/*
- * Get current position in file
+/**
+ * Get the current position in the file
+ * @return 
  */
 long fg::util::File::getPosition(void) {
     if(m_file == NULL) {
@@ -492,8 +538,11 @@ long fg::util::File::getPosition(void) {
     return position;
 }
 
-/*
- *
+/**
+ * Sets the position in the currently open/selected file
+ * @param offset
+ * @param whence
+ * @return 
  */
 int fg::util::File::setPosition(long offset, int whence) {
     if(m_file == NULL) {
