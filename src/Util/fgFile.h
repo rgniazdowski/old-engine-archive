@@ -6,74 +6,55 @@
  * FlexiGame source code and any related files can not be copied, modified 
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
+/* 
+ * File:   fgFile.h
+ * Author: vigilant
+ *
+ * Created on December 27, 2014, 12:51 PM
+ */
 
 #ifndef FG_INC_FILE
     #define FG_INC_FILE
     #define FG_INC_FILE_BLOCK
 
     #include "fgBuildConfig.h"
-    #include "fgCommon.h"
-
-    #include "fgTag.h"
     #include "fgFileBase.h"
-
-namespace fg {
-    namespace util {
-        class File;
-    };
-};
-//class fg::util::File;
-
-    #define FG_TAG_FILE_NAME	"File"
-    #define FG_TAG_FILE		FG_TAG_TYPE(fg::util::File)
-
-FG_TAG_TEMPLATE_ID_AUTO(fg::util::File, FG_TAG_FILE_NAME);
-
-namespace fg {
-    namespace util {
-        typedef FG_TAG_FILE FileTag;
-    };
-};
-//typedef FG_TAG_FILE typename fg::util::FileTag;
-
-    #include <cstdio>
-    #include <string>
-
-    #define FG_FILE_PATH_MAX    FG_PATH_MAX
-
-/* Seek from beginning of file. */
-    #define FG_FILE_SEEK_SET    SEEK_SET   
-/* Seek from current position. */
-    #define FG_FILE_SEEK_CUR    SEEK_CUR   
-/* Seek from end of file. */
-    #define FG_FILE_SEEK_END    SEEK_END   
-/* End of file */
-    #define FG_EOF              EOF
-/* Max buffer for format string */
-    #define FG_MAX_BUFFER       8192
-
-/* Standard input */
-    #define FG_IN               stdin
-/* Standard output */
-    #define FG_OUT              stdout
-/* Standard error output */
-    #define FG_ERR              stderr
+    #include "fgRegularFile.h"
+    #include "fgZipFile.h"
 
 namespace fg {
     namespace util {
 
-        /*
-         * Platform independent wrapper for basic file operations
+        /**
+         * This is special wrapper for file operations
+         * This class contains two objects - RegularFile & ZipFile
+         * Selection depends on the selected path
          */
         class File : public fg::util::base::File {
         public:
             typedef fg::util::base::File base_type;
-            typedef FileTag tag_type;
-            typedef typename fg::util::base::File::Mode Mode;
+            typedef typename fg::util::RegularFile::tag_type tag_type;
+            typedef typename fg::util::RegularFile::Mode Mode;
+            typedef typename fg::util::RegularFile::Mode FileMode;
+            typedef typename fg::util::ZipFile::Mode ZipMode;
 
-        protected:
-            /// C standard file handle
-            FILE *m_file;
+        private:
+
+            enum DataMode {
+                ZIP, REGULAR
+            };
+
+        private:
+            /// Object for managing Zip files and files within the Zip
+            ZipFile m_zip;
+            /// Object for managing regular files (plain, on disk/ROM)
+            RegularFile m_regular;
+            /// Pointer to the base type, is never NULL
+            base_type *m_file;
+            /// Current mode in which this object operates on - ZIP or REGULAR
+            /// Depends on the selected path - path can point to ZIP or REGULAR
+            /// or a REGULAR file inside of a ZIP file.
+            DataMode m_mode;
 
         public:
             /**
@@ -86,75 +67,123 @@ namespace fg {
              * @param filePath
              */
             File(const char *filePath);
+            
+            /**
+             * 
+             * @param orig
+             */
+            File(const File &orig);
 
             /**
              * Destructor, closes the file, frees up all buffers
              */
             virtual ~File();
 
+            /******************************************************************/
             /**
              * Get the C standard mode for fopen
              * @param mode
              * @return 
              */
-            static const char *modeStr(Mode mode);
+            static inline const char *modeStr(Mode mode) {
+                return RegularFile::modeStr(mode);
+            }
+
+            /******************************************************************/
+            /**
+             * Return the file path (C string)
+             * @return 
+             */
+            virtual inline const char *getPath(void) const {
+                return m_file->getPath();
+            }
+            /**
+             * Set file open mode
+             * @param mode
+             */
+            virtual inline void setMode(Mode mode) {
+                if(m_mode == ZIP)
+                    m_zip.setMode(mode);
+                else
+                    m_regular.setMode(mode);
+                m_modeFlags = mode;
+            }
+
+            /**
+             * Set the file path, this will also determine the internal mode based
+             * on the  file selected - path  can  point to both regular file and
+             * files inside of the zip archives.
+             * @param filePath
+             */
+            virtual void setPath(const char *filePath);
+            /**
+             * Set the file path, this will also determine the internal mode based
+             * on the  file selected - path  can  point to both regular file and
+             * files inside of the zip archives.
+             * @param filePath
+             */
+            virtual void setPath(const std::string & filePath);
+
+            /******************************************************************/
 
             using fg::util::base::File::open;
-            
             /**
              * Open the file with already set options
              * @return 
              */
-            virtual fgBool open(void);
+            virtual inline fgBool open(void) {
+                return m_file->open();
+            }
             /**
              * Open the file with specified mode
              * @param mode
              * @return 
              */
-            virtual fgBool open(Mode mode);
+            virtual inline fgBool open(Mode mode) {
+                m_modeFlags = mode;
+                return m_file->open(mode);
+            }
             /**
              * Open the file (pointed to by path) with specified mode
              * @param filePath
              * @param mode
              * @return 
              */
-            virtual fgBool open(const char *filePath, Mode mode);
+            virtual inline fgBool open(const char *filePath, Mode mode) {
+                if(!filePath)
+                    return FG_FALSE;
+                this->setPath(filePath);
+                m_modeFlags = mode;
+                return m_file->open(mode);
+            }
+
+            /******************************************************************/
             /**
              * Close the file
              * @return 
              */
-            virtual fgBool close(void);
-
+            virtual inline fgBool close(void) {
+                return m_file->close();
+            }
             /**
              * Check if file is currently opened
              * @return 
              */
-            virtual fgBool isOpen(void) const;
-
-            /**
-             * Check if file exists
-             * @param filePath
-             * @return 
-             */
-            static fgBool exists(const char *filePath);
-
-            /**
-             * Check if file exists
-             * @param filePath
-             * @return 
-             */
-            static fgBool exists(const std::string &filePath);
-
-            /**
-             * Check if file exists
-             * @return 
-             */
-            virtual fgBool exists(void) {
-                return File::exists(m_filePath.c_str());
+            virtual inline fgBool isOpen(void) const {
+                return m_file->isOpen();
             }
 
+            /**
+             * Check if file exists
+             * @return 
+             */
+            virtual inline fgBool exists(void) {
+                return m_file->exists();
+            }
+
+            /******************************************************************/
+
             using fg::util::base::File::load;
-            
             /**
              * This will load the whole file into char *buffer
              * @return Newly allocated string representing the contents of the file
@@ -162,7 +191,9 @@ namespace fg {
              *         exceeded a NULL pointer will be returned. The returned
              *         string buffer will be null-terminated ('\0' will be appended)
              */
-            virtual char *load(void);
+            virtual inline char *load(void) {
+                return m_file->load();
+            }
 
             /**
              * This will load the whole file into char *buffer
@@ -172,8 +203,9 @@ namespace fg {
              *         exceeded a NULL pointer will be returned. The returned
              *         string buffer will be null-terminated ('\0' will be appended)
              */
-            virtual char *load(const char *filePath);
-
+            virtual char *load(const char *filePath) {
+                return m_file->load(filePath);
+            }
             /**
              * Read from file
              * @param buffer
@@ -181,14 +213,18 @@ namespace fg {
              * @param elemcount
              * @return 
              */
-            virtual int read(void *buffer, unsigned int elemsize, unsigned int elemcount);
+            virtual inline int read(void *buffer, unsigned int elemsize, unsigned int elemcount) {
+                return m_file->read(buffer, elemsize, elemcount);
+            }
             /**
              * Read string from the file
              * @param buffer
              * @param maxlen
              * @return 
              */
-            virtual char *readString(char *buffer, unsigned int maxlen);
+            virtual inline char *readString(char *buffer, unsigned int maxlen) {
+                return m_file->readString(buffer, maxlen);
+            }
             /**
              * Write to the file
              * @param buffer
@@ -196,7 +232,9 @@ namespace fg {
              * @param elemcount
              * @return 
              */
-            virtual int write(void *buffer, unsigned int elemsize, unsigned int elemcount);
+            virtual inline int write(void *buffer, unsigned int elemsize, unsigned int elemcount) {
+                return m_file->write(buffer, elemsize, elemcount);
+            }
             /**
              * Print to the file
              * @param fmt
@@ -208,57 +246,77 @@ namespace fg {
              * @param str
              * @return 
              */
-            virtual int puts(const char *str);
+            virtual inline int puts(const char *str) {
+                return m_file->puts(str);
+            }
 
+            /******************************************************************/
             /**
              * Check is it end of file
              * @return 
              */
-            virtual fgBool isEOF(void);
+            virtual inline fgBool isEOF(void) {
+                return m_file->isEOF();
+            }
             /**
              * Flush file buffers
              * @return 
              */
-            virtual fgBool flush(void);
-
+            virtual inline fgBool flush(void) {
+                return m_file->flush();
+            }
             /**
              *  Get (read) single character from file
              * @return 
              */
-            virtual int getChar(void);
+            virtual inline int getChar(void) {
+                return m_file->getChar();
+            }
             /**
              * Put (write) single character to file
              * @param c
              * @return 
              */
-            virtual int putChar(char c);
+            virtual inline int putChar(char c) {
+                return m_file->putChar(c);
+            }
             /**
              * Get the file size (in bytes)
              * @return 
              */
-            virtual int getSize(void);
+            virtual inline int getSize(void) {
+                return m_file->getSize();
+            }
             /**
              * Get the current position in the file
              * @return 
              */
-            virtual long getPosition(void);
+            virtual inline long getPosition(void) {
+                return m_file->getPosition();
+            }
             /**
              * Sets the position in the currently open/selected file
              * @param offset
              * @param whence
              * @return 
              */
-            virtual int setPosition(long offset, int whence);
-
+            virtual inline int setPosition(long offset, int whence) {
+                return m_file->setPosition(offset, whence);
+            }
+            
             /**
              * Return the stdio FILE standard pointer
              * @return 
              */
             FILE *getFilePtr(void) const {
-                return m_file;
+                return m_regular.getFilePtr();
             }
         };
+
+        /// The higher file class alias - data file
+        typedef File DataFile;
     };
 };
+
     #undef FG_INC_FILE_BLOCK
-#endif /* FG_INC_FILE */
+#endif	/* FG_INC_FILE */

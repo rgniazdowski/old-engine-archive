@@ -86,6 +86,8 @@ namespace fg {
             fgStringVector m_filePaths;
             /// Iterator to the element in the string vector (file paths)
             fgStringVector::iterator m_fileItor;
+            /// Number (ID) of the currently selected file (in Zip)
+            int m_currentFileID;
 
             /**
              * This union is for structures containing information about the 
@@ -126,6 +128,19 @@ namespace fg {
             /// Enumeration for currently selected ZipFile handling mode
             Mode m_mode;
 
+        private:
+            /**
+             * File selection function for internal use
+             * @param id
+             * @return 
+             */
+            fgBool private_selectFile(const int id);
+            /**
+             * 
+             * @return 
+             */
+            fgBool private_updateCurrentFileInfo(void);
+            
         public:
             /**
              * Default empty constructor for the ZipFile
@@ -266,6 +281,29 @@ namespace fg {
             fgStringVector const & getFileList(void) const {
                 return m_filePaths;
             }
+            
+            /******************************************************************/
+            
+            /**
+             * Check whether currently selected file is a directory
+             * @return 
+             */
+            fgBool isCurrentFileDir(void);
+            /**
+             * 
+             * @return 
+             */
+            fgBool goToNextFile(void);
+            /**
+             * 
+             * @return 
+             */
+            fgBool goToPreviousFile(void);
+            /**
+             * 
+             * @return 
+             */
+            fgBool goToFirstFile(void);
 
             /******************************************************************/
 

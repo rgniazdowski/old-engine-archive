@@ -10,8 +10,11 @@
 #ifndef FG_INC_TEXTURE_LOADER
     #define FG_INC_TEXTURE_LOADER
 
-    #include "Util/fgFile.h"
+    #include "Util/fgFileBase.h"
 
+    #define PNG_NO_STDIO
+    #define PNG_NO_READ_SUPPORTED
+    #define PNG_NO_WRITE_SUPPORTED
     #include "png.h"
 extern "C" {
     #include "jpeglib.h"
@@ -29,6 +32,10 @@ extern "C" {
  * procedures (RGBA format #FIXME).
  */
 class fgTextureLoader {
+private:
+    fgTextureLoader() {}
+    ~fgTextureLoader() {}
+    
 protected:
 
     struct fgJPEGErrorMgr {
@@ -45,17 +52,17 @@ public:
     // Loads a JPEG file and returns unsigned char array with raw data
     static unsigned char *loadJPEG(const char *path, int &width, int &height);
     // Loads a JPEG file and returns unsigned char array with raw data
-    static unsigned char *loadJPEG(fg::util::File *fileStream, int &width, int &height);
+    static unsigned char *loadJPEG(fg::util::base::File *fileStream, int &width, int &height);
 
     // Loads a PNG file and returns unsigned char array with raw data
     static unsigned char *loadPNG(const char *path, int &width, int &height);
     // Loads a PNG file and returns unsigned char array with raw data
-    static unsigned char *loadPNG(fg::util::File *fileStream, int &width, int &height);
+    static unsigned char *loadPNG(fg::util::base::File *fileStream, int &width, int &height);
 
     // Loads a TGA file and returns unsigned char array with raw data
     static unsigned char *loadTGA(const char *path, int &width, int &height);
     // Loads a TGA file and returns unsigned char array with raw data
-    static unsigned char *loadTGA(fg::util::File *fileStream, int &width, int &height);
+    static unsigned char *loadTGA(fg::util::base::File *fileStream, int &width, int &height);
 
     static fgBool saveTGA(const char *path, const unsigned char* data, const int width, const int height);
 };

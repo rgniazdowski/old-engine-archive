@@ -9,7 +9,7 @@
 
 #include "fgGFXShaderManager.h"
 #include "GFX/fgGFXErrorCodes.h"
-#include "Util/fgFile.h"
+#include "Util/fgRegularFile.h"
 #include "Util/fgDirent.h"
 #include "Util/fgStrings.h"
 

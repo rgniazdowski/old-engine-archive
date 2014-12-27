@@ -10,6 +10,7 @@
 #include "fgTextureResource.h"
 #include "fgTextureLoader.h"
 #include "Util/fgPath.h"
+#include "Util/fgFile.h"
 #include "fgLog.h"
 #include "Util/fgStrings.h"
 

@@ -15,6 +15,8 @@
 
 #include "fgZipFile.h"
 #include "fgStrings.h"
+#include "fgMemory.h"
+#include "fgPath.h"
 #include <fstream>
 
 /**
@@ -26,6 +28,7 @@ m_selectedFilePath(),
 m_extractionPath(),
 m_filePaths(),
 m_fileItor(),
+m_currentFileID(0),
 m_zf(NULL),
 m_uf(NULL),
 m_mode(Mode::READ) {
@@ -44,6 +47,7 @@ m_selectedFilePath(),
 m_extractionPath(),
 m_filePaths(),
 m_fileItor(),
+m_currentFileID(0),
 m_zf(NULL),
 m_uf(NULL),
 m_mode(Mode::READ) {
@@ -64,6 +68,7 @@ m_selectedFilePath(),
 m_extractionPath(),
 m_filePaths(),
 m_fileItor(),
+m_currentFileID(0),
 m_zf(NULL),
 m_uf(NULL),
 m_mode(Mode::READ) {
@@ -159,6 +164,126 @@ void fg::util::ZipFile::setPath(const std::string & filePath) {
 }
 
 /**
+ * Check whether currently selected file is a directory
+ * @return 
+ */
+fgBool fg::util::ZipFile::isCurrentFileDir(void) {
+    int sn = m_selectedFilePath.size();
+    if(sn) {
+        std::string dirname;
+        fgPath::dirName(m_selectedFilePath, dirname);
+        int dn = dirname.size();
+        char dc = dirname[dn - 1];
+        char sc = m_selectedFilePath[sn - 1];
+        if(dn == sn && (dc == '/' || dc == '\\') && (sc == '/' || sc == '\\'))
+            return FG_TRUE;
+    }
+    return FG_FALSE;
+}
+
+/**
+ * 
+ * @return 
+ */
+fgBool fg::util::ZipFile::goToNextFile(void) {
+    if(!isOpen())
+        return FG_FALSE;
+    m_currentFileID++;
+    if(m_currentFileID >= (int)m_filePaths.size()) {
+        return FG_FALSE;
+    }
+    return private_selectFile(m_currentFileID);
+}
+
+/**
+ * 
+ * @return 
+ */
+fgBool fg::util::ZipFile::goToPreviousFile(void) {
+    if(!isOpen())
+        return FG_FALSE;
+    m_currentFileID--;
+    if(m_currentFileID < 0) {
+        return FG_FALSE;
+    }
+    return private_selectFile(m_currentFileID);
+}
+
+/**
+ * 
+ * @return 
+ */
+fgBool fg::util::ZipFile::goToFirstFile(void) {
+    if(m_filePath.empty())
+        return FG_FALSE;
+    return selectFile(m_filePath.c_str());
+}
+
+/**
+ * 
+ * @return 
+ */
+fgBool fg::util::ZipFile::private_updateCurrentFileInfo(void) {
+    fgBool status = FG_TRUE;
+    if(!isOpen())
+        status = FG_FALSE;
+    if(status && m_mode == Mode::READ && m_uf) {
+        char fileInZip[256];
+        int err = unzGetCurrentFileInfo64(m_uf, &m_zInfo.unz64, fileInZip, 256, NULL, 0, NULL, 0);
+        if(err != UNZ_OK) {
+            // Something went wrong while getting info
+            status = FG_FALSE;
+        } else {
+            if(m_password.empty()) {
+                err = unzOpenCurrentFile(m_uf);
+            } else {
+                err = unzOpenCurrentFilePassword(m_uf, m_password.c_str());
+            }
+            if(err != UNZ_OK) {
+                // Could not open the file
+                m_selectedFilePath.clear();
+                m_currentFileID = 0;
+                status = FG_FALSE;
+            } else {
+                m_selectedFilePath = fileInZip;
+            }
+        }
+    }
+    return status;
+}
+
+/**
+ * 
+ * @param id
+ * @return 
+ */
+fgBool fg::util::ZipFile::private_selectFile(const int id) {
+    if(id < 0 || id >= (int)m_filePaths.size())
+        return FG_FALSE;
+    if(m_filePath.empty()) {
+        return FG_FALSE;
+    }
+    if(!m_uf) {
+        // The Zip file needs to be opened before selecting the file
+        return FG_FALSE;
+    }
+    int err = UNZ_OK;
+    err = unzCloseCurrentFile(m_uf);
+    // Probably path points to the file inside of the Zip
+    err = unzLocateFile(m_uf, m_filePaths[id].c_str(), NULL);
+    if(err != UNZ_OK) {
+        m_selectedFilePath.clear();
+        m_currentFileID = 0;
+        return FG_FALSE;
+    }
+    m_currentFileID = id;
+    // Properly selected path
+    //m_selectedFilePath = m_filePaths[id];
+    return private_updateCurrentFileInfo();
+    //return FG_TRUE;
+}
+
+/**
  * Selects the file inside of the ZipFile. By default the first file
  * is selected.
  * @param filePath  Relative path to the file inside the Zip. If the
@@ -190,8 +315,10 @@ fgBool fg::util::ZipFile::selectFile(const char *filePath) {
         err = unzLocateFile(m_uf, filePath, NULL);
         if(err != UNZ_OK) {
             m_selectedFilePath.clear();
+            m_currentFileID = 0;
             return FG_FALSE;
         }
+        m_currentFileID = m_filePaths.find(std::string(filePath));
         // Properly selected path
         m_selectedFilePath = filePath;
     } else {
@@ -199,29 +326,14 @@ fgBool fg::util::ZipFile::selectFile(const char *filePath) {
         if(fgStrings::isEqual(m_filePath.c_str(), filePath, FG_FALSE)) {
             err = unzCloseCurrentFile(m_uf);
             err = unzGoToFirstFile(m_uf);
+            m_currentFileID = 0;
             if(err != UNZ_OK) {
                 m_selectedFilePath.clear();
                 return FG_FALSE;
             }
         }
     }
-    char fileInZip[256];
-    err = unzGetCurrentFileInfo64(m_uf, &m_zInfo.unz64, fileInZip, 256, NULL, 0, NULL, 0);
-    if(err != UNZ_OK) {
-        // Something went wrong while getting info
-    } else {
-        if(m_password.empty()) {
-            err = unzOpenCurrentFile(m_uf);
-        } else {
-            err = unzOpenCurrentFilePassword(m_uf, m_password.c_str());
-        }
-        if(err != UNZ_OK) {
-            // Could not open the file
-            m_selectedFilePath.clear();
-        } else {
-            m_selectedFilePath = fileInZip;
-        }
-    }
+    private_updateCurrentFileInfo();
     return FG_TRUE;
 }
 
@@ -251,6 +363,10 @@ fgBool fg::util::ZipFile::open(void) {
     // Here the magic happens
     int err = UNZ_OK;
     if(m_mode == Mode::READ || m_mode == Mode::EXTRACT) {
+        if(m_uf) {
+            unzCloseCurrentFile(m_uf);
+            unzClose(m_uf);
+        }
         m_uf = unzOpen(m_filePath.c_str());
         if(m_uf == NULL) {
             // Failed to open file
@@ -422,7 +538,44 @@ fgBool fg::util::ZipFile::exists(void) {
  *         string buffer will be null-terminated ('\0' will be appended)
  */
 char *fg::util::ZipFile::load(void) {
-    return NULL;
+    char *data = NULL;
+    fgBool status = FG_TRUE;
+    unsigned int fileSize = 0;
+    if(!isOpen() || m_selectedFilePath.empty()) {
+        status = FG_FALSE;
+    }
+    if(!m_uf) {
+        status = FG_FALSE;
+    }
+    if(status) {
+        fileSize = (unsigned int)m_zInfo.unz64.uncompressed_size;
+        if(!fileSize) {
+            status = FG_FALSE;
+        }
+    }
+    if(status) {
+        data = fgMalloc<char>(fileSize + 1);
+        if(!data) {
+            status = FG_FALSE;
+        } else {
+            memset(data, 0, fileSize + 1);
+        }
+    }
+    if(status) {
+        // Reselect the current file - this will rewind the file to the beginning
+        if(getPosition() != 0L)
+            status = selectFile(m_selectedFilePath.c_str());
+    }
+    if(status) {
+        int bytesRead = read((void *)data, 1, fileSize);
+        if(bytesRead <= 0) {
+            status = FG_FALSE;
+            //fgFree((void *)data, fileSize, FG_TRUE);
+            fgFree(data);
+            data = NULL;
+        }
+    }
+    return data;
 }
 
 /**
@@ -436,11 +589,16 @@ char *fg::util::ZipFile::load(void) {
 char *fg::util::ZipFile::load(const char *filePath) {
     if(!filePath)
         return NULL;
+    if(isOpen()) {
+        close();
+    }
     setPath(filePath);
     if(m_filePath.empty())
         return NULL;
-
-    return NULL;
+    if(!open()) {
+        return NULL;
+    }
+    return load();
 }
 
 /**

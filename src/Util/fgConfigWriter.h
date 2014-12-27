@@ -10,11 +10,11 @@
 #ifndef FG_INC_CONFIG_WRITER
     #define FG_INC_CONFIG_WRITER
 
-    #include "fgFile.h"
+    #include "fgRegularFile.h"
 
     #include "fgConfigStruct.h"
 
-class fgConfigWriter : protected fg::util::File {
+class fgConfigWriter : protected fg::util::RegularFile {
 protected:
 public:
     fgConfigWriter();

@@ -28,10 +28,10 @@ fgBool fgConfigWriter::save(const char *filePath, fgCfgTypes::sectionMap &sectio
     if(sectionMap.empty())
         return FG_FALSE;
 
-    if(fg::util::File::isOpen())
+    if(fg::util::RegularFile::isOpen())
         close();
 
-    if(!fg::util::File::open(filePath, fg::util::File::Mode::WRITE)) {
+    if(!fg::util::RegularFile::open(filePath, fg::util::RegularFile::Mode::WRITE)) {
         return FG_FALSE;
     }
 
@@ -41,9 +41,9 @@ fgBool fgConfigWriter::save(const char *filePath, fgCfgTypes::sectionMap &sectio
     for(; it != end; it++) {
         fgCfgSection *section = it->second;
         if(!section) continue;
-        fg::util::File::print("%s\n", section->toString(linebuf));
+        fg::util::RegularFile::print("%s\n", section->toString(linebuf));
         for(unsigned int i = 0; i < section->parameters.size(); i++) {
-            fg::util::File::print("%s\n", section->parameters[i]->toString(linebuf));
+            fg::util::RegularFile::print("%s\n", section->parameters[i]->toString(linebuf));
         }
     }
 

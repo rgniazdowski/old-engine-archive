@@ -502,7 +502,7 @@ private:
      * DEVICE PAUSE event
      */
     void suspendGfxEvent(void) {
-        FG_LOG_DEBUG(">>> SUSPEND GFX SUBSYSTEM()");
+        FG_LOG_DEBUG(">>> SUSPEND GFX SUBSYSTEM <<<");
         if(m_gameMain)
             m_gameMain->getGfxMain()->suspendGFX();
     }
@@ -511,7 +511,7 @@ private:
      * DEVICE unpause event
      */
     void resumeGfxEvent(void) {
-        FG_LOG_DEBUG(">>> RESUME GFX SUBSYSTEM()");
+        FG_LOG_DEBUG(">>> RESUME GFX SUBSYSTEM <<<");
         if(m_gameMain)
             m_gameMain->getGfxMain()->resumeGFX();
     }
@@ -521,7 +521,7 @@ private:
      * (not the GL pause event)
      */
     void focusLostEvent(void) {
-        FG_LOG_DEBUG("focusLostEvent()");
+        FG_LOG_DEBUG(">>> FOCUS LOST EVENT <<<");
 
         // Brak focus czyli:
         // - wyswietlenie menu
@@ -542,7 +542,7 @@ private:
      * (not the GL unpause event)
      */
     void focusGainedEvent(void) {
-        FG_LOG_DEBUG("focusGainedEvent()");
+        FG_LOG_DEBUG(">>> FOCUS GAINED EVENT <<<");
     }
 #if defined(FG_USING_MARMALADE)
 

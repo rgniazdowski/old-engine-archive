@@ -9,7 +9,7 @@
 
 #include "fgProfiling.h"
 #include "fgTime.h"
-#include "fgFile.h"
+#include "fgRegularFile.h"
 
 #if defined(FG_DEBUG)
 fgProfiling *g_debugProfiling = NULL;
@@ -175,8 +175,8 @@ void fgProfiling::updateHistory(void) {
 
 void fgProfiling::dumpToDefaultFile(void) {
     profileVecItor begin = m_orderVec.begin(), end = m_orderVec.end(), it;
-    fg::util::File file;
-    file.open("defaultProfile.log", fg::util::File::Mode::WRITE);
+    fg::util::RegularFile file;
+    file.open("defaultProfile.log", fg::util::RegularFile::Mode::WRITE);
     long timestamp = fgTime::seconds();
     struct tm *ti;
     ti = localtime(&timestamp);

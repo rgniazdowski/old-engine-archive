@@ -11,7 +11,7 @@
     #define FG_INC_CONFIG_PARSER
 
     #include "fgStatus.h"
-    #include "fgFile.h"
+    #include "fgRegularFile.h"
 
     #include "fgConfigStruct.h"
 
@@ -20,7 +20,7 @@
 /**
  *
  */
-class fgConfigParser : protected fg::util::File {
+class fgConfigParser : protected fg::util::RegularFile {
 protected:
     /// Loaded file size
     unsigned int m_fileSize;

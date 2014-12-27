@@ -324,6 +324,8 @@
           <itemPath>../../../src/Util/fgPath.h</itemPath>
           <itemPath>../../../src/Util/fgProfiling.cpp</itemPath>
           <itemPath>../../../src/Util/fgProfiling.h</itemPath>
+          <itemPath>../../../src/Util/fgRegularFile.cpp</itemPath>
+          <itemPath>../../../src/Util/fgRegularFile.h</itemPath>
           <itemPath>../../../src/Util/fgSettings.cpp</itemPath>
           <itemPath>../../../src/Util/fgSettings.h</itemPath>
           <itemPath>../../../src/Util/fgStringParser.h</itemPath>
@@ -1625,6 +1627,13 @@
       <item path="../../../src/Util/fgProfiling.cpp" ex="false" tool="1" flavor2="8">
       </item>
       <item path="../../../src/Util/fgProfiling.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Util/fgRegularFile.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+      </item>
+      <item path="../../../src/Util/fgRegularFile.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/Util/fgSettings.cpp" ex="false" tool="1" flavor2="8">
       </item>
@@ -2930,6 +2939,13 @@
       </item>
       <item path="../../../src/Util/fgProfiling.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../../../src/Util/fgRegularFile.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Util/fgRegularFile.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../../../src/Util/fgSettings.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="../../../src/Util/fgSettings.h" ex="false" tool="3" flavor2="0">
@@ -4204,6 +4220,13 @@
       </item>
       <item path="../../../src/Util/fgProfiling.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../../../src/Util/fgRegularFile.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Util/fgRegularFile.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../../../src/Util/fgSettings.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="../../../src/Util/fgSettings.h" ex="false" tool="3" flavor2="0">
@@ -5455,6 +5478,13 @@
       <item path="../../../src/Util/fgProfiling.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="../../../src/Util/fgProfiling.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Util/fgRegularFile.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Util/fgRegularFile.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/Util/fgSettings.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -6729,6 +6759,13 @@
       </item>
       <item path="../../../src/Util/fgProfiling.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../../../src/Util/fgRegularFile.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+      </item>
+      <item path="../../../src/Util/fgRegularFile.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../../../src/Util/fgSettings.cpp" ex="false" tool="1" flavor2="8">
       </item>
       <item path="../../../src/Util/fgSettings.h" ex="false" tool="3" flavor2="0">
@@ -7991,6 +8028,13 @@
       <item path="../../../src/Util/fgProfiling.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="../../../src/Util/fgProfiling.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Util/fgRegularFile.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Util/fgRegularFile.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/Util/fgSettings.cpp" ex="false" tool="1" flavor2="0">
       </item>

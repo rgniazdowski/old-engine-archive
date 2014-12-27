@@ -65,7 +65,7 @@ fgBool fgConfigParser::load(const char *filePath, fgCfgTypes::sectionMap &sectio
             return FG_FALSE;
         filePath = m_filePath.c_str();
     }
-    m_fileBuffer = fg::util::File::load(filePath);
+    m_fileBuffer = fg::util::RegularFile::load(filePath);
     // Close the file
     close();
     // parse data and store it in section map

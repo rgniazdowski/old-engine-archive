@@ -12,7 +12,7 @@
 
     #include "fgGFXShaderDefs.h"
     #include "fgGFXShaderBase.h"
-    #include "Util/fgFile.h"
+    #include "Util/fgRegularFile.h"
     #include <map>
 
 typedef fgGFXuint fgGfxShaderObjParamType;
@@ -26,7 +26,7 @@ typedef fgGFXuint fgGfxShaderObjParamType;
 /*
  *
  */
-class fgGfxShader : public fgGfxShaderBase, protected fg::util::File {
+class fgGfxShader : public fgGfxShaderBase, protected fg::util::RegularFile {
     friend class fgGfxShaderProgram;
 public:
     typedef fgVector<std::string> defineStrVec;

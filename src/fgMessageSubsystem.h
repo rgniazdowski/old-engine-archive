@@ -17,7 +17,7 @@
 
     #include <stack>    
     #include "fgVector.h"
-    #include "Util/fgFile.h"
+    #include "Util/fgRegularFile.h"
 
     #include "fgLog.h"
 
@@ -151,11 +151,11 @@ protected:
     //
     msStatusVec m_statusVec;
     //
-    fg::util::File m_logAll;
+    fg::util::RegularFile m_logAll;
     //
-    fg::util::File m_logError;
+    fg::util::RegularFile m_logError;
     //
-    fg::util::File m_logDebug;
+    fg::util::RegularFile m_logDebug;
 };
 
 // #FIXME - here we go again with the singletons... :)

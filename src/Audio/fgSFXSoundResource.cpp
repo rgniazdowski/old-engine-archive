@@ -11,7 +11,7 @@
 #include "fgLog.h"
 #include "Util/fgStrings.h"
 #include "Util/fgMemory.h"
-#include "Util/fgFile.h"
+#include "Util/fgRegularFile.h"
 
 /**
  * 
@@ -114,8 +114,8 @@ fgBool fgSoundResource::loadRawData(void) {
 fgBool fgSoundResource::loadWavData(void) {
     if(getFilePath(m_quality).empty())
         return FG_FALSE;
-    fg::util::File wavFile;
-    if(!wavFile.open(getFilePathStr(m_quality), fg::util::File::Mode::BINARY | fg::util::File::Mode::READ)) {
+    fg::util::RegularFile wavFile;
+    if(!wavFile.open(getFilePathStr(m_quality), fg::util::RegularFile::Mode::BINARY | fg::util::RegularFile::Mode::READ)) {
         FG_LOG_ERROR("SFX: Unable to open WAV file: '%s'", getFilePathStr(m_quality));
         return FG_FALSE;
     }
