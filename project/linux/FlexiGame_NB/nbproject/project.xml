@@ -36,14 +36,6 @@
                     <name>Release</name>
                     <type>1</type>
                 </confElem>
-                <confElem>
-                    <name>Debug_GLBIND_SDL2</name>
-                    <type>1</type>
-                </confElem>
-                <confElem>
-                    <name>Release_GLBIND_SDL2</name>
-                    <type>1</type>
-                </confElem>
             </confList>
             <formatting>
                 <project-formatting-style>false</project-formatting-style>
@@ -75,6 +67,7 @@
             <word>destructors</word>
             <word>dfactor</word>
             <word>Dirent</word>
+            <word>dotfiles</word>
             <word>dragonsfunk</word>
             <word>drawcall</word>
             <word>drawcall's</word>
@@ -85,6 +78,7 @@
             <word>endian</word>
             <word>enum</word>
             <word>fg</word>
+            <word>fgprivate</word>
             <word>fmt</word>
             <word>foreach</word>
             <word>framebuffer</word>
@@ -112,6 +106,7 @@
             <word>ismapped</word>
             <word>itor</word>
             <word>ivec</word>
+            <word>Joypad</word>
             <word>jpg</word>
             <word>lightuserdata</word>
             <word>Lightwave</word>
@@ -153,6 +148,7 @@
             <word>py</word>
             <word>pz</word>
             <word>Radoslaw</word>
+            <word>readdir</word>
             <word>rgb</word>
             <word>rgba</word>
             <word>s'</word>
