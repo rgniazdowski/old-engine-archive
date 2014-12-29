@@ -19,7 +19,7 @@
     #include <stack>
 
     #include "fgStatus.h"
-    #include "Util/fgRegularFile.h"
+    #include "Util/fgFile.h"
 
     #include "fgXMLDefaultHandler.h"
 
@@ -31,9 +31,7 @@ class fgXMLParser;
 FG_TAG_TEMPLATE_ID_AUTO(fgXMLParser, FG_TAG_XML_PARSER_NAME);
 typedef FG_TAG_XML_PARSER fgXMLParserTag;
 
-// This class extends the fgFile, so it can load the proper XML file
-// fgXMLParser contains  specialized functions for  parsing/interpreting the  data inside the XML file, its
-// a kind of a XML functions wrapper to make it easier and more intuitive to interpret and extract the data
+
 
 /** TiXmlBase is a base class for every class in TinyXml.
         It does little except to establish that TinyXml classes
@@ -56,61 +54,72 @@ typedef FG_TAG_XML_PARSER fgXMLParserTag;
         A Decleration contains: Attributes (not on tree)
  */
 
-class fgXMLParser : protected fg::util::RegularFile {
+/**
+ * This class extends the fgFile, so it can load the proper XML file
+ * fgXMLParser contains  specialized functions for  parsing/interpreting the  data inside the XML file, its
+ * a kind of a XML functions wrapper to make it easier and more intuitive to interpret and extract the data
+ */
+class fgXMLParser : protected fg::util::DataFile {
 public:
-    typedef fg::util::RegularFile base_type;
+    ///
+    typedef fg::util::DataFile base_type;
+    ///
     typedef fgXMLParserTag tag_type;
 protected:
-    // Loaded file size
+    /// Loaded file size
     unsigned int m_fileSize;
-    // Data buffer
+    /// Data buffer
     char *m_fileBuffer;
-    // Structure for holding info about the whole document
+    /// Structure for holding info about the whole document
     fgXMLDocument m_xmlDocument;
-    // Pointer to XML files' root node
+    /// Pointer to XML files' root node
     fgXMLElement *m_rootXMLElement;
-    // Pointer to the current node (seek position)
+    /// Pointer to the current node (seek position)
     fgXMLNode *m_currentXMLNode;
-    // Pointer to the current attribute (seek position)
+    /// Pointer to the current attribute (seek position)
     fgXMLAttribute *m_currentXMLAttribute;
-    // On this stack current nodes are being placed before the parser goes deeper (into the nodes children)
+    /// On this stack current nodes are being placed before the parser goes deeper (into the nodes children)
     std::stack<fgXMLNode *> m_parsingStack;
-    // Pointer to the interface object used for automatic parsing of the XML file (handler)
+    /// Pointer to the interface object used for automatic parsing of the XML file (handler)
     fgXMLDefaultHandler *m_contentHandler;
     
 public:
-    /*
+    /**
      * Default empty constructor
      */
     fgXMLParser() : m_fileSize(0), m_fileBuffer(NULL), m_xmlDocument(),
     m_rootXMLElement(NULL), m_currentXMLNode(NULL),
     m_currentXMLAttribute(NULL), m_parsingStack(), m_contentHandler(NULL) { }
-    /*
+    
+    /**
      * Constructor with file path parameter - loads the xml file
+     * @param filePath
      */
-    fgXMLParser(const char *filePath) : fg::util::RegularFile(filePath), m_fileSize(0), m_fileBuffer(NULL), m_xmlDocument(),
+    fgXMLParser(const char *filePath) : fg::util::DataFile(filePath), m_fileSize(0), m_fileBuffer(NULL), m_xmlDocument(),
     m_rootXMLElement(NULL), m_currentXMLNode(NULL),
     m_currentXMLAttribute(NULL), m_parsingStack(),
     m_contentHandler(NULL) {
         loadXML(filePath);
     }
     /*
-     * Main destructor - frees all data
+     * Destructor - frees all data
      */
     virtual ~fgXMLParser() {
         freeXML();
     }
 
-    /*
-     *
+    /**
+     * 
+     * @param filePath
+     * @return 
      */
     fgBool loadXML(const char *filePath);
 
-    /*
+    /**
      * Frees the structures holding all of the xml data
      */
     void freeXML(void);
-    /*
+    /**
      * Stores the pointer to the object for content event handling.
      * This handler is managed outside of this class.
      */
@@ -121,27 +130,34 @@ public:
             return FG_FALSE;
         return FG_TRUE;
     }
-    /*
+    /**
      * Returns the pointer to content handler (used for automatic parsing).
      * NULL if not set - no automatic parsing possible.
+     * @return 
      */
     fgXMLDefaultHandler *getContentHandler(void) const {
         return m_contentHandler;
     }
 
-    /*
+    /**
      * Parse (analyze) the xml file using predefined content handler.
+     * @return 
      */
     fgBool parseWithHandler(void);
 
-    /*
-     *
-     */
 private:
-    fgBool _parseDeep(fgXMLNode *cnode = NULL, int depth = 0);
+    /**
+     * 
+     * @param cnode
+     * @param depth
+     * @return 
+     */
+    fgBool private_parseDeep(fgXMLNode *cnode = NULL, int depth = 0);
+    
 public:
-    /*
+    /**
      * Check if XML is loaded
+     * @return
      */
     fgBool isXMLLoaded(void) const {
         if(m_rootXMLElement)
@@ -149,34 +165,39 @@ public:
         else
             return FG_FALSE;
     }
-    /*
+    /**
      * Returns the root node of the xml file
+     * @return 
      */
     fgXMLElement *getRootElement(void) const {
         return m_rootXMLElement;
     }
-    /*
+    /**
      * Returns the root element value (string)
+     * @return 
      */
     const char *getRootElementValue(void) const {
         if(!m_rootXMLElement)
             return NULL;
         return m_rootXMLElement->Value();
     }
-    /*
+    /**
      * Returns the current node (seek position)
+     * @return 
      */
     fgXMLNode *getCurrentNode(void) const {
         return m_currentXMLNode;
     }
-    /*
+    /**
      * Returns the current attribute (seek position)
+     * @return 
      */
     fgXMLAttribute *getCurrentAttribute(void) const {
         return m_currentXMLAttribute;
     }
-    /*
+    /**
      * Returns the current attribute name
+     * @return 
      */
     const char *getCurrentAttributeName(void) const {
         if(!m_currentXMLAttribute)
@@ -191,8 +212,9 @@ public:
             return NULL;
         return m_currentXMLAttribute->Value();
     }
-    /*
+    /**
      * Checks for the nodes children
+     * @return
      */
     fgBool getCurrentNodeChildrenPresence(void) const {
         if(!m_currentXMLNode) {
@@ -202,8 +224,9 @@ public:
         }
         return !m_currentXMLNode->NoChildren();
     }
-    /*
+    /**
      * Returns the current node value
+     * @return
      */
     const char *getCurrentNodeValue(void) const {
         if(!m_currentXMLNode)
@@ -213,8 +236,9 @@ public:
         else
             return getCurrentTextNodeValue();
     }
-    /*
-     *
+    /**
+     * 
+     * @return 
      */
     const char *getCurrentTextNodeValue(void) const {
         if(!m_currentXMLNode)
@@ -226,8 +250,10 @@ public:
             return NULL;
         return textNode->Value();
     }
-    /*
+    
+    /**
      * Checks is there any current node/element in the seek position
+     * @return
      */
     fgBool isCurrent(void) const {
         if(!m_currentXMLNode)
@@ -235,40 +261,50 @@ public:
         else
             return FG_TRUE;
     }
-    /*
+    
+    /**
      * Checks if the current pointer points to XML Element
+     * @return
      */
     fgBool isCurrentElement(void) const {
         if(!m_currentXMLNode)
             return FG_FALSE;
         return (m_currentXMLNode->Type() == fgXMLNode::TINYXML_ELEMENT);
     }
-    /*
+    
+    /**
      * Checks if the current pointer points to XML Text
+     * @return
      */
     fgBool isCurrentText(void) const {
         if(!m_currentXMLNode)
             return FG_FALSE;
         return (m_currentXMLNode->Type() == fgXMLNode::TINYXML_TEXT);
     }
-    /*
+    
+    /**
      * Checks if the current pointer points to XML Comment
+     * @return
      */
     fgBool isCurrentComment(void) const {
         if(!m_currentXMLNode)
             return FG_FALSE;
         return (m_currentXMLNode->Type() == fgXMLNode::TINYXML_COMMENT);
     }
-    /*
+    
+    /**
      * Checks if the current pointer points to unknown xml node type
+     * @return
      */
     fgBool isCurrentUnknown(void) const {
         if(!m_currentXMLNode)
             return FG_FALSE;
         return (m_currentXMLNode->Type() == fgXMLNode::TINYXML_UNKNOWN);
     }
-    /*
+    
+    /**
      * Sets the attribute pointer to the first possible attribute in the current node
+     * @return
      */
     fgBool setFirstAttribute(void) {
         if(!m_currentXMLNode) {
@@ -279,18 +315,23 @@ public:
                 return FG_FALSE;
             return FG_TRUE;
         }
-        if(!isCurrentElement())
+        if(!isCurrentElement()) {
             return FG_FALSE;
+        }
         fgXMLElement *xmlElement = m_currentXMLNode->ToElement();
-        if(!xmlElement)
+        if(!xmlElement) {
             return FG_FALSE;
+        }
         m_currentXMLAttribute = xmlElement->FirstAttribute();
-        if(m_currentXMLAttribute == NULL)
+        if(m_currentXMLAttribute == NULL) {
             return FG_FALSE;
+        }
         return FG_TRUE;
     }
-    /*
+    
+    /**
      * Parser goes deeper into the xml document structure, setting proper value for the current pointer
+     * @return
      */
     fgBool goDeeper(void) {
         if(!m_currentXMLNode) {
@@ -305,16 +346,19 @@ public:
             }
         }
 
-        if(m_currentXMLNode->NoChildren())
+        if(m_currentXMLNode->NoChildren()) {
             return FG_FALSE;
+        }
 
         m_parsingStack.push(m_currentXMLNode);
         m_currentXMLNode = m_currentXMLNode->FirstChild();
         m_currentXMLAttribute = NULL;
         return FG_TRUE;
     }
-    /*
+    
+    /**
      * Parser goes higher (back) in the xml document structure
+     * @return
      */
     fgBool goHigher(void) {
         if(m_parsingStack.empty())
@@ -326,8 +370,10 @@ public:
         m_currentXMLAttribute = NULL;
         return FG_TRUE;
     }
-    /*
+    
+    /**
      * Parser goes to the next node (next sibling)
+     * @return
      */
     fgBool goToNextNode(void) {
         if(!m_currentXMLNode)
@@ -338,8 +384,10 @@ public:
         else
             return FG_FALSE;
     }
-    /*
+    
+    /**
      * Parser goes to the previous node (previous sibling)
+     * @return
      */
     fgBool goToPreviousNode(void) {
         if(!m_currentXMLNode)
@@ -350,8 +398,10 @@ public:
         else
             return FG_FALSE;
     }
-    /*
+    
+    /**
      * Parser goes to the next attribute
+     * @return
      */
     fgBool goToNextAttribute(void) {
         if(!m_currentXMLAttribute)
@@ -362,8 +412,9 @@ public:
         else
             return FG_FALSE;
     }
-    /*
+    /**
      * Parser goes to the previous attribute
+     * @return
      */
     fgBool goToPreviousAttribute(void) {
         if(!m_currentXMLAttribute)

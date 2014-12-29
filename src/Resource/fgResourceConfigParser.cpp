@@ -88,7 +88,7 @@ fgResourceHeader &fgResourceConfig::getResourceHeader(const std::string & resNam
  */
 fgBool fgResourceConfig::parseData(void) {
     if(m_sectionMap.empty()) {
-        FG_LOG::PrintError("Resource config section map is empty");
+        FG_LOG_ERROR("Resource config section map is empty");
         return FG_FALSE;
     }
     std::string dirPath;

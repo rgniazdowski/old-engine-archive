@@ -90,7 +90,11 @@ fgBool fgGuiWidgetManager::initialize(void) {
     // Will now preload all required styles
     fgDirent widgetsDir;
     const char *filename = NULL;
-    widgetsDir.readDirectory(m_widgetsPath, FG_TRUE);
+    fgBool status = widgetsDir.readDirectory(m_widgetsPath, FG_TRUE, FG_TRUE);
+    if(!status) {
+        FG_LOG_ERROR("GUI: Unable to read directory (widgets): '%s'", m_widgetsPath.c_str());
+    }
+    
     while((filename = widgetsDir.getNextFile()) != NULL) {
         const char *ext = fgPath::fileExt(filename, FG_TRUE);
         if(!ext)

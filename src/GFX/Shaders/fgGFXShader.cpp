@@ -12,8 +12,9 @@
 #include "Util/fgMemory.h"
 #include "fgMessageSubsystem.h"
 
-/*
- *
+/**
+ * 
+ * @param type
  */
 fgGfxShader::fgGfxShader(fgGfxShaderType type) :
 m_type(type),
@@ -35,15 +36,15 @@ m_isSourceLoaded(FG_FALSE) {
     //FG_LOG_DEBUG("fgGfxShader::fgGfxShader();");
 }
 
-/*
- *
+/**
+ * 
  */
 fgGfxShader::~fgGfxShader() {
     fgGfxShader::clearAll();
 }
 
-/*
- *
+/**
+ * 
  */
 void fgGfxShader::clearAll(void) {
     freeSource();
@@ -66,8 +67,9 @@ fgBool fgGfxShader::setVersion(fgGfxSLVersion slVer) {
     return FG_TRUE;
 }
 
-/*
- *
+/**
+ * 
+ * @param constantDef
  */
 void fgGfxShader::appendDefine(fgGfxShaderConstantDef constantDef) {
     std::string defStr;
@@ -76,8 +78,9 @@ void fgGfxShader::appendDefine(fgGfxShaderConstantDef constantDef) {
     m_defineStrVec.push_back(defStr);
 }
 
-/*
- *
+/**
+ * 
+ * @param includeName
  */
 void fgGfxShader::appendInclude(std::string & includeName) {
     if(!includeName.empty())
@@ -106,7 +109,7 @@ fgBool fgGfxShader::loadSource(void) {
         return FG_TRUE;
     }
 
-    m_fileSource = fg::util::RegularFile::load(getFilePath().c_str());
+    m_fileSource = fg::util::DataFile::load(getFilePath().c_str());
     if(!m_fileSource) {
         return FG_FALSE; // PROPER ERROR CODE
     }
@@ -147,7 +150,7 @@ fgBool fgGfxShader::loadSource(void) {
  */
 fgBool fgGfxShader::loadSource(const char *path) {
     setFilePath(path);
-    fg::util::RegularFile::setPath(path);
+    fg::util::DataFile::setPath(path);
     return loadSource();
 }
 
@@ -158,7 +161,7 @@ fgBool fgGfxShader::loadSource(const char *path) {
  */
 fgBool fgGfxShader::loadSource(std::string & path) {
     setFilePath(path);
-    fg::util::RegularFile::setPath(path);
+    fg::util::DataFile::setPath(path);
     return loadSource();
 }
 
@@ -205,7 +208,7 @@ fgBool fgGfxShader::compile(void) {
     }
     if(!create()) {
         // Failed to create shader
-        FG_LOG::PrintError("GFX: Failed to create shader '%s'", getNameStr());
+        FG_LOG_ERROR("GFX: Failed to create shader '%s'", getNameStr());
         return FG_FALSE;
     }
     glShaderSource(m_gfxID, m_numSources, m_sources, NULL);
@@ -215,7 +218,7 @@ fgBool fgGfxShader::compile(void) {
     updateLog();
     updateParams();
     if(!m_params[FG_GFX_SHADER_COMPILE_STATUS]) {
-        FG_LOG::PrintError("GFX: compilation failed -  %s", getFilePath().c_str());
+        FG_LOG_ERROR("GFX: compilation failed -  %s", getFilePath().c_str());
     } else {
         FG_LOG_DEBUG("GFX: Successfully compiled shader: '%s', type: '%s'", getFilePathStr(), FG_GFX_SHADER_TYPE_TO_TEXT(m_type));
     }
@@ -232,7 +235,7 @@ fgBool fgGfxShader::compile(const char *path) {
         return FG_FALSE;
     }
     setFilePath(path);
-    fg::util::RegularFile::setPath(path);
+    fg::util::DataFile::setPath(path);
     return compile();
 }
 
@@ -246,7 +249,7 @@ fgBool fgGfxShader::compile(std::string & path) {
         return FG_FALSE;
     }
     setFilePath(path);
-    fg::util::RegularFile::setPath(path);
+    fg::util::DataFile::setPath(path);
     return compile();
 }
 

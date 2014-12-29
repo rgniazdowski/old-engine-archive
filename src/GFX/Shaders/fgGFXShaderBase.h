@@ -36,10 +36,21 @@ class fgGfxShaderBase : public fgManagedDataFileBase<fgGfxShaderHandle, fgQualit
     friend class fgGfxShader;
     friend class fgGfxShaderProgram;
     friend class fgGfxShaderManager;
+public:
+    ///
+    typedef fgManagedDataFileBase<fgGfxShaderHandle, fgQuality> base_type;
+    ///
+    typedef fgGfxShaderTag tag_type;
+    
 protected:
+    ///
     typedef std::map<fgGFXenum, fgGFXint> objParamMap;
+    ///
     typedef objParamMap::iterator objParamMapItor;
 
+    /**
+     *
+     */
     enum shaderBaseType {
         FG_GFX_BASE_TYPE_INVALID = 0,
         FG_GFX_BASE_TYPE_SHADER = 1,
@@ -65,7 +76,6 @@ public:
      * 
      */
     virtual ~fgGfxShaderBase();
-
     /**
      * 
      * @return 

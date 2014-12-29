@@ -13,8 +13,8 @@
     #include "Util/fgFileBase.h"
 
     #define PNG_NO_STDIO
-    #define PNG_NO_READ_SUPPORTED
-    #define PNG_NO_WRITE_SUPPORTED
+    //#define PNG_NO_READ_SUPPORTED
+    //#define PNG_NO_WRITE_SUPPORTED
     #include "png.h"
 extern "C" {
     #include "jpeglib.h"

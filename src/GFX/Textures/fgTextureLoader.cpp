@@ -11,11 +11,11 @@
 #include "Util/fgPath.h"
 #include "fgLog.h"
 #include "Util/fgFile.h"
+#include "Util/fgStrings.h"
+
 extern "C" {
 #include "jerror.h"
 }
-
-
 
 typedef struct
 {
@@ -186,7 +186,6 @@ unsigned char *fgTextureLoader::loadJPEG(fg::util::base::File *fileStream, int &
             return NULL;
         }
     }
-
     unsigned char *data = NULL;
     int i = 0, j = 0, rowStride = -1;
     long cont = 0;
@@ -199,6 +198,7 @@ unsigned char *fgTextureLoader::loadJPEG(fg::util::base::File *fileStream, int &
     jpegError.pub.error_exit = fgJPEGErrorExit;
     if(setjmp(jpegError.setjmp_buffer)) {
         // #TODO error handling / reporting
+        FG_LOG_ERROR("JPEG LOAD: Error occurred while loading JPEG file: '%s'", fileStream->getPath());
         jpeg_destroy_decompress(&cinfo);
         return NULL;
     }
@@ -247,10 +247,11 @@ unsigned char *fgTextureLoader::loadJPEG(fg::util::base::File *fileStream, int &
             // #TODO error handling / reporting
             delete [] data;
             delete [] dataBuffer;
+            FG_LOG_ERROR("JPEG LOAD: Invalid number of components[%d]: '%s'", cinfo.output_components, fileStream->getPath());
             return NULL;
     }
     delete [] dataBuffer;
-    FG_LOG_INFO(">> >> JPEG LOAD: %s, %dx%d, data=%p;", fileStream->getPath(), width, height, data);
+    FG_LOG_INFO("JPEG LOAD: path[%s], size[%dx%d], data[%p];", fileStream->getPath(), width, height, data);
     return data;
 }
 

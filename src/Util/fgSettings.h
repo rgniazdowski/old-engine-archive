@@ -15,13 +15,15 @@
     #include "XML/fgXMLDefaultHandler.h"
     #include "XML/fgXMLAutoHandler.h"
 
-/*
+/**
  *
  */
 class fgSettings {
 public:
-    // 
 
+    /**
+     *
+     */
     struct settingsData {
         std::string defaultDataPath; // Path to the data folder
         std::string defaultLogPath; // Path to the log folder
@@ -51,48 +53,79 @@ public:
         debugMode(FG_FALSE) { }
 
         // 
-        void clear(void) {
- }
+        void clear(void) { }
     };
-public:
-    // 
-    fgSettings();
-    // 
-    fgSettings(const char *filePath);
-    // 
-    ~fgSettings();
 
-    // 
-    fgBool load(const char *filePath);
 protected:
-    // 
+    ///
     fgXMLParser *m_parser;
-    // 
+    /// 
     settingsData m_settings;
+
 public:
-    // 
+    /**
+     * 
+     */
+    fgSettings();
+    /**
+     * 
+     * @param filePath
+     */
+    fgSettings(const char *filePath);
+    /**
+     * 
+     */
+    virtual ~fgSettings();
+
+    /**
+     * 
+     * @param filePath
+     * @return 
+     */
+    fgBool load(const char *filePath);
+
+public:
+    /**
+     * 
+     * @return 
+     */
     std::string &getDefaultDataPath(void) {
         return m_settings.defaultDataPath;
     }
-    // 
+    /**
+     * 
+     * @return 
+     */
     const char *getDefaultDataPathStr(void) const {
         return m_settings.defaultDataPath.c_str();
     }
-    // 
+    
+    /**
+     * 
+     * @param path
+     */
     void setDefaultDataPath(const char *path) {
         if(path)
             m_settings.defaultDataPath = path;
     }
-
-    // 
+    /**
+     * 
+     * @return 
+     */
     std::string &getDefaultLogPath(void) {
         return m_settings.defaultLogPath;
     }
-    // 
+    /**
+     * 
+     * @return 
+     */
     const char *getDefaultLogPathStr(void) const {
         return m_settings.defaultLogPath.c_str();
     }
-    // 
+    /**
+     * 
+     * @param path
+     */
     void setDefaultLogPath(const char *path) {
         if(path)
             m_settings.defaultLogPath = path;

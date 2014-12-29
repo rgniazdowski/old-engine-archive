@@ -11,22 +11,24 @@
     #define FG_INC_CONFIG_PARSER
 
     #include "fgStatus.h"
-    #include "fgRegularFile.h"
+    #include "fgFile.h"
 
     #include "fgConfigStruct.h"
 
-    // #FIXME - special tag type for config parser !
+// #FIXME - special tag type for config parser !
 
 /**
  *
  */
-class fgConfigParser : protected fg::util::RegularFile {
+class fgConfigParser : protected fg::util::DataFile {
+public:
+    typedef fg::util::DataFile base_type;
 protected:
     /// Loaded file size
     unsigned int m_fileSize;
     /// Data buffer
     char *m_fileBuffer;
-    
+
 public:
     /**
      * Default constructor for config parser object
@@ -34,7 +36,7 @@ public:
     fgConfigParser();
 
     /**
-     * Default destructor for config parser object
+     * Destructor for config parser object
      */
     virtual ~fgConfigParser();
 
@@ -69,7 +71,6 @@ public:
      * Free all data of the config
      */
     void freeData(void);
-
     /**
      * Return the file size (in bytes)
      * @return 
@@ -77,7 +78,7 @@ public:
     unsigned int getFileSize(void) const {
         return m_fileSize;
     }
-    
+
 };
 
 #endif /* FG_INC_CONFIG_PARSER */

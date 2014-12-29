@@ -132,7 +132,7 @@ fgBool fgResourceManager::initialize(void) {
         m_dataDir = new fgDirent();
     // Fix me - universal paths - use pwd or something
     // #FIXME - compatibility for different platforms
-    m_dataDir->readDirectory("./", FG_TRUE);
+    m_dataDir->readDirectory("./", FG_TRUE, FG_TRUE);
     m_dataDir->rewind();
     FG_LOG_DEBUG("Resource: Initializing resource manager\nCurrent maximum memory: %.2f", (float)m_nMaximumMemory / 1024.0 / 1024.0); // #TODELETE
     // First of all load any resource group configs,

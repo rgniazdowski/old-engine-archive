@@ -80,7 +80,7 @@ void fgXMLParser::freeXML(void) {
  * For now however (because of the XMLParser function) it is almost impossible
  * to make such function without recursion. #FIXME #TODO #P4
  */
-fgBool fgXMLParser::_parseDeep(fgXMLNode *cnode, int depth) {
+fgBool fgXMLParser::private_parseDeep(fgXMLNode *cnode, int depth) {
     if(!cnode) {
         fgXMLAttribute *firstAttribute = NULL;
         fgXMLElement *elementPtr = NULL;
@@ -109,7 +109,7 @@ fgBool fgXMLParser::_parseDeep(fgXMLNode *cnode, int depth) {
                 // Handlers function for properly handling begining of the element
                 this->m_contentHandler->startElement(currentNodeValue, elementPtr, (fgXMLNodeType)elementPtr->Type(), firstAttribute, depth);
                 // Go deeper in the parsing tree
-                this->_parseDeep(this->getCurrentNode(), (depth));
+                this->private_parseDeep(this->getCurrentNode(), (depth));
                 // Handle end of the element
                 this->m_contentHandler->endElement(currentNodeValue, elementPtr, (fgXMLNodeType)elementPtr->Type(), depth);
             } else if(this->isCurrentText() || this->isCurrentComment()) {
@@ -152,7 +152,7 @@ fgBool fgXMLParser::parseWithHandler(void) {
     // Start document parsing
     m_contentHandler->startDocument(&this->m_xmlDocument);
     // Start deep parsing #FIXME
-    fgBool pstatus = _parseDeep(NULL, 0);
+    fgBool pstatus = private_parseDeep(NULL, 0);
     if(!pstatus) {
         FG_MessageSubsystem->reportError(tag_type::name(), FG_ERRNO_XML_PARSE_DEEP);
         return FG_FALSE;

@@ -59,7 +59,7 @@ fgBool fgGuiStyleManager::initialize(void) {
     // Will now preload all required styles
     fgDirent stylesDir;
     const char *filename;
-    stylesDir.readDirectory(m_stylesPath, FG_TRUE);
+    stylesDir.readDirectory(m_stylesPath, FG_TRUE, FG_TRUE);
     while((filename = stylesDir.getNextFile()) != NULL) {
         const char *ext = fgPath::fileExt(filename, FG_TRUE);
         if(!ext)
@@ -73,7 +73,7 @@ fgBool fgGuiStyleManager::initialize(void) {
                 continue;
             } else {
                 if(!insertStyle(style)) {
-                    FG_LOG::PrintError("GUI: Insertion to database failed for style: '%s'", style->getNameStr());
+                    FG_LOG_ERROR("GUI: Insertion to database failed for style: '%s'", style->getNameStr());
                     // # remember to ALWAYS try to release the handle after failed insertion
                     releaseHandle(style->getRefHandle());
                     delete style;

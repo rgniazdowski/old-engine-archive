@@ -9,16 +9,22 @@
 
 #include "fgConfigWriter.h"
 
-/*
+/**
  *
  */
 fgConfigWriter::fgConfigWriter() { }
 
-/*
+/**
  *
  */
 fgConfigWriter::~fgConfigWriter() { }
 
+/**
+ * 
+ * @param filePath
+ * @param sectionMap
+ * @return 
+ */
 fgBool fgConfigWriter::save(const char *filePath, fgCfgTypes::sectionMap &sectionMap) {
     if(filePath == NULL) {
         if(m_filePath.empty())
@@ -28,10 +34,10 @@ fgBool fgConfigWriter::save(const char *filePath, fgCfgTypes::sectionMap &sectio
     if(sectionMap.empty())
         return FG_FALSE;
 
-    if(fg::util::RegularFile::isOpen())
+    if(fg::util::DataFile::isOpen())
         close();
 
-    if(!fg::util::RegularFile::open(filePath, fg::util::RegularFile::Mode::WRITE)) {
+    if(!fg::util::DataFile::open(filePath, fg::util::DataFile::Mode::WRITE)) {
         return FG_FALSE;
     }
 
@@ -41,9 +47,9 @@ fgBool fgConfigWriter::save(const char *filePath, fgCfgTypes::sectionMap &sectio
     for(; it != end; it++) {
         fgCfgSection *section = it->second;
         if(!section) continue;
-        fg::util::RegularFile::print("%s\n", section->toString(linebuf));
+        fg::util::DataFile::print("%s\n", section->toString(linebuf));
         for(unsigned int i = 0; i < section->parameters.size(); i++) {
-            fg::util::RegularFile::print("%s\n", section->parameters[i]->toString(linebuf));
+            fg::util::DataFile::print("%s\n", section->parameters[i]->toString(linebuf));
         }
     }
 

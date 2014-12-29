@@ -18,16 +18,22 @@
 fgConfigParser::fgConfigParser() : m_fileSize(0), m_fileBuffer(NULL) { }
 
 /*
- * Default destructor for config parser object
+ * Destructor for config parser object
  */
 fgConfigParser::~fgConfigParser() {
     freeData();
 }
 
-/*
- *
+/**
+ * Split section name
+ * @param fullSectionName
+ * @param sectionName
+ * @param subSectionName
+ * @return 
  */
-fgBool fgConfigParser::splitSectionName(std::string &fullSectionName, std::string &sectionName, std::string &subSectionName) {
+fgBool fgConfigParser::splitSectionName(std::string &fullSectionName,
+                                        std::string &sectionName,
+                                        std::string &subSectionName) {
     fgBool isSection = FG_TRUE;
     fullSectionName = fgStrings::trim(fullSectionName, std::string("[]"));
     fgVector<std::string> splitSection;
@@ -54,8 +60,11 @@ fgBool fgConfigParser::splitSectionName(std::string &fullSectionName, std::strin
     return isSection;
 }
 
-/*
+/**
  * Load config and store all parameters in given section map
+ * @param filePath
+ * @param sectionMap
+ * @return 
  */
 fgBool fgConfigParser::load(const char *filePath, fgCfgTypes::sectionMap &sectionMap) {
     if(m_fileBuffer)
@@ -65,15 +74,22 @@ fgBool fgConfigParser::load(const char *filePath, fgCfgTypes::sectionMap &sectio
             return FG_FALSE;
         filePath = m_filePath.c_str();
     }
-    m_fileBuffer = fg::util::RegularFile::load(filePath);
+    // DataFile/File is a special class wrapper for RegularFile and ZipFile
+    // This allows for transparent manipulation (mostly reading) of files.
+    // It doesn't matter whether or not the file being loaded is on disk or
+    // inside of a zip archive. #NICE
+    m_fileBuffer = fg::util::DataFile::load(filePath);
     // Close the file
     close();
     // parse data and store it in section map
     return parseData(m_fileBuffer, sectionMap);
 }
 
-/*
+/**
  * Parse data and store parameters in given section map (reference)
+ * @param data
+ * @param sectionMap
+ * @return 
  */
 fgBool fgConfigParser::parseData(const char *data, fgCfgTypes::sectionMap &sectionMap) {
     if(!data) {
@@ -180,7 +196,7 @@ fgBool fgConfigParser::parseData(const char *data, fgCfgTypes::sectionMap &secti
     return FG_TRUE;
 }
 
-/*
+/**
  * Free all data assiocated with the config parameters
  */
 void fgConfigParser::freeData(void) {

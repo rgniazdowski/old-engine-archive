@@ -78,29 +78,53 @@ public:
      */
     virtual ~fgDirent();
 
+private:
+    /**
+     * 
+     * @param fileName
+     * @param filePath
+     * @param recursive
+     * @return 
+     */
+    fgBool internal_readZipFile(const std::string& fileName,
+                                const std::string& filePath, 
+                                fgBool recursive = FG_FALSE);
+    
+public:
+    
     /**
      * Reads the directory that was specified earlier. If additional option is 
      * specified it will read the directory recursively - the difference is that 
      * now querying for next file in the list will always return the full path 
      * to it. The file list will not contain names of the folders (just file paths)
+     * @param recursive
+     * @param listZipFiles
+     * @return 
      */
-    fgBool readDirectory(fgBool recursive = FG_FALSE);
+    fgBool readDirectory(fgBool recursive = FG_FALSE,
+                         fgBool listZipFiles = FG_FALSE);
     /**
      * Reads the specified directory creating the list of files
      * to be processed later
      * @param dirPath
      * @param recursive
+     * @param listZipFiles
      * @return 
      */
-    fgBool readDirectory(const char *dirPath, fgBool recursive);
+    fgBool readDirectory(const char *dirPath,
+                         fgBool recursive,
+                         fgBool listZipFiles);
     /**
      * Reads the specified directory creating the list of files
      * to be processed later
      * @param dirPath
      * @param recursive
+     * @param listZipFiles
      * @return 
      */
-    fgBool readDirectory(const std::string &dirPath, fgBool recursive = FG_FALSE);
+    fgBool readDirectory(const std::string &dirPath,
+                         fgBool recursive = FG_FALSE,
+                         fgBool listZipFiles = FG_FALSE);
 
     /**
      * Returns the next file name
