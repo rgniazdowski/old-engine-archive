@@ -8,6 +8,7 @@
  *******************************************************/
 
 #include "fgTypes.h"
+#include "fgCommon.h"
 #include "fgLog.h"
 #include "fgDirent.h"
 #include "fgPath.h"
@@ -124,95 +125,106 @@ fgBool fgDirent::readDirectory(fgBool recursive, fgBool listZipFiles) {
     m_fileNames.clear_optimised();
     fgStringVector dirStack;
     std::string fileName;
+    std::string dirPath;
+    fgStringVector dirVec;
+    fgStrings::split(m_dirPath, ';', dirVec);
+    int ndirs = dirVec.size();
 
-    const char *fileExt = fgStrings::stristr(m_dirPath, ".zip");
-    if(!fileExt)
-        fileExt = fgStrings::stristr(m_dirPath, ".pk3");
-    if(fileExt) {
-        // dir path points to a zip file
-        internal_readZipFile(m_dirPath, m_dirPath, FG_FALSE);
-    } else {
-        dirStack.push_back(m_dirPath);
-    }
+    for(int idir = 0; idir < ndirs; idir++) {
+        dirPath = dirVec[idir];
 
-    while(!dirStack.empty()) {
-        std::string filePath;
-        std::string curDir = dirStack.back();
-        dirStack.pop_back();
-
-#if defined(FG_USING_MARMALADE)
-        char fileNameStr[FG_FILE_NAME_MAX];
-        m_fileList = s3eFileListDirectory(curDir.c_str());
-        if(!m_fileList)
-            continue;
-
-        while(S3E_RESULT_SUCCESS == s3eFileListNext(m_fileList, fileNameStr, FG_FILE_NAME_MAX - 1)) {
-            fileName = fileNameStr;
-#else
-        struct stat fileInfo;
-        m_curDir = opendir(curDir.c_str());
-        if(!m_curDir) {
-            FG_LOG_DEBUG("fg::util::dirent: Unable to open directory: '%s'", curDir.c_str());
-            continue;
+        const char *fileExt = fgStrings::stristr(dirPath, ".zip");
+        if(!fileExt)
+            fileExt = fgStrings::stristr(dirPath, ".pk3");
+        if(fileExt) {
+            // dir path points to a zip file
+            internal_readZipFile(dirPath, dirPath, FG_FALSE);
+        } else {
+            dirStack.push_back(dirPath);
         }
 
-        while((m_curEntry = readdir(m_curDir)) != NULL) {
-            fileName = m_curEntry->d_name;
-#endif /* FG_USING_MARMALADE */
-            // Skip special file names
-            if(fileName.compare(".") == 0 || fileName.compare("..") == 0)
-                continue;
+        while(!dirStack.empty()) {
+            std::string filePath;
+            std::string curDir = dirStack.back();
+            dirStack.pop_back();
 
-            // Create the full path to the file - join paths
-            fgPath::join(filePath, curDir, fileName);
-            fgBool isDir = FG_FALSE;
-            fgBool isZip = FG_FALSE;
 #if defined(FG_USING_MARMALADE)
-            // Check if the path points to a directory
-            isDir = (fgBool)s3eFileGetFileInt(filePath.c_str(), S3E_FILE_ISDIR);
-#else
-            // Check if the path points to a directory
-            if(lstat(filePath.c_str(), &fileInfo) < 0)
+            char fileNameStr[FG_FILE_NAME_MAX];
+            m_fileList = s3eFileListDirectory(curDir.c_str());
+            if(!m_fileList)
                 continue;
-            isDir = (fgBool)S_ISDIR(fileInfo.st_mode);
-#endif /* FG_USING_MARMALADE */
-            // Check whether the file points to the zip file
-            // Paths within the zip file listing are always recursive - 
-            // the appended list will always contain all files within a zip file
-            const char *fileExt = fgStrings::stristr(filePath, ".zip");
-            if(!fileExt)
-                fileExt = fgStrings::stristr(filePath, ".pk3");
-            if(fileExt)
-                isZip = FG_TRUE; // path points to a zip file
 
-            if(recursive) {
-                if(isDir) {
-                    // throw the path to a directory onto the stack for next read
-                    dirStack.push_back(filePath);
+            while(S3E_RESULT_SUCCESS == s3eFileListNext(m_fileList, fileNameStr, FG_FILE_NAME_MAX - 1)) {
+                fileName = fileNameStr;
+#else
+            struct stat fileInfo;
+            m_curDir = opendir(curDir.c_str());
+            if(!m_curDir) {
+                FG_LOG_DEBUG("fg::util::dirent: Unable to open directory: '%s'", curDir.c_str());
+                continue;
+            }
+
+            while((m_curEntry = readdir(m_curDir)) != NULL) {
+                fileName = m_curEntry->d_name;
+#endif /* FG_USING_MARMALADE */
+                if(fileName.empty())
+                    continue;
+                // Skip special file names - also dotfiles
+                //if(fileName.compare(".") == 0 || fileName.compare("..") == 0)
+                if(fileName[0] == '.' || fileName.compare("fgprivate") == 0)
+                    continue;
+
+                // Create the full path to the file - join paths
+                fgPath::join(filePath, curDir, fileName);
+                fgBool isDir = FG_FALSE;
+                fgBool isZip = FG_FALSE;
+#if defined(FG_USING_MARMALADE)
+                // Check if the path points to a directory
+                isDir = (fgBool)s3eFileGetFileInt(filePath.c_str(), S3E_FILE_ISDIR);
+#else
+                // Check if the path points to a directory
+                if(lstat(filePath.c_str(), &fileInfo) < 0)
+                    continue;
+                isDir = (fgBool)S_ISDIR(fileInfo.st_mode);
+#endif /* FG_USING_MARMALADE */
+                // Check whether the file points to the zip file
+                // Paths within the zip file listing are always recursive - 
+                // the appended list will always contain all files within a zip file
+                const char *fileExt = fgStrings::stristr(filePath, ".zip");
+                if(!fileExt)
+                    fileExt = fgStrings::stristr(filePath, ".pk3");
+                if(fileExt)
+                    isZip = FG_TRUE; // path points to a zip file
+
+                if(recursive) {
+                    if(isDir) {
+                        // throw the path to a directory onto the stack for next read
+                        dirStack.push_back(filePath);
+                    } else {
+                        // push the path into vector
+                        m_fileNames.push_back(filePath);
+                    }
                 } else {
-                    // push the name into vector
-                    m_fileNames.push_back(filePath);
+                    if(!isDir) {
+                        // It's not a directory so push it into the list
+                        m_fileNames.push_back(fileName);
+                    }
                 }
-            } else {
-                if(!isDir) {
-                    // It's not a directory so push it into the list
-                    m_fileNames.push_back(fileName);
+
+                if(isZip && listZipFiles) {
+                    internal_readZipFile(fileName, filePath, recursive);
                 }
-            }
 
-            if(isZip && listZipFiles) {
-                internal_readZipFile(fileName, filePath, recursive);
-            }
-
-        }
-        curDir.clear();
-        fileName.clear();
+            } // while(readdir/fileListNext)
+            curDir.clear();
+            fileName.clear();
 #if defined(FG_USING_MARMALADE)
-        s3eFileListClose(m_fileList);
+            s3eFileListClose(m_fileList);
 #else
-        closedir(m_curDir);
+            closedir(m_curDir);
 #endif /* FG_USING_MARMALADE */
-    }
+        } // while(!dirStack.empty())
+    } // for(...) -> split dir path by ';'
     rewind();
     m_isRecursive = recursive;
     if(!m_fileNames.empty())
@@ -293,6 +305,9 @@ std::string &fgDirent::getNextFilePath(std::string &path) {
     const char *filename = fgDirent::getNextFile();
     path.clear();
     if(filename && !m_isRecursive) {
+        // #FIXME - this will cause error if fgDirent was not recursive and
+        // did not store file paths by default - if fgDirent was called with
+        // many directories to list -> FUBAR :(
         fgPath::join(path, m_dirPath, std::string(filename));
     } else if(filename && m_isRecursive) {
         // with the recursive mode, this array always stores paths (relative)
