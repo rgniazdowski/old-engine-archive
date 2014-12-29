@@ -179,6 +179,49 @@ fgBool fgScriptSubsystem::cyclicGCFunction(void* systemData, void* userData) {
 
 /**
  * 
+ * @param filePath
+ * @return 
+ */
+int fgScriptSubsystem::executeFile(const char *filePath) {
+    if(!m_luaState || !filePath) {
+        return 2;
+    }
+    /**
+     *  LUA_OK		0
+     *  LUA_YIELD	1
+     *  LUA_ERRRUN	2
+     *  LUA_ERRSYNTAX	3
+     *  LUA_ERRMEM	4
+     *  LUA_ERRGCMM	5
+     *  LUA_ERRERR	6
+     */
+    if(!m_isBindingComplete) {
+        return 2;
+    }
+    fg::util::DataFile scriptFile;
+    if(!scriptFile.open(filePath, fg::util::File::Mode::READ)) {
+        FG_LOG_ERROR("Script: Unable to open script file: '%s'", filePath);
+        return 2;
+    }
+    char *buffer = scriptFile.load();
+    if(!buffer) {
+        FG_LOG_ERROR("Script: Unable to load script file into buffer: '%s'", filePath);
+        return 2;
+    }
+    scriptFile.close();
+    const char *fileName = fgPath::fileName(filePath);
+    int size = strlen(buffer), status = 0;
+#if defined(FG_USING_LUA_PLUS)
+    status = m_luaState->DoBuffer(buffer, size, fileName);
+#elif defined(FG_USING_LUA)
+    status = (luaL_loadbuffer(m_luaState, buffer, size, fileName) || lua_pcall(m_luaState, 0, 0, 0));
+#endif    
+    fgFree(buffer);
+    return status;
+}
+
+/**
+ * 
  * @return 
  */
 fgBool fgScriptSubsystem::destroy(void) {
@@ -615,7 +658,7 @@ fgBool fgScriptSubsystem::registerConstants(void) {
     m_globals.SetInteger("FG_EVENT_GAME_WAITING", (int)FG_EVENT_GAME_WAITING);
     m_globals.SetInteger("FG_EVENT_GAME_CONNECTED", (int)FG_EVENT_GAME_CONNECTED);
     m_globals.SetInteger("FG_EVENT_GAME_DISCONNECTED", (int)FG_EVENT_GAME_DISCONNECTED);
-    
+
     //
     // SWIPE DIRECTION
     //
@@ -2193,9 +2236,9 @@ fgBool fgScriptSubsystem::registerSoundManager(void) {
                                              static_cast<fgSFXManager *>(0),
                                              static_cast<SFX_Bool_C_STR_IN>(&fgSFXManager::isPaused));
     m_metatableSoundMgr.RegisterObjectDirect("stopAll",
-                                             static_cast<fgSFXManager *>(0), 
+                                             static_cast<fgSFXManager *>(0),
                                              &fgSFXManager::stopAll);
-    m_metatableSoundMgr.RegisterObjectDirect("setSfxVolume", 
+    m_metatableSoundMgr.RegisterObjectDirect("setSfxVolume",
                                              static_cast<fgSFXManager *>(0),
                                              &fgSFXManager::setSfxVolume);
     m_metatableSoundMgr.RegisterObjectDirect("getSfxVolume",
@@ -2205,7 +2248,7 @@ fgBool fgScriptSubsystem::registerSoundManager(void) {
                                              static_cast<fgSFXManager *>(0),
                                              &fgSFXManager::setMusicVolume);
     m_metatableSoundMgr.RegisterObjectDirect("getMusicVolume",
-                                             static_cast<fgSFXManager *>(0), 
+                                             static_cast<fgSFXManager *>(0),
                                              &fgSFXManager::getMusicVolume);
 
     uintptr_t offset = (uintptr_t)m_pSoundMgr;
@@ -2252,21 +2295,21 @@ fgBool fgScriptSubsystem::registerLogicManager(void) {
                                              static_cast<fg::game::Logic *>(0),
                                              &fg::game::Logic::startGameDefault);
     m_metatableLogicMgr.RegisterObjectDirect("startGameStageID",
-                                             static_cast<fg::game::Logic *>(0), 
+                                             static_cast<fg::game::Logic *>(0),
                                              static_cast<LOGIC_void_UINT_IN>(&fg::game::Logic::startGame));
     m_metatableLogicMgr.RegisterObjectDirect("startGameStageName",
-                                             static_cast<fg::game::Logic *>(0), 
+                                             static_cast<fg::game::Logic *>(0),
                                              static_cast<LOGIC_void_C_STR_IN>(&fg::game::Logic::startGame));
     m_metatableLogicMgr.RegisterObjectDirect("stopGame",
                                              static_cast<fg::game::Logic *>(0),
                                              &fg::game::Logic::stopGame);
     m_metatableLogicMgr.RegisterObjectDirect("pauseGame",
-                                             static_cast<fg::game::Logic *>(0), 
+                                             static_cast<fg::game::Logic *>(0),
                                              &fg::game::Logic::pauseGame);
     m_metatableLogicMgr.RegisterObjectDirect("restartGame",
                                              static_cast<fg::game::Logic *>(0),
                                              &fg::game::Logic::restartGame);
-    
+
     m_metatableLogicMgr.RegisterObjectDirect("getCurrentStageID",
                                              static_cast<fg::game::Logic *>(0),
                                              &fg::game::Logic::getCurrentStageID);
@@ -2285,7 +2328,7 @@ fgBool fgScriptSubsystem::registerLogicManager(void) {
     m_metatableLogicMgr.RegisterObjectDirect("resetStageScore",
                                              static_cast<fg::game::Logic *>(0),
                                              &fg::game::Logic::resetStageScore);
-    
+
     m_metatableLogicMgr.RegisterObjectDirect("setPlayerName",
                                              static_cast<fg::game::Logic *>(0),
                                              static_cast<LOGIC_void_C_STR_IN>(&fg::game::Logic::setPlayerName));
@@ -2334,8 +2377,8 @@ fgBool fgScriptSubsystem::registerLogicManager(void) {
     // Create lua object for Game Logic manager global
     LuaPlus::LuaObject logicMgrObj = m_luaState->BoxPointer((void *)m_pLogicMgr);
     logicMgrObj.SetMetatable(m_metatableLogicMgr);
-    
-    
+
+
     // #FIXME - create in script proper structure as in C++ -> fg.game.Logic, etc
     m_globals.SetObject("LogicManager", logicMgrObj);
     m_globals.SetObject("GameLogic", logicMgrObj);

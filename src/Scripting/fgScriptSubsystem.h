@@ -281,7 +281,23 @@ public:
      * @return 
      */
     virtual fgBool initialize(void);
-
+    
+public:
+    /**
+     * 
+     * @param filePath
+     * @return 
+     */
+    int executeFile(const char *filePath);
+    /**
+     * 
+     * @param filePath
+     * @return 
+     */
+    inline int executeFile(const std::string& filePath) {
+        return executeFile(filePath.c_str());
+    }
+    
 public:
     #if defined(FG_USING_LUA_PLUS)
     /**
