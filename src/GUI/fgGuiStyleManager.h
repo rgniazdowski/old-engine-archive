@@ -19,9 +19,16 @@
  *
  */
 class fgGuiStyleManager : public fgDataManagerBase<fgGuiStyle*, fgGuiStyleHandle, fgGuiStyleTag> {
+public:
+    ///
+    typedef fgDataManagerBase<fgGuiStyle*, fgGuiStyleHandle, fgGuiStyleTag> base_type;
+    
 protected:
+    ///
     typedef hmDataVec smStyleVec;
+    ///
     typedef hmDataVecItor smStyleVecItor;
+
 public:
     /**
      * 

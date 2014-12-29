@@ -27,6 +27,10 @@
 class fgGuiWidgetManager : public fg::base::Manager, protected fgHandleManager<fgGuiWidget *, fgGuiWidgetHandle> {
 public:
     ///
+    typedef fgHandleManager<fgGuiWidget *, fgGuiWidgetHandle> base_type;
+    ///
+    typedef fgGuiWidgetHandle handle_type;
+    ///
     typedef fgVector<fgGuiWidget *> widgetVec;
     ///
     typedef widgetVec::iterator widgetVecItor;
@@ -270,7 +274,6 @@ private:
     /// Declared in GuiMain
     fgGuiCallback *m_pGuiLinkCallback;
 
-    
     /// Widgets that have no fathers. For example a main screen, window, menu, etc
     widgetVec m_rootWidgets;
     /// Widgets structure files base path

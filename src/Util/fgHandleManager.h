@@ -59,6 +59,9 @@ protected:
     };
     #endif
 public:
+    ///
+    typedef DataType data_type;
+    ///
     typedef std::string hashKey;
     // Type for vector storing Data pointers
     typedef fgVector <DataType> hmDataVec;
