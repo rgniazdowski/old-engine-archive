@@ -8,6 +8,7 @@
  *******************************************************/
 
 #include "fgSFXMusicResource.h"
+#include "Util/fgFile.h"
 #include "fgLog.h"
 
 /**
@@ -73,7 +74,7 @@ fgBool fgMusicResource::create(void) {
         return FG_FALSE;
     }
 #if defined(FG_USING_SDL_MIXER)
-    m_musData = Mix_LoadMUS(getFilePathStr(m_quality));
+    m_musData = Mix_LoadMUS(getFilePathStr(m_quality));    
     if(!m_musData) {
         FG_LOG_DEBUG("SFX: Failed to load music file: '%s'", getFilePathStr(m_quality));
         m_isReady = FG_FALSE;
@@ -83,7 +84,10 @@ fgBool fgMusicResource::create(void) {
         m_isReady = FG_TRUE;
     }
 #elif defined(FG_USING_MARMALADE) && defined(FG_USING_MARMALADE_AUDIO)
-    if(fgFile::exists(getFilePathStr(m_quality))) {
+    // Check if the file exists
+    // Please note that because loading/playing music with Marmalade API
+    // the music file must be a RegularFile - cannot be inside the Zip #NOZIP
+    if(fg::util::RegularFile::exists(getFilePathStr(m_quality))) {
         // The file exists so it should be loadable by the s3eAudio API
         m_isReady = FG_TRUE;
     }

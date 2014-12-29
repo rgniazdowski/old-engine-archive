@@ -11,7 +11,7 @@
 #include "fgLog.h"
 #include "Util/fgStrings.h"
 #include "Util/fgMemory.h"
-#include "Util/fgRegularFile.h"
+#include "Util/fgFile.h"
 
 /**
  * 
@@ -102,7 +102,7 @@ fgBool fgSoundResource::loadRawData(void) {
     m_soundData = buffer;
     m_size = fileSize;
 #else
-    
+
 #endif
     return FG_TRUE;
 }
@@ -114,30 +114,30 @@ fgBool fgSoundResource::loadRawData(void) {
 fgBool fgSoundResource::loadWavData(void) {
     if(getFilePath(m_quality).empty())
         return FG_FALSE;
-    fg::util::RegularFile wavFile;
-    if(!wavFile.open(getFilePathStr(m_quality), fg::util::RegularFile::Mode::BINARY | fg::util::RegularFile::Mode::READ)) {
+    fg::util::DataFile wavFile;
+    if(!wavFile.open(getFilePathStr(m_quality), fg::util::DataFile::Mode::BINARY | fg::util::DataFile::Mode::READ)) {
         FG_LOG_ERROR("SFX: Unable to open WAV file: '%s'", getFilePathStr(m_quality));
         return FG_FALSE;
     }
     fgSoundWAVHeader wavHeader;
     fgSoundWAVChunkHeader dataChunkHeader;
-    
+
     wavFile.read(&wavHeader, (int)wavHeader.size(), 1);
     if(strncmp(wavHeader.waveID, "WAVE", 4) != 0) {
-    //if(!fgStrings::isEqual(wavHeader.waveID, "WAVE")) {
+        //if(!fgStrings::isEqual(wavHeader.waveID, "WAVE")) {
         FG_LOG_ERROR("SFX: WAV file is not valid, missing 'WAVE' format ID: '%s'", getFilePathStr(m_quality));
         wavFile.close();
         return FG_FALSE;
     }
-    
+
     // Check for existence of fmt chunk
     if(strncmp(wavHeader.subChunkFmtID, "fmt", 3) != 0) {
-    //if(!fgStrings::isEqual(wavHeader.subChunkFmtID, "fmt")) {
+        //if(!fgStrings::isEqual(wavHeader.subChunkFmtID, "fmt")) {
         FG_LOG_ERROR("SFX: WAV file format chunk malformed: '%s'", getFilePathStr(m_quality));
         wavFile.close();
         return FG_FALSE;
     }
-    
+
     if(wavHeader.audioFormat != 1) {
         FG_LOG_ERROR("SFX: WAV file is not in PCM format: '%s'", getFilePathStr(m_quality));
         wavFile.close();
@@ -149,24 +149,24 @@ fgBool fgSoundResource::loadWavData(void) {
     void *temp = fgMalloc<void>(wavHeader.chunkSize);
     do {
         wavFile.read(&dataChunkHeader, (int)dataChunkHeader.size(), 1);
-        
+
         if(strncmp(dataChunkHeader.chunkDataID, "data", 4) == 0) {
-        //if(fgStrings::isEqual(dataChunkHeader.chunkDataID, "data")) {
+            //if(fgStrings::isEqual(dataChunkHeader.chunkDataID, "data")) {
             if(m_soundData == NULL)
                 m_soundData = fgMalloc<unsigned char>(dataChunkHeader.subChunkDataSize);
             else
-                m_soundData = fgRealloc<unsigned char>(m_soundData, (m_size+dataChunkHeader.subChunkDataSize));
-            wavFile.read(m_soundData+m_size, 1, dataChunkHeader.subChunkDataSize);
+                m_soundData = fgRealloc<unsigned char>(m_soundData, (m_size + dataChunkHeader.subChunkDataSize));
+            wavFile.read(m_soundData + m_size, 1, dataChunkHeader.subChunkDataSize);
             m_size += dataChunkHeader.subChunkDataSize;
         } else {
             wavFile.read(temp, 1, dataChunkHeader.subChunkDataSize);
         }
-        offset = (int)wavFile.getPosition();        
+        offset = (int)wavFile.getPosition();
     } while(offset < wavHeader.chunkSize);
-    
+
     fgFree(temp);
     wavFile.close();
-    
+
     m_header.audioFormat = wavHeader.audioFormat;
     m_header.bitsPerSample = wavHeader.bitsPerSample;
     m_header.numChannels = wavHeader.numChannels;
@@ -193,9 +193,76 @@ fgBool fgSoundResource::create(void) {
         FG_LOG_ERROR("SFX: Sound/chunk file extension is not valid (.WAV): '%s'", path);
         return FG_FALSE;
     }
-    m_chunkData = Mix_LoadWAV(path);
+    // Still need to use the custom wav loading procedure - it's because of loading
+    // wav files from zip archives - need to create some automatic SDL_RWops wrapper
+    // Also have in mind that at some point when FGEngine will not use Marmalade,
+    // but SDL2 instead (meaning for mobile platforms) - ZipFile/RegularFile/DataFile and ZLIB
+    // custom built library will need to use low level SDL IO functions - need 
+    // to bind it transparently #WAV #SDL2 #MOBILE #SDL_RWOPS
+    if(loadWavData()) {
+        Uint16 format;
+        int channels;
+        int frequency;
+        //AUDIO_U8        0x0008  /**< Unsigned 8-bit samples */
+        //AUDIO_S8        0x8008  /**< Signed 8-bit samples */
+        //AUDIO_U16LSB    0x0010  /**< Unsigned 16-bit samples */
+        //AUDIO_S16LSB    0x8010  /**< Signed 16-bit samples */
+        //AUDIO_U16MSB    0x1010  /**< As above, but big-endian byte order */
+        //AUDIO_S16MSB    0x9010  /**< As above, but big-endian byte order */
+        Uint16 wave_format;
+        int wave_channels;
+        int wave_frequency;
+        if(m_header.bitsPerSample == 8)
+            wave_format = AUDIO_U8;
+        else if(m_header.bitsPerSample == 16)
+            wave_format = AUDIO_S16;
+        else if(m_header.bitsPerSample == 32)
+            wave_format = AUDIO_S32;
+        wave_channels = m_header.numChannels;
+        wave_frequency = m_header.sampleRate;
+        Mix_QuerySpec(&frequency, &format, &channels);
+        SDL_AudioCVT wavecvt;
+        /* Build the audio converter and create conversion buffers */
+        if(wave_format != format ||
+           wave_channels != channels ||
+           wave_frequency != frequency) {
+            if(SDL_BuildAudioCVT(&wavecvt,
+                                 wave_format, wave_channels, wave_frequency,
+                                 format, channels, frequency) < 0) {
+                FG_LOG_ERROR("SFX: SDL2: Failed to initialize audio converter");
+                fgFree(m_soundData);
+                m_soundData = NULL;
+                return FG_FALSE;
+            }
+            int samplesize = ((wave_format & 0xFF) / 8) * wave_channels;
+            wavecvt.len = m_size & ~(samplesize - 1);
+            wavecvt.buf = (Uint8 *)SDL_calloc(1, wavecvt.len * wavecvt.len_mult);
+            if(wavecvt.buf == NULL) {
+                SDL_SetError("Out of memory");
+                FG_LOG_ERROR("SFX: SDL2: Failed to allocate conversion buffer");
+                fgFree(m_soundData);
+                m_soundData = NULL;
+                return FG_FALSE;
+            }
+            SDL_memcpy(wavecvt.buf, m_soundData, m_size);
+            fgFree(m_soundData);
+            m_soundData = NULL;
+
+            /* Run the audio converter */
+            if(SDL_ConvertAudio(&wavecvt) < 0) {
+                SDL_free(wavecvt.buf);
+                FG_LOG_ERROR("SFX: SDL2: Failed to convert audio data for: '%s'", path);
+                return FG_FALSE;
+            }
+            m_chunkData = Mix_QuickLoad_RAW(wavecvt.buf, wavecvt.len_cvt);
+            if(!m_chunkData) {
+                SDL_free(wavecvt.buf);
+                FG_LOG_ERROR("SFX: SDL2: Failed to initialize chunk(RAW) audio data for: '%s'", path);
+                return FG_FALSE;
+            }
+        }
+    }
     if(!m_chunkData) {
-        FG_LOG_DEBUG("SFX: Failed to load sound/chunk file: '%s'", path);
         m_isReady = FG_FALSE;
     } else {
         FG_LOG_DEBUG("SFX: Successfully loaded sound/chunk file: '%s'", path);
@@ -203,9 +270,12 @@ fgBool fgSoundResource::create(void) {
         m_isReady = FG_TRUE;
     }
 #elif defined(FG_USING_MARMALADE_SOUND)
+    // Well on Marmalade Sound no conversion is needed - sound is mono, 22050, 16bit
+    // and the files (wav) are all in that format - this can change of course 
+    // #MARMALADE #AUDIO_CONVERTER #STEREO
     if(fgStrings::endsWith(path, ".wav", FG_FALSE)) {
         if(loadWavData()) {
-            m_isReady = FG_TRUE;            
+            m_isReady = FG_TRUE;
         }
     } else if(fgStrings::endsWith(path, ".raw", FG_FALSE)) {
         // This only support .raw files for now...
@@ -291,6 +361,13 @@ void fgSoundResource::play(void) {
         m_isPaused = FG_FALSE;
     }
 #elif defined(FG_USING_MARMALADE_SOUND)
+    // s3eSoundProperty
+    // S3E_SOUND_STEREO_ENABLED 	
+    // [read,int]Return 1 if the sound device is in stereo mode. This is enabled
+    // by setting the [S3E] StereoSound option in your ICF. If the hardware does
+    // not support stereo this will always return 0. In order to generate stereo
+    // sound you must register the S3E_CHANNEL_GEN_AUDIO_STEREO callback on your
+    // channel(s).
     if(m_soundData) {
         m_channel = s3eSoundGetFreeChannel();
         s3eSoundChannelSetInt(m_channel, S3E_CHANNEL_RATE, m_header.sampleRate);
