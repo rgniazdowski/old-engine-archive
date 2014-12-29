@@ -1,0 +1,76 @@
+<GUIStructure>
+
+	<Menu name="MainMenu" ignoreState="true" flags="packvertical right mainmenu">
+		<Button name="StartGameButton" link="SelectGameMenu">START GAME</Button>
+		<Button name="HighscoresButton" link="HighscoresMenu">HIGH SCORES</Button>
+		<Button name="StatsButton" link="StatsMenu" active="false">STATISTICS</Button>
+		<Button name="OptionsButton" link="OptionsMenu">OPTIONS</Button>
+
+		<ScrollArea name="Scrolled" ignoreState="true" style="FrameStyle" flags="vslider hslider packvertical" size="100,100">
+			<Button name="XXX1" size="100,50">XX1</Button>
+			<Button name="XXX2" size="100,50">XX2</Button>
+			<Button name="XXX3" size="100,50">XX3</Button>
+			<Button name="XXX4" size="100,50">XX4</Button>
+			<Button name="XXX5" size="100,50">XX5</Button>
+			<Button name="XXX6" size="100,50">XX6</Button>
+			<Button size="100,50">XX6</Button>
+			<Button size="100,50">XX6</Button>
+			<Button size="100,50">XX6</Button>
+			<Button size="100,50">XX6</Button>
+			<Button size="100,50">XX6</Button>
+			<Button size="100,50">XX6</Button>
+			<Button size="100,50">XX6</Button>
+			<Button size="100,50">XX6</Button>
+			<Button size="100,50">XX6</Button>
+			<Button size="100,50">XX6</Button>
+			<Button size="100,50">XX6</Button>
+			<Button size="100,50">XX6</Button>
+			<Button size="100,50">XX6</Button>
+			<Button size="100,50">XX6</Button>
+			<Button size="100,50">XX6</Button>
+			<Button size="100,50">XX6</Button>
+			<Button size="100,50">XX6</Button>
+			<Button size="100,50">XX6XX</Button>
+		</ScrollArea>
+
+		<Container name="TestContainer" ignoreState="true" style="FrameStyle" flags="packhorizontal center">
+			<Button name="Test1Button" size="200,60">TEST1 BUTTON</Button>
+			<Button name="Test2Button" size="200,60" link="Empty">TEST2 BUTTON</Button>
+		</Container>
+
+		<Container name="SliderContainer" ignoreState="true" style="FrameStyle" flags="packhorizontal center" visible="false">
+			<Slider name="Slide1" size="50,150">YO1</Slider>
+			<Slider name="Slide2" size="200,50">YO2</Slider>
+			<Slider name="Slide3" size="150,150">YO3</Slider>
+		</Container>
+	</Menu>
+
+	<Menu name="Empty">
+	</Menu>
+
+	<Menu name="OptionsMenu" flags="packvertical">
+		<!--		<Button name="YoloButton" pos="200,200" size="200,50">YOLO BITCHEZ</Button> -->
+		<Button name="OptionsBack" link="MainMenu"> GO BACK! </Button>
+	</Menu>
+
+	<Menu name="SelectGameMenu" flags="packvertical">
+		<Button name="LastLevelButton" action="LoadLevel"> Last level </Button>
+		<Button name="SelectGameBack" link="MainMenu"> GO BACK! </Button>
+	</Menu>
+
+	<Menu name="HighscoresMenu" flags="packvertical">
+		<Button name="HighscoresBack" link="MainMenu"> GO BACK! </Button>
+	</Menu>
+
+	<Menu name="StatsMenu" flags="packvertical">
+		<Button name="StatsBack" link="MainMenu"> GO BACK! </Button>
+	</Menu>
+
+	<Menu name="ContextMenu" ignoreState="true" visible="false" style="ContextMenuStyle" flags="packvertical center">
+		<Button name="CMAction1" size="200,20">Show test window</Button>
+		<Button name="CMAction2" size="200,20">Switch menu</Button>
+		<Button name="CMAction3" size="200,20">Popup test</Button>
+		<Button name="CMAction4" size="200,20">Properties...</Button>
+	</Menu>
+
+</GUIStructure>

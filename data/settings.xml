@@ -4,7 +4,8 @@
 	<mainConfigPath>main.config.ini</mainConfigPath>
 	<programTitle>Flexible Game Engine: Infinium</programTitle>
 	<defaultProfileName>default</defaultProfileName>
-	<mainProfileName>main</mainProfileName>
+	<mainModPath>main</mainModPath>
+	<currentModPath>endless_flying</currentModPath>
 	<verboseLevel>3</verboseLevel>
 	<useSound>true</useSound>
 	<useConsole>true</useConsole>

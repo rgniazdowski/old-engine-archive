@@ -96,7 +96,7 @@ function testCallback1(event)
 --	SoundManager:setMusicVolume(0.5)
 	if(SoundManager:isPlaying(mus) == 0) then
 		io.write("MUSIC IS NOT PLAYING! GOING TO PLAY\n")
-	--	SoundManager:play(mus)
+--		SoundManager:play(mus)
 	else
 		io.write("MUSIC IS ALREADY PLAYING!\n")
 	end
@@ -116,11 +116,37 @@ EventManager.addEventCallback(FG_EVENT_TOUCH_TAP_FINISHED, testCallback1, 1)
 EventManager.addEventCallback(FG_EVENT_TOUCH_TAP_FINISHED, "testCallback2()", 0)
 EventManager.addEventCallback(FG_EVENT_RESOURCE_CREATED, resourceCallback)
 
-repeats = 3
+repeats = 4
+
+function gameStarted()
+	io.write(">> >> >> GAME STARTED\n");
+end
+
+function gamePaused()
+	io.write(">> >> >> GAME PAUSED\n");
+end
+
+function gameStopped()
+	io.write(">> >> >> GAME STOPPED\n");
+end
+
+EventManager.addEventCallback(FG_EVENT_GAME_STARTED, gameStarted, 0)
+EventManager.addEventCallback(FG_EVENT_GAME_PAUSED, gamePaused, 0)
+EventManager.addEventCallback(FG_EVENT_GAME_STOPPED, gameStopped, 0)
 
 function cyclicCallback()
 	repeats = repeats - 1
 	io.write("CYCLIC CALLBACK YOLO! every 1500ms: ", repeats, " more calls\n");
+
+	if(repeats == 3) then
+		GameLogic:startGameDefault();
+	end
+	if(repeats == 2) then
+		GameLogic:pauseGame();
+	end
+	if(repeats == 1) then
+		GameLogic:stopGame();
+	end
 end
 
 function timeoutCallback()
