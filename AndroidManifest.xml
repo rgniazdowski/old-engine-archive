@@ -38,7 +38,7 @@
     <!-- Required if using the sdcard (AndroidUseSdcard=1). -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <!-- Required by s3eContacts. -->
-    <uses-permission android:name="android.permission.READ_CONTACTS"/>
+	<!-- <uses-permission android:name="android.permission.READ_CONTACTS"/> -->
     <!-- Required by s3eCamera. -->
     <uses-permission android:name="android.permission.CAMERA"/>
     <!-- Required by s3eAndroidLVL.mkb to check licensing. -->

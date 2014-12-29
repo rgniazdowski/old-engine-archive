@@ -214,12 +214,11 @@ assets
 	textures/other/BackgroundCrate_1024x512.jpg    
 
     (data)
-    gui/frame.style.ini
-    gui/main.style.ini
-    gui/menu.gui.xml
-    gui/relbutton.style.ini
-    gui/test.style.ini
-    gui/yolo.style.ini
+    endless_flying/gui/frame.style.ini
+    endless_flying/gui/main.style.ini
+    endless_flying/gui/menu.gui.xml
+    endless_flying/gui/relbutton.style.ini
+	endless_flying/gui/contextmenu.style.ini
 
 	(data)
 	fonts/CaptureIt.res.ini
@@ -422,6 +421,7 @@ deployments
 	icon='icons/MainGenericIcon.jpg'
 	iphone-appid='com.flexigame.Infinium'
 	iphone-enable-4inch-retina='1'
+	iphone-show-status-bar='0'
 	iphone-icon='icons/ios_57x57.png'
 	iphone-icon-dir='icons'
 	iphone-icon-high-res='icons/ios_114x114.png'
@@ -429,12 +429,13 @@ deployments
 	iphone-icon-ipad-high-res='icons/ios_144x144.png'
 	iphone-info-plist='info_second.plist'
 	iphone-launch-dir='icons/launch'
+	iphone-skip-launch-generation=0
 	iphone-nosign=1
 	iphone-sign-for-distribution=0
-	iphone-skip-icon-generation='0'
-	iphone-splash='icons/splash/iPhone_splash.png'
-	iphone-splashscreen-landscape='icons/splash/iPhone_splash_landscape.png'
-	iphone-splashscreen-portrait='icons/splash/iPhone_splash_portrait.png'
+	iphone-skip-icon-generation=0
+	#iphone-splash='icons/splash/iPhone_splash.png'
+	#iphone-splashscreen-landscape='icons/splash/iPhone_splash_landscape.png'
+	#iphone-splashscreen-portrait='icons/splash/iPhone_splash_portrait.png'
 	name='Infinium'
 	provider='Radoslaw Gniazdowski'
 	splashscreen='icons/splash'
