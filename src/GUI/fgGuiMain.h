@@ -86,7 +86,7 @@ private:
     fgFunctionCallback *m_guiMouseCallback;
     /// Special callback for handling link events (menu navigation)
     fgGuiCallback *m_guiLinkCallback;
-    
+
     /// Next menu link (can be null if no menu change is required)
     fgGuiMenu *m_changeToMenu;
     /// Currently displayed menu screen
@@ -96,16 +96,16 @@ private:
     /// Whether there is some kind of shifting / animation
     /// If so - no state updating will occur
     fgBool m_isMenuChanging;
-    
+
     /// Special vector for holding gui callbacks
     /// It's used for easy free/deletion process
     guiCallbackVec m_guiCallbacks;
-    
+
     /// Special bounding box describing current screen/window
     /// 3D float/double type box is used for compatibility 
     /// with widget functions
     fgBoundingBox3Df m_screenBox;
-    
+
 protected:
     /**
      * 
@@ -128,7 +128,10 @@ public:
      * @param pEventMgr
      * @param pResourceMgr
      */
-    fgGuiMain(fgEventManager *pEventMgr = NULL, fgResourceManager *pResourceMgr = NULL);
+    fgGuiMain(const std::string& stylesPath,
+              const std::string& widgetsPath,
+              fgEventManager *pEventMgr = NULL,
+              fgResourceManager *pResourceMgr = NULL);
     /**
      * 
      */

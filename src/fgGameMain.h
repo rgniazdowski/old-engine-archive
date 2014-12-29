@@ -9,6 +9,7 @@
 
 #ifndef FG_INC_GAME_MAIN
     #define FG_INC_GAME_MAIN
+    #define FG_INC_GAME_MAIN_BLOCK
 
     #include "fgBuildConfig.h"
     #include "fgCommon.h"
@@ -34,11 +35,12 @@ class fgGameMain;
 FG_TAG_TEMPLATE_ID_AUTO(fgGameMain, FG_TAG_GAME_MAIN_NAME);
 typedef FG_TAG_GAME_MAIN fgGameMainTag;
 
-/*
+/**
  *
  */
 class fgGameMain {
 public:
+    ///
     typedef fgGameMainTag tag_type;
 
 public:
@@ -64,18 +66,29 @@ protected:
 
 public:
 
-    // This needs to be called first before everything else.
-    // Function creates and initializes subsystems
+    /**
+     * This needs to be called first before everything else.
+     * Function creates and initializes various subsystems
+     * @return  FG_TRUE if everything was initialized successfully, FG_FALSE otherwise
+     */
     fgBool initSubsystems(void);
 
-    // Loads main configuration files determining the next steps
-    // of game initialization
+    /**
+     *  Loads main configuration files determining the next steps of game initialization
+     * @return 
+     */
     fgBool loadConfiguration(void);
 
-    // Loads resources specified in configuration files (pre load phase ?)
+    /**
+     * Loads resources specified in configuration files (pre load phase)
+     * @return 
+     */
     fgBool loadResources(void);
 
-    // Unloads, frees and deletes all data from fgResourceManager subsystem
+    /**
+     * Unloads, frees and deletes all data from fgResourceManager subsystem
+     * @return 
+     */
     fgBool releaseResources(void);
 
     // This frees the subsystems - simply deletes all singleton instances 
@@ -93,7 +106,7 @@ public:
     // Begins the proper render of the created buffers
     void render(void);
 
-    // Update - all event handling, calling scripts, AI, game logic and etc
+    // Update - all event handling, calling scripts, AI, game logic and others
     void update(void);
     /**
      * 
@@ -196,44 +209,45 @@ protected:
 protected:
     /**
      * 
-     * @param eventMgr
+     * @param pEventMgr
      */
     void setEventManager(fgEventManager *pEventMgr);
 
 private:
-    /// 
+    /// Main GFX subsystem object
     fgGfxMain *m_gfxMain;
-    ///
+    /// Main GUI (User Interface))
     fgGuiMain *m_guiMain;
-    /// 
+    /// Main, hard settings
     fgSettings *m_settings;
-    /// 
+    /// Main config 
     fgConfig *m_mainConfig;
-    ///
+    /// Main Quality Manager
     fgQualityManager *m_qualityMgr;
-    ///
+    /// Main Resource Manager
     fgResourceManager *m_resourceMgr;
-    ///
+    /// Resource factory object - registers create() methods for Resource Objects
     fgResourceFactory *m_resourceFactory;
-    ///
+    /// Pointer to the external Event Manager
     fgEventManager *m_pEventMgr;
-    ///
+    /// 
     fgPointerInputReceiver *m_pointerInputReceiver;
-    ///
+    /// Joypad/Joystick controller object
     fgJoypadController *m_joypadController;
-    ///
+    /// Builtin script subsystem - it needs access to all main managers
     fgScriptSubsystem *m_scriptSubsystem;
-    ///
+    /// Sound manager - loading, playing sounds
     fgSFXManager *m_soundMgr;
-    ///
+    /// Inner game logic
     fg::game::Logic *m_logicMgr;
 
-    ///
+    /// Callback for Touch events
     fgFunctionCallback *m_gameTouchCallback;
-    ///
+    /// Callback for Mouse events
     fgFunctionCallback *m_gameMouseCallback;
-    ///
+    /// Special callback for game free look (controlling camera via touch/click)
     fgFunctionCallback *m_gameFreeLookCallback;
 };
 
+    #undef FG_INC_GAME_MAIN_BLOCK
 #endif /* FG_INC_GAME_MAIN */

@@ -460,7 +460,7 @@ private:
             g_debugProfiling->end("Game::render");
             g_debugProfiling->end("Program::loopStep");
             g_debugProfiling->updateHistory();
-        
+
             loopCount++;
             if(loopCount > 2) {
                 loopCount = 0;
@@ -661,11 +661,13 @@ int32_t fgMarmaladeHandlers::keyStateChangedHandler(void *systemData, void *user
  * Main function that is called when the program starts.
  */
 #if defined FG_USING_MARMALADE
+
 extern "C" int main() {
     IwUtilInit();
     int argc = 0;
     char *argv[] = {NULL, NULL};
 #else
+
 extern "C" int main(int argc, char *argv[]) {
 #endif /* FG_USING_MARMALADE */
     //IwMemBucketDebugSetBreakpoint(95281);
@@ -674,12 +676,11 @@ extern "C" int main(int argc, char *argv[]) {
     //IwMemBucketDebugSetBreakpoint(1551);
     FG_LOG_DEBUG("%s: Start up", FG_PACKAGE_FULL_TEXT);
     MainModule *mainModule = new MainModule(argc, argv);
-
     if(!mainModule->initProgram()) {
         mainModule->closeProgram();
         FG_LOG_DEBUG("Deleting main module...");
         delete mainModule;
-        FG_LOG::PrintError("Initialization failed, closing program with error");
+        FG_LOG_ERROR("Initialization failed, closing program with error");
 #if defined(FG_USING_MARMALADE)
         IwUtilTerminate();
         s3eDeviceExit(0);
@@ -709,5 +710,6 @@ extern "C" int main(int argc, char *argv[]) {
     s3eDeviceExit(0);
 #endif /* FG_USING_MARMALADE */
     FG_LOG_DEBUG("Successfully closed program");
+
     return 0;
 }

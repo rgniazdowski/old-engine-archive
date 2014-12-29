@@ -290,8 +290,18 @@ fgBool fgGameMain::initSubsystems(void) {
     if(!m_gfxMain->initGFX()) {
         return FG_FALSE;
     }
-    if(!m_guiMain)
-        m_guiMain = new fgGuiMain();
+    if(!m_guiMain) {
+        // Provide styles and widgets path
+        std::string mainModPath = m_settings->getMainModPath();
+        std::string modPath = m_settings->getCurrentModPath();
+        fgPath::join(mainModPath, mainModPath, "gui");
+        fgPath::join(modPath, modPath, "gui");
+        std::string guiPath;
+        guiPath.append(mainModPath);
+        guiPath.append(";");
+        guiPath.append(modPath);
+        m_guiMain = new fgGuiMain(guiPath, guiPath);
+    }
     FG_HardwareState->deviceYield(0); // #FIXME - device yield...
     int w = m_gfxMain->getMainWindow()->getWidth();
     int h = m_gfxMain->getMainWindow()->getHeight();
@@ -316,7 +326,7 @@ fgBool fgGameMain::initSubsystems(void) {
     FG_HardwareState->deviceYield(0); // #FIXME - device yield...
     if(!m_resourceMgr)
         m_resourceMgr = new fgResourceManager(m_resourceFactory, m_qualityMgr, m_pEventMgr);
-#ifdef FG_USING_MARMALADE
+#if defined(FG_USING_MARMALADE)
     m_resourceMgr->setMaximumMemory(s3eMemoryGetInt(S3E_MEMORY_FREE) - 1024 * 1024 * 10); // minus 10MB for the structures and other overheads
     m_resourceMgr->initialize();
 #else
@@ -336,7 +346,6 @@ fgBool fgGameMain::initSubsystems(void) {
     // Setup Game Logic external pointers
     if(m_logicMgr) {
         m_logicMgr->setEventManager(m_pEventMgr);
-
         // Initialize the Game Logic object
         if(!m_logicMgr->initialize()) {
             FG_LOG_ERROR("Logic: Main Game Logic module initialized with errors");
@@ -380,17 +389,26 @@ fgBool fgGameMain::initSubsystems(void) {
     return FG_TRUE;
 }
 
-/*
+/**
  * This loads main configuration files determining the next steps
  * of game initialization
+ * @return 
  */
 fgBool fgGameMain::loadConfiguration(void) {
     FG_LOG_DEBUG("Loading configuration...");
     if(!m_settings)
         m_settings = new fgSettings();
     if(!m_settings->load("settings.xml")) { // #FIXME - universal, cross solution - path management
-        FG_LOG::PrintError("Failed to load main settings ...");
+        FG_LOG_ERROR("Main: Failed to load main settings...");
         return FG_FALSE;
+    }
+    if(m_settings->getMainConfigPath().length()) {
+        if(!m_mainConfig)
+            m_mainConfig = new fgConfig();
+        if(!m_mainConfig->load(m_settings->getMainConfigPathStr())) {
+            FG_LOG_ERROR("Main: Failed to load main configuration file...");
+            return FG_FALSE;
+        }
     }
     return FG_TRUE;
 }
@@ -403,11 +421,10 @@ fgBool fgGameMain::loadResources(void) {
     FG_LOG_DEBUG("Loading resources...");
 #if defined(FG_USING_LUA_PLUS)
     LuaPlus::LuaState *state = m_scriptSubsystem->getLuaState();
-    if(state) {
-        if(state->DoFile("main.lua")) {
-            // An error occurred
-            if(state->GetTop() == 1)
-                std::cout << "An error occurred: " << state->CheckString(1) << std::endl;
+    if(m_scriptSubsystem->executeFile("main.lua") && state) {
+        // An error occurred
+        if(state->GetTop() == 1) {
+            FG_LOG_ERROR("Main: Error occurred while running script: '%s'", state->CheckString(1));
         }
     }
 #endif

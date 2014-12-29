@@ -43,10 +43,15 @@
 
 #include "fgDebugConfig.h"
 
-/*
- *
+/**
+ * 
+ * @param eventMgr
+ * @param resourceMgr
  */
-fgGuiMain::fgGuiMain(fgEventManager *eventMgr, fgResourceManager *resourceMgr) :
+fgGuiMain::fgGuiMain(const std::string& stylesPath,
+                     const std::string& widgetsPath,
+                     fgEventManager *eventMgr,
+                     fgResourceManager *resourceMgr) :
 m_styleMgr(NULL),
 m_widgetMgr(NULL),
 m_widgetFactory(NULL),
@@ -74,8 +79,14 @@ m_screenBox() {
         registerGuiCallbacks();
 
     // #FIXME - styles/widgets path - package/zip #ZIP #MOD
-    m_styleMgr->setStylesPath("gui");
-    m_widgetMgr->setWidgetsPath("gui");
+    if(stylesPath.length())
+        m_styleMgr->setStylesPath(stylesPath);
+    else
+        m_styleMgr->setStylesPath("gui");
+    if(widgetsPath.length())
+        m_widgetMgr->setWidgetsPath(widgetsPath);
+    else
+        m_widgetMgr->setWidgetsPath(widgetsPath);
 
     m_guiCallbacks.reserve(8);
 
@@ -87,7 +98,7 @@ m_screenBox() {
     m_console->setVisible(FG_FALSE); // #FIXME :o
 }
 
-/*
+/**
  *
  */
 fgGuiMain::~fgGuiMain() {
@@ -104,6 +115,7 @@ void fgGuiMain::clear(void) {
 
 /**
  * 
+ * @return 
  */
 fgBool fgGuiMain::destroy(void) {
     unregisterGuiCallbacks();
@@ -160,6 +172,7 @@ fgBool fgGuiMain::destroy(void) {
 
 /**
  * 
+ * @return 
  */
 fgBool fgGuiMain::initialize(void) {
     if(m_init)
@@ -256,7 +269,7 @@ void fgGuiMain::registerGuiCallbacks(void) {
     m_pEventMgr->addEventCallback(FG_EVENT_MOUSE_MOTION, m_guiMouseCallback);
 }
 
-/*
+/**
  *
  */
 void fgGuiMain::unregisterGuiCallbacks(void) {

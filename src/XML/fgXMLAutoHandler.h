@@ -97,7 +97,9 @@ template <> struct fgXMLAutoCharacters<_type> { \
 	typedef _type type; \
 	static void characters(const char ch[], int start, int length, fgXMLNodeType nodeType, type *_target, fgXMLElement *_elemPtr) { \
 		if(!_target || !_elemPtr || !length) return; \
-		const char  *localName = _elemPtr->Value()
+		const char  *localName = _elemPtr->Value(); \
+                if(!localName) \
+                    return
 
     #define FG_XML_AUTO_TEMPLATE_CHARACTERS_CHECK_NAME(_elemType, _target_member, _name) \
 	do { \

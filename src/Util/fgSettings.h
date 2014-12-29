@@ -9,6 +9,7 @@
 
 #ifndef FG_INC_SETTINGS
     #define FG_INC_SETTINGS
+    #define FG_INC_SETTINGS_BLOCK
 
     #include "fgTypes.h"
     #include "XML/fgXMLParser.h"
@@ -25,26 +26,44 @@ public:
      *
      */
     struct settingsData {
-        std::string defaultDataPath; // Path to the data folder
-        std::string defaultLogPath; // Path to the log folder
-        std::string mainConfigPath; // Path to the main configuration file
-        std::string programTitle; // Program title
-        std::string defaultProfileName; // Default profile name
-        std::string mainProfileName; // Main profile name
+        /// Path to the data folder
+        std::string defaultDataPath;
+        /// Path to the log folder
+        std::string defaultLogPath;
+        /// Path to the main configuration file
+        std::string mainConfigPath;
+        /// Program title
+        std::string programTitle;
+        /// Default profile name
+        std::string defaultProfileName;
+        /// Main mod path (main modification folder - defaults to main in most cases)
+        std::string mainModPath;
+        /// Current mod path (modification folder name)
+        std::string currentModPath; 
         //std::string lastExecution;		// Last run/execution time in readable format (string/text)
         //int	videoModeID;				// Active video mode ID
-        int verboseLevel; // Verbose level
+        /// Verbose level
+        int verboseLevel;
         //long lastTimestamp;				// Last run timestamp
-        fgBool useSound; // Will be sound used?
-        fgBool useConsole; // Will be console used (GUI)?
-        fgBool useNetwork; // Will be network used?
+        /// Will sound be used?
+        fgBool useSound;
+        /// Will console be used (GUI)?
+        fgBool useConsole;
+        /// Will network be used?
+        fgBool useNetwork; 
         //fgBool cleanExit;				// Did the application closed normally last time?
-        fgBool debugMode; // Is debug mode on?
+        /// Is debug mode on?
+        fgBool debugMode;
 
-        // 
+        /**
+         * 
+         */ 
         settingsData() :
+        defaultProfileName("default"),
+        mainModPath("main"),
+        currentModPath("mod"),
         //videoModeID(-1),
-        verboseLevel(0),
+        verboseLevel(FG_VERBOSE_LEVEL),
         //lastTimestamp(0L),
         useSound(FG_FALSE),
         useConsole(FG_FALSE),
@@ -52,7 +71,9 @@ public:
         //cleanExit(FG_FALSE),
         debugMode(FG_FALSE) { }
 
-        // 
+        /**
+         * 
+         */ 
         void clear(void) { }
     };
 
@@ -99,7 +120,6 @@ public:
     const char *getDefaultDataPathStr(void) const {
         return m_settings.defaultDataPath.c_str();
     }
-    
     /**
      * 
      * @param path
@@ -131,60 +151,119 @@ public:
             m_settings.defaultLogPath = path;
     }
 
-    // 
+    /**
+     * 
+     * @return 
+     */ 
     std::string &getMainConfigPath(void) {
         return m_settings.mainConfigPath;
     }
-    // 
+    /**
+     * 
+     * @return 
+     */ 
     const char *getMainConfigPathStr(void) const {
         return m_settings.mainConfigPath.c_str();
     }
-    // 
+    /**
+     * 
+     * @param path
+     */ 
     void setMainConfigPath(const char *path) {
         if(path)
             m_settings.mainConfigPath = path;
     }
 
-    // 
+    /**
+     * 
+     * @return 
+     */
     std::string &getProgramTitle(void) {
         return m_settings.programTitle;
     }
-    // 
+    /**
+     * 
+     * @return 
+     */ 
     const char *getProgramTitleStr(void) const {
         return m_settings.programTitle.c_str();
     }
-    // 
+    /**
+     * 
+     * @param path
+     */ 
     void setProgramTitle(const char *path) {
         if(path)
             m_settings.programTitle = path;
     }
 
-    // 
+    /**
+     * 
+     * @return 
+     */ 
     std::string &getDefaultProfileName(void) {
         return m_settings.defaultProfileName;
     }
-    // 
+    /**
+     * 
+     * @return 
+     */ 
     const char *getDefaultProfileNameStr(void) const {
         return m_settings.defaultProfileName.c_str();
     }
-    // 
+    /**
+     * 
+     * @param path
+     */ 
     void setDefaultProfileName(const char *path) {
         if(path)
             m_settings.defaultProfileName = path;
     }
 
-    // 
-    std::string &getMainProfileName(void) {
-        return m_settings.mainProfileName;
+    /**
+     * 
+     * @return 
+     */
+    std::string &getMainModPath(void) {
+        return m_settings.mainModPath;
     }
-    // 
-    const char *getMainProfileNameStr(void) const {
-        return m_settings.mainProfileName.c_str();
+    /**
+     * 
+     * @return 
+     */
+    const char *getMainModPathStr(void) const {
+        return m_settings.mainModPath.c_str();
     }
-    // 
-    void setMainProfileName(const char *path) {
+    /**
+     * 
+     * @param path
+     */
+    void setMainModPath(const char *path) {
         if(path)
-            m_settings.mainProfileName = path;
+            m_settings.mainModPath = path;
+    }
+    
+    /**
+     * 
+     * @return 
+     */
+    std::string &getCurrentModPath(void) {
+        return m_settings.currentModPath;
+    }
+    /**
+     * 
+     * @return 
+     */
+    const char *getCurrentModPathStr(void) const {
+        return m_settings.currentModPath.c_str();
+    }
+    /**
+     * 
+     * @param path
+     */
+    void setCurrentModPath(const char *path) {
+        if(path)
+            m_settings.currentModPath = path;
     }
     #if 0
     // 
@@ -210,11 +289,17 @@ public:
         m_settings.videoModeID = modeID;
     }
     #endif
-    // 
+    /**
+     * 
+     * @return 
+     */
     int getVerboseLevel(void) const {
         return m_settings.verboseLevel;
     }
-    // 
+    /**
+     * 
+     * @param verboseLevel
+     */
     void setVerboseLevel(int verboseLevel) {
         m_settings.verboseLevel = verboseLevel;
     }
@@ -228,29 +313,47 @@ public:
         m_settings.lastTimestamp = timestamp;
     }
     #endif
-    // 
+    /**
+     * 
+     * @return 
+     */
     fgBool isUseSound(void) const {
         return m_settings.useSound;
     }
-    // 
+    /**
+     * 
+     * @param toggle
+     */
     void setUseSound(fgBool toggle) {
         m_settings.useSound = toggle;
     }
 
-    // 
+    /**
+     * 
+     * @return 
+     */
     fgBool isUseConsole(void) const {
         return m_settings.useConsole;
     }
-    // 
+    /**
+     * 
+     * @param toggle
+     */
     void setUseConsole(fgBool toggle) {
         m_settings.useConsole = toggle;
     }
 
-    // 
+    /**
+     * 
+     * @return 
+     */ 
     fgBool isUseNetwork(void) const {
         return m_settings.useNetwork;
     }
-    // 
+    /**
+     * 
+     * @param toggle
+     */
     void setUseNetwork(fgBool toggle) {
         m_settings.useNetwork = toggle;
     }
@@ -264,11 +367,17 @@ public:
         m_settings.cleanExit = toggle;
     }
     #endif
-    // 
+    /**
+     * 
+     * @return 
+     */
     fgBool isDebugMode(void) const {
         return m_settings.debugMode;
     }
-    // 
+    /**
+     * 
+     * @param toggle
+     */
     void setDebugMode(fgBool toggle) {
         m_settings.debugMode = toggle;
     }
@@ -285,7 +394,8 @@ FG_XML_AUTO_TEMPLATE_ELEMENT_CHECK_NAME(const char *, defaultLogPath, "defaultLo
 FG_XML_AUTO_TEMPLATE_ELEMENT_CHECK_NAME(const char *, mainConfigPath, "mainConfigPath");
 FG_XML_AUTO_TEMPLATE_ELEMENT_CHECK_NAME(const char *, programTitle, "programTitle");
 FG_XML_AUTO_TEMPLATE_ELEMENT_CHECK_NAME(const char *, defaultProfileName, "defaultProfileName");
-FG_XML_AUTO_TEMPLATE_ELEMENT_CHECK_NAME(const char *, mainProfileName, "mainProfileName");
+FG_XML_AUTO_TEMPLATE_ELEMENT_CHECK_NAME(const char *, mainModPath, "mainModPath");
+FG_XML_AUTO_TEMPLATE_ELEMENT_CHECK_NAME(const char *, currentModPath, "currentModPath");
 //FG_XML_AUTO_TEMPLATE_ELEMENT_CHECK_NAME(const char *, lastExecution,		"lastExecution");
 //FG_XML_AUTO_TEMPLATE_ELEMENT_CHECK_NAME(int,		videoModeID,		"videoModeID");
 FG_XML_AUTO_TEMPLATE_ELEMENT_CHECK_NAME(int, verboseLevel, "verboseLevel");
@@ -305,4 +415,5 @@ FG_XML_AUTO_TEMPLATE_ATTRIBUTE_BEGIN(fgSettings::settingsData);
 FG_XML_AUTO_TEMPLATE_ATTRIBUTE_EMPTY
 FG_XML_AUTO_TEMPLATE_ATTRIBUTE_END();
 
+    #undef FG_INC_SETTINGS_BLOCK
 #endif /* FG_INC_SETTINGS */

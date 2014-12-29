@@ -59,7 +59,7 @@ fgBool fgGuiStyleManager::initialize(void) {
         return FG_FALSE;
     }
     // Will now preload all required styles
-    fgDirent stylesDir;
+    fgDirent stylesDir; 
     const char *filename;
     fgBool status = stylesDir.readDirectory(m_stylesPath, FG_TRUE, FG_TRUE);
     if(!status) {
