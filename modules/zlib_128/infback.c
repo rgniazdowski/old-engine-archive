@@ -14,6 +14,7 @@
 #include "inftrees.h"
 #include "inflate.h"
 #include "inffast.h"
+#include <string.h>
 
 /* function prototypes */
 local void fixedtables OF((struct inflate_state FAR *state));
@@ -33,7 +34,7 @@ const char *version;
 int stream_size;
 {
     struct inflate_state FAR *state;
-
+    
     if (version == Z_NULL || version[0] != ZLIB_VERSION[0] ||
         stream_size != (int)(sizeof(z_stream)))
         return Z_VERSION_ERROR;

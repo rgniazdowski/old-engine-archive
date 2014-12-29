@@ -49,6 +49,12 @@ _x > _y ? _x : _y; })
 #endif
 #endif
 
+#if defined(__S3E__)
+#ifndef min
+#define min(_x,_y) (  _x < _y ? _x : _y )
+#endif
+#endif
+
 typedef struct ourstream_s {
   char readBuffer[IOBUF_BUFFERSIZE];
   uInt readBufferLength;
@@ -95,7 +101,7 @@ voidpf fopen_buf_internal_func (opaque, stream, number_disk, mode)
     memset(streamio, 0, sizeof(ourstream_t));
     streamio->stream = stream;
     print_buf(opaque, streamio, "open [num %d mode %d]\n", number_disk, mode);
-    return streamio;
+    return (voidpf)streamio;
 }
 
 voidpf ZCALLBACK fopen_buf_func (opaque, filename, mode)
@@ -126,7 +132,7 @@ voidpf ZCALLBACK fopendisk_buf_func (opaque, stream_cd, number_disk, mode)
 {
     ourbuffer_t *bufio = (ourbuffer_t *)opaque;
     ourstream_t *streamio = (ourstream_t *)stream_cd;
-    voidpf *stream = bufio->filefunc.zopendisk_file(bufio->filefunc.opaque, streamio->stream, number_disk, mode);
+    voidpf stream = bufio->filefunc.zopendisk_file(bufio->filefunc.opaque, streamio->stream, number_disk, mode);
     return fopen_buf_internal_func(opaque, stream, number_disk, mode);
 }
 
@@ -494,7 +500,7 @@ void fill_buffer_filefunc (pzlib_filefunc_def, ourbuf)
     pzlib_filefunc_def->zseek_file = fseek_buf_func;
     pzlib_filefunc_def->zclose_file = fclose_buf_func;
     pzlib_filefunc_def->zerror_file = ferror_buf_func;
-    pzlib_filefunc_def->opaque = ourbuf;
+    pzlib_filefunc_def->opaque = (voidpf)ourbuf;
 }
 
 void fill_buffer_filefunc64 (pzlib_filefunc_def, ourbuf)
@@ -509,5 +515,5 @@ void fill_buffer_filefunc64 (pzlib_filefunc_def, ourbuf)
     pzlib_filefunc_def->zseek64_file = fseek64_buf_func;
     pzlib_filefunc_def->zclose_file = fclose_buf_func;
     pzlib_filefunc_def->zerror_file = ferror_buf_func;
-    pzlib_filefunc_def->opaque = ourbuf;
+    pzlib_filefunc_def->opaque = (voidpf)ourbuf;
 }

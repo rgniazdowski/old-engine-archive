@@ -56,7 +56,7 @@ voidpf ZCALLBACK fopen_mem_func (opaque, filename, mode)
 
     mem->cur_offset = 0;
 
-    return mem;
+    return (voidpf)mem;
 }
 
 voidpf ZCALLBACK fopendisk_mem_func (opaque, stream, number_disk, mode)
@@ -188,5 +188,5 @@ void fill_memory_filefunc (pzlib_filefunc_def, ourmem)
     pzlib_filefunc_def->zseek_file = fseek_mem_func;
     pzlib_filefunc_def->zclose_file = fclose_mem_func;
     pzlib_filefunc_def->zerror_file = ferror_mem_func;
-    pzlib_filefunc_def->opaque = ourmem;
+    pzlib_filefunc_def->opaque = (voidpf)ourmem;
 }

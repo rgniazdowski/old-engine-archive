@@ -78,72 +78,72 @@ ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libMiniZipMaster_NB.${CND_DLIB_EXT}: 
 ${OBJECTDIR}/_ext/904282815/aescrypt.o: ../../../modules/zlib_128/contrib/minizip/aes/aescrypt.c 
 	${MKDIR} -p ${OBJECTDIR}/_ext/904282815
 	${RM} "$@.d"
-	$(COMPILE.c) -g -DHAVE_AES -DFG_DEBUG -D_DEBUG -DDEBUG -std=c11 -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/904282815/aescrypt.o ../../../modules/zlib_128/contrib/minizip/aes/aescrypt.c
+	$(COMPILE.c) -g -DDEBUG -DFG_DEBUG -DHAVE_AES -D_DEBUG -std=c11 -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/904282815/aescrypt.o ../../../modules/zlib_128/contrib/minizip/aes/aescrypt.c
 
 ${OBJECTDIR}/_ext/904282815/aeskey.o: ../../../modules/zlib_128/contrib/minizip/aes/aeskey.c 
 	${MKDIR} -p ${OBJECTDIR}/_ext/904282815
 	${RM} "$@.d"
-	$(COMPILE.c) -g -DHAVE_AES -DFG_DEBUG -D_DEBUG -DDEBUG -std=c11 -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/904282815/aeskey.o ../../../modules/zlib_128/contrib/minizip/aes/aeskey.c
+	$(COMPILE.c) -g -DDEBUG -DFG_DEBUG -DHAVE_AES -D_DEBUG -std=c11 -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/904282815/aeskey.o ../../../modules/zlib_128/contrib/minizip/aes/aeskey.c
 
 ${OBJECTDIR}/_ext/904282815/aestab.o: ../../../modules/zlib_128/contrib/minizip/aes/aestab.c 
 	${MKDIR} -p ${OBJECTDIR}/_ext/904282815
 	${RM} "$@.d"
-	$(COMPILE.c) -g -DHAVE_AES -DFG_DEBUG -D_DEBUG -DDEBUG -std=c11 -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/904282815/aestab.o ../../../modules/zlib_128/contrib/minizip/aes/aestab.c
+	$(COMPILE.c) -g -DDEBUG -DFG_DEBUG -DHAVE_AES -D_DEBUG -std=c11 -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/904282815/aestab.o ../../../modules/zlib_128/contrib/minizip/aes/aestab.c
 
 ${OBJECTDIR}/_ext/904282815/entropy.o: ../../../modules/zlib_128/contrib/minizip/aes/entropy.c 
 	${MKDIR} -p ${OBJECTDIR}/_ext/904282815
 	${RM} "$@.d"
-	$(COMPILE.c) -g -DHAVE_AES -DFG_DEBUG -D_DEBUG -DDEBUG -std=c11 -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/904282815/entropy.o ../../../modules/zlib_128/contrib/minizip/aes/entropy.c
+	$(COMPILE.c) -g -DDEBUG -DFG_DEBUG -DHAVE_AES -D_DEBUG -std=c11 -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/904282815/entropy.o ../../../modules/zlib_128/contrib/minizip/aes/entropy.c
 
 ${OBJECTDIR}/_ext/904282815/fileenc.o: ../../../modules/zlib_128/contrib/minizip/aes/fileenc.c 
 	${MKDIR} -p ${OBJECTDIR}/_ext/904282815
 	${RM} "$@.d"
-	$(COMPILE.c) -g -DHAVE_AES -DFG_DEBUG -D_DEBUG -DDEBUG -std=c11 -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/904282815/fileenc.o ../../../modules/zlib_128/contrib/minizip/aes/fileenc.c
+	$(COMPILE.c) -g -DDEBUG -DFG_DEBUG -DHAVE_AES -D_DEBUG -std=c11 -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/904282815/fileenc.o ../../../modules/zlib_128/contrib/minizip/aes/fileenc.c
 
 ${OBJECTDIR}/_ext/904282815/hmac.o: ../../../modules/zlib_128/contrib/minizip/aes/hmac.c 
 	${MKDIR} -p ${OBJECTDIR}/_ext/904282815
 	${RM} "$@.d"
-	$(COMPILE.c) -g -DHAVE_AES -DFG_DEBUG -D_DEBUG -DDEBUG -std=c11 -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/904282815/hmac.o ../../../modules/zlib_128/contrib/minizip/aes/hmac.c
+	$(COMPILE.c) -g -DDEBUG -DFG_DEBUG -DHAVE_AES -D_DEBUG -std=c11 -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/904282815/hmac.o ../../../modules/zlib_128/contrib/minizip/aes/hmac.c
 
 ${OBJECTDIR}/_ext/904282815/prng.o: ../../../modules/zlib_128/contrib/minizip/aes/prng.c 
 	${MKDIR} -p ${OBJECTDIR}/_ext/904282815
 	${RM} "$@.d"
-	$(COMPILE.c) -g -DHAVE_AES -DFG_DEBUG -D_DEBUG -DDEBUG -std=c11 -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/904282815/prng.o ../../../modules/zlib_128/contrib/minizip/aes/prng.c
+	$(COMPILE.c) -g -DDEBUG -DFG_DEBUG -DHAVE_AES -D_DEBUG -std=c11 -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/904282815/prng.o ../../../modules/zlib_128/contrib/minizip/aes/prng.c
 
 ${OBJECTDIR}/_ext/904282815/pwd2key.o: ../../../modules/zlib_128/contrib/minizip/aes/pwd2key.c 
 	${MKDIR} -p ${OBJECTDIR}/_ext/904282815
 	${RM} "$@.d"
-	$(COMPILE.c) -g -DHAVE_AES -DFG_DEBUG -D_DEBUG -DDEBUG -std=c11 -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/904282815/pwd2key.o ../../../modules/zlib_128/contrib/minizip/aes/pwd2key.c
+	$(COMPILE.c) -g -DDEBUG -DFG_DEBUG -DHAVE_AES -D_DEBUG -std=c11 -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/904282815/pwd2key.o ../../../modules/zlib_128/contrib/minizip/aes/pwd2key.c
 
 ${OBJECTDIR}/_ext/904282815/sha1.o: ../../../modules/zlib_128/contrib/minizip/aes/sha1.c 
 	${MKDIR} -p ${OBJECTDIR}/_ext/904282815
 	${RM} "$@.d"
-	$(COMPILE.c) -g -DHAVE_AES -DFG_DEBUG -D_DEBUG -DDEBUG -std=c11 -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/904282815/sha1.o ../../../modules/zlib_128/contrib/minizip/aes/sha1.c
+	$(COMPILE.c) -g -DDEBUG -DFG_DEBUG -DHAVE_AES -D_DEBUG -std=c11 -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/904282815/sha1.o ../../../modules/zlib_128/contrib/minizip/aes/sha1.c
 
 ${OBJECTDIR}/_ext/1455455233/ioapi.o: ../../../modules/zlib_128/contrib/minizip/ioapi.c 
 	${MKDIR} -p ${OBJECTDIR}/_ext/1455455233
 	${RM} "$@.d"
-	$(COMPILE.c) -g -DHAVE_AES -DFG_DEBUG -D_DEBUG -DDEBUG -std=c11 -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1455455233/ioapi.o ../../../modules/zlib_128/contrib/minizip/ioapi.c
+	$(COMPILE.c) -g -DDEBUG -DFG_DEBUG -DHAVE_AES -D_DEBUG -std=c11 -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1455455233/ioapi.o ../../../modules/zlib_128/contrib/minizip/ioapi.c
 
 ${OBJECTDIR}/_ext/1455455233/ioapi_buf.o: ../../../modules/zlib_128/contrib/minizip/ioapi_buf.c 
 	${MKDIR} -p ${OBJECTDIR}/_ext/1455455233
 	${RM} "$@.d"
-	$(COMPILE.c) -g -DHAVE_AES -DFG_DEBUG -D_DEBUG -DDEBUG -std=c11 -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1455455233/ioapi_buf.o ../../../modules/zlib_128/contrib/minizip/ioapi_buf.c
+	$(COMPILE.c) -g -DDEBUG -DFG_DEBUG -DHAVE_AES -D_DEBUG -std=c11 -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1455455233/ioapi_buf.o ../../../modules/zlib_128/contrib/minizip/ioapi_buf.c
 
 ${OBJECTDIR}/_ext/1455455233/ioapi_mem.o: ../../../modules/zlib_128/contrib/minizip/ioapi_mem.c 
 	${MKDIR} -p ${OBJECTDIR}/_ext/1455455233
 	${RM} "$@.d"
-	$(COMPILE.c) -g -DHAVE_AES -DFG_DEBUG -D_DEBUG -DDEBUG -std=c11 -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1455455233/ioapi_mem.o ../../../modules/zlib_128/contrib/minizip/ioapi_mem.c
+	$(COMPILE.c) -g -DDEBUG -DFG_DEBUG -DHAVE_AES -D_DEBUG -std=c11 -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1455455233/ioapi_mem.o ../../../modules/zlib_128/contrib/minizip/ioapi_mem.c
 
 ${OBJECTDIR}/_ext/1455455233/unzip.o: ../../../modules/zlib_128/contrib/minizip/unzip.c 
 	${MKDIR} -p ${OBJECTDIR}/_ext/1455455233
 	${RM} "$@.d"
-	$(COMPILE.c) -g -DHAVE_AES -DFG_DEBUG -D_DEBUG -DDEBUG -std=c11 -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1455455233/unzip.o ../../../modules/zlib_128/contrib/minizip/unzip.c
+	$(COMPILE.c) -g -DDEBUG -DFG_DEBUG -DHAVE_AES -D_DEBUG -std=c11 -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1455455233/unzip.o ../../../modules/zlib_128/contrib/minizip/unzip.c
 
 ${OBJECTDIR}/_ext/1455455233/zip.o: ../../../modules/zlib_128/contrib/minizip/zip.c 
 	${MKDIR} -p ${OBJECTDIR}/_ext/1455455233
 	${RM} "$@.d"
-	$(COMPILE.c) -g -DHAVE_AES -DFG_DEBUG -D_DEBUG -DDEBUG -std=c11 -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1455455233/zip.o ../../../modules/zlib_128/contrib/minizip/zip.c
+	$(COMPILE.c) -g -DDEBUG -DFG_DEBUG -DHAVE_AES -D_DEBUG -std=c11 -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1455455233/zip.o ../../../modules/zlib_128/contrib/minizip/zip.c
 
 # Subprojects
 .build-subprojects:

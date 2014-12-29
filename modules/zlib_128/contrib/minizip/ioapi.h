@@ -31,7 +31,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "zlib.h"
+#include "../../zlib.h"
 
 #if defined(USE_FILE32API)
 #  define fopen64 fopen
@@ -149,8 +149,8 @@ typedef struct zlib_filefunc64_32_def_s
     seek_file_func      zseek32_file;
 } zlib_filefunc64_32_def;
 
-#define ZREAD64(filefunc,filestream,buf,size)       ((*((filefunc).zfile_func64.zread_file))        ((filefunc).zfile_func64.opaque,filestream,buf,size))
-#define ZWRITE64(filefunc,filestream,buf,size)      ((*((filefunc).zfile_func64.zwrite_file))       ((filefunc).zfile_func64.opaque,filestream,buf,size))
+#define ZREAD64(filefunc,filestream,buf,size)       ((*((filefunc).zfile_func64.zread_file))        ((filefunc).zfile_func64.opaque,filestream,(void *)(buf),(uLong)(size)))
+#define ZWRITE64(filefunc,filestream,buf,size)      ((*((filefunc).zfile_func64.zwrite_file))       ((filefunc).zfile_func64.opaque,filestream,(const void *)(buf),(uLong)(size)))
 /*#define ZTELL64(filefunc,filestream)                ((*((filefunc).ztell64_file))                   ((filefunc).opaque,filestream))*/
 /*#define ZSEEK64(filefunc,filestream,pos,mode)       ((*((filefunc).zseek64_file))                   ((filefunc).opaque,filestream,pos,mode))*/
 #define ZCLOSE64(filefunc,filestream)               ((*((filefunc).zfile_func64.zclose_file))       ((filefunc).zfile_func64.opaque,filestream))
@@ -166,7 +166,7 @@ void fill_zlib_filefunc64_32_def_from_filefunc32 OF((zlib_filefunc64_32_def* p_f
 #define ZOPEN64(filefunc,filename,mode)             (call_zopen64((&(filefunc)),(filename),(mode)))
 #define ZOPENDISK64(filefunc,filestream,diskn,mode) (call_zopendisk64((&(filefunc)),(filestream),(diskn),(mode)))
 #define ZTELL64(filefunc,filestream)                (call_ztell64((&(filefunc)),(filestream)))
-#define ZSEEK64(filefunc,filestream,pos,mode)       (call_zseek64((&(filefunc)),(filestream),(pos),(mode)))
+#define ZSEEK64(filefunc,filestream,pos,mode)       (call_zseek64((&(filefunc)),((voidpf)(filestream)),((ZPOS64_T)(pos)),((int)(mode))))
 
 #ifdef __cplusplus
 }

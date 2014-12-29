@@ -1,0 +1,4 @@
+HAVE_AES Whether should use advanced encryption methods (AES) - support for new format of password protected Zip files
+HAVE_MEMCPY Whether should use standard memory functions (memset, memcpy)
+Z_PREFIX Unique prefix for all types and library functions will be defined, The "standard" zlib should be compiled without it.
+HAS_STDINT_H Force include stdint.h and use uint64_t definition

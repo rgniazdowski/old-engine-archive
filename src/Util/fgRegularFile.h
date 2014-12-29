@@ -69,7 +69,7 @@ namespace fg {
         public:
             typedef fg::util::base::File base_type;
             typedef RegularFileTag tag_type;
-            typedef typename fg::util::base::File::Mode Mode;
+            typedef fg::util::base::File::Mode Mode;
 
         protected:
             /// C standard file handle

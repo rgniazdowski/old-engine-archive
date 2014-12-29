@@ -9,10 +9,13 @@ subproject zlib_128
 #    url="http://source.madewithmarmalade.com/upstream/zlib-1.2.3.tar.gz"
 #}
 
-#includepath "."
+includepath "."
 
 files
 {
+	[docs]
+	"doc/zlib_128.defines.txt"
+
     [h]
     "*.h"
 
@@ -34,10 +37,17 @@ files
 	[minizip/h]
 	"*.h"
 
-	[minizip/h]
+	[minizip/aes]
 	("contrib/minizip/aes")
 	"*.c"
 
+}
+
+defines {
+	HAVE_AES
+	HAVE_MEMCPY
+	Z_PREFIX
+	HAS_STDINT_H
 }
 
 # TODO: Remove module_options once build machines are set to use RVCT 3.0 by default.

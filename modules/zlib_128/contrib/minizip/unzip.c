@@ -24,7 +24,7 @@
 #  define NOUNCRYPT
 #endif*/
 
-#include "zlib.h"
+#include "../../zlib.h"
 #include "unzip.h"
 
 #ifdef STDC
@@ -303,14 +303,14 @@ local ZPOS64_T unz64local_SearchCentralDir(const zlib_filefunc64_32_def* pzlib_f
     buf = (unsigned char*)ALLOC(BUFREADCOMMENT + 4);
     if (buf == NULL)
         return 0;
-
-    if (ZSEEK64(*pzlib_filefunc_def, filestream, 0, ZLIB_FILEFUNC_SEEK_END) != 0)
+    //call_zseek64(pzlib_filefunc_def, (voidpf)filestream, (ZPOS64_T)0UL, 2);
+    if (ZSEEK64(*pzlib_filefunc_def, (voidpf)filestream, (ZPOS64_T)0UL, (int)ZLIB_FILEFUNC_SEEK_END) != 0)
     {
         TRYFREE(buf);
         return 0;
     }
     
-    file_size = ZTELL64(*pzlib_filefunc_def, filestream);
+    file_size = ZTELL64(*pzlib_filefunc_def, (voidpf)filestream);
 
     if (max_back > file_size)
         max_back = file_size;
@@ -326,9 +326,9 @@ local ZPOS64_T unz64local_SearchCentralDir(const zlib_filefunc64_32_def* pzlib_f
         read_size = ((BUFREADCOMMENT + 4) < (file_size - read_pos)) ?
                      (BUFREADCOMMENT + 4) : (uLong)(file_size - read_pos);
 
-        if (ZSEEK64(*pzlib_filefunc_def, filestream, read_pos, ZLIB_FILEFUNC_SEEK_SET) != 0)
+        if (ZSEEK64(*pzlib_filefunc_def, filestream, (ZPOS64_T)read_pos, (int)ZLIB_FILEFUNC_SEEK_SET) != 0)
             break;
-        if (ZREAD64(*pzlib_filefunc_def, filestream, buf, read_size) != read_size)
+        if (ZREAD64(*pzlib_filefunc_def, filestream, buf, (uLong)read_size) != read_size)
             break;
 
         for (i = (int)read_size-3; (i--) > 0;)
@@ -804,7 +804,7 @@ local int unz64local_GetCurrentFileInfoInternal(unzFile file, unz_file_info64 *p
 
         if (lSeek != 0)
         {
-            if (ZSEEK64(s->z_filefunc, s->filestream_with_CD, lSeek, ZLIB_FILEFUNC_SEEK_CUR) == 0)
+            if (ZSEEK64(s->z_filefunc, s->filestream_with_CD, (ZPOS64_T)lSeek, (int)ZLIB_FILEFUNC_SEEK_CUR) == 0)
                 lSeek=0;
             else
                 err = UNZ_ERRNO;
@@ -822,7 +822,7 @@ local int unz64local_GetCurrentFileInfoInternal(unzFile file, unz_file_info64 *p
     {
         if (lSeek != 0)
         {
-            if (ZSEEK64(s->z_filefunc, s->filestream_with_CD, lSeek, ZLIB_FILEFUNC_SEEK_CUR) == 0)
+            if (ZSEEK64(s->z_filefunc, s->filestream_with_CD, (ZPOS64_T)lSeek, ZLIB_FILEFUNC_SEEK_CUR) == 0)
                 lSeek=0;
             else
                 err = UNZ_ERRNO;
@@ -1259,7 +1259,7 @@ extern int ZEXPORT unzOpenCurrentFile3(unzFile file, int* method, int* level, in
             if (ZREAD64(s->z_filefunc, s->filestream, passverify, AES_PWVERIFYSIZE) != AES_PWVERIFYSIZE)
                 return UNZ_INTERNALERROR;
 
-            fcrypt_init(s->cur_file_info_internal.aes_encryption_mode, password, strlen(password), saltvalue,
+            fcrypt_init(s->cur_file_info_internal.aes_encryption_mode, (const unsigned char *)password, strlen(password), saltvalue,
                 passverify, &s->pfile_in_zip_read->aes_ctx);
 
             pfile_in_zip_read_info->rest_read_compressed -= saltlength + AES_PWVERIFYSIZE;

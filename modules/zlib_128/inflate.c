@@ -84,6 +84,7 @@
 #include "inftrees.h"
 #include "inflate.h"
 #include "inffast.h"
+#include <string.h>
 
 #ifdef MAKEFIXED
 #  ifndef BUILDFIXED

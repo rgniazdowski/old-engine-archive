@@ -48,7 +48,7 @@ namespace fg {
         class ZipFile : public fg::util::base::File {
         public:
             ///
-            typedef typename fg::util::base::File::Mode FileMode;
+            typedef fg::util::base::File::Mode FileMode;
 
         public:
 
@@ -82,6 +82,9 @@ namespace fg {
             std::string m_selectedFilePath;
             /// Currently selected output (extraction) path
             std::string m_extractionPath;
+            /// This path will point to the zip file location - without the internal
+            /// path to the compressed file within the zip.
+            std::string m_zipPath;
             /// List/vector with the file paths (relative) in the specified Zip
             fgStringVector m_filePaths;
             /// Iterator to the element in the string vector (file paths)
@@ -250,6 +253,27 @@ namespace fg {
              * @return 
              */
             std::string const & getCurrentFile(void) const {
+                return m_selectedFilePath;
+            }
+            /**
+             * 
+             * @return 
+             */
+            const char *getZipPathStr(void) const {
+                return m_selectedFilePath.c_str();
+            }
+            /**
+             * 
+             * @return 
+             */
+            std::string& getZipPath(void) {
+                return m_selectedFilePath;
+            }
+            /**
+             * 
+             * @return 
+             */
+            std::string const & getZipPath(void) const {
                 return m_selectedFilePath;
             }
             /**

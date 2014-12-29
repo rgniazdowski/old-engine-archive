@@ -51,6 +51,10 @@
 
 #include "deflate.h"
 
+#if defined(ZLIB_I3D_DEF)
+#include <string.h>
+#endif
+
 const char deflate_copyright[] =
    " deflate 1.2.8 Copyright 1995-2013 Jean-loup Gailly and Mark Adler ";
 /*

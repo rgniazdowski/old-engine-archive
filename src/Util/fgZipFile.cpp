@@ -26,6 +26,7 @@ fg::util::ZipFile::ZipFile() :
 m_password(),
 m_selectedFilePath(),
 m_extractionPath(),
+m_zipPath(),
 m_filePaths(),
 m_fileItor(),
 m_currentFileID(0),
@@ -45,6 +46,7 @@ fg::util::ZipFile::ZipFile(const char* filePath) :
 m_password(),
 m_selectedFilePath(),
 m_extractionPath(),
+m_zipPath(),
 m_filePaths(),
 m_fileItor(),
 m_currentFileID(0),
@@ -66,6 +68,7 @@ fg::util::ZipFile::ZipFile(const std::string& filePath) :
 m_password(),
 m_selectedFilePath(),
 m_extractionPath(),
+m_zipPath(),
 m_filePaths(),
 m_fileItor(),
 m_currentFileID(0),
@@ -89,9 +92,11 @@ fg::util::ZipFile::ZipFile(const ZipFile& orig) { }
  */
 fg::util::ZipFile::~ZipFile() {
     m_filePath.clear();
-    m_filePath.shrink_to_fit();
     m_selectedFilePath.clear();
+#if !defined(FG_USING_MARMALADE)
     m_selectedFilePath.shrink_to_fit();
+    m_filePath.shrink_to_fit();
+#endif
     m_filePaths.clear_optimised();
 }
 
@@ -102,16 +107,17 @@ fg::util::ZipFile::~ZipFile() {
 void fg::util::ZipFile::setMode(FileMode mode) {
     m_modeFlags = mode; // File mode
     m_mode = Mode::READ; // ZipFile mode
-    if(m_modeFlags & FileMode::READ_UPDATE ||
-       m_modeFlags & FileMode::UPDATE ||
-       m_modeFlags & FileMode::APPEND ||
-       m_modeFlags & FileMode::APPEND_UPDATE ||
-       m_modeFlags & FileMode::WRITE_UPDATE) {
-        m_mode = Mode::UPDATE;
-    } else if(!!(m_modeFlags & FileMode::READ)) {
+    if(!!(m_modeFlags & FileMode::READ) && !(m_modeFlags & FileMode::UPDATE)) {
         m_mode = Mode::READ;
-    } else if(!!(m_modeFlags & FileMode::WRITE)) {
+    } else if(!!(m_modeFlags & FileMode::WRITE) && !(m_modeFlags & FileMode::UPDATE)) {
         m_mode = Mode::WRITE;
+    } else if(m_modeFlags & FileMode::READ_UPDATE ||
+              m_modeFlags & FileMode::UPDATE ||
+              m_modeFlags & FileMode::APPEND ||
+              m_modeFlags & FileMode::APPEND_UPDATE ||
+              m_modeFlags & FileMode::WRITE_UPDATE) {
+        m_mode = Mode::UPDATE;
+    }
     }
 }
 
@@ -139,15 +145,21 @@ void fg::util::ZipFile::setPath(const char *filePath) {
         if(extlen > 4) {
             // This means that there is something more in the path
             //unsigned int fplen = ((uintptr_t)ext)-((uintptr_t)filePath);
+            m_zipPath = filePath;
+            m_zipPath.resize(m_zipPath.size() - extlen + 4);
+#if !defined(FG_USING_MARMALADE)
+            m_zipPath.shrink_to_fit();
+#endif
+            // Full path to the file within the zip file - it cointains also the
+            // name of the zip archive
             m_filePath = filePath;
-            m_filePath.resize(m_filePath.size() - extlen + 4);
-            m_filePath.shrink_to_fit();
-            // Relative path to the selected file
+            // Relative path to the selected file in the archive
             // Checking for a valid path is in open functions
             m_selectedFilePath = (ext + 5);
         } else {
             // the extension fits
-            m_filePath = filePath;
+            m_zipPath = filePath;
+            m_filePath = m_zipPath;
             m_selectedFilePath.clear();
         }
     }
@@ -249,6 +261,10 @@ fgBool fg::util::ZipFile::private_updateCurrentFileInfo(void) {
             }
         }
     }
+    if(status) {
+        // Join the path to the file
+        fgPath::join(m_filePath, m_zipPath, m_selectedFilePath);
+    }
     return status;
 }
 
@@ -323,7 +339,7 @@ fgBool fg::util::ZipFile::selectFile(const char *filePath) {
         m_selectedFilePath = filePath;
     } else {
         // Check the path (the same as Zip) -> select the first file
-        if(fgStrings::isEqual(m_filePath.c_str(), filePath, FG_FALSE)) {
+        if(fgStrings::isEqual(m_zipPath.c_str(), filePath, FG_FALSE)) {
             err = unzCloseCurrentFile(m_uf);
             err = unzGoToFirstFile(m_uf);
             m_currentFileID = 0;
@@ -357,7 +373,7 @@ fgBool fg::util::ZipFile::selectFile(const std::string& filePath) {
  * @return 
  */
 fgBool fg::util::ZipFile::open(void) {
-    if(m_mode == Mode::NONE || m_filePath.empty())
+    if(m_mode == Mode::NONE || m_zipPath.empty())
         return FG_FALSE;
     // MAIN OPEN FUNCTION FOR ZIP
     // Here the magic happens
@@ -367,7 +383,7 @@ fgBool fg::util::ZipFile::open(void) {
             unzCloseCurrentFile(m_uf);
             unzClose(m_uf);
         }
-        m_uf = unzOpen(m_filePath.c_str());
+        m_uf = unzOpen64((void *)m_zipPath.c_str());
         if(m_uf == NULL) {
             // Failed to open file
             return FG_FALSE;
@@ -523,7 +539,7 @@ fgBool fg::util::ZipFile::isOpen(void) const {
  */
 fgBool fg::util::ZipFile::exists(void) {
 #if defined FG_USING_MARMALADE
-    return (fgBool)s3eFileCheckExists(m_filePath);
+    return (fgBool)s3eFileCheckExists(m_filePath.c_str());
 #else
     std::ifstream fileCheck(m_filePath);
     return (fgBool)fileCheck.good();

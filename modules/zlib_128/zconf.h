@@ -19,7 +19,7 @@
 
 #if defined(ZLIB_I3D_DEF)
 #  define USE_FILE32API
-#  define Z_PREFIX
+//#  define Z_PREFIX 1
 #endif
 
 /*

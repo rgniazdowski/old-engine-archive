@@ -89,11 +89,10 @@ inline const char * _FG_BOOL_TO_TEXT(fgBool value) {
 // #FIXME - #P3 - string obfuscation (also for error code -> text msg translations)
     #define FG_BOOL_FROM_TEXT(text) _FG_BOOL_FROM_TEXT(text)
     #define FG_BOOL_TO_TEXT(value) _FG_BOOL_TO_TEXT(value)
-
+//inline bool operator ==(Type x, Type y) { return static_cast<bool>(static_cast<int>(x) == static_cast<int>(y)); } 
+//inline bool operator !=(Type x, Type y) { return static_cast<bool>(static_cast<int>(x) != static_cast<int>(y)); }
     #define FG_ENUM_FLAGS(Type) \
 inline bool operator !(Type x) { return static_cast<int>(x) == 0; } \
-inline bool operator ==(Type x, Type y) { return static_cast<bool>(static_cast<int>(x) == static_cast<int>(y)); } \
-inline bool operator !=(Type x, Type y) { return static_cast<bool>(static_cast<int>(x) != static_cast<int>(y)); } \
 inline bool operator &&(Type x, Type y) { return static_cast<bool>(static_cast<int>(x) && static_cast<int>(y)); } \
 inline bool operator ||(Type x, Type y) { return static_cast<bool>(static_cast<int>(x) || static_cast<int>(y)); } \
 inline bool operator ||(bool x, Type y) { return static_cast<bool>(static_cast<int>(x) || static_cast<int>(y)); } \

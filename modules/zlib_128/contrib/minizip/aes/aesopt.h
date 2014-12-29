@@ -673,22 +673,22 @@ Issue Date: 20/12/2007
 /* generic definitions of Rijndael macros that use tables    */
 
 #define no_table(x,box,vf,rf,c) bytes2word( \
-    box[bval(vf(x,0,c),rf(0,c))], \
-    box[bval(vf(x,1,c),rf(1,c))], \
-    box[bval(vf(x,2,c),rf(2,c))], \
-    box[bval(vf(x,3,c),rf(3,c))])
+    box[bval(vf((x),0,c),rf(0,c))], \
+    box[bval(vf((x),1,c),rf(1,c))], \
+    box[bval(vf((x),2,c),rf(2,c))], \
+    box[bval(vf((x),3,c),rf(3,c))])
 
 #define one_table(x,op,tab,vf,rf,c) \
- (     tab[bval(vf(x,0,c),rf(0,c))] \
-  ^ op(tab[bval(vf(x,1,c),rf(1,c))],1) \
-  ^ op(tab[bval(vf(x,2,c),rf(2,c))],2) \
-  ^ op(tab[bval(vf(x,3,c),rf(3,c))],3))
+ (     tab[bval(vf((x),0,c),rf(0,c))] \
+  ^ op(tab[bval(vf((x),1,c),rf(1,c))],1) \
+  ^ op(tab[bval(vf((x),2,c),rf(2,c))],2) \
+  ^ op(tab[bval(vf((x),3,c),rf(3,c))],3))
 
 #define four_tables(x,tab,vf,rf,c) \
- (  tab[0][bval(vf(x,0,c),rf(0,c))] \
-  ^ tab[1][bval(vf(x,1,c),rf(1,c))] \
-  ^ tab[2][bval(vf(x,2,c),rf(2,c))] \
-  ^ tab[3][bval(vf(x,3,c),rf(3,c))])
+ (  tab[0][bval(vf((x),0,(c)),rf(0,(c)))] \
+  ^ tab[1][bval(vf((x),1,(c)),rf(1,(c)))] \
+  ^ tab[2][bval(vf((x),2,(c)),rf(2,(c)))] \
+  ^ tab[3][bval(vf((x),3,(c)),rf(3,(c)))])
 
 #define vf1(x,r,c)  (x)
 #define rf1(r,c)    (r)
@@ -709,7 +709,7 @@ Issue Date: 20/12/2007
 #endif
 
 #if defined( IM4_SET )
-#  define inv_mcol(x)       four_tables(x,t_use(i,m),vf1,rf1,0)
+#  define inv_mcol(x)       four_tables((x),t_use(i,m),vf1,rf1,0)
 #elif defined( IM1_SET )
 #  define inv_mcol(x)       one_table(x,upr,t_use(i,m),vf1,rf1,0)
 #else

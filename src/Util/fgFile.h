@@ -33,10 +33,10 @@ namespace fg {
         class File : public fg::util::base::File {
         public:
             typedef fg::util::base::File base_type;
-            typedef typename fg::util::RegularFile::tag_type tag_type;
-            typedef typename fg::util::RegularFile::Mode Mode;
-            typedef typename fg::util::RegularFile::Mode FileMode;
-            typedef typename fg::util::ZipFile::Mode ZipMode;
+            typedef fg::util::RegularFile::tag_type tag_type;
+            typedef fg::util::File::Mode Mode;
+            typedef fg::util::File::Mode FileMode;
+            typedef fg::util::ZipFile::Mode ZipMode;
 
         private:
 
@@ -204,6 +204,9 @@ namespace fg {
              *         string buffer will be null-terminated ('\0' will be appended)
              */
             virtual char *load(const char *filePath) {
+                if(!filePath)
+                    return FG_FALSE;
+                this->setPath(filePath);
                 return m_file->load(filePath);
             }
             /**
