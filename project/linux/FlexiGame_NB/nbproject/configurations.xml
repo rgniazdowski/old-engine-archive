@@ -1751,6 +1751,7 @@
             <pElem>../../../modules/stbfont/usascii</pElem>
             <pElem>../../../modules/stbfont</pElem>
             <pElem>../../../modules/luaplus51-all/Src</pElem>
+            <pElem>../../../modules/zlib_128/contrib/minizip</pElem>
           </incDir>
           <preprocessorList>
             <Elem>FG_NO_UNDEF</Elem>
@@ -1775,6 +1776,7 @@
             <pElem>../../../modules/tinyxml/upstream</pElem>
             <pElem>../../../modules/stbfont/usascii</pElem>
             <pElem>../../../modules/stbfont</pElem>
+            <pElem>../../../modules/zlib_128/contrib/minizip</pElem>
             <pElem>../../../modules/luaplus51-all/Src</pElem>
           </incDir>
           <preprocessorList>
