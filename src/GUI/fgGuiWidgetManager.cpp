@@ -80,11 +80,11 @@ fgBool fgGuiWidgetManager::destroy(void) {
 fgBool fgGuiWidgetManager::initialize(void) {
     FG_LOG_DEBUG("GUI: Initializing Widget manager...");
     if(!m_pWidgetFactory || !m_pStyleMgr) {
-        FG_LOG::PrintError("GUI: Failed to initialize widget manager - not all external pointers are set");
+        FG_LOG_ERROR("GUI: Failed to initialize widget manager - not all external pointers are set");
         return FG_FALSE;
     }
     if(m_widgetsPath.empty()) {
-        FG_LOG::PrintError("GUI: Default path for widgets directory is not set");
+        FG_LOG_ERROR("GUI: Default path for widgets directory is not set");
         return FG_FALSE;
     }
     // Will now preload all required styles

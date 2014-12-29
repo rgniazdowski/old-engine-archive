@@ -10,29 +10,30 @@
 #include "fgGuiStyleManager.h"
 #include "Util/fgDirent.h"
 
-/*
- *
+/**
+ * 
  */
 fgGuiStyleManager::fgGuiStyleManager() {
     m_managerType = FG_MANAGER_GUI_STYLE;
 }
 
-/*
- *
+/**
+ * 
  */
 fgGuiStyleManager::~fgGuiStyleManager() {
     fgGuiStyleManager::destroy();
 }
 
-/*
- *
+/**
+ * 
  */
 void fgGuiStyleManager::clear(void) {
     releaseAllHandles();
 }
 
-/*
- *
+/**
+ * 
+ * @return 
  */
 fgBool fgGuiStyleManager::destroy(void) {
     hmDataVecItor begin = getRefDataVector().begin();
@@ -47,19 +48,23 @@ fgBool fgGuiStyleManager::destroy(void) {
     return FG_TRUE;
 }
 
-/*
- *
+/**
+ * 
+ * @return 
  */
 fgBool fgGuiStyleManager::initialize(void) {
     FG_LOG_DEBUG("GUI: Initializing Style manager...");
     if(m_stylesPath.empty()) {
-        FG_LOG::PrintError("GUI: Default path for styles directory is not set");
+        FG_LOG_ERROR("GUI: Default path for styles directory is not set");
         return FG_FALSE;
     }
     // Will now preload all required styles
     fgDirent stylesDir;
     const char *filename;
-    stylesDir.readDirectory(m_stylesPath, FG_TRUE, FG_TRUE);
+    fgBool status = stylesDir.readDirectory(m_stylesPath, FG_TRUE, FG_TRUE);
+    if(!status) {
+        FG_LOG_ERROR("GUI: Unable to read directory (styles): '%s'", m_stylesPath.c_str());
+    }
     while((filename = stylesDir.getNextFile()) != NULL) {
         const char *ext = fgPath::fileExt(filename, FG_TRUE);
         if(!ext)
@@ -88,6 +93,12 @@ fgBool fgGuiStyleManager::initialize(void) {
     return FG_TRUE;
 }
 
+/**
+ * 
+ * @param pStyle
+ * @param nameTag
+ * @return 
+ */
 fgBool fgGuiStyleManager::insert(fgGuiStyle *pStyle, const std::string& nameTag) {
     if(!pStyle)
         return FG_FALSE;
@@ -99,8 +110,10 @@ fgBool fgGuiStyleManager::insert(fgGuiStyle *pStyle, const std::string& nameTag)
     return FG_FALSE;
 }
 
-/*
- *
+/**
+ * 
+ * @param pStyle
+ * @return 
  */
 fgBool fgGuiStyleManager::insertStyle(fgGuiStyle *pStyle) {
     if(!pStyle) {
@@ -113,31 +126,37 @@ fgBool fgGuiStyleManager::insertStyle(fgGuiStyle *pStyle) {
     return FG_TRUE;
 }
 
-/*
- *
+/**
+ * 
+ * @param info
+ * @return 
  */
 fgGuiStyle* fgGuiStyleManager::request(const std::string& info) {
     // #FIXME
     return NULL;
 }
 
-/*
- *
+/**
+ * 
+ * @param info
+ * @return 
  */
 fgGuiStyle* fgGuiStyleManager::request(const char *info) {
     // #FIXME
     return NULL;
 }
 
-/*
- *
+/**
+ * 
+ * @param path
  */
 void fgGuiStyleManager::setStylesPath(const std::string &path) {
     m_stylesPath = path;
 }
 
-/*
- *
+/**
+ * 
+ * @param path
  */
 void fgGuiStyleManager::setStylesPath(const char *path) {
     m_stylesPath = path;

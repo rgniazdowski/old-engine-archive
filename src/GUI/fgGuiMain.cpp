@@ -73,7 +73,7 @@ m_screenBox() {
     if(m_pEventMgr)
         registerGuiCallbacks();
 
-    // #FIXME
+    // #FIXME - styles/widgets path - package/zip #ZIP #MOD
     m_styleMgr->setStylesPath("gui");
     m_widgetMgr->setWidgetsPath("gui");
 
