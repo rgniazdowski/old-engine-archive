@@ -349,9 +349,10 @@ float yolo_posy = 0;
  *
  */
 void fgGfxMain::render(void) {
-
+    //m_gfxContext->scissor(100,100,200,300);
     static float offset = 0.0f;
-    static fgGfxModelResource *model = NULL;
+    static fgGfxModelResource *cobraBomber = NULL;
+
     static float rotxyz = 0.0f;
     static bool loadModel = true;
     glm::mat4 Model;
@@ -371,7 +372,6 @@ void fgGfxMain::render(void) {
     std::string sOrthoEasyShaderName("sOrthoEasy");
     std::string sSkyBoxEasyShaderName("sSkyBoxEasy");
     std::string modelname("CobraBomber");
-    std::string texname("CobraBomberTexture");
 
     offset = fmodf(offset + 0.2f, 2 * 3.141f);
     if(!m_textureMgr || !m_shaderMgr) {
@@ -382,7 +382,6 @@ void fgGfxMain::render(void) {
     rm = (fgResourceManager *)m_textureMgr->getResourceManager();
     if(!rm) {
         FG_LOG_ERROR("Cant access resource manager.");
-
         return;
     }
 
@@ -400,9 +399,9 @@ void fgGfxMain::render(void) {
     }
 #endif
     if(loadModel) {
-        if(!model)
-            model = (fgGfxModelResource *)rm->get(modelname);
-        if(!model) {
+        if(!cobraBomber)
+            cobraBomber = (fgGfxModelResource *)rm->get(modelname);
+        if(!cobraBomber) {
             printf("NO MODEL\n");
             return;
         }
@@ -421,10 +420,10 @@ void fgGfxMain::render(void) {
 
     if(state[SDL_SCANCODE_D] == SDL_PRESSED)
         m_3DScene->getCamera()->moveRight();
-    
+
     if(state[SDL_SCANCODE_SPACE] == SDL_PRESSED)
         m_3DScene->getCamera()->moveUp();
-    
+
     if(state[SDL_SCANCODE_LCTRL] == SDL_PRESSED)
         m_3DScene->getCamera()->moveDown();
 #else 
@@ -436,6 +435,7 @@ void fgGfxMain::render(void) {
         m_3DScene->getCamera()->moveLeft();
     if(s3eKeyboardGetState(s3eKeyD) & S3E_KEY_STATE_DOWN)
         m_3DScene->getCamera()->moveRight();
+
 #endif
 
     m_3DScene->getCamera()->update();
@@ -517,28 +517,29 @@ void fgGfxMain::render(void) {
     m_shaderMgr->useProgram(program);
     program->setUniform(FG_GFX_USE_TEXTURE, 1.0f);
     program->setUniform(FG_GFX_PLAIN_TEXTURE, (fgGFXint)0);
+
     // #FIXME - this of course needs to be somewhere else 
-    if(model && m_3DScene) {
+    if(cobraBomber && m_3DScene && 0) {
         if(!m_3DScene->count()) {
-            m_3DScene->addFromModel(model, std::string("PlayerFighter"));
-            m_3DScene->addFromModel(model, std::string("PlayerEnemy"));
+            //m_3DScene->addFromModel(cobraBomber, std::string("PlayerFighter"));
+            //m_3DScene->addFromModel(cobraBomber, std::string("PlayerEnemy"));
         }
     }
-    static float rotation = 0.0f;
-    static float radius = 200.0f;
+    static float rot1 = 0.0f;
+    static float radius1 = 200.0f;
     // #FIXME
-    if(m_3DScene) {
+    if(m_3DScene && 0) {
         fgGfxSceneNode *obj1 = m_3DScene->get("PlayerFighter");
         if(obj1) {
             obj1->setModelMatrix(modelMat);
         }
         fgGfxSceneNode *obj2 = m_3DScene->get("PlayerEnemy");
         if(obj2) {
-            rotation += 0.00127f * (float)FG_HardwareState->getDelta();
-            if(rotation > M_PI * 2.0f)
-                rotation = 0.0f;
-            float rx = cos(rotation) * radius;
-            float rz = sin(rotation) * radius;
+            rot1 += 0.00127f * (float)FG_HardwareState->getDelta();
+            if(rot1 > M_PI * 2.0f)
+                rot1 = 0.0f;
+            float rx = cos(rot1) * radius1;
+            float rz = sin(rot1) * radius1;
 
             modelMat = fgMath::translate(fgMatrix4f(), fgVector3f(rx, 20.0f, rz));
             modelMat = fgMath::rotate(modelMat, (float)M_PI / 2.0f, fgVector3f(0.0f, 1.0f, 0.0f));

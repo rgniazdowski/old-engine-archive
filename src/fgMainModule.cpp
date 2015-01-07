@@ -83,8 +83,7 @@ protected:
 #if defined(FG_USING_MARMALADE) // #FIXME
     m_deviceQuery(),
 #endif /* FG_USING_MARMALADE */
-    m_gameMain(NULL),
-    m_eventMgr(NULL) { }
+    m_gameMain(NULL) { }
 
 protected:
 #if defined(FG_USING_SDL2)
@@ -150,17 +149,17 @@ protected:
 
                     /* Keyboard events */
                 case SDL_KEYDOWN: /**< Key pressed */
-                    if(m_eventMgr) {
+                    if(this->m_gameMain) {
                         // #FIXME
                         if(!event.key.repeat)
-                            m_eventMgr->addKeyDown((int)event.key.keysym.sym);
+                            static_cast<fgEventManager *>(this->m_gameMain)->addKeyDown((int)event.key.keysym.sym);
                     }
                     break;
                 case SDL_KEYUP: /**< Key released */
-                    if(m_eventMgr) {
+                    if(this->m_gameMain) {
                         // #FIXME
                         if(!event.key.repeat)
-                            m_eventMgr->addKeyUp((int)event.key.keysym.sym);
+                            static_cast<fgEventManager *>(this->m_gameMain)->addKeyUp((int)event.key.keysym.sym);
                     }
                     break;
                 case SDL_TEXTEDITING: /**< Keyboard text editing (composition) */
@@ -357,29 +356,21 @@ private:
         s3eGLRegister(S3E_GL_RESUME, &fgMarmaladeHandlers::resumeGfxHandler, (void *)this);
 
 #endif /* FG_USING_MARMALADE */
-        if(!m_eventMgr) {
-            FG_LOG_DEBUG("Creating event manager...");
-            m_eventMgr = new fgEventManager();
-            if(!m_eventMgr->initialize()) {
-                // Should check?
-            }
-        }
         if(!m_gameMain) {
             FG_LOG_DEBUG("Creating game main object...");
-            m_gameMain = new fgGameMain(m_eventMgr);
+            m_gameMain = new fgGameMain(m_argc, m_argv);
         }
-
         // Well the whole configuration process should update the screen (swap buffers)
         // this is needed to display splash screen (after marmalade splash screen) and
         // show the game initialization process by displaying the progress bar
         if(!m_gameMain->loadConfiguration()) {
             return FG_FALSE;
         }
-
+        // Initialize the main subsystems (gui, gfx and others)
         if(!m_gameMain->initSubsystems()) {
             return FG_FALSE;
         }
-
+        // Preload any required resources
         if(!m_gameMain->loadResources()) {
             return FG_FALSE;
         }
@@ -390,7 +381,7 @@ private:
     }
 
     /**
-     * Apps main loop step (one thread)
+     * Applications main loop step (one thread)
      */
     fgBool mainLoopStep() {
         FG_HardwareState->deviceYield(0);
@@ -483,10 +474,6 @@ private:
             delete m_gameMain;
         }
         m_gameMain = NULL;
-        if(m_eventMgr) {
-            delete m_eventMgr;
-            m_eventMgr = NULL;
-        }
         m_appInit = FG_FALSE;
 #if defined(FG_DEBUG)
         if(g_debugProfiling)
@@ -550,7 +537,7 @@ private:
      * Handle PRESSING and RELEASING keys
      */
     void keyStateChangedEvent(s3eKeyboardEvent* event) {
-        if(!m_appInit || !m_eventMgr)
+        if(!m_appInit || !m_gameMain)
             return;
 #if 0
         char dst[100];
@@ -563,9 +550,9 @@ private:
         printf("'%s'\n", dst);
 #endif
         if(event->m_Pressed) {
-            m_eventMgr->addKeyDown((int)event->m_Key);
+            static_cast<fgEventManager *>(m_gameMain)->addKeyDown((int)event->m_Key);
         } else {
-            m_eventMgr->addKeyUp((int)event->m_Key);
+            static_cast<fgEventManager *>(m_gameMain)->addKeyUp((int)event->m_Key);
         }
         //FG_LOG_DEBUG("FG_EventManager - keyboard - %d is pressed? - code: %d", (int)event->m_Pressed, (int)event->m_Key);
     }
@@ -592,9 +579,6 @@ private:
     /// changing name to fgApplication - or extending fgApplication class
     /// #TODO - support threads
     fgGameMain *m_gameMain;
-    /// Main event manager, it's going to be initialized in main module class
-    /// then passed down to the GameMain class
-    fgEventManager *m_eventMgr;
 };
 
 #if defined FG_USING_MARMALADE
@@ -705,11 +689,11 @@ extern "C" int main(int argc, char *argv[]) {
     FG_LOG_DEBUG("Deleting main module...");
     delete mainModule;
 
+    FG_LOG_DEBUG("Successfully closed program");
+
 #if defined FG_USING_MARMALADE
     IwUtilTerminate();
     s3eDeviceExit(0);
 #endif /* FG_USING_MARMALADE */
-    FG_LOG_DEBUG("Successfully closed program");
-
     return 0;
 }

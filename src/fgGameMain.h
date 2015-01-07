@@ -38,7 +38,7 @@ typedef FG_TAG_GAME_MAIN fgGameMainTag;
 /**
  *
  */
-class fgGameMain {
+class fgGameMain : public fgEventManager {
 public:
     ///
     typedef fgGameMainTag tag_type;
@@ -48,7 +48,7 @@ public:
      * Default constructor for the Game Main object
      * @param pEventMgr
      */
-    fgGameMain(fgEventManager* pEventMgr);
+    fgGameMain(int argc, char **argv);
     /**
      * Default destructor for the Game Main object
      */
@@ -147,8 +147,8 @@ public:
      * 
      * @return 
      */
-    inline fgEventManager *getEventManager(void) const {
-        return m_pEventMgr;
+    inline fgEventManager *getEventManager(void) {
+        return static_cast<fgEventManager *>(this);
     }
     /**
      * 
@@ -211,7 +211,7 @@ protected:
      * 
      * @param pEventMgr
      */
-    void setEventManager(fgEventManager *pEventMgr);
+    void setEventManager(void);
 
 private:
     /// Number of the arguments passed to program
@@ -232,8 +232,6 @@ private:
     fgResourceManager *m_resourceMgr;
     /// Resource factory object - registers create() methods for Resource Objects
     fgResourceFactory *m_resourceFactory;
-    /// Pointer to the external Event Manager
-    fgEventManager *m_pEventMgr;
     /// 
     fgPointerInputReceiver *m_pointerInputReceiver;
     /// Joypad/Joystick controller object
