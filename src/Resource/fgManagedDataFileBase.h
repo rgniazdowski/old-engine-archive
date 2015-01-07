@@ -63,8 +63,7 @@ public:
      */
     virtual void setFilePath(const char *path) {
         if(!path)
-            return;
-        m_filePath.clear();
+            return;        
         m_filePath = path;
         m_fileMapping[m_defaultID] = path;
     }
@@ -72,8 +71,7 @@ public:
      * Set file path for this data
      * @param path
      */
-    virtual void setFilePath(const std::string& path) {
-        m_filePath.clear();
+    virtual void setFilePath(const std::string& path) {        
         m_filePath = path;
         m_fileMapping[m_defaultID] = path;
     }
