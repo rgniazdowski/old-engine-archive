@@ -9,7 +9,8 @@
 
 #ifndef FG_INC_PS_PARTICLE_EFFECT
     #define FG_INC_PS_PARTICLE_EFFECT
-
+    #define FG_INC_PS_PARTICLE_EFFECT_BLOCK
+    
     #include "fgBool.h"
     #include "GFX/fgGFXTypes.h"
 
@@ -175,6 +176,7 @@ protected:
      * 
      */
     virtual void clear(void);
+    
 public:
     /**
      * Empty constructor - no allocation made
@@ -324,30 +326,35 @@ public:
     }
     /**
      * Are parameters (start/end size, start/end color) taken into account when calculating the particles
+     * @param toggle
      */
     inline void setParamsActive(const fgBool toggle = FG_TRUE) {
         setFlag(FG_PARTICLE_PARAMS_ACTIVE, toggle);
     }
-    /*
+    /**
      * Is velocity random?
+     * @param toggle
      */
     inline void setRandomVelocity(const fgBool toggle = FG_TRUE) {
         setFlag(FG_PARTICLE_RANDOM_VELOCITY, toggle);
     }
     /**
      * Is life of the particle describing also the size?
+     * @param toggle
      */
     inline void setLifeAsSize(const fgBool toggle = FG_TRUE) {
         setFlag(FG_PARTICLE_LIFE_AS_SIZE, toggle);
     }
     /**
      * Do particles pitch in the direction they're flying?
+     * @param toggle
      */
     inline void setFacingVelocity(const fgBool toggle = FG_TRUE) {
         setFlag(FG_PARTICLE_FACING_VELOCITY, toggle);
     }
     /**
      * Is the newly added particle randomly rotated?
+     * @param toggle
      */
     inline void setRandomAngle(const fgBool toggle = FG_TRUE) {
         setFlag(FG_PARTICLE_RANDOM_ANGLE, toggle);
@@ -361,6 +368,7 @@ public:
     }
     /**
      * The start size of the added particle
+     * @param size
      */
     inline void setStartSize(const float size) {
         m_startSize.x = size;
@@ -689,4 +697,5 @@ public:
     void basicCalculate(fgParticle *outputParticle);
 };
 
+    #undef FG_INC_PS_PARTICLE_EFFECT_BLOCK
 #endif /* FG_INC_PS_PARTICLE_EFFECT */

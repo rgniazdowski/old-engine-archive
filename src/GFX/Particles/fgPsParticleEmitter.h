@@ -14,7 +14,8 @@
  */
 
 #ifndef FG_INC_PS_PARTICLE_EMITTER
-    #define	FG_INC_PS_PARTICLE_EMITTER
+    #define FG_INC_PS_PARTICLE_EMITTER
+    #undef FG_INC_PS_PARTICLE_EMITTER_BLOCK
 
     #include "fgVector.h"
     #include "GFX/fgGFXSceneNode.h"
@@ -25,22 +26,28 @@
  */
 class fgParticleEmitter : public fgGfxSceneNode {
 public:
+    /// Base type of the ParticleEmitter
+    typedef fgGfxSceneNode base_type;
+    /// Vector type definition for holding Particle Effects
     typedef fgVector<fgParticleEffect *> particleEffects;
+    /// Iterator for the ParticleEffects vector
     typedef particleEffects::iterator    particleEffectsItor;
-    
+    /// Vector type holding Particles
     typedef fgVector<fgParticle> particleData;
+    /// Iterator for the Particles vector
     typedef particleData::iterator particleDataItor;
+    
 private:
     /// Pointers to the particle effects to which
     /// this particle emitter is bound
     particleEffects m_effects;
-    /// 
+    /// Origin of the emitter (world space)
     fgVector3f m_origin;
-    ///
+    /// Particle data used for manipulation, drawing
     particleData m_particles;
-    ///
+    /// Current number of particles in the emitter
     unsigned int m_numParticles;
-    ///
+    /// Maximum number of the particles for this emitter 
     unsigned int m_maxCount;
     
 public:
@@ -124,9 +131,7 @@ public:
      */
     virtual void calculate(void);
     
-    
-    
 };
 
+    #undef FG_INC_PS_PARTICLE_EMITTER_BLOCK
 #endif	/* FG_INC_PS_PARTICLE_EMITTER */
-

@@ -39,7 +39,9 @@ void fgParticleEffect::clear(void) {
 }
 
 /**
- *
+ * 
+ * @param params
+ * @return 
  */
 fgBool fgParticleEffect::initializeFromConfig(fgCfgTypes::parameterVec& params) {
     if(params.empty())
@@ -412,6 +414,9 @@ void fgParticleEffect::calculate(void) {
 /**
  * Takes two particles, does randomization on [from->some_val, to->some_val]
  * and stores new random values to Particle* from
+ * @param from
+ * @param to
+ * @param result
  */
 void fgParticleEffect::randomizeOnPair(const fgParticle* from,
                                        const fgParticle* to,
@@ -573,7 +578,7 @@ void fgParticleEffect::basicCalculate(fgParticle* outputParticle) {
     outputParticle->rotation.y += outputParticle->angularVelocity.y * fgTime::elapsed();
     outputParticle->rotation.z += outputParticle->angularVelocity.z * fgTime::elapsed();
 
-    // FADE
+    // FADING
     outputParticle->life -= outputParticle->fadeSpeed * fgTime::elapsed();
     
     // LIFE AS SIZE
@@ -581,38 +586,6 @@ void fgParticleEffect::basicCalculate(fgParticle* outputParticle) {
         outputParticle->bbox.size.x = fabs(outputParticle->life);
         outputParticle->bbox.size.y = fabs(outputParticle->life);
         outputParticle->bbox.size.z = fabs(outputParticle->life);
-    }
-
-    // ONLY FOR Z ROTATION
-    if(isFacingVelocity()) {
-        float r = sqrt(outputParticle->velocity.x * outputParticle->velocity.x + outputParticle->velocity.y * outputParticle->velocity.y);
-        float a = outputParticle->velocity.x;
-        float b = outputParticle->velocity.y;
-        float sina = b / r;
-        double radians = asin(sina);
-        float angle = (float)radians / (float)M_PI * 180.0f;
-        // #FIXME - RADIANS
-        if(1) {
-            if(a > 0.0f && b > 0.0f) {
-                outputParticle->rotation.z = FG_DEG2RAD * (90.0f + fabs(angle));
-            } else if(a < 0.0f && b > 0.0f) {
-                outputParticle->rotation.z = FG_DEG2RAD * (270.0f - fabs(angle));
-            } else if(a < 0.0f && b < 0.0f) {
-                outputParticle->rotation.z = FG_DEG2RAD * (270.0f + fabs(angle));
-            } else { // if(a > 0.0f && b < 0.0f)
-                outputParticle->rotation.z = FG_DEG2RAD * (90.0f - fabs(angle));
-            }
-        }
-        if(0) {
-            if(a > 0.0f && b > 0.0f)
-                outputParticle->rotation.z = FG_DEG2RAD * (-90.0f - fabs(angle));
-            else if(a < 0.0f && b > 0.0f)
-                outputParticle->rotation.z = FG_DEG2RAD * (90.0f + fabs(angle));
-            else if(a < 0.0f && b < 0.0f)
-                outputParticle->rotation.z = FG_DEG2RAD * (90.0f - fabs(angle));
-            else // if(a > 0.0f && b < 0.0f)
-                outputParticle->rotation.z = FG_DEG2RAD * (-(90.0f - fabs(angle)));
-        }
     }
 
     if(isParamsActive()) {
