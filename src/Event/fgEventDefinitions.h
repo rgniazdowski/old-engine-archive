@@ -16,11 +16,9 @@
     #endif
 
 //
-// This file will contain all basic events occuring in the game engine
+// This file will contain all basic events occurring in the game engine
 // also defines standard event structures holding info about the event
 //
-
-// Event Type enumeration
 
     #ifndef FG_EVENT_TYPE_DEFINED
         #define FG_EVENT_TYPE_DEFINED
@@ -60,29 +58,30 @@ typedef unsigned int fgEventType;
 #define FG_EVENT_RESOURCE_REQUESTED 22
 
 #define FG_EVENT_PROGRAM_INIT       23
+#define FG_EVENT_LOADING_BEGIN      24
+#define FG_EVENT_LOADING_FINISHED   25
+#define FG_EVENT_SPLASHSCREEN       26
 
-#define FG_EVENT_VERTEX_STREAM_READY 24
-#define FG_EVENT_CAMERA_CHANGED     25
+#define FG_EVENT_VERTEX_STREAM_READY    27
+#define FG_EVENT_CAMERA_CHANGED         28
 
-#define FG_EVENT_SOUND_PLAYED       26
+#define FG_EVENT_SOUND_PLAYED           29
 
-#define FG_EVENT_MENU_CHANGED       27
-#define FG_EVENT_WIDGET_STATE_CHANGED 28
+#define FG_EVENT_MENU_CHANGED           30
+#define FG_EVENT_WIDGET_STATE_CHANGED   31
 
-#define FG_EVENT_SENSORS_CHANGED    29
+#define FG_EVENT_SENSORS_CHANGED            32
 
-#define FG_EVENT_GAME_CONTROLLER_ADDED      30
-#define FG_EVENT_GAME_CONTROLLER_REMOVED    31
-#define FG_EVENT_GAME_CONTROLLER_BUTTON     32
-#define FG_EVENT_GAME_CONTROLLER_AXIS       33
+#define FG_EVENT_GAME_CONTROLLER_ADDED      33
+#define FG_EVENT_GAME_CONTROLLER_REMOVED    34
+#define FG_EVENT_GAME_CONTROLLER_BUTTON     35
+#define FG_EVENT_GAME_CONTROLLER_AXIS       36
 
-#define FG_EVENT_RESERVED1          34
-#define FG_EVENT_RESERVED2          35
-#define FG_EVENT_RESERVED3          36
+#define FG_EVENT_RESERVED1          37
+#define FG_EVENT_RESERVED2          38
+#define FG_EVENT_RESERVED3          39
 
-#define FG_EVENT_LAST_STANDARD_EVENT_CODE 36
-
-//#define FG_NUM_EVENT_TYPES          37
+#define FG_EVENT_LAST_STANDARD_EVENT_CODE 39
 
 enum fgSwipeDirection {
     FG_SWIPE_INVALID,
@@ -179,7 +178,7 @@ struct fgSwipeEvent : fgEventBase {
     int swipeYSteps;
 };
 
-/*
+/**
  *
  */
 struct fgSwipePinchEvent : fgEventBase {
@@ -193,7 +192,7 @@ struct fgSwipePinchEvent : fgEventBase {
     int pinchSize;
 };
 
-/*
+/**
  *
  */
 struct fgSwipeRotateEvent : fgEventBase { // Should extend SwipeEvent?
@@ -204,7 +203,7 @@ struct fgSwipeRotateEvent : fgEventBase { // Should extend SwipeEvent?
     float angle;
 };
 
-/*
+/**
  *
  */
 struct fgKeyEvent : fgEventBase {
@@ -216,43 +215,88 @@ struct fgKeyEvent : fgEventBase {
     fgBool pressed;
 };
 
+/**
+ *
+ */
 struct fgResourceEvent : fgEventBase {
     fgResourceStatus status; // ?
     fgResource *resource;
 };
 
+//#define FG_EVENT_PROGRAM_INIT       23
+//#define FG_EVENT_LOADING            24
+//#define FG_EVENT_SPLASHSCREEN       26
+
+struct fgProgramEvent : fgEventBase {
+    
+};
+
+enum class fgLoadingStatus : unsigned char {
+    BEGIN = 0,
+    CONTINUE = 1,
+    FINISH = 2
+};
+
+struct fgLoadingEvent : fgEventBase {
+    fgLoadingStatus status;
+};
+
+/**
+ *
+ */
+struct fgSplashScreenEvent : fgEventBase {
+    /// Status of the splashscreen display - no additional data is required?
+    /// If FG_TRUE - splashscreen is no longer displayed
+    /// If FG_FALSE - splashscreen just started or in the middle
+    fgBool finish;
+};
+
+/**
+ *
+ */
 struct fgVertexStreamEvent : fgEventBase {
     //FG_GFXHANDLE vertexStreamHandle;
     //fgVertexStream *vertexStreamHolder;
 };
 
+/**
+ *
+ */
 struct fgCameraEvent : fgEventBase {
     //GfxCamera *cameraHolder;
     //FG_GFXHANDLE cameraHandle;
 };
 
+/**
+ *
+ */
 struct fgSoundEvent : fgEventBase {
     //FG_RHANDLE soundHandle;
     //fgResource *soundHolder;
 };
 
+/**
+ *
+ */
 struct fgMenuChangedEvent : fgEventBase {
     //GUIHANDLE 
     //
 };
 
+/**
+ *
+ */
 struct fgWidgetEvent : fgEventBase {
     //FG_GUIHANDLE widgetHandle;
     //fgWidget
     //fgResource
 };
 
-/*
+/**
  *
  */
 struct fgSensorsEvent : fgEventBase {
     // int type; or fgSensorType type;
-
     union {
 
         struct {
@@ -262,7 +306,17 @@ struct fgSensorsEvent : fgEventBase {
     };
 };
 
-/*
+/**
+ *
+ */
+struct fgReservedEvent : fgEventBase {
+    void *data1;
+    void *data2;
+    void *data3;
+    int n_data;
+};
+
+/**
  *
  */
 struct fgEvent {
@@ -286,6 +340,8 @@ struct fgEvent {
         fgControllerDeviceEvent controller;
         fgControllerButtonEvent controllerButton;
         fgControllerAxisEvent controllerAxis;
+        
+        fgReservedEvent reserved;
     };
 };
 
