@@ -88,6 +88,7 @@ IF NOT EXIST "%FG_DEBUG_CERTS_DIR%" (
 )
 
 echo ** Calling resigning tool for iOS package
+rem call tools\resign_run.bat development provisions\iOS_Distribution_FG_Infinium.mobileprovision
 call tools\resign_run.bat development
 if errorlevel 1 goto end
 cd %~dp0..

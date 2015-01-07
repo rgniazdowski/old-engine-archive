@@ -48,11 +48,12 @@ IF "%2"=="" (
 )
 
 rem dir "E:\Develop\Game.Dev.Engine\infinium\deployments\default\iphone\release\Infinium.ipa"
-rem filename ""
+rem filename "E:\Develop\Game.Dev.Engine\infinium\provisions\iOS_Distribution_FG_Infinium.mobileprovision"
 rem host "!"
 rem select "iPhone Developer"
 
 echo ** Updating settings for IPhoneSigner
+echo ** Embedded provision file: %FG_PROVISION_FILE%
 rem @echo on
 
 echo dir "%CD%\%FG_IPAFILE%" > %FG_S3E_SIGN_CFG_FILE%

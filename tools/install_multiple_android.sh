@@ -8,9 +8,11 @@ if test "$#" -ne 1; then
 	exit
 fi
 
-dirname $0                                                                      
+#dirname $0                                                                      
 cd `dirname $0`                                                                 
 cd ../
+
+adb devices 
 
 for SERIAL in $(adb devices | tail -n +2 | cut -sf 1);
 do
