@@ -302,7 +302,7 @@ typedef enum _ESOArgType {
 #define SO_END_OF_OPTIONS   { -1, NULL, SO_NONE }
 
 #ifdef _DEBUG
-# ifdef _MSC_VER
+# if defined(_MSC_VER) && !defined(FG_USING_MARMALADE)
 #  include <crtdbg.h>
 #  define SO_ASSERT(b)  _ASSERTE(b)
 # else
