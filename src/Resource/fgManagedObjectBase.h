@@ -28,18 +28,20 @@
 template<typename HandleType>
 class fgManagedObjectBase {
 public:
+    ///
     typedef HandleType handle_type;
     // System data is always set to (void *)this
     typedef fgBool(*callbackPtr)(void *systemData, void *userData);
+    ///
     typedef callbackPtr callback_type;
-    
+
 public:
     /**
      * Default empty constructor for managed base object
      */
     fgManagedObjectBase() : m_pManager(NULL), m_nameTag(), m_isManaged(FG_FALSE) { }
     /**
-     * Default empty destructor for managed base object
+     * Destructor for managed base object
      */
     virtual ~fgManagedObjectBase() {
         // Now call the special destructor callbacks
@@ -159,27 +161,27 @@ public:
      * 
      * @return 
      */
-    inline fg::base::Manager *getManager(void) const {
+    inline fg::base::CManager *getManager(void) const {
         return m_pManager;
     }
     /**
      * 
      * @param pManager
      */
-    inline void setManager(fg::base::Manager *pManager) {
+    inline void setManager(fg::base::CManager *pManager) {
         m_pManager = pManager;
     }
 
 protected:
-    ///
-    fg::base::Manager *m_pManager;
+    /// Pointer to the managing class - can be NULL
+    fg::base::CManager *m_pManager;
     /// Name of the data, string ID
     std::string m_nameTag;
     /// Unique handle number
     HandleType m_handle;
     /// Is this data currently managed inside of any kind manager?
     fgBool m_isManaged;
-    
+
 private:
 
     /**
@@ -203,8 +205,10 @@ private:
         callback(pCallback),
         userData(pUserData) { }
     };
-
+    
+    ///
     typedef fgVector<callbackData> callbackVec;
+    ///
     typedef typename callbackVec::iterator callbackVecItor;
     /// Callbacks to call when the destructor is called
     callbackVec m_onDestructorCallbacks;

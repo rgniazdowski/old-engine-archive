@@ -14,7 +14,8 @@
  */
 
 #ifndef FG_INC_SCRIPT_CALLBACK
-    #define	FG_INC_SCRIPT_CALLBACK
+    #define FG_INC_SCRIPT_CALLBACK
+    #define FG_INC_SCRIPT_CALLBACK_BLOCK
 
     #if defined(FG_INC_SCRIPT_MT_BLOCK)
         #error "FG_SCRIPT_MTBLOCK is defined: Do not include ScriptCallback header inside of ScriptMetatables header"
@@ -286,4 +287,5 @@ public:
     virtual fgBool Call(fgGuiMain *pGuiMain, fgGuiWidget *pWidget);
 };
 
+    #undef FG_INC_SCRIPT_CALLBACK_BLOCK
 #endif	/* FG_INC_SCRIPT_CALLBACK */

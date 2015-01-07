@@ -102,7 +102,7 @@ fgBool fgGuiWidgetManager::initialize(void) {
         if(strcasecmp(ext, "gui.xml") == 0) {
             FG_LOG_DEBUG("GUI: Loading gui widget struct file: '%s'", filename);
             if(!loadStructureSheet(filename)) {
-                FG_LOG::PrintError("GUI: Failed to load gui widget struct: '%s'", filename);
+                FG_LOG_ERROR("GUI: Failed to load gui widget struct: '%s'", filename);
                 continue;
             }
             FG_LOG_DEBUG("GUI: Successfully loaded structure file '%s' to the database", filename);

@@ -47,7 +47,7 @@ fgGfxDrawingBatch::~fgGfxDrawingBatch() {
 /*
  *
  */
-void fgGfxDrawingBatch::setShaderManager(fg::base::Manager *pShaderMgr) {
+void fgGfxDrawingBatch::setShaderManager(fg::base::CManager *pShaderMgr) {
     if(pShaderMgr) {
         if(pShaderMgr->getManagerType() != FG_MANAGER_GFX_SHADER)
             return;

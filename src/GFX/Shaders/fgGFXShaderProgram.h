@@ -9,6 +9,7 @@
 
 #ifndef FG_INC_GFX_SHADER_PROGRAM
     #define FG_INC_GFX_SHADER_PROGRAM
+    #define FG_INC_GFX_SHADER_PROGRAM_BLOCK
 
     #include "fgGFXShaderDefs.h"
     #include "fgGFXShader.h"
@@ -134,18 +135,30 @@ protected:
     fgBool m_isCompiled;
     /// Is the shader program linked and ready to use
     fgBool m_isLinked;
-    ///
-    fg::base::Manager *m_manager;
+    /// Pointer to the managing class
+    fg::base::CManager *m_manager;
 
 public:
-    //
+    /**
+     * 
+     */
     fgGfxShaderProgram();
-    //
+    /**
+     * 
+     */
     virtual ~fgGfxShaderProgram();
 
-    //
+    /**
+     * 
+     * @param path
+     * @return 
+     */
     fgBool preLoadConfig(const char *path);
-    //
+    /**
+     * 
+     * @param path
+     * @return 
+     */
     fgBool preLoadConfig(std::string &path);
 
 protected:
@@ -170,19 +183,33 @@ protected:
     fgBool _detachShaders(void);
 
     //
+    /**
+     * 
+     * @return 
+     */
     fgGFXint updateLinkStatus(void);
-    //
+    /**
+     * 
+     * @return 
+     */
     fgGFXint updateValidateStatus(void);
 
-    //
+    /**
+     * 
+     * @return 
+     */
     fgBool releaseGFX(void);
 
-    //
-    fgBool setManager(fg::base::Manager *pManager);
+    /**
+     * 
+     * @param pManager
+     * @return 
+     */
+    fgBool setManager(fg::base::CManager *pManager);
 
 public:
     // Create the shader program with direct GL calls
-    // Gfx ID will become valid if this function is successfull
+    // Gfx ID will become valid if this function is successful
     fgGFXuint create(void);
     // Try to compile the shaders for this shader program
     // If needed the source code files will be loaded
@@ -302,4 +329,5 @@ public:
     #endif
 };
 
+    #undef FG_INC_GFX_SHADER_PROGRAM_BLOCK
 #endif /* FG_INC_GFX_SHADER_PROGRAM */

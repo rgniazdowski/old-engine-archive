@@ -9,6 +9,7 @@
 
 #ifndef FG_INC_POINTER_DATA
     #define FG_INC_POINTER_DATA
+    #define FG_INC_POINTER_DATA_BLOCK
 
     #ifndef FG_INC_BUILD_CONFIG
         #include "fgBuildConfig.h"
@@ -73,30 +74,53 @@ typedef unsigned int fgButtonID;
 
 typedef unsigned int fgPointerState;
 
+/**
+ *
+ */
 struct fgPointerData {
 
+    /**
+     */
     union {
+        ///
         fgTouchID m_touchID;
+        ///
         fgButtonID m_buttonID;
+        ///
         fgPointerID m_pointerID;
     };
+    ///
     fgPointerState m_state;
 
+    /**
+     */
     union {
+        ///
         int m_moveX;
+        ///
         int m_x;
     };
 
+    /**
+     */
     union {
+        ///
         int m_moveY;
+        ///
         int m_y;
     };
 
+    /**
+     */
     union {
         fgBool m_pressed;
         fgBool m_active;
     };
+    ///
     fgBool m_pointerTap;
+    /**
+     * 
+     */
     fgPointerData() :
     m_touchID(0),
     m_state(FG_POINTER_STATE_UP),
@@ -105,4 +129,5 @@ struct fgPointerData {
     m_pointerTap(FG_FALSE) { }
 };
 
+    #undef FG_INC_POINTER_DATA_BLOCK
 #endif /* FG_INC_POINTER_DATA */

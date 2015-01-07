@@ -36,16 +36,16 @@ typedef FG_TAG_PARTICLE_SYSTEM fgParticleSystemTag;
 /**
  *
  */
-class fgParticleSystem : public fg::base::Manager  {
+class fgParticleSystem : public fg::base::CManager  {
 public:
     typedef fgVector<fgParticleEmitter *> emittersVec;
     typedef emittersVec::iterator emittersVecItor;
     
 private:
     /// Pointer to the external resource manager
-    fg::base::Manager *m_pResourceMgr;
+    fg::base::CManager *m_pResourceMgr;
     /// Pointer to the external scene manager
-    fg::base::Manager *m_pSceneMgr;
+    fg::base::CManager *m_pSceneMgr;
     /// Emitters vector
     emittersVec m_emitters;
     
@@ -53,7 +53,7 @@ public:
     /**
      * 
      */
-    fgParticleSystem(fg::base::Manager *pResourceMgr = NULL, fg::base::Manager *pSceneMgr = NULL);
+    fgParticleSystem(fg::base::CManager *pResourceMgr = NULL, fg::base::CManager *pSceneMgr = NULL);
     /**
      * 
      */
@@ -92,28 +92,28 @@ public:
      * 
      * @param pResourceMgr
      */
-    inline void setResourceManager(fg::base::Manager *pResourceMgr) {
+    inline void setResourceManager(fg::base::CManager *pResourceMgr) {
         m_pResourceMgr = pResourceMgr;
     }
     /**
      * 
      * @return 
      */
-    inline fg::base::Manager *getResourceManager(void) const {
+    inline fg::base::CManager *getResourceManager(void) const {
         return m_pResourceMgr;
     }
     /**
      * 
      * @param pSceneMgr
      */
-    inline void setSceneManager(fg::base::Manager *pSceneMgr) {
+    inline void setSceneManager(fg::base::CManager *pSceneMgr) {
         m_pSceneMgr = pSceneMgr;
     }
     /**
      * 
      * @return 
      */
-    inline fg::base::Manager *getSceneManager(void) const {
+    inline fg::base::CManager *getSceneManager(void) const {
         return m_pSceneMgr;
     }
     

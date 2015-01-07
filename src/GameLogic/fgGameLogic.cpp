@@ -14,8 +14,8 @@
  * 
  * @param pEventMgr
  */
-fg::game::Logic::Logic(fg::base::Manager* pEventMgr) :
-fg::base::Manager(),
+fg::game::Logic::Logic(fg::base::CManager* pEventMgr) :
+fg::base::CManager(),
 m_status(GAME_INVALID),
 m_currentStageID(0),
 m_currentStageName(),

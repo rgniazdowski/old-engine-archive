@@ -21,7 +21,7 @@
 /**
  * 
  */
-fgParticleSystem::fgParticleSystem(fg::base::Manager *pResourceMgr, fg::base::Manager *pSceneMgr) {
+fgParticleSystem::fgParticleSystem(fg::base::CManager *pResourceMgr, fg::base::CManager *pSceneMgr) {
     setResourceManager(pResourceMgr);
     setSceneManager(pSceneMgr);
 }
@@ -271,28 +271,29 @@ fgParticleEmitter* fgParticleSystem::insertParticleEmitter(const std::string& pa
                                                            const std::string& particleEmitterNameTag,
                                                            const fgVector3f& emitterOrigin) {
     if(!m_pSceneMgr || !m_pResourceMgr) {
-        FG_LOG::PrintError("GFX: Unable to add ParticleEmitter - Particle System is not set up");
+        FG_LOG_ERROR("GFX: Unable to add ParticleEmitter - Particle System is not set up");
         return NULL;
     }
     if(particleEffectNameTag.empty() || particleEmitterNameTag.empty()) {
-        FG_LOG::PrintError("GFX: Unable to add ParticleEmitter - name tags are empty");
+        FG_LOG_ERROR("GFX: Unable to add ParticleEmitter - name tags are empty");
         return NULL;
     }
     if(isEmitterInTheScene(particleEmitterNameTag)) {
-        FG_LOG::PrintError("GFX: Particle emitter '%s' is already in the Scene Manager", particleEmitterNameTag.c_str());
+        FG_LOG_ERROR("GFX: Particle emitter '%s' is already in the Scene Manager", particleEmitterNameTag.c_str());
         return NULL;
     }
     if(isEmitterInTheArray(particleEmitterNameTag)) {
-        FG_LOG::PrintError("GFX: Particle emitter '%s' is already in the Scene Manager", particleEmitterNameTag.c_str());
+        FG_LOG_ERROR("GFX: Particle emitter '%s' is already in the Scene Manager", particleEmitterNameTag.c_str());
         return NULL;
     }
     fgParticleEffect *pEffect = (fgParticleEffect *)(static_cast<fgResourceManager *>(m_pResourceMgr)->request(particleEffectNameTag));
     if(!pEffect) {
-        FG_LOG::PrintError("GFX: Unable to find particle effect: '%s'", particleEffectNameTag.c_str());
+        FG_LOG_ERROR("GFX: Unable to find particle effect: '%s'", particleEffectNameTag.c_str());
         return NULL;
     }
-    if(pEffect->isDisposed())
+    if(pEffect->isDisposed()) {
         pEffect->create();
+    }
     fgTextureResource *pTexture = (fgTextureResource *)(static_cast<fgResourceManager *>(m_pResourceMgr)->request(pEffect->getTextureName()));
     if(pTexture) {
         pEffect->setTextureGfxID(pTexture->getRefGfxID());
@@ -329,11 +330,11 @@ fgParticleEmitter* fgParticleSystem::insertParticleEmitter(const char *particleE
                                                            const fgVector3f& emitterOrigin) {
 
     if(!particleEffectNameTag || !particleEmitterNameTag) {
-        FG_LOG::PrintError("GFX: Unable to add ParticleEmitter - name tags are empty");
+        FG_LOG_ERROR("GFX: Unable to add ParticleEmitter - name tags are empty");
         return NULL;
     }
     if(!strlen(particleEffectNameTag) || !strlen(particleEmitterNameTag)) {
-        FG_LOG::PrintError("GFX: Unable to add ParticleEmitter - name tags are empty");
+        FG_LOG_ERROR("GFX: Unable to add ParticleEmitter - name tags are empty");
         return NULL;
     }
 

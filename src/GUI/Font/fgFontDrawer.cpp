@@ -404,7 +404,6 @@ float fgFontDrawer::height(fgFontResource *font, const char *string, float charS
  * @param font
  * @param charSize
  * @param fmt
- * @param ...
  * @return 
  */
 fgVector2f fgFontDrawer::size(fgFontResource *font, float charSize, const char *fmt, ...) {
@@ -440,7 +439,6 @@ fgVector2f fgFontDrawer::size(fgFontResource *font, const char *string, float ch
  * 
  * @param charSize
  * @param fmt
- * @param ...
  * @return 
  */
 float fgFontDrawer::width(float charSize, const char *fmt, ...) {
@@ -474,7 +472,6 @@ float fgFontDrawer::width(const char *string, float charSize) {
  * 
  * @param charSize
  * @param fmt
- * @param ...
  * @return 
  */
 float fgFontDrawer::height(float charSize, const char *fmt, ...) {

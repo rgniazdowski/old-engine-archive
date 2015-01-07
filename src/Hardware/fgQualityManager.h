@@ -36,11 +36,11 @@
  * This is bound to change in the future
  * Let's call this version v0.1
  */
-class fgQualityManager : public fg::base::Manager {
+class fgQualityManager : public fg::base::CManager {
 private:
     typedef std::map<int, fgQuality> areaQMap;
     typedef areaQMap::iterator areaQMapItor;
-    typedef fg::base::Manager base_type; // ?
+    typedef fg::base::CManager base_type; // ?
     /// Temporary map for storing display area sizes and corresponding quality
     /// This will work only for mobile platforms (iOS especially)
     /// Here the power of the given device is determined by max screen resolution

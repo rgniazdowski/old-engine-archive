@@ -9,7 +9,7 @@
 
 #include "fgErrorCodes.h"
 
-/*
+/**
  *
  */
 void fgErrorCodes::registerAll(void) {
@@ -29,7 +29,7 @@ void fgErrorCodes::registerAll(void) {
     FG_ERRNO_GAME::__registerAll();
 }
 
-/*
+/**
  *
  */
 void fgErrorCodes::unregisterAll(void) {

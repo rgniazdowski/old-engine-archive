@@ -27,7 +27,7 @@ fgSFXManager::~fgSFXManager() {
 /**
  * 
  */
-fgSFXManager::fgSFXManager(fg::base::Manager *pResourceMgr) :
+fgSFXManager::fgSFXManager(fg::base::CManager *pResourceMgr) :
 m_sfxVolume(0),
 m_musVolume(0),
 m_pResourceMgr(NULL) {
@@ -133,7 +133,7 @@ fgAudioBase *fgSFXManager::request(const std::string& info) {
  * 
  * @param pResourceMgr
  */
-void fgSFXManager::setResourceManager(fg::base::Manager *pResourceMgr) {
+void fgSFXManager::setResourceManager(fg::base::CManager *pResourceMgr) {
     if(pResourceMgr) {
         if(pResourceMgr->getManagerType() == FG_MANAGER_RESOURCE)
             m_pResourceMgr = pResourceMgr;

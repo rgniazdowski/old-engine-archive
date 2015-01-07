@@ -94,27 +94,27 @@ void *fgScriptSubsystem::m_luaState = NULL;
 fgBool fgScriptSubsystem::m_isBindingComplete = FG_FALSE;
 
 /// Pointer to the external GUI Main object
-fg::base::Manager *fgScriptSubsystem::m_pGuiMain = NULL;
+fg::base::CManager *fgScriptSubsystem::m_pGuiMain = NULL;
 /// Pointer to the external Event manager
-fg::base::Manager *fgScriptSubsystem::m_pEventMgr = NULL;
+fg::base::CManager *fgScriptSubsystem::m_pEventMgr = NULL;
 /// Pointer to the external Resource manager
-fg::base::Manager *fgScriptSubsystem::m_pResourceMgr = NULL;
+fg::base::CManager *fgScriptSubsystem::m_pResourceMgr = NULL;
 /// Pointer to the external GFX Shader manager
-fg::base::Manager *fgScriptSubsystem::m_pShaderMgr = NULL;
+fg::base::CManager *fgScriptSubsystem::m_pShaderMgr = NULL;
 /// Pointer to the external 2D Scene manager
-fg::base::Manager *fgScriptSubsystem::m_p2DSceneMgr = NULL;
+fg::base::CManager *fgScriptSubsystem::m_p2DSceneMgr = NULL;
 /// Pointer to the external 3D Scene manager
-fg::base::Manager *fgScriptSubsystem::m_p3DSceneMgr = NULL;
+fg::base::CManager *fgScriptSubsystem::m_p3DSceneMgr = NULL;
 /// Pointer to the external Particle manager
-fg::base::Manager *fgScriptSubsystem::m_pParticleMgr = NULL;
+fg::base::CManager *fgScriptSubsystem::m_pParticleMgr = NULL;
 /// Pointer to the external GUI Widget manager
-fg::base::Manager *fgScriptSubsystem::m_pWidgetMgr = NULL;
+fg::base::CManager *fgScriptSubsystem::m_pWidgetMgr = NULL;
 /// Pointer to the external GUI Style manager
-fg::base::Manager *fgScriptSubsystem::m_pStyleMgr = NULL;
+fg::base::CManager *fgScriptSubsystem::m_pStyleMgr = NULL;
 /// Pointer to the external Sound manager
-fg::base::Manager *fgScriptSubsystem::m_pSoundMgr = NULL;
+fg::base::CManager *fgScriptSubsystem::m_pSoundMgr = NULL;
 /// Pointer to the external Game Logic manager
-fg::base::Manager *fgScriptSubsystem::m_pLogicMgr = NULL;
+fg::base::CManager *fgScriptSubsystem::m_pLogicMgr = NULL;
 
 /**
  * 

@@ -68,9 +68,9 @@ typedef FG_TAG_SCRIPT_SUBSYSTEM fgScriptSubsystemTag;
 /**
  * 
  */
-class fgScriptSubsystem : public fg::base::Manager {
+class fgScriptSubsystem : public fg::base::CManager {
 public:
-    typedef fg::base::Manager base_type;
+    typedef fg::base::CManager base_type;
     typedef fgScriptSubsystemTag tag_type;
 private:
 
@@ -133,33 +133,33 @@ private:
     LuaPlus::LuaObject m_metatableSoundMgr;
     /// Lua metatable for the external logic manager
     LuaPlus::LuaObject m_metatableLogicMgr;
-	#else
-	static void *m_luaState;
+    #else
+    static void *m_luaState;
     #endif
 
     /// Pointer to the external gui main object
-    static fg::base::Manager *m_pGuiMain;
+    static fg::base::CManager *m_pGuiMain;
     /// Pointer to the external event manager
-    static fg::base::Manager *m_pEventMgr;
+    static fg::base::CManager *m_pEventMgr;
     /// Pointer to the external resource manager
-    static fg::base::Manager *m_pResourceMgr;
+    static fg::base::CManager *m_pResourceMgr;
     /// Pointer to the external shader manager
-    static fg::base::Manager *m_pShaderMgr;
+    static fg::base::CManager *m_pShaderMgr;
     /// Pointer to the external 2D Scene manager
-    static fg::base::Manager *m_p2DSceneMgr;
+    static fg::base::CManager *m_p2DSceneMgr;
     /// Pointer to the external 3D Scene manager
-    static fg::base::Manager *m_p3DSceneMgr;
+    static fg::base::CManager *m_p3DSceneMgr;
     /// Pointer to the external particle manager
-    static fg::base::Manager *m_pParticleMgr;
+    static fg::base::CManager *m_pParticleMgr;
     /// Pointer to the external widget manager
-    static fg::base::Manager *m_pWidgetMgr;
+    static fg::base::CManager *m_pWidgetMgr;
     /// Pointer to the external style manager
-    static fg::base::Manager *m_pStyleMgr;
+    static fg::base::CManager *m_pStyleMgr;
     /// Pointer to the external sound manager
-    static fg::base::Manager *m_pSoundMgr;
+    static fg::base::CManager *m_pSoundMgr;
     /// Pointer to the external logic manager
-    static fg::base::Manager *m_pLogicMgr;
-    
+    static fg::base::CManager *m_pLogicMgr;
+
     ///
     static fgBool m_isBindingComplete;
 
@@ -182,77 +182,77 @@ public:
      * 
      * @param pEventManager
      */
-    inline void setEventManager(fg::base::Manager *pEventManager) {
+    inline void setEventManager(fg::base::CManager *pEventManager) {
         m_pEventMgr = pEventManager;
     }
     /**
      * 
      * @param pResourceManager
      */
-    inline void setResourceManager(fg::base::Manager *pResourceManager) {
+    inline void setResourceManager(fg::base::CManager *pResourceManager) {
         m_pResourceMgr = pResourceManager;
     }
     /**
      * 
      * @param pShaderManager
      */
-    inline void setShaderManager(fg::base::Manager *pShaderManager) {
+    inline void setShaderManager(fg::base::CManager *pShaderManager) {
         m_pShaderMgr = pShaderManager;
     }
     /**
      * 
      * @param p2DSceneManager
      */
-    inline void set2DSceneManager(fg::base::Manager *p2DSceneManager) {
+    inline void set2DSceneManager(fg::base::CManager *p2DSceneManager) {
         m_p2DSceneMgr = p2DSceneManager;
     }
     /**
      * 
      * @param p3DSceneManager
      */
-    inline void set3DSceneManager(fg::base::Manager *p3DSceneManager) {
+    inline void set3DSceneManager(fg::base::CManager *p3DSceneManager) {
         m_p3DSceneMgr = p3DSceneManager;
     }
     /**
      * 
      * @param pParticleSystem
      */
-    inline void setParticleSystem(fg::base::Manager *pParticleSystem) {
+    inline void setParticleSystem(fg::base::CManager *pParticleSystem) {
         m_pParticleMgr = pParticleSystem;
     }
     /**
      * 
      * @param pGuiMain
      */
-    inline void setGuiMain(fg::base::Manager *pGuiMain) {
+    inline void setGuiMain(fg::base::CManager *pGuiMain) {
         m_pGuiMain = pGuiMain;
     }
     /**
      * 
      * @param pWidgetManager
      */
-    inline void setWidgetManager(fg::base::Manager *pWidgetManager) {
+    inline void setWidgetManager(fg::base::CManager *pWidgetManager) {
         m_pWidgetMgr = pWidgetManager;
     }
     /**
      * 
      * @param pStyleManager
      */
-    inline void setStyleManager(fg::base::Manager *pStyleManager) {
+    inline void setStyleManager(fg::base::CManager *pStyleManager) {
         m_pStyleMgr = pStyleManager;
     }
     /**
      * 
      * @param pSoundManager
      */
-    inline void setSoundManager(fg::base::Manager *pSoundManager) {
+    inline void setSoundManager(fg::base::CManager *pSoundManager) {
         m_pSoundMgr = pSoundManager;
     }
     /**
      * 
      * @param pLogicManager
      */
-    inline void setLogicManager(fg::base::Manager *pLogicManager) {
+    inline void setLogicManager(fg::base::CManager *pLogicManager) {
         m_pLogicMgr = pLogicManager;
     }
 
@@ -281,7 +281,7 @@ public:
      * @return 
      */
     virtual fgBool initialize(void);
-    
+
 public:
     /**
      * 
@@ -297,7 +297,7 @@ public:
     inline int executeFile(const std::string& filePath) {
         return executeFile(filePath.c_str());
     }
-    
+
 public:
     #if defined(FG_USING_LUA_PLUS)
     /**
@@ -313,13 +313,13 @@ public:
      * @return 
      */
     static lua_State *getCLuaState(void) {
-#if defined(FG_USING_LUA_PLUS)
+    #if defined(FG_USING_LUA_PLUS)
         if(!m_luaState)
             return (lua_State *)NULL;
         return m_luaState->GetCState();
-#else
-		return (lua_State *)NULL;
-#endif
+    #else
+        return (lua_State *)NULL;
+    #endif
     }
     #if defined(FG_USING_LUA_PLUS)
     /**
@@ -426,7 +426,7 @@ protected:
      * @return 
      */
     static int addWidgetCallbackWrapper(lua_State *L);
-    
+
     /**
      * 
      * @param systemData

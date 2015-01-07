@@ -48,9 +48,9 @@ namespace fg {
         /**
          *
          */
-        class Logic : public fg::base::Manager {
+        class Logic : public fg::base::CManager {
         public:
-            typedef fg::base::Manager base_type;
+            typedef fg::base::CManager base_type;
             ///
             typedef float score_type;
             
@@ -95,7 +95,7 @@ namespace fg {
             /**
              * 
              */
-            Logic(fg::base::Manager *pEventMgr);
+            Logic(fg::base::CManager *pEventMgr);
             /**
              * 
              * @param orig
@@ -135,14 +135,14 @@ namespace fg {
              * 
              * @param pEventMgr
              */
-            void setEventManager(fg::base::Manager *pEventMgr) {
+            void setEventManager(fg::base::CManager *pEventMgr) {
                 m_pEventMgr = pEventMgr;
             }
             /**
              * 
              * @return 
              */
-            inline fg::base::Manager *getEventManager(void) const {
+            inline fg::base::CManager *getEventManager(void) const {
                 return m_pEventMgr;
             }
             
@@ -359,7 +359,7 @@ namespace fg {
             
         private:
             /// External pointer to the event manager
-            fg::base::Manager *m_pEventMgr;
+            fg::base::CManager *m_pEventMgr;
             ///
             Status m_status;
             ///

@@ -18,19 +18,19 @@
 
 #include <queue>
 
-#include "Util/fgStrings.h"
-#include "Util/fgDirent.h"
-#include "Util/fgPath.h"
-#include "fgLog.h"
 #include "Hardware/fgQualityManager.h"
 #include "Event/fgEventManager.h"
+#include "Util/fgStrings.h"
+#include "Util/fgDirent.h"
 #include "Util/fgMemory.h"
+#include "Util/fgPath.h"
+#include "fgLog.h"
 
 /**
  * 
  * @param resourceFactory
  */
-fgResourceManager::fgResourceManager(fgResourceFactory *pResourceFactory, fg::base::Manager *pQualityMgr, fg::base::Manager *pEventMgr) :
+fgResourceManager::fgResourceManager(fgResourceFactory *pResourceFactory, fg::base::CManager *pQualityMgr, fg::base::CManager *pEventMgr) :
 m_pResourceFactory(pResourceFactory),
 m_pQualityMgr(pQualityMgr),
 m_pEventMgr(pEventMgr),
@@ -43,14 +43,14 @@ m_bResourceReserved(FG_FALSE) {
     m_managerType = FG_MANAGER_RESOURCE;
 }
 
-/*
+/**
  *
  */
 fgResourceManager::~fgResourceManager() {
     fgResourceManager::destroy();
 }
 
-/*
+/**
  * Reset local parameters
  */
 void fgResourceManager::clear(void) {
@@ -67,7 +67,7 @@ void fgResourceManager::clear(void) {
     m_managerType = FG_MANAGER_RESOURCE;
 }
 
-/*
+/**
  * This function will release all data and memory held by resource
  * manager itself (including resources)
  */
@@ -116,8 +116,9 @@ fgBool fgResourceManager::destroy(void) {
     return FG_TRUE;
 }
 
-/*
+/**
  * Function pre loads any required data (configs, metadata, etc)
+ * @return 
  */
 fgBool fgResourceManager::initialize(void) {
     if(m_init) {

@@ -9,10 +9,9 @@
 
 #ifndef FG_INC_HARDWARE_STATE
     #define FG_INC_HARDWARE_STATE
+    #define FG_INC_HARDWARE_STATE_BLOCK
 
     #include "fgSingleton.h"
-
-// #FIXME
 
 enum fgScreenOrientation {
     FG_SCREEN_ORIENTATION_PORTRAIT,
@@ -36,7 +35,7 @@ enum fgScreenOrientation {
 class fgHardwareState : public fgSingleton<fgHardwareState> {
     friend class fgSingleton<fgHardwareState>;
 private:
-    // Timestamp (in miliseconds)
+    // Timestamp (in milliseconds)
     unsigned long int m_TS;
     // Screen height
     int m_screenHeight;
@@ -58,7 +57,7 @@ private:
 protected:
     // Default constructor for Hardware State object
     fgHardwareState();
-    // Default destructor for Hardware State object
+    // Destructor for Hardware State object
     virtual ~fgHardwareState();
 
 public:
@@ -200,6 +199,8 @@ public:
     }
 };
 
+    // #FIXME - #SINGLETON - HardwareState
     #define FG_HardwareState fgHardwareState::getInstance()
 
+    #undef FG_INC_HARDWARE_STATE_BLOCK
 #endif /* FG_INC_HARDWARE_STATE */

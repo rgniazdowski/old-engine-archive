@@ -55,7 +55,7 @@ class fgGuiMain;
 /**
  *
  */
-class fgGuiMain : public fg::base::Manager, public fgGuiBase {
+class fgGuiMain : public fg::base::CManager, public fgGuiBase {
 private:
     typedef fgVector<fgGuiCallback *> guiCallbackVec;
     typedef guiCallbackVec::iterator guiCallbackVecItor;
@@ -76,7 +76,7 @@ private:
     /// GUI drawer special drawing batch
     fgGuiDrawer *m_guiDrawer;
     /// Pointer to external shader manager class
-    fg::base::Manager *m_pShaderMgr;
+    fg::base::CManager *m_pShaderMgr;
     /// Pointer to external input receiver - touch/mouse/keyboard
     fgPointerInputReceiver *m_pPointerInputReceiver;
 
@@ -221,7 +221,7 @@ public:
      * 
      * @return 
      */
-    fg::base::Manager *getShaderManager(void) const;
+    fg::base::CManager *getShaderManager(void) const;
     /**
      * 
      * @return 
@@ -242,7 +242,7 @@ public:
      * 
      * @param pShaderMgr
      */
-    void setShaderManager(fg::base::Manager *pShaderMgr);
+    void setShaderManager(fg::base::CManager *pShaderMgr);
     /**
      * 
      * @param pointerInputReceiver

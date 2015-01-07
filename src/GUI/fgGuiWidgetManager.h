@@ -24,7 +24,7 @@
 /**
  *
  */
-class fgGuiWidgetManager : public fg::base::Manager, protected fgHandleManager<fgGuiWidget *, fgGuiWidgetHandle> {
+class fgGuiWidgetManager : public fg::base::CManager, protected fgHandleManager<fgGuiWidget *, fgGuiWidgetHandle> {
 public:
     ///
     typedef fgHandleManager<fgGuiWidget *, fgGuiWidgetHandle> base_type;

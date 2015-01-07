@@ -22,7 +22,7 @@
  *
  */
 template <typename DataType, typename HandleType, typename TagType>
-class fgDataManagerBase : public fg::base::Manager, protected fgHandleManager<DataType, HandleType> {
+class fgDataManagerBase : public fg::base::CManager, protected fgHandleManager<DataType, HandleType> {
 public:
     typedef TagType tag_type;
     typedef HandleType handle_type;

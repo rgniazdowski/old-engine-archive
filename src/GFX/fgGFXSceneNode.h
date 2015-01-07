@@ -49,7 +49,7 @@ typedef unsigned int fgGfxSceneNodeType;
 /// Trigger is a special node type - when collision occurs with it
 /// the special event is thrown - registered callbacks will be called
     #define FG_GFX_SCENE_NODE_TRIGGER   4
-    
+
 /// Drawable type for scene node
     #define FG_GFX_DRAWABLE_SCENENODE   5
 
@@ -71,6 +71,8 @@ class fgGfxSceneNode :
 public fgManagedObjectBase<fgGfxSceneNodeHandle>,
 public fgGfxDrawable {
 public:
+    /// Scene node tag type
+    typedef fgGfxSceneNodeTag tag_type;
     /// Drawable object type
     typedef fgGfxDrawable drawable_type;
     /// Base type for scene node
@@ -85,7 +87,7 @@ public:
     typedef childrenSet::iterator childrenSetItor;
     /// Bounding box type - axis-aligned
     typedef fgAABoundingBox3Df box_type;
-
+    
 private:
     ///
     fgGfxSceneNodeType m_nodeType;
@@ -108,6 +110,8 @@ protected:
 public:
     /**
      * 
+     * @param nodeType
+     * @param pParent
      */
     fgGfxSceneNode(fgGfxSceneNodeType nodeType = FG_GFX_SCENE_NODE_INVALID, self_type *pParent = NULL);
     /**
@@ -343,7 +347,6 @@ public:
         // #FUBAR
         m_aabb.transform(modelMat);
     }
-    
     /**
      * 
      * @return 
@@ -358,9 +361,8 @@ public:
     void setVisible(const fgBool toggle = FG_TRUE) {
         m_isVisible = toggle;
     }
-    
+
     ////////////////////////////////////////////////////////////////////////////
-    
     /**
      * 
      * @param b
@@ -376,7 +378,6 @@ public:
      */
     inline int operator !=(const fgGfxSceneNode& b) const {
         return (this->getHandle() != b.getHandle());
-        return 0;
     }
     /**
      * 

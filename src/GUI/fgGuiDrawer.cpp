@@ -28,7 +28,7 @@ fgGuiDrawer::~fgGuiDrawer() {
 /*
  *
  */
-void fgGuiDrawer::setResourceManager(fg::base::Manager *pResourceMgr) {
+void fgGuiDrawer::setResourceManager(fg::base::CManager *pResourceMgr) {
     m_pResourceMgr = pResourceMgr;
 }
 

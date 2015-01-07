@@ -30,14 +30,22 @@
 /**
  *
  */
-class fgGfxSceneManager : public fg::base::Manager,
-        protected fgGfxDrawingBatch,
-        protected fgHandleManager<fgGfxSceneNode *, fgGfxSceneNodeHandle> {
+class fgGfxSceneManager :
+public fg::base::CManager,
+protected fgGfxDrawingBatch,
+protected fgHandleManager<fgGfxSceneNode *, fgGfxSceneNodeHandle> {
 public:
+    ///
+    typedef fg::base::CManager base_type;
+    ///
     typedef fgGfxSceneNode node_type;
+    ///
     typedef fgGfxSceneNodeHandle handle_type;
+    ///
     typedef std::priority_queue<fgGfxSceneNode*, std::deque<fgGfxSceneNode*>, fgPtrLessEq<fgGfxSceneNode*> > nodePriorityQueue;
+    ///
     typedef fgVector<fgGfxSceneNode *> objectVec;
+    ///
     typedef objectVec::iterator objectVecItor;
 
 protected:
@@ -71,13 +79,18 @@ public:
      * 
      * @param pShaderMgr
      */
-    virtual void setShaderManager(fg::base::Manager *pShaderMgr);
+    virtual void setShaderManager(fg::base::CManager *pShaderMgr);
 
-    // Set internal pointer to the main resource manager
-    void setResourceManager(fg::base::Manager *pResourceMgr);
-
-    // Get internal pointer to the main resource manager
-    fg::base::Manager *getResourceManager(void) const {
+    /**
+     * Set internal pointer to the main resource manager
+     * @param pResourceMgr
+     */
+    void setResourceManager(fg::base::CManager *pResourceMgr);
+    /**
+     * Get internal pointer to the main resource manager
+     * @return 
+     */
+    inline fg::base::CManager *getResourceManager(void) const {
         return m_pResourceMgr;
     }
     /**
@@ -128,8 +141,8 @@ public:
      * @return 
      */
     virtual fgBool addNode(fgGfxSceneNodeHandle& nodeUniqueID,
-                             fgGfxSceneNode *pNode,
-                             fgGfxSceneNode *pFatherNode = NULL);
+                           fgGfxSceneNode *pNode,
+                           fgGfxSceneNode *pFatherNode = NULL);
     /**
      * 
      * @param nodeUniqueID
@@ -138,8 +151,8 @@ public:
      * @return 
      */
     virtual fgBool addNode(fgGfxSceneNodeHandle& nodeUniqueID,
-                             fgGfxSceneNode *pNode,
-                             const fgGfxSceneNodeHandle& nodeParentUniqueID);
+                           fgGfxSceneNode *pNode,
+                           const fgGfxSceneNodeHandle& nodeParentUniqueID);
     /**
      * 
      * @param nodeUniqueID
@@ -148,8 +161,8 @@ public:
      * @return 
      */
     virtual fgBool addNode(fgGfxSceneNodeHandle& nodeUniqueID,
-                             fgGfxSceneNode *pNode,
-                             const std::string& nodeParentNameTag);
+                           fgGfxSceneNode *pNode,
+                           const std::string& nodeParentNameTag);
     /**
      * 
      * @param nodeUniqueID
@@ -158,8 +171,8 @@ public:
      * @return 
      */
     virtual fgBool addNode(fgGfxSceneNodeHandle& nodeUniqueID,
-                             fgGfxSceneNode *pNode,
-                             const char* nodeParentNameTag);
+                           fgGfxSceneNode *pNode,
+                           const char* nodeParentNameTag);
 
     /**
      * 
@@ -321,7 +334,7 @@ private:
     ///
     nodePriorityQueue m_nodeQueue;
     /// Pointer to the external resource manager - dont know if this is necessary
-    fg::base::Manager *m_pResourceMgr;
+    fg::base::CManager *m_pResourceMgr;
 };
 
     #undef FG_INC_GFX_SCENE_MANAGER_BLOCK

@@ -65,7 +65,7 @@ public:
      * @param pQualityMgr       Pointer to the external quality manager object. This is mandatory.
      * @param pEventMgr         Pointer to the external event manager object. This is optional. Default: NULL
      */
-    fgResourceManager(fgResourceFactory *pResourceFactory, fg::base::Manager *pQualityMgr, fg::base::Manager *pEventMgr = NULL);
+    fgResourceManager(fgResourceFactory *pResourceFactory, fg::base::CManager *pQualityMgr, fg::base::CManager *pEventMgr = NULL);
     /**
      * Default destructor for resource manager
      */
@@ -87,21 +87,21 @@ public:
      * 
      * @param pEventMgr
      */
-    void setEventManager(fg::base::Manager *pEventMgr) {
+    void setEventManager(fg::base::CManager *pEventMgr) {
         m_pEventMgr = pEventMgr;
     }
     /**
      * 
      * @return 
      */
-    fg::base::Manager *getEventManager(void) const {
+    fg::base::CManager *getEventManager(void) const {
         return m_pEventMgr;
     }
     /**
      * 
      * @return 
      */
-    fg::base::Manager *getQualityManager(void) const {
+    fg::base::CManager *getQualityManager(void) const {
         return m_pQualityMgr;
     }
 
@@ -303,9 +303,9 @@ private:
     ///
     fgResourceFactory *m_pResourceFactory;
     ///
-    fg::base::Manager *m_pQualityMgr;
+    fg::base::CManager *m_pQualityMgr;
     ///
-    fg::base::Manager *m_pEventMgr;
+    fg::base::CManager *m_pEventMgr;
     ///
     fgDirent *m_dataDir;
     /// Size of the current used memory by the managed resources

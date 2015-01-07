@@ -417,7 +417,7 @@ void fgGuiMain::updateState(void) {
 }
 
 /**
- *
+ * 
  */
 void fgGuiMain::display(void) {
     if(!m_widgetMgr || !m_pResourceMgr)
@@ -521,12 +521,13 @@ fgResourceManager *fgGuiMain::getResourceManager(void) const {
  * 
  * @return 
  */
-fg::base::Manager *fgGuiMain::getShaderManager(void) const {
+fg::base::CManager *fgGuiMain::getShaderManager(void) const {
     return m_pShaderMgr;
 }
 
-/*
- *
+/**
+ * 
+ * @return 
  */
 fgPointerInputReceiver *fgGuiMain::getPointerInputReceiver(void) const {
     return m_pPointerInputReceiver;
@@ -561,7 +562,7 @@ void fgGuiMain::setResourceManager(fgResourceManager * pResourceMgr) {
  * 
  * @param pShaderMgr
  */
-void fgGuiMain::setShaderManager(fg::base::Manager * pShaderMgr) {
+void fgGuiMain::setShaderManager(fg::base::CManager * pShaderMgr) {
     if(pShaderMgr) {
         if(pShaderMgr->getManagerType() != FG_MANAGER_GFX_SHADER)
             return;

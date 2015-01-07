@@ -524,10 +524,12 @@ fgBool fgGfxShaderProgram::releaseGFX(void) {
     return status;
 }
 
-/*
- *
+/**
+ * 
+ * @param pManager
+ * @return 
  */
-fgBool fgGfxShaderProgram::setManager(fg::base::Manager *pManager) {
+fgBool fgGfxShaderProgram::setManager(fg::base::CManager *pManager) {
     if(!pManager)
         return FG_FALSE;
     setManaged(FG_TRUE);

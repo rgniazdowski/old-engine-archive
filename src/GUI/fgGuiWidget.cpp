@@ -218,7 +218,7 @@ fgBoundingBox3Df fgGuiWidget::updateBounds(const fgBoundingBox3Df &bounds) {
     return positionAndSize;
 }
 
-/*
+/**
  *
  */
 void fgGuiWidget::refresh(void) {
@@ -253,8 +253,9 @@ int fgGuiWidget::updateState(const fgPointerData *pointerData) {
     if(m_state == FG_GUI_WIDGET_STATE_FOCUS) {
         if(lastState == FG_GUI_WIDGET_STATE_NONE) {
             // Focus gained
-            if(m_onFocus)
+            if(m_onFocus) {
                 m_onFocus->Call(this);
+            }
         }
         if(pointerData->m_state & FG_POINTER_STATE_PRESSED)//|| pointerData->m_state & FG_POINTER_STATE_DOWN) 
         {

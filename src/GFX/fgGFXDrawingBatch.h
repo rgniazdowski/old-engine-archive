@@ -58,7 +58,7 @@ protected:
     ///
     fgVector3f m_relMove;
     ///
-    fg::base::Manager *m_pShaderMgr;
+    fg::base::CManager *m_pShaderMgr;
 
 protected:
     /**
@@ -93,7 +93,7 @@ public:
      * 
      * @return 
      */
-    inline fg::base::Manager *getShaderManager(void) const {
+    inline fg::base::CManager *getShaderManager(void) const {
         return m_pShaderMgr;
     }
 
@@ -101,7 +101,7 @@ public:
      * 
      * @param pShaderMgr
      */
-    virtual void setShaderManager(fg::base::Manager *pShaderMgr);
+    virtual void setShaderManager(fg::base::CManager *pShaderMgr);
 
     /**
      * 

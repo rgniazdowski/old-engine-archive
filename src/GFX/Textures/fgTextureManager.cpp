@@ -19,7 +19,7 @@
 /**
  * Protected constructor
  */
-fgTextureManager::fgTextureManager(fg::base::Manager *pResourceMgr) :
+fgTextureManager::fgTextureManager(fg::base::CManager *pResourceMgr) :
 m_pResourceMgr(NULL),
 m_pEventMgr(NULL),
 m_resourceCreatedCallback(NULL),
@@ -120,12 +120,12 @@ fgBool fgTextureManager::initialize(void) {
  * 
  * @param pResourceMgr
  */
-void fgTextureManager::setResourceManager(fg::base::Manager *pResourceMgr) {
+void fgTextureManager::setResourceManager(fg::base::CManager *pResourceMgr) {
     if(!pResourceMgr)
         return;
     if(pResourceMgr->getManagerType() == FG_MANAGER_RESOURCE) {
         m_pResourceMgr = pResourceMgr;
-        fg::base::Manager *pEventMgr = static_cast<fgResourceManager *>(m_pResourceMgr)->getEventManager();
+        fg::base::CManager *pEventMgr = static_cast<fgResourceManager *>(m_pResourceMgr)->getEventManager();
         if(!pEventMgr) {
             unregisterResourceCallbacks();
             m_pEventMgr = NULL;
@@ -142,7 +142,7 @@ void fgTextureManager::setResourceManager(fg::base::Manager *pResourceMgr) {
  * 
  * @return 
  */
-fg::base::Manager * fgTextureManager::getResourceManager(void) const {
+fg::base::CManager * fgTextureManager::getResourceManager(void) const {
     return m_pResourceMgr;
 }
 

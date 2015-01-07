@@ -23,18 +23,18 @@ namespace fg {
         /**
          *
          */
-        class Manager {
+        class CManager {
         public:
             /**
              * 
              */
-            Manager() :
+            CManager() :
             m_init(FG_FALSE),
             m_managerType(FG_MANAGER_INVALID) { }
             /**
              * 
              */
-            virtual ~Manager() { }
+            virtual ~CManager() { }
 
         protected:
             /**

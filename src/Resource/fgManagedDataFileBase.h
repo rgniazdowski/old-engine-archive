@@ -9,6 +9,7 @@
 
 #ifndef FG_INC_DATA_OBJECT_BASE
     #define FG_INC_DATA_OBJECT_BASE
+    #define FG_INC_DATA_OBJECT_BASE_BLOCK
 
     #include "fgManagedObjectBase.h"
     #include <map>
@@ -28,14 +29,20 @@ template<typename HandleType, typename MapKeyType>
  */
 class fgManagedDataFileBase : public fgManagedObjectBase<HandleType> {
 public:
+    ///
     typedef std::map<MapKeyType, std::string> fileMapping;
+    ///
     typedef typename fileMapping::iterator fileMappingItor;
+    ///
     typedef HandleType handle_type;
+    ///
     typedef MapKeyType map_key_type;
+    ///
     typedef fgManagedObjectBase<HandleType> base_type;
+    
 public:
     /**
-     * Default empty constructor for resource base object
+     * Default constructor for resource base object
      */
     fgManagedDataFileBase() : m_defaultID((MapKeyType) - 1) {
         m_filePath.clear();
@@ -43,7 +50,7 @@ public:
     }
 
     /**
-     * Default empty destructor for resource base object
+     * Destructor for resource base object
      */
     virtual ~fgManagedDataFileBase() {
         m_filePath.clear();
@@ -184,4 +191,5 @@ protected:
     MapKeyType m_defaultID;
 };
 
+    #undef FG_INC_DATA_OBJECT_BASE_BLOCK
 #endif /* FG_INC_DATA_OBJECT_BASE */
