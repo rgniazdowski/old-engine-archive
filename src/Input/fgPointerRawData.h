@@ -25,38 +25,61 @@
 
     #include "fgPointerData.h"
 
-/*
+/**
  *
  */
 struct fgPointerRawData : fgPointerData {
+    ///
     fgBool m_pressOccured;
 
+    ///
     unsigned long int m_pressedMilliseconds;
+    ///
     unsigned long int m_releasedMilliseconds;
 
+    ///
     int m_pointerXSwipeInitial;
+    ///
     int m_pointerXInitial;
+    ///
     int m_pointerXStart;
+    ///
     int m_pointerXEnd;
 
+    ///
     int m_pointerYSwipeInitial;
+    ///
     int m_pointerYInitial;
+    ///
     int m_pointerYStart;
+    ///
     int m_pointerYEnd;
 
+    ///
     int m_tapX;
+    ///
     int m_tapY;
+    ///
     int m_basicSwipeXSize;
+    ///
     int m_basicSwipeYSize;
+    ///
     int m_swipeXSize;
+    ///
     int m_swipeYSize;
 
+    ///
     fgBool m_swipeLeft;
+    ///
     fgBool m_swipeRight;
+    ///
     fgBool m_swipeDown;
+    ///
     fgBool m_swipeUp;
 
+    ///
     int m_xSwipeSteps;
+    ///
     int m_ySwipeSteps;
 
     // Ten konstruktor nie jest tak naprawde potrzebny, bo DOMYSLNY KONSTRUKTOR
@@ -66,6 +89,7 @@ struct fgPointerRawData : fgPointerData {
     // UPDATE: niekoniecznie tak jest. Przywrocilem konstruktor. Trzeba doczytac.
     // http://stackoverflow.com/questions/1542892/two-ways-of-calling-default-constructor
     fgPointerRawData() :
+    fgPointerData(),
     m_pressOccured(FG_FALSE),
     m_pressedMilliseconds(0), m_releasedMilliseconds(0),
     m_pointerXSwipeInitial(0), m_pointerXInitial(0),

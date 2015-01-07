@@ -71,7 +71,7 @@ void fgGuiConsole::updateFromStatusVec(const fgVector<fgStatus *> &statusVec) {
        return;
    
    if(n > m_numConsoleRecords) {
-       for(int i=m_numConsoleRecords;i<n;i++) {
+       for(unsigned int i=m_numConsoleRecords;i<n;i++) {
            fgStatus *status = statusVec[i];
            if(!status)
                continue;

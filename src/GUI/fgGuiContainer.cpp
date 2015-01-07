@@ -43,6 +43,8 @@ void fgGuiContainer::setDefaults(void) {
     m_type = FG_GUI_CONTAINER;
     m_typeName = FG_GUI_CONTAINER_NAME;
     m_typeTraits = FG_GUI_CONTAINER | FG_GUI_WIDGET;
+    m_ignoreState = FG_TRUE; // CONTAINER BY DEFAULT IGNORES THE STATE CHANGE (STYLE)
+    m_packMethod = FG_GUI_CONTAINER_PACK_VERTICAL;
 }
 
 /**

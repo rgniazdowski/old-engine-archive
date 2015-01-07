@@ -248,6 +248,7 @@ int fgGuiWidget::updateState(const fgPointerData *pointerData) {
     m_state = FG_GUI_WIDGET_STATE_NONE;
     if(m_bbox.test((float)pointerData->m_x, (float)pointerData->m_y)) {
         m_state = FG_GUI_WIDGET_STATE_FOCUS;
+        //if(!m_ignoreState) FG_LOG_DEBUG("GUI: Widget name[%s] state[FOCUS]", getNameStr());
     }
 
     if(m_state == FG_GUI_WIDGET_STATE_FOCUS) {
@@ -260,24 +261,34 @@ int fgGuiWidget::updateState(const fgPointerData *pointerData) {
         if(pointerData->m_state & FG_POINTER_STATE_PRESSED)//|| pointerData->m_state & FG_POINTER_STATE_DOWN) 
         {
             m_state = FG_GUI_WIDGET_STATE_PRESSED;
+            //if(!m_ignoreState) FG_LOG_DEBUG("GUI: Widget name[%s] state[PRESSED]", getNameStr());
         } else if(pointerData->m_state == FG_POINTER_STATE_RELEASED) {
             if(lastState == FG_GUI_WIDGET_STATE_PRESSED) {
                 // On click event - does not care about tap
                 // when widget is tapped - on activate event is called
-                if(m_onClick)
+                if(m_onClick) {
                     m_onClick->Call(this);
+                }
+                //if(!m_ignoreState) FG_LOG_DEBUG("GUI: Widget name[%s] state[CLICK]", getNameStr());
+
+                if(pointerData->m_pointerTap) {
+                    m_state = FG_GUI_WIDGET_STATE_ACTIVATED;
+                    if(lastState != FG_GUI_WIDGET_STATE_ACTIVATED) {
+                        //if(!m_ignoreState) FG_LOG_DEBUG("GUI: Widget name[%s] state[ACTIVATED]", getNameStr());
+                        if(m_onActivate && lastState != FG_GUI_WIDGET_STATE_ACTIVATED) {
+                            m_onActivate->Call(this);
+                            FG_LOG_DEBUG("GUI: Widget name[%s] call:onActivate()", getNameStr());
+                        }
+                        if(m_onLink && m_link.length()) {
+                            // This a special callback, designed for menu navigation
+                            m_onLink->Call(this);
+                            FG_LOG_DEBUG("GUI: Widget name[%s] call:onLink()", getNameStr());
+                        }
+                    }
+                }
             }
             if(pointerData->m_pointerTap) {
                 m_state = FG_GUI_WIDGET_STATE_ACTIVATED;
-                if(lastState != FG_GUI_WIDGET_STATE_ACTIVATED) {
-                    if(m_onActivate && lastState != FG_GUI_WIDGET_STATE_ACTIVATED) {
-                        m_onActivate->Call(this);
-                    }
-                    if(m_onLink && m_link.length()) {
-                        // This a special callback, designed for menu navigation
-                        m_onLink->Call(this);
-                    }
-                }
             }
         } else {
             // que paso?
@@ -292,7 +303,9 @@ int fgGuiWidget::updateState(const fgPointerData *pointerData) {
         // #TODO - callback dispatcher base class P2/3
         if(m_onFocusLost)
             m_onFocusLost->Call(this);
+        //if(!m_ignoreState) FG_LOG_DEBUG("GUI: Widget name[%s] state[FOCUS LOST]", getNameStr());
     }
+    //if(!m_ignoreState && m_state != 0 && m_state != lastState) FG_LOG_DEBUG("GUI: Widget name[%s] state[%d] lastState[%d] -> 0-none, 1-focus, 2-pressed, 3-activated", getNameStr(), m_state, lastState);
     // key events!
     if(m_state != lastState) {
         if(m_onChangeState)

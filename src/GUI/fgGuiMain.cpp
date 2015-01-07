@@ -388,8 +388,13 @@ extern float guiScale;
 void fgGuiMain::updateState(void) {
     if(!m_widgetMgr || !m_pResourceMgr || !m_pPointerInputReceiver)
         return;
-    if(m_isMenuChanging)
-        return;
+    if(m_isMenuChanging) {
+        if(m_changeToMenu) {
+            m_currentMenu = static_cast<fgGuiMenu *>(m_changeToMenu);
+        }
+        m_isMenuChanging = FG_FALSE;
+        //return;
+    }        
     if(!m_currentMenu) {
         // #FIXME - this needs to look a little bit differently
         fgGuiWidgetManager::widgetVec & roots = m_widgetMgr->getRefRootWidgets();
@@ -627,9 +632,11 @@ fgBool fgGuiMain::guiLinkHandler(fgGuiMain* pGuiMain, fgGuiWidget * pWidget) {
             return FG_FALSE;
         if(goToWidget->getTypeTraits() & FG_GUI_MENU) {
             // NOT YET - need animation ?
-            //m_changeToMenu = static_cast<fgGuiMenu *>(goToWidget);
-            m_currentMenu = static_cast<fgGuiMenu *>(goToWidget);
-            m_isMenuChanging = FG_FALSE; // #FIXME
+            m_changeToMenu = static_cast<fgGuiMenu *>(goToWidget);
+            //m_currentMenu = static_cast<fgGuiMenu *>(goToWidget);
+            FG_LOG_DEBUG("GUI: Changing menu to: '%s'", m_currentMenu->getNameStr());
+            this->updateState();
+            m_isMenuChanging = FG_TRUE; // #FIXME
             return FG_TRUE;
         } else {
             return FG_FALSE;
