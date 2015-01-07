@@ -53,6 +53,8 @@
 /// Standard color array - format based on GFX color/vec4
 #include "fgColors.h"
 #include "fgDebugConfig.h"
+/// Simple options management
+#include "SimpleOpt.h"
 
 /**
  * Default constructor for the Game Main object
@@ -423,6 +425,28 @@ fgBool fgGameMain::loadConfiguration(void) {
             return FG_FALSE;
         }
     }
+    // #FIXME
+    CSimpleOpt::SOption gameOptions[] = {
+        {0, "--mod", SO_REQ_SEP},
+        { -1, NULL, SO_NONE}
+    };
+
+    CSimpleOpt args;
+    args.Init(m_argc, m_argv, gameOptions, SO_O_NOERR | SO_O_EXACT);
+    while(args.Next()) {
+        switch(args.OptionId()) {
+            case 0:
+                if(args.OptionArg()) {
+                    if(strlen(args.OptionArg())) {
+                        m_settings->setCurrentModPath(args.OptionArg());
+                        FG_LOG_DEBUG("SETUP: Setting new current mod path: '%s'", args.OptionArg());
+                    }
+                }
+                break;
+            default:
+                break;
+        };
+    }
     return FG_TRUE;
 }
 
@@ -435,8 +459,17 @@ fgBool fgGameMain::loadResources(void) {
     FG_LOG_DEBUG("Loading resources...");
 #if defined(FG_USING_LUA_PLUS)
     LuaPlus::LuaState *state = m_scriptSubsystem->getLuaState();
-    if(m_scriptSubsystem->executeFile("main.lua") && state) {
-        // An error occurred
+    std::string mainScriptPath;
+    fgPath::join(mainScriptPath, m_settings->getMainModPath(), std::string("main.lua"));
+    FG_LOG_DEBUG("Main: Loading and executing script file: '%s'", mainScriptPath.c_str());
+    if(m_scriptSubsystem->executeFile(mainScriptPath) != 0 && state) {
+        if(state->GetTop() == 1) {
+            FG_LOG_ERROR("Main: Error occurred while running script: '%s'", state->CheckString(1));
+        }
+    }
+    fgPath::join(mainScriptPath, m_settings->getCurrentModPath(), std::string("main.lua"));
+    FG_LOG_DEBUG("Main: Loading and executing script file: '%s'", mainScriptPath.c_str());
+    if(m_scriptSubsystem->executeFile(mainScriptPath) != 0 && state) {
         if(state->GetTop() == 1) {
             FG_LOG_ERROR("Main: Error occurred while running script: '%s'", state->CheckString(1));
         }
@@ -796,6 +829,8 @@ fgBool fgGameMain::gameFreeLookHandler(fgArgumentList* argv) {
         x = touch->x;
         y = touch->y;
         pressed = touch->pressed;
+        if(touch->touchID > FG_POINTER_BUTTON_SELECT)
+            return FG_TRUE;
     } else if(type == FG_EVENT_MOUSE_MOTION ||
               type == FG_EVENT_MOUSE_PRESSED ||
               type == FG_EVENT_MOUSE_RELEASED) {
@@ -803,6 +838,8 @@ fgBool fgGameMain::gameFreeLookHandler(fgArgumentList* argv) {
         x = mouse->x;
         y = mouse->y;
         pressed = mouse->pressed;
+        if(mouse->buttonID > FG_POINTER_BUTTON_SELECT)
+            return FG_TRUE;
     } else {
         return FG_FALSE;
     }

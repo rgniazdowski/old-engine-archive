@@ -214,6 +214,10 @@ protected:
     void setEventManager(fgEventManager *pEventMgr);
 
 private:
+    /// Number of the arguments passed to program
+    int m_argc;
+    /// Array of arguments passed to program
+    char **m_argv;
     /// Main GFX subsystem object
     fgGfxMain *m_gfxMain;
     /// Main GUI (User Interface))
@@ -240,7 +244,7 @@ private:
     fgSFXManager *m_soundMgr;
     /// Inner game logic
     fg::game::Logic *m_logicMgr;
-
+    
     /// Callback for Touch events
     fgFunctionCallback *m_gameTouchCallback;
     /// Callback for Mouse events
