@@ -82,57 +82,64 @@ files
 assets
 {
 	(data)
+	developer.jpg
+	publisher.jpg
+	publisher.png
+	splash.png
 
-	sound/m1.mp3
-
-	sound/beat1.raw
-	sound/bounce1.raw
-	sound/chime1.raw
-	sound/click1.raw
-	sound/electronic1.raw
-
-	sound/beat1.wav
-	sound/bounce1.wav
-	sound/chime1.wav
-	sound/click1.wav
-	sound/electronic1.wav
-	sound/empty.wav
-	sound/explode.wav
-	sound/shot2.wav
-	sound/shot.wav
-
-	sound/mod/mod.shamrip.mod
-	sound/mod/mod.dragonsfunk.mod
-	sound/mod/mod.dragonsfunk.mp3
+	(data)
+	main/sound/m1.mp3
+	main/sound/beat1.raw
+	main/sound/bounce1.raw
+	main/sound/chime1.raw
+	main/sound/click1.raw
+	main/sound/electronic1.raw
+	main/sound/beat1.wav
+	main/sound/bounce1.wav
+	main/sound/chime1.wav
+	main/sound/click1.wav
+	main/sound/electronic1.wav
+	main/sound/empty.wav
+	main/sound/explode.wav
+	main/sound/shot2.wav
+	main/sound/shot.wav
+	main/sound/mod/mod.shamrip.mod
+	main/sound/mod/mod.dragonsfunk.mod
+	main/sound/mod/mod.dragonsfunk.mp3
 
     (data)
-    Asteroids.group.ini
-	Crystal1.group.ini
-	CobraBomber.group.ini
-    CobraFighter.group.ini
-    CobraInterceptor.group.ini
-    DerelictMiningStation.group.ini
-    explosionDebris.particle.ini
-    ExplosionDebris.res.ini
-    explosionFlash.particle.ini
-    ExplosionFlash.res.ini
-    explosionRoundSparks.particle.ini
-    ExplosionRoundSparks.res.ini
-    explosionShockwave.particle.ini
-    ExplosionShockwave.res.ini
-    explosionSmoke.particle.ini
-    ExplosionSmoke.res.ini
-    explosionSmokeTrails.particle.ini
-    ExplosionSmokeTrails.res.ini
-    explosionSparks.particle.ini
-    ExplosionSparks.res.ini
-    fonts.group.ini
+	endless_flying/fly_tex.group.xml
+    endless_flying/Asteroids.group.ini
+	endless_flying/Crystal1.group.ini
+	endless_flying/CobraBomber.group.ini
+    endless_flying/CobraFighter.group.ini
+    endless_flying/CobraInterceptor.group.ini
+
+    (data)
+    main/explosionDebris.particle.ini
+    main/ExplosionDebris.res.ini
+    main/explosionFlash.particle.ini
+    main/ExplosionFlash.res.ini
+    main/explosionRoundSparks.particle.ini
+    main/ExplosionRoundSparks.res.ini
+    main/explosionShockwave.particle.ini
+    main/ExplosionShockwave.res.ini
+    main/explosionSmoke.particle.ini
+    main/ExplosionSmoke.res.ini
+    main/explosionSmokeTrails.particle.ini
+    main/ExplosionSmokeTrails.res.ini
+    main/explosionSparks.particle.ini
+    main/ExplosionSparks.res.ini
+    main/fonts.group.ini
+	main/textures.group.xml
+	main/particle_textures.group.xml
+
+    (data)
     main.config.ini
-    audio.group.xml
-    particle_textures.group.xml
     settings.xml
-    textures.group.xml
-	main.lua
+
+    (data)
+    endless_flying/main.lua
 
 	(data)
 	textures/splash/bg_biohazard0_1920x1200.jpg
@@ -141,77 +148,132 @@ assets
 	textures/splash/bg_biohazard0_1024x768.jpg
 
 	(data)
-	textures/skybox/plasma_galaxy_1024.jpg
-	textures/skybox/PurpleNebulaCube.res.ini
-	textures/skybox/PurpleNebula.res.ini
-	textures/skybox/galaxy_1024.jpg
-	textures/skybox/purple-nebula-1024.jpg
-	textures/skybox/galaxy_mod_1024.jpg
-	textures/skybox/purple-nebula-2048.jpg
-	textures/skybox/nebula_1024.jpg
-	textures/skybox/pn-cube/purple-nebula-2048-px.jpg
-	textures/skybox/pn-cube/purple-nebula-2048-py.jpg
-	textures/skybox/pn-cube/purple-nebula-2048-pz.jpg
-	textures/skybox/pn-cube/purple-nebula-2048-nx.jpg
-	textures/skybox/pn-cube/purple-nebula-2048-ny.jpg
-	textures/skybox/pn-cube/purple-nebula-2048-nz.jpg
-	textures/skybox/pn-cube/purple-nebula-1024-px.jpg
-	textures/skybox/pn-cube/purple-nebula-1024-py.jpg
-	textures/skybox/pn-cube/purple-nebula-1024-pz.jpg
-	textures/skybox/pn-cube/purple-nebula-1024-nx.jpg
-	textures/skybox/pn-cube/purple-nebula-1024-ny.jpg
-	textures/skybox/pn-cube/purple-nebula-1024-nz.jpg
-	textures/skybox/pn-cube/purple-nebula-512-px.jpg
-	textures/skybox/pn-cube/purple-nebula-512-py.jpg
-	textures/skybox/pn-cube/purple-nebula-512-pz.jpg
-	textures/skybox/pn-cube/purple-nebula-512-nx.jpg
-	textures/skybox/pn-cube/purple-nebula-512-ny.jpg
-	textures/skybox/pn-cube/purple-nebula-512-nz.jpg
+	endless_flying/textures/skybox/plasma_galaxy_1024.jpg
+	endless_flying/textures/skybox/PurpleNebulaCube.res.ini
+	endless_flying/textures/skybox/PurpleNebula.res.ini
+	endless_flying/textures/skybox/galaxy_1024.jpg
+	endless_flying/textures/skybox/purple-nebula-1024.jpg
+	endless_flying/textures/skybox/galaxy_mod_1024.jpg
+	endless_flying/textures/skybox/purple-nebula-2048.jpg
+	endless_flying/textures/skybox/nebula_1024.jpg
+	endless_flying/textures/skybox/pn-cube/purple-nebula-2048-px.jpg
+	endless_flying/textures/skybox/pn-cube/purple-nebula-2048-py.jpg
+	endless_flying/textures/skybox/pn-cube/purple-nebula-2048-pz.jpg
+	endless_flying/textures/skybox/pn-cube/purple-nebula-2048-nx.jpg
+	endless_flying/textures/skybox/pn-cube/purple-nebula-2048-ny.jpg
+	endless_flying/textures/skybox/pn-cube/purple-nebula-2048-nz.jpg
+	endless_flying/textures/skybox/pn-cube/purple-nebula-1024-px.jpg
+	endless_flying/textures/skybox/pn-cube/purple-nebula-1024-py.jpg
+	endless_flying/textures/skybox/pn-cube/purple-nebula-1024-pz.jpg
+	endless_flying/textures/skybox/pn-cube/purple-nebula-1024-nx.jpg
+	endless_flying/textures/skybox/pn-cube/purple-nebula-1024-ny.jpg
+	endless_flying/textures/skybox/pn-cube/purple-nebula-1024-nz.jpg
+	endless_flying/textures/skybox/pn-cube/purple-nebula-512-px.jpg
+	endless_flying/textures/skybox/pn-cube/purple-nebula-512-py.jpg
+	endless_flying/textures/skybox/pn-cube/purple-nebula-512-pz.jpg
+	endless_flying/textures/skybox/pn-cube/purple-nebula-512-nx.jpg
+	endless_flying/textures/skybox/pn-cube/purple-nebula-512-ny.jpg
+	endless_flying/textures/skybox/pn-cube/purple-nebula-512-nz.jpg
 
 	(data)
-    textures/particle/CloudsSheet.res.ini
-    textures/particle/clouds0_sheet_1024.tga
-    textures/particle/clouds0_sheet_512.tga
-	textures/particle/shockwave1.tga
-	textures/particle/shockwave0.tga
-	textures/particle/smoketrail0.tga
-	textures/particle/flame0_sheet.tga
-	textures/particle/flash0_sheet.tga
-	textures/particle/spark0.tga
-    textures/particle/roundspark0.tga
-	textures/particle/explosion1_1024.tga
-	textures/particle/fire1_512.tga
-	textures/particle/debris0_sheet.tga
+    main/textures/particle/CloudsSheet.res.ini
+    main/textures/particle/ExplosionSheet.res.ini
+    main/textures/particle/FigureSheet.res.ini
+    main/textures/particle/FlareSheet.res.ini
+    main/textures/particle/WhirlSheet.res.ini
+
+    (data)
+    main/textures/particle/clouds0_sheet_1024.jpg
+    main/textures/particle/clouds0_sheet_512.jpg
+    main/textures/particle/debris0_sheet.jpg
+    main/textures/particle/explosion0_sheet_256.jpg
+    main/textures/particle/explosion0_sheet_512.jpg
+    main/textures/particle/figure0_sheet_1024.jpg
+    main/textures/particle/figure0_sheet_256.jpg
+    main/textures/particle/figure0_sheet_512.jpg
+    main/textures/particle/flame0_sheet.jpg
+    main/textures/particle/flare0_sheet_1024.jpg
+    main/textures/particle/flare0_sheet_256.jpg
+    main/textures/particle/flare0_sheet_512.jpg
+    main/textures/particle/flash0_sheet.jpg
+    main/textures/particle/roundspark0.jpg
+	main/textures/particle/shockwave0.jpg
+	main/textures/particle/shockwave1.jpg
+	main/textures/particle/smoketrail0.jpg
+	main/textures/particle/spark0.jpg
+    main/textures/particle/whirlsheet_128.jpg
+    main/textures/particle/whirlsheet_256.jpg
+    main/textures/particle/whirlsheet_512.jpg
+	main/textures/particle/explosion1_1024.tga
+	main/textures/particle/fire1_512.tga
 
 	(data)
-	textures/gui/hud/HudTop.res.ini
-	textures/gui/hud/hud_top_1024.tga
-	textures/gui/hud/hud_top_2048.tga
-	textures/gui/hud/HudBottom.res.ini
-	textures/gui/hud/hud_bottom_1024.tga
-	textures/gui/hud/hud_bottom_2048.tga
-	textures/gui/hud/HudLines.res.ini
-	textures/gui/hud/hud_lines_1024.tga
-	textures/gui/hud/hud_lines_2048.tga
-	textures/gui/hud/HudCenter.res.ini
-	textures/gui/hud/hud_center_512.tga
-	textures/gui/hud/hud_center_1024.tga
-    textures/gui/MenuBG.res.ini
-    textures/gui/PopupBG.res.ini
-    textures/gui/MenuBGx1024.png
-    textures/gui/MenuBGx512.png
-    textures/gui/PopupBackground_1024x512.tga
-    textures/gui/TitleBar_1024x64.jpg
+	main/textures/particle/flares/aura.jpg
+	main/textures/particle/flares/corona.jpg
+	main/textures/particle/flares/darkball.jpg
+	main/textures/particle/flares/divine.jpg
+	main/textures/particle/flares/extend.jpg
+	main/textures/particle/flares/extendring.jpg
+	main/textures/particle/flares/flaredouble.jpg
+	main/textures/particle/flares/flarefour.jpg
+	main/textures/particle/flares/hexagon.jpg
+	main/textures/particle/flares/hexangle.jpg
+	main/textures/particle/flares/i0.jpg
+	main/textures/particle/flares/iris.jpg
+	main/textures/particle/flares/nova.jpg
+	main/textures/particle/flares/pearl.jpg
+	main/textures/particle/flares/pearlring.jpg
+	main/textures/particle/flares/pollen.jpg
+	main/textures/particle/flares/quadangle.jpg
+	main/textures/particle/flares/quadragon.jpg
+	main/textures/particle/flares/ring.jpg
+	main/textures/particle/flares/sparkle.jpg
+	main/textures/particle/flares/star.jpg
+	main/textures/particle/flares/starring.jpg
+	main/textures/particle/flares/sun.jpg
+	main/textures/particle/flares/triangle.jpg
+	main/textures/particle/flares/trigon.jpg
+	main/textures/particle/flares/tunel.jpg
+	main/textures/particle/flares/tunelring.jpg
+	main/textures/particle/flares/wave.jpg
+	main/textures/particle/flares/wavering.jpg
+	main/textures/particle/flares/x0.jpg
+	main/textures/particle/flares/x1.jpg
+	main/textures/particle/flares/x2.jpg
+	main/textures/particle/flares/x3.jpg
+	main/textures/particle/flares/x4.jpg
+	main/textures/particle/flares/x5.jpg
+	main/textures/particle/flares/x6.jpg
+
+
+	(data)
+	main/textures/gui/hud/HudTop.res.ini
+	main/textures/gui/hud/hud_top_1024.tga
+	main/textures/gui/hud/hud_top_2048.tga
+	main/textures/gui/hud/HudBottom.res.ini
+	main/textures/gui/hud/hud_bottom_1024.tga
+	main/textures/gui/hud/hud_bottom_2048.tga
+	main/textures/gui/hud/HudLines.res.ini
+	main/textures/gui/hud/hud_lines_1024.tga
+	main/textures/gui/hud/hud_lines_2048.tga
+	main/textures/gui/hud/HudCenter.res.ini
+	main/textures/gui/hud/hud_center_512.tga
+	main/textures/gui/hud/hud_center_1024.tga
+    main/textures/gui/MenuBG.res.ini
+    main/textures/gui/PopupBG.res.ini
+    main/textures/gui/MenuBGx1024.png
+    main/textures/gui/MenuBGx512.png
+    main/textures/gui/PopupBackground_1024x512.tga
+    main/textures/gui/TitleBar_1024x64.jpg
 
     (data)
     textures/Grill_1024x512.tga
     textures/GrillSquare1_512.tga
     textures/MetGrill_512.tga
-    textures/MetGrill_1024.tga
     textures/MetalGrill.res.ini
 
 	(data)
-	textures/other/BackgroundCrate_1024x512.jpg    
+	main/textures/gui/BackgroundCrate_1024x512.jpg
 
     (data)
     endless_flying/gui/frame.style.ini
@@ -221,84 +283,78 @@ assets
 	endless_flying/gui/contextmenu.style.ini
 
 	(data)
-	fonts/CaptureIt.res.ini
-	fonts/CaptureIt_1024.tga
-	fonts/CaptureIt_2048.tga
-	fonts/CaptureIt_512.tga
+	main/fonts/CaptureIt.res.ini
+	main/fonts/CaptureIt_1024.tga
+	main/fonts/CaptureIt_2048.tga
+	main/fonts/CaptureIt_512.tga
 
-	fonts/CarbonType.res.ini
-	fonts/CarbonType_1024.tga
-	fonts/CarbonType_2048.tga
-	fonts/CarbonType_512.tga
+	main/fonts/CarbonType.res.ini
+	main/fonts/CarbonType_1024.tga
+	main/fonts/CarbonType_2048.tga
+	main/fonts/CarbonType_512.tga
 
-	fonts/TrueCrimes.res.ini
-	fonts/TrueCrimes_1024.tga
-	fonts/TrueCrimes_2048.tga
-	fonts/TrueCrimes_512.tga
+	main/fonts/Loaded.res.ini
+	main/fonts/Loaded_1024.tga
+	main/fonts/Loaded_2048.tga
+	main/fonts/Loaded_512.tga
 
-    fonts/Loaded.res.ini
-	fonts/Loaded_1024.tga
-	fonts/Loaded_2048.tga
-	fonts/Loaded_512.tga
-
-	(data)
-	obj/CobraBomber/CobraBomber_512.png
-	obj/CobraBomber/CobraBomber_1024.png
-	obj/CobraBomber/CobraBomber.mtl
-	obj/CobraBomber/CobraBomber.obj
+	main/fonts/Furore.res.ini
+	main/fonts/Furore_1024.tga
+	main/fonts/Furore_2048.tga
+	main/fonts/Furore_512.tga
 
 	(data)
-	obj/Crystal1/Crystal1.obj
-	obj/Crystal1/Crystal1.mtl
-	obj/Crystal1/Crystal_512.jpg
-	obj/Crystal1/Crystal_1024.jpg
+	endless_flying/obj/CobraBomber/CobraBomber_512.png
+	endless_flying/obj/CobraBomber/CobraBomber_1024.png
+	endless_flying/obj/CobraBomber/CobraBomber.mtl
+	endless_flying/obj/CobraBomber/CobraBomber.obj
 
 	(data)
-	obj/Rocks/rock_d_01.mtl
-	obj/Rocks/rock_d_01_normal_512.jpg
-	obj/Rocks/rock_d_01.obj
-	obj/Rocks/rock_d_01_tex_AM1_512.jpg
-	obj/Rocks/rock_d_01_tex_AM4_512.jpg
-	obj/Rocks/rock_d_01_tex_AM5_512.jpg
+	endless_flying/obj/Crystal1/Crystal1.obj
+	endless_flying/obj/Crystal1/Crystal1.mtl
+	endless_flying/obj/Crystal1/Crystal_512.jpg
+	endless_flying/obj/Crystal1/Crystal_1024.jpg
 
 	(data)
-	obj/Rocks/rock_d_02.mtl
-	obj/Rocks/rock_d_02_normal_512.jpg
-	obj/Rocks/rock_d_02.obj
-	obj/Rocks/rock_d_02_tex_AM1_512.jpg
-	obj/Rocks/rock_d_02_tex_AM4_512.jpg
-	obj/Rocks/rock_d_02_tex_AM5_512.jpg
+	endless_flying/obj/Rocks/rock_d_01.mtl
+	endless_flying/obj/Rocks/rock_d_01_normal_512.jpg
+	endless_flying/obj/Rocks/rock_d_01.obj
+	endless_flying/obj/Rocks/rock_d_01_tex_AM1_512.jpg
+	endless_flying/obj/Rocks/rock_d_01_tex_AM4_512.jpg
+	endless_flying/obj/Rocks/rock_d_01_tex_AM5_512.jpg
 
 	(data)
-	obj/Rocks/rock_d_03.mtl
-	obj/Rocks/rock_d_03_normal_512.jpg
-	obj/Rocks/rock_d_03.obj
-	obj/Rocks/rock_d_03_tex_AM1_512.jpg
-	obj/Rocks/rock_d_03_tex_AM4_512.jpg
-	obj/Rocks/rock_d_03_tex_AM5_512.jpg
+	endless_flying/obj/Rocks/rock_d_02.mtl
+	endless_flying/obj/Rocks/rock_d_02_normal_512.jpg
+	endless_flying/obj/Rocks/rock_d_02.obj
+	endless_flying/obj/Rocks/rock_d_02_tex_AM1_512.jpg
+	endless_flying/obj/Rocks/rock_d_02_tex_AM4_512.jpg
+	endless_flying/obj/Rocks/rock_d_02_tex_AM5_512.jpg
 
 	(data)
-	obj/Rocks/rock_d_05.mtl
-	obj/Rocks/rock_d_05_normal_512.jpg
-	obj/Rocks/rock_d_05.obj
-	obj/Rocks/rock_d_05_tex_AM1_512.jpg
-	obj/Rocks/rock_d_05_tex_AM4_512.jpg
-	obj/Rocks/rock_d_05_tex_AM5_512.jpg
-	obj/Rocks/rock_d_05_tex_diff_512.jpg
+	endless_flying/obj/Rocks/rock_d_03.mtl
+	endless_flying/obj/Rocks/rock_d_03_normal_512.jpg
+	endless_flying/obj/Rocks/rock_d_03.obj
+	endless_flying/obj/Rocks/rock_d_03_tex_AM1_512.jpg
+	endless_flying/obj/Rocks/rock_d_03_tex_AM4_512.jpg
+	endless_flying/obj/Rocks/rock_d_03_tex_AM5_512.jpg
 
 	(data)
-	obj/Rocks/rock_d_06.mtl
-	obj/Rocks/rock_d_06_normal_512.jpg
-	obj/Rocks/rock_d_06.obj
-	obj/Rocks/rock_d_06_tex_AM1_512.jpg
-	obj/Rocks/rock_d_06_tex_AM4_512.jpg
-	obj/Rocks/rock_d_06_tex_AM5_512.jpg
+	endless_flying/obj/Rocks/rock_d_05.mtl
+	endless_flying/obj/Rocks/rock_d_05_normal_512.jpg
+	endless_flying/obj/Rocks/rock_d_05.obj
+	endless_flying/obj/Rocks/rock_d_05_tex_AM1_512.jpg
+	endless_flying/obj/Rocks/rock_d_05_tex_AM4_512.jpg
+	endless_flying/obj/Rocks/rock_d_05_tex_AM5_512.jpg
+	endless_flying/obj/Rocks/rock_d_05_tex_diff_512.jpg
 
-	#(data)
-	#obj/MalHideout/MalHideout_512.jpg
-	#obj/MalHideout/MalHideout_1024.jpg
-	#obj/MalHideout/MalHideout.mtl
-	#obj/MalHideout/MalHideout.obj
+	(data)
+	endless_flying/obj/Rocks/rock_d_06.mtl
+	endless_flying/obj/Rocks/rock_d_06_normal_512.jpg
+	endless_flying/obj/Rocks/rock_d_06.obj
+	endless_flying/obj/Rocks/rock_d_06_tex_AM1_512.jpg
+	endless_flying/obj/Rocks/rock_d_06_tex_AM4_512.jpg
+	endless_flying/obj/Rocks/rock_d_06_tex_AM5_512.jpg
 
 	(data)
 	shaders/other/sVertexLighting.frag

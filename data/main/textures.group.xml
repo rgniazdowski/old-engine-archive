@@ -1,0 +1,11 @@
+
+<ResourceGroup name="MainTextures" priority="medium">
+	<Texture path="textures/gui/BackgroundCrate_1024x512.jpg" name="MainBackgroundTexture" quality="universal" />
+
+	<!-- quality below zero tells the system that that texture must be used in
+		 every quality setup (which has not texture with the same name) -->
+	<Texture config="textures/gui/hud/HudTop.res.ini" />
+	<Texture config="textures/gui/hud/HudBottom.res.ini" />
+	<Texture config="textures/gui/hud/HudCenter.res.ini" />
+	<Texture config="textures/gui/hud/HudLines.res.ini" />
+</ResourceGroup>

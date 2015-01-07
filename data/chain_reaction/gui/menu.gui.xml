@@ -1,0 +1,59 @@
+<GUIStructure>
+
+	<Menu name="MainMenu" ignoreState="true" flags="packvertical right mainmenu">
+		<Container>
+			<Button name="StartGameButton" link="SelectGameMenu">START GAME</Button>
+			<Button name="HighscoresButton" link="HighscoresMenu">HIGH SCORES</Button>
+			<Button name="StatsButton" link="StatsMenu">STATISTICS</Button>
+			<Button name="OptionsButton" link="OptionsMenu">OPTIONS</Button>
+			<Button name="TestMenuButton" link="TestMenu">TEST MENU</Button>
+		</Container>
+	</Menu>
+
+	<Menu name="Empty">
+	</Menu>
+
+	<Menu name="OptionsMenu" flags="packvertical">
+		<Button name="OptionsBack" link="MainMenu"> GO BACK! </Button>
+	</Menu>
+
+	<Menu name="SelectGameMenu" flags="packvertical">
+		<Container>
+			<Button name="LastLevelButton" action="LoadLevel"> Last level </Button>
+			<Button name="SelectGameBack" link="MainMenu"> GO BACK! </Button>
+		</Container>
+	</Menu>
+
+	<Menu name="HighscoresMenu" flags="packvertical">
+		<Button name="HighscoresBack" link="MainMenu"> GO BACK! </Button>
+	</Menu>
+
+	<Menu name="StatsMenu" flags="packvertical">
+		<Button name="StatsBack" link="MainMenu"> GO BACK! </Button>
+	</Menu>
+
+	<Menu name="TestMenu" ignoreState="true" flags="packhorizontal">
+		<Container flags="packvertical">
+			<Button name="XXStartGameButton">START GAME</Button>
+			<Button name="XXHighscoresButton">HIGH SCORES</Button>
+			<Button name="XXStatsButton">STATISTICS</Button>
+			<Button name="XXOptionsButton">OPTIONS</Button>
+		</Container>
+		<Container flags="packvertical">
+			<Container name="StartGameContainer" visible="false" style="FrameS">
+				START GAME CONTAINER
+				OH MY GOD
+				HOW DOES IT WORK
+			</Container>
+			<Container name="HighscoresContainer" visible="false" style="FrameS">
+				HIGHSCORES
+				SPICE EXTENDS LIFE
+			</Container>
+			<Container name="StatsContainer" visible="false" style="FrameS">
+				YOU NEED IT IN YOUR LIFE :D
+				BOUNCE
+			</Container>
+		</Container>
+	</Menu>
+
+</GUIStructure>

@@ -1,0 +1,51 @@
+# 3ds Max Wavefront OBJ Exporter v0.97b - (c)2007 guruware
+# File Created: 11.12.2009 03:05:41
+
+newmtl Standardmaterial
+	Ns 32.000000
+	Ni 1.500000
+	d 1.000000
+	Tr 0.000000
+	Tf 1.000000 1.000000 1.000000 
+	illum 2
+	Ka 0.694118 0.580392 0.101961
+	Kd 0.694118 0.580392 0.101961
+	Ks 0.000000 0.000000 0.000000
+	Ke 0.000000 0.000000 0.000000
+	map_Ka rock_d_06_tex_AM1_512.jpg
+	map_Kd rock_d_06_tex_AM1_512.jpg
+
+#
+# Ka - ambient color
+# Kd - diffuse color
+# Ks - specular color
+# Ns - specular exponent - scalar
+# d/Tr - dissolved/transparency - scalar
+# illum - illumination model
+#	0. Color on and Ambient off
+#	1. Color on and Ambient on
+#	2. Highlight on
+#	3. Reflection on and Ray trace on
+#	4. Transparency: Glass on, Reflection: Ray trace on
+#	5. Reflection: Fresnel on and Ray trace on
+#	6. Transparency: Refraction on, Reflection: Fresnel off and Ray trace on
+#	7. Transparency: Refraction on, Reflection: Fresnel on and Ray trace on
+#	8. Reflection on and Ray trace off
+#	9. Transparency: Glass on, Reflection: Ray trace off
+#	10. Casts shadows onto invisible surfaces
+#	
+#	map_Ka - ambient texture map
+#	map_Kd - diffuse texture map
+#	map_Ks - specular color texture map
+#	map_Ns - specular highlight component
+#	map_d  - alpha texture map
+#	map_bump - bump texture
+#	bump -  bump texture ^^ as above - bump map - by default uses luminance
+#			channel of the image
+#
+#	disp - displacement map
+#	decal - stencil decal texture - defaults to 'matte' channel of the image
+#
+#	refl -type sphere X - spherical reflection map
+#
+#
