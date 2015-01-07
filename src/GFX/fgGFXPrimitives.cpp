@@ -157,10 +157,10 @@ static const GLfloat c_trisCube1x1[] = {
  * triangle strip format, no index, CCW
  */
 const fgVertex3v c_stripSquare1x1[] = {
-    {fgVector3f(-0.5f, 0.5f, 0.f), fgVector3f(0.f, 0.f, 0.f), fgVector2f(0.f, 1.f)},
+    {fgVector3f(0.5f, -0.5f, 0.f), fgVector3f(0.f, 0.f, 0.f), fgVector2f(1.f, 0.f)},
     {fgVector3f(-0.5f, -0.5f, 0.f), fgVector3f(0.f, 0.f, 0.f), fgVector2f(0.f, 0.f)},
     {fgVector3f(0.5f, 0.5f, 0.f), fgVector3f(0.f, 0.f, 0.f), fgVector2f(1.f, 1.f)},
-    {fgVector3f(0.5f, -0.5f, 0.f), fgVector3f(0.f, 0.f, 0.f), fgVector2f(1.f, 0.f)},
+    {fgVector3f(-0.5f, 0.5f, 0.f), fgVector3f(0.f, 0.f, 0.f), fgVector2f(0.f, 1.f)}
 };
 
 /*
@@ -177,7 +177,7 @@ const fgVertex3v c_stripRect3x1[] = {
     {fgVector3f(0.5f / 3, -0.5f, 0.f), fgVector3f(0.f, 0.f, 0.f), fgVector2f(2.f / 3, 0.f)},
 
     {fgVector3f(0.5f, 0.5f, 0.f), fgVector3f(0.f, 0.f, 0.f), fgVector2f(1.f, 1.f)},
-    {fgVector3f(0.5f, -0.5f, 0.f), fgVector3f(0.f, 0.f, 0.f), fgVector2f(1.f, 0.f)},
+    {fgVector3f(0.5f, -0.5f, 0.f), fgVector3f(0.f, 0.f, 0.f), fgVector2f(1.f, 0.f)}
 };
 
 #include "GFX/Shaders/fgGFXShaderDefs.h"
@@ -493,6 +493,25 @@ void fgGfxPrimitives::drawArray2D(const fgVertexData *inputData,
     glDrawArrays((fgGFXenum)mode, 0, inputData->size());
     fgGLError("glDrawArrays");
 
+}
+
+void fgGfxPrimitives::drawSquare2D(void) {
+    fgGfxPlatform::context()->diffVertexAttribArrayMask(FG_GFX_POSITION_BIT | FG_GFX_UVS_BIT);
+    fgGfxPlatform::context()->vertexAttribPointer(FG_GFX_ATTRIB_POS_LOCATION,
+                                                  3,
+                                                  FG_GFX_FLOAT,
+                                                  FG_GFX_FALSE,
+                                                  sizeof (fgVertex3v),
+                                                  (fgGFXvoid *)c_stripSquare1x1);
+
+    uintptr_t offset = (uintptr_t)((unsigned int*)&c_stripSquare1x1[0]) + sizeof (fgVector3f) * 2;
+    fgGfxPlatform::context()->vertexAttribPointer(FG_GFX_ATTRIB_UVS_LOCATION,
+                                                  2,
+                                                  FG_GFX_FLOAT,
+                                                  FG_GFX_FALSE,
+                                                  sizeof (fgVertex3v),
+                                                  (fgGFXvoid*)offset);
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, sizeof (c_stripSquare1x1) / sizeof (fgVertex3v));
 }
 
 /*

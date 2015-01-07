@@ -79,6 +79,8 @@
             <word>enum</word>
             <word>fg</word>
             <word>fgprivate</word>
+            <word>flaredouble</word>
+            <word>flarefour</word>
             <word>fmt</word>
             <word>foreach</word>
             <word>framebuffer</word>
@@ -88,6 +90,7 @@
             <word>Gainsboro</word>
             <word>gameplay</word>
             <word>gc</word>
+            <word>getcwd</word>
             <word>gfx</word>
             <word>gl</word>
             <word>glbinding</word>
@@ -96,6 +99,8 @@
             <word>gui</word>
             <word>hacky</word>
             <word>hcenter</word>
+            <word>hexangle</word>
+            <word>highp</word>
             <word>hslider</word>
             <word>ids</word>
             <word>idx</word>
@@ -114,6 +119,7 @@
             <word>lu</word>
             <word>Lua</word>
             <word>malloc</word>
+            <word>mediump</word>
             <word>metadata</word>
             <word>metatable</word>
             <word>metatables</word>
@@ -147,6 +153,8 @@
             <word>px</word>
             <word>py</word>
             <word>pz</word>
+            <word>quadangle</word>
+            <word>quadragon</word>
             <word>Radoslaw</word>
             <word>readdir</word>
             <word>rgb</word>
@@ -158,6 +166,8 @@
             <word>sliderhorizontal</word>
             <word>slidervertical</word>
             <word>soa</word>
+            <word>splashscreen</word>
+            <word>srand</word>
             <word>srsly</word>
             <word>std</word>
             <word>strcasecmp</word>
@@ -184,6 +194,7 @@
             <word>wav</word>
             <word>wut</word>
             <word>xml</word>
+            <word>xyz</word>
             <word>zfail</word>
             <word>Zlib</word>
             <word>zpass</word>

@@ -84,7 +84,7 @@ m_gameFreeLookCallback(NULL) {
     FG_MessageSubsystem->initialize(); // ? #FIXME message subsystem
     FG_MessageSubsystem->setLogPaths("all.log", "error.log", "debug.log");
     m_pointerInputReceiver = new fgPointerInputReceiver();
-    m_joypadController = new fgJoypadController(); // #FIXME - joypad part of input receiver?
+    m_joypadController = new fgJoypadController(); // #FIXME - Joypad part of input receiver?
     m_scriptSubsystem = new fgScriptSubsystem();
     m_soundMgr = new fgSFXManager();
     if(pEventMgr) {
@@ -180,7 +180,7 @@ fgGameMain::~fgGameMain() {
     m_scriptSubsystem = NULL;
     // Free registered human readable colors - these are from HTML table
     fgColors::freeColors();
-    // Unregister all error codes
+    // Unregister all error codes #FIXME
     fgErrorCodes::unregisterAll();
     // Delete the global instance of Message Subsystem singleton
     // MessageSubsystem is a special LOG wrapper
@@ -277,9 +277,10 @@ void fgGameMain::setEventManager(fgEventManager *pEventMgr) {
     }
 }
 
-/*
+/**
  * This needs to be called first before everything else.
  * Function creates and initializes subsystems
+ * @return
  */
 fgBool fgGameMain::initSubsystems(void) {
     float t1 = fgTime::ms();
@@ -310,8 +311,6 @@ fgBool fgGameMain::initSubsystems(void) {
     FG_HardwareState->initDPI();
     if(!m_qualityMgr)
         m_qualityMgr = new fgQualityManager(w * h);
-    if(m_pointerInputReceiver)
-        m_pointerInputReceiver->initialize();
     if(!m_resourceFactory)
         m_resourceFactory = new fgResourceFactory();
     else
@@ -333,13 +332,24 @@ fgBool fgGameMain::initSubsystems(void) {
     m_resourceMgr->setMaximumMemory(128 * 1024 * 1024 - 1024 * 1024 * 10); // #FIXME #TODO
     m_resourceMgr->initialize();
 #endif // FG_USING_MARMALADE
-
+    // Setup GFX Main external pointers
+    m_gfxMain->setupResourceManager(m_resourceMgr);
+    FG_HardwareState->deviceYield(0); // #FIXME - device yield...
+    ////////////////////////////////////////////////////////////////////////////
+    // Resource Manager and GFX is now fully initialized (with default shader)
+    // Now is the moment to display something on screen - preload some texture
+    // This will preload any required textures and upload them to the GFX
+    m_gfxMain->setupLoader();
+    FG_HardwareState->deviceYield(0); // #FIXME - device yield...
+    m_gfxMain->getLoader()->update(0.0f);
+    ////////////////////////////////////////////////////////////////////////////
     // Setup SFX manager external pointer - resource manager
     if(m_soundMgr)
         m_soundMgr->setResourceManager(m_resourceMgr);
     if(!m_soundMgr->initialize()) {
         FG_LOG_ERROR("SFX: Initialization of Sound module finished with errors");
     }
+    m_gfxMain->getLoader()->update(10.0f);
     // Create object for Game Logic Manager
     if(!m_logicMgr)
         m_logicMgr = new fg::game::Logic(NULL);
@@ -351,9 +361,10 @@ fgBool fgGameMain::initSubsystems(void) {
             FG_LOG_ERROR("Logic: Main Game Logic module initialized with errors");
         }
     }
-
-    // Setup GFX Main external pointers
-    m_gfxMain->setResourceManager(m_resourceMgr);
+    if(m_pointerInputReceiver)
+        m_pointerInputReceiver->initialize();
+    m_gfxMain->getLoader()->update(10.0f);
+    FG_HardwareState->deviceYield(0); // #FIXME - device yield...
     // Setup GUI Main external pointers
     m_guiMain->setResourceManager(m_resourceMgr);
     m_guiMain->setShaderManager(m_gfxMain->getShaderManager());
@@ -380,12 +391,14 @@ fgBool fgGameMain::initSubsystems(void) {
     m_scriptSubsystem->setWidgetManager(static_cast<fg::base::Manager *>(m_guiMain->getWidgetManager()));
     m_scriptSubsystem->setLogicManager(static_cast<fg::base::Manager *>(m_logicMgr));
 
+    m_gfxMain->getLoader()->update(10.0f);
     if(!m_scriptSubsystem->initialize()) {
         FG_LOG_ERROR("Script: Initialization of Script module finished with errors");
     }
     FG_HardwareState->deviceYield(0); // #FIXME - device yield...
     float t2 = fgTime::ms();
     FG_LOG_DEBUG("Main: All subsystems initialized in %.2f seconds", (t2 - t1) / 1000.0f);
+    m_gfxMain->getLoader()->update(10.0f);
     return FG_TRUE;
 }
 
@@ -413,8 +426,9 @@ fgBool fgGameMain::loadConfiguration(void) {
     return FG_TRUE;
 }
 
-/*
+/**
  * This loads resources specified in configuration files
+ * @return
  */
 fgBool fgGameMain::loadResources(void) {
     float t1 = fgTime::ms();
@@ -428,7 +442,7 @@ fgBool fgGameMain::loadResources(void) {
         }
     }
 #endif
-
+    m_gfxMain->getLoader()->update(10.0f);
     ////////////////////////////////////////////////////////////////////////////
     m_gfxMain->getShaderManager()->setShadersPath("shaders/");
     m_gfxMain->preLoadShaders();
@@ -442,6 +456,7 @@ fgBool fgGameMain::loadResources(void) {
         // this will also bind attributes and after successful link - bind uniforms
         program->link();
     }
+    m_gfxMain->getLoader()->update(10.0f);
     {
         std::string sOrthoEasyShaderName("sOrthoEasy");
         fgGfxShaderProgram *program = m_gfxMain->getShaderManager()->get(sOrthoEasyShaderName);
@@ -452,6 +467,7 @@ fgBool fgGameMain::loadResources(void) {
             program->link(); // this will also bind attributes and after successful link - bind uniforms
         }
     }
+    m_gfxMain->getLoader()->update(10.0f);
     {
         std::string sSkyBoxEasyShaderName("sSkyBoxEasy");
         fgGfxShaderProgram *program = m_gfxMain->getShaderManager()->get(sSkyBoxEasyShaderName);
@@ -462,6 +478,7 @@ fgBool fgGameMain::loadResources(void) {
             program->link(); // this will also bind attributes and after successful link - bind uniforms
         }
     }
+    m_gfxMain->getLoader()->update(10.0f);
     FG_HardwareState->deviceYield(0); // #FIXME - device yield...
 #if 1
     ////////////////////////////////////////////////////////////////////////////
@@ -475,6 +492,8 @@ fgBool fgGameMain::loadResources(void) {
         float t2 = fgTime::ms();
         FG_LOG_DEBUG("WHOLE OBJECT CREATION TOOK: %.2f seconds", (t2 - t1) / 1000.0f);
     }
+    FG_HardwareState->deviceYield(0);
+    m_gfxMain->getLoader()->update(10.0f);
     {
         FG_LOG_DEBUG("Will now try load object Rock1.obj");
         std::string modelname("Rock1");
@@ -512,12 +531,16 @@ fgBool fgGameMain::loadResources(void) {
     m_gfxMain->getParticleSystem()->insertParticleEmitter("ExplosionSparks", "ExplosionSparks", fgVector3f(0.0f, 0.0f, 0.0f));
     float t2 = fgTime::ms();
     FG_LOG_DEBUG("Main: Resources loaded in %.2f seconds", (t2 - t1) / 1000.0f);
-
+    m_gfxMain->getLoader()->update(10.0f);
+#if !defined(FG_USING_MARMALADE)
+    usleep(500*1000);
+#endif
     return FG_TRUE;
 }
 
-/*
+/**
  * This unloads, frees and deletes all data from fgResourceManager subsystem
+ * @return
  */
 fgBool fgGameMain::releaseResources(void) {
     if(m_resourceMgr) {
@@ -527,9 +550,10 @@ fgBool fgGameMain::releaseResources(void) {
     return FG_FALSE;
 }
 
-/*
+/**
  * This frees the subsystems - simply deletes all singleton instances (every main subsystem is a singleton)
  * must be called after releaseResources
+ * @return
  */
 fgBool fgGameMain::closeSybsystems(void) {
     FG_LOG_DEBUG("Closing subsystems...");
@@ -546,8 +570,9 @@ fgBool fgGameMain::closeSybsystems(void) {
     return FG_TRUE;
 }
 
-/*
+/**
  * This function releases the resources and closes the subsystems
+ * @return
  */
 fgBool fgGameMain::quit(void) {
     FG_LOG_DEBUG("Game main quit requested");
@@ -559,7 +584,7 @@ fgBool fgGameMain::quit(void) {
     return status;
 }
 
-/*
+/**
  * Main display function creates the buffer (vertex/color/texture coords buffers) to be
  * displayed in current frame; the real drawing of created buffers is inside the render
  * function (which in the future should be in separate thread)
@@ -584,7 +609,7 @@ void fgGameMain::display(void) {
 #endif
 }
 
-/*
+/**
  * Begins the proper render of the created buffers
  */
 void fgGameMain::render(void) {
@@ -626,7 +651,7 @@ void fgGameMain::render(void) {
     m_gfxMain->getMainWindow()->swapBuffers();
 }
 
-/*
+/**
  * Update - all event handling, calling scripts, AI, game logic and etc
  * This happens for every frame (for iOS fps is hardcoded for 60, never more)
  */

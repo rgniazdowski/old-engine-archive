@@ -41,6 +41,8 @@ public:
     /*
      *
      */
+    static void drawSquare2D(void);
+    
     static void drawRect2D(void);
     
     static void drawSkyBoxOptimized(void);

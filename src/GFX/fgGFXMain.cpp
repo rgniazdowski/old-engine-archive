@@ -149,6 +149,7 @@ fgBool fgGfxMain::initGFX(void) {
         }
     }
     if(status) {
+
         FG_LOG_DEBUG("GFX: Setting viewport (0, 0, %d, %d)", m_mainWindow->getWidth(), m_mainWindow->getHeight());
         m_gfxContext->viewport(0, 0, m_mainWindow->getWidth(), m_mainWindow->getHeight());
         m_gfxContext->clearDepth(1.0f);
@@ -167,6 +168,7 @@ fgBool fgGfxMain::initGFX(void) {
         m_gfxContext->scissor(0, 0, m_mainWindow->getWidth(), m_mainWindow->getHeight());
         m_gfxContext->setScreenSize(m_mainWindow->getWidth(), m_mainWindow->getHeight());
         m_2DScene->getMVP()->setOrtho(0.0f, (float)m_mainWindow->getWidth(), (float)m_mainWindow->getHeight(), 0.0f);
+        m_loader.setContext(m_gfxContext);
         m_init = FG_TRUE;
     }
     if(status && m_shaderMgr) {
@@ -176,6 +178,8 @@ fgBool fgGfxMain::initGFX(void) {
         }
     }
     if(status) {
+        m_loader.setProgram(m_shaderMgr->getCurrentProgram());
+        m_loader.setMainWindow(m_mainWindow);
         FG_LOG_DEBUG("GFX: Subsystem initialized successfully");
     }
     float t2 = fgTime::ms();
@@ -183,7 +187,45 @@ fgBool fgGfxMain::initGFX(void) {
     return status;
 }
 
-/*
+/**
+ * 
+ */
+void fgGfxMain::setupLoader(void) {
+    if(!m_pResourceMgr)
+        return;
+    if(!m_textureMgr->isInit())
+        return;
+    fgResourceManager *pResourceMgr = static_cast<fgResourceManager *>(m_pResourceMgr);
+    //
+    // Splash texture load and upload - #FIXME - splash texture names from config!
+    //
+    const char *splashes[] = {"developer.jpg","publisher.jpg","splash.png"};
+    int nsplashes = sizeof(splashes)/sizeof(splashes[0]);
+    int x = FG_RAND(0, nsplashes-1);
+    fgTextureResource *texture = (fgTextureResource *)(pResourceMgr->request(splashes[x]));
+    if(!texture) {
+        FG_LOG_ERROR("GFX: Unable to load Splash texture");
+        return;
+    }
+    m_textureMgr->uploadToVRAM(texture, FG_TRUE);
+    FG_HardwareState->deviceYield(1);
+    m_loader.setSplashTexture(texture);
+    //
+    // ProgressBar texture load and upload
+    //
+    const char *loaders[] = {"sun.jpg","hexangle.jpg"};
+    int nloaders = sizeof(loaders)/sizeof(loaders[0]);
+    x = FG_RAND(0, nloaders-1);
+    texture = (fgTextureResource *)(pResourceMgr->request(loaders[x]));
+    if(!texture) {
+        FG_LOG_ERROR("GFX: Unable to load ProgressBar texture");
+        return;
+    }
+    m_textureMgr->uploadToVRAM(texture, FG_TRUE);
+    FG_HardwareState->deviceYield(1);
+    m_loader.setProgressTexture(texture);
+    
+}
 
 /**
  *

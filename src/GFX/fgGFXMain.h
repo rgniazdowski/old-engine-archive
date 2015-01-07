@@ -14,6 +14,7 @@
     #include "fgGFXStdInc.h"
 
     #include "fgGFXWindow.h"
+    #include "fgGFXLoader.h"
     #include "fgGFXCameraAnimation.h"
     #include "Shaders/fgGFXShaderManager.h"
     #include "Textures/fgTextureManager.h"
@@ -95,6 +96,11 @@ public:
     // Begins the proper render of the created buffers
     void render(void);
 
+    /**
+     * This will preload needed textures for the GFX::Loader - splash/progress
+     */
+    void setupLoader(void);
+    
     // Returns the pointer to the Texture Manager
     fgTextureManager *getTextureManager(void) const;
     // Releases all textures - the GFX side and nonGFX (meaning internal RAM)
@@ -113,6 +119,10 @@ public:
     fgGfxCameraAnimation *get3DSceneCamera(void) const;
     //
     fgParticleSystem *getParticleSystem(void) const;
+    //
+    fg::gfx::CLoader *getLoader(void) {
+        return &m_loader;
+    }
     /**
      * 
      * @return 
@@ -122,6 +132,9 @@ public:
     }
     
 private:
+    /// Loader object - displays splash screen and progress bar at the early 
+    /// stages of initialization - before GUI subsystem full initialization
+    fg::gfx::CLoader m_loader;
     /// Texture manager for GFX upload/reload - works with Resource manager
     fgTextureManager *m_textureMgr;
     /// Pointer to the resource manager - defined and managed outside
