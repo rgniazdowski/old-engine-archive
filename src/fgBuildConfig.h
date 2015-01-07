@@ -426,8 +426,8 @@ extern struct fgBuildConfig g_fgBuildConfig;
 
 // Full name of the project
     #define FG_FULL_NAME                "Flexible Game Engine"
-    #define FG_AUTHOR_ALIAS		""
-    #define FG_PACKAGE_ALIAS		""
+    #define FG_AUTHOR_ALIAS		"Vigilant One"
+    #define FG_PACKAGE_ALIAS		"FG:E"
 
 // Copyright text
     #define FG_COPYRIGHT		"Copyright (C) Radoslaw Gniazdowski. All rights reserved."
@@ -438,9 +438,9 @@ extern struct fgBuildConfig g_fgBuildConfig;
 // Home page address
     #define FG_HOMEPAGE			"http://flexigame.com"
 
-    #define FG_ENGINE
-    #define FG_FLEXIGAME
-    #define FG_JUST_FOR_FUN
+    #define FG_ENGINE                   "FG Engine"
+    #define FG_FLEXIGAME                "FlexiGame"
+    #define FG_JUST_FOR_FUN             "Just for fun"
 
     #define FG_MOTTO			"The spice is vital for space travel"
 

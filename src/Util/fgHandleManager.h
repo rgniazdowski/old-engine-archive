@@ -255,15 +255,16 @@ fgBool fgHandleManager<DataType, HandleType>::acquireHandle(HandleType& rHandle,
  */
 template <typename DataType, typename HandleType>
 fgBool fgHandleManager<DataType, HandleType>::setupName(const std::string& name, const HandleType& rHandle) {
-    if(!isHandleValid(rHandle))
+    if(!isHandleValid(rHandle)) {
         return FG_FALSE;
+    }
     if(m_nameMap.find(name) != m_nameMap.end()) {
-        FG_LOG::PrintError("%s(%d): Such key already exists in name map - in function %s.", fgPath::fileName(__FILE__), __LINE__ - 1, __FUNCTION__);
+        FG_LOG_ERROR("%s(%d): Such key already exists in name map - name_tag[%s], function[%s]", fgPath::fileName(__FILE__), __LINE__ - 1, name.c_str(), __FUNCTION__);
         return FG_FALSE; // Such key already exists
     }
     fgRawIndex index = rHandle.getIndex();
     if(!m_nameVec[index].empty()) {
-        FG_LOG::PrintError("%s(%d): There is name tag already in the vector on index: '%d', name tag: '%s' - in function %s.", fgPath::fileName(__FILE__), __LINE__ - 1, index, name.c_str(), __FUNCTION__);
+        FG_LOG_ERROR("%s(%d): There is name tag already in the vector - index[%s], name_tag[%s], function[%s]", fgPath::fileName(__FILE__), __LINE__ - 1, index, name.c_str(), __FUNCTION__);
         // There is already some set on the current index
         return FG_FALSE;
     }
@@ -280,13 +281,16 @@ fgBool fgHandleManager<DataType, HandleType>::setupName(const std::string& name,
  */
 template <typename DataType, typename HandleType>
 fgBool fgHandleManager<DataType, HandleType>::setupName(const char* name, const HandleType& rHandle) {
-    if(!isHandleValid(rHandle))
+    if(!isHandleValid(rHandle)) {
         return FG_FALSE;
+    }
     if(m_nameMap.find(std::string(name)) != m_nameMap.end()) {
+        FG_LOG_ERROR("%s(%d): Such key already exists in name map - name_tag[%s], function[%s]", fgPath::fileName(__FILE__), __LINE__ - 1, name, __FUNCTION__);
         return FG_FALSE; // Such key already exists
     }
     fgRawIndex index = rHandle.getIndex();
     if(m_nameVec[index].size() > 0) {
+        FG_LOG_ERROR("%s(%d): There is name tag already in the vector - index[%s], name_tag[%s], function[%s]", fgPath::fileName(__FILE__), __LINE__ - 1, index, name, __FUNCTION__);
         // There is already some set on the current index
         // No reassignment is allowed
         return FG_FALSE;
@@ -304,7 +308,7 @@ fgBool fgHandleManager<DataType, HandleType>::setupName(const char* name, const 
 template <typename DataType, typename HandleType>
 fgBool fgHandleManager<DataType, HandleType>::releaseHandle(const HandleType& handle) {
     if(!isHandleValid(handle)) {
-        FG_LOG_DEBUG("HandleManager: can't release handle - handle is invalid, tag_name[%s]", HandleType::getTagName());
+        FG_LOG_DEBUG("HandleManager[%s]: can't release handle - handle is invalid, tag_name[%s]", HandleType::getTagName(), HandleType::getTagName());
         return FG_FALSE;
     }
     // which one?
@@ -339,8 +343,9 @@ void fgHandleManager<DataType, HandleType>::releaseAllHandles(void) {
  */
 template <typename DataType, typename HandleType>
 inline DataType fgHandleManager<DataType, HandleType>::dereference(const HandleType& handle) {
-    if(!isHandleValid(handle))
+    if(!isHandleValid(handle)) {
         return NULL;
+    }
     fgRawIndex index = handle.getIndex();
     return *(m_managedData.begin() + index);
 }
@@ -352,9 +357,9 @@ inline DataType fgHandleManager<DataType, HandleType>::dereference(const HandleT
  */
 template <typename DataType, typename HandleType>
 inline DataType fgHandleManager<DataType, HandleType>::dereference(const std::string& name) {
-    if(name.empty())
+    if(name.empty()) {
         return NULL;
-
+    }
     typename hmNameMap::iterator it = m_nameMap.find(name);
     if(it == m_nameMap.end()) {
         return NULL;
@@ -377,8 +382,9 @@ inline DataType fgHandleManager<DataType, HandleType>::dereference(const std::st
  */
 template <typename DataType, typename HandleType>
 inline DataType fgHandleManager<DataType, HandleType>::dereference(const char* name) {
-    if(name == NULL)
+    if(name == NULL) {
         return NULL;
+    }
     std::string key = name;
     return fgHandleManager<DataType, HandleType>::dereference(key);
 }
@@ -390,8 +396,9 @@ inline DataType fgHandleManager<DataType, HandleType>::dereference(const char* n
  */
 template <typename DataType, typename HandleType>
 inline fgBool fgHandleManager<DataType, HandleType>::isDataManaged(DataType pData) {
-    if(m_managedData.find(pData) != -1)
+    if(m_managedData.find(pData) != -1) {
         return FG_TRUE;
+    }
     return FG_FALSE;
 }
 
@@ -402,8 +409,9 @@ inline fgBool fgHandleManager<DataType, HandleType>::isDataManaged(DataType pDat
  */
 template <typename DataType, typename HandleType>
 inline fgBool fgHandleManager<DataType, HandleType>::isHandleValid(const HandleType& handle) {
-    if(handle.isNull())
+    if(handle.isNull()) {
         return FG_FALSE;
+    }
     // check handle validity - $ this check can be removed for speed
     // if you can assume all handle references are always valid.
     fgRawIndex index = handle.getIndex();
