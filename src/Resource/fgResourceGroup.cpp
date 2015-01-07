@@ -15,11 +15,11 @@
 #include "Util/fgPath.h"
 #include "Util/fgStrings.h"
 
-/**********************************************************
+/*******************************************************************************
  * RESOURCE GROUP CONTENT HANDLER - READING XML FILE
  */
 
-/*
+/**
  * Base constructor of the resource group content handler object
  */
 fgResourceGroupContentHandler::fgResourceGroupContentHandler() :
@@ -30,8 +30,8 @@ m_curResPriority(FG_RES_PRIORITY_INVALID),
 m_isMapped(FG_FALSE),
 m_isFileQualityMapTag(FG_FALSE) { }
 
-/*
- * Base destructor of the resource group content handler object
+/**
+ * Destructor of the resource group content handler object
  */
 fgResourceGroupContentHandler::~fgResourceGroupContentHandler() {
     while(!m_elemStack.empty())
@@ -41,13 +41,16 @@ fgResourceGroupContentHandler::~fgResourceGroupContentHandler() {
 /*
  *
  */
-void fgResourceGroupContentHandler::endElement(const char *localName, fgXMLElement *elementPtr, fgXMLNodeType nodeType, int depth) {
+void fgResourceGroupContentHandler::endElement(const char *localName,
+                                               fgXMLElement *elementPtr,
+                                               fgXMLNodeType nodeType,
+                                               int depth) {
     m_elemStack.pop();
     fgResourceType rtype = FG_RESOURCE_TYPE_FROM_TEXT(localName);
     // If the resource was created...
     if(m_resourcePtr && (rtype != FG_RESOURCE_GROUP && rtype != FG_RESOURCE_INVALID)) {
         m_resourcePtr->setPriority(m_curResPriority);
-        // ...then it can be added to the Resource Groups' list.
+        // ...then it can be added to the Resource Groups list.
         this->m_resourceGroup->getRefResourceFiles().push_back(m_resourcePtr);
         m_resType = FG_RESOURCE_INVALID;
         m_resourcePtr = NULL;
@@ -55,15 +58,17 @@ void fgResourceGroupContentHandler::endElement(const char *localName, fgXMLEleme
         m_isFileQualityMapTag = FG_FALSE;
         m_curResPriority = FG_RES_PRIORITY_INVALID;
     }
-    //FG_LOG_DEBUG("END ELEMENT: %s\n", localName);
 }
 
-/*
- *
+/**
+ * 
+ * @param path
+ * @return 
  */
 fgBool fgResourceGroupContentHandler::loadResConfig(const char *path) {
     if(!path)
         return FG_FALSE;
+    FG_LOG_DEBUG("Loading resource config: '%s'", path);
     fgResourceConfig *resCfg = new fgResourceConfig();
     // This references to external config file, config should be loaded and proper resource created
     if(!resCfg->load(path)) {
@@ -80,7 +85,7 @@ fgBool fgResourceGroupContentHandler::loadResConfig(const char *path) {
         m_resourcePtr->setQuality(header->quality);
         m_curResPriority = header->priority;
         if(header->paths.size() != header->qualities.size()) {
-            FG_LOG::PrintError("Group config: number of qualities doesn't match number of files for: '%s'", header->name.c_str());
+            FG_LOG_ERROR("Group config: number of qualities doesn't match number of files for: '%s'", header->name.c_str());
             delete m_resourcePtr;
             m_resourcePtr = NULL;
             if(resCfg)
@@ -89,7 +94,6 @@ fgBool fgResourceGroupContentHandler::loadResConfig(const char *path) {
         }
         for(int i = 0; i < (int)header->paths.size(); i++) {
             m_resourcePtr->setFilePath(header->paths[i], header->qualities[i]);
-            //FG_LOG_DEBUG("Setting path: '%s', for resource: '%s', quality='%d'", pathVec[i].c_str(), name.c_str(), (int)qualityVec[i]);
         }
         m_resourcePtr->setDefaultID(header->quality);
     }
@@ -102,7 +106,11 @@ fgBool fgResourceGroupContentHandler::loadResConfig(const char *path) {
  * Receive notification of the start of an element.
  * This function will add to the specified resource group any identified resources.
  */
-void fgResourceGroupContentHandler::startElement(const char *localName, fgXMLElement *elementPtr, fgXMLNodeType nodeType, fgXMLAttribute *firstAttribute, int depth) {
+void fgResourceGroupContentHandler::startElement(const char *localName,
+                                                 fgXMLElement *elementPtr,
+                                                 fgXMLNodeType nodeType,
+                                                 fgXMLAttribute *firstAttribute,
+                                                 int depth) {
     //FG_LOG_DEBUG("START ELEMENT: %s", localName);
     // Sound
     // Music
@@ -151,16 +159,25 @@ void fgResourceGroupContentHandler::startElement(const char *localName, fgXMLEle
     const char *resName = NULL;
     // Pointer to the first attribute for checking
     fgXMLAttribute *attribute = firstAttribute;
+    std::string cfgDirPath = m_resourceGroup->getFilePath();
+    fgPath::dirName(cfgDirPath, cfgDirPath);
+
     if(m_resType != FG_RESOURCE_GROUP && (m_resType != FG_RESOURCE_INVALID || m_isFileQualityMapTag)) {
         while(attribute) {
             const char *attrname = attribute->Name();
             const char *attrvalue = attribute->Value();
             if(strncasecmp(attrname, "config", 6) == 0) {
-                if(!loadResConfig(attrvalue)) {
+                if(attrvalue) {
+                    std::string newPath = fgPath::join(cfgDirPath, std::string(attrvalue));
+                    if(!loadResConfig(newPath.c_str())) {
+                        attribute = attribute->Next();
+                        continue;
+                    } else {
+                        return;
+                    }
+                } else {
                     attribute = attribute->Next();
                     continue;
-                } else {
-                    return;
                 }
                 break;
             }
@@ -179,10 +196,12 @@ void fgResourceGroupContentHandler::startElement(const char *localName, fgXMLEle
             attribute = attribute->Next();
         }
     }
+
     if(m_resType == FG_RESOURCE_INVALID) {
         if(m_resourcePtr && m_isFileQualityMapTag && resPath) {
             //FG_LOG_DEBUG("Setting path: '%s', for resource: '%s', quality='%s'", resPath, m_curResName, resQualityStr);
-            m_resourcePtr->setFilePath(resPath, resQuality);
+            std::string newPath = fgPath::join(cfgDirPath, std::string(resPath));
+            m_resourcePtr->setFilePath(newPath, resQuality);
         }
         return;
     }
@@ -193,53 +212,60 @@ void fgResourceGroupContentHandler::startElement(const char *localName, fgXMLEle
         m_resourcePtr = NULL;
     } else {
         m_resourcePtr = m_resourceGroup->getResourceFactory()->createResource(m_resType);
-        m_resourcePtr->setFilePath(resPath);
+        if(resPath) {
+            std::string newPath = fgPath::join(cfgDirPath, std::string(resPath));
+            m_resourcePtr->setFilePath(newPath);
+        }
         m_resourcePtr->setName(resName);
     }
 }
 
 /*********************************************************/
 
-/*
+/**
  * Base constructor of the resource group object
  */
 fgResourceGroup::fgResourceGroup() {
     clear();
 }
 
+/**
+ * 
+ * @param resourceFactory
+ */
 fgResourceGroup::fgResourceGroup(fgResourceFactory *resourceFactory) {
     clear();
     setResourceFactory(resourceFactory);
 }
 
-/*
- * Base destructor of the resource group object
+/**
+ * Destructor of the resource group object
  */
 fgResourceGroup::~fgResourceGroup() {
     fgResourceGroup::destroy();
-    FG_LOG_DEBUG("fgResourceGroup::~~fgResourceGroup(); END");
 }
 
-/*
- *
+/**
+ * 
+ * @param resourceFactory
  */
 void fgResourceGroup::setResourceFactory(fgResourceFactory *resourceFactory) {
     if(resourceFactory)
         m_resourceFactory = resourceFactory;
 }
 
-/*
- *
+/**
+ * 
+ * @return 
  */
 fgResourceFactory *fgResourceGroup::getResourceFactory(void) const {
     return m_resourceFactory;
 }
 
-/*
+/**
  * Clears the class data, this actually does not free allocated memory, just resets base class attributes
  */
 void fgResourceGroup::clear(void) {
-    FG_LOG_DEBUG("fgResourceGroup::clear();");
     fgResource::clear();
     m_rHandles.clear_optimised();
     m_resourceFiles.clear_optimised();
@@ -247,8 +273,9 @@ void fgResourceGroup::clear(void) {
     m_resourceFactory = NULL;
 }
 
-/*
+/**
  * Create function loads/interprets data from file in ROM and place it in RAM memory.
+ * @return
  */
 fgBool fgResourceGroup::create(void) {
     if(m_resourceFiles.empty())
@@ -262,18 +289,18 @@ fgBool fgResourceGroup::create(void) {
     return status;
 }
 
-/*
- * Destroy all loaded data including additional metadata (called with deconstructor)
+/**
+ * Destroy all loaded data including additional metadata (called with destructor)
  */
 void fgResourceGroup::destroy(void) {
-    FG_LOG_DEBUG("fgResourceGroup::destroy();");
     ZeroLock();
     dispose();
     clear();
 }
 
-/*
+/**
  * Reloads any data, recreates the resource (refresh)
+ * @return
  */
 fgBool fgResourceGroup::recreate(void) {
     //FG_LOG_DEBUG("fgResourceGroup::recreate();");
@@ -288,12 +315,10 @@ fgBool fgResourceGroup::recreate(void) {
     return status;
 }
 
-/*
+/**
  * Dispose completely of the all loaded data, free all memory
  */
 void fgResourceGroup::dispose(void) {
-    //FG_LOG_DEBUG("fgResourceGroup::~dispose();");
-    FG_LOG_DEBUG("fgResourceGroup::dispose();");
     if(m_resourceFiles.empty())
         return;
     for(rgResVecItor it = m_resourceFiles.begin(); it != m_resourceFiles.end(); it++) {
@@ -301,8 +326,9 @@ void fgResourceGroup::dispose(void) {
     }
 }
 
-/*
+/**
  * Check if resource is disposed (not loaded yet or disposed after)
+ * @return
  */
 fgBool fgResourceGroup::isDisposed(void) const {
     if(m_resourceFiles.empty())
@@ -315,10 +341,11 @@ fgBool fgResourceGroup::isDisposed(void) const {
     return status;
 }
 
-/*
+/**
  *
+ * @return
  */
-fgBool fgResourceGroup::_parseIniConfig(void) {
+fgBool fgResourceGroup::private_parseIniConfig(void) {
     if(!m_resourceFactory) {
         return FG_FALSE;
     }
@@ -368,7 +395,7 @@ fgBool fgResourceGroup::_parseIniConfig(void) {
         resource->setQuality(header->quality);
 
         if(header->paths.size() != header->qualities.size()) {
-            FG_LOG::PrintError("Group config: number of qualities doesn't match number of files for: '%s'", header->name.c_str());
+            FG_LOG_ERROR("Group config: number of qualities doesn't match number of files for: '%s'", header->name.c_str());
             delete resource;
             if(resCfg)
                 delete resCfg;
@@ -391,10 +418,11 @@ fgBool fgResourceGroup::_parseIniConfig(void) {
     return FG_TRUE;
 }
 
-/*
+/**
  * This will parse/load xml group config file. It wont
  * load or allocate any data - this is for 'create' to do.
  * This function will return false if file path is not set.
+ * @return
  */
 fgBool fgResourceGroup::preLoadConfig(void) {
     if(!m_resourceFactory) {
@@ -420,13 +448,13 @@ fgBool fgResourceGroup::preLoadConfig(void) {
         delete contentHandler;
         m_xmlParser = NULL;
     } else if(strcasecmp(ext, "group.ini") == 0) {
-        if(!_parseIniConfig())
+        if(!private_parseIniConfig())
             return FG_FALSE;
     }
     return FG_TRUE;
 }
 
-/*
+/**
  * Refresh arrays holding handles and resource pointers within this group
  */
 void fgResourceGroup::refreshArrays(void) {
@@ -438,8 +466,9 @@ void fgResourceGroup::refreshArrays(void) {
     }
 }
 
-/*
+/**
  * Lock the resource (reference counter +1)
+ * @return
  */
 unsigned int fgResourceGroup::Lock(void) {
     if(m_resourceFiles.empty())
@@ -450,8 +479,9 @@ unsigned int fgResourceGroup::Lock(void) {
     return upRef();
 }
 
-/*
+/**
  * Unlock the resource (reference counter -1)
+ * @return
  */
 unsigned int fgResourceGroup::Unlock(void) {
     if(m_resourceFiles.empty())
@@ -462,7 +492,7 @@ unsigned int fgResourceGroup::Unlock(void) {
     return downRef();
 }
 
-/*
+/**
  * Unlock completely the resource (reference counter = 0)
  */
 void fgResourceGroup::ZeroLock(void) {

@@ -147,7 +147,7 @@ fgBool fgDirent::readDirectory(fgBool recursive, fgBool listZipFiles) {
             std::string filePath;
             std::string curDir = dirStack.back();
             dirStack.pop_back();
-
+            FG_LOG_DEBUG("fg::util::dirent: Opening directory for reading: '%s'", curDir.c_str());
 #if defined(FG_USING_MARMALADE)
             char fileNameStr[FG_FILE_NAME_MAX];
             m_fileList = s3eFileListDirectory(curDir.c_str());

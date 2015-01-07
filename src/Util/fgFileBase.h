@@ -88,7 +88,8 @@ namespace fg {
                  * @param filePath
                  */
                 virtual void setPath(const char *filePath) {
-                    m_filePath = filePath;
+                    if(filePath)
+                        m_filePath = filePath;
                 }
                 /**
                  * Set the file path

@@ -77,6 +77,7 @@ fg::util::File::~File() {
 void fg::util::File::setPath(const char *filePath) {
     if(!filePath)
         return;
+    base_type::setPath(filePath);
     // Use the m_zip setPath to determine if this points to a ZipFile
     m_zip.setPath(filePath);
     const char *path = m_zip.getPath();

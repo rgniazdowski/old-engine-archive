@@ -21,11 +21,13 @@
 
 // -----------------------------
 // Predefined classes
+
 class fgResourceGroup;
 class fgResourceGroupContentHandler;
+
 // -----------------------------
 
-/*
+/**
  * This is ResourceGroup content handler helper class used for deep/recursive
  * automatic xml parsing  (SAXP alike).  This resource group  handler will be
  * somehow universal for every resource group. Which means that there need to
@@ -36,55 +38,86 @@ class fgResourceGroupContentHandler;
 class fgResourceGroupContentHandler : public fgXMLDefaultHandler {
     friend class fgResourceGroup;
 private:
-    // Pointer to the resource group - this groups' xml config file is being parsed by this handler
+    /// Pointer to the resource group - this groups' xml config file is being parsed by this handler
     fgResourceGroup *m_resourceGroup;
-    // Current resource type
+    /// Current resource type
     fgResourceType m_resType;
-    // Current resource object pointer
+    /// Current resource object pointer
     fgResource *m_resourcePtr;
-    // Current resource priority
+    /// Current resource priority
     fgResPriorityType m_curResPriority;
-    // Is current resource tag mapped? (file names mapped to quality)
+    /// Is current resource tag mapped? (file names mapped to quality)
     fgBool m_isMapped;
-    // Is current xml used for mapping file to quality?
+    /// Is current xml used for mapping file to quality?
     fgBool m_isFileQualityMapTag;
-    // Element stack (not used yet, #FIXME)
+    /// Element stack (not used yet, #FIXME)
     std::stack<fgXMLElement *> m_elemStack;
 
-    // Base constructor of the resource group content handler object
+    /**
+     * Base constructor of the resource group content handler object
+     */
     fgResourceGroupContentHandler();
-    // Base destructor of the resource group content handler object
+    /**
+     * Destructor of the resource group content handler object
+     */
     virtual ~fgResourceGroupContentHandler();
 
 protected:
-    // Set pointer to resource group object - this group is being parsed
+    /**
+     * Set pointer to resource group object - this group is being parsed
+     * @param group
+     */
     void setResourceGroupPointer(fgResourceGroup *group) {
         m_resourceGroup = group;
     }
-    //
+    /**
+     * 
+     * @param path
+     * @return 
+     */
     fgBool loadResConfig(const char *path);
 
 public:
-    // Receive notification of the end of the document.
-    virtual void endDocument(fgXMLDocument *document) {
-        // End document
-    }
+    /**
+     * Receive notification of the end of the document.
+     * @param document
+     */
+    virtual void endDocument(fgXMLDocument *document) { }
 
-    // Receive notification of the end of an element.
+    /**
+     * Receive notification of the end of an element.
+     * @param localName
+     * @param elementPtr
+     * @param nodeType
+     * @param depth
+     */
     virtual void endElement(const char *localName, fgXMLElement *elementPtr, fgXMLNodeType nodeType, int depth = 0);
 
-    // Receive notification of the beginning of the document.
-    virtual void startDocument(fgXMLDocument *document) {
-        // Start document
-    }
+    /**
+     * Receive notification of the beginning of the document.
+     * @param document
+     */
+    virtual void startDocument(fgXMLDocument *document) { }
 
-    // Receive notification of the start of an element.
+    /**
+     * Receive notification of the start of an element.
+     * @param localName
+     * @param elementPtr
+     * @param nodeType
+     * @param firstAttribute
+     * @param depth
+     */
     virtual void startElement(const char *localName, fgXMLElement *elementPtr, fgXMLNodeType nodeType, fgXMLAttribute *firstAttribute, int depth = 0);
 
-    // Receive notification of character data inside an element or comment
-    virtual void characters(const char *ch, int start, int length, fgXMLNodeType nodeType, int depth = 0) {
-        // Characters - wont be needed
-    }
+    /**
+     * Receive notification of character data inside an element or comment
+     * @param ch
+     * @param start
+     * @param length
+     * @param nodeType
+     * @param depth
+     */
+    virtual void characters(const char *ch, int start, int length, fgXMLNodeType nodeType, int depth = 0) { }
 };
 
 /**
@@ -106,50 +139,93 @@ public:
  * own proper implementation
  */
 class fgResourceGroup : public fgResource {
+    ///
     friend class fgResourceGroupContentHandler;
+    /// 
     friend class fgResourceManager;
 
 public:
+    ///
     typedef fgVector<fgResource *> rgResVec;
+    ///
     typedef fgVector<FG_RHANDLE> rgHandleVec;
+    ///
     typedef fgVector<fgResource *>::iterator rgResVecItor;
+    ///
     typedef fgVector<FG_RHANDLE>::iterator rgHandleVecItor;
+    ///
     typedef fgVector<fgResource *>::const_iterator rgResVecConstItor;
+    ///
     typedef fgVector<FG_RHANDLE>::const_iterator rgHandleVecConstItor;
 
 public:
-    // Base constructor of the resource group object
+    /**
+     * Base constructor of the resource group object
+     */
     fgResourceGroup();
-    //
+    /**
+     * 
+     * @param resourceFactory
+     */
     fgResourceGroup(fgResourceFactory *resourceFactory);
-    // Base destructor of the resource group object
-    ~fgResourceGroup();
+    /**
+     * Destructor of the resource group object
+     */
+    virtual ~fgResourceGroup();
 
+    /**
+     * 
+     * @return 
+     */
     FG_RESOURCE_FACTORY_CREATE_FUNCTION(fgResourceGroup)
 
-    //
+    /**
+     * 
+     * @param resourceFactory
+     */
     void setResourceFactory(fgResourceFactory *resourceFactory);
-    //
+    /**
+     * 
+     * @return 
+     */
     fgResourceFactory *getResourceFactory(void) const;
 
 protected:
-    // Clears the class data, this actually does not free allocated memory, just resets base class attributes
+    /**
+     * Clears the class data, this actually does not free allocated memory, just resets base class attributes
+     */
     virtual void clear(void);
 
 public:
-    // Create function loads/interprets data from file in ROM and place it in RAM memory.
+    /**
+     * Create function loads/interprets data from file in ROM and place it in RAM memory.
+     * @return 
+     */
     virtual fgBool create(void);
-    // Destroy all loaded data including additional metadata (called with deconstructor)
+    /**
+     * Destroy all loaded data including additional metadata (called with destructor)
+     */
     virtual void destroy(void);
-    // Reloads any data, recreates the resource (refresh)
+    /**
+     * Reloads any data, recreates the resource (refresh)
+     * @return 
+     */
     virtual fgBool recreate(void);
-    // Dispose completely of the all loaded data, free all memory
+    /**
+     * Dispose completely of the all loaded data, free all memory
+     */
     virtual void dispose(void);
-    // Check if resource is disposed (not loaded yet or disposed after)
+    /**
+     * Check if resource is disposed (not loaded yet or disposed after)
+     * @return 
+     */
     virtual fgBool isDisposed(void) const;
 
-    // Return the size of the data actually loaded inside the class
-    // For the resource group this always returns zero
+    /**
+     * Return the size of the data actually loaded inside the class
+     * For the resource group this always returns zero
+     * @return 
+     */
     virtual size_t getSize() const {
         return 0;
     }
@@ -159,38 +235,57 @@ public:
     // This function will return false if file path is not set.
     virtual fgBool preLoadConfig(void);
 
-    // Refresh arrays holding handles and resource pointers within this group
+    /**
+     * Refresh arrays holding handles and resource pointers within this group
+     */
     virtual void refreshArrays(void);
 
-    // Return reference to array of resource pointers (objects) within this resource group
+    /**
+     * Return reference to array of resource pointers (objects) within this resource group
+     * @return 
+     */
     rgResVec& getRefResourceFiles(void) {
         return m_resourceFiles;
     }
-    // Return reference to array of resource handles within this resource group
+    /**
+     * Return reference to array of resource handles within this resource group
+     * @return 
+     */
     rgHandleVec& getRefResourceHandles(void) {
         return m_rHandles;
     }
 
 protected:
-    // Lock the resource (reference counter +1)
+    /**
+     * Lock the resource (reference counter +1)
+     * @return 
+     */
     virtual unsigned int Lock(void);
-    // Unlock the resource (reference counter -1)
+    /**
+     *  Unlock the resource (reference counter -1)
+     * @return 
+     */
     virtual unsigned int Unlock(void);
-    // Unlock completely the resource (reference counter = 0) #NOTSAFE #FIXME
+    /**
+     * Unlock completely the resource (reference counter = 0) #NOTSAFE #FIXME
+     */
     virtual void ZeroLock(void);
 
 private:
-    //
-    fgBool _parseIniConfig(void);
+    /**
+     * 
+     * @return 
+     */
+    fgBool private_parseIniConfig(void);
 
 protected:
-    // List of all handles within this resource group
+    /// List of all handles within this resource group
     rgHandleVec m_rHandles;
-    // List of all resource files 
+    /// List of all resource files 
     rgResVec m_resourceFiles;
-    // Parser for xml config files (here: resource group xml files)
+    /// Parser for xml config files (here: resource group xml files)
     fgXMLParser *m_xmlParser;
-    // Resource factory
+    /// Resource factory
     fgResourceFactory *m_resourceFactory;
 
 };

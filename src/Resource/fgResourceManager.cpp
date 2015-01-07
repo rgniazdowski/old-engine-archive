@@ -144,7 +144,7 @@ fgBool fgResourceManager::initialize(void) {
     // resource groups files should look different - must be
     // more universal - platform independent, check for
     // correct paths in the environment, etc.
-    while(m_dataDir->searchForFile(filepath, std::string("./"), std::string("*group.xml;*group.ini"), FG_FALSE).length()) {
+    while(m_dataDir->searchForFile(filepath, std::string("./"), std::string("*group.xml;*group.ini"), FG_TRUE).length()) {
         resGroupFiles.push_back(filepath);
     }
 
@@ -152,14 +152,13 @@ fgBool fgResourceManager::initialize(void) {
         FG_MessageSubsystem->reportWarning(tag_type::name(), FG_ERRNO_RESOURCE_NO_GROUPS, FG_MSG_IN_FUNCTION);
         return FG_FALSE;
     }
-    const char *filename;
     for(unsigned int i = 0; i < resGroupFiles.size(); i++) {
         // #FIXME - should resource manager hold separate array for res groups IDS ? oh my ...
         FG_RHANDLE grpUniqueID;
-        filename = fgPath::fileName(resGroupFiles[i].c_str());
         fgResourceGroup *resGroup = new fgResourceGroup(m_pResourceFactory);
         // #TODO this will not always look like this - requires full path (cross platform)
-        resGroup->setFilePath(filename);
+        FG_LOG_DEBUG("Resource: Loading resource group file: '%s'", resGroupFiles[i].c_str());
+        resGroup->setFilePath(resGroupFiles[i].c_str());
         if(!resGroup->preLoadConfig()) {
             delete resGroup;
             resGroup = NULL;
@@ -189,17 +188,21 @@ fgBool fgResourceManager::initialize(void) {
     return FG_TRUE;
 }
 
-/*
+/**
  * Set maximum memory value for the used memory counter
+ * @param nMaxSize
+ * @return 
  */
 fgBool fgResourceManager::setMaximumMemory(size_t nMaxSize) {
     m_nMaximumMemory = nMaxSize;
     return checkForOverallocation();
 }
 
-/*
+/**
  * Allows the resource manager to pre-reserve an amount of memory so
  * an inserted resource does not exceed the maximum allowed memory
+ * @param nMem
+ * @return 
  */
 fgBool fgResourceManager::reserveMemory(size_t nMem) {
     addMemory(nMem);
@@ -209,8 +212,10 @@ fgBool fgResourceManager::reserveMemory(size_t nMem) {
     return FG_TRUE;
 }
 
-/*
+/**
  * Find next resource with given criteria (currently resource type)
+ * @param resType
+ * @return 
  */
 fgBool fgResourceManager::goToNext(fgResourceType resType) {
     while(FG_TRUE) {
@@ -226,8 +231,11 @@ fgBool fgResourceManager::goToNext(fgResourceType resType) {
     return isValid();
 }
 
-/*
+/**
  * Find next resource with given criteria (currently resource type)
+ * @param resTypes
+ * @param n
+ * @return 
  */
 fgBool fgResourceManager::goToNext(const fgResourceType* resTypes, int n) {
     if(!resTypes)
@@ -255,8 +263,11 @@ fgBool fgResourceManager::goToNext(const fgResourceType* resTypes, int n) {
     return isValid();
 }
 
-/*
+/**
  * Find next resource with given criteria (currently resource type and quality)
+ * @param resType
+ * @param quality
+ * @return 
  */
 fgBool fgResourceManager::goToNext(fgResourceType resType, fgQuality quality) {
     while(FG_TRUE) {
@@ -274,7 +285,7 @@ fgBool fgResourceManager::goToNext(fgResourceType resType, fgQuality quality) {
     return isValid();
 }
 
-/*
+/**
  * Insert resource group into manager, if you pass in the pointer to
  * resource handle, the Resource Manager will provide a unique handle for you.
  */
@@ -302,7 +313,8 @@ fgBool fgResourceManager::insertResource(fgResource* pResource) {
 /*
  * Insert resource group into manager
  */
-fgBool fgResourceManager::insertResourceGroup(const FG_RHANDLE& rhUniqueID, fgResource* pResource) {
+fgBool fgResourceManager::insertResourceGroup(const FG_RHANDLE& rhUniqueID,
+                                              fgResource* pResource) {
     if(!fgDataManagerBase::isManaged(pResource)) {
         return FG_FALSE;
     }
@@ -375,8 +387,10 @@ fgBool fgResourceManager::dispose(const char *nameTag) {
     return dispose(fgDataManagerBase::get(nameTag));
 }
 
-/*
+/**
  * Disposes of the resource (frees memory) - does not remove resource from the manager
+ * @param pResource
+ * @return 
  */
 fgBool fgResourceManager::dispose(fgResource* pResource) {
     if(!fgDataManagerBase::isManaged(pResource))
@@ -441,11 +455,13 @@ void fgResourceManager::refreshResource(fgResource* pResource) {
     }
 }
 
-/*
+/**
  * Get the resource pointer (object) via resource handle ID
  * Using GetResource tells the manager that you are about to access the
  * object.  If the resource has been disposed, it will be recreated
  * before it has been returned.
+ * @param rhUniqueID
+ * @return 
  */
 fgResource* fgResourceManager::get(const FG_RHANDLE& rhUniqueID) {
     fgResource *pResource = fgDataManagerBase::get(rhUniqueID);
@@ -457,11 +473,13 @@ fgResource* fgResourceManager::get(const FG_RHANDLE& rhUniqueID) {
     return pResource;
 }
 
-/*
+/**
  * Get the resource pointer (object) via resource handle ID
  * Using GetResource tells the manager that you are about to access the
  * object.  If the resource has been disposed, it will be recreated
  * before it has been returned.
+ * @param nameTag
+ * @return 
  */
 fgResource* fgResourceManager::get(const std::string& nameTag) {
     fgResource *pResource = fgDataManagerBase::get(nameTag);
@@ -473,11 +491,13 @@ fgResource* fgResourceManager::get(const std::string& nameTag) {
     return pResource;
 }
 
-/*
+/**
  * Get the resource pointer (object) via resource handle ID
  * Using GetResource tells the manager that you are about to access the
  * object.  If the resource has been disposed, it will be recreated
  * before it has been returned.
+ * @param nameTag
+ * @return 
  */
 fgResource* fgResourceManager::get(const char *nameTag) {
     return fgResourceManager::get(std::string(nameTag));
