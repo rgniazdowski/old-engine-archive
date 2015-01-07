@@ -118,7 +118,25 @@ void fg::util::ZipFile::setMode(FileMode mode) {
               m_modeFlags & FileMode::WRITE_UPDATE) {
         m_mode = Mode::UPDATE;
     }
+#if 0
+    if(m_mode == Mode::UPDATE) {
+        printf("&READ_UPDATE: %u\n", static_cast<unsigned int>(m_modeFlags & FileMode::READ_UPDATE));
+        printf("&UPDATE: %u\n", static_cast<unsigned int>(m_modeFlags & FileMode::UPDATE));
+        printf("&APPEND: %u\n", static_cast<unsigned int>(m_modeFlags & FileMode::APPEND));
+        printf("&APPEND_UPDATE: %u\n", static_cast<unsigned int>(m_modeFlags & FileMode::APPEND_UPDATE));
+        printf("&WRITE_UPDATE: %u\n", static_cast<unsigned int>(m_modeFlags & FileMode::WRITE_UPDATE));
+        printf("READ: %u\n", static_cast<unsigned int>(FileMode::READ));
+        printf("WRITE: %u\n", static_cast<unsigned int>(FileMode::WRITE));
+        printf("APPEND: %u\n", static_cast<unsigned int>(FileMode::APPEND));
+        printf("UPDATE: %u\n", static_cast<unsigned int>(FileMode::UPDATE));
+        printf("BINARY: %u\n", static_cast<unsigned int>(FileMode::BINARY));
+        printf("READ_UPDATE: %u\n", static_cast<unsigned int>(FileMode::READ_UPDATE));
+        printf("WRITE_UPDATE: %u\n", static_cast<unsigned int>(FileMode::WRITE_UPDATE));
+        printf("APPEND_UPDATE: %u\n", static_cast<unsigned int>(FileMode::APPEND_UPDATE));
+        printf("READ | BINARY: %u\n", static_cast<unsigned int>(FileMode::READ | FileMode::BINARY));
+        printf("ZIP UPDATE: filepath[%s], zippath[%s]\n", m_filePath.c_str(), m_zipPath.c_str());
     }
+#endif
 }
 
 /**
