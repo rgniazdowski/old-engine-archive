@@ -17,24 +17,55 @@
  *
  */
 class fgGfx3DScene : public fgGfxSceneManager {
+public:
+    ///
+    typedef fgGfxSceneManager base_type;
+    
 private:
 
 public:
-    //
+    /**
+     * 
+     */
     fgGfx3DScene();
-    //
+    /**
+     * 
+     */
     virtual ~fgGfx3DScene();
 
 public:
 
-    //
+    /**
+     * 
+     */
     virtual void sortCalls(void);
 
-    //
+    /**
+     * 
+     */
     virtual void render(void);
 
-    //
+    /**
+     * 
+     * @param pModelRes
+     * @param nameTag
+     * @return 
+     */
     fgGfxSceneNode *addFromModel(fgGfxModelResource *pModelRes, const std::string& nameTag);
+    /**
+     * 
+     * @param modelNameTag
+     * @param nameTag
+     * @return 
+     */
+    fgGfxSceneNode *addFromModel(const std::string& modelNameTag, const std::string& nameTag);
+    /**
+     * 
+     * @param modelNameTag
+     * @param nameTag
+     * @return 
+     */
+    fgGfxSceneNode *addFromModel(const char *modelNameTag, const char *nameTag);
 };
 
     #undef FG_INC_GFX_3D_SCENE_BLOCK

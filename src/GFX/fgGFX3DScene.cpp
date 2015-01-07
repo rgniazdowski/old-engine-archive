@@ -30,7 +30,6 @@ fgGfx3DScene::~fgGfx3DScene() { }
  * 
  */
 void fgGfx3DScene::sortCalls(void) {
-    //printf("fgGfx3DScene::sortCalls(void)\n");
     fgGfxSceneManager::sortCalls();
 }
 
@@ -38,7 +37,6 @@ void fgGfx3DScene::sortCalls(void) {
  * 
  */
 void fgGfx3DScene::render(void) {
-    //printf("fgGfx3DScene::render(void)\n");
     fgGfxSceneManager::render();
 }
 
@@ -61,4 +59,49 @@ fgGfxSceneNode *fgGfx3DScene::addFromModel(fgGfxModelResource* pModelRes,
         pNode = NULL;
     }
     return pNode;
+}
+
+/**
+ * 
+ * @param modelNameTag
+ * @param nameTag
+ * @return 
+ */
+fgGfxSceneNode *fgGfx3DScene::addFromModel(const std::string& modelNameTag,
+                                           const std::string& nameTag) {
+    if(modelNameTag.empty() || nameTag.empty()) {
+        return NULL;
+    }
+    fgResourceManager *pResourceManager = static_cast<fgResourceManager *>(getResourceManager());
+    if(!pResourceManager) {
+        return NULL;
+    }
+    fgGfxModelResource *pModelRes = static_cast<fgGfxModelResource *>(pResourceManager->get(modelNameTag));
+    if(!pModelRes) {
+        return NULL;
+    }
+    return addFromModel(pModelRes, nameTag);
+}
+
+/**
+ * 
+ * @param modelNameTag
+ * @param nameTag
+ * @return 
+ */
+fgGfxSceneNode *fgGfx3DScene::addFromModel(const char *modelNameTag,
+                                           const char *nameTag) {
+    if(!modelNameTag || !nameTag) {
+        return NULL;
+    }
+    fgResourceManager *pResourceManager = static_cast<fgResourceManager *>(getResourceManager());
+    if(!pResourceManager) {
+        return NULL;
+    }
+    fgGfxModelResource *pModelRes = static_cast<fgGfxModelResource *>(pResourceManager->get(modelNameTag));
+    if(!pModelRes) {
+        return NULL;
+    }
+    // #FIXME char * / std::string !
+    return addFromModel(pModelRes, std::string(nameTag));
 }
