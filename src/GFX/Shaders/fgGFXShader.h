@@ -9,6 +9,7 @@
 
 #ifndef FG_INC_GFX_SHADER
     #define FG_INC_GFX_SHADER
+    #define FG_INC_GFX_SHADER_BLOCK
 
     #include "fgGFXShaderDefs.h"
     #include "fgGFXShaderBase.h"
@@ -28,6 +29,7 @@ typedef fgGFXuint fgGfxShaderObjParamType;
  */
 class fgGfxShader : public fgGfxShaderBase, protected fg::util::DataFile {
     friend class fgGfxShaderProgram;
+    friend class fgGfxShaderManager;
 public:
     ///
     typedef fgGfxShaderBase base_type;
@@ -185,6 +187,51 @@ public:
     const char *getSource(void) const {
         return (const char *)m_fileSource;
     }
+    /**
+     * 
+     * @param sourceBuffer
+     */
+    void setSourceBuffer(char *sourceBuffer) {
+        m_fileSource = sourceBuffer;
+    }
+    /**
+     * 
+     * @param filePath
+     */
+    virtual void setPath(const char *filePath) {
+        if(filePath) {
+            fgGfxShaderBase::setFilePath(filePath);            
+            fg::util::DataFile::setPath(filePath);
+        }
+    }
+    /**
+     * 
+     * @param filePath
+     */
+    virtual void setPath(const std::string& filePath) {
+        fgGfxShaderBase::setFilePath(filePath);
+        fg::util::DataFile::setPath(filePath);
+    }
+    /**
+     * 
+     * @param filePath
+     */
+    virtual void setFilePath(const char *filePath) {
+        if(filePath) {
+            fgGfxShaderBase::setFilePath(filePath);            
+            fg::util::DataFile::setPath(filePath);
+        }
+    }
+    /**
+     * 
+     * @param filePath
+     */
+    virtual void setFilePath(const std::string& filePath) {
+        fgGfxShaderBase::setFilePath(filePath);
+        fg::util::DataFile::setPath(filePath);
+    }
+
 };
 
+    #undef FG_INC_GFX_SHADER_BLOCK
 #endif /* FG_INC_GFX_SHADER */

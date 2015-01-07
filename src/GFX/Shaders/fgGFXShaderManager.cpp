@@ -12,9 +12,10 @@
 #include "Util/fgRegularFile.h"
 #include "Util/fgDirent.h"
 #include "Util/fgStrings.h"
+#include "Util/fgMemory.h"
 
-/*
- *
+/**
+ * 
  */
 fgGfxShaderManager::fgGfxShaderManager() :
 m_currentProgram(NULL),
@@ -26,15 +27,15 @@ m_isPreloadDone(FG_FALSE) {
     m_init = FG_FALSE;
 }
 
-/*
- *
+/**
+ * 
  */
 fgGfxShaderManager::~fgGfxShaderManager() {
     destroy();
 }
 
-/*
- *
+/**
+ * 
  */
 void fgGfxShaderManager::clear(void) {
     m_currentProgram = NULL;
@@ -46,8 +47,9 @@ void fgGfxShaderManager::clear(void) {
     m_isPreloadDone = FG_FALSE;
 }
 
-/*
- *
+/**
+ * 
+ * @return 
  */
 fgBool fgGfxShaderManager::destroy(void) {
     smProgramVec & data = getRefDataVector();
@@ -64,8 +66,9 @@ fgBool fgGfxShaderManager::destroy(void) {
     return FG_TRUE;
 }
 
-/*
- *
+/**
+ * 
+ * @return 
  */
 fgBool fgGfxShaderManager::initialize(void) {
     if(m_init) {
@@ -78,12 +81,126 @@ fgBool fgGfxShaderManager::initialize(void) {
     m_shadersDir->clearList();
     m_shadersDir->readDirectory(m_shadersPath, FG_TRUE);
     m_shadersDir->rewind();
+
+    // Will now initialize the builtin default shader program - it is not loaded
+    // from configs or source file on disk/ROM
+    fgGfxSLVersion slVersion = fgGfxPlatform::context()->getSLVersion();
+    fgGfxShaderProgram *defaultProgram = new fgGfxShaderProgram();
+    defaultProgram->setName("DefaultShader"); // #FIXME - const name
+    defaultProgram->setFilePath("DefaultShader");
+    fgGfxShaderProgram::attributeBindVec &attrBinds = defaultProgram->getRefAttrBinds();
+    fgGfxShaderProgram::uniformBindVec &uniformBinds = defaultProgram->getRefUniformBinds();
+    fgGfxShaderProgram::shaderVec & shaderVec = defaultProgram->getRefShaderVec();
+    char *sourceFragment = fgMalloc<char>(2048);
+    char *sourceVertex = fgMalloc<char>(2048);
+
+    // DEFAULT FRAGMENT SHADER SOURCE BUFFER
+    strcpy(sourceFragment, "#ifdef FG_GFX_ESSL_PRECISION_DEF\n"
+           "precision highp float;\n"
+           "varying highp vec3 v_position;\n"
+           "varying highp vec2 v_texCoord;\n"
+           "varying highp vec4 v_color;\n"
+           "uniform mediump vec4  u_CustomColor;\n"
+           "#else\n"
+           "varying vec3 v_position;\n"
+           "varying vec2 v_texCoord;\n"
+           "varying vec4 v_color;\n"
+           "uniform vec4  u_CustomColor;\n"
+           "#endif\n"
+           "uniform sampler2D s_texture;\n"
+           "uniform float u_useTexture;\n"           
+           "void main() {\n"
+           "	vec4 texel;\n"
+           "	if(u_useTexture > 0.5) {\n"
+           "		texel = texture2D(s_texture, v_texCoord);\n"
+           "	} else {\n"
+           "		texel = vec4(1.0, 1.0, 1.0, 1.0);\n"
+           "	}\n"
+           "	gl_FragColor = texel; \n"
+           "}\n\0");
+
+    // DEFAULT VERTEX SHADER SOURCE BUFFER
+    strcpy(sourceVertex, "#ifdef FG_GFX_ESSL_PRECISION_DEF\n"
+           "precision highp float;\n"
+           "varying highp vec3 v_position;\n"
+           "varying highp vec2 v_texCoord;\n"
+           "varying highp vec4 v_color;\n"
+           "#else\n"
+           "varying vec3 v_position;\n"
+           "varying vec2 v_texCoord;\n"
+           "varying vec4 v_color;\n"
+           "#endif\n"
+           "uniform mat4 u_mvpMatrix;\n"
+           "attribute vec4 a_position; \n"
+           "attribute vec2 a_texCoord;\n"
+           "attribute vec4 a_color;\n"
+           "void main() {\n"
+           "	gl_Position = u_mvpMatrix * a_position;\n"
+           "	v_position = a_position.xyz;\n"
+           "	v_texCoord = a_texCoord;\n"
+           "	v_color = a_color;\n"
+           "}\n\0");
+
+    shaderVec[fgGfxShaderProgram::SP_FRAGMENT_SHADER_ID] = new fgGfxShader(fgGfxShaderType::FG_GFX_SHADER_FRAGMENT);
+    shaderVec[fgGfxShaderProgram::SP_VERTEX_SHADER_ID] = new fgGfxShader(fgGfxShaderType::FG_GFX_SHADER_VERTEX);
+
+    ////////////////////////////////////////////////////////////////////////////
+    // FRAGMENT SHADER
+    shaderVec[fgGfxShaderProgram::SP_FRAGMENT_SHADER_ID]->setVersion(slVersion);
+    shaderVec[fgGfxShaderProgram::SP_FRAGMENT_SHADER_ID]->setName("DefaultShader");
+    shaderVec[fgGfxShaderProgram::SP_FRAGMENT_SHADER_ID]->setFilePath("no_path");
+    if(slVersion == FG_GFX_ESSL_100 || slVersion == FG_GFX_ESSL_300) {
+        shaderVec[fgGfxShaderProgram::SP_FRAGMENT_SHADER_ID]->appendDefine(fgGfxShaderConstantDef("FG_GFX_ESSL_PRECISION_DEF", FG_TRUE));
+    }
+    shaderVec[fgGfxShaderProgram::SP_FRAGMENT_SHADER_ID]->setSourceBuffer(sourceFragment);
+
+    ////////////////////////////////////////////////////////////////////////////
+    // VERTEX SHADER
+    shaderVec[fgGfxShaderProgram::SP_VERTEX_SHADER_ID]->setVersion(slVersion);
+    shaderVec[fgGfxShaderProgram::SP_VERTEX_SHADER_ID]->setName("DefaultShader");
+    shaderVec[fgGfxShaderProgram::SP_VERTEX_SHADER_ID]->setFilePath("no_path");
+    if(slVersion == FG_GFX_ESSL_100 || slVersion == FG_GFX_ESSL_300) {
+        shaderVec[fgGfxShaderProgram::SP_VERTEX_SHADER_ID]->appendDefine(fgGfxShaderConstantDef("FG_GFX_ESSL_PRECISION_DEF", FG_TRUE));
+    }
+    shaderVec[fgGfxShaderProgram::SP_VERTEX_SHADER_ID]->setSourceBuffer(sourceVertex);
+
+    attrBinds.push_back(fgGfxAttributeBind("a_position", fgGfxAttributeType::FG_GFX_POSITION));
+    attrBinds.push_back(fgGfxAttributeBind("a_texCoord", fgGfxAttributeType::FG_GFX_TEXTURE_COORD));
+    attrBinds.push_back(fgGfxAttributeBind("a_color", fgGfxAttributeType::FG_GFX_COLOR));
+
+    uniformBinds.push_back(fgGfxUniformBind("u_mvpMatrix", fgGfxUniformType::FG_GFX_MVP_MATRIX));
+    uniformBinds.push_back(fgGfxUniformBind("u_CustomColor", fgGfxUniformType::FG_GFX_CUSTOM_COLOR));
+    uniformBinds.push_back(fgGfxUniformBind("u_useTexture", fgGfxUniformType::FG_GFX_USE_TEXTURE));
+    uniformBinds.push_back(fgGfxUniformBind("s_texture", fgGfxUniformType::FG_GFX_PLAIN_TEXTURE));
+
+    defaultProgram->m_isPreLoaded = FG_TRUE;
+
+    if(!defaultProgram->compile()) {
+        FG_LOG_ERROR("GFX: Unable to compile default built-in shader program");
+    }
+
+    if(!defaultProgram->link()) {
+        FG_LOG_ERROR("GFX: Unable to link default built-in shader program");
+    }
+
+    if(!insertProgram(defaultProgram)) {
+        releaseHandle(defaultProgram->getHandle());
+        delete defaultProgram;
+        defaultProgram = NULL;
+        FG_LOG_ERROR("GFX: Unable to insert default built-in shader program into the Manager");
+    } else {
+        useProgram(defaultProgram);
+        defaultProgram->setUniform(fgGfxUniformType::FG_GFX_USE_TEXTURE, 1.0f);
+        defaultProgram->setUniform(fgGfxUniformType::FG_GFX_PLAIN_TEXTURE, 0);
+    }
+
     m_init = FG_TRUE;
-    return m_init;//preLoadShaders(); // ?
+    return m_init; //preLoadShaders(); // ?
 }
 
-/*
- *
+/**
+ * 
+ * @return 
  */
 fgBool fgGfxShaderManager::preLoadShaders(void) {
     if(!m_init)
@@ -145,8 +262,11 @@ fgBool fgGfxShaderManager::preLoadShaders(void) {
     return FG_TRUE;
 }
 
-/*
- *
+/**
+ * 
+ * @param pProgram
+ * @param nameTag
+ * @return 
  */
 fgBool fgGfxShaderManager::insert(fgGfxShaderProgram *pProgram, const std::string& nameTag) {
     if(!pProgram)
@@ -160,15 +280,19 @@ fgBool fgGfxShaderManager::insert(fgGfxShaderProgram *pProgram, const std::strin
     return FG_FALSE;
 }
 
-/*
- *
+/**
+ * 
+ * @param pProgram
+ * @return 
  */
 fgBool fgGfxShaderManager::insertProgram(fgGfxShaderProgram *pProgram) {
     return insert(pProgram, pProgram->getName());
 }
 
-/*
- *
+/**
+ * 
+ * @param info
+ * @return 
  */
 fgGfxShaderProgram *fgGfxShaderManager::request(const std::string& info) {
     if(!m_shadersDir || !m_init || info.empty())
@@ -237,7 +361,7 @@ fgGfxShaderProgram *fgGfxShaderManager::request(const std::string& info) {
 
         if(fgStrings::endsWith(fext, FG_GFX_SHADER_CONFIG_PROGRAM_STD_SUFFIX, FG_TRUE)) {
             isConfig = FG_TRUE;
-        } 
+        }
 
         if(isConfig) {
             isFound = FG_TRUE;
@@ -261,28 +385,32 @@ fgGfxShaderProgram *fgGfxShaderManager::request(const std::string& info) {
             delete shaderPtr;
             shaderPtr = NULL;
             return NULL;
-        }        
+        }
     }
 
     return shaderPtr;
 }
 
-/*
- *
+/**
+ * 
+ * @param info
+ * @return 
  */
 fgGfxShaderProgram *fgGfxShaderManager::request(const char *info) {
     return request(std::string(info));
 }
 
-/*
- *
+/**
+ * 
+ * @return 
  */
 fgGfxShaderProgram *fgGfxShaderManager::getCurrentProgram(void) const {
     return m_currentProgram;
 }
 
-/*
- *
+/**
+ * 
+ * @param path
  */
 void fgGfxShaderManager::setShadersPath(const std::string &path) {
     m_shadersPath = path;
@@ -298,8 +426,9 @@ void fgGfxShaderManager::setShadersPath(const std::string &path) {
     }
 }
 
-/*
- *
+/**
+ * 
+ * @param path
  */
 void fgGfxShaderManager::setShadersPath(const char *path) {
     if(!path) {
@@ -315,8 +444,9 @@ void fgGfxShaderManager::setShadersPath(const char *path) {
     }
 }
 
-/*
- *
+/**
+ * 
+ * @return 
  */
 fgBool fgGfxShaderManager::compileShaders(void) {
     if(!m_init) {
@@ -341,8 +471,9 @@ fgBool fgGfxShaderManager::compileShaders(void) {
     return status;
 }
 
-/*
- *
+/**
+ * 
+ * @return 
  */
 fgBool fgGfxShaderManager::linkShaders(void) {
     if(!m_init) {
@@ -367,8 +498,9 @@ fgBool fgGfxShaderManager::linkShaders(void) {
     return status;
 }
 
-/*
- *
+/**
+ * 
+ * @return 
  */
 fgBool fgGfxShaderManager::allReleaseGFX(void) {
     if(!m_init) {
@@ -393,8 +525,10 @@ fgBool fgGfxShaderManager::allReleaseGFX(void) {
     return status;
 }
 
-/*
- *
+/**
+ * 
+ * @param pProgram
+ * @return 
  */
 fgBool fgGfxShaderManager::useProgram(fgGfxShaderProgram *pProgram) {
     if(!pProgram)
@@ -406,8 +540,10 @@ fgBool fgGfxShaderManager::useProgram(fgGfxShaderProgram *pProgram) {
     return FG_FALSE;
 }
 
-/*
- *
+/**
+ * 
+ * @param spUniqueID
+ * @return 
  */
 fgBool fgGfxShaderManager::useProgram(fgGfxShaderHandle spUniqueID) {
     fgGfxShaderProgram *pProgram = dereference(spUniqueID);
@@ -420,8 +556,10 @@ fgBool fgGfxShaderManager::useProgram(fgGfxShaderHandle spUniqueID) {
     return pProgram->use();
 }
 
-/*
- *
+/**
+ * 
+ * @param nameTag
+ * @return 
  */
 fgBool fgGfxShaderManager::useProgram(const std::string &nameTag) {
     fgGfxShaderProgram *pProgram = dereference(nameTag);
@@ -434,8 +572,10 @@ fgBool fgGfxShaderManager::useProgram(const std::string &nameTag) {
     return pProgram->use();
 }
 
-/*
- *
+/**
+ * 
+ * @param nameTag
+ * @return 
  */
 fgBool fgGfxShaderManager::useProgram(const char *nameTag) {
     fgGfxShaderProgram *pProgram = dereference(nameTag);
@@ -448,8 +588,10 @@ fgBool fgGfxShaderManager::useProgram(const char *nameTag) {
     return pProgram->use();
 }
 
-/*
- *
+/**
+ * 
+ * @param pProgram
+ * @return 
  */
 fgBool fgGfxShaderManager::isProgramUsed(fgGfxShaderProgram *pProgram) {
     if(m_currentProgram && m_currentProgram == pProgram) {
@@ -459,24 +601,30 @@ fgBool fgGfxShaderManager::isProgramUsed(fgGfxShaderProgram *pProgram) {
     return FG_FALSE;
 }
 
-/*
- *
+/**
+ * 
+ * @param spUniqueID
+ * @return 
  */
 fgBool fgGfxShaderManager::isProgramUsed(fgGfxShaderHandle spUniqueID) {
     fgGfxShaderProgram *pProgram = dereference(spUniqueID);
     return fgGfxShaderManager::isProgramUsed(pProgram);
 }
 
-/*
- *
+/**
+ * 
+ * @param nameTag
+ * @return 
  */
 fgBool fgGfxShaderManager::isProgramUsed(const std::string &nameTag) {
     fgGfxShaderProgram *pProgram = dereference(nameTag);
     return fgGfxShaderManager::isProgramUsed(pProgram);
 }
 
-/*
- *
+/**
+ * 
+ * @param nameTag
+ * @return 
  */
 fgBool fgGfxShaderManager::isProgramUsed(const char *nameTag) {
     fgGfxShaderProgram *pProgram = dereference(nameTag);

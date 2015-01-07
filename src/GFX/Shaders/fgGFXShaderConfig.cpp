@@ -13,30 +13,31 @@
 #include "Util/fgPath.h"
 #include "Util/fgStrings.h"
 
-/*
- *
+/**
+ * 
  */
 fgGfxShaderConfig::fgGfxShaderConfig() :
 m_configType(FG_GFX_SHADER_CONFIG_INVALID),
 m_preferredSLVersion(FG_GFX_SHADING_LANGUAGE_INVALID),
 m_defaultPrecision(FG_GFX_SHADER_PRECISION_DEFAULT) { }
 
-/*
- *
+/**
+ * 
+ * @param filePath
  */
 fgGfxShaderConfig::fgGfxShaderConfig(const char *filePath) {
     fgGfxShaderConfig::load(filePath);
 }
 
-/*
- *
+/**
+ * 
  */
 fgGfxShaderConfig::~fgGfxShaderConfig() {
     clearAll();
 }
 
-/*
- *
+/**
+ * 
  */
 void fgGfxShaderConfig::clearAll(void) {
     fgConfig::clearAll();
@@ -54,8 +55,11 @@ void fgGfxShaderConfig::clearAll(void) {
     m_constants.clear_optimised();
 }
 
-/*
- *
+/**
+ * 
+ * @param filePath
+ * @param SLver
+ * @return 
  */
 fgBool fgGfxShaderConfig::load(const char *filePath, fgGfxSLVersion SLver) {
     fgGfxShaderConfig::clearAll();
@@ -63,55 +67,59 @@ fgBool fgGfxShaderConfig::load(const char *filePath, fgGfxSLVersion SLver) {
         FG_MessageSubsystem->reportError(tag_type::name(), FG_ERRNO_GFX_SHADER_FAIL_CFG_LOAD);
         return FG_FALSE;
     }
-    return _parseData(SLver);
+    return private_parseData(SLver);
 }
 
-/*
- *
+/**
+ * 
+ * @param definesSection
+ * @return 
  */
-fgBool fgGfxShaderConfig::_parseDefines(fgCfgSection *_definesSection) {
-    if(!_definesSection)
+fgBool fgGfxShaderConfig::private_parseDefines(fgCfgSection *definesSection) {
+    if(!definesSection)
         return FG_FALSE;
-    unsigned short _n = 0;
+    unsigned short n = 0;
     fgCfgTypes::parameterVecItor paramsBegin, paramsEnd, paramsItor;
     // This section is optional
-    paramsBegin = _definesSection->parameters.begin();
-    paramsEnd = _definesSection->parameters.end();
+    paramsBegin = definesSection->parameters.begin();
+    paramsEnd = definesSection->parameters.end();
     paramsItor = paramsBegin;
     for(; paramsItor != paramsEnd; paramsItor++) {
         fgCfgParameter *param = *paramsItor;
         if(!param) continue;
         // for now only BOOL is supported
         if(param->type == FG_CFG_PARAMETER_BOOL && !param->name.empty()) {
-            fgGfxShaderConstantDef _constant;
-            _constant.name = param->name;
-            _constant.value = param->bool_val;
-            m_constants.push_back(_constant);
-            _n++;
+            fgGfxShaderConstantDef constant;
+            constant.name = param->name;
+            constant.value = param->bool_val;
+            m_constants.push_back(constant);
+            n++;
         }
     }
-    if(!_n)
+    if(!n)
         return FG_FALSE;
     return FG_TRUE;
 }
 
-/*
- *
+/**
+ * 
+ * @param includeSection
+ * @return 
  */
-fgBool fgGfxShaderConfig::_parseInclude(fgCfgSection *_includeSection) {
-    if(!_includeSection)
+fgBool fgGfxShaderConfig::private_parseInclude(fgCfgSection *includeSection) {
+    if(!includeSection)
         return FG_FALSE;
-    unsigned short _n = 0;
-    fgCfgParameter *param = _includeSection->getParameter("list", FG_CFG_PARAMETER_STRING);
+    unsigned short n = 0;
+    fgCfgParameter *param = includeSection->getParameter("list", FG_CFG_PARAMETER_STRING);
     if(!param) return FG_FALSE;
-    fgVector<std::string> _incVec;
-    std::string _tmp = param->string;
-    fgStrings::split(_tmp, ',', _incVec);
-    for(int i = 0; i < (int)_incVec.size(); i++) {
-        m_includes.push_back(_incVec[i]);
-        _n++;
+    fgVector<std::string> incVec;
+    std::string tmp = param->string;
+    fgStrings::split(tmp, ',', incVec);
+    for(int i = 0; i < (int)incVec.size(); i++) {
+        m_includes.push_back(incVec[i]);
+        n++;
     }
-    if(!_n)
+    if(!n)
         return FG_FALSE;
     return FG_TRUE;
 }
@@ -119,7 +127,7 @@ fgBool fgGfxShaderConfig::_parseInclude(fgCfgSection *_includeSection) {
 /*
  * #OPTIMISE #DIVIDE #FIXME shader config parse data, move some operations to other function for clarity
  */
-fgBool fgGfxShaderConfig::_parseData(fgGfxSLVersion SLver) {
+fgBool fgGfxShaderConfig::private_parseData(fgGfxSLVersion SLver) {
     if(SLver != FG_GFX_SHADING_LANGUAGE_INVALID) {
         m_preferredSLVersion = SLver;
     } else if(m_preferredSLVersion == FG_GFX_SHADING_LANGUAGE_INVALID) {
@@ -210,14 +218,14 @@ fgBool fgGfxShaderConfig::_parseData(fgGfxSLVersion SLver) {
     // Shader.Defines holds list of constants for all configurations (shading language version)
     // and all shader types (shader objects to link with shader program)
     fgCfgSection *definesSection = getSection("Shader.Defines");
-    _parseDefines(definesSection);
+    private_parseDefines(definesSection);
     // Populate list of constants for selected configuration,
     // like before this section is optional
     {
         std::string _tmp = "Shader.Defines.";
         _tmp.append(m_selectedConfigName);
         definesSection = getSection(_tmp);
-        _parseDefines(definesSection);
+        private_parseDefines(definesSection);
     }
     //
     // Parse more wide parameters from specific shader configuration (not program config)
@@ -241,15 +249,15 @@ fgBool fgGfxShaderConfig::_parseData(fgGfxSLVersion SLver) {
         // Parse defines
         std::string _tmp;
         _tmp.append(shortPrefix).append(".Defines");
-        _parseDefines(getSection(_tmp));
+        private_parseDefines(getSection(_tmp));
         _tmp.clear();
         _tmp.append(shortPrefix).append(".Defines.").append(m_selectedConfigName);
-        _parseDefines(getSection(_tmp));
+        private_parseDefines(getSection(_tmp));
         _tmp.clear();
 
         // parse includes
         _tmp.append(shortPrefix).append(".Include");
-        _parseInclude(getSection(_tmp));
+        private_parseInclude(getSection(_tmp));
         _tmp.clear();
 
         // Parse file / quality configuration specific for this shader

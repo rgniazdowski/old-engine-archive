@@ -9,9 +9,9 @@
 
 #ifndef FG_INC_GFX_STD_INC
     #define FG_INC_GFX_STD_INC
-    #define FG_INC_GFX_STD_INC_BLOCK__
+    #define FG_INC_GFX_STD_INC_BLOCK
 
-    #ifdef FG_INC_GFX_TYPES_BLOCK__
+    #ifdef FG_INC_GFX_TYPES_BLOCK
         #error "FG_GFX_TYPES_BLOCK constant is defined. Do not include GfxStdInc inside of GfxTypes header."
     #endif
 
@@ -27,5 +27,5 @@
         #include "fgGFXTypes.h"
     #endif
 
-    #undef FG_INC_GFX_STD_INC_BLOCK__
+    #undef FG_INC_GFX_STD_INC_BLOCK
 #endif /* FG_INC_GFX_STD_INC */

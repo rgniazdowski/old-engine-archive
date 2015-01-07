@@ -9,8 +9,9 @@
 
 #ifndef FG_INC_GFX_SHADER_CONFIG
     #define FG_INC_GFX_SHADER_CONFIG
+    #define FG_INC_GFX_SHADER_CONFIG_BLOCK
 
-    #ifdef FG_INC_GFX_STD_INC_BLOCK__
+    #ifdef FG_INC_GFX_STD_INC_BLOCK
         #error "FG_GFX_STD_INC_BLOCK constant is defined. Do not include GfxShaderConfig inside of Gfx Standard Include header."
     #endif
     #include "fgGFXShaderDefs.h"
@@ -62,15 +63,23 @@ typedef FG_TAG_GFX_SHADER_CONFIG fgGfxShaderConfigTag;
  */
 class fgGfxShaderConfig : protected fgConfig {
 public:
+    ///
     typedef fgConfig base_type;
+    ///
     typedef fgGfxShaderConfigTag tag_type;
-    
+    ///
     typedef fgVector<fgGfxShaderType> shaderTypeVec;
+    ///
     typedef fgVector<fgGfxUniformBind> shaderUniformBindVec;
+    ///
     typedef fgVector<fgGfxAttributeBind> shaderAttributeBindVec;
+    ///
     typedef fgVector<std::string> shaderIncludeNameVec;
+    ///
     typedef fgVector<std::string> shaderFileVec;
+    ///
     typedef fgVector<fgQuality> shaderQualityVec;
+    ///
     typedef fgVector<fgGfxShaderConstantDef> shaderConstantVec;
 
 protected:
@@ -101,83 +110,129 @@ protected:
 
     ///
     fgGfxShaderPrecision m_defaultPrecision;
+    
 public:
-    //
+    /**
+     * 
+     */
     fgGfxShaderConfig();
-    // 
+    /**
+     * 
+     * @param filePath
+     */ 
     fgGfxShaderConfig(const char *filePath);
-    // 
+    /**
+     * 
+     */
     virtual ~fgGfxShaderConfig();
-
-    //
+    /**
+     * 
+     */
     virtual void clearAll(void);
 
-    // 
+    /**
+     * 
+     * @param filePath
+     * @param SLver
+     * @return 
+     */
     fgBool load(const char *filePath = NULL, fgGfxSLVersion SLver = FG_GFX_SHADING_LANGUAGE_INVALID);
 
-    //
+    /**
+     * 
+     * @return 
+     */
     fgGfxShaderConfigType getType(void) const {
         return m_configType;
     }
-
-    //
+    /**
+     * 
+     * @return 
+     */
     shaderTypeVec & getRefShaderTypes(void) {
         return m_shaderTypes;
     }
-
-    //
+    /**
+     * 
+     * @return 
+     */
     shaderUniformBindVec & getRefUniformBinds(void) {
         return m_uniformBinds;
     }
-
-    //
+    /**
+     * 
+     * @return 
+     */
     shaderAttributeBindVec & getRefAttributeBinds(void) {
         return m_attributeBinds;
     }
-
-    //
+    /**
+     * 
+     * @return 
+     */
     shaderIncludeNameVec & getRefIncludes(void) {
         return m_includes;
     }
-
-    //
+    /**
+     * 
+     * @return 
+     */
     shaderFileVec & getRefFiles(void) {
         return m_files;
     }
-
-    //
+    /**
+     * 
+     * @return 
+     */
     shaderQualityVec & getRefQualities(void) {
         return m_qualities;
     }
-
-    //
+    /**
+     * 
+     * @return 
+     */
     shaderConstantVec & getRefConstants(void) {
         return m_constants;
     }
-
-    //
+    /**
+     * 
+     * @return 
+     */
     std::string & getProgramName(void) {
         return m_programName;
     }
-
-    //
+    /**
+     * 
+     * @return 
+     */
     std::string & getSelectedConfigName(void) {
         return m_selectedConfigName;
     }
-
-    //
-    void setPreferredSLVersion(fgGfxSLVersion _ver) {
-        m_preferredSLVersion = _ver;
+    /**
+     * 
+     * @param _ver
+     */
+    void setPreferredSLVersion(fgGfxSLVersion version) {
+        m_preferredSLVersion = version;
     }
 
 private:
-    // 
-    fgBool _parseData(fgGfxSLVersion SLver);
-    //
-    fgBool _parseDefines(fgCfgSection *_definesSection);
-    //
-    fgBool _parseInclude(fgCfgSection *_includeSection);
+    /**
+     * 
+     * @param SLver
+     * @return 
+     */
+    fgBool private_parseData(fgGfxSLVersion SLver);
+    /**
+     * 
+     * @param _definesSection
+     * @return 
+     */
+    fgBool private_parseDefines(fgCfgSection *definesSection);
+    /**
+     */
+    fgBool private_parseInclude(fgCfgSection *includeSection);
 
 };
-
+    #undef FG_INC_GFX_SHADER_CONFIG_BLOCK
 #endif /* FG_INC_GFX_SHADER_CONFIG */

@@ -9,6 +9,7 @@
 
 #ifndef FG_INC_GFX_MVP_MATRIX
     #define FG_INC_GFX_MVP_MATRIX
+    #define FG_INC_GFX_MVP_MATRIX_BLOCK
 
     #include "fgGFXMVMatrix.h"
     #include "fgGFXProjection.h"
@@ -193,4 +194,5 @@ protected:
     fgMatrix4f m_viewProjMatrix;
 };
 
+    #undef FG_INC_GFX_MVP_MATRIX_BLOCK
 #endif /* FG_INC_GFX_MVP_MATRIX */

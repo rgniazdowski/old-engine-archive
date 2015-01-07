@@ -95,9 +95,8 @@ void fgGfxShader::appendInclude(std::string & includeName) {
  * @return 
  */
 fgBool fgGfxShader::loadSource(void) {
-    
     if(getFilePath().empty()) {
-        FG_MessageSubsystem->reportWarning(tag_type::name(), FG_ERRNO_WRONG_PATH);
+        FG_MessageSubsystem->reportWarning(tag_type::name(), FG_ERRNO_WRONG_PATH, "path[%s]", getFilePathStr());
         return FG_FALSE;
     }
     if(m_version == FG_GFX_SHADING_LANGUAGE_INVALID) {
@@ -106,11 +105,15 @@ fgBool fgGfxShader::loadSource(void) {
     }
     // do not reload the source (will need to attach again the rest of the defines / sources)
     if(m_isSourceLoaded || m_sources) {
+        FG_LOG_DEBUG("GFX:Shader: Shader source is already loaded: '%s'", getFilePathStr());
         return FG_TRUE;
     }
 
-    m_fileSource = fg::util::DataFile::load(getFilePath().c_str());
+    if(!m_fileSource) {        
+        m_fileSource = fg::util::DataFile::load();
+    }
     if(!m_fileSource) {
+        FG_LOG_ERROR("GFX:Shader: Unable to load shader source: '%s'", getFilePathStr());
         return FG_FALSE; // PROPER ERROR CODE
     }
 
@@ -124,6 +127,8 @@ fgBool fgGfxShader::loadSource(void) {
     //_version.append("#version ");
     if(m_version == FG_GFX_ESSL_100)
         m_sources[0] = _FG_GFX_SL_VERSION_EMPTY;
+    else 
+        m_sources[0] = _FG_GFX_SL_VERSION_EMPTY;
     //_version.append("100 es\n");
     //m_sources[0] = _version.c_str();
     int n = 1;
@@ -136,9 +141,11 @@ fgBool fgGfxShader::loadSource(void) {
         m_sources[n] = "\n"; // #FIXME
     }
     m_sources[n] = m_fileSource;
+#if defined(FG_DEBUG)
     for(int i = 0; i < (int)m_numSources; i++) {
         printf("[%d] '%s'\n", i, m_sources[i]);
     }
+#endif
     m_isSourceLoaded = FG_TRUE;
     return FG_TRUE;
 }

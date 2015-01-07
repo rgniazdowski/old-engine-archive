@@ -57,17 +57,18 @@ typedef fgGFXuint fgGfxProgramObjParamType;
 // the number of active uniform variables
     #define FG_GFX_PROGRAM_ACTIVE_UNIFORMS                  GL_ACTIVE_UNIFORMS
 
-/*
+/**
  *
  */
 class fgGfxShaderProgram : public fgGfxShaderBase {
     friend class fgGfxShaderManager;
 public:
+    ///
     typedef fgGfxShaderBase base_type;
+    ///
     typedef fgGfxShaderProgramTag tag_type;
-    
-protected:
 
+public:
     enum {
         SP_FRAGMENT_SHADER_ID = 0,
         SP_VERTEX_SHADER_ID = 1,
@@ -81,7 +82,12 @@ protected:
     };
 
 protected:
-    static fgGFXint _shaderTypeToSpID(fgGfxShaderType _type) {
+    /**
+     * 
+     * @param _type
+     * @return 
+     */
+    static fgGFXint shaderTypeToSpID(fgGfxShaderType _type) {
         fgGFXint spID = 0;
         switch(_type) {
             case fgGfxShaderType::FG_GFX_SHADER_FRAGMENT:
@@ -112,11 +118,17 @@ protected:
     }
 
 public:
+    ///
     typedef fgVector<fgGfxShader *> shaderVec;
+    ///
     typedef shaderVec::iterator shaderVecItor;
+    ///
     typedef fgGfxShaderConfig::shaderUniformBindVec uniformBindVec;
+    ///
     typedef uniformBindVec::iterator uniformBindVecItor;
+    ///
     typedef fgGfxShaderConfig::shaderAttributeBindVec attributeBindVec;
+    ///
     typedef attributeBindVec::iterator attributeBindVecItor;
 
 protected:
@@ -162,27 +174,55 @@ public:
     fgBool preLoadConfig(std::string &path);
 
 protected:
-    //
-    fgBool _appendUniformBinds(uniformBindVec & binds);
-    //
-    fgBool _appendAttributeBinds(attributeBindVec & binds);
+    /**
+     * 
+     * @param binds
+     * @return 
+     */
+    fgBool appendUniformBinds(uniformBindVec & binds);
+    /**
+     * 
+     * @param binds
+     * @return 
+     */
+    fgBool appendAttributeBinds(attributeBindVec & binds);
 
-    //
-    fgBool _attachShader(fgGfxShader *shader);
-    //
-    fgBool _attachShaders(void);
+    /**
+     * 
+     * @param shader
+     * @return 
+     */
+    fgBool attachShader(fgGfxShader *shader);
+    /**
+     * 
+     * @return 
+     */
+    fgBool attachShaders(void);
 
-    //
-    fgBool _deleteShader(fgGfxShader *shader);
-    //
-    fgBool _deleteShaders(void);
+    /**
+     * 
+     * @param shader
+     * @return 
+     */
+    fgBool deleteShader(fgGfxShader *shader);
+    /**
+     * 
+     * @return 
+     */
+    fgBool deleteShaders(void);
 
-    //
-    fgBool _detachShader(fgGfxShader *shader);
-    //
-    fgBool _detachShaders(void);
+    /**
+     * 
+     * @param shader
+     * @return 
+     */
+    fgBool detachShader(fgGfxShader *shader);
+    /**
+     * 
+     * @return 
+     */
+    fgBool detachShaders(void);
 
-    //
     /**
      * 
      * @return 
@@ -214,41 +254,85 @@ public:
     // Try to compile the shaders for this shader program
     // If needed the source code files will be loaded
     fgBool compile(void);
-    //
+    /**
+     * 
+     * @return 
+     */
     fgBool link(void);
-    //
+    /**
+     * 
+     * @return 
+     */
     fgBool use(void);
-    //
+    /**
+     * 
+     * @return 
+     */
     fgBool bindAttributes(void);
-    //
+    /**
+     * 
+     * @return 
+     */
     fgBool bindUniforms(void);
-    //
+    /**
+     * 
+     * @return 
+     */
     fgBool deleteProgram(void);
-    //
+    /**
+     * 
+     */
     void clearAll(void);
 
-    //
+    /**
+     * 
+     * @return 
+     */
     fgBool isUsed(void);
+    /**
+     * 
+     * @return 
+     */
+    fgBool isLinked(void) const {
+        return m_isLinked;
+    }
+    /**
+     * 
+     * @return 
+     */
+    fgBool isCompiled(void) const {
+        return m_isCompiled;
+    }
 
 public:
-    //
+    /**
+     * 
+     * @return 
+     */
     inline shaderVec & getRefShaderVec(void) {
         return m_shaders;
     }
-
-    //
+    /**
+     * 
+     * @return 
+     */
     inline attributeBindVec & getRefAttrBinds(void) {
         return m_attrBinds;
     }
-
-    //
+    /**
+     * 
+     * @return 
+     */
     inline uniformBindVec & getRefUniformBinds(void) {
         return m_uniformBinds;
     }
-
-    // 
+    /**
+     * 
+     * @param type
+     * @return 
+     */
     inline fgGfxShader *getShader(fgGfxShaderType type) const {
-        fgGFXint id = _shaderTypeToSpID(type);
+        fgGFXint id = shaderTypeToSpID(type);
         if(id != -1)
             return m_shaders[id];
         else
@@ -257,72 +341,191 @@ public:
 
     ///////////////////////////////////////////////////////
 
-    //
+    /**
+     * 
+     * @param type
+     * @return 
+     */
     fgGFXint getUniformLocation(fgGfxUniformType type);
-    //
+    /**
+     * 
+     * @param variableName
+     * @return 
+     */
     fgGFXint getUniformLocation(std::string variableName);
 
-    //
+    /**
+     * 
+     * @param type
+     * @return 
+     */
     fgGFXint getUniformBindIndex(fgGfxUniformType type);
-    //
+    /**
+     * 
+     * @param type
+     * @return 
+     */
     fgGfxUniformBind *getUniformBind(fgGfxUniformType type);
 
-    //
+    /**
+     * 
+     * @param matrix
+     * @return 
+     */
     fgBool setUniform(fgGfxMVPMatrix *matrix);
-    //
+    /**
+     * 
+     * @param matrix
+     * @return 
+     */
     fgBool setUniform(fgGfxMVMatrix *matrix);
 
-    //
+    /**
+     * 
+     * @param type
+     * @param v0
+     * @return 
+     */
     fgBool setUniform(fgGfxUniformType type, fgGFXfloat v0);
-    //
+    /**
+     * 
+     * @param type
+     * @param v0
+     * @param v1
+     * @return 
+     */
     fgBool setUniform(fgGfxUniformType type, fgGFXfloat v0, fgGFXfloat v1);
-    //
-    fgBool setUniform(fgGfxUniformType type, fgGFXfloat v0, fgGFXfloat v1, fgGFXfloat v2);
-    //
-    fgBool setUniform(fgGfxUniformType type, fgGFXfloat v0, fgGFXfloat v1, fgGFXfloat v2, fgGFXfloat v3);
+    /**
+     * 
+     * @param type
+     * @param v0
+     * @param v1
+     * @param v2
+     * @return 
+     */
+    fgBool setUniform(fgGfxUniformType type,
+                      fgGFXfloat v0,
+                      fgGFXfloat v1,
+                      fgGFXfloat v2);
+    /**
+     * 
+     * @param type
+     * @param v0
+     * @param v1
+     * @param v2
+     * @param v3
+     * @return 
+     */
+    fgBool setUniform(fgGfxUniformType type,
+                      fgGFXfloat v0,
+                      fgGFXfloat v1,
+                      fgGFXfloat v2,
+                      fgGFXfloat v3);
 
-    //
+    /**
+     * 
+     * @param type
+     * @param v0
+     * @return 
+     */
     fgBool setUniform(fgGfxUniformType type, fgGFXint v0);
-    //
+    /**
+     * 
+     * @param type
+     * @param v0
+     * @param v1
+     * @return 
+     */
     fgBool setUniform(fgGfxUniformType type, fgGFXint v0, fgGFXint v1);
-    //
-    fgBool setUniform(fgGfxUniformType type, fgGFXint v0, fgGFXint v1, fgGFXint v2);
-    //
-    fgBool setUniform(fgGfxUniformType type, fgGFXint v0, fgGFXint v1, fgGFXint v2, fgGFXint v3);
+    /**
+     * 
+     * @param type
+     * @param v0
+     * @param v1
+     * @param v2
+     * @return 
+     */
+    fgBool setUniform(fgGfxUniformType type,
+                      fgGFXint v0,
+                      fgGFXint v1,
+                      fgGFXint v2);
+    /**
+     * 
+     * @param type
+     * @param v0
+     * @param v1
+     * @param v2
+     * @param v3
+     * @return 
+     */
+    fgBool setUniform(fgGfxUniformType type,
+                      fgGFXint v0,
+                      fgGFXint v1,
+                      fgGFXint v2,
+                      fgGFXint v3);
 
-    //
-    fgBool setUniform(fgGfxUniformType type, fgGFXsizei count, const fgGFXfloat *value);
-    //
-    fgBool setUniform(fgGfxUniformType type, fgGFXsizei count, const fgGFXint *value);
+    /**
+     * 
+     * @param type
+     * @param count
+     * @param value
+     * @return 
+     */
+    fgBool setUniform(fgGfxUniformType type,
+                      fgGFXsizei count,
+                      const fgGFXfloat *value);
+    /**
+     * 
+     * @param type
+     * @param count
+     * @param value
+     * @return 
+     */
+    fgBool setUniform(fgGfxUniformType type,
+                      fgGFXsizei count,
+                      const fgGFXint *value);
 
-    ///////////////////////////////////////////////////////
-
-    //
+    ////////////////////////////////////////////////////////////////////////////
+    /**
+     * 
+     * @return 
+     */
     inline fgGfxShader *getFragmentShader(void) const {
         return m_shaders[SP_FRAGMENT_SHADER_ID];
     }
-
-    //
+    /**
+     * 
+     * @return 
+     */
     inline fgGfxShader *getVertexShader(void) const {
         return m_shaders[SP_VERTEX_SHADER_ID];
     }
     #if defined FG_USING_OPENGL
-    //
+    /**
+     * 
+     * @return 
+     */
     inline fgGfxShader *getTessControlShader(void) const {
         return m_shaders[SP_TESS_CONTROL_SHADER_ID];
     }
-
-    //
+    /**
+     * 
+     * @return 
+     */
     inline fgGfxShader *getTessEvaluationShader(void) const {
         return m_shaders[SP_TESS_EVALUATION_SHADER_ID];
     }
-
-    //
+    /**
+     * 
+     * @return 
+     */
     inline fgGfxShader *getGeometryShader(void) const {
         return m_shaders[SP_GEOMETRY_SHADER_ID];
     }
-
-    //
+    /**
+     * 
+     * @return 
+     */
     inline fgGfxShader *getComputeShader(void) const {
         return m_shaders[SP_COMPUTE_SHADER_ID];
     }

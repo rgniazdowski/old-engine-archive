@@ -10,7 +10,7 @@
 #ifndef FG_INC_GFX_SHADER_MANAGER
     #define FG_INC_GFX_SHADER_MANAGER
 
-    #ifdef FG_INC_GFX_STD_INC_BLOCK__
+    #ifdef FG_INC_GFX_STD_INC_BLOCK
         #error "FG_GFX_STD_INC_BLOCK constant is defined. Do not include GfxShaderManager inside of Gfx Standard Include header."
     #endif
 

@@ -169,6 +169,12 @@ fgBool fgGfxMain::initGFX(void) {
         m_2DScene->getMVP()->setOrtho(0.0f, (float)m_mainWindow->getWidth(), (float)m_mainWindow->getHeight(), 0.0f);
         m_init = FG_TRUE;
     }
+    if(status && m_shaderMgr) {
+        if(!m_shaderMgr->initialize()) {
+            FG_LOG_ERROR("GFX: Unable to initialize Shader Manager");
+            //status = FG_FALSE; // ?
+        }
+    }
     if(status) {
         FG_LOG_DEBUG("GFX: Subsystem initialized successfully");
     }

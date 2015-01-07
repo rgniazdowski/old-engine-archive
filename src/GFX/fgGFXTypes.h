@@ -9,7 +9,7 @@
 
 #ifndef FG_INC_GFX_TYPES
     #define FG_INC_GFX_TYPES
-    #define FG_INC_GFX_TYPES_BLOCK__
+    #define FG_INC_GFX_TYPES_BLOCK
 
     #ifdef FG_INC_TYPES_BLOCK
         #error "FG_TYPES_BLOCK constant is defined. Do not include fgGfxTypes header inside of fgTypes header."
@@ -203,5 +203,5 @@ inline void dumpMatrix(const float *mat, const char *title) {
     printf("{ %.2f %.2f %.2f %.2f }\n\n", mat[12], mat[13], mat[14], mat[15]);
 }
 
-    #undef FG_INC_GFX_TYPES_BLOCK__
+    #undef FG_INC_GFX_TYPES_BLOCK
 #endif /* FG_INC_GFX_TYPES */
