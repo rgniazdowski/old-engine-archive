@@ -40,7 +40,9 @@ typedef FG_TAG_GFX_MAIN fgGfxMainTag;
  */
 class fgGfxMain {
 public:
+    ///
     typedef fgGfxMain type;
+    ///
     typedef fgGfxMainTag tag_type;
 public:
     /**
@@ -102,7 +104,7 @@ public:
     // Pre loads all shaders - caches the specific configs
     fgBool preLoadShaders(void) const;
     // Returns the pointer to the main GFX windows - OS specific main window
-    fgGfxWindow *getMainWindow(void) const;
+    fg::gfx::CWindow *getMainWindow(void) const;
     // Returns the pointer to the main 3D scene - may be NULL
     fgGfx3DScene *get3DScene(void) const;
     // Returns the pointer to the main 2D scene - may be NULL
@@ -111,6 +113,13 @@ public:
     fgGfxCameraAnimation *get3DSceneCamera(void) const;
     //
     fgParticleSystem *getParticleSystem(void) const;
+    /**
+     * 
+     * @return 
+     */
+    fgGfxContext *context(void) const {
+        return m_gfxContext;
+    }
     
 private:
     /// Texture manager for GFX upload/reload - works with Resource manager
@@ -122,7 +131,7 @@ private:
     /// Main GFX shader manager
     fgGfxShaderManager *m_shaderMgr;
     /// Main GFX OS specific window
-    fgGfxWindow *m_mainWindow;
+    fg::gfx::CWindow *m_mainWindow;
     /// Main GFX context - it's directly connected to the GFX window
     fgGfxContext *m_gfxContext;
     /// Main 3D scene management

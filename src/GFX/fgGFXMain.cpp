@@ -52,7 +52,7 @@ m_init(FG_FALSE) {
     m_2DScene->setShaderManager(m_shaderMgr);
 }
 
-/*
+/**
  *
  */
 fgGfxMain::~fgGfxMain() {
@@ -88,7 +88,7 @@ fgGfxMain::~fgGfxMain() {
     m_2DScene = NULL;
 }
 
-/*
+/**
  *
  */
 void fgGfxMain::registerResourceCallbacks(void) {
@@ -101,7 +101,7 @@ void fgGfxMain::registerResourceCallbacks(void) {
     static_cast<fgEventManager *>(m_pEventMgr)->addEventCallback(FG_EVENT_RESOURCE_CREATED, m_resourceCreatedCallback);
 }
 
-/*
+/**
  *
  */
 void fgGfxMain::unregisterResourceCallbacks(void) {
@@ -111,8 +111,9 @@ void fgGfxMain::unregisterResourceCallbacks(void) {
     static_cast<fgEventManager *>(m_pEventMgr)->removeEventCallback(FG_EVENT_RESOURCE_CREATED, m_resourceCreatedCallback);
 }
 
-/*
- *
+/**
+ * 
+ * @return 
  */
 fgBool fgGfxMain::initGFX(void) {
     float t1 = fgTime::ms();
@@ -123,7 +124,7 @@ fgBool fgGfxMain::initGFX(void) {
         status = FG_FALSE;
     }
     if(!m_mainWindow && status) {
-        m_mainWindow = new fgGfxWindow();
+        m_mainWindow = new fg::gfx::CWindow();
     }
     if(m_mainWindow && status) {
         // #FIXME - resolution FIXME!
@@ -177,6 +178,8 @@ fgBool fgGfxMain::initGFX(void) {
 }
 
 /*
+
+/**
  *
  */
 void fgGfxMain::closeGFX(void) {
@@ -191,8 +194,9 @@ void fgGfxMain::closeGFX(void) {
     m_init = FG_FALSE;
 }
 
-/*
- *
+/**
+ * 
+ * @return 
  */
 fgBool fgGfxMain::suspendGFX(void) {
     fgBool status = FG_TRUE;
@@ -218,8 +222,9 @@ fgBool fgGfxMain::suspendGFX(void) {
     return status;
 }
 
-/*
- *
+/**
+ * 
+ * @return 
  */
 fgBool fgGfxMain::resumeGFX(void) {
     fgBool status = FG_TRUE;
@@ -256,7 +261,7 @@ fgBool fgGfxMain::resumeGFX(void) {
     return status;
 }
 
-/*
+/**
  *
  */
 void fgGfxMain::display(void) {
@@ -292,7 +297,7 @@ float guiScale = 1.0f;
 float yolo_posx = 0;
 float yolo_posy = 0;
 
-/*
+/**
  *
  */
 void fgGfxMain::render(void) {
@@ -630,7 +635,7 @@ fgGfxShaderManager *fgGfxMain::getShaderManager(void) const {
  * 
  * @return 
  */
-fgGfxWindow *fgGfxMain::getMainWindow(void) const {
+fg::gfx::CWindow *fgGfxMain::getMainWindow(void) const {
     return m_mainWindow;
 }
 
@@ -668,8 +673,9 @@ fgParticleSystem *fgGfxMain::getParticleSystem(void) const {
     return m_particleSystem;
 }
 
-/*
+/**
  *
+ * @return
  */
 fgBool fgGfxMain::preLoadShaders(void) const {
     if(!m_shaderMgr) {
@@ -680,8 +686,9 @@ fgBool fgGfxMain::preLoadShaders(void) const {
     return m_shaderMgr->preLoadShaders();
 }
 
-/*
+/**
  * #FIXME
+ * @return
  */
 fgBool fgGfxMain::releaseTextures(void) {
     if(m_textureMgr) {

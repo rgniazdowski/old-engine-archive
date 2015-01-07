@@ -15,10 +15,10 @@
 #include "s3eTypes.h"
 #endif
 
-/*
- *
+/**
+ * 
  */
-fgGfxWindow::fgGfxWindow() :
+fg::gfx::CWindow::CWindow() :
 m_title(),
 #if defined(FG_USING_EGL)
 m_EGLSurface(0),
@@ -33,10 +33,13 @@ m_isHW(FG_FALSE),
 m_isDB(FG_FALSE),
 m_isOpen(FG_FALSE) { }
 
-/*
- *
+/**
+ * 
+ * @param title
+ * @param width
+ * @param height
  */
-fgGfxWindow::fgGfxWindow(const char *title, unsigned int width, unsigned int height) :
+fg::gfx::CWindow::CWindow(const char *title, unsigned int width, unsigned int height) :
 m_title(),
 #if defined(FG_USING_EGL)
 m_EGLSurface(0),
@@ -50,26 +53,30 @@ m_isFullscreen(FG_FALSE),
 m_isHW(FG_FALSE),
 m_isDB(FG_FALSE),
 m_isOpen(FG_FALSE) {
-    fgGfxWindow::setup(title, width, height);
+    CWindow::setup(title, width, height);
 }
 
-/*
- *
+/**
+ * 
  */
-fgGfxWindow::~fgGfxWindow() {
+fg::gfx::CWindow::~CWindow() {
     close();
 }
 
-/*
- *
+/**
+ * 
+ * @param title
+ * @param width
+ * @param height
+ * @return 
  */
-fgBool fgGfxWindow::setup(const char *title, unsigned int width, unsigned int height) {
+fgBool fg::gfx::CWindow::setup(const char *title, unsigned int width, unsigned int height) {
     if(!fgGfxPlatform::isInit()) {
         FG_LOG::PrintError("GFX: Cannot setup window without platform initialized.");
         return FG_FALSE;
     }
     if(m_isOpen) {
-        fgGfxWindow::close();
+        CWindow::close();
     }
     fgBool status = FG_TRUE;
 #if defined FG_USING_EGL || defined FG_USING_MARMALADE_EGL
@@ -144,10 +151,11 @@ fgBool fgGfxWindow::setup(const char *title, unsigned int width, unsigned int he
     return status;
 }
 
-/*
- *
+/**
+ * 
+ * @return 
  */
-fgBool fgGfxWindow::close(void) {
+fgBool fg::gfx::CWindow::close(void) {
     if(!fgGfxPlatform::isInit()) {
         FG_LOG_ERROR("GFX: Platform not initialized.");
         return FG_FALSE;
@@ -186,27 +194,31 @@ fgBool fgGfxWindow::close(void) {
     return status;
 }
 
-/*
- *
+/**
+ * 
+ * @param toggle
  */
-void fgGfxWindow::setFullscreen(fgBool toggle) {
+void fg::gfx::CWindow::setFullscreen(fgBool toggle) {
     if(m_isFullscreen != toggle) {
         m_isFullscreen = toggle;
         refreshFS();
     }
 }
 
-/*
- *
+/**
+ * 
+ * @return 
  */
-fgBool fgGfxWindow::refreshFS(void) {
+fgBool fg::gfx::CWindow::refreshFS(void) {
+    // #FIXME
     return FG_TRUE;
 }
 
-/*
- *
+/**
+ * 
+ * @return 
  */
-fgBool fgGfxWindow::swapBuffers(void) {
+fgBool fg::gfx::CWindow::swapBuffers(void) {
 #if defined FG_USING_MARMALADE_EGL
     EGLDisplay eglDisplay = (EGLDisplay)fgGfxPlatform::getDefaultDisplay();
     if(eglDisplay && m_EGLSurface)
@@ -220,13 +232,13 @@ fgBool fgGfxWindow::swapBuffers(void) {
     return FG_TRUE;
 }
 
-/*
+/**
  *
  */
-void fgGfxWindow::clearColor(void) {
+void fg::gfx::CWindow::clearColor(void) {
 #if defined FG_USING_OPENGL || defined FG_USING_OPENGL_ES
     // #FIXME ?
-    fgGfxPlatform::context()->clearColor(0.05f, 0.0f, 0.0f, 1.0f);
+    fgGfxPlatform::context()->clearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 #endif
 }

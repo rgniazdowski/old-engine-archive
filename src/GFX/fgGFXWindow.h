@@ -19,129 +19,132 @@
         #include "fgGFXGL.h"
     #endif
 
-/**
- *
- */
-class fgGfxWindow {
-public:
-    /**
-     *
-     */
-    fgGfxWindow();
-    /**
-     * 
-     * @param title
-     * @param width
-     * @param height
-     */
-    fgGfxWindow(const char *title, unsigned int width, unsigned int height);
+namespace fg {
+    namespace gfx {
 
-    /**
-     * 
-     */
-    ~fgGfxWindow();
+        /**
+         *
+         */
+        class CWindow {
+        public:
+            /**
+             *
+             */
+            CWindow();
+            /**
+             * 
+             * @param title
+             * @param width
+             * @param height
+             */
+            CWindow(const char *title, unsigned int width, unsigned int height);
 
-    /**
-     * 
-     * @param title
-     * @param width
-     * @param height
-     * @return 
-     */
-    fgBool setup(const char *title, unsigned int width, unsigned int height);
+            /**
+             * 
+             */
+            ~CWindow();
 
-    /**
-     * 
-     * @return 
-     */
-    fgBool close(void);
+            /**
+             * 
+             * @param title
+             * @param width
+             * @param height
+             * @return 
+             */
+            fgBool setup(const char *title, unsigned int width, unsigned int height);
 
-    /**
-     * 
-     * @return 
-     */
-    int getWidth(void) const {
-        return m_width;
-    }
-    /**
-     * 
-     * @return 
-     */
-    int getHeight(void) const {
-        return m_height;
-    }
-    /**
-     * 
-     * @return 
-     */
-    float getAspect(void) const {
-        return (float)m_width / (float)m_height;
-    }
+            /**
+             * 
+             * @return 
+             */
+            fgBool close(void);
+            /**
+             * 
+             * @return 
+             */
+            int getWidth(void) const {
+                return m_width;
+            }
+            /**
+             * 
+             * @return 
+             */
+            int getHeight(void) const {
+                return m_height;
+            }
+            /**
+             * 
+             * @return 
+             */
+            float getAspect(void) const {
+                return (float)m_width / (float)m_height;
+            }
 
-    /**
-     * 
-     * @param toggle
-     */
-    void setFullscreen(fgBool toggle = FG_TRUE);
+            /**
+             * 
+             * @param toggle
+             */
+            void setFullscreen(fgBool toggle = FG_TRUE);
 
-    /**
-     * 
-     * @return 
-     */
-    fgBool swapBuffers(void);
-    
-    /**
-     * 
-     */
-    void clearColor(void);
-    
-    /**
-     * 
-     * @return 
-     */
-    fgBool isOpen(void) const {
-        return m_isOpen;
-    }
+            /**
+             * 
+             * @return 
+             */
+            fgBool swapBuffers(void);
+
+            /**
+             * 
+             */
+            void clearColor(void);
+            /**
+             * 
+             * @return 
+             */
+            fgBool isOpen(void) const {
+                return m_isOpen;
+            }
 
     #if defined(FG_USING_SDL2)
-    SDL_Window* getSysPtr(void) const {
-        return m_sdlWindow;
-    }
+            SDL_Window* getSysPtr(void) const {
+                return m_sdlWindow;
+            }
     #elif defined(FG_USING_EGL)
-    EGLSurface getSysPtr(void) const {
-        return m_EGLSurface;
-    }
+            EGLSurface getSysPtr(void) const {
+                return m_EGLSurface;
+            }
     #else
-    void *getSysPtr(void) const {
-        return NULL;
-    }
+            void *getSysPtr(void) const {
+                return NULL;
+            }
     #endif
 
-private:
-    //
-    fgBool refreshFS(void);
+        private:
+            //
+            fgBool refreshFS(void);
 
-private:
-    /// 
-    std::string m_title;
+        private:
+            /// 
+            std::string m_title;
     #if defined FG_USING_EGL
-    EGLSurface m_EGLSurface;
+            EGLSurface m_EGLSurface;
     #elif defined FG_USING_SDL2
-    SDL_Window* m_sdlWindow;
-    Uint32 m_sdlFlags;
+            SDL_Window* m_sdlWindow;
+            Uint32 m_sdlFlags;
     #endif
-    /// 
-    unsigned int m_width;
-    /// 
-    unsigned int m_height;
-    ///
-    fgBool m_isFullscreen;
-    ///
-    fgBool m_isHW;
-    ///
-    fgBool m_isDB;
-    ///
-    fgBool m_isOpen;
+            /// 
+            unsigned int m_width;
+            /// 
+            unsigned int m_height;
+            ///
+            fgBool m_isFullscreen;
+            ///
+            fgBool m_isHW;
+            ///
+            fgBool m_isDB;
+            ///
+            fgBool m_isOpen;
+        };
+    };
 };
 
     #undef FG_INC_GFX_WINDOW_BLOCK
