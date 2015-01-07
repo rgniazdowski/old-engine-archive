@@ -78,6 +78,7 @@
 #include "Audio/fgSFXMusicResource.h"
 #include "Audio/fgSFXManager.h"
 #include "Util/fgStrings.h"
+#include "GFX/fgGFX3DScene.h"
 
 #if defined(FG_USING_LUA_PLUS)
 ///
@@ -1536,6 +1537,45 @@ fgBool fgScriptSubsystem::registerShaderManager(void) {
 
 /**
  * 
+ * @param metatable
+ * @param sceneManager
+ * @return 
+ */
+#if defined(FG_USING_LUA_PLUS)
+
+fgBool fgScriptSubsystem::registerSceneManager(LuaPlus::LuaObject &metatable,
+                                               const unsigned short int metatableID,
+                                               fg::base::CManager *sceneManager,
+                                               const char *objectName) {
+    if(m_isBindingComplete) {
+        return FG_TRUE;
+    }
+    if(!sceneManager) {
+        return FG_FALSE;
+    }
+    // Scene manager (2D or 3D) metatable
+    metatable = m_globals.CreateTable(fgScriptMT->getMetatableName(metatableID));
+    metatable.SetObject("__index", metatable);
+    //m_metatableResourceMgr.Register("request", &fgScriptSubsystem::newResourceWrapper);
+
+    uintptr_t offset = (uintptr_t)sceneManager;
+    userDataObjectMapItor it = m_userDataObjectMap.find(offset);
+    if(it != m_userDataObjectMap.end()) {
+        return FG_FALSE;
+    }
+    // Create Lua object for scene manager global
+    LuaPlus::LuaObject sceneManagerObj = m_luaState->BoxPointer((void *)sceneManager);
+    sceneManagerObj.SetMetatable(metatable);
+    m_globals.SetObject(objectName, sceneManagerObj);
+    m_userDataObjectMap[offset] = sceneManagerObj;
+    
+    return FG_TRUE;
+}
+#else
+#endif /* FG_USING_LUA_PLUS */
+
+/**
+ * 
  * @return
  */
 fgBool fgScriptSubsystem::register2DSceneManager(void) {
@@ -1549,6 +1589,11 @@ fgBool fgScriptSubsystem::register2DSceneManager(void) {
         return FG_TRUE;
     if(m_globals.GetRef() < 0)
         return FG_FALSE;
+    
+    if(!registerSceneManager(m_metatable2DSceneMgr, fgScriptMetatables::SCENE2D_MANAGER_MT_ID, m_p2DSceneMgr, "Scene2D")) {
+        FG_LOG_ERROR("Script: Unable to register common metatable for 2D Scene Manager");
+        return FG_FALSE;
+    }
 
 #endif /* FG_USING_LUA_PLUS */
     return FG_TRUE;
@@ -1569,6 +1614,38 @@ fgBool fgScriptSubsystem::register3DSceneManager(void) {
         return FG_TRUE;
     if(m_globals.GetRef() < 0)
         return FG_FALSE;
+
+    if(!registerSceneManager(m_metatable3DSceneMgr, fgScriptMetatables::SCENE3D_MANAGER_MT_ID, m_p3DSceneMgr, "Scene3D")) {
+        FG_LOG_ERROR("Script: Unable to register common metatable for 3D Scene Manager");
+        return FG_FALSE;
+    }
+    
+    // Register additional direct functions for 3D Scene Manager - they're specific for this class/object
+    typedef fgGfxSceneNode *(fgGfx3DScene::*SCENE3D_SceneNode_C_STR_IN_C_STR_IN)(const char *, const char *);
+    
+    m_metatable3DSceneMgr.RegisterObjectDirect("addFromModel",
+                                             static_cast<fgGfx3DScene *>(0),
+                                             static_cast<SCENE3D_SceneNode_C_STR_IN_C_STR_IN>(&fgGfx3DScene::addFromModel));
+    
+    ////////////////////////////////////////////////////////////////////////////
+    //
+    // Registering now metatables for various 3D/2D Scene types
+    // Registration here for this types needs to be done once - it will be used
+    // globally for 2D and 3D scene manipulations
+    //
+
+    // Register Base GfxSceneNode metatable
+    LPCD::Class(m_luaState->GetCState(), fgScriptMT->getMetatableName(fgScriptMetatables::SCENE_NODE_MT_ID))
+            .ObjectDirect("getName", (fgGfxSceneNode::base_type *)0, &fgGfxSceneNode::base_type::getNameStr)
+            .ObjectDirect("isManaged", (fgGfxSceneNode::base_type *)0, &fgGfxSceneNode::base_type::isManaged)
+            .ObjectDirect("isEmpty", (fgGfxSceneNode *)0, &fgGfxSceneNode::isEmpty)
+            .ObjectDirect("hasChildren", (fgGfxSceneNode *)0, &fgGfxSceneNode::hasChildren)
+            .ObjectDirect("getChildrenCount", (fgGfxSceneNode *)0, &fgGfxSceneNode::getChildrenCount)
+            .ObjectDirect("isVisible", (fgGfxSceneNode *)0, &fgGfxSceneNode::isVisible)
+            .ObjectDirect("setVisible", (fgGfxSceneNode *)0, &fgGfxSceneNode::setVisible);
+    //.MetatableFunction("__gc", &fgScriptSubsystem::managedResourceGCEvent); // #DELETE
+    
+    ////////////////////////////////////////////////////////////////////////////
 
 #endif /* FG_USING_LUA_PLUS */
     return FG_TRUE;

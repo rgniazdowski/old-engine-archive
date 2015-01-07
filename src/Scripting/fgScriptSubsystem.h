@@ -461,6 +461,19 @@ private:
      * @return
      */
     fgBool registerShaderManager(void);
+    #if defined(FG_USING_LUA_PLUS)
+    /**
+     * 
+     * @param metatable
+     * @param sceneManager
+     * @return 
+     */
+    fgBool registerSceneManager(LuaPlus::LuaObject &metatable,
+                                const unsigned short int metatableID,
+                                fg::base::CManager *sceneManager,
+                                const char *objectName);
+    #else
+    #endif /* FG_USING_LUA_PLUS */
     /**
      * 
      * @return

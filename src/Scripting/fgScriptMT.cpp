@@ -208,8 +208,11 @@ void fgScriptMetatables::generateMetatableNames(void) {
     m_metatableInfoVec[EVENT_SENSORS_MT_ID] = metatableInfo("FGX", "T");
     m_metatableInfoVec[EVENT_MAIN_MT_ID] = metatableInfo("FGX", "T");
 
-    // ?
+    // Script callback type
     m_metatableInfoVec[SCRIPT_CALLBACK_MT_ID] = metatableInfo("FGX", "T");
+    
+    // GFX Scene Node type
+    m_metatableInfoVec[SCENE_NODE_MT_ID] = metatableInfo("FGX", "T");
 
 #endif
 

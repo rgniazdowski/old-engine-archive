@@ -34,6 +34,10 @@
     #ifndef FG_INC_GFX_TYPES
         #include "GFX/fgGFXTypes.h"
     #endif
+    
+    #ifndef FG_INC_GFX_SCENE_NODE
+        #include "GFX/fgGFXSceneNode.h"
+    #endif
 
     #ifndef FG_INC_SCRIPT_MT
         #include "fgScriptMT.h"
@@ -313,7 +317,7 @@ namespace LPCD {
         static inline bool Match(lua_State* L, int idx) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
             LuaPlus::LuaObject obj = state->Stack(idx);
-            bool result;// = (obj.GetMetatable() == state->GetRegistry()[fgScriptMT->getMetatableName(fgScriptMetatables::GUI_WIDGET_MT_ID)]);
+            bool result; // = (obj.GetMetatable() == state->GetRegistry()[fgScriptMT->getMetatableName(fgScriptMetatables::GUI_WIDGET_MT_ID)]);
             // This is fubar. No, really fucked up
             result = (bool) obj.IsUserdata();
             return result;
@@ -355,7 +359,7 @@ namespace LPCD {
         static inline bool Match(lua_State* L, int idx) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
             LuaPlus::LuaObject obj = state->Stack(idx);
-            bool result;// = (obj.GetMetatable() == state->GetRegistry()[fgScriptMT->getMetatableName(fgScriptMetatables::GUI_WIDGET_MT_ID)]);
+            bool result; // = (obj.GetMetatable() == state->GetRegistry()[fgScriptMT->getMetatableName(fgScriptMetatables::GUI_WIDGET_MT_ID)]);
             // This is fubar
             result = (bool) obj.IsUserdata();
             return result;
@@ -1387,6 +1391,46 @@ namespace LPCD {
     };
 
     template<> struct Type<const fgControllerAxisEvent&> : public Type<fgControllerAxisEvent> {
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    // FG GFX SPECIAL TYPES
+    ////////////////////////////////////////////////////////////////////////////
+
+    /***************************************************************************
+     * fgGfxSceneNode pointer parameter *
+     **************************************************************************/
+
+    template<> struct Type<fgGfxSceneNode *> {
+        static inline void Push(lua_State* L, const fgGfxSceneNode * value) {
+            LuaPlus::LuaState* state = lua_State_to_LuaState(L);
+            LuaPlus::LuaObject obj = state->BoxPointer((void*)value);
+            #if defined(FG_DEBUG)
+            FG_LOG_DEBUG("Script: LPCD Push: ptr[%p], offset[%lu], name[%s], type_name[fgGfxSceneNode]", value, (uintptr_t)value, value->getNameStr());
+        #endif
+            fgScriptMetatables::METAID metaID = fgScriptMetatables::SCENE_NODE_MT_ID;
+            const char *metatableName = fgScriptMT->getMetatableName(metaID);          
+            obj.SetMetatable(state->GetRegistry()[metatableName]);
+        }
+        static inline bool Match(lua_State* L, int idx) {
+            LuaPlus::LuaState* state = lua_State_to_LuaState(L);
+            LuaPlus::LuaObject obj = state->Stack(idx);
+            bool result; // = (obj.GetMetatable() == state->GetRegistry()[fgScriptMT->getMetatableName(fgScriptMetatables::GUI_WIDGET_MT_ID)]);
+            // This is fubar
+            result = (bool) obj.IsUserdata();
+            return result;
+        }
+        static inline fgGfxSceneNode * Get(lua_State* L, int idx) {
+            LuaPlus::LuaState* state = lua_State_to_LuaState(L);
+            fgGfxSceneNode *pSceneNode = (fgGfxSceneNode *)state->UnBoxPointer(idx);
+            return pSceneNode;
+        }
+    };
+
+    template<> struct Type<fgGfxSceneNode *&> : public Type<fgGfxSceneNode *> {
+    };
+
+    template<> struct Type<const fgGfxSceneNode *&> : public Type<fgGfxSceneNode *> {
     };
 
     ////////////////////////////////////////////////////////////////////////////

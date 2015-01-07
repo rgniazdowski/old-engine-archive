@@ -146,6 +146,11 @@ public:
         // Special Callback type 
         //
         SCRIPT_CALLBACK_MT_ID,
+        
+        //
+        // 3D/2D GFX Scene Node & other types
+        //
+        SCENE_NODE_MT_ID,
 
         METATABLE_SIZE
     };
