@@ -120,7 +120,7 @@ fgBool fgTextureResource::create(void) {
     if(m_rawData && !m_isReady) {
         releaseNonGFX();
     }
-    FG_LOG::PrintInfo("fgTextureResource::create(void)");
+    FG_LOG_DEBUG("GFX: Creating texture [%s]", m_nameTag.c_str());
     if(getFilePath(m_quality).empty()) {
         FG_LOG_ERROR("GFX: texture file path is empty on create");
         // #TODO error handling / reporting
@@ -190,6 +190,8 @@ fgBool fgTextureResource::create(void) {
             FG_LOG_ERROR("GFX: raw data is NULL - failed to load texture '%s'", filePathPtr);
             // #TODO error handling / reporting
             return FG_FALSE;
+        } else {
+            FG_LOG_DEBUG("GFX: Successfully loaded texture nameTag[%s], path[%s]", m_nameTag.c_str(), filePathStr);
         }
         // #FIXME - texture raw data size calculation!
         m_size += sizeof (unsigned char) * m_width * m_height * m_components;
@@ -197,8 +199,6 @@ fgBool fgTextureResource::create(void) {
     }
 
     m_isReady = FG_TRUE;
-    // #FIXME size calculation
-
     return FG_TRUE;
 }
 

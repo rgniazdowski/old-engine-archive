@@ -27,26 +27,26 @@ typedef struct
 
 typedef fg_jpeg_my_source_mgr * fg_jpeg_my_src_ptr;
 
-#define INPUT_BUF_SIZE  4096    /* choose an efficiently fread'able size */   
+#define INPUT_BUF_SIZE  4096    /* choose an efficiently fread'able size */
 
 /**
- * 
+ *
  * @param cinfo
  */
 static void fg_jpeg_init_source(j_decompress_ptr cinfo) {
     fg_jpeg_my_src_ptr src = (fg_jpeg_my_src_ptr)cinfo->src;
 
-    /* We reset the empty-input-file flag for each image,                         
-     * but we don't clear the input buffer.                                       
-     * This is correct behavior for reading a series of images from one source.   
+    /* We reset the empty-input-file flag for each image,
+     * but we don't clear the input buffer.
+     * This is correct behavior for reading a series of images from one source.
      */
     src->start_of_file = TRUE;
 }
 
 /**
- * 
+ *
  * @param cinfo
- * @return 
+ * @return
  */
 static boolean fg_jpeg_fill_input_buffer(j_decompress_ptr cinfo) {
     fg_jpeg_my_src_ptr src = (fg_jpeg_my_src_ptr)cinfo->src;
@@ -83,17 +83,21 @@ static boolean fg_jpeg_fill_input_buffer(j_decompress_ptr cinfo) {
 
 static void fg_jpeg_skip_input_data(j_decompress_ptr cinfo, long num_bytes) {
     fg_jpeg_my_src_ptr src = (fg_jpeg_my_src_ptr)cinfo->src;
-
-    /* Just a dumb implementation for now.  Could use fseek() except              
-     * it doesn't work on pipes.  Not clear that being smart is worth             
-     * any trouble anyway --- large skips are infrequent.                         
+    fg::util::base::File *file = NULL;
+    /* Just a dumb implementation for now.  Could use fseek() except
+     * it doesn't work on pipes.  Not clear that being smart is worth
+     * any trouble anyway --- large skips are infrequent.
      */
+    if(src->infile) {
+        file = (fg::util::base::File *) src->infile;
+        // Some additional static check?
+    }
     if(num_bytes > 0) {
         while(num_bytes > (long)src->pub.bytes_in_buffer) {
             num_bytes -= (long)src->pub.bytes_in_buffer;
             (void)fg_jpeg_fill_input_buffer(cinfo);
-            /* note we assume that fill_input_buffer will never return FALSE,         
-             * so suspension need not be handled.                                     
+            /* note we assume that fill_input_buffer will never return FALSE,
+             * so suspension need not be handled.
              */
         }
         src->pub.next_input_byte += (size_t)num_bytes;
@@ -101,31 +105,36 @@ static void fg_jpeg_skip_input_data(j_decompress_ptr cinfo, long num_bytes) {
     }
 }
 
-static boolean fg_jpeg_resync_to_restart(j_decompress_ptr cinfo, int desired) { 
+static boolean fg_jpeg_resync_to_restart(j_decompress_ptr cinfo, int desired) {
     return jpeg_resync_to_restart(cinfo, desired);
 }
 
-static void fg_jpeg_term_source(j_decompress_ptr cinfo) { 
-    // nothing ?
+static void fg_jpeg_term_source(j_decompress_ptr cinfo) {
+    fg_jpeg_my_src_ptr src = (fg_jpeg_my_src_ptr)cinfo->src;
+    fg::util::base::File *file = NULL;
+    if(src->infile) {
+        file = (fg::util::base::File *) src->infile;
+        // Some additional static check?
+    }
 }
 
 static void fg_png_custom_read(png_structp png_ptr, png_bytep data, png_size_t length)
 {
     png_size_t lenread = 0;
     if(length <= 0 || !data) {
-        // error
+        FG_LOG_ERROR("PNG.custom_read: Error occured on read: data is NULL or given length <= 0");
         return;
     }
-    
+
     if(png_get_io_ptr(png_ptr) == NULL) {
-        //error
+        FG_LOG_ERROR("PNG.custom_read: Error occured on read: io_ptr is NULL");
         return;
     }
-    
+
     fg::util::base::File *file = (fg::util::base::File *)png_get_io_ptr(png_ptr);
     lenread = file->read((void *)data, 1, length);
     if(lenread < length) {
-        // error
+        FG_LOG_WARNING("PNG.custom_read: Warning, did not read all data from file: path[%s], %d < %d", file->getPath(), lenread, length);
     }
 }
 
@@ -138,6 +147,7 @@ static unsigned char *universalPreLoad(const char *path,
                                        const char *extType) {
     if(!path) {
         // #TODO error handling / reporting
+	    FG_LOG_DEBUG("GFX: universalPreLoad: No path specified! [RARE]");
         return NULL;
     }
     fg::util::File *fileStream = new fg::util::File(path);
@@ -166,14 +176,14 @@ static unsigned char *universalPreLoad(const char *path,
     }
 }
 
-/*
+/**
  * Loads a JPEG file and returns unsigned char array with raw data
  */
 unsigned char *fgTextureLoader::loadJPEG(const char *path, int &width, int &height) {
     return universalPreLoad(path, width, height, "jpeg");
 }
 
-/*
+/**
  * Loads a JPEG file and returns unsigned char array with raw data
  */
 unsigned char *fgTextureLoader::loadJPEG(fg::util::base::File *fileStream, int &width, int &height) {
@@ -268,6 +278,7 @@ unsigned char *fgTextureLoader::loadPNG(const char *path, int &width, int &heigh
 unsigned char *fgTextureLoader::loadPNG(fg::util::base::File *fileStream, int &width, int &height) {
     if(!fileStream) {
         // #TODO error handling / reporting
+	    FG_LOG_ERROR("PNG LOAD: FileStream specified is NULL!");
         return NULL;
     } else if(!fileStream->isOpen()) {
         if(!fileStream->open(fg::util::File::Mode::READ | fg::util::File::Mode::BINARY)) {
@@ -370,7 +381,7 @@ unsigned char *fgTextureLoader::loadPNG(fg::util::base::File *fileStream, int &w
 
     width = (int)w;
     height = (int)h;
-    FG_LOG_INFO("PNG LOAD: %s, %dx%d, data=%p;", fileStream->getPath(), w, h, data);
+    FG_LOG_INFO("PNG LOAD: path[%s], size=[%dx%d], data=[%p], comp[%d];", fileStream->getPath(), w, h, data, (int)channels);
     return data;
 }
 
@@ -386,13 +397,11 @@ unsigned char *fgTextureLoader::loadTGA(const char *path, int &width, int &heigh
  */
 unsigned char *fgTextureLoader::loadTGA(fg::util::base::File *fileStream, int &width, int &height) {
     if(!fileStream) {
-        FG_LOG_ERROR("%s(%d): fileStream is NULL - failed to load texture - in function %s.", fgPath::fileName(__FILE__), __LINE__ - 1, __FUNCTION__);
-        // #TODO error handling / reporting
+        FG_LOG_ERROR("TGA LOAD: FileStream specified is NULL!");
         return NULL;
     } else if(!fileStream->isOpen()) {
         if(!fileStream->open(fg::util::RegularFile::Mode::READ | fg::util::RegularFile::Mode::BINARY)) {
-            FG_LOG_ERROR("%s(%d): failed to open texture file - in function %s.", fgPath::fileName(__FILE__), __LINE__ - 1, __FUNCTION__);
-            // #TODO error handling / reporting
+            FG_LOG_ERROR("TGA LOAD: failed to open texture file: '%s'", fileStream->getPath());
             return NULL;
         }
     }
@@ -426,8 +435,7 @@ unsigned char *fgTextureLoader::loadTGA(fg::util::base::File *fileStream, int &w
     // Output RGBA image
     data = new unsigned char[w * h * 4];
     if(!data || !buffer) {
-        FG_LOG_ERROR("%s(%d): failed to allocate new data  - in function %s.", fgPath::fileName(__FILE__), __LINE__ - 1, __FUNCTION__);
-        // #TODO error handling / reporting
+        FG_LOG_ERROR("TGA LOAD: failed to allocate new data while loading texture file: '%s'", fileStream->getPath());
         return NULL;
     }
     fileStream->setPosition(info[0], SEEK_CUR);
@@ -487,7 +495,7 @@ unsigned char *fgTextureLoader::loadTGA(fg::util::base::File *fileStream, int &w
     delete [] buffer;
     width = w;
     height = h;
-    FG_LOG_INFO("TGA LOAD: %s, %dx%d, data=%p; comp=%d;", fileStream->getPath(), w, h, data, components);
+    FG_LOG_INFO("TGA LOAD: path[%s], size[%dx%d], data[%p], comp[%d];", fileStream->getPath(), w, h, data, components);
     return data;
 }
 

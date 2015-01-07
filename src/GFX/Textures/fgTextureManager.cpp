@@ -300,14 +300,14 @@ fgBool fgTextureManager::uploadToVRAM(fgTextureResource *texture, fgBool force) 
         }
         if(!texture->hasOwnedRAM()) {
             if(!texture->create()) {
-                FG_LOG::PrintError("GFX: Could not recreate texture '%s'", texture->getFilePathStr());
+                FG_LOG_ERROR("GFX: Could not recreate texture '%s'", texture->getFilePathStr());
                 result = FG_FALSE;
             }
         }
         if(texture->hasOwnedRAM()) {
             if(!fgTextureManager::makeTexture(texture)) {
                 result = FG_FALSE;
-                FG_LOG::PrintError("GFX: Could not upload texture '%s' to VRAM", texture->getFilePathStr());
+                FG_LOG_ERROR("GFX: Could not upload texture '%s' to VRAM", texture->getFilePathStr());
             } else {
                 if(fgGfxPlatform::context()->isTexture(texGfxID) == FG_GFX_TRUE)
                     texture->setIsInVRAM(FG_TRUE);
@@ -434,17 +434,17 @@ fgBool fgTextureManager::makeTexture(fgTextureResource * pTexture) {
         return FG_FALSE;
     FG_HardwareState->deviceYield();
     if(!pTexture) {
-        FG_LOG::PrintError("GFX: Cannot upload texture - texture resource is NULL");
+        FG_LOG_ERROR("GFX: Cannot upload texture - texture resource is NULL");
         return FG_FALSE;
     }
     if(!((fgResourceManager *)m_pResourceMgr)->isManaged(pTexture)) {
-        FG_LOG::PrintError("GFX: Cannot upload texture - texture resource is not managed by Resource Manager");
+        FG_LOG_ERROR("GFX: Cannot upload texture - texture resource is not managed by Resource Manager");
         return FG_FALSE;
     }
     ((fgResourceManager *)m_pResourceMgr)->lockResource(pTexture);
 
     if(!pTexture->getRawData() || !pTexture->hasOwnedRAM()) {
-        FG_LOG::PrintError("GFX: Cannot upload texture - texture resource is disposed / empty");
+        FG_LOG_ERROR("GFX: Cannot upload texture - texture resource is disposed / empty");
         return FG_FALSE;
     }
     FG_LOG_DEBUG("GFX: Preparing for texture upload [%s]...", pTexture->getNameStr());
