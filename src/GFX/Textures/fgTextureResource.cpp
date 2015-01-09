@@ -206,13 +206,13 @@ fgBool fgTextureResource::create(void) {
  * Destroy all loaded data including additional metadata (called with destructor)
  */
 void fgTextureResource::destroy(void) {
-    FG_LOG_DEBUG("fgTextureResource::destroy();");
     releaseNonGFX();
     fgTextureResource::clear();
 }
 
-/*
+/**
  * Reloads any data, recreates the resource (refresh)
+ * @return
  */
 fgBool fgTextureResource::recreate(void) {
     FG_LOG_DEBUG("fgTextureResource::recreate(void)");
@@ -222,17 +222,17 @@ fgBool fgTextureResource::recreate(void) {
     return create();
 }
 
-/*
+/**
  * Dispose completely of the all loaded data, free all memory
  * Releases non-GPU side of resources
  */
 void fgTextureResource::dispose(void) {
-    FG_LOG_DEBUG("fgTextureResource::~dispose();");
     releaseNonGFX();
 }
 
-/*
- * Check if resource is disposed (not loaded yet or disposed after)
+/**
+ * Check if resource is disposed (not loaded yet or disposed after)\
+ * @return
  */
 fgBool fgTextureResource::isDisposed(void) const {
     // #FIXME ?
@@ -247,8 +247,10 @@ fgBool fgTextureResource::isDisposed(void) const {
         return !this->hasOwnedRAM();
 }
 
-/*
- *
+/**
+ * 
+ * @param path
+ * @return 
  */
 fgBool fgTextureResource::setFileTypeFromFilePath(std::string &path) {
     if(path.empty())
@@ -271,11 +273,11 @@ fgBool fgTextureResource::setFileTypeFromFilePath(std::string &path) {
     return FG_TRUE;
 }
 
-/*
+/**
  * Releases non-GPU side of resources
  */
 void fgTextureResource::releaseNonGFX(void) {
-    FG_LOG_DEBUG("fgTextureResource::releaseNonGFX();   p_rawData=%p;", m_rawData);
+    FG_LOG_DEBUG("GFX:Texture: release nonGFX: rawData[%p];", m_rawData);
 
     for(int i = 0; i < FG_NUM_TEXTURE_CUBE_MAPS; i++) {
         if(m_cubeData[i]) {

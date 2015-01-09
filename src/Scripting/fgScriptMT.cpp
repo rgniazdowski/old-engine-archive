@@ -118,6 +118,8 @@ void fgScriptMetatables::generateMetatableNames(void) {
 #if !defined(FG_USING_MARMALADE)
 
     m_metatableInfoVec[EMPTY_MT_ID] = metatableInfo("FG", "X");
+    
+    m_metatableInfoVec[FG_NAMESPACE_MT_ID] = metatableInfo("FG", "NMSPC");
 
     m_metatableInfoVec[VECTOR2I_MT_ID] = metatableInfo("FGX", "T");
     m_metatableInfoVec[VECTOR2F_MT_ID] = metatableInfo("FGX", "T");

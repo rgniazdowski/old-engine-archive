@@ -28,7 +28,9 @@ class fgScriptSubsystem;
  * 
  */
 class fgScriptMetatables : public fgSingleton<fgScriptMetatables> {
+    ///
     friend class fgSingleton<fgScriptMetatables>;
+    ///
     friend class fgScriptSubsystem;
 public:
 
@@ -36,17 +38,10 @@ public:
         EMPTY_MT_ID = 0,
 
         //
-        // Vectors / Color
+        // FG main metatable
         //
-        VECTOR2I_MT_ID, // #used
-        VECTOR2F_MT_ID, // #used
-        VECTOR3I_MT_ID, // #used
-        VECTOR3F_MT_ID, // #used
-        VECTOR4I_MT_ID, // #used
-        VECTOR4F_MT_ID, // #used
-
-        ERROR_MT_ID,
-
+        FG_NAMESPACE_MT_ID, // #used
+        
         //
         // Main managers
         //
@@ -61,6 +56,18 @@ public:
         STYLE_MANAGER_MT_ID,
         SOUND_MANAGER_MT_ID,
         LOGIC_MANAGER_MT_ID,
+        
+        //
+        // Vectors / Color
+        //
+        VECTOR2I_MT_ID, // #used
+        VECTOR2F_MT_ID, // #used
+        VECTOR3I_MT_ID, // #used
+        VECTOR3F_MT_ID, // #used
+        VECTOR4I_MT_ID, // #used
+        VECTOR4F_MT_ID, // #used
+
+        ERROR_MT_ID,
 
         //
         // Resources 

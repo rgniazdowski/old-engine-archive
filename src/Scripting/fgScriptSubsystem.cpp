@@ -86,6 +86,8 @@ LuaPlus::LuaState *fgScriptSubsystem::m_luaState = NULL;
 ///
 LuaPlus::LuaObject fgScriptSubsystem::m_globals;
 ///
+LuaPlus::LuaObject fgScriptSubsystem::m_fgObj;
+///
 fgScriptSubsystem::userDataObjectMap fgScriptSubsystem::m_userDataObjectMap;
 #else 
 void *fgScriptSubsystem::m_luaState = NULL;
@@ -122,18 +124,6 @@ fg::base::CManager *fgScriptSubsystem::m_pLogicMgr = NULL;
  */
 fgScriptSubsystem::fgScriptSubsystem()
 #if defined(FG_USING_LUA_PLUS)
-:
-m_metatableGuiMain(),
-m_metatableEventMgr(),
-m_metatableResourceMgr(),
-m_metatableShaderMgr(),
-m_metatable2DSceneMgr(),
-m_metatable3DSceneMgr(),
-m_metatableParticleMgr(),
-m_metatableWidgetMgr(),
-m_metatableStyleMgr(),
-m_metatableSoundMgr(),
-m_metatableLogicMgr()
 #endif /* FG_USING_LUA_PLUS */
 {
     m_managerType = FG_MANAGER_SCRIPT;
@@ -246,17 +236,8 @@ fgBool fgScriptSubsystem::destroy(void) {
 
 #if defined(FG_USING_LUA_PLUS)
     m_globals.Reset();
-    m_metatableGuiMain.Reset();
-    m_metatableEventMgr.Reset();
-    m_metatableResourceMgr.Reset();
-    m_metatableShaderMgr.Reset();
-    m_metatable2DSceneMgr.Reset();
-    m_metatable3DSceneMgr.Reset();
-    m_metatableParticleMgr.Reset();
-    m_metatableWidgetMgr.Reset();
-    m_metatableStyleMgr.Reset();
-    m_metatableSoundMgr.Reset();
-    m_metatableLogicMgr.Reset();
+    for(int i = 0; i < NUM_MGR_METATABLES; i++)
+        m_mgrMetatables[i].Reset();
     userDataObjectMapItor it = m_userDataObjectMap.begin(),
             end = m_userDataObjectMap.end();
     for(; it != end; it++) {
@@ -298,13 +279,22 @@ fgBool fgScriptSubsystem::initialize(void) {
     if(!m_luaState)
         m_luaState = LuaPlus::LuaState::Create(true);
     if(!m_luaState) {
-        FG_LOG::PrintError("Script: Failed to initialize main state");
+        FG_LOG_ERROR("Script: Failed to initialize main state");
         return FG_FALSE;
     }
     m_globals = m_luaState->GetGlobals();
 #endif /* FG_USING_LUA_PLUS */
 
     fgScriptMT->generateMetatableNames();
+
+    // Register main 'fg' global object (namespace)
+    {
+        m_mgrMetatables[FG_NAMESPACE] = m_globals.CreateTable(fgScriptMT->getMetatableName(fgScriptMetatables::FG_NAMESPACE_MT_ID));
+        m_mgrMetatables[FG_NAMESPACE].SetObject("__index", m_mgrMetatables[FG_NAMESPACE]);
+        m_fgObj = m_luaState->CreateTable();
+        m_fgObj.SetMetatable(m_mgrMetatables[FG_NAMESPACE]); // ? # ?
+        m_globals.SetObject("fg", m_fgObj);        
+    }
 
     if(!registerConstants()) {
         FG_LOG_ERROR("Script: Failed to register global constants");
@@ -366,9 +356,9 @@ fgBool fgScriptSubsystem::initialize(void) {
 
     if(m_cyclicGCCallback) {
         static_cast<fg::event::CEventManager *>(m_pEventMgr)->addCyclicCallback(m_cyclicGCCallback,
-                                                                      FG_CYCLIC_CALLBACK_INFINITE_REPEAT,
-                                                                      FG_SCRIPT_DEFAULT_GC_INTERVAL,
-                                                                      NULL);
+                                                                                FG_CYCLIC_CALLBACK_INFINITE_REPEAT,
+                                                                                FG_SCRIPT_DEFAULT_GC_INTERVAL,
+                                                                                NULL);
     }
 
     return FG_TRUE;
@@ -429,8 +419,13 @@ int fgScriptSubsystem::managedResourceGCEvent(lua_State* L) {
         return 0;
 #if defined(FG_USING_LUA_PLUS)
     // Mainly for resources ?
+    // It's quite possible that Resource do not need any kind of management from the script level
+    // They're always loaded/created using external ResMgr functions
+    // ResourceManager manages the data so...
+    return 0; // # RESOURCE GC EVENT - EMPTY
+#if 0
     LuaPlus::LuaState* state = lua_State_to_LuaState(L);
-    //get the pointer lua is trying to delete.
+    //get the pointer Lua is trying to delete.
     if(!state->IsUserdata(1)) {
         int isTable = (int)state->IsTable(1);
         int isNoneOrNil = (int)state->IsNoneOrNil(1);
@@ -467,6 +462,7 @@ int fgScriptSubsystem::managedResourceGCEvent(lua_State* L) {
     }
     //pResource->dispose();
     //FG_LOG_DEBUG("Script: Managed Resource GC: called dispose: name[%s], ptr[%p], offset[%lu]", pResource->getNameStr(), pResource, offset);
+#endif /* if 0 */
 #endif /* FG_USING_LUA_PLUS */
     return 0;
 }
@@ -512,186 +508,186 @@ fgBool fgScriptSubsystem::registerConstants(void) {
         return FG_TRUE;
 
 #if defined(FG_USING_LUA_PLUS)
-    if(m_globals.GetRef() < 0)
+    if(m_fgObj.GetRef() < 0)
         return FG_FALSE;
 
     //
     // #STRINGS #OBFUSCATION #FIXME #TODO
     //
 
-    m_globals.SetInteger("FG_BUILD_VERSION", (int)FG_BUILD_VERSION);
+    m_fgObj.SetInteger("BUILD_VERSION", (int)FG_BUILD_VERSION);
 
     //
     // GUI STYLE CONSTANTS
     //
-    m_globals.SetInteger("FG_GUI_FLOAT_UNIT_INVALID", (float)FG_GUI_FLOAT_UNIT_INVALID);
+    m_fgObj.SetInteger("GUI_FLOAT_UNIT_INVALID", (float)FG_GUI_FLOAT_UNIT_INVALID);
 
     // fgGuiUnitType
-    m_globals.SetInteger("FG_GUI_PIXELS", (int)FG_GUI_PIXELS);
-    m_globals.SetInteger("FG_GUI_INCHES", (int)FG_GUI_INCHES);
-    m_globals.SetInteger("FG_GUI_BLOCKS", (int)FG_GUI_BLOCKS);
-    m_globals.SetInteger("FG_GUI_PERCENTS", (int)FG_GUI_PERCENTS);
+    m_fgObj.SetInteger("GUI_PIXELS", (int)FG_GUI_PIXELS);
+    m_fgObj.SetInteger("GUI_INCHES", (int)FG_GUI_INCHES);
+    m_fgObj.SetInteger("GUI_BLOCKS", (int)FG_GUI_BLOCKS);
+    m_fgObj.SetInteger("GUI_PERCENTS", (int)FG_GUI_PERCENTS);
     // fgGuiBorderStyle
-    m_globals.SetInteger("FG_GUI_BORDER_NONE", (int)FG_GUI_BORDER_NONE);
-    m_globals.SetInteger("FG_GUI_BORDER_DOTTED", (int)FG_GUI_BORDER_DOTTED);
-    m_globals.SetInteger("FG_GUI_BORDER_DASHED", (int)FG_GUI_BORDER_DASHED);
-    m_globals.SetInteger("FG_GUI_BORDER_SOLID", (int)FG_GUI_BORDER_SOLID);
+    m_fgObj.SetInteger("GUI_BORDER_NONE", (int)FG_GUI_BORDER_NONE);
+    m_fgObj.SetInteger("GUI_BORDER_DOTTED", (int)FG_GUI_BORDER_DOTTED);
+    m_fgObj.SetInteger("GUI_BORDER_DASHED", (int)FG_GUI_BORDER_DASHED);
+    m_fgObj.SetInteger("GUI_BORDER_SOLID", (int)FG_GUI_BORDER_SOLID);
 
     // fgGuiBorderWhich
-    m_globals.SetInteger("FG_GUI_BORDER_LEFT", (int)FG_GUI_BORDER_LEFT);
-    m_globals.SetInteger("FG_GUI_BORDER_RIGHT", (int)FG_GUI_BORDER_RIGHT);
-    m_globals.SetInteger("FG_GUI_BORDER_TOP", (int)FG_GUI_BORDER_TOP);
-    m_globals.SetInteger("FG_GUI_BORDER_BOTTOM", (int)FG_GUI_BORDER_BOTTOM);
-    m_globals.SetInteger("FG_GUI_BORDER_ALL", (int)FG_GUI_BORDER_ALL);
+    m_fgObj.SetInteger("GUI_BORDER_LEFT", (int)FG_GUI_BORDER_LEFT);
+    m_fgObj.SetInteger("GUI_BORDER_RIGHT", (int)FG_GUI_BORDER_RIGHT);
+    m_fgObj.SetInteger("GUI_BORDER_TOP", (int)FG_GUI_BORDER_TOP);
+    m_fgObj.SetInteger("GUI_BORDER_BOTTOM", (int)FG_GUI_BORDER_BOTTOM);
+    m_fgObj.SetInteger("GUI_BORDER_ALL", (int)FG_GUI_BORDER_ALL);
 
     // fgGuiBackgroundStyle
-    m_globals.SetInteger("FG_GUI_BACKGROUND_NONE", (int)FG_GUI_BACKGROUND_NONE);
-    m_globals.SetInteger("FG_GUI_BACKGROUND_NORMAL", (int)FG_GUI_BACKGROUND_NORMAL);
-    m_globals.SetInteger("FG_GUI_BACKGROUND_MAX", (int)FG_GUI_BACKGROUND_MAX);
-    m_globals.SetInteger("FG_GUI_BACKGROUND_TILED", (int)FG_GUI_BACKGROUND_TILED);
+    m_fgObj.SetInteger("GUI_BACKGROUND_NONE", (int)FG_GUI_BACKGROUND_NONE);
+    m_fgObj.SetInteger("GUI_BACKGROUND_NORMAL", (int)FG_GUI_BACKGROUND_NORMAL);
+    m_fgObj.SetInteger("GUI_BACKGROUND_MAX", (int)FG_GUI_BACKGROUND_MAX);
+    m_fgObj.SetInteger("GUI_BACKGROUND_TILED", (int)FG_GUI_BACKGROUND_TILED);
 
     // fgGuiMarginWhich
-    m_globals.SetInteger("FG_GUI_MARGIN_LEFT", (int)FG_GUI_MARGIN_LEFT);
-    m_globals.SetInteger("FG_GUI_MARGIN_RIGHT", (int)FG_GUI_MARGIN_RIGHT);
-    m_globals.SetInteger("FG_GUI_MARGIN_TOP", (int)FG_GUI_MARGIN_TOP);
-    m_globals.SetInteger("FG_GUI_MARGIN_BOTTOM", (int)FG_GUI_MARGIN_BOTTOM);
-    m_globals.SetInteger("FG_GUI_MARGIN_ALL", (int)FG_GUI_MARGIN_ALL);
+    m_fgObj.SetInteger("GUI_MARGIN_LEFT", (int)FG_GUI_MARGIN_LEFT);
+    m_fgObj.SetInteger("GUI_MARGIN_RIGHT", (int)FG_GUI_MARGIN_RIGHT);
+    m_fgObj.SetInteger("GUI_MARGIN_TOP", (int)FG_GUI_MARGIN_TOP);
+    m_fgObj.SetInteger("GUI_MARGIN_BOTTOM", (int)FG_GUI_MARGIN_BOTTOM);
+    m_fgObj.SetInteger("GUI_MARGIN_ALL", (int)FG_GUI_MARGIN_ALL);
 
     // fgGuiPaddingWhich
-    m_globals.SetInteger("FG_GUI_PADDING_LEFT", (int)FG_GUI_PADDING_LEFT);
-    m_globals.SetInteger("FG_GUI_PADDING_RIGHT", (int)FG_GUI_PADDING_RIGHT);
-    m_globals.SetInteger("FG_GUI_PADDING_TOP", (int)FG_GUI_PADDING_TOP);
-    m_globals.SetInteger("FG_GUI_PADDING_BOTTOM", (int)FG_GUI_PADDING_BOTTOM);
-    m_globals.SetInteger("FG_GUI_PADDING_ALL", (int)FG_GUI_PADDING_ALL);
+    m_fgObj.SetInteger("GUI_PADDING_LEFT", (int)FG_GUI_PADDING_LEFT);
+    m_fgObj.SetInteger("GUI_PADDING_RIGHT", (int)FG_GUI_PADDING_RIGHT);
+    m_fgObj.SetInteger("GUI_PADDING_TOP", (int)FG_GUI_PADDING_TOP);
+    m_fgObj.SetInteger("GUI_PADDING_BOTTOM", (int)FG_GUI_PADDING_BOTTOM);
+    m_fgObj.SetInteger("GUI_PADDING_ALL", (int)FG_GUI_PADDING_ALL);
 
     // fgGuiAlign
-    m_globals.SetInteger("FG_GUI_ALIGN_NONE", (int)FG_GUI_ALIGN_NONE);
-    m_globals.SetInteger("FG_GUI_ALIGN_LEFT", (int)FG_GUI_ALIGN_LEFT);
-    m_globals.SetInteger("FG_GUI_ALIGN_RIGHT", (int)FG_GUI_ALIGN_RIGHT);
-    m_globals.SetInteger("FG_GUI_ALIGN_CENTER", (int)FG_GUI_ALIGN_CENTER);
-    m_globals.SetInteger("FG_GUI_ALIGN_MIDDLE", (int)FG_GUI_ALIGN_MIDDLE);
-    m_globals.SetInteger("FG_GUI_ALIGN_TOP", (int)FG_GUI_ALIGN_TOP);
-    m_globals.SetInteger("FG_GUI_ALIGN_BOTTOM", (int)FG_GUI_ALIGN_BOTTOM);
+    m_fgObj.SetInteger("GUI_ALIGN_NONE", (int)FG_GUI_ALIGN_NONE);
+    m_fgObj.SetInteger("GUI_ALIGN_LEFT", (int)FG_GUI_ALIGN_LEFT);
+    m_fgObj.SetInteger("GUI_ALIGN_RIGHT", (int)FG_GUI_ALIGN_RIGHT);
+    m_fgObj.SetInteger("GUI_ALIGN_CENTER", (int)FG_GUI_ALIGN_CENTER);
+    m_fgObj.SetInteger("GUI_ALIGN_MIDDLE", (int)FG_GUI_ALIGN_MIDDLE);
+    m_fgObj.SetInteger("GUI_ALIGN_TOP", (int)FG_GUI_ALIGN_TOP);
+    m_fgObj.SetInteger("GUI_ALIGN_BOTTOM", (int)FG_GUI_ALIGN_BOTTOM);
 
     // fgGuiPositionStyle
-    m_globals.SetInteger("FG_GUI_POS_STATIC", (int)FG_GUI_POS_STATIC);
-    m_globals.SetInteger("FG_GUI_POS_FIXED", (int)FG_GUI_POS_FIXED);
-    m_globals.SetInteger("FG_GUI_POS_RELATIVE", (int)FG_GUI_POS_RELATIVE);
-    m_globals.SetInteger("FG_GUI_POS_ABSOLUTE", (int)FG_GUI_POS_ABSOLUTE);
+    m_fgObj.SetInteger("GUI_POS_STATIC", (int)FG_GUI_POS_STATIC);
+    m_fgObj.SetInteger("GUI_POS_FIXED", (int)FG_GUI_POS_FIXED);
+    m_fgObj.SetInteger("GUI_POS_RELATIVE", (int)FG_GUI_POS_RELATIVE);
+    m_fgObj.SetInteger("GUI_POS_ABSOLUTE", (int)FG_GUI_POS_ABSOLUTE);
 
     // fgGuiSizeStyle
-    m_globals.SetInteger("FG_GUI_SIZE_PIXELS", (int)FG_GUI_SIZE_PIXELS);
-    m_globals.SetInteger("FG_GUI_SIZE_INCHES", (int)FG_GUI_SIZE_INCHES);
-    m_globals.SetInteger("FG_GUI_SIZE_BLOCKS", (int)FG_GUI_SIZE_BLOCKS);
-    m_globals.SetInteger("FG_GUI_SIZE_PERCENTS", (int)FG_GUI_SIZE_PERCENTS);
-    m_globals.SetInteger("FG_GUI_SIZE_MAX", (int)FG_GUI_SIZE_MAX);
-    m_globals.SetInteger("FG_GUI_SIZE_MIN", (int)FG_GUI_SIZE_MIN);
+    m_fgObj.SetInteger("GUI_SIZE_PIXELS", (int)FG_GUI_SIZE_PIXELS);
+    m_fgObj.SetInteger("GUI_SIZE_INCHES", (int)FG_GUI_SIZE_INCHES);
+    m_fgObj.SetInteger("GUI_SIZE_BLOCKS", (int)FG_GUI_SIZE_BLOCKS);
+    m_fgObj.SetInteger("GUI_SIZE_PERCENTS", (int)FG_GUI_SIZE_PERCENTS);
+    m_fgObj.SetInteger("GUI_SIZE_MAX", (int)FG_GUI_SIZE_MAX);
+    m_fgObj.SetInteger("GUI_SIZE_MIN", (int)FG_GUI_SIZE_MIN);
 
     //
     // GUI WIDGET CONSTANTS
     //
-    m_globals.SetInteger("FG_GUI_WIDGET_STATE_NONE", (int)FG_GUI_WIDGET_STATE_NONE);
-    m_globals.SetInteger("FG_GUI_WIDGET_STATE_FOCUS", (int)FG_GUI_WIDGET_STATE_FOCUS);
-    m_globals.SetInteger("FG_GUI_WIDGET_STATE_PRESSED", (int)FG_GUI_WIDGET_STATE_PRESSED);
-    m_globals.SetInteger("FG_GUI_WIDGET_STATE_ACTIVATED", (int)FG_GUI_WIDGET_STATE_ACTIVATED);
-    m_globals.SetInteger("FG_GUI_WIDGET_STATE_DEACTIVATED", (int)FG_GUI_WIDGET_STATE_DEACTIVATED);
-    m_globals.SetInteger("FG_GUI_WIDGET_STATE_COUNT", (int)FG_GUI_WIDGET_STATE_COUNT);
+    m_fgObj.SetInteger("GUI_WIDGET_STATE_NONE", (int)FG_GUI_WIDGET_STATE_NONE);
+    m_fgObj.SetInteger("GUI_WIDGET_STATE_FOCUS", (int)FG_GUI_WIDGET_STATE_FOCUS);
+    m_fgObj.SetInteger("GUI_WIDGET_STATE_PRESSED", (int)FG_GUI_WIDGET_STATE_PRESSED);
+    m_fgObj.SetInteger("GUI_WIDGET_STATE_ACTIVATED", (int)FG_GUI_WIDGET_STATE_ACTIVATED);
+    m_fgObj.SetInteger("GUI_WIDGET_STATE_DEACTIVATED", (int)FG_GUI_WIDGET_STATE_DEACTIVATED);
+    m_fgObj.SetInteger("GUI_WIDGET_STATE_COUNT", (int)FG_GUI_WIDGET_STATE_COUNT);
 
     //
     // GUI WIDGET CALLBACK TYPE CONSTANTS        
     //
-    m_globals.SetInteger("FG_GUI_WIDGET_CALLBACK_INVALID", (int)FG_GUI_WIDGET_CALLBACK_INVALID);
-    m_globals.SetInteger("FG_GUI_WIDGET_CALLBACK_ON_FOCUS", (int)FG_GUI_WIDGET_CALLBACK_ON_FOCUS);
-    m_globals.SetInteger("FG_GUI_WIDGET_CALLBACK_ON_FOCUS_GAIN", (int)FG_GUI_WIDGET_CALLBACK_ON_FOCUS_GAIN);
-    m_globals.SetInteger("FG_GUI_WIDGET_CALLBACK_ON_FOCUS_LOST", (int)FG_GUI_WIDGET_CALLBACK_ON_FOCUS_LOST);
-    m_globals.SetInteger("FG_GUI_WIDGET_CALLBACK_ON_CLICK", (int)FG_GUI_WIDGET_CALLBACK_ON_CLICK);
-    m_globals.SetInteger("FG_GUI_WIDGET_CALLBACK_ON_ACTIVATE", (int)FG_GUI_WIDGET_CALLBACK_ON_ACTIVATE);
-    m_globals.SetInteger("FG_GUI_WIDGET_CALLBACK_ON_DEACTIVATE", (int)FG_GUI_WIDGET_CALLBACK_ON_DEACTIVATE);
-    m_globals.SetInteger("FG_GUI_WIDGET_CALLBACK_ON_KEY", (int)FG_GUI_WIDGET_CALLBACK_ON_KEY);
-    m_globals.SetInteger("FG_GUI_WIDGET_CALLBACK_ON_MOUSE", (int)FG_GUI_WIDGET_CALLBACK_ON_KEY);
-    m_globals.SetInteger("FG_GUI_WIDGET_CALLBACK_ON_CHANGE_STATE", (int)FG_GUI_WIDGET_CALLBACK_ON_KEY);
-    m_globals.SetInteger("FG_GUI_WIDGET_CALLBACK_NUM", (int)FG_GUI_WIDGET_CALLBACK_ON_KEY);
+    m_fgObj.SetInteger("GUI_WIDGET_CALLBACK_INVALID", (int)FG_GUI_WIDGET_CALLBACK_INVALID);
+    m_fgObj.SetInteger("GUI_WIDGET_CALLBACK_ON_FOCUS", (int)FG_GUI_WIDGET_CALLBACK_ON_FOCUS);
+    m_fgObj.SetInteger("GUI_WIDGET_CALLBACK_ON_FOCUS_GAIN", (int)FG_GUI_WIDGET_CALLBACK_ON_FOCUS_GAIN);
+    m_fgObj.SetInteger("GUI_WIDGET_CALLBACK_ON_FOCUS_LOST", (int)FG_GUI_WIDGET_CALLBACK_ON_FOCUS_LOST);
+    m_fgObj.SetInteger("GUI_WIDGET_CALLBACK_ON_CLICK", (int)FG_GUI_WIDGET_CALLBACK_ON_CLICK);
+    m_fgObj.SetInteger("GUI_WIDGET_CALLBACK_ON_ACTIVATE", (int)FG_GUI_WIDGET_CALLBACK_ON_ACTIVATE);
+    m_fgObj.SetInteger("GUI_WIDGET_CALLBACK_ON_DEACTIVATE", (int)FG_GUI_WIDGET_CALLBACK_ON_DEACTIVATE);
+    m_fgObj.SetInteger("GUI_WIDGET_CALLBACK_ON_KEY", (int)FG_GUI_WIDGET_CALLBACK_ON_KEY);
+    m_fgObj.SetInteger("GUI_WIDGET_CALLBACK_ON_MOUSE", (int)FG_GUI_WIDGET_CALLBACK_ON_KEY);
+    m_fgObj.SetInteger("GUI_WIDGET_CALLBACK_ON_CHANGE_STATE", (int)FG_GUI_WIDGET_CALLBACK_ON_KEY);
+    m_fgObj.SetInteger("GUI_WIDGET_CALLBACK_NUM", (int)FG_GUI_WIDGET_CALLBACK_ON_KEY);
 
 
     //
     // EVENT TYPE CONSTANTS #FIXME #STRING #OBFUSCATION
     //
 
-    m_globals.SetInteger("FG_EVENT_INVALID", (int)FG_EVENT_INVALID);
+    m_fgObj.SetInteger("EVENT_INVALID", (int)FG_EVENT_INVALID);
 
-    m_globals.SetInteger("FG_EVENT_TOUCH_PRESSED", (int)FG_EVENT_TOUCH_PRESSED);
-    m_globals.SetInteger("FG_EVENT_TOUCH_RELEASED", (int)FG_EVENT_TOUCH_RELEASED);
-    m_globals.SetInteger("FG_EVENT_TOUCH_MOTION", (int)FG_EVENT_TOUCH_MOTION);
-    m_globals.SetInteger("FG_EVENT_TOUCH_TAP_FINISHED", (int)FG_EVENT_TOUCH_TAP_FINISHED);
-    m_globals.SetInteger("FG_EVENT_MOUSE_PRESSED", (int)FG_EVENT_MOUSE_PRESSED);
-    m_globals.SetInteger("FG_EVENT_MOUSE_RELEASED", (int)FG_EVENT_MOUSE_RELEASED);
-    m_globals.SetInteger("FG_EVENT_MOUSE_MOTION", (int)FG_EVENT_MOUSE_MOTION);
-    m_globals.SetInteger("FG_EVENT_SWIPE_X", (int)FG_EVENT_SWIPE_X);
-    m_globals.SetInteger("FG_EVENT_SWIPE_Y", (int)FG_EVENT_SWIPE_Y);
-    m_globals.SetInteger("FG_EVENT_SWIPE_XY", (int)FG_EVENT_SWIPE_XY);
-    m_globals.SetInteger("FG_EVENT_SWIPE_ANGLE", (int)FG_EVENT_SWIPE_ANGLE);
-    m_globals.SetInteger("FG_EVENT_SWIPE_PINCH", (int)FG_EVENT_SWIPE_PINCH);
-    m_globals.SetInteger("FG_EVENT_MULTI_SWIPE_ROTATE", (int)FG_EVENT_MULTI_SWIPE_ROTATE);
-    m_globals.SetInteger("FG_EVENT_KEY_DOWN", (int)FG_EVENT_KEY_DOWN);
-    m_globals.SetInteger("FG_EVENT_KEY_UP", (int)FG_EVENT_KEY_UP);
+    m_fgObj.SetInteger("EVENT_TOUCH_PRESSED", (int)FG_EVENT_TOUCH_PRESSED);
+    m_fgObj.SetInteger("EVENT_TOUCH_RELEASED", (int)FG_EVENT_TOUCH_RELEASED);
+    m_fgObj.SetInteger("EVENT_TOUCH_MOTION", (int)FG_EVENT_TOUCH_MOTION);
+    m_fgObj.SetInteger("EVENT_TOUCH_TAP_FINISHED", (int)FG_EVENT_TOUCH_TAP_FINISHED);
+    m_fgObj.SetInteger("EVENT_MOUSE_PRESSED", (int)FG_EVENT_MOUSE_PRESSED);
+    m_fgObj.SetInteger("EVENT_MOUSE_RELEASED", (int)FG_EVENT_MOUSE_RELEASED);
+    m_fgObj.SetInteger("EVENT_MOUSE_MOTION", (int)FG_EVENT_MOUSE_MOTION);
+    m_fgObj.SetInteger("EVENT_SWIPE_X", (int)FG_EVENT_SWIPE_X);
+    m_fgObj.SetInteger("EVENT_SWIPE_Y", (int)FG_EVENT_SWIPE_Y);
+    m_fgObj.SetInteger("EVENT_SWIPE_XY", (int)FG_EVENT_SWIPE_XY);
+    m_fgObj.SetInteger("EVENT_SWIPE_ANGLE", (int)FG_EVENT_SWIPE_ANGLE);
+    m_fgObj.SetInteger("EVENT_SWIPE_PINCH", (int)FG_EVENT_SWIPE_PINCH);
+    m_fgObj.SetInteger("EVENT_MULTI_SWIPE_ROTATE", (int)FG_EVENT_MULTI_SWIPE_ROTATE);
+    m_fgObj.SetInteger("EVENT_KEY_DOWN", (int)FG_EVENT_KEY_DOWN);
+    m_fgObj.SetInteger("EVENT_KEY_UP", (int)FG_EVENT_KEY_UP);
 
-    m_globals.SetInteger("FG_EVENT_RESOURCE_CREATED", (int)FG_EVENT_RESOURCE_CREATED);
-    m_globals.SetInteger("FG_EVENT_RESOURCE_REMOVED", (int)FG_EVENT_RESOURCE_REMOVED);
-    m_globals.SetInteger("FG_EVENT_RESOURCE_DISPOSED", (int)FG_EVENT_RESOURCE_DISPOSED);
-    m_globals.SetInteger("FG_EVENT_RESOURCE_DESTROYED", (int)FG_EVENT_RESOURCE_DESTROYED);
-    m_globals.SetInteger("FG_EVENT_RESOURCE_REQUESTED", (int)FG_EVENT_RESOURCE_REQUESTED);
+    m_fgObj.SetInteger("EVENT_RESOURCE_CREATED", (int)FG_EVENT_RESOURCE_CREATED);
+    m_fgObj.SetInteger("EVENT_RESOURCE_REMOVED", (int)FG_EVENT_RESOURCE_REMOVED);
+    m_fgObj.SetInteger("EVENT_RESOURCE_DISPOSED", (int)FG_EVENT_RESOURCE_DISPOSED);
+    m_fgObj.SetInteger("EVENT_RESOURCE_DESTROYED", (int)FG_EVENT_RESOURCE_DESTROYED);
+    m_fgObj.SetInteger("EVENT_RESOURCE_REQUESTED", (int)FG_EVENT_RESOURCE_REQUESTED);
 
-    m_globals.SetInteger("FG_EVENT_PROGRAM_INIT", (int)FG_EVENT_PROGRAM_INIT);
-    m_globals.SetInteger("FG_EVENT_VERTEX_STREAM_READY", (int)FG_EVENT_VERTEX_STREAM_READY);
-    m_globals.SetInteger("FG_EVENT_CAMERA_CHANGED", (int)FG_EVENT_CAMERA_CHANGED);
-    m_globals.SetInteger("FG_EVENT_SOUND_PLAYED", (int)FG_EVENT_SOUND_PLAYED);
-    m_globals.SetInteger("FG_EVENT_MENU_CHANGED", (int)FG_EVENT_MENU_CHANGED);
-    m_globals.SetInteger("FG_EVENT_WIDGET_STATE_CHANGED", (int)FG_EVENT_WIDGET_STATE_CHANGED);
-    m_globals.SetInteger("FG_EVENT_SENSORS_CHANGED", (int)FG_EVENT_SENSORS_CHANGED);
+    m_fgObj.SetInteger("EVENT_PROGRAM_INIT", (int)FG_EVENT_PROGRAM_INIT);
+    m_fgObj.SetInteger("EVENT_VERTEX_STREAM_READY", (int)FG_EVENT_VERTEX_STREAM_READY);
+    m_fgObj.SetInteger("EVENT_CAMERA_CHANGED", (int)FG_EVENT_CAMERA_CHANGED);
+    m_fgObj.SetInteger("EVENT_SOUND_PLAYED", (int)FG_EVENT_SOUND_PLAYED);
+    m_fgObj.SetInteger("EVENT_MENU_CHANGED", (int)FG_EVENT_MENU_CHANGED);
+    m_fgObj.SetInteger("EVENT_WIDGET_STATE_CHANGED", (int)FG_EVENT_WIDGET_STATE_CHANGED);
+    m_fgObj.SetInteger("EVENT_SENSORS_CHANGED", (int)FG_EVENT_SENSORS_CHANGED);
 
-    m_globals.SetInteger("FG_EVENT_GAME_CONTROLLER_ADDED", (int)FG_EVENT_GAME_CONTROLLER_ADDED);
-    m_globals.SetInteger("FG_EVENT_GAME_CONTROLLER_REMOVED", (int)FG_EVENT_GAME_CONTROLLER_REMOVED);
-    m_globals.SetInteger("FG_EVENT_GAME_CONTROLLER_BUTTON", (int)FG_EVENT_GAME_CONTROLLER_BUTTON);
-    m_globals.SetInteger("FG_EVENT_GAME_CONTROLLER_AXIS", (int)FG_EVENT_GAME_CONTROLLER_AXIS);
+    m_fgObj.SetInteger("EVENT_GAME_CONTROLLER_ADDED", (int)FG_EVENT_GAME_CONTROLLER_ADDED);
+    m_fgObj.SetInteger("EVENT_GAME_CONTROLLER_REMOVED", (int)FG_EVENT_GAME_CONTROLLER_REMOVED);
+    m_fgObj.SetInteger("EVENT_GAME_CONTROLLER_BUTTON", (int)FG_EVENT_GAME_CONTROLLER_BUTTON);
+    m_fgObj.SetInteger("EVENT_GAME_CONTROLLER_AXIS", (int)FG_EVENT_GAME_CONTROLLER_AXIS);
 
     //
     // GAME LOGIC EVENT TYPE CONSTANTS
     //
-    m_globals.SetInteger("FG_EVENT_GAME_STARTED", (int)FG_EVENT_GAME_STARTED);
-    m_globals.SetInteger("FG_EVENT_GAME_PAUSED", (int)FG_EVENT_GAME_PAUSED);
-    m_globals.SetInteger("FG_EVENT_GAME_STOPPED", (int)FG_EVENT_GAME_STOPPED);
-    m_globals.SetInteger("FG_EVENT_GAME_LOADING", (int)FG_EVENT_GAME_LOADING);
-    m_globals.SetInteger("FG_EVENT_GAME_RESTARTING", (int)FG_EVENT_GAME_RESTARTING);
-    m_globals.SetInteger("FG_EVENT_GAME_FINISHED", (int)FG_EVENT_GAME_FINISHED);
-    m_globals.SetInteger("FG_EVENT_GAME_WAITING", (int)FG_EVENT_GAME_WAITING);
-    m_globals.SetInteger("FG_EVENT_GAME_CONNECTED", (int)FG_EVENT_GAME_CONNECTED);
-    m_globals.SetInteger("FG_EVENT_GAME_DISCONNECTED", (int)FG_EVENT_GAME_DISCONNECTED);
+    m_fgObj.SetInteger("EVENT_GAME_STARTED", (int)FG_EVENT_GAME_STARTED);
+    m_fgObj.SetInteger("EVENT_GAME_PAUSED", (int)FG_EVENT_GAME_PAUSED);
+    m_fgObj.SetInteger("EVENT_GAME_STOPPED", (int)FG_EVENT_GAME_STOPPED);
+    m_fgObj.SetInteger("EVENT_GAME_LOADING", (int)FG_EVENT_GAME_LOADING);
+    m_fgObj.SetInteger("EVENT_GAME_RESTARTING", (int)FG_EVENT_GAME_RESTARTING);
+    m_fgObj.SetInteger("EVENT_GAME_FINISHED", (int)FG_EVENT_GAME_FINISHED);
+    m_fgObj.SetInteger("EVENT_GAME_WAITING", (int)FG_EVENT_GAME_WAITING);
+    m_fgObj.SetInteger("EVENT_GAME_CONNECTED", (int)FG_EVENT_GAME_CONNECTED);
+    m_fgObj.SetInteger("EVENT_GAME_DISCONNECTED", (int)FG_EVENT_GAME_DISCONNECTED);
 
     //
     // SWIPE DIRECTION
     //
-    m_globals.SetInteger("FG_SWIPE_INVALID", (int)FG_SWIPE_INVALID);
-    m_globals.SetInteger("FG_SWIPE_LEFT", (int)FG_SWIPE_LEFT);
-    m_globals.SetInteger("FG_SWIPE_RIGHT", (int)FG_SWIPE_RIGHT);
-    m_globals.SetInteger("FG_SWIPE_UP", (int)FG_SWIPE_UP);
-    m_globals.SetInteger("FG_SWIPE_DOWN", (int)FG_SWIPE_DOWN);
-    m_globals.SetInteger("FG_SWIPE_ANGLE", (int)FG_SWIPE_ANGLE);
+    m_fgObj.SetInteger("SWIPE_INVALID", (int)FG_SWIPE_INVALID);
+    m_fgObj.SetInteger("SWIPE_LEFT", (int)FG_SWIPE_LEFT);
+    m_fgObj.SetInteger("SWIPE_RIGHT", (int)FG_SWIPE_RIGHT);
+    m_fgObj.SetInteger("SWIPE_UP", (int)FG_SWIPE_UP);
+    m_fgObj.SetInteger("SWIPE_DOWN", (int)FG_SWIPE_DOWN);
+    m_fgObj.SetInteger("SWIPE_ANGLE", (int)FG_SWIPE_ANGLE);
 
     //
     // PINCH DIRECTION
     //
-    m_globals.SetInteger("FG_PINCH_INVALID", (int)FG_PINCH_INVALID);
-    m_globals.SetInteger("FG_PINCH_IN", (int)FG_PINCH_IN);
-    m_globals.SetInteger("FG_PINCH_OUT", (int)FG_PINCH_OUT);
+    m_fgObj.SetInteger("PINCH_INVALID", (int)FG_PINCH_INVALID);
+    m_fgObj.SetInteger("PINCH_IN", (int)FG_PINCH_IN);
+    m_fgObj.SetInteger("PINCH_OUT", (int)FG_PINCH_OUT);
 
     //
     // RESOURCE STATUS
     //
-    m_globals.SetInteger("FG_RESOURCE_CREATED", (int)FG_RESOURCE_CREATED);
-    m_globals.SetInteger("FG_RESOURCE_REMOVED", (int)FG_RESOURCE_REMOVED);
-    m_globals.SetInteger("FG_RESOURCE_DISPOSED", (int)FG_RESOURCE_DISPOSED);
-    m_globals.SetInteger("FG_RESOURCE_DESTROYED", (int)FG_RESOURCE_DESTROYED);
-    m_globals.SetInteger("FG_RESOURCE_REQUESTED", (int)FG_RESOURCE_REQUESTED);
+    m_fgObj.SetInteger("RESOURCE_CREATED", (int)FG_RESOURCE_CREATED);
+    m_fgObj.SetInteger("RESOURCE_REMOVED", (int)FG_RESOURCE_REMOVED);
+    m_fgObj.SetInteger("RESOURCE_DISPOSED", (int)FG_RESOURCE_DISPOSED);
+    m_fgObj.SetInteger("RESOURCE_DESTROYED", (int)FG_RESOURCE_DESTROYED);
+    m_fgObj.SetInteger("RESOURCE_REQUESTED", (int)FG_RESOURCE_REQUESTED);
 
 #endif /* FG_USING_LUA_PLUS */
     return FG_TRUE;
@@ -709,7 +705,7 @@ fgBool fgScriptSubsystem::registerAdditionalTypes(void) {
         return FG_TRUE;
 
 #if defined(FG_USING_LUA_PLUS)
-    if(m_globals.GetRef() < 0)
+    if(m_fgObj.GetRef() < 0)
         return FG_FALSE;
 
     // fgVector2i | FG VECTOR 2I    
@@ -719,7 +715,7 @@ fgBool fgScriptSubsystem::registerAdditionalTypes(void) {
             .Property("s", &fgVector2i::s)
             .Property("t", &fgVector2i::t)
             .MetatableFunction("__gc", &fgScriptSubsystem::simpleFreeGCEvent); // simpleTypedGCEvent<fgVector2i>
-    m_globals.Register("Vector2i", &fgScriptSubsystem::simpleTypedMallocEvent<fgVector2i, fgScriptMetatables::VECTOR2I_MT_ID>);
+    m_fgObj.Register("Vector2i", &fgScriptSubsystem::simpleTypedMallocEvent<fgVector2i, fgScriptMetatables::VECTOR2I_MT_ID>);
     FG_LOG_DEBUG("Script: Register metatable '%s' for Vector2i", fgScriptMT->getMetatableName(fgScriptMetatables::VECTOR2I_MT_ID));
 
     // fgVector2f | FG VECTOR 2F
@@ -729,7 +725,7 @@ fgBool fgScriptSubsystem::registerAdditionalTypes(void) {
             .Property("s", &fgVector2f::s)
             .Property("t", &fgVector2f::t)
             .MetatableFunction("__gc", &fgScriptSubsystem::simpleFreeGCEvent); // simpleTypedGCEvent<fgVector2f>
-    m_globals.Register("Vector2f", &fgScriptSubsystem::simpleTypedMallocEvent<fgVector2f, fgScriptMetatables::VECTOR2F_MT_ID>);
+    m_fgObj.Register("Vector2f", &fgScriptSubsystem::simpleTypedMallocEvent<fgVector2f, fgScriptMetatables::VECTOR2F_MT_ID>);
     FG_LOG_DEBUG("Script: Register metatable '%s' for Vector2f", fgScriptMT->getMetatableName(fgScriptMetatables::VECTOR2F_MT_ID));
 
     // fgVector3i | FG VECTOR 3I    
@@ -743,7 +739,7 @@ fgBool fgScriptSubsystem::registerAdditionalTypes(void) {
             .Property("s", &fgVector3i::s)
             .Property("t", &fgVector3i::t)
             .MetatableFunction("__gc", &fgScriptSubsystem::simpleFreeGCEvent); // simpleTypedGCEvent<fgVector3i>
-    m_globals.Register("Vector3i", &fgScriptSubsystem::simpleTypedMallocEvent<fgVector3i, fgScriptMetatables::VECTOR3I_MT_ID>);
+    m_fgObj.Register("Vector3i", &fgScriptSubsystem::simpleTypedMallocEvent<fgVector3i, fgScriptMetatables::VECTOR3I_MT_ID>);
     FG_LOG_DEBUG("Script: Register metatable '%s' for Vector3i", fgScriptMT->getMetatableName(fgScriptMetatables::VECTOR3I_MT_ID));
 
     // fgVector3f | FG VECTOR 3F    
@@ -757,8 +753,8 @@ fgBool fgScriptSubsystem::registerAdditionalTypes(void) {
             .Property("s", &fgVector3f::s)
             .Property("t", &fgVector3f::t)
             .MetatableFunction("__gc", &fgScriptSubsystem::simpleFreeGCEvent); // simpleTypedGCEvent<fgVector3f>
-    m_globals.Register("Vector3f", &fgScriptSubsystem::simpleTypedMallocEvent<fgVector3f, fgScriptMetatables::VECTOR3F_MT_ID>);
-    m_globals.Register("Color3f", &fgScriptSubsystem::simpleTypedMallocEvent<fgVector3f, fgScriptMetatables::VECTOR3F_MT_ID>);
+    m_fgObj.Register("Vector3f", &fgScriptSubsystem::simpleTypedMallocEvent<fgVector3f, fgScriptMetatables::VECTOR3F_MT_ID>);
+    m_fgObj.Register("Color3f", &fgScriptSubsystem::simpleTypedMallocEvent<fgVector3f, fgScriptMetatables::VECTOR3F_MT_ID>);
     FG_LOG_DEBUG("Script: Register metatable '%s' for Vector3f", fgScriptMT->getMetatableName(fgScriptMetatables::VECTOR3F_MT_ID));
 
     // fgVector4i | FG VECTOR 4I 
@@ -774,8 +770,8 @@ fgBool fgScriptSubsystem::registerAdditionalTypes(void) {
             .Property("s", &fgVector4i::s)
             .Property("t", &fgVector4i::t)
             .MetatableFunction("__gc", &fgScriptSubsystem::simpleFreeGCEvent); // simpleTypedGCEvent<fgVector4i>
-    m_globals.Register("Vector4i", &fgScriptSubsystem::simpleTypedMallocEvent<fgVector4i, fgScriptMetatables::VECTOR4I_MT_ID>);
-    //m_globals.Register("Color4i", &fgScriptSubsystem::simpleTypedMallocEvent<fgVector4i, fgScriptMetatables::VECTOR4I_MT_ID>);
+    m_fgObj.Register("Vector4i", &fgScriptSubsystem::simpleTypedMallocEvent<fgVector4i, fgScriptMetatables::VECTOR4I_MT_ID>);
+    //m_fgObj.Register("Color4i", &fgScriptSubsystem::simpleTypedMallocEvent<fgVector4i, fgScriptMetatables::VECTOR4I_MT_ID>);
     FG_LOG_DEBUG("Script: Register metatable '%s' for Vector4i", fgScriptMT->getMetatableName(fgScriptMetatables::VECTOR4I_MT_ID));
 
     // fgVector4f | FG VECTOR 4F    
@@ -791,8 +787,8 @@ fgBool fgScriptSubsystem::registerAdditionalTypes(void) {
             .Property("s", &fgVector4f::s)
             .Property("t", &fgVector4f::t)
             .MetatableFunction("__gc", &fgScriptSubsystem::simpleFreeGCEvent); // simpleTypedGCEvent<fgVector4f>
-    m_globals.Register("Vector4f", &fgScriptSubsystem::simpleTypedMallocEvent<fgVector4f, fgScriptMetatables::VECTOR4F_MT_ID>);
-    m_globals.Register("Color4f", &fgScriptSubsystem::simpleTypedMallocEvent<fgVector4f, fgScriptMetatables::VECTOR4F_MT_ID>);
+    m_fgObj.Register("Vector4f", &fgScriptSubsystem::simpleTypedMallocEvent<fgVector4f, fgScriptMetatables::VECTOR4F_MT_ID>);
+    m_fgObj.Register("Color4f", &fgScriptSubsystem::simpleTypedMallocEvent<fgVector4f, fgScriptMetatables::VECTOR4F_MT_ID>);
     FG_LOG_DEBUG("Script: Register metatable '%s' for Vector4f", fgScriptMT->getMetatableName(fgScriptMetatables::VECTOR4F_MT_ID));
 #endif /* FG_USING_LUA_PLUS */
     return FG_TRUE;
@@ -1042,18 +1038,18 @@ fgBool fgScriptSubsystem::registerEventManager(void) {
         return FG_FALSE;
 
 #if defined(FG_USING_LUA_PLUS)
-    if(m_metatableEventMgr.GetRef() >= 0)
+    if(m_mgrMetatables[EVENT_MGR].GetRef() >= 0)
         return FG_TRUE;
-    if(m_globals.GetRef() < 0)
+    if(m_fgObj.GetRef() < 0)
         return FG_FALSE;
 
-    m_metatableEventMgr = m_globals.CreateTable(fgScriptMT->getMetatableName(fgScriptMetatables::EVENT_MANAGER_MT_ID));
-    m_metatableEventMgr.SetObject("__index", m_metatableEventMgr);
-    //m_metatableEventMgr.RegisterObjectDirect("");
+    m_mgrMetatables[EVENT_MGR] = m_fgObj.CreateTable(fgScriptMT->getMetatableName(fgScriptMetatables::EVENT_MANAGER_MT_ID));
+    m_mgrMetatables[EVENT_MGR].SetObject("__index", m_mgrMetatables[EVENT_MGR]);
+    //m_mgrMetatables[EVENT_MGR].RegisterObjectDirect("");
     // Could use Register direct? hmm?
-    m_metatableEventMgr.Register("addEventCallback", &addEventCallbackWrapper);
-    m_metatableEventMgr.Register("addTimeoutCallback", &addTimeoutCallbackWrapper);
-    m_metatableEventMgr.Register("addCyclicCallback", &addCyclicCallbackWrapper);
+    m_mgrMetatables[EVENT_MGR].Register("addEventCallback", &addEventCallbackWrapper);
+    m_mgrMetatables[EVENT_MGR].Register("addTimeoutCallback", &addTimeoutCallbackWrapper);
+    m_mgrMetatables[EVENT_MGR].Register("addCyclicCallback", &addCyclicCallbackWrapper);
 
     uintptr_t offset = (uintptr_t)m_pEventMgr;
     userDataObjectMapItor it = m_userDataObjectMap.find(offset);
@@ -1063,8 +1059,9 @@ fgBool fgScriptSubsystem::registerEventManager(void) {
     }
     LuaPlus::LuaObject eventMgrObj = m_luaState->BoxPointer((void *)m_pEventMgr);
     // Some functions ? anyone ? need special helper static funcs for EventMgr
-    eventMgrObj.SetMetatable(m_metatableEventMgr);
-    m_globals.SetObject("EventManager", eventMgrObj);
+    eventMgrObj.SetMetatable(m_mgrMetatables[EVENT_MGR]);
+    m_fgObj.SetObject("EventManager", eventMgrObj);
+
     m_userDataObjectMap[offset].obj = eventMgrObj;
     m_userDataObjectMap[offset].isBound = FG_TRUE;
 
@@ -1076,7 +1073,7 @@ fgBool fgScriptSubsystem::registerEventManager(void) {
             // .Property("timeStamp", &fgEventBase::timeStamp) // Time stamp should be float ?
             ;
     //.MetatableFunction("__gc", &fgScriptSubsystem::simpleFreeGCEvent); // simpleTypedGCEvent<fgVector2i>
-    //m_globals.Register("Vector2i", &fgScriptSubsystem::simpleTypedMallocEvent<fgVector2i, VECTOR2I_MT_ID>);
+    //m_fgObj.Register("Vector2i", &fgScriptSubsystem::simpleTypedMallocEvent<fgVector2i, VECTOR2I_MT_ID>);
     //FG_LOG_DEBUG("Script: Register metatable '%s' for Vector2i", fgScriptMT->getMetatableName(fgScriptMetatables::VECTOR2I_MT_ID));
 
     // Controller Device Event : EventBase
@@ -1327,15 +1324,15 @@ fgBool fgScriptSubsystem::registerResourceManager(void) {
         return FG_FALSE;
 
 #if defined(FG_USING_LUA_PLUS)
-    if(m_metatableResourceMgr.GetRef() >= 0)
+    if(m_mgrMetatables[RESOURCE_MGR].GetRef() >= 0)
         return FG_TRUE;
-    if(m_globals.GetRef() < 0)
+    if(m_fgObj.GetRef() < 0)
         return FG_FALSE;
 
     // Resource manager metatable
-    m_metatableResourceMgr = m_globals.CreateTable(fgScriptMT->getMetatableName(fgScriptMetatables::RESOURCE_MANAGER_MT_ID));
-    m_metatableResourceMgr.SetObject("__index", m_metatableResourceMgr);
-    m_metatableResourceMgr.Register("request", &fgScriptSubsystem::newResourceWrapper);
+    m_mgrMetatables[RESOURCE_MGR] = m_fgObj.CreateTable(fgScriptMT->getMetatableName(fgScriptMetatables::RESOURCE_MANAGER_MT_ID));
+    m_mgrMetatables[RESOURCE_MGR].SetObject("__index", m_mgrMetatables[RESOURCE_MGR]);
+    m_mgrMetatables[RESOURCE_MGR].Register("request", &fgScriptSubsystem::newResourceWrapper);
 
     uintptr_t offset = (uintptr_t)m_pResourceMgr;
     userDataObjectMapItor it = m_userDataObjectMap.find(offset);
@@ -1344,8 +1341,8 @@ fgBool fgScriptSubsystem::registerResourceManager(void) {
     }
     // Create lua object for resource manager global
     LuaPlus::LuaObject resourceMgrObj = m_luaState->BoxPointer((void *)m_pResourceMgr);
-    resourceMgrObj.SetMetatable(m_metatableResourceMgr);
-    m_globals.SetObject("ResourceManager", resourceMgrObj);
+    resourceMgrObj.SetMetatable(m_mgrMetatables[RESOURCE_MGR]);
+    m_fgObj.SetObject("ResourceManager", resourceMgrObj);
     m_userDataObjectMap[offset] = resourceMgrObj;
 
     //
@@ -1496,7 +1493,7 @@ fgBool fgScriptSubsystem::registerResourceManager(void) {
             .ObjectDirect("isRandomAngle", (fgParticleEffect *)0, &fgParticleEffect::isRandomAngle)
             .MetatableFunction("__gc", &fgScriptSubsystem::managedResourceGCEvent);
 
-    //m_globals.Register("Texture", &fgScriptSubsystem::newResourceWrapper);
+    //m_fgObj.Register("Texture", &fgScriptSubsystem::newResourceWrapper);
 
     //
     // Register Music (SFX) Resource metatable
@@ -1533,9 +1530,9 @@ fgBool fgScriptSubsystem::registerShaderManager(void) {
         return FG_FALSE;
 
 #if defined(FG_USING_LUA_PLUS)
-    if(m_metatableShaderMgr.GetRef() >= 0)
+    if(m_mgrMetatables[SHADER_MGR].GetRef() >= 0)
         return FG_TRUE;
-    if(m_globals.GetRef() < 0)
+    if(m_fgObj.GetRef() < 0)
         return FG_FALSE;
 
 #endif /* FG_USING_LUA_PLUS */
@@ -1561,9 +1558,9 @@ fgBool fgScriptSubsystem::registerSceneManager(LuaPlus::LuaObject &metatable,
         return FG_FALSE;
     }
     // Scene manager (2D or 3D) metatable
-    metatable = m_globals.CreateTable(fgScriptMT->getMetatableName(metatableID));
+    metatable = m_fgObj.CreateTable(fgScriptMT->getMetatableName(metatableID));
     metatable.SetObject("__index", metatable);
-    //m_metatableResourceMgr.Register("request", &fgScriptSubsystem::newResourceWrapper);
+    //m_mgrMetatables[RESOURCE_MGR].Register("request", &fgScriptSubsystem::newResourceWrapper);
 
     uintptr_t offset = (uintptr_t)sceneManager;
     userDataObjectMapItor it = m_userDataObjectMap.find(offset);
@@ -1573,9 +1570,9 @@ fgBool fgScriptSubsystem::registerSceneManager(LuaPlus::LuaObject &metatable,
     // Create Lua object for scene manager global
     LuaPlus::LuaObject sceneManagerObj = m_luaState->BoxPointer((void *)sceneManager);
     sceneManagerObj.SetMetatable(metatable);
-    m_globals.SetObject(objectName, sceneManagerObj);
+    m_fgObj.SetObject(objectName, sceneManagerObj);
     m_userDataObjectMap[offset] = sceneManagerObj;
-    
+
     return FG_TRUE;
 }
 #else
@@ -1592,12 +1589,12 @@ fgBool fgScriptSubsystem::register2DSceneManager(void) {
         return FG_FALSE;
 
 #if defined(FG_USING_LUA_PLUS)
-    if(m_metatable2DSceneMgr.GetRef() >= 0)
+    if(m_mgrMetatables[SCENE2D_MGR].GetRef() >= 0)
         return FG_TRUE;
-    if(m_globals.GetRef() < 0)
+    if(m_fgObj.GetRef() < 0)
         return FG_FALSE;
-    
-    if(!registerSceneManager(m_metatable2DSceneMgr, fgScriptMetatables::SCENE2D_MANAGER_MT_ID, m_p2DSceneMgr, "Scene2D")) {
+
+    if(!registerSceneManager(m_mgrMetatables[SCENE2D_MGR], fgScriptMetatables::SCENE2D_MANAGER_MT_ID, m_p2DSceneMgr, "Scene2D")) {
         FG_LOG_ERROR("Script: Unable to register common metatable for 2D Scene Manager");
         return FG_FALSE;
     }
@@ -1617,23 +1614,23 @@ fgBool fgScriptSubsystem::register3DSceneManager(void) {
         return FG_FALSE;
 
 #if defined(FG_USING_LUA_PLUS)
-    if(m_metatable3DSceneMgr.GetRef() >= 0)
+    if(m_mgrMetatables[SCENE3D_MGR].GetRef() >= 0)
         return FG_TRUE;
-    if(m_globals.GetRef() < 0)
+    if(m_fgObj.GetRef() < 0)
         return FG_FALSE;
 
-    if(!registerSceneManager(m_metatable3DSceneMgr, fgScriptMetatables::SCENE3D_MANAGER_MT_ID, m_p3DSceneMgr, "Scene3D")) {
+    if(!registerSceneManager(m_mgrMetatables[SCENE3D_MGR], fgScriptMetatables::SCENE3D_MANAGER_MT_ID, m_p3DSceneMgr, "Scene3D")) {
         FG_LOG_ERROR("Script: Unable to register common metatable for 3D Scene Manager");
         return FG_FALSE;
     }
-    
+
     // Register additional direct functions for 3D Scene Manager - they're specific for this class/object
-    typedef fgGfxSceneNode *(fgGfx3DScene::*SCENE3D_SceneNode_C_STR_IN_C_STR_IN)(const char *, const char *);
-    
-    m_metatable3DSceneMgr.RegisterObjectDirect("addFromModel",
-                                             static_cast<fgGfx3DScene *>(0),
-                                             static_cast<SCENE3D_SceneNode_C_STR_IN_C_STR_IN>(&fgGfx3DScene::addFromModel));
-    
+    typedef fgGfxSceneNode * (fgGfx3DScene::*SCENE3D_SceneNode_C_STR_IN_C_STR_IN)(const char *, const char *);
+
+    m_mgrMetatables[SCENE3D_MGR].RegisterObjectDirect("addFromModel",
+                                                      static_cast<fgGfx3DScene *>(0),
+                                                      static_cast<SCENE3D_SceneNode_C_STR_IN_C_STR_IN>(&fgGfx3DScene::addFromModel));
+
     ////////////////////////////////////////////////////////////////////////////
     //
     // Registering now metatables for various 3D/2D Scene types
@@ -1651,7 +1648,7 @@ fgBool fgScriptSubsystem::register3DSceneManager(void) {
             .ObjectDirect("isVisible", (fgGfxSceneNode *)0, &fgGfxSceneNode::isVisible)
             .ObjectDirect("setVisible", (fgGfxSceneNode *)0, &fgGfxSceneNode::setVisible);
     //.MetatableFunction("__gc", &fgScriptSubsystem::managedResourceGCEvent); // #DELETE
-    
+
     ////////////////////////////////////////////////////////////////////////////
 
 #endif /* FG_USING_LUA_PLUS */
@@ -1669,14 +1666,14 @@ fgBool fgScriptSubsystem::registerParticleSystem(void) {
         return FG_FALSE;
 
 #if defined(FG_USING_LUA_PLUS)
-    if(m_metatableParticleMgr.GetRef() >= 0)
+    if(m_mgrMetatables[PARTICLE_MGR].GetRef() >= 0)
         return FG_TRUE;
-    if(m_globals.GetRef() < 0)
+    if(m_fgObj.GetRef() < 0)
         return FG_FALSE;
 
     // Particle system/manager metatable
-    m_metatableParticleMgr = m_globals.CreateTable(fgScriptMT->getMetatableName(fgScriptMetatables::PARTICLE_SYSTEM_MT_ID));
-    m_metatableParticleMgr.SetObject("__index", m_metatableParticleMgr);
+    m_mgrMetatables[PARTICLE_MGR] = m_fgObj.CreateTable(fgScriptMT->getMetatableName(fgScriptMetatables::PARTICLE_SYSTEM_MT_ID));
+    m_mgrMetatables[PARTICLE_MGR].SetObject("__index", m_mgrMetatables[PARTICLE_MGR]);
     //m_metatableParticleMgr.Register("request", &fgScriptSubsystem::newResourceWrapper);
 
     uintptr_t offset = (uintptr_t)m_pParticleMgr;
@@ -1686,8 +1683,8 @@ fgBool fgScriptSubsystem::registerParticleSystem(void) {
     }
     // Create lua object for particle system/manager global
     LuaPlus::LuaObject particleMgrObj = m_luaState->BoxPointer((void *)m_pParticleMgr);
-    particleMgrObj.SetMetatable(m_metatableParticleMgr);
-    m_globals.SetObject("ParticleSystem", particleMgrObj);
+    particleMgrObj.SetMetatable(m_mgrMetatables[PARTICLE_MGR]);
+    m_fgObj.SetObject("ParticleSystem", particleMgrObj);
     m_userDataObjectMap[offset].obj = particleMgrObj;
     m_userDataObjectMap[offset].isBound = FG_TRUE;
 
@@ -1826,7 +1823,7 @@ int fgScriptSubsystem::addWidgetCallbackWrapper(lua_State *L) {
         callback = new fgScriptGuiCallback(static_cast<fgGuiMain *>(m_pGuiMain), L, script, argc);
     } else if(hasFunction) {
         callback = new fgScriptGuiCallback(static_cast<fgGuiMain *>(m_pGuiMain), L, objFunction, argc);
-    }    
+    }
     fgBool status = FG_FALSE;
     if(pWidget)
         status = static_cast<fgGuiMain *>(m_pGuiMain)->addWidgetCallback(pWidget, callback, callbackType);
@@ -1854,15 +1851,15 @@ fgBool fgScriptSubsystem::registerGuiMain(void) {
         return FG_FALSE;
 
 #if defined(FG_USING_LUA_PLUS)
-    if(m_metatableGuiMain.GetRef() >= 0)
+    if(m_mgrMetatables[GUI_MAIN].GetRef() >= 0)
         return FG_TRUE;
-    if(m_globals.GetRef() < 0)
+    if(m_fgObj.GetRef() < 0)
         return FG_FALSE;
 
     // Gui main/manager metatable
-    m_metatableGuiMain = m_globals.CreateTable(fgScriptMT->getMetatableName(fgScriptMetatables::GUI_MAIN_MT_ID));
-    m_metatableGuiMain.SetObject("__index", m_metatableGuiMain);
-    m_metatableGuiMain.Register("addWidgetCallback", &fgScriptSubsystem::addWidgetCallbackWrapper);
+    m_mgrMetatables[GUI_MAIN] = m_fgObj.CreateTable(fgScriptMT->getMetatableName(fgScriptMetatables::GUI_MAIN_MT_ID));
+    m_mgrMetatables[GUI_MAIN].SetObject("__index", m_mgrMetatables[GUI_MAIN]);
+    m_mgrMetatables[GUI_MAIN].Register("addWidgetCallback", &fgScriptSubsystem::addWidgetCallbackWrapper);
 
     uintptr_t offset = (uintptr_t)m_pGuiMain;
     userDataObjectMapItor it = m_userDataObjectMap.find(offset);
@@ -1871,9 +1868,9 @@ fgBool fgScriptSubsystem::registerGuiMain(void) {
     }
     // Create lua object for gui main/manager global
     LuaPlus::LuaObject guiMainObj = m_luaState->BoxPointer((void *)m_pGuiMain);
-    guiMainObj.SetMetatable(m_metatableGuiMain);
-    m_globals.SetObject("GuiMain", guiMainObj);
-    m_globals.SetObject("GUI", guiMainObj);
+    guiMainObj.SetMetatable(m_mgrMetatables[GUI_MAIN]);
+    m_fgObj.SetObject("GuiMain", guiMainObj);
+    //m_fgObj.SetObject("GUI", guiMainObj);
     m_userDataObjectMap[offset].obj = guiMainObj;
     m_userDataObjectMap[offset].isBound = FG_TRUE;
 #endif /* FG_USING_LUA_PLUS */
@@ -1891,9 +1888,9 @@ fgBool fgScriptSubsystem::registerWidgetManager(void) {
         return FG_FALSE;
 
 #if defined(FG_USING_LUA_PLUS)
-    if(m_metatableWidgetMgr.GetRef() >= 0)
+    if(m_mgrMetatables[WIDGET_MGR].GetRef() >= 0)
         return FG_TRUE;
-    if(m_globals.GetRef() < 0)
+    if(m_fgObj.GetRef() < 0)
         return FG_FALSE;
 
     typedef fgBool(fgGuiWidgetManager::*GWM_Bool_Widget_IN)(fgGuiWidget *);
@@ -1902,27 +1899,27 @@ fgBool fgScriptSubsystem::registerWidgetManager(void) {
     typedef fgGuiWidget * (fgGuiWidgetManager::*GWM_Widget_C_STR_IN)(const char *);
 
     // Widget manager metatable
-    m_metatableWidgetMgr = m_globals.CreateTable(fgScriptMT->getMetatableName(fgScriptMetatables::WIDGET_MANAGER_MT_ID));
-    m_metatableWidgetMgr.SetObject("__index", m_metatableWidgetMgr);
-    m_metatableWidgetMgr.RegisterObjectDirect("addWidget",
-                                              (fgGuiWidgetManager *)0,
-                                              static_cast<GWM_Bool_Widget_IN>(&fgGuiWidgetManager::addWidget));
+    m_mgrMetatables[WIDGET_MGR] = m_fgObj.CreateTable(fgScriptMT->getMetatableName(fgScriptMetatables::WIDGET_MANAGER_MT_ID));
+    m_mgrMetatables[WIDGET_MGR].SetObject("__index", m_mgrMetatables[WIDGET_MGR]);
+    m_mgrMetatables[WIDGET_MGR].RegisterObjectDirect("addWidget",
+                                                     (fgGuiWidgetManager *)0,
+                                                     static_cast<GWM_Bool_Widget_IN>(&fgGuiWidgetManager::addWidget));
 
-    m_metatableWidgetMgr.RegisterObjectDirect("addWidgetWithFather",
-                                              (fgGuiWidgetManager *)0,
-                                              static_cast<GWM_Bool_Widget_Widget_IN>(&fgGuiWidgetManager::addWidget));
+    m_mgrMetatables[WIDGET_MGR].RegisterObjectDirect("addWidgetWithFather",
+                                                     (fgGuiWidgetManager *)0,
+                                                     static_cast<GWM_Bool_Widget_Widget_IN>(&fgGuiWidgetManager::addWidget));
 
-    m_metatableWidgetMgr.RegisterObjectDirect("removeWidget",
-                                              (fgGuiWidgetManager *)0,
-                                              static_cast<GWM_Bool_Widget_IN>(&fgGuiWidgetManager::remove));
+    m_mgrMetatables[WIDGET_MGR].RegisterObjectDirect("removeWidget",
+                                                     (fgGuiWidgetManager *)0,
+                                                     static_cast<GWM_Bool_Widget_IN>(&fgGuiWidgetManager::remove));
 
-    m_metatableWidgetMgr.RegisterObjectDirect("removeWidgetByName",
-                                              (fgGuiWidgetManager *)0,
-                                              static_cast<GWM_Bool_C_STR_IN>(&fgGuiWidgetManager::remove));
+    m_mgrMetatables[WIDGET_MGR].RegisterObjectDirect("removeWidgetByName",
+                                                     (fgGuiWidgetManager *)0,
+                                                     static_cast<GWM_Bool_C_STR_IN>(&fgGuiWidgetManager::remove));
 
-    m_metatableWidgetMgr.RegisterObjectDirect("getWidget",
-                                              (fgGuiWidgetManager *)0,
-                                              static_cast<GWM_Widget_C_STR_IN>(&fgGuiWidgetManager::get));
+    m_mgrMetatables[WIDGET_MGR].RegisterObjectDirect("getWidget",
+                                                     (fgGuiWidgetManager *)0,
+                                                     static_cast<GWM_Widget_C_STR_IN>(&fgGuiWidgetManager::get));
     //m_metatableWidgetMgr.Register("request", &fgScriptSubsystem::newResourceWrapper);
 
     uintptr_t offset = (uintptr_t)m_pWidgetMgr;
@@ -1932,8 +1929,8 @@ fgBool fgScriptSubsystem::registerWidgetManager(void) {
     }
     // Create lua object for particle system/manager global
     LuaPlus::LuaObject widgetMgrObj = m_luaState->BoxPointer((void *)m_pWidgetMgr);
-    widgetMgrObj.SetMetatable(m_metatableWidgetMgr);
-    m_globals.SetObject("WidgetManager", widgetMgrObj);
+    widgetMgrObj.SetMetatable(m_mgrMetatables[WIDGET_MGR]);
+    m_fgObj.SetObject("WidgetManager", widgetMgrObj);
     m_userDataObjectMap[offset].obj = widgetMgrObj;
     m_userDataObjectMap[offset].isBound = FG_TRUE;
 
@@ -2004,14 +2001,14 @@ fgBool fgScriptSubsystem::registerWidgetManager(void) {
     LPCD::Class(m_luaState->GetCState(), metatableName, metatableNameWidget)
             //.ObjectDirect("getWidth", (fgTextureResource *)0, &fgTextureResource::getWidth)            
             .MetatableFunction("__gc", &fgScriptSubsystem::managedObjectTypedGCEvent<fgGuiWidgetHandle>);
-    m_globals.Register("Button", &fgScriptSubsystem::managedObjectTypedNewEvent<fgGuiButton, fgScriptMetatables::GUI_BUTTON_MT_ID>);
+    m_fgObj.Register("Button", &fgScriptSubsystem::managedObjectTypedNewEvent<fgGuiButton, fgScriptMetatables::GUI_BUTTON_MT_ID>);
 
     // Register Gui Toggle Button metatable
     metatableName = fgScriptMT->getMetatableName(fgScriptMetatables::GUI_TOGGLE_BUTTON_MT_ID);
     LPCD::Class(m_luaState->GetCState(), metatableName, fgScriptMT->getMetatableName(fgScriptMetatables::GUI_BUTTON_MT_ID))
             //.ObjectDirect("getWidth", (fgTextureResource *)0, &fgTextureResource::getWidth)            
             .MetatableFunction("__gc", &fgScriptSubsystem::managedObjectTypedGCEvent<fgGuiWidgetHandle>);
-    m_globals.Register("ToggleButton", &fgScriptSubsystem::managedObjectTypedNewEvent<fgGuiToggleButton, fgScriptMetatables::GUI_TOGGLE_BUTTON_MT_ID>);
+    m_fgObj.Register("ToggleButton", &fgScriptSubsystem::managedObjectTypedNewEvent<fgGuiToggleButton, fgScriptMetatables::GUI_TOGGLE_BUTTON_MT_ID>);
 
     typedef fgBool(fgGuiContainer::*GCNT_Bool_C_STR_IN)(const char *);
     typedef fgBool(fgGuiContainer::*GCNT_Bool_Widget_IN)(fgGuiWidget *);
@@ -2031,98 +2028,98 @@ fgBool fgScriptSubsystem::registerWidgetManager(void) {
 
             //.ObjectDirect("getWidth", (fgTextureResource *)0, &fgTextureResource::getWidth)            
             .MetatableFunction("__gc", &fgScriptSubsystem::managedObjectTypedGCEvent<fgGuiWidgetHandle>);
-    m_globals.Register("Container", &fgScriptSubsystem::managedObjectTypedNewEvent<fgGuiContainer, fgScriptMetatables::GUI_CONTAINER_MT_ID>);
+    m_fgObj.Register("Container", &fgScriptSubsystem::managedObjectTypedNewEvent<fgGuiContainer, fgScriptMetatables::GUI_CONTAINER_MT_ID>);
 
     // Register Gui Editable Text metatable
     //metatableName = fgScriptMT->getMetatableName(E);
     //LPCD::Class(m_luaState->GetCState(), metatableName, metatableNameWidget)
     //        //.ObjectDirect("getWidth", (fgTextureResource *)0, &fgTextureResource::getWidth)            
     //        .MetatableFunction("__gc", &fgScriptSubsystem::managedObjectTypedGCEvent<fgGuiWidgetHandle>);
-    //m_globals.Register("EditableText", &fgScriptSubsystem::managedObjectTypedNewEvent<fgGuiButton, fgScriptMetatables::GUI_CONSOLE_MT_ID>);
+    //m_fgObj.Register("EditableText", &fgScriptSubsystem::managedObjectTypedNewEvent<fgGuiButton, fgScriptMetatables::GUI_CONSOLE_MT_ID>);
 
     // Register Gui Frame metatable
     metatableName = fgScriptMT->getMetatableName(fgScriptMetatables::GUI_FRAME_MT_ID);
     LPCD::Class(m_luaState->GetCState(), metatableName, fgScriptMT->getMetatableName(fgScriptMetatables::GUI_CONTAINER_MT_ID))
             //.ObjectDirect("getWidth", (fgTextureResource *)0, &fgTextureResource::getWidth)            
             .MetatableFunction("__gc", &fgScriptSubsystem::managedObjectTypedGCEvent<fgGuiWidgetHandle>);
-    m_globals.Register("Frame", &fgScriptSubsystem::managedObjectTypedNewEvent<fgGuiFrame, fgScriptMetatables::GUI_FRAME_MT_ID>);
+    m_fgObj.Register("Frame", &fgScriptSubsystem::managedObjectTypedNewEvent<fgGuiFrame, fgScriptMetatables::GUI_FRAME_MT_ID>);
 
     // Register Gui Label metatable
     metatableName = fgScriptMT->getMetatableName(fgScriptMetatables::GUI_LABEL_MT_ID);
     LPCD::Class(m_luaState->GetCState(), metatableName, metatableNameWidget)
             //.ObjectDirect("getWidth", (fgTextureResource *)0, &fgTextureResource::getWidth)            
             .MetatableFunction("__gc", &fgScriptSubsystem::managedObjectTypedGCEvent<fgGuiWidgetHandle>);
-    m_globals.Register("Label", &fgScriptSubsystem::managedObjectTypedNewEvent<fgGuiLabel, fgScriptMetatables::GUI_LABEL_MT_ID>);
+    m_fgObj.Register("Label", &fgScriptSubsystem::managedObjectTypedNewEvent<fgGuiLabel, fgScriptMetatables::GUI_LABEL_MT_ID>);
 
     // Register Gui Loader metatable
     metatableName = fgScriptMT->getMetatableName(fgScriptMetatables::GUI_LOADER_MT_ID);
     LPCD::Class(m_luaState->GetCState(), metatableName, metatableNameWidget)
             //.ObjectDirect("getWidth", (fgTextureResource *)0, &fgTextureResource::getWidth)            
             .MetatableFunction("__gc", &fgScriptSubsystem::managedObjectTypedGCEvent<fgGuiWidgetHandle>);
-    m_globals.Register("Loader", &fgScriptSubsystem::managedObjectTypedNewEvent<fgGuiLoader, fgScriptMetatables::GUI_LOADER_MT_ID>);
+    m_fgObj.Register("Loader", &fgScriptSubsystem::managedObjectTypedNewEvent<fgGuiLoader, fgScriptMetatables::GUI_LOADER_MT_ID>);
 
     // Register Gui Menu metatable
     metatableName = fgScriptMT->getMetatableName(fgScriptMetatables::GUI_MENU_MT_ID);
     LPCD::Class(m_luaState->GetCState(), metatableName, fgScriptMT->getMetatableName(fgScriptMetatables::GUI_CONTAINER_MT_ID))
             //.ObjectDirect("getWidth", (fgTextureResource *)0, &fgTextureResource::getWidth)            
             .MetatableFunction("__gc", &fgScriptSubsystem::managedObjectTypedGCEvent<fgGuiWidgetHandle>);
-    m_globals.Register("Menu", &fgScriptSubsystem::managedObjectTypedNewEvent<fgGuiMenu, fgScriptMetatables::GUI_MENU_MT_ID>);
+    m_fgObj.Register("Menu", &fgScriptSubsystem::managedObjectTypedNewEvent<fgGuiMenu, fgScriptMetatables::GUI_MENU_MT_ID>);
 
     // Register Gui Window metatable
     metatableName = fgScriptMT->getMetatableName(fgScriptMetatables::GUI_WINDOW_MT_ID);
     LPCD::Class(m_luaState->GetCState(), metatableName, fgScriptMT->getMetatableName(fgScriptMetatables::GUI_CONTAINER_MT_ID))
             //.ObjectDirect("getWidth", (fgTextureResource *)0, &fgTextureResource::getWidth)            
             .MetatableFunction("__gc", &fgScriptSubsystem::managedObjectTypedGCEvent<fgGuiWidgetHandle>);
-    m_globals.Register("Window", &fgScriptSubsystem::managedObjectTypedNewEvent<fgGuiWindow, fgScriptMetatables::GUI_WINDOW_MT_ID>);
+    m_fgObj.Register("Window", &fgScriptSubsystem::managedObjectTypedNewEvent<fgGuiWindow, fgScriptMetatables::GUI_WINDOW_MT_ID>);
 
     // Register Gui MessageBox metatable
     metatableName = fgScriptMT->getMetatableName(fgScriptMetatables::GUI_MESSAGE_BOX_MT_ID);
     LPCD::Class(m_luaState->GetCState(), metatableName, fgScriptMT->getMetatableName(fgScriptMetatables::GUI_WINDOW_MT_ID))
             //.ObjectDirect("getWidth", (fgTextureResource *)0, &fgTextureResource::getWidth)            
             .MetatableFunction("__gc", &fgScriptSubsystem::managedObjectTypedGCEvent<fgGuiWidgetHandle>);
-    m_globals.Register("MessageBox", &fgScriptSubsystem::managedObjectTypedNewEvent<fgGuiMessageBox, fgScriptMetatables::GUI_MESSAGE_BOX_MT_ID>);
+    m_fgObj.Register("MessageBox", &fgScriptSubsystem::managedObjectTypedNewEvent<fgGuiMessageBox, fgScriptMetatables::GUI_MESSAGE_BOX_MT_ID>);
 
     // Register Gui Popup metatable
     metatableName = fgScriptMT->getMetatableName(fgScriptMetatables::GUI_POPUP_MT_ID);
     LPCD::Class(m_luaState->GetCState(), metatableName, fgScriptMT->getMetatableName(fgScriptMetatables::GUI_WINDOW_MT_ID))
             //.ObjectDirect("getWidth", (fgTextureResource *)0, &fgTextureResource::getWidth)            
             .MetatableFunction("__gc", &fgScriptSubsystem::managedObjectTypedGCEvent<fgGuiWidgetHandle>);
-    m_globals.Register("Popup", &fgScriptSubsystem::managedObjectTypedNewEvent<fgGuiPopup, fgScriptMetatables::GUI_POPUP_MT_ID>);
+    m_fgObj.Register("Popup", &fgScriptSubsystem::managedObjectTypedNewEvent<fgGuiPopup, fgScriptMetatables::GUI_POPUP_MT_ID>);
 
     // Register Gui Progress Bar metatable
     metatableName = fgScriptMT->getMetatableName(fgScriptMetatables::GUI_PROGRESS_BAR_MT_ID);
     LPCD::Class(m_luaState->GetCState(), metatableName, metatableNameWidget)
             //.ObjectDirect("getWidth", (fgTextureResource *)0, &fgTextureResource::getWidth)            
             .MetatableFunction("__gc", &fgScriptSubsystem::managedObjectTypedGCEvent<fgGuiWidgetHandle>);
-    m_globals.Register("ProgressBar", &fgScriptSubsystem::managedObjectTypedNewEvent<fgGuiProgressBar, fgScriptMetatables::GUI_PROGRESS_BAR_MT_ID>);
+    m_fgObj.Register("ProgressBar", &fgScriptSubsystem::managedObjectTypedNewEvent<fgGuiProgressBar, fgScriptMetatables::GUI_PROGRESS_BAR_MT_ID>);
 
     // Register Gui Scroll Area metatable
     metatableName = fgScriptMT->getMetatableName(fgScriptMetatables::GUI_SCROLL_AREA_MT_ID);
     LPCD::Class(m_luaState->GetCState(), metatableName, fgScriptMT->getMetatableName(fgScriptMetatables::GUI_CONTAINER_MT_ID))
             //.ObjectDirect("getWidth", (fgTextureResource *)0, &fgTextureResource::getWidth)            
             .MetatableFunction("__gc", &fgScriptSubsystem::managedObjectTypedGCEvent<fgGuiWidgetHandle>);
-    m_globals.Register("ScrollArea", &fgScriptSubsystem::managedObjectTypedNewEvent<fgGuiScrollArea, fgScriptMetatables::GUI_SCROLL_AREA_MT_ID>);
+    m_fgObj.Register("ScrollArea", &fgScriptSubsystem::managedObjectTypedNewEvent<fgGuiScrollArea, fgScriptMetatables::GUI_SCROLL_AREA_MT_ID>);
 
     // Register Gui Table metatable
     metatableName = fgScriptMT->getMetatableName(fgScriptMetatables::GUI_TABLE_MT_ID);
     LPCD::Class(m_luaState->GetCState(), metatableName, fgScriptMT->getMetatableName(fgScriptMetatables::GUI_CONTAINER_MT_ID))
             //.ObjectDirect("getWidth", (fgTextureResource *)0, &fgTextureResource::getWidth)            
             .MetatableFunction("__gc", &fgScriptSubsystem::managedObjectTypedGCEvent<fgGuiWidgetHandle>);
-    m_globals.Register("Table", &fgScriptSubsystem::managedObjectTypedNewEvent<fgGuiTable, fgScriptMetatables::GUI_TABLE_MT_ID>);
+    m_fgObj.Register("Table", &fgScriptSubsystem::managedObjectTypedNewEvent<fgGuiTable, fgScriptMetatables::GUI_TABLE_MT_ID>);
 
     // Register Gui TextArea metatable
     metatableName = fgScriptMT->getMetatableName(fgScriptMetatables::GUI_TEXT_AREA_MT_ID);
     LPCD::Class(m_luaState->GetCState(), metatableName, fgScriptMT->getMetatableName(fgScriptMetatables::GUI_SCROLL_AREA_MT_ID))
             //.ObjectDirect("getWidth", (fgTextureResource *)0, &fgTextureResource::getWidth)            
             .MetatableFunction("__gc", &fgScriptSubsystem::managedObjectTypedGCEvent<fgGuiWidgetHandle>);
-    m_globals.Register("TextArea", &fgScriptSubsystem::managedObjectTypedNewEvent<fgGuiTextArea, fgScriptMetatables::GUI_TEXT_AREA_MT_ID>);
+    m_fgObj.Register("TextArea", &fgScriptSubsystem::managedObjectTypedNewEvent<fgGuiTextArea, fgScriptMetatables::GUI_TEXT_AREA_MT_ID>);
 
     // Register Gui Console metatable
     metatableName = fgScriptMT->getMetatableName(fgScriptMetatables::GUI_CONSOLE_MT_ID);
     LPCD::Class(m_luaState->GetCState(), metatableName, fgScriptMT->getMetatableName(fgScriptMetatables::GUI_TEXT_AREA_MT_ID))
             //.ObjectDirect("getWidth", (fgTextureResource *)0, &fgTextureResource::getWidth)            
             .MetatableFunction("__gc", &fgScriptSubsystem::managedObjectTypedGCEvent<fgGuiWidgetHandle>);
-    m_globals.Register("Console", &fgScriptSubsystem::managedObjectTypedNewEvent<fgGuiConsole, fgScriptMetatables::GUI_CONSOLE_MT_ID>);
+    m_fgObj.Register("Console", &fgScriptSubsystem::managedObjectTypedNewEvent<fgGuiConsole, fgScriptMetatables::GUI_CONSOLE_MT_ID>);
 
     //
     // Styles / Style Content and other builtin
@@ -2272,9 +2269,9 @@ fgBool fgScriptSubsystem::registerStyleManager(void) {
         return FG_FALSE;
 
 #if defined(FG_USING_LUA_PLUS)
-    if(m_metatableStyleMgr.GetRef() >= 0)
+    if(m_mgrMetatables[STYLE_MGR].GetRef() >= 0)
         return FG_TRUE;
-    if(m_globals.GetRef() < 0)
+    if(m_fgObj.GetRef() < 0)
         return FG_FALSE;
 
 #endif /* FG_USING_LUA_PLUS */
@@ -2294,51 +2291,51 @@ fgBool fgScriptSubsystem::registerSoundManager(void) {
         return FG_FALSE;
 
 #if defined(FG_USING_LUA_PLUS)
-    if(m_metatableSoundMgr.GetRef() >= 0)
+    if(m_mgrMetatables[SOUND_MGR].GetRef() >= 0)
         return FG_TRUE;
-    if(m_globals.GetRef() < 0)
+    if(m_fgObj.GetRef() < 0)
         return FG_FALSE;
     typedef fgBool(fgSFXManager::*SFX_Bool_C_STR_IN)(const char *);
 
     // Sound manager metatable
-    m_metatableSoundMgr = m_globals.CreateTable(fgScriptMT->getMetatableName(fgScriptMetatables::SOUND_MANAGER_MT_ID));
-    m_metatableSoundMgr.SetObject("__index", m_metatableSoundMgr);
-    m_metatableSoundMgr.RegisterObjectDirect("play",
-                                             static_cast<fgSFXManager *>(0),
-                                             static_cast<SFX_Bool_C_STR_IN>(&fgSFXManager::play));
-    m_metatableSoundMgr.RegisterObjectDirect("pause",
-                                             static_cast<fgSFXManager *>(0),
-                                             static_cast<SFX_Bool_C_STR_IN>(&fgSFXManager::pause));
-    m_metatableSoundMgr.RegisterObjectDirect("resume",
-                                             static_cast<fgSFXManager *>(0),
-                                             static_cast<SFX_Bool_C_STR_IN>(&fgSFXManager::resume));
-    m_metatableSoundMgr.RegisterObjectDirect("rewind",
-                                             static_cast<fgSFXManager *>(0),
-                                             static_cast<SFX_Bool_C_STR_IN>(&fgSFXManager::rewind));
-    m_metatableSoundMgr.RegisterObjectDirect("stop",
-                                             static_cast<fgSFXManager *>(0),
-                                             static_cast<SFX_Bool_C_STR_IN>(&fgSFXManager::stop));
-    m_metatableSoundMgr.RegisterObjectDirect("isPlaying",
-                                             static_cast<fgSFXManager *>(0),
-                                             static_cast<SFX_Bool_C_STR_IN>(&fgSFXManager::isPlaying));
-    m_metatableSoundMgr.RegisterObjectDirect("isPaused",
-                                             static_cast<fgSFXManager *>(0),
-                                             static_cast<SFX_Bool_C_STR_IN>(&fgSFXManager::isPaused));
-    m_metatableSoundMgr.RegisterObjectDirect("stopAll",
-                                             static_cast<fgSFXManager *>(0),
-                                             &fgSFXManager::stopAll);
-    m_metatableSoundMgr.RegisterObjectDirect("setSfxVolume",
-                                             static_cast<fgSFXManager *>(0),
-                                             &fgSFXManager::setSfxVolume);
-    m_metatableSoundMgr.RegisterObjectDirect("getSfxVolume",
-                                             static_cast<fgSFXManager *>(0),
-                                             &fgSFXManager::getSfxVolume);
-    m_metatableSoundMgr.RegisterObjectDirect("setMusicVolume",
-                                             static_cast<fgSFXManager *>(0),
-                                             &fgSFXManager::setMusicVolume);
-    m_metatableSoundMgr.RegisterObjectDirect("getMusicVolume",
-                                             static_cast<fgSFXManager *>(0),
-                                             &fgSFXManager::getMusicVolume);
+    m_mgrMetatables[SOUND_MGR] = m_fgObj.CreateTable(fgScriptMT->getMetatableName(fgScriptMetatables::SOUND_MANAGER_MT_ID));
+    m_mgrMetatables[SOUND_MGR].SetObject("__index", m_mgrMetatables[SOUND_MGR]);
+    m_mgrMetatables[SOUND_MGR].RegisterObjectDirect("play",
+                                                    static_cast<fgSFXManager *>(0),
+                                                    static_cast<SFX_Bool_C_STR_IN>(&fgSFXManager::play));
+    m_mgrMetatables[SOUND_MGR].RegisterObjectDirect("pause",
+                                                    static_cast<fgSFXManager *>(0),
+                                                    static_cast<SFX_Bool_C_STR_IN>(&fgSFXManager::pause));
+    m_mgrMetatables[SOUND_MGR].RegisterObjectDirect("resume",
+                                                    static_cast<fgSFXManager *>(0),
+                                                    static_cast<SFX_Bool_C_STR_IN>(&fgSFXManager::resume));
+    m_mgrMetatables[SOUND_MGR].RegisterObjectDirect("rewind",
+                                                    static_cast<fgSFXManager *>(0),
+                                                    static_cast<SFX_Bool_C_STR_IN>(&fgSFXManager::rewind));
+    m_mgrMetatables[SOUND_MGR].RegisterObjectDirect("stop",
+                                                    static_cast<fgSFXManager *>(0),
+                                                    static_cast<SFX_Bool_C_STR_IN>(&fgSFXManager::stop));
+    m_mgrMetatables[SOUND_MGR].RegisterObjectDirect("isPlaying",
+                                                    static_cast<fgSFXManager *>(0),
+                                                    static_cast<SFX_Bool_C_STR_IN>(&fgSFXManager::isPlaying));
+    m_mgrMetatables[SOUND_MGR].RegisterObjectDirect("isPaused",
+                                                    static_cast<fgSFXManager *>(0),
+                                                    static_cast<SFX_Bool_C_STR_IN>(&fgSFXManager::isPaused));
+    m_mgrMetatables[SOUND_MGR].RegisterObjectDirect("stopAll",
+                                                    static_cast<fgSFXManager *>(0),
+                                                    &fgSFXManager::stopAll);
+    m_mgrMetatables[SOUND_MGR].RegisterObjectDirect("setSfxVolume",
+                                                    static_cast<fgSFXManager *>(0),
+                                                    &fgSFXManager::setSfxVolume);
+    m_mgrMetatables[SOUND_MGR].RegisterObjectDirect("getSfxVolume",
+                                                    static_cast<fgSFXManager *>(0),
+                                                    &fgSFXManager::getSfxVolume);
+    m_mgrMetatables[SOUND_MGR].RegisterObjectDirect("setMusicVolume",
+                                                    static_cast<fgSFXManager *>(0),
+                                                    &fgSFXManager::setMusicVolume);
+    m_mgrMetatables[SOUND_MGR].RegisterObjectDirect("getMusicVolume",
+                                                    static_cast<fgSFXManager *>(0),
+                                                    &fgSFXManager::getMusicVolume);
 
     uintptr_t offset = (uintptr_t)m_pSoundMgr;
     userDataObjectMapItor it = m_userDataObjectMap.find(offset);
@@ -2347,8 +2344,8 @@ fgBool fgScriptSubsystem::registerSoundManager(void) {
     }
     // Create lua object for Sound manager global
     LuaPlus::LuaObject soundMgrObj = m_luaState->BoxPointer((void *)m_pSoundMgr);
-    soundMgrObj.SetMetatable(m_metatableSoundMgr);
-    m_globals.SetObject("SoundManager", soundMgrObj);
+    soundMgrObj.SetMetatable(m_mgrMetatables[SOUND_MGR]);
+    m_fgObj.SetObject("SoundManager", soundMgrObj);
     m_userDataObjectMap[offset].obj = soundMgrObj;
     m_userDataObjectMap[offset].isBound = FG_TRUE;
 
@@ -2368,9 +2365,9 @@ fgBool fgScriptSubsystem::registerLogicManager(void) {
         return FG_FALSE;
 
 #if defined(FG_USING_LUA_PLUS)
-    if(m_metatableLogicMgr.GetRef() >= 0)
+    if(m_mgrMetatables[LOGIC_MGR].GetRef() >= 0)
         return FG_TRUE;
-    if(m_globals.GetRef() < 0)
+    if(m_fgObj.GetRef() < 0)
         return FG_FALSE;
 
     typedef fgBool(fg::game::Logic::*LOGIC_Bool_C_STR_IN)(const char *);
@@ -2378,86 +2375,86 @@ fgBool fgScriptSubsystem::registerLogicManager(void) {
     typedef void(fg::game::Logic::*LOGIC_void_UINT_IN)(const unsigned int);
 
     // Game Logic manager metatable
-    m_metatableLogicMgr = m_globals.CreateTable(fgScriptMT->getMetatableName(fgScriptMetatables::LOGIC_MANAGER_MT_ID));
-    m_metatableLogicMgr.SetObject("__index", m_metatableLogicMgr);
-    m_metatableLogicMgr.RegisterObjectDirect("startGameDefault",
-                                             static_cast<fg::game::Logic *>(0),
-                                             &fg::game::Logic::startGameDefault);
-    m_metatableLogicMgr.RegisterObjectDirect("startGameStageID",
-                                             static_cast<fg::game::Logic *>(0),
-                                             static_cast<LOGIC_void_UINT_IN>(&fg::game::Logic::startGame));
-    m_metatableLogicMgr.RegisterObjectDirect("startGameStageName",
-                                             static_cast<fg::game::Logic *>(0),
-                                             static_cast<LOGIC_void_C_STR_IN>(&fg::game::Logic::startGame));
-    m_metatableLogicMgr.RegisterObjectDirect("stopGame",
-                                             static_cast<fg::game::Logic *>(0),
-                                             &fg::game::Logic::stopGame);
-    m_metatableLogicMgr.RegisterObjectDirect("pauseGame",
-                                             static_cast<fg::game::Logic *>(0),
-                                             &fg::game::Logic::pauseGame);
-    m_metatableLogicMgr.RegisterObjectDirect("restartGame",
-                                             static_cast<fg::game::Logic *>(0),
-                                             &fg::game::Logic::restartGame);
+    m_mgrMetatables[LOGIC_MGR] = m_fgObj.CreateTable(fgScriptMT->getMetatableName(fgScriptMetatables::LOGIC_MANAGER_MT_ID));
+    m_mgrMetatables[LOGIC_MGR].SetObject("__index", m_mgrMetatables[LOGIC_MGR]);
+    m_mgrMetatables[LOGIC_MGR].RegisterObjectDirect("startGameDefault",
+                                                    static_cast<fg::game::Logic *>(0),
+                                                    &fg::game::Logic::startGameDefault);
+    m_mgrMetatables[LOGIC_MGR].RegisterObjectDirect("startGameStageID",
+                                                    static_cast<fg::game::Logic *>(0),
+                                                    static_cast<LOGIC_void_UINT_IN>(&fg::game::Logic::startGame));
+    m_mgrMetatables[LOGIC_MGR].RegisterObjectDirect("startGameStageName",
+                                                    static_cast<fg::game::Logic *>(0),
+                                                    static_cast<LOGIC_void_C_STR_IN>(&fg::game::Logic::startGame));
+    m_mgrMetatables[LOGIC_MGR].RegisterObjectDirect("stopGame",
+                                                    static_cast<fg::game::Logic *>(0),
+                                                    &fg::game::Logic::stopGame);
+    m_mgrMetatables[LOGIC_MGR].RegisterObjectDirect("pauseGame",
+                                                    static_cast<fg::game::Logic *>(0),
+                                                    &fg::game::Logic::pauseGame);
+    m_mgrMetatables[LOGIC_MGR].RegisterObjectDirect("restartGame",
+                                                    static_cast<fg::game::Logic *>(0),
+                                                    &fg::game::Logic::restartGame);
 
-    m_metatableLogicMgr.RegisterObjectDirect("getCurrentStageID",
-                                             static_cast<fg::game::Logic *>(0),
-                                             &fg::game::Logic::getCurrentStageID);
-    m_metatableLogicMgr.RegisterObjectDirect("getCurrentStageName",
-                                             static_cast<fg::game::Logic *>(0),
-                                             &fg::game::Logic::getCurrentStageNameStr);
-    m_metatableLogicMgr.RegisterObjectDirect("getStageScore",
-                                             static_cast<fg::game::Logic *>(0),
-                                             &fg::game::Logic::getStageScore);
-    m_metatableLogicMgr.RegisterObjectDirect("getGlobalScore",
-                                             static_cast<fg::game::Logic *>(0),
-                                             &fg::game::Logic::getGlobalScore);
-    m_metatableLogicMgr.RegisterObjectDirect("increaseStageScore",
-                                             static_cast<fg::game::Logic *>(0),
-                                             &fg::game::Logic::increaseStageScore);
-    m_metatableLogicMgr.RegisterObjectDirect("resetStageScore",
-                                             static_cast<fg::game::Logic *>(0),
-                                             &fg::game::Logic::resetStageScore);
+    m_mgrMetatables[LOGIC_MGR].RegisterObjectDirect("getCurrentStageID",
+                                                    static_cast<fg::game::Logic *>(0),
+                                                    &fg::game::Logic::getCurrentStageID);
+    m_mgrMetatables[LOGIC_MGR].RegisterObjectDirect("getCurrentStageName",
+                                                    static_cast<fg::game::Logic *>(0),
+                                                    &fg::game::Logic::getCurrentStageNameStr);
+    m_mgrMetatables[LOGIC_MGR].RegisterObjectDirect("getStageScore",
+                                                    static_cast<fg::game::Logic *>(0),
+                                                    &fg::game::Logic::getStageScore);
+    m_mgrMetatables[LOGIC_MGR].RegisterObjectDirect("getGlobalScore",
+                                                    static_cast<fg::game::Logic *>(0),
+                                                    &fg::game::Logic::getGlobalScore);
+    m_mgrMetatables[LOGIC_MGR].RegisterObjectDirect("increaseStageScore",
+                                                    static_cast<fg::game::Logic *>(0),
+                                                    &fg::game::Logic::increaseStageScore);
+    m_mgrMetatables[LOGIC_MGR].RegisterObjectDirect("resetStageScore",
+                                                    static_cast<fg::game::Logic *>(0),
+                                                    &fg::game::Logic::resetStageScore);
 
-    m_metatableLogicMgr.RegisterObjectDirect("setPlayerName",
-                                             static_cast<fg::game::Logic *>(0),
-                                             static_cast<LOGIC_void_C_STR_IN>(&fg::game::Logic::setPlayerName));
-    m_metatableLogicMgr.RegisterObjectDirect("getPlayerName",
-                                             static_cast<fg::game::Logic *>(0),
-                                             &fg::game::Logic::getPlayerNameStr);
+    m_mgrMetatables[LOGIC_MGR].RegisterObjectDirect("setPlayerName",
+                                                    static_cast<fg::game::Logic *>(0),
+                                                    static_cast<LOGIC_void_C_STR_IN>(&fg::game::Logic::setPlayerName));
+    m_mgrMetatables[LOGIC_MGR].RegisterObjectDirect("getPlayerName",
+                                                    static_cast<fg::game::Logic *>(0),
+                                                    &fg::game::Logic::getPlayerNameStr);
 
-    m_metatableLogicMgr.RegisterObjectDirect("isActive",
-                                             static_cast<fg::game::Logic *>(0),
-                                             &fg::game::Logic::isActive);
-    m_metatableLogicMgr.RegisterObjectDirect("isPaused",
-                                             static_cast<fg::game::Logic *>(0),
-                                             &fg::game::Logic::isPaused);
-    m_metatableLogicMgr.RegisterObjectDirect("isStopped",
-                                             static_cast<fg::game::Logic *>(0),
-                                             &fg::game::Logic::isStopped);
-    m_metatableLogicMgr.RegisterObjectDirect("isLoading",
-                                             static_cast<fg::game::Logic *>(0),
-                                             &fg::game::Logic::isLoading);
-    m_metatableLogicMgr.RegisterObjectDirect("isRestarting",
-                                             static_cast<fg::game::Logic *>(0),
-                                             &fg::game::Logic::isRestarting);
-    m_metatableLogicMgr.RegisterObjectDirect("isStopping",
-                                             static_cast<fg::game::Logic *>(0),
-                                             &fg::game::Logic::isStopping);
-    m_metatableLogicMgr.RegisterObjectDirect("isFinishing",
-                                             static_cast<fg::game::Logic *>(0),
-                                             &fg::game::Logic::isFinishing);
-    m_metatableLogicMgr.RegisterObjectDirect("isFinished",
-                                             static_cast<fg::game::Logic *>(0),
-                                             &fg::game::Logic::isFinished);
-    m_metatableLogicMgr.RegisterObjectDirect("isConnecting",
-                                             static_cast<fg::game::Logic *>(0),
-                                             &fg::game::Logic::isConnecting);
-    m_metatableLogicMgr.RegisterObjectDirect("isWaiting",
-                                             static_cast<fg::game::Logic *>(0),
-                                             &fg::game::Logic::isWaiting);
-    m_metatableLogicMgr.RegisterObjectDirect("isDisconnected",
-                                             static_cast<fg::game::Logic *>(0),
-                                             &fg::game::Logic::isDisconnected);
+    m_mgrMetatables[LOGIC_MGR].RegisterObjectDirect("isActive",
+                                                    static_cast<fg::game::Logic *>(0),
+                                                    &fg::game::Logic::isActive);
+    m_mgrMetatables[LOGIC_MGR].RegisterObjectDirect("isPaused",
+                                                    static_cast<fg::game::Logic *>(0),
+                                                    &fg::game::Logic::isPaused);
+    m_mgrMetatables[LOGIC_MGR].RegisterObjectDirect("isStopped",
+                                                    static_cast<fg::game::Logic *>(0),
+                                                    &fg::game::Logic::isStopped);
+    m_mgrMetatables[LOGIC_MGR].RegisterObjectDirect("isLoading",
+                                                    static_cast<fg::game::Logic *>(0),
+                                                    &fg::game::Logic::isLoading);
+    m_mgrMetatables[LOGIC_MGR].RegisterObjectDirect("isRestarting",
+                                                    static_cast<fg::game::Logic *>(0),
+                                                    &fg::game::Logic::isRestarting);
+    m_mgrMetatables[LOGIC_MGR].RegisterObjectDirect("isStopping",
+                                                    static_cast<fg::game::Logic *>(0),
+                                                    &fg::game::Logic::isStopping);
+    m_mgrMetatables[LOGIC_MGR].RegisterObjectDirect("isFinishing",
+                                                    static_cast<fg::game::Logic *>(0),
+                                                    &fg::game::Logic::isFinishing);
+    m_mgrMetatables[LOGIC_MGR].RegisterObjectDirect("isFinished",
+                                                    static_cast<fg::game::Logic *>(0),
+                                                    &fg::game::Logic::isFinished);
+    m_mgrMetatables[LOGIC_MGR].RegisterObjectDirect("isConnecting",
+                                                    static_cast<fg::game::Logic *>(0),
+                                                    &fg::game::Logic::isConnecting);
+    m_mgrMetatables[LOGIC_MGR].RegisterObjectDirect("isWaiting",
+                                                    static_cast<fg::game::Logic *>(0),
+                                                    &fg::game::Logic::isWaiting);
+    m_mgrMetatables[LOGIC_MGR].RegisterObjectDirect("isDisconnected",
+                                                    static_cast<fg::game::Logic *>(0),
+                                                    &fg::game::Logic::isDisconnected);
     uintptr_t offset = (uintptr_t)m_pLogicMgr;
     userDataObjectMapItor it = m_userDataObjectMap.find(offset);
     if(it != m_userDataObjectMap.end()) {
@@ -2465,12 +2462,12 @@ fgBool fgScriptSubsystem::registerLogicManager(void) {
     }
     // Create lua object for Game Logic manager global
     LuaPlus::LuaObject logicMgrObj = m_luaState->BoxPointer((void *)m_pLogicMgr);
-    logicMgrObj.SetMetatable(m_metatableLogicMgr);
+    logicMgrObj.SetMetatable(m_mgrMetatables[LOGIC_MGR]);
 
 
     // #FIXME - create in script proper structure as in C++ -> fg.game.Logic, etc
-    m_globals.SetObject("LogicManager", logicMgrObj);
-    m_globals.SetObject("GameLogic", logicMgrObj);
+    m_fgObj.SetObject("LogicManager", logicMgrObj);
+    m_fgObj.SetObject("GameLogic", logicMgrObj);
     m_userDataObjectMap[offset].obj = logicMgrObj;
     m_userDataObjectMap[offset].isBound = FG_TRUE;
 

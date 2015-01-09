@@ -63,15 +63,18 @@ typedef FG_TAG_SCRIPT_SUBSYSTEM fgScriptSubsystemTag;
 //typedef FG_TAG_SCRIPT_SUBSYSTEM fgScriptSubsystemTag;
 
 // Every 60s call global GC request
-    #define FG_SCRIPT_DEFAULT_GC_INTERVAL 60000
+    #define FG_SCRIPT_DEFAULT_GC_INTERVAL 5000
 
 /**
  * 
  */
 class fgScriptSubsystem : public fg::base::CManager {
 public:
+    ///
     typedef fg::base::CManager base_type;
+    ///
     typedef fgScriptSubsystemTag tag_type;
+
 private:
 
     struct userDataObject {
@@ -101,38 +104,41 @@ private:
     ///
     typedef userDataObjectMap::iterator userDataObjectMapItor;
 
+    /**
+     * This enum correspond to ones in fgScriptMT/Metatables - just managers
+     */
+    enum {
+        EMPTY_MT_MGR,
+
+        FG_NAMESPACE,
+
+        EVENT_MGR,
+        RESOURCE_MGR,
+        SHADER_MGR,
+        SCENE2D_MGR,
+        SCENE3D_MGR,
+        PARTICLE_MGR,
+        GUI_MAIN,
+        WIDGET_MGR,
+        STYLE_MGR,
+        SOUND_MGR,
+        LOGIC_MGR,
+
+        NUM_MGR_METATABLES
+    };
+
     #if defined(FG_USING_LUA_PLUS)
     /// Main global state for LUA
     static LuaPlus::LuaState *m_luaState;
     /// Globals table
     static LuaPlus::LuaObject m_globals;
     ///
+    static LuaPlus::LuaObject m_fgObj;
+    ///
     static userDataObjectMap m_userDataObjectMap;
-    /// Lua metatable for the external gui main object
-    /// This object will mainly provide just some functions
-    /// For handling events, setting callbacks (also some
-    /// menu management)
-    LuaPlus::LuaObject m_metatableGuiMain;
-    /// Lua metatable for the external event manager
-    LuaPlus::LuaObject m_metatableEventMgr;
-    /// Lua metatable for the external resource manager
-    LuaPlus::LuaObject m_metatableResourceMgr;
-    /// Lua metatable for the external shader manager
-    LuaPlus::LuaObject m_metatableShaderMgr;
-    /// Lua metatable for the external 2D Scene manager
-    LuaPlus::LuaObject m_metatable2DSceneMgr;
-    /// Lua metatable for the external 3D Scene manager
-    LuaPlus::LuaObject m_metatable3DSceneMgr;
-    /// Lua metatable for the external particle manager
-    LuaPlus::LuaObject m_metatableParticleMgr;
-    /// Lua metatable for the external widget manager
-    LuaPlus::LuaObject m_metatableWidgetMgr;
-    /// Lua metatable for the external style manager
-    LuaPlus::LuaObject m_metatableStyleMgr;
-    /// Lua metatable for the external sound manager
-    LuaPlus::LuaObject m_metatableSoundMgr;
-    /// Lua metatable for the external logic manager
-    LuaPlus::LuaObject m_metatableLogicMgr;
+    /// Storage for metatables
+    LuaPlus::LuaObject m_mgrMetatables[NUM_MGR_METATABLES];
+
     #else
     static void *m_luaState;
     #endif
@@ -601,15 +607,14 @@ int fgScriptSubsystem::managedObjectTypedGCEvent(lua_State* L) {
         // The pointer is not registered
         FG_LOG_DEBUG("Script: Managed Object Typed GC: pointer is not registered: ptr[%p], [offset: %lu], HandleType[%s]", unboxed, offset, HandleType::getTagName());
         return 0;
-    } else {
-        m_userDataObjectMap.erase(it);
     }
-    FG_LOG_DEBUG("Script: GC event for Managed Object: name[%s], HandleType[%s]", pManagedObject->getNameStr(), HandleType::getTagName());
+    FG_LOG_DEBUG("Script: Managed Object Typed GC: name[%s], HandleType[%s], isManaged[%d], [offset: %lu]", pManagedObject->getNameStr(), HandleType::getTagName(), pManagedObject->isManaged(), offset);
     if(pManagedObject->isManaged() == FG_FALSE) {
         // Object is not managed in some manager
         // Can call destructors
         FG_LOG_DEBUG("Script: Managed Object Typed GC: Object is not managed, will be deleted name[%s], ptr[%p], offset[%lu]", pManagedObject->getNameStr(), pManagedObject, offset);
         delete pManagedObject;
+        m_userDataObjectMap.erase(it);
     }
     #endif /* FG_USING_LUA_PLUS */
     return 0;
@@ -660,6 +665,7 @@ int fgScriptSubsystem::simpleTypedMallocEvent(lua_State* L) {
     #endif /* FG_USING_LUA_PLUS */
     return 1;
 }
+
 /**
  * 
  * @param L
