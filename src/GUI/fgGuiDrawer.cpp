@@ -107,22 +107,35 @@ void fgGuiDrawer::appendBackground2D(const fgVec2f &pos,
                                      fgGuiStyleContent& style) {
     if(!m_pResourceMgr)
         return;
-    int index;
+    int index = 0;
+    fgTextureResource *pTexture = NULL;
+    fgGuiBackground &background = style.getBackground();
     fgGfxDrawCall *drawCall = requestDrawCall(index, FG_GFX_DRAW_CALL_CUSTOM_ARRAY);
     drawCall->setComponentActive(0);
     drawCall->setComponentActive(FG_GFX_POSITION_BIT | FG_GFX_UVS_BIT | FG_GFX_COLOR_BIT);
-    if(m_pResourceMgr && !style.getBackground().texture.empty()) {
+    if(m_pResourceMgr && !background.texture.empty()) {
         // Get or request ?
-        fgResource *pResource = static_cast<fgResourceManager *>(m_pResourceMgr)->request(style.getBackground().texture);
+        fgResource *pResource = static_cast<fgResourceManager *>(m_pResourceMgr)->request(background.texture);
         if(pResource) {
             if(pResource->getResourceType() == FG_RESOURCE_TEXTURE) {
-                fgTextureResource *pTexture = (fgTextureResource *)pResource;
+                pTexture = (fgTextureResource *)pResource;
                 drawCall->setTexture(pTexture->getRefGfxID());
             }
         }
     }
-    drawCall->setColor(style.getBackground().color);
-    drawCall->appendRect2D(pos, size, fgVec2f(0, 1), fgVec2f(1, 0), FG_FALSE);
+    fgVec2f uv1(0, 1); // upper left corner
+    fgVec2f uv2(1, 0); // lower right corner
+    if(background.style == FG_GUI_BACKGROUND_TILED) {
+        fgVec2f ratio(1.0f, 1.0f);
+        if(pTexture) {
+            ratio.x = size.x/(float)pTexture->getWidth();
+            ratio.y = size.y/(float)pTexture->getHeight();
+            uv1.y = ratio.y;
+            uv2.x = ratio.x;
+        }
+    }
+    drawCall->setColor(background.color);
+    drawCall->appendRect2D(pos, size, uv1, uv2, FG_FALSE);
 }
 
 /**

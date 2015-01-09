@@ -272,6 +272,17 @@ fgGuiBackgroundStyle fgGuiStyleContent::parseBackgroundStyle(const char *value) 
     fgGuiBackgroundStyle style = FG_GUI_BACKGROUND_MAX;
     if(!value)
         return style;
+    
+    if(strcmp(value, "none") == 0) {
+        style = FG_GUI_BACKGROUND_NONE;
+    } else if(strcmp(value, "normal") == 0) {
+        style = FG_GUI_BACKGROUND_NORMAL;
+    } else if(strcmp(value, "max") == 0) {
+        style = FG_GUI_BACKGROUND_MAX;
+    } else if(strcmp(value, "tiled") == 0) {
+        style = FG_GUI_BACKGROUND_TILED;
+    }
+    
     return style;
 }
 
