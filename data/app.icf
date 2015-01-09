@@ -33,7 +33,7 @@ EGL_DEPTH_SIZE=24
 DispFixRot="FixedLandscape"
 SysGlesVersion=2
 MemSize=56000000
-IOSDispScaleFactor=200
+IOSDispScaleFactor=auto
 
 {ID=IPHONE "iPhone7,1"}
 [S3E]
@@ -62,43 +62,43 @@ MemSize=64000000
 
 #medium 640x960
 {[S3E]DispAreaQ==614400}
-MemSize=72000000
+MemSize=64000000
 	
 #medium 600x1024
 {[S3E]DispAreaQ==614400}
-MemSize=96000000
+MemSize=82000000
 
 #medium 640x1146 - NEW IPHONE 
 {[S3E]DispAreaQ==733440}
-MemSize=96000000
+MemSize=82000000
 
 #medium 640x1136 - NEW IPHONE 
 {[S3E]DispAreaQ==727040}
-MemSize=96000000
+MemSize=82000000
 
 #medium 768x1024
 {[S3E]DispAreaQ==786432}
-MemSize=96000000
+MemSize=82000000
 
 #medium 720x1280
 {[S3E]DispAreaQ==921600}
-MemSize=96000000
+MemSize=90000000
 
 #medium 768x1280
 {[S3E]DispAreaQ==983040}
-MemSize=96000000
+MemSize=90000000
 
 #medium 800x1280
 {[S3E]DispAreaQ==1024000}
-MemSize=96000000
+MemSize=90000000
 	
 #high 1200x1920	| 2304000
 {[S3E]DispAreaQ > 1024000}
-MemSize=128000000
+MemSize=96000000
 
-#high 1536x2048	
+#high 1536x2048
 {[S3E]DispAreaQ >= 3145728}
-MemSize=128000000
+MemSize=96000000
 
 {}
 

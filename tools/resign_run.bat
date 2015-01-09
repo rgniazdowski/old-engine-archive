@@ -8,7 +8,7 @@ echo ****************** FLEXI GAME ************************
 echo ** %date% %time%
 
 IF "%S3E_DIR%" == "" (
-    GOTO sets3edir 
+    GOTO sets3edir
 ) ELSE (
     GOTO s3edirpresent
 )

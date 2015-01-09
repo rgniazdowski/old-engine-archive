@@ -9,7 +9,7 @@ EGL_DEPTH_SIZE=24
 DispFixRot="FixedLandscape"
 SysGlesVersion=2
 MemSize=56000000
-IOSDispScaleFactor=200
+IOSDispScaleFactor=auto
 {ID=IPHONE "iPhone7,1"}
 [S3E]
 IOSDispScaleFactor=261
@@ -21,36 +21,30 @@ MemSize=40000000
 {[S3E]DispAreaQ==320000}
 MemSize=50000000
 {[S3E]DispAreaQ==384000}
-MemSize=56000000
+MemSize=64000000
 {[S3E]DispAreaQ==518400}
 MemSize=64000000
 {[S3E]DispAreaQ==614400}
-MemSize=72000000
+MemSize=64000000
 {[S3E]DispAreaQ==614400}
-MemSize=72000000
+MemSize=82000000
 {[S3E]DispAreaQ==733440}
-MemSize=72000000
+MemSize=82000000
 {[S3E]DispAreaQ==727040}
-MemSize=72000000
+MemSize=82000000
 {[S3E]DispAreaQ==786432}
-MemSize=72000000
+MemSize=82000000
 {[S3E]DispAreaQ==921600}
-MemSize=72000000
-{[S3E]DispAreaQ==983040}
-MemSize=72000000
-{[S3E]DispAreaQ==1024000}
-MemSize=72000000
-{[S3E]DispAreaQ > 1024000}
-MemSize=80000000
-{[S3E]DispAreaQ >= 3145728}
 MemSize=90000000
+{[S3E]DispAreaQ==983040}
+MemSize=90000000
+{[S3E]DispAreaQ==1024000}
+MemSize=90000000
+{[S3E]DispAreaQ > 1024000}
+MemSize=96000000
+{[S3E]DispAreaQ >= 3145728}
+MemSize=96000000
 {}
 [s3e]
 SysAppVersion=1.0.0
-SysAppCaption="A Flexi Game"
-SplashScreenFile=iPhone_splash.jpg;iPhone_splash_portrait.jpg;iPhone_splash_landscape.jpg
-SplashScreenWidth=320;640;960
-SplashScreenHeight=480;960;640
-SplashScreenBkR=0x5D
-SplashScreenBkG=0x56
-SplashScreenBkB=0x0C
+SysAppCaption="A FlexiBench"

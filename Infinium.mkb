@@ -88,6 +88,10 @@ assets
 	splash.png
 
 	(data)
+    main.config.ini
+    settings.xml
+
+	(data)
 	main/sound/m1.mp3
 	main/sound/beat1.raw
 	main/sound/bounce1.raw
@@ -106,14 +110,6 @@ assets
 	main/sound/mod/mod.shamrip.mod
 	main/sound/mod/mod.dragonsfunk.mod
 	main/sound/mod/mod.dragonsfunk.mp3
-
-    (data)
-	endless_flying/fly_tex.group.xml
-    endless_flying/Asteroids.group.ini
-	endless_flying/Crystal1.group.ini
-	endless_flying/CobraBomber.group.ini
-    endless_flying/CobraFighter.group.ini
-    endless_flying/CobraInterceptor.group.ini
 
     (data)
     main/explosionDebris.particle.ini
@@ -135,47 +131,6 @@ assets
 	main/particle_textures.group.xml
 
     (data)
-    main.config.ini
-    settings.xml
-
-    (data)
-    endless_flying/main.lua
-
-	(data)
-	textures/splash/bg_biohazard0_1920x1200.jpg
-	textures/splash/loading_screen0.jpg
-	textures/splash/bg_biohazard0_1136x640.jpg
-	textures/splash/bg_biohazard0_1024x768.jpg
-
-	(data)
-	endless_flying/textures/skybox/plasma_galaxy_1024.jpg
-	endless_flying/textures/skybox/PurpleNebulaCube.res.ini
-	endless_flying/textures/skybox/PurpleNebula.res.ini
-	endless_flying/textures/skybox/galaxy_1024.jpg
-	endless_flying/textures/skybox/purple-nebula-1024.jpg
-	endless_flying/textures/skybox/galaxy_mod_1024.jpg
-	endless_flying/textures/skybox/purple-nebula-2048.jpg
-	endless_flying/textures/skybox/nebula_1024.jpg
-	endless_flying/textures/skybox/pn-cube/purple-nebula-2048-px.jpg
-	endless_flying/textures/skybox/pn-cube/purple-nebula-2048-py.jpg
-	endless_flying/textures/skybox/pn-cube/purple-nebula-2048-pz.jpg
-	endless_flying/textures/skybox/pn-cube/purple-nebula-2048-nx.jpg
-	endless_flying/textures/skybox/pn-cube/purple-nebula-2048-ny.jpg
-	endless_flying/textures/skybox/pn-cube/purple-nebula-2048-nz.jpg
-	endless_flying/textures/skybox/pn-cube/purple-nebula-1024-px.jpg
-	endless_flying/textures/skybox/pn-cube/purple-nebula-1024-py.jpg
-	endless_flying/textures/skybox/pn-cube/purple-nebula-1024-pz.jpg
-	endless_flying/textures/skybox/pn-cube/purple-nebula-1024-nx.jpg
-	endless_flying/textures/skybox/pn-cube/purple-nebula-1024-ny.jpg
-	endless_flying/textures/skybox/pn-cube/purple-nebula-1024-nz.jpg
-	endless_flying/textures/skybox/pn-cube/purple-nebula-512-px.jpg
-	endless_flying/textures/skybox/pn-cube/purple-nebula-512-py.jpg
-	endless_flying/textures/skybox/pn-cube/purple-nebula-512-pz.jpg
-	endless_flying/textures/skybox/pn-cube/purple-nebula-512-nx.jpg
-	endless_flying/textures/skybox/pn-cube/purple-nebula-512-ny.jpg
-	endless_flying/textures/skybox/pn-cube/purple-nebula-512-nz.jpg
-
-	(data)
     main/textures/particle/CloudsSheet.res.ini
     main/textures/particle/ExplosionSheet.res.ini
     main/textures/particle/FigureSheet.res.ini
@@ -245,7 +200,6 @@ assets
 	main/textures/particle/flares/x5.jpg
 	main/textures/particle/flares/x6.jpg
 
-
 	(data)
 	main/textures/gui/hud/HudTop.res.ini
 	main/textures/gui/hud/hud_top_1024.tga
@@ -267,20 +221,21 @@ assets
     main/textures/gui/TitleBar_1024x64.jpg
 
     (data)
+	main/textures/gui/BackgroundCrate_1024x512.jpg
+
+    (data)
     textures/Grill_1024x512.tga
     textures/GrillSquare1_512.tga
     textures/MetGrill_512.tga
     textures/MetalGrill.res.ini
-
-	(data)
-	main/textures/gui/BackgroundCrate_1024x512.jpg
+	textures/decals/MetalDecal_256.png
+	textures/decals/MetalDecal_512.png
 
     (data)
-    endless_flying/gui/frame.style.ini
-    endless_flying/gui/main.style.ini
-    endless_flying/gui/menu.gui.xml
-    endless_flying/gui/relbutton.style.ini
-	endless_flying/gui/contextmenu.style.ini
+	textures/splash/bg_biohazard0_1920x1200.jpg
+	textures/splash/loading_screen0.jpg
+	textures/splash/bg_biohazard0_1136x640.jpg
+	textures/splash/bg_biohazard0_1024x768.jpg
 
 	(data)
 	main/fonts/CaptureIt.res.ini
@@ -302,6 +257,98 @@ assets
 	main/fonts/Furore_1024.tga
 	main/fonts/Furore_2048.tga
 	main/fonts/Furore_512.tga
+
+	(data)
+	shaders/other/sVertexLighting.frag
+	shaders/other/sVertexLighting.vert
+
+	(data)
+	shaders/sPlainEasy.frag
+	shaders/sPlainEasy.vert
+	shaders/sPlainEasy.program.ini
+	shaders/sPlainEasy.frag.shader.ini
+	shaders/sPlainEasy.vert.shader.ini
+
+	(data)
+	shaders/sSkyBoxEasy.frag
+	shaders/sSkyBoxEasy.vert
+	shaders/sSkyBoxEasy.program.ini
+	shaders/sSkyBoxEasy.frag.shader.ini
+	shaders/sSkyBoxEasy.vert.shader.ini
+
+	(data)
+	shaders/sOrthoEasy.frag
+	shaders/sOrthoEasy.vert
+	shaders/sOrthoEasy.program.ini
+	shaders/sOrthoEasy.frag.shader.ini
+	shaders/sOrthoEasy.vert.shader.ini
+
+	(data)
+	shaders/other/sSlowBumpMapping.frag
+	shaders/other/sSlowBumpMapping.vert
+	shaders/other/sSlowBumpMapping.program.ini
+	shaders/other/sSlowBumpMapping.frag.shader.ini
+	shaders/other/sSlowBumpMapping.vert.shader.ini
+
+	(data)
+	shaders/other/sEnvironmentMapping.frag
+	shaders/other/sEnvironmentMapping.vert
+	shaders/other/sEnvironmentMapping.program.ini
+	shaders/other/sEnvironmentMapping.frag.shader.ini
+	shaders/other/sEnvironmentMapping.vert.shader.ini
+
+	(data)
+	shaders/other/sFragmentLighting.frag
+	shaders/other/sFragmentLighting.vert
+	shaders/other/sFragmentLighting.program.ini
+	shaders/other/sFragmentLighting.frag.shader.ini
+	shaders/other/sFragmentLighting.vert.shader.ini
+
+	(data)
+    endless_flying/gui/frame.style.ini
+    endless_flying/gui/main.style.ini
+    endless_flying/gui/menu.gui.xml
+    endless_flying/gui/relbutton.style.ini
+	endless_flying/gui/contextmenu.style.ini
+
+	(data)
+    endless_flying/main.lua
+
+    (data)
+	endless_flying/fly_tex.group.xml
+    endless_flying/Asteroids.group.ini
+	endless_flying/Crystal1.group.ini
+	endless_flying/CobraBomber.group.ini
+    endless_flying/CobraFighter.group.ini
+    endless_flying/CobraInterceptor.group.ini
+
+	(data)
+	endless_flying/textures/skybox/plasma_galaxy_1024.jpg
+	endless_flying/textures/skybox/PurpleNebulaCube.res.ini
+	endless_flying/textures/skybox/PurpleNebula.res.ini
+	endless_flying/textures/skybox/galaxy_1024.jpg
+	endless_flying/textures/skybox/purple-nebula-1024.jpg
+	endless_flying/textures/skybox/galaxy_mod_1024.jpg
+	endless_flying/textures/skybox/purple-nebula-2048.jpg
+	endless_flying/textures/skybox/nebula_1024.jpg
+	endless_flying/textures/skybox/pn-cube/purple-nebula-2048-px.jpg
+	endless_flying/textures/skybox/pn-cube/purple-nebula-2048-py.jpg
+	endless_flying/textures/skybox/pn-cube/purple-nebula-2048-pz.jpg
+	endless_flying/textures/skybox/pn-cube/purple-nebula-2048-nx.jpg
+	endless_flying/textures/skybox/pn-cube/purple-nebula-2048-ny.jpg
+	endless_flying/textures/skybox/pn-cube/purple-nebula-2048-nz.jpg
+	endless_flying/textures/skybox/pn-cube/purple-nebula-1024-px.jpg
+	endless_flying/textures/skybox/pn-cube/purple-nebula-1024-py.jpg
+	endless_flying/textures/skybox/pn-cube/purple-nebula-1024-pz.jpg
+	endless_flying/textures/skybox/pn-cube/purple-nebula-1024-nx.jpg
+	endless_flying/textures/skybox/pn-cube/purple-nebula-1024-ny.jpg
+	endless_flying/textures/skybox/pn-cube/purple-nebula-1024-nz.jpg
+	endless_flying/textures/skybox/pn-cube/purple-nebula-512-px.jpg
+	endless_flying/textures/skybox/pn-cube/purple-nebula-512-py.jpg
+	endless_flying/textures/skybox/pn-cube/purple-nebula-512-pz.jpg
+	endless_flying/textures/skybox/pn-cube/purple-nebula-512-nx.jpg
+	endless_flying/textures/skybox/pn-cube/purple-nebula-512-ny.jpg
+	endless_flying/textures/skybox/pn-cube/purple-nebula-512-nz.jpg
 
 	(data)
 	endless_flying/obj/CobraBomber/CobraBomber_512.png
@@ -356,51 +403,15 @@ assets
 	endless_flying/obj/Rocks/rock_d_06_tex_AM4_512.jpg
 	endless_flying/obj/Rocks/rock_d_06_tex_AM5_512.jpg
 
+	["ChainReaction"]
+	<include "Default">
 	(data)
-	shaders/other/sVertexLighting.frag
-	shaders/other/sVertexLighting.vert
-
-	(data)
-	shaders/sPlainEasy.frag
-	shaders/sPlainEasy.vert
-	shaders/sPlainEasy.program.ini
-	shaders/sPlainEasy.frag.shader.ini
-	shaders/sPlainEasy.vert.shader.ini
-
-	(data)
-	shaders/sSkyBoxEasy.frag
-	shaders/sSkyBoxEasy.vert
-	shaders/sSkyBoxEasy.program.ini
-	shaders/sSkyBoxEasy.frag.shader.ini
-	shaders/sSkyBoxEasy.vert.shader.ini
-
-	(data)
-	shaders/sOrthoEasy.frag
-	shaders/sOrthoEasy.vert
-	shaders/sOrthoEasy.program.ini
-	shaders/sOrthoEasy.frag.shader.ini
-	shaders/sOrthoEasy.vert.shader.ini
-
-	(data)
-	shaders/other/sSlowBumpMapping.frag
-	shaders/other/sSlowBumpMapping.vert
-	shaders/other/sSlowBumpMapping.program.ini
-	shaders/other/sSlowBumpMapping.frag.shader.ini
-	shaders/other/sSlowBumpMapping.vert.shader.ini
-
-	(data)
-	shaders/other/sEnvironmentMapping.frag
-	shaders/other/sEnvironmentMapping.vert
-	shaders/other/sEnvironmentMapping.program.ini
-	shaders/other/sEnvironmentMapping.frag.shader.ini
-	shaders/other/sEnvironmentMapping.vert.shader.ini
-
-	(data)
-	shaders/other/sFragmentLighting.frag
-	shaders/other/sFragmentLighting.vert
-	shaders/other/sFragmentLighting.program.ini
-	shaders/other/sFragmentLighting.frag.shader.ini
-	shaders/other/sFragmentLighting.vert.shader.ini
+	chain_reaction/main.lua
+	chain_reaction/gui/main.style.ini
+	chain_reaction/gui/menu.gui.xml
+	chain_reaction/gui/frame.style.ini
+	(data/chain_reaction)
+	settings.xml
 
 }
 
@@ -422,6 +433,8 @@ options
 	warn-level=2
 	buildenv=VC11
     cflags="-std=c++11"
+	s3e-data-dir=data
+
 }
 
 packages
@@ -440,6 +453,7 @@ subprojects
 	stbfont
 	ng_luaplus
 	zlib_128
+	simpleopt
 }
 
 includepaths
@@ -456,50 +470,96 @@ librarypaths
 	modules/libjpeg/lib
 }
 
+####
+#### FG: It is preferred not to use the DeployTool - there are special scripts
+####
 #### AUTO GENERATED deployment settings from DeployTool.exe. Do not edit below this line ####
 deployments
 {
 	["Default"]
-	android-extra-manifest='ExtraManifest.xml'
-	android-icon='icons/and_48x48.png'
-	android-icon-gallery='icons/and_170x170.png'
-	android-icon-hdpi='icons/and_72x72.png'
-	android-icon-ldpi='icons/and_36x36.png'
-	android-icon-mdpi='icons/and_48x48.png'
-	android-icon-xhdpi='icons/and_96x96.png'
-	android-icon-xxhdpi='icons/ios_144x144.png'
-	android-icon-xxxhdpi='icons/and_192x192.png'
-	android-manifest='AndroidManifest.xml'
-	android-unsigned=0
 	caption='A Flexi Game'
 	copyright='(C) FlexiGame Software'
 	embed-icf=1
-	icon='icons/MainGenericIcon.jpg'
-	iphone-appid='com.flexigame.Infinium'
-	iphone-enable-4inch-retina='1'
-	iphone-show-status-bar='0'
-	iphone-icon='icons/ios_57x57.png'
-	iphone-icon-dir='icons'
-	iphone-icon-high-res='icons/ios_114x114.png'
-	iphone-icon-ipad='icons/ios_72x72.png'
-	iphone-icon-ipad-high-res='icons/ios_144x144.png'
-	iphone-info-plist='info_second.plist'
-	iphone-launch-dir='icons/launch'
-	iphone-skip-launch-generation=0
-	iphone-nosign=1
-	iphone-sign-for-distribution=0
-	iphone-skip-icon-generation=0
-	#iphone-splash='icons/splash/iPhone_splash.png'
-	#iphone-splashscreen-landscape='icons/splash/iPhone_splash_landscape.png'
-	#iphone-splashscreen-portrait='icons/splash/iPhone_splash_portrait.png'
+	icon='icons/DefaultGenericIcon.jpg'
 	name='Infinium'
 	provider='Radoslaw Gniazdowski'
-	splashscreen='icons/splash'
 	splashscreen-auto-onblack=1
-	splashscreen-use-all=1
+	version=1.0.0
 	version-major=1
 	version-minor=0
 	version-revision=0
-	win32-icon='icons/MainGenericIcon.jpg'
+
+	android-pkgname='com.flexigame.Infinium'
+	android-extra-manifest='ExtraManifest.xml'
+	android-manifest='AndroidManifest.xml'
+	android-unsigned=0
+	android-icon='icons/default/and_48x48.png'
+	android-icon-gallery='icons/default/and_170x170.png'
+	android-icon-hdpi='icons/default/and_72x72.png'
+	android-icon-ldpi='icons/default/and_36x36.png'
+	android-icon-mdpi='icons/default/and_48x48.png'
+	android-icon-xhdpi='icons/default/and_96x96.png'
+	android-icon-xxhdpi='icons/default/ios_144x144.png'
+	android-icon-xxxhdpi='icons/default/and_192x192.png'
+
+	iphone-appid='com.flexigame.Infinium'
+	iphone-enable-4inch-retina='1'
+	iphone-icon-dir='icons/default'
+	iphone-icon='icons/default/ios_57x57.png'
+	iphone-icon-high-res='icons/default/ios_114x114.png'
+	iphone-icon-ipad='icons/default/ios_72x72.png'
+	iphone-icon-ipad-high-res='icons/default/ios_144x144.png'
+	iphone-info-plist='info_second.plist'
+	iphone-launch-dir='icons/launch'
+	iphone-minimum-ios-version='7.0'
+	iphone-nosign=1
+	iphone-provisioning-profile='provisions/iOS_Distribution_FG_Infinium.mobileprovision'
+	iphone-show-status-bar=0
+	iphone-sign-for-distribution=0
+	iphone-skip-icon-generation=0
+	iphone-skip-launch-generation=0
+	iphone-uiviewcontroller-based-status-bar=1
+
+	win32-icon='icons/FlexiGameTextIcon.png'
 	win32-pref-processtitle='FlexiGame Infinium'
+
+	["ChainReaction"]
+	caption='A Chain Reaction'
+	assets='ChainReaction'
+	name='ChainReaction'
+	android-pkgname='com.flexigame.ChainReaction'
+	android-icon='icons/chain_reaction/and_48x48.png'
+	android-icon-gallery='icons/chain_reaction/and_170x170.png'
+	android-icon-hdpi='icons/chain_reaction/and_72x72.png'
+	android-icon-ldpi='icons/chain_reaction/and_36x36.png'
+	android-icon-mdpi='icons/chain_reaction/and_48x48.png'
+	android-icon-xhdpi='icons/chain_reaction/and_96x96.png'
+	android-icon-xxhdpi='icons/chain_reaction/ios_144x144.png'
+	android-icon-xxxhdpi='icons/chain_reaction/and_192x192.png'
+	iphone-appid='com.flexigame.ChainReaction'
+	iphone-icon-dir='icons/chain_reaction'
+	iphone-icon='icons/chain_reaction/ios_57x57.png'
+	iphone-icon-high-res='icons/chain_reaction/ios_114x114.png'
+	iphone-icon-ipad='icons/chain_reaction/ios_72x72.png'
+	iphone-icon-ipad-high-res='icons/chain_reaction/ios_144x144.png'
+
+	["FlexiBench"]
+	caption='A FlexiBench'
+	assets='Default'
+	name='FlexiBench'
+	android-pkgname='com.flexigame.FlexiBench'
+	android-icon='icons/bench/and_48x48.png'
+	android-icon-gallery='icons/bench/and_170x170.png'
+	android-icon-hdpi='icons/bench/and_72x72.png'
+	android-icon-ldpi='icons/bench/and_36x36.png'
+	android-icon-mdpi='icons/bench/and_48x48.png'
+	android-icon-xhdpi='icons/bench/and_96x96.png'
+	android-icon-xxhdpi='icons/bench/ios_144x144.png'
+	android-icon-xxxhdpi='icons/bench/and_192x192.png'
+	iphone-appid='com.flexigame.FlexiBench'
+	iphone-icon-dir='icons/bench'
+	iphone-icon='icons/bench/ios_57x57.png'
+	iphone-icon-high-res='icons/bench/ios_114x114.png'
+	iphone-icon-ipad='icons/bench/ios_72x72.png'
+	iphone-icon-ipad-high-res='icons/bench/ios_144x144.png'
 }

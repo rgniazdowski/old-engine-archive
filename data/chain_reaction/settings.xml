@@ -1,0 +1,14 @@
+<Settings>
+	<defaultDataPath>data</defaultDataPath>
+	<defaultLogPath>log</defaultLogPath>
+	<mainConfigPath>main.config.ini</mainConfigPath>
+	<programTitle>Flexible Game Engine: Infinium</programTitle>
+	<defaultProfileName>default</defaultProfileName>
+	<mainModPath>main</mainModPath>
+	<currentModPath>chain_reaction</currentModPath>
+	<verboseLevel>3</verboseLevel>
+	<useSound>true</useSound>
+	<useConsole>true</useConsole>
+	<useNetwork>true</useNetwork>
+	<debugMode>true</debugMode>
+</Settings>

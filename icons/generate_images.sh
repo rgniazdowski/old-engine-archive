@@ -1,5 +1,25 @@
 #!/bin/bash
 
+echo "Icon generator - Android & iOS standard"
+
+TEMPLATE=missile-swarm.tga
+if test "$#" -lt 1; then
+	echo "Illegal number of parameters"
+	echo "please pass the input icon name"
+	echo "usage: generate_images.sh {icon.generic.file} {optional.destination.dir}"
+	exit
+fi
+
+DESTINATION_DIR=default
+if test "$#" -eq 2; then
+	echo "Passed in additional parameter: destination folder"
+	DESTINATION_DIR=$2
+fi
+
+TEMPLATE=$1
+
+echo "TEMPLATE=$TEMPLATE DESTINATION=$DESTINATION_DIR"
+
 # No alpha for iOS
 OPTS_REMOVE_ALPHA=( -background black -flatten +matte )
 
@@ -18,13 +38,14 @@ DEPTH_IOS=( -depth 8 )
 
 #TEMPLATE=editable/huggable_template.svg
 #TEMPLATE=Fractal-1-Icon.jpg
-TEMPLATE=missile-swarm.tga
+
+#exit
 
 #######################################
 # Android
 for fname in "${FILES_AND[@]}"; do
-		echo $fname...
-		rm -f $fname
+		#echo $fname...
+		rm -f $DESTINATION_DIR/$fname
 
 		# Extract image size
 		size=${fname#and_}
@@ -33,7 +54,8 @@ for fname in "${FILES_AND[@]}"; do
 		width=${size%x*}
 		height=${size#*x}
 
-		convert "$TEMPLATE" "${DEPTH_AND[@]}" -resize $size "$fname"
+		echo convert "$TEMPLATE" "${DEPTH_AND[@]}" -resize $size "$DESTINATION_DIR/$fname"
+		convert "$TEMPLATE" "${DEPTH_AND[@]}" -resize $size "$DESTINATION_DIR/$fname"
 
 		#inkscape -z -e "$fname" -w "$width" -h "$height" -D "$TEMPLATE"
 		#mogrify -background black -flatten +matte "$fname"
@@ -42,8 +64,8 @@ done
 ######################################
 # iOS
 for fname in "${FILES_IOS[@]}"; do
-		echo $fname...
-		rm -f $fname
+		#echo $fname...
+		rm -f $DESTINATION_DIR/$fname
 
 		# Extract image size
 		size=${fname#ios_}
@@ -58,8 +80,8 @@ for fname in "${FILES_IOS[@]}"; do
 		width=${size%x*}
 		height=${size#*x}
 
-		echo convert "$TEMPLATE" "${DEPTH_IOS[@]}" "${OPTS_REMOVE_ALPHA[@]}" -resize $size PNG24:"$fname"
-		convert "$TEMPLATE" "${DEPTH_IOS[@]}" "${OPTS_REMOVE_ALPHA[@]}" -resize $size PNG24:"$fname"
+		echo convert "$TEMPLATE" "${DEPTH_IOS[@]}" "${OPTS_REMOVE_ALPHA[@]}" -resize $size PNG24:"$DESTINATION_DIR/$fname"
+		convert "$TEMPLATE" "${DEPTH_IOS[@]}" "${OPTS_REMOVE_ALPHA[@]}" -resize $size PNG24:"$DESTINATION_DIR/$fname"
 
 		if (( $width == 57 )) ; then
 			# App icon iPhone 2G/3G/3GS (iOS 6.1 and earlier)
@@ -128,7 +150,7 @@ done
 #mogrify -background black -flatten +matte "$fname"
 
 echo
-identify *.png
+identify $DESTINATION_DIR/*.png
 
 
 #

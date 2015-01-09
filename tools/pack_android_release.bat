@@ -8,7 +8,7 @@ echo **************** FLEXI GAME ANDROID ******************
 echo ** %date% %time%
 
 IF "%S3E_DIR%" == "" (
-GOTO sets3edir 
+GOTO sets3edir
 ) ELSE (
 GOTO s3edirpresent
 )
@@ -21,6 +21,29 @@ set S3E_DIR=C:\Marmalade\7.4\s3e
 set FG_BUILDDIR=build_infinium_vc11
 set FG_PROJECTNAME=Infinium
 set PYTHON=C:\Marmalade\7.4\python\Python.exe
+
+rem first argument is the name of the config and the subdir
+IF "%1"=="" (
+	set FG_DEPLOY_CONFIG_NAME=Default
+	set FG_DEPLOY_SUBDIR_NAME=default
+	set FG_DEPLOY_CONFIG_NAME_PARAM=-v
+	echo ** Going to create Default deploy package
+) ELSE (
+    set FG_DEPLOY_CONFIG_NAME=%1
+    set FG_DEPLOY_SUBDIR_NAME=%1
+    set FG_DEPLOY_CONFIG_NAME_PARAM=-v --config=%1
+	echo ** Going to create '%1' deploy package
+)
+
+IF "%1"=="default" (
+	set FG_DEPLOY_CONFIG_NAME=Default
+	set FG_DEPLOY_SUBDIR_NAME=default
+	set FG_DEPLOY_CONFIG_NAME_PARAM=-v
+)
+
+IF "%1"=="Default" (
+	set FG_DEPLOY_SUBDIR_NAME=default
+)
 
 echo ******************************************************
 echo ** S3E_DIR is '%S3E_DIR%'
@@ -51,12 +74,13 @@ IF NOT EXIST "%FG_BUILDDIR%\deploy_config.py" (
 
 rem ===================== create deploy package for IOS Release
 echo ******************************************************
-echo ** Creating deployment for ANDROID - ARM - RELEASE - %FG_PROJECTNAME%
-call %S3E_DIR%\bin\s3e_deploy.bat -n -f --os=android --arch arm --gcc %FG_BUILDDIR%\deploy_config.py
+echo ** Creating deployment for ANDROID - ARM - RELEASE - %FG_PROJECTNAME% - Config %FG_DEPLOY_CONFIG_NAME%
+rem call %S3E_DIR%\bin\s3e_deploy.bat -n -f --config=ChainReaction --os=android --arch arm --gcc %FG_BUILDDIR%\deploy_config.py
+call %S3E_DIR%\bin\s3e_deploy.bat -n -f %FG_DEPLOY_CONFIG_NAME_PARAM% --os=android --arch arm --gcc %FG_BUILDDIR%\deploy_config.py
 if errorlevel 1 goto end
 
 set FG_RELEASE=release
-set FG_RELEASEDIR=deployments\default\android\release\arm
+set FG_RELEASEDIR=deployments\%FG_DEPLOY_SUBDIR_NAME%\android\release\arm
 set FG_RELEASE_CERTS_DIR=%FG_RELEASEDIR%\certificates
 set FG_PKGFILE=%FG_RELEASEDIR%\%FG_PROJECTNAME%.apk
 set FG_PKGFILENAME=%FG_PROJECTNAME%.apk
