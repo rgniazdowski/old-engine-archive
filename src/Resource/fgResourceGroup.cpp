@@ -160,7 +160,7 @@ void fgResourceGroupContentHandler::startElement(const char *localName,
     // Pointer to the first attribute for checking
     fgXMLAttribute *attribute = firstAttribute;
     std::string cfgDirPath = m_resourceGroup->getFilePath();
-    fgPath::dirName(cfgDirPath, cfgDirPath);
+    fg::path::dirName(cfgDirPath, cfgDirPath);
 
     if(m_resType != FG_RESOURCE_GROUP && (m_resType != FG_RESOURCE_INVALID || m_isFileQualityMapTag)) {
         while(attribute) {
@@ -168,7 +168,7 @@ void fgResourceGroupContentHandler::startElement(const char *localName,
             const char *attrvalue = attribute->Value();
             if(strncasecmp(attrname, "config", 6) == 0) {
                 if(attrvalue) {
-                    std::string newPath = fgPath::join(cfgDirPath, std::string(attrvalue));
+                    std::string newPath = fg::path::join(cfgDirPath, std::string(attrvalue));
                     if(!loadResConfig(newPath.c_str())) {
                         attribute = attribute->Next();
                         continue;
@@ -200,7 +200,7 @@ void fgResourceGroupContentHandler::startElement(const char *localName,
     if(m_resType == FG_RESOURCE_INVALID) {
         if(m_resourcePtr && m_isFileQualityMapTag && resPath) {
             //FG_LOG_DEBUG("Setting path: '%s', for resource: '%s', quality='%s'", resPath, m_curResName, resQualityStr);
-            std::string newPath = fgPath::join(cfgDirPath, std::string(resPath));
+            std::string newPath = fg::path::join(cfgDirPath, std::string(resPath));
             m_resourcePtr->setFilePath(newPath, resQuality);
         }
         return;
@@ -213,7 +213,7 @@ void fgResourceGroupContentHandler::startElement(const char *localName,
     } else {
         m_resourcePtr = m_resourceGroup->getResourceFactory()->createResource(m_resType);
         if(resPath) {
-            std::string newPath = fgPath::join(cfgDirPath, std::string(resPath));
+            std::string newPath = fg::path::join(cfgDirPath, std::string(resPath));
             m_resourcePtr->setFilePath(newPath);
         }
         m_resourcePtr->setName(resName);
@@ -430,7 +430,7 @@ fgBool fgResourceGroup::preLoadConfig(void) {
     }
     if(m_filePath.empty())
         return FG_FALSE;
-    const char *ext = fgPath::fileExt(m_filePath.c_str(), FG_TRUE);
+    const char *ext = fg::path::fileExt(m_filePath.c_str(), FG_TRUE);
     if(!ext)
         return FG_FALSE;
     if(strcasecmp(ext, "group.xml") == 0) {

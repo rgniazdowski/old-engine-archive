@@ -8,7 +8,7 @@
  *******************************************************/
 
 #include "fgCommon.h"
-#include "fgPointerInputReceiver.h"
+#include "fgInputHandler.h"
 #include "fgLog.h"
 #include "Util/fgMemory.h"
 #include "Util/fgTime.h"
@@ -28,11 +28,11 @@
 #include <SDL2/SDL_events.h>
 #endif
 
-
-const unsigned int fgPointerInputReceiver::MAX_TOUCH_POINTS = FG_INPUT_MAX_TOUCH_POINTS;
+///
+const unsigned int fg::event::CInputHandler::MAX_TOUCH_POINTS = FG_INPUT_MAX_TOUCH_POINTS;
 
 /**
- * Private constructor
+ * 
  * #low                                        BlockSize    TapSize
  * 240◊320      {[S3E]DispAreaQ==76800}          17.8f
  * 320x480      {[S3E]DispAreaQ==153600} iPod                  5
@@ -54,7 +54,7 @@ const unsigned int fgPointerInputReceiver::MAX_TOUCH_POINTS = FG_INPUT_MAX_TOUCH
  * 1536x2048	{[S3E]DispAreaQ==3145728} iPad3  118.1f        120
  *
  */
-fgPointerInputReceiver::fgPointerInputReceiver(fgEventManager *eventMgr) :
+fg::event::CInputHandler::CInputHandler(CEventManager *eventMgr) :
 m_eventMgr(eventMgr),
 m_init(FG_FALSE),
 m_useMultitouch(FG_FALSE),
@@ -63,10 +63,10 @@ m_pointerAvailable(FG_FALSE) {
     memset((void *)m_rawTouchesProcessed, 0, sizeof (m_rawTouchesProcessed));
 }
 
-/*
+/**
  *
  */
-void fgPointerInputReceiver::initialize(void) {
+void fg::event::CInputHandler::initialize(void) {
     int DispArea = FG_HardwareState->getDisplayArea();
 
     //
@@ -142,20 +142,20 @@ void fgPointerInputReceiver::initialize(void) {
     PIXELS_PER_STEP_Y = y_threshold;
 
     FG_LOG_DEBUG("### pfactor: %f, xpfactor: %f, ypfactor: %f, dpi:%d, xdpi:%d, ydpi:%d",
-                       pfactor, xpfactor, ypfactor, FG_HardwareState->getDPI(), FG_HardwareState->getXDPI(), FG_HardwareState->getYDPI());
+                 pfactor, xpfactor, ypfactor, FG_HardwareState->getDPI(), FG_HardwareState->getXDPI(), FG_HardwareState->getYDPI());
     FG_LOG_DEBUG("MAX_OFFSET_FOR_TAP: [%d], MIN SWIPE_X: [%d], MIN SWIPE_Y: [%d], PIXELS_PER_X: [%d], PIXELS_PER_Y: [%d]",
-                       MAX_OFFSET_FOR_TAP, MIN_OFFSET_FOR_SWIPE_X, MIN_OFFSET_FOR_SWIPE_Y, PIXELS_PER_STEP_X, PIXELS_PER_STEP_Y);
+                 MAX_OFFSET_FOR_TAP, MIN_OFFSET_FOR_SWIPE_X, MIN_OFFSET_FOR_SWIPE_Y, PIXELS_PER_STEP_X, PIXELS_PER_STEP_Y);
 
 #if defined(FG_USING_MARMALADE)
     m_pointerAvailable = s3ePointerGetInt(S3E_POINTER_AVAILABLE) ? FG_TRUE : FG_FALSE;
     // Register for touches
     m_useMultitouch = s3ePointerGetInt(S3E_POINTER_MULTI_TOUCH_AVAILABLE) ? FG_TRUE : FG_FALSE;
     if(m_useMultitouch) {
-        s3ePointerRegister(S3E_POINTER_TOUCH_EVENT, &fgPointerInputReceiver::multiTouchButtonHandler, (void *)this);
-        s3ePointerRegister(S3E_POINTER_TOUCH_MOTION_EVENT, &fgPointerInputReceiver::multiTouchMotionHandler, (void *)this);
+        s3ePointerRegister(S3E_POINTER_TOUCH_EVENT, &fg::event::CInputHandler::multiTouchButtonHandler, (void *)this);
+        s3ePointerRegister(S3E_POINTER_TOUCH_MOTION_EVENT, &fg::event::CInputHandler::multiTouchMotionHandler, (void *)this);
     } else {
-        s3ePointerRegister(S3E_POINTER_BUTTON_EVENT, &fgPointerInputReceiver::singleTouchButtonHandler, (void *)this);
-        s3ePointerRegister(S3E_POINTER_MOTION_EVENT, &fgPointerInputReceiver::singleTouchMotionHandler, (void *)this);
+        s3ePointerRegister(S3E_POINTER_BUTTON_EVENT, &fg::event::CInputHandler::singleTouchButtonHandler, (void *)this);
+        s3ePointerRegister(S3E_POINTER_MOTION_EVENT, &fg::event::CInputHandler::singleTouchMotionHandler, (void *)this);
     }
 #elif defined(FG_USING_SDL2)
     m_pointerAvailable = FG_TRUE;
@@ -164,27 +164,47 @@ void fgPointerInputReceiver::initialize(void) {
 }
 
 /**
- * Private Destructor
+ * Destructor for the InputHandler object
  */
-fgPointerInputReceiver::~fgPointerInputReceiver() {
+fg::event::CInputHandler::~CInputHandler() {
+    for(fgCallbackBindingMap::iterator it = m_keyDownBinds.begin(); it != m_keyDownBinds.end(); it++) {
+        for(int i = 0; i < (int)it->second.size(); i++) {
+            delete it->second[i];
+            it->second[i] = NULL;
+        }
+        it->second.clear();
+    }
+
+    for(fgCallbackBindingMap::iterator it = m_keyUpBinds.begin(); it != m_keyUpBinds.end(); it++) {
+        for(int i = 0; i < (int)it->second.size(); i++) {
+            delete it->second[i];
+            it->second[i] = NULL;
+        }
+        it->second.clear();
+    }
+    
     memset((void *)m_rawTouches, 0, sizeof (m_rawTouches));
     memset((void *)m_rawTouchesProcessed, 0, sizeof (m_rawTouchesProcessed));
 #if defined(FG_USING_MARMALADE)
     if(m_useMultitouch) {
-        s3ePointerUnRegister(S3E_POINTER_TOUCH_EVENT, &fgPointerInputReceiver::multiTouchButtonHandler);
-        s3ePointerUnRegister(S3E_POINTER_TOUCH_MOTION_EVENT, &fgPointerInputReceiver::multiTouchMotionHandler);
+        s3ePointerUnRegister(S3E_POINTER_TOUCH_EVENT, &fg::event::CInputHandler::multiTouchButtonHandler);
+        s3ePointerUnRegister(S3E_POINTER_TOUCH_MOTION_EVENT, &fg::event::CInputHandler::multiTouchMotionHandler);
     } else {
-        s3ePointerUnRegister(S3E_POINTER_BUTTON_EVENT, &fgPointerInputReceiver::singleTouchButtonHandler);
-        s3ePointerUnRegister(S3E_POINTER_MOTION_EVENT, &fgPointerInputReceiver::singleTouchMotionHandler);
+        s3ePointerUnRegister(S3E_POINTER_BUTTON_EVENT, &fg::event::CInputHandler::singleTouchButtonHandler);
+        s3ePointerUnRegister(S3E_POINTER_MOTION_EVENT, &fg::event::CInputHandler::singleTouchMotionHandler);
     }
 #endif
+    m_keyDownBinds.clear();
+    m_keyUpBinds.clear();
+    m_keysUpPool.clear();
+    m_keysDownPool.clear();
 }
 
 /**
  * Screen touch event.
  * @param point Pointer position
  */
-void fgPointerInputReceiver::handlePointerPressed(fgVector2i point, unsigned int touchID) {
+void fg::event::CInputHandler::handlePointerPressed(fgVector2i point, unsigned int touchID) {
     if(touchID >= MAX_TOUCH_POINTS) {
         return;
     } else if(touchID == 0) {
@@ -247,7 +267,7 @@ void fgPointerInputReceiver::handlePointerPressed(fgVector2i point, unsigned int
  * Pointer move event.
  * @param point Pointer position
  */
-void fgPointerInputReceiver::handlePointerMoved(fgVector2i point, unsigned int touchID, fgPointerState state) {
+void fg::event::CInputHandler::handlePointerMoved(fgVector2i point, unsigned int touchID, fgPointerState state) {
     if(touchID >= MAX_TOUCH_POINTS)
         return;
 
@@ -288,7 +308,7 @@ void fgPointerInputReceiver::handlePointerMoved(fgVector2i point, unsigned int t
  * Pointer released.
  * @param point Pointer position
  */
-void fgPointerInputReceiver::handlePointerReleased(fgVector2i point, unsigned int touchID) {
+void fg::event::CInputHandler::handlePointerReleased(fgVector2i point, unsigned int touchID) {
     if(touchID >= MAX_TOUCH_POINTS)
         return;
 
@@ -339,58 +359,151 @@ void fgPointerInputReceiver::handlePointerReleased(fgVector2i point, unsigned in
     }
 }
 
-/*
- *
+/**
+ * 
+ * @param pointerID
+ * @return 
  */
-fgPointerRawData *fgPointerInputReceiver::getPointerRawData(fgPointerID pointerID) {
+fgPointerRawData *fg::event::CInputHandler::getPointerRawData(fgPointerID pointerID) {
     if(pointerID >= MAX_TOUCH_POINTS)
         return NULL;
 
     return &m_rawTouchesProcessed[pointerID];
 }
 
-/*
- *
+/**
+ * 
+ * @param pointerID
+ * @return 
  */
-fgPointerData *fgPointerInputReceiver::getPointerData(fgPointerID pointerID) {
+fgPointerData *fg::event::CInputHandler::getPointerData(fgPointerID pointerID) {
     if(pointerID >= MAX_TOUCH_POINTS)
         return NULL;
 
     return ((fgPointerData *)(&m_rawTouchesProcessed[pointerID]));
 }
 
-/*
- *
+/**
+ * 
+ * @param pointerID
+ * @return 
  */
-fgPointerState fgPointerInputReceiver::getPointerState(fgPointerID pointerID) {
+fgPointerState fg::event::CInputHandler::getPointerState(fgPointerID pointerID) {
     if(pointerID >= MAX_TOUCH_POINTS)
         return FG_FALSE;
 
     return m_rawTouchesProcessed[pointerID].m_state;
 }
 
-/*
- *
+/**
+ * 
+ * @param pointerID
+ * @return 
  */
-int fgPointerInputReceiver::getPointerX(fgPointerID pointerID) {
+int fg::event::CInputHandler::getPointerX(fgPointerID pointerID) {
     if(pointerID >= MAX_TOUCH_POINTS)
         return 0;
     return m_rawTouchesProcessed[pointerID].m_x;
 }
 
-/*
- *
+/**
+ * 
+ * @param pointerID
+ * @return 
  */
-int fgPointerInputReceiver::getPointerY(fgPointerID pointerID) {
+int fg::event::CInputHandler::getPointerY(fgPointerID pointerID) {
     if(pointerID >= MAX_TOUCH_POINTS)
         return 0;
     return m_rawTouchesProcessed[pointerID].m_y;
 }
 
-/*
+/**
+ * 
+ * @param keyCode
+ * @param callback
+ * @return 
+ */
+fgFunctionCallback* fg::event::CInputHandler::addKeyDownCallback(int keyCode,
+                                                       fgFunctionCallback *callback) {
+    if(!callback || keyCode <= 0)
+        return NULL;
+    if(m_keyDownBinds[keyCode].find(callback) >= 0) {
+        return NULL;
+    }
+    m_keyDownBinds[keyCode].push_back(callback);
+    return callback;
+}
+
+/**
+ * 
+ * @param keyCode
+ * @param callback
+ * @return 
+ */
+fgFunctionCallback* fg::event::CInputHandler::addKeyUpCallback(int keyCode,
+                                                     fgFunctionCallback *callback) {
+    if(!callback || keyCode <= 0)
+        return NULL;
+    if(m_keyUpBinds[keyCode].find(callback) >= 0) {
+        return NULL;
+    }
+    m_keyUpBinds[keyCode].push_back(callback);
+    return callback;
+}
+
+/**
+ * This adds key code to the pool of pressed down keys
+ * @param keyCode
+ */
+void fg::event::CInputHandler::addKeyDown(int keyCode) {
+    m_keysDownPool.push_back(keyCode);
+}
+
+/**
+ * This adds key code to the pool of released (up) keys
+ * @param keyCode
+ */
+void fg::event::CInputHandler::addKeyUp(int keyCode) {
+    m_keysUpPool.push_back(keyCode);
+}
+
+/**
  *
  */
-void fgPointerInputReceiver::processData(void) {
+void fg::event::CInputHandler::processData(void) {
+    //
+    // Phase 1: execute keyboard callbacks - from active keys in the pool
+    // Please note that these will come from external event queue (low level)
+    // could be SDL2 event queue, or glu/freeglut/X, Marmalade...
+    //
+    for(int i = 0; i < (int)m_keysDownPool.size(); i++) {
+        int keyCode = m_keysDownPool[i];
+        fgCallbackBindingMap::iterator found = m_keyDownBinds.find(keyCode);
+        if(found == m_keyDownBinds.end())
+            continue;
+        for(int j = 0; j < (int)m_keyDownBinds[keyCode].size(); j++) {
+            // There's no need for argument list
+            m_keyDownBinds[keyCode][j]->Call();
+        }
+    }
+    m_keysDownPool.clear();
+
+    for(int i = 0; i < (int)m_keysUpPool.size(); i++) {
+        int keyCode = m_keysUpPool[i];
+        fgCallbackBindingMap::iterator found = m_keyUpBinds.find(keyCode);
+        if(found == m_keyUpBinds.end())
+            continue;
+        for(int j = 0; j < (int)m_keyUpBinds[keyCode].size(); j++) {
+            // There's no need for argument list
+            m_keyUpBinds[keyCode][j]->Call();
+        }
+    }
+    m_keysUpPool.clear();
+    
+    //
+    // Phase 2: Process pointer/touch data and throw proper events 
+    //
+    
     if(!m_pointerAvailable)
         return;
 #if defined(FG_USING_MARMALADE)
@@ -439,7 +552,7 @@ void fgPointerInputReceiver::processData(void) {
 
                 } else {
                     FG_LOG_DEBUG("TouchRcvr:: Space criterion NOT TRUE: x_delta = %d, y_delta = %d", abs(touchPtr.m_pointerXEnd - touchPtr.m_pointerXInitial),
-                                       abs(touchPtr.m_pointerYEnd - touchPtr.m_pointerYInitial));
+                                 abs(touchPtr.m_pointerYEnd - touchPtr.m_pointerYInitial));
                 }
             } else {
                 FG_LOG_DEBUG("TouchRcvr:: Time criterion NOT TRUE: delta_time = %d", delta_time);
@@ -582,13 +695,26 @@ void fgPointerInputReceiver::processData(void) {
 }
 
 /**
- * Detects if swipe occured and computes its size.
+ * Detects if swipe occurred and computes its size.
  *
- * The initialPointer is used to detect occurence,
+ * The initialPointer is used to detect occurrence,
  * startPointer to compute size.
+ * 
+ * @param min_offset_for_swipe
+ * @param startPointer
+ * @param endPointer
+ * @param initialSwipePointer
+ * @param minusSwipe
+ * @param plusSwipe
+ * @param swipeSize
  */
-void fgPointerInputReceiver::interpretSwipes(int min_offset_for_swipe, int startPointer, int endPointer, int initialSwipePointer, // IN
-                                             fgBool* minusSwipe, fgBool* plusSwipe, int* swipeSize) // OUT
+void fg::event::CInputHandler::interpretSwipes(int min_offset_for_swipe,
+                                     int startPointer,
+                                     int endPointer,
+                                     int initialSwipePointer, // IN
+                                     fgBool* minusSwipe,
+                                     fgBool* plusSwipe,
+                                     int* swipeSize) // OUT
 {
     // This is physical swipe lenght - not necesarily
     // software swipe (it will become software swipe
@@ -620,20 +746,24 @@ void fgPointerInputReceiver::interpretSwipes(int min_offset_for_swipe, int start
 }
 
 /**
- * Touch press/release HANDLER / systemData is event struct / userData - pointer to class
+ * Touch press/release HANDLER
+ * 
+ * @param systemData Pointer to the event structure
+ * @param userData Pointer to the handling class - fgInputHandler
+ * @return 
  */
-int32_t fgPointerInputReceiver::multiTouchButtonHandler(void* systemData, void* userData) {
+int32_t fg::event::CInputHandler::multiTouchButtonHandler(void* systemData, void* userData) {
     if(!systemData || !userData)
         return 0;
-    fgPointerInputReceiver *inputReceiver = (fgPointerInputReceiver *)userData;
+    CInputHandler *inputHandler = (CInputHandler *)userData;
 #if defined(FG_USING_MARMALADE)
     s3ePointerTouchEvent* event = (s3ePointerTouchEvent*)systemData;
-    if(!inputReceiver->m_init)
+    if(!inputHandler->m_init)
         return 0;
     if(event->m_Pressed) {
-        inputReceiver->handlePointerPressed(fgVector2i(event->m_x, event->m_y), event->m_TouchID);
+        inputHandler->handlePointerPressed(fgVector2i(event->m_x, event->m_y), event->m_TouchID);
     } else {
-        inputReceiver->handlePointerReleased(fgVector2i(event->m_x, event->m_y), event->m_TouchID);
+        inputHandler->handlePointerReleased(fgVector2i(event->m_x, event->m_y), event->m_TouchID);
     }
 #elif defined(FG_USING_SDL2)
     SDL_TouchFingerEvent *event = (SDL_TouchFingerEvent *)systemData;
@@ -649,29 +779,36 @@ int32_t fgPointerInputReceiver::multiTouchButtonHandler(void* systemData, void* 
 }
 
 /**
- * Touch motion HANDLER / systemData is event struct / userData - pointer to class
+ * Touch motion HANDLER
+ * 
+ * @param systemData Pointer to the event structure
+ * @param userData Pointer to the handling class - fgInputHandler
+ * @return 
  */
-int32_t fgPointerInputReceiver::multiTouchMotionHandler(void* systemData, void* userData) {
+int32_t fg::event::CInputHandler::multiTouchMotionHandler(void* systemData, void* userData) {
     if(!systemData || !userData)
         return 0;
-    fgPointerInputReceiver *inputReceiver = (fgPointerInputReceiver *)userData;
+    CInputHandler *inputHandler = (CInputHandler *)userData;
 #if defined(FG_USING_MARMALADE)
     s3ePointerTouchMotionEvent* event = (s3ePointerTouchMotionEvent*)systemData;
-    if(!inputReceiver->m_init)
+    if(!inputHandler->m_init)
         return 0;
-    inputReceiver->handlePointerMoved(fgVector2i(event->m_x, event->m_y), event->m_TouchID, FG_POINTER_STATE_PRESSED);
+    inputHandler->handlePointerMoved(fgVector2i(event->m_x, event->m_y), event->m_TouchID, FG_POINTER_STATE_PRESSED);
 #elif defined(FG_USING_SDL2)
 #endif
     return 0;
 }
 
 /**
- * Single press/release HANDLER / systemData is event struct / userData - pointer to class
+ * Single press/release HANDLER
+ * @param systemData Pointer to the event structure
+ * @param userData Pointer to the handling class - fgInputHandler
+ * @return 
  */
-int32_t fgPointerInputReceiver::singleTouchButtonHandler(void* systemData, void* userData) {
+int32_t fg::event::CInputHandler::singleTouchButtonHandler(void* systemData, void* userData) {
     if(!systemData || !userData)
         return 0;
-    fgPointerInputReceiver *inputReceiver = (fgPointerInputReceiver *)userData;
+    CInputHandler *inputReceiver = (CInputHandler *)userData;
     if(!inputReceiver->m_init)
         return 0;
 #if defined(FG_USING_MARMALADE)
@@ -693,12 +830,15 @@ int32_t fgPointerInputReceiver::singleTouchButtonHandler(void* systemData, void*
 }
 
 /**
- * Single motion HANDLER / systemData is event struct / userData - pointer to class
+ * Single motion HANDLER
+ * @param systemData Pointer to the event structure
+ * @param userData Pointer to the handling class - fgInputHandler
+ * @return 
  */
-int32_t fgPointerInputReceiver::singleTouchMotionHandler(void* systemData, void* userData) {
+int32_t fg::event::CInputHandler::singleTouchMotionHandler(void* systemData, void* userData) {
     if(!systemData || !userData)
         return 0;
-    fgPointerInputReceiver *inputReceiver = (fgPointerInputReceiver *)userData;
+    CInputHandler *inputReceiver = (CInputHandler *)userData;
     if(!inputReceiver->m_init)
         return 0;
 #if defined(FG_USING_MARMALADE)

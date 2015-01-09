@@ -259,12 +259,12 @@ fgBool fgHandleManager<DataType, HandleType>::setupName(const std::string& name,
         return FG_FALSE;
     }
     if(m_nameMap.find(name) != m_nameMap.end()) {
-        FG_LOG_ERROR("%s(%d): Such key already exists in name map - name_tag[%s], function[%s]", fgPath::fileName(__FILE__), __LINE__ - 1, name.c_str(), __FUNCTION__);
+        FG_LOG_ERROR("%s(%d): Such key already exists in name map - name_tag[%s], function[%s]", fg::path::fileName(__FILE__), __LINE__ - 1, name.c_str(), __FUNCTION__);
         return FG_FALSE; // Such key already exists
     }
     fgRawIndex index = rHandle.getIndex();
     if(!m_nameVec[index].empty()) {
-        FG_LOG_ERROR("%s(%d): There is name tag already in the vector - index[%s], name_tag[%s], function[%s]", fgPath::fileName(__FILE__), __LINE__ - 1, index, name.c_str(), __FUNCTION__);
+        FG_LOG_ERROR("%s(%d): There is name tag already in the vector - index[%s], name_tag[%s], function[%s]", fg::path::fileName(__FILE__), __LINE__ - 1, index, name.c_str(), __FUNCTION__);
         // There is already some set on the current index
         return FG_FALSE;
     }
@@ -285,12 +285,12 @@ fgBool fgHandleManager<DataType, HandleType>::setupName(const char* name, const 
         return FG_FALSE;
     }
     if(m_nameMap.find(std::string(name)) != m_nameMap.end()) {
-        FG_LOG_ERROR("%s(%d): Such key already exists in name map - name_tag[%s], function[%s]", fgPath::fileName(__FILE__), __LINE__ - 1, name, __FUNCTION__);
+        FG_LOG_ERROR("%s(%d): Such key already exists in name map - name_tag[%s], function[%s]", fg::path::fileName(__FILE__), __LINE__ - 1, name, __FUNCTION__);
         return FG_FALSE; // Such key already exists
     }
     fgRawIndex index = rHandle.getIndex();
     if(m_nameVec[index].size() > 0) {
-        FG_LOG_ERROR("%s(%d): There is name tag already in the vector - index[%s], name_tag[%s], function[%s]", fgPath::fileName(__FILE__), __LINE__ - 1, index, name, __FUNCTION__);
+        FG_LOG_ERROR("%s(%d): There is name tag already in the vector - index[%s], name_tag[%s], function[%s]", fg::path::fileName(__FILE__), __LINE__ - 1, index, name, __FUNCTION__);
         // There is already some set on the current index
         // No reassignment is allowed
         return FG_FALSE;

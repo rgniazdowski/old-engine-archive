@@ -201,7 +201,7 @@ fgBool fg::util::ZipFile::isCurrentFileDir(void) {
     int sn = m_selectedFilePath.size();
     if(sn) {
         std::string dirname;
-        fgPath::dirName(m_selectedFilePath, dirname);
+        fg::path::dirName(m_selectedFilePath, dirname);
         int dn = dirname.size();
         char dc = dirname[dn - 1];
         char sc = m_selectedFilePath[sn - 1];
@@ -281,7 +281,7 @@ fgBool fg::util::ZipFile::private_updateCurrentFileInfo(void) {
     }
     if(status) {
         // Join the path to the file
-        fgPath::join(m_filePath, m_zipPath, m_selectedFilePath);
+        fg::path::join(m_filePath, m_zipPath, m_selectedFilePath);
     }
     return status;
 }

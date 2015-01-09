@@ -47,6 +47,7 @@
             <word>app</word>
             <word>arg</word>
             <word>argc</word>
+            <word>argv</word>
             <word>attrib</word>
             <word>Autodesk</word>
             <word>bbox</word>
@@ -84,6 +85,7 @@
             <word>fmt</word>
             <word>foreach</word>
             <word>framebuffer</word>
+            <word>freeglut</word>
             <word>fubar</word>
             <word>fullscreen</word>
             <word>func</word>
@@ -95,6 +97,7 @@
             <word>gl</word>
             <word>glbinding</word>
             <word>glm</word>
+            <word>glu</word>
             <word>Gniazdowski</word>
             <word>gui</word>
             <word>hacky</word>

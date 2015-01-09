@@ -92,7 +92,7 @@ fgBool fgResourceConfig::parseData(void) {
         return FG_FALSE;
     }
     std::string dirPath;
-    fgPath::dirName(m_configPath, dirPath);
+    fg::path::dirName(m_configPath, dirPath);
     fgCfgTypes::sectionMapItor smit = m_sectionMap.begin(),
             end = m_sectionMap.end();
     for(; smit != end; smit++) {
@@ -124,7 +124,7 @@ fgBool fgResourceConfig::parseData(void) {
                     fgResourceHeader cfgHeader;
                     cfgHeader.isConfig = FG_TRUE;
                     cfgHeader.name = section->name;
-                    fgPath::join(cfgHeader.configPath, dirPath, param->string);
+                    fg::path::join(cfgHeader.configPath, dirPath, param->string);
                     //cfgHeader.configPath = param->string;
                     cfgHeader.paths.push_back(param->string);
                     m_resources[cfgHeader.name] = cfgHeader;
@@ -196,7 +196,7 @@ fgBool fgResourceConfig::parseData(void) {
                     fgStrings::split(param->string, ',', _helperVec);
                     for(int i = 0; i < (int)_helperVec.size(); i++) {
                         std::string _pathH;
-                        fgPath::join(_pathH, dirPath, _helperVec[i]);
+                        fg::path::join(_pathH, dirPath, _helperVec[i]);
                         pathVec.push_back(_pathH);
                     }
                     if(pathVec.empty())
@@ -213,7 +213,7 @@ fgBool fgResourceConfig::parseData(void) {
                     quality = FG_QUALITY_UNIVERSAL;
                 }
                 if((param = section->getParameter("path", FG_CFG_PARAMETER_STRING)) != NULL) {
-                    fgPath::join(path, dirPath, param->string);
+                    fg::path::join(path, dirPath, param->string);
                     pathVec.push_back(path);
                 } else {
                     foundPath = FG_FALSE;

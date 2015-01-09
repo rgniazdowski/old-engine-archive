@@ -33,6 +33,12 @@
           <itemPath>../../../src/Event/fgEventHelper.h</itemPath>
           <itemPath>../../../src/Event/fgEventManager.cpp</itemPath>
           <itemPath>../../../src/Event/fgEventManager.h</itemPath>
+          <itemPath>../../../src/Event/fgInputHandler.cpp</itemPath>
+          <itemPath>../../../src/Event/fgInputHandler.h</itemPath>
+          <itemPath>../../../src/Event/fgJoypadController.cpp</itemPath>
+          <itemPath>../../../src/Event/fgJoypadController.h</itemPath>
+          <itemPath>../../../src/Event/fgPointerData.h</itemPath>
+          <itemPath>../../../src/Event/fgPointerRawData.h</itemPath>
           <itemPath>../../../src/Event/fgThrownEvent.h</itemPath>
           <itemPath>../../../src/Event/fgTimeoutCallback.h</itemPath>
         </logicalFolder>
@@ -250,14 +256,6 @@
           <itemPath>../../../src/Hardware/fgQualityTypes.h</itemPath>
           <itemPath>../../../src/Hardware/fgSensors.cpp</itemPath>
           <itemPath>../../../src/Hardware/fgSensors.h</itemPath>
-        </logicalFolder>
-        <logicalFolder name="Input" displayName="Input" projectFiles="true">
-          <itemPath>../../../src/Input/fgJoypadController.cpp</itemPath>
-          <itemPath>../../../src/Input/fgJoypadController.h</itemPath>
-          <itemPath>../../../src/Input/fgPointerData.h</itemPath>
-          <itemPath>../../../src/Input/fgPointerInputReceiver.cpp</itemPath>
-          <itemPath>../../../src/Input/fgPointerInputReceiver.h</itemPath>
-          <itemPath>../../../src/Input/fgPointerRawData.h</itemPath>
         </logicalFolder>
         <logicalFolder name="Math" displayName="Math" projectFiles="true">
           <itemPath>../../../src/Math/fgKalmanFilter.cpp</itemPath>
@@ -649,6 +647,33 @@
             flavor2="8">
       </item>
       <item path="../../../src/Event/fgEventManager.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Event/fgInputHandler.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Event/fgInputHandler.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Event/fgJoypadController.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Event/fgJoypadController.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Event/fgPointerData.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Event/fgPointerRawData.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -1400,33 +1425,6 @@
       </item>
       <item path="../../../src/Hardware/fgSensors.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/Input/fgJoypadController.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="../../../src/Input/fgJoypadController.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../../../src/Input/fgPointerData.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../../../src/Input/fgPointerInputReceiver.cpp"
-            ex="false"
-            tool="1"
-            flavor2="8">
-      </item>
-      <item path="../../../src/Input/fgPointerInputReceiver.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../../../src/Input/fgPointerRawData.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
       <item path="../../../src/Math/fgKalmanFilter.cpp"
             ex="false"
             tool="1"
@@ -1972,6 +1970,33 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/Event/fgInputHandler.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Event/fgInputHandler.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Event/fgJoypadController.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Event/fgJoypadController.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Event/fgPointerData.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Event/fgPointerRawData.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../src/Event/fgThrownEvent.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/Event/fgTimeoutCallback.h"
@@ -2718,33 +2743,6 @@
             flavor2="0">
       </item>
       <item path="../../../src/Hardware/fgSensors.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../../../src/Input/fgJoypadController.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="../../../src/Input/fgJoypadController.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../../../src/Input/fgPointerData.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../../../src/Input/fgPointerInputReceiver.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="../../../src/Input/fgPointerInputReceiver.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../../../src/Input/fgPointerRawData.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
       </item>
       <item path="../../../src/Math/fgKalmanFilter.cpp"
             ex="false"
@@ -3257,6 +3255,33 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/Event/fgInputHandler.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Event/fgInputHandler.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Event/fgJoypadController.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Event/fgJoypadController.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Event/fgPointerData.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Event/fgPointerRawData.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../src/Event/fgThrownEvent.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/Event/fgTimeoutCallback.h"
@@ -4003,33 +4028,6 @@
             flavor2="0">
       </item>
       <item path="../../../src/Hardware/fgSensors.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../../../src/Input/fgJoypadController.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="../../../src/Input/fgJoypadController.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../../../src/Input/fgPointerData.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../../../src/Input/fgPointerInputReceiver.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="../../../src/Input/fgPointerInputReceiver.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../../../src/Input/fgPointerRawData.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
       </item>
       <item path="../../../src/Math/fgKalmanFilter.cpp"
             ex="false"
@@ -4520,6 +4518,33 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/Event/fgInputHandler.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Event/fgInputHandler.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Event/fgJoypadController.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Event/fgJoypadController.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Event/fgPointerData.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Event/fgPointerRawData.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../src/Event/fgThrownEvent.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/Event/fgTimeoutCallback.h"
@@ -5266,33 +5291,6 @@
             flavor2="0">
       </item>
       <item path="../../../src/Hardware/fgSensors.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../../../src/Input/fgJoypadController.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="../../../src/Input/fgJoypadController.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../../../src/Input/fgPointerData.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../../../src/Input/fgPointerInputReceiver.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="../../../src/Input/fgPointerInputReceiver.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../../../src/Input/fgPointerRawData.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
       </item>
       <item path="../../../src/Math/fgKalmanFilter.cpp"
             ex="false"

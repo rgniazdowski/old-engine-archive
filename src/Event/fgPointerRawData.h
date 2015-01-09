@@ -102,6 +102,39 @@ struct fgPointerRawData : fgPointerData {
     m_swipeLeft(FG_FALSE), m_swipeRight(FG_FALSE),
     m_swipeDown(FG_FALSE), m_swipeUp(FG_FALSE),
     m_xSwipeSteps(0), m_ySwipeSteps(0) { }
+    
+    /**
+     * 
+     */
+    void dump(void) {
+    #if defined(FG_DEBUG)
+        printf("fg::PointerRawData: touchID[%3d] x[%3d] y[%3d] pressed[%3d] tap[%d]\n"
+               "fg::PointerRawData: pressO[%3d] pressedML[%ld] releasedML[%ld]\n"
+               "fg::PointerRawData: SwipeInitial:XxY[%dx%d]\n"
+               "fg::PointerRawData: Initial:XxY[%dx%d]\n"
+               "fg::PointerRawData: Start:XxY[%dx%d]\n"
+               "fg::PointerRawData: End:XxY[%dx%d]\n"
+               "fg::PointerRawData: TAP:XxY[%dx%d]\n"
+               "fg::PointerRawData: SWIPE:BASIC:SIZE:XxY[%dx%d]\n"
+               "fg::PointerRawData: SWIPE:SIZE:XxY[%dx%d]\n"
+               "fg::PointerRawData: SWIPE: left[%d] right[%d] down[%d] up[%d]\n"
+               "fg::PointerRawData: SWIPE:STEPS:XxY[%dx%d]\n"
+               "--------------------------------------------------------------\n\n",
+               (int)m_touchID, (int)m_x, (int)m_y, (int)m_pressed, (int)m_pointerTap,
+               (int)m_pressOccured, m_pressedMilliseconds, m_releasedMilliseconds,
+               (int)m_pointerXSwipeInitial, (int)m_pointerYSwipeInitial,
+               (int)m_pointerXInitial, (int)m_pointerYInitial,
+               (int)m_pointerXStart, (int)m_pointerYStart,
+               (int)m_pointerXEnd, (int)m_pointerYEnd,
+               (int)m_tapX, (int)m_tapY,
+               (int)m_basicSwipeXSize, (int)m_basicSwipeYSize,
+               (int)m_swipeXSize, (int)m_swipeYSize,
+               (int)m_swipeLeft, (int)m_swipeRight, (int)m_swipeDown, (int)m_swipeUp,
+               (int)m_xSwipeSteps, (int)m_ySwipeSteps
+               );
+    #else
+    #endif
+    }
 
 };
 

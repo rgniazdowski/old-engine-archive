@@ -31,7 +31,7 @@
     #include "fgGuiWidgetFactory.h"
 
     #include "Event/fgEventManager.h"
-    #include "Input/fgPointerInputReceiver.h"
+    #include "Event/fgInputHandler.h"
     #ifndef FG_INC_RESOURCE_MANAGER
         #include "Resource/fgResourceManager.h"
     #endif
@@ -57,7 +57,9 @@ class fgGuiMain;
  */
 class fgGuiMain : public fg::base::CManager, public fgGuiBase {
 private:
+    ///
     typedef fgVector<fgGuiCallback *> guiCallbackVec;
+    ///
     typedef guiCallbackVec::iterator guiCallbackVecItor;
 
 private:
@@ -70,7 +72,7 @@ private:
     /// Widget factory 
     fgGuiWidgetFactory *m_widgetFactory;
     /// Pointer to external event manager class
-    fgEventManager *m_pEventMgr;
+    fg::event::CEventManager *m_pEventMgr;
     /// Pointer to external resource manager
     fgResourceManager *m_pResourceMgr;
     /// GUI drawer special drawing batch
@@ -78,7 +80,7 @@ private:
     /// Pointer to external shader manager class
     fg::base::CManager *m_pShaderMgr;
     /// Pointer to external input receiver - touch/mouse/keyboard
-    fgPointerInputReceiver *m_pPointerInputReceiver;
+    fg::event::CInputHandler *m_pPointerInputReceiver;
 
     /// Special callback for receiving touch events
     fgFunctionCallback *m_guiTouchCallback;
@@ -130,7 +132,7 @@ public:
      */
     fgGuiMain(const std::string& stylesPath,
               const std::string& widgetsPath,
-              fgEventManager *pEventMgr = NULL,
+              fg::event::CEventManager *pEventMgr = NULL,
               fgResourceManager *pResourceMgr = NULL);
     /**
      * 
@@ -211,7 +213,7 @@ public:
      * 
      * @return 
      */
-    fgEventManager *getEventManager(void) const;
+    fg::event::CEventManager *getEventManager(void) const;
     /**
      * 
      * @return 
@@ -226,13 +228,13 @@ public:
      * 
      * @return 
      */
-    fgPointerInputReceiver *getPointerInputReceiver(void) const;
+    fg::event::CInputHandler *getPointerInputReceiver(void) const;
 
     /**
      * 
      * @param pEventMgr
      */
-    void setEventManager(fgEventManager *pEventMgr);
+    void setEventManager(fg::event::CEventManager *pEventMgr);
     /**
      * 
      * @param pResourceMgr
@@ -247,7 +249,7 @@ public:
      * 
      * @param pointerInputReceiver
      */
-    void setPointerInputReceiver(fgPointerInputReceiver *pointerInputReceiver);
+    void setPointerInputReceiver(fg::event::CInputHandler *pointerInputReceiver);
 
     /**
      * Update state of all widgets (called only when needed)
@@ -286,5 +288,4 @@ public:
 };
 
     #undef FG_INC_GUI_MAIN_BLOCK
-
 #endif /* FG_INC_GUI_MAIN */

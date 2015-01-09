@@ -43,6 +43,8 @@
 
 #include "fgDebugConfig.h"
 
+using namespace fg;
+
 /**
  * 
  * @param eventMgr
@@ -50,7 +52,7 @@
  */
 fgGuiMain::fgGuiMain(const std::string& stylesPath,
                      const std::string& widgetsPath,
-                     fgEventManager *eventMgr,
+                     event::CEventManager *eventMgr,
                      fgResourceManager *resourceMgr) :
 m_styleMgr(NULL),
 m_widgetMgr(NULL),
@@ -215,13 +217,13 @@ fgBool fgGuiMain::initialize(void) {
 
     // Initializing style manager
     if(!m_styleMgr->initialize()) {
-        FG_LOG::PrintError("GUI: Style manager not initialized");
+        FG_LOG_ERROR("GUI: Style manager not initialized");
     }
     // Setup link handler used in managed widgets - it's for menu navigation mostly
     m_widgetMgr->setLinkHandler(m_guiLinkCallback);
     // Initialize the widget manager - preload data
     if(!m_widgetMgr->initialize()) {
-        FG_LOG::PrintError("GUI: Widget manager not initialized");
+        FG_LOG_ERROR("GUI: Widget manager not initialized");
     }
     // Initializing console style #FIXME, this could use some optimizing
     if(m_styleMgr && m_console) {
@@ -510,7 +512,7 @@ fgGuiStyleManager *fgGuiMain::getStyleManager(void) const {
  * 
  * @return 
  */
-fgEventManager *fgGuiMain::getEventManager(void) const {
+event::CEventManager *fgGuiMain::getEventManager(void) const {
     return m_pEventMgr;
 }
 
@@ -534,7 +536,7 @@ fg::base::CManager *fgGuiMain::getShaderManager(void) const {
  * 
  * @return 
  */
-fgPointerInputReceiver *fgGuiMain::getPointerInputReceiver(void) const {
+event::CInputHandler *fgGuiMain::getPointerInputReceiver(void) const {
     return m_pPointerInputReceiver;
 }
 
@@ -542,7 +544,7 @@ fgPointerInputReceiver *fgGuiMain::getPointerInputReceiver(void) const {
  * 
  * @param pEventMgr
  */
-void fgGuiMain::setEventManager(fgEventManager * pEventMgr) {
+void fgGuiMain::setEventManager(event::CEventManager * pEventMgr) {
     if(!pEventMgr) {
         unregisterGuiCallbacks();
     } else if(m_pEventMgr && m_pEventMgr != pEventMgr) {
@@ -581,7 +583,7 @@ void fgGuiMain::setShaderManager(fg::base::CManager * pShaderMgr) {
  * 
  * @param pointerInputReceiver
  */
-void fgGuiMain::setPointerInputReceiver(fgPointerInputReceiver * pointerInputReceiver) {
+void fgGuiMain::setPointerInputReceiver(event::CInputHandler * pointerInputReceiver) {
     m_pPointerInputReceiver = pointerInputReceiver;
 }
 
@@ -593,10 +595,10 @@ void fgGuiMain::setPointerInputReceiver(fgPointerInputReceiver * pointerInputRec
 fgBool fgGuiMain::guiTouchHandler(fgArgumentList * argv) {
     if(!argv)
         return FG_FALSE;
-    fgEventBase *event = (fgEventBase *)argv->getArgumentValueByID(0);
-    if(!event)
+    fgEventBase *pEvent = (fgEventBase *)argv->getArgumentValueByID(0);
+    if(!pEvent)
         return FG_FALSE;
-    //fgEventType type = event->eventType;
+    //fgEventType type = pEvent->eventType;
     this->updateState();
     return FG_TRUE;
 }
@@ -609,10 +611,10 @@ fgBool fgGuiMain::guiTouchHandler(fgArgumentList * argv) {
 fgBool fgGuiMain::guiMouseHandler(fgArgumentList * argv) {
     if(!argv)
         return FG_FALSE;
-    fgEventBase *event = (fgEventBase *)argv->getArgumentValueByID(0);
-    if(!event)
+    fgEventBase *pEvent = (fgEventBase *)argv->getArgumentValueByID(0);
+    if(!pEvent)
         return FG_FALSE;
-    //fgEventType type = event->eventType;
+    //fgEventType type = pEvent->eventType;
     this->updateState();
     return FG_TRUE;
 }

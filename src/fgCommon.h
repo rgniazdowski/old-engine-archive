@@ -150,7 +150,7 @@ inline int FG_Rand(int a, int b) {
         #define FG_RAND(_A, _B) (_A + (int)(((float)(_B - _A + 1)) * rand() / (((float)RAND_MAX) + 1.0f)))
     #endif
 
-    #define FG_MSG_IN_FUNCTION_FULL "in function: %s - %s(%d)", __FUNCTION__, fgPath::fileName(__FILE__), __LINE__-1
+    #define FG_MSG_IN_FUNCTION_FULL "in function: %s - %s(%d)", __FUNCTION__, fg::path::fileName(__FILE__), __LINE__-1
     #define FG_MSG_IN_FUNCTION "in function: %s", __FUNCTION__
 
 #endif /* FG_INC_COMMON */

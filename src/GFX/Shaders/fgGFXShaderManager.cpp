@@ -76,12 +76,7 @@ fgBool fgGfxShaderManager::initialize(void) {
         return FG_TRUE;
     }
     FG_LOG_DEBUG("GFX: Initializing Shader Manager...");
-    if(!m_shadersDir)
-        m_shadersDir = new fgDirent();
-    m_shadersDir->clearList();
-    m_shadersDir->readDirectory(m_shadersPath, FG_TRUE);
-    m_shadersDir->rewind();
-
+    
     // Will now initialize the builtin default shader program - it is not loaded
     // from configs or source file on disk/ROM
     fgGfxSLVersion slVersion = fgGfxPlatform::context()->getSLVersion();
@@ -212,10 +207,13 @@ fgBool fgGfxShaderManager::preLoadShaders(void) {
         return FG_FALSE;
     }
     if(!m_shadersDir) {
-        FG_LOG_ERROR("GFX: Shaders directory reader is not ready");
-        return FG_FALSE;
+        m_shadersDir = new fgDirent();
     }
     FG_LOG_DEBUG("GFX: Pre-loading any required/available shader programs");
+    m_shadersDir->clearList();
+    m_shadersDir->readDirectory(m_shadersPath, FG_TRUE);
+    m_shadersDir->rewind();
+    
     std::string filePath;
     std::string pattern;
     pattern = "*";
@@ -316,7 +314,7 @@ fgGfxShaderProgram *fgGfxShaderManager::request(const std::string& info) {
     fgBool isFound = FG_FALSE;
     fgBool isConfig = FG_FALSE;
 
-    const char *iext = fgPath::fileExt(info.c_str(), FG_TRUE);
+    const char *iext = fg::path::fileExt(info.c_str(), FG_TRUE);
     if(!iext) { // no extension given so... search all
         infoAsName = FG_TRUE;
         pattern.append(info).append(".*;");
@@ -339,7 +337,7 @@ fgGfxShaderProgram *fgGfxShaderManager::request(const std::string& info) {
                 // not just file name - this request function takes in just file names
                 // resource names or patterns (wildcards for extensions)
                 if(fgStrings::stristr(fit->second, pattern)) {
-                    const char *shext = fgPath::fileExt(fit->second.c_str(), FG_TRUE);
+                    const char *shext = fg::path::fileExt(fit->second.c_str(), FG_TRUE);
                     if(fgStrings::isEqual(shext, iext, FG_FALSE)) {
                         //if(fit->second.compare(pattern) == 0) {
                         // Found shader prox containing specified file
@@ -356,7 +354,7 @@ fgGfxShaderProgram *fgGfxShaderManager::request(const std::string& info) {
         if(iext) {
             fext = iext;
         } else {
-            fext = fgPath::fileExt(filePath.c_str(), FG_TRUE);
+            fext = fg::path::fileExt(filePath.c_str(), FG_TRUE);
         }
 
         if(fgStrings::endsWith(fext, FG_GFX_SHADER_CONFIG_PROGRAM_STD_SUFFIX, FG_TRUE)) {
@@ -442,6 +440,7 @@ void fgGfxShaderManager::setShadersPath(const char *path) {
         else
             m_shadersPath.insert(0, "./");
     }
+    FG_LOG_DEBUG("GFX:%s: Set shaders path to: '%s'", tag_type::name(), m_shadersPath.c_str());
 }
 
 /**

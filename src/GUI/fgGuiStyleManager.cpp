@@ -66,7 +66,7 @@ fgBool fgGuiStyleManager::initialize(void) {
         FG_LOG_ERROR("GUI: Unable to read directory (styles): '%s'", m_stylesPath.c_str());
     }
     while((filename = stylesDir.getNextFile()) != NULL) {
-        const char *ext = fgPath::fileExt(filename, FG_TRUE);
+        const char *ext = fg::path::fileExt(filename, FG_TRUE);
         if(!ext)
             continue;
         if(strcasecmp(ext, "style.ini") == 0) {

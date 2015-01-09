@@ -11,29 +11,33 @@
 #include "Util/fgMemory.h"
 #include "fgLog.h"
 
-fgJoypadController *fgJoypadController::m_controllers = NULL;
-fgBool fgJoypadController::m_init = FG_FALSE;
+///
+fg::event::CJoypadController *fg::event::CJoypadController::m_controllers = NULL;
+///
+fgBool fg::event::CJoypadController::m_init = FG_FALSE;
 
-/*
- *
+/**
+ * 
+ * @param eventMgr
  */
-fgJoypadController::fgJoypadController(fgEventManager *eventMgr) :
+fg::event::CJoypadController::CJoypadController(CEventManager *eventMgr) :
 m_gamepad(NULL),
 m_haptic(NULL),
 m_instanceID(-1),
-m_eventMgr(eventMgr),
+m_pEventMgr(eventMgr),
 m_isConnected(FG_FALSE) {
  }
 
-/*
- *
+/**
+ * 
  */
-fgJoypadController::~fgJoypadController() { }
+fg::event::CJoypadController::~CJoypadController() { }
 
-/*
- *  Opens the joystick controller
+/**
+ * Opens the joystick controller
+ * @param device
  */
-void fgJoypadController::open(const int device) {
+void fg::event::CJoypadController::open(const int device) {
 #if defined(FG_USING_SDL2)
     fgBool isGameController = FG_FALSE;
     if(SDL_IsGameController(device)) {
@@ -83,10 +87,10 @@ void fgJoypadController::open(const int device) {
 #endif
 }
 
-/*
+/**
  *
  */
-void fgJoypadController::close(void) {
+void fg::event::CJoypadController::close(void) {
 #if defined(FG_USING_SDL2)
     if(m_isConnected) {
         m_isConnected = FG_FALSE;
@@ -101,14 +105,14 @@ void fgJoypadController::close(void) {
 #endif
 }
 
-/*
+/**
  *
  */
-void fgJoypadController::quit(void) {
+void fg::event::CJoypadController::quit(void) {
     if(m_controllers) {
         for(int i = 0; i < FG_MAX_GAME_CONTROLLERS; i++)
             m_controllers[i].close();
-        fgFree(m_controllers, sizeof (fgJoypadController) * FG_MAX_GAME_CONTROLLERS);
+        fgFree(m_controllers, sizeof (CJoypadController) * FG_MAX_GAME_CONTROLLERS);
     }
     m_controllers = NULL;
 #if defined(FG_USING_SDL2)
@@ -123,12 +127,13 @@ void fgJoypadController::quit(void) {
 #endif
 }
 
-/*
+/**
  *
+ * @return
  */
-fgBool fgJoypadController::initialize(void) {
+fgBool fg::event::CJoypadController::initialize(void) {
     if(!m_controllers) {
-        m_controllers = fgMalloc<fgJoypadController>(FG_MAX_GAME_CONTROLLERS);
+        m_controllers = fgMalloc<CJoypadController>(FG_MAX_GAME_CONTROLLERS);
     }
 #if defined(FG_USING_SDL2)
     if(SDL_WasInit(SDL_INIT_GAMECONTROLLER) == 0) {
@@ -144,16 +149,16 @@ fgBool fgJoypadController::initialize(void) {
         SDL_JoystickEventState(SDL_ENABLE);
 
         for(int i = 0; i < joys; i++) {
-            fgJoypadController& jc = m_controllers[i];
+            CJoypadController& jc = m_controllers[i];
             jc.open(i);
-            if(m_eventMgr) {
+            if(m_pEventMgr) {
                 fgControllerDeviceEvent *fgevent = fgMalloc<fgControllerDeviceEvent>();
                 fgArgumentList *list = new fgArgumentList(1);
                 fgevent->which = i;
                 fgevent->timeStamp = 0; // #FIXME
                 fgevent->eventType = FG_EVENT_GAME_CONTROLLER_ADDED;
                 list->pushArgument(FG_ARGUMENT_TEMP_POINTER, (void*)fgevent);
-                m_eventMgr->throwEvent(fgevent->eventType, list);
+                m_pEventMgr->throwEvent(fgevent->eventType, list);
             }
         }
 
@@ -165,15 +170,15 @@ fgBool fgJoypadController::initialize(void) {
     return m_init;
 }
 
-#if defined(FG_USING_SDL2)
-
-/*
- *
+/**
+ * 
+ * @param instance
+ * @return 
  */
-int fgJoypadController::getControllerIdx(const SDL_JoystickID instance) {
+#if defined(FG_USING_SDL2)
+int fg::event::CJoypadController::getControllerIdx(const SDL_JoystickID instance) {
 #else
-
-int fgJoypadController::getControllerIdx(const int instance) {
+int fg::event::CJoypadController::getControllerIdx(const int instance) {
 #endif
 
     for(int i = 0; i < FG_MAX_GAME_CONTROLLERS; ++i) {
@@ -184,12 +189,13 @@ int fgJoypadController::getControllerIdx(const int instance) {
     return -1;
 }
 
-#if defined(FG_USING_SDL2)
-
-/*
- *
+/**
+ * 
+ * @param event
+ * @return 
  */
-int fgJoypadController::processEvent(const SDL_Event& event) {
+#if defined(FG_USING_SDL2)
+int fg::event::CJoypadController::processEvent(const SDL_Event& event) {
     //if(!m_eventMgr)
     //return;
     switch(event.type) {
@@ -202,7 +208,7 @@ int fgJoypadController::processEvent(const SDL_Event& event) {
             if(cIndex < 0) return 0; // unknown controller?
             //fgJoypadController& jc = m_controllers[cIndex];
             // Throw proper fgEventManager event + info
-            if(m_eventMgr) {
+            if(m_pEventMgr) {
                 fgControllerAxisEvent *fgevent = fgMalloc<fgControllerAxisEvent>();
                 fgArgumentList *list = new fgArgumentList(1);
                 fgevent->axis = caxis.axis;
@@ -211,7 +217,7 @@ int fgJoypadController::processEvent(const SDL_Event& event) {
                 fgevent->timeStamp = caxis.timestamp;
                 fgevent->eventType = FG_EVENT_GAME_CONTROLLER_AXIS;
                 list->pushArgument(FG_ARGUMENT_TEMP_POINTER, (void*)fgevent);
-                m_eventMgr->throwEvent(fgevent->eventType, list);
+                m_pEventMgr->throwEvent(fgevent->eventType, list);
             }
             break;
         }
@@ -225,7 +231,7 @@ int fgJoypadController::processEvent(const SDL_Event& event) {
             if(cIndex < 0) return 0; // unknown controller?
             //fgJoypadController& jc = m_controllers[cIndex];
             // Throw proper fgEventManager event + info
-            if(m_eventMgr) {
+            if(m_pEventMgr) {
                 fgControllerButtonEvent *fgevent = fgMalloc<fgControllerButtonEvent>();
                 fgArgumentList *list = new fgArgumentList(1);
                 fgevent->state = cbutton.state;
@@ -234,7 +240,7 @@ int fgJoypadController::processEvent(const SDL_Event& event) {
                 fgevent->timeStamp = cbutton.timestamp;
                 fgevent->eventType = FG_EVENT_GAME_CONTROLLER_BUTTON;
                 list->pushArgument(FG_ARGUMENT_TEMP_POINTER, (void*)fgevent);
-                m_eventMgr->throwEvent(fgevent->eventType, list);
+                m_pEventMgr->throwEvent(fgevent->eventType, list);
             }
             break;
         }
@@ -242,16 +248,16 @@ int fgJoypadController::processEvent(const SDL_Event& event) {
         case SDL_CONTROLLERDEVICEADDED:
         {
             if(event.cdevice.which < FG_MAX_GAME_CONTROLLERS) {
-                fgJoypadController& jc = m_controllers[event.cdevice.which];
+                CJoypadController& jc = m_controllers[event.cdevice.which];
                 jc.open(event.cdevice.which);
-                if(m_eventMgr) {
+                if(m_pEventMgr) {
                     fgControllerDeviceEvent *fgevent = fgMalloc<fgControllerDeviceEvent>();
                     fgArgumentList *list = new fgArgumentList(1);
                     fgevent->which = event.cdevice.which;
                     fgevent->timeStamp = event.cdevice.timestamp;
                     fgevent->eventType = FG_EVENT_GAME_CONTROLLER_ADDED;
                     list->pushArgument(FG_ARGUMENT_TEMP_POINTER, (void*)fgevent);
-                    m_eventMgr->throwEvent(fgevent->eventType, list);
+                    m_pEventMgr->throwEvent(fgevent->eventType, list);
                 }
             }
             break;
@@ -261,16 +267,16 @@ int fgJoypadController::processEvent(const SDL_Event& event) {
         {
             int cIndex = getControllerIdx(event.cdevice.which);
             if(cIndex < 0) return 0; // unknown controller?
-            fgJoypadController& jc = m_controllers[cIndex];
+            CJoypadController& jc = m_controllers[cIndex];
             jc.close();
-            if(m_eventMgr) {
+            if(m_pEventMgr) {
                 fgControllerDeviceEvent *fgevent = fgMalloc<fgControllerDeviceEvent>();
                 fgArgumentList *list = new fgArgumentList(1);
                 fgevent->which = event.cdevice.which;
                 fgevent->timeStamp = event.cdevice.timestamp;
                 fgevent->eventType = FG_EVENT_GAME_CONTROLLER_REMOVED;
                 list->pushArgument(FG_ARGUMENT_TEMP_POINTER, (void*)fgevent);
-                m_eventMgr->throwEvent(fgevent->eventType, list);
+                m_pEventMgr->throwEvent(fgevent->eventType, list);
             }
             break;
         }
@@ -278,11 +284,10 @@ int fgJoypadController::processEvent(const SDL_Event& event) {
     return 0;
 }
 #else
-
 /*
  *
  */
-int fgJoypadController::processEvent(void) {
+int fg::event::CJoypadController::processEvent(void) {
     return 0;
 }
 #endif /* defined(FG_USING_SDL2) */

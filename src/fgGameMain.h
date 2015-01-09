@@ -18,8 +18,8 @@
     #include "Util/fgTag.h"
     #include "Resource/fgResourceManager.h"
     #include "Resource/fgResourceFactory.h"
-    #include "Input/fgPointerInputReceiver.h"
-    #include "Input/fgJoypadController.h"
+    #include "Event/fgInputHandler.h"
+    #include "Event/fgJoypadController.h"
     #include "Audio/fgSFXManager.h"
 
     #include "GFX/fgGFXMain.h"
@@ -38,7 +38,7 @@ typedef FG_TAG_GAME_MAIN fgGameMainTag;
 /**
  *
  */
-class fgGameMain : public fgEventManager {
+class fgGameMain : public fg::event::CEventManager {
 public:
     ///
     typedef fgGameMainTag tag_type;
@@ -108,6 +108,8 @@ public:
 
     // Update - all event handling, calling scripts, AI, game logic and others
     void update(void);
+    
+public:
     /**
      * 
      * @return 
@@ -147,21 +149,21 @@ public:
      * 
      * @return 
      */
-    inline fgEventManager *getEventManager(void) {
-        return static_cast<fgEventManager *>(this);
+    inline CEventManager *getEventManager(void) {
+        return static_cast<CEventManager *>(this);
     }
     /**
      * 
      * @return 
      */
-    inline fgPointerInputReceiver *getPointerInputReceiver(void) const {
-        return m_pointerInputReceiver;
+    inline fg::event::CInputHandler *getInputHandler(void) const {
+        return m_inputHandler;
     }
     /**
      * 
      * @return 
      */
-    inline fgJoypadController *getJoypadController(void) const {
+    inline fg::event::CJoypadController *getJoypadController(void) const {
         return m_joypadController;
     }
     /**
@@ -233,9 +235,9 @@ private:
     /// Resource factory object - registers create() methods for Resource Objects
     fgResourceFactory *m_resourceFactory;
     /// 
-    fgPointerInputReceiver *m_pointerInputReceiver;
+    fg::event::CInputHandler *m_inputHandler;
     /// Joypad/Joystick controller object
-    fgJoypadController *m_joypadController;
+    fg::event::CJoypadController *m_joypadController;
     /// Builtin script subsystem - it needs access to all main managers
     fgScriptSubsystem *m_scriptSubsystem;
     /// Sound manager - loading, playing sounds

@@ -9,6 +9,7 @@
 
 #ifndef FG_INC_EVENT_HELPER
     #define FG_INC_EVENT_HELPER
+    #define FG_INC_EVENT_HELPER_BLOCK
 
     #include "fgVector.h"
     #include "fgCallback.h"
@@ -46,4 +47,5 @@ typedef fgVector<fgCyclicCallback> fgCyclicCallbacksVec;
 ///
 typedef fgCyclicCallbacksVec::iterator fgCyclicCallbacksVecItor;
 
+    #undef FG_INC_EVENT_HELPER_BLOCK
 #endif /* FG_INC_EVENT_HELPER */

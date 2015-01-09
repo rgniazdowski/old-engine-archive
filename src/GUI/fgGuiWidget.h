@@ -41,7 +41,7 @@
     #include "GFX/fgGFXBoundingBox.h"
 
     #ifndef FG_INC_POINTER_DATA
-        #include "Input/fgPointerData.h"
+        #include "Event/fgPointerData.h"
     #endif
 
     #define FG_GUI_WIDGET_STATE_NONE		0	// main

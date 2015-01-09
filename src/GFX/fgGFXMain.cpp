@@ -98,7 +98,7 @@ void fgGfxMain::registerResourceCallbacks(void) {
     if(!m_resourceCreatedCallback)
         m_resourceCreatedCallback = new fgClassCallback<fgGfxMain>(this, &fgGfxMain::resourceCreatedHandler);
 
-    static_cast<fgEventManager *>(m_pEventMgr)->addEventCallback(FG_EVENT_RESOURCE_CREATED, m_resourceCreatedCallback);
+    static_cast<fg::event::CEventManager *>(m_pEventMgr)->addEventCallback(FG_EVENT_RESOURCE_CREATED, m_resourceCreatedCallback);
 }
 
 /**
@@ -108,7 +108,7 @@ void fgGfxMain::unregisterResourceCallbacks(void) {
     if(!m_pEventMgr)
         return;
 
-    static_cast<fgEventManager *>(m_pEventMgr)->removeEventCallback(FG_EVENT_RESOURCE_CREATED, m_resourceCreatedCallback);
+    static_cast<fg::event::CEventManager *>(m_pEventMgr)->removeEventCallback(FG_EVENT_RESOURCE_CREATED, m_resourceCreatedCallback);
 }
 
 /**

@@ -25,7 +25,7 @@
 
 #include "fgLog.h"
 #include "Event/fgEventManager.h"
-#include "Input/fgPointerInputReceiver.h"
+#include "Event/fgInputHandler.h"
 #include "Hardware/fgHardwareState.h"
 #include "Util/fgProfiling.h"
 #include "fgDebugConfig.h"
@@ -152,14 +152,14 @@ protected:
                     if(this->m_gameMain) {
                         // #FIXME
                         if(!event.key.repeat)
-                            static_cast<fgEventManager *>(this->m_gameMain)->addKeyDown((int)event.key.keysym.sym);
+                            this->m_gameMain->getInputHandler()->addKeyDown((int)event.key.keysym.sym);
                     }
                     break;
                 case SDL_KEYUP: /**< Key released */
                     if(this->m_gameMain) {
                         // #FIXME
                         if(!event.key.repeat)
-                            static_cast<fgEventManager *>(this->m_gameMain)->addKeyUp((int)event.key.keysym.sym);
+                            this->m_gameMain->getInputHandler()->addKeyUp((int)event.key.keysym.sym);
                     }
                     break;
                 case SDL_TEXTEDITING: /**< Keyboard text editing (composition) */
@@ -172,17 +172,17 @@ protected:
                 case SDL_MOUSEMOTION: /**< Mouse moved */
                     if(!m_gameMain)
                         continue;
-                    this->m_gameMain->getPointerInputReceiver()->singleTouchMotionHandler((void *)&event.motion, this->m_gameMain->getPointerInputReceiver());
+                    this->m_gameMain->getInputHandler()->singleTouchMotionHandler((void *)&event.motion, this->m_gameMain->getInputHandler());
                     break;
                 case SDL_MOUSEBUTTONDOWN: /**< Mouse button pressed */
                     if(!m_gameMain)
                         continue;
-                    this->m_gameMain->getPointerInputReceiver()->singleTouchButtonHandler((void *)&event.button, this->m_gameMain->getPointerInputReceiver());
+                    this->m_gameMain->getInputHandler()->singleTouchButtonHandler((void *)&event.button, this->m_gameMain->getInputHandler());
                     break;
                 case SDL_MOUSEBUTTONUP: /**< Mouse button released */
                     if(!m_gameMain)
                         continue;
-                    this->m_gameMain->getPointerInputReceiver()->singleTouchButtonHandler((void *)&event.button, this->m_gameMain->getPointerInputReceiver());
+                    this->m_gameMain->getInputHandler()->singleTouchButtonHandler((void *)&event.button, this->m_gameMain->getInputHandler());
                     break;
                 case SDL_MOUSEWHEEL: /**< Mouse wheel motion */
                     guiScale += 0.05f * (float)event.wheel.y;
@@ -231,7 +231,7 @@ protected:
                 {
                     if(!m_gameMain)
                         continue;
-                    fgJoypadController *joypadController = this->m_gameMain->getJoypadController();
+                    CJoypadController *joypadController = this->m_gameMain->getJoypadController();
                     if(joypadController) {
                         joypadController->processEvent(event);
                     }
@@ -274,7 +274,7 @@ protected:
                     if(event.type >= SDL_CONTROLLERAXISMOTION && event.type <= SDL_CONTROLLERDEVICEREMAPPED) {
                         if(!m_gameMain)
                             continue;
-                        fgJoypadController *joypadController = this->m_gameMain->getJoypadController();
+                        fg::event::CJoypadController *joypadController = this->m_gameMain->getJoypadController();
                         if(joypadController) {
                             joypadController->processEvent(event);
                         }
@@ -550,9 +550,9 @@ private:
         printf("'%s'\n", dst);
 #endif
         if(event->m_Pressed) {
-            static_cast<fgEventManager *>(m_gameMain)->addKeyDown((int)event->m_Key);
+            static_cast<CEventManager *>(m_gameMain)->addKeyDown((int)event->m_Key);
         } else {
-            static_cast<fgEventManager *>(m_gameMain)->addKeyUp((int)event->m_Key);
+            static_cast<CEventManager *>(m_gameMain)->addKeyUp((int)event->m_Key);
         }
         //FG_LOG_DEBUG("FG_EventManager - keyboard - %d is pressed? - code: %d", (int)event->m_Pressed, (int)event->m_Key);
     }

@@ -443,7 +443,7 @@ void fgResourceManager::refreshResource(fgResource* pResource) {
 
             fgArgumentList *argList = new fgArgumentList();
             argList->pushArgument(FG_ARGUMENT_TEMP_POINTER, (void *)resEvent);
-            static_cast<fgEventManager *>(m_pEventMgr)->throwEvent(FG_EVENT_RESOURCE_CREATED, argList);
+            static_cast<fg::event::CEventManager *>(m_pEventMgr)->throwEvent(FG_EVENT_RESOURCE_CREATED, argList);
         }
         addMemory(pResource->getSize());
 
@@ -554,7 +554,7 @@ fgResource* fgResourceManager::request(const std::string& info, const fgResource
     fgBool isFound = FG_FALSE;
     fgBool isConfig = FG_FALSE;
 
-    const char *iext = fgPath::fileExt(info.c_str(), FG_TRUE);
+    const char *iext = fg::path::fileExt(info.c_str(), FG_TRUE);
     if(!iext) { // no extension given so... search all
         infoAsName = FG_TRUE;
         pattern.append(info).append(".*;");
@@ -595,7 +595,7 @@ fgResource* fgResourceManager::request(const std::string& info, const fgResource
         if(iext) {
             fext = iext;
         } else {
-            fext = fgPath::fileExt(filePath.c_str(), FG_TRUE);
+            fext = fg::path::fileExt(filePath.c_str(), FG_TRUE);
         }
 
         if(fgStrings::endsWith(fext, "res.ini", FG_TRUE)) {
@@ -696,7 +696,7 @@ fgResource* fgResourceManager::request(const std::string& info, const fgResource
 
             fgArgumentList *argList = new fgArgumentList();
             argList->pushArgument(FG_ARGUMENT_TEMP_POINTER, (void *)resEvent);
-            static_cast<fgEventManager *>(m_pEventMgr)->throwEvent(FG_EVENT_RESOURCE_REQUESTED, argList);
+            static_cast<fg::event::CEventManager *>(m_pEventMgr)->throwEvent(FG_EVENT_RESOURCE_REQUESTED, argList);
         }
     }
     return resourcePtr;

@@ -254,7 +254,7 @@ fgBool fgTextureResource::setFileTypeFromFilePath(std::string &path) {
     if(path.empty())
         return FG_FALSE;
     // #FIXME - this should be extracted to other file (used for some basic file operation, pathext or whatnot #P3 #TODO)
-    const char *ext = fgPath::fileExt(path.c_str(), FG_TRUE);
+    const char *ext = fg::path::fileExt(path.c_str(), FG_TRUE);
     if(strncasecmp(ext, FG_TEXTURE_FILE_EXTENSION_BMP, strlen(FG_TEXTURE_FILE_EXTENSION_BMP)) == 0) {
         this->m_fileType = FG_TEXTURE_FILE_BMP;
     } else if(strncasecmp(ext, FG_TEXTURE_FILE_EXTENSION_RAW, strlen(FG_TEXTURE_FILE_EXTENSION_RAW)) == 0) {

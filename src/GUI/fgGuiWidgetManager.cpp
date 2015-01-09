@@ -96,7 +96,7 @@ fgBool fgGuiWidgetManager::initialize(void) {
     }
     
     while((filename = widgetsDir.getNextFile()) != NULL) {
-        const char *ext = fgPath::fileExt(filename, FG_TRUE);
+        const char *ext = fg::path::fileExt(filename, FG_TRUE);
         if(!ext)
             continue;
         if(strcasecmp(ext, "gui.xml") == 0) {

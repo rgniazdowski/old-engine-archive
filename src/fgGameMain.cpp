@@ -43,7 +43,7 @@
 /// Event management
 #include "Event/fgEventManager.h"
 /// User raw input (mouse/touch/)
-#include "Input/fgPointerInputReceiver.h"
+#include "Event/fgInputHandler.h"
 /// XML parsing
 #include "XML/fgXMLParser.h"
 /// Message subsystem
@@ -69,7 +69,7 @@ m_mainConfig(NULL),
 m_qualityMgr(NULL),
 m_resourceMgr(NULL),
 m_resourceFactory(NULL),
-m_pointerInputReceiver(NULL),
+m_inputHandler(NULL),
 m_joypadController(NULL),
 m_scriptSubsystem(NULL),
 m_soundMgr(NULL),
@@ -77,7 +77,7 @@ m_logicMgr(NULL),
 m_gameTouchCallback(NULL),
 m_gameMouseCallback(NULL),
 m_gameFreeLookCallback(NULL) {
-    if(!fgEventManager::initialize()) {
+    if(!fg::event::CEventManager::initialize()) {
 
     }
     // #FIXME srand init ?
@@ -89,8 +89,8 @@ m_gameFreeLookCallback(NULL) {
     // #FIXME - getcwd / get exec path / paths management / etc
     FG_MessageSubsystem->initialize(); // ? #FIXME message subsystem
     FG_MessageSubsystem->setLogPaths("all.log", "error.log", "debug.log");
-    m_pointerInputReceiver = new fgPointerInputReceiver();
-    m_joypadController = new fgJoypadController(); // #FIXME - Joypad part of input receiver?
+    m_inputHandler = new fg::event::CInputHandler();
+    m_joypadController = new fg::event::CJoypadController(); // #FIXME - Joypad part of input receiver?
     m_scriptSubsystem = new fgScriptSubsystem();
     m_soundMgr = new fgSFXManager();
     this->setEventManager();
@@ -143,9 +143,9 @@ fgGameMain::~fgGameMain() {
         delete m_resourceFactory;
     m_resourceFactory = NULL;
     // Input Receiver object
-    if(m_pointerInputReceiver)
-        delete m_pointerInputReceiver;
-    m_pointerInputReceiver = NULL;
+    if(m_inputHandler)
+        delete m_inputHandler;
+    m_inputHandler = NULL;
     m_guiMain->setPointerInputReceiver(NULL);
     // Joystick Controller
     if(m_joypadController) {
@@ -198,50 +198,50 @@ void fgGameMain::registerGameCallbacks(void) {
     if(!m_gameTouchCallback)
         m_gameTouchCallback = new fgClassCallback<fgGameMain>(this, &fgGameMain::gameTouchHandler);
 
-    fgEventManager::addEventCallback(FG_EVENT_TOUCH_PRESSED, m_gameTouchCallback);
-    fgEventManager::addEventCallback(FG_EVENT_TOUCH_RELEASED, m_gameTouchCallback);
-    fgEventManager::addEventCallback(FG_EVENT_TOUCH_MOTION, m_gameTouchCallback);
-    fgEventManager::addEventCallback(FG_EVENT_TOUCH_TAP_FINISHED, m_gameTouchCallback);
+    fg::event::CEventManager::addEventCallback(FG_EVENT_TOUCH_PRESSED, m_gameTouchCallback);
+    fg::event::CEventManager::addEventCallback(FG_EVENT_TOUCH_RELEASED, m_gameTouchCallback);
+    fg::event::CEventManager::addEventCallback(FG_EVENT_TOUCH_MOTION, m_gameTouchCallback);
+    fg::event::CEventManager::addEventCallback(FG_EVENT_TOUCH_TAP_FINISHED, m_gameTouchCallback);
 
     if(!m_gameMouseCallback)
         m_gameMouseCallback = new fgClassCallback<fgGameMain>(this, &fgGameMain::gameMouseHandler);
 
-    fgEventManager::addEventCallback(FG_EVENT_MOUSE_PRESSED, m_gameMouseCallback);
-    fgEventManager::addEventCallback(FG_EVENT_MOUSE_RELEASED, m_gameMouseCallback);
-    fgEventManager::addEventCallback(FG_EVENT_MOUSE_MOTION, m_gameMouseCallback);
+    fg::event::CEventManager::addEventCallback(FG_EVENT_MOUSE_PRESSED, m_gameMouseCallback);
+    fg::event::CEventManager::addEventCallback(FG_EVENT_MOUSE_RELEASED, m_gameMouseCallback);
+    fg::event::CEventManager::addEventCallback(FG_EVENT_MOUSE_MOTION, m_gameMouseCallback);
 
     if(!m_gameFreeLookCallback)
         m_gameFreeLookCallback = new fgClassCallback<fgGameMain>(this, &fgGameMain::gameFreeLookHandler);
 
-    fgEventManager::addEventCallback(FG_EVENT_TOUCH_PRESSED, m_gameFreeLookCallback);
-    fgEventManager::addEventCallback(FG_EVENT_TOUCH_RELEASED, m_gameFreeLookCallback);
-    fgEventManager::addEventCallback(FG_EVENT_TOUCH_MOTION, m_gameFreeLookCallback);
-    fgEventManager::addEventCallback(FG_EVENT_TOUCH_TAP_FINISHED, m_gameFreeLookCallback);
-    fgEventManager::addEventCallback(FG_EVENT_MOUSE_PRESSED, m_gameFreeLookCallback);
-    fgEventManager::addEventCallback(FG_EVENT_MOUSE_RELEASED, m_gameFreeLookCallback);
-    fgEventManager::addEventCallback(FG_EVENT_MOUSE_MOTION, m_gameFreeLookCallback);
+    fg::event::CEventManager::addEventCallback(FG_EVENT_TOUCH_PRESSED, m_gameFreeLookCallback);
+    fg::event::CEventManager::addEventCallback(FG_EVENT_TOUCH_RELEASED, m_gameFreeLookCallback);
+    fg::event::CEventManager::addEventCallback(FG_EVENT_TOUCH_MOTION, m_gameFreeLookCallback);
+    fg::event::CEventManager::addEventCallback(FG_EVENT_TOUCH_TAP_FINISHED, m_gameFreeLookCallback);
+    fg::event::CEventManager::addEventCallback(FG_EVENT_MOUSE_PRESSED, m_gameFreeLookCallback);
+    fg::event::CEventManager::addEventCallback(FG_EVENT_MOUSE_RELEASED, m_gameFreeLookCallback);
+    fg::event::CEventManager::addEventCallback(FG_EVENT_MOUSE_MOTION, m_gameFreeLookCallback);
 }
 
 /**
  *
  */
 void fgGameMain::unregisterGameCallbacks(void) {
-    fgEventManager::removeEventCallback(FG_EVENT_TOUCH_PRESSED, m_gameTouchCallback);
-    fgEventManager::removeEventCallback(FG_EVENT_TOUCH_RELEASED, m_gameTouchCallback);
-    fgEventManager::removeEventCallback(FG_EVENT_TOUCH_MOTION, m_gameTouchCallback);
-    fgEventManager::removeEventCallback(FG_EVENT_TOUCH_TAP_FINISHED, m_gameTouchCallback);
+    fg::event::CEventManager::removeEventCallback(FG_EVENT_TOUCH_PRESSED, m_gameTouchCallback);
+    fg::event::CEventManager::removeEventCallback(FG_EVENT_TOUCH_RELEASED, m_gameTouchCallback);
+    fg::event::CEventManager::removeEventCallback(FG_EVENT_TOUCH_MOTION, m_gameTouchCallback);
+    fg::event::CEventManager::removeEventCallback(FG_EVENT_TOUCH_TAP_FINISHED, m_gameTouchCallback);
 
-    fgEventManager::removeEventCallback(FG_EVENT_MOUSE_PRESSED, m_gameMouseCallback);
-    fgEventManager::removeEventCallback(FG_EVENT_MOUSE_RELEASED, m_gameMouseCallback);
-    fgEventManager::removeEventCallback(FG_EVENT_MOUSE_MOTION, m_gameMouseCallback);
+    fg::event::CEventManager::removeEventCallback(FG_EVENT_MOUSE_PRESSED, m_gameMouseCallback);
+    fg::event::CEventManager::removeEventCallback(FG_EVENT_MOUSE_RELEASED, m_gameMouseCallback);
+    fg::event::CEventManager::removeEventCallback(FG_EVENT_MOUSE_MOTION, m_gameMouseCallback);
 
-    fgEventManager::removeEventCallback(FG_EVENT_TOUCH_PRESSED, m_gameFreeLookCallback);
-    fgEventManager::removeEventCallback(FG_EVENT_TOUCH_RELEASED, m_gameFreeLookCallback);
-    fgEventManager::removeEventCallback(FG_EVENT_TOUCH_MOTION, m_gameFreeLookCallback);
-    fgEventManager::removeEventCallback(FG_EVENT_TOUCH_TAP_FINISHED, m_gameFreeLookCallback);
-    fgEventManager::removeEventCallback(FG_EVENT_MOUSE_PRESSED, m_gameFreeLookCallback);
-    fgEventManager::removeEventCallback(FG_EVENT_MOUSE_RELEASED, m_gameFreeLookCallback);
-    fgEventManager::removeEventCallback(FG_EVENT_MOUSE_MOTION, m_gameFreeLookCallback);
+    fg::event::CEventManager::removeEventCallback(FG_EVENT_TOUCH_PRESSED, m_gameFreeLookCallback);
+    fg::event::CEventManager::removeEventCallback(FG_EVENT_TOUCH_RELEASED, m_gameFreeLookCallback);
+    fg::event::CEventManager::removeEventCallback(FG_EVENT_TOUCH_MOTION, m_gameFreeLookCallback);
+    fg::event::CEventManager::removeEventCallback(FG_EVENT_TOUCH_TAP_FINISHED, m_gameFreeLookCallback);
+    fg::event::CEventManager::removeEventCallback(FG_EVENT_MOUSE_PRESSED, m_gameFreeLookCallback);
+    fg::event::CEventManager::removeEventCallback(FG_EVENT_MOUSE_RELEASED, m_gameFreeLookCallback);
+    fg::event::CEventManager::removeEventCallback(FG_EVENT_MOUSE_MOTION, m_gameFreeLookCallback);
 }
 
 /**
@@ -250,13 +250,13 @@ void fgGameMain::unregisterGameCallbacks(void) {
  */
 void fgGameMain::setEventManager() {
     //registerGameCallbacks();
-    if(m_pointerInputReceiver)
-        m_pointerInputReceiver->setEventManager(this);
+    if(m_inputHandler)
+        m_inputHandler->setEventManager(this);
     if(m_joypadController)
         m_joypadController->setEventManager(this);
     if(m_guiMain) {
         m_guiMain->setEventManager(this);
-        m_guiMain->setPointerInputReceiver(m_pointerInputReceiver);
+        m_guiMain->setPointerInputReceiver(m_inputHandler);
     }
     if(m_resourceMgr) {
         m_resourceMgr->setEventManager(this);
@@ -284,8 +284,8 @@ fgBool fgGameMain::initSubsystems(void) {
         // Provide styles and widgets path
         std::string mainModPath = m_settings->getMainModPath();
         std::string modPath = m_settings->getCurrentModPath();
-        fgPath::join(mainModPath, mainModPath, "gui");
-        fgPath::join(modPath, modPath, "gui");
+        fg::path::join(mainModPath, mainModPath, "gui");
+        fg::path::join(modPath, modPath, "gui");
         std::string guiPath;
         guiPath.append(mainModPath);
         guiPath.append(";");
@@ -350,16 +350,16 @@ fgBool fgGameMain::initSubsystems(void) {
             FG_LOG_ERROR("Logic: Main Game Logic module initialized with errors");
         }
     }
-    if(m_pointerInputReceiver)
-        m_pointerInputReceiver->initialize();
+    if(m_inputHandler)
+        m_inputHandler->initialize();
     m_gfxMain->getLoader()->update(10.0f);
     FG_HardwareState->deviceYield(0); // #FIXME - device yield...
     // Setup GUI Main external pointers
     m_guiMain->setResourceManager(m_resourceMgr);
     m_guiMain->setShaderManager(m_gfxMain->getShaderManager());
-    m_guiMain->setPointerInputReceiver(m_pointerInputReceiver);
+    m_guiMain->setPointerInputReceiver(m_inputHandler);
     m_guiMain->setEventManager(this);
-    m_pointerInputReceiver->setEventManager(this);
+    m_inputHandler->setEventManager(this);
     m_resourceMgr->setEventManager(this);
     // When GUI MAIN has set the resource manager - it can preload builtin fonts
     if(!m_guiMain->initialize()) {
@@ -442,22 +442,15 @@ fgBool fgGameMain::loadResources(void) {
     float t1 = fgTime::ms();
     FG_LOG_DEBUG("Loading resources...");
 #if defined(FG_USING_LUA_PLUS)
-    LuaPlus::LuaState *state = m_scriptSubsystem->getLuaState();
-    std::string mainScriptPath;
-    fgPath::join(mainScriptPath, m_settings->getMainModPath(), std::string("main.lua"));
+    //LuaPlus::LuaState *state = m_scriptSubsystem->getLuaState();
+    std::string mainScriptPath, modScriptPath;
+    fg::path::join(mainScriptPath, m_settings->getMainModPath(), std::string("main.lua"));
     FG_LOG_DEBUG("Main: Loading and executing script file: '%s'", mainScriptPath.c_str());
-    if(m_scriptSubsystem->executeFile(mainScriptPath) != 0 && state) {
-        if(state->GetTop() == 1) {
-            FG_LOG_ERROR("Main: Error occurred while running script: '%s'", state->CheckString(1));
-        }
-    }
-    fgPath::join(mainScriptPath, m_settings->getCurrentModPath(), std::string("main.lua"));
-    FG_LOG_DEBUG("Main: Loading and executing script file: '%s'", mainScriptPath.c_str());
-    if(m_scriptSubsystem->executeFile(mainScriptPath) != 0 && state) {
-        if(state->GetTop() == 1) {
-            FG_LOG_ERROR("Main: Error occurred while running script: '%s'", state->CheckString(1));
-        }
-    }
+    m_scriptSubsystem->executeFile(mainScriptPath);
+    
+    fg::path::join(modScriptPath, m_settings->getCurrentModPath(), std::string("main.lua"));
+    FG_LOG_DEBUG("Main: Loading and executing script file: '%s'", modScriptPath.c_str());
+    m_scriptSubsystem->executeFile(modScriptPath);
 #endif
     m_gfxMain->getLoader()->update(10.0f);
     ////////////////////////////////////////////////////////////////////////////
@@ -478,7 +471,7 @@ fgBool fgGameMain::loadResources(void) {
         std::string sOrthoEasyShaderName("sOrthoEasy");
         fgGfxShaderProgram *program = m_gfxMain->getShaderManager()->get(sOrthoEasyShaderName);
         FG_HardwareState->deviceYield(0); // #FIXME - device yield...
-        FG_LOG_DEBUG("Will now try to compile and link 'sOrthoEasyShader' shader program");
+        FG_LOG_DEBUG("Init: Will now try to compile and link 'sOrthoEasyShader' shader program");
         if(program) {
             program->compile();
             program->link(); // this will also bind attributes and after successful link - bind uniforms
@@ -489,7 +482,7 @@ fgBool fgGameMain::loadResources(void) {
         std::string sSkyBoxEasyShaderName("sSkyBoxEasy");
         fgGfxShaderProgram *program = m_gfxMain->getShaderManager()->get(sSkyBoxEasyShaderName);
         FG_HardwareState->deviceYield(0); // #FIXME - device yield...
-        FG_LOG_DEBUG("Will now try to compile and link 'sSkyBoxEasyShader' shader program");
+        FG_LOG_DEBUG("Init: Will now try to compile and link 'sSkyBoxEasyShader' shader program");
         if(program) {
             program->compile();
             program->link(); // this will also bind attributes and after successful link - bind uniforms
@@ -503,7 +496,7 @@ fgBool fgGameMain::loadResources(void) {
     // Create vertex buffers on event - not explicitly 
     {
         float t1 = fgTime::ms();
-        FG_LOG_DEBUG("Will now try load object CobraBomber.obj");
+        FG_LOG_DEBUG("Init: Will now try load object CobraBomber.obj");
         std::string modelname("CobraBomber");
         fgGfxModelResource *model = (fgGfxModelResource *)m_resourceMgr->get(modelname);
         float t2 = fgTime::ms();
@@ -525,7 +518,7 @@ fgBool fgGameMain::loadResources(void) {
     FG_LOG_DEBUG("Main: Resources loaded in %.2f seconds", (t2 - t1) / 1000.0f);
     m_gfxMain->getLoader()->update(10.0f);
 #if !defined(FG_USING_MARMALADE)
-    usleep(500*1000);
+    usleep(500 * 1000);
 #endif
     return FG_TRUE;
 }
@@ -553,8 +546,8 @@ fgBool fgGameMain::closeSybsystems(void) {
         m_gfxMain->releaseTextures();
 
     fgGameMain::releaseResources();
-    if(m_pointerInputReceiver)
-        m_pointerInputReceiver->setEventManager(NULL);
+    if(m_inputHandler)
+        m_inputHandler->setEventManager(NULL);
     FG_HardwareState->deleteInstance(); // #KILL_ALL_SINGLETONS
     if(m_gfxMain)
         m_gfxMain->closeGFX();
@@ -661,12 +654,12 @@ void fgGameMain::update(void) {
     // special object for managing input - mouse / joystick / keyboard / touch
     // InputReceiver ? #FIXME
     // Also SDL events throwing needs some fixing
-    if(m_pointerInputReceiver)
-        m_pointerInputReceiver->processData();
+    if(m_inputHandler)
+        m_inputHandler->processData();
     FG_HardwareState->deviceYield(0);
     // Well this is really useful system, in the end GUI and others will be hooked
     // to EventManager so everything what needs to be done is done in this function
-    fgEventManager::executeEvents();
+    fg::event::CEventManager::executeEvents();
     FG_HardwareState->deviceYield(0);
     // This must be called  when you wish the manager to check for discardable
     // resources.  Resources will only be swapped out if the maximum allowable

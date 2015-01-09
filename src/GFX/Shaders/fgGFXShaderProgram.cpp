@@ -84,7 +84,7 @@ fgBool fgGfxShaderProgram::preLoadConfig(const char *path) {
         return FG_FALSE;
     }
     setFilePath(path);
-    const char *ext = fgPath::fileExt(path, FG_TRUE);
+    const char *ext = fg::path::fileExt(path, FG_TRUE);
     if(!ext) {
         FG_MessageSubsystem->reportError(tag_type::name(), FG_ERRNO_WRONG_PATH);
         return FG_FALSE;
@@ -130,7 +130,7 @@ fgBool fgGfxShaderProgram::preLoadConfig(const char *path) {
         // File quality mapping omg
         // Need to find a way :D for now supporting only one file / quality universal
         // #TODO #FILEMAPPING
-        newPath = fgPath::dirName(fullPath);
+        newPath = fg::path::dirName(fullPath);
         newPath.append(m_config->getRefFiles()[0]);
         shader->setFilePath(newPath);
         newPath.clear();

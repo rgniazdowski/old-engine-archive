@@ -82,7 +82,7 @@ fgBool fg::game::Logic::throwGameEvent(const fgEventType eventType) {
     if(m_pEventMgr->getManagerType() != FG_MANAGER_EVENT)
         return FG_FALSE;
 
-    static_cast<fgEventManager *>(m_pEventMgr)->throwEvent(eventType);
+    static_cast<fg::event::CEventManager *>(m_pEventMgr)->throwEvent(eventType);
     return FG_TRUE;
 }
 

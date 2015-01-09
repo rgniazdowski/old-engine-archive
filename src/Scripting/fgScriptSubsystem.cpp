@@ -21,7 +21,7 @@
  * Also other parts of the engine do not care about the Script Subsystem - 
  * Some things need to happen behind the scenes ;p
  * 
- * However there is a downside to everything:  If  something  big changes in the 
+ * However there is a downside to everything:a  If  something  big changes in the 
  * system (some refactoring, new classes, different mechanism, addition of smart
  * pointer, custom new/delete, different memory management, etc) - those changes
  * will need  to be  reflected in here also.  It could be  different name of the 
@@ -210,10 +210,17 @@ int fgScriptSubsystem::executeFile(const char *filePath) {
         return 2;
     }
     scriptFile.close();
-    const char *fileName = fgPath::fileName(filePath);
+    const char *fileName = fg::path::fileName(filePath);
     int size = strlen(buffer), status = 0;
 #if defined(FG_USING_LUA_PLUS)
     status = m_luaState->DoBuffer(buffer, size, fileName);
+    if(status != 0) {
+        int top = m_luaState->GetTop();
+        if(m_luaState->IsString(top)) {
+            FG_LOG_ERROR("Script: Error occurred while running script: '%s'", filePath);
+            FG_LOG_ERROR("Script: Script trace: %s", m_luaState->CheckString(top));
+        }
+    }
 #elif defined(FG_USING_LUA)
     status = (luaL_loadbuffer(m_luaState, buffer, size, fileName) || lua_pcall(m_luaState, 0, 0, 0));
 #endif    
@@ -231,7 +238,7 @@ fgBool fgScriptSubsystem::destroy(void) {
 
     if(m_pEventMgr) {
         if(m_cyclicGCCallback) {
-            static_cast<fgEventManager *>(m_pEventMgr)->removeCyclicCallback(m_cyclicGCCallback);
+            static_cast<fg::event::CEventManager *>(m_pEventMgr)->removeCyclicCallback(m_cyclicGCCallback);
             delete m_cyclicGCCallback;
         }
         m_cyclicGCCallback = NULL;
@@ -358,7 +365,7 @@ fgBool fgScriptSubsystem::initialize(void) {
     m_managerType = FG_MANAGER_SCRIPT;
 
     if(m_cyclicGCCallback) {
-        static_cast<fgEventManager *>(m_pEventMgr)->addCyclicCallback(m_cyclicGCCallback,
+        static_cast<fg::event::CEventManager *>(m_pEventMgr)->addCyclicCallback(m_cyclicGCCallback,
                                                                       FG_CYCLIC_CALLBACK_INFINITE_REPEAT,
                                                                       FG_SCRIPT_DEFAULT_GC_INTERVAL,
                                                                       NULL);
@@ -869,7 +876,7 @@ int fgScriptSubsystem::addEventCallbackWrapper(lua_State *L) {
     } else if(hasFunction) {
         callback = new fgScriptCallback(L, objFunction, argc, fgScriptCallback::EVENT_CALLBACK);
     }
-    if(static_cast<fgEventManager *>(m_pEventMgr)->addEventCallback(eventType, callback)) {
+    if(static_cast<fg::event::CEventManager *>(m_pEventMgr)->addEventCallback(eventType, callback)) {
         FG_LOG_DEBUG("Script: Successfully added callback for event[%d]", eventType);
     } else {
         FG_LOG_DEBUG("Script: Failed to add callback for event[%d]", eventType);
@@ -934,7 +941,7 @@ int fgScriptSubsystem::addTimeoutCallbackWrapper(lua_State *L) {
     } else if(hasFunction) {
         callback = new fgScriptCallback(L, objFunction, argc, fgScriptCallback::EVENT_CALLBACK);
     }
-    if(static_cast<fgEventManager *>(m_pEventMgr)->addTimeoutCallback(callback, timeout, NULL)) {
+    if(static_cast<fg::event::CEventManager *>(m_pEventMgr)->addTimeoutCallback(callback, timeout, NULL)) {
         FG_LOG_DEBUG("Script: Successfully added timeout callback");
     } else {
         FG_LOG_DEBUG("Script: Failed to add timeout callback");
@@ -1011,7 +1018,7 @@ int fgScriptSubsystem::addCyclicCallbackWrapper(lua_State *L) {
     } else if(hasFunction) {
         callback = new fgScriptCallback(L, objFunction, argc, fgScriptCallback::EVENT_CALLBACK);
     }
-    if(static_cast<fgEventManager *>(m_pEventMgr)->addCyclicCallback(callback, repeats, interval, NULL)) {
+    if(static_cast<fg::event::CEventManager *>(m_pEventMgr)->addCyclicCallback(callback, repeats, interval, NULL)) {
         FG_LOG_DEBUG("Script: Successfully added cyclic callback");
     } else {
         FG_LOG_DEBUG("Script: Failed to add cyclic callback");
@@ -1808,13 +1815,18 @@ int fgScriptSubsystem::addWidgetCallbackWrapper(lua_State *L) {
         FG_LOG_DEBUG("Script: WidgetCallbackWrapper: GUI Main is not proper manager");
         return 0;
     }
-
+    // #FIXME - sometimes passed Lua function pointer will be the same for different widgets
+    // Well then there has to be some kind of check to  determine if new allocation is
+    // really needed - some script callback objects need to be reusable
+    // #UPDATE - well it looks like that it is not possible because the LuaFunction
+    // object does not provide getter function for the inner LuaObject which stores Lua function
+    //
     fgGuiCallback *callback = NULL;
     if(script) {
         callback = new fgScriptGuiCallback(static_cast<fgGuiMain *>(m_pGuiMain), L, script, argc);
     } else if(hasFunction) {
         callback = new fgScriptGuiCallback(static_cast<fgGuiMain *>(m_pGuiMain), L, objFunction, argc);
-    }
+    }    
     fgBool status = FG_FALSE;
     if(pWidget)
         status = static_cast<fgGuiMain *>(m_pGuiMain)->addWidgetCallback(pWidget, callback, callbackType);

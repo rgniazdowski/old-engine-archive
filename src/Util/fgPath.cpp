@@ -11,12 +11,15 @@
 #include "fgCommon.h"
 #include "fgMemory.h"
 
-/*
- *
+/**
+ * 
+ * @param path
+ * @param fullExt
+ * @return 
  */
-const char *fgPath::fileExt(const char *path, fgBool fullExt) {
+const char *fg::path::fileExt(const char *path, fgBool fullExt) {
     if(!path) return NULL;
-    path = fgPath::fileName(path);
+    path = fg::path::fileName(path);
     const char *dot = NULL;
     if(fullExt == FG_TRUE)
         dot = strchr(path, '.');
@@ -26,20 +29,23 @@ const char *fgPath::fileExt(const char *path, fgBool fullExt) {
     return dot + 1;
 }
 
-/*
- *
+/**
+ * 
+ * @param path
+ * @return 
  */
-const char* fgPath::fileName(const char* path) {
+const char* fg::path::fileName(const char* path) {
     if(!path)
         return NULL;
     return (strrchr(path, '/') ? strrchr(path, '/') + 1 : strrchr(path, '\\') ? strrchr(path, '\\') + 1 : path);
 }
 
-/*
- *
+/**
+ * 
+ * @param path
  */
-void fgPath::dirName(char *path) {
-    const char* filename = fgPath::fileName(path);
+void fg::path::dirName(char *path) {
+    const char* filename = fg::path::fileName(path);
     if(!filename)
         return;
     int npath = strlen(path);
@@ -49,11 +55,13 @@ void fgPath::dirName(char *path) {
         path[i] = 0;
 }
 
-/*
- *
+/**
+ * 
+ * @param path
+ * @return 
  */
-char *fgPath::dirName(const char *path) {
-    const char* filename = fgPath::fileName(path);
+char *fg::path::dirName(const char *path) {
+    const char* filename = fg::path::fileName(path);
     if(!filename)
         return NULL;
     int npath = strlen(path);
@@ -65,40 +73,54 @@ char *fgPath::dirName(const char *path) {
     return buf;
 }
 
-/*
- *
+/**
+ * 
+ * @param path
+ * @return 
  */
-std::string fgPath::dirName(std::string &path) {
-    const char* filename = fgPath::fileName(path.c_str());
+std::string fg::path::dirName(std::string &path) {
+    const char* filename = fg::path::fileName(path.c_str());
     if(!filename)
         return path;
     return path.substr(0, path.length() - strlen(filename));
 }
 
-/*
- *
+/**
+ * 
+ * @param path
+ * @param dirpath
+ * @return 
  */
-std::string& fgPath::dirName(std::string &path, std::string &dirpath) {
+std::string& fg::path::dirName(std::string &path, std::string &dirpath) {
     dirpath = dirName(path);
     return dirpath;
 }
 
-/*
- *
+/**
+ * 
+ * @param path
+ * @param dirpath
+ * @param filename
  */
-void fgPath::split(std::string &path, std::string &dirpath, std::string &filename) {
+void fg::path::split(std::string &path, std::string &dirpath, std::string &filename) {
     dirpath = dirName(path);
-    const char* filename_c = fgPath::fileName(path.c_str());
+    const char* filename_c = fg::path::fileName(path.c_str());
     if(!filename_c)
         filename.clear();
     else
         filename = filename_c;
 }
 
-/*
- *
+/**
+ * 
+ * @param path
+ * @param dirpath
+ * @param filename
+ * @return 
  */
-std::string& fgPath::join(std::string &path, const std::string &dirpath, const std::string &filename) {
+std::string& fg::path::join(std::string &path,
+                            const std::string &dirpath, 
+                            const std::string &filename) {
     // path - here is the result stored
 
     int dirlen = (int)dirpath.length();
@@ -112,16 +134,21 @@ std::string& fgPath::join(std::string &path, const std::string &dirpath, const s
     return path;
 }
 
-/*
- *
+/**
+ * 
+ * @param dirpath
+ * @param filename
+ * @return 
  */
-std::string fgPath::join(const std::string &dirpath, const std::string &filename) {
+std::string fg::path::join(const std::string &dirpath, const std::string &filename) {
     std::string path;
-    fgPath::join(path, dirpath, filename);
+    fg::path::join(path, dirpath, filename);
     return path;
 }
 
-/*
- *
+/**
+ * 
+ * @param path
+ * @param parts
  */
-void fgPath::join(std::string &path, fgStringVector &parts) { }
+void fg::path::join(std::string &path, fgStringVector &parts) { }

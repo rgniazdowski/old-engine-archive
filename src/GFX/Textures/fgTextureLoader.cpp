@@ -118,8 +118,7 @@ static void fg_jpeg_term_source(j_decompress_ptr cinfo) {
     }
 }
 
-static void fg_png_custom_read(png_structp png_ptr, png_bytep data, png_size_t length)
-{
+static void fg_png_custom_read(png_structp png_ptr, png_bytep data, png_size_t length) {
     png_size_t lenread = 0;
     if(length <= 0 || !data) {
         FG_LOG_ERROR("PNG.custom_read: Error occured on read: data is NULL or given length <= 0");
@@ -147,7 +146,7 @@ static unsigned char *universalPreLoad(const char *path,
                                        const char *extType) {
     if(!path) {
         // #TODO error handling / reporting
-	    FG_LOG_DEBUG("GFX: universalPreLoad: No path specified! [RARE]");
+        FG_LOG_DEBUG("GFX: universalPreLoad: No path specified! [RARE]");
         return NULL;
     }
     fg::util::File *fileStream = new fg::util::File(path);
@@ -242,7 +241,8 @@ unsigned char *fgTextureLoader::loadJPEG(fg::util::base::File *fileStream, int &
         case 1:
             for(i = 0, j = 0; i < width * height; i++, j += 4) {
                 data[j] = data[j + 1] = data[j + 2] = dataBuffer[i];
-                data[j + 3] = 255;
+                //data[j + 3] = 255;
+                data[j + 3] = FG_TEXTURE_ALPHA_FIX_VALUE(data[j], data[j], data[j]);
             }
             break;
         case 3:
@@ -261,7 +261,8 @@ unsigned char *fgTextureLoader::loadJPEG(fg::util::base::File *fileStream, int &
             return NULL;
     }
     delete [] dataBuffer;
-    FG_LOG_INFO("JPEG LOAD: path[%s], size[%dx%d], data[%p];", fileStream->getPath(), width, height, data);
+    FG_LOG_DEBUG("JPEG LOAD: path[%s], size[%dx%d], data[%p];", fileStream->getPath(), width, height, data);
+    FG_LOG_DEBUG("JPEG LOAD: texture file[%s] converted to RGBA - alpha fixed as RGB average", fg::path::fileName(fileStream->getPath()));
     return data;
 }
 
@@ -278,7 +279,7 @@ unsigned char *fgTextureLoader::loadPNG(const char *path, int &width, int &heigh
 unsigned char *fgTextureLoader::loadPNG(fg::util::base::File *fileStream, int &width, int &height) {
     if(!fileStream) {
         // #TODO error handling / reporting
-	    FG_LOG_ERROR("PNG LOAD: FileStream specified is NULL!");
+        FG_LOG_ERROR("PNG LOAD: FileStream specified is NULL!");
         return NULL;
     } else if(!fileStream->isOpen()) {
         if(!fileStream->open(fg::util::File::Mode::READ | fg::util::File::Mode::BINARY)) {
@@ -381,7 +382,9 @@ unsigned char *fgTextureLoader::loadPNG(fg::util::base::File *fileStream, int &w
 
     width = (int)w;
     height = (int)h;
-    FG_LOG_INFO("PNG LOAD: path[%s], size=[%dx%d], data=[%p], comp[%d];", fileStream->getPath(), w, h, data, (int)channels);
+    FG_LOG_DEBUG("PNG LOAD: path[%s], size=[%dx%d], data=[%p], comp[%d];", fileStream->getPath(), w, h, data, (int)channels);
+    if((int)channels != 4)
+        FG_LOG_DEBUG("PNG LOAD: texture file[%s] converted to RGBA - alpha fixed as RGB average", fg::path::fileName(fileStream->getPath()));
     return data;
 }
 
@@ -495,7 +498,9 @@ unsigned char *fgTextureLoader::loadTGA(fg::util::base::File *fileStream, int &w
     delete [] buffer;
     width = w;
     height = h;
-    FG_LOG_INFO("TGA LOAD: path[%s], size[%dx%d], data[%p], comp[%d];", fileStream->getPath(), w, h, data, components);
+    FG_LOG_DEBUG("TGA LOAD: path[%s], size[%dx%d], data[%p], comp[%d];", fileStream->getPath(), w, h, data, components);
+    if(components != 4)
+        FG_LOG_DEBUG("TGA LOAD: texture file[%s] converted to RGBA - alpha fixed as RGB average", fg::path::fileName(fileStream->getPath()));
     return data;
 }
 

@@ -87,14 +87,14 @@ fgBool fgDirent::internal_readZipFile(const std::string& fileName,
         std::string filePathInZip;
         // Join the paths
         if(recursive) {
-            fgPath::join(filePathInZip, filePath, zipFileList[i]);
+            fg::path::join(filePathInZip, filePath, zipFileList[i]);
         } else {
-            fgPath::join(filePathInZip, fileName, zipFileList[i]);
+            fg::path::join(filePathInZip, fileName, zipFileList[i]);
         }
         std::string dirInZipName;
         // If the path has an ending delimeter the dirName function
         // will return the same string - no changes
-        fgPath::dirName(filePathInZip, dirInZipName);
+        fg::path::dirName(filePathInZip, dirInZipName);
         int fn = filePathInZip.size();
         int dn = dirInZipName.size();
         char dc = dirInZipName[dn - 1];
@@ -175,7 +175,7 @@ fgBool fgDirent::readDirectory(fgBool recursive, fgBool listZipFiles) {
                     continue;
 
                 // Create the full path to the file - join paths
-                fgPath::join(filePath, curDir, fileName);
+                fg::path::join(filePath, curDir, fileName);
                 fgBool isDir = FG_FALSE;
                 fgBool isZip = FG_FALSE;
 #if defined(FG_USING_MARMALADE)
@@ -308,7 +308,7 @@ std::string &fgDirent::getNextFilePath(std::string &path) {
         // #FIXME - this will cause error if fgDirent was not recursive and
         // did not store file paths by default - if fgDirent was called with
         // many directories to list -> FUBAR :(
-        fgPath::join(path, m_dirPath, std::string(filename));
+        fg::path::join(path, m_dirPath, std::string(filename));
     } else if(filename && m_isRecursive) {
         // with the recursive mode, this array always stores paths (relative)
         path = filename;
@@ -365,7 +365,7 @@ std::string &fgDirent::searchForFile(std::string &output,
             for(int i = 0; i < (int)patternVec.size(); i++) {
                 std::string &pattern = patternVec[i];
                 if(pattern.length()) {
-                    const char *filename = fgPath::fileName(subPath);
+                    const char *filename = fg::path::fileName(subPath);
                     if(pattern[0] == '*') {
                         if(fgStrings::endsWith(filename, (pattern.c_str() + 1), FG_FALSE)) {
                             output = foundPath;

@@ -42,10 +42,6 @@ files
 	"Scripting/*.cpp"
 	"Scripting/*.h"
 
-	["FlexiGame/Input"]
-	"Input/*.cpp"
-	"Input/*.h"
-
 	["FlexiGame/Hardware"]
 	"Hardware/*.cpp"
 	"Hardware/*.h"

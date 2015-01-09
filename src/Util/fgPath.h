@@ -9,6 +9,7 @@
 
 #ifndef FG_INC_PATH
     #define FG_INC_PATH
+    #define FG_INC_PATH_BLOCK
 
     #include "fgBuildConfig.h"
     #include "fgBool.h"
@@ -27,36 +28,36 @@
         #define FG_PATH_DELIM2C '\\'
     #endif
 
-class fgPath {
-private:
-    fgPath() { }
-    ~fgPath() { }
-public:
-    // Return the file extension //fgPath::fileExt
-    static const char* fileExt(const char *path, fgBool fullExt = FG_FALSE);
+namespace fg {
+    namespace path {
 
-    // Return the file name in path //fgPath::fileName
-    static const char* fileName(const char* path);
+        // Return the file extension //fgPath::fileExt
+        const char* fileExt(const char *path, fgBool fullExt = FG_FALSE);
 
-    // Retrieve the dirname in path - this will change the input string (fill last part with \0)
-    static void dirName(char* path);
-    // Retrieve the dirname in path - remember that this function allocates a new string
-    static char *dirName(const char* path);
-    //
-    static std::string dirName(std::string &path);
-    //
-    static std::string& dirName(std::string &path, std::string &dir);
+        // Return the file name in path //fgPath::fileName
+        const char* fileName(const char* path);
 
-    // Split the path and save parts (dirname, filename) in input parameters
-    static void split(std::string &path, std::string &dirpath, std::string &filename);
+        // Retrieve the dirname in path - this will change the input string (fill last part with \0)
+        void dirName(char* path);
+        // Retrieve the dirname in path - remember that this function allocates a new string
+        char *dirName(const char* path);
+        //
+        std::string dirName(std::string &path);
+        //
+        std::string& dirName(std::string &path, std::string &dir);
 
-    // Join the path elements
-    static std::string& join(std::string &path, const std::string &dirpath, const std::string &filename);
+        // Split the path and save parts (dirname, filename) in input parameters
+        void split(std::string &path, std::string &dirpath, std::string &filename);
 
-    static std::string join(const std::string &dirpath, const std::string &filename);
+        // Join the path elements
+        std::string& join(std::string &path, const std::string &dirpath, const std::string &filename);
 
-    // Join the path from parts
-    static void join(std::string &path, fgStringVector &parts);
+        std::string join(const std::string &dirpath, const std::string &filename);
+
+        // Join the path from parts
+        void join(std::string &path, fgStringVector &parts);
+    };
 };
 
+    #undef FG_INC_PATH_BLOCK
 #endif /* FG_INC_PATH */

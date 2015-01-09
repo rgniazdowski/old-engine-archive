@@ -139,7 +139,7 @@ fgBool fgGfxShaderConfig::private_parseData(fgGfxSLVersion SLver) {
         return FG_FALSE;
     }
 
-    const char *ext = fgPath::fileExt(m_configPath.c_str(), FG_TRUE);
+    const char *ext = fg::path::fileExt(m_configPath.c_str(), FG_TRUE);
     if(!ext) {
         FG_MessageSubsystem->reportError(tag_type::name(), FG_ERRNO_WRONG_PATH);
         return FG_FALSE;
@@ -433,11 +433,11 @@ fgBool fgGfxShaderConfig::private_parseData(fgGfxSLVersion SLver) {
         // specific configuration procedures for compute shader
 #endif
     }
-    FG_MessageSubsystem->reportSuccess(tag_type::name(), FG_ERRNO_GFX_OK, "GFX: Shader config loaded successfully: '%s'", fgPath::fileName(m_configPath.c_str()));
+    FG_MessageSubsystem->reportSuccess(tag_type::name(), FG_ERRNO_GFX_OK, "GFX: Shader config loaded successfully: '%s'", fg::path::fileName(m_configPath.c_str()));
     if(m_configType == FG_GFX_SHADER_CONFIG_PROGRAM) {
-        FG_LOG_DEBUG("GFX: Shader config for program loaded; name[%s], file[%s]", m_programName.c_str(), fgPath::fileName(m_configPath.c_str()));
+        FG_LOG_DEBUG("GFX: Shader config for program loaded; name[%s], file[%s]", m_programName.c_str(), fg::path::fileName(m_configPath.c_str()));
     } else {
-        FG_LOG_DEBUG("GFX: Shader config loaded: file[%s]", fgPath::fileName(m_configPath.c_str()));
+        FG_LOG_DEBUG("GFX: Shader config loaded: file[%s]", fg::path::fileName(m_configPath.c_str()));
     }
     return FG_TRUE;
 }
