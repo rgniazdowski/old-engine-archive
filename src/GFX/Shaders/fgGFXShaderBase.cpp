@@ -14,7 +14,7 @@
 /*
  *
  */
-fgGfxShaderBase::fgGfxShaderBase() :
+fg::gfx::base::CShader::CShader() :
 m_log(NULL),
 m_gfxID(0),
 m_baseType(FG_GFX_BASE_TYPE_INVALID) { }
@@ -22,7 +22,7 @@ m_baseType(FG_GFX_BASE_TYPE_INVALID) { }
 /*
  *
  */
-fgGfxShaderBase::~fgGfxShaderBase() {
+fg::gfx::base::CShader::~CShader() {
     m_params.clear();
     if(m_log)
         fgFree(m_log);
@@ -32,7 +32,7 @@ fgGfxShaderBase::~fgGfxShaderBase() {
 /*
  *
  */
-void fgGfxShaderBase::updateLog(void) {
+void fg::gfx::base::CShader::updateLog(void) {
     if(!m_gfxID)
         return;
     if(m_baseType == FG_GFX_BASE_TYPE_INVALID)
@@ -66,7 +66,7 @@ void fgGfxShaderBase::updateLog(void) {
 /*
  *
  */
-void fgGfxShaderBase::updateParams(void) {
+void fg::gfx::base::CShader::updateParams(void) {
     if(!m_gfxID)
         return;
     if(m_baseType == FG_GFX_BASE_TYPE_INVALID) {
@@ -95,7 +95,7 @@ void fgGfxShaderBase::updateParams(void) {
 /*
  *
  */
-fgGFXint fgGfxShaderBase::updateParam(fgGFXenum pname) {
+fgGFXint fg::gfx::base::CShader::updateParam(fgGFXenum pname) {
     if(!m_gfxID)
         return 0;
     if(m_baseType == FG_GFX_BASE_TYPE_INVALID)

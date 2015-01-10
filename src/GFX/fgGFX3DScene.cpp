@@ -16,28 +16,28 @@
 /**
  * 
  */
-fgGfx3DScene::fgGfx3DScene() :
-fgGfxSceneManager() {
+fg::gfx::CScene3D::CScene3D() :
+CSceneManager() {
     getMVP()->setPerspective(45.0f, 4.0f / 3.0f);
 }
 
 /**
  * 
  */
-fgGfx3DScene::~fgGfx3DScene() { }
+fg::gfx::CScene3D::~CScene3D() { }
 
 /**
  * 
  */
-void fgGfx3DScene::sortCalls(void) {
-    fgGfxSceneManager::sortCalls();
+void fg::gfx::CScene3D::sortCalls(void) {
+    CSceneManager::sortCalls();
 }
 
 /**
  * 
  */
-void fgGfx3DScene::render(void) {
-    fgGfxSceneManager::render();
+void fg::gfx::CScene3D::render(void) {
+    CSceneManager::render();
 }
 
 /**
@@ -46,12 +46,12 @@ void fgGfx3DScene::render(void) {
  * @param nameTag
  * @return 
  */
-fgGfxSceneNode *fgGfx3DScene::addFromModel(fgGfxModelResource* pModelRes,
+fg::gfx::CSceneNode *fg::gfx::CScene3D::addFromModel(CModelResource* pModelRes,
                                            const std::string& nameTag) {
     if(!pModelRes) {
         return NULL;
     }
-    fgGfxSceneNode *pNode = new fgGfxSceneNodeObject(pModelRes, NULL);
+    CSceneNode *pNode = new CSceneNodeObject(pModelRes, NULL);
     //fgGfxSceneNodeObject *pNodeObject = static_cast<fgGfxSceneNodeObject *>(pNode);
     pNode->setName(nameTag);
     if(!addNode(pNode->getRefHandle(), pNode)) {
@@ -67,7 +67,7 @@ fgGfxSceneNode *fgGfx3DScene::addFromModel(fgGfxModelResource* pModelRes,
  * @param nameTag
  * @return 
  */
-fgGfxSceneNode *fgGfx3DScene::addFromModel(const std::string& modelNameTag,
+fg::gfx::CSceneNode *fg::gfx::CScene3D::addFromModel(const std::string& modelNameTag,
                                            const std::string& nameTag) {
     if(modelNameTag.empty() || nameTag.empty()) {
         return NULL;
@@ -76,7 +76,7 @@ fgGfxSceneNode *fgGfx3DScene::addFromModel(const std::string& modelNameTag,
     if(!pResourceManager) {
         return NULL;
     }
-    fgGfxModelResource *pModelRes = static_cast<fgGfxModelResource *>(pResourceManager->get(modelNameTag));
+    CModelResource *pModelRes = static_cast<CModelResource *>(pResourceManager->get(modelNameTag));
     if(!pModelRes) {
         return NULL;
     }
@@ -89,7 +89,7 @@ fgGfxSceneNode *fgGfx3DScene::addFromModel(const std::string& modelNameTag,
  * @param nameTag
  * @return 
  */
-fgGfxSceneNode *fgGfx3DScene::addFromModel(const char *modelNameTag,
+fg::gfx::CSceneNode *fg::gfx::CScene3D::addFromModel(const char *modelNameTag,
                                            const char *nameTag) {
     if(!modelNameTag || !nameTag) {
         return NULL;
@@ -98,7 +98,7 @@ fgGfxSceneNode *fgGfx3DScene::addFromModel(const char *modelNameTag,
     if(!pResourceManager) {
         return NULL;
     }
-    fgGfxModelResource *pModelRes = static_cast<fgGfxModelResource *>(pResourceManager->get(modelNameTag));
+    CModelResource *pModelRes = static_cast<CModelResource *>(pResourceManager->get(modelNameTag));
     if(!pModelRes) {
         return NULL;
     }

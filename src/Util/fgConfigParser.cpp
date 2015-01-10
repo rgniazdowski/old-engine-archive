@@ -36,7 +36,7 @@ fgBool fgConfigParser::splitSectionName(std::string &fullSectionName,
                                         std::string &subSectionName) {
     fgBool isSection = FG_TRUE;
     fullSectionName = fgStrings::trim(fullSectionName, std::string("[]"));
-    fgVector<std::string> splitSection;
+    fg::CVector<std::string> splitSection;
     splitSection.reserve(4);
     fgStrings::split(fullSectionName, '.', splitSection);
     if(splitSection.size() == 1) {

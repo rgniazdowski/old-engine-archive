@@ -12,33 +12,39 @@
     #define FG_INC_GFX_2D_SCENE_BLOCK
 
     #include "fgGFXSceneManager.h"
+    
+namespace fg {
 
-/**
- *
- */
-class fgGfx2DScene : public fgGfxSceneManager {
-public:
-    ///
-    typedef fgGfxSceneManager base_type;
+    namespace gfx {
 
-private:
+        /**
+         *
+         */
+        class CScene2D : public CSceneManager {
+        public:
+            ///
+            typedef CSceneManager base_type;
 
-public:
-    /**
-     * 
-     */
-    fgGfx2DScene();
-    /**
-     * 
-     */
-    virtual ~fgGfx2DScene();
+        private:
 
-public:
-    //    #THAFUCK?
-    //    virtual void flush(void);
-    //    virtual void sortCalls(void);
-    //    virtual void render(void);
+        public:
+            /**
+             * 
+             */
+            CScene2D();
+            /**
+             * 
+             */
+            virtual ~CScene2D();
 
+        public:
+            //    #THAFUCK?
+            //    virtual void flush(void);
+            //    virtual void sortCalls(void);
+            //    virtual void render(void);
+
+        };
+    };
 };
 
     #undef FG_INC_GFX_2D_SCENE_BLOCK

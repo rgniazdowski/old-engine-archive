@@ -79,7 +79,7 @@ fgBool fgDirent::internal_readZipFile(const std::string& fileName,
     // active - append full zip listing into file names/paths vector
     fg::util::ZipFile zip(filePath);
     zip.open();
-    fgStringVector &zipFileList = zip.getFileList();
+    fg::CStringVector &zipFileList = zip.getFileList();
     int nZipFiles = zipFileList.size();
     for(int i = 0; i < nZipFiles; i++) {
         // Need to check here if the path inside of the zip does not
@@ -123,10 +123,10 @@ fgBool fgDirent::readDirectory(fgBool recursive, fgBool listZipFiles) {
 #endif /* FG_USING_MARMALADE */
 
     m_fileNames.clear_optimised();
-    fgStringVector dirStack;
+    fg::CStringVector dirStack;
     std::string fileName;
     std::string dirPath;
-    fgStringVector dirVec;
+    fg::CStringVector dirVec;
     fgStrings::split(m_dirPath, ';', dirVec);
     int ndirs = dirVec.size();
 
@@ -350,7 +350,7 @@ std::string &fgDirent::searchForFile(std::string &output,
     fgBool stop = FG_FALSE;
     std::string foundPath;
     const char *subPath;
-    fgStringVector patternVec;
+    fg::CStringVector patternVec;
     fgStrings::split(patterns, ';', patternVec);
     do {
         if(getNextFilePath(foundPath).empty())
@@ -411,9 +411,10 @@ void fgDirent::clearList(void) {
     m_fileIt = m_fileNames.end();
 }
 
-/*
- *
+/**
+ * 
+ * @return 
  */
-fgStringVector &fgDirent::getRefFiles(void) {
+fg::CStringVector &fgDirent::getRefFiles(void) {
     return m_fileNames;
 }

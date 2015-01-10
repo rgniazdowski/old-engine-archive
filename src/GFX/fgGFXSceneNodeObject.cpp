@@ -20,10 +20,12 @@
 
 /**
  * 
+ * @param pModel
+ * @param pParent
  */
-fgGfxSceneNodeObject::fgGfxSceneNodeObject(fgGfxModel *pModel, fgGfxSceneNode *pParent) :
-fgGfxSceneNode(FG_GFX_SCENE_NODE_OBJECT, pParent) {
-    fgGfxSceneNode::setNodeType(FG_GFX_SCENE_NODE_OBJECT);
+fg::gfx::CSceneNodeObject::CSceneNodeObject(fg::gfx::CModel *pModel, fg::gfx::CSceneNode *pParent) :
+CSceneNode(FG_GFX_SCENE_NODE_OBJECT, pParent) {
+    CSceneNode::setNodeType(FG_GFX_SCENE_NODE_OBJECT);
     // Now need to reset the draw call - this is object based on model
     // it has multiple children - they have their own draw calls
     // One drawcall for model/object is not needed - remove it just in case
@@ -41,12 +43,12 @@ fgGfxSceneNode(FG_GFX_SCENE_NODE_OBJECT, pParent) {
  * 
  * @param orig
  */
-fgGfxSceneNodeObject::fgGfxSceneNodeObject(const fgGfxSceneNodeObject& orig) { }
+fg::gfx::CSceneNodeObject::CSceneNodeObject(const CSceneNodeObject& orig) { }
 
 /**
  * 
  */
-fgGfxSceneNodeObject::~fgGfxSceneNodeObject() {
+fg::gfx::CSceneNodeObject::~CSceneNodeObject() {
     FG_LOG_DEBUG("fgGfxSceneNodeObject destructor %s", this->m_nameTag.c_str());
     // Well there's no need to remove children from this destructor
     // The base class destructor (SceneNode) will take care of that
@@ -56,7 +58,7 @@ fgGfxSceneNodeObject::~fgGfxSceneNodeObject() {
  * 
  * @param pModel
  */
-void fgGfxSceneNodeObject::setModel(fgGfxModel *pModel) {
+void fg::gfx::CSceneNodeObject::setModel(fg::gfx::CModel *pModel) {
     if(pModel) {
         if(m_pModel == pModel) {
             // No need to reinitialize #FIXME
@@ -81,15 +83,15 @@ void fgGfxSceneNodeObject::setModel(fgGfxModel *pModel) {
             // Would need to clear the children list?
         } // SRSLY? #FIXME
 
-        fgGfxModel::modelShapes &shapes = pModel->getRefShapes();
-        fgGfxModel::modelShapesItor sit = shapes.begin(), send = shapes.end();
+        fg::gfx::CModel::modelShapes &shapes = pModel->getRefShapes();
+        fg::gfx::CModel::modelShapesItor sit = shapes.begin(), send = shapes.end();
         for(; sit != send; sit++) {
             if(!(*sit))
                 continue;
             fgGfxMeshBase *pMesh = (*sit)->mesh;
             if(!pMesh)
                 continue;
-            fgGfxSceneNode *pChildNode = new fgGfxSceneNodeMesh(pMesh, this);
+            CSceneNode *pChildNode = new fg::gfx::CSceneNodeMesh(pMesh, this);
             // Should register it in a manager?
             if(m_pManager) {
                 if(m_pManager->getManagerType() == FG_MANAGER_SCENE) {

@@ -30,9 +30,9 @@ typedef unsigned int fgResourceConfigType;
  */
 struct fgResourceHeader {
     ///
-    fgVector<fgQuality> qualities;
+    fg::CVector<fgQuality> qualities;
     ///
-    fgStringVector paths;
+    fg::CStringVector paths;
     ///
     std::string name;
     ///
@@ -123,43 +123,67 @@ public:
      */
     fgCfgSection *getConfigSection(void);
 
-    //
+    /**
+     * 
+     * @param resName
+     * @return 
+     */
     fgResourceHeader &getResourceHeader(const char *resName);
-
-    //
+    /**
+     * 
+     * @param resName
+     * @return 
+     */
     fgResourceHeader &getResourceHeader(const std::string & resName);
 
-    //
-    fgStringVector &getRefResourceNames(void) {
+    /**
+     * 
+     * @return 
+     */
+    fg::CStringVector &getRefResourceNames(void) {
         return m_resNames;
     }
-
-    //
+    /**
+     * 
+     * @return 
+     */
     resourceHeaderMap &getRefResourceHeaders(void) {
         return m_resources;
     }
-
-    //
-    fgVector<fgQuality> &getRefQualities(void) {
+    /**
+     * 
+     * @return 
+     */
+    fg::CVector<fgQuality> &getRefQualities(void) {
         return m_header.qualities;
     }
 
-    //
-    fgStringVector &getRefPaths(void) {
+    /**
+     * 
+     * @return 
+     */
+    fg::CStringVector &getRefPaths(void) {
         return m_header.paths;
     }
 
-    //
+    /**
+     * 
+     * @return 
+     */
     fgResPriorityType getPriority(void) const {
         return m_header.priority;
     }
-
-    //
+    /**
+     * 
+     * @return 
+     */
     std::string &getName(void) {
         return m_header.name;
     }
-
-    //
+    /**
+     * 
+     * @return 
+     */
     fgResourceHeader &getRefHeader(void) {
         return m_header;
     }
@@ -174,12 +198,11 @@ private:
     ///
     fgResourceHeader m_header;
     ///
-    fgStringVector m_resNames;
+    fg::CStringVector m_resNames;
     ///
     fgResourceConfigType m_cfgType;
     ///
     resourceHeaderMap m_resources;
-
 };
 
 #endif /* FG_INC_RESOURCE_CONFIG */

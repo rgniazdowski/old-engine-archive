@@ -381,335 +381,341 @@ struct fgGfxContextParam {
     }
 };
 
-/*
- * Special class for holding information about current GFX context.
- * Works as a special kind of cache for client and server side.
- */
-class fgGfxContext {
-    friend class fgGfxPlatform;
-public:
-    typedef std::map<fgGFXuint, fgGfxContextParam> gfxParamMap;
-    typedef gfxParamMap::iterator gfxParamMapItor;
+namespace fg {
+    namespace gfx {
 
-    typedef std::map<fgGFXuint, fgGfxTextureID*> gfxTextureMap;
-    typedef gfxTextureMap::iterator gfxTextureMapItor;
+        class CPlatform;
+        
+        /*
+         * Special class for holding information about current GFX context.
+         * Works as a special kind of cache for client and server side.
+         */
+        class CContext {
+            friend class fg::gfx::CPlatform;
+            
+        public:
+            typedef std::map<fgGFXuint, fgGfxContextParam> gfxParamMap;
+            typedef gfxParamMap::iterator gfxParamMapItor;
 
-    typedef std::map<fgGFXuint, fgGfxBufferID*> gfxBufferMap;
-    typedef gfxBufferMap::iterator gfxBufferMapItor;
+            typedef std::map<fgGFXuint, fgGfxTextureID*> gfxTextureMap;
+            typedef gfxTextureMap::iterator gfxTextureMapItor;
 
-private:
+            typedef std::map<fgGFXuint, fgGfxBufferID*> gfxBufferMap;
+            typedef gfxBufferMap::iterator gfxBufferMapItor;
+
+        private:
     #if defined(FG_USING_SDL2)
-    SDL_Window *m_sdlWindow;
-    SDL_GLContext m_GLContext; // #FIXME - context can be separate? ... P4
+            SDL_Window *m_sdlWindow;
+            SDL_GLContext m_GLContext; // #FIXME - context can be separate? ... P4
     #elif defined(FG_USING_EGL)    
-    void* m_GLContext; // it's for EGL only...
+            void* m_GLContext; // it's for EGL only...
     #else
-    void *m_GLContext; // ?
+            void *m_GLContext; // ?
     #endif
-    /// Special parameter map used for caching and fast value check
-    /// It's used for not calling redundant GL functions, like:
-    /// glGet/glEnable/glDisable/glIsEnabled and so on. Also for
-    /// functions like activating proper vertex attrib array idx,
-    /// bounding textures... any kind of function that changes internal
-    /// state values.
-    gfxParamMap m_params;
-    /// Special map used for holding valid texture IDs
-    /// Every texture needs to be created/deleted through
-    /// this class. When texture is deleted its' ID is zeroed
-    /// in every place in the app. Therefore there's no need to
-    /// often call glIsTexture. If gfx ID is not zero the texture
-    /// is surely valid.
-    gfxTextureMap m_textures;
-    /// Special map used for holding valid VBO IDs. Use case
-    /// is the same as for textures.
-    gfxBufferMap m_buffers;
-    /// Viewport area (used for fast check if viewport changed)
-    fgGFXuint m_viewportAreaQ;
-    /// Scissor area
-    fgGFXuint m_scissorAreaQ;
+            /// Special parameter map used for caching and fast value check
+            /// It's used for not calling redundant GL functions, like:
+            /// glGet/glEnable/glDisable/glIsEnabled and so on. Also for
+            /// functions like activating proper vertex attrib array idx,
+            /// bounding textures... any kind of function that changes internal
+            /// state values.
+            gfxParamMap m_params;
+            /// Special map used for holding valid texture IDs
+            /// Every texture needs to be created/deleted through
+            /// this class. When texture is deleted its' ID is zeroed
+            /// in every place in the app. Therefore there's no need to
+            /// often call glIsTexture. If gfx ID is not zero the texture
+            /// is surely valid.
+            gfxTextureMap m_textures;
+            /// Special map used for holding valid VBO IDs. Use case
+            /// is the same as for textures.
+            gfxBufferMap m_buffers;
+            /// Viewport area (used for fast check if viewport changed)
+            fgGFXuint m_viewportAreaQ;
+            /// Scissor area
+            fgGFXuint m_scissorAreaQ;
 
-    /// Currently used attribute mask
-    fgGFXuint m_attribMask;
-    ///
-    fgGfxAttributeData m_attrInfo[FG_GFX_ATTRIBUTE_DATA_MAX]; // #FIXME - attribute count ... why here?  hello?
-    /// Currently bound texture ID
-    fgGFXuint m_boundTexture;
-    /// Supported shading language version
-    fgGfxSLVersion m_SLVersion;
-    ///
-    fgVector2i m_screenSize;
-    /// Is context ready? Is initialization successful?
-    fgBool m_init;
+            /// Currently used attribute mask
+            fgGFXuint m_attribMask;
+            ///
+            fgGfxAttributeData m_attrInfo[FG_GFX_ATTRIBUTE_DATA_MAX]; // #FIXME - attribute count ... why here?  hello?
+            /// Currently bound texture ID
+            fgGFXuint m_boundTexture;
+            /// Supported shading language version
+            fgGfxSLVersion m_SLVersion;
+            ///
+            fgVector2i m_screenSize;
+            /// Is context ready? Is initialization successful?
+            fgBool m_init;
 
-protected:
+        protected:
     #if defined(FG_USING_SDL2)
-    // Default constructor for the SDL build
-    fgGfxContext(SDL_Window *sdlWindow);
+            // Default constructor for the SDL build
+            CContext(SDL_Window *sdlWindow);
     #else
-    // Default constructor
-    fgGfxContext();
+            // Default constructor
+            CContext();
     #endif
-    // Default destructor for the GFX context object
-    virtual ~fgGfxContext();
+            // Default destructor for the GFX context object
+            virtual ~CContext();
 
-    // This function will set or unset given attrib bits
-    // depending on the current mask value
-    void updateAttribMask(const fgGFXuint index);
+            // This function will set or unset given attrib bits
+            // depending on the current mask value
+            void updateAttribMask(const fgGFXuint index);
 
-public:
-    /**
-     * 
-     * @return 
-     */
-    fgBool isInit(void) const {
-        return m_init;
-    }
-    /**
-     * Return version ID for shading language currently supported by the graphics context
-     * @return 
-     */
-    fgGfxSLVersion getSLVersion(void) const {
-        return m_SLVersion;
-    }
-    
-    /**
-     * 
-     * @return 
-     */
-    void *getGLContext(void) const {
-        return m_GLContext;
-    }
-    
-    /**
-     * 
-     * @return 
-     */
-    fgVector2i const & getScreenSize(void) const {
-        return m_screenSize;
-    }
-    /**
-     * 
-     * @param w
-     * @param h
-     */
-    void setScreenSize(const int w, const int h) {
-        m_screenSize.x = w;
-        m_screenSize.y = h;
-    }
-    /**
-     * 
-     * @param screenSize
-     */
-    void setScreenSize(const fgVector2i & screenSize) {
-        m_screenSize = screenSize;
-    } 
-    /**
-     * 
-     * @param screenSize
-     */
-    void setScreenSize(const fgVector2f & screenSize) {
-        m_screenSize.x = (int)screenSize.x;
-        m_screenSize.y = (int)screenSize.y;
-    }
+        public:
+            /**
+             * 
+             * @return 
+             */
+            fgBool isInit(void) const {
+                return m_init;
+            }
+            /**
+             * Return version ID for shading language currently supported by the graphics context
+             * @return 
+             */
+            fgGfxSLVersion getSLVersion(void) const {
+                return m_SLVersion;
+            }
+            /**
+             * 
+             * @return 
+             */
+            void *getGLContext(void) const {
+                return m_GLContext;
+            }
+            /**
+             * 
+             * @return 
+             */
+            fgVector2i const & getScreenSize(void) const {
+                return m_screenSize;
+            }
+            /**
+             * 
+             * @param w
+             * @param h
+             */
+            void setScreenSize(const int w, const int h) {
+                m_screenSize.x = w;
+                m_screenSize.y = h;
+            }
+            /**
+             * 
+             * @param screenSize
+             */
+            void setScreenSize(const fgVector2i & screenSize) {
+                m_screenSize = screenSize;
+            }
+            /**
+             * 
+             * @param screenSize
+             */
+            void setScreenSize(const fgVector2f & screenSize) {
+                m_screenSize.x = (int)screenSize.x;
+                m_screenSize.y = (int)screenSize.y;
+            }
 
-    // Initialize the context and internal parameter state
-    void initialize(void);
-    // Get parameter structure
-    fgGfxContextParam& getParam(const fgGFXenum pname);
+            // Initialize the context and internal parameter state
+            void initialize(void);
+            // Get parameter structure
+            fgGfxContextParam& getParam(const fgGFXenum pname);
 
-    // Enable GFX capability
-    void enable(const fgGFXenum cap);
-    // Disable GFX capability
-    void disable(const fgGFXenum cap);
+            // Enable GFX capability
+            void enable(const fgGFXenum cap);
+            // Disable GFX capability
+            void disable(const fgGFXenum cap);
 
-    // Is given capability/parameter enabled?
-    fgGFXboolean isEnabled(const fgGFXenum pname);
-    // Is given capability/parameter disabled?
-    fgGFXboolean isDisabled(const fgGFXenum pname);
+            // Is given capability/parameter enabled?
+            fgGFXboolean isEnabled(const fgGFXenum pname);
+            // Is given capability/parameter disabled?
+            fgGFXboolean isDisabled(const fgGFXenum pname);
 
-    // Is given buffer ID valid?
-    fgGFXboolean isBuffer(const fgGFXuint buffer);
-    // Is given buffer ID struct valid?
-    fgGFXboolean isBuffer(const fgGfxBufferID& bufferID);
-    // Is given pointer to buffer ID struct valid?
-    fgGFXboolean isBuffer(const fgGfxBufferID* bufferID);
+            // Is given buffer ID valid?
+            fgGFXboolean isBuffer(const fgGFXuint buffer);
+            // Is given buffer ID struct valid?
+            fgGFXboolean isBuffer(const fgGfxBufferID& bufferID);
+            // Is given pointer to buffer ID struct valid?
+            fgGFXboolean isBuffer(const fgGfxBufferID* bufferID);
 
-    // Delete/release all buffers registered within this context
-    void deleteAllBuffers(void);
+            // Delete/release all buffers registered within this context
+            void deleteAllBuffers(void);
 
-    // Generate given number of buffers
-    fgGFXboolean genBuffers(const int count, fgGfxBufferID*& buffers, const fgGFXenum usage = GL_STATIC_DRAW);
+            // Generate given number of buffers
+            fgGFXboolean genBuffers(const int count, fgGfxBufferID*& buffers, const fgGFXenum usage = GL_STATIC_DRAW);
 
-    // Set buffer data
-    void bufferData(
-                    fgGfxBufferID& bufferID,
-                    const fgGFXsizei size,
-                    const fgGFXvoid* data,
-                    const fgGFXenum target = GL_ARRAY_BUFFER,
-                    const fgGFXenum usage = (fgGFXenum)0);
+            // Set buffer data
+            void bufferData(
+                            fgGfxBufferID& bufferID,
+                            const fgGFXsizei size,
+                            const fgGFXvoid* data,
+                            const fgGFXenum target = GL_ARRAY_BUFFER,
+                            const fgGFXenum usage = (fgGFXenum)0);
 
-    // Bind given buffer ID to target array
-    void bindBuffer(const fgGFXenum target, const fgGFXuint buffer);
-    // Bind given buffer ID to target array
-    void bindBuffer(fgGfxBufferID& bufferID, const fgGFXenum target = (fgGFXenum)0);
-    // Return currently bound buffer
-    fgGFXuint boundBuffer(const fgGFXenum target = GL_ARRAY_BUFFER);
+            // Bind given buffer ID to target array
+            void bindBuffer(const fgGFXenum target, const fgGFXuint buffer);
+            // Bind given buffer ID to target array
+            void bindBuffer(fgGfxBufferID& bufferID, const fgGFXenum target = (fgGFXenum)0);
+            // Return currently bound buffer
+            fgGFXuint boundBuffer(const fgGFXenum target = GL_ARRAY_BUFFER);
 
-    // Delete/release given buffer
-    void deleteBuffer(fgGfxBufferID& bufferID);
-    // Delete/release given number of buffers. IDs are zeroed and are no longer valid
-    void deleteBuffers(const int count, fgGfxBufferID* buffers);
+            // Delete/release given buffer
+            void deleteBuffer(fgGfxBufferID& bufferID);
+            // Delete/release given number of buffers. IDs are zeroed and are no longer valid
+            void deleteBuffers(const int count, fgGfxBufferID* buffers);
 
-    // Currently bound texture ID
-    fgGFXuint boundTexture(void) const;
-    // Currently active texture unit ID
-    fgGFXuint activeTexture(void);
+            // Currently bound texture ID
+            fgGFXuint boundTexture(void) const;
+            // Currently active texture unit ID
+            fgGFXuint activeTexture(void);
 
-    // Is given texture ID valid?
-    fgGFXboolean isTexture(const fgGFXuint texture);
-    // Is given texture ID valid?
-    fgGFXboolean isTexture(const fgGfxTextureID& textureID);
+            // Is given texture ID valid?
+            fgGFXboolean isTexture(const fgGFXuint texture);
+            // Is given texture ID valid?
+            fgGFXboolean isTexture(const fgGfxTextureID& textureID);
 
-    // Set active texture unit ID
-    void activeTexture(const fgGFXenum texture);
+            // Set active texture unit ID
+            void activeTexture(const fgGFXenum texture);
 
-    // Delete/release all registered textures
-    void deleteAllTextures(void);
+            // Delete/release all registered textures
+            void deleteAllTextures(void);
 
-    // Generate given number of texture objects
-    void genTextures(const int count, fgGfxTextureID* textures, const fgGFXenum target = GL_TEXTURE_2D);
-    // Generate texture and store information in special structure
-    void genTexture(fgGfxTextureID* texture, const fgGFXenum target = GL_TEXTURE_2D);
+            // Generate given number of texture objects
+            void genTextures(const int count, fgGfxTextureID* textures, const fgGFXenum target = GL_TEXTURE_2D);
+            // Generate texture and store information in special structure
+            void genTexture(fgGfxTextureID* texture, const fgGFXenum target = GL_TEXTURE_2D);
 
-    // Delete the specified number of textures based on info in special array
-    void deleteTextures(const int count, fgGfxTextureID* textures);
-    // Delete the given texture based on the special information struct
-    void deleteTexture(fgGfxTextureID& textureID);
+            // Delete the specified number of textures based on info in special array
+            void deleteTextures(const int count, fgGfxTextureID* textures);
+            // Delete the given texture based on the special information struct
+            void deleteTexture(fgGfxTextureID& textureID);
 
-    // Bind texture to 2D
-    void bindTexture2D(const fgGFXuint texID);
-    // Bind texture to 3D
-    void bindTextureCube(const fgGFXuint texID);
-    // Bind texture to given target
-    void bindTexture(fgGfxTextureID& textureID, const fgGFXenum target = (fgGFXenum)0);
+            // Bind texture to 2D
+            void bindTexture2D(const fgGFXuint texID);
+            // Bind texture to 3D
+            void bindTextureCube(const fgGFXuint texID);
+            // Bind texture to given target
+            void bindTexture(fgGfxTextureID& textureID, const fgGFXenum target = (fgGFXenum)0);
 
-    // Specify the blend equation mode
-    void blendEquation(const fgGFXenum mode);
-    // Specify the blend equation mode separately for RGB and alpha channels
-    void blendEquation(const fgGFXenum modeRGB, const fgGFXenum modeAlpha);
-    // Specify the blend functions for source and destination
-    void blendFunc(const fgGFXenum sfactor, const fgGFXenum dfactor);
-    // Specify the blend functions for source and destination separately for RGB and alpha channels
-    void blendFunc(const fgGFXenum srcRGB, const fgGFXenum dstRGB, const fgGFXenum srcAlpha, const fgGFXenum dstAlpha);
+            // Specify the blend equation mode
+            void blendEquation(const fgGFXenum mode);
+            // Specify the blend equation mode separately for RGB and alpha channels
+            void blendEquation(const fgGFXenum modeRGB, const fgGFXenum modeAlpha);
+            // Specify the blend functions for source and destination
+            void blendFunc(const fgGFXenum sfactor, const fgGFXenum dfactor);
+            // Specify the blend functions for source and destination separately for RGB and alpha channels
+            void blendFunc(const fgGFXenum srcRGB, const fgGFXenum dstRGB, const fgGFXenum srcAlpha, const fgGFXenum dstAlpha);
 
-    // Use specified shader program
-    void useProgram(const fgGFXuint program);
-    // Returns the index to currently active vertex program
-    fgGFXuint activeProgram(void);
+            // Use specified shader program
+            void useProgram(const fgGFXuint program);
+            // Returns the index to currently active vertex program
+            fgGFXuint activeProgram(void);
 
-    // Set the viewport dimensions
-    void viewport(const fgGFXint x, const fgGFXint y, const fgGFXint width, const fgGFXint height);
-    // Set the viewport dimensions
-    void viewport(const fgVector2i& pos, const fgVector2i& size);
-    // Set the viewport dimensions
-    void viewport(const fgVector4i& dimensions);
+            // Set the viewport dimensions
+            void viewport(const fgGFXint x, const fgGFXint y, const fgGFXint width, const fgGFXint height);
+            // Set the viewport dimensions
+            void viewport(const fgVector2i& pos, const fgVector2i& size);
+            // Set the viewport dimensions
+            void viewport(const fgVector4i& dimensions);
 
-    // Returns the viewport aspect ratio
-    inline fgGFXfloat getViewportAspect(void) {
-        fgGFXfloat y = (fgGFXfloat)m_params[(fgGFXuint)GL_VIEWPORT].ints[1];
-        if(y <= FG_EPSILON)
-            return 1.0f;
-        return (fgGFXfloat)m_params[(fgGFXuint)GL_VIEWPORT].ints[0] / y;
-    }
+            // Returns the viewport aspect ratio
+            inline fgGFXfloat getViewportAspect(void) {
+                fgGFXfloat y = (fgGFXfloat)m_params[(fgGFXuint)GL_VIEWPORT].ints[1];
+                if(y <= FG_EPSILON)
+                    return 1.0f;
+                return (fgGFXfloat)m_params[(fgGFXuint)GL_VIEWPORT].ints[0] / y;
+            }
 
-    // Set the scissor box to default dimensions
-    inline void scissor(void) {
-        scissor(0, 0, m_screenSize.x, m_screenSize.y);
-    }
-    // Set the scissor box dimensions
-    void scissor(const fgGFXint x, const fgGFXint y, const fgGFXint width, const fgGFXint height);
-    // Set the scissor box dimensions
-    void scissor(const fgVector2i& pos, const fgVector2i& size);
-    // Set the scissor box dimensions
-    void scissor(const fgVector4i& dimensions);
+            // Set the scissor box to default dimensions
+            inline void scissor(void) {
+                scissor(0, 0, m_screenSize.x, m_screenSize.y);
+            }
+            // Set the scissor box dimensions
+            void scissor(const fgGFXint x, const fgGFXint y, const fgGFXint width, const fgGFXint height);
+            // Set the scissor box dimensions
+            void scissor(const fgVector2i& pos, const fgVector2i& size);
+            // Set the scissor box dimensions
+            void scissor(const fgVector4i& dimensions);
 
-    // Returns the scissor box aspect ratio
-    inline fgGFXfloat getScissorAspect(void) {
-        fgGFXfloat y = (fgGFXfloat)m_params[(fgGFXuint)GL_SCISSOR_BOX].ints[1];
-        if(y <= FG_EPSILON)
-            return 1.0f;
-        return (fgGFXfloat)m_params[(fgGFXuint)GL_SCISSOR_BOX].ints[0] / y;
-    }
+            // Returns the scissor box aspect ratio
+            inline fgGFXfloat getScissorAspect(void) {
+                fgGFXfloat y = (fgGFXfloat)m_params[(fgGFXuint)GL_SCISSOR_BOX].ints[1];
+                if(y <= FG_EPSILON)
+                    return 1.0f;
+                return (fgGFXfloat)m_params[(fgGFXuint)GL_SCISSOR_BOX].ints[0] / y;
+            }
 
-    // Toggle scissor test capability
-    void setScissorTest(const fgBool toggle = FG_TRUE);
-    // Toggle depth testing
-    void setDepthTest(const fgBool toggle = FG_TRUE);
-    // Toggle cull face elimination
-    void setCullFace(const fgBool toggle = FG_TRUE);
-    // Toggle blending
-    void setBlend(const fgBool toggle = FG_TRUE);
-    // Set the front face
-    void frontFace(const fgGFXenum mode = GL_CCW);
-    // Set the cull face
-    void cullFace(const fgGFXenum mode = GL_BACK);
-    // Set the depth function
-    void depthFunc(const fgGFXenum func);
-    // Set the clear depth value
-    void clearDepth(const fgGFXfloat depth = 1.0f);
-    // Set the clear color
-    void clearColor(const fgGFXfloat red, const fgGFXfloat green, const fgGFXfloat blue, const fgGFXfloat alpha);
-    // Set the clear stencil value
-    void clearStencil(const fgGFXint s);
-    // Set the pixel unpacking alignment
-    void pixelStoreUnPack(const fgGFXint param = 4);
-    // Set the pixel packing alignment
-    void pixelStorePack(const fgGFXint param = 4);
+            // Toggle scissor test capability
+            void setScissorTest(const fgBool toggle = FG_TRUE);
+            // Toggle depth testing
+            void setDepthTest(const fgBool toggle = FG_TRUE);
+            // Toggle cull face elimination
+            void setCullFace(const fgBool toggle = FG_TRUE);
+            // Toggle blending
+            void setBlend(const fgBool toggle = FG_TRUE);
+            // Set the front face
+            void frontFace(const fgGFXenum mode = GL_CCW);
+            // Set the cull face
+            void cullFace(const fgGFXenum mode = GL_BACK);
+            // Set the depth function
+            void depthFunc(const fgGFXenum func);
+            // Set the clear depth value
+            void clearDepth(const fgGFXfloat depth = 1.0f);
+            // Set the clear color
+            void clearColor(const fgGFXfloat red, const fgGFXfloat green, const fgGFXfloat blue, const fgGFXfloat alpha);
+            // Set the clear stencil value
+            void clearStencil(const fgGFXint s);
+            // Set the pixel unpacking alignment
+            void pixelStoreUnPack(const fgGFXint param = 4);
+            // Set the pixel packing alignment
+            void pixelStorePack(const fgGFXint param = 4);
 
-    // Returns the currently active vertex attribute mask
-    fgGFXuint activeVertexAttribArrayMask(void) const;
-    // Returns whether given index vertex attrib array is activated
-    fgBool isVertexAttribArrayActive(const fgGFXuint index) const;
+            // Returns the currently active vertex attribute mask
+            fgGFXuint activeVertexAttribArrayMask(void) const;
+            // Returns whether given index vertex attrib array is activated
+            fgBool isVertexAttribArrayActive(const fgGFXuint index) const;
 
-    // https://www.khronos.org/opengles/sdk/docs/man/xhtml/glEnableVertexAttribArray.xml
-    // Enable the given vertex attrib array index and also by default update the current attrib mask
-    void enableVertexAttribArray(const fgGFXuint index, const fgBool updateMask = FG_TRUE);
-    // Disable the given vertex attrib array index and also by default update the current attrib mask
-    void disableVertexAttribArray(const fgGFXuint index, const fgBool updateMask = FG_TRUE);
-    // Enable the vertex attrib arrays based on the given attrib mask
-    // Attributes not in the mask will not be deactivated
-    void enableVertexAttribArrayMask(const fgGFXuint mask);
-    // Disable the vertex attrib arrays based on the given attrib mask
-    void disableVertexAttribArrayMask(const fgGFXuint mask);
-    // Disable or enable given vertex attrib arrays based on the given mask
-    // Attributes not in the mask will be deactivated
-    void diffVertexAttribArrayMask(const fgGFXuint mask);
+            // https://www.khronos.org/opengles/sdk/docs/man/xhtml/glEnableVertexAttribArray.xml
+            // Enable the given vertex attrib array index and also by default update the current attrib mask
+            void enableVertexAttribArray(const fgGFXuint index, const fgBool updateMask = FG_TRUE);
+            // Disable the given vertex attrib array index and also by default update the current attrib mask
+            void disableVertexAttribArray(const fgGFXuint index, const fgBool updateMask = FG_TRUE);
+            // Enable the vertex attrib arrays based on the given attrib mask
+            // Attributes not in the mask will not be deactivated
+            void enableVertexAttribArrayMask(const fgGFXuint mask);
+            // Disable the vertex attrib arrays based on the given attrib mask
+            void disableVertexAttribArrayMask(const fgGFXuint mask);
+            // Disable or enable given vertex attrib arrays based on the given mask
+            // Attributes not in the mask will be deactivated
+            void diffVertexAttribArrayMask(const fgGFXuint mask);
 
 
-    // https://www.khronos.org/opengles/sdk/docs/man/xhtml/glGetVertexAttrib.xml
-    // Returns the buffer (VBO) index currently bound to given vertex attrib index
-    fgGFXuint getVertexAttribBufferBinding(const fgGFXuint index);
-    //
-    fgGFXuint getVertexAttribSize(const fgGFXuint index);
-    // Returns the vertex attrib data stride for the given index
-    fgGFXuint getVertexAttribStride(const fgGFXuint index);
-    // Returns the vertex attrib data type
-    fgGFXenum getVertexAttribType(const fgGFXuint index);
-    // Returns whether the given attrib array is normalized
-    fgGFXboolean getVertexAttribNormalized(const fgGFXuint index);
+            // https://www.khronos.org/opengles/sdk/docs/man/xhtml/glGetVertexAttrib.xml
+            // Returns the buffer (VBO) index currently bound to given vertex attrib index
+            fgGFXuint getVertexAttribBufferBinding(const fgGFXuint index);
+            //
+            fgGFXuint getVertexAttribSize(const fgGFXuint index);
+            // Returns the vertex attrib data stride for the given index
+            fgGFXuint getVertexAttribStride(const fgGFXuint index);
+            // Returns the vertex attrib data type
+            fgGFXenum getVertexAttribType(const fgGFXuint index);
+            // Returns whether the given attrib array is normalized
+            fgGFXboolean getVertexAttribNormalized(const fgGFXuint index);
 
-    // https://www.khronos.org/opengles/sdk/docs/man/xhtml/glVertexAttribPointer.xml
-    // Sets the various data details for given vertex attribute index
-    void vertexAttribPointer(fgGFXuint index,
-                             fgGFXint size,
-                             fgGFXenum type,
-                             fgGFXboolean normalized,
-                             fgGFXsizei stride,
-                             fgGFXvoid* ptr);
+            // https://www.khronos.org/opengles/sdk/docs/man/xhtml/glVertexAttribPointer.xml
+            // Sets the various data details for given vertex attribute index
+            void vertexAttribPointer(fgGFXuint index,
+                                     fgGFXint size,
+                                     fgGFXenum type,
+                                     fgGFXboolean normalized,
+                                     fgGFXsizei stride,
+                                     fgGFXvoid* ptr);
 
-    // Sets the various data details based on a special attribute data struct
-    void vertexAttribPointer(fgGfxAttributeData& attrData);
+            // Sets the various data details based on a special attribute data struct
+            void vertexAttribPointer(fgGfxAttributeData& attrData);
 
+        };
+    };
 };
 
     #undef FG_INC_GFX_CONTEXT_BLOCK

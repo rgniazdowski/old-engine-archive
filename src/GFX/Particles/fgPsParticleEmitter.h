@@ -20,23 +20,23 @@
     #include "fgVector.h"
     #include "GFX/fgGFXSceneNode.h"
     #include "fgPsParticleEffect.h"
-    
+
 /**
  * 
  */
-class fgParticleEmitter : public fgGfxSceneNode {
+class fgParticleEmitter : public fg::gfx::CSceneNode {
 public:
     /// Base type of the ParticleEmitter
-    typedef fgGfxSceneNode base_type;
+    typedef fg::gfx::CSceneNode base_type;
     /// Vector type definition for holding Particle Effects
-    typedef fgVector<fgParticleEffect *> particleEffects;
+    typedef fg::CVector<fgParticleEffect *> particleEffects;
     /// Iterator for the ParticleEffects vector
-    typedef particleEffects::iterator    particleEffectsItor;
+    typedef particleEffects::iterator particleEffectsItor;
     /// Vector type holding Particles
-    typedef fgVector<fgParticle> particleData;
+    typedef fg::CVector<fgParticle> particleData;
     /// Iterator for the Particles vector
     typedef particleData::iterator particleDataItor;
-    
+
 private:
     /// Pointers to the particle effects to which
     /// this particle emitter is bound
@@ -49,18 +49,17 @@ private:
     unsigned int m_numParticles;
     /// Maximum number of the particles for this emitter 
     unsigned int m_maxCount;
-    
+
 public:
     /**
      * 
      */
     fgParticleEmitter(fgParticleEffect *pParticleEffect = NULL);
-    
+
     /**
      * 
      */
     virtual ~fgParticleEmitter();
-
     /**
      * 
      * @param maxCount
@@ -72,7 +71,6 @@ public:
             m_maxCount = maxCount;
         }
     }
-    
     /**
      * 
      * @return 
@@ -80,7 +78,6 @@ public:
     inline unsigned int getMaxCount(void) const {
         return m_maxCount;
     }
-    
     /**
      * 
      * @return 
@@ -90,7 +87,6 @@ public:
             return m_effects.back();
         return NULL;
     }
-    
     /**
      * 
      * @return 
@@ -98,7 +94,6 @@ public:
     inline particleData& getParticleData(void) {
         return m_particles;
     }
-    
     /**
      * 
      * @return 
@@ -106,31 +101,31 @@ public:
     inline unsigned int getParticleCount(void) const {
         return m_numParticles;
     }
-    
+
     /**
      * 
      * @param which
      */
     void removeParticle(const unsigned int which);
-    
+
     /**
      * 
      * @param count
      */
     void addParticles(const unsigned int count, const fgVector3f& customOrigin);
-    
+
     /**
      * 
      * @param pParticleEffect
      * @return
      */
     fgBool setupFromParticleEffect(fgParticleEffect *pParticleEffect);
-    
+
     /**
      * 
      */
     virtual void calculate(void);
-    
+
 };
 
     #undef FG_INC_PS_PARTICLE_EMITTER_BLOCK

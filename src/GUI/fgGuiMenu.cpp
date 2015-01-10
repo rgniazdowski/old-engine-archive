@@ -32,7 +32,7 @@ void fgGuiMenu::setFlags(const std::string& flags) {
     // This is important - always call setFlags for the base class
     fgGuiContainer::setFlags(flags);
     m_isMainMenu = FG_FALSE;
-    fgStringVector flagsVec;
+    fg::CStringVector flagsVec;
     fgStrings::split(flags, ' ', flagsVec);
     if(flagsVec.empty())
         return;

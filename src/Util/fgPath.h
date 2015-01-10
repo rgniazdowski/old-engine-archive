@@ -55,7 +55,7 @@ namespace fg {
         std::string join(const std::string &dirpath, const std::string &filename);
 
         // Join the path from parts
-        void join(std::string &path, fgStringVector &parts);
+        void join(std::string &path, CStringVector &parts);
     };
 };
 

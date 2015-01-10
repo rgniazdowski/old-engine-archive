@@ -58,7 +58,7 @@ class fgGuiMain;
 class fgGuiMain : public fg::base::CManager, public fgGuiBase {
 private:
     ///
-    typedef fgVector<fgGuiCallback *> guiCallbackVec;
+    typedef fg::CVector<fgGuiCallback *> guiCallbackVec;
     ///
     typedef guiCallbackVec::iterator guiCallbackVecItor;
 

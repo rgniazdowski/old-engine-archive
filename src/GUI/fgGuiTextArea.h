@@ -25,14 +25,18 @@ public:
     
 protected:
     ///
-    fgStringVector m_textData;
+    fg::CStringVector m_textData;
     ///
     struct TextAreaSize {
         ///
         unsigned short cols; // x
         ///
         unsigned short rows; // y
-        
+        /**
+         * 
+         * @param _cols
+         * @param _rows
+         */
         TextAreaSize(unsigned short _cols = 32, unsigned short _rows = 1) :
         cols(_cols), rows(_rows) {            
         }

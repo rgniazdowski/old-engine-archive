@@ -29,7 +29,7 @@
 /*
  *
  */
-class fgGuiDrawer : public fgFontDrawer, public virtual fgGfxDrawingBatch {
+class fgGuiDrawer : public fgFontDrawer, public virtual fg::gfx::CDrawingBatch {
     friend class fgGuiMain;
     friend class fgGuiWidgetManager;
 private:

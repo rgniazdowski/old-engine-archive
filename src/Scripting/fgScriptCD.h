@@ -1401,8 +1401,8 @@ namespace LPCD {
      * fgGfxSceneNode pointer parameter *
      **************************************************************************/
 
-    template<> struct Type<fgGfxSceneNode *> {
-        static inline void Push(lua_State* L, const fgGfxSceneNode * value) {
+    template<> struct Type<fg::gfx::CSceneNode *> {
+        static inline void Push(lua_State* L, const fg::gfx::CSceneNode * value) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
             LuaPlus::LuaObject obj = state->BoxPointer((void*)value);
             #if defined(FG_DEBUG)
@@ -1420,17 +1420,17 @@ namespace LPCD {
             result = (bool) obj.IsUserdata();
             return result;
         }
-        static inline fgGfxSceneNode * Get(lua_State* L, int idx) {
+        static inline fg::gfx::CSceneNode * Get(lua_State* L, int idx) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
-            fgGfxSceneNode *pSceneNode = (fgGfxSceneNode *)state->UnBoxPointer(idx);
+            fg::gfx::CSceneNode *pSceneNode = (fg::gfx::CSceneNode *)state->UnBoxPointer(idx);
             return pSceneNode;
         }
     };
 
-    template<> struct Type<fgGfxSceneNode *&> : public Type<fgGfxSceneNode *> {
+    template<> struct Type<fg::gfx::CSceneNode *&> : public Type<fg::gfx::CSceneNode *> {
     };
 
-    template<> struct Type<const fgGfxSceneNode *&> : public Type<fgGfxSceneNode *> {
+    template<> struct Type<const fg::gfx::CSceneNode *&> : public Type<fg::gfx::CSceneNode *> {
     };
 
     ////////////////////////////////////////////////////////////////////////////

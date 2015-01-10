@@ -51,12 +51,12 @@ namespace fg {
             /// This can be NULL - if so, no progress bar will be displayed
             fgTextureResource *m_pProgressTex;
             /// Pointer to the currently used program -- needed to set MVP
-            fgGfxShaderProgram *m_pProgram;
+            CShaderProgram *m_pProgram;
             /// Pointer to the main gfx window object
             CWindow *m_pWindow;
             /// Pointer to the external context currently used
             /// Probably passed down from GFX::MAIN
-            fgGfxContext *m_pContext;
+            CContext *m_pContext;
             /// Main Model-Projection-View matrix to use with shader
             fgGfxMVPMatrix m_mvp;
             /// 4x4 matrix to hold translation and scale transformations
@@ -98,7 +98,7 @@ namespace fg {
              * 
              * @param pProgram
              */
-            void setProgram(fgGfxShaderProgram *pProgram) {
+            void setProgram(CShaderProgram *pProgram) {
                 m_pProgram = pProgram;
             }
             /**
@@ -118,7 +118,7 @@ namespace fg {
              * 
              * @param pContext
              */
-            void setContext(fgGfxContext *pContext) {
+            void setContext(CContext *pContext) {
                 m_pContext = pContext;
             }
 

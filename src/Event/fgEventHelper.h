@@ -22,12 +22,12 @@
     #include <queue>
 
 ///
-typedef std::map<int, fgVector<fgFunctionCallback *> > fgCallbackBindingMap;
+typedef std::map<int, fg::CVector<fgFunctionCallback *> > fgCallbackBindingMap;
 ///
 typedef fgCallbackBindingMap::iterator fgCallbackBindingMapItor;
 
 ///
-typedef fgVector<fgFunctionCallback *> fgCallbacksVec;
+typedef fg::CVector<fgFunctionCallback *> fgCallbacksVec;
 
 ///
 typedef fgCallbacksVec::iterator fgCallbacksVecItor;
@@ -38,12 +38,12 @@ typedef fgCallbacksVec::const_iterator fgCallbacksVecConstItor;
 typedef std::queue<fgThrownEvent> fgEventsQueue;
 
 ///
-typedef fgVector<fgTimeoutCallback> fgTimeoutCallbacksVec;
+typedef fg::CVector<fgTimeoutCallback> fgTimeoutCallbacksVec;
 ///
 typedef fgTimeoutCallbacksVec::iterator fgTimeoutCallbacksVecItor;
 
 ///
-typedef fgVector<fgCyclicCallback> fgCyclicCallbacksVec;
+typedef fg::CVector<fgCyclicCallback> fgCyclicCallbacksVec;
 ///
 typedef fgCyclicCallbacksVec::iterator fgCyclicCallbacksVecItor;
 

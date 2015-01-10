@@ -12,13 +12,13 @@
 /**
  * 
  */
-fgGfx2DScene::fgGfx2DScene() {
+fg::gfx::CScene2D::CScene2D() {
     getMVP()->setOrtho(0.0f, 1024.0f, 768.0f, 0.0f);
 }
 
 /**
  * 
  */
-fgGfx2DScene::~fgGfx2DScene() {
+fg::gfx::CScene2D::~CScene2D() {
     
 }

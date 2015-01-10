@@ -38,36 +38,70 @@ inline void fgGfxComputeNormal(const fgVector3f & v1, const fgVector3f & v2, con
     normal = glm::normalize(glm::cross(v3 - v1, v2 - v1));
 }
 
-/*
+/**
  * Base abstract class type for Mesh data
  */
 struct fgGfxMeshBase : public fgVertexData {
+    ////
     fgAABoundingBox3Df aabb;
     
+    /**
+     * 
+     */
     virtual ~fgGfxMeshBase() { };
+    /**
+     * 
+     */
     virtual void clear(void) = 0;
+    /**
+     * 
+     * @return 
+     */
     virtual size_t getDataSize(void) = 0;
+    /**
+     * 
+     * @return 
+     */
     virtual fgGFXuint getNumVertices(void) const = 0;
+    /**
+     * 
+     * @return 
+     */
     virtual fgGFXuint getNumNormals(void) const = 0;
+    /**
+     * 
+     * @return 
+     */
     virtual fgGFXuint getNumUVs(void) const = 0;
+    /**
+     * 
+     * @return 
+     */
     virtual fgGFXuint getNumColors(void) const = 0;
+    /**
+     * 
+     * @return 
+     */
     virtual fgGFXuint getNumIndices(void) const = 0;
+    /**
+     * 
+     */
     virtual void updateAABB(void) = 0;
 };
 
-/*
+/**
  * Special class for holding mesh data as SoA
  * - structure of arrays
  */
 struct fgGfxMeshSoA : fgGfxMeshBase {
     /// Vector holding floats representing position (vertices)
-    fgVector<fgGFXfloat> vertices; //3 fgVector3f
+    fg::CVector<fgGFXfloat> vertices; //3 fgVector3f
     /// Vector holding floats for normals
-    fgVector<fgGFXfloat> normals; //3 fgVector3f
+    fg::CVector<fgGFXfloat> normals; //3 fgVector3f
     /// Vector holding texture coords
-    fgVector<fgGFXfloat> uvs; //2 fgVector2f
+    fg::CVector<fgGFXfloat> uvs; //2 fgVector2f
     /// Vector holding indices
-    fgVector<fgGFXushort> indices;
+    fg::CVector<fgGFXushort> indices;
 
     static const unsigned short POSITIONS_VBO_ARRAY_IDX;
     static const unsigned short VERTICES_VBO_ARRAY_IDX;
@@ -76,7 +110,9 @@ struct fgGfxMeshSoA : fgGfxMeshBase {
     static const unsigned short UVS_VBO_ARRAY_IDX;
     static const unsigned short INDICES_VBO_ARRAY_IDX;
 
-    // Default constructor
+    /**
+     * 
+     */
     fgGfxMeshSoA() { }
 
     #if 0
@@ -353,7 +389,7 @@ struct fgGfxMeshAoS : fgGfxMeshBase {
     fgVertexData3v vertices;
     /// Special indices array
     // #FIXME Need to check for OGL version, ushort is mandatory on ES2
-    fgVector<fgGFXushort> indices;
+    fg::CVector<fgGFXushort> indices;
 
 
     static const unsigned short POSITIONS_VBO_ARRAY_IDX;

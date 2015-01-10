@@ -195,7 +195,7 @@ fgBool fgTextureResource::create(void) {
         }
         // #FIXME - texture raw data size calculation!
         m_size += sizeof (unsigned char) * m_width * m_height * m_components;
-        FG_LOG_DEBUG("GFX: texture [%s] current size (KB): %.1f [MB=%.2f]", m_nameTag.c_str(), m_size/1024.0f, m_size/1024.0f/1024.0f);
+        FG_LOG_DEBUG("GFX: texture [%s] current size (KB): %.1f [MB=%.2f]", m_nameTag.c_str(), m_size / 1024.0f, m_size / 1024.0f / 1024.0f);
     }
 
     m_isReady = FG_TRUE;
@@ -304,7 +304,7 @@ void fgTextureResource::setFlags(const std::string& flags) {
         return;
     // This is important - always call setFlags for the base class
     fgResource::setFlags(flags);
-    fgStringVector flagsVec;
+    fg::CStringVector flagsVec;
     fgStrings::split(flags, ' ', flagsVec);
     if(flagsVec.empty())
         return;

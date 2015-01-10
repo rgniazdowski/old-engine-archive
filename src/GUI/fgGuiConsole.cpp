@@ -60,32 +60,32 @@ void fgGuiConsole::display(fgGuiDrawer* guiLayer) {
  * 
  * @param statusVec
  */
-void fgGuiConsole::updateFromStatusVec(const fgVector<fgStatus *> &statusVec) {
-   if(statusVec.empty())
-       return;
-   
-   unsigned int n = statusVec.size(), diff = 0;
-   diff = abs(n - m_numConsoleRecords);
-   
-   if(n == m_numConsoleRecords)
-       return;
-   
-   if(n > m_numConsoleRecords) {
-       for(unsigned int i=m_numConsoleRecords;i<n;i++) {
-           fgStatus *status = statusVec[i];
-           if(!status)
-               continue;
-           if(status->hasMessage()) {
-               this->pushText(status->message->data);
-           }
-       }
-       m_vSlider->setCurrentValue(m_vSlider->getMaxValue(), m_vSlider->getMaxValue());
-       m_numConsoleRecords = m_textData.size();
-   } else {
-       // n < m_numConsoleRecords
-       for(int i=0;i<diff;i++) {
-           m_textData.pop_back();
-       }
-       m_numConsoleRecords = n;
-   }
+void fgGuiConsole::updateFromStatusVec(const fg::CVector<fgStatus *> &statusVec) {
+    if(statusVec.empty())
+        return;
+
+    unsigned int n = statusVec.size(), diff = 0;
+    diff = abs(n - m_numConsoleRecords);
+
+    if(n == m_numConsoleRecords)
+        return;
+
+    if(n > m_numConsoleRecords) {
+        for(unsigned int i = m_numConsoleRecords; i < n; i++) {
+            fgStatus *status = statusVec[i];
+            if(!status)
+                continue;
+            if(status->hasMessage()) {
+                this->pushText(status->message->data);
+            }
+        }
+        m_vSlider->setCurrentValue(m_vSlider->getMaxValue(), m_vSlider->getMaxValue());
+        m_numConsoleRecords = m_textData.size();
+    } else {
+        // n < m_numConsoleRecords
+        for(int i = 0; i < diff; i++) {
+            m_textData.pop_back();
+        }
+        m_numConsoleRecords = n;
+    }
 }

@@ -13,13 +13,17 @@
 
     #include "fgGFXSceneManager.h"
 
+namespace fg {
+
+    namespace gfx {
+
 /**
  *
  */
-class fgGfx3DScene : public fgGfxSceneManager {
+class CScene3D : public fg::gfx::CSceneManager {
 public:
     ///
-    typedef fgGfxSceneManager base_type;
+    typedef fg::gfx::CSceneManager base_type;
     
 private:
 
@@ -27,11 +31,11 @@ public:
     /**
      * 
      */
-    fgGfx3DScene();
+    CScene3D();
     /**
      * 
      */
-    virtual ~fgGfx3DScene();
+    virtual ~CScene3D();
 
 public:
 
@@ -51,21 +55,23 @@ public:
      * @param nameTag
      * @return 
      */
-    fgGfxSceneNode *addFromModel(fgGfxModelResource *pModelRes, const std::string& nameTag);
+    CSceneNode *addFromModel(CModelResource *pModelRes, const std::string& nameTag);
     /**
      * 
      * @param modelNameTag
      * @param nameTag
      * @return 
      */
-    fgGfxSceneNode *addFromModel(const std::string& modelNameTag, const std::string& nameTag);
+    CSceneNode *addFromModel(const std::string& modelNameTag, const std::string& nameTag);
     /**
      * 
      * @param modelNameTag
      * @param nameTag
      * @return 
      */
-    fgGfxSceneNode *addFromModel(const char *modelNameTag, const char *nameTag);
+    CSceneNode *addFromModel(const char *modelNameTag, const char *nameTag);
+};
+    };
 };
 
     #undef FG_INC_GFX_3D_SCENE_BLOCK

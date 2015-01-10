@@ -156,7 +156,7 @@ public:
      * Returns all loaded files (directory listing)
      * @return 
      */
-    fgStringVector &getRefFiles(void);
+    fg::CStringVector &getRefFiles(void);
 
     /**
      * This function rewinds to the beginning the file pointer (in the list)
@@ -173,9 +173,9 @@ protected:
     /// The whole path to the directory
     std::string m_dirPath;
     /// List/vector with the file names in the specified directory #FIXME
-    fgStringVector m_fileNames;
+    fg::CStringVector m_fileNames;
     /// iterator to the element in the string vector (file path/name)
-    fgStringVector::iterator m_fileIt;
+    fg::CStringVector::iterator m_fileIt;
 
     #ifdef FG_USING_MARMALADE
     /// Marmalade specific structure for reading directory contents

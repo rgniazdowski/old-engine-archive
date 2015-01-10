@@ -9,66 +9,73 @@
 
 #ifndef FG_INC_GFX_LAYER
     #define FG_INC_GFX_LAYER
+    #define FG_INC_GFX_LAYER_BLOCK
 
-/**
- *
- */
-class fgGfxLayer {
-public:
-    /**
-     * 
-     */
-    fgGfxLayer() : m_zIndex(0) { }
-    /**
-     * 
-     */
-    virtual ~fgGfxLayer() { }
-    
-    /**
-     * 
-     * @return 
-     */
-    virtual int getZIndex(void) const {
-        return m_zIndex;
-    }
-    /**
-     * 
-     * @param zIndex
-     */
-    virtual void setZIndex(const int zIndex) {
-        m_zIndex = zIndex;
-    }
-    /**
-     * 
-     */
-    virtual void upZIndex(void) {
-        m_zIndex++;
-    }
-    /**
-     * 
-     */
-    virtual void downZIndex(void) {
-        m_zIndex--;
-    }
-    
-    /**
-     * 
-     */
-    virtual void flush(void) = 0;
+namespace fg {
 
-    /**
-     * 
-     */
-    virtual void sortCalls(void) = 0;
+    namespace gfx {
 
-    /**
-     * 
-     */
-    virtual void render(void) = 0;
+        /**
+         *
+         */
+        class CLayer {
+        public:
+            /**
+             * 
+             */
+            CLayer() : m_zIndex(0) { }
+            /**
+             * 
+             */
+            virtual ~CLayer() { }
+            /**
+             * 
+             * @return 
+             */
+            virtual int getZIndex(void) const {
+                return m_zIndex;
+            }
+            /**
+             * 
+             * @param zIndex
+             */
+            virtual void setZIndex(const int zIndex) {
+                m_zIndex = zIndex;
+            }
+            /**
+             * 
+             */
+            virtual void upZIndex(void) {
+                m_zIndex++;
+            }
+            /**
+             * 
+             */
+            virtual void downZIndex(void) {
+                m_zIndex--;
+            }
 
-protected:
-    ///
-    int m_zIndex;
+            /**
+             * 
+             */
+            virtual void flush(void) = 0;
+
+            /**
+             * 
+             */
+            virtual void sortCalls(void) = 0;
+
+            /**
+             * 
+             */
+            virtual void render(void) = 0;
+
+        protected:
+            ///
+            int m_zIndex;
+        };
+    };
 };
 
+    #undef FG_INC_GFX_LAYER_BLOCK
 #endif /* FG_INC_GFX_LAYER */

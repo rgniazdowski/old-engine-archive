@@ -73,7 +73,7 @@ struct fgArgument {
 class fgArgumentList {
 private:
     ///
-    fgVector<fgArgument> m_argv;
+    fg::CVector<fgArgument> m_argv;
     ///
     int m_argc;
     ///

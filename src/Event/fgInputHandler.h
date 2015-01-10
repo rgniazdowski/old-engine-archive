@@ -76,9 +76,9 @@ namespace fg {
 
         private:
             ///
-            fgVector<int> m_keysDownPool;
+            CVector<int> m_keysDownPool;
             ///
-            fgVector<int> m_keysUpPool;
+            CVector<int> m_keysUpPool;
             /// int - keyCode, value - vector of callbacks to call
             /// Binding for key down events
             fgCallbackBindingMap m_keyDownBinds;

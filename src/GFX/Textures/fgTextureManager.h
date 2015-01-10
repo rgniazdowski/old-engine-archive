@@ -52,7 +52,7 @@ protected:
      * 
      */
     virtual void clear(void);
-    
+
     /**
      * 
      */
@@ -110,11 +110,11 @@ public:
      * @return 
      */
     fgGfxTextureID &getRefGfxID(const fgResourceHandle& texHandle);
-    
+
     fgGfxTextureID &getRefGfxID(const std::string& nameTag);
-    
+
     fgGfxTextureID &getRefGfxID(const char *nameTag);
-    
+
 private:
     /**
      * Uploads texture given via ID into VRAM.
@@ -129,7 +129,7 @@ private:
      * be used).
      */
     fgBool makeTexture(fgTextureResource *textureResource);
-    
+
     /**
      * 
      * @param argv

@@ -43,16 +43,18 @@
     #define	FG_GFX_MODEL_RES_OFF		0x0F8
 // X - DirectX 3D Model
     #define	FG_GFX_MODEL_RES_X		0x0F9
-
+    
+namespace fg {
+    namespace gfx {
 /*
  * Class definition for Model Resource
  * This resource loads various types of models
  * Provides functions also for generation of VBOs
  */
-class fgGfxModelResource : public fgResource {
+class CModelResource : public ::fgResource {
 public:
     // Type definition for vector holding model shapes
-    typedef fgVector<fgGfxShape *> modelShapes;
+    typedef CVector<fgGfxShape *> modelShapes;
     // Type definition for special vector iterator
     typedef modelShapes::iterator modelShapesItor;
 
@@ -60,25 +62,25 @@ public:
     /**
      * 
      */
-    fgGfxModelResource();
+    CModelResource();
     /**
      * 
      * @param path
      */
-    fgGfxModelResource(const char *path);
+    CModelResource(const char *path);
     /**
      * 
      * @param path
      */
-    fgGfxModelResource(std::string& path);
+    CModelResource(std::string& path);
     /**
      * 
      */
-    virtual ~fgGfxModelResource() {
+    virtual ~CModelResource() {
         destroy();
     }
 
-    FG_RESOURCE_FACTORY_CREATE_FUNCTION(fgGfxModelResource)
+    FG_RESOURCE_FACTORY_CREATE_FUNCTION(CModelResource)
 
 protected:
     /**
@@ -332,7 +334,9 @@ protected:
 
 };
 
-typedef fgGfxModelResource fgGfxModel;
+typedef CModelResource CModel;
+};
+};
 
     #undef FG_INC_GFX_MODEL_RESOURCE_BLOCK
 #endif /* FG_INC_GFX_MODEL_RESOURCE */

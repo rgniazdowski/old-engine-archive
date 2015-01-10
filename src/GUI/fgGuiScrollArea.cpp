@@ -57,7 +57,7 @@ void fgGuiScrollArea::setFlags(const std::string& flags) {
         return;
     // This is important - always call setFlags for the base class
     base_type::setFlags(flags);
-    fgStringVector flagsVec;
+    fg::CStringVector flagsVec;
     fgStrings::split(flags, ' ', flagsVec);
     if(flagsVec.empty())
         return;

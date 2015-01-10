@@ -139,7 +139,7 @@ fgBool fgResourceManager::initialize(void) {
     // First of all load any resource group configs,
     // file extension is *.rgrp and it's a xml file.
     std::string filepath;
-    fgStringVector resGroupFiles;
+    fg::CStringVector resGroupFiles;
     // #FIXME - well this looks kinda bad, probably loading
     // resource groups files should look different - must be
     // more universal - platform independent, check for

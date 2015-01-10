@@ -9,17 +9,24 @@
 
 #ifndef FG_INC_VECTOR
     #define FG_INC_VECTOR
-
+    #define FG_INC_VECTOR_BLOCK
+    
     #ifndef FG_INC_BUILD_CONFIG
         #include "fgBuildConfig.h"
     #endif
 
     #if defined(FG_USING_MARMALADE)
         #include "IwUtil.h"
-
+/**
+ *
+ */
 template <class X, class A = CIwAllocator<X>, class REALLOCATE = ReallocateDefault<X, A > >
-class fgVector : public CIwArray<X, A, REALLOCATE> {
+class CVector : public CIwArray<X, A, REALLOCATE> {
 public:
+    /**
+     * @param i
+     * @return
+     */
     X & at(int const i) const {
         uint32 index = (uint32)i;
         if(index >= this->num_p) {
@@ -31,40 +38,62 @@ public:
     #else
 
         #include <vector>
+        
+namespace fg {
 
-template <class T, class Alloc = std::allocator<T> >
-class fgVector : public std::vector<T, Alloc> {
-public:
-    void clear_optimised() {
-        //std::vector<T, Alloc>::clear();
-        this->clear();
-    }
-    int find(T const & value) const {
-        int i = 0;
-        for(typename std::vector<T, Alloc>::const_iterator it = std::vector<T, Alloc>::begin();
-                it != std::vector<T, Alloc>::end();
-                it++, i++) {
-            if((*it) == value) {
-                return i;
-            }
+    /**
+     * 
+     */
+    template <class T, class Alloc = std::allocator<T> >
+    class CVector : public std::vector<T, Alloc> {
+    public:
+        /**
+         * 
+         */
+        void clear_optimised() {
+            //std::vector<T, Alloc>::clear();
+            this->clear();
         }
-        return -1;
-    }
-    bool contains(T const & value) const {
-        for(typename std::vector<T, Alloc>::const_iterator it = std::vector<T, Alloc>::begin();
-                it != std::vector<T, Alloc>::end(); it++) {
-            if((*it) == value) {
-                return true;
+        /**
+         * 
+         * @param value
+         * @return 
+         */
+        int find(T const & value) const {
+            int i = 0;
+            for(typename std::vector<T, Alloc>::const_iterator it = std::vector<T, Alloc>::begin();
+                    it != std::vector<T, Alloc>::end();
+                    it++, i++) {
+                if((*it) == value) {
+                    return i;
+                }
             }
+            return -1;
         }
-        return false;
-    }
+        /**
+         * 
+         * @param value
+         * @return 
+         */
+        bool contains(T const & value) const {
+            for(typename std::vector<T, Alloc>::const_iterator it = std::vector<T, Alloc>::begin();
+                    it != std::vector<T, Alloc>::end(); it++) {
+                if((*it) == value) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+    };
 
 };
     #endif /* FG_USING_MARMALADE */
 
     #include <string>
-    
-typedef fgVector<std::string> fgStringVector;
+namespace fg {
+    typedef CVector<std::string> CStringVector;
+};
 
+    #undef FG_INC_VECTOR_BLOCK
 #endif /* FG_INC_VECTOR */

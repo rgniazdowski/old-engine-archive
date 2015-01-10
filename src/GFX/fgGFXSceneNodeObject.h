@@ -27,66 +27,71 @@
         #include "fgGFXModelResource.h"
     #endif
 
-/**
- * 
- */
-class fgGfxSceneNodeObject : public fgGfxSceneNode {
-public:
-    typedef fgGfxSceneNode base_type;
+namespace fg {
+    namespace gfx {
 
-private:
-    fgGfxModel *m_pModel;
+        /**
+         * 
+         */
+        class CSceneNodeObject : public fg::gfx::CSceneNode {
+        public:
+            typedef fg::gfx::CSceneNode base_type;
 
-public:
-    /**
-     * 
-     */
-    fgGfxSceneNodeObject(fgGfxModel *pModel = NULL, fgGfxSceneNode *pParent = NULL);
-    /**
-     * 
-     * @param orig
-     */
-    fgGfxSceneNodeObject(const fgGfxSceneNodeObject& orig);
-    /**
-     * 
-     */
-    virtual ~fgGfxSceneNodeObject();
+        private:
+            fg::gfx::CModel *m_pModel;
 
-public:
-    /**
-     * 
-     * @param pModel
-     */
-    virtual void setModel(fgGfxModel *pModel);
-    /**
-     * 
-     * @return 
-     */
-    fgGfxModel *getModel(void) const {
-        return m_pModel;
-    }
-    /**
-     * 
-     */
-    virtual inline void updateAABB(void) {
-        // #FUBAR
-        if(m_pModel) {
-            m_aabb.min = m_pModel->getRefAABB().min;
-            m_aabb.max = m_pModel->getRefAABB().max;
-            m_aabb.transform(m_modelMat);
-        }
-    }
-    /**
-     * 
-     * @param modelMat
-     */
-    virtual inline void updateAABB(const fgMatrix4f& modelMat) {
-        if(m_pModel) {
-            m_aabb.min = m_pModel->getRefAABB().min;
-            m_aabb.max = m_pModel->getRefAABB().max;
-            m_aabb.transform(modelMat);
-        }
-    }
+        public:
+            /**
+             * 
+             */
+            CSceneNodeObject(fg::gfx::CModel *pModel = NULL, fg::gfx::CSceneNode *pParent = NULL);
+            /**
+             * 
+             * @param orig
+             */
+            CSceneNodeObject(const CSceneNodeObject& orig);
+            /**
+             * 
+             */
+            virtual ~CSceneNodeObject();
+
+        public:
+            /**
+             * 
+             * @param pModel
+             */
+            virtual void setModel(fg::gfx::CModel *pModel);
+            /**
+             * 
+             * @return 
+             */
+            fg::gfx::CModel *getModel(void) const {
+                return m_pModel;
+            }
+            /**
+             * 
+             */
+            virtual inline void updateAABB(void) {
+                // #FUBAR
+                if(m_pModel) {
+                    m_aabb.min = m_pModel->getRefAABB().min;
+                    m_aabb.max = m_pModel->getRefAABB().max;
+                    m_aabb.transform(m_modelMat);
+                }
+            }
+            /**
+             * 
+             * @param modelMat
+             */
+            virtual inline void updateAABB(const fgMatrix4f& modelMat) {
+                if(m_pModel) {
+                    m_aabb.min = m_pModel->getRefAABB().min;
+                    m_aabb.max = m_pModel->getRefAABB().max;
+                    m_aabb.transform(modelMat);
+                }
+            }
+        };
+    };
 };
 
     #undef FG_INC_GFX_SCENE_NODE_OBJECT_BLOCK

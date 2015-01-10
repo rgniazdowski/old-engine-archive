@@ -55,7 +55,7 @@ public:
     typedef fgResourceManagerTag tag_type;
     
 protected:
-    typedef fgVector<fgResourceHandle> rmHandleVec;
+    typedef fg::CVector<fgResourceHandle> rmHandleVec;
     typedef rmHandleVec::iterator rmHandleVecItor;
 
 public:

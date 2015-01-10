@@ -59,21 +59,21 @@ public:
     /*
      *
      */
-    static void drawArray2D(const fgVector<fgVertex2v> &inputData,
+    static void drawArray2D(const fg::CVector<fgVertex2v> &inputData,
                             const unsigned int attribMask = FG_GFX_POSITION_BIT | FG_GFX_UVS_BIT,
                             const fgGfxPrimitiveMode mode = fgGfxPrimitiveMode::FG_GFX_TRIANGLES);
 
     /*
      *
      */
-    static void drawArray2D(const fgVector<fgVertex3v> &inputData,
+    static void drawArray2D(const fg::CVector<fgVertex3v> &inputData,
                             const unsigned int attribMask = FG_GFX_POSITION_BIT | FG_GFX_NORMAL_BIT | FG_GFX_UVS_BIT,
                             const fgGfxPrimitiveMode mode = fgGfxPrimitiveMode::FG_GFX_TRIANGLES);
 
     /*
      *
      */
-    static void drawArray2D(const fgVector<fgVertex4v> &inputData,
+    static void drawArray2D(const fg::CVector<fgVertex4v> &inputData,
                             const unsigned int attribMask = FG_GFX_POSITION_BIT | FG_GFX_NORMAL_BIT | FG_GFX_UVS_BIT | FG_GFX_COLOR_BIT,
                             const fgGfxPrimitiveMode mode = fgGfxPrimitiveMode::FG_GFX_TRIANGLES);
 
@@ -82,8 +82,7 @@ public:
     /*
      *
      */
-    static void appendRect2D(
-                             fgVector<fgVertex2v> &outputData,
+    static void appendRect2D(fg::CVector<fgVertex2v> &outputData,
                              float sizex, float sizey,
                              const fgVec2f &uv1, const fgVec2f &uv2,
                              const fgGfxPrimitiveMode mode = FG_GFX_TRIANGLES,
@@ -92,8 +91,7 @@ public:
     /*
      *
      */
-    static void appendRect2D(
-                             fgVector<fgVertex2v> &outputData,
+    static void appendRect2D(fg::CVector<fgVertex2v> &outputData,
                              const fgVec2f &size,
                              const fgVec2f &uv1, const fgVec2f &uv2,
                              const fgGfxPrimitiveMode mode = FG_GFX_TRIANGLES,
@@ -102,8 +100,7 @@ public:
     /*
      *
      */
-    static void appendRect2D(
-                             fgVector<fgVertex2v> &outputData,
+    static void appendRect2D(fg::CVector<fgVertex2v> &outputData,
                              const fgVec2f &relPos, const fgVec2f &size,
                              const fgVec2f &uv1, const fgVec2f &uv2,
                              const fgGfxPrimitiveMode mode = FG_GFX_TRIANGLES,
@@ -114,8 +111,7 @@ public:
     /*
      *
      */
-    static void appendRect2D(
-                             fgVertexData *outputData,
+    static void appendRect2D(fgVertexData *outputData,
                              float sizex, float sizey,
                              const fgVec2f &uv1, const fgVec2f &uv2,
                              const fgColor4f &color,
@@ -125,8 +121,7 @@ public:
     /*
      *
      */
-    static void appendRect2D(
-                             fgVertexData *outputData,
+    static void appendRect2D(fgVertexData *outputData,
                              const fgVec2f &size,
                              const fgVec2f &uv1, const fgVec2f &uv2,
                              const fgColor4f &color,
@@ -136,8 +131,7 @@ public:
     /*
      *
      */
-    static void appendRect2D(
-                             fgVertexData *outputData,
+    static void appendRect2D(fgVertexData *outputData,
                              const fgVec2f &relPos, const fgVec2f &size,
                              const fgVec2f &uv1, const fgVec2f &uv2,
                              const fgColor4f &color,
@@ -149,8 +143,7 @@ public:
     /*
      *
      */
-    static void appendRect2D(
-                             fgVector<fgVertex4v> &outputData,
+    static void appendRect2D(fg::CVector<fgVertex4v> &outputData,
                              float sizex, float sizey,
                              const fgVec2f &uv1, const fgVec2f &uv2,
                              const fgGfxPrimitiveMode mode = FG_GFX_TRIANGLES,
@@ -159,8 +152,7 @@ public:
     /*
      *
      */
-    static void appendRect2D(
-                             fgVector<fgVertex4v> &outputData,
+    static void appendRect2D(fg::CVector<fgVertex4v> &outputData,
                              const fgVec2f &size,
                              const fgVec2f &uv1, const fgVec2f &uv2,
                              const fgGfxPrimitiveMode mode = FG_GFX_TRIANGLES,
@@ -169,8 +161,7 @@ public:
     /*
      *
      */
-    static void appendRect2D(
-                             fgVector<fgVertex4v> &outputData,
+    static void appendRect2D(fg::CVector<fgVertex4v> &outputData,
                              const fgVec2f &relPos, const fgVec2f &size,
                              const fgVec2f &uv1, const fgVec2f &uv2,
                              const fgGfxPrimitiveMode mode = FG_GFX_TRIANGLES,

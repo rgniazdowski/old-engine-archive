@@ -51,7 +51,7 @@ struct ColorName
 };
 
 /// Special array containing 140 standard colors and human readable names
-fgVector<ColorName> g_colorNames;
+fg::CVector<ColorName> g_colorNames;
 
 #if 0
 static const ColorName s_colorNames[140]; // = { 

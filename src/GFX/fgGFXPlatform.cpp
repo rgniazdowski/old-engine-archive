@@ -11,16 +11,16 @@
 #include "Util/fgMemory.h"
 
 /// Main gfx context (server/client state cache)
-fgGfxContext *fgGfxPlatform::m_gfxContext = NULL;
+fg::gfx::CContext *fg::gfx::CPlatform::m_gfxContext = NULL;
 
 /// Is platform initialized?
-fgBool fgGfxPlatform::m_init = FG_FALSE;
+fgBool fg::gfx::CPlatform::m_init = FG_FALSE;
 
 /// Default display pointer // #FIXME
-void *fgGfxPlatform::m_defaultDisplay = 0;
+void *fg::gfx::CPlatform::m_defaultDisplay = 0;
 
 /// Default config pointer
-void *fgGfxPlatform::m_defaultConfig = 0;
+void *fg::gfx::CPlatform::m_defaultConfig = 0;
 
 #if defined FG_USING_MARMALADE
 #include "s3e.h"
@@ -30,12 +30,12 @@ void *fgGfxPlatform::m_defaultConfig = 0;
 /**
  * 
  */
-fgGfxPlatform::fgGfxPlatform() { }
+fg::gfx::CPlatform::CPlatform() { }
 
 /**
  * 
  */
-fgGfxPlatform::~fgGfxPlatform() {
+fg::gfx::CPlatform::~CPlatform() {
     if(m_gfxContext)
         delete m_gfxContext;
     m_gfxContext = NULL;
@@ -46,12 +46,12 @@ fgGfxPlatform::~fgGfxPlatform() {
  * @param reinit
  * @return 
  */
-fgBool fgGfxPlatform::initialize(fgBool reinit) {
-    if(fgGfxPlatform::m_init && !reinit)
+fgBool fg::gfx::CPlatform::initialize(fgBool reinit) {
+    if(fg::gfx::CPlatform::m_init && !reinit)
         return FG_TRUE;
-    if(reinit && fgGfxPlatform::m_init) {
+    if(reinit && CPlatform::m_init) {
         // Need to reinitialize
-        fgGfxPlatform::quit(); // ?
+        fg::gfx::CPlatform::quit(); // ?
     }
     fgBool status = FG_TRUE;
     
@@ -197,12 +197,12 @@ fgBool fgGfxPlatform::initialize(fgBool reinit) {
 #if !defined(FG_USING_SDL2)
     if(status) {
         if(!m_gfxContext)
-            m_gfxContext = new fgGfxContext();
+            m_gfxContext = new CContext();
         m_gfxContext->initialize();
     }
 #endif
     if(status)
-        fgGfxPlatform::m_init = FG_TRUE;
+        CPlatform::m_init = FG_TRUE;
     return status;
 }
 
@@ -210,7 +210,7 @@ fgBool fgGfxPlatform::initialize(fgBool reinit) {
  * 
  * @return 
  */
-fgBool fgGfxPlatform::quit(void) {
+fgBool fg::gfx::CPlatform::quit(void) {
     fgBool status = FG_TRUE;
     if(m_init) {
 #if defined(FG_USING_EGL) || defined(FG_USING_MARMALADE_EGL)
@@ -254,9 +254,9 @@ fgBool fgGfxPlatform::quit(void) {
  * @param sdlWindow
  * @return 
  */
-fgBool fgGfxPlatform::initializeMainContext(SDL_Window* sdlWindow) {
+fgBool fg::gfx::CPlatform::initializeMainContext(SDL_Window* sdlWindow) {
     if(!m_gfxContext)
-        m_gfxContext = new fgGfxContext(sdlWindow);
+        m_gfxContext = new CContext(sdlWindow);
     if(!m_gfxContext->isInit())
         return FG_FALSE;
     m_gfxContext->initialize();
@@ -268,7 +268,7 @@ fgBool fgGfxPlatform::initializeMainContext(SDL_Window* sdlWindow) {
  * 
  * @return 
  */
-fgGfxContext *fgGfxPlatform::context(void) {
+fg::gfx::CContext *fg::gfx::CPlatform::context(void) {
     return m_gfxContext;
 }
 
@@ -276,24 +276,24 @@ fgGfxContext *fgGfxPlatform::context(void) {
  * 
  * @return 
  */
-fgBool fgGfxPlatform::isInit(void) {
-    return fgGfxPlatform::m_init;
+fgBool fg::gfx::CPlatform::isInit(void) {
+    return fg::gfx::CPlatform::m_init;
 }
 
 /**
  * 
  * @return 
  */
-void *fgGfxPlatform::getDefaultDisplay(void) {
-    return fgGfxPlatform::m_defaultDisplay;
+void *fg::gfx::CPlatform::getDefaultDisplay(void) {
+    return fg::gfx::CPlatform::m_defaultDisplay;
 }
 
 /**
  * 
  * @return 
  */
-void *fgGfxPlatform::getDefaultConfig(void) {
-    return fgGfxPlatform::m_defaultConfig;
+void *fg::gfx::CPlatform::getDefaultConfig(void) {
+    return fg::gfx::CPlatform::m_defaultConfig;
 }
 
 #if defined FG_USING_EGL
@@ -302,7 +302,7 @@ void *fgGfxPlatform::getDefaultConfig(void) {
  * @param display
  * @param config
  */
-void fgGfxPlatform::_eglDumpConfig(EGLDisplay display, EGLConfig config) {
+void fg::gfx::CPlatform::_eglDumpConfig(EGLDisplay display, EGLConfig config) {
     if(!display || !config)
         return;
 

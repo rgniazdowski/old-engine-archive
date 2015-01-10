@@ -21,8 +21,8 @@
 /**
  * 
  */
-fgGfxSceneManager::fgGfxSceneManager() :
-fgGfxDrawingBatch(),
+fg::gfx::CSceneManager::CSceneManager() :
+CDrawingBatch(),
 m_MVP(),
 m_camera(FG_GFX_CAMERA_FREE) {
     m_managerType = FG_MANAGER_SCENE;
@@ -31,14 +31,14 @@ m_camera(FG_GFX_CAMERA_FREE) {
 /**
  * 
  */
-fgGfxSceneManager::~fgGfxSceneManager() {
-    fgGfxSceneManager::destroy();
+fg::gfx::CSceneManager::~CSceneManager() {
+    fg::gfx::CSceneManager::destroy();
 }
 
 /**
  *
  */
-void fgGfxSceneManager::clear(void) {
+void fg::gfx::CSceneManager::clear(void) {
     releaseAllHandles();
     m_managerType = FG_MANAGER_SCENE;
     m_pResourceMgr = NULL;
@@ -48,8 +48,8 @@ void fgGfxSceneManager::clear(void) {
  * 
  * @return 
  */
-fgBool fgGfxSceneManager::destroy(void) {
-    fgGfxDrawingBatch::flush();
+fgBool fg::gfx::CSceneManager::destroy(void) {
+    CDrawingBatch::flush();
     //objectVecItor oit = m_objects.begin(), oend = m_objects.end();
 
     // Delete all gfx objects in the scene
@@ -70,14 +70,14 @@ fgBool fgGfxSceneManager::destroy(void) {
     end = getRefDataVector().end();
     itor = begin;
     for(; itor != end; itor++) {
-        fgGfxSceneNode *pObj = *itor;
+        CSceneNode *pObj = *itor;
         if(pObj == NULL)
             continue;
         if(pObj->isManaged())
             delete pObj;
         *itor = NULL;
     }
-    fgGfxSceneManager::clear();
+    fg::gfx::CSceneManager::clear();
     return FG_TRUE;
 }
 
@@ -85,7 +85,7 @@ fgBool fgGfxSceneManager::destroy(void) {
  * 
  * @return 
  */
-fgBool fgGfxSceneManager::initialize(void) {
+fgBool fg::gfx::CSceneManager::initialize(void) {
     return FG_TRUE;
 }
 
@@ -93,15 +93,15 @@ fgBool fgGfxSceneManager::initialize(void) {
  * 
  * @param shaderMgr
  */
-void fgGfxSceneManager::setShaderManager(fg::base::CManager* pShaderMgr) {
-    fgGfxDrawingBatch::setShaderManager(pShaderMgr);
+void fg::gfx::CSceneManager::setShaderManager(fg::base::CManager* pShaderMgr) {
+    CDrawingBatch::setShaderManager(pShaderMgr);
 }
 
 /**
  * 
  * @param pResourceMgr
  */
-void fgGfxSceneManager::setResourceManager(fg::base::CManager *pResourceMgr) {
+void fg::gfx::CSceneManager::setResourceManager(fg::base::CManager *pResourceMgr) {
     if(!pResourceMgr)
         return;
     if(pResourceMgr->getManagerType() == FG_MANAGER_RESOURCE)
@@ -111,8 +111,8 @@ void fgGfxSceneManager::setResourceManager(fg::base::CManager *pResourceMgr) {
 /**
  * 
  */
-void fgGfxSceneManager::flush(void) {
-    fgGfxDrawingBatch::flush();
+void fg::gfx::CSceneManager::flush(void) {
+    CDrawingBatch::flush();
     while(!m_nodeQueue.empty())
         m_nodeQueue.pop();
 }
@@ -120,13 +120,13 @@ void fgGfxSceneManager::flush(void) {
 /**
  * 
  */
-void fgGfxSceneManager::sortCalls(void) {
+void fg::gfx::CSceneManager::sortCalls(void) {
     if(!getShaderManager())
         return;
     //printf("fgGfxSceneManager::sortCalls(void)\n");
     m_MVP.setCamera((fgGfxCamera *)(&m_camera));
     if(getRefPriorityQueue().empty())
-        fgGfxDrawingBatch::sortCalls(); // NOPE
+        CDrawingBatch::sortCalls(); // NOPE
     while(!m_nodeQueue.empty())
         m_nodeQueue.pop();
     hmDataVecItor itor = getRefDataVector().begin(), end = getRefDataVector().end();
@@ -137,8 +137,8 @@ void fgGfxSceneManager::sortCalls(void) {
     for(; itor != end; itor++, idx++) {
         if(!(*itor))
             continue;
-        fgGfxSceneNode *pNode = (*itor);
-        fgGfxDrawCall *pDrawCall = pNode->getDrawCall();
+        CSceneNode *pNode = (*itor);
+        CDrawCall *pDrawCall = pNode->getDrawCall();
 #if defined(FG_DEBUG)
         if(g_fgDebugConfig.isDebugProfiling) {
             g_debugProfiling->begin("GFX::Scene::FrustumCheck");
@@ -161,7 +161,7 @@ void fgGfxSceneManager::sortCalls(void) {
         }
 #endif
         //FG_LOG_DEBUG("[%d] -> AABBox[%s] -- -- Sphere.30.0f[%s] %s\n", idx, msg[boxtest], msg[spherestatus], pNode->getNameStr());
-        g_fgDebugConfig.gfxBBoxShow = true;
+        //g_fgDebugConfig.gfxBBoxShow = true;
         // ? also need to push to queue more than one draw call
         // And i mean... wait wut? All children are registered
         // This is a tree - that needs to be traversed
@@ -174,7 +174,7 @@ void fgGfxSceneManager::sortCalls(void) {
         }
         if(pDrawCall) {
             if(!pDrawCall->getShaderProgram())
-                pDrawCall->setShaderProgram(((fgGfxShaderManager *)getShaderManager())->getCurrentProgram());
+                pDrawCall->setShaderProgram(((fg::gfx::CShaderManager *)getShaderManager())->getCurrentProgram());
             //pDrawCall->setModelMatrix(pObj->getRefModelMatrix());
             // getRefPriorityQueue().push(pDrawCall);
         }
@@ -185,18 +185,18 @@ void fgGfxSceneManager::sortCalls(void) {
 /**
  * 
  */
-void fgGfxSceneManager::render(void) {
+void fg::gfx::CSceneManager::render(void) {
     //printf("fgGfxSceneManager::render(void)\n");
     //if(m_nodeQueue.empty())
     //    fgGfxSceneManager::sortCalls();
-    fgGfxDrawingBatch::render(); // #NOPE ? i don't know what i'm doing
+    CDrawingBatch::render(); // #NOPE ? i don't know what i'm doing
     while(!m_nodeQueue.empty()) {
 #if defined(FG_DEBUG)
         if(g_fgDebugConfig.isDebugProfiling) {
             g_debugProfiling->begin("GFX::Scene::DrawNode");
         }
 #endif
-        fgGfxSceneNode *pSceneNode = m_nodeQueue.top();
+        CSceneNode *pSceneNode = m_nodeQueue.top();
         pSceneNode->draw();
 #if defined(FG_DEBUG)
         if(g_fgDebugConfig.isDebugProfiling) {
@@ -205,13 +205,10 @@ void fgGfxSceneManager::render(void) {
 #endif
 
 #if defined(FG_DEBUG)
-        if(g_fgDebugConfig.isDebugProfiling) {
-            g_debugProfiling->begin("GFX::Scene::DrawAABBLines");
-        }
-        static_cast<fgGfxShaderManager *>(m_pShaderMgr)->getCurrentProgram()->setUniform(FG_GFX_USE_TEXTURE, 0.0f);
+        static_cast<fg::gfx::CShaderManager *>(m_pShaderMgr)->getCurrentProgram()->setUniform(FG_GFX_USE_TEXTURE, 0.0f);
         if(FG_DEBUG_CFG_OPTION(gfxBBoxShow) && pSceneNode->getNodeType() == FG_GFX_SCENE_NODE_OBJECT) {
 
-            fgGfxSceneNodeObject *pSceneObj = static_cast<fgGfxSceneNodeObject *>(pSceneNode);
+            CSceneNodeObject *pSceneObj = static_cast<CSceneNodeObject *>(pSceneNode);
             //g_fgDebugConfig.gfxBBoxShow
             // Current aabb - it's in model space (local)
             fgAABB3Df &modelBox = pSceneObj->getModel()->getRefAABB();
@@ -221,11 +218,8 @@ void fgGfxSceneManager::render(void) {
         }
         if(FG_DEBUG_CFG_OPTION(gfxBBoxShow)) {
             m_MVP.resetModelMatrix();
-            static_cast<fgGfxShaderManager *>(m_pShaderMgr)->getCurrentProgram()->setUniform(&m_MVP);
+            static_cast<fg::gfx::CShaderManager *>(m_pShaderMgr)->getCurrentProgram()->setUniform(&m_MVP);
             fgGfxPrimitives::drawAABBLines(pSceneNode->getRefAABB());
-        }
-        if(g_fgDebugConfig.isDebugProfiling) {
-            g_debugProfiling->end("GFX::Scene::DrawAABBLines");
         }
 #endif
         m_nodeQueue.pop();
@@ -241,7 +235,7 @@ void fgGfxSceneManager::render(void) {
  * @param manage
  * @return 
  */
-int fgGfxSceneManager::appendObject(fgGfxSceneNode *pObj, fgBool manage) {
+int fg::gfx::CSceneManager::appendObject(CSceneNode *pObj, fgBool manage) {
     if(!pObj)
         return -1;
     if(m_objects.find(pObj) != -1)
@@ -249,10 +243,10 @@ int fgGfxSceneManager::appendObject(fgGfxSceneNode *pObj, fgBool manage) {
     if(!pObj->getModel())
         return -1;
 
-    fgGfxDrawCall *call = new fgGfxDrawCall(FG_GFX_DRAW_CALL_MODEL);
+    CDrawCall *call = new CDrawCall(FG_GFX_DRAW_CALL_MODEL);
     call->setupFromModel(pObj->getModel());
     if(getShaderManager())
-        call->setShaderProgram(((fgGfxShaderManager *)getShaderManager())->getCurrentProgram());
+        call->setShaderProgram(((CShaderManager *)getShaderManager())->getCurrentProgram());
     if(m_resourceMgr) {
         fgGfxMaterial *pMainMaterial = pObj->getModel()->getMainMaterial();
         if(pMainMaterial) {
@@ -268,7 +262,7 @@ int fgGfxSceneManager::appendObject(fgGfxSceneNode *pObj, fgBool manage) {
     m_objDrawCalls.push_back(call);
     // 2nd argument tells that this draw call should not be managed
     // meaning: destructor wont be called on flush()
-    fgGfxDrawingBatch::appendDrawCall(call, FG_FALSE);
+    CDrawingBatch::appendDrawCall(call, FG_FALSE);
 
     return ((int)m_objects.size() - 1);
 }
@@ -280,14 +274,14 @@ int fgGfxSceneManager::appendObject(fgGfxSceneNode *pObj, fgBool manage) {
  * @param manage
  * @return 
  */
-fgGfxSceneNode *fgGfxSceneManager::appendModel(int& index,
-                                               fgGfxModelResource* pModelRes,
+CSceneNode *fg::gfx::CSceneManager::appendModel(int& index,
+                                               CModelResource* pModelRes,
                                                fgBool manage) {
     if(!pModelRes) {
         index = -1;
         return NULL;
     }
-    fgGfxSceneNode *pObj = new fgGfxSceneNode();
+    CSceneNode *pObj = new CSceneNode();
     //pObj->setName();
     pObj->setModel(pModelRes);
     index = appendObject(pObj, manage);
@@ -302,9 +296,9 @@ fgGfxSceneNode *fgGfxSceneManager::appendModel(int& index,
  * @param oFatherObj
  * @return 
  */
-fgBool fgGfxSceneManager::addNode(fgGfxSceneNodeHandle& nodeUniqueID,
-                                  fgGfxSceneNode *pNode,
-                                  fgGfxSceneNode *pFatherNode) {
+fgBool fg::gfx::CSceneManager::addNode(fgGfxSceneNodeHandle& nodeUniqueID,
+                                  CSceneNode *pNode,
+                                  CSceneNode *pFatherNode) {
     if(!pNode) {
         // Empty pointer - return
         FG_LOG_ERROR("GFX.SceneManager: // Empty pointer - exit... no addition made");
@@ -346,12 +340,12 @@ fgBool fgGfxSceneManager::addNode(fgGfxSceneNodeHandle& nodeUniqueID,
 #if 1
     if(pNode->getNodeType() == FG_GFX_SCENE_NODE_OBJECT) {
         // #FIXME - this is total fubar
-        fgGfxSceneNodeObject *pNodeObject = static_cast<fgGfxSceneNodeObject *>(pNode);
-        fgGfxDrawCall *pDrawCall = (*pNodeObject->getChildren().begin())->getDrawCall();
+        CSceneNodeObject *pNodeObject = static_cast<CSceneNodeObject *>(pNode);
+        CDrawCall *pDrawCall = (*pNodeObject->getChildren().begin())->getDrawCall();
         pDrawCall->setMVP(&m_MVP);
         if(pNodeObject->getModel()) {
             if(getShaderManager())
-                pDrawCall->setShaderProgram(((fgGfxShaderManager *)getShaderManager())->getCurrentProgram());
+                pDrawCall->setShaderProgram(((fg::gfx::CShaderManager *)getShaderManager())->getCurrentProgram());
             if(m_pResourceMgr) {
                 fgGfxMaterial *pMainMaterial = pNodeObject->getModel()->getMainMaterial();
                 if(pMainMaterial) {
@@ -362,11 +356,11 @@ fgBool fgGfxSceneManager::addNode(fgGfxSceneNodeHandle& nodeUniqueID,
             }
         }
     } else {
-        fgGfxDrawCall *pDrawCall = pNode->getDrawCall();
+        CDrawCall *pDrawCall = pNode->getDrawCall();
         if(pDrawCall) {
             pDrawCall->setMVP(&m_MVP);
             if(getShaderManager())
-                pDrawCall->setShaderProgram(((fgGfxShaderManager *)getShaderManager())->getCurrentProgram());
+                pDrawCall->setShaderProgram(((fg::gfx::CShaderManager *)getShaderManager())->getCurrentProgram());
         }
     }
 #endif
@@ -384,8 +378,8 @@ fgBool fgGfxSceneManager::addNode(fgGfxSceneNodeHandle& nodeUniqueID,
  * @param oFatherUniqueID
  * @return 
  */
-fgBool fgGfxSceneManager::addNode(fgGfxSceneNodeHandle& oUniqueID,
-                                  fgGfxSceneNode *pObj,
+fgBool fg::gfx::CSceneManager::addNode(fgGfxSceneNodeHandle& oUniqueID,
+                                  CSceneNode *pObj,
                                   const fgGfxSceneNodeHandle& oFatherUniqueID) {
     return addNode(oUniqueID, pObj, fgHandleManager::dereference(oFatherUniqueID));
 }
@@ -397,8 +391,8 @@ fgBool fgGfxSceneManager::addNode(fgGfxSceneNodeHandle& oUniqueID,
  * @param oFatherNameTag
  * @return 
  */
-fgBool fgGfxSceneManager::addNode(fgGfxSceneNodeHandle& oUniqueID,
-                                  fgGfxSceneNode *pObj,
+fgBool fg::gfx::CSceneManager::addNode(fgGfxSceneNodeHandle& oUniqueID,
+                                  CSceneNode *pObj,
                                   const std::string& oFatherNameTag) {
     return addNode(oUniqueID, pObj, fgHandleManager::dereference(oFatherNameTag));
 }
@@ -410,8 +404,8 @@ fgBool fgGfxSceneManager::addNode(fgGfxSceneNodeHandle& oUniqueID,
  * @param oFatherNameTag
  * @return 
  */
-fgBool fgGfxSceneManager::addNode(fgGfxSceneNodeHandle& oUniqueID,
-                                  fgGfxSceneNode *pObj,
+fgBool fg::gfx::CSceneManager::addNode(fgGfxSceneNodeHandle& oUniqueID,
+                                  CSceneNode *pObj,
                                   const char* oFatherNameTag) {
     return addNode(oUniqueID, pObj, fgHandleManager::dereference(oFatherNameTag));
 }
@@ -421,7 +415,7 @@ fgBool fgGfxSceneManager::addNode(fgGfxSceneNodeHandle& oUniqueID,
  * @param pObj
  * @return 
  */
-fgBool fgGfxSceneManager::remove(fgGfxSceneNode *pObj) {
+fgBool fg::gfx::CSceneManager::remove(CSceneNode *pObj) {
     if(!pObj || !isManaged(pObj)) {
         return FG_FALSE;
     }
@@ -436,7 +430,7 @@ fgBool fgGfxSceneManager::remove(fgGfxSceneNode *pObj) {
  * @param oUniqueID
  * @return 
  */
-fgBool fgGfxSceneManager::remove(const fgGfxSceneNodeHandle& oUniqueID) {
+fgBool fg::gfx::CSceneManager::remove(const fgGfxSceneNodeHandle& oUniqueID) {
     return remove(fgHandleManager::dereference(oUniqueID));
 }
 
@@ -445,7 +439,7 @@ fgBool fgGfxSceneManager::remove(const fgGfxSceneNodeHandle& oUniqueID) {
  * @param nameTag
  * @return 
  */
-fgBool fgGfxSceneManager::remove(const std::string& nameTag) {
+fgBool fg::gfx::CSceneManager::remove(const std::string& nameTag) {
     return remove(fgHandleManager::dereference(nameTag));
 }
 
@@ -454,7 +448,7 @@ fgBool fgGfxSceneManager::remove(const std::string& nameTag) {
  * @param nameTag
  * @return 
  */
-fgBool fgGfxSceneManager::remove(const char *nameTag) {
+fgBool fg::gfx::CSceneManager::remove(const char *nameTag) {
     return remove(fgHandleManager::dereference(nameTag));
 }
 
@@ -463,8 +457,8 @@ fgBool fgGfxSceneManager::remove(const char *nameTag) {
  * @param pObj
  * @return 
  */
-fgBool fgGfxSceneManager::destroyNode(fgGfxSceneNode*& pObj) {
-    if(!fgGfxSceneManager::remove(pObj)) {
+fgBool fg::gfx::CSceneManager::destroyNode(CSceneNode*& pObj) {
+    if(!fg::gfx::CSceneManager::remove(pObj)) {
         return FG_FALSE;
     }
     delete pObj;
@@ -477,8 +471,8 @@ fgBool fgGfxSceneManager::destroyNode(fgGfxSceneNode*& pObj) {
  * @param oUniqueID
  * @return 
  */
-fgBool fgGfxSceneManager::destroyNode(const fgGfxSceneNodeHandle& oUniqueID) {
-    fgGfxSceneNode *pObj = fgHandleManager::dereference(oUniqueID);
+fgBool fg::gfx::CSceneManager::destroyNode(const fgGfxSceneNodeHandle& oUniqueID) {
+    CSceneNode *pObj = fgHandleManager::dereference(oUniqueID);
     return destroyNode(pObj);
 }
 
@@ -487,8 +481,8 @@ fgBool fgGfxSceneManager::destroyNode(const fgGfxSceneNodeHandle& oUniqueID) {
  * @param nameTag
  * @return 
  */
-fgBool fgGfxSceneManager::destroyNode(const std::string& nameTag) {
-    fgGfxSceneNode *pObj = fgHandleManager::dereference(nameTag);
+fgBool fg::gfx::CSceneManager::destroyNode(const std::string& nameTag) {
+    CSceneNode *pObj = fgHandleManager::dereference(nameTag);
     return destroyNode(pObj);
 }
 
@@ -497,8 +491,8 @@ fgBool fgGfxSceneManager::destroyNode(const std::string& nameTag) {
  * @param nameTag
  * @return 
  */
-fgBool fgGfxSceneManager::destroyNode(const char *nameTag) {
-    fgGfxSceneNode *pObj = fgHandleManager::dereference(nameTag);
+fgBool fg::gfx::CSceneManager::destroyNode(const char *nameTag) {
+    CSceneNode *pObj = fgHandleManager::dereference(nameTag);
     return destroyNode(pObj);
 }
 
@@ -507,7 +501,7 @@ fgBool fgGfxSceneManager::destroyNode(const char *nameTag) {
  * @param oUniqueID
  * @return 
  */
-fgGfxSceneNode* fgGfxSceneManager::get(const fgGfxSceneNodeHandle& oUniqueID) {
+fg::gfx::CSceneNode* fg::gfx::CSceneManager::get(const fgGfxSceneNodeHandle& oUniqueID) {
     return fgHandleManager::dereference(oUniqueID);
 }
 
@@ -516,7 +510,7 @@ fgGfxSceneNode* fgGfxSceneManager::get(const fgGfxSceneNodeHandle& oUniqueID) {
  * @param nameTag
  * @return 
  */
-fgGfxSceneNode* fgGfxSceneManager::get(const std::string& nameTag) {
+fg::gfx::CSceneNode* fg::gfx::CSceneManager::get(const std::string& nameTag) {
     return fgHandleManager::dereference(nameTag);
 }
 
@@ -525,7 +519,7 @@ fgGfxSceneNode* fgGfxSceneManager::get(const std::string& nameTag) {
  * @param nameTag
  * @return 
  */
-fgGfxSceneNode* fgGfxSceneManager::get(const char *nameTag) {
+fg::gfx::CSceneNode* fg::gfx::CSceneManager::get(const char *nameTag) {
     return fgHandleManager::dereference(nameTag);
 }
 
@@ -534,7 +528,7 @@ fgGfxSceneNode* fgGfxSceneManager::get(const char *nameTag) {
  * @param pObj
  * @return 
  */
-fgBool fgGfxSceneManager::isManaged(const fgGfxSceneNode *pObj) {
+fgBool fg::gfx::CSceneManager::isManaged(const CSceneNode *pObj) {
     if(!pObj) {
         return FG_FALSE;
     }
@@ -554,8 +548,8 @@ fgBool fgGfxSceneManager::isManaged(const fgGfxSceneNode *pObj) {
  * @param oUniqueID
  * @return 
  */
-fgBool fgGfxSceneManager::isManaged(const fgGfxSceneNodeHandle& oUniqueID) {
-    fgGfxSceneNode *pObj = get(oUniqueID);
+fgBool fg::gfx::CSceneManager::isManaged(const fgGfxSceneNodeHandle& oUniqueID) {
+    CSceneNode *pObj = get(oUniqueID);
     return (fgBool)(pObj != NULL);
 }
 
@@ -564,8 +558,8 @@ fgBool fgGfxSceneManager::isManaged(const fgGfxSceneNodeHandle& oUniqueID) {
  * @param nameTag
  * @return 
  */
-fgBool fgGfxSceneManager::isManaged(const std::string& nameTag) {
-    fgGfxSceneNode *pObj = get(nameTag);
+fgBool fg::gfx::CSceneManager::isManaged(const std::string& nameTag) {
+    CSceneNode *pObj = get(nameTag);
     return (fgBool)(pObj != NULL);
 }
 
@@ -574,7 +568,7 @@ fgBool fgGfxSceneManager::isManaged(const std::string& nameTag) {
  * @param nameTag
  * @return 
  */
-fgBool fgGfxSceneManager::isManaged(const char *nameTag) {
-    fgGfxSceneNode *pObj = get(nameTag);
+fgBool fg::gfx::CSceneManager::isManaged(const char *nameTag) {
+    CSceneNode *pObj = get(nameTag);
     return (fgBool)(pObj != NULL);
 }

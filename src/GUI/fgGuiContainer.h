@@ -51,7 +51,7 @@ public:
     ///
     typedef childrenMap::iterator childrenMapItor;
     ///
-    typedef fgVector<fgGuiWidget *> childrenVec;
+    typedef fg::CVector<fgGuiWidget *> childrenVec;
     ///
     typedef childrenVec::iterator childrenVecItor;
     

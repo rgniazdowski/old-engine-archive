@@ -33,7 +33,7 @@ typedef unsigned int fgFontPrintMode;
 /*
  *
  */
-class fgFontDrawer : public virtual fgGfxDrawingBatch {
+class fgFontDrawer : public virtual fg::gfx::CDrawingBatch {
 public:
     /**
      *
@@ -50,7 +50,7 @@ protected:
      * @param texture
      * @return 
      */
-    fgGfxDrawCall *setupDrawCall(fgTextureResource *texture);
+    fg::gfx::CDrawCall *setupDrawCall(fgTextureResource *texture);
 
 public:
     /**

@@ -58,7 +58,7 @@ void fgGuiContainer::setFlags(const std::string& flags) {
     base_type::setFlags(flags);
     m_packMethod = FG_GUI_CONTAINER_PACK_FREE;
     m_packAlign = FG_GUI_CONTAINER_PACK_ALIGN_NONE;
-    fgStringVector flagsVec;
+    fg::CStringVector flagsVec;
     fgStrings::split(flags, ' ', flagsVec);
     if(flagsVec.empty())
         return;

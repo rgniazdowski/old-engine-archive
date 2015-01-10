@@ -16,7 +16,7 @@
 /**
  * 
  */
-fgGfxShaderConfig::fgGfxShaderConfig() :
+fg::gfx::CShaderConfig::CShaderConfig() :
 m_configType(FG_GFX_SHADER_CONFIG_INVALID),
 m_preferredSLVersion(FG_GFX_SHADING_LANGUAGE_INVALID),
 m_defaultPrecision(FG_GFX_SHADER_PRECISION_DEFAULT) { }
@@ -25,21 +25,21 @@ m_defaultPrecision(FG_GFX_SHADER_PRECISION_DEFAULT) { }
  * 
  * @param filePath
  */
-fgGfxShaderConfig::fgGfxShaderConfig(const char *filePath) {
-    fgGfxShaderConfig::load(filePath);
+fg::gfx::CShaderConfig::CShaderConfig(const char *filePath) {
+    fg::gfx::CShaderConfig::load(filePath);
 }
 
 /**
  * 
  */
-fgGfxShaderConfig::~fgGfxShaderConfig() {
+fg::gfx::CShaderConfig::~CShaderConfig() {
     clearAll();
 }
 
 /**
  * 
  */
-void fgGfxShaderConfig::clearAll(void) {
+void fg::gfx::CShaderConfig::clearAll(void) {
     fgConfig::clearAll();
     m_selectedConfigName.clear();
     m_programName.clear();
@@ -61,8 +61,8 @@ void fgGfxShaderConfig::clearAll(void) {
  * @param SLver
  * @return 
  */
-fgBool fgGfxShaderConfig::load(const char *filePath, fgGfxSLVersion SLver) {
-    fgGfxShaderConfig::clearAll();
+fgBool fg::gfx::CShaderConfig::load(const char *filePath, fgGfxSLVersion SLver) {
+    fg::gfx::CShaderConfig::clearAll();
     if(!fgConfig::load(filePath)) {
         FG_MessageSubsystem->reportError(tag_type::name(), FG_ERRNO_GFX_SHADER_FAIL_CFG_LOAD);
         return FG_FALSE;
@@ -75,7 +75,7 @@ fgBool fgGfxShaderConfig::load(const char *filePath, fgGfxSLVersion SLver) {
  * @param definesSection
  * @return 
  */
-fgBool fgGfxShaderConfig::private_parseDefines(fgCfgSection *definesSection) {
+fgBool fg::gfx::CShaderConfig::private_parseDefines(fgCfgSection *definesSection) {
     if(!definesSection)
         return FG_FALSE;
     unsigned short n = 0;
@@ -106,13 +106,13 @@ fgBool fgGfxShaderConfig::private_parseDefines(fgCfgSection *definesSection) {
  * @param includeSection
  * @return 
  */
-fgBool fgGfxShaderConfig::private_parseInclude(fgCfgSection *includeSection) {
+fgBool fg::gfx::CShaderConfig::private_parseInclude(fgCfgSection *includeSection) {
     if(!includeSection)
         return FG_FALSE;
     unsigned short n = 0;
     fgCfgParameter *param = includeSection->getParameter("list", FG_CFG_PARAMETER_STRING);
     if(!param) return FG_FALSE;
-    fgVector<std::string> incVec;
+    CVector<std::string> incVec;
     std::string tmp = param->string;
     fgStrings::split(tmp, ',', incVec);
     for(int i = 0; i < (int)incVec.size(); i++) {
@@ -127,7 +127,7 @@ fgBool fgGfxShaderConfig::private_parseInclude(fgCfgSection *includeSection) {
 /*
  * #OPTIMISE #DIVIDE #FIXME shader config parse data, move some operations to other function for clarity
  */
-fgBool fgGfxShaderConfig::private_parseData(fgGfxSLVersion SLver) {
+fgBool fg::gfx::CShaderConfig::private_parseData(fgGfxSLVersion SLver) {
     if(SLver != FG_GFX_SHADING_LANGUAGE_INVALID) {
         m_preferredSLVersion = SLver;
     } else if(m_preferredSLVersion == FG_GFX_SHADING_LANGUAGE_INVALID) {
@@ -271,7 +271,7 @@ fgBool fgGfxShaderConfig::private_parseData(fgGfxSLVersion SLver) {
             FG_MessageSubsystem->reportError(tag_type::name(), FG_ERRNO_GFX_SHADER_NO_FILE_SECTION);
             return FG_FALSE;
         }
-        fgVector<std::string> _helperVec;
+        CVector<std::string> _helperVec;
         fgBool foundQuality = FG_FALSE, foundFile = FG_FALSE;
         if((param = cfgSpecSection->getParameter("quality", FG_CFG_PARAMETER_STRING)) != NULL) {
             std::string _q_vec = param->string;

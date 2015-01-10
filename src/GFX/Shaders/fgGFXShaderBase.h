@@ -9,6 +9,7 @@
 
 #ifndef FG_INC_GFX_SHADER_BASE
     #define FG_INC_GFX_SHADER_BASE
+    #define FG_INC_GFX_SHADER_BASE_BLOCK
 
     #include "fgGFXShaderDefs.h"
 
@@ -18,113 +19,133 @@
     #include "Util/fgTag.h"
     #include <map>
 
-class fgGfxShader;
+namespace fg {
+    namespace gfx {
+        class CShader;
+    };
+};
 
     #define FG_TAG_GFX_SHADER_NAME	"GfxShader"
-    #define FG_TAG_GFX_SHADER		FG_TAG_TYPE(fgGfxShader)
+    #define FG_TAG_GFX_SHADER		FG_TAG_TYPE(fg::gfx::CShader)
 
-FG_TAG_TEMPLATE_ID_AUTO(fgGfxShader, FG_TAG_GFX_SHADER_NAME);
+FG_TAG_TEMPLATE_ID_AUTO(fg::gfx::CShader, FG_TAG_GFX_SHADER_NAME);
 typedef FG_TAG_GFX_SHADER fgGfxShaderTag;
 
 // Special handle type for shader program
 typedef fgHandle<fgGfxShaderTag> fgGfxShaderHandle;
 
-/**
- *
- */
-class fgGfxShaderBase : public fgManagedDataFileBase<fgGfxShaderHandle, fgQuality> {
-    friend class fgGfxShader;
-    friend class fgGfxShaderProgram;
-    friend class fgGfxShaderManager;
-public:
-    ///
-    typedef fgManagedDataFileBase<fgGfxShaderHandle, fgQuality> base_type;
-    ///
-    typedef fgGfxShaderTag tag_type;
-    
-protected:
-    ///
-    typedef std::map<fgGFXenum, fgGFXint> objParamMap;
-    ///
-    typedef objParamMap::iterator objParamMapItor;
+namespace fg {
+    namespace gfx {
 
-    /**
-     *
-     */
-    enum shaderBaseType {
-        FG_GFX_BASE_TYPE_INVALID = 0,
-        FG_GFX_BASE_TYPE_SHADER = 1,
-        FG_GFX_BASE_TYPE_PROGRAM = 2
+        /// Forward declaration
+        //class CShader;
+        /// Forward declaration for CShaderProgram
+        class CShaderProgram;
+        /// Forward declaration for CShaderManager
+        class CShaderManager;
+
+        namespace base {
+
+            /**
+             *
+             */
+            class CShader : public fgManagedDataFileBase<fgGfxShaderHandle, fgQuality> {
+                //friend class fg::gfx::CShader;
+                friend class fg::gfx::CShaderProgram;
+                friend class fg::gfx::CShaderManager;
+            public:
+                ///
+                typedef fgManagedDataFileBase<fgGfxShaderHandle, fgQuality> base_type;
+                ///
+                typedef fgGfxShaderTag tag_type;
+
+            protected:
+                ///
+                typedef std::map<fgGFXenum, fgGFXint> objParamMap;
+                ///
+                typedef objParamMap::iterator objParamMapItor;
+
+                /**
+                 *
+                 */
+                enum shaderBaseType {
+                    FG_GFX_BASE_TYPE_INVALID = 0,
+                    FG_GFX_BASE_TYPE_SHADER = 1,
+                    FG_GFX_BASE_TYPE_PROGRAM = 2
+                };
+
+            protected:
+                ///
+                objParamMap m_params;
+                ///
+                char *m_log;
+                ///
+                fgGFXuint m_gfxID;
+                /// 
+                shaderBaseType m_baseType;
+
+            public:
+                /**
+                 * 
+                 */
+                CShader();
+                /**
+                 * 
+                 */
+                virtual ~CShader();
+                /**
+                 * 
+                 * @return 
+                 */
+                fgGFXuint getGfxID(void) const {
+                    return m_gfxID;
+                }
+                /**
+                 * 
+                 * @return 
+                 */
+                fgGFXuint & getRefGfxID(void) {
+                    return m_gfxID;
+                }
+                /**
+                 * 
+                 * @param pname
+                 * @return 
+                 */
+                fgGFXint getParam(fgGFXenum pname) {
+                    return m_params[pname];
+                }
+                /**
+                 * 
+                 * @return 
+                 */
+                const char *getLog(void) const {
+                    return m_log;
+                }
+                /**
+                 * 
+                 */
+                virtual void clearAll(void) = 0;
+
+            protected:
+                /**
+                 * 
+                 */
+                void updateLog(void);
+                /**
+                 * 
+                 */
+                void updateParams(void);
+                /**
+                 * 
+                 * @param pname
+                 * @return 
+                 */
+                fgGFXint updateParam(fgGFXenum pname);
+            };
+        };
     };
-
-protected:
-    ///
-    objParamMap m_params;
-    ///
-    char *m_log;
-    ///
-    fgGFXuint m_gfxID;
-    /// 
-    shaderBaseType m_baseType;
-
-public:
-    /**
-     * 
-     */
-    fgGfxShaderBase();
-    /**
-     * 
-     */
-    virtual ~fgGfxShaderBase();
-    /**
-     * 
-     * @return 
-     */
-    fgGFXuint getGfxID(void) const {
-        return m_gfxID;
-    }
-    /**
-     * 
-     * @return 
-     */
-    fgGFXuint & getRefGfxID(void) {
-        return m_gfxID;
-    }
-    /**
-     * 
-     * @param pname
-     * @return 
-     */
-    fgGFXint getParam(fgGFXenum pname) {
-        return m_params[pname];
-    }
-    /**
-     * 
-     * @return 
-     */
-    const char *getLog(void) const {
-        return m_log;
-    }
-    /**
-     * 
-     */
-    virtual void clearAll(void) = 0;
-
-protected:
-    /**
-     * 
-     */
-    void updateLog(void);
-    /**
-     * 
-     */
-    void updateParams(void);
-    /**
-     * 
-     * @param pname
-     * @return 
-     */
-    fgGFXint updateParam(fgGFXenum pname);
 };
 
+    #undef FG_INC_GFX_SHADER_BASE_BLOCK
 #endif /*FG_INC_GFX_SHADER_BASE */

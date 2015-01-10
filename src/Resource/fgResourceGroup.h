@@ -146,17 +146,17 @@ class fgResourceGroup : public fgResource {
 
 public:
     ///
-    typedef fgVector<fgResource *> rgResVec;
+    typedef fg::CVector<fgResource *> rgResVec;
     ///
-    typedef fgVector<FG_RHANDLE> rgHandleVec;
+    typedef fg::CVector<FG_RHANDLE> rgHandleVec;
     ///
-    typedef fgVector<fgResource *>::iterator rgResVecItor;
+    typedef fg::CVector<fgResource *>::iterator rgResVecItor;
     ///
-    typedef fgVector<FG_RHANDLE>::iterator rgHandleVecItor;
+    typedef fg::CVector<FG_RHANDLE>::iterator rgHandleVecItor;
     ///
-    typedef fgVector<fgResource *>::const_iterator rgResVecConstItor;
+    typedef fg::CVector<fgResource *>::const_iterator rgResVecConstItor;
     ///
-    typedef fgVector<FG_RHANDLE>::const_iterator rgHandleVecConstItor;
+    typedef fg::CVector<FG_RHANDLE>::const_iterator rgHandleVecConstItor;
 
 public:
     /**

@@ -91,25 +91,38 @@ protected:
     };
     #endif // FG_USING_MARMALADE
 protected:
+    ///
     typedef std::stack<fgProfileSample *> profileStack;
+    ///
     typedef std::string hashKey;
     #ifdef FG_USING_MARMALADE
+    ///
     typedef std::hash<std::string> hashFunc;
     //typedef std::hash_map<hashKey, fgProfileSample *, hashFunc, profileEqualTo> profileMap;   // #FIXME #WTF
     //typedef std::hash_map<hashKey, fgProfileSampleHistory *, hashFunc, profileEqualTo> historyMap; // #FIXME #WTF
-
+    ///
     typedef std::map<hashKey, fgProfileSample *, profileLessTo> profileMap;
+    ///
     typedef std::map<hashKey, fgProfileSampleHistory *, profileLessTo> historyMap;
     #else
+    ///
     typedef std::unordered_map <hashKey, fgProfileSample *> profileMap;
+    ///
     typedef std::unordered_map <hashKey, fgProfileSampleHistory *> historyMap;
     #endif
+    ///
     typedef std::pair<std::string, fgProfileSample *> profileMapPair;
+    ///
     typedef std::pair<std::string, fgProfileSampleHistory *> historyMapPair;
+    ///
     typedef profileMap::iterator profileMapItor;
+    ///
     typedef historyMap::iterator historyMapItor;
-    typedef fgVector<fgProfileSample *> profileVec;
+    ///
+    typedef fg::CVector<fgProfileSample *> profileVec;
+    ///
     typedef profileVec::iterator profileVecItor;
+    
 private:
     // Stack holding currently open samples (active) in order
     profileStack m_profileStack;

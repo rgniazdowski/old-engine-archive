@@ -12,8 +12,8 @@
 /*
  *
  */
-fgGfxDrawCall::fgGfxDrawCall(const fgGfxDrawCallType type, const fgGFXuint attribMask) :
-fgGfxDrawable(FG_GFX_DRAWABLE_DRAWCALL),
+fg::gfx::CDrawCall::CDrawCall(const fgGfxDrawCallType type, const fgGFXuint attribMask) :
+CDrawable(FG_GFX_DRAWABLE_DRAWCALL),
 m_vecDataBase(NULL),
 m_vecData2v(NULL),
 m_vecData3v(NULL),
@@ -81,7 +81,7 @@ m_isManaged(0) {
 /*
  *
  */
-fgGfxDrawCall::~fgGfxDrawCall() {
+fg::gfx::CDrawCall::~CDrawCall() {
     m_program = NULL;
     m_MVP = NULL;
     if(m_vecData2v) {
@@ -103,7 +103,7 @@ fgGfxDrawCall::~fgGfxDrawCall() {
  * 
  * @param toggle
  */
-void fgGfxDrawCall::setManaged(const fgBool toggle) {
+void fg::gfx::CDrawCall::setManaged(const fgBool toggle) {
     m_isManaged = toggle;
 }
 
@@ -111,14 +111,14 @@ void fgGfxDrawCall::setManaged(const fgBool toggle) {
  * 
  * @return 
  */
-fgBool fgGfxDrawCall::isManaged() const {
+fgBool fg::gfx::CDrawCall::isManaged() const {
     return m_isManaged;
 }
 
 /*
  *
  */
-void fgGfxDrawCall::setupVertexData(fgGFXuint attribMask) {
+void fg::gfx::CDrawCall::setupVertexData(fgGFXuint attribMask) {
     if(!attribMask)
         return;
     if(m_vecDataBase) {
@@ -154,7 +154,7 @@ void fgGfxDrawCall::setupVertexData(fgGFXuint attribMask) {
  * 
  * @param pMesh
  */
-void fgGfxDrawCall::setupFromMesh(const fgGfxMeshBase* pMesh) {
+void fg::gfx::CDrawCall::setupFromMesh(const fgGfxMeshBase* pMesh) {
     if(!pMesh)
         return;
     pMesh->setupAttributes(m_attrData);
@@ -177,7 +177,7 @@ void fgGfxDrawCall::setupFromMesh(const fgGfxMeshBase* pMesh) {
  * 
  * @return 
  */
-fgVector4i const & fgGfxDrawCall::getScissorBox(void) const {
+fgVector4i const & fg::gfx::CDrawCall::getScissorBox(void) const {
     return m_scissorBox;
 }
 
@@ -185,7 +185,7 @@ fgVector4i const & fgGfxDrawCall::getScissorBox(void) const {
  * 
  * @return 
  */
-fgVector3f const & fgGfxDrawCall::getRelMove(void) const {
+fgVector3f const & fg::gfx::CDrawCall::getRelMove(void) const {
     return m_relMove;
 }
 
@@ -193,7 +193,7 @@ fgVector3f const & fgGfxDrawCall::getRelMove(void) const {
  * 
  * @return 
  */
-int fgGfxDrawCall::getZIndex(void) const {
+int fg::gfx::CDrawCall::getZIndex(void) const {
     return m_zIndex;
 }
 
@@ -201,7 +201,7 @@ int fgGfxDrawCall::getZIndex(void) const {
  * 
  * @return 
  */
-fgGfxAttributeData* fgGfxDrawCall::getAttributeData(void) {
+fgGfxAttributeData* fg::gfx::CDrawCall::getAttributeData(void) {
     return m_attrData;
 }
 
@@ -209,7 +209,7 @@ fgGfxAttributeData* fgGfxDrawCall::getAttributeData(void) {
  * 
  * @return 
  */
-fgGFXuint fgGfxDrawCall::getAttribMask(void) const {
+fgGFXuint fg::gfx::CDrawCall::getAttribMask(void) const {
     return m_attribMask;
 }
 
@@ -217,7 +217,7 @@ fgGFXuint fgGfxDrawCall::getAttribMask(void) const {
  * 
  * @return 
  */
-fgGfxDrawCallType fgGfxDrawCall::getDrawCallType(void) const {
+fgGfxDrawCallType fg::gfx::CDrawCall::getDrawCallType(void) const {
     return m_drawCallType;
 }
 
@@ -225,7 +225,7 @@ fgGfxDrawCallType fgGfxDrawCall::getDrawCallType(void) const {
  * 
  * @return 
  */
-fgGfxDrawAppendMode fgGfxDrawCall::getDrawAppendMode(void) const {
+fgGfxDrawAppendMode fg::gfx::CDrawCall::getDrawAppendMode(void) const {
     return m_drawAppendMode;
 }
 
@@ -233,7 +233,7 @@ fgGfxDrawAppendMode fgGfxDrawCall::getDrawAppendMode(void) const {
  * 
  * @return 
  */
-fgGfxPrimitiveMode fgGfxDrawCall::getPrimitiveMode(void) const {
+fgGfxPrimitiveMode fg::gfx::CDrawCall::getPrimitiveMode(void) const {
     return m_primMode;
 }
 
@@ -241,7 +241,7 @@ fgGfxPrimitiveMode fgGfxDrawCall::getPrimitiveMode(void) const {
  * 
  * @return 
  */
-fgVertexData *fgGfxDrawCall::getVertexData(void) const {
+fgVertexData *fg::gfx::CDrawCall::getVertexData(void) const {
     return m_vecDataBase;
 }
 
@@ -252,7 +252,7 @@ fgVertexData *fgGfxDrawCall::getVertexData(void) const {
  * @param width
  * @param height
  */
-void fgGfxDrawCall::setScissorBox(const fgGFXint x, const fgGFXint y, const fgGFXint width, const fgGFXint height) {
+void fg::gfx::CDrawCall::setScissorBox(const fgGFXint x, const fgGFXint y, const fgGFXint width, const fgGFXint height) {
     m_scissorBox.x = x;
     m_scissorBox.y = y;
     m_scissorBox.z = width;
@@ -264,7 +264,7 @@ void fgGfxDrawCall::setScissorBox(const fgGFXint x, const fgGFXint y, const fgGF
  * @param pos
  * @param size
  */
-void fgGfxDrawCall::setScissorBox(const fgVector2i& pos, const fgVector2i & size) {
+void fg::gfx::CDrawCall::setScissorBox(const fgVector2i& pos, const fgVector2i & size) {
     m_scissorBox.x = pos.x;
     m_scissorBox.y = pos.y;
     m_scissorBox.z = size.x;
@@ -275,7 +275,7 @@ void fgGfxDrawCall::setScissorBox(const fgVector2i& pos, const fgVector2i & size
  * 
  * @param dimensions
  */
-void fgGfxDrawCall::setScissorBox(const fgVector4i & dimensions) {
+void fg::gfx::CDrawCall::setScissorBox(const fgVector4i & dimensions) {
     m_scissorBox = dimensions;
 }
 
@@ -283,7 +283,7 @@ void fgGfxDrawCall::setScissorBox(const fgVector4i & dimensions) {
  * 
  * @param relMove
  */
-void fgGfxDrawCall::setRelMove(const fgVector3f& relMove) {
+void fg::gfx::CDrawCall::setRelMove(const fgVector3f& relMove) {
     m_relMove = relMove;
 }
 
@@ -291,7 +291,7 @@ void fgGfxDrawCall::setRelMove(const fgVector3f& relMove) {
  * 
  * @param relMove
  */
-void fgGfxDrawCall::setRelMove(const fgVector2f& relMove) {
+void fg::gfx::CDrawCall::setRelMove(const fgVector2f& relMove) {
     m_relMove.x = relMove.x;
     m_relMove.y = relMove.y;
     m_relMove.z = 0.0f;
@@ -301,7 +301,7 @@ void fgGfxDrawCall::setRelMove(const fgVector2f& relMove) {
  * 
  * @param zIndex
  */
-void fgGfxDrawCall::setZIndex(const int zIndex) {
+void fg::gfx::CDrawCall::setZIndex(const int zIndex) {
     m_zIndex = zIndex;
     m_fastCmp.setPart(2, (fg::util::FastCmp::data_type_32)m_zIndex);
 }
@@ -309,7 +309,7 @@ void fgGfxDrawCall::setZIndex(const int zIndex) {
 /*
  *
  */
-void fgGfxDrawCall::upZIndex(void) {
+void fg::gfx::CDrawCall::upZIndex(void) {
     m_zIndex++;
     m_fastCmp.setPart(2, (fg::util::FastCmp::data_type_32)m_zIndex);
 }
@@ -317,7 +317,7 @@ void fgGfxDrawCall::upZIndex(void) {
 /*
  *
  */
-void fgGfxDrawCall::downZIndex(void) {
+void fg::gfx::CDrawCall::downZIndex(void) {
     m_zIndex--;
     m_fastCmp.setPart(2, (fg::util::FastCmp::data_type_32)m_zIndex);
 }
@@ -325,28 +325,28 @@ void fgGfxDrawCall::downZIndex(void) {
 /*
  *
  */
-void fgGfxDrawCall::setDrawCallType(const fgGfxDrawCallType type) {
+void fg::gfx::CDrawCall::setDrawCallType(const fgGfxDrawCallType type) {
     m_drawCallType = type;
 }
 
 /*
  *
  */
-void fgGfxDrawCall::setDrawAppendMode(const fgGfxDrawAppendMode mode) {
+void fg::gfx::CDrawCall::setDrawAppendMode(const fgGfxDrawAppendMode mode) {
     m_drawAppendMode = mode;
 }
 
 /*
  *
  */
-void fgGfxDrawCall::setPrimitiveMode(const fgGfxPrimitiveMode mode) {
+void fg::gfx::CDrawCall::setPrimitiveMode(const fgGfxPrimitiveMode mode) {
     m_primMode = mode;
 }
 
 /*
  * Whether to set UVs, normals or colors active
  */
-void fgGfxDrawCall::setComponentActive(unsigned int component, const fgBool reset) {
+void fg::gfx::CDrawCall::setComponentActive(unsigned int component, const fgBool reset) {
     if(!component || reset)
         m_attribMask = 0;
     if(component & FG_GFX_POSITION_BIT)
@@ -365,35 +365,35 @@ void fgGfxDrawCall::setComponentActive(unsigned int component, const fgBool rese
 /*
  *
  */
-void fgGfxDrawCall::setColor(const fgColor3f& color) {
+void fg::gfx::CDrawCall::setColor(const fgColor3f& color) {
     m_color = fgColor4f(color.r, color.g, color.b, 1.0f);
 }
 
 /*
  *
  */
-void fgGfxDrawCall::setColor(const fgColor4f& color) {
+void fg::gfx::CDrawCall::setColor(const fgColor4f& color) {
     m_color = color;
 }
 
 /*
  *
  */
-void fgGfxDrawCall::resetColor(void) {
+void fg::gfx::CDrawCall::resetColor(void) {
     m_color = fgColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 }
 
 /*
  *
  */
-void fgGfxDrawCall::setMVP(fgGfxMVPMatrix *MVP) {
+void fg::gfx::CDrawCall::setMVP(fgGfxMVPMatrix *MVP) {
     m_MVP = MVP;
 }
 
 /*
  *
  */
-fgGfxMVPMatrix *fgGfxDrawCall::getMVP(void) const {
+fgGfxMVPMatrix *fg::gfx::CDrawCall::getMVP(void) const {
     return m_MVP;
 }
 
@@ -402,7 +402,7 @@ fgGfxMVPMatrix *fgGfxDrawCall::getMVP(void) const {
  * However it should be avoided. Shader program knows if it's being currently used.
  * Also only through shader manager given shader program can be set as active.
  */
-void fgGfxDrawCall::setShaderProgram(fgGfxShaderProgram *pProgram) {
+void fg::gfx::CDrawCall::setShaderProgram(fg::gfx::CShaderProgram *pProgram) {
     m_program = pProgram;
     if(m_program)
         m_fastCmp.setPart(3, (fg::util::FastCmp::data_type_32)m_program->getHandle().getIndex());
@@ -414,14 +414,14 @@ void fgGfxDrawCall::setShaderProgram(fgGfxShaderProgram *pProgram) {
 /*
  *
  */
-fgGfxShaderProgram *fgGfxDrawCall::getShaderProgram(void) const {
+fg::gfx::CShaderProgram *fg::gfx::CDrawCall::getShaderProgram(void) const {
     return m_program;
 }
 
 /*
  *
  */
-void fgGfxDrawCall::setTexture(const fgGfxTextureID& textureID) {
+void fg::gfx::CDrawCall::setTexture(const fgGfxTextureID& textureID) {
     m_textureID = textureID;
     m_fastCmp.setPart(1, (fg::util::FastCmp::data_type_32)m_textureID.id);
 }
@@ -429,21 +429,21 @@ void fgGfxDrawCall::setTexture(const fgGfxTextureID& textureID) {
 /*
  *
  */
-fgGfxTextureID const & fgGfxDrawCall::getTexture(void) const {
+fgGfxTextureID const & fg::gfx::CDrawCall::getTexture(void) const {
     return m_textureID;
 }
 
 /*
  *
  */
-fgGfxTextureID& fgGfxDrawCall::getTexture(void) {
+fgGfxTextureID& fg::gfx::CDrawCall::getTexture(void) {
     return m_textureID;
 }
 
 /*
  * Clear the buffers
  */
-void fgGfxDrawCall::flush(void) {
+void fg::gfx::CDrawCall::flush(void) {
     m_relMove = fgVector3f(0.0f, 0.0f, 0.0f);
     if(m_vecDataBase)
         m_vecDataBase->clear();
@@ -454,7 +454,7 @@ void fgGfxDrawCall::flush(void) {
 /*
  * Append simple rectangle next to the last one
  */
-void fgGfxDrawCall::appendRect2D(const fgVec2f &size,
+void fg::gfx::CDrawCall::appendRect2D(const fgVec2f &size,
                                  const fgVec2f &uv1, const fgVec2f &uv2,
                                  const fgBool rewind) {
     // #FIXME - TOO DEEP CALL 
@@ -464,7 +464,7 @@ void fgGfxDrawCall::appendRect2D(const fgVec2f &size,
 /*
  *
  */
-void fgGfxDrawCall::appendRect2D(const fgVec2f &relPos, const fgVec2f &size,
+void fg::gfx::CDrawCall::appendRect2D(const fgVec2f &relPos, const fgVec2f &size,
                                  const fgVec2f &uv1, const fgVec2f &uv2,
                                  const fgBool rewind) {
     fgVec2f pos(relPos.x, relPos.y);
@@ -481,21 +481,21 @@ void fgGfxDrawCall::appendRect2D(const fgVec2f &relPos, const fgVec2f &size,
 /**
  * 
  */
-fgBool fgGfxDrawCall::applyAttributeData(void) {
+fgBool fg::gfx::CDrawCall::applyAttributeData(void) {
     if(m_drawCallType == FG_GFX_DRAW_CALL_MESH ||
        m_drawCallType == FG_GFX_DRAW_CALL_CUSTOM_ARRAY) {
-        fgGfxPlatform::context()->diffVertexAttribArrayMask(m_attribMask);
+        CPlatform::context()->diffVertexAttribArrayMask(m_attribMask);
         if(m_attrData[0].isInterleaved == FG_TRUE && m_attrData[0].isBO) {
-            fgGfxPlatform::context()->bindBuffer(GL_ARRAY_BUFFER, m_attrData[0].buffer);
+            CPlatform::context()->bindBuffer(GL_ARRAY_BUFFER, m_attrData[0].buffer);
         } else {
-            fgGfxPlatform::context()->bindBuffer(GL_ARRAY_BUFFER, 0);
+            CPlatform::context()->bindBuffer(GL_ARRAY_BUFFER, 0);
         }
         for(int i = 0; i < FG_GFX_ATTRIBUTE_COUNT; i++) {
             if(m_attrData[i].isEnabled) {
                 if(m_attrData[i].isInterleaved == FG_FALSE && m_attrData[i].isBO) {
-                    fgGfxPlatform::context()->bindBuffer(GL_ARRAY_BUFFER, m_attrData[i].buffer);
+                    CPlatform::context()->bindBuffer(GL_ARRAY_BUFFER, m_attrData[i].buffer);
                 }
-                fgGfxPlatform::context()->vertexAttribPointer(m_attrData[i].index,
+                CPlatform::context()->vertexAttribPointer(m_attrData[i].index,
                                                               m_attrData[i].size,
                                                               m_attrData[i].dataType,
                                                               m_attrData[i].isNormalized,
@@ -504,9 +504,9 @@ fgBool fgGfxDrawCall::applyAttributeData(void) {
             }
         }
         if(m_drawingInfo.buffer) {
-            fgGfxPlatform::context()->bindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_drawingInfo.buffer);
+            CPlatform::context()->bindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_drawingInfo.buffer);
         } else {
-            fgGfxPlatform::context()->bindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+            CPlatform::context()->bindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
         }
     } else {
         return FG_FALSE;
@@ -517,13 +517,13 @@ fgBool fgGfxDrawCall::applyAttributeData(void) {
 /*
  *
  */
-void fgGfxDrawCall::draw(void) {
+void fg::gfx::CDrawCall::draw(void) {
     if(!m_vecDataBase && m_drawCallType == FG_GFX_DRAW_CALL_CUSTOM_ARRAY) // ? ?
         return;
     fgBool scissorSet = FG_FALSE;
     if(m_scissorBox.z != 0 && m_scissorBox.w != 0) {
         // If scissor box has some kind of size then...
-        fgGfxPlatform::context()->scissor(m_scissorBox);
+        CPlatform::context()->scissor(m_scissorBox);
         scissorSet = FG_TRUE;
     }
     if(m_MVP && m_program) {
@@ -532,7 +532,7 @@ void fgGfxDrawCall::draw(void) {
     }
     if(m_program) {
         if(m_textureID.id) {
-            fgGfxPlatform::context()->bindTexture(m_textureID);
+            CPlatform::context()->bindTexture(m_textureID);
             m_program->setUniform(FG_GFX_USE_TEXTURE, 1.0f);
         } else {
             m_program->setUniform(FG_GFX_USE_TEXTURE, 0.0f);
@@ -555,13 +555,13 @@ void fgGfxDrawCall::draw(void) {
             glDrawArrays((fgGFXenum)m_primMode, 0, m_drawingInfo.count);
         }
         // #FIXME
-        fgGfxPlatform::context()->bindBuffer(GL_ARRAY_BUFFER, 0);
-        fgGfxPlatform::context()->bindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+        CPlatform::context()->bindBuffer(GL_ARRAY_BUFFER, 0);
+        CPlatform::context()->bindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
     }
     
     if(scissorSet) //FIXME
     {
         // Reset the scissor box
-        fgGfxPlatform::context()->scissor();
+        CPlatform::context()->scissor();
     }
 }

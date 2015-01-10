@@ -18,15 +18,15 @@
 /**
  * 
  */
-fgGfxSceneNodeMesh::fgGfxSceneNodeMesh(fgGfxMeshBase *pMesh, fgGfxSceneNode *pParent) :
-fgGfxSceneNode(FG_GFX_SCENE_NODE_MESH, pParent) {
-    fgGfxSceneNode::setNodeType(FG_GFX_SCENE_NODE_MESH);
+fg::gfx::CSceneNodeMesh::CSceneNodeMesh(fgGfxMeshBase *pMesh, CSceneNode *pParent) :
+CSceneNode(FG_GFX_SCENE_NODE_MESH, pParent) {
+    CSceneNode::setNodeType(FG_GFX_SCENE_NODE_MESH);
     if(m_drawCall) {
         delete m_drawCall;
         m_drawCall = NULL;
     }
     // #FIXME - still draw call management needs some fixing - this is so awkward, I mean... srsly?
-    m_drawCall = new fgGfxDrawCall(FG_GFX_DRAW_CALL_MESH, FG_GFX_POSITION_BIT | FG_GFX_UVS_BIT | FG_GFX_NORMAL_BIT);
+    m_drawCall = new CDrawCall(FG_GFX_DRAW_CALL_MESH, FG_GFX_POSITION_BIT | FG_GFX_UVS_BIT | FG_GFX_NORMAL_BIT);
     setMesh(pMesh);
 }
 
@@ -34,21 +34,21 @@ fgGfxSceneNode(FG_GFX_SCENE_NODE_MESH, pParent) {
  * 
  * @param orig
  */
-fgGfxSceneNodeMesh::fgGfxSceneNodeMesh(const fgGfxSceneNodeMesh& orig) { }
+fg::gfx::CSceneNodeMesh::CSceneNodeMesh(const CSceneNodeMesh& orig) { }
 
 /**
  * 
  */
-fgGfxSceneNodeMesh::~fgGfxSceneNodeMesh() { }
+fg::gfx::CSceneNodeMesh::~CSceneNodeMesh() { }
 
 /**
  * 
  * @param pMesh
  */
-void fgGfxSceneNodeMesh::setMesh(fgGfxMeshBase* pMesh) {
+void fg::gfx::CSceneNodeMesh::setMesh(fgGfxMeshBase* pMesh) {
     if(!pMesh)
         return;
-    fgGfxSceneNode::setNodeType(FG_GFX_SCENE_NODE_MESH);
+    CSceneNode::setNodeType(FG_GFX_SCENE_NODE_MESH);
     if(m_drawCall) {
         m_drawCall->setupFromMesh(pMesh);
     }

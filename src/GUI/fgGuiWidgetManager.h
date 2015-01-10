@@ -31,7 +31,7 @@ public:
     ///
     typedef fgGuiWidgetHandle handle_type;
     ///
-    typedef fgVector<fgGuiWidget *> widgetVec;
+    typedef fg::CVector<fgGuiWidget *> widgetVec;
     ///
     typedef widgetVec::iterator widgetVecItor;
     

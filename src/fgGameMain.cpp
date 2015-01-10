@@ -307,7 +307,7 @@ fgBool fgGameMain::initSubsystems(void) {
     m_resourceFactory->registerResource(FG_RESOURCE_TEXTURE, &fgTextureResource::createResource);
     m_resourceFactory->registerResource(FG_RESOURCE_FONT, &fgFontResource::createResource);
     m_resourceFactory->registerResource(FG_RESOURCE_GROUP, &fgResourceGroup::createResource);
-    m_resourceFactory->registerResource(FG_RESOURCE_3D_MODEL, &fgGfxModelResource::createResource);
+    m_resourceFactory->registerResource(FG_RESOURCE_3D_MODEL, &fg::gfx::CModelResource::createResource);
     m_resourceFactory->registerResource(FG_RESOURCE_PARTICLE_EFFECT, &fgParticleEffect::createResource);
     m_resourceFactory->registerResource(FG_RESOURCE_MUSIC, &fgMusicResource::createResource);
     m_resourceFactory->registerResource(FG_RESOURCE_SOUND, &fgSoundResource::createResource);
@@ -457,7 +457,7 @@ fgBool fgGameMain::loadResources(void) {
     m_gfxMain->getShaderManager()->setShadersPath("shaders/");
     m_gfxMain->preLoadShaders();
     std::string sPlainEasyShaderName("sPlainEasy");
-    fgGfxShaderProgram *program = m_gfxMain->getShaderManager()->get(sPlainEasyShaderName);
+    fg::gfx::CShaderProgram *program = m_gfxMain->getShaderManager()->get(sPlainEasyShaderName);
     FG_HardwareState->deviceYield(0); // #FIXME - device yield...
     FG_LOG_DEBUG("Will now try to compile and link 'sPlainEasy' shader program");
     if(program) {
@@ -469,7 +469,7 @@ fgBool fgGameMain::loadResources(void) {
     m_gfxMain->getLoader()->update(10.0f);
     {
         std::string sOrthoEasyShaderName("sOrthoEasy");
-        fgGfxShaderProgram *program = m_gfxMain->getShaderManager()->get(sOrthoEasyShaderName);
+        fg::gfx::CShaderProgram *program = m_gfxMain->getShaderManager()->get(sOrthoEasyShaderName);
         FG_HardwareState->deviceYield(0); // #FIXME - device yield...
         FG_LOG_DEBUG("Init: Will now try to compile and link 'sOrthoEasyShader' shader program");
         if(program) {
@@ -480,7 +480,7 @@ fgBool fgGameMain::loadResources(void) {
     m_gfxMain->getLoader()->update(10.0f);
     {
         std::string sSkyBoxEasyShaderName("sSkyBoxEasy");
-        fgGfxShaderProgram *program = m_gfxMain->getShaderManager()->get(sSkyBoxEasyShaderName);
+        fg::gfx::CShaderProgram *program = m_gfxMain->getShaderManager()->get(sSkyBoxEasyShaderName);
         FG_HardwareState->deviceYield(0); // #FIXME - device yield...
         FG_LOG_DEBUG("Init: Will now try to compile and link 'sSkyBoxEasyShader' shader program");
         if(program) {
@@ -498,7 +498,7 @@ fgBool fgGameMain::loadResources(void) {
         float t1 = fgTime::ms();
         FG_LOG_DEBUG("Init: Will now try load object CobraBomber.obj");
         std::string modelname("CobraBomber");
-        fgGfxModelResource *model = (fgGfxModelResource *)m_resourceMgr->get(modelname);
+        fg::gfx::CModelResource *model = (fg::gfx::CModelResource *)m_resourceMgr->get(modelname);
         float t2 = fgTime::ms();
         FG_LOG_DEBUG("WHOLE OBJECT CREATION TOOK: %.2f seconds", (t2 - t1) / 1000.0f);
     }
@@ -619,7 +619,7 @@ void fgGameMain::render(void) {
         g_debugProfiling->end("GFX::render");
     }
 #endif
-    fgGfxPlatform::context()->setBlend(FG_TRUE); // #FIXME
+    fg::gfx::CPlatform::context()->setBlend(FG_TRUE); // #FIXME
 #if defined(FG_DEBUG)
     if(g_fgDebugConfig.isDebugProfiling) {
         g_debugProfiling->begin("GUI::render");
@@ -631,7 +631,7 @@ void fgGameMain::render(void) {
         g_debugProfiling->end("GUI::render");
     }
 #endif
-    fgGfxPlatform::context()->setBlend(FG_FALSE); // #FIXME
+    fg::gfx::CPlatform::context()->setBlend(FG_FALSE); // #FIXME
     FG_HardwareState->deviceYield();
     m_gfxMain->getMainWindow()->swapBuffers();
 }

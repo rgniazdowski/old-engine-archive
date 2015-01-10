@@ -172,14 +172,25 @@ namespace fgTinyObj {
         return vi;
     }
 
-    static unsigned int updateVertex(
-                                     std::map<vertex_index, unsigned int>& vertexCache,
-                                     fgVector<float>& positions,
-                                     fgVector<float>& normals,
-                                     fgVector<float>& texcoords,
-                                     const fgVector<float>& in_positions,
-                                     const fgVector<float>& in_normals,
-                                     const fgVector<float>& in_texcoords,
+    /**
+     * SoA compatible version of updateVertex
+     * @param vertexCache
+     * @param positions
+     * @param normals
+     * @param texcoords
+     * @param in_positions
+     * @param in_normals
+     * @param in_texcoords
+     * @param i
+     * @return 
+     */
+    static unsigned int updateVertex(std::map<vertex_index, unsigned int>& vertexCache,
+                                     fg::CVector<float>& positions,
+                                     fg::CVector<float>& normals,
+                                     fg::CVector<float>& texcoords,
+                                     const fg::CVector<float>& in_positions,
+                                     const fg::CVector<float>& in_normals,
+                                     const fg::CVector<float>& in_texcoords,
                                      const vertex_index& i) {
         const std::map<vertex_index, unsigned int>::iterator it = vertexCache.find(i);
 
@@ -211,15 +222,21 @@ namespace fgTinyObj {
         return idx;
     }
 
-    /*
+    /**
      * AoS compatible version of updateVertex
+     * @param vertexCache
+     * @param vertices
+     * @param in_positions
+     * @param in_normals
+     * @param in_texcoords
+     * @param i
+     * @return 
      */
-    static unsigned int updateVertex(
-                                     std::map<vertex_index, unsigned int>& vertexCache,
-                                     fgVector<fgVertex3v> & vertices,
-                                     const fgVector<float>& in_positions,
-                                     const fgVector<float>& in_normals,
-                                     const fgVector<float>& in_texcoords,
+    static unsigned int updateVertex(std::map<vertex_index, unsigned int>& vertexCache,
+                                     fg::CVector<fgVertex3v> & vertices,
+                                     const fg::CVector<float>& in_positions,
+                                     const fg::CVector<float>& in_normals,
+                                     const fg::CVector<float>& in_texcoords,
                                      const vertex_index& i) {
         const std::map<vertex_index, unsigned int>::iterator it = vertexCache.find(i);
 
@@ -256,31 +273,41 @@ namespace fgTinyObj {
     }
 
     /*
-     * This is used for SoA (structure of arrays) shape/mesh mode
+     * This is used for SoA/AoS (structure of arrays) shape/mesh mode
+     * @param shape
+     * @param in_positions
+     * @param in_normals
+     * @param in_texcoords
+     * @param faceGroup
+     * @param material
+     * @param name
+     * @param is_material_set
+     * @param forceAoS
+     * @return 
      */
     static fgBool exportFaceGroupToShape(fgGfxShape *shape,
-                                         const fgVector<float> &in_positions,
-                                         const fgVector<float> &in_normals,
-                                         const fgVector<float> &in_texcoords,
-                                         const fgVector<fgVector<vertex_index> >& faceGroup,
+                                         const fg::CVector<float> &in_positions,
+                                         const fg::CVector<float> &in_normals,
+                                         const fg::CVector<float> &in_texcoords,
+                                         const fg::CVector<fg::CVector<vertex_index> >& faceGroup,
                                          const fgGfxMaterial &material,
                                          const std::string &name,
-                                         const fgBool is_material_seted,
+                                         const fgBool is_material_set,
                                          const fgBool forceAoS = FG_TRUE) {
         if(faceGroup.empty() || !shape) {
             return FG_FALSE;
         }
 
         // Flattened version of vertex data
-        fgVector<float> positions;
-        fgVector<float> normals;
-        fgVector<float> texcoords;
+        fg::CVector<float> positions;
+        fg::CVector<float> normals;
+        fg::CVector<float> texcoords;
         std::map<vertex_index, unsigned int> vertexCache;
-        fgVector<fgGFXushort> indices; // unsigned short FIXME ! 
-        fgVector<fgVertex3v> vertices;
+        fg::CVector<fgGFXushort> indices; // unsigned short FIXME ! 
+        fg::CVector<fgVertex3v> vertices;
         // Flatten vertices and indices
         for(size_t i = 0; i < faceGroup.size(); i++) {
-            const fgVector<vertex_index>& face = faceGroup[i];
+            const fg::CVector<vertex_index>& face = faceGroup[i];
 
             vertex_index i0 = face[0];
             vertex_index i1(-1);
@@ -334,7 +361,7 @@ namespace fgTinyObj {
             ((fgGfxMeshSoA *)shape->mesh)->indices.swap(indices);
         }
 
-        if(is_material_seted) {
+        if(is_material_set) {
             if(!shape->material)
                 shape->material = new fgGfxMaterial(material);
             /*else
@@ -351,8 +378,11 @@ namespace fgTinyObj {
         return FG_TRUE;
     }
 
-    /*
-     *
+    /**
+     * 
+     * @param material_map
+     * @param inStream
+     * @return 
      */
     std::string LoadMtl(std::map<std::string, fgGfxMaterial>& material_map, std::istream& inStream) {
         material_map.clear();
@@ -553,7 +583,7 @@ namespace fgTinyObj {
         return LoadMtl(matMap, matIStream);
     }
 
-    std::string LoadObj(fgVector<fgGfxShape *>& shapes,
+    std::string LoadObj(fg::CVector<fgGfxShape *>& shapes,
                         const char* filename,
                         const char* mtl_basepath,
                         fgBool forceAoS) {
@@ -575,17 +605,17 @@ namespace fgTinyObj {
         return LoadObj(shapes, ifs, matFileReader, forceAoS);
     }
 
-    std::string LoadObj(fgVector<fgGfxShape *>& shapes,
+    std::string LoadObj(fg::CVector<fgGfxShape *>& shapes,
                         std::istream& inStream,
                         MaterialReader& readMatFn,
                         fgBool forceAoS) {
         std::stringstream err;
         float t1 = fgTime::ms();
 
-        fgVector<float> v;
-        fgVector<float> vn;
-        fgVector<float> vt;
-        fgVector<fgVector<vertex_index> > faceGroup;
+        fg::CVector<float> v;
+        fg::CVector<float> vn;
+        fg::CVector<float> vt;
+        fg::CVector<fg::CVector<vertex_index> > faceGroup;
         std::string name;
 
         // material
@@ -594,7 +624,7 @@ namespace fgTinyObj {
         bool is_material_seted = false;
 
         int maxchars = 8192; // Alloc enough size.
-        fgVector<char> buf; // Alloc enough size.
+        fg::CVector<char> buf; // Alloc enough size.
         buf.resize(maxchars);
         float l1 = fgTime::ms();
         while(inStream.peek() != -1) {
@@ -660,7 +690,7 @@ namespace fgTinyObj {
                 token += 2;
                 token += strspn(token, " \t");
 
-                fgVector<vertex_index> face;
+                fg::CVector<vertex_index> face;
                 while(!isNewLine(token[0])) {
                     vertex_index vi = parseTriple(token, v.size() / 3, vn.size() / 3, vt.size() / 2);
                     face.push_back(vi);
@@ -721,7 +751,7 @@ namespace fgTinyObj {
                 is_material_seted = false;
                 faceGroup.clear();
 
-                fgStringVector names;
+                fg::CStringVector names;
                 while(!isNewLine(token[0])) {
                     std::string str = parseString(token);
                     names.push_back(str);

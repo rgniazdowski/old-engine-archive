@@ -136,7 +136,7 @@ int fgFontDrawer::print(float x0, float y0, const char *string, float charSize) 
  * Clears the buffer (no drawing is performed)
  */
 void fgFontDrawer::flush(void) {
-    fgGfxDrawingBatch::flush();
+    fg::gfx::CDrawingBatch::flush();
     m_relMove = fgVector3f(0.0f, 0.0f, 0.0f);
 }
 
@@ -144,7 +144,7 @@ void fgFontDrawer::flush(void) {
  * 
  */
 void fgFontDrawer::render(void) {
-    fgGfxDrawingBatch::render();
+    fg::gfx::CDrawingBatch::render();
 }
 
 /**
@@ -153,7 +153,7 @@ void fgFontDrawer::render(void) {
  */
 void fgFontDrawer::setColor(const fgColor4f &color) {
     m_color = color;
-    fgGfxDrawCall *drawCall = fgGfxDrawingBatch::getLastDrawCall();
+    fg::gfx::CDrawCall *drawCall = fg::gfx::CDrawingBatch::getLastDrawCall();
     if(drawCall) {
         drawCall->setColor(m_color);
     }
@@ -165,7 +165,7 @@ void fgFontDrawer::setColor(const fgColor4f &color) {
  */
 void fgFontDrawer::setColor(const fgColor3f &color) {
     m_color = fgColor4f(color.r, color.g, color.g, 1.0f);
-    fgGfxDrawCall *drawCall = fgGfxDrawingBatch::getLastDrawCall();
+    fg::gfx::CDrawCall *drawCall = fg::gfx::CDrawingBatch::getLastDrawCall();
     if(drawCall) {
         drawCall->setColor(m_color);
     }
@@ -176,7 +176,7 @@ void fgFontDrawer::setColor(const fgColor3f &color) {
  */
 void fgFontDrawer::setColor(void) {
     m_color = fgColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-    fgGfxDrawCall *drawCall = fgGfxDrawingBatch::getLastDrawCall();
+    fg::gfx::CDrawCall *drawCall = fg::gfx::CDrawingBatch::getLastDrawCall();
     if(drawCall) {
         drawCall->setColor(m_color);
     }
@@ -187,9 +187,9 @@ void fgFontDrawer::setColor(void) {
  * @param texture
  * @return 
  */
-fgGfxDrawCall *fgFontDrawer::setupDrawCall(fgTextureResource *texture) {
+fg::gfx::CDrawCall *fgFontDrawer::setupDrawCall(fgTextureResource *texture) {
     int index;
-    fgGfxDrawCall *drawCall = fgGfxDrawingBatch::requestDrawCall(index,
+    fg::gfx::CDrawCall *drawCall = fg::gfx::CDrawingBatch::requestDrawCall(index,
                                                                 FG_GFX_DRAW_CALL_CUSTOM_ARRAY,
                                                                 FG_GFX_POSITION_BIT | FG_GFX_UVS_BIT | FG_GFX_COLOR_BIT);
     drawCall->setColor(m_color);
@@ -264,7 +264,7 @@ float fgFontDrawer::placeChar(float xRel0, float yRel0, char letter, fgBool rewi
     relPos.x += charInfo.p0f.x*scale;
     relPos.y += charInfo.p0f.y*scale;
     fgVec2f rectSize = (charInfo.p1f - charInfo.p0f) * scale;
-    fgGfxDrawCall *drawCall = fgGfxDrawingBatch::getLastDrawCall();
+    fg::gfx::CDrawCall *drawCall = fg::gfx::CDrawingBatch::getLastDrawCall();
     if(!drawCall) {
         drawCall = setupDrawCall(m_currentFont);
     }

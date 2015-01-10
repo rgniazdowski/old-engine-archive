@@ -106,19 +106,19 @@ public:
     // Releases all textures - the GFX side and nonGFX (meaning internal RAM)
     fgBool releaseTextures(void);
     // Returns the pointer to the shader manager
-    fgGfxShaderManager *getShaderManager(void) const;
+    fg::gfx::CShaderManager *getShaderManager(void) const;
     // Pre loads all shaders - caches the specific configs
     fgBool preLoadShaders(void) const;
     // Returns the pointer to the main GFX windows - OS specific main window
     fg::gfx::CWindow *getMainWindow(void) const;
     // Returns the pointer to the main 3D scene - may be NULL
-    fgGfx3DScene *get3DScene(void) const;
+    fg::gfx::CScene3D *get3DScene(void) const;
     // Returns the pointer to the main 2D scene - may be NULL
-    fgGfx2DScene *get2DScene(void) const;
+    fg::gfx::CScene2D *get2DScene(void) const;
     // Returns the pointer to the main 3D scene camera - may be NULL
     fgGfxCameraAnimation *get3DSceneCamera(void) const;
     //
-    fgParticleSystem *getParticleSystem(void) const;
+    fg::gfx::CParticleSystem *getParticleSystem(void) const;
     //
     fg::gfx::CLoader *getLoader(void) {
         return &m_loader;
@@ -127,7 +127,7 @@ public:
      * 
      * @return 
      */
-    fgGfxContext *context(void) const {
+    fg::gfx::CContext *context(void) const {
         return m_gfxContext;
     }
     
@@ -142,17 +142,17 @@ private:
     /// Pointer to the external event manager
     fg::base::CManager *m_pEventMgr;
     /// Main GFX shader manager
-    fgGfxShaderManager *m_shaderMgr;
+    fg::gfx::CShaderManager *m_shaderMgr;
     /// Main GFX OS specific window
     fg::gfx::CWindow *m_mainWindow;
     /// Main GFX context - it's directly connected to the GFX window
-    fgGfxContext *m_gfxContext;
+    fg::gfx::CContext *m_gfxContext;
     /// Main 3D scene management
-    fgGfx3DScene *m_3DScene;
+    fg::gfx::CScene3D *m_3DScene;
     /// Main 2D scene management
-    fgGfx2DScene *m_2DScene;
+    fg::gfx::CScene2D *m_2DScene;
     /// Main Particle System
-    fgParticleSystem *m_particleSystem;
+    fg::gfx::CParticleSystem *m_particleSystem;
     /// 
     fgFunctionCallback *m_resourceCreatedCallback;
     /// Is GFX init properly?

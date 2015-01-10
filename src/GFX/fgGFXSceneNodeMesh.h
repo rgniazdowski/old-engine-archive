@@ -20,48 +20,52 @@
     #ifndef FG_INC_GFX_SCENE_NODE
         #include "fgGFXSceneNode.h"
     #endif
-    
+
     #ifndef FG_INC_GFX_MODEL_TYPES
         #include "fgGFXModelTypes.h"
     #endif
+namespace fg {
+    namespace gfx {
 
-/**
- * 
- */
-class fgGfxSceneNodeMesh : public fgGfxSceneNode {
-public:
-    /**
-     * 
-     */
-    fgGfxSceneNodeMesh(fgGfxMeshBase *pMesh = NULL, fgGfxSceneNode *pParent = NULL);
-    /**
-     * 
-     * @param orig
-     */
-    fgGfxSceneNodeMesh(const fgGfxSceneNodeMesh& orig);
-    /**
-     * 
-     */
-    virtual ~fgGfxSceneNodeMesh();
+        /**
+         * 
+         */
+        class CSceneNodeMesh : public CSceneNode {
+        public:
+            /**
+             * 
+             */
+            CSceneNodeMesh(fgGfxMeshBase *pMesh = NULL, CSceneNode *pParent = NULL);
+            /**
+             * 
+             * @param orig
+             */
+            CSceneNodeMesh(const CSceneNodeMesh& orig);
+            /**
+             * 
+             */
+            virtual ~CSceneNodeMesh();
 
-public:
-    /**
-     * 
-     * @return 
-     */
-    fgGfxMeshBase *getMesh(void) const {
-        return m_pMesh;
-    }
-    /**
-     * 
-     * @param pMesh
-     */
-    virtual void setMesh(fgGfxMeshBase *pMesh);
-    
-private:
-    /// Pointer to external mesh that this object represents
-    fgGfxMeshBase *m_pMesh;
+        public:
+            /**
+             * 
+             * @return 
+             */
+            fgGfxMeshBase *getMesh(void) const {
+                return m_pMesh;
+            }
+            /**
+             * 
+             * @param pMesh
+             */
+            virtual void setMesh(fgGfxMeshBase *pMesh);
 
+        private:
+            /// Pointer to external mesh that this object represents
+            fgGfxMeshBase *m_pMesh;
+
+        };
+    };
 };
 
     #undef FG_INC_GFX_SCENE_NODE_MESH_BLOCK

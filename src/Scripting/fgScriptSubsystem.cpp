@@ -293,7 +293,7 @@ fgBool fgScriptSubsystem::initialize(void) {
         m_mgrMetatables[FG_NAMESPACE].SetObject("__index", m_mgrMetatables[FG_NAMESPACE]);
         m_fgObj = m_luaState->CreateTable();
         m_fgObj.SetMetatable(m_mgrMetatables[FG_NAMESPACE]); // ? # ?
-        m_globals.SetObject("fg", m_fgObj);        
+        m_globals.SetObject("fg", m_fgObj);
     }
 
     if(!registerConstants()) {
@@ -1379,19 +1379,19 @@ fgBool fgScriptSubsystem::registerResourceManager(void) {
 
     // Register Gfx Model Resource metatable
     LPCD::Class(m_luaState->GetCState(), fgScriptMT->getMetatableName(fgScriptMetatables::GFX_MODEL_RESOURCE_MT_ID), fgScriptMT->getMetatableName(fgScriptMetatables::RESOURCE_MT_ID))
-            .ObjectDirect("getModelType", (fgGfxModelResource *)0, &fgGfxModelResource::getModelType)
-            .ObjectDirect("getNumIndices", (fgGfxModelResource *)0, &fgGfxModelResource::getNumIndices)
-            .ObjectDirect("getNumMaterials", (fgGfxModelResource *)0, &fgGfxModelResource::getNumMaterials)
-            .ObjectDirect("getNumNormals", (fgGfxModelResource *)0, &fgGfxModelResource::getNumNormals)
-            .ObjectDirect("getNumPolygons", (fgGfxModelResource *)0, &fgGfxModelResource::getNumPolygons)
-            .ObjectDirect("getNumShapes", (fgGfxModelResource *)0, &fgGfxModelResource::getNumShapes)
-            .ObjectDirect("getNumTriangles", (fgGfxModelResource *)0, &fgGfxModelResource::getNumTriangles)
-            .ObjectDirect("getNumUVs", (fgGfxModelResource *)0, &fgGfxModelResource::getNumUVs)
-            .ObjectDirect("getNumVertices", (fgGfxModelResource *)0, &fgGfxModelResource::getNumVertices)
-            .ObjectDirect("isInterleaved", (fgGfxModelResource *)0, &fgGfxModelResource::isInterleaved)
-            .ObjectDirect("isTextured", (fgGfxModelResource *)0, &fgGfxModelResource::isTextured)
-            .ObjectDirect("isMultitextured", (fgGfxModelResource *)0, &fgGfxModelResource::isMultitextured)
-            .ObjectDirect("hasMaterial", (fgGfxModelResource *)0, &fgGfxModelResource::hasMaterial)
+            .ObjectDirect("getModelType", (fg::gfx::CModelResource *)0, &fg::gfx::CModelResource::getModelType)
+            .ObjectDirect("getNumIndices", (fg::gfx::CModelResource *)0, &fg::gfx::CModelResource::getNumIndices)
+            .ObjectDirect("getNumMaterials", (fg::gfx::CModelResource *)0, &fg::gfx::CModelResource::getNumMaterials)
+            .ObjectDirect("getNumNormals", (fg::gfx::CModelResource *)0, &fg::gfx::CModelResource::getNumNormals)
+            .ObjectDirect("getNumPolygons", (fg::gfx::CModelResource *)0, &fg::gfx::CModelResource::getNumPolygons)
+            .ObjectDirect("getNumShapes", (fg::gfx::CModelResource *)0, &fg::gfx::CModelResource::getNumShapes)
+            .ObjectDirect("getNumTriangles", (fg::gfx::CModelResource *)0, &fg::gfx::CModelResource::getNumTriangles)
+            .ObjectDirect("getNumUVs", (fg::gfx::CModelResource *)0, &fg::gfx::CModelResource::getNumUVs)
+            .ObjectDirect("getNumVertices", (fg::gfx::CModelResource *)0, &fg::gfx::CModelResource::getNumVertices)
+            .ObjectDirect("isInterleaved", (fg::gfx::CModelResource *)0, &fg::gfx::CModelResource::isInterleaved)
+            .ObjectDirect("isTextured", (fg::gfx::CModelResource *)0, &fg::gfx::CModelResource::isTextured)
+            .ObjectDirect("isMultitextured", (fg::gfx::CModelResource *)0, &fg::gfx::CModelResource::isMultitextured)
+            .ObjectDirect("hasMaterial", (fg::gfx::CModelResource *)0, &fg::gfx::CModelResource::hasMaterial)
             .MetatableFunction("__gc", &fgScriptSubsystem::managedResourceGCEvent);
 
     typedef void (fgParticleEffect::*PE_void_4X_INT_IN)(const int, const int, const int, const int);
@@ -1625,11 +1625,11 @@ fgBool fgScriptSubsystem::register3DSceneManager(void) {
     }
 
     // Register additional direct functions for 3D Scene Manager - they're specific for this class/object
-    typedef fgGfxSceneNode * (fgGfx3DScene::*SCENE3D_SceneNode_C_STR_IN_C_STR_IN)(const char *, const char *);
+    typedef fg::gfx::CSceneNode * (fg::gfx::CScene3D::*SCENE3D_SceneNode_C_STR_IN_C_STR_IN)(const char *, const char *);
 
     m_mgrMetatables[SCENE3D_MGR].RegisterObjectDirect("addFromModel",
-                                                      static_cast<fgGfx3DScene *>(0),
-                                                      static_cast<SCENE3D_SceneNode_C_STR_IN_C_STR_IN>(&fgGfx3DScene::addFromModel));
+                                                      static_cast<fg::gfx::CScene3D *>(0),
+                                                      static_cast<SCENE3D_SceneNode_C_STR_IN_C_STR_IN>(&fg::gfx::CScene3D::addFromModel));
 
     ////////////////////////////////////////////////////////////////////////////
     //
@@ -1640,13 +1640,13 @@ fgBool fgScriptSubsystem::register3DSceneManager(void) {
 
     // Register Base GfxSceneNode metatable
     LPCD::Class(m_luaState->GetCState(), fgScriptMT->getMetatableName(fgScriptMetatables::SCENE_NODE_MT_ID))
-            .ObjectDirect("getName", (fgGfxSceneNode::base_type *)0, &fgGfxSceneNode::base_type::getNameStr)
-            .ObjectDirect("isManaged", (fgGfxSceneNode::base_type *)0, &fgGfxSceneNode::base_type::isManaged)
-            .ObjectDirect("isEmpty", (fgGfxSceneNode *)0, &fgGfxSceneNode::isEmpty)
-            .ObjectDirect("hasChildren", (fgGfxSceneNode *)0, &fgGfxSceneNode::hasChildren)
-            .ObjectDirect("getChildrenCount", (fgGfxSceneNode *)0, &fgGfxSceneNode::getChildrenCount)
-            .ObjectDirect("isVisible", (fgGfxSceneNode *)0, &fgGfxSceneNode::isVisible)
-            .ObjectDirect("setVisible", (fgGfxSceneNode *)0, &fgGfxSceneNode::setVisible);
+            .ObjectDirect("getName", (fg::gfx::CSceneNode::base_type *)0, &fg::gfx::CSceneNode::base_type::getNameStr)
+            .ObjectDirect("isManaged", (fg::gfx::CSceneNode::base_type *)0, &fg::gfx::CSceneNode::base_type::isManaged)
+            .ObjectDirect("isEmpty", (fg::gfx::CSceneNode *)0, &fg::gfx::CSceneNode::isEmpty)
+            .ObjectDirect("hasChildren", (fg::gfx::CSceneNode *)0, &fg::gfx::CSceneNode::hasChildren)
+            .ObjectDirect("getChildrenCount", (fg::gfx::CSceneNode *)0, &fg::gfx::CSceneNode::getChildrenCount)
+            .ObjectDirect("isVisible", (fg::gfx::CSceneNode *)0, &fg::gfx::CSceneNode::isVisible)
+            .ObjectDirect("setVisible", (fg::gfx::CSceneNode *)0, &fg::gfx::CSceneNode::setVisible);
     //.MetatableFunction("__gc", &fgScriptSubsystem::managedResourceGCEvent); // #DELETE
 
     ////////////////////////////////////////////////////////////////////////////

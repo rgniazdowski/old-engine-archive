@@ -16,7 +16,7 @@
 /*
  *
  */
-fgGfxModelResource::fgGfxModelResource() :
+fg::gfx::CModelResource::CModelResource() :
 fgResource(),
 m_materialOverride(NULL),
 m_modelType(FG_GFX_MODEL_RES_INVALID),
@@ -31,7 +31,7 @@ m_isInterleaved(FG_TRUE) {
 /*
  *
  */
-fgGfxModelResource::fgGfxModelResource(const char *path) :
+fg::gfx::CModelResource::CModelResource(const char *path) :
 fgResource(path),
 m_materialOverride(NULL),
 m_modelType(FG_GFX_MODEL_RES_INVALID),
@@ -45,7 +45,7 @@ m_isInterleaved(FG_TRUE) {
 /*
  *
  */
-fgGfxModelResource::fgGfxModelResource(std::string& path) :
+fg::gfx::CModelResource::CModelResource(std::string& path) :
 fgResource(path),
 m_materialOverride(NULL),
 m_modelType(FG_GFX_MODEL_RES_INVALID),
@@ -60,7 +60,7 @@ m_isInterleaved(FG_TRUE) {
  * Clears the class data, this actually does not free allocated memory,
  * just resets base class attributes
  */
-void fgGfxModelResource::clear(void) {
+void fg::gfx::CModelResource::clear(void) {
     fgResource::clear();
     m_materialOverride = NULL;
     m_modelType = FG_GFX_MODEL_RES_INVALID;
@@ -76,7 +76,7 @@ void fgGfxModelResource::clear(void) {
  * @param path
  * @return 
  */
-fgBool fgGfxModelResource::setModelTypeFromFilePath(std::string &path) {
+fgBool fg::gfx::CModelResource::setModelTypeFromFilePath(std::string &path) {
     const char *ext = fg::path::fileExt(path.c_str());
     if(!ext)
         return FG_FALSE;
@@ -92,7 +92,7 @@ fgBool fgGfxModelResource::setModelTypeFromFilePath(std::string &path) {
 /*
  *
  */
-fgBool fgGfxModelResource::_loadOBJ(void) {
+fgBool fg::gfx::CModelResource::_loadOBJ(void) {
     if(getFilePath(m_quality).empty()) {
         return FG_FALSE;
     }
@@ -171,7 +171,7 @@ fgBool fgGfxModelResource::_loadOBJ(void) {
 /*
  * Create function loads/interprets data from file in ROM and place it in RAM memory.
  */
-fgBool fgGfxModelResource::create(void) {
+fgBool fg::gfx::CModelResource::create(void) {
     if(m_isReady || !isDisposed()) {
         return FG_TRUE;
     }
@@ -238,7 +238,7 @@ fgBool fgGfxModelResource::create(void) {
 /*
  * Destroy all loaded data including additional metadata (called with deconstructor)
  */
-void fgGfxModelResource::destroy(void) {
+void fg::gfx::CModelResource::destroy(void) {
     dispose();
     clear();
 }
@@ -246,7 +246,7 @@ void fgGfxModelResource::destroy(void) {
 /*
  * Reloads any data, recreates the resource (refresh)
  */
-fgBool fgGfxModelResource::recreate(void) {
+fgBool fg::gfx::CModelResource::recreate(void) {
     dispose();
     return create();
 }
@@ -254,7 +254,7 @@ fgBool fgGfxModelResource::recreate(void) {
 /*
  * Dispose completely of the all loaded data, free all memory
  */
-void fgGfxModelResource::dispose(void) {
+void fg::gfx::CModelResource::dispose(void) {
     int n = (int)m_shapes.size();
     for(int i = 0; i < n; i++) {
         fgGfxShape *shape = m_shapes[i];
@@ -274,14 +274,14 @@ void fgGfxModelResource::dispose(void) {
 /*
  * Check if resource is disposed (not loaded yet or disposed after)
  */
-fgBool fgGfxModelResource::isDisposed(void) const {
+fgBool fg::gfx::CModelResource::isDisposed(void) const {
     return (fgBool)(m_shapes.empty());
 }
 
 /**
  * 
  */
-void fgGfxModelResource::updateAABB(void) {
+void fg::gfx::CModelResource::updateAABB(void) {
     if(m_shapes.empty()) {
         return;
     }
@@ -298,7 +298,7 @@ void fgGfxModelResource::updateAABB(void) {
 /*
  *
  */
-fgBool fgGfxModelResource::genBuffers(void) {
+fgBool fg::gfx::CModelResource::genBuffers(void) {
     if(m_shapes.empty()) {
         return FG_FALSE;
     }
@@ -314,7 +314,7 @@ fgBool fgGfxModelResource::genBuffers(void) {
 /*
  *
  */
-fgBool fgGfxModelResource::deleteBuffers(void) {
+fgBool fg::gfx::CModelResource::deleteBuffers(void) {
     if(m_shapes.empty()) {
         return FG_FALSE;
     }

@@ -207,7 +207,7 @@ private:
     };
     
     ///
-    typedef fgVector<callbackData> callbackVec;
+    typedef fg::CVector<callbackData> callbackVec;
     ///
     typedef typename callbackVec::iterator callbackVecItor;
     /// Callbacks to call when the destructor is called

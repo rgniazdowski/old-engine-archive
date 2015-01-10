@@ -109,7 +109,9 @@ public:
      * @param elems
      * @return 
      */
-    static fgVector<std::string> &split(const std::string &s, char delim, fgVector<std::string> &elems) {
+    static fg::CVector<std::string> &split(const std::string &s,
+                                           char delim,
+                                           fg::CVector<std::string> &elems) {
         std::stringstream ss(s);
         std::string item;
         while(std::getline(ss, item, delim)) {
@@ -124,8 +126,9 @@ public:
      * @param delim
      * @return 
      */
-    static fgVector<std::string> split(const std::string &s, char delim) {
-        fgVector<std::string> elems;
+    static fg::CVector<std::string> split(const std::string &s,
+                                          char delim) {
+        fg::CVector<std::string> elems;
         fgStrings::split(s, delim, elems);
         return elems;
     }

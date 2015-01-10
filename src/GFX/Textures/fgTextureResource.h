@@ -64,7 +64,7 @@ protected:
 
 public:
     virtual void setFlags(const std::string& flags);
-    
+
     // Releases non-GPU side of resources – should be
     // used to free data after uploading into VRAM
     void releaseNonGFX(void);
@@ -150,7 +150,9 @@ protected:
     fgTextureType m_textureType;
     /// Final texture pixel format (data pixel format)
     fgTexturePixelFormat m_pixelFormat;
+
     union {
+
         struct {
             unsigned char* px;
             unsigned char* nx;
@@ -159,7 +161,7 @@ protected:
             unsigned char* pz;
             unsigned char* nz;
         } m_cube;
-    /// Storage for raw pixel data
+        /// Storage for raw pixel data
         unsigned char* m_rawData;
         unsigned char* m_cubeData[FG_NUM_TEXTURE_CUBE_MAPS];
         unsigned char* m_texelsVec[8]; // #FIXME

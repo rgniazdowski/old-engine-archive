@@ -98,7 +98,7 @@ public:
         }
         retVector = VectorType();
         std::string vectorStr = fgStrings::trim(value, std::string(" \t\n\r()[]"));
-        fgStringVector parts;
+        fg::CStringVector parts;
         fgStrings::split(vectorStr, ',', parts);
         if(parts.empty()) {
             return;

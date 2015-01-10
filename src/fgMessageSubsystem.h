@@ -30,7 +30,9 @@ public:
     typedef fg::base::CManager base_type;
     
 protected:
-    typedef fgVector<fgStatus *> msStatusVec;
+    ///
+    typedef fg::CVector<fgStatus *> msStatusVec;
+    ///
     typedef msStatusVec::iterator msStatusVecItor;
 
 protected:

@@ -11,8 +11,13 @@
 #include "fgGFXDrawCall.h"
 #include "fgGFXSceneManager.h"
 
-fgGfxSceneNode::fgGfxSceneNode(fgGfxSceneNodeType nodeType,
-                               self_type *pParent) :
+/**
+ * 
+ * @param nodeType
+ * @param pParent
+ */
+fg::gfx::CSceneNode::CSceneNode(fgGfxSceneNodeType nodeType,
+                                self_type *pParent) :
 base_type(), // fgManagedObjectBase init
 drawable_type(FG_GFX_DRAWABLE_SCENENODE), // fgGfxDrawable init
 m_nodeType(nodeType), // Current node type
@@ -25,14 +30,14 @@ m_drawCall(NULL) // DrawCall for this node - it cannot be managed
 {
     // Draw call is only initialized when Node Custom type is specialized
     if(m_nodeType == FG_GFX_SCENE_NODE_CUSTOM) {
-        m_drawCall = new fgGfxDrawCall();
+        m_drawCall = new CDrawCall();
     }
 }
 
 /**
  * 
  */
-fgGfxSceneNode::~fgGfxSceneNode() {
+fg::gfx::CSceneNode::~CSceneNode() {
     if(m_drawCall)
         delete m_drawCall;
     m_drawCall = NULL;
@@ -47,7 +52,7 @@ fgGfxSceneNode::~fgGfxSceneNode() {
         if(!(*it)) {
             m_children.erase(it);
         } else {
-            fgGfxSceneNode *pChild = const_cast<fgGfxSceneNode *>(*it);
+            CSceneNode *pChild = const_cast<CSceneNode *>(*it);
             destroyChild(pChild);
         }
         // can also make scene manager bind special callbacks to the managed objects...
@@ -61,7 +66,7 @@ fgGfxSceneNode::~fgGfxSceneNode() {
 /**
  * 
  */
-void fgGfxSceneNode::draw(void) {
+void fg::gfx::CSceneNode::draw(void) {
     if(!m_isVisible)
         return;
     if(m_drawCall) {
@@ -79,7 +84,7 @@ void fgGfxSceneNode::draw(void) {
  * Draw with relative 2D position
  * @param relPos
  */
-void fgGfxSceneNode::draw(const fgVec2f& relPos) {
+void fg::gfx::CSceneNode::draw(const fgVec2f& relPos) {
     if(!m_isVisible)
         return;
     if(m_drawCall) {
@@ -97,7 +102,7 @@ void fgGfxSceneNode::draw(const fgVec2f& relPos) {
  * Draw with relative 3D position
  * @param relPos
  */
-void fgGfxSceneNode::draw(const fgVec3f& relPos) {
+void fg::gfx::CSceneNode::draw(const fgVec3f& relPos) {
     if(!m_isVisible)
         return;
     if(m_drawCall) {
@@ -115,7 +120,7 @@ void fgGfxSceneNode::draw(const fgVec3f& relPos) {
  * Draw with given model matrix
  * @param modelMat
  */
-void fgGfxSceneNode::draw(const fgMatrix4f& modelMat) {
+void fg::gfx::CSceneNode::draw(const fgMatrix4f& modelMat) {
     if(!m_isVisible)
         return;
     if(m_drawCall) {
@@ -134,7 +139,7 @@ void fgGfxSceneNode::draw(const fgMatrix4f& modelMat) {
  * @param pChild
  * @return 
  */
-fgBool fgGfxSceneNode::addChild(fgGfxSceneNode *pChild) {
+fgBool fg::gfx::CSceneNode::addChild(CSceneNode *pChild) {
     if(!pChild)
         return FG_FALSE;
     fgBool status = FG_FALSE;
@@ -149,7 +154,7 @@ fgBool fgGfxSceneNode::addChild(fgGfxSceneNode *pChild) {
  * @param pChild
  * @return 
  */
-fgBool fgGfxSceneNode::removeChild(fgGfxSceneNode *pChild) {
+fgBool fg::gfx::CSceneNode::removeChild(CSceneNode *pChild) {
     if(!pChild || m_children.empty())
         return FG_FALSE;
     fgBool status = FG_TRUE;
@@ -163,7 +168,7 @@ fgBool fgGfxSceneNode::removeChild(fgGfxSceneNode *pChild) {
         pChild->setParent(NULL);
         if(m_pManager) {
             if(m_pManager->getManagerType() == FG_MANAGER_SCENE) {
-                static_cast<fgGfxSceneManager *>(m_pManager)->remove(pChild);
+                static_cast<CSceneManager *>(m_pManager)->remove(pChild);
             }
         }
     }
@@ -175,10 +180,10 @@ fgBool fgGfxSceneNode::removeChild(fgGfxSceneNode *pChild) {
  * @param childName
  * @return 
  */
-fgGfxSceneNode *fgGfxSceneNode::removeChild(const std::string& childName) {
+fg::gfx::CSceneNode *fg::gfx::CSceneNode::removeChild(const std::string& childName) {
     if(childName.empty() || m_children.empty())
         return NULL;
-    fgGfxSceneNode *pChild = NULL;
+    CSceneNode *pChild = NULL;
     fgBool secondCheck = FG_TRUE;
     childrenSetItor it = m_children.end();
     fgBool managerValid = FG_FALSE;
@@ -186,7 +191,7 @@ fgGfxSceneNode *fgGfxSceneNode::removeChild(const std::string& childName) {
     if(m_pManager) {
         if(m_pManager->getManagerType() == FG_MANAGER_SCENE) {
             managerValid = FG_TRUE;
-            pChild = static_cast<fgGfxSceneManager *>(m_pManager)->get(childName);
+            pChild = static_cast<CSceneManager *>(m_pManager)->get(childName);
             if(pChild) {
                 // Now this can be tricky. How to check if *this parent has this child?
                 // Go through all children and check pointer? (set::find())?
@@ -227,7 +232,7 @@ fgGfxSceneNode *fgGfxSceneNode::removeChild(const std::string& childName) {
             // Removal will still remain here. However deletion not. Deletion
             // will be automatic (on object destructor scene mgr callback is fired)
             if(managerValid) {
-                static_cast<fgGfxSceneManager *>(m_pManager)->remove(pChild);
+                static_cast<CSceneManager *>(m_pManager)->remove(pChild);
             }
         }
     }
@@ -239,7 +244,7 @@ fgGfxSceneNode *fgGfxSceneNode::removeChild(const std::string& childName) {
  * @param childName
  * @return 
  */
-fgGfxSceneNode *fgGfxSceneNode::removeChild(const char *childName) {
+fg::gfx::CSceneNode *fg::gfx::CSceneNode::removeChild(const char *childName) {
     if(!childName || m_children.empty())
         return NULL;
     if(!*childName)
@@ -252,7 +257,7 @@ fgGfxSceneNode *fgGfxSceneNode::removeChild(const char *childName) {
  * @param pChild
  * @return 
  */
-fgBool fgGfxSceneNode::destroyChild(fgGfxSceneNode *&pChild) {
+fgBool fg::gfx::CSceneNode::destroyChild(CSceneNode *&pChild) {
     if(!pChild)
         return FG_FALSE;
     if(m_children.empty())
@@ -269,7 +274,7 @@ fgBool fgGfxSceneNode::destroyChild(fgGfxSceneNode *&pChild) {
         pChild->setParent(NULL);
         if(m_pManager && false) { // #FIXME
             if(m_pManager->getManagerType() == FG_MANAGER_SCENE) {
-                static_cast<fgGfxSceneManager *>(m_pManager)->destroyNode(pChild);
+                static_cast<CSceneManager *>(m_pManager)->destroyNode(pChild);
                 managerValid = FG_TRUE;
             }
         }
@@ -286,10 +291,10 @@ fgBool fgGfxSceneNode::destroyChild(fgGfxSceneNode *&pChild) {
  * @param childName
  * @return 
  */
-fgBool fgGfxSceneNode::destroyChild(const std::string& childName) {
+fgBool fg::gfx::CSceneNode::destroyChild(const std::string& childName) {
     if(childName.empty() || m_children.empty())
         return FG_FALSE;
-    fgGfxSceneNode *pChild = NULL;
+    CSceneNode *pChild = NULL;
     fgBool secondCheck = FG_TRUE;
     childrenSetItor it = m_children.end();
     fgBool managerValid = FG_FALSE;
@@ -297,7 +302,7 @@ fgBool fgGfxSceneNode::destroyChild(const std::string& childName) {
     if(m_pManager) {
         if(m_pManager->getManagerType() == FG_MANAGER_SCENE) {
             managerValid = FG_TRUE;
-            pChild = static_cast<fgGfxSceneManager *>(m_pManager)->get(childName);
+            pChild = static_cast<CSceneManager *>(m_pManager)->get(childName);
             if(pChild) {
                 // Now this can be tricky. How to check if *this parent has this child?
                 // Go through all children and check pointer? (set::find())?
@@ -338,7 +343,7 @@ fgBool fgGfxSceneNode::destroyChild(const std::string& childName) {
             // scene mgr callback is fired)
             if(managerValid) {
                 // #FIXME
-                static_cast<fgGfxSceneManager *>(m_pManager)->destroyNode(pChild);
+                static_cast<CSceneManager *>(m_pManager)->destroyNode(pChild);
             } else {
                 delete pChild;
                 pChild = NULL;
@@ -354,7 +359,7 @@ fgBool fgGfxSceneNode::destroyChild(const std::string& childName) {
  * @param childName
  * @return 
  */
-fgBool fgGfxSceneNode::destroyChild(const char *childName) {
+fgBool fg::gfx::CSceneNode::destroyChild(const char *childName) {
     if(!childName)
         return FG_FALSE;
     if(!*childName)
@@ -367,15 +372,15 @@ fgBool fgGfxSceneNode::destroyChild(const char *childName) {
  * @param childHandle
  * @return 
  */
-fgGfxSceneNode* fgGfxSceneNode::getChild(const fgGfxSceneNode::handle_type& childHandle) {
+fg::gfx::CSceneNode* fg::gfx::CSceneNode::getChild(const fg::gfx::CSceneNode::handle_type& childHandle) {
     if(childHandle.isNull() || m_children.empty())
         return NULL;
-    fgGfxSceneNode *pChild = NULL;
+    CSceneNode *pChild = NULL;
     fgBool secondCheck = FG_TRUE;
     // Can use manager pointer - kinda strange ?
     if(m_pManager) {
         if(m_pManager->getManagerType() == FG_MANAGER_SCENE) {
-            pChild = static_cast<fgGfxSceneManager *>(m_pManager)->get(childHandle);
+            pChild = static_cast<CSceneManager *>(m_pManager)->get(childHandle);
             if(pChild) {
                 // Now this can be tricky. How to check if *this parent has this child?
                 // Go through all children and check pointer? (set::find())?
@@ -413,15 +418,15 @@ fgGfxSceneNode* fgGfxSceneNode::getChild(const fgGfxSceneNode::handle_type& chil
  * @param childName
  * @return 
  */
-fgGfxSceneNode* fgGfxSceneNode::getChild(const std::string& childName) {
+fg::gfx::CSceneNode* fg::gfx::CSceneNode::getChild(const std::string& childName) {
     if(childName.empty() || m_children.empty())
         return NULL;
-    fgGfxSceneNode *pChild = NULL;
+    CSceneNode *pChild = NULL;
     fgBool secondCheck = FG_TRUE;
     // Can use manager pointer - kinda strange ?
     if(m_pManager) {
         if(m_pManager->getManagerType() == FG_MANAGER_SCENE) {
-            pChild = static_cast<fgGfxSceneManager *>(m_pManager)->get(childName);
+            pChild = static_cast<CSceneManager *>(m_pManager)->get(childName);
             if(pChild) {
                 // Now this can be tricky. How to check if *this parent has this child?
                 // Go through all children and check pointer? (set::find())?
@@ -461,7 +466,7 @@ fgGfxSceneNode* fgGfxSceneNode::getChild(const std::string& childName) {
  * @param childName
  * @return 
  */
-fgGfxSceneNode* fgGfxSceneNode::getChild(const char *childName) {
+fg::gfx::CSceneNode* fg::gfx::CSceneNode::getChild(const char *childName) {
     return getChild(std::string(childName));
 }
 
@@ -470,7 +475,7 @@ fgGfxSceneNode* fgGfxSceneNode::getChild(const char *childName) {
  * @param pChild
  * @return 
  */
-fgBool fgGfxSceneNode::hasChild(fgGfxSceneNode *pChild) {
+fgBool fg::gfx::CSceneNode::hasChild(CSceneNode *pChild) {
     if(!pChild || m_children.empty())
         return FG_FALSE;
     fgBool status = FG_FALSE;
@@ -485,7 +490,7 @@ fgBool fgGfxSceneNode::hasChild(fgGfxSceneNode *pChild) {
  * @param childHandle
  * @return 
  */
-fgBool fgGfxSceneNode::hasChild(const fgGfxSceneNode::handle_type& childHandle) {
+fgBool fg::gfx::CSceneNode::hasChild(const fg::gfx::CSceneNode::handle_type& childHandle) {
     if(childHandle.isNull() || m_children.empty())
         return FG_FALSE;
     fgBool status = FG_FALSE;
@@ -506,7 +511,7 @@ fgBool fgGfxSceneNode::hasChild(const fgGfxSceneNode::handle_type& childHandle) 
  * @param childName
  * @return 
  */
-fgBool fgGfxSceneNode::hasChild(const std::string& childName) {
+fgBool fg::gfx::CSceneNode::hasChild(const std::string& childName) {
     if(m_children.empty())
         return FG_FALSE;
     fgBool status = FG_FALSE;
@@ -520,7 +525,7 @@ fgBool fgGfxSceneNode::hasChild(const std::string& childName) {
  * @param childName
  * @return 
  */
-fgBool fgGfxSceneNode::hasChild(const char* childName) {
+fgBool fg::gfx::CSceneNode::hasChild(const char* childName) {
     if(!childName || m_children.empty())
         return FG_FALSE;
     fgBool status = FG_FALSE;

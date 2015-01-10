@@ -177,7 +177,7 @@ fgBool fgGuiStyle::load(const char *path) {
 fgGuiStyleContent &fgGuiStyle::getContent(const std::string& info) {
     if(info.empty())
         return m_styleContent["main"];
-    fgStringVector parts;
+    fg::CStringVector parts;
     fgStrings::split(info, '.', parts);
     styleNameMap::iterator end = m_styleContent.end();
     if(parts.size() == 1) {
@@ -232,7 +232,7 @@ fgBool fgGuiStyle::copyFullContent(fgGuiStyleContent *contents, int num, const s
     FG_GUI_WIDGET_STATE_ACTIVATED	3	// activated
     FG_GUI_WIDGET_STATE_DEACTIVATED	4	// deactivated
      */
-    fgStringVector parts;
+    fg::CStringVector parts;
     fgStrings::split(info, '.', parts);
     std::string search = parts[0];
     parts.clear();

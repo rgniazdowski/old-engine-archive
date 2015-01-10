@@ -21,12 +21,12 @@
 /**
  *
  */
-template <typename DataType, typename HandleType, typename TagType>
-class fgDataManagerBase : public fg::base::CManager, protected fgHandleManager<DataType, HandleType> {
+template <typename TDataType, typename THandleType, typename TTagType>
+class fgDataManagerBase : public fg::base::CManager, protected fgHandleManager<TDataType, THandleType> {
 public:
-    typedef TagType tag_type;
-    typedef HandleType handle_type;
-    typedef fgHandleManager<DataType, HandleType> handle_mgr_type;
+    typedef TTagType tag_type;
+    typedef THandleType handle_type;
+    typedef fgHandleManager<TDataType, THandleType> handle_mgr_type;
         
 public:
     /**
@@ -67,20 +67,20 @@ public:
      * @param nameTag
      * @return 
      */
-    virtual fgBool insert(DataType pData, const std::string& nameTag);
+    virtual fgBool insert(TDataType pData, const std::string& nameTag);
 
     /**
      * 
      * @param pData
      * @return 
      */
-    virtual fgBool remove(DataType pData);
+    virtual fgBool remove(TDataType pData);
     /**
      * 
      * @param dhUniqueID
      * @return 
      */
-    virtual fgBool remove(const HandleType& dhUniqueID);
+    virtual fgBool remove(const THandleType& dhUniqueID);
     /**
      * 
      * @param nameTag
@@ -99,13 +99,13 @@ public:
      * @param pData
      * @return 
      */
-    virtual fgBool destroyData(DataType& pData);
+    virtual fgBool destroyData(TDataType& pData);
     /**
      * 
      * @param dhUniqueID
      * @return 
      */
-    virtual fgBool destroyData(const HandleType& dhUniqueID);
+    virtual fgBool destroyData(const THandleType& dhUniqueID);
     /**
      * 
      * @param nameTag
@@ -124,45 +124,45 @@ public:
      * @param dhUniqueID
      * @return 
      */
-    virtual DataType get(const HandleType& dhUniqueID);
+    virtual TDataType get(const THandleType& dhUniqueID);
     /**
      * 
      * @param nameTag
      * @return 
      */
-    virtual DataType get(const std::string& nameTag);
+    virtual TDataType get(const std::string& nameTag);
     /**
      * 
      * @param nameTag
      * @return 
      */
-    virtual DataType get(const char *nameTag);
+    virtual TDataType get(const char *nameTag);
 
     /**
      * 
      * @param info
      * @return 
      */
-    virtual DataType request(const std::string& info) = 0;
+    virtual TDataType request(const std::string& info) = 0;
     /**
      * 
      * @param info
      * @return 
      */
-    virtual DataType request(const char *info) = 0;
+    virtual TDataType request(const char *info) = 0;
 
     /**
      * 
      * @param pData
      * @return 
      */
-    virtual fgBool isManaged(DataType pData);
+    virtual fgBool isManaged(TDataType pData);
     /**
      * 
      * @param dhUniqueID
      * @return 
      */
-    virtual fgBool isManaged(const HandleType& dhUniqueID);
+    virtual fgBool isManaged(const THandleType& dhUniqueID);
     /**
      * 
      * @param nameTag

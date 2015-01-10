@@ -23,20 +23,32 @@ struct fgCfgParameter;
 struct fgCfgSection;
 
 namespace fgCfgTypes {
+    ///
     typedef std::string sectionMapKey;
+    ///
     typedef std::map<sectionMapKey, fgCfgSection*> sectionMap;
+    ///
     typedef std::pair<sectionMapKey, fgCfgSection*> sectionMapPair;
+    ///
     typedef sectionMap::iterator sectionMapItor;
 
-    typedef fgVector<fgCfgParameter*> parameterVec;
+    ///
+    typedef fg::CVector<fgCfgParameter*> parameterVec;
+    ///
     typedef parameterVec::iterator parameterVecItor;
 
-    typedef fgVector<fgCfgSection*> sectionVec;
+    ///
+    typedef fg::CVector<fgCfgSection*> sectionVec;
+    ///
     typedef sectionVec::iterator sectionVecItor;
 
+    ///
     typedef std::string parameterMapKey;
+    ///
     typedef std::map<parameterMapKey, fgCfgParameter*> parameterMap;
+    ///
     typedef std::pair<parameterMapKey, fgCfgParameter*> parameterMapPair;
+    ///
     typedef parameterMap::iterator parameterMapItor;
 };
 

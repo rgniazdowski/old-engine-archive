@@ -13,15 +13,15 @@
     #include "Util/fgFileBase.h"
 
     #define PNG_NO_STDIO
-    //#define PNG_NO_READ_SUPPORTED
-    //#define PNG_NO_WRITE_SUPPORTED
+//#define PNG_NO_READ_SUPPORTED
+//#define PNG_NO_WRITE_SUPPORTED
     #include "png.h"
 extern "C" {
     #include "jpeglib.h"
 }
 
     #ifndef FG_TEXTURE_ALPHA_FIX_VALUE
-    #define FG_TEXTURE_ALPHA_FIX_VALUE(_R, _G, _B) \
+        #define FG_TEXTURE_ALPHA_FIX_VALUE(_R, _G, _B) \
             ((_G < 16 && _R < 16 && _B < 16) ? 0 : (_R + _G + _B) / 3)
     #endif
 
@@ -33,9 +33,9 @@ extern "C" {
  */
 class fgTextureLoader {
 private:
-    fgTextureLoader() {}
-    ~fgTextureLoader() {}
-    
+    fgTextureLoader() { }
+    ~fgTextureLoader() { }
+
 protected:
 
     struct fgJPEGErrorMgr {

@@ -145,9 +145,9 @@ fgBool fgResourceConfig::parseData(void) {
             fgResourceType type = FG_RESOURCE_INVALID;
             fgQuality quality = FG_QUALITY_UNIVERSAL;
             fgResPriorityType priority = FG_RES_PRIORITY_LOW;
-            fgVector<fgQuality> qualityVec;
-            fgVector<std::string> pathVec;
-            fgVector<std::string> _helperVec;
+            fg::CVector<fgQuality> qualityVec;
+            fg::CVector<std::string> pathVec;
+            fg::CVector<std::string> _helperVec;
 
             /// Get the resource name
             if((param = section->getParameter("name", FG_CFG_PARAMETER_STRING)) != NULL) {

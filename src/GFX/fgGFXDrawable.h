@@ -25,54 +25,70 @@ typedef unsigned int fgGfxDrawableType;
 
     #define FG_GFX_DRAWABLE_INVALID     0
 
+namespace fg {
 
-/**
- * 
- */
-class fgGfxDrawable {
-public:
-    /**
-     * 
-     */
-    fgGfxDrawable(const fgGfxDrawableType drawableType = FG_GFX_DRAWABLE_INVALID) : m_drawableType(drawableType) { }
-    /**
-     * 
-     */
-    virtual ~fgGfxDrawable() { }
-    
-public:
-    
-    virtual void draw(void) = 0;
-    // Draw with relative 2D position
-    virtual void draw(const fgVec2f& relPos) = 0;
-    // Draw with relative 3D position
-    virtual void draw(const fgVec3f& relPos) = 0;
-    // Draw with given model matrix
-    virtual void draw(const fgMatrix4f& modelMat) = 0;
-    
-public:
-    /**
-     * 
-     * @return 
-     */
-    fgGfxDrawableType getDrawableType(void) const {
-        return m_drawableType;
-    }
-    
-protected:
-    /**
-     * 
-     * @param drawableType
-     */
-    void setDrawableType(const fgGfxDrawableType drawableType) {
-        m_drawableType = drawableType;
-    }
-    
-private:
-    fgGfxDrawableType m_drawableType;
+    namespace gfx {
+
+        /**
+         * 
+         */
+        class CDrawable {
+        public:
+            /**
+             * 
+             */
+            CDrawable(const fgGfxDrawableType drawableType = FG_GFX_DRAWABLE_INVALID) :
+            m_drawableType(drawableType) { }
+            /**
+             * 
+             */
+            virtual ~CDrawable() { }
+
+        public:
+            /**
+             * 
+             */
+            virtual void draw(void) = 0;
+            /**
+             * Draw with relative 2D position
+             * @param relPos
+             */
+            virtual void draw(const fgVec2f& relPos) = 0;
+            /**
+             * Draw with relative 3D position
+             * @param relPos
+             */
+            virtual void draw(const fgVec3f& relPos) = 0;
+            /**
+             * Draw with given model matrix
+             * @param modelMat
+             */
+            virtual void draw(const fgMatrix4f& modelMat) = 0;
+
+        public:
+            /**
+             * 
+             * @return 
+             */
+            fgGfxDrawableType getDrawableType(void) const {
+                return m_drawableType;
+            }
+
+        protected:
+            /**
+             * 
+             * @param drawableType
+             */
+            void setDrawableType(const fgGfxDrawableType drawableType) {
+                m_drawableType = drawableType;
+            }
+
+        private:
+            ///
+            fgGfxDrawableType m_drawableType;
+        };
+    };
 };
-
-
 
     #undef FG_INC_GFX_DRAWABLE_BLOCK
 #endif	/* FG_INC_GFX_DRAWABLE */

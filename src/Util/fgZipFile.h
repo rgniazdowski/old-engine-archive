@@ -86,9 +86,9 @@ namespace fg {
             /// path to the compressed file within the zip.
             std::string m_zipPath;
             /// List/vector with the file paths (relative) in the specified Zip
-            fgStringVector m_filePaths;
+            CStringVector m_filePaths;
             /// Iterator to the element in the string vector (file paths)
-            fgStringVector::iterator m_fileItor;
+            CStringVector::iterator m_fileItor;
             /// Number (ID) of the currently selected file (in Zip)
             int m_currentFileID;
 
@@ -295,14 +295,14 @@ namespace fg {
              * 
              * @return 
              */
-            fgStringVector & getFileList(void) {
+            CStringVector & getFileList(void) {
                 return m_filePaths;
             }
             /**
              * 
              * @return 
              */
-            fgStringVector const & getFileList(void) const {
+            CStringVector const & getFileList(void) const {
                 return m_filePaths;
             }
             

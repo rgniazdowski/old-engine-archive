@@ -24,7 +24,7 @@ m_pResourceMgr(NULL),
 m_pEventMgr(NULL),
 m_resourceCreatedCallback(NULL),
 m_allInVRAM(FG_FALSE) {
-//    fgStatusReporter::setReportToMsgSystem(FG_TRUE);
+    //    fgStatusReporter::setReportToMsgSystem(FG_TRUE);
     m_pResourceMgr = NULL;
     if(!pResourceMgr) {
         //setErrorCode(FG_ERRNO_WRONG_PARAM);
@@ -288,7 +288,7 @@ fgBool fgTextureManager::uploadToVRAM(fgTextureResource *texture, fgBool force) 
     }
     fgBool result = FG_TRUE;
     fgGfxTextureID& texGfxID = texture->getRefGfxID();
-    if(fgGfxPlatform::context()->isTexture(texGfxID) == FG_GFX_TRUE && !force) {
+    if(fg::gfx::CPlatform::context()->isTexture(texGfxID) == FG_GFX_TRUE && !force) {
         return result;
     }
     FG_LOG_DEBUG("GFX: Is texture '%s' locked? [%d]", texture->getNameStr(), texture->isLocked());
@@ -309,7 +309,7 @@ fgBool fgTextureManager::uploadToVRAM(fgTextureResource *texture, fgBool force) 
                 result = FG_FALSE;
                 FG_LOG_ERROR("GFX: Could not upload texture '%s' to VRAM", texture->getFilePathStr());
             } else {
-                if(fgGfxPlatform::context()->isTexture(texGfxID) == FG_GFX_TRUE)
+                if(fg::gfx::CPlatform::context()->isTexture(texGfxID) == FG_GFX_TRUE)
                     texture->setIsInVRAM(FG_TRUE);
             }
         }
@@ -371,7 +371,7 @@ void fgTextureManager::allReleaseNonGFX(void) {
         if(resType == FG_RESOURCE_TEXTURE || resType == FG_RESOURCE_FONT) {
             fgTextureResource *textureResource = (fgTextureResource *)resource;
             textureResource->releaseNonGFX();
-            if(fgGfxPlatform::context()->isTexture(textureResource->getRefGfxID()) == GL_TRUE)
+            if(fg::gfx::CPlatform::context()->isTexture(textureResource->getRefGfxID()) == GL_TRUE)
                 textureResource->setIsInVRAM(FG_TRUE);
         }
         ((fgResourceManager *)m_pResourceMgr)->goToNext(searchTypes, 3);
@@ -400,7 +400,7 @@ void fgTextureManager::allReleaseGFX(void) {
         if(resType == FG_RESOURCE_TEXTURE || resType == FG_RESOURCE_FONT) {
             fgTextureResource *textureResource = (fgTextureResource *)resource;
             fgGfxTextureID& texGfxID = textureResource->getRefGfxID();
-            fgGfxPlatform::context()->deleteTexture(texGfxID);
+            fg::gfx::CPlatform::context()->deleteTexture(texGfxID);
             //textureResource->releaseNonGFX();
         }
         ((fgResourceManager *)m_pResourceMgr)->goToNext(searchTypes, 3);
@@ -418,7 +418,7 @@ void fgTextureManager::releaseGFX(fgTextureResource * texture) {
     fgResourceType resType = texture->getResourceType();
     if(resType == FG_RESOURCE_TEXTURE || resType == FG_RESOURCE_FONT) {
         fgGfxTextureID& texGfxID = texture->getRefGfxID();
-        fgGfxPlatform::context()->deleteTexture(texGfxID);
+        fg::gfx::CPlatform::context()->deleteTexture(texGfxID);
     }
 }
 
@@ -450,16 +450,17 @@ fgBool fgTextureManager::makeTexture(fgTextureResource * pTexture) {
     FG_LOG_DEBUG("GFX: Preparing for texture upload [%s]...", pTexture->getNameStr());
     fgGfxTextureID& texGfxID = pTexture->getRefGfxID();
     // Generate texture object ONLY IF NEEDED
-    if(FG_GFX_FALSE == fgGfxPlatform::context()->isTexture(texGfxID)) {
-        fgGfxPlatform::context()->genTexture(pTexture->getPtrGfxID());
+    if(FG_GFX_FALSE == fg::gfx::CPlatform::context()->isTexture(texGfxID)) {
+        fg::gfx::CPlatform::context()->genTexture(pTexture->getPtrGfxID());
     }
     fgBool status = FG_TRUE;
     std::string failedFuncs;
-    fgGfxPlatform::context()->bindTexture(texGfxID);
+    fg::gfx::CPlatform::context()->bindTexture(texGfxID);
     if(fgGLError("glBindTexture")) {
         status = FG_FALSE;
         failedFuncs.append("glBindTexture, ");
     }
+
     fgGFXuint target = 0;
     fgGFXuint cubeTargets[] = {GL_TEXTURE_CUBE_MAP_POSITIVE_X, GL_TEXTURE_CUBE_MAP_NEGATIVE_X,
                                GL_TEXTURE_CUBE_MAP_POSITIVE_Y, GL_TEXTURE_CUBE_MAP_NEGATIVE_Y,

@@ -181,7 +181,7 @@ fgGuiBorder fgGuiStyleContent::parseBorder(const char *value) {
     fgGuiBorder border;
     if(!value)
         return border;
-    fgStringVector parts;
+    fg::CStringVector parts;
     std::string borderStr = value;
     borderStr = fgStrings::trim(borderStr);
     fgStrings::split(borderStr, ' ', parts);
@@ -243,7 +243,7 @@ fgGuiAlign fgGuiStyleContent::parseAlign(const char *value) {
     if(!value)
         return align;
     align = FG_GUI_ALIGN_NONE;
-    fgStringVector parts;
+    fg::CStringVector parts;
     fgStrings::split(std::string(value), ' ', parts);
     for(int i = 0; i < (int)parts.size(); i++) {
         if(parts[i].compare("left") == 0) {

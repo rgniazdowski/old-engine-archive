@@ -151,4 +151,4 @@ std::string fg::path::join(const std::string &dirpath, const std::string &filena
  * @param path
  * @param parts
  */
-void fg::path::join(std::string &path, fgStringVector &parts) { }
+void fg::path::join(std::string &path, CStringVector &parts) { }

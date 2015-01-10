@@ -64,8 +64,8 @@ public:
     ///
     typedef std::string hashKey;
     // Type for vector storing Data pointers
-    typedef fgVector <DataType> hmDataVec;
-    typedef typename fgVector <DataType>::iterator hmDataVecItor;
+    typedef fg::CVector <DataType> hmDataVec;
+    typedef typename fg::CVector <DataType>::iterator hmDataVecItor;
     #ifdef FG_USING_MARMALADE
     typedef std::hash<std::string> hashFunc;
     // Type for map, assigning handle index value to string ID (case sensitive)
@@ -75,9 +75,9 @@ public:
     #endif
 
 private:
-    typedef fgVector <fgRawMagic> hmMagicVec;
-    typedef fgVector <hashKey> hmNameVec;
-    typedef fgVector <unsigned int> hmFreeSlotsVec;
+    typedef fg::CVector <fgRawMagic> hmMagicVec;
+    typedef fg::CVector <hashKey> hmNameVec;
+    typedef fg::CVector <unsigned int> hmFreeSlotsVec;
 
     /// Data storage
     hmDataVec m_managedData;

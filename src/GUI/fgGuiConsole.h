@@ -9,6 +9,7 @@
 
 #ifndef FG_INC_GUI_CONSOLE
     #define FG_INC_GUI_CONSOLE
+    #define FG_INC_GUI_CONSOLE_BLOCK
 
     #include "fgGuiTextArea.h"
     #include "fgGuiWidgetFactoryTypes.h"
@@ -80,7 +81,7 @@ public:
      * 
      * @param statusVec
      */
-    void updateFromStatusVec(const fgVector<fgStatus *> &statusVec);
+    void updateFromStatusVec(const fg::CVector<fgStatus *> &statusVec);
 
 public:
     /**
@@ -123,5 +124,7 @@ public:
         m_numConsoleRecords = m_textData.size();
     }
 };
+
+    #undef FG_INC_GUI_CONSOLE_BLOCK
 
 #endif /* FG_INC_GUI_CONSOLE */

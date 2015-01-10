@@ -138,13 +138,13 @@ fgGFXboolean fgVertexData2v::setupAttributes(fgGfxAttributeData *pDataArray) con
  * @return 
  */
 fgGFXboolean fgVertexData2v::genBuffers(void) {
-    if(!fgGfxPlatform::isInit())
+    if(!fg::gfx::CPlatform::isInit())
         return FG_GFX_FALSE;
     int &count = getRefVBOCount();
     count = 1;
-    fgGfxPlatform::context()->genBuffers(count, getRefPtrVBO(), GL_STATIC_DRAW);
-    fgGfxPlatform::context()->bindBuffer(getRefPtrVBO()[0], GL_ARRAY_BUFFER);
-    fgGfxPlatform::context()->bufferData(getRefPtrVBO()[0], this->stride() * this->size(), fgVertexData2v::front());
+    fg::gfx::CPlatform::context()->genBuffers(count, getRefPtrVBO(), GL_STATIC_DRAW);
+    fg::gfx::CPlatform::context()->bindBuffer(getRefPtrVBO()[0], GL_ARRAY_BUFFER);
+    fg::gfx::CPlatform::context()->bufferData(getRefPtrVBO()[0], this->stride() * this->size(), fgVertexData2v::front());
     return FG_GFX_TRUE;
 }
 
@@ -155,7 +155,7 @@ fgGFXboolean fgVertexData2v::genBuffers(void) {
 fgGFXboolean fgVertexData2v::deleteBuffers(void) {
     if(!getPtrVBO())
         return FG_GFX_FALSE;
-    fgGfxPlatform::context()->deleteBuffers(getVBOCount(), getPtrVBO());
+    fg::gfx::CPlatform::context()->deleteBuffers(getVBOCount(), getPtrVBO());
     return FG_GFX_TRUE;
 
 }
@@ -167,7 +167,7 @@ fgGFXboolean fgVertexData2v::deleteBuffers(void) {
 fgGFXboolean fgVertexData2v::destroyBuffers(void) {
     if(!getPtrVBO())
         return FG_GFX_FALSE;
-    fgGfxPlatform::context()->deleteBuffers(getVBOCount(), getPtrVBO());
+    fg::gfx::CPlatform::context()->deleteBuffers(getVBOCount(), getPtrVBO());
     fgGfxBufferID *& refBuf = getRefPtrVBO();
     fgFree<fgGfxBufferID>(refBuf);
     refBuf = NULL;
@@ -333,13 +333,13 @@ fgGFXboolean fgVertexData3v::setupAttributes(fgGfxAttributeData *pDataArray) con
  * @return 
  */
 fgGFXboolean fgVertexData3v::genBuffers(void) {
-    if(!fgGfxPlatform::isInit())
+    if(!fg::gfx::CPlatform::isInit())
         return FG_GFX_FALSE;
     int &count = getRefVBOCount();
     count = 1;
-    fgGfxPlatform::context()->genBuffers(count, getRefPtrVBO(), GL_STATIC_DRAW);
-    fgGfxPlatform::context()->bindBuffer(getRefPtrVBO()[0], GL_ARRAY_BUFFER);
-    fgGfxPlatform::context()->bufferData(getRefPtrVBO()[0], this->stride() * this->size(), fgVertexData3v::front());
+    fg::gfx::CPlatform::context()->genBuffers(count, getRefPtrVBO(), GL_STATIC_DRAW);
+    fg::gfx::CPlatform::context()->bindBuffer(getRefPtrVBO()[0], GL_ARRAY_BUFFER);
+    fg::gfx::CPlatform::context()->bufferData(getRefPtrVBO()[0], this->stride() * this->size(), fgVertexData3v::front());
     return FG_GFX_TRUE;
 }
 
@@ -350,7 +350,7 @@ fgGFXboolean fgVertexData3v::genBuffers(void) {
 fgGFXboolean fgVertexData3v::deleteBuffers(void) {
     if(!getPtrVBO())
         return FG_GFX_FALSE;
-    fgGfxPlatform::context()->deleteBuffers(getVBOCount(), getPtrVBO());
+    fg::gfx::CPlatform::context()->deleteBuffers(getVBOCount(), getPtrVBO());
     return FG_GFX_TRUE;
 }
 
@@ -361,7 +361,7 @@ fgGFXboolean fgVertexData3v::deleteBuffers(void) {
 fgGFXboolean fgVertexData3v::destroyBuffers(void) {
     if(!getPtrVBO())
         return FG_GFX_FALSE;
-    fgGfxPlatform::context()->deleteBuffers(getVBOCount(), getPtrVBO());
+    fg::gfx::CPlatform::context()->deleteBuffers(getVBOCount(), getPtrVBO());
     fgGfxBufferID *& refBuf = getRefPtrVBO();
     fgFree<fgGfxBufferID>(refBuf);
     refBuf = NULL;
@@ -560,13 +560,13 @@ fgGFXboolean fgVertexData4v::setupAttributes(fgGfxAttributeData *pDataArray) con
  * @return 
  */
 fgGFXboolean fgVertexData4v::genBuffers(void) {
-    if(!fgGfxPlatform::isInit())
+    if(!fg::gfx::CPlatform::isInit())
         return FG_GFX_FALSE;
     int &count = getRefVBOCount();
     count = 1;
-    fgGfxPlatform::context()->genBuffers(count, getRefPtrVBO(), GL_STATIC_DRAW);
-    fgGfxPlatform::context()->bindBuffer(getRefPtrVBO()[0], GL_ARRAY_BUFFER);
-    fgGfxPlatform::context()->bufferData(getRefPtrVBO()[0], this->stride() * this->size(), fgVertexData4v::front());
+    fg::gfx::CPlatform::context()->genBuffers(count, getRefPtrVBO(), GL_STATIC_DRAW);
+    fg::gfx::CPlatform::context()->bindBuffer(getRefPtrVBO()[0], GL_ARRAY_BUFFER);
+    fg::gfx::CPlatform::context()->bufferData(getRefPtrVBO()[0], this->stride() * this->size(), fgVertexData4v::front());
     return FG_GFX_TRUE;
 }
 
@@ -577,7 +577,7 @@ fgGFXboolean fgVertexData4v::genBuffers(void) {
 fgGFXboolean fgVertexData4v::deleteBuffers(void) {
     if(!getPtrVBO())
         return FG_GFX_FALSE;
-    fgGfxPlatform::context()->deleteBuffers(getVBOCount(), getPtrVBO());
+    fg::gfx::CPlatform::context()->deleteBuffers(getVBOCount(), getPtrVBO());
     return FG_GFX_TRUE;
 }
 
@@ -588,7 +588,7 @@ fgGFXboolean fgVertexData4v::deleteBuffers(void) {
 fgGFXboolean fgVertexData4v::destroyBuffers(void) {
     if(!getPtrVBO())
         return FG_GFX_FALSE;
-    fgGfxPlatform::context()->deleteBuffers(getVBOCount(), getPtrVBO());
+    fg::gfx::CPlatform::context()->deleteBuffers(getVBOCount(), getPtrVBO());
     fgGfxBufferID *& refBuf = getRefPtrVBO();
     fgFree<fgGfxBufferID>(refBuf);
     refBuf = NULL;

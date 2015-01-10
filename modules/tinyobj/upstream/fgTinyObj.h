@@ -52,26 +52,56 @@ namespace fgTinyObj {
 
     };
 
+    /**
+     * 
+     */
     class MaterialReader {
     public:
+        /**
+         * 
+         */
         MaterialReader() { }
+        /**
+         * 
+         */
         virtual ~MaterialReader() { }
-
+        /**
+         * 
+         * @param matId
+         * @param matMap
+         * @return 
+         */
         virtual std::string operator ()(
                 const std::string& matId,
                 std::map<std::string, fgGfxMaterial>& matMap) = 0;
     };
 
-    class MaterialFileReader :
-    public MaterialReader {
+    /**
+     * 
+     */
+    class MaterialFileReader : public MaterialReader {
     public:
+        /**
+         * 
+         * @param mtl_basepath
+         */
         MaterialFileReader(const std::string& mtl_basepath) : m_mtlBasePath(mtl_basepath) { }
+        /**
+         * 
+         */
         virtual ~MaterialFileReader() { }
+        /**
+         * 
+         * @param matId
+         * @param matMap
+         * @return 
+         */
         virtual std::string operator ()(
                 const std::string& matId,
                 std::map<std::string, fgGfxMaterial>& matMap);
 
     private:
+        ///
         std::string m_mtlBasePath;
     };
 
@@ -80,8 +110,7 @@ namespace fgTinyObj {
     /// The function returns error string.
     /// Returns empty string when loading .obj success.
     /// 'mtl_basepath' is optional, and used for base path for .mtl file.
-    std::string LoadObj(
-                        fgVector<fgGfxShape *>& shapes, // [output]
+    std::string LoadObj(fg::CVector<fgGfxShape *>& shapes, // [output]
                         const char* filename,
                         const char* mtl_basepath = NULL,
                         fgBool forceAoS = FG_TRUE);
@@ -89,16 +118,14 @@ namespace fgTinyObj {
     /// Loads object from a std::istream, uses GetMtlIStreamFn to retrieve
     /// std::istream for materials.
     /// Returns empty string when loading .obj success.
-    std::string LoadObj(
-                        fgVector<fgGfxShape *>& shapes, // [output]
+    std::string LoadObj(fg::CVector<fgGfxShape *>& shapes, // [output]
                         std::istream& inStream,
                         MaterialReader& readMatFn,
                         fgBool forceAoS = FG_TRUE);
 
     /// Loads materials into std::map
     /// Returns an empty string if successful
-    std::string LoadMtl(
-                        std::map<std::string, fgGfxMaterial>& material_map,
+    std::string LoadMtl(std::map<std::string, fgGfxMaterial>& material_map,
                         std::istream& inStream);
 }
 

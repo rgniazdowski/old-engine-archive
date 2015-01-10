@@ -71,7 +71,7 @@ fg::gfx::CWindow::~CWindow() {
  * @return 
  */
 fgBool fg::gfx::CWindow::setup(const char *title, unsigned int width, unsigned int height) {
-    if(!fgGfxPlatform::isInit()) {
+    if(!CPlatform::isInit()) {
         FG_LOG::PrintError("GFX: Cannot setup window without platform initialized.");
         return FG_FALSE;
     }
@@ -80,9 +80,9 @@ fgBool fg::gfx::CWindow::setup(const char *title, unsigned int width, unsigned i
     }
     fgBool status = FG_TRUE;
 #if defined FG_USING_EGL || defined FG_USING_MARMALADE_EGL
-    EGLDisplay eglDisplay = (EGLDisplay)fgGfxPlatform::getDefaultDisplay();
-    EGLContext eglContext = (EGLContext)fgGfxPlatform::context()->getGLContext();
-    EGLConfig eglConfig = (EGLConfig)fgGfxPlatform::getDefaultConfig();
+    EGLDisplay eglDisplay = (EGLDisplay)CPlatform::getDefaultDisplay();
+    EGLContext eglContext = (EGLContext)CPlatform::context()->getGLContext();
+    EGLConfig eglConfig = (EGLConfig)CPlatform::getDefaultConfig();
     EGLNativeWindowType eglNativeWindow = 0;
 
     if(!eglDisplay || !eglContext || !eglConfig) {
@@ -156,17 +156,17 @@ fgBool fg::gfx::CWindow::setup(const char *title, unsigned int width, unsigned i
  * @return 
  */
 fgBool fg::gfx::CWindow::close(void) {
-    if(!fgGfxPlatform::isInit()) {
+    if(!CPlatform::isInit()) {
         FG_LOG_ERROR("GFX: Platform not initialized.");
         return FG_FALSE;
     }
     fgBool status = FG_TRUE;
 #if defined FG_USING_EGL
-    EGLDisplay eglDisplay = (EGLDisplay)fgGfxPlatform::getDefaultDisplay();
+    EGLDisplay eglDisplay = (EGLDisplay)CPlatform::getDefaultDisplay();
     // Getting context in the gfx window makes sense under EGL - it's safe
     // to asume (for now) that there's just one context and one window
     // It supposed to be more flexible though
-    EGLContext eglContext = (EGLContext)fgGfxPlatform::context()->getGLContext();
+    EGLContext eglContext = (EGLContext)CPlatform::context()->getGLContext();
     if(eglDisplay) {
         eglMakeCurrent(eglDisplay, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
         if(m_EGLSurface)
@@ -220,7 +220,7 @@ fgBool fg::gfx::CWindow::refreshFS(void) {
  */
 fgBool fg::gfx::CWindow::swapBuffers(void) {
 #if defined FG_USING_MARMALADE_EGL
-    EGLDisplay eglDisplay = (EGLDisplay)fgGfxPlatform::getDefaultDisplay();
+    EGLDisplay eglDisplay = (EGLDisplay)CPlatform::getDefaultDisplay();
     if(eglDisplay && m_EGLSurface)
         eglSwapBuffers(eglDisplay, m_EGLSurface);
 #elif defined FG_USING_MARMALADE_IWGL
@@ -238,7 +238,7 @@ fgBool fg::gfx::CWindow::swapBuffers(void) {
 void fg::gfx::CWindow::clearColor(void) {
 #if defined FG_USING_OPENGL || defined FG_USING_OPENGL_ES
     // #FIXME ?
-    fgGfxPlatform::context()->clearColor(0.0f, 0.0f, 0.0f, 1.0f);
+    CPlatform::context()->clearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 #endif
 }

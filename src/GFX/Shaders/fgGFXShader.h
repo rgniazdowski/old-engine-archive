@@ -24,213 +24,219 @@ typedef fgGFXuint fgGfxShaderObjParamType;
     #define FG_GFX_SHADER_INFO_LOG_LENGTH   GL_INFO_LOG_LENGTH
     #define FG_GFX_SHADER_SOURCE_LENGTH     GL_SHADER_SOURCE_LENGTH
 
-/**
- *
- */
-class fgGfxShader : public fgGfxShaderBase, protected fg::util::DataFile {
-    friend class fgGfxShaderProgram;
-    friend class fgGfxShaderManager;
-public:
-    ///
-    typedef fgGfxShaderBase base_type;
-    ///
-    typedef fgGfxShaderBase::tag_type tag_type;
-    ///
-    typedef fgVector<std::string> defineStrVec;
-    ///
-    typedef defineStrVec::iterator defineStrVecItor;
-    ///
-    typedef fgVector<std::string> includeStrVec;
-    ///
-    typedef includeStrVec::iterator includeStrVecItor;
+namespace fg {
+    namespace gfx {
 
-protected:
-    ///
-    fgGfxShaderType m_type;
-    ///
-    defineStrVec m_defineStrVec;
-    ///
-    includeStrVec m_includeStrVec;
-    ///
-    fgGfxSLVersion m_version;
-    ///
-    int m_numSources;
-    ///
-    unsigned int m_sourceSize;
-    ///
-    char const ** m_sources;
-    ///
-    char * m_fileSource;
-    ///
-    fgGfxShaderPrecision m_precision;
-    ///
-    fgBool m_isSourceLoaded;
-    ///
-    fgBool m_isAttached;
+        /**
+         *
+         */
+        class CShader : public fg::gfx::base::CShader, protected fg::util::DataFile {
+            friend class CShaderProgram;
+            friend class CShaderManager;
+        public:
+            ///
+            typedef fg::gfx::base::CShader base_type;
+            ///
+            typedef fg::gfx::base::CShader::tag_type tag_type;
+            ///
+            typedef CVector<std::string> defineStrVec;
+            ///
+            typedef defineStrVec::iterator defineStrVecItor;
+            ///
+            typedef CVector<std::string> includeStrVec;
+            ///
+            typedef includeStrVec::iterator includeStrVecItor;
 
-public:
-    /**
-     * 
-     * @param type
-     */
-    fgGfxShader(fgGfxShaderType type);
-    /**
-     * 
-     */
-    virtual ~fgGfxShader();
+        protected:
+            ///
+            fgGfxShaderType m_type;
+            ///
+            defineStrVec m_defineStrVec;
+            ///
+            includeStrVec m_includeStrVec;
+            ///
+            fgGfxSLVersion m_version;
+            ///
+            int m_numSources;
+            ///
+            unsigned int m_sourceSize;
+            ///
+            char const ** m_sources;
+            ///
+            char * m_fileSource;
+            ///
+            fgGfxShaderPrecision m_precision;
+            ///
+            fgBool m_isSourceLoaded;
+            ///
+            fgBool m_isAttached;
 
-    /**
-     * 
-     * @param slVer
-     * @return 
-     */
-    fgBool setVersion(fgGfxSLVersion slVer);
-    /**
-     * 
-     * @param constantDef
-     */
-    void appendDefine(fgGfxShaderConstantDef constantDef);
-    /**
-     * 
-     * @param includeName
-     */
-    void appendInclude(std::string & includeName);
+        public:
+            /**
+             * 
+             * @param type
+             */
+            CShader(fgGfxShaderType type);
+            /**
+             * 
+             */
+            virtual ~CShader();
 
-    /**
-     * 
-     * @return 
-     */
-    fgBool loadSource(void);
-    /**
-     * 
-     * @param path
-     * @return 
-     */
-    fgBool loadSource(const char *path);
-    /**
-     * 
-     * @param path
-     * @return 
-     */
-    fgBool loadSource(std::string & path);
-    /**
-     * 
-     */
-    void freeSource(void);
+            /**
+             * 
+             * @param slVer
+             * @return 
+             */
+            fgBool setVersion(fgGfxSLVersion slVer);
+            /**
+             * 
+             * @param constantDef
+             */
+            void appendDefine(fgGfxShaderConstantDef constantDef);
+            /**
+             * 
+             * @param includeName
+             */
+            void appendInclude(std::string & includeName);
 
-    /**
-     * 
-     * @return 
-     */
-    fgGFXuint create(void);
-    /**
-     * 
-     * @return 
-     */
-    fgBool compile(void);
-    /**
-     * 
-     * @param path
-     * @return 
-     */
-    fgBool compile(const char *path);
-    /**
-     * 
-     * @param path
-     * @return 
-     */
-    fgBool compile(std::string & path);
-    /**
-     * 
-     * @return 
-     */
-    fgBool deleteShader(void);
+            /**
+             * 
+             * @return 
+             */
+            fgBool loadSource(void);
+            /**
+             * 
+             * @param path
+             * @return 
+             */
+            fgBool loadSource(const char *path);
+            /**
+             * 
+             * @param path
+             * @return 
+             */
+            fgBool loadSource(std::string & path);
+            /**
+             * 
+             */
+            void freeSource(void);
 
-    /**
-     * 
-     */
-    void clearAll(void);
+            /**
+             * 
+             * @return 
+             */
+            fgGFXuint create(void);
+            /**
+             * 
+             * @return 
+             */
+            fgBool compile(void);
+            /**
+             * 
+             * @param path
+             * @return 
+             */
+            fgBool compile(const char *path);
+            /**
+             * 
+             * @param path
+             * @return 
+             */
+            fgBool compile(std::string & path);
+            /**
+             * 
+             * @return 
+             */
+            fgBool deleteShader(void);
 
-protected:
-    /**
-     * 
-     * @param program
-     * @return 
-     */
-    fgBool attach(fgGFXuint program);
-    /**
-     * 
-     * @param program
-     * @return 
-     */
-    fgBool detach(fgGFXuint program);
+            /**
+             * 
+             */
+            void clearAll(void);
 
-public:
-    /**
-     * 
-     * @param precision
-     */
-    void setPrecision(fgGfxShaderPrecision precision) {
-        m_precision = precision;
-    }
-    /**
-     * 
-     * @return 
-     */
-    fgGfxShaderPrecision getPrecision(void) const {
-        return m_precision;
-    }
-    /**
-     * 
-     * @return 
-     */
-    const char *getSource(void) const {
-        return (const char *)m_fileSource;
-    }
-    /**
-     * 
-     * @param sourceBuffer
-     */
-    void setSourceBuffer(char *sourceBuffer) {
-        m_fileSource = sourceBuffer;
-    }
-    /**
-     * 
-     * @param filePath
-     */
-    virtual void setPath(const char *filePath) {
-        if(filePath) {
-            fgGfxShaderBase::setFilePath(filePath);            
-            fg::util::DataFile::setPath(filePath);
-        }
-    }
-    /**
-     * 
-     * @param filePath
-     */
-    virtual void setPath(const std::string& filePath) {
-        fgGfxShaderBase::setFilePath(filePath);
-        fg::util::DataFile::setPath(filePath);
-    }
-    /**
-     * 
-     * @param filePath
-     */
-    virtual void setFilePath(const char *filePath) {
-        if(filePath) {
-            fgGfxShaderBase::setFilePath(filePath);            
-            fg::util::DataFile::setPath(filePath);
-        }
-    }
-    /**
-     * 
-     * @param filePath
-     */
-    virtual void setFilePath(const std::string& filePath) {
-        fgGfxShaderBase::setFilePath(filePath);
-        fg::util::DataFile::setPath(filePath);
-    }
+        protected:
+            /**
+             * 
+             * @param program
+             * @return 
+             */
+            fgBool attach(fgGFXuint program);
+            /**
+             * 
+             * @param program
+             * @return 
+             */
+            fgBool detach(fgGFXuint program);
 
+        public:
+            /**
+             * 
+             * @param precision
+             */
+            void setPrecision(fgGfxShaderPrecision precision) {
+                m_precision = precision;
+            }
+            /**
+             * 
+             * @return 
+             */
+            fgGfxShaderPrecision getPrecision(void) const {
+                return m_precision;
+            }
+            /**
+             * 
+             * @return 
+             */
+            const char *getSource(void) const {
+                return (const char *)m_fileSource;
+            }
+            /**
+             * 
+             * @param sourceBuffer
+             */
+            void setSourceBuffer(char *sourceBuffer) {
+                m_fileSource = sourceBuffer;
+            }
+            /**
+             * 
+             * @param filePath
+             */
+            virtual void setPath(const char *filePath) {
+                if(filePath) {
+                    fg::gfx::base::CShader::setFilePath(filePath);
+                    fg::util::DataFile::setPath(filePath);
+                }
+            }
+            /**
+             * 
+             * @param filePath
+             */
+            virtual void setPath(const std::string& filePath) {
+                fg::gfx::base::CShader::setFilePath(filePath);
+                fg::util::DataFile::setPath(filePath);
+            }
+            /**
+             * 
+             * @param filePath
+             */
+            virtual void setFilePath(const char *filePath) {
+                if(filePath) {
+                    fg::gfx::base::CShader::setFilePath(filePath);
+                    fg::util::DataFile::setPath(filePath);
+                }
+            }
+            /**
+             * 
+             * @param filePath
+             */
+            virtual void setFilePath(const std::string& filePath) {
+                fg::gfx::base::CShader::setFilePath(filePath);
+                fg::util::DataFile::setPath(filePath);
+            }
+
+        };
+
+    };
 };
 
     #undef FG_INC_GFX_SHADER_BLOCK
