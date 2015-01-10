@@ -124,7 +124,7 @@ void fg::gfx::CSceneManager::sortCalls(void) {
     if(!getShaderManager())
         return;
     //printf("fgGfxSceneManager::sortCalls(void)\n");
-    m_MVP.setCamera((fgGfxCamera *)(&m_camera));
+    m_MVP.setCamera((CCamera *)(&m_camera));
     if(getRefPriorityQueue().empty())
         CDrawingBatch::sortCalls(); // NOPE
     while(!m_nodeQueue.empty())
@@ -250,7 +250,7 @@ int fg::gfx::CSceneManager::appendObject(CSceneNode *pObj, fgBool manage) {
     if(m_resourceMgr) {
         fgGfxMaterial *pMainMaterial = pObj->getModel()->getMainMaterial();
         if(pMainMaterial) {
-            fgTextureResource *pTexRes = (fgTextureResource *)((fgResourceManager *)m_resourceMgr)->get(pMainMaterial->ambientTexHandle);
+            CTextureResource *pTexRes = (CTextureResource *)((CResourceManager *)m_resourceMgr)->get(pMainMaterial->ambientTexHandle);
             if(pTexRes)
                 call->setTexture(pTexRes->getRefGfxID());
         }
@@ -349,7 +349,7 @@ fgBool fg::gfx::CSceneManager::addNode(fgGfxSceneNodeHandle& nodeUniqueID,
             if(m_pResourceMgr) {
                 fgGfxMaterial *pMainMaterial = pNodeObject->getModel()->getMainMaterial();
                 if(pMainMaterial) {
-                    fgTextureResource *pTexRes = (fgTextureResource *)((fgResourceManager *)m_pResourceMgr)->get(pMainMaterial->ambientTexHandle);
+                    CTextureResource *pTexRes = (CTextureResource *)((CResourceManager *)m_pResourceMgr)->get(pMainMaterial->ambientTexHandle);
                     if(pTexRes)
                         pDrawCall->setTexture(pTexRes->getRefGfxID());
                 }

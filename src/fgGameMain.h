@@ -142,7 +142,7 @@ public:
      * 
      * @return 
      */
-    inline fgResourceManager *getResourceManager(void) const {
+    inline CResourceManager *getResourceManager(void) const {
         return m_resourceMgr;
     }
     /**
@@ -177,7 +177,7 @@ public:
      * 
      * @return 
      */
-    inline fgSFXManager *getSoundManager(void) const {
+    inline fg::sfx::CSfxManager *getSoundManager(void) const {
         return m_soundMgr;
     }
     /**
@@ -231,7 +231,7 @@ private:
     /// Main Quality Manager
     fgQualityManager *m_qualityMgr;
     /// Main Resource Manager
-    fgResourceManager *m_resourceMgr;
+    CResourceManager *m_resourceMgr;
     /// Resource factory object - registers create() methods for Resource Objects
     fgResourceFactory *m_resourceFactory;
     /// 
@@ -241,7 +241,7 @@ private:
     /// Builtin script subsystem - it needs access to all main managers
     fgScriptSubsystem *m_scriptSubsystem;
     /// Sound manager - loading, playing sounds
-    fgSFXManager *m_soundMgr;
+    fg::sfx::CSfxManager *m_soundMgr;
     /// Inner game logic
     fg::game::Logic *m_logicMgr;
     

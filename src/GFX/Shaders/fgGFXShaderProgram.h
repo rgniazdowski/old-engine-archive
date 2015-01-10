@@ -382,13 +382,13 @@ namespace fg {
              * @param matrix
              * @return 
              */
-            fgBool setUniform(fgGfxMVPMatrix *matrix);
+            fgBool setUniform(CMVPMatrix *matrix);
             /**
              * 
              * @param matrix
              * @return 
              */
-            fgBool setUniform(fgGfxMVMatrix *matrix);
+            fgBool setUniform(CMVMatrix *matrix);
 
             /**
              * 

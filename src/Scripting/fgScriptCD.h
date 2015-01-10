@@ -34,7 +34,7 @@
     #ifndef FG_INC_GFX_TYPES
         #include "GFX/fgGFXTypes.h"
     #endif
-    
+
     #ifndef FG_INC_GFX_SCENE_NODE
         #include "GFX/fgGFXSceneNode.h"
     #endif
@@ -49,6 +49,18 @@
 
     #ifndef FG_INC_EVENT_DEFINITIONS
         #include "Event/fgEventDefinitions.h"
+    #endif
+    
+    #ifndef FG_INC_SFX_AUDIO_BASE
+        #include "Audio/fgSFXAudioBase.h"
+    #endif
+    
+    #ifndef FG_INC_SFX_MUSIC_RESOURCE
+        #include "Audio/fgSFXMusicResource.h"
+    #endif
+    
+    #ifndef FG_INC_SFX_SOUND_RESOURCE
+        #include "Audio/fgSFXSoundResource.h"
     #endif
 
     #include "fgLog.h"
@@ -296,8 +308,8 @@ namespace LPCD {
      * fgResource pointer parameter *
      **************************************************************************/
 
-    template<> struct Type<fgResource *> {
-        static inline void Push(lua_State* L, const fgResource * value) {
+    template<> struct Type<CResource *> {
+        static inline void Push(lua_State* L, const CResource * value) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
             LuaPlus::LuaObject obj = state->BoxPointer((void*)value);
             // Can check the pointer (offset) and instead of creating new object
@@ -322,17 +334,17 @@ namespace LPCD {
             result = (bool) obj.IsUserdata();
             return result;
         }
-        static inline fgResource * Get(lua_State* L, int idx) {
+        static inline CResource * Get(lua_State* L, int idx) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
-            fgResource *pResource = (fgResource *)state->UnBoxPointer(idx);
+            CResource *pResource = (CResource *)state->UnBoxPointer(idx);
             return pResource;
         }
     };
 
-    template<> struct Type<fgResource *&> : public Type<fgResource *> {
+    template<> struct Type<CResource *&> : public Type<CResource *> {
     };
 
-    template<> struct Type<const fgResource *&> : public Type<fgResource *> {
+    template<> struct Type<const CResource *&> : public Type<CResource *> {
     };
 
     /***************************************************************************
@@ -1405,11 +1417,11 @@ namespace LPCD {
         static inline void Push(lua_State* L, const fg::gfx::CSceneNode * value) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
             LuaPlus::LuaObject obj = state->BoxPointer((void*)value);
-            #if defined(FG_DEBUG)
-            FG_LOG_DEBUG("Script: LPCD Push: ptr[%p], offset[%lu], name[%s], type_name[fgGfxSceneNode]", value, (uintptr_t)value, value->getNameStr());
+        #if defined(FG_DEBUG)
+            FG_LOG_DEBUG("Script: LPCD Push: ptr[%p], offset[%lu], name[%s], type_name[fg::gfx::CSceneNode]", value, (uintptr_t)value, value->getNameStr());
         #endif
             fgScriptMetatables::METAID metaID = fgScriptMetatables::SCENE_NODE_MT_ID;
-            const char *metatableName = fgScriptMT->getMetatableName(metaID);          
+            const char *metatableName = fgScriptMT->getMetatableName(metaID);
             obj.SetMetatable(state->GetRegistry()[metatableName]);
         }
         static inline bool Match(lua_State* L, int idx) {
@@ -1431,6 +1443,59 @@ namespace LPCD {
     };
 
     template<> struct Type<const fg::gfx::CSceneNode *&> : public Type<fg::gfx::CSceneNode *> {
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    // FG SFX SPECIAL TYPES
+    ////////////////////////////////////////////////////////////////////////////
+
+    /***************************************************************************
+     * fg::sfx::base::CAudio pointer parameter *
+     **************************************************************************/
+
+    template<> struct Type<fg::sfx::base::CAudio *> {
+        static inline void Push(lua_State* L, const fg::sfx::base::CAudio * value) {
+            LuaPlus::LuaState* state = lua_State_to_LuaState(L);
+            LuaPlus::LuaObject obj;
+            const fg::sfx::CMusic *pMusic = NULL;
+            const fg::sfx::CSound *pSound = NULL;
+            const char *nameStr = NULL;
+            if(value->getAudioBaseType() == fg::sfx::base::T_MUSIC) {
+                pMusic = static_cast<const fg::sfx::CMusic *>(value);
+                nameStr = pMusic->getNameStr();
+                obj = state->BoxPointer((void*)pMusic);
+            } else if(value->getAudioBaseType() == fg::sfx::base::T_SOUND) {
+                pSound = static_cast<const fg::sfx::CSound *>(value);
+                nameStr = pSound->getNameStr();
+                obj = state->BoxPointer((void*)pSound);
+            }
+            
+        #if defined(FG_DEBUG)
+            FG_LOG_DEBUG("Script: LPCD Push: ptr[%p], offset[%lu], name[%s], type_name[fg::sfx::base::CAudio]", value, (uintptr_t)value, nameStr);
+        #endif
+            fgScriptMetatables::METAID metaID = fgScriptMetatables::AUDIO_BASE_RES_MT_ID;
+            const char *metatableName = fgScriptMT->getMetatableName(metaID);
+            obj.SetMetatable(state->GetRegistry()[metatableName]);
+        }
+        static inline bool Match(lua_State* L, int idx) {
+            LuaPlus::LuaState* state = lua_State_to_LuaState(L);
+            LuaPlus::LuaObject obj = state->Stack(idx);
+            bool result; // = (obj.GetMetatable() == state->GetRegistry()[fgScriptMT->getMetatableName(fgScriptMetatables::GUI_WIDGET_MT_ID)]);
+            // This is fubar
+            result = (bool) obj.IsUserdata();
+            return result;
+        }
+        static inline fg::sfx::base::CAudio * Get(lua_State* L, int idx) {
+            LuaPlus::LuaState* state = lua_State_to_LuaState(L);
+            fg::sfx::base::CAudio *pAudio = (fg::sfx::base::CAudio *)state->UnBoxPointer(idx);
+            return pAudio;
+        }
+    };
+
+    template<> struct Type<fg::sfx::base::CAudio *&> : public Type<fg::sfx::base::CAudio *> {
+    };
+
+    template<> struct Type<const fg::sfx::base::CAudio *&> : public Type<fg::sfx::base::CAudio *> {
     };
 
     ////////////////////////////////////////////////////////////////////////////

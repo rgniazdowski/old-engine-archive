@@ -386,14 +386,14 @@ void fg::gfx::CDrawCall::resetColor(void) {
 /*
  *
  */
-void fg::gfx::CDrawCall::setMVP(fgGfxMVPMatrix *MVP) {
+void fg::gfx::CDrawCall::setMVP(CMVPMatrix *MVP) {
     m_MVP = MVP;
 }
 
 /*
  *
  */
-fgGfxMVPMatrix *fg::gfx::CDrawCall::getMVP(void) const {
+fg::gfx::CMVPMatrix *fg::gfx::CDrawCall::getMVP(void) const {
     return m_MVP;
 }
 

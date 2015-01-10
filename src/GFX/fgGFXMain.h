@@ -34,8 +34,6 @@ class fgGfxMain;
 FG_TAG_TEMPLATE_ID_AUTO(fgGfxMain, FG_TAG_GFX_MAIN_NAME);
 typedef FG_TAG_GFX_MAIN fgGfxMainTag;
 
-// Manager base?
-
 /**
  *
  */
@@ -45,6 +43,7 @@ public:
     typedef fgGfxMain type;
     ///
     typedef fgGfxMainTag tag_type;
+    
 public:
     /**
      * Default constructor for the GFX main object
@@ -74,17 +73,32 @@ protected:
     
 public:
     
-    // Sets the pointer to the external resource manager
+    /**
+     * Sets the pointer to the external resource manager
+     * @param pResourceManager
+     * @return 
+     */
     fgBool setupResourceManager(fg::base::CManager *pResourceManager);
 
-    // Init the whole GFX subsystem - set the screen
+    /**
+     * Init the whole GFX subsystem - set the screen
+     * @return 
+     */
     fgBool initGFX(void);
-    // Close the subsystem - destroy the graphics context
+    /**
+     * Close the subsystem - destroy the graphics context
+     */
     void closeGFX(void);
 
-    // Suspend event
+    /**
+     * 
+     * @return 
+     */
     fgBool suspendGFX(void);
-    // Resume event, restore state & context
+    /**
+     * Resume event, restore state & context
+     * @return 
+     */
     fgBool resumeGFX(void);
 
     // Now main display function creates the buffer (vertex/color/texture coords buffers) 
@@ -101,25 +115,55 @@ public:
      */
     void setupLoader(void);
     
-    // Returns the pointer to the Texture Manager
-    fgTextureManager *getTextureManager(void) const;
-    // Releases all textures - the GFX side and nonGFX (meaning internal RAM)
+    /**
+     * Returns the pointer to the Texture Manager
+     * @return 
+     */
+    fg::gfx::CTextureManager *getTextureManager(void) const;
+    /**
+     * Releases all textures - the GFX side and nonGFX (meaning internal RAM)
+     * @return 
+     */
     fgBool releaseTextures(void);
-    // Returns the pointer to the shader manager
+    /**
+     * Returns the pointer to the shader manager
+     * @return 
+     */
     fg::gfx::CShaderManager *getShaderManager(void) const;
-    // Pre loads all shaders - caches the specific configs
+    /**
+     * Pre loads all shaders - caches the specific configs
+     * @return 
+     */
     fgBool preLoadShaders(void) const;
-    // Returns the pointer to the main GFX windows - OS specific main window
+    /**
+     * Returns the pointer to the main GFX windows - OS specific main window
+     * @return 
+     */
     fg::gfx::CWindow *getMainWindow(void) const;
-    // Returns the pointer to the main 3D scene - may be NULL
+    /**
+     * Getter for the Scene3D object
+     * @return 
+     */
     fg::gfx::CScene3D *get3DScene(void) const;
-    // Returns the pointer to the main 2D scene - may be NULL
+    /**
+     * Returns the pointer to the main 2D scene - may be NULL
+     * @return 
+     */
     fg::gfx::CScene2D *get2DScene(void) const;
-    // Returns the pointer to the main 3D scene camera - may be NULL
-    fgGfxCameraAnimation *get3DSceneCamera(void) const;
-    //
+    /**
+     * Returns the pointer to the main 3D scene camera - may be NULL
+     * @return 
+     */
+    fg::gfx::CCameraAnimation *get3DSceneCamera(void) const;
+    /**
+     * 
+     * @return 
+     */
     fg::gfx::CParticleSystem *getParticleSystem(void) const;
-    //
+    /**
+     * 
+     * @return 
+     */
     fg::gfx::CLoader *getLoader(void) {
         return &m_loader;
     }
@@ -136,7 +180,7 @@ private:
     /// stages of initialization - before GUI subsystem full initialization
     fg::gfx::CLoader m_loader;
     /// Texture manager for GFX upload/reload - works with Resource manager
-    fgTextureManager *m_textureMgr;
+    fg::gfx::CTextureManager *m_textureMgr;
     /// Pointer to the resource manager - defined and managed outside
     fg::base::CManager *m_pResourceMgr;
     /// Pointer to the external event manager

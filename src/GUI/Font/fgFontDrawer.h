@@ -50,7 +50,7 @@ protected:
      * @param texture
      * @return 
      */
-    fg::gfx::CDrawCall *setupDrawCall(fgTextureResource *texture);
+    fg::gfx::CDrawCall *setupDrawCall(fg::gfx::CTexture *texture);
 
 public:
     /**

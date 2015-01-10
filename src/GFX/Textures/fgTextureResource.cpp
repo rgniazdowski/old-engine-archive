@@ -39,8 +39,8 @@ bool fgTexture::checkGlError(const char* fname) {
 /*
  * Base constructor of the texture resource object
  */
-fgTextureResource::fgTextureResource() :
-fgResource(),
+fg::gfx::CTextureResource::CTextureResource() :
+CResource(),
 m_fileType(FG_TEXTURE_FILE_INVALID),
 m_textureType(FG_TEXTURE_PLAIN),
 m_pixelFormat(FG_TEXTURE_PIXEL_INVALID),
@@ -57,8 +57,8 @@ m_isInVRAM(FG_FALSE) {
 /*
  *
  */
-fgTextureResource::fgTextureResource(const char *path) :
-fgResource(path),
+fg::gfx::CTextureResource::CTextureResource(const char *path) :
+CResource(path),
 m_fileType(FG_TEXTURE_FILE_INVALID),
 m_textureType(FG_TEXTURE_PLAIN),
 m_pixelFormat(FG_TEXTURE_PIXEL_INVALID),
@@ -75,8 +75,8 @@ m_isInVRAM(FG_FALSE) {
 /*
  *
  */
-fgTextureResource::fgTextureResource(std::string& path) :
-fgResource(path),
+fg::gfx::CTextureResource::CTextureResource(std::string& path) :
+CResource(path),
 m_fileType(FG_TEXTURE_FILE_INVALID),
 m_textureType(FG_TEXTURE_PLAIN),
 m_pixelFormat(FG_TEXTURE_PIXEL_INVALID),
@@ -94,8 +94,8 @@ m_isInVRAM(FG_FALSE) {
  * Clears the class data, this actually does not free allocated memory,
  * just resets base class attributes
  */
-void fgTextureResource::clear(void) {
-    fgResource::clear();
+void fg::gfx::CTextureResource::clear(void) {
+    CResource::clear();
     m_fileType = FG_TEXTURE_FILE_INVALID;
     m_textureType = FG_TEXTURE_PLAIN;
     m_pixelFormat = FG_TEXTURE_PIXEL_INVALID;
@@ -113,7 +113,7 @@ void fgTextureResource::clear(void) {
 /*
  * Create function loads/interprets data from file in ROM and place it in RAM memory.
  */
-fgBool fgTextureResource::create(void) {
+fgBool fg::gfx::CTextureResource::create(void) {
     if(m_rawData && m_isReady) {
         return FG_TRUE;
     }
@@ -205,16 +205,16 @@ fgBool fgTextureResource::create(void) {
 /*
  * Destroy all loaded data including additional metadata (called with destructor)
  */
-void fgTextureResource::destroy(void) {
+void fg::gfx::CTextureResource::destroy(void) {
     releaseNonGFX();
-    fgTextureResource::clear();
+    fg::gfx::CTextureResource::clear();
 }
 
 /**
  * Reloads any data, recreates the resource (refresh)
  * @return
  */
-fgBool fgTextureResource::recreate(void) {
+fgBool fg::gfx::CTextureResource::recreate(void) {
     FG_LOG_DEBUG("fgTextureResource::recreate(void)");
     if(m_isReady || m_rawData)
         releaseNonGFX();
@@ -226,7 +226,7 @@ fgBool fgTextureResource::recreate(void) {
  * Dispose completely of the all loaded data, free all memory
  * Releases non-GPU side of resources
  */
-void fgTextureResource::dispose(void) {
+void fg::gfx::CTextureResource::dispose(void) {
     releaseNonGFX();
 }
 
@@ -234,7 +234,7 @@ void fgTextureResource::dispose(void) {
  * Check if resource is disposed (not loaded yet or disposed after)\
  * @return
  */
-fgBool fgTextureResource::isDisposed(void) const {
+fgBool fg::gfx::CTextureResource::isDisposed(void) const {
     // #FIXME ?
     // This should also check if texture (GL/GFX) ID is valid.
     // If it is, then it means that the texture is uploaded and
@@ -252,7 +252,7 @@ fgBool fgTextureResource::isDisposed(void) const {
  * @param path
  * @return 
  */
-fgBool fgTextureResource::setFileTypeFromFilePath(std::string &path) {
+fgBool fg::gfx::CTextureResource::setFileTypeFromFilePath(std::string &path) {
     if(path.empty())
         return FG_FALSE;
     // #FIXME - this should be extracted to other file (used for some basic file operation, pathext or whatnot #P3 #TODO)
@@ -276,7 +276,7 @@ fgBool fgTextureResource::setFileTypeFromFilePath(std::string &path) {
 /**
  * Releases non-GPU side of resources
  */
-void fgTextureResource::releaseNonGFX(void) {
+void fg::gfx::CTextureResource::releaseNonGFX(void) {
     FG_LOG_DEBUG("GFX:Texture: release nonGFX: rawData[%p];", m_rawData);
 
     for(int i = 0; i < FG_NUM_TEXTURE_CUBE_MAPS; i++) {
@@ -299,11 +299,11 @@ void fgTextureResource::releaseNonGFX(void) {
  * 
  * @param flags
  */
-void fgTextureResource::setFlags(const std::string& flags) {
+void fg::gfx::CTextureResource::setFlags(const std::string& flags) {
     if(flags.empty() || flags.length() < 2)
         return;
     // This is important - always call setFlags for the base class
-    fgResource::setFlags(flags);
+    CResource::setFlags(flags);
     fg::CStringVector flagsVec;
     fgStrings::split(flags, ' ', flagsVec);
     if(flagsVec.empty())

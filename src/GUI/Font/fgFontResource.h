@@ -9,6 +9,7 @@
 
 #ifndef FG_INC_FONT_RESOURCE
     #define FG_INC_FONT_RESOURCE
+    #define FG_INC_FONT_RESOURCE_BLOCK
 
     #include "Resource/fgResource.h"
     #include "Resource/fgResourceFactoryTypes.h"
@@ -27,19 +28,33 @@ typedef unsigned int fgFontType;
 /*
  * Class definition for Font Resource - extends the Texture Resource
  */
-class fgFontResource : public fgTextureResource {
+class fgFontResource : public fg::gfx::CTextureResource {
 public:
-    // Base constructor of the font resource object
+    /**
+     * Base constructor of the font resource object
+     */
     fgFontResource();
-    // Constructor with additional parameter (path)
+    /**
+     * Constructor with additional parameter (path)
+     * @param path
+     */
     fgFontResource(const char *path);
-    // Constructor with additional parameter (path)
+    /**
+     * Constructor with additional parameter (path)
+     * @param path
+     */
     fgFontResource(std::string& path);
-    // Base destructor of the font resource object
+    /**
+     * Destructor of the font resource object
+     */
     virtual ~fgFontResource() {
         fgFontResource::destroy();
     }
 
+    /**
+     * 
+     * @return 
+     */
     FG_RESOURCE_FACTORY_CREATE_FUNCTION(fgFontResource)
 
 protected:
@@ -48,15 +63,28 @@ protected:
     virtual void clear(void);
 
 public:
-    // Create function loads/interprets data from file in ROM and place it in RAM memory.
+    /**
+     * Create function loads/interprets data from file in ROM and place it in RAM memory.
+     * @return 
+     */
     virtual fgBool create(void);
-    // Destroy all loaded data including additional metadata (called with deconstructor)
+    /**
+     * Destroy all loaded data including additional metadata (called with destructor)
+     */
     virtual void destroy(void);
-    // Reloads any data, recreates the resource (refresh)
+    /**
+     * Reloads any data, recreates the resource (refresh)
+     * @return 
+     */
     virtual fgBool recreate(void);
-    // Dispose completely of the all loaded data, free all memory
+    /**
+     * Dispose completely of the all loaded data, free all memory
+     */
     virtual void dispose(void);
-    // Check if resource is disposed (not loaded yet or disposed after)
+    /**
+     * Check if resource is disposed (not loaded yet or disposed after)
+     * @return 
+     */
     virtual fgBool isDisposed(void) const;
     /**
      * 
@@ -89,4 +117,5 @@ protected:
     int m_step;
 };
 
+    #undef FG_INC_FONT_RESOURCE_BLOCK
 #endif /* FG_INC_FONT_RESOURCE */

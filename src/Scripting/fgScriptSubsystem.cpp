@@ -444,7 +444,7 @@ int fgScriptSubsystem::managedResourceGCEvent(lua_State* L) {
         return 0;
     }
     fgBool isRegistered = FG_TRUE;
-    fgResource *pResource = (fgResource *)unboxed;
+    CResource *pResource = (CResource *)unboxed;
     uintptr_t offset = (uintptr_t)pResource;
     userDataObjectMapItor it = m_userDataObjectMap.find(offset);
     if(it == m_userDataObjectMap.end()) {
@@ -1279,7 +1279,7 @@ int fgScriptSubsystem::newResourceWrapper(lua_State* L) {
         return 0;
     if(m_pResourceMgr->getManagerType() != FG_MANAGER_RESOURCE)
         return 0;
-    fgResource *pResource = static_cast<fgResourceManager *>(m_pResourceMgr)->request(info);
+    CResource *pResource = static_cast<CResourceManager *>(m_pResourceMgr)->request(info);
     LuaPlus::LuaObject resourceObj = state->BoxPointer(pResource);
     if(!pResource) {
         resourceObj.SetMetatable(LuaPlus::LuaObject());
@@ -1348,27 +1348,26 @@ fgBool fgScriptSubsystem::registerResourceManager(void) {
     //
     // Registering now metatables for various resource types
     //
-
-    typedef const char*(fgResource::base_type::*getFilePathStrType)(void)const;
+    typedef const char*(CResource::base_type::*getFilePathStrType)(void)const;
     // Register Base Resource metatable
     LPCD::Class(m_luaState->GetCState(), fgScriptMT->getMetatableName(fgScriptMetatables::RESOURCE_MT_ID))
-            .ObjectDirect("getName", (fgResource::base_type::base_type *)0, &fgResource::base_type::base_type::getNameStr)
-            .ObjectDirect("isManaged", (fgResource::base_type::base_type *)0, &fgResource::base_type::base_type::isManaged)
+            .ObjectDirect("getName", (CResource::base_type::base_type *)0, &CResource::base_type::base_type::getNameStr)
+            .ObjectDirect("isManaged", (CResource::base_type::base_type *)0, &CResource::base_type::base_type::isManaged)
             .ObjectDirect("getFilePath",
-                          (fgResource::base_type *)0,
-                          static_cast<getFilePathStrType>(&fgResource::base_type::getFilePathStr))
-            .ObjectDirect("getSize", (fgResource *)0, &fgResource::getSize)
-            .ObjectDirect("getLastAccess", (fgResource *)0, &fgResource::getLastAccess)
-            .ObjectDirect("isDisposed", (fgResource *)0, &fgResource::isDisposed)
-            .ObjectDirect("isLocked", (fgResource *)0, &fgResource::isLocked)
-            .ObjectDirect("dispose", (fgResource *)0, &fgResource::dispose);
+                          (CResource::base_type *)0,
+                          static_cast<getFilePathStrType>(&CResource::base_type::getFilePathStr))
+            .ObjectDirect("getSize", (CResource *)0, &CResource::getSize)
+            .ObjectDirect("getLastAccess", (CResource *)0, &CResource::getLastAccess)
+            .ObjectDirect("isDisposed", (CResource *)0, &CResource::isDisposed)
+            .ObjectDirect("isLocked", (CResource *)0, &CResource::isLocked)
+            .ObjectDirect("dispose", (CResource *)0, &CResource::dispose);
     //.MetatableFunction("__gc", &fgScriptSubsystem::managedResourceGCEvent); // #DELETE
 
     // Register Texture Resource metatable
     LPCD::Class(m_luaState->GetCState(), fgScriptMT->getMetatableName(fgScriptMetatables::TEXTURE_RESOURCE_MT_ID), fgScriptMT->getMetatableName(fgScriptMetatables::RESOURCE_MT_ID))
-            .ObjectDirect("getWidth", (fgTextureResource *)0, &fgTextureResource::getWidth)
-            .ObjectDirect("getHeight", (fgTextureResource *)0, &fgTextureResource::getHeight)
-            .ObjectDirect("getComponents", (fgTextureResource *)0, &fgTextureResource::getComponents)
+            .ObjectDirect("getWidth", (fg::gfx::CTexture*)0, &fg::gfx::CTexture::getWidth)
+            .ObjectDirect("getHeight", (fg::gfx::CTexture*)0, &fg::gfx::CTexture::getHeight)
+            .ObjectDirect("getComponents", (fg::gfx::CTexture*)0, &fg::gfx::CTexture::getComponents)
             .MetatableFunction("__gc", &fgScriptSubsystem::managedResourceGCEvent);
 
     // Register Font Resource metatable
@@ -1497,17 +1496,21 @@ fgBool fgScriptSubsystem::registerResourceManager(void) {
 
     //
     // Register Music (SFX) Resource metatable
+    // AudioBase extends Resource (on the script level)
+    // Music/Sound extends AudioBase
     //
-    LPCD::Class(m_luaState->GetCState(), fgScriptMT->getMetatableName(fgScriptMetatables::AUDIO_BASE_RES_MT_ID), fgScriptMT->getMetatableName(fgScriptMetatables::RESOURCE_MT_ID))
-            .ObjectDirect("play", (fgAudioBase *)0, &fgAudioBase::play)
-            .ObjectDirect("pause", (fgAudioBase *)0, &fgAudioBase::pause)
-            .ObjectDirect("resume", (fgAudioBase *)0, &fgAudioBase::resume)
-            .ObjectDirect("rewind", (fgAudioBase *)0, &fgAudioBase::rewind)
-            .ObjectDirect("stop", (fgAudioBase *)0, &fgAudioBase::stop)
-            .ObjectDirect("halt", (fgAudioBase *)0, &fgAudioBase::halt)
-            .ObjectDirect("isPaused", (fgAudioBase *)0, &fgAudioBase::isPaused)
-            .ObjectDirect("setVolume", (fgAudioBase *)0, &fgAudioBase::setVolume)
-            .ObjectDirect("getVolume", (fgAudioBase *)0, &fgAudioBase::getVolume);
+    LPCD::Class(m_luaState->GetCState(),
+                fgScriptMT->getMetatableName(fgScriptMetatables::AUDIO_BASE_RES_MT_ID),
+                fgScriptMT->getMetatableName(fgScriptMetatables::RESOURCE_MT_ID))
+            .ObjectDirect("play", (fg::sfx::base::CAudio *)0, &fg::sfx::base::CAudio::play)
+            .ObjectDirect("pause", (fg::sfx::base::CAudio *)0, &fg::sfx::base::CAudio::pause)
+            .ObjectDirect("resume", (fg::sfx::base::CAudio *)0, &fg::sfx::base::CAudio::resume)
+            .ObjectDirect("rewind", (fg::sfx::base::CAudio *)0, &fg::sfx::base::CAudio::rewind)
+            .ObjectDirect("stop", (fg::sfx::base::CAudio *)0, &fg::sfx::base::CAudio::stop)
+            .ObjectDirect("halt", (fg::sfx::base::CAudio *)0, &fg::sfx::base::CAudio::halt)
+            .ObjectDirect("isPaused", (fg::sfx::base::CAudio *)0, &fg::sfx::base::CAudio::isPaused)
+            .ObjectDirect("setVolume", (fg::sfx::base::CAudio *)0, &fg::sfx::base::CAudio::setVolume)
+            .ObjectDirect("getVolume", (fg::sfx::base::CAudio *)0, &fg::sfx::base::CAudio::getVolume);
 
     LPCD::Class(m_luaState->GetCState(), fgScriptMT->getMetatableName(fgScriptMetatables::MUSIC_RESOURCE_MT_ID), fgScriptMT->getMetatableName(fgScriptMetatables::AUDIO_BASE_RES_MT_ID))
             .MetatableFunction("__gc", &fgScriptSubsystem::managedResourceGCEvent);
@@ -2295,47 +2298,51 @@ fgBool fgScriptSubsystem::registerSoundManager(void) {
         return FG_TRUE;
     if(m_fgObj.GetRef() < 0)
         return FG_FALSE;
-    typedef fgBool(fgSFXManager::*SFX_Bool_C_STR_IN)(const char *);
+    typedef fgBool(fg::sfx::CSfxManager::*SFX_Bool_C_STR_IN)(const char *);
+    typedef fg::sfx::base::CAudio*(fg::sfx::CSfxManager::*SFX_CAudio_C_STR_IN)(const char *);
 
     // Sound manager metatable
     m_mgrMetatables[SOUND_MGR] = m_fgObj.CreateTable(fgScriptMT->getMetatableName(fgScriptMetatables::SOUND_MANAGER_MT_ID));
     m_mgrMetatables[SOUND_MGR].SetObject("__index", m_mgrMetatables[SOUND_MGR]);
     m_mgrMetatables[SOUND_MGR].RegisterObjectDirect("play",
-                                                    static_cast<fgSFXManager *>(0),
-                                                    static_cast<SFX_Bool_C_STR_IN>(&fgSFXManager::play));
+                                                    static_cast<fg::sfx::CSfxManager *>(0),
+                                                    static_cast<SFX_Bool_C_STR_IN>(&fg::sfx::CSfxManager::play));
     m_mgrMetatables[SOUND_MGR].RegisterObjectDirect("pause",
-                                                    static_cast<fgSFXManager *>(0),
-                                                    static_cast<SFX_Bool_C_STR_IN>(&fgSFXManager::pause));
+                                                    static_cast<fg::sfx::CSfxManager *>(0),
+                                                    static_cast<SFX_Bool_C_STR_IN>(&fg::sfx::CSfxManager::pause));
     m_mgrMetatables[SOUND_MGR].RegisterObjectDirect("resume",
-                                                    static_cast<fgSFXManager *>(0),
-                                                    static_cast<SFX_Bool_C_STR_IN>(&fgSFXManager::resume));
+                                                    static_cast<fg::sfx::CSfxManager *>(0),
+                                                    static_cast<SFX_Bool_C_STR_IN>(&fg::sfx::CSfxManager::resume));
     m_mgrMetatables[SOUND_MGR].RegisterObjectDirect("rewind",
-                                                    static_cast<fgSFXManager *>(0),
-                                                    static_cast<SFX_Bool_C_STR_IN>(&fgSFXManager::rewind));
+                                                    static_cast<fg::sfx::CSfxManager *>(0),
+                                                    static_cast<SFX_Bool_C_STR_IN>(&fg::sfx::CSfxManager::rewind));
     m_mgrMetatables[SOUND_MGR].RegisterObjectDirect("stop",
-                                                    static_cast<fgSFXManager *>(0),
-                                                    static_cast<SFX_Bool_C_STR_IN>(&fgSFXManager::stop));
+                                                    static_cast<fg::sfx::CSfxManager *>(0),
+                                                    static_cast<SFX_Bool_C_STR_IN>(&fg::sfx::CSfxManager::stop));
     m_mgrMetatables[SOUND_MGR].RegisterObjectDirect("isPlaying",
-                                                    static_cast<fgSFXManager *>(0),
-                                                    static_cast<SFX_Bool_C_STR_IN>(&fgSFXManager::isPlaying));
+                                                    static_cast<fg::sfx::CSfxManager *>(0),
+                                                    static_cast<SFX_Bool_C_STR_IN>(&fg::sfx::CSfxManager::isPlaying));
     m_mgrMetatables[SOUND_MGR].RegisterObjectDirect("isPaused",
-                                                    static_cast<fgSFXManager *>(0),
-                                                    static_cast<SFX_Bool_C_STR_IN>(&fgSFXManager::isPaused));
+                                                    static_cast<fg::sfx::CSfxManager *>(0),
+                                                    static_cast<SFX_Bool_C_STR_IN>(&fg::sfx::CSfxManager::isPaused));
     m_mgrMetatables[SOUND_MGR].RegisterObjectDirect("stopAll",
-                                                    static_cast<fgSFXManager *>(0),
-                                                    &fgSFXManager::stopAll);
+                                                    static_cast<fg::sfx::CSfxManager *>(0),
+                                                    &fg::sfx::CSfxManager::stopAll);
     m_mgrMetatables[SOUND_MGR].RegisterObjectDirect("setSfxVolume",
-                                                    static_cast<fgSFXManager *>(0),
-                                                    &fgSFXManager::setSfxVolume);
+                                                    static_cast<fg::sfx::CSfxManager *>(0),
+                                                    &fg::sfx::CSfxManager::setSfxVolume);
     m_mgrMetatables[SOUND_MGR].RegisterObjectDirect("getSfxVolume",
-                                                    static_cast<fgSFXManager *>(0),
-                                                    &fgSFXManager::getSfxVolume);
+                                                    static_cast<fg::sfx::CSfxManager *>(0),
+                                                    &fg::sfx::CSfxManager::getSfxVolume);
     m_mgrMetatables[SOUND_MGR].RegisterObjectDirect("setMusicVolume",
-                                                    static_cast<fgSFXManager *>(0),
-                                                    &fgSFXManager::setMusicVolume);
+                                                    static_cast<fg::sfx::CSfxManager *>(0),
+                                                    &fg::sfx::CSfxManager::setMusicVolume);
     m_mgrMetatables[SOUND_MGR].RegisterObjectDirect("getMusicVolume",
-                                                    static_cast<fgSFXManager *>(0),
-                                                    &fgSFXManager::getMusicVolume);
+                                                    static_cast<fg::sfx::CSfxManager *>(0),
+                                                    &fg::sfx::CSfxManager::getMusicVolume);
+    m_mgrMetatables[SOUND_MGR].RegisterObjectDirect("request",
+                                                    static_cast<fg::sfx::CSfxManager *>(0),
+                                                    static_cast<SFX_CAudio_C_STR_IN>(&fg::sfx::CSfxManager::request));
 
     uintptr_t offset = (uintptr_t)m_pSoundMgr;
     userDataObjectMapItor it = m_userDataObjectMap.find(offset);

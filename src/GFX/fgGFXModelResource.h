@@ -51,7 +51,7 @@ namespace fg {
  * This resource loads various types of models
  * Provides functions also for generation of VBOs
  */
-class CModelResource : public ::fgResource {
+class CModelResource : public ::CResource {
 public:
     // Type definition for vector holding model shapes
     typedef CVector<fgGfxShape *> modelShapes;

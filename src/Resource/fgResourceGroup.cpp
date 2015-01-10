@@ -266,7 +266,7 @@ fgResourceFactory *fgResourceGroup::getResourceFactory(void) const {
  * Clears the class data, this actually does not free allocated memory, just resets base class attributes
  */
 void fgResourceGroup::clear(void) {
-    fgResource::clear();
+    CResource::clear();
     m_rHandles.clear_optimised();
     m_resourceFiles.clear_optimised();
     m_resType = FG_RESOURCE_GROUP;
@@ -383,7 +383,7 @@ fgBool fgResourceGroup::private_parseIniConfig(void) {
             continue;
         }
 
-        fgResource *resource = m_resourceFactory->createResource(header->resType);
+        CResource *resource = m_resourceFactory->createResource(header->resType);
         if(!resource) {
             if(resCfg)
                 delete resCfg;
@@ -501,5 +501,5 @@ void fgResourceGroup::ZeroLock(void) {
     for(rgResVecItor it = m_resourceFiles.begin(); it != m_resourceFiles.end(); it++) {
         (*it)->ZeroLock();
     }
-    fgResource::ZeroLock();
+    CResource::ZeroLock();
 }

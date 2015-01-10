@@ -16,7 +16,7 @@
 /*
  * Base constructor of the resource object
  */
-fgResource::fgResource() :
+CResource::CResource() :
 m_priority(FG_RES_PRIORITY_LOW),
 m_quality(FG_QUALITY_UNIVERSAL),
 m_resType(FG_RESOURCE_INVALID),
@@ -31,7 +31,7 @@ m_isReady(FG_FALSE) {
 /*
  * Constructor with additional parameter (path)
  */
-fgResource::fgResource(const char *path) :
+CResource::CResource(const char *path) :
 m_priority(FG_RES_PRIORITY_LOW),
 m_quality(FG_QUALITY_UNIVERSAL),
 m_resType(FG_RESOURCE_INVALID),
@@ -47,7 +47,7 @@ m_isReady(FG_FALSE) {
 /*
  * Constructor with additional parameter (path)
  */
-fgResource::fgResource(std::string& path) :
+CResource::CResource(std::string& path) :
 m_priority(FG_RES_PRIORITY_LOW),
 m_quality(FG_QUALITY_UNIVERSAL),
 m_resType(FG_RESOURCE_INVALID),
@@ -64,7 +64,7 @@ m_isReady(FG_FALSE) {
  * Clears the class data, this actually does not free allocated memory,
  * just resets base class attributes
  */
-void fgResource::clear(void) {
+void CResource::clear(void) {
     m_resType = FG_RESOURCE_INVALID;
     m_priority = FG_RES_PRIORITY_LOW;
     m_quality = FG_QUALITY_UNIVERSAL;
@@ -83,7 +83,7 @@ void fgResource::clear(void) {
  * @param container
  * @return 
  */
-bool fgResource::operator <(fgResource& container) {
+bool CResource::operator <(CResource& container) {
     if(getPriority() < container.getPriority())
         return true;
     else if(getPriority() > container.getPriority())
@@ -108,7 +108,7 @@ bool fgResource::operator <(fgResource& container) {
  * @param container
  * @return 
  */
-bool fgResource::operator >(fgResource& container) {
+bool CResource::operator >(CResource& container) {
     if(getPriority() < container.getPriority())
         return false;
     else if(getPriority() > container.getPriority())

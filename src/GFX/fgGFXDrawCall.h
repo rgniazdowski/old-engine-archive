@@ -98,7 +98,7 @@ namespace fg {
             /// because the model matrix would change
             /// view and projection matrix parameters stay the same (mostly)
             /// through all drawing batch
-            fgGfxMVPMatrix *m_MVP;
+            CMVPMatrix *m_MVP;
             /// Used vertex data will depend on the attribute mask used
             /// Appending specific data however may alter this and make 
             /// other buffers invalid
@@ -240,9 +240,9 @@ namespace fg {
             virtual void resetColor(void);
 
             // Sets the pointer to given MVP matrix
-            void setMVP(fgGfxMVPMatrix *MVP = NULL);
+            void setMVP(CMVPMatrix *MVP = NULL);
             // Returns the pointer to currently used MVP matrix
-            fgGfxMVPMatrix * getMVP(void) const;
+            CMVPMatrix * getMVP(void) const;
 
             // Can be null, which would mean that this draw call does not care about such thing
             // However it should be avoided. Shader program knows if it's being currently used.

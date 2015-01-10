@@ -40,7 +40,7 @@ public:
     fgBool registerResource(const fgResourceType type, fgCreateResourceFn function);
 
     // Call specific create function for given resource
-    fgResource* createResource(const fgResourceType type);
+    CResource* createResource(const fgResourceType type);
 
     // Check if given resource type constructor/create function is registered in factory
     fgBool isRegistered(const fgResourceType type);

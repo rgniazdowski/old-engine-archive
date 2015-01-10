@@ -43,7 +43,7 @@ private:
     /// Current resource type
     fgResourceType m_resType;
     /// Current resource object pointer
-    fgResource *m_resourcePtr;
+    CResource *m_resourcePtr;
     /// Current resource priority
     fgResPriorityType m_curResPriority;
     /// Is current resource tag mapped? (file names mapped to quality)
@@ -138,23 +138,23 @@ public:
  * Hint: Use smart pointers in the future - from boost library or
  * own proper implementation
  */
-class fgResourceGroup : public fgResource {
+class fgResourceGroup : public CResource {
     ///
     friend class fgResourceGroupContentHandler;
     /// 
-    friend class fgResourceManager;
+    friend class CResourceManager;
 
 public:
     ///
-    typedef fg::CVector<fgResource *> rgResVec;
+    typedef fg::CVector<CResource *> rgResVec;
     ///
     typedef fg::CVector<FG_RHANDLE> rgHandleVec;
     ///
-    typedef fg::CVector<fgResource *>::iterator rgResVecItor;
+    typedef fg::CVector<CResource *>::iterator rgResVecItor;
     ///
     typedef fg::CVector<FG_RHANDLE>::iterator rgHandleVecItor;
     ///
-    typedef fg::CVector<fgResource *>::const_iterator rgResVecConstItor;
+    typedef fg::CVector<CResource *>::const_iterator rgResVecConstItor;
     ///
     typedef fg::CVector<FG_RHANDLE>::const_iterator rgHandleVecConstItor;
 

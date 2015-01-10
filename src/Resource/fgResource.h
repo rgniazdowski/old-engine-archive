@@ -25,18 +25,18 @@
     #include "Util/fgHandle.h"
     #include "Util/fgTag.h"
 
-class fgResourceManager;
+class CResourceManager;
 class fgResourceGroup;
-class fgResource;
+class CResource;
 
     #include "fgResourceFactoryTypes.h"
 
     #define FG_TAG_RESOURCE_NAME	"Resource"
 //#define FG_TAG_RESOURCE_ID		10 //#FIXME - something automatic maybe?
-    #define FG_TAG_RESOURCE		FG_TAG_TYPE(fgResource)
+    #define FG_TAG_RESOURCE		FG_TAG_TYPE(CResource)
 
 //FG_TAG_TEMPLATE(fgResource, FG_TAG_RESOURCE_NAME, FG_TAG_RESOURCE_ID);
-FG_TAG_TEMPLATE_ID_AUTO(fgResource, FG_TAG_RESOURCE_NAME);
+FG_TAG_TEMPLATE_ID_AUTO(CResource, FG_TAG_RESOURCE_NAME);
 
 // Special handle type for resource
 typedef FG_TAG_RESOURCE fgResourceTag;
@@ -182,8 +182,8 @@ inline fgResPriorityType _FG_RES_PRIORITY_FROM_TEXT(const char* text) {
 /*
  * Base class for resource
  */
-class fgResource : public fgManagedDataFileBase<fgResourceHandle, fgQuality> {
-    friend class fgResourceManager;
+class CResource : public fgManagedDataFileBase<fgResourceHandle, fgQuality> {
+    friend class CResourceManager;
     friend class fgResourceGroup;
 public:
     typedef fgManagedDataFileBase<fgResourceHandle, fgQuality> base_type;
@@ -195,21 +195,21 @@ public:
     /**
      *  Base constructor of the resource object
      */
-    fgResource();
+    CResource();
     /**
      * Constructor with additional parameter (path)
      * @param path
      */
-    fgResource(const char *path);
+    CResource(const char *path);
     /**
      * Constructor with additional parameter (path)
      * @param path
      */
-    fgResource(std::string& path);
+    CResource(std::string& path);
     /**
      * Base destructor of the resource object
      */
-    virtual ~fgResource() { }
+    virtual ~CResource() { }
 
 protected:
     /**
@@ -227,7 +227,7 @@ public:
     virtual fgBool create(void) = 0;
     // Destroy all loaded data including additional metadata (called with deconstructor)
     virtual void destroy(void) {
-        fgResource::clear();
+        CResource::clear();
     };
     // Dispose and recreate must be able to discard and then completely recreate
     // the data contained in the class with no additional parameters
@@ -312,9 +312,9 @@ public:
     }
 
     // The less-than operator defines how resources get sorted for discarding.
-    virtual bool operator <(fgResource& container);
+    virtual bool operator <(CResource& container);
     // The greater-than operator is used for comparison (eg. while sorting)
-    virtual bool operator >(fgResource& container);
+    virtual bool operator >(CResource& container);
 
     // Well using reference count as simple as below is not recommended, it is more difficult
     // to handle in the end, dims the code etc., can cause many problems. Need to migrate to

@@ -14,7 +14,7 @@
 /**
  * 
  */
-fgParticleEffect::fgParticleEffect() : fgResource() {
+fgParticleEffect::fgParticleEffect() : CResource() {
     m_resType = FG_RESOURCE_PARTICLE_EFFECT;
     m_textureIDRange.x = 0;
     m_textureIDRange.y = 0;
@@ -34,7 +34,7 @@ fgParticleEffect::~fgParticleEffect() {
  * 
  */
 void fgParticleEffect::clear(void) {
-    fgResource::clear();
+    CResource::clear();
     m_resType = FG_RESOURCE_PARTICLE_EFFECT;
 }
 

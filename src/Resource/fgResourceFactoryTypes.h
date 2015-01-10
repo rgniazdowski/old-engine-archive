@@ -10,12 +10,12 @@
 #ifndef FG_INC_RESOURCE_FACTORY_TYPES
     #define FG_INC_RESOURCE_FACTORY_TYPES
 
-class fgResource;
+class CResource;
 
     #if __cplusplus > 199711L
-using fgCreateResourceFn = fgResource* (*)(void);
+using fgCreateResourceFn = CResource* (*)(void);
     #else
-typedef fgResource* (*fgCreateResourceFn)(void);
+typedef CResource* (*fgCreateResourceFn)(void);
     #endif
 
     #ifndef FG_FACTORY_CREATE_FUNCTION
@@ -25,7 +25,7 @@ static RETURNTYPE * createResource(void) { return new CREATETYPE(); }
 
     #ifndef FG_RESOURCE_FACTORY_CREATE_FUNCTION
         #define FG_RESOURCE_FACTORY_CREATE_FUNCTION(CREATETYPE) \
-static fgResource * createResource(void) { return new CREATETYPE(); }
+static CResource * createResource(void) { return new CREATETYPE(); }
     #endif
 
 #endif /* FG_INC_RESOURCE_FACTORY_TYPES */

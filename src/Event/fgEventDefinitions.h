@@ -220,7 +220,7 @@ struct fgKeyEvent : fgEventBase {
  */
 struct fgResourceEvent : fgEventBase {
     fgResourceStatus status; // ?
-    fgResource *resource;
+    CResource *resource;
 };
 
 //#define FG_EVENT_PROGRAM_INIT       23

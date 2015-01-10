@@ -187,7 +187,7 @@ void fgFontDrawer::setColor(void) {
  * @param texture
  * @return 
  */
-fg::gfx::CDrawCall *fgFontDrawer::setupDrawCall(fgTextureResource *texture) {
+fg::gfx::CDrawCall *fgFontDrawer::setupDrawCall(fg::gfx::CTexture *texture) {
     int index;
     fg::gfx::CDrawCall *drawCall = fg::gfx::CDrawingBatch::requestDrawCall(index,
                                                                 FG_GFX_DRAW_CALL_CUSTOM_ARRAY,

@@ -12,7 +12,7 @@
 /*
  *
  */
-fgGfxCameraAnimation::fgGfxCameraAnimation(const fgGfxCameraType type) :
+fg::gfx::CCameraAnimation::CCameraAnimation(const fgGfxCameraType type) :
 m_type(type),
 m_hAngle((fgGFXfloat)M_PI),
 m_vAngle(0.0f),
@@ -28,12 +28,12 @@ m_dt(0.0f) {
 /*
  *
  */
-fgGfxCameraAnimation::~fgGfxCameraAnimation() { }
+fg::gfx::CCameraAnimation::~CCameraAnimation() { }
 
 /*
  *
  */
-float *fgGfxCameraAnimation::update(void) {
+float *fg::gfx::CCameraAnimation::update(void) {
     if(m_type == FG_GFX_CAMERA_FREE) {
         m_direction = fgVec3f(cos(m_vAngle) * sin(m_hAngle),
                               sin(m_vAngle),
@@ -53,58 +53,58 @@ float *fgGfxCameraAnimation::update(void) {
     //       m_center.x, m_center.y, m_center.z,
     //       m_up.x, m_up.y, m_up.z,
     //       m_direction.x, m_direction.y, m_direction.z);
-    return fgGfxCamera::update();
+    return CCamera::update();
 }
 
 /*
  *
  */
-float *fgGfxCameraAnimation::update(fgGFXfloat mouseXrel, fgGFXfloat mouseYrel) {
+float *fg::gfx::CCameraAnimation::update(fgGFXfloat mouseXrel, fgGFXfloat mouseYrel) {
     if(m_type == FG_GFX_CAMERA_FREE) {
         m_hAngle += m_mouseSpeed * mouseXrel;
         m_vAngle += m_mouseSpeed * mouseYrel;
     }
-    return fgGfxCameraAnimation::update();
+    return CCameraAnimation::update();
 }
 
 /*
  *
  */
-void fgGfxCameraAnimation::moveLeft(void) {
+void fg::gfx::CCameraAnimation::moveLeft(void) {
     m_eye -= m_right * m_dt * m_speed;
 }
 
 /*
  *
  */
-void fgGfxCameraAnimation::moveRight(void) {
+void fg::gfx::CCameraAnimation::moveRight(void) {
     m_eye += m_right * m_dt * m_speed;
 }
 
 /*
  *
  */
-void fgGfxCameraAnimation::moveForward(void) {
+void fg::gfx::CCameraAnimation::moveForward(void) {
     m_eye += m_direction * m_dt * m_speed;
 }
 
 /*
  *
  */
-void fgGfxCameraAnimation::moveBackward(void) {
+void fg::gfx::CCameraAnimation::moveBackward(void) {
     m_eye -= m_direction * m_dt * m_speed;
 }
 
 /*
  *
  */
-void fgGfxCameraAnimation::moveUp(void) {
+void fg::gfx::CCameraAnimation::moveUp(void) {
     m_eye += m_up * m_dt * m_speed;
 }
 
 /*
  *
  */
-void fgGfxCameraAnimation::moveDown(void) {
+void fg::gfx::CCameraAnimation::moveDown(void) {
     m_eye -= m_up * m_dt * m_speed;
 }

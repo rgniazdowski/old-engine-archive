@@ -9,6 +9,7 @@
 
 #ifndef FG_INC_GFX_CAMERA_ANIMATION
     #define FG_INC_GFX_CAMERA_ANIMATION
+    #define FG_INC_GFX_CAMERA_ANIMATION_BLOCK
 
     #include "fgGFXCamera.h"
     #include "fgGFXTypes.h"
@@ -25,22 +26,23 @@ typedef unsigned int fgGfxCameraType;
 // Camera walks the specified path (checkpoints)
     #define FG_GFX_CAMERA_PATH		4
 
+namespace fg { namespace gfx {
 /*
  *
  */
-class fgGfxCameraAnimation : public fgGfxCamera {
+class CCameraAnimation : public CCamera {
 public:
-    typedef fgGfxCamera base_type;
+    typedef CCamera base_type;
 public:
     /**
      * 
      * @param type
      */
-    fgGfxCameraAnimation(const fgGfxCameraType type = FG_GFX_CAMERA_FREE);
+    CCameraAnimation(const fgGfxCameraType type = FG_GFX_CAMERA_FREE);
     /**
      * 
      */
-    virtual ~fgGfxCameraAnimation();
+    virtual ~CCameraAnimation();
 
     /**
      * 
@@ -224,5 +226,7 @@ private:
     ///
     fgGFXfloat m_dt;
 };
+};};
 
+    #undef FG_INC_GFX_CAMERA_ANIMATION_BLOCK
 #endif /* FG_INC_GFX_CAMERA_ANIMATION */

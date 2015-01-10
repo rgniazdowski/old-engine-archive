@@ -12,18 +12,18 @@
 /**
  * 
  */
-fgGfxFrustum::fgGfxFrustum() { }
+fg::gfx::CFrustum::CFrustum() { }
 
 /**
  * 
  * @param orig
  */
-fgGfxFrustum::fgGfxFrustum(const fgGfxFrustum& orig) { }
+fg::gfx::CFrustum::CFrustum(const CFrustum& orig) { }
 
 /**
  * 
  */
-fgGfxFrustum::~fgGfxFrustum() { }
+fg::gfx::CFrustum::~CFrustum() { }
 
 /**
  * 
@@ -32,10 +32,10 @@ fgGfxFrustum::~fgGfxFrustum() { }
  * @param zNear
  * @param zFar
  */
-void fgGfxFrustum::setCamera(const float angle,
-                             const float ratio,
-                             const float zNear,
-                             const float zFar) {
+void fg::gfx::CFrustum::setCamera(const float angle,
+                                  const float ratio,
+                                  const float zNear,
+                                  const float zFar) {
     this->m_aspect = ratio;
     this->m_angle = angle;
     this->m_zNear = zNear;
@@ -55,9 +55,9 @@ void fgGfxFrustum::setCamera(const float angle,
  * @param center
  * @param up
  */
-void fgGfxFrustum::set(const fgVector3f &eye,
-                       const fgVector3f &center,
-                       const fgVector3f &up) {
+void fg::gfx::CFrustum::set(const fgVector3f &eye,
+                            const fgVector3f &center,
+                            const fgVector3f &up) {
     fgVector3f dir, nc, fc, X, Y, Z;
 
     Z = eye - center;
@@ -104,7 +104,7 @@ void fgGfxFrustum::set(const fgVector3f &eye,
     aux = fgMath::normalize(aux);
     normal = fgMath::cross(Y, aux); //normal = Y * aux;
     m_planes[RIGHT].set(normal, nc + X * m_nw);
-    
+
 #if defined(FG_DEBUG) && 0 // #FIXME
     dumpPlane(m_planes[LEFT], "LEFT");
     dumpPlane(m_planes[RIGHT], "RIGHT");
@@ -120,7 +120,7 @@ void fgGfxFrustum::set(const fgVector3f &eye,
  * @param m
  * @return 
  */
-void fgGfxFrustum::set(const fgMatrix4f &matrix) {
+void fg::gfx::CFrustum::set(const fgMatrix4f &matrix) {
     float a = 0.0f, b = 0.0f, c = 0.0f, d = 0.0f;
     // The elements of the 4x4 matrix are stored in
     // column-major order (see "OpenGL Programming Guide",
@@ -220,10 +220,10 @@ void fgGfxFrustum::set(const fgMatrix4f &matrix) {
     d = m[3][3] + m[3][1];
     m_planes[BOTTOM].set(a, b, c, d);
     // Near clipping plane
-    a = m[0][2];// + m[0][3];
-    b = m[1][2];// + m[1][3];
-    c = m[2][2];// + m[2][3];
-    d = m[3][2];// + m[3][3];
+    a = m[0][2]; // + m[0][3];
+    b = m[1][2]; // + m[1][3];
+    c = m[2][2]; // + m[2][3];
+    d = m[3][2]; // + m[3][3];
     m_planes[NEARP].set(a, b, c, d);
     // Far clipping plane
     a = m[0][3] - m[0][2];
@@ -247,7 +247,7 @@ void fgGfxFrustum::set(const fgMatrix4f &matrix) {
  * @param p
  * @return 
  */
-int fgGfxFrustum::testPoint(const fgVector3f &point) {
+int fg::gfx::CFrustum::testPoint(const fgVector3f &point) {
     // #FIXME - OPTIMIZE!
     int result = INSIDE;
     for(int i = 0; i < 6; i++) {
@@ -264,7 +264,7 @@ int fgGfxFrustum::testPoint(const fgVector3f &point) {
  * @param raio
  * @return 
  */
-int fgGfxFrustum::testSphere(const fgVector3f &point, const float radius) {
+int fg::gfx::CFrustum::testSphere(const fgVector3f &point, const float radius) {
     // #FIXME - OPTIMIZE!
     // #FIXME - remember that for now this all works with worldspace (MVP transform)
     int result = INSIDE;
@@ -285,7 +285,7 @@ int fgGfxFrustum::testSphere(const fgVector3f &point, const float radius) {
  * @param b
  * @return 
  */
-int fgGfxFrustum::testAABB(const fgAABoundingBox3Df &box) {
+int fg::gfx::CFrustum::testAABB(const fgAABoundingBox3Df &box) {
     if(!box.isValid())
         return OUTSIDE;
     // #FIXME - OPTIMIZE!

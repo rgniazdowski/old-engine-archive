@@ -20,134 +20,171 @@
     #include "Event/fgArgumentList.h"
     #include "Event/fgCallback.h"
 
-class fgTextureManager;
+namespace fg {
+    namespace gfx {
+        class CTextureManager;
+    };
+};
 
     #define FG_TAG_TEXTURE_MANAGER_NAME		"GfxTextureManager"
 //#define FG_TAG_MANAGER_BASE_ID		20 //#FIXME - something automatic maybe?
-    #define FG_TAG_TEXTURE_MANAGER			FG_TAG_TYPE(fgTextureManager)
+    #define FG_TAG_TEXTURE_MANAGER			FG_TAG_TYPE(fg::gfx::CTextureManager)
 
 //FG_TAG_TEMPLATE(fgResourceManager, FG_TAG_MANAGER_BASE_NAME, FG_TAG_MANAGER_BASE_ID);
-FG_TAG_TEMPLATE_ID_AUTO(fgTextureManager, FG_TAG_TEXTURE_MANAGER_NAME);
+FG_TAG_TEMPLATE_ID_AUTO(fg::gfx::CTextureManager, FG_TAG_TEXTURE_MANAGER_NAME);
 
 // Special handle type for manager base
 typedef FG_TAG_TEXTURE_MANAGER fgTextureManagerTag;
 
     #define FG_MANAGER_TEXTURE      0x00000004
 
-/**
- * Class that allows to perform GROUP OPERATIONS on all textures. 
- */
-class fgTextureManager : public fg::base::CManager {
-public:
-    typedef fg::base::CManager base_type;
-    typedef fgTextureManagerTag tag_type;
-public:
-    // Default constructor for Texture Manager object
-    fgTextureManager(fg::base::CManager *pResourceMgr);
-    // Default destructor for Texture Manager object
-    virtual ~fgTextureManager();
+namespace fg {
+    namespace gfx {
 
-protected:
-    /**
-     * 
-     */
-    virtual void clear(void);
+        /**
+         * Class that allows to perform GROUP OPERATIONS on all textures. 
+         */
+        class CTextureManager : public fg::base::CManager {
+        public:
+            ///
+            typedef fg::base::CManager base_type;
+            ///
+            typedef fgTextureManagerTag tag_type;
+            
+        public:
+            /**
+             * Default constructor for Texture Manager object
+             * @param pResourceMgr
+             */
+            CTextureManager(fg::base::CManager *pResourceMgr);
+            /**
+             * Destructor for Texture Manager object
+             */
+            virtual ~CTextureManager();
 
-    /**
-     * 
-     */
-    void registerResourceCallbacks(void);
-    /**
-     * 
-     */
-    void unregisterResourceCallbacks(void);
+        protected:
+            /**
+             * 
+             */
+            virtual void clear(void);
 
-public:
-    //
-    virtual fgBool destroy(void);
-    //
-    virtual fgBool initialize(void);
+            /**
+             * 
+             */
+            void registerResourceCallbacks(void);
+            /**
+             * 
+             */
+            void unregisterResourceCallbacks(void);
 
-    //
-    void setResourceManager(fg::base::CManager *pResourceMgr);
-    //
-    fg::base::CManager *getResourceManager(void) const;
+        public:
+            /**
+             * 
+             * @return 
+             */
+            virtual fgBool destroy(void);
+            /**
+             * 
+             * @return 
+             */
+            virtual fgBool initialize(void);
 
-    /**
-     * RAM -> VRAM.
-     * Update of VRAM is unconditional. 
-     * Update of RAM is dependent on:
-     * - no image being already loaded,
-     * - force option given.
-     */
-    fgBool allToVRAM(fgBool reupload = FG_FALSE);
+            /**
+             * 
+             * @param pResourceMgr
+             */
+            void setResourceManager(fg::base::CManager *pResourceMgr);
+            /**
+             * 
+             * @return 
+             */
+            fg::base::CManager *getResourceManager(void) const;
 
-    // Releases all non GFX (i.e. non VRAM) data
-    void allReleaseNonGFX(void);
+            /**
+             * RAM -> VRAM.
+             * Update of VRAM is unconditional. 
+             * Update of RAM is dependent on:
+             * - no image being already loaded,
+             * - force option given.
+             */
+            fgBool allToVRAM(fgBool reupload = FG_FALSE);
 
-    // Releases all GFX (i.e. texture ids) data
-    void allReleaseGFX(void);
+            // Releases all non GFX (i.e. non VRAM) data
+            void allReleaseNonGFX(void);
 
-    // #FIXME #TODO #P2
+            // Releases all GFX (i.e. texture ids) data
+            void allReleaseGFX(void);
+
+            // #FIXME #TODO #P2
     #if defined(FG_USING_OPENGL_ES) || defined(FG_USING_OPENGL)
-    static GLint translatePixelFormat(fgTexturePixelFormat pixelFormat);
-    static GLint translateInternalPixelFormat(fgTextureInternalPixelFormat internalPixelFormat);
+            static GLint translatePixelFormat(fgTexturePixelFormat pixelFormat);
+            static GLint translateInternalPixelFormat(fgTextureInternalPixelFormat internalPixelFormat);
     #endif
 
-    //
-    fgBool uploadToVRAM(fgTextureResource *texture, fgBool force = FG_FALSE);
-    //
-    fgBool uploadToVRAM(const std::string& nameTag, fgBool force = FG_FALSE);
-    //
-    fgBool uploadToVRAM(const char *nameTag, fgBool force = FG_FALSE);
+            //
+            fgBool uploadToVRAM(CTexture *texture, fgBool force = FG_FALSE);
+            //
+            fgBool uploadToVRAM(const std::string& nameTag, fgBool force = FG_FALSE);
+            //
+            fgBool uploadToVRAM(const char *nameTag, fgBool force = FG_FALSE);
 
-    //
-    void releaseGFX(fgTextureResource *pTexture);
+            //
+            void releaseGFX(CTexture *pTexture);
 
-    /**
-     * 
-     * @param texHandle
-     * @return 
-     */
-    fgGfxTextureID &getRefGfxID(const fgResourceHandle& texHandle);
+            /**
+             * 
+             * @param texHandle
+             * @return 
+             */
+            fgGfxTextureID &getRefGfxID(const fgResourceHandle& texHandle);
+            /**
+             * 
+             * @param nameTag
+             * @return 
+             */
+            fgGfxTextureID &getRefGfxID(const std::string& nameTag);
+            /**
+             * 
+             * @param nameTag
+             * @return 
+             */
+            fgGfxTextureID &getRefGfxID(const char *nameTag);
 
-    fgGfxTextureID &getRefGfxID(const std::string& nameTag);
+        private:
+            /**
+             * Uploads texture given via ID into VRAM.
+             *
+             * No force is possible – i.e. it is impossible to delete
+             * texture through glDeleteTextures() and recreate it through
+             * glGenTextures(). This is because OpenGL can UPDATE already
+             * existing textures (i.e. use already generated texture IDs)
+             *
+             * (Still, fgTexture is capable of doing that: releaseAll() will
+             * leave filename intact. It is however not needed, and should not
+             * be used).
+             */
+            fgBool makeTexture(CTextureResource *textureResource);
 
-    fgGfxTextureID &getRefGfxID(const char *nameTag);
+            /**
+             * 
+             * @param argv
+             * @return 
+             */
+            fgBool resourceCreatedHandler(fgArgumentList *argv);
 
-private:
-    /**
-     * Uploads texture given via ID into VRAM.
-     *
-     * No force is possible – i.e. it is impossible to delete
-     * texture through glDeleteTextures() and recreate it through
-     * glGenTextures(). This is because OpenGL can UPDATE already
-     * existing textures (i.e. use already generated texture IDs)
-     *
-     * (Still, fgTexture is capable of doing that: releaseAll() will
-     * leave filename intact. It is however not needed, and should not
-     * be used).
-     */
-    fgBool makeTexture(fgTextureResource *textureResource);
-
-    /**
-     * 
-     * @param argv
-     * @return 
-     */
-    fgBool resourceCreatedHandler(fgArgumentList *argv);
-
-private:
-    ///
-    fg::base::CManager *m_pResourceMgr;
-    ///
-    fg::base::CManager *m_pEventMgr;
-    ///
-    fgFunctionCallback *m_resourceCreatedCallback;
-    ///
-    fgBool m_allInVRAM;
-    ///
-    fgGfxTextureID m_emptyGfxID;
+        private:
+            ///
+            fg::base::CManager *m_pResourceMgr;
+            ///
+            fg::base::CManager *m_pEventMgr;
+            ///
+            fgFunctionCallback *m_resourceCreatedCallback;
+            ///
+            fgBool m_allInVRAM;
+            ///
+            fgGfxTextureID m_emptyGfxID;
+        };
+    };
 };
 
     #undef FG_INC_TEXTURE_MANAGER_BLOCK

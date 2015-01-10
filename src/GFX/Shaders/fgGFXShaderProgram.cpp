@@ -681,7 +681,7 @@ fgGFXint fg::gfx::CShaderProgram::getUniformLocation(std::string variableName) {
  * @param matrix
  * @return 
  */
-fgBool fg::gfx::CShaderProgram::setUniform(fgGfxMVPMatrix *matrix) {
+fgBool fg::gfx::CShaderProgram::setUniform(CMVPMatrix *matrix) {
     if(!matrix)
         return FG_FALSE;
     fgGfxUniformBind * bind = getUniformBind(FG_GFX_MVP_MATRIX);
@@ -699,7 +699,7 @@ fgBool fg::gfx::CShaderProgram::setUniform(fgGfxMVPMatrix *matrix) {
  * @param matrix
  * @return 
  */
-fgBool fg::gfx::CShaderProgram::setUniform(fgGfxMVMatrix *matrix) {
+fgBool fg::gfx::CShaderProgram::setUniform(CMVMatrix *matrix) {
     fgGfxUniformBind * bind = getUniformBind(FG_GFX_MV_MATRIX);
     if(!bind || !matrix)
         return FG_FALSE;

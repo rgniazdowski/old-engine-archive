@@ -20,7 +20,7 @@
         #include <SDL/SDL.h>
         #include <SDL/SDL_mixer.h>
     #elif defined(FG_USING_MARMALADE)
-        //#error "TODO: Music/Audio support for Marmalade based build!"
+//#error "TODO: Music/Audio support for Marmalade based build!"
 //      #include "s3eFile.h"
         #ifdef FG_USING_MARMALADE_AUDIO
             #include "s3eAudio.h" // s3eAudio can play music files
@@ -38,120 +38,135 @@
     #include "fgSFXAudioBase.h"
     #include "Resource/fgResourceFactoryTypes.h"
 
-/**
- * 
- */
-class fgMusicResource : public fgResource, public fgAudioBase {
-public:
-    typedef fgResource base_type;
-    typedef fgAudioBase base_audio_type;
-private:
+namespace fg {
+
+    namespace sfx {
+
+        /**
+         * 
+         */
+        class CMusicResource : public CResource, public fg::sfx::base::CAudio {
+        public:
+            ///
+            typedef CResource base_type;
+            ///
+            typedef CAudio base_audio_type;
+
+        private:
     #if defined(FG_USING_SDL_MIXER)
-    ///
-    Mix_Music *m_musData;
+            ///
+            Mix_Music *m_musData;
     #elif defined(FG_USING_MARMALADE) // AUDIO / SOUND
-	void *m_musData;
+            void *m_musData;
     #else
-    void *m_musData;
+            void *m_musData;
     #endif
-    ///
-    unsigned char *m_rawData;
+            ///
+            unsigned char *m_rawData;
 
-public:
-    /**
-     * 
-     */
-    fgMusicResource();
-    /**
-     * 
-     * @param path
-     */
-    fgMusicResource(const char *path);
-    /**
-     * 
-     * @param path
-     */
-    fgMusicResource(std::string& path);
-    /**
-     * 
-     */
-    virtual ~fgMusicResource() {
-        fgMusicResource::destroy();
-    }
+        public:
+            /**
+             * 
+             */
+            CMusicResource();
+            /**
+             * 
+             * @param path
+             */
+            CMusicResource(const char *path);
+            /**
+             * 
+             * @param path
+             */
+            CMusicResource(std::string& path);
+            /**
+             * 
+             */
+            virtual ~CMusicResource() {
+                CMusicResource::destroy();
+            }
 
-    FG_RESOURCE_FACTORY_CREATE_FUNCTION(fgMusicResource);
+            /**
+             * 
+             * @return 
+             */
+            FG_RESOURCE_FACTORY_CREATE_FUNCTION(CMusicResource)
 
+        protected:
+            /**
+             * 
+             */
+            virtual void clear(void);
 
-protected:
-    /**
-     * 
-     */
-    virtual void clear(void);
+        public:
 
-public:
+            /**
+             * Create function loads/interprets data from file in ROM and place it in RAM memory.
+             * @return 
+             */
+            virtual fgBool create(void);
+            /**
+             * Destroy all loaded data including additional metadata (called with destructor)
+             */
+            virtual void destroy(void);
+            /**
+             * Reloads any data, recreates the resource (refresh)
+             * @return 
+             */
+            virtual fgBool recreate(void);
+            /**
+             * Dispose completely of the all loaded data, free all memory
+             */
+            virtual void dispose(void);
+            /**
+             * Check if resource is disposed (not loaded yet or disposed after)
+             * @return 
+             */
+            virtual fgBool isDisposed(void) const;
 
-    /**
-     * Create function loads/interprets data from file in ROM and place it in RAM memory.
-     * @return 
-     */
-    virtual fgBool create(void);
-    /**
-     * Destroy all loaded data including additional metadata (called with destructor)
-     */
-    virtual void destroy(void);
-    /**
-     * Reloads any data, recreates the resource (refresh)
-     * @return 
-     */
-    virtual fgBool recreate(void);
-    /**
-     * Dispose completely of the all loaded data, free all memory
-     */
-    virtual void dispose(void);
-    /**
-     * Check if resource is disposed (not loaded yet or disposed after)
-     * @return 
-     */
-    virtual fgBool isDisposed(void) const;
+        public:
+            /**
+             * 
+             */
+            virtual void play(void);
+            /**
+             * 
+             */
+            virtual void pause(void);
+            /**
+             * 
+             */
+            virtual void resume(void);
+            /**
+             * 
+             */
+            virtual void rewind(void);
+            /**
+             * 
+             */
+            virtual void stop(void);
+            /**
+             * 
+             * @return 
+             */
+            virtual fgBool isPaused(void);
+            /**
+             * 
+             * @return 
+             */
+            virtual fgBool isPlaying(void);
 
-public:
-    /**
-     * 
-     */
-    virtual void play(void);
-    /**
-     * 
-     */
-    virtual void pause(void);
-    /**
-     * 
-     */
-    virtual void resume(void);
-    /**
-     * 
-     */
-    virtual void rewind(void);
-    /**
-     * 
-     */
-    virtual void stop(void);
-    /**
-     * 
-     * @return 
-     */
-    virtual fgBool isPaused(void);
-    /**
-     * 
-     * @return 
-     */
-    virtual fgBool isPlaying(void);
-
-public:
-    /**
-     * 
-     * @param volume
-     */
-    void setVolume(FG_SFX_VOLUME_TYPE volume);
+        public:
+            /**
+             * 
+             * @param volume
+             */
+            void setVolume(FG_SFX_VOLUME_TYPE volume);
+        };
+        
+        ///
+        typedef CMusicResource CMusic;
+    };
 };
 
     #undef FG_INC_SFX_MUSIC_RESOURCE_BLOCK

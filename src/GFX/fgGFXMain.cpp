@@ -195,14 +195,14 @@ void fgGfxMain::setupLoader(void) {
         return;
     if(!m_textureMgr->isInit())
         return;
-    fgResourceManager *pResourceMgr = static_cast<fgResourceManager *>(m_pResourceMgr);
+    CResourceManager *pResourceMgr = static_cast<CResourceManager *>(m_pResourceMgr);
     //
     // Splash texture load and upload - #FIXME - splash texture names from config!
     //
     const char *splashes[] = {"developer.jpg","publisher.jpg","splash.png"};
     int nsplashes = sizeof(splashes)/sizeof(splashes[0]);
     int x = FG_RAND(0, nsplashes-1);
-    fgTextureResource *texture = (fgTextureResource *)(pResourceMgr->request(splashes[x]));
+    fg::gfx::CTexture *texture = (fg::gfx::CTexture *)(pResourceMgr->request(splashes[x]));
     if(!texture) {
         FG_LOG_ERROR("GFX: Unable to load Splash texture");
         return;
@@ -216,7 +216,7 @@ void fgGfxMain::setupLoader(void) {
     const char *loaders[] = {"sun.jpg","hexangle.jpg"};
     int nloaders = sizeof(loaders)/sizeof(loaders[0]);
     x = FG_RAND(0, nloaders-1);
-    texture = (fgTextureResource *)(pResourceMgr->request(loaders[x]));
+    texture = (fg::gfx::CTexture *)(pResourceMgr->request(loaders[x]));
     if(!texture) {
         FG_LOG_ERROR("GFX: Unable to load ProgressBar texture");
         return;
@@ -294,7 +294,7 @@ fgBool fgGfxMain::resumeGFX(void) {
     {
         fg::gfx::CModelResource *model = NULL;
         std::string modelname("CobraBomber");
-        model = (fg::gfx::CModelResource *)((fgResourceManager *)m_textureMgr->getResourceManager())->get(modelname);
+        model = (fg::gfx::CModelResource *)((CResourceManager *)m_textureMgr->getResourceManager())->get(modelname);
         if(model) {
             if(model->getRefShapes().size()) {
                 model->getRefShapes()[0]->mesh->genBuffers();
@@ -363,7 +363,7 @@ void fgGfxMain::render(void) {
     }
     fgGLError();
     m_mainWindow->clearColor();
-    fgResourceManager *rm = NULL;
+    CResourceManager *rm = NULL;
     static int a[10] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 #if defined(FG_USING_SDL2)
     const Uint8 *state = SDL_GetKeyboardState(NULL);
@@ -379,7 +379,7 @@ void fgGfxMain::render(void) {
         return;
 
     }
-    rm = (fgResourceManager *)m_textureMgr->getResourceManager();
+    rm = (CResourceManager *)m_textureMgr->getResourceManager();
     if(!rm) {
         FG_LOG_ERROR("Cant access resource manager.");
         return;
@@ -466,16 +466,16 @@ void fgGfxMain::render(void) {
             g_debugProfiling->begin("GFX::drawSkyBoxTexResGet");
         }
 #endif  
-        static fgResource *pResourceX = NULL;
+        static CResource *pResourceX = NULL;
         if(!pResourceX)
-            pResourceX = static_cast<fgResourceManager *>(m_pResourceMgr)->get("PurpleNebulaCube");
+            pResourceX = static_cast<CResourceManager *>(m_pResourceMgr)->get("PurpleNebulaCube");
 #if defined(FG_DEBUG)
         if(g_fgDebugConfig.isDebugProfiling) {
             g_debugProfiling->end("GFX::drawSkyBoxTexResGet");
         }
 #endif
         if(pResourceX->getResourceType() == FG_RESOURCE_TEXTURE) {
-            fgGfxTexture *pTexture = static_cast<fgGfxTexture *>(pResourceX);
+            fg::gfx::CTexture *pTexture = static_cast<fg::gfx::CTexture *>(pResourceX);
             if(pTexture) {
                 fgGfxTextureID &texID = pTexture->getRefGfxID();
 
@@ -616,8 +616,8 @@ void fgGfxMain::render(void) {
     m_2DScene->render();
 
     // #FIXME ! TOTAL FUBAR SITUATION ! OMG ! OH MY !
-    fgGfxMVPMatrix mvp_lol;
-    fgGfxMVPMatrix *MVP = &mvp_lol;
+    fg::gfx::CMVPMatrix mvp_lol;
+    fg::gfx::CMVPMatrix *MVP = &mvp_lol;
     MVP->identity();
     MVP->setOrtho(0, (float)m_mainWindow->getWidth(), (float)m_mainWindow->getHeight(), 0.0f);
     MVP->calculate(Model);
@@ -638,7 +638,7 @@ fgBool fgGfxMain::setupResourceManager(fg::base::CManager *pResourceManager) {
         return FG_FALSE;
     }
     if(!m_textureMgr)
-        m_textureMgr = new fgTextureManager(pResourceManager);
+        m_textureMgr = new fg::gfx::CTextureManager(pResourceManager);
     else
         m_textureMgr->setResourceManager(pResourceManager);
     m_pResourceMgr = pResourceManager;
@@ -651,7 +651,7 @@ fgBool fgGfxMain::setupResourceManager(fg::base::CManager *pResourceManager) {
         m_particleSystem->setSceneManager(m_2DScene);
         m_particleSystem->initialize();
     }
-    fg::base::CManager *pEventMgr = static_cast<fgResourceManager *>(m_pResourceMgr)->getEventManager();
+    fg::base::CManager *pEventMgr = static_cast<CResourceManager *>(m_pResourceMgr)->getEventManager();
     if(!pEventMgr) {
         unregisterResourceCallbacks();
         m_pEventMgr = NULL;
@@ -668,7 +668,7 @@ fgBool fgGfxMain::setupResourceManager(fg::base::CManager *pResourceManager) {
  * 
  * @return 
  */
-fgTextureManager *fgGfxMain::getTextureManager(void) const {
+fg::gfx::CTextureManager *fgGfxMain::getTextureManager(void) const {
     return m_textureMgr;
 }
 
@@ -708,7 +708,7 @@ fg::gfx::CScene2D *fgGfxMain::get2DScene(void) const {
  * 
  * @return 
  */
-fgGfxCameraAnimation *fgGfxMain::get3DSceneCamera(void) const {
+fg::gfx::CCameraAnimation *fgGfxMain::get3DSceneCamera(void) const {
     if(!m_3DScene)
         return NULL;
     return m_3DScene->getCamera();
@@ -765,7 +765,7 @@ fgBool fgGfxMain::resourceCreatedHandler(fgArgumentList * argv) {
     if(type != FG_EVENT_RESOURCE_CREATED)
         return FG_FALSE;
     fgResourceEvent *resourceEvent = (fgResourceEvent *)event;
-    fgResource *pResource = resourceEvent->resource;
+    CResource *pResource = resourceEvent->resource;
     if(!pResource)
         return FG_FALSE;
 

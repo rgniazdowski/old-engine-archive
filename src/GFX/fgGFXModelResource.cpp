@@ -17,7 +17,7 @@
  *
  */
 fg::gfx::CModelResource::CModelResource() :
-fgResource(),
+CResource(),
 m_materialOverride(NULL),
 m_modelType(FG_GFX_MODEL_RES_INVALID),
 m_isMultitextured(FG_FALSE),
@@ -32,7 +32,7 @@ m_isInterleaved(FG_TRUE) {
  *
  */
 fg::gfx::CModelResource::CModelResource(const char *path) :
-fgResource(path),
+CResource(path),
 m_materialOverride(NULL),
 m_modelType(FG_GFX_MODEL_RES_INVALID),
 m_isMultitextured(FG_FALSE),
@@ -46,7 +46,7 @@ m_isInterleaved(FG_TRUE) {
  *
  */
 fg::gfx::CModelResource::CModelResource(std::string& path) :
-fgResource(path),
+CResource(path),
 m_materialOverride(NULL),
 m_modelType(FG_GFX_MODEL_RES_INVALID),
 m_isMultitextured(FG_FALSE),
@@ -61,7 +61,7 @@ m_isInterleaved(FG_TRUE) {
  * just resets base class attributes
  */
 void fg::gfx::CModelResource::clear(void) {
-    fgResource::clear();
+    CResource::clear();
     m_materialOverride = NULL;
     m_modelType = FG_GFX_MODEL_RES_INVALID;
     m_isTextured = FG_FALSE;
@@ -122,24 +122,24 @@ fgBool fg::gfx::CModelResource::_loadOBJ(void) {
         if(shape->material) {
             m_numMaterials++;
             if(m_pManager) {
-                fgResource *tex = NULL;
+                CResource *tex = NULL;
                 // Ambient texture handle lookup
-                tex = ((fgResourceManager *)m_pManager)->request(shape->material->ambientTexName);
+                tex = ((CResourceManager *)m_pManager)->request(shape->material->ambientTexName);
                 if(tex) {
                     shape->material->ambientTexHandle = tex->getHandle();
                 }
                 // Diffuse texture handle lookup
-                tex = ((fgResourceManager *)m_pManager)->request(shape->material->diffuseTexName);
+                tex = ((CResourceManager *)m_pManager)->request(shape->material->diffuseTexName);
                 if(tex) {
                     shape->material->diffuseTexHandle = tex->getHandle();
                 }
                 // Specular texture handle lookup
-                tex = ((fgResourceManager *)m_pManager)->request(shape->material->specularTexName);
+                tex = ((CResourceManager *)m_pManager)->request(shape->material->specularTexName);
                 if(tex) {
                     shape->material->specularTexHandle = tex->getHandle();
                 }
                 // Normal texture handle lookup
-                tex = ((fgResourceManager *)m_pManager)->request(shape->material->normalTexName);
+                tex = ((CResourceManager *)m_pManager)->request(shape->material->normalTexName);
                 if(tex) {
                     shape->material->normalTexHandle = tex->getHandle();
                 }

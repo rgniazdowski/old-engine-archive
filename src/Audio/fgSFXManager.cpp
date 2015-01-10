@@ -20,14 +20,14 @@
 /**
  * 
  */
-fgSFXManager::~fgSFXManager() {
-    fgSFXManager::destroy();
+fg::sfx::CSfxManager::~CSfxManager() {
+    CSfxManager::destroy();
 }
 
 /**
  * 
  */
-fgSFXManager::fgSFXManager(fg::base::CManager *pResourceMgr) :
+fg::sfx::CSfxManager::CSfxManager(fg::base::CManager *pResourceMgr) :
 m_sfxVolume(0),
 m_musVolume(0),
 m_pResourceMgr(NULL) {
@@ -39,7 +39,7 @@ m_pResourceMgr(NULL) {
 /**
  * 
  */
-void fgSFXManager::clear() {
+void fg::sfx::CSfxManager::clear() {
     m_managerType = FG_MANAGER_SOUND;
 }
 
@@ -48,7 +48,7 @@ void fgSFXManager::clear() {
  * @param nameTag
  * @return 
  */
-fgAudioBase *fgSFXManager::get(const char *nameTag) {
+fg::sfx::base::CAudio *fg::sfx::CSfxManager::get(const char *nameTag) {
     if(!nameTag)
         return NULL;
     return get(std::string(nameTag));
@@ -59,19 +59,19 @@ fgAudioBase *fgSFXManager::get(const char *nameTag) {
  * @param nameTag
  * @return 
  */
-fgAudioBase *fgSFXManager::get(const std::string& nameTag) {
+fg::sfx::base::CAudio *fg::sfx::CSfxManager::get(const std::string& nameTag) {
     if(!m_pResourceMgr)
         return NULL;
-    fgResource *pResource = static_cast<fgResourceManager *>(m_pResourceMgr)->get(nameTag);
+    CResource *pResource = static_cast<CResourceManager *>(m_pResourceMgr)->get(nameTag);
     if(!pResource)
         return NULL;
-    fgAudioBase *pAudio = NULL;
+    base::CAudio *pAudio = NULL;
     if(pResource->getResourceType() == FG_RESOURCE_MUSIC) {
-        fgMusicResource *music = static_cast<fgMusicResource *>(pResource);
-        pAudio = static_cast<fgAudioBase *>(music);
+        fg::sfx::CMusic *music = static_cast<fg::sfx::CMusic*>(pResource);
+        pAudio = static_cast<base::CAudio *>(music);
     } else if(pResource->getResourceType() == FG_RESOURCE_SOUND) {
-        fgSoundResource *sound = static_cast<fgSoundResource *>(pResource);
-        pAudio = static_cast<fgAudioBase *>(sound);
+        fg::sfx::CSound *sound = static_cast<fg::sfx::CSound*>(pResource);
+        pAudio = static_cast<base::CAudio *>(sound);
     }    
     return pAudio;
 }
@@ -81,19 +81,19 @@ fgAudioBase *fgSFXManager::get(const std::string& nameTag) {
  * @param soundHandle
  * @return 
  */
-fgAudioBase *fgSFXManager::get(const fgResourceHandle& soundHandle) {
+fg::sfx::base::CAudio *fg::sfx::CSfxManager::get(const fgResourceHandle& soundHandle) {
     if(!m_pResourceMgr)
         return NULL;
-    fgResource *pResource = static_cast<fgResourceManager *>(m_pResourceMgr)->get(soundHandle);
+    CResource *pResource = static_cast<CResourceManager *>(m_pResourceMgr)->get(soundHandle);
     if(!pResource)
         return NULL;
-    fgAudioBase *pAudio = NULL;
+    fg::sfx::base::CAudio *pAudio = NULL;
     if(pResource->getResourceType() == FG_RESOURCE_MUSIC) {
-        fgMusicResource *music = static_cast<fgMusicResource *>(pResource);
-        pAudio = static_cast<fgAudioBase *>(music);
+        fg::sfx::CMusic *music = static_cast<fg::sfx::CMusic *>(pResource);
+        pAudio = static_cast<base::CAudio *>(music);
     } else if(pResource->getResourceType() == FG_RESOURCE_SOUND) {
-        fgSoundResource *sound = static_cast<fgSoundResource *>(pResource);
-        pAudio = static_cast<fgAudioBase *>(sound);
+        fg::sfx::CSound *sound = static_cast<fg::sfx::CSound *>(pResource);
+        pAudio = static_cast<base::CAudio *>(sound);
     }
     return pAudio;
 }
@@ -103,7 +103,7 @@ fgAudioBase *fgSFXManager::get(const fgResourceHandle& soundHandle) {
  * @param info
  * @return 
  */
-fgAudioBase *fgSFXManager::request(const char *info) {
+fg::sfx::base::CAudio *fg::sfx::CSfxManager::request(const char *info) {
     return request(std::string(info));
 }
 
@@ -112,19 +112,21 @@ fgAudioBase *fgSFXManager::request(const char *info) {
  * @param info
  * @return 
  */
-fgAudioBase *fgSFXManager::request(const std::string& info) {
+fg::sfx::base::CAudio *fg::sfx::CSfxManager::request(const std::string& info) {
     if(!m_pResourceMgr)
         return NULL;
-    fgResource *pResource = static_cast<fgResourceManager *>(m_pResourceMgr)->request(info);
+    CResource *pResource = static_cast<CResourceManager *>(m_pResourceMgr)->request(info);
     if(!pResource)
         return NULL;
-    fgAudioBase *pAudio = NULL;
+    fg::sfx::base::CAudio *pAudio = NULL;
     if(pResource->getResourceType() == FG_RESOURCE_MUSIC) {
-        fgMusicResource *music = static_cast<fgMusicResource *>(pResource);
-        pAudio = static_cast<fgAudioBase *>(music);
+        // Need two step casting because the AudioBase is virtual
+        fg::sfx::CMusic* music = static_cast<fg::sfx::CMusic *>(pResource);
+        pAudio = static_cast<fg::sfx::base::CAudio *>(music);
     } else if(pResource->getResourceType() == FG_RESOURCE_SOUND) {
-        fgSoundResource *sound = static_cast<fgSoundResource *>(pResource);
-        pAudio = static_cast<fgAudioBase *>(sound);
+        // Need two step casting because the AudioBase is virtual
+        fg::sfx::CSound *sound = static_cast<fg::sfx::CSound *>(pResource);
+        pAudio = static_cast<fg::sfx::base::CAudio *>(sound);
     }
     return pAudio;
 }
@@ -133,8 +135,9 @@ fgAudioBase *fgSFXManager::request(const std::string& info) {
  * 
  * @param pResourceMgr
  */
-void fgSFXManager::setResourceManager(fg::base::CManager *pResourceMgr) {
+void fg::sfx::CSfxManager::setResourceManager(fg::base::CManager *pResourceMgr) {
     if(pResourceMgr) {
+        // fgSfxManager
         if(pResourceMgr->getManagerType() == FG_MANAGER_RESOURCE)
             m_pResourceMgr = pResourceMgr;
     }
@@ -144,7 +147,7 @@ void fgSFXManager::setResourceManager(fg::base::CManager *pResourceMgr) {
  * 
  * @return 
  */
-fgBool fgSFXManager::initialize(void) {
+fgBool fg::sfx::CSfxManager::initialize(void) {
     if(m_init)
         return FG_TRUE;
     m_managerType = FG_MANAGER_SOUND;
@@ -197,7 +200,7 @@ fgBool fgSFXManager::initialize(void) {
  * 
  * @return 
  */
-fgBool fgSFXManager::destroy(void) {
+fgBool fg::sfx::CSfxManager::destroy(void) {
     if(!m_init)
         return FG_FALSE;
     stopAll();
@@ -214,7 +217,7 @@ fgBool fgSFXManager::destroy(void) {
  * 
  * @param volume
  */
-void fgSFXManager::setSfxVolume(fgSFXManager::volume_type volume) {
+void fg::sfx::CSfxManager::setSfxVolume(CSfxManager::volume_type volume) {
     m_sfxVolume = volume;
 #if defined(FG_USING_MARMALADE)
     if(m_sfxVolume < 0.0f)
@@ -232,7 +235,7 @@ void fgSFXManager::setSfxVolume(fgSFXManager::volume_type volume) {
 /**
  * 
  */
-void fgSFXManager::applySfxVolume(void) {
+void fg::sfx::CSfxManager::applySfxVolume(void) {
 #if defined(FG_USING_MARMALADE_SOUND)
     s3eResult result = s3eSoundSetInt(S3E_SOUND_VOLUME, int(m_sfxVolume * S3E_SOUND_MAX_VOLUME * 0.9f));
     if(S3E_RESULT_SUCCESS != result) {
@@ -246,7 +249,7 @@ void fgSFXManager::applySfxVolume(void) {
 /**
  * 
  */
-void fgSFXManager::stopAll(void) {
+void fg::sfx::CSfxManager::stopAll(void) {
 #if defined(FG_USING_MARMALADE_SOUND)
     s3eSoundStopAllChannels();
 #elif defined(FG_USING_SDL_MIXER)
@@ -259,7 +262,7 @@ void fgSFXManager::stopAll(void) {
  * 
  * @param volume
  */
-void fgSFXManager::setMusicVolume(fgSFXManager::volume_type volume) {
+void fg::sfx::CSfxManager::setMusicVolume(CSfxManager::volume_type volume) {
     m_musVolume = volume;
 #if defined(FG_USING_MARMALADE)
     if(m_musVolume < 0.0f)
@@ -276,7 +279,7 @@ void fgSFXManager::setMusicVolume(fgSFXManager::volume_type volume) {
 /**
  * 
  */
-void fgSFXManager::applyMusicVolume() {
+void fg::sfx::CSfxManager::applyMusicVolume() {
 #if defined(FG_USING_MARMALADE_AUDIO)
     s3eResult result = s3eAudioSetInt(S3E_AUDIO_VOLUME, int(m_musVolume * S3E_AUDIO_MAX_VOLUME * 0.85f));
 #elif defined(FG_USING_SDL_MIXER)
@@ -289,8 +292,8 @@ void fgSFXManager::applyMusicVolume() {
  * @param name
  * @return 
  */
-fgBool fgSFXManager::play(const char *name) {
-    fgAudioBase *pAudio = request(name);
+fgBool fg::sfx::CSfxManager::play(const char *name) {
+    base::CAudio *pAudio = request(name);
     if(!pAudio)
         return FG_FALSE;
     pAudio->play();
@@ -302,8 +305,8 @@ fgBool fgSFXManager::play(const char *name) {
  * @param name
  * @return 
  */
-fgBool fgSFXManager::play(const std::string &name) {
-    fgAudioBase *pAudio = request(name);
+fgBool fg::sfx::CSfxManager::play(const std::string &name) {
+    base::CAudio *pAudio = request(name);
     if(!pAudio)
         return FG_FALSE;
     pAudio->play();
@@ -315,8 +318,8 @@ fgBool fgSFXManager::play(const std::string &name) {
  * @param soundHandle
  * @return 
  */
-fgBool fgSFXManager::play(const fgResourceHandle& soundHandle) {
-    fgAudioBase *pAudio = get(soundHandle);
+fgBool fg::sfx::CSfxManager::play(const fgResourceHandle& soundHandle) {
+    base::CAudio *pAudio = get(soundHandle);
     if(!pAudio)
         return FG_FALSE;
     pAudio->play();
@@ -328,8 +331,8 @@ fgBool fgSFXManager::play(const fgResourceHandle& soundHandle) {
  * @param name
  * @return 
  */
-fgBool fgSFXManager::pause(const char *name) {
-    fgAudioBase *pAudio = request(name);
+fgBool fg::sfx::CSfxManager::pause(const char *name) {
+    base::CAudio *pAudio = request(name);
     if(!pAudio)
         return FG_FALSE;
     pAudio->pause();
@@ -341,8 +344,8 @@ fgBool fgSFXManager::pause(const char *name) {
  * @param name
  * @return 
  */
-fgBool fgSFXManager::pause(const std::string &name) {
-    fgAudioBase *pAudio = request(name);
+fgBool fg::sfx::CSfxManager::pause(const std::string &name) {
+    base::CAudio *pAudio = request(name);
     if(!pAudio)
         return FG_FALSE;
     pAudio->pause();
@@ -354,8 +357,8 @@ fgBool fgSFXManager::pause(const std::string &name) {
  * @param soundHandle
  * @return 
  */
-fgBool fgSFXManager::pause(const fgResourceHandle& soundHandle) {
-    fgAudioBase *pAudio = get(soundHandle);
+fgBool fg::sfx::CSfxManager::pause(const fgResourceHandle& soundHandle) {
+    base::CAudio *pAudio = get(soundHandle);
     if(!pAudio)
         return FG_FALSE;
     pAudio->pause();
@@ -367,8 +370,8 @@ fgBool fgSFXManager::pause(const fgResourceHandle& soundHandle) {
  * @param name
  * @return 
  */
-fgBool fgSFXManager::resume(const char *name) {
-    fgAudioBase *pAudio = request(name);
+fgBool fg::sfx::CSfxManager::resume(const char *name) {
+    base::CAudio *pAudio = request(name);
     if(!pAudio)
         return FG_FALSE;
     pAudio->resume();
@@ -380,8 +383,8 @@ fgBool fgSFXManager::resume(const char *name) {
  * @param name
  * @return 
  */
-fgBool fgSFXManager::resume(const std::string &name) {
-    fgAudioBase *pAudio = request(name);
+fgBool fg::sfx::CSfxManager::resume(const std::string &name) {
+    base::CAudio *pAudio = request(name);
     if(!pAudio)
         return FG_FALSE;
     pAudio->resume();
@@ -393,8 +396,8 @@ fgBool fgSFXManager::resume(const std::string &name) {
  * @param soundHandle
  * @return 
  */
-fgBool fgSFXManager::resume(const fgResourceHandle& soundHandle) {
-    fgAudioBase *pAudio = get(soundHandle);
+fgBool fg::sfx::CSfxManager::resume(const fgResourceHandle& soundHandle) {
+    base::CAudio *pAudio = get(soundHandle);
     if(!pAudio)
         return FG_FALSE;
     pAudio->resume();
@@ -406,8 +409,8 @@ fgBool fgSFXManager::resume(const fgResourceHandle& soundHandle) {
  * @param name
  * @return 
  */
-fgBool fgSFXManager::rewind(const char *name) {
-    fgAudioBase *pAudio = request(name);
+fgBool fg::sfx::CSfxManager::rewind(const char *name) {
+    base::CAudio *pAudio = request(name);
     if(!pAudio)
         return FG_FALSE;
     pAudio->rewind();
@@ -419,8 +422,8 @@ fgBool fgSFXManager::rewind(const char *name) {
  * @param name
  * @return 
  */
-fgBool fgSFXManager::rewind(const std::string &name) {
-    fgAudioBase *pAudio = request(name);
+fgBool fg::sfx::CSfxManager::rewind(const std::string &name) {
+    base::CAudio *pAudio = request(name);
     if(!pAudio)
         return FG_FALSE;
     pAudio->rewind();
@@ -432,8 +435,8 @@ fgBool fgSFXManager::rewind(const std::string &name) {
  * @param soundHandle
  * @return 
  */
-fgBool fgSFXManager::rewind(const fgResourceHandle& soundHandle) {
-    fgAudioBase *pAudio = get(soundHandle);
+fgBool fg::sfx::CSfxManager::rewind(const fgResourceHandle& soundHandle) {
+    base::CAudio *pAudio = get(soundHandle);
     if(!pAudio)
         return FG_FALSE;
     pAudio->rewind();
@@ -445,8 +448,8 @@ fgBool fgSFXManager::rewind(const fgResourceHandle& soundHandle) {
  * @param name
  * @return 
  */
-fgBool fgSFXManager::stop(const char *name) {
-    fgAudioBase *pAudio = request(name);
+fgBool fg::sfx::CSfxManager::stop(const char *name) {
+    base::CAudio *pAudio = request(name);
     if(!pAudio)
         return FG_FALSE;
     pAudio->stop();
@@ -458,8 +461,8 @@ fgBool fgSFXManager::stop(const char *name) {
  * @param name
  * @return 
  */
-fgBool fgSFXManager::stop(const std::string &name) {
-    fgAudioBase *pAudio = request(name);
+fgBool fg::sfx::CSfxManager::stop(const std::string &name) {
+    base::CAudio *pAudio = request(name);
     if(!pAudio)
         return FG_FALSE;
     pAudio->stop();
@@ -471,8 +474,8 @@ fgBool fgSFXManager::stop(const std::string &name) {
  * @param soundHandle
  * @return 
  */
-fgBool fgSFXManager::stop(const fgResourceHandle& soundHandle) {
-    fgAudioBase *pAudio = get(soundHandle);
+fgBool fg::sfx::CSfxManager::stop(const fgResourceHandle& soundHandle) {
+    base::CAudio *pAudio = get(soundHandle);
     if(!pAudio)
         return FG_FALSE;
     pAudio->stop();
@@ -484,8 +487,8 @@ fgBool fgSFXManager::stop(const fgResourceHandle& soundHandle) {
  * @param name
  * @return 
  */
-fgBool fgSFXManager::isPlaying(const char *name) {
-    fgAudioBase *pAudio = request(name);
+fgBool fg::sfx::CSfxManager::isPlaying(const char *name) {
+    base::CAudio *pAudio = request(name);
     if(!pAudio)
         return FG_FALSE;
     return pAudio->isPlaying();
@@ -496,8 +499,8 @@ fgBool fgSFXManager::isPlaying(const char *name) {
  * @param name
  * @return 
  */
-fgBool fgSFXManager::isPlaying(const std::string &name) {
-    fgAudioBase *pAudio = request(name);
+fgBool fg::sfx::CSfxManager::isPlaying(const std::string &name) {
+    base::CAudio *pAudio = request(name);
     if(!pAudio)
         return FG_FALSE;
     return pAudio->isPlaying();
@@ -508,8 +511,8 @@ fgBool fgSFXManager::isPlaying(const std::string &name) {
  * @param soundHandle
  * @return 
  */
-fgBool fgSFXManager::isPlaying(const fgResourceHandle& soundHandle) {
-    fgAudioBase *pAudio = get(soundHandle);
+fgBool fg::sfx::CSfxManager::isPlaying(const fgResourceHandle& soundHandle) {
+    base::CAudio *pAudio = get(soundHandle);
     if(!pAudio)
         return FG_FALSE;
     return pAudio->isPlaying();
@@ -520,8 +523,8 @@ fgBool fgSFXManager::isPlaying(const fgResourceHandle& soundHandle) {
  * @param name
  * @return 
  */
-fgBool fgSFXManager::isPaused(const char *name) {
-    fgAudioBase *pAudio = request(name);
+fgBool fg::sfx::CSfxManager::isPaused(const char *name) {
+    base::CAudio *pAudio = request(name);
     if(!pAudio)
         return FG_FALSE;
     return pAudio->isPaused();
@@ -532,8 +535,8 @@ fgBool fgSFXManager::isPaused(const char *name) {
  * @param name
  * @return 
  */
-fgBool fgSFXManager::isPaused(const std::string &name) {
-    fgAudioBase *pAudio = request(name);
+fgBool fg::sfx::CSfxManager::isPaused(const std::string &name) {
+    base::CAudio *pAudio = request(name);
     if(!pAudio)
         return FG_FALSE;
     pAudio->isPaused();
@@ -545,8 +548,8 @@ fgBool fgSFXManager::isPaused(const std::string &name) {
  * @param soundHandle
  * @return 
  */
-fgBool fgSFXManager::isPaused(const fgResourceHandle& soundHandle) {
-    fgAudioBase *pAudio = get(soundHandle);
+fgBool fg::sfx::CSfxManager::isPaused(const fgResourceHandle& soundHandle) {
+    base::CAudio *pAudio = get(soundHandle);
     if(!pAudio)
         return FG_FALSE;
     pAudio->isPaused();

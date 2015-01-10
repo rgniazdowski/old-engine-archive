@@ -46,10 +46,10 @@ namespace fg {
         private:
             /// Pointer to the splash texture to display as the background
             /// Please note that this textures need to be uploaded to the GFX
-            fgTextureResource *m_pSplashTex;
+            CTextureResource *m_pSplashTex;
             /// Pointer to the progress texture - used to draw the simple bar
             /// This can be NULL - if so, no progress bar will be displayed
-            fgTextureResource *m_pProgressTex;
+            CTextureResource *m_pProgressTex;
             /// Pointer to the currently used program -- needed to set MVP
             CShaderProgram *m_pProgram;
             /// Pointer to the main gfx window object
@@ -58,7 +58,7 @@ namespace fg {
             /// Probably passed down from GFX::MAIN
             CContext *m_pContext;
             /// Main Model-Projection-View matrix to use with shader
-            fgGfxMVPMatrix m_mvp;
+            CMVPMatrix m_mvp;
             /// 4x4 matrix to hold translation and scale transformations
             fgMatrix4f m_mat;
             /// Progress of the loading - from 0 to 100
@@ -84,14 +84,14 @@ namespace fg {
              * 
              * @param pSplashTex
              */
-            void setSplashTexture(fgTextureResource *pSplashTex) {
+            void setSplashTexture(CTextureResource *pSplashTex) {
                 m_pSplashTex = pSplashTex;
             }
             /**
              * 
              * @param pProgressTex
              */
-            void setProgressTexture(fgTextureResource *pProgressTex) {
+            void setProgressTexture(CTextureResource *pProgressTex) {
                 m_pProgressTex = pProgressTex;
             }
             /**

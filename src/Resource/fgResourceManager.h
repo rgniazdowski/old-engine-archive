@@ -12,7 +12,8 @@
 
 #ifndef FG_INC_RESOURCE_MANAGER
     #define FG_INC_RESOURCE_MANAGER
-
+    #define FG_INC_RESOURCE_MANAGER_BLOCK
+    
     #include "fgDataManagerBase.h"
     #include "fgResource.h"
     #include "fgResourceGroup.h"
@@ -27,35 +28,49 @@
         #define FG_RHANDLE fgResourceHandle
     #endif
 
-class fgResourceManager;
+class CResourceManager;
 
     #define FG_TAG_RESOURCE_MANAGER_NAME	"ResourceMgr"
 //#define FG_TAG_MANAGER_BASE_ID		20 //#FIXME - something automatic maybe?
-    #define FG_TAG_RESOURCE_MANAGER		FG_TAG_TYPE(fgResourceManager)
+    #define FG_TAG_RESOURCE_MANAGER		FG_TAG_TYPE(CResourceManager)
 
 //FG_TAG_TEMPLATE(fgResourceManager, FG_TAG_MANAGER_BASE_NAME, FG_TAG_MANAGER_BASE_ID);
-FG_TAG_TEMPLATE_ID_AUTO(fgResourceManager, FG_TAG_RESOURCE_MANAGER_NAME);
+FG_TAG_TEMPLATE_ID_AUTO(CResourceManager, FG_TAG_RESOURCE_MANAGER_NAME);
 
 // Special handle type for manager base
 typedef FG_TAG_RESOURCE_MANAGER fgResourceManagerTag;
 
     #define FG_MANAGER_RESOURCE     0x00000020
 
-//
-// The resource manager handles all the external resources. It takes care of the memory
-// usage and destroys all unused data. Its very convenient as after pushing resource into
-// the manager there's no additional
-//
 
-class fgResourceManager : public fgDataManagerBase<fgResource*, fgResourceHandle, fgResourceManagerTag> {
-    friend class fgTextureManager;
-public:
-    typedef fgDataManagerBase<fgResource*, fgResourceHandle, fgResourceManagerTag> base_type;
-    typedef fgResourceHandle handle_type;
-    typedef fgResourceManagerTag tag_type;
+
+namespace fg {
+    namespace gfx {
+        class CTextureManager;
+    }
+}
+
+/**
+ * The resource manager handles all the external resources. It takes care of the memory
+ * usage and destroys all unused data. Its very convenient as after pushing resource into
+ * the manager there's no additional
+ *
+ */
+class CResourceManager : public fgDataManagerBase<CResource*, fgResourceHandle, fgResourceManagerTag> {
+    friend class fg::gfx::CTextureManager;
     
+public:
+    ///
+    typedef fgDataManagerBase<CResource*, fgResourceHandle, fgResourceManagerTag> base_type;
+    ///
+    typedef fgResourceHandle handle_type;
+    ///
+    typedef fgResourceManagerTag tag_type;
+
 protected:
+    ///
     typedef fg::CVector<fgResourceHandle> rmHandleVec;
+    ///
     typedef rmHandleVec::iterator rmHandleVecItor;
 
 public:
@@ -65,11 +80,11 @@ public:
      * @param pQualityMgr       Pointer to the external quality manager object. This is mandatory.
      * @param pEventMgr         Pointer to the external event manager object. This is optional. Default: NULL
      */
-    fgResourceManager(fgResourceFactory *pResourceFactory, fg::base::CManager *pQualityMgr, fg::base::CManager *pEventMgr = NULL);
+    CResourceManager(fgResourceFactory *pResourceFactory, fg::base::CManager *pQualityMgr, fg::base::CManager *pEventMgr = NULL);
     /**
      * Default destructor for resource manager
      */
-    virtual ~fgResourceManager();
+    virtual ~CResourceManager();
 
 protected:
     /**
@@ -78,10 +93,16 @@ protected:
     virtual void clear(void);
 
 public:
-    // This function will release all data and memory held by resource
-    // manager itself (including resources)
+    /**
+     * This function will release all data and memory held by resource
+     * manager itself (including resources)
+     * @return 
+     */
     fgBool destroy(void);
-    // This will pre-load any required data
+    /**
+     * This will pre-load any required data
+     * @return 
+     */
     fgBool initialize(void);
     /**
      * 
@@ -114,9 +135,16 @@ public:
     // --------------------------------------------------------------------------
     // Memory management routines
 
-    // Set maximum memory value for the used memory counter
+    /**
+     * Set maximum memory value for the used memory counter
+     * @param nMaxSize
+     * @return 
+     */
     fgBool setMaximumMemory(size_t nMaxSize);
-    // Return the maximum memory value
+    /**
+     * Return the maximum memory value
+     * @return 
+     */
     size_t getMaximumMemory(void) const {
         return m_nMaximumMemory;
     }
@@ -128,22 +156,33 @@ public:
     // access to the map or iterator causes a stack pointer fault if you access
     // the map across a dll boundary, but it's safe through the wrappers.
 
-    // Go to the begin of resource map iteration
+    /**
+     * Go to the begin of resource map iteration
+     */
     void goToBegin(void) {
         m_currentResource = getRefDataVector().begin();
     }
-    // Get pointer to the current resource (based on iterator)
-    fgResource* getCurrentResource(void) {
+    /**
+     * Get pointer to the current resource (based on iterator)
+     * @return 
+     */
+    CResource* getCurrentResource(void) {
         if(!isValid())
             return NULL;
         else
             return (*m_currentResource);
     }
-    // Is current pointer to resource valid?
+    /**
+     * Is current pointer to resource valid?
+     * @return 
+     */
     fgBool isValid(void) {
         return ((m_currentResource != getRefDataVector().end()) ? FG_TRUE : FG_FALSE);
     }
-    // Go to the next resource (iterate to next)
+    /**
+     * Go to the next resource (iterate to next)
+     * @return 
+     */
     fgBool goToNext() {
         //while((*m_currentResource) != NULL) {
         m_currentResource++;
@@ -152,11 +191,25 @@ public:
         //}
         return isValid();
     }
-    // Find next resource with given criteria (currently resource type)
+    /**
+     * Find next resource with given criteria (currently resource type)
+     * @param resType
+     * @return 
+     */
     fgBool goToNext(fgResourceType resType);
-    // Find next resource with given criteria (currently resource type)
+    /**
+     * Find next resource with given criteria (currently resource type)
+     * @param resType
+     * @param n
+     * @return 
+     */
     fgBool goToNext(const fgResourceType* resType, int n);
-    // Find next resource with given criteria (currently resource type and quality)
+    /**
+     * Find next resource with given criteria (currently resource type and quality)
+     * @param resType
+     * @param quality
+     * @return 
+     */
     fgBool goToNext(fgResourceType resType, fgQuality quality);
 
     // -----------------------------------------------------------------------
@@ -169,8 +222,8 @@ public:
     // Insert resource group into manager
     // If you pass in the pointer to resource handle, the Resource Manager
     // will provide a unique handle for you.
-    fgBool insertResource(fgResource* pResource);
-    
+    fgBool insertResource(CResource* pResource);
+
 protected:
     /**
      * Insert resource group into manager
@@ -178,13 +231,12 @@ protected:
      * @param pResource
      * @return 
      */
-    fgBool insertResourceGroup(const FG_RHANDLE& rhUniqueID, fgResource* pResource);
-
+    fgBool insertResourceGroup(const FG_RHANDLE& rhUniqueID, CResource* pResource);
     /**
      * 
      * @param pResource
      */
-    void refreshResource(fgResource *pResource);
+    void refreshResource(CResource *pResource);
 
 public:
 
@@ -193,22 +245,54 @@ public:
     // meaning that anywhere else in the code it is not allowed to remove
     // resource from the manager without handling the memory release properly
 
-    // Removes an object completely from the manager (does not free memory)
-    virtual fgBool remove(fgResource* pResource);
-    // Removes an object completely from the manager (does not free memory)
+    /**
+     * Removes an object completely from the manager (does not free memory)
+     * @param pResource
+     * @return 
+     */
+    virtual fgBool remove(CResource* pResource);
+    /**
+     * Removes an object completely from the manager (does not free memory)
+     * @param rhUniqueID
+     * @return 
+     */
     virtual fgBool remove(const FG_RHANDLE& rhUniqueID);
-    // Removes an object completely from the manager (does not free memory)
+    /**
+     * Removes an object completely from the manager (does not free memory)
+     * @param nameTag
+     * @return 
+     */
     virtual fgBool remove(const std::string& nameTag);
-    // Removes an object completely from the manager (does not free memory)
+    /**
+     * Removes an object completely from the manager (does not free memory)
+     * @param nameTag
+     * @return 
+     */
     virtual fgBool remove(const char *nameTag);
 
-    // Disposes of the resource (frees memory) - does not remove resource from the manager
-    fgBool dispose(fgResource* pResource);
-    // Disposes of the resource (frees memory) - does not remove resource from the manager
+    /**
+     * Disposes of the resource (frees memory) - does not remove resource from the manager
+     * @param pResource
+     * @return 
+     */
+    fgBool dispose(CResource* pResource);
+    /**
+     * Disposes of the resource (frees memory) - does not remove resource from the manager
+     * @param rhUniqueID
+     * @return 
+     */
     fgBool dispose(const FG_RHANDLE& rhUniqueID);
-    // Disposes of the resource (frees memory) - does not remove resource from the manager
+    /**
+     * Disposes of the resource (frees memory) - does not remove resource from the manager
+     * @param nameTag
+     * @return 
+     */
     fgBool dispose(const std::string& nameTag);
-    // Disposes of the resource (frees memory) - does not remove resource from the manager
+    /**
+     * Disposes of the resource (frees memory) - does not remove resource from the manager
+     * @param nameTag
+     * @return 
+     */
     fgBool dispose(const char *nameTag);
 
     // request resource? uses resource factory, info holds
@@ -218,16 +302,30 @@ public:
     // read it from disk (it's to similar to get, however get
     // searches for reasource only in precached data (RAM)
     // Request function uses resource factory to create resources
-    virtual fgResource* request(const std::string& info);
+    virtual CResource* request(const std::string& info);
 
-    // Request specified resource from disk
-    virtual fgResource* request(const char *info);
+    /**
+     * Request specified resource from disk
+     * @param info
+     * @return 
+     */
+    virtual CResource* request(const char *info);
 
-    // Request function uses resource factory to create resources
-    virtual fgResource* request(const std::string& info, const fgResourceType forcedType);
+    /**
+     * Request function uses resource factory to create resources
+     * @param info
+     * @param forcedType
+     * @return 
+     */
+    virtual CResource* request(const std::string& info, const fgResourceType forcedType);
 
-    // Request specified resource from disk
-    virtual fgResource* request(const char *info, const fgResourceType forcedType);
+    /**
+     * Request specified resource from disk
+     * @param info
+     * @param forcedType
+     * @return 
+     */
+    virtual CResource* request(const char *info, const fgResourceType forcedType);
 
     // Destroy functions will release all the memory for the resource, delete
     // the object, remove the resource from the manager - resource handle will
@@ -242,35 +340,35 @@ public:
     // Using GetResource tells the manager that you are about to access the
     // object.  If the resource has been disposed, it will be recreated
     // before it has been returned.
-    virtual fgResource* get(const FG_RHANDLE& rhUniqueID);
+    virtual CResource* get(const FG_RHANDLE& rhUniqueID);
 
     // Using GetResource tells the manager that you are about to access the
     // object.  If the resource has been disposed, it will be recreated
     // before it has been returned.
-    virtual fgResource* get(const std::string& nameTag);
+    virtual CResource* get(const std::string& nameTag);
 
     // Using GetResource tells the manager that you are about to access the
     // object.  If the resource has been disposed, it will be recreated
     // before it has been returned.
-    virtual fgResource* get(const char *nameTag);
+    virtual CResource* get(const char *nameTag);
 
     // Locking the resource ensures that the resource does not get managed by
     // the Resource Manager.  You can use this to ensure that a surface does not
     // get swapped out, for instance.  The resource contains a reference count
     // to ensure that numerous locks can be safely made.
     // #FIXME #TODO #P3 - locking/unlocking is based on counter - DEPRECATED.
-    fgResource* lockResource(const FG_RHANDLE& rhUniqueID);
+    CResource* lockResource(const FG_RHANDLE& rhUniqueID);
     // Lock the resource
-    fgBool lockResource(fgResource *pResource);
+    fgBool lockResource(CResource *pResource);
     // Unlocking the object let's the resource manager know that you no longer
     // need exclusive access.  When all locks have been released (the reference
     // count is 0), the object is considered safe for management again and can
     // be swapped out at the manager's discretion.  The object can be referenced
     // either by handle or by the object's pointer.
     // #FIXME #TODO #P3 - locking/unlocking is based on counter - DEPRECATED.
-    fgResource* unlockResource(const FG_RHANDLE& rhUniqueID);
+    CResource* unlockResource(const FG_RHANDLE& rhUniqueID);
     // Unlock the resource
-    fgBool unlockResource(fgResource *pResource);
+    fgBool unlockResource(CResource *pResource);
 
     // This must be called when you wish the manager to check for discardable
     // resources.  Resources will only be swapped out if the maximum allowable
@@ -280,33 +378,43 @@ public:
     fgBool checkForOverallocation(void);
 
 protected:
-    // Refresh allocated memory based on managed resources
+    /**
+     * Refresh allocated memory based on managed resources
+     */
     void refreshMemory(void);
-    // Set used memory to zero
+    /**
+     * Set used memory to zero
+     */
     inline void resetMemory(void) {
         m_nCurrentUsedMemory = 0;
     }
-    // Add given value to used memory counter
+    /**
+     * Add given value to used memory counter
+     * @param nMem
+     */
     inline void addMemory(size_t nMem) {
         m_nCurrentUsedMemory += nMem;
     }
-    // Subtract given value from used memory counter
+    /**
+     * Subtract given value from used memory counter
+     * @param nMem
+     */
     inline void removeMemory(size_t nMem) {
         m_nCurrentUsedMemory -= nMem;
     }
 
 private:
-    /// Iterator to the current resource (used for browsing through the resources' map)
+    /// Iterator to the current resource (used for browsing through the resources map)
     hmDataVecItor m_currentResource;
     /// Array holding handles to resource groups
     rmHandleVec m_resourceGroupHandles;
     ///
     fgResourceFactory *m_pResourceFactory;
-    ///
+    /// Pointer to the external Quality manager
     fg::base::CManager *m_pQualityMgr;
-    ///
+    /// Pointer to the external Event manager
     fg::base::CManager *m_pEventMgr;
-    ///
+    /// Dirent object for parsing the data directory contents
     fgDirent *m_dataDir;
     /// Size of the current used memory by the managed resources
     size_t m_nCurrentUsedMemory;
@@ -316,4 +424,5 @@ private:
     fgBool m_bResourceReserved;
 };
 
+    #undef FG_INC_RESOURCE_MANAGER_BLOCK
 #endif /* FG_INC_RESOURCE_MANAGER */

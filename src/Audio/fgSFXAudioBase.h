@@ -29,79 +29,103 @@
         #endif
     #endif
 
-/**
- * 
- */
-class fgAudioBase {
-public:
-    /**
-     * 
-     */
-    fgAudioBase() : m_volume(0),
-    m_isPaused(FG_FALSE),
-    m_isPlaying(FG_FALSE) { }
-    /**
-     * 
-     */
-    virtual ~fgAudioBase() { }
-protected:
-    ///
-    FG_SFX_VOLUME_TYPE m_volume;
-    ///
-    fgBool m_isPaused;
-    ///
-    fgBool m_isPlaying;
+namespace fg {
+    namespace sfx {
+        namespace base {
+            
+            enum Type {
+                T_NONE = 0,
+                T_SOUND = 1,
+                T_MUSIC = 2,
+                T_MANAGER = 3
+            };
 
-public:
-    virtual void play(void) = 0;
-    /**
-     * 
-     */
-    virtual void pause(void) = 0;
-    /**
-     * 
-     */
-    virtual void resume(void) = 0;
-    /**
-     * 
-     */
-    virtual void rewind(void) = 0;
-    /**
-     * 
-     */
-    virtual void stop(void) = 0;
-    /**
-     * 
-     */
-    virtual void halt(void) {
-        stop();
+            /**
+             * 
+             */
+            class CAudio {
+            public:
+                /**
+                 * 
+                 */
+                CAudio(Type _type) : m_volume(0),
+                m_isPaused(FG_FALSE),
+                m_isPlaying(FG_FALSE),
+                m_baseType(_type) { }
+                /**
+                 * 
+                 */
+                virtual ~CAudio() { }
+                
+            protected:
+                ///
+                FG_SFX_VOLUME_TYPE m_volume;
+                ///
+                fgBool m_isPaused;
+                ///
+                fgBool m_isPlaying;
+                ///
+                Type m_baseType;
+
+            public:
+                virtual void play(void) = 0;
+                /**
+                 * 
+                 */
+                virtual void pause(void) = 0;
+                /**
+                 * 
+                 */
+                virtual void resume(void) = 0;
+                /**
+                 * 
+                 */
+                virtual void rewind(void) = 0;
+                /**
+                 * 
+                 */
+                virtual void stop(void) = 0;
+                /**
+                 * 
+                 */
+                virtual void halt(void) {
+                    stop();
+                };
+                /**
+                 * 
+                 * @return 
+                 */
+                virtual fgBool isPaused(void) = 0;
+                /**
+                 * 
+                 * @return 
+                 */
+                virtual fgBool isPlaying(void) = 0;
+
+            public:
+                /**
+                 * 
+                 * @param volume
+                 */
+                virtual void setVolume(FG_SFX_VOLUME_TYPE volume) = 0;
+                /**
+                 * 
+                 * @return 
+                 */
+                FG_SFX_VOLUME_TYPE getVolume(void) const {
+                    return m_volume;
+                }
+                /**
+                 * 
+                 * @return 
+                 */
+                Type getAudioBaseType(void) const {
+                    return m_baseType;
+                }
+            };
+        };
     };
-    /**
-     * 
-     * @return 
-     */
-    virtual fgBool isPaused(void) = 0;
-    /**
-     * 
-     * @return 
-     */
-    virtual fgBool isPlaying(void) = 0;
-
-public:
-    /**
-     * 
-     * @param volume
-     */
-    virtual void setVolume(FG_SFX_VOLUME_TYPE volume) = 0;
-    /**
-     * 
-     * @return 
-     */
-    FG_SFX_VOLUME_TYPE getVolume(void) const {
-        return m_volume;
-    }
 };
-
     #undef FG_INC_SFX_AUDIO_BASE_BLOCK
 #endif	/* FG_INC_SFX_AUDIO_BASE */
 

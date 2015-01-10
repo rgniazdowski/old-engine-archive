@@ -18,7 +18,7 @@
  * Base constructor of the font resource object
  */
 fgFontResource::fgFontResource() :
-fgTextureResource(),
+CTextureResource(),
 m_fontType(FG_FONT_TYPE_TEXTURE),
 m_info(),
 m_step(0) {
@@ -30,7 +30,7 @@ m_step(0) {
  * Constructor with additional parameter (path)
  */
 fgFontResource::fgFontResource(const char *path) :
-fgTextureResource(path),
+CTextureResource(path),
 m_fontType(FG_FONT_TYPE_TEXTURE),
 m_info(),
 m_step(0) {
@@ -42,7 +42,7 @@ m_step(0) {
  * Constructor with additional parameter (path)
  */
 fgFontResource::fgFontResource(std::string& path) :
-fgTextureResource(path),
+CTextureResource(path),
 m_fontType(FG_FONT_TYPE_TEXTURE),
 m_info(),
 m_step(0) {
@@ -56,7 +56,7 @@ m_step(0) {
  */
 void fgFontResource::clear(void) {
     FG_LOG_DEBUG("fgFontResource::clear();");
-    fgTextureResource::clear();
+    CTextureResource::clear();
     m_step = 0;
     m_resType = FG_RESOURCE_FONT;
     m_fontType = FG_FONT_TYPE_TEXTURE;
@@ -68,7 +68,7 @@ void fgFontResource::clear(void) {
 fgBool fgFontResource::create(void) {
     FG_LOG_DEBUG("fgFontResource::create();");
     m_textureType = FG_TEXTURE_FONT;
-    if(!fgTextureResource::create()) {
+    if(!CTextureResource::create()) {
         // #TODO error handling / reporting
         FG_LOG::PrintError("%s(%d): texture create function has failed - in function %s.", fg::path::fileName(__FILE__), __LINE__ - 1, __FUNCTION__);
         return FG_FALSE;
@@ -137,7 +137,7 @@ fgBool fgFontResource::create(void) {
  * Destroy all loaded data including additional metadata (called with deconstructor)
  */
 void fgFontResource::destroy(void) {
-    fgTextureResource::destroy();
+    CTextureResource::destroy();
     m_info.destroy();
 }
 
@@ -155,7 +155,7 @@ fgBool fgFontResource::recreate(void) {
  */
 void fgFontResource::dispose(void) {
     FG_LOG_DEBUG("fgFontResource::~dispose();");
-    fgTextureResource::dispose();
+    CTextureResource::dispose();
     m_step = 0;
     m_info.destroy();
 }
@@ -164,7 +164,7 @@ void fgFontResource::dispose(void) {
  * Check if resource is disposed (not loaded yet or disposed after)
  */
 fgBool fgFontResource::isDisposed(void) const {
-    return fgTextureResource::isDisposed();
+    return CTextureResource::isDisposed();
 }
 
 #if 0

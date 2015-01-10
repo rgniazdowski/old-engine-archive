@@ -92,7 +92,7 @@ m_gameFreeLookCallback(NULL) {
     m_inputHandler = new fg::event::CInputHandler();
     m_joypadController = new fg::event::CJoypadController(); // #FIXME - Joypad part of input receiver?
     m_scriptSubsystem = new fgScriptSubsystem();
-    m_soundMgr = new fgSFXManager();
+    m_soundMgr = new fg::sfx::CSfxManager();
     this->setEventManager();
     m_joypadController->initialize(); // #FIXME
     registerGameCallbacks();
@@ -304,16 +304,16 @@ fgBool fgGameMain::initSubsystems(void) {
         m_resourceFactory = new fgResourceFactory();
     else
         m_resourceFactory->clear();
-    m_resourceFactory->registerResource(FG_RESOURCE_TEXTURE, &fgTextureResource::createResource);
+    m_resourceFactory->registerResource(FG_RESOURCE_TEXTURE, &fg::gfx::CTexture::createResource);
     m_resourceFactory->registerResource(FG_RESOURCE_FONT, &fgFontResource::createResource);
     m_resourceFactory->registerResource(FG_RESOURCE_GROUP, &fgResourceGroup::createResource);
     m_resourceFactory->registerResource(FG_RESOURCE_3D_MODEL, &fg::gfx::CModelResource::createResource);
     m_resourceFactory->registerResource(FG_RESOURCE_PARTICLE_EFFECT, &fgParticleEffect::createResource);
-    m_resourceFactory->registerResource(FG_RESOURCE_MUSIC, &fgMusicResource::createResource);
-    m_resourceFactory->registerResource(FG_RESOURCE_SOUND, &fgSoundResource::createResource);
+    m_resourceFactory->registerResource(FG_RESOURCE_MUSIC, &fg::sfx::CMusic::createResource);
+    m_resourceFactory->registerResource(FG_RESOURCE_SOUND, &fg::sfx::CSound::createResource);
     FG_HardwareState->deviceYield(0); // #FIXME - device yield...
     if(!m_resourceMgr)
-        m_resourceMgr = new fgResourceManager(m_resourceFactory, m_qualityMgr, this);
+        m_resourceMgr = new CResourceManager(m_resourceFactory, m_qualityMgr, this);
 #if defined(FG_USING_MARMALADE)
     m_resourceMgr->setMaximumMemory(s3eMemoryGetInt(S3E_MEMORY_FREE) - 1024 * 1024 * 10); // minus 10MB for the structures and other overheads
     m_resourceMgr->initialize();

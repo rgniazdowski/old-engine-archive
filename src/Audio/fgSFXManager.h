@@ -31,271 +31,282 @@
         #define FG_MANAGER_SOUND        0x00008000
     #endif
 
-/**
- * 
- */
-class fgSFXManager : public fg::base::CManager {
-public:
-    typedef fg::base::CManager base_type;
-    typedef FG_SFX_VOLUME_TYPE volume_type;
-private:
-    ///
-    volume_type m_sfxVolume;
-    ///
-    volume_type m_musVolume;
+namespace fg {
+    namespace sfx {
+
+        /**
+         * 
+         */
+        class CSfxManager : public fg::base::CManager {
+        public:
+            ///
+            typedef fg::base::CManager base_type;
+            ///
+            typedef FG_SFX_VOLUME_TYPE volume_type;
+
+        private:
+            ///
+            volume_type m_sfxVolume;
+            ///
+            volume_type m_musVolume;
     #if defined(FG_USING_MARMALADE)
-    fgBool m_mp3;
-    fgBool m_pcm;
+            fgBool m_mp3;
+            fgBool m_pcm;
     #endif /* FG_USING_MARMALADE */
-    ///
-    fg::base::CManager *m_pResourceMgr;
+            ///
+            fg::base::CManager *m_pResourceMgr;
 
-public:
-    /**
-     * 
-     */
-    fgSFXManager(fg::base::CManager *pResourceMgr = NULL);
-    /**
-     * 
-     */
-    virtual ~fgSFXManager();
+        public:
+            /**
+             * 
+             */
+            CSfxManager(fg::base::CManager *pResourceMgr = NULL);
+            /**
+             * 
+             */
+            virtual ~CSfxManager();
 
-protected:
-    /**
-     * 
-     * @param volume
-     */
-    virtual void clear(void);
+        protected:
+            /**
+             * 
+             * @param volume
+             */
+            virtual void clear(void);
 
-    /**
-     * 
-     * @param nameTag
-     * @return 
-     */
-    fgAudioBase *get(const char *nameTag);
-    /**
-     * 
-     * @param nameTag
-     * @return 
-     */
-    fgAudioBase *get(const std::string& nameTag);
-    /**
-     * 
-     * @param soundHandle
-     * @return 
-     */
-    fgAudioBase *get(const fgResourceHandle& soundHandle);
-    /**
-     * 
-     * @param info
-     * @return 
-     */
-    fgAudioBase *request(const char *info);
-    /**
-     * 
-     * @param info
-     * @return 
-     */
-    fgAudioBase *request(const std::string& info);
+            /**
+             * 
+             * @param nameTag
+             * @return 
+             */
+            fg::sfx::base::CAudio *get(const char *nameTag);
+            /**
+             * 
+             * @param nameTag
+             * @return 
+             */
+            fg::sfx::base::CAudio *get(const std::string& nameTag);
+            /**
+             * 
+             * @param soundHandle
+             * @return 
+             */
+            fg::sfx::base::CAudio *get(const fgResourceHandle& soundHandle);
+            
+        public:
+            /**
+             * 
+             * @param info
+             * @return 
+             */
+            fg::sfx::base::CAudio *request(const char *info);
+            /**
+             * 
+             * @param info
+             * @return 
+             */
+            fg::sfx::base::CAudio *request(const std::string& info);
 
-public:
-    /**
-     * 
-     * @param pResourceMgr
-     */
-    void setResourceManager(fg::base::CManager *pResourceMgr);
-    /**
-     * 
-     * @return 
-     */
-    fg::base::CManager *getResourceManager(void) const {
-        return m_pResourceMgr;
-    }
+        public:
+            /**
+             * 
+             * @param pResourceMgr
+             */
+            void setResourceManager(fg::base::CManager *pResourceMgr);
+            /**
+             * 
+             * @return 
+             */
+            fg::base::CManager *getResourceManager(void) const {
+                return m_pResourceMgr;
+            }
 
-public:
-    /**
-     * 
-     * @return 
-     */
-    virtual fgBool destroy(void);
-    /**
-     * 
-     * @return 
-     */
-    virtual fgBool initialize(void);
+        public:
+            /**
+             * 
+             * @return 
+             */
+            virtual fgBool destroy(void);
+            /**
+             * 
+             * @return 
+             */
+            virtual fgBool initialize(void);
 
-public:
-    /**
-     * 
-     * @param volume
-     */
-    void setSfxVolume(volume_type volume);
-    /**
-     * 
-     */
-    void applySfxVolume();
-    /**
-     * 
-     * @param volume
-     */
-    void setMusicVolume(volume_type volume);
-    /**
-     * 
-     */
-    void applyMusicVolume();
-    /**
-     * 
-     * @return 
-     */
-    volume_type getSfxVolume(void) const {
-        return m_sfxVolume;
-    }
-    /**
-     * 
-     * @return 
-     */
-    volume_type getMusicVolume(void) const {
-        return m_musVolume;
-    }
+        public:
+            /**
+             * 
+             * @param volume
+             */
+            void setSfxVolume(volume_type volume);
+            /**
+             * 
+             */
+            void applySfxVolume();
+            /**
+             * 
+             * @param volume
+             */
+            void setMusicVolume(volume_type volume);
+            /**
+             * 
+             */
+            void applyMusicVolume();
+            /**
+             * 
+             * @return 
+             */
+            volume_type getSfxVolume(void) const {
+                return m_sfxVolume;
+            }
+            /**
+             * 
+             * @return 
+             */
+            volume_type getMusicVolume(void) const {
+                return m_musVolume;
+            }
 
-    /**
-     * 
-     */
-    void stopAll(void);
+            /**
+             * 
+             */
+            void stopAll(void);
 
-    /**
-     * 
-     * @param name
-     * @return 
-     */
-    fgBool play(const char *name);
-    /**
-     * 
-     * @param name
-     * @return 
-     */
-    fgBool play(const std::string &name);
-    /**
-     * 
-     * @param soundHandle
-     * @return 
-     */
-    fgBool play(const fgResourceHandle& soundHandle);
+            /**
+             * 
+             * @param name
+             * @return 
+             */
+            fgBool play(const char *name);
+            /**
+             * 
+             * @param name
+             * @return 
+             */
+            fgBool play(const std::string &name);
+            /**
+             * 
+             * @param soundHandle
+             * @return 
+             */
+            fgBool play(const fgResourceHandle& soundHandle);
 
-    /**
-     * 
-     * @param name
-     * @return 
-     */
-    fgBool pause(const char *name);
-    /**
-     * 
-     * @param name
-     * @return 
-     */
-    fgBool pause(const std::string &name);
-    /**
-     * 
-     * @param soundHandle
-     * @return 
-     */
-    fgBool pause(const fgResourceHandle& soundHandle);
+            /**
+             * 
+             * @param name
+             * @return 
+             */
+            fgBool pause(const char *name);
+            /**
+             * 
+             * @param name
+             * @return 
+             */
+            fgBool pause(const std::string &name);
+            /**
+             * 
+             * @param soundHandle
+             * @return 
+             */
+            fgBool pause(const fgResourceHandle& soundHandle);
 
-    /**
-     * 
-     * @param name
-     * @return 
-     */
-    fgBool resume(const char *name);
-    /**
-     * 
-     * @param name
-     * @return 
-     */
-    fgBool resume(const std::string &name);
-    /**
-     * 
-     * @param soundHandle
-     * @return 
-     */
-    fgBool resume(const fgResourceHandle& soundHandle);
+            /**
+             * 
+             * @param name
+             * @return 
+             */
+            fgBool resume(const char *name);
+            /**
+             * 
+             * @param name
+             * @return 
+             */
+            fgBool resume(const std::string &name);
+            /**
+             * 
+             * @param soundHandle
+             * @return 
+             */
+            fgBool resume(const fgResourceHandle& soundHandle);
 
-    /**
-     * 
-     * @param name
-     * @return 
-     */
-    fgBool rewind(const char *name);
-    /**
-     * 
-     * @param name
-     * @return 
-     */
-    fgBool rewind(const std::string &name);
-    /**
-     * 
-     * @param soundHandle
-     * @return 
-     */
-    fgBool rewind(const fgResourceHandle& soundHandle);
+            /**
+             * 
+             * @param name
+             * @return 
+             */
+            fgBool rewind(const char *name);
+            /**
+             * 
+             * @param name
+             * @return 
+             */
+            fgBool rewind(const std::string &name);
+            /**
+             * 
+             * @param soundHandle
+             * @return 
+             */
+            fgBool rewind(const fgResourceHandle& soundHandle);
 
-    /**
-     * 
-     * @param name
-     * @return 
-     */
-    fgBool stop(const char *name);
-    /**
-     * 
-     * @param name
-     * @return 
-     */
-    fgBool stop(const std::string &name);
-    /**
-     * 
-     * @param soundHandle
-     * @return 
-     */
-    fgBool stop(const fgResourceHandle& soundHandle);
+            /**
+             * 
+             * @param name
+             * @return 
+             */
+            fgBool stop(const char *name);
+            /**
+             * 
+             * @param name
+             * @return 
+             */
+            fgBool stop(const std::string &name);
+            /**
+             * 
+             * @param soundHandle
+             * @return 
+             */
+            fgBool stop(const fgResourceHandle& soundHandle);
 
-    /**
-     * 
-     * @param name
-     * @return 
-     */
-    fgBool isPlaying(const char *name);
-    /**
-     * 
-     * @param name
-     * @return 
-     */
-    fgBool isPlaying(const std::string &name);
-    /**
-     * 
-     * @param soundHandle
-     * @return 
-     */
-    fgBool isPlaying(const fgResourceHandle& soundHandle);
+            /**
+             * 
+             * @param name
+             * @return 
+             */
+            fgBool isPlaying(const char *name);
+            /**
+             * 
+             * @param name
+             * @return 
+             */
+            fgBool isPlaying(const std::string &name);
+            /**
+             * 
+             * @param soundHandle
+             * @return 
+             */
+            fgBool isPlaying(const fgResourceHandle& soundHandle);
 
-    /**
-     * 
-     * @param name
-     * @return 
-     */
-    fgBool isPaused(const char *name);
-    /**
-     * 
-     * @param name
-     * @return 
-     */
-    fgBool isPaused(const std::string &name);
-    /**
-     * 
-     * @param soundHandle
-     * @return 
-     */
-    fgBool isPaused(const fgResourceHandle& soundHandle);
+            /**
+             * 
+             * @param name
+             * @return 
+             */
+            fgBool isPaused(const char *name);
+            /**
+             * 
+             * @param name
+             * @return 
+             */
+            fgBool isPaused(const std::string &name);
+            /**
+             * 
+             * @param soundHandle
+             * @return 
+             */
+            fgBool isPaused(const fgResourceHandle& soundHandle);
 
+        };
+
+    };
 };
 
 

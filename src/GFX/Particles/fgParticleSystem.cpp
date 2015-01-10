@@ -217,7 +217,7 @@ fgBool fg::gfx::CParticleSystem::insert(fgParticleEffect* pEffect, const std::st
         return FG_FALSE;
     if(!m_pResourceMgr)
         return FG_FALSE;
-    if(static_cast<fgResourceManager *>(m_pResourceMgr)->insert(pEffect, nameTag)) {
+    if(static_cast<CResourceManager *>(m_pResourceMgr)->insert(pEffect, nameTag)) {
         pEffect->setManaged(FG_TRUE);
         return FG_TRUE;
     }
@@ -244,7 +244,7 @@ fgBool fg::gfx::CParticleSystem::insertParticleEffect(fgParticleEffect *pEffect)
 fgParticleEffect* fg::gfx::CParticleSystem::request(const std::string& info) {
     if(!m_pResourceMgr || info.empty())
         return NULL;
-    return (fgParticleEffect *)(static_cast<fgResourceManager *>(m_pResourceMgr)->request(info));
+    return (fgParticleEffect *)(static_cast<CResourceManager *>(m_pResourceMgr)->request(info));
 }
 
 /**
@@ -257,7 +257,7 @@ fgParticleEffect* fg::gfx::CParticleSystem::request(const char *info) {
         return NULL;
     if(strlen(info) < 1)
         return NULL;
-    return (fgParticleEffect *)(static_cast<fgResourceManager *>(m_pResourceMgr)->request(info));
+    return (fgParticleEffect *)(static_cast<CResourceManager *>(m_pResourceMgr)->request(info));
 }
 
 /**
@@ -286,7 +286,7 @@ fgParticleEmitter* fg::gfx::CParticleSystem::insertParticleEmitter(const std::st
         FG_LOG_ERROR("GFX: Particle emitter '%s' is already in the Scene Manager", particleEmitterNameTag.c_str());
         return NULL;
     }
-    fgParticleEffect *pEffect = (fgParticleEffect *)(static_cast<fgResourceManager *>(m_pResourceMgr)->request(particleEffectNameTag));
+    fgParticleEffect *pEffect = (fgParticleEffect *)(static_cast<CResourceManager *>(m_pResourceMgr)->request(particleEffectNameTag));
     if(!pEffect) {
         FG_LOG_ERROR("GFX: Unable to find particle effect: '%s'", particleEffectNameTag.c_str());
         return NULL;
@@ -294,7 +294,7 @@ fgParticleEmitter* fg::gfx::CParticleSystem::insertParticleEmitter(const std::st
     if(pEffect->isDisposed()) {
         pEffect->create();
     }
-    fgTextureResource *pTexture = (fgTextureResource *)(static_cast<fgResourceManager *>(m_pResourceMgr)->request(pEffect->getTextureName()));
+    CTextureResource *pTexture = (CTextureResource *)(static_cast<CResourceManager *>(m_pResourceMgr)->request(pEffect->getTextureName()));
     if(pTexture) {
         pEffect->setTextureGfxID(pTexture->getRefGfxID());
     }
@@ -380,7 +380,7 @@ void fg::gfx::CParticleSystem::calculate(void) {
         fgVertexData *pVertexData = NULL;
         if(pDrawCall) {
             // #FIXME
-            fgTextureResource *pTexture = (fgTextureResource *)(static_cast<fgResourceManager *>(m_pResourceMgr)->request(pEffect->getTextureName()));
+            CTextureResource *pTexture = (CTextureResource *)(static_cast<CResourceManager *>(m_pResourceMgr)->request(pEffect->getTextureName()));
             if(pTexture) {
                 pEffect->setTextureGfxID(pTexture->getRefGfxID());
             }

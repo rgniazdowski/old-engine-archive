@@ -309,14 +309,14 @@ namespace fg {
             /**
              * 
              */
-            inline fgGfxCameraAnimation *getCamera(void) {
+            inline CCameraAnimation *getCamera(void) {
                 return &m_camera;
             }
             /**
              * 
              * @param pCamera
              */
-            inline void applyCamera(const fgGfxCamera* pCamera) {
+            inline void applyCamera(const CCamera* pCamera) {
                 m_camera.setEye(pCamera->getRefEye());
                 m_camera.setCenter(pCamera->getRefCenter());
                 m_camera.setUp(pCamera->getRefUp());
@@ -325,15 +325,15 @@ namespace fg {
              * 
              * @return 
              */
-            inline fgGfxMVPMatrix *getMVP(void) {
+            inline CMVPMatrix *getMVP(void) {
                 return &m_MVP;
             }
 
         private:
             /// Internal MVP matrix to use, this will set the perspective view
-            fgGfxMVPMatrix m_MVP;
+            CMVPMatrix m_MVP;
             /// Internal camera
-            fgGfxCameraAnimation m_camera;
+            CCameraAnimation m_camera;
             ///
             nodePriorityQueue m_nodeQueue;
             /// Pointer to the external resource manager - dont know if this is necessary
