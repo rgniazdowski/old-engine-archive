@@ -72,7 +72,7 @@ fg::gfx::CSceneNode *fg::gfx::CScene3D::addFromModel(const std::string& modelNam
     if(modelNameTag.empty() || nameTag.empty()) {
         return NULL;
     }
-    CResourceManager *pResourceManager = static_cast<CResourceManager *>(getResourceManager());
+    fg::resource::CResourceManager *pResourceManager = static_cast<fg::resource::CResourceManager *>(getResourceManager());
     if(!pResourceManager) {
         return NULL;
     }
@@ -94,7 +94,7 @@ fg::gfx::CSceneNode *fg::gfx::CScene3D::addFromModel(const char *modelNameTag,
     if(!modelNameTag || !nameTag) {
         return NULL;
     }
-    CResourceManager *pResourceManager = static_cast<CResourceManager *>(getResourceManager());
+    fg::resource::CResourceManager *pResourceManager = static_cast<fg::resource::CResourceManager *>(getResourceManager());
     if(!pResourceManager) {
         return NULL;
     }

@@ -1279,7 +1279,7 @@ int fgScriptSubsystem::newResourceWrapper(lua_State* L) {
         return 0;
     if(m_pResourceMgr->getManagerType() != FG_MANAGER_RESOURCE)
         return 0;
-    CResource *pResource = static_cast<CResourceManager *>(m_pResourceMgr)->request(info);
+    fg::resource::CResource *pResource = static_cast<fg::resource::CResourceManager *>(m_pResourceMgr)->request(info);
     LuaPlus::LuaObject resourceObj = state->BoxPointer(pResource);
     if(!pResource) {
         resourceObj.SetMetatable(LuaPlus::LuaObject());
@@ -1348,19 +1348,19 @@ fgBool fgScriptSubsystem::registerResourceManager(void) {
     //
     // Registering now metatables for various resource types
     //
-    typedef const char*(CResource::base_type::*getFilePathStrType)(void)const;
+    typedef const char*(fg::resource::CResource::base_type::*getFilePathStrType)(void)const;
     // Register Base Resource metatable
     LPCD::Class(m_luaState->GetCState(), fgScriptMT->getMetatableName(fgScriptMetatables::RESOURCE_MT_ID))
-            .ObjectDirect("getName", (CResource::base_type::base_type *)0, &CResource::base_type::base_type::getNameStr)
-            .ObjectDirect("isManaged", (CResource::base_type::base_type *)0, &CResource::base_type::base_type::isManaged)
+            .ObjectDirect("getName", (fg::resource::CResource::base_type::base_type *)0, &fg::resource::CResource::base_type::base_type::getNameStr)
+            .ObjectDirect("isManaged", (fg::resource::CResource::base_type::base_type *)0, &fg::resource::CResource::base_type::base_type::isManaged)
             .ObjectDirect("getFilePath",
-                          (CResource::base_type *)0,
-                          static_cast<getFilePathStrType>(&CResource::base_type::getFilePathStr))
-            .ObjectDirect("getSize", (CResource *)0, &CResource::getSize)
-            .ObjectDirect("getLastAccess", (CResource *)0, &CResource::getLastAccess)
-            .ObjectDirect("isDisposed", (CResource *)0, &CResource::isDisposed)
-            .ObjectDirect("isLocked", (CResource *)0, &CResource::isLocked)
-            .ObjectDirect("dispose", (CResource *)0, &CResource::dispose);
+                          (fg::resource::CResource::base_type *)0,
+                          static_cast<getFilePathStrType>(&fg::resource::CResource::base_type::getFilePathStr))
+            .ObjectDirect("getSize", (fg::resource::CResource *)0, &fg::resource::CResource::getSize)
+            .ObjectDirect("getLastAccess", (fg::resource::CResource *)0, &fg::resource::CResource::getLastAccess)
+            .ObjectDirect("isDisposed", (fg::resource::CResource *)0, &fg::resource::CResource::isDisposed)
+            .ObjectDirect("isLocked", (fg::resource::CResource *)0, &fg::resource::CResource::isLocked)
+            .ObjectDirect("dispose", (fg::resource::CResource *)0, &fg::resource::CResource::dispose);
     //.MetatableFunction("__gc", &fgScriptSubsystem::managedResourceGCEvent); // #DELETE
 
     // Register Texture Resource metatable

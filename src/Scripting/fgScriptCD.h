@@ -308,8 +308,8 @@ namespace LPCD {
      * fgResource pointer parameter *
      **************************************************************************/
 
-    template<> struct Type<CResource *> {
-        static inline void Push(lua_State* L, const CResource * value) {
+    template<> struct Type<fg::resource::CResource *> {
+        static inline void Push(lua_State* L, const fg::resource::CResource * value) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
             LuaPlus::LuaObject obj = state->BoxPointer((void*)value);
             // Can check the pointer (offset) and instead of creating new object
@@ -334,17 +334,17 @@ namespace LPCD {
             result = (bool) obj.IsUserdata();
             return result;
         }
-        static inline CResource * Get(lua_State* L, int idx) {
+        static inline fg::resource::CResource * Get(lua_State* L, int idx) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
-            CResource *pResource = (CResource *)state->UnBoxPointer(idx);
+            fg::resource::CResource *pResource = (fg::resource::CResource *)state->UnBoxPointer(idx);
             return pResource;
         }
     };
 
-    template<> struct Type<CResource *&> : public Type<CResource *> {
+    template<> struct Type<fg::resource::CResource *&> : public Type<fg::resource::CResource *> {
     };
 
-    template<> struct Type<const CResource *&> : public Type<CResource *> {
+    template<> struct Type<const fg::resource::CResource *&> : public Type<fg::resource::CResource *> {
     };
 
     /***************************************************************************

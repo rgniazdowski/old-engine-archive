@@ -14,7 +14,7 @@
     #ifndef FG_INC_RESOURCE
         #include "Resource/fgResource.h"
     #endif
-
+    
 //
 // This file will contain all basic events occurring in the game engine
 // also defines standard event structures holding info about the event
@@ -220,7 +220,7 @@ struct fgKeyEvent : fgEventBase {
  */
 struct fgResourceEvent : fgEventBase {
     fgResourceStatus status; // ?
-    CResource *resource;
+    fg::resource::CResource *resource;
 };
 
 //#define FG_EVENT_PROGRAM_INIT       23

@@ -74,7 +74,7 @@ private:
     /// Pointer to external event manager class
     fg::event::CEventManager *m_pEventMgr;
     /// Pointer to external resource manager
-    CResourceManager *m_pResourceMgr;
+    fg::resource::CResourceManager *m_pResourceMgr;
     /// GUI drawer special drawing batch
     fgGuiDrawer *m_guiDrawer;
     /// Pointer to external shader manager class
@@ -133,7 +133,7 @@ public:
     fgGuiMain(const std::string& stylesPath,
               const std::string& widgetsPath,
               fg::event::CEventManager *pEventMgr = NULL,
-              CResourceManager *pResourceMgr = NULL);
+              fg::resource::CResourceManager *pResourceMgr = NULL);
     /**
      * 
      */
@@ -218,7 +218,7 @@ public:
      * 
      * @return 
      */
-    CResourceManager *getResourceManager(void) const;
+    fg::resource::CResourceManager *getResourceManager(void) const;
     /**
      * 
      * @return 
@@ -239,7 +239,7 @@ public:
      * 
      * @param pResourceMgr
      */
-    void setResourceManager(CResourceManager *pResourceMgr);
+    void setResourceManager(fg::resource::CResourceManager *pResourceMgr);
     /**
      * 
      * @param pShaderMgr

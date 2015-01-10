@@ -25,18 +25,22 @@
     #include "Util/fgHandle.h"
     #include "Util/fgTag.h"
 
-class CResourceManager;
-class fgResourceGroup;
-class CResource;
+namespace fg {
+    namespace resource {
+        class CResourceManager;
+        class CResourceGroup;
+        class CResource;
+    };
+};
 
     #include "fgResourceFactoryTypes.h"
 
     #define FG_TAG_RESOURCE_NAME	"Resource"
 //#define FG_TAG_RESOURCE_ID		10 //#FIXME - something automatic maybe?
-    #define FG_TAG_RESOURCE		FG_TAG_TYPE(CResource)
+    #define FG_TAG_RESOURCE		FG_TAG_TYPE(fg::resource::CResource)
 
 //FG_TAG_TEMPLATE(fgResource, FG_TAG_RESOURCE_NAME, FG_TAG_RESOURCE_ID);
-FG_TAG_TEMPLATE_ID_AUTO(CResource, FG_TAG_RESOURCE_NAME);
+FG_TAG_TEMPLATE_ID_AUTO(fg::resource::CResource, FG_TAG_RESOURCE_NAME);
 
 // Special handle type for resource
 typedef FG_TAG_RESOURCE fgResourceTag;
@@ -56,9 +60,9 @@ typedef fgHandle<fgResourceTag> fgResourceHandle;
     #define FG_RESOURCE_TEXTURE_TEXT		"Texture"
     #define FG_RESOURCE_FONT_TEXT		"Font"
     #define FG_RESOURCE_SAVE_FILE_TEXT		"SaveFile"
-    //#define FG_RESOURCE_GUI_STRUCTURE_SHEET_TEXT    "GuiStructureSheet"
-    //#define FG_RESOURCE_GUI_STYLE_SHEET_TEXT        "GuiStyleSheet"
-    //#define FG_RESOURCE_SHADER_TEXT		"Shader" // #FIXME
+//#define FG_RESOURCE_GUI_STRUCTURE_SHEET_TEXT    "GuiStructureSheet"
+//#define FG_RESOURCE_GUI_STYLE_SHEET_TEXT        "GuiStyleSheet"
+//#define FG_RESOURCE_SHADER_TEXT		"Shader" // #FIXME
     #define FG_RESOURCE_SCENE_TEXT		"Scene"
     #define FG_RESOURCE_SCRIPT_TEXT		"Script"
     #define FG_RESOURCE_GROUP_TEXT		"ResourceGroup"
@@ -83,9 +87,9 @@ typedef unsigned int fgResourceType;
     #define FG_RESOURCE_TEXTURE                 0x0AB3
     #define FG_RESOURCE_FONT                    0x0AB4
     #define FG_RESOURCE_SAVE_FILE               0x0AB5
-    //#define FG_RESOURCE_GUI_STRUCTURE_SHEET     0x0AB6
-    //#define FG_RESOURCE_GUI_STYLE_SHEET         0x0AB7
-    //#define FG_RESOURCE_SHADER                  0x0AB8	// #FIXME
+//#define FG_RESOURCE_GUI_STRUCTURE_SHEET     0x0AB6
+//#define FG_RESOURCE_GUI_STYLE_SHEET         0x0AB7
+//#define FG_RESOURCE_SHADER                  0x0AB8	// #FIXME
     #define FG_RESOURCE_SCENE                   0x0AB9
     #define FG_RESOURCE_SCRIPT                  0x0ABA
     #define FG_RESOURCE_GROUP                   0x0ABB
@@ -179,185 +183,195 @@ inline fgResPriorityType _FG_RES_PRIORITY_FROM_TEXT(const char* text) {
 // #FIXME - #P3 - string obfuscation (also for error code -> text msg translations)
     #define FG_RES_PRIORITY_FROM_TEXT(text) _FG_RES_PRIORITY_FROM_TEXT(text)
 
-/*
- * Base class for resource
- */
-class CResource : public fgManagedDataFileBase<fgResourceHandle, fgQuality> {
-    friend class CResourceManager;
-    friend class fgResourceGroup;
-public:
-    typedef fgManagedDataFileBase<fgResourceHandle, fgQuality> base_type;
-    typedef fgResourceTag tag_type;
-    typedef fgResourceHandle handle_type;
-    typedef fgQuality quality_type;
-        
-public:
-    /**
-     *  Base constructor of the resource object
-     */
-    CResource();
-    /**
-     * Constructor with additional parameter (path)
-     * @param path
-     */
-    CResource(const char *path);
-    /**
-     * Constructor with additional parameter (path)
-     * @param path
-     */
-    CResource(std::string& path);
-    /**
-     * Base destructor of the resource object
-     */
-    virtual ~CResource() { }
+namespace fg {
 
-protected:
-    /**
-     * Clears the class data, this actually does not free allocated memory,
-     * just resets base class attributes
-     */
-    virtual void clear(void);
+    namespace resource {
 
-public:
-    // Create and destroy functions.  Note that the create() function of the
-    // derived class does not have to exactly match the base class.  No assumptions
-    // are made regarding parameters.
-    // create() function should simply be overloaded to call any proper loading function,
-    // which will load/interpret data from file in ROM and place it in RAM memory.
-    virtual fgBool create(void) = 0;
-    // Destroy all loaded data including additional metadata (called with deconstructor)
-    virtual void destroy(void) {
-        CResource::clear();
+        /**
+         * Base class for resource
+         */
+        class CResource : public ::fgManagedDataFileBase<fgResourceHandle, fgQuality> {
+            friend class CResourceManager;
+            friend class CResourceGroup;
+
+        public:
+            ///
+            typedef fgManagedDataFileBase<fgResourceHandle, fgQuality> base_type;
+            ///
+            typedef fgResourceTag tag_type;
+            ///
+            typedef fgResourceHandle handle_type;
+            ///
+            typedef fgQuality quality_type;
+
+        public:
+            /**
+             *  Base constructor of the resource object
+             */
+            CResource();
+            /**
+             * Constructor with additional parameter (path)
+             * @param path
+             */
+            CResource(const char *path);
+            /**
+             * Constructor with additional parameter (path)
+             * @param path
+             */
+            CResource(std::string& path);
+            /**
+             * Base destructor of the resource object
+             */
+            virtual ~CResource() { }
+
+        protected:
+            /**
+             * Clears the class data, this actually does not free allocated memory,
+             * just resets base class attributes
+             */
+            virtual void clear(void);
+
+        public:
+            // Create and destroy functions.  Note that the create() function of the
+            // derived class does not have to exactly match the base class.  No assumptions
+            // are made regarding parameters.
+            // create() function should simply be overloaded to call any proper loading function,
+            // which will load/interpret data from file in ROM and place it in RAM memory.
+            virtual fgBool create(void) = 0;
+            // Destroy all loaded data including additional metadata (called with deconstructor)
+            virtual void destroy(void) {
+                CResource::clear();
+            };
+            // Dispose and recreate must be able to discard and then completely recreate
+            // the data contained in the class with no additional parameters
+            // This functions should NOT be overloaded to have different number of parameters.
+            virtual fgBool recreate(void) = 0;
+            // Dispose completely of the all loaded data, free all memory
+            virtual void dispose(void) = 0;
+
+            // Return the size of the data actually loaded inside the class
+            virtual size_t getSize(void) const {
+                return m_size;
+            }
+            // Return true if the data exists (it's loaded and ready)
+            virtual fgBool isDisposed(void) const = 0;
+            /**
+             * 
+             * @param flags
+             */
+            inline virtual void setFlags(const char *flags) {
+                setFlags(std::string(flags));
+            }
+            /**
+             * 
+             * @param flags
+             */
+            inline virtual void setFlags(const std::string& flags) { }
+
+            // These functions set the parameters by which the sorting operator determines
+            // in what order resources are discarded
+
+            // Set the resource priority
+            inline void setPriority(fgResPriorityType priority) {
+                m_priority = priority;
+            }
+            // Get the resource priority
+            inline fgResPriorityType getPriority() const {
+                return m_priority;
+            }
+
+            // Set the resource quality
+            inline void setQuality(fgQuality quality) {
+                m_quality = quality;
+            }
+            // Get the resource quality
+            inline fgQuality getQuality() const {
+                return m_quality;
+            }
+
+            // Get the resource type id
+            inline fgResourceType getResourceType() const {
+                return m_resType;
+            }
+
+        protected:
+            /**
+             * Set the reference counter for the resource
+             * @param nCount
+             */
+            void setReferenceCount(unsigned int nCount) {
+                m_nRefCount = nCount;
+            }
+
+        public:
+
+            // Return the current hit of the reference counter for the resource
+            unsigned int getReferenceCount(void) const {
+                return m_nRefCount;
+            }
+            // Check if the resource is locked (reference counter is not zero)
+            fgBool isLocked(void) const {
+                return (m_nRefCount > 0) ? FG_TRUE : FG_FALSE;
+            }
+
+            // Set the last access time
+            void setLastAccess(time_t lastAccess) {
+                m_lastAccess = lastAccess;
+            }
+            // Return the current access time of the resource
+            time_t getLastAccess(void) const {
+                return m_lastAccess;
+            }
+
+            // The less-than operator defines how resources get sorted for discarding.
+            virtual bool operator <(CResource& container);
+            // The greater-than operator is used for comparison (eg. while sorting)
+            virtual bool operator >(CResource& container);
+
+            // Well using reference count as simple as below is not recommended, it is more difficult
+            // to handle in the end, dims the code etc., can cause many problems. Need to migrate to
+            // smart pointers... using boost or some implementation #FIXME #P3 #TODO
+        protected:
+            // Increase the reference count
+            inline unsigned int upRef(void) {
+                m_nRefCount++;
+                return m_nRefCount;
+            }
+            // Decrease the reference count
+            inline unsigned int downRef(void) {
+                if(m_nRefCount > 0) m_nRefCount--;
+                return m_nRefCount;
+            }
+            // Lock the resource (reference counter +1)
+            virtual unsigned int Lock(void) {
+                return upRef();
+            }
+            // Unlock the resource (reference counter -1)
+            virtual unsigned int Unlock(void) {
+                return downRef();
+            }
+            // Unlock completely the resource (reference counter = 0) #NOTSAFE #FIXME
+            virtual void ZeroLock(void) {
+                m_nRefCount = 0;
+            }
+        protected:
+            /// Priority of this resource
+            fgResPriorityType m_priority;
+            /// Quality of the resource
+            fgQuality m_quality;
+            /// Resource type
+            fgResourceType m_resType;
+            /// Number of references to this resource
+            unsigned int m_nRefCount;
+            /// Time of last access, may become handy #TESTME
+            time_t m_lastAccess;
+            /// Size in bytes of the loaded data
+            size_t m_size;
+            /// Is the resource loaded and ready to be used in program?
+            fgBool m_isReady;
+
+        };
     };
-    // Dispose and recreate must be able to discard and then completely recreate
-    // the data contained in the class with no additional parameters
-    // This functions should NOT be overloaded to have different number of parameters.
-    virtual fgBool recreate(void) = 0;
-    // Dispose completely of the all loaded data, free all memory
-    virtual void dispose(void) = 0;
-
-    // Return the size of the data actually loaded inside the class
-    virtual size_t getSize(void) const {
-        return m_size;
-    }
-    // Return true if the data exists (it's loaded and ready)
-    virtual fgBool isDisposed(void) const = 0;
-
-    /**
-     * 
-     * @param flags
-     */
-    inline virtual void setFlags(const char *flags) {
-        setFlags(std::string(flags));
-    }
-    /**
-     * 
-     * @param flags
-     */
-    inline virtual void setFlags(const std::string& flags) { }
-    
-    // These functions set the parameters by which the sorting operator determines
-    // in what order resources are discarded
-
-    // Set the resource priority
-    inline void setPriority(fgResPriorityType priority) {
-        m_priority = priority;
-    }
-    // Get the resource priority
-    inline fgResPriorityType getPriority() const {
-        return m_priority;
-    }
-
-    // Set the resource quality
-    inline void setQuality(fgQuality quality) {
-        m_quality = quality;
-    }
-    // Get the resource quality
-    inline fgQuality getQuality() const {
-        return m_quality;
-    }
-
-    // Get the resource type id
-    inline fgResourceType getResourceType() const {
-        return m_resType;
-    }
-
-protected:
-    /**
-     * Set the reference counter for the resource
-     * @param nCount
-     */
-    void setReferenceCount(unsigned int nCount) {
-        m_nRefCount = nCount;
-    }
-
-public:
-    
-    // Return the current hit of the reference counter for the resource
-    unsigned int getReferenceCount(void) const {
-        return m_nRefCount;
-    }
-    // Check if the resource is locked (reference counter is not zero)
-    fgBool isLocked(void) const {
-        return (m_nRefCount > 0) ? FG_TRUE : FG_FALSE;
-    }
-
-    // Set the last access time
-    void setLastAccess(time_t lastAccess) {
-        m_lastAccess = lastAccess;
-    }
-    // Return the current access time of the resource
-    time_t getLastAccess(void) const {
-        return m_lastAccess;
-    }
-
-    // The less-than operator defines how resources get sorted for discarding.
-    virtual bool operator <(CResource& container);
-    // The greater-than operator is used for comparison (eg. while sorting)
-    virtual bool operator >(CResource& container);
-
-    // Well using reference count as simple as below is not recommended, it is more difficult
-    // to handle in the end, dims the code etc., can cause many problems. Need to migrate to
-    // smart pointers... using boost or some implementation #FIXME #P3 #TODO
-protected:
-    // Increase the reference count
-    inline unsigned int upRef(void) {
-        m_nRefCount++;
-        return m_nRefCount;
-    }
-    // Decrease the reference count
-    inline unsigned int downRef(void) {
-        if(m_nRefCount > 0) m_nRefCount--;
-        return m_nRefCount;
-    }
-    // Lock the resource (reference counter +1)
-    virtual unsigned int Lock(void) {
-        return upRef();
-    }
-    // Unlock the resource (reference counter -1)
-    virtual unsigned int Unlock(void) {
-        return downRef();
-    }
-    // Unlock completely the resource (reference counter = 0) #NOTSAFE #FIXME
-    virtual void ZeroLock(void) {
-        m_nRefCount = 0;
-    }
-protected:
-    /// Priority of this resource
-    fgResPriorityType m_priority;
-    /// Quality of the resource
-    fgQuality m_quality;
-    /// Resource type
-    fgResourceType m_resType;
-    /// Number of references to this resource
-    unsigned int m_nRefCount;
-    /// Time of last access, may become handy #TESTME
-    time_t m_lastAccess;
-    /// Size in bytes of the loaded data
-    size_t m_size;
-    /// Is the resource loaded and ready to be used in program?
-    fgBool m_isReady;
-
 };
 
     #undef FG_INC_RESOURCE_BLOCK

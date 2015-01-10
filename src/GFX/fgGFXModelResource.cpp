@@ -124,22 +124,22 @@ fgBool fg::gfx::CModelResource::_loadOBJ(void) {
             if(m_pManager) {
                 CResource *tex = NULL;
                 // Ambient texture handle lookup
-                tex = ((CResourceManager *)m_pManager)->request(shape->material->ambientTexName);
+                tex = ((fg::resource::CResourceManager *)m_pManager)->request(shape->material->ambientTexName);
                 if(tex) {
                     shape->material->ambientTexHandle = tex->getHandle();
                 }
                 // Diffuse texture handle lookup
-                tex = ((CResourceManager *)m_pManager)->request(shape->material->diffuseTexName);
+                tex = ((fg::resource::CResourceManager *)m_pManager)->request(shape->material->diffuseTexName);
                 if(tex) {
                     shape->material->diffuseTexHandle = tex->getHandle();
                 }
                 // Specular texture handle lookup
-                tex = ((CResourceManager *)m_pManager)->request(shape->material->specularTexName);
+                tex = ((fg::resource::CResourceManager *)m_pManager)->request(shape->material->specularTexName);
                 if(tex) {
                     shape->material->specularTexHandle = tex->getHandle();
                 }
                 // Normal texture handle lookup
-                tex = ((CResourceManager *)m_pManager)->request(shape->material->normalTexName);
+                tex = ((fg::resource::CResourceManager *)m_pManager)->request(shape->material->normalTexName);
                 if(tex) {
                     shape->material->normalTexHandle = tex->getHandle();
                 }

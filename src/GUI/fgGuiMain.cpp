@@ -53,7 +53,7 @@ using namespace fg;
 fgGuiMain::fgGuiMain(const std::string& stylesPath,
                      const std::string& widgetsPath,
                      event::CEventManager *eventMgr,
-                     CResourceManager *resourceMgr) :
+                     resource::CResourceManager *resourceMgr) :
 m_styleMgr(NULL),
 m_widgetMgr(NULL),
 m_widgetFactory(NULL),
@@ -520,7 +520,7 @@ event::CEventManager *fgGuiMain::getEventManager(void) const {
  * 
  * @return 
  */
-CResourceManager *fgGuiMain::getResourceManager(void) const {
+fg::resource::CResourceManager *fgGuiMain::getResourceManager(void) const {
     return m_pResourceMgr;
 }
 
@@ -559,7 +559,7 @@ void fgGuiMain::setEventManager(event::CEventManager * pEventMgr) {
  * 
  * @param pResourceMgr
  */
-void fgGuiMain::setResourceManager(CResourceManager * pResourceMgr) {
+void fgGuiMain::setResourceManager(fg::resource::CResourceManager * pResourceMgr) {
     m_pResourceMgr = pResourceMgr;
     if(m_guiDrawer)
         m_guiDrawer->setResourceManager(pResourceMgr);

@@ -39,16 +39,19 @@
     #include "Resource/fgResourceFactoryTypes.h"
 
 namespace fg {
-
+    namespace resource {
+        class CResource;
+    };
+    
     namespace sfx {
 
         /**
          * 
          */
-        class CMusicResource : public CResource, public fg::sfx::base::CAudio {
+        class CMusicResource : public fg::resource::CResource, public fg::sfx::base::CAudio {
         public:
             ///
-            typedef CResource base_type;
+            typedef fg::resource::CResource base_type;
             ///
             typedef CAudio base_audio_type;
 

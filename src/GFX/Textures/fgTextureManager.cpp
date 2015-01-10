@@ -31,7 +31,7 @@ m_allInVRAM(FG_FALSE) {
         m_init = FG_FALSE;
     } else if(pResourceMgr->getManagerType() == FG_MANAGER_RESOURCE) {
         m_pResourceMgr = pResourceMgr;
-        m_pEventMgr = static_cast<CResourceManager *>(pResourceMgr)->getEventManager();
+        m_pEventMgr = static_cast<fg::resource::CResourceManager *>(pResourceMgr)->getEventManager();
         registerResourceCallbacks();
     }
     m_managerType = FG_MANAGER_TEXTURE;
@@ -125,7 +125,7 @@ void fg::gfx::CTextureManager::setResourceManager(fg::base::CManager *pResourceM
         return;
     if(pResourceMgr->getManagerType() == FG_MANAGER_RESOURCE) {
         m_pResourceMgr = pResourceMgr;
-        fg::base::CManager *pEventMgr = static_cast<CResourceManager *>(m_pResourceMgr)->getEventManager();
+        fg::base::CManager *pEventMgr = static_cast<fg::resource::CResourceManager *>(m_pResourceMgr)->getEventManager();
         if(!pEventMgr) {
             unregisterResourceCallbacks();
             m_pEventMgr = NULL;
@@ -154,7 +154,7 @@ fg::base::CManager * fg::gfx::CTextureManager::getResourceManager(void) const {
 fgGfxTextureID& fg::gfx::CTextureManager::getRefGfxID(const fgResourceHandle& texHandle) {
     if(!m_pResourceMgr)
         return m_emptyGfxID;
-    CTextureResource *pTexture = (CTextureResource *)static_cast<CResourceManager *>(m_pResourceMgr)->get(texHandle);
+    fg::gfx::CTextureResource *pTexture = (CTextureResource *)static_cast<fg::resource::CResourceManager *>(m_pResourceMgr)->get(texHandle);
     if(!pTexture) {
         m_emptyGfxID.reset();
         return m_emptyGfxID;
@@ -170,7 +170,7 @@ fgGfxTextureID& fg::gfx::CTextureManager::getRefGfxID(const fgResourceHandle& te
 fgGfxTextureID& fg::gfx::CTextureManager::getRefGfxID(const std::string& nameTag) {
     if(!m_pResourceMgr || nameTag.empty())
         return m_emptyGfxID;
-    CTextureResource *pTexture = (CTextureResource *)static_cast<CResourceManager *>(m_pResourceMgr)->get(nameTag);
+    fg::gfx::CTextureResource *pTexture = (CTextureResource *)static_cast<fg::resource::CResourceManager *>(m_pResourceMgr)->get(nameTag);
     if(!pTexture) {
         m_emptyGfxID.reset();
         return m_emptyGfxID;
@@ -186,7 +186,7 @@ fgGfxTextureID& fg::gfx::CTextureManager::getRefGfxID(const std::string& nameTag
 fgGfxTextureID& fg::gfx::CTextureManager::getRefGfxID(const char *nameTag) {
     if(!m_pResourceMgr || !nameTag)
         return m_emptyGfxID;
-    CTextureResource *pTexture = (CTextureResource *)static_cast<CResourceManager *>(m_pResourceMgr)->get(nameTag);
+    fg::gfx::CTextureResource *pTexture = (CTextureResource *)static_cast<fg::resource::CResourceManager *>(m_pResourceMgr)->get(nameTag);
     if(!pTexture) {
         m_emptyGfxID.reset();
         return m_emptyGfxID;
@@ -209,7 +209,7 @@ fgBool fg::gfx::CTextureManager::resourceCreatedHandler(fgArgumentList * argv) {
     if(type != FG_EVENT_RESOURCE_CREATED)
         return FG_FALSE;
     fgResourceEvent *resourceEvent = (fgResourceEvent *)event;
-    CResource *pResource = resourceEvent->resource;
+    fg::resource::CResource *pResource = resourceEvent->resource;
     if(!pResource)
         return FG_FALSE;
     // Some of those checks are not necessary because
@@ -244,11 +244,11 @@ fgBool fg::gfx::CTextureManager::allToVRAM(fgBool reupload) {
     // right now it's just bollocks
     //
     if(reupload) {
-        FG_LOG_DEBUG("GFX: Will now reupload textures that were previously in VRAM...");
+        FG_LOG_DEBUG("GFX: Will now re-upload textures that were previously in VRAM...");
     }
-    ((CResourceManager *)m_pResourceMgr)->goToBegin();
-    while(((CResourceManager *)m_pResourceMgr)->isValid()) {
-        CResource *resource = ((CResourceManager *)m_pResourceMgr)->getCurrentResource();
+    ((fg::resource::CResourceManager *)m_pResourceMgr)->goToBegin();
+    while(((fg::resource::CResourceManager *)m_pResourceMgr)->isValid()) {
+        fg::resource::CResource *resource = ((fg::resource::CResourceManager *)m_pResourceMgr)->getCurrentResource();
         if(!resource) {
             FG_LOG::PrintError("GFX: Loop in texture manager, resource is %p\n", resource);
             return FG_FALSE;
@@ -264,7 +264,7 @@ fgBool fg::gfx::CTextureManager::allToVRAM(fgBool reupload) {
                 force = FG_TRUE;
             fg::gfx::CTextureManager::uploadToVRAM(textureResource, force);
         }
-        ((CResourceManager *)m_pResourceMgr)->goToNext(searchTypes, 3);
+        ((fg::resource::CResourceManager *)m_pResourceMgr)->goToNext(searchTypes, 3);
     }
     m_allInVRAM = FG_TRUE;
     return result;
@@ -277,7 +277,7 @@ fgBool fg::gfx::CTextureManager::allToVRAM(fgBool reupload) {
  * @return 
  */
 fgBool fg::gfx::CTextureManager::uploadToVRAM(CTexture *texture, fgBool force) {
-    if(!((CResourceManager *)m_pResourceMgr) || !texture)
+    if(!((fg::resource::CResourceManager *)m_pResourceMgr) || !texture)
         return FG_FALSE;
     FG_HardwareState->deviceYield();
     fgResourceType resType = texture->getResourceType();
@@ -340,12 +340,12 @@ fgBool fg::gfx::CTextureManager::uploadToVRAM(const char *nameTag, fgBool force)
     if(!m_pResourceMgr)
         return FG_FALSE;
     FG_HardwareState->deviceYield();
-    CResource *resource = ((CResourceManager *)m_pResourceMgr)->get(nameTag);
+    fg::resource::CResource *resource = ((fg::resource::CResourceManager *)m_pResourceMgr)->get(nameTag);
     if(!resource)
         return FG_FALSE;
     if(resource->getResourceType() != FG_RESOURCE_TEXTURE || resource->getResourceType() != FG_RESOURCE_FONT)
         return FG_FALSE;
-    CTextureResource *texture = (CTextureResource *)resource;
+    fg::gfx::CTexture *texture = (fg::gfx::CTexture *)resource;
     return uploadToVRAM(texture, force);
 }
 
@@ -360,9 +360,9 @@ void fg::gfx::CTextureManager::allReleaseNonGFX(void) {
     // #FIXME #P1 - this needs more testing and should look quite different
     // right now it's just bollocks
     //
-    ((CResourceManager *)m_pResourceMgr)->goToBegin();
-    while(((CResourceManager *)m_pResourceMgr)->isValid()) {
-        CResource *resource = ((CResourceManager *)m_pResourceMgr)->getCurrentResource();
+    ((fg::resource::CResourceManager *)m_pResourceMgr)->goToBegin();
+    while(((fg::resource::CResourceManager *)m_pResourceMgr)->isValid()) {
+        fg::resource::CResource *resource = ((fg::resource::CResourceManager *)m_pResourceMgr)->getCurrentResource();
         if(!resource) {
             return;
             // FAIL
@@ -374,9 +374,9 @@ void fg::gfx::CTextureManager::allReleaseNonGFX(void) {
             if(fg::gfx::CPlatform::context()->isTexture(textureResource->getRefGfxID()) == GL_TRUE)
                 textureResource->setIsInVRAM(FG_TRUE);
         }
-        ((CResourceManager *)m_pResourceMgr)->goToNext(searchTypes, 3);
+        ((fg::resource::CResourceManager *)m_pResourceMgr)->goToNext(searchTypes, 3);
     }
-    ((CResourceManager *)m_pResourceMgr)->refreshMemory();
+    ((fg::resource::CResourceManager *)m_pResourceMgr)->refreshMemory();
 }
 
 /**
@@ -390,9 +390,9 @@ void fg::gfx::CTextureManager::allReleaseGFX(void) {
     // #FIXME #P1 - this needs more testing and should look quite different
     // right now it's just bollocks
     //
-    ((CResourceManager *)m_pResourceMgr)->goToBegin();
-    while(((CResourceManager *)m_pResourceMgr)->isValid()) {
-        CResource *resource = ((CResourceManager *)m_pResourceMgr)->getCurrentResource();
+    ((fg::resource::CResourceManager *)m_pResourceMgr)->goToBegin();
+    while(((fg::resource::CResourceManager *)m_pResourceMgr)->isValid()) {
+        fg::resource::CResource *resource = ((fg::resource::CResourceManager *)m_pResourceMgr)->getCurrentResource();
         if(!resource) {
             return;
         }
@@ -403,9 +403,9 @@ void fg::gfx::CTextureManager::allReleaseGFX(void) {
             fg::gfx::CPlatform::context()->deleteTexture(texGfxID);
             //textureResource->releaseNonGFX();
         }
-        ((CResourceManager *)m_pResourceMgr)->goToNext(searchTypes, 3);
+        ((fg::resource::CResourceManager *)m_pResourceMgr)->goToNext(searchTypes, 3);
     }
-    ((CResourceManager *)m_pResourceMgr)->refreshMemory();
+    ((fg::resource::CResourceManager *)m_pResourceMgr)->refreshMemory();
 }
 
 /**
@@ -437,11 +437,11 @@ fgBool fg::gfx::CTextureManager::makeTexture(CTextureResource * pTexture) {
         FG_LOG_ERROR("GFX: Cannot upload texture - texture resource is NULL");
         return FG_FALSE;
     }
-    if(!((CResourceManager *)m_pResourceMgr)->isManaged(pTexture)) {
+    if(!((fg::resource::CResourceManager *)m_pResourceMgr)->isManaged(pTexture)) {
         FG_LOG_ERROR("GFX: Cannot upload texture - texture resource is not managed by Resource Manager");
         return FG_FALSE;
     }
-    ((CResourceManager *)m_pResourceMgr)->lockResource(pTexture);
+    ((fg::resource::CResourceManager *)m_pResourceMgr)->lockResource(pTexture);
 
     if(!pTexture->getRawData() || !pTexture->hasOwnedRAM()) {
         FG_LOG_ERROR("GFX: Cannot upload texture - texture resource is disposed / empty");
@@ -519,7 +519,7 @@ fgBool fg::gfx::CTextureManager::makeTexture(CTextureResource * pTexture) {
         status = FG_FALSE;
         failedFuncs.append("glTexImage2D, ");
     }
-    ((CResourceManager *)m_pResourceMgr)->unlockResource(pTexture);
+    ((fg::resource::CResourceManager *)m_pResourceMgr)->unlockResource(pTexture);
     if(!status) {
         FG_LOG_ERROR("GFX: Errors on texture '%s' upload. Failing functions: %s", pTexture->getNameStr(), failedFuncs.substr(0, failedFuncs.length() - 2).c_str());
         failedFuncs.clear();

@@ -77,7 +77,7 @@ void fgGuiDrawer::appendText2D(fgVec2f& outTextSize,
     buf[FG_FONT_DRAW_STRING_BUF_MAX - 1] = '\0';
     
     fgGuiForeground &fg = style.getForeground();
-    CResource *resFont = static_cast<CResourceManager *>(m_pResourceMgr)->get(fg.font);
+    fg::resource::CResource *resFont = static_cast<fg::resource::CResourceManager *>(m_pResourceMgr)->get(fg.font);
     if(!resFont)
         return;
     if(resFont->getResourceType() != FG_RESOURCE_FONT)
@@ -115,7 +115,7 @@ void fgGuiDrawer::appendBackground2D(const fgVec2f &pos,
     drawCall->setComponentActive(FG_GFX_POSITION_BIT | FG_GFX_UVS_BIT | FG_GFX_COLOR_BIT);
     if(m_pResourceMgr && !background.texture.empty()) {
         // Get or request ?
-        CResource *pResource = static_cast<CResourceManager *>(m_pResourceMgr)->request(background.texture);
+        fg::resource::CResource *pResource = static_cast<fg::resource::CResourceManager *>(m_pResourceMgr)->request(background.texture);
         if(pResource) {
             if(pResource->getResourceType() == FG_RESOURCE_TEXTURE) {
                 pTexture = (fg::gfx::CTexture *)pResource;

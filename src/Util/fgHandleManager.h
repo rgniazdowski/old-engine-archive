@@ -41,7 +41,7 @@ namespace std {
     #endif /* FG_USING_MARMALADE */
 
 // HandleType HAS TO BE template of fgHandle
-template <typename DataType, typename HandleType>
+template <typename TDataType, typename THandleType>
 /**
  *
  */
@@ -60,12 +60,12 @@ protected:
     #endif
 public:
     ///
-    typedef DataType data_type;
+    typedef TDataType data_type;
     ///
     typedef std::string hashKey;
     // Type for vector storing Data pointers
-    typedef fg::CVector <DataType> hmDataVec;
-    typedef typename fg::CVector <DataType>::iterator hmDataVecItor;
+    typedef fg::CVector <TDataType> hmDataVec;
+    typedef typename fg::CVector <TDataType>::iterator hmDataVecItor;
     #ifdef FG_USING_MARMALADE
     typedef std::hash<std::string> hashFunc;
     // Type for map, assigning handle index value to string ID (case sensitive)
@@ -115,27 +115,27 @@ public:
      * @param pResource
      * @return 
      */
-    fgBool acquireHandle(HandleType& rHandle, DataType pResource);
+    fgBool acquireHandle(THandleType& rHandle, TDataType pResource);
     /**
      * 
      * @param name
      * @param rHandle
      * @return 
      */
-    fgBool setupName(const std::string& name, const HandleType& rHandle);
+    fgBool setupName(const std::string& name, const THandleType& rHandle);
     /**
      * 
      * @param name
      * @param rHandle
      * @return 
      */
-    fgBool setupName(const char* name, const HandleType& rHandle);
+    fgBool setupName(const char* name, const THandleType& rHandle);
     /**
      * 
      * @param handle
      * @return 
      */
-    fgBool releaseHandle(const HandleType& handle);
+    fgBool releaseHandle(const THandleType& handle);
     /**
      * 
      */
@@ -146,19 +146,19 @@ public:
      * @param handle
      * @return 
      */
-    DataType dereference(const HandleType& handle);
+    TDataType dereference(const THandleType& handle);
     /**
      * 
      * @param name
      * @return 
      */
-    DataType dereference(const std::string& name);
+    TDataType dereference(const std::string& name);
     /**
      * 
      * @param name
      * @return 
      */
-    DataType dereference(const char* name);
+    TDataType dereference(const char* name);
 
     /**
      * 
@@ -197,13 +197,13 @@ public:
      * @param pData
      * @return 
      */
-    fgBool isDataManaged(DataType pData);
+    fgBool isDataManaged(TDataType pData);
     /**
      * 
      * @param handle
      * @return 
      */
-    fgBool isHandleValid(const HandleType& handle);
+    fgBool isHandleValid(const THandleType& handle);
 };
 
 /**

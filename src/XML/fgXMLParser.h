@@ -81,7 +81,7 @@ protected:
     /// On this stack current nodes are being placed before the parser goes deeper (into the nodes children)
     std::stack<fgXMLNode *> m_parsingStack;
     /// Pointer to the interface object used for automatic parsing of the XML file (handler)
-    fgXMLDefaultHandler *m_contentHandler;
+    fg::xml::CDefaultHandler *m_contentHandler;
     
 public:
     /**
@@ -123,7 +123,7 @@ public:
      * Stores the pointer to the object for content event handling.
      * This handler is managed outside of this class.
      */
-    fgBool setContentHandler(fgXMLDefaultHandler *contentHandler) {
+    fgBool setContentHandler(fg::xml::CDefaultHandler *contentHandler) {
         if(contentHandler)
             m_contentHandler = contentHandler;
         else
@@ -135,7 +135,7 @@ public:
      * NULL if not set - no automatic parsing possible.
      * @return 
      */
-    fgXMLDefaultHandler *getContentHandler(void) const {
+    fg::xml::CDefaultHandler *getContentHandler(void) const {
         return m_contentHandler;
     }
 

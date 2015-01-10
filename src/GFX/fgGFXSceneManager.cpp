@@ -349,7 +349,7 @@ fgBool fg::gfx::CSceneManager::addNode(fgGfxSceneNodeHandle& nodeUniqueID,
             if(m_pResourceMgr) {
                 fgGfxMaterial *pMainMaterial = pNodeObject->getModel()->getMainMaterial();
                 if(pMainMaterial) {
-                    CTextureResource *pTexRes = (CTextureResource *)((CResourceManager *)m_pResourceMgr)->get(pMainMaterial->ambientTexHandle);
+                    CTextureResource *pTexRes = (CTextureResource *)((fg::resource::CResourceManager *)m_pResourceMgr)->get(pMainMaterial->ambientTexHandle);
                     if(pTexRes)
                         pDrawCall->setTexture(pTexRes->getRefGfxID());
                 }

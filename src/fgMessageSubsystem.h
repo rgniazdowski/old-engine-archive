@@ -26,6 +26,7 @@
  */
 class fgMessageSubsystem : protected fg::base::CManager, public fgSingleton<fgMessageSubsystem> {
     friend class fgSingleton<fgMessageSubsystem>;
+    
 public:
     typedef fg::base::CManager base_type;
     

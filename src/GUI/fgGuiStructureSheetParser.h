@@ -22,7 +22,7 @@
 /*
  *
  */
-class fgGuiStructureSheetParser : public fgXMLDefaultHandler {
+class fgGuiStructureSheetParser : public fg::xml::CDefaultHandler {
     friend class fgGuiWidgetManager;
     friend class fgGuiMain;
 
@@ -39,6 +39,7 @@ private:
     fgBool m_isFailure;
     ///
     int m_count;
+    
 protected:
     // Base constructor of the resource group content handler object
     fgGuiStructureSheetParser();

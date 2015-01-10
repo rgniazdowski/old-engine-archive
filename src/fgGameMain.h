@@ -142,7 +142,7 @@ public:
      * 
      * @return 
      */
-    inline CResourceManager *getResourceManager(void) const {
+    inline fg::resource::CResourceManager *getResourceManager(void) const {
         return m_resourceMgr;
     }
     /**
@@ -231,7 +231,7 @@ private:
     /// Main Quality Manager
     fgQualityManager *m_qualityMgr;
     /// Main Resource Manager
-    CResourceManager *m_resourceMgr;
+    fg::resource::CResourceManager *m_resourceMgr;
     /// Resource factory object - registers create() methods for Resource Objects
     fgResourceFactory *m_resourceFactory;
     /// 

@@ -9,13 +9,18 @@
 
 #ifndef FG_INC_RESOURCE_FACTORY_TYPES
     #define FG_INC_RESOURCE_FACTORY_TYPES
-
-class CResource;
+    #define FG_INC_RESOURCE_FACTORY_TYPES_BLOCK
+    
+namespace fg {
+    namespace resource {
+        class CResource;
+    };
+};
 
     #if __cplusplus > 199711L
-using fgCreateResourceFn = CResource* (*)(void);
+using fgCreateResourceFn = fg::resource::CResource* (*)(void);
     #else
-typedef CResource* (*fgCreateResourceFn)(void);
+typedef fg::resource::CResource* (*fgCreateResourceFn)(void);
     #endif
 
     #ifndef FG_FACTORY_CREATE_FUNCTION
@@ -25,7 +30,8 @@ static RETURNTYPE * createResource(void) { return new CREATETYPE(); }
 
     #ifndef FG_RESOURCE_FACTORY_CREATE_FUNCTION
         #define FG_RESOURCE_FACTORY_CREATE_FUNCTION(CREATETYPE) \
-static CResource * createResource(void) { return new CREATETYPE(); }
+static fg::resource::CResource * createResource(void) { return new CREATETYPE(); }
     #endif
 
+    #undef FG_INC_RESOURCE_FACTORY_TYPES_BLOCK
 #endif /* FG_INC_RESOURCE_FACTORY_TYPES */

@@ -55,7 +55,7 @@ fgBool fgResourceFactory::registerResource(const fgResourceType type, fgCreateRe
 /*
  * Call specific create function for given resource
  */
-CResource* fgResourceFactory::createResource(const fgResourceType type) {
+fg::resource::CResource* fgResourceFactory::createResource(const fgResourceType type) {
     factoryMapItor it = m_factoryMap.find(type);
     if(it != m_factoryMap.end()) {
         if(it->second != NULL)

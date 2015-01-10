@@ -22,7 +22,7 @@
 /**
  * Base constructor of the resource group content handler object
  */
-fgResourceGroupContentHandler::fgResourceGroupContentHandler() :
+fg::resource::CResourceGroupContentHandler::CResourceGroupContentHandler() :
 m_resourceGroup(NULL),
 m_resType(FG_RESOURCE_INVALID),
 m_resourcePtr(NULL),
@@ -33,7 +33,7 @@ m_isFileQualityMapTag(FG_FALSE) { }
 /**
  * Destructor of the resource group content handler object
  */
-fgResourceGroupContentHandler::~fgResourceGroupContentHandler() {
+fg::resource::CResourceGroupContentHandler::~CResourceGroupContentHandler() {
     while(!m_elemStack.empty())
         m_elemStack.pop();
 }
@@ -41,7 +41,7 @@ fgResourceGroupContentHandler::~fgResourceGroupContentHandler() {
 /*
  *
  */
-void fgResourceGroupContentHandler::endElement(const char *localName,
+void fg::resource::CResourceGroupContentHandler::endElement(const char *localName,
                                                fgXMLElement *elementPtr,
                                                fgXMLNodeType nodeType,
                                                int depth) {
@@ -65,7 +65,7 @@ void fgResourceGroupContentHandler::endElement(const char *localName,
  * @param path
  * @return 
  */
-fgBool fgResourceGroupContentHandler::loadResConfig(const char *path) {
+fgBool fg::resource::CResourceGroupContentHandler::loadResConfig(const char *path) {
     if(!path)
         return FG_FALSE;
     FG_LOG_DEBUG("Loading resource config: '%s'", path);
@@ -106,7 +106,7 @@ fgBool fgResourceGroupContentHandler::loadResConfig(const char *path) {
  * Receive notification of the start of an element.
  * This function will add to the specified resource group any identified resources.
  */
-void fgResourceGroupContentHandler::startElement(const char *localName,
+void fg::resource::CResourceGroupContentHandler::startElement(const char *localName,
                                                  fgXMLElement *elementPtr,
                                                  fgXMLNodeType nodeType,
                                                  fgXMLAttribute *firstAttribute,
@@ -225,7 +225,7 @@ void fgResourceGroupContentHandler::startElement(const char *localName,
 /**
  * Base constructor of the resource group object
  */
-fgResourceGroup::fgResourceGroup() {
+fg::resource::CResourceGroup::CResourceGroup() {
     clear();
 }
 
@@ -233,7 +233,7 @@ fgResourceGroup::fgResourceGroup() {
  * 
  * @param resourceFactory
  */
-fgResourceGroup::fgResourceGroup(fgResourceFactory *resourceFactory) {
+fg::resource::CResourceGroup::CResourceGroup(fgResourceFactory *resourceFactory) {
     clear();
     setResourceFactory(resourceFactory);
 }
@@ -241,15 +241,15 @@ fgResourceGroup::fgResourceGroup(fgResourceFactory *resourceFactory) {
 /**
  * Destructor of the resource group object
  */
-fgResourceGroup::~fgResourceGroup() {
-    fgResourceGroup::destroy();
+fg::resource::CResourceGroup::~CResourceGroup() {
+    fg::resource::CResourceGroup::destroy();
 }
 
 /**
  * 
  * @param resourceFactory
  */
-void fgResourceGroup::setResourceFactory(fgResourceFactory *resourceFactory) {
+void fg::resource::CResourceGroup::setResourceFactory(fgResourceFactory *resourceFactory) {
     if(resourceFactory)
         m_resourceFactory = resourceFactory;
 }
@@ -258,14 +258,14 @@ void fgResourceGroup::setResourceFactory(fgResourceFactory *resourceFactory) {
  * 
  * @return 
  */
-fgResourceFactory *fgResourceGroup::getResourceFactory(void) const {
+fgResourceFactory *fg::resource::CResourceGroup::getResourceFactory(void) const {
     return m_resourceFactory;
 }
 
 /**
  * Clears the class data, this actually does not free allocated memory, just resets base class attributes
  */
-void fgResourceGroup::clear(void) {
+void fg::resource::CResourceGroup::clear(void) {
     CResource::clear();
     m_rHandles.clear_optimised();
     m_resourceFiles.clear_optimised();
@@ -277,7 +277,7 @@ void fgResourceGroup::clear(void) {
  * Create function loads/interprets data from file in ROM and place it in RAM memory.
  * @return
  */
-fgBool fgResourceGroup::create(void) {
+fgBool fg::resource::CResourceGroup::create(void) {
     if(m_resourceFiles.empty())
         return FG_FALSE;
     fgBool status = FG_TRUE;
@@ -292,7 +292,7 @@ fgBool fgResourceGroup::create(void) {
 /**
  * Destroy all loaded data including additional metadata (called with destructor)
  */
-void fgResourceGroup::destroy(void) {
+void fg::resource::CResourceGroup::destroy(void) {
     ZeroLock();
     dispose();
     clear();
@@ -302,7 +302,7 @@ void fgResourceGroup::destroy(void) {
  * Reloads any data, recreates the resource (refresh)
  * @return
  */
-fgBool fgResourceGroup::recreate(void) {
+fgBool fg::resource::CResourceGroup::recreate(void) {
     //FG_LOG_DEBUG("fgResourceGroup::recreate();");
     if(m_resourceFiles.empty())
         return FG_FALSE;
@@ -318,7 +318,7 @@ fgBool fgResourceGroup::recreate(void) {
 /**
  * Dispose completely of the all loaded data, free all memory
  */
-void fgResourceGroup::dispose(void) {
+void fg::resource::CResourceGroup::dispose(void) {
     if(m_resourceFiles.empty())
         return;
     for(rgResVecItor it = m_resourceFiles.begin(); it != m_resourceFiles.end(); it++) {
@@ -330,7 +330,7 @@ void fgResourceGroup::dispose(void) {
  * Check if resource is disposed (not loaded yet or disposed after)
  * @return
  */
-fgBool fgResourceGroup::isDisposed(void) const {
+fgBool fg::resource::CResourceGroup::isDisposed(void) const {
     if(m_resourceFiles.empty())
         return FG_TRUE;
     fgBool status = FG_TRUE;
@@ -345,7 +345,7 @@ fgBool fgResourceGroup::isDisposed(void) const {
  *
  * @return
  */
-fgBool fgResourceGroup::private_parseIniConfig(void) {
+fgBool fg::resource::CResourceGroup::private_parseIniConfig(void) {
     if(!m_resourceFactory) {
         return FG_FALSE;
     }
@@ -424,7 +424,7 @@ fgBool fgResourceGroup::private_parseIniConfig(void) {
  * This function will return false if file path is not set.
  * @return
  */
-fgBool fgResourceGroup::preLoadConfig(void) {
+fgBool fg::resource::CResourceGroup::preLoadConfig(void) {
     if(!m_resourceFactory) {
         return FG_FALSE;
     }
@@ -436,7 +436,7 @@ fgBool fgResourceGroup::preLoadConfig(void) {
     if(strcasecmp(ext, "group.xml") == 0) {
         // Resource group config file is in XML format
         m_xmlParser = new fgXMLParser();
-        fgResourceGroupContentHandler *contentHandler = new fgResourceGroupContentHandler();
+        CResourceGroupContentHandler *contentHandler = new CResourceGroupContentHandler();
         contentHandler->setResourceGroupPointer(this);
         m_xmlParser->setContentHandler(contentHandler);
 
@@ -457,7 +457,7 @@ fgBool fgResourceGroup::preLoadConfig(void) {
 /**
  * Refresh arrays holding handles and resource pointers within this group
  */
-void fgResourceGroup::refreshArrays(void) {
+void fg::resource::CResourceGroup::refreshArrays(void) {
     m_rHandles.clear();
     if(m_resourceFiles.empty())
         return;
@@ -470,7 +470,7 @@ void fgResourceGroup::refreshArrays(void) {
  * Lock the resource (reference counter +1)
  * @return
  */
-unsigned int fgResourceGroup::Lock(void) {
+unsigned int fg::resource::CResourceGroup::Lock(void) {
     if(m_resourceFiles.empty())
         return -1;
     for(rgResVecItor it = m_resourceFiles.begin(); it != m_resourceFiles.end(); it++) {
@@ -483,7 +483,7 @@ unsigned int fgResourceGroup::Lock(void) {
  * Unlock the resource (reference counter -1)
  * @return
  */
-unsigned int fgResourceGroup::Unlock(void) {
+unsigned int fg::resource::CResourceGroup::Unlock(void) {
     if(m_resourceFiles.empty())
         return -1;
     for(rgResVecItor it = m_resourceFiles.begin(); it != m_resourceFiles.end(); it++) {
@@ -495,7 +495,7 @@ unsigned int fgResourceGroup::Unlock(void) {
 /**
  * Unlock completely the resource (reference counter = 0)
  */
-void fgResourceGroup::ZeroLock(void) {
+void fg::resource::CResourceGroup::ZeroLock(void) {
     if(m_resourceFiles.empty())
         return;
     for(rgResVecItor it = m_resourceFiles.begin(); it != m_resourceFiles.end(); it++) {

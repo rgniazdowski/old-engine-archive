@@ -62,7 +62,7 @@ fg::sfx::base::CAudio *fg::sfx::CSfxManager::get(const char *nameTag) {
 fg::sfx::base::CAudio *fg::sfx::CSfxManager::get(const std::string& nameTag) {
     if(!m_pResourceMgr)
         return NULL;
-    CResource *pResource = static_cast<CResourceManager *>(m_pResourceMgr)->get(nameTag);
+    fg::resource::CResource *pResource = static_cast<fg::resource::CResourceManager *>(m_pResourceMgr)->get(nameTag);
     if(!pResource)
         return NULL;
     base::CAudio *pAudio = NULL;
@@ -84,7 +84,7 @@ fg::sfx::base::CAudio *fg::sfx::CSfxManager::get(const std::string& nameTag) {
 fg::sfx::base::CAudio *fg::sfx::CSfxManager::get(const fgResourceHandle& soundHandle) {
     if(!m_pResourceMgr)
         return NULL;
-    CResource *pResource = static_cast<CResourceManager *>(m_pResourceMgr)->get(soundHandle);
+    fg::resource::CResource *pResource = static_cast<fg::resource::CResourceManager *>(m_pResourceMgr)->get(soundHandle);
     if(!pResource)
         return NULL;
     fg::sfx::base::CAudio *pAudio = NULL;
@@ -115,7 +115,7 @@ fg::sfx::base::CAudio *fg::sfx::CSfxManager::request(const char *info) {
 fg::sfx::base::CAudio *fg::sfx::CSfxManager::request(const std::string& info) {
     if(!m_pResourceMgr)
         return NULL;
-    CResource *pResource = static_cast<CResourceManager *>(m_pResourceMgr)->request(info);
+    fg::resource::CResource *pResource = static_cast<fg::resource::CResourceManager *>(m_pResourceMgr)->request(info);
     if(!pResource)
         return NULL;
     fg::sfx::base::CAudio *pAudio = NULL;

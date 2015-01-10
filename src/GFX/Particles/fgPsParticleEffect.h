@@ -114,7 +114,7 @@ FG_ENUM_FLAGS(fgParticleEffectFlags);
  * @extends fgConfig
  * @see     fgConfig
  */
-class fgParticleEffect : public CResource {
+class fgParticleEffect : public fg::resource::CResource {
 private:
     /// Maximum number of a particles displayed at one time
     int m_maxCount;

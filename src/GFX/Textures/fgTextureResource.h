@@ -26,7 +26,7 @@ namespace fg {
         /*
          *
          */
-        class CTextureResource : public ::CResource {
+        class CTextureResource : public ::fg::resource::CResource {
             friend class fg::gfx::CTextureManager;
 
         public:

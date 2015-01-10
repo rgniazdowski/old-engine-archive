@@ -40,6 +40,9 @@
     #include <stdlib.h>
 
 namespace fg {
+    namespace resource {
+        class CResource; 
+    };
     namespace sfx {
         /*
          * 
@@ -197,10 +200,10 @@ namespace fg {
         /**
          * 
          */
-        class CSoundResource : public CResource, public fg::sfx::base::CAudio {
+        class CSoundResource : public fg::resource::CResource, public fg::sfx::base::CAudio {
         public:
             ///
-            typedef CResource base_type;
+            typedef fg::resource::CResource base_type;
             ///
             typedef CAudio base_audio_type;
 

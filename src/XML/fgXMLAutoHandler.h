@@ -129,7 +129,7 @@ template <> struct fgXMLAutoAttribute<_type> { \
     #include <stack>
 
 template<typename Target>
-class fgXMLAutoHandler : public fgXMLDefaultHandler {
+class fgXMLAutoHandler : public fg::xml::CDefaultHandler {
 public:
     fgXMLAutoHandler() : m_target(NULL), m_isFailure(FG_FALSE) { }
     virtual ~fgXMLAutoHandler() {
