@@ -76,7 +76,7 @@ rem ===================== create deploy package for IOS Release
 echo ******************************************************
 echo ** Creating deployment for ANDROID - ARM - RELEASE - %FG_PROJECTNAME% - Config %FG_DEPLOY_CONFIG_NAME%
 rem call %S3E_DIR%\bin\s3e_deploy.bat -n -f --config=ChainReaction --os=android --arch arm --gcc %FG_BUILDDIR%\deploy_config.py
-call %S3E_DIR%\bin\s3e_deploy.bat -n -f %FG_DEPLOY_CONFIG_NAME_PARAM% --os=android --arch arm --gcc %FG_BUILDDIR%\deploy_config.py
+call %S3E_DIR%\bin\s3e_deploy.bat -n -f %FG_DEPLOY_CONFIG_NAME_PARAM% --os=android --release-loader --arch arm --gcc %FG_BUILDDIR%\deploy_config.py
 if errorlevel 1 goto end
 
 set FG_RELEASE=release

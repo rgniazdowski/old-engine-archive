@@ -453,7 +453,7 @@ private:
             g_debugProfiling->updateHistory();
 
             loopCount++;
-            if(loopCount > 2) {
+            if(loopCount > 20) {
                 loopCount = 0;
                 g_debugProfiling->dumpToDefaultFile();
             }
@@ -550,9 +550,9 @@ private:
         printf("'%s'\n", dst);
 #endif
         if(event->m_Pressed) {
-            static_cast<CEventManager *>(m_gameMain)->addKeyDown((int)event->m_Key);
+			m_gameMain->getInputHandler()->addKeyDown((int)event->m_Key);
         } else {
-            static_cast<CEventManager *>(m_gameMain)->addKeyUp((int)event->m_Key);
+			m_gameMain->getInputHandler()->addKeyUp((int)event->m_Key);
         }
         //FG_LOG_DEBUG("FG_EventManager - keyboard - %d is pressed? - code: %d", (int)event->m_Pressed, (int)event->m_Key);
     }
@@ -654,11 +654,12 @@ extern "C" int main() {
 
 extern "C" int main(int argc, char *argv[]) {
 #endif /* FG_USING_MARMALADE */
-    //IwMemBucketDebugSetBreakpoint(95281);
-    //IwMemBucketDebugSetBreakpoint(115818);
-    //IwMemBucketDebugSetBreakpoint(784334);
     //IwMemBucketDebugSetBreakpoint(1551);
     FG_LOG_DEBUG("%s: Start up", FG_PACKAGE_FULL_TEXT);
+#if defined(FG_DEBUG) && !defined(FG_USING_MARMALADE)
+    char str_args[2048];
+    FG_LOG_DEBUG("%s: Number of arguments: %d", FG_PACKAGE_NAME, argc);
+#endif
     MainModule *mainModule = new MainModule(argc, argv);
     if(!mainModule->initProgram()) {
         mainModule->closeProgram();

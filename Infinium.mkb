@@ -481,9 +481,6 @@ deployments
 	provider='Radoslaw Gniazdowski'
 	splashscreen-auto-onblack=1
 	version=1.0.0
-	version-major=1
-	version-minor=0
-	version-revision=0
 
 	android-pkgname='com.flexigame.Infinium'
 	android-extra-manifest='ExtraManifest.xml'

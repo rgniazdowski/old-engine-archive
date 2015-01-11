@@ -80,7 +80,7 @@ IF NOT EXIST "%FG_BUILDDIR%\deploy_config.py" (
 rem ===================== create deploy package for IOS Release
 echo ******************************************************
 echo ** Creating deployment for IOS - RELEASE - %FG_PROJECTNAME% - Config %FG_DEPLOY_CONFIG_NAME%
-call %S3E_DIR%\bin\s3e_deploy.bat -n -f %FG_DEPLOY_CONFIG_NAME_PARAM% --os=iphone --arch arm --gcc %FG_BUILDDIR%\deploy_config.py
+call %S3E_DIR%\bin\s3e_deploy.bat -n -f %FG_DEPLOY_CONFIG_NAME_PARAM% --os=iphone --release-loader --arch arm --gcc %FG_BUILDDIR%\deploy_config.py
 if errorlevel 1 goto end
 
 set FG_RELEASE=release

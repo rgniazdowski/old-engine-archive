@@ -17,23 +17,26 @@
 
     #if defined(FG_USING_MARMALADE)
         #include "IwUtil.h"
-/**
- *
- */
-template <class X, class A = CIwAllocator<X>, class REALLOCATE = ReallocateDefault<X, A > >
-class CVector : public CIwArray<X, A, REALLOCATE> {
-public:
-    /**
-     * @param i
-     * @return
-     */
-    X & at(int const i) const {
-        uint32 index = (uint32)i;
-        if(index >= this->num_p) {
-            return this->p[0];
-        }
-        return this->p[index];
-    }
+
+namespace fg {
+	/**
+	 *
+	 */
+	template <class X, class A = ::CIwAllocator<X>, class REALLOCATE = ::ReallocateDefault<X, A > >
+	class CVector : public ::CIwArray<X, A, REALLOCATE> {
+	public:
+		/**
+		 * @param i
+		 * @return
+		 */
+		X & at(int const i) const {
+			uint32 index = (uint32)i;
+			if(index >= this->num_p) {
+				return this->p[0];
+			}
+			return this->p[index];
+		}
+	};
 };
     #else
 
