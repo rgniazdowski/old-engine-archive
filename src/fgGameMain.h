@@ -170,7 +170,7 @@ public:
      * 
      * @return 
      */
-    inline fgScriptSubsystem *getScriptSubsystem(void) const {
+    inline fg::script::CScriptSubsystem *getScriptSubsystem(void) const {
         return m_scriptSubsystem;
     }
     /**
@@ -239,7 +239,7 @@ private:
     /// Joypad/Joystick controller object
     fg::event::CJoypadController *m_joypadController;
     /// Builtin script subsystem - it needs access to all main managers
-    fgScriptSubsystem *m_scriptSubsystem;
+    fg::script::CScriptSubsystem *m_scriptSubsystem;
     /// Sound manager - loading, playing sounds
     fg::sfx::CSfxManager *m_soundMgr;
     /// Inner game logic

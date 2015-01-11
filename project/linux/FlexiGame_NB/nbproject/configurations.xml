@@ -264,8 +264,8 @@
         </logicalFolder>
         <logicalFolder name="Resource" displayName="Resource" projectFiles="true">
           <itemPath>../../../src/Resource/fgDataManagerBase.h</itemPath>
-          <itemPath>../../../src/Resource/fgManagedDataFileBase.h</itemPath>
-          <itemPath>../../../src/Resource/fgManagedObjectBase.h</itemPath>
+          <itemPath>../../../src/Resource/fgManagedDataFile.h</itemPath>
+          <itemPath>../../../src/Resource/fgManagedObject.h</itemPath>
           <itemPath>../../../src/Resource/fgResource.cpp</itemPath>
           <itemPath>../../../src/Resource/fgResource.h</itemPath>
           <itemPath>../../../src/Resource/fgResourceConfigParser.cpp</itemPath>
@@ -1439,12 +1439,12 @@
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/Resource/fgManagedDataFileBase.h"
+      <item path="../../../src/Resource/fgManagedDataFile.h"
             ex="false"
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/Resource/fgManagedObjectBase.h"
+      <item path="../../../src/Resource/fgManagedObject.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -2758,12 +2758,12 @@
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/Resource/fgManagedDataFileBase.h"
+      <item path="../../../src/Resource/fgManagedDataFile.h"
             ex="false"
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/Resource/fgManagedObjectBase.h"
+      <item path="../../../src/Resource/fgManagedObject.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -4043,12 +4043,12 @@
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/Resource/fgManagedDataFileBase.h"
+      <item path="../../../src/Resource/fgManagedDataFile.h"
             ex="false"
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/Resource/fgManagedObjectBase.h"
+      <item path="../../../src/Resource/fgManagedObject.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -5306,12 +5306,12 @@
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/Resource/fgManagedDataFileBase.h"
+      <item path="../../../src/Resource/fgManagedDataFile.h"
             ex="false"
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/Resource/fgManagedObjectBase.h"
+      <item path="../../../src/Resource/fgManagedObject.h"
             ex="false"
             tool="3"
             flavor2="0">

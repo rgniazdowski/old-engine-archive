@@ -50,28 +50,32 @@
     #ifndef FG_INC_EVENT_DEFINITIONS
         #include "Event/fgEventDefinitions.h"
     #endif
-    
+
     #ifndef FG_INC_SFX_AUDIO_BASE
         #include "Audio/fgSFXAudioBase.h"
     #endif
-    
+
     #ifndef FG_INC_SFX_MUSIC_RESOURCE
         #include "Audio/fgSFXMusicResource.h"
     #endif
-    
+
     #ifndef FG_INC_SFX_SOUND_RESOURCE
         #include "Audio/fgSFXSoundResource.h"
     #endif
 
     #include "fgLog.h"
 
-class fgScriptSubsystem;
+namespace fg {
+    namespace script {
+        class CScriptSubsystem;
+    };
+};
 
 /**
  * 
  */
 class fgScriptCD {
-    friend class fgScriptSubsystem;
+    friend class fg::script::CScriptSubsystem;
 private:
     /**
      * 
@@ -1469,7 +1473,7 @@ namespace LPCD {
                 nameStr = pSound->getNameStr();
                 obj = state->BoxPointer((void*)pSound);
             }
-            
+
         #if defined(FG_DEBUG)
             FG_LOG_DEBUG("Script: LPCD Push: ptr[%p], offset[%lu], name[%s], type_name[fg::sfx::base::CAudio]", value, (uintptr_t)value, nameStr);
         #endif

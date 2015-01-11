@@ -91,7 +91,7 @@ m_gameFreeLookCallback(NULL) {
     FG_MessageSubsystem->setLogPaths("all.log", "error.log", "debug.log");
     m_inputHandler = new fg::event::CInputHandler();
     m_joypadController = new fg::event::CJoypadController(); // #FIXME - Joypad part of input receiver?
-    m_scriptSubsystem = new fgScriptSubsystem();
+    m_scriptSubsystem = new fg::script::CScriptSubsystem();
     m_soundMgr = new fg::sfx::CSfxManager();
     this->setEventManager();
     m_joypadController->initialize(); // #FIXME

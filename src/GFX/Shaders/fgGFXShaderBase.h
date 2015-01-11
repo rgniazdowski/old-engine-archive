@@ -14,7 +14,7 @@
     #include "fgGFXShaderDefs.h"
 
     #include "Hardware/fgQualityTypes.h"
-    #include "Resource/fgManagedDataFileBase.h"
+    #include "Resource/fgManagedDataFile.h"
     #include "Util/fgHandle.h"
     #include "Util/fgTag.h"
     #include <map>
@@ -35,6 +35,10 @@ typedef FG_TAG_GFX_SHADER fgGfxShaderTag;
 typedef fgHandle<fgGfxShaderTag> fgGfxShaderHandle;
 
 namespace fg {
+    namespace resource {
+        template<typename THandleType, typename TMapKeyType> class CManagedDataFile;
+    };
+
     namespace gfx {
 
         /// Forward declaration
@@ -49,13 +53,13 @@ namespace fg {
             /**
              *
              */
-            class CShader : public fgManagedDataFileBase<fgGfxShaderHandle, fgQuality> {
+            class CShader : public fg::resource::CManagedDataFile<fgGfxShaderHandle, fgQuality> {
                 //friend class fg::gfx::CShader;
                 friend class fg::gfx::CShaderProgram;
                 friend class fg::gfx::CShaderManager;
             public:
                 ///
-                typedef fgManagedDataFileBase<fgGfxShaderHandle, fgQuality> base_type;
+                typedef CManagedDataFile<fgGfxShaderHandle, fgQuality> base_type;
                 ///
                 typedef fgGfxShaderTag tag_type;
 

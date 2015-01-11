@@ -12,7 +12,7 @@
 
     #include "fgBuildConfig.h"
     #include "fgGuiStyleContent.h"
-    #include "Resource/fgManagedDataFileBase.h"
+    #include "Resource/fgManagedDataFile.h"
     #include "Util/fgHandle.h"
     #include "Util/fgTag.h"
     #include "Hardware/fgQualityTypes.h" // #FIXME
@@ -50,10 +50,16 @@ namespace std {
         #include <unordered_map>
     #endif /* FG_USING_MARMALADE */
 
+namespace fg {
+    namespace resource {
+        template<typename THandleType, typename TMapKeyType> class CManagedDataFile;
+    };
+};
+
 /*
  *
  */
-class fgGuiStyle : public fgManagedDataFileBase<fgGuiStyleHandle, fgQuality> {
+class fgGuiStyle : public fg::resource::CManagedDataFile<fgGuiStyleHandle, fgQuality> {
     friend class fgGuiStyleManager;
     #ifdef FG_USING_MARMALADE
 protected:
@@ -68,7 +74,7 @@ protected:
     };
     #endif
 public:
-    typedef fgManagedDataFileBase<fgGuiStyleHandle, fgQuality> base_type;
+    typedef CManagedDataFile<fgGuiStyleHandle, fgQuality> base_type;
     typedef std::string hashKey;
     #ifdef FG_USING_MARMALADE	
     typedef std::hash<std::string> hashFunc;
@@ -137,7 +143,7 @@ public:
     fgGuiStyleContent *getContentPtr(const char *info) {
         return &getContent(info);
     }
-    
+
     /**
      * 
      * @param contents

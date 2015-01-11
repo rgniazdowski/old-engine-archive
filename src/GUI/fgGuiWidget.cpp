@@ -16,7 +16,7 @@
  *
  */
 fgGuiWidget::fgGuiWidget() :
-fgManagedObjectBase(),
+CManagedObject(),
 m_typeName(),
 m_styleName(FG_GUI_WIDGET_DEFAULT_STYLE),
 m_link(),

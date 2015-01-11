@@ -21,7 +21,7 @@
     #include <cstring>
 
     #include "fgManagerBase.h"
-    #include "fgManagedDataFileBase.h"
+    #include "fgManagedDataFile.h"
     #include "Util/fgHandle.h"
     #include "Util/fgTag.h"
 
@@ -190,13 +190,13 @@ namespace fg {
         /**
          * Base class for resource
          */
-        class CResource : public ::fgManagedDataFileBase<fgResourceHandle, fgQuality> {
+        class CResource : public CManagedDataFile<fgResourceHandle, fgQuality> {
             friend class CResourceManager;
             friend class CResourceGroup;
 
         public:
             ///
-            typedef fgManagedDataFileBase<fgResourceHandle, fgQuality> base_type;
+            typedef CManagedDataFile<fgResourceHandle, fgQuality> base_type;
             ///
             typedef fgResourceTag tag_type;
             ///

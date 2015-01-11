@@ -82,65 +82,65 @@
 
 #if defined(FG_USING_LUA_PLUS)
 ///
-LuaPlus::LuaState *fgScriptSubsystem::m_luaState = NULL;
+LuaPlus::LuaState *fg::script::CScriptSubsystem::m_luaState = NULL;
 ///
-LuaPlus::LuaObject fgScriptSubsystem::m_globals;
+LuaPlus::LuaObject fg::script::CScriptSubsystem::m_globals;
 ///
-LuaPlus::LuaObject fgScriptSubsystem::m_fgObj;
+LuaPlus::LuaObject fg::script::CScriptSubsystem::m_fgObj;
 ///
-fgScriptSubsystem::userDataObjectMap fgScriptSubsystem::m_userDataObjectMap;
+fg::script::CScriptSubsystem::userDataObjectMap fg::script::CScriptSubsystem::m_userDataObjectMap;
 #else 
-void *fgScriptSubsystem::m_luaState = NULL;
+void *fg::script::CScriptSubsystem::m_luaState = NULL;
 #endif /* FG_USING_LUA_PLUS */
 
 ///
-fgBool fgScriptSubsystem::m_isBindingComplete = FG_FALSE;
+fgBool fg::script::CScriptSubsystem::m_isBindingComplete = FG_FALSE;
 
 /// Pointer to the external GUI Main object
-fg::base::CManager *fgScriptSubsystem::m_pGuiMain = NULL;
+fg::base::CManager *fg::script::CScriptSubsystem::m_pGuiMain = NULL;
 /// Pointer to the external Event manager
-fg::base::CManager *fgScriptSubsystem::m_pEventMgr = NULL;
+fg::base::CManager *fg::script::CScriptSubsystem::m_pEventMgr = NULL;
 /// Pointer to the external Resource manager
-fg::base::CManager *fgScriptSubsystem::m_pResourceMgr = NULL;
+fg::base::CManager *fg::script::CScriptSubsystem::m_pResourceMgr = NULL;
 /// Pointer to the external GFX Shader manager
-fg::base::CManager *fgScriptSubsystem::m_pShaderMgr = NULL;
+fg::base::CManager *fg::script::CScriptSubsystem::m_pShaderMgr = NULL;
 /// Pointer to the external 2D Scene manager
-fg::base::CManager *fgScriptSubsystem::m_p2DSceneMgr = NULL;
+fg::base::CManager *fg::script::CScriptSubsystem::m_p2DSceneMgr = NULL;
 /// Pointer to the external 3D Scene manager
-fg::base::CManager *fgScriptSubsystem::m_p3DSceneMgr = NULL;
+fg::base::CManager *fg::script::CScriptSubsystem::m_p3DSceneMgr = NULL;
 /// Pointer to the external Particle manager
-fg::base::CManager *fgScriptSubsystem::m_pParticleMgr = NULL;
+fg::base::CManager *fg::script::CScriptSubsystem::m_pParticleMgr = NULL;
 /// Pointer to the external GUI Widget manager
-fg::base::CManager *fgScriptSubsystem::m_pWidgetMgr = NULL;
+fg::base::CManager *fg::script::CScriptSubsystem::m_pWidgetMgr = NULL;
 /// Pointer to the external GUI Style manager
-fg::base::CManager *fgScriptSubsystem::m_pStyleMgr = NULL;
+fg::base::CManager *fg::script::CScriptSubsystem::m_pStyleMgr = NULL;
 /// Pointer to the external Sound manager
-fg::base::CManager *fgScriptSubsystem::m_pSoundMgr = NULL;
+fg::base::CManager *fg::script::CScriptSubsystem::m_pSoundMgr = NULL;
 /// Pointer to the external Game Logic manager
-fg::base::CManager *fgScriptSubsystem::m_pLogicMgr = NULL;
+fg::base::CManager *fg::script::CScriptSubsystem::m_pLogicMgr = NULL;
 
 /**
  * 
  */
-fgScriptSubsystem::fgScriptSubsystem()
+fg::script::CScriptSubsystem::CScriptSubsystem()
 #if defined(FG_USING_LUA_PLUS)
 #endif /* FG_USING_LUA_PLUS */
 {
     m_managerType = FG_MANAGER_SCRIPT;
-    m_cyclicGCCallback = new fgPlainFunctionCallback(&fgScriptSubsystem::cyclicGCFunction, NULL);
+    m_cyclicGCCallback = new fgPlainFunctionCallback(&fg::script::CScriptSubsystem::cyclicGCFunction, NULL);
 }
 
 /**
  * 
  */
-fgScriptSubsystem::~fgScriptSubsystem() {
-    fgScriptSubsystem::destroy();
+fg::script::CScriptSubsystem::~CScriptSubsystem() {
+    fg::script::CScriptSubsystem::destroy();
 }
 
 /**
  * 
  */
-void fgScriptSubsystem::clear(void) {
+void fg::script::CScriptSubsystem::clear(void) {
     m_cyclicGCCallback = NULL;
     m_managerType = FG_MANAGER_SCRIPT;
 }
@@ -151,7 +151,7 @@ void fgScriptSubsystem::clear(void) {
  * @param userData
  * @return 
  */
-fgBool fgScriptSubsystem::cyclicGCFunction(void* systemData, void* userData) {
+fgBool fg::script::CScriptSubsystem::cyclicGCFunction(void* systemData, void* userData) {
     if(!m_luaState)
         return FG_FALSE;
     if(!m_isBindingComplete)
@@ -173,7 +173,7 @@ fgBool fgScriptSubsystem::cyclicGCFunction(void* systemData, void* userData) {
  * @param filePath
  * @return 
  */
-int fgScriptSubsystem::executeFile(const char *filePath) {
+int fg::script::CScriptSubsystem::executeFile(const char *filePath) {
     if(!m_luaState || !filePath) {
         return 2;
     }
@@ -222,7 +222,7 @@ int fgScriptSubsystem::executeFile(const char *filePath) {
  * 
  * @return 
  */
-fgBool fgScriptSubsystem::destroy(void) {
+fgBool fg::script::CScriptSubsystem::destroy(void) {
     if(!m_init)
         return FG_FALSE;
 
@@ -256,7 +256,7 @@ fgBool fgScriptSubsystem::destroy(void) {
     m_init = FG_FALSE;
 
     fgScriptMT->deleteInstance();
-    fgScriptSubsystem::clear();
+    fg::script::CScriptSubsystem::clear();
     return FG_TRUE;
 }
 
@@ -264,7 +264,7 @@ fgBool fgScriptSubsystem::destroy(void) {
  * 
  * @return 
  */
-fgBool fgScriptSubsystem::initialize(void) {
+fgBool fg::script::CScriptSubsystem::initialize(void) {
     if(m_init)
         return m_init;
     if(m_isBindingComplete) {
@@ -369,7 +369,7 @@ fgBool fgScriptSubsystem::initialize(void) {
  * @param L
  * @return 
  */
-int fgScriptSubsystem::simpleFreeGCEvent(lua_State* L) {
+int fg::script::CScriptSubsystem::simpleFreeGCEvent(lua_State* L) {
     if(!L)
         return 0;
 #if defined(FG_USING_LUA_PLUS)
@@ -414,7 +414,7 @@ int fgScriptSubsystem::simpleFreeGCEvent(lua_State* L) {
  * @param L
  * @return 
  */
-int fgScriptSubsystem::managedResourceGCEvent(lua_State* L) {
+int fg::script::CScriptSubsystem::managedResourceGCEvent(lua_State* L) {
     if(!L)
         return 0;
 #if defined(FG_USING_LUA_PLUS)
@@ -473,7 +473,7 @@ int fgScriptSubsystem::managedResourceGCEvent(lua_State* L) {
  * @param userData
  * @return 
  */
-fgBool fgScriptSubsystem::managedObjectDestructorCallback(void *systemData, void *userData) {
+fgBool fg::script::CScriptSubsystem::managedObjectDestructorCallback(void *systemData, void *userData) {
     if(!systemData)
         return FG_FALSE;
 
@@ -500,7 +500,7 @@ fgBool fgScriptSubsystem::managedObjectDestructorCallback(void *systemData, void
  * 
  * @return 
  */
-fgBool fgScriptSubsystem::registerConstants(void) {
+fgBool fg::script::CScriptSubsystem::registerConstants(void) {
     if(!m_luaState)
         return FG_FALSE;
 
@@ -697,7 +697,7 @@ fgBool fgScriptSubsystem::registerConstants(void) {
  * 
  * @return 
  */
-fgBool fgScriptSubsystem::registerAdditionalTypes(void) {
+fgBool fg::script::CScriptSubsystem::registerAdditionalTypes(void) {
     if(!m_luaState)
         return FG_FALSE;
 
@@ -714,8 +714,8 @@ fgBool fgScriptSubsystem::registerAdditionalTypes(void) {
             .Property("y", &fgVector2i::y)
             .Property("s", &fgVector2i::s)
             .Property("t", &fgVector2i::t)
-            .MetatableFunction("__gc", &fgScriptSubsystem::simpleFreeGCEvent); // simpleTypedGCEvent<fgVector2i>
-    m_fgObj.Register("Vector2i", &fgScriptSubsystem::simpleTypedMallocEvent<fgVector2i, fgScriptMetatables::VECTOR2I_MT_ID>);
+            .MetatableFunction("__gc", &fg::script::CScriptSubsystem::simpleFreeGCEvent); // simpleTypedGCEvent<fgVector2i>
+    m_fgObj.Register("Vector2i", &fg::script::CScriptSubsystem::simpleTypedMallocEvent<fgVector2i, fgScriptMetatables::VECTOR2I_MT_ID>);
     FG_LOG_DEBUG("Script: Register metatable '%s' for Vector2i", fgScriptMT->getMetatableName(fgScriptMetatables::VECTOR2I_MT_ID));
 
     // fgVector2f | FG VECTOR 2F
@@ -724,8 +724,8 @@ fgBool fgScriptSubsystem::registerAdditionalTypes(void) {
             .Property("y", &fgVector2f::y)
             .Property("s", &fgVector2f::s)
             .Property("t", &fgVector2f::t)
-            .MetatableFunction("__gc", &fgScriptSubsystem::simpleFreeGCEvent); // simpleTypedGCEvent<fgVector2f>
-    m_fgObj.Register("Vector2f", &fgScriptSubsystem::simpleTypedMallocEvent<fgVector2f, fgScriptMetatables::VECTOR2F_MT_ID>);
+            .MetatableFunction("__gc", &fg::script::CScriptSubsystem::simpleFreeGCEvent); // simpleTypedGCEvent<fgVector2f>
+    m_fgObj.Register("Vector2f", &fg::script::CScriptSubsystem::simpleTypedMallocEvent<fgVector2f, fgScriptMetatables::VECTOR2F_MT_ID>);
     FG_LOG_DEBUG("Script: Register metatable '%s' for Vector2f", fgScriptMT->getMetatableName(fgScriptMetatables::VECTOR2F_MT_ID));
 
     // fgVector3i | FG VECTOR 3I    
@@ -738,8 +738,8 @@ fgBool fgScriptSubsystem::registerAdditionalTypes(void) {
             .Property("b", &fgVector3i::b)
             .Property("s", &fgVector3i::s)
             .Property("t", &fgVector3i::t)
-            .MetatableFunction("__gc", &fgScriptSubsystem::simpleFreeGCEvent); // simpleTypedGCEvent<fgVector3i>
-    m_fgObj.Register("Vector3i", &fgScriptSubsystem::simpleTypedMallocEvent<fgVector3i, fgScriptMetatables::VECTOR3I_MT_ID>);
+            .MetatableFunction("__gc", &fg::script::CScriptSubsystem::simpleFreeGCEvent); // simpleTypedGCEvent<fgVector3i>
+    m_fgObj.Register("Vector3i", &fg::script::CScriptSubsystem::simpleTypedMallocEvent<fgVector3i, fgScriptMetatables::VECTOR3I_MT_ID>);
     FG_LOG_DEBUG("Script: Register metatable '%s' for Vector3i", fgScriptMT->getMetatableName(fgScriptMetatables::VECTOR3I_MT_ID));
 
     // fgVector3f | FG VECTOR 3F    
@@ -752,9 +752,9 @@ fgBool fgScriptSubsystem::registerAdditionalTypes(void) {
             .Property("b", &fgVector3f::b)
             .Property("s", &fgVector3f::s)
             .Property("t", &fgVector3f::t)
-            .MetatableFunction("__gc", &fgScriptSubsystem::simpleFreeGCEvent); // simpleTypedGCEvent<fgVector3f>
-    m_fgObj.Register("Vector3f", &fgScriptSubsystem::simpleTypedMallocEvent<fgVector3f, fgScriptMetatables::VECTOR3F_MT_ID>);
-    m_fgObj.Register("Color3f", &fgScriptSubsystem::simpleTypedMallocEvent<fgVector3f, fgScriptMetatables::VECTOR3F_MT_ID>);
+            .MetatableFunction("__gc", &fg::script::CScriptSubsystem::simpleFreeGCEvent); // simpleTypedGCEvent<fgVector3f>
+    m_fgObj.Register("Vector3f", &fg::script::CScriptSubsystem::simpleTypedMallocEvent<fgVector3f, fgScriptMetatables::VECTOR3F_MT_ID>);
+    m_fgObj.Register("Color3f", &fg::script::CScriptSubsystem::simpleTypedMallocEvent<fgVector3f, fgScriptMetatables::VECTOR3F_MT_ID>);
     FG_LOG_DEBUG("Script: Register metatable '%s' for Vector3f", fgScriptMT->getMetatableName(fgScriptMetatables::VECTOR3F_MT_ID));
 
     // fgVector4i | FG VECTOR 4I 
@@ -769,8 +769,8 @@ fgBool fgScriptSubsystem::registerAdditionalTypes(void) {
             .Property("a", &fgVector4i::a)
             .Property("s", &fgVector4i::s)
             .Property("t", &fgVector4i::t)
-            .MetatableFunction("__gc", &fgScriptSubsystem::simpleFreeGCEvent); // simpleTypedGCEvent<fgVector4i>
-    m_fgObj.Register("Vector4i", &fgScriptSubsystem::simpleTypedMallocEvent<fgVector4i, fgScriptMetatables::VECTOR4I_MT_ID>);
+            .MetatableFunction("__gc", &fg::script::CScriptSubsystem::simpleFreeGCEvent); // simpleTypedGCEvent<fgVector4i>
+    m_fgObj.Register("Vector4i", &fg::script::CScriptSubsystem::simpleTypedMallocEvent<fgVector4i, fgScriptMetatables::VECTOR4I_MT_ID>);
     //m_fgObj.Register("Color4i", &fgScriptSubsystem::simpleTypedMallocEvent<fgVector4i, fgScriptMetatables::VECTOR4I_MT_ID>);
     FG_LOG_DEBUG("Script: Register metatable '%s' for Vector4i", fgScriptMT->getMetatableName(fgScriptMetatables::VECTOR4I_MT_ID));
 
@@ -786,9 +786,9 @@ fgBool fgScriptSubsystem::registerAdditionalTypes(void) {
             .Property("a", &fgVector4f::a)
             .Property("s", &fgVector4f::s)
             .Property("t", &fgVector4f::t)
-            .MetatableFunction("__gc", &fgScriptSubsystem::simpleFreeGCEvent); // simpleTypedGCEvent<fgVector4f>
-    m_fgObj.Register("Vector4f", &fgScriptSubsystem::simpleTypedMallocEvent<fgVector4f, fgScriptMetatables::VECTOR4F_MT_ID>);
-    m_fgObj.Register("Color4f", &fgScriptSubsystem::simpleTypedMallocEvent<fgVector4f, fgScriptMetatables::VECTOR4F_MT_ID>);
+            .MetatableFunction("__gc", &fg::script::CScriptSubsystem::simpleFreeGCEvent); // simpleTypedGCEvent<fgVector4f>
+    m_fgObj.Register("Vector4f", &fg::script::CScriptSubsystem::simpleTypedMallocEvent<fgVector4f, fgScriptMetatables::VECTOR4F_MT_ID>);
+    m_fgObj.Register("Color4f", &fg::script::CScriptSubsystem::simpleTypedMallocEvent<fgVector4f, fgScriptMetatables::VECTOR4F_MT_ID>);
     FG_LOG_DEBUG("Script: Register metatable '%s' for Vector4f", fgScriptMT->getMetatableName(fgScriptMetatables::VECTOR4F_MT_ID));
 #endif /* FG_USING_LUA_PLUS */
     return FG_TRUE;
@@ -799,7 +799,7 @@ fgBool fgScriptSubsystem::registerAdditionalTypes(void) {
  * @param L
  * @return 
  */
-int fgScriptSubsystem::addEventCallbackWrapper(lua_State *L) {
+int fg::script::CScriptSubsystem::addEventCallbackWrapper(lua_State *L) {
 #if defined(FG_USING_LUA_PLUS)
     LuaPlus::LuaState* state = lua_State_to_LuaState(L);
     LuaPlus::LuaStack args(state);
@@ -888,7 +888,7 @@ int fgScriptSubsystem::addEventCallbackWrapper(lua_State *L) {
  * @param L
  * @return 
  */
-int fgScriptSubsystem::addTimeoutCallbackWrapper(lua_State *L) {
+int fg::script::CScriptSubsystem::addTimeoutCallbackWrapper(lua_State *L) {
 #if defined(FG_USING_LUA_PLUS)
     LuaPlus::LuaState* state = lua_State_to_LuaState(L);
     LuaPlus::LuaStack args(state);
@@ -953,7 +953,7 @@ int fgScriptSubsystem::addTimeoutCallbackWrapper(lua_State *L) {
  * @param L
  * @return 
  */
-int fgScriptSubsystem::addCyclicCallbackWrapper(lua_State *L) {
+int fg::script::CScriptSubsystem::addCyclicCallbackWrapper(lua_State *L) {
 #if defined(FG_USING_LUA_PLUS)
     LuaPlus::LuaState* state = lua_State_to_LuaState(L);
     LuaPlus::LuaStack args(state);
@@ -1029,7 +1029,7 @@ int fgScriptSubsystem::addCyclicCallbackWrapper(lua_State *L) {
  * 
  * @return 
  */
-fgBool fgScriptSubsystem::registerEventManager(void) {
+fgBool fg::script::CScriptSubsystem::registerEventManager(void) {
     if(!m_luaState)
         return FG_FALSE;
     if(m_isBindingComplete)
@@ -1261,7 +1261,7 @@ fgBool fgScriptSubsystem::registerEventManager(void) {
  * @param state
  * @return 
  */
-int fgScriptSubsystem::newResourceWrapper(lua_State* L) {
+int fg::script::CScriptSubsystem::newResourceWrapper(lua_State* L) {
     if(!L)
         return 0;
 #if defined(FG_USING_LUA_PLUS)
@@ -1305,7 +1305,7 @@ int fgScriptSubsystem::newResourceWrapper(lua_State* L) {
         m_userDataObjectMap[offset] = userDataObject(resourceObj, FG_TRUE);
     }
     if(status) {
-        pResource->registerOnDestruct(&fgScriptSubsystem::managedObjectDestructorCallback, NULL);
+        pResource->registerOnDestruct(&fg::script::CScriptSubsystem::managedObjectDestructorCallback, NULL);
     }
 #endif /* FG_USING_LUA_PLUS */
     return 1;
@@ -1315,7 +1315,7 @@ int fgScriptSubsystem::newResourceWrapper(lua_State* L) {
  * 
  * @return 
  */
-fgBool fgScriptSubsystem::registerResourceManager(void) {
+fgBool fg::script::CScriptSubsystem::registerResourceManager(void) {
     if(!m_luaState)
         return FG_FALSE;
     if(m_isBindingComplete)
@@ -1332,7 +1332,7 @@ fgBool fgScriptSubsystem::registerResourceManager(void) {
     // Resource manager metatable
     m_mgrMetatables[RESOURCE_MGR] = m_fgObj.CreateTable(fgScriptMT->getMetatableName(fgScriptMetatables::RESOURCE_MANAGER_MT_ID));
     m_mgrMetatables[RESOURCE_MGR].SetObject("__index", m_mgrMetatables[RESOURCE_MGR]);
-    m_mgrMetatables[RESOURCE_MGR].Register("request", &fgScriptSubsystem::newResourceWrapper);
+    m_mgrMetatables[RESOURCE_MGR].Register("request", &fg::script::CScriptSubsystem::newResourceWrapper);
 
     uintptr_t offset = (uintptr_t)m_pResourceMgr;
     userDataObjectMapItor it = m_userDataObjectMap.find(offset);
@@ -1368,13 +1368,13 @@ fgBool fgScriptSubsystem::registerResourceManager(void) {
             .ObjectDirect("getWidth", (fg::gfx::CTexture*)0, &fg::gfx::CTexture::getWidth)
             .ObjectDirect("getHeight", (fg::gfx::CTexture*)0, &fg::gfx::CTexture::getHeight)
             .ObjectDirect("getComponents", (fg::gfx::CTexture*)0, &fg::gfx::CTexture::getComponents)
-            .MetatableFunction("__gc", &fgScriptSubsystem::managedResourceGCEvent);
+            .MetatableFunction("__gc", &fg::script::CScriptSubsystem::managedResourceGCEvent);
 
     // Register Font Resource metatable
     LPCD::Class(m_luaState->GetCState(), fgScriptMT->getMetatableName(fgScriptMetatables::FONT_RESOURCE_MT_ID), fgScriptMT->getMetatableName(fgScriptMetatables::TEXTURE_RESOURCE_MT_ID))
             .ObjectDirect("getFontType", (fgFontResource *)0, &fgFontResource::getFontType)
             .ObjectDirect("getStep", (fgFontResource *)0, &fgFontResource::getStep)
-            .MetatableFunction("__gc", &fgScriptSubsystem::managedResourceGCEvent);
+            .MetatableFunction("__gc", &fg::script::CScriptSubsystem::managedResourceGCEvent);
 
     // Register Gfx Model Resource metatable
     LPCD::Class(m_luaState->GetCState(), fgScriptMT->getMetatableName(fgScriptMetatables::GFX_MODEL_RESOURCE_MT_ID), fgScriptMT->getMetatableName(fgScriptMetatables::RESOURCE_MT_ID))
@@ -1391,7 +1391,7 @@ fgBool fgScriptSubsystem::registerResourceManager(void) {
             .ObjectDirect("isTextured", (fg::gfx::CModelResource *)0, &fg::gfx::CModelResource::isTextured)
             .ObjectDirect("isMultitextured", (fg::gfx::CModelResource *)0, &fg::gfx::CModelResource::isMultitextured)
             .ObjectDirect("hasMaterial", (fg::gfx::CModelResource *)0, &fg::gfx::CModelResource::hasMaterial)
-            .MetatableFunction("__gc", &fgScriptSubsystem::managedResourceGCEvent);
+            .MetatableFunction("__gc", &fg::script::CScriptSubsystem::managedResourceGCEvent);
 
     typedef void (fgParticleEffect::*PE_void_4X_INT_IN)(const int, const int, const int, const int);
     typedef void (fgParticleEffect::*PE_void_2X_FLOAT_IN)(const float, const float);
@@ -1490,7 +1490,7 @@ fgBool fgScriptSubsystem::registerResourceManager(void) {
             .ObjectDirect("isLifeAsSize", (fgParticleEffect *)0, &fgParticleEffect::isLifeAsSize)
             .ObjectDirect("isFacingVelocity", (fgParticleEffect *)0, &fgParticleEffect::isFacingVelocity)
             .ObjectDirect("isRandomAngle", (fgParticleEffect *)0, &fgParticleEffect::isRandomAngle)
-            .MetatableFunction("__gc", &fgScriptSubsystem::managedResourceGCEvent);
+            .MetatableFunction("__gc", &fg::script::CScriptSubsystem::managedResourceGCEvent);
 
     //m_fgObj.Register("Texture", &fgScriptSubsystem::newResourceWrapper);
 
@@ -1513,10 +1513,10 @@ fgBool fgScriptSubsystem::registerResourceManager(void) {
             .ObjectDirect("getVolume", (fg::sfx::base::CAudio *)0, &fg::sfx::base::CAudio::getVolume);
 
     LPCD::Class(m_luaState->GetCState(), fgScriptMT->getMetatableName(fgScriptMetatables::MUSIC_RESOURCE_MT_ID), fgScriptMT->getMetatableName(fgScriptMetatables::AUDIO_BASE_RES_MT_ID))
-            .MetatableFunction("__gc", &fgScriptSubsystem::managedResourceGCEvent);
+            .MetatableFunction("__gc", &fg::script::CScriptSubsystem::managedResourceGCEvent);
 
     LPCD::Class(m_luaState->GetCState(), fgScriptMT->getMetatableName(fgScriptMetatables::SOUND_RESOURCE_MT_ID), fgScriptMT->getMetatableName(fgScriptMetatables::AUDIO_BASE_RES_MT_ID))
-            .MetatableFunction("__gc", &fgScriptSubsystem::managedResourceGCEvent);
+            .MetatableFunction("__gc", &fg::script::CScriptSubsystem::managedResourceGCEvent);
 
 #endif /* FG_USING_LUA_PLUS */    
     return FG_TRUE;
@@ -1526,7 +1526,7 @@ fgBool fgScriptSubsystem::registerResourceManager(void) {
  * 
  * @return
  */
-fgBool fgScriptSubsystem::registerShaderManager(void) {
+fgBool fg::script::CScriptSubsystem::registerShaderManager(void) {
     if(m_isBindingComplete)
         return FG_TRUE;
     if(!m_pShaderMgr)
@@ -1550,7 +1550,7 @@ fgBool fgScriptSubsystem::registerShaderManager(void) {
  */
 #if defined(FG_USING_LUA_PLUS)
 
-fgBool fgScriptSubsystem::registerSceneManager(LuaPlus::LuaObject &metatable,
+fgBool fg::script::CScriptSubsystem::registerSceneManager(LuaPlus::LuaObject &metatable,
                                                const unsigned short int metatableID,
                                                fg::base::CManager *sceneManager,
                                                const char *objectName) {
@@ -1585,7 +1585,7 @@ fgBool fgScriptSubsystem::registerSceneManager(LuaPlus::LuaObject &metatable,
  * 
  * @return
  */
-fgBool fgScriptSubsystem::register2DSceneManager(void) {
+fgBool fg::script::CScriptSubsystem::register2DSceneManager(void) {
     if(m_isBindingComplete)
         return FG_TRUE;
     if(!m_p2DSceneMgr)
@@ -1610,7 +1610,7 @@ fgBool fgScriptSubsystem::register2DSceneManager(void) {
  * 
  * @return
  */
-fgBool fgScriptSubsystem::register3DSceneManager(void) {
+fgBool fg::script::CScriptSubsystem::register3DSceneManager(void) {
     if(m_isBindingComplete)
         return FG_TRUE;
     if(!m_p3DSceneMgr)
@@ -1662,7 +1662,7 @@ fgBool fgScriptSubsystem::register3DSceneManager(void) {
  * 
  * @return
  */
-fgBool fgScriptSubsystem::registerParticleSystem(void) {
+fgBool fg::script::CScriptSubsystem::registerParticleSystem(void) {
     if(m_isBindingComplete)
         return FG_TRUE;
     if(!m_pParticleMgr)
@@ -1700,7 +1700,7 @@ fgBool fgScriptSubsystem::registerParticleSystem(void) {
  * @param L
  * @return 
  */
-int fgScriptSubsystem::addWidgetCallbackWrapper(lua_State *L) {
+int fg::script::CScriptSubsystem::addWidgetCallbackWrapper(lua_State *L) {
 #if defined(FG_USING_LUA_PLUS)
     LuaPlus::LuaState* state = lua_State_to_LuaState(L);
     LuaPlus::LuaStack args(state);
@@ -1847,7 +1847,7 @@ int fgScriptSubsystem::addWidgetCallbackWrapper(lua_State *L) {
  * 
  * @return 
  */
-fgBool fgScriptSubsystem::registerGuiMain(void) {
+fgBool fg::script::CScriptSubsystem::registerGuiMain(void) {
     if(m_isBindingComplete)
         return FG_TRUE;
     if(!m_pGuiMain)
@@ -1862,7 +1862,7 @@ fgBool fgScriptSubsystem::registerGuiMain(void) {
     // Gui main/manager metatable
     m_mgrMetatables[GUI_MAIN] = m_fgObj.CreateTable(fgScriptMT->getMetatableName(fgScriptMetatables::GUI_MAIN_MT_ID));
     m_mgrMetatables[GUI_MAIN].SetObject("__index", m_mgrMetatables[GUI_MAIN]);
-    m_mgrMetatables[GUI_MAIN].Register("addWidgetCallback", &fgScriptSubsystem::addWidgetCallbackWrapper);
+    m_mgrMetatables[GUI_MAIN].Register("addWidgetCallback", &fg::script::CScriptSubsystem::addWidgetCallbackWrapper);
 
     uintptr_t offset = (uintptr_t)m_pGuiMain;
     userDataObjectMapItor it = m_userDataObjectMap.find(offset);
@@ -1884,7 +1884,7 @@ fgBool fgScriptSubsystem::registerGuiMain(void) {
  * 
  * @return
  */
-fgBool fgScriptSubsystem::registerWidgetManager(void) {
+fgBool fg::script::CScriptSubsystem::registerWidgetManager(void) {
     if(m_isBindingComplete)
         return FG_TRUE;
     if(!m_pWidgetMgr)
@@ -2003,15 +2003,15 @@ fgBool fgScriptSubsystem::registerWidgetManager(void) {
     metatableName = fgScriptMT->getMetatableName(fgScriptMetatables::GUI_BUTTON_MT_ID);
     LPCD::Class(m_luaState->GetCState(), metatableName, metatableNameWidget)
             //.ObjectDirect("getWidth", (fgTextureResource *)0, &fgTextureResource::getWidth)            
-            .MetatableFunction("__gc", &fgScriptSubsystem::managedObjectTypedGCEvent<fgGuiWidgetHandle>);
-    m_fgObj.Register("Button", &fgScriptSubsystem::managedObjectTypedNewEvent<fgGuiButton, fgScriptMetatables::GUI_BUTTON_MT_ID>);
+            .MetatableFunction("__gc", &fg::script::CScriptSubsystem::managedObjectTypedGCEvent<fgGuiWidgetHandle>);
+    m_fgObj.Register("Button", &fg::script::CScriptSubsystem::managedObjectTypedNewEvent<fgGuiButton, fgScriptMetatables::GUI_BUTTON_MT_ID>);
 
     // Register Gui Toggle Button metatable
     metatableName = fgScriptMT->getMetatableName(fgScriptMetatables::GUI_TOGGLE_BUTTON_MT_ID);
     LPCD::Class(m_luaState->GetCState(), metatableName, fgScriptMT->getMetatableName(fgScriptMetatables::GUI_BUTTON_MT_ID))
             //.ObjectDirect("getWidth", (fgTextureResource *)0, &fgTextureResource::getWidth)            
-            .MetatableFunction("__gc", &fgScriptSubsystem::managedObjectTypedGCEvent<fgGuiWidgetHandle>);
-    m_fgObj.Register("ToggleButton", &fgScriptSubsystem::managedObjectTypedNewEvent<fgGuiToggleButton, fgScriptMetatables::GUI_TOGGLE_BUTTON_MT_ID>);
+            .MetatableFunction("__gc", &fg::script::CScriptSubsystem::managedObjectTypedGCEvent<fgGuiWidgetHandle>);
+    m_fgObj.Register("ToggleButton", &fg::script::CScriptSubsystem::managedObjectTypedNewEvent<fgGuiToggleButton, fgScriptMetatables::GUI_TOGGLE_BUTTON_MT_ID>);
 
     typedef fgBool(fgGuiContainer::*GCNT_Bool_C_STR_IN)(const char *);
     typedef fgBool(fgGuiContainer::*GCNT_Bool_Widget_IN)(fgGuiWidget *);
@@ -2030,8 +2030,8 @@ fgBool fgScriptSubsystem::registerWidgetManager(void) {
                           static_cast<GCNT_Bool_C_STR_IN>(&fgGuiContainer::removeChild))
 
             //.ObjectDirect("getWidth", (fgTextureResource *)0, &fgTextureResource::getWidth)            
-            .MetatableFunction("__gc", &fgScriptSubsystem::managedObjectTypedGCEvent<fgGuiWidgetHandle>);
-    m_fgObj.Register("Container", &fgScriptSubsystem::managedObjectTypedNewEvent<fgGuiContainer, fgScriptMetatables::GUI_CONTAINER_MT_ID>);
+            .MetatableFunction("__gc", &fg::script::CScriptSubsystem::managedObjectTypedGCEvent<fgGuiWidgetHandle>);
+    m_fgObj.Register("Container", &fg::script::CScriptSubsystem::managedObjectTypedNewEvent<fgGuiContainer, fgScriptMetatables::GUI_CONTAINER_MT_ID>);
 
     // Register Gui Editable Text metatable
     //metatableName = fgScriptMT->getMetatableName(E);
@@ -2044,85 +2044,85 @@ fgBool fgScriptSubsystem::registerWidgetManager(void) {
     metatableName = fgScriptMT->getMetatableName(fgScriptMetatables::GUI_FRAME_MT_ID);
     LPCD::Class(m_luaState->GetCState(), metatableName, fgScriptMT->getMetatableName(fgScriptMetatables::GUI_CONTAINER_MT_ID))
             //.ObjectDirect("getWidth", (fgTextureResource *)0, &fgTextureResource::getWidth)            
-            .MetatableFunction("__gc", &fgScriptSubsystem::managedObjectTypedGCEvent<fgGuiWidgetHandle>);
-    m_fgObj.Register("Frame", &fgScriptSubsystem::managedObjectTypedNewEvent<fgGuiFrame, fgScriptMetatables::GUI_FRAME_MT_ID>);
+            .MetatableFunction("__gc", &fg::script::CScriptSubsystem::managedObjectTypedGCEvent<fgGuiWidgetHandle>);
+    m_fgObj.Register("Frame", &fg::script::CScriptSubsystem::managedObjectTypedNewEvent<fgGuiFrame, fgScriptMetatables::GUI_FRAME_MT_ID>);
 
     // Register Gui Label metatable
     metatableName = fgScriptMT->getMetatableName(fgScriptMetatables::GUI_LABEL_MT_ID);
     LPCD::Class(m_luaState->GetCState(), metatableName, metatableNameWidget)
             //.ObjectDirect("getWidth", (fgTextureResource *)0, &fgTextureResource::getWidth)            
-            .MetatableFunction("__gc", &fgScriptSubsystem::managedObjectTypedGCEvent<fgGuiWidgetHandle>);
-    m_fgObj.Register("Label", &fgScriptSubsystem::managedObjectTypedNewEvent<fgGuiLabel, fgScriptMetatables::GUI_LABEL_MT_ID>);
+            .MetatableFunction("__gc", &fg::script::CScriptSubsystem::managedObjectTypedGCEvent<fgGuiWidgetHandle>);
+    m_fgObj.Register("Label", &fg::script::CScriptSubsystem::managedObjectTypedNewEvent<fgGuiLabel, fgScriptMetatables::GUI_LABEL_MT_ID>);
 
     // Register Gui Loader metatable
     metatableName = fgScriptMT->getMetatableName(fgScriptMetatables::GUI_LOADER_MT_ID);
     LPCD::Class(m_luaState->GetCState(), metatableName, metatableNameWidget)
             //.ObjectDirect("getWidth", (fgTextureResource *)0, &fgTextureResource::getWidth)            
-            .MetatableFunction("__gc", &fgScriptSubsystem::managedObjectTypedGCEvent<fgGuiWidgetHandle>);
-    m_fgObj.Register("Loader", &fgScriptSubsystem::managedObjectTypedNewEvent<fgGuiLoader, fgScriptMetatables::GUI_LOADER_MT_ID>);
+            .MetatableFunction("__gc", &fg::script::CScriptSubsystem::managedObjectTypedGCEvent<fgGuiWidgetHandle>);
+    m_fgObj.Register("Loader", &fg::script::CScriptSubsystem::managedObjectTypedNewEvent<fgGuiLoader, fgScriptMetatables::GUI_LOADER_MT_ID>);
 
     // Register Gui Menu metatable
     metatableName = fgScriptMT->getMetatableName(fgScriptMetatables::GUI_MENU_MT_ID);
     LPCD::Class(m_luaState->GetCState(), metatableName, fgScriptMT->getMetatableName(fgScriptMetatables::GUI_CONTAINER_MT_ID))
             //.ObjectDirect("getWidth", (fgTextureResource *)0, &fgTextureResource::getWidth)            
-            .MetatableFunction("__gc", &fgScriptSubsystem::managedObjectTypedGCEvent<fgGuiWidgetHandle>);
-    m_fgObj.Register("Menu", &fgScriptSubsystem::managedObjectTypedNewEvent<fgGuiMenu, fgScriptMetatables::GUI_MENU_MT_ID>);
+            .MetatableFunction("__gc", &fg::script::CScriptSubsystem::managedObjectTypedGCEvent<fgGuiWidgetHandle>);
+    m_fgObj.Register("Menu", &fg::script::CScriptSubsystem::managedObjectTypedNewEvent<fgGuiMenu, fgScriptMetatables::GUI_MENU_MT_ID>);
 
     // Register Gui Window metatable
     metatableName = fgScriptMT->getMetatableName(fgScriptMetatables::GUI_WINDOW_MT_ID);
     LPCD::Class(m_luaState->GetCState(), metatableName, fgScriptMT->getMetatableName(fgScriptMetatables::GUI_CONTAINER_MT_ID))
             //.ObjectDirect("getWidth", (fgTextureResource *)0, &fgTextureResource::getWidth)            
-            .MetatableFunction("__gc", &fgScriptSubsystem::managedObjectTypedGCEvent<fgGuiWidgetHandle>);
-    m_fgObj.Register("Window", &fgScriptSubsystem::managedObjectTypedNewEvent<fgGuiWindow, fgScriptMetatables::GUI_WINDOW_MT_ID>);
+            .MetatableFunction("__gc", &fg::script::CScriptSubsystem::managedObjectTypedGCEvent<fgGuiWidgetHandle>);
+    m_fgObj.Register("Window", &fg::script::CScriptSubsystem::managedObjectTypedNewEvent<fgGuiWindow, fgScriptMetatables::GUI_WINDOW_MT_ID>);
 
     // Register Gui MessageBox metatable
     metatableName = fgScriptMT->getMetatableName(fgScriptMetatables::GUI_MESSAGE_BOX_MT_ID);
     LPCD::Class(m_luaState->GetCState(), metatableName, fgScriptMT->getMetatableName(fgScriptMetatables::GUI_WINDOW_MT_ID))
             //.ObjectDirect("getWidth", (fgTextureResource *)0, &fgTextureResource::getWidth)            
-            .MetatableFunction("__gc", &fgScriptSubsystem::managedObjectTypedGCEvent<fgGuiWidgetHandle>);
-    m_fgObj.Register("MessageBox", &fgScriptSubsystem::managedObjectTypedNewEvent<fgGuiMessageBox, fgScriptMetatables::GUI_MESSAGE_BOX_MT_ID>);
+            .MetatableFunction("__gc", &fg::script::CScriptSubsystem::managedObjectTypedGCEvent<fgGuiWidgetHandle>);
+    m_fgObj.Register("MessageBox", &fg::script::CScriptSubsystem::managedObjectTypedNewEvent<fgGuiMessageBox, fgScriptMetatables::GUI_MESSAGE_BOX_MT_ID>);
 
     // Register Gui Popup metatable
     metatableName = fgScriptMT->getMetatableName(fgScriptMetatables::GUI_POPUP_MT_ID);
     LPCD::Class(m_luaState->GetCState(), metatableName, fgScriptMT->getMetatableName(fgScriptMetatables::GUI_WINDOW_MT_ID))
             //.ObjectDirect("getWidth", (fgTextureResource *)0, &fgTextureResource::getWidth)            
-            .MetatableFunction("__gc", &fgScriptSubsystem::managedObjectTypedGCEvent<fgGuiWidgetHandle>);
-    m_fgObj.Register("Popup", &fgScriptSubsystem::managedObjectTypedNewEvent<fgGuiPopup, fgScriptMetatables::GUI_POPUP_MT_ID>);
+            .MetatableFunction("__gc", &fg::script::CScriptSubsystem::managedObjectTypedGCEvent<fgGuiWidgetHandle>);
+    m_fgObj.Register("Popup", &fg::script::CScriptSubsystem::managedObjectTypedNewEvent<fgGuiPopup, fgScriptMetatables::GUI_POPUP_MT_ID>);
 
     // Register Gui Progress Bar metatable
     metatableName = fgScriptMT->getMetatableName(fgScriptMetatables::GUI_PROGRESS_BAR_MT_ID);
     LPCD::Class(m_luaState->GetCState(), metatableName, metatableNameWidget)
             //.ObjectDirect("getWidth", (fgTextureResource *)0, &fgTextureResource::getWidth)            
-            .MetatableFunction("__gc", &fgScriptSubsystem::managedObjectTypedGCEvent<fgGuiWidgetHandle>);
-    m_fgObj.Register("ProgressBar", &fgScriptSubsystem::managedObjectTypedNewEvent<fgGuiProgressBar, fgScriptMetatables::GUI_PROGRESS_BAR_MT_ID>);
+            .MetatableFunction("__gc", &fg::script::CScriptSubsystem::managedObjectTypedGCEvent<fgGuiWidgetHandle>);
+    m_fgObj.Register("ProgressBar", &fg::script::CScriptSubsystem::managedObjectTypedNewEvent<fgGuiProgressBar, fgScriptMetatables::GUI_PROGRESS_BAR_MT_ID>);
 
     // Register Gui Scroll Area metatable
     metatableName = fgScriptMT->getMetatableName(fgScriptMetatables::GUI_SCROLL_AREA_MT_ID);
     LPCD::Class(m_luaState->GetCState(), metatableName, fgScriptMT->getMetatableName(fgScriptMetatables::GUI_CONTAINER_MT_ID))
             //.ObjectDirect("getWidth", (fgTextureResource *)0, &fgTextureResource::getWidth)            
-            .MetatableFunction("__gc", &fgScriptSubsystem::managedObjectTypedGCEvent<fgGuiWidgetHandle>);
-    m_fgObj.Register("ScrollArea", &fgScriptSubsystem::managedObjectTypedNewEvent<fgGuiScrollArea, fgScriptMetatables::GUI_SCROLL_AREA_MT_ID>);
+            .MetatableFunction("__gc", &fg::script::CScriptSubsystem::managedObjectTypedGCEvent<fgGuiWidgetHandle>);
+    m_fgObj.Register("ScrollArea", &fg::script::CScriptSubsystem::managedObjectTypedNewEvent<fgGuiScrollArea, fgScriptMetatables::GUI_SCROLL_AREA_MT_ID>);
 
     // Register Gui Table metatable
     metatableName = fgScriptMT->getMetatableName(fgScriptMetatables::GUI_TABLE_MT_ID);
     LPCD::Class(m_luaState->GetCState(), metatableName, fgScriptMT->getMetatableName(fgScriptMetatables::GUI_CONTAINER_MT_ID))
             //.ObjectDirect("getWidth", (fgTextureResource *)0, &fgTextureResource::getWidth)            
-            .MetatableFunction("__gc", &fgScriptSubsystem::managedObjectTypedGCEvent<fgGuiWidgetHandle>);
-    m_fgObj.Register("Table", &fgScriptSubsystem::managedObjectTypedNewEvent<fgGuiTable, fgScriptMetatables::GUI_TABLE_MT_ID>);
+            .MetatableFunction("__gc", &fg::script::CScriptSubsystem::managedObjectTypedGCEvent<fgGuiWidgetHandle>);
+    m_fgObj.Register("Table", &fg::script::CScriptSubsystem::managedObjectTypedNewEvent<fgGuiTable, fgScriptMetatables::GUI_TABLE_MT_ID>);
 
     // Register Gui TextArea metatable
     metatableName = fgScriptMT->getMetatableName(fgScriptMetatables::GUI_TEXT_AREA_MT_ID);
     LPCD::Class(m_luaState->GetCState(), metatableName, fgScriptMT->getMetatableName(fgScriptMetatables::GUI_SCROLL_AREA_MT_ID))
             //.ObjectDirect("getWidth", (fgTextureResource *)0, &fgTextureResource::getWidth)            
-            .MetatableFunction("__gc", &fgScriptSubsystem::managedObjectTypedGCEvent<fgGuiWidgetHandle>);
-    m_fgObj.Register("TextArea", &fgScriptSubsystem::managedObjectTypedNewEvent<fgGuiTextArea, fgScriptMetatables::GUI_TEXT_AREA_MT_ID>);
+            .MetatableFunction("__gc", &fg::script::CScriptSubsystem::managedObjectTypedGCEvent<fgGuiWidgetHandle>);
+    m_fgObj.Register("TextArea", &fg::script::CScriptSubsystem::managedObjectTypedNewEvent<fgGuiTextArea, fgScriptMetatables::GUI_TEXT_AREA_MT_ID>);
 
     // Register Gui Console metatable
     metatableName = fgScriptMT->getMetatableName(fgScriptMetatables::GUI_CONSOLE_MT_ID);
     LPCD::Class(m_luaState->GetCState(), metatableName, fgScriptMT->getMetatableName(fgScriptMetatables::GUI_TEXT_AREA_MT_ID))
             //.ObjectDirect("getWidth", (fgTextureResource *)0, &fgTextureResource::getWidth)            
-            .MetatableFunction("__gc", &fgScriptSubsystem::managedObjectTypedGCEvent<fgGuiWidgetHandle>);
-    m_fgObj.Register("Console", &fgScriptSubsystem::managedObjectTypedNewEvent<fgGuiConsole, fgScriptMetatables::GUI_CONSOLE_MT_ID>);
+            .MetatableFunction("__gc", &fg::script::CScriptSubsystem::managedObjectTypedGCEvent<fgGuiWidgetHandle>);
+    m_fgObj.Register("Console", &fg::script::CScriptSubsystem::managedObjectTypedNewEvent<fgGuiConsole, fgScriptMetatables::GUI_CONSOLE_MT_ID>);
 
     //
     // Styles / Style Content and other builtin
@@ -2265,7 +2265,7 @@ fgBool fgScriptSubsystem::registerWidgetManager(void) {
  * 
  * @return
  */
-fgBool fgScriptSubsystem::registerStyleManager(void) {
+fgBool fg::script::CScriptSubsystem::registerStyleManager(void) {
     if(m_isBindingComplete)
         return FG_TRUE;
     if(!m_pStyleMgr)
@@ -2285,7 +2285,7 @@ fgBool fgScriptSubsystem::registerStyleManager(void) {
  * 
  * @return
  */
-fgBool fgScriptSubsystem::registerSoundManager(void) {
+fgBool fg::script::CScriptSubsystem::registerSoundManager(void) {
     if(m_isBindingComplete)
         return FG_TRUE;
     if(!m_pSoundMgr)
@@ -2363,7 +2363,7 @@ fgBool fgScriptSubsystem::registerSoundManager(void) {
 /**
  * 
  */
-fgBool fgScriptSubsystem::registerLogicManager(void) {
+fgBool fg::script::CScriptSubsystem::registerLogicManager(void) {
     if(m_isBindingComplete)
         return FG_TRUE;
     if(!m_pLogicMgr)

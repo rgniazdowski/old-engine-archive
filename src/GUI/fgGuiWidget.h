@@ -27,7 +27,7 @@
 
     #include "Util/fgTag.h"
     #include "Util/fgHandle.h"
-    #include "Resource/fgManagedObjectBase.h"
+    #include "Resource/fgManagedObject.h"
 
     #include "fgGuiStyleContent.h"
     #include "fgGuiCallback.h"
@@ -99,18 +99,24 @@ typedef fgHandle<fgGuiWidgetTag> fgGuiWidgetHandle;
 
 typedef unsigned int fgGuiWidgetCallbackType;
 
+namespace fg {
+    namespace resource {
+        template<typename THandleType> class CManagedObject;
+    };
+};
+
 /**
  *
  * @see fgManagedObjectBase
  */
-class fgGuiWidget : public fgManagedObjectBase<fgGuiWidgetHandle> {
+class fgGuiWidget : public fg::resource::CManagedObject<fgGuiWidgetHandle> {
     friend class fgGuiMain;
     friend class fgGuiWidgetManager;
     friend class fgGuiStructureSheetParser;
 
 public:
     ///
-    typedef fgManagedObjectBase<fgGuiWidgetHandle> base_type;
+    typedef CManagedObject<fgGuiWidgetHandle> base_type;
 
 private:
 

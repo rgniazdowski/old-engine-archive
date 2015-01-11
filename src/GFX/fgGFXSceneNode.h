@@ -60,6 +60,10 @@ typedef unsigned int fgGfxSceneNodeType;
     #include <set>
 
 namespace fg {
+    namespace resource {
+        template<typename THandleType> class CManagedObject;
+    };
+
     namespace gfx {
 
         /**
@@ -75,7 +79,7 @@ namespace fg {
          * Also need template structs for managing safe down/up-casting (static)
          */
         class CSceneNode :
-        public fgManagedObjectBase<fgGfxSceneNodeHandle>,
+        public fg::resource::CManagedObject<fgGfxSceneNodeHandle>,
         public CDrawable {
         public:
             /// Scene node tag type
@@ -83,7 +87,7 @@ namespace fg {
             /// Drawable object type
             typedef CDrawable drawable_type;
             /// Base type for scene node
-            typedef fgManagedObjectBase<fgGfxSceneNodeHandle> base_type;
+            typedef CManagedObject<fgGfxSceneNodeHandle> base_type;
             /// Handle type for scene node
             typedef fgGfxSceneNodeHandle handle_type;
             /// SceneNode type - self
