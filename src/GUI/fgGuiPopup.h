@@ -9,35 +9,55 @@
 
 #ifndef FG_INC_GUI_POPUP
     #define FG_INC_GUI_POPUP
+    #define FG_INC_GUI_POPUP_BLOCK
 
     #include "fgGuiWindow.h"
     #include "fgGuiWidgetFactoryTypes.h"
 
-/*
- *
- */
-class fgGuiPopup : public fgGuiWindow {
-public:
-    typedef fgGuiWindow base_type;
-protected:
+namespace fg {
+    namespace gui {
 
-protected:
-    // 
-    virtual void setDefaults(void);
+        /**
+         *
+         */
+        class CPopup : public CWindow {
+        public:
+            typedef CWindow base_type;
 
-public:
-    // 
-    fgGuiPopup();
-    // 
-    virtual ~fgGuiPopup();
+        public:
+            /**
+             * 
+             */
+            CPopup();
+            /**
+             * 
+             */
+            virtual ~CPopup();
 
-    FG_GUI_WIDGET_FACTORY_CREATE_FUNCTION(fgGuiPopup);
+            /**
+             * 
+             * @return 
+             */
+            FG_GUI_WIDGET_FACTORY_CREATE_FUNCTION(CPopup)
 
-    // 
-    virtual fgBoundingBox3Df updateBounds(void);
-    // 
-    virtual void refresh(void);
+            /**
+             * 
+             * @return 
+             */
+            virtual fgBoundingBox3Df updateBounds(void);
+            /**
+             * 
+             */
+            virtual void refresh(void);
 
+        protected:
+            /**
+             * 
+             */
+            virtual void setDefaults(void);
+        };
+    };
 };
 
+    #undef FG_INC_GUI_POPUP_BLOCK
 #endif /* FG_INC_GUI_POPUP */

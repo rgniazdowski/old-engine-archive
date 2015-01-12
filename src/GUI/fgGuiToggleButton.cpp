@@ -9,35 +9,25 @@
 
 #include "fgGuiToggleButton.h"
 
-/*
+using namespace fg;
+
+/**
  *
  */
-fgGuiToggleButton::fgGuiToggleButton() {
-    fgGuiToggleButton::setDefaults();
+gui::CToggleButton::CToggleButton() {
+    CToggleButton::setDefaults();
 }
 
-/*
+/**
  *
  */
-fgGuiToggleButton::~fgGuiToggleButton() { }
+gui::CToggleButton::~CToggleButton() { }
 
-/*
+/**
  *
  */
-void fgGuiToggleButton::setDefaults(void) {
-    m_type = FG_GUI_TOGGLE_BUTTON;
+void gui::CToggleButton::setDefaults(void) {
+    m_type = TOGGLE_BUTTON;
     m_typeName = FG_GUI_TOGGLE_BUTTON_NAME;
-    m_typeTraits = FG_GUI_TOGGLE_BUTTON | FG_GUI_BUTTON | FG_GUI_WIDGET;
+    m_typeTraits = TOGGLE_BUTTON | BUTTON | WIDGET;
 }
-
-/*
- *
- */
-fgBoundingBox3Df fgGuiToggleButton::updateBounds(void) {
-    return fgGuiButton::updateBounds();
-}
-
-/*
- *
- */
-void fgGuiToggleButton::refresh(void) { }

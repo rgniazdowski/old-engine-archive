@@ -19,15 +19,15 @@
 
 namespace fg {
     namespace util {
-        class RegularFile;
+        class CRegularFile;
     };
 };
 //class fg::util::File;
 
     #define FG_TAG_FILE_NAME	"RegularFile"
-    #define FG_TAG_FILE		FG_TAG_TYPE(fg::util::RegularFile)
+    #define FG_TAG_FILE		FG_TAG_TYPE(fg::util::CRegularFile)
 
-FG_TAG_TEMPLATE_ID_AUTO(fg::util::RegularFile, FG_TAG_FILE_NAME);
+FG_TAG_TEMPLATE_ID_AUTO(fg::util::CRegularFile, FG_TAG_FILE_NAME);
 
 namespace fg {
     namespace util {
@@ -65,11 +65,11 @@ namespace fg {
         /*
          * Platform independent wrapper for basic file operations
          */
-        class RegularFile : public fg::util::base::File {
+        class CRegularFile : public fg::util::base::CFile {
         public:
-            typedef fg::util::base::File base_type;
+            typedef fg::util::base::CFile base_type;
             typedef RegularFileTag tag_type;
-            typedef fg::util::base::File::Mode Mode;
+            typedef fg::util::base::CFile::Mode Mode;
 
         protected:
             /// C standard file handle
@@ -79,18 +79,18 @@ namespace fg {
             /**
              * Default constructor for File object
              */
-            RegularFile();
+            CRegularFile();
 
             /**
              * Constructor for File object with parameter (file path)
              * @param filePath
              */
-            RegularFile(const char *filePath);
+            CRegularFile(const char *filePath);
 
             /**
              * Destructor, closes the file, frees up all buffers
              */
-            virtual ~RegularFile();
+            virtual ~CRegularFile();
 
             /**
              * Get the C standard mode for fopen
@@ -101,7 +101,7 @@ namespace fg {
 
             /******************************************************************/
             
-            using fg::util::base::File::open;
+            using fg::util::base::CFile::open;
             
             /**
              * Open the file with already set options
@@ -155,12 +155,12 @@ namespace fg {
              * @return 
              */
             virtual fgBool exists(void) {
-                return RegularFile::exists(m_filePath.c_str());
+                return CRegularFile::exists(m_filePath.c_str());
             }
             
             /******************************************************************/
 
-            using fg::util::base::File::load;
+            using fg::util::base::CFile::load;
             
             /**
              * This will load the whole file into char *buffer

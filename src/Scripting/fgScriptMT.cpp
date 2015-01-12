@@ -18,60 +18,64 @@
 #include "Resource/fgResource.h"
 
 template <>
-bool fgSingleton<fgScriptMetatables>::instanceFlag = false;
+bool fgSingleton<fg::script::CMetatables>::instanceFlag = false;
 
 template <>
-fgScriptMetatables *fgSingleton<fgScriptMetatables>::instance = NULL;
+fg::script::CMetatables *fgSingleton<fg::script::CMetatables>::instance = NULL;
+
+using namespace fg;
 
 /**
  * 
  */
-fgScriptMetatables::fgScriptMetatables() { }
+script::CMetatables::CMetatables() { }
 
 /**
  * 
  */
-fgScriptMetatables::~fgScriptMetatables() { clearMetatableNames(); }
+script::CMetatables::~CMetatables() {
+    clearMetatableNames();
+}
 
 /**
  * 
  * @param widgetType
  * @return 
  */
-fgScriptMetatables::METAID fgScriptMetatables::getMetatableIDFromWidgetType(const unsigned int widgetType) {
+script::CMetatables::METAID script::CMetatables::getMetatableIDFromWidgetType(const unsigned int widgetType) {
     METAID metaID;
-    if(widgetType == FG_GUI_BUTTON) {
-        metaID = fgScriptMetatables::GUI_BUTTON_MT_ID;
-    } else if(widgetType == FG_GUI_CONSOLE) {
-        metaID = fgScriptMetatables::GUI_CONSOLE_MT_ID;
-    } else if(widgetType == FG_GUI_CONTAINER) {
-        metaID = fgScriptMetatables::GUI_CONTAINER_MT_ID;
-    } else if(widgetType == FG_GUI_FRAME) {
-        metaID = fgScriptMetatables::GUI_FRAME_MT_ID;
-    } else if(widgetType == FG_GUI_LABEL) {
-        metaID = fgScriptMetatables::GUI_FRAME_MT_ID;
-    } else if(widgetType == FG_GUI_LOADER) {
-        metaID = fgScriptMetatables::GUI_LOADER_MT_ID;
-    } else if(widgetType == FG_GUI_MENU) {
-        metaID = fgScriptMetatables::GUI_MENU_MT_ID;
-    } else if(widgetType == FG_GUI_MESSAGE_BOX) {
-        metaID = fgScriptMetatables::GUI_MESSAGE_BOX_MT_ID;
-    } else if(widgetType == FG_GUI_POPUP) {
-        metaID = fgScriptMetatables::GUI_POPUP_MT_ID;
-    } else if(widgetType == FG_GUI_PROGRESS_BAR) {
-        metaID = fgScriptMetatables::GUI_PROGRESS_BAR_MT_ID;
-    } else if(widgetType == FG_GUI_SCROLL_AREA) {
-        metaID = fgScriptMetatables::GUI_SCROLL_AREA_MT_ID;
-    } else if(widgetType == FG_GUI_TABLE) {
-        metaID = fgScriptMetatables::GUI_TABLE_MT_ID;
-    } else if(widgetType == FG_GUI_TEXT_AREA) {
-        metaID = fgScriptMetatables::GUI_TEXT_AREA_MT_ID;
-    } else if(widgetType == FG_GUI_TOGGLE_BUTTON) {
-        metaID = fgScriptMetatables::GUI_TOGGLE_BUTTON_MT_ID;
-    } else if(widgetType == FG_GUI_WINDOW) {
-        metaID = fgScriptMetatables::GUI_WINDOW_MT_ID;
+    if(widgetType == gui::BUTTON) {
+        metaID = CMetatables::GUI_BUTTON_MT_ID;
+    } else if(widgetType == gui::CONSOLE) {
+        metaID = CMetatables::GUI_CONSOLE_MT_ID;
+    } else if(widgetType == gui::CONTAINER) {
+        metaID = CMetatables::GUI_CONTAINER_MT_ID;
+    } else if(widgetType == gui::FRAME) {
+        metaID = CMetatables::GUI_FRAME_MT_ID;
+    } else if(widgetType == gui::LABEL) {
+        metaID = CMetatables::GUI_FRAME_MT_ID;
+    } else if(widgetType == gui::LOADER) {
+        metaID = CMetatables::GUI_LOADER_MT_ID;
+    } else if(widgetType == gui::MENU) {
+        metaID = CMetatables::GUI_MENU_MT_ID;
+    } else if(widgetType == gui::MESSAGE_BOX) {
+        metaID = CMetatables::GUI_MESSAGE_BOX_MT_ID;
+    } else if(widgetType == gui::POPUP) {
+        metaID = CMetatables::GUI_POPUP_MT_ID;
+    } else if(widgetType == gui::PROGRESS_BAR) {
+        metaID = CMetatables::GUI_PROGRESS_BAR_MT_ID;
+    } else if(widgetType == gui::SCROLL_AREA) {
+        metaID = CMetatables::GUI_SCROLL_AREA_MT_ID;
+    } else if(widgetType == gui::TABLE) {
+        metaID = CMetatables::GUI_TABLE_MT_ID;
+    } else if(widgetType == gui::TEXT_AREA) {
+        metaID = CMetatables::GUI_TEXT_AREA_MT_ID;
+    } else if(widgetType == gui::TOGGLE_BUTTON) {
+        metaID = CMetatables::GUI_TOGGLE_BUTTON_MT_ID;
+    } else if(widgetType == gui::WINDOW) {
+        metaID = CMetatables::GUI_WINDOW_MT_ID;
     } else {
-        metaID = fgScriptMetatables::EMPTY_MT_ID;
+        metaID = CMetatables::EMPTY_MT_ID;
     }
     return metaID;
 }
@@ -81,22 +85,22 @@ fgScriptMetatables::METAID fgScriptMetatables::getMetatableIDFromWidgetType(cons
  * @param resourceType
  * @return 
  */
-fgScriptMetatables::METAID fgScriptMetatables::getMetatableIDFromResourceType(const unsigned int resourceType) {
+script::CMetatables::METAID script::CMetatables::getMetatableIDFromResourceType(const unsigned int resourceType) {
     METAID metaID;
     if(resourceType == FG_RESOURCE_TEXTURE) {
-        metaID = fgScriptMetatables::TEXTURE_RESOURCE_MT_ID;
+        metaID = CMetatables::TEXTURE_RESOURCE_MT_ID;
     } else if(resourceType == FG_RESOURCE_FONT) {
-        metaID = fgScriptMetatables::FONT_RESOURCE_MT_ID;
+        metaID = CMetatables::FONT_RESOURCE_MT_ID;
     } else if(resourceType == FG_RESOURCE_3D_MODEL) {
-        metaID = fgScriptMetatables::GFX_MODEL_RESOURCE_MT_ID;
+        metaID = CMetatables::GFX_MODEL_RESOURCE_MT_ID;
     } else if(resourceType == FG_RESOURCE_PARTICLE_EFFECT) {
-        metaID = fgScriptMetatables::PARTICLE_EFFECT_RESOURCE_MT_ID;
+        metaID = CMetatables::PARTICLE_EFFECT_RESOURCE_MT_ID;
     } else if(resourceType == FG_RESOURCE_MUSIC) {
-        metaID = fgScriptMetatables::MUSIC_RESOURCE_MT_ID;
+        metaID = CMetatables::MUSIC_RESOURCE_MT_ID;
     } else if(resourceType == FG_RESOURCE_SOUND) {
-        metaID = fgScriptMetatables::SOUND_RESOURCE_MT_ID;
+        metaID = CMetatables::SOUND_RESOURCE_MT_ID;
     } else {
-        metaID = fgScriptMetatables::EMPTY_MT_ID;
+        metaID = CMetatables::EMPTY_MT_ID;
     }
     return metaID;
 }
@@ -104,7 +108,7 @@ fgScriptMetatables::METAID fgScriptMetatables::getMetatableIDFromResourceType(co
 /**
  * 
  */
-void fgScriptMetatables::generateMetatableNames(void) {
+void script::CMetatables::generateMetatableNames(void) {
     // Initializing metatable map
     m_metatableInfoVec.clear();
     m_metatableInfoVec.reserve(METATABLE_SIZE);
@@ -118,7 +122,7 @@ void fgScriptMetatables::generateMetatableNames(void) {
 #if !defined(FG_USING_MARMALADE)
 
     m_metatableInfoVec[EMPTY_MT_ID] = metatableInfo("FG", "X");
-    
+
     m_metatableInfoVec[FG_NAMESPACE_MT_ID] = metatableInfo("FG", "NMSPC");
 
     m_metatableInfoVec[VECTOR2I_MT_ID] = metatableInfo("FGX", "T");
@@ -154,12 +158,12 @@ void fgScriptMetatables::generateMetatableNames(void) {
     m_metatableInfoVec[SAVE_FILE_RESOURCE_MT_ID] = metatableInfo("FGX", "T");
 
     // INI Config / Settings XML
-    
+
     m_metatableInfoVec[CONFIG_MT_ID] = metatableInfo("FGX", "T");
     m_metatableInfoVec[SETTINGS_MT_ID] = metatableInfo("FGX", "T");
 
     // GUI Widget structure metatables
-    
+
     m_metatableInfoVec[GUI_WIDGET_MT_ID] = metatableInfo("FGX", "T");
     m_metatableInfoVec[GUI_BUTTON_MT_ID] = metatableInfo("FGX", "T");
     m_metatableInfoVec[GUI_CONSOLE_MT_ID] = metatableInfo("FGX", "T");
@@ -178,19 +182,20 @@ void fgScriptMetatables::generateMetatableNames(void) {
     m_metatableInfoVec[GUI_WINDOW_MT_ID] = metatableInfo("FGX", "T");
 
     // GUI Style special structures
-    
+
     m_metatableInfoVec[GUI_STYLE_MT_ID] = metatableInfo("FGX", "T");
     m_metatableInfoVec[GUI_STYLE_CONTENT_MT_ID] = metatableInfo("FGX", "T");
     m_metatableInfoVec[GUI_STYLE_SIZE_MT_ID] = metatableInfo("FGX", "T");
     m_metatableInfoVec[GUI_STYLE_BACKGROUND_MT_ID] = metatableInfo("FGX", "T");
     m_metatableInfoVec[GUI_STYLE_FOREGROUND_MT_ID] = metatableInfo("FGX", "T");
     m_metatableInfoVec[GUI_STYLE_MARGIN_MT_ID] = metatableInfo("FGX", "T");
+    m_metatableInfoVec[GUI_STYLE_PADDING_MT_ID] = metatableInfo("FGX", "T");
     m_metatableInfoVec[GUI_STYLE_BORDER_INFO_MT_ID] = metatableInfo("FGX", "T");
     m_metatableInfoVec[GUI_STYLE_BORDER_MT_ID] = metatableInfo("FGX", "T");
     m_metatableInfoVec[GUI_STYLE_POSITION_MT_ID] = metatableInfo("FGX", "T");
 
     // Thrown Event info structures 
-    
+
     m_metatableInfoVec[EVENT_BASE_MT_ID] = metatableInfo("FGX", "T");
     m_metatableInfoVec[EVENT_CONTROLLER_DEVICE_MT_ID] = metatableInfo("FGX", "T");
     m_metatableInfoVec[EVENT_CONTROLLER_BUTTON_MT_ID] = metatableInfo("FGX", "T");
@@ -212,7 +217,7 @@ void fgScriptMetatables::generateMetatableNames(void) {
 
     // Script callback type
     m_metatableInfoVec[SCRIPT_CALLBACK_MT_ID] = metatableInfo("FGX", "T");
-    
+
     // GFX Scene Node type
     m_metatableInfoVec[SCENE_NODE_MT_ID] = metatableInfo("FGX", "T");
 
@@ -226,7 +231,7 @@ void fgScriptMetatables::generateMetatableNames(void) {
 /**
  * 
  */
-void fgScriptMetatables::clearMetatableNames() {
+void script::CMetatables::clearMetatableNames() {
     m_metatableInfoVec.clear();
     metatableInfoVec smvec;
     m_metatableInfoVec.swap(smvec);

@@ -9,15 +9,28 @@
 
 #ifndef FG_INC_GUI_BASE
     #define FG_INC_GUI_BASE
+    #define FG_INC_GUI_BASE_BLOCK
 
-/*
- *
- */
-class fgGuiBase {
-public:
-    fgGuiBase() { }
-    virtual ~fgGuiBase() { }
+namespace fg {
+    namespace gui {
 
+        /**
+         *
+         */
+        class CGuiBase {
+        public:
+            /**
+             * 
+             */
+            CGuiBase() { }
+            /**
+             * 
+             */
+            virtual ~CGuiBase() { }
+
+        };
+    };
 };
 
+    #undef FG_INC_GUI_BASE_BLOCK
 #endif /* FG_INC_GUI_BASE */

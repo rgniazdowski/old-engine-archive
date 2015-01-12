@@ -12,19 +12,20 @@
 #include "GFX/Shaders/fgGFXShaderManager.h"
 #include "GFX/fgGFXAABoundingBox.h"
 
-/**
- *
- */
-fgFontDrawer::fgFontDrawer() :
-m_currentFont(NULL),
-m_color(1.0f, 1.0f, 1.0f, 1.0f),
-m_printMode(FG_FONT_PRINT_MODE_ABSOLUTE) {
-}
+using namespace fg;
 
 /**
  *
  */
-fgFontDrawer::~fgFontDrawer() { }
+gui::CFontDrawer::CFontDrawer() :
+m_currentFont(NULL),
+m_color(1.0f, 1.0f, 1.0f, 1.0f),
+m_printMode(FG_FONT_PRINT_MODE_ABSOLUTE) { }
+
+/**
+ *
+ */
+gui::CFontDrawer::~CFontDrawer() { }
 
 /**
  * 
@@ -34,7 +35,7 @@ fgFontDrawer::~fgFontDrawer() { }
  * @param fmt
  * @return 
  */
-int fgFontDrawer::print(float x0, float y0, float charSize, const char *fmt, ...) {
+int gui::CFontDrawer::print(float x0, float y0, float charSize, const char *fmt, ...) {
     if(!m_currentFont || !fmt)
         return 0;
     char buf[FG_FONT_DRAW_STRING_BUF_MAX];
@@ -55,7 +56,7 @@ int fgFontDrawer::print(float x0, float y0, float charSize, const char *fmt, ...
  * @param ...
  * @return 
  */
-int fgFontDrawer::print(float charSize, const char *fmt, ...) {
+int gui::CFontDrawer::print(float charSize, const char *fmt, ...) {
     if(!m_currentFont || !fmt)
         return 0;
     char buf[FG_FONT_DRAW_STRING_BUF_MAX];
@@ -75,7 +76,7 @@ int fgFontDrawer::print(float charSize, const char *fmt, ...) {
  * @param charSize
  * @return 
  */
-int fgFontDrawer::print(const char *string, float charSize) {
+int gui::CFontDrawer::print(const char *string, float charSize) {
     return print(0.0f, 0.0f, string, charSize);
 }
 
@@ -87,7 +88,7 @@ int fgFontDrawer::print(const char *string, float charSize) {
  * @param charSize
  * @return 
  */
-int fgFontDrawer::print(float x0, float y0, const char *string, float charSize) {
+int gui::CFontDrawer::print(float x0, float y0, const char *string, float charSize) {
     if(!m_currentFont || !string)
         return 0;
     // main
@@ -101,7 +102,7 @@ int fgFontDrawer::print(float x0, float y0, const char *string, float charSize) 
     //scale = charSize / (float)m_currentFont->getStep(); // ? is it needed?
     //x += m_relMove.x;
     //y += m_relMove.y;
-    if(m_printMode == FG_FONT_PRINT_MODE_ABSOLUTE && 0) {        
+    if(m_printMode == FG_FONT_PRINT_MODE_ABSOLUTE && 0) {
         m_relMove.x = -x0;
         m_relMove.y = -y0;
     } else {
@@ -135,7 +136,7 @@ int fgFontDrawer::print(float x0, float y0, const char *string, float charSize) 
 /**
  * Clears the buffer (no drawing is performed)
  */
-void fgFontDrawer::flush(void) {
+void gui::CFontDrawer::flush(void) {
     fg::gfx::CDrawingBatch::flush();
     m_relMove = fgVector3f(0.0f, 0.0f, 0.0f);
 }
@@ -143,17 +144,17 @@ void fgFontDrawer::flush(void) {
 /**
  * 
  */
-void fgFontDrawer::render(void) {
-    fg::gfx::CDrawingBatch::render();
+void gui::CFontDrawer::render(void) {
+    gfx::CDrawingBatch::render();
 }
 
 /**
  * 
  * @param color
  */
-void fgFontDrawer::setColor(const fgColor4f &color) {
+void gui::CFontDrawer::setColor(const fgColor4f &color) {
     m_color = color;
-    fg::gfx::CDrawCall *drawCall = fg::gfx::CDrawingBatch::getLastDrawCall();
+    gfx::CDrawCall *drawCall = gfx::CDrawingBatch::getLastDrawCall();
     if(drawCall) {
         drawCall->setColor(m_color);
     }
@@ -163,9 +164,9 @@ void fgFontDrawer::setColor(const fgColor4f &color) {
  * 
  * @param color
  */
-void fgFontDrawer::setColor(const fgColor3f &color) {
+void gui::CFontDrawer::setColor(const fgColor3f &color) {
     m_color = fgColor4f(color.r, color.g, color.g, 1.0f);
-    fg::gfx::CDrawCall *drawCall = fg::gfx::CDrawingBatch::getLastDrawCall();
+    gfx::CDrawCall *drawCall = gfx::CDrawingBatch::getLastDrawCall();
     if(drawCall) {
         drawCall->setColor(m_color);
     }
@@ -174,9 +175,9 @@ void fgFontDrawer::setColor(const fgColor3f &color) {
 /**
  * 
  */
-void fgFontDrawer::setColor(void) {
+void fg::gui::CFontDrawer::setColor(void) {
     m_color = fgColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-    fg::gfx::CDrawCall *drawCall = fg::gfx::CDrawingBatch::getLastDrawCall();
+    gfx::CDrawCall *drawCall = gfx::CDrawingBatch::getLastDrawCall();
     if(drawCall) {
         drawCall->setColor(m_color);
     }
@@ -187,11 +188,11 @@ void fgFontDrawer::setColor(void) {
  * @param texture
  * @return 
  */
-fg::gfx::CDrawCall *fgFontDrawer::setupDrawCall(fg::gfx::CTexture *texture) {
+gfx::CDrawCall *gui::CFontDrawer::setupDrawCall(gfx::CTexture *texture) {
     int index;
-    fg::gfx::CDrawCall *drawCall = fg::gfx::CDrawingBatch::requestDrawCall(index,
-                                                                FG_GFX_DRAW_CALL_CUSTOM_ARRAY,
-                                                                FG_GFX_POSITION_BIT | FG_GFX_UVS_BIT | FG_GFX_COLOR_BIT);
+    gfx::CDrawCall *drawCall = gfx::CDrawingBatch::requestDrawCall(index,
+                                                                   FG_GFX_DRAW_CALL_CUSTOM_ARRAY,
+                                                                   FG_GFX_POSITION_BIT | FG_GFX_UVS_BIT | FG_GFX_COLOR_BIT);
     drawCall->setColor(m_color);
     drawCall->setTexture(texture->getRefGfxID());
     drawCall->setDrawAppendMode(FG_GFX_DRAW_APPEND_ABSOLUTE);
@@ -203,7 +204,7 @@ fg::gfx::CDrawCall *fgFontDrawer::setupDrawCall(fg::gfx::CTexture *texture) {
  * @param font
  * @return 
  */
-fgBool fgFontDrawer::setFont(fgFontResource *font) {
+fgBool gui::CFontDrawer::setFont(CFontResource *font) {
     if(!font)
         return FG_FALSE;
     if(m_currentFont != font) {
@@ -217,15 +218,15 @@ fgBool fgFontDrawer::setFont(fgFontResource *font) {
  * 
  * @return 
  */
-fgFontResource *fgFontDrawer::getFont(void) const {
+gui::CFontResource *gui::CFontDrawer::getFont(void) const {
     return m_currentFont;
 }
 
 /*
  * This will flush the data, reset the fontHandle, clear cache etc
  */
-void fgFontDrawer::reset(void) {
-    fgFontDrawer::flush();
+void gui::CFontDrawer::reset(void) {
+    gui::CFontDrawer::flush();
     m_currentFont = NULL;
     m_relMove = fgVector3f(0.0f, 0.0f, 0.0f);
 }
@@ -237,7 +238,7 @@ void fgFontDrawer::reset(void) {
  * @param charSize
  * @return 
  */
-float fgFontDrawer::placeChar(char letter, fgBool rewind, float charSize) {
+float gui::CFontDrawer::placeChar(char letter, fgBool rewind, float charSize) {
     if(!m_currentFont)
         return 0.0f;
     return placeChar(0.0f, 0.0f, letter, charSize);
@@ -252,14 +253,18 @@ float fgFontDrawer::placeChar(char letter, fgBool rewind, float charSize) {
  * @param charSize
  * @return 
  */
-float fgFontDrawer::placeChar(float xRel0, float yRel0, char letter, fgBool rewind, float charSize) {
+float gui::CFontDrawer::placeChar(float xRel0,
+                                  float yRel0,
+                                  char letter,
+                                  fgBool rewind,
+                                  float charSize) {
     if(!m_currentFont)
         return 0.0f;
     int i = (int)letter - m_currentFont->getDataInfo().firstChar;
     if(charSize <= 0.0f)
         charSize = (float)m_currentFont->getStep();
     float scale = charSize / (float)m_currentFont->getStep();
-    fgFontCharInfo &charInfo = m_currentFont->getDataInfo().charInfo[i];
+    SFontCharInfo &charInfo = m_currentFont->getDataInfo().charInfo[i];
     fgVec2f relPos(xRel0, yRel0);
     relPos.x += charInfo.p0f.x*scale;
     relPos.y += charInfo.p0f.y*scale;
@@ -284,7 +289,7 @@ float fgFontDrawer::placeChar(float xRel0, float yRel0, char letter, fgBool rewi
  * @param ...
  * @return 
  */
-float fgFontDrawer::width(fgFontResource *font, float charSize, const char *fmt, ...) {
+float gui::CFontDrawer::width(CFontResource *font, float charSize, const char *fmt, ...) {
     if(!font)
         return 0.0f;
     char buf[FG_FONT_DRAW_STRING_BUF_MAX];
@@ -295,7 +300,7 @@ float fgFontDrawer::width(fgFontResource *font, float charSize, const char *fmt,
     va_end(args);
     // Index is zero based -> MAX-1 points to last byte in buffer
     buf[FG_FONT_DRAW_STRING_BUF_MAX - 1] = '\0';
-    return fgFontDrawer::width(font, buf, charSize);
+    return fg::gui::CFontDrawer::width(font, buf, charSize);
 }
 
 /**
@@ -305,7 +310,7 @@ float fgFontDrawer::width(fgFontResource *font, float charSize, const char *fmt,
  * @param charSize
  * @return 
  */
-float fgFontDrawer::width(fgFontResource *font, const char *string, float charSize) {
+float gui::CFontDrawer::width(CFontResource *font, const char *string, float charSize) {
     if(!font)
         return 0.0f;
     float x = 0.0f;
@@ -350,7 +355,10 @@ float fgFontDrawer::width(fgFontResource *font, const char *string, float charSi
  * @param ...
  * @return 
  */
-float fgFontDrawer::height(fgFontResource *font, float charSize, const char *fmt, ...) {
+float gui::CFontDrawer::height(CFontResource *font,
+                               float charSize,
+                               const char *fmt,
+                               ...) {
     if(!font)
         return 0.0f;
     char buf[FG_FONT_DRAW_STRING_BUF_MAX];
@@ -364,7 +372,7 @@ float fgFontDrawer::height(fgFontResource *font, float charSize, const char *fmt
     // Index is zero based -> MAX-1 points to last byte in buffer
     buf[FG_FONT_DRAW_STRING_BUF_MAX - 1] = '\0';
 
-    return fgFontDrawer::height(font, buf, charSize);
+    return gui::CFontDrawer::height(font, buf, charSize);
 }
 
 /**
@@ -374,7 +382,9 @@ float fgFontDrawer::height(fgFontResource *font, float charSize, const char *fmt
  * @param charSize
  * @return 
  */
-float fgFontDrawer::height(fgFontResource *font, const char *string, float charSize) {
+float gui::CFontDrawer::height(CFontResource *font,
+                               const char *string,
+                               float charSize) {
     if(!font)
         return 0.0f;
     if(charSize <= 0.0f)
@@ -406,7 +416,10 @@ float fgFontDrawer::height(fgFontResource *font, const char *string, float charS
  * @param fmt
  * @return 
  */
-fgVector2f fgFontDrawer::size(fgFontResource *font, float charSize, const char *fmt, ...) {
+fgVector2f gui::CFontDrawer::size(CFontResource *font,
+                                  float charSize,
+                                  const char *fmt,
+                                  ...) {
     if(!font)
         return fgVector2f();
     char buf[FG_FONT_DRAW_STRING_BUF_MAX];
@@ -426,7 +439,9 @@ fgVector2f fgFontDrawer::size(fgFontResource *font, float charSize, const char *
  * @param charSize
  * @return 
  */
-fgVector2f fgFontDrawer::size(fgFontResource *font, const char *string, float charSize) {
+fgVector2f gui::CFontDrawer::size(CFontResource *font,
+                                  const char *string,
+                                  float charSize) {
     if(!string)
         return fgVector2f();
     fgVector2f textSize;
@@ -441,7 +456,9 @@ fgVector2f fgFontDrawer::size(fgFontResource *font, const char *string, float ch
  * @param fmt
  * @return 
  */
-float fgFontDrawer::width(float charSize, const char *fmt, ...) {
+float gui::CFontDrawer::width(float charSize,
+                              const char *fmt,
+                              ...) {
     if(!m_currentFont)
         return 0.0f;
     char buf[FG_FONT_DRAW_STRING_BUF_MAX];
@@ -460,7 +477,8 @@ float fgFontDrawer::width(float charSize, const char *fmt, ...) {
  * @param charSize
  * @return 
  */
-float fgFontDrawer::width(const char *string, float charSize) {
+float gui::CFontDrawer::width(const char *string,
+                              float charSize) {
     if(!m_currentFont || !string)
         return 0.0f;
     if(charSize <= FG_EPSILON)
@@ -474,7 +492,9 @@ float fgFontDrawer::width(const char *string, float charSize) {
  * @param fmt
  * @return 
  */
-float fgFontDrawer::height(float charSize, const char *fmt, ...) {
+float gui::CFontDrawer::height(float charSize,
+                               const char *fmt,
+                               ...) {
     if(!m_currentFont || !fmt)
         return 0.0f;
     if(charSize <= FG_EPSILON)
@@ -494,8 +514,9 @@ float fgFontDrawer::height(float charSize, const char *fmt, ...) {
  * @param height
  * @return 
  */
-float fgFontDrawer::height(const char *string, float charSize) {
-     if(!m_currentFont || !string)
+float gui::CFontDrawer::height(const char *string,
+                               float charSize) {
+    if(!m_currentFont || !string)
         return 0.0f;
     if(charSize <= FG_EPSILON)
         return FG_EPSILON;
@@ -508,7 +529,9 @@ float fgFontDrawer::height(const char *string, float charSize) {
  * @param fmt
  * @return 
  */
-fgVector2f fgFontDrawer::size(float charSize, const char *fmt, ...) {
+fgVector2f gui::CFontDrawer::size(float charSize,
+                                  const char *fmt,
+                                  ...) {
     if(!m_currentFont)
         return fgVector2f();
     char buf[FG_FONT_DRAW_STRING_BUF_MAX];
@@ -527,7 +550,8 @@ fgVector2f fgFontDrawer::size(float charSize, const char *fmt, ...) {
  * @param charSize
  * @return 
  */
-fgVector2f fgFontDrawer::size(const char *string, float charSize) {
+fgVector2f gui::CFontDrawer::size(const char *string,
+                                  float charSize) {
     if(!string)
         return fgVector2f();
     fgVector2f textSize;

@@ -9,34 +9,56 @@
 
 #ifndef FG_INC_GUI_LABEL
     #define FG_INC_GUI_LABEL
+    #define FG_INC_GUI_LABEL_BLOCK
 
     #include "fgGuiWidget.h"
     #include "fgGuiWidgetFactoryTypes.h"
 
-/*
- *
- */
-class fgGuiLabel : public fgGuiWidget {
-public:
-    typedef fgGuiWidget base_type;
-protected:
-    /// 
-    std::string m_text;
+namespace fg {
+    namespace gui {
 
-protected:
-    // 
-    virtual void setDefaults(void);
+        /**
+         *
+         */
+        class CLabel : public CWidget {
+        public:
+            ///
+            typedef CWidget base_type;
 
-public:
-    // 
-    fgGuiLabel();
-    // 
-    virtual ~fgGuiLabel();
+        protected:
+            /// 
+            std::string m_text;
 
-    FG_GUI_WIDGET_FACTORY_CREATE_FUNCTION(fgGuiLabel);
+        protected:
+            /**
+             * 
+             */
+            virtual void setDefaults(void);
 
-    // 
-    virtual fgBoundingBox3Df updateBounds(void);
+        public:
+            /**
+             * 
+             */
+            CLabel();
+            /**
+             * 
+             */
+            virtual ~CLabel();
+
+            /**
+             * 
+             * @return 
+             */
+            FG_GUI_WIDGET_FACTORY_CREATE_FUNCTION(CLabel)
+
+            /**
+             * 
+             * @return 
+             */
+            virtual fgBoundingBox3Df updateBounds(void);
+        };
+    };
 };
 
+    #undef FG_INC_GUI_LABEL_BLOCK
 #endif /* FG_INC_GUI_LABEL */

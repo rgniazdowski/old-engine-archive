@@ -16,30 +16,32 @@
 #include "fgGuiSlider.h"
 #include "fgGuiDrawer.h"
 
+using namespace fg;
+
 /**
  * 
  */
-fgGuiSlider::fgGuiSlider() :
+gui::CSlider::CSlider() :
 base_type(),
 m_maxValue(100.0f),
 m_currentValue(),
 m_pointerRatio(),
 m_ratio(0.2f, 0.2f),
 m_sliderAlign(SLIDER_VERTICAL) {
-    fgGuiSlider::setDefaults();
+    CSlider::setDefaults();
 }
 
 /**
  * 
  */
-fgGuiSlider::~fgGuiSlider() { }
+gui::CSlider::~CSlider() { }
 
 /**
  * 
  */
-void fgGuiSlider::setDefaults(void) {
-    m_type = FG_GUI_SLIDER;
-    m_typeTraits = FG_GUI_SLIDER | FG_GUI_WIDGET;
+void gui::CSlider::setDefaults(void) {
+    m_type = SLIDER;
+    m_typeTraits = SLIDER | WIDGET;
     m_typeName = FG_GUI_SLIDER_NAME;
 }
 
@@ -47,16 +49,16 @@ void fgGuiSlider::setDefaults(void) {
  * 
  * @param guiLayer
  */
-void fgGuiSlider::display(fgGuiDrawer* guiLayer) {
+void gui::CSlider::display(CDrawer* guiLayer) {
     if(!guiLayer)
         return;
     if(!m_isVisible)
         return;
-    fgGuiDrawer *guiDrawer = (fgGuiDrawer *)guiLayer; // wut?
-    fgGuiPadding &padding = m_styles[m_state].getPadding();
-    fgGuiBorderInfo &borderInfo = m_styles[m_state].getBorder();
-    fgColor4f &bgColor = m_styles[m_state].getBackground().color;
-    fgColor4f &fgColor = m_styles[m_state].getForeground().color;
+    CDrawer *guiDrawer = (CDrawer *)guiLayer; // wut?
+    SPadding &padding = m_styles[(int)m_state].getPadding();
+    SBorderGroup &borderInfo = m_styles[(int)m_state].getBorder();
+    fgColor4f &bgColor = m_styles[(int)m_state].getBackground().color;
+    fgColor4f &fgColor = m_styles[(int)m_state].getForeground().color;
     /// need to normally draw Slider from base_type::display
     /// and also provide additional drawing (slider hook ?)
 
@@ -77,13 +79,13 @@ void fgGuiSlider::display(fgGuiDrawer* guiLayer) {
 
         if(blockSize.x > m_bbox.size.x - borderXY.x - paddingXY.x)
             blockSize.x = m_bbox.size.x - borderXY.x - paddingXY.x;
-        
+
         blockPos.x = m_bbox.pos.x - blockSize.x / 2.0f + m_pointerRatio.x * m_bbox.size.x;
         blockPos.y = m_bbox.pos.y + (m_bbox.size.y - blockSize.y) / 2.0f;
     } else if(m_sliderAlign == SLIDER_VERTICAL) {
         blockSize.x = m_bbox.size.x - borderXY.x - paddingXY.x;
         blockSize.y = m_bbox.size.y * m_ratio.y;
-        
+
         if(blockSize.y > m_bbox.size.y - borderXY.y - paddingXY.y)
             blockSize.y = m_bbox.size.y - borderXY.y - paddingXY.y;
 
@@ -96,7 +98,7 @@ void fgGuiSlider::display(fgGuiDrawer* guiLayer) {
         blockPos.x = m_bbox.pos.x - blockSize.x / 2.0f + m_pointerRatio.x * m_bbox.size.x;
         blockPos.y = m_bbox.pos.y - blockSize.y / 2.0f + m_pointerRatio.y * m_bbox.size.y;
     }
-    
+
     if(blockPos.x - padding.left < m_bbox.pos.x)
         blockPos.x = m_bbox.pos.x + padding.left;
     if(blockPos.x + blockSize.x + padding.right > m_bbox.pos.x + m_bbox.size.x)
@@ -112,19 +114,19 @@ void fgGuiSlider::display(fgGuiDrawer* guiLayer) {
     m_currentValue.y = m_maxValue * ((blockPos.y - padding.top - m_bbox.pos.y) / (m_bbox.size.y - paddingXY.y - blockSize.y));
 
     if(bgColor.a > FG_EPSILON) {
-        guiDrawer->appendBackground2D(blockPos, blockSize, m_styles[m_state]);
+        guiDrawer->appendBackground2D(blockPos, blockSize, m_styles[(int)m_state]);
     }
-    guiDrawer->appendBorder2D(blockPos, blockSize, m_styles[m_state]);
+    guiDrawer->appendBorder2D(blockPos, blockSize, m_styles[(int)m_state]);
 }
 
 /**
  *
  */
-int fgGuiSlider::updateState(const fgPointerData* pointerData) {
+gui::CWidget::State gui::CSlider::updateState(const fgPointerData* pointerData) {
     if(!pointerData) {
         return m_state;
     }
-    fgGuiWidgetState lastState = m_state;
+    State lastState = m_state;
     fgBool ignoreStateTmp = m_ignoreState;
     // So base_type::updateState does not reset m_state
     m_ignoreState = FG_FALSE;
@@ -141,7 +143,7 @@ int fgGuiSlider::updateState(const fgPointerData* pointerData) {
         m_sliderAlign = SLIDER_UNIVERSAL;
     }
 
-    if(m_state == FG_GUI_WIDGET_STATE_PRESSED || m_state == FG_GUI_WIDGET_STATE_ACTIVATED) {
+    if(m_state == State::PRESSED || m_state == State::ACTIVATED) {
         // Need to update the slider value 
         // Can use focus?
 
@@ -159,7 +161,7 @@ int fgGuiSlider::updateState(const fgPointerData* pointerData) {
 
     m_ignoreState = ignoreStateTmp;
     if(m_ignoreState)
-        m_state = FG_GUI_WIDGET_STATE_NONE;
+        m_state = State::NONE;
 
     return m_state;
 }

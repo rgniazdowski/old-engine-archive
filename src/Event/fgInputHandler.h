@@ -81,10 +81,10 @@ namespace fg {
             CVector<int> m_keysUpPool;
             /// int - keyCode, value - vector of callbacks to call
             /// Binding for key down events
-            fgCallbackBindingMap m_keyDownBinds;
+            CallbackBindingMap m_keyDownBinds;
             /// Binding for key up binds - note that this will only work if
             /// previously key was released
-            fgCallbackBindingMap m_keyUpBinds;
+            CallbackBindingMap m_keyUpBinds;
             ///
             fgPointerRawData m_rawTouchesProcessed[FG_INPUT_MAX_TOUCH_POINTS + 1];
             ///
@@ -133,16 +133,16 @@ namespace fg {
              * @param pCallback
              * @return 
              */
-            fgFunctionCallback* addKeyDownCallback(int keyCode,
-                                                   fgFunctionCallback *pCallback);
+            CFunctionCallback* addKeyDownCallback(int keyCode,
+                                                   CFunctionCallback *pCallback);
             /**
              * 
              * @param keyCode
              * @param pCallback
              * @return 
              */
-            fgFunctionCallback* addKeyUpCallback(int keyCode,
-                                                 fgFunctionCallback *pCallback);
+            CFunctionCallback* addKeyUpCallback(int keyCode,
+                                                 CFunctionCallback *pCallback);
 
             /**
              * Add key code to the pool of pressed down keys

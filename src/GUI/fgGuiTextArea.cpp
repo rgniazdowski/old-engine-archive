@@ -10,36 +10,37 @@
 #include "fgGuiTextArea.h"
 #include "fgGuiDrawer.h"
 
-/*
+/**
  *
  */
-fgGuiTextArea::fgGuiTextArea() :
-fgGuiScrollArea(),
+fg::gui::CTextArea::CTextArea() :
+CScrollArea(),
 m_textData(),
 m_textAreaSize() {
-    fgGuiTextArea::setDefaults();
+    fg::gui::CTextArea::setDefaults();
 }
 
-/*
+/**
  *
  */
-fgGuiTextArea::~fgGuiTextArea() { }
+fg::gui::CTextArea::~CTextArea() { }
 
-/*
- *
+/**
+ * 
  */
-void fgGuiTextArea::setDefaults(void) {
-    m_type = FG_GUI_TEXT_AREA;
+void fg::gui::CTextArea::setDefaults(void) {
+    m_type = TEXT_AREA;
     m_typeName = FG_GUI_TEXT_AREA_NAME;
-    m_typeTraits = FG_GUI_TEXT_AREA | FG_GUI_SCROLL_AREA | FG_GUI_CONTAINER | FG_GUI_WIDGET;
+    m_typeTraits = TEXT_AREA | SCROLL_AREA | CONTAINER | WIDGET;
 }
 
-/*
- *
+/**
+ * 
+ * @return 
  */
-fgBoundingBox3Df fgGuiTextArea::updateBounds(void) {
-    float textSize = m_styles[m_state].getForeground().textSize;
-    fgGuiPadding &padding = m_styles[m_state].getPadding();
+fgBoundingBox3Df fg::gui::CTextArea::updateBounds(void) {
+    float textSize = m_styles[(int)m_state].getForeground().textSize;
+    SPadding &padding = m_styles[(int)m_state].getPadding();
     m_textAreaSize.cols = (m_bbox.size.x - padding.left - padding.right) / textSize;
     m_textAreaSize.rows = (m_bbox.size.y - padding.bottom - padding.top) / textSize; // ? refresh ?
     fgBoundingBox3Df scrollAreaSize = base_type::updateBounds();
@@ -51,10 +52,10 @@ fgBoundingBox3Df fgGuiTextArea::updateBounds(void) {
     return scrollAreaSize;
 }
 
-/*
- *
+/**
+ * 
  */
-void fgGuiTextArea::refresh(void) {
+void fg::gui::CTextArea::refresh(void) {
     base_type::refresh(); // #FIXME
 }
 
@@ -62,7 +63,7 @@ void fgGuiTextArea::refresh(void) {
  * 
  * @param guiLayer
  */
-void fgGuiTextArea::display(fgGuiDrawer* guiLayer) {
+void fg::gui::CTextArea::display(CDrawer* guiLayer) {
     if(!guiLayer)
         return;
     if(!m_isVisible)
@@ -70,7 +71,7 @@ void fgGuiTextArea::display(fgGuiDrawer* guiLayer) {
 
     base_type::display(guiLayer);
 
-    fgGuiDrawer *guiDrawer = (fgGuiDrawer *)guiLayer;
+    CDrawer *guiDrawer = (CDrawer *)guiLayer;
     fgVec2f blockPos, blockSize, textSize;
 
     int n = m_textData.size();
@@ -85,11 +86,11 @@ void fgGuiTextArea::display(fgGuiDrawer* guiLayer) {
         if(m_textData[j].length()) {
             // #FIXME
             guiDrawer->downZIndex();
-            float charSizeY = m_styles[m_state].getForeground().textSize;
+            float charSizeY = m_styles[(int)m_state].getForeground().textSize;
             float newPos = m_bbox.pos.y + (m_textAreaSize.rows - 1 - i) * charSizeY;
             blockPos = fgVec2f(m_bbox.pos.x, newPos);
             blockSize = fgVec2f(m_bbox.size.x, charSizeY);
-            guiDrawer->appendText2D(m_textSize, blockPos, blockSize, m_styles[m_state], m_textData[j].c_str());
+            guiDrawer->appendText2D(m_textSize, blockPos, blockSize, m_styles[(int)m_state], m_textData[j].c_str());
             guiDrawer->upZIndex();
         }
     }

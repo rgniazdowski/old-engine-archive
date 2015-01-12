@@ -11,15 +11,17 @@
 #include "Util/fgStrings.h"
 #include "fgColors.h"
 
-/*
- *
- */
-fgGuiStyleContent::fgGuiStyleContent() { }
+using namespace fg;
 
-/*
+/**
  *
  */
-fgGuiStyleContent::~fgGuiStyleContent() { }
+gui::CStyleContent::CStyleContent() { }
+
+/**
+ *
+ */
+gui::CStyleContent::~CStyleContent() { }
 
 /**
  * 
@@ -28,42 +30,42 @@ fgGuiStyleContent::~fgGuiStyleContent() { }
  * @param size
  * @param boundSize
  */
-void fgGuiStyleContent::applyPosAlign(const fgGuiAlign align,
-                                      fgVector3f& pos,
-                                      const fgVector3f& size,
-                                      const fgVector3f& boundPos,
-                                      const fgVector3f& boundSize,
-                                      const fgBool isInside) {
+void gui::CStyleContent::applyPosAlign(const Align align,
+                                       fgVector3f& pos,
+                                       const fgVector3f& size,
+                                       const fgVector3f& boundPos,
+                                       const fgVector3f& boundSize,
+                                       const fgBool isInside) {
     // Margin is outside of the border
     // Padding is inside of the border
 
-    fgGuiMargin *offset = NULL;
+    SMargin *offset = NULL;
     if(isInside) {
-        offset = (fgGuiMargin *) & m_padding;
+        offset = (SMargin *) & m_padding;
     } else {
-        offset = (fgGuiMargin *) & m_margin;
+        offset = (SMargin *) & m_margin;
     }
 
-    if(align == FG_GUI_ALIGN_NONE) {
+    if(align == Align::NONE) {
         pos.x = boundPos.x + offset->left;
         pos.y = boundPos.y + offset->top;
     }
 
-    if(align & FG_GUI_ALIGN_LEFT) {
+    if(!!(align & Align::LEFT)) {
         pos.x = boundPos.x + offset->left;
-    } else if(align & FG_GUI_ALIGN_RIGHT) {
+    } else if(!!(align & Align::RIGHT)) {
         if(boundSize.x >= size.x)
             pos.x = boundPos.x + boundSize.x - size.x - offset->right;
-    } else if(align & FG_GUI_ALIGN_CENTER) {
+    } else if(!!(align & Align::CENTER)) {
         if(boundSize.x >= size.x)
             pos.x = boundPos.x + boundSize.x / 2.0f - size.x / 2.0f;
     }
-    if(align & FG_GUI_ALIGN_MIDDLE) {
+    if(!!(align & Align::MIDDLE)) {
         if(boundSize.y >= size.y)
             pos.y = boundPos.y + boundSize.y / 2.0f - size.y / 2.0f;
-    } else if(align & FG_GUI_ALIGN_TOP) {
+    } else if(!!(align & Align::TOP)) {
         pos.y = boundPos.y + offset->top;
-    } else if(align & FG_GUI_ALIGN_BOTTOM) {
+    } else if(!!(align & Align::BOTTOM)) {
         if(boundSize.y > size.y)
             pos.y = (boundPos.y + boundSize.y) - size.y - offset->bottom;
     }
@@ -76,41 +78,41 @@ void fgGuiStyleContent::applyPosAlign(const fgGuiAlign align,
  * @param size
  * @param boundSize
  */
-void fgGuiStyleContent::applyPosAlign(const fgGuiAlign align,
-                                      fgVector2f& pos,
-                                      const fgVector2f& size,
-                                      const fgVector2f& boundPos,
-                                      const fgVector2f& boundSize,
-                                      const fgBool isInside) {
+void gui::CStyleContent::applyPosAlign(const Align align,
+                                       fgVector2f& pos,
+                                       const fgVector2f& size,
+                                       const fgVector2f& boundPos,
+                                       const fgVector2f& boundSize,
+                                       const fgBool isInside) {
     // Margin is outside of the border
     // Padding is inside of the border
 
-    fgGuiMargin *offset = NULL;
+    SMargin *offset = NULL;
     if(isInside) {
-        offset = (fgGuiMargin *) & m_padding;
+        offset = (SMargin *) & m_padding;
     } else {
-        offset = (fgGuiMargin *) & m_margin;
+        offset = (SMargin *) & m_margin;
     }
 
-    if(align == FG_GUI_ALIGN_NONE) {
+    if(align == Align::NONE) {
         pos.x += offset->left;
         pos.y += offset->top;
     }
-    if(align & FG_GUI_ALIGN_LEFT) {
+    if(!!(align & Align::LEFT)) {
         pos.x = boundPos.x + offset->left;
-    } else if(align & FG_GUI_ALIGN_RIGHT) {
+    } else if(!!(align & Align::RIGHT)) {
         if(boundSize.x >= size.x)
             pos.x = boundPos.x + boundSize.x - size.x - offset->right;
-    } else if(align & FG_GUI_ALIGN_CENTER) {
+    } else if(!!(align & Align::CENTER)) {
         if(boundSize.x >= size.x)
             pos.x = boundPos.x + boundSize.x / 2.0f - size.x / 2.0f;
     }
-    if(align & FG_GUI_ALIGN_MIDDLE) {
+    if(!!(align & Align::MIDDLE)) {
         if(boundSize.y >= size.y)
             pos.y = boundPos.y + boundSize.y / 2.0f - size.y / 2.0f;
-    } else if(align & FG_GUI_ALIGN_TOP) {
+    } else if(!!(align & Align::TOP)) {
         pos.y = boundPos.y + offset->top;
-    } else if(align & FG_GUI_ALIGN_BOTTOM) {
+    } else if(!!(align & Align::BOTTOM)) {
         if(boundSize.y >= size.y)
             pos.y = (boundPos.y + boundSize.y) - size.y - offset->bottom;
     }
@@ -121,7 +123,7 @@ void fgGuiStyleContent::applyPosAlign(const fgGuiAlign align,
  * @param value
  * @return 
  */
-fgColor4f fgGuiStyleContent::parseColor(const char *value) {
+fgColor4f gui::CStyleContent::parseColor(const char *value) {
     if(!value)
         return FG_GUI_DEFAULT_FG_COLOR;
     std::string colorStr = value;
@@ -156,18 +158,18 @@ fgColor4f fgGuiStyleContent::parseColor(const char *value) {
  * @param value
  * @return 
  */
-fgGuiBorderStyle fgGuiStyleContent::parseBorderStyle(const char *value) {
+gui::SBorder::Style gui::CStyleContent::parseBorderStyle(const char *value) {
     if(!value)
-        return FG_GUI_BORDER_NONE;
-    fgGuiBorderStyle style = FG_GUI_BORDER_NONE;
+        return SBorder::Style::NONE;
+    SBorder::Style style = SBorder::Style::NONE;
 
     if(strcasecmp(value, "none") == 0) {
     } else if(strcasecmp(value, "dotted") == 0) {
-        style = FG_GUI_BORDER_DOTTED;
+        style = SBorder::Style::DOTTED;
     } else if(strcasecmp(value, "dashed") == 0) {
-        style = FG_GUI_BORDER_DASHED;
+        style = SBorder::Style::DASHED;
     } else if(strcasecmp(value, "solid") == 0) {
-        style = FG_GUI_BORDER_SOLID;
+        style = SBorder::Style::SOLID;
     }
     return style;
 }
@@ -177,8 +179,8 @@ fgGuiBorderStyle fgGuiStyleContent::parseBorderStyle(const char *value) {
  * @param value
  * @return 
  */
-fgGuiBorder fgGuiStyleContent::parseBorder(const char *value) {
-    fgGuiBorder border;
+gui::SBorder gui::CStyleContent::parseBorder(const char *value) {
+    SBorder border;
     if(!value)
         return border;
     fg::CStringVector parts;
@@ -215,19 +217,19 @@ fgGuiBorder fgGuiStyleContent::parseBorder(const char *value) {
  * @param value
  * @return 
  */
-fgGuiPositionStyle fgGuiStyleContent::parsePositionStyle(const char *value) {
+gui::SPosition::Style gui::CStyleContent::parsePositionStyle(const char *value) {
     if(!value)
-        return FG_GUI_POS_STATIC;
-    fgGuiPositionStyle style = FG_GUI_POS_STATIC;
+        return SPosition::Style::STATIC;
+    SPosition::Style style = SPosition::Style::STATIC;
 
     if(strcmp(value, "static") == 0) {
-        style = FG_GUI_POS_STATIC;
+        style = SPosition::Style::STATIC;
     } else if(strcmp(value, "fixed") == 0) {
-        style = FG_GUI_POS_FIXED;
+        style = SPosition::Style::FIXED;
     } else if(strcmp(value, "relative") == 0) {
-        style = FG_GUI_POS_RELATIVE;
+        style = SPosition::Style::RELATIVE;
     } else if(strcmp(value, "absolute") == 0) {
-        style = FG_GUI_POS_ABSOLUTE;
+        style = SPosition::Style::ABSOLUTE;
     }
 
     return style;
@@ -238,26 +240,26 @@ fgGuiPositionStyle fgGuiStyleContent::parsePositionStyle(const char *value) {
  * @param value
  * @return 
  */
-fgGuiAlign fgGuiStyleContent::parseAlign(const char *value) {
-    fgGuiAlign align = FG_GUI_ALIGN_CENTER;
+gui::Align gui::CStyleContent::parseAlign(const char *value) {
+    Align align = Align::CENTER;
     if(!value)
         return align;
-    align = FG_GUI_ALIGN_NONE;
+    align = Align::NONE;
     fg::CStringVector parts;
     fgStrings::split(std::string(value), ' ', parts);
     for(int i = 0; i < (int)parts.size(); i++) {
         if(parts[i].compare("left") == 0) {
-            align |= FG_GUI_ALIGN_LEFT;
+            align |= Align::LEFT;
         } else if(parts[i].compare("right") == 0) {
-            align |= FG_GUI_ALIGN_RIGHT;
+            align |= Align::RIGHT;
         } else if(parts[i].compare("center") == 0) {
-            align |= FG_GUI_ALIGN_CENTER;
+            align |= Align::CENTER;
         } else if(parts[i].compare("middle") == 0) {
-            align |= FG_GUI_ALIGN_MIDDLE;
+            align |= Align::MIDDLE;
         } else if(parts[i].compare("top") == 0) {
-            align |= FG_GUI_ALIGN_TOP;
+            align |= Align::TOP;
         } else if(parts[i].compare("bottom") == 0) {
-            align |= FG_GUI_ALIGN_BOTTOM;
+            align |= Align::BOTTOM;
         }
     }
     return align;
@@ -268,21 +270,21 @@ fgGuiAlign fgGuiStyleContent::parseAlign(const char *value) {
  * @param value
  * @return 
  */
-fgGuiBackgroundStyle fgGuiStyleContent::parseBackgroundStyle(const char *value) {
-    fgGuiBackgroundStyle style = FG_GUI_BACKGROUND_MAX;
+gui::SBackground::Style gui::CStyleContent::parseBackgroundStyle(const char *value) {
+    SBackground::Style style = SBackground::Style::MAX;
     if(!value)
         return style;
-    
+
     if(strcmp(value, "none") == 0) {
-        style = FG_GUI_BACKGROUND_NONE;
+        style = SBackground::Style::NONE;
     } else if(strcmp(value, "normal") == 0) {
-        style = FG_GUI_BACKGROUND_NORMAL;
+        style = SBackground::Style::NORMAL;
     } else if(strcmp(value, "max") == 0) {
-        style = FG_GUI_BACKGROUND_MAX;
+        style = SBackground::Style::MAX;
     } else if(strcmp(value, "tiled") == 0) {
-        style = FG_GUI_BACKGROUND_TILED;
+        style = SBackground::Style::TILED;
     }
-    
+
     return style;
 }
 
@@ -292,22 +294,22 @@ fgGuiBackgroundStyle fgGuiStyleContent::parseBackgroundStyle(const char *value) 
  * @param type      Type of the unit, can be percents, inches, blocks or pixels
  * @return          Floating point value of the parsed length
  */
-float fgGuiStyleContent::parseLength(const char *value, fgGuiUnitType &type) {
+float gui::CStyleContent::parseLength(const char *value, Unit &unit) {
     if(!value)
         return 0.0f;
     float length = 0.0f;
     std::string lengthStr;
     if(fgStrings::containsChars(value, "%")) {
-        type = FG_GUI_PERCENTS;
+        unit = Unit::PERCENTS;
         lengthStr = fgStrings::trim(std::string(value), std::string(" %"));
     } else if(fgStrings::containsChars(value, "b", FG_FALSE)) {
-        type = FG_GUI_BLOCKS;
+        unit = Unit::BLOCKS;
         lengthStr = fgStrings::trim(std::string(value), std::string(" bB"));
     } else if(fgStrings::containsChars(value, "i", FG_FALSE)) {
-        type = FG_GUI_INCHES;
+        unit = Unit::INCHES;
         lengthStr = fgStrings::trim(std::string(value), std::string(" iI"));
     } else {
-        type = FG_GUI_PIXELS;
+        unit = Unit::PIXELS;
         lengthStr = fgStrings::trim(std::string(value), std::string(" fF"));
     }
     length = (float)atof(lengthStr.c_str());
@@ -320,7 +322,7 @@ float fgGuiStyleContent::parseLength(const char *value, fgGuiUnitType &type) {
  * @param merge     If true the styles will be merged, if false - overwritten
  * @return 
  */
-fgBool fgGuiStyleContent::initializeFromConfig(fgCfgTypes::parameterVec &params, fgBool merge) {
+fgBool gui::CStyleContent::initializeFromConfig(fgCfgTypes::parameterVec &params, fgBool merge) {
     if(params.empty())
         return FG_FALSE;
 
@@ -358,7 +360,7 @@ fgBool fgGuiStyleContent::initializeFromConfig(fgCfgTypes::parameterVec &params,
 
             // TEXT SIZE PARAMETER
         } else if(param->name.compare("textSize") == 0) {
-            fgGuiUnitType unit = FG_GUI_PIXELS;
+            Unit unit = Unit::PIXELS;
             if(param->type == FG_CFG_PARAMETER_FLOAT) {
                 this->m_fg.textSize = param->float_val;
             } else if(param->type == FG_CFG_PARAMETER_INT) {
@@ -376,140 +378,140 @@ fgBool fgGuiStyleContent::initializeFromConfig(fgCfgTypes::parameterVec &params,
             // MARGIN MODIFIER - APPLIES TO ALL
         } else if(param->name.compare("margin") == 0) {
             if(param->type == FG_CFG_PARAMETER_FLOAT)
-                this->setMargin(FG_GUI_MARGIN_ALL, param->float_val);
+                this->setMargin(SMargin::Which::ALL, param->float_val);
             else if(param->type == FG_CFG_PARAMETER_INT)
-                this->setMargin(FG_GUI_MARGIN_ALL, (float)param->int_val);
+                this->setMargin(SMargin::Which::ALL, (float)param->int_val);
 
             // LEFT MARGIN MODIFIER
         } else if(param->name.compare("margin-left") == 0) {
             if(param->type == FG_CFG_PARAMETER_FLOAT)
-                this->setMargin(FG_GUI_MARGIN_LEFT, param->float_val);
+                this->setMargin(SMargin::Which::LEFT, param->float_val);
             else if(param->type == FG_CFG_PARAMETER_INT)
-                this->setMargin(FG_GUI_MARGIN_LEFT, (float)param->int_val);
+                this->setMargin(SMargin::Which::LEFT, (float)param->int_val);
 
             // RIGHT MARGIN MODIFIER
         } else if(param->name.compare("margin-right") == 0) {
             if(param->type == FG_CFG_PARAMETER_FLOAT)
-                this->setMargin(FG_GUI_MARGIN_RIGHT, param->float_val);
+                this->setMargin(SMargin::Which::RIGHT, param->float_val);
             else if(param->type == FG_CFG_PARAMETER_INT)
-                this->setMargin(FG_GUI_MARGIN_RIGHT, (float)param->int_val);
+                this->setMargin(SMargin::Which::RIGHT, (float)param->int_val);
 
             // TOP MARGIN MODIFIER
         } else if(param->name.compare("margin-top") == 0) {
             if(param->type == FG_CFG_PARAMETER_FLOAT)
-                this->setMargin(FG_GUI_MARGIN_TOP, param->float_val);
+                this->setMargin(SMargin::Which::TOP, param->float_val);
             else if(param->type == FG_CFG_PARAMETER_INT)
-                this->setMargin(FG_GUI_MARGIN_TOP, (float)param->int_val);
+                this->setMargin(SMargin::Which::TOP, (float)param->int_val);
 
             // BOTTOM MARGIN MODIFIER
         } else if(param->name.compare("margin-bottom") == 0) {
             if(param->type == FG_CFG_PARAMETER_FLOAT)
-                this->setMargin(FG_GUI_MARGIN_BOTTOM, param->float_val);
+                this->setMargin(SMargin::Which::BOTTOM, param->float_val);
             else if(param->type == FG_CFG_PARAMETER_INT)
-                this->setMargin(FG_GUI_MARGIN_BOTTOM, (float)param->int_val);
+                this->setMargin(SMargin::Which::BOTTOM, (float)param->int_val);
 
             // PADDING MODIFIER - APPLIES TO ALL
         } else if(param->name.compare("padding") == 0) {
             if(param->type == FG_CFG_PARAMETER_FLOAT)
-                this->setPadding(FG_GUI_PADDING_ALL, param->float_val);
+                this->setPadding(SPadding::Which::ALL, param->float_val);
             else if(param->type == FG_CFG_PARAMETER_INT)
-                this->setPadding(FG_GUI_PADDING_ALL, (float)param->int_val);
+                this->setPadding(SPadding::Which::ALL, (float)param->int_val);
 
             // LEFT PADDING MODIFIER
         } else if(param->name.compare("padding-left") == 0) {
             if(param->type == FG_CFG_PARAMETER_FLOAT)
-                this->setPadding(FG_GUI_PADDING_LEFT, param->float_val);
+                this->setPadding(SPadding::Which::LEFT, param->float_val);
             else if(param->type == FG_CFG_PARAMETER_INT)
-                this->setPadding(FG_GUI_PADDING_LEFT, (float)param->int_val);
+                this->setPadding(SPadding::Which::LEFT, (float)param->int_val);
 
             // RIGHT PADDING MODIFIER
         } else if(param->name.compare("padding-right") == 0) {
             if(param->type == FG_CFG_PARAMETER_FLOAT)
-                this->setPadding(FG_GUI_PADDING_RIGHT, param->float_val);
+                this->setPadding(SPadding::Which::RIGHT, param->float_val);
             else if(param->type == FG_CFG_PARAMETER_INT)
-                this->setPadding(FG_GUI_PADDING_RIGHT, (float)param->int_val);
+                this->setPadding(SPadding::Which::RIGHT, (float)param->int_val);
 
             // TOP PADDING MODIFIER
         } else if(param->name.compare("padding-top") == 0) {
             if(param->type == FG_CFG_PARAMETER_FLOAT)
-                this->setPadding(FG_GUI_PADDING_TOP, param->float_val);
+                this->setPadding(SPadding::Which::TOP, param->float_val);
             else if(param->type == FG_CFG_PARAMETER_INT)
-                this->setPadding(FG_GUI_PADDING_TOP, (float)param->int_val);
+                this->setPadding(SPadding::Which::TOP, (float)param->int_val);
 
             // BOTTOM PADDING MODIFIER
         } else if(param->name.compare("padding-bottom") == 0) {
             if(param->type == FG_CFG_PARAMETER_FLOAT)
-                this->setPadding(FG_GUI_PADDING_BOTTOM, param->float_val);
+                this->setPadding(SPadding::Which::BOTTOM, param->float_val);
             else if(param->type == FG_CFG_PARAMETER_INT)
-                this->setPadding(FG_GUI_PADDING_BOTTOM, (float)param->int_val);
+                this->setPadding(SPadding::Which::BOTTOM, (float)param->int_val);
 
             // BORDER PARAMETER - APPLIES TO ALL BORDERS
         } else if(param->name.compare("border") == 0) {
             if(param->type == FG_CFG_PARAMETER_STRING) {
-                fgGuiBorder border = parseBorder(param->string);
+                SBorder border = parseBorder(param->string);
                 this->m_border.all = border;
                 this->m_border.left = border;
                 this->m_border.right = border;
                 this->m_border.top = border;
                 this->m_border.bottom = border;
             } else if(param->type == FG_CFG_PARAMETER_FLOAT) {
-                this->setBorder(FG_GUI_BORDER_ALL, param->float_val);
-                this->setBorder(FG_GUI_BORDER_ALL, FG_GUI_BORDER_SOLID);
+                this->setBorder(SBorder::Which::ALL, param->float_val);
+                this->setBorder(SBorder::Which::ALL, SBorder::Style::SOLID);
             } else if(param->type == FG_CFG_PARAMETER_INT) {
-                this->setBorder(FG_GUI_BORDER_ALL, (float)param->int_val);
-                this->setBorder(FG_GUI_BORDER_ALL, FG_GUI_BORDER_SOLID);
+                this->setBorder(SBorder::Which::ALL, (float)param->int_val);
+                this->setBorder(SBorder::Which::ALL, SBorder::Style::SOLID);
             }
 
             // LEFT BORDER PARAMETER
         } else if(param->name.compare("border-left") == 0) {
             if(param->type == FG_CFG_PARAMETER_STRING) {
-                fgGuiBorder border = parseBorder(param->string);
+                SBorder border = parseBorder(param->string);
                 this->m_border.left = border;
             } else if(param->type == FG_CFG_PARAMETER_FLOAT) {
-                this->setBorder(FG_GUI_BORDER_LEFT, param->float_val);
-                this->setBorder(FG_GUI_BORDER_LEFT, FG_GUI_BORDER_SOLID);
+                this->setBorder(SBorder::Which::LEFT, param->float_val);
+                this->setBorder(SBorder::Which::LEFT, SBorder::Style::SOLID);
             } else if(param->type == FG_CFG_PARAMETER_INT) {
-                this->setBorder(FG_GUI_BORDER_LEFT, (float)param->int_val);
-                this->setBorder(FG_GUI_BORDER_LEFT, FG_GUI_BORDER_SOLID);
+                this->setBorder(SBorder::Which::LEFT, (float)param->int_val);
+                this->setBorder(SBorder::Which::LEFT, SBorder::Style::SOLID);
             }
 
             // RIGHT BORDER PARAMETER
         } else if(param->name.compare("border-right") == 0) {
             if(param->type == FG_CFG_PARAMETER_STRING) {
-                fgGuiBorder border = parseBorder(param->string);
+                SBorder border = parseBorder(param->string);
                 this->m_border.right = border;
             } else if(param->type == FG_CFG_PARAMETER_FLOAT) {
-                this->setBorder(FG_GUI_BORDER_RIGHT, param->float_val);
-                this->setBorder(FG_GUI_BORDER_RIGHT, FG_GUI_BORDER_SOLID);
+                this->setBorder(SBorder::Which::RIGHT, param->float_val);
+                this->setBorder(SBorder::Which::RIGHT, SBorder::Style::SOLID);
             } else if(param->type == FG_CFG_PARAMETER_INT) {
-                this->setBorder(FG_GUI_BORDER_RIGHT, (float)param->int_val);
-                this->setBorder(FG_GUI_BORDER_RIGHT, FG_GUI_BORDER_SOLID);
+                this->setBorder(SBorder::Which::RIGHT, (float)param->int_val);
+                this->setBorder(SBorder::Which::RIGHT, SBorder::Style::SOLID);
             }
 
             // TOP BORDER PARAMETER
         } else if(param->name.compare("border-top") == 0) {
             if(param->type == FG_CFG_PARAMETER_STRING) {
-                fgGuiBorder border = parseBorder(param->string);
+                SBorder border = parseBorder(param->string);
                 this->m_border.top = border;
             } else if(param->type == FG_CFG_PARAMETER_FLOAT) {
-                this->setBorder(FG_GUI_BORDER_TOP, param->float_val);
-                this->setBorder(FG_GUI_BORDER_TOP, FG_GUI_BORDER_SOLID);
+                this->setBorder(SBorder::Which::TOP, param->float_val);
+                this->setBorder(SBorder::Which::TOP, SBorder::Style::SOLID);
             } else if(param->type == FG_CFG_PARAMETER_INT) {
-                this->setBorder(FG_GUI_BORDER_TOP, (float)param->int_val);
-                this->setBorder(FG_GUI_BORDER_TOP, FG_GUI_BORDER_SOLID);
+                this->setBorder(SBorder::Which::TOP, (float)param->int_val);
+                this->setBorder(SBorder::Which::TOP, SBorder::Style::SOLID);
             }
 
             // BOTTOM BORDER PARAMETER
         } else if(param->name.compare("border-bottom") == 0) {
             if(param->type == FG_CFG_PARAMETER_STRING) {
-                fgGuiBorder border = parseBorder(param->string);
+                SBorder border = parseBorder(param->string);
                 this->m_border.bottom = border;
             } else if(param->type == FG_CFG_PARAMETER_FLOAT) {
-                this->setBorder(FG_GUI_BORDER_BOTTOM, param->float_val);
-                this->setBorder(FG_GUI_BORDER_BOTTOM, FG_GUI_BORDER_SOLID);
+                this->setBorder(SBorder::Which::BOTTOM, param->float_val);
+                this->setBorder(SBorder::Which::BOTTOM, SBorder::Style::SOLID);
             } else if(param->type == FG_CFG_PARAMETER_INT) {
-                this->setBorder(FG_GUI_BORDER_BOTTOM, (float)param->int_val);
-                this->setBorder(FG_GUI_BORDER_BOTTOM, FG_GUI_BORDER_SOLID);
+                this->setBorder(SBorder::Which::BOTTOM, (float)param->int_val);
+                this->setBorder(SBorder::Which::BOTTOM, SBorder::Style::SOLID);
             }
 
             // POSITON STYLE
@@ -521,12 +523,12 @@ fgBool fgGuiStyleContent::initializeFromConfig(fgCfgTypes::parameterVec &params,
         } else if(param->name.compare("left") == 0) {
             if(param->type == FG_CFG_PARAMETER_FLOAT) {
                 this->m_position.left = param->float_val;
-                this->m_position.unit = FG_GUI_PIXELS;
+                this->m_position.unit = Unit::PIXELS;
             } else if(param->type == FG_CFG_PARAMETER_INT) {
                 this->m_position.left = (float)param->int_val;
-                this->m_position.unit = FG_GUI_PIXELS;
+                this->m_position.unit = Unit::PIXELS;
             } else if(param->type == FG_CFG_PARAMETER_STRING) {
-                fgGuiUnitType unit = FG_GUI_PIXELS;
+                Unit unit = Unit::PIXELS;
                 this->m_position.left = parseLength(param->string, unit);
                 this->m_position.unit = unit;
             }
@@ -535,12 +537,12 @@ fgBool fgGuiStyleContent::initializeFromConfig(fgCfgTypes::parameterVec &params,
         } else if(param->name.compare("right") == 0) {
             if(param->type == FG_CFG_PARAMETER_FLOAT) {
                 this->m_position.right = param->float_val;
-                this->m_position.unit = FG_GUI_PIXELS;
+                this->m_position.unit = Unit::PIXELS;
             } else if(param->type == FG_CFG_PARAMETER_INT) {
                 this->m_position.right = (float)param->int_val;
-                this->m_position.unit = FG_GUI_PIXELS;
+                this->m_position.unit = Unit::PIXELS;
             } else if(param->type == FG_CFG_PARAMETER_STRING) {
-                fgGuiUnitType unit = FG_GUI_PIXELS;
+                Unit unit = Unit::PIXELS;
                 this->m_position.right = parseLength(param->string, unit);
                 this->m_position.unit = unit;
             }
@@ -549,12 +551,12 @@ fgBool fgGuiStyleContent::initializeFromConfig(fgCfgTypes::parameterVec &params,
         } else if(param->name.compare("top") == 0) {
             if(param->type == FG_CFG_PARAMETER_FLOAT) {
                 this->m_position.top = param->float_val;
-                this->m_position.unit = FG_GUI_PIXELS;
+                this->m_position.unit = Unit::PIXELS;
             } else if(param->type == FG_CFG_PARAMETER_INT) {
                 this->m_position.top = (float)param->int_val;
-                this->m_position.unit = FG_GUI_PIXELS;
+                this->m_position.unit = Unit::PIXELS;
             } else if(param->type == FG_CFG_PARAMETER_STRING) {
-                fgGuiUnitType unit = FG_GUI_PIXELS;
+                Unit unit = Unit::PIXELS;
                 this->m_position.top = parseLength(param->string, unit);
                 this->m_position.unit = unit;
             }
@@ -563,12 +565,12 @@ fgBool fgGuiStyleContent::initializeFromConfig(fgCfgTypes::parameterVec &params,
         } else if(param->name.compare("bottom") == 0) {
             if(param->type == FG_CFG_PARAMETER_FLOAT) {
                 this->m_position.bottom = param->float_val;
-                this->m_position.unit = FG_GUI_PIXELS;
+                this->m_position.unit = Unit::PIXELS;
             } else if(param->type == FG_CFG_PARAMETER_INT) {
                 this->m_position.bottom = (float)param->int_val;
-                this->m_position.unit = FG_GUI_PIXELS;
+                this->m_position.unit = Unit::PIXELS;
             } else if(param->type == FG_CFG_PARAMETER_STRING) {
-                fgGuiUnitType unit = FG_GUI_PIXELS;
+                Unit unit = Unit::PIXELS;
                 this->m_position.bottom = parseLength(param->string, unit);
                 this->m_position.unit = unit;
             }
@@ -577,12 +579,12 @@ fgBool fgGuiStyleContent::initializeFromConfig(fgCfgTypes::parameterVec &params,
         } else if(param->name.compare("front") == 0) {
             if(param->type == FG_CFG_PARAMETER_FLOAT) {
                 this->m_position.front = param->float_val;
-                this->m_position.unit = FG_GUI_PIXELS;
+                this->m_position.unit = Unit::PIXELS;
             } else if(param->type == FG_CFG_PARAMETER_INT) {
                 this->m_position.front = (float)param->int_val;
-                this->m_position.unit = FG_GUI_PIXELS;
+                this->m_position.unit = Unit::PIXELS;
             } else if(param->type == FG_CFG_PARAMETER_STRING) {
-                fgGuiUnitType unit = FG_GUI_PIXELS;
+                Unit unit = Unit::PIXELS;
                 this->m_position.front = parseLength(param->string, unit);
                 this->m_position.unit = unit;
             }
@@ -591,12 +593,12 @@ fgBool fgGuiStyleContent::initializeFromConfig(fgCfgTypes::parameterVec &params,
         } else if(param->name.compare("back") == 0) {
             if(param->type == FG_CFG_PARAMETER_FLOAT) {
                 this->m_position.back = param->float_val;
-                this->m_position.unit = FG_GUI_PIXELS;
+                this->m_position.unit = Unit::PIXELS;
             } else if(param->type == FG_CFG_PARAMETER_INT) {
                 this->m_position.back = (float)param->int_val;
-                this->m_position.unit = FG_GUI_PIXELS;
+                this->m_position.unit = Unit::PIXELS;
             } else if(param->type == FG_CFG_PARAMETER_STRING) {
-                fgGuiUnitType unit = FG_GUI_PIXELS;
+                Unit unit = Unit::PIXELS;
                 this->m_position.back = parseLength(param->string, unit);
                 this->m_position.unit = unit;
             }
@@ -621,18 +623,18 @@ fgBool fgGuiStyleContent::initializeFromConfig(fgCfgTypes::parameterVec &params,
             // #FIXME
             if(param->type == FG_CFG_PARAMETER_FLOAT) {
                 this->m_size.x = param->float_val;
-                this->m_size.style = FG_GUI_SIZE_PIXELS;
+                this->m_size.style = SSize::Style::PIXELS;
             } else if(param->type == FG_CFG_PARAMETER_INT) {
                 this->m_size.x = (float)param->int_val;
-                this->m_size.style = FG_GUI_SIZE_PIXELS;
+                this->m_size.style = SSize::Style::PIXELS;
             } else if(param->type == FG_CFG_PARAMETER_STRING) {
-                fgGuiUnitType unit = FG_GUI_PIXELS;
+                Unit unit = (Unit)SSize::Style::PIXELS;
                 this->m_size.x = parseLength(param->string, unit);
-                this->m_size.style = (fgGuiSizeStyle)unit;
-                if(this->m_size.x >= 100.0f && unit == FG_GUI_PERCENTS)
-                    this->m_size.style = FG_GUI_SIZE_MAX;
-                else if(this->m_size.x <= FG_EPSILON + 1.0f && unit == FG_GUI_PERCENTS)
-                    this->m_size.style = FG_GUI_SIZE_MIN;
+                this->m_size.style = (SSize::Style)unit;
+                if(this->m_size.x >= 100.0f && unit == Unit::PERCENTS)
+                    this->m_size.style = SSize::Style::MAX;
+                else if(this->m_size.x <= FG_EPSILON + 1.0f && unit == Unit::PERCENTS)
+                    this->m_size.style = SSize::Style::MIN;
             }
 
             // HEIGHT
@@ -640,18 +642,18 @@ fgBool fgGuiStyleContent::initializeFromConfig(fgCfgTypes::parameterVec &params,
             // #FIXME
             if(param->type == FG_CFG_PARAMETER_FLOAT) {
                 this->m_size.y = param->float_val;
-                this->m_size.style = FG_GUI_SIZE_PIXELS;
+                this->m_size.style = SSize::Style::PIXELS;
             } else if(param->type == FG_CFG_PARAMETER_INT) {
                 this->m_size.y = (float)param->int_val;
-                this->m_size.style = FG_GUI_SIZE_PIXELS;
+                this->m_size.style = SSize::Style::PIXELS;
             } else if(param->type == FG_CFG_PARAMETER_STRING) {
-                fgGuiUnitType unit;
+                Unit unit;
                 this->m_size.y = parseLength(param->string, unit);
-                this->m_size.style = (fgGuiSizeStyle)unit;
-                if(this->m_size.y >= 100.0f && unit == FG_GUI_PERCENTS)
-                    this->m_size.style = FG_GUI_SIZE_MAX;
-                else if(this->m_size.y <= FG_EPSILON + 1.0f && unit == FG_GUI_PERCENTS)
-                    this->m_size.style = FG_GUI_SIZE_MIN;
+                this->m_size.style = (SSize::Style)unit;
+                if(this->m_size.y >= 100.0f && unit == Unit::PERCENTS)
+                    this->m_size.style = SSize::Style::MAX;
+                else if(this->m_size.y <= FG_EPSILON + 1.0f && unit == Unit::PERCENTS)
+                    this->m_size.style = SSize::Style::MIN;
             }
 
             // USED SHADER FOR EFFECTS
@@ -672,7 +674,7 @@ fgBool fgGuiStyleContent::initializeFromConfig(fgCfgTypes::parameterVec &params,
  * 
  * @return 
  */
-fgGuiBackground& fgGuiStyleContent::getBackground(void) {
+gui::SBackground& gui::CStyleContent::getBackground(void) {
     return m_bg;
 }
 
@@ -680,7 +682,7 @@ fgGuiBackground& fgGuiStyleContent::getBackground(void) {
  * 
  * @return 
  */
-fgGuiForeground& fgGuiStyleContent::getForeground(void) {
+gui::SForeground& gui::CStyleContent::getForeground(void) {
     return m_fg;
 }
 
@@ -688,7 +690,7 @@ fgGuiForeground& fgGuiStyleContent::getForeground(void) {
  * 
  * @return 
  */
-fgGuiMargin& fgGuiStyleContent::getMargin(void) {
+gui::SMargin& gui::CStyleContent::getMargin(void) {
     return m_margin;
 }
 
@@ -696,7 +698,7 @@ fgGuiMargin& fgGuiStyleContent::getMargin(void) {
  * 
  * @return 
  */
-fgGuiPadding& fgGuiStyleContent::getPadding(void) {
+gui::SPadding& gui::CStyleContent::getPadding(void) {
     return m_padding;
 }
 
@@ -704,7 +706,7 @@ fgGuiPadding& fgGuiStyleContent::getPadding(void) {
  * 
  * @return 
  */
-fgGuiBorderInfo& fgGuiStyleContent::getBorder(void) {
+gui::SBorderGroup& gui::CStyleContent::getBorder(void) {
     return m_border;
 }
 
@@ -712,7 +714,7 @@ fgGuiBorderInfo& fgGuiStyleContent::getBorder(void) {
  * 
  * @return 
  */
-fgGuiPosition& fgGuiStyleContent::getPosition(void) {
+gui::SPosition& gui::CStyleContent::getPosition(void) {
     return m_position;
 }
 
@@ -720,7 +722,7 @@ fgGuiPosition& fgGuiStyleContent::getPosition(void) {
  * 
  * @return 
  */
-fgGuiAlign fgGuiStyleContent::getAlign(void) const {
+gui::Align gui::CStyleContent::getAlign(void) const {
     return m_align;
 }
 
@@ -728,7 +730,7 @@ fgGuiAlign fgGuiStyleContent::getAlign(void) const {
  * 
  * @return 
  */
-fgGuiAlign fgGuiStyleContent::getVAlign(void) const {
+gui::Align gui::CStyleContent::getVAlign(void) const {
     return m_valign;
 }
 
@@ -736,7 +738,7 @@ fgGuiAlign fgGuiStyleContent::getVAlign(void) const {
  * 
  * @return 
  */
-fgGuiAlign fgGuiStyleContent::getTextAlign(void) const {
+gui::Align gui::CStyleContent::getTextAlign(void) const {
     return m_textAlign;
 }
 
@@ -744,7 +746,7 @@ fgGuiAlign fgGuiStyleContent::getTextAlign(void) const {
  * 
  * @return 
  */
-fgGuiSize& fgGuiStyleContent::getSize(void) {
+gui::SSize& gui::CStyleContent::getSize(void) {
     return m_size;
 }
 
@@ -752,7 +754,7 @@ fgGuiSize& fgGuiStyleContent::getSize(void) {
  * 
  * @return 
  */
-std::string& fgGuiStyleContent::getShader(void) {
+std::string& gui::CStyleContent::getShader(void) {
     return m_shader;
 }
 
@@ -760,7 +762,7 @@ std::string& fgGuiStyleContent::getShader(void) {
  * 
  * @return 
  */
-const char *fgGuiStyleContent::getShaderStr(void) const {
+const char *gui::CStyleContent::getShaderStr(void) const {
     return m_shader.c_str();
 }
 
@@ -768,7 +770,7 @@ const char *fgGuiStyleContent::getShaderStr(void) const {
  * 
  * @return 
  */
-std::string& fgGuiStyleContent::getEffect(void) {
+std::string& gui::CStyleContent::getEffect(void) {
     return m_effect;
 }
 
@@ -776,7 +778,7 @@ std::string& fgGuiStyleContent::getEffect(void) {
  * 
  * @return 
  */
-const char *fgGuiStyleContent::getEffectStr(void) const {
+const char *gui::CStyleContent::getEffectStr(void) const {
     return m_effect.c_str();
 }
 
@@ -785,7 +787,7 @@ const char *fgGuiStyleContent::getEffectStr(void) const {
  * @param style
  * @return 
  */
-fgGuiStyleContent& fgGuiStyleContent::setBackground(const fgGuiBackgroundStyle style) {
+gui::CStyleContent& gui::CStyleContent::setBackground(const SBackground::Style style) {
     m_bg.style = style;
     return (*this);
 }
@@ -795,7 +797,7 @@ fgGuiStyleContent& fgGuiStyleContent::setBackground(const fgGuiBackgroundStyle s
  * @param color
  * @return 
  */
-fgGuiStyleContent& fgGuiStyleContent::setBackground(const fgColor4f& color) {
+gui::CStyleContent& gui::CStyleContent::setBackground(const fgColor4f& color) {
     m_bg.color = color;
     return (*this);
 }
@@ -805,7 +807,7 @@ fgGuiStyleContent& fgGuiStyleContent::setBackground(const fgColor4f& color) {
  * @param texture
  * @return 
  */
-fgGuiStyleContent& fgGuiStyleContent::setBackground(const std::string& texture) {
+gui::CStyleContent& gui::CStyleContent::setBackground(const std::string& texture) {
     m_bg.texture = texture;
     return (*this);
 }
@@ -815,7 +817,7 @@ fgGuiStyleContent& fgGuiStyleContent::setBackground(const std::string& texture) 
  * @param texture
  * @return 
  */
-fgGuiStyleContent& fgGuiStyleContent::setBackground(const char *texture) {
+gui::CStyleContent& gui::CStyleContent::setBackground(const char *texture) {
     m_bg.texture = texture;
     return (*this);
 }
@@ -825,7 +827,7 @@ fgGuiStyleContent& fgGuiStyleContent::setBackground(const char *texture) {
  * @param textSize
  * @return 
  */
-fgGuiStyleContent& fgGuiStyleContent::setForeground(const float textSize) {
+gui::CStyleContent& gui::CStyleContent::setForeground(const float textSize) {
     m_fg.textSize = textSize;
     return (*this);
 }
@@ -835,7 +837,7 @@ fgGuiStyleContent& fgGuiStyleContent::setForeground(const float textSize) {
  * @param color
  * @return 
  */
-fgGuiStyleContent& fgGuiStyleContent::setForeground(const fgColor4f& color) {
+gui::CStyleContent& gui::CStyleContent::setForeground(const fgColor4f& color) {
     m_fg.color = color;
     return (*this);
 }
@@ -845,7 +847,7 @@ fgGuiStyleContent& fgGuiStyleContent::setForeground(const fgColor4f& color) {
  * @param font
  * @return 
  */
-fgGuiStyleContent& fgGuiStyleContent::setForeground(const std::string& font) {
+gui::CStyleContent& gui::CStyleContent::setForeground(const std::string& font) {
     m_fg.font = font;
     return (*this);
 }
@@ -855,7 +857,7 @@ fgGuiStyleContent& fgGuiStyleContent::setForeground(const std::string& font) {
  * @param font
  * @return 
  */
-fgGuiStyleContent& fgGuiStyleContent::setForeground(const char *font) {
+gui::CStyleContent& gui::CStyleContent::setForeground(const char *font) {
     m_fg.font = font;
     return (*this);
 }
@@ -865,8 +867,8 @@ fgGuiStyleContent& fgGuiStyleContent::setForeground(const char *font) {
  * @param size
  * @return 
  */
-fgGuiStyleContent& fgGuiStyleContent::setMargin(const float size) {
-    return setMargin(FG_GUI_MARGIN_ALL, size);
+gui::CStyleContent& gui::CStyleContent::setMargin(const float size) {
+    return setMargin(SMargin::Which::ALL, size);
 }
 
 /**
@@ -875,16 +877,16 @@ fgGuiStyleContent& fgGuiStyleContent::setMargin(const float size) {
  * @param size
  * @return 
  */
-fgGuiStyleContent& fgGuiStyleContent::setMargin(const fgGuiMarginWhich which, const float size) {
-    if(which & FG_GUI_MARGIN_LEFT)
+gui::CStyleContent& gui::CStyleContent::setMargin(const SMargin::Which which, const float size) {
+    if(!!(which & SMargin::Which::LEFT))
         m_margin.left = size;
-    if(which & FG_GUI_MARGIN_RIGHT)
+    if(!!(which & SMargin::Which::RIGHT))
         m_margin.right = size;
-    if(which & FG_GUI_MARGIN_TOP)
+    if(!!(which & SMargin::Which::TOP))
         m_margin.top = size;
-    if(which & FG_GUI_MARGIN_BOTTOM)
+    if(!!(which & SMargin::Which::BOTTOM))
         m_margin.bottom = size;
-    if(which & FG_GUI_MARGIN_ALL)
+    if(!!(which & SMargin::Which::ALL))
         m_margin.value = size;
     return (*this);
 }
@@ -894,8 +896,8 @@ fgGuiStyleContent& fgGuiStyleContent::setMargin(const fgGuiMarginWhich which, co
  * @param size
  * @return 
  */
-fgGuiStyleContent& fgGuiStyleContent::setPadding(const float size) {
-    return setPadding(FG_GUI_PADDING_ALL, size);
+gui::CStyleContent& gui::CStyleContent::setPadding(const float size) {
+    return setPadding(SPadding::Which::ALL, size);
 }
 
 /**
@@ -904,16 +906,16 @@ fgGuiStyleContent& fgGuiStyleContent::setPadding(const float size) {
  * @param size
  * @return 
  */
-fgGuiStyleContent& fgGuiStyleContent::setPadding(const fgGuiPaddingWhich which, const float size) {
-    if(which & FG_GUI_PADDING_LEFT)
+gui::CStyleContent& gui::CStyleContent::setPadding(const SPadding::Which which, const float size) {
+    if(!!(which & SPadding::Which::LEFT))
         m_padding.left = size;
-    if(which & FG_GUI_PADDING_RIGHT)
+    if(!!(which & SPadding::Which::RIGHT))
         m_padding.right = size;
-    if(which & FG_GUI_PADDING_TOP)
+    if(!!(which & SPadding::Which::TOP))
         m_padding.top = size;
-    if(which & FG_GUI_PADDING_BOTTOM)
+    if(!!(which & SPadding::Which::BOTTOM))
         m_padding.bottom = size;
-    if(which & FG_GUI_PADDING_ALL)
+    if(!!(which & SPadding::Which::ALL))
         m_padding.value = size;
     return (*this);
 }
@@ -923,8 +925,8 @@ fgGuiStyleContent& fgGuiStyleContent::setPadding(const fgGuiPaddingWhich which, 
  * @param style
  * @return 
  */
-fgGuiStyleContent& fgGuiStyleContent::setBorder(const fgGuiBorderStyle style) {
-    return setBorder(FG_GUI_BORDER_ALL, style);
+gui::CStyleContent& gui::CStyleContent::setBorder(const SBorder::Style style) {
+    return setBorder(SBorder::Which::ALL, style);
 }
 
 /**
@@ -932,8 +934,8 @@ fgGuiStyleContent& fgGuiStyleContent::setBorder(const fgGuiBorderStyle style) {
  * @param color
  * @return 
  */
-fgGuiStyleContent& fgGuiStyleContent::setBorder(const fgColor4f& color) {
-    return setBorder(FG_GUI_BORDER_ALL, color);
+gui::CStyleContent& gui::CStyleContent::setBorder(const fgColor4f& color) {
+    return setBorder(SBorder::Which::ALL, color);
 }
 
 /**
@@ -941,8 +943,8 @@ fgGuiStyleContent& fgGuiStyleContent::setBorder(const fgColor4f& color) {
  * @param width
  * @return 
  */
-fgGuiStyleContent& fgGuiStyleContent::setBorder(const float width) {
-    return setBorder(FG_GUI_BORDER_ALL, width);
+gui::CStyleContent& gui::CStyleContent::setBorder(const float width) {
+    return setBorder(SBorder::Which::ALL, width);
 }
 
 /**
@@ -951,16 +953,16 @@ fgGuiStyleContent& fgGuiStyleContent::setBorder(const float width) {
  * @param style
  * @return 
  */
-fgGuiStyleContent& fgGuiStyleContent::setBorder(const fgGuiBorderWhich which, const fgGuiBorderStyle style) {
-    if(which & FG_GUI_BORDER_LEFT)
+gui::CStyleContent& gui::CStyleContent::setBorder(const SBorder::Which which, const SBorder::Style style) {
+    if(!!(which & SBorder::Which::LEFT))
         m_border.left.style = style;
-    if(which & FG_GUI_BORDER_RIGHT)
+    if(!!(which & SBorder::Which::RIGHT))
         m_border.right.style = style;
-    if(which & FG_GUI_BORDER_TOP)
+    if(!!(which & SBorder::Which::TOP))
         m_border.top.style = style;
-    if(which & FG_GUI_BORDER_BOTTOM)
+    if(!!(which & SBorder::Which::BOTTOM))
         m_border.bottom.style = style;
-    if(which & FG_GUI_BORDER_ALL)
+    if(!!(which & SBorder::Which::ALL))
         m_border.all.style = style;
     return (*this);
 }
@@ -971,16 +973,16 @@ fgGuiStyleContent& fgGuiStyleContent::setBorder(const fgGuiBorderWhich which, co
  * @param color
  * @return 
  */
-fgGuiStyleContent& fgGuiStyleContent::setBorder(const fgGuiBorderWhich which, const fgColor4f& color) {
-    if(which & FG_GUI_BORDER_LEFT)
+gui::CStyleContent& gui::CStyleContent::setBorder(const SBorder::Which which, const fgColor4f& color) {
+    if(!!(which & SBorder::Which::LEFT))
         m_border.left.color = color;
-    if(which & FG_GUI_BORDER_RIGHT)
+    if(!!(which & SBorder::Which::RIGHT))
         m_border.right.color = color;
-    if(which & FG_GUI_BORDER_TOP)
+    if(!!(which & SBorder::Which::TOP))
         m_border.top.color = color;
-    if(which & FG_GUI_BORDER_BOTTOM)
+    if(!!(which & SBorder::Which::BOTTOM))
         m_border.bottom.color = color;
-    if(which & FG_GUI_BORDER_ALL)
+    if(!!(which & SBorder::Which::ALL))
         m_border.all.color = color;
     return (*this);
 }
@@ -991,16 +993,16 @@ fgGuiStyleContent& fgGuiStyleContent::setBorder(const fgGuiBorderWhich which, co
  * @param width
  * @return 
  */
-fgGuiStyleContent& fgGuiStyleContent::setBorder(const fgGuiBorderWhich which, const float width) {
-    if(which & FG_GUI_BORDER_LEFT)
+gui::CStyleContent& gui::CStyleContent::setBorder(const SBorder::Which which, const float width) {
+    if(!!(which & SBorder::Which::LEFT))
         m_border.left.width = width;
-    if(which & FG_GUI_BORDER_RIGHT)
+    if(!!(which & SBorder::Which::RIGHT))
         m_border.right.width = width;
-    if(which & FG_GUI_BORDER_TOP)
+    if(!!(which & SBorder::Which::TOP))
         m_border.top.width = width;
-    if(which & FG_GUI_BORDER_BOTTOM)
+    if(!!(which & SBorder::Which::BOTTOM))
         m_border.bottom.width = width;
-    if(which & FG_GUI_BORDER_ALL)
+    if(!!(which & SBorder::Which::ALL))
         m_border.all.width = width;
     return (*this);
 }
@@ -1010,7 +1012,7 @@ fgGuiStyleContent& fgGuiStyleContent::setBorder(const fgGuiBorderWhich which, co
  * @param style
  * @return 
  */
-fgGuiStyleContent& fgGuiStyleContent::setPosition(const fgGuiPositionStyle style) {
+gui::CStyleContent& gui::CStyleContent::setPosition(const SPosition::Style style) {
     m_position.style = style;
     return (*this);
 }
@@ -1021,8 +1023,8 @@ fgGuiStyleContent& fgGuiStyleContent::setPosition(const fgGuiPositionStyle style
  * @param modPos
  * @return 
  */
-fgGuiStyleContent& fgGuiStyleContent::setPosition(const fgGuiPositionStyle style,
-                                                  const fgVector2f& modPos) {
+gui::CStyleContent& gui::CStyleContent::setPosition(const SPosition::Style style,
+                                                    const fgVector2f& modPos) {
     return setPosition(style).setPosition(modPos);
 }
 
@@ -1031,8 +1033,8 @@ fgGuiStyleContent& fgGuiStyleContent::setPosition(const fgGuiPositionStyle style
  * @param modPos
  * @return 
  */
-fgGuiStyleContent& fgGuiStyleContent::setPosition(const fgVector2f& modPos) {
-    if(m_position.style != FG_GUI_POS_STATIC) {
+gui::CStyleContent& gui::CStyleContent::setPosition(const fgVector2f& modPos) {
+    if(m_position.style != SPosition::Style::STATIC) {
         if(modPos.x <= 0.0f)
             m_position.left = fabsf(modPos.x);
         else
@@ -1051,8 +1053,8 @@ fgGuiStyleContent& fgGuiStyleContent::setPosition(const fgVector2f& modPos) {
  * @param modPos
  * @return 
  */
-fgGuiStyleContent& fgGuiStyleContent::setPosition(const fgGuiPositionStyle style,
-                                                  const fgVector3f& modPos) {
+gui::CStyleContent& gui::CStyleContent::setPosition(const SPosition::Style style,
+                                                    const fgVector3f& modPos) {
     return setPosition(style).setPosition(modPos);
 }
 
@@ -1061,8 +1063,8 @@ fgGuiStyleContent& fgGuiStyleContent::setPosition(const fgGuiPositionStyle style
  * @param modPos
  * @return 
  */
-fgGuiStyleContent& fgGuiStyleContent::setPosition(const fgVector3f& modPos) {
-    if(m_position.style != FG_GUI_POS_STATIC) {
+gui::CStyleContent& gui::CStyleContent::setPosition(const fgVector3f& modPos) {
+    if(m_position.style != SPosition::Style::STATIC) {
         if(modPos.x <= 0.0f)
             m_position.left = fabsf(modPos.x);
         else
@@ -1084,7 +1086,7 @@ fgGuiStyleContent& fgGuiStyleContent::setPosition(const fgVector3f& modPos) {
  * @param align
  * @return 
  */
-fgGuiStyleContent& fgGuiStyleContent::setAlign(const fgGuiAlign align) {
+gui::CStyleContent& gui::CStyleContent::setAlign(const Align align) {
     m_align = align;
     return (*this);
 }
@@ -1094,7 +1096,7 @@ fgGuiStyleContent& fgGuiStyleContent::setAlign(const fgGuiAlign align) {
  * @param vAlign
  * @return 
  */
-fgGuiStyleContent& fgGuiStyleContent::setVAlign(const fgGuiAlign vAlign) {
+gui::CStyleContent& gui::CStyleContent::setVAlign(const Align vAlign) {
     m_valign = vAlign;
     return (*this);
 }
@@ -1104,7 +1106,7 @@ fgGuiStyleContent& fgGuiStyleContent::setVAlign(const fgGuiAlign vAlign) {
  * @param textAlign
  * @return 
  */
-fgGuiStyleContent& fgGuiStyleContent::setTextAlign(const fgGuiAlign textAlign) {
+gui::CStyleContent& gui::CStyleContent::setTextAlign(const Align textAlign) {
     m_textAlign = textAlign;
     return (*this);
 }
@@ -1114,7 +1116,7 @@ fgGuiStyleContent& fgGuiStyleContent::setTextAlign(const fgGuiAlign textAlign) {
  * @param style
  * @return 
  */
-fgGuiStyleContent& fgGuiStyleContent::setSize(const fgGuiSizeStyle style) {
+gui::CStyleContent& gui::CStyleContent::setSize(const SSize::Style style) {
     m_size.style = style;
     return (*this);
 }
@@ -1126,9 +1128,9 @@ fgGuiStyleContent& fgGuiStyleContent::setSize(const fgGuiSizeStyle style) {
  * @param y
  * @return 
  */
-fgGuiStyleContent& fgGuiStyleContent::setSize(const fgGuiSizeStyle style,
-                                              const float x,
-                                              const float y) {
+gui::CStyleContent& gui::CStyleContent::setSize(const SSize::Style style,
+                                                const float x,
+                                                const float y) {
     return setSize(style).setSize(x, y);
 }
 
@@ -1138,8 +1140,8 @@ fgGuiStyleContent& fgGuiStyleContent::setSize(const fgGuiSizeStyle style,
  * @param size
  * @return 
  */
-fgGuiStyleContent& fgGuiStyleContent::setSize(const fgGuiSizeStyle style,
-                                              const fgVector2f& size) {
+gui::CStyleContent& gui::CStyleContent::setSize(const SSize::Style style,
+                                                const fgVector2f& size) {
 
     return setSize(style).setSize(size);
 }
@@ -1152,10 +1154,10 @@ fgGuiStyleContent& fgGuiStyleContent::setSize(const fgGuiSizeStyle style,
  * @param z
  * @return 
  */
-fgGuiStyleContent& fgGuiStyleContent::setSize(const fgGuiSizeStyle style,
-                                              const float x,
-                                              const float y,
-                                              const float z) {
+gui::CStyleContent& gui::CStyleContent::setSize(const SSize::Style style,
+                                                const float x,
+                                                const float y,
+                                                const float z) {
 
     return setSize(style).setSize(x, y, z);
 }
@@ -1166,8 +1168,8 @@ fgGuiStyleContent& fgGuiStyleContent::setSize(const fgGuiSizeStyle style,
  * @param size
  * @return 
  */
-fgGuiStyleContent& fgGuiStyleContent::setSize(const fgGuiSizeStyle style,
-                                              const fgVector3f& size) {
+gui::CStyleContent& gui::CStyleContent::setSize(const SSize::Style style,
+                                                const fgVector3f& size) {
     return setSize(style).setSize(size);
 }
 
@@ -1177,7 +1179,7 @@ fgGuiStyleContent& fgGuiStyleContent::setSize(const fgGuiSizeStyle style,
  * @param y
  * @return 
  */
-fgGuiStyleContent& fgGuiStyleContent::setSize(const float x, const float y) {
+gui::CStyleContent& gui::CStyleContent::setSize(const float x, const float y) {
     m_size.x = x;
     m_size.y = y;
     return (*this);
@@ -1188,7 +1190,7 @@ fgGuiStyleContent& fgGuiStyleContent::setSize(const float x, const float y) {
  * @param size
  * @return 
  */
-fgGuiStyleContent& fgGuiStyleContent::setSize(const fgVector2f& size) {
+gui::CStyleContent& gui::CStyleContent::setSize(const fgVector2f& size) {
     m_size.x = size.x;
     m_size.y = size.y;
     return (*this);
@@ -1201,9 +1203,9 @@ fgGuiStyleContent& fgGuiStyleContent::setSize(const fgVector2f& size) {
  * @param z
  * @return 
  */
-fgGuiStyleContent& fgGuiStyleContent::setSize(const float x,
-                                              const float y,
-                                              const float z) {
+gui::CStyleContent& gui::CStyleContent::setSize(const float x,
+                                                const float y,
+                                                const float z) {
     m_size.x = x;
     m_size.y = y;
     m_size.z = z;
@@ -1215,7 +1217,7 @@ fgGuiStyleContent& fgGuiStyleContent::setSize(const float x,
  * @param size
  * @return 
  */
-fgGuiStyleContent& fgGuiStyleContent::setSize(const fgVector3f& size) {
+gui::CStyleContent& gui::CStyleContent::setSize(const fgVector3f& size) {
     m_size.x = size.x;
     m_size.y = size.y;
     m_size.z = size.z;
@@ -1227,7 +1229,7 @@ fgGuiStyleContent& fgGuiStyleContent::setSize(const fgVector3f& size) {
  * @param shader
  * @return 
  */
-fgGuiStyleContent& fgGuiStyleContent::setShader(const std::string& shader) {
+gui::CStyleContent& gui::CStyleContent::setShader(const std::string& shader) {
     m_shader = shader;
     return (*this);
 }
@@ -1237,7 +1239,7 @@ fgGuiStyleContent& fgGuiStyleContent::setShader(const std::string& shader) {
  * @param shader
  * @return 
  */
-fgGuiStyleContent& fgGuiStyleContent::setShader(const char *shader) {
+gui::CStyleContent& gui::CStyleContent::setShader(const char *shader) {
     m_shader = shader;
     return (*this);
 }
@@ -1247,7 +1249,7 @@ fgGuiStyleContent& fgGuiStyleContent::setShader(const char *shader) {
  * @param effect
  * @return 
  */
-fgGuiStyleContent& fgGuiStyleContent::setEffect(const std::string& effect) {
+gui::CStyleContent& gui::CStyleContent::setEffect(const std::string& effect) {
     m_effect = effect;
     return (*this);
 }
@@ -1257,7 +1259,7 @@ fgGuiStyleContent& fgGuiStyleContent::setEffect(const std::string& effect) {
  * @param effect
  * @return 
  */
-fgGuiStyleContent& fgGuiStyleContent::setEffect(const char *effect) {
+gui::CStyleContent& gui::CStyleContent::setEffect(const char *effect) {
     m_effect = effect;
     return (*this);
 }

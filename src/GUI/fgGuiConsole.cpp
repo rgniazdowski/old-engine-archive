@@ -10,41 +10,42 @@
 #include "fgGuiConsole.h"
 #include "fgStatus.h"
 
-/*
+/**
  *
  */
-fgGuiConsole::fgGuiConsole() :
+fg::gui::CConsole::CConsole() :
 base_type(),
 m_numConsoleRecords(0) {
-    fgGuiConsole::setDefaults();
+    fg::gui::CConsole::setDefaults();
 }
 
-/*
+/**
  *
  */
-fgGuiConsole::~fgGuiConsole() { }
+fg::gui::CConsole::~CConsole() { }
 
-/*
+/**
  *
  */
-void fgGuiConsole::setDefaults(void) {
-    m_type = FG_GUI_CONSOLE;
+void fg::gui::CConsole::setDefaults(void) {
+    m_type = CONSOLE;
     m_typeName = FG_GUI_CONSOLE_NAME;
-    m_typeTraits = FG_GUI_CONSOLE | FG_GUI_TEXT_AREA | FG_GUI_SCROLL_AREA | FG_GUI_CONTAINER | FG_GUI_WIDGET;
+    m_typeTraits = CONSOLE | TEXT_AREA | SCROLL_AREA | CONTAINER | WIDGET;
     m_sliderSwitch = SLIDER_VERTICAL;
 }
 
-/*
- *
+/**
+ * 
+ * @return 
  */
-fgBoundingBox3Df fgGuiConsole::updateBounds(void) {
+fgBoundingBox3Df fg::gui::CConsole::updateBounds(void) {
     return base_type::updateBounds();
 }
 
-/*
- *
+/**
+ * 
  */
-void fgGuiConsole::refresh(void) {
+void fg::gui::CConsole::refresh(void) {
     base_type::refresh();
 }
 
@@ -52,7 +53,7 @@ void fgGuiConsole::refresh(void) {
  * 
  * @param guiLayer
  */
-void fgGuiConsole::display(fgGuiDrawer* guiLayer) {
+void fg::gui::CConsole::display(CDrawer* guiLayer) {
     base_type::display(guiLayer);
 }
 
@@ -60,7 +61,7 @@ void fgGuiConsole::display(fgGuiDrawer* guiLayer) {
  * 
  * @param statusVec
  */
-void fgGuiConsole::updateFromStatusVec(const fg::CVector<fgStatus *> &statusVec) {
+void fg::gui::CConsole::updateFromStatusVec(const fg::CVector<fgStatus *> &statusVec) {
     if(statusVec.empty())
         return;
 
@@ -83,7 +84,7 @@ void fgGuiConsole::updateFromStatusVec(const fg::CVector<fgStatus *> &statusVec)
         m_numConsoleRecords = m_textData.size();
     } else {
         // n < m_numConsoleRecords
-        for(int i = 0; i < diff; i++) {
+        for(unsigned int i = 0; i < diff; i++) {
             m_textData.pop_back();
         }
         m_numConsoleRecords = n;

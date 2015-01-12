@@ -19,96 +19,102 @@
     #include "fgGuiContainer.h"
     #include "fgGuiWidgetFactoryTypes.h"
 
-/**
- *
- */
-class fgGuiScrollArea : public fgGuiContainer {
-public:
-    ///
-    typedef fgGuiContainer base_type;
+namespace fg {
+    namespace gui {
 
-public:
-    enum SliderSwitch {
-        SLIDER_NONE = 0,
-        SLIDER_HORIZONTAL = 1,
-        SLIDER_VERTICAL = 2,
-        SLIDER_BOTH = 3
+        /**
+         *
+         */
+        class CScrollArea : public CContainer {
+        public:
+            ///
+            typedef CContainer base_type;
+
+        public:
+
+            enum SliderSwitch {
+                SLIDER_NONE = 0,
+                SLIDER_HORIZONTAL = 1,
+                SLIDER_VERTICAL = 2,
+                SLIDER_BOTH = 3
+            };
+
+        protected:
+            /// Horizontal slider
+            CSlider *m_hSlider;
+            /// Vertical slider
+            CSlider *m_vSlider;
+            /// Relative move of the content based on the w/h sliders
+            fgVector2f m_relMove;
+            /// Which slider to show?
+            SliderSwitch m_sliderSwitch;
+            /// Special bounding box describing the inner content (container)
+            fgBoundingBox3Df m_contentBBox;
+
+        protected:
+            /**
+             * 
+             */
+            virtual void setDefaults(void);
+
+        public:
+            /**
+             * 
+             */
+            CScrollArea();
+            /**
+             * 
+             */
+            virtual ~CScrollArea();
+
+            /**
+             * 
+             * @return 
+             */
+            FG_GUI_WIDGET_FACTORY_CREATE_FUNCTION(CScrollArea);
+
+            /**
+             * 
+             * @return 
+             */
+            virtual void setFlags(const std::string& flags);
+
+            /**
+             * 
+             * @param guiLayer
+             */
+            virtual void display(CDrawer *guiLayer);
+
+            /**
+             * 
+             * @return 
+             */
+            virtual fgBoundingBox3Df updateBounds(void);
+
+            /**
+             * 
+             * @param bbox
+             * @return 
+             */
+            virtual fgBoundingBox3Df updateBounds(const fgBoundingBox3Df &bbox);
+
+            /**
+             * 
+             */
+            virtual void refresh(void);
+
+            /**
+             * 
+             * @param pointerData
+             * @return 
+             */
+            virtual State updateState(const fgPointerData *pointerData);
+
+        };
     };
-    
-protected:
-    /// Horizontal slider
-    fgGuiSlider *m_hSlider;
-    /// Vertical slider
-    fgGuiSlider *m_vSlider;
-    /// Relative move of the content based on the w/h sliders
-    fgVector2f m_relMove;
-    /// Which slider to show?
-    SliderSwitch m_sliderSwitch;
-    /// Special bounding box describing the inner content (container)
-    fgBoundingBox3Df m_contentBBox;
-    
-protected:
-    /**
-     * 
-     */
-    virtual void setDefaults(void);
-
-public:
-    /**
-     * 
-     */
-    fgGuiScrollArea();
-    /**
-     * 
-     */
-    virtual ~fgGuiScrollArea();
-
-    /**
-     * 
-     * @return 
-     */
-    FG_GUI_WIDGET_FACTORY_CREATE_FUNCTION(fgGuiScrollArea);
-
-    /**
-     * 
-     * @return 
-     */
-    virtual void setFlags(const std::string& flags);
-    
-    /**
-     * 
-     * @param guiLayer
-     */
-    virtual void display(fgGuiDrawer *guiLayer);
-    
-    /**
-     * 
-     * @return 
-     */
-    virtual fgBoundingBox3Df updateBounds(void);
-    
-    /**
-     * 
-     * @param bbox
-     * @return 
-     */
-    virtual fgBoundingBox3Df updateBounds(const fgBoundingBox3Df &bbox);
-    
-    /**
-     * 
-     */
-    virtual void refresh(void);
-    
-    /**
-     * 
-     * @param pointerData
-     * @return 
-     */
-    virtual int updateState(const fgPointerData *pointerData);
-
 };
 
-FG_ENUM_FLAGS(fgGuiScrollArea::SliderSwitch);
+FG_ENUM_FLAGS(fg::gui::CScrollArea::SliderSwitch);
 
     #undef FG_INC_GUI_SCROLL_AREA_BLOCK
 #endif /* FG_INC_GUI_SCROLL_AREA */

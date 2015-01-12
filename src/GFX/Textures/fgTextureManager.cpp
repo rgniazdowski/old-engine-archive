@@ -52,9 +52,9 @@ void fg::gfx::CTextureManager::registerResourceCallbacks(void) {
         return;
 
     if(!m_resourceCreatedCallback)
-        m_resourceCreatedCallback = new fgClassCallback<CTextureManager>(this, &fg::gfx::CTextureManager::resourceCreatedHandler);
+        m_resourceCreatedCallback = new fg::event::CMethodCallback<CTextureManager>(this, &fg::gfx::CTextureManager::resourceCreatedHandler);
 
-    static_cast<fg::event::CEventManager *>(m_pEventMgr)->addEventCallback(FG_EVENT_RESOURCE_CREATED, m_resourceCreatedCallback);
+    static_cast<fg::event::CEventManager *>(m_pEventMgr)->addCallback(FG_EVENT_RESOURCE_CREATED, m_resourceCreatedCallback);
     //m_pEventMgr->addEventCallback(FG_EVENT_TOUCH_RELEASED, m_gameTouchCallback);
     //m_pEventMgr->addEventCallback(FG_EVENT_TOUCH_MOTION, m_gameTouchCallback);
     //m_pEventMgr->addEventCallback(FG_EVENT_TOUCH_TAP_FINISHED, m_gameTouchCallback);
@@ -74,7 +74,7 @@ void fg::gfx::CTextureManager::unregisterResourceCallbacks(void) {
     if(!m_pEventMgr)
         return;
 
-    static_cast<fg::event::CEventManager *>(m_pEventMgr)->removeEventCallback(FG_EVENT_RESOURCE_CREATED, m_resourceCreatedCallback);
+    static_cast<fg::event::CEventManager *>(m_pEventMgr)->removeCallback(FG_EVENT_RESOURCE_CREATED, m_resourceCreatedCallback);
 
     //m_pEventMgr->removeEventCallback(FG_EVENT_MOUSE_PRESSED, m_gameMouseCallback);
     //m_pEventMgr->removeEventCallback(FG_EVENT_MOUSE_RELEASED, m_gameMouseCallback);
@@ -120,7 +120,7 @@ fgBool fg::gfx::CTextureManager::initialize(void) {
  * 
  * @param pResourceMgr
  */
-void fg::gfx::CTextureManager::setResourceManager(fg::base::CManager *pResourceMgr) {
+void fg::gfx::CTextureManager::setResourceManager(fg::base::CManager* pResourceMgr) {
     if(!pResourceMgr)
         return;
     if(pResourceMgr->getManagerType() == FG_MANAGER_RESOURCE) {
@@ -142,7 +142,7 @@ void fg::gfx::CTextureManager::setResourceManager(fg::base::CManager *pResourceM
  * 
  * @return 
  */
-fg::base::CManager * fg::gfx::CTextureManager::getResourceManager(void) const {
+fg::base::CManager* fg::gfx::CTextureManager::getResourceManager(void) const {
     return m_pResourceMgr;
 }
 
@@ -199,10 +199,10 @@ fgGfxTextureID& fg::gfx::CTextureManager::getRefGfxID(const char *nameTag) {
  * @param argv
  * @return 
  */
-fgBool fg::gfx::CTextureManager::resourceCreatedHandler(fgArgumentList * argv) {
+fgBool fg::gfx::CTextureManager::resourceCreatedHandler(fg::event::CArgumentList * argv) {
     if(!argv)
         return FG_FALSE;
-    fgEventBase *event = (fgEventBase *)argv->getArgumentValueByID(0);
+    fgEventBase *event = (fgEventBase *)argv->getValueByID(0);
     if(!event)
         return FG_FALSE;
     fgEventType type = event->eventType;

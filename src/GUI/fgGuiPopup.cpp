@@ -9,35 +9,41 @@
 
 #include "fgGuiPopup.h"
 
-/*
+using namespace fg;
+
+/**
  *
  */
-fgGuiPopup::fgGuiPopup() {
-    fgGuiPopup::setDefaults();
+gui::CPopup::CPopup() :
+base_type() {
+    CPopup::setDefaults();
 }
 
-/*
+/**
  *
  */
-fgGuiPopup::~fgGuiPopup() { }
+gui::CPopup::~CPopup() { }
 
-/*
+/**
  *
  */
-void fgGuiPopup::setDefaults(void) {
-    m_type = FG_GUI_POPUP;
+void gui::CPopup::setDefaults(void) {
+    m_type = POPUP;
     m_typeName = FG_GUI_POPUP_NAME;
-    m_typeTraits = FG_GUI_POPUP | FG_GUI_WINDOW | FG_GUI_CONTAINER | FG_GUI_WIDGET;
+    m_typeTraits = POPUP | WINDOW | CONTAINER | WIDGET;
 }
 
-/*
- *
+/**
+ * 
+ * @return 
  */
-fgBoundingBox3Df fgGuiPopup::updateBounds(void) {
-    return fgGuiWindow::updateBounds();
+fgBoundingBox3Df gui::CPopup::updateBounds(void) {
+    return CWindow::updateBounds();
 }
 
-/*
+/**
  *
  */
-void fgGuiPopup::refresh(void) { }
+void gui::CPopup::refresh(void) {
+    base_type::refresh();
+}

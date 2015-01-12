@@ -9,6 +9,7 @@
 
 #ifndef FG_INC_GUI_MENU
     #define FG_INC_GUI_MENU
+    #define FG_INC_GUI_MENU_BLOCK
 
     #include <map>
 
@@ -16,43 +17,69 @@
     #include "fgGuiContainer.h"
     #include "fgGuiWidgetFactoryTypes.h"
 
-/**
- * 
- */
-class fgGuiMenu : public fgGuiContainer {
-public:
-    typedef fgGuiContainer base_type;
-private:
-    ///
-    fgBool m_isMainMenu;
+namespace fg {
+    namespace gui {
 
-protected:
-    // 
-    virtual void setDefaults(void);
+        /**
+         * 
+         */
+        class CMenu : public CContainer {
+        public:
+            typedef CContainer base_type;
+        private:
+            ///
+            fgBool m_isMainMenu;
 
-public:
-    
-    using fgGuiWidget::updateBounds;
-    
-    // 
-    fgGuiMenu();
-    // 
-    virtual ~fgGuiMenu();
+        public:
 
-    FG_GUI_WIDGET_FACTORY_CREATE_FUNCTION(fgGuiMenu);
+            using CWidget::updateBounds;
 
-    //
-    virtual void setFlags(const std::string& flags);
+            /**
+             * 
+             */
+            CMenu();
+            /**
+             * 
+             */
+            virtual ~CMenu();
 
-    // 
-    virtual fgBoundingBox3Df updateBounds(void);
-    // 
-    virtual void refresh(void);
+            /**
+             * 
+             * @return 
+             */
+            FG_GUI_WIDGET_FACTORY_CREATE_FUNCTION(CMenu)
 
-    //
-    fgBool isMainMenu(void) const {
-        return m_isMainMenu;
-    }
+            /**
+             * 
+             * @param flags
+             */
+            virtual void setFlags(const std::string& flags);
+
+            /**
+             * 
+             * @return 
+             */
+            virtual fgBoundingBox3Df updateBounds(void);
+            /**
+             * 
+             */
+            virtual void refresh(void);
+            /**
+             * 
+             * @return 
+             */
+            fgBool isMainMenu(void) const {
+                return m_isMainMenu;
+            }
+
+        protected:
+            /**
+             * 
+             */
+            virtual void setDefaults(void);
+        };
+    };
 };
 
+    #undef FG_INC_GUI_MENU_BLOCK
 #endif /* FG_INC_GUI_MENU */

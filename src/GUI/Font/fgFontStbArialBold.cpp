@@ -13,12 +13,12 @@
 #include "StbArialBold/stb_font_arial_bold_16_usascii.inl"
 #include "StbArialBold/stb_font_arial_bold_8_usascii.inl"
 
-fgFontBuiltInRawData fgFontBuiltIn::StbArialBold::m_stbFontRawData;
+fg::gui::SFontBuiltInRawData fg::gui::font::StbArialBold::m_stbFontRawData;
 
 /*
  *
  */
-fgFontBuiltInRawData* fgFontBuiltIn::StbArialBold::getRawData(const int size) {
+fg::gui::SFontBuiltInRawData* fg::gui::font::StbArialBold::getRawData(const int size) {
     if(size > 0 && size <= 8) {
         m_stbFontRawData.xPtr = FG_STB_FONT_PTR(arial_bold_8, x);
         m_stbFontRawData.yPtr = FG_STB_FONT_PTR(arial_bold_8, y);

@@ -9,37 +9,59 @@
 
 #ifndef FG_INC_GUI_BUTTON
     #define FG_INC_GUI_BUTTON
+    #define FG_INC_GUI_BUTTON_BLOCK
 
     #include "fgGuiWidget.h"
     #include "fgGuiLabel.h"
     #include "fgGuiWidgetFactoryTypes.h"
 
-/*
- *
- */
-class fgGuiButton : public fgGuiWidget {
-public:
-    typedef fgGuiWidget base_type;
-protected:
-    /// 
-    fgGuiLabel *m_label;
+namespace fg {
+    namespace gui {
 
-protected:
-    // 
-    virtual void setDefaults(void);
+        /*
+         *
+         */
+        class CButton : public CWidget {
+        public:
+            typedef fg::gui::CWidget base_type;
+        protected:
+            /// 
+            CLabel *m_label;
 
-public:
-    // 
-    fgGuiButton();
-    // 
-    virtual ~fgGuiButton();
+        protected:
+            /**
+             * 
+             */
+            virtual void setDefaults(void);
 
-    FG_GUI_WIDGET_FACTORY_CREATE_FUNCTION(fgGuiButton);
+        public:
+            /**
+             * 
+             */
+            CButton();
+            /**
+             * 
+             */
+            virtual ~CButton();
 
-    // 
-    virtual fgBoundingBox3Df updateBounds(void);
-    //
-    virtual void refresh(void);
+            /**
+             * 
+             * @return 
+             */
+            FG_GUI_WIDGET_FACTORY_CREATE_FUNCTION(CButton)
+
+            /**
+             * 
+             * @return 
+             */
+            virtual fgBoundingBox3Df updateBounds(void);
+            /**
+             * 
+             */
+            virtual void refresh(void);
+        };
+    };
 };
 
+    #undef FG_INC_GUI_BUTTON_BLOCK
 #endif /* FG_INC_GUI_BUTTON */ 

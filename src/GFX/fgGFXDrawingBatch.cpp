@@ -10,8 +10,11 @@
 #include "fgGFXDrawingBatch.h"
 #include "GFX/Shaders/fgGFXShaderManager.h"
 
-/*
- *
+/**
+ * 
+ * @param reservedSize
+ * @param drawCallType
+ * @param attribMask
  */
 fg::gfx::CDrawingBatch::CDrawingBatch(const unsigned int reservedSize,
                                       const fgGfxDrawCallType drawCallType,
@@ -27,7 +30,7 @@ m_pShaderMgr(NULL) {
     reserve(reservedSize);
 }
 
-/*
+/**
  *
  */
 fg::gfx::CDrawingBatch::~CDrawingBatch() {
@@ -44,8 +47,9 @@ fg::gfx::CDrawingBatch::~CDrawingBatch() {
     m_drawCalls.clear_optimised();
 }
 
-/*
- *
+/**
+ * 
+ * @param pShaderMgr
  */
 void fg::gfx::CDrawingBatch::setShaderManager(fg::base::CManager *pShaderMgr) {
     if(pShaderMgr) {
@@ -55,8 +59,13 @@ void fg::gfx::CDrawingBatch::setShaderManager(fg::base::CManager *pShaderMgr) {
     m_pShaderMgr = pShaderMgr;
 }
 
-/*
- *
+/**
+ * 
+ * @param index
+ * @param type
+ * @param attribMask
+ * @param pProgram
+ * @return 
  */
 fg::gfx::CDrawCall *fg::gfx::CDrawingBatch::requestDrawCall(int &index,
                                                             const fgGfxDrawCallType type,
@@ -96,8 +105,10 @@ fg::gfx::CDrawCall *fg::gfx::CDrawingBatch::requestDrawCall(int &index,
     return drawCall;
 }
 
-/*
- *
+/**
+ * 
+ * @param index
+ * @return 
  */
 fg::gfx::CDrawCall *fg::gfx::CDrawingBatch::getDrawCall(int index) {
     if(index < 0 || index >= (int)m_drawCalls.size())

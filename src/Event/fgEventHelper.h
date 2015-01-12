@@ -21,31 +21,36 @@
     #include <map>
     #include <queue>
 
-///
-typedef std::map<int, fg::CVector<fgFunctionCallback *> > fgCallbackBindingMap;
-///
-typedef fgCallbackBindingMap::iterator fgCallbackBindingMapItor;
+namespace fg {
+    namespace event {
 
-///
-typedef fg::CVector<fgFunctionCallback *> fgCallbacksVec;
+        ///
+        typedef std::map<int, fg::CVector<fg::event::CFunctionCallback *> > CallbackBindingMap;
+        ///
+        typedef CallbackBindingMap::iterator CallbackBindingMapItor;
 
-///
-typedef fgCallbacksVec::iterator fgCallbacksVecItor;
-///
-typedef fgCallbacksVec::const_iterator fgCallbacksVecConstItor;
+        ///
+        typedef fg::CVector<fg::event::CFunctionCallback *> CallbacksVec;
 
-///
-typedef std::queue<fgThrownEvent> fgEventsQueue;
+        ///
+        typedef CallbacksVec::iterator CallbacksVecItor;
+        ///
+        typedef CallbacksVec::const_iterator CallbacksVecConstItor;
 
-///
-typedef fg::CVector<fgTimeoutCallback> fgTimeoutCallbacksVec;
-///
-typedef fgTimeoutCallbacksVec::iterator fgTimeoutCallbacksVecItor;
+        ///
+        typedef std::queue<fg::event::SThrownEvent> EventsQueue;
 
-///
-typedef fg::CVector<fgCyclicCallback> fgCyclicCallbacksVec;
-///
-typedef fgCyclicCallbacksVec::iterator fgCyclicCallbacksVecItor;
+        ///
+        typedef fg::CVector<fg::event::STimeoutCallback> TimeoutCallbacksVec;
+        ///
+        typedef TimeoutCallbacksVec::iterator TimeoutCallbacksVecItor;
+
+        ///
+        typedef fg::CVector<fg::event::SCyclicCallback> CyclicCallbacksVec;
+        ///
+        typedef CyclicCallbacksVec::iterator CyclicCallbacksVecItor;
+    };
+};
 
     #undef FG_INC_EVENT_HELPER_BLOCK
 #endif /* FG_INC_EVENT_HELPER */

@@ -13,12 +13,14 @@
 #include "StbTimes/stb_font_times_16_usascii.inl"
 #include "StbTimes/stb_font_times_8_usascii.inl"
 
-fgFontBuiltInRawData fgFontBuiltIn::StbTimes::m_stbFontRawData;
+fg::gui::SFontBuiltInRawData fg::gui::font::StbTimes::m_stbFontRawData;
 
-/*
- *
+/**
+ * 
+ * @param size
+ * @return 
  */
-fgFontBuiltInRawData* fgFontBuiltIn::StbTimes::getRawData(const int size) {
+fg::gui::SFontBuiltInRawData* fg::gui::font::StbTimes::getRawData(const int size) {
     if(size > 0 && size <= 8) {
         m_stbFontRawData.xPtr = FG_STB_FONT_PTR(times_8, x);
         m_stbFontRawData.yPtr = FG_STB_FONT_PTR(times_8, y);

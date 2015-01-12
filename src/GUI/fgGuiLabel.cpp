@@ -9,31 +9,34 @@
 
 #include "fgGuiLabel.h"
 
-/*
+using namespace fg;
+
+/**
  *
  */
-fgGuiLabel::fgGuiLabel() : 
-fgGuiWidget() {
-    fgGuiLabel::setDefaults();
+gui::CLabel::CLabel() :
+CWidget() {
+    CLabel::setDefaults();
 }
 
-/*
+/**
  *
  */
-fgGuiLabel::~fgGuiLabel() { }
+gui::CLabel::~CLabel() { }
 
-/*
+/**
  *
  */
-void fgGuiLabel::setDefaults(void) {
-    m_type = FG_GUI_LABEL;
+void gui::CLabel::setDefaults(void) {
+    m_type = LABEL;
     m_typeName = FG_GUI_LABEL_NAME;
-    m_typeTraits = FG_GUI_LABEL | FG_GUI_WIDGET;
+    m_typeTraits = LABEL | WIDGET;
 }
 
-/*
- *
+/**
+ * 
+ * @return 
  */
-fgBoundingBox3Df fgGuiLabel::updateBounds(void) {
-    return fgGuiWidget::updateBounds();
+fgBoundingBox3Df gui::CLabel::updateBounds(void) {
+    return base_type::updateBounds();
 }

@@ -52,8 +52,8 @@ void fg::gfx::CShaderManager::clear(void) {
  * @return 
  */
 fgBool fg::gfx::CShaderManager::destroy(void) {
-   smProgramVec & data = getRefDataVector();
-   hmDataVecItor begin = data.begin(), end = data.end(), itor = begin;
+   ProgramVec & data = getRefDataVector();
+   DataVecItor begin = data.begin(), end = data.end(), itor = begin;
    for(; itor != end; ++itor) {
       if((*itor) == NULL)
          continue;
@@ -269,7 +269,7 @@ fgBool fg::gfx::CShaderManager::preLoadShaders(void) {
 fgBool fg::gfx::CShaderManager::insert(CShaderProgram *pProgram, const std::string& nameTag) {
    if(!pProgram)
       return FG_FALSE;
-   if(fgDataManagerBase::insert(pProgram, nameTag)) {
+   if(CDataManagerBase::insert(pProgram, nameTag)) {
       pProgram->setName(nameTag); // ?
       pProgram->setManaged(FG_TRUE);
       pProgram->setManager(this);
@@ -325,7 +325,7 @@ fg::gfx::CShaderProgram *fg::gfx::CShaderManager::request(const std::string& inf
    // Search file names of shaders already in cache
    if(!infoAsName && iext) {
       // This is special search for filename within already loaded shaders
-      smProgramVecItor it = getRefDataVector().begin(), end = getRefDataVector().end();
+      ProgramVecItor it = getRefDataVector().begin(), end = getRefDataVector().end();
       for(; it != end; it++) {
          fg::gfx::CShaderProgram *program = (*it);
          if(!program)
@@ -452,7 +452,7 @@ fgBool fg::gfx::CShaderManager::compileShaders(void) {
       return FG_FALSE;
    }
    fgBool status = FG_TRUE;
-   smProgramVecItor end, itor;
+   ProgramVecItor end, itor;
    end = getRefDataVector().end();
    itor = getRefDataVector().begin();
    for(; itor != end; itor++) {
@@ -479,7 +479,7 @@ fgBool fg::gfx::CShaderManager::linkShaders(void) {
       return FG_FALSE;
    }
    fgBool status = FG_TRUE;
-   smProgramVecItor end, itor;
+   ProgramVecItor end, itor;
    end = getRefDataVector().end();
    itor = getRefDataVector().begin();
    for(; itor != end; itor++) {
@@ -506,7 +506,7 @@ fgBool fg::gfx::CShaderManager::allReleaseGFX(void) {
       return FG_FALSE; // ERROR ?
    }
    fgBool status = FG_TRUE;
-   smProgramVecItor end, itor;
+   ProgramVecItor end, itor;
    end = getRefDataVector().end();
    itor = getRefDataVector().begin();
    for(; itor != end; itor++) {

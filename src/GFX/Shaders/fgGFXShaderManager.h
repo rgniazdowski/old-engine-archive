@@ -48,17 +48,19 @@ namespace fg {
         /**
          *
          */
-        class CShaderManager : public fgDataManagerBase<fg::gfx::CShaderProgram*, fgGfxShaderHandle, fgGfxShaderManagerTag> {
+        class CShaderManager : 
+        public fg::resource::CDataManagerBase<fg::gfx::CShaderProgram*, fgGfxShaderHandle, fgGfxShaderManagerTag> {
         public:
-            typedef fgDataManagerBase<CShaderProgram*, fgGfxShaderHandle, fgGfxShaderManagerTag> base_type;
+            typedef CDataManagerBase<CShaderProgram*, fgGfxShaderHandle, fgGfxShaderManagerTag> base_type;
+            typedef CShaderManager self_type;
             typedef CShaderProgram data_type;
             typedef CShaderProgram* data_type_ptr;
             typedef fgGfxShaderHandle handle_type;
             typedef fgGfxShaderManagerTag tag_type;
 
         protected:
-            typedef hmDataVec smProgramVec;
-            typedef hmDataVec::iterator smProgramVecItor;
+            typedef DataVec ProgramVec;
+            typedef DataVec::iterator ProgramVecItor;
 
         public:
             /**

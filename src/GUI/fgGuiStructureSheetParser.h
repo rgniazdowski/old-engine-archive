@@ -9,6 +9,7 @@
 
 #ifndef FG_INC_GUI_STRUCTURE_SHEET_PARSER
     #define FG_INC_GUI_STRUCTURE_SHEET_PARSER
+    #define FG_INC_GUI_STRUCTURE_SHEET_PARSER_BLOCK
 
     #include "XML/fgXMLParser.h"
     #include "XML/fgXMLDefaultHandler.h"
@@ -19,61 +20,133 @@
 
     #define FG_GUI_STRUCTURE_SHEET_ROOT_NODE "GUIStructure"
 
-/*
- *
- */
-class fgGuiStructureSheetParser : public fg::xml::CDefaultHandler {
-    friend class fgGuiWidgetManager;
-    friend class fgGuiMain;
+namespace fg {
+    namespace gui {
 
-private:
-    ///
-    std::stack<fgXMLElement *> m_elemStack;
-    ///
-    std::stack<fgGuiWidget *> m_widgetStack;
-    ///
-    fgGuiWidgetFactory *m_widgetFactory;
-    ///
-    fgGuiWidgetManager *m_widgetMgr;
-    ///
-    fgBool m_isFailure;
-    ///
-    int m_count;
-    
-protected:
-    // Base constructor of the resource group content handler object
-    fgGuiStructureSheetParser();
-    // Base destructor of the resource group content handler object
-    virtual ~fgGuiStructureSheetParser();
+        class CGuiMain;
+        class CWidgetManager;
 
-protected:
-    //
-    void setWidgetFactory(fgGuiWidgetFactory *widgetFactory);
-    //
-    fgGuiWidgetFactory *getWidgetFactory(void) const;
-    //
-    void setWidgetManager(fgGuiWidgetManager *widgetMgr);
-    //
-    fgGuiWidgetManager *getWidgetManager(void) const;
-    //
-    fgBool parseWidgetAttributes(fgGuiWidget *pWidget, fgXMLAttribute *attribute);
-    //
-    static fgVector3f parseSpatialData(const char *data);
-public:
-    // Receive notification of the end of the document.
-    virtual void endDocument(fgXMLDocument *document);
+        /**
+         *
+         */
+        class CStructureSheetParser : public fg::xml::CDefaultHandler {
+            friend class fg::gui::CWidgetManager;
+            friend class fg::gui::CGuiMain;
 
-    // Receive notification of the end of an element.
-    virtual void endElement(const char *localName, fgXMLElement *elementPtr, fgXMLNodeType nodeType, int depth = 0);
+        private:
+            ///
+            std::stack<fgXMLElement *> m_elemStack;
+            ///
+            std::stack<CWidget *> m_widgetStack;
+            ///
+            CWidgetFactory *m_widgetFactory;
+            ///
+            CWidgetManager *m_widgetMgr;
+            ///
+            fgBool m_isFailure;
+            ///
+            int m_count;
 
-    // Receive notification of the beginning of the document.
-    virtual void startDocument(fgXMLDocument *document);
+        protected:
+            /**
+             * Base constructor of the resource group content handler object
+             */
+            CStructureSheetParser();
+            /**
+             * Destructor of the resource group content handler object
+             */
+            virtual ~CStructureSheetParser();
 
-    // Receive notification of the start of an element.
-    virtual void startElement(const char *localName, fgXMLElement *elementPtr, fgXMLNodeType nodeType, fgXMLAttribute *firstAttribute, int depth = 0);
+        protected:
+            /**
+             * 
+             * @param widgetFactory
+             */
+            void setWidgetFactory(CWidgetFactory *widgetFactory);
+            /**
+             * 
+             * @return 
+             */
+            CWidgetFactory *getWidgetFactory(void) const;
+            /**
+             * 
+             * @param widgetMgr
+             */
+            void setWidgetManager(CWidgetManager *widgetMgr);
+            /**
+             * 
+             * @return 
+             */
+            CWidgetManager *getWidgetManager(void) const;
+            /**
+             * 
+             * @param pWidget
+             * @param attribute
+             * @return 
+             */
+            fgBool parseWidgetAttributes(CWidget *pWidget, fgXMLAttribute *attribute);
+            /**
+             * 
+             * @param data
+             * @return 
+             */
+            static fgVector3f parseSpatialData(const char *data);
 
-    // Receive notification of character data inside an element or comment
-    virtual void characters(const char *ch, int start, int length, fgXMLNodeType nodeType, int depth = 0);
+        public:
+            /**
+             * Receive notification of the end of the document.
+             * @param document
+             */
+            virtual void endDocument(fgXMLDocument *document);
+
+            /**
+             * Receive notification of the end of an element.
+             * @param localName
+             * @param elementPtr
+             * @param nodeType
+             * @param depth
+             */
+            virtual void endElement(const char *localName,
+                                    fgXMLElement *elementPtr,
+                                    fgXMLNodeType nodeType,
+                                    int depth = 0);
+
+            /**
+             * Receive notification of the beginning of the document.
+             * @param document
+             */
+            virtual void startDocument(fgXMLDocument *document);
+
+            /**
+             * Receive notification of the start of an element.
+             * @param localName
+             * @param elementPtr
+             * @param nodeType
+             * @param firstAttribute
+             * @param depth
+             */
+            virtual void startElement(const char *localName,
+                                      fgXMLElement *elementPtr,
+                                      fgXMLNodeType nodeType,
+                                      fgXMLAttribute *firstAttribute,
+                                      int depth = 0);
+
+            /**
+             * Receive notification of character data inside an element or comment
+             * @param ch
+             * @param start
+             * @param length
+             * @param nodeType
+             * @param depth
+             */
+            virtual void characters(const char *ch,
+                                    int start,
+                                    int length,
+                                    fgXMLNodeType nodeType,
+                                    int depth = 0);
+        };
+    };
 };
 
+    #undef FG_INC_GUI_STRUCTURE_SHEET_PARSER_BLOCK
 #endif /* FG_INC_GUI_STRUCTURE_SHEET_PARSER */

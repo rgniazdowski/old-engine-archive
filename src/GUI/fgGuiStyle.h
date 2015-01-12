@@ -9,6 +9,7 @@
 
 #ifndef FG_INC_GUI_STYLE
     #define FG_INC_GUI_STYLE
+    #define FG_INC_GUI_STYLE_BLOCK
 
     #include "fgBuildConfig.h"
     #include "fgGuiStyleContent.h"
@@ -19,12 +20,15 @@
 
     #define FG_GUI_STYLE_SHEET_NAME "StyleSheet" // #FIXME - string obfuscation
 
-class fgGuiStyle;
-
+namespace fg {
+    namespace gui {
+        class CStyle;
+    };
+};
     #define FG_TAG_GUI_STYLE_NAME	"GuiStyle"
-    #define FG_TAG_GUI_STYLE		FG_TAG_TYPE(fgGuiStyle)
+    #define FG_TAG_GUI_STYLE		FG_TAG_TYPE(fg::gui::CStyle)
 
-FG_TAG_TEMPLATE_ID_AUTO(fgGuiStyle, FG_TAG_GUI_STYLE_NAME);
+FG_TAG_TEMPLATE_ID_AUTO(fg::gui::CStyle, FG_TAG_GUI_STYLE_NAME);
 typedef FG_TAG_GUI_STYLE fgGuiStyleTag;
 
 // Special handle type for shader program
@@ -54,113 +58,119 @@ namespace fg {
     namespace resource {
         template<typename THandleType, typename TMapKeyType> class CManagedDataFile;
     };
-};
 
-/*
- *
- */
-class fgGuiStyle : public fg::resource::CManagedDataFile<fgGuiStyleHandle, fgQuality> {
-    friend class fgGuiStyleManager;
+    namespace gui {
+
+        class CStyleManager;
+        
+        /*
+         *
+         */
+        class CStyle : public fg::resource::CManagedDataFile<fgGuiStyleHandle, fgQuality> {
+            friend class fg::gui::CStyleManager;
     #ifdef FG_USING_MARMALADE
-protected:
+        protected:
 
-    struct smEqualTo {
-        bool operator ()(const char* s1, const char* s2) const {
-            return strcmp(s1, s2) == 0;
-        }
-        bool operator ()(const std::string& s1, const std::string& s2) const {
-            return s1.compare(s2) == 0;
-        }
-    };
+            struct smEqualTo {
+                bool operator ()(const char* s1, const char* s2) const {
+                    return strcmp(s1, s2) == 0;
+                }
+                bool operator ()(const std::string& s1, const std::string& s2) const {
+                    return s1.compare(s2) == 0;
+                }
+            };
     #endif
-public:
-    typedef CManagedDataFile<fgGuiStyleHandle, fgQuality> base_type;
-    typedef std::string hashKey;
+        public:
+            typedef fg::resource::CManagedDataFile<fgGuiStyleHandle, fgQuality> base_type;
+            typedef std::string HashKey;
     #ifdef FG_USING_MARMALADE	
-    typedef std::hash<std::string> hashFunc;
-    // Type for map, assigning style content value to string ID (case sensitive)
-    typedef std::hash_map <hashKey, fgGuiStyleContent, hashFunc, smEqualTo> styleNameMap;
+            typedef std::hash<std::string> hashFunc;
+            // Type for map, assigning style content value to string ID (case sensitive)
+            typedef std::hash_map <HashKey, CStyleContent, hashFunc, smEqualTo> StyleNameMap;
     #else
-    typedef std::unordered_map <hashKey, fgGuiStyleContent> styleNameMap;
+            typedef std::unordered_map <HashKey, CStyleContent> StyleNameMap;
     #endif
-private:
-    // 
-    styleNameMap m_styleContent;
+        private:
+            // 
+            StyleNameMap m_styleContent;
 
-public:
-    /**
-     * 
-     */
-    fgGuiStyle();
-    /**
-     * 
-     */
-    virtual ~fgGuiStyle();
+        public:
+            /**
+             * 
+             */
+            CStyle();
+            /**
+             * 
+             */
+            virtual ~CStyle();
 
-    /**
-     * 
-     * @return 
-     */
-    fgBool load(void);
-    /**
-     * 
-     * @param path
-     * @return 
-     */
-    fgBool load(const std::string& path);
-    /**
-     * 
-     * @param path
-     * @return 
-     */
-    fgBool load(const char *path);
+            /**
+             * 
+             * @return 
+             */
+            fgBool load(void);
+            /**
+             * 
+             * @param path
+             * @return 
+             */
+            fgBool load(const std::string& path);
+            /**
+             * 
+             * @param path
+             * @return 
+             */
+            fgBool load(const char *path);
 
-    /**
-     * 
-     * @param info
-     * @return 
-     */
-    fgGuiStyleContent &getContent(const std::string& info);
-    /**
-     * 
-     * @param info
-     * @return 
-     */
-    fgGuiStyleContent &getContent(const char *info);
-    /**
-     * 
-     * @param info
-     * @return 
-     */
-    fgGuiStyleContent *getContentPtr(const std::string& info) {
-        return &getContent(info);
-    }
-    /**
-     * 
-     * @param info
-     * @return 
-     */
-    fgGuiStyleContent *getContentPtr(const char *info) {
-        return &getContent(info);
-    }
+            /**
+             * 
+             * @param info
+             * @return 
+             */
+            CStyleContent &getContent(const std::string& info);
+            /**
+             * 
+             * @param info
+             * @return 
+             */
+            CStyleContent &getContent(const char *info);
+            /**
+             * 
+             * @param info
+             * @return 
+             */
+            CStyleContent *getContentPtr(const std::string& info) {
+                return &getContent(info);
+            }
+            /**
+             * 
+             * @param info
+             * @return 
+             */
+            CStyleContent *getContentPtr(const char *info) {
+                return &getContent(info);
+            }
 
-    /**
-     * 
-     * @param contents
-     * @param num
-     * @param info
-     * @return 
-     */
-    fgBool copyFullContent(fgGuiStyleContent *contents, int num, const std::string& info);
-    /**
-     * 
-     * @param contents
-     * @param num
-     * @param info
-     * @return 
-     */
-    fgBool copyFullContent(fgGuiStyleContent *contents, int num, const char *info);
+            /**
+             * 
+             * @param contents
+             * @param num
+             * @param info
+             * @return 
+             */
+            fgBool copyFullContent(CStyleContent *contents, int num, const std::string& info);
+            /**
+             * 
+             * @param contents
+             * @param num
+             * @param info
+             * @return 
+             */
+            fgBool copyFullContent(CStyleContent *contents, int num, const char *info);
 
+        };
+    };
 };
 
+    #undef FG_INC_GUI_STYLE_BLOCK
 #endif /* FG_INC_GUI_STYLE */

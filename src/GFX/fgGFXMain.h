@@ -69,7 +69,7 @@ protected:
      * @param argv
      * @return 
      */
-    fgBool resourceCreatedHandler(fgArgumentList *argv);
+    fgBool resourceCreatedHandler(fg::event::CArgumentList *argv);
     
 public:
     
@@ -198,7 +198,7 @@ private:
     /// Main Particle System
     fg::gfx::CParticleSystem *m_particleSystem;
     /// 
-    fgFunctionCallback *m_resourceCreatedCallback;
+    fg::event::CFunctionCallback *m_resourceCreatedCallback;
     /// Is GFX init properly?
     fgBool m_init;
 };

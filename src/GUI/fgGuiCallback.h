@@ -9,316 +9,332 @@
 
 #ifndef FG_INC_GUI_CALLBACK
     #define FG_INC_GUI_CALLBACK
+    #define FG_INC_GUI_CALLBACK_BLOCK
 
     #include "Event/fgCallback.h"
 
-class fgGuiWidget;
-class fgGuiMain;
-typedef fgBool(*fgGuiWidgetEventHandlerFunc) (fgGuiMain *guiMain, fgGuiWidget *widget);
-
-/**
- *
- */
-class fgGuiCallback : public virtual fgFunctionCallback {
-public:
-    typedef fgFunctionCallback base_type;
-public:
-    fgGuiCallback(fgGuiMain *pGuiMain = NULL) {
-        fgFunctionCallback::setFunction((fgFunctionCallback::fgFunction)NULL);
-        m_guiMainPtr = pGuiMain;
-    }
-    virtual ~fgGuiCallback() {
-        m_guiMainPtr = NULL;
-    }
-
-    /**
-     * 
-     * @param pWidget
-     * @return 
-     */
-    virtual fgBool Call(fgGuiWidget *pWidget) = 0;
-
-    /**
-     * 
-     * @param pGuiMain
-     * @param pWidget
-     * @return 
-     */
-    virtual fgBool Call(fgGuiMain *pGuiMain, fgGuiWidget *pWidget) = 0;
-    
-    /**
-     * 
-     * @param pGuiMain
-     */
-    void setGuiMain(fgGuiMain *pGuiMain) {
-        m_guiMainPtr = pGuiMain;
-    }
-    
-    /**
-     * 
-     * @return 
-     */
-    fgGuiMain *getGuiMain(void) const {
-        return m_guiMainPtr;
-    }
-
-protected:
-    ///
-    fgGuiMain *m_guiMainPtr;
+namespace fg {
+    namespace gui {
+        class CWidget;
+        class CGuiMain;
+    };
 };
 
-template < class Class >
-/*
- *
- */
-class fgGuiClassCallback : public fgGuiCallback {
-public:
-    typedef fgGuiCallback base_type;
-    typedef fgBool(Class::*fgGuiMethod)(fgGuiMain *guiMain, fgGuiWidget *widget);
-    typedef fgGuiMethod callback_type;
 
-    /**
-     * 
-     * @param pClassInstance
-     * @param pMethod
-     */
-    fgGuiClassCallback(Class* pClassInstance, fgGuiMethod pMethod) :
-    fgGuiCallback(NULL) {
-        m_pClassInstance = pClassInstance;
-        m_guiMethod = pMethod;
-    }
-    /**
-     * 
-     * @param pClassInstance
-     * @param pGuiMain
-     * @param pMethod
-     */
-    fgGuiClassCallback(Class* pClassInstance, fgGuiMain *pGuiMain, fgGuiMethod pMethod) :
-    fgGuiCallback(pGuiMain) {
-        m_pClassInstance = pClassInstance;
-        m_guiMethod = pMethod;
-    }
-    /**
-     * 
-     */
-    virtual ~fgGuiClassCallback() {
-        m_pClassInstance = NULL;
-        m_guiMethod = NULL;
-    }
+typedef fgBool(*fgGuiWidgetEventHandlerFunc) (fg::gui::CGuiMain *guiMain, fg::gui::CWidget *widget);
 
-    /**
-     * 
-     * @param pClassInstance
-     */
-    void setClassInstance(Class* pClassInstance) {
-        if(pClassInstance)
-            m_pClassInstance = pClassInstance;
-    }
+namespace fg {
+    namespace gui {
 
-    /**
-     * 
-     * @param method
-     */
-    void setGuiMethod(fgGuiMethod method) {
-        m_pClassInstance = NULL;
-        m_guiMethod = method;
-    }
-    /**
-     * 
-     * @return 
-     */
-    virtual fgBool Call(void) {
-        if(m_guiMethod != NULL && m_pClassInstance != NULL)
-            return (m_pClassInstance->*m_guiMethod)(NULL, NULL);
-        return FG_FALSE;
-    }
-    /**
-     * 
-     * @param argv
-     * @return 
-     */
-    virtual fgBool Call(fgArgumentList *argv) {
-        if(m_guiMethod != NULL && m_pClassInstance != NULL) {
-            // If argument list is given then maybe should check for existence
-            // of STRUCT parameters ?
-            //return (m_classInstance->*m_guiMethod)(argv);
-            return FG_FALSE;
-        }
-        return FG_FALSE;
-    }
-    /**
-     * 
-     * @param pWidget
-     * @return 
-     */
-    virtual fgBool Call(fgGuiWidget *pWidget) {
-        if(m_guiMethod != NULL && m_pClassInstance != NULL && m_guiMainPtr != NULL)
-            return (m_pClassInstance->*m_guiMethod)(m_guiMainPtr, pWidget);
-        return FG_FALSE;
-    }
-    /**
-     * 
-     * @param pGuiMain
-     * @param pWidget
-     * @return 
-     */
-    virtual fgBool Call(fgGuiMain *pGuiMain, fgGuiWidget *pWidget) {
-        if(m_guiMethod != NULL && m_pClassInstance != NULL)
-            return (m_pClassInstance->*m_guiMethod)(pGuiMain, pWidget);
-        return FG_FALSE;
-    }
+        /**
+         *
+         */
+        class CGuiCallback : public virtual fg::event::CFunctionCallback {
+        public:
+            ///
+            typedef fg::event::CFunctionCallback base_type;
 
-    /**
-     * 
-     * @param pClassInstance
-     * @param pGuiMain
-     * @param pWidget
-     * @return 
-     */
-    fgBool Call(Class *pClassInstance, fgGuiMain *pGuiMain = NULL, fgGuiWidget *pWidget = NULL) {
-        if(m_guiMethod != NULL && pClassInstance != NULL)
-            return (pClassInstance->*m_guiMethod)(pGuiMain, pWidget);
-        return FG_FALSE;
-    }
-
-    /**
-     * 
-     * @return 
-     */
-    inline fgGuiMethod & getGuiMethod(void) {
-        return m_guiMethod;
-    }
-
-    /**
-     * 
-     * @return 
-     */
-    inline fgGuiMethod const & getGuiMethod(void) const {
-        return m_guiMethod;
-    }
-
-private:
-    /// 
-    Class* m_pClassInstance;
-    ///
-    fgGuiMethod m_guiMethod;
-};
-
-/**
- * GuiFunctionCallback is similar to fgPlainFunctionCallback
- * here you have (fgGuiMain *guiMain, fgGuiWidget *widget)
- * in plain function: (void *systemData, void *userData)
- * However the system data is *widget... and userData: guiMain
- * So the usage is almost interchangeable - however not recommended
- */
-class fgGuiFunctionCallback : public fgGuiCallback {
-public:
-    typedef fgGuiCallback base_type;
-    typedef fgBool(*fgGuiFunction)(fgGuiMain *guiMain, fgGuiWidget *widget);
-    typedef fgGuiFunction callback_type;
-
-    /**
-     * 
-     * @param function
-     */
-    fgGuiFunctionCallback(fgGuiFunction pFunction) :
-    fgGuiCallback(NULL) {
-        m_guiFunction = pFunction;
-    }
-    /**
-     * 
-     * @param guiMain
-     * @param function
-     */
-    fgGuiFunctionCallback(fgGuiMain *pGuiMain, fgGuiFunction pFunction) :
-    fgGuiCallback(pGuiMain) {
-        m_guiFunction = pFunction;
-    }
-
-    /**
-     * 
-     */
-    virtual ~fgGuiFunctionCallback() {
-        m_guiFunction = NULL;
-    }
-
-    /**
-     * 
-     * @param function
-     */
-    void setGuiFunction(fgGuiFunction pFunction) {
-        m_guiFunction = pFunction;
-    }
-
-    /**
-     * 
-     * @return 
-     */
-    virtual fgBool Call(void) {
-        if(m_guiFunction != NULL)
-            return m_guiFunction(m_guiMainPtr, NULL);
-        return FG_FALSE;
-    }
-    /**
-     * 
-     * @param pSystemData
-     * @return 
-     */
-    virtual fgBool Call(void *pSystemData) {
-        // This is for compatibility - fgFunctionCallback provides the
-        // *(void *pSystemData) Call() function version however it is 
-        // empty
-        if(m_guiFunction != NULL) {
-            if(!pSystemData) {
-                return m_guiFunction(m_guiMainPtr, NULL);
-            } else {
-                fgGuiWidget *pWidget = (fgGuiWidget *)pSystemData;
-                //if(pWidget->isManaged())
-                    return m_guiFunction(m_guiMainPtr, pWidget);
+        public:
+            /**
+             * 
+             * @param pGuiMain
+             */
+            CGuiCallback(CGuiMain *pGuiMain = NULL) {
+                fg::event::CFunctionCallback::setFunction((fg::event::CFunctionCallback::fgFunction)NULL);
+                m_pGuiMain = pGuiMain;
+            }
+            /**
+             * 
+             */
+            virtual ~CGuiCallback() {
+                m_pGuiMain = NULL;
             }
 
-        }
-        return FG_FALSE;
-    }
-    /**
-     * 
-     * @param pWidget
-     * @return 
-     */
-    virtual fgBool Call(fgGuiWidget *pWidget) {
-        if(m_guiFunction != NULL)
-            return m_guiFunction(m_guiMainPtr, pWidget);
-        return FG_FALSE;
-    }
-    /**
-     * 
-     * @param pGuiMain
-     * @param pWidget
-     * @return 
-     */
-    virtual fgBool Call(fgGuiMain *pGuiMain, fgGuiWidget *pWidget) {
-        if(m_guiFunction != NULL)
-            return m_guiFunction(pGuiMain, pWidget);
-        return FG_FALSE;
-    }
-    /**
-     * 
-     * @return 
-     */
-    inline fgGuiFunction & getGuiFunction(void) {
-        return m_guiFunction;
-    }
-    /**
-     * 
-     * @return 
-     */
-    inline fgGuiFunction const & getGuiFunction(void) const {
-        return m_guiFunction;
-    }
+            /**
+             * 
+             * @param pWidget
+             * @return 
+             */
+            virtual fgBool Call(CWidget *pWidget) = 0;
 
-private:
-    ///
-    fgGuiFunction m_guiFunction;
+            /**
+             * 
+             * @param pGuiMain
+             * @param pWidget
+             * @return 
+             */
+            virtual fgBool Call(CGuiMain *pGuiMain, CWidget *pWidget) = 0;
+            /**
+             * 
+             * @param pGuiMain
+             */
+            void setGuiMain(CGuiMain *pGuiMain) {
+                m_pGuiMain = pGuiMain;
+            }
+            /**
+             * 
+             * @return 
+             */
+            CGuiMain *getGuiMain(void) const {
+                return m_pGuiMain;
+            }
+
+        protected:
+            ///
+            CGuiMain *m_pGuiMain;
+        };
+
+        /**
+         *
+         */
+        template < class TClass >
+        class CGuiMethodCallback : public CGuiCallback {
+        public:
+            ///
+            typedef CGuiCallback base_type;
+            ///
+            typedef fgBool(TClass::*fgGuiMethod)(CGuiMain *guiMain, CWidget *widget);
+            ///
+            typedef fgGuiMethod callback_type;
+            /**
+             * 
+             * @param pClassInstance
+             * @param pMethod
+             */
+            CGuiMethodCallback(TClass* pClassInstance, fgGuiMethod pMethod) :
+            CGuiCallback(NULL) {
+                m_pClassInstance = pClassInstance;
+                m_guiMethod = pMethod;
+            }
+            /**
+             * 
+             * @param pClassInstance
+             * @param pGuiMain
+             * @param pMethod
+             */
+            CGuiMethodCallback(TClass* pClassInstance, CGuiMain *pGuiMain, fgGuiMethod pMethod) :
+            CGuiCallback(pGuiMain) {
+                m_pClassInstance = pClassInstance;
+                m_guiMethod = pMethod;
+            }
+            /**
+             * 
+             */
+            virtual ~CGuiMethodCallback() {
+                m_pClassInstance = NULL;
+                m_guiMethod = NULL;
+            }
+            /**
+             * 
+             * @param pClassInstance
+             */
+            void setClassInstance(TClass* pClassInstance) {
+                if(pClassInstance)
+                    m_pClassInstance = pClassInstance;
+            }
+            /**
+             * 
+             * @param method
+             */
+            void setGuiMethod(fgGuiMethod method) {
+                m_pClassInstance = NULL;
+                m_guiMethod = method;
+            }
+            /**
+             * 
+             * @return 
+             */
+            virtual fgBool Call(void) {
+                if(m_guiMethod != NULL && m_pClassInstance != NULL)
+                    return (m_pClassInstance->*m_guiMethod)(NULL, NULL);
+                return FG_FALSE;
+            }
+            /**
+             * 
+             * @param argv
+             * @return 
+             */
+            virtual fgBool Call(fg::event::CArgumentList *argv) {
+                if(m_guiMethod != NULL && m_pClassInstance != NULL) {
+                    // If argument list is given then maybe should check for existence
+                    // of STRUCT parameters ?
+                    //return (m_classInstance->*m_guiMethod)(argv);
+                    return FG_FALSE;
+                }
+                return FG_FALSE;
+            }
+            /**
+             * 
+             * @param pWidget
+             * @return 
+             */
+            virtual fgBool Call(CWidget *pWidget) {
+                if(m_guiMethod != NULL && m_pClassInstance != NULL && m_pGuiMain != NULL)
+                    return (m_pClassInstance->*m_guiMethod)(m_pGuiMain, pWidget);
+                return FG_FALSE;
+            }
+            /**
+             * 
+             * @param pGuiMain
+             * @param pWidget
+             * @return 
+             */
+            virtual fgBool Call(CGuiMain *pGuiMain, CWidget *pWidget) {
+                if(m_guiMethod != NULL && m_pClassInstance != NULL)
+                    return (m_pClassInstance->*m_guiMethod)(pGuiMain, pWidget);
+                return FG_FALSE;
+            }
+            /**
+             * 
+             * @param pClassInstance
+             * @param pGuiMain
+             * @param pWidget
+             * @return 
+             */
+            fgBool Call(TClass *pClassInstance, CGuiMain *pGuiMain = NULL, CWidget *pWidget = NULL) {
+                if(m_guiMethod != NULL && pClassInstance != NULL)
+                    return (pClassInstance->*m_guiMethod)(pGuiMain, pWidget);
+                return FG_FALSE;
+            }
+            /**
+             * 
+             * @return 
+             */
+            inline fgGuiMethod & getGuiMethod(void) {
+                return m_guiMethod;
+            }
+            /**
+             * 
+             * @return 
+             */
+            inline fgGuiMethod const & getGuiMethod(void) const {
+                return m_guiMethod;
+            }
+
+        private:
+            /// 
+            TClass* m_pClassInstance;
+            ///
+            fgGuiMethod m_guiMethod;
+        };
+
+        /**
+         * GuiFunctionCallback is similar to fgPlainFunctionCallback
+         * here you have (fgGuiMain *guiMain, fgGuiWidget *widget)
+         * in plain function: (void *systemData, void *userData)
+         * However the system data is *widget... and userData: guiMain
+         * So the usage is almost interchangeable - however not recommended
+         */
+        class CGuiFunctionCallback : public CGuiCallback {
+        public:
+            ///
+            typedef CGuiCallback base_type;
+            ///
+            typedef fgBool(*fgGuiFunction)(CGuiMain *guiMain, CWidget *widget);
+            ///
+            typedef fgGuiFunction callback_type;
+            /**
+             * 
+             * @param function
+             */
+            CGuiFunctionCallback(fgGuiFunction pFunction) :
+            CGuiCallback(NULL) {
+                m_guiFunction = pFunction;
+            }
+            /**
+             * 
+             * @param guiMain
+             * @param function
+             */
+            CGuiFunctionCallback(CGuiMain *pGuiMain, fgGuiFunction pFunction) :
+            CGuiCallback(pGuiMain) {
+                m_guiFunction = pFunction;
+            }
+            /**
+             * 
+             */
+            virtual ~CGuiFunctionCallback() {
+                m_guiFunction = NULL;
+            }
+            /**
+             * 
+             * @param function
+             */
+            void setGuiFunction(fgGuiFunction pFunction) {
+                m_guiFunction = pFunction;
+            }
+            /**
+             * 
+             * @return 
+             */
+            virtual fgBool Call(void) {
+                if(m_guiFunction != NULL)
+                    return m_guiFunction(m_pGuiMain, NULL);
+                return FG_FALSE;
+            }
+            /**
+             * 
+             * @param pSystemData
+             * @return 
+             */
+            virtual fgBool Call(void *pSystemData) {
+                // This is for compatibility - fgFunctionCallback provides the
+                // *(void *pSystemData) Call() function version however it is 
+                // empty
+                if(m_guiFunction != NULL) {
+                    if(!pSystemData) {
+                        return m_guiFunction(m_pGuiMain, NULL);
+                    } else {
+                        CWidget *pWidget = (CWidget *)pSystemData;
+                        //if(pWidget->isManaged())
+                        return m_guiFunction(m_pGuiMain, pWidget);
+                    }
+
+                }
+                return FG_FALSE;
+            }
+            /**
+             * 
+             * @param pWidget
+             * @return 
+             */
+            virtual fgBool Call(CWidget *pWidget) {
+                if(m_guiFunction != NULL)
+                    return m_guiFunction(m_pGuiMain, pWidget);
+                return FG_FALSE;
+            }
+            /**
+             * 
+             * @param pGuiMain
+             * @param pWidget
+             * @return 
+             */
+            virtual fgBool Call(CGuiMain *pGuiMain, CWidget *pWidget) {
+                if(m_guiFunction != NULL)
+                    return m_guiFunction(pGuiMain, pWidget);
+                return FG_FALSE;
+            }
+            /**
+             * 
+             * @return 
+             */
+            inline fgGuiFunction & getGuiFunction(void) {
+                return m_guiFunction;
+            }
+            /**
+             * 
+             * @return 
+             */
+            inline fgGuiFunction const & getGuiFunction(void) const {
+                return m_guiFunction;
+            }
+
+        private:
+            ///
+            fgGuiFunction m_guiFunction;
+        };
+    };
 };
 
+    #undef FG_INC_GUI_CALLBACK_BLOCK
 #endif /* FG_INC_GUI_CALLBACK */

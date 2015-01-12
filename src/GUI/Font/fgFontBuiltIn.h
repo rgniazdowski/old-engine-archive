@@ -14,75 +14,79 @@
     #include "fgFontResource.h"
     #include "fgFontBuiltInTypes.h"
 
-/**
- *
- */
-class fgFontBuiltInResource : public fgFontResource {
-public:
-    /**
-     * 
-     */
-    fgFontBuiltInResource();
-    /**
-     * 
-     * @param rawFontData
-     */
-    fgFontBuiltInResource(fgFontBuiltInRawData *rawFontData);
-    /**
-     * 
-     */
-    virtual ~fgFontBuiltInResource() {
-        fgFontBuiltInResource::destroy();
-    }
+namespace fg {
+    namespace gui {
 
-protected:
-    /**
-     * 
-     */
-    virtual void clear(void);
+        /**
+         *
+         */
+        class CFontBuiltInResource : public CFontResource {
+        public:
+            /**
+             * 
+             */
+            CFontBuiltInResource();
+            /**
+             * 
+             * @param rawFontData
+             */
+            CFontBuiltInResource(SFontBuiltInRawData *rawFontData);
+            /**
+             * 
+             */
+            virtual ~CFontBuiltInResource() {
+                CFontBuiltInResource::destroy();
+            }
 
-public:
-    /**
-     * 
-     * @return 
-     */
-    virtual fgBool create(void);
-    /**
-     * 
-     */
-    virtual void destroy(void);
-    /**
-     * 
-     * @return 
-     */
-    virtual fgBool recreate(void);
-    /**
-     * 
-     */
-    virtual void dispose(void);
-    /**
-     * 
-     * @return 
-     */
-    virtual fgBool isDisposed(void) const;
-    /**
-     * 
-     * @param rawFontData
-     */
-    void setBuiltInRawFontData(fgFontBuiltInRawData *rawFontData);
-    /**
-     * 
-     * @return 
-     */
-    fgFontBuiltInRawData *getRawFontData(void) const {
-        return m_rawFontData;
-    }
+        protected:
+            /**
+             * 
+             */
+            virtual void clear(void);
 
-private:
-    /// 
-    fgFontBuiltInRawData *m_rawFontData;
+        public:
+            /**
+             * 
+             * @return 
+             */
+            virtual fgBool create(void);
+            /**
+             * 
+             */
+            virtual void destroy(void);
+            /**
+             * 
+             * @return 
+             */
+            virtual fgBool recreate(void);
+            /**
+             * 
+             */
+            virtual void dispose(void);
+            /**
+             * 
+             * @return 
+             */
+            virtual fgBool isDisposed(void) const;
+            /**
+             * 
+             * @param rawFontData
+             */
+            void setBuiltInRawFontData(SFontBuiltInRawData *rawFontData);
+            /**
+             * 
+             * @return 
+             */
+            SFontBuiltInRawData *getRawFontData(void) const {
+                return m_rawFontData;
+            }
+
+        private:
+            /// 
+            SFontBuiltInRawData *m_rawFontData;
+        };
+    };
 };
-
     #define FG_FONT_TYPE_STB_BUILTIN	0x0040
 
     #undef FG_INC_FONT_BUILT_IN_BLOCK

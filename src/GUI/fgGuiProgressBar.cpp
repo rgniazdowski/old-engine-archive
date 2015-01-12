@@ -9,35 +9,40 @@
 
 #include "fgGuiProgressBar.h"
 
+using namespace fg;
+
 /*
  *
  */
-fgGuiProgressBar::fgGuiProgressBar() {
-    fgGuiProgressBar::setDefaults();
+gui::CProgressBar::CProgressBar() {
+    CProgressBar::setDefaults();
 }
 
 /*
  *
  */
-fgGuiProgressBar::~fgGuiProgressBar() { }
+gui::CProgressBar::~CProgressBar() { }
 
 /*
  *
  */
-void fgGuiProgressBar::setDefaults(void) {
-    m_type = FG_GUI_PROGRESS_BAR;
+void gui::CProgressBar::setDefaults(void) {
+    m_type = PROGRESS_BAR;
     m_typeName = FG_GUI_PROGRESS_BAR_NAME;
-    m_typeTraits = FG_GUI_PROGRESS_BAR | FG_GUI_WIDGET;
+    m_typeTraits = PROGRESS_BAR | WIDGET;
 }
 
-/*
- *
+/**
+ * 
+ * @return 
  */
-fgBoundingBox3Df fgGuiProgressBar::updateBounds(void) {
-    return fgGuiWidget::updateBounds();
+fgBoundingBox3Df gui::CProgressBar::updateBounds(void) {
+    return base_type::updateBounds();
 }
 
-/*
+/**
  *
  */
-void fgGuiProgressBar::refresh(void) { }
+void gui::CProgressBar::refresh(void) { 
+    base_type::refresh();
+}

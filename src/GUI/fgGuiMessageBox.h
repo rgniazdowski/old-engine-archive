@@ -9,35 +9,57 @@
 
 #ifndef FG_INC_GUI_MESSAGE_BOX
     #define FG_INC_GUI_MESSAGE_BOX
+    #define FG_INC_GUI_MESSAGE_BOX_BLOCK
 
     #include "fgGuiWindow.h"
     #include "fgGuiWidgetFactoryTypes.h"
 
-/*
- *
- */
-class fgGuiMessageBox : public fgGuiWindow {
-public:
-    typedef fgGuiWindow base_type;
-protected:
+namespace fg {
+    namespace gui {
 
-protected:
-    // 
-    virtual void setDefaults(void);
+        /**
+         *
+         */
+        class CMessageBox : public CWindow {
+        public:
+            ///
+            typedef CWindow base_type;
 
-public:
-    // 
-    fgGuiMessageBox();
-    // 
-    virtual ~fgGuiMessageBox();
 
-    FG_GUI_WIDGET_FACTORY_CREATE_FUNCTION(fgGuiMessageBox);
+        public:
+            /**
+             * 
+             */
+            CMessageBox();
+            /**
+             * 
+             */
+            virtual ~CMessageBox();
 
-    // 
-    virtual fgBoundingBox3Df updateBounds(void);
-    // 
-    virtual void refresh(void);
+            /**
+             * 
+             * @return 
+             */
+            FG_GUI_WIDGET_FACTORY_CREATE_FUNCTION(CMessageBox)
 
+            /**
+             * 
+             * @return 
+             */
+            virtual fgBoundingBox3Df updateBounds(void);
+            /**
+             * 
+             */
+            virtual void refresh(void);
+
+        protected:
+            /**
+             * 
+             */
+            virtual void setDefaults(void);
+        };
+    };
 };
 
+    #undef FG_INC_GUI_MESSAGE_BOX_BLOCK
 #endif /* FG_INC_GUI_MESSAGE_BOX */ 

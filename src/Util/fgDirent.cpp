@@ -77,7 +77,7 @@ fgBool fgDirent::internal_readZipFile(const std::string& fileName,
                                       fgBool recursive) {
     // If the current file is a zip file and the listing trigger is
     // active - append full zip listing into file names/paths vector
-    fg::util::ZipFile zip(filePath);
+    fg::util::CZipFile zip(filePath);
     zip.open();
     fg::CStringVector &zipFileList = zip.getFileList();
     int nZipFiles = zipFileList.size();

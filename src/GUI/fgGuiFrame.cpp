@@ -9,38 +9,41 @@
 
 #include "fgGuiFrame.h"
 
+using namespace fg;
+
 /*
  *
  */
-fgGuiFrame::fgGuiFrame() :
-fgGuiContainer() {
-    fgGuiFrame::setDefaults();
+gui::CFrame::CFrame() :
+CContainer() {
+    CFrame::setDefaults();
 }
 
 /*
  *
  */
-fgGuiFrame::~fgGuiFrame() { }
+gui::CFrame::~CFrame() { }
 
 /*
  *
  */
-void fgGuiFrame::setDefaults(void) {
-    m_type = FG_GUI_FRAME;
+void gui::CFrame::setDefaults(void) {
+    m_type = FRAME;
     m_typeName = FG_GUI_FRAME_NAME;
-    m_typeTraits = FG_GUI_FRAME | FG_GUI_CONTAINER | FG_GUI_WIDGET;
+    m_typeTraits = FRAME | CONTAINER | WIDGET;
 }
 
-/*
- *
+/**
+ * 
+ * @return 
  */
-fgBoundingBox3Df fgGuiFrame::updateBounds(void) {
-    return fgGuiContainer::updateBounds();
+fgBoundingBox3Df gui::CFrame::updateBounds(void) {
+    return CContainer::updateBounds();
 }
 
-/*
- *
+/**
+ * 
  */
-void fgGuiFrame::refresh(void) { 
-    fgGuiContainer::refresh();
+void gui::CFrame::refresh(void) {
+    CContainer::refresh();
 }

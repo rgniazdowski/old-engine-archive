@@ -9,6 +9,7 @@
 
 #ifndef FG_INC_GUI_WIDGET_FACTORY
     #define FG_INC_GUI_WIDGET_FACTORY
+    #define FG_INC_GUI_WIDGET_FACTORY_BLOCK
 
     #include "fgTypes.h"
     #include "fgGuiWidget.h"
@@ -16,37 +17,66 @@
 
     #include <map>
 
-/*
- *
- */
-class fgGuiWidgetFactory {
-public:
-    typedef std::map<fgGuiWidgetType, fgCreateGuiWidgetFn> factoryMap;
-    typedef std::pair<fgGuiWidgetType, fgCreateGuiWidgetFn> factoryPair;
-    typedef factoryMap::iterator factoryMapItor;
-    typedef factoryMap::const_iterator factoryMapConstItor;
+namespace fg {
+    namespace gui {
 
-public:
-    // Default empty constructor for Widget Factory object
-    fgGuiWidgetFactory();
-    // Default destructor for Widget Factory object
-    ~fgGuiWidgetFactory();
+        /**
+         *
+         */
+        class CWidgetFactory {
+        public:
+            ///
+            typedef std::map<WidgetType, fgCreateGuiWidgetFn> factoryMap;
+            ///
+            typedef std::pair<WidgetType, fgCreateGuiWidgetFn> factoryPair;
+            ///
+            typedef factoryMap::iterator factoryMapItor;
+            ///
+            typedef factoryMap::const_iterator factoryMapConstItor;
 
-    // Clear all registered Widget creators
-    void clear(void);
+        public:
+            /**
+             * Default empty constructor for Widget Factory object
+             */
+            CWidgetFactory();
+            /**
+             * Destructor for Widget Factory object
+             */
+            virtual ~CWidgetFactory();
 
-    // Register Widget create function based on resource type
-    fgBool registerWidget(const fgGuiWidgetType type, fgCreateGuiWidgetFn function);
+            /**
+             * Clear all registered Widget creators
+             */
+            void clear(void);
 
-    // Call specific create function for given Widget
-    fgGuiWidget* createWidget(const fgGuiWidgetType type);
+            /**
+             * Register Widget create function based on resource type
+             * @param type
+             * @param function
+             * @return 
+             */
+            fgBool registerWidget(const WidgetType type, fgCreateGuiWidgetFn function);
 
-    // Check if given resource type constructor/create function is registered in factory
-    fgBool isRegistered(const fgGuiWidgetType type);
+            /**
+             * Call specific create function for given Widget
+             * @param type
+             * @return 
+             */
+            CWidget* createWidget(const WidgetType type);
 
-private:
-    // Map storing create functions for given widget types
-    factoryMap m_factoryMap;
+            /**
+             * Check if given resource type constructor/create function is registered in factory
+             * @param type
+             * @return 
+             */
+            fgBool isRegistered(const WidgetType type);
+
+        private:
+            /// Map storing create functions for given widget types
+            factoryMap m_factoryMap;
+        };
+    };
 };
 
+    #undef FG_INC_GUI_WIDGET_FACTORY_BLOCK
 #endif /* FG_INC_GUI_WIDGET_FACTORY */

@@ -167,7 +167,7 @@ void fg::event::CInputHandler::initialize(void) {
  * Destructor for the InputHandler object
  */
 fg::event::CInputHandler::~CInputHandler() {
-    for(fgCallbackBindingMap::iterator it = m_keyDownBinds.begin(); it != m_keyDownBinds.end(); it++) {
+    for(CallbackBindingMap::iterator it = m_keyDownBinds.begin(); it != m_keyDownBinds.end(); it++) {
         for(int i = 0; i < (int)it->second.size(); i++) {
             delete it->second[i];
             it->second[i] = NULL;
@@ -175,14 +175,14 @@ fg::event::CInputHandler::~CInputHandler() {
         it->second.clear();
     }
 
-    for(fgCallbackBindingMap::iterator it = m_keyUpBinds.begin(); it != m_keyUpBinds.end(); it++) {
+    for(CallbackBindingMap::iterator it = m_keyUpBinds.begin(); it != m_keyUpBinds.end(); it++) {
         for(int i = 0; i < (int)it->second.size(); i++) {
             delete it->second[i];
             it->second[i] = NULL;
         }
         it->second.clear();
     }
-    
+
     memset((void *)m_rawTouches, 0, sizeof (m_rawTouches));
     memset((void *)m_rawTouchesProcessed, 0, sizeof (m_rawTouchesProcessed));
 #if defined(FG_USING_MARMALADE)
@@ -251,8 +251,8 @@ void fg::event::CInputHandler::handlePointerPressed(fgVector2i point, unsigned i
         touchEvent->x = point.x;
         touchEvent->y = point.y;
 
-        fgArgumentList *argList = new fgArgumentList();
-        argList->pushArgument(FG_ARGUMENT_TEMP_POINTER, (void *)touchEvent);
+        CArgumentList *argList = new CArgumentList();
+        argList->push(SArgument::Type::ARG_TMP_POINTER, (void *)touchEvent);
         m_eventMgr->throwEvent(FG_EVENT_TOUCH_PRESSED, argList);
 
         // Throw also more general event
@@ -292,8 +292,8 @@ void fg::event::CInputHandler::handlePointerMoved(fgVector2i point, unsigned int
         touchEvent->x = point.x;
         touchEvent->y = point.y;
 
-        fgArgumentList *argList = new fgArgumentList();
-        argList->pushArgument(FG_ARGUMENT_TEMP_POINTER, (void *)touchEvent);
+        CArgumentList *argList = new CArgumentList();
+        argList->push(SArgument::Type::ARG_TMP_POINTER, (void *)touchEvent);
         m_eventMgr->throwEvent(FG_EVENT_TOUCH_MOTION, argList);
 
         // Throw also more general event
@@ -347,8 +347,8 @@ void fg::event::CInputHandler::handlePointerReleased(fgVector2i point, unsigned 
         touchEvent->x = point.x;
         touchEvent->y = point.y;
 
-        fgArgumentList *argList = new fgArgumentList();
-        argList->pushArgument(FG_ARGUMENT_TEMP_POINTER, (void *)touchEvent);
+        CArgumentList *argList = new CArgumentList();
+        argList->push(SArgument::Type::ARG_TMP_POINTER, (void *)touchEvent);
         m_eventMgr->throwEvent(FG_EVENT_TOUCH_RELEASED, argList);
 
         // Throw also more general event
@@ -423,8 +423,8 @@ int fg::event::CInputHandler::getPointerY(fgPointerID pointerID) {
  * @param callback
  * @return 
  */
-fgFunctionCallback* fg::event::CInputHandler::addKeyDownCallback(int keyCode,
-                                                       fgFunctionCallback *callback) {
+fg::event::CFunctionCallback* fg::event::CInputHandler::addKeyDownCallback(int keyCode,
+                                                                           CFunctionCallback *callback) {
     if(!callback || keyCode <= 0)
         return NULL;
     if(m_keyDownBinds[keyCode].find(callback) >= 0) {
@@ -440,8 +440,8 @@ fgFunctionCallback* fg::event::CInputHandler::addKeyDownCallback(int keyCode,
  * @param callback
  * @return 
  */
-fgFunctionCallback* fg::event::CInputHandler::addKeyUpCallback(int keyCode,
-                                                     fgFunctionCallback *callback) {
+fg::event::CFunctionCallback* fg::event::CInputHandler::addKeyUpCallback(int keyCode,
+                                                                         CFunctionCallback *callback) {
     if(!callback || keyCode <= 0)
         return NULL;
     if(m_keyUpBinds[keyCode].find(callback) >= 0) {
@@ -478,7 +478,7 @@ void fg::event::CInputHandler::processData(void) {
     //
     for(int i = 0; i < (int)m_keysDownPool.size(); i++) {
         int keyCode = m_keysDownPool[i];
-        fgCallbackBindingMap::iterator found = m_keyDownBinds.find(keyCode);
+        CallbackBindingMap::iterator found = m_keyDownBinds.find(keyCode);
         if(found == m_keyDownBinds.end())
             continue;
         for(int j = 0; j < (int)m_keyDownBinds[keyCode].size(); j++) {
@@ -490,7 +490,7 @@ void fg::event::CInputHandler::processData(void) {
 
     for(int i = 0; i < (int)m_keysUpPool.size(); i++) {
         int keyCode = m_keysUpPool[i];
-        fgCallbackBindingMap::iterator found = m_keyUpBinds.find(keyCode);
+        CallbackBindingMap::iterator found = m_keyUpBinds.find(keyCode);
         if(found == m_keyUpBinds.end())
             continue;
         for(int j = 0; j < (int)m_keyUpBinds[keyCode].size(); j++) {
@@ -499,11 +499,11 @@ void fg::event::CInputHandler::processData(void) {
         }
     }
     m_keysUpPool.clear();
-    
+
     //
     // Phase 2: Process pointer/touch data and throw proper events 
     //
-    
+
     if(!m_pointerAvailable)
         return;
 #if defined(FG_USING_MARMALADE)
@@ -540,8 +540,8 @@ void fg::event::CInputHandler::processData(void) {
                         touchEvent->x = touchPtr.m_tapX;
                         touchEvent->y = touchPtr.m_tapY;
 
-                        fgArgumentList *argList = new fgArgumentList();
-                        argList->pushArgument(FG_ARGUMENT_TEMP_POINTER, (void *)touchEvent);
+                        CArgumentList *argList = new CArgumentList();
+                        argList->push(SArgument::Type::ARG_TMP_POINTER, (void *)touchEvent);
                         m_eventMgr->throwEvent(FG_EVENT_TOUCH_TAP_FINISHED, argList);
 
                         //touchEvent = new fgTouchEvent(*touchEvent);
@@ -634,8 +634,8 @@ void fg::event::CInputHandler::processData(void) {
                     swipeEvent->xEnd = touchPtr.m_pointerXEnd;
                     swipeEvent->yEnd = touchPtr.m_pointerYEnd;
 
-                    fgArgumentList *argList = new fgArgumentList();
-                    argList->pushArgument(FG_ARGUMENT_TEMP_POINTER, (void *)swipeEvent);
+                    CArgumentList *argList = new CArgumentList();
+                    argList->push(SArgument::Type::ARG_TMP_POINTER, (void *)swipeEvent);
 
                     if(X && Y) {
                         swipeEvent->eventType = FG_EVENT_SWIPE_XY;
@@ -709,12 +709,12 @@ void fg::event::CInputHandler::processData(void) {
  * @param swipeSize
  */
 void fg::event::CInputHandler::interpretSwipes(int min_offset_for_swipe,
-                                     int startPointer,
-                                     int endPointer,
-                                     int initialSwipePointer, // IN
-                                     fgBool* minusSwipe,
-                                     fgBool* plusSwipe,
-                                     int* swipeSize) // OUT
+                                               int startPointer,
+                                               int endPointer,
+                                               int initialSwipePointer, // IN
+                                               fgBool* minusSwipe,
+                                               fgBool* plusSwipe,
+                                               int* swipeSize) // OUT
 {
     // This is physical swipe lenght - not necesarily
     // software swipe (it will become software swipe

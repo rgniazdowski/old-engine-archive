@@ -30,13 +30,20 @@ namespace fg {
          * This class contains two objects - RegularFile & ZipFile
          * Selection depends on the selected path
          */
-        class File : public fg::util::base::File {
+        class CFile : public fg::util::base::CFile {
         public:
-            typedef fg::util::base::File base_type;
-            typedef fg::util::RegularFile::tag_type tag_type;
-            typedef fg::util::File::Mode Mode;
-            typedef fg::util::File::Mode FileMode;
-            typedef fg::util::ZipFile::Mode ZipMode;
+            ///
+            typedef fg::util::CFile self_type;
+            ///
+            typedef fg::util::base::CFile base_type;
+            ///
+            typedef fg::util::CRegularFile::tag_type tag_type;
+            ///
+            typedef fg::util::CFile::Mode Mode;
+            ///
+            typedef fg::util::CFile::Mode FileMode;
+            ///
+            typedef fg::util::CZipFile::Mode ZipMode;
 
         private:
 
@@ -46,9 +53,9 @@ namespace fg {
 
         private:
             /// Object for managing Zip files and files within the Zip
-            ZipFile m_zip;
+            CZipFile m_zip;
             /// Object for managing regular files (plain, on disk/ROM)
-            RegularFile m_regular;
+            CRegularFile m_regular;
             /// Pointer to the base type, is never NULL
             base_type *m_file;
             /// Current mode in which this object operates on - ZIP or REGULAR
@@ -60,24 +67,24 @@ namespace fg {
             /**
              * Default constructor for File object
              */
-            File();
+            CFile();
 
             /**
              * Constructor for File object with parameter (file path)
              * @param filePath
              */
-            File(const char *filePath);
+            CFile(const char *filePath);
             
             /**
              * 
              * @param orig
              */
-            File(const File &orig);
+            CFile(const CFile &orig);
 
             /**
              * Destructor, closes the file, frees up all buffers
              */
-            virtual ~File();
+            virtual ~CFile();
 
             /******************************************************************/
             /**
@@ -86,7 +93,7 @@ namespace fg {
              * @return 
              */
             static inline const char *modeStr(Mode mode) {
-                return RegularFile::modeStr(mode);
+                return CRegularFile::modeStr(mode);
             }
 
             /******************************************************************/
@@ -126,7 +133,7 @@ namespace fg {
 
             /******************************************************************/
 
-            using fg::util::base::File::open;
+            using fg::util::base::CFile::open;
             /**
              * Open the file with already set options
              * @return 
@@ -183,7 +190,7 @@ namespace fg {
 
             /******************************************************************/
 
-            using fg::util::base::File::load;
+            using fg::util::base::CFile::load;
             /**
              * This will load the whole file into char *buffer
              * @return Newly allocated string representing the contents of the file
@@ -317,7 +324,7 @@ namespace fg {
         };
 
         /// The higher file class alias - data file
-        typedef File DataFile;
+        typedef CFile DataFile;
     };
 };
 

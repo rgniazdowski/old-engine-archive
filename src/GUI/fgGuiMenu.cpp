@@ -10,27 +10,29 @@
 #include "fgGuiMenu.h"
 #include "Util/fgStrings.h"
 
+using namespace fg;
+
 /*
  *
  */
-fgGuiMenu::fgGuiMenu() : m_isMainMenu(FG_FALSE) {
-    fgGuiMenu::setDefaults();
+gui::CMenu::CMenu() : m_isMainMenu(FG_FALSE) {
+    gui::CMenu::setDefaults();
 }
 
 /*
  *
  */
-fgGuiMenu::~fgGuiMenu() { }
+gui::CMenu::~CMenu() { }
 
 /**
  * 
  * @param flags
  */
-void fgGuiMenu::setFlags(const std::string& flags) {
+void gui::CMenu::setFlags(const std::string& flags) {
     if(flags.empty() || flags.length() < 5)
         return;
     // This is important - always call setFlags for the base class
-    fgGuiContainer::setFlags(flags);
+    CContainer::setFlags(flags);
     m_isMainMenu = FG_FALSE;
     fg::CStringVector flagsVec;
     fgStrings::split(flags, ' ', flagsVec);
@@ -48,22 +50,22 @@ void fgGuiMenu::setFlags(const std::string& flags) {
 /*
  *
  */
-void fgGuiMenu::setDefaults(void) {
-    m_type = FG_GUI_MENU;
+void gui::CMenu::setDefaults(void) {
+    m_type = MENU;
     m_typeName = FG_GUI_MENU_NAME;
-    m_typeTraits = FG_GUI_MENU | FG_GUI_CONTAINER | FG_GUI_WIDGET;
+    m_typeTraits = MENU | CONTAINER | WIDGET;
 }
 
 /*
  *
  */
-fgBoundingBox3Df fgGuiMenu::updateBounds(void) {
-    return fgGuiContainer::updateBounds();
+fgBoundingBox3Df gui::CMenu::updateBounds(void) {
+    return CContainer::updateBounds();
 }
 
 /*
  *
  */
-void fgGuiMenu::refresh(void) {
-    fgGuiContainer::refresh();
+void gui::CMenu::refresh(void) {
+    CContainer::refresh();
 }

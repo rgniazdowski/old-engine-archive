@@ -10,30 +10,35 @@
 #include "fgGuiWidgetFactory.h"
 #include "fgLog.h"
 
-/*
+using namespace fg;
+
+/**
  * Default empty constructor for Resource Factory object
  */
-fgGuiWidgetFactory::fgGuiWidgetFactory() {
-}
+gui::CWidgetFactory::CWidgetFactory() { }
 
-/*
+/**
  * Default destructor for Resource Factory object
  */
-fgGuiWidgetFactory::~fgGuiWidgetFactory() {
+gui::CWidgetFactory::~CWidgetFactory() {
     clear();
 }
 
-/*
+/**
  * Clear all registered resource creators
  */
-void fgGuiWidgetFactory::clear(void) {
+void gui::CWidgetFactory::clear(void) {
     m_factoryMap.clear();
 }
 
-/*
+/**
  * Register resource create function based on resource type
+ * @param type
+ * @param function
+ * @return 
  */
-fgBool fgGuiWidgetFactory::registerWidget(const fgGuiWidgetType type, fgCreateGuiWidgetFn function) {
+fgBool gui::CWidgetFactory::registerWidget(const WidgetType type,
+                                           fgCreateGuiWidgetFn function) {
     if(!function)
         return FG_FALSE;
     factoryPair query_pair;
@@ -49,10 +54,12 @@ fgBool fgGuiWidgetFactory::registerWidget(const fgGuiWidgetType type, fgCreateGu
     return FG_TRUE;
 }
 
-/*
+/**
  * Call specific create function for given widget
+ * @param type
+ * @return 
  */
-fgGuiWidget* fgGuiWidgetFactory::createWidget(const fgGuiWidgetType type) {
+gui::CWidget* gui::CWidgetFactory::createWidget(const WidgetType type) {
     factoryMapItor it = m_factoryMap.find(type);
     if(it != m_factoryMap.end()) {
         if(it->second != NULL)
@@ -61,10 +68,12 @@ fgGuiWidget* fgGuiWidgetFactory::createWidget(const fgGuiWidgetType type) {
     return NULL;
 }
 
-/*
+/**
  * Check if given widget type constructor/create function is registered in factory
+ * @param type
+ * @return 
  */
-fgBool fgGuiWidgetFactory::isRegistered(const fgGuiWidgetType type) {
+fgBool gui::CWidgetFactory::isRegistered(const WidgetType type) {
     factoryMapItor it = m_factoryMap.find(type);
     if(it != m_factoryMap.end()) {
         return FG_TRUE;

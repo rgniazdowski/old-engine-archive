@@ -20,16 +20,18 @@
 #include "GUI/fgGuiButton.h"
 #include "Event/fgEventDefinitions.h"
 
+using namespace fg;
+
 /**
  * 
  * @param L
  * @param info
  * @param _type
  */
-fgScriptCallback::fgScriptCallback(lua_State *L,
-                                   const char *info,
-                                   unsigned short int _argc,
-                                   ScriptCallbackType _type) :
+script::CScriptCallback::CScriptCallback(lua_State *L,
+                                         const char *info,
+                                         unsigned short int _argc,
+                                         ScriptCallbackType _type) :
 m_luaState(L),
 m_script(),
 m_function(NULL),
@@ -63,7 +65,7 @@ m_argc(_argc) {
  * 
  * @return 
  */
-fgBool fgScriptCallback::Call(void) {
+fgBool script::CScriptCallback::Call(void) {
     if(m_type == INVALID || !m_luaState || !m_function)
         return FG_FALSE;
     if(m_argc > 0 && m_type != SCRIPT) {
@@ -71,6 +73,7 @@ fgBool fgScriptCallback::Call(void) {
         // The call will fail
         return FG_FALSE;
     }
+        
 #if defined(FG_USING_LUA_PLUS)
     if(!m_argc) {
         (*m_function)(); // No return value expected
@@ -79,8 +82,8 @@ fgBool fgScriptCallback::Call(void) {
         // In case of Event this will be proper event structure
         // With GUI this will be proper pointer to Widget
         // This call is without parameters so, need to pass empty Widget
-        fgGuiButton button;
-        (*m_function)((fgGuiWidget *) & button); // No return value expected
+        gui::CButton button;
+        (*m_function)((gui::CWidget *) & button); // No return value expected
     } else if(m_type == EVENT_CALLBACK) {
         fgEvent event;
         memset(&event, 0, sizeof (fgEvent));
@@ -100,13 +103,13 @@ fgBool fgScriptCallback::Call(void) {
  * @param argv
  * @return 
  */
-fgBool fgScriptCallback::Call(fgArgumentList *argv) {
+fgBool script::CScriptCallback::Call(event::CArgumentList *argv) {
     if(m_type == INVALID || !m_luaState)
         return FG_FALSE;
     if(!argv) {
         return Call();
     }
-    if(!argv->getArgumentCount()) {
+    if(!argv->getCount()) {
         // This is hacky, what if script callback is to function that takes
         // some number of arguments?
         return Call();
@@ -115,8 +118,8 @@ fgBool fgScriptCallback::Call(fgArgumentList *argv) {
         return Call();
     }
 #if defined(FG_USING_LUA_PLUS)
-    fgArgumentType argType = FG_ARGUMENT_NONE;
-    void *pArg = argv->getArgumentValueByID(0, &argType);
+    event::SArgument::Type argType = event::SArgument::Type::ARG_NONE;
+    void *pArg = argv->getValueByID(0, &argType);
     if(!pArg)
         return FG_FALSE;
     if(m_type == GUI_CALLBACK) {
@@ -125,10 +128,10 @@ fgBool fgScriptCallback::Call(fgArgumentList *argv) {
         // Will need to hack it!
         // This probably wont be used often or event removed as there will
         // be separate class for this fgScriptGuiCallback
-        fgGuiWidget *pWidget = (fgGuiWidget *)pArg;
+        gui::CWidget *pWidget = (gui::CWidget *)pArg;
         if(!pWidget)
             return FG_FALSE;
-        if(pWidget->getTypeTraits() & FG_GUI_WIDGET) {
+        if(pWidget->getTypeTraits() & gui::WIDGET) {
             (*m_function)(pWidget); // No return value expected
         }
         return FG_TRUE;
@@ -246,7 +249,7 @@ fgBool fgScriptCallback::Call(fgArgumentList *argv) {
  * 
  * @return 
  */
-fgBool fgScriptCallback::Call(void *pSystemData) {
+fgBool script::CScriptCallback::Call(void *pSystemData) {
     if(m_type == INVALID || !m_luaState)
         return FG_FALSE;
     if(!pSystemData) {
@@ -262,12 +265,12 @@ fgBool fgScriptCallback::Call(void *pSystemData) {
         // Will need to hack it!
         // This probably wont be used often or event removed as there will
         // be separate class for this fgScriptGuiCallback
-        fgGuiWidget *pWidget = (fgGuiWidget *)pSystemData;
+        gui::CWidget *pWidget = (gui::CWidget *)pSystemData;
         if(!pWidget)
             return FG_FALSE;
         if(!pWidget->isManaged())
             return FG_FALSE;
-        if(pWidget->getTypeTraits() & FG_GUI_WIDGET) {
+        if(pWidget->getTypeTraits() & gui::WIDGET) {
             (*m_function)(pWidget); // No return value expected
         }
         return FG_TRUE;
@@ -300,23 +303,23 @@ fgBool fgScriptCallback::Call(void *pSystemData) {
  * @param info
  * @param _type
  */
-fgScriptGuiCallback::fgScriptGuiCallback(fgGuiMain *pGuiMain, lua_State *L,
-                                         const char *info,
-                                         const unsigned short int _argc) :
-fgScriptCallback(L, info, _argc, SCRIPT),
-fgGuiCallback(pGuiMain) {
-    fgFunctionCallback::setFunction((fgFunctionCallback::fgFunction)NULL);
+script::CScriptGuiCallback::CScriptGuiCallback(gui::CGuiMain *pGuiMain, lua_State *L,
+                                               const char *info,
+                                               const unsigned short int _argc) :
+CScriptCallback(L, info, _argc, SCRIPT),
+gui::CGuiCallback(pGuiMain) {
+    event::CFunctionCallback::setFunction((event::CFunctionCallback::fgFunction)NULL);
 }
 
 /**
  * 
  * @return 
  */
-fgBool fgScriptGuiCallback::Call(void) {
+fgBool script::CScriptGuiCallback::Call(void) {
     if(getType() == INVALID) {
         return FG_FALSE;
     } else if(getType() == GUI_CALLBACK || getType() == SCRIPT) {
-        return fgScriptCallback::Call();
+        return script::CScriptCallback::Call();
     }
     return FG_FALSE;
 }
@@ -326,10 +329,10 @@ fgBool fgScriptGuiCallback::Call(void) {
  * @param argv
  * @return 
  */
-fgBool fgScriptGuiCallback::Call(fgArgumentList *argv) {
+fgBool script::CScriptGuiCallback::Call(event::CArgumentList *argv) {
     if(!argv)
         return FG_FALSE;
-    return fgScriptCallback::Call(argv);
+    return script::CScriptCallback::Call(argv);
 }
 
 /**
@@ -337,10 +340,10 @@ fgBool fgScriptGuiCallback::Call(fgArgumentList *argv) {
  * @param pSystemData
  * @return 
  */
-fgBool fgScriptGuiCallback::Call(void *pSystemData) {
+fgBool script::CScriptGuiCallback::Call(void *pSystemData) {
     if(!pSystemData)
         return FG_FALSE;
-    return fgScriptCallback::Call(pSystemData);
+    return script::CScriptCallback::Call(pSystemData);
 }
 
 /**
@@ -348,10 +351,10 @@ fgBool fgScriptGuiCallback::Call(void *pSystemData) {
  * @param pWidget
  * @return 
  */
-fgBool fgScriptGuiCallback::Call(fgGuiWidget *pWidget) {
+fgBool script::CScriptGuiCallback::Call(gui::CWidget *pWidget) {
     if(!pWidget)
         return FG_FALSE;
-    return fgScriptCallback::Call((void *)pWidget);
+    return script::CScriptCallback::Call((void *)pWidget);
 }
 
 /**
@@ -360,8 +363,8 @@ fgBool fgScriptGuiCallback::Call(fgGuiWidget *pWidget) {
  * @param pWidget
  * @return 
  */
-fgBool fgScriptGuiCallback::Call(fgGuiMain *pGuiMain, fgGuiWidget *pWidget) {
+fgBool script::CScriptGuiCallback::Call(gui::CGuiMain *pGuiMain, gui::CWidget *pWidget) {
     if(!pWidget)
         return FG_FALSE;
-    return fgScriptCallback::Call((void *)pWidget);
+    return script::CScriptCallback::Call((void *)pWidget);
 }

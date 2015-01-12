@@ -10,7 +10,7 @@
 #ifndef FG_INC_PS_PARTICLE_EFFECT
     #define FG_INC_PS_PARTICLE_EFFECT
     #define FG_INC_PS_PARTICLE_EFFECT_BLOCK
-    
+
     #include "fgBool.h"
     #include "GFX/fgGFXTypes.h"
 
@@ -165,7 +165,7 @@ private:
     fgColor4f m_startColor;
     /// The end color of the animated particle. The particle will reach the end color in TTL miliseconds
     fgColor4f m_endColor;
-    
+
     /// 
     unsigned int m_burnoutDelay;
     ///
@@ -176,7 +176,7 @@ protected:
      * 
      */
     virtual void clear(void);
-    
+
 public:
     /**
      * Empty constructor - no allocation made
@@ -689,7 +689,7 @@ public:
     static void randomizeOnPair(const fgParticle* from,
                                 const fgParticle* to,
                                 fgParticle *result);
-    
+
     /**
      * 
      * @param outputParticle

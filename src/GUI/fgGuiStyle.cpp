@@ -12,22 +12,25 @@
 #include "Util/fgStrings.h"
 #include "fgLog.h"
 
-/*
- *
- */
-fgGuiStyle::fgGuiStyle() { }
+using namespace fg;
 
-/*
+/**
  *
  */
-fgGuiStyle::~fgGuiStyle() {
+gui::CStyle::CStyle() { }
+
+/**
+ *
+ */
+gui::CStyle::~CStyle() {
     m_styleContent.clear();
 }
 
-/*
- *
+/**
+ * 
+ * @return 
  */
-fgBool fgGuiStyle::load(void) {
+fgBool gui::CStyle::load(void) {
     if(getFilePath().empty())
         return FG_FALSE;
     fgConfig *config = new fgConfig();
@@ -41,7 +44,7 @@ fgBool fgGuiStyle::load(void) {
     m_styleContent.clear();
 
     for(int i = 0; i < 5; i++) {
-        m_styleContent[_buildInSubStyles[i]] = fgGuiStyleContent();
+        m_styleContent[_buildInSubStyles[i]] = CStyleContent();
     }
 
     fgCfgTypes::sectionMap &sections = config->getRefSectionMap();
@@ -103,7 +106,7 @@ fgBool fgGuiStyle::load(void) {
             }
         } else {
         }
-        fgGuiStyleContent newSubStyleContent;
+        CStyleContent newSubStyleContent;
 
         if(subName.length()) {
             if(isupper(firstName[0]) && islower(subName[0])) {
@@ -151,46 +154,52 @@ fgBool fgGuiStyle::load(void) {
     return FG_TRUE;
 }
 
-/*
- *
+/**
+ * 
+ * @param path
+ * @return 
  */
-fgBool fgGuiStyle::load(const std::string& path) {
+fgBool gui::CStyle::load(const std::string& path) {
     if(path.empty())
         return FG_FALSE;
     setFilePath(path);
-    return fgGuiStyle::load();
+    return gui::CStyle::load();
 }
 
-/*
- *
+/**
+ * 
+ * @param path
+ * @return 
  */
-fgBool fgGuiStyle::load(const char *path) {
+fgBool gui::CStyle::load(const char *path) {
     if(!path)
         return FG_FALSE;
     setFilePath(path);
-    return fgGuiStyle::load();
+    return gui::CStyle::load();
 }
 
-/*
- *
+/**
+ * 
+ * @param info
+ * @return 
  */
-fgGuiStyleContent &fgGuiStyle::getContent(const std::string& info) {
+gui::CStyleContent &gui::CStyle::getContent(const std::string& info) {
     if(info.empty())
         return m_styleContent["main"];
     fg::CStringVector parts;
     fgStrings::split(info, '.', parts);
-    styleNameMap::iterator end = m_styleContent.end();
+    StyleNameMap::iterator end = m_styleContent.end();
     if(parts.size() == 1) {
-        styleNameMap::iterator itor = m_styleContent.find(info);
+        StyleNameMap::iterator itor = m_styleContent.find(info);
         if(itor != end)
             return itor->second;
     } else if(parts.size() == 2) {
-        styleNameMap::iterator itorAll = m_styleContent.find(info);
+        StyleNameMap::iterator itorAll = m_styleContent.find(info);
         if(itorAll != end) {
             return itorAll->second;
         }
-        styleNameMap::iterator itor1 = m_styleContent.find(parts[0]);
-        styleNameMap::iterator itor2 = m_styleContent.find(parts[1]);
+        StyleNameMap::iterator itor1 = m_styleContent.find(parts[0]);
+        StyleNameMap::iterator itor2 = m_styleContent.find(parts[1]);
         if(itor1 == end && itor2 != end) {
             return itor2->second;
         } else if(itor1 != end && itor2 == end) {
@@ -202,17 +211,25 @@ fgGuiStyleContent &fgGuiStyle::getContent(const std::string& info) {
     return m_styleContent["main"];
 }
 
-/*
- *
+/**
+ * 
+ * @param info
+ * @return 
  */
-fgGuiStyleContent &fgGuiStyle::getContent(const char *info) {
+gui::CStyleContent &gui::CStyle::getContent(const char *info) {
     return getContent(std::string(info));
 }
 
-/*
- *
+/**
+ * 
+ * @param contents
+ * @param num
+ * @param info
+ * @return 
  */
-fgBool fgGuiStyle::copyFullContent(fgGuiStyleContent *contents, int num, const std::string& info) {
+fgBool gui::CStyle::copyFullContent(CStyleContent *contents,
+                                    int num,
+                                    const std::string& info) {
     if(num < 1 || !contents)
         return FG_FALSE;
     if(num > 5)
@@ -226,11 +243,11 @@ fgBool fgGuiStyle::copyFullContent(fgGuiStyleContent *contents, int num, const s
                                               "deactivated" // DEACTIV	4
     };
     /*
-    FG_GUI_WIDGET_STATE_NONE		0	// main
-    FG_GUI_WIDGET_STATE_FOCUS		1	// focus
-    FG_GUI_WIDGET_STATE_PRESSED		2	// pressed
-    FG_GUI_WIDGET_STATE_ACTIVATED	3	// activated
-    FG_GUI_WIDGET_STATE_DEACTIVATED	4	// deactivated
+    STATE_NONE		0	// main
+    STATE_FOCUS		1	// focus
+    STATE_PRESSED		2	// pressed
+    STATE_ACTIVATED	3	// activated
+    STATE_DEACTIVATED	4	// deactivated
      */
     fg::CStringVector parts;
     fgStrings::split(info, '.', parts);
@@ -246,9 +263,15 @@ fgBool fgGuiStyle::copyFullContent(fgGuiStyleContent *contents, int num, const s
     return FG_TRUE;
 }
 
-/*
- *
+/**
+ * 
+ * @param contents
+ * @param num
+ * @param info
+ * @return 
  */
-fgBool fgGuiStyle::copyFullContent(fgGuiStyleContent *contents, int num, const char *info) {
+fgBool gui::CStyle::copyFullContent(CStyleContent *contents,
+                                    int num,
+                                    const char *info) {
     return copyFullContent(contents, num, std::string(info));
 }

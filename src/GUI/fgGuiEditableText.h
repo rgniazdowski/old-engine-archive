@@ -9,51 +9,58 @@
 
 #ifndef FG_INC_GUI_EDITABLE_TEXT
     #define FG_INC_GUI_EDITABLE_TEXT
+    #define FG_INC_GUI_EDITABLE_TEXT_BLOCK
 
     #include "fgGuiTextArea.h"
     #include "fgGuiWidgetFactoryTypes.h"
 
-/**
- *
- */
-class fgGuiEditableText : public fgGuiTextArea {
-public:
-    ///
-    typedef fgGuiTextArea base_type;
-protected:
+namespace fg {
+    namespace gui {
 
-protected:
-    /**
-     * 
-     */
-    virtual void setDefaults(void);
+        /**
+         *
+         */
+        class CEditableText : public CTextArea {
+        public:
+            ///
+            typedef CTextArea base_type;
+        protected:
 
-public:
-    /**
-     * 
-     */
-    fgGuiEditableText();
-    /**
-     * 
-     */
-    virtual ~fgGuiEditableText();
+        protected:
+            /**
+             * 
+             */
+            virtual void setDefaults(void);
 
-    /**
-     * 
-     * @return 
-     */
-    FG_GUI_WIDGET_FACTORY_CREATE_FUNCTION(fgGuiEditableText);
+        public:
+            /**
+             * 
+             */
+            CEditableText();
+            /**
+             * 
+             */
+            virtual ~CEditableText();
 
-    /**
-     * 
-     * @return 
-     */
-    virtual fgBoundingBox3Df updateBounds(void);
-    /**
-     * 
-     */
-    virtual void refresh(void);
+            /**
+             * 
+             * @return 
+             */
+            FG_GUI_WIDGET_FACTORY_CREATE_FUNCTION(CEditableText)
 
+            /**
+             * 
+             * @return 
+             */
+            virtual fgBoundingBox3Df updateBounds(void);
+            /**
+             * 
+             */
+            virtual void refresh(void);
+
+        };
+    };
 };
 
+    #undef FG_INC_GUI_EDITABLE_TEXT_BLOCK
 #endif /* FG_INC_GUI_EDITABLE_TEXT */

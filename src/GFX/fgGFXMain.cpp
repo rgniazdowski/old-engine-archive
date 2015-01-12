@@ -96,9 +96,9 @@ void fgGfxMain::registerResourceCallbacks(void) {
         return;
 
     if(!m_resourceCreatedCallback)
-        m_resourceCreatedCallback = new fgClassCallback<fgGfxMain>(this, &fgGfxMain::resourceCreatedHandler);
+        m_resourceCreatedCallback = new fg::event::CMethodCallback<fgGfxMain>(this, &fgGfxMain::resourceCreatedHandler);
 
-    static_cast<fg::event::CEventManager *>(m_pEventMgr)->addEventCallback(FG_EVENT_RESOURCE_CREATED, m_resourceCreatedCallback);
+    static_cast<fg::event::CEventManager *>(m_pEventMgr)->addCallback(FG_EVENT_RESOURCE_CREATED, m_resourceCreatedCallback);
 }
 
 /**
@@ -108,7 +108,7 @@ void fgGfxMain::unregisterResourceCallbacks(void) {
     if(!m_pEventMgr)
         return;
 
-    static_cast<fg::event::CEventManager *>(m_pEventMgr)->removeEventCallback(FG_EVENT_RESOURCE_CREATED, m_resourceCreatedCallback);
+    static_cast<fg::event::CEventManager *>(m_pEventMgr)->removeCallback(FG_EVENT_RESOURCE_CREATED, m_resourceCreatedCallback);
 }
 
 /**
@@ -755,10 +755,10 @@ fgBool fgGfxMain::releaseTextures(void) {
  * @param argv
  * @return 
  */
-fgBool fgGfxMain::resourceCreatedHandler(fgArgumentList * argv) {
+fgBool fgGfxMain::resourceCreatedHandler(fg::event::CArgumentList * argv) {
     if(!argv)
         return FG_FALSE;
-    fgEventBase *event = (fgEventBase *)argv->getArgumentValueByID(0);
+    fgEventBase *event = (fgEventBase *)argv->getValueByID(0);
     if(!event)
         return FG_FALSE;
     fgEventType type = event->eventType;

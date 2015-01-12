@@ -30,225 +30,231 @@ typedef unsigned int fgFontPrintMode;
         #include "GFX/fgGFXDrawingBatch.h"
     #endif 
 
-/*
- *
- */
-class fgFontDrawer : public virtual fg::gfx::CDrawingBatch {
-public:
-    /**
-     *
-     */
-    fgFontDrawer();
-    /**
-     * 
-     */
-    virtual ~fgFontDrawer();
+namespace fg {
+    namespace gui {
 
-protected:
-    /**
-     * 
-     * @param texture
-     * @return 
-     */
-    fg::gfx::CDrawCall *setupDrawCall(fg::gfx::CTexture *texture);
+        /**
+         *
+         */
+        class CFontDrawer : public virtual fg::gfx::CDrawingBatch {
+        public:
+            /**
+             *
+             */
+            CFontDrawer();
+            /**
+             * 
+             */
+            virtual ~CFontDrawer();
 
-public:
-    /**
-     * 
-     * @param x0
-     * @param y0
-     * @param charSize
-     * @param fmt
-     * @return 
-     */
-    int print(float x0, float y0, float charSize, const char *fmt, ...);
-    /**
-     * 
-     * @param x0
-     * @param y0
-     * @param string
-     * @param charSize
-     * @return 
-     */
-    int print(float x0, float y0, const char *string, float charSize = FG_FONT_DEFAULT_CHAR_SIZE_PX);
-    /**
-     * 
-     * @param size
-     * @param fmt
-     * @param ...
-     * @return 
-     */
-    int print(float size, const char *fmt, ...);
-    /**
-     * 
-     * @param string
-     * @param charSize
-     * @return 
-     */
-    int print(const char *string, float charSize = FG_FONT_DEFAULT_CHAR_SIZE_PX);
-    
-    /**
-     * 
-     * @param color
-     */
-    virtual void setColor(const fgColor4f &color);
-    /**
-     * 
-     * @param color
-     */
-    virtual void setColor(const fgColor3f &color);
-    /**
-     * 
-     */
-    virtual void setColor(void);
+        protected:
+            /**
+             * 
+             * @param texture
+             * @return 
+             */
+            fg::gfx::CDrawCall *setupDrawCall(fg::gfx::CTexture *texture);
 
-    /**
-     * 
-     */
-    virtual void flush(void);
-    /**
-     * 
-     */
-    virtual void render(void);
+        public:
+            /**
+             * 
+             * @param x0
+             * @param y0
+             * @param charSize
+             * @param fmt
+             * @return 
+             */
+            int print(float x0, float y0, float charSize, const char *fmt, ...);
+            /**
+             * 
+             * @param x0
+             * @param y0
+             * @param string
+             * @param charSize
+             * @return 
+             */
+            int print(float x0, float y0, const char *string, float charSize = FG_FONT_DEFAULT_CHAR_SIZE_PX);
+            /**
+             * 
+             * @param size
+             * @param fmt
+             * @param ...
+             * @return 
+             */
+            int print(float size, const char *fmt, ...);
+            /**
+             * 
+             * @param string
+             * @param charSize
+             * @return 
+             */
+            int print(const char *string, float charSize = FG_FONT_DEFAULT_CHAR_SIZE_PX);
 
-    /**
-     * 
-     * @param charSize
-     * @param fmt
-     * @return 
-     */
-    float width(float charSize, const char *fmt, ...);
-    /**
-     * 
-     * @param string
-     * @param charSize
-     * @return 
-     */
-    float width(const char *string, float charSize);
-    /**
-     * 
-     * @param charSize
-     * @param fmt
-     * @return 
-     */
-    float height(float charSize, const char *fmt, ...);
-    /**
-     * 
-     * @param string
-     * @param charSize
-     * @return 
-     */
-    float height(const char *string, float charSize);
-    /**
-     * 
-     * @param charSize
-     * @param fmt
-     * @return 
-     */
-    fgVector2f size(float charSize, const char *fmt, ...);
-    /**
-     * 
-     * @param string
-     * @param charSize
-     * @return 
-     */
-    fgVector2f size(const char *string, float charSize);
+            /**
+             * 
+             * @param color
+             */
+            virtual void setColor(const fgColor4f &color);
+            /**
+             * 
+             * @param color
+             */
+            virtual void setColor(const fgColor3f &color);
+            /**
+             * 
+             */
+            virtual void setColor(void);
 
-    /**
-     * 
-     * @param font
-     * @param charSize
-     * @param fmt
-     * @return 
-     */
-    static float width(fgFontResource *font, float charSize, const char *fmt, ...);
-    /**
-     * 
-     * @param font
-     * @param string
-     * @param charSize
-     * @return 
-     */
-    static float width(fgFontResource *font, const char *string, float charSize);
-    /**
-     * 
-     * @param font
-     * @param charSize
-     * @param fmt
-     * @return 
-     */
-    static float height(fgFontResource *font, float charSize, const char *fmt, ...);
-    /**
-     * 
-     * @param font
-     * @param string
-     * @param charSize
-     * @return 
-     */
-    static float height(fgFontResource *font, const char *string, float charSize);
-    /**
-     * 
-     * @param font
-     * @param charSize
-     * @param fmt
-     * @return 
-     */
-    static fgVector2f size(fgFontResource *font, float charSize, const char *fmt, ...);
+            /**
+             * 
+             */
+            virtual void flush(void);
+            /**
+             * 
+             */
+            virtual void render(void);
 
-    /**
-     * 
-     * @param font
-     * @param string
-     * @param charSize
-     * @return 
-     */
-    static fgVector2f size(fgFontResource *font, const char *string, float charSize);
+            /**
+             * 
+             * @param charSize
+             * @param fmt
+             * @return 
+             */
+            float width(float charSize, const char *fmt, ...);
+            /**
+             * 
+             * @param string
+             * @param charSize
+             * @return 
+             */
+            float width(const char *string, float charSize);
+            /**
+             * 
+             * @param charSize
+             * @param fmt
+             * @return 
+             */
+            float height(float charSize, const char *fmt, ...);
+            /**
+             * 
+             * @param string
+             * @param charSize
+             * @return 
+             */
+            float height(const char *string, float charSize);
+            /**
+             * 
+             * @param charSize
+             * @param fmt
+             * @return 
+             */
+            fgVector2f size(float charSize, const char *fmt, ...);
+            /**
+             * 
+             * @param string
+             * @param charSize
+             * @return 
+             */
+            fgVector2f size(const char *string, float charSize);
 
-    /**
-     * Set current font used for drawing
-     * @param font
-     * @return 
-     */
-    fgBool setFont(fgFontResource *font);
+            /**
+             * 
+             * @param font
+             * @param charSize
+             * @param fmt
+             * @return 
+             */
+            static float width(CFontResource *font, float charSize, const char *fmt, ...);
+            /**
+             * 
+             * @param font
+             * @param string
+             * @param charSize
+             * @return 
+             */
+            static float width(CFontResource *font, const char *string, float charSize);
+            /**
+             * 
+             * @param font
+             * @param charSize
+             * @param fmt
+             * @return 
+             */
+            static float height(CFontResource *font, float charSize, const char *fmt, ...);
+            /**
+             * 
+             * @param font
+             * @param string
+             * @param charSize
+             * @return 
+             */
+            static float height(CFontResource *font, const char *string, float charSize);
+            /**
+             * 
+             * @param font
+             * @param charSize
+             * @param fmt
+             * @return 
+             */
+            static fgVector2f size(CFontResource *font, float charSize, const char *fmt, ...);
 
-    /**
-     * 
-     * @return 
-     */
-    fgFontResource *getFont(void) const;
+            /**
+             * 
+             * @param font
+             * @param string
+             * @param charSize
+             * @return 
+             */
+            static fgVector2f size(CFontResource *font, const char *string, float charSize);
 
-    /**
-     * 
-     */
-    virtual void reset(void);
+            /**
+             * Set current font used for drawing
+             * @param font
+             * @return 
+             */
+            fgBool setFont(CFontResource *font);
 
-protected:
-    /**
-     * Place the char right after the last want. Rewind is for going back in the line (caret return)
-     * @param letter
-     * @param rewind
-     * @param charSize
-     * @return 
-     */
-    float placeChar(char letter, fgBool rewind = FG_FALSE, float charSize = FG_FONT_DEFAULT_CHAR_SIZE_PX);
-    /**
-     * Place the char after the last one + relative position transform
-     * @param xRel0
-     * @param yRel0
-     * @param letter
-     * @param rewind
-     * @param charSize
-     * @return 
-     */
-    float placeChar(float xRel0, float yRel0, char letter, fgBool rewind = FG_FALSE, float charSize = FG_FONT_DEFAULT_CHAR_SIZE_PX);
+            /**
+             * 
+             * @return 
+             */
+            CFontResource *getFont(void) const;
 
-private:
-    /// Currently used font resource for drawing
-    fgFontResource *m_currentFont;
-    /// Currently used color for drawing
-    fgColor4f m_color;
-    /// Font printing mode
-    fgFontPrintMode m_printMode;
+            /**
+             * 
+             */
+            virtual void reset(void);
+
+        protected:
+            /**
+             * Place the char right after the last want. Rewind is for going back in the line (caret return)
+             * @param letter
+             * @param rewind
+             * @param charSize
+             * @return 
+             */
+            float placeChar(char letter, fgBool rewind = FG_FALSE, float charSize = FG_FONT_DEFAULT_CHAR_SIZE_PX);
+            /**
+             * Place the char after the last one + relative position transform
+             * @param xRel0
+             * @param yRel0
+             * @param letter
+             * @param rewind
+             * @param charSize
+             * @return 
+             */
+            float placeChar(float xRel0, float yRel0, char letter, fgBool rewind = FG_FALSE, float charSize = FG_FONT_DEFAULT_CHAR_SIZE_PX);
+
+        private:
+            /// Currently used font resource for drawing
+            CFontResource *m_currentFont;
+            /// Currently used color for drawing
+            fgColor4f m_color;
+            /// Font printing mode
+            fgFontPrintMode m_printMode;
+        };
+    };
 };
 
+    #undef FG_INC_FONT_DRAWER_BLOCK
 #endif /* FG_INC_FONT_DRAWER */

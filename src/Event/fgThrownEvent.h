@@ -9,45 +9,54 @@
 
 #ifndef FG_INC_THROWN_EVENT
     #define FG_INC_THROWN_EVENT
-
+    #define FG_INC_THROWN_EVENT_BLOCK
+    
     #include "fgEventDefinitions.h"
     #include "fgArgumentList.h"
 
-/**
- *
- */
-struct fgThrownEvent {
-    ///
-    fgEventType eventCode;
-    ///
-    fgArgumentList *argList;
-    ///
-    void *systemData;
-    /**
-     * 
-     */
-    fgThrownEvent(fgEventType _eventCode = FG_EVENT_INVALID) :
-    eventCode(_eventCode), 
-    argList(NULL), 
-    systemData(NULL) { }
-    /**
-     * 
-     * @param _eventCode
-     * @param _argList
-     */
-    fgThrownEvent(fgEventType _eventCode, fgArgumentList *_argList) :
-    eventCode(_eventCode),
-    argList(_argList),
-    systemData(NULL) { }
-    /**
-     * 
-     * @param _eventCode
-     * @param _systemData
-     */
-    fgThrownEvent(fgEventType _eventCode, void *_systemData) :
-    eventCode(_eventCode),
-    argList(NULL),
-    systemData(_systemData) { }
+namespace fg {
+    namespace event {
+
+        /**
+         *
+         */
+        struct SThrownEvent {
+            ///
+            fgEventType eventCode;
+            ///
+            CArgumentList *argList;
+            ///
+            void *systemData;
+            /**
+             * 
+             */
+            SThrownEvent(fgEventType _eventCode = FG_EVENT_INVALID) :
+            eventCode(_eventCode),
+            argList(NULL),
+            systemData(NULL) { }
+            /**
+             * 
+             * @param _eventCode
+             * @param _argList
+             */
+            SThrownEvent(fgEventType _eventCode, CArgumentList *_argList) :
+            eventCode(_eventCode),
+            argList(_argList),
+            systemData(NULL) { }
+            /**
+             * 
+             * @param _eventCode
+             * @param _systemData
+             */
+            SThrownEvent(fgEventType _eventCode, void *_systemData) :
+            eventCode(_eventCode),
+            argList(NULL),
+            systemData(_systemData) { }
+        };
+
+    };
+
 };
 
+    #undef FG_INC_THROWN_EVENT_BLOCK
 #endif /* FG_INC_THROWN_EVENT */

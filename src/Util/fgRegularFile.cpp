@@ -26,7 +26,7 @@
  * @param filePath
  * @return 
  */
-fgBool fg::util::RegularFile::exists(const char *filePath) {
+fgBool fg::util::CRegularFile::exists(const char *filePath) {
 #if defined FG_USING_MARMALADE
     return (fgBool)s3eFileCheckExists(filePath);
 #else
@@ -40,14 +40,14 @@ fgBool fg::util::RegularFile::exists(const char *filePath) {
  * @param filePath
  * @return 
  */
-fgBool fg::util::RegularFile::exists(const std::string &filePath) {
-    return fg::util::RegularFile::exists(filePath.c_str());
+fgBool fg::util::CRegularFile::exists(const std::string &filePath) {
+    return fg::util::CRegularFile::exists(filePath.c_str());
 }
 
 /**
  * Default constructor for File object
  */
-fg::util::RegularFile::RegularFile() :
+fg::util::CRegularFile::CRegularFile() :
 m_file(NULL) {
     m_modeFlags = Mode::READ | Mode::BINARY;
 }
@@ -56,7 +56,7 @@ m_file(NULL) {
  * Constructor for File object with parameter (file path)
  * @param filePath
  */
-fg::util::RegularFile::RegularFile(const char *filePath) :
+fg::util::CRegularFile::CRegularFile(const char *filePath) :
 m_file(NULL) {
     m_modeFlags = Mode::READ | Mode::BINARY;
     m_filePath = filePath;
@@ -65,7 +65,7 @@ m_file(NULL) {
 /**
  * Destructor, closes the file, frees up all buffers
  */
-fg::util::RegularFile::~RegularFile() {
+fg::util::CRegularFile::~CRegularFile() {
     close();
     m_filePath.clear();
 }
@@ -75,7 +75,7 @@ fg::util::RegularFile::~RegularFile() {
  * @param mode
  * @return 
  */
-const char *fg::util::RegularFile::modeStr(Mode mode) {
+const char *fg::util::CRegularFile::modeStr(Mode mode) {
     if(mode == Mode::NONE)
         return "";
     if(!!(mode & Mode::READ)) {
@@ -114,7 +114,7 @@ const char *fg::util::RegularFile::modeStr(Mode mode) {
  * @param mode
  * @return 
  */
-fgBool fg::util::RegularFile::open(const char *filePath, Mode mode) {
+fgBool fg::util::CRegularFile::open(const char *filePath, Mode mode) {
     if(filePath == NULL) {
         FG_MessageSubsystem->reportWarning(tag_type::name(), FG_ERRNO_FILE_NO_PATH);
         //FG_LOG_WARNING("%s: No file path specified", tag_type::name())
@@ -158,7 +158,7 @@ fgBool fg::util::RegularFile::open(const char *filePath, Mode mode) {
  * @param mode
  * @return 
  */
-fgBool fg::util::RegularFile::open(Mode mode) {
+fgBool fg::util::CRegularFile::open(Mode mode) {
     if(mode == Mode::NONE) {
         FG_MessageSubsystem->reportWarning(tag_type::name(), FG_ERRNO_FILE_WRONG_MODE, "%s", m_filePath.c_str());
         return FG_FALSE;
@@ -170,7 +170,7 @@ fgBool fg::util::RegularFile::open(Mode mode) {
  * Open the file with already set options
  * @return 
  */
-fgBool fg::util::RegularFile::open(void) {
+fgBool fg::util::CRegularFile::open(void) {
     if(m_modeFlags == Mode::NONE)
         m_modeFlags = Mode::READ;
     return open(m_filePath.c_str(), m_modeFlags);
@@ -180,7 +180,7 @@ fgBool fg::util::RegularFile::open(void) {
  * Close the file
  * @return 
  */
-fgBool fg::util::RegularFile::close(void) {
+fgBool fg::util::CRegularFile::close(void) {
     if(m_file) {
         FG_ERRNO_CLEAR();
         clearerr(m_file);
@@ -203,7 +203,7 @@ fgBool fg::util::RegularFile::close(void) {
  * Check if file is currently opened
  * @return 
  */
-fgBool fg::util::RegularFile::isOpen(void) const {
+fgBool fg::util::CRegularFile::isOpen(void) const {
     if(m_file)
         return FG_TRUE;
     else
@@ -217,7 +217,7 @@ fgBool fg::util::RegularFile::isOpen(void) const {
  *         exceeded a NULL pointer will be returned. The returned
  *         string buffer will be null-terminated ('\0' will be appended)
  */
-char *fg::util::RegularFile::load(const char *filePath) {
+char *fg::util::CRegularFile::load(const char *filePath) {
     if(!isOpen() && !open(filePath, Mode::READ | Mode::BINARY)) {
         FG_MessageSubsystem->reportWarning(tag_type::name(), FG_ERRNO_FILE_ALREADY_OPEN, "%s", filePath);
         return NULL;
@@ -259,7 +259,7 @@ char *fg::util::RegularFile::load(const char *filePath) {
  *         exceeded a NULL pointer will be returned. The returned
  *         string buffer will be null-terminated ('\0' will be appended)
  */
-char *fg::util::RegularFile::load(void) {
+char *fg::util::CRegularFile::load(void) {
     if(m_filePath.empty()) {
         FG_MessageSubsystem->reportWarning(tag_type::name(), FG_ERRNO_FILE_NO_PATH, "%s", m_filePath.c_str());
         return NULL;
@@ -274,7 +274,7 @@ char *fg::util::RegularFile::load(void) {
  * @param elemcount
  * @return 
  */
-int fg::util::RegularFile::read(void *buffer, unsigned int elemsize, unsigned int elemcount) {
+int fg::util::CRegularFile::read(void *buffer, unsigned int elemsize, unsigned int elemcount) {
     if(buffer == NULL || elemsize == 0 || elemcount == 0 || m_file == NULL) {
         FG_MessageSubsystem->reportWarning(tag_type::name(), FG_ERRNO_FILE_WRONG_PARAMETERS, "%s", m_filePath.c_str());
         return 0;
@@ -297,7 +297,7 @@ int fg::util::RegularFile::read(void *buffer, unsigned int elemsize, unsigned in
  * @param maxlen
  * @return 
  */
-char *fg::util::RegularFile::readString(char *buffer, unsigned int maxlen) {
+char *fg::util::CRegularFile::readString(char *buffer, unsigned int maxlen) {
     if(buffer == NULL || maxlen == 0 || m_file == NULL) {
         FG_MessageSubsystem->reportWarning(tag_type::name(), FG_ERRNO_FILE_WRONG_PARAMETERS);
         return NULL;
@@ -320,7 +320,7 @@ char *fg::util::RegularFile::readString(char *buffer, unsigned int maxlen) {
  * @param fmt
  * @return 
  */
-int fg::util::RegularFile::print(const char *fmt, ...) {
+int fg::util::CRegularFile::print(const char *fmt, ...) {
     if(fmt == NULL || m_file == NULL) {
         FG_MessageSubsystem->reportWarning(tag_type::name(), FG_ERRNO_FILE_WRONG_PARAMETERS);
         return -1;
@@ -352,7 +352,7 @@ int fg::util::RegularFile::print(const char *fmt, ...) {
  * @param elemcount
  * @return 
  */
-int fg::util::RegularFile::write(void *buffer, unsigned int elemsize, unsigned int elemcount) {
+int fg::util::CRegularFile::write(void *buffer, unsigned int elemsize, unsigned int elemcount) {
     if(m_file == NULL || buffer == NULL || elemsize == 0 || elemcount == 0) {
         FG_MessageSubsystem->reportWarning(tag_type::name(), FG_ERRNO_FILE_WRONG_PARAMETERS);
         return -1;
@@ -376,7 +376,7 @@ int fg::util::RegularFile::write(void *buffer, unsigned int elemsize, unsigned i
  * @param str
  * @return 
  */
-int fg::util::RegularFile::puts(const char *str) {
+int fg::util::CRegularFile::puts(const char *str) {
     if(str == NULL) {
         FG_MessageSubsystem->reportWarning(tag_type::name(), FG_ERRNO_FILE_WRONG_PARAMETERS);
         return -1;
@@ -402,7 +402,7 @@ int fg::util::RegularFile::puts(const char *str) {
  * Check is it end of file
  * @return 
  */
-fgBool fg::util::RegularFile::isEOF(void) {
+fgBool fg::util::CRegularFile::isEOF(void) {
     if(m_file == NULL) {
         FG_MessageSubsystem->reportWarning(tag_type::name(), FG_ERRNO_FILE_NOT_OPENED);
         return FG_FALSE;
@@ -416,7 +416,7 @@ fgBool fg::util::RegularFile::isEOF(void) {
  * Flush file buffers
  * @return 
  */
-fgBool fg::util::RegularFile::flush(void) {
+fgBool fg::util::CRegularFile::flush(void) {
     if(m_file == NULL) {
         FG_MessageSubsystem->reportWarning(tag_type::name(), FG_ERRNO_FILE_NOT_OPENED);
         return FG_FALSE;
@@ -437,7 +437,7 @@ fgBool fg::util::RegularFile::flush(void) {
  *  Get (read) single character from file
  * @return 
  */
-int fg::util::RegularFile::getChar(void) {
+int fg::util::CRegularFile::getChar(void) {
     if(m_file == NULL) {
         FG_MessageSubsystem->reportWarning(tag_type::name(), FG_ERRNO_FILE_NOT_OPENED);
         return -1;
@@ -462,7 +462,7 @@ int fg::util::RegularFile::getChar(void) {
  * @param c
  * @return 
  */
-int fg::util::RegularFile::putChar(char c) {
+int fg::util::CRegularFile::putChar(char c) {
     if(m_file == NULL) {
         FG_MessageSubsystem->reportWarning(tag_type::name(), FG_ERRNO_FILE_NOT_OPENED);
         return FG_EOF;
@@ -483,7 +483,7 @@ int fg::util::RegularFile::putChar(char c) {
  * Get the file size (in bytes)
  * @return 
  */
-int fg::util::RegularFile::getSize(void) {
+int fg::util::CRegularFile::getSize(void) {
     if(m_file == NULL) {
         FG_MessageSubsystem->reportWarning(tag_type::name(), FG_ERRNO_FILE_NOT_OPENED);
         return -1;
@@ -520,7 +520,7 @@ int fg::util::RegularFile::getSize(void) {
  * Get the current position in the file
  * @return 
  */
-long fg::util::RegularFile::getPosition(void) {
+long fg::util::CRegularFile::getPosition(void) {
     if(m_file == NULL) {
         FG_MessageSubsystem->reportWarning(tag_type::name(), FG_ERRNO_FILE_NOT_OPENED);
         return -1;
@@ -544,7 +544,7 @@ long fg::util::RegularFile::getPosition(void) {
  * @param whence
  * @return 
  */
-int fg::util::RegularFile::setPosition(long offset, int whence) {
+int fg::util::CRegularFile::setPosition(long offset, int whence) {
     if(m_file == NULL) {
         FG_MessageSubsystem->reportWarning(tag_type::name(), FG_ERRNO_FILE_NOT_OPENED);
         return -1;

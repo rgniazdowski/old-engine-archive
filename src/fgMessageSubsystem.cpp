@@ -72,7 +72,7 @@ void fgMessageSubsystem::setLogPaths(const char *pathAll, const char *pathError,
 void fgMessageSubsystem::setLogAllPath(const char *pathAll) {
     if(pathAll)
         m_logAll.setPath(pathAll);
-    m_logAll.setMode(fg::util::RegularFile::Mode::APPEND);
+    m_logAll.setMode(fg::util::CRegularFile::Mode::APPEND);
 }
 
 /**
@@ -82,7 +82,7 @@ void fgMessageSubsystem::setLogAllPath(const char *pathAll) {
 void fgMessageSubsystem::setLogErrorPath(const char *pathError) {
     if(pathError)
         m_logError.setPath(pathError);
-    m_logError.setMode(fg::util::RegularFile::Mode::APPEND);
+    m_logError.setMode(fg::util::CRegularFile::Mode::APPEND);
 }
 
 /**
@@ -92,7 +92,7 @@ void fgMessageSubsystem::setLogErrorPath(const char *pathError) {
 void fgMessageSubsystem::setLogDebugPath(const char *pathDebug) {
     if(pathDebug)
         m_logDebug.setPath(pathDebug);
-    m_logDebug.setMode(fg::util::RegularFile::Mode::APPEND);
+    m_logDebug.setMode(fg::util::CRegularFile::Mode::APPEND);
 }
 
 /**
@@ -133,7 +133,7 @@ fgBool fgMessageSubsystem::pushStatus(fgStatus *status) {
     if(!status)
         return FG_FALSE;
     m_statusVec.push_back(status);
-    fg::util::RegularFile *filePtr = NULL;
+    fg::util::CRegularFile *filePtr = NULL;
     if(status->message) {
         switch(status->message->type) {
             case FG_MESSAGE_DEBUG:

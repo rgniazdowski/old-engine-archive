@@ -10,12 +10,16 @@
 #ifndef FG_INC_GUI_WIDGET_FACTORY_TYPES
     #define FG_INC_GUI_WIDGET_FACTORY_TYPES
 
-class fgGuiWidget;
+namespace fg {
+    namespace gui {
+        class CWidget;
+    };
+};
 
     #if __cplusplus > 199711L
-using fgCreateGuiWidgetFn = fgGuiWidget* (*)(void);
+using fgCreateGuiWidgetFn = fg::gui::CWidget* (*)(void);
     #else
-typedef fgGuiWidget* (*fgCreateGuiWidgetFn)(void);
+typedef fg::gui::CWidget* (*fgCreateGuiWidgetFn)(void);
     #endif
 
     #ifndef FG_GUI_FACTORY_CREATE_FUNCTION
@@ -25,7 +29,7 @@ static RETURNTYPE * createWidget(void) { return new CREATETYPE(); }
 
     #ifndef FG_GUI_WIDGET_FACTORY_CREATE_FUNCTION
         #define FG_GUI_WIDGET_FACTORY_CREATE_FUNCTION(CREATETYPE) \
-static fgGuiWidget * createWidget(void) { return new CREATETYPE(); }
+static fg::gui::CWidget * createWidget(void) { return new CREATETYPE(); }
     #endif
 
 #endif /* FG_INC_GUI_WIDGET_FACTORY_TYPES */

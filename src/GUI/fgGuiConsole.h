@@ -13,118 +13,122 @@
 
     #include "fgGuiTextArea.h"
     #include "fgGuiWidgetFactoryTypes.h"
-    
+
 struct fgStatus;
 
-/**
- *
- */
-class fgGuiConsole : public fgGuiTextArea {
-public:
-    ///
-    typedef fgGuiTextArea base_type;
+namespace fg {
+    namespace gui {
 
-protected:
-    ///
-    unsigned int m_numConsoleRecords;
+        /**
+         *
+         */
+        class CConsole : public CTextArea {
+        public:
+            ///
+            typedef CTextArea base_type;
 
-protected:
-    /**
-     * 
-     */
-    virtual void setDefaults(void);
+        protected:
+            ///
+            unsigned int m_numConsoleRecords;
 
-public:
-    /**
-     * 
-     */
-    fgGuiConsole();
-    /**
-     * 
-     */
-    virtual ~fgGuiConsole();
+        protected:
+            /**
+             * 
+             */
+            virtual void setDefaults(void);
 
-    /**
-     * 
-     * @param guiLayer
-     */
-    virtual void display(fgGuiDrawer *guiLayer);
+        public:
+            /**
+             * 
+             */
+            CConsole();
+            /**
+             * 
+             */
+            virtual ~CConsole();
 
-    /**
-     * 
-     * @return 
-     */
-    FG_GUI_WIDGET_FACTORY_CREATE_FUNCTION(fgGuiConsole);
+            /**
+             * 
+             * @param guiLayer
+             */
+            virtual void display(CDrawer *guiLayer);
 
-    using fgGuiWidget::updateBounds;
+            /**
+             * 
+             * @return 
+             */
+            FG_GUI_WIDGET_FACTORY_CREATE_FUNCTION(CConsole)
 
-    /**
-     * 
-     * @return 
-     */
-    virtual fgBoundingBox3Df updateBounds(void);
+            using fg::gui::CWidget::updateBounds;
 
-    /**
-     * 
-     */
-    virtual void refresh(void);
+            /**
+             * 
+             * @return 
+             */
+            virtual fgBoundingBox3Df updateBounds(void);
 
-public:
-    /**
-     * 
-     * @return 
-     */
-    unsigned int getNumConsoleRecords(void) const {
-        return m_numConsoleRecords;
-    }
-    /**
-     * 
-     * @param statusVec
-     */
-    void updateFromStatusVec(const fg::CVector<fgStatus *> &statusVec);
+            /**
+             * 
+             */
+            virtual void refresh(void);
 
-public:
-    /**
-     * 
-     * @param text
-     */
-    virtual void pushText(const char *text) {
-        base_type::pushText(text);
-        m_numConsoleRecords = m_textData.size();
-    }
-    /**
-     * 
-     * @param text
-     */
-    virtual void pushText(const std::string &text) {
-        base_type::pushText(text);
-        m_numConsoleRecords = m_textData.size();
-    }
-    /**
-     * 
-     * @param text
-     */
-    virtual void setText(const std::string &text) {
-        base_type::setText(text);
-        m_numConsoleRecords = m_textData.size();
-    }
-    /**
-     * 
-     * @param text
-     */
-    virtual void setText(const char *text) {
-        base_type::setText(text);
-        m_numConsoleRecords = m_textData.size();
-    }
-    /**
-     * 
-     */
-    virtual void clearText(void) {
-        base_type::clearText();
-        m_numConsoleRecords = m_textData.size();
-    }
+        public:
+            /**
+             * 
+             * @return 
+             */
+            unsigned int getNumConsoleRecords(void) const {
+                return m_numConsoleRecords;
+            }
+            /**
+             * 
+             * @param statusVec
+             */
+            void updateFromStatusVec(const fg::CVector<fgStatus *> &statusVec);
+
+        public:
+            /**
+             * 
+             * @param text
+             */
+            virtual void pushText(const char *text) {
+                base_type::pushText(text);
+                m_numConsoleRecords = m_textData.size();
+            }
+            /**
+             * 
+             * @param text
+             */
+            virtual void pushText(const std::string &text) {
+                base_type::pushText(text);
+                m_numConsoleRecords = m_textData.size();
+            }
+            /**
+             * 
+             * @param text
+             */
+            virtual void setText(const std::string &text) {
+                base_type::setText(text);
+                m_numConsoleRecords = m_textData.size();
+            }
+            /**
+             * 
+             * @param text
+             */
+            virtual void setText(const char *text) {
+                base_type::setText(text);
+                m_numConsoleRecords = m_textData.size();
+            }
+            /**
+             * 
+             */
+            virtual void clearText(void) {
+                base_type::clearText();
+                m_numConsoleRecords = m_textData.size();
+            }
+        };
+    };
 };
 
     #undef FG_INC_GUI_CONSOLE_BLOCK
-
 #endif /* FG_INC_GUI_CONSOLE */

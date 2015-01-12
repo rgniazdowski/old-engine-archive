@@ -9,6 +9,7 @@
 
 #ifndef FG_INC_GUI_CONTAINER
     #define FG_INC_GUI_CONTAINER
+    #define FG_INC_GUI_CONTAINER_BLOCK
 
     #include "fgGuiWidget.h"
     #include "fgGuiWidgetFactoryTypes.h"
@@ -39,153 +40,159 @@ FG_ENUM_FLAGS(fgGuiContainerPackAlign);
 
     #include <map>
 
-/**
- *
- */
-class fgGuiContainer : public fgGuiWidget {
-public:
-    ///
-    typedef fgGuiWidget base_type;
-    ///
-    typedef std::map<std::string, fgGuiWidget*> childrenMap;
-    ///
-    typedef childrenMap::iterator childrenMapItor;
-    ///
-    typedef fg::CVector<fgGuiWidget *> childrenVec;
-    ///
-    typedef childrenVec::iterator childrenVecItor;
-    
-protected:
-    /// 
-    childrenMap m_childrenMap;
-    ///
-    childrenVec m_children;
-    ///
-    fgGuiContainerPackMethod m_packMethod;
-    ///
-    fgGuiContainerPackAlign m_packAlign;
+namespace fg {
+    namespace gui {
 
-private:
-    ///
-    fgBool m_drawChildren;
-    
-protected:
-    /**
-     * 
-     */
-    virtual void setDefaults(void);
+        /**
+         *
+         */
+        class CContainer : public fg::gui::CWidget {
+        public:
+            ///
+            typedef fg::gui::CWidget base_type;
+            ///
+            typedef std::map<std::string, fg::gui::CWidget*> childrenMap;
+            ///
+            typedef childrenMap::iterator childrenMapItor;
+            ///
+            typedef fg::CVector<fg::gui::CWidget *> childrenVec;
+            ///
+            typedef childrenVec::iterator childrenVecItor;
 
-public:
-    /**
-     * 
-     */
-    fgGuiContainer();
-    /**
-     * 
-     */
-    virtual ~fgGuiContainer();
+        protected:
+            /// 
+            childrenMap m_childrenMap;
+            ///
+            childrenVec m_children;
+            ///
+            fgGuiContainerPackMethod m_packMethod;
+            ///
+            fgGuiContainerPackAlign m_packAlign;
 
-    /**
-     * 
-     * @return 
-     */
-    FG_GUI_WIDGET_FACTORY_CREATE_FUNCTION(fgGuiContainer);
-    
-    /**
-     * 
-     * @param flags
-     */
-    virtual void setFlags(const std::string& flags);
-    
-    /**
-     * 
-     * @param guiLayer
-     */
-    virtual void display(fgGuiDrawer *guiLayer);
+        private:
+            ///
+            fgBool m_drawChildren;
 
-    using base_type::updateBounds;
-    
-    /**
-     * 
-     * @return 
-     */
-    virtual fgBoundingBox3Df updateBounds(void);
-    /**
-     * 
-     */
-    virtual void refresh(void);
+        protected:
+            /**
+             * 
+             */
+            virtual void setDefaults(void);
 
-    /**
-     * 
-     * @param pointerData
-     * @return 
-     */
-    virtual int updateState(const fgPointerData *pointerData);
+        public:
+            /**
+             * 
+             */
+            CContainer();
+            /**
+             * 
+             */
+            virtual ~CContainer();
 
-    /**
-     * 
-     * @param nameTag
-     * @return 
-     */
-    fgGuiWidget *getChild(const std::string& nameTag);
-    /**
-     * 
-     * @param nameTag
-     * @return 
-     */
-    fgGuiWidget *getChild(const char *nameTag);
-    /**
-     * 
-     * @return 
-     */
-    childrenVec& getChildren(void);
-    /**
-     * 
-     * @return 
-     */
-    childrenMap& getChildrenMap(void);
-    
-    /**
-     * 
-     * @param pWidget
-     * @return 
-     */
-    fgBool addChild(fgGuiWidget *pWidget);
-    /**
-     * 
-     * @param pWidget
-     * @return 
-     */
-    fgBool removeChild(fgGuiWidget *pWidget);
-    /**
-     * 
-     * @param nameTag
-     * @return 
-     */
-    fgBool removeChild(const std::string& nameTag);
-    /**
-     * 
-     * @param nameTag
-     * @return 
-     */
-    fgBool removeChild(const char *nameTag);
-    
-public:
-    /**
-     * 
-     * @return 
-     */
-    fgBool isDrawChildren(void) const {
-        return m_drawChildren;
-    }
-    /**
-     * 
-     * @param toggle
-     * @return 
-     */
-    void setDrawChildren(fgBool toggle = FG_TRUE) {
-        m_drawChildren = toggle;
-    }
+            /**
+             * 
+             * @return 
+             */
+            FG_GUI_WIDGET_FACTORY_CREATE_FUNCTION(CContainer)
+
+            /**
+             * 
+             * @param flags
+             */
+            virtual void setFlags(const std::string& flags);
+
+            /**
+             * 
+             * @param guiLayer
+             */
+            virtual void display(CDrawer *guiLayer);
+
+            using base_type::updateBounds;
+
+            /**
+             * 
+             * @return 
+             */
+            virtual fgBoundingBox3Df updateBounds(void);
+            /**
+             * 
+             */
+            virtual void refresh(void);
+
+            /**
+             * 
+             * @param pointerData
+             * @return 
+             */
+            virtual State updateState(const fgPointerData *pointerData);
+
+            /**
+             * 
+             * @param nameTag
+             * @return 
+             */
+            CWidget *getChild(const std::string& nameTag);
+            /**
+             * 
+             * @param nameTag
+             * @return 
+             */
+            CWidget *getChild(const char *nameTag);
+            /**
+             * 
+             * @return 
+             */
+            childrenVec& getChildren(void);
+            /**
+             * 
+             * @return 
+             */
+            childrenMap& getChildrenMap(void);
+
+            /**
+             * 
+             * @param pWidget
+             * @return 
+             */
+            fgBool addChild(CWidget *pWidget);
+            /**
+             * 
+             * @param pWidget
+             * @return 
+             */
+            fgBool removeChild(CWidget *pWidget);
+            /**
+             * 
+             * @param nameTag
+             * @return 
+             */
+            fgBool removeChild(const std::string& nameTag);
+            /**
+             * 
+             * @param nameTag
+             * @return 
+             */
+            fgBool removeChild(const char *nameTag);
+
+        public:
+            /**
+             * 
+             * @return 
+             */
+            fgBool isDrawChildren(void) const {
+                return m_drawChildren;
+            }
+            /**
+             * 
+             * @param toggle
+             * @return 
+             */
+            void setDrawChildren(fgBool toggle = FG_TRUE) {
+                m_drawChildren = toggle;
+            }
+        };
+    };
 };
 
+    #undef FG_INC_GUI_CONTAINER_BLOCK
 #endif /* FG_INC_GUI_CONTAINER */

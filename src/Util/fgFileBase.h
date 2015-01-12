@@ -33,7 +33,7 @@ namespace fg {
             /**
              *
              */
-            class File {
+            class CFile {
             public:
 
                 /**
@@ -76,11 +76,11 @@ namespace fg {
                 /**
                  * 
                  */
-                File() : m_filePath(), m_modeFlags(Mode::READ) { }
+                CFile() : m_filePath(), m_modeFlags(Mode::READ) { }
                 /**
                  * 
                  */
-                virtual ~File() { }
+                virtual ~CFile() { }
 
             public:
                 /**
@@ -248,7 +248,7 @@ namespace fg {
             };
 
             // Overload standard bitwise operator for enum type
-            FG_ENUM_FLAGS(File::Mode);
+            FG_ENUM_FLAGS(CFile::Mode);
         };
     };
 };

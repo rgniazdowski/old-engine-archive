@@ -11,24 +11,26 @@
 #include "fgGuiDrawer.h"
 #include "Util/fgStrings.h"
 
+using namespace fg;
+
 /**
  * 
  */
-fgGuiScrollArea::fgGuiScrollArea() :
+gui::CScrollArea::CScrollArea() :
 base_type(),
 m_hSlider(NULL),
 m_vSlider(NULL),
 m_relMove(),
 m_sliderSwitch(SLIDER_NONE) {
-    fgGuiScrollArea::setDefaults();
-    m_hSlider = new fgGuiSlider();
-    m_vSlider = new fgGuiSlider();
+    gui::CScrollArea::setDefaults();
+    m_hSlider = new CSlider();
+    m_vSlider = new CSlider();
 }
 
 /**
  * 
  */
-fgGuiScrollArea::~fgGuiScrollArea() {
+gui::CScrollArea::~CScrollArea() {
     if(m_hSlider) {
         delete m_hSlider;
     }
@@ -42,17 +44,17 @@ fgGuiScrollArea::~fgGuiScrollArea() {
 /**
  * 
  */
-void fgGuiScrollArea::setDefaults(void) {
-    m_type = FG_GUI_SCROLL_AREA;
+void gui::CScrollArea::setDefaults(void) {
+    m_type = SCROLL_AREA;
     m_typeName = FG_GUI_SCROLL_AREA_NAME;
-    m_typeTraits = FG_GUI_SCROLL_AREA | FG_GUI_CONTAINER | FG_GUI_WIDGET;
+    m_typeTraits = SCROLL_AREA | CONTAINER | WIDGET;
 }
 
 /**
  * 
  * @param flags
  */
-void fgGuiScrollArea::setFlags(const std::string& flags) {
+void gui::CScrollArea::setFlags(const std::string& flags) {
     if(flags.empty() || flags.length() < 3)
         return;
     // This is important - always call setFlags for the base class
@@ -80,7 +82,7 @@ void fgGuiScrollArea::setFlags(const std::string& flags) {
  * 
  * @param guiLayer
  */
-void fgGuiScrollArea::display(fgGuiDrawer* guiLayer) {
+void gui::CScrollArea::display(CDrawer* guiLayer) {
     // Now before drawing the guiLayer needs to set the relative move
     // relative move is based on inner container size and current state of the
     // sliders - later on the sliders will be fixed to have adaptive size (toggle? anyone?)
@@ -88,7 +90,7 @@ void fgGuiScrollArea::display(fgGuiDrawer* guiLayer) {
     if(!guiLayer) {
         return;
     }
-    fgGuiPadding &padding = m_styles[m_state].getPadding();
+    SPadding &padding = m_styles[(int)m_state].getPadding();
     fgVector3f oldRelMove = guiLayer->getRelMove();
     fgVector3f newRelMove = oldRelMove + fgVector3f(m_relMove.x, m_relMove.y, 0.0f); // #FIXME
 
@@ -133,10 +135,10 @@ void fgGuiScrollArea::display(fgGuiDrawer* guiLayer) {
  * 
  * @return 
  */
-fgBoundingBox3Df fgGuiScrollArea::updateBounds(void) {
+fgBoundingBox3Df gui::CScrollArea::updateBounds(void) {
 
-    fgGuiMargin &margin = m_styles[m_state].getMargin();
-    fgBoundingBox3Df scrollAreaSize = fgGuiWidget::updateBounds();
+    SMargin &margin = m_styles[(int)m_state].getMargin();
+    fgBoundingBox3Df scrollAreaSize = CWidget::updateBounds();
     m_contentBBox = base_type::updateBounds();
     m_bbox = scrollAreaSize;
     m_bbox.pos.x += margin.left;
@@ -145,8 +147,8 @@ fgBoundingBox3Df fgGuiScrollArea::updateBounds(void) {
     m_bbox.size.y -= margin.bottom + margin.top;
 
     if(m_hSlider) {
-        fgGuiStyleContent &style = m_hSlider->getStyleContent(m_hSlider->getState());
-        fgGuiBorderInfo &border = style.getBorder();
+        CStyleContent &style = m_hSlider->getStyleContent(m_hSlider->getState());
+        SBorderGroup &border = style.getBorder();
         float w = m_bbox.size.x - border.left.width - border.right.width;
         float h = m_bbox.size.y * 0.1f;
         if(h > 15.0f)
@@ -163,8 +165,8 @@ fgBoundingBox3Df fgGuiScrollArea::updateBounds(void) {
         m_relMove.x = (-1.0f) * (m_contentBBox.size.x-scrollAreaSize.size.x) * m_hSlider->getCurrentValue().x / m_hSlider->getMaxValue();
     }
     if(m_vSlider) {
-        fgGuiStyleContent &style = m_vSlider->getStyleContent(m_vSlider->getState());
-        fgGuiBorderInfo &border = style.getBorder();
+        CStyleContent &style = m_vSlider->getStyleContent(m_vSlider->getState());
+        SBorderGroup &border = style.getBorder();
         float w = m_bbox.size.x * 0.1f;
         float h = m_bbox.size.y - border.top.width - border.bottom.width;
         if(w > 15.0f)
@@ -189,14 +191,14 @@ fgBoundingBox3Df fgGuiScrollArea::updateBounds(void) {
  * @param bbox
  * @return 
  */
-fgBoundingBox3Df fgGuiScrollArea::updateBounds(const fgBoundingBox3Df& bbox) {
+fgBoundingBox3Df gui::CScrollArea::updateBounds(const fgBoundingBox3Df& bbox) {
     return base_type::updateBounds(bbox);
 }
 
 /**
  * 
  */
-void fgGuiScrollArea::refresh(void) {
+void gui::CScrollArea::refresh(void) {
     base_type::refresh();
     if(m_hSlider && (m_sliderSwitch & SLIDER_HORIZONTAL)) {
         m_hSlider->setStyleName(m_styleName);
@@ -209,9 +211,9 @@ void fgGuiScrollArea::refresh(void) {
 /**
  * 
  */
-int fgGuiScrollArea::updateState(const fgPointerData* pointerData) {
+gui::CWidget::State gui::CScrollArea::updateState(const fgPointerData* pointerData) {
     if(!pointerData)
-        return FG_FALSE;
+        return State::NONE;
 
     if(m_hSlider && (m_sliderSwitch & SLIDER_HORIZONTAL)) {
         m_hSlider->updateState(pointerData);

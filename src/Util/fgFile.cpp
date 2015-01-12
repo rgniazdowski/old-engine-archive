@@ -20,7 +20,7 @@
 /**
  * 
  */
-fg::util::File::File() :
+fg::util::CFile::CFile() :
 m_zip(),
 m_regular(),
 m_file(NULL),
@@ -33,7 +33,7 @@ m_mode(REGULAR) {
  * 
  * @param filePath
  */
-fg::util::File::File(const char *filePath) :
+fg::util::CFile::CFile(const char *filePath) :
 m_zip(),
 m_regular(),
 m_file(NULL),
@@ -47,7 +47,7 @@ m_mode(REGULAR) {
  * 
  * @param orig
  */
-fg::util::File::File(const File& orig) {
+fg::util::CFile::CFile(const CFile& orig) {
     if(&orig != this) {
         this->m_mode = orig.m_mode;
         this->m_modeFlags = orig.m_modeFlags;
@@ -64,7 +64,7 @@ fg::util::File::File(const File& orig) {
 /**
  * 
  */
-fg::util::File::~File() {
+fg::util::CFile::~CFile() {
     m_zip.close();
     m_regular.close();
     m_file = NULL;
@@ -74,7 +74,7 @@ fg::util::File::~File() {
  * 
  * @param filePath
  */
-void fg::util::File::setPath(const char *filePath) {
+void fg::util::CFile::setPath(const char *filePath) {
     if(!filePath)
         return;
     base_type::setPath(filePath);
@@ -102,7 +102,7 @@ void fg::util::File::setPath(const char *filePath) {
  * 
  * @param filePath
  */
-void fg::util::File::setPath(const std::string & filePath) {
+void fg::util::CFile::setPath(const std::string & filePath) {
     if(filePath.size())
         setPath(filePath.c_str());
 }
@@ -112,7 +112,7 @@ void fg::util::File::setPath(const std::string & filePath) {
  * @param fmt
  * @return 
  */
-int fg::util::File::print(const char *fmt, ...) {
+int fg::util::CFile::print(const char *fmt, ...) {
     if(fmt == NULL || m_file == NULL) {
         FG_MessageSubsystem->reportWarning(tag_type::name(), FG_ERRNO_FILE_WRONG_PARAMETERS);
         return -1;

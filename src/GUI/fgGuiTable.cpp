@@ -9,35 +9,40 @@
 
 #include "fgGuiTable.h"
 
+using namespace fg;
+
 /*
  *
  */
-fgGuiTable::fgGuiTable() {
-    fgGuiTable::setDefaults();
+gui::CTable::CTable() {
+    fg::gui::CTable::setDefaults();
 }
 
 /*
  *
  */
-fgGuiTable::~fgGuiTable() { }
+gui::CTable::~CTable() { }
 
-/*
+/**
  *
  */
-void fgGuiTable::setDefaults(void) {
-    m_type = FG_GUI_TABLE;
+void gui::CTable::setDefaults(void) {
+    m_type = TABLE;
     m_typeName = FG_GUI_TABLE_NAME;
-    m_typeTraits = FG_GUI_TABLE | FG_GUI_CONTAINER | FG_GUI_WIDGET;
+    m_typeTraits = TABLE | CONTAINER | WIDGET;
 }
 
-/*
- *
+/**
+ * 
+ * @return 
  */
-fgBoundingBox3Df fgGuiTable::updateBounds(void) {
-    return fgGuiContainer::updateBounds();
+fgBoundingBox3Df gui::CTable::updateBounds(void) {
+    return base_type::updateBounds();
 }
 
-/*
+/**
  *
  */
-void fgGuiTable::refresh(void) { }
+void gui::CTable::refresh(void) {
+    base_type::refresh();
+}

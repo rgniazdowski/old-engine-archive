@@ -22,7 +22,7 @@ namespace fg {
     namespace gfx {
 
         class CTextureManager;
-        
+
         /*
          *
          */
@@ -50,8 +50,13 @@ namespace fg {
             virtual ~CTextureResource() {
                 CTextureResource::destroy();
             }
-
+            
+            /**
+             * 
+             * @return 
+             */
             FG_RESOURCE_FACTORY_CREATE_FUNCTION(CTextureResource)
+            
         protected:
             // Clears the class data, this actually does not free allocated memory,
             // just resets base class attributes

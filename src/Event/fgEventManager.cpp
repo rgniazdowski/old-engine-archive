@@ -33,7 +33,7 @@ fg::event::CEventManager::~CEventManager() {
  * @return 
  */
 fgBool fg::event::CEventManager::destroy(void) {
-    for(fgCallbackBindingMap::iterator it = m_eventBinds.begin(); it != m_eventBinds.end(); it++) {
+    for(CallbackBindingMap::iterator it = m_eventBinds.begin(); it != m_eventBinds.end(); it++) {
         for(int i = 0; i < (int)it->second.size(); i++) {
             if(it->second[i])
                 delete it->second[i];
@@ -93,7 +93,7 @@ fgBool fg::event::CEventManager::initialize(void) {
  * @param eventCode
  */
 void fg::event::CEventManager::throwEvent(fgEventType eventCode) {
-    fgThrownEvent event(eventCode);
+    SThrownEvent event(eventCode);
     m_eventsQueue.push(event);
 }
 
@@ -102,8 +102,8 @@ void fg::event::CEventManager::throwEvent(fgEventType eventCode) {
  * @param eventCode
  * @param list
  */
-void fg::event::CEventManager::throwEvent(fgEventType eventCode, fgArgumentList *list) {
-    fgThrownEvent event(eventCode, list);
+void fg::event::CEventManager::throwEvent(fgEventType eventCode, CArgumentList *list) {
+    SThrownEvent event(eventCode, list);
     m_eventsQueue.push(event);
 }
 
@@ -113,8 +113,8 @@ void fg::event::CEventManager::throwEvent(fgEventType eventCode, fgArgumentList 
  * @param pSystemData
  */
 void fg::event::CEventManager::throwEvent(fgEventType eventCode,
-                                void *pSystemData) {
-    fgThrownEvent event(eventCode, (void *)pSystemData);
+                                          void *pSystemData) {
+    SThrownEvent event(eventCode, (void *)pSystemData);
     m_eventsQueue.push(event);
 }
 
@@ -124,8 +124,8 @@ void fg::event::CEventManager::throwEvent(fgEventType eventCode,
  * @param pCallback
  * @return 
  */
-fgFunctionCallback* fg::event::CEventManager::addEventCallback(fgEventType eventCode,
-                                                     fgFunctionCallback *pCallback) {
+fg::event::CFunctionCallback* fg::event::CEventManager::addCallback(fgEventType eventCode,
+                                                                    CFunctionCallback *pCallback) {
     if(!pCallback || (int)eventCode < 0)
         return NULL;
     // Duplicate callbacks are not allowed for the same event
@@ -142,13 +142,13 @@ fgFunctionCallback* fg::event::CEventManager::addEventCallback(fgEventType event
  * @param pFunction
  * @return 
  */
-fgFunctionCallback* fg::event::CEventManager::addEventCallback(fgEventType eventCode,
-                                                     fgFunctionCallback::fgFunction pFunction) {
+fg::event::CFunctionCallback* fg::event::CEventManager::addCallback(fgEventType eventCode,
+                                                                    CFunctionCallback::fgFunction pFunction) {
     if(!pFunction || (int)eventCode < 0)
         return NULL;
     // !! !!
     // Need to check somehow for duplicates #FIXME
-    fgFunctionCallback *pCallback = new fgFunctionCallback(pFunction);
+    CFunctionCallback *pCallback = new CFunctionCallback(pFunction);
     m_eventBinds[eventCode].push_back(pCallback);
     return pCallback;
 }
@@ -160,13 +160,13 @@ fgFunctionCallback* fg::event::CEventManager::addEventCallback(fgEventType event
  * @param pUserData
  * @return 
  */
-fgFunctionCallback* fg::event::CEventManager::addEventCallback(fgEventType eventCode,
-                                                     fgPlainFunctionCallback::fgPlainFunction pPlainFunction,
-                                                     void *pUserData) {
+fg::event::CFunctionCallback* fg::event::CEventManager::addCallback(fgEventType eventCode,
+                                                                    CPlainFunctionCallback::fgPlainFunction pPlainFunction,
+                                                                    void *pUserData) {
     if((int)eventCode < 0 || !pPlainFunction)
         return NULL;
 
-    fgFunctionCallback *pCallback = new fgPlainFunctionCallback(pPlainFunction, pUserData);
+    CFunctionCallback *pCallback = new CPlainFunctionCallback(pPlainFunction, pUserData);
     m_eventBinds[eventCode].push_back(pCallback);
     return pCallback;
 }
@@ -177,14 +177,14 @@ fgFunctionCallback* fg::event::CEventManager::addEventCallback(fgEventType event
  * @param pCallback
  * @return 
  */
-fgBool fg::event::CEventManager::removeEventCallback(fgEventType eventCode, fgFunctionCallback *pCallback) {
+fgBool fg::event::CEventManager::removeCallback(fgEventType eventCode, CFunctionCallback *pCallback) {
     if(!pCallback || (int)eventCode < 0)
         return FG_FALSE;
 
-    fgCallbacksVec &callbacksVec = m_eventBinds[eventCode];
+    CallbacksVec &callbacksVec = m_eventBinds[eventCode];
     if(callbacksVec.empty())
         return FG_FALSE;
-    fgCallbacksVecItor cit = callbacksVec.begin(), end = callbacksVec.end();
+    CallbacksVecItor cit = callbacksVec.begin(), end = callbacksVec.end();
     for(; cit != end; cit++) {
         if(*cit == pCallback) {
             m_eventBinds[eventCode].erase(cit);
@@ -202,12 +202,12 @@ fgBool fg::event::CEventManager::removeEventCallback(fgEventType eventCode, fgFu
  * @param pArgList
  * @return 
  */
-fgFunctionCallback* fg::event::CEventManager::addTimeoutCallback(fgFunctionCallback *pCallback,
-                                                       const int timeout,
-                                                       fgArgumentList *pArgList) {
+fg::event::CFunctionCallback* fg::event::CEventManager::addTimeoutCallback(CFunctionCallback *pCallback,
+                                                                           const int timeout,
+                                                                           CArgumentList *pArgList) {
     if(!pCallback)
         return NULL;
-    fgTimeoutCallback timeoutCallback(pCallback, timeout, pArgList);
+    STimeoutCallback timeoutCallback(pCallback, timeout, pArgList);
     timeoutCallback.timeStamp = FG_GetTicks();
     m_timeoutCallbacks.push_back(timeoutCallback);
     return pCallback;
@@ -218,15 +218,15 @@ fgFunctionCallback* fg::event::CEventManager::addTimeoutCallback(fgFunctionCallb
  * @param pCallback
  * @return 
  */
-fgBool fg::event::CEventManager::removeTimeoutCallback(fgFunctionCallback *pCallback) {
+fgBool fg::event::CEventManager::removeTimeoutCallback(CFunctionCallback *pCallback) {
     if(!pCallback)
         return FG_FALSE;
     fgBool status = FG_FALSE;
-    fgTimeoutCallbacksVecItor begin = m_timeoutCallbacks.begin();
-    fgTimeoutCallbacksVecItor it = begin,
+    TimeoutCallbacksVecItor begin = m_timeoutCallbacks.begin();
+    TimeoutCallbacksVecItor it = begin,
             end = m_timeoutCallbacks.end();
     for(; it != end; it++) {
-        fgTimeoutCallback &timeout = (*it);
+        STimeoutCallback &timeout = (*it);
         if(timeout.callback == pCallback) {
             timeout.callback = NULL;
             timeout.argList = NULL;
@@ -247,13 +247,13 @@ fgBool fg::event::CEventManager::removeTimeoutCallback(fgFunctionCallback *pCall
  * @param pArgList
  * @return 
  */
-fgFunctionCallback* fg::event::CEventManager::addCyclicCallback(fgFunctionCallback *pCallback,
-                                                      const int repeats,
-                                                      const int interval,
-                                                      fgArgumentList *pArgList) {
+fg::event::CFunctionCallback* fg::event::CEventManager::addCyclicCallback(CFunctionCallback *pCallback,
+                                                                          const int repeats,
+                                                                          const int interval,
+                                                                          CArgumentList *pArgList) {
     if(!pCallback)
         return NULL;
-    fgCyclicCallback cyclicCallback(pCallback, repeats, interval, pArgList);
+    SCyclicCallback cyclicCallback(pCallback, repeats, interval, pArgList);
     cyclicCallback.timeStamp = FG_GetTicks();
     m_cyclicCallbacks.push_back(cyclicCallback);
     return pCallback;
@@ -264,15 +264,15 @@ fgFunctionCallback* fg::event::CEventManager::addCyclicCallback(fgFunctionCallba
  * @param pCallback
  * @return 
  */
-fgBool fg::event::CEventManager::removeCyclicCallback(fgFunctionCallback *pCallback) {
+fgBool fg::event::CEventManager::removeCyclicCallback(CFunctionCallback *pCallback) {
     if(!pCallback)
         return FG_FALSE;
     fgBool status = FG_FALSE;
-    fgCyclicCallbacksVecItor begin = m_cyclicCallbacks.begin();
-    fgCyclicCallbacksVecItor it = begin,
+    CyclicCallbacksVecItor begin = m_cyclicCallbacks.begin();
+    CyclicCallbacksVecItor it = begin,
             end = m_cyclicCallbacks.end();
     for(; it != end; it++) {
-        fgCyclicCallback &cyclic = (*it);
+        SCyclicCallback &cyclic = (*it);
         if(cyclic.callback == pCallback) {
             cyclic.callback = NULL;
             cyclic.argList = NULL;
@@ -294,17 +294,17 @@ void fg::event::CEventManager::executeEvents(void) {
     // Btw after calling the proper callback,
     // queue entry with argument list must be erased 
     while(!m_eventsQueue.empty()) {
-        fgThrownEvent &event = m_eventsQueue.front();
+        SThrownEvent &event = m_eventsQueue.front();
         int eventCode = event.eventCode;
         //FG_LOG_DEBUG("Event code thrown %d | list: %p", eventCode, event.argList);
-        fgCallbackBindingMap::iterator found = m_eventBinds.find(eventCode);
+        CallbackBindingMap::iterator found = m_eventBinds.find(eventCode);
         if(found == m_eventBinds.end()) {
             if(event.argList)
                 delete event.argList;
             m_eventsQueue.pop();
             continue;
         }
-        fgCallbacksVec &callbacks = (*found).second;
+        CallbacksVec &callbacks = (*found).second;
         for(int j = 0; j < (int)callbacks.size(); j++) {
             if(callbacks[j]) {
                 if(event.argList) {
@@ -328,7 +328,7 @@ void fg::event::CEventManager::executeEvents(void) {
 
     // After timeout is executed it needs to be deleted from the timeouts pool - also the callback pointer must 
     // be freed with the argument list as they no longer needed
-    for(fgTimeoutCallbacksVecItor it = m_timeoutCallbacks.begin(); it != m_timeoutCallbacks.end(); it++) {
+    for(TimeoutCallbacksVecItor it = m_timeoutCallbacks.begin(); it != m_timeoutCallbacks.end(); it++) {
         if(TS - it->timeStamp >= (unsigned long int)it->timeout) {
             if(it->callback) {
                 it->callback->Call(it->argList);
@@ -348,7 +348,7 @@ void fg::event::CEventManager::executeEvents(void) {
     }
 
     // Phase 4: Cyclic callbacks
-    for(fgCyclicCallbacksVecItor it = m_cyclicCallbacks.begin(); it != m_cyclicCallbacks.end(); it++) {
+    for(CyclicCallbacksVecItor it = m_cyclicCallbacks.begin(); it != m_cyclicCallbacks.end(); it++) {
         if(TS - it->timeStamp >= (unsigned long int)it->interval) {
             if(it->callback && (it->repeats || it->repeats == -1)) {
                 it->callback->Call(it->argList);

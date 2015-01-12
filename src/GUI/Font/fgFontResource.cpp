@@ -17,7 +17,7 @@
 /*
  * Base constructor of the font resource object
  */
-fgFontResource::fgFontResource() :
+fg::gui::CFontResource::CFontResource() :
 CTextureResource(),
 m_fontType(FG_FONT_TYPE_TEXTURE),
 m_info(),
@@ -29,7 +29,7 @@ m_step(0) {
 /*
  * Constructor with additional parameter (path)
  */
-fgFontResource::fgFontResource(const char *path) :
+fg::gui::CFontResource::CFontResource(const char *path) :
 CTextureResource(path),
 m_fontType(FG_FONT_TYPE_TEXTURE),
 m_info(),
@@ -41,7 +41,7 @@ m_step(0) {
 /*
  * Constructor with additional parameter (path)
  */
-fgFontResource::fgFontResource(std::string& path) :
+fg::gui::CFontResource::CFontResource(std::string& path) :
 CTextureResource(path),
 m_fontType(FG_FONT_TYPE_TEXTURE),
 m_info(),
@@ -54,7 +54,7 @@ m_step(0) {
  * Clears the class data, this actually does not free allocated memory, 
  * just resets base class attributes
  */
-void fgFontResource::clear(void) {
+void fg::gui::CFontResource::clear(void) {
     FG_LOG_DEBUG("fgFontResource::clear();");
     CTextureResource::clear();
     m_step = 0;
@@ -65,7 +65,7 @@ void fgFontResource::clear(void) {
 /*
  * Create function loads/interprets data from file in ROM and place it in RAM memory.
  */
-fgBool fgFontResource::create(void) {
+fgBool fg::gui::CFontResource::create(void) {
     FG_LOG_DEBUG("fgFontResource::create();");
     m_textureType = FG_TEXTURE_FONT;
     if(!CTextureResource::create()) {
@@ -84,7 +84,7 @@ fgBool fgFontResource::create(void) {
     dt = 1.0f / 16.0f;
     FG_LOG_DEBUG("FONT CREATE 'Tex::ID=%s'; size=%dx%d; step=%d;", this->m_nameTag.c_str(), m_width, m_width, m_step);
     if(!m_info.charInfo) {
-        m_info.charInfo = fgMalloc<fgFontCharInfo>(FG_FONT_STANDARD_ASCII_SIZE);
+        m_info.charInfo = fgMalloc<SFontCharInfo>(FG_FONT_STANDARD_ASCII_SIZE);
     }
     m_info.numChars = FG_FONT_STANDARD_ASCII_SIZE;
     for(y = 0, i = 0; y < 16; y++) {
@@ -136,7 +136,7 @@ fgBool fgFontResource::create(void) {
 /*
  * Destroy all loaded data including additional metadata (called with deconstructor)
  */
-void fgFontResource::destroy(void) {
+void fg::gui::CFontResource::destroy(void) {
     CTextureResource::destroy();
     m_info.destroy();
 }
@@ -144,16 +144,16 @@ void fgFontResource::destroy(void) {
 /*
  * Reloads any data, recreates the resource (refresh)
  */
-fgBool fgFontResource::recreate(void) {
+fgBool fg::gui::CFontResource::recreate(void) {
     FG_LOG_DEBUG("fgFontResource::recreate();");
-    fgFontResource::dispose();
-    return fgFontResource::create();
+    fg::gui::CFontResource::dispose();
+    return fg::gui::CFontResource::create();
 }
 
 /*
  * Dispose completely of the all loaded data, free all memory
  */
-void fgFontResource::dispose(void) {
+void fg::gui::CFontResource::dispose(void) {
     FG_LOG_DEBUG("fgFontResource::~dispose();");
     CTextureResource::dispose();
     m_step = 0;
@@ -163,7 +163,7 @@ void fgFontResource::dispose(void) {
 /*
  * Check if resource is disposed (not loaded yet or disposed after)
  */
-fgBool fgFontResource::isDisposed(void) const {
+fgBool fg::gui::CFontResource::isDisposed(void) const {
     return CTextureResource::isDisposed();
 }
 
@@ -172,7 +172,7 @@ fgBool fgFontResource::isDisposed(void) const {
 /*
  *
  */
-void fgFontResource::setFontArea(Area *area) {
+void fg::gui::CFontResource::setFontArea(Area *area) {
     m_fontArea.x = area->x;
     m_fontArea.y = area->y;
     m_fontArea.w = area->w;
@@ -183,7 +183,7 @@ void fgFontResource::setFontArea(Area *area) {
 /*
  *
  */
-void fgFontResource::setFontAreaDefault(void) {
+void fg::gui::CFontResource::setFontAreaDefault(void) {
     m_fontArea.x = 0;
     m_fontArea.y = 0;
     m_fontArea.w = FG_HardwareState->screenWidth();
@@ -196,7 +196,7 @@ void fgFontResource::setFontAreaDefault(void) {
 /*
  *
  */
-bool fgFontResource::load(Tex::ID FONT_ID) {
+bool fg::gui::CFontResource::load(Tex::ID FONT_ID) {
  }
 
 /**
@@ -205,7 +205,7 @@ bool fgFontResource::load(Tex::ID FONT_ID) {
  * @param char_size	Rozmiar jednego znaku (wysokosc)
  * @param letter	Znak do wypisania
  */
-float fgFontResource::placeChar(float x0, float y0, float char_size, char letter, void *inmat) {
+float fg::gui::CFontResource::placeChar(float x0, float y0, float char_size, char letter, void *inmat) {
     int x, y, i, size;
     float s, t, ds, dt;
     float scale;
@@ -263,7 +263,7 @@ float fgFontResource::placeChar(float x0, float y0, float char_size, char letter
  * @param string
  * @return
  */
-int fgFontResource::print(float x, float y, float size, const char *string, ...) {
+int fg::gui::CFontResource::print(float x, float y, float size, const char *string, ...) {
     int n;
     char *s;
     char buf[BUFFF_SIZE];
@@ -380,7 +380,7 @@ int fgFontResource::print(float x, float y, float size, const char *string, ...)
  * @param string
  * @return
  */
-int fgFontResource::printCenter(float y, float size, const char *string, ...) {
+int fg::gui::CFontResource::printCenter(float y, float size, const char *string, ...) {
     char buf[BUFFF_SIZE];
     int n = 0;
     char *token;
@@ -409,7 +409,7 @@ int fgFontResource::printCenter(float y, float size, const char *string, ...) {
  * @param fmt
  * @return
  */
-int fgFontResource::printLeft(float y, float size, const char *string, ...) {
+int fg::gui::CFontResource::printLeft(float y, float size, const char *string, ...) {
     char buf[BUFFF_SIZE];
     int n = 0;
     va_list args;
@@ -432,7 +432,7 @@ int fgFontResource::printLeft(float y, float size, const char *string, ...) {
  * @param fmt
  * @return
  */
-int fgFontResource::printRight(float y, float size, const char *string, ...) {
+int fg::gui::CFontResource::printRight(float y, float size, const char *string, ...) {
     char buf[BUFFF_SIZE];
     int n = 0;
     char *token;
@@ -461,7 +461,7 @@ int fgFontResource::printRight(float y, float size, const char *string, ...) {
  * @param fmt
  * @return
  */
-float fgFontResource::height(float size, const char *string, ...) {
+float fg::gui::CFontResource::height(float size, const char *string, ...) {
     char buf[BUFFF_SIZE];
     int i;
     float y = size;

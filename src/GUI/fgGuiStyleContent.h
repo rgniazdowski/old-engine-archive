@@ -9,6 +9,7 @@
 
 #ifndef FG_INC_GUI_STYLE_CONTENT
     #define FG_INC_GUI_STYLE_CONTENT
+    #define FG_INC_GUI_STYLE_CONTENT_BLOCK
 
     #include "fgBuildConfig.h"
     #include "fgTypes.h"
@@ -23,256 +24,26 @@
     #define FG_GUI_FLOAT_UNIT_INVALID       1280000.0f
     #define FG_GUI_CHECK_FLOAT(value)   (value < FG_GUI_FLOAT_UNIT_INVALID)
 
-/**
- *
- */
-enum fgGuiUnitType {
-    FG_GUI_PIXELS,
-    FG_GUI_INCHES,
-    FG_GUI_BLOCKS,
-    FG_GUI_PERCENTS
-};
+    #include "Util/fgConfigStruct.h"
 
-/**
- *
- */
-enum fgGuiBorderStyle {
-    FG_GUI_BORDER_NONE,
-    FG_GUI_BORDER_DOTTED,
-    FG_GUI_BORDER_DASHED,
-    FG_GUI_BORDER_SOLID
-};
-
-/**
- *
- */
-enum fgGuiBorderWhich {
-    FG_GUI_BORDER_LEFT = 0x0001,
-    FG_GUI_BORDER_RIGHT = 0x0002,
-    FG_GUI_BORDER_TOP = 0x0004,
-    FG_GUI_BORDER_BOTTOM = 0x0008,
-    FG_GUI_BORDER_ALL = FG_GUI_BORDER_LEFT | FG_GUI_BORDER_RIGHT | FG_GUI_BORDER_TOP | FG_GUI_BORDER_BOTTOM
-};
-FG_ENUM_FLAGS(fgGuiBorderWhich);
-
-    #define FG_GUI_DEFAULT_BORDER_STYLE FG_GUI_BORDER_SOLID
+    #define FG_GUI_DEFAULT_BORDER_STYLE SBorder::Style::SOLID
     #define FG_GUI_DEFAULT_BORDER_COLOR	fgColor4f(1.0f, 1.0f, 1.0f, 1.0f)
     #define FG_GUI_DEFAULT_BORDER_WIDTH	2.0f
-
-/**
- *
- */
-struct fgGuiBorder {
-    ///
-    fgColor4f color;
-    ///
-    fgGuiBorderStyle style;
-    ///
-    float width;
-    /**
-     * 
-     * @param _width
-     */
-    fgGuiBorder(const float _width = FG_GUI_DEFAULT_BORDER_WIDTH) :
-    color(FG_GUI_DEFAULT_BORDER_COLOR),
-    style(FG_GUI_DEFAULT_BORDER_STYLE),
-    width(_width) { }
-    
-    operator fgColor4f() const {
-        return color;
-    }
-    
-    operator fgGuiBorderStyle() const {
-        return style;
-    }
-    
-    operator float() const {
-        return width;
-    }
-};
-
-/**
- *
- */
-enum fgGuiBackgroundStyle {
-    FG_GUI_BACKGROUND_NONE,
-    FG_GUI_BACKGROUND_NORMAL,
-    FG_GUI_BACKGROUND_MAX,
-    FG_GUI_BACKGROUND_TILED
-};
-
-/**
- *
- */
-struct fgGuiBackground {
-    ///
-    std::string texture;
-    ///
-    fgColor4f color;
-    ///
-    fgGuiBackgroundStyle style;
-    /**
-     * 
-     */
-    fgGuiBackground() :
-    texture(),
-    color(0.4f, 0.4f, 0.4f, 0.8f), // Default predefs..
-    style(FG_GUI_BACKGROUND_MAX) { }
-    
-    operator std::string() const {
-        return texture;
-    }
-    
-    operator fgColor4f() const {
-        return color;
-    }
-    
-    operator fgGuiBackgroundStyle() const {
-        return style;
-    }
-};
-
     #define FG_GUI_DEFAULT_TEXT_SIZE	16.0f
     #define FG_GUI_DEFAULT_FONT		"StbCourier"
     #define FG_GUI_DEFAULT_FG_COLOR	fgColor4f(0.9f, 0.9f, 0.9f, 1.0f)
+    #define FG_GUI_DEFAULT_MARGIN       8.0f
+    #define FG_GUI_DEFAULT_PADDING      8.0f
+    #define FG_GUI_DEFAULT_ALIGN	Align::CENTER
+    #define FG_GUI_DEFAULT_VALIGN	Align::MIDDLE
+    #define FG_GUI_DEFAULT_TEXT_ALIGN   (Align::CENTER | Align::MIDDLE)
 
-/**
- *
- */
-struct fgGuiForeground {
-    ///
-    fgGuiUnitType unit;
-    ///
-    float textSize;
-    ///
-    std::string font;
-    ///
-    fgColor4f color;
-    /**
-     * 
-     */
-    fgGuiForeground() :
-    unit(FG_GUI_PIXELS),
-    textSize(FG_GUI_DEFAULT_TEXT_SIZE),
-    font(FG_GUI_DEFAULT_FONT),
-    color(FG_GUI_DEFAULT_FG_COLOR)
-    { }
-};
+    #define FG_GUI_DEFAULT_SIZE_STYLE   SSize::Style::PIXELS
+    #define FG_GUI_DEFAULT_SIZE_X       10.0f
+    #define FG_GUI_DEFAULT_SIZE_Y       5.0f
+    #define FG_GUI_DEFAULT_SIZE_Z       1.0f
 
-    #define FG_GUI_DEFAULT_MARGIN   8.0f
-    #define FG_GUI_DEFAULT_PADDING  8.0f
-
-/**
- *
- */
-struct fgGuiMargin {
-    ///
-    float value;
-    ///
-    float left;
-    ///
-    float right;
-    ///
-    float top;
-    ///
-    float bottom;
-    /**
-     * 
-     */
-    fgGuiMargin() :
-    value(FG_GUI_DEFAULT_MARGIN),
-    left(FG_GUI_DEFAULT_MARGIN),
-    right(FG_GUI_DEFAULT_MARGIN),
-    top(FG_GUI_DEFAULT_MARGIN),
-    bottom(FG_GUI_DEFAULT_MARGIN) { }
-    
-    operator float() const {
-        return value;
-    }
-};
-
-/**
- *
- */
-enum fgGuiMarginWhich {
-    FG_GUI_MARGIN_LEFT = 0x0001,
-    FG_GUI_MARGIN_RIGHT = 0x0002,
-    FG_GUI_MARGIN_TOP = 0x0004,
-    FG_GUI_MARGIN_BOTTOM = 0x0008,
-    FG_GUI_MARGIN_ALL = FG_GUI_MARGIN_LEFT | FG_GUI_MARGIN_RIGHT | FG_GUI_MARGIN_TOP | FG_GUI_MARGIN_BOTTOM
-};
-FG_ENUM_FLAGS(fgGuiMarginWhich);
-
-/**
- * 
- */
-struct fgGuiBorderInfo {
-    ///
-    fgGuiBorder all;
-    ///
-    fgGuiBorder left;
-    ///
-    fgGuiBorder right;
-    ///
-    fgGuiBorder top;
-    ///
-    fgGuiBorder bottom;
-    /**
-     * 
-     */
-    fgGuiBorderInfo() :
-    all(FG_GUI_DEFAULT_BORDER_WIDTH),
-    left(FG_GUI_DEFAULT_BORDER_WIDTH),
-    right(FG_GUI_DEFAULT_BORDER_WIDTH),
-    top(FG_GUI_DEFAULT_BORDER_WIDTH),
-    bottom(FG_GUI_DEFAULT_BORDER_WIDTH) { }
-    
-    // maybe some functions ?
-};
-
-typedef fgGuiMargin fgGuiPadding;
-
-/**
- *
- */
-enum fgGuiPaddingWhich {
-    FG_GUI_PADDING_LEFT = 0x0001,
-    FG_GUI_PADDING_RIGHT = 0x0002,
-    FG_GUI_PADDING_TOP = 0x0004,
-    FG_GUI_PADDING_BOTTOM = 0x0008,
-    FG_GUI_PADDING_ALL = FG_GUI_PADDING_LEFT | FG_GUI_PADDING_RIGHT | FG_GUI_PADDING_TOP | FG_GUI_PADDING_BOTTOM
-};
-FG_ENUM_FLAGS(fgGuiPaddingWhich);
-
-/**
- *
- */
-enum fgGuiAlign {
-    FG_GUI_ALIGN_NONE = 0x0000,
-    FG_GUI_ALIGN_LEFT = 0x0001,
-    FG_GUI_ALIGN_RIGHT = 0x0002,
-    FG_GUI_ALIGN_CENTER = 0x0004,
-    FG_GUI_ALIGN_MIDDLE = 0x0008,
-    FG_GUI_ALIGN_TOP = 0x0020,
-    FG_GUI_ALIGN_BOTTOM = 0x0040
-};
-FG_ENUM_FLAGS(fgGuiAlign);
-
-    #define FG_GUI_DEFAULT_ALIGN	FG_GUI_ALIGN_CENTER
-    #define FG_GUI_DEFAULT_VALIGN	FG_GUI_ALIGN_MIDDLE
-    #define FG_GUI_DEFAULT_TEXT_ALIGN (FG_GUI_ALIGN_CENTER | FG_GUI_ALIGN_MIDDLE)
-
-/**
- *
- */
-enum fgGuiPositionStyle {
-    FG_GUI_POS_STATIC,
-    FG_GUI_POS_FIXED,
-    FG_GUI_POS_RELATIVE,
-    FG_GUI_POS_ABSOLUTE
-};
-
-    #define FG_GUI_DEFAULT_POSITION_STYLE	FG_GUI_POS_STATIC
+    #define FG_GUI_DEFAULT_POSITION_STYLE	SPosition::Style::STATIC
     #define FG_GUI_DEFAULT_POSITION_LEFT	FG_GUI_FLOAT_UNIT_INVALID
     #define FG_GUI_DEFAULT_POSITION_RIGTH	FG_GUI_FLOAT_UNIT_INVALID
     #define FG_GUI_DEFAULT_POSITION_TOP		FG_GUI_FLOAT_UNIT_INVALID
@@ -280,316 +51,872 @@ enum fgGuiPositionStyle {
     #define FG_GUI_DEFAULT_POSITION_FRONT	FG_GUI_FLOAT_UNIT_INVALID
     #define FG_GUI_DEFAULT_POSITION_BACK	FG_GUI_FLOAT_UNIT_INVALID
 
-/**
- *
- */
-struct fgGuiPosition {
-    ///
-    fgGuiPositionStyle style;
-    ///
-    fgGuiUnitType unit;
-    ///
-    float left;
-    ///
-    float right;
-    ///
-    float top;
-    ///
-    float bottom;
-    ///
-    float front;
-    ///
-    float back;
-    /**
-     * 
-     */
-    fgGuiPosition() :
-    style(FG_GUI_DEFAULT_POSITION_STYLE),
-    unit(FG_GUI_PIXELS),
-    left(FG_GUI_DEFAULT_POSITION_LEFT),
-    right(FG_GUI_DEFAULT_POSITION_RIGTH),
-    top(FG_GUI_DEFAULT_POSITION_TOP),
-    bottom(FG_GUI_DEFAULT_POSITION_BOTTOM),
-    front(FG_GUI_DEFAULT_POSITION_FRONT),
-    back(FG_GUI_DEFAULT_POSITION_BACK) {
-        left = FG_GUI_FLOAT_UNIT_INVALID;
-        right = left;
-        top = left;
-        bottom = left;
-        front = left;
-        back = left;
-    }
-};
+namespace fg {
+    namespace gui {
 
-/**
- *
- */
-enum fgGuiSizeStyle {
-    FG_GUI_SIZE_PIXELS = FG_GUI_PIXELS,
-    FG_GUI_SIZE_INCHES = FG_GUI_INCHES,
-    FG_GUI_SIZE_BLOCKS = FG_GUI_BLOCKS,
-    FG_GUI_SIZE_PERCENTS = FG_GUI_PERCENTS,
-    FG_GUI_SIZE_MAX,
-    FG_GUI_SIZE_MIN
+        /**
+         *
+         */
+        enum class Unit : unsigned char {
+            PIXELS,
+            INCHES,
+            BLOCKS,
+            PERCENTS
+        };
 
-};
+        /**
+         *
+         */
+        struct SBorder {
 
-    #define FG_GUI_DEFAULT_SIZE_STYLE   FG_GUI_SIZE_PIXELS
-    #define FG_GUI_DEFAULT_SIZE_X       10.0f
-    #define FG_GUI_DEFAULT_SIZE_Y       5.0f
-    #define FG_GUI_DEFAULT_SIZE_Z       1.0f
+            /**
+             *
+             */
+            enum class Which : unsigned char {
+                LEFT = 0x0001,
+                RIGHT = 0x0002,
+                TOP = 0x0004,
+                BOTTOM = 0x0008,
+                ALL = Which::LEFT | Which::RIGHT | Which::TOP | Which::BOTTOM
+            };
 
-/**
- *
- */
-struct fgGuiSize {
-    ///
-    fgGuiSizeStyle style;
+            /**
+             *
+             */
+            enum class Style : unsigned char {
+                NONE,
+                DOTTED,
+                DASHED,
+                SOLID
+            };
+            ///
+            Style style;
+            ///
+            fgColor4f color;
+            ///
+            float width;
+            /**
+             * 
+             * @param _width
+             */
+            SBorder(const float _width = FG_GUI_DEFAULT_BORDER_WIDTH) :
+            style(FG_GUI_DEFAULT_BORDER_STYLE),
+            color(FG_GUI_DEFAULT_BORDER_COLOR),
+            width(_width) { }
+            /**
+             * 
+             * @return 
+             */
+            operator fgColor4f() const {
+                return color;
+            }
+            /**
+             * 
+             * @return 
+             */
+            operator SBorder::Style() const {
+                return style;
+            }
+            /**
+             * 
+             * @return 
+             */
+            operator float() const {
+                return width;
+            }
+        };
 
-    union {
-        float w;
-        float x;
+        /**
+         *
+         */
+        struct SBackground {
+
+            /**
+             *
+             */
+            enum Style {
+                NONE,
+                NORMAL,
+                MAX,
+                TILED
+            };
+            ///
+            Style style;
+            ///
+            std::string texture;
+            ///
+            fgColor4f color;
+            /**
+             * 
+             */
+            SBackground() :
+            style(Style::MAX),
+            texture(),
+            color(0.4f, 0.4f, 0.4f, 0.8f) // Default
+            { }
+            /**
+             * 
+             * @return 
+             */
+            operator std::string() const {
+                return texture;
+            }
+            /**
+             * 
+             * @return 
+             */
+            operator fgColor4f() const {
+                return color;
+            }
+            /**
+             * 
+             * @return 
+             */
+            operator SBackground::Style() const {
+                return style;
+            }
+        };
+
+        /**
+         *
+         */
+        struct SForeground {
+            ///
+            Unit unit;
+            ///
+            float textSize;
+            ///
+            std::string font;
+            ///
+            fgColor4f color;
+            /**
+             * 
+             */
+            SForeground() :
+            unit(Unit::PIXELS),
+            textSize(FG_GUI_DEFAULT_TEXT_SIZE),
+            font(FG_GUI_DEFAULT_FONT),
+            color(FG_GUI_DEFAULT_FG_COLOR) { }
+        };
+
+        /**
+         *
+         */
+        struct SMargin {
+
+            /**
+             *
+             */
+            enum class Which : unsigned char {
+                LEFT = 0x0001,
+                RIGHT = 0x0002,
+                TOP = 0x0004,
+                BOTTOM = 0x0008,
+                ALL = Which::LEFT | Which::RIGHT | Which::TOP | Which::BOTTOM
+            };
+            ///
+            float value;
+            ///
+            float left;
+            ///
+            float right;
+            ///
+            float top;
+            ///
+            float bottom;
+            /**
+             * 
+             */
+            SMargin() :
+            value(FG_GUI_DEFAULT_MARGIN),
+            left(FG_GUI_DEFAULT_MARGIN),
+            right(FG_GUI_DEFAULT_MARGIN),
+            top(FG_GUI_DEFAULT_MARGIN),
+            bottom(FG_GUI_DEFAULT_MARGIN) { }
+            /**
+             * 
+             * @return 
+             */
+            operator float() const {
+                return value;
+            }
+        };
+
+        /**
+         *
+         */
+        struct SPadding {
+
+            /**
+             *
+             */
+            enum class Which : unsigned char {
+                LEFT = 0x0001,
+                RIGHT = 0x0002,
+                TOP = 0x0004,
+                BOTTOM = 0x0008,
+                ALL = Which::LEFT | Which::RIGHT | Which::TOP | Which::BOTTOM
+            };
+            ///
+            float value;
+            ///
+            float left;
+            ///
+            float right;
+            ///
+            float top;
+            ///
+            float bottom;
+            /**
+             * 
+             */
+            SPadding() :
+            value(FG_GUI_DEFAULT_MARGIN),
+            left(FG_GUI_DEFAULT_MARGIN),
+            right(FG_GUI_DEFAULT_MARGIN),
+            top(FG_GUI_DEFAULT_MARGIN),
+            bottom(FG_GUI_DEFAULT_MARGIN) { }
+            /**
+             * 
+             * @return 
+             */
+            operator float() const {
+                return value;
+            }
+        };
+
+        /**
+         * 
+         */
+        struct SBorderGroup {
+            ///
+            SBorder all;
+            ///
+            SBorder left;
+            ///
+            SBorder right;
+            ///
+            SBorder top;
+            ///
+            SBorder bottom;
+            /**
+             * 
+             */
+            SBorderGroup() :
+            all(FG_GUI_DEFAULT_BORDER_WIDTH),
+            left(FG_GUI_DEFAULT_BORDER_WIDTH),
+            right(FG_GUI_DEFAULT_BORDER_WIDTH),
+            top(FG_GUI_DEFAULT_BORDER_WIDTH),
+            bottom(FG_GUI_DEFAULT_BORDER_WIDTH) { }
+
+            // maybe some functions ?
+        };
+
+        /**
+         *
+         */
+        enum class Align : unsigned char {
+            NONE = 0x0000,
+            LEFT = 0x0001,
+            RIGHT = 0x0002,
+            CENTER = 0x0004,
+            MIDDLE = 0x0008,
+            TOP = 0x0020,
+            BOTTOM = 0x0040
+        };
+
+        /**
+         *
+         */
+        struct SPosition {
+
+            /**
+             *
+             */
+            enum class Style : unsigned char {
+                STATIC,
+                FIXED,
+                RELATIVE,
+                ABSOLUTE
+            };
+            ///
+            Style style;
+            ///
+            Unit unit;
+            ///
+            float left;
+            ///
+            float right;
+            ///
+            float top;
+            ///
+            float bottom;
+            ///
+            float front;
+            ///
+            float back;
+            /**
+             * 
+             */
+            SPosition() :
+            style(FG_GUI_DEFAULT_POSITION_STYLE),
+            unit(Unit::PIXELS),
+            left(FG_GUI_DEFAULT_POSITION_LEFT),
+            right(FG_GUI_DEFAULT_POSITION_RIGTH),
+            top(FG_GUI_DEFAULT_POSITION_TOP),
+            bottom(FG_GUI_DEFAULT_POSITION_BOTTOM),
+            front(FG_GUI_DEFAULT_POSITION_FRONT),
+            back(FG_GUI_DEFAULT_POSITION_BACK) {
+                left = FG_GUI_FLOAT_UNIT_INVALID;
+                right = left;
+                top = left;
+                bottom = left;
+                front = left;
+                back = left;
+            }
+        };
+
+        /**
+         *
+         */
+        struct SSize {
+
+            /**
+             *
+             */
+            enum class Style : unsigned char {
+                PIXELS = Unit::PIXELS,
+                INCHES = Unit::INCHES,
+                BLOCKS = Unit::BLOCKS,
+                PERCENTS = Unit::PERCENTS,
+                MAX,
+                MIN
+            };
+            ///
+            Style style;
+
+            union {
+                float w;
+                float x;
+            };
+
+            union {
+                float h;
+                float y;
+            };
+
+            union {
+                float d;
+                float z;
+            };
+            /**
+             * 
+             */
+            SSize() :
+            style(FG_GUI_DEFAULT_SIZE_STYLE),
+            x(FG_GUI_DEFAULT_SIZE_X),
+            y(FG_GUI_DEFAULT_SIZE_Y),
+            z(FG_GUI_DEFAULT_SIZE_Z) { }
+        };
     };
-
-    union {
-        float h;
-        float y;
-    };
-
-    union {
-        float d;
-        float z;
-    };
-    /**
-     * 
-     */
-    fgGuiSize() :
-    style(FG_GUI_DEFAULT_SIZE_STYLE),
-    x(FG_GUI_DEFAULT_SIZE_X),
-    y(FG_GUI_DEFAULT_SIZE_Y),
-    z(FG_GUI_DEFAULT_SIZE_Z) { }
 };
 
-    #include "Util/fgConfigStruct.h"
+FG_ENUM_FLAGS(fg::gui::SBorder::Which);
+FG_ENUM_FLAGS(fg::gui::SMargin::Which);
+FG_ENUM_FLAGS(fg::gui::SPadding::Which);
+FG_ENUM_FLAGS(fg::gui::Align);
 
-/*
- *
- */
-class fgGuiStyleContent {
-    friend class fgGuiStyle;
-private:
-    ///
-    std::string m_shader;
-    ///
-    std::string m_effect;
-    ///
-    fgGuiSize m_size;
-    ///
-    fgGuiBackground m_bg;
-    ///
-    fgGuiForeground m_fg;
-    ///
-    fgGuiMargin m_margin;
-    ///
-    fgGuiPadding m_padding;
-    ///
-    fgGuiBorderInfo m_border;
-    ///
-    fgGuiPosition m_position;
-    ///
-    fgGuiAlign m_align;
-    ///
-    fgGuiAlign m_valign;
-    ///
-    fgGuiAlign m_textAlign;
+////////////////////////////////////////////////////////////////////////////////
 
-public:
-    /**
-     * 
-     */
-    fgGuiStyleContent();
-    /**
-     * 
-     */
-    virtual ~fgGuiStyleContent();
+namespace fg {
+    namespace gui {
 
-    /**
-     * 
-     * @param params
-     * @param merge
-     * @return 
-     */
-    fgBool initializeFromConfig(fgCfgTypes::parameterVec &params, fgBool merge = FG_FALSE);
+        class CStyle;
 
-    /**
-     * 
-     * @param align
-     * @param pos
-     * @param size
-     * @param boundPos
-     * @param boundSize
-     * @param isInside
-     */
-    void applyPosAlign(const fgGuiAlign align, fgVector3f& pos, const fgVector3f& size, const fgVector3f& boundPos, const fgVector3f& boundSize, const fgBool isInside = FG_TRUE);
-    /**
-     * 
-     * @param align
-     * @param pos
-     * @param size
-     * @param boundPos
-     * @param boundSize
-     * @param isInside
-     */
-    void applyPosAlign(const fgGuiAlign align, fgVector2f& pos, const fgVector2f& size, const fgVector2f& boundPos, const fgVector2f& boundSize, const fgBool isInside = FG_TRUE);
+        /*
+         *
+         */
+        class CStyleContent {
+            friend class fg::gui::CStyle;
 
-    //
-    static fgColor4f parseColor(const char *value);
-    //
-    static fgGuiBorder parseBorder(const char *value);
-    //
-    static fgGuiBorderStyle parseBorderStyle(const char *value);
-    //
-    static fgGuiPositionStyle parsePositionStyle(const char *value);
-    //
-    static fgGuiAlign parseAlign(const char *value);
-    //
-    static fgGuiBackgroundStyle parseBackgroundStyle(const char *value);
-    //
-    static float parseLength(const char *value, fgGuiUnitType &type);
+        public:
+            ///
+            typedef CStyleContent self_type;
+            ///
+            typedef CStyleContent& self_ref;
 
-    //
-    fgGuiBackground& getBackground(void);
-    //
-    fgGuiForeground& getForeground(void);
-    //
-    fgGuiMargin& getMargin(void);
-    //
-    fgGuiPadding& getPadding(void);
-    //
-    fgGuiBorderInfo& getBorder(void);
-    //
-    fgGuiPosition& getPosition(void);
-    //
-    fgGuiAlign getAlign(void) const;
-    //
-    fgGuiAlign getVAlign(void) const;
-    //
-    fgGuiAlign getTextAlign(void) const;
-    //
-    fgGuiSize& getSize(void);
-    //
-    std::string& getShader(void);
-    //
-    const char *getShaderStr(void) const;
-    //
-    std::string& getEffect(void);
-    //
-    const char *getEffectStr(void) const;
+        public:
+            /**
+             * 
+             */
+            CStyleContent();
+            /**
+             * 
+             */
+            virtual ~CStyleContent();
 
-    //
-    fgGuiStyleContent& setBackground(const fgGuiBackgroundStyle style);
-    //
-    fgGuiStyleContent& setBackground(const fgColor4f& color);
-    //
-    fgGuiStyleContent& setBackground(const std::string& texture);
-    //
-    fgGuiStyleContent& setBackground(const char *texture);
+            ////////////////////////////////////////////////////////////////////
 
-    //
-    fgGuiStyleContent& setForeground(const float textSize);
-    //
-    fgGuiStyleContent& setForeground(const fgColor4f& color);
-    //
-    fgGuiStyleContent& setForeground(const std::string& font);
-    //
-    fgGuiStyleContent& setForeground(const char *font);
+            /**
+             * 
+             * @param params
+             * @param merge
+             * @return 
+             */
+            fgBool initializeFromConfig(fgCfgTypes::parameterVec &params, fgBool merge = FG_FALSE);
 
-    //
-    fgGuiStyleContent& setMargin(const float size);
-    //
-    fgGuiStyleContent& setMargin(const fgGuiMarginWhich which, const float size);
+            ////////////////////////////////////////////////////////////////////
 
-    //
-    fgGuiStyleContent& setPadding(const float size);
-    //
-    fgGuiStyleContent& setPadding(const fgGuiPaddingWhich which, const float size);
+            /**
+             * 
+             * @param align
+             * @param pos
+             * @param size
+             * @param boundPos
+             * @param boundSize
+             * @param isInside
+             */
+            void applyPosAlign(const Align align, fgVector3f& pos, const fgVector3f& size, const fgVector3f& boundPos, const fgVector3f& boundSize, const fgBool isInside = FG_TRUE);
+            /**
+             * 
+             * @param align
+             * @param pos
+             * @param size
+             * @param boundPos
+             * @param boundSize
+             * @param isInside
+             */
+            void applyPosAlign(const Align align, fgVector2f& pos, const fgVector2f& size, const fgVector2f& boundPos, const fgVector2f& boundSize, const fgBool isInside = FG_TRUE);
 
-    //
-    fgGuiStyleContent& setBorder(const fgGuiBorderStyle style);
-    //
-    fgGuiStyleContent& setBorder(const fgColor4f& color);
-    //
-    fgGuiStyleContent& setBorder(const float width);
+            ////////////////////////////////////////////////////////////////////
 
-    //
-    fgGuiStyleContent& setBorder(const fgGuiBorderWhich which, const fgGuiBorderStyle style);
-    //
-    fgGuiStyleContent& setBorder(const fgGuiBorderWhich which, const fgColor4f& color);
-    //
-    fgGuiStyleContent& setBorder(const fgGuiBorderWhich which, const float width);
+            /**
+             * 
+             * @param value
+             * @return 
+             */
+            static fgColor4f parseColor(const char *value);
+            /**
+             * 
+             * @param value
+             * @return 
+             */
+            static SBorder parseBorder(const char *value);
+            /**
+             * 
+             * @param value
+             * @return 
+             */
+            static SBorder::Style parseBorderStyle(const char *value);
+            /**
+             * 
+             * @param value
+             * @return 
+             */
+            static SPosition::Style parsePositionStyle(const char *value);
+            /**
+             * 
+             * @param value
+             * @return 
+             */
+            static Align parseAlign(const char *value);
+            /**
+             * 
+             * @param value
+             * @return 
+             */
+            static SBackground::Style parseBackgroundStyle(const char *value);
+            /**
+             * 
+             * @param value
+             * @param unit
+             * @return 
+             */
+            static float parseLength(const char *value, Unit &unit);
 
-    //
-    fgGuiStyleContent& setPosition(const fgGuiPositionStyle style);
-    //
-    fgGuiStyleContent& setPosition(const fgGuiPositionStyle style, const fgVector2f& modPos);
-    //
-    fgGuiStyleContent& setPosition(const fgVector2f& modPos);
-    //
-    fgGuiStyleContent& setPosition(const fgGuiPositionStyle style, const fgVector3f& modPos);
-    //
-    fgGuiStyleContent& setPosition(const fgVector3f& modPos);
+            ////////////////////////////////////////////////////////////////////
 
-    //
-    fgGuiStyleContent& setAlign(const fgGuiAlign align);
-    //
-    fgGuiStyleContent& setVAlign(const fgGuiAlign vAlign);
-    //
-    fgGuiStyleContent& setTextAlign(const fgGuiAlign textAlign);
+            /**
+             * 
+             * @return 
+             */
+            SBackground& getBackground(void);
+            /**
+             * 
+             * @return 
+             */
+            SForeground& getForeground(void);
+            /**
+             * 
+             * @return 
+             */
+            SMargin& getMargin(void);
+            /**
+             * 
+             * @return 
+             */
+            SPadding& getPadding(void);
+            /**
+             * 
+             * @return 
+             */
+            SBorderGroup& getBorder(void);
+            /**
+             * 
+             * @return 
+             */
+            SPosition& getPosition(void);
+            /**
+             * 
+             * @return 
+             */
+            Align getAlign(void) const;
+            /**
+             * 
+             * @return 
+             */
+            Align getVAlign(void) const;
+            /**
+             * 
+             * @return 
+             */
+            Align getTextAlign(void) const;
+            /**
+             * 
+             * @return 
+             */
+            SSize& getSize(void);
+            /**
+             * 
+             * @return 
+             */
+            std::string& getShader(void);
+            /**
+             * 
+             * @return 
+             */
+            const char *getShaderStr(void) const;
+            /**
+             * 
+             * @return 
+             */
+            std::string& getEffect(void);
+            /**
+             * 
+             * @return 
+             */
+            const char *getEffectStr(void) const;
 
-    //
-    fgGuiStyleContent& setSize(const fgGuiSizeStyle style);
-    //
-    fgGuiStyleContent& setSize(const fgGuiSizeStyle style, const float x, const float y);
-    //
-    fgGuiStyleContent& setSize(const fgGuiSizeStyle style, const fgVector2f& size);
-    //
-    fgGuiStyleContent& setSize(const fgGuiSizeStyle style, const float x, const float y, const float z);
-    //
-    fgGuiStyleContent& setSize(const fgGuiSizeStyle style, const fgVector3f& size);
-    //
-    fgGuiStyleContent& setSize(const float x, const float y);
-    //
-    fgGuiStyleContent& setSize(const fgVector2f& size);
-    //
-    fgGuiStyleContent& setSize(const float x, const float y, const float z);
-    //
-    fgGuiStyleContent& setSize(const fgVector3f& size);
+            ////////////////////////////////////////////////////////////////////
 
-    /**
-     * 
-     * @param shader
-     * @return 
-     */
-    fgGuiStyleContent& setShader(const std::string& shader);
-    /**
-     * 
-     * @param shader
-     * @return 
-     */
-    fgGuiStyleContent& setShader(const char *shader);
+            /**
+             * 
+             * @param style
+             * @return 
+             */
+            self_ref setBackground(const SBackground::Style style);
+            /**
+             * 
+             * @param color
+             * @return 
+             */
+            self_ref setBackground(const fgColor4f& color);
+            /**
+             * 
+             * @param texture
+             * @return 
+             */
+            self_ref setBackground(const std::string& texture);
+            /**
+             * 
+             * @param texture
+             * @return 
+             */
+            self_ref setBackground(const char *texture);
 
-    /**
-     * 
-     * @param effect
-     * @return 
-     */
-    fgGuiStyleContent& setEffect(const std::string& effect);
-    /**
-     * 
-     * @param effect
-     * @return 
-     */
-    fgGuiStyleContent& setEffect(const char *effect);
+            ////////////////////////////////////////////////////////////////////
+
+            /**
+             * 
+             * @param textSize
+             * @return 
+             */
+            self_ref setForeground(const float textSize);
+            /**
+             * 
+             * @param color
+             * @return 
+             */
+            self_ref setForeground(const fgColor4f& color);
+            /**
+             * 
+             * @param font
+             * @return 
+             */
+            self_ref setForeground(const std::string& font);
+            /**
+             * 
+             * @param font
+             * @return 
+             */
+            self_ref setForeground(const char *font);
+
+            ////////////////////////////////////////////////////////////////////
+
+            /**
+             * 
+             * @param size
+             * @return 
+             */
+            self_ref setMargin(const float size);
+            /**
+             * 
+             * @param which
+             * @param size
+             * @return 
+             */
+            self_ref setMargin(const SMargin::Which which, const float size);
+
+            ////////////////////////////////////////////////////////////////////
+
+            /**
+             * 
+             * @param size
+             * @return 
+             */
+            self_ref setPadding(const float size);
+            /**
+             * 
+             * @param which
+             * @param size
+             * @return 
+             */
+            self_ref setPadding(const SPadding::Which which, const float size);
+
+            ////////////////////////////////////////////////////////////////////
+
+            /**
+             * 
+             * @param style
+             * @return 
+             */
+            self_ref setBorder(const SBorder::Style style);
+            /**
+             * 
+             * @param color
+             * @return 
+             */
+            self_ref setBorder(const fgColor4f& color);
+            /**
+             * 
+             * @param width
+             * @return 
+             */
+            self_ref setBorder(const float width);
+
+            ////////////////////////////////////////////////////////////////////
+
+            /**
+             * 
+             * @param which
+             * @param style
+             * @return 
+             */
+            self_ref setBorder(const SBorder::Which which, const SBorder::Style style);
+            /**
+             * 
+             * @param which
+             * @param color
+             * @return 
+             */
+            self_ref setBorder(const SBorder::Which which, const fgColor4f& color);
+            /**
+             * 
+             * @param which
+             * @param width
+             * @return 
+             */
+            self_ref setBorder(const SBorder::Which which, const float width);
+
+            ////////////////////////////////////////////////////////////////////
+
+            /**
+             * 
+             * @param style
+             * @return 
+             */
+            self_ref setPosition(const SPosition::Style style);
+            /**
+             * 
+             * @param style
+             * @param modPos
+             * @return 
+             */
+            self_ref setPosition(const SPosition::Style style, const fgVector2f& modPos);
+            /**
+             * 
+             * @param modPos
+             * @return 
+             */
+            self_ref setPosition(const fgVector2f& modPos);
+            /**
+             * 
+             * @param style
+             * @param modPos
+             * @return 
+             */
+            self_ref setPosition(const SPosition::Style style, const fgVector3f& modPos);
+            /**
+             * 
+             * @param modPos
+             * @return 
+             */
+            self_ref setPosition(const fgVector3f& modPos);
+
+            ////////////////////////////////////////////////////////////////////
+
+            /**
+             * 
+             * @param align
+             * @return 
+             */
+            self_ref setAlign(const Align align);
+            /**
+             * 
+             * @param vAlign
+             * @return 
+             */
+            self_ref setVAlign(const Align vAlign);
+            /**
+             * 
+             * @param textAlign
+             * @return 
+             */
+            self_ref setTextAlign(const Align textAlign);
+
+            ////////////////////////////////////////////////////////////////////
+
+            /**
+             * 
+             * @param style
+             * @return 
+             */
+            self_ref setSize(const SSize::Style style);
+            /**
+             * 
+             * @param style
+             * @param x
+             * @param y
+             * @return 
+             */
+            self_ref setSize(const SSize::Style style, const float x, const float y);
+            /**
+             * 
+             * @param style
+             * @param size
+             * @return 
+             */
+            self_ref setSize(const SSize::Style style, const fgVector2f& size);
+            /**
+             * 
+             * @param style
+             * @param x
+             * @param y
+             * @param z
+             * @return 
+             */
+            self_ref setSize(const SSize::Style style, const float x, const float y, const float z);
+            /**
+             * 
+             * @param style
+             * @param size
+             * @return 
+             */
+            self_ref setSize(const SSize::Style style, const fgVector3f& size);
+            /**
+             * 
+             * @param x
+             * @param y
+             * @return 
+             */
+            self_ref setSize(const float x, const float y);
+            /**
+             * 
+             * @param size
+             * @return 
+             */
+            self_ref setSize(const fgVector2f& size);
+            /**
+             * 
+             * @param x
+             * @param y
+             * @param z
+             * @return 
+             */
+            self_ref setSize(const float x, const float y, const float z);
+            /**
+             * 
+             * @param size
+             * @return 
+             */
+            self_ref setSize(const fgVector3f& size);
+
+            ////////////////////////////////////////////////////////////////////
+
+            /**
+             * 
+             * @param shader
+             * @return 
+             */
+            self_ref setShader(const std::string& shader);
+            /**
+             * 
+             * @param shader
+             * @return 
+             */
+            self_ref setShader(const char *shader);
+
+            /**
+             * 
+             * @param effect
+             * @return 
+             */
+            self_ref setEffect(const std::string& effect);
+            /**
+             * 
+             * @param effect
+             * @return 
+             */
+            self_ref setEffect(const char *effect);
+
+        private:
+            /// Used shader - name
+            std::string m_shader;
+            /// Used effect - name
+            std::string m_effect;
+            /// Size modifier
+            SSize m_size;
+            /// Style of the background (image, modifier)
+            SBackground m_bg;
+            /// Foreground info & style
+            SForeground m_fg;
+            /// Margins information
+            SMargin m_margin;
+            /// Padding information
+            SPadding m_padding;
+            /// Border information
+            SBorderGroup m_border;
+            /// Position modifier
+            SPosition m_position;
+            /// Horizontal align
+            Align m_align;
+            /// Vertical align
+            Align m_valign;
+            /// Align of the text
+            Align m_textAlign;
+        };
+    };
 };
 
+    #undef FG_INC_GUI_STYLE_CONTENT_BLOCK
 #endif /* FG_INC_GUI_STYLE_CONTENT */

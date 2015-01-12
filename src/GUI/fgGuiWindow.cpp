@@ -9,35 +9,40 @@
 
 #include "fgGuiWindow.h"
 
-/*
+using namespace fg;
+
+/**
  *
  */
-fgGuiWindow::fgGuiWindow() {
-    fgGuiWindow::setDefaults();
+gui::CWindow::CWindow() {
+    fg::gui::CWindow::setDefaults();
 }
 
-/*
+/**
  *
  */
-fgGuiWindow::~fgGuiWindow() { }
+gui::CWindow::~CWindow() { }
 
-/*
+/**
  *
  */
-void fgGuiWindow::setDefaults(void) {
-    m_type = FG_GUI_WINDOW;
+void gui::CWindow::setDefaults(void) {
+    m_type = WINDOW;
     m_typeName = FG_GUI_WINDOW_NAME;
-    m_typeTraits = FG_GUI_WINDOW | FG_GUI_CONTAINER | FG_GUI_WIDGET;
+    m_typeTraits = WINDOW | CONTAINER | WIDGET;
 }
 
-/*
- *
+/**
+ * 
+ * @return 
  */
-fgBoundingBox3Df fgGuiWindow::updateBounds(void) {
-    return fgGuiContainer::updateBounds();
+fgBoundingBox3Df gui::CWindow::updateBounds(void) {
+    return fg::gui::CContainer::updateBounds();
 }
 
-/*
+/**
  *
  */
-void fgGuiWindow::refresh(void) { }
+void gui::CWindow::refresh(void) {
+    base_type::refresh();
+}

@@ -91,7 +91,7 @@ fgBool fg::sfx::CMusicResource::create(void) {
     // Check if the file exists
     // Please note that because loading/playing music with Marmalade API
     // the music file must be a RegularFile - cannot be inside the Zip #NOZIP
-    if(fg::util::RegularFile::exists(getFilePathStr(m_quality))) {
+    if(fg::util::CRegularFile::exists(getFilePathStr(m_quality))) {
         // The file exists so it should be loadable by the s3eAudio API
         m_isReady = FG_TRUE;
     }

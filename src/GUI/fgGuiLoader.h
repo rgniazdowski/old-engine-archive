@@ -9,36 +9,58 @@
 
 #ifndef FG_INC_GUI_LOADER
     #define FG_INC_GUI_LOADER
+    #define FG_INC_GUI_LOADER_BLOCK
 
     #include "fgGuiWidget.h"
     #include "fgGuiWidgetFactoryTypes.h"
 
-/*
- *
- */
-class fgGuiLoader : public fgGuiWidget {
-public:
-    typedef fgGuiWidget base_type;
-protected:
-    /// 
-    std::string m_text;
+namespace fg {
+    namespace gui {
 
-protected:
-    // 
-    virtual void setDefaults(void);
+        /**
+         *
+         */
+        class CLoaderSub : public CWidget {
+        public:
+            typedef fg::gui::CWidget base_type;
+        protected:
+            /// 
+            std::string m_text;
 
-public:
-    // 
-    fgGuiLoader();
-    // 
-    virtual ~fgGuiLoader();
+        protected:
+            /**
+             * 
+             */
+            virtual void setDefaults(void);
 
-    FG_GUI_WIDGET_FACTORY_CREATE_FUNCTION(fgGuiLoader);
+        public:
+            /**
+             * 
+             */
+            CLoaderSub();
+            /**
+             * 
+             */
+            virtual ~CLoaderSub();
 
-    // 
-    virtual fgBoundingBox3Df updateBounds(void);
-    //
-    virtual void refresh(void);
+            /**
+             * 
+             * @return 
+             */
+            FG_GUI_WIDGET_FACTORY_CREATE_FUNCTION(CLoaderSub)
+
+            /**
+             * 
+             * @return 
+             */
+            virtual fgBoundingBox3Df updateBounds(void);
+            /**
+             * 
+             */
+            virtual void refresh(void);
+        };
+    };
 };
 
+    #undef FG_INC_GUI_LOADER_BLOCK
 #endif /* FG_INC_GUI_LOADER */

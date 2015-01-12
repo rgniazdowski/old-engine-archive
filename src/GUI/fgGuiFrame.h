@@ -9,35 +9,56 @@
 
 #ifndef FG_INC_GUI_FRAME
     #define FG_INC_GUI_FRAME
+    #define FG_INC_GUI_FRAME_BLOCK
 
     #include "fgGuiContainer.h"
     #include "fgGuiWidgetFactoryTypes.h"
 
-/*
- *
- */
-class fgGuiFrame : public fgGuiContainer {
-public:
-    typedef fgGuiContainer base_type;
-protected:
+namespace fg {
+    namespace gui {
 
-protected:
-    // 
-    virtual void setDefaults(void);
+        /*
+         *
+         */
+        class CFrame : public CContainer {
+        public:
+            typedef CContainer base_type;
 
-public:
-    // 
-    fgGuiFrame();
-    // 
-    virtual ~fgGuiFrame();
+        public:
+            /**
+             * 
+             * @return 
+             */
+            CFrame();
+            /**
+             * 
+             */
+            virtual ~CFrame();
 
-    FG_GUI_WIDGET_FACTORY_CREATE_FUNCTION(fgGuiFrame);
+            /**
+             * 
+             * @return 
+             */
+            FG_GUI_WIDGET_FACTORY_CREATE_FUNCTION(CFrame)
 
-    // 
-    virtual fgBoundingBox3Df updateBounds(void);
-    // 
-    virtual void refresh(void);
+            /**
+             * 
+             * @return 
+             */
+            virtual fgBoundingBox3Df updateBounds(void);
+            /**
+             * 
+             */
+            virtual void refresh(void);
 
+        protected:
+            /**
+             * 
+             */
+            virtual void setDefaults(void);
+        };
+    };
 };
 
+    #undef FG_INC_GUI_FRAME_BLOCK
 #endif /* FG_INC_GUI_FRAME */

@@ -45,10 +45,10 @@ namespace fg {
          * library supports AES encryption, I/O buffering, PKWARE disk spanning.
          * 
          */
-        class ZipFile : public fg::util::base::File {
+        class CZipFile : public fg::util::base::CFile {
         public:
             ///
-            typedef fg::util::base::File::Mode FileMode;
+            typedef fg::util::base::CFile::Mode FileMode;
 
         public:
 
@@ -148,30 +148,30 @@ namespace fg {
             /**
              * Default empty constructor for the ZipFile
              */
-            ZipFile();
+            CZipFile();
 
             /**
              * 
              * @param filePath
              */
-            ZipFile(const char *filePath);
+            CZipFile(const char *filePath);
 
             /**
              * 
              * @param filePath
              */
-            ZipFile(const std::string& filePath);
+            CZipFile(const std::string& filePath);
 
             /**
              * 
              * @param orig
              */
-            ZipFile(const ZipFile& orig);
+            CZipFile(const CZipFile& orig);
 
             /**
              * Default virtual destructor for the ZipFile object
              */
-            virtual ~ZipFile();
+            virtual ~CZipFile();
 
             /******************************************************************/
             

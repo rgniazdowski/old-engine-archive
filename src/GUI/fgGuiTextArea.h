@@ -9,128 +9,132 @@
 
 #ifndef FG_INC_GUI_TEXT_AREA
     #define FG_INC_GUI_TEXT_AREA
+    #define FG_INC_GUI_TEXT_AREA_BLOCK
 
     #include "fgGuiScrollArea.h"
     #include "fgGuiWidgetFactoryTypes.h"
 
     #include "fgVector.h"
-    
-/**
- * 
- */
-class fgGuiTextArea : public fgGuiScrollArea {
-public:
-    ///
-    typedef fgGuiScrollArea base_type;
-    
-protected:
-    ///
-    fg::CStringVector m_textData;
-    ///
-    struct TextAreaSize {
-        ///
-        unsigned short cols; // x
-        ///
-        unsigned short rows; // y
+
+namespace fg {
+    namespace gui {
+
         /**
          * 
-         * @param _cols
-         * @param _rows
          */
-        TextAreaSize(unsigned short _cols = 32, unsigned short _rows = 1) :
-        cols(_cols), rows(_rows) {            
-        }
-    } m_textAreaSize;
+        class CTextArea : public CScrollArea {
+        public:
+            ///
+            typedef CScrollArea base_type;
 
-    
-    
-protected:
-    /**
-     * 
-     */
-    virtual void setDefaults(void);
+        protected:
+            ///
+            fg::CStringVector m_textData;
+            ///
 
-public:
-    /**
-     * 
-     */
-    fgGuiTextArea();
-    /**
-     * 
-     */
-    virtual ~fgGuiTextArea();
+            struct TextAreaSize {
+                ///
+                unsigned short cols; // x
+                ///
+                unsigned short rows; // y
+                /**
+                 * 
+                 * @param _cols
+                 * @param _rows
+                 */
+                TextAreaSize(unsigned short _cols = 32, unsigned short _rows = 1) :
+                cols(_cols), rows(_rows) { }
+            } m_textAreaSize;
 
-    /**
-     * 
-     * @return 
-     */
-    FG_GUI_WIDGET_FACTORY_CREATE_FUNCTION(fgGuiTextArea);
 
-    /**
-     * 
-     * @param guiLayer
-     */
-    virtual void display(fgGuiDrawer *guiLayer);
-    
-    /**
-     * 
-     * @return 
-     */
-    virtual fgBoundingBox3Df updateBounds(void);
-    /**
-     * 
-     */
-    virtual void refresh(void);
-    
-public:
-    /**
-     * 
-     * @param text
-     */
-    virtual void pushText(const char *text) {
-        m_textData.push_back(std::string(text));
-    }
-    
-    /**
-     * 
-     * @param text
-     */
-    virtual void pushText(const std::string &text) {
-        m_textData.push_back(text);
-    }
-    
-    /**
-     * 
-     * @param text
-     */
-    virtual void setText(const std::string &text) {
-        m_text.clear();
-        m_textData.clear_optimised();
-        m_textData.resize(0);
-        m_textData.push_back(text);
-    }
-    
-    /**
-     * 
-     * @param text
-     */
-    virtual void setText(const char *text) {
-        if(text) {
-            m_textData.clear_optimised();
-            m_textData.resize(0);
-            m_textData.push_back(std::string(text));
-        }
-        m_text.clear();
-    }
-    /**
-     * 
-     */
-    virtual void clearText(void) {
-        m_text.clear();
-        m_textData.clear_optimised();
-        m_textData.resize(0);
-    }
 
+        protected:
+            /**
+             * 
+             */
+            virtual void setDefaults(void);
+
+        public:
+            /**
+             * 
+             */
+            CTextArea();
+            /**
+             * 
+             */
+            virtual ~CTextArea();
+
+            /**
+             * 
+             * @return 
+             */
+            FG_GUI_WIDGET_FACTORY_CREATE_FUNCTION(CTextArea)
+
+            /**
+             * 
+             * @param guiLayer
+             */
+            virtual void display(CDrawer *guiLayer);
+
+            /**
+             * 
+             * @return 
+             */
+            virtual fgBoundingBox3Df updateBounds(void);
+            /**
+             * 
+             */
+            virtual void refresh(void);
+
+        public:
+            /**
+             * 
+             * @param text
+             */
+            virtual void pushText(const char *text) {
+                m_textData.push_back(std::string(text));
+            }
+            /**
+             * 
+             * @param text
+             */
+            virtual void pushText(const std::string &text) {
+                m_textData.push_back(text);
+            }
+            /**
+             * 
+             * @param text
+             */
+            virtual void setText(const std::string &text) {
+                m_text.clear();
+                m_textData.clear_optimised();
+                m_textData.resize(0);
+                m_textData.push_back(text);
+            }
+            /**
+             * 
+             * @param text
+             */
+            virtual void setText(const char *text) {
+                if(text) {
+                    m_textData.clear_optimised();
+                    m_textData.resize(0);
+                    m_textData.push_back(std::string(text));
+                }
+                m_text.clear();
+            }
+            /**
+             * 
+             */
+            virtual void clearText(void) {
+                m_text.clear();
+                m_textData.clear_optimised();
+                m_textData.resize(0);
+            }
+
+        };
+    };
 };
 
+    #undef FG_INC_GUI_TEXT_AREA_BLOCK
 #endif /* FG_INC_GUI_TEXT_AREA */

@@ -9,216 +9,216 @@
 
 #ifndef FG_INC_ARGUMENT_LIST
     #define FG_INC_ARGUMENT_LIST
+    #define FG_INC_ARGUMENT_LIST_BLOCK
 
     #include "fgTypes.h"
 
     #define FG_ARGUMENT_DEFAULT_COUNT	8
     #define FG_ARGUMENT_MAX_STRING	256 // #FIXME
 
-/**
- *
- */
-enum fgArgumentType {
-    // Integer
-    FG_ARGUMENT_INTEGER,
-    // Double number
-    FG_ARGUMENT_DOUBLE,
-    // Float number
-    FG_ARGUMENT_FLOAT,
-    // Char string array
-    FG_ARGUMENT_STRING,
-    // Void* pointer to any kind of data
-    FG_ARGUMENT_POINTER,
-    // Pointer to allocated structure, structure needs to be allocated by 'malloc' and freed using the 'free' function
-    FG_ARGUMENT_TEMP_POINTER,
-    // No argument
-    FG_ARGUMENT_NONE
-};
+namespace fg {
+    namespace event {
 
-/*
- *
- */
-struct fgArgument {
-    ///
-    fgArgumentType type;
+        /*
+         *
+         */
+        struct SArgument {
 
-    union {
-        ///
-        int int_val;
-        ///
-        double double_val;
-        ///
-        float float_val;
-        ///
-        char string[FG_ARGUMENT_MAX_STRING];
-        ///
-        void *custom_pointer;
+            enum class Type : unsigned char {
+                /// Integer
+                ARG_INTEGER,
+                /// Double number
+                ARG_DOUBLE,
+                /// Float number
+                ARG_FLOAT,
+                /// Char string array
+                ARG_STRING,
+                /// Void* pointer to any kind of data
+                ARG_POINTER,
+                /// Pointer to allocated structure, structure needs to be allocated by 'malloc' and freed using the 'free' function
+                ARG_TMP_POINTER,
+                /// No argument
+                ARG_NONE
+            } type;
+
+            union {
+                /// Value representing integer
+                int int_val;
+                /// Double precision float value
+                double double_val;
+                /// Float value
+                float float_val;
+                /// String parameter
+                char string[FG_ARGUMENT_MAX_STRING];
+                /// Custom pointer
+                void *custom_pointer;
+            };
+            /**
+             * 
+             */
+            SArgument() : type(Type::ARG_NONE), int_val(0) { }
+            /**
+             * 
+             */
+            void reset(void) {
+                type = Type::ARG_NONE;
+                int_val = 0;
+            }
+        };
+
+        /**
+         *
+         */
+        class CArgumentList {
+        private:
+            ///
+            fg::CVector<SArgument> m_argv;
+            ///
+            int m_argc;
+            ///
+            int m_maxArgs;
+            ///
+            int m_currentArg;
+            ///
+            SArgument m_emptyArgument;
+
+        public:
+            /**
+             * 
+             */
+            CArgumentList();
+            /**
+             * 
+             * @param _max
+             */
+            CArgumentList(int _max);
+
+            /**
+             * 
+             */
+            virtual ~CArgumentList();
+
+            /**
+             * 
+             * @param _max
+             */
+            void setMaxCount(int _max);
+            /**
+             * 
+             * @return 
+             */
+            int getMaxCount();
+
+            /**
+             * 
+             * @param _type
+             * @param _value
+             */
+            void push(SArgument::Type type, void *value);
+            /**
+             * 
+             * @param int_val
+             */
+            void push(int int_val);
+            /**
+             * 
+             * @param double_val
+             */
+            void push(double double_val);
+            /**
+             * 
+             * @param float_val
+             */
+            void push(float float_val);
+            /**
+             * 
+             * @param string
+             */
+            void push(const char *string);
+            /**
+             * 
+             * @param custom_pointer
+             */
+            void push(void *custom_pointer);
+
+            /**
+             * 
+             * @return 
+             */
+            int getCount(void);
+
+            /**
+             * 
+             */
+            void reset(void);
+            /**
+             * 
+             * @return 
+             */
+            fgBool isNext(void);
+
+            /**
+             * 
+             * @param _type
+             * @return 
+             */
+            void *getNextValue(SArgument::Type *type = NULL);
+            /**
+             * 
+             * @param ID
+             * @param _type
+             * @return 
+             */
+            void *getValueByID(int ID, SArgument::Type *type = NULL);
+
+            /**
+             * 
+             * @return 
+             */
+            SArgument getNextStruct(void);
+            /**
+             * 
+             * @param ID
+             * @return 
+             */
+            SArgument getStructByID(int ID);
+
+            /**
+             * 
+             * @return 
+             */
+            int getCurrentID(void);
+
+            /**
+             * 
+             */
+            void clear(void);
+            /**
+             * 
+             * @param i
+             * @return 
+             */
+            inline SArgument& operator [](int i) {
+                m_emptyArgument.reset();
+                if((int)m_argv.size() > i)
+                    return m_argv[i];
+                else
+                    return m_emptyArgument;
+            }
+            /**
+             * 
+             * @param i
+             * @return 
+             */
+            inline const SArgument& operator [](int i)const {
+                if((int)m_argv.size() > i)
+                    return m_argv[i];
+                else
+                    return m_emptyArgument;
+            }
+        };
     };
-    /**
-     * 
-     */
-    fgArgument() : type(FG_ARGUMENT_NONE), int_val(0) { }
-    /**
-     * 
-     */
-    void reset(void) {
-        type = FG_ARGUMENT_NONE;
-        int_val = 0;
-    }
 };
 
-/**
- *
- */
-class fgArgumentList {
-private:
-    ///
-    fg::CVector<fgArgument> m_argv;
-    ///
-    int m_argc;
-    ///
-    int m_maxArgs;
-    ///
-    int m_currentArg;
-    ///
-    fgArgument m_emptyArgument;
-    
-public:
-    /**
-     * 
-     */
-    fgArgumentList();
-    /**
-     * 
-     * @param _max
-     */
-    fgArgumentList(int _max);
-
-    /**
-     * 
-     */
-    virtual ~fgArgumentList();
-
-    /**
-     * 
-     * @param _max
-     */
-    void setMaxArgumentCount(int _max);
-    /**
-     * 
-     * @return 
-     */
-    int getMaxArgumentCount();
-
-    /**
-     * 
-     * @param _type
-     * @param _value
-     */
-    void pushArgument(fgArgumentType _type, void *_value);
-    /**
-     * 
-     * @param int_val
-     */
-    void pushArgument(int int_val);
-    /**
-     * 
-     * @param double_val
-     */
-    void pushArgument(double double_val);
-    /**
-     * 
-     * @param float_val
-     */
-    void pushArgument(float float_val);
-    /**
-     * 
-     * @param string
-     */
-    void pushArgument(const char *string);
-    /**
-     * 
-     * @param custom_pointer
-     */
-    void pushArgument(void *custom_pointer);
-
-    /**
-     * 
-     * @return 
-     */
-    int getArgumentCount();
-
-    /**
-     * 
-     */
-    void reset();
-    /**
-     * 
-     * @return 
-     */
-    fgBool isThereNextArgument();
-
-    /**
-     * 
-     * @param _type
-     * @return 
-     */
-    void *getNextArgumentValue(fgArgumentType *_type = NULL);
-    /**
-     * 
-     * @param ID
-     * @param _type
-     * @return 
-     */
-    void *getArgumentValueByID(int ID, fgArgumentType *_type = NULL);
-
-    /**
-     * 
-     * @return 
-     */
-    fgArgument getNextArgumentStruct();
-    /**
-     * 
-     * @param ID
-     * @return 
-     */
-    fgArgument getArgumentStructByID(int ID);
-
-    /**
-     * 
-     * @return 
-     */
-    int getCurrentID();
-
-    /**
-     * 
-     */
-    void clearArguments();
-    
-    /**
-     * 
-     * @param i
-     * @return 
-     */
-    inline fgArgument &operator [](int i) {
-        m_emptyArgument.reset();
-        if((int)m_argv.size() > i)
-            return m_argv[i];
-        else
-            return m_emptyArgument;
-    }
-    /**
-     * 
-     * @param i
-     * @return 
-     */
-    inline const fgArgument operator [](int i)const {
-        if((int)m_argv.size() > i)
-            return m_argv[i];
-        else
-            return m_emptyArgument;
-    }
-};
-
-
+    #undef FG_INC_ARGUMENT_LIST_BLOCK
 #endif /* FG_INC_ARGUMENT_LIST */

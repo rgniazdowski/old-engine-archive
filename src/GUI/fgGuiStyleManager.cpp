@@ -10,24 +10,26 @@
 #include "fgGuiStyleManager.h"
 #include "Util/fgDirent.h"
 
+using namespace fg;
+
 /**
  * 
  */
-fgGuiStyleManager::fgGuiStyleManager() {
+gui::CStyleManager::CStyleManager() {
     m_managerType = FG_MANAGER_GUI_STYLE;
 }
 
 /**
  * 
  */
-fgGuiStyleManager::~fgGuiStyleManager() {
-    fgGuiStyleManager::destroy();
+gui::CStyleManager::~CStyleManager() {
+    gui::CStyleManager::destroy();
 }
 
 /**
  * 
  */
-void fgGuiStyleManager::clear(void) {
+void gui::CStyleManager::clear(void) {
     releaseAllHandles();
 }
 
@@ -35,16 +37,16 @@ void fgGuiStyleManager::clear(void) {
  * 
  * @return 
  */
-fgBool fgGuiStyleManager::destroy(void) {
-    hmDataVecItor begin = getRefDataVector().begin();
-    hmDataVecItor end = getRefDataVector().end();
-    for(hmDataVecItor itor = begin; itor != end; ++itor) {
+fgBool gui::CStyleManager::destroy(void) {
+    StyleVecItor begin = getRefDataVector().begin();
+    StyleVecItor end = getRefDataVector().end();
+    for(StyleVecItor itor = begin; itor != end; ++itor) {
         if((*itor) == NULL)
             continue;
         delete (*itor);
         *itor = NULL;
     }
-    fgGuiStyleManager::clear();
+    gui::CStyleManager::clear();
     return FG_TRUE;
 }
 
@@ -52,14 +54,14 @@ fgBool fgGuiStyleManager::destroy(void) {
  * 
  * @return 
  */
-fgBool fgGuiStyleManager::initialize(void) {
+fgBool gui::CStyleManager::initialize(void) {
     FG_LOG_DEBUG("GUI: Initializing Style manager...");
     if(m_stylesPath.empty()) {
         FG_LOG_ERROR("GUI: Default path for styles directory is not set");
         return FG_FALSE;
     }
     // Will now preload all required styles
-    fgDirent stylesDir; 
+    fgDirent stylesDir;
     const char *filename;
     fgBool status = stylesDir.readDirectory(m_stylesPath, FG_TRUE, FG_TRUE);
     if(!status) {
@@ -70,7 +72,7 @@ fgBool fgGuiStyleManager::initialize(void) {
         if(!ext)
             continue;
         if(strcasecmp(ext, "style.ini") == 0) {
-            fgGuiStyle *style = new fgGuiStyle();
+            CStyle *style = new CStyle();
             FG_LOG_DEBUG("GUI: Loading gui style file: '%s'", filename);
             if(!style->load(filename)) {
                 FG_LOG::PrintError("GUI: Failed to load gui style: '%s'", filename);
@@ -99,10 +101,10 @@ fgBool fgGuiStyleManager::initialize(void) {
  * @param nameTag
  * @return 
  */
-fgBool fgGuiStyleManager::insert(fgGuiStyle *pStyle, const std::string& nameTag) {
+fgBool gui::CStyleManager::insert(CStyle *pStyle, const std::string& nameTag) {
     if(!pStyle)
         return FG_FALSE;
-    if(fgDataManagerBase::insert(pStyle, nameTag)) {
+    if(base_type::insert(pStyle, nameTag)) {
         pStyle->setName(nameTag);
         pStyle->setManaged(FG_TRUE);
         return FG_TRUE;
@@ -115,7 +117,7 @@ fgBool fgGuiStyleManager::insert(fgGuiStyle *pStyle, const std::string& nameTag)
  * @param pStyle
  * @return 
  */
-fgBool fgGuiStyleManager::insertStyle(fgGuiStyle *pStyle) {
+fgBool gui::CStyleManager::insertStyle(CStyle *pStyle) {
     if(!pStyle) {
         return FG_FALSE;
     }
@@ -131,7 +133,7 @@ fgBool fgGuiStyleManager::insertStyle(fgGuiStyle *pStyle) {
  * @param info
  * @return 
  */
-fgGuiStyle* fgGuiStyleManager::request(const std::string& info) {
+gui::CStyle* gui::CStyleManager::request(const std::string& info) {
     // #FIXME
     return NULL;
 }
@@ -141,7 +143,7 @@ fgGuiStyle* fgGuiStyleManager::request(const std::string& info) {
  * @param info
  * @return 
  */
-fgGuiStyle* fgGuiStyleManager::request(const char *info) {
+gui::CStyle* gui::CStyleManager::request(const char *info) {
     // #FIXME
     return NULL;
 }
@@ -150,7 +152,7 @@ fgGuiStyle* fgGuiStyleManager::request(const char *info) {
  * 
  * @param path
  */
-void fgGuiStyleManager::setStylesPath(const std::string &path) {
+void gui::CStyleManager::setStylesPath(const std::string &path) {
     m_stylesPath = path;
 }
 
@@ -158,6 +160,6 @@ void fgGuiStyleManager::setStylesPath(const std::string &path) {
  * 
  * @param path
  */
-void fgGuiStyleManager::setStylesPath(const char *path) {
+void gui::CStyleManager::setStylesPath(const char *path) {
     m_stylesPath = path;
 }

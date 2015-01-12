@@ -196,52 +196,52 @@ fgGameMain::~fgGameMain() {
  */
 void fgGameMain::registerGameCallbacks(void) {
     if(!m_gameTouchCallback)
-        m_gameTouchCallback = new fgClassCallback<fgGameMain>(this, &fgGameMain::gameTouchHandler);
+        m_gameTouchCallback = new fg::event::CMethodCallback<fgGameMain>(this, &fgGameMain::gameTouchHandler);
 
-    fg::event::CEventManager::addEventCallback(FG_EVENT_TOUCH_PRESSED, m_gameTouchCallback);
-    fg::event::CEventManager::addEventCallback(FG_EVENT_TOUCH_RELEASED, m_gameTouchCallback);
-    fg::event::CEventManager::addEventCallback(FG_EVENT_TOUCH_MOTION, m_gameTouchCallback);
-    fg::event::CEventManager::addEventCallback(FG_EVENT_TOUCH_TAP_FINISHED, m_gameTouchCallback);
+    fg::event::CEventManager::addCallback(FG_EVENT_TOUCH_PRESSED, m_gameTouchCallback);
+    fg::event::CEventManager::addCallback(FG_EVENT_TOUCH_RELEASED, m_gameTouchCallback);
+    fg::event::CEventManager::addCallback(FG_EVENT_TOUCH_MOTION, m_gameTouchCallback);
+    fg::event::CEventManager::addCallback(FG_EVENT_TOUCH_TAP_FINISHED, m_gameTouchCallback);
 
     if(!m_gameMouseCallback)
-        m_gameMouseCallback = new fgClassCallback<fgGameMain>(this, &fgGameMain::gameMouseHandler);
+        m_gameMouseCallback = new fg::event::CMethodCallback<fgGameMain>(this, &fgGameMain::gameMouseHandler);
 
-    fg::event::CEventManager::addEventCallback(FG_EVENT_MOUSE_PRESSED, m_gameMouseCallback);
-    fg::event::CEventManager::addEventCallback(FG_EVENT_MOUSE_RELEASED, m_gameMouseCallback);
-    fg::event::CEventManager::addEventCallback(FG_EVENT_MOUSE_MOTION, m_gameMouseCallback);
+    fg::event::CEventManager::addCallback(FG_EVENT_MOUSE_PRESSED, m_gameMouseCallback);
+    fg::event::CEventManager::addCallback(FG_EVENT_MOUSE_RELEASED, m_gameMouseCallback);
+    fg::event::CEventManager::addCallback(FG_EVENT_MOUSE_MOTION, m_gameMouseCallback);
 
     if(!m_gameFreeLookCallback)
-        m_gameFreeLookCallback = new fgClassCallback<fgGameMain>(this, &fgGameMain::gameFreeLookHandler);
+        m_gameFreeLookCallback = new fg::event::CMethodCallback<fgGameMain>(this, &fgGameMain::gameFreeLookHandler);
 
-    fg::event::CEventManager::addEventCallback(FG_EVENT_TOUCH_PRESSED, m_gameFreeLookCallback);
-    fg::event::CEventManager::addEventCallback(FG_EVENT_TOUCH_RELEASED, m_gameFreeLookCallback);
-    fg::event::CEventManager::addEventCallback(FG_EVENT_TOUCH_MOTION, m_gameFreeLookCallback);
-    fg::event::CEventManager::addEventCallback(FG_EVENT_TOUCH_TAP_FINISHED, m_gameFreeLookCallback);
-    fg::event::CEventManager::addEventCallback(FG_EVENT_MOUSE_PRESSED, m_gameFreeLookCallback);
-    fg::event::CEventManager::addEventCallback(FG_EVENT_MOUSE_RELEASED, m_gameFreeLookCallback);
-    fg::event::CEventManager::addEventCallback(FG_EVENT_MOUSE_MOTION, m_gameFreeLookCallback);
+    fg::event::CEventManager::addCallback(FG_EVENT_TOUCH_PRESSED, m_gameFreeLookCallback);
+    fg::event::CEventManager::addCallback(FG_EVENT_TOUCH_RELEASED, m_gameFreeLookCallback);
+    fg::event::CEventManager::addCallback(FG_EVENT_TOUCH_MOTION, m_gameFreeLookCallback);
+    fg::event::CEventManager::addCallback(FG_EVENT_TOUCH_TAP_FINISHED, m_gameFreeLookCallback);
+    fg::event::CEventManager::addCallback(FG_EVENT_MOUSE_PRESSED, m_gameFreeLookCallback);
+    fg::event::CEventManager::addCallback(FG_EVENT_MOUSE_RELEASED, m_gameFreeLookCallback);
+    fg::event::CEventManager::addCallback(FG_EVENT_MOUSE_MOTION, m_gameFreeLookCallback);
 }
 
 /**
  *
  */
 void fgGameMain::unregisterGameCallbacks(void) {
-    fg::event::CEventManager::removeEventCallback(FG_EVENT_TOUCH_PRESSED, m_gameTouchCallback);
-    fg::event::CEventManager::removeEventCallback(FG_EVENT_TOUCH_RELEASED, m_gameTouchCallback);
-    fg::event::CEventManager::removeEventCallback(FG_EVENT_TOUCH_MOTION, m_gameTouchCallback);
-    fg::event::CEventManager::removeEventCallback(FG_EVENT_TOUCH_TAP_FINISHED, m_gameTouchCallback);
+    fg::event::CEventManager::removeCallback(FG_EVENT_TOUCH_PRESSED, m_gameTouchCallback);
+    fg::event::CEventManager::removeCallback(FG_EVENT_TOUCH_RELEASED, m_gameTouchCallback);
+    fg::event::CEventManager::removeCallback(FG_EVENT_TOUCH_MOTION, m_gameTouchCallback);
+    fg::event::CEventManager::removeCallback(FG_EVENT_TOUCH_TAP_FINISHED, m_gameTouchCallback);
 
-    fg::event::CEventManager::removeEventCallback(FG_EVENT_MOUSE_PRESSED, m_gameMouseCallback);
-    fg::event::CEventManager::removeEventCallback(FG_EVENT_MOUSE_RELEASED, m_gameMouseCallback);
-    fg::event::CEventManager::removeEventCallback(FG_EVENT_MOUSE_MOTION, m_gameMouseCallback);
+    fg::event::CEventManager::removeCallback(FG_EVENT_MOUSE_PRESSED, m_gameMouseCallback);
+    fg::event::CEventManager::removeCallback(FG_EVENT_MOUSE_RELEASED, m_gameMouseCallback);
+    fg::event::CEventManager::removeCallback(FG_EVENT_MOUSE_MOTION, m_gameMouseCallback);
 
-    fg::event::CEventManager::removeEventCallback(FG_EVENT_TOUCH_PRESSED, m_gameFreeLookCallback);
-    fg::event::CEventManager::removeEventCallback(FG_EVENT_TOUCH_RELEASED, m_gameFreeLookCallback);
-    fg::event::CEventManager::removeEventCallback(FG_EVENT_TOUCH_MOTION, m_gameFreeLookCallback);
-    fg::event::CEventManager::removeEventCallback(FG_EVENT_TOUCH_TAP_FINISHED, m_gameFreeLookCallback);
-    fg::event::CEventManager::removeEventCallback(FG_EVENT_MOUSE_PRESSED, m_gameFreeLookCallback);
-    fg::event::CEventManager::removeEventCallback(FG_EVENT_MOUSE_RELEASED, m_gameFreeLookCallback);
-    fg::event::CEventManager::removeEventCallback(FG_EVENT_MOUSE_MOTION, m_gameFreeLookCallback);
+    fg::event::CEventManager::removeCallback(FG_EVENT_TOUCH_PRESSED, m_gameFreeLookCallback);
+    fg::event::CEventManager::removeCallback(FG_EVENT_TOUCH_RELEASED, m_gameFreeLookCallback);
+    fg::event::CEventManager::removeCallback(FG_EVENT_TOUCH_MOTION, m_gameFreeLookCallback);
+    fg::event::CEventManager::removeCallback(FG_EVENT_TOUCH_TAP_FINISHED, m_gameFreeLookCallback);
+    fg::event::CEventManager::removeCallback(FG_EVENT_MOUSE_PRESSED, m_gameFreeLookCallback);
+    fg::event::CEventManager::removeCallback(FG_EVENT_MOUSE_RELEASED, m_gameFreeLookCallback);
+    fg::event::CEventManager::removeCallback(FG_EVENT_MOUSE_MOTION, m_gameFreeLookCallback);
 }
 
 /**
@@ -290,7 +290,7 @@ fgBool fgGameMain::initSubsystems(void) {
         guiPath.append(mainModPath);
         guiPath.append(";");
         guiPath.append(modPath);
-        m_guiMain = new fgGuiMain(guiPath, guiPath);
+        m_guiMain = new fg::gui::CGuiMain(guiPath, guiPath);
     }
     FG_HardwareState->deviceYield(0); // #FIXME - device yield...
     int w = m_gfxMain->getMainWindow()->getWidth();
@@ -305,9 +305,9 @@ fgBool fgGameMain::initSubsystems(void) {
     else
         m_resourceFactory->clear();
     m_resourceFactory->registerResource(FG_RESOURCE_TEXTURE, &fg::gfx::CTexture::createResource);
-    m_resourceFactory->registerResource(FG_RESOURCE_FONT, &fgFontResource::createResource);
+    m_resourceFactory->registerResource(FG_RESOURCE_FONT, &fg::gui::CFont::createResource);
     m_resourceFactory->registerResource(FG_RESOURCE_GROUP, &fg::resource::CResourceGroup::createResource);
-    m_resourceFactory->registerResource(FG_RESOURCE_3D_MODEL, &fg::gfx::CModelResource::createResource);
+    m_resourceFactory->registerResource(FG_RESOURCE_3D_MODEL, &fg::gfx::CModel::createResource);
     m_resourceFactory->registerResource(FG_RESOURCE_PARTICLE_EFFECT, &fgParticleEffect::createResource);
     m_resourceFactory->registerResource(FG_RESOURCE_MUSIC, &fg::sfx::CMusic::createResource);
     m_resourceFactory->registerResource(FG_RESOURCE_SOUND, &fg::sfx::CSound::createResource);
@@ -447,7 +447,7 @@ fgBool fgGameMain::loadResources(void) {
     fg::path::join(mainScriptPath, m_settings->getMainModPath(), std::string("main.lua"));
     FG_LOG_DEBUG("Main: Loading and executing script file: '%s'", mainScriptPath.c_str());
     m_scriptSubsystem->executeFile(mainScriptPath);
-    
+
     fg::path::join(modScriptPath, m_settings->getCurrentModPath(), std::string("main.lua"));
     FG_LOG_DEBUG("Main: Loading and executing script file: '%s'", modScriptPath.c_str());
     m_scriptSubsystem->executeFile(modScriptPath);
@@ -680,10 +680,10 @@ void fgGameMain::update(void) {
  * @param argv
  * @return 
  */
-fgBool fgGameMain::gameTouchHandler(fgArgumentList *argv) {
+fgBool fgGameMain::gameTouchHandler(fg::event::CArgumentList *argv) {
     if(!argv)
         return FG_FALSE;
-    fgEventBase *event = (fgEventBase *)argv->getArgumentValueByID(0);
+    fgEventBase *event = (fgEventBase *)argv->getValueByID(0);
     if(!event)
         return FG_FALSE;
     fgEventType type = event->eventType;
@@ -742,10 +742,10 @@ fgBool fgGameMain::gameTouchHandler(fgArgumentList *argv) {
  * @param argv
  * @return 
  */
-fgBool fgGameMain::gameMouseHandler(fgArgumentList *argv) {
+fgBool fgGameMain::gameMouseHandler(fg::event::CArgumentList *argv) {
     if(!argv)
         return FG_FALSE;
-    fgEventBase *event = (fgEventBase *)argv->getArgumentValueByID(0);
+    fgEventBase *event = (fgEventBase *)argv->getValueByID(0);
     if(!event)
         return FG_FALSE;
     //fgEventType type = event->eventType;
@@ -759,12 +759,12 @@ fgBool fgGameMain::gameMouseHandler(fgArgumentList *argv) {
  * @param argv
  * @return 
  */
-fgBool fgGameMain::gameFreeLookHandler(fgArgumentList* argv) {
+fgBool fgGameMain::gameFreeLookHandler(fg::event::CArgumentList* argv) {
     if(!argv || !this->m_gfxMain)
         return FG_FALSE;
     if(!this->m_gfxMain->get3DSceneCamera())
         return FG_FALSE;
-    fgEventBase *event = (fgEventBase *)argv->getArgumentValueByID(0);
+    fgEventBase *event = (fgEventBase *)argv->getValueByID(0);
     if(!event)
         return FG_FALSE;
     fgEventType type = event->eventType;

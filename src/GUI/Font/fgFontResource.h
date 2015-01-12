@@ -25,97 +25,104 @@
 
 typedef unsigned int fgFontType;
 
-/*
- * Class definition for Font Resource - extends the Texture Resource
- */
-class fgFontResource : public fg::gfx::CTextureResource {
-public:
-    /**
-     * Base constructor of the font resource object
-     */
-    fgFontResource();
-    /**
-     * Constructor with additional parameter (path)
-     * @param path
-     */
-    fgFontResource(const char *path);
-    /**
-     * Constructor with additional parameter (path)
-     * @param path
-     */
-    fgFontResource(std::string& path);
-    /**
-     * Destructor of the font resource object
-     */
-    virtual ~fgFontResource() {
-        fgFontResource::destroy();
-    }
+namespace fg {
+    namespace gui {
 
-    /**
-     * 
-     * @return 
-     */
-    FG_RESOURCE_FACTORY_CREATE_FUNCTION(fgFontResource)
+        /*
+         * Class definition for Font Resource - extends the Texture Resource
+         */
+        class CFontResource : public fg::gfx::CTextureResource {
+        public:
+            /**
+             * Base constructor of the font resource object
+             */
+            CFontResource();
+            /**
+             * Constructor with additional parameter (path)
+             * @param path
+             */
+            CFontResource(const char *path);
+            /**
+             * Constructor with additional parameter (path)
+             * @param path
+             */
+            CFontResource(std::string& path);
+            /**
+             * Destructor of the font resource object
+             */
+            virtual ~CFontResource() {
+                CFontResource::destroy();
+            }
 
-protected:
-    // Clears the class data, this actually does not free allocated memory, 
-    // just resets base class attributes
-    virtual void clear(void);
+            /**
+             * 
+             * @return 
+             */
+            FG_RESOURCE_FACTORY_CREATE_FUNCTION(CFontResource)
 
-public:
-    /**
-     * Create function loads/interprets data from file in ROM and place it in RAM memory.
-     * @return 
-     */
-    virtual fgBool create(void);
-    /**
-     * Destroy all loaded data including additional metadata (called with destructor)
-     */
-    virtual void destroy(void);
-    /**
-     * Reloads any data, recreates the resource (refresh)
-     * @return 
-     */
-    virtual fgBool recreate(void);
-    /**
-     * Dispose completely of the all loaded data, free all memory
-     */
-    virtual void dispose(void);
-    /**
-     * Check if resource is disposed (not loaded yet or disposed after)
-     * @return 
-     */
-    virtual fgBool isDisposed(void) const;
-    /**
-     * 
-     * @return 
-     */
-    virtual int getStep(void) const {
-        return m_step;
-    }
-    /**
-     * 
-     * @return 
-     */
-    fgFontType getFontType(void) const {
-        return m_fontType;
-    }
-    /**
-     * 
-     * @return 
-     */
-    fgFontDataInfo &getDataInfo(void) {
-        return m_info;
-    }
+        protected:
+            // Clears the class data, this actually does not free allocated memory, 
+            // just resets base class attributes
+            virtual void clear(void);
 
-protected:
-    /// 
-    fgFontType m_fontType;
-    ///
-    fgFontDataInfo m_info;
-    /// 
-    int m_step;
+        public:
+            /**
+             * Create function loads/interprets data from file in ROM and place it in RAM memory.
+             * @return 
+             */
+            virtual fgBool create(void);
+            /**
+             * Destroy all loaded data including additional metadata (called with destructor)
+             */
+            virtual void destroy(void);
+            /**
+             * Reloads any data, recreates the resource (refresh)
+             * @return 
+             */
+            virtual fgBool recreate(void);
+            /**
+             * Dispose completely of the all loaded data, free all memory
+             */
+            virtual void dispose(void);
+            /**
+             * Check if resource is disposed (not loaded yet or disposed after)
+             * @return 
+             */
+            virtual fgBool isDisposed(void) const;
+            /**
+             * 
+             * @return 
+             */
+            virtual int getStep(void) const {
+                return m_step;
+            }
+            /**
+             * 
+             * @return 
+             */
+            fgFontType getFontType(void) const {
+                return m_fontType;
+            }
+            /**
+             * 
+             * @return 
+             */
+            SFontDataInfo &getDataInfo(void) {
+                return m_info;
+            }
+
+        protected:
+            /// 
+            fgFontType m_fontType;
+            ///
+            SFontDataInfo m_info;
+            /// 
+            int m_step;
+        };
+
+        ///
+        typedef CFontResource CFont;
+    };
 };
-
     #undef FG_INC_FONT_RESOURCE_BLOCK
 #endif /* FG_INC_FONT_RESOURCE */

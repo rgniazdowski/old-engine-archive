@@ -9,32 +9,56 @@
 
 #ifndef FG_INC_GUI_TABLE
     #define FG_INC_GUI_TABLE
+    #define FG_INC_GUI_TABLE_BLOCK
 
     #include "fgGuiContainer.h"
     #include "fgGuiWidgetFactoryTypes.h"
 
-class fgGuiTable : public fgGuiContainer {
-public:
-    typedef fgGuiContainer base_type;
-protected:
+namespace fg {
+    namespace gui {
 
-protected:
-    // 
-    virtual void setDefaults(void);
+        /**
+         *
+         */
+        class CTable : public CContainer {
+        public:
+            ///
+            typedef CContainer base_type;
 
-public:
-    // 
-    fgGuiTable();
-    // 
-    virtual ~fgGuiTable();
+        public:
+            /**
+             * 
+             */
+            CTable();
+            /**
+             * 
+             */
+            virtual ~CTable();
 
-    FG_GUI_WIDGET_FACTORY_CREATE_FUNCTION(fgGuiTable);
+            /**
+             * 
+             * @return 
+             */
+            FG_GUI_WIDGET_FACTORY_CREATE_FUNCTION(CTable)
 
-    // 
-    virtual fgBoundingBox3Df updateBounds(void);
-    // 
-    virtual void refresh(void);
+            /**
+             * 
+             * @return 
+             */
+            virtual fgBoundingBox3Df updateBounds(void);
+            /**
+             * 
+             */
+            virtual void refresh(void);
 
+        protected:
+            /**
+             * 
+             */
+            virtual void setDefaults(void);
+        };
+    };
 };
 
+    #undef FG_INC_GUI_TABLE_BLOCK
 #endif /* FG_INC_GUI_TABLE */

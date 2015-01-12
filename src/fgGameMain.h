@@ -108,7 +108,7 @@ public:
 
     // Update - all event handling, calling scripts, AI, game logic and others
     void update(void);
-    
+
 public:
     /**
      * 
@@ -121,7 +121,7 @@ public:
      * 
      * @return 
      */
-    inline fgGuiMain *getGuiMain(void) const {
+    inline fg::gui::CGuiMain *getGuiMain(void) const {
         return m_guiMain;
     }
     /**
@@ -194,19 +194,19 @@ protected:
      * @param argv
      * @return 
      */
-    fgBool gameTouchHandler(fgArgumentList *argv);
+    fgBool gameTouchHandler(fg::event::CArgumentList *argv);
     /**
      * 
      * @param argv
      * @return 
      */
-    fgBool gameMouseHandler(fgArgumentList *argv);
+    fgBool gameMouseHandler(fg::event::CArgumentList *argv);
     /**
      * 
      * @param argv
      * @return 
      */
-    fgBool gameFreeLookHandler(fgArgumentList *argv);
+    fgBool gameFreeLookHandler(fg::event::CArgumentList *argv);
 
 protected:
     /**
@@ -223,7 +223,7 @@ private:
     /// Main GFX subsystem object
     fgGfxMain *m_gfxMain;
     /// Main GUI (User Interface))
-    fgGuiMain *m_guiMain;
+    fg::gui::CGuiMain *m_guiMain;
     /// Main, hard settings
     fgSettings *m_settings;
     /// Main config 
@@ -244,13 +244,13 @@ private:
     fg::sfx::CSfxManager *m_soundMgr;
     /// Inner game logic
     fg::game::Logic *m_logicMgr;
-    
+
     /// Callback for Touch events
-    fgFunctionCallback *m_gameTouchCallback;
+    fg::event::CFunctionCallback *m_gameTouchCallback;
     /// Callback for Mouse events
-    fgFunctionCallback *m_gameMouseCallback;
+    fg::event::CFunctionCallback *m_gameMouseCallback;
     /// Special callback for game free look (controlling camera via touch/click)
-    fgFunctionCallback *m_gameFreeLookCallback;
+    fg::event::CFunctionCallback *m_gameFreeLookCallback;
 };
 
     #undef FG_INC_GAME_MAIN_BLOCK

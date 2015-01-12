@@ -109,10 +109,14 @@ namespace fg {
              */
             fgBool allToVRAM(fgBool reupload = FG_FALSE);
 
-            // Releases all non GFX (i.e. non VRAM) data
+            /**
+             * Releases all non GFX (i.e. non VRAM) data
+             */
             void allReleaseNonGFX(void);
 
-            // Releases all GFX (i.e. texture ids) data
+            /**
+             * Releases all GFX (i.e. texture ids) data
+             */
             void allReleaseGFX(void);
 
             // #FIXME #TODO #P2
@@ -121,14 +125,32 @@ namespace fg {
             static GLint translateInternalPixelFormat(fgTextureInternalPixelFormat internalPixelFormat);
     #endif
 
-            //
+            /**
+             * 
+             * @param texture
+             * @param force
+             * @return 
+             */
             fgBool uploadToVRAM(CTexture *texture, fgBool force = FG_FALSE);
-            //
+            /**
+             * 
+             * @param nameTag
+             * @param force
+             * @return 
+             */
             fgBool uploadToVRAM(const std::string& nameTag, fgBool force = FG_FALSE);
-            //
+            /**
+             * 
+             * @param nameTag
+             * @param force
+             * @return 
+             */
             fgBool uploadToVRAM(const char *nameTag, fgBool force = FG_FALSE);
 
-            //
+            /**
+             * 
+             * @param pTexture
+             */
             void releaseGFX(CTexture *pTexture);
 
             /**
@@ -170,7 +192,7 @@ namespace fg {
              * @param argv
              * @return 
              */
-            fgBool resourceCreatedHandler(fgArgumentList *argv);
+            fgBool resourceCreatedHandler(fg::event::CArgumentList *argv);
 
         private:
             ///
@@ -178,7 +200,7 @@ namespace fg {
             ///
             fg::base::CManager *m_pEventMgr;
             ///
-            fgFunctionCallback *m_resourceCreatedCallback;
+            fg::event::CFunctionCallback *m_resourceCreatedCallback;
             ///
             fgBool m_allInVRAM;
             ///

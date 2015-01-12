@@ -50,13 +50,13 @@ namespace fg {
         private:
             /// int - eventCode
             /// Binding for all global events
-            fgCallbackBindingMap m_eventBinds;
+            CallbackBindingMap m_eventBinds;
             /// Events queue (message queue so to speak)
-            fgEventsQueue m_eventsQueue;
+            EventsQueue m_eventsQueue;
             /// Special pool with timeout callbacks (timers)
-            fgTimeoutCallbacksVec m_timeoutCallbacks;
+            TimeoutCallbacksVec m_timeoutCallbacks;
             /// Pool with cyclic timeout callbacks (repeat timers, self reset)
-            fgCyclicCallbacksVec m_cyclicCallbacks;
+            CyclicCallbacksVec m_cyclicCallbacks;
 
         public:
             /**
@@ -101,7 +101,7 @@ namespace fg {
              * @param list
              */
             void throwEvent(fgEventType eventCode,
-                            fgArgumentList *list);
+                            CArgumentList *list);
 
             /**
              * 
@@ -117,16 +117,16 @@ namespace fg {
              * @param pCallback
              * @return 
              */
-            fgFunctionCallback* addEventCallback(fgEventType eventCode,
-                                                 fgFunctionCallback *pCallback);
+            CFunctionCallback* addCallback(fgEventType eventCode,
+                                           CFunctionCallback *pCallback);
             /**
              * 
              * @param eventCode
              * @param pFunction
              * @return 
              */
-            fgFunctionCallback* addEventCallback(fgEventType eventCode,
-                                                 fgFunctionCallback::fgFunction pFunction);
+            CFunctionCallback* addCallback(fgEventType eventCode,
+                                           CFunctionCallback::fgFunction pFunction);
 
             /**
              * 
@@ -135,9 +135,9 @@ namespace fg {
              * @param pUserData
              * @return 
              */
-            fgFunctionCallback* addEventCallback(fgEventType eventCode,
-                                                 fgPlainFunctionCallback::fgPlainFunction pPlainFunction,
-                                                 void *pUserData = NULL);
+            CFunctionCallback* addCallback(fgEventType eventCode,
+                                           CPlainFunctionCallback::fgPlainFunction pPlainFunction,
+                                           void *pUserData = NULL);
             /**
              * 
              * @param eventCode
@@ -146,10 +146,9 @@ namespace fg {
              * @return 
              */
             template < class Class >
-            fgFunctionCallback* addEventCallback(
-                                                 fgEventType eventCode,
-                                                 typename fgClassCallback<Class>::fgClassMethod pMethod,
-                                                 Class* pClassInstance);
+            CFunctionCallback* addCallback(fgEventType eventCode,
+                                           typename CMethodCallback<Class>::ClassMethod pMethod,
+                                           Class* pClassInstance);
 
             /**
              * 
@@ -157,7 +156,7 @@ namespace fg {
              * @param callback
              * @return 
              */
-            fgBool removeEventCallback(fgEventType eventCode, fgFunctionCallback *pCallback);
+            fgBool removeCallback(fgEventType eventCode, CFunctionCallback *pCallback);
 
             /**
              * 
@@ -166,16 +165,16 @@ namespace fg {
              * @param argList
              * @return 
              */
-            fgFunctionCallback* addTimeoutCallback(fgFunctionCallback *pCallback,
-                                                   const int timeout,
-                                                   fgArgumentList *pArgList);
+            CFunctionCallback* addTimeoutCallback(CFunctionCallback *pCallback,
+                                                  const int timeout,
+                                                  CArgumentList *pArgList);
 
             /**
              * 
              * @param pCallback
              * @return 
              */
-            fgBool removeTimeoutCallback(fgFunctionCallback *pCallback);
+            fgBool removeTimeoutCallback(CFunctionCallback *pCallback);
 
             /**
              * 
@@ -185,17 +184,17 @@ namespace fg {
              * @param argList
              * @return 
              */
-            fgFunctionCallback* addCyclicCallback(fgFunctionCallback *pCallback,
-                                                  const int repeats = FG_CYCLIC_CALLBACK_INFINITE_REPEAT,
-                                                  const int interval = FG_CYCLIC_CALLBACK_DEFAULT_INTERVAL,
-                                                  fgArgumentList *pArgList = NULL);
+            CFunctionCallback* addCyclicCallback(CFunctionCallback *pCallback,
+                                                 const int repeats = FG_CYCLIC_CALLBACK_INFINITE_REPEAT,
+                                                 const int interval = FG_CYCLIC_CALLBACK_DEFAULT_INTERVAL,
+                                                 CArgumentList *pArgList = NULL);
 
             /**
              * 
              * @param pCallback
              * @return 
              */
-            fgBool removeCyclicCallback(fgFunctionCallback *pCallback);
+            fgBool removeCyclicCallback(CFunctionCallback *pCallback);
 
             /**
              * Execute (finalized) all events waiting in a queue
@@ -206,7 +205,6 @@ namespace fg {
         };
     };
 };
-
 /**
  * 
  * @param eventCode
@@ -215,13 +213,13 @@ namespace fg {
  * @return 
  */
 template <class Class>
-fgFunctionCallback* fg::event::CEventManager::addEventCallback(
-                                                               fgEventType eventCode,
-                                                               typename fgClassCallback<Class>::fgClassMethod pMethod,
-                                                               Class* pClassInstance) {
+fg::event::CFunctionCallback* fg::event::CEventManager::addCallback(
+                                                                    fgEventType eventCode,
+                                                                    typename CMethodCallback<Class>::ClassMethod pMethod,
+                                                                    Class* pClassInstance) {
     if(!pMethod || (int)eventCode < 0 || !pClassInstance)
         return NULL;
-    fgFunctionCallback *callback = new fgClassCallback<Class>(pClassInstance, pMethod);
+    CFunctionCallback *callback = new CMethodCallback<Class>(pClassInstance, pMethod);
     m_eventBinds[eventCode].push_back(callback);
     return callback;
 }

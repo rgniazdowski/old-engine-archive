@@ -9,35 +9,55 @@
 
 #ifndef FG_INC_GUI_PROGRESS_BAR
     #define FG_INC_GUI_PROGRESS_BAR
+    #define FG_INC_GUI_PROGRESS_BAR_BLOCK
 
     #include "fgGuiWidget.h"
     #include "fgGuiWidgetFactoryTypes.h"
 
-/*
+namespace fg { namespace gui {
+
+/**
  *
  */
-class fgGuiProgressBar : public fgGuiWidget {
+class CProgressBar : public CWidget {
 public:
-    typedef fgGuiWidget base_type;
+    typedef fg::gui::CWidget base_type;
 protected:
 
 protected:
-    // 
+    /**
+     * 
+     */
     virtual void setDefaults(void);
 
 public:
-    // 
-    fgGuiProgressBar();
-    // 
-    virtual ~fgGuiProgressBar();
+    /**
+     * 
+     */
+    CProgressBar();
+    /**
+     * 
+     */
+    virtual ~CProgressBar();
 
-    FG_GUI_WIDGET_FACTORY_CREATE_FUNCTION(fgGuiProgressBar);
+    /**
+     * 
+     * @return 
+     */
+    FG_GUI_WIDGET_FACTORY_CREATE_FUNCTION(CProgressBar)
 
-    // 
+    /**
+     * 
+     * @return 
+     */
     virtual fgBoundingBox3Df updateBounds(void);
-    // 
+    /**
+     * 
+     */
     virtual void refresh(void);
 
 };
+};};
 
+    #undef FG_INC_GUI_PROGRESS_BAR_BLOCK
 #endif /* FG_INC_GUI_PROGRESS_BAR */

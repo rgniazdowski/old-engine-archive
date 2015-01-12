@@ -13,12 +13,12 @@
 #include "StbConsolas/stb_font_consolas_16_usascii.inl"
 #include "StbConsolas/stb_font_consolas_8_usascii.inl"
 
-fgFontBuiltInRawData fgFontBuiltIn::StbConsolas::m_stbFontRawData;
+fg::gui::SFontBuiltInRawData fg::gui::font::StbConsolas::m_stbFontRawData;
 
 /*
  *
  */
-fgFontBuiltInRawData* fgFontBuiltIn::StbConsolas::getRawData(const int size) {
+fg::gui::SFontBuiltInRawData* fg::gui::font::StbConsolas::getRawData(const int size) {
     if(size > 0 && size <= 8) {
         m_stbFontRawData.xPtr = FG_STB_FONT_PTR(consolas_8, x);
         m_stbFontRawData.yPtr = FG_STB_FONT_PTR(consolas_8, y);

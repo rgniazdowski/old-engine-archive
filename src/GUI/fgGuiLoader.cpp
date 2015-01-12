@@ -9,38 +9,41 @@
 
 #include "fgGuiLoader.h"
 
-/*
+using namespace fg;
+
+/**
  *
  */
-fgGuiLoader::fgGuiLoader() :
-fgGuiWidget() {
-    fgGuiLoader::setDefaults();
+gui::CLoaderSub::CLoaderSub() :
+CWidget() {
+    CLoaderSub::setDefaults();
 }
 
-/*
+/**
  *
  */
-fgGuiLoader::~fgGuiLoader() { }
+gui::CLoaderSub::~CLoaderSub() { }
 
-/*
+/**
  *
  */
-void fgGuiLoader::setDefaults(void) {
-    m_type = FG_GUI_LOADER;
+void gui::CLoaderSub::setDefaults(void) {
+    m_type = LOADER;
     m_typeName = FG_GUI_LOADER_NAME;
-    m_typeTraits = FG_GUI_LOADER | FG_GUI_WIDGET;
+    m_typeTraits = LOADER | WIDGET;
 }
 
-/*
- *
+/**
+ * 
+ * @return 
  */
-fgBoundingBox3Df fgGuiLoader::updateBounds(void) {
-    return fgGuiWidget::updateBounds();
+fgBoundingBox3Df gui::CLoaderSub::updateBounds(void) {
+    return base_type::updateBounds();
 }
 
-/*
+/**
  *
  */
-void fgGuiLoader::refresh(void) {
-    fgGuiWidget::refresh();
+void gui::CLoaderSub::refresh(void) {
+    base_type::refresh();
 }

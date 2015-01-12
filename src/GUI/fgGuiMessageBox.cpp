@@ -9,35 +9,41 @@
 
 #include "fgGuiMessageBox.h"
 
-/*
+using namespace fg;
+
+/**
  *
  */
-fgGuiMessageBox::fgGuiMessageBox() {
-    fgGuiMessageBox::setDefaults();
+gui::CMessageBox::CMessageBox() :
+base_type() {
+    CMessageBox::setDefaults();
 }
 
-/*
+/**
  *
  */
-fgGuiMessageBox::~fgGuiMessageBox() { }
+gui::CMessageBox::~CMessageBox() { }
 
-/*
+/**
  *
  */
-void fgGuiMessageBox::setDefaults(void) {
-    m_type = FG_GUI_MESSAGE_BOX;
+void gui::CMessageBox::setDefaults(void) {
+    m_type = MESSAGE_BOX;
     m_typeName = FG_GUI_MESSAGE_BOX_NAME;
-    m_typeTraits = FG_GUI_MESSAGE_BOX | FG_GUI_WINDOW | FG_GUI_CONTAINER | FG_GUI_WIDGET;
+    m_typeTraits = MESSAGE_BOX | WINDOW | CONTAINER | WIDGET;
+}
+
+/**
+ * 
+ * @return 
+ */
+fgBoundingBox3Df gui::CMessageBox::updateBounds(void) {
+    return CWindow::updateBounds();
 }
 
 /*
  *
  */
-fgBoundingBox3Df fgGuiMessageBox::updateBounds(void) {
-    return fgGuiWindow::updateBounds();
+void gui::CMessageBox::refresh(void) {
+    base_type::refresh();
 }
-
-/*
- *
- */
-void fgGuiMessageBox::refresh(void) { }

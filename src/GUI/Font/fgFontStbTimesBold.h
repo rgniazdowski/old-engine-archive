@@ -9,6 +9,7 @@
 
 #ifndef FG_INC_FONT_STB_TIMES_BOLD
     #define FG_INC_FONT_STB_TIMES_BOLD
+    #define FG_INC_FONT_STB_TIMES_BOLD_BLOCK
 
     #ifndef FG_INC_FONT_BUILT_IN_TYPES
         #include "fgFontBuiltInTypes.h"
@@ -22,17 +23,30 @@
         #define FG_STB_FONT_CONST(_font_name, _const_name) STB_FONT_ ## _font_name ## _usascii_ ## _const_name
     #endif
 
-namespace fgFontBuiltIn {
+namespace fg {
+    namespace gui {
+        namespace font {
 
-    class StbTimesBold {
-    public:
-        static fgFontBuiltInRawData* getRawData(const int size = 50);
+            class StbTimesBold {
+            public:
+                /**
+                 * 
+                 * @param size
+                 * @return 
+                 */
+                static SFontBuiltInRawData* getRawData(const int size = 50);
 
-    private:
-        static fgFontBuiltInRawData m_stbFontRawData;
-        StbTimesBold() { }
-        ~StbTimesBold() { }
+            private:
+                ///
+                static SFontBuiltInRawData m_stbFontRawData;
+                ///
+                StbTimesBold() { }
+                ///
+                ~StbTimesBold() { }
+            };
+        };
     };
 };
 
+    #undef FG_INC_FONT_STB_TIMES_BOLD_BLOCK
 #endif /* FG_INC_FONT_STB_TIMES_BOLD */

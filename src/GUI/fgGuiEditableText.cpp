@@ -9,38 +9,40 @@
 
 #include "fgGuiEditableText.h"
 
+using namespace fg;
+
 /*
  *
  */
-fgGuiEditableText::fgGuiEditableText() :
-fgGuiTextArea() {
-    fgGuiEditableText::setDefaults();
+gui::CEditableText::CEditableText() :
+CTextArea() {
+    CEditableText::setDefaults();
 }
 
 /*
  *
  */
-fgGuiEditableText::~fgGuiEditableText() { }
+gui::CEditableText::~CEditableText() { }
 
 /*
  *
  */
-void fgGuiEditableText::setDefaults(void) {
-    m_type = FG_GUI_EDITABLE_TEXT;
+void gui::CEditableText::setDefaults(void) {
+    m_type = EDITABLE_TEXT;
     m_typeName = FG_GUI_EDITABLE_TEXT_NAME;
-    m_typeTraits = FG_GUI_EDITABLE_TEXT | FG_GUI_TEXT_AREA | FG_GUI_SCROLL_AREA | FG_GUI_CONTAINER | FG_GUI_WIDGET;
+    m_typeTraits = EDITABLE_TEXT | TEXT_AREA | SCROLL_AREA | CONTAINER | WIDGET;
 }
 
 /*
  *
  */
-fgBoundingBox3Df fgGuiEditableText::updateBounds(void) {
-    return fgGuiTextArea::updateBounds();
+fgBoundingBox3Df gui::CEditableText::updateBounds(void) {
+    return CTextArea::updateBounds();
 }
 
 /*
  *
  */
-void fgGuiEditableText::refresh(void) { 
-    fgGuiTextArea::refresh();
+void gui::CEditableText::refresh(void) {
+    CTextArea::refresh();
 }

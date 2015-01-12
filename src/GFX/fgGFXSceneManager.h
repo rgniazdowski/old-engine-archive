@@ -36,10 +36,14 @@ namespace fg {
         class CSceneManager :
         public fg::base::CManager,
         protected CDrawingBatch,
-        protected fgHandleManager<CSceneNode *, fgGfxSceneNodeHandle> {
+        protected fg::util::CHandleManager<CSceneNode *, fgGfxSceneNodeHandle> {
         public:
             ///
+            typedef CSceneManager self_type;
+            ///
             typedef fg::base::CManager base_type;
+            ///
+            typedef fg::util::CHandleManager<CSceneNode *, fgGfxSceneNodeHandle> handle_mgr_type;
             ///
             typedef CSceneNode node_type;
             ///
@@ -47,9 +51,10 @@ namespace fg {
             ///
             typedef std::priority_queue<CSceneNode*, std::deque<CSceneNode*>, fgPtrLessEq<CSceneNode*> > nodePriorityQueue;
             ///
-            typedef CVector<CSceneNode *> objectVec;
+            typedef CVector<CSceneNode *> ObjectVec;
             ///
-            typedef objectVec::iterator objectVecItor;
+            typedef ObjectVec::iterator ObjectVecItor;
+
 
         protected:
             /**
@@ -276,35 +281,35 @@ namespace fg {
              * @return 
              */
             inline CSceneNode *get(const int index) {
-                if(index < 0 || index >= (int)fgHandleManager::getRefDataVector().size())
+                if(index < 0 || index >= (int)CHandleManager::getRefDataVector().size())
                     return NULL;
-                return fgHandleManager::getRefDataVector()[index];
+                return CHandleManager::getRefDataVector()[index];
             }
 
             // This is special array like operator
             // Note that there is no boundaries checking
             CSceneNode *operator [](size_t n) {
-                return fgHandleManager::getRefDataVector()[n];
+                return CHandleManager::getRefDataVector()[n];
             }
 
             // This is special array like operator
             // Note that there is no boundaries checking
             const CSceneNode *operator [](size_t n) const {
-                return fgHandleManager::getRefDataVector()[n];
+                return CHandleManager::getRefDataVector()[n];
             }
 
             // Returns the number of valid handles used within the handle 
             // manager. This value should not be used for any kind of iteration
             // through the internal data vector
             unsigned int count(void) const {
-                return fgHandleManager::getUsedHandleCount();
+                return CHandleManager::getUsedHandleCount();
             }
 
             // This will return the size of the internal data vector
             // Returned value takes into account also empty slots, so
             // this is the real size of the internal data array
             unsigned int size(void) const {
-                return fgHandleManager::getRefDataVector().size();
+                return CHandleManager::getRefDataVector().size();
             }
             /**
              * 

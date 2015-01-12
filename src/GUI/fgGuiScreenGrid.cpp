@@ -11,15 +11,17 @@
 
 #include "fgGuiScreenGrid.h"
 
-const float fgGuiScreenGrid::DEFAULT_GRID_H = 40.0f;
+const float fg::gui::CScreenGrid::DEFAULT_GRID_H = 40.0f;
 
 template <>
-bool fgSingleton<fgGuiScreenGrid>::instanceFlag = false;
+bool fgSingleton<fg::gui::CScreenGrid>::instanceFlag = false;
 
 template <>
-fgGuiScreenGrid *fgSingleton<fgGuiScreenGrid>::instance = NULL;
+fg::gui::CScreenGrid *fgSingleton<fg::gui::CScreenGrid>::instance = NULL;
 
-fgGuiScreenGrid::fgGuiScreenGrid() {
+using namespace fg;
+
+gui::CScreenGrid::CScreenGrid() {
     /**
      * The most common resolutions for smartphones old and new ones, including tablets
      *
@@ -76,26 +78,25 @@ fgGuiScreenGrid::fgGuiScreenGrid() {
     }
 }
 
-float fgGuiScreenGrid::transformToPixels(int grid_position) const {
+float gui::CScreenGrid::transformToPixels(int grid_position) const {
     if(grid_position < 0)
         grid_position = 0;
     return (float)grid_position * gridCellSize;
 }
 
-float fgGuiScreenGrid::transformToPixels(float grid_position) const {
+float gui::CScreenGrid::transformToPixels(float grid_position) const {
     if(grid_position < 0.0f)
         grid_position = 0.0f;
     return (float)grid_position * gridCellSize;
 }
 
-fgVector2f fgGuiScreenGrid::transform(fgVector2f grid_position) const {
-    return fgGuiScreenGrid::transform(grid_position.x, grid_position.y);
+fgVector2f gui::CScreenGrid::transform(fgVector2f grid_position) const {
+    return CScreenGrid::transform(grid_position.x, grid_position.y);
 }
 
-fgVector2f fgGuiScreenGrid::transform(float grid_position_x, float grid_position_y) const {
+fgVector2f gui::CScreenGrid::transform(float grid_position_x, float grid_position_y) const {
     fgVector2f transformed;
     transformed.x = (float)transformToPixels(grid_position_x);
     transformed.y = (float)transformToPixels(grid_position_y);
     return transformed;
 }
-

@@ -61,12 +61,12 @@ namespace fg {
          * the manager there's no additional
          *
          */
-        class CResourceManager : public ::fgDataManagerBase<fg::resource::CResource*, fgResourceHandle, fgResourceManagerTag> {
+        class CResourceManager : public CDataManagerBase<fg::resource::CResource*, fgResourceHandle, fgResourceManagerTag> {
             friend class fg::gfx::CTextureManager;
 
         public:
             ///
-            typedef fgDataManagerBase<CResource*, fgResourceHandle, fgResourceManagerTag> base_type;
+            typedef CDataManagerBase<CResource*, fgResourceHandle, fgResourceManagerTag> base_type;
             ///
             typedef fgResourceHandle handle_type;
             ///
@@ -409,7 +409,7 @@ namespace fg {
 
         private:
             /// Iterator to the current resource (used for browsing through the resources map)
-            hmDataVecItor m_currentResource;
+            DataVecItor m_currentResource;
             /// Array holding handles to resource groups
             rmHandleVec m_resourceGroupHandles;
             ///

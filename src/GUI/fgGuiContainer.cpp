@@ -11,21 +11,23 @@
 #include "Util/fgStrings.h"
 #include "fgGuiDrawer.h"
 
+using namespace fg;
+
 /**
  *
  */
-fgGuiContainer::fgGuiContainer() :
+gui::CContainer::CContainer() :
 base_type(),
 m_packMethod(FG_GUI_CONTAINER_PACK_FREE),
 m_packAlign(FG_GUI_CONTAINER_PACK_ALIGN_NONE),
 m_drawChildren(FG_TRUE) {
-    fgGuiContainer::setDefaults();
+    gui::CContainer::setDefaults();
 }
 
 /**
  *
  */
-fgGuiContainer::~fgGuiContainer() {
+gui::CContainer::~CContainer() {
     // What about freeing children widgets?
     // There should be some way to mark widgets for deletion (removal)
     // From the widget manager
@@ -39,10 +41,10 @@ fgGuiContainer::~fgGuiContainer() {
 /**
  *
  */
-void fgGuiContainer::setDefaults(void) {
-    m_type = FG_GUI_CONTAINER;
+void gui::CContainer::setDefaults(void) {
+    m_type = CONTAINER;
     m_typeName = FG_GUI_CONTAINER_NAME;
-    m_typeTraits = FG_GUI_CONTAINER | FG_GUI_WIDGET;
+    m_typeTraits = CONTAINER | WIDGET;
     m_ignoreState = FG_TRUE; // CONTAINER BY DEFAULT IGNORES THE STATE CHANGE (STYLE)
     m_packMethod = FG_GUI_CONTAINER_PACK_VERTICAL;
 }
@@ -51,7 +53,7 @@ void fgGuiContainer::setDefaults(void) {
  * 
  * @param flags
  */
-void fgGuiContainer::setFlags(const std::string& flags) {
+void gui::CContainer::setFlags(const std::string& flags) {
     if(flags.empty() || flags.length() < 3)
         return;
     // This is important - always call setFlags for the base class
@@ -101,7 +103,7 @@ void fgGuiContainer::setFlags(const std::string& flags) {
  * 
  * @param guiLayer
  */
-void fgGuiContainer::display(fgGuiDrawer *guiLayer) {
+void gui::CContainer::display(CDrawer *guiLayer) {
     if(!guiLayer)
         return;
     guiLayer->downZIndex();
@@ -109,7 +111,7 @@ void fgGuiContainer::display(fgGuiDrawer *guiLayer) {
     if(!m_drawChildren)
         return;
     for(int i = 0; i < (int)m_children.size(); i++) {
-        fgGuiWidget *child = m_children[i];
+        CWidget *child = m_children[i];
         if(!child)
             continue;
         guiLayer->downZIndex();
@@ -125,7 +127,7 @@ void fgGuiContainer::display(fgGuiDrawer *guiLayer) {
  * 
  * @return 
  */
-fgBoundingBox3Df fgGuiContainer::updateBounds(void) {
+fgBoundingBox3Df gui::CContainer::updateBounds(void) {
     if(m_children.empty()) {
         return base_type::updateBounds();
     }
@@ -134,11 +136,11 @@ fgBoundingBox3Df fgGuiContainer::updateBounds(void) {
     // set the minimal size
     base_type::updateBounds();
     // Current container style 
-    fgGuiStyleContent &containerStyle = m_styles[m_state];
+    CStyleContent &containerStyle = m_styles[(int)m_state];
     // Current container padding (inner border)
-    fgGuiPadding &containerPadding = containerStyle.getPadding();
+    SPadding &containerPadding = containerStyle.getPadding();
     // Current container margins (outer border)
-    fgGuiMargin &containerMargin = containerStyle.getMargin();
+    SMargin &containerMargin = containerStyle.getMargin();
     // outerBox - this box takes into account current widget's margin
     fgBoundingBox3Df outerBox;
     // innerBox - this box is for the usable area inside of the widget
@@ -171,7 +173,7 @@ fgBoundingBox3Df fgGuiContainer::updateBounds(void) {
     // in the gui container flow
     int nStaticChildren = nChildren;
     // Pointer to the last static positioned widget
-    fgGuiWidget *lastWidget = NULL;
+    CWidget *lastWidget = NULL;
 
     // Calculate the current innerBox for comparison
     innerBox.pos.x = m_bbox.pos.x + containerPadding.left;
@@ -183,7 +185,7 @@ fgBoundingBox3Df fgGuiContainer::updateBounds(void) {
     // Ignore non static widgets (positioning)
     // Also calculate the max/min widget size
     for(int i = 0; i < nChildren; i++) {
-        fgGuiWidget *child = m_children[i];
+        CWidget *child = m_children[i];
         if(!child)
             continue;
         // #FIXME - not visible widgets should be completely ignored?
@@ -191,7 +193,7 @@ fgBoundingBox3Df fgGuiContainer::updateBounds(void) {
             continue;
         fgVector3f childSize;
 
-        if(child->getStyleContent().getPosition().style != FG_GUI_POS_STATIC) {
+        if(child->getStyleContent().getPosition().style != SPosition::Style::STATIC) {
             nStaticChildren--;
             // If child has different than static positioning, update its size
             // and position with the main (container) innerBox constraint
@@ -199,14 +201,14 @@ fgBoundingBox3Df fgGuiContainer::updateBounds(void) {
             // child widget can update bounds of the parent container differently
 
             //fgBoundingBox3Df childBox = child->updateBounds(innerBox); // #FIXME
-            
+
             // Now if this widget is relatively position it can exceed the boundaries
             // of this container - so we need to merge this innerbox with childsbox
             //if(innerBox.pos.x > childBox.pos.x)
             //    innerBox.pos.x = childBox.pos.x;
             //if(innerBox.pos.y > childBox.pos.y)
             //    innerBox.pos.y = childBox.pos.y;
-            
+
             //innerBox.merge(childBox);
             innerBox.merge(child->updateBounds(innerBox));
             continue;
@@ -275,10 +277,10 @@ fgBoundingBox3Df fgGuiContainer::updateBounds(void) {
     // Iterate through all children widgets updating their
     // size and position with special area constraint
     for(int i = 0, j = 0; i < nChildren; i++, j++) {
-        fgGuiWidget *child = m_children[i];
+        CWidget *child = m_children[i];
         if(!child)
             continue;
-        if(child->getStyleContent().getPosition().style != FG_GUI_POS_STATIC ||
+        if(child->getStyleContent().getPosition().style != SPosition::Style::STATIC ||
            !child->isVisible()) {
             j--;
             continue;
@@ -349,13 +351,13 @@ fgBoundingBox3Df fgGuiContainer::updateBounds(void) {
     return outerBox;
 }
 
-/*
+/**
  *
  */
-void fgGuiContainer::refresh(void) {
+void gui::CContainer::refresh(void) {
     base_type::refresh();
     for(int i = 0; i < (int)m_children.size(); i++) {
-        fgGuiWidget *child = m_children[i];
+        CWidget *child = m_children[i];
 
         if(!child)
             continue;
@@ -368,12 +370,12 @@ void fgGuiContainer::refresh(void) {
  * @param pointerData
  * @return 
  */
-int fgGuiContainer::updateState(const fgPointerData *pointerData) {
+gui::CWidget::State gui::CContainer::updateState(const fgPointerData *pointerData) {
     base_type::updateState(pointerData);
     //if(fgGuiWidget::updateState(pointerData) == FG_GUI_WIDGET_STATE_NONE);
     //return m_state;
     for(int i = 0; i < (int)m_children.size(); i++) {
-        fgGuiWidget *child = m_children[i];
+        CWidget *child = m_children[i];
         if(!child)
             continue;
         child->updateState(pointerData);
@@ -386,13 +388,13 @@ int fgGuiContainer::updateState(const fgPointerData *pointerData) {
  * @param nameTag
  * @return 
  */
-fgGuiWidget *fgGuiContainer::getChild(const std::string& nameTag) {
+gui::CWidget *gui::CContainer::getChild(const std::string& nameTag) {
     if(nameTag.empty())
         return NULL;
     childrenMapItor itor = m_childrenMap.find(nameTag);
     if(itor == m_childrenMap.end())
         return NULL;
-    fgGuiWidget * pWidget = itor->second;
+    CWidget * pWidget = itor->second;
     return pWidget;
 }
 
@@ -401,7 +403,7 @@ fgGuiWidget *fgGuiContainer::getChild(const std::string& nameTag) {
  * @param nameTag
  * @return 
  */
-fgGuiWidget *fgGuiContainer::getChild(const char *nameTag) {
+gui::CWidget *gui::CContainer::getChild(const char *nameTag) {
     return getChild(std::string(nameTag));
 }
 
@@ -409,7 +411,7 @@ fgGuiWidget *fgGuiContainer::getChild(const char *nameTag) {
  * 
  * @return 
  */
-fgGuiContainer::childrenVec& fgGuiContainer::getChildren(void) {
+gui::CContainer::childrenVec& gui::CContainer::getChildren(void) {
     return m_children;
 }
 
@@ -417,7 +419,7 @@ fgGuiContainer::childrenVec& fgGuiContainer::getChildren(void) {
  * 
  * @return 
  */
-fgGuiContainer::childrenMap& fgGuiContainer::getChildrenMap(void) {
+gui::CContainer::childrenMap& gui::CContainer::getChildrenMap(void) {
     return m_childrenMap;
 }
 
@@ -426,7 +428,7 @@ fgGuiContainer::childrenMap& fgGuiContainer::getChildrenMap(void) {
  * @param pWidget
  * @return 
  */
-fgBool fgGuiContainer::addChild(fgGuiWidget *pWidget) {
+fgBool gui::CContainer::addChild(CWidget *pWidget) {
     if(m_children.find(pWidget) == -1) {
         m_childrenMap[pWidget->getName()] = pWidget;
         m_children.push_back(pWidget);
@@ -441,7 +443,7 @@ fgBool fgGuiContainer::addChild(fgGuiWidget *pWidget) {
  * @param pWidget
  * @return 
  */
-fgBool fgGuiContainer::removeChild(fgGuiWidget *pWidget) {
+fgBool gui::CContainer::removeChild(CWidget *pWidget) {
     if(!pWidget)
         return FG_FALSE;
     return removeChild(pWidget->getName());
@@ -452,13 +454,13 @@ fgBool fgGuiContainer::removeChild(fgGuiWidget *pWidget) {
  * @param nameTag
  * @return 
  */
-fgBool fgGuiContainer::removeChild(const std::string& nameTag) {
+fgBool gui::CContainer::removeChild(const std::string& nameTag) {
     if(nameTag.empty())
         return FG_FALSE;
     childrenMapItor itor = m_childrenMap.find(nameTag);
     if(itor == m_childrenMap.end())
         return FG_FALSE;
-    fgGuiWidget * pWidget = itor->second;
+    CWidget * pWidget = itor->second;
     m_childrenMap.erase(itor);
     childrenVecItor vit = m_children.begin(), end = m_children.end();
     for(; vit != end; vit++) {
@@ -477,7 +479,7 @@ fgBool fgGuiContainer::removeChild(const std::string& nameTag) {
  * @param nameTag
  * @return 
  */
-fgBool fgGuiContainer::removeChild(const char *nameTag) {
+fgBool gui::CContainer::removeChild(const char *nameTag) {
     if(!nameTag)
         return FG_FALSE;
     if(!strlen(nameTag))

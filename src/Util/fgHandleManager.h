@@ -40,192 +40,193 @@ namespace std {
         #include <unordered_map>
     #endif /* FG_USING_MARMALADE */
 
-// HandleType HAS TO BE template of fgHandle
-template <typename TDataType, typename THandleType>
-/**
- *
- */
-class fgHandleManager {
-    #ifdef FG_USING_MARMALADE
-protected:
+namespace fg {
+    namespace util {
 
-    struct hmEqualTo {
-        bool operator ()(const char* s1, const char* s2) const {
-            return strcmp(s1, s2) == 0;
-        }
-        bool operator ()(const std::string& s1, const std::string& s2) const {
-            return s1.compare(s2) == 0;
-        }
-    };
-    #endif
-public:
-    ///
-    typedef TDataType data_type;
-    ///
-    typedef std::string hashKey;
-    // Type for vector storing Data pointers
-    typedef fg::CVector <TDataType> hmDataVec;
-    typedef typename fg::CVector <TDataType>::iterator hmDataVecItor;
+        /**
+         * // HandleType HAS TO BE template of fgHandle
+         */
+        template <typename TDataType, typename THandleType>
+        class CHandleManager {
     #ifdef FG_USING_MARMALADE
-    typedef std::hash<std::string> hashFunc;
-    // Type for map, assigning handle index value to string ID (case sensitive)
-    typedef std::hash_map <hashKey, fgRawIndex, hashFunc, hmEqualTo> hmNameMap;
+        protected:
+
+            struct hmEqualTo {
+                bool operator ()(const char* s1, const char* s2) const {
+                    return strcmp(s1, s2) == 0;
+                }
+                bool operator ()(const std::string& s1, const std::string& s2) const {
+                    return s1.compare(s2) == 0;
+                }
+            };
+    #endif
+        public:
+            ///
+            typedef TDataType data_type;
+            ///
+            typedef std::string HashKey;
+            // Type for vector storing Data pointers
+            typedef fg::CVector <TDataType> DataVec;
+            typedef typename fg::CVector <TDataType>::iterator DataVecItor;
+    #ifdef FG_USING_MARMALADE
+            typedef std::hash<std::string> hashFunc;
+            // Type for map, assigning handle index value to string ID (case sensitive)
+            typedef std::hash_map <HashKey, fgRawIndex, hashFunc, hmEqualTo> NameMap;
     #else
-    typedef std::unordered_map <hashKey, fgRawIndex> hmNameMap;
+            typedef std::unordered_map <HashKey, fgRawIndex> NameMap;
     #endif
 
-private:
-    typedef fg::CVector <fgRawMagic> hmMagicVec;
-    typedef fg::CVector <hashKey> hmNameVec;
-    typedef fg::CVector <unsigned int> hmFreeSlotsVec;
+        private:
+            ///
+            typedef fg::CVector <fgRawMagic> MagicVec;
+            ///
+            typedef fg::CVector <HashKey> NameVec;
+            ///
+            typedef fg::CVector <unsigned int> FreeSlotsVec;
 
-    /// Data storage
-    hmDataVec m_managedData;
-    /// Corresponding magic numbers
-    hmMagicVec m_magicData;
-    /// Free slots in the database
-    hmFreeSlotsVec m_freeSlots;
-    /// Map for name (string) IDs
-    hmNameMap m_nameMap;
-    /// Vector for storing string IDs
-    hmNameVec m_nameVec;
+            /// Data storage
+            DataVec m_managedData;
+            /// Corresponding magic numbers
+            MagicVec m_magicData;
+            /// Free slots in the database
+            FreeSlotsVec m_freeSlots;
+            /// Map for name (string) IDs
+            NameMap m_nameMap;
+            /// Vector for storing string IDs
+            NameVec m_nameVec;
 
-protected:
-    /**
-     * Reset internal data
-     */
-    void clear(void);
-public:
-    /**
-     * Default constructor for Handle Manager object
-     */
-    fgHandleManager() {
-        clear();
-    }
-    /**
-     * Default destructor for Handle Manager object
-     */
-    ~fgHandleManager() {
-        clear();
-    }
+        protected:
+            /**
+             * Reset internal data
+             */
+            void clear(void);
+        public:
+            /**
+             * Default constructor for Handle Manager object
+             */
+            CHandleManager() {
+                clear();
+            }
+            /**
+             * Destructor for Handle Manager object
+             */
+            virtual ~CHandleManager() {
+                clear();
+            }
 
-    /**
-     * 
-     * @param rHandle
-     * @param pResource
-     * @return 
-     */
-    fgBool acquireHandle(THandleType& rHandle, TDataType pResource);
-    /**
-     * 
-     * @param name
-     * @param rHandle
-     * @return 
-     */
-    fgBool setupName(const std::string& name, const THandleType& rHandle);
-    /**
-     * 
-     * @param name
-     * @param rHandle
-     * @return 
-     */
-    fgBool setupName(const char* name, const THandleType& rHandle);
-    /**
-     * 
-     * @param handle
-     * @return 
-     */
-    fgBool releaseHandle(const THandleType& handle);
-    /**
-     * 
-     */
-    void releaseAllHandles(void);
+            /**
+             * 
+             * @param rHandle
+             * @param pResource
+             * @return 
+             */
+            fgBool acquireHandle(THandleType& rHandle, TDataType pResource);
+            /**
+             * 
+             * @param name
+             * @param rHandle
+             * @return 
+             */
+            fgBool setupName(const std::string& name, const THandleType& rHandle);
+            /**
+             * 
+             * @param name
+             * @param rHandle
+             * @return 
+             */
+            fgBool setupName(const char* name, const THandleType& rHandle);
+            /**
+             * 
+             * @param handle
+             * @return 
+             */
+            fgBool releaseHandle(const THandleType& handle);
+            /**
+             * 
+             */
+            void releaseAllHandles(void);
 
-    /**
-     * 
-     * @param handle
-     * @return 
-     */
-    TDataType dereference(const THandleType& handle);
-    /**
-     * 
-     * @param name
-     * @return 
-     */
-    TDataType dereference(const std::string& name);
-    /**
-     * 
-     * @param name
-     * @return 
-     */
-    TDataType dereference(const char* name);
+            /**
+             * 
+             * @param handle
+             * @return 
+             */
+            TDataType dereference(const THandleType& handle);
+            /**
+             * 
+             * @param name
+             * @return 
+             */
+            TDataType dereference(const std::string& name);
+            /**
+             * 
+             * @param name
+             * @return 
+             */
+            TDataType dereference(const char* name);
+            /**
+             * 
+             * @return 
+             */
+            unsigned int getUsedHandleCount(void) const {
+                return ( m_magicData.size() - m_freeSlots.size());
+            }
+            /**
+             * 
+             * @return 
+             */
+            fgBool hasUsedHandles(void) const {
+                return (fgBool)(!!getUsedHandleCount());
+            }
+            /**
+             * 
+             * @return 
+             */
+            DataVec& getRefDataVector(void) {
+                return m_managedData;
+            }
+            /**
+             * 
+             * @return 
+             */
+            const DataVec& getRefDataVector(void) const {
+                return m_managedData;
+            }
 
-    /**
-     * 
-     * @return 
-     */
-    unsigned int getUsedHandleCount(void) const {
-        return ( m_magicData.size() - m_freeSlots.size());
-    }
-
-    /**
-     * 
-     * @return 
-     */
-    fgBool hasUsedHandles(void) const {
-        return (fgBool)(!!getUsedHandleCount());
-    }
-
-    /**
-     * 
-     * @return 
-     */
-    hmDataVec& getRefDataVector(void) {
-        return m_managedData;
-    }
-
-    /**
-     * 
-     * @return 
-     */
-    const hmDataVec& getRefDataVector(void) const {
-        return m_managedData;
-    }
-
-    /**
-     * 
-     * @param pData
-     * @return 
-     */
-    fgBool isDataManaged(TDataType pData);
-    /**
-     * 
-     * @param handle
-     * @return 
-     */
-    fgBool isHandleValid(const THandleType& handle);
+            /**
+             * 
+             * @param pData
+             * @return 
+             */
+            fgBool isDataManaged(TDataType pData);
+            /**
+             * 
+             * @param handle
+             * @return 
+             */
+            fgBool isHandleValid(const THandleType& handle);
+        };
+    };
 };
-
 /**
  * 
  */
-template <typename DataType, typename HandleType>
-void fgHandleManager<DataType, HandleType>::clear(void) {
+template <typename TDataType, typename THandleType>
+void fg::util::CHandleManager<TDataType, THandleType>::clear(void) {
     m_managedData.clear_optimised();
     m_magicData.clear_optimised();
     m_freeSlots.clear_optimised();
     m_nameVec.clear_optimised();
     m_nameMap.clear();
 }
-
 /**
  * 
  * @param rHandle
  * @param pResource
  * @return 
  */
-template <typename DataType, typename HandleType>
-fgBool fgHandleManager<DataType, HandleType>::acquireHandle(HandleType& rHandle, DataType pResource) {
+template <typename TDataType, typename THandleType>
+fgBool fg::util::CHandleManager<TDataType, THandleType>::acquireHandle(THandleType& rHandle, TDataType pResource) {
     // If free list is empty, add a new one otherwise use first one found
     unsigned int index;
     if(m_freeSlots.empty()) {
@@ -246,15 +247,14 @@ fgBool fgHandleManager<DataType, HandleType>::acquireHandle(HandleType& rHandle,
     }
     return FG_TRUE;
 }
-
 /**
  * 
  * @param name
  * @param rHandle
  * @return 
  */
-template <typename DataType, typename HandleType>
-fgBool fgHandleManager<DataType, HandleType>::setupName(const std::string& name, const HandleType& rHandle) {
+template <typename TDataType, typename THandleType>
+fgBool fg::util::CHandleManager<TDataType, THandleType>::setupName(const std::string& name, const THandleType& rHandle) {
     if(!isHandleValid(rHandle)) {
         return FG_FALSE;
     }
@@ -272,15 +272,14 @@ fgBool fgHandleManager<DataType, HandleType>::setupName(const std::string& name,
     m_nameVec[index] = name;
     return FG_TRUE;
 }
-
 /**
  * 
  * @param name
  * @param rHandle
  * @return 
  */
-template <typename DataType, typename HandleType>
-fgBool fgHandleManager<DataType, HandleType>::setupName(const char* name, const HandleType& rHandle) {
+template <typename TDataType, typename THandleType>
+fgBool fg::util::CHandleManager<TDataType, THandleType>::setupName(const char* name, const THandleType& rHandle) {
     if(!isHandleValid(rHandle)) {
         return FG_FALSE;
     }
@@ -299,16 +298,15 @@ fgBool fgHandleManager<DataType, HandleType>::setupName(const char* name, const 
     m_nameVec[index] = std::string(name);
     return FG_TRUE;
 }
-
 /**
  * 
  * @param handle
  * @return 
  */
-template <typename DataType, typename HandleType>
-fgBool fgHandleManager<DataType, HandleType>::releaseHandle(const HandleType& handle) {
+template <typename TDataType, typename THandleType>
+fgBool fg::util::CHandleManager<TDataType, THandleType>::releaseHandle(const THandleType& handle) {
     if(!isHandleValid(handle)) {
-        FG_LOG_DEBUG("HandleManager[%s]: can't release handle - handle is invalid, tag_name[%s]", HandleType::getTagName(), HandleType::getTagName());
+        FG_LOG_DEBUG("HandleManager[%s]: can't release handle - handle is invalid, tag_name[%s]", THandleType::getTagName(), THandleType::getTagName());
         return FG_FALSE;
     }
     // which one?
@@ -316,10 +314,10 @@ fgBool fgHandleManager<DataType, HandleType>::releaseHandle(const HandleType& ha
     // ok remove it - tag as unused and add to free list
     m_magicData[index] = 0;
     m_managedData[index] = NULL;
-    FG_LOG_DEBUG("HandleManager[%s]: Releasing handle: index[%d], magic[%d], handle[%d]", HandleType::getTagName(), index, handle.getMagic(), handle.getHandle());
+    FG_LOG_DEBUG("HandleManager[%s]: Releasing handle: index[%d], magic[%d], handle[%d]", THandleType::getTagName(), index, handle.getMagic(), handle.getHandle());
     if(!m_nameVec[index].empty()) {
         m_nameMap.erase(m_nameVec[index]);
-        FG_LOG_DEBUG("HandleManager[%s]: erasing '%s' from handle map...", HandleType::getTagName(), m_nameVec[index].c_str());
+        FG_LOG_DEBUG("HandleManager[%s]: erasing '%s' from handle map...", THandleType::getTagName(), m_nameVec[index].c_str());
     }
     m_nameVec[index].clear();
     m_freeSlots.push_back(index);
@@ -328,12 +326,11 @@ fgBool fgHandleManager<DataType, HandleType>::releaseHandle(const HandleType& ha
     }
     return FG_TRUE;
 }
-
 /**
  * 
  */
-template <typename DataType, typename HandleType>
-void fgHandleManager<DataType, HandleType>::releaseAllHandles(void) {
+template <typename TDataType, typename THandleType>
+void fg::util::CHandleManager<TDataType, THandleType>::releaseAllHandles(void) {
     clear();
 }
 /**
@@ -341,26 +338,25 @@ void fgHandleManager<DataType, HandleType>::releaseAllHandles(void) {
  * @param handle
  * @return 
  */
-template <typename DataType, typename HandleType>
-inline DataType fgHandleManager<DataType, HandleType>::dereference(const HandleType& handle) {
+template <typename TDataType, typename THandleType>
+inline TDataType fg::util::CHandleManager<TDataType, THandleType>::dereference(const THandleType& handle) {
     if(!isHandleValid(handle)) {
         return NULL;
     }
     fgRawIndex index = handle.getIndex();
     return *(m_managedData.begin() + index);
 }
-
 /**
  * 
  * @param name
  * @return 
  */
-template <typename DataType, typename HandleType>
-inline DataType fgHandleManager<DataType, HandleType>::dereference(const std::string& name) {
+template <typename TDataType, typename THandleType>
+inline TDataType fg::util::CHandleManager<TDataType, THandleType>::dereference(const std::string& name) {
     if(name.empty()) {
         return NULL;
     }
-    typename hmNameMap::iterator it = m_nameMap.find(name);
+    typename NameMap::iterator it = m_nameMap.find(name);
     if(it == m_nameMap.end()) {
         return NULL;
     }
@@ -374,41 +370,38 @@ inline DataType fgHandleManager<DataType, HandleType>::dereference(const std::st
         return NULL;
     }
 }
-
 /**
  * 
  * @param name
  * @return 
  */
-template <typename DataType, typename HandleType>
-inline DataType fgHandleManager<DataType, HandleType>::dereference(const char* name) {
+template <typename TDataType, typename THandleType>
+inline TDataType fg::util::CHandleManager<TDataType, THandleType>::dereference(const char* name) {
     if(name == NULL) {
         return NULL;
     }
     std::string key = name;
-    return fgHandleManager<DataType, HandleType>::dereference(key);
+    return CHandleManager<TDataType, THandleType>::dereference(key);
 }
-
 /**
  * 
  * @param pData
  * @return 
  */
-template <typename DataType, typename HandleType>
-inline fgBool fgHandleManager<DataType, HandleType>::isDataManaged(DataType pData) {
+template <typename TDataType, typename THandleType>
+inline fgBool fg::util::CHandleManager<TDataType, THandleType>::isDataManaged(TDataType pData) {
     if(m_managedData.find(pData) != -1) {
         return FG_TRUE;
     }
     return FG_FALSE;
 }
-
 /**
  * 
  * @param handle
  * @return 
  */
-template <typename DataType, typename HandleType>
-inline fgBool fgHandleManager<DataType, HandleType>::isHandleValid(const HandleType& handle) {
+template <typename TDataType, typename THandleType>
+inline fgBool fg::util::CHandleManager<TDataType, THandleType>::isHandleValid(const THandleType& handle) {
     if(handle.isNull()) {
         return FG_FALSE;
     }
@@ -417,7 +410,7 @@ inline fgBool fgHandleManager<DataType, HandleType>::isHandleValid(const HandleT
     fgRawIndex index = handle.getIndex();
     if((index >= m_managedData.size()) || (m_magicData[index] != handle.getMagic())) {
         // no good! invalid handle == client programming error
-        FG_LOG_DEBUG("HandleManager[%s]: invalid handle, magic numbers don't match with index: index[%d], magic[%d], handle[%d], true_magic[%d]", HandleType::getTagName(), index, handle.getMagic(), handle.getHandle(), m_magicData[index]);
+        FG_LOG_DEBUG("HandleManager[%s]: invalid handle, magic numbers don't match with index: index[%d], magic[%d], handle[%d], true_magic[%d]", THandleType::getTagName(), index, handle.getMagic(), handle.getHandle(), m_magicData[index]);
         return FG_FALSE;
     }
     return FG_TRUE;
@@ -425,10 +418,10 @@ inline fgBool fgHandleManager<DataType, HandleType>::isHandleValid(const HandleT
 
     #if 0
 template <typename DataType, typename HandleType>
-inline const DataType* fgHandleManager <DataType, HandleType>
+inline const DataType* CHandleManager <DataType, HandleType>
 ::Dereference(HandleType handle) const {
     // this lazy cast is ok - non-const version does not modify anything
-    typedef fgHandleManager <DataType, HandleType> ThisType;
+    typedef CHandleManager <DataType, HandleType> ThisType;
     return ( const_cast<ThisType*>(this)->Dereference(handle));
 }
     #endif

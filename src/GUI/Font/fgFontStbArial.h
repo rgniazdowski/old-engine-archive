@@ -9,7 +9,8 @@
 
 #ifndef FG_INC_FONT_STB_ARIAL
     #define FG_INC_FONT_STB_ARIAL
-
+    #define FG_INC_FONT_STB_ARIAL_BLOCK
+    
     #ifndef FG_INC_FONT_BUILT_IN_TYPES
         #include "fgFontBuiltInTypes.h"
     #endif
@@ -22,17 +23,30 @@
         #define FG_STB_FONT_CONST(_font_name, _const_name) STB_FONT_ ## _font_name ## _usascii_ ## _const_name
     #endif
 
-namespace fgFontBuiltIn {
+namespace fg {
+    namespace gui {
+        namespace font {
 
-    class StbArial {
-    public:
-        static fgFontBuiltInRawData* getRawData(const int size = 50);
+            class StbArial {
+            public:
+                /**
+                 * 
+                 * @param size
+                 * @return 
+                 */
+                static SFontBuiltInRawData* getRawData(const int size = 50);
 
-    private:
-        static fgFontBuiltInRawData m_stbFontRawData;
-        StbArial() { }
-        ~StbArial() { }
+            private:
+                ///
+                static SFontBuiltInRawData m_stbFontRawData;
+                ///
+                StbArial() { }
+                ///
+                ~StbArial() { }
+            };
+        };
     };
 };
 
+    #undef FG_INC_FONT_STB_ARIAL_BLOCK
 #endif /* FG_INC_FONT_STB_ARIAL */

@@ -9,35 +9,46 @@
 
 #ifndef FG_INC_GUI_TOGGLE_BUTTON
     #define FG_INC_GUI_TOGGLE_BUTTON
+    #define FG_INC_GUI_TOGGLE_BUTTON_BLOCK
 
     #include "fgGuiButton.h"
     #include "fgGuiWidgetFactoryTypes.h"
 
-/*
- *
- */
-class fgGuiToggleButton : public fgGuiButton {
-public:
-    typedef fgGuiButton base_type;
-private:
+namespace fg {
+    namespace gui {
 
-protected:
-    // 
-    virtual void setDefaults(void);
+        /**
+         *
+         */
+        class CToggleButton : public CButton {
+        public:
+            ///
+            typedef CButton base_type;
 
-public:
-    // 
-    fgGuiToggleButton();
-    // 
-    virtual ~fgGuiToggleButton();
+        public:
+            /**
+             * 
+             */
+            CToggleButton();
+            /**
+             * 
+             */
+            virtual ~CToggleButton();
 
-    FG_GUI_WIDGET_FACTORY_CREATE_FUNCTION(fgGuiToggleButton);
+            /**
+             * 
+             * @return 
+             */
+            FG_GUI_WIDGET_FACTORY_CREATE_FUNCTION(CToggleButton)
 
-    // 
-    virtual fgBoundingBox3Df updateBounds(void);
-    // 
-    virtual void refresh(void);
-
+        protected:
+            /**
+             * 
+             */
+            virtual void setDefaults(void);
+        };
+    };
 };
 
+    #undef FG_INC_GUI_TOGGLE_BUTTON_BLOCK
 #endif /* FG_INC_GUI_TOGGLE_BUTTON */

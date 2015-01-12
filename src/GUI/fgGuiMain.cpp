@@ -50,10 +50,10 @@ using namespace fg;
  * @param eventMgr
  * @param resourceMgr
  */
-fgGuiMain::fgGuiMain(const std::string& stylesPath,
-                     const std::string& widgetsPath,
-                     event::CEventManager *eventMgr,
-                     resource::CResourceManager *resourceMgr) :
+gui::CGuiMain::CGuiMain(const std::string& stylesPath,
+                        const std::string& widgetsPath,
+                        event::CEventManager *eventMgr,
+                        resource::CResourceManager *resourceMgr) :
 m_styleMgr(NULL),
 m_widgetMgr(NULL),
 m_widgetFactory(NULL),
@@ -71,10 +71,10 @@ m_console(NULL),
 m_isMenuChanging(FG_FALSE),
 m_guiCallbacks(),
 m_screenBox() {
-    m_widgetFactory = new fgGuiWidgetFactory();
-    m_styleMgr = new fgGuiStyleManager();
-    m_widgetMgr = new fgGuiWidgetManager(m_widgetFactory, m_styleMgr);
-    m_guiDrawer = new fgGuiDrawer();
+    m_widgetFactory = new CWidgetFactory();
+    m_styleMgr = new CStyleManager();
+    m_widgetMgr = new fg::gui::CWidgetManager(m_widgetFactory, m_styleMgr);
+    m_guiDrawer = new CDrawer();
     m_guiDrawer->setResourceManager(resourceMgr);
 
     if(m_pEventMgr)
@@ -94,23 +94,23 @@ m_screenBox() {
 
     m_managerType = FG_MANAGER_GUI_MAIN;
 
-    m_guiLinkCallback = new fgGuiClassCallback<fgGuiMain>(this, this, &fgGuiMain::guiLinkHandler);
+    m_guiLinkCallback = new CGuiMethodCallback<CGuiMain>(this, this, &CGuiMain::guiLinkHandler);
 
-    m_console = new fgGuiConsole();
+    m_console = new CConsole();
     m_console->setVisible(FG_FALSE); // #FIXME :o
 }
 
 /**
  *
  */
-fgGuiMain::~fgGuiMain() {
-    fgGuiMain::destroy();
+gui::CGuiMain::~CGuiMain() {
+    gui::CGuiMain::destroy();
 }
 
 /**
  * 
  */
-void fgGuiMain::clear(void) {
+void gui::CGuiMain::clear(void) {
     m_managerType = FG_MANAGER_GUI_MAIN;
 
 }
@@ -119,7 +119,7 @@ void fgGuiMain::clear(void) {
  * 
  * @return 
  */
-fgBool fgGuiMain::destroy(void) {
+fgBool gui::CGuiMain::destroy(void) {
     unregisterGuiCallbacks();
 
     if(m_console)
@@ -176,7 +176,7 @@ fgBool fgGuiMain::destroy(void) {
  * 
  * @return 
  */
-fgBool fgGuiMain::initialize(void) {
+fgBool gui::CGuiMain::initialize(void) {
     if(m_init)
         return FG_TRUE;
     if(!m_pEventMgr || !m_pResourceMgr || !m_pShaderMgr || !m_pPointerInputReceiver) {
@@ -185,32 +185,32 @@ fgBool fgGuiMain::initialize(void) {
         return FG_FALSE;
     }
     //m_widgetFactory->registerWidget(FG_GUI_WIDGET,		&fgGuiWidget::createWidget);
-    m_widgetFactory->registerWidget(FG_GUI_LABEL, &fgGuiLabel::createWidget);
-    m_widgetFactory->registerWidget(FG_GUI_BUTTON, &fgGuiButton::createWidget);
-    m_widgetFactory->registerWidget(FG_GUI_TOGGLE_BUTTON, &fgGuiToggleButton::createWidget);
-    m_widgetFactory->registerWidget(FG_GUI_CONTAINER, &fgGuiContainer::createWidget);
-    m_widgetFactory->registerWidget(FG_GUI_MENU, &fgGuiMenu::createWidget);
-    m_widgetFactory->registerWidget(FG_GUI_FRAME, &fgGuiFrame::createWidget);
-    m_widgetFactory->registerWidget(FG_GUI_SCROLL_AREA, &fgGuiScrollArea::createWidget);
-    m_widgetFactory->registerWidget(FG_GUI_TEXT_AREA, &fgGuiTextArea::createWidget);
-    m_widgetFactory->registerWidget(FG_GUI_EDITABLE_TEXT, &fgGuiEditableText::createWidget);
-    m_widgetFactory->registerWidget(FG_GUI_CONSOLE, &fgGuiConsole::createWidget);
-    m_widgetFactory->registerWidget(FG_GUI_WINDOW, &fgGuiWindow::createWidget);
-    m_widgetFactory->registerWidget(FG_GUI_MESSAGE_BOX, &fgGuiMessageBox::createWidget);
-    m_widgetFactory->registerWidget(FG_GUI_POPUP, &fgGuiPopup::createWidget);
-    m_widgetFactory->registerWidget(FG_GUI_PROGRESS_BAR, &fgGuiProgressBar::createWidget);
-    m_widgetFactory->registerWidget(FG_GUI_TABLE, &fgGuiTable::createWidget);
-    m_widgetFactory->registerWidget(FG_GUI_LOADER, &fgGuiLoader::createWidget);
-    m_widgetFactory->registerWidget(FG_GUI_SLIDER, &fgGuiSlider::createWidget);
+    m_widgetFactory->registerWidget(LABEL, &CLabel::createWidget);
+    m_widgetFactory->registerWidget(BUTTON, &CButton::createWidget);
+    m_widgetFactory->registerWidget(TOGGLE_BUTTON, &CToggleButton::createWidget);
+    m_widgetFactory->registerWidget(CONTAINER, &CContainer::createWidget);
+    m_widgetFactory->registerWidget(MENU, &CMenu::createWidget);
+    m_widgetFactory->registerWidget(FRAME, &CFrame::createWidget);
+    m_widgetFactory->registerWidget(SCROLL_AREA, &CScrollArea::createWidget);
+    m_widgetFactory->registerWidget(TEXT_AREA, &CTextArea::createWidget);
+    m_widgetFactory->registerWidget(EDITABLE_TEXT, &CEditableText::createWidget);
+    m_widgetFactory->registerWidget(CONSOLE, &CConsole::createWidget);
+    m_widgetFactory->registerWidget(WINDOW, &CWindow::createWidget);
+    m_widgetFactory->registerWidget(MESSAGE_BOX, &CMessageBox::createWidget);
+    m_widgetFactory->registerWidget(POPUP, &CPopup::createWidget);
+    m_widgetFactory->registerWidget(PROGRESS_BAR, &CProgressBar::createWidget);
+    m_widgetFactory->registerWidget(TABLE, &CTable::createWidget);
+    m_widgetFactory->registerWidget(LOADER, &CLoaderSub::createWidget);
+    m_widgetFactory->registerWidget(SLIDER, &CSlider::createWidget);
 
     FG_LOG_DEBUG("GUI: Initializing builtin fonts...");
-    fgFontBuiltInResource *consolasBold = new fgFontBuiltInResource(fgFontBuiltIn::StbConsolasBold::getRawData(32));
+    CFontBuiltInResource *consolasBold = new CFontBuiltInResource(font::StbConsolasBold::getRawData(32));
     consolasBold->setName("StbConsolasBold");
     m_pResourceMgr->insertResource(consolasBold);
     // This will automatically create the resource and also throw event for GFX upload
     m_pResourceMgr->get(consolasBold->getRefHandle());
 
-    fgFontBuiltInResource *courier = new fgFontBuiltInResource(fgFontBuiltIn::StbCourier::getRawData(50));
+    CFontBuiltInResource *courier = new CFontBuiltInResource(font::StbCourier::getRawData(50));
     courier->setName("StbCourier");
     m_pResourceMgr->insertResource(courier);
     m_pResourceMgr->get(courier->getRefHandle());
@@ -228,14 +228,14 @@ fgBool fgGuiMain::initialize(void) {
     // Initializing console style #FIXME, this could use some optimizing
     if(m_styleMgr && m_console) {
         std::string styleName = m_console->getStyleName();
-        fgGuiStyle *style = m_styleMgr->get(styleName);
+        CStyle *style = m_styleMgr->get(styleName);
         if(style) {
             FG_LOG_DEBUG("WidgetManager: Copying style to widget: '%s' of type: '%s'",
                          m_console->getNameStr(),
                          m_console->getTypeNameStr());
 
             style->copyFullContent(m_console->getStyleContents(),
-                                   FG_GUI_WIDGET_STATE_COUNT,
+                                   (int)CWidget::State::COUNT,
                                    m_console->getTypeName());
             m_console->refresh();
             m_console->updateBounds();
@@ -251,40 +251,40 @@ fgBool fgGuiMain::initialize(void) {
 /**
  *
  */
-void fgGuiMain::registerGuiCallbacks(void) {
+void gui::CGuiMain::registerGuiCallbacks(void) {
     if(!m_pEventMgr)
         return;
 
     if(!m_guiTouchCallback)
-        m_guiTouchCallback = new fgClassCallback<fgGuiMain>(this, &fgGuiMain::guiTouchHandler);
+        m_guiTouchCallback = new fg::event::CMethodCallback<CGuiMain>(this, &CGuiMain::guiTouchHandler);
 
-    m_pEventMgr->addEventCallback(FG_EVENT_TOUCH_PRESSED, m_guiTouchCallback);
-    m_pEventMgr->addEventCallback(FG_EVENT_TOUCH_RELEASED, m_guiTouchCallback);
-    m_pEventMgr->addEventCallback(FG_EVENT_TOUCH_MOTION, m_guiTouchCallback);
-    m_pEventMgr->addEventCallback(FG_EVENT_TOUCH_TAP_FINISHED, m_guiTouchCallback);
+    m_pEventMgr->addCallback(FG_EVENT_TOUCH_PRESSED, m_guiTouchCallback);
+    m_pEventMgr->addCallback(FG_EVENT_TOUCH_RELEASED, m_guiTouchCallback);
+    m_pEventMgr->addCallback(FG_EVENT_TOUCH_MOTION, m_guiTouchCallback);
+    m_pEventMgr->addCallback(FG_EVENT_TOUCH_TAP_FINISHED, m_guiTouchCallback);
 
     if(!m_guiMouseCallback)
-        m_guiMouseCallback = new fgClassCallback<fgGuiMain>(this, &fgGuiMain::guiMouseHandler);
+        m_guiMouseCallback = new fg::event::CMethodCallback<CGuiMain>(this, &CGuiMain::guiMouseHandler);
 
-    m_pEventMgr->addEventCallback(FG_EVENT_MOUSE_PRESSED, m_guiMouseCallback);
-    m_pEventMgr->addEventCallback(FG_EVENT_MOUSE_RELEASED, m_guiMouseCallback);
-    m_pEventMgr->addEventCallback(FG_EVENT_MOUSE_MOTION, m_guiMouseCallback);
+    m_pEventMgr->addCallback(FG_EVENT_MOUSE_PRESSED, m_guiMouseCallback);
+    m_pEventMgr->addCallback(FG_EVENT_MOUSE_RELEASED, m_guiMouseCallback);
+    m_pEventMgr->addCallback(FG_EVENT_MOUSE_MOTION, m_guiMouseCallback);
 }
 
 /**
  *
  */
-void fgGuiMain::unregisterGuiCallbacks(void) {
+void gui::CGuiMain::unregisterGuiCallbacks(void) {
     if(!m_pEventMgr)
         return;
 
-    m_pEventMgr->removeEventCallback(FG_EVENT_TOUCH_PRESSED, m_guiTouchCallback);
-    m_pEventMgr->removeEventCallback(FG_EVENT_TOUCH_RELEASED, m_guiTouchCallback);
-    m_pEventMgr->removeEventCallback(FG_EVENT_TOUCH_MOTION, m_guiTouchCallback);
-    m_pEventMgr->removeEventCallback(FG_EVENT_TOUCH_TAP_FINISHED, m_guiTouchCallback);
-    m_pEventMgr->removeEventCallback(FG_EVENT_MOUSE_PRESSED, m_guiMouseCallback);
-    m_pEventMgr->removeEventCallback(FG_EVENT_MOUSE_RELEASED, m_guiMouseCallback);
-    m_pEventMgr->removeEventCallback(FG_EVENT_MOUSE_MOTION, m_guiMouseCallback);
+    m_pEventMgr->removeCallback(FG_EVENT_TOUCH_PRESSED, m_guiTouchCallback);
+    m_pEventMgr->removeCallback(FG_EVENT_TOUCH_RELEASED, m_guiTouchCallback);
+    m_pEventMgr->removeCallback(FG_EVENT_TOUCH_MOTION, m_guiTouchCallback);
+    m_pEventMgr->removeCallback(FG_EVENT_TOUCH_TAP_FINISHED, m_guiTouchCallback);
+    m_pEventMgr->removeCallback(FG_EVENT_MOUSE_PRESSED, m_guiMouseCallback);
+    m_pEventMgr->removeCallback(FG_EVENT_MOUSE_RELEASED, m_guiMouseCallback);
+    m_pEventMgr->removeCallback(FG_EVENT_MOUSE_MOTION, m_guiMouseCallback);
 }
 
 /**
@@ -294,9 +294,9 @@ void fgGuiMain::unregisterGuiCallbacks(void) {
  * @param callbackType
  * @return 
  */
-fgBool fgGuiMain::addWidgetCallback(fgGuiWidget *pWidget,
-                                    fgGuiCallback *pCallback,
-                                    const fgGuiWidgetCallbackType callbackType) {
+fgBool gui::CGuiMain::addWidgetCallback(CWidget *pWidget,
+                                        CGuiCallback *pCallback,
+                                        const fgGuiWidgetCallbackType callbackType) {
     if(!pWidget || !pCallback || !callbackType)
         return FG_FALSE;
     if(!pWidget->isManaged())
@@ -357,9 +357,9 @@ fgBool fgGuiMain::addWidgetCallback(fgGuiWidget *pWidget,
  * @param callbackType
  * @return 
  */
-fgBool fgGuiMain::addWidgetCallback(const char *widgetName,
-                                    fgGuiCallback *pCallback,
-                                    const fgGuiWidgetCallbackType callbackType) {
+fgBool gui::CGuiMain::addWidgetCallback(const char *widgetName,
+                                        CGuiCallback *pCallback,
+                                        const fgGuiWidgetCallbackType callbackType) {
     if(!widgetName || !pCallback || !callbackType)
         return FG_FALSE;
     if(!*widgetName)
@@ -374,9 +374,9 @@ fgBool fgGuiMain::addWidgetCallback(const char *widgetName,
  * @param callbackType
  * @return 
  */
-fgBool fgGuiMain::addWidgetCallback(const std::string& widgetName,
-                                    fgGuiCallback *pCallback,
-                                    const fgGuiWidgetCallbackType callbackType) {
+fgBool gui::CGuiMain::addWidgetCallback(const std::string& widgetName,
+                                        CGuiCallback *pCallback,
+                                        const fgGuiWidgetCallbackType callbackType) {
     if(!pCallback || !callbackType || widgetName.empty())
         return FG_FALSE;
     return addWidgetCallback(m_widgetMgr->get(widgetName), pCallback, callbackType);
@@ -387,27 +387,27 @@ extern float guiScale;
 /**
  * 
  */
-void fgGuiMain::updateState(void) {
+void gui::CGuiMain::updateState(void) {
     if(!m_widgetMgr || !m_pResourceMgr || !m_pPointerInputReceiver)
         return;
     if(m_isMenuChanging) {
         if(m_changeToMenu) {
-            m_currentMenu = static_cast<fgGuiMenu *>(m_changeToMenu);
+            m_currentMenu = static_cast<CMenu *>(m_changeToMenu);
         }
         m_isMenuChanging = FG_FALSE;
         //return;
-    }        
+    }
     if(!m_currentMenu) {
         // #FIXME - this needs to look a little bit differently
-        fgGuiWidgetManager::widgetVec & roots = m_widgetMgr->getRefRootWidgets();
+        fg::gui::CWidgetManager::WidgetVec & roots = m_widgetMgr->getRefRootWidgets();
         if(roots.empty())
             return;
-        fgGuiWidget *mainMenu = m_widgetMgr->get("MainMenu");
+        fg::gui::CWidget *mainMenu = m_widgetMgr->get("MainMenu");
         if(!mainMenu)
             return;
-        if(!(mainMenu->getTypeTraits() & FG_GUI_MENU))
+        if(!(mainMenu->getTypeTraits() & MENU))
             return;
-        m_currentMenu = static_cast<fgGuiMenu *>(mainMenu);
+        m_currentMenu = static_cast<CMenu *>(mainMenu);
     }
     fgPointerData *pt = m_pPointerInputReceiver->getPointerData();
     if(pt) {
@@ -426,7 +426,7 @@ void fgGuiMain::updateState(void) {
 /**
  * 
  */
-void fgGuiMain::display(void) {
+void gui::CGuiMain::display(void) {
     if(!m_widgetMgr || !m_pResourceMgr)
         return;
     if(!m_currentMenu)
@@ -439,7 +439,7 @@ void fgGuiMain::display(void) {
     //        return;
     //    if(!(mainMenu->getTypeTraits() & FG_GUI_CONTAINER))
     //        return;
-    if(!(m_currentMenu->getTypeTraits() & FG_GUI_CONTAINER))
+    if(!(m_currentMenu->getTypeTraits() & CONTAINER))
         return;
 
     // Maybe update bounds should be in update part? not display...
@@ -479,7 +479,7 @@ void fgGuiMain::display(void) {
 /**
  *
  */
-void fgGuiMain::render(void) {
+void gui::CGuiMain::render(void) {
     m_guiDrawer->render();
     m_guiDrawer->flush();
 }
@@ -488,7 +488,7 @@ void fgGuiMain::render(void) {
  * 
  * @return 
  */
-fgGuiWidgetManager *fgGuiMain::getWidgetManager(void) const {
+gui::CWidgetManager *gui::CGuiMain::getWidgetManager(void) const {
     return m_widgetMgr;
 }
 
@@ -496,7 +496,7 @@ fgGuiWidgetManager *fgGuiMain::getWidgetManager(void) const {
  * 
  * @return 
  */
-fgGuiWidgetFactory *fgGuiMain::getWidgetFactory(void) const {
+gui::CWidgetFactory *gui::CGuiMain::getWidgetFactory(void) const {
     return m_widgetFactory;
 }
 
@@ -504,7 +504,7 @@ fgGuiWidgetFactory *fgGuiMain::getWidgetFactory(void) const {
  * 
  * @return 
  */
-fgGuiStyleManager *fgGuiMain::getStyleManager(void) const {
+gui::CStyleManager *gui::CGuiMain::getStyleManager(void) const {
     return m_styleMgr;
 }
 
@@ -512,7 +512,7 @@ fgGuiStyleManager *fgGuiMain::getStyleManager(void) const {
  * 
  * @return 
  */
-event::CEventManager *fgGuiMain::getEventManager(void) const {
+event::CEventManager *gui::CGuiMain::getEventManager(void) const {
     return m_pEventMgr;
 }
 
@@ -520,7 +520,7 @@ event::CEventManager *fgGuiMain::getEventManager(void) const {
  * 
  * @return 
  */
-fg::resource::CResourceManager *fgGuiMain::getResourceManager(void) const {
+fg::resource::CResourceManager *gui::CGuiMain::getResourceManager(void) const {
     return m_pResourceMgr;
 }
 
@@ -528,7 +528,7 @@ fg::resource::CResourceManager *fgGuiMain::getResourceManager(void) const {
  * 
  * @return 
  */
-fg::base::CManager *fgGuiMain::getShaderManager(void) const {
+fg::base::CManager *gui::CGuiMain::getShaderManager(void) const {
     return m_pShaderMgr;
 }
 
@@ -536,7 +536,7 @@ fg::base::CManager *fgGuiMain::getShaderManager(void) const {
  * 
  * @return 
  */
-event::CInputHandler *fgGuiMain::getPointerInputReceiver(void) const {
+event::CInputHandler *gui::CGuiMain::getPointerInputReceiver(void) const {
     return m_pPointerInputReceiver;
 }
 
@@ -544,7 +544,7 @@ event::CInputHandler *fgGuiMain::getPointerInputReceiver(void) const {
  * 
  * @param pEventMgr
  */
-void fgGuiMain::setEventManager(event::CEventManager * pEventMgr) {
+void gui::CGuiMain::setEventManager(event::CEventManager * pEventMgr) {
     if(!pEventMgr) {
         unregisterGuiCallbacks();
     } else if(m_pEventMgr && m_pEventMgr != pEventMgr) {
@@ -559,7 +559,7 @@ void fgGuiMain::setEventManager(event::CEventManager * pEventMgr) {
  * 
  * @param pResourceMgr
  */
-void fgGuiMain::setResourceManager(fg::resource::CResourceManager * pResourceMgr) {
+void gui::CGuiMain::setResourceManager(resource::CResourceManager * pResourceMgr) {
     m_pResourceMgr = pResourceMgr;
     if(m_guiDrawer)
         m_guiDrawer->setResourceManager(pResourceMgr);
@@ -569,7 +569,7 @@ void fgGuiMain::setResourceManager(fg::resource::CResourceManager * pResourceMgr
  * 
  * @param pShaderMgr
  */
-void fgGuiMain::setShaderManager(fg::base::CManager * pShaderMgr) {
+void gui::CGuiMain::setShaderManager(fg::base::CManager * pShaderMgr) {
     if(pShaderMgr) {
         if(pShaderMgr->getManagerType() != FG_MANAGER_GFX_SHADER)
             return;
@@ -583,7 +583,7 @@ void fgGuiMain::setShaderManager(fg::base::CManager * pShaderMgr) {
  * 
  * @param pointerInputReceiver
  */
-void fgGuiMain::setPointerInputReceiver(event::CInputHandler * pointerInputReceiver) {
+void gui::CGuiMain::setPointerInputReceiver(event::CInputHandler * pointerInputReceiver) {
     m_pPointerInputReceiver = pointerInputReceiver;
 }
 
@@ -592,10 +592,10 @@ void fgGuiMain::setPointerInputReceiver(event::CInputHandler * pointerInputRecei
  * @param argv
  * @return 
  */
-fgBool fgGuiMain::guiTouchHandler(fgArgumentList * argv) {
+fgBool gui::CGuiMain::guiTouchHandler(event::CArgumentList * argv) {
     if(!argv)
         return FG_FALSE;
-    fgEventBase *pEvent = (fgEventBase *)argv->getArgumentValueByID(0);
+    fgEventBase *pEvent = (fgEventBase *)argv->getValueByID(0);
     if(!pEvent)
         return FG_FALSE;
     //fgEventType type = pEvent->eventType;
@@ -608,10 +608,10 @@ fgBool fgGuiMain::guiTouchHandler(fgArgumentList * argv) {
  * @param argv
  * @return 
  */
-fgBool fgGuiMain::guiMouseHandler(fgArgumentList * argv) {
+fgBool gui::CGuiMain::guiMouseHandler(event::CArgumentList * argv) {
     if(!argv)
         return FG_FALSE;
-    fgEventBase *pEvent = (fgEventBase *)argv->getArgumentValueByID(0);
+    fgEventBase *pEvent = (fgEventBase *)argv->getValueByID(0);
     if(!pEvent)
         return FG_FALSE;
     //fgEventType type = pEvent->eventType;
@@ -625,16 +625,16 @@ fgBool fgGuiMain::guiMouseHandler(fgArgumentList * argv) {
  * @param pWidget
  * @return 
  */
-fgBool fgGuiMain::guiLinkHandler(fgGuiMain* pGuiMain, fgGuiWidget * pWidget) {
+fgBool gui::CGuiMain::guiLinkHandler(CGuiMain* pGuiMain, CWidget * pWidget) {
     if(!pGuiMain || !pWidget || !m_widgetMgr)
         return FG_FALSE;
     if(pWidget->getLink().length()) {
-        fgGuiWidget *goToWidget = m_widgetMgr->get(pWidget->getLink());
+        CWidget *goToWidget = m_widgetMgr->get(pWidget->getLink());
         if(!goToWidget)
             return FG_FALSE;
-        if(goToWidget->getTypeTraits() & FG_GUI_MENU) {
+        if(goToWidget->getTypeTraits() & MENU) {
             // NOT YET - need animation ?
-            m_changeToMenu = static_cast<fgGuiMenu *>(goToWidget);
+            m_changeToMenu = static_cast<CMenu *>(goToWidget);
             //m_currentMenu = static_cast<fgGuiMenu *>(goToWidget);
             FG_LOG_DEBUG("GUI: Changing menu to: '%s'", m_currentMenu->getNameStr());
             this->updateState();

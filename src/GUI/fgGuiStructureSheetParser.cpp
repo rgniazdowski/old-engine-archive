@@ -15,10 +15,12 @@
 #include "Util/fgStrings.h"
 #include "Util/fgHashFunc.h"
 
+using namespace fg;
+
 /*
  *
  */
-fgGuiStructureSheetParser::fgGuiStructureSheetParser() :
+gui::CStructureSheetParser::CStructureSheetParser() :
 m_elemStack(),
 m_widgetStack(),
 m_widgetFactory(NULL),
@@ -29,7 +31,7 @@ m_count(0) { }
 /*
  *
  */
-fgGuiStructureSheetParser::~fgGuiStructureSheetParser() {
+gui::CStructureSheetParser::~CStructureSheetParser() {
    while(!m_elemStack.empty())
       m_elemStack.pop();
    while(!m_widgetStack.empty())
@@ -41,40 +43,40 @@ fgGuiStructureSheetParser::~fgGuiStructureSheetParser() {
 /*
  *
  */
-void fgGuiStructureSheetParser::setWidgetFactory(fgGuiWidgetFactory *widgetFactory) {
+void gui::CStructureSheetParser::setWidgetFactory(CWidgetFactory *widgetFactory) {
    m_widgetFactory = widgetFactory;
 }
 
 /*
  *
  */
-fgGuiWidgetFactory *fgGuiStructureSheetParser::getWidgetFactory(void) const {
+gui::CWidgetFactory *gui::CStructureSheetParser::getWidgetFactory(void) const {
    return m_widgetFactory;
 }
 
 /*
  *
  */
-void fgGuiStructureSheetParser::setWidgetManager(fgGuiWidgetManager *widgetMgr) {
+void gui::CStructureSheetParser::setWidgetManager(fg::gui::CWidgetManager *widgetMgr) {
    m_widgetMgr = widgetMgr;
 }
 
 /*
  *
  */
-fgGuiWidgetManager *fgGuiStructureSheetParser::getWidgetManager(void) const {
+fg::gui::CWidgetManager *gui::CStructureSheetParser::getWidgetManager(void) const {
    return m_widgetMgr;
 }
 
 /*
  *
  */
-void fgGuiStructureSheetParser::startDocument(fgXMLDocument *document) { }
+void gui::CStructureSheetParser::startDocument(fgXMLDocument *document) { }
 
 /*
  *
  */
-fgVector3f fgGuiStructureSheetParser::parseSpatialData(const char *data) {
+fgVector3f gui::CStructureSheetParser::parseSpatialData(const char *data) {
    fgVector3f out;
    if(!data)
       return out;
@@ -104,7 +106,7 @@ fgVector3f fgGuiStructureSheetParser::parseSpatialData(const char *data) {
 /*
  *
  */
-fgBool fgGuiStructureSheetParser::parseWidgetAttributes(fgGuiWidget *pWidget, fgXMLAttribute *attribute) {
+fgBool gui::CStructureSheetParser::parseWidgetAttributes(fg::gui::CWidget *pWidget, fgXMLAttribute *attribute) {
    if(!pWidget)
       return FG_FALSE;
 
@@ -166,7 +168,7 @@ fgBool fgGuiStructureSheetParser::parseWidgetAttributes(fgGuiWidget *pWidget, fg
 /*
  *
  */
-void fgGuiStructureSheetParser::startElement(const char *localName, fgXMLElement *elementPtr, fgXMLNodeType nodeType, fgXMLAttribute *firstAttribute, int depth) {
+void gui::CStructureSheetParser::startElement(const char *localName, fgXMLElement *elementPtr, fgXMLNodeType nodeType, fgXMLAttribute *firstAttribute, int depth) {
    m_count++;
    m_elemStack.push(elementPtr);
    //printf("GUI ELEMENT START: %s | text: %s\n", localName, elementPtr->GetText());
@@ -185,8 +187,8 @@ void fgGuiStructureSheetParser::startElement(const char *localName, fgXMLElement
    }
 
    std::string widgetTypeName = localName;
-   fgGuiWidgetType widgetType = m_widgetMgr->widgetTypeFromName(localName);
-   if(widgetType == FG_GUI_WIDGET_UNKNOWN) {
+   WidgetType widgetType = m_widgetMgr->widgetTypeFromName(localName);
+   if(widgetType == WIDGET_UNKNOWN) {
       m_widgetStack.push(NULL);
       return;
    }
@@ -195,7 +197,7 @@ void fgGuiStructureSheetParser::startElement(const char *localName, fgXMLElement
       return;
    }
 
-   fgGuiWidget *pWidget = m_widgetFactory->createWidget(widgetType);
+   fg::gui::CWidget *pWidget = m_widgetFactory->createWidget(widgetType);
    if(!pWidget) {
       m_widgetStack.push(NULL);
       return;
@@ -205,13 +207,13 @@ void fgGuiStructureSheetParser::startElement(const char *localName, fgXMLElement
       m_widgetStack.push(NULL);
       return;
    }
-   fgGuiWidget *pFatherWidget = NULL;
-   fgGuiContainer *pFatherContainer = NULL;
+   fg::gui::CWidget *pFatherWidget = NULL;
+   CContainer *pFatherContainer = NULL;
    if(m_widgetStack.size() >= 1) {
       pFatherWidget = m_widgetStack.top();
       if(pFatherWidget) {
-         if(pFatherWidget->getTypeTraits() & FG_GUI_CONTAINER) {
-            pFatherContainer = (fgGuiContainer *)pFatherWidget;
+         if(pFatherWidget->getTypeTraits() & CONTAINER) {
+            pFatherContainer = (CContainer *)pFatherWidget;
             pFatherContainer->addChild(pWidget);
             pWidget->setFather(pFatherWidget);
          }
@@ -238,13 +240,13 @@ void fgGuiStructureSheetParser::startElement(const char *localName, fgXMLElement
 /*
  *
  */
-void fgGuiStructureSheetParser::endElement(const char *localName, fgXMLElement *elementPtr, fgXMLNodeType nodeType, int depth) {
+void gui::CStructureSheetParser::endElement(const char *localName, fgXMLElement *elementPtr, fgXMLNodeType nodeType, int depth) {
    m_elemStack.pop();
    if(m_isFailure)
       return;
    //printf("GUI ELEMENT END: %s\n", localName);
    if(!m_widgetStack.empty()) {
-      fgGuiWidget *pWidget = m_widgetStack.top();
+      fg::gui::CWidget *pWidget = m_widgetStack.top();
       if(pWidget) {
          // Is this really necessary?
          pWidget->updateBounds();
@@ -256,11 +258,11 @@ void fgGuiStructureSheetParser::endElement(const char *localName, fgXMLElement *
 /*
  *
  */
-void fgGuiStructureSheetParser::characters(const char *ch, int start, int length, fgXMLNodeType nodeType, int depth) {
+void gui::CStructureSheetParser::characters(const char *ch, int start, int length, fgXMLNodeType nodeType, int depth) {
    if(m_isFailure || !ch)
       return;
    if(nodeType == fgXMLNode::TINYXML_TEXT && !m_widgetStack.empty()) {
-      fgGuiWidget *pWidget = m_widgetStack.top();
+      fg::gui::CWidget *pWidget = m_widgetStack.top();
       if(!pWidget)
          return;
       //printf("characters: This node is a text: %s\n", ch);
@@ -271,4 +273,4 @@ void fgGuiStructureSheetParser::characters(const char *ch, int start, int length
 /*
  *
  */
-void fgGuiStructureSheetParser::endDocument(fgXMLDocument *document) { }
+void gui::CStructureSheetParser::endDocument(fgXMLDocument *document) { }

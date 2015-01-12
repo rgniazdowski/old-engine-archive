@@ -13,12 +13,12 @@
 #include "StbCourier/stb_font_courier_16_usascii.inl"
 #include "StbCourier/stb_font_courier_8_usascii.inl"
 
-fgFontBuiltInRawData fgFontBuiltIn::StbCourier::m_stbFontRawData;
+fg::gui::SFontBuiltInRawData fg::gui::font::StbCourier::m_stbFontRawData;
 
 /*
  *
  */
-fgFontBuiltInRawData* fgFontBuiltIn::StbCourier::getRawData(const int size) {
+fg::gui::SFontBuiltInRawData* fg::gui::font::StbCourier::getRawData(const int size) {
     if(size > 0 && size <= 8) {
         m_stbFontRawData.xPtr = FG_STB_FONT_PTR(courier_8, x);
         m_stbFontRawData.yPtr = FG_STB_FONT_PTR(courier_8, y);

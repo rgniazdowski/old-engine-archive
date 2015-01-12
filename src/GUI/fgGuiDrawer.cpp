@@ -14,42 +14,41 @@
 /*
  *
  */
-fgGuiDrawer::fgGuiDrawer() :
-m_pResourceMgr(NULL) {
-}
+fg::gui::CDrawer::CDrawer() :
+m_pResourceMgr(NULL) { }
 
 /*
  *
  */
-fgGuiDrawer::~fgGuiDrawer() {
+fg::gui::CDrawer::~CDrawer() {
     m_pResourceMgr = NULL;
 }
 
 /*
  *
  */
-void fgGuiDrawer::setResourceManager(fg::base::CManager *pResourceMgr) {
+void fg::gui::CDrawer::setResourceManager(fg::base::CManager *pResourceMgr) {
     m_pResourceMgr = pResourceMgr;
 }
 
 /*
  *
  */
-void fgGuiDrawer::flush(void) {
+void fg::gui::CDrawer::flush(void) {
     CDrawingBatch::flush();
 }
 
 /*
  *
  */
-void fgGuiDrawer::sortCalls(void) {
+void fg::gui::CDrawer::sortCalls(void) {
     CDrawingBatch::sortCalls();
 }
 
 /*
  *
  */
-void fgGuiDrawer::render(void) {
+void fg::gui::CDrawer::render(void) {
     CDrawingBatch::render();
 }
 
@@ -61,11 +60,11 @@ void fgGuiDrawer::render(void) {
  * @param style
  * @param fmt
  */
-void fgGuiDrawer::appendText2D(fgVec2f& outTextSize,
-                               const fgVec2f &blockPos,
-                               const fgVec2f &blockSize,
-                               fgGuiStyleContent& style,
-                               const char *fmt, ...) {
+void fg::gui::CDrawer::appendText2D(fgVec2f& outTextSize,
+                                    const fgVec2f &blockPos,
+                                    const fgVec2f &blockSize,
+                                    CStyleContent& style,
+                                    const char *fmt, ...) {
     if(!m_pResourceMgr || !fmt)
         return;
     char buf[FG_FONT_DRAW_STRING_BUF_MAX];
@@ -75,23 +74,23 @@ void fgGuiDrawer::appendText2D(fgVec2f& outTextSize,
     vsnprintf(buf, FG_FONT_DRAW_STRING_BUF_MAX - 1, fmt, args);
     va_end(args);
     buf[FG_FONT_DRAW_STRING_BUF_MAX - 1] = '\0';
-    
-    fgGuiForeground &fg = style.getForeground();
+
+    SForeground &fg = style.getForeground();
     fg::resource::CResource *resFont = static_cast<fg::resource::CResourceManager *>(m_pResourceMgr)->get(fg.font);
     if(!resFont)
         return;
     if(resFont->getResourceType() != FG_RESOURCE_FONT)
         return;
-    fgFontResource *fontResProper = (fgFontResource *)resFont;
+    CFontResource *fontResProper = (CFontResource *)resFont;
     this->setFont(fontResProper);
     this->setColor(fg.color);
-    fgGuiAlign textAlign = style.getTextAlign();
-    fgGuiPadding &padding = style.getPadding();
+    Align textAlign = style.getTextAlign();
+    SPadding &padding = style.getPadding();
     fgVector2f outPos = blockPos;
     float realTextSize = fg.textSize;
-    if(fg.unit == FG_GUI_PERCENTS)
-        realTextSize = fg.textSize/100.0f * getScreenSize().y;    
-    outTextSize = fgFontDrawer::size(fontResProper, buf, /*fg.textSize*/realTextSize);
+    if(fg.unit == Unit::PERCENTS)
+        realTextSize = fg.textSize / 100.0f * getScreenSize().y;
+    outTextSize = CFontDrawer::size(fontResProper, buf, /*fg.textSize*/realTextSize);
     style.applyPosAlign(style.getTextAlign(), outPos, outTextSize, blockPos, blockSize, FG_TRUE);
     this->print(outPos.x, outPos.y, buf, /*fg.textSize*/realTextSize);
 }
@@ -102,14 +101,14 @@ void fgGuiDrawer::appendText2D(fgVec2f& outTextSize,
  * @param size
  * @param style
  */
-void fgGuiDrawer::appendBackground2D(const fgVec2f &pos,
-                                     const fgVec2f &size,
-                                     fgGuiStyleContent& style) {
+void fg::gui::CDrawer::appendBackground2D(const fgVec2f &pos,
+                                          const fgVec2f &size,
+                                          CStyleContent& style) {
     if(!m_pResourceMgr)
         return;
     int index = 0;
     fg::gfx::CTexture *pTexture = NULL;
-    fgGuiBackground &background = style.getBackground();
+    SBackground &background = style.getBackground();
     fg::gfx::CDrawCall *drawCall = requestDrawCall(index, FG_GFX_DRAW_CALL_CUSTOM_ARRAY);
     drawCall->setComponentActive(0);
     drawCall->setComponentActive(FG_GFX_POSITION_BIT | FG_GFX_UVS_BIT | FG_GFX_COLOR_BIT);
@@ -125,11 +124,11 @@ void fgGuiDrawer::appendBackground2D(const fgVec2f &pos,
     }
     fgVec2f uv1(0, 1); // upper left corner
     fgVec2f uv2(1, 0); // lower right corner
-    if(background.style == FG_GUI_BACKGROUND_TILED) {
+    if(background.style == SBackground::Style::TILED) {
         fgVec2f ratio(1.0f, 1.0f);
         if(pTexture) {
-            ratio.x = size.x/(float)pTexture->getWidth();
-            ratio.y = size.y/(float)pTexture->getHeight();
+            ratio.x = size.x / (float)pTexture->getWidth();
+            ratio.y = size.y / (float)pTexture->getHeight();
             uv1.y = ratio.y;
             uv2.x = ratio.x;
         }
@@ -144,16 +143,16 @@ void fgGuiDrawer::appendBackground2D(const fgVec2f &pos,
  * @param size
  * @param style
  */
-void fgGuiDrawer::appendBorder2D(const fgVec2f &pos,
-                                 const fgVec2f &size, 
-                                 fgGuiStyleContent& style) {
+void fg::gui::CDrawer::appendBorder2D(const fgVec2f &pos,
+                                      const fgVec2f &size,
+                                      CStyleContent& style) {
     if(!m_pResourceMgr)
         return;
-    fgGuiBorderInfo &border = style.getBorder();
-    if(border.left.style == FG_GUI_BORDER_NONE &&
-       border.right.style == FG_GUI_BORDER_NONE &&
-       border.top.style == FG_GUI_BORDER_NONE &&
-       border.bottom.style == FG_GUI_BORDER_NONE) {
+    SBorderGroup &border = style.getBorder();
+    if(border.left.style == SBorder::Style::NONE &&
+       border.right.style == SBorder::Style::NONE &&
+       border.top.style == SBorder::Style::NONE &&
+       border.bottom.style == SBorder::Style::NONE) {
         return;
     }
     int index;

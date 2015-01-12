@@ -46,7 +46,7 @@ struct lua_State {
 
     #include "Resource/fgManagedObject.h"
     #include "Event/fgCallback.h"
-    
+
 namespace fg {
     namespace script {
         class CScriptSubsystem;
@@ -178,7 +178,7 @@ namespace fg {
 
 
             ///
-            fgFunctionCallback *m_cyclicGCCallback;
+            event::CFunctionCallback *m_cyclicGCCallback;
 
         public:
             /**
@@ -350,7 +350,7 @@ namespace fg {
              * @param state
              * @return 
              */
-            template<class Type, fgScriptMetatables::METAID METATABLE_ID>
+            template<class Type, CMetatables::METAID METATABLE_ID>
             static int simpleTypedMallocEvent(lua_State* L);
 
             /**
@@ -366,7 +366,7 @@ namespace fg {
              * @param state
              * @return 
              */
-            template<class Type, fgScriptMetatables::METAID METATABLE_ID>
+            template<class Type, CMetatables::METAID METATABLE_ID>
             static int simpleInPlaceTypedNewEvent(lua_State* L);
 
             /**
@@ -389,7 +389,7 @@ namespace fg {
              * @param L
              * @return 
              */
-            template<class Type, fgScriptMetatables::METAID METATABLE_ID>
+            template<class Type, CMetatables::METAID METATABLE_ID>
             static int managedObjectTypedNewEvent(lua_State *L);
 
             /**
@@ -535,7 +535,7 @@ namespace fg {
  * @param L
  * @return 
  */
-template<class Type, fgScriptMetatables::METAID METATABLE_ID>
+template<class Type, fg::script::CMetatables::METAID METATABLE_ID>
 int fg::script::CScriptSubsystem::managedObjectTypedNewEvent(lua_State* L) {
     if(!L)
         return 1;
@@ -633,7 +633,7 @@ int fg::script::CScriptSubsystem::managedObjectTypedGCEvent(lua_State* L) {
  * @param L
  * @return 
  */
-template<class Type, fgScriptMetatables::METAID METATABLE_ID>
+template<class Type, fg::script::CMetatables::METAID METATABLE_ID>
 int fg::script::CScriptSubsystem::simpleTypedMallocEvent(lua_State* L) {
     if(!L)
         return 1;
@@ -726,7 +726,7 @@ int fg::script::CScriptSubsystem::simpleTypedFreeGCEvent(lua_State* L) {
  * @param L
  * @return 
  */
-template<class Type, fgScriptMetatables::METAID METATABLE_ID>
+template<class Type, fg::script::CMetatables::METAID METATABLE_ID>
 int fg::script::CScriptSubsystem::simpleInPlaceTypedNewEvent(lua_State* L) {
     if(!L)
         return 1;

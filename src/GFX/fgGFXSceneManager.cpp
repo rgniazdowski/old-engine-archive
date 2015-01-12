@@ -65,7 +65,7 @@ fgBool fg::gfx::CSceneManager::destroy(void) {
     // The piece of code seems to repeat itself
     // Maybe even the handle manager can have this piece of code?
     // Delete all gfx objects in the scene
-    hmDataVecItor begin, end, itor;
+    DataVecItor begin, end, itor;
     begin = getRefDataVector().begin();
     end = getRefDataVector().end();
     itor = begin;
@@ -129,7 +129,7 @@ void fg::gfx::CSceneManager::sortCalls(void) {
         CDrawingBatch::sortCalls(); // NOPE
     while(!m_nodeQueue.empty())
         m_nodeQueue.pop();
-    hmDataVecItor itor = getRefDataVector().begin(), end = getRefDataVector().end();
+    DataVecItor itor = getRefDataVector().begin(), end = getRefDataVector().end();
     //m_MVP.calculate(&m_camera, fgMatrix4f());
     //m_MVP.getRefFrustum().set(m_MVP.getRefProjMatrix() * m_MVP.getRefViewMatrix());
 #if 1
@@ -301,25 +301,25 @@ fgBool fg::gfx::CSceneManager::addNode(fgGfxSceneNodeHandle& nodeUniqueID,
                                   CSceneNode *pFatherNode) {
     if(!pNode) {
         // Empty pointer - return
-        FG_LOG_ERROR("GFX.SceneManager: // Empty pointer - exit... no addition made");
+        FG_LOG_ERROR("GFX.SceneManager: Empty pointer - exit... no addition made");
         return FG_FALSE;
     }
 
-    if(fgHandleManager::isDataManaged(pNode)) {
+    if(handle_mgr_type::isDataManaged(pNode)) {
         // Widget is already managed in the handle manager
-        FG_LOG_ERROR("GFX.SceneManager: // Object is already managed in the handle manager: '%s'", pNode->getNameStr());
+        FG_LOG_ERROR("GFX.SceneManager: Object is already managed in the handle manager: '%s'", pNode->getNameStr());
         return FG_FALSE;
     }
 
     if(!pNode->getHandle().isNull()) {
         // Widget has already initialized handle
-        FG_LOG_ERROR("GFX.SceneManager: // Object has already initialized handle: '%s'", pNode->getNameStr());
+        FG_LOG_ERROR("GFX.SceneManager: Object has already initialized handle: '%s'", pNode->getNameStr());
         return FG_FALSE;
     }
 
-    if(!fgHandleManager::acquireHandle(nodeUniqueID, pNode)) {
+    if(!handle_mgr_type::acquireHandle(nodeUniqueID, pNode)) {
         // Could not aquire handle for the widget
-        FG_LOG_ERROR("GFX.SceneManager: // Could not aquire handle for the object: '%s'", pNode->getNameStr());
+        FG_LOG_ERROR("GFX.SceneManager: Could not aquire handle for the object: '%s'", pNode->getNameStr());
         return FG_FALSE;
     }
     pNode->setHandle(nodeUniqueID);
@@ -330,10 +330,10 @@ fgBool fg::gfx::CSceneManager::addNode(fgGfxSceneNodeHandle& nodeUniqueID,
     pNode->setManager(this); // Setup internal pointer to the manager
     pNode->setParent(pFatherNode); // Pointer to the parent (if any)
 
-    if(!fgHandleManager::setupName(pNode->getName(), nodeUniqueID)) {
+    if(!handle_mgr_type::setupName(pNode->getName(), nodeUniqueID)) {
         // Could not setup handle string tag/name for the scene node
         // The handle name tag can be empty - sometimes it is not needed
-        FG_LOG_ERROR("GFX.SceneManager: // Could not setup handle string tag/name for the object: '%s'", pNode->getNameStr());
+        FG_LOG_ERROR("GFX.SceneManager: Could not setup handle string tag/name for the object: '%s'", pNode->getNameStr());
     }
     //unsigned int index = pObj->getHandle().getIndex();
 
@@ -381,7 +381,7 @@ fgBool fg::gfx::CSceneManager::addNode(fgGfxSceneNodeHandle& nodeUniqueID,
 fgBool fg::gfx::CSceneManager::addNode(fgGfxSceneNodeHandle& oUniqueID,
                                   CSceneNode *pObj,
                                   const fgGfxSceneNodeHandle& oFatherUniqueID) {
-    return addNode(oUniqueID, pObj, fgHandleManager::dereference(oFatherUniqueID));
+    return addNode(oUniqueID, pObj, CHandleManager::dereference(oFatherUniqueID));
 }
 
 /**
@@ -394,7 +394,7 @@ fgBool fg::gfx::CSceneManager::addNode(fgGfxSceneNodeHandle& oUniqueID,
 fgBool fg::gfx::CSceneManager::addNode(fgGfxSceneNodeHandle& oUniqueID,
                                   CSceneNode *pObj,
                                   const std::string& oFatherNameTag) {
-    return addNode(oUniqueID, pObj, fgHandleManager::dereference(oFatherNameTag));
+    return addNode(oUniqueID, pObj, CHandleManager::dereference(oFatherNameTag));
 }
 
 /**
@@ -407,7 +407,7 @@ fgBool fg::gfx::CSceneManager::addNode(fgGfxSceneNodeHandle& oUniqueID,
 fgBool fg::gfx::CSceneManager::addNode(fgGfxSceneNodeHandle& oUniqueID,
                                   CSceneNode *pObj,
                                   const char* oFatherNameTag) {
-    return addNode(oUniqueID, pObj, fgHandleManager::dereference(oFatherNameTag));
+    return addNode(oUniqueID, pObj, CHandleManager::dereference(oFatherNameTag));
 }
 
 /**
@@ -422,7 +422,7 @@ fgBool fg::gfx::CSceneManager::remove(CSceneNode *pObj) {
     pObj->setManaged(FG_FALSE);
     // Reset the manager pointer - object is not managed - it is no longer needed
     pObj->setManager(NULL);
-    return fgHandleManager::releaseHandle(pObj->getHandle());
+    return CHandleManager::releaseHandle(pObj->getHandle());
 }
 
 /**
@@ -431,7 +431,7 @@ fgBool fg::gfx::CSceneManager::remove(CSceneNode *pObj) {
  * @return 
  */
 fgBool fg::gfx::CSceneManager::remove(const fgGfxSceneNodeHandle& oUniqueID) {
-    return remove(fgHandleManager::dereference(oUniqueID));
+    return remove(CHandleManager::dereference(oUniqueID));
 }
 
 /**
@@ -440,7 +440,7 @@ fgBool fg::gfx::CSceneManager::remove(const fgGfxSceneNodeHandle& oUniqueID) {
  * @return 
  */
 fgBool fg::gfx::CSceneManager::remove(const std::string& nameTag) {
-    return remove(fgHandleManager::dereference(nameTag));
+    return remove(CHandleManager::dereference(nameTag));
 }
 
 /**
@@ -449,7 +449,7 @@ fgBool fg::gfx::CSceneManager::remove(const std::string& nameTag) {
  * @return 
  */
 fgBool fg::gfx::CSceneManager::remove(const char *nameTag) {
-    return remove(fgHandleManager::dereference(nameTag));
+    return remove(handle_mgr_type::dereference(nameTag));
 }
 
 /**
@@ -472,7 +472,7 @@ fgBool fg::gfx::CSceneManager::destroyNode(CSceneNode*& pObj) {
  * @return 
  */
 fgBool fg::gfx::CSceneManager::destroyNode(const fgGfxSceneNodeHandle& oUniqueID) {
-    CSceneNode *pObj = fgHandleManager::dereference(oUniqueID);
+    CSceneNode *pObj = handle_mgr_type::dereference(oUniqueID);
     return destroyNode(pObj);
 }
 
@@ -482,7 +482,7 @@ fgBool fg::gfx::CSceneManager::destroyNode(const fgGfxSceneNodeHandle& oUniqueID
  * @return 
  */
 fgBool fg::gfx::CSceneManager::destroyNode(const std::string& nameTag) {
-    CSceneNode *pObj = fgHandleManager::dereference(nameTag);
+    CSceneNode *pObj = handle_mgr_type::dereference(nameTag);
     return destroyNode(pObj);
 }
 
@@ -492,7 +492,7 @@ fgBool fg::gfx::CSceneManager::destroyNode(const std::string& nameTag) {
  * @return 
  */
 fgBool fg::gfx::CSceneManager::destroyNode(const char *nameTag) {
-    CSceneNode *pObj = fgHandleManager::dereference(nameTag);
+    CSceneNode *pObj = handle_mgr_type::dereference(nameTag);
     return destroyNode(pObj);
 }
 
@@ -502,7 +502,7 @@ fgBool fg::gfx::CSceneManager::destroyNode(const char *nameTag) {
  * @return 
  */
 fg::gfx::CSceneNode* fg::gfx::CSceneManager::get(const fgGfxSceneNodeHandle& oUniqueID) {
-    return fgHandleManager::dereference(oUniqueID);
+    return handle_mgr_type::dereference(oUniqueID);
 }
 
 /**
@@ -511,7 +511,7 @@ fg::gfx::CSceneNode* fg::gfx::CSceneManager::get(const fgGfxSceneNodeHandle& oUn
  * @return 
  */
 fg::gfx::CSceneNode* fg::gfx::CSceneManager::get(const std::string& nameTag) {
-    return fgHandleManager::dereference(nameTag);
+    return handle_mgr_type::dereference(nameTag);
 }
 
 /**
@@ -520,7 +520,7 @@ fg::gfx::CSceneNode* fg::gfx::CSceneManager::get(const std::string& nameTag) {
  * @return 
  */
 fg::gfx::CSceneNode* fg::gfx::CSceneManager::get(const char *nameTag) {
-    return fgHandleManager::dereference(nameTag);
+    return handle_mgr_type::dereference(nameTag);
 }
 
 /**
@@ -533,7 +533,7 @@ fgBool fg::gfx::CSceneManager::isManaged(const CSceneNode *pObj) {
         return FG_FALSE;
     }
     if(FG_IS_INVALID_HANDLE(pObj->getHandle()) ||
-       !fgHandleManager::isHandleValid(pObj->getHandle())) {
+       !handle_mgr_type::isHandleValid(pObj->getHandle())) {
         return FG_FALSE;
     }
     // This last check is an overkill

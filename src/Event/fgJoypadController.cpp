@@ -25,8 +25,7 @@ m_gamepad(NULL),
 m_haptic(NULL),
 m_instanceID(-1),
 m_pEventMgr(eventMgr),
-m_isConnected(FG_FALSE) {
- }
+m_isConnected(FG_FALSE) { }
 
 /**
  * 
@@ -153,11 +152,11 @@ fgBool fg::event::CJoypadController::initialize(void) {
             jc.open(i);
             if(m_pEventMgr) {
                 fgControllerDeviceEvent *fgevent = fgMalloc<fgControllerDeviceEvent>();
-                fgArgumentList *list = new fgArgumentList(1);
+                CArgumentList *list = new CArgumentList(1);
                 fgevent->which = i;
                 fgevent->timeStamp = 0; // #FIXME
                 fgevent->eventType = FG_EVENT_GAME_CONTROLLER_ADDED;
-                list->pushArgument(FG_ARGUMENT_TEMP_POINTER, (void*)fgevent);
+                list->push(SArgument::Type::ARG_TMP_POINTER, (void*)fgevent);
                 m_pEventMgr->throwEvent(fgevent->eventType, list);
             }
         }
@@ -176,8 +175,10 @@ fgBool fg::event::CJoypadController::initialize(void) {
  * @return 
  */
 #if defined(FG_USING_SDL2)
+
 int fg::event::CJoypadController::getControllerIdx(const SDL_JoystickID instance) {
 #else
+
 int fg::event::CJoypadController::getControllerIdx(const int instance) {
 #endif
 
@@ -195,6 +196,7 @@ int fg::event::CJoypadController::getControllerIdx(const int instance) {
  * @return 
  */
 #if defined(FG_USING_SDL2)
+
 int fg::event::CJoypadController::processEvent(const SDL_Event& event) {
     //if(!m_eventMgr)
     //return;
@@ -210,13 +212,13 @@ int fg::event::CJoypadController::processEvent(const SDL_Event& event) {
             // Throw proper fgEventManager event + info
             if(m_pEventMgr) {
                 fgControllerAxisEvent *fgevent = fgMalloc<fgControllerAxisEvent>();
-                fgArgumentList *list = new fgArgumentList(1);
+                CArgumentList *list = new CArgumentList(1);
                 fgevent->axis = caxis.axis;
                 fgevent->value = caxis.value;
                 fgevent->which = caxis.which;
                 fgevent->timeStamp = caxis.timestamp;
                 fgevent->eventType = FG_EVENT_GAME_CONTROLLER_AXIS;
-                list->pushArgument(FG_ARGUMENT_TEMP_POINTER, (void*)fgevent);
+                list->push(SArgument::Type::ARG_TMP_POINTER, (void*)fgevent);
                 m_pEventMgr->throwEvent(fgevent->eventType, list);
             }
             break;
@@ -233,13 +235,13 @@ int fg::event::CJoypadController::processEvent(const SDL_Event& event) {
             // Throw proper fgEventManager event + info
             if(m_pEventMgr) {
                 fgControllerButtonEvent *fgevent = fgMalloc<fgControllerButtonEvent>();
-                fgArgumentList *list = new fgArgumentList(1);
+                CArgumentList *list = new CArgumentList(1);
                 fgevent->state = cbutton.state;
                 fgevent->button = cbutton.button;
                 fgevent->which = cbutton.which;
                 fgevent->timeStamp = cbutton.timestamp;
                 fgevent->eventType = FG_EVENT_GAME_CONTROLLER_BUTTON;
-                list->pushArgument(FG_ARGUMENT_TEMP_POINTER, (void*)fgevent);
+                list->push(SArgument::Type::ARG_TMP_POINTER, (void*)fgevent);
                 m_pEventMgr->throwEvent(fgevent->eventType, list);
             }
             break;
@@ -252,11 +254,11 @@ int fg::event::CJoypadController::processEvent(const SDL_Event& event) {
                 jc.open(event.cdevice.which);
                 if(m_pEventMgr) {
                     fgControllerDeviceEvent *fgevent = fgMalloc<fgControllerDeviceEvent>();
-                    fgArgumentList *list = new fgArgumentList(1);
+                    CArgumentList *list = new CArgumentList(1);
                     fgevent->which = event.cdevice.which;
                     fgevent->timeStamp = event.cdevice.timestamp;
                     fgevent->eventType = FG_EVENT_GAME_CONTROLLER_ADDED;
-                    list->pushArgument(FG_ARGUMENT_TEMP_POINTER, (void*)fgevent);
+                    list->push(SArgument::Type::ARG_TMP_POINTER, (void*)fgevent);
                     m_pEventMgr->throwEvent(fgevent->eventType, list);
                 }
             }
@@ -271,11 +273,11 @@ int fg::event::CJoypadController::processEvent(const SDL_Event& event) {
             jc.close();
             if(m_pEventMgr) {
                 fgControllerDeviceEvent *fgevent = fgMalloc<fgControllerDeviceEvent>();
-                fgArgumentList *list = new fgArgumentList(1);
+                CArgumentList *list = new CArgumentList(1);
                 fgevent->which = event.cdevice.which;
                 fgevent->timeStamp = event.cdevice.timestamp;
                 fgevent->eventType = FG_EVENT_GAME_CONTROLLER_REMOVED;
-                list->pushArgument(FG_ARGUMENT_TEMP_POINTER, (void*)fgevent);
+                list->push(SArgument::Type::ARG_TMP_POINTER, (void*)fgevent);
                 m_pEventMgr->throwEvent(fgevent->eventType, list);
             }
             break;
@@ -284,6 +286,7 @@ int fg::event::CJoypadController::processEvent(const SDL_Event& event) {
     return 0;
 }
 #else
+
 /*
  *
  */

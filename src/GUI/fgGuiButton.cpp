@@ -9,39 +9,42 @@
 
 #include "fgGuiButton.h"
 
-/*
+using namespace fg;
+
+/**
  *
  */
-fgGuiButton::fgGuiButton() :
-fgGuiWidget(),
+gui::CButton::CButton() :
+CWidget(),
 m_label(NULL) {
-    fgGuiButton::setDefaults();
+    CButton::setDefaults();
 }
 
-/*
+/**
  *
  */
-fgGuiButton::~fgGuiButton() { }
+gui::CButton::~CButton() { }
 
-/*
+/**
  *
  */
-void fgGuiButton::setDefaults(void) {
-    m_type = FG_GUI_BUTTON;
+void gui::CButton::setDefaults(void) {
+    m_type = BUTTON;
     m_typeName = FG_GUI_BUTTON_NAME;
-    m_typeTraits = FG_GUI_BUTTON | FG_GUI_WIDGET;
+    m_typeTraits = BUTTON | WIDGET;
 }
 
-/*
- *
+/**
+ * 
+ * @return 
  */
-fgBoundingBox3Df fgGuiButton::updateBounds(void) {
-    return fgGuiWidget::updateBounds();
+fgBoundingBox3Df gui::CButton::updateBounds(void) {
+    return base_type::updateBounds();
 }
 
-/*
+/**
  *
  */
-void fgGuiButton::refresh(void) { 
-    fgGuiWidget::refresh();
+void gui::CButton::refresh(void) {
+    base_type::refresh();
 }

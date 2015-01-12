@@ -21,263 +21,272 @@
 
     #define FG_MANAGER_GUI_WIDGET   0x00000200  
 
-/**
- *
- */
-class fgGuiWidgetManager : public fg::base::CManager, protected fgHandleManager<fgGuiWidget *, fgGuiWidgetHandle> {
-public:
-    ///
-    typedef fgHandleManager<fgGuiWidget *, fgGuiWidgetHandle> base_type;
-    ///
-    typedef fgGuiWidgetHandle handle_type;
-    ///
-    typedef fg::CVector<fgGuiWidget *> widgetVec;
-    ///
-    typedef widgetVec::iterator widgetVecItor;
-    
-protected:
-    /**
-     * 
-     */
-    virtual void clear(void);
-    
-public:
-    /**
-     * 
-     * @param widgetFactory
-     * @param styleMgr
-     */
-    fgGuiWidgetManager(fgGuiWidgetFactory *widgetFactory = NULL, fgGuiStyleManager *styleMgr = NULL);
-    /**
-     * 
-     */
-    virtual ~fgGuiWidgetManager();
-    
-    /**
-     * 
-     * @return 
-     */
-    virtual fgBool destroy(void);
-    /**
-     * 
-     * @return 
-     */
-    virtual fgBool initialize(void);
+namespace fg {
+    namespace gui {
 
-    /**
-     * 
-     * @param typeName
-     * @return 
-     */
-    static fgGuiWidgetType widgetTypeFromName(const char *typeName);
-    /**
-     * 
-     * @param typeName
-     * @return 
-     */
-    static fgGuiWidgetType widgetTypeFromName(const std::string& typeName);
+        /**
+         *
+         */
+        class CWidgetManager :
+        public fg::base::CManager,
+        protected fg::util::CHandleManager<CWidget *, fgGuiWidgetHandle> {
+        public:
+            ///
+            typedef fg::base::CManager base_type;
+            ///
+            typedef fg::util::CHandleManager<CWidget *, fgGuiWidgetHandle> handle_mgr_type;
+            ///
+            typedef fgGuiWidgetHandle handle_type;
+            ///
+            typedef fg::CVector<CWidget *> WidgetVec;
+            ///
+            typedef WidgetVec::iterator WidgetVecItor;
 
-    /**
-     * 
-     * @param pLinkHandlerCallback
-     */
-    void setLinkHandler(fgGuiCallback *pLinkHandlerCallback) {
-        m_pGuiLinkCallback = pLinkHandlerCallback;
-    }
-    /**
-     * 
-     * @param widgetFactory
-     */
-    void setWidgetFactory(fgGuiWidgetFactory *widgetFactory);
-    /**
-     * 
-     * @return 
-     */
-    fgGuiWidgetFactory *getWidgetFactory(void) const;
+        protected:
+            /**
+             * 
+             */
+            virtual void clear(void);
 
-    /**
-     * 
-     * @param styleMgr
-     */
-    void setStyleManager(fgGuiStyleManager *styleMgr);
-    /**
-     * 
-     * @return 
-     */
-    fgGuiStyleManager *getStyleManager(void) const;
+        public:
+            /**
+             * 
+             * @param widgetFactory
+             * @param styleMgr
+             */
+            CWidgetManager(CWidgetFactory *widgetFactory = NULL, CStyleManager *styleMgr = NULL);
+            /**
+             * 
+             */
+            virtual ~CWidgetManager();
 
-    /**
-     * 
-     * @param filePath
-     * @return 
-     */
-    fgBool loadStructureSheet(const std::string& filePath);
-    /**
-     * 
-     * @param filePath
-     * @return 
-     */
-    fgBool loadStructureSheet(const char *filePath);
+            /**
+             * 
+             * @return 
+             */
+            virtual fgBool destroy(void);
+            /**
+             * 
+             * @return 
+             */
+            virtual fgBool initialize(void);
 
-    /**
-     * 
-     * @param pWidget
-     * @return 
-     */
-    virtual fgBool addWidget(fgGuiWidget *pWidget);
-    /**
-     * 
-     * @param pWidget
-     * @param pFatherWidget
-     * @return 
-     */
-    virtual fgBool addWidget(fgGuiWidget *pWidget, fgGuiWidget *pFatherWidget);
-    /**
-     * 
-     * @param pWidget
-     * @param wFatherUniqueID
-     * @return 
-     */
-    virtual fgBool addWidget(fgGuiWidget *pWidget, const fgGuiWidgetHandle& wFatherUniqueID);
-    /**
-     * 
-     * @param pWidget
-     * @param wFatherNameTag
-     * @return 
-     */
-    virtual fgBool addWidget(fgGuiWidget *pWidget, const std::string& wFatherNameTag);
-    /**
-     * 
-     * @param pWidget
-     * @param wFatherNameTag
-     * @return 
-     */
-    virtual fgBool addWidget(fgGuiWidget *pWidget, const char* wFatherNameTag);
+            /**
+             * 
+             * @param typeName
+             * @return 
+             */
+            static WidgetType widgetTypeFromName(const char *typeName);
+            /**
+             * 
+             * @param typeName
+             * @return 
+             */
+            static WidgetType widgetTypeFromName(const std::string& typeName);
+            /**
+             * 
+             * @param pLinkHandlerCallback
+             */
+            void setLinkHandler(CGuiCallback *pLinkHandlerCallback) {
+                m_pGuiLinkCallback = pLinkHandlerCallback;
+            }
+            /**
+             * 
+             * @param widgetFactory
+             */
+            void setWidgetFactory(CWidgetFactory *widgetFactory);
+            /**
+             * 
+             * @return 
+             */
+            CWidgetFactory *getWidgetFactory(void) const;
 
-    /**
-     * 
-     * @param pWidget
-     * @return 
-     */
-    virtual fgBool remove(fgGuiWidget *pWidget);
-    /**
-     * 
-     * @param wUniqueID
-     * @return 
-     */
-    virtual fgBool remove(const fgGuiWidgetHandle& wUniqueID);
-    /**
-     * 
-     * @param nameTag
-     * @return 
-     */
-    virtual fgBool remove(const std::string& nameTag);
-    /**
-     * 
-     * @param nameTag
-     * @return 
-     */
-    virtual fgBool remove(const char *nameTag);
+            /**
+             * 
+             * @param styleMgr
+             */
+            void setStyleManager(CStyleManager *styleMgr);
+            /**
+             * 
+             * @return 
+             */
+            CStyleManager *getStyleManager(void) const;
 
-    /**
-     * 
-     * @param pWidget
-     * @return 
-     */
-    virtual fgBool destroyWidget(fgGuiWidget*& pWidget);
-    /**
-     * 
-     * @param wUniqueID
-     * @return 
-     */
-    virtual fgBool destroyWidget(const fgGuiWidgetHandle& wUniqueID);
-    /**
-     * 
-     * @param nameTag
-     * @return 
-     */
-    virtual fgBool destroyWidget(const std::string& nameTag);
-    /**
-     * 
-     * @param nameTag
-     * @return 
-     */
-    virtual fgBool destroyWidget(const char *nameTag);
+            /**
+             * 
+             * @param filePath
+             * @return 
+             */
+            fgBool loadStructureSheet(const std::string& filePath);
+            /**
+             * 
+             * @param filePath
+             * @return 
+             */
+            fgBool loadStructureSheet(const char *filePath);
 
-    /**
-     * 
-     * @param wUniqueID
-     * @return 
-     */
-    virtual fgGuiWidget* get(const fgGuiWidgetHandle& wUniqueID);
-    /**
-     * 
-     * @param nameTag
-     * @return 
-     */
-    virtual fgGuiWidget* get(const std::string& nameTag);
-    /**
-     * 
-     * @param nameTag
-     * @return 
-     */
-    virtual fgGuiWidget* get(const char *nameTag);
+            /**
+             * 
+             * @param pWidget
+             * @return 
+             */
+            virtual fgBool addWidget(CWidget *pWidget);
+            /**
+             * 
+             * @param pWidget
+             * @param pFatherWidget
+             * @return 
+             */
+            virtual fgBool addWidget(CWidget *pWidget, CWidget *pFatherWidget);
+            /**
+             * 
+             * @param pWidget
+             * @param wFatherUniqueID
+             * @return 
+             */
+            virtual fgBool addWidget(CWidget *pWidget, const fgGuiWidgetHandle& wFatherUniqueID);
+            /**
+             * 
+             * @param pWidget
+             * @param wFatherNameTag
+             * @return 
+             */
+            virtual fgBool addWidget(CWidget *pWidget, const std::string& wFatherNameTag);
+            /**
+             * 
+             * @param pWidget
+             * @param wFatherNameTag
+             * @return 
+             */
+            virtual fgBool addWidget(CWidget *pWidget, const char* wFatherNameTag);
 
-    /**
-     * 
-     * @param pWidget
-     * @return 
-     */
-    virtual fgBool isManaged(fgGuiWidget *pWidget);
-    /**
-     * 
-     * @param wUniqueID
-     * @return 
-     */
-    virtual fgBool isManaged(const fgGuiWidgetHandle& wUniqueID);
-    /**
-     * 
-     * @param nameTag
-     * @return 
-     */
-    virtual fgBool isManaged(const std::string& nameTag);
-    /**
-     * 
-     * @param nameTag
-     * @return 
-     */
-    virtual fgBool isManaged(const char *nameTag);
+            /**
+             * 
+             * @param pWidget
+             * @return 
+             */
+            virtual fgBool remove(CWidget *pWidget);
+            /**
+             * 
+             * @param wUniqueID
+             * @return 
+             */
+            virtual fgBool remove(const fgGuiWidgetHandle& wUniqueID);
+            /**
+             * 
+             * @param nameTag
+             * @return 
+             */
+            virtual fgBool remove(const std::string& nameTag);
+            /**
+             * 
+             * @param nameTag
+             * @return 
+             */
+            virtual fgBool remove(const char *nameTag);
 
-    /**
-     * 
-     * @return 
-     */
-    widgetVec& getRefRootWidgets(void);
+            /**
+             * 
+             * @param pWidget
+             * @return 
+             */
+            virtual fgBool destroyWidget(CWidget*& pWidget);
+            /**
+             * 
+             * @param wUniqueID
+             * @return 
+             */
+            virtual fgBool destroyWidget(const fgGuiWidgetHandle& wUniqueID);
+            /**
+             * 
+             * @param nameTag
+             * @return 
+             */
+            virtual fgBool destroyWidget(const std::string& nameTag);
+            /**
+             * 
+             * @param nameTag
+             * @return 
+             */
+            virtual fgBool destroyWidget(const char *nameTag);
 
-    /**
-     * 
-     * @param path
-     */
-    void setWidgetsPath(const std::string &path);
-    /**
-     * 
-     * @param path
-     */
-    void setWidgetsPath(const char *path);
-    
-private:
-    /// Pointer to the external widget factory
-    fgGuiWidgetFactory *m_pWidgetFactory;
-    /// Pointer to the external style manager
-    fgGuiStyleManager *m_pStyleMgr;
-    /// Pointer to the external link handler callback
-    /// Declared in GuiMain
-    fgGuiCallback *m_pGuiLinkCallback;
+            /**
+             * 
+             * @param wUniqueID
+             * @return 
+             */
+            virtual CWidget* get(const fgGuiWidgetHandle& wUniqueID);
+            /**
+             * 
+             * @param nameTag
+             * @return 
+             */
+            virtual CWidget* get(const std::string& nameTag);
+            /**
+             * 
+             * @param nameTag
+             * @return 
+             */
+            virtual CWidget* get(const char *nameTag);
 
-    /// Widgets that have no fathers. For example a main screen, window, menu, etc
-    widgetVec m_rootWidgets;
-    /// Widgets structure files base path
-    std::string m_widgetsPath;
+            /**
+             * 
+             * @param pWidget
+             * @return 
+             */
+            virtual fgBool isManaged(CWidget *pWidget);
+            /**
+             * 
+             * @param wUniqueID
+             * @return 
+             */
+            virtual fgBool isManaged(const fgGuiWidgetHandle& wUniqueID);
+            /**
+             * 
+             * @param nameTag
+             * @return 
+             */
+            virtual fgBool isManaged(const std::string& nameTag);
+            /**
+             * 
+             * @param nameTag
+             * @return 
+             */
+            virtual fgBool isManaged(const char *nameTag);
+
+            /**
+             * 
+             * @return 
+             */
+            WidgetVec& getRefRootWidgets(void);
+
+            /**
+             * 
+             * @param path
+             */
+            void setWidgetsPath(const std::string &path);
+            /**
+             * 
+             * @param path
+             */
+            void setWidgetsPath(const char *path);
+
+        private:
+            /// Pointer to the external widget factory
+            CWidgetFactory *m_pWidgetFactory;
+            /// Pointer to the external style manager
+            CStyleManager *m_pStyleMgr;
+            /// Pointer to the external link handler callback
+            /// Declared in GuiMain
+            CGuiCallback *m_pGuiLinkCallback;
+
+            /// Widgets that have no fathers. For example a main screen, window, menu, etc
+            WidgetVec m_rootWidgets;
+            /// Widgets structure files base path
+            std::string m_widgetsPath;
+        };
+
+    };
 };
 
 #endif /* FG_INC_GUI_WIDGET_MANAGER */
