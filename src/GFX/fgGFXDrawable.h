@@ -53,17 +53,17 @@ namespace fg {
              * Draw with relative 2D position
              * @param relPos
              */
-            virtual void draw(const fgVec2f& relPos) = 0;
+            virtual void draw(const Vec2f& relPos) = 0;
             /**
              * Draw with relative 3D position
              * @param relPos
              */
-            virtual void draw(const fgVec3f& relPos) = 0;
+            virtual void draw(const Vec3f& relPos) = 0;
             /**
              * Draw with given model matrix
              * @param modelMat
              */
-            virtual void draw(const fgMatrix4f& modelMat) = 0;
+            virtual void draw(const Matrix4f& modelMat) = 0;
 
         public:
             /**

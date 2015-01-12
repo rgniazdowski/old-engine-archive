@@ -37,7 +37,7 @@ void gui::CMessageBox::setDefaults(void) {
  * 
  * @return 
  */
-fgBoundingBox3Df gui::CMessageBox::updateBounds(void) {
+gfx::BoundingBox3Df gui::CMessageBox::updateBounds(void) {
     return CWindow::updateBounds();
 }
 

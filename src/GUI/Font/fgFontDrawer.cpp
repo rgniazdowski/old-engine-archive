@@ -106,7 +106,7 @@ int gui::CFontDrawer::print(float x0, float y0, const char *string, float charSi
         m_relMove.x = -x0;
         m_relMove.y = -y0;
     } else {
-        //m_relMove = fgVector3f(0.0f, 0.0f, 0.0f);
+        //m_relMove = Vector3f(0.0f, 0.0f, 0.0f);
     }
     setupDrawCall(m_currentFont);
     float w = 0.0f;
@@ -138,7 +138,7 @@ int gui::CFontDrawer::print(float x0, float y0, const char *string, float charSi
  */
 void gui::CFontDrawer::flush(void) {
     fg::gfx::CDrawingBatch::flush();
-    m_relMove = fgVector3f(0.0f, 0.0f, 0.0f);
+    m_relMove = Vector3f(0.0f, 0.0f, 0.0f);
 }
 
 /**
@@ -228,7 +228,7 @@ gui::CFontResource *gui::CFontDrawer::getFont(void) const {
 void gui::CFontDrawer::reset(void) {
     gui::CFontDrawer::flush();
     m_currentFont = NULL;
-    m_relMove = fgVector3f(0.0f, 0.0f, 0.0f);
+    m_relMove = Vector3f(0.0f, 0.0f, 0.0f);
 }
 
 /**
@@ -265,10 +265,10 @@ float gui::CFontDrawer::placeChar(float xRel0,
         charSize = (float)m_currentFont->getStep();
     float scale = charSize / (float)m_currentFont->getStep();
     SFontCharInfo &charInfo = m_currentFont->getDataInfo().charInfo[i];
-    fgVec2f relPos(xRel0, yRel0);
+    Vector2f relPos(xRel0, yRel0);
     relPos.x += charInfo.p0f.x*scale;
     relPos.y += charInfo.p0f.y*scale;
-    fgVec2f rectSize = (charInfo.p1f - charInfo.p0f) * scale;
+    Vector2f rectSize = (charInfo.p1f - charInfo.p0f) * scale;
     fg::gfx::CDrawCall *drawCall = fg::gfx::CDrawingBatch::getLastDrawCall();
     if(!drawCall) {
         drawCall = setupDrawCall(m_currentFont);
@@ -416,12 +416,12 @@ float gui::CFontDrawer::height(CFontResource *font,
  * @param fmt
  * @return 
  */
-fgVector2f gui::CFontDrawer::size(CFontResource *font,
-                                  float charSize,
-                                  const char *fmt,
-                                  ...) {
+Vector2f gui::CFontDrawer::size(CFontResource *font,
+                                float charSize,
+                                const char *fmt,
+                                ...) {
     if(!font)
-        return fgVector2f();
+        return Vector2f();
     char buf[FG_FONT_DRAW_STRING_BUF_MAX];
     va_list args;
     va_start(args, fmt);
@@ -439,12 +439,12 @@ fgVector2f gui::CFontDrawer::size(CFontResource *font,
  * @param charSize
  * @return 
  */
-fgVector2f gui::CFontDrawer::size(CFontResource *font,
-                                  const char *string,
-                                  float charSize) {
+Vector2f gui::CFontDrawer::size(CFontResource *font,
+                                const char *string,
+                                float charSize) {
     if(!string)
-        return fgVector2f();
-    fgVector2f textSize;
+        return Vector2f();
+    Vector2f textSize;
     textSize.x = width(font, string, charSize);
     textSize.y = height(font, string, charSize);
     return textSize;
@@ -529,11 +529,11 @@ float gui::CFontDrawer::height(const char *string,
  * @param fmt
  * @return 
  */
-fgVector2f gui::CFontDrawer::size(float charSize,
-                                  const char *fmt,
-                                  ...) {
+Vector2f gui::CFontDrawer::size(float charSize,
+                                const char *fmt,
+                                ...) {
     if(!m_currentFont)
-        return fgVector2f();
+        return Vector2f();
     char buf[FG_FONT_DRAW_STRING_BUF_MAX];
     va_list args;
     va_start(args, fmt);
@@ -550,11 +550,11 @@ fgVector2f gui::CFontDrawer::size(float charSize,
  * @param charSize
  * @return 
  */
-fgVector2f gui::CFontDrawer::size(const char *string,
-                                  float charSize) {
+Vector2f gui::CFontDrawer::size(const char *string,
+                                float charSize) {
     if(!string)
-        return fgVector2f();
-    fgVector2f textSize;
+        return Vector2f();
+    Vector2f textSize;
     textSize.x = width(m_currentFont, string, charSize);
     textSize.y = height(m_currentFont, string, charSize);
     return textSize;

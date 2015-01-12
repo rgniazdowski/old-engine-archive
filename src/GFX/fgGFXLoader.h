@@ -60,7 +60,7 @@ namespace fg {
             /// Main Model-Projection-View matrix to use with shader
             CMVPMatrix m_mvp;
             /// 4x4 matrix to hold translation and scale transformations
-            fgMatrix4f m_mat;
+            Matrix4f m_mat;
             /// Progress of the loading - from 0 to 100
             float m_progress;
 

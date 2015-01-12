@@ -38,7 +38,7 @@ void gui::CButton::setDefaults(void) {
  * 
  * @return 
  */
-fgBoundingBox3Df gui::CButton::updateBounds(void) {
+gfx::BoundingBox3Df gui::CButton::updateBounds(void) {
     return base_type::updateBounds();
 }
 

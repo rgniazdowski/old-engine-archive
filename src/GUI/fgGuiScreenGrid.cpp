@@ -90,12 +90,12 @@ float gui::CScreenGrid::transformToPixels(float grid_position) const {
     return (float)grid_position * gridCellSize;
 }
 
-fgVector2f gui::CScreenGrid::transform(fgVector2f grid_position) const {
+Vector2f gui::CScreenGrid::transform(Vector2f grid_position) const {
     return CScreenGrid::transform(grid_position.x, grid_position.y);
 }
 
-fgVector2f gui::CScreenGrid::transform(float grid_position_x, float grid_position_y) const {
-    fgVector2f transformed;
+Vector2f gui::CScreenGrid::transform(float grid_position_x, float grid_position_y) const {
+    Vector2f transformed;
     transformed.x = (float)transformToPixels(grid_position_x);
     transformed.y = (float)transformToPixels(grid_position_y);
     return transformed;

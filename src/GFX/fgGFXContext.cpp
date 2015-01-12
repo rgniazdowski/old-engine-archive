@@ -12,10 +12,12 @@
 #include "Util/fgMemory.h"
 #include "fgGFXPlatform.h"
 
+using namespace fg;
+
 /*
  *
  */
-void fgGfxContextParam::determineParamType(void) {
+void gfx::SContextParam::determineParamType(void) {
     count = 1;
     switch(this->pname) {
             // params returns a single value indicating the active multitexture unit. The initial value is GL_TEXTURE0.
@@ -739,7 +741,7 @@ void fgGfxContextParam::determineParamType(void) {
 /*
  *
  */
-fgBool fgGfxContextParam::update(void) {
+fgBool gfx::SContextParam::update(void) {
     if(this->paramType == FG_GFX_PARAM_INVALID)
         return FG_FALSE;
     fgBool status = FG_TRUE;
@@ -884,10 +886,10 @@ fgBool fgGfxContextParam::update(void) {
  *
  */
 #if defined(FG_USING_SDL2)
-fg::gfx::CContext::CContext(SDL_Window *sdlWindow) :
+gfx::CContext::CContext(SDL_Window *sdlWindow) :
 #else
 
-fg::gfx::CContext::CContext() :
+gfx::CContext::CContext() :
 #endif
 #if defined(FG_USING_SDL2)
 
@@ -1012,92 +1014,92 @@ m_init(FG_FALSE) {
 
 #endif
     FG_LOG_DEBUG("GFX: Initializing GL parameter list...");
-    m_params[(fgGFXuint)GL_ACTIVE_TEXTURE] = fgGfxContextParam(GL_ACTIVE_TEXTURE);
-    m_params[(fgGFXuint)GL_ALIASED_LINE_WIDTH_RANGE] = fgGfxContextParam(GL_ALIASED_LINE_WIDTH_RANGE);
-    m_params[(fgGFXuint)GL_ALIASED_POINT_SIZE_RANGE] = fgGfxContextParam(GL_ALIASED_POINT_SIZE_RANGE);
-    m_params[(fgGFXuint)GL_ALPHA_BITS] = fgGfxContextParam(GL_ALPHA_BITS);
-    m_params[(fgGFXuint)GL_BLEND] = fgGfxContextParam(GL_BLEND);
-    m_params[(fgGFXuint)GL_BLEND_COLOR] = fgGfxContextParam(GL_BLEND_COLOR);
-    m_params[(fgGFXuint)GL_BLEND_DST_ALPHA] = fgGfxContextParam(GL_BLEND_DST_ALPHA);
-    m_params[(fgGFXuint)GL_BLEND_DST_RGB] = fgGfxContextParam(GL_BLEND_DST_RGB);
-    m_params[(fgGFXuint)GL_BLEND_SRC_ALPHA] = fgGfxContextParam(GL_BLEND_SRC_ALPHA);
-    m_params[(fgGFXuint)GL_BLEND_SRC_RGB] = fgGfxContextParam(GL_BLEND_SRC_RGB);
-    m_params[(fgGFXuint)GL_BLEND_EQUATION_ALPHA] = fgGfxContextParam(GL_BLEND_EQUATION_ALPHA);
-    m_params[(fgGFXuint)GL_BLEND_EQUATION_RGB] = fgGfxContextParam(GL_BLEND_EQUATION_RGB);
-    m_params[(fgGFXuint)GL_RED_BITS] = fgGfxContextParam(GL_RED_BITS);
-    m_params[(fgGFXuint)GL_GREEN_BITS] = fgGfxContextParam(GL_GREEN_BITS);
-    m_params[(fgGFXuint)GL_BLUE_BITS] = fgGfxContextParam(GL_BLUE_BITS);
-    m_params[(fgGFXuint)GL_DEPTH_BITS] = fgGfxContextParam(GL_DEPTH_BITS);
-    m_params[(fgGFXuint)GL_COLOR_CLEAR_VALUE] = fgGfxContextParam(GL_COLOR_CLEAR_VALUE);
-    m_params[(fgGFXuint)GL_COLOR_WRITEMASK] = fgGfxContextParam(GL_COLOR_WRITEMASK);
+    m_params[(fgGFXuint)GL_ACTIVE_TEXTURE] = SContextParam(GL_ACTIVE_TEXTURE);
+    m_params[(fgGFXuint)GL_ALIASED_LINE_WIDTH_RANGE] = SContextParam(GL_ALIASED_LINE_WIDTH_RANGE);
+    m_params[(fgGFXuint)GL_ALIASED_POINT_SIZE_RANGE] = SContextParam(GL_ALIASED_POINT_SIZE_RANGE);
+    m_params[(fgGFXuint)GL_ALPHA_BITS] = SContextParam(GL_ALPHA_BITS);
+    m_params[(fgGFXuint)GL_BLEND] = SContextParam(GL_BLEND);
+    m_params[(fgGFXuint)GL_BLEND_COLOR] = SContextParam(GL_BLEND_COLOR);
+    m_params[(fgGFXuint)GL_BLEND_DST_ALPHA] = SContextParam(GL_BLEND_DST_ALPHA);
+    m_params[(fgGFXuint)GL_BLEND_DST_RGB] = SContextParam(GL_BLEND_DST_RGB);
+    m_params[(fgGFXuint)GL_BLEND_SRC_ALPHA] = SContextParam(GL_BLEND_SRC_ALPHA);
+    m_params[(fgGFXuint)GL_BLEND_SRC_RGB] = SContextParam(GL_BLEND_SRC_RGB);
+    m_params[(fgGFXuint)GL_BLEND_EQUATION_ALPHA] = SContextParam(GL_BLEND_EQUATION_ALPHA);
+    m_params[(fgGFXuint)GL_BLEND_EQUATION_RGB] = SContextParam(GL_BLEND_EQUATION_RGB);
+    m_params[(fgGFXuint)GL_RED_BITS] = SContextParam(GL_RED_BITS);
+    m_params[(fgGFXuint)GL_GREEN_BITS] = SContextParam(GL_GREEN_BITS);
+    m_params[(fgGFXuint)GL_BLUE_BITS] = SContextParam(GL_BLUE_BITS);
+    m_params[(fgGFXuint)GL_DEPTH_BITS] = SContextParam(GL_DEPTH_BITS);
+    m_params[(fgGFXuint)GL_COLOR_CLEAR_VALUE] = SContextParam(GL_COLOR_CLEAR_VALUE);
+    m_params[(fgGFXuint)GL_COLOR_WRITEMASK] = SContextParam(GL_COLOR_WRITEMASK);
     //m_params[(fgGFXuint)GL_COMPRESSED_TEXTURE_FORMATS] = fgGfxContextParam(GL_COMPRESSED_TEXTURE_FORMATS);
-    m_params[(fgGFXuint)GL_CULL_FACE] = fgGfxContextParam(GL_CULL_FACE);
-    m_params[(fgGFXuint)GL_CULL_FACE_MODE] = fgGfxContextParam(GL_CULL_FACE_MODE);
-    m_params[(fgGFXuint)GL_CURRENT_PROGRAM] = fgGfxContextParam(GL_CURRENT_PROGRAM);
-    m_params[(fgGFXuint)GL_DEPTH_CLEAR_VALUE] = fgGfxContextParam(GL_DEPTH_CLEAR_VALUE);
-    m_params[(fgGFXuint)GL_DEPTH_FUNC] = fgGfxContextParam(GL_DEPTH_FUNC);
-    m_params[(fgGFXuint)GL_DEPTH_RANGE] = fgGfxContextParam(GL_DEPTH_RANGE);
-    m_params[(fgGFXuint)GL_DEPTH_TEST] = fgGfxContextParam(GL_DEPTH_TEST);
-    m_params[(fgGFXuint)GL_DEPTH_WRITEMASK] = fgGfxContextParam(GL_DEPTH_WRITEMASK);
-    m_params[(fgGFXuint)GL_DITHER] = fgGfxContextParam(GL_DITHER);
-    m_params[(fgGFXuint)GL_ARRAY_BUFFER_BINDING] = fgGfxContextParam(GL_ARRAY_BUFFER_BINDING);
-    m_params[(fgGFXuint)GL_ELEMENT_ARRAY_BUFFER_BINDING] = fgGfxContextParam(GL_ELEMENT_ARRAY_BUFFER_BINDING);
-    m_params[(fgGFXuint)GL_FRAMEBUFFER_BINDING] = fgGfxContextParam(GL_FRAMEBUFFER_BINDING);
-    m_params[(fgGFXuint)GL_FRONT_FACE] = fgGfxContextParam(GL_FRONT_FACE);
-    m_params[(fgGFXuint)GL_GENERATE_MIPMAP_HINT] = fgGfxContextParam(GL_GENERATE_MIPMAP_HINT);
-    m_params[(fgGFXuint)GL_IMPLEMENTATION_COLOR_READ_FORMAT] = fgGfxContextParam(GL_IMPLEMENTATION_COLOR_READ_FORMAT);
-    m_params[(fgGFXuint)GL_IMPLEMENTATION_COLOR_READ_TYPE] = fgGfxContextParam(GL_IMPLEMENTATION_COLOR_READ_TYPE);
-    m_params[(fgGFXuint)GL_LINE_WIDTH] = fgGfxContextParam(GL_LINE_WIDTH);
-    m_params[(fgGFXuint)GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS] = fgGfxContextParam(GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS);
-    m_params[(fgGFXuint)GL_MAX_CUBE_MAP_TEXTURE_SIZE] = fgGfxContextParam(GL_MAX_CUBE_MAP_TEXTURE_SIZE);
-    m_params[(fgGFXuint)GL_MAX_FRAGMENT_UNIFORM_VECTORS] = fgGfxContextParam(GL_MAX_FRAGMENT_UNIFORM_VECTORS);
-    m_params[(fgGFXuint)GL_MAX_RENDERBUFFER_SIZE] = fgGfxContextParam(GL_MAX_RENDERBUFFER_SIZE);
-    m_params[(fgGFXuint)GL_MAX_TEXTURE_IMAGE_UNITS] = fgGfxContextParam(GL_MAX_TEXTURE_IMAGE_UNITS);
-    m_params[(fgGFXuint)GL_MAX_TEXTURE_SIZE] = fgGfxContextParam(GL_MAX_TEXTURE_SIZE);
-    m_params[(fgGFXuint)GL_MAX_VARYING_VECTORS] = fgGfxContextParam(GL_MAX_VARYING_VECTORS);
-    m_params[(fgGFXuint)GL_MAX_VERTEX_ATTRIBS] = fgGfxContextParam(GL_MAX_VERTEX_ATTRIBS);
-    m_params[(fgGFXuint)GL_MAX_VERTEX_TEXTURE_IMAGE_UNITS] = fgGfxContextParam(GL_MAX_VERTEX_TEXTURE_IMAGE_UNITS);
-    m_params[(fgGFXuint)GL_MAX_VERTEX_UNIFORM_VECTORS] = fgGfxContextParam(GL_MAX_VERTEX_UNIFORM_VECTORS);
-    m_params[(fgGFXuint)GL_NUM_COMPRESSED_TEXTURE_FORMATS] = fgGfxContextParam(GL_NUM_COMPRESSED_TEXTURE_FORMATS);
-    m_params[(fgGFXuint)GL_NUM_SHADER_BINARY_FORMATS] = fgGfxContextParam(GL_NUM_SHADER_BINARY_FORMATS);
-    m_params[(fgGFXuint)GL_PACK_ALIGNMENT] = fgGfxContextParam(GL_PACK_ALIGNMENT);
-    m_params[(fgGFXuint)GL_POLYGON_OFFSET_FACTOR] = fgGfxContextParam(GL_POLYGON_OFFSET_FACTOR);
-    m_params[(fgGFXuint)GL_POLYGON_OFFSET_FILL] = fgGfxContextParam(GL_POLYGON_OFFSET_FILL);
-    m_params[(fgGFXuint)GL_POLYGON_OFFSET_UNITS] = fgGfxContextParam(GL_POLYGON_OFFSET_UNITS);
-    m_params[(fgGFXuint)GL_RENDERBUFFER_BINDING] = fgGfxContextParam(GL_RENDERBUFFER_BINDING);
-    m_params[(fgGFXuint)GL_SAMPLE_ALPHA_TO_COVERAGE] = fgGfxContextParam(GL_SAMPLE_ALPHA_TO_COVERAGE);
-    m_params[(fgGFXuint)GL_SAMPLE_COVERAGE] = fgGfxContextParam(GL_SAMPLE_COVERAGE);
-    m_params[(fgGFXuint)GL_SAMPLE_BUFFERS] = fgGfxContextParam(GL_SAMPLE_BUFFERS);
-    m_params[(fgGFXuint)GL_SAMPLE_COVERAGE_INVERT] = fgGfxContextParam(GL_SAMPLE_COVERAGE_INVERT);
-    m_params[(fgGFXuint)GL_SAMPLE_COVERAGE_VALUE] = fgGfxContextParam(GL_SAMPLE_COVERAGE_VALUE);
-    m_params[(fgGFXuint)GL_SAMPLES] = fgGfxContextParam(GL_SAMPLES);
-    m_params[(fgGFXuint)GL_MAX_VIEWPORT_DIMS] = fgGfxContextParam(GL_MAX_VIEWPORT_DIMS);
-    m_params[(fgGFXuint)GL_SCISSOR_BOX] = fgGfxContextParam(GL_SCISSOR_BOX);
-    m_params[(fgGFXuint)GL_SCISSOR_TEST] = fgGfxContextParam(GL_SCISSOR_TEST);
+    m_params[(fgGFXuint)GL_CULL_FACE] = SContextParam(GL_CULL_FACE);
+    m_params[(fgGFXuint)GL_CULL_FACE_MODE] = SContextParam(GL_CULL_FACE_MODE);
+    m_params[(fgGFXuint)GL_CURRENT_PROGRAM] = SContextParam(GL_CURRENT_PROGRAM);
+    m_params[(fgGFXuint)GL_DEPTH_CLEAR_VALUE] = SContextParam(GL_DEPTH_CLEAR_VALUE);
+    m_params[(fgGFXuint)GL_DEPTH_FUNC] = SContextParam(GL_DEPTH_FUNC);
+    m_params[(fgGFXuint)GL_DEPTH_RANGE] = SContextParam(GL_DEPTH_RANGE);
+    m_params[(fgGFXuint)GL_DEPTH_TEST] = SContextParam(GL_DEPTH_TEST);
+    m_params[(fgGFXuint)GL_DEPTH_WRITEMASK] = SContextParam(GL_DEPTH_WRITEMASK);
+    m_params[(fgGFXuint)GL_DITHER] = SContextParam(GL_DITHER);
+    m_params[(fgGFXuint)GL_ARRAY_BUFFER_BINDING] = SContextParam(GL_ARRAY_BUFFER_BINDING);
+    m_params[(fgGFXuint)GL_ELEMENT_ARRAY_BUFFER_BINDING] = SContextParam(GL_ELEMENT_ARRAY_BUFFER_BINDING);
+    m_params[(fgGFXuint)GL_FRAMEBUFFER_BINDING] = SContextParam(GL_FRAMEBUFFER_BINDING);
+    m_params[(fgGFXuint)GL_FRONT_FACE] = SContextParam(GL_FRONT_FACE);
+    m_params[(fgGFXuint)GL_GENERATE_MIPMAP_HINT] = SContextParam(GL_GENERATE_MIPMAP_HINT);
+    m_params[(fgGFXuint)GL_IMPLEMENTATION_COLOR_READ_FORMAT] = SContextParam(GL_IMPLEMENTATION_COLOR_READ_FORMAT);
+    m_params[(fgGFXuint)GL_IMPLEMENTATION_COLOR_READ_TYPE] = SContextParam(GL_IMPLEMENTATION_COLOR_READ_TYPE);
+    m_params[(fgGFXuint)GL_LINE_WIDTH] = SContextParam(GL_LINE_WIDTH);
+    m_params[(fgGFXuint)GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS] = SContextParam(GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS);
+    m_params[(fgGFXuint)GL_MAX_CUBE_MAP_TEXTURE_SIZE] = SContextParam(GL_MAX_CUBE_MAP_TEXTURE_SIZE);
+    m_params[(fgGFXuint)GL_MAX_FRAGMENT_UNIFORM_VECTORS] = SContextParam(GL_MAX_FRAGMENT_UNIFORM_VECTORS);
+    m_params[(fgGFXuint)GL_MAX_RENDERBUFFER_SIZE] = SContextParam(GL_MAX_RENDERBUFFER_SIZE);
+    m_params[(fgGFXuint)GL_MAX_TEXTURE_IMAGE_UNITS] = SContextParam(GL_MAX_TEXTURE_IMAGE_UNITS);
+    m_params[(fgGFXuint)GL_MAX_TEXTURE_SIZE] = SContextParam(GL_MAX_TEXTURE_SIZE);
+    m_params[(fgGFXuint)GL_MAX_VARYING_VECTORS] = SContextParam(GL_MAX_VARYING_VECTORS);
+    m_params[(fgGFXuint)GL_MAX_VERTEX_ATTRIBS] = SContextParam(GL_MAX_VERTEX_ATTRIBS);
+    m_params[(fgGFXuint)GL_MAX_VERTEX_TEXTURE_IMAGE_UNITS] = SContextParam(GL_MAX_VERTEX_TEXTURE_IMAGE_UNITS);
+    m_params[(fgGFXuint)GL_MAX_VERTEX_UNIFORM_VECTORS] = SContextParam(GL_MAX_VERTEX_UNIFORM_VECTORS);
+    m_params[(fgGFXuint)GL_NUM_COMPRESSED_TEXTURE_FORMATS] = SContextParam(GL_NUM_COMPRESSED_TEXTURE_FORMATS);
+    m_params[(fgGFXuint)GL_NUM_SHADER_BINARY_FORMATS] = SContextParam(GL_NUM_SHADER_BINARY_FORMATS);
+    m_params[(fgGFXuint)GL_PACK_ALIGNMENT] = SContextParam(GL_PACK_ALIGNMENT);
+    m_params[(fgGFXuint)GL_POLYGON_OFFSET_FACTOR] = SContextParam(GL_POLYGON_OFFSET_FACTOR);
+    m_params[(fgGFXuint)GL_POLYGON_OFFSET_FILL] = SContextParam(GL_POLYGON_OFFSET_FILL);
+    m_params[(fgGFXuint)GL_POLYGON_OFFSET_UNITS] = SContextParam(GL_POLYGON_OFFSET_UNITS);
+    m_params[(fgGFXuint)GL_RENDERBUFFER_BINDING] = SContextParam(GL_RENDERBUFFER_BINDING);
+    m_params[(fgGFXuint)GL_SAMPLE_ALPHA_TO_COVERAGE] = SContextParam(GL_SAMPLE_ALPHA_TO_COVERAGE);
+    m_params[(fgGFXuint)GL_SAMPLE_COVERAGE] = SContextParam(GL_SAMPLE_COVERAGE);
+    m_params[(fgGFXuint)GL_SAMPLE_BUFFERS] = SContextParam(GL_SAMPLE_BUFFERS);
+    m_params[(fgGFXuint)GL_SAMPLE_COVERAGE_INVERT] = SContextParam(GL_SAMPLE_COVERAGE_INVERT);
+    m_params[(fgGFXuint)GL_SAMPLE_COVERAGE_VALUE] = SContextParam(GL_SAMPLE_COVERAGE_VALUE);
+    m_params[(fgGFXuint)GL_SAMPLES] = SContextParam(GL_SAMPLES);
+    m_params[(fgGFXuint)GL_MAX_VIEWPORT_DIMS] = SContextParam(GL_MAX_VIEWPORT_DIMS);
+    m_params[(fgGFXuint)GL_SCISSOR_BOX] = SContextParam(GL_SCISSOR_BOX);
+    m_params[(fgGFXuint)GL_SCISSOR_TEST] = SContextParam(GL_SCISSOR_TEST);
     //m_params[(fgGFXuint)GL_SHADER_BINARY_FORMATS] = fgGfxContextParam(GL_SHADER_BINARY_FORMATS);
-    m_params[(fgGFXuint)GL_SHADER_COMPILER] = fgGfxContextParam(GL_SHADER_COMPILER);
-    m_params[(fgGFXuint)GL_STENCIL_BACK_FUNC] = fgGfxContextParam(GL_STENCIL_BACK_FUNC);
-    m_params[(fgGFXuint)GL_STENCIL_BACK_REF] = fgGfxContextParam(GL_STENCIL_BACK_REF);
-    m_params[(fgGFXuint)GL_STENCIL_BACK_VALUE_MASK] = fgGfxContextParam(GL_STENCIL_BACK_VALUE_MASK);
-    m_params[(fgGFXuint)GL_STENCIL_BACK_FAIL] = fgGfxContextParam(GL_STENCIL_BACK_FAIL);
-    m_params[(fgGFXuint)GL_STENCIL_BACK_PASS_DEPTH_FAIL] = fgGfxContextParam(GL_STENCIL_BACK_PASS_DEPTH_FAIL);
-    m_params[(fgGFXuint)GL_STENCIL_BACK_PASS_DEPTH_PASS] = fgGfxContextParam(GL_STENCIL_BACK_PASS_DEPTH_PASS);
-    m_params[(fgGFXuint)GL_STENCIL_BACK_WRITEMASK] = fgGfxContextParam(GL_STENCIL_BACK_WRITEMASK);
-    m_params[(fgGFXuint)GL_STENCIL_FUNC] = fgGfxContextParam(GL_STENCIL_FUNC);
-    m_params[(fgGFXuint)GL_STENCIL_REF] = fgGfxContextParam(GL_STENCIL_REF);
-    m_params[(fgGFXuint)GL_STENCIL_VALUE_MASK] = fgGfxContextParam(GL_STENCIL_VALUE_MASK);
-    m_params[(fgGFXuint)GL_STENCIL_FAIL] = fgGfxContextParam(GL_STENCIL_FAIL);
-    m_params[(fgGFXuint)GL_STENCIL_PASS_DEPTH_FAIL] = fgGfxContextParam(GL_STENCIL_PASS_DEPTH_FAIL);
-    m_params[(fgGFXuint)GL_STENCIL_PASS_DEPTH_PASS] = fgGfxContextParam(GL_STENCIL_PASS_DEPTH_PASS);
-    m_params[(fgGFXuint)GL_STENCIL_WRITEMASK] = fgGfxContextParam(GL_STENCIL_WRITEMASK);
-    m_params[(fgGFXuint)GL_STENCIL_TEST] = fgGfxContextParam(GL_STENCIL_TEST);
-    m_params[(fgGFXuint)GL_STENCIL_BITS] = fgGfxContextParam(GL_STENCIL_BITS);
-    m_params[(fgGFXuint)GL_STENCIL_CLEAR_VALUE] = fgGfxContextParam(GL_STENCIL_CLEAR_VALUE);
-    m_params[(fgGFXuint)GL_SUBPIXEL_BITS] = fgGfxContextParam(GL_SUBPIXEL_BITS);
-    m_params[(fgGFXuint)GL_TEXTURE_BINDING_2D] = fgGfxContextParam(GL_TEXTURE_BINDING_2D);
-    m_params[(fgGFXuint)GL_TEXTURE_BINDING_CUBE_MAP] = fgGfxContextParam(GL_TEXTURE_BINDING_CUBE_MAP);
-    m_params[(fgGFXuint)GL_UNPACK_ALIGNMENT] = fgGfxContextParam(GL_UNPACK_ALIGNMENT);
-    m_params[(fgGFXuint)GL_VIEWPORT] = fgGfxContextParam(GL_VIEWPORT);
+    m_params[(fgGFXuint)GL_SHADER_COMPILER] = SContextParam(GL_SHADER_COMPILER);
+    m_params[(fgGFXuint)GL_STENCIL_BACK_FUNC] = SContextParam(GL_STENCIL_BACK_FUNC);
+    m_params[(fgGFXuint)GL_STENCIL_BACK_REF] = SContextParam(GL_STENCIL_BACK_REF);
+    m_params[(fgGFXuint)GL_STENCIL_BACK_VALUE_MASK] = SContextParam(GL_STENCIL_BACK_VALUE_MASK);
+    m_params[(fgGFXuint)GL_STENCIL_BACK_FAIL] = SContextParam(GL_STENCIL_BACK_FAIL);
+    m_params[(fgGFXuint)GL_STENCIL_BACK_PASS_DEPTH_FAIL] = SContextParam(GL_STENCIL_BACK_PASS_DEPTH_FAIL);
+    m_params[(fgGFXuint)GL_STENCIL_BACK_PASS_DEPTH_PASS] = SContextParam(GL_STENCIL_BACK_PASS_DEPTH_PASS);
+    m_params[(fgGFXuint)GL_STENCIL_BACK_WRITEMASK] = SContextParam(GL_STENCIL_BACK_WRITEMASK);
+    m_params[(fgGFXuint)GL_STENCIL_FUNC] = SContextParam(GL_STENCIL_FUNC);
+    m_params[(fgGFXuint)GL_STENCIL_REF] = SContextParam(GL_STENCIL_REF);
+    m_params[(fgGFXuint)GL_STENCIL_VALUE_MASK] = SContextParam(GL_STENCIL_VALUE_MASK);
+    m_params[(fgGFXuint)GL_STENCIL_FAIL] = SContextParam(GL_STENCIL_FAIL);
+    m_params[(fgGFXuint)GL_STENCIL_PASS_DEPTH_FAIL] = SContextParam(GL_STENCIL_PASS_DEPTH_FAIL);
+    m_params[(fgGFXuint)GL_STENCIL_PASS_DEPTH_PASS] = SContextParam(GL_STENCIL_PASS_DEPTH_PASS);
+    m_params[(fgGFXuint)GL_STENCIL_WRITEMASK] = SContextParam(GL_STENCIL_WRITEMASK);
+    m_params[(fgGFXuint)GL_STENCIL_TEST] = SContextParam(GL_STENCIL_TEST);
+    m_params[(fgGFXuint)GL_STENCIL_BITS] = SContextParam(GL_STENCIL_BITS);
+    m_params[(fgGFXuint)GL_STENCIL_CLEAR_VALUE] = SContextParam(GL_STENCIL_CLEAR_VALUE);
+    m_params[(fgGFXuint)GL_SUBPIXEL_BITS] = SContextParam(GL_SUBPIXEL_BITS);
+    m_params[(fgGFXuint)GL_TEXTURE_BINDING_2D] = SContextParam(GL_TEXTURE_BINDING_2D);
+    m_params[(fgGFXuint)GL_TEXTURE_BINDING_CUBE_MAP] = SContextParam(GL_TEXTURE_BINDING_CUBE_MAP);
+    m_params[(fgGFXuint)GL_UNPACK_ALIGNMENT] = SContextParam(GL_UNPACK_ALIGNMENT);
+    m_params[(fgGFXuint)GL_VIEWPORT] = SContextParam(GL_VIEWPORT);
 
     memset(m_attrInfo, 0, sizeof (m_attrInfo));
 
@@ -1222,7 +1224,7 @@ m_init(FG_FALSE) {
 /*
  *
  */
-fg::gfx::CContext::~CContext() {
+gfx::CContext::~CContext() {
 #if defined(FG_USING_SDL2)
     if(m_GLContext)
         SDL_GL_DeleteContext(m_GLContext);
@@ -1240,10 +1242,10 @@ fg::gfx::CContext::~CContext() {
 /*
  *
  */
-void fg::gfx::CContext::initialize(void) {
-    gfxParamMapItor end = m_params.end(), itor = m_params.begin();
+void gfx::CContext::initialize(void) {
+    ParameterMapItor end = m_params.end(), itor = m_params.begin();
     for(; itor != end; itor++) {
-        fgGfxContextParam &param = itor->second;
+        SContextParam &param = itor->second;
         param.load();
         //printf("Parameter GFX: %d = %d\n", (int)itor->first, (int)param.boolVal);
     }
@@ -1252,35 +1254,35 @@ void fg::gfx::CContext::initialize(void) {
 /*
  *
  */
-fgGfxContextParam& fg::gfx::CContext::getParam(const fgGFXenum pname) {
+gfx::SContextParam& gfx::CContext::getParam(const fgGFXenum pname) {
     return m_params[(fgGFXuint)pname];
 }
 
 /*
  *
  */
-void fg::gfx::CContext::enable(const fgGFXenum cap) {
+void gfx::CContext::enable(const fgGFXenum cap) {
     m_params[(fgGFXuint)cap].set((fgGFXboolean)FG_GFX_TRUE);
 }
 
 /*
  *
  */
-void fg::gfx::CContext::disable(const fgGFXenum cap) {
+void gfx::CContext::disable(const fgGFXenum cap) {
     m_params[(fgGFXuint)cap].set((fgGFXboolean)FG_GFX_FALSE);
 }
 
 /*
  *
  */
-fgGFXboolean fg::gfx::CContext::isEnabled(const fgGFXenum pname) {
+fgGFXboolean gfx::CContext::isEnabled(const fgGFXenum pname) {
     return m_params[(fgGFXuint)pname].boolVal;
 }
 
 /*
  *
  */
-fgGFXboolean fg::gfx::CContext::isDisabled(const fgGFXenum pname) {
+fgGFXboolean gfx::CContext::isDisabled(const fgGFXenum pname) {
     return (fgGFXboolean)(FG_GFX_FALSE == m_params[(fgGFXuint)pname].boolVal);
 }
 
@@ -1289,7 +1291,7 @@ fgGFXboolean fg::gfx::CContext::isDisabled(const fgGFXenum pname) {
  * @param buffer
  * @return 
  */
-fgGFXboolean fg::gfx::CContext::isBuffer(const fgGFXuint buffer) {
+fgGFXboolean gfx::CContext::isBuffer(const fgGFXuint buffer) {
     if(buffer == 0)
         return FG_GFX_FALSE;
     if(m_buffers.empty())
@@ -1304,7 +1306,7 @@ fgGFXboolean fg::gfx::CContext::isBuffer(const fgGFXuint buffer) {
  * @param bufferID
  * @return 
  */
-fgGFXboolean fg::gfx::CContext::isBuffer(const fgGfxBufferID& bufferID) {
+fgGFXboolean gfx::CContext::isBuffer(const fgGfxBufferID& bufferID) {
     return isBuffer(bufferID.id);
 }
 
@@ -1313,7 +1315,7 @@ fgGFXboolean fg::gfx::CContext::isBuffer(const fgGfxBufferID& bufferID) {
  * @param bufferID
  * @return 
  */
-fgGFXboolean fg::gfx::CContext::isBuffer(const fgGfxBufferID* bufferID) {
+fgGFXboolean gfx::CContext::isBuffer(const fgGfxBufferID* bufferID) {
     if(!bufferID)
         return FG_GFX_FALSE;
     return isBuffer(bufferID->id);
@@ -1329,10 +1331,10 @@ fgGFXboolean fg::gfx::CContext::isBuffer(const fgGfxBufferID* bufferID) {
 /**
  * 
  */
-void fg::gfx::CContext::deleteAllBuffers(void) {
+void gfx::CContext::deleteAllBuffers(void) {
     if(m_buffers.empty())
         return;
-    gfxBufferMapItor itor = m_buffers.begin(), end = m_buffers.end();
+    BufferMapItor itor = m_buffers.begin(), end = m_buffers.end();
     for(; itor != end; itor++) {
         fgGfxBufferID *buffer = itor->second;
         if(!buffer)
@@ -1351,9 +1353,9 @@ void fg::gfx::CContext::deleteAllBuffers(void) {
  * @param usage
  * @return 
  */
-fgGFXboolean fg::gfx::CContext::genBuffers(const int count,
-                                      fgGfxBufferID*& buffers,
-                                      const fgGFXenum usage) {
+fgGFXboolean gfx::CContext::genBuffers(const int count,
+                                       fgGfxBufferID*& buffers,
+                                       const fgGFXenum usage) {
     if(count <= 0)
         return FG_GFX_FALSE;
     if(!buffers) {
@@ -1379,11 +1381,11 @@ fgGFXboolean fg::gfx::CContext::genBuffers(const int count,
  * @param target
  * @param usage
  */
-void fg::gfx::CContext::bufferData(fgGfxBufferID& bufferID,
-                              const fgGFXsizei size,
-                              const fgGFXvoid* data,
-                              const fgGFXenum target,
-                              const fgGFXenum usage) {
+void gfx::CContext::bufferData(fgGfxBufferID& bufferID,
+                               const fgGFXsizei size,
+                               const fgGFXvoid* data,
+                               const fgGFXenum target,
+                               const fgGFXenum usage) {
     if(!data)
         return;
     if((fgGFXenum)0 == target || (fgGFXenum)0 == bufferID.target) {
@@ -1410,7 +1412,7 @@ void fg::gfx::CContext::bufferData(fgGfxBufferID& bufferID,
  * @param bufferID
  * @param target
  */
-void fg::gfx::CContext::bindBuffer(fgGfxBufferID& bufferID, const fgGFXenum target) {
+void gfx::CContext::bindBuffer(fgGfxBufferID& bufferID, const fgGFXenum target) {
     if(bufferID.id == 0)
         return;
     if(target != (fgGFXenum)0)
@@ -1425,7 +1427,7 @@ void fg::gfx::CContext::bindBuffer(fgGfxBufferID& bufferID, const fgGFXenum targ
  * @param target
  * @param buffer
  */
-void fg::gfx::CContext::bindBuffer(const fgGFXenum target, const fgGFXuint buffer) {
+void gfx::CContext::bindBuffer(const fgGFXenum target, const fgGFXuint buffer) {
     if(target == GL_ARRAY_BUFFER || target == GL_ARRAY_BUFFER_BINDING) {
         m_params[(fgGFXuint)GL_ARRAY_BUFFER_BINDING].set((fgGFXint)buffer);
     } else if(target == GL_ELEMENT_ARRAY_BUFFER || target == GL_ELEMENT_ARRAY_BUFFER_BINDING) {
@@ -1438,7 +1440,7 @@ void fg::gfx::CContext::bindBuffer(const fgGFXenum target, const fgGFXuint buffe
  * @param target
  * @return 
  */
-fgGFXuint fg::gfx::CContext::boundBuffer(const fgGFXenum target) {
+fgGFXuint gfx::CContext::boundBuffer(const fgGFXenum target) {
     if(target == GL_ARRAY_BUFFER || target == GL_ARRAY_BUFFER_BINDING) {
         return m_params[(fgGFXuint)GL_ARRAY_BUFFER_BINDING];
     } else if(target == GL_ELEMENT_ARRAY_BUFFER || target == GL_ELEMENT_ARRAY_BUFFER_BINDING) {
@@ -1451,12 +1453,12 @@ fgGFXuint fg::gfx::CContext::boundBuffer(const fgGFXenum target) {
  * 
  * @param bufferID
  */
-void fg::gfx::CContext::deleteBuffer(fgGfxBufferID& bufferID) {
+void gfx::CContext::deleteBuffer(fgGfxBufferID& bufferID) {
     if(bufferID.id == 0)
         return;
     if(m_buffers.empty())
         return;
-    gfxBufferMapItor itor = m_buffers.find(bufferID.id);
+    BufferMapItor itor = m_buffers.find(bufferID.id);
     if(itor == m_buffers.end())
         return;
     glDeleteBuffers(1, bufferID.ptrID());
@@ -1469,7 +1471,7 @@ void fg::gfx::CContext::deleteBuffer(fgGfxBufferID& bufferID) {
  * @param count
  * @param buffers
  */
-void fg::gfx::CContext::deleteBuffers(const int count, fgGfxBufferID* buffers) {
+void gfx::CContext::deleteBuffers(const int count, fgGfxBufferID* buffers) {
     if(count <= 0 || !buffers)
         return;
     for(int i = 0; i < count; i++)
@@ -1480,7 +1482,7 @@ void fg::gfx::CContext::deleteBuffers(const int count, fgGfxBufferID* buffers) {
  * 
  * @return 
  */
-fgGFXuint fg::gfx::CContext::boundTexture(void) const {
+fgGFXuint gfx::CContext::boundTexture(void) const {
     return m_boundTexture;
 }
 
@@ -1488,7 +1490,7 @@ fgGFXuint fg::gfx::CContext::boundTexture(void) const {
  * 
  * @return 
  */
-fgGFXuint fg::gfx::CContext::activeTexture(void) {
+fgGFXuint gfx::CContext::activeTexture(void) {
     return m_params[(fgGFXuint)GL_ACTIVE_TEXTURE];
 }
 
@@ -1496,7 +1498,7 @@ fgGFXuint fg::gfx::CContext::activeTexture(void) {
  * 
  * @param texture
  */
-void fg::gfx::CContext::activeTexture(const fgGFXenum texture) {
+void gfx::CContext::activeTexture(const fgGFXenum texture) {
     m_params[(fgGFXuint)GL_ACTIVE_TEXTURE].set((fgGFXint)texture);
 }
 
@@ -1505,7 +1507,7 @@ void fg::gfx::CContext::activeTexture(const fgGFXenum texture) {
  * @param texture
  * @return 
  */
-fgGFXboolean fg::gfx::CContext::isTexture(const fgGFXuint texture) {
+fgGFXboolean gfx::CContext::isTexture(const fgGFXuint texture) {
     if(texture == 0)
         return FG_GFX_FALSE;
     if(m_textures.empty())
@@ -1520,17 +1522,17 @@ fgGFXboolean fg::gfx::CContext::isTexture(const fgGFXuint texture) {
  * @param textureID
  * @return 
  */
-fgGFXboolean fg::gfx::CContext::isTexture(const fgGfxTextureID& textureID) {
+fgGFXboolean gfx::CContext::isTexture(const fgGfxTextureID& textureID) {
     return isTexture(textureID.id);
 }
 
 /**
  * 
  */
-void fg::gfx::CContext::deleteAllTextures(void) {
+void gfx::CContext::deleteAllTextures(void) {
     if(m_textures.empty())
         return;
-    gfxTextureMapItor itor = m_textures.begin(), end = m_textures.end();
+    TextureMapItor itor = m_textures.begin(), end = m_textures.end();
     for(; itor != end; itor++) {
         fgGfxTextureID *tex = itor->second;
         if(!tex)
@@ -1548,9 +1550,9 @@ void fg::gfx::CContext::deleteAllTextures(void) {
  * @param textures
  * @param target
  */
-void fg::gfx::CContext::genTextures(const int count,
-                               fgGfxTextureID* textures,
-                               const fgGFXenum target/* = GL_TEXTURE_2D*/) {
+void gfx::CContext::genTextures(const int count,
+                                fgGfxTextureID* textures,
+                                const fgGFXenum target/* = GL_TEXTURE_2D*/) {
     if(count <= 0 || !textures)
         return;
     if(!textures)
@@ -1565,8 +1567,8 @@ void fg::gfx::CContext::genTextures(const int count,
  * @param texture
  * @param target
  */
-void fg::gfx::CContext::genTexture(fgGfxTextureID* texture,
-                              const fgGFXenum target/* = GL_TEXTURE_2D*/) {
+void gfx::CContext::genTexture(fgGfxTextureID* texture,
+                               const fgGFXenum target/* = GL_TEXTURE_2D*/) {
     if(!texture)
         return;
     texture->target = target;
@@ -1582,7 +1584,7 @@ void fg::gfx::CContext::genTexture(fgGfxTextureID* texture,
  * @param count
  * @param textures
  */
-void fg::gfx::CContext::deleteTextures(const int count, fgGfxTextureID* textures) {
+void gfx::CContext::deleteTextures(const int count, fgGfxTextureID* textures) {
     if(count <= 0 || !textures)
         return;
     for(int i = 0; i < count; i++)
@@ -1593,12 +1595,12 @@ void fg::gfx::CContext::deleteTextures(const int count, fgGfxTextureID* textures
  * 
  * @param textureID
  */
-void fg::gfx::CContext::deleteTexture(fgGfxTextureID& textureID) {
+void gfx::CContext::deleteTexture(fgGfxTextureID& textureID) {
     if(textureID.id == 0)
         return;
     if(m_textures.empty())
         return;
-    gfxTextureMapItor itor = m_textures.find(textureID.id);
+    TextureMapItor itor = m_textures.find(textureID.id);
     if(itor == m_textures.end())
         return;
     glDeleteTextures(1, textureID.ptrID());
@@ -1613,7 +1615,7 @@ void fg::gfx::CContext::deleteTexture(fgGfxTextureID& textureID) {
  * @param textureID
  * @param target
  */
-void fg::gfx::CContext::bindTexture(fgGfxTextureID& textureID, const fgGFXenum target/*=0*/) {
+void gfx::CContext::bindTexture(fgGfxTextureID& textureID, const fgGFXenum target/*=0*/) {
     if(textureID.id == 0)
         return;
     if(target != (fgGFXenum)0)
@@ -1633,7 +1635,7 @@ void fg::gfx::CContext::bindTexture(fgGfxTextureID& textureID, const fgGFXenum t
  * 
  * @param texID
  */
-void fg::gfx::CContext::bindTexture2D(const fgGFXuint texID) {
+void gfx::CContext::bindTexture2D(const fgGFXuint texID) {
     m_params[(fgGFXuint)GL_TEXTURE_BINDING_2D].set((fgGFXint)texID);
     m_boundTexture = texID;
 }
@@ -1642,7 +1644,7 @@ void fg::gfx::CContext::bindTexture2D(const fgGFXuint texID) {
  * 
  * @param texID
  */
-void fg::gfx::CContext::bindTextureCube(const fgGFXuint texID) {
+void gfx::CContext::bindTextureCube(const fgGFXuint texID) {
     m_params[(fgGFXuint)GL_TEXTURE_BINDING_CUBE_MAP].set((fgGFXint)texID);
     m_boundTexture = texID;
 }
@@ -1651,9 +1653,9 @@ void fg::gfx::CContext::bindTextureCube(const fgGFXuint texID) {
  * 
  * @param mode
  */
-void fg::gfx::CContext::blendEquation(const fgGFXenum mode) {
-    fgGfxContextParam& modeRGB = m_params[(fgGFXuint)GL_BLEND_EQUATION_RGB];
-    fgGfxContextParam& modeAlpha = m_params[(fgGFXuint)GL_BLEND_EQUATION_ALPHA];
+void gfx::CContext::blendEquation(const fgGFXenum mode) {
+    SContextParam& modeRGB = m_params[(fgGFXuint)GL_BLEND_EQUATION_RGB];
+    SContextParam& modeAlpha = m_params[(fgGFXuint)GL_BLEND_EQUATION_ALPHA];
     if(modeRGB.intVal != (fgGFXint)mode || modeAlpha.intVal != (fgGFXint)mode) {
         modeAlpha = modeRGB = mode;
         glBlendEquationSeparate(mode, mode);
@@ -1665,11 +1667,11 @@ void fg::gfx::CContext::blendEquation(const fgGFXenum mode) {
  * @param sfactor
  * @param dfactor
  */
-void fg::gfx::CContext::blendFunc(const fgGFXenum sfactor, const fgGFXenum dfactor) {
-    fgGfxContextParam& srcRGB = m_params[(fgGFXuint)GL_BLEND_SRC_RGB];
-    fgGfxContextParam& dstRGB = m_params[(fgGFXuint)GL_BLEND_DST_RGB];
-    fgGfxContextParam& srcAlpha = m_params[(fgGFXuint)GL_BLEND_SRC_ALPHA];
-    fgGfxContextParam& dstAlpha = m_params[(fgGFXuint)GL_BLEND_DST_ALPHA];
+void gfx::CContext::blendFunc(const fgGFXenum sfactor, const fgGFXenum dfactor) {
+    SContextParam& srcRGB = m_params[(fgGFXuint)GL_BLEND_SRC_RGB];
+    SContextParam& dstRGB = m_params[(fgGFXuint)GL_BLEND_DST_RGB];
+    SContextParam& srcAlpha = m_params[(fgGFXuint)GL_BLEND_SRC_ALPHA];
+    SContextParam& dstAlpha = m_params[(fgGFXuint)GL_BLEND_DST_ALPHA];
 
     if(srcRGB.intVal != (fgGFXint)sfactor ||
        srcAlpha.intVal != (fgGFXint)sfactor ||
@@ -1694,14 +1696,14 @@ void fg::gfx::CContext::blendFunc(const fgGFXenum sfactor, const fgGFXenum dfact
  * @param srcAlpha
  * @param dstAlpha
  */
-void fg::gfx::CContext::blendFunc(const fgGFXenum srcRGB,
-                             const fgGFXenum dstRGB,
-                             const fgGFXenum srcAlpha,
-                             const fgGFXenum dstAlpha) {
-    fgGfxContextParam& srcRGBparam = m_params[(fgGFXuint)GL_BLEND_SRC_RGB];
-    fgGfxContextParam& dstRGBparam = m_params[(fgGFXuint)GL_BLEND_DST_RGB];
-    fgGfxContextParam& srcAlphaparam = m_params[(fgGFXuint)GL_BLEND_SRC_ALPHA];
-    fgGfxContextParam& dstAlphaparam = m_params[(fgGFXuint)GL_BLEND_DST_ALPHA];
+void gfx::CContext::blendFunc(const fgGFXenum srcRGB,
+                              const fgGFXenum dstRGB,
+                              const fgGFXenum srcAlpha,
+                              const fgGFXenum dstAlpha) {
+    SContextParam& srcRGBparam = m_params[(fgGFXuint)GL_BLEND_SRC_RGB];
+    SContextParam& dstRGBparam = m_params[(fgGFXuint)GL_BLEND_DST_RGB];
+    SContextParam& srcAlphaparam = m_params[(fgGFXuint)GL_BLEND_SRC_ALPHA];
+    SContextParam& dstAlphaparam = m_params[(fgGFXuint)GL_BLEND_DST_ALPHA];
 
     if(srcRGBparam.intVal != (fgGFXint)srcRGB ||
        srcAlphaparam.intVal != (fgGFXint)srcAlpha ||
@@ -1723,7 +1725,7 @@ void fg::gfx::CContext::blendFunc(const fgGFXenum srcRGB,
  * 
  * @param program
  */
-void fg::gfx::CContext::useProgram(const fgGFXuint program) {
+void gfx::CContext::useProgram(const fgGFXuint program) {
     if(m_params[(fgGFXuint)GL_CURRENT_PROGRAM].intVal != (fgGFXint)program) {
         m_params[(fgGFXuint)GL_CURRENT_PROGRAM].set((fgGFXint)program);
     }
@@ -1733,7 +1735,7 @@ void fg::gfx::CContext::useProgram(const fgGFXuint program) {
  * 
  * @return 
  */
-fgGFXuint fg::gfx::CContext::activeProgram(void) {
+fgGFXuint gfx::CContext::activeProgram(void) {
     return m_params[(fgGFXuint)GL_CURRENT_PROGRAM];
 }
 
@@ -1744,7 +1746,7 @@ fgGFXuint fg::gfx::CContext::activeProgram(void) {
  * @param width
  * @param height
  */
-void fg::gfx::CContext::viewport(const fgGFXint x, const fgGFXint y, const fgGFXint width, const fgGFXint height) {
+void gfx::CContext::viewport(const fgGFXint x, const fgGFXint y, const fgGFXint width, const fgGFXint height) {
     fgGFXuint areaQ = x * y + width*height;
     if(areaQ != m_viewportAreaQ) {
         m_viewportAreaQ = areaQ;
@@ -1757,7 +1759,7 @@ void fg::gfx::CContext::viewport(const fgGFXint x, const fgGFXint y, const fgGFX
  * @param pos
  * @param size
  */
-void fg::gfx::CContext::viewport(const fgVector2i& pos, const fgVector2i& size) {
+void gfx::CContext::viewport(const Vector2i& pos, const Vector2i& size) {
     viewport(pos.x, pos.y, size.x, size.y);
 }
 
@@ -1765,7 +1767,7 @@ void fg::gfx::CContext::viewport(const fgVector2i& pos, const fgVector2i& size) 
  * 
  * @param dimensions
  */
-void fg::gfx::CContext::viewport(const fgVector4i& dimensions) {
+void gfx::CContext::viewport(const Vector4i& dimensions) {
     viewport(dimensions.x, dimensions.y, dimensions.z, dimensions.w);
 }
 
@@ -1776,7 +1778,7 @@ void fg::gfx::CContext::viewport(const fgVector4i& dimensions) {
  * @param width
  * @param height
  */
-void fg::gfx::CContext::scissor(const fgGFXint x, const fgGFXint y, const fgGFXint width, const fgGFXint height) {
+void gfx::CContext::scissor(const fgGFXint x, const fgGFXint y, const fgGFXint width, const fgGFXint height) {
     fgGFXuint areaQ = x * y + width*height;
     if(areaQ != m_scissorAreaQ) {
         m_scissorAreaQ = areaQ;
@@ -1789,7 +1791,7 @@ void fg::gfx::CContext::scissor(const fgGFXint x, const fgGFXint y, const fgGFXi
  * @param pos
  * @param size
  */
-void fg::gfx::CContext::scissor(const fgVector2i& pos, const fgVector2i& size) {
+void gfx::CContext::scissor(const Vector2i& pos, const Vector2i& size) {
     scissor(pos.x, pos.y, size.x, size.y);
 }
 
@@ -1797,7 +1799,7 @@ void fg::gfx::CContext::scissor(const fgVector2i& pos, const fgVector2i& size) {
  * 
  * @param dimensions
  */
-void fg::gfx::CContext::scissor(const fgVector4i& dimensions) {
+void gfx::CContext::scissor(const Vector4i& dimensions) {
     scissor(dimensions.x, dimensions.y, dimensions.z, dimensions.w);
 }
 
@@ -1805,7 +1807,7 @@ void fg::gfx::CContext::scissor(const fgVector4i& dimensions) {
  * 
  * @param toggle
  */
-void fg::gfx::CContext::setScissorTest(const fgBool toggle) {
+void gfx::CContext::setScissorTest(const fgBool toggle) {
     m_params[(fgGFXuint)GL_SCISSOR_TEST].set((fgGFXboolean)toggle);
 }
 
@@ -1813,7 +1815,7 @@ void fg::gfx::CContext::setScissorTest(const fgBool toggle) {
  * 
  * @param toggle
  */
-void fg::gfx::CContext::setDepthTest(const fgBool toggle) {
+void gfx::CContext::setDepthTest(const fgBool toggle) {
     m_params[(fgGFXuint)GL_DEPTH_TEST].set((fgGFXboolean)toggle);
 }
 
@@ -1821,7 +1823,7 @@ void fg::gfx::CContext::setDepthTest(const fgBool toggle) {
  * 
  * @param toggle
  */
-void fg::gfx::CContext::setCullFace(const fgBool toggle) {
+void gfx::CContext::setCullFace(const fgBool toggle) {
     //gfxParamMapItor itor = m_params.find((fgGFXuint)GL_CULL_FACE);
     m_params[(fgGFXuint)GL_CULL_FACE].set((fgGFXboolean)toggle);
 }
@@ -1830,70 +1832,70 @@ void fg::gfx::CContext::setCullFace(const fgBool toggle) {
  * 
  * @param toggle
  */
-void fg::gfx::CContext::setBlend(const fgBool toggle) {
+void gfx::CContext::setBlend(const fgBool toggle) {
     m_params[(fgGFXuint)GL_BLEND].set((fgGFXboolean)toggle);
 }
 
 /*
  *
  */
-void fg::gfx::CContext::frontFace(const fgGFXenum mode) {
+void gfx::CContext::frontFace(const fgGFXenum mode) {
     m_params[(fgGFXuint)GL_FRONT_FACE].set((fgGFXint)mode);
 }
 
 /*
  *
  */
-void fg::gfx::CContext::cullFace(const fgGFXenum mode) {
+void gfx::CContext::cullFace(const fgGFXenum mode) {
     m_params[(fgGFXuint)GL_CULL_FACE_MODE].set((fgGFXint)mode);
 }
 
 /*
  *
  */
-void fg::gfx::CContext::depthFunc(const fgGFXenum func) {
+void gfx::CContext::depthFunc(const fgGFXenum func) {
     m_params[(fgGFXuint)GL_DEPTH_FUNC].set((fgGFXint)func);
 }
 
 /*
  *
  */
-void fg::gfx::CContext::clearDepth(const fgGFXfloat depth) {
+void gfx::CContext::clearDepth(const fgGFXfloat depth) {
     m_params[(fgGFXuint)GL_DEPTH_CLEAR_VALUE].set(depth);
 }
 
 /*
  *
  */
-void fg::gfx::CContext::clearColor(const fgGFXfloat red, const fgGFXfloat green, const fgGFXfloat blue, const fgGFXfloat alpha) {
+void gfx::CContext::clearColor(const fgGFXfloat red, const fgGFXfloat green, const fgGFXfloat blue, const fgGFXfloat alpha) {
     m_params[(fgGFXuint)GL_COLOR_CLEAR_VALUE].set(red, green, blue, alpha);
 }
 
 /*
  *
  */
-void fg::gfx::CContext::clearStencil(const fgGFXint s) {
+void gfx::CContext::clearStencil(const fgGFXint s) {
     m_params[(fgGFXuint)GL_STENCIL_CLEAR_VALUE].set(s);
 }
 
 /*
  *
  */
-fgGFXuint fg::gfx::CContext::activeVertexAttribArrayMask(void) const {
+fgGFXuint gfx::CContext::activeVertexAttribArrayMask(void) const {
     return m_attribMask;
 }
 
 /*
  *
  */
-fgBool fg::gfx::CContext::isVertexAttribArrayActive(const fgGFXuint index) const {
+fgBool gfx::CContext::isVertexAttribArrayActive(const fgGFXuint index) const {
     return m_attrInfo[index].isEnabled;
 }
 
 /*
  *
  */
-void fg::gfx::CContext::updateAttribMask(const fgGFXuint index) {
+void gfx::CContext::updateAttribMask(const fgGFXuint index) {
     if(index == FG_GFX_ATTRIB_POS_LOCATION) {
         m_attribMask ^= FG_GFX_POSITION_BIT;
     } else if(index == FG_GFX_ATTRIB_NORM_LOCATION) {
@@ -1916,7 +1918,7 @@ void fg::gfx::CContext::updateAttribMask(const fgGFXuint index) {
  * @param index
  * @param updateMask
  */
-void fg::gfx::CContext::enableVertexAttribArray(const fgGFXuint index, const fgBool updateMask) {
+void gfx::CContext::enableVertexAttribArray(const fgGFXuint index, const fgBool updateMask) {
     if(!m_attrInfo[index].isEnabled) {
         m_attrInfo[index].isEnabled = FG_GFX_TRUE;
         glEnableVertexAttribArray(index);
@@ -1930,7 +1932,7 @@ void fg::gfx::CContext::enableVertexAttribArray(const fgGFXuint index, const fgB
  * @param index
  * @param updateMask
  */
-void fg::gfx::CContext::disableVertexAttribArray(const fgGFXuint index, const fgBool updateMask) {
+void gfx::CContext::disableVertexAttribArray(const fgGFXuint index, const fgBool updateMask) {
     if(m_attrInfo[index].isEnabled) {
         m_attrInfo[index].isEnabled = FG_GFX_FALSE;
         glDisableVertexAttribArray(index);
@@ -1942,7 +1944,7 @@ void fg::gfx::CContext::disableVertexAttribArray(const fgGFXuint index, const fg
 /*
  *
  */
-void fg::gfx::CContext::enableVertexAttribArrayMask(const fgGFXuint mask) {
+void gfx::CContext::enableVertexAttribArrayMask(const fgGFXuint mask) {
     if(mask == m_attribMask)
         return;
     if(mask & FG_GFX_POSITION_BIT)
@@ -1961,7 +1963,7 @@ void fg::gfx::CContext::enableVertexAttribArrayMask(const fgGFXuint mask) {
 /*
  *
  */
-void fg::gfx::CContext::disableVertexAttribArrayMask(const fgGFXuint mask) {
+void gfx::CContext::disableVertexAttribArrayMask(const fgGFXuint mask) {
     if(mask == m_attribMask)
         return;
     if(!(mask & FG_GFX_POSITION_BIT))
@@ -1980,7 +1982,7 @@ void fg::gfx::CContext::disableVertexAttribArrayMask(const fgGFXuint mask) {
 /*
  *
  */
-void fg::gfx::CContext::diffVertexAttribArrayMask(const fgGFXuint mask) {
+void gfx::CContext::diffVertexAttribArrayMask(const fgGFXuint mask) {
     if(mask == m_attribMask)
         return;
     if(mask & FG_GFX_POSITION_BIT)
@@ -2013,21 +2015,21 @@ void fg::gfx::CContext::diffVertexAttribArrayMask(const fgGFXuint mask) {
 /*
  * https://www.khronos.org/opengles/sdk/docs/man/xhtml/glGetVertexAttrib.xml
  */
-fgGFXuint fg::gfx::CContext::getVertexAttribBufferBinding(const fgGFXuint index) {
+fgGFXuint gfx::CContext::getVertexAttribBufferBinding(const fgGFXuint index) {
     return m_attrInfo[index].buffer;
 }
 
 /*
  *
  */
-fgGFXuint fg::gfx::CContext::getVertexAttribSize(const fgGFXuint index) {
+fgGFXuint gfx::CContext::getVertexAttribSize(const fgGFXuint index) {
     return m_attrInfo[index].size;
 }
 
 /*
  *
  */
-fgGFXuint fg::gfx::CContext::getVertexAttribStride(const fgGFXuint index) {
+fgGFXuint gfx::CContext::getVertexAttribStride(const fgGFXuint index) {
     if(index >= 12)
         return 0;
     return m_attrInfo[index].stride;
@@ -2036,7 +2038,7 @@ fgGFXuint fg::gfx::CContext::getVertexAttribStride(const fgGFXuint index) {
 /*
  *
  */
-fgGFXenum fg::gfx::CContext::getVertexAttribType(const fgGFXuint index) {
+fgGFXenum gfx::CContext::getVertexAttribType(const fgGFXuint index) {
     if(index >= 12)
         return (fgGFXenum)0;
     return m_attrInfo[index].type;
@@ -2045,7 +2047,7 @@ fgGFXenum fg::gfx::CContext::getVertexAttribType(const fgGFXuint index) {
 /*
  *
  */
-fgGFXboolean fg::gfx::CContext::getVertexAttribNormalized(const fgGFXuint index) {
+fgGFXboolean gfx::CContext::getVertexAttribNormalized(const fgGFXuint index) {
     // #FIXME checks
     if(index >= 12)
         return FG_GFX_FALSE;
@@ -2055,12 +2057,12 @@ fgGFXboolean fg::gfx::CContext::getVertexAttribNormalized(const fgGFXuint index)
 /*
  * https://www.khronos.org/opengles/sdk/docs/man/xhtml/glVertexAttribPointer.xml
  */
-void fg::gfx::CContext::vertexAttribPointer(fgGFXuint index,
-                                       fgGFXint size,
-                                       fgGFXenum type,
-                                       fgGFXboolean normalized,
-                                       fgGFXsizei stride,
-                                       fgGFXvoid* ptr) {
+void gfx::CContext::vertexAttribPointer(fgGFXuint index,
+                                        fgGFXint size,
+                                        fgGFXenum type,
+                                        fgGFXboolean normalized,
+                                        fgGFXsizei stride,
+                                        fgGFXvoid* ptr) {
     if(index >= 12)
         return;
     // #FIXME
@@ -2085,7 +2087,7 @@ void fg::gfx::CContext::vertexAttribPointer(fgGFXuint index,
  * 
  * @param attrData
  */
-void fg::gfx::CContext::vertexAttribPointer(fgGfxAttributeData& attrData) {
+void gfx::CContext::vertexAttribPointer(fgGfxAttributeData& attrData) {
     fgGFXint index = attrData.index;
     if(index < 0)
         return;

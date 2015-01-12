@@ -31,10 +31,10 @@ gui::CStyleContent::~CStyleContent() { }
  * @param boundSize
  */
 void gui::CStyleContent::applyPosAlign(const Align align,
-                                       fgVector3f& pos,
-                                       const fgVector3f& size,
-                                       const fgVector3f& boundPos,
-                                       const fgVector3f& boundSize,
+                                       Vector3f& pos,
+                                       const Vector3f& size,
+                                       const Vector3f& boundPos,
+                                       const Vector3f& boundSize,
                                        const fgBool isInside) {
     // Margin is outside of the border
     // Padding is inside of the border
@@ -79,10 +79,10 @@ void gui::CStyleContent::applyPosAlign(const Align align,
  * @param boundSize
  */
 void gui::CStyleContent::applyPosAlign(const Align align,
-                                       fgVector2f& pos,
-                                       const fgVector2f& size,
-                                       const fgVector2f& boundPos,
-                                       const fgVector2f& boundSize,
+                                       Vector2f& pos,
+                                       const Vector2f& size,
+                                       const Vector2f& boundPos,
+                                       const Vector2f& boundSize,
                                        const fgBool isInside) {
     // Margin is outside of the border
     // Padding is inside of the border
@@ -1024,7 +1024,7 @@ gui::CStyleContent& gui::CStyleContent::setPosition(const SPosition::Style style
  * @return 
  */
 gui::CStyleContent& gui::CStyleContent::setPosition(const SPosition::Style style,
-                                                    const fgVector2f& modPos) {
+                                                    const Vector2f& modPos) {
     return setPosition(style).setPosition(modPos);
 }
 
@@ -1033,7 +1033,7 @@ gui::CStyleContent& gui::CStyleContent::setPosition(const SPosition::Style style
  * @param modPos
  * @return 
  */
-gui::CStyleContent& gui::CStyleContent::setPosition(const fgVector2f& modPos) {
+gui::CStyleContent& gui::CStyleContent::setPosition(const Vector2f& modPos) {
     if(m_position.style != SPosition::Style::STATIC) {
         if(modPos.x <= 0.0f)
             m_position.left = fabsf(modPos.x);
@@ -1054,7 +1054,7 @@ gui::CStyleContent& gui::CStyleContent::setPosition(const fgVector2f& modPos) {
  * @return 
  */
 gui::CStyleContent& gui::CStyleContent::setPosition(const SPosition::Style style,
-                                                    const fgVector3f& modPos) {
+                                                    const Vector3f& modPos) {
     return setPosition(style).setPosition(modPos);
 }
 
@@ -1063,7 +1063,7 @@ gui::CStyleContent& gui::CStyleContent::setPosition(const SPosition::Style style
  * @param modPos
  * @return 
  */
-gui::CStyleContent& gui::CStyleContent::setPosition(const fgVector3f& modPos) {
+gui::CStyleContent& gui::CStyleContent::setPosition(const Vector3f& modPos) {
     if(m_position.style != SPosition::Style::STATIC) {
         if(modPos.x <= 0.0f)
             m_position.left = fabsf(modPos.x);
@@ -1141,7 +1141,7 @@ gui::CStyleContent& gui::CStyleContent::setSize(const SSize::Style style,
  * @return 
  */
 gui::CStyleContent& gui::CStyleContent::setSize(const SSize::Style style,
-                                                const fgVector2f& size) {
+                                                const Vector2f& size) {
 
     return setSize(style).setSize(size);
 }
@@ -1169,7 +1169,7 @@ gui::CStyleContent& gui::CStyleContent::setSize(const SSize::Style style,
  * @return 
  */
 gui::CStyleContent& gui::CStyleContent::setSize(const SSize::Style style,
-                                                const fgVector3f& size) {
+                                                const Vector3f& size) {
     return setSize(style).setSize(size);
 }
 
@@ -1190,7 +1190,7 @@ gui::CStyleContent& gui::CStyleContent::setSize(const float x, const float y) {
  * @param size
  * @return 
  */
-gui::CStyleContent& gui::CStyleContent::setSize(const fgVector2f& size) {
+gui::CStyleContent& gui::CStyleContent::setSize(const Vector2f& size) {
     m_size.x = size.x;
     m_size.y = size.y;
     return (*this);
@@ -1217,7 +1217,7 @@ gui::CStyleContent& gui::CStyleContent::setSize(const float x,
  * @param size
  * @return 
  */
-gui::CStyleContent& gui::CStyleContent::setSize(const fgVector3f& size) {
+gui::CStyleContent& gui::CStyleContent::setSize(const Vector3f& size) {
     m_size.x = size.x;
     m_size.y = size.y;
     m_size.z = size.z;

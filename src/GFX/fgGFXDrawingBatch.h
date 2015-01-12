@@ -63,11 +63,11 @@ namespace fg {
             ///
             fgGFXuint m_defaultAttribMask;
             ///
-            fgVector4i m_scissorBox;
+            Vector4i m_scissorBox;
 
         protected:
             /// Relative move
-            fgVector3f m_relMove;
+            Vector3f m_relMove;
             /// Pointer to external Shader Manager
             fg::base::CManager *m_pShaderMgr;
 
@@ -236,21 +236,21 @@ namespace fg {
              * 
              * @return 
              */
-            fgVector3f const & getRelMove(void) const {
+            Vector3f const & getRelMove(void) const {
                 return m_relMove;
             }
             /**
              * 
              * @param relMove
              */
-            void setRelMove(const fgVector3f& relMove) {
+            void setRelMove(const Vector3f& relMove) {
                 m_relMove = relMove;
             }
             /**
              * 
              * @param relMove
              */
-            void setRelMove(const fgVector2f& relMove) {
+            void setRelMove(const Vector2f& relMove) {
                 m_relMove.x = relMove.x;
                 m_relMove.y = relMove.y;
                 m_relMove.z = 0.0f;
@@ -259,14 +259,14 @@ namespace fg {
              * 
              * @return 
              */
-            fgVector4i const & getScissorBox(void) const {
+            Vector4i const & getScissorBox(void) const {
                 return m_scissorBox;
             }
             /**
              * 
              * @return 
              */
-            fgVector2i const & getScreenSize(void) const {
+            Vector2i const & getScreenSize(void) const {
                 return CPlatform::context()->getScreenSize();
             }
             /**
@@ -287,7 +287,7 @@ namespace fg {
              * @param pos
              * @param size
              */
-            void setScissorBox(const fgVector2i& pos, const fgVector2i & size) {
+            void setScissorBox(const Vector2i& pos, const Vector2i & size) {
                 m_scissorBox.x = pos.x;
                 m_scissorBox.y = pos.y;
                 m_scissorBox.z = size.x;
@@ -297,7 +297,7 @@ namespace fg {
              * 
              * @param dimensions
              */
-            void setScissorBox(const fgVector4i & dimensions) {
+            void setScissorBox(const Vector4i & dimensions) {
                 m_scissorBox = dimensions;
             }
 

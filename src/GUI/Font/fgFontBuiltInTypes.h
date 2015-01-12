@@ -83,17 +83,17 @@ namespace fg {
          */
         struct SFontCharInfo {
             // coordinates if using floating positioning
-            fgVec2f uv1f;
-            fgVec2f uv2f;
-            fgVec2f p0f;
-            fgVec2f p1f;
+            Vec2f uv1f;
+            Vec2f uv2f;
+            Vec2f p0f;
+            Vec2f p1f;
             float stepf;
 
             // coordinates if using integer positioning
-            fgVec2f uv1i;
-            fgVec2f uv2i;
-            fgVec2i p0i;
-            fgVec2i p1i;
+            Vec2f uv1i;
+            Vec2f uv2i;
+            Vec2i p0i;
+            Vec2i p1i;
             int stepi;
         };
 

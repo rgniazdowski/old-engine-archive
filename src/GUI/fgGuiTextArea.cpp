@@ -10,25 +10,27 @@
 #include "fgGuiTextArea.h"
 #include "fgGuiDrawer.h"
 
+using namespace fg;
+
 /**
  *
  */
-fg::gui::CTextArea::CTextArea() :
+gui::CTextArea::CTextArea() :
 CScrollArea(),
 m_textData(),
 m_textAreaSize() {
-    fg::gui::CTextArea::setDefaults();
+    gui::CTextArea::setDefaults();
 }
 
 /**
  *
  */
-fg::gui::CTextArea::~CTextArea() { }
+gui::CTextArea::~CTextArea() { }
 
 /**
  * 
  */
-void fg::gui::CTextArea::setDefaults(void) {
+void gui::CTextArea::setDefaults(void) {
     m_type = TEXT_AREA;
     m_typeName = FG_GUI_TEXT_AREA_NAME;
     m_typeTraits = TEXT_AREA | SCROLL_AREA | CONTAINER | WIDGET;
@@ -38,12 +40,12 @@ void fg::gui::CTextArea::setDefaults(void) {
  * 
  * @return 
  */
-fgBoundingBox3Df fg::gui::CTextArea::updateBounds(void) {
+gfx::BoundingBox3Df gui::CTextArea::updateBounds(void) {
     float textSize = m_styles[(int)m_state].getForeground().textSize;
     SPadding &padding = m_styles[(int)m_state].getPadding();
     m_textAreaSize.cols = (m_bbox.size.x - padding.left - padding.right) / textSize;
     m_textAreaSize.rows = (m_bbox.size.y - padding.bottom - padding.top) / textSize; // ? refresh ?
-    fgBoundingBox3Df scrollAreaSize = base_type::updateBounds();
+    gfx::BoundingBox3Df scrollAreaSize = base_type::updateBounds();
     int n = m_textData.size();
     if(m_vSlider) {
         m_vSlider->setRatio(scrollAreaSize.size.y / (textSize * n));
@@ -55,7 +57,7 @@ fgBoundingBox3Df fg::gui::CTextArea::updateBounds(void) {
 /**
  * 
  */
-void fg::gui::CTextArea::refresh(void) {
+void gui::CTextArea::refresh(void) {
     base_type::refresh(); // #FIXME
 }
 
@@ -63,7 +65,7 @@ void fg::gui::CTextArea::refresh(void) {
  * 
  * @param guiLayer
  */
-void fg::gui::CTextArea::display(CDrawer* guiLayer) {
+void gui::CTextArea::display(CDrawer* guiLayer) {
     if(!guiLayer)
         return;
     if(!m_isVisible)
@@ -72,7 +74,7 @@ void fg::gui::CTextArea::display(CDrawer* guiLayer) {
     base_type::display(guiLayer);
 
     CDrawer *guiDrawer = (CDrawer *)guiLayer;
-    fgVec2f blockPos, blockSize, textSize;
+    Vec2f blockPos, blockSize, textSize;
 
     int n = m_textData.size();
     //float sliderRatio = (float)m_textAreaSize.rows/(float)n;
@@ -88,8 +90,8 @@ void fg::gui::CTextArea::display(CDrawer* guiLayer) {
             guiDrawer->downZIndex();
             float charSizeY = m_styles[(int)m_state].getForeground().textSize;
             float newPos = m_bbox.pos.y + (m_textAreaSize.rows - 1 - i) * charSizeY;
-            blockPos = fgVec2f(m_bbox.pos.x, newPos);
-            blockSize = fgVec2f(m_bbox.size.x, charSizeY);
+            blockPos = Vec2f(m_bbox.pos.x, newPos);
+            blockSize = Vec2f(m_bbox.size.x, charSizeY);
             guiDrawer->appendText2D(m_textSize, blockPos, blockSize, m_styles[(int)m_state], m_textData[j].c_str());
             guiDrawer->upZIndex();
         }

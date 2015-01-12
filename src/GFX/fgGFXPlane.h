@@ -26,7 +26,7 @@
 template<class ValueType>
 struct fgPlaneT {
     typedef fgPlaneT<ValueType> self_type;
-    typedef typename fgVector3T<ValueType>::type vector_type;
+    typedef typename fg::Vector3T<ValueType>::type vector_type;
     typedef ValueType value_type;
 
     enum Halfspace {
@@ -79,8 +79,8 @@ public:
         aux2 = v3 - v2;
 
         this->n = aux2 * aux1;
-        this->n = fgMath::normalize(this->n);
-        this->d = -fgMath::dot(this->n, v2);
+        this->n = fg::math::normalize(this->n);
+        this->d = -fg::math::dot(this->n, v2);
     }
     /**
      * 
@@ -88,8 +88,8 @@ public:
      * @param point
      */
     void set(const vector_type &normal, const vector_type &point) {
-        this->n = fgMath::normalize(normal);
-        this->d = -fgMath::dot(this->n, point);
+        this->n = fg::math::normalize(normal);
+        this->d = -fg::math::dot(this->n, point);
     }
     /**
      * 
@@ -108,7 +108,7 @@ public:
      * 
      */
     void normalize(void) {
-        float l = fgMath::length(this->n);
+        float l = fg::math::length(this->n);
         this->n.x = this->n.x / l;
         this->n.y = this->n.y / l;
         this->n.z = this->n.z / l;
@@ -120,7 +120,7 @@ public:
      * @return 
      */
     float distance(const vector_type &point) {
-        return (d + fgMath::dot(n, point));
+        return (d + fg::math::dot(n, point));
         //return (d + normal.innerProduct(p));
     }
     /**
@@ -147,9 +147,8 @@ typedef fgPlaneT<unsigned int> fgPlaneu;
 typedef fgPlaneT<double> fgPlaned;
 
     #include <cstdio>
-
 inline void dumpPlane(const fgPlanef & plane, const char *title) {
-    printf("%s = { %.2f %.2f %.2f d=%.2f}\n", ( title ? title : "X"), plane.n.x, plane.n.y, plane.n.z, plane.d);
+    printf("%s = { %.2f %.2f %.2f d=%.2f}\n", (title ? title : "X"), plane.n.x, plane.n.y, plane.n.z, plane.d);
 }
 
     #undef FG_INC_GFX_PLANE_BLOCK

@@ -10,24 +10,26 @@
 #include "fgGuiConsole.h"
 #include "fgStatus.h"
 
+using namespace fg;
+
 /**
  *
  */
-fg::gui::CConsole::CConsole() :
+gui::CConsole::CConsole() :
 base_type(),
 m_numConsoleRecords(0) {
-    fg::gui::CConsole::setDefaults();
+    gui::CConsole::setDefaults();
 }
 
 /**
  *
  */
-fg::gui::CConsole::~CConsole() { }
+gui::CConsole::~CConsole() { }
 
 /**
  *
  */
-void fg::gui::CConsole::setDefaults(void) {
+void gui::CConsole::setDefaults(void) {
     m_type = CONSOLE;
     m_typeName = FG_GUI_CONSOLE_NAME;
     m_typeTraits = CONSOLE | TEXT_AREA | SCROLL_AREA | CONTAINER | WIDGET;
@@ -38,14 +40,14 @@ void fg::gui::CConsole::setDefaults(void) {
  * 
  * @return 
  */
-fgBoundingBox3Df fg::gui::CConsole::updateBounds(void) {
+gfx::BoundingBox3Df gui::CConsole::updateBounds(void) {
     return base_type::updateBounds();
 }
 
 /**
  * 
  */
-void fg::gui::CConsole::refresh(void) {
+void gui::CConsole::refresh(void) {
     base_type::refresh();
 }
 
@@ -53,7 +55,7 @@ void fg::gui::CConsole::refresh(void) {
  * 
  * @param guiLayer
  */
-void fg::gui::CConsole::display(CDrawer* guiLayer) {
+void gui::CConsole::display(CDrawer* guiLayer) {
     base_type::display(guiLayer);
 }
 
@@ -61,7 +63,7 @@ void fg::gui::CConsole::display(CDrawer* guiLayer) {
  * 
  * @param statusVec
  */
-void fg::gui::CConsole::updateFromStatusVec(const fg::CVector<fgStatus *> &statusVec) {
+void gui::CConsole::updateFromStatusVec(const fg::CVector<fgStatus *> &statusVec) {
     if(statusVec.empty())
         return;
 

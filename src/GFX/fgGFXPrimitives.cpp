@@ -8,89 +8,94 @@
  *******************************************************/
 
 #include "fgGFXPrimitives.h"
+#include "GFX/Shaders/fgGFXShaderDefs.h"
+#include "GFX/Shaders/fgGFXShaderProgram.h"
+#include "fgGFXAABoundingBox.h"
 
-fgVector4f colorWhite(1.0f, 1.0f, 1.0f, 1.0f);
+using namespace fg;
+
+Vector4f colorWhite(1.0f, 1.0f, 1.0f, 1.0f);
 
 /*
  *
  */
-const fgVertex4v c_stripSkyBoxOptimized[] = {
-                                             // Vertex data for face 0 // Front?
-    {fgVector3f(-0.5f, -0.5f, 0.5f), fgVector3f(0.0f, 0.0f, -1.0f), fgVector2f(2.0f / 3.0f, 1.0f - 0.0f), colorWhite}, //  v0
-    {fgVector3f(0.5f, -0.5f, 0.5f), fgVector3f(0.0f, 0.0f, -1.0f), fgVector2f(1.0f, 1.0f - 0.0f), colorWhite}, //  v1
-    {fgVector3f(-0.5f, 0.5f, 0.5f), fgVector3f(0.0f, 0.0f, -1.0f), fgVector2f(2.0f / 3.0f, 1.0f - 1.0f / 3.0f), colorWhite}, //  v2
-    {fgVector3f(0.5f, 0.5f, 0.5f), fgVector3f(0.0f, 0.0f, -1.0f), fgVector2f(1.0f, 1.0f - 1.0f / 3.0f), colorWhite}, //  v3
+const gfx::Vertex4v c_stripSkyBoxOptimized[] = {
+                                                // Vertex data for face 0 // Front?
+    {Vector3f(-0.5f, -0.5f, 0.5f), Vector3f(0.0f, 0.0f, -1.0f), Vector2f(2.0f / 3.0f, 1.0f - 0.0f), colorWhite}, //  v0
+    {Vector3f(0.5f, -0.5f, 0.5f), Vector3f(0.0f, 0.0f, -1.0f), Vector2f(1.0f, 1.0f - 0.0f), colorWhite}, //  v1
+    {Vector3f(-0.5f, 0.5f, 0.5f), Vector3f(0.0f, 0.0f, -1.0f), Vector2f(2.0f / 3.0f, 1.0f - 1.0f / 3.0f), colorWhite}, //  v2
+    {Vector3f(0.5f, 0.5f, 0.5f), Vector3f(0.0f, 0.0f, -1.0f), Vector2f(1.0f, 1.0f - 1.0f / 3.0f), colorWhite}, //  v3
 
-                                             // Vertex data for face 1 // Right?
-    {fgVector3f(0.5f, -0.5f, 0.5f), fgVector3f(-1.0f, 0.0f, 0.0f), fgVector2f(1.0f, 1.0f - 1.0f / 3.0f), colorWhite}, //  v4
-    {fgVector3f(0.5f, -0.5f, -0.5f), fgVector3f(-1.0f, 0.0f, 0.0f), fgVector2f(2.0f / 3.0f, 1.0f - 1.0f / 3.0f), colorWhite}, //  v5
-    {fgVector3f(0.5f, 0.5f, 0.5f), fgVector3f(-1.0f, 0.0f, 0.0f), fgVector2f(1.0f, 1.0f - 2.0f / 3.0f), colorWhite}, //  v6
-    {fgVector3f(0.5f, 0.5f, -0.5f), fgVector3f(-1.0f, 0.0f, 0.0f), fgVector2f(2.0f / 3.0f, 1.0f - 2.0f / 3.0f), colorWhite}, //  v7
+                                                // Vertex data for face 1 // Right?
+    {Vector3f(0.5f, -0.5f, 0.5f), Vector3f(-1.0f, 0.0f, 0.0f), Vector2f(1.0f, 1.0f - 1.0f / 3.0f), colorWhite}, //  v4
+    {Vector3f(0.5f, -0.5f, -0.5f), Vector3f(-1.0f, 0.0f, 0.0f), Vector2f(2.0f / 3.0f, 1.0f - 1.0f / 3.0f), colorWhite}, //  v5
+    {Vector3f(0.5f, 0.5f, 0.5f), Vector3f(-1.0f, 0.0f, 0.0f), Vector2f(1.0f, 1.0f - 2.0f / 3.0f), colorWhite}, //  v6
+    {Vector3f(0.5f, 0.5f, -0.5f), Vector3f(-1.0f, 0.0f, 0.0f), Vector2f(2.0f / 3.0f, 1.0f - 2.0f / 3.0f), colorWhite}, //  v7
 
-                                             // Vertex data for face 2 // Back?
-    {fgVector3f(0.5f, -0.5f, -0.5f), fgVector3f(0.0f, 0.0f, 1.0f), fgVector2f(2.0f / 3.0f, 1.0f - 1.0f / 3.0f), colorWhite}, //  v8
-    {fgVector3f(-0.5f, -0.5f, -0.5f), fgVector3f(0.0f, 0.0f, 1.0f), fgVector2f(1.0f / 3.0f, 1.0f - 1.0f / 3.0f), colorWhite}, //  v9
-    {fgVector3f(0.5f, 0.5f, -0.5f), fgVector3f(0.0f, 0.0f, 1.0f), fgVector2f(2.0f / 3.0f, 1.0f - 2.0f / 3.0f), colorWhite}, // v10
-    {fgVector3f(-0.5f, 0.5f, -0.5f), fgVector3f(0.0f, 0.0f, 1.0f), fgVector2f(1.0f / 3.0f, 1.0f - 2.0f / 3.0f), colorWhite}, // v11
+                                                // Vertex data for face 2 // Back?
+    {Vector3f(0.5f, -0.5f, -0.5f), Vector3f(0.0f, 0.0f, 1.0f), Vector2f(2.0f / 3.0f, 1.0f - 1.0f / 3.0f), colorWhite}, //  v8
+    {Vector3f(-0.5f, -0.5f, -0.5f), Vector3f(0.0f, 0.0f, 1.0f), Vector2f(1.0f / 3.0f, 1.0f - 1.0f / 3.0f), colorWhite}, //  v9
+    {Vector3f(0.5f, 0.5f, -0.5f), Vector3f(0.0f, 0.0f, 1.0f), Vector2f(2.0f / 3.0f, 1.0f - 2.0f / 3.0f), colorWhite}, // v10
+    {Vector3f(-0.5f, 0.5f, -0.5f), Vector3f(0.0f, 0.0f, 1.0f), Vector2f(1.0f / 3.0f, 1.0f - 2.0f / 3.0f), colorWhite}, // v11
 
-                                             // Vertex data for face 3 // Left?
-    {fgVector3f(-0.5f, -0.5f, -0.5f), fgVector3f(1.0f, 0.0f, 0.0f), fgVector2f(1.0f / 3.0f, 1.0f - 1.0f / 3.0f), colorWhite}, // v12
-    {fgVector3f(-0.5f, -0.5f, 0.5f), fgVector3f(1.0f, 0.0f, 0.0f), fgVector2f(0.0f, 1.0f - 1.0f / 3.0f), colorWhite}, // v13
-    {fgVector3f(-0.5f, 0.5f, -0.5f), fgVector3f(1.0f, 0.0f, 0.0f), fgVector2f(1.0f / 3.0f, 1.0f - 2.0f / 3.0f), colorWhite}, // v14
-    {fgVector3f(-0.5f, 0.5f, 0.5f), fgVector3f(1.0f, 0.0f, 0.0f), fgVector2f(0.0f, 1.0f - 2.0f / 3.0f), colorWhite}, // v15
+                                                // Vertex data for face 3 // Left?
+    {Vector3f(-0.5f, -0.5f, -0.5f), Vector3f(1.0f, 0.0f, 0.0f), Vector2f(1.0f / 3.0f, 1.0f - 1.0f / 3.0f), colorWhite}, // v12
+    {Vector3f(-0.5f, -0.5f, 0.5f), Vector3f(1.0f, 0.0f, 0.0f), Vector2f(0.0f, 1.0f - 1.0f / 3.0f), colorWhite}, // v13
+    {Vector3f(-0.5f, 0.5f, -0.5f), Vector3f(1.0f, 0.0f, 0.0f), Vector2f(1.0f / 3.0f, 1.0f - 2.0f / 3.0f), colorWhite}, // v14
+    {Vector3f(-0.5f, 0.5f, 0.5f), Vector3f(1.0f, 0.0f, 0.0f), Vector2f(0.0f, 1.0f - 2.0f / 3.0f), colorWhite}, // v15
 
-                                             // Vertex data for face 4 // Bottom?
-    {fgVector3f(-0.5f, -0.5f, -0.5f), fgVector3f(0.0f, 1.0f, 0.0f), fgVector2f(1.0f / 3.0f, 1.0f - 1.0f / 3.0f), colorWhite}, // v16
-    {fgVector3f(0.5f, -0.5f, -0.5f), fgVector3f(0.0f, 1.0f, 0.0f), fgVector2f(2.0f / 3.0f, 1.0f - 1.0f / 3.0f), colorWhite}, // v17
-    {fgVector3f(-0.5f, -0.5f, 0.5f), fgVector3f(0.0f, 1.0f, 0.0f), fgVector2f(1.0f / 3.0f, 1.0f - 0.0f), colorWhite}, // v18
-    {fgVector3f(0.5f, -0.5f, 0.5f), fgVector3f(0.0f, 1.0f, 0.0f), fgVector2f(2.0f / 3.0f, 1.0f - 0.0f), colorWhite}, // v19
+                                                // Vertex data for face 4 // Bottom?
+    {Vector3f(-0.5f, -0.5f, -0.5f), Vector3f(0.0f, 1.0f, 0.0f), Vector2f(1.0f / 3.0f, 1.0f - 1.0f / 3.0f), colorWhite}, // v16
+    {Vector3f(0.5f, -0.5f, -0.5f), Vector3f(0.0f, 1.0f, 0.0f), Vector2f(2.0f / 3.0f, 1.0f - 1.0f / 3.0f), colorWhite}, // v17
+    {Vector3f(-0.5f, -0.5f, 0.5f), Vector3f(0.0f, 1.0f, 0.0f), Vector2f(1.0f / 3.0f, 1.0f - 0.0f), colorWhite}, // v18
+    {Vector3f(0.5f, -0.5f, 0.5f), Vector3f(0.0f, 1.0f, 0.0f), Vector2f(2.0f / 3.0f, 1.0f - 0.0f), colorWhite}, // v19
 
-                                             // Vertex data for face 5 // Top?
-    {fgVector3f(-0.5f, 0.5f, 0.5f), fgVector3f(0.0f, -1.0f, 0.0f), fgVector2f(1.0f / 3.0f, 1.0f - 1.0f), colorWhite}, // v20 
-    {fgVector3f(0.5f, 0.5f, 0.5f), fgVector3f(0.0f, -1.0f, 0.0f), fgVector2f(2.0f / 3.0f, 1.0f - 1.0f), colorWhite}, // v21 
-    {fgVector3f(-0.5f, 0.5f, -0.5f), fgVector3f(0.0f, -1.0f, 0.0f), fgVector2f(1.0f / 3.0f, 1.0f - 2.0f / 3.0f), colorWhite}, // v22 
-    {fgVector3f(0.5f, 0.5f, -0.5f), fgVector3f(0.0f, -1.0f, 0.0f), fgVector2f(2.0f / 3.0f, 1.0f - 2.0f / 3.0f), colorWhite} // v23 
+                                                // Vertex data for face 5 // Top?
+    {Vector3f(-0.5f, 0.5f, 0.5f), Vector3f(0.0f, -1.0f, 0.0f), Vector2f(1.0f / 3.0f, 1.0f - 1.0f), colorWhite}, // v20 
+    {Vector3f(0.5f, 0.5f, 0.5f), Vector3f(0.0f, -1.0f, 0.0f), Vector2f(2.0f / 3.0f, 1.0f - 1.0f), colorWhite}, // v21 
+    {Vector3f(-0.5f, 0.5f, -0.5f), Vector3f(0.0f, -1.0f, 0.0f), Vector2f(1.0f / 3.0f, 1.0f - 2.0f / 3.0f), colorWhite}, // v22 
+    {Vector3f(0.5f, 0.5f, -0.5f), Vector3f(0.0f, -1.0f, 0.0f), Vector2f(2.0f / 3.0f, 1.0f - 2.0f / 3.0f), colorWhite} // v23 
 };
 
 /*
  *
  */
-const fgVertex3v c_stripCube1x1[] = {
-                                     // Vertex data for face 0
-    {fgVector3f(-0.5f, -0.5f, 0.5f)}, //  v0
-    {fgVector3f(0.5f, -0.5f, 0.5f)}, //  v1
-    {fgVector3f(-0.5f, 0.5f, 0.5f)}, //  v2
-    {fgVector3f(0.5f, 0.5f, 0.5f)}, //  v3
+const gfx::Vertex3v c_stripCube1x1[] = {
+                                        // Vertex data for face 0
+    {Vector3f(-0.5f, -0.5f, 0.5f)}, //  v0
+    {Vector3f(0.5f, -0.5f, 0.5f)}, //  v1
+    {Vector3f(-0.5f, 0.5f, 0.5f)}, //  v2
+    {Vector3f(0.5f, 0.5f, 0.5f)}, //  v3
 
-                                     // Vertex data for face 1
-    {fgVector3f(0.5f, -0.5f, 0.5f)}, //  v4
-    {fgVector3f(0.5f, -0.5f, -0.5f)}, //  v5
-    {fgVector3f(0.5f, 0.5f, 0.5f)}, //  v6
-    {fgVector3f(0.5f, 0.5f, -0.5f)}, //  v7
+                                        // Vertex data for face 1
+    {Vector3f(0.5f, -0.5f, 0.5f)}, //  v4
+    {Vector3f(0.5f, -0.5f, -0.5f)}, //  v5
+    {Vector3f(0.5f, 0.5f, 0.5f)}, //  v6
+    {Vector3f(0.5f, 0.5f, -0.5f)}, //  v7
 
-                                     // Vertex data for face 2
-    {fgVector3f(0.5f, -0.5f, -0.5f)}, //  v8
-    {fgVector3f(-0.5f, -0.5f, -0.5f)}, //  v9
-    {fgVector3f(0.5f, 0.5f, -0.5f)}, // v10
-    {fgVector3f(-0.5f, 0.5f, -0.5f)}, // v11
+                                        // Vertex data for face 2
+    {Vector3f(0.5f, -0.5f, -0.5f)}, //  v8
+    {Vector3f(-0.5f, -0.5f, -0.5f)}, //  v9
+    {Vector3f(0.5f, 0.5f, -0.5f)}, // v10
+    {Vector3f(-0.5f, 0.5f, -0.5f)}, // v11
 
-                                     // Vertex data for face 3
-    {fgVector3f(-0.5f, -0.5f, -0.5f)}, // v12
-    {fgVector3f(-0.5f, -0.5f, 0.5f)}, // v13
-    {fgVector3f(-0.5f, 0.5f, -0.5f)}, // v14
-    {fgVector3f(-0.5f, 0.5f, 0.5f)}, // v15
+                                        // Vertex data for face 3
+    {Vector3f(-0.5f, -0.5f, -0.5f)}, // v12
+    {Vector3f(-0.5f, -0.5f, 0.5f)}, // v13
+    {Vector3f(-0.5f, 0.5f, -0.5f)}, // v14
+    {Vector3f(-0.5f, 0.5f, 0.5f)}, // v15
 
-                                     // Vertex data for face 4
-    {fgVector3f(-0.5f, -0.5f, -0.5f)}, // v16
-    {fgVector3f(0.5f, -0.5f, -0.5f)}, // v17
-    {fgVector3f(-0.5f, -0.5f, 0.5f)}, // v18
-    {fgVector3f(0.5f, -0.5f, 0.5f)}, // v19
+                                        // Vertex data for face 4
+    {Vector3f(-0.5f, -0.5f, -0.5f)}, // v16
+    {Vector3f(0.5f, -0.5f, -0.5f)}, // v17
+    {Vector3f(-0.5f, -0.5f, 0.5f)}, // v18
+    {Vector3f(0.5f, -0.5f, 0.5f)}, // v19
 
-                                     // Vertex data for face 5
-    {fgVector3f(-0.5f, 0.5f, 0.5f)}, // v20
-    {fgVector3f(0.5f, 0.5f, 0.5f)}, // v21
-    {fgVector3f(-0.5f, 0.5f, -0.5f)}, // v22
-    {fgVector3f(0.5f, 0.5f, -0.5f)} // v23
+                                        // Vertex data for face 5
+    {Vector3f(-0.5f, 0.5f, 0.5f)}, // v20
+    {Vector3f(0.5f, 0.5f, 0.5f)}, // v21
+    {Vector3f(-0.5f, 0.5f, -0.5f)}, // v22
+    {Vector3f(0.5f, 0.5f, -0.5f)} // v23
 };
 
 /*
@@ -156,67 +161,63 @@ static const GLfloat c_trisCube1x1[] = {
  * Square is size of 1.0fx1.0f, point 0.0 is centered (0.0 is center mass),
  * triangle strip format, no index, CCW
  */
-const fgVertex3v c_stripSquare1x1[] = {
-    {fgVector3f(0.5f, -0.5f, 0.f), fgVector3f(0.f, 0.f, 0.f), fgVector2f(1.f, 0.f)},
-    {fgVector3f(-0.5f, -0.5f, 0.f), fgVector3f(0.f, 0.f, 0.f), fgVector2f(0.f, 0.f)},
-    {fgVector3f(0.5f, 0.5f, 0.f), fgVector3f(0.f, 0.f, 0.f), fgVector2f(1.f, 1.f)},
-    {fgVector3f(-0.5f, 0.5f, 0.f), fgVector3f(0.f, 0.f, 0.f), fgVector2f(0.f, 1.f)}
+const gfx::Vertex3v c_stripSquare1x1[] = {
+    {Vector3f(0.5f, -0.5f, 0.f), Vector3f(0.f, 0.f, 0.f), Vector2f(1.f, 0.f)},
+    {Vector3f(-0.5f, -0.5f, 0.f), Vector3f(0.f, 0.f, 0.f), Vector2f(0.f, 0.f)},
+    {Vector3f(0.5f, 0.5f, 0.f), Vector3f(0.f, 0.f, 0.f), Vector2f(1.f, 1.f)},
+    {Vector3f(-0.5f, 0.5f, 0.f), Vector3f(0.f, 0.f, 0.f), Vector2f(0.f, 1.f)}
 };
 
 /*
  * Rectangle, size 1.0fx1.0f, made of 3 quads (3x1) in triangle strip, (6 triangles)
  * mass centered, CCW, texture coords, no normals, no index
  */
-const fgVertex3v c_stripRect3x1[] = {
-    {fgVector3f(-0.5f, 0.5f, 0.f), fgVector3f(0.f, 0.f, 0.f), fgVector2f(0.f, 1.f)},
-    {fgVector3f(-0.5f, -0.5f, 0.f), fgVector3f(0.f, 0.f, 0.f), fgVector2f(0.f, 0.f)},
-    {fgVector3f(-0.5f / 3, 0.5f, 0.f), fgVector3f(0.f, 0.f, 0.f), fgVector2f(1.f / 3, 1.f)},
-    {fgVector3f(-0.5f / 3, -0.5f, 0.f), fgVector3f(0.f, 0.f, 0.f), fgVector2f(1.f / 3, 0.f)},
+const gfx::Vertex3v c_stripRect3x1[] = {
+    {Vector3f(-0.5f, 0.5f, 0.f), Vector3f(0.f, 0.f, 0.f), Vector2f(0.f, 1.f)},
+    {Vector3f(-0.5f, -0.5f, 0.f), Vector3f(0.f, 0.f, 0.f), Vector2f(0.f, 0.f)},
+    {Vector3f(-0.5f / 3, 0.5f, 0.f), Vector3f(0.f, 0.f, 0.f), Vector2f(1.f / 3, 1.f)},
+    {Vector3f(-0.5f / 3, -0.5f, 0.f), Vector3f(0.f, 0.f, 0.f), Vector2f(1.f / 3, 0.f)},
 
-    {fgVector3f(0.5f / 3, 0.5f, 0.f), fgVector3f(0.f, 0.f, 0.f), fgVector2f(2.f / 3, 1.f)},
-    {fgVector3f(0.5f / 3, -0.5f, 0.f), fgVector3f(0.f, 0.f, 0.f), fgVector2f(2.f / 3, 0.f)},
+    {Vector3f(0.5f / 3, 0.5f, 0.f), Vector3f(0.f, 0.f, 0.f), Vector2f(2.f / 3, 1.f)},
+    {Vector3f(0.5f / 3, -0.5f, 0.f), Vector3f(0.f, 0.f, 0.f), Vector2f(2.f / 3, 0.f)},
 
-    {fgVector3f(0.5f, 0.5f, 0.f), fgVector3f(0.f, 0.f, 0.f), fgVector2f(1.f, 1.f)},
-    {fgVector3f(0.5f, -0.5f, 0.f), fgVector3f(0.f, 0.f, 0.f), fgVector2f(1.f, 0.f)}
+    {Vector3f(0.5f, 0.5f, 0.f), Vector3f(0.f, 0.f, 0.f), Vector2f(1.f, 1.f)},
+    {Vector3f(0.5f, -0.5f, 0.f), Vector3f(0.f, 0.f, 0.f), Vector2f(1.f, 0.f)}
 };
 
-#include "GFX/Shaders/fgGFXShaderDefs.h"
-#include "GFX/Shaders/fgGFXShaderProgram.h"
-#include "fgGFXAABoundingBox.h"
-
-void fgGfxPrimitives::drawSkyBoxOptimized(void) {
-    fg::gfx::CPlatform::context()->diffVertexAttribArrayMask(fgVertex4v::attribMask());
+void gfx::CPrimitives::drawSkyBoxOptimized(void) {
+    gfx::CPlatform::context()->diffVertexAttribArrayMask(Vertex4v::attribMask());
 
     uintptr_t offset = (uintptr_t)((unsigned int*)&c_stripSkyBoxOptimized[0]);
-    fg::gfx::CPlatform::context()->vertexAttribPointer(FG_GFX_ATTRIB_POS_LOCATION,
-                                                  3,
-                                                  FG_GFX_FLOAT,
-                                                  FG_GFX_FALSE,
-                                                  sizeof (fgVertex4v),
-                                                  reinterpret_cast<fgGFXvoid*>(offset));
-    offset += sizeof (fgVector3f); // Move offset to Normals
-    fg::gfx::CPlatform::context()->vertexAttribPointer(FG_GFX_ATTRIB_NORM_LOCATION,
-                                                  3,
-                                                  FG_GFX_FLOAT,
-                                                  FG_GFX_FALSE,
-                                                  sizeof (fgVertex4v),
-                                                  reinterpret_cast<fgGFXvoid*>(offset));
-    
-    offset += sizeof (fgVector3f); // Move offset to UVS
-    fg::gfx::CPlatform::context()->vertexAttribPointer(FG_GFX_ATTRIB_UVS_LOCATION,
-                                                  2,
-                                                  FG_GFX_FLOAT,
-                                                  FG_GFX_FALSE,
-                                                  sizeof (fgVertex4v),
-                                                  reinterpret_cast<fgGFXvoid*>(offset));
-    
-    offset += sizeof (fgVector2f); // Move offset to Color
-    fg::gfx::CPlatform::context()->vertexAttribPointer(FG_GFX_ATTRIB_COLOR_LOCATION,
-                                                  4,
-                                                  FG_GFX_FLOAT,
-                                                  FG_GFX_FALSE,
-                                                  sizeof (fgVertex4v),
-                                                  reinterpret_cast<fgGFXvoid*>(offset));
+    gfx::CPlatform::context()->vertexAttribPointer(FG_GFX_ATTRIB_POS_LOCATION,
+                                                   3,
+                                                   FG_GFX_FLOAT,
+                                                   FG_GFX_FALSE,
+                                                   sizeof (Vertex4v),
+                                                   reinterpret_cast<fgGFXvoid*>(offset));
+    offset += sizeof (Vector3f); // Move offset to Normals
+    gfx::CPlatform::context()->vertexAttribPointer(FG_GFX_ATTRIB_NORM_LOCATION,
+                                                   3,
+                                                   FG_GFX_FLOAT,
+                                                   FG_GFX_FALSE,
+                                                   sizeof (Vertex4v),
+                                                   reinterpret_cast<fgGFXvoid*>(offset));
+
+    offset += sizeof (Vector3f); // Move offset to UVS
+    gfx::CPlatform::context()->vertexAttribPointer(FG_GFX_ATTRIB_UVS_LOCATION,
+                                                   2,
+                                                   FG_GFX_FLOAT,
+                                                   FG_GFX_FALSE,
+                                                   sizeof (Vertex4v),
+                                                   reinterpret_cast<fgGFXvoid*>(offset));
+
+    offset += sizeof (Vector2f); // Move offset to Color
+    gfx::CPlatform::context()->vertexAttribPointer(FG_GFX_ATTRIB_COLOR_LOCATION,
+                                                   4,
+                                                   FG_GFX_FLOAT,
+                                                   FG_GFX_FALSE,
+                                                   sizeof (Vertex4v),
+                                                   reinterpret_cast<fgGFXvoid*>(offset));
 
     //(GLenum mode, GLsizei count, GLenum type, const void *indices)
     glDrawElements((GLenum)fgGfxPrimitiveMode::FG_GFX_TRIANGLE_STRIP,
@@ -225,49 +226,49 @@ void fgGfxPrimitives::drawSkyBoxOptimized(void) {
                    c_stripCube1x1Idx);
 }
 
-void fgGfxPrimitives::drawAABBLines(const fgAABoundingBox3Df& aabb) {
-    fg::gfx::CPlatform::context()->diffVertexAttribArrayMask(FG_GFX_POSITION_BIT | FG_GFX_COLOR_BIT);
+void gfx::CPrimitives::drawAABBLines(const AABoundingBox3Df& aabb) {
+    gfx::CPlatform::context()->diffVertexAttribArrayMask(FG_GFX_POSITION_BIT | FG_GFX_COLOR_BIT);
 
-    fgVec3f center = aabb.getCenter();
-    fgVec3f extent = aabb.getExtent();
+    Vec3f center = aabb.getCenter();
+    Vec3f extent = aabb.getExtent();
 
-    fgVec3f v[8] = {
-                    fgVec3f(center.x - extent.x, center.y - extent.y, center.z + extent.z), // 1 -x, -y, +z
-                    fgVec3f(center.x + extent.x, center.y - extent.y, center.z + extent.z), // 2 +x, -y, +z
-                    fgVec3f(center.x + extent.x, center.y + extent.y, center.z + extent.z), // 3 +x, +y, +z
-                    fgVec3f(center.x - extent.x, center.y + extent.y, center.z + extent.z), // 4 -x, +y, +z
+    Vec3f v[8] = {
+                  Vec3f(center.x - extent.x, center.y - extent.y, center.z + extent.z), // 1 -x, -y, +z
+                  Vec3f(center.x + extent.x, center.y - extent.y, center.z + extent.z), // 2 +x, -y, +z
+                  Vec3f(center.x + extent.x, center.y + extent.y, center.z + extent.z), // 3 +x, +y, +z
+                  Vec3f(center.x - extent.x, center.y + extent.y, center.z + extent.z), // 4 -x, +y, +z
 
-                    fgVec3f(center.x - extent.x, center.y + extent.y, center.z - extent.z), // 5 -x, +y, -z
-                    fgVec3f(center.x + extent.x, center.y + extent.y, center.z - extent.z), // 6 +x, +y, -z
-                    fgVec3f(center.x + extent.x, center.y - extent.y, center.z - extent.z), // 7 +x, -y, -z
-                    fgVec3f(center.x - extent.x, center.y - extent.y, center.z - extent.z) // 8 -x, -y, -z
+                  Vec3f(center.x - extent.x, center.y + extent.y, center.z - extent.z), // 5 -x, +y, -z
+                  Vec3f(center.x + extent.x, center.y + extent.y, center.z - extent.z), // 6 +x, +y, -z
+                  Vec3f(center.x + extent.x, center.y - extent.y, center.z - extent.z), // 7 +x, -y, -z
+                  Vec3f(center.x - extent.x, center.y - extent.y, center.z - extent.z) // 8 -x, -y, -z
     };
 #define _id_vec(_X) v[(_X-1)]
-    const fgVector3f aabbLineStripBuf[] = {
-                                           // 1st face
-                                           _id_vec(4), // 0
-                                           _id_vec(1), // 1
-                                           _id_vec(2), // 2
-                                           _id_vec(4), // 3
-                                           _id_vec(3), // 4
-                                           _id_vec(2), // 5
+    const Vector3f aabbLineStripBuf[] = {
+                                         // 1st face
+                                         _id_vec(4), // 0
+                                         _id_vec(1), // 1
+                                         _id_vec(2), // 2
+                                         _id_vec(4), // 3
+                                         _id_vec(3), // 4
+                                         _id_vec(2), // 5
 
-                                           // 2nd face
-                                           _id_vec(7), // 6
-                                           _id_vec(3), // 7
-                                           _id_vec(6), // 8
-                                           _id_vec(7), // 9
+                                         // 2nd face
+                                         _id_vec(7), // 6
+                                         _id_vec(3), // 7
+                                         _id_vec(6), // 8
+                                         _id_vec(7), // 9
 
-                                           // 3rd face
-                                           _id_vec(8), // 10
-                                           _id_vec(6), // 11
-                                           _id_vec(5), // 12
-                                           _id_vec(8), // 13
+                                         // 3rd face
+                                         _id_vec(8), // 10
+                                         _id_vec(6), // 11
+                                         _id_vec(5), // 12
+                                         _id_vec(8), // 13
 
-                                           // 4th face
-                                           _id_vec(1), // 14
-                                           _id_vec(5), // 15
-                                           _id_vec(4), // 16
+                                         // 4th face
+                                         _id_vec(1), // 14
+                                         _id_vec(5), // 15
+                                         _id_vec(4), // 16
     };
     const fgColor4f aabbColor[] = {
                                    fgColor4f(1.0f, 1.0f, 1.0f, 1.0f),
@@ -295,20 +296,20 @@ void fgGfxPrimitives::drawAABBLines(const fgAABoundingBox3Df& aabb) {
     };
 #undef _id_vec
     uintptr_t offset = (uintptr_t)((unsigned int*)&aabbLineStripBuf[0]);
-    fg::gfx::CPlatform::context()->vertexAttribPointer(FG_GFX_ATTRIB_POS_LOCATION,
-                                                  3,
-                                                  FG_GFX_FLOAT,
-                                                  FG_GFX_FALSE,
-                                                  sizeof (fgVector3f),
-                                                  reinterpret_cast<fgGFXvoid*>(offset));
+    gfx::CPlatform::context()->vertexAttribPointer(FG_GFX_ATTRIB_POS_LOCATION,
+                                                   3,
+                                                   FG_GFX_FLOAT,
+                                                   FG_GFX_FALSE,
+                                                   sizeof (Vector3f),
+                                                   reinterpret_cast<fgGFXvoid*>(offset));
 
     offset = (uintptr_t)((unsigned int*)&aabbColor[0]);
-    fg::gfx::CPlatform::context()->vertexAttribPointer(FG_GFX_ATTRIB_COLOR_LOCATION,
-                                                  4,
-                                                  FG_GFX_FLOAT,
-                                                  FG_GFX_FALSE,
-                                                  sizeof (fgVector4f),
-                                                  reinterpret_cast<fgGFXvoid*>(offset));
+    gfx::CPlatform::context()->vertexAttribPointer(FG_GFX_ATTRIB_COLOR_LOCATION,
+                                                   4,
+                                                   FG_GFX_FLOAT,
+                                                   FG_GFX_FALSE,
+                                                   sizeof (Vector4f),
+                                                   reinterpret_cast<fgGFXvoid*>(offset));
     glDrawArrays((GLenum)fgGfxPrimitiveMode::FG_GFX_LINE_STRIP, 0, sizeof (aabbLineStripBuf) / sizeof (aabbLineStripBuf[0]));
 
 }
@@ -316,30 +317,30 @@ void fgGfxPrimitives::drawAABBLines(const fgAABoundingBox3Df& aabb) {
 /*
  *
  */
-void fgGfxPrimitives::drawArray2D(const fg::CVector<fgVertex2v> &inputData,
-                                  const unsigned int attribMask,
-                                  const fgGfxPrimitiveMode mode) {
+void gfx::CPrimitives::drawArray2D(const fg::CVector<Vertex2v> &inputData,
+                                   const unsigned int attribMask,
+                                   const fgGfxPrimitiveMode mode) {
     if(inputData.empty() || !attribMask)
         return;
-    fg::gfx::CPlatform::context()->diffVertexAttribArrayMask(attribMask);
+    gfx::CPlatform::context()->diffVertexAttribArrayMask(attribMask);
 
     uintptr_t offset = (uintptr_t)((unsigned int*)&inputData.front());
     if(attribMask & FG_GFX_POSITION_BIT) {
-        fg::gfx::CPlatform::context()->vertexAttribPointer(FG_GFX_ATTRIB_POS_LOCATION,
-                                                      3,
-                                                      FG_GFX_FLOAT,
-                                                      FG_GFX_FALSE,
-                                                      sizeof (fgVertex2v),
-                                                      reinterpret_cast<fgGFXvoid*>(offset));
+        gfx::CPlatform::context()->vertexAttribPointer(FG_GFX_ATTRIB_POS_LOCATION,
+                                                       3,
+                                                       FG_GFX_FLOAT,
+                                                       FG_GFX_FALSE,
+                                                       sizeof (Vertex2v),
+                                                       reinterpret_cast<fgGFXvoid*>(offset));
     }
-    offset += sizeof (fgVector3f);
+    offset += sizeof (Vector3f);
     if(attribMask & FG_GFX_UVS_BIT) {
-        fg::gfx::CPlatform::context()->vertexAttribPointer(FG_GFX_ATTRIB_UVS_LOCATION,
-                                                      2,
-                                                      FG_GFX_FLOAT,
-                                                      FG_GFX_FALSE,
-                                                      sizeof (fgVertex2v),
-                                                      reinterpret_cast<fgGFXvoid*>(offset));
+        gfx::CPlatform::context()->vertexAttribPointer(FG_GFX_ATTRIB_UVS_LOCATION,
+                                                       2,
+                                                       FG_GFX_FLOAT,
+                                                       FG_GFX_FALSE,
+                                                       sizeof (Vertex2v),
+                                                       reinterpret_cast<fgGFXvoid*>(offset));
     }
     glDrawArrays((GLenum)mode, 0, inputData.size());
     fgGLError("glDrawArrays");
@@ -348,9 +349,9 @@ void fgGfxPrimitives::drawArray2D(const fg::CVector<fgVertex2v> &inputData,
 /*
  *
  */
-void fgGfxPrimitives::drawArray2D(const fg::CVector<fgVertex3v> &inputData,
-                                  const unsigned int attribMask,
-                                  const fgGfxPrimitiveMode mode) {
+void gfx::CPrimitives::drawArray2D(const fg::CVector<Vertex3v> &inputData,
+                                   const unsigned int attribMask,
+                                   const fgGfxPrimitiveMode mode) {
     if(inputData.empty() || !attribMask)
         return;
     // Need to optimize this
@@ -358,32 +359,32 @@ void fgGfxPrimitives::drawArray2D(const fg::CVector<fgVertex3v> &inputData,
     // every time, this may cause some slow down - find a way to remember the 
     // state of the active attribute arrays...
     uintptr_t offset = (uintptr_t)((unsigned int*)&inputData.front());
-    fg::gfx::CPlatform::context()->diffVertexAttribArrayMask(attribMask);
+    gfx::CPlatform::context()->diffVertexAttribArrayMask(attribMask);
     if(attribMask & FG_GFX_POSITION_BIT) {
-        fg::gfx::CPlatform::context()->vertexAttribPointer(FG_GFX_ATTRIB_POS_LOCATION,
-                                                      3,
-                                                      FG_GFX_FLOAT,
-                                                      FG_GFX_FALSE,
-                                                      sizeof (fgVertex3v),
-                                                      reinterpret_cast<fgGFXvoid*>(offset));
+        gfx::CPlatform::context()->vertexAttribPointer(FG_GFX_ATTRIB_POS_LOCATION,
+                                                       3,
+                                                       FG_GFX_FLOAT,
+                                                       FG_GFX_FALSE,
+                                                       sizeof (Vertex3v),
+                                                       reinterpret_cast<fgGFXvoid*>(offset));
     }
-    offset += sizeof (fgVector3f);
+    offset += sizeof (Vector3f);
     if(attribMask & FG_GFX_NORMAL_BIT) {
-        fg::gfx::CPlatform::context()->vertexAttribPointer(FG_GFX_ATTRIB_NORM_LOCATION,
-                                                      3,
-                                                      FG_GFX_FLOAT,
-                                                      FG_GFX_FALSE,
-                                                      sizeof (fgVertex3v),
-                                                      reinterpret_cast<fgGFXvoid*>(offset));
+        gfx::CPlatform::context()->vertexAttribPointer(FG_GFX_ATTRIB_NORM_LOCATION,
+                                                       3,
+                                                       FG_GFX_FLOAT,
+                                                       FG_GFX_FALSE,
+                                                       sizeof (Vertex3v),
+                                                       reinterpret_cast<fgGFXvoid*>(offset));
     }
-    offset += sizeof (fgVector3f);
+    offset += sizeof (Vector3f);
     if(attribMask & FG_GFX_UVS_BIT) {
-        fg::gfx::CPlatform::context()->vertexAttribPointer(FG_GFX_ATTRIB_UVS_LOCATION,
-                                                      2,
-                                                      FG_GFX_FLOAT,
-                                                      FG_GFX_FALSE,
-                                                      sizeof (fgVertex3v),
-                                                      reinterpret_cast<fgGFXvoid*>(offset));
+        gfx::CPlatform::context()->vertexAttribPointer(FG_GFX_ATTRIB_UVS_LOCATION,
+                                                       2,
+                                                       FG_GFX_FLOAT,
+                                                       FG_GFX_FALSE,
+                                                       sizeof (Vertex3v),
+                                                       reinterpret_cast<fgGFXvoid*>(offset));
     }
     glDrawArrays((GLenum)mode, 0, inputData.size());
     fgGLError("glDrawArrays");
@@ -392,48 +393,48 @@ void fgGfxPrimitives::drawArray2D(const fg::CVector<fgVertex3v> &inputData,
 /*
  *
  */
-void fgGfxPrimitives::drawArray2D(const fg::CVector<fgVertex4v> &inputData,
-                                  const unsigned int attribMask,
-                                  const fgGfxPrimitiveMode mode) {
+void gfx::CPrimitives::drawArray2D(const fg::CVector<Vertex4v> &inputData,
+                                   const unsigned int attribMask,
+                                   const fgGfxPrimitiveMode mode) {
     if(inputData.empty() || !attribMask)
         return;
 
     uintptr_t offset = (uintptr_t)((unsigned int*)&inputData.front());
-    fg::gfx::CPlatform::context()->diffVertexAttribArrayMask(attribMask);
+    gfx::CPlatform::context()->diffVertexAttribArrayMask(attribMask);
     if(attribMask & FG_GFX_POSITION_BIT) {
-        fg::gfx::CPlatform::context()->vertexAttribPointer(FG_GFX_ATTRIB_POS_LOCATION,
-                                                      3,
-                                                      FG_GFX_FLOAT,
-                                                      FG_GFX_FALSE,
-                                                      sizeof (fgVertex4v),
-                                                      reinterpret_cast<fgGFXvoid*>(offset));
+        gfx::CPlatform::context()->vertexAttribPointer(FG_GFX_ATTRIB_POS_LOCATION,
+                                                       3,
+                                                       FG_GFX_FLOAT,
+                                                       FG_GFX_FALSE,
+                                                       sizeof (Vertex4v),
+                                                       reinterpret_cast<fgGFXvoid*>(offset));
     }
-    offset += sizeof (fgVector3f);
+    offset += sizeof (Vector3f);
     if(attribMask & FG_GFX_NORMAL_BIT) {
-        fg::gfx::CPlatform::context()->vertexAttribPointer(FG_GFX_ATTRIB_NORM_LOCATION,
-                                                      3,
-                                                      FG_GFX_FLOAT,
-                                                      FG_GFX_FALSE,
-                                                      sizeof (fgVertex4v),
-                                                      reinterpret_cast<fgGFXvoid*>(offset));
+        gfx::CPlatform::context()->vertexAttribPointer(FG_GFX_ATTRIB_NORM_LOCATION,
+                                                       3,
+                                                       FG_GFX_FLOAT,
+                                                       FG_GFX_FALSE,
+                                                       sizeof (Vertex4v),
+                                                       reinterpret_cast<fgGFXvoid*>(offset));
     }
-    offset += sizeof (fgVector3f);
+    offset += sizeof (Vector3f);
     if(attribMask & FG_GFX_UVS_BIT) {
-        fg::gfx::CPlatform::context()->vertexAttribPointer(FG_GFX_ATTRIB_UVS_LOCATION,
-                                                      2,
-                                                      FG_GFX_FLOAT,
-                                                      FG_GFX_FALSE,
-                                                      sizeof (fgVertex4v),
-                                                      reinterpret_cast<fgGFXvoid*>(offset));
+        gfx::CPlatform::context()->vertexAttribPointer(FG_GFX_ATTRIB_UVS_LOCATION,
+                                                       2,
+                                                       FG_GFX_FLOAT,
+                                                       FG_GFX_FALSE,
+                                                       sizeof (Vertex4v),
+                                                       reinterpret_cast<fgGFXvoid*>(offset));
     }
-    offset += sizeof (fgVector2f);
+    offset += sizeof (Vector2f);
     if(attribMask & FG_GFX_COLOR_BIT) {
-        fg::gfx::CPlatform::context()->vertexAttribPointer(FG_GFX_ATTRIB_COLOR_LOCATION,
-                                                      4,
-                                                      FG_GFX_FLOAT,
-                                                      FG_GFX_FALSE,
-                                                      sizeof (fgVertex4v),
-                                                      reinterpret_cast<fgGFXvoid*>(offset));
+        gfx::CPlatform::context()->vertexAttribPointer(FG_GFX_ATTRIB_COLOR_LOCATION,
+                                                       4,
+                                                       FG_GFX_FLOAT,
+                                                       FG_GFX_FALSE,
+                                                       sizeof (Vertex4v),
+                                                       reinterpret_cast<fgGFXvoid*>(offset));
     }
     glDrawArrays((GLenum)mode, 0, inputData.size());
     fgGLError("glDrawArrays");
@@ -442,126 +443,126 @@ void fgGfxPrimitives::drawArray2D(const fg::CVector<fgVertex4v> &inputData,
 /*
  *
  */
-void fgGfxPrimitives::drawArray2D(const fgVertexData *inputData,
-                                  const unsigned int attribMask,
-                                  const fgGfxPrimitiveMode mode) {
+void gfx::CPrimitives::drawArray2D(const CVertexData *inputData,
+                                   const unsigned int attribMask,
+                                   const fgGfxPrimitiveMode mode) {
     if(!inputData)
         return;
     if(inputData->empty() || !attribMask)
         return;
     unsigned int andMask = (attribMask & inputData->attribMask());
-    fg::gfx::CPlatform::context()->diffVertexAttribArrayMask(andMask);
+    gfx::CPlatform::context()->diffVertexAttribArrayMask(andMask);
     uintptr_t offset = (uintptr_t)((unsigned int*)inputData->front());
     if(andMask & FG_GFX_POSITION_BIT) {
-        fg::gfx::CPlatform::context()->vertexAttribPointer(FG_GFX_ATTRIB_POS_LOCATION,
-                                                      3,
-                                                      FG_GFX_FLOAT,
-                                                      FG_GFX_FALSE,
-                                                      inputData->stride(),
-                                                      reinterpret_cast<fgGFXvoid*>(offset));
+        gfx::CPlatform::context()->vertexAttribPointer(FG_GFX_ATTRIB_POS_LOCATION,
+                                                       3,
+                                                       FG_GFX_FLOAT,
+                                                       FG_GFX_FALSE,
+                                                       inputData->stride(),
+                                                       reinterpret_cast<fgGFXvoid*>(offset));
     }
     if(inputData->attribMask() & FG_GFX_POSITION_BIT)
-        offset += sizeof (fgVector3f);
+        offset += sizeof (Vector3f);
     if(andMask & FG_GFX_NORMAL_BIT) {
-        fg::gfx::CPlatform::context()->vertexAttribPointer(FG_GFX_ATTRIB_NORM_LOCATION,
-                                                      3,
-                                                      FG_GFX_FLOAT,
-                                                      FG_GFX_FALSE,
-                                                      inputData->stride(),
-                                                      reinterpret_cast<fgGFXvoid*>(offset));
+        gfx::CPlatform::context()->vertexAttribPointer(FG_GFX_ATTRIB_NORM_LOCATION,
+                                                       3,
+                                                       FG_GFX_FLOAT,
+                                                       FG_GFX_FALSE,
+                                                       inputData->stride(),
+                                                       reinterpret_cast<fgGFXvoid*>(offset));
     }
     if(inputData->attribMask() & FG_GFX_UVS_BIT)
-        offset += sizeof (fgVector3f);
+        offset += sizeof (Vector3f);
     if(andMask & FG_GFX_UVS_BIT) {
-        fg::gfx::CPlatform::context()->vertexAttribPointer(FG_GFX_ATTRIB_UVS_LOCATION,
-                                                      2,
-                                                      FG_GFX_FLOAT,
-                                                      FG_GFX_FALSE,
-                                                      inputData->stride(),
-                                                      reinterpret_cast<fgGFXvoid*>(offset));
+        gfx::CPlatform::context()->vertexAttribPointer(FG_GFX_ATTRIB_UVS_LOCATION,
+                                                       2,
+                                                       FG_GFX_FLOAT,
+                                                       FG_GFX_FALSE,
+                                                       inputData->stride(),
+                                                       reinterpret_cast<fgGFXvoid*>(offset));
     }
     if(inputData->attribMask() & FG_GFX_COLOR_BIT)
-        offset += sizeof (fgVector2f);
+        offset += sizeof (Vector2f);
     if(andMask & FG_GFX_COLOR_BIT) {
-        fg::gfx::CPlatform::context()->vertexAttribPointer(FG_GFX_ATTRIB_COLOR_LOCATION,
-                                                      4,
-                                                      FG_GFX_FLOAT,
-                                                      FG_GFX_FALSE,
-                                                      inputData->stride(),
-                                                      reinterpret_cast<fgGFXvoid*>(offset));
+        gfx::CPlatform::context()->vertexAttribPointer(FG_GFX_ATTRIB_COLOR_LOCATION,
+                                                       4,
+                                                       FG_GFX_FLOAT,
+                                                       FG_GFX_FALSE,
+                                                       inputData->stride(),
+                                                       reinterpret_cast<fgGFXvoid*>(offset));
     }
     glDrawArrays((fgGFXenum)mode, 0, inputData->size());
     fgGLError("glDrawArrays");
 
 }
 
-void fgGfxPrimitives::drawSquare2D(void) {
-    fg::gfx::CPlatform::context()->diffVertexAttribArrayMask(FG_GFX_POSITION_BIT | FG_GFX_UVS_BIT);
-    fg::gfx::CPlatform::context()->vertexAttribPointer(FG_GFX_ATTRIB_POS_LOCATION,
-                                                  3,
-                                                  FG_GFX_FLOAT,
-                                                  FG_GFX_FALSE,
-                                                  sizeof (fgVertex3v),
-                                                  (fgGFXvoid *)c_stripSquare1x1);
+void gfx::CPrimitives::drawSquare2D(void) {
+    gfx::CPlatform::context()->diffVertexAttribArrayMask(FG_GFX_POSITION_BIT | FG_GFX_UVS_BIT);
+    gfx::CPlatform::context()->vertexAttribPointer(FG_GFX_ATTRIB_POS_LOCATION,
+                                                   3,
+                                                   FG_GFX_FLOAT,
+                                                   FG_GFX_FALSE,
+                                                   sizeof (Vertex3v),
+                                                   (fgGFXvoid *)c_stripSquare1x1);
 
-    uintptr_t offset = (uintptr_t)((unsigned int*)&c_stripSquare1x1[0]) + sizeof (fgVector3f) * 2;
-    fg::gfx::CPlatform::context()->vertexAttribPointer(FG_GFX_ATTRIB_UVS_LOCATION,
-                                                  2,
-                                                  FG_GFX_FLOAT,
-                                                  FG_GFX_FALSE,
-                                                  sizeof (fgVertex3v),
-                                                  (fgGFXvoid*)offset);
-    glDrawArrays(GL_TRIANGLE_STRIP, 0, sizeof (c_stripSquare1x1) / sizeof (fgVertex3v));
+    uintptr_t offset = (uintptr_t)((unsigned int*)&c_stripSquare1x1[0]) + sizeof (Vector3f) * 2;
+    gfx::CPlatform::context()->vertexAttribPointer(FG_GFX_ATTRIB_UVS_LOCATION,
+                                                   2,
+                                                   FG_GFX_FLOAT,
+                                                   FG_GFX_FALSE,
+                                                   sizeof (Vertex3v),
+                                                   (fgGFXvoid*)offset);
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, sizeof (c_stripSquare1x1) / sizeof (Vertex3v));
 }
 
 /*
  *
  */
-void fgGfxPrimitives::drawRect2D(void) {
-    fg::gfx::CPlatform::context()->diffVertexAttribArrayMask(FG_GFX_POSITION_BIT | FG_GFX_UVS_BIT);
-    fg::gfx::CPlatform::context()->vertexAttribPointer(FG_GFX_ATTRIB_POS_LOCATION,
-                                                  3,
-                                                  FG_GFX_FLOAT,
-                                                  FG_GFX_FALSE,
-                                                  sizeof (fgVertex3v),
-                                                  (fgGFXvoid *)c_stripRect3x1);
+void gfx::CPrimitives::drawRect2D(void) {
+    gfx::CPlatform::context()->diffVertexAttribArrayMask(FG_GFX_POSITION_BIT | FG_GFX_UVS_BIT);
+    gfx::CPlatform::context()->vertexAttribPointer(FG_GFX_ATTRIB_POS_LOCATION,
+                                                   3,
+                                                   FG_GFX_FLOAT,
+                                                   FG_GFX_FALSE,
+                                                   sizeof (Vertex3v),
+                                                   (fgGFXvoid *)c_stripRect3x1);
 
     uintptr_t offset = (uintptr_t)((unsigned int*)&c_stripRect3x1[0]) + sizeof (fgGFXfloat) * 6;
-    fg::gfx::CPlatform::context()->vertexAttribPointer(FG_GFX_ATTRIB_UVS_LOCATION,
-                                                  2,
-                                                  FG_GFX_FLOAT,
-                                                  FG_GFX_FALSE,
-                                                  sizeof (fgVertex3v),
-                                                  (fgGFXvoid*)offset);
-    glDrawArrays(GL_TRIANGLE_STRIP, 0, sizeof (c_stripRect3x1) / sizeof (fgVertex3v));
+    gfx::CPlatform::context()->vertexAttribPointer(FG_GFX_ATTRIB_UVS_LOCATION,
+                                                   2,
+                                                   FG_GFX_FLOAT,
+                                                   FG_GFX_FALSE,
+                                                   sizeof (Vertex3v),
+                                                   (fgGFXvoid*)offset);
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, sizeof (c_stripRect3x1) / sizeof (Vertex3v));
     fgGLError("glDrawArrays");
 }
 
 /*
  *
  */
-void fgGfxPrimitives::appendRect2D(fgVertexData *outputData,
-                                   const fgVec2f &size,
-                                   const fgVec2f &uv1,
-                                   const fgVec2f &uv2,
-                                   const fgColor4f &color,
-                                   const fgGfxPrimitiveMode mode,
-                                   const fgBool rewind) {
-    appendRect2D(outputData, fgVec2f(0.0f, 0.0f), size, uv1, uv2, color, mode, rewind);
+void gfx::CPrimitives::appendRect2D(CVertexData *outputData,
+                                    const Vec2f &size,
+                                    const Vec2f &uv1,
+                                    const Vec2f &uv2,
+                                    const fgColor4f &color,
+                                    const fgGfxPrimitiveMode mode,
+                                    const fgBool rewind) {
+    appendRect2D(outputData, Vec2f(0.0f, 0.0f), size, uv1, uv2, color, mode, rewind);
 }
 
 /*
  *
  */
-void fgGfxPrimitives::appendRect2D(fgVertexData *outputData,
-                                   float sizex,
-                                   float sizey,
-                                   const fgVec2f &uv1,
-                                   const fgVec2f &uv2,
-                                   const fgColor4f &color,
-                                   const fgGfxPrimitiveMode mode,
-                                   const fgBool rewind) {
-    appendRect2D(outputData, fgVec2f(0.0f, 0.0f), fgVec2f(sizex, sizey), uv1, uv2, color, mode, rewind);
+void gfx::CPrimitives::appendRect2D(CVertexData *outputData,
+                                    float sizex,
+                                    float sizey,
+                                    const Vec2f &uv1,
+                                    const Vec2f &uv2,
+                                    const fgColor4f &color,
+                                    const fgGfxPrimitiveMode mode,
+                                    const fgBool rewind) {
+    appendRect2D(outputData, Vec2f(0.0f, 0.0f), Vec2f(sizex, sizey), uv1, uv2, color, mode, rewind);
 }
 
 /*
@@ -569,14 +570,14 @@ void fgGfxPrimitives::appendRect2D(fgVertexData *outputData,
  * (does not use indexing, quad is specified via 6 vertices - two separate triangles)
  * Currently specifing UVs for Triangle strip is not obvious (it's tricky, needs changing)
  */
-void fgGfxPrimitives::appendRect2D(fgVertexData *outputData,
-                                   const fgVec2f &relPos,
-                                   const fgVec2f &size,
-                                   const fgVec2f &uv1,
-                                   const fgVec2f &uv2,
-                                   const fgColor4f &color,
-                                   const fgGfxPrimitiveMode mode,
-                                   const fgBool rewind) {
+void gfx::CPrimitives::appendRect2D(CVertexData *outputData,
+                                    const Vec2f &relPos,
+                                    const Vec2f &size,
+                                    const Vec2f &uv1,
+                                    const Vec2f &uv2,
+                                    const fgColor4f &color,
+                                    const fgGfxPrimitiveMode mode,
+                                    const fgBool rewind) {
     if(!outputData)
         return;
     float x1 = 0.0f, y1 = 0.0f;
@@ -601,21 +602,21 @@ void fgGfxPrimitives::appendRect2D(fgVertexData *outputData,
     }*/
     x1 += relPos.x;
     y1 += relPos.y;
-    fgVector3f norm = fgVector3f(1.0f, 1.0f, 1.0f);
+    Vector3f norm = Vector3f(1.0f, 1.0f, 1.0f);
     if(mode == fgGfxPrimitiveMode::FG_GFX_TRIANGLE_STRIP || mode == fgGfxPrimitiveMode::FG_GFX_TRIANGLES) {
 
-        fgVertex2v v1, v2;
-        v1.position = fgVec3f(x1, y1, 0.0f);
-        v1.uv = fgVec2f(uv1.x, 1 - uv1.y);
-        v2.position = fgVec3f(x1, y1 + size.y, 0.0f);
-        v2.uv = fgVec2f(uv1.x, 1 - uv2.y);
+        Vertex2v v1, v2;
+        v1.position = Vec3f(x1, y1, 0.0f);
+        v1.uv = Vec2f(uv1.x, 1 - uv1.y);
+        v2.position = Vec3f(x1, y1 + size.y, 0.0f);
+        v2.uv = Vec2f(uv1.x, 1 - uv2.y);
         if(mode == fgGfxPrimitiveMode::FG_GFX_TRIANGLE_STRIP && outputData->empty()) {
-            fgVertex3v v3, v4;
-            v3.position = fgVec3f(x1 + size.x, y1, 0.0f);
-            v3.uv = fgVec2f(uv2.x, 1 - uv1.y);
+            Vertex3v v3, v4;
+            v3.position = Vec3f(x1 + size.x, y1, 0.0f);
+            v3.uv = Vec2f(uv2.x, 1 - uv1.y);
 
-            v4.position = fgVec3f(x1 + size.x, y1 + size.y, 0.0f);
-            v4.uv = fgVec2f(uv2.x, 1 - uv2.y);
+            v4.position = Vec3f(x1 + size.x, y1 + size.y, 0.0f);
+            v4.uv = Vec2f(uv2.x, 1 - uv2.y);
             outputData->append(v1.position, norm, v1.uv, color);
             outputData->append(v2.position, norm, v2.uv, color);
             outputData->append(v3.position, norm, v3.uv, color);
@@ -631,19 +632,19 @@ void fgGfxPrimitives::appendRect2D(fgVertexData *outputData,
 
 
         if(mode == fgGfxPrimitiveMode::FG_GFX_TRIANGLES) {
-            fgVertex2v v3, v4;
-            fgVertex2v v5, v6;
-            v3.position = fgVec3f(x1 + size.x, y1, 0.0f);
-            v3.uv = fgVec2f(uv2.x, 1 - uv1.y);
+            Vertex2v v3, v4;
+            Vertex2v v5, v6;
+            v3.position = Vec3f(x1 + size.x, y1, 0.0f);
+            v3.uv = Vec2f(uv2.x, 1 - uv1.y);
 
-            v4.position = fgVec3f(x1, y1 + size.y, 0.0f);
-            v4.uv = fgVec2f(uv1.x, 1 - uv2.y);
+            v4.position = Vec3f(x1, y1 + size.y, 0.0f);
+            v4.uv = Vec2f(uv1.x, 1 - uv2.y);
 
-            v5.position = fgVec3f(x1 + size.x, y1 + size.y, 0.0f);
-            v5.uv = fgVec2f(uv2.x, 1 - uv2.y);
+            v5.position = Vec3f(x1 + size.x, y1 + size.y, 0.0f);
+            v5.uv = Vec2f(uv2.x, 1 - uv2.y);
 
-            v6.position = fgVec3f(x1 + size.x, y1, 0.0f);
-            v6.uv = fgVec2f(uv2.x, 1 - uv1.y);
+            v6.position = Vec3f(x1 + size.x, y1, 0.0f);
+            v6.uv = Vec2f(uv2.x, 1 - uv1.y);
 
             outputData->append(v3.position, norm, v3.uv, color);
             outputData->append(v4.position, norm, v4.uv, color);

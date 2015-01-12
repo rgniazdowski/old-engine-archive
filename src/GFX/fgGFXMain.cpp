@@ -26,11 +26,18 @@
 #endif
 
 #include "fgLog.h"
+#include "fgGFXPrimitives.h"
+#include "fgGFXDrawingBatch.h"
+float guiScale = 1.0f;
+float yolo_posx = 0;
+float yolo_posy = 0;
+
+using namespace fg;
 
 /*
  *
  */
-fgGfxMain::fgGfxMain() :
+gfx::CGfxMain::CGfxMain() :
 m_textureMgr(NULL),
 m_pResourceMgr(NULL),
 m_pEventMgr(NULL),
@@ -42,12 +49,12 @@ m_2DScene(NULL),
 m_particleSystem(NULL),
 m_resourceCreatedCallback(NULL),
 m_init(FG_FALSE) {
-    m_3DScene = new fg::gfx::CScene3D();
-    m_2DScene = new fg::gfx::CScene2D();
-    m_particleSystem = new fg::gfx::CParticleSystem();
+    m_3DScene = new gfx::CScene3D();
+    m_2DScene = new gfx::CScene2D();
+    m_particleSystem = new gfx::CParticleSystem();
     m_particleSystem->setSceneManager(m_2DScene);
 
-    m_shaderMgr = new fg::gfx::CShaderManager();
+    m_shaderMgr = new gfx::CShaderManager();
     m_3DScene->setShaderManager(m_shaderMgr);
     m_2DScene->setShaderManager(m_shaderMgr);
 }
@@ -55,7 +62,7 @@ m_init(FG_FALSE) {
 /**
  *
  */
-fgGfxMain::~fgGfxMain() {
+gfx::CGfxMain::~CGfxMain() {
     unregisterResourceCallbacks();
     if(m_particleSystem)
         delete m_particleSystem;
@@ -75,7 +82,7 @@ fgGfxMain::~fgGfxMain() {
         delete m_mainWindow;
     if(m_resourceCreatedCallback)
         delete m_resourceCreatedCallback;
-    memset(this, 0, sizeof (fgGfxMain)); // ?
+    memset(this, 0, sizeof (CGfxMain)); // ?
     m_resourceCreatedCallback = NULL;
     m_particleSystem = NULL;
     m_textureMgr = NULL;
@@ -91,12 +98,12 @@ fgGfxMain::~fgGfxMain() {
 /**
  *
  */
-void fgGfxMain::registerResourceCallbacks(void) {
+void gfx::CGfxMain::registerResourceCallbacks(void) {
     if(!m_pEventMgr)
         return;
 
     if(!m_resourceCreatedCallback)
-        m_resourceCreatedCallback = new fg::event::CMethodCallback<fgGfxMain>(this, &fgGfxMain::resourceCreatedHandler);
+        m_resourceCreatedCallback = new fg::event::CMethodCallback<CGfxMain>(this, &gfx::CGfxMain::resourceCreatedHandler);
 
     static_cast<fg::event::CEventManager *>(m_pEventMgr)->addCallback(FG_EVENT_RESOURCE_CREATED, m_resourceCreatedCallback);
 }
@@ -104,7 +111,7 @@ void fgGfxMain::registerResourceCallbacks(void) {
 /**
  *
  */
-void fgGfxMain::unregisterResourceCallbacks(void) {
+void gfx::CGfxMain::unregisterResourceCallbacks(void) {
     if(!m_pEventMgr)
         return;
 
@@ -115,16 +122,16 @@ void fgGfxMain::unregisterResourceCallbacks(void) {
  * 
  * @return 
  */
-fgBool fgGfxMain::initGFX(void) {
+fgBool gfx::CGfxMain::initGFX(void) {
     float t1 = fgTime::ms();
     fgBool status = FG_TRUE;
 
-    if(!fg::gfx::CPlatform::initialize()) {
+    if(!gfx::CPlatform::initialize()) {
         // ERROR
         status = FG_FALSE;
     }
     if(!m_mainWindow && status) {
-        m_mainWindow = new fg::gfx::CWindow();
+        m_mainWindow = new gfx::CWindow();
     }
     if(m_mainWindow && status) {
         // #FIXME - resolution FIXME!
@@ -134,11 +141,11 @@ fgBool fgGfxMain::initGFX(void) {
             status = FG_FALSE;
         }
 #if defined(FG_USING_SDL2)
-        fg::gfx::CPlatform::initializeMainContext(m_mainWindow->getSysPtr());
+        gfx::CPlatform::initializeMainContext(m_mainWindow->getSysPtr());
 #endif
     }
     if(status) {
-        m_gfxContext = fg::gfx::CPlatform::context();
+        m_gfxContext = gfx::CPlatform::context();
         if(!m_gfxContext) {
             status = FG_FALSE;
         } else if(!m_gfxContext->isInit()) {
@@ -190,7 +197,7 @@ fgBool fgGfxMain::initGFX(void) {
 /**
  * 
  */
-void fgGfxMain::setupLoader(void) {
+void gfx::CGfxMain::setupLoader(void) {
     if(!m_pResourceMgr)
         return;
     if(!m_textureMgr->isInit())
@@ -199,10 +206,10 @@ void fgGfxMain::setupLoader(void) {
     //
     // Splash texture load and upload - #FIXME - splash texture names from config!
     //
-    const char *splashes[] = {"developer.jpg","publisher.jpg","splash.png"};
-    int nsplashes = sizeof(splashes)/sizeof(splashes[0]);
-    int x = FG_RAND(0, nsplashes-1);
-    fg::gfx::CTexture *texture = (fg::gfx::CTexture *)(pResourceMgr->request(splashes[x]));
+    const char *splashes[] = {"developer.jpg", "publisher.jpg", "splash.png"};
+    int nsplashes = sizeof (splashes) / sizeof (splashes[0]);
+    int x = FG_RAND(0, nsplashes - 1);
+    gfx::CTexture *texture = (gfx::CTexture *)(pResourceMgr->request(splashes[x]));
     if(!texture) {
         FG_LOG_ERROR("GFX: Unable to load Splash texture");
         return;
@@ -213,10 +220,10 @@ void fgGfxMain::setupLoader(void) {
     //
     // ProgressBar texture load and upload
     //
-    const char *loaders[] = {"sun.jpg","hexangle.jpg"};
-    int nloaders = sizeof(loaders)/sizeof(loaders[0]);
-    x = FG_RAND(0, nloaders-1);
-    texture = (fg::gfx::CTexture *)(pResourceMgr->request(loaders[x]));
+    const char *loaders[] = {"sun.jpg", "hexangle.jpg"};
+    int nloaders = sizeof (loaders) / sizeof (loaders[0]);
+    x = FG_RAND(0, nloaders - 1);
+    texture = (gfx::CTexture *)(pResourceMgr->request(loaders[x]));
     if(!texture) {
         FG_LOG_ERROR("GFX: Unable to load ProgressBar texture");
         return;
@@ -224,18 +231,18 @@ void fgGfxMain::setupLoader(void) {
     m_textureMgr->uploadToVRAM(texture, FG_TRUE);
     FG_HardwareState->deviceYield(1);
     m_loader.setProgressTexture(texture);
-    
+
 }
 
 /**
  *
  */
-void fgGfxMain::closeGFX(void) {
+void gfx::CGfxMain::closeGFX(void) {
     FG_LOG_DEBUG("Closing GFX subsystem...");
     if(m_init) {
         if(m_mainWindow)
             m_mainWindow->close();
-        fg::gfx::CPlatform::quit();
+        gfx::CPlatform::quit();
         unregisterResourceCallbacks();
         m_gfxContext = NULL;
     }
@@ -246,7 +253,7 @@ void fgGfxMain::closeGFX(void) {
  * 
  * @return 
  */
-fgBool fgGfxMain::suspendGFX(void) {
+fgBool gfx::CGfxMain::suspendGFX(void) {
     fgBool status = FG_TRUE;
     if(!m_init) {
         status = FG_FALSE;
@@ -274,9 +281,9 @@ fgBool fgGfxMain::suspendGFX(void) {
  * 
  * @return 
  */
-fgBool fgGfxMain::resumeGFX(void) {
+fgBool gfx::CGfxMain::resumeGFX(void) {
     fgBool status = FG_TRUE;
-    if(!fgGfxMain::initGFX())
+    if(!gfx::CGfxMain::initGFX())
         status = FG_FALSE;
     if(m_textureMgr && status)
         if(!m_textureMgr->allToVRAM(FG_TRUE))
@@ -292,9 +299,9 @@ fgBool fgGfxMain::resumeGFX(void) {
     // REGENERATE VBOS #TODO
     // #FIXME lol
     {
-        fg::gfx::CModelResource *model = NULL;
+        gfx::CModelResource *model = NULL;
         std::string modelname("CobraBomber");
-        model = (fg::gfx::CModelResource *)((fg::resource::CResourceManager *)m_textureMgr->getResourceManager())->get(modelname);
+        model = (gfx::CModelResource *)((fg::resource::CResourceManager *)m_textureMgr->getResourceManager())->get(modelname);
         if(model) {
             if(model->getRefShapes().size()) {
                 model->getRefShapes()[0]->mesh->genBuffers();
@@ -312,7 +319,7 @@ fgBool fgGfxMain::resumeGFX(void) {
 /**
  *
  */
-void fgGfxMain::display(void) {
+void gfx::CGfxMain::display(void) {
     if(!m_gfxContext)
         return;
     if(m_particleSystem) {
@@ -339,19 +346,13 @@ void fgGfxMain::display(void) {
 #endif
 }
 
-#include "fgGFXPrimitives.h"
-#include "fgGFXDrawingBatch.h"
-float guiScale = 1.0f;
-float yolo_posx = 0;
-float yolo_posy = 0;
-
 /**
  *
  */
-void fgGfxMain::render(void) {
+void gfx::CGfxMain::render(void) {
     //m_gfxContext->scissor(100,100,200,300);
     static float offset = 0.0f;
-    static fg::gfx::CModelResource *cobraBomber = NULL;
+    static gfx::CModelResource *cobraBomber = NULL;
 
     static float rotxyz = 0.0f;
     static bool loadModel = true;
@@ -400,7 +401,7 @@ void fgGfxMain::render(void) {
 #endif
     if(loadModel) {
         if(!cobraBomber)
-            cobraBomber = (fg::gfx::CModelResource *)rm->get(modelname);
+            cobraBomber = (gfx::CModelResource *)rm->get(modelname);
         if(!cobraBomber) {
             printf("NO MODEL\n");
             return;
@@ -441,8 +442,8 @@ void fgGfxMain::render(void) {
     m_3DScene->getCamera()->update();
     m_3DScene->getMVP()->setCamera(m_3DScene->getCamera());
     m_3DScene->getMVP()->setPerspective(45.0f, m_mainWindow->getAspect());
-    fgMatrix4f modelMat;
-    fg::gfx::CShaderProgram *program = m_shaderMgr->get(sSkyBoxEasyShaderName);
+    Matrix4f modelMat;
+    gfx::CShaderProgram *program = m_shaderMgr->get(sSkyBoxEasyShaderName);
     program->setUniform(FG_GFX_USE_TEXTURE, 1.0f);
     program->setUniform(FG_GFX_CUBE_TEXTURE, (fgGFXint)0);
 
@@ -475,21 +476,21 @@ void fgGfxMain::render(void) {
         }
 #endif
         if(pResourceX->getResourceType() == FG_RESOURCE_TEXTURE) {
-            fg::gfx::CTexture *pTexture = static_cast<fg::gfx::CTexture *>(pResourceX);
+            gfx::CTexture *pTexture = static_cast<gfx::CTexture *>(pResourceX);
             if(pTexture) {
                 fgGfxTextureID &texID = pTexture->getRefGfxID();
 
                 //m_gfxContext->activeTexture(GL_TEXTURE1); // ? ? ? 
                 m_gfxContext->bindTexture(texID);
 
-                modelMat = fgMath::translate(fgMatrix4f(), m_3DScene->getCamera()->getRefEye());
+                modelMat = math::translate(Matrix4f(), m_3DScene->getCamera()->getRefEye());
                 float skyboxScale = FG_GFX_PERSPECTIVE_ZFAR_DEFAULT * 1.1f;
-                modelMat = fgMath::scale(modelMat, fgVector3f(skyboxScale, skyboxScale, skyboxScale));
+                modelMat = math::scale(modelMat, Vector3f(skyboxScale, skyboxScale, skyboxScale));
                 m_3DScene->getMVP()->calculate(modelMat);
                 program->setUniform(m_3DScene->getMVP());
                 m_gfxContext->frontFace(GL_CW); // #FUBAR
                 //m_gfxContext->setCullFace(FG_FALSE);
-                fgGfxPrimitives::drawSkyBoxOptimized();
+                CPrimitives::drawSkyBoxOptimized();
                 m_gfxContext->frontFace(GL_CCW);
                 //m_gfxContext->setCullFace(FG_TRUE);
             }
@@ -505,8 +506,8 @@ void fgGfxMain::render(void) {
     if(rotxyz > M_PI * 2.0f)
         rotxyz = 0.0f;
 
-    modelMat = fgMath::translate(fgMatrix4f(), fgVector3f(yolo_posx, yolo_posy * 0.0f, yolo_posy));
-    modelMat = fgMath::rotate(modelMat, rotxyz, fgVector3f(1.0f, 1.0f, 1.0f)); //fgMath::translate(fgMatrix4f(1.0f), fgVector3f(0.0f, 0.0f, -5.0f));
+    modelMat = math::translate(Matrix4f(), Vector3f(yolo_posx, yolo_posy * 0.0f, yolo_posy));
+    modelMat = math::rotate(modelMat, rotxyz, Vector3f(1.0f, 1.0f, 1.0f)); //math::translate(fgMatrix4f(1.0f), Vector3f(0.0f, 0.0f, -5.0f));
 
     program = m_shaderMgr->get(sPlainEasyShaderName);
 
@@ -529,11 +530,11 @@ void fgGfxMain::render(void) {
     static float radius1 = 200.0f;
     // #FIXME
     if(m_3DScene && 0) {
-        fg::gfx::CSceneNode *obj1 = m_3DScene->get("PlayerFighter");
+        gfx::CSceneNode *obj1 = m_3DScene->get("PlayerFighter");
         if(obj1) {
             obj1->setModelMatrix(modelMat);
         }
-        fg::gfx::CSceneNode *obj2 = m_3DScene->get("PlayerEnemy");
+        gfx::CSceneNode *obj2 = m_3DScene->get("PlayerEnemy");
         if(obj2) {
             rot1 += 0.00127f * (float)FG_HardwareState->getDelta();
             if(rot1 > M_PI * 2.0f)
@@ -541,8 +542,8 @@ void fgGfxMain::render(void) {
             float rx = cos(rot1) * radius1;
             float rz = sin(rot1) * radius1;
 
-            modelMat = fgMath::translate(fgMatrix4f(), fgVector3f(rx, 20.0f, rz));
-            modelMat = fgMath::rotate(modelMat, (float)M_PI / 2.0f, fgVector3f(0.0f, 1.0f, 0.0f));
+            modelMat = math::translate(Matrix4f(), Vector3f(rx, 20.0f, rz));
+            modelMat = math::rotate(modelMat, (float)M_PI / 2.0f, Vector3f(0.0f, 1.0f, 0.0f));
             obj2->setModelMatrix(modelMat);
         }
     }
@@ -564,14 +565,14 @@ void fgGfxMain::render(void) {
     // 2D LAYER DRAWING TEST - NEEDS TO WORK DIFFERENTLY
     // THIS IS FOR GUI DRAWING - SPECIAL ORTHO SHADER
     //////////////////////////////////////////////////////////////
-    fg::gfx::CShaderProgram *program2 = m_shaderMgr->get(sOrthoEasyShaderName);
+    gfx::CShaderProgram *program2 = m_shaderMgr->get(sOrthoEasyShaderName);
     if(!program2) {
         FG_LOG_ERROR("Cant access sOrthoEasy shader program.");
         return;
     }
     m_shaderMgr->useProgram(program2);
 
-    fg::gfx::CPlatform::context()->setBlend(FG_TRUE);
+    gfx::CPlatform::context()->setBlend(FG_TRUE);
 #if defined(FG_USING_MARMALADE)
     if(s3eKeyboardGetState(s3eKeyLeft) & S3E_KEY_STATE_DOWN) {
         yolo_posx -= 10.0f;
@@ -603,21 +604,21 @@ void fgGfxMain::render(void) {
     }
 
 #endif
-    Model = fgMath::translate(Model, fgVec3f(yolo_posx * 0.0f, yolo_posy * 0.0f, 0.0f));
-    Model = fgMath::scale(Model, fgVec3f(guiScale, guiScale, 0.0f));
+    Model = math::translate(Model, Vec3f(yolo_posx * 0.0f, yolo_posy * 0.0f, 0.0f));
+    Model = math::scale(Model, Vec3f(guiScale, guiScale, 0.0f));
 
     m_2DScene->getMVP()->setOrtho(0, (float)m_mainWindow->getWidth(), (float)m_mainWindow->getHeight(), 0.0f);
     //m_2DScene->getMVP()->calculate(Model);
     //m_2DScene->getMVP()->update();
     //program2->setUniform(MVP);
 
-    fg::gfx::CPlatform::context()->blendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+    gfx::CPlatform::context()->blendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
     //printf("fgGfx2DScene::render(void)\n");
     m_2DScene->render();
 
     // #FIXME ! TOTAL FUBAR SITUATION ! OMG ! OH MY !
-    fg::gfx::CMVPMatrix mvp_lol;
-    fg::gfx::CMVPMatrix *MVP = &mvp_lol;
+    gfx::CMVPMatrix mvp_lol;
+    gfx::CMVPMatrix *MVP = &mvp_lol;
     MVP->identity();
     MVP->setOrtho(0, (float)m_mainWindow->getWidth(), (float)m_mainWindow->getHeight(), 0.0f);
     MVP->calculate(Model);
@@ -631,14 +632,14 @@ void fgGfxMain::render(void) {
  * @param pResourceManager
  * @return 
  */
-fgBool fgGfxMain::setupResourceManager(fg::base::CManager *pResourceManager) {
+fgBool gfx::CGfxMain::setupResourceManager(fg::base::CManager *pResourceManager) {
     if(!pResourceManager)
         return FG_FALSE;
     if(pResourceManager->getManagerType() != FG_MANAGER_RESOURCE) {
         return FG_FALSE;
     }
     if(!m_textureMgr)
-        m_textureMgr = new fg::gfx::CTextureManager(pResourceManager);
+        m_textureMgr = new gfx::CTextureManager(pResourceManager);
     else
         m_textureMgr->setResourceManager(pResourceManager);
     m_pResourceMgr = pResourceManager;
@@ -668,7 +669,7 @@ fgBool fgGfxMain::setupResourceManager(fg::base::CManager *pResourceManager) {
  * 
  * @return 
  */
-fg::gfx::CTextureManager *fgGfxMain::getTextureManager(void) const {
+gfx::CTextureManager *gfx::CGfxMain::getTextureManager(void) const {
     return m_textureMgr;
 }
 
@@ -676,7 +677,7 @@ fg::gfx::CTextureManager *fgGfxMain::getTextureManager(void) const {
  * 
  * @return 
  */
-fg::gfx::CShaderManager *fgGfxMain::getShaderManager(void) const {
+gfx::CShaderManager *gfx::CGfxMain::getShaderManager(void) const {
     return m_shaderMgr;
 }
 
@@ -684,7 +685,7 @@ fg::gfx::CShaderManager *fgGfxMain::getShaderManager(void) const {
  * 
  * @return 
  */
-fg::gfx::CWindow *fgGfxMain::getMainWindow(void) const {
+gfx::CWindow *gfx::CGfxMain::getMainWindow(void) const {
     return m_mainWindow;
 }
 
@@ -692,7 +693,7 @@ fg::gfx::CWindow *fgGfxMain::getMainWindow(void) const {
  * 
  * @return 
  */
-fg::gfx::CScene3D *fgGfxMain::get3DScene(void) const {
+gfx::CScene3D *gfx::CGfxMain::get3DScene(void) const {
     return m_3DScene;
 }
 
@@ -700,7 +701,7 @@ fg::gfx::CScene3D *fgGfxMain::get3DScene(void) const {
  * 
  * @return 
  */
-fg::gfx::CScene2D *fgGfxMain::get2DScene(void) const {
+gfx::CScene2D *gfx::CGfxMain::get2DScene(void) const {
     return m_2DScene;
 }
 
@@ -708,7 +709,7 @@ fg::gfx::CScene2D *fgGfxMain::get2DScene(void) const {
  * 
  * @return 
  */
-fg::gfx::CCameraAnimation *fgGfxMain::get3DSceneCamera(void) const {
+gfx::CCameraAnimation *gfx::CGfxMain::get3DSceneCamera(void) const {
     if(!m_3DScene)
         return NULL;
     return m_3DScene->getCamera();
@@ -718,7 +719,7 @@ fg::gfx::CCameraAnimation *fgGfxMain::get3DSceneCamera(void) const {
  * 
  * @return 
  */
-fg::gfx::CParticleSystem *fgGfxMain::getParticleSystem(void) const {
+gfx::CParticleSystem *gfx::CGfxMain::getParticleSystem(void) const {
     return m_particleSystem;
 }
 
@@ -726,7 +727,7 @@ fg::gfx::CParticleSystem *fgGfxMain::getParticleSystem(void) const {
  *
  * @return
  */
-fgBool fgGfxMain::preLoadShaders(void) const {
+fgBool gfx::CGfxMain::preLoadShaders(void) const {
     if(!m_shaderMgr) {
         return FG_FALSE;
     }
@@ -739,7 +740,7 @@ fgBool fgGfxMain::preLoadShaders(void) const {
  * #FIXME
  * @return
  */
-fgBool fgGfxMain::releaseTextures(void) {
+fgBool gfx::CGfxMain::releaseTextures(void) {
     if(m_textureMgr) {
         m_textureMgr->allReleaseGFX();
         m_textureMgr->allReleaseNonGFX();
@@ -755,7 +756,7 @@ fgBool fgGfxMain::releaseTextures(void) {
  * @param argv
  * @return 
  */
-fgBool fgGfxMain::resourceCreatedHandler(fg::event::CArgumentList * argv) {
+fgBool gfx::CGfxMain::resourceCreatedHandler(fg::event::CArgumentList * argv) {
     if(!argv)
         return FG_FALSE;
     fgEventBase *event = (fgEventBase *)argv->getValueByID(0);
@@ -771,19 +772,19 @@ fgBool fgGfxMain::resourceCreatedHandler(fg::event::CArgumentList * argv) {
 
     if(pResource->getResourceType() != FG_RESOURCE_3D_MODEL)
         return FG_FALSE;
-    fg::gfx::CModelResource *pModel = (fg::gfx::CModelResource *)pResource;
-    fg::gfx::CModelResource::modelShapes &shapes = pModel->getRefShapes();
+    gfx::CModelResource *pModel = (gfx::CModelResource *)pResource;
+    gfx::CModelResource::modelShapes &shapes = pModel->getRefShapes();
     int n = shapes.size();
     if(n) {
         FG_LOG_DEBUG("GFX: Uploading static vertex data to VBO for model: '%s'", pModel->getNameStr());
     }
     for(int i = 0; i < n; i++) {
-        fgGfxShape *shape = shapes[i];
+        SShape *shape = shapes[i];
         if(!shape)
             continue;
         if(!shape->mesh)
             continue;
-        if(!fg::gfx::CPlatform::context()->isBuffer(shape->mesh->getPtrVBO())) {
+        if(!gfx::CPlatform::context()->isBuffer(shape->mesh->getPtrVBO())) {
             FG_LOG_DEBUG("GFX: Uploading static vertex data to VBO for shape: '%s'", shape->name.c_str());
             shape->mesh->genBuffers();
         }

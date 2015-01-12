@@ -30,7 +30,7 @@ SequentialEffect::SequentialEffect(int max_count) : m_data(NULL), m_countData(0)
 
 void SequentialEffect::setMaxCount(int max_count) {
     if(m_data == NULL) {
-        fgParticleEffect::setMaxCount(max_count);
+        CParticleEffect::setMaxCount(max_count);
         m_maxCountData = max_count;
         m_data = fgMalloc<AdditionalData>(max_count);
         m_countData = 0;
@@ -69,7 +69,7 @@ int SequentialEffect::addSequence(float x, float y, float z, float size, int cou
         return -1;
 
     idx = m_countData;
-    fgParticle particle;
+    SParticle particle;
 
     m_countData++;
 
@@ -110,7 +110,7 @@ int SequentialEffect::addSequence(float x, float y, float z, float size, int cou
 
 void SequentialEffect::calculate(void) {
     return;
-    fgParticle *particle;
+    SParticle *particle;
     for(int i = 0; i < m_countData; i++) {
         particle = &(particlesData()[i]);
         if((int64_t)FG_HardwareState->getTS() - m_data[i].time_last_frame >= m_data[i].frame_duration) {
@@ -131,7 +131,7 @@ void SequentialEffect::calculate(void) {
             SequentialEffect::remove(i);
         }
     }
-    fgParticleEffect::calculate();
+    CParticleEffect::calculate();
 }
 
 #endif

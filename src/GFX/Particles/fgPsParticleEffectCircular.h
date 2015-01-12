@@ -18,7 +18,7 @@
 /*
  *
  */
-class ParticleEffectCircular : public fgParticleEffect {
+class ParticleEffectCircular : public CParticleEffect {
 protected:
     // The CIRCULAR insert index
     int m_current_insert_idx;
@@ -117,22 +117,22 @@ public:
      * e. Then, m_current_index_idx ++ MODULO m_maxCount
      *
      */
-    virtual fgBool add(fgParticle* particle);
+    virtual fgBool add(SParticle* particle);
 
     /**
      * Batch-add. Number of inserts is limited to maxCount()
      */
-    virtual fgBool addGroup(fgParticle *particles, int count);
+    virtual fgBool addGroup(SParticle *particles, int count);
 
     /**
      * Adds random Particle, built upon values in [from->some_field, to->some_field]
      */
-    virtual fgBool addRandom(fgParticle *from, fgParticle *to);
+    virtual fgBool addRandom(SParticle *from, SParticle *to);
 
     /**
      * Batch-add with randomization
      */
-    fgBool addRandomGroup(fgParticle *from, fgParticle *to, int count);
+    fgBool addRandomGroup(SParticle *from, SParticle *to, int count);
 
 };
     #endif

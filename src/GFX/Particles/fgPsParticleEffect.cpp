@@ -11,10 +11,12 @@
 #include "Util/fgConfig.h"
 #include "Util/fgStringParser.h"
 
+using namespace fg;
+
 /**
  * 
  */
-fgParticleEffect::fgParticleEffect() : CResource() {
+gfx::CParticleEffect::CParticleEffect() : CResource() {
     m_resType = FG_RESOURCE_PARTICLE_EFFECT;
     m_textureIDRange.x = 0;
     m_textureIDRange.y = 0;
@@ -26,15 +28,15 @@ fgParticleEffect::fgParticleEffect() : CResource() {
 /**
  * 
  */
-fgParticleEffect::~fgParticleEffect() {
-    fgParticleEffect::destroy();
+gfx::CParticleEffect::~CParticleEffect() {
+    gfx::CParticleEffect::destroy();
 }
 
 /**
  * 
  */
-void fgParticleEffect::clear(void) {
-    CResource::clear();
+void gfx::CParticleEffect::clear(void) {
+    fg::resource::CResource::clear();
     m_resType = FG_RESOURCE_PARTICLE_EFFECT;
 }
 
@@ -43,7 +45,7 @@ void fgParticleEffect::clear(void) {
  * @param params
  * @return 
  */
-fgBool fgParticleEffect::initializeFromConfig(fgCfgTypes::parameterVec& params) {
+fgBool gfx::CParticleEffect::initializeFromConfig(fgCfgTypes::parameterVec& params) {
     if(params.empty())
         return FG_FALSE;
 
@@ -83,7 +85,7 @@ fgBool fgParticleEffect::initializeFromConfig(fgCfgTypes::parameterVec& params) 
             // particle - area – boundingbox –
         } else if(param->name.compare("particle-area") == 0) {
             if(param->type == FG_CFG_PARAMETER_STRING) {
-                fgStringParser::parseVector<fgBoundingBox3Df>(m_particleArea, param->string);
+                fgStringParser::parseVector<BoundingBox3Df>(m_particleArea, param->string);
                 this->m_isAreaSet = FG_TRUE;
             }
 
@@ -120,32 +122,32 @@ fgBool fgParticleEffect::initializeFromConfig(fgCfgTypes::parameterVec& params) 
             // start - size – vector –
         } else if(param->name.compare("start-size") == 0) {
             if(param->type == FG_CFG_PARAMETER_STRING)
-                fgStringParser::parseVector<fgVector3f>(m_startSize, param->string);
+                fgStringParser::parseVector<Vector3f>(m_startSize, param->string);
 
             // end - size – vector –
         } else if(param->name.compare("end-size") == 0) {
             if(param->type == FG_CFG_PARAMETER_STRING)
-                fgStringParser::parseVector<fgVector3f>(m_endSize, param->string);
+                fgStringParser::parseVector<Vector3f>(m_endSize, param->string);
 
             // spread - speed – vector –
         } else if(param->name.compare("spread-speed") == 0) {
             if(param->type == FG_CFG_PARAMETER_STRING)
-                fgStringParser::parseVector<fgVector3f>(m_spreadSpeed, param->string);
+                fgStringParser::parseVector<Vector3f>(m_spreadSpeed, param->string);
 
             // life - range – vector –
         } else if(param->name.compare("life-range") == 0) {
             if(param->type == FG_CFG_PARAMETER_STRING)
-                fgStringParser::parseVector<fgVector2f>(m_lifeRange, param->string);
+                fgStringParser::parseVector<Vector2f>(m_lifeRange, param->string);
 
             // ttl - range – vector –
         } else if(param->name.compare("ttl-range") == 0) {
             if(param->type == FG_CFG_PARAMETER_STRING)
-                fgStringParser::parseVector<fgVector2i>(m_ttlRange, param->string);
+                fgStringParser::parseVector<Vector2i>(m_ttlRange, param->string);
 
             // fade - speed - range – vector –
         } else if(param->name.compare("fade-speed-range") == 0) {
             if(param->type == FG_CFG_PARAMETER_STRING)
-                fgStringParser::parseVector<fgVector2f>(m_fadeSpeedRange, param->string);
+                fgStringParser::parseVector<Vector2f>(m_fadeSpeedRange, param->string);
 
             // start - color – color –
         } else if(param->name.compare("start-color") == 0) {
@@ -167,12 +169,12 @@ fgBool fgParticleEffect::initializeFromConfig(fgCfgTypes::parameterVec& params) 
         } else if(param->name.compare("texture-size") == 0 ||
                   param->name.compare("texture-sheet-size") == 0) {
             if(param->type == FG_CFG_PARAMETER_STRING)
-                fgStringParser::parseVector<fgVector2i>(m_textureSheetSize, param->string);
+                fgStringParser::parseVector<Vector2i>(m_textureSheetSize, param->string);
 
             // textureIDRange – vector –
         } else if(param->name.compare("texture-id-range") == 0) {
             if(param->type == FG_CFG_PARAMETER_STRING)
-                fgStringParser::parseVector<fgVector2i>(m_textureIDRange, param->string);
+                fgStringParser::parseVector<Vector2i>(m_textureIDRange, param->string);
 
             // Burnout delay (milliseconds)
         } else if(param->name.compare("burnout-delay") == 0) {
@@ -190,7 +192,7 @@ fgBool fgParticleEffect::initializeFromConfig(fgCfgTypes::parameterVec& params) 
         } else if(param->name.compare("burn-range") == 0 ||
                   param->name.compare("burnout-range") == 0) {
             if(param->type == FG_CFG_PARAMETER_STRING)
-                fgStringParser::parseVector<fgVector2f>(m_burnRange, param->string);
+                fgStringParser::parseVector<Vector2f>(m_burnRange, param->string);
         }
     }
     if(this->getName().empty() || m_maxCount <= 0)
@@ -202,7 +204,7 @@ fgBool fgParticleEffect::initializeFromConfig(fgCfgTypes::parameterVec& params) 
  * Create function loads/interprets data from file in ROM and place it in RAM memory.
  * @return 
  */
-fgBool fgParticleEffect::create(void) {
+fgBool gfx::CParticleEffect::create(void) {
     if(m_isReady) {
         return FG_TRUE;
     }
@@ -239,7 +241,7 @@ fgBool fgParticleEffect::create(void) {
         // #FIXME
     }
 
-    m_size = sizeof (fgParticleEffect) + m_nameTag.length() + m_textureName.length();
+    m_size = sizeof (CParticleEffect) + m_nameTag.length() + m_textureName.length();
     m_resType = FG_RESOURCE_PARTICLE_EFFECT;
     m_isReady = FG_TRUE;
     return FG_TRUE;
@@ -248,7 +250,7 @@ fgBool fgParticleEffect::create(void) {
 /**
  * Destroy all loaded data including additional metadata (called with destructor)
  */
-void fgParticleEffect::destroy(void) {
+void gfx::CParticleEffect::destroy(void) {
     m_isReady = FG_FALSE;
     m_size = 0;
 }
@@ -257,7 +259,7 @@ void fgParticleEffect::destroy(void) {
  * Reloads any data, recreates the resource (refresh)
  * @return 
  */
-fgBool fgParticleEffect::recreate(void) {
+fgBool gfx::CParticleEffect::recreate(void) {
     dispose();
     m_isReady = FG_FALSE;
     return create();
@@ -266,7 +268,7 @@ fgBool fgParticleEffect::recreate(void) {
 /**
  * Dispose completely of the all loaded data, free all memory
  */
-void fgParticleEffect::dispose(void) {
+void gfx::CParticleEffect::dispose(void) {
     m_isReady = FG_FALSE;
     m_size = 0;
 }
@@ -275,7 +277,7 @@ void fgParticleEffect::dispose(void) {
  * Check if resource is disposed (not loaded yet or disposed after)
  * @return 
  */
-fgBool fgParticleEffect::isDisposed(void) const {
+fgBool gfx::CParticleEffect::isDisposed(void) const {
     return !m_isReady;
 }
 
@@ -285,13 +287,13 @@ fgBool fgParticleEffect::isDisposed(void) const {
  * @param randomizePosition
  * @param position
  */
-void fgParticleEffect::initializeParticle(fgParticle *outputParticle,
-                                          const fgBool randomizePosition,
-                                          const fgVector3f & position) {
+void gfx::CParticleEffect::initializeParticle(SParticle *outputParticle,
+                                              const fgBool randomizePosition,
+                                              const Vector3f & position) {
     if(!outputParticle)
         return;
 
-    fgParticle from, to;
+    SParticle from, to;
 
     //
     // FROM
@@ -315,7 +317,7 @@ void fgParticleEffect::initializeParticle(fgParticle *outputParticle,
     from.angularVelocity.z = 0.0f;
 
     if(randomizePosition) {
-        from.bbox.pos = fgVector3f(0.0f, 0.0f, 0.0f);
+        from.bbox.pos = Vector3f(0.0f, 0.0f, 0.0f);
     } else {
         from.bbox.pos = position;
     }
@@ -368,46 +370,46 @@ void fgParticleEffect::initializeParticle(fgParticle *outputParticle,
 
 #if 0
 
-void fgParticleEffect::calculate(void) {
-        if(m_particles[i].life <= 0.0f) {
-            remove(i);
-            // Checking the particle area which means checking and bouncing off particles of the area edges
-        } else if(m_isAreaSet == FG_TRUE && m_isAreaCheck == FG_TRUE && m_drawMode == MODE_2D) {
-            // Particle X position is within the boundaries so we can check the Y position
-            if(m_particles[i].bbox.pos.x >= float(m_particleArea.x) && m_particles[i].bbox.pos.x + m_particles[i].bbox.size.x <= float(m_particleArea.x + m_particleArea.w)) {
-                // The UPPER and LOWER boundary
-                if(m_particles[i].bbox.pos.y <= float(m_particleArea.y) || m_particles[i].bbox.pos.y + m_particles[i].bbox.size.y >= float(m_particleArea.y + m_particleArea.h))
-                    m_particles[i].velocity.y *= -1.0f;
-                // Particle X position is out of boundaries so we can change it's direction
-            } else {
-                m_particles[i].velocity.x *= -1.0f;
-                // FIXME
-            }
+void gfx::CParticleEffect::calculate(void) {
+    if(m_particles[i].life <= 0.0f) {
+        remove(i);
+        // Checking the particle area which means checking and bouncing off particles of the area edges
+    } else if(m_isAreaSet == FG_TRUE && m_isAreaCheck == FG_TRUE && m_drawMode == MODE_2D) {
+        // Particle X position is within the boundaries so we can check the Y position
+        if(m_particles[i].bbox.pos.x >= float(m_particleArea.x) && m_particles[i].bbox.pos.x + m_particles[i].bbox.size.x <= float(m_particleArea.x + m_particleArea.w)) {
+            // The UPPER and LOWER boundary
+            if(m_particles[i].bbox.pos.y <= float(m_particleArea.y) || m_particles[i].bbox.pos.y + m_particles[i].bbox.size.y >= float(m_particleArea.y + m_particleArea.h))
+                m_particles[i].velocity.y *= -1.0f;
+            // Particle X position is out of boundaries so we can change it's direction
+        } else {
+            m_particles[i].velocity.x *= -1.0f;
+            // FIXME
+        }
 
-            if(m_particles[i].bbox.pos.y + m_particles[i].bbox.size.y > float(m_particleArea.y + m_particleArea.h)) {
-                float diff = fabs(float(m_particleArea.y + m_particleArea.h) - (m_particles[i].bbox.pos.y + m_particles[i].bbox.size.y));
-                m_particles[i].bbox.pos.y -= diff + m_particles[i].bbox.size.y / 4.0f;
-            }
+        if(m_particles[i].bbox.pos.y + m_particles[i].bbox.size.y > float(m_particleArea.y + m_particleArea.h)) {
+            float diff = fabs(float(m_particleArea.y + m_particleArea.h) - (m_particles[i].bbox.pos.y + m_particles[i].bbox.size.y));
+            m_particles[i].bbox.pos.y -= diff + m_particles[i].bbox.size.y / 4.0f;
+        }
 
-            if(m_particles[i].bbox.pos.x < float(m_particleArea.x))
-                m_particles[i].bbox.pos.x += fabs(m_particles[i].bbox.pos.x - float(m_particleArea.x));
+        if(m_particles[i].bbox.pos.x < float(m_particleArea.x))
+            m_particles[i].bbox.pos.x += fabs(m_particles[i].bbox.pos.x - float(m_particleArea.x));
 
-            if(m_particles[i].bbox.pos.x + m_particles[i].bbox.size.x > float(m_particleArea.x + m_particleArea.w)) {
-                float diff = fabs(float(m_particleArea.x + m_particleArea.w) - (m_particles[i].bbox.pos.x + m_particles[i].bbox.size.x));
-                m_particles[i].bbox.pos.x -= diff + m_particles[i].bbox.size.x / 4.0f;
-            }
-            // Deleting particles fully offscreen
-        } else if(m_isAreaCheck == false && m_drawMode == MODE_2D) {
-            if(m_particles[i].bbox.pos.x + m_particles[i].bbox.size.x / 2 >= float(screenArea.x) && m_particles[i].bbox.pos.x - m_particles[i].bbox.size.x / 2 <= float(screenArea.x + screenArea.w)) {
-                // The UPPER and LOWER boundary
-                if(m_particles[i].bbox.pos.y + m_particles[i].bbox.size.y / 2 <= float(screenArea.y) || m_particles[i].bbox.pos.y - m_particles[i].bbox.size.y / 2 >= float(screenArea.y + screenArea.h))
-                    remove(i);
-                // Particle X position is out of boundaries so we can delete it
-            } else {
+        if(m_particles[i].bbox.pos.x + m_particles[i].bbox.size.x > float(m_particleArea.x + m_particleArea.w)) {
+            float diff = fabs(float(m_particleArea.x + m_particleArea.w) - (m_particles[i].bbox.pos.x + m_particles[i].bbox.size.x));
+            m_particles[i].bbox.pos.x -= diff + m_particles[i].bbox.size.x / 4.0f;
+        }
+        // Deleting particles fully offscreen
+    } else if(m_isAreaCheck == false && m_drawMode == MODE_2D) {
+        if(m_particles[i].bbox.pos.x + m_particles[i].bbox.size.x / 2 >= float(screenArea.x) && m_particles[i].bbox.pos.x - m_particles[i].bbox.size.x / 2 <= float(screenArea.x + screenArea.w)) {
+            // The UPPER and LOWER boundary
+            if(m_particles[i].bbox.pos.y + m_particles[i].bbox.size.y / 2 <= float(screenArea.y) || m_particles[i].bbox.pos.y - m_particles[i].bbox.size.y / 2 >= float(screenArea.y + screenArea.h))
                 remove(i);
-            }
+            // Particle X position is out of boundaries so we can delete it
+        } else {
+            remove(i);
         }
     }
+}
 }
 #endif
 
@@ -418,11 +420,11 @@ void fgParticleEffect::calculate(void) {
  * @param to
  * @param result
  */
-void fgParticleEffect::randomizeOnPair(const fgParticle* from,
-                                       const fgParticle* to,
-                                       fgParticle * result) {
+void gfx::CParticleEffect::randomizeOnPair(const SParticle* from,
+                                           const SParticle* to,
+                                           SParticle * result) {
     int from_val, to_val;
-    fgParticle* target = result;
+    SParticle* target = result;
 
     // Burn parameter
     from_val = (int)(from->burn * 1000);
@@ -567,7 +569,7 @@ void fgParticleEffect::randomizeOnPair(const fgParticle* from,
  * 
  * @param outputParticle
  */
-void fgParticleEffect::basicCalculate(fgParticle* outputParticle) {
+void gfx::CParticleEffect::basicCalculate(SParticle* outputParticle) {
     // MOVEMENT
     outputParticle->bbox.pos.x += outputParticle->velocity.x * fgTime::elapsed();
     outputParticle->bbox.pos.y += outputParticle->velocity.y * fgTime::elapsed();
@@ -580,7 +582,7 @@ void fgParticleEffect::basicCalculate(fgParticle* outputParticle) {
 
     // FADING
     outputParticle->life -= outputParticle->fadeSpeed * fgTime::elapsed();
-    
+
     // LIFE AS SIZE
     if(isLifeAsSize()) {
         outputParticle->bbox.size.x = fabs(outputParticle->life);

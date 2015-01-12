@@ -36,7 +36,7 @@ void gui::CTable::setDefaults(void) {
  * 
  * @return 
  */
-fgBoundingBox3Df gui::CTable::updateBounds(void) {
+gfx::BoundingBox3Df gui::CTable::updateBounds(void) {
     return base_type::updateBounds();
 }
 

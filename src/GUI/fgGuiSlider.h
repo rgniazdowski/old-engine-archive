@@ -42,11 +42,11 @@ namespace fg {
             ///
             float m_maxValue;
             ///
-            fgVec2f m_currentValue;
+            Vec2f m_currentValue;
             /// This is special ratio - it's based on the position of the pointer over slider
-            fgVec2f m_pointerRatio;
+            Vec2f m_pointerRatio;
             /// This is ratio of the slider - determines size of the slider
-            fgVec2f m_ratio;
+            Vec2f m_ratio;
             ///
             SliderAlign m_sliderAlign;
 
@@ -107,7 +107,7 @@ namespace fg {
              * 
              * @return 
              */
-            fgVec2f const & getRatio(void) const {
+            Vec2f const & getRatio(void) const {
                 return m_ratio;
             }
             /**
@@ -148,7 +148,7 @@ namespace fg {
              * 
              * @param currentValue
              */
-            void setRatio(const fgVector2f& ratio) {
+            void setRatio(const Vector2f& ratio) {
                 m_ratio = ratio;
                 if(m_ratio.x > 1.0f)
                     m_ratio.x = 1.0f;
@@ -159,7 +159,7 @@ namespace fg {
              * 
              * @return 
              */
-            fgVec2f const & getCurrentValue(void) const {
+            Vec2f const & getCurrentValue(void) const {
                 return m_currentValue;
             }
             /**
@@ -176,7 +176,7 @@ namespace fg {
              * 
              * @param currentValue
              */
-            void setCurrentValue(const fgVector2f& currentValue) {
+            void setCurrentValue(const Vector2f& currentValue) {
                 m_currentValue = currentValue;
                 m_pointerRatio = m_currentValue / m_maxValue;
             }

@@ -44,7 +44,7 @@ namespace fg {
              * Returns reference to the internal view matrix
              * @return 
              */
-            inline fgMatrix4f & getRefViewMatrix(void) {
+            inline Matrix4f & getRefViewMatrix(void) {
                 return m_viewMatrix;
             }
             /**
@@ -52,7 +52,7 @@ namespace fg {
              * @return 
              */
             virtual float * update(void) {
-                m_viewMatrix = fgMath::lookAt(m_eye, m_center, m_up);
+                m_viewMatrix = math::lookAt(m_eye, m_center, m_up);
                 //m_frustum.set(m_eye, m_center, m_up); // #SRSLY?
                 return getViewMatPtr();
             }
@@ -61,76 +61,76 @@ namespace fg {
              * @return 
              */
             inline const float * getViewMatPtr(void) const {
-                return fgMath::value_ptr(m_viewMatrix);
+                return math::value_ptr(m_viewMatrix);
             }
             /**
              * Returns the pointer to the view matrix
              * @return 
              */
             inline float * getViewMatPtr(void) {
-                return fgMath::value_ptr(m_viewMatrix);
+                return math::value_ptr(m_viewMatrix);
             }
             /**
              * 
              * @param eye
              */
-            inline void setEye(const fgVec3f& eye) {
+            inline void setEye(const Vector3f& eye) {
                 m_eye = eye;
             }
             /**
              * 
              * @param center
              */
-            inline void setCenter(const fgVec3f& center) {
+            inline void setCenter(const Vector3f& center) {
                 m_center = center;
             }
             /**
              * 
              * @param up
              */
-            inline void setUp(const fgVec3f& up) {
+            inline void setUp(const Vector3f& up) {
                 m_up = up;
             }
             /**
              * Returns the reference to the eye vector
              * @return 
              */
-            inline fgVec3f & getRefEye(void) {
+            inline Vector3f & getRefEye(void) {
                 return m_eye;
             }
             /**
              * Returns the reference to the center vector
              * @return 
              */
-            inline fgVec3f & getRefCenter(void) {
+            inline Vector3f & getRefCenter(void) {
                 return m_center;
             }
             /**
              * Returns the reference to the up vector
              * @return 
              */
-            inline fgVec3f & getRefUp(void) {
+            inline Vector3f & getRefUp(void) {
                 return m_up;
             }
             /**
              * Returns the reference to the eye vector
              * @return 
              */
-            inline fgVec3f const & getRefEye(void) const {
+            inline Vector3f const & getRefEye(void) const {
                 return m_eye;
             }
             /**
              * Returns the reference to the center vector
              * @return 
              */
-            inline fgVec3f const & getRefCenter(void) const {
+            inline Vector3f const & getRefCenter(void) const {
                 return m_center;
             }
             /**
              * Returns the reference to the up vector
              * @return 
              */
-            inline fgVec3f const & getRefUp(void) const {
+            inline Vector3f const & getRefUp(void) const {
                 return m_up;
             }
             /**
@@ -138,49 +138,49 @@ namespace fg {
              * @return 
              */
             inline const float * getPtrEye(void) const {
-                return fgMath::value_ptr(m_eye);
+                return math::value_ptr(m_eye);
             }
             /**
              * Returns the pointer to the eye vector data
              * @return 
              */
             inline float * getPtrEye(void) {
-                return fgMath::value_ptr(m_eye);
+                return math::value_ptr(m_eye);
             }
             /**
              * Returns the pointer to the center vector data
              * @return 
              */
             inline const float * getPtrCenter(void) const {
-                return fgMath::value_ptr(m_center);
+                return math::value_ptr(m_center);
             }
             /**
              * Returns the pointer to the center vector data
              * @return 
              */
             inline float * getPtrCenter(void) {
-                return fgMath::value_ptr(m_center);
+                return math::value_ptr(m_center);
             }
             /**
              * Returns the pointer to the up vector data
              * @return 
              */
             inline const float * getPtrUp(void) const {
-                return fgMath::value_ptr(m_up);
+                return math::value_ptr(m_up);
             }
             /**
              * Returns the pointer to the up vector data
              * @return 
              */
             inline float * getPtrUp(void) {
-                return fgMath::value_ptr(m_up);
+                return math::value_ptr(m_up);
             }
             /**
              * Resets the internal view matrix
              * The internal vectors (eye,...) are unchanged
              */
             virtual inline void identity(void) {
-                m_viewMatrix = fgMatrix4f();
+                m_viewMatrix = Matrix4f();
                 //m_frustum.invalidate();
             }
             /**
@@ -202,13 +202,13 @@ namespace fg {
             /// Current camera frustum
             CFrustum m_frustum;
             /// The view matrix of this camera
-            fgMatrix4f m_viewMatrix;
+            Matrix4f m_viewMatrix;
             /// Position of the camera in world space
-            fgVec3f m_eye;
+            Vector3f m_eye;
             /// Where the camera is looking?
-            fgVec3f m_center;
+            Vector3f m_center;
             /// Head by default will be up (0,1,0)
-            fgVec3f m_up;
+            Vector3f m_up;
         };
     };
 };

@@ -35,7 +35,7 @@ namespace fg {
         /**
          *
          */
-        class CDrawer : public CFontDrawer, public virtual fg::gfx::CDrawingBatch {
+        class CDrawer : public CFontDrawer, public virtual gfx::CDrawingBatch {
             friend class fg::gui::CGuiMain;
             friend class fg::gui::CWidgetManager;
 
@@ -91,7 +91,7 @@ namespace fg {
              * @param style
              * @param fmt
              */
-            virtual void appendText2D(fgVec2f& outTextSize, const fgVec2f &blockPos, const fgVec2f &blockSize, CStyleContent& style, const char *fmt, ...);
+            virtual void appendText2D(Vec2f& outTextSize, const Vec2f &blockPos, const Vec2f &blockSize, CStyleContent& style, const char *fmt, ...);
 
             /**
              * 
@@ -99,7 +99,7 @@ namespace fg {
              * @param size
              * @param style
              */
-            virtual void appendBackground2D(const fgVec2f &pos, const fgVec2f &size, CStyleContent& style);
+            virtual void appendBackground2D(const Vec2f &pos, const Vec2f &size, CStyleContent& style);
 
             /**
              * 
@@ -107,7 +107,7 @@ namespace fg {
              * @param size
              * @param style
              */
-            virtual void appendBorder2D(const fgVec2f &pos, const fgVec2f &size, CStyleContent& style);
+            virtual void appendBorder2D(const Vec2f &pos, const Vec2f &size, CStyleContent& style);
 
         };
     };

@@ -24,17 +24,19 @@
  * * To ma sens przy scenach z duza iloscia obiektow - zostawiam na pozniej - P4
  */
 
+using namespace fg;
+
 /**
  * 
  */
-fgGfxMaterial::fgGfxMaterial() { }
+gfx::SMaterial::SMaterial() { }
 
 /**
  * 
  * @return 
  */
-size_t fgGfxMaterial::getDataSize(void) {
-    size_t size = sizeof (fgGfxMaterial);
+size_t gfx::SMaterial::getDataSize(void) {
+    size_t size = sizeof (SMaterial);
     size += name.length() +
             ambientTexName.length() +
             diffuseTexName.length() +
@@ -48,9 +50,7 @@ size_t fgGfxMaterial::getDataSize(void) {
  * 
  * @param material
  */
-fgGfxMaterial::fgGfxMaterial(const fgGfxMaterial & material) {
-    //*this = material;
-
+gfx::SMaterial::SMaterial(const SMaterial & material) {
     this->ambientTexHandle.copyFrom(material.ambientTexHandle);
     this->diffuseTexHandle.copyFrom(material.diffuseTexHandle);
     this->specularTexHandle.copyFrom(material.specularTexHandle);

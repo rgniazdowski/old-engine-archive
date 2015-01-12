@@ -11,44 +11,46 @@
 #include "GFX/Shaders/fgGFXShaderManager.h"
 #include "Resource/fgResourceManager.h"
 
+using namespace fg;
+
 /*
  *
  */
-fg::gui::CDrawer::CDrawer() :
+gui::CDrawer::CDrawer() :
 m_pResourceMgr(NULL) { }
 
 /*
  *
  */
-fg::gui::CDrawer::~CDrawer() {
+gui::CDrawer::~CDrawer() {
     m_pResourceMgr = NULL;
 }
 
 /*
  *
  */
-void fg::gui::CDrawer::setResourceManager(fg::base::CManager *pResourceMgr) {
+void gui::CDrawer::setResourceManager(fg::base::CManager *pResourceMgr) {
     m_pResourceMgr = pResourceMgr;
 }
 
 /*
  *
  */
-void fg::gui::CDrawer::flush(void) {
+void gui::CDrawer::flush(void) {
     CDrawingBatch::flush();
 }
 
 /*
  *
  */
-void fg::gui::CDrawer::sortCalls(void) {
+void gui::CDrawer::sortCalls(void) {
     CDrawingBatch::sortCalls();
 }
 
 /*
  *
  */
-void fg::gui::CDrawer::render(void) {
+void gui::CDrawer::render(void) {
     CDrawingBatch::render();
 }
 
@@ -60,11 +62,11 @@ void fg::gui::CDrawer::render(void) {
  * @param style
  * @param fmt
  */
-void fg::gui::CDrawer::appendText2D(fgVec2f& outTextSize,
-                                    const fgVec2f &blockPos,
-                                    const fgVec2f &blockSize,
-                                    CStyleContent& style,
-                                    const char *fmt, ...) {
+void gui::CDrawer::appendText2D(Vec2f& outTextSize,
+                                const Vec2f &blockPos,
+                                const Vec2f &blockSize,
+                                CStyleContent& style,
+                                const char *fmt, ...) {
     if(!m_pResourceMgr || !fmt)
         return;
     char buf[FG_FONT_DRAW_STRING_BUF_MAX];
@@ -86,7 +88,7 @@ void fg::gui::CDrawer::appendText2D(fgVec2f& outTextSize,
     this->setColor(fg.color);
     Align textAlign = style.getTextAlign();
     SPadding &padding = style.getPadding();
-    fgVector2f outPos = blockPos;
+    Vector2f outPos = blockPos;
     float realTextSize = fg.textSize;
     if(fg.unit == Unit::PERCENTS)
         realTextSize = fg.textSize / 100.0f * getScreenSize().y;
@@ -101,9 +103,9 @@ void fg::gui::CDrawer::appendText2D(fgVec2f& outTextSize,
  * @param size
  * @param style
  */
-void fg::gui::CDrawer::appendBackground2D(const fgVec2f &pos,
-                                          const fgVec2f &size,
-                                          CStyleContent& style) {
+void gui::CDrawer::appendBackground2D(const Vec2f &pos,
+                                      const Vec2f &size,
+                                      CStyleContent& style) {
     if(!m_pResourceMgr)
         return;
     int index = 0;
@@ -122,10 +124,10 @@ void fg::gui::CDrawer::appendBackground2D(const fgVec2f &pos,
             }
         }
     }
-    fgVec2f uv1(0, 1); // upper left corner
-    fgVec2f uv2(1, 0); // lower right corner
+    Vec2f uv1(0, 1); // upper left corner
+    Vec2f uv2(1, 0); // lower right corner
     if(background.style == SBackground::Style::TILED) {
-        fgVec2f ratio(1.0f, 1.0f);
+        Vec2f ratio(1.0f, 1.0f);
         if(pTexture) {
             ratio.x = size.x / (float)pTexture->getWidth();
             ratio.y = size.y / (float)pTexture->getHeight();
@@ -143,9 +145,9 @@ void fg::gui::CDrawer::appendBackground2D(const fgVec2f &pos,
  * @param size
  * @param style
  */
-void fg::gui::CDrawer::appendBorder2D(const fgVec2f &pos,
-                                      const fgVec2f &size,
-                                      CStyleContent& style) {
+void gui::CDrawer::appendBorder2D(const Vec2f &pos,
+                                  const Vec2f &size,
+                                  CStyleContent& style) {
     if(!m_pResourceMgr)
         return;
     SBorderGroup &border = style.getBorder();
@@ -166,27 +168,27 @@ void fg::gui::CDrawer::appendBorder2D(const fgVec2f &pos,
     twidth = style.getBorder().top.width;
     bwidth = style.getBorder().bottom.width;
     // Left
-    fgVec2f pos1(pos.x - lwidth, pos.y - twidth);
-    fgVec2f size1(lwidth, size.y + twidth + bwidth);
+    Vec2f pos1(pos.x - lwidth, pos.y - twidth);
+    Vec2f size1(lwidth, size.y + twidth + bwidth);
 
     // Top
-    fgVec2f pos2(pos.x, pos.y - twidth);
-    fgVec2f size2(size.x, twidth);
+    Vec2f pos2(pos.x, pos.y - twidth);
+    Vec2f size2(size.x, twidth);
 
     // Right
-    fgVec2f pos3(pos.x + size.x, pos.y - twidth);
-    fgVec2f size3(rwidth, size.y + twidth + bwidth);
+    Vec2f pos3(pos.x + size.x, pos.y - twidth);
+    Vec2f size3(rwidth, size.y + twidth + bwidth);
 
     // Bottom
-    fgVec2f pos4(pos.x, pos.y + size.y);
-    fgVec2f size4(size.x, bwidth);
+    Vec2f pos4(pos.x, pos.y + size.y);
+    Vec2f size4(size.x, bwidth);
 
     drawCall->setColor(style.getBorder().left.color);
-    drawCall->appendRect2D(pos1, size1, fgVec2f(0, 1), fgVec2f(1, 0), FG_FALSE);
+    drawCall->appendRect2D(pos1, size1, Vec2f(0, 1), Vec2f(1, 0), FG_FALSE);
     drawCall->setColor(style.getBorder().top.color);
-    drawCall->appendRect2D(pos2, size2, fgVec2f(0, 1), fgVec2f(1, 0), FG_FALSE);
+    drawCall->appendRect2D(pos2, size2, Vec2f(0, 1), Vec2f(1, 0), FG_FALSE);
     drawCall->setColor(style.getBorder().right.color);
-    drawCall->appendRect2D(pos3, size3, fgVec2f(0, 1), fgVec2f(1, 0), FG_FALSE);
+    drawCall->appendRect2D(pos3, size3, Vec2f(0, 1), Vec2f(1, 0), FG_FALSE);
     drawCall->setColor(style.getBorder().bottom.color);
-    drawCall->appendRect2D(pos4, size4, fgVec2f(0, 1), fgVec2f(1, 0), FG_FALSE);
+    drawCall->appendRect2D(pos4, size4, Vec2f(0, 1), Vec2f(1, 0), FG_FALSE);
 }

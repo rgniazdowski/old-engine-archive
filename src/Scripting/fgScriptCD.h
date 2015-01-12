@@ -100,13 +100,13 @@ namespace LPCD {
      * FG VECTOR 2I
      **************************************************************************/
 
-    template<> struct Type<fgVector2i> {
-        static inline void Push(lua_State* L, const fgVector2i& value) {
+    template<> struct Type<fg::Vector2i> {
+        static inline void Push(lua_State* L, const fg::Vector2i& value) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
             void *ptr = (void*)&value;
             LuaPlus::LuaObject obj = state->BoxPointer(ptr);
         #if defined(FG_DEBUG)
-            FG_LOG_DEBUG("Script: LPCD Push: ptr[%p], offset[%lu], type_name[fgVector2i]", ptr, (uintptr_t)ptr);
+            FG_LOG_DEBUG("Script: LPCD Push: ptr[%p], offset[%lu], type_name[fg::Vector2i]", ptr, (uintptr_t)ptr);
         #endif
             obj.SetMetatable(state->GetRegistry()[fgScriptMT->getMetatableName(fg::script::CMetatables::VECTOR2I_MT_ID)]);
         }
@@ -115,29 +115,29 @@ namespace LPCD {
             LuaPlus::LuaObject obj = state->Stack(idx);
             return obj.GetMetatable() == state->GetRegistry()[fgScriptMT->getMetatableName(fg::script::CMetatables::VECTOR2I_MT_ID)];
         }
-        static inline fgVector2i Get(lua_State* L, int idx) {
+        static inline fg::Vector2i Get(lua_State* L, int idx) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
-            return *(fgVector2i*)state->UnBoxPointer(idx);
+            return *(fg::Vector2i*)state->UnBoxPointer(idx);
         }
     };
 
-    template<> struct Type<fgVector2i&> : public Type<fgVector2i> {
+    template<> struct Type<fg::Vector2i&> : public Type<fg::Vector2i> {
     };
 
-    template<> struct Type<const fgVector2i&> : public Type<fgVector2i> {
+    template<> struct Type<const fg::Vector2i&> : public Type<fg::Vector2i> {
     };
 
     /***************************************************************************
      * FG VECTOR 2F
      **************************************************************************/
 
-    template<> struct Type<fgVector2f> {
-        static inline void Push(lua_State* L, const fgVector2f& value) {
+    template<> struct Type<fg::Vector2f> {
+        static inline void Push(lua_State* L, const fg::Vector2f& value) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
             void *ptr = (void*)&value;
             LuaPlus::LuaObject obj = state->BoxPointer(ptr);
         #if defined(FG_DEBUG)
-            FG_LOG_DEBUG("Script: LPCD Push: ptr[%p], offset[%lu], type_name[fgVector2f]", ptr, (uintptr_t)ptr);
+            FG_LOG_DEBUG("Script: LPCD Push: ptr[%p], offset[%lu], type_name[fg::Vector2f]", ptr, (uintptr_t)ptr);
         #endif
             obj.SetMetatable(state->GetRegistry()[fgScriptMT->getMetatableName(fg::script::CMetatables::VECTOR2F_MT_ID)]);
         }
@@ -146,30 +146,30 @@ namespace LPCD {
             LuaPlus::LuaObject obj = state->Stack(idx);
             return obj.GetMetatable() == state->GetRegistry()[fgScriptMT->getMetatableName(fg::script::CMetatables::VECTOR2F_MT_ID)];
         }
-        static inline fgVector2f Get(lua_State* L, int idx) {
+        static inline fg::Vector2f Get(lua_State* L, int idx) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
-            fgVector2f* ptr = (fgVector2f *)state->UnBoxPointer(idx);
+            fg::Vector2f* ptr = (fg::Vector2f *)state->UnBoxPointer(idx);
             return *ptr;
         }
     };
 
-    template<> struct Type<fgVector2f&> : public Type<fgVector2f> {
+    template<> struct Type<fg::Vector2f&> : public Type<fg::Vector2f> {
     };
 
-    template<> struct Type<const fgVector2f&> : public Type<fgVector2f> {
+    template<> struct Type<const fg::Vector2f&> : public Type<fg::Vector2f> {
     };
 
     /***************************************************************************
      * FG VECTOR 3I
      **************************************************************************/
 
-    template<> struct Type<fgVector3i> {
-        static inline void Push(lua_State* L, const fgVector3i& value) {
+    template<> struct Type<fg::Vector3i> {
+        static inline void Push(lua_State* L, const fg::Vector3i& value) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
             void *ptr = (void*)&value;
             LuaPlus::LuaObject obj = state->BoxPointer(ptr);
         #if defined(FG_DEBUG)
-            FG_LOG_DEBUG("Script: LPCD Push: ptr[%p], offset[%lu], type_name[fgVector3i]", ptr, (uintptr_t)ptr);
+            FG_LOG_DEBUG("Script: LPCD Push: ptr[%p], offset[%lu], type_name[fg::Vector3i]", ptr, (uintptr_t)ptr);
         #endif
             obj.SetMetatable(state->GetRegistry()[fgScriptMT->getMetatableName(fg::script::CMetatables::VECTOR3I_MT_ID)]);
         }
@@ -178,29 +178,29 @@ namespace LPCD {
             LuaPlus::LuaObject obj = state->Stack(idx);
             return obj.GetMetatable() == state->GetRegistry()[fgScriptMT->getMetatableName(fg::script::CMetatables::VECTOR3I_MT_ID)];
         }
-        static inline fgVector3i Get(lua_State* L, int idx) {
+        static inline fg::Vector3i Get(lua_State* L, int idx) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
-            return *(fgVector3i*)state->UnBoxPointer(idx);
+            return *(fg::Vector3i*)state->UnBoxPointer(idx);
         }
     };
 
-    template<> struct Type<fgVector3i&> : public Type<fgVector3i> {
+    template<> struct Type<fg::Vector3i&> : public Type<fg::Vector3i> {
     };
 
-    template<> struct Type<const fgVector3i&> : public Type<fgVector3i> {
+    template<> struct Type<const fg::Vector3i&> : public Type<fg::Vector3i> {
     };
 
     /***************************************************************************
      * FG VECTOR 3F
      **************************************************************************/
 
-    template<> struct Type<fgVector3f> {
-        static inline void Push(lua_State* L, const fgVector3f& value) {
+    template<> struct Type<fg::Vector3f> {
+        static inline void Push(lua_State* L, const fg::Vector3f& value) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
             void *ptr = (void*)&value;
             LuaPlus::LuaObject obj = state->BoxPointer(ptr);
         #if defined(FG_DEBUG)
-            FG_LOG_DEBUG("Script: LPCD Push: ptr[%p], offset[%lu], type_name[fgVector3f]", ptr, (uintptr_t)ptr);
+            FG_LOG_DEBUG("Script: LPCD Push: ptr[%p], offset[%lu], type_name[fg::Vector3f]", ptr, (uintptr_t)ptr);
         #endif
             obj.SetMetatable(state->GetRegistry()[fgScriptMT->getMetatableName(fg::script::CMetatables::VECTOR3F_MT_ID)]);
         }
@@ -209,29 +209,29 @@ namespace LPCD {
             LuaPlus::LuaObject obj = state->Stack(idx);
             return obj.GetMetatable() == state->GetRegistry()[fgScriptMT->getMetatableName(fg::script::CMetatables::VECTOR3F_MT_ID)];
         }
-        static inline fgVector3f Get(lua_State* L, int idx) {
+        static inline fg::Vector3f Get(lua_State* L, int idx) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
-            return *(fgVector3f*)state->UnBoxPointer(idx);
+            return *(fg::Vector3f*)state->UnBoxPointer(idx);
         }
     };
 
-    template<> struct Type<fgVector3f&> : public Type<fgVector3f> {
+    template<> struct Type<fg::Vector3f&> : public Type<fg::Vector3f> {
     };
 
-    template<> struct Type<const fgVector3f&> : public Type<fgVector3f> {
+    template<> struct Type<const fg::Vector3f&> : public Type<fg::Vector3f> {
     };
 
     /***************************************************************************
      * FG VECTOR 4I
      **************************************************************************/
 
-    template<> struct Type<fgVector4i> {
-        static inline void Push(lua_State* L, const fgVector4i& value) {
+    template<> struct Type<fg::Vector4i> {
+        static inline void Push(lua_State* L, const fg::Vector4i& value) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
             void *ptr = (void*)&value;
             LuaPlus::LuaObject obj = state->BoxPointer(ptr);
         #if defined(FG_DEBUG)
-            FG_LOG_DEBUG("Script: LPCD Push: ptr[%p], offset[%lu], type_name[fgVector4i]", ptr, (uintptr_t)ptr);
+            FG_LOG_DEBUG("Script: LPCD Push: ptr[%p], offset[%lu], type_name[fg::Vector4i]", ptr, (uintptr_t)ptr);
         #endif
             obj.SetMetatable(state->GetRegistry()[fgScriptMT->getMetatableName(fg::script::CMetatables::VECTOR4I_MT_ID)]);
         }
@@ -240,29 +240,29 @@ namespace LPCD {
             LuaPlus::LuaObject obj = state->Stack(idx);
             return obj.GetMetatable() == state->GetRegistry()[fgScriptMT->getMetatableName(fg::script::CMetatables::VECTOR4I_MT_ID)];
         }
-        static inline fgVector4i Get(lua_State* L, int idx) {
+        static inline fg::Vector4i Get(lua_State* L, int idx) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
-            return *(fgVector4i*)state->UnBoxPointer(idx);
+            return *(fg::Vector4i*)state->UnBoxPointer(idx);
         }
     };
 
-    template<> struct Type<fgVector4i&> : public Type<fgVector4i> {
+    template<> struct Type<fg::Vector4i&> : public Type<fg::Vector4i> {
     };
 
-    template<> struct Type<const fgVector4i&> : public Type<fgVector4i> {
+    template<> struct Type<const fg::Vector4i&> : public Type<fg::Vector4i> {
     };
 
     /***************************************************************************
      * FG VECTOR 4F
      **************************************************************************/
 
-    template<> struct Type<fgVector4f> {
-        static inline void Push(lua_State* L, const fgVector4f& value) {
+    template<> struct Type<fg::Vector4f> {
+        static inline void Push(lua_State* L, const fg::Vector4f& value) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
             void *ptr = (void*)&value;
             LuaPlus::LuaObject obj = state->BoxPointer(ptr);
         #if defined(FG_DEBUG)
-            FG_LOG_DEBUG("Script: LPCD Push: ptr[%p], offset[%lu], type_name[fgVector4f]", ptr, (uintptr_t)ptr);
+            FG_LOG_DEBUG("Script: LPCD Push: ptr[%p], offset[%lu], type_name[fg::Vector4f]", ptr, (uintptr_t)ptr);
         #endif
             obj.SetMetatable(state->GetRegistry()[fgScriptMT->getMetatableName(fg::script::CMetatables::VECTOR4F_MT_ID)]);
         }
@@ -271,16 +271,16 @@ namespace LPCD {
             LuaPlus::LuaObject obj = state->Stack(idx);
             return obj.GetMetatable() == state->GetRegistry()[fgScriptMT->getMetatableName(fg::script::CMetatables::VECTOR4F_MT_ID)];
         }
-        static inline fgVector4f Get(lua_State* L, int idx) {
+        static inline fg::Vector4f Get(lua_State* L, int idx) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
-            return *(fgVector4f*)state->UnBoxPointer(idx);
+            return *(fg::Vector4f*)state->UnBoxPointer(idx);
         }
     };
 
-    template<> struct Type<fgVector4f&> : public Type<fgVector4f> {
+    template<> struct Type<fg::Vector4f&> : public Type<fg::Vector4f> {
     };
 
-    template<> struct Type<const fgVector4f&> : public Type<fgVector4f> {
+    template<> struct Type<const fg::Vector4f&> : public Type<fg::Vector4f> {
     };
 }
 

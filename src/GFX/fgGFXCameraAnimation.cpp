@@ -21,7 +21,7 @@ m_mouseSpeed(0.002f),
 m_zoom(1.0f),
 m_distance(1.0f),
 m_dt(0.0f) {
-    fgVector3f position = fgVector3f(0, 20.0f, 300.0f);
+    Vector3f position = Vector3f(0, 20.0f, 300.0f);
     m_eye = position;
 }
 
@@ -35,17 +35,17 @@ fg::gfx::CCameraAnimation::~CCameraAnimation() { }
  */
 float *fg::gfx::CCameraAnimation::update(void) {
     if(m_type == FG_GFX_CAMERA_FREE) {
-        m_direction = fgVec3f(cos(m_vAngle) * sin(m_hAngle),
-                              sin(m_vAngle),
-                              cos(m_vAngle) * cos(m_hAngle)
-                              );
+        m_direction = Vector3f(cos(m_vAngle) * sin(m_hAngle),
+                               sin(m_vAngle),
+                               cos(m_vAngle) * cos(m_hAngle)
+                               );
 
-        m_right = fgVec3f(sin(m_hAngle - M_PI_2),
-                          0,
-                          cos(m_hAngle - M_PI_2)
-                          );
+        m_right = Vector3f(sin(m_hAngle - M_PI_2),
+                           0,
+                           cos(m_hAngle - M_PI_2)
+                           );
 
-        m_up = fgMath::cross(m_right, m_direction);
+        m_up = math::cross(m_right, m_direction);
         m_center = m_eye + m_direction;
     }
     //printf("eye:{%.2f,%.2f,%.2f}, center:{%.2f,%.2f,%.2f}, up:{%.2f,%.2f,%.2f}, m_direction:{%.2f,%.2f,%.2f}\n",

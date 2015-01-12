@@ -148,14 +148,14 @@ namespace fg {
              * @param fmt
              * @return 
              */
-            fgVector2f size(float charSize, const char *fmt, ...);
+            Vector2f size(float charSize, const char *fmt, ...);
             /**
              * 
              * @param string
              * @param charSize
              * @return 
              */
-            fgVector2f size(const char *string, float charSize);
+            Vector2f size(const char *string, float charSize);
 
             /**
              * 
@@ -196,7 +196,7 @@ namespace fg {
              * @param fmt
              * @return 
              */
-            static fgVector2f size(CFontResource *font, float charSize, const char *fmt, ...);
+            static Vector2f size(CFontResource *font, float charSize, const char *fmt, ...);
 
             /**
              * 
@@ -205,7 +205,7 @@ namespace fg {
              * @param charSize
              * @return 
              */
-            static fgVector2f size(CFontResource *font, const char *string, float charSize);
+            static Vector2f size(CFontResource *font, const char *string, float charSize);
 
             /**
              * Set current font used for drawing

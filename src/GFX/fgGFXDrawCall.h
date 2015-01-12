@@ -75,13 +75,13 @@ namespace fg {
             /// Pointers within must be always valid
             fgGfxDrawingInfo m_drawingInfo;
             /// Special vector data
-            fgVertexData *m_vecDataBase;
+            CVertexData *m_vecDataBase;
             ///
-            fgVertexData *m_vecData2v;
+            CVertexData *m_vecData2v;
             ///
-            fgVertexData *m_vecData3v;
+            CVertexData *m_vecData3v;
             ///
-            fgVertexData *m_vecData4v;
+            CVertexData *m_vecData4v;
             /// Pointer to the shader program used in this draw call
             /// It can be set to NULL, then the draw call will use
             /// last active shader program. The pointer to the shader
@@ -115,9 +115,9 @@ namespace fg {
             /// Current color used
             fgColor4f m_color;
             /// Holds the value for the relative move
-            fgVector3f m_relMove;
+            Vector3f m_relMove;
             /// Scissor box for current draw call
-            fgVector4i m_scissorBox;
+            Vector4i m_scissorBox;
             ///
             fg::util::FastCmp m_fastCmp;
             /// Holds value for special Z index used for more direct sorting
@@ -161,31 +161,58 @@ namespace fg {
              * 
              * @param pMesh
              */
-            void setupFromMesh(const fgGfxMeshBase* pMesh);
+            void setupFromMesh(const SMeshBase* pMesh);
 
             /**
              * 
              * @return 
              */
-            fgVector4i const & getScissorBox(void) const;
-            //
-            fgVector3f const & getRelMove(void) const;
-            // Returns the current Z index
+            Vector4i const & getScissorBox(void) const;
+            /**
+             * 
+             * @return 
+             */
+            Vector3f const & getRelMove(void) const;
+            /**
+             * Returns the current Z index
+             * @return 
+             */
             int getZIndex(void) const;
-            // Returns whether the draw call is managed
+            /**
+             * Returns whether the draw call is managed
+             * @return 
+             */
             fgBool isManaged(void) const;
-            // Returns the pointer to the attribute data array
+            /**
+             * Returns the pointer to the attribute data array
+             * @return 
+             */
             fgGfxAttributeData* getAttributeData(void);
-            // Returns currently active attribute mask
+            /**
+             * Returns currently active attribute mask
+             * @return 
+             */
             fgGFXuint getAttribMask(void) const;
-            // Returns the draw call type identifier
+            /**
+             * Returns the draw call type identifier
+             * @return 
+             */
             fgGfxDrawCallType getDrawCallType(void) const;
-            // Returns the append mode for the current draw call
+            /**
+             * Returns the append mode for the current draw call
+             * @return 
+             */
             fgGfxDrawAppendMode getDrawAppendMode(void) const;
-            // Returns the primitive mode used for drawing
+            /**
+             * Returns the primitive mode used for drawing
+             * @return 
+             */
             fgGfxPrimitiveMode getPrimitiveMode(void) const;
-            //
-            fgVertexData *getVertexData(void) const;
+            /**
+             * 
+             * @return 
+             */
+            CVertexData *getVertexData(void) const;
 
             /**
              * 
@@ -200,89 +227,161 @@ namespace fg {
              * @param pos
              * @param size
              */
-            void setScissorBox(const fgVector2i& pos, const fgVector2i & size);
+            void setScissorBox(const Vector2i& pos, const Vector2i & size);
             /**
              * 
              * @param dimensions
              */
-            void setScissorBox(const fgVector4i & dimensions);
+            void setScissorBox(const Vector4i & dimensions);
             /**
              * 
              * @param relMove
              */
-            void setRelMove(const fgVector3f & relMove);
+            void setRelMove(const Vector3f & relMove);
             /**
              * 
              * @param relMove
              */
-            void setRelMove(const fgVector2f & relMove);
-            // Sets the Z index to specified value
+            void setRelMove(const Vector2f & relMove);
+            /**
+             * Sets the Z index to specified value
+             * @param zIndex
+             */
             void setZIndex(const int zIndex);
-            // Increments by 1 the Z index
+            /**
+             * Increments by 1 the Z index
+             */
             void upZIndex(void);
-            // Lowers the Z index
+            /**
+             *  Lowers the Z index
+             */
             void downZIndex(void);
-            // Sets the draw call type
+            /**
+             * Sets the draw call type
+             * @param type
+             */
             void setDrawCallType(const fgGfxDrawCallType type);
-            // Sets the append mode
+            /**
+             * Sets the append mode
+             * @param mode
+             */
             void setDrawAppendMode(const fgGfxDrawAppendMode mode);
-            // Sets the primitive mode for the draw call
+            /**
+             *  Sets the primitive mode for the draw call
+             * @param mode
+             */
             void setPrimitiveMode(const fgGfxPrimitiveMode mode);
 
-            // Whether to set UVs, normals or colors active
+            /**
+             * Whether to set UVs, normals or colors active
+             * @param component
+             * @param reset
+             */
             void setComponentActive(unsigned int component, const fgBool reset = FG_FALSE);
 
-            // Set active color for the next data
+            /**
+             * Set active color for the next data
+             * @param color
+             */
             virtual void setColor(const fgColor3f & color);
-            // Set active color for the next data
+            /**
+             * Set active color for the next data
+             * @param color
+             */
             virtual void setColor(const fgColor4f & color);
-            // This will reset used color
+            /**
+             * This will reset used color
+             */
             virtual void resetColor(void);
 
-            // Sets the pointer to given MVP matrix
+            /**
+             * Sets the pointer to given MVP matrix
+             * @param MVP
+             */
             void setMVP(CMVPMatrix *MVP = NULL);
-            // Returns the pointer to currently used MVP matrix
+            /**
+             * Returns the pointer to currently used MVP matrix
+             * @return 
+             */
             CMVPMatrix * getMVP(void) const;
 
             // Can be null, which would mean that this draw call does not care about such thing
             // However it should be avoided. Shader program knows if it's being currently used.
             // Also only through shader manager given shader program can be set as active.
             void setShaderProgram(fg::gfx::CShaderProgram *pProgram = NULL);
-            // Returns the currently used shader program for this draw call
+            /**
+             * Returns the currently used shader program for this draw call
+             * @return 
+             */
             fg::gfx::CShaderProgram * getShaderProgram(void) const;
 
-            // Sets the texture pointer
+            /**
+             * Sets the texture pointer
+             * @param textureID
+             */
             void setTexture(const fgGfxTextureID & textureID);
-            // Returns the texture ID reference
+            /**
+             * Returns the texture ID reference
+             * @return 
+             */
             fgGfxTextureID const & getTexture(void) const;
-            // Returns the texture ID reference
+            /**
+             * Returns the texture ID reference
+             * @return 
+             */
             fgGfxTextureID & getTexture(void);
 
-            // Clear the buffers
+            /**
+             * Clear the buffers
+             */
             virtual void flush(void);
 
-            // Append simple rectangle next to the last one
-            void appendRect2D(const fgVec2f &size,
-                              const fgVec2f &uv1, const fgVec2f &uv2,
+            /**
+             * Append simple rectangle next to the last one
+             * @param size
+             * @param uv1
+             * @param uv2
+             * @param rewind
+             */
+            void appendRect2D(const Vector2f &size,
+                              const Vector2f &uv1, const Vector2f &uv2,
                               const fgBool rewind = FG_FALSE);
 
-            // Append simple rectangle with relative position to the last data
-            void appendRect2D(const fgVec2f &relPos, const fgVec2f &size,
-                              const fgVec2f &uv1, const fgVec2f &uv2,
+            /**
+             * Append simple rectangle with relative position to the last data
+             * @param relPos
+             * @param size
+             * @param uv1
+             * @param uv2
+             * @param rewind
+             */
+            void appendRect2D(const Vector2f &relPos, const Vector2f &size,
+                              const Vector2f &uv1, const Vector2f &uv2,
                               const fgBool rewind = FG_FALSE);
 
-            // Draw
+            /**
+             * 
+             */
             virtual void draw(void);
-            // Draw with relative 2D position
-            virtual inline void draw(const fgVec2f & relPos) {
-                CDrawCall::draw(fgMath::translate(fgMatrix4f(), fgVec3f(relPos.x, relPos.y, 0.0f)));
+            /**
+             * Draw with relative 2D position
+             * @param relPos
+             */
+            virtual inline void draw(const Vector2f & relPos) {
+                CDrawCall::draw(math::translate(Matrix4f(), Vector3f(relPos.x, relPos.y, 0.0f)));
             }
-            // Draw with relative 3D position
-            virtual inline void draw(const fgVec3f & relPos) {
-                CDrawCall::draw(fgMath::translate(fgMatrix4f(), relPos));
+            /**
+             * Draw with relative 3D position
+             * @param relPos
+             */
+            virtual inline void draw(const Vector3f & relPos) {
+                CDrawCall::draw(math::translate(Matrix4f(), relPos));
             }
-            // Draw with given model matrix
-            virtual inline void draw(const fgMatrix4f & modelMat) {
+            /**
+             * Draw with given model matrix
+             * @param modelMat
+             */
+            virtual inline void draw(const Matrix4f & modelMat) {
                 if(m_MVP && m_program) {
                     m_MVP->calculate(modelMat);
                 }

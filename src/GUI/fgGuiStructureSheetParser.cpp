@@ -76,8 +76,8 @@ void gui::CStructureSheetParser::startDocument(fgXMLDocument *document) { }
 /*
  *
  */
-fgVector3f gui::CStructureSheetParser::parseSpatialData(const char *data) {
-   fgVector3f out;
+Vector3f gui::CStructureSheetParser::parseSpatialData(const char *data) {
+   Vector3f out;
    if(!data)
       return out;
 
@@ -130,11 +130,11 @@ fgBool gui::CStructureSheetParser::parseWidgetAttributes(fg::gui::CWidget *pWidg
       } else if(strcasecmp(attrname, "ignoreState") == 0) {
          pWidget->setIgnoreState(FG_BOOL_FROM_TEXT(attrvalue));
       } else if(strcasecmp(attrname, "pos") == 0 || strcasecmp(attrname, "position") == 0) {
-         fgVector3f pos = parseSpatialData(attrvalue);
+         Vector3f pos = parseSpatialData(attrvalue);
          pWidget->setPosition(pos);
          pWidget->setRelativePos(pos);
       } else if(strcasecmp(attrname, "size") == 0) {
-         fgVector3f size = parseSpatialData(attrvalue);
+         Vector3f size = parseSpatialData(attrvalue);
          pWidget->setSize(size);
       } else if(strcasecmp(attrname, "link") == 0) {
          pWidget->setLink(attrvalue);

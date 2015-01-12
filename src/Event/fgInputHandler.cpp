@@ -204,7 +204,7 @@ fg::event::CInputHandler::~CInputHandler() {
  * Screen touch event.
  * @param point Pointer position
  */
-void fg::event::CInputHandler::handlePointerPressed(fgVector2i point, unsigned int touchID) {
+void fg::event::CInputHandler::handlePointerPressed(Vector2i point, unsigned int touchID) {
     if(touchID >= MAX_TOUCH_POINTS) {
         return;
     } else if(touchID == 0) {
@@ -267,7 +267,7 @@ void fg::event::CInputHandler::handlePointerPressed(fgVector2i point, unsigned i
  * Pointer move event.
  * @param point Pointer position
  */
-void fg::event::CInputHandler::handlePointerMoved(fgVector2i point, unsigned int touchID, fgPointerState state) {
+void fg::event::CInputHandler::handlePointerMoved(Vector2i point, unsigned int touchID, fgPointerState state) {
     if(touchID >= MAX_TOUCH_POINTS)
         return;
 
@@ -308,7 +308,7 @@ void fg::event::CInputHandler::handlePointerMoved(fgVector2i point, unsigned int
  * Pointer released.
  * @param point Pointer position
  */
-void fg::event::CInputHandler::handlePointerReleased(fgVector2i point, unsigned int touchID) {
+void fg::event::CInputHandler::handlePointerReleased(Vector2i point, unsigned int touchID) {
     if(touchID >= MAX_TOUCH_POINTS)
         return;
 
@@ -761,9 +761,9 @@ int32_t fg::event::CInputHandler::multiTouchButtonHandler(void* systemData, void
     if(!inputHandler->m_init)
         return 0;
     if(event->m_Pressed) {
-        inputHandler->handlePointerPressed(fgVector2i(event->m_x, event->m_y), event->m_TouchID);
+        inputHandler->handlePointerPressed(Vector2i(event->m_x, event->m_y), event->m_TouchID);
     } else {
-        inputHandler->handlePointerReleased(fgVector2i(event->m_x, event->m_y), event->m_TouchID);
+        inputHandler->handlePointerReleased(Vector2i(event->m_x, event->m_y), event->m_TouchID);
     }
 #elif defined(FG_USING_SDL2)
     SDL_TouchFingerEvent *event = (SDL_TouchFingerEvent *)systemData;
@@ -793,7 +793,7 @@ int32_t fg::event::CInputHandler::multiTouchMotionHandler(void* systemData, void
     s3ePointerTouchMotionEvent* event = (s3ePointerTouchMotionEvent*)systemData;
     if(!inputHandler->m_init)
         return 0;
-    inputHandler->handlePointerMoved(fgVector2i(event->m_x, event->m_y), event->m_TouchID, FG_POINTER_STATE_PRESSED);
+    inputHandler->handlePointerMoved(Vector2i(event->m_x, event->m_y), event->m_TouchID, FG_POINTER_STATE_PRESSED);
 #elif defined(FG_USING_SDL2)
 #endif
     return 0;
@@ -814,16 +814,16 @@ int32_t fg::event::CInputHandler::singleTouchButtonHandler(void* systemData, voi
 #if defined(FG_USING_MARMALADE)
     s3ePointerEvent* event = (s3ePointerEvent*)systemData;
     if(event->m_Pressed) {
-        inputReceiver->handlePointerPressed(fgVector2i(event->m_x, event->m_y));
+        inputReceiver->handlePointerPressed(Vector2i(event->m_x, event->m_y));
     } else {
-        inputReceiver->handlePointerReleased(fgVector2i(event->m_x, event->m_y));
+        inputReceiver->handlePointerReleased(Vector2i(event->m_x, event->m_y));
     }
 #elif defined(FG_USING_SDL2)
     SDL_MouseButtonEvent *event = (SDL_MouseButtonEvent *)systemData;
     if(event->type == SDL_MOUSEBUTTONDOWN) {
-        inputReceiver->handlePointerPressed(fgVector2i(event->x, event->y), (unsigned int)event->button);
+        inputReceiver->handlePointerPressed(Vector2i(event->x, event->y), (unsigned int)event->button);
     } else {
-        inputReceiver->handlePointerReleased(fgVector2i(event->x, event->y), (unsigned int)event->button);
+        inputReceiver->handlePointerReleased(Vector2i(event->x, event->y), (unsigned int)event->button);
     }
 #endif
     return 0;
@@ -844,11 +844,11 @@ int32_t fg::event::CInputHandler::singleTouchMotionHandler(void* systemData, voi
 #if defined(FG_USING_MARMALADE)
     s3ePointerMotionEvent* event = (s3ePointerMotionEvent*)systemData;
 
-    inputReceiver->handlePointerMoved(fgVector2i(event->m_x, event->m_y));
+    inputReceiver->handlePointerMoved(Vector2i(event->m_x, event->m_y));
 #elif defined(FG_USING_SDL2)
     SDL_MouseMotionEvent *event = (SDL_MouseMotionEvent *)systemData;
 
-    inputReceiver->handlePointerMoved(fgVector2i(event->x, event->y)/*, need ID? */, FG_DEFAULT_POINTER_ID, event->state);
+    inputReceiver->handlePointerMoved(Vector2i(event->x, event->y)/*, need ID? */, FG_DEFAULT_POINTER_ID, event->state);
 #endif
     return 0;
 }

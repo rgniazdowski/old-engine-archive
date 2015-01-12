@@ -95,35 +95,35 @@ namespace fg {
              * @param center
              * @param up
              */
-            void set(const fgVector3f &eye,
-                     const fgVector3f &center,
-                     const fgVector3f &up);
+            void set(const Vector3f &eye,
+                     const Vector3f &center,
+                     const Vector3f &up);
 
             /**
              * 
              * @param m
              */
-            void set(const fgMatrix4f &m);
+            void set(const Matrix4f &m);
 
             /**
              * 
              * @param point
              * @return 
              */
-            int testPoint(const fgVector3f &point);
+            int testPoint(const Vector3f &point);
             /**
              * 
              * @param point
              * @param radius
              * @return 
              */
-            int testSphere(const fgVector3f &point, const float radius);
+            int testSphere(const Vector3f &point, const float radius);
             /**
              * 
              * @param box
              * @return 
              */
-            int testAABB(const fgAABoundingBox3Df &box);
+            int testAABB(const AABoundingBox3Df &box);
 
         public:
             /**
@@ -154,21 +154,21 @@ namespace fg {
 
             struct {
                 /// Near Top Left
-                fgVector3f ntl;
+                Vector3f ntl;
                 /// Near Top Right
-                fgVector3f ntr;
+                Vector3f ntr;
                 /// Near Bottom Left
-                fgVector3f nbl;
+                Vector3f nbl;
                 /// Near Bottom Right
-                fgVector3f nbr;
+                Vector3f nbr;
                 /// Far Top Left
-                fgVector3f ftl;
+                Vector3f ftl;
                 /// Far Top Right
-                fgVector3f ftr;
+                Vector3f ftr;
                 /// Far Bottom Left
-                fgVector3f fbl;
+                Vector3f fbl;
                 /// Far Bottom Right
-                fgVector3f fbr;
+                Vector3f fbr;
             } m_point;
             ///
             float m_zNear;

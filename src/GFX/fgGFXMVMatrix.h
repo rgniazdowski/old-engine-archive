@@ -13,7 +13,7 @@
 
     #include "fgGFXCamera.h"
     #include "fgBool.h"
-    
+
 namespace fg {
 
     namespace gfx {
@@ -36,7 +36,7 @@ namespace fg {
              * @param modelMatrix
              * @return 
              */
-            virtual float *calculate(const fgMatrix4f & modelMatrix) {
+            virtual float *calculate(const Matrix4f & modelMatrix) {
                 m_modelViewMatrix = m_viewMatrix * modelMatrix;
                 return getModelViewMatPtr();
             }
@@ -48,7 +48,7 @@ namespace fg {
              * @return 
              */
             virtual float *calculate(CCamera *camera,
-                                     const fgMatrix4f & modelMatrix,
+                                     const Matrix4f & modelMatrix,
                                      fgBool updateMatrix = FG_TRUE) {
                 if(camera) {
                     m_eye = camera->getRefEye();
@@ -64,14 +64,14 @@ namespace fg {
              * 
              * @return 
              */
-            inline fgMatrix4f & getRefMVMatrix(void) {
+            inline Matrix4f & getRefMVMatrix(void) {
                 return m_modelViewMatrix;
             }
             /**
              * 
              * @return 
              */
-            inline fgMatrix4f const & getRefMVMatrix(void) const {
+            inline Matrix4f const & getRefMVMatrix(void) const {
                 return m_modelViewMatrix;
             }
             /**
@@ -79,26 +79,26 @@ namespace fg {
              * @return 
              */
             inline const float * getModelViewMatPtr(void) const {
-                return fgMath::value_ptr(m_modelViewMatrix);
+                return fg::math::value_ptr(m_modelViewMatrix);
             }
             /**
              * 
              * @return 
              */
             inline float * getModelViewMatPtr(void) {
-                return fgMath::value_ptr(m_modelViewMatrix);
+                return fg::math::value_ptr(m_modelViewMatrix);
             }
             /**
              * 
              */
             virtual inline void identity(void) {
                 CCamera::identity();
-                m_modelViewMatrix = fgMatrix4f();
+                m_modelViewMatrix = Matrix4f();
             }
 
         protected:
             /// 
-            fgMatrix4f m_modelViewMatrix;
+            Matrix4f m_modelViewMatrix;
         };
     };
 };

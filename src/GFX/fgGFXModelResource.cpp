@@ -116,7 +116,7 @@ fgBool fg::gfx::CModelResource::_loadOBJ(void) {
     }
     for(; itor != end; itor++) {
         m_numShapes++;
-        fgGfxShape *shape = (*itor);
+        SShape *shape = (*itor);
         FG_LOG_DEBUG("Model '%s': found shape '%s'", getNameStr(), shape->name.c_str());
         FG_LOG_DEBUG("Shape '%s': nvec: %d, nnorm: %d, nuvs: %d", shape->name.c_str(), shape->mesh->getNumVertices(), shape->mesh->getNumNormals(), shape->mesh->getNumUVs());
         if(shape->material) {
@@ -158,9 +158,9 @@ fgBool fg::gfx::CModelResource::_loadOBJ(void) {
     }
     if(!m_materialOverride) {
         if(!m_numShapes)
-            m_materialOverride = new fgGfxMaterial();
+            m_materialOverride = new SMaterial();
         else
-            m_materialOverride = new fgGfxMaterial(*this->m_shapes[0]->material);
+            m_materialOverride = new SMaterial(*this->m_shapes[0]->material);
     }
     m_size += m_materialOverride->getDataSize();
     FG_LOG_DEBUG("Model '%s': vertices: %d, normals: %d, indices: %d, uvs: %d", getNameStr(),
@@ -257,7 +257,7 @@ fgBool fg::gfx::CModelResource::recreate(void) {
 void fg::gfx::CModelResource::dispose(void) {
     int n = (int)m_shapes.size();
     for(int i = 0; i < n; i++) {
-        fgGfxShape *shape = m_shapes[i];
+        SShape *shape = m_shapes[i];
         m_shapes[i] = NULL;
         delete shape;
         shape = NULL;

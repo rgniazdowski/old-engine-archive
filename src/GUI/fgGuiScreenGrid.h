@@ -78,8 +78,8 @@ namespace fg {
             float transformToPixels(int grid_position) const;
             float transformToPixels(float grid_position) const;
 
-            fgVector2f transform(fgVector2f grid_position) const;
-            fgVector2f transform(float grid_position_x, float grid_position_y) const;
+            Vector2f transform(Vector2f grid_position) const;
+            Vector2f transform(float grid_position_x, float grid_position_y) const;
         };
 
     };

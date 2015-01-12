@@ -37,6 +37,6 @@ void gui::CLabel::setDefaults(void) {
  * 
  * @return 
  */
-fgBoundingBox3Df gui::CLabel::updateBounds(void) {
+gfx::BoundingBox3Df gui::CLabel::updateBounds(void) {
     return base_type::updateBounds();
 }

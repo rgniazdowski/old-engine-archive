@@ -18,7 +18,7 @@
 /**
  * 
  */
-fg::gfx::CSceneNodeMesh::CSceneNodeMesh(fgGfxMeshBase *pMesh, CSceneNode *pParent) :
+fg::gfx::CSceneNodeMesh::CSceneNodeMesh(SMeshBase *pMesh, CSceneNode *pParent) :
 CSceneNode(FG_GFX_SCENE_NODE_MESH, pParent) {
     CSceneNode::setNodeType(FG_GFX_SCENE_NODE_MESH);
     if(m_drawCall) {
@@ -45,7 +45,7 @@ fg::gfx::CSceneNodeMesh::~CSceneNodeMesh() { }
  * 
  * @param pMesh
  */
-void fg::gfx::CSceneNodeMesh::setMesh(fgGfxMeshBase* pMesh) {
+void fg::gfx::CSceneNodeMesh::setMesh(SMeshBase* pMesh) {
     if(!pMesh)
         return;
     CSceneNode::setNodeType(FG_GFX_SCENE_NODE_MESH);

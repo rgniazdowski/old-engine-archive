@@ -154,11 +154,11 @@ namespace fg {
             CStyleContent m_styles[(int)State::COUNT];
 
             /// Relative position in pixels
-            fgVector3f m_relPos;
+            Vector3f m_relPos;
             /// Position (this is where the widget is currently drawn) and size of the widget
-            fgBoundingBox3Df m_bbox;
+            gfx::BoundingBox3Df m_bbox;
             /// Current text size, this is updated automatically via appendText functions
-            fgVector2f m_textSize;
+            Vector2f m_textSize;
 
             /// This callback will be executed when widget is focused
             CGuiCallback *m_onFocus;
@@ -249,13 +249,13 @@ namespace fg {
              * 
              * @return 
              */
-            virtual fgBoundingBox3Df updateBounds(void);
+            virtual gfx::BoundingBox3Df updateBounds(void);
             /**
              * 
              * @param bbox
              * @return 
              */
-            virtual fgBoundingBox3Df updateBounds(const fgBoundingBox3Df &bbox);
+            virtual gfx::BoundingBox3Df updateBounds(const gfx::BoundingBox3Df &bbox);
             /**
              * 
              */
@@ -368,49 +368,49 @@ namespace fg {
              * 
              * @param pos
              */
-            virtual void setPosition(const fgVector3f& pos) {
+            virtual void setPosition(const Vector3f& pos) {
                 m_bbox.pos = pos;
             }
             /**
              * 
              * @return 
              */
-            virtual fgVector3f& getPosition(void) {
+            virtual Vector3f& getPosition(void) {
                 return m_bbox.pos;
             }
             /**
              * 
              * @return 
              */
-            inline fgVector3f& getRelativePos(void) {
+            inline Vector3f& getRelativePos(void) {
                 return m_relPos;
             }
             /**
              * 
              * @param relPos
              */
-            inline void setRelativePos(const fgVector3f& relPos) {
+            inline void setRelativePos(const Vector3f& relPos) {
                 m_relPos = relPos;
             }
             /**
              * 
              * @param size
              */
-            inline void setSize(const fgVector3f& size) {
+            inline void setSize(const Vector3f& size) {
                 m_bbox.size = size;
             }
             /**
              * Returns the reference to the vector holding widget size
              * @return 
              */
-            inline fgVector3f& getSize(void) {
+            inline Vector3f& getSize(void) {
                 return m_bbox.size;
             }
             /**
              * Returns the reference to the bounding box
              * @return 
              */
-            inline fgBoundingBox3Df& getBBox(void) {
+            inline gfx::BoundingBox3Df& getBBox(void) {
                 return m_bbox;
             }
             /**

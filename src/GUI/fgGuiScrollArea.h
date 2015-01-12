@@ -45,11 +45,11 @@ namespace fg {
             /// Vertical slider
             CSlider *m_vSlider;
             /// Relative move of the content based on the w/h sliders
-            fgVector2f m_relMove;
+            Vector2f m_relMove;
             /// Which slider to show?
             SliderSwitch m_sliderSwitch;
             /// Special bounding box describing the inner content (container)
-            fgBoundingBox3Df m_contentBBox;
+            gfx::BoundingBox3Df m_contentBBox;
 
         protected:
             /**
@@ -89,14 +89,14 @@ namespace fg {
              * 
              * @return 
              */
-            virtual fgBoundingBox3Df updateBounds(void);
+            virtual gfx::BoundingBox3Df updateBounds(void);
 
             /**
              * 
              * @param bbox
              * @return 
              */
-            virtual fgBoundingBox3Df updateBounds(const fgBoundingBox3Df &bbox);
+            virtual gfx::BoundingBox3Df updateBounds(const gfx::BoundingBox3Df &bbox);
 
             /**
              * 

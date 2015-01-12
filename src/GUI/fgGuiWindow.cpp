@@ -36,7 +36,7 @@ void gui::CWindow::setDefaults(void) {
  * 
  * @return 
  */
-fgBoundingBox3Df gui::CWindow::updateBounds(void) {
+gfx::BoundingBox3Df gui::CWindow::updateBounds(void) {
     return fg::gui::CContainer::updateBounds();
 }
 

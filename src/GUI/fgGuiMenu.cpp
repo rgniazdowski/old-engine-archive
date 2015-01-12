@@ -59,7 +59,7 @@ void gui::CMenu::setDefaults(void) {
 /*
  *
  */
-fgBoundingBox3Df gui::CMenu::updateBounds(void) {
+gfx::BoundingBox3Df gui::CMenu::updateBounds(void) {
     return CContainer::updateBounds();
 }
 

@@ -11,12 +11,14 @@
 #include "fgGFXPlatform.h"
 #include "Util/fgMemory.h"
 
-const unsigned short fgGfxMeshSoA::POSITIONS_VBO_ARRAY_IDX = 0;
-const unsigned short fgGfxMeshSoA::VERTICES_VBO_ARRAY_IDX = 0;
-const unsigned short fgGfxMeshSoA::NORMALS_VBO_ARRAY_IDX = 1;
-const unsigned short fgGfxMeshSoA::TEX_COORDS_VBO_ARRAY_IDX = 2;
-const unsigned short fgGfxMeshSoA::UVS_VBO_ARRAY_IDX = 2;
-const unsigned short fgGfxMeshSoA::INDICES_VBO_ARRAY_IDX = 3;
+using namespace fg;
+
+const unsigned short gfx::SMeshSoA::POSITIONS_VBO_ARRAY_IDX = 0;
+const unsigned short gfx::SMeshSoA::VERTICES_VBO_ARRAY_IDX = 0;
+const unsigned short gfx::SMeshSoA::NORMALS_VBO_ARRAY_IDX = 1;
+const unsigned short gfx::SMeshSoA::TEX_COORDS_VBO_ARRAY_IDX = 2;
+const unsigned short gfx::SMeshSoA::UVS_VBO_ARRAY_IDX = 2;
+const unsigned short gfx::SMeshSoA::INDICES_VBO_ARRAY_IDX = 3;
 
 /******************************************************************************
  * MESH SOA FUNCTIONS - STRUCTURE OF ARRAYS
@@ -26,7 +28,7 @@ const unsigned short fgGfxMeshSoA::INDICES_VBO_ARRAY_IDX = 3;
  * Get the indices VBO ID
  * @return  GFX id for indices VBO or 0 if not generated or invalid
  */
-fgGFXuint fgGfxMeshSoA::getIndicesVBO(void) const {
+fgGFXuint gfx::SMeshSoA::getIndicesVBO(void) const {
     if(!hasVBO())
         return 0;
     return getPtrVBO()[INDICES_VBO_ARRAY_IDX].id;
@@ -37,7 +39,7 @@ fgGFXuint fgGfxMeshSoA::getIndicesVBO(void) const {
  * @return  Pointer to indices array. May be 0 (NULL) if VBO is
  *          generated (offset) or there are no indices at all
  */
-fgGFXvoid *fgGfxMeshSoA::getIndicesPointer(void) const {
+fgGFXvoid *gfx::SMeshSoA::getIndicesPointer(void) const {
     if(!hasVBO())
         return (fgGFXvoid *)((unsigned int*)&indices.front());
     return (fgGFXvoid *)0;
@@ -48,7 +50,7 @@ fgGFXvoid *fgGfxMeshSoA::getIndicesPointer(void) const {
  * @param pDataArray
  * @return 
  */
-fgGFXboolean fgGfxMeshSoA::refreshAttributes(fgGfxAttributeData *pDataArray) const {
+fgGFXboolean gfx::SMeshSoA::refreshAttributes(fgGfxAttributeData *pDataArray) const {
     if(!pDataArray)
         return FG_GFX_FALSE;
     // 3V - pos + norm + uv
@@ -116,7 +118,7 @@ fgGFXboolean fgGfxMeshSoA::refreshAttributes(fgGfxAttributeData *pDataArray) con
  * @param pDataArray
  * @return 
  */
-fgGFXboolean fgGfxMeshSoA::setupAttributes(fgGfxAttributeData *pDataArray) const {
+fgGFXboolean gfx::SMeshSoA::setupAttributes(fgGfxAttributeData *pDataArray) const {
     if(!pDataArray)
         return FG_GFX_FALSE;
     // 3V - pos + norm + uv
@@ -131,7 +133,7 @@ fgGFXboolean fgGfxMeshSoA::setupAttributes(fgGfxAttributeData *pDataArray) const
     pDataArray[index].size = 3;
     pDataArray[index].type = FG_GFX_POSITION;
     pDataArray[index].dataType = FG_GFX_FLOAT;
-    pDataArray[index].stride = sizeof (fgVector3f);
+    pDataArray[index].stride = sizeof (Vector3f);
     pDataArray[index].isEnabled = FG_TRUE;
     pDataArray[index].isInterleaved = FG_FALSE; // SoA is not interleaved
     pDataArray[index].isNormalized = FG_FALSE;
@@ -155,7 +157,7 @@ fgGFXboolean fgGfxMeshSoA::setupAttributes(fgGfxAttributeData *pDataArray) const
     pDataArray[index].size = 3;
     pDataArray[index].type = FG_GFX_NORMAL;
     pDataArray[index].dataType = FG_GFX_FLOAT;
-    pDataArray[index].stride = sizeof (fgVector3f);
+    pDataArray[index].stride = sizeof (Vector3f);
     pDataArray[index].isEnabled = FG_TRUE;
     pDataArray[index].isInterleaved = FG_FALSE; // SoA is not interleaved
     pDataArray[index].isNormalized = FG_FALSE;
@@ -178,7 +180,7 @@ fgGFXboolean fgGfxMeshSoA::setupAttributes(fgGfxAttributeData *pDataArray) const
     pDataArray[index].size = 2;
     pDataArray[index].type = FG_GFX_TEXTURE_COORD;
     pDataArray[index].dataType = FG_GFX_FLOAT;
-    pDataArray[index].stride = sizeof (fgVector2f);
+    pDataArray[index].stride = sizeof (Vector2f);
     pDataArray[index].isEnabled = FG_TRUE;
     pDataArray[index].isInterleaved = FG_FALSE; // SoA is not interleaved
     pDataArray[index].isNormalized = FG_FALSE;
@@ -207,35 +209,35 @@ fgGFXboolean fgGfxMeshSoA::setupAttributes(fgGfxAttributeData *pDataArray) const
  * 
  * @return 
  */
-fgGFXboolean fgGfxMeshSoA::genBuffers(void) {
-    if(!fg::gfx::CPlatform::isInit())
+fgGFXboolean gfx::SMeshSoA::genBuffers(void) {
+    if(!gfx::CPlatform::isInit())
         return FG_GFX_FALSE;
     int &count = getRefVBOCount();
     count = 4;
-    fg::gfx::CPlatform::context()->genBuffers(count, getRefPtrVBO(), GL_STATIC_DRAW);
-    fg::gfx::CPlatform::context()->bindBuffer(getRefPtrVBO()[POSITIONS_VBO_ARRAY_IDX],
-                                         GL_ARRAY_BUFFER);
-    fg::gfx::CPlatform::context()->bufferData(getRefPtrVBO()[POSITIONS_VBO_ARRAY_IDX],
-                                         sizeof (fgGFXfloat) * vertices.size(),
-                                         (fgGFXvoid *)(&vertices.front()));
+    gfx::CPlatform::context()->genBuffers(count, getRefPtrVBO(), GL_STATIC_DRAW);
+    gfx::CPlatform::context()->bindBuffer(getRefPtrVBO()[POSITIONS_VBO_ARRAY_IDX],
+                                          GL_ARRAY_BUFFER);
+    gfx::CPlatform::context()->bufferData(getRefPtrVBO()[POSITIONS_VBO_ARRAY_IDX],
+                                          sizeof (fgGFXfloat) * vertices.size(),
+                                          (fgGFXvoid *)(&vertices.front()));
 
-    fg::gfx::CPlatform::context()->bindBuffer(getRefPtrVBO()[NORMALS_VBO_ARRAY_IDX],
-                                         GL_ARRAY_BUFFER);
-    fg::gfx::CPlatform::context()->bufferData(getRefPtrVBO()[NORMALS_VBO_ARRAY_IDX],
-                                         sizeof (fgGFXfloat) * normals.size(),
-                                         (fgGFXvoid *)(&normals.front()));
+    gfx::CPlatform::context()->bindBuffer(getRefPtrVBO()[NORMALS_VBO_ARRAY_IDX],
+                                          GL_ARRAY_BUFFER);
+    gfx::CPlatform::context()->bufferData(getRefPtrVBO()[NORMALS_VBO_ARRAY_IDX],
+                                          sizeof (fgGFXfloat) * normals.size(),
+                                          (fgGFXvoid *)(&normals.front()));
 
-    fg::gfx::CPlatform::context()->bindBuffer(getRefPtrVBO()[TEX_COORDS_VBO_ARRAY_IDX],
-                                         GL_ARRAY_BUFFER);
-    fg::gfx::CPlatform::context()->bufferData(getRefPtrVBO()[TEX_COORDS_VBO_ARRAY_IDX],
-                                         sizeof (fgGFXfloat) * uvs.size(),
-                                         (fgGFXvoid *)(&uvs.front()));
+    gfx::CPlatform::context()->bindBuffer(getRefPtrVBO()[TEX_COORDS_VBO_ARRAY_IDX],
+                                          GL_ARRAY_BUFFER);
+    gfx::CPlatform::context()->bufferData(getRefPtrVBO()[TEX_COORDS_VBO_ARRAY_IDX],
+                                          sizeof (fgGFXfloat) * uvs.size(),
+                                          (fgGFXvoid *)(&uvs.front()));
 
-    fg::gfx::CPlatform::context()->bindBuffer(getRefPtrVBO()[INDICES_VBO_ARRAY_IDX],
-                                         GL_ELEMENT_ARRAY_BUFFER);
-    fg::gfx::CPlatform::context()->bufferData(getRefPtrVBO()[INDICES_VBO_ARRAY_IDX],
-                                         sizeof (fgGFXushort) * indices.size(),
-                                         (fgGFXvoid *)(&indices.front()));
+    gfx::CPlatform::context()->bindBuffer(getRefPtrVBO()[INDICES_VBO_ARRAY_IDX],
+                                          GL_ELEMENT_ARRAY_BUFFER);
+    gfx::CPlatform::context()->bufferData(getRefPtrVBO()[INDICES_VBO_ARRAY_IDX],
+                                          sizeof (fgGFXushort) * indices.size(),
+                                          (fgGFXvoid *)(&indices.front()));
     return FG_GFX_TRUE;
 
 }
@@ -244,10 +246,10 @@ fgGFXboolean fgGfxMeshSoA::genBuffers(void) {
  * 
  * @return 
  */
-fgGFXboolean fgGfxMeshSoA::deleteBuffers(void) {
+fgGFXboolean gfx::SMeshSoA::deleteBuffers(void) {
     if(!getPtrVBO())
         return FG_GFX_FALSE;
-    fg::gfx::CPlatform::context()->deleteBuffers(getVBOCount(), getPtrVBO());
+    gfx::CPlatform::context()->deleteBuffers(getVBOCount(), getPtrVBO());
     return FG_GFX_TRUE;
 
 }
@@ -256,10 +258,10 @@ fgGFXboolean fgGfxMeshSoA::deleteBuffers(void) {
  * 
  * @return 
  */
-fgGFXboolean fgGfxMeshSoA::destroyBuffers(void) {
+fgGFXboolean gfx::SMeshSoA::destroyBuffers(void) {
     if(!getPtrVBO())
         return FG_GFX_FALSE;
-    fg::gfx::CPlatform::context()->deleteBuffers(getVBOCount(), getPtrVBO());
+    gfx::CPlatform::context()->deleteBuffers(getVBOCount(), getPtrVBO());
     fgGfxBufferID *& refBuf = getRefPtrVBO();
     fgFree<fgGfxBufferID>(refBuf);
     refBuf = NULL;
@@ -270,18 +272,18 @@ fgGFXboolean fgGfxMeshSoA::destroyBuffers(void) {
  * MESH AOS FUNCTION - ARRAY OF STRUCTURES
  ******************************************************************************/
 
-const unsigned short fgGfxMeshAoS::POSITIONS_VBO_ARRAY_IDX = 0;
-const unsigned short fgGfxMeshAoS::VERTICES_VBO_ARRAY_IDX = 0;
-const unsigned short fgGfxMeshAoS::NORMALS_VBO_ARRAY_IDX = 0;
-const unsigned short fgGfxMeshAoS::TEX_COORDS_VBO_ARRAY_IDX = 0;
-const unsigned short fgGfxMeshAoS::UVS_VBO_ARRAY_IDX = 0;
-const unsigned short fgGfxMeshAoS::INDICES_VBO_ARRAY_IDX = 1;
+const unsigned short gfx::SMeshAoS::POSITIONS_VBO_ARRAY_IDX = 0;
+const unsigned short gfx::SMeshAoS::VERTICES_VBO_ARRAY_IDX = 0;
+const unsigned short gfx::SMeshAoS::NORMALS_VBO_ARRAY_IDX = 0;
+const unsigned short gfx::SMeshAoS::TEX_COORDS_VBO_ARRAY_IDX = 0;
+const unsigned short gfx::SMeshAoS::UVS_VBO_ARRAY_IDX = 0;
+const unsigned short gfx::SMeshAoS::INDICES_VBO_ARRAY_IDX = 1;
 
 /**
  * Get the indices VBO ID
  * @return  GFX id for indices VBO or 0 if not generated or invalid
  */
-fgGFXuint fgGfxMeshAoS::getIndicesVBO(void) const {
+fgGFXuint gfx::SMeshAoS::getIndicesVBO(void) const {
     if(!hasVBO())
         return 0;
     return getPtrVBO()[INDICES_VBO_ARRAY_IDX].id;
@@ -292,7 +294,7 @@ fgGFXuint fgGfxMeshAoS::getIndicesVBO(void) const {
  * @return  Pointer to indices array. May be 0 (NULL) if VBO is
  *          generated (offset) or there are no indices at all
  */
-fgGFXvoid *fgGfxMeshAoS::getIndicesPointer(void) const {
+fgGFXvoid *gfx::SMeshAoS::getIndicesPointer(void) const {
     if(!hasVBO())
         return (fgGFXvoid *)((unsigned int*)&indices.front());
     return (fgGFXvoid *)0;
@@ -302,35 +304,35 @@ fgGFXvoid *fgGfxMeshAoS::getIndicesPointer(void) const {
  * 
  * @return  GFX_TRUE if buffers (VBO) were generated successfully
  */
-fgGFXboolean fgGfxMeshAoS::genBuffers(void) {
-    if(!fg::gfx::CPlatform::isInit())
+fgGFXboolean gfx::SMeshAoS::genBuffers(void) {
+    if(!gfx::CPlatform::isInit())
         return FG_GFX_FALSE;
     int &count = getRefVBOCount();
     count = 2;
-    fg::gfx::CPlatform::context()->genBuffers(count, getRefPtrVBO(), GL_STATIC_DRAW);
-    fg::gfx::CPlatform::context()->bindBuffer(getRefPtrVBO()[VERTICES_VBO_ARRAY_IDX],
-                                         GL_ARRAY_BUFFER);
+    gfx::CPlatform::context()->genBuffers(count, getRefPtrVBO(), GL_STATIC_DRAW);
+    gfx::CPlatform::context()->bindBuffer(getRefPtrVBO()[VERTICES_VBO_ARRAY_IDX],
+                                          GL_ARRAY_BUFFER);
 
-    fg::gfx::CPlatform::context()->bufferData(getRefPtrVBO()[VERTICES_VBO_ARRAY_IDX],
-                                         this->stride() * this->size(),
-                                         fgGfxMeshAoS::front());
+    gfx::CPlatform::context()->bufferData(getRefPtrVBO()[VERTICES_VBO_ARRAY_IDX],
+                                          this->stride() * this->size(),
+                                          gfx::SMeshAoS::front());
 
-    fg::gfx::CPlatform::context()->bindBuffer(getRefPtrVBO()[INDICES_VBO_ARRAY_IDX],
-                                         GL_ELEMENT_ARRAY_BUFFER);
+    gfx::CPlatform::context()->bindBuffer(getRefPtrVBO()[INDICES_VBO_ARRAY_IDX],
+                                          GL_ELEMENT_ARRAY_BUFFER);
 
-    fg::gfx::CPlatform::context()->bufferData(getRefPtrVBO()[INDICES_VBO_ARRAY_IDX],
-                                         sizeof (fgGFXushort) * indices.size(),
-                                         (fgGFXvoid *)(&indices.front()));
+    gfx::CPlatform::context()->bufferData(getRefPtrVBO()[INDICES_VBO_ARRAY_IDX],
+                                          sizeof (fgGFXushort) * indices.size(),
+                                          (fgGFXvoid *)(&indices.front()));
 
     FG_LOG_DEBUG("GFX: MESH: binding buffer id: %d", (int)getRefPtrVBO()[VERTICES_VBO_ARRAY_IDX].id);
     FG_LOG_DEBUG("GFX: MESH: buffer id: %d, data: %p, stride: %d, size: %d",
-                       (int)getRefPtrVBO()[VERTICES_VBO_ARRAY_IDX].id, front(), stride(), size());
+                 (int)getRefPtrVBO()[VERTICES_VBO_ARRAY_IDX].id, front(), stride(), size());
     FG_LOG_DEBUG("GFX: MESH: binding buffer id: %d", (int)getRefPtrVBO()[INDICES_VBO_ARRAY_IDX].id);
     FG_LOG_DEBUG("GFX: MESH: buffer id: %d, data: %p, size(B): %d, size: %d",
-                       (int)getRefPtrVBO()[INDICES_VBO_ARRAY_IDX].id,
-                       (fgGFXvoid *)(&indices.front()),
-                       sizeof (fgGFXushort) * indices.size(),
-                       indices.size());
+                 (int)getRefPtrVBO()[INDICES_VBO_ARRAY_IDX].id,
+                 (fgGFXvoid *)(&indices.front()),
+                 sizeof (fgGFXushort) * indices.size(),
+                 indices.size());
 
     return FG_GFX_TRUE;
 
@@ -340,10 +342,10 @@ fgGFXboolean fgGfxMeshAoS::genBuffers(void) {
  * 
  * @return 
  */
-fgGFXboolean fgGfxMeshAoS::deleteBuffers(void) {
+fgGFXboolean gfx::SMeshAoS::deleteBuffers(void) {
     if(!getPtrVBO())
         return FG_GFX_FALSE;
-    fg::gfx::CPlatform::context()->deleteBuffers(getVBOCount(), getPtrVBO());
+    gfx::CPlatform::context()->deleteBuffers(getVBOCount(), getPtrVBO());
     return FG_GFX_TRUE;
 
 }
@@ -352,10 +354,10 @@ fgGFXboolean fgGfxMeshAoS::deleteBuffers(void) {
  * 
  * @return 
  */
-fgGFXboolean fgGfxMeshAoS::destroyBuffers(void) {
+fgGFXboolean gfx::SMeshAoS::destroyBuffers(void) {
     if(!getPtrVBO())
         return FG_GFX_FALSE;
-    fg::gfx::CPlatform::context()->deleteBuffers(getVBOCount(), getPtrVBO());
+    gfx::CPlatform::context()->deleteBuffers(getVBOCount(), getPtrVBO());
     fgGfxBufferID *& refBuf = getRefPtrVBO();
     fgFree<fgGfxBufferID>(refBuf);
     refBuf = NULL;

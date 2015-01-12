@@ -28,229 +28,235 @@
     #include "Hardware/fgQualityManager.h"
     #include "Scripting/fgScriptSubsystem.h"
     #include "GameLogic/fgGameLogic.h"
-
-class fgGameMain;
+namespace fg {
+    class CGameMain;
+};
     #define FG_TAG_GAME_MAIN_NAME       "GameMain"
-    #define FG_TAG_GAME_MAIN            FG_TAG_TYPE(fgGameMain)
-FG_TAG_TEMPLATE_ID_AUTO(fgGameMain, FG_TAG_GAME_MAIN_NAME);
+    #define FG_TAG_GAME_MAIN            FG_TAG_TYPE(fg::CGameMain)
+
+FG_TAG_TEMPLATE_ID_AUTO(fg::CGameMain, FG_TAG_GAME_MAIN_NAME);
+
 typedef FG_TAG_GAME_MAIN fgGameMainTag;
 
-/**
- *
- */
-class fgGameMain : public fg::event::CEventManager {
-public:
-    ///
-    typedef fgGameMainTag tag_type;
+namespace fg {
 
-public:
-    /**
-     * Default constructor for the Game Main object
-     * @param pEventMgr
-     */
-    fgGameMain(int argc, char **argv);
-    /**
-     * Default destructor for the Game Main object
-     */
-    virtual ~fgGameMain();
-
-protected:
     /**
      *
      */
-    void registerGameCallbacks(void);
-    /**
-     * 
-     */
-    void unregisterGameCallbacks(void);
+    class CGameMain : public event::CEventManager {
+    public:
+        ///
+        typedef fgGameMainTag tag_type;
 
-public:
+    public:
+        /**
+         * Default constructor for the Game Main object
+         * @param pEventMgr
+         */
+        CGameMain(int argc, char **argv);
+        /**
+         * Default destructor for the Game Main object
+         */
+        virtual ~CGameMain();
 
-    /**
-     * This needs to be called first before everything else.
-     * Function creates and initializes various subsystems
-     * @return  FG_TRUE if everything was initialized successfully, FG_FALSE otherwise
-     */
-    fgBool initSubsystems(void);
+    protected:
+        /**
+         *
+         */
+        void registerGameCallbacks(void);
+        /**
+         * 
+         */
+        void unregisterGameCallbacks(void);
 
-    /**
-     *  Loads main configuration files determining the next steps of game initialization
-     * @return 
-     */
-    fgBool loadConfiguration(void);
+    public:
 
-    /**
-     * Loads resources specified in configuration files (pre load phase)
-     * @return 
-     */
-    fgBool loadResources(void);
+        /**
+         * This needs to be called first before everything else.
+         * Function creates and initializes various subsystems
+         * @return  FG_TRUE if everything was initialized successfully, FG_FALSE otherwise
+         */
+        fgBool initSubsystems(void);
 
-    /**
-     * Unloads, frees and deletes all data from fgResourceManager subsystem
-     * @return 
-     */
-    fgBool releaseResources(void);
+        /**
+         *  Loads main configuration files determining the next steps of game initialization
+         * @return 
+         */
+        fgBool loadConfiguration(void);
 
-    // This frees the subsystems - simply deletes all singleton instances 
-    // (every main subsystem is a singleton) #FIXME #KILLALLSINGLETONS
-    fgBool closeSybsystems(void);
+        /**
+         * Loads resources specified in configuration files (pre load phase)
+         * @return 
+         */
+        fgBool loadResources(void);
 
-    // This function releases the resources and closes the subsystems
-    fgBool quit(void);
+        /**
+         * Unloads, frees and deletes all data from fgResourceManager subsystem
+         * @return 
+         */
+        fgBool releaseResources(void);
 
-    // Now main display function creates the buffer (vertex/color/texture coords buffers) 
-    // to be displayed in current frame. The real drawing of created buffers is inside the
-    // render function (which in the future should be in separate thread)
-    void display(void);
+        // This frees the subsystems - simply deletes all singleton instances 
+        // (every main subsystem is a singleton) #FIXME #KILLALLSINGLETONS
+        fgBool closeSybsystems(void);
 
-    // Begins the proper render of the created buffers
-    void render(void);
+        // This function releases the resources and closes the subsystems
+        fgBool quit(void);
 
-    // Update - all event handling, calling scripts, AI, game logic and others
-    void update(void);
+        // Now main display function creates the buffer (vertex/color/texture coords buffers) 
+        // to be displayed in current frame. The real drawing of created buffers is inside the
+        // render function (which in the future should be in separate thread)
+        void display(void);
 
-public:
-    /**
-     * 
-     * @return 
-     */
-    inline fgGfxMain *getGfxMain(void) const {
-        return m_gfxMain;
-    }
-    /**
-     * 
-     * @return 
-     */
-    inline fg::gui::CGuiMain *getGuiMain(void) const {
-        return m_guiMain;
-    }
-    /**
-     * 
-     * @return 
-     */
-    inline fgSettings *getSettings(void) const {
-        return m_settings;
-    }
-    /**
-     * 
-     * @return 
-     */
-    inline fgConfig *getMainConfig(void) const {
-        return m_mainConfig;
-    }
-    /**
-     * 
-     * @return 
-     */
-    inline fg::resource::CResourceManager *getResourceManager(void) const {
-        return m_resourceMgr;
-    }
-    /**
-     * 
-     * @return 
-     */
-    inline CEventManager *getEventManager(void) {
-        return static_cast<CEventManager *>(this);
-    }
-    /**
-     * 
-     * @return 
-     */
-    inline fg::event::CInputHandler *getInputHandler(void) const {
-        return m_inputHandler;
-    }
-    /**
-     * 
-     * @return 
-     */
-    inline fg::event::CJoypadController *getJoypadController(void) const {
-        return m_joypadController;
-    }
-    /**
-     * 
-     * @return 
-     */
-    inline fg::script::CScriptSubsystem *getScriptSubsystem(void) const {
-        return m_scriptSubsystem;
-    }
-    /**
-     * 
-     * @return 
-     */
-    inline fg::sfx::CSfxManager *getSoundManager(void) const {
-        return m_soundMgr;
-    }
-    /**
-     * 
-     * @return 
-     */
-    inline fg::game::Logic *getLogicManager(void) const {
-        return m_logicMgr;
-    }
+        // Begins the proper render of the created buffers
+        void render(void);
 
-protected:
-    /**
-     * 
-     * @param argv
-     * @return 
-     */
-    fgBool gameTouchHandler(fg::event::CArgumentList *argv);
-    /**
-     * 
-     * @param argv
-     * @return 
-     */
-    fgBool gameMouseHandler(fg::event::CArgumentList *argv);
-    /**
-     * 
-     * @param argv
-     * @return 
-     */
-    fgBool gameFreeLookHandler(fg::event::CArgumentList *argv);
+        // Update - all event handling, calling scripts, AI, game logic and others
+        void update(void);
 
-protected:
-    /**
-     * 
-     * @param pEventMgr
-     */
-    void setEventManager(void);
+    public:
+        /**
+         * 
+         * @return 
+         */
+        inline gfx::CGfxMain *getGfxMain(void) const {
+            return m_gfxMain;
+        }
+        /**
+         * 
+         * @return 
+         */
+        inline gui::CGuiMain *getGuiMain(void) const {
+            return m_guiMain;
+        }
+        /**
+         * 
+         * @return 
+         */
+        inline fgSettings *getSettings(void) const {
+            return m_settings;
+        }
+        /**
+         * 
+         * @return 
+         */
+        inline fgConfig *getMainConfig(void) const {
+            return m_mainConfig;
+        }
+        /**
+         * 
+         * @return 
+         */
+        inline resource::CResourceManager *getResourceManager(void) const {
+            return m_resourceMgr;
+        }
+        /**
+         * 
+         * @return 
+         */
+        inline CEventManager *getEventManager(void) {
+            return static_cast<CEventManager *>(this);
+        }
+        /**
+         * 
+         * @return 
+         */
+        inline event::CInputHandler *getInputHandler(void) const {
+            return m_inputHandler;
+        }
+        /**
+         * 
+         * @return 
+         */
+        inline event::CJoypadController *getJoypadController(void) const {
+            return m_joypadController;
+        }
+        /**
+         * 
+         * @return 
+         */
+        inline script::CScriptSubsystem *getScriptSubsystem(void) const {
+            return m_scriptSubsystem;
+        }
+        /**
+         * 
+         * @return 
+         */
+        inline sfx::CSfxManager *getSoundManager(void) const {
+            return m_soundMgr;
+        }
+        /**
+         * 
+         * @return 
+         */
+        inline fg::game::Logic *getLogicManager(void) const {
+            return m_logicMgr;
+        }
 
-private:
-    /// Number of the arguments passed to program
-    int m_argc;
-    /// Array of arguments passed to program
-    char **m_argv;
-    /// Main GFX subsystem object
-    fgGfxMain *m_gfxMain;
-    /// Main GUI (User Interface))
-    fg::gui::CGuiMain *m_guiMain;
-    /// Main, hard settings
-    fgSettings *m_settings;
-    /// Main config 
-    fgConfig *m_mainConfig;
-    /// Main Quality Manager
-    fgQualityManager *m_qualityMgr;
-    /// Main Resource Manager
-    fg::resource::CResourceManager *m_resourceMgr;
-    /// Resource factory object - registers create() methods for Resource Objects
-    fgResourceFactory *m_resourceFactory;
-    /// 
-    fg::event::CInputHandler *m_inputHandler;
-    /// Joypad/Joystick controller object
-    fg::event::CJoypadController *m_joypadController;
-    /// Builtin script subsystem - it needs access to all main managers
-    fg::script::CScriptSubsystem *m_scriptSubsystem;
-    /// Sound manager - loading, playing sounds
-    fg::sfx::CSfxManager *m_soundMgr;
-    /// Inner game logic
-    fg::game::Logic *m_logicMgr;
+    protected:
+        /**
+         * 
+         * @param argv
+         * @return 
+         */
+        fgBool gameTouchHandler(event::CArgumentList *argv);
+        /**
+         * 
+         * @param argv
+         * @return 
+         */
+        fgBool gameMouseHandler(event::CArgumentList *argv);
+        /**
+         * 
+         * @param argv
+         * @return 
+         */
+        fgBool gameFreeLookHandler(event::CArgumentList *argv);
 
-    /// Callback for Touch events
-    fg::event::CFunctionCallback *m_gameTouchCallback;
-    /// Callback for Mouse events
-    fg::event::CFunctionCallback *m_gameMouseCallback;
-    /// Special callback for game free look (controlling camera via touch/click)
-    fg::event::CFunctionCallback *m_gameFreeLookCallback;
+    protected:
+        /**
+         * 
+         * @param pEventMgr
+         */
+        void setEventManager(void);
+
+    private:
+        /// Number of the arguments passed to program
+        int m_argc;
+        /// Array of arguments passed to program
+        char **m_argv;
+        /// Main GFX subsystem object
+        gfx::CGfxMain *m_gfxMain;
+        /// Main GUI (User Interface))
+        gui::CGuiMain *m_guiMain;
+        /// Main, hard settings
+        fgSettings *m_settings;
+        /// Main config 
+        fgConfig *m_mainConfig;
+        /// Main Quality Manager
+        fgQualityManager *m_qualityMgr;
+        /// Main Resource Manager
+        resource::CResourceManager *m_resourceMgr;
+        /// Resource factory object - registers create() methods for Resource Objects
+        fgResourceFactory *m_resourceFactory;
+        /// 
+        event::CInputHandler *m_inputHandler;
+        /// Joypad/Joystick controller object
+        event::CJoypadController *m_joypadController;
+        /// Builtin script subsystem - it needs access to all main managers
+        script::CScriptSubsystem *m_scriptSubsystem;
+        /// Sound manager - loading, playing sounds
+        sfx::CSfxManager *m_soundMgr;
+        /// Inner game logic
+        game::Logic *m_logicMgr;
+
+        /// Callback for Touch events
+        event::CFunctionCallback *m_gameTouchCallback;
+        /// Callback for Mouse events
+        event::CFunctionCallback *m_gameMouseCallback;
+        /// Special callback for game free look (controlling camera via touch/click)
+        event::CFunctionCallback *m_gameFreeLookCallback;
+    };
 };
 
     #undef FG_INC_GAME_MAIN_BLOCK

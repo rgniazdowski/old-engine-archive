@@ -85,15 +85,15 @@ void fg::gfx::CLoader::update(const float diff) {
     /// Bind the splash texture
     m_pContext->bindTexture(m_pSplashTex->getRefGfxID());
     // Centered on screen, aspect ratio 1:1 regardless of texture dimensions (for now)
-    m_mat = fgMath::translate(fgMatrix4f(),
-                              fgVec3f(ww / 2.0f,
-                                      wh / 2.0f,
-                                      0.0f));
-    m_mat = fgMath::rotate(m_mat, (float)ratio*M_PIF*(70.0f/(float)FG_RAND(100,110)), fgVec3f(0.0f, 0.0f, 1.0f));
-    m_mat = fgMath::scale(m_mat, fgVec3f(mextent, mextent, 0.0f));
+    m_mat = math::translate(Matrix4f(),
+                            Vec3f(ww / 2.0f,
+                                  wh / 2.0f,
+                                  0.0f));
+    m_mat = math::rotate(m_mat, (float)ratio * M_PIF * (70.0f / (float)FG_RAND(100, 110)), Vec3f(0.0f, 0.0f, 1.0f));
+    m_mat = math::scale(m_mat, Vec3f(mextent, mextent, 0.0f));
     m_mvp.calculate(m_mat);
     m_pProgram->setUniform(&m_mvp);
-    fgGfxPrimitives::drawSquare2D();
+    CPrimitives::drawSquare2D();
 
     if(!m_pProgressTex || m_progress < FG_EPSILON) {
         m_pWindow->swapBuffers();
@@ -105,14 +105,14 @@ void fg::gfx::CLoader::update(const float diff) {
     /// Bind the progress texture
     m_pContext->bindTexture(m_pProgressTex->getRefGfxID());
     // Bottom-left of the screen
-    m_mat = fgMath::translate(fgMatrix4f(),
-                              fgVec3f(ww / 2.0f,
-                                      wh - ph / 2.0f,
-                                      0.0f));
-    m_mat = fgMath::scale(m_mat, fgVec3f(pw, ph, 0.0f));
+    m_mat = math::translate(Matrix4f(),
+                            Vec3f(ww / 2.0f,
+                                  wh - ph / 2.0f,
+                                  0.0f));
+    m_mat = math::scale(m_mat, Vec3f(pw, ph, 0.0f));
     m_mvp.calculate(m_mat);
     m_pProgram->setUniform(&m_mvp);
-    fgGfxPrimitives::drawSquare2D();
+    CPrimitives::drawSquare2D();
     m_pWindow->swapBuffers();
     FG_HardwareState->deviceYield(1);
 }

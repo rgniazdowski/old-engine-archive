@@ -55,18 +55,18 @@ void fg::gfx::CFrustum::setCamera(const float angle,
  * @param center
  * @param up
  */
-void fg::gfx::CFrustum::set(const fgVector3f &eye,
-                            const fgVector3f &center,
-                            const fgVector3f &up) {
-    fgVector3f dir, nc, fc, X, Y, Z;
+void fg::gfx::CFrustum::set(const Vector3f &eye,
+                            const Vector3f &center,
+                            const Vector3f &up) {
+    Vector3f dir, nc, fc, X, Y, Z;
 
     Z = eye - center;
-    Z = fgMath::normalize(Z);
+    Z = math::normalize(Z);
 
-    X = fgMath::cross(up, Z);
-    X = fgMath::normalize(X);
+    X = math::cross(up, Z);
+    X = math::normalize(X);
 
-    Y = fgMath::cross(Z, X);
+    Y = math::cross(Z, X);
 
     nc = eye - Z * m_zNear;
     fc = eye - Z * m_zFar;
@@ -84,25 +84,25 @@ void fg::gfx::CFrustum::set(const fgVector3f &eye,
     m_planes[NEARP].set(-Z, nc);
     m_planes[FARP].set(Z, fc);
 
-    fgVec3f aux, normal;
+    Vec3f aux, normal;
     aux = (nc + Y * m_nh) - eye;
-    aux = fgMath::normalize(aux);
-    normal = fgMath::cross(aux, X);
+    aux = math::normalize(aux);
+    normal = math::cross(aux, X);
     m_planes[TOP].set(normal, nc + Y * m_nh);
 
     aux = (nc - Y * m_nh) - eye;
-    aux = fgMath::normalize(aux);
-    normal = fgMath::cross(X, aux);
+    aux = math::normalize(aux);
+    normal = math::cross(X, aux);
     m_planes[BOTTOM].set(normal, nc - Y * m_nh);
 
     aux = (nc - X * m_nw) - eye;
-    aux = fgMath::normalize(aux);
-    normal = fgMath::cross(aux, Y);
+    aux = math::normalize(aux);
+    normal = math::cross(aux, Y);
     m_planes[LEFT].set(normal, nc - X * m_nw);
 
     aux = (nc + X * m_nw) - eye;
-    aux = fgMath::normalize(aux);
-    normal = fgMath::cross(Y, aux); //normal = Y * aux;
+    aux = math::normalize(aux);
+    normal = math::cross(Y, aux); //normal = Y * aux;
     m_planes[RIGHT].set(normal, nc + X * m_nw);
 
 #if defined(FG_DEBUG) && 0 // #FIXME
@@ -120,15 +120,15 @@ void fg::gfx::CFrustum::set(const fgVector3f &eye,
  * @param m
  * @return 
  */
-void fg::gfx::CFrustum::set(const fgMatrix4f &matrix) {
+void fg::gfx::CFrustum::set(const Matrix4f &matrix) {
     float a = 0.0f, b = 0.0f, c = 0.0f, d = 0.0f;
     // The elements of the 4x4 matrix are stored in
     // column-major order (see "OpenGL Programming Guide",
     // 3rd edition, pp 106, glLoadMatrix).
 #if defined(FG_DEBUG) // #FIXME
-    //dumpMatrix(fgMath::value_ptr(matrix), NULL); // #FIXME
+    //dumpMatrix(math::value_ptr(matrix), NULL); // #FIXME
 #endif
-    fgMatrix4f m = fgMath::transpose(matrix);
+    Matrix4f m = math::transpose(matrix);
     /***************************************************************************
      * Supporting Non-Identity World and View Matrices
      ***************************************************************************
@@ -247,7 +247,7 @@ void fg::gfx::CFrustum::set(const fgMatrix4f &matrix) {
  * @param p
  * @return 
  */
-int fg::gfx::CFrustum::testPoint(const fgVector3f &point) {
+int fg::gfx::CFrustum::testPoint(const Vector3f &point) {
     // #FIXME - OPTIMIZE!
     int result = INSIDE;
     for(int i = 0; i < 6; i++) {
@@ -264,7 +264,7 @@ int fg::gfx::CFrustum::testPoint(const fgVector3f &point) {
  * @param raio
  * @return 
  */
-int fg::gfx::CFrustum::testSphere(const fgVector3f &point, const float radius) {
+int fg::gfx::CFrustum::testSphere(const Vector3f &point, const float radius) {
     // #FIXME - OPTIMIZE!
     // #FIXME - remember that for now this all works with worldspace (MVP transform)
     int result = INSIDE;
@@ -285,13 +285,13 @@ int fg::gfx::CFrustum::testSphere(const fgVector3f &point, const float radius) {
  * @param b
  * @return 
  */
-int fg::gfx::CFrustum::testAABB(const fgAABoundingBox3Df &box) {
+int fg::gfx::CFrustum::testAABB(const AABoundingBox3Df &box) {
     if(!box.isValid())
         return OUTSIDE;
     // #FIXME - OPTIMIZE!
     int result = INSIDE;
-    fgVec3f center = box.getCenter();
-    fgVec3f extent = box.getExtent();
+    Vec3f center = box.getCenter();
+    Vec3f extent = box.getExtent();
 
     for(int i = 0; i < NUM_PLANES; i++) {
         //and since plane is(expected to be) constant for some number of boxes, 
@@ -300,9 +300,9 @@ int fg::gfx::CFrustum::testAABB(const fgAABoundingBox3Df &box) {
         //second vector, absPlane, that’s just the componentwise abs of plane
 
         //Using this notation, we get :
-        fgVec3f absPlane = fgMath::abs(m_planes[i].n);
-        float d = fgMath::dot(center, m_planes[i].n);
-        float r = fgMath::dot(extent, absPlane);
+        Vec3f absPlane = math::abs(m_planes[i].n);
+        float d = math::dot(center, m_planes[i].n);
+        float r = math::dot(extent, absPlane);
 
         if(d + r < -m_planes[i].d) {
             return OUTSIDE;

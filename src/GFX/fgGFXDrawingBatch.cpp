@@ -10,15 +10,17 @@
 #include "fgGFXDrawingBatch.h"
 #include "GFX/Shaders/fgGFXShaderManager.h"
 
+using namespace fg;
+
 /**
  * 
  * @param reservedSize
  * @param drawCallType
  * @param attribMask
  */
-fg::gfx::CDrawingBatch::CDrawingBatch(const unsigned int reservedSize,
-                                      const fgGfxDrawCallType drawCallType,
-                                      const fgGFXuint attribMask) :
+gfx::CDrawingBatch::CDrawingBatch(const unsigned int reservedSize,
+                                  const fgGfxDrawCallType drawCallType,
+                                  const fgGFXuint attribMask) :
 m_numDrawCalls(0),
 m_reservedSize(0),
 m_numNotManaged(0),
@@ -33,8 +35,8 @@ m_pShaderMgr(NULL) {
 /**
  *
  */
-fg::gfx::CDrawingBatch::~CDrawingBatch() {
-    fg::gfx::CDrawingBatch::flush();
+gfx::CDrawingBatch::~CDrawingBatch() {
+    gfx::CDrawingBatch::flush();
     reserve(0, FG_TRUE); // force down-resize
     /*for(unsigned int i=0;i<m_reservedSize;i++) {
         if(m_drawCalls[i] == NULL)
@@ -51,7 +53,7 @@ fg::gfx::CDrawingBatch::~CDrawingBatch() {
  * 
  * @param pShaderMgr
  */
-void fg::gfx::CDrawingBatch::setShaderManager(fg::base::CManager *pShaderMgr) {
+void gfx::CDrawingBatch::setShaderManager(fg::base::CManager *pShaderMgr) {
     if(pShaderMgr) {
         if(pShaderMgr->getManagerType() != FG_MANAGER_GFX_SHADER)
             return;
@@ -67,10 +69,10 @@ void fg::gfx::CDrawingBatch::setShaderManager(fg::base::CManager *pShaderMgr) {
  * @param pProgram
  * @return 
  */
-fg::gfx::CDrawCall *fg::gfx::CDrawingBatch::requestDrawCall(int &index,
-                                                            const fgGfxDrawCallType type,
-                                                            const fgGFXuint attribMask,
-                                                            fg::gfx::CShaderProgram *pProgram) {
+gfx::CDrawCall *gfx::CDrawingBatch::requestDrawCall(int &index,
+                                                    const fgGfxDrawCallType type,
+                                                    const fgGFXuint attribMask,
+                                                    gfx::CShaderProgram *pProgram) {
     CDrawCall *drawCall = NULL;
     if(m_freeSlots.empty()) {
         // Increase the number of drawcalls, get the next drawcall index
@@ -88,7 +90,7 @@ fg::gfx::CDrawCall *fg::gfx::CDrawingBatch::requestDrawCall(int &index,
     }
     // fgGfxDrawCall *drawCall = new fgGfxDrawCall(type, attribMask);
     if(m_pShaderMgr && !pProgram) {
-        fg::gfx::CShaderManager *shaderMgrPtr = static_cast<fg::gfx::CShaderManager *>(getShaderManager());
+        gfx::CShaderManager *shaderMgrPtr = static_cast<gfx::CShaderManager *>(getShaderManager());
         drawCall->setShaderProgram(shaderMgrPtr->getCurrentProgram());
     } else {
         drawCall->setShaderProgram(pProgram);
@@ -110,7 +112,7 @@ fg::gfx::CDrawCall *fg::gfx::CDrawingBatch::requestDrawCall(int &index,
  * @param index
  * @return 
  */
-fg::gfx::CDrawCall *fg::gfx::CDrawingBatch::getDrawCall(int index) {
+gfx::CDrawCall *gfx::CDrawingBatch::getDrawCall(int index) {
     if(index < 0 || index >= (int)m_drawCalls.size())
         return NULL;
     return m_drawCalls[index];
@@ -119,7 +121,7 @@ fg::gfx::CDrawCall *fg::gfx::CDrawingBatch::getDrawCall(int index) {
 /*
  *
  */
-fg::gfx::CDrawCall *fg::gfx::CDrawingBatch::getLastDrawCall(void) {
+gfx::CDrawCall *gfx::CDrawingBatch::getLastDrawCall(void) {
     if(m_numDrawCalls == 0)
         return NULL;
     //return m_drawCalls.back();
@@ -129,7 +131,7 @@ fg::gfx::CDrawCall *fg::gfx::CDrawingBatch::getLastDrawCall(void) {
 /*
  *
  */
-int fg::gfx::CDrawingBatch::appendDrawCall(CDrawCall* drawCall, fgBool manage, fgBool check) {
+int gfx::CDrawingBatch::appendDrawCall(CDrawCall* drawCall, fgBool manage, fgBool check) {
     if(!drawCall)
         return -1;
     if(check && !m_drawCalls.empty()) {
@@ -172,7 +174,7 @@ int fg::gfx::CDrawingBatch::appendDrawCall(CDrawCall* drawCall, fgBool manage, f
  * @param index
  * @return 
  */
-fg::gfx::CDrawCall *fg::gfx::CDrawingBatch::removeDrawCall(int index) {
+gfx::CDrawCall *gfx::CDrawingBatch::removeDrawCall(int index) {
     if(index >= (int)m_numDrawCalls || index < 0)
         return NULL;
     CDrawCall *drawCall = m_drawCalls[index];
@@ -208,7 +210,7 @@ fg::gfx::CDrawCall *fg::gfx::CDrawingBatch::removeDrawCall(int index) {
  * @param drawCall
  * @return 
  */
-fgBool fg::gfx::CDrawingBatch::removeDrawCall(CDrawCall *drawCall) {
+fgBool gfx::CDrawingBatch::removeDrawCall(CDrawCall *drawCall) {
     if(!drawCall)
         return FG_FALSE;
     int dupIdx = -1;
@@ -242,7 +244,7 @@ fgBool fg::gfx::CDrawingBatch::removeDrawCall(CDrawCall *drawCall) {
 /*
  *
  */
-fgBool fg::gfx::CDrawingBatch::deleteDrawCall(int index) {
+fgBool gfx::CDrawingBatch::deleteDrawCall(int index) {
     fgBool isManaged = FG_FALSE;
     if(index < (int)m_numDrawCalls && index >= 0) {
         if(m_drawCalls[index]) {
@@ -250,7 +252,7 @@ fgBool fg::gfx::CDrawingBatch::deleteDrawCall(int index) {
                 isManaged = FG_TRUE;
         }
     }
-    CDrawCall *drawCall = fg::gfx::CDrawingBatch::removeDrawCall(index);
+    CDrawCall *drawCall = gfx::CDrawingBatch::removeDrawCall(index);
     if(!drawCall)
         return FG_FALSE;
     if(isManaged) {
@@ -266,14 +268,14 @@ fgBool fg::gfx::CDrawingBatch::deleteDrawCall(int index) {
  * @param drawCall
  * @return 
  */
-fgBool fg::gfx::CDrawingBatch::deleteDrawCall(CDrawCall*& drawCall) {
+fgBool gfx::CDrawingBatch::deleteDrawCall(CDrawCall*& drawCall) {
     if(!drawCall) {
         return FG_FALSE;
     }
     // Need to remember the 'isManaged' flag before removal
     // - when draw call is removed the flag is automaticall set to false
     fgBool isManaged = drawCall->isManaged();
-    if(!fg::gfx::CDrawingBatch::removeDrawCall(drawCall)) {
+    if(!gfx::CDrawingBatch::removeDrawCall(drawCall)) {
         return FG_FALSE;
     }
     if(isManaged) {
@@ -290,7 +292,7 @@ fgBool fg::gfx::CDrawingBatch::deleteDrawCall(CDrawCall*& drawCall) {
  * @param maximum
  * @return 
  */
-int fg::gfx::CDrawingBatch::getFreeSlot(int maximum) {
+int gfx::CDrawingBatch::getFreeSlot(int maximum) {
     if(m_freeSlots.empty())
         return -1; // ?
     if(maximum < 0) {
@@ -314,7 +316,7 @@ int fg::gfx::CDrawingBatch::getFreeSlot(int maximum) {
  * @param reservedSize
  * @param force
  */
-void fg::gfx::CDrawingBatch::reserve(unsigned int reservedSize, fgBool force) {
+void gfx::CDrawingBatch::reserve(unsigned int reservedSize, fgBool force) {
     if(m_reservedSize > reservedSize && force) {
         int remaining = m_numNotManaged;
         std::stack<CDrawCall *> notManagedCalls;
@@ -380,7 +382,7 @@ void fg::gfx::CDrawingBatch::reserve(unsigned int reservedSize, fgBool force) {
 /**
  * 
  */
-void fg::gfx::CDrawingBatch::flush(void) {
+void gfx::CDrawingBatch::flush(void) {
     while(!m_priorityBatch.empty())
         m_priorityBatch.pop();
 
@@ -407,8 +409,8 @@ void fg::gfx::CDrawingBatch::flush(void) {
     }
     m_numDrawCalls = 0;
     m_zIndex = 0;
-    m_relMove = fgVector3f();
-    m_scissorBox = fgVector4i();
+    m_relMove = Vector3f();
+    m_scissorBox = Vector4i();
     /*
     int nDuplicates = m_duplicates.size();
     for(int i=0;i<nDuplicates;i++) {
@@ -436,7 +438,7 @@ void fg::gfx::CDrawingBatch::flush(void) {
 /*
  *
  */
-void fg::gfx::CDrawingBatch::sortCalls(void) {
+void gfx::CDrawingBatch::sortCalls(void) {
     while(!m_priorityBatch.empty())
         m_priorityBatch.pop();
     //drawCallVecItor itor = m_drawCalls.begin(), end = m_drawCalls.end();
@@ -452,9 +454,9 @@ void fg::gfx::CDrawingBatch::sortCalls(void) {
 /*
  *
  */
-void fg::gfx::CDrawingBatch::render(void) {
+void gfx::CDrawingBatch::render(void) {
     if(m_priorityBatch.empty())
-        fg::gfx::CDrawingBatch::sortCalls(); // #FIX - need to call via fgGfxDrawingBatch to avoid duplicate call (virtual)
+        gfx::CDrawingBatch::sortCalls(); // #FIX - need to call via fgGfxDrawingBatch to avoid duplicate call (virtual)
     int i = 0;
     while(!m_priorityBatch.empty()) {
         CDrawable *drawCall = m_priorityBatch.top();

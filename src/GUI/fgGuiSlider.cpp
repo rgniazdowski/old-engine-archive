@@ -62,7 +62,7 @@ void gui::CSlider::display(CDrawer* guiLayer) {
     /// need to normally draw Slider from base_type::display
     /// and also provide additional drawing (slider hook ?)
 
-    fgVec2f borderXY, paddingXY;
+    Vec2f borderXY, paddingXY;
     borderXY.x = borderInfo.left.width + borderInfo.right.width;
     borderXY.y = borderInfo.top.width + borderInfo.bottom.width;
     paddingXY.y = padding.top + padding.bottom;
@@ -70,8 +70,8 @@ void gui::CSlider::display(CDrawer* guiLayer) {
 
     base_type::display(guiLayer);
 
-    fgVec2f blockSize;
-    fgVec2f blockPos;
+    Vec2f blockSize;
+    Vec2f blockPos;
 
     if(m_sliderAlign == SLIDER_HORIZONTAL) {
         blockSize.x = m_bbox.size.x * m_ratio.x;
@@ -130,7 +130,7 @@ gui::CWidget::State gui::CSlider::updateState(const fgPointerData* pointerData) 
     fgBool ignoreStateTmp = m_ignoreState;
     // So base_type::updateState does not reset m_state
     m_ignoreState = FG_FALSE;
-    fgVec2f ptrRelPos;
+    Vec2f ptrRelPos;
 
     // This will update the state to the new value
     base_type::updateState(pointerData);

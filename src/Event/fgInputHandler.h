@@ -234,20 +234,20 @@ namespace fg {
              * @param point
              * @param touchID
              */
-            void handlePointerPressed(fgVector2i point, unsigned int touchID = FG_DEFAULT_POINTER_ID);
+            void handlePointerPressed(Vector2i point, unsigned int touchID = FG_DEFAULT_POINTER_ID);
             /**
              * 
              * @param point
              * @param touchID
              * @param state
              */
-            void handlePointerMoved(fgVector2i point, unsigned int touchID = FG_DEFAULT_POINTER_ID, fgPointerState state = FG_POINTER_STATE_RELEASED);
+            void handlePointerMoved(Vector2i point, unsigned int touchID = FG_DEFAULT_POINTER_ID, fgPointerState state = FG_POINTER_STATE_RELEASED);
             /**
              * 
              * @param point
              * @param touchID
              */
-            void handlePointerReleased(fgVector2i point, unsigned int touchID = FG_DEFAULT_POINTER_ID);
+            void handlePointerReleased(Vector2i point, unsigned int touchID = FG_DEFAULT_POINTER_ID);
 
         protected:
             /**

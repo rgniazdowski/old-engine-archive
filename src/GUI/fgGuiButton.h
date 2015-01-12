@@ -54,7 +54,7 @@ namespace fg {
              * 
              * @return 
              */
-            virtual fgBoundingBox3Df updateBounds(void);
+            virtual gfx::BoundingBox3Df updateBounds(void);
             /**
              * 
              */

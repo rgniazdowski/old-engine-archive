@@ -11,18 +11,20 @@
 #include "fgGFXPlatform.h"
 #include "Util/fgMemory.h"
 
+using namespace fg;
+
 /**
  * 
  * @param pDataArray
  * @return 
  */
-fgGFXboolean fgVertexData2v::refreshAttributes(fgGfxAttributeData *pDataArray) const {
+fgGFXboolean gfx::CVertexData2v::refreshAttributes(fgGfxAttributeData *pDataArray) const {
     if(!pDataArray)
         return FG_GFX_FALSE;
     // 2V - pos + uv
     fgGFXint index = 0;
     // If VBOs are not set this will act as data address
-    uintptr_t pointer = (uintptr_t)((unsigned int*)fgVertexData2v::front());
+    uintptr_t pointer = (uintptr_t)((unsigned int*)CVertexData2v::front());
     uintptr_t offset = 0;
     // Position coordinates
     index = FG_GFX_ATTRIB_POS_LOCATION;
@@ -41,8 +43,8 @@ fgGFXboolean fgVertexData2v::refreshAttributes(fgGfxAttributeData *pDataArray) c
     pDataArray[FG_GFX_ATTRIB_NORM_LOCATION] = fgGfxAttributeData(FG_GFX_NORMAL);
 
     // Move offset to UVs (first is position of type fgVector3f)
-    offset += sizeof (fgVector3f);
-    pointer += sizeof (fgVector3f);
+    offset += sizeof (Vector3f);
+    pointer += sizeof (Vector3f);
     // Texture coordinates
     index = FG_GFX_ATTRIB_UVS_LOCATION;
     pDataArray[index].index = index;
@@ -70,13 +72,13 @@ fgGFXboolean fgVertexData2v::refreshAttributes(fgGfxAttributeData *pDataArray) c
  * @param pDataArray
  * @return 
  */
-fgGFXboolean fgVertexData2v::setupAttributes(fgGfxAttributeData *pDataArray) const {
+fgGFXboolean gfx::CVertexData2v::setupAttributes(fgGfxAttributeData *pDataArray) const {
     if(!pDataArray)
         return FG_GFX_FALSE;
     // 2V - pos + uv
     fgGFXint index = 0;
     // If VBOs are not set this will act as data address
-    uintptr_t pointer = (uintptr_t)((unsigned int*)fgVertexData2v::front());
+    uintptr_t pointer = (uintptr_t)((unsigned int*)CVertexData2v::front());
     uintptr_t offset = 0;
     // Position coordinates
     index = FG_GFX_ATTRIB_POS_LOCATION;
@@ -102,8 +104,8 @@ fgGFXboolean fgVertexData2v::setupAttributes(fgGfxAttributeData *pDataArray) con
     pDataArray[FG_GFX_ATTRIB_NORM_LOCATION] = fgGfxAttributeData(FG_GFX_NORMAL);
 
     // Move offset to UVs (first is position of type fgVector3f)
-    offset += sizeof (fgVector3f);
-    pointer += sizeof (fgVector3f);
+    offset += sizeof (Vector3f);
+    pointer += sizeof (Vector3f);
     // Texture coordinates
     index = FG_GFX_ATTRIB_UVS_LOCATION;
     pDataArray[index].index = index;
@@ -137,14 +139,14 @@ fgGFXboolean fgVertexData2v::setupAttributes(fgGfxAttributeData *pDataArray) con
  * 
  * @return 
  */
-fgGFXboolean fgVertexData2v::genBuffers(void) {
+fgGFXboolean gfx::CVertexData2v::genBuffers(void) {
     if(!fg::gfx::CPlatform::isInit())
         return FG_GFX_FALSE;
     int &count = getRefVBOCount();
     count = 1;
     fg::gfx::CPlatform::context()->genBuffers(count, getRefPtrVBO(), GL_STATIC_DRAW);
     fg::gfx::CPlatform::context()->bindBuffer(getRefPtrVBO()[0], GL_ARRAY_BUFFER);
-    fg::gfx::CPlatform::context()->bufferData(getRefPtrVBO()[0], this->stride() * this->size(), fgVertexData2v::front());
+    fg::gfx::CPlatform::context()->bufferData(getRefPtrVBO()[0], this->stride() * this->size(), gfx::CVertexData2v::front());
     return FG_GFX_TRUE;
 }
 
@@ -152,7 +154,7 @@ fgGFXboolean fgVertexData2v::genBuffers(void) {
  * 
  * @return 
  */
-fgGFXboolean fgVertexData2v::deleteBuffers(void) {
+fgGFXboolean gfx::CVertexData2v::deleteBuffers(void) {
     if(!getPtrVBO())
         return FG_GFX_FALSE;
     fg::gfx::CPlatform::context()->deleteBuffers(getVBOCount(), getPtrVBO());
@@ -164,7 +166,7 @@ fgGFXboolean fgVertexData2v::deleteBuffers(void) {
  * 
  * @return 
  */
-fgGFXboolean fgVertexData2v::destroyBuffers(void) {
+fgGFXboolean gfx::CVertexData2v::destroyBuffers(void) {
     if(!getPtrVBO())
         return FG_GFX_FALSE;
     fg::gfx::CPlatform::context()->deleteBuffers(getVBOCount(), getPtrVBO());
@@ -179,13 +181,13 @@ fgGFXboolean fgVertexData2v::destroyBuffers(void) {
  * @param pDataArray
  * @return 
  */
-fgGFXboolean fgVertexData3v::refreshAttributes(fgGfxAttributeData *pDataArray) const {
+fgGFXboolean gfx::CVertexData3v::refreshAttributes(fgGfxAttributeData *pDataArray) const {
     if(!pDataArray)
         return FG_GFX_FALSE;
     // 3V - pos + norm + uv
     fgGFXint index = 0;
     // If VBOs are not set this will act as data address
-    uintptr_t pointer = (uintptr_t)((unsigned int*)fgVertexData3v::front());
+    uintptr_t pointer = (uintptr_t)((unsigned int*)CVertexData3v::front());
     uintptr_t offset = 0;
     // Position coordinates
     index = FG_GFX_ATTRIB_POS_LOCATION;
@@ -200,8 +202,8 @@ fgGFXboolean fgVertexData3v::refreshAttributes(fgGfxAttributeData *pDataArray) c
     }
 
     // Move offset to normals (first is position of type fgVector3f)
-    offset += sizeof (fgVector3f);
-    pointer += sizeof (fgVector3f);
+    offset += sizeof (Vector3f);
+    pointer += sizeof (Vector3f);
     // Normals coords - activated
     index = FG_GFX_ATTRIB_NORM_LOCATION;
     if(getPtrVBO() && getVBOCount()) {
@@ -215,8 +217,8 @@ fgGFXboolean fgVertexData3v::refreshAttributes(fgGfxAttributeData *pDataArray) c
     }
 
     // Move offset to UVs (second is normal of type fgVector3f)
-    offset += sizeof (fgVector3f);
-    pointer += sizeof (fgVector3f);
+    offset += sizeof (Vector3f);
+    pointer += sizeof (Vector3f);
     // Texture coordinates
     index = FG_GFX_ATTRIB_UVS_LOCATION;
     if(getPtrVBO() && getVBOCount()) {
@@ -244,13 +246,13 @@ fgGFXboolean fgVertexData3v::refreshAttributes(fgGfxAttributeData *pDataArray) c
  * @param pDataArray
  * @return 
  */
-fgGFXboolean fgVertexData3v::setupAttributes(fgGfxAttributeData *pDataArray) const {
+fgGFXboolean gfx::CVertexData3v::setupAttributes(fgGfxAttributeData *pDataArray) const {
     if(!pDataArray)
         return FG_GFX_FALSE;
     // 3V - pos + norm + uv
     fgGFXint index = 0;
     // If VBOs are not set this will act as data address
-    uintptr_t pointer = (uintptr_t)((unsigned int*)fgVertexData3v::front());
+    uintptr_t pointer = (uintptr_t)((unsigned int*)CVertexData3v::front());
     uintptr_t offset = 0;
     // Position coordinates
     index = FG_GFX_ATTRIB_POS_LOCATION;
@@ -273,8 +275,8 @@ fgGFXboolean fgVertexData3v::setupAttributes(fgGfxAttributeData *pDataArray) con
     }
 
     // Move offset to normals (first is position of type fgVector3f)
-    offset += sizeof (fgVector3f);
-    pointer += sizeof (fgVector3f);
+    offset += sizeof (Vector3f);
+    pointer += sizeof (Vector3f);
     // Normals coords - activated
     index = FG_GFX_ATTRIB_NORM_LOCATION;
     pDataArray[index].index = index;
@@ -296,8 +298,8 @@ fgGFXboolean fgVertexData3v::setupAttributes(fgGfxAttributeData *pDataArray) con
     }
 
     // Move offset to UVs (second is normal of type fgVector3f)
-    offset += sizeof (fgVector3f);
-    pointer += sizeof (fgVector3f);
+    offset += sizeof (Vector3f);
+    pointer += sizeof (Vector3f);
     // Texture coordinates
     index = FG_GFX_ATTRIB_UVS_LOCATION;
     pDataArray[index].index = index;
@@ -332,14 +334,14 @@ fgGFXboolean fgVertexData3v::setupAttributes(fgGfxAttributeData *pDataArray) con
  * 
  * @return 
  */
-fgGFXboolean fgVertexData3v::genBuffers(void) {
+fgGFXboolean gfx::CVertexData3v::genBuffers(void) {
     if(!fg::gfx::CPlatform::isInit())
         return FG_GFX_FALSE;
     int &count = getRefVBOCount();
     count = 1;
     fg::gfx::CPlatform::context()->genBuffers(count, getRefPtrVBO(), GL_STATIC_DRAW);
     fg::gfx::CPlatform::context()->bindBuffer(getRefPtrVBO()[0], GL_ARRAY_BUFFER);
-    fg::gfx::CPlatform::context()->bufferData(getRefPtrVBO()[0], this->stride() * this->size(), fgVertexData3v::front());
+    fg::gfx::CPlatform::context()->bufferData(getRefPtrVBO()[0], this->stride() * this->size(), gfx::CVertexData3v::front());
     return FG_GFX_TRUE;
 }
 
@@ -347,7 +349,7 @@ fgGFXboolean fgVertexData3v::genBuffers(void) {
  * 
  * @return 
  */
-fgGFXboolean fgVertexData3v::deleteBuffers(void) {
+fgGFXboolean gfx::CVertexData3v::deleteBuffers(void) {
     if(!getPtrVBO())
         return FG_GFX_FALSE;
     fg::gfx::CPlatform::context()->deleteBuffers(getVBOCount(), getPtrVBO());
@@ -358,7 +360,7 @@ fgGFXboolean fgVertexData3v::deleteBuffers(void) {
  * 
  * @return 
  */
-fgGFXboolean fgVertexData3v::destroyBuffers(void) {
+fgGFXboolean gfx::CVertexData3v::destroyBuffers(void) {
     if(!getPtrVBO())
         return FG_GFX_FALSE;
     fg::gfx::CPlatform::context()->deleteBuffers(getVBOCount(), getPtrVBO());
@@ -373,14 +375,14 @@ fgGFXboolean fgVertexData3v::destroyBuffers(void) {
  * @param pDataArray
  * @return 
  */
-fgGFXboolean fgVertexData4v::refreshAttributes(fgGfxAttributeData *pDataArray) const {
+fgGFXboolean gfx::CVertexData4v::refreshAttributes(fgGfxAttributeData *pDataArray) const {
     if(!pDataArray)
         return FG_GFX_FALSE;
-    
+
     // 3V - pos + norm + uv + color
     fgGFXint index = 0;
     // If VBOs are not set this will act as data address
-    uintptr_t pointer = (uintptr_t)((unsigned int*)fgVertexData4v::front());
+    uintptr_t pointer = (uintptr_t)((unsigned int*)CVertexData4v::front());
     uintptr_t offset = 0;
     // Position coordinates - always present (at least at the moment)
     index = FG_GFX_ATTRIB_POS_LOCATION;
@@ -395,8 +397,8 @@ fgGFXboolean fgVertexData4v::refreshAttributes(fgGfxAttributeData *pDataArray) c
     }
 
     // Move offset to normals (first is position of type fgVector3f)
-    offset += sizeof (fgVector3f);
-    pointer += sizeof (fgVector3f);
+    offset += sizeof (Vector3f);
+    pointer += sizeof (Vector3f);
     // Normals coords - activated
     index = FG_GFX_ATTRIB_NORM_LOCATION;
     if(getPtrVBO() && getVBOCount()) {
@@ -410,8 +412,8 @@ fgGFXboolean fgVertexData4v::refreshAttributes(fgGfxAttributeData *pDataArray) c
     }
 
     // Move offset to UVs (second is normal of type fgVector3f)
-    offset += sizeof (fgVector3f);
-    pointer += sizeof (fgVector3f);
+    offset += sizeof (Vector3f);
+    pointer += sizeof (Vector3f);
     // Texture coordinates
     index = FG_GFX_ATTRIB_UVS_LOCATION;
     if(getPtrVBO() && getVBOCount()) {
@@ -425,8 +427,8 @@ fgGFXboolean fgVertexData4v::refreshAttributes(fgGfxAttributeData *pDataArray) c
     }
 
     // Move offset to Colors (last one was uv of type fgVector2f)
-    offset += sizeof (fgVector2f); // 2UVs
-    pointer += sizeof (fgVector2f);
+    offset += sizeof (Vector2f); // 2UVs
+    pointer += sizeof (Vector2f);
 
     // Colors = there are no colors, this attribute will be disabled
     index = FG_GFX_ATTRIB_COLOR_LOCATION;
@@ -442,7 +444,7 @@ fgGFXboolean fgVertexData4v::refreshAttributes(fgGfxAttributeData *pDataArray) c
 
     // Tangents - this attribute will be disabled - not yet supported
     pDataArray[FG_GFX_ATTRIB_TANGENT_LOCATION] = fgGfxAttributeData(FG_GFX_TANGENT);
-    
+
     return FG_GFX_TRUE;
 }
 
@@ -451,13 +453,13 @@ fgGFXboolean fgVertexData4v::refreshAttributes(fgGfxAttributeData *pDataArray) c
  * @param pDataArray
  * @return 
  */
-fgGFXboolean fgVertexData4v::setupAttributes(fgGfxAttributeData *pDataArray) const {
+fgGFXboolean gfx::CVertexData4v::setupAttributes(fgGfxAttributeData *pDataArray) const {
     if(!pDataArray)
         return FG_GFX_FALSE;
     // 3V - pos + norm + uv + color
     fgGFXint index = 0;
     // If VBOs are not set this will act as data address
-    uintptr_t pointer = (uintptr_t)((unsigned int*)fgVertexData4v::front());
+    uintptr_t pointer = (uintptr_t)((unsigned int*)CVertexData4v::front());
     uintptr_t offset = 0;
     // Position coordinates - always present (at least at the moment)
     index = FG_GFX_ATTRIB_POS_LOCATION;
@@ -480,8 +482,8 @@ fgGFXboolean fgVertexData4v::setupAttributes(fgGfxAttributeData *pDataArray) con
     }
 
     // Move offset to normals (first is position of type fgVector3f)
-    offset += sizeof (fgVector3f);
-    pointer += sizeof (fgVector3f);
+    offset += sizeof (Vector3f);
+    pointer += sizeof (Vector3f);
     // Normals coords - activated
     index = FG_GFX_ATTRIB_NORM_LOCATION;
     pDataArray[index].index = index;
@@ -503,8 +505,8 @@ fgGFXboolean fgVertexData4v::setupAttributes(fgGfxAttributeData *pDataArray) con
     }
 
     // Move offset to UVs (second is normal of type fgVector3f)
-    offset += sizeof (fgVector3f);
-    pointer += sizeof (fgVector3f);
+    offset += sizeof (Vector3f);
+    pointer += sizeof (Vector3f);
     // Texture coordinates
     index = FG_GFX_ATTRIB_UVS_LOCATION;
     pDataArray[index].index = index;
@@ -526,8 +528,8 @@ fgGFXboolean fgVertexData4v::setupAttributes(fgGfxAttributeData *pDataArray) con
     }
 
     // Move offset to Colors (last one was uv of type fgVector2f)
-    offset += sizeof (fgVector2f); // 2UVs
-    pointer += sizeof (fgVector2f);
+    offset += sizeof (Vector2f); // 2UVs
+    pointer += sizeof (Vector2f);
 
     // Colors = there are no colors, this attribute will be disabled
     index = FG_GFX_ATTRIB_COLOR_LOCATION;
@@ -559,14 +561,14 @@ fgGFXboolean fgVertexData4v::setupAttributes(fgGfxAttributeData *pDataArray) con
  * 
  * @return 
  */
-fgGFXboolean fgVertexData4v::genBuffers(void) {
+fgGFXboolean gfx::CVertexData4v::genBuffers(void) {
     if(!fg::gfx::CPlatform::isInit())
         return FG_GFX_FALSE;
     int &count = getRefVBOCount();
     count = 1;
     fg::gfx::CPlatform::context()->genBuffers(count, getRefPtrVBO(), GL_STATIC_DRAW);
     fg::gfx::CPlatform::context()->bindBuffer(getRefPtrVBO()[0], GL_ARRAY_BUFFER);
-    fg::gfx::CPlatform::context()->bufferData(getRefPtrVBO()[0], this->stride() * this->size(), fgVertexData4v::front());
+    fg::gfx::CPlatform::context()->bufferData(getRefPtrVBO()[0], this->stride() * this->size(), gfx::CVertexData4v::front());
     return FG_GFX_TRUE;
 }
 
@@ -574,7 +576,7 @@ fgGFXboolean fgVertexData4v::genBuffers(void) {
  * 
  * @return 
  */
-fgGFXboolean fgVertexData4v::deleteBuffers(void) {
+fgGFXboolean gfx::CVertexData4v::deleteBuffers(void) {
     if(!getPtrVBO())
         return FG_GFX_FALSE;
     fg::gfx::CPlatform::context()->deleteBuffers(getVBOCount(), getPtrVBO());
@@ -585,7 +587,7 @@ fgGFXboolean fgVertexData4v::deleteBuffers(void) {
  * 
  * @return 
  */
-fgGFXboolean fgVertexData4v::destroyBuffers(void) {
+fgGFXboolean gfx::CVertexData4v::destroyBuffers(void) {
     if(!getPtrVBO())
         return FG_GFX_FALSE;
     fg::gfx::CPlatform::context()->deleteBuffers(getVBOCount(), getPtrVBO());

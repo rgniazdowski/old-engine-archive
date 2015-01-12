@@ -90,7 +90,7 @@ namespace fg {
              * @param data
              * @return 
              */
-            static fgVector3f parseSpatialData(const char *data);
+            static Vector3f parseSpatialData(const char *data);
 
         public:
             /**

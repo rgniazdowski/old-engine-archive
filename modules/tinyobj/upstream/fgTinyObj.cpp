@@ -31,7 +31,11 @@
 
 namespace fgTinyObj {
 
-    void InitMaterial(fgGfxMaterial& material) {
+    /**
+     * 
+     * @param material
+     */
+    void InitMaterial(fg::gfx::SMaterial& material) {
         material.name = "";
         material.ambientTexName = "";
         material.diffuseTexName = "";
@@ -51,6 +55,9 @@ namespace fgTinyObj {
         material.unknownParam.clear();
     }
 
+    /**
+     *
+     */
     struct vertex_index
     {
         int v_idx, vt_idx, vn_idx;
@@ -233,7 +240,7 @@ namespace fgTinyObj {
      * @return 
      */
     static unsigned int updateVertex(std::map<vertex_index, unsigned int>& vertexCache,
-                                     fg::CVector<fgVertex3v> & vertices,
+                                     fg::CVector<fg::gfx::Vertex3v> & vertices,
                                      const fg::CVector<float>& in_positions,
                                      const fg::CVector<float>& in_normals,
                                      const fg::CVector<float>& in_texcoords,
@@ -246,7 +253,7 @@ namespace fgTinyObj {
         }
 
         assert(in_positions.size() > (unsigned int)(3 * i.v_idx + 2));
-        fgVertex3v vertex;
+        fg::gfx::Vertex3v vertex;
 
         vertex.position[0] = (in_positions[3 * i.v_idx + 0]);
         vertex.position[1] = (in_positions[3 * i.v_idx + 1]);
@@ -285,12 +292,12 @@ namespace fgTinyObj {
      * @param forceAoS
      * @return 
      */
-    static fgBool exportFaceGroupToShape(fgGfxShape *shape,
+    static fgBool exportFaceGroupToShape(fg::gfx::SShape *shape,
                                          const fg::CVector<float> &in_positions,
                                          const fg::CVector<float> &in_normals,
                                          const fg::CVector<float> &in_texcoords,
                                          const fg::CVector<fg::CVector<vertex_index> >& faceGroup,
-                                         const fgGfxMaterial &material,
+                                         const fg::gfx::SMaterial &material,
                                          const std::string &name,
                                          const fgBool is_material_set,
                                          const fgBool forceAoS = FG_TRUE) {
@@ -304,7 +311,7 @@ namespace fgTinyObj {
         fg::CVector<float> texcoords;
         std::map<vertex_index, unsigned int> vertexCache;
         fg::CVector<fgGFXushort> indices; // unsigned short FIXME ! 
-        fg::CVector<fgVertex3v> vertices;
+        fg::CVector<fg::gfx::Vertex3v> vertices;
         // Flatten vertices and indices
         for(size_t i = 0; i < faceGroup.size(); i++) {
             const fg::CVector<vertex_index>& face = faceGroup[i];
@@ -345,30 +352,30 @@ namespace fgTinyObj {
         shape->name = name;
         if(forceAoS) {
             if(!shape->mesh) {
-                shape->mesh = new fgGfxMeshAoS();
+                shape->mesh = new fg::gfx::SMeshAoS();
             }
             FG_LOG_DEBUG("fgTinyObj: Constructing AoS mesh in shape: '%s'", shape->name.c_str());
-            ((fgGfxMeshAoS *)shape->mesh)->vertices.swap(vertices);
-            ((fgGfxMeshAoS *)shape->mesh)->indices.swap(indices);
+            ((fg::gfx::SMeshAoS *)shape->mesh)->vertices.swap(vertices);
+            ((fg::gfx::SMeshAoS *)shape->mesh)->indices.swap(indices);
         } else {
             if(!shape->mesh) {
-                shape->mesh = new fgGfxMeshSoA();
+                shape->mesh = new fg::gfx::SMeshSoA();
             }
             FG_LOG_DEBUG("fgTinyObj: Constructing SoA mesh in shape: '%s'", shape->name.c_str());
-            ((fgGfxMeshSoA *)shape->mesh)->vertices.swap(positions);
-            ((fgGfxMeshSoA *)shape->mesh)->normals.swap(normals);
-            ((fgGfxMeshSoA *)shape->mesh)->uvs.swap(texcoords);
-            ((fgGfxMeshSoA *)shape->mesh)->indices.swap(indices);
+            ((fg::gfx::SMeshSoA *)shape->mesh)->vertices.swap(positions);
+            ((fg::gfx::SMeshSoA *)shape->mesh)->normals.swap(normals);
+            ((fg::gfx::SMeshSoA *)shape->mesh)->uvs.swap(texcoords);
+            ((fg::gfx::SMeshSoA *)shape->mesh)->indices.swap(indices);
         }
 
         if(is_material_set) {
             if(!shape->material)
-                shape->material = new fgGfxMaterial(material);
+                shape->material = new fg::gfx::SMaterial(material);
             /*else
             shape.material(material);*/
         } else {
             if(!shape->material)
-                shape->material = new fgGfxMaterial();
+                shape->material = new fg::gfx::SMaterial();
             InitMaterial(*shape->material);
             shape->material->diffuse[0] = 1.f;
             shape->material->diffuse[1] = 1.f;
@@ -384,10 +391,10 @@ namespace fgTinyObj {
      * @param inStream
      * @return 
      */
-    std::string LoadMtl(std::map<std::string, fgGfxMaterial>& material_map, std::istream& inStream) {
+    std::string LoadMtl(std::map<std::string, fg::gfx::SMaterial>& material_map, std::istream& inStream) {
         material_map.clear();
         std::stringstream err;
-        fgGfxMaterial material;
+        fg::gfx::SMaterial material;
 
         int maxchars = 8192; // Alloc enough size.
         std::vector<char> buf(maxchars); // Alloc enough size.
@@ -421,7 +428,7 @@ namespace fgTinyObj {
             // new mtl
             if((0 == strncmp(token, "newmtl", 6)) && isSpace((token[6]))) {
                 // flush previous material.
-                material_map.insert(std::pair<std::string, fgGfxMaterial>(material.name, material));
+                material_map.insert(std::pair<std::string, fg::gfx::SMaterial>(material.name, material));
 
                 // initial temporary material
                 InitMaterial(material);
@@ -563,14 +570,19 @@ namespace fgTinyObj {
             }
         }
         // flush last material.
-        material_map.insert(std::pair<std::string, fgGfxMaterial>(material.name, material));
+        material_map.insert(std::pair<std::string, fg::gfx::SMaterial>(material.name, material));
 
         return err.str();
     }
 
-    std::string MaterialFileReader::operator ()(
-                                                const std::string& matId,
-                                                std::map<std::string, fgGfxMaterial>& matMap) {
+    /**
+     * 
+     * @param matId
+     * @param matMap
+     * @return 
+     */
+    std::string MaterialFileReader::operator ()(const std::string& matId,
+                                                std::map<std::string, fg::gfx::SMaterial>& matMap) {
         std::string filepath;
 
         if(!m_mtlBasePath.empty()) {
@@ -583,7 +595,15 @@ namespace fgTinyObj {
         return LoadMtl(matMap, matIStream);
     }
 
-    std::string LoadObj(fg::CVector<fgGfxShape *>& shapes,
+    /**
+     * 
+     * @param shapes
+     * @param filename
+     * @param mtl_basepath
+     * @param forceAoS
+     * @return 
+     */
+    std::string LoadObj(fg::CVector<fg::gfx::SShape *>& shapes,
                         const char* filename,
                         const char* mtl_basepath,
                         fgBool forceAoS) {
@@ -605,7 +625,15 @@ namespace fgTinyObj {
         return LoadObj(shapes, ifs, matFileReader, forceAoS);
     }
 
-    std::string LoadObj(fg::CVector<fgGfxShape *>& shapes,
+    /**
+     * 
+     * @param shapes
+     * @param inStream
+     * @param readMatFn
+     * @param forceAoS
+     * @return 
+     */
+    std::string LoadObj(fg::CVector<fg::gfx::SShape *>& shapes,
                         std::istream& inStream,
                         MaterialReader& readMatFn,
                         fgBool forceAoS) {
@@ -619,8 +647,8 @@ namespace fgTinyObj {
         std::string name;
 
         // material
-        std::map<std::string, fgGfxMaterial> material_map;
-        fgGfxMaterial material;
+        std::map<std::string, fg::gfx::SMaterial> material_map;
+        fg::gfx::SMaterial material;
         bool is_material_seted = false;
 
         int maxchars = 8192; // Alloc enough size.
@@ -740,7 +768,7 @@ namespace fgTinyObj {
             if(token[0] == 'g' && isSpace((token[1]))) {
 
                 // flush previous face group.
-                fgGfxShape *shape = new fgGfxShape();
+                fg::gfx::SShape *shape = new fg::gfx::SShape();
                 fgBool ret = exportFaceGroupToShape(shape, v, vn, vt, faceGroup, material, name, is_material_seted, forceAoS);
                 if(ret) {
                     shapes.push_back(shape);
@@ -774,7 +802,7 @@ namespace fgTinyObj {
             if(token[0] == 'o' && isSpace((token[1]))) {
 
                 // flush previous face group.
-                fgGfxShape *shape = new fgGfxShape();
+                fg::gfx::SShape *shape = new fg::gfx::SShape();
                 fgBool ret = exportFaceGroupToShape(shape, v, vn, vt, faceGroup, material, name, is_material_seted, forceAoS);
                 if(ret) {
                     shapes.push_back(shape);
@@ -798,7 +826,7 @@ namespace fgTinyObj {
         float l2 = fgTime::ms();
         FG_LOG_DEBUG("fgTinyObj: load raw data: %.2f seconds", (l2 - l1) / 1000.0f);
 
-        fgGfxShape *shape = new fgGfxShape();
+        fg::gfx::SShape *shape = new fg::gfx::SShape();
         float e1 = fgTime::ms();
         fgBool ret = exportFaceGroupToShape(shape, v, vn, vt, faceGroup, material, name, is_material_seted, forceAoS);
         float e2 = fgTime::ms();

@@ -11,13 +11,15 @@
 #include "fgGFXDrawCall.h"
 #include "fgGFXSceneManager.h"
 
+using namespace fg;
+
 /**
  * 
  * @param nodeType
  * @param pParent
  */
-fg::gfx::CSceneNode::CSceneNode(fgGfxSceneNodeType nodeType,
-                                self_type *pParent) :
+gfx::CSceneNode::CSceneNode(fgGfxSceneNodeType nodeType,
+                            self_type *pParent) :
 base_type(), // fgManagedObjectBase init
 drawable_type(FG_GFX_DRAWABLE_SCENENODE), // fgGfxDrawable init
 m_nodeType(nodeType), // Current node type
@@ -37,7 +39,7 @@ m_drawCall(NULL) // DrawCall for this node - it cannot be managed
 /**
  * 
  */
-fg::gfx::CSceneNode::~CSceneNode() {
+gfx::CSceneNode::~CSceneNode() {
     if(m_drawCall)
         delete m_drawCall;
     m_drawCall = NULL;
@@ -66,7 +68,7 @@ fg::gfx::CSceneNode::~CSceneNode() {
 /**
  * 
  */
-void fg::gfx::CSceneNode::draw(void) {
+void gfx::CSceneNode::draw(void) {
     if(!m_isVisible)
         return;
     if(m_drawCall) {
@@ -84,7 +86,7 @@ void fg::gfx::CSceneNode::draw(void) {
  * Draw with relative 2D position
  * @param relPos
  */
-void fg::gfx::CSceneNode::draw(const fgVec2f& relPos) {
+void gfx::CSceneNode::draw(const Vec2f& relPos) {
     if(!m_isVisible)
         return;
     if(m_drawCall) {
@@ -102,7 +104,7 @@ void fg::gfx::CSceneNode::draw(const fgVec2f& relPos) {
  * Draw with relative 3D position
  * @param relPos
  */
-void fg::gfx::CSceneNode::draw(const fgVec3f& relPos) {
+void gfx::CSceneNode::draw(const Vec3f& relPos) {
     if(!m_isVisible)
         return;
     if(m_drawCall) {
@@ -120,7 +122,7 @@ void fg::gfx::CSceneNode::draw(const fgVec3f& relPos) {
  * Draw with given model matrix
  * @param modelMat
  */
-void fg::gfx::CSceneNode::draw(const fgMatrix4f& modelMat) {
+void gfx::CSceneNode::draw(const Matrix4f& modelMat) {
     if(!m_isVisible)
         return;
     if(m_drawCall) {
@@ -139,7 +141,7 @@ void fg::gfx::CSceneNode::draw(const fgMatrix4f& modelMat) {
  * @param pChild
  * @return 
  */
-fgBool fg::gfx::CSceneNode::addChild(CSceneNode *pChild) {
+fgBool gfx::CSceneNode::addChild(CSceneNode *pChild) {
     if(!pChild)
         return FG_FALSE;
     fgBool status = FG_FALSE;
@@ -154,7 +156,7 @@ fgBool fg::gfx::CSceneNode::addChild(CSceneNode *pChild) {
  * @param pChild
  * @return 
  */
-fgBool fg::gfx::CSceneNode::removeChild(CSceneNode *pChild) {
+fgBool gfx::CSceneNode::removeChild(CSceneNode *pChild) {
     if(!pChild || m_children.empty())
         return FG_FALSE;
     fgBool status = FG_TRUE;
@@ -180,7 +182,7 @@ fgBool fg::gfx::CSceneNode::removeChild(CSceneNode *pChild) {
  * @param childName
  * @return 
  */
-fg::gfx::CSceneNode *fg::gfx::CSceneNode::removeChild(const std::string& childName) {
+gfx::CSceneNode *gfx::CSceneNode::removeChild(const std::string& childName) {
     if(childName.empty() || m_children.empty())
         return NULL;
     CSceneNode *pChild = NULL;
@@ -244,7 +246,7 @@ fg::gfx::CSceneNode *fg::gfx::CSceneNode::removeChild(const std::string& childNa
  * @param childName
  * @return 
  */
-fg::gfx::CSceneNode *fg::gfx::CSceneNode::removeChild(const char *childName) {
+gfx::CSceneNode *gfx::CSceneNode::removeChild(const char *childName) {
     if(!childName || m_children.empty())
         return NULL;
     if(!*childName)
@@ -257,7 +259,7 @@ fg::gfx::CSceneNode *fg::gfx::CSceneNode::removeChild(const char *childName) {
  * @param pChild
  * @return 
  */
-fgBool fg::gfx::CSceneNode::destroyChild(CSceneNode *&pChild) {
+fgBool gfx::CSceneNode::destroyChild(CSceneNode *&pChild) {
     if(!pChild)
         return FG_FALSE;
     if(m_children.empty())
@@ -291,7 +293,7 @@ fgBool fg::gfx::CSceneNode::destroyChild(CSceneNode *&pChild) {
  * @param childName
  * @return 
  */
-fgBool fg::gfx::CSceneNode::destroyChild(const std::string& childName) {
+fgBool gfx::CSceneNode::destroyChild(const std::string& childName) {
     if(childName.empty() || m_children.empty())
         return FG_FALSE;
     CSceneNode *pChild = NULL;
@@ -359,7 +361,7 @@ fgBool fg::gfx::CSceneNode::destroyChild(const std::string& childName) {
  * @param childName
  * @return 
  */
-fgBool fg::gfx::CSceneNode::destroyChild(const char *childName) {
+fgBool gfx::CSceneNode::destroyChild(const char *childName) {
     if(!childName)
         return FG_FALSE;
     if(!*childName)
@@ -372,7 +374,7 @@ fgBool fg::gfx::CSceneNode::destroyChild(const char *childName) {
  * @param childHandle
  * @return 
  */
-fg::gfx::CSceneNode* fg::gfx::CSceneNode::getChild(const fg::gfx::CSceneNode::handle_type& childHandle) {
+gfx::CSceneNode* gfx::CSceneNode::getChild(const gfx::CSceneNode::handle_type& childHandle) {
     if(childHandle.isNull() || m_children.empty())
         return NULL;
     CSceneNode *pChild = NULL;
@@ -418,7 +420,7 @@ fg::gfx::CSceneNode* fg::gfx::CSceneNode::getChild(const fg::gfx::CSceneNode::ha
  * @param childName
  * @return 
  */
-fg::gfx::CSceneNode* fg::gfx::CSceneNode::getChild(const std::string& childName) {
+gfx::CSceneNode* gfx::CSceneNode::getChild(const std::string& childName) {
     if(childName.empty() || m_children.empty())
         return NULL;
     CSceneNode *pChild = NULL;
@@ -466,7 +468,7 @@ fg::gfx::CSceneNode* fg::gfx::CSceneNode::getChild(const std::string& childName)
  * @param childName
  * @return 
  */
-fg::gfx::CSceneNode* fg::gfx::CSceneNode::getChild(const char *childName) {
+gfx::CSceneNode* gfx::CSceneNode::getChild(const char *childName) {
     return getChild(std::string(childName));
 }
 
@@ -475,7 +477,7 @@ fg::gfx::CSceneNode* fg::gfx::CSceneNode::getChild(const char *childName) {
  * @param pChild
  * @return 
  */
-fgBool fg::gfx::CSceneNode::hasChild(CSceneNode *pChild) {
+fgBool gfx::CSceneNode::hasChild(CSceneNode *pChild) {
     if(!pChild || m_children.empty())
         return FG_FALSE;
     fgBool status = FG_FALSE;
@@ -490,7 +492,7 @@ fgBool fg::gfx::CSceneNode::hasChild(CSceneNode *pChild) {
  * @param childHandle
  * @return 
  */
-fgBool fg::gfx::CSceneNode::hasChild(const fg::gfx::CSceneNode::handle_type& childHandle) {
+fgBool gfx::CSceneNode::hasChild(const gfx::CSceneNode::handle_type& childHandle) {
     if(childHandle.isNull() || m_children.empty())
         return FG_FALSE;
     fgBool status = FG_FALSE;
@@ -511,7 +513,7 @@ fgBool fg::gfx::CSceneNode::hasChild(const fg::gfx::CSceneNode::handle_type& chi
  * @param childName
  * @return 
  */
-fgBool fg::gfx::CSceneNode::hasChild(const std::string& childName) {
+fgBool gfx::CSceneNode::hasChild(const std::string& childName) {
     if(m_children.empty())
         return FG_FALSE;
     fgBool status = FG_FALSE;
@@ -525,7 +527,7 @@ fgBool fg::gfx::CSceneNode::hasChild(const std::string& childName) {
  * @param childName
  * @return 
  */
-fgBool fg::gfx::CSceneNode::hasChild(const char* childName) {
+fgBool gfx::CSceneNode::hasChild(const char* childName) {
     if(!childName || m_children.empty())
         return FG_FALSE;
     fgBool status = FG_FALSE;

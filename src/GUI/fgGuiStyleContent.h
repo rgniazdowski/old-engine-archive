@@ -476,7 +476,7 @@ namespace fg {
              * @param boundSize
              * @param isInside
              */
-            void applyPosAlign(const Align align, fgVector3f& pos, const fgVector3f& size, const fgVector3f& boundPos, const fgVector3f& boundSize, const fgBool isInside = FG_TRUE);
+            void applyPosAlign(const Align align, Vector3f& pos, const Vector3f& size, const Vector3f& boundPos, const Vector3f& boundSize, const fgBool isInside = FG_TRUE);
             /**
              * 
              * @param align
@@ -486,7 +486,7 @@ namespace fg {
              * @param boundSize
              * @param isInside
              */
-            void applyPosAlign(const Align align, fgVector2f& pos, const fgVector2f& size, const fgVector2f& boundPos, const fgVector2f& boundSize, const fgBool isInside = FG_TRUE);
+            void applyPosAlign(const Align align, Vector2f& pos, const Vector2f& size, const Vector2f& boundPos, const Vector2f& boundSize, const fgBool isInside = FG_TRUE);
 
             ////////////////////////////////////////////////////////////////////
 
@@ -752,26 +752,26 @@ namespace fg {
              * @param modPos
              * @return 
              */
-            self_ref setPosition(const SPosition::Style style, const fgVector2f& modPos);
+            self_ref setPosition(const SPosition::Style style, const Vector2f& modPos);
             /**
              * 
              * @param modPos
              * @return 
              */
-            self_ref setPosition(const fgVector2f& modPos);
+            self_ref setPosition(const Vector2f& modPos);
             /**
              * 
              * @param style
              * @param modPos
              * @return 
              */
-            self_ref setPosition(const SPosition::Style style, const fgVector3f& modPos);
+            self_ref setPosition(const SPosition::Style style, const Vector3f& modPos);
             /**
              * 
              * @param modPos
              * @return 
              */
-            self_ref setPosition(const fgVector3f& modPos);
+            self_ref setPosition(const Vector3f& modPos);
 
             ////////////////////////////////////////////////////////////////////
 
@@ -816,7 +816,7 @@ namespace fg {
              * @param size
              * @return 
              */
-            self_ref setSize(const SSize::Style style, const fgVector2f& size);
+            self_ref setSize(const SSize::Style style, const Vector2f& size);
             /**
              * 
              * @param style
@@ -832,7 +832,7 @@ namespace fg {
              * @param size
              * @return 
              */
-            self_ref setSize(const SSize::Style style, const fgVector3f& size);
+            self_ref setSize(const SSize::Style style, const Vector3f& size);
             /**
              * 
              * @param x
@@ -845,7 +845,7 @@ namespace fg {
              * @param size
              * @return 
              */
-            self_ref setSize(const fgVector2f& size);
+            self_ref setSize(const Vector2f& size);
             /**
              * 
              * @param x
@@ -859,7 +859,7 @@ namespace fg {
              * @param size
              * @return 
              */
-            self_ref setSize(const fgVector3f& size);
+            self_ref setSize(const Vector3f& size);
 
             ////////////////////////////////////////////////////////////////////
 

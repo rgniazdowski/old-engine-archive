@@ -97,7 +97,7 @@ namespace fg {
             /// Bidirectional iterator through children set
             typedef childrenSet::iterator childrenSetItor;
             /// Bounding box type - axis-aligned
-            typedef fgAABoundingBox3Df box_type;
+            typedef AABoundingBox3Df box_type;
 
         private:
             ///
@@ -111,9 +111,9 @@ namespace fg {
 
         protected:
             /// Internal object specific model matrix
-            fgMatrix4f m_modelMat;
-            /// This is updated bounding box - it's transformed
-            fgAABoundingBox3Df m_aabb;
+            Matrix4f m_modelMat;
+            /// This is updated bounding box - it's transformed by the model matrix
+            AABoundingBox3Df m_aabb;
             /// Because the Scene Node is drawable it will contain inside required
             /// draw call - pre-configured properly will draw what is needed
             CDrawCall *m_drawCall;
@@ -138,17 +138,17 @@ namespace fg {
              * Draw with relative 2D position
              * @param relPos
              */
-            virtual void draw(const fgVec2f& relPos);
+            virtual void draw(const Vec2f& relPos);
             /**
              * Draw with relative 3D position
              * @param relPos
              */
-            virtual void draw(const fgVec3f& relPos);
+            virtual void draw(const Vec3f& relPos);
             /**
              * Draw with given model matrix
              * @param modelMat
              */
-            virtual void draw(const fgMatrix4f& modelMat);
+            virtual void draw(const Matrix4f& modelMat);
 
             /**
              * 
@@ -305,42 +305,42 @@ namespace fg {
              * 
              * @return 
              */
-            inline fgMatrix4f& getRefModelMatrix(void) {
+            inline Matrix4f& getRefModelMatrix(void) {
                 return m_modelMat;
             }
             /**
              * 
              * @return 
              */
-            inline fgMatrix4f const & getRefModelMatrix(void) const {
+            inline Matrix4f const & getRefModelMatrix(void) const {
                 return m_modelMat;
             }
             /**
              * 
              * @param modelMat
              */
-            inline void setModelMatrix(const fgMatrix4f& modelMat) {
+            inline void setModelMatrix(const Matrix4f& modelMat) {
                 m_modelMat = modelMat;
             }
             /**
              * 
              * @param aabb
              */
-            inline void setAABB(const fgAABoundingBox3Df& aabb) {
+            inline void setAABB(const AABoundingBox3Df& aabb) {
                 m_aabb = aabb;
             }
             /**
              * 
              * @return 
              */
-            inline fgAABoundingBox3Df& getRefAABB(void) {
+            inline AABoundingBox3Df& getRefAABB(void) {
                 return m_aabb;
             }
             /**
              * 
              * @return 
              */
-            inline fgAABoundingBox3Df const & getRefAABB(void) const {
+            inline AABoundingBox3Df const & getRefAABB(void) const {
                 return m_aabb;
             }
             /**
@@ -354,7 +354,7 @@ namespace fg {
              * 
              * @param modelMat
              */
-            virtual inline void updateAABB(const fgMatrix4f& modelMat) {
+            virtual inline void updateAABB(const Matrix4f& modelMat) {
                 // #FUBAR
                 m_aabb.transform(modelMat);
             }

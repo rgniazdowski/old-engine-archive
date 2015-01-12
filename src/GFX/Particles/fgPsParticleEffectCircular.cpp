@@ -25,8 +25,8 @@ fgParticleEffectCircular::~fgParticleEffectCircular() { }
  * Sets m_maxCount, which implies resetting the object
  */
 void fgParticleEffectCircular::setMaxCount(int max_count) {
-    fgParticleEffect::setMaxCount(max_count);
-    fgParticle dummy_particle = fgParticle();
+    CParticleEffect::setMaxCount(max_count);
+    SParticle dummy_particle = SParticle();
 
     // Size == INT_MAX -> object is DUMMY and
     // should not be removed – but overwritten
@@ -34,7 +34,7 @@ void fgParticleEffectCircular::setMaxCount(int max_count) {
 
     // ALL FIELDS ARE DUMMIES AT START
     m_particles.resize(max_count);
-    for(CVector<fgParticle>::iterator it = m_particles.begin(); it != m_particles.end(); it++)
+    for(CVector<SParticle>::iterator it = m_particles.begin(); it != m_particles.end(); it++)
         *it = dummy_particle;
 
     m_dummy_count = maxCount();
@@ -45,7 +45,7 @@ void fgParticleEffectCircular::setMaxCount(int max_count) {
 /**
  * CIRCULAR MODE particle insert - always accepts new particle (deleting old if needed)
  */
-fgBool fgParticleEffectCircular::add(fgParticle* particle) {
+fgBool fgParticleEffectCircular::add(SParticle* particle) {
     // OVERWRITE LAST STORED PARTICLE?
     if(m_overwrite_once_flag) {
         m_overwrite_once_flag = false;
@@ -75,7 +75,7 @@ fgBool fgParticleEffectCircular::add(fgParticle* particle) {
 /**
  * Batch-add of particles. Number of inserts is limited to maxCount
  */
-fgBool fgParticleEffectCircular::addGroup(fgParticle *particles, int count) {
+fgBool fgParticleEffectCircular::addGroup(SParticle *particles, int count) {
     if(count <= 0)
         return FG_FALSE;
 
@@ -93,11 +93,11 @@ fgBool fgParticleEffectCircular::addGroup(fgParticle *particles, int count) {
 /**
  * Adds random Particle, built upon values in [from->some_field, to->some_field]
  */
-fgBool fgParticleEffectCircular::addRandom(fgParticle *from, fgParticle *to) {
+fgBool fgParticleEffectCircular::addRandom(SParticle *from, SParticle *to) {
     if(from == NULL || to == NULL)
         return FG_FALSE;
 
-    fgParticle result;
+    SParticle result;
 
     randomizeOnPair(from, to, &result);
 
@@ -107,7 +107,7 @@ fgBool fgParticleEffectCircular::addRandom(fgParticle *from, fgParticle *to) {
 /**
  * Batch-add with randomization
  */
-fgBool fgParticleEffectCircular::addRandomGroup(fgParticle *from, fgParticle *to, int count) {
+fgBool fgParticleEffectCircular::addRandomGroup(SParticle *from, SParticle *to, int count) {
     if(from == NULL || to == NULL) {
         return FG_FALSE;
     }

@@ -35,7 +35,7 @@ namespace fg {
             /**
              * 
              */
-            CSceneNodeMesh(fgGfxMeshBase *pMesh = NULL, CSceneNode *pParent = NULL);
+            CSceneNodeMesh(SMeshBase *pMesh = NULL, CSceneNode *pParent = NULL);
             /**
              * 
              * @param orig
@@ -51,18 +51,18 @@ namespace fg {
              * 
              * @return 
              */
-            fgGfxMeshBase *getMesh(void) const {
+            SMeshBase *getMesh(void) const {
                 return m_pMesh;
             }
             /**
              * 
              * @param pMesh
              */
-            virtual void setMesh(fgGfxMeshBase *pMesh);
+            virtual void setMesh(SMeshBase *pMesh);
 
         private:
             /// Pointer to external mesh that this object represents
-            fgGfxMeshBase *m_pMesh;
+            SMeshBase *m_pMesh;
 
         };
     };

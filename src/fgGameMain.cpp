@@ -56,10 +56,12 @@
 /// Simple options management
 #include "SimpleOpt.h"
 
+using namespace fg;
+
 /**
  * Default constructor for the Game Main object
  */
-fgGameMain::fgGameMain(int argc, char **argv) :
+CGameMain::CGameMain(int argc, char **argv) :
 m_argc(argc),
 m_argv(argv),
 m_gfxMain(NULL),
@@ -77,7 +79,7 @@ m_logicMgr(NULL),
 m_gameTouchCallback(NULL),
 m_gameMouseCallback(NULL),
 m_gameFreeLookCallback(NULL) {
-    if(!fg::event::CEventManager::initialize()) {
+    if(!event::CEventManager::initialize()) {
 
     }
     // #FIXME srand init ?
@@ -89,10 +91,10 @@ m_gameFreeLookCallback(NULL) {
     // #FIXME - getcwd / get exec path / paths management / etc
     FG_MessageSubsystem->initialize(); // ? #FIXME message subsystem
     FG_MessageSubsystem->setLogPaths("all.log", "error.log", "debug.log");
-    m_inputHandler = new fg::event::CInputHandler();
-    m_joypadController = new fg::event::CJoypadController(); // #FIXME - Joypad part of input receiver?
+    m_inputHandler = new event::CInputHandler();
+    m_joypadController = new event::CJoypadController(); // #FIXME - Joypad part of input receiver?
     m_scriptSubsystem = new fg::script::CScriptSubsystem();
-    m_soundMgr = new fg::sfx::CSfxManager();
+    m_soundMgr = new sfx::CSfxManager();
     this->setEventManager();
     m_joypadController->initialize(); // #FIXME
     registerGameCallbacks();
@@ -101,7 +103,7 @@ m_gameFreeLookCallback(NULL) {
 /**
  * Default destructor for the Game Main object
  */
-fgGameMain::~fgGameMain() {
+CGameMain::~CGameMain() {
     // >> Main Game Object destruction - begin
     // Unregister any required callbacks
     unregisterGameCallbacks();
@@ -194,61 +196,61 @@ fgGameMain::~fgGameMain() {
 /**
  *
  */
-void fgGameMain::registerGameCallbacks(void) {
+void CGameMain::registerGameCallbacks(void) {
     if(!m_gameTouchCallback)
-        m_gameTouchCallback = new fg::event::CMethodCallback<fgGameMain>(this, &fgGameMain::gameTouchHandler);
+        m_gameTouchCallback = new event::CMethodCallback<CGameMain>(this, &CGameMain::gameTouchHandler);
 
-    fg::event::CEventManager::addCallback(FG_EVENT_TOUCH_PRESSED, m_gameTouchCallback);
-    fg::event::CEventManager::addCallback(FG_EVENT_TOUCH_RELEASED, m_gameTouchCallback);
-    fg::event::CEventManager::addCallback(FG_EVENT_TOUCH_MOTION, m_gameTouchCallback);
-    fg::event::CEventManager::addCallback(FG_EVENT_TOUCH_TAP_FINISHED, m_gameTouchCallback);
+    event::CEventManager::addCallback(FG_EVENT_TOUCH_PRESSED, m_gameTouchCallback);
+    event::CEventManager::addCallback(FG_EVENT_TOUCH_RELEASED, m_gameTouchCallback);
+    event::CEventManager::addCallback(FG_EVENT_TOUCH_MOTION, m_gameTouchCallback);
+    event::CEventManager::addCallback(FG_EVENT_TOUCH_TAP_FINISHED, m_gameTouchCallback);
 
     if(!m_gameMouseCallback)
-        m_gameMouseCallback = new fg::event::CMethodCallback<fgGameMain>(this, &fgGameMain::gameMouseHandler);
+        m_gameMouseCallback = new event::CMethodCallback<CGameMain>(this, &CGameMain::gameMouseHandler);
 
-    fg::event::CEventManager::addCallback(FG_EVENT_MOUSE_PRESSED, m_gameMouseCallback);
-    fg::event::CEventManager::addCallback(FG_EVENT_MOUSE_RELEASED, m_gameMouseCallback);
-    fg::event::CEventManager::addCallback(FG_EVENT_MOUSE_MOTION, m_gameMouseCallback);
+    event::CEventManager::addCallback(FG_EVENT_MOUSE_PRESSED, m_gameMouseCallback);
+    event::CEventManager::addCallback(FG_EVENT_MOUSE_RELEASED, m_gameMouseCallback);
+    event::CEventManager::addCallback(FG_EVENT_MOUSE_MOTION, m_gameMouseCallback);
 
     if(!m_gameFreeLookCallback)
-        m_gameFreeLookCallback = new fg::event::CMethodCallback<fgGameMain>(this, &fgGameMain::gameFreeLookHandler);
+        m_gameFreeLookCallback = new event::CMethodCallback<CGameMain>(this, &CGameMain::gameFreeLookHandler);
 
-    fg::event::CEventManager::addCallback(FG_EVENT_TOUCH_PRESSED, m_gameFreeLookCallback);
-    fg::event::CEventManager::addCallback(FG_EVENT_TOUCH_RELEASED, m_gameFreeLookCallback);
-    fg::event::CEventManager::addCallback(FG_EVENT_TOUCH_MOTION, m_gameFreeLookCallback);
-    fg::event::CEventManager::addCallback(FG_EVENT_TOUCH_TAP_FINISHED, m_gameFreeLookCallback);
-    fg::event::CEventManager::addCallback(FG_EVENT_MOUSE_PRESSED, m_gameFreeLookCallback);
-    fg::event::CEventManager::addCallback(FG_EVENT_MOUSE_RELEASED, m_gameFreeLookCallback);
-    fg::event::CEventManager::addCallback(FG_EVENT_MOUSE_MOTION, m_gameFreeLookCallback);
+    event::CEventManager::addCallback(FG_EVENT_TOUCH_PRESSED, m_gameFreeLookCallback);
+    event::CEventManager::addCallback(FG_EVENT_TOUCH_RELEASED, m_gameFreeLookCallback);
+    event::CEventManager::addCallback(FG_EVENT_TOUCH_MOTION, m_gameFreeLookCallback);
+    event::CEventManager::addCallback(FG_EVENT_TOUCH_TAP_FINISHED, m_gameFreeLookCallback);
+    event::CEventManager::addCallback(FG_EVENT_MOUSE_PRESSED, m_gameFreeLookCallback);
+    event::CEventManager::addCallback(FG_EVENT_MOUSE_RELEASED, m_gameFreeLookCallback);
+    event::CEventManager::addCallback(FG_EVENT_MOUSE_MOTION, m_gameFreeLookCallback);
 }
 
 /**
  *
  */
-void fgGameMain::unregisterGameCallbacks(void) {
-    fg::event::CEventManager::removeCallback(FG_EVENT_TOUCH_PRESSED, m_gameTouchCallback);
-    fg::event::CEventManager::removeCallback(FG_EVENT_TOUCH_RELEASED, m_gameTouchCallback);
-    fg::event::CEventManager::removeCallback(FG_EVENT_TOUCH_MOTION, m_gameTouchCallback);
-    fg::event::CEventManager::removeCallback(FG_EVENT_TOUCH_TAP_FINISHED, m_gameTouchCallback);
+void CGameMain::unregisterGameCallbacks(void) {
+    event::CEventManager::removeCallback(FG_EVENT_TOUCH_PRESSED, m_gameTouchCallback);
+    event::CEventManager::removeCallback(FG_EVENT_TOUCH_RELEASED, m_gameTouchCallback);
+    event::CEventManager::removeCallback(FG_EVENT_TOUCH_MOTION, m_gameTouchCallback);
+    event::CEventManager::removeCallback(FG_EVENT_TOUCH_TAP_FINISHED, m_gameTouchCallback);
 
-    fg::event::CEventManager::removeCallback(FG_EVENT_MOUSE_PRESSED, m_gameMouseCallback);
-    fg::event::CEventManager::removeCallback(FG_EVENT_MOUSE_RELEASED, m_gameMouseCallback);
-    fg::event::CEventManager::removeCallback(FG_EVENT_MOUSE_MOTION, m_gameMouseCallback);
+    event::CEventManager::removeCallback(FG_EVENT_MOUSE_PRESSED, m_gameMouseCallback);
+    event::CEventManager::removeCallback(FG_EVENT_MOUSE_RELEASED, m_gameMouseCallback);
+    event::CEventManager::removeCallback(FG_EVENT_MOUSE_MOTION, m_gameMouseCallback);
 
-    fg::event::CEventManager::removeCallback(FG_EVENT_TOUCH_PRESSED, m_gameFreeLookCallback);
-    fg::event::CEventManager::removeCallback(FG_EVENT_TOUCH_RELEASED, m_gameFreeLookCallback);
-    fg::event::CEventManager::removeCallback(FG_EVENT_TOUCH_MOTION, m_gameFreeLookCallback);
-    fg::event::CEventManager::removeCallback(FG_EVENT_TOUCH_TAP_FINISHED, m_gameFreeLookCallback);
-    fg::event::CEventManager::removeCallback(FG_EVENT_MOUSE_PRESSED, m_gameFreeLookCallback);
-    fg::event::CEventManager::removeCallback(FG_EVENT_MOUSE_RELEASED, m_gameFreeLookCallback);
-    fg::event::CEventManager::removeCallback(FG_EVENT_MOUSE_MOTION, m_gameFreeLookCallback);
+    event::CEventManager::removeCallback(FG_EVENT_TOUCH_PRESSED, m_gameFreeLookCallback);
+    event::CEventManager::removeCallback(FG_EVENT_TOUCH_RELEASED, m_gameFreeLookCallback);
+    event::CEventManager::removeCallback(FG_EVENT_TOUCH_MOTION, m_gameFreeLookCallback);
+    event::CEventManager::removeCallback(FG_EVENT_TOUCH_TAP_FINISHED, m_gameFreeLookCallback);
+    event::CEventManager::removeCallback(FG_EVENT_MOUSE_PRESSED, m_gameFreeLookCallback);
+    event::CEventManager::removeCallback(FG_EVENT_MOUSE_RELEASED, m_gameFreeLookCallback);
+    event::CEventManager::removeCallback(FG_EVENT_MOUSE_MOTION, m_gameFreeLookCallback);
 }
 
 /**
  * 
  * @param eventMgr
  */
-void fgGameMain::setEventManager() {
+void CGameMain::setEventManager() {
     //registerGameCallbacks();
     if(m_inputHandler)
         m_inputHandler->setEventManager(this);
@@ -271,12 +273,12 @@ void fgGameMain::setEventManager() {
  * Function creates and initializes subsystems
  * @return
  */
-fgBool fgGameMain::initSubsystems(void) {
+fgBool CGameMain::initSubsystems(void) {
     float t1 = fgTime::ms();
     FG_HardwareState->deviceYield(0); // #FIXME - device yield...
     if(m_gfxMain)
         return FG_FALSE;
-    m_gfxMain = new fgGfxMain();
+    m_gfxMain = new gfx::CGfxMain();
     if(!m_gfxMain->initGFX()) {
         return FG_FALSE;
     }
@@ -284,13 +286,13 @@ fgBool fgGameMain::initSubsystems(void) {
         // Provide styles and widgets path
         std::string mainModPath = m_settings->getMainModPath();
         std::string modPath = m_settings->getCurrentModPath();
-        fg::path::join(mainModPath, mainModPath, "gui");
-        fg::path::join(modPath, modPath, "gui");
+        path::join(mainModPath, mainModPath, "gui");
+        path::join(modPath, modPath, "gui");
         std::string guiPath;
         guiPath.append(mainModPath);
         guiPath.append(";");
         guiPath.append(modPath);
-        m_guiMain = new fg::gui::CGuiMain(guiPath, guiPath);
+        m_guiMain = new gui::CGuiMain(guiPath, guiPath);
     }
     FG_HardwareState->deviceYield(0); // #FIXME - device yield...
     int w = m_gfxMain->getMainWindow()->getWidth();
@@ -304,16 +306,16 @@ fgBool fgGameMain::initSubsystems(void) {
         m_resourceFactory = new fgResourceFactory();
     else
         m_resourceFactory->clear();
-    m_resourceFactory->registerResource(FG_RESOURCE_TEXTURE, &fg::gfx::CTexture::createResource);
-    m_resourceFactory->registerResource(FG_RESOURCE_FONT, &fg::gui::CFont::createResource);
-    m_resourceFactory->registerResource(FG_RESOURCE_GROUP, &fg::resource::CResourceGroup::createResource);
-    m_resourceFactory->registerResource(FG_RESOURCE_3D_MODEL, &fg::gfx::CModel::createResource);
-    m_resourceFactory->registerResource(FG_RESOURCE_PARTICLE_EFFECT, &fgParticleEffect::createResource);
-    m_resourceFactory->registerResource(FG_RESOURCE_MUSIC, &fg::sfx::CMusic::createResource);
-    m_resourceFactory->registerResource(FG_RESOURCE_SOUND, &fg::sfx::CSound::createResource);
+    m_resourceFactory->registerResource(FG_RESOURCE_TEXTURE, &gfx::CTexture::createResource);
+    m_resourceFactory->registerResource(FG_RESOURCE_FONT, &gui::CFont::createResource);
+    m_resourceFactory->registerResource(FG_RESOURCE_GROUP, &resource::CResourceGroup::createResource);
+    m_resourceFactory->registerResource(FG_RESOURCE_3D_MODEL, &gfx::CModel::createResource);
+    m_resourceFactory->registerResource(FG_RESOURCE_PARTICLE_EFFECT, &gfx::CParticleEffect::createResource);
+    m_resourceFactory->registerResource(FG_RESOURCE_MUSIC, &sfx::CMusic::createResource);
+    m_resourceFactory->registerResource(FG_RESOURCE_SOUND, &sfx::CSound::createResource);
     FG_HardwareState->deviceYield(0); // #FIXME - device yield...
     if(!m_resourceMgr)
-        m_resourceMgr = new fg::resource::CResourceManager(m_resourceFactory, m_qualityMgr, this);
+        m_resourceMgr = new resource::CResourceManager(m_resourceFactory, m_qualityMgr, this);
 #if defined(FG_USING_MARMALADE)
     m_resourceMgr->setMaximumMemory(s3eMemoryGetInt(S3E_MEMORY_FREE) - 1024 * 1024 * 10); // minus 10MB for the structures and other overheads
     m_resourceMgr->initialize();
@@ -393,7 +395,7 @@ fgBool fgGameMain::initSubsystems(void) {
  * of game initialization
  * @return 
  */
-fgBool fgGameMain::loadConfiguration(void) {
+fgBool CGameMain::loadConfiguration(void) {
     FG_LOG_DEBUG("Loading configuration...");
     if(!m_settings)
         m_settings = new fgSettings();
@@ -438,17 +440,17 @@ fgBool fgGameMain::loadConfiguration(void) {
  * This loads resources specified in configuration files
  * @return
  */
-fgBool fgGameMain::loadResources(void) {
+fgBool CGameMain::loadResources(void) {
     float t1 = fgTime::ms();
     FG_LOG_DEBUG("Loading resources...");
 #if defined(FG_USING_LUA_PLUS)
     //LuaPlus::LuaState *state = m_scriptSubsystem->getLuaState();
     std::string mainScriptPath, modScriptPath;
-    fg::path::join(mainScriptPath, m_settings->getMainModPath(), std::string("main.lua"));
+    path::join(mainScriptPath, m_settings->getMainModPath(), std::string("main.lua"));
     FG_LOG_DEBUG("Main: Loading and executing script file: '%s'", mainScriptPath.c_str());
     m_scriptSubsystem->executeFile(mainScriptPath);
 
-    fg::path::join(modScriptPath, m_settings->getCurrentModPath(), std::string("main.lua"));
+    path::join(modScriptPath, m_settings->getCurrentModPath(), std::string("main.lua"));
     FG_LOG_DEBUG("Main: Loading and executing script file: '%s'", modScriptPath.c_str());
     m_scriptSubsystem->executeFile(modScriptPath);
 #endif
@@ -457,7 +459,7 @@ fgBool fgGameMain::loadResources(void) {
     m_gfxMain->getShaderManager()->setShadersPath("shaders/");
     m_gfxMain->preLoadShaders();
     std::string sPlainEasyShaderName("sPlainEasy");
-    fg::gfx::CShaderProgram *program = m_gfxMain->getShaderManager()->get(sPlainEasyShaderName);
+    gfx::CShaderProgram *program = m_gfxMain->getShaderManager()->get(sPlainEasyShaderName);
     FG_HardwareState->deviceYield(0); // #FIXME - device yield...
     FG_LOG_DEBUG("Will now try to compile and link 'sPlainEasy' shader program");
     if(program) {
@@ -469,7 +471,7 @@ fgBool fgGameMain::loadResources(void) {
     m_gfxMain->getLoader()->update(10.0f);
     {
         std::string sOrthoEasyShaderName("sOrthoEasy");
-        fg::gfx::CShaderProgram *program = m_gfxMain->getShaderManager()->get(sOrthoEasyShaderName);
+        gfx::CShaderProgram *program = m_gfxMain->getShaderManager()->get(sOrthoEasyShaderName);
         FG_HardwareState->deviceYield(0); // #FIXME - device yield...
         FG_LOG_DEBUG("Init: Will now try to compile and link 'sOrthoEasyShader' shader program");
         if(program) {
@@ -480,7 +482,7 @@ fgBool fgGameMain::loadResources(void) {
     m_gfxMain->getLoader()->update(10.0f);
     {
         std::string sSkyBoxEasyShaderName("sSkyBoxEasy");
-        fg::gfx::CShaderProgram *program = m_gfxMain->getShaderManager()->get(sSkyBoxEasyShaderName);
+        gfx::CShaderProgram *program = m_gfxMain->getShaderManager()->get(sSkyBoxEasyShaderName);
         FG_HardwareState->deviceYield(0); // #FIXME - device yield...
         FG_LOG_DEBUG("Init: Will now try to compile and link 'sSkyBoxEasyShader' shader program");
         if(program) {
@@ -498,7 +500,7 @@ fgBool fgGameMain::loadResources(void) {
         float t1 = fgTime::ms();
         FG_LOG_DEBUG("Init: Will now try load object CobraBomber.obj");
         std::string modelname("CobraBomber");
-        fg::gfx::CModelResource *model = (fg::gfx::CModelResource *)m_resourceMgr->get(modelname);
+        gfx::CModelResource *model = (gfx::CModelResource *)m_resourceMgr->get(modelname);
         float t2 = fgTime::ms();
         FG_LOG_DEBUG("WHOLE OBJECT CREATION TOOK: %.2f seconds", (t2 - t1) / 1000.0f);
     }
@@ -507,13 +509,13 @@ fgBool fgGameMain::loadResources(void) {
     ////////////////////////////////////////////////////////////////////////////
 #endif
 
-    m_gfxMain->getParticleSystem()->insertParticleEmitter("ExplosionDebris", "ExplosionDebris", fgVector3f(0.0f, 0.0f, 0.0f));
-    m_gfxMain->getParticleSystem()->insertParticleEmitter("ExplosionFlash", "ExplosionFlash", fgVector3f(0.0f, 0.0f, 0.0f));
-    m_gfxMain->getParticleSystem()->insertParticleEmitter("ExplosionRoundSparks", "ExplosionRoundSparks", fgVector3f(0.0f, 0.0f, 0.0f));
-    m_gfxMain->getParticleSystem()->insertParticleEmitter("ExplosionShockwave", "ExplosionShockwave", fgVector3f(0.0f, 0.0f, 0.0f));
-    m_gfxMain->getParticleSystem()->insertParticleEmitter("ExplosionSmoke", "ExplosionSmoke", fgVector3f(0.0f, 0.0f, 0.0f));
-    m_gfxMain->getParticleSystem()->insertParticleEmitter("ExplosionSmokeTrails", "ExplosionSmokeTrails", fgVector3f(0.0f, 0.0f, 0.0f));
-    m_gfxMain->getParticleSystem()->insertParticleEmitter("ExplosionSparks", "ExplosionSparks", fgVector3f(0.0f, 0.0f, 0.0f));
+    m_gfxMain->getParticleSystem()->insertParticleEmitter("ExplosionDebris", "ExplosionDebris", Vector3f(0.0f, 0.0f, 0.0f));
+    m_gfxMain->getParticleSystem()->insertParticleEmitter("ExplosionFlash", "ExplosionFlash", Vector3f(0.0f, 0.0f, 0.0f));
+    m_gfxMain->getParticleSystem()->insertParticleEmitter("ExplosionRoundSparks", "ExplosionRoundSparks", Vector3f(0.0f, 0.0f, 0.0f));
+    m_gfxMain->getParticleSystem()->insertParticleEmitter("ExplosionShockwave", "ExplosionShockwave", Vector3f(0.0f, 0.0f, 0.0f));
+    m_gfxMain->getParticleSystem()->insertParticleEmitter("ExplosionSmoke", "ExplosionSmoke", Vector3f(0.0f, 0.0f, 0.0f));
+    m_gfxMain->getParticleSystem()->insertParticleEmitter("ExplosionSmokeTrails", "ExplosionSmokeTrails", Vector3f(0.0f, 0.0f, 0.0f));
+    m_gfxMain->getParticleSystem()->insertParticleEmitter("ExplosionSparks", "ExplosionSparks", Vector3f(0.0f, 0.0f, 0.0f));
     float t2 = fgTime::ms();
     FG_LOG_DEBUG("Main: Resources loaded in %.2f seconds", (t2 - t1) / 1000.0f);
     m_gfxMain->getLoader()->update(10.0f);
@@ -527,7 +529,7 @@ fgBool fgGameMain::loadResources(void) {
  * This unloads, frees and deletes all data from fgResourceManager subsystem
  * @return
  */
-fgBool fgGameMain::releaseResources(void) {
+fgBool CGameMain::releaseResources(void) {
     if(m_resourceMgr) {
         FG_LOG_DEBUG("Releasing resources...");
         return m_resourceMgr->destroy();
@@ -540,12 +542,12 @@ fgBool fgGameMain::releaseResources(void) {
  * must be called after releaseResources
  * @return
  */
-fgBool fgGameMain::closeSybsystems(void) {
+fgBool CGameMain::closeSybsystems(void) {
     FG_LOG_DEBUG("Closing subsystems...");
     if(m_gfxMain)
         m_gfxMain->releaseTextures();
 
-    fgGameMain::releaseResources();
+    CGameMain::releaseResources();
     if(m_inputHandler)
         m_inputHandler->setEventManager(NULL);
     FG_HardwareState->deleteInstance(); // #KILL_ALL_SINGLETONS
@@ -559,7 +561,7 @@ fgBool fgGameMain::closeSybsystems(void) {
  * This function releases the resources and closes the subsystems
  * @return
  */
-fgBool fgGameMain::quit(void) {
+fgBool CGameMain::quit(void) {
     FG_LOG_DEBUG("Game main quit requested");
     fgBool status = FG_TRUE;
     if(!releaseResources())
@@ -574,7 +576,7 @@ fgBool fgGameMain::quit(void) {
  * displayed in current frame; the real drawing of created buffers is inside the render
  * function (which in the future should be in separate thread)
  */
-void fgGameMain::display(void) {
+void CGameMain::display(void) {
 #if defined(FG_DEBUG)
     if(g_fgDebugConfig.isDebugProfiling)
         g_debugProfiling->begin("GFX::display");
@@ -597,7 +599,7 @@ void fgGameMain::display(void) {
 /**
  * Begins the proper render of the created buffers
  */
-void fgGameMain::render(void) {
+void CGameMain::render(void) {
     // #FIXME
     static int fpsc = 0;
     if(fpsc == FG_FRAMES_COUNT_LIMIT + 2) {
@@ -619,7 +621,7 @@ void fgGameMain::render(void) {
         g_debugProfiling->end("GFX::render");
     }
 #endif
-    fg::gfx::CPlatform::context()->setBlend(FG_TRUE); // #FIXME
+    gfx::CPlatform::context()->setBlend(FG_TRUE); // #FIXME
 #if defined(FG_DEBUG)
     if(g_fgDebugConfig.isDebugProfiling) {
         g_debugProfiling->begin("GUI::render");
@@ -631,7 +633,7 @@ void fgGameMain::render(void) {
         g_debugProfiling->end("GUI::render");
     }
 #endif
-    fg::gfx::CPlatform::context()->setBlend(FG_FALSE); // #FIXME
+    gfx::CPlatform::context()->setBlend(FG_FALSE); // #FIXME
     FG_HardwareState->deviceYield();
     m_gfxMain->getMainWindow()->swapBuffers();
 }
@@ -640,7 +642,7 @@ void fgGameMain::render(void) {
  * Update - all event handling, calling scripts, AI, game logic and etc
  * This happens for every frame (for iOS fps is hardcoded for 60, never more)
  */
-void fgGameMain::update(void) {
+void CGameMain::update(void) {
     fgTime::markTick();
     FG_HardwareState->calculateDT(); // #FIXME
     FG_HardwareState->calculateFPS(); // #FIXME
@@ -659,7 +661,7 @@ void fgGameMain::update(void) {
     FG_HardwareState->deviceYield(0);
     // Well this is really useful system, in the end GUI and others will be hooked
     // to EventManager so everything what needs to be done is done in this function
-    fg::event::CEventManager::executeEvents();
+    event::CEventManager::executeEvents();
     FG_HardwareState->deviceYield(0);
     // This must be called  when you wish the manager to check for discardable
     // resources.  Resources will only be swapped out if the maximum allowable
@@ -680,7 +682,7 @@ void fgGameMain::update(void) {
  * @param argv
  * @return 
  */
-fgBool fgGameMain::gameTouchHandler(fg::event::CArgumentList *argv) {
+fgBool CGameMain::gameTouchHandler(event::CArgumentList *argv) {
     if(!argv)
         return FG_FALSE;
     fgEventBase *event = (fgEventBase *)argv->getValueByID(0);
@@ -690,47 +692,47 @@ fgBool fgGameMain::gameTouchHandler(fg::event::CArgumentList *argv) {
     if(type == FG_EVENT_TOUCH_TAP_FINISHED && this->m_gfxMain) {
 
         fgTouchEvent *touch = (fgTouchEvent *)event;
-        fgParticleEmitter *pEmitter = NULL;
+        gfx::CParticleEmitter *pEmitter = NULL;
         {
             pEmitter = this->m_gfxMain->getParticleSystem()->getParticleEmitter("ExplosionDebris");
             if(pEmitter) {
-                pEmitter->addParticles(20, fgVector3f((float)touch->x, (float)touch->y, 0.0f));
+                pEmitter->addParticles(20, Vector3f((float)touch->x, (float)touch->y, 0.0f));
             }
         }
         {
             pEmitter = this->m_gfxMain->getParticleSystem()->getParticleEmitter("ExplosionFlash");
             if(pEmitter) {
-                pEmitter->addParticles(2, fgVector3f((float)touch->x, (float)touch->y, 0.0f));
+                pEmitter->addParticles(2, Vector3f((float)touch->x, (float)touch->y, 0.0f));
             }
         }
         {
             pEmitter = this->m_gfxMain->getParticleSystem()->getParticleEmitter("ExplosionRoundSparks");
             if(pEmitter) {
-                pEmitter->addParticles(6, fgVector3f((float)touch->x, (float)touch->y, 0.0f));
+                pEmitter->addParticles(6, Vector3f((float)touch->x, (float)touch->y, 0.0f));
             }
         }
         {
             pEmitter = this->m_gfxMain->getParticleSystem()->getParticleEmitter("ExplosionShockwave");
             if(pEmitter) {
-                pEmitter->addParticles(1, fgVector3f((float)touch->x, (float)touch->y, 0.0f));
+                pEmitter->addParticles(1, Vector3f((float)touch->x, (float)touch->y, 0.0f));
             }
         }
         {
             pEmitter = this->m_gfxMain->getParticleSystem()->getParticleEmitter("ExplosionSmoke");
             if(pEmitter) {
-                pEmitter->addParticles(20, fgVector3f((float)touch->x, (float)touch->y, 0.0f));
+                pEmitter->addParticles(20, Vector3f((float)touch->x, (float)touch->y, 0.0f));
             }
         }
         {
             pEmitter = this->m_gfxMain->getParticleSystem()->getParticleEmitter("ExplosionSmokeTrails");
             if(pEmitter) {
-                pEmitter->addParticles(32, fgVector3f((float)touch->x, (float)touch->y, 0.0f));
+                pEmitter->addParticles(32, Vector3f((float)touch->x, (float)touch->y, 0.0f));
             }
         }
         {
             pEmitter = this->m_gfxMain->getParticleSystem()->getParticleEmitter("ExplosionSparks");
             if(pEmitter) {
-                pEmitter->addParticles(48, fgVector3f((float)touch->x, (float)touch->y, 0.0f));
+                pEmitter->addParticles(48, Vector3f((float)touch->x, (float)touch->y, 0.0f));
             }
         }
     }
@@ -742,7 +744,7 @@ fgBool fgGameMain::gameTouchHandler(fg::event::CArgumentList *argv) {
  * @param argv
  * @return 
  */
-fgBool fgGameMain::gameMouseHandler(fg::event::CArgumentList *argv) {
+fgBool CGameMain::gameMouseHandler(event::CArgumentList *argv) {
     if(!argv)
         return FG_FALSE;
     fgEventBase *event = (fgEventBase *)argv->getValueByID(0);
@@ -759,7 +761,7 @@ fgBool fgGameMain::gameMouseHandler(fg::event::CArgumentList *argv) {
  * @param argv
  * @return 
  */
-fgBool fgGameMain::gameFreeLookHandler(fg::event::CArgumentList* argv) {
+fgBool CGameMain::gameFreeLookHandler(event::CArgumentList* argv) {
     if(!argv || !this->m_gfxMain)
         return FG_FALSE;
     if(!this->m_gfxMain->get3DSceneCamera())

@@ -38,7 +38,7 @@
 
     #include "fgGuiDrawer.h"
     #include "fgGuiCallback.h"
-    
+
 namespace fg {
     namespace gui {
         class CGuiMain;
@@ -55,7 +55,7 @@ namespace fg {
 //FG_EVENT_MOUSE_MOTION		=	7,
 
     #define FG_MANAGER_GUI_MAIN     0x00000400
-    
+
 namespace fg {
     namespace gui {
 
@@ -113,7 +113,7 @@ namespace fg {
             /// Special bounding box describing current screen/window
             /// 3D float/double type box is used for compatibility 
             /// with widget functions
-            fgBoundingBox3Df m_screenBox;
+            gfx::BoundingBox3Df m_screenBox;
 
         protected:
             /**

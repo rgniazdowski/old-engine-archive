@@ -91,8 +91,8 @@ void gui::CScrollArea::display(CDrawer* guiLayer) {
         return;
     }
     SPadding &padding = m_styles[(int)m_state].getPadding();
-    fgVector3f oldRelMove = guiLayer->getRelMove();
-    fgVector3f newRelMove = oldRelMove + fgVector3f(m_relMove.x, m_relMove.y, 0.0f); // #FIXME
+    Vector3f oldRelMove = guiLayer->getRelMove();
+    Vector3f newRelMove = oldRelMove + Vector3f(m_relMove.x, m_relMove.y, 0.0f); // #FIXME
 
     // Draw current widget without the children and relative move
     fgBool drawChildren = isDrawChildren();
@@ -101,7 +101,7 @@ void gui::CScrollArea::display(CDrawer* guiLayer) {
     setDrawChildren(drawChildren);
 
     // Get the current screen size
-    fgVector2i const &screenSize = guiLayer->getScreenSize();
+    Vector2i const &screenSize = guiLayer->getScreenSize();
 
     // Set the relative move for drawing
     // Draw base (container) children with relative position
@@ -135,10 +135,10 @@ void gui::CScrollArea::display(CDrawer* guiLayer) {
  * 
  * @return 
  */
-fgBoundingBox3Df gui::CScrollArea::updateBounds(void) {
+gfx::BoundingBox3Df gui::CScrollArea::updateBounds(void) {
 
     SMargin &margin = m_styles[(int)m_state].getMargin();
-    fgBoundingBox3Df scrollAreaSize = CWidget::updateBounds();
+    gfx::BoundingBox3Df scrollAreaSize = CWidget::updateBounds();
     m_contentBBox = base_type::updateBounds();
     m_bbox = scrollAreaSize;
     m_bbox.pos.x += margin.left;
@@ -158,11 +158,11 @@ fgBoundingBox3Df gui::CScrollArea::updateBounds(void) {
 
         if(m_sliderSwitch & SLIDER_VERTICAL)
             w -= m_vSlider->getSize().x + border.left.width;
-        m_hSlider->setSize(fgVector3f(w, h, 0.0f));
-        m_hSlider->setPosition(fgVector3f(x, y, 0.0f));
+        m_hSlider->setSize(Vector3f(w, h, 0.0f));
+        m_hSlider->setPosition(Vector3f(x, y, 0.0f));
         m_hSlider->updateBounds();
-        m_hSlider->setRatio(scrollAreaSize.size.x/m_contentBBox.size.x);
-        m_relMove.x = (-1.0f) * (m_contentBBox.size.x-scrollAreaSize.size.x) * m_hSlider->getCurrentValue().x / m_hSlider->getMaxValue();
+        m_hSlider->setRatio(scrollAreaSize.size.x / m_contentBBox.size.x);
+        m_relMove.x = (-1.0f) * (m_contentBBox.size.x - scrollAreaSize.size.x) * m_hSlider->getCurrentValue().x / m_hSlider->getMaxValue();
     }
     if(m_vSlider) {
         CStyleContent &style = m_vSlider->getStyleContent(m_vSlider->getState());
@@ -176,12 +176,12 @@ fgBoundingBox3Df gui::CScrollArea::updateBounds(void) {
         if(m_sliderSwitch & SLIDER_HORIZONTAL)
             h -= m_hSlider->getSize().y + border.bottom.width;
 
-        m_vSlider->setSize(fgVector3f(w, h, 0.0f));
+        m_vSlider->setSize(Vector3f(w, h, 0.0f));
         // LEFT ? This will need fixing - #slider / scroll box positioning / update bounds
-        m_vSlider->setPosition(fgVector3f(x, y, 0.0f));
+        m_vSlider->setPosition(Vector3f(x, y, 0.0f));
         m_vSlider->updateBounds();
-        m_vSlider->setRatio(scrollAreaSize.size.y/m_contentBBox.size.y);
-        m_relMove.y = (-1.0f) * (m_contentBBox.size.y-scrollAreaSize.size.y) * m_vSlider->getCurrentValue().y / m_vSlider->getMaxValue();
+        m_vSlider->setRatio(scrollAreaSize.size.y / m_contentBBox.size.y);
+        m_relMove.y = (-1.0f) * (m_contentBBox.size.y - scrollAreaSize.size.y) * m_vSlider->getCurrentValue().y / m_vSlider->getMaxValue();
     }
     return scrollAreaSize;
 }
@@ -191,7 +191,7 @@ fgBoundingBox3Df gui::CScrollArea::updateBounds(void) {
  * @param bbox
  * @return 
  */
-fgBoundingBox3Df gui::CScrollArea::updateBounds(const fgBoundingBox3Df& bbox) {
+gfx::BoundingBox3Df gui::CScrollArea::updateBounds(const gfx::BoundingBox3Df& bbox) {
     return base_type::updateBounds(bbox);
 }
 

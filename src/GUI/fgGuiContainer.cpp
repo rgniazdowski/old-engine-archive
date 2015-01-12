@@ -127,7 +127,7 @@ void gui::CContainer::display(CDrawer *guiLayer) {
  * 
  * @return 
  */
-fgBoundingBox3Df gui::CContainer::updateBounds(void) {
+gfx::BoundingBox3Df gui::CContainer::updateBounds(void) {
     if(m_children.empty()) {
         return base_type::updateBounds();
     }
@@ -142,31 +142,31 @@ fgBoundingBox3Df gui::CContainer::updateBounds(void) {
     // Current container margins (outer border)
     SMargin &containerMargin = containerStyle.getMargin();
     // outerBox - this box takes into account current widget's margin
-    fgBoundingBox3Df outerBox;
+    gfx::BoundingBox3Df outerBox;
     // innerBox - this box is for the usable area inside of the widget
     // it's bbox without the inner paddings
-    fgBoundingBox3Df innerBox;
+    gfx::BoundingBox3Df innerBox;
     // widgetBox - this is special area just for one widget
     // It describes constraints for a given widget
     // Calculate from: childSize + spacing
     // childSize needs to take into account margins
-    fgBoundingBox3Df widgetBox;
+    gfx::BoundingBox3Df widgetBox;
     // Size of the smallest widget
-    fgVector3f minWidgetSize(FG_GUI_FLOAT_UNIT_INVALID,
-                             FG_GUI_FLOAT_UNIT_INVALID,
-                             FG_GUI_FLOAT_UNIT_INVALID);
+    Vector3f minWidgetSize(FG_GUI_FLOAT_UNIT_INVALID,
+                           FG_GUI_FLOAT_UNIT_INVALID,
+                           FG_GUI_FLOAT_UNIT_INVALID);
     // Size of the largest widget
-    fgVector3f maxWidgetSize;
+    Vector3f maxWidgetSize;
     // Size of all children inside of this container
     // Be aware that this differs completely depending
     // on the packing method (vertical/horizontal)
-    fgVector3f childrenSize;
+    Vector3f childrenSize;
     // Spacing describes the space before and after the widget
     // Equation: (InnerContainerSize - ChildrenSize) / ( ChildrenCount * 2 )
-    fgVector3f spacing;
+    Vector3f spacing;
     // Stepping describes the average area size for a single widget #FIXME
     // Equation: (InnerContainerSize / ChildrenCount)
-    fgVector3f stepping;
+    Vector3f stepping;
     // Number of all children
     int nChildren = m_children.size();
     // Number of all static children - these widgets are processed 
@@ -191,7 +191,7 @@ fgBoundingBox3Df gui::CContainer::updateBounds(void) {
         // #FIXME - not visible widgets should be completely ignored?
         if(!child->isVisible())
             continue;
-        fgVector3f childSize;
+        Vector3f childSize;
 
         if(child->getStyleContent().getPosition().style != SPosition::Style::STATIC) {
             nStaticChildren--;
@@ -272,7 +272,7 @@ fgBoundingBox3Df gui::CContainer::updateBounds(void) {
     // Equation: (InnerContainerSize / ChildrenCount)
     stepping = (innerBox.size / (float)nStaticChildren);
     // Helper vector - size of the last widget
-    fgVector3f lastChildSize;
+    Vector3f lastChildSize;
 
     // Iterate through all children widgets updating their
     // size and position with special area constraint
@@ -287,7 +287,7 @@ fgBoundingBox3Df gui::CContainer::updateBounds(void) {
         }
 
         // Valid size of the current widget
-        fgVector3f childSize = child->getSize();
+        Vector3f childSize = child->getSize();
         childSize.x += child->getStyleContent().getMargin().right + child->getStyleContent().getMargin().left;
         childSize.y += child->getStyleContent().getMargin().bottom + child->getStyleContent().getMargin().top;
         if(!lastWidget) {

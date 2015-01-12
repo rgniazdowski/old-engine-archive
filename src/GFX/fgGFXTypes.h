@@ -15,6 +15,24 @@
         #error "FG_TYPES_BLOCK constant is defined. Do not include fgGfxTypes header inside of fgTypes header."
     #endif
 
+    #ifndef FG_GFX_NONE
+        #define FG_GFX_NONE 0
+    #endif
+
+    #ifndef FG_INC_MATHLIB
+        #include "Math/fgMathLib.h"
+    #endif
+
+    #if 0
+namespace fg {
+    namespace gfx {
+        namespace math {
+            using namespace ::fg::math;
+        };
+    };
+};
+    #endif // 0 // nope...
+
     #ifndef FG_INC_GFX_GL
         #include "fgGFXGL.h"
     #endif
@@ -23,12 +41,28 @@
         #include "fgGFXColor.h"
     #endif
 
-    #ifndef FG_GFX_NONE
-        #define FG_GFX_NONE 0
-    #endif
-
     #ifndef FG_INC_GFX_ATTRIB_BITS
         #include "fgGFXAttribBits.h"
+    #endif
+
+    #ifndef FG_INC_GFX_ATTRIBUTE_DATA
+        #include "fgGFXAttributeData.h"
+    #endif
+
+    #ifndef FG_INC_GFX_BUFFERID
+        #include "fgGFXBufferID.h"
+    #endif
+
+    #ifndef FG_INC_GFX_TEXTUREID
+        #include "fgGFXTextureID.h"
+    #endif
+
+    #ifndef FG_INC_GFX_VERTEX
+        #include "fgGFXVertex.h"
+    #endif
+
+    #ifndef FG_INC_GFX_VERTEX_DATA
+        #include "fgGFXVertexData.h"
     #endif
 
     #if !defined(FG_RAND)
@@ -109,26 +143,13 @@ inline const char * _FG_GFX_DATA_TYPE_TO_TEXT(fgGFXenum value) {
 }
 
 // #FIXME - #P3 - string obfuscation (also for error code -> text msg translations)
-    #define FG_GFX_DATA_TYPE_FROM_TEXT(text)	_FG_GFX_DATA_TYPE_FROM_TEXT(text)
-    #define FG_GFX_DATA_TYPE_TO_TEXT(value)		_FG_GFX_DATA_TYPE_TO_TEXT(value)
+    #define FG_GFX_DATA_TYPE_FROM_TEXT(text)    _FG_GFX_DATA_TYPE_FROM_TEXT(text)
+    #define FG_GFX_DATA_TYPE_TO_TEXT(value)     _FG_GFX_DATA_TYPE_TO_TEXT(value)
 
-    #ifndef FG_INC_GFX_ATTRIBUTE_DATA
-        #include "fgGFXAttributeData.h"
-    #endif
 
 //
 // Buffer / Texture / ... binding helper structures
 //
-
-    #ifndef FG_INC_GFX_BUFFERID
-        #include "fgGFXBufferID.h"
-    #endif
-
-    #ifndef FG_INC_GFX_TEXTUREID
-        #include "fgGFXTextureID.h"
-    #endif
-
-    #include <cmath>
 
     #ifndef FG_EPSILON
         #define FG_EPSILON 1e-6f
@@ -155,16 +176,7 @@ inline const char * _FG_GFX_DATA_TYPE_TO_TEXT(fgGFXenum value) {
         #define FG_RAD2DEG_FUNC(_RADIANS) (_RADIANS * FG_RAD2DEG)
     #endif
 
-    #ifndef FG_INC_GFX_VERTEX
-        #include "fgGFXVertex.h"
-    #endif
-
-
-    #ifndef FG_INC_GFX_VERTEX_DATA
-        #include "fgGFXVertexData.h"
-    #endif
-
-/*
+/**
  * This is quick drawing info, it's a helper, needs refactoring
  * It provides info for direct drawing functions (like DrawElements
  * or DrawArrays from gl). Because of the parameters it's easy to
@@ -183,8 +195,9 @@ struct fgGfxDrawingInfo {
     fgGFXuint buffer;
     ///
     fgGFXuint count;
-
-    //
+    /**
+     * 
+     */
     fgGfxDrawingInfo() {
         indices.pointer = 0;
         indices.offset = 0;

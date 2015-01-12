@@ -37,7 +37,7 @@ void gui::CFrame::setDefaults(void) {
  * 
  * @return 
  */
-fgBoundingBox3Df gui::CFrame::updateBounds(void) {
+gfx::BoundingBox3Df gui::CFrame::updateBounds(void) {
     return CContainer::updateBounds();
 }
 

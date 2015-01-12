@@ -36,7 +36,7 @@ void gui::CEditableText::setDefaults(void) {
 /*
  *
  */
-fgBoundingBox3Df gui::CEditableText::updateBounds(void) {
+gfx::BoundingBox3Df gui::CEditableText::updateBounds(void) {
     return CTextArea::updateBounds();
 }
 

@@ -70,7 +70,7 @@ namespace fg {
                                          float top,
                                          float zNear = FG_GFX_ORTHO_ZNEAR_DEFAULT,
                                          float zFar = FG_GFX_ORTHO_ZFAR_DEFAULT) {
-                m_projMatrix = fgMath::ortho(left, right, bottom, top, zNear, zFar);
+                m_projMatrix = math::ortho(left, right, bottom, top, zNear, zFar);
                 m_frustum.setCamera(0.0f, right / bottom, zNear, zFar);
                 m_viewProjMatrix = m_projMatrix * m_viewMatrix;
                 m_frustum.set(m_viewProjMatrix);
@@ -80,7 +80,7 @@ namespace fg {
              * @param modelMatrix
              * @return 
              */
-            virtual float *calculate(const fgMatrix4f & modelMatrix) {
+            virtual float *calculate(const Matrix4f & modelMatrix) {
                 CMVMatrix::calculate(modelMatrix);
                 m_modelViewProjMatrix = m_projMatrix * m_modelViewMatrix;
                 //m_frustum.set(m_modelViewProjMatrix);
@@ -94,7 +94,7 @@ namespace fg {
              * @return 
              */
             virtual float *calculate(CCamera *camera,
-                                     const fgMatrix4f & modelMatrix,
+                                     const Matrix4f & modelMatrix,
                                      fgBool updateMatrix = FG_TRUE) {
                 CMVMatrix::calculate(camera, modelMatrix);
                 // argument updateMatrix is ignored, MVP matrix will be always updated
@@ -108,7 +108,7 @@ namespace fg {
              * 
              */
             virtual void resetModelMatrix(void) {
-                CMVMatrix::calculate(fgMatrix4f());
+                CMVMatrix::calculate(Matrix4f());
                 m_modelViewProjMatrix = m_projMatrix * m_modelViewMatrix;
             }
             /**
@@ -128,14 +128,14 @@ namespace fg {
              * 
              * @return 
              */
-            inline fgMatrix4f & getRefModelViewProjMatrix(void) {
+            inline Matrix4f & getRefModelViewProjMatrix(void) {
                 return m_modelViewProjMatrix;
             }
             /**
              * 
              * @return 
              */
-            inline fgMatrix4f const & getRefModelViewProjMatrix(void) const {
+            inline Matrix4f const & getRefModelViewProjMatrix(void) const {
                 return m_modelViewProjMatrix;
             }
             /**
@@ -143,14 +143,14 @@ namespace fg {
              * @return 
              */
             inline const float * getModelViewProjMatPtr(void) const {
-                return fgMath::value_ptr(m_modelViewProjMatrix);
+                return math::value_ptr(m_modelViewProjMatrix);
             }
             /**
              * 
              * @return 
              */
             inline float * getModelViewProjMatPtr(void) {
-                return fgMath::value_ptr(m_modelViewProjMatrix);
+                return math::value_ptr(m_modelViewProjMatrix);
             }
             /*
              * Getters for VP raw matrix (view * projection)
@@ -159,14 +159,14 @@ namespace fg {
              * 
              * @return 
              */
-            inline fgMatrix4f & getRefViewProjMatrix(void) {
+            inline Matrix4f & getRefViewProjMatrix(void) {
                 return m_viewProjMatrix;
             }
             /**
              * 
              * @return 
              */
-            inline fgMatrix4f const & getRefViewProjMatrix(void) const {
+            inline Matrix4f const & getRefViewProjMatrix(void) const {
                 return m_viewProjMatrix;
             }
             /**
@@ -174,14 +174,14 @@ namespace fg {
              * @return 
              */
             inline const float * getViewProjMatPtr(void) const {
-                return fgMath::value_ptr(m_viewProjMatrix);
+                return math::value_ptr(m_viewProjMatrix);
             }
             /**
              * 
              * @return 
              */
             inline float * getViewProjMatPtr(void) {
-                return fgMath::value_ptr(m_viewProjMatrix);
+                return math::value_ptr(m_viewProjMatrix);
             }
             /**
              * 
@@ -189,15 +189,15 @@ namespace fg {
             virtual inline void identity(void) {
                 CMVMatrix::identity();
                 CProjection::identity();
-                m_modelViewProjMatrix = fgMatrix4f();
-                m_viewProjMatrix = fgMatrix4f();
+                m_modelViewProjMatrix = Matrix4f();
+                m_viewProjMatrix = Matrix4f();
             }
 
         protected:
             /// 
-            fgMatrix4f m_modelViewProjMatrix;
+            Matrix4f m_modelViewProjMatrix;
             ///
-            fgMatrix4f m_viewProjMatrix;
+            Matrix4f m_viewProjMatrix;
         };
     };
 };

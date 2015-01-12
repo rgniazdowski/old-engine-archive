@@ -37,7 +37,7 @@ void gui::CLoaderSub::setDefaults(void) {
  * 
  * @return 
  */
-fgBoundingBox3Df gui::CLoaderSub::updateBounds(void) {
+gfx::BoundingBox3Df gui::CLoaderSub::updateBounds(void) {
     return base_type::updateBounds();
 }
 

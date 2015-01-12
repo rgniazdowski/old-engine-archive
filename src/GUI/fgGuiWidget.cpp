@@ -71,8 +71,8 @@ void gui::CWidget::display(CDrawer *guiLayer) {
         return;
     CDrawer *guiDrawer = (CDrawer *)guiLayer;
     guiDrawer->downZIndex();
-    fgVec2f blockPos = fgVec2f(m_bbox.pos.x, m_bbox.pos.y);
-    fgVec2f blockSize = fgVec2f(m_bbox.size.x, m_bbox.size.y);
+    Vec2f blockPos = Vec2f(m_bbox.pos.x, m_bbox.pos.y);
+    Vec2f blockSize = Vec2f(m_bbox.size.x, m_bbox.size.y);
     fgColor4f &bgColor = m_styles[(int)m_state].getBackground().color;
     if(bgColor.a > FG_EPSILON)
         guiDrawer->appendBackground2D(blockPos, blockSize, m_styles[(int)m_state]);
@@ -98,16 +98,16 @@ void gui::CWidget::display(CDrawer *guiLayer) {
     if(m_text.length()) {
         // #FIXME
         guiDrawer->downZIndex();
-        blockPos = fgVec2f(m_bbox.pos.x, m_bbox.pos.y);
-        blockSize = fgVec2f(m_bbox.size.x, m_bbox.size.y);
+        blockPos = Vec2f(m_bbox.pos.x, m_bbox.pos.y);
+        blockSize = Vec2f(m_bbox.size.x, m_bbox.size.y);
         guiDrawer->appendText2D(m_textSize, blockPos, blockSize, m_styles[(int)m_state], getTextStr());
         guiDrawer->upZIndex();
     }
 #if defined(FG_DEBUG)
     // PADDING DEBUG - INNER BORDER
     if(g_fgDebugConfig.guiBBoxShow) {
-        blockPos = fgVec2f(m_bbox.pos.x, m_bbox.pos.y);
-        blockSize = fgVec2f(m_bbox.size.x, m_bbox.size.y);
+        blockPos = Vec2f(m_bbox.pos.x, m_bbox.pos.y);
+        blockSize = Vec2f(m_bbox.size.x, m_bbox.size.y);
         blockPos.x += m_styles[(int)m_state].getPadding().left;
         blockPos.y += m_styles[(int)m_state].getPadding().top;
         blockSize.x -= m_styles[(int)m_state].getPadding().right + m_styles[(int)m_state].getPadding().left;
@@ -116,8 +116,8 @@ void gui::CWidget::display(CDrawer *guiLayer) {
     }
     // MARGIN DEBUG - OUTER BORDER
     if(g_fgDebugConfig.guiBBoxShow) {
-        blockPos = fgVec2f(m_bbox.pos.x, m_bbox.pos.y);
-        blockSize = fgVec2f(m_bbox.size.x, m_bbox.size.y);
+        blockPos = Vec2f(m_bbox.pos.x, m_bbox.pos.y);
+        blockSize = Vec2f(m_bbox.size.x, m_bbox.size.y);
         blockPos.x -= m_styles[(int)m_state].getMargin().left;
         blockPos.y -= m_styles[(int)m_state].getMargin().top;
         blockSize.x += m_styles[(int)m_state].getMargin().right + m_styles[(int)m_state].getMargin().left;
@@ -131,13 +131,13 @@ void gui::CWidget::display(CDrawer *guiLayer) {
  * 
  * @return 
  */
-fgBoundingBox3Df gui::CWidget::updateBounds(void) {
+gfx::BoundingBox3Df gui::CWidget::updateBounds(void) {
     CStyleContent &style = m_styles[(int)m_state];
     SPadding &padding = style.getPadding();
     // Padding is inside of the border - it applies to the contents inside
     // of the widget, in this case the lowest (most deep) content is initial
     // text / label 
-    fgVector3f minSize;
+    Vector3f minSize;
     minSize.x = m_textSize.x + padding.left + padding.right;
     minSize.y = m_textSize.y + padding.top + padding.bottom;
     if(m_bbox.size.x < minSize.x) {
@@ -146,7 +146,7 @@ fgBoundingBox3Df gui::CWidget::updateBounds(void) {
     if(m_bbox.size.y < minSize.y) {
         m_bbox.size.y = minSize.y;
     }
-    fgBoundingBox3Df positionAndSize = m_bbox;
+    gfx::BoundingBox3Df positionAndSize = m_bbox;
     positionAndSize.pos.x -= style.getMargin().left;
     positionAndSize.pos.y -= style.getMargin().top;
     positionAndSize.size.x += style.getMargin().right + style.getMargin().left;
@@ -159,7 +159,7 @@ fgBoundingBox3Df gui::CWidget::updateBounds(void) {
  * @param bounds
  * @return 
  */
-fgBoundingBox3Df gui::CWidget::updateBounds(const fgBoundingBox3Df &bounds) {
+gfx::BoundingBox3Df gui::CWidget::updateBounds(const gfx::BoundingBox3Df &bounds) {
     CStyleContent &style = m_styles[(int)m_state];
     SPosition::Style posStyle = style.getPosition().style;
     SSize &size = style.getSize();
@@ -170,7 +170,7 @@ fgBoundingBox3Df gui::CWidget::updateBounds(const fgBoundingBox3Df &bounds) {
         m_bbox.size.x = size.x / 100.0f * bounds.size.x - style.getMargin().left - style.getMargin().right;
         m_bbox.size.y = size.y / 100.0f * bounds.size.y - style.getMargin().bottom - style.getMargin().top;
     }
-    fgBoundingBox3Df positionAndSize = updateBounds(); // Call to the derived version
+    gfx::BoundingBox3Df positionAndSize = updateBounds(); // Call to the derived version
     // Margin?
     if(posStyle == SPosition::Style::STATIC) {
         m_bbox.pos = bounds.pos;

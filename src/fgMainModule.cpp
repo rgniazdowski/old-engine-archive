@@ -358,7 +358,7 @@ private:
 #endif /* FG_USING_MARMALADE */
         if(!m_gameMain) {
             FG_LOG_DEBUG("Creating game main object...");
-            m_gameMain = new fgGameMain(m_argc, m_argv);
+            m_gameMain = new fg::CGameMain(m_argc, m_argv);
         }
         // Well the whole configuration process should update the screen (swap buffers)
         // this is needed to display splash screen (after marmalade splash screen) and
@@ -550,9 +550,9 @@ private:
         printf("'%s'\n", dst);
 #endif
         if(event->m_Pressed) {
-			m_gameMain->getInputHandler()->addKeyDown((int)event->m_Key);
+            m_gameMain->getInputHandler()->addKeyDown((int)event->m_Key);
         } else {
-			m_gameMain->getInputHandler()->addKeyUp((int)event->m_Key);
+            m_gameMain->getInputHandler()->addKeyUp((int)event->m_Key);
         }
         //FG_LOG_DEBUG("FG_EventManager - keyboard - %d is pressed? - code: %d", (int)event->m_Pressed, (int)event->m_Key);
     }
@@ -578,7 +578,7 @@ private:
     /// Needs refactoring, some level of merging within main module or
     /// changing name to fgApplication - or extending fgApplication class
     /// #TODO - support threads
-    fgGameMain *m_gameMain;
+    fg::CGameMain *m_gameMain;
 };
 
 #if defined FG_USING_MARMALADE

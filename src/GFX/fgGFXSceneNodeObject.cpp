@@ -88,7 +88,7 @@ void fg::gfx::CSceneNodeObject::setModel(fg::gfx::CModel *pModel) {
         for(; sit != send; sit++) {
             if(!(*sit))
                 continue;
-            fgGfxMeshBase *pMesh = (*sit)->mesh;
+            SMeshBase *pMesh = (*sit)->mesh;
             if(!pMesh)
                 continue;
             CSceneNode *pChildNode = new fg::gfx::CSceneNodeMesh(pMesh, this);

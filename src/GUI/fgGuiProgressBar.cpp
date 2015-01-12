@@ -36,7 +36,7 @@ void gui::CProgressBar::setDefaults(void) {
  * 
  * @return 
  */
-fgBoundingBox3Df gui::CProgressBar::updateBounds(void) {
+gfx::BoundingBox3Df gui::CProgressBar::updateBounds(void) {
     return base_type::updateBounds();
 }
 

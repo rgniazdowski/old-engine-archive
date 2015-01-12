@@ -53,355 +53,362 @@
     #define FG_GFX_PARAM_CLEAR_STENCIL		31
     #define FG_GFX_PARAM_PIXEL_STORE		32
 
-/*
- *
- */
-struct fgGfxContextParam {
-    /// Parameter name (special enum value)
-    fgGFXenum pname;
-    /// Generic type of the data storing information/values
-    fgGFXenum type;
-    /// Special parameter type, for determining special 
-    /// functions to use when setting parameter value
-    fgGFXuint paramType;
-    /// Size of the data (eg. one float, two floats, etc...)
-    int count;
-
-    union {
-        fgGFXboolean boolVal;
-        fgGFXboolean booleans[12];
-        fgGFXfloat floats[12];
-        fgGFXfloat floatVal;
-        fgGFXint ints[12];
-        fgGFXint intVal;
-    };
-
-    // Special overload operator for GFX integer type
-    operator fgGFXint() const {
-        return intVal;
-    }
-
-    // Special overload operator for GFX float type
-    operator fgGFXfloat() const {
-        return floatVal;
-    }
-
-    // Special overload operator for GFX boolean type (it's unsigned char mostly)
-    operator fgGFXboolean() const {
-        return boolVal;
-    }
-
-    // Special overload operator for GFX unsigned int type
-    operator fgGFXuint() const {
-        return (fgGFXuint)intVal;
-    }
-
-    #if defined(FG_USING_GL_BINDING)
-    // Special overload operator for GFX enum type (when using glbinding,
-    // the GFXenum type is actually an enum class, so overloading needs to
-    // be done explictly)
-    operator fgGFXenum() const {
-        return (fgGFXenum)intVal;
-    }
-    #endif
-    // Special overload operator for the builtin bool type
-    operator bool() const {
-        return ( intVal ? true : false);
-    }
-
-    // Comparison operator for integer type
-    inline bool operator ==(fgGFXint a) const {
-        return (intVal == a);
-    }
-    // Not equal operator for integer type
-    inline bool operator !=(fgGFXint a) const {
-        return (intVal != a);
-    }
-    // Greater than operator for integer type
-    inline bool operator >(fgGFXint a) const {
-        return (intVal > a);
-    }
-    // Less than operator for integer type
-    inline bool operator <(fgGFXint a) const {
-        return (intVal < a);
-    }
-    //
-    inline bool operator ==(fgGFXfloat a) const {
-        return (floatVal == a);
-    }
-    //
-    inline bool operator !=(fgGFXfloat a) const {
-        return (floatVal != a);
-    }
-    //
-    inline bool operator >(fgGFXfloat a) const {
-        return (floatVal > a);
-    }
-    //
-    inline bool operator <(fgGFXfloat a) const {
-        return (floatVal < a);
-    }
-    //
-    inline bool operator ==(fgGFXuint a) const {
-        return ((fgGFXuint)intVal == a);
-    }
-    //
-    inline bool operator !=(fgGFXuint a) const {
-        return ((fgGFXuint)intVal != a);
-    }
-    //
-    inline bool operator >(fgGFXuint a) const {
-        return ((fgGFXuint)intVal > a);
-    }
-    //
-    inline bool operator <(fgGFXuint a) const {
-        return ((fgGFXuint)intVal < a);
-    }
-
-    // 
-    inline void load(void) {
-        if(paramType == FG_GFX_PARAM_INVALID)
-            return;
-        switch(type) {
-            case FG_GFX_BOOL:
-                glGetBooleanv(pname, booleans);
-                fgGLError("glGetBooleanv");
-                break;
-            case FG_GFX_FLOAT:
-                glGetFloatv(pname, floats);
-                fgGLError("glGetFloatv");
-                break;
-            case FG_GFX_INT:
-                glGetIntegerv(pname, ints);
-                fgGLError("glGetIntegerv");
-                break;
-            default:
-                break;
-        };
-    }
-
-    // Determines the special parameter type based on parameter name enumerator
-    void determineParamType(void);
-
-    // Updates the values on the server side
-    fgBool update(void);
-
-    // 
-    fgGfxContextParam(const fgGFXenum _pname = (fgGFXenum)0) :
-    pname(_pname),
-    type(FG_GFX_BOOL),
-    paramType(FG_GFX_PARAM_INVALID),
-    count(1) {
-        memset(ints, 0, 12);
-        determineParamType();
-    }
-
-    // 
-    fgGfxContextParam(const fgGFXenum _pname, const fgGFXfloat _fval) :
-    pname(_pname),
-    type(FG_GFX_FLOAT),
-    count(1) {
-        memset(ints, 0, 12);
-        floats[0] = _fval;
-        determineParamType();
-    }
-
-    // 
-    fgGfxContextParam(const fgGFXenum _pname, const fgGFXint _ival) :
-    pname(_pname),
-    type(FG_GFX_INT),
-    count(1) {
-        memset(ints, 0, 12);
-        ints[0] = _ival;
-        determineParamType();
-    }
-
-    // 
-    fgGfxContextParam(const fgGFXenum _pname, const fgGFXboolean _bval) :
-    pname(_pname),
-    type(FG_GFX_BOOL),
-    count(1) {
-        memset(ints, 0, 12);
-        booleans[0] = _bval;
-        determineParamType();
-        //update();
-    }
-
-    // 
-    fgGfxContextParam(const fgGFXenum _pname, const int _count, const fgGFXfloat *_fvals) :
-    pname(_pname),
-    count(_count) {
-        memset(ints, 0, 12);
-        determineParamType();
-        set(_fvals, FG_FALSE);
-    }
-
-    // 
-    fgGfxContextParam(const fgGFXenum _pname, const int _count, const fgGFXint *_ivals) :
-    pname(_pname),
-    count(_count) {
-        memset(ints, 0, 12);
-        determineParamType();
-        set(_ivals, FG_FALSE);
-    }
-
-    // 
-    fgGfxContextParam(const fgGFXenum _pname, const int _count, const fgGFXboolean *_bvals) :
-    pname(_pname),
-    count(_count) {
-        memset(ints, 0, 12);
-        determineParamType();
-        set(_bvals, FG_FALSE);
-    }
-
-    // 
-    inline void set(const fgGFXfloat _fval, const fgBool update = FG_TRUE) {
-        type = FG_GFX_FLOAT;
-        count = 1;
-        if(fabsf(floats[0] - _fval) > FG_EPSILON) {
-            floats[0] = _fval;
-            if(update)
-                this->update();
-        }
-    }
-
-    // 
-    inline void set(const fgGFXint _ival, const fgBool update = FG_TRUE) {
-        type = FG_GFX_INT;
-        count = 1;
-        if(ints[0] != _ival) {
-            ints[0] = _ival;
-            if(update)
-                this->update();
-        }
-    }
-
-    //
-    inline void set(const fgGFXint _i0, const fgGFXint _i1, const fgGFXint _i2, const fgGFXint _i3, const fgBool update = FG_TRUE) {
-        type = FG_GFX_INT;
-        count = 4;
-        if(ints[0] != _i0 ||
-                ints[1] != _i1 ||
-                ints[2] != _i2 ||
-                ints[3] != _i3) {
-            ints[0] = _i0;
-            ints[1] = _i1;
-            ints[2] = _i2;
-            ints[3] = _i3;
-            if(update)
-                this->update();
-        }
-    }
-
-    //
-    inline void set(const fgGFXfloat _f0, const fgGFXfloat _f1, const fgGFXfloat _f2, const fgGFXfloat _f3, const fgBool update = FG_TRUE) {
-        type = FG_GFX_INT;
-        count = 4;
-        if(floats[0] != _f0 ||
-                floats[1] != _f1 ||
-                floats[2] != _f2 ||
-                floats[3] != _f3) {
-            floats[0] = _f0;
-            floats[1] = _f1;
-            floats[2] = _f2;
-            floats[3] = _f3;
-            if(update)
-                this->update();
-        }
-    }
-
-    // 
-    inline void set(const fgGFXboolean _bval, const fgBool update = FG_TRUE) {
-        type = FG_GFX_BOOL;
-        if(booleans[0] != _bval) {
-            booleans[0] = _bval;
-            if(update)
-                this->update();
-        }
-    }
-
-    // 
-    inline void set(const fgGFXfloat *_fvals, const fgBool update = FG_TRUE) {
-        if(!_fvals)
-            return;
-        type = FG_GFX_FLOAT;
-        fgBool diff = FG_FALSE;
-        for(int i = 0; i < count; i++) {
-            if(diff || fabs(floats[i] - _fvals[i]) > FG_EPSILON) {
-                floats[i] = _fvals[i];
-                diff = FG_TRUE;
-            }
-        }
-        if(update && diff)
-            this->update();
-    }
-
-    // 
-    inline void set(const fgGFXint *_ivals, const fgBool update = FG_TRUE) {
-        if(!_ivals)
-            return;
-        type = FG_GFX_INT;
-        fgBool diff = FG_FALSE;
-        for(int i = 0; i < count; i++) {
-            if(diff || ints[i] != _ivals[i]) {
-                ints[i] = _ivals[i];
-                diff = FG_TRUE;
-            }
-        }
-        if(update && diff)
-            this->update();
-    }
-
-    // 
-    inline void set(const fgGFXboolean *_bvals, const fgBool update = FG_TRUE) {
-        if(!_bvals)
-            return;
-        type = FG_GFX_BOOL;
-        fgBool diff = FG_FALSE;
-        for(int i = 0; i < count; i++) {
-            if(booleans[i] != _bvals[i]) {
-                booleans[i] = _bvals[i];
-                diff = FG_TRUE;
-            }
-        }
-        if(update && diff)
-            this->update();
-    }
-
-    // 
-    inline void *get(fgGFXenum *_type = NULL) {
-        if(_type)
-            *_type = type;
-
-        if(type == FG_GFX_FLOAT)
-            return (void *)floats;
-        else if(type == FG_GFX_INT)
-            return (void *)ints;
-        return (void *)booleans;
-    }
-};
 
 namespace fg {
     namespace gfx {
 
+        /*
+         *
+         */
+        struct SContextParam {
+            /// Parameter name (special enum value)
+            fgGFXenum pname;
+            /// Generic type of the data storing information/values
+            fgGFXenum type;
+            /// Special parameter type, for determining special 
+            /// functions to use when setting parameter value
+            fgGFXuint paramType;
+            /// Size of the data (eg. one float, two floats, etc...)
+            int count;
+
+            union {
+                fgGFXboolean boolVal;
+                fgGFXboolean booleans[12];
+                fgGFXfloat floats[12];
+                fgGFXfloat floatVal;
+                fgGFXint ints[12];
+                fgGFXint intVal;
+            };
+
+            // Special overload operator for GFX integer type
+            operator fgGFXint() const {
+                return intVal;
+            }
+
+            // Special overload operator for GFX float type
+            operator fgGFXfloat() const {
+                return floatVal;
+            }
+
+            // Special overload operator for GFX boolean type (it's unsigned char mostly)
+            operator fgGFXboolean() const {
+                return boolVal;
+            }
+
+            // Special overload operator for GFX unsigned int type
+            operator fgGFXuint() const {
+                return (fgGFXuint)intVal;
+            }
+
+    #if defined(FG_USING_GL_BINDING)
+            // Special overload operator for GFX enum type (when using glbinding,
+            // the GFXenum type is actually an enum class, so overloading needs to
+            // be done explictly)
+            operator fgGFXenum() const {
+                return (fgGFXenum)intVal;
+            }
+    #endif
+            // Special overload operator for the builtin bool type
+            operator bool() const {
+                return ( intVal ? true : false);
+            }
+
+            // Comparison operator for integer type
+            inline bool operator ==(fgGFXint a) const {
+                return (intVal == a);
+            }
+            // Not equal operator for integer type
+            inline bool operator !=(fgGFXint a) const {
+                return (intVal != a);
+            }
+            // Greater than operator for integer type
+            inline bool operator >(fgGFXint a) const {
+                return (intVal > a);
+            }
+            // Less than operator for integer type
+            inline bool operator <(fgGFXint a) const {
+                return (intVal < a);
+            }
+            //
+            inline bool operator ==(fgGFXfloat a) const {
+                return (floatVal == a);
+            }
+            //
+            inline bool operator !=(fgGFXfloat a) const {
+                return (floatVal != a);
+            }
+            //
+            inline bool operator >(fgGFXfloat a) const {
+                return (floatVal > a);
+            }
+            //
+            inline bool operator <(fgGFXfloat a) const {
+                return (floatVal < a);
+            }
+            //
+            inline bool operator ==(fgGFXuint a) const {
+                return ((fgGFXuint)intVal == a);
+            }
+            //
+            inline bool operator !=(fgGFXuint a) const {
+                return ((fgGFXuint)intVal != a);
+            }
+            //
+            inline bool operator >(fgGFXuint a) const {
+                return ((fgGFXuint)intVal > a);
+            }
+            //
+            inline bool operator <(fgGFXuint a) const {
+                return ((fgGFXuint)intVal < a);
+            }
+
+            // 
+            inline void load(void) {
+                if(paramType == FG_GFX_PARAM_INVALID)
+                    return;
+                switch(type) {
+                    case FG_GFX_BOOL:
+                        glGetBooleanv(pname, booleans);
+                        fgGLError("glGetBooleanv");
+                        break;
+                    case FG_GFX_FLOAT:
+                        glGetFloatv(pname, floats);
+                        fgGLError("glGetFloatv");
+                        break;
+                    case FG_GFX_INT:
+                        glGetIntegerv(pname, ints);
+                        fgGLError("glGetIntegerv");
+                        break;
+                    default:
+                        break;
+                };
+            }
+
+            // Determines the special parameter type based on parameter name enumerator
+            void determineParamType(void);
+
+            // Updates the values on the server side
+            fgBool update(void);
+
+            // 
+            SContextParam(const fgGFXenum _pname = (fgGFXenum)0) :
+            pname(_pname),
+            type(FG_GFX_BOOL),
+            paramType(FG_GFX_PARAM_INVALID),
+            count(1) {
+                memset(ints, 0, 12);
+                determineParamType();
+            }
+
+            // 
+            SContextParam(const fgGFXenum _pname, const fgGFXfloat _fval) :
+            pname(_pname),
+            type(FG_GFX_FLOAT),
+            count(1) {
+                memset(ints, 0, 12);
+                floats[0] = _fval;
+                determineParamType();
+            }
+
+            // 
+            SContextParam(const fgGFXenum _pname, const fgGFXint _ival) :
+            pname(_pname),
+            type(FG_GFX_INT),
+            count(1) {
+                memset(ints, 0, 12);
+                ints[0] = _ival;
+                determineParamType();
+            }
+
+            // 
+            SContextParam(const fgGFXenum _pname, const fgGFXboolean _bval) :
+            pname(_pname),
+            type(FG_GFX_BOOL),
+            count(1) {
+                memset(ints, 0, 12);
+                booleans[0] = _bval;
+                determineParamType();
+                //update();
+            }
+
+            // 
+            SContextParam(const fgGFXenum _pname, const int _count, const fgGFXfloat *_fvals) :
+            pname(_pname),
+            count(_count) {
+                memset(ints, 0, 12);
+                determineParamType();
+                set(_fvals, FG_FALSE);
+            }
+
+            // 
+            SContextParam(const fgGFXenum _pname, const int _count, const fgGFXint *_ivals) :
+            pname(_pname),
+            count(_count) {
+                memset(ints, 0, 12);
+                determineParamType();
+                set(_ivals, FG_FALSE);
+            }
+
+            // 
+            SContextParam(const fgGFXenum _pname, const int _count, const fgGFXboolean *_bvals) :
+            pname(_pname),
+            count(_count) {
+                memset(ints, 0, 12);
+                determineParamType();
+                set(_bvals, FG_FALSE);
+            }
+
+            // 
+            inline void set(const fgGFXfloat _fval, const fgBool update = FG_TRUE) {
+                type = FG_GFX_FLOAT;
+                count = 1;
+                if(fabsf(floats[0] - _fval) > FG_EPSILON) {
+                    floats[0] = _fval;
+                    if(update)
+                        this->update();
+                }
+            }
+
+            // 
+            inline void set(const fgGFXint _ival, const fgBool update = FG_TRUE) {
+                type = FG_GFX_INT;
+                count = 1;
+                if(ints[0] != _ival) {
+                    ints[0] = _ival;
+                    if(update)
+                        this->update();
+                }
+            }
+
+            //
+            inline void set(const fgGFXint _i0, const fgGFXint _i1, const fgGFXint _i2, const fgGFXint _i3, const fgBool update = FG_TRUE) {
+                type = FG_GFX_INT;
+                count = 4;
+                if(ints[0] != _i0 ||
+                        ints[1] != _i1 ||
+                        ints[2] != _i2 ||
+                        ints[3] != _i3) {
+                    ints[0] = _i0;
+                    ints[1] = _i1;
+                    ints[2] = _i2;
+                    ints[3] = _i3;
+                    if(update)
+                        this->update();
+                }
+            }
+
+            //
+            inline void set(const fgGFXfloat _f0, const fgGFXfloat _f1, const fgGFXfloat _f2, const fgGFXfloat _f3, const fgBool update = FG_TRUE) {
+                type = FG_GFX_INT;
+                count = 4;
+                if(floats[0] != _f0 ||
+                        floats[1] != _f1 ||
+                        floats[2] != _f2 ||
+                        floats[3] != _f3) {
+                    floats[0] = _f0;
+                    floats[1] = _f1;
+                    floats[2] = _f2;
+                    floats[3] = _f3;
+                    if(update)
+                        this->update();
+                }
+            }
+
+            // 
+            inline void set(const fgGFXboolean _bval, const fgBool update = FG_TRUE) {
+                type = FG_GFX_BOOL;
+                if(booleans[0] != _bval) {
+                    booleans[0] = _bval;
+                    if(update)
+                        this->update();
+                }
+            }
+
+            // 
+            inline void set(const fgGFXfloat *_fvals, const fgBool update = FG_TRUE) {
+                if(!_fvals)
+                    return;
+                type = FG_GFX_FLOAT;
+                fgBool diff = FG_FALSE;
+                for(int i = 0; i < count; i++) {
+                    if(diff || fabs(floats[i] - _fvals[i]) > FG_EPSILON) {
+                        floats[i] = _fvals[i];
+                        diff = FG_TRUE;
+                    }
+                }
+                if(update && diff)
+                    this->update();
+            }
+
+            // 
+            inline void set(const fgGFXint *_ivals, const fgBool update = FG_TRUE) {
+                if(!_ivals)
+                    return;
+                type = FG_GFX_INT;
+                fgBool diff = FG_FALSE;
+                for(int i = 0; i < count; i++) {
+                    if(diff || ints[i] != _ivals[i]) {
+                        ints[i] = _ivals[i];
+                        diff = FG_TRUE;
+                    }
+                }
+                if(update && diff)
+                    this->update();
+            }
+
+            // 
+            inline void set(const fgGFXboolean *_bvals, const fgBool update = FG_TRUE) {
+                if(!_bvals)
+                    return;
+                type = FG_GFX_BOOL;
+                fgBool diff = FG_FALSE;
+                for(int i = 0; i < count; i++) {
+                    if(booleans[i] != _bvals[i]) {
+                        booleans[i] = _bvals[i];
+                        diff = FG_TRUE;
+                    }
+                }
+                if(update && diff)
+                    this->update();
+            }
+
+            // 
+            inline void *get(fgGFXenum *_type = NULL) {
+                if(_type)
+                    *_type = type;
+
+                if(type == FG_GFX_FLOAT)
+                    return (void *)floats;
+                else if(type == FG_GFX_INT)
+                    return (void *)ints;
+                return (void *)booleans;
+            }
+        };
+
         class CPlatform;
-        
+
         /*
          * Special class for holding information about current GFX context.
          * Works as a special kind of cache for client and server side.
          */
         class CContext {
             friend class fg::gfx::CPlatform;
-            
+
         public:
-            typedef std::map<fgGFXuint, fgGfxContextParam> gfxParamMap;
-            typedef gfxParamMap::iterator gfxParamMapItor;
+            ///
+            typedef std::map<fgGFXuint, SContextParam> ParameterMap;
+            ///
+            typedef ParameterMap::iterator ParameterMapItor;
 
-            typedef std::map<fgGFXuint, fgGfxTextureID*> gfxTextureMap;
-            typedef gfxTextureMap::iterator gfxTextureMapItor;
+            ///
+            typedef std::map<fgGFXuint, fgGfxTextureID*> TextureMap;
+            ///
+            typedef TextureMap::iterator TextureMapItor;
 
-            typedef std::map<fgGFXuint, fgGfxBufferID*> gfxBufferMap;
-            typedef gfxBufferMap::iterator gfxBufferMapItor;
+            ///
+            typedef std::map<fgGFXuint, fgGfxBufferID*> BufferMap;
+            ///
+            typedef BufferMap::iterator BufferMapItor;
 
         private:
     #if defined(FG_USING_SDL2)
@@ -418,17 +425,17 @@ namespace fg {
             /// functions like activating proper vertex attrib array idx,
             /// bounding textures... any kind of function that changes internal
             /// state values.
-            gfxParamMap m_params;
+            ParameterMap m_params;
             /// Special map used for holding valid texture IDs
             /// Every texture needs to be created/deleted through
             /// this class. When texture is deleted its' ID is zeroed
             /// in every place in the app. Therefore there's no need to
             /// often call glIsTexture. If gfx ID is not zero the texture
             /// is surely valid.
-            gfxTextureMap m_textures;
+            TextureMap m_textures;
             /// Special map used for holding valid VBO IDs. Use case
             /// is the same as for textures.
-            gfxBufferMap m_buffers;
+            BufferMap m_buffers;
             /// Viewport area (used for fast check if viewport changed)
             fgGFXuint m_viewportAreaQ;
             /// Scissor area
@@ -443,7 +450,7 @@ namespace fg {
             /// Supported shading language version
             fgGfxSLVersion m_SLVersion;
             ///
-            fgVector2i m_screenSize;
+            Vector2i m_screenSize;
             /// Is context ready? Is initialization successful?
             fgBool m_init;
 
@@ -488,7 +495,7 @@ namespace fg {
              * 
              * @return 
              */
-            fgVector2i const & getScreenSize(void) const {
+            Vector2i const & getScreenSize(void) const {
                 return m_screenSize;
             }
             /**
@@ -504,14 +511,14 @@ namespace fg {
              * 
              * @param screenSize
              */
-            void setScreenSize(const fgVector2i & screenSize) {
+            void setScreenSize(const Vector2i & screenSize) {
                 m_screenSize = screenSize;
             }
             /**
              * 
              * @param screenSize
              */
-            void setScreenSize(const fgVector2f & screenSize) {
+            void setScreenSize(const Vector2f & screenSize) {
                 m_screenSize.x = (int)screenSize.x;
                 m_screenSize.y = (int)screenSize.y;
             }
@@ -519,7 +526,7 @@ namespace fg {
             // Initialize the context and internal parameter state
             void initialize(void);
             // Get parameter structure
-            fgGfxContextParam& getParam(const fgGFXenum pname);
+            SContextParam& getParam(const fgGFXenum pname);
 
             // Enable GFX capability
             void enable(const fgGFXenum cap);
@@ -614,9 +621,9 @@ namespace fg {
             // Set the viewport dimensions
             void viewport(const fgGFXint x, const fgGFXint y, const fgGFXint width, const fgGFXint height);
             // Set the viewport dimensions
-            void viewport(const fgVector2i& pos, const fgVector2i& size);
+            void viewport(const Vector2i& pos, const Vector2i& size);
             // Set the viewport dimensions
-            void viewport(const fgVector4i& dimensions);
+            void viewport(const Vector4i& dimensions);
 
             // Returns the viewport aspect ratio
             inline fgGFXfloat getViewportAspect(void) {
@@ -633,9 +640,9 @@ namespace fg {
             // Set the scissor box dimensions
             void scissor(const fgGFXint x, const fgGFXint y, const fgGFXint width, const fgGFXint height);
             // Set the scissor box dimensions
-            void scissor(const fgVector2i& pos, const fgVector2i& size);
+            void scissor(const Vector2i& pos, const Vector2i& size);
             // Set the scissor box dimensions
-            void scissor(const fgVector4i& dimensions);
+            void scissor(const Vector4i& dimensions);
 
             // Returns the scissor box aspect ratio
             inline fgGFXfloat getScissorAspect(void) {

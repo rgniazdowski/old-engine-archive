@@ -37,7 +37,7 @@ void gui::CPopup::setDefaults(void) {
  * 
  * @return 
  */
-fgBoundingBox3Df gui::CPopup::updateBounds(void) {
+gfx::BoundingBox3Df gui::CPopup::updateBounds(void) {
     return CWindow::updateBounds();
 }
 

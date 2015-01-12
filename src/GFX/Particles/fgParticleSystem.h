@@ -47,7 +47,7 @@ namespace fg {
          */
         class CParticleSystem : public fg::base::CManager {
         public:
-            typedef CVector<fgParticleEmitter *> emittersVec;
+            typedef CVector<CParticleEmitter *> emittersVec;
             typedef emittersVec::iterator emittersVecItor;
 
         private:
@@ -79,7 +79,7 @@ namespace fg {
              * @param pEmitter
              * @return 
              */
-            fgBool isEmitterInTheArray(fgParticleEmitter *pEmitter);
+            fgBool isEmitterInTheArray(CParticleEmitter *pEmitter);
 
             /**
              * 
@@ -130,7 +130,7 @@ namespace fg {
              * @param pEmitter
              * @return 
              */
-            fgBool isEmitterInTheScene(const fgParticleEmitter *pEmitter);
+            fgBool isEmitterInTheScene(const CParticleEmitter *pEmitter);
 
             /**
              * 
@@ -151,14 +151,14 @@ namespace fg {
              * @param emitterNameTag
              * @return 
              */
-            fgParticleEmitter *getParticleEmitter(const std::string& emitterNameTag);
+            CParticleEmitter *getParticleEmitter(const std::string& emitterNameTag);
 
             /**
              * 
              * @param emitterNameTag
              * @return 
              */
-            fgParticleEmitter *getParticleEmitter(const char *emitterNameTag);
+            CParticleEmitter *getParticleEmitter(const char *emitterNameTag);
 
             /**
              * 
@@ -178,7 +178,7 @@ namespace fg {
              * @param nameTag
              * @return 
              */
-            virtual fgBool insert(fgParticleEffect* pEffect, const std::string& nameTag);
+            virtual fgBool insert(CParticleEffect* pEffect, const std::string& nameTag);
 
             /**
              * 
@@ -186,20 +186,20 @@ namespace fg {
              * @param pStyle
              * @return 
              */
-            virtual fgBool insertParticleEffect(fgParticleEffect *pEffect);
+            virtual fgBool insertParticleEffect(CParticleEffect *pEffect);
 
             /**
              * 
              * @param info
              * @return 
              */
-            virtual fgParticleEffect* request(const std::string& info);
+            virtual CParticleEffect* request(const std::string& info);
             /**
              * 
              * @param info
              * @return 
              */
-            virtual fgParticleEffect* request(const char *info);
+            virtual CParticleEffect* request(const char *info);
 
             /**
              * 
@@ -208,9 +208,9 @@ namespace fg {
              * @param emitterOrigin
              * @return 
              */
-            virtual fgParticleEmitter* insertParticleEmitter(const std::string& particleEffectNameTag,
-                                                             const std::string& particleEmitterNameTag,
-                                                             const fgVector3f& emitterOrigin);
+            virtual CParticleEmitter* insertParticleEmitter(const std::string& particleEffectNameTag,
+                                                            const std::string& particleEmitterNameTag,
+                                                            const Vector3f& emitterOrigin);
 
             /**
              * 
@@ -219,9 +219,9 @@ namespace fg {
              * @param emitterOrigin
              * @return 
              */
-            virtual fgParticleEmitter* insertParticleEmitter(const char *particleEffectNameTag,
-                                                             const char *particleEmitterNameTag,
-                                                             const fgVector3f& emitterOrigin);
+            virtual CParticleEmitter* insertParticleEmitter(const char *particleEffectNameTag,
+                                                            const char *particleEmitterNameTag,
+                                                            const Vector3f& emitterOrigin);
 
             /**
              * 
@@ -229,7 +229,7 @@ namespace fg {
              * @param particleEffectNameTag
              * @return 
              */
-            virtual fgBool insertParticleEmitter(const fgParticleEmitter* pParticleEmitter,
+            virtual fgBool insertParticleEmitter(const CParticleEmitter* pParticleEmitter,
                                                  const std::string& particleEffectNameTag);
 
             /**

@@ -34,11 +34,11 @@ namespace fg {
         class CProjection {
         public:
             ///
-            typedef fgMatrix4f matrix_type;
+            typedef Matrix4f matrix_type;
 
         protected:
             ///
-            fgMatrix4f m_projMatrix;
+            Matrix4f m_projMatrix;
 
         public:
             /**
@@ -83,20 +83,20 @@ namespace fg {
                                          float top,
                                          float zNear = FG_GFX_ORTHO_ZNEAR_DEFAULT,
                                          float zFar = FG_GFX_ORTHO_ZFAR_DEFAULT) {
-                m_projMatrix = fgMath::ortho(left, right, bottom, top, zNear, zFar);
+                m_projMatrix = math::ortho(left, right, bottom, top, zNear, zFar);
             }
             /**
              * 
              * @return 
              */
-            inline fgMatrix4f & getRefProjMatrix(void) {
+            inline Matrix4f & getRefProjMatrix(void) {
                 return m_projMatrix;
             }
             /**
              * 
              * @return 
              */
-            inline fgMatrix4f const & getRefProjMatrix(void) const {
+            inline Matrix4f const & getRefProjMatrix(void) const {
                 return m_projMatrix;
             }
             /**
@@ -104,20 +104,20 @@ namespace fg {
              * @return 
              */
             inline const float * getProjMatPtr(void) const {
-                return fgMath::value_ptr(m_projMatrix);
+                return math::value_ptr(m_projMatrix);
             }
             /**
              * 
              * @return 
              */
             inline float * getProjMatPtr(void) {
-                return fgMath::value_ptr(m_projMatrix);
+                return math::value_ptr(m_projMatrix);
             }
             /**
              * 
              */
             virtual inline void identity(void) {
-                m_projMatrix = fgMatrix4f();
+                m_projMatrix = Matrix4f();
             }
         };
     };

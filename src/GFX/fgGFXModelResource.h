@@ -59,7 +59,7 @@ namespace fg {
         class CModelResource : public fg::resource::CResource {
         public:
             // Type definition for vector holding model shapes
-            typedef CVector<fgGfxShape *> modelShapes;
+            typedef CVector<SShape *> modelShapes;
             // Type definition for special vector iterator
             typedef modelShapes::iterator modelShapesItor;
 
@@ -166,14 +166,14 @@ namespace fg {
              * 
              * @return 
              */
-            fgAABoundingBox3Df & getRefAABB(void) {
+            AABoundingBox3Df & getRefAABB(void) {
                 return m_aabb;
             }
             /**
              * 
              * @return 
              */
-            fgAABoundingBox3Df const & getRefAABB(void) const {
+            AABoundingBox3Df const & getRefAABB(void) const {
                 return m_aabb;
             }
 
@@ -202,7 +202,7 @@ namespace fg {
              * Gets the main override material of the model resource
              * @return      Pointer to the override material for all shapes
              */
-            fgGfxMaterial* getMainMaterial(void) const {
+            SMaterial* getMainMaterial(void) const {
                 return m_materialOverride;
             }
             /**
@@ -292,11 +292,11 @@ namespace fg {
 
         protected:
             /// Global material override definition
-            fgGfxMaterial *m_materialOverride;
+            SMaterial *m_materialOverride;
             /// Array holding all basic shapes of the model
             modelShapes m_shapes;
             /// Main bounding box - it's for whole model (all shapes)
-            fgAABoundingBox3Df m_aabb;
+            AABoundingBox3Df m_aabb;
             /// Identifier of the model type - based on the input data file extension
             fgGFXuint m_modelType;
             /// Is model multitextured?
