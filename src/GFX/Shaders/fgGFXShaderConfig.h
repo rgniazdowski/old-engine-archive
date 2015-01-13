@@ -68,26 +68,26 @@ namespace fg {
          * This class can load and parse only one config at one time, and
          * will provide that data for only one config type.
          */
-        class CShaderConfig : protected fgConfig {
+        class CShaderConfig : protected fg::util::CConfig {
         public:
             ///
-            typedef fgConfig base_type;
+            typedef fg::util::CConfig base_type;
             ///
             typedef fgGfxShaderConfigTag tag_type;
             ///
-            typedef fg::CVector<fgGfxShaderType> shaderTypeVec;
+            typedef CVector<fgGfxShaderType> shaderTypeVec;
             ///
-            typedef fg::CVector<fgGfxUniformBind> shaderUniformBindVec;
+            typedef CVector<fgGfxUniformBind> shaderUniformBindVec;
             ///
-            typedef fg::CVector<fgGfxAttributeBind> shaderAttributeBindVec;
+            typedef CVector<fgGfxAttributeBind> shaderAttributeBindVec;
             ///
-            typedef fg::CVector<std::string> shaderIncludeNameVec;
+            typedef CVector<std::string> shaderIncludeNameVec;
             ///
-            typedef fg::CVector<std::string> shaderFileVec;
+            typedef CVector<std::string> shaderFileVec;
             ///
-            typedef fg::CVector<fgQuality> shaderQualityVec;
+            typedef CVector<fgQuality> shaderQualityVec;
             ///
-            typedef fg::CVector<fgGfxShaderConstantDef> shaderConstantVec;
+            typedef CVector<fgGfxShaderConstantDef> shaderConstantVec;
 
         protected:
             ///
@@ -234,10 +234,13 @@ namespace fg {
              * @param _definesSection
              * @return 
              */
-            fgBool private_parseDefines(fgCfgSection *definesSection);
+            fgBool private_parseDefines(util::SCfgSection *definesSection);
             /**
+             * 
+             * @param includeSection
+             * @return 
              */
-            fgBool private_parseInclude(fgCfgSection *includeSection);
+            fgBool private_parseInclude(util::SCfgSection *includeSection);
 
         };
     };

@@ -12,119 +12,130 @@
 #include "Util/fgPath.h"
 #include "fgLog.h"
 
-/*
+using namespace fg;
+
+/**
  *
  */
-fgResourceConfig::fgResourceConfig() :
+resource::CResourceConfig::CResourceConfig() :
 m_header(),
 m_resNames(),
 m_cfgType(FG_RES_CFG_INVALID),
 m_resources() { }
 
-/*
- *
+/**
+ * 
+ * @param filePath
  */
-fgResourceConfig::fgResourceConfig(const char *filePath) :
+resource::CResourceConfig::CResourceConfig(const char *filePath) :
 m_header(),
 m_resNames(),
 m_cfgType(FG_RES_CFG_INVALID),
 m_resources() {
     if(filePath)
-        fgResourceConfig::load(filePath);
+        resource::CResourceConfig::load(filePath);
 }
 
-/*
- *
+/**
+ * 
  */
-fgResourceConfig::~fgResourceConfig() {
+resource::CResourceConfig::~CResourceConfig() {
     m_resNames.clear_optimised();
     m_resources.clear();
 }
 
-/*
- *
+/**
+ * 
+ * @param filePath
+ * @return 
  */
-fgBool fgResourceConfig::load(const char *filePath) {
+fgBool resource::CResourceConfig::load(const char *filePath) {
     if(!filePath)
         return FG_FALSE;
-    if(!fgConfig::load(filePath)) {
+    if(!CConfig::load(filePath)) {
         return FG_FALSE;
     }
 
-    return fgResourceConfig::parseData();
+    return resource::CResourceConfig::parseData();
 }
 
-/*
- *
+/**
+ * 
+ * @return 
  */
-fgCfgSection *fgResourceConfig::getConfigSection(void) {
+util::SCfgSection *resource::CResourceConfig::getConfigSection(void) {
     if(m_cfgType == FG_RES_CFG_RESOURCE_GROUP)
-        return fgConfig::getSection(FG_RESOURCE_GROUP_TEXT);
+        return CConfig::getSection(FG_RESOURCE_GROUP_TEXT);
     else if(m_cfgType == FG_RES_CFG_RESOURCE)
-        return fgConfig::getSection(FG_RESOURCE_TEXT);
+        return CConfig::getSection(FG_RESOURCE_TEXT);
     else
         return NULL;
 }
 
-/*
- *
+/**
+ * 
+ * @param resName
+ * @return 
  */
-fgResourceHeader &fgResourceConfig::getResourceHeader(const char *resName) {
-    return fgResourceConfig::getResourceHeader(std::string(resName));
+resource::SResourceHeader &resource::CResourceConfig::getRefHeader(const char *resName) {
+    return resource::CResourceConfig::getRefHeader(std::string(resName));
 }
 
-/*
- *
+/**
+ * 
+ * @param resName
+ * @return 
  */
-fgResourceHeader &fgResourceConfig::getResourceHeader(const std::string & resName) {
-    resourceHeaderMapItor rhmit = m_resources.find(resName);
+resource::SResourceHeader &resource::CResourceConfig::getRefHeader(const std::string & resName) {
+    ResourceHeaderMapItor rhmit = m_resources.find(resName);
     if(rhmit == m_resources.end())
         return m_resources["__INVALID__"];
     return rhmit->second;
 }
 
-/*
- *
+/**
+ * 
+ * @return 
  */
-fgBool fgResourceConfig::parseData(void) {
+fgBool resource::CResourceConfig::parseData(void) {
     if(m_sectionMap.empty()) {
         FG_LOG_ERROR("Resource config section map is empty");
         return FG_FALSE;
     }
     std::string dirPath;
-    fg::path::dirName(m_configPath, dirPath);
-    fgCfgTypes::sectionMapItor smit = m_sectionMap.begin(),
+    path::dirName(m_configPath, dirPath);
+    util::config::SectionMapItor smit = m_sectionMap.begin(),
             end = m_sectionMap.end();
     for(; smit != end; smit++) {
-        fgCfgSection *section = smit->second;
+        util::SCfgSection *section = smit->second;
         fgBool isResGrpCfgSection = (section->name.compare(FG_RESOURCE_GROUP_TEXT) == 0);
         fgBool isResCfgSection = (section->name.compare(FG_RESOURCE_TEXT) == 0);
 
         if(isResGrpCfgSection || isResCfgSection) { // res grp || resource
-            fgCfgParameter *param = NULL;
+            util::SCfgParameter *param = NULL;
             if((param = section->getParameter("name")) != NULL) {
-                if(param->type == FG_CFG_PARAMETER_STRING)
+                if(param->type == util::SCfgParameter::STRING)
                     m_header.name = param->string;
             } else {
             }
             if((param = section->getParameter("priority")) != NULL) {
-                if(param->type == FG_CFG_PARAMETER_STRING)
-                    m_header.priority = FG_RES_PRIORITY_FROM_TEXT(param->string);
+                if(param->type == util::SCfgParameter::STRING)
+                    m_header.priority = getResourcePriorityFromText(param->string);
             } else {
             }
         }
         if(!isResGrpCfgSection) {
-            fgCfgParameter *param = NULL;
+            util::SCfgParameter *param = NULL;
 
             // special section parameter which tells that section
             // points to resource config file (not plain data)
             // further scanning is not needed
             if(!isResCfgSection) {
-                if((param = section->getParameter("config", FG_CFG_PARAMETER_STRING)) != NULL) {
-                    fgResourceHeader cfgHeader;
+                if((param = section->getParameter("config", util::SCfgParameter::STRING)) != NULL) {
+                    SResourceHeader cfgHeader;
                     cfgHeader.isConfig = FG_TRUE;
                     cfgHeader.name = section->name;
-                    fg::path::join(cfgHeader.configPath, dirPath, param->string);
+                    path::join(cfgHeader.configPath, dirPath, param->string);
                     //cfgHeader.configPath = param->string;
                     cfgHeader.paths.push_back(param->string);
                     m_resources[cfgHeader.name] = cfgHeader;
@@ -142,36 +153,36 @@ fgBool fgResourceConfig::parseData(void) {
             std::string name;
             std::string path;
             std::string flags;
-            fgResourceType type = FG_RESOURCE_INVALID;
+            resource::ResourceType type = resource::INVALID;
             fgQuality quality = FG_QUALITY_UNIVERSAL;
-            fgResPriorityType priority = FG_RES_PRIORITY_LOW;
-            fg::CVector<fgQuality> qualityVec;
-            fg::CVector<std::string> pathVec;
-            fg::CVector<std::string> _helperVec;
+            resource::ResourcePriority priority = ResourcePriority::LOW;
+            CVector<fgQuality> qualityVec;
+            CVector<std::string> pathVec;
+            CVector<std::string> _helperVec;
 
             /// Get the resource name
-            if((param = section->getParameter("name", FG_CFG_PARAMETER_STRING)) != NULL) {
+            if((param = section->getParameter("name", util::SCfgParameter::STRING)) != NULL) {
                 name = param->string;
             } else {
                 foundName = FG_FALSE;
             }
-            if((param = section->getParameter("flags", FG_CFG_PARAMETER_STRING)) != NULL) {
+            if((param = section->getParameter("flags", util::SCfgParameter::STRING)) != NULL) {
                 flags = param->string;
             }
             // Get the resource type
-            if((param = section->getParameter("type", FG_CFG_PARAMETER_STRING)) != NULL) {
-                type = FG_RESOURCE_TYPE_FROM_TEXT(param->string);
+            if((param = section->getParameter("type", util::SCfgParameter::STRING)) != NULL) {
+                type = getResourceTypeFromText(param->string);
             } else {
                 foundType = FG_FALSE;
             }
             // Get the resource priority
-            if((param = section->getParameter("priority", FG_CFG_PARAMETER_STRING)) != NULL) {
-                priority = FG_RES_PRIORITY_FROM_TEXT(param->string);
+            if((param = section->getParameter("priority", util::SCfgParameter::STRING)) != NULL) {
+                priority = getResourcePriorityFromText(param->string);
             } else {
                 foundPriority = FG_FALSE;
             }
             // Check if the resource has files mapped to different qualities
-            if((param = section->getParameter("isMapped", FG_CFG_PARAMETER_BOOL)) != NULL) {
+            if((param = section->getParameter("isMapped", util::SCfgParameter::BOOL)) != NULL) {
                 isMapped = param->bool_val;
             } else {
                 isMapped = FG_FALSE;
@@ -180,7 +191,7 @@ fgBool fgResourceConfig::parseData(void) {
             // indicating that the values stored inside are separated by ';' char (array/vector)
             if(isMapped) {
                 // Get the parameter: quality vector
-                if((param = section->getParameter("qualityVec", FG_CFG_PARAMETER_STRING)) != NULL) {
+                if((param = section->getParameter("qualityVec", util::SCfgParameter::STRING)) != NULL) {
                     _helperVec.clear_optimised();
                     fgStrings::split(param->string, ',', _helperVec);
                     for(int i = 0; i < (int)_helperVec.size(); i++) {
@@ -191,12 +202,12 @@ fgBool fgResourceConfig::parseData(void) {
                 } else {
                     foundQuality = FG_FALSE;
                 }
-                if((param = section->getParameter("pathVec", FG_CFG_PARAMETER_STRING)) != NULL) {
+                if((param = section->getParameter("pathVec", util::SCfgParameter::STRING)) != NULL) {
                     _helperVec.clear_optimised();
                     fgStrings::split(param->string, ',', _helperVec);
                     for(int i = 0; i < (int)_helperVec.size(); i++) {
                         std::string _pathH;
-                        fg::path::join(_pathH, dirPath, _helperVec[i]);
+                        path::join(_pathH, dirPath, _helperVec[i]);
                         pathVec.push_back(_pathH);
                     }
                     if(pathVec.empty())
@@ -206,14 +217,14 @@ fgBool fgResourceConfig::parseData(void) {
                 }
                 // In other case, the resource has single quality selected and stores single file
             } else {
-                if((param = section->getParameter("quality", FG_CFG_PARAMETER_STRING)) != NULL) {
+                if((param = section->getParameter("quality", util::SCfgParameter::STRING)) != NULL) {
                     quality = FG_QUALITY_FROM_TEXT(param->string);
                     qualityVec.push_back(quality);
                 } else {
                     quality = FG_QUALITY_UNIVERSAL;
                 }
-                if((param = section->getParameter("path", FG_CFG_PARAMETER_STRING)) != NULL) {
-                    fg::path::join(path, dirPath, param->string);
+                if((param = section->getParameter("path", util::SCfgParameter::STRING)) != NULL) {
+                    path::join(path, dirPath, param->string);
                     pathVec.push_back(path);
                 } else {
                     foundPath = FG_FALSE;
@@ -221,7 +232,7 @@ fgBool fgResourceConfig::parseData(void) {
             }
             if(!foundPath || !foundType || !foundName || !foundQuality)
                 continue;
-            if(type == FG_RESOURCE_GROUP) {
+            if(type == resource::GROUP) {
                 qualityVec.clear_optimised();
                 pathVec.clear_optimised();
                 continue;
@@ -234,7 +245,7 @@ fgBool fgResourceConfig::parseData(void) {
                 m_header.flags = flags;
                 m_resources[m_header.name] = m_header;
             } else {
-                fgResourceHeader resHeader;
+                SResourceHeader resHeader;
                 resHeader.name = name;
                 if(foundPriority)
                     resHeader.priority = priority;

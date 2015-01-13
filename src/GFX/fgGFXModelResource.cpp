@@ -9,14 +9,16 @@
 
 #include "fgGFXModelResource.h"
 #include "fgTinyObj.h"
+#include "Resource/fgResourceManager.h"
 #include "Resource/fgResourceErrorCodes.h"
 #include "Util/fgPath.h"
-#include "Resource/fgResourceManager.h"
 
-/*
- *
+using namespace fg;
+
+/**
+ * 
  */
-fg::gfx::CModelResource::CModelResource() :
+gfx::CModelResource::CModelResource() :
 CResource(),
 m_materialOverride(NULL),
 m_modelType(FG_GFX_MODEL_RES_INVALID),
@@ -25,13 +27,14 @@ m_isTextured(FG_FALSE),
 m_hasMaterial(FG_FALSE),
 m_isInterleaved(FG_TRUE) {
     memset(m_numData, 0, sizeof (m_numData));
-    m_resType = FG_RESOURCE_3D_MODEL;
+    m_resType = resource::MODEL3D;
 }
 
-/*
- *
+/**
+ * 
+ * @param path
  */
-fg::gfx::CModelResource::CModelResource(const char *path) :
+gfx::CModelResource::CModelResource(const char *path) :
 CResource(path),
 m_materialOverride(NULL),
 m_modelType(FG_GFX_MODEL_RES_INVALID),
@@ -39,13 +42,14 @@ m_isMultitextured(FG_FALSE),
 m_isTextured(FG_FALSE),
 m_hasMaterial(FG_FALSE),
 m_isInterleaved(FG_TRUE) {
-    m_resType = FG_RESOURCE_3D_MODEL;
+    m_resType = resource::MODEL3D;
 }
 
-/*
- *
+/**
+ * 
+ * @param path
  */
-fg::gfx::CModelResource::CModelResource(std::string& path) :
+gfx::CModelResource::CModelResource(std::string& path) :
 CResource(path),
 m_materialOverride(NULL),
 m_modelType(FG_GFX_MODEL_RES_INVALID),
@@ -53,14 +57,14 @@ m_isMultitextured(FG_FALSE),
 m_isTextured(FG_FALSE),
 m_hasMaterial(FG_FALSE),
 m_isInterleaved(FG_TRUE) {
-    m_resType = FG_RESOURCE_3D_MODEL;
+    m_resType = resource::MODEL3D;
 }
 
 /*
  * Clears the class data, this actually does not free allocated memory,
  * just resets base class attributes
  */
-void fg::gfx::CModelResource::clear(void) {
+void gfx::CModelResource::clear(void) {
     CResource::clear();
     m_materialOverride = NULL;
     m_modelType = FG_GFX_MODEL_RES_INVALID;
@@ -76,7 +80,7 @@ void fg::gfx::CModelResource::clear(void) {
  * @param path
  * @return 
  */
-fgBool fg::gfx::CModelResource::setModelTypeFromFilePath(std::string &path) {
+fgBool gfx::CModelResource::setModelTypeFromFilePath(std::string &path) {
     const char *ext = fg::path::fileExt(path.c_str());
     if(!ext)
         return FG_FALSE;
@@ -92,7 +96,7 @@ fgBool fg::gfx::CModelResource::setModelTypeFromFilePath(std::string &path) {
 /*
  *
  */
-fgBool fg::gfx::CModelResource::_loadOBJ(void) {
+fgBool gfx::CModelResource::_loadOBJ(void) {
     if(getFilePath(m_quality).empty()) {
         return FG_FALSE;
     }
@@ -171,7 +175,7 @@ fgBool fg::gfx::CModelResource::_loadOBJ(void) {
 /*
  * Create function loads/interprets data from file in ROM and place it in RAM memory.
  */
-fgBool fg::gfx::CModelResource::create(void) {
+fgBool gfx::CModelResource::create(void) {
     if(m_isReady || !isDisposed()) {
         return FG_TRUE;
     }
@@ -238,7 +242,7 @@ fgBool fg::gfx::CModelResource::create(void) {
 /*
  * Destroy all loaded data including additional metadata (called with deconstructor)
  */
-void fg::gfx::CModelResource::destroy(void) {
+void gfx::CModelResource::destroy(void) {
     dispose();
     clear();
 }
@@ -246,7 +250,7 @@ void fg::gfx::CModelResource::destroy(void) {
 /*
  * Reloads any data, recreates the resource (refresh)
  */
-fgBool fg::gfx::CModelResource::recreate(void) {
+fgBool gfx::CModelResource::recreate(void) {
     dispose();
     return create();
 }
@@ -254,7 +258,7 @@ fgBool fg::gfx::CModelResource::recreate(void) {
 /*
  * Dispose completely of the all loaded data, free all memory
  */
-void fg::gfx::CModelResource::dispose(void) {
+void gfx::CModelResource::dispose(void) {
     int n = (int)m_shapes.size();
     for(int i = 0; i < n; i++) {
         SShape *shape = m_shapes[i];
@@ -274,14 +278,14 @@ void fg::gfx::CModelResource::dispose(void) {
 /*
  * Check if resource is disposed (not loaded yet or disposed after)
  */
-fgBool fg::gfx::CModelResource::isDisposed(void) const {
+fgBool gfx::CModelResource::isDisposed(void) const {
     return (fgBool)(m_shapes.empty());
 }
 
 /**
  * 
  */
-void fg::gfx::CModelResource::updateAABB(void) {
+void gfx::CModelResource::updateAABB(void) {
     if(m_shapes.empty()) {
         return;
     }
@@ -289,8 +293,8 @@ void fg::gfx::CModelResource::updateAABB(void) {
     m_aabb.invalidate();
     for(int i = 0; i < n; i++) {
         if(m_shapes[i]->mesh) {
-           m_shapes[i]->updateAABB();
-           m_aabb.merge(m_shapes[i]->mesh->aabb);
+            m_shapes[i]->updateAABB();
+            m_aabb.merge(m_shapes[i]->mesh->aabb);
         }
     }
 }
@@ -298,7 +302,7 @@ void fg::gfx::CModelResource::updateAABB(void) {
 /*
  *
  */
-fgBool fg::gfx::CModelResource::genBuffers(void) {
+fgBool gfx::CModelResource::genBuffers(void) {
     if(m_shapes.empty()) {
         return FG_FALSE;
     }
@@ -314,7 +318,7 @@ fgBool fg::gfx::CModelResource::genBuffers(void) {
 /*
  *
  */
-fgBool fg::gfx::CModelResource::deleteBuffers(void) {
+fgBool gfx::CModelResource::deleteBuffers(void) {
     if(m_shapes.empty()) {
         return FG_FALSE;
     }

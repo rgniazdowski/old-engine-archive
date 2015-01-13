@@ -33,9 +33,9 @@ gui::CStyle::~CStyle() {
 fgBool gui::CStyle::load(void) {
     if(getFilePath().empty())
         return FG_FALSE;
-    fgConfig *config = new fgConfig();
+    util::CConfig *config = new util::CConfig();
     if(!config->load(getFilePathStr())) {
-        FG_LOG::PrintError("GUI: Couldn't load style content file: '%s'", getFilePathStr());
+        FG_LOG_ERROR("GUI: Couldn't load style content file: '%s'", getFilePathStr());
         delete config;
         return FG_FALSE;
     }
@@ -47,19 +47,19 @@ fgBool gui::CStyle::load(void) {
         m_styleContent[_buildInSubStyles[i]] = CStyleContent();
     }
 
-    fgCfgTypes::sectionMap &sections = config->getRefSectionMap();
-    fgCfgTypes::sectionMapItor begin, end, itor;
+    util::config::SectionMap &sections = config->getRefSectionMap();
+    util::config::SectionMapItor begin, end, itor;
     begin = sections.begin();
     end = sections.end();
     itor = begin;
-    fgCfgSection *styleSheetSection = config->getSection(FG_GUI_STYLE_SHEET_NAME);
-    fgCfgParameter *param = NULL;
+    util::SCfgSection *styleSheetSection = config->getSection(FG_GUI_STYLE_SHEET_NAME);
+    util::SCfgParameter *param = NULL;
     if(!styleSheetSection) {
         // ERROR
         delete config;
         return FG_FALSE;
     } else {
-        if((param = styleSheetSection->getParameter("name", FG_CFG_PARAMETER_STRING)) != NULL) {
+        if((param = styleSheetSection->getParameter("name", util::SCfgParameter::STRING)) != NULL) {
             setName(param->string);
         } else {
             // ERROR
@@ -67,13 +67,13 @@ fgBool gui::CStyle::load(void) {
             return FG_FALSE;
         }
     }
-    fgCfgSection *mainSection = config->getSection("main");
+    util::SCfgSection *mainSection = config->getSection("main");
     if(mainSection) {
         m_styleContent["main"].initializeFromConfig(mainSection->parameters);
     }
 
     for(; itor != end; itor++) {
-        fgCfgSection *section = itor->second;
+        util::SCfgSection *section = itor->second;
         if(!section)
             continue;
         if(section->name.compare(FG_GUI_STYLE_SHEET_NAME) == 0 ||
@@ -81,12 +81,12 @@ fgBool gui::CStyle::load(void) {
             continue;
         }
 
-        fgCfgTypes::parameterVec &params = section->parameters;
+        util::config::ParameterVec &params = section->parameters;
 
         std::string& fullName = section->name;
         std::string& subName = section->subName;
         std::string firstName;
-        fgConfigParser::splitSectionName(fullName, firstName, subName);
+        util::CConfigParser::splitSectionName(fullName, firstName, subName);
         // if the subName (subsection) exists it points to the state
         // if not, then depending on the case of the first character
         // of the section specify style parameters for all widgets of
@@ -96,7 +96,7 @@ fgBool gui::CStyle::load(void) {
         fgBool isInherit = FG_FALSE;
         fgBool autoInherit = FG_TRUE;
         std::string inheritFrom;
-        fgCfgParameter *paramInherit = section->getParameter("inherit", FG_CFG_PARAMETER_STRING);
+        util::SCfgParameter *paramInherit = section->getParameter("inherit", util::SCfgParameter::STRING);
         if(paramInherit) {
             if(strcmp(paramInherit->string, "none") == 0) {
                 autoInherit = FG_FALSE;
@@ -112,7 +112,7 @@ fgBool gui::CStyle::load(void) {
             if(isupper(firstName[0]) && islower(subName[0])) {
                 // subName points to the widget state
                 // it will autoinherit from global widget state
-                fgCfgSection *inheritSection = NULL;
+                util::SCfgSection *inheritSection = NULL;
                 if(autoInherit) {
                     inheritSection = config->getSection(subName);
                     if(!inheritSection)
@@ -136,7 +136,7 @@ fgBool gui::CStyle::load(void) {
                 newSubStyleContent = m_styleContent["main"];
             } else {
                 // uppercase - widget type
-                fgCfgSection *inheritSection = NULL;
+                util::SCfgSection *inheritSection = NULL;
                 if(isInherit && inheritFrom.length()) {
                     inheritSection = config->getSection(inheritFrom);
                 }
@@ -249,7 +249,7 @@ fgBool gui::CStyle::copyFullContent(CStyleContent *contents,
     STATE_ACTIVATED	3	// activated
     STATE_DEACTIVATED	4	// deactivated
      */
-    fg::CStringVector parts;
+    CStringVector parts;
     fgStrings::split(info, '.', parts);
     std::string search = parts[0];
     parts.clear();

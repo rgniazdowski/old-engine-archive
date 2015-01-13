@@ -13,10 +13,12 @@
 #include "Util/fgMemory.h"
 #include "Util/fgFile.h"
 
+using namespace fg;
+
 /**
  * 
  */
-fg::sfx::CSoundResource::CSoundResource() :
+sfx::CSoundResource::CSoundResource() :
 CResource(),
 CAudio(base::T_SOUND),
 m_chunkData(NULL),
@@ -24,7 +26,7 @@ m_soundData(NULL),
 m_channel(0),
 m_header() {
     m_volume = FG_SOUND_RESOURCE_DEFAULT_VOLUME;
-    m_resType = FG_RESOURCE_SOUND;
+    m_resType = resource::SOUND;
     m_baseType = base::T_SOUND;
 }
 
@@ -32,7 +34,7 @@ m_header() {
  * 
  * @param path
  */
-fg::sfx::CSoundResource::CSoundResource(const char *path) :
+sfx::CSoundResource::CSoundResource(const char *path) :
 CResource(path),
 CAudio(base::T_SOUND),
 m_chunkData(NULL),
@@ -40,7 +42,7 @@ m_soundData(NULL),
 m_channel(0),
 m_header() {
     m_volume = FG_SOUND_RESOURCE_DEFAULT_VOLUME;
-    m_resType = FG_RESOURCE_SOUND;
+    m_resType = resource::SOUND;
     m_baseType = base::T_SOUND;
 }
 
@@ -48,7 +50,7 @@ m_header() {
  * 
  * @param path
  */
-fg::sfx::CSoundResource::CSoundResource(std::string& path) :
+sfx::CSoundResource::CSoundResource(std::string& path) :
 CResource(path),
 CAudio(base::T_SOUND),
 m_chunkData(NULL),
@@ -56,16 +58,16 @@ m_soundData(NULL),
 m_channel(0),
 m_header() {
     m_volume = FG_SOUND_RESOURCE_DEFAULT_VOLUME;
-    m_resType = FG_RESOURCE_SOUND;
+    m_resType = resource::SOUND;
     m_baseType = base::T_SOUND;
 }
 
 /**
  * 
  */
-void fg::sfx::CSoundResource::clear(void) {
+void sfx::CSoundResource::clear(void) {
     CResource::clear();
-    m_resType = FG_RESOURCE_SOUND;
+    m_resType = resource::SOUND;
     m_chunkData = NULL;
     m_soundData = NULL;
     m_isPaused = FG_FALSE;
@@ -74,7 +76,7 @@ void fg::sfx::CSoundResource::clear(void) {
     m_baseType = base::T_SOUND;
 }
 
-fgBool fg::sfx::CSoundResource::loadRawData(void) {
+fgBool sfx::CSoundResource::loadRawData(void) {
     if(getFilePath(m_quality).empty())
         return FG_FALSE;
 #if defined(FG_USING_MARMALADE_SOUND)
@@ -115,7 +117,7 @@ fgBool fg::sfx::CSoundResource::loadRawData(void) {
  * 
  * @return 
  */
-fgBool fg::sfx::CSoundResource::loadWavData(void) {
+fgBool sfx::CSoundResource::loadWavData(void) {
     if(getFilePath(m_quality).empty())
         return FG_FALSE;
     fg::util::DataFile wavFile;
@@ -182,7 +184,7 @@ fgBool fg::sfx::CSoundResource::loadWavData(void) {
  * Create function loads/interprets data from file in ROM and place it in RAM memory.
  * @return 
  */
-fgBool fg::sfx::CSoundResource::create(void) {
+fgBool sfx::CSoundResource::create(void) {
     if(m_isReady)
         return FG_TRUE;
     if(getFilePath(m_quality).empty()) {
@@ -295,18 +297,18 @@ fgBool fg::sfx::CSoundResource::create(void) {
 /**
  * Destroy all loaded data including additional metadata (called with destructor)
  */
-void fg::sfx::CSoundResource::destroy(void) {
+void sfx::CSoundResource::destroy(void) {
     dispose();
     m_chunkData = NULL;
     m_isReady = FG_FALSE;
-    fg::sfx::CSoundResource::clear();
+    sfx::CSoundResource::clear();
 }
 
 /**
  * Reloads any data, recreates the resource (refresh)
  * @return 
  */
-fgBool fg::sfx::CSoundResource::recreate(void) {
+fgBool sfx::CSoundResource::recreate(void) {
     if(m_isReady) {
         dispose();
     }
@@ -316,7 +318,7 @@ fgBool fg::sfx::CSoundResource::recreate(void) {
 /**
  * Dispose completely of the all loaded data, free all memory
  */
-void fg::sfx::CSoundResource::dispose(void) {
+void sfx::CSoundResource::dispose(void) {
 #if defined(FG_USING_SDL_MIXER)
     setVolume(0);
     stop();
@@ -338,7 +340,7 @@ void fg::sfx::CSoundResource::dispose(void) {
  * Check if resource is disposed (not loaded yet or disposed after)
  * @return 
  */
-fgBool fg::sfx::CSoundResource::isDisposed(void) const {
+fgBool sfx::CSoundResource::isDisposed(void) const {
 #if defined(FG_USING_MARMALADE_SOUND)
     if(!m_soundData || !m_isReady) {
         return FG_TRUE;
@@ -354,7 +356,7 @@ fgBool fg::sfx::CSoundResource::isDisposed(void) const {
 /**
  * 
  */
-void fg::sfx::CSoundResource::play(void) {
+void sfx::CSoundResource::play(void) {
     if(!m_isReady)
         return;
     FG_LOG_DEBUG("SFX: Playing sound: name[%s]", getNameStr());
@@ -395,7 +397,7 @@ void fg::sfx::CSoundResource::play(void) {
 /**
  * 
  */
-void fg::sfx::CSoundResource::pause(void) {
+void sfx::CSoundResource::pause(void) {
     if(!m_isReady)
         return;
 #if defined(FG_USING_SDL_MIXER)
@@ -415,7 +417,7 @@ void fg::sfx::CSoundResource::pause(void) {
 /**
  * 
  */
-void fg::sfx::CSoundResource::resume(void) {
+void sfx::CSoundResource::resume(void) {
     if(!m_isReady)
         return;
 #if defined(FG_USING_SDL_MIXER)
@@ -438,7 +440,7 @@ void fg::sfx::CSoundResource::resume(void) {
 /**
  * 
  */
-void fg::sfx::CSoundResource::rewind(void) {
+void sfx::CSoundResource::rewind(void) {
     if(!m_isReady)
         return;
 #if defined(FG_USING_SDL_MIXER)
@@ -453,7 +455,7 @@ void fg::sfx::CSoundResource::rewind(void) {
 /**
  * 
  */
-void fg::sfx::CSoundResource::stop(void) {
+void sfx::CSoundResource::stop(void) {
     if(!m_isReady)
         return;
 #if defined(FG_USING_SDL_MIXER)
@@ -475,7 +477,7 @@ void fg::sfx::CSoundResource::stop(void) {
  * 
  * @return 
  */
-fgBool fg::sfx::CSoundResource::isPaused(void) {
+fgBool sfx::CSoundResource::isPaused(void) {
     if(!m_isReady)
         return FG_FALSE;
 #if defined(FG_USING_SDL_MIXER)
@@ -491,7 +493,7 @@ fgBool fg::sfx::CSoundResource::isPaused(void) {
  * 
  * @return 
  */
-fgBool fg::sfx::CSoundResource::isPlaying(void) {
+fgBool sfx::CSoundResource::isPlaying(void) {
     if(!m_isReady)
         return FG_FALSE;
 #if defined(FG_USING_SDL_MIXER)
@@ -506,7 +508,7 @@ fgBool fg::sfx::CSoundResource::isPlaying(void) {
  * 
  * @param volume
  */
-void fg::sfx::CSoundResource::setVolume(FG_SFX_VOLUME_TYPE volume) {
+void sfx::CSoundResource::setVolume(FG_SFX_VOLUME_TYPE volume) {
     if(!m_isReady)
         return;
 #if defined(FG_USING_SDL_MIXER)
@@ -529,7 +531,7 @@ void fg::sfx::CSoundResource::setVolume(FG_SFX_VOLUME_TYPE volume) {
  * 
  * @return 
  */
-int fg::sfx::CSoundResource::getCurrentChannel(void) {
+int sfx::CSoundResource::getCurrentChannel(void) {
     if(!m_isReady) {
         m_channel = 0;
     } else if(!isPlaying() && !isPaused()) {

@@ -32,7 +32,7 @@ using namespace fg;
  * 
  * @param resourceFactory
  */
-resource::CResourceManager::CResourceManager(fgResourceFactory *pResourceFactory, fg::base::CManager *pQualityMgr, fg::base::CManager *pEventMgr) :
+resource::CResourceManager::CResourceManager(CResourceFactory *pResourceFactory, fg::base::CManager *pQualityMgr, fg::base::CManager *pEventMgr) :
 m_pResourceFactory(pResourceFactory),
 m_pQualityMgr(pQualityMgr),
 m_pEventMgr(pEventMgr),
@@ -219,7 +219,7 @@ fgBool resource::CResourceManager::reserveMemory(size_t nMem) {
  * @param resType
  * @return 
  */
-fgBool resource::CResourceManager::goToNext(fgResourceType resType) {
+fgBool resource::CResourceManager::goToNext(ResourceType resType) {
     while(FG_TRUE) {
         m_currentResource++;
         if(!isValid()) {
@@ -239,7 +239,7 @@ fgBool resource::CResourceManager::goToNext(fgResourceType resType) {
  * @param n
  * @return 
  */
-fgBool resource::CResourceManager::goToNext(const fgResourceType* resTypes, int n) {
+fgBool resource::CResourceManager::goToNext(const ResourceType* resTypes, int n) {
     if(!resTypes)
         return FG_FALSE;
 
@@ -251,7 +251,7 @@ fgBool resource::CResourceManager::goToNext(const fgResourceType* resTypes, int 
         fgBool status = FG_FALSE;
         int i = 0;
         while(!status) {
-            if(i == n || resTypes[i] == FG_RESOURCE_INVALID)
+            if(i == n || resTypes[i] == resource::INVALID)
                 break;
             if((*m_currentResource)->getResourceType() == resTypes[i]) {
                 status = FG_TRUE;
@@ -271,7 +271,7 @@ fgBool resource::CResourceManager::goToNext(const fgResourceType* resTypes, int 
  * @param quality
  * @return 
  */
-fgBool resource::CResourceManager::goToNext(fgResourceType resType, fgQuality quality) {
+fgBool resource::CResourceManager::goToNext(ResourceType resType, fgQuality quality) {
     while(FG_TRUE) {
         goToNext();
         if(!isValid()) {
@@ -511,7 +511,7 @@ resource::CResource* resource::CResourceManager::get(const char *nameTag) {
  * @return 
  */
 resource::CResource* resource::CResourceManager::request(const std::string& info) {
-    return request(info, FG_RESOURCE_AUTO);
+    return request(info, AUTO);
 }
 
 /**
@@ -520,7 +520,7 @@ resource::CResource* resource::CResourceManager::request(const std::string& info
  * @return 
  */
 resource::CResource* resource::CResourceManager::request(const char *info) {
-    return request(std::string(info), FG_RESOURCE_AUTO);
+    return request(std::string(info), AUTO);
 }
 
 /**
@@ -529,7 +529,7 @@ resource::CResource* resource::CResourceManager::request(const char *info) {
  * @param forcedType
  * @return 
  */
-resource::CResource* resource::CResourceManager::request(const std::string& info, const fgResourceType forcedType) {
+resource::CResource* resource::CResourceManager::request(const std::string& info, const ResourceType forcedType) {
     if(!m_dataDir || !m_init || !m_pResourceFactory || info.empty())
         return NULL;
     CResource *resourcePtr = NULL;
@@ -551,7 +551,7 @@ resource::CResource* resource::CResourceManager::request(const std::string& info
 
     std::string pattern;
     std::string filePath;
-    fgResourceType resExtType = FG_RESOURCE_INVALID;
+    ResourceType resExtType = resource::INVALID;
     fgBool infoAsName = FG_FALSE;
     fgBool isFound = FG_FALSE;
     fgBool isConfig = FG_FALSE;
@@ -603,28 +603,28 @@ resource::CResource* resource::CResourceManager::request(const std::string& info
         if(fgStrings::endsWith(fext, "res.ini", FG_TRUE)) {
             isConfig = FG_TRUE;
         } else if(fgStrings::endsWith(fext, "tga", FG_TRUE)) {
-            resExtType = FG_RESOURCE_TEXTURE;
+            resExtType = resource::TEXTURE;
         } else if(fgStrings::endsWith(fext, "jpg", FG_TRUE)) {
-            resExtType = FG_RESOURCE_TEXTURE;
+            resExtType = resource::TEXTURE;
         } else if(fgStrings::endsWith(fext, "png", FG_TRUE)) {
-            resExtType = FG_RESOURCE_TEXTURE;
+            resExtType = resource::TEXTURE;
         } else if(fgStrings::endsWith(fext, "obj", FG_TRUE)) {
-            resExtType = FG_RESOURCE_3D_MODEL;
+            resExtType = resource::MODEL3D;
         } else if(fgStrings::endsWith(fext, "wav", FG_TRUE)) {
-            resExtType = FG_RESOURCE_SOUND;
+            resExtType = resource::SOUND;
         } else if(fgStrings::endsWith(fext, "mp3", FG_TRUE)) {
-            resExtType = FG_RESOURCE_MUSIC;
+            resExtType = resource::MUSIC;
         } else if(fgStrings::endsWith(fext, "mod", FG_TRUE)) {
-            resExtType = FG_RESOURCE_MUSIC;
+            resExtType = resource::MUSIC;
         } else if(fgStrings::endsWith(fext, "raw", FG_TRUE)) {
             // marmalade #FIXME
-            resExtType = FG_RESOURCE_SOUND;
+            resExtType = resource::SOUND;
         } else if(fgStrings::endsWith(fext, "particle.ini", FG_TRUE)) {
-            resExtType = FG_RESOURCE_PARTICLE_EFFECT;
+            resExtType = resource::PARTICLE_EFFECT;
         } else {
         }
 
-        if(resExtType != FG_RESOURCE_INVALID || isConfig) {
+        if(resExtType != resource::INVALID || isConfig) {
             isFound = FG_TRUE;
             break;
         }
@@ -633,7 +633,7 @@ resource::CResource* resource::CResourceManager::request(const std::string& info
     if(!isFound)
         return NULL;
     if(isConfig) {
-        fgResourceConfig *resCfg = new fgResourceConfig();
+        CResourceConfig *resCfg = new CResourceConfig();
         // This references to external config file, config should be loaded and proper resource created
         if(!resCfg->load(filePath.c_str())) {
             delete resCfg;
@@ -643,7 +643,7 @@ resource::CResource* resource::CResourceManager::request(const std::string& info
         // THIS CODE IS REALLY SIMILAR TO THE ONE IN RESOURCE GROUP
         // NEED TO THINK OF A WAY TO NOT REPEAT THIS CHUNK OF CODE
         // SHOULD RESOURCE GROUP HAVE SOME ACCESS TO THIS RES MGR?
-        fgResourceHeader *header = &resCfg->getRefHeader();
+        SResourceHeader *header = &resCfg->getRefHeader();
         if(m_pResourceFactory->isRegistered(header->resType)) {
             resourcePtr = m_pResourceFactory->createResource(header->resType);
             resourcePtr->setName(header->name);
@@ -664,13 +664,13 @@ resource::CResource* resource::CResourceManager::request(const std::string& info
             resourcePtr->setDefaultID(header->quality);
         }
         delete resCfg;
-    } else if(resExtType != FG_RESOURCE_INVALID) {
-        if(forcedType != FG_RESOURCE_AUTO)
+    } else if(resExtType != resource::INVALID) {
+        if(forcedType != AUTO)
             resExtType = forcedType;
         if(m_pResourceFactory->isRegistered(resExtType)) {
             resourcePtr = m_pResourceFactory->createResource(resExtType);
             resourcePtr->setName(info);
-            resourcePtr->setPriority(FG_RES_PRIORITY_LOW);
+            resourcePtr->setPriority(ResourcePriority::LOW);
             resourcePtr->setQuality(FG_QUALITY_UNIVERSAL);
             resourcePtr->setDefaultID(FG_QUALITY_UNIVERSAL);
             resourcePtr->setFilePath(filePath);
@@ -710,7 +710,7 @@ resource::CResource* resource::CResourceManager::request(const std::string& info
  * @param forcedType
  * @return 
  */
-resource::CResource* resource::CResourceManager::request(const char *info, const fgResourceType forcedType) {
+resource::CResource* resource::CResourceManager::request(const char *info, const ResourceType forcedType) {
     return request(std::string(info), forcedType);
 }
 

@@ -17,7 +17,7 @@ using namespace fg;
  * 
  */
 gfx::CParticleEffect::CParticleEffect() : CResource() {
-    m_resType = FG_RESOURCE_PARTICLE_EFFECT;
+    m_resType = resource::PARTICLE_EFFECT;
     m_textureIDRange.x = 0;
     m_textureIDRange.y = 0;
     m_burnoutDelay = 0;
@@ -36,8 +36,8 @@ gfx::CParticleEffect::~CParticleEffect() {
  * 
  */
 void gfx::CParticleEffect::clear(void) {
-    fg::resource::CResource::clear();
-    m_resType = FG_RESOURCE_PARTICLE_EFFECT;
+    CResource::clear();
+    m_resType = resource::PARTICLE_EFFECT;
 }
 
 /**
@@ -45,11 +45,11 @@ void gfx::CParticleEffect::clear(void) {
  * @param params
  * @return 
  */
-fgBool gfx::CParticleEffect::initializeFromConfig(fgCfgTypes::parameterVec& params) {
+fgBool gfx::CParticleEffect::initializeFromConfig(util::config::ParameterVec& params) {
     if(params.empty())
         return FG_FALSE;
 
-    fgCfgTypes::parameterVecItor begin, end, itor;
+    util::config::ParameterVecItor begin, end, itor;
     begin = params.begin();
     end = params.end();
     itor = begin;
@@ -57,16 +57,16 @@ fgBool gfx::CParticleEffect::initializeFromConfig(fgCfgTypes::parameterVec& para
     // Iterate through all style parameters
     // Parameters are taken directly from ini config file
     for(; itor != end; itor++) {
-        fgCfgParameter *param = *itor;
+        util::SCfgParameter *param = *itor;
         if(!param)
             continue;
         // name – string –
         if(param->name.compare("name") == 0) {
-            if(param->type == FG_CFG_PARAMETER_STRING)
+            if(param->type == util::SCfgParameter::STRING)
                 this->setName(param->string);
 
         } else if(param->name.compare("type") == 0) {
-            if(param->type == FG_CFG_PARAMETER_STRING) {
+            if(param->type == util::SCfgParameter::STRING) {
                 //this->setName(param->string);
                 if(strcasecmp(param->string, "group") == 0) {
                     this->setFlag(FG_PARTICLE_GROUP_EFFECT, FG_TRUE);
@@ -77,112 +77,112 @@ fgBool gfx::CParticleEffect::initializeFromConfig(fgCfgTypes::parameterVec& para
 
         } else if(param->name.compare("max-count") == 0) {
             // max - count – integer –
-            if(param->type == FG_CFG_PARAMETER_INT)
+            if(param->type == util::SCfgParameter::INT)
                 this->setMaxCount(param->int_val);
-            else if(param->type == FG_CFG_PARAMETER_STRING)
+            else if(param->type == util::SCfgParameter::STRING)
                 this->setMaxCount(atoi(param->string));
 
             // particle - area – boundingbox –
         } else if(param->name.compare("particle-area") == 0) {
-            if(param->type == FG_CFG_PARAMETER_STRING) {
+            if(param->type == util::SCfgParameter::STRING) {
                 fgStringParser::parseVector<BoundingBox3Df>(m_particleArea, param->string);
                 this->m_isAreaSet = FG_TRUE;
             }
 
             // area - check – bool –
         } else if(param->name.compare("area-check") == 0) {
-            if(param->type == FG_CFG_PARAMETER_BOOL)
+            if(param->type == util::SCfgParameter::BOOL)
                 this->m_isAreaCheck = param->bool_val;
 
             // random - velocity – bool –
         } else if(param->name.compare("random-velocity") == 0) {
-            if(param->type == FG_CFG_PARAMETER_BOOL)
+            if(param->type == util::SCfgParameter::BOOL)
                 setFlag(FG_PARTICLE_RANDOM_VELOCITY, param->bool_val);
 
             // random - angle – bool –
         } else if(param->name.compare("random-angle") == 0) {
-            if(param->type == FG_CFG_PARAMETER_BOOL)
+            if(param->type == util::SCfgParameter::BOOL)
                 setFlag(FG_PARTICLE_RANDOM_ANGLE, param->bool_val);
 
             // life - as - size – bool –
         } else if(param->name.compare("life-as-size") == 0) {
-            if(param->type == FG_CFG_PARAMETER_BOOL)
+            if(param->type == util::SCfgParameter::BOOL)
                 setFlag(FG_PARTICLE_LIFE_AS_SIZE, param->bool_val);
 
             // facing - velocity – bool –
         } else if(param->name.compare("facing-velocity") == 0) {
-            if(param->type == FG_CFG_PARAMETER_BOOL)
+            if(param->type == util::SCfgParameter::BOOL)
                 setFlag(FG_PARTICLE_FACING_VELOCITY, param->bool_val);
 
             // params - active – bool –
         } else if(param->name.compare("params-active") == 0) {
-            if(param->type == FG_CFG_PARAMETER_BOOL)
+            if(param->type == util::SCfgParameter::BOOL)
                 setFlag(FG_PARTICLE_PARAMS_ACTIVE, param->bool_val);
 
             // start - size – vector –
         } else if(param->name.compare("start-size") == 0) {
-            if(param->type == FG_CFG_PARAMETER_STRING)
+            if(param->type == util::SCfgParameter::STRING)
                 fgStringParser::parseVector<Vector3f>(m_startSize, param->string);
 
             // end - size – vector –
         } else if(param->name.compare("end-size") == 0) {
-            if(param->type == FG_CFG_PARAMETER_STRING)
+            if(param->type == util::SCfgParameter::STRING)
                 fgStringParser::parseVector<Vector3f>(m_endSize, param->string);
 
             // spread - speed – vector –
         } else if(param->name.compare("spread-speed") == 0) {
-            if(param->type == FG_CFG_PARAMETER_STRING)
+            if(param->type == util::SCfgParameter::STRING)
                 fgStringParser::parseVector<Vector3f>(m_spreadSpeed, param->string);
 
             // life - range – vector –
         } else if(param->name.compare("life-range") == 0) {
-            if(param->type == FG_CFG_PARAMETER_STRING)
+            if(param->type == util::SCfgParameter::STRING)
                 fgStringParser::parseVector<Vector2f>(m_lifeRange, param->string);
 
             // ttl - range – vector –
         } else if(param->name.compare("ttl-range") == 0) {
-            if(param->type == FG_CFG_PARAMETER_STRING)
+            if(param->type == util::SCfgParameter::STRING)
                 fgStringParser::parseVector<Vector2i>(m_ttlRange, param->string);
 
             // fade - speed - range – vector –
         } else if(param->name.compare("fade-speed-range") == 0) {
-            if(param->type == FG_CFG_PARAMETER_STRING)
+            if(param->type == util::SCfgParameter::STRING)
                 fgStringParser::parseVector<Vector2f>(m_fadeSpeedRange, param->string);
 
             // start - color – color –
         } else if(param->name.compare("start-color") == 0) {
-            if(param->type == FG_CFG_PARAMETER_STRING)
+            if(param->type == util::SCfgParameter::STRING)
                 m_startColor = fgStringParser::parseColor(param->string);
 
             // end - color – color –
         } else if(param->name.compare("end-color") == 0) {
-            if(param->type == FG_CFG_PARAMETER_STRING)
+            if(param->type == util::SCfgParameter::STRING)
                 m_endColor = fgStringParser::parseColor(param->string);
 
             // texture – string –
         } else if(param->name.compare("texture") == 0 ||
                   param->name.compare("texture-name") == 0) {
-            if(param->type == FG_CFG_PARAMETER_STRING)
+            if(param->type == util::SCfgParameter::STRING)
                 m_textureName = param->string;
 
             // textureSize – vector –
         } else if(param->name.compare("texture-size") == 0 ||
                   param->name.compare("texture-sheet-size") == 0) {
-            if(param->type == FG_CFG_PARAMETER_STRING)
+            if(param->type == util::SCfgParameter::STRING)
                 fgStringParser::parseVector<Vector2i>(m_textureSheetSize, param->string);
 
             // textureIDRange – vector –
         } else if(param->name.compare("texture-id-range") == 0) {
-            if(param->type == FG_CFG_PARAMETER_STRING)
+            if(param->type == util::SCfgParameter::STRING)
                 fgStringParser::parseVector<Vector2i>(m_textureIDRange, param->string);
 
             // Burnout delay (milliseconds)
         } else if(param->name.compare("burnout-delay") == 0) {
-            if(param->type == FG_CFG_PARAMETER_INT) {
+            if(param->type == util::SCfgParameter::INT) {
                 if(param->int_val >= 0) {
                     this->m_burnoutDelay = (unsigned int)param->int_val;
                 }
-            } else if(param->type == FG_CFG_PARAMETER_FLOAT) {
+            } else if(param->type == util::SCfgParameter::FLOAT) {
                 if(param->float_val >= 0.0f) {
                     this->m_burnoutDelay = (unsigned int)param->float_val;
                 }
@@ -191,7 +191,7 @@ fgBool gfx::CParticleEffect::initializeFromConfig(fgCfgTypes::parameterVec& para
             // Burnout range (floats, valid values 0.0f-1.0f)
         } else if(param->name.compare("burn-range") == 0 ||
                   param->name.compare("burnout-range") == 0) {
-            if(param->type == FG_CFG_PARAMETER_STRING)
+            if(param->type == util::SCfgParameter::STRING)
                 fgStringParser::parseVector<Vector2f>(m_burnRange, param->string);
         }
     }
@@ -209,30 +209,30 @@ fgBool gfx::CParticleEffect::create(void) {
         return FG_TRUE;
     }
     if(getFilePath().empty()) {
-        FG_LOG::PrintError("GFX: Unable to create a ParticleEffect: the path is empty");
+        FG_LOG_ERROR("GFX: Unable to create a ParticleEffect: the path is empty");
         return FG_FALSE;
     }
-    fgConfig config(getFilePathStr());
+    util::CConfig config(getFilePathStr());
     if(!config.isLoaded()) {
-        FG_LOG::PrintError("GFX: Failed to load particle effect config: '%s'", getFilePathStr());
+        FG_LOG_ERROR("GFX: Failed to load particle effect config: '%s'", getFilePathStr());
         return FG_FALSE;
     }
-    fgCfgTypes::sectionMap &sections = config.getRefSectionMap();
-    fgCfgTypes::sectionMapItor sitor = sections.begin(), send = sections.end();
+    util::config::SectionMap &sections = config.getRefSectionMap();
+    util::config::SectionMapItor sitor = sections.begin(), send = sections.end();
 
     if(sections.empty()) {
-        FG_LOG::PrintError("GFX: Particle config file has no valid sections: '%s'", getFilePathStr());
+        FG_LOG_ERROR("GFX: Particle config file has no valid sections: '%s'", getFilePathStr());
         return FG_FALSE;
     }
-    fgCfgSection *mainSection = config.getSection(FG_RESOURCE_PARTICLE_EFFECT_TEXT);
+    util::SCfgSection *mainSection = config.getSection(FG_RESOURCE_PARTICLE_EFFECT_TEXT);
     if(!mainSection) {
-        FG_LOG::PrintError("GFX: Particle config is malformed: '%s'", getFilePathStr());
+        FG_LOG_ERROR("GFX: Particle config is malformed: '%s'", getFilePathStr());
         return FG_FALSE;
     }
 
     // Initialize internal parameters from config parameter list
     if(!initializeFromConfig(mainSection->parameters)) {
-        FG_LOG::PrintError("GFX: Failed to initialize ParticleEffect from config: '%s'", getFilePathStr());
+        FG_LOG_ERROR("GFX: Failed to initialize ParticleEffect from config: '%s'", getFilePathStr());
         return FG_FALSE;
     }
 
@@ -242,7 +242,7 @@ fgBool gfx::CParticleEffect::create(void) {
     }
 
     m_size = sizeof (CParticleEffect) + m_nameTag.length() + m_textureName.length();
-    m_resType = FG_RESOURCE_PARTICLE_EFFECT;
+    m_resType = resource::PARTICLE_EFFECT;
     m_isReady = FG_TRUE;
     return FG_TRUE;
 }

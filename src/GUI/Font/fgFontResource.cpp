@@ -8,64 +8,64 @@
  *******************************************************/
 
 #include "fgFontResource.h"
-
-#include "fgLog.h"
-#include "Util/fgPath.h"
 #include "GFX/Textures/fgTextureManager.h"
 #include "Hardware/fgHardwareState.h"
+#include "Util/fgPath.h"
+#include "fgLog.h"
 
-/*
+using namespace fg;
+
+/**
  * Base constructor of the font resource object
  */
-fg::gui::CFontResource::CFontResource() :
+gui::CFontResource::CFontResource() :
 CTextureResource(),
-m_fontType(FG_FONT_TYPE_TEXTURE),
+m_fontType(FONT_TEXTURE),
 m_info(),
 m_step(0) {
-    m_resType = FG_RESOURCE_FONT;
-    FG_LOG_DEBUG("fgFontResource::fgFontResource()");
+    m_resType = resource::FONT;
 }
 
-/*
+/**
  * Constructor with additional parameter (path)
+ * @param path
  */
-fg::gui::CFontResource::CFontResource(const char *path) :
+gui::CFontResource::CFontResource(const char *path) :
 CTextureResource(path),
-m_fontType(FG_FONT_TYPE_TEXTURE),
+m_fontType(FONT_TEXTURE),
 m_info(),
 m_step(0) {
-    m_resType = FG_RESOURCE_FONT;
-    FG_LOG_DEBUG("fgFontResource::fgFontResource()");
+    m_resType = resource::FONT;
 }
 
-/*
+/**
  * Constructor with additional parameter (path)
+ * @param path
  */
-fg::gui::CFontResource::CFontResource(std::string& path) :
+gui::CFontResource::CFontResource(std::string& path) :
 CTextureResource(path),
-m_fontType(FG_FONT_TYPE_TEXTURE),
+m_fontType(FONT_TEXTURE),
 m_info(),
 m_step(0) {
-    m_resType = FG_RESOURCE_FONT;
-    FG_LOG_DEBUG("fgFontResource::fgFontResource()");
+    m_resType = resource::FONT;
 }
 
-/*
+/**
  * Clears the class data, this actually does not free allocated memory, 
  * just resets base class attributes
  */
-void fg::gui::CFontResource::clear(void) {
-    FG_LOG_DEBUG("fgFontResource::clear();");
+void gui::CFontResource::clear(void) {
     CTextureResource::clear();
     m_step = 0;
-    m_resType = FG_RESOURCE_FONT;
-    m_fontType = FG_FONT_TYPE_TEXTURE;
+    m_resType = resource::FONT;
+    m_fontType = FONT_TEXTURE;
 }
 
-/*
+/**
  * Create function loads/interprets data from file in ROM and place it in RAM memory.
+ * @return 
  */
-fgBool fg::gui::CFontResource::create(void) {
+fgBool gui::CFontResource::create(void) {
     FG_LOG_DEBUG("fgFontResource::create();");
     m_textureType = FG_TEXTURE_FONT;
     if(!CTextureResource::create()) {
@@ -84,9 +84,9 @@ fgBool fg::gui::CFontResource::create(void) {
     dt = 1.0f / 16.0f;
     FG_LOG_DEBUG("FONT CREATE 'Tex::ID=%s'; size=%dx%d; step=%d;", this->m_nameTag.c_str(), m_width, m_width, m_step);
     if(!m_info.charInfo) {
-        m_info.charInfo = fgMalloc<SFontCharInfo>(FG_FONT_STANDARD_ASCII_SIZE);
+        m_info.charInfo = fgMalloc<SFontCharInfo>(STANDARD_ASCII_SIZE);
     }
-    m_info.numChars = FG_FONT_STANDARD_ASCII_SIZE;
+    m_info.numChars = STANDARD_ASCII_SIZE;
     for(y = 0, i = 0; y < 16; y++) {
         for(x = 0; x < 16; x++, i++) {
             space0 = 0.0f;
@@ -133,37 +133,39 @@ fgBool fg::gui::CFontResource::create(void) {
     return FG_TRUE;
 }
 
-/*
- * Destroy all loaded data including additional metadata (called with deconstructor)
+/**
+ * Destroy all loaded data including additional metadata (called with destructor)
  */
-void fg::gui::CFontResource::destroy(void) {
+void gui::CFontResource::destroy(void) {
     CTextureResource::destroy();
     m_info.destroy();
 }
 
-/*
+/**
  * Reloads any data, recreates the resource (refresh)
+ * @return 
  */
-fgBool fg::gui::CFontResource::recreate(void) {
+fgBool gui::CFontResource::recreate(void) {
     FG_LOG_DEBUG("fgFontResource::recreate();");
-    fg::gui::CFontResource::dispose();
-    return fg::gui::CFontResource::create();
+    gui::CFontResource::dispose();
+    return gui::CFontResource::create();
 }
 
-/*
+/**
  * Dispose completely of the all loaded data, free all memory
  */
-void fg::gui::CFontResource::dispose(void) {
+void gui::CFontResource::dispose(void) {
     FG_LOG_DEBUG("fgFontResource::~dispose();");
     CTextureResource::dispose();
     m_step = 0;
     m_info.destroy();
 }
 
-/*
+/**
  * Check if resource is disposed (not loaded yet or disposed after)
+ * @return 
  */
-fgBool fg::gui::CFontResource::isDisposed(void) const {
+fgBool gui::CFontResource::isDisposed(void) const {
     return CTextureResource::isDisposed();
 }
 
@@ -172,7 +174,7 @@ fgBool fg::gui::CFontResource::isDisposed(void) const {
 /*
  *
  */
-void fg::gui::CFontResource::setFontArea(Area *area) {
+void gui::CFontResource::setFontArea(Area *area) {
     m_fontArea.x = area->x;
     m_fontArea.y = area->y;
     m_fontArea.w = area->w;
@@ -183,7 +185,7 @@ void fg::gui::CFontResource::setFontArea(Area *area) {
 /*
  *
  */
-void fg::gui::CFontResource::setFontAreaDefault(void) {
+void gui::CFontResource::setFontAreaDefault(void) {
     m_fontArea.x = 0;
     m_fontArea.y = 0;
     m_fontArea.w = FG_HardwareState->screenWidth();
@@ -196,8 +198,7 @@ void fg::gui::CFontResource::setFontAreaDefault(void) {
 /*
  *
  */
-bool fg::gui::CFontResource::load(Tex::ID FONT_ID) {
- }
+bool gui::CFontResource::load(Tex::ID FONT_ID) { }
 
 /**
  * Ustawia na ekranie pojedynczy znak o prawidlowym rozmiarze i teksturze
@@ -205,7 +206,7 @@ bool fg::gui::CFontResource::load(Tex::ID FONT_ID) {
  * @param char_size	Rozmiar jednego znaku (wysokosc)
  * @param letter	Znak do wypisania
  */
-float fg::gui::CFontResource::placeChar(float x0, float y0, float char_size, char letter, void *inmat) {
+float gui::CFontResource::placeChar(float x0, float y0, float char_size, char letter, void *inmat) {
     int x, y, i, size;
     float s, t, ds, dt;
     float scale;
@@ -263,7 +264,7 @@ float fg::gui::CFontResource::placeChar(float x0, float y0, float char_size, cha
  * @param string
  * @return
  */
-int fg::gui::CFontResource::print(float x, float y, float size, const char *string, ...) {
+int gui::CFontResource::print(float x, float y, float size, const char *string, ...) {
     int n;
     char *s;
     char buf[BUFFF_SIZE];
@@ -380,7 +381,7 @@ int fg::gui::CFontResource::print(float x, float y, float size, const char *stri
  * @param string
  * @return
  */
-int fg::gui::CFontResource::printCenter(float y, float size, const char *string, ...) {
+int gui::CFontResource::printCenter(float y, float size, const char *string, ...) {
     char buf[BUFFF_SIZE];
     int n = 0;
     char *token;
@@ -409,7 +410,7 @@ int fg::gui::CFontResource::printCenter(float y, float size, const char *string,
  * @param fmt
  * @return
  */
-int fg::gui::CFontResource::printLeft(float y, float size, const char *string, ...) {
+int gui::CFontResource::printLeft(float y, float size, const char *string, ...) {
     char buf[BUFFF_SIZE];
     int n = 0;
     va_list args;
@@ -432,7 +433,7 @@ int fg::gui::CFontResource::printLeft(float y, float size, const char *string, .
  * @param fmt
  * @return
  */
-int fg::gui::CFontResource::printRight(float y, float size, const char *string, ...) {
+int gui::CFontResource::printRight(float y, float size, const char *string, ...) {
     char buf[BUFFF_SIZE];
     int n = 0;
     char *token;
@@ -461,7 +462,7 @@ int fg::gui::CFontResource::printRight(float y, float size, const char *string, 
  * @param fmt
  * @return
  */
-float fg::gui::CFontResource::height(float size, const char *string, ...) {
+float gui::CFontResource::height(float size, const char *string, ...) {
     char buf[BUFFF_SIZE];
     int i;
     float y = size;

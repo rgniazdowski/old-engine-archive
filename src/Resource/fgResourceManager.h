@@ -85,7 +85,7 @@ namespace fg {
              * @param pQualityMgr       Pointer to the external quality manager object. This is mandatory.
              * @param pEventMgr         Pointer to the external event manager object. This is optional. Default: NULL
              */
-            CResourceManager(fgResourceFactory *pResourceFactory, fg::base::CManager *pQualityMgr, fg::base::CManager *pEventMgr = NULL);
+            CResourceManager(CResourceFactory *pResourceFactory, fg::base::CManager *pQualityMgr, fg::base::CManager *pEventMgr = NULL);
             /**
              * Default destructor for resource manager
              */
@@ -135,7 +135,7 @@ namespace fg {
              * 
              * @return 
              */
-            fgResourceFactory *getResourceFactory(void) const;
+            CResourceFactory *getResourceFactory(void) const;
 
             // --------------------------------------------------------------------------
             // Memory management routines
@@ -200,21 +200,21 @@ namespace fg {
              * @param resType
              * @return 
              */
-            fgBool goToNext(fgResourceType resType);
+            fgBool goToNext(ResourceType resType);
             /**
              * Find next resource with given criteria (currently resource type)
              * @param resType
              * @param n
              * @return 
              */
-            fgBool goToNext(const fgResourceType* resType, int n);
+            fgBool goToNext(const ResourceType* resType, int n);
             /**
              * Find next resource with given criteria (currently resource type and quality)
              * @param resType
              * @param quality
              * @return 
              */
-            fgBool goToNext(fgResourceType resType, fgQuality quality);
+            fgBool goToNext(ResourceType resType, fgQuality quality);
 
             // -----------------------------------------------------------------------
             // General resource access
@@ -321,7 +321,7 @@ namespace fg {
              * @param forcedType
              * @return 
              */
-            virtual CResource* request(const std::string& info, const fgResourceType forcedType);
+            virtual CResource* request(const std::string& info, const ResourceType forcedType);
 
             /**
              * Request specified resource from disk
@@ -329,7 +329,7 @@ namespace fg {
              * @param forcedType
              * @return 
              */
-            virtual CResource* request(const char *info, const fgResourceType forcedType);
+            virtual CResource* request(const char *info, const ResourceType forcedType);
 
             // Destroy functions will release all the memory for the resource, delete
             // the object, remove the resource from the manager - resource handle will
@@ -413,7 +413,7 @@ namespace fg {
             /// Array holding handles to resource groups
             rmHandleVec m_resourceGroupHandles;
             ///
-            fgResourceFactory *m_pResourceFactory;
+            CResourceFactory *m_pResourceFactory;
             /// Pointer to the external Quality manager
             fg::base::CManager *m_pQualityMgr;
             /// Pointer to the external Event manager

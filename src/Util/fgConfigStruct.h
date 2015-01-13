@@ -15,364 +15,368 @@
     #include <string>
     #include <map>
 
-    #define FG_CFG_PARAMATER_STRING_MAX 512
-    #define FG_CFG_LINE_MAX             1024
     #define FG_CFG_DEFAULT_VALUE        "_default_"
 
-struct fgCfgParameter;
-struct fgCfgSection;
+namespace fg {
+    namespace util {
 
-namespace fgCfgTypes {
-    ///
-    typedef std::string sectionMapKey;
-    ///
-    typedef std::map<sectionMapKey, fgCfgSection*> sectionMap;
-    ///
-    typedef std::pair<sectionMapKey, fgCfgSection*> sectionMapPair;
-    ///
-    typedef sectionMap::iterator sectionMapItor;
+        struct SCfgParameter;
+        struct SCfgSection;
 
-    ///
-    typedef fg::CVector<fgCfgParameter*> parameterVec;
-    ///
-    typedef parameterVec::iterator parameterVecItor;
+        namespace config {
+            ///
+            typedef std::string SectionMapKey;
+            ///
+            typedef std::map<SectionMapKey, SCfgSection*> SectionMap;
+            ///
+            typedef std::pair<SectionMapKey, SCfgSection*> SectionMapPair;
+            ///
+            typedef SectionMap::iterator SectionMapItor;
 
-    ///
-    typedef fg::CVector<fgCfgSection*> sectionVec;
-    ///
-    typedef sectionVec::iterator sectionVecItor;
+            ///
+            typedef fg::CVector<SCfgParameter*> ParameterVec;
+            ///
+            typedef ParameterVec::iterator ParameterVecItor;
 
-    ///
-    typedef std::string parameterMapKey;
-    ///
-    typedef std::map<parameterMapKey, fgCfgParameter*> parameterMap;
-    ///
-    typedef std::pair<parameterMapKey, fgCfgParameter*> parameterMapPair;
-    ///
-    typedef parameterMap::iterator parameterMapItor;
-};
+            ///
+            typedef fg::CVector<SCfgSection*> SectionVec;
+            ///
+            typedef SectionVec::iterator SectionVecItor;
 
-/*
- *
- */
-enum fgCfgParameterType {
-    FG_CFG_PARAMETER_INT, // Integer value - int
-    FG_CFG_PARAMETER_LONG, // Long integer value - long int
-    FG_CFG_PARAMETER_FLOAT, // Float value
-    FG_CFG_PARAMETER_BOOL, // Boolean value - fgBool
-    FG_CFG_PARAMETER_STRING, // String value - char array
-    FG_CFG_PARAMETER_NONE // No value specified - unknow
-};
+            ///
+            typedef std::string ParameterMapKey;
+            ///
+            typedef std::map<ParameterMapKey, SCfgParameter*> ParameterMap;
+            ///
+            typedef std::pair<ParameterMapKey, SCfgParameter*> ParameterMapPair;
+            ///
+            typedef ParameterMap::iterator ParameterMapItor;
+        };
 
-/**
- *
- */
-struct fgCfgParameter {
-    /// Name of the parameter
-    std::string name;
-    /// Name of the section
-    std::string sectionName;
-    /// Name of the subsection in which the parameter resides
-    std::string subSectionName;
-    /// Parameter type (type of the value stored)
-    fgCfgParameterType type;
+        ///
+        const unsigned int PARAM_STRING_MAX = 512;
+        ///
+        const unsigned int CONFIG_LINE_MAX = 1024;
 
-    // Union for storing different values
-    union {
-        char string[FG_CFG_PARAMATER_STRING_MAX];
-        long int long_val;
-        float float_val;
-        int int_val;
-        fgBool bool_val;
+        /**
+         *
+         */
+        struct SCfgParameter {
+            /// Name of the parameter
+            std::string name;
+            /// Name of the section
+            std::string sectionName;
+            /// Name of the subsection in which the parameter resides
+            std::string subSectionName;
+
+            /**
+             *
+             */
+            enum Type {
+                /// No value specified - unknown
+                NONE,
+                /// Integer value - int
+                INT,
+                /// Long integer value - long int
+                LONG,
+                /// Float value
+                FLOAT,
+                /// Boolean value - fgBool
+                BOOL,
+                /// String value - char array
+                STRING
+            } type;
+
+            /**
+             * Union for storing different values
+             */
+            union {
+                ///
+                char string[PARAM_STRING_MAX];
+                ///
+                long int long_val;
+                ///
+                float float_val;
+                ///
+                int int_val;
+                ///
+                fgBool bool_val;
+            };
+            /**
+             * 
+             */
+            SCfgParameter() : type(NONE) {
+                memset(string, 0, PARAM_STRING_MAX);
+            }
+            /**
+             * Destructor for the configs parameter
+             */
+            virtual ~SCfgParameter() {
+                name.clear();
+                sectionName.clear();
+                subSectionName.clear();
+            }
+            /**
+             * Reset all values
+             */
+            inline void reset() {
+                type = NONE;
+                int_val = 0;
+                name.clear();
+                sectionName.clear();
+                subSectionName.clear();
+                memset(string, 0, PARAM_STRING_MAX);
+            }
+            /**
+             * Set the integer value for the parameter
+             * @param _int_val
+             */
+            inline void set(int _int_val) {
+                type = INT;
+                int_val = _int_val;
+            }
+            /**
+             *  Set the 'long int' value for the parameter
+             * @param _long_val
+             */
+            inline void set(long int _long_val) {
+                type = LONG;
+                long_val = _long_val;
+            }
+            /**
+             *  Set the float value of the parameter
+             * @param _float_val
+             */
+            inline void set(float _float_val) {
+                type = FLOAT;
+                float_val = _float_val;
+            }
+            /**
+             * Set the bool value of the parameter
+             * @param _bool_val
+             */
+            inline void set(fgBool _bool_val) {
+                type = BOOL;
+                bool_val = _bool_val;
+            }
+            /**
+             * Set the string value of the parameter
+             * @param _string
+             */
+            inline void set(const char *_string) {
+                type = STRING;
+                strncpy(string, _string, PARAM_STRING_MAX - 1);
+            }
+            /**
+             * Set the parameter value based on the type enum and void pointer
+             * @param _type
+             * @param _value
+             * @return 
+             */
+            fgBool set(Type _type, void *_value) {
+                if(!_value)
+                    return FG_FALSE;
+
+                switch(_type) {
+                    case INT:
+                        int_val = *((int *)_value);
+                        break;
+                    case LONG:
+                        long_val = *((long int *)_value);
+                        break;
+                    case FLOAT:
+                        float_val = *((float *)_value);
+                        break;
+                    case BOOL:
+                        bool_val = *((fgBool *)_value);
+                        break;
+                    case STRING:
+                        strncpy(string, (const char *)_value, PARAM_STRING_MAX - 1);
+                        break;
+                    case NONE:
+                        return FG_FALSE;
+                        break;
+                    default:
+                        return FG_FALSE;
+                        break;
+                };
+                type = _type;
+                return FG_TRUE;
+            }
+            /**
+             * Get the void* pointer to the value stored in the parameter struct - NULL if invalid
+             * @return 
+             */
+            inline void *get(void) {
+                switch(type) {
+                    case INT:
+                        return (void *)&int_val;
+                        break;
+                    case LONG:
+                        return (void *)&long_val;
+                        break;
+                    case FLOAT:
+                        return (void *)&float_val;
+                        break;
+                    case BOOL:
+                        return (void *)&bool_val;
+                        break;
+                    case STRING:
+                        return (void *)string;
+                        break;
+                    case NONE:
+                        break;
+                    default:
+                        break;
+                };
+                return NULL;
+            }
+            /**
+             * Convert value of the parameter to string. Will be stored in specified buffer. NULL on failure.
+             * @param buf
+             * @param nmax
+             * @return 
+             */
+            char *valueToString(char *buf, unsigned int nmax = PARAM_STRING_MAX) {
+                if(nmax < PARAM_STRING_MAX || !buf)
+                    return NULL;
+
+                switch(type) {
+                    case INT:
+                        snprintf(buf, nmax, "%d", int_val);
+                        break;
+                    case LONG:
+                        snprintf(buf, nmax, "%ldL", long_val);
+                        break;
+                    case FLOAT:
+                        snprintf(buf, nmax, "%f", float_val);
+                        break;
+                    case BOOL:
+                        snprintf(buf, nmax, "%s", FG_BOOL_TO_TEXT(bool_val));
+                        break;
+                    case STRING:
+                        snprintf(buf, nmax, "\"%s\"", string);
+                        break;
+                    case NONE:
+                        return NULL;
+                        break;
+                    default:
+                        return NULL;
+                        break;
+                };
+                return buf;
+            }
+            /**
+             * Convert the parameter to string. The string will be in format: name = value
+             * @param buf
+             * @param nmax
+             * @return 
+             */
+            inline char *toString(char *buf, unsigned int nmax = CONFIG_LINE_MAX) {
+                if(!buf)
+                    return NULL;
+                char tmp_val[PARAM_STRING_MAX];
+                if(!valueToString(tmp_val))
+                    return NULL;
+                snprintf(buf, nmax, "%s = %s", name.c_str(), tmp_val);
+                return buf;
+            }
+        };
+
+        /*
+         *
+         */
+        struct SCfgSection {
+            // Full section name
+            std::string name;
+            // Name of the subsection
+            std::string subName;
+            // parameters vector - all parameters one after another
+            config::ParameterVec parameters;
+            // parameters map - key is the parameter name
+            config::ParameterMap parametersMap;
+            /**
+             * Default empty constructor
+             */
+            SCfgSection() { }
+            /**
+             * Default destructor for config section
+             */
+            virtual ~SCfgSection() {
+                name.clear();
+                subName.clear();
+                parameters.clear_optimised();
+                parametersMap.clear();
+            }
+            /**
+             * Return the parameter with given name
+             * @param parameterName
+             * @return 
+             */
+            SCfgParameter *getParameter(const char *parameterName) {
+                config::ParameterMapKey pmkey = parameterName;
+                config::ParameterMapItor pmit = parametersMap.find(pmkey);
+                if(pmit == parametersMap.end())
+                    return NULL;
+                return pmit->second;
+            }
+            /**
+             * 
+             * @param parameterName
+             * @param _type
+             * @return 
+             */
+            SCfgParameter *getParameter(const char *parameterName, SCfgParameter::Type _type) {
+                SCfgParameter *param = getParameter(parameterName);
+                if(!param)
+                    return NULL;
+                if(param->type != _type)
+                    return NULL;
+                return param;
+            }
+            /**
+             * Return the parameter with given name
+             * @param parameterName
+             * @return 
+             */
+            inline SCfgParameter *getParameter(std::string & parameterName) {
+                return getParameter(parameterName.c_str());
+            }
+            /**
+             * 
+             * @param parameterName
+             * @param _type
+             * @return 
+             */
+            inline SCfgParameter *getParameter(std::string & parameterName, SCfgParameter::Type _type) {
+                return getParameter(parameterName.c_str(), _type);
+            }
+            /**
+             * This will release all data - calls destructors
+             */
+            void freeAll(void) {
+                parametersMap.clear();
+                while(!parameters.empty()) {
+                    SCfgParameter *&param = parameters.back();
+                    delete param;
+                    param = NULL;
+                    parameters.pop_back();
+                }
+            }
+            /**
+             * 
+             * @param buf
+             * @param nmax
+             * @return 
+             */
+            inline char *toString(char *buf, unsigned int nmax = PARAM_STRING_MAX) {
+                if(!buf)
+                    return NULL;
+                snprintf(buf, nmax, "[%s]", name.c_str());
+                return buf;
+            }
+        };
     };
-    
-    /**
-     * 
-     */
-    fgCfgParameter() : type(FG_CFG_PARAMETER_NONE) {
-        memset(string, 0, FG_CFG_PARAMATER_STRING_MAX);
-    }
-    /**
-     * Default destructor for the configs' parameter
-     */
-    virtual ~fgCfgParameter() {
-        name.clear();
-        sectionName.clear();
-        subSectionName.clear();
-    }
-
-    /**
-     * Reset all values
-     */
-    inline void reset() {
-        type = FG_CFG_PARAMETER_NONE;
-        int_val = 0;
-        name.clear();
-        sectionName.clear();
-        subSectionName.clear();
-        memset(string, 0, FG_CFG_PARAMATER_STRING_MAX);
-    }
-
-    /**
-     * Set the integer value for the parameter
-     * @param _int_val
-     */
-    inline void set(int _int_val) {
-        type = FG_CFG_PARAMETER_INT;
-        int_val = _int_val;
-    }
-    /**
-     *  Set the 'long int' value for the parameter
-     * @param _long_val
-     */
-    inline void set(long int _long_val) {
-        type = FG_CFG_PARAMETER_LONG;
-        long_val = _long_val;
-    }
-    /**
-     *  Set the float value of the parameter
-     * @param _float_val
-     */
-    inline void set(float _float_val) {
-        type = FG_CFG_PARAMETER_FLOAT;
-        float_val = _float_val;
-    }
-    /**
-     * Set the bool value of the parameter
-     * @param _bool_val
-     */
-    inline void set(fgBool _bool_val) {
-        type = FG_CFG_PARAMETER_BOOL;
-        bool_val = _bool_val;
-    }
-    /**
-     * Set the string value of the parameter
-     * @param _string
-     */
-    inline void set(const char *_string) {
-        type = FG_CFG_PARAMETER_STRING;
-        strncpy(string, _string, FG_CFG_PARAMATER_STRING_MAX - 1);
-    }
-
-    /**
-     * Set the parameter value based on the type enum and void pointer
-     * @param _type
-     * @param _value
-     * @return 
-     */
-    fgBool set(fgCfgParameterType _type, void *_value) {
-        if(!_value)
-            return FG_FALSE;
-
-        switch(_type) {
-            case FG_CFG_PARAMETER_INT:
-                int_val = *((int *)_value);
-                break;
-            case FG_CFG_PARAMETER_LONG:
-                long_val = *((long int *)_value);
-                break;
-            case FG_CFG_PARAMETER_FLOAT:
-                float_val = *((float *)_value);
-                break;
-            case FG_CFG_PARAMETER_BOOL:
-                bool_val = *((fgBool *)_value);
-                break;
-            case FG_CFG_PARAMETER_STRING:
-                strncpy(string, (const char *)_value, FG_CFG_PARAMATER_STRING_MAX - 1);
-                break;
-            case FG_CFG_PARAMETER_NONE:
-                return FG_FALSE;
-                break;
-            default:
-                return FG_FALSE;
-                break;
-        };
-        type = _type;
-        return FG_TRUE;
-    }
-
-    /**
-     * Get the void* pointer to the value stored in the parameter struct - NULL if invalid
-     * @return 
-     */
-    inline void *get(void) {
-        switch(type) {
-            case FG_CFG_PARAMETER_INT:
-                return (void *)&int_val;
-                break;
-            case FG_CFG_PARAMETER_LONG:
-                return (void *)&long_val;
-                break;
-            case FG_CFG_PARAMETER_FLOAT:
-                return (void *)&float_val;
-                break;
-            case FG_CFG_PARAMETER_BOOL:
-                return (void *)&bool_val;
-                break;
-            case FG_CFG_PARAMETER_STRING:
-                return (void *)string;
-                break;
-            case FG_CFG_PARAMETER_NONE:
-                break;
-            default:
-                break;
-        };
-        return NULL;
-    }
-
-    /**
-     * Convert value of the parameter to string. Will be stored in specified buffer. NULL on failure.
-     * @param buf
-     * @param nmax
-     * @return 
-     */
-    char *valueToString(char *buf, unsigned int nmax = FG_CFG_PARAMATER_STRING_MAX) {
-        if(nmax < FG_CFG_PARAMATER_STRING_MAX || !buf)
-            return NULL;
-
-        switch(type) {
-            case FG_CFG_PARAMETER_INT:
-                snprintf(buf, nmax, "%d", int_val);
-                break;
-            case FG_CFG_PARAMETER_LONG:
-                snprintf(buf, nmax, "%ldL", long_val);
-                break;
-            case FG_CFG_PARAMETER_FLOAT:
-                snprintf(buf, nmax, "%f", float_val);
-                break;
-            case FG_CFG_PARAMETER_BOOL:
-                snprintf(buf, nmax, "%s", FG_BOOL_TO_TEXT(bool_val));
-                break;
-            case FG_CFG_PARAMETER_STRING:
-                snprintf(buf, nmax, "\"%s\"", string);
-                break;
-            case FG_CFG_PARAMETER_NONE:
-                return NULL;
-                break;
-            default:
-                return NULL;
-                break;
-        };
-        return buf;
-    }
-
-    /**
-     * Convert the parameter to string. The string will be in format: name = value
-     * @param buf
-     * @param nmax
-     * @return 
-     */
-    inline char *toString(char *buf, unsigned int nmax = FG_CFG_LINE_MAX) {
-        if(!buf)
-            return NULL;
-        char tmp_val[FG_CFG_PARAMATER_STRING_MAX];
-        if(!valueToString(tmp_val))
-            return NULL;
-        snprintf(buf, nmax, "%s = %s", name.c_str(), tmp_val);
-        return buf;
-    }
-};
-
-/*
- *
- */
-struct fgCfgSection {
-    // Full section name
-    std::string name;
-    // Name of the subsection
-    std::string subName;
-    // parameters vector - all parameters one after another
-    fgCfgTypes::parameterVec parameters;
-    // parameters map - key is the parameter name
-    fgCfgTypes::parameterMap parametersMap;
-
-    /**
-     * Default empty constructor
-     */
-    fgCfgSection() { }
-
-    /**
-     * Default destructor for config section
-     */
-    virtual ~fgCfgSection() {
-        name.clear();
-        subName.clear();
-        parameters.clear_optimised();
-        parametersMap.clear();
-    }
-
-    /**
-     * Return the parameter with given name
-     * @param parameterName
-     * @return 
-     */
-    fgCfgParameter *getParameter(const char *parameterName) {
-        fgCfgTypes::parameterMapKey pmkey = parameterName;
-        fgCfgTypes::parameterMapItor pmit = parametersMap.find(pmkey);
-        if(pmit == parametersMap.end())
-            return NULL;
-        return pmit->second;
-    }
-
-    /**
-     * 
-     * @param parameterName
-     * @param _type
-     * @return 
-     */
-    fgCfgParameter *getParameter(const char *parameterName, fgCfgParameterType _type) {
-        fgCfgParameter *param = getParameter(parameterName);
-        if(!param)
-            return NULL;
-        if(param->type != _type)
-            return NULL;
-        return param;
-    }
-
-    /**
-     * Return the parameter with given name
-     * @param parameterName
-     * @return 
-     */
-    inline fgCfgParameter *getParameter(std::string & parameterName) {
-        return getParameter(parameterName.c_str());
-    }
-
-    /**
-     * 
-     * @param parameterName
-     * @param _type
-     * @return 
-     */
-    inline fgCfgParameter *getParameter(std::string & parameterName, fgCfgParameterType _type) {
-        return getParameter(parameterName.c_str(), _type);
-    }
-
-    /**
-     * This will release all data - calls destructors
-     */
-    void freeAll(void) {
-        parametersMap.clear();
-        while(!parameters.empty()) {
-            fgCfgParameter *&param = parameters.back();
-            delete param;
-            param = NULL;
-            parameters.pop_back();
-        }
-    }
-
-    /**
-     * 
-     * @param buf
-     * @param nmax
-     * @return 
-     */
-    inline char *toString(char *buf, unsigned int nmax = FG_CFG_PARAMATER_STRING_MAX) {
-        if(!buf)
-            return NULL;
-        snprintf(buf, nmax, "[%s]", name.c_str());
-        return buf;
-    }
 };
 
     #undef FG_INC_CONFIG_STRUCT_BLOCK

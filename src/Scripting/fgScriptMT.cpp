@@ -87,17 +87,17 @@ script::CMetatables::METAID script::CMetatables::getMetatableIDFromWidgetType(co
  */
 script::CMetatables::METAID script::CMetatables::getMetatableIDFromResourceType(const unsigned int resourceType) {
     METAID metaID;
-    if(resourceType == FG_RESOURCE_TEXTURE) {
+    if(resourceType == resource::TEXTURE) {
         metaID = CMetatables::TEXTURE_RESOURCE_MT_ID;
-    } else if(resourceType == FG_RESOURCE_FONT) {
+    } else if(resourceType == resource::FONT) {
         metaID = CMetatables::FONT_RESOURCE_MT_ID;
-    } else if(resourceType == FG_RESOURCE_3D_MODEL) {
+    } else if(resourceType == resource::MODEL3D) {
         metaID = CMetatables::GFX_MODEL_RESOURCE_MT_ID;
-    } else if(resourceType == FG_RESOURCE_PARTICLE_EFFECT) {
+    } else if(resourceType == resource::PARTICLE_EFFECT) {
         metaID = CMetatables::PARTICLE_EFFECT_RESOURCE_MT_ID;
-    } else if(resourceType == FG_RESOURCE_MUSIC) {
+    } else if(resourceType == resource::MUSIC) {
         metaID = CMetatables::MUSIC_RESOURCE_MT_ID;
-    } else if(resourceType == FG_RESOURCE_SOUND) {
+    } else if(resourceType == resource::SOUND) {
         metaID = CMetatables::SOUND_RESOURCE_MT_ID;
     } else {
         metaID = CMetatables::EMPTY_MT_ID;

@@ -140,7 +140,7 @@ namespace fg {
          * 
          * @return 
          */
-        inline fgConfig *getMainConfig(void) const {
+        inline util::CConfig *getMainConfig(void) const {
             return m_mainConfig;
         }
         /**
@@ -232,13 +232,13 @@ namespace fg {
         /// Main, hard settings
         fgSettings *m_settings;
         /// Main config 
-        fgConfig *m_mainConfig;
+        util::CConfig *m_mainConfig;
         /// Main Quality Manager
         fgQualityManager *m_qualityMgr;
         /// Main Resource Manager
         resource::CResourceManager *m_resourceMgr;
         /// Resource factory object - registers create() methods for Resource Objects
-        fgResourceFactory *m_resourceFactory;
+        resource::CResourceFactory *m_resourceFactory;
         /// 
         event::CInputHandler *m_inputHandler;
         /// Joypad/Joystick controller object

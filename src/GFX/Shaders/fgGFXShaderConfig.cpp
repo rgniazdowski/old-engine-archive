@@ -13,10 +13,12 @@
 #include "Util/fgPath.h"
 #include "Util/fgStrings.h"
 
+using namespace fg;
+
 /**
  * 
  */
-fg::gfx::CShaderConfig::CShaderConfig() :
+gfx::CShaderConfig::CShaderConfig() :
 m_configType(FG_GFX_SHADER_CONFIG_INVALID),
 m_preferredSLVersion(FG_GFX_SHADING_LANGUAGE_INVALID),
 m_defaultPrecision(FG_GFX_SHADER_PRECISION_DEFAULT) { }
@@ -25,22 +27,22 @@ m_defaultPrecision(FG_GFX_SHADER_PRECISION_DEFAULT) { }
  * 
  * @param filePath
  */
-fg::gfx::CShaderConfig::CShaderConfig(const char *filePath) {
-    fg::gfx::CShaderConfig::load(filePath);
+gfx::CShaderConfig::CShaderConfig(const char *filePath) {
+    gfx::CShaderConfig::load(filePath);
 }
 
 /**
  * 
  */
-fg::gfx::CShaderConfig::~CShaderConfig() {
+gfx::CShaderConfig::~CShaderConfig() {
     clearAll();
 }
 
 /**
  * 
  */
-void fg::gfx::CShaderConfig::clearAll(void) {
-    fgConfig::clearAll();
+void gfx::CShaderConfig::clearAll(void) {
+    CConfig::clearAll();
     m_selectedConfigName.clear();
     m_programName.clear();
     m_preferredSLVersion = FG_GFX_SHADING_LANGUAGE_INVALID;
@@ -61,9 +63,9 @@ void fg::gfx::CShaderConfig::clearAll(void) {
  * @param SLver
  * @return 
  */
-fgBool fg::gfx::CShaderConfig::load(const char *filePath, fgGfxSLVersion SLver) {
-    fg::gfx::CShaderConfig::clearAll();
-    if(!fgConfig::load(filePath)) {
+fgBool gfx::CShaderConfig::load(const char *filePath, fgGfxSLVersion SLver) {
+    gfx::CShaderConfig::clearAll();
+    if(!CConfig::load(filePath)) {
         FG_MessageSubsystem->reportError(tag_type::name(), FG_ERRNO_GFX_SHADER_FAIL_CFG_LOAD);
         return FG_FALSE;
     }
@@ -75,20 +77,20 @@ fgBool fg::gfx::CShaderConfig::load(const char *filePath, fgGfxSLVersion SLver) 
  * @param definesSection
  * @return 
  */
-fgBool fg::gfx::CShaderConfig::private_parseDefines(fgCfgSection *definesSection) {
+fgBool gfx::CShaderConfig::private_parseDefines(util::SCfgSection *definesSection) {
     if(!definesSection)
         return FG_FALSE;
     unsigned short n = 0;
-    fgCfgTypes::parameterVecItor paramsBegin, paramsEnd, paramsItor;
+    util::config::ParameterVecItor paramsBegin, paramsEnd, paramsItor;
     // This section is optional
     paramsBegin = definesSection->parameters.begin();
     paramsEnd = definesSection->parameters.end();
     paramsItor = paramsBegin;
     for(; paramsItor != paramsEnd; paramsItor++) {
-        fgCfgParameter *param = *paramsItor;
+        util::SCfgParameter *param = *paramsItor;
         if(!param) continue;
         // for now only BOOL is supported
-        if(param->type == FG_CFG_PARAMETER_BOOL && !param->name.empty()) {
+        if(param->type == util::SCfgParameter::BOOL && !param->name.empty()) {
             fgGfxShaderConstantDef constant;
             constant.name = param->name;
             constant.value = param->bool_val;
@@ -106,11 +108,11 @@ fgBool fg::gfx::CShaderConfig::private_parseDefines(fgCfgSection *definesSection
  * @param includeSection
  * @return 
  */
-fgBool fg::gfx::CShaderConfig::private_parseInclude(fgCfgSection *includeSection) {
+fgBool gfx::CShaderConfig::private_parseInclude(util::SCfgSection *includeSection) {
     if(!includeSection)
         return FG_FALSE;
     unsigned short n = 0;
-    fgCfgParameter *param = includeSection->getParameter("list", FG_CFG_PARAMETER_STRING);
+    util::SCfgParameter *param = includeSection->getParameter("list", util::SCfgParameter::STRING);
     if(!param) return FG_FALSE;
     CVector<std::string> incVec;
     std::string tmp = param->string;
@@ -127,7 +129,7 @@ fgBool fg::gfx::CShaderConfig::private_parseInclude(fgCfgSection *includeSection
 /*
  * #OPTIMISE #DIVIDE #FIXME shader config parse data, move some operations to other function for clarity
  */
-fgBool fg::gfx::CShaderConfig::private_parseData(fgGfxSLVersion SLver) {
+fgBool gfx::CShaderConfig::private_parseData(fgGfxSLVersion SLver) {
     if(SLver != FG_GFX_SHADING_LANGUAGE_INVALID) {
         m_preferredSLVersion = SLver;
     } else if(m_preferredSLVersion == FG_GFX_SHADING_LANGUAGE_INVALID) {
@@ -139,7 +141,7 @@ fgBool fg::gfx::CShaderConfig::private_parseData(fgGfxSLVersion SLver) {
         return FG_FALSE;
     }
 
-    const char *ext = fg::path::fileExt(m_configPath.c_str(), FG_TRUE);
+    const char *ext = path::fileExt(m_configPath.c_str(), FG_TRUE);
     if(!ext) {
         FG_MessageSubsystem->reportError(tag_type::name(), FG_ERRNO_WRONG_PATH);
         return FG_FALSE;
@@ -169,7 +171,7 @@ fgBool fg::gfx::CShaderConfig::private_parseData(fgGfxSLVersion SLver) {
         return FG_FALSE;
     }
 
-    fgCfgSection *mainSection = NULL;
+    util::SCfgSection *mainSection = NULL;
     if(m_configType == FG_GFX_SHADER_CONFIG_PROGRAM) {
         mainSection = getSection(FG_GFX_SHADER_CONFIG_PROGRAM_SECTION_NAME);
     } else {
@@ -182,7 +184,7 @@ fgBool fg::gfx::CShaderConfig::private_parseData(fgGfxSLVersion SLver) {
         return FG_FALSE;
     }
     {
-        fgCfgParameter *param = mainSection->getParameter("precision", FG_CFG_PARAMETER_STRING);
+        util::SCfgParameter *param = mainSection->getParameter("precision", util::SCfgParameter::STRING);
         if(param) {
             m_defaultPrecision = (fgGfxShaderPrecision)FG_GFX_PRECISION_FROM_TEXT(param->string);
         }
@@ -196,7 +198,7 @@ fgBool fg::gfx::CShaderConfig::private_parseData(fgGfxSLVersion SLver) {
         strcpy(_tmpStr, "GLSL");
     snprintf(slVerSubSectionName, 64, "Shader.Version.%s.%d", _tmpStr, (int)m_preferredSLVersion);
     // Check if the shader supports that shading language
-    fgCfgSection *slVersionSection = getSection(slVerSubSectionName);
+    util::SCfgSection *slVersionSection = getSection(slVerSubSectionName);
     if(!slVersionSection) {
         FG_MessageSubsystem->reportError(tag_type::name(), FG_ERRNO_GFX_SHADER_NOT_SUPPORTED_SLVER, "path[%s]", m_configPath.c_str());
         return FG_FALSE;
@@ -207,7 +209,7 @@ fgBool fg::gfx::CShaderConfig::private_parseData(fgGfxSLVersion SLver) {
     }
     // Get the name of the configuration based on shading language version
     {
-        fgCfgParameter *param = slVersionSection->getParameter("configuration", FG_CFG_PARAMETER_STRING);
+        util::SCfgParameter *param = slVersionSection->getParameter("configuration", util::SCfgParameter::STRING);
         if(!param) {
             FG_MessageSubsystem->reportError(tag_type::name(), FG_ERRNO_GFX_SHADER_WRONG_PARAM);
             return FG_FALSE;
@@ -217,7 +219,7 @@ fgBool fg::gfx::CShaderConfig::private_parseData(fgGfxSLVersion SLver) {
     // Now populate list of defines (constant values / bool only)
     // Shader.Defines holds list of constants for all configurations (shading language version)
     // and all shader types (shader objects to link with shader program)
-    fgCfgSection *definesSection = getSection("Shader.Defines");
+    util::SCfgSection *definesSection = getSection("Shader.Defines");
     private_parseDefines(definesSection);
     // Populate list of constants for selected configuration,
     // like before this section is optional
@@ -231,7 +233,7 @@ fgBool fg::gfx::CShaderConfig::private_parseData(fgGfxSLVersion SLver) {
     // Parse more wide parameters from specific shader configuration (not program config)
     //
     if(m_configType != FG_GFX_SHADER_CONFIG_PROGRAM) {
-        fgCfgParameter *param = mainSection->getParameter("shaderType", FG_CFG_PARAMETER_STRING);
+        util::SCfgParameter *param = mainSection->getParameter("shaderType", util::SCfgParameter::STRING);
         if(!param) {
             // no shader type specified - it has to be explicitly stated in config
             // even if the file extension points to shader type
@@ -264,7 +266,7 @@ fgBool fg::gfx::CShaderConfig::private_parseData(fgGfxSLVersion SLver) {
         // This depends on the selected configuration (sub config) based on
         // shading language version
         _tmp.append(shortPrefix).append(".Config.").append(m_selectedConfigName);
-        fgCfgSection *cfgSpecSection = getSection(_tmp);
+        util::SCfgSection *cfgSpecSection = getSection(_tmp);
         _tmp.clear();
         if(!cfgSpecSection) {
             // This is bad - specific config with file/quality list was not found
@@ -273,7 +275,7 @@ fgBool fg::gfx::CShaderConfig::private_parseData(fgGfxSLVersion SLver) {
         }
         CVector<std::string> _helperVec;
         fgBool foundQuality = FG_FALSE, foundFile = FG_FALSE;
-        if((param = cfgSpecSection->getParameter("quality", FG_CFG_PARAMETER_STRING)) != NULL) {
+        if((param = cfgSpecSection->getParameter("quality", util::SCfgParameter::STRING)) != NULL) {
             std::string _q_vec = param->string;
             fgStrings::split(_q_vec, ',', _helperVec);
             m_qualities.clear_optimised();
@@ -286,7 +288,7 @@ fgBool fg::gfx::CShaderConfig::private_parseData(fgGfxSLVersion SLver) {
             _q_vec.clear();
             _helperVec.clear_optimised();
         }
-        if((param = cfgSpecSection->getParameter("file", FG_CFG_PARAMETER_STRING)) != NULL) {
+        if((param = cfgSpecSection->getParameter("file", util::SCfgParameter::STRING)) != NULL) {
             std::string _f_vec = param->string;
             fgStrings::split(_f_vec, ',', _helperVec);
             m_files.clear_optimised();
@@ -310,7 +312,7 @@ fgBool fg::gfx::CShaderConfig::private_parseData(fgGfxSLVersion SLver) {
         if(_shadertype == fgGfxShaderType::FG_GFX_SHADER_VERTEX) {
             // checking for attributes only for vertex shader 
             // (attributes in fragment shader are not allowed / needed)
-            fgCfgTypes::sectionVec _attributes;
+            util::config::SectionVec _attributes;
             _tmp.append(shortPrefix).append(".").append("Attribute.");
             getSectionsWith(_attributes, _tmp.c_str());
             if(_attributes.empty()) {
@@ -330,9 +332,9 @@ fgBool fg::gfx::CShaderConfig::private_parseData(fgGfxSLVersion SLver) {
                 }
                 // This will also set the proper location and data type
                 _bind.setType(_bind.type);
-                fgCfgParameter *_aname = NULL, *_aprecision = NULL;
-                _aname = _attributes[i]->getParameter("attributeName", FG_CFG_PARAMETER_STRING);
-                _aprecision = _attributes[i]->getParameter("precision", FG_CFG_PARAMETER_STRING);
+                util::SCfgParameter *_aname = NULL, *_aprecision = NULL;
+                _aname = _attributes[i]->getParameter("attributeName", util::SCfgParameter::STRING);
+                _aprecision = _attributes[i]->getParameter("precision", util::SCfgParameter::STRING);
                 if(!_aname) {
                     // This attribute definition section is malformed
                     FG_MessageSubsystem->reportWarning(tag_type::name(), FG_ERRNO_GFX_SHADER_WRONG_ATTRIBUTE);
@@ -351,7 +353,7 @@ fgBool fg::gfx::CShaderConfig::private_parseData(fgGfxSLVersion SLver) {
         //
         // checking for attributes only for vertex shader 
         // (attributes in fragment shader are not allowed / needed)
-        fgCfgTypes::sectionVec _uniforms;
+        util::config::SectionVec _uniforms;
         _tmp.clear();
         _tmp.append(shortPrefix).append(".").append("Uniform.");
         getSectionsWith(_uniforms, _tmp.c_str());
@@ -368,10 +370,10 @@ fgBool fg::gfx::CShaderConfig::private_parseData(fgGfxSLVersion SLver) {
                 FG_MessageSubsystem->reportWarning(tag_type::name(), FG_ERRNO_GFX_SHADER_WRONG_UNIFORM, "name=[%s]", _uniforms[i]->subName.c_str());
                 continue;
             }
-            fgCfgParameter *_uname = NULL, *_uprecision = NULL;
-            _uname = _uniforms[i]->getParameter("uniformName", FG_CFG_PARAMETER_STRING);
+            util::SCfgParameter *_uname = NULL, *_uprecision = NULL;
+            _uname = _uniforms[i]->getParameter("uniformName", util::SCfgParameter::STRING);
             //_uDataType = _uniforms[i]->getParameter("type", FG_CFG_PARAMETER_STRING);
-            _uprecision = _uniforms[i]->getParameter("precision", FG_CFG_PARAMETER_STRING);
+            _uprecision = _uniforms[i]->getParameter("precision", util::SCfgParameter::STRING);
             if(!_uname) {
                 // This uniform definition section is malformed
                 FG_MessageSubsystem->reportWarning(tag_type::name(), FG_ERRNO_GFX_SHADER_WRONG_UNIFORM, "name=[%s]", _uniforms[i]->subName.c_str());
@@ -388,8 +390,8 @@ fgBool fg::gfx::CShaderConfig::private_parseData(fgGfxSLVersion SLver) {
     }
     // specific configuration procedures for main shader config (shader program)
     if(m_configType == FG_GFX_SHADER_CONFIG_PROGRAM) {
-        fgCfgParameter *param = NULL;
-        param = mainSection->getParameter("programName", FG_CFG_PARAMETER_STRING);
+        util::SCfgParameter *param = NULL;
+        param = mainSection->getParameter("programName", util::SCfgParameter::STRING);
         if(!param) {
             // this is kinda big error, the program name (string handle ID) is not specified
             FG_MessageSubsystem->reportError(tag_type::name(), FG_ERRNO_GFX_SHADER_NO_PROG_NAME);
@@ -407,7 +409,7 @@ fgBool fg::gfx::CShaderConfig::private_parseData(fgGfxSLVersion SLver) {
         for(int i = 0; i < nmax; i++) {
             std::string qstr = "has";
             qstr.append(g_fgGfxSupportedShaderTypesText[i]);
-            param = mainSection->getParameter(qstr, FG_CFG_PARAMETER_BOOL);
+            param = mainSection->getParameter(qstr, util::SCfgParameter::BOOL);
             if(param) {
                 if(param->bool_val == FG_TRUE) {
                     m_shaderTypes.push_back(g_fgGfxSupportedShaderTypes[i]);

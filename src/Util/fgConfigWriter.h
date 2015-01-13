@@ -9,18 +9,40 @@
 
 #ifndef FG_INC_CONFIG_WRITER
     #define FG_INC_CONFIG_WRITER
+    #define FG_INC_CONFIG_WRITER_BLOCK
 
     #include "fgFile.h"
 
     #include "fgConfigStruct.h"
 
-class fgConfigWriter : protected fg::util::DataFile {
-protected:
-public:
-    fgConfigWriter();
-    virtual ~fgConfigWriter();
+namespace fg {
+    namespace util {
 
-    fgBool save(const char *filePath, fgCfgTypes::sectionMap &sectionMap);
+        /**
+         * 
+         */
+        class CConfigWriter : protected DataFile {
+        protected:
+        public:
+            /**
+             * 
+             */
+            CConfigWriter();
+            /**
+             * 
+             */
+            virtual ~CConfigWriter();
+
+            /**
+             * 
+             * @param filePath
+             * @param sectionMap
+             * @return 
+             */
+            fgBool save(const char *filePath, config::SectionMap &sectionMap);
+        };
+    };
 };
 
+    #undef FG_INC_CONFIG_WRITER_BLOCK
 #endif /* FG_INC_CONFIG_WRITER */

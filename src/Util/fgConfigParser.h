@@ -9,76 +9,82 @@
 
 #ifndef FG_INC_CONFIG_PARSER
     #define FG_INC_CONFIG_PARSER
+    #define FG_INC_CONFIG_PARSER_BLOCK
 
     #include "fgStatus.h"
     #include "fgFile.h"
 
     #include "fgConfigStruct.h"
 
-// #FIXME - special tag type for config parser !
+namespace fg {
+    namespace util {
 
-/**
- *
- */
-class fgConfigParser : protected fg::util::DataFile {
-public:
-    typedef fg::util::DataFile base_type;
-protected:
-    /// Loaded file size
-    unsigned int m_fileSize;
-    /// Data buffer
-    char *m_fileBuffer;
+        /**
+         *
+         */
+        class CConfigParser : protected DataFile {
+        public:
+            ///
+            typedef fg::util::DataFile base_type;
 
-public:
-    /**
-     * Default constructor for config parser object
-     */
-    fgConfigParser();
+        protected:
+            /// Loaded file size
+            unsigned int m_fileSize;
+            /// Data buffer
+            char *m_fileBuffer;
 
-    /**
-     * Destructor for config parser object
-     */
-    virtual ~fgConfigParser();
+        public:
+            /**
+             * Default constructor for config parser object
+             */
+            CConfigParser();
 
-    /**
-     * Split section name
-     * @param fullSectionName
-     * @param sectionName
-     * @param subSectionName
-     * @return 
-     */
-    static fgBool splitSectionName(std::string &fullSectionName,
-                                   std::string &sectionName,
-                                   std::string &subSectionName);
+            /**
+             * Destructor for config parser object
+             */
+            virtual ~CConfigParser();
 
-    /**
-     * Load config and store all parameters in given section map
-     * @param filePath
-     * @param sectionMap
-     * @return 
-     */
-    fgBool load(const char *filePath, fgCfgTypes::sectionMap &sectionMap);
+            /**
+             * Split section name
+             * @param fullSectionName
+             * @param sectionName
+             * @param subSectionName
+             * @return 
+             */
+            static fgBool splitSectionName(std::string &fullSectionName,
+                                           std::string &sectionName,
+                                           std::string &subSectionName);
 
-    /**
-     * Parse data and store parameters in given section map (reference)
-     * @param data
-     * @param sectionMap
-     * @return 
-     */
-    fgBool parseData(const char *data, fgCfgTypes::sectionMap &sectionMap);
+            /**
+             * Load config and store all parameters in given section map
+             * @param filePath
+             * @param sectionMap
+             * @return 
+             */
+            fgBool load(const char *filePath, config::SectionMap &sectionMap);
 
-    /**
-     * Free all data of the config
-     */
-    void freeData(void);
-    /**
-     * Return the file size (in bytes)
-     * @return 
-     */
-    unsigned int getFileSize(void) const {
-        return m_fileSize;
-    }
+            /**
+             * Parse data and store parameters in given section map (reference)
+             * @param data
+             * @param sectionMap
+             * @return 
+             */
+            fgBool parseData(const char *data, config::SectionMap &sectionMap);
 
+            /**
+             * Free all data of the config
+             */
+            void freeData(void);
+            /**
+             * Return the file size (in bytes)
+             * @return 
+             */
+            unsigned int getFileSize(void) const {
+                return m_fileSize;
+            }
+        };
+    };
 };
 
+    #undef FG_INC_CONFIG_PARSER_BLOCK
 #endif /* FG_INC_CONFIG_PARSER */

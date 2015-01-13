@@ -121,8 +121,6 @@ fg::base::CManager *script::CScriptSubsystem::m_pSoundMgr = NULL;
 /// Pointer to the external Game Logic manager
 fg::base::CManager *script::CScriptSubsystem::m_pLogicMgr = NULL;
 
-
-
 /**
  * 
  */
@@ -1292,7 +1290,7 @@ int script::CScriptSubsystem::newResourceWrapper(lua_State* L) {
     uintptr_t offset = (uintptr_t)pResource;
     userDataObjectMapItor it = m_userDataObjectMap.find(offset);
     FG_LOG_DEBUG("Script: New Resource: ptr[%p], offset[%lu]", pResource, offset);
-    fgResourceType resType = pResource->getResourceType();
+    resource::ResourceType resType = pResource->getResourceType();
     CMetatables::METAID metaID = fgScriptMT->getMetatableIDFromResourceType(resType);
     if(metaID == CMetatables::EMPTY_MT_ID) {
         resourceObj.SetMetatable(LuaPlus::LuaObject());
@@ -1555,9 +1553,9 @@ fgBool script::CScriptSubsystem::registerShaderManager(void) {
 #if defined(FG_USING_LUA_PLUS)
 
 fgBool script::CScriptSubsystem::registerSceneManager(LuaPlus::LuaObject &metatable,
-                                                          const unsigned short int metatableID,
-                                                          fg::base::CManager *sceneManager,
-                                                          const char *objectName) {
+                                                      const unsigned short int metatableID,
+                                                      fg::base::CManager *sceneManager,
+                                                      const char *objectName) {
     if(m_isBindingComplete) {
         return FG_TRUE;
     }

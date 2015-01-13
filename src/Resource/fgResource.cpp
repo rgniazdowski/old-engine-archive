@@ -13,13 +13,15 @@
 #include "fgResource.h"
 #include "fgLog.h"
 
-/*
+using namespace fg;
+
+/**
  * Base constructor of the resource object
  */
-fg::resource::CResource::CResource() :
-m_priority(FG_RES_PRIORITY_LOW),
+resource::CResource::CResource() :
+m_priority(ResourcePriority::LOW),
 m_quality(FG_QUALITY_UNIVERSAL),
-m_resType(FG_RESOURCE_INVALID),
+m_resType(resource::INVALID),
 m_nRefCount(0),
 m_lastAccess(0),
 m_size(0),
@@ -28,13 +30,14 @@ m_isReady(FG_FALSE) {
     //FG_LOG_DEBUG("fgResource::fgResource();");
 }
 
-/*
+/**
  * Constructor with additional parameter (path)
+ * @param path
  */
-fg::resource::CResource::CResource(const char *path) :
-m_priority(FG_RES_PRIORITY_LOW),
+resource::CResource::CResource(const char *path) :
+m_priority(ResourcePriority::LOW),
 m_quality(FG_QUALITY_UNIVERSAL),
-m_resType(FG_RESOURCE_INVALID),
+m_resType(resource::INVALID),
 m_nRefCount(0),
 m_lastAccess(0),
 m_size(0),
@@ -47,10 +50,10 @@ m_isReady(FG_FALSE) {
 /*
  * Constructor with additional parameter (path)
  */
-fg::resource::CResource::CResource(std::string& path) :
-m_priority(FG_RES_PRIORITY_LOW),
+resource::CResource::CResource(std::string& path) :
+m_priority(ResourcePriority::LOW),
 m_quality(FG_QUALITY_UNIVERSAL),
-m_resType(FG_RESOURCE_INVALID),
+m_resType(resource::INVALID),
 m_nRefCount(0),
 m_lastAccess(0),
 m_size(0),
@@ -64,9 +67,9 @@ m_isReady(FG_FALSE) {
  * Clears the class data, this actually does not free allocated memory,
  * just resets base class attributes
  */
-void fg::resource::CResource::clear(void) {
-    m_resType = FG_RESOURCE_INVALID;
-    m_priority = FG_RES_PRIORITY_LOW;
+void resource::CResource::clear(void) {
+    m_resType = resource::INVALID;
+    m_priority = ResourcePriority::LOW;
     m_quality = FG_QUALITY_UNIVERSAL;
     m_nRefCount = 0;
     m_lastAccess = 0;
@@ -83,7 +86,7 @@ void fg::resource::CResource::clear(void) {
  * @param container
  * @return 
  */
-bool fg::resource::CResource::operator <(CResource& container) {
+bool resource::CResource::operator <(CResource& container) {
     if(getPriority() < container.getPriority())
         return true;
     else if(getPriority() > container.getPriority())
@@ -108,7 +111,7 @@ bool fg::resource::CResource::operator <(CResource& container) {
  * @param container
  * @return 
  */
-bool fg::resource::CResource::operator >(CResource& container) {
+bool resource::CResource::operator >(CResource& container) {
     if(getPriority() < container.getPriority())
         return false;
     else if(getPriority() > container.getPriority())

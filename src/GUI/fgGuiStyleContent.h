@@ -463,7 +463,7 @@ namespace fg {
              * @param merge
              * @return 
              */
-            fgBool initializeFromConfig(fgCfgTypes::parameterVec &params, fgBool merge = FG_FALSE);
+            fgBool initializeFromConfig(util::config::ParameterVec &params, fgBool merge = FG_FALSE);
 
             ////////////////////////////////////////////////////////////////////
 

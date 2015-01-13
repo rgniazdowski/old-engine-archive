@@ -202,7 +202,7 @@ void gfx::CGfxMain::setupLoader(void) {
         return;
     if(!m_textureMgr->isInit())
         return;
-    fg::resource::CResourceManager *pResourceMgr = static_cast<fg::resource::CResourceManager *>(m_pResourceMgr);
+    resource::CResourceManager *pResourceMgr = static_cast<resource::CResourceManager *>(m_pResourceMgr);
     //
     // Splash texture load and upload - #FIXME - splash texture names from config!
     //
@@ -301,7 +301,7 @@ fgBool gfx::CGfxMain::resumeGFX(void) {
     {
         gfx::CModelResource *model = NULL;
         std::string modelname("CobraBomber");
-        model = (gfx::CModelResource *)((fg::resource::CResourceManager *)m_textureMgr->getResourceManager())->get(modelname);
+        model = (gfx::CModelResource *)((resource::CResourceManager *)m_textureMgr->getResourceManager())->get(modelname);
         if(model) {
             if(model->getRefShapes().size()) {
                 model->getRefShapes()[0]->mesh->genBuffers();
@@ -364,7 +364,7 @@ void gfx::CGfxMain::render(void) {
     }
     fgGLError();
     m_mainWindow->clearColor();
-    fg::resource::CResourceManager *rm = NULL;
+    resource::CResourceManager *rm = NULL;
     static int a[10] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 #if defined(FG_USING_SDL2)
     const Uint8 *state = SDL_GetKeyboardState(NULL);
@@ -380,7 +380,7 @@ void gfx::CGfxMain::render(void) {
         return;
 
     }
-    rm = (fg::resource::CResourceManager *)m_textureMgr->getResourceManager();
+    rm = (resource::CResourceManager *)m_textureMgr->getResourceManager();
     if(!rm) {
         FG_LOG_ERROR("Cant access resource manager.");
         return;
@@ -467,15 +467,15 @@ void gfx::CGfxMain::render(void) {
             g_debugProfiling->begin("GFX::drawSkyBoxTexResGet");
         }
 #endif  
-        static fg::resource::CResource *pResourceX = NULL;
+        static resource::CResource *pResourceX = NULL;
         if(!pResourceX)
-            pResourceX = static_cast<fg::resource::CResourceManager *>(m_pResourceMgr)->get("PurpleNebulaCube");
+            pResourceX = static_cast<resource::CResourceManager *>(m_pResourceMgr)->get("PurpleNebulaCube");
 #if defined(FG_DEBUG)
         if(g_fgDebugConfig.isDebugProfiling) {
             g_debugProfiling->end("GFX::drawSkyBoxTexResGet");
         }
 #endif
-        if(pResourceX->getResourceType() == FG_RESOURCE_TEXTURE) {
+        if(pResourceX->getResourceType() == resource::TEXTURE) {
             gfx::CTexture *pTexture = static_cast<gfx::CTexture *>(pResourceX);
             if(pTexture) {
                 fgGfxTextureID &texID = pTexture->getRefGfxID();
@@ -652,7 +652,7 @@ fgBool gfx::CGfxMain::setupResourceManager(fg::base::CManager *pResourceManager)
         m_particleSystem->setSceneManager(m_2DScene);
         m_particleSystem->initialize();
     }
-    fg::base::CManager *pEventMgr = static_cast<fg::resource::CResourceManager *>(m_pResourceMgr)->getEventManager();
+    fg::base::CManager *pEventMgr = static_cast<resource::CResourceManager *>(m_pResourceMgr)->getEventManager();
     if(!pEventMgr) {
         unregisterResourceCallbacks();
         m_pEventMgr = NULL;
@@ -766,11 +766,11 @@ fgBool gfx::CGfxMain::resourceCreatedHandler(fg::event::CArgumentList * argv) {
     if(type != FG_EVENT_RESOURCE_CREATED)
         return FG_FALSE;
     fgResourceEvent *resourceEvent = (fgResourceEvent *)event;
-    fg::resource::CResource *pResource = resourceEvent->resource;
+    resource::CResource *pResource = resourceEvent->resource;
     if(!pResource)
         return FG_FALSE;
 
-    if(pResource->getResourceType() != FG_RESOURCE_3D_MODEL)
+    if(pResource->getResourceType() != resource::MODEL3D)
         return FG_FALSE;
     gfx::CModelResource *pModel = (gfx::CModelResource *)pResource;
     gfx::CModelResource::modelShapes &shapes = pModel->getRefShapes();

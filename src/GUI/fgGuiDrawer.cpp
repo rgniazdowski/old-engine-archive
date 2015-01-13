@@ -78,10 +78,10 @@ void gui::CDrawer::appendText2D(Vec2f& outTextSize,
     buf[FG_FONT_DRAW_STRING_BUF_MAX - 1] = '\0';
 
     SForeground &fg = style.getForeground();
-    fg::resource::CResource *resFont = static_cast<fg::resource::CResourceManager *>(m_pResourceMgr)->get(fg.font);
+    resource::CResource *resFont = static_cast<resource::CResourceManager *>(m_pResourceMgr)->get(fg.font);
     if(!resFont)
         return;
-    if(resFont->getResourceType() != FG_RESOURCE_FONT)
+    if(resFont->getResourceType() != resource::FONT)
         return;
     CFontResource *fontResProper = (CFontResource *)resFont;
     this->setFont(fontResProper);
@@ -109,17 +109,17 @@ void gui::CDrawer::appendBackground2D(const Vec2f &pos,
     if(!m_pResourceMgr)
         return;
     int index = 0;
-    fg::gfx::CTexture *pTexture = NULL;
+    gfx::CTexture *pTexture = NULL;
     SBackground &background = style.getBackground();
-    fg::gfx::CDrawCall *drawCall = requestDrawCall(index, FG_GFX_DRAW_CALL_CUSTOM_ARRAY);
+    gfx::CDrawCall *drawCall = requestDrawCall(index, FG_GFX_DRAW_CALL_CUSTOM_ARRAY);
     drawCall->setComponentActive(0);
     drawCall->setComponentActive(FG_GFX_POSITION_BIT | FG_GFX_UVS_BIT | FG_GFX_COLOR_BIT);
     if(m_pResourceMgr && !background.texture.empty()) {
         // Get or request ?
-        fg::resource::CResource *pResource = static_cast<fg::resource::CResourceManager *>(m_pResourceMgr)->request(background.texture);
+        resource::CResource *pResource = static_cast<resource::CResourceManager *>(m_pResourceMgr)->request(background.texture);
         if(pResource) {
-            if(pResource->getResourceType() == FG_RESOURCE_TEXTURE) {
-                pTexture = (fg::gfx::CTexture *)pResource;
+            if(pResource->getResourceType() == resource::TEXTURE) {
+                pTexture = (gfx::CTexture *)pResource;
                 drawCall->setTexture(pTexture->getRefGfxID());
             }
         }
@@ -159,7 +159,7 @@ void gui::CDrawer::appendBorder2D(const Vec2f &pos,
     }
     int index;
     float lwidth = 0.0f, rwidth = 0.0f, twidth = 0.0f, bwidth = 0.0f;
-    fg::gfx::CDrawCall *drawCall = requestDrawCall(index, FG_GFX_DRAW_CALL_CUSTOM_ARRAY);
+    gfx::CDrawCall *drawCall = requestDrawCall(index, FG_GFX_DRAW_CALL_CUSTOM_ARRAY);
     drawCall->setComponentActive(0);
     drawCall->setComponentActive(FG_GFX_POSITION_BIT | FG_GFX_COLOR_BIT);
 

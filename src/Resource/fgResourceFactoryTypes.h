@@ -10,18 +10,20 @@
 #ifndef FG_INC_RESOURCE_FACTORY_TYPES
     #define FG_INC_RESOURCE_FACTORY_TYPES
     #define FG_INC_RESOURCE_FACTORY_TYPES_BLOCK
-    
+
 namespace fg {
     namespace resource {
         class CResource;
-    };
-};
 
     #if __cplusplus > 199711L
-using fgCreateResourceFn = fg::resource::CResource* (*)(void);
+        ///
+        using CreateResourceFunction = CResource* (*)(void);
     #else
-typedef fg::resource::CResource* (*fgCreateResourceFn)(void);
+        ///
+        typedef CResource* (*CreateResourceFunction)(void);
     #endif
+    };
+};
 
     #ifndef FG_FACTORY_CREATE_FUNCTION
         #define FG_FACTORY_CREATE_FUNCTION(RETURNTYPE, CREATETYPE) \

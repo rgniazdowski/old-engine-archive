@@ -12,15 +12,17 @@
 #include "fgStrings.h"
 #include "fgMessageSubsystem.h"
 
-/*
+using namespace fg;
+
+/**
  * Default constructor for config parser object
  */
-fgConfigParser::fgConfigParser() : m_fileSize(0), m_fileBuffer(NULL) { }
+util::CConfigParser::CConfigParser() : m_fileSize(0), m_fileBuffer(NULL) { }
 
-/*
+/**
  * Destructor for config parser object
  */
-fgConfigParser::~fgConfigParser() {
+util::CConfigParser::~CConfigParser() {
     freeData();
 }
 
@@ -31,9 +33,9 @@ fgConfigParser::~fgConfigParser() {
  * @param subSectionName
  * @return 
  */
-fgBool fgConfigParser::splitSectionName(std::string &fullSectionName,
-                                        std::string &sectionName,
-                                        std::string &subSectionName) {
+fgBool util::CConfigParser::splitSectionName(std::string &fullSectionName,
+                                             std::string &sectionName,
+                                             std::string &subSectionName) {
     fgBool isSection = FG_TRUE;
     fullSectionName = fgStrings::trim(fullSectionName, std::string("[]"));
     fg::CVector<std::string> splitSection;
@@ -66,7 +68,7 @@ fgBool fgConfigParser::splitSectionName(std::string &fullSectionName,
  * @param sectionMap
  * @return 
  */
-fgBool fgConfigParser::load(const char *filePath, fgCfgTypes::sectionMap &sectionMap) {
+fgBool util::CConfigParser::load(const char *filePath, config::SectionMap &sectionMap) {
     if(m_fileBuffer)
         fgFree(m_fileBuffer);
     if(filePath == NULL) {
@@ -91,7 +93,7 @@ fgBool fgConfigParser::load(const char *filePath, fgCfgTypes::sectionMap &sectio
  * @param sectionMap
  * @return 
  */
-fgBool fgConfigParser::parseData(const char *data, fgCfgTypes::sectionMap &sectionMap) {
+fgBool util::CConfigParser::parseData(const char *data, config::SectionMap &sectionMap) {
     if(!data) {
         if(!m_fileBuffer) {
             FG_MessageSubsystem->reportError(tag_type::name(), FG_WARNING, "Parse data file buffer error - null");
@@ -108,7 +110,7 @@ fgBool fgConfigParser::parseData(const char *data, fgCfgTypes::sectionMap &secti
 
     size_t cur;
     size_t next = std::string::npos;
-    fgCfgSection *newSection = NULL;
+    SCfgSection *newSection = NULL;
     do {
         cur = next + 1;
         next = input.find("\n", cur);
@@ -123,15 +125,15 @@ fgBool fgConfigParser::parseData(const char *data, fgCfgTypes::sectionMap &secti
             continue;
         if(line[0] == '[') {
             fullSectionName = fgStrings::trim(line, std::string("[]"));
-            isSection = fgConfigParser::splitSectionName(fullSectionName, sectionName, subSectionName);
+            isSection = util::CConfigParser::splitSectionName(fullSectionName, sectionName, subSectionName);
             if(newSection) {
                 newSection = NULL;
             }
             if(isSection) {
-                newSection = new fgCfgSection();
+                newSection = new SCfgSection();
                 newSection->name = fullSectionName;
                 newSection->subName = subSectionName;
-                fgCfgTypes::sectionMapKey key = fullSectionName;
+                config::SectionMapKey key = fullSectionName;
                 sectionMap[key] = newSection;
             }
             //printf(">>> full section '%s', section '%s', subsection '%s'\n", fullSectionName.c_str(),
@@ -149,7 +151,7 @@ fgBool fgConfigParser::parseData(const char *data, fgCfgTypes::sectionMap &secti
             //printf("param value: %s = '%s'\n", parameterName.c_str(), parameterValue.c_str());
             if(parameterName.empty())
                 continue;
-            fgCfgParameter *parameter = new fgCfgParameter();
+            SCfgParameter *parameter = new SCfgParameter();
             parameter->name = parameterName;
             if(!sectionName.empty())
                 parameter->sectionName = sectionName;
@@ -180,7 +182,7 @@ fgBool fgConfigParser::parseData(const char *data, fgCfgTypes::sectionMap &secti
                 //parameter->set(FG_CFG_DEFAULT_VALUE); // #FIXME
                 parameter->set(parameterValue.c_str());
             }
-            fgCfgTypes::parameterMapKey key = parameterName;
+            config::ParameterMapKey key = parameterName;
             if(newSection) {
                 newSection->parametersMap[key] = parameter;
                 newSection->parameters.push_back(parameter);
@@ -199,7 +201,7 @@ fgBool fgConfigParser::parseData(const char *data, fgCfgTypes::sectionMap &secti
 /**
  * Free all data assiocated with the config parameters
  */
-void fgConfigParser::freeData(void) {
+void util::CConfigParser::freeData(void) {
     if(m_fileBuffer)
         fgFree(m_fileBuffer);
     m_fileSize = 0;

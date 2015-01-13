@@ -9,6 +9,7 @@
 
 #ifndef FG_INC_MESSAGE_SUBSYSTEM
     #define FG_INC_MESSAGE_SUBSYSTEM
+    #define FG_INC_MESSAGE_SUBSYSTEM_BLOCK
 
     #include "fgCommon.h"
     #include "fgSingleton.h"
@@ -28,6 +29,7 @@ class fgMessageSubsystem : protected fg::base::CManager, public fgSingleton<fgMe
     friend class fgSingleton<fgMessageSubsystem>;
     
 public:
+    ///
     typedef fg::base::CManager base_type;
     
 protected:
@@ -151,17 +153,18 @@ public:
     void reportDebug(const char *tagName, int code = FG_ERRNO_OK, const char *fmt = NULL, ...);
 
 protected:
-    //
+    /// Special vector containing pushed statuses
     msStatusVec m_statusVec;
-    //
+    /// File entry for logging all messages
     fg::util::CRegularFile m_logAll;
-    //
+    /// File entry for logging error messages
     fg::util::CRegularFile m_logError;
-    //
+    /// File entry for logging only debug messages
     fg::util::CRegularFile m_logDebug;
 };
 
 // #FIXME - here we go again with the singletons... :)
     #define FG_MessageSubsystem fgMessageSubsystem::getInstance()
 
+    #undef FG_INC_MESSAGE_SUBSYSTEM_BLOCK
 #endif /* FG_INC_MESSAGE_SUBSYSTEM */

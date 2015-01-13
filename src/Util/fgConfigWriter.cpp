@@ -9,15 +9,17 @@
 
 #include "fgConfigWriter.h"
 
-/**
- *
- */
-fgConfigWriter::fgConfigWriter() { }
+using namespace fg;
 
 /**
  *
  */
-fgConfigWriter::~fgConfigWriter() { }
+util::CConfigWriter::CConfigWriter() { }
+
+/**
+ *
+ */
+util::CConfigWriter::~CConfigWriter() { }
 
 /**
  * 
@@ -25,7 +27,7 @@ fgConfigWriter::~fgConfigWriter() { }
  * @param sectionMap
  * @return 
  */
-fgBool fgConfigWriter::save(const char *filePath, fgCfgTypes::sectionMap &sectionMap) {
+fgBool util::CConfigWriter::save(const char *filePath, config::SectionMap &sectionMap) {
     if(filePath == NULL) {
         if(m_filePath.empty())
             return FG_FALSE;
@@ -34,18 +36,18 @@ fgBool fgConfigWriter::save(const char *filePath, fgCfgTypes::sectionMap &sectio
     if(sectionMap.empty())
         return FG_FALSE;
 
-    if(fg::util::DataFile::isOpen())
+    if(DataFile::isOpen())
         close();
 
-    if(!fg::util::DataFile::open(filePath, fg::util::DataFile::Mode::WRITE)) {
+    if(!DataFile::open(filePath, DataFile::Mode::WRITE)) {
         return FG_FALSE;
     }
 
-    fgCfgTypes::sectionMapItor it = sectionMap.begin(),
+    config::SectionMapItor it = sectionMap.begin(),
             end = sectionMap.end();
-    char linebuf[FG_CFG_LINE_MAX];
+    char linebuf[CONFIG_LINE_MAX];
     for(; it != end; it++) {
-        fgCfgSection *section = it->second;
+        SCfgSection *section = it->second;
         if(!section) continue;
         fg::util::DataFile::print("%s\n", section->toString(linebuf));
         for(unsigned int i = 0; i < section->parameters.size(); i++) {

@@ -675,7 +675,7 @@ namespace fg {
              * @param params
              * @return 
              */
-            fgBool initializeFromConfig(fgCfgTypes::parameterVec &params);
+            fgBool initializeFromConfig(util::config::ParameterVec &params);
 
             /**
              * Initializes the given particle based on given parameters, it will be 

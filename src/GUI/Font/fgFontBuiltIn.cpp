@@ -9,30 +9,33 @@
 
 #include "fgFontBuiltIn.h"
 
-/*
- *
+using namespace fg;
+
+/**
+ * 
  */
-fg::gui::CFontBuiltInResource::CFontBuiltInResource() :
+gui::CFontBuiltInResource::CFontBuiltInResource() :
 CFontResource(),
 m_rawFontData(NULL) {
     m_fontType = FG_FONT_TYPE_STB_BUILTIN;
-    m_resType = FG_RESOURCE_FONT;
+    m_resType = resource::FONT;
 }
 
-/*
- *
+/**
+ * 
+ * @param rawFontData
  */
-fg::gui::CFontBuiltInResource::CFontBuiltInResource(SFontBuiltInRawData *rawFontData) :
+gui::CFontBuiltInResource::CFontBuiltInResource(SFontBuiltInRawData *rawFontData) :
 CFontResource(),
 m_rawFontData(rawFontData) {
     m_fontType = FG_FONT_TYPE_STB_BUILTIN;
-    m_resType = FG_RESOURCE_FONT;
+    m_resType = resource::FONT;
 }
 
 /*
  *
  */
-void fg::gui::CFontBuiltInResource::clear(void) {
+void gui::CFontBuiltInResource::clear(void) {
     CFontResource::clear();
     m_rawData = NULL;
     m_fontType = FG_FONT_TYPE_STB_BUILTIN;
@@ -41,7 +44,7 @@ void fg::gui::CFontBuiltInResource::clear(void) {
 /*
  *
  */
-fgBool fg::gui::CFontBuiltInResource::create(void) {
+fgBool gui::CFontBuiltInResource::create(void) {
     FG_LOG_DEBUG("fgFontBuiltInResource::create();");
     if(!m_rawFontData)
         return FG_FALSE;
@@ -155,7 +158,7 @@ fgBool fg::gui::CFontBuiltInResource::create(void) {
 /*
  *
  */
-void fg::gui::CFontBuiltInResource::destroy(void) {
+void gui::CFontBuiltInResource::destroy(void) {
     CFontResource::destroy();
     m_rawFontData = NULL;
 }
@@ -164,15 +167,15 @@ void fg::gui::CFontBuiltInResource::destroy(void) {
  * 
  * @return 
  */
-fgBool fg::gui::CFontBuiltInResource::recreate(void) {
-    fg::gui::CFontBuiltInResource::dispose();
-    return fg::gui::CFontBuiltInResource::create();
+fgBool gui::CFontBuiltInResource::recreate(void) {
+    gui::CFontBuiltInResource::dispose();
+    return gui::CFontBuiltInResource::create();
 }
 
 /*
  *
  */
-void fg::gui::CFontBuiltInResource::dispose(void) {
+void gui::CFontBuiltInResource::dispose(void) {
     CFontResource::dispose();
 }
 
@@ -180,7 +183,7 @@ void fg::gui::CFontBuiltInResource::dispose(void) {
  * 
  * @return 
  */
-fgBool fg::gui::CFontBuiltInResource::isDisposed(void) const {
+fgBool gui::CFontBuiltInResource::isDisposed(void) const {
     return CFontResource::isDisposed();
 }
 
@@ -188,7 +191,7 @@ fgBool fg::gui::CFontBuiltInResource::isDisposed(void) const {
  * 
  * @param rawFontData
  */
-void fg::gui::CFontBuiltInResource::setBuiltInRawFontData(SFontBuiltInRawData *rawFontData) {
+void gui::CFontBuiltInResource::setBuiltInRawFontData(SFontBuiltInRawData *rawFontData) {
     if(!rawFontData)
         return;
     m_rawFontData = rawFontData;

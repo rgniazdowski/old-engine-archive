@@ -45,11 +45,11 @@ namespace fg {
             /// Pointer to the resource group - this groups' xml config file is being parsed by this handler
             CResourceGroup *m_resourceGroup;
             /// Current resource type
-            fgResourceType m_resType;
+            ResourceType m_resType;
             /// Current resource object pointer
             CResource *m_resourcePtr;
             /// Current resource priority
-            fgResPriorityType m_curResPriority;
+            ResourcePriority m_curResPriority;
             /// Is current resource tag mapped? (file names mapped to quality)
             fgBool m_isMapped;
             /// Is current xml used for mapping file to quality?
@@ -169,7 +169,7 @@ namespace fg {
              * 
              * @param resourceFactory
              */
-            CResourceGroup(fgResourceFactory *resourceFactory);
+            CResourceGroup(CResourceFactory *resourceFactory);
             /**
              * Destructor of the resource group object
              */
@@ -185,12 +185,12 @@ namespace fg {
              * 
              * @param resourceFactory
              */
-            void setResourceFactory(fgResourceFactory *resourceFactory);
+            void setResourceFactory(CResourceFactory *resourceFactory);
             /**
              * 
              * @return 
              */
-            fgResourceFactory *getResourceFactory(void) const;
+            CResourceFactory *getFactory(void) const;
 
         protected:
             /**
@@ -286,7 +286,7 @@ namespace fg {
             /// Parser for xml config files (here: resource group xml files)
             fgXMLParser *m_xmlParser;
             /// Resource factory
-            fgResourceFactory *m_resourceFactory;
+            CResourceFactory *m_resFactory;
 
         };
     };

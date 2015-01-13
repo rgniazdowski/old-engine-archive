@@ -9,45 +9,75 @@
 
 #ifndef FG_INC_RESOURCE_FACTORY
     #define FG_INC_RESOURCE_FACTORY
+    #define FG_INC_RESOURCE_FACTORY_BLOCK
 
     #include "fgCommon.h"
     #include "fgResource.h"
     #include "fgResourceFactoryTypes.h"
 
     #include <map>
-// Need general template ?
 
-/*
- *
- */
-class fgResourceFactory {
-public:
-    typedef std::map<fgResourceType, fgCreateResourceFn> factoryMap;
-    typedef std::pair<fgResourceType, fgCreateResourceFn> factoryPair;
-    typedef factoryMap::iterator factoryMapItor;
-    typedef factoryMap::const_iterator factoryMapConstItor;
 
-public:
-    // Default empty constructor for Resource Factory object
-    fgResourceFactory();
-    // Default destructor for Resource Factory object
-    ~fgResourceFactory();
+namespace fg {
+    namespace resource {
 
-    // Clear all registered resource creators
-    void clear(void);
+        /**
+         *
+         */
+        class CResourceFactory {
+        public:
+            ///
+            typedef std::map<ResourceType, CreateResourceFunction> factoryMap;
+            ///
+            typedef std::pair<ResourceType, CreateResourceFunction> factoryPair;
+            ///
+            typedef factoryMap::iterator factoryMapItor;
+            ///
+            typedef factoryMap::const_iterator factoryMapConstItor;
 
-    // Register resource create function based on resource type
-    fgBool registerResource(const fgResourceType type, fgCreateResourceFn function);
+        public:
+            /**
+             * Default empty constructor for Resource Factory object
+             */
+            CResourceFactory();
+            /**
+             * Destructor for Resource Factory object
+             */
+            virtual ~CResourceFactory();
 
-    // Call specific create function for given resource
-    fg::resource::CResource* createResource(const fgResourceType type);
+            /**
+             * Clear all registered resource creators
+             */
+            void clear(void);
 
-    // Check if given resource type constructor/create function is registered in factory
-    fgBool isRegistered(const fgResourceType type);
+            /**
+             * Register resource create function based on resource type
+             * @param type
+             * @param function
+             * @return 
+             */
+            fgBool registerResource(const ResourceType type, CreateResourceFunction function);
 
-private:
-    // Map storing create functions for given resource types
-    factoryMap m_factoryMap;
+            /**
+             * Call specific create function for given resource
+             * @param type
+             * @return 
+             */
+            CResource* createResource(const ResourceType type);
+
+            /**
+             * Check if given resource type constructor/create function is registered in factory
+             * @param type
+             * @return 
+             */
+            fgBool isRegistered(const ResourceType type);
+
+        private:
+            /// Map storing create functions for given resource types
+            factoryMap m_factoryMap;
+        };
+
+    };
 };
-
+    #undef FG_INC_RESOURCE_FACTORY_BLOCK
 #endif /* FG_INC_RESOURCE_FACTORY */

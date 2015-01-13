@@ -21,188 +21,194 @@
 typedef unsigned int fgResourceConfigType;
 
     #define FG_RES_CFG_INVALID              0
-    #define FG_RES_CFG_RESOURCE             FG_RESOURCE
-    #define FG_RES_CFG_RESOURCE_GROUP       FG_RESOURCE_GROUP
+    #define FG_RES_CFG_RESOURCE             1
+    #define FG_RES_CFG_RESOURCE_GROUP       2
 
-/*
- * Resource header is used only for config files
- * This will provide fast and handy data
- */
-struct fgResourceHeader {
-    ///
-    fg::CVector<fgQuality> qualities;
-    ///
-    fg::CStringVector paths;
-    ///
-    std::string name;
-    ///
-    std::string flags;
-    ///
-    std::string configPath;
-    /// Priority of this resource
-    fgResPriorityType priority;
-    /// Quality of the resource
-    fgQuality quality;
-    /// Resource type
-    fgResourceType resType;
-    ///
-    fgBool isConfig;
-    /**
-     * 
-     */
-    fgResourceHeader() :
-    qualities(),
-    paths(),
-    name(),
-    flags(),
-    configPath(),
-    priority(FG_RES_PRIORITY_LOW),
-    quality(FG_QUALITY_UNIVERSAL),
-    resType(FG_RESOURCE_INVALID),
-    isConfig(FG_FALSE) { }
-    /**
-     * 
-     */
-    ~fgResourceHeader() {
-        paths.clear_optimised();
-        qualities.clear_optimised();
-        name.clear();
-        flags.clear();
-        configPath.clear();
-    }
-};
+namespace fg {
+    namespace resource {
 
-/*
- *
- */
-class fgResourceConfig : public fgConfig {
-public:
-    typedef fgConfig base_type;
-    typedef std::map<std::string, fgResourceHeader> resourceHeaderMap;
-    typedef resourceHeaderMap::iterator resourceHeaderMapItor;
-public:
-    /**
-     */
-    fgResourceConfig();
-    /**
-     * 
-     * @param filePath
-     */
-    fgResourceConfig(const char *filePath);
-    /**
-     * 
-     */
-    virtual ~fgResourceConfig();
+        /*
+         * Resource header is used only for config files
+         * This will provide fast and handy data
+         */
+        struct SResourceHeader {
+            ///
+            fg::CVector<fgQuality> qualities;
+            ///
+            fg::CStringVector paths;
+            ///
+            std::string name;
+            ///
+            std::string flags;
+            ///
+            std::string configPath;
+            /// Priority of this resource
+            ResourcePriority priority;
+            /// Quality of the resource
+            fgQuality quality;
+            /// Resource type
+            ResourceType resType;
+            ///
+            fgBool isConfig;
+            /**
+             * 
+             */
+            SResourceHeader() :
+            qualities(),
+            paths(),
+            name(),
+            flags(),
+            configPath(),
+            priority(ResourcePriority::LOW),
+            quality(FG_QUALITY_UNIVERSAL),
+            resType(resource::INVALID),
+            isConfig(FG_FALSE) { }
+            /**
+             * 
+             */
+            ~SResourceHeader() {
+                paths.clear_optimised();
+                qualities.clear_optimised();
+                name.clear();
+                flags.clear();
+                configPath.clear();
+            }
+        };
 
-    /**
-     * 
-     * @param filePath
-     * @return 
-     */
-    virtual fgBool load(const char *filePath = NULL);
+        /*
+         *
+         */
+        class CResourceConfig : public util::CConfig {
+        public:
+            ///
+            typedef CResourceConfig type;
+            ///
+            typedef util::CConfig base_type;
+            ///
+            typedef std::map<std::string, SResourceHeader> ResourceHeaderMap;
+            ///
+            typedef ResourceHeaderMap::iterator ResourceHeaderMapItor;
 
-    /**
-     * 
-     * @return 
-     */
-    fgResourceType getResourceType(void) const {
-        return m_header.resType;
-    }
+        public:
+            /**
+             */
+            CResourceConfig();
+            /**
+             * 
+             * @param filePath
+             */
+            CResourceConfig(const char *filePath);
+            /**
+             * 
+             */
+            virtual ~CResourceConfig();
 
-    /**
-     * 
-     * @return 
-     */
-    fgResourceConfigType getConfigType(void) const {
-        return m_cfgType;
-    }
+            /**
+             * 
+             * @param filePath
+             * @return 
+             */
+            virtual fgBool load(const char *filePath = NULL);
+            /**
+             * 
+             * @return 
+             */
+            ResourceType getResourceType(void) const {
+                return m_header.resType;
+            }
+            /**
+             * #UNUSED
+             * @return 
+             */
+            fgResourceConfigType getConfigType(void) const {
+                return m_cfgType;
+            }
 
-    /**
-     * 
-     * @return 
-     */
-    fgCfgSection *getConfigSection(void);
+            /**
+             * #FIXME - UNUSED
+             * @return 
+             */
+            util::SCfgSection *getConfigSection(void);
+            /**
+             * 
+             * @return 
+             */
+            SResourceHeader &getRefHeader(void) {
+                return m_header;
+            }
+            /**
+             * 
+             * @param resName
+             * @return 
+             */
+            SResourceHeader &getRefHeader(const char *resName);
+            /**
+             * 
+             * @param resName
+             * @return 
+             */
+            SResourceHeader &getRefHeader(const std::string & resName);
+            /**
+             * 
+             * @return 
+             */
+            CStringVector &getRefResourceNames(void) {
+                return m_resNames;
+            }
+            /**
+             * 
+             * @return 
+             */
+            ResourceHeaderMap &getRefHeaders(void) {
+                return m_resources;
+            }
+            /**
+             * 
+             * @return 
+             */
+            CVector<fgQuality> &getRefQualities(void) {
+                return m_header.qualities;
+            }
+            /**
+             * 
+             * @return 
+             */
+            CStringVector &getRefPaths(void) {
+                return m_header.paths;
+            }
+            /**
+             * 
+             * @return 
+             */
+            ResourcePriority getPriority(void) const {
+                return m_header.priority;
+            }
+            /**
+             * 
+             * @return 
+             */
+            std::string &getName(void) {
+                return m_header.name;
+            }
 
-    /**
-     * 
-     * @param resName
-     * @return 
-     */
-    fgResourceHeader &getResourceHeader(const char *resName);
-    /**
-     * 
-     * @param resName
-     * @return 
-     */
-    fgResourceHeader &getResourceHeader(const std::string & resName);
+        protected:
+            /**
+             * 
+             * @return 
+             */
+            fgBool parseData(void);
 
-    /**
-     * 
-     * @return 
-     */
-    fg::CStringVector &getRefResourceNames(void) {
-        return m_resNames;
-    }
-    /**
-     * 
-     * @return 
-     */
-    resourceHeaderMap &getRefResourceHeaders(void) {
-        return m_resources;
-    }
-    /**
-     * 
-     * @return 
-     */
-    fg::CVector<fgQuality> &getRefQualities(void) {
-        return m_header.qualities;
-    }
-
-    /**
-     * 
-     * @return 
-     */
-    fg::CStringVector &getRefPaths(void) {
-        return m_header.paths;
-    }
-
-    /**
-     * 
-     * @return 
-     */
-    fgResPriorityType getPriority(void) const {
-        return m_header.priority;
-    }
-    /**
-     * 
-     * @return 
-     */
-    std::string &getName(void) {
-        return m_header.name;
-    }
-    /**
-     * 
-     * @return 
-     */
-    fgResourceHeader &getRefHeader(void) {
-        return m_header;
-    }
-protected:
-    /**
-     * 
-     * @return 
-     */
-    fgBool parseData(void);
-
-private:
-    ///
-    fgResourceHeader m_header;
-    ///
-    fg::CStringVector m_resNames;
-    ///
-    fgResourceConfigType m_cfgType;
-    ///
-    resourceHeaderMap m_resources;
+        private:
+            ///
+            SResourceHeader m_header;
+            ///
+            CStringVector m_resNames;
+            ///
+            fgResourceConfigType m_cfgType;
+            ///
+            ResourceHeaderMap m_resources;
+        };
+    };
 };
 
 #endif /* FG_INC_RESOURCE_CONFIG */

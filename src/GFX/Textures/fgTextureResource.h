@@ -26,8 +26,16 @@ namespace fg {
         /*
          *
          */
-        class CTextureResource : public ::fg::resource::CResource {
+        class CTextureResource : public fg::resource::CResource {
             friend class fg::gfx::CTextureManager;
+
+        public:
+            ///
+            typedef fg::resource::CResource base_type;
+            ///
+            typedef CTextureResource type;
+            ///
+            typedef CTextureResource self_type;
 
         public:
             /**
@@ -50,13 +58,13 @@ namespace fg {
             virtual ~CTextureResource() {
                 CTextureResource::destroy();
             }
-            
+
             /**
              * 
              * @return 
              */
             FG_RESOURCE_FACTORY_CREATE_FUNCTION(CTextureResource)
-            
+
         protected:
             // Clears the class data, this actually does not free allocated memory,
             // just resets base class attributes

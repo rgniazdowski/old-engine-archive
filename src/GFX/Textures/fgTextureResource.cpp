@@ -9,10 +9,11 @@
 
 #include "fgTextureResource.h"
 #include "fgTextureLoader.h"
+
 #include "Util/fgPath.h"
 #include "Util/fgFile.h"
-#include "fgLog.h"
 #include "Util/fgStrings.h"
+#include "fgLog.h"
 
 /**
 
@@ -36,10 +37,12 @@ bool fgTexture::checkGlError(const char* fname) {
 }
  */
 
+using namespace fg;
+
 /*
  * Base constructor of the texture resource object
  */
-fg::gfx::CTextureResource::CTextureResource() :
+gfx::CTextureResource::CTextureResource() :
 CResource(),
 m_fileType(FG_TEXTURE_FILE_INVALID),
 m_textureType(FG_TEXTURE_PLAIN),
@@ -50,14 +53,14 @@ m_height(0),
 m_components(-1),
 m_textureGfxID(0),
 m_isInVRAM(FG_FALSE) {
-    m_resType = FG_RESOURCE_TEXTURE;
+    m_resType = resource::TEXTURE;
     memset(m_cubeData, 0, sizeof (m_cubeData));
 }
 
 /*
  *
  */
-fg::gfx::CTextureResource::CTextureResource(const char *path) :
+gfx::CTextureResource::CTextureResource(const char *path) :
 CResource(path),
 m_fileType(FG_TEXTURE_FILE_INVALID),
 m_textureType(FG_TEXTURE_PLAIN),
@@ -68,14 +71,14 @@ m_height(0),
 m_components(-1),
 m_textureGfxID(0),
 m_isInVRAM(FG_FALSE) {
-    m_resType = FG_RESOURCE_TEXTURE;
+    m_resType = resource::TEXTURE;
     memset(m_cubeData, 0, sizeof (m_cubeData));
 }
 
 /*
  *
  */
-fg::gfx::CTextureResource::CTextureResource(std::string& path) :
+gfx::CTextureResource::CTextureResource(std::string& path) :
 CResource(path),
 m_fileType(FG_TEXTURE_FILE_INVALID),
 m_textureType(FG_TEXTURE_PLAIN),
@@ -86,7 +89,7 @@ m_height(0),
 m_components(-1),
 m_textureGfxID(0),
 m_isInVRAM(FG_FALSE) {
-    m_resType = FG_RESOURCE_TEXTURE;
+    m_resType = resource::TEXTURE;
     memset(m_cubeData, 0, sizeof (m_cubeData));
 }
 
@@ -94,7 +97,7 @@ m_isInVRAM(FG_FALSE) {
  * Clears the class data, this actually does not free allocated memory,
  * just resets base class attributes
  */
-void fg::gfx::CTextureResource::clear(void) {
+void gfx::CTextureResource::clear(void) {
     CResource::clear();
     m_fileType = FG_TEXTURE_FILE_INVALID;
     m_textureType = FG_TEXTURE_PLAIN;
@@ -105,7 +108,7 @@ void fg::gfx::CTextureResource::clear(void) {
     m_height = 0;
     m_components = -1;
     m_textureGfxID = 0;
-    m_resType = FG_RESOURCE_TEXTURE;
+    m_resType = resource::TEXTURE;
     m_isInVRAM = FG_FALSE;
     memset(m_cubeData, 0, sizeof (m_cubeData));
 }
@@ -113,7 +116,7 @@ void fg::gfx::CTextureResource::clear(void) {
 /*
  * Create function loads/interprets data from file in ROM and place it in RAM memory.
  */
-fgBool fg::gfx::CTextureResource::create(void) {
+fgBool gfx::CTextureResource::create(void) {
     if(m_rawData && m_isReady) {
         return FG_TRUE;
     }
@@ -205,16 +208,16 @@ fgBool fg::gfx::CTextureResource::create(void) {
 /*
  * Destroy all loaded data including additional metadata (called with destructor)
  */
-void fg::gfx::CTextureResource::destroy(void) {
+void gfx::CTextureResource::destroy(void) {
     releaseNonGFX();
-    fg::gfx::CTextureResource::clear();
+    gfx::CTextureResource::clear();
 }
 
 /**
  * Reloads any data, recreates the resource (refresh)
  * @return
  */
-fgBool fg::gfx::CTextureResource::recreate(void) {
+fgBool gfx::CTextureResource::recreate(void) {
     FG_LOG_DEBUG("fgTextureResource::recreate(void)");
     if(m_isReady || m_rawData)
         releaseNonGFX();
@@ -226,7 +229,7 @@ fgBool fg::gfx::CTextureResource::recreate(void) {
  * Dispose completely of the all loaded data, free all memory
  * Releases non-GPU side of resources
  */
-void fg::gfx::CTextureResource::dispose(void) {
+void gfx::CTextureResource::dispose(void) {
     releaseNonGFX();
 }
 
@@ -234,7 +237,7 @@ void fg::gfx::CTextureResource::dispose(void) {
  * Check if resource is disposed (not loaded yet or disposed after)\
  * @return
  */
-fgBool fg::gfx::CTextureResource::isDisposed(void) const {
+fgBool gfx::CTextureResource::isDisposed(void) const {
     // #FIXME ?
     // This should also check if texture (GL/GFX) ID is valid.
     // If it is, then it means that the texture is uploaded and
@@ -252,7 +255,7 @@ fgBool fg::gfx::CTextureResource::isDisposed(void) const {
  * @param path
  * @return 
  */
-fgBool fg::gfx::CTextureResource::setFileTypeFromFilePath(std::string &path) {
+fgBool gfx::CTextureResource::setFileTypeFromFilePath(std::string &path) {
     if(path.empty())
         return FG_FALSE;
     // #FIXME - this should be extracted to other file (used for some basic file operation, pathext or whatnot #P3 #TODO)
@@ -276,7 +279,7 @@ fgBool fg::gfx::CTextureResource::setFileTypeFromFilePath(std::string &path) {
 /**
  * Releases non-GPU side of resources
  */
-void fg::gfx::CTextureResource::releaseNonGFX(void) {
+void gfx::CTextureResource::releaseNonGFX(void) {
     FG_LOG_DEBUG("GFX:Texture: release nonGFX: rawData[%p];", m_rawData);
 
     for(int i = 0; i < FG_NUM_TEXTURE_CUBE_MAPS; i++) {
@@ -299,7 +302,7 @@ void fg::gfx::CTextureResource::releaseNonGFX(void) {
  * 
  * @param flags
  */
-void fg::gfx::CTextureResource::setFlags(const std::string& flags) {
+void gfx::CTextureResource::setFlags(const std::string& flags) {
     if(flags.empty() || flags.length() < 2)
         return;
     // This is important - always call setFlags for the base class

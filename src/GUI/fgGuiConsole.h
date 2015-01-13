@@ -59,7 +59,7 @@ namespace fg {
              */
             FG_GUI_WIDGET_FACTORY_CREATE_FUNCTION(CConsole)
 
-            using fg::gui::CWidget::updateBounds;
+            using gui::CWidget::updateBounds;
 
             /**
              * 

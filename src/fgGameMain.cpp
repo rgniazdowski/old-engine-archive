@@ -303,16 +303,30 @@ fgBool CGameMain::initSubsystems(void) {
     if(!m_qualityMgr)
         m_qualityMgr = new fgQualityManager(w * h);
     if(!m_resourceFactory)
-        m_resourceFactory = new fgResourceFactory();
+        m_resourceFactory = new resource::CResourceFactory();
     else
         m_resourceFactory->clear();
-    m_resourceFactory->registerResource(FG_RESOURCE_TEXTURE, &gfx::CTexture::createResource);
-    m_resourceFactory->registerResource(FG_RESOURCE_FONT, &gui::CFont::createResource);
-    m_resourceFactory->registerResource(FG_RESOURCE_GROUP, &resource::CResourceGroup::createResource);
-    m_resourceFactory->registerResource(FG_RESOURCE_3D_MODEL, &gfx::CModel::createResource);
-    m_resourceFactory->registerResource(FG_RESOURCE_PARTICLE_EFFECT, &gfx::CParticleEffect::createResource);
-    m_resourceFactory->registerResource(FG_RESOURCE_MUSIC, &sfx::CMusic::createResource);
-    m_resourceFactory->registerResource(FG_RESOURCE_SOUND, &sfx::CSound::createResource);
+    m_resourceFactory->registerResource(resource::SOUND, &sfx::CSound::createResource);
+    m_resourceFactory->registerResource(resource::MUSIC, &sfx::CMusic::createResource);
+    m_resourceFactory->registerResource(resource::MODEL3D, &gfx::CModel::createResource);
+    m_resourceFactory->registerResource(resource::TEXTURE, &gfx::CTexture::createResource);
+    m_resourceFactory->registerResource(resource::FONT, &gui::CFont::createResource);
+    //m_resourceFactory->registerResource(resource::SAVE_FILE, &);
+    //m_resourceFactory->registerResource(resource::GUI_STRUCTURE_SHEET, &);
+    //m_resourceFactory->registerResource(resource::GUI_STYLE_SHEET, &);
+    //m_resourceFactory->registerResource(resource::SHADER, &);
+    //m_resourceFactory->registerResource(resource::SCENE, &);
+    //m_resourceFactory->registerResource(resource::SCRIPT, &);
+    m_resourceFactory->registerResource(resource::GROUP, &resource::CResourceGroup::createResource);
+    //m_resourceFactory->registerResource(resource::VARIA, &);
+    //m_resourceFactory->registerResource(resource::BINARY, &);
+    //m_resourceFactory->registerResource(resource::LIBRARY, &);
+    //m_resourceFactory->registerResource(resource::PLUGIN, &);
+    //m_resourceFactory->registerResource(resource::CUSTOM, &);
+    //m_resourceFactory->registerResource(resource::ZIP_PACK, &);
+    m_resourceFactory->registerResource(resource::PARTICLE_EFFECT, &gfx::CParticleEffect::createResource);
+    
+    
     FG_HardwareState->deviceYield(0); // #FIXME - device yield...
     if(!m_resourceMgr)
         m_resourceMgr = new resource::CResourceManager(m_resourceFactory, m_qualityMgr, this);
@@ -405,7 +419,7 @@ fgBool CGameMain::loadConfiguration(void) {
     }
     if(m_settings->getMainConfigPath().length()) {
         if(!m_mainConfig)
-            m_mainConfig = new fgConfig();
+            m_mainConfig = new util::CConfig();
         if(!m_mainConfig->load(m_settings->getMainConfigPathStr())) {
             FG_LOG_ERROR("Main: Failed to load main configuration file...");
             return FG_FALSE;

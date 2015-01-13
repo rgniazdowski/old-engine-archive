@@ -85,6 +85,8 @@ namespace fg {
             /// 
             SFontBuiltInRawData *m_rawFontData;
         };
+        ///
+        typedef CFontBuiltInResource CFontBuiltIn;
     };
 };
     #define FG_FONT_TYPE_STB_BUILTIN	0x0040

@@ -16,22 +16,37 @@
     #include "GFX/Textures/fgTextureResource.h"
     #include "fgFontBuiltInTypes.h"
 
-// This is standard grid size (used for fonts based on textures)
-    #define FG_FONT_STANDARD_GRID_SIZE	16
-    #define FG_FONT_STANDARD_ASCII_SIZE	(FG_FONT_STANDARD_GRID_SIZE*FG_FONT_STANDARD_GRID_SIZE)
-
-    #define FG_FONT_TYPE_INVALID	0x0000
-    #define FG_FONT_TYPE_TEXTURE	0x0001
-
-typedef unsigned int fgFontType;
-
 namespace fg {
     namespace gui {
+        ///
+        typedef unsigned int FontType;
+        
+        ///
+        const unsigned int STANDARD_GRID_SIZE = 16;
+        ///
+        const unsigned int STANDARD_GRID_WIDTH = 16;
+        ///
+        const unsigned int STANDARD_GRID_HEIGHT = 16;
+        ///
+        const unsigned int STANDARD_ASCII_SIZE = 256;
+        
+        /// Invalid font type - initial value
+        const FontType FONT_INVALID = 0x0000;
+        /// Font made from texture resource
+        const FontType FONT_TEXTURE = 0x0001;
 
         /*
          * Class definition for Font Resource - extends the Texture Resource
          */
         class CFontResource : public fg::gfx::CTextureResource {
+        public:
+            ///
+            typedef fg::gfx::CTextureResource base_type;
+            ///
+            typedef CFontResource type;
+            ///
+            typedef CFontResource self_type;
+
         public:
             /**
              * Base constructor of the font resource object
@@ -100,7 +115,7 @@ namespace fg {
              * 
              * @return 
              */
-            fgFontType getFontType(void) const {
+            FontType getFontType(void) const {
                 return m_fontType;
             }
             /**
@@ -113,7 +128,7 @@ namespace fg {
 
         protected:
             /// 
-            fgFontType m_fontType;
+            FontType m_fontType;
             ///
             SFontDataInfo m_info;
             /// 

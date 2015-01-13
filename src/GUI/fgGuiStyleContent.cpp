@@ -322,11 +322,11 @@ float gui::CStyleContent::parseLength(const char *value, Unit &unit) {
  * @param merge     If true the styles will be merged, if false - overwritten
  * @return 
  */
-fgBool gui::CStyleContent::initializeFromConfig(fgCfgTypes::parameterVec &params, fgBool merge) {
+fgBool gui::CStyleContent::initializeFromConfig(util::config::ParameterVec &params, fgBool merge) {
     if(params.empty())
         return FG_FALSE;
 
-    fgCfgTypes::parameterVecItor begin, end, itor;
+    util::config::ParameterVecItor begin, end, itor;
     begin = params.begin();
     end = params.end();
     itor = begin;
@@ -334,200 +334,200 @@ fgBool gui::CStyleContent::initializeFromConfig(fgCfgTypes::parameterVec &params
     // Iterate through all style parameters
     // Parameters are taken directly from ini config file
     for(; itor != end; itor++) {
-        fgCfgParameter *param = *itor;
+        util::SCfgParameter *param = *itor;
         if(!param)
             continue;
 
         // BACKGROUND COLOR PARAMETER
         if(param->name.compare("bg-color") == 0) {
-            if(param->type == FG_CFG_PARAMETER_STRING)
+            if(param->type == util::SCfgParameter::STRING)
                 m_bg.color = parseColor(param->string);
 
             // FOREGROUND COLOR
         } else if(param->name.compare("fg-color") == 0) {
-            if(param->type == FG_CFG_PARAMETER_STRING)
+            if(param->type == util::SCfgParameter::STRING)
                 m_fg.color = parseColor(param->string);
 
             // BACKGROUND TEXTURE NAME
         } else if(param->name.compare("bg-texture") == 0) {
-            if(param->type == FG_CFG_PARAMETER_STRING)
+            if(param->type == util::SCfgParameter::STRING)
                 m_bg.texture = param->string;
 
             // BACKGROUND STYLE MODIFIER
         } else if(param->name.compare("bg-style") == 0) {
-            if(param->type == FG_CFG_PARAMETER_STRING)
+            if(param->type == util::SCfgParameter::STRING)
                 m_bg.style = parseBackgroundStyle(param->string);
 
             // TEXT SIZE PARAMETER
         } else if(param->name.compare("textSize") == 0) {
             Unit unit = Unit::PIXELS;
-            if(param->type == FG_CFG_PARAMETER_FLOAT) {
+            if(param->type == util::SCfgParameter::FLOAT) {
                 this->m_fg.textSize = param->float_val;
-            } else if(param->type == FG_CFG_PARAMETER_INT) {
+            } else if(param->type == util::SCfgParameter::INT) {
                 this->m_fg.textSize = (float)param->int_val;
-            } else if(param->type == FG_CFG_PARAMETER_STRING) {
+            } else if(param->type == util::SCfgParameter::STRING) {
                 this->m_fg.textSize = parseLength(param->string, unit);
             }
             this->m_fg.unit = unit;
 
             // FONT NAME PARAMETER
         } else if(param->name.compare("font") == 0) {
-            if(param->type == FG_CFG_PARAMETER_STRING)
+            if(param->type == util::SCfgParameter::STRING)
                 m_fg.font = param->string;
 
             // MARGIN MODIFIER - APPLIES TO ALL
         } else if(param->name.compare("margin") == 0) {
-            if(param->type == FG_CFG_PARAMETER_FLOAT)
+            if(param->type == util::SCfgParameter::FLOAT)
                 this->setMargin(SMargin::Which::ALL, param->float_val);
-            else if(param->type == FG_CFG_PARAMETER_INT)
+            else if(param->type == util::SCfgParameter::INT)
                 this->setMargin(SMargin::Which::ALL, (float)param->int_val);
 
             // LEFT MARGIN MODIFIER
         } else if(param->name.compare("margin-left") == 0) {
-            if(param->type == FG_CFG_PARAMETER_FLOAT)
+            if(param->type == util::SCfgParameter::FLOAT)
                 this->setMargin(SMargin::Which::LEFT, param->float_val);
-            else if(param->type == FG_CFG_PARAMETER_INT)
+            else if(param->type == util::SCfgParameter::INT)
                 this->setMargin(SMargin::Which::LEFT, (float)param->int_val);
 
             // RIGHT MARGIN MODIFIER
         } else if(param->name.compare("margin-right") == 0) {
-            if(param->type == FG_CFG_PARAMETER_FLOAT)
+            if(param->type == util::SCfgParameter::FLOAT)
                 this->setMargin(SMargin::Which::RIGHT, param->float_val);
-            else if(param->type == FG_CFG_PARAMETER_INT)
+            else if(param->type == util::SCfgParameter::INT)
                 this->setMargin(SMargin::Which::RIGHT, (float)param->int_val);
 
             // TOP MARGIN MODIFIER
         } else if(param->name.compare("margin-top") == 0) {
-            if(param->type == FG_CFG_PARAMETER_FLOAT)
+            if(param->type == util::SCfgParameter::FLOAT)
                 this->setMargin(SMargin::Which::TOP, param->float_val);
-            else if(param->type == FG_CFG_PARAMETER_INT)
+            else if(param->type == util::SCfgParameter::INT)
                 this->setMargin(SMargin::Which::TOP, (float)param->int_val);
 
             // BOTTOM MARGIN MODIFIER
         } else if(param->name.compare("margin-bottom") == 0) {
-            if(param->type == FG_CFG_PARAMETER_FLOAT)
+            if(param->type == util::SCfgParameter::FLOAT)
                 this->setMargin(SMargin::Which::BOTTOM, param->float_val);
-            else if(param->type == FG_CFG_PARAMETER_INT)
+            else if(param->type == util::SCfgParameter::INT)
                 this->setMargin(SMargin::Which::BOTTOM, (float)param->int_val);
 
             // PADDING MODIFIER - APPLIES TO ALL
         } else if(param->name.compare("padding") == 0) {
-            if(param->type == FG_CFG_PARAMETER_FLOAT)
+            if(param->type == util::SCfgParameter::FLOAT)
                 this->setPadding(SPadding::Which::ALL, param->float_val);
-            else if(param->type == FG_CFG_PARAMETER_INT)
+            else if(param->type == util::SCfgParameter::INT)
                 this->setPadding(SPadding::Which::ALL, (float)param->int_val);
 
             // LEFT PADDING MODIFIER
         } else if(param->name.compare("padding-left") == 0) {
-            if(param->type == FG_CFG_PARAMETER_FLOAT)
+            if(param->type == util::SCfgParameter::FLOAT)
                 this->setPadding(SPadding::Which::LEFT, param->float_val);
-            else if(param->type == FG_CFG_PARAMETER_INT)
+            else if(param->type == util::SCfgParameter::INT)
                 this->setPadding(SPadding::Which::LEFT, (float)param->int_val);
 
             // RIGHT PADDING MODIFIER
         } else if(param->name.compare("padding-right") == 0) {
-            if(param->type == FG_CFG_PARAMETER_FLOAT)
+            if(param->type == util::SCfgParameter::FLOAT)
                 this->setPadding(SPadding::Which::RIGHT, param->float_val);
-            else if(param->type == FG_CFG_PARAMETER_INT)
+            else if(param->type == util::SCfgParameter::INT)
                 this->setPadding(SPadding::Which::RIGHT, (float)param->int_val);
 
             // TOP PADDING MODIFIER
         } else if(param->name.compare("padding-top") == 0) {
-            if(param->type == FG_CFG_PARAMETER_FLOAT)
+            if(param->type == util::SCfgParameter::FLOAT)
                 this->setPadding(SPadding::Which::TOP, param->float_val);
-            else if(param->type == FG_CFG_PARAMETER_INT)
+            else if(param->type == util::SCfgParameter::INT)
                 this->setPadding(SPadding::Which::TOP, (float)param->int_val);
 
             // BOTTOM PADDING MODIFIER
         } else if(param->name.compare("padding-bottom") == 0) {
-            if(param->type == FG_CFG_PARAMETER_FLOAT)
+            if(param->type == util::SCfgParameter::FLOAT)
                 this->setPadding(SPadding::Which::BOTTOM, param->float_val);
-            else if(param->type == FG_CFG_PARAMETER_INT)
+            else if(param->type == util::SCfgParameter::INT)
                 this->setPadding(SPadding::Which::BOTTOM, (float)param->int_val);
 
             // BORDER PARAMETER - APPLIES TO ALL BORDERS
         } else if(param->name.compare("border") == 0) {
-            if(param->type == FG_CFG_PARAMETER_STRING) {
+            if(param->type == util::SCfgParameter::STRING) {
                 SBorder border = parseBorder(param->string);
                 this->m_border.all = border;
                 this->m_border.left = border;
                 this->m_border.right = border;
                 this->m_border.top = border;
                 this->m_border.bottom = border;
-            } else if(param->type == FG_CFG_PARAMETER_FLOAT) {
+            } else if(param->type == util::SCfgParameter::FLOAT) {
                 this->setBorder(SBorder::Which::ALL, param->float_val);
                 this->setBorder(SBorder::Which::ALL, SBorder::Style::SOLID);
-            } else if(param->type == FG_CFG_PARAMETER_INT) {
+            } else if(param->type == util::SCfgParameter::INT) {
                 this->setBorder(SBorder::Which::ALL, (float)param->int_val);
                 this->setBorder(SBorder::Which::ALL, SBorder::Style::SOLID);
             }
 
             // LEFT BORDER PARAMETER
         } else if(param->name.compare("border-left") == 0) {
-            if(param->type == FG_CFG_PARAMETER_STRING) {
+            if(param->type == util::SCfgParameter::STRING) {
                 SBorder border = parseBorder(param->string);
                 this->m_border.left = border;
-            } else if(param->type == FG_CFG_PARAMETER_FLOAT) {
+            } else if(param->type == util::SCfgParameter::FLOAT) {
                 this->setBorder(SBorder::Which::LEFT, param->float_val);
                 this->setBorder(SBorder::Which::LEFT, SBorder::Style::SOLID);
-            } else if(param->type == FG_CFG_PARAMETER_INT) {
+            } else if(param->type == util::SCfgParameter::INT) {
                 this->setBorder(SBorder::Which::LEFT, (float)param->int_val);
                 this->setBorder(SBorder::Which::LEFT, SBorder::Style::SOLID);
             }
 
             // RIGHT BORDER PARAMETER
         } else if(param->name.compare("border-right") == 0) {
-            if(param->type == FG_CFG_PARAMETER_STRING) {
+            if(param->type == util::SCfgParameter::STRING) {
                 SBorder border = parseBorder(param->string);
                 this->m_border.right = border;
-            } else if(param->type == FG_CFG_PARAMETER_FLOAT) {
+            } else if(param->type == util::SCfgParameter::FLOAT) {
                 this->setBorder(SBorder::Which::RIGHT, param->float_val);
                 this->setBorder(SBorder::Which::RIGHT, SBorder::Style::SOLID);
-            } else if(param->type == FG_CFG_PARAMETER_INT) {
+            } else if(param->type == util::SCfgParameter::INT) {
                 this->setBorder(SBorder::Which::RIGHT, (float)param->int_val);
                 this->setBorder(SBorder::Which::RIGHT, SBorder::Style::SOLID);
             }
 
             // TOP BORDER PARAMETER
         } else if(param->name.compare("border-top") == 0) {
-            if(param->type == FG_CFG_PARAMETER_STRING) {
+            if(param->type == util::SCfgParameter::STRING) {
                 SBorder border = parseBorder(param->string);
                 this->m_border.top = border;
-            } else if(param->type == FG_CFG_PARAMETER_FLOAT) {
+            } else if(param->type == util::SCfgParameter::FLOAT) {
                 this->setBorder(SBorder::Which::TOP, param->float_val);
                 this->setBorder(SBorder::Which::TOP, SBorder::Style::SOLID);
-            } else if(param->type == FG_CFG_PARAMETER_INT) {
+            } else if(param->type == util::SCfgParameter::INT) {
                 this->setBorder(SBorder::Which::TOP, (float)param->int_val);
                 this->setBorder(SBorder::Which::TOP, SBorder::Style::SOLID);
             }
 
             // BOTTOM BORDER PARAMETER
         } else if(param->name.compare("border-bottom") == 0) {
-            if(param->type == FG_CFG_PARAMETER_STRING) {
+            if(param->type == util::SCfgParameter::STRING) {
                 SBorder border = parseBorder(param->string);
                 this->m_border.bottom = border;
-            } else if(param->type == FG_CFG_PARAMETER_FLOAT) {
+            } else if(param->type == util::SCfgParameter::FLOAT) {
                 this->setBorder(SBorder::Which::BOTTOM, param->float_val);
                 this->setBorder(SBorder::Which::BOTTOM, SBorder::Style::SOLID);
-            } else if(param->type == FG_CFG_PARAMETER_INT) {
+            } else if(param->type == util::SCfgParameter::INT) {
                 this->setBorder(SBorder::Which::BOTTOM, (float)param->int_val);
                 this->setBorder(SBorder::Which::BOTTOM, SBorder::Style::SOLID);
             }
 
             // POSITON STYLE
         } else if(param->name.compare("position") == 0) {
-            if(param->type == FG_CFG_PARAMETER_STRING)
+            if(param->type == util::SCfgParameter::STRING)
                 this->setPosition(parsePositionStyle(param->string));
 
             // LEFT POSITION (X) LEFT
         } else if(param->name.compare("left") == 0) {
-            if(param->type == FG_CFG_PARAMETER_FLOAT) {
+            if(param->type == util::SCfgParameter::FLOAT) {
                 this->m_position.left = param->float_val;
                 this->m_position.unit = Unit::PIXELS;
-            } else if(param->type == FG_CFG_PARAMETER_INT) {
+            } else if(param->type == util::SCfgParameter::INT) {
                 this->m_position.left = (float)param->int_val;
                 this->m_position.unit = Unit::PIXELS;
-            } else if(param->type == FG_CFG_PARAMETER_STRING) {
+            } else if(param->type == util::SCfgParameter::STRING) {
                 Unit unit = Unit::PIXELS;
                 this->m_position.left = parseLength(param->string, unit);
                 this->m_position.unit = unit;
@@ -535,13 +535,13 @@ fgBool gui::CStyleContent::initializeFromConfig(fgCfgTypes::parameterVec &params
 
             // RIGHT POSITION (X) MODIFIER
         } else if(param->name.compare("right") == 0) {
-            if(param->type == FG_CFG_PARAMETER_FLOAT) {
+            if(param->type == util::SCfgParameter::FLOAT) {
                 this->m_position.right = param->float_val;
                 this->m_position.unit = Unit::PIXELS;
-            } else if(param->type == FG_CFG_PARAMETER_INT) {
+            } else if(param->type == util::SCfgParameter::INT) {
                 this->m_position.right = (float)param->int_val;
                 this->m_position.unit = Unit::PIXELS;
-            } else if(param->type == FG_CFG_PARAMETER_STRING) {
+            } else if(param->type == util::SCfgParameter::STRING) {
                 Unit unit = Unit::PIXELS;
                 this->m_position.right = parseLength(param->string, unit);
                 this->m_position.unit = unit;
@@ -549,13 +549,13 @@ fgBool gui::CStyleContent::initializeFromConfig(fgCfgTypes::parameterVec &params
 
             // TOP POSITION (Y) MODIFIER
         } else if(param->name.compare("top") == 0) {
-            if(param->type == FG_CFG_PARAMETER_FLOAT) {
+            if(param->type == util::SCfgParameter::FLOAT) {
                 this->m_position.top = param->float_val;
                 this->m_position.unit = Unit::PIXELS;
-            } else if(param->type == FG_CFG_PARAMETER_INT) {
+            } else if(param->type == util::SCfgParameter::INT) {
                 this->m_position.top = (float)param->int_val;
                 this->m_position.unit = Unit::PIXELS;
-            } else if(param->type == FG_CFG_PARAMETER_STRING) {
+            } else if(param->type == util::SCfgParameter::STRING) {
                 Unit unit = Unit::PIXELS;
                 this->m_position.top = parseLength(param->string, unit);
                 this->m_position.unit = unit;
@@ -563,13 +563,13 @@ fgBool gui::CStyleContent::initializeFromConfig(fgCfgTypes::parameterVec &params
 
             // BOTTOM POSITION (Y) MODIFIER
         } else if(param->name.compare("bottom") == 0) {
-            if(param->type == FG_CFG_PARAMETER_FLOAT) {
+            if(param->type == util::SCfgParameter::FLOAT) {
                 this->m_position.bottom = param->float_val;
                 this->m_position.unit = Unit::PIXELS;
-            } else if(param->type == FG_CFG_PARAMETER_INT) {
+            } else if(param->type == util::SCfgParameter::INT) {
                 this->m_position.bottom = (float)param->int_val;
                 this->m_position.unit = Unit::PIXELS;
-            } else if(param->type == FG_CFG_PARAMETER_STRING) {
+            } else if(param->type == util::SCfgParameter::STRING) {
                 Unit unit = Unit::PIXELS;
                 this->m_position.bottom = parseLength(param->string, unit);
                 this->m_position.unit = unit;
@@ -577,13 +577,13 @@ fgBool gui::CStyleContent::initializeFromConfig(fgCfgTypes::parameterVec &params
 
             // FRONT POSITION (Z) MODIFIER
         } else if(param->name.compare("front") == 0) {
-            if(param->type == FG_CFG_PARAMETER_FLOAT) {
+            if(param->type == util::SCfgParameter::FLOAT) {
                 this->m_position.front = param->float_val;
                 this->m_position.unit = Unit::PIXELS;
-            } else if(param->type == FG_CFG_PARAMETER_INT) {
+            } else if(param->type == util::SCfgParameter::INT) {
                 this->m_position.front = (float)param->int_val;
                 this->m_position.unit = Unit::PIXELS;
-            } else if(param->type == FG_CFG_PARAMETER_STRING) {
+            } else if(param->type == util::SCfgParameter::STRING) {
                 Unit unit = Unit::PIXELS;
                 this->m_position.front = parseLength(param->string, unit);
                 this->m_position.unit = unit;
@@ -591,13 +591,13 @@ fgBool gui::CStyleContent::initializeFromConfig(fgCfgTypes::parameterVec &params
 
             // BACK POSITION (Z) MODIFIER
         } else if(param->name.compare("back") == 0) {
-            if(param->type == FG_CFG_PARAMETER_FLOAT) {
+            if(param->type == util::SCfgParameter::FLOAT) {
                 this->m_position.back = param->float_val;
                 this->m_position.unit = Unit::PIXELS;
-            } else if(param->type == FG_CFG_PARAMETER_INT) {
+            } else if(param->type == util::SCfgParameter::INT) {
                 this->m_position.back = (float)param->int_val;
                 this->m_position.unit = Unit::PIXELS;
-            } else if(param->type == FG_CFG_PARAMETER_STRING) {
+            } else if(param->type == util::SCfgParameter::STRING) {
                 Unit unit = Unit::PIXELS;
                 this->m_position.back = parseLength(param->string, unit);
                 this->m_position.unit = unit;
@@ -605,29 +605,29 @@ fgBool gui::CStyleContent::initializeFromConfig(fgCfgTypes::parameterVec &params
 
             // HORIZONTAL ALIGN
         } else if(param->name.compare("align") == 0) {
-            if(param->type == FG_CFG_PARAMETER_STRING)
+            if(param->type == util::SCfgParameter::STRING)
                 this->m_align = parseAlign(param->string);
 
             // VERTICAL ALIGN
         } else if(param->name.compare("valign") == 0) {
-            if(param->type == FG_CFG_PARAMETER_STRING)
+            if(param->type == util::SCfgParameter::STRING)
                 this->m_valign = parseAlign(param->string);
 
             // TEXT ALIGN
         } else if(param->name.compare("text-align") == 0) {
-            if(param->type == FG_CFG_PARAMETER_STRING)
+            if(param->type == util::SCfgParameter::STRING)
                 this->m_textAlign = parseAlign(param->string);
 
             // WIDTH
         } else if(param->name.compare("width") == 0) {
             // #FIXME
-            if(param->type == FG_CFG_PARAMETER_FLOAT) {
+            if(param->type == util::SCfgParameter::FLOAT) {
                 this->m_size.x = param->float_val;
                 this->m_size.style = SSize::Style::PIXELS;
-            } else if(param->type == FG_CFG_PARAMETER_INT) {
+            } else if(param->type == util::SCfgParameter::INT) {
                 this->m_size.x = (float)param->int_val;
                 this->m_size.style = SSize::Style::PIXELS;
-            } else if(param->type == FG_CFG_PARAMETER_STRING) {
+            } else if(param->type == util::SCfgParameter::STRING) {
                 Unit unit = (Unit)SSize::Style::PIXELS;
                 this->m_size.x = parseLength(param->string, unit);
                 this->m_size.style = (SSize::Style)unit;
@@ -640,13 +640,13 @@ fgBool gui::CStyleContent::initializeFromConfig(fgCfgTypes::parameterVec &params
             // HEIGHT
         } else if(param->name.compare("height") == 0) {
             // #FIXME
-            if(param->type == FG_CFG_PARAMETER_FLOAT) {
+            if(param->type == util::SCfgParameter::FLOAT) {
                 this->m_size.y = param->float_val;
                 this->m_size.style = SSize::Style::PIXELS;
-            } else if(param->type == FG_CFG_PARAMETER_INT) {
+            } else if(param->type == util::SCfgParameter::INT) {
                 this->m_size.y = (float)param->int_val;
                 this->m_size.style = SSize::Style::PIXELS;
-            } else if(param->type == FG_CFG_PARAMETER_STRING) {
+            } else if(param->type == util::SCfgParameter::STRING) {
                 Unit unit;
                 this->m_size.y = parseLength(param->string, unit);
                 this->m_size.style = (SSize::Style)unit;
@@ -658,12 +658,12 @@ fgBool gui::CStyleContent::initializeFromConfig(fgCfgTypes::parameterVec &params
 
             // USED SHADER FOR EFFECTS
         } else if(param->name.compare("shader") == 0) {
-            if(param->type == FG_CFG_PARAMETER_STRING)
+            if(param->type == util::SCfgParameter::STRING)
                 m_shader = param->string;
 
             // APPLIED EFFECT - SIMILAR TO PARTICLE EFFECT
         } else if(param->name.compare("effect") == 0) {
-            if(param->type == FG_CFG_PARAMETER_STRING)
+            if(param->type == util::SCfgParameter::STRING)
                 m_effect = param->string;
         }
     }

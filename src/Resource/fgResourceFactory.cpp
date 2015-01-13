@@ -10,32 +10,37 @@
 #include "fgResourceFactory.h"
 #include "fgLog.h"
 
-/*
+using namespace fg;
+
+/**
  * Default empty constructor for Resource Factory object
  */
-fgResourceFactory::fgResourceFactory() {
-    FG_LOG_DEBUG("fgResourceFactory: allocation");
+resource::CResourceFactory::CResourceFactory() {
+    ///FG_LOG_DEBUG("fgResourceFactory: allocation");
 }
 
-/*
- * Default destructor for Resource Factory object
+/**
+ * Destructor for Resource Factory object
  */
-fgResourceFactory::~fgResourceFactory() {
-    FG_LOG_DEBUG("fgResourceFactory: destroy");
+resource::CResourceFactory::~CResourceFactory() {
+    ///FG_LOG_DEBUG("fgResourceFactory: destroy");
     clear();
 }
 
-/*
+/**
  * Clear all registered resource creators
  */
-void fgResourceFactory::clear(void) {
+void resource::CResourceFactory::clear(void) {
     m_factoryMap.clear();
 }
 
-/*
+/**
  * Register resource create function based on resource type
+ * @param type
+ * @param function
+ * @return 
  */
-fgBool fgResourceFactory::registerResource(const fgResourceType type, fgCreateResourceFn function) {
+fgBool resource::CResourceFactory::registerResource(const ResourceType type, CreateResourceFunction function) {
     if(!function)
         return FG_FALSE;
     factoryPair query_pair;
@@ -52,10 +57,12 @@ fgBool fgResourceFactory::registerResource(const fgResourceType type, fgCreateRe
     return FG_TRUE;
 }
 
-/*
+/**
  * Call specific create function for given resource
+ * @param type
+ * @return 
  */
-fg::resource::CResource* fgResourceFactory::createResource(const fgResourceType type) {
+resource::CResource* resource::CResourceFactory::createResource(const ResourceType type) {
     factoryMapItor it = m_factoryMap.find(type);
     if(it != m_factoryMap.end()) {
         if(it->second != NULL)
@@ -64,10 +71,12 @@ fg::resource::CResource* fgResourceFactory::createResource(const fgResourceType 
     return NULL;
 }
 
-/*
+/**
  * Check if given resource type constructor/create function is registered in factory
+ * @param type
+ * @return 
  */
-fgBool fgResourceFactory::isRegistered(const fgResourceType type) {
+fgBool resource::CResourceFactory::isRegistered(const ResourceType type) {
     factoryMapItor it = m_factoryMap.find(type);
     if(it != m_factoryMap.end()) {
         return FG_TRUE;
