@@ -412,7 +412,7 @@ fgBool CGameMain::initSubsystems(void) {
 fgBool CGameMain::loadConfiguration(void) {
     FG_LOG_DEBUG("Loading configuration...");
     if(!m_settings)
-        m_settings = new fgSettings();
+        m_settings = new CSettings();
     if(!m_settings->load("settings.xml")) { // #FIXME - universal, cross solution - path management
         FG_LOG_ERROR("Main: Failed to load main settings...");
         return FG_FALSE;
@@ -425,6 +425,7 @@ fgBool CGameMain::loadConfiguration(void) {
             return FG_FALSE;
         }
     }
+    
     // #FIXME
     CSimpleOpt::SOption gameOptions[] = {
         {0, "--mod", SO_REQ_SEP},

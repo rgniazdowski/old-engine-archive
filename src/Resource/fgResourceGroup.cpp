@@ -442,7 +442,7 @@ fgBool resource::CResourceGroup::preLoadConfig(void) {
         return FG_FALSE;
     if(strcasecmp(ext, "group.xml") == 0) {
         // Resource group config file is in XML format
-        m_xmlParser = new fgXMLParser();
+        m_xmlParser = new xml::CParser();
         CResourceGroupContentHandler *contentHandler = new CResourceGroupContentHandler();
         contentHandler->setResourceGroupPointer(this);
         m_xmlParser->setContentHandler(contentHandler);

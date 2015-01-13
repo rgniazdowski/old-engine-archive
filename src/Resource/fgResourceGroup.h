@@ -284,7 +284,7 @@ namespace fg {
             /// List of all resource files 
             rgResVec m_resourceFiles;
             /// Parser for xml config files (here: resource group xml files)
-            fgXMLParser *m_xmlParser;
+            xml::CParser *m_xmlParser;
             /// Resource factory
             CResourceFactory *m_resFactory;
 

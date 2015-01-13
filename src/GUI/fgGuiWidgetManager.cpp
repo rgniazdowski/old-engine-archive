@@ -258,7 +258,7 @@ fgBool gui::CWidgetManager::loadStructureSheet(const char *filePath) {
     if(!filePath) {
         return FG_FALSE;
     }
-    fgXMLParser *xmlParser = new fgXMLParser();
+    xml::CParser *xmlParser = new xml::CParser();
     CStructureSheetParser *contentHandler = new CStructureSheetParser();
 
     contentHandler->setWidgetFactory(m_pWidgetFactory);

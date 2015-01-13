@@ -133,7 +133,7 @@ namespace fg {
          * 
          * @return 
          */
-        inline fgSettings *getSettings(void) const {
+        inline CSettings *getSettings(void) const {
             return m_settings;
         }
         /**
@@ -230,7 +230,7 @@ namespace fg {
         /// Main GUI (User Interface))
         gui::CGuiMain *m_guiMain;
         /// Main, hard settings
-        fgSettings *m_settings;
+        CSettings *m_settings;
         /// Main config 
         util::CConfig *m_mainConfig;
         /// Main Quality Manager

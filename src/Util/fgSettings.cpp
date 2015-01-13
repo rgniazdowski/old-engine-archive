@@ -9,36 +9,38 @@
 
 #include "fgSettings.h"
 
-/*
- *
- */
-fgSettings::fgSettings() : m_parser(NULL) { }
+using namespace fg;
 
 /*
  *
  */
-fgSettings::fgSettings(const char *filePath) : m_parser(NULL) {
+CSettings::CSettings() : m_parser(NULL) { }
+
+/*
+ *
+ */
+CSettings::CSettings(const char *filePath) : m_parser(NULL) {
     load(filePath);
 }
 
 /*
  *
  */
-fgSettings::~fgSettings() { }
+CSettings::~CSettings() { }
 
 /*
  *
  */
-fgBool fgSettings::load(const char *filePath) {
+fgBool CSettings::load(const char *filePath) {
     if(!filePath)
         return FG_FALSE;
     if(!m_parser) {
-        m_parser = new fgXMLParser();
+        m_parser = new xml::CParser();
         //m_parser->setReportToMsgSystem(FG_FALSE); !?!
     }
     fgBool status = FG_TRUE;
-    fgXMLAutoHandler<fgSettings::settingsData> *content = NULL;
-    content = new fgXMLAutoHandler<fgSettings::settingsData>();
+    fgXMLAutoHandler<CSettings::settingsData> *content = NULL;
+    content = new fgXMLAutoHandler<CSettings::settingsData>();
     settingsData data;
     content->setTarget(&data);
     m_parser->setContentHandler(content);

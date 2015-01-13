@@ -13,10 +13,12 @@
 #include "Util/fgMemory.h"
 #include "fgMessageSubsystem.h"
 
+using namespace fg;
+
 /*
  *
  */
-fgBool fgXMLParser::loadXML(const char *filePath) {
+fgBool xml::CParser::loadXML(const char *filePath) {
     if(filePath == NULL) {
         FG_MessageSubsystem->reportWarning(tag_type::name(), FG_ERRNO_FILE_WRONG_PARAMETERS);
         return FG_FALSE;
@@ -58,7 +60,7 @@ fgBool fgXMLParser::loadXML(const char *filePath) {
 /*
  * Frees all data stored
  */
-void fgXMLParser::freeXML(void) {
+void xml::CParser::freeXML(void) {
     if(m_fileBuffer) {
         fgFree(m_fileBuffer);
     }
@@ -80,7 +82,7 @@ void fgXMLParser::freeXML(void) {
  * For now however (because of the XMLParser function) it is almost impossible
  * to make such function without recursion. #FIXME #TODO #P4
  */
-fgBool fgXMLParser::private_parseDeep(fgXMLNode *cnode, int depth) {
+fgBool xml::CParser::private_parseDeep(fgXMLNode *cnode, int depth) {
     if(!cnode) {
         fgXMLAttribute *firstAttribute = NULL;
         fgXMLElement *elementPtr = NULL;
@@ -137,7 +139,7 @@ fgBool fgXMLParser::private_parseDeep(fgXMLNode *cnode, int depth) {
 /*
  * Parse (analyze) the xml file using predefined content handler.
  */
-fgBool fgXMLParser::parseWithHandler(void) {
+fgBool xml::CParser::parseWithHandler(void) {
     if(!m_contentHandler) {
         FG_MessageSubsystem->reportError(tag_type::name(), FG_ERRNO_XML_NO_CONTENT_HANDLER);
         return FG_FALSE;
