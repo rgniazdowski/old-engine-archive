@@ -90,9 +90,9 @@ fgBool gui::CWidgetManager::initialize(void) {
         return FG_FALSE;
     }
     // Will now preload all required styles
-    fgDirent widgetsDir;
+    util::CDirent widgetsDir;
     const char *filename = NULL;
-    fgBool status = widgetsDir.readDirectory(m_widgetsPath, FG_TRUE, FG_TRUE);
+    fgBool status = widgetsDir.readDir(m_widgetsPath, FG_TRUE, FG_TRUE);
     if(!status) {
         FG_LOG_ERROR("GUI: Unable to read directory (widgets): '%s'", m_widgetsPath.c_str());
     }

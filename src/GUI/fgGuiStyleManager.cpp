@@ -61,9 +61,9 @@ fgBool gui::CStyleManager::initialize(void) {
         return FG_FALSE;
     }
     // Will now preload all required styles
-    fgDirent stylesDir;
+    util::CDirent stylesDir;
     const char *filename;
-    fgBool status = stylesDir.readDirectory(m_stylesPath, FG_TRUE, FG_TRUE);
+    fgBool status = stylesDir.readDir(m_stylesPath, FG_TRUE, FG_TRUE);
     if(!status) {
         FG_LOG_ERROR("GUI: Unable to read directory (styles): '%s'", m_stylesPath.c_str());
     }

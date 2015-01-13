@@ -187,7 +187,7 @@ gui::CStyleContent &gui::CStyle::getContent(const std::string& info) {
     if(info.empty())
         return m_styleContent["main"];
     fg::CStringVector parts;
-    fgStrings::split(info, '.', parts);
+    strings::split(info, '.', parts);
     StyleNameMap::iterator end = m_styleContent.end();
     if(parts.size() == 1) {
         StyleNameMap::iterator itor = m_styleContent.find(info);
@@ -250,7 +250,7 @@ fgBool gui::CStyle::copyFullContent(CStyleContent *contents,
     STATE_DEACTIVATED	4	// deactivated
      */
     CStringVector parts;
-    fgStrings::split(info, '.', parts);
+    strings::split(info, '.', parts);
     std::string search = parts[0];
     parts.clear();
     contents[0] = getContent(search);

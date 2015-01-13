@@ -419,7 +419,7 @@ namespace fg {
             /// Pointer to the external Event manager
             fg::base::CManager *m_pEventMgr;
             /// Dirent object for parsing the data directory contents
-            fgDirent *m_dataDir;
+            util::CDirent *m_dataDir;
             /// Size of the current used memory by the managed resources
             size_t m_nCurrentUsedMemory;
             /// Value of the maximum supported size of all managed resources

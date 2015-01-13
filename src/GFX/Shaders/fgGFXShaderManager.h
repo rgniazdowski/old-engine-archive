@@ -223,7 +223,7 @@ namespace fg {
             /// will become invalid, need to set this pointer to NULL on suspend
             CShaderProgram *m_currentProgram;
             ///
-            fgDirent *m_shadersDir;
+            util::CDirent *m_shadersDir;
             ///
             std::string m_shadersPath;
             ///

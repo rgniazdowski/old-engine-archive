@@ -129,25 +129,25 @@ fgColor4f gui::CStyleContent::parseColor(const char *value) {
     std::string colorStr = value;
     int r = 255, g = 255, b = 255, a = 255;
     fgColor4f retColor;
-    colorStr = fgStrings::trim(colorStr);
-    if(fgStrings::startsWith(colorStr.c_str(), "rgba", FG_TRUE)) {
+    colorStr = strings::trim(colorStr);
+    if(strings::startsWith(colorStr.c_str(), "rgba", FG_TRUE)) {
         sscanf(colorStr.c_str(), "rgba(%d,%d,%d,%d)", &r, &g, &b, &a);
         retColor.r = (float)r / 255.0f;
         retColor.g = (float)g / 255.0f;
         retColor.b = (float)b / 255.0f;
         retColor.a = (float)a / 255.0f;
-    } else if(fgStrings::startsWith(colorStr.c_str(), "rgb", FG_TRUE)) {
+    } else if(strings::startsWith(colorStr.c_str(), "rgb", FG_TRUE)) {
         sscanf(colorStr.c_str(), "rgb(%d,%d,%d)", &r, &g, &b);
         retColor.r = (float)r / 255.0f;
         retColor.g = (float)g / 255.0f;
         retColor.b = (float)b / 255.0f;
         retColor.a = (float)a / 255.0f;
-    } else if(fgStrings::startsWith(colorStr.c_str(), "#", FG_TRUE) || fgStrings::startsWith(colorStr.c_str(), "0x", FG_FALSE)) {
+    } else if(strings::startsWith(colorStr.c_str(), "#", FG_TRUE) || strings::startsWith(colorStr.c_str(), "0x", FG_FALSE)) {
         // HEX!
-        retColor = fgColors::parseHEX(colorStr);
+        retColor = colors::parseHEX(colorStr);
     } else {
         // readable human name !
-        retColor = fgColors::getColorFromName(colorStr);
+        retColor = colors::getColor(colorStr);
     }
 
     return retColor;
@@ -185,10 +185,10 @@ gui::SBorder gui::CStyleContent::parseBorder(const char *value) {
         return border;
     fg::CStringVector parts;
     std::string borderStr = value;
-    borderStr = fgStrings::trim(borderStr);
-    fgStrings::split(borderStr, ' ', parts);
+    borderStr = strings::trim(borderStr);
+    strings::split(borderStr, ' ', parts);
     if(parts.size() == 1) {
-        parts[0] = fgStrings::trim(parts[0]);
+        parts[0] = strings::trim(parts[0]);
         if(isdigit((int)parts[0].c_str()[0])) {
             border.width = (float)atof(parts[0].c_str());
         } else {
@@ -196,12 +196,12 @@ gui::SBorder gui::CStyleContent::parseBorder(const char *value) {
         }
     } else if(parts.size() == 2 || parts.size() == 3) {
         for(int i = 0; i < (int)parts.size(); i++) {
-            parts[i] = fgStrings::trim(parts[i]);
+            parts[i] = strings::trim(parts[i]);
             if(isdigit((int)parts[i].c_str()[0])) {
                 border.width = (float)atof(parts[i].c_str());
-            } else if(fgStrings::startsWith(parts[i].c_str(), "rgb", FG_FALSE) ||
-                      fgStrings::startsWith(parts[i].c_str(), "#") ||
-                      fgStrings::startsWith(parts[i].c_str(), "0x", FG_FALSE) ||
+            } else if(strings::startsWith(parts[i].c_str(), "rgb", FG_FALSE) ||
+                      strings::startsWith(parts[i].c_str(), "#") ||
+                      strings::startsWith(parts[i].c_str(), "0x", FG_FALSE) ||
                       i == 2) {
                 border.color = parseColor(parts[i].c_str());
             } else {
@@ -246,7 +246,7 @@ gui::Align gui::CStyleContent::parseAlign(const char *value) {
         return align;
     align = Align::NONE;
     fg::CStringVector parts;
-    fgStrings::split(std::string(value), ' ', parts);
+    strings::split(std::string(value), ' ', parts);
     for(int i = 0; i < (int)parts.size(); i++) {
         if(parts[i].compare("left") == 0) {
             align |= Align::LEFT;
@@ -299,18 +299,18 @@ float gui::CStyleContent::parseLength(const char *value, Unit &unit) {
         return 0.0f;
     float length = 0.0f;
     std::string lengthStr;
-    if(fgStrings::containsChars(value, "%")) {
+    if(strings::containsChars(value, "%")) {
         unit = Unit::PERCENTS;
-        lengthStr = fgStrings::trim(std::string(value), std::string(" %"));
-    } else if(fgStrings::containsChars(value, "b", FG_FALSE)) {
+        lengthStr = strings::trim(std::string(value), std::string(" %"));
+    } else if(strings::containsChars(value, "b", FG_FALSE)) {
         unit = Unit::BLOCKS;
-        lengthStr = fgStrings::trim(std::string(value), std::string(" bB"));
-    } else if(fgStrings::containsChars(value, "i", FG_FALSE)) {
+        lengthStr = strings::trim(std::string(value), std::string(" bB"));
+    } else if(strings::containsChars(value, "i", FG_FALSE)) {
         unit = Unit::INCHES;
-        lengthStr = fgStrings::trim(std::string(value), std::string(" iI"));
+        lengthStr = strings::trim(std::string(value), std::string(" iI"));
     } else {
         unit = Unit::PIXELS;
-        lengthStr = fgStrings::trim(std::string(value), std::string(" fF"));
+        lengthStr = strings::trim(std::string(value), std::string(" fF"));
     }
     length = (float)atof(lengthStr.c_str());
     return length;

@@ -17,9 +17,16 @@
 #include "fgBool.h"
 #include "Util/fgStrings.h"
 
-#define FG_COLORS_NUM_MAX 140
 
-fgBool fgColors::s_isInit = FG_FALSE;
+namespace fg {
+    namespace colors {
+        ///
+        const unsigned int NUM_COLORS = 140;
+        ///
+        static fgBool s_isInit = FG_FALSE;
+
+    };
+};
 
 struct ColorName
 {
@@ -35,18 +42,32 @@ struct ColorName
      * @param _color
      * @param _name
      */
-    ColorName(const std::string& _name, const fgColor4f& _color) :
+    ColorName(const std::string& _name,
+              const fgColor4f& _color) :
     color(_color),
     name(_name) { }
 
-    ColorName(const std::string& _name, const unsigned long _hexColor, const unsigned char _comp) :
+    /**
+     * 
+     * @param _name
+     * @param _hexColor
+     * @param _comp
+     */
+    ColorName(const std::string& _name,
+              const unsigned long _hexColor,
+              const unsigned char _comp) :
     name(_name) {
-        color = fgColors::parseHEX(_hexColor, _comp);
+        color = fg::colors::parseHEX(_hexColor, _comp);
     }
 
+    /**
+     * 
+     * @param _name
+     * @param _hexStr
+     */
     ColorName(const std::string& _name, const std::string& _hexStr) :
     name(_name) {
-        color = fgColors::parseHEX(_hexStr);
+        color = fg::colors::parseHEX(_hexStr);
     }
 };
 
@@ -198,27 +219,19 @@ ColorName(std::string("YellowGreen"), std::string("9ACD32"))
 };
 #endif
 
-/**
- * 
- */
-fgColors::fgColors() { }
+using namespace fg;
 
 /**
  * 
  */
-fgColors::~fgColors() { }
-
-/**
- * 
- */
-void fgColors::initialize() {
-    if(s_isInit)
+void colors::initialize(void) {
+    if(colors::s_isInit)
         return;
 
-    s_isInit = FG_TRUE;
+    colors::s_isInit = FG_TRUE;
 
     g_colorNames.clear_optimised();
-    g_colorNames.reserve(FG_COLORS_NUM_MAX);
+    g_colorNames.reserve(NUM_COLORS);
 
     g_colorNames.push_back(ColorName(std::string("AliceBlue"), std::string("F0F8FF")));
     g_colorNames.push_back(ColorName(std::string("AntiqueWhite"), std::string("FAEBD7")));
@@ -364,12 +377,20 @@ void fgColors::initialize() {
 
 /**
  * 
+ * @return 
  */
-void fgColors::freeColors() {
+fgBool colors::isInit(void) {
+    return colors::s_isInit;
+}
+
+/**
+ * 
+ */
+void colors::freeColors() {
     g_colorNames.clear_optimised();
     g_colorNames.resize(0);
     g_colorNames.reserve(0);
-    s_isInit = FG_FALSE;
+    colors::s_isInit = FG_FALSE;
 }
 
 /**
@@ -377,8 +398,8 @@ void fgColors::freeColors() {
  * @param name
  * @return 
  */
-fgColor4f fgColors::getColorFromName(const char *name) {
-    return getColorFromName(std::string(name));
+fgColor4f colors::getColor(const char *name) {
+    return getColor(std::string(name));
 }
 
 /**
@@ -386,18 +407,18 @@ fgColor4f fgColors::getColorFromName(const char *name) {
  * @param name
  * @return 
  */
-fgColor4f fgColors::getColorFromName(const std::string& name) {
-    if(!s_isInit)
+fgColor4f colors::getColor(const std::string& name) {
+    if(!colors::s_isInit)
         return fgColor4f(1.0f, 1.0f, 1.0f, 1.0f);
     if(name.empty())
         return fgColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 
-    int n = FG_COLORS_NUM_MAX;
+    int n = NUM_COLORS;
 
-    std::string colorName = fgStrings::trim(name, std::string(" \t\n\r."));
+    std::string colorName = strings::trim(name, std::string(" \t\n\r."));
 
     for(int i = 0; i < n; i++) {
-        if(fgStrings::isEqual(g_colorNames[i].name, colorName, FG_FALSE)) {
+        if(strings::isEqual(g_colorNames[i].name, colorName, FG_FALSE)) {
             return g_colorNames[i].color;
         }
     }
@@ -409,7 +430,7 @@ fgColor4f fgColors::getColorFromName(const std::string& name) {
  * @param value
  * @return 
  */
-fgColor4f fgColors::parseHEX(const char *value) {
+fgColor4f colors::parseHEX(const char *value) {
     return parseHEX(std::string(value));
 }
 
@@ -418,9 +439,9 @@ fgColor4f fgColors::parseHEX(const char *value) {
  * @param value
  * @return 
  */
-fgColor4f fgColors::parseHEX(const std::string& value) {
-    std::string hexStr = fgStrings::trim(value, std::string(" \t\n\r;#x"));
-    if(fgStrings::startsWith(hexStr, std::string("0x"), FG_FALSE)) {
+fgColor4f colors::parseHEX(const std::string& value) {
+    std::string hexStr = strings::trim(value, std::string(" \t\n\r;#x"));
+    if(strings::startsWith(hexStr, std::string("0x"), FG_FALSE)) {
         hexStr = hexStr.substr(2);
     }
     unsigned char comp;
@@ -436,7 +457,7 @@ fgColor4f fgColors::parseHEX(const std::string& value) {
     if(*p != 0) {
         return fgColor4f(1.0f, 1.0f, 1.0f, 1.0f);
     } else {
-        return fgColors::parseHEX(hexNum, comp);
+        return colors::parseHEX(hexNum, comp);
     }
 }
 
@@ -446,7 +467,7 @@ fgColor4f fgColors::parseHEX(const std::string& value) {
  * @param comp
  * @return 
  */
-fgColor4f fgColors::parseHEX(unsigned long int value, const unsigned char comp) {
+fgColor4f colors::parseHEX(unsigned long int value, const unsigned char comp) {
     fgColor4f color;
     color.b = (float)(value & 0xFF) / 255.0f;
     value >>= 8;

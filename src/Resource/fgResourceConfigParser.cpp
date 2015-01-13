@@ -193,7 +193,7 @@ fgBool resource::CResourceConfig::parseData(void) {
                 // Get the parameter: quality vector
                 if((param = section->getParameter("qualityVec", util::SCfgParameter::STRING)) != NULL) {
                     _helperVec.clear_optimised();
-                    fgStrings::split(param->string, ',', _helperVec);
+                    strings::split(param->string, ',', _helperVec);
                     for(int i = 0; i < (int)_helperVec.size(); i++) {
                         qualityVec.push_back(FG_QUALITY_FROM_TEXT(_helperVec[i].c_str()));
                     }
@@ -204,7 +204,7 @@ fgBool resource::CResourceConfig::parseData(void) {
                 }
                 if((param = section->getParameter("pathVec", util::SCfgParameter::STRING)) != NULL) {
                     _helperVec.clear_optimised();
-                    fgStrings::split(param->string, ',', _helperVec);
+                    strings::split(param->string, ',', _helperVec);
                     for(int i = 0; i < (int)_helperVec.size(); i++) {
                         std::string _pathH;
                         path::join(_pathH, dirPath, _helperVec[i]);

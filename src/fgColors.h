@@ -14,77 +14,76 @@
  */
 
 #ifndef FG_INC_COLORS
-    #define	FG_INC_COLORS
+    #define FG_INC_COLORS
+    #define FG_INC_COLORS_BLOCK
 
     #ifndef FG_INC_GFX_COLOR
         #include "GFX/fgGFXColor.h"
     #endif
-    
-    #include "fgBool.h"
 
+    #include "fgBool.h"
     #include <string>
+
 /**
- * 
+ *
  */
-class fgColors {
-private:
+namespace fg {
     /**
      * 
      */
-    fgColors();
-    /**
-     * 
-     */
-    virtual ~fgColors();
-    
-public:
-    
-    /**
-     * 
-     */
-    static void initialize(void);
-    
-    /**
-     * 
-     */
-    static void freeColors(void);
-    
-    /**
-     * 
-     * @param name
-     * @return 
-     */
-    static fgColor4f getColorFromName(const char *name);
-    /**
-     * 
-     * @param name
-     * @return 
-     */
-    static fgColor4f getColorFromName(const std::string& name);
-    /**
-     * 
-     * @param value
-     * @return 
-     */
-    static fgColor4f parseHEX(const char *value);
-    /**
-     * 
-     * @param value
-     * @return 
-     */
-    static fgColor4f parseHEX(const std::string& value);
-    /**
-     * 
-     * @param value
-     * @param comp
-     * @return 
-     */
-    static fgColor4f parseHEX(unsigned long int value, const unsigned char comp = 4);
-    
-private:
-    /// Are color tables initialized?
-    static fgBool s_isInit;
+    namespace colors {
+
+        /**
+         * 
+         */
+        void initialize(void);
+
+        /**
+         * 
+         */
+        void freeColors(void);
+
+        /**
+         * 
+         * @return 
+         */
+        fgBool isInit(void);
+        
+        /**
+         * 
+         * @param name
+         * @return 
+         */
+        fgColor4f getColor(const char *name);
+        /**
+         * 
+         * @param name
+         * @return 
+         */
+        fgColor4f getColor(const std::string& name);
+        /**
+         * 
+         * @param value
+         * @return 
+         */
+        fgColor4f parseHEX(const char *value);
+        /**
+         * 
+         * @param value
+         * @return 
+         */
+        fgColor4f parseHEX(const std::string& value);
+        /**
+         * 
+         * @param value
+         * @param comp
+         * @return 
+         */
+        fgColor4f parseHEX(unsigned long int value, const unsigned char comp = 4);
+
+    };
 };
 
+    #undef FG_INC_COLORS_BLOCK
 #endif	/* FG_INC_COLORS */
 

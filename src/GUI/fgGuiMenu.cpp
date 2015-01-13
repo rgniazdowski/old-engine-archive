@@ -35,7 +35,7 @@ void gui::CMenu::setFlags(const std::string& flags) {
     CContainer::setFlags(flags);
     m_isMainMenu = FG_FALSE;
     fg::CStringVector flagsVec;
-    fgStrings::split(flags, ' ', flagsVec);
+    strings::split(flags, ' ', flagsVec);
     if(flagsVec.empty())
         return;
     unsigned int n = (unsigned int)flagsVec.size();

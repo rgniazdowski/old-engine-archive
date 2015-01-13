@@ -1760,28 +1760,28 @@ int script::CScriptSubsystem::addWidgetCallbackWrapper(lua_State *L) {
         } else if(args[id].IsString()) {
             // [2] callback type - as name (string)
             const char *ctype = args[id].GetString();
-            if(fgStrings::isEqual(ctype, "onFocus", FG_FALSE)) {
+            if(strings::isEqual(ctype, "onFocus", FG_FALSE)) {
                 callbackType = FG_GUI_WIDGET_CALLBACK_ON_FOCUS;
 
-            } else if(fgStrings::isEqual(ctype, "onFocusLost", FG_FALSE)) {
+            } else if(strings::isEqual(ctype, "onFocusLost", FG_FALSE)) {
                 callbackType = FG_GUI_WIDGET_CALLBACK_ON_FOCUS_LOST;
 
-            } else if(fgStrings::isEqual(ctype, "onClick", FG_FALSE)) {
+            } else if(strings::isEqual(ctype, "onClick", FG_FALSE)) {
                 callbackType = FG_GUI_WIDGET_CALLBACK_ON_CLICK;
 
-            } else if(fgStrings::isEqual(ctype, "onActivate", FG_FALSE)) {
+            } else if(strings::isEqual(ctype, "onActivate", FG_FALSE)) {
                 callbackType = FG_GUI_WIDGET_CALLBACK_ON_ACTIVATE;
 
-            } else if(fgStrings::isEqual(ctype, "onDeactivate", FG_FALSE)) {
+            } else if(strings::isEqual(ctype, "onDeactivate", FG_FALSE)) {
                 callbackType = FG_GUI_WIDGET_CALLBACK_ON_DEACTIVATE;
 
-            } else if(fgStrings::isEqual(ctype, "onKey", FG_FALSE)) {
+            } else if(strings::isEqual(ctype, "onKey", FG_FALSE)) {
                 callbackType = FG_GUI_WIDGET_CALLBACK_ON_KEY;
 
-            } else if(fgStrings::isEqual(ctype, "onMouse", FG_FALSE)) {
+            } else if(strings::isEqual(ctype, "onMouse", FG_FALSE)) {
                 callbackType = FG_GUI_WIDGET_CALLBACK_ON_MOUSE;
 
-            } else if(fgStrings::isEqual(ctype, "onChangeState", FG_FALSE)) {
+            } else if(strings::isEqual(ctype, "onChangeState", FG_FALSE)) {
                 callbackType = FG_GUI_WIDGET_CALLBACK_ON_CHANGE_STATE;
             }
             FG_LOG_DEBUG("Script: WidgetCallbackWrapper: 2nd argument: callbackType[%d][%s]", callbackType, ctype);

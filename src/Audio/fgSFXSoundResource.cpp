@@ -195,7 +195,7 @@ fgBool sfx::CSoundResource::create(void) {
     const char *path = getFilePathStr(m_quality);
 
 #if defined(FG_USING_SDL_MIXER)
-    if(!fgStrings::endsWith(path, ".wav", FG_FALSE)) {
+    if(!strings::endsWith(path, ".wav", FG_FALSE)) {
         FG_LOG_ERROR("SFX: Sound/chunk file extension is not valid (.WAV): '%s'", path);
         return FG_FALSE;
     }
@@ -279,11 +279,11 @@ fgBool sfx::CSoundResource::create(void) {
     // Well on Marmalade Sound no conversion is needed - sound is mono, 22050, 16bit
     // and the files (wav) are all in that format - this can change of course 
     // #MARMALADE #AUDIO_CONVERTER #STEREO
-    if(fgStrings::endsWith(path, ".wav", FG_FALSE)) {
+    if(strings::endsWith(path, ".wav", FG_FALSE)) {
         if(loadWavData()) {
             m_isReady = FG_TRUE;
         }
-    } else if(fgStrings::endsWith(path, ".raw", FG_FALSE)) {
+    } else if(strings::endsWith(path, ".raw", FG_FALSE)) {
         // This only support .raw files for now...
         if(loadRawData()) {
             m_isReady = FG_TRUE;

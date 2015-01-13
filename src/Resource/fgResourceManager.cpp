@@ -132,16 +132,16 @@ fgBool resource::CResourceManager::initialize(void) {
         return FG_FALSE;
     }
     if(!m_dataDir)
-        m_dataDir = new fgDirent();
+        m_dataDir = new util::CDirent();
     // Fix me - universal paths - use pwd or something
     // #FIXME - compatibility for different platforms
-    m_dataDir->readDirectory("./", FG_TRUE, FG_TRUE);
+    m_dataDir->readDir("./", FG_TRUE, FG_TRUE);
     m_dataDir->rewind();
     FG_LOG_DEBUG("Resource: Initializing resource manager\nCurrent maximum memory: %.2f", (float)m_nMaximumMemory / 1024.0 / 1024.0); // #TODELETE
     // First of all load any resource group configs,
     // file extension is *.rgrp and it's a xml file.
     std::string filepath;
-    fg::CStringVector resGroupFiles;
+    CStringVector resGroupFiles;
     // #FIXME - well this looks kinda bad, probably loading
     // resource groups files should look different - must be
     // more universal - platform independent, check for
@@ -316,7 +316,7 @@ fgBool resource::CResourceManager::insertResource(CResource* pResource) {
  * Insert resource group into manager
  */
 fgBool resource::CResourceManager::insertResourceGroup(const FG_RHANDLE& rhUniqueID,
-                                              CResource* pResource) {
+                                                       CResource* pResource) {
     if(!CDataManagerBase::isManaged(pResource)) {
         return FG_FALSE;
     }
@@ -544,7 +544,7 @@ resource::CResource* resource::CResourceManager::request(const std::string& info
     }
     // info cannot be a path, it has to be resource name or config name
     // required file will be found
-    if(fgStrings::containsChars(info, std::string("/\\"))) {
+    if(strings::containsChars(info, std::string("/\\"))) {
         FG_LOG_ERROR("Resource: Request cannot contain full path: '%s'", info.c_str());
         return NULL;
     }
@@ -580,7 +580,7 @@ resource::CResource* resource::CResourceManager::request(const std::string& info
                 // Comparing using endsWith - resource contains relative file paths
                 // not just file name - this request function takes in just file names
                 // resource names or patterns (wildcards for extensions)
-                if(fgStrings::endsWith(fit->second, pattern, FG_TRUE)) {
+                if(strings::endsWith(fit->second, pattern, FG_TRUE)) {
                     //if(fit->second.compare(pattern) == 0) {
                     // Found resource containing specified file
                     CResourceManager::refreshResource(res);
@@ -600,26 +600,26 @@ resource::CResource* resource::CResourceManager::request(const std::string& info
             fext = fg::path::fileExt(filePath.c_str(), FG_TRUE);
         }
 
-        if(fgStrings::endsWith(fext, "res.ini", FG_TRUE)) {
+        if(strings::endsWith(fext, "res.ini", FG_TRUE)) {
             isConfig = FG_TRUE;
-        } else if(fgStrings::endsWith(fext, "tga", FG_TRUE)) {
+        } else if(strings::endsWith(fext, "tga", FG_TRUE)) {
             resExtType = resource::TEXTURE;
-        } else if(fgStrings::endsWith(fext, "jpg", FG_TRUE)) {
+        } else if(strings::endsWith(fext, "jpg", FG_TRUE)) {
             resExtType = resource::TEXTURE;
-        } else if(fgStrings::endsWith(fext, "png", FG_TRUE)) {
+        } else if(strings::endsWith(fext, "png", FG_TRUE)) {
             resExtType = resource::TEXTURE;
-        } else if(fgStrings::endsWith(fext, "obj", FG_TRUE)) {
+        } else if(strings::endsWith(fext, "obj", FG_TRUE)) {
             resExtType = resource::MODEL3D;
-        } else if(fgStrings::endsWith(fext, "wav", FG_TRUE)) {
+        } else if(strings::endsWith(fext, "wav", FG_TRUE)) {
             resExtType = resource::SOUND;
-        } else if(fgStrings::endsWith(fext, "mp3", FG_TRUE)) {
+        } else if(strings::endsWith(fext, "mp3", FG_TRUE)) {
             resExtType = resource::MUSIC;
-        } else if(fgStrings::endsWith(fext, "mod", FG_TRUE)) {
+        } else if(strings::endsWith(fext, "mod", FG_TRUE)) {
             resExtType = resource::MUSIC;
-        } else if(fgStrings::endsWith(fext, "raw", FG_TRUE)) {
+        } else if(strings::endsWith(fext, "raw", FG_TRUE)) {
             // marmalade #FIXME
             resExtType = resource::SOUND;
-        } else if(fgStrings::endsWith(fext, "particle.ini", FG_TRUE)) {
+        } else if(strings::endsWith(fext, "particle.ini", FG_TRUE)) {
             resExtType = resource::PARTICLE_EFFECT;
         } else {
         }

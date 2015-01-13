@@ -60,18 +60,18 @@ void gui::CScrollArea::setFlags(const std::string& flags) {
     // This is important - always call setFlags for the base class
     base_type::setFlags(flags);
     fg::CStringVector flagsVec;
-    fgStrings::split(flags, ' ', flagsVec);
+    strings::split(flags, ' ', flagsVec);
     if(flagsVec.empty())
         return;
     unsigned int n = (unsigned int)flagsVec.size();
     for(unsigned int i = 0; i < n; i++) {
-        if(fgStrings::isEqual(flagsVec[i].c_str(), "slidervertical", FG_FALSE) ||
-           fgStrings::isEqual(flagsVec[i].c_str(), "vslider", FG_FALSE)) {
+        if(strings::isEqual(flagsVec[i].c_str(), "slidervertical", FG_FALSE) ||
+           strings::isEqual(flagsVec[i].c_str(), "vslider", FG_FALSE)) {
             m_sliderSwitch |= SLIDER_VERTICAL;
-        } else if(fgStrings::isEqual(flagsVec[i].c_str(), "sliderhorizontal", FG_FALSE) ||
-                  fgStrings::isEqual(flagsVec[i].c_str(), "hslider", FG_FALSE)) {
+        } else if(strings::isEqual(flagsVec[i].c_str(), "sliderhorizontal", FG_FALSE) ||
+                  strings::isEqual(flagsVec[i].c_str(), "hslider", FG_FALSE)) {
             m_sliderSwitch |= SLIDER_HORIZONTAL;
-        } else if(fgStrings::isEqual(flagsVec[i].c_str(), "sliderboth", FG_FALSE)) {
+        } else if(strings::isEqual(flagsVec[i].c_str(), "sliderboth", FG_FALSE)) {
             m_sliderSwitch |= SLIDER_BOTH;
         }
     }

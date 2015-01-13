@@ -37,10 +37,10 @@ fgBool util::CConfigParser::splitSectionName(std::string &fullSectionName,
                                              std::string &sectionName,
                                              std::string &subSectionName) {
     fgBool isSection = FG_TRUE;
-    fullSectionName = fgStrings::trim(fullSectionName, std::string("[]"));
+    fullSectionName = strings::trim(fullSectionName, std::string("[]"));
     fg::CVector<std::string> splitSection;
     splitSection.reserve(4);
-    fgStrings::split(fullSectionName, '.', splitSection);
+    strings::split(fullSectionName, '.', splitSection);
     if(splitSection.size() == 1) {
         sectionName = splitSection[0];
         subSectionName.clear();
@@ -118,13 +118,13 @@ fgBool util::CConfigParser::parseData(const char *data, config::SectionMap &sect
         std::string line = input.substr(cur, next - cur);
         if(line.empty())
             continue;
-        line = fgStrings::trim(line);
+        line = strings::trim(line);
         if(line[0] == ';' ||
            line[0] == '#' ||
            (line[0] == '/' && line[1] == '/')) // Ignore comments
             continue;
         if(line[0] == '[') {
-            fullSectionName = fgStrings::trim(line, std::string("[]"));
+            fullSectionName = strings::trim(line, std::string("[]"));
             isSection = util::CConfigParser::splitSectionName(fullSectionName, sectionName, subSectionName);
             if(newSection) {
                 newSection = NULL;
@@ -146,8 +146,8 @@ fgBool util::CConfigParser::parseData(const char *data, config::SectionMap &sect
             if(line.find_last_of('\"') < line.find_last_of(';'))
                 line = line.substr(0, line.find_last_of(';'));
             int eqpos = line.find_first_of('=');
-            std::string parameterName = fgStrings::trim(line.substr(0, eqpos));
-            std::string parameterValue = fgStrings::trim(line.substr(eqpos + 1));
+            std::string parameterName = strings::trim(line.substr(0, eqpos));
+            std::string parameterValue = strings::trim(line.substr(eqpos + 1));
             //printf("param value: %s = '%s'\n", parameterName.c_str(), parameterValue.c_str());
             if(parameterName.empty())
                 continue;
@@ -164,12 +164,12 @@ fgBool util::CConfigParser::parseData(const char *data, config::SectionMap &sect
             // Does the string contain quotes?
             if(quotepos != (int)std::string::npos) {
                 // it's a string value
-                parameterValue = fgStrings::trim(parameterValue, std::string("'\""));
+                parameterValue = strings::trim(parameterValue, std::string("'\""));
                 parameter->set(parameterValue.c_str());
             } else if(bool_value != FG_BOOL_INVALID) {
                 // it's a bool value
                 parameter->set(bool_value);
-            } else if(fgStrings::isFloat(parameterValue)) {
+            } else if(strings::isFloat(parameterValue)) {
                 // it's a float value
                 parameter->set((float)atof(parameterValue.c_str()));
             } else if(toupper((int)parameterValue[parameterValue.size() - 1]) == 'L') {

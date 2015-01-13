@@ -24,7 +24,7 @@
     #include "GFX/fgGFXTypes.h"
     #include "Util/fgStrings.h"
     #include "fgColors.h"
-    
+
 /**
  * 
  */
@@ -50,7 +50,6 @@ public:
             return fgColor4f(1.0f, 1.0f, 1.0f, 1.0f);
         return parseColor(std::string(value));
     }
-    
     /**
      * 
      * @param colorStr
@@ -61,30 +60,29 @@ public:
             return fgColor4f(1.0f, 1.0f, 1.0f, 1.0f);
         int r = 255, g = 255, b = 255, a = 255;
         fgColor4f retColor;
-        std::string colorStr = fgStrings::trim(value);
-        if(fgStrings::startsWith(colorStr.c_str(), "rgba", FG_TRUE)) {
+        std::string colorStr = fg::strings::trim(value);
+        if(fg::strings::startsWith(colorStr.c_str(), "rgba", FG_TRUE)) {
             sscanf(colorStr.c_str(), "rgba(%d,%d,%d,%d)", &r, &g, &b, &a);
             retColor.r = (float)r / 255.0f;
             retColor.g = (float)g / 255.0f;
             retColor.b = (float)b / 255.0f;
             retColor.a = (float)a / 255.0f;
-        } else if(fgStrings::startsWith(colorStr.c_str(), "rgb", FG_TRUE)) {
+        } else if(fg::strings::startsWith(colorStr.c_str(), "rgb", FG_TRUE)) {
             sscanf(colorStr.c_str(), "rgb(%d,%d,%d)", &r, &g, &b);
             retColor.r = (float)r / 255.0f;
             retColor.g = (float)g / 255.0f;
             retColor.b = (float)b / 255.0f;
             retColor.a = (float)a / 255.0f;
-        } else if(fgStrings::startsWith(colorStr.c_str(), "#", FG_TRUE) || fgStrings::startsWith(colorStr.c_str(), "0x", FG_FALSE)) {
+        } else if(fg::strings::startsWith(colorStr.c_str(), "#", FG_TRUE) || fg::strings::startsWith(colorStr.c_str(), "0x", FG_FALSE)) {
             // HEX!
-            retColor = fgColors::parseHEX(colorStr);
+            retColor = fg::colors::parseHEX(colorStr);
         } else {
             // readable human name !
-            retColor = fgColors::getColorFromName(colorStr);
+            retColor = fg::colors::getColor(colorStr);
         }
 
         return retColor;
     }
-    
     /**
      * 
      * @param retVector
@@ -97,9 +95,9 @@ public:
             return;
         }
         retVector = VectorType();
-        std::string vectorStr = fgStrings::trim(value, std::string(" \t\n\r()[]"));
+        std::string vectorStr = fg::strings::trim(value, std::string(" \t\n\r()[]"));
         fg::CStringVector parts;
-        fgStrings::split(vectorStr, ',', parts);
+        fg::strings::split(vectorStr, ',', parts);
         if(parts.empty()) {
             return;
         }
@@ -110,14 +108,13 @@ public:
         }
         // 0 1 2  3 4 5
         // 0 1    2 3
-        for(int i=0,j=0; i < n; i++, j++) {
+        for(int i = 0, j = 0; i < n; i++, j++) {
             // BBOX FIX #
             if(n == 4 && retVector.length() == 6 && i == 2)
                 j++;
             retVector[j] = (typename VectorType::value_type) atof(parts[i].c_str());
         }
     }
-    
     /**
      * 
      * @param retVector

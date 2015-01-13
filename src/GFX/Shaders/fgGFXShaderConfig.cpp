@@ -116,7 +116,7 @@ fgBool gfx::CShaderConfig::private_parseInclude(util::SCfgSection *includeSectio
     if(!param) return FG_FALSE;
     CVector<std::string> incVec;
     std::string tmp = param->string;
-    fgStrings::split(tmp, ',', incVec);
+    strings::split(tmp, ',', incVec);
     for(int i = 0; i < (int)incVec.size(); i++) {
         m_includes.push_back(incVec[i]);
         n++;
@@ -277,7 +277,7 @@ fgBool gfx::CShaderConfig::private_parseData(fgGfxSLVersion SLver) {
         fgBool foundQuality = FG_FALSE, foundFile = FG_FALSE;
         if((param = cfgSpecSection->getParameter("quality", util::SCfgParameter::STRING)) != NULL) {
             std::string _q_vec = param->string;
-            fgStrings::split(_q_vec, ',', _helperVec);
+            strings::split(_q_vec, ',', _helperVec);
             m_qualities.clear_optimised();
             for(int i = 0; i < (int)_helperVec.size(); i++) {
                 m_qualities.push_back(FG_QUALITY_FROM_TEXT(_helperVec[i].c_str()));
@@ -290,7 +290,7 @@ fgBool gfx::CShaderConfig::private_parseData(fgGfxSLVersion SLver) {
         }
         if((param = cfgSpecSection->getParameter("file", util::SCfgParameter::STRING)) != NULL) {
             std::string _f_vec = param->string;
-            fgStrings::split(_f_vec, ',', _helperVec);
+            strings::split(_f_vec, ',', _helperVec);
             m_files.clear_optimised();
             for(int i = 0; i < (int)_helperVec.size(); i++) {
                 m_files.push_back(_helperVec[i]);

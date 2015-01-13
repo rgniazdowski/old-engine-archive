@@ -308,7 +308,7 @@ void gfx::CTextureResource::setFlags(const std::string& flags) {
     // This is important - always call setFlags for the base class
     CResource::setFlags(flags);
     fg::CStringVector flagsVec;
-    fgStrings::split(flags, ' ', flagsVec);
+    strings::split(flags, ' ', flagsVec);
     if(flagsVec.empty())
         return;
     //    FG_TEXTURE_BUMP = 2,
@@ -319,15 +319,15 @@ void gfx::CTextureResource::setFlags(const std::string& flags) {
     //    FG_TEXTURE_3D = 7,
     unsigned int n = (unsigned int)flagsVec.size();
     for(unsigned int i = 0; i < n; i++) {
-        if(fgStrings::isEqual(flagsVec[i].c_str(), "cube", FG_FALSE)) {
+        if(strings::isEqual(flagsVec[i].c_str(), "cube", FG_FALSE)) {
             m_textureType = FG_TEXTURE_CUBE;
-        } else if(fgStrings::isEqual(flagsVec[i].c_str(), "2D", FG_FALSE)) {
+        } else if(strings::isEqual(flagsVec[i].c_str(), "2D", FG_FALSE)) {
             m_textureType = FG_TEXTURE_PLAIN;
-        } else if(fgStrings::isEqual(flagsVec[i].c_str(), "3D", FG_FALSE)) {
+        } else if(strings::isEqual(flagsVec[i].c_str(), "3D", FG_FALSE)) {
             m_textureType = FG_TEXTURE_3D;
-        } else if(fgStrings::isEqual(flagsVec[i].c_str(), "bump", FG_FALSE)) {
+        } else if(strings::isEqual(flagsVec[i].c_str(), "bump", FG_FALSE)) {
             m_textureType = FG_TEXTURE_BUMP;
-        } else if(fgStrings::isEqual(flagsVec[i].c_str(), "normal", FG_FALSE)) {
+        } else if(strings::isEqual(flagsVec[i].c_str(), "normal", FG_FALSE)) {
             m_textureType = FG_TEXTURE_NORMAL;
         }
     }

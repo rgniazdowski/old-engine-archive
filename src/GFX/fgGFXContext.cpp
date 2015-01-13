@@ -1128,11 +1128,11 @@ m_init(FG_FALSE) {
     FG_LOG_DEBUG("GFX: Extensions:    %s", (const char*)glExtensions.c_str());
     //glGetStringi(GL_EXTENSIONS, 0);
     CStringVector vparts;
-    fgStrings::split(glVersion, ' ', vparts);
+    strings::split(glVersion, ' ', vparts);
     for(int i = 0; i < (int)vparts.size(); i++) {
-        fgStrings::trim(vparts[i]);
-        if(fgStrings::startsWith(vparts[i].c_str(), "3.0", FG_FALSE)) {
-        } else if(fgStrings::startsWith(vparts[i].c_str(), "3.1", FG_FALSE)) {
+        strings::trim(vparts[i]);
+        if(strings::startsWith(vparts[i].c_str(), "3.0", FG_FALSE)) {
+        } else if(strings::startsWith(vparts[i].c_str(), "3.1", FG_FALSE)) {
         }
     }
     //GLSL Version      OpenGL Version
@@ -1151,61 +1151,61 @@ m_init(FG_FALSE) {
 
     vparts.clear();
     m_SLVersion = FG_GFX_SHADING_LANGUAGE_INVALID;
-    fgStrings::split(glSLVersion, ' ', vparts);
+    strings::split(glSLVersion, ' ', vparts);
     const char *selectedVersionNum = NULL;
     const char *selectedSLType = "GLSL";
     for(int i = 0; i < (int)vparts.size(); i++) {
-        fgStrings::trim(vparts[i]);
-        if(fgStrings::startsWith(vparts[i].c_str(), "1.0", FG_FALSE)) {
+        strings::trim(vparts[i]);
+        if(strings::startsWith(vparts[i].c_str(), "1.0", FG_FALSE)) {
             if(g_fgBuildConfig.usingMarmaladeOpenGLES || g_fgBuildConfig.usingMarmalade) {
                 m_SLVersion = FG_GFX_ESSL_100;
                 selectedSLType = "ESSL";
                 selectedVersionNum = "1.0";
             }
-        } else if(fgStrings::startsWith(vparts[i].c_str(), "1.1", FG_FALSE)) {
+        } else if(strings::startsWith(vparts[i].c_str(), "1.1", FG_FALSE)) {
             m_SLVersion = FG_GFX_GLSL_110;
             if(g_fgBuildConfig.usingMarmaladeOpenGLES || g_fgBuildConfig.usingMarmalade) {
                 m_SLVersion = FG_GFX_ESSL_100;
                 selectedSLType = "ESSL";
                 selectedVersionNum = "1.0";
             }
-        } else if(fgStrings::startsWith(vparts[i].c_str(), "1.2", FG_FALSE)) {
+        } else if(strings::startsWith(vparts[i].c_str(), "1.2", FG_FALSE)) {
             m_SLVersion = FG_GFX_GLSL_120;
             selectedVersionNum = "1.2";
-        } else if(fgStrings::startsWith(vparts[i].c_str(), "1.3", FG_FALSE)) {
+        } else if(strings::startsWith(vparts[i].c_str(), "1.3", FG_FALSE)) {
             m_SLVersion = FG_GFX_GLSL_130;
             selectedVersionNum = "1.3";
-        } else if(fgStrings::startsWith(vparts[i].c_str(), "1.4", FG_FALSE)) {
+        } else if(strings::startsWith(vparts[i].c_str(), "1.4", FG_FALSE)) {
             m_SLVersion = FG_GFX_GLSL_140;
             selectedVersionNum = "1.4";
-        } else if(fgStrings::startsWith(vparts[i].c_str(), "1.5", FG_FALSE)) {
+        } else if(strings::startsWith(vparts[i].c_str(), "1.5", FG_FALSE)) {
             m_SLVersion = FG_GFX_GLSL_150;
             selectedVersionNum = "1.5";
-        } else if(fgStrings::startsWith(vparts[i].c_str(), "3.0", FG_FALSE)) {
+        } else if(strings::startsWith(vparts[i].c_str(), "3.0", FG_FALSE)) {
             if(g_fgBuildConfig.usingMarmaladeOpenGLES || g_fgBuildConfig.usingMarmalade) {
                 m_SLVersion = FG_GFX_ESSL_300;
                 selectedSLType = "ESSL";
                 selectedVersionNum = "3.0";
             }
-        } else if(fgStrings::startsWith(vparts[i].c_str(), "3.3", FG_FALSE)) {
+        } else if(strings::startsWith(vparts[i].c_str(), "3.3", FG_FALSE)) {
             m_SLVersion = FG_GFX_GLSL_330;
             selectedVersionNum = "3.3";
-        } else if(fgStrings::startsWith(vparts[i].c_str(), "4.0", FG_FALSE)) {
+        } else if(strings::startsWith(vparts[i].c_str(), "4.0", FG_FALSE)) {
             m_SLVersion = FG_GFX_GLSL_400;
             selectedVersionNum = "4.0";
-        } else if(fgStrings::startsWith(vparts[i].c_str(), "4.1", FG_FALSE)) {
+        } else if(strings::startsWith(vparts[i].c_str(), "4.1", FG_FALSE)) {
             m_SLVersion = FG_GFX_GLSL_410;
             selectedVersionNum = "4.1";
-        } else if(fgStrings::startsWith(vparts[i].c_str(), "4.2", FG_FALSE)) {
+        } else if(strings::startsWith(vparts[i].c_str(), "4.2", FG_FALSE)) {
             m_SLVersion = FG_GFX_GLSL_420;
             selectedVersionNum = "4.2";
-        } else if(fgStrings::startsWith(vparts[i].c_str(), "4.3", FG_FALSE)) {
+        } else if(strings::startsWith(vparts[i].c_str(), "4.3", FG_FALSE)) {
             m_SLVersion = FG_GFX_GLSL_430;
             selectedVersionNum = "4.3"; // #FIXME
-        } else if(fgStrings::startsWith(vparts[i].c_str(), "4.4", FG_FALSE)) {
+        } else if(strings::startsWith(vparts[i].c_str(), "4.4", FG_FALSE)) {
             m_SLVersion = FG_GFX_GLSL_440;
             selectedVersionNum = "4.4";
-        } else if(fgStrings::startsWith(vparts[i].c_str(), "4.5", FG_FALSE)) {
+        } else if(strings::startsWith(vparts[i].c_str(), "4.5", FG_FALSE)) {
             m_SLVersion = FG_GFX_GLSL_450;
             selectedVersionNum = "4.5";
         }

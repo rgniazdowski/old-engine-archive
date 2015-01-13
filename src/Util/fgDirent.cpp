@@ -7,18 +7,20 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-#include "fgTypes.h"
-#include "fgCommon.h"
-#include "fgLog.h"
 #include "fgDirent.h"
-#include "fgPath.h"
-#include "fgStrings.h"
+#include "fgCommon.h" // #FIXME
+#include "fgTypes.h"
 #include "fgZipFile.h"
+#include "fgStrings.h"
+#include "fgPath.h"
+#include "fgLog.h"
 
-/*
+using namespace fg;
+
+/**
  *
  */
-fgDirent::fgDirent() :
+util::CDirent::CDirent() :
 m_dirPath(),
 m_fileNames(),
 m_fileIt(),
@@ -32,30 +34,30 @@ m_isRecursive(FG_FALSE) {
     m_fileIt = m_fileNames.end();
 }
 
-/*
- * Default constructor with the specified directory path
+/**
+ * Constructor with the specified directory path
  * Please note that this constructor will also call the
  * read directory function.
  */
-fgDirent::fgDirent(const char *dirPath) {
+util::CDirent::CDirent(const char *dirPath) {
     m_isRecursive = FG_FALSE;
-    readDirectory(dirPath, FG_FALSE);
+    readDir(dirPath, FG_FALSE);
 }
 
-/*
- * Default constructor with the specified directory path
+/**
+ * Constructor with the specified directory path
  * Please note that this constructor will also call the
  * read directory function.
  */
-fgDirent::fgDirent(const std::string &dirPath) {
+util::CDirent::CDirent(const std::string &dirPath) {
     m_isRecursive = FG_FALSE;
-    readDirectory(dirPath, FG_FALSE);
+    readDir(dirPath, FG_FALSE);
 }
 
-/*
+/**
  *
  */
-fgDirent::~fgDirent() {
+util::CDirent::~CDirent() {
 #ifdef FG_USING_MARMALADE
     // ?
 #else
@@ -72,14 +74,14 @@ fgDirent::~fgDirent() {
  * @param recursive
  * @return 
  */
-fgBool fgDirent::internal_readZipFile(const std::string& fileName,
-                                      const std::string& filePath,
-                                      fgBool recursive) {
+fgBool util::CDirent::internal_readZipFile(const std::string& fileName,
+                                           const std::string& filePath,
+                                           fgBool recursive) {
     // If the current file is a zip file and the listing trigger is
     // active - append full zip listing into file names/paths vector
-    fg::util::CZipFile zip(filePath);
+    util::CZipFile zip(filePath);
     zip.open();
-    fg::CStringVector &zipFileList = zip.getFileList();
+    CStringVector &zipFileList = zip.getFileList();
     int nZipFiles = zipFileList.size();
     for(int i = 0; i < nZipFiles; i++) {
         // Need to check here if the path inside of the zip does not
@@ -87,14 +89,14 @@ fgBool fgDirent::internal_readZipFile(const std::string& fileName,
         std::string filePathInZip;
         // Join the paths
         if(recursive) {
-            fg::path::join(filePathInZip, filePath, zipFileList[i]);
+            path::join(filePathInZip, filePath, zipFileList[i]);
         } else {
-            fg::path::join(filePathInZip, fileName, zipFileList[i]);
+            path::join(filePathInZip, fileName, zipFileList[i]);
         }
         std::string dirInZipName;
         // If the path has an ending delimeter the dirName function
         // will return the same string - no changes
-        fg::path::dirName(filePathInZip, dirInZipName);
+        path::dirName(filePathInZip, dirInZipName);
         int fn = filePathInZip.size();
         int dn = dirInZipName.size();
         char dc = dirInZipName[dn - 1];
@@ -114,7 +116,7 @@ fgBool fgDirent::internal_readZipFile(const std::string& fileName,
  * @param listZipFiles
  * @return 
  */
-fgBool fgDirent::readDirectory(fgBool recursive, fgBool listZipFiles) {
+fgBool util::CDirent::readDir(fgBool recursive, fgBool listZipFiles) {
 #ifdef FG_USING_MARMALADE
     m_fileList = NULL;
 #else
@@ -123,19 +125,19 @@ fgBool fgDirent::readDirectory(fgBool recursive, fgBool listZipFiles) {
 #endif /* FG_USING_MARMALADE */
 
     m_fileNames.clear_optimised();
-    fg::CStringVector dirStack;
+    CStringVector dirStack;
     std::string fileName;
     std::string dirPath;
-    fg::CStringVector dirVec;
-    fgStrings::split(m_dirPath, ';', dirVec);
+    CStringVector dirVec;
+    strings::split(m_dirPath, ';', dirVec);
     int ndirs = dirVec.size();
 
     for(int idir = 0; idir < ndirs; idir++) {
         dirPath = dirVec[idir];
 
-        const char *fileExt = fgStrings::stristr(dirPath, ".zip");
+        const char *fileExt = strings::stristr(dirPath, ".zip");
         if(!fileExt)
-            fileExt = fgStrings::stristr(dirPath, ".pk3");
+            fileExt = strings::stristr(dirPath, ".pk3");
         if(fileExt) {
             // dir path points to a zip file
             internal_readZipFile(dirPath, dirPath, FG_FALSE);
@@ -147,7 +149,7 @@ fgBool fgDirent::readDirectory(fgBool recursive, fgBool listZipFiles) {
             std::string filePath;
             std::string curDir = dirStack.back();
             dirStack.pop_back();
-            FG_LOG_DEBUG("fg::util::dirent: Opening directory for reading: '%s'", curDir.c_str());
+            FG_LOG_DEBUG("util::dirent: Opening directory for reading: '%s'", curDir.c_str());
 #if defined(FG_USING_MARMALADE)
             char fileNameStr[FG_FILE_NAME_MAX];
             m_fileList = s3eFileListDirectory(curDir.c_str());
@@ -160,7 +162,7 @@ fgBool fgDirent::readDirectory(fgBool recursive, fgBool listZipFiles) {
             struct stat fileInfo;
             m_curDir = opendir(curDir.c_str());
             if(!m_curDir) {
-                FG_LOG_DEBUG("fg::util::dirent: Unable to open directory: '%s'", curDir.c_str());
+                FG_LOG_DEBUG("util::dirent: Unable to open directory: '%s'", curDir.c_str());
                 continue;
             }
 
@@ -175,7 +177,7 @@ fgBool fgDirent::readDirectory(fgBool recursive, fgBool listZipFiles) {
                     continue;
 
                 // Create the full path to the file - join paths
-                fg::path::join(filePath, curDir, fileName);
+                path::join(filePath, curDir, fileName);
                 fgBool isDir = FG_FALSE;
                 fgBool isZip = FG_FALSE;
 #if defined(FG_USING_MARMALADE)
@@ -190,9 +192,9 @@ fgBool fgDirent::readDirectory(fgBool recursive, fgBool listZipFiles) {
                 // Check whether the file points to the zip file
                 // Paths within the zip file listing are always recursive - 
                 // the appended list will always contain all files within a zip file
-                const char *fileExt = fgStrings::stristr(filePath, ".zip");
+                const char *fileExt = strings::stristr(filePath, ".zip");
                 if(!fileExt)
-                    fileExt = fgStrings::stristr(filePath, ".pk3");
+                    fileExt = strings::stristr(filePath, ".pk3");
                 if(fileExt)
                     isZip = FG_TRUE; // path points to a zip file
 
@@ -240,9 +242,9 @@ fgBool fgDirent::readDirectory(fgBool recursive, fgBool listZipFiles) {
  * @param listZipFiles
  * @return 
  */
-fgBool fgDirent::readDirectory(const char *dirPath,
-                               fgBool recursive,
-                               fgBool listZipFiles) {
+fgBool util::CDirent::readDir(const char *dirPath,
+                              fgBool recursive,
+                              fgBool listZipFiles) {
     if(dirPath)
         m_dirPath = dirPath;
     if((dirPath && strlen(dirPath) == 0) || !dirPath) {
@@ -252,7 +254,7 @@ fgBool fgDirent::readDirectory(const char *dirPath,
         m_dirPath = "./";
 #endif
     }
-    return readDirectory(recursive, listZipFiles);
+    return readDir(recursive, listZipFiles);
 }
 
 /**
@@ -263,9 +265,9 @@ fgBool fgDirent::readDirectory(const char *dirPath,
  * @param listZipFiles
  * @return 
  */
-fgBool fgDirent::readDirectory(const std::string &dirPath,
-                               fgBool recursive,
-                               fgBool listZipFiles) {
+fgBool util::CDirent::readDir(const std::string &dirPath,
+                              fgBool recursive,
+                              fgBool listZipFiles) {
     if(!dirPath.empty()) {
         m_dirPath = dirPath;
     } else {
@@ -275,14 +277,14 @@ fgBool fgDirent::readDirectory(const std::string &dirPath,
         m_dirPath = "./";
 #endif
     }
-    return readDirectory(recursive, listZipFiles);
+    return readDir(recursive, listZipFiles);
 }
 
 /**
  * Return the next file name
  * @return 
  */
-const char *fgDirent::getNextFile(void) {
+const char *util::CDirent::getNextFile(void) {
     if(m_fileIt == m_fileNames.end()) {
         m_fileIt = m_fileNames.begin();
         if(m_fileIt != m_fileNames.end())
@@ -301,14 +303,14 @@ const char *fgDirent::getNextFile(void) {
  * @param path
  * @return 
  */
-std::string &fgDirent::getNextFilePath(std::string &path) {
-    const char *filename = fgDirent::getNextFile();
+std::string &util::CDirent::getNextFilePath(std::string &path) {
+    const char *filename = util::CDirent::getNextFile();
     path.clear();
     if(filename && !m_isRecursive) {
         // #FIXME - this will cause error if fgDirent was not recursive and
         // did not store file paths by default - if fgDirent was called with
         // many directories to list -> FUBAR :(
-        fg::path::join(path, m_dirPath, std::string(filename));
+        path::join(path, m_dirPath, std::string(filename));
     } else if(filename && m_isRecursive) {
         // with the recursive mode, this array always stores paths (relative)
         path = filename;
@@ -324,10 +326,10 @@ std::string &fgDirent::getNextFilePath(std::string &path) {
  * @param deep
  * @return 
  */
-std::string &fgDirent::searchForFile(std::string &output,
-                                     const std::string &basePath,
-                                     const std::string &patterns,
-                                     const fgBool deep) {
+std::string &util::CDirent::searchForFile(std::string &output,
+                                          const std::string &basePath,
+                                          const std::string &patterns,
+                                          const fgBool deep) {
     std::string searchPath;
     if(!basePath.empty()) {
         searchPath = basePath;
@@ -350,29 +352,29 @@ std::string &fgDirent::searchForFile(std::string &output,
     fgBool stop = FG_FALSE;
     std::string foundPath;
     const char *subPath;
-    fg::CStringVector patternVec;
-    fgStrings::split(patterns, ';', patternVec);
+    CStringVector patternVec;
+    strings::split(patterns, ';', patternVec);
     do {
         if(getNextFilePath(foundPath).empty())
             stop = FG_TRUE;
-        if(!stop && fgStrings::startsWith(foundPath, searchPath)) {
+        if(!stop && strings::startsWith(foundPath, searchPath)) {
             subPath = foundPath.c_str() + searchPath.length();
             // If the found subpath contains delimeters - skip if deep trigger is not active
-            if(!deep && fgStrings::containsChars(subPath, "/\\"))
+            if(!deep && strings::containsChars(subPath, "/\\"))
                 continue;
             if(patternVec.empty())
                 output = foundPath;
             for(int i = 0; i < (int)patternVec.size(); i++) {
                 std::string &pattern = patternVec[i];
                 if(pattern.length()) {
-                    const char *filename = fg::path::fileName(subPath);
+                    const char *filename = path::fileName(subPath);
                     if(pattern[0] == '*') {
-                        if(fgStrings::endsWith(filename, (pattern.c_str() + 1), FG_FALSE)) {
+                        if(strings::endsWith(filename, (pattern.c_str() + 1), FG_FALSE)) {
                             output = foundPath;
                         }
                     } else if(pattern[pattern.length() - 1] == '*') {
                         std::string _tmp = pattern.substr(0, pattern.length() - 1);
-                        if(fgStrings::startsWith(filename, _tmp.c_str(), FG_FALSE)) {
+                        if(strings::startsWith(filename, _tmp.c_str(), FG_FALSE)) {
                             output = foundPath;
                         }
                     } else {
@@ -392,7 +394,7 @@ std::string &fgDirent::searchForFile(std::string &output,
 /*
  * This function rewinds to the beginning the file pointer (in the list)
  */
-fgBool fgDirent::rewind(void) {
+fgBool util::CDirent::rewind(void) {
     m_fileIt = m_fileNames.end();
     if(!m_fileNames.size())
         return FG_FALSE;
@@ -402,7 +404,7 @@ fgBool fgDirent::rewind(void) {
 /*
  *
  */
-void fgDirent::clearList(void) {
+void util::CDirent::clearList(void) {
     m_isRecursive = FG_FALSE;
 #ifdef FG_USING_MARMALADE
     m_fileList = NULL;
@@ -415,6 +417,6 @@ void fgDirent::clearList(void) {
  * 
  * @return 
  */
-fg::CStringVector &fgDirent::getRefFiles(void) {
+CStringVector &util::CDirent::getRefFiles(void) {
     return m_fileNames;
 }

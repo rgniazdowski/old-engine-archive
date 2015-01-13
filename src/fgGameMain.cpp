@@ -87,7 +87,7 @@ m_gameFreeLookCallback(NULL) {
     // #FIXME error codes registry place
     fgErrorCodes::registerAll();
     // Initialize colors here?
-    fgColors::initialize();
+    colors::initialize();
     // #FIXME - getcwd / get exec path / paths management / etc
     FG_MessageSubsystem->initialize(); // ? #FIXME message subsystem
     FG_MessageSubsystem->setLogPaths("all.log", "error.log", "debug.log");
@@ -184,7 +184,7 @@ CGameMain::~CGameMain() {
     delete m_scriptSubsystem;
     m_scriptSubsystem = NULL;
     // Free registered human readable colors - these are from HTML table
-    fgColors::freeColors();
+    colors::freeColors();
     // Unregister all error codes #FIXME
     fgErrorCodes::unregisterAll();
     // Delete the global instance of Message Subsystem singleton

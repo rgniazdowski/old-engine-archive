@@ -9,415 +9,192 @@
 
 #ifndef FG_INC_STRINGS
     #define FG_INC_STRINGS
+    #define FG_INC_STRINGS_BLOCK
 
     #include "fgVector.h"
+    #include "fgBool.h"
+
     #include <string>
     #include <cstring>
     #include <sstream>
 
-/**
- *
- */
-class fgStrings {
-protected:
-    /**
-     * 
-     */
-    fgStrings() { }
-    /**
-     * 
-     */
-    ~fgStrings() { }
+namespace fg {
 
-public:
     /**
-     * 
-     * @param str
-     * @param whitespace
-     * @return 
+     *
      */
-    static std::string trim(const std::string& str,
-                            const std::string& whitespace = " \t") {
-        const unsigned int strBegin = str.find_first_not_of(whitespace);
-        if(strBegin == std::string::npos || strBegin > str.length())
-            return ""; // no content
-
-        const unsigned int strEnd = str.find_last_not_of(whitespace);
-        const unsigned int strRange = strEnd - strBegin + 1;
-
-        return str.substr(strBegin, strRange);
-    }
-    /**
-     * 
-     * @param str
-     * @param whitespace
-     * @return 
-     */
-    static std::string trim(const std::string& str,
-                            const char *whitespace) {
-        std::string whitespaceStr;
-        if(!whitespace)
-            whitespaceStr = " \t";
-        return fgStrings::trim(str, whitespaceStr);
-    }
-    /**
-     * 
-     * @param str
-     * @param whitespace
-     * @return 
-     */
-    static std::string trim(const char *str,
-                            const char *whitespace) {
-        if(!str)
-            return std::string();
-        std::string whitespaceStr;
-        if(!whitespace)
-            whitespaceStr = " \t";
-        return fgStrings::trim(std::string(str), whitespaceStr);
-    }
-    /**
-     * 
-     * @param str
-     * @param fill
-     * @param whitespace
-     * @return 
-     */
-    static std::string reduce(const std::string& str,
-                              const std::string& fill = " ",
-                              const std::string& whitespace = " \t") {
-        // trim first
-        std::string result = fgStrings::trim(str, whitespace);
-
-        // replace sub ranges
-        unsigned int beginSpace = result.find_first_of(whitespace);
-        while(beginSpace != std::string::npos) {
-            const unsigned int endSpace = result.find_first_not_of(whitespace, beginSpace);
-            const unsigned int range = endSpace - beginSpace;
-
-            result.replace(beginSpace, range, fill);
-
-            const unsigned int newStart = beginSpace + fill.length();
-            beginSpace = result.find_first_of(whitespace, newStart);
-        }
-
-        return result;
-    }
-    /**
-     * 
-     * @param s
-     * @param delim
-     * @param elems
-     * @return 
-     */
-    static fg::CVector<std::string> &split(const std::string &s,
-                                           char delim,
-                                           fg::CVector<std::string> &elems) {
-        std::stringstream ss(s);
-        std::string item;
-        while(std::getline(ss, item, delim)) {
-            if(!item.empty())
-                elems.push_back(item);
-        }
-        return elems;
-    }
-    /**
-     * 
-     * @param s
-     * @param delim
-     * @return 
-     */
-    static fg::CVector<std::string> split(const std::string &s,
-                                          char delim) {
-        fg::CVector<std::string> elems;
-        fgStrings::split(s, delim, elems);
-        return elems;
-    }
-    /**
-     * 
-     * @param string
-     * @return 
-     */
-    static fgBool isFloat(const std::string& string) {
-        std::string::const_iterator it = string.begin();
-        fgBool decimalPoint = FG_FALSE;
-        int minSize = 0;
-        if(string.size() > 0 && (string[0] == '-' || string[0] == '+')) {
-            it++;
-            minSize++;
-        }
-        //
-        // If you don't want to recognize floating point numbers in 
-        // the format X.XXf, just remove the condition:
-        // && ((*it!='f') || it+1 != string.end() || !decimalPoint)
-        //
-        // If you don't want to recognize numbers without '.' as 
-        // float (i.e. not '1', only '1.', '1.0', '1.0f'...) 
-        // then change the last line to:
-        // return string.size()>minSize && it == string.end() && decimalPoint;
-        //
-        while(it != string.end()) {
-            if(*it == '.') {
-                if(!decimalPoint) decimalPoint = FG_TRUE;
-                else break;
-            } else if(!std::isdigit(*it) && (it + 1 != string.end() || !decimalPoint)) {
-                break;
-            }
-            ++it;
-        }
-        return (fgBool)(((int)string.size() > minSize) && it == string.end() && decimalPoint);
-    }
-    /**
-     * 
-     * @param string
-     * @return 
-     */
-    static fgBool isNumber(const std::string& string) {
-        std::string::const_iterator it = string.begin();
-        fgBool decimalPoint = FG_FALSE;
-        int minSize = 0;
-        if(string.size() > 0 && (string[0] == '-' || string[0] == '+')) {
-            it++;
-            minSize++;
-        }
-        while(it != string.end()) {
-            if(*it == '.') {
-                if(!decimalPoint) decimalPoint = FG_TRUE;
-                else break;
-            } else if(!std::isdigit(*it)) {
-                break;
-            }
-            ++it;
-        }
-        return (fgBool)(((int)string.size() > minSize) && it == string.end());
-    }
-    /**
-     * 
-     * @param input
-     * @param pattern
-     * @param caseSensitive
-     * @return 
-     */
-    static fgBool isEqual(const std::string& input,
+    namespace strings {
+        /**
+         * 
+         * @param str
+         * @param whitespace
+         * @return 
+         */
+        std::string trim(const std::string& str,
+                         const std::string& whitespace = " \t");
+        /**
+         * 
+         * @param str
+         * @param whitespace
+         * @return 
+         */
+        std::string trim(const std::string& str,
+                         const char *whitespace);
+        /**
+         * 
+         * @param str
+         * @param whitespace
+         * @return 
+         */
+        std::string trim(const char *str,
+                         const char *whitespace);
+        /**
+         * 
+         * @param str
+         * @param fill
+         * @param whitespace
+         * @return 
+         */
+        std::string reduce(const std::string& str,
+                           const std::string& fill = " ",
+                           const std::string& whitespace = " \t");
+        /**
+         * 
+         * @param s
+         * @param delim
+         * @param elems
+         * @return 
+         */
+        CVector<std::string>& split(const std::string &s,
+                                    char delim,
+                                    CVector<std::string> &elems);
+        /**
+         * 
+         * @param s
+         * @param delim
+         * @return 
+         */
+        CVector<std::string> split(const std::string &s,
+                                   char delim);
+        /**
+         * 
+         * @param string
+         * @return 
+         */
+        fgBool isFloat(const std::string& string);
+        /**
+         * 
+         * @param string
+         * @return 
+         */
+        fgBool isNumber(const std::string& string);
+        /**
+         * 
+         * @param input
+         * @param pattern
+         * @param caseSensitive
+         * @return 
+         */
+        fgBool isEqual(const std::string& input,
+                       const std::string& pattern,
+                       const fgBool caseSensitive = FG_TRUE);
+        /**
+         * 
+         * @param input
+         * @param pattern
+         * @param caseSensitive
+         * @return 
+         */
+        fgBool isEqual(const char *input,
+                       const char *pattern,
+                       const fgBool caseSensitive = FG_TRUE);
+        /**
+         * 
+         * @param input
+         * @param pattern
+         * @param caseSensitive
+         * @return 
+         */
+        fgBool startsWith(const std::string& input,
                           const std::string& pattern,
-                          const fgBool caseSensitive = FG_TRUE) {
-        if(pattern.length() != input.length())
-            return FG_FALSE;
-        return fgStrings::startsWith(input, pattern, caseSensitive);
-    }
-    /**
-     * 
-     * @param input
-     * @param pattern
-     * @param caseSensitive
-     * @return 
-     */
-    static fgBool isEqual(const char *input,
+                          const fgBool caseSensitive = FG_TRUE);
+        /**
+         * 
+         * @param input
+         * @param pattern
+         * @param caseSensitive
+         * @return 
+         */
+        fgBool startsWith(const char *input,
                           const char *pattern,
-                          const fgBool caseSensitive = FG_TRUE) {
-        if(strlen(pattern) != strlen(input))
-            return FG_FALSE;
-        return fgStrings::startsWith(input, pattern, caseSensitive);
-    }
-    /**
-     * 
-     * @param input
-     * @param pattern
-     * @param caseSensitive
-     * @return 
-     */
-    static fgBool startsWith(const std::string& input,
-                             const std::string& pattern,
-                             const fgBool caseSensitive = FG_TRUE) {
-        if(input.length() < pattern.length() || pattern.empty() || input.empty())
-            return FG_FALSE;
-        int plen = pattern.length();
-        for(int i = 0; i < plen; i++) {
-            if((caseSensitive && input[i] != pattern[i]) ||
-                    (!caseSensitive && tolower(input[i]) != tolower(pattern[i]))) {
-                return FG_FALSE;
-            }
-        }
-        return FG_TRUE;
-    }
-    /**
-     * 
-     * @param input
-     * @param pattern
-     * @param caseSensitive
-     * @return 
-     */
-    static fgBool startsWith(const char *input,
-                             const char *pattern,
-                             fgBool caseSensitive = FG_TRUE) {
-        if(!input || !pattern)
-            return FG_FALSE;
-        int plen = strlen(pattern);
-        int ilen = strlen(input);
-        if(ilen < plen || !ilen || !plen)
-            return FG_FALSE;
-        for(int i = 0; i < plen; i++) {
-            if((caseSensitive && input[i] != pattern[i]) ||
-                    (!caseSensitive && tolower(input[i]) != tolower(pattern[i]))) {
-                return FG_FALSE;
-            }
-        }
-        return FG_TRUE;
-    }
-    /**
-     * 
-     * @param input
-     * @param pattern
-     * @param caseSensitive
-     * @return 
-     */
-    static fgBool endsWith(const std::string& input,
-                           const std::string& pattern,
-                           fgBool caseSensitive = FG_TRUE) {
-        if(input.length() < pattern.length() || pattern.empty() || input.empty())
-            return FG_FALSE;
-        int plen = pattern.length();
-        int ilen = input.length();
-        for(int i = ilen - 1, p = plen - 1; i >= 0 && p >= 0; i--, p--) {
-            if((caseSensitive && input[i] != pattern[p]) ||
-                    (!caseSensitive && tolower(input[i]) != tolower(pattern[p]))) {
-                return FG_FALSE;
-            }
-        }
-        return FG_TRUE;
-    }
-    /**
-     * 
-     * @param input
-     * @param pattern
-     * @param caseSensitive
-     * @return 
-     */
-    static fgBool endsWith(const char *input,
-                           const char *pattern,
-                           fgBool caseSensitive = FG_TRUE) {
-        if(!input || !pattern)
-            return FG_FALSE;
-        int plen = strlen(pattern);
-        int ilen = strlen(input);
-        if(ilen < plen || !plen || !ilen)
-            return FG_FALSE;
-        for(int i = ilen - 1, p = plen - 1; i >= 0 && p >= 0; i--, p--) {
-            if((caseSensitive && input[i] != pattern[p]) ||
-                    (!caseSensitive && tolower(input[i]) != tolower(pattern[p]))) {
-                return FG_FALSE;
-            }
-        }
-        return FG_TRUE;
-    }
-    /**
-     * 
-     * @param input
-     * @param chars
-     * @return 
-     */
-    static fgBool containsChars(const std::string& input, const std::string& chars) {
-        return (input.find_first_of(chars) != std::string::npos);
-    }
-    /**
-     * 
-     * @param input
-     * @param chars
-     * @param caseSensitive
-     * @return 
-     */
-    static fgBool containsChars(const char *input,
-                                const char *chars,
-                                const fgBool caseSensitive = FG_TRUE) {
-        if(!input || !chars)
-            return FG_FALSE;
-        int i = 0, j = 0;
-        int ilen = strlen(input), clen = strlen(chars);
-        if(!ilen || !clen)
-            return FG_FALSE;
-        for(; i < ilen; i++) {
-            for(j = 0; j < clen; j++) {
-                if((caseSensitive && input[i] == chars[j]) ||
-                        (!caseSensitive && tolower(input[i]) == tolower(chars[j]))) {
-                    return FG_TRUE;
-                }
-            }
-        }
-        return FG_FALSE;
-    }
-    /**
-     * 
-     * @param str
-     * @param needle
-     * @return 
-     */
-    static const char *strstr(const char *str, const char *needle) {
-        if(!needle || !*needle || !str) return str;
-        char *p1 = (char*)str, *p2 = (char*)needle;
-        char *p1Adv = (char*)str;
-        while(*++p2)
-            p1Adv++;
-        while(*p1Adv) {
-            char *p1Begin = p1;
-            p2 = (char*)needle;
-            while(*p1 && *p2 && *p1 == *p2) {
-                p1++;
-                p2++;
-            }
-            if(!*p2)
-                return p1Begin;
-            p1 = p1Begin + 1;
-            p1Adv++;
-        }
-        return NULL;
-    }
-    /**
-     * 
-     * @param str
-     * @param needle
-     * @return 
-     */
-    static inline const char *strstr(const std::string& str, const std::string& needle) {
-        if(str.empty() || needle.empty())
-            return NULL;
-        return fgStrings::strstr(str.c_str(), needle.c_str());
-    }
-    /**
-     * 
-     * @param str
-     * @param needle
-     * @return 
-     */
-    static const char *stristr(const char *str, const char *needle) {
-        if(!needle || !*needle || !str) return str;
-        char *p1 = (char*)str, *p2 = (char*)needle;
-        char *p1Adv = (char*)str;
-        while(*++p2)
-            p1Adv++;
-        while(*p1Adv) {
-            char *p1Begin = p1;
-            p2 = (char*)needle;
-            while(*p1 && *p2 && (tolower(*p1) == tolower(*p2))) {
-                p1++;
-                p2++;
-            }
-            if(!*p2)
-                return p1Begin;
-            p1 = p1Begin + 1;
-            p1Adv++;
-        }
-        return NULL;
-    }
-    /**
-     * 
-     * @param str
-     * @param needle
-     * @return 
-     */
-    static inline const char *stristr(const std::string& str, const std::string& needle) {
-        if(str.empty() || needle.empty())
-            return NULL;
-        return fgStrings::stristr(str.c_str(), needle.c_str());
-    }
+                          fgBool caseSensitive = FG_TRUE);
+        /**
+         * 
+         * @param input
+         * @param pattern
+         * @param caseSensitive
+         * @return 
+         */
+        fgBool endsWith(const std::string& input,
+                        const std::string& pattern,
+                        fgBool caseSensitive = FG_TRUE);
+        /**
+         * 
+         * @param input
+         * @param pattern
+         * @param caseSensitive
+         * @return 
+         */
+        fgBool endsWith(const char *input,
+                        const char *pattern,
+                        fgBool caseSensitive = FG_TRUE);
+        /**
+         * 
+         * @param input
+         * @param chars
+         * @return 
+         */
+        fgBool containsChars(const std::string& input, const std::string& chars);
+        /**
+         * 
+         * @param input
+         * @param chars
+         * @param caseSensitive
+         * @return 
+         */
+        fgBool containsChars(const char *input,
+                             const char *chars,
+                             const fgBool caseSensitive = FG_TRUE);
+        /**
+         * 
+         * @param str
+         * @param needle
+         * @return 
+         */
+        const char *strstr(const char *str, const char *needle);
+        /**
+         * 
+         * @param str
+         * @param needle
+         * @return 
+         */
+        const char *strstr(const std::string& str, const std::string& needle);
+        /**
+         * 
+         * @param str
+         * @param needle
+         * @return 
+         */
+        const char *stristr(const char *str, const char *needle);
+        /**
+         * 
+         * @param str
+         * @param needle
+         * @return 
+         */
+        const char *stristr(const std::string& str, const std::string& needle);
+    };
 };
 
+    #undef FG_INC_STRINGS_BLOCK
 #endif /* FG_INC_STRINGS */

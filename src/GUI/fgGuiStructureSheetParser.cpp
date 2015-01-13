@@ -82,7 +82,7 @@ Vector3f gui::CStructureSheetParser::parseSpatialData(const char *data) {
       return out;
 
    fg::CStringVector parts;
-   fgStrings::split(std::string(data), ',', parts);
+   strings::split(std::string(data), ',', parts);
 
    if(parts.empty())
       return out;

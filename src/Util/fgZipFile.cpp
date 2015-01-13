@@ -150,9 +150,9 @@ void fg::util::CZipFile::setPath(const char *filePath) {
     // like: "data/textures.zip/castle/flag.tga"
     if(!filePath)
         return;
-    const char *ext = fgStrings::stristr(filePath, ".zip");
+    const char *ext = strings::stristr(filePath, ".zip");
     if(!ext)
-        ext = fgStrings::stristr(filePath, ".pk3");
+        ext = strings::stristr(filePath, ".pk3");
     if(!ext) {
         // Probably not a valid Zip file
         m_filePath.clear();
@@ -340,9 +340,9 @@ fgBool fg::util::CZipFile::selectFile(const char *filePath) {
         return FG_FALSE;
     }
     int err = UNZ_OK;
-    const char *ext = fgStrings::stristr(filePath, ".zip");
+    const char *ext = strings::stristr(filePath, ".zip");
     if(!ext)
-        ext = fgStrings::stristr(filePath, ".pk3");
+        ext = strings::stristr(filePath, ".pk3");
     if(!ext) {
         err = unzCloseCurrentFile(m_uf);
         // Probably path points to the file inside of the Zip
@@ -357,7 +357,7 @@ fgBool fg::util::CZipFile::selectFile(const char *filePath) {
         m_selectedFilePath = filePath;
     } else {
         // Check the path (the same as Zip) -> select the first file
-        if(fgStrings::isEqual(m_zipPath.c_str(), filePath, FG_FALSE)) {
+        if(strings::isEqual(m_zipPath.c_str(), filePath, FG_FALSE)) {
             err = unzCloseCurrentFile(m_uf);
             err = unzGoToFirstFile(m_uf);
             m_currentFileID = 0;
