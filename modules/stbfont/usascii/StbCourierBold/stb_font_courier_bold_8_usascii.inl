@@ -164,6 +164,7 @@ static unsigned short stb__courier_bold_8_usascii_a[95]={ 68,68,68,68,68,68,68,6
 68,68,68,68,68,68,68,68,68,68,68,68,68,68,68,68,
 68,68,68,68,68,68,68, };
 
+#if 0
 // Call this function with
 //    font: NULL or array length
 //    data: NULL or specified size
@@ -223,6 +224,7 @@ static void stb_font_courier_bold_8_usascii(stb_fontchar font[STB_FONT_courier_b
         }
     }
 }
+#endif 
 
 #ifndef STB_SOMEFONT_CREATE
 #define STB_SOMEFONT_CREATE              stb_font_courier_bold_8_usascii
