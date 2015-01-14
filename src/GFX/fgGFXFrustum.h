@@ -18,8 +18,9 @@
     #define FG_INC_GFX_FRUSTUM_BLOCK
 
     #include "fgGFXPlane.h"
-    #ifndef FG_INC_GFX_AA_BOUNDING_BOX
-        #include "fgGFXAABoundingBox.h"
+
+    #ifndef FG_INC_GFX_BOUNDING_VOLUME
+        #include "fgGFXBoundingVolume.h"
     #endif
 
 namespace fg {
@@ -123,7 +124,19 @@ namespace fg {
              * @param box
              * @return 
              */
-            int testAABB(const AABoundingBox3Df &box);
+            int testSphere(const BoundingVolume3Df& box);
+            /**
+             * 
+             * @param box
+             * @return 
+             */
+            int testVolume(const AABoundingBox3Df &box);
+            /**
+             * 
+             * @param box
+             * @return 
+             */
+            int testVolume(const BoundingVolume3Df &box);
 
         public:
             /**

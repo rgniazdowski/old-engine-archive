@@ -22,6 +22,7 @@
     #endif
 
     #include "GFX/fgGFXBoundingBox.h"
+    #include "fgBool.h"
 
     #include <cfloat>
 
@@ -72,8 +73,8 @@ namespace fg {
                     const void *cur = (const void *)(offset + i * stride);
                     value_type *values = (value_type *)cur;
                     for(size_type j = 0; j < innerMax; j++) {
-                        value_type &minVal = bbox[j];
-                        value_type &maxVal = bbox[j + innerMax];
+                        value_type& minVal = bbox[j];
+                        value_type& maxVal = bbox[j + innerMax];
                         value_type checkVal = *(values + j); // offset + sizeof(value_type)*j
                         maxVal = fg::math::max(maxVal, checkVal);
                         minVal = fg::math::min(minVal, checkVal);
@@ -100,16 +101,16 @@ namespace fg {
             typedef unsigned int size_type;
 
             ///
-            TVecType min;
+            vector_type min;
             ///
-            TVecType max;
+            vector_type max;
             /**
              * Overloaded assignment operator - needs to be implemented
              * because of the use of union with complex types
              * @param other
              * @return 
              */
-            self_type & operator =(const self_type & other) {
+            self_type& operator =(const self_type& other) {
                 if(this != &other) // protect against invalid self-assignment
                 {
                     this->min = other.min;
@@ -129,7 +130,7 @@ namespace fg {
              * explicitly because of the union containing complex types
              * @param other
              */
-            SAABoundingBoxT(const self_type & other) : min(), max() {
+            SAABoundingBoxT(const self_type& other) : min(), max() {
                 this->min = other.min;
                 this->max = other.max;
             }
@@ -159,7 +160,7 @@ namespace fg {
              * @param i
              * @return 
              */
-            value_type & operator [](size_type i) {
+            value_type& operator [](size_type i) {
                 if(i >= (size_type)this->length())
                     i = 0;
                 if(i >= (size_type)this->min.length()) {
@@ -239,7 +240,7 @@ namespace fg {
              * @param left
              * @return 
              */
-            box_type &setLeft(value_type left) {
+            box_type& setLeft(value_type left) {
                 this->min.x = left;
                 return (*this);
             }
@@ -248,7 +249,7 @@ namespace fg {
              * @param right
              * @return 
              */
-            box_type &setRight(value_type right) {
+            box_type& setRight(value_type right) {
                 this->max.x = right;
                 return (*this);
             }
@@ -257,7 +258,7 @@ namespace fg {
              * @param top
              * @return 
              */
-            box_type &setTop(value_type top) {
+            box_type& setTop(value_type top) {
                 this->max.y = top;
                 return (*this);
             }
@@ -266,7 +267,7 @@ namespace fg {
              * @param back
              * @return 
              */
-            box_type &setBottom(value_type back) {
+            box_type& setBottom(value_type back) {
                 this->min.y = back;
                 return (*this);
             }
@@ -275,7 +276,7 @@ namespace fg {
              * @param width
              * @return 
              */
-            box_type &setWidth(value_type width) {
+            box_type& setWidth(value_type width) {
                 this->max.x = this->min.x + width;
                 return (*this);
             }
@@ -284,7 +285,7 @@ namespace fg {
              * @param height
              * @return 
              */
-            box_type &setHeight(value_type height) {
+            box_type& setHeight(value_type height) {
                 this->max.y = this->min.y + height;
                 return (*this);
             }
@@ -293,7 +294,7 @@ namespace fg {
              * @param vec
              * @return 
              */
-            virtual inline fgBool test(const vector_type& vec) const {
+            inline fgBool test(const vector_type& vec) const {
                 return this->test(vec.x, vec.y);
             }
             /**
@@ -302,7 +303,8 @@ namespace fg {
              * @param y
              * @return 
              */
-            virtual inline fgBool test(const value_type x, const value_type y) const {
+            inline fgBool test(const value_type x,
+                               const value_type y) const {
                 if(x > this->min.x && x < this->max.x) {
                     if(y > this->min.y && y < this->max.y) {
                         return FG_TRUE;
@@ -317,8 +319,39 @@ namespace fg {
              * @param z
              * @return 
              */
-            virtual inline fgBool test(const value_type x, const value_type y, const value_type z) const {
+            inline fgBool test(const value_type x,
+                               const value_type y,
+                               const value_type z) const {
                 return this->test(x, y);
+            }
+            /**
+             * 
+             * @param center
+             * @param radius
+             * @return 
+             */
+            fgBool test(const vector_type& center, const value_type radius) const {
+                // needs to return true if 'sphere' is completely inside of 'this' box
+                if(center - radius < this->min)
+                    return FG_FALSE;
+                if(center + radius > this->max)
+                    return FG_FALSE;
+                return FG_TRUE;
+            }
+            /**
+             * 
+             * @param box
+             * @return 
+             */
+            fgBool test(const box_type& box) const {
+                // needs to return true if 'box' is completely inside of 'this' box
+                if(box.min.x < this->min.x || box.max.x > this->max.x) {
+                    return FG_FALSE;
+                }
+                if(box.min.y < this->min.y || box.max.y > this->max.y) {
+                    return FG_FALSE;
+                }
+                return FG_TRUE;
             }
             /**
              * 
@@ -326,13 +359,14 @@ namespace fg {
              * @param b
              * @return 
              */
-            virtual box_type &merge(const box_type &a, const box_type &b) = 0;
+            virtual box_type& merge(const box_type& a,
+                                    const box_type& b) = 0;
             /**
              * 
              * @param a
              * @return 
              */
-            virtual box_type &merge(const box_type &a) = 0;
+            virtual box_type& merge(const box_type& a) = 0;
 
             /**
              * 
@@ -340,7 +374,8 @@ namespace fg {
              * @param count
              * @return 
              */
-            virtual box_type &setBoundsFromData(vector_type *data, const size_type count = 1) = 0;
+            virtual box_type& setBoundsFromData(vector_type *data,
+                                                const size_type count = 1) = 0;
             /**
              * 
              */
@@ -361,6 +396,9 @@ namespace fg {
          */
         template <class TValueType>
         struct SAABoundingBox2DT : SAABoundingBoxT<SAABoundingBox2DT<TValueType>, typename Vector2T<TValueType>::type, TValueType> {
+            ///
+            typedef SAABoundingBox2DT<TValueType> type;
+            ///
             typedef SAABoundingBox2DT<TValueType> self_type;
             ///
             typedef typename Vector2T<TValueType>::type vec_type;
@@ -382,16 +420,16 @@ namespace fg {
              * @param _min
              * @param _size
              */
-            SAABoundingBox2DT(const vec_type &_min,
-                              const vec_type &_size) :
-            base_type(_min, _size) { }
+            SAABoundingBox2DT(const vec_type& _min,
+                              const vec_type& _max) :
+            base_type(_min, _max) { }
             /**
              * 
              * @param a
              * @param b
              * @return 
              */
-            virtual inline self_type &merge(self_type const &a,
+            virtual inline self_type& merge(self_type const &a,
                                             self_type const &b) {
                 this->invalidate();
                 this->merge(a);
@@ -404,7 +442,7 @@ namespace fg {
              * @param b
              * @return 
              */
-            virtual inline self_type &merge(SBoundingBox2DT<TValueType> const &a,
+            virtual inline self_type& merge(SBoundingBox2DT<TValueType> const &a,
                                             SBoundingBox2DT<TValueType> const &b) {
                 this->invalidate();
                 this->merge(a);
@@ -416,7 +454,7 @@ namespace fg {
              * @param a
              * @return 
              */
-            virtual inline self_type &merge(self_type const &a) {
+            virtual inline self_type& merge(self_type const &a) {
                 // Should zero? nope!
                 this->min.x = fg::math::min(this->min.x, a.min.x);
                 this->min.y = fg::math::min(this->min.y, a.min.y);
@@ -429,7 +467,7 @@ namespace fg {
              * @param a
              * @return 
              */
-            virtual inline self_type &merge(SBoundingBox2DT<TValueType> const &a) {
+            virtual inline self_type& merge(SBoundingBox2DT<TValueType> const &a) {
                 // Should zero? nope!
                 this->min.x = fg::math::min(this->min.x, a.pos.x);
                 this->min.y = fg::math::min(this->min.y, a.pos.y);
@@ -443,7 +481,7 @@ namespace fg {
              * @param count
              * @return 
              */
-            virtual self_type &merge(const self_type *aaboxes,
+            virtual self_type& merge(const self_type *aaboxes,
                                      const size_type count = 1) {
                 if(!count || !aaboxes)
                     return (*this);
@@ -459,7 +497,7 @@ namespace fg {
              * @param count
              * @return 
              */
-            virtual self_type &merge(const SBoundingBox2DT<TValueType> *boxes,
+            virtual self_type& merge(const SBoundingBox2DT<TValueType> *boxes,
                                      const size_type count = 1) {
                 if(!count || !boxes)
                     return (*this);
@@ -475,7 +513,8 @@ namespace fg {
              * @param count
              * @return 
              */
-            virtual self_type &setBoundsFromData(vector_type *data, const size_type count = 1) {
+            virtual self_type& setBoundsFromData(vector_type *data,
+                                                 const size_type count = 1) {
                 if(!data || !count)
                     return (*this);
                 this->invalidate();
@@ -494,7 +533,7 @@ namespace fg {
              * @param count
              * @return 
              */
-            virtual inline self_type &setBoundsFromData(const void *data,
+            virtual inline self_type& setBoundsFromData(const void *data,
                                                         const size_type stride,
                                                         const size_type count = 1) {
                 return AABBHelper::setBoundsFromData((*this), data, stride, count);
@@ -513,14 +552,14 @@ namespace fg {
              */
             virtual inline void invalidate(void) {
                 this->zero();
-                this->min->x = FLT_MAX;
-                this->min->y = FLT_MAX;
+                this->min.x = FLT_MAX;
+                this->min.y = FLT_MAX;
             }
             /**
              * 
              * @return 
              */
-            virtual inline vector_type getCenter(void) const {
+            inline vector_type getCenter(void) const {
                 //center = 0.5 * (min + max);
                 //extent = 0.5 * (max - min);
                 return 0.5f * (this->min + this->max);
@@ -529,7 +568,7 @@ namespace fg {
              * 
              * @return 
              */
-            virtual inline vector_type getExtent(void) const {
+            inline vector_type getExtent(void) const {
                 return 0.5f * (this->max - this->min);
             }
             /**
@@ -537,7 +576,7 @@ namespace fg {
              * @param normal
              * @return 
              */
-            virtual inline vector_type getVertexP(const vector_type &normal) const {
+            virtual inline vector_type getVertexP(const vector_type& normal) const {
                 vector_type result = this->min;
 
                 if(normal.x >= 0)
@@ -553,7 +592,7 @@ namespace fg {
              * @param normal
              * @return 
              */
-            virtual inline vector_type getVertexN(const vector_type &normal) const {
+            virtual inline vector_type getVertexN(const vector_type& normal) const {
                 vector_type result = this->max;
 
                 if(normal.x >= 0)
@@ -648,7 +687,7 @@ namespace fg {
              * @param _min
              * @param _size
              */
-            SAABoundingBox3DT(const vec_type &_min, const vec_type &_size) :
+            SAABoundingBox3DT(const vec_type& _min, const vec_type& _size) :
             base_type(_min, _size) { }
             /**
              * 
@@ -656,7 +695,7 @@ namespace fg {
              * @param b
              * @return 
              */
-            virtual inline self_type &merge(self_type const &a, self_type const &b) {
+            virtual inline self_type& merge(self_type const &a, self_type const &b) {
                 this->invalidate();
                 this->merge(a);
                 this->merge(b);
@@ -668,7 +707,7 @@ namespace fg {
              * @param b
              * @return 
              */
-            virtual inline self_type &merge(SBoundingBox3DT<TValueType> const &a, SBoundingBox3DT<TValueType> const &b) {
+            virtual inline self_type& merge(SBoundingBox3DT<TValueType> const &a, SBoundingBox3DT<TValueType> const &b) {
                 this->invalidate();
                 this->merge(a);
                 this->merge(b);
@@ -679,7 +718,7 @@ namespace fg {
              * @param a
              * @return 
              */
-            virtual inline self_type &merge(self_type const &a) {
+            virtual inline self_type& merge(self_type const &a) {
                 // Should zero? nope!
                 this->min.x = fg::math::min(this->min.x, a.min.x);
                 this->min.y = fg::math::min(this->min.y, a.min.y);
@@ -695,7 +734,7 @@ namespace fg {
              * @param a
              * @return 
              */
-            virtual inline self_type &merge(SBoundingBox3DT<TValueType> const &a) {
+            virtual inline self_type& merge(SBoundingBox3DT<TValueType> const &a) {
                 // Should zero? nope!
                 this->min.x = fg::math::min(this->min.x, a.pos.x);
                 this->min.y = fg::math::min(this->min.y, a.pos.y);
@@ -711,7 +750,7 @@ namespace fg {
              * @param count
              * @return 
              */
-            virtual self_type &merge(const self_type *aaboxes, const size_type count = 1) {
+            virtual self_type& merge(const self_type *aaboxes, const size_type count = 1) {
                 if(!count || !aaboxes)
                     return (*this);
                 //this->zero(); // nope
@@ -726,7 +765,7 @@ namespace fg {
              * @param count
              * @return 
              */
-            virtual self_type &merge(const SBoundingBox3DT<TValueType> *boxes, const size_type count = 1) {
+            virtual self_type& merge(const SBoundingBox3DT<TValueType> *boxes, const size_type count = 1) {
                 if(!count || !boxes)
                     return (*this);
                 //this->zero(); // nope
@@ -741,7 +780,7 @@ namespace fg {
              * @param count
              * @return 
              */
-            virtual self_type &setBoundsFromData(vector_type *data, const size_type count = 1) {
+            virtual self_type& setBoundsFromData(vector_type *data, const size_type count = 1) {
                 if(!data || !count)
                     return (*this);
                 this->invalidate();
@@ -762,7 +801,7 @@ namespace fg {
              * @param count
              * @return 
              */
-            virtual inline self_type &setBoundsFromData(const void *data,
+            virtual inline self_type& setBoundsFromData(const void *data,
                                                         const size_type stride,
                                                         const size_type count = 1) {
                 return AABBHelper::setBoundsFromData((*this), data, stride, count);
@@ -803,14 +842,14 @@ namespace fg {
              * 
              * @return 
              */
-            virtual inline vector_type getCenter(void) const {
+            inline vector_type getCenter(void) const {
                 return 0.5f * (this->min + this->max);
             }
             /**
              * 
              * @return 
              */
-            virtual inline vector_type getExtent(void) const {
+            inline vector_type getExtent(void) const {
                 return 0.5f * (this->max - this->min);
             }
             /**
@@ -818,7 +857,7 @@ namespace fg {
              * @param normal
              * @return 
              */
-            virtual inline vector_type getVertexP(const vector_type &normal) const {
+            virtual inline vector_type getVertexP(const vector_type& normal) const {
                 vector_type result = this->min;
 
                 if(normal.x >= 0)
@@ -837,7 +876,7 @@ namespace fg {
              * @param normal
              * @return 
              */
-            virtual inline vector_type getVertexN(const vector_type &normal) const {
+            virtual inline vector_type getVertexN(const vector_type& normal) const {
                 vector_type result = this->max;
                 if(normal.x >= 0)
                     result.x = this->min.x;
@@ -881,22 +920,15 @@ namespace fg {
                     }
                 }
             }
-            virtual inline fgBool test(const vector_type& vec) const {
-                return this->test(vec.x, vec.y, vec.z);
-            }
+
+            using base_type::test;
             /**
              * 
-             * @param x
-             * @param y
+             * @param vec
              * @return 
              */
-            virtual inline fgBool test(const value_type x, const value_type y) const {
-                if(x > this->min.x && x < this->max.x) {
-                    if(y > this->min.y && y < this->max.y) {
-                        return FG_TRUE;
-                    }
-                }
-                return FG_FALSE;
+            inline fgBool test(const vector_type& vec) const {
+                return this->test(vec.x, vec.y, vec.z);
             }
             /**
              * 
@@ -905,7 +937,9 @@ namespace fg {
              * @param z
              * @return 
              */
-            virtual inline fgBool test(const value_type x, const value_type y, const value_type z) const {
+            inline fgBool test(const value_type x,
+                               const value_type y,
+                               const value_type z) const {
                 if(x > this->min.x && x < this->max.x) {
                     if(y > this->min.y && y < this->max.y) {
                         if(z > this->min.z && z < this->max.z) {
@@ -915,8 +949,39 @@ namespace fg {
                 }
                 return FG_FALSE;
             }
+            /**
+             * 
+             * @param center
+             * @param radius
+             * @return 
+             */
+            fgBool test(const vector_type& center, const value_type radius) const {
+                // needs to return true if 'sphere' is completely inside of 'this' box
+                if(center - radius < this->min)
+                    return FG_FALSE;
+                if(center + radius > this->max)
+                    return FG_FALSE;
+                return FG_TRUE;
+            }
+            /**
+             * 
+             * @param box
+             * @return 
+             */
+            fgBool test(const self_type& box) const {
+                // needs to return true if 'box' is completely inside of 'this' box
+                if(box.min.x < this->min.x || box.max.x > this->max.x) {
+                    return FG_FALSE;
+                }
+                if(box.min.y < this->min.y || box.max.y > this->max.y) {
+                    return FG_FALSE;
+                }
+                if(box.min.z < this->min.z || box.max.z > this->max.z) {
+                    return FG_FALSE;
+                }
+                return FG_TRUE;
+            }
         };
-
 
         /// Basic axis-aligned bounding box 3D with float data type
         typedef SAABoundingBox3DT<float> AABoundingBox3Df;
@@ -935,7 +1000,6 @@ namespace fg {
         typedef AABoundingBox3Du AABB3Du;
         ///
         typedef AABoundingBox3Dd AABB3Dd;
-
     };
 };
 

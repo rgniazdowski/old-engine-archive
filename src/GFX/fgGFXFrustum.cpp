@@ -1,3 +1,11 @@
+/*******************************************************
+ * Copyright (C) 2014 Radoslaw Gniazdowski <contact@flexigame.com>. All rights reserved.
+ * 
+ * This file is part of FlexiGame: Flexible Game Engine
+ * 
+ * FlexiGame source code and any related files can not be copied, modified 
+ * and/or distributed without the express or written consent from the author.
+ *******************************************************/
 /* 
  * File:   fgGFXFrustum.cpp
  * Author: vigilant
@@ -8,22 +16,25 @@
 #include "fgGFXFrustum.h"
 #include "Math/fgMathLib.h"
 #include "fgGFXGL.h"
+#include "fgGFXBoundingVolume.h"
+
+using namespace fg;
 
 /**
  * 
  */
-fg::gfx::CFrustum::CFrustum() { }
+gfx::CFrustum::CFrustum() { }
 
 /**
  * 
  * @param orig
  */
-fg::gfx::CFrustum::CFrustum(const CFrustum& orig) { }
+gfx::CFrustum::CFrustum(const CFrustum& orig) { }
 
 /**
  * 
  */
-fg::gfx::CFrustum::~CFrustum() { }
+gfx::CFrustum::~CFrustum() { }
 
 /**
  * 
@@ -32,10 +43,10 @@ fg::gfx::CFrustum::~CFrustum() { }
  * @param zNear
  * @param zFar
  */
-void fg::gfx::CFrustum::setCamera(const float angle,
-                                  const float ratio,
-                                  const float zNear,
-                                  const float zFar) {
+void gfx::CFrustum::setCamera(const float angle,
+                              const float ratio,
+                              const float zNear,
+                              const float zFar) {
     this->m_aspect = ratio;
     this->m_angle = angle;
     this->m_zNear = zNear;
@@ -55,9 +66,9 @@ void fg::gfx::CFrustum::setCamera(const float angle,
  * @param center
  * @param up
  */
-void fg::gfx::CFrustum::set(const Vector3f &eye,
-                            const Vector3f &center,
-                            const Vector3f &up) {
+void gfx::CFrustum::set(const Vector3f &eye,
+                        const Vector3f &center,
+                        const Vector3f &up) {
     Vector3f dir, nc, fc, X, Y, Z;
 
     Z = eye - center;
@@ -120,7 +131,7 @@ void fg::gfx::CFrustum::set(const Vector3f &eye,
  * @param m
  * @return 
  */
-void fg::gfx::CFrustum::set(const Matrix4f &matrix) {
+void gfx::CFrustum::set(const Matrix4f &matrix) {
     float a = 0.0f, b = 0.0f, c = 0.0f, d = 0.0f;
     // The elements of the 4x4 matrix are stored in
     // column-major order (see "OpenGL Programming Guide",
@@ -244,10 +255,10 @@ void fg::gfx::CFrustum::set(const Matrix4f &matrix) {
 
 /**
  * 
- * @param p
+ * @param point
  * @return 
  */
-int fg::gfx::CFrustum::testPoint(const Vector3f &point) {
+int gfx::CFrustum::testPoint(const Vector3f &point) {
     // #FIXME - OPTIMIZE!
     int result = INSIDE;
     for(int i = 0; i < 6; i++) {
@@ -260,13 +271,13 @@ int fg::gfx::CFrustum::testPoint(const Vector3f &point) {
 
 /**
  * 
- * @param p
- * @param raio
+ * @param point
+ * @param radius
  * @return 
  */
-int fg::gfx::CFrustum::testSphere(const Vector3f &point, const float radius) {
+int gfx::CFrustum::testSphere(const Vector3f &point, const float radius) {
     // #FIXME - OPTIMIZE!
-    // #FIXME - remember that for now this all works with worldspace (MVP transform)
+    // #FIXME - remember that for now this all works with world-space (MVP transform)
     int result = INSIDE;
     float distance;
 
@@ -282,10 +293,30 @@ int fg::gfx::CFrustum::testSphere(const Vector3f &point, const float radius) {
 
 /**
  * 
- * @param b
+ * @param box
  * @return 
  */
-int fg::gfx::CFrustum::testAABB(const AABoundingBox3Df &box) {
+int gfx::CFrustum::testSphere(const BoundingVolume3Df& box) {
+    // #FIXME - remember that for now this all works with world-space (MVP transform)
+    int result = INSIDE;
+    float distance = 0.0f;
+
+    for(int i = 0; i < NUM_PLANES; i++) {
+        distance = m_planes[i].distance(box.center);
+        if(distance < -box.radius)
+            return OUTSIDE;
+        else if(distance < box.radius)
+            result = INTERSECT;
+    }
+    return result;
+}
+
+/**
+ * 
+ * @param box
+ * @return 
+ */
+int gfx::CFrustum::testVolume(const AABoundingBox3Df &box) {
     if(!box.isValid())
         return OUTSIDE;
     // #FIXME - OPTIMIZE!
@@ -308,7 +339,39 @@ int fg::gfx::CFrustum::testAABB(const AABoundingBox3Df &box) {
             return OUTSIDE;
         }
 
-        // P/N vertex method is fubar, something is not working here
+        // P/N vertex method is FUBAR, something is not working here
+        // It yields wrong results
+        // P max
+        //if(m_planes[i].distance(b.getVertexP(m_planes[i].n)) < 0)
+        //    return OUTSIDE;
+        // N min
+        //else if(m_planes[i].distance(b.getVertexN(m_planes[i].n)) < 0)
+        //    result = INTERSECT;
+    }
+    return result;
+}
+
+/**
+ * 
+ * @param box
+ * @return 
+ */
+int gfx::CFrustum::testVolume(const BoundingVolume3Df &box) {
+    if(!box.isValid())
+        return OUTSIDE;
+    // #FIXME - OPTIMIZE!
+    int result = INSIDE;
+
+    for(int i = 0; i < NUM_PLANES; i++) {
+        Vec3f absPlane = math::abs(m_planes[i].n);
+        float d = math::dot(box.center, m_planes[i].n);
+        float r = math::dot(box.extent, absPlane);
+
+        if(d + r < -m_planes[i].d) {
+            return OUTSIDE;
+        }
+
+        // P/N vertex method is FUBAR, something is not working here
         // It yields wrong results
         // P max
         //if(m_planes[i].distance(b.getVertexP(m_planes[i].n)) < 0)
