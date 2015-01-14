@@ -143,7 +143,7 @@ void gfx::CSceneManager::sortCalls(void) {
         CDrawCall *pDrawCall = pNode->getDrawCall();
 #if defined(FG_DEBUG)
         if(g_fgDebugConfig.isDebugProfiling) {
-            g_debugProfiling->begin("GFX::Scene::FrustumCheck");
+            profile::g_debugProfiling->begin("GFX::Scene::FrustumCheck");
         }
 #endif
         // There is a problem because the bounding box needs to be modified by
@@ -159,7 +159,7 @@ void gfx::CSceneManager::sortCalls(void) {
             pNode->setVisible(FG_TRUE);
 #if defined(FG_DEBUG)
         if(g_fgDebugConfig.isDebugProfiling) {
-            g_debugProfiling->end("GFX::Scene::FrustumCheck");
+            profile::g_debugProfiling->end("GFX::Scene::FrustumCheck");
         }
 #endif
         //FG_LOG_DEBUG("[%d] -> AABBox[%s] -- -- Sphere.30.0f[%s] %s\n", idx, msg[boxtest], msg[spherestatus], pNode->getNameStr());
@@ -195,14 +195,14 @@ void gfx::CSceneManager::render(void) {
     while(!m_nodeQueue.empty()) {
 #if defined(FG_DEBUG)
         if(g_fgDebugConfig.isDebugProfiling) {
-            g_debugProfiling->begin("GFX::Scene::DrawNode");
+            profile::g_debugProfiling->begin("GFX::Scene::DrawNode");
         }
 #endif
         CSceneNode *pSceneNode = m_nodeQueue.top();
         pSceneNode->draw();
 #if defined(FG_DEBUG)
         if(g_fgDebugConfig.isDebugProfiling) {
-            g_debugProfiling->end("GFX::Scene::DrawNode");
+            profile::g_debugProfiling->end("GFX::Scene::DrawNode");
         }
 #endif
 

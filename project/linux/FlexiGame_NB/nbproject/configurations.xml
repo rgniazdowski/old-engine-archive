@@ -365,6 +365,7 @@
         <itemPath>../../../src/fgLog.cpp</itemPath>
         <itemPath>../../../src/fgLog.h</itemPath>
         <itemPath>../../../src/fgMainModule.cpp</itemPath>
+        <itemPath>../../../src/fgMainModule.h</itemPath>
         <itemPath>../../../src/fgManagerBase.h</itemPath>
         <itemPath>../../../src/fgMessageCommon.h</itemPath>
         <itemPath>../../../src/fgMessageSubsystem.cpp</itemPath>
@@ -1720,6 +1721,8 @@
       </item>
       <item path="../../../src/fgMainModule.cpp" ex="false" tool="1" flavor2="8">
       </item>
+      <item path="../../../src/fgMainModule.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../../../src/fgManagerBase.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/fgMessageCommon.h" ex="false" tool="3" flavor2="0">
@@ -3041,6 +3044,8 @@
       </item>
       <item path="../../../src/fgMainModule.cpp" ex="false" tool="1" flavor2="0">
       </item>
+      <item path="../../../src/fgMainModule.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../../../src/fgManagerBase.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/fgMessageCommon.h" ex="false" tool="3" flavor2="0">
@@ -4328,6 +4333,8 @@
       </item>
       <item path="../../../src/fgMainModule.cpp" ex="false" tool="1" flavor2="0">
       </item>
+      <item path="../../../src/fgMainModule.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../../../src/fgManagerBase.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/fgMessageCommon.h" ex="false" tool="3" flavor2="0">
@@ -5592,6 +5599,8 @@
       <item path="../../../src/fgLog.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/fgMainModule.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../../src/fgMainModule.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/fgManagerBase.h" ex="false" tool="3" flavor2="0">
       </item>

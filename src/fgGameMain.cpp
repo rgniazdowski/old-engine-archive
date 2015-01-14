@@ -594,19 +594,19 @@ fgBool CGameMain::quit(void) {
 void CGameMain::display(void) {
 #if defined(FG_DEBUG)
     if(g_fgDebugConfig.isDebugProfiling)
-        g_debugProfiling->begin("GFX::display");
+        profile::g_debugProfiling->begin("GFX::display");
 #endif
     m_gfxMain->display();
 #if defined(FG_DEBUG)
     if(g_fgDebugConfig.isDebugProfiling) {
-        g_debugProfiling->end("GFX::display");
-        g_debugProfiling->begin("GUI::display");
+        profile::g_debugProfiling->end("GFX::display");
+        profile::g_debugProfiling->begin("GUI::display");
     }
 #endif
     m_guiMain->display();
 #if defined(FG_DEBUG)
     if(g_fgDebugConfig.isDebugProfiling) {
-        g_debugProfiling->end("GUI::display");
+        profile::g_debugProfiling->end("GUI::display");
     }
 #endif
 }
@@ -626,26 +626,26 @@ void CGameMain::render(void) {
     fpsc++;
 #if defined(FG_DEBUG)
     if(g_fgDebugConfig.isDebugProfiling) {
-        g_debugProfiling->begin("GFX::render");
+        profile::g_debugProfiling->begin("GFX::render");
     }
 #endif
     m_gfxMain->render();
     FG_HardwareState->deviceYield();
 #if defined(FG_DEBUG)
     if(g_fgDebugConfig.isDebugProfiling) {
-        g_debugProfiling->end("GFX::render");
+        profile::g_debugProfiling->end("GFX::render");
     }
 #endif
     gfx::CPlatform::context()->setBlend(FG_TRUE); // #FIXME
 #if defined(FG_DEBUG)
     if(g_fgDebugConfig.isDebugProfiling) {
-        g_debugProfiling->begin("GUI::render");
+        profile::g_debugProfiling->begin("GUI::render");
     }
 #endif
     m_guiMain->render();
 #if defined(FG_DEBUG)
     if(g_fgDebugConfig.isDebugProfiling) {
-        g_debugProfiling->end("GUI::render");
+        profile::g_debugProfiling->end("GUI::render");
     }
 #endif
     gfx::CPlatform::context()->setBlend(FG_FALSE); // #FIXME

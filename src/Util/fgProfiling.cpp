@@ -11,33 +11,36 @@
 #include "fgTime.h"
 #include "fgRegularFile.h"
 
+using namespace fg;
+
 #if defined(FG_DEBUG)
-fgProfiling *g_debugProfiling = NULL;
+///
+profile::CProfiling *profile::g_debugProfiling = NULL;
 #endif
 
-/*
- *
+/**
+ * 
  */
-fgProfiling::fgProfiling() : m_startProfile(-1.0f), m_endProfile(-1.0f) { }
+profile::CProfiling::CProfiling() : m_startProfile(-1.0f), m_endProfile(-1.0f) { }
 
-/*
- *
+/**
+ * 
  */
-fgProfiling::~fgProfiling() {
+profile::CProfiling::~CProfiling() {
     clear();
 }
 
-/*
- *
+/**
+ * 
  */
-void fgProfiling::initialize(void) {
+void profile::CProfiling::initialize(void) {
     m_startProfile = fgTime::exact();
 }
 
-/*
- *
+/**
+ * 
  */
-void fgProfiling::clear(void) {
+void profile::CProfiling::clear(void) {
     while(!m_profileStack.empty())
         m_profileStack.pop();
     m_sampleMap.clear();
@@ -47,25 +50,27 @@ void fgProfiling::clear(void) {
     m_endProfile = 0.0f;
 }
 
-/*
- *
+/**
+ * 
+ * @param name
+ * @return 
  */
-fgBool fgProfiling::begin(const std::string& name) {
+fgBool profile::CProfiling::begin(const std::string& name) {
     if(name.empty())
         return FG_FALSE;
-    profileMapPair query_pair;
+    ProfileMapPair query_pair;
     query_pair.first = name;
-    query_pair.second = new fgProfileSample();
-    std::pair<profileMapItor, bool> result = m_sampleMap.insert(query_pair);
-    profileMapItor it = result.first;
-    fgProfileSample *sample = it->second;
+    query_pair.second = new SSample();
+    std::pair<ProfileMapItor, bool> result = m_sampleMap.insert(query_pair);
+    ProfileMapItor it = result.first;
+    SSample *sample = it->second;
     if(!sample)
         return FG_FALSE;
     if(result.second == false && sample->isValid) {
         delete query_pair.second;
         query_pair.second = NULL;
         // Existed
-        if(sample->numOpen) {            
+        if(sample->numOpen) {
             // max 1 open at once
             return FG_FALSE;
         }
@@ -98,31 +103,35 @@ fgBool fgProfiling::begin(const std::string& name) {
 
     if(sample)
         m_profileStack.push(sample);
-    
+
     return FG_TRUE;
 }
 
-/*
- *
+/**
+ * 
+ * @param name
+ * @return 
  */
-fgBool fgProfiling::begin(const char* name) {
+fgBool profile::CProfiling::begin(const char* name) {
     if(!name)
         return FG_FALSE;
     std::string strName = std::string(name);
     return begin(strName);
 }
 
-/*
- *
+/**
+ * 
+ * @param name
+ * @return 
  */
-fgBool fgProfiling::end(const std::string& name) {
+fgBool profile::CProfiling::end(const std::string& name) {
     if(name.empty())
         return FG_FALSE;
-   
-    profileMapItor it = m_sampleMap.find(name);
+
+    ProfileMapItor it = m_sampleMap.find(name);
     if(it == m_sampleMap.end())
         return FG_FALSE;
-    fgProfileSample *sample = it->second;
+    SSample *sample = it->second;
     if(!sample)
         return FG_FALSE;
     if(!sample->isValid || !sample->numOpen)
@@ -132,7 +141,7 @@ fgBool fgProfiling::end(const std::string& name) {
     m_profileStack.pop();
     sample->numParents = m_profileStack.size();
     if(sample->numParents) {
-        fgProfileSample *parent = m_profileStack.top();
+        SSample *parent = m_profileStack.top();
         if(parent->isValid)
             parent->childrenSampleTime += endTime - sample->startTime;
     }
@@ -141,10 +150,12 @@ fgBool fgProfiling::end(const std::string& name) {
     return FG_TRUE;
 }
 
-/*
- *
+/**
+ * 
+ * @param name
+ * @return 
  */
-fgBool fgProfiling::end(const char* name) {
+fgBool profile::CProfiling::end(const char* name) {
     if(!name)
         return FG_FALSE;
     std::string strName;
@@ -152,15 +163,15 @@ fgBool fgProfiling::end(const char* name) {
     return end(strName);
 }
 
-/*
- *
+/**
+ * 
  */
-void fgProfiling::updateHistory(void) {
+void profile::CProfiling::updateHistory(void) {
     m_endProfile = fgTime::exact();
 
-    profileVecItor begin = m_orderVec.begin(), end = m_orderVec.end(), it;
+    ProfileVecItor begin = m_orderVec.begin(), end = m_orderVec.end(), it;
     for(it = begin; it != end; it++) {
-        fgProfileSample *sample = (*it);
+        SSample *sample = (*it);
         if(!sample->isValid)
             continue;
         sample->isValid = FG_FALSE;
@@ -173,8 +184,11 @@ void fgProfiling::updateHistory(void) {
     m_startProfile = fgTime::exact();
 }
 
-void fgProfiling::dumpToDefaultFile(void) {
-    profileVecItor begin = m_orderVec.begin(), end = m_orderVec.end(), it;
+/**
+ * 
+ */
+void profile::CProfiling::dumpToDefaultFile(void) {
+    ProfileVecItor begin = m_orderVec.begin(), end = m_orderVec.end(), it;
     fg::util::CRegularFile file;
     file.open("defaultProfile.log", fg::util::CRegularFile::Mode::WRITE);
     long timestamp = fgTime::seconds();
@@ -191,7 +205,7 @@ void fgProfiling::dumpToDefaultFile(void) {
     file.print("  Ave :   Min :   Max :   # : Profile Name\n");
     file.print("--------------------------------------------\n");
     for(it = begin; it != end; it++) {
-        fgProfileSample *sample = (*it);
+        SSample *sample = (*it);
         //if(!sample->isValid)
         //    continue;
         unsigned int indent = 0;
@@ -218,10 +232,13 @@ void fgProfiling::dumpToDefaultFile(void) {
     file.close();
 }
 
-/*
- *
+/**
+ * 
+ * @param name
+ * @param percent
+ * @return 
  */
-fgBool fgProfiling::storeProfileHistory(const std::string& name, float percent) {
+fgBool profile::CProfiling::storeProfileHistory(const std::string& name, float percent) {
     if(name.empty())
         return FG_FALSE;
     float oldRatio;
@@ -230,16 +247,16 @@ fgBool fgProfiling::storeProfileHistory(const std::string& name, float percent) 
         newRatio = 1.0f;
     }
     oldRatio = 1.0f - newRatio;
-    std::pair<std::string, fgProfileSampleHistory *> query_pair;
+    std::pair<std::string, SSampleHistory *> query_pair;
     query_pair.first = name;
-    query_pair.second = new fgProfileSampleHistory();
-    std::pair<historyMapItor, bool> result = m_sampleHistory.insert(query_pair);
-    historyMapItor it = result.first;
-    fgProfileSampleHistory *sample = it->second;
+    query_pair.second = new SSampleHistory();
+    std::pair<HistoryMapItor, bool> result = m_sampleHistory.insert(query_pair);
+    HistoryMapItor it = result.first;
+    SSampleHistory *sample = it->second;
     if(!sample)
         return FG_FALSE;
     if(result.second == false) {
-		// Sample existed #FIXME -- too much allocs
+        // Sample existed #FIXME -- too much allocs
         delete query_pair.second;
         query_pair.second = NULL;
         // Existed
@@ -259,8 +276,8 @@ fgBool fgProfiling::storeProfileHistory(const std::string& name, float percent) 
     } else {
         // New insertion
         if(m_sampleHistory.size() > FG_MAX_PROFILE_SAMPLES) {
-			delete it->second;
-			it->second = NULL;
+            delete it->second;
+            it->second = NULL;
             m_sampleHistory.erase(it);
             return FG_FALSE;
         }
@@ -272,16 +289,24 @@ fgBool fgProfiling::storeProfileHistory(const std::string& name, float percent) 
     return FG_TRUE;
 }
 
-/*
- *
+/**
+ * 
+ * @param name
+ * @param average
+ * @param minimum
+ * @param maximum
+ * @return 
  */
-fgBool fgProfiling::getProfileHistory(const std::string& name, float* average, float* minimum, float *maximum) {
+fgBool profile::CProfiling::getProfileHistory(const std::string& name,
+                                              float* average,
+                                              float* minimum,
+                                              float *maximum) {
     if(name.empty())
         return FG_FALSE;
-    historyMapItor it = m_sampleHistory.find(name);
+    HistoryMapItor it = m_sampleHistory.find(name);
     if(it == m_sampleHistory.end())
         return FG_FALSE;
-    fgProfileSampleHistory *entry = it->second;
+    SSampleHistory *entry = it->second;
     if(!entry)
         return FG_FALSE;
     if(average)
@@ -292,4 +317,3 @@ fgBool fgProfiling::getProfileHistory(const std::string& name, float* average, f
         *maximum = entry->maximum;
     return FG_TRUE;
 }
-

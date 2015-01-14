@@ -327,21 +327,21 @@ void gfx::CGfxMain::display(void) {
     }
 #if defined(FG_DEBUG)
     if(g_fgDebugConfig.isDebugProfiling) {
-        g_debugProfiling->begin("GFX::3DScene::sortCalls");
+        profile::g_debugProfiling->begin("GFX::3DScene::sortCalls");
     }
 #endif
     m_3DScene->sortCalls();
 #if defined(FG_DEBUG)
     if(g_fgDebugConfig.isDebugProfiling) {
-        g_debugProfiling->end("GFX::3DScene::sortCalls");
-        g_debugProfiling->begin("GFX::2DScene::sortCalls");
+        profile::g_debugProfiling->end("GFX::3DScene::sortCalls");
+        profile::g_debugProfiling->begin("GFX::2DScene::sortCalls");
     }
 #endif
     //printf("fgGfx2DScene::sortCalls(void)\n");
     m_2DScene->sortCalls();
 #if defined(FG_DEBUG)
     if(g_fgDebugConfig.isDebugProfiling) {
-        g_debugProfiling->end("GFX::2DScene::sortCalls");
+        profile::g_debugProfiling->end("GFX::2DScene::sortCalls");
     }
 #endif
 }
@@ -455,7 +455,7 @@ void gfx::CGfxMain::render(void) {
     if(true) {
 #if defined(FG_DEBUG)
         if(g_fgDebugConfig.isDebugProfiling) {
-            g_debugProfiling->begin("GFX::drawSkyBox");
+            profile::g_debugProfiling->begin("GFX::drawSkyBox");
         }
 #endif
         //
@@ -464,7 +464,7 @@ void gfx::CGfxMain::render(void) {
         // Load proper texture
 #if defined(FG_DEBUG)
         if(g_fgDebugConfig.isDebugProfiling) {
-            g_debugProfiling->begin("GFX::drawSkyBoxTexResGet");
+            profile::g_debugProfiling->begin("GFX::drawSkyBoxTexResGet");
         }
 #endif  
         static resource::CResource *pResourceX = NULL;
@@ -472,7 +472,7 @@ void gfx::CGfxMain::render(void) {
             pResourceX = static_cast<resource::CResourceManager *>(m_pResourceMgr)->get("PurpleNebulaCube");
 #if defined(FG_DEBUG)
         if(g_fgDebugConfig.isDebugProfiling) {
-            g_debugProfiling->end("GFX::drawSkyBoxTexResGet");
+            profile::g_debugProfiling->end("GFX::drawSkyBoxTexResGet");
         }
 #endif
         if(pResourceX->getResourceType() == resource::TEXTURE) {
@@ -497,7 +497,7 @@ void gfx::CGfxMain::render(void) {
         }
 #if defined(FG_DEBUG)
         if(g_fgDebugConfig.isDebugProfiling) {
-            g_debugProfiling->end("GFX::drawSkyBox");
+            profile::g_debugProfiling->end("GFX::drawSkyBox");
         }
 #endif
     }
@@ -550,14 +550,14 @@ void gfx::CGfxMain::render(void) {
 
 #if defined(FG_DEBUG)
     if(g_fgDebugConfig.isDebugProfiling) {
-        g_debugProfiling->begin("GFX::3DScene::render");
+        profile::g_debugProfiling->begin("GFX::3DScene::render");
     }
 #endif
     // RENDER THE 3D SCENE
     m_3DScene->render();
 #if defined(FG_DEBUG)
     if(g_fgDebugConfig.isDebugProfiling) {
-        g_debugProfiling->end("GFX::3DScene::render");
+        profile::g_debugProfiling->end("GFX::3DScene::render");
     }
 #endif
 

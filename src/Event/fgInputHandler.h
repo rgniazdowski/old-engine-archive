@@ -27,8 +27,9 @@
     #endif
 
     #if defined(FG_USING_SDL2)
-class MainModule;
-
+namespace fg {
+    class CMainModule;
+};
         #include "SDL2/SDL_events.h"
         #define FG_DEFAULT_POINTER_ID 1
     #endif /* FG_USING_SDL2 */
@@ -45,7 +46,7 @@ namespace fg {
          */
         class CInputHandler {
     #if defined(FG_USING_SDL2)
-            friend class ::MainModule;
+            friend class fg::CMainModule;
     #endif
         private:
             ///
@@ -134,7 +135,7 @@ namespace fg {
              * @return 
              */
             CFunctionCallback* addKeyDownCallback(int keyCode,
-                                                   CFunctionCallback *pCallback);
+                                                  CFunctionCallback *pCallback);
             /**
              * 
              * @param keyCode
@@ -142,7 +143,7 @@ namespace fg {
              * @return 
              */
             CFunctionCallback* addKeyUpCallback(int keyCode,
-                                                 CFunctionCallback *pCallback);
+                                                CFunctionCallback *pCallback);
 
             /**
              * Add key code to the pool of pressed down keys
