@@ -7,7 +7,22 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-#ifndef FG_INC_GFX_QUADTREE_BASE
-    #define FG_INC_GFX_QUADTREE_BASE
+#include "fgGFXOctree.h"
 
-#endif /* FG_INC_GFX_QUADTREE_BASE */
+using namespace fg;
+
+/**
+ * 
+ */
+gfx::COctree::COctree() { }
+
+/**
+ * 
+ * @param orig
+ */
+gfx::COctree::COctree(const COctree& orig) { }
+
+/**
+ * 
+ */
+gfx::COctree::~COctree() { }

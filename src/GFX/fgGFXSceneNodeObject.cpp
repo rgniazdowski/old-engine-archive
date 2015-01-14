@@ -76,7 +76,7 @@ void fg::gfx::CSceneNodeObject::setModel(fg::gfx::CModel *pModel) {
         }
         // Now setup draw call and children from every shape/mesh from given model
         // -- need some method for quick children removal - all of them
-        childrenSetItor it = getChildren().begin(), end = getChildren().end();
+        ChildrenSetItor it = getChildren().begin(), end = getChildren().end();
         for(; it != end; it++) {
             if(!(*it))
                 continue;

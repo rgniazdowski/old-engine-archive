@@ -92,6 +92,7 @@
           <itemPath>../../../src/GFX/fgGFXAttribBits.h</itemPath>
           <itemPath>../../../src/GFX/fgGFXAttributeData.h</itemPath>
           <itemPath>../../../src/GFX/fgGFXBoundingBox.h</itemPath>
+          <itemPath>../../../src/GFX/fgGFXBoundingVolume.h</itemPath>
           <itemPath>../../../src/GFX/fgGFXBufferID.h</itemPath>
           <itemPath>../../../src/GFX/fgGFXCamera.cpp</itemPath>
           <itemPath>../../../src/GFX/fgGFXCamera.h</itemPath>
@@ -114,6 +115,10 @@
           <itemPath>../../../src/GFX/fgGFXLight.h</itemPath>
           <itemPath>../../../src/GFX/fgGFXLoader.cpp</itemPath>
           <itemPath>../../../src/GFX/fgGFXLoader.h</itemPath>
+          <itemPath>../../../src/GFX/fgGFXLooseOctree.cpp</itemPath>
+          <itemPath>../../../src/GFX/fgGFXLooseOctree.h</itemPath>
+          <itemPath>../../../src/GFX/fgGFXLooseQuadtree.cpp</itemPath>
+          <itemPath>../../../src/GFX/fgGFXLooseQuadtree.h</itemPath>
           <itemPath>../../../src/GFX/fgGFXMVMatrix.h</itemPath>
           <itemPath>../../../src/GFX/fgGFXMVPMatrix.h</itemPath>
           <itemPath>../../../src/GFX/fgGFXMain.cpp</itemPath>
@@ -124,16 +129,16 @@
           <itemPath>../../../src/GFX/fgGFXModelResource.h</itemPath>
           <itemPath>../../../src/GFX/fgGFXModelTypes.cpp</itemPath>
           <itemPath>../../../src/GFX/fgGFXModelTypes.h</itemPath>
-          <itemPath>../../../src/GFX/fgGFXOctreeBase.cpp</itemPath>
-          <itemPath>../../../src/GFX/fgGFXOctreeBase.h</itemPath>
+          <itemPath>../../../src/GFX/fgGFXOctree.cpp</itemPath>
+          <itemPath>../../../src/GFX/fgGFXOctree.h</itemPath>
           <itemPath>../../../src/GFX/fgGFXPlane.h</itemPath>
           <itemPath>../../../src/GFX/fgGFXPlatform.cpp</itemPath>
           <itemPath>../../../src/GFX/fgGFXPlatform.h</itemPath>
           <itemPath>../../../src/GFX/fgGFXPrimitives.cpp</itemPath>
           <itemPath>../../../src/GFX/fgGFXPrimitives.h</itemPath>
           <itemPath>../../../src/GFX/fgGFXProjection.h</itemPath>
-          <itemPath>../../../src/GFX/fgGFXQuadtreeBase.cpp</itemPath>
-          <itemPath>../../../src/GFX/fgGFXQuadtreeBase.h</itemPath>
+          <itemPath>../../../src/GFX/fgGFXQuadtree.cpp</itemPath>
+          <itemPath>../../../src/GFX/fgGFXQuadtree.h</itemPath>
           <itemPath>../../../src/GFX/fgGFXSceneManager.cpp</itemPath>
           <itemPath>../../../src/GFX/fgGFXSceneManager.h</itemPath>
           <itemPath>../../../src/GFX/fgGFXSceneNode.cpp</itemPath>
@@ -867,6 +872,11 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/GFX/fgGFXBoundingVolume.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../src/GFX/fgGFXBufferID.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGFXCamera.cpp" ex="false" tool="1" flavor2="8">
@@ -923,6 +933,26 @@
       </item>
       <item path="../../../src/GFX/fgGFXLoader.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../../../src/GFX/fgGFXLooseOctree.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGFXLooseOctree.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGFXLooseQuadtree.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGFXLooseQuadtree.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../src/GFX/fgGFXMVMatrix.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGFXMVPMatrix.h" ex="false" tool="3" flavor2="0">
@@ -952,12 +982,9 @@
       </item>
       <item path="../../../src/GFX/fgGFXModelTypes.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXOctreeBase.cpp"
-            ex="false"
-            tool="1"
-            flavor2="8">
+      <item path="../../../src/GFX/fgGFXOctree.cpp" ex="false" tool="1" flavor2="8">
       </item>
-      <item path="../../../src/GFX/fgGFXOctreeBase.h" ex="false" tool="3" flavor2="0">
+      <item path="../../../src/GFX/fgGFXOctree.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGFXPlane.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -974,15 +1001,9 @@
       </item>
       <item path="../../../src/GFX/fgGFXProjection.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXQuadtreeBase.cpp"
-            ex="false"
-            tool="1"
-            flavor2="8">
+      <item path="../../../src/GFX/fgGFXQuadtree.cpp" ex="false" tool="1" flavor2="8">
       </item>
-      <item path="../../../src/GFX/fgGFXQuadtreeBase.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
+      <item path="../../../src/GFX/fgGFXQuadtree.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGFXSceneManager.cpp"
             ex="false"
@@ -2190,6 +2211,11 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/GFX/fgGFXBoundingVolume.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../src/GFX/fgGFXBufferID.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGFXCamera.cpp" ex="false" tool="1" flavor2="0">
@@ -2246,6 +2272,26 @@
       </item>
       <item path="../../../src/GFX/fgGFXLoader.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../../../src/GFX/fgGFXLooseOctree.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGFXLooseOctree.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGFXLooseQuadtree.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGFXLooseQuadtree.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../src/GFX/fgGFXMVMatrix.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGFXMVPMatrix.h" ex="false" tool="3" flavor2="0">
@@ -2275,12 +2321,9 @@
       </item>
       <item path="../../../src/GFX/fgGFXModelTypes.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXOctreeBase.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
+      <item path="../../../src/GFX/fgGFXOctree.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXOctreeBase.h" ex="false" tool="3" flavor2="0">
+      <item path="../../../src/GFX/fgGFXOctree.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGFXPlane.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -2297,15 +2340,9 @@
       </item>
       <item path="../../../src/GFX/fgGFXProjection.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXQuadtreeBase.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
+      <item path="../../../src/GFX/fgGFXQuadtree.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXQuadtreeBase.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
+      <item path="../../../src/GFX/fgGFXQuadtree.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGFXSceneManager.cpp"
             ex="false"
@@ -3479,6 +3516,11 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/GFX/fgGFXBoundingVolume.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../src/GFX/fgGFXBufferID.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGFXCamera.cpp" ex="false" tool="1" flavor2="0">
@@ -3535,6 +3577,26 @@
       </item>
       <item path="../../../src/GFX/fgGFXLoader.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../../../src/GFX/fgGFXLooseOctree.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGFXLooseOctree.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGFXLooseQuadtree.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGFXLooseQuadtree.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../src/GFX/fgGFXMVMatrix.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGFXMVPMatrix.h" ex="false" tool="3" flavor2="0">
@@ -3564,12 +3626,9 @@
       </item>
       <item path="../../../src/GFX/fgGFXModelTypes.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXOctreeBase.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
+      <item path="../../../src/GFX/fgGFXOctree.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXOctreeBase.h" ex="false" tool="3" flavor2="0">
+      <item path="../../../src/GFX/fgGFXOctree.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGFXPlane.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -3586,15 +3645,9 @@
       </item>
       <item path="../../../src/GFX/fgGFXProjection.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXQuadtreeBase.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
+      <item path="../../../src/GFX/fgGFXQuadtree.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXQuadtreeBase.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
+      <item path="../../../src/GFX/fgGFXQuadtree.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGFXSceneManager.cpp"
             ex="false"
@@ -4746,6 +4799,11 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/GFX/fgGFXBoundingVolume.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../src/GFX/fgGFXBufferID.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGFXCamera.cpp" ex="false" tool="1" flavor2="0">
@@ -4802,6 +4860,26 @@
       </item>
       <item path="../../../src/GFX/fgGFXLoader.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../../../src/GFX/fgGFXLooseOctree.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGFXLooseOctree.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGFXLooseQuadtree.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGFXLooseQuadtree.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../src/GFX/fgGFXMVMatrix.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGFXMVPMatrix.h" ex="false" tool="3" flavor2="0">
@@ -4831,12 +4909,9 @@
       </item>
       <item path="../../../src/GFX/fgGFXModelTypes.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXOctreeBase.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
+      <item path="../../../src/GFX/fgGFXOctree.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXOctreeBase.h" ex="false" tool="3" flavor2="0">
+      <item path="../../../src/GFX/fgGFXOctree.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGFXPlane.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -4853,15 +4928,9 @@
       </item>
       <item path="../../../src/GFX/fgGFXProjection.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXQuadtreeBase.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
+      <item path="../../../src/GFX/fgGFXQuadtree.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXQuadtreeBase.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
+      <item path="../../../src/GFX/fgGFXQuadtree.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGFXSceneManager.cpp"
             ex="false"

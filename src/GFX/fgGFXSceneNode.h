@@ -14,18 +14,20 @@
     #include "Math/fgMathLib.h"
     #include "Util/fgTag.h"
     #include "fgGFXAABoundingBox.h"
+    #include "fgGFXBoundingVolume.h"
+
     #ifndef FG_INC_GFX_DRAWABLE
         #include "fgGFXDrawable.h"
     #endif
     #ifndef FG_INC_GFX_DRAW_CALL
         #include "fgGFXDrawCall.h"
     #endif
+
 namespace fg {
     namespace gfx {
         class CSceneNode;
     }
 }
-
 
     #define FG_TAG_GFX_OBJECT_NAME	"GfxSceneNode"
     #define FG_TAG_GFX_OBJECT		FG_TAG_TYPE(fg::gfx::CSceneNode)
@@ -93,9 +95,9 @@ namespace fg {
             /// SceneNode type - self
             typedef CSceneNode self_type;
             /// Special set containing children
-            typedef std::set<self_type *> childrenSet;
+            typedef std::set<self_type *> ChildrenSet;
             /// Bidirectional iterator through children set
-            typedef childrenSet::iterator childrenSetItor;
+            typedef ChildrenSet::iterator ChildrenSetItor;
             /// Bounding box type - axis-aligned
             typedef AABoundingBox3Df box_type;
 
@@ -105,7 +107,7 @@ namespace fg {
             /// Scene node father/parent node pointer
             self_type *m_pParent;
             ///
-            childrenSet m_children;
+            ChildrenSet m_children;
             ///
             fgBool m_isVisible;
 
@@ -113,7 +115,7 @@ namespace fg {
             /// Internal object specific model matrix
             Matrix4f m_modelMat;
             /// This is updated bounding box - it's transformed by the model matrix
-            AABoundingBox3Df m_aabb;
+            BoundingVolume3Df m_aabb;
             /// Because the Scene Node is drawable it will contain inside required
             /// draw call - pre-configured properly will draw what is needed
             CDrawCall *m_drawCall;
@@ -256,14 +258,14 @@ namespace fg {
              * 
              * @return 
              */
-            inline childrenSet & getChildren(void) {
+            inline ChildrenSet & getChildren(void) {
                 return m_children;
             }
             /**
              * 
              * @return 
              */
-            inline childrenSet const & getChildren(void) const {
+            inline ChildrenSet const & getChildren(void) const {
                 return m_children;
             }
             /**
@@ -326,28 +328,36 @@ namespace fg {
              * 
              * @param aabb
              */
-            inline void setAABB(const AABoundingBox3Df& aabb) {
+            inline void setBoundingVolume(const AABoundingBox3Df& aabb) {
+                m_aabb.invalidate();
+                m_aabb.merge(aabb);
+            }
+            /**
+             * 
+             * @param aabb
+             */
+            inline void setBoundingVolume(const BoundingVolume3Df& aabb) {
                 m_aabb = aabb;
             }
             /**
              * 
              * @return 
              */
-            inline AABoundingBox3Df& getRefAABB(void) {
+            inline BoundingVolume3Df& getRefBoundingVolume(void) {
                 return m_aabb;
             }
             /**
              * 
              * @return 
              */
-            inline AABoundingBox3Df const & getRefAABB(void) const {
+            inline BoundingVolume3Df const& getRefBoundingVolume(void) const {
                 return m_aabb;
             }
             /**
              * 
              */
             virtual inline void updateAABB(void) {
-                // #FUBAR
+                // #FUBAR - no reset
                 m_aabb.transform(m_modelMat);
             }
             /**
@@ -355,7 +365,7 @@ namespace fg {
              * @param modelMat
              */
             virtual inline void updateAABB(const Matrix4f& modelMat) {
-                // #FUBAR
+                // #FUBAR - no reset performed
                 m_aabb.transform(modelMat);
             }
             /**

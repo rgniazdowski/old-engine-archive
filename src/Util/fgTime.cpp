@@ -32,6 +32,7 @@ float fgTime::s_lastTick = -1.0;
 
 #if defined(FG_USING_SDL2)
 #include <SDL2/SDL_timer.h>
+#include <unistd.h>
 #endif
 
 /*
@@ -84,7 +85,7 @@ float fgTime::elapsed(void) {
 }
 
 /*
- *
+ * Get time since init in seconds
  */
 float fgTime::exact(void) {
 #ifdef FG_USING_PLATFORM_WINDOWS

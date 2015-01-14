@@ -27,15 +27,17 @@ void *fg::gfx::CPlatform::m_defaultConfig = 0;
 #include "s3eTypes.h"
 #endif
 
-/**
- * 
- */
-fg::gfx::CPlatform::CPlatform() { }
+using namespace fg;
 
 /**
  * 
  */
-fg::gfx::CPlatform::~CPlatform() {
+gfx::CPlatform::CPlatform() { }
+
+/**
+ * 
+ */
+gfx::CPlatform::~CPlatform() {
     if(m_gfxContext)
         delete m_gfxContext;
     m_gfxContext = NULL;
@@ -46,12 +48,12 @@ fg::gfx::CPlatform::~CPlatform() {
  * @param reinit
  * @return 
  */
-fgBool fg::gfx::CPlatform::initialize(fgBool reinit) {
-    if(fg::gfx::CPlatform::m_init && !reinit)
+fgBool gfx::CPlatform::initialize(fgBool reinit) {
+    if(gfx::CPlatform::m_init && !reinit)
         return FG_TRUE;
     if(reinit && CPlatform::m_init) {
         // Need to reinitialize
-        fg::gfx::CPlatform::quit(); // ?
+        gfx::CPlatform::quit(); // ?
     }
     fgBool status = FG_TRUE;
     
@@ -210,7 +212,7 @@ fgBool fg::gfx::CPlatform::initialize(fgBool reinit) {
  * 
  * @return 
  */
-fgBool fg::gfx::CPlatform::quit(void) {
+fgBool gfx::CPlatform::quit(void) {
     fgBool status = FG_TRUE;
     if(m_init) {
 #if defined(FG_USING_EGL) || defined(FG_USING_MARMALADE_EGL)
@@ -254,7 +256,7 @@ fgBool fg::gfx::CPlatform::quit(void) {
  * @param sdlWindow
  * @return 
  */
-fgBool fg::gfx::CPlatform::initializeMainContext(SDL_Window* sdlWindow) {
+fgBool gfx::CPlatform::initializeMainContext(SDL_Window* sdlWindow) {
     if(!m_gfxContext)
         m_gfxContext = new CContext(sdlWindow);
     if(!m_gfxContext->isInit())
@@ -268,7 +270,7 @@ fgBool fg::gfx::CPlatform::initializeMainContext(SDL_Window* sdlWindow) {
  * 
  * @return 
  */
-fg::gfx::CContext *fg::gfx::CPlatform::context(void) {
+gfx::CContext *gfx::CPlatform::context(void) {
     return m_gfxContext;
 }
 
@@ -276,24 +278,24 @@ fg::gfx::CContext *fg::gfx::CPlatform::context(void) {
  * 
  * @return 
  */
-fgBool fg::gfx::CPlatform::isInit(void) {
-    return fg::gfx::CPlatform::m_init;
+fgBool gfx::CPlatform::isInit(void) {
+    return gfx::CPlatform::m_init;
 }
 
 /**
  * 
  * @return 
  */
-void *fg::gfx::CPlatform::getDefaultDisplay(void) {
-    return fg::gfx::CPlatform::m_defaultDisplay;
+void *gfx::CPlatform::getDefaultDisplay(void) {
+    return gfx::CPlatform::m_defaultDisplay;
 }
 
 /**
  * 
  * @return 
  */
-void *fg::gfx::CPlatform::getDefaultConfig(void) {
-    return fg::gfx::CPlatform::m_defaultConfig;
+void *gfx::CPlatform::getDefaultConfig(void) {
+    return gfx::CPlatform::m_defaultConfig;
 }
 
 #if defined FG_USING_EGL
@@ -302,7 +304,7 @@ void *fg::gfx::CPlatform::getDefaultConfig(void) {
  * @param display
  * @param config
  */
-void fg::gfx::CPlatform::_eglDumpConfig(EGLDisplay display, EGLConfig config) {
+void gfx::CPlatform::_eglDumpConfig(EGLDisplay display, EGLConfig config) {
     if(!display || !config)
         return;
 

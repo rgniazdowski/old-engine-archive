@@ -33,6 +33,8 @@ m_drawCall(NULL) // DrawCall for this node - it cannot be managed
     // Draw call is only initialized when Node Custom type is specialized
     if(m_nodeType == FG_GFX_SCENE_NODE_CUSTOM) {
         m_drawCall = new CDrawCall();
+    } else {
+        m_drawCall = NULL;
     }
 }
 
@@ -48,7 +50,7 @@ gfx::CSceneNode::~CSceneNode() {
     // Manager needs to destroy/release the managed children objects
     // .. .. .. 
     while(!m_children.empty()) {
-        childrenSetItor it = m_children.begin();
+        ChildrenSetItor it = m_children.begin();
         if(it == m_children.end())
             break;
         if(!(*it)) {
@@ -74,7 +76,7 @@ void gfx::CSceneNode::draw(void) {
     if(m_drawCall) {
         m_drawCall->draw(m_modelMat);
     }
-    childrenSetItor it = m_children.begin(), end = m_children.end();
+    ChildrenSetItor it = m_children.begin(), end = m_children.end();
     for(; it != end; it++) {
         if(!(*it))
             continue;
@@ -92,7 +94,7 @@ void gfx::CSceneNode::draw(const Vec2f& relPos) {
     if(m_drawCall) {
         m_drawCall->draw(relPos);
     }
-    childrenSetItor it = m_children.begin(), end = m_children.end();
+    ChildrenSetItor it = m_children.begin(), end = m_children.end();
     for(; it != end; it++) {
         if(!(*it))
             continue;
@@ -110,7 +112,7 @@ void gfx::CSceneNode::draw(const Vec3f& relPos) {
     if(m_drawCall) {
         m_drawCall->draw(relPos);
     }
-    childrenSetItor it = m_children.begin(), end = m_children.end();
+    ChildrenSetItor it = m_children.begin(), end = m_children.end();
     for(; it != end; it++) {
         if(!(*it))
             continue;
@@ -128,7 +130,7 @@ void gfx::CSceneNode::draw(const Matrix4f& modelMat) {
     if(m_drawCall) {
         m_drawCall->draw(modelMat);
     }
-    childrenSetItor it = m_children.begin(), end = m_children.end();
+    ChildrenSetItor it = m_children.begin(), end = m_children.end();
     for(; it != end; it++) {
         if(!(*it))
             continue;
@@ -145,7 +147,7 @@ fgBool gfx::CSceneNode::addChild(CSceneNode *pChild) {
     if(!pChild)
         return FG_FALSE;
     fgBool status = FG_FALSE;
-    std::pair<childrenSetItor, bool> result = m_children.insert(pChild);
+    std::pair<ChildrenSetItor, bool> result = m_children.insert(pChild);
     if(result.second)
         status = FG_TRUE;
     return status;
@@ -160,7 +162,7 @@ fgBool gfx::CSceneNode::removeChild(CSceneNode *pChild) {
     if(!pChild || m_children.empty())
         return FG_FALSE;
     fgBool status = FG_TRUE;
-    childrenSetItor it = m_children.find(pChild);
+    ChildrenSetItor it = m_children.find(pChild);
     if(it == m_children.end()) {
         status = FG_FALSE;
     } else {
@@ -187,7 +189,7 @@ gfx::CSceneNode *gfx::CSceneNode::removeChild(const std::string& childName) {
         return NULL;
     CSceneNode *pChild = NULL;
     fgBool secondCheck = FG_TRUE;
-    childrenSetItor it = m_children.end();
+    ChildrenSetItor it = m_children.end();
     fgBool managerValid = FG_FALSE;
     // Can use manager pointer - kinda strange ?
     if(m_pManager) {
@@ -214,7 +216,7 @@ gfx::CSceneNode *gfx::CSceneNode::removeChild(const std::string& childName) {
     }
     if(secondCheck) {
         it = m_children.begin();
-        childrenSetItor end = m_children.end();
+        ChildrenSetItor end = m_children.end();
         for(; it != end; it++) {
             if(!(*it))
                 continue;
@@ -266,7 +268,7 @@ fgBool gfx::CSceneNode::destroyChild(CSceneNode *&pChild) {
         return FG_FALSE;
     fgBool status = FG_TRUE;
     fgBool managerValid = FG_FALSE;
-    childrenSetItor it = m_children.find(pChild);
+    ChildrenSetItor it = m_children.find(pChild);
     if(it == m_children.end()) {
         status = FG_FALSE;
     } else {
@@ -298,7 +300,7 @@ fgBool gfx::CSceneNode::destroyChild(const std::string& childName) {
         return FG_FALSE;
     CSceneNode *pChild = NULL;
     fgBool secondCheck = FG_TRUE;
-    childrenSetItor it = m_children.end();
+    ChildrenSetItor it = m_children.end();
     fgBool managerValid = FG_FALSE;
     // Can use manager pointer - kinda strange ?
     if(m_pManager) {
@@ -323,7 +325,7 @@ fgBool gfx::CSceneNode::destroyChild(const std::string& childName) {
     }
     if(secondCheck) {
         it = m_children.begin();
-        childrenSetItor end = m_children.end();
+        ChildrenSetItor end = m_children.end();
         for(; it != end; it++) {
             if(!(*it))
                 continue;
@@ -393,7 +395,7 @@ gfx::CSceneNode* gfx::CSceneNode::getChild(const gfx::CSceneNode::handle_type& c
                 }
                 // 2. method
                 if(false) {
-                    childrenSetItor it = m_children.find(pChild);
+                    ChildrenSetItor it = m_children.find(pChild);
                     if(it != m_children.end()) {
                         secondCheck = FG_FALSE;
                     }
@@ -402,7 +404,7 @@ gfx::CSceneNode* gfx::CSceneNode::getChild(const gfx::CSceneNode::handle_type& c
         }
     }
     if(secondCheck) {
-        childrenSetItor it = m_children.begin(), end = m_children.end();
+        ChildrenSetItor it = m_children.begin(), end = m_children.end();
         for(; it != end; it++) {
             if(!(*it))
                 continue;
@@ -439,7 +441,7 @@ gfx::CSceneNode* gfx::CSceneNode::getChild(const std::string& childName) {
                 }
                 // 2. method:
                 if(false) {
-                    childrenSetItor it = m_children.find(pChild);
+                    ChildrenSetItor it = m_children.find(pChild);
                     if(it != m_children.end()) {
                         secondCheck = FG_FALSE;
                     }
@@ -450,7 +452,7 @@ gfx::CSceneNode* gfx::CSceneNode::getChild(const std::string& childName) {
         }
     }
     if(secondCheck) {
-        childrenSetItor it = m_children.begin(), end = m_children.end();
+        ChildrenSetItor it = m_children.begin(), end = m_children.end();
         for(; it != end; it++) {
             if(!(*it))
                 continue;
@@ -481,7 +483,7 @@ fgBool gfx::CSceneNode::hasChild(CSceneNode *pChild) {
     if(!pChild || m_children.empty())
         return FG_FALSE;
     fgBool status = FG_FALSE;
-    childrenSetItor it = m_children.find(pChild);
+    ChildrenSetItor it = m_children.find(pChild);
     if(it != m_children.end())
         status = FG_TRUE;
     return status;
@@ -496,7 +498,7 @@ fgBool gfx::CSceneNode::hasChild(const gfx::CSceneNode::handle_type& childHandle
     if(childHandle.isNull() || m_children.empty())
         return FG_FALSE;
     fgBool status = FG_FALSE;
-    childrenSetItor it = m_children.begin(), end = m_children.end();
+    ChildrenSetItor it = m_children.begin(), end = m_children.end();
     for(; it != end; it++) {
         if(!(*it))
             continue;

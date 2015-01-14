@@ -151,7 +151,7 @@ void gfx::CSceneManager::sortCalls(void) {
         pNode->updateAABB();
 
         //const char *msg[] = {"OUTSIDE", "INTERSECT", "INSIDE", "[null]", "\0"};
-        int boxtest = m_MVP.getRefFrustum().testAABB(pNode->getRefAABB());
+        int boxtest = m_MVP.getRefFrustum().testVolume(pNode->getRefBoundingVolume());
         //int spheretest = (int)m_MVP.getRefFrustum().testSphere(fgVector3f(pNode->getRefModelMatrix()[3]), 30.0f);
         if(!boxtest)
             pNode->setVisible(FG_FALSE);
@@ -221,7 +221,7 @@ void gfx::CSceneManager::render(void) {
         if(FG_DEBUG_CFG_OPTION(gfxBBoxShow)) {
             m_MVP.resetModelMatrix();
             static_cast<gfx::CShaderManager *>(m_pShaderMgr)->getCurrentProgram()->setUniform(&m_MVP);
-            CPrimitives::drawAABBLines(pSceneNode->getRefAABB());
+            CPrimitives::drawAABBLines(pSceneNode->getRefBoundingVolume());
         }
 #endif
         m_nodeQueue.pop();

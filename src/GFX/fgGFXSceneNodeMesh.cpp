@@ -15,10 +15,12 @@
 
 #include "fgGFXSceneNodeMesh.h"
 
+using namespace fg;
+
 /**
  * 
  */
-fg::gfx::CSceneNodeMesh::CSceneNodeMesh(SMeshBase *pMesh, CSceneNode *pParent) :
+gfx::CSceneNodeMesh::CSceneNodeMesh(SMeshBase *pMesh, CSceneNode *pParent) :
 CSceneNode(FG_GFX_SCENE_NODE_MESH, pParent) {
     CSceneNode::setNodeType(FG_GFX_SCENE_NODE_MESH);
     if(m_drawCall) {
@@ -34,18 +36,18 @@ CSceneNode(FG_GFX_SCENE_NODE_MESH, pParent) {
  * 
  * @param orig
  */
-fg::gfx::CSceneNodeMesh::CSceneNodeMesh(const CSceneNodeMesh& orig) { }
+gfx::CSceneNodeMesh::CSceneNodeMesh(const CSceneNodeMesh& orig) { }
 
 /**
  * 
  */
-fg::gfx::CSceneNodeMesh::~CSceneNodeMesh() { }
+gfx::CSceneNodeMesh::~CSceneNodeMesh() { }
 
 /**
  * 
  * @param pMesh
  */
-void fg::gfx::CSceneNodeMesh::setMesh(SMeshBase* pMesh) {
+void gfx::CSceneNodeMesh::setMesh(SMeshBase* pMesh) {
     if(!pMesh)
         return;
     CSceneNode::setNodeType(FG_GFX_SCENE_NODE_MESH);
