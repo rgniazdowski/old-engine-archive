@@ -572,7 +572,7 @@ fgBool script::CScriptSubsystem::registerConstants(void) {
     m_fgObj.SetInteger("GUI_ALIGN_BOTTOM", (int)gui::Align::BOTTOM);
 
     // fgGuiPositionStyle
-    m_fgObj.SetInteger("GUI_POS_STATIC", (int)gui::SPosition::Style::STATIC);
+    m_fgObj.SetInteger("GUI_POS_STATIC", (int)gui::SPosition::Style::STATICPOS);
     m_fgObj.SetInteger("GUI_POS_FIXED", (int)gui::SPosition::Style::FIXED);
     m_fgObj.SetInteger("GUI_POS_RELATIVE", (int)gui::SPosition::Style::RELATIVE);
     m_fgObj.SetInteger("GUI_POS_ABSOLUTE", (int)gui::SPosition::Style::ABSOLUTE);

@@ -172,7 +172,7 @@ gfx::BoundingBox3Df gui::CWidget::updateBounds(const gfx::BoundingBox3Df &bounds
     }
     gfx::BoundingBox3Df positionAndSize = updateBounds(); // Call to the derived version
     // Margin?
-    if(posStyle == SPosition::Style::STATIC) {
+    if(posStyle == SPosition::Style::STATICPOS) {
         m_bbox.pos = bounds.pos;
         // Padding is inside of the border
         // Margin is outside of the border
@@ -224,7 +224,7 @@ gfx::BoundingBox3Df gui::CWidget::updateBounds(const gfx::BoundingBox3Df &bounds
  *
  */
 void gui::CWidget::refresh(void) {
-    if(m_styles[(int)m_state].getPosition().style != SPosition::Style::STATIC) {
+    if(m_styles[(int)m_state].getPosition().style != SPosition::Style::STATICPOS) {
         if(FG_GUI_CHECK_FLOAT(m_styles[(int)m_state].getPosition().left))
             m_relPos.x = m_styles[(int)m_state].getPosition().left;
         if(FG_GUI_CHECK_FLOAT(m_styles[(int)m_state].getPosition().top))

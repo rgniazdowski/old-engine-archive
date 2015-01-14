@@ -193,7 +193,7 @@ gfx::BoundingBox3Df gui::CContainer::updateBounds(void) {
             continue;
         Vector3f childSize;
 
-        if(child->getStyleContent().getPosition().style != SPosition::Style::STATIC) {
+        if(child->getStyleContent().getPosition().style != SPosition::Style::STATICPOS) {
             nStaticChildren--;
             // If child has different than static positioning, update its size
             // and position with the main (container) innerBox constraint
@@ -280,7 +280,7 @@ gfx::BoundingBox3Df gui::CContainer::updateBounds(void) {
         CWidget *child = m_children[i];
         if(!child)
             continue;
-        if(child->getStyleContent().getPosition().style != SPosition::Style::STATIC ||
+        if(child->getStyleContent().getPosition().style != SPosition::Style::STATICPOS ||
            !child->isVisible()) {
             j--;
             continue;

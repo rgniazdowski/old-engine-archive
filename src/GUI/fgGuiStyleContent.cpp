@@ -219,11 +219,11 @@ gui::SBorder gui::CStyleContent::parseBorder(const char *value) {
  */
 gui::SPosition::Style gui::CStyleContent::parsePositionStyle(const char *value) {
     if(!value)
-        return SPosition::Style::STATIC;
-    SPosition::Style style = SPosition::Style::STATIC;
+        return SPosition::Style::STATICPOS;
+    SPosition::Style style = SPosition::Style::STATICPOS;
 
     if(strcmp(value, "static") == 0) {
-        style = SPosition::Style::STATIC;
+        style = SPosition::Style::STATICPOS;
     } else if(strcmp(value, "fixed") == 0) {
         style = SPosition::Style::FIXED;
     } else if(strcmp(value, "relative") == 0) {
@@ -1034,7 +1034,7 @@ gui::CStyleContent& gui::CStyleContent::setPosition(const SPosition::Style style
  * @return 
  */
 gui::CStyleContent& gui::CStyleContent::setPosition(const Vector2f& modPos) {
-    if(m_position.style != SPosition::Style::STATIC) {
+    if(m_position.style != SPosition::Style::STATICPOS) {
         if(modPos.x <= 0.0f)
             m_position.left = fabsf(modPos.x);
         else
@@ -1064,7 +1064,7 @@ gui::CStyleContent& gui::CStyleContent::setPosition(const SPosition::Style style
  * @return 
  */
 gui::CStyleContent& gui::CStyleContent::setPosition(const Vector3f& modPos) {
-    if(m_position.style != SPosition::Style::STATIC) {
+    if(m_position.style != SPosition::Style::STATICPOS) {
         if(modPos.x <= 0.0f)
             m_position.left = fabsf(modPos.x);
         else

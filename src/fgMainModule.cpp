@@ -18,6 +18,67 @@
 
 extern float guiScale; // #FIXME GUI SCALE
 
+
+#if defined FG_USING_MARMALADE
+
+/**
+ * Focus lost HANDLER
+ */
+int32_t fgMarmaladeHandlers::pauseHandler(void *systemData, void *userData) {
+    if(!userData)
+        return 0;
+    fg::CMainModule *mainModule = (fg::CMainModule *)userData;
+    mainModule->focusLostEvent();
+    return 0;
+}
+
+/**
+ * Focus restored HANDLER
+ */
+int32_t fgMarmaladeHandlers::unpauseHandler(void *systemData, void *userData) {
+    if(!userData)
+        return 0;
+    fg::CMainModule *mainModule = (fg::CMainModule *)userData;
+    mainModule->focusGainedEvent();
+    return 0;
+}
+
+/**
+ * Focus lost HANDLER
+ */
+int32_t fgMarmaladeHandlers::suspendGfxHandler(void *systemData, void *userData) {
+    if(!userData)
+        return 0;
+    fg::CMainModule *mainModule = (fg::CMainModule *)userData;
+    mainModule->suspendGfxEvent();
+    return 0;
+}
+
+/**
+ * Focus restored HANDLER
+ */
+int32_t fgMarmaladeHandlers::resumeGfxHandler(void *systemData, void *userData) {
+    if(!userData)
+        return 0;
+    fg::CMainModule *mainModule = (fg::CMainModule *)userData;
+    mainModule->resumeGfxEvent();
+    return 0;
+}
+
+/**
+ * Key state changed HANDLER
+ */
+int32_t fgMarmaladeHandlers::keyStateChangedHandler(void *systemData, void *userData) {
+    if(!userData)
+        return 0;
+    fg::CMainModule *mainModule = (fg::CMainModule *)userData;
+    s3eKeyboardEvent* event = (s3eKeyboardEvent*)systemData;
+    mainModule->keyStateChangedEvent(event);
+    return 0;
+}
+
+#endif /* FG_USING_MARMALADE */
+
 using namespace fg;
 
 /**
@@ -470,67 +531,6 @@ void CMainModule::keyStateChangedEvent(s3eKeyboardEvent* event) {
     }
     //FG_LOG_DEBUG("FG_EventManager - keyboard - %d is pressed? - code: %d", (int)event->m_Pressed, (int)event->m_Key);
 }
-#endif /* FG_USING_MARMALADE */
-
-
-#if defined FG_USING_MARMALADE
-
-/**
- * Focus lost HANDLER
- */
-int32_t fgMarmaladeHandlers::pauseHandler(void *systemData, void *userData) {
-    if(!userData)
-        return 0;
-    CMainModule *mainModule = (CMainModule *)userData;
-    mainModule->focusLostEvent();
-    return 0;
-}
-
-/**
- * Focus restored HANDLER
- */
-int32_t fgMarmaladeHandlers::unpauseHandler(void *systemData, void *userData) {
-    if(!userData)
-        return 0;
-    CMainModule *mainModule = (CMainModule *)userData;
-    mainModule->focusGainedEvent();
-    return 0;
-}
-
-/**
- * Focus lost HANDLER
- */
-int32_t fgMarmaladeHandlers::suspendGfxHandler(void *systemData, void *userData) {
-    if(!userData)
-        return 0;
-    CMainModule *mainModule = (CMainModule *)userData;
-    mainModule->suspendGfxEvent();
-    return 0;
-}
-
-/**
- * Focus restored HANDLER
- */
-int32_t fgMarmaladeHandlers::resumeGfxHandler(void *systemData, void *userData) {
-    if(!userData)
-        return 0;
-    CMainModule *mainModule = (CMainModule *)userData;
-    mainModule->resumeGfxEvent();
-    return 0;
-}
-
-/**
- * Key state changed HANDLER
- */
-int32_t fgMarmaladeHandlers::keyStateChangedHandler(void *systemData, void *userData) {
-    if(!userData)
-        return 0;
-    CMainModule *mainModule = (CMainModule *)userData;
-    s3eKeyboardEvent* event = (s3eKeyboardEvent*)systemData;
-    mainModule->keyStateChangedEvent(event);
-    return 0;
-}
-
 #endif /* FG_USING_MARMALADE */
 
 /**

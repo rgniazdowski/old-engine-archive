@@ -68,7 +68,7 @@ namespace fg {
 
     template<typename T>
     struct Vector2T {
-        typedef detail::tvec2<T, glm::defaultp> type;
+        typedef glm::detail::tvec2<T, glm::defaultp> type;
     };
 
     template<typename T>
@@ -83,7 +83,7 @@ namespace fg {
 
     template<typename T>
     struct Vec2T {
-        typedef detail::tvec2<T, glm::defaultp> type;
+        typedef glm::detail::tvec2<T, glm::defaultp> type;
     };
 
     template<typename T>

@@ -67,7 +67,7 @@ namespace fg {
      */
     class CMainModule {
     #if defined FG_USING_MARMALADE
-        friend class fgMarmaladeHandlers;
+        friend class ::fgMarmaladeHandlers;
         friend int ::main();
     #else
         friend int ::main(int argc, char *argv[]);

@@ -37,21 +37,21 @@ void gui::CDrawer::setResourceManager(fg::base::CManager *pResourceMgr) {
  *
  */
 void gui::CDrawer::flush(void) {
-    CDrawingBatch::flush();
+    gfx::CDrawingBatch::flush();
 }
 
 /*
  *
  */
 void gui::CDrawer::sortCalls(void) {
-    CDrawingBatch::sortCalls();
+    gfx::CDrawingBatch::sortCalls();
 }
 
 /*
  *
  */
 void gui::CDrawer::render(void) {
-    CDrawingBatch::render();
+    gfx::CDrawingBatch::render();
 }
 
 /**
@@ -124,6 +124,8 @@ void gui::CDrawer::appendBackground2D(const Vec2f &pos,
             }
         }
     }
+    //union {T x, r, s;};
+    //union {T y, g, t;};
     Vec2f uv1(0, 1); // upper left corner
     Vec2f uv2(1, 0); // lower right corner
     if(background.style == SBackground::Style::TILED) {
@@ -131,8 +133,17 @@ void gui::CDrawer::appendBackground2D(const Vec2f &pos,
         if(pTexture) {
             ratio.x = size.x / (float)pTexture->getWidth();
             ratio.y = size.y / (float)pTexture->getHeight();
-            uv1.y = ratio.y;
-            uv2.x = ratio.x;
+            uv1.y = ratio.y; // upper left corner (t/y coordinate)
+            uv2.x = ratio.x; // lower right corner (s/x coordinate)
+            // centered tiling test #FIXME
+            if(ratio.x > 1.0f) {
+                uv2.y = -(ratio.x - 1.0f) / 2.0f;
+                uv2.x += uv2.y;
+            }
+            if(ratio.y > 1.0f) {
+                uv1.x = -(ratio.y - 1.0f) / 2.0f;
+                uv1.y += uv1.x;
+            }
         }
     }
     drawCall->setColor(background.color);

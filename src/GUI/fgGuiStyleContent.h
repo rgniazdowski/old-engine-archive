@@ -43,7 +43,7 @@
     #define FG_GUI_DEFAULT_SIZE_Y       5.0f
     #define FG_GUI_DEFAULT_SIZE_Z       1.0f
 
-    #define FG_GUI_DEFAULT_POSITION_STYLE	SPosition::Style::STATIC
+    #define FG_GUI_DEFAULT_POSITION_STYLE	SPosition::Style::STATICPOS
     #define FG_GUI_DEFAULT_POSITION_LEFT	FG_GUI_FLOAT_UNIT_INVALID
     #define FG_GUI_DEFAULT_POSITION_RIGTH	FG_GUI_FLOAT_UNIT_INVALID
     #define FG_GUI_DEFAULT_POSITION_TOP		FG_GUI_FLOAT_UNIT_INVALID
@@ -334,7 +334,7 @@ namespace fg {
              *
              */
             enum class Style : unsigned char {
-                STATIC,
+                STATICPOS,
                 FIXED,
                 RELATIVE,
                 ABSOLUTE

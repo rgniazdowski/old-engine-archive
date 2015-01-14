@@ -105,7 +105,7 @@ namespace fg {
          */
         enum class ResourcePriority : char {
             ///
-            INVALID = -1,
+            INVALID = ((char)(-1)),
 
             ///
             LOW = 0,
