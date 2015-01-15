@@ -14,10 +14,10 @@
 const float fg::gui::CScreenGrid::DEFAULT_GRID_H = 40.0f;
 
 template <>
-bool fgSingleton<fg::gui::CScreenGrid>::instanceFlag = false;
+bool CSingleton<fg::gui::CScreenGrid>::instanceFlag = false;
 
 template <>
-fg::gui::CScreenGrid *fgSingleton<fg::gui::CScreenGrid>::instance = NULL;
+fg::gui::CScreenGrid *CSingleton<fg::gui::CScreenGrid>::instance = NULL;
 
 using namespace fg;
 

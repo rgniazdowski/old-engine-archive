@@ -571,17 +571,17 @@ void gfx::CParticleEffect::randomizeOnPair(const SParticle* from,
  */
 void gfx::CParticleEffect::basicCalculate(SParticle* outputParticle) {
     // MOVEMENT
-    outputParticle->bbox.pos.x += outputParticle->velocity.x * fgTime::elapsed();
-    outputParticle->bbox.pos.y += outputParticle->velocity.y * fgTime::elapsed();
-    outputParticle->bbox.pos.z += outputParticle->velocity.z * fgTime::elapsed();
+    outputParticle->bbox.pos.x += outputParticle->velocity.x * timesys::elapsed();
+    outputParticle->bbox.pos.y += outputParticle->velocity.y * timesys::elapsed();
+    outputParticle->bbox.pos.z += outputParticle->velocity.z * timesys::elapsed();
 
     // ROTATION
-    outputParticle->rotation.x += outputParticle->angularVelocity.x * fgTime::elapsed();
-    outputParticle->rotation.y += outputParticle->angularVelocity.y * fgTime::elapsed();
-    outputParticle->rotation.z += outputParticle->angularVelocity.z * fgTime::elapsed();
+    outputParticle->rotation.x += outputParticle->angularVelocity.x * timesys::elapsed();
+    outputParticle->rotation.y += outputParticle->angularVelocity.y * timesys::elapsed();
+    outputParticle->rotation.z += outputParticle->angularVelocity.z * timesys::elapsed();
 
     // FADING
-    outputParticle->life -= outputParticle->fadeSpeed * fgTime::elapsed();
+    outputParticle->life -= outputParticle->fadeSpeed * timesys::elapsed();
 
     // LIFE AS SIZE
     if(isLifeAsSize()) {
@@ -593,7 +593,7 @@ void gfx::CParticleEffect::basicCalculate(SParticle* outputParticle) {
     if(isParamsActive()) {
         // This actions will work properly only if the particle TTL parameter is set
         // Size
-        float elapsed = fgTime::elapsed();
+        float elapsed = timesys::elapsed();
         float ttl = (float)outputParticle->ttl / 1000.0f;
         outputParticle->bbox.size += (m_endSize - m_startSize) / ttl * elapsed;
         fgColor4f &color = outputParticle->color;

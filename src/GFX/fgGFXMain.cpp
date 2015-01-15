@@ -123,7 +123,7 @@ void gfx::CGfxMain::unregisterResourceCallbacks(void) {
  * @return 
  */
 fgBool gfx::CGfxMain::initGFX(void) {
-    float t1 = fgTime::ms();
+    float t1 = timesys::ms();
     fgBool status = FG_TRUE;
 
     if(!gfx::CPlatform::initialize()) {
@@ -189,7 +189,7 @@ fgBool gfx::CGfxMain::initGFX(void) {
         m_loader.setMainWindow(m_mainWindow);
         FG_LOG_DEBUG("GFX: Subsystem initialized successfully");
     }
-    float t2 = fgTime::ms();
+    float t2 = timesys::ms();
     FG_LOG_DEBUG("GFX: Initialized in %.2f seconds", (t2 - t1) / 1000.0f);
     return status;
 }

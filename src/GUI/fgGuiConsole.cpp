@@ -63,7 +63,7 @@ void gui::CConsole::display(CDrawer* guiLayer) {
  * 
  * @param statusVec
  */
-void gui::CConsole::updateFromStatusVec(const fg::CVector<fgStatus *> &statusVec) {
+void gui::CConsole::updateFromStatusVec(const CVector<msg::SStatus*>& statusVec) {
     if(statusVec.empty())
         return;
 
@@ -75,7 +75,7 @@ void gui::CConsole::updateFromStatusVec(const fg::CVector<fgStatus *> &statusVec
 
     if(n > m_numConsoleRecords) {
         for(unsigned int i = m_numConsoleRecords; i < n; i++) {
-            fgStatus *status = statusVec[i];
+            msg::SStatus *status = statusVec[i];
             if(!status)
                 continue;
             if(status->hasMessage()) {

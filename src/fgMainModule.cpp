@@ -18,8 +18,7 @@
 
 extern float guiScale; // #FIXME GUI SCALE
 
-
-#if defined FG_USING_MARMALADE
+#if defined(FG_USING_MARMALADE)
 
 /**
  * Focus lost HANDLER
@@ -76,7 +75,6 @@ int32_t fgMarmaladeHandlers::keyStateChangedHandler(void *systemData, void *user
     mainModule->keyStateChangedEvent(event);
     return 0;
 }
-
 #endif /* FG_USING_MARMALADE */
 
 using namespace fg;
@@ -202,43 +200,43 @@ SDL_EventType CMainModule::checkSDLEvents(void) {
 
                 /* Joystick events #FIXME */
             case SDL_JOYAXISMOTION: /**< Joystick axis motion */
-                printf("SDL_JOYAXISMOTION\n");
+                FG_LOG_DEBUG("SDL_JOYAXISMOTION");
                 break;
             case SDL_JOYBALLMOTION: /**< Joystick trackball motion */
-                printf("SDL_JOYBALLMOTION\n");
+                FG_LOG_DEBUG("SDL_JOYBALLMOTION");
                 break;
             case SDL_JOYHATMOTION: /**< Joystick hat position change */
-                printf("SDL_JOYHATMOTION\n");
+                FG_LOG_DEBUG("SDL_JOYHATMOTION");
                 break;
             case SDL_JOYBUTTONDOWN: /**< Joystick button pressed */
-                printf("SDL_JOYBUTTONDOWN\n");
+                FG_LOG_DEBUG("SDL_JOYBUTTONDOWN");
                 break;
             case SDL_JOYBUTTONUP: /**< Joystick button released */
-                printf("SDL_JOYBUTTONUP\n");
+                FG_LOG_DEBUG("SDL_JOYBUTTONUP");
                 break;
             case SDL_JOYDEVICEADDED: /**< A new joystick has been inserted into the system */
-                printf("SDL_JOYDEVICEADDED\n");
+                FG_LOG_DEBUG("SDL_JOYDEVICEADDED");
                 break;
             case SDL_JOYDEVICEREMOVED: /**< An opened joystick has been removed */
-                printf("SDL_JOYDEVICEREMOVED\n");
+                FG_LOG_DEBUG("SDL_JOYDEVICEREMOVED");
                 break;
 
                 /* Game controller events */
 #if 0
             case SDL_CONTROLLERAXISMOTION: /**< Game controller axis motion */
-                printf("SDL_CONTROLLERAXISMOTION\n");
+                FG_LOG_DEBUG("SDL_CONTROLLERAXISMOTION");
                 break;
             case SDL_CONTROLLERBUTTONDOWN: /**< Game controller button pressed */
-                printf("SDL_CONTROLLERBUTTONDOWN\n");
+                FG_LOG_DEBUG("SDL_CONTROLLERBUTTONDOWN");
                 break;
             case SDL_CONTROLLERBUTTONUP: /**< Game controller button released */
-                printf("SDL_CONTROLLERBUTTONUP\n");
+                FG_LOG_DEBUG("SDL_CONTROLLERBUTTONUP");
                 break;
             case SDL_CONTROLLERDEVICEADDED: /**< A new Game controller has been inserted into the system */
-                printf("SDL_CONTROLLERDEVICEADDED\n");
+                FG_LOG_DEBUG("SDL_CONTROLLERDEVICEADDED");
                 break;
             case SDL_CONTROLLERDEVICEREMOVED: /**< An opened Game controller has been removed */
-                printf("SDL_CONTROLLERDEVICEREMOVED\n");
+                FG_LOG_DEBUG("SDL_CONTROLLERDEVICEREMOVED");
             {
                 if(!m_gameMain)
                     continue;
@@ -250,7 +248,7 @@ SDL_EventType CMainModule::checkSDLEvents(void) {
                 break;
 
             case SDL_CONTROLLERDEVICEREMAPPED: /**< The controller mapping was updated */
-                printf("SDL_CONTROLLERDEVICEREMAPPED\n");
+                FG_LOG_DEBUG("SDL_CONTROLLERDEVICEREMAPPED");
                 break;
 #endif
                 /* Touch events */
@@ -304,12 +302,12 @@ SDL_EventType CMainModule::checkSDLEvents(void) {
  * @return 
  */
 fgBool CMainModule::initProgram() {
-    fgTime::init(); // #FIXME global time init?
+    timesys::init(); // #FIXME global time init?
 #if defined(FG_DEBUG)
     profile::g_debugProfiling = new profile::CProfiling();
     profile::g_debugProfiling->initialize();
 #endif
-    float t1 = fgTime::ms();
+    float t1 = timesys::ms();
     FG_LOG_DEBUG("Init program main...");
     if(m_appInit) {
         // already initialized
@@ -351,7 +349,7 @@ fgBool CMainModule::initProgram() {
         return FG_FALSE;
     }
     m_appInit = FG_TRUE;
-    float t2 = fgTime::ms();
+    float t2 = timesys::ms();
     FG_LOG_DEBUG("Main: Program initialized in %.2f seconds", (t2 - t1) / 1000.0f);
     return FG_TRUE;
 }

@@ -14,7 +14,11 @@
     #include "fgGuiTextArea.h"
     #include "fgGuiWidgetFactoryTypes.h"
 
-struct fgStatus;
+namespace fg {
+    namespace msg {
+        struct SStatus;
+    };
+};
 
 namespace fg {
     namespace gui {
@@ -84,7 +88,7 @@ namespace fg {
              * 
              * @param statusVec
              */
-            void updateFromStatusVec(const fg::CVector<fgStatus *> &statusVec);
+            void updateFromStatusVec(const CVector<msg::SStatus *> &statusVec);
 
         public:
             /**

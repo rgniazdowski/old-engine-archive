@@ -276,7 +276,7 @@ fgBool script::CScriptSubsystem::initialize(void) {
     if(!m_pEventMgr || !m_pResourceMgr) {
         return FG_FALSE;
     }
-    float t1 = fgTime::ms();
+    float t1 = timesys::ms();
 #if defined(FG_USING_LUA_PLUS)
     if(!m_luaState)
         m_luaState = LuaPlus::LuaState::Create(true);
@@ -350,7 +350,7 @@ fgBool script::CScriptSubsystem::initialize(void) {
         FG_LOG_ERROR("Script: Failed to register GameLogicManager object");
     }
 
-    float t2 = fgTime::ms();
+    float t2 = timesys::ms();
     FG_LOG_DEBUG("Script: ScriptSubsystem initialized in %.2f seconds", (t2 - t1) / 1000.0f);
     m_init = FG_TRUE;
     m_isBindingComplete = FG_TRUE;

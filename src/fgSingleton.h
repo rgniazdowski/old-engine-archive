@@ -11,13 +11,13 @@
     #define FG_INC_SINGLETON
 
 template<typename Class>
-class fgSingleton {
+class CSingleton {
 private:
     static bool instanceFlag;
     static Class *instance;
 
 protected:
-    fgSingleton() { }
+    CSingleton() { }
 
 public:
     static Class *getInstance() {
@@ -38,7 +38,7 @@ public:
             instance = 0;
         }
     }
-    virtual ~fgSingleton() {
+    virtual ~CSingleton() {
         instanceFlag = false;
     }
 };

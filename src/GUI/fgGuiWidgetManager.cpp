@@ -298,13 +298,13 @@ fgBool gui::CWidgetManager::addWidget(CWidget *pWidget) {
 fgBool gui::CWidgetManager::addWidget(CWidget *pWidget, CWidget *pFatherWidget) {
     if(!pWidget) {
         // Empty pointer - return
-        FG_LOG::PrintError("WidgetManager: // Empty pointer - exit... no addition made");
+        log::PrintError("WidgetManager: // Empty pointer - exit... no addition made");
         return FG_FALSE;
     }
     fgGuiWidgetHandle wUniqueID;
     if(handle_mgr_type::isDataManaged(pWidget)) {
         // Widget is already managed in the handle manager
-        FG_LOG::PrintError("WidgetManager: // Widget is already managed in the handle manager: '%s' of type '%s'", pWidget->getNameStr(), pWidget->getTypeNameStr());
+        log::PrintError("WidgetManager: // Widget is already managed in the handle manager: '%s' of type '%s'", pWidget->getNameStr(), pWidget->getTypeNameStr());
         return FG_FALSE;
     }
 

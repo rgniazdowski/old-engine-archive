@@ -9,42 +9,69 @@
 
 #ifndef FG_INC_EXCEPTION
     #define FG_INC_EXCEPTION
+    #define FG_INC_EXCEPTION_BLOCK
 
     #include "fgBool.h"
     #include "fgErrno.h"
     #include "fgMessageCommon.h"
     #include <string>
 
-/*
- *
- */
-struct fgException : fgError {
-    std::string data;
-    fgException() {
-        type = FG_MESSAGE_ERROR;
-        critical = FG_TRUE;
-    }
-    fgException(const char *_data) {
-        type = FG_MESSAGE_ERROR;
-        critical = FG_TRUE;
-        data = _data;
-        code = FG_ERRNO_OK;
-    }
-    fgException(const char *_data, int _code) {
-        type = FG_MESSAGE_ERROR;
-        critical = FG_TRUE;
-        data = _data;
-        code = _code;
-    }
-    fgException(int _code) {
-        type = FG_MESSAGE_ERROR;
-        critical = FG_TRUE;
-        code = _code;
-        data = FG_ERRNO_STR(_code); // #FIXME
-    }
-    ~fgException() {
-        data.clear();
-    }
+namespace fg {
+    namespace msg {
+
+        /**
+         *
+         */
+        struct SException : SError {
+            ///
+            std::string data;
+            /**
+             * 
+             */
+            SException() {
+                type = MSG_ERROR;
+                critical = FG_TRUE;
+            }
+            /**
+             * 
+             * @param _data
+             */
+            SException(const char *_data) {
+                type = MSG_ERROR;
+                critical = FG_TRUE;
+                data = _data;
+                code = FG_ERRNO_OK;
+            }
+            /**
+             * 
+             * @param _data
+             * @param _code
+             */
+            SException(const char *_data, int _code) {
+                type = MSG_ERROR;
+                critical = FG_TRUE;
+                data = _data;
+                code = _code;
+            }
+            /**
+             * 
+             * @param _code
+             */
+            SException(int _code) {
+                type = MSG_ERROR;
+                critical = FG_TRUE;
+                code = _code;
+                data = FG_ERRNO_STR(_code); // #FIXME
+            }
+            /**
+             * 
+             */
+            virtual ~SException() {
+                data.clear();
+            }
+        };
+    };
 };
 
+    #undef FG_INC_EXCEPTION_BLOCK
 #endif /* FG_INC_EXCEPTION */

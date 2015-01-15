@@ -12,40 +12,55 @@
 
     #include <ctime>
 
-    #define FG_TIME_MIN_TICK	0.001f
-    #define FG_CLOCKS_PER_SEC	CLOCKS_PER_SEC
+namespace fg {
 
-class fgTime {
-private:
-    // Time marking start (init function)
-    static float s_start;
-    static float s_current;
-    static float s_lastTick;
+    namespace timesys {
+        
+        ///
+        const float MINIMUM_TICK = 0.001f;
+        ///
+        const long int MINIMUM_CLOCKS_PER_SEC = CLOCKS_PER_SEC;
+        
+        /**
+         * First initial time stamp
+         */
+        void init(void);
+        /**
+         * Mark current time
+         */
+        void markTick(void);
 
-    // Private constructor
-    fgTime() { }
-    // Private destructor
-    ~fgTime() { }
-public:
-    // First initial time stamp
-    static void init(void);
-    // Mark current time
-    static void markTick(void);
+        /**
+         * Return elapsed time since last tick (seconds)
+         * @return 
+         */
+        float elapsed(void);
+        /**
+         * Get exact time since init (seconds)
+         * @return 
+         */
+        float exact(void);
+        /**
+         * Get clock ticks
+         * @return 
+         */
+        float ticks(void);
+        /**
+         * Get time since init in milliseconds
+         * @return 
+         */
+        float ms(void);
+        /**
+         * Get the number of seconds since 00:00 hours, Jan 1, 1970 UTC
+         * (i.e., the current unix timestamp). Uses time(null)
+         * @return 
+         */
+        long seconds(void);
+    };
 
-    // Return elapsed time since last tick (seconds)
-    static float elapsed(void);
-    // Get exact time since init (seconds)
-    static float exact(void);
-    // Get clock ticks
-    static float ticks(void);
-    // Get time since init in miliseconds
-    static float ms(void);
-    // Get the number of seconds since 00:00 hours, Jan 1, 1970 UTC
-    // (i.e., the current unix timestamp). Uses time(null)
-    static long seconds(void);
 };
 
-// Platform independent function for getting time in miliseconds
+// Platform independent function for getting time in milliseconds
 unsigned long int FG_GetTicks(void);
 
 #endif

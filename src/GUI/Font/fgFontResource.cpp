@@ -70,7 +70,7 @@ fgBool gui::CFontResource::create(void) {
     m_textureType = FG_TEXTURE_FONT;
     if(!CTextureResource::create()) {
         // #TODO error handling / reporting
-        FG_LOG::PrintError("%s(%d): texture create function has failed - in function %s.", fg::path::fileName(__FILE__), __LINE__ - 1, __FUNCTION__);
+        log::PrintError("%s(%d): texture create function has failed - in function %s.", fg::path::fileName(__FILE__), __LINE__ - 1, __FUNCTION__);
         return FG_FALSE;
     }
     if(m_step)

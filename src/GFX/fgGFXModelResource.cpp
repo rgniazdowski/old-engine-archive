@@ -104,7 +104,7 @@ fgBool gfx::CModelResource::_loadOBJ(void) {
     std::string mtl_basepath = fg::path::dirName(getFilePath());
     err = fgTinyObj::LoadObj(this->m_shapes, getFilePathStr(m_quality), mtl_basepath.c_str(), m_isInterleaved);
     if(!err.empty()) {
-        FG_LOG::PrintError("Error while loading model: %s", err.c_str());
+        log::PrintError("Error while loading model: %s", err.c_str());
         this->m_shapes.clear();
         return FG_FALSE;
     }
@@ -116,7 +116,7 @@ fgBool gfx::CModelResource::_loadOBJ(void) {
     end = this->m_shapes.end();
     itor = begin;
     if(this->m_shapes.empty()) {
-        FG_LOG::PrintError("There is no shapes in model file: '%s'", getFilePathStr());
+        log::PrintError("There is no shapes in model file: '%s'", getFilePathStr());
     }
     for(; itor != end; itor++) {
         m_numShapes++;
@@ -181,13 +181,13 @@ fgBool gfx::CModelResource::create(void) {
     }
     m_size = 0;
     if(getFilePath(m_quality).empty()) {
-        FG_LOG::PrintError("%s(%d): file path is empty on create", fg::path::fileName(__FILE__), __LINE__ - 1);
+        log::PrintError("%s(%d): file path is empty on create", fg::path::fileName(__FILE__), __LINE__ - 1);
         // #TODO error handling / reporting
         return FG_FALSE;
     }
     setModelTypeFromFilePath();
     if(m_modelType == FG_GFX_MODEL_RES_INVALID) {
-        FG_LOG::PrintError("%s(%d): model file type is invalid", fg::path::fileName(__FILE__), __LINE__ - 1);
+        log::PrintError("%s(%d): model file type is invalid", fg::path::fileName(__FILE__), __LINE__ - 1);
         // #TODO error handling / reporting
         return FG_FALSE;
     }

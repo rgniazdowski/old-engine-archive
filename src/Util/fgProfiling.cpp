@@ -34,7 +34,7 @@ profile::CProfiling::~CProfiling() {
  * 
  */
 void profile::CProfiling::initialize(void) {
-    m_startProfile = fgTime::exact();
+    m_startProfile = timesys::exact();
 }
 
 /**
@@ -76,7 +76,7 @@ fgBool profile::CProfiling::begin(const std::string& name) {
         }
         sample->numOpen++;
         sample->numInstances++;
-        sample->startTime = fgTime::exact();
+        sample->startTime = timesys::exact();
         //sample->isValid = FG_TRUE;
     } else {
         // New insertion
@@ -94,7 +94,7 @@ fgBool profile::CProfiling::begin(const std::string& name) {
         sample->numOpen = 1;
         sample->numInstances = 1;
         sample->accumulator = 0.0f;
-        sample->startTime = fgTime::exact();
+        sample->startTime = timesys::exact();
         sample->childrenSampleTime = 0.0f;
         sample->name = name;
         if(result.second)
@@ -137,7 +137,7 @@ fgBool profile::CProfiling::end(const std::string& name) {
     if(!sample->isValid || !sample->numOpen)
         return FG_FALSE;
     sample->numOpen--;
-    float endTime = fgTime::exact();
+    float endTime = timesys::exact();
     m_profileStack.pop();
     sample->numParents = m_profileStack.size();
     if(sample->numParents) {
@@ -167,7 +167,7 @@ fgBool profile::CProfiling::end(const char* name) {
  * 
  */
 void profile::CProfiling::updateHistory(void) {
-    m_endProfile = fgTime::exact();
+    m_endProfile = timesys::exact();
 
     ProfileVecItor begin = m_orderVec.begin(), end = m_orderVec.end(), it;
     for(it = begin; it != end; it++) {
@@ -181,7 +181,7 @@ void profile::CProfiling::updateHistory(void) {
         aveTime = minTime = maxTime = percentTime;
         storeProfileHistory(sample->name, percentTime);
     }
-    m_startProfile = fgTime::exact();
+    m_startProfile = timesys::exact();
 }
 
 /**
@@ -191,7 +191,7 @@ void profile::CProfiling::dumpToDefaultFile(void) {
     ProfileVecItor begin = m_orderVec.begin(), end = m_orderVec.end(), it;
     fg::util::CRegularFile file;
     file.open("defaultProfile.log", fg::util::CRegularFile::Mode::WRITE);
-    long timestamp = fgTime::seconds();
+    long timestamp = timesys::seconds();
     struct tm *ti;
     ti = localtime(&timestamp);
 
@@ -242,7 +242,7 @@ fgBool profile::CProfiling::storeProfileHistory(const std::string& name, float p
     if(name.empty())
         return FG_FALSE;
     float oldRatio;
-    float newRatio = 0.8f * fgTime::elapsed();
+    float newRatio = 0.8f * timesys::elapsed();
     if(newRatio > 1.0f) {
         newRatio = 1.0f;
     }

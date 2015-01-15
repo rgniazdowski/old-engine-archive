@@ -1392,11 +1392,11 @@ void gfx::CContext::bufferData(fgGfxBufferID& bufferID,
         bufferID.target = GL_ARRAY_BUFFER;
     }
     if(m_params[(fgGFXuint)GL_ARRAY_BUFFER_BINDING] != bufferID.id && bufferID.target == GL_ARRAY_BUFFER) {
-        FG_LOG::PrintError("GFX: Invalid buffer bound, can't set buffer data");
+        log::PrintError("GFX: Invalid buffer bound, can't set buffer data");
         return;
     }
     if(m_params[(fgGFXuint)GL_ELEMENT_ARRAY_BUFFER_BINDING] != bufferID.id && bufferID.target == GL_ELEMENT_ARRAY_BUFFER) {
-        FG_LOG::PrintError("GFX: Invalid buffer bound, can't set buffer data");
+        log::PrintError("GFX: Invalid buffer bound, can't set buffer data");
         return;
     }
     if(usage != (fgGFXenum)0)

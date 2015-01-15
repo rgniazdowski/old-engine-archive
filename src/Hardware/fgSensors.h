@@ -34,9 +34,9 @@
  * Accelerometer: mierzy przyspieszenie WZDŁUŻ OSI.
  *
  */
-class fgSensors : public fgSingleton<fgSensors> {
+class fgSensors : public CSingleton<fgSensors> {
     friend int32_t HarvestCallback(void* systemData, void* userData);
-    friend class fgSingleton<fgSensors>;
+    friend class CSingleton<fgSensors>;
 public:
 
     enum {

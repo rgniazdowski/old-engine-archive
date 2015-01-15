@@ -72,7 +72,7 @@ fg::gfx::CWindow::~CWindow() {
  */
 fgBool fg::gfx::CWindow::setup(const char *title, unsigned int width, unsigned int height) {
     if(!CPlatform::isInit()) {
-        FG_LOG::PrintError("GFX: Cannot setup window without platform initialized.");
+        log::PrintError("GFX: Cannot setup window without platform initialized.");
         return FG_FALSE;
     }
     if(m_isOpen) {
@@ -107,7 +107,7 @@ fgBool fg::gfx::CWindow::setup(const char *title, unsigned int width, unsigned i
     fgEGLError("eglQuerySurface");
     if(w < 0 || h < 0) {
 #if defined FG_USING_MARMALADE
-        FG_LOG::PrintError("EGL: query surface failed, falling back to S3E...");
+        log::PrintError("EGL: query surface failed, falling back to S3E...");
         w = s3eSurfaceGetInt(S3E_SURFACE_WIDTH);
         h = s3eSurfaceGetInt(S3E_SURFACE_HEIGHT);
 #else 

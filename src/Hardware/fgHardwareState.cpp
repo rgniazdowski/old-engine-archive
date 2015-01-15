@@ -26,10 +26,10 @@
 #endif // FG_USING_DPI_INFO
 
 template <>
-bool fgSingleton<fgHardwareState>::instanceFlag = false;
+bool CSingleton<fgHardwareState>::instanceFlag = false;
 
 template <>
-fgHardwareState *fgSingleton<fgHardwareState>::instance = NULL;
+fgHardwareState *CSingleton<fgHardwareState>::instance = NULL;
 
 /**
  * Private constructor
@@ -60,7 +60,7 @@ void fgHardwareState::initDPI() {
     FG_LOG_DEBUG("### SCREEN DPI IS: %d ###", m_dpi);
 
     if(0 == m_dpi) {
-        FG_LOG::PrintError("DPI extension returned dpi=0. Overwriting with 163");
+        log::PrintError("DPI extension returned dpi=0. Overwriting with 163");
         m_dpi = 163;
     }
 #else
@@ -68,7 +68,7 @@ void fgHardwareState::initDPI() {
 #endif // FG_USING_DPI_INFO
 
     if(0 == m_screenWidth || 0 == m_screenHeight) {
-        FG_LOG::PrintError("initDPI called when no screen width & height being set!");
+        FG_LOG_ERROR("initDPI called when no screen width & height being set!");
         exit(5);
     }
     int display_area = m_screenWidth * m_screenHeight;

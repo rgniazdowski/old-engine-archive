@@ -638,7 +638,7 @@ namespace fgTinyObj {
                         MaterialReader& readMatFn,
                         fgBool forceAoS) {
         std::stringstream err;
-        float t1 = fgTime::ms();
+        float t1 = fg::timesys::ms();
 
         fg::CVector<float> v;
         fg::CVector<float> vn;
@@ -654,7 +654,7 @@ namespace fgTinyObj {
         int maxchars = 8192; // Alloc enough size.
         fg::CVector<char> buf; // Alloc enough size.
         buf.resize(maxchars);
-        float l1 = fgTime::ms();
+        float l1 = fg::timesys::ms();
         while(inStream.peek() != -1) {
             inStream.getline(&buf[0], maxchars);
 
@@ -823,20 +823,20 @@ namespace fgTinyObj {
             }
             // Ignore unknown command.
         } // while (inStream.peek() != -1)
-        float l2 = fgTime::ms();
+        float l2 = fg::timesys::ms();
         FG_LOG_DEBUG("fgTinyObj: load raw data: %.2f seconds", (l2 - l1) / 1000.0f);
 
         fg::gfx::SShape *shape = new fg::gfx::SShape();
-        float e1 = fgTime::ms();
+        float e1 = fg::timesys::ms();
         fgBool ret = exportFaceGroupToShape(shape, v, vn, vt, faceGroup, material, name, is_material_seted, forceAoS);
-        float e2 = fgTime::ms();
+        float e2 = fg::timesys::ms();
         FG_LOG_DEBUG("fgTinyObj: exportFaceGroupToShape: %.2f seconds", (e2 - e1) / 1000.0f);
         if(ret) {
             shapes.push_back(shape);
         }
         is_material_seted = FG_FALSE; // for safety
         faceGroup.clear(); // for safety
-        float t2 = fgTime::ms();
+        float t2 = fg::timesys::ms();
         FG_LOG_DEBUG("fgTinyObj: total %.2f seconds", (t2 - t1) / 1000.0f);
 
         return err.str();

@@ -10,33 +10,35 @@
 #include "fgMessageSubsystem.h"
 
 template <>
-bool fgSingleton<fgMessageSubsystem>::instanceFlag = false;
+bool CSingleton<fg::msg::CMessageSubsystem>::instanceFlag = false;
 
 template <>
-fgMessageSubsystem *fgSingleton<fgMessageSubsystem>::instance = NULL;
+fg::msg::CMessageSubsystem *CSingleton<fg::msg::CMessageSubsystem>::instance = NULL;
+
+using namespace fg;
 
 /**
  * 
  */
-fgMessageSubsystem::fgMessageSubsystem() { }
+msg::CMessageSubsystem::CMessageSubsystem() { }
 
 /**
  * 
  */
-fgMessageSubsystem::~fgMessageSubsystem() {
+msg::CMessageSubsystem::~CMessageSubsystem() {
     destroy();
 }
 
 /**
  * 
  */
-void fgMessageSubsystem::clear(void) {
+void msg::CMessageSubsystem::clear(void) {
     flushAll();
 }
 
 /** \brief
  */
-fgBool fgMessageSubsystem::destroy(void) {
+fgBool msg::CMessageSubsystem::destroy(void) {
     flushAll();
 
     m_logAll.close();
@@ -49,7 +51,7 @@ fgBool fgMessageSubsystem::destroy(void) {
  * 
  * @return 
  */
-fgBool fgMessageSubsystem::initialize(void) {
+fgBool msg::CMessageSubsystem::initialize(void) {
     return FG_TRUE;
 }
 
@@ -59,7 +61,7 @@ fgBool fgMessageSubsystem::initialize(void) {
  * @param pathError
  * @param pathDebug
  */
-void fgMessageSubsystem::setLogPaths(const char *pathAll, const char *pathError, const char *pathDebug) {
+void msg::CMessageSubsystem::setLogPaths(const char *pathAll, const char *pathError, const char *pathDebug) {
     setLogAllPath(pathAll);
     setLogErrorPath(pathError);
     setLogDebugPath(pathDebug);
@@ -69,7 +71,7 @@ void fgMessageSubsystem::setLogPaths(const char *pathAll, const char *pathError,
  * 
  * @param pathAll
  */
-void fgMessageSubsystem::setLogAllPath(const char *pathAll) {
+void msg::CMessageSubsystem::setLogAllPath(const char *pathAll) {
     if(pathAll)
         m_logAll.setPath(pathAll);
     m_logAll.setMode(fg::util::CRegularFile::Mode::APPEND);
@@ -79,7 +81,7 @@ void fgMessageSubsystem::setLogAllPath(const char *pathAll) {
  * 
  * @param pathError
  */
-void fgMessageSubsystem::setLogErrorPath(const char *pathError) {
+void msg::CMessageSubsystem::setLogErrorPath(const char *pathError) {
     if(pathError)
         m_logError.setPath(pathError);
     m_logError.setMode(fg::util::CRegularFile::Mode::APPEND);
@@ -89,7 +91,7 @@ void fgMessageSubsystem::setLogErrorPath(const char *pathError) {
  * 
  * @param pathDebug
  */
-void fgMessageSubsystem::setLogDebugPath(const char *pathDebug) {
+void msg::CMessageSubsystem::setLogDebugPath(const char *pathDebug) {
     if(pathDebug)
         m_logDebug.setPath(pathDebug);
     m_logDebug.setMode(fg::util::CRegularFile::Mode::APPEND);
@@ -98,9 +100,9 @@ void fgMessageSubsystem::setLogDebugPath(const char *pathDebug) {
 /**
  * 
  */
-void fgMessageSubsystem::flushAll(void) {
+void msg::CMessageSubsystem::flushAll(void) {
     while(!m_statusVec.empty()) {
-        fgStatus *back = m_statusVec.back();
+        SStatus *back = m_statusVec.back();
         //FG_LOG_DEBUG("MSG: Delete status: [%p] - msg: [%p] ", back, back->message);
         //if(back->message)
         //FG_LOG_DEBUG("MSG: Delete [%p] - [%s]", back->message, back->message->data.c_str());
@@ -116,11 +118,11 @@ void fgMessageSubsystem::flushAll(void) {
  * @param msg
  * @return 
  */
-fgBool fgMessageSubsystem::pushMessage(fgMessage *msg) {
+fgBool msg::CMessageSubsystem::pushMessage(SMessage *msg) {
     if(!msg)
         return FG_FALSE;
 
-    fgStatus *newStatus = new fgStatus(msg);
+    SStatus *newStatus = new SStatus(msg);
     return pushStatus(newStatus);
 }
 
@@ -129,17 +131,17 @@ fgBool fgMessageSubsystem::pushMessage(fgMessage *msg) {
  * @param status
  * @return 
  */
-fgBool fgMessageSubsystem::pushStatus(fgStatus *status) {
+fgBool msg::CMessageSubsystem::pushStatus(SStatus *status) {
     if(!status)
         return FG_FALSE;
     m_statusVec.push_back(status);
     fg::util::CRegularFile *filePtr = NULL;
     if(status->message) {
         switch(status->message->type) {
-            case FG_MESSAGE_DEBUG:
+            case MSG_DEBUG:
                 filePtr = &m_logDebug;
                 break;
-            case FG_MESSAGE_ERROR:
+            case MSG_ERROR:
                 filePtr = &m_logError;
                 break;
             default:
@@ -150,13 +152,13 @@ fgBool fgMessageSubsystem::pushStatus(fgStatus *status) {
             filePtr = &m_logError;
         }
     }
-    FG_LOG::PrintStatus(status);
+    log::PrintStatus(status);
     // #FIXME #TODO - buffering messages, cyclic writing to log files (but always to console output)
     // Warning, Info, Debug, Error
-    FG_LOG::PrintStatusToLog(&m_logAll, status);
+    log::PrintStatusToLog(&m_logAll, status);
     // Debug or Error
     if(filePtr)
-        FG_LOG::PrintStatusToLog(filePtr, status);
+        log::PrintStatusToLog(filePtr, status);
     return FG_TRUE;
 }
 
@@ -166,18 +168,18 @@ fgBool fgMessageSubsystem::pushStatus(fgStatus *status) {
  * @param code
  * @param fmt
  */
-void fgMessageSubsystem::reportSuccess(const char *tagName, int code, const char *fmt, ...) {
+void msg::CMessageSubsystem::reportSuccess(const char *tagName, int code, const char *fmt, ...) {
     const char *msgData = NULL;
-    char buf[FG_MESSAGE_BUFFER_MAX];
+    char buf[BUFFER_MAX];
     if(fmt) {
         va_list args;
         va_start(args, fmt);
-        int movc = tagName ? snprintf(buf, FG_MESSAGE_BUFFER_MAX - 1, "%s: ", tagName) : 0;
+        int movc = tagName ? snprintf(buf, BUFFER_MAX - 1, "%s: ", tagName) : 0;
         vsprintf(buf + movc, fmt, args);
         va_end(args);
         msgData = buf;
     }
-    fgStatus *newStatus = new fgStatus();
+    SStatus *newStatus = new SStatus();
     pushStatus(newStatus->success(code, msgData));
 }
 
@@ -187,18 +189,18 @@ void fgMessageSubsystem::reportSuccess(const char *tagName, int code, const char
  * @param code
  * @param fmt
  */
-void fgMessageSubsystem::reportWarning(const char *tagName, int code, const char *fmt, ...) {
+void msg::CMessageSubsystem::reportWarning(const char *tagName, int code, const char *fmt, ...) {
     const char *msgData = NULL;
-    char buf[FG_MESSAGE_BUFFER_MAX];
+    char buf[BUFFER_MAX];
     if(fmt) {
         va_list args;
         va_start(args, fmt);
-        int movc = tagName ? snprintf(buf, FG_MESSAGE_BUFFER_MAX - 1, "%s: ", tagName) : 0;
+        int movc = tagName ? snprintf(buf, BUFFER_MAX - 1, "%s: ", tagName) : 0;
         vsprintf(buf + movc, fmt, args);
         va_end(args);
         msgData = buf;
     }
-    fgStatus *newStatus = new fgStatus();
+    SStatus *newStatus = new SStatus();
     pushStatus(newStatus->warning(code, msgData));
 }
 
@@ -208,18 +210,18 @@ void fgMessageSubsystem::reportWarning(const char *tagName, int code, const char
  * @param code
  * @param fmt
  */
-void fgMessageSubsystem::reportError(const char *tagName, int code, const char *fmt, ...) {
+void msg::CMessageSubsystem::reportError(const char *tagName, int code, const char *fmt, ...) {
     const char *msgData = NULL;
-    char buf[FG_MESSAGE_BUFFER_MAX];
+    char buf[BUFFER_MAX];
     if(fmt) {
         va_list args;
         va_start(args, fmt);
-        int movc = tagName ? snprintf(buf, FG_MESSAGE_BUFFER_MAX - 1, "%s: ", tagName) : 0;
+        int movc = tagName ? snprintf(buf, BUFFER_MAX - 1, "%s: ", tagName) : 0;
         vsprintf(buf + movc, fmt, args);
         va_end(args);
         msgData = buf;
     }
-    fgStatus *newStatus = new fgStatus();
+    SStatus *newStatus = new SStatus();
     pushStatus(newStatus->error(code, msgData));
 }
 
@@ -229,18 +231,18 @@ void fgMessageSubsystem::reportError(const char *tagName, int code, const char *
  * @param code
  * @param fmt
  */
-void fgMessageSubsystem::reportDebug(const char *tagName, int code, const char *fmt, ...) {
+void msg::CMessageSubsystem::reportDebug(const char *tagName, int code, const char *fmt, ...) {
     const char *msgData = NULL;
-    char buf[FG_MESSAGE_BUFFER_MAX];
+    char buf[BUFFER_MAX];
     if(fmt) {
         va_list args;
         va_start(args, fmt);
-        int movc = tagName ? snprintf(buf, FG_MESSAGE_BUFFER_MAX - 1, "%s: ", tagName) : 0;
+        int movc = tagName ? snprintf(buf, BUFFER_MAX - 1, "%s: ", tagName) : 0;
         vsprintf(buf + movc, fmt, args);
         va_end(args);
         msgData = buf;
     }
-    fgStatus *newStatus = new fgStatus();
+    SStatus *newStatus = new SStatus();
     pushStatus(newStatus->debug(code, msgData));
 }
 
@@ -248,7 +250,7 @@ void fgMessageSubsystem::reportDebug(const char *tagName, int code, const char *
  * 
  * @return 
  */
-fgStatus *fgMessageSubsystem::getLastStatus(void) {
+msg::SStatus *msg::CMessageSubsystem::getLastStatus(void) {
     if(!m_statusVec.empty()) {
         return m_statusVec.back();
     }
@@ -259,9 +261,9 @@ fgStatus *fgMessageSubsystem::getLastStatus(void) {
  * 
  * @return 
  */
-fgMessage *fgMessageSubsystem::getLastMessage(void) {
+msg::SMessage *msg::CMessageSubsystem::getLastMessage(void) {
     if(!m_statusVec.empty()) {
-        fgStatus *status = m_statusVec.back();
+        SStatus *status = m_statusVec.back();
         if(status->message)
             return status->message;
     }

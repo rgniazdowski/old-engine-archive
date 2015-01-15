@@ -274,7 +274,7 @@ void CGameMain::setEventManager() {
  * @return
  */
 fgBool CGameMain::initSubsystems(void) {
-    float t1 = fgTime::ms();
+    float t1 = timesys::ms();
     FG_HardwareState->deviceYield(0); // #FIXME - device yield...
     if(m_gfxMain)
         return FG_FALSE;
@@ -398,7 +398,7 @@ fgBool CGameMain::initSubsystems(void) {
         FG_LOG_ERROR("Script: Initialization of Script module finished with errors");
     }
     FG_HardwareState->deviceYield(0); // #FIXME - device yield...
-    float t2 = fgTime::ms();
+    float t2 = timesys::ms();
     FG_LOG_DEBUG("Main: All subsystems initialized in %.2f seconds", (t2 - t1) / 1000.0f);
     m_gfxMain->getLoader()->update(10.0f);
     return FG_TRUE;
@@ -456,7 +456,7 @@ fgBool CGameMain::loadConfiguration(void) {
  * @return
  */
 fgBool CGameMain::loadResources(void) {
-    float t1 = fgTime::ms();
+    float t1 = timesys::ms();
     FG_LOG_DEBUG("Loading resources...");
 #if defined(FG_USING_LUA_PLUS)
     //LuaPlus::LuaState *state = m_scriptSubsystem->getLuaState();
@@ -512,11 +512,11 @@ fgBool CGameMain::loadResources(void) {
     // Can also create special event for GFX - upload static vertex data
     // Create vertex buffers on event - not explicitly 
     {
-        float t1 = fgTime::ms();
+        float t1 = timesys::ms();
         FG_LOG_DEBUG("Init: Will now try load object CobraBomber.obj");
         std::string modelname("CobraBomber");
         gfx::CModelResource *model = (gfx::CModelResource *)m_resourceMgr->get(modelname);
-        float t2 = fgTime::ms();
+        float t2 = timesys::ms();
         FG_LOG_DEBUG("WHOLE OBJECT CREATION TOOK: %.2f seconds", (t2 - t1) / 1000.0f);
     }
     FG_HardwareState->deviceYield(0);
@@ -531,7 +531,7 @@ fgBool CGameMain::loadResources(void) {
     m_gfxMain->getParticleSystem()->insertParticleEmitter("ExplosionSmoke", "ExplosionSmoke", Vector3f(0.0f, 0.0f, 0.0f));
     m_gfxMain->getParticleSystem()->insertParticleEmitter("ExplosionSmokeTrails", "ExplosionSmokeTrails", Vector3f(0.0f, 0.0f, 0.0f));
     m_gfxMain->getParticleSystem()->insertParticleEmitter("ExplosionSparks", "ExplosionSparks", Vector3f(0.0f, 0.0f, 0.0f));
-    float t2 = fgTime::ms();
+    float t2 = timesys::ms();
     FG_LOG_DEBUG("Main: Resources loaded in %.2f seconds", (t2 - t1) / 1000.0f);
     m_gfxMain->getLoader()->update(10.0f);
 #if !defined(FG_USING_MARMALADE)
@@ -658,7 +658,7 @@ void CGameMain::render(void) {
  * This happens for every frame (for iOS fps is hardcoded for 60, never more)
  */
 void CGameMain::update(void) {
-    fgTime::markTick();
+    timesys::markTick();
     FG_HardwareState->calculateDT(); // #FIXME
     FG_HardwareState->calculateFPS(); // #FIXME
 

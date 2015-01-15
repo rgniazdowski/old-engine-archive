@@ -17,35 +17,137 @@
 
 #include "Util/fgTime.h"
 
-namespace FG_LOG {
+namespace fg {
+    namespace log {
 
-    void _preparePrintBuf(char *buf, const char *type) {
-        long timestamp = fgTime::seconds();
-        int mstru = (int)fgTime::ms() % 1000;
-        struct tm *ti;
-        ti = localtime(&timestamp);
+        const char *DEFAULT_FOLDER = "log\0";
 
-        snprintf(buf, FG_LOG_BUF_MAX - 1, "%02d/%02d/%02d %02d:%02d:%02d.%03d: %s",
-                 ti->tm_mday,
-                 ti->tm_mon + 1,
-                 ti->tm_year - 100,
-                 ti->tm_hour,
-                 ti->tm_min,
-                 ti->tm_sec,
-                 mstru,
-                 type);
-    }
+        /**
+         * 
+         * @param buf
+         * @param type
+         */
+        void preparePrintBuffer(char *buf, const char *type) {
+            long timestamp = timesys::seconds();
+            int mstru = (int)timesys::ms() % 1000;
+            struct tm *ti;
+            ti = localtime(&timestamp);
+
+            snprintf(buf, BUFFER_MAX - 1, "%02d/%02d/%02d %02d:%02d:%02d.%03d: %s",
+                     ti->tm_mday,
+                     ti->tm_mon + 1,
+                     ti->tm_year - 100,
+                     ti->tm_hour,
+                     ti->tm_min,
+                     ti->tm_sec,
+                     mstru,
+                     type);
+        }
+
+        /**
+         * 
+         * @param message
+         * @param buf
+         * @param timestamp
+         * @return 
+         */
+        fgBool prepareMsgBuffer(msg::SMessage *message, char *buf, long timestamp = -1) {
+            if(!message || !buf)
+                return FG_FALSE;
+            if(timestamp == -1)
+                timestamp = timesys::seconds();
+            struct tm *ti;
+            ti = localtime(&timestamp);
+            const char *msg_type;
+            switch(message->type) {
+                case msg::MSG_DEBUG:
+                    msg_type = "DEBUG";
+                    if(message->debug.critical)
+                        msg_type = "CRITICAL DEBUG";
+                    break;
+                case msg::MSG_ERROR:
+                    msg_type = "ERROR";
+                    if(message->error.critical)
+                        msg_type = "CRITICAL ERROR";
+                    break;
+                case msg::MSG_WARNING:
+                    msg_type = "WARNING";
+                    if(message->warning.serious)
+                        msg_type = "SERIOUS WARNING";
+                    break;
+                default:
+                    msg_type = "INFO";
+                    break;
+            };
+            int mstru = (int)timesys::ms() % 1000;
+
+            snprintf(buf, log::BUFFER_MAX - 1, "%02d/%02d/%02d %02d:%02d:%02d.%03d: %s(%d): %s: %s",
+                     ti->tm_mday,
+                     ti->tm_mon + 1,
+                     ti->tm_year - 100,
+                     ti->tm_hour,
+                     ti->tm_min,
+                     ti->tm_sec,
+                     mstru,
+                     msg_type,
+                     message->code(),
+                     fgErrno::strError(message->code()),
+                     message->data.c_str());
+
+            return FG_TRUE;
+        }
+
+        /**
+         * 
+         * @param status
+         * @param buf
+         * @return 
+         */
+        fgBool prepareStatusBuffer(msg::SStatus *status, char *buf) {
+            if(!status || !buf)
+                return FG_FALSE;
+            if(status->message) {
+                prepareMsgBuffer(status->message, buf, status->timestamp);
+            } else {
+                const char *msg_type = "INFO";
+                if(status->isError()) {
+                    msg_type = "ERROR";
+                } else if(status->isWarning()) {
+                    msg_type = "WARNING";
+                } else if(status->isSuccess()) {
+                    msg_type = "SUCCESS";
+                }
+                struct tm *ti;
+                ti = localtime(&status->timestamp);
+                int mstru = (int)timesys::ms() % 1000;
+                snprintf(buf, log::BUFFER_MAX - 1, "%02d/%02d/%02d %02d:%02d:%02d.%03d: %s(%d): %s",
+                         ti->tm_mday,
+                         ti->tm_mon + 1,
+                         ti->tm_year - 100,
+                         ti->tm_hour,
+                         ti->tm_min,
+                         ti->tm_sec,
+                         mstru,
+                         msg_type,
+                         status->code(),
+                         fgErrno::strError(status->code()));
+            }
+            return FG_TRUE;
+        }
+    };
 };
 
-/*
+using namespace fg;
+
+/**
  * Log info message
+ * @param fmt
  */
-void FG_LOG::PrintInfo(const char *fmt, ...) {
-    char buf[FG_LOG_BUF_MAX];
+void log::PrintInfo(const char *fmt, ...) {
+    char buf[BUFFER_MAX];
     va_list args;
 
-    //memset(buf, 0, FG_LOG_BUF_MAX);
-    FG_LOG::_preparePrintBuf(buf, "INFO: ");
+    log::preparePrintBuffer(buf, "INFO: ");
     va_start(args, fmt);
     vsprintf(buf + strlen(buf), fmt, args);
     va_end(args);
@@ -54,21 +156,22 @@ void FG_LOG::PrintInfo(const char *fmt, ...) {
     puts(buf);
 }
 
-/*
+/**
  * Write log message
+ * @param fmt
  */
-void FG_LOG::PrintDebug(const char *fmt, ...) {
+void log::PrintDebug(const char *fmt, ...) {
 #ifdef FG_DEBUG
 #if FG_DEBUG
-    char buf[FG_LOG_BUF_MAX];
+    char buf[BUFFER_MAX];
     va_list args;
 
     //memset(buf, 0, FG_LOG_BUF_MAX);
-    FG_LOG::_preparePrintBuf(buf, "DEBUG: ");
+    log::preparePrintBuffer(buf, "DEBUG: ");
     int n = strlen(buf);
     va_start(args, fmt);
     //vsprintf(buf + n, fmt, args);
-    vsnprintf(buf + n, FG_LOG_BUF_MAX - n - 1, fmt, args);
+    vsnprintf(buf + n, BUFFER_MAX - n - 1, fmt, args);
     n = strlen(buf);
     va_end(args);
 
@@ -78,15 +181,15 @@ void FG_LOG::PrintDebug(const char *fmt, ...) {
 #endif
 }
 
-/*
+/**
  * Log error message
+ * @param fmt
  */
-void FG_LOG::PrintError(const char *fmt, ...) {
-    char buf[FG_LOG_BUF_MAX];
+void log::PrintError(const char *fmt, ...) {
+    char buf[BUFFER_MAX];
     va_list args;
 
-    //memset(buf, 0, FG_LOG_BUF_MAX);
-    FG_LOG::_preparePrintBuf(buf, "ERROR: ");
+    log::preparePrintBuffer(buf, "ERROR: ");
     va_start(args, fmt);
     vsprintf(buf + strlen(buf), fmt, args);
     va_end(args);
@@ -95,15 +198,15 @@ void FG_LOG::PrintError(const char *fmt, ...) {
     puts(buf);
 }
 
-/*
+/**
  * Log warning message
+ * @param fmt
  */
-void FG_LOG::PrintWarning(const char *fmt, ...) {
-    char buf[FG_LOG_BUF_MAX];
+void log::PrintWarning(const char *fmt, ...) {
+    char buf[BUFFER_MAX];
     va_list args;
 
-    //memset(buf, 0, FG_LOG_BUF_MAX);
-    FG_LOG::_preparePrintBuf(buf, "WARNING: ");
+    log::preparePrintBuffer(buf, "WARNING: ");
     va_start(args, fmt);
     vsprintf(buf + strlen(buf), fmt, args);
     va_end(args);
@@ -112,10 +215,13 @@ void FG_LOG::PrintWarning(const char *fmt, ...) {
     puts(buf);
 }
 
-/*
- *
+/**
+ * 
+ * @param file
+ * @param fmt
+ * @param ...
  */
-void FG_LOG::WriteToLog(fg::util::base::CFile *file, const char *fmt, ...) {
+void log::WriteToLog(util::base::CFile *file, const char *fmt, ...) {
     if(!file)
         return;
     if(!strlen(file->getPath()))
@@ -125,7 +231,7 @@ void FG_LOG::WriteToLog(fg::util::base::CFile *file, const char *fmt, ...) {
             return;
     }
 
-    char buf[FG_LOG_BUF_MAX];
+    char buf[BUFFER_MAX];
     va_list args;
 
     va_start(args, fmt);
@@ -135,111 +241,35 @@ void FG_LOG::WriteToLog(fg::util::base::CFile *file, const char *fmt, ...) {
     file->puts(buf);
 }
 
-namespace FG_LOG {
-
-    fgBool _prepareMsgBuf(fgMessage *message, char *buf, long timestamp = -1) {
-        if(!message || !buf)
-            return FG_FALSE;
-        if(timestamp == -1)
-            timestamp = fgTime::seconds();
-        struct tm *ti;
-        ti = localtime(&timestamp);
-        const char *msg_type;
-        switch(message->type) {
-            case FG_MESSAGE_DEBUG:
-                msg_type = "DEBUG";
-                if(message->debug.critical)
-                    msg_type = "CRITICAL DEBUG";
-                break;
-            case FG_MESSAGE_ERROR:
-                msg_type = "ERROR";
-                if(message->error.critical)
-                    msg_type = "CRITICAL ERROR";
-                break;
-            case FG_MESSAGE_WARNING:
-                msg_type = "WARNING";
-                if(message->warning.serious)
-                    msg_type = "SERIOUS WARNING";
-                break;
-            default:
-                msg_type = "INFO";
-                break;
-        };
-        int mstru = (int)fgTime::ms() % 1000;
-
-        snprintf(buf, FG_LOG_BUF_MAX - 1, "%02d/%02d/%02d %02d:%02d:%02d.%03d: %s(%d): %s: %s",
-                 ti->tm_mday,
-                 ti->tm_mon + 1,
-                 ti->tm_year - 100,
-                 ti->tm_hour,
-                 ti->tm_min,
-                 ti->tm_sec,
-                 mstru,
-                 msg_type,
-                 message->code(),
-                 fgErrno::strError(message->code()),
-                 message->data.c_str());
-
-        return FG_TRUE;
-    }
-
-    fgBool _prepareStatusBuf(fgStatus *status, char *buf) {
-        if(!status || !buf)
-            return FG_FALSE;
-        if(status->message) {
-            FG_LOG::_prepareMsgBuf(status->message, buf, status->timestamp);
-        } else {
-            const char *msg_type = "INFO";
-            if(status->isError()) {
-                msg_type = "ERROR";
-            } else if(status->isWarning()) {
-                msg_type = "WARNING";
-            } else if(status->isSuccess()) {
-                msg_type = "SUCCESS";
-            }
-            struct tm *ti;
-            ti = localtime(&status->timestamp);
-            int mstru = (int)fgTime::ms() % 1000;
-            snprintf(buf, FG_LOG_BUF_MAX - 1, "%02d/%02d/%02d %02d:%02d:%02d.%03d: %s(%d): %s",
-                     ti->tm_mday,
-                     ti->tm_mon + 1,
-                     ti->tm_year - 100,
-                     ti->tm_hour,
-                     ti->tm_min,
-                     ti->tm_sec,
-                     mstru,
-                     msg_type,
-                     status->code(),
-                     fgErrno::strError(status->code()));
-        }
-        return FG_TRUE;
-    }
-};
-
-/*
- *
+/**
+ * 
+ * @param message
+ * @param timestamp
  */
-void FG_LOG::PrintMessage(fgMessage *message, long timestamp) {
-    char buf[FG_LOG_BUF_MAX];
-    if(!FG_LOG::_prepareMsgBuf(message, buf, timestamp))
+void log::PrintMessage(msg::SMessage *message, long timestamp) {
+    char buf[log::BUFFER_MAX];
+    if(!log::prepareMsgBuffer(message, buf, timestamp))
         return;
     puts(buf);
 }
 
-/*
- *
+/**
+ * 
+ * @param file
+ * @param message
+ * @param timestamp
  */
-void FG_LOG::PrintMessageToLog(fg::util::base::CFile *file, fgMessage *message, long timestamp) {
+void log::PrintMessageToLog(util::base::CFile *file, msg::SMessage *message, long timestamp) {
     if(!message || !file)
         return;
     if(!strlen(file->getPath()))
         return;
     if(!file->isOpen()) {
-        if(!file->open(fg::util::base::CFile::Mode::APPEND))
+        if(!file->open(util::base::CFile::Mode::APPEND))
             return;
     }
-    char buf[FG_LOG_BUF_MAX];
-    if(!FG_LOG::_prepareMsgBuf(message, buf, timestamp))
+    char buf[BUFFER_MAX];
+    if(!prepareMsgBuffer(message, buf, timestamp))
         return;
     int n = (int)strlen(buf);
     buf[n] = '\r';
@@ -251,14 +281,14 @@ void FG_LOG::PrintMessageToLog(fg::util::base::CFile *file, fgMessage *message, 
 /*
  *
  */
-void FG_LOG::PrintStatus(fgStatus *status) {
+void log::PrintStatus(msg::SStatus *status) {
     if(!status)
         return;
     if(status->message) {
-        FG_LOG::PrintMessage(status->message, status->timestamp);
+        PrintMessage(status->message, status->timestamp);
     } else {
-        char buf[FG_LOG_BUF_MAX];
-        if(!FG_LOG::_prepareStatusBuf(status, buf))
+        char buf[log::BUFFER_MAX];
+        if(!prepareStatusBuffer(status, buf))
             return;
         puts(buf);
     }
@@ -267,20 +297,20 @@ void FG_LOG::PrintStatus(fgStatus *status) {
 /*
  *
  */
-void FG_LOG::PrintStatusToLog(fg::util::base::CFile *file, fgStatus *status) {
+void log::PrintStatusToLog(util::base::CFile *file, msg::SStatus *status) {
     if(!status || !file)
         return;
     if(!strlen(file->getPath()))
         return;
     if(status->message) {
-        FG_LOG::PrintMessageToLog(file, status->message, status->timestamp);
+        PrintMessageToLog(file, status->message, status->timestamp);
     } else {
         if(!file->isOpen()) {
-            if(!file->open(fg::util::base::CFile::Mode::APPEND))
+            if(!file->open(util::base::CFile::Mode::APPEND))
                 return;
         }
-        char buf[FG_LOG_BUF_MAX];
-        if(!FG_LOG::_prepareStatusBuf(status, buf))
+        char buf[BUFFER_MAX];
+        if(!prepareStatusBuffer(status, buf))
             return;
         int n = (int)strlen(buf);
         buf[n] = '\r';

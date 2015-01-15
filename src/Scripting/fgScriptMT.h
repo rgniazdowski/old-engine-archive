@@ -29,9 +29,9 @@ namespace fg {
         /**
          * 
          */
-        class CMetatables : public fgSingleton<CMetatables> {
+        class CMetatables : public CSingleton<CMetatables> {
             ///
-            friend class fgSingleton<CMetatables>;
+            friend class CSingleton<CMetatables>;
             ///
             friend class fg::script::CScriptSubsystem;
         public:

@@ -180,7 +180,7 @@ fgBool gui::CGuiMain::initialize(void) {
     if(m_init)
         return FG_TRUE;
     if(!m_pEventMgr || !m_pResourceMgr || !m_pShaderMgr || !m_pPointerInputReceiver) {
-        FG_LOG::PrintError("GUI: Initialization of main GUI module failed - not all external pointers are set");
+        log::PrintError("GUI: Initialization of main GUI module failed - not all external pointers are set");
         m_init = FG_FALSE;
         return FG_FALSE;
     }

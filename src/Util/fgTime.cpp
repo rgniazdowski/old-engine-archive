@@ -10,35 +10,47 @@
 #include "fgBuildConfig.h"
 #include "fgTime.h"
 
-#ifdef FG_USING_PLATFORM_WINDOWS
+#if defined(FG_USING_PLATFORM_WINDOWS)
 #include "windows.h"
-static DWORD g_start;
 #else
 #include <sys/time.h>
-static struct timeval g_start;
 #endif
+#include <ctime>
 
-#ifdef FG_USING_MARMALADE
+#if defined(FG_USING_MARMALADE)
 #include "s3eDebug.h"
 #include "s3eTimer.h"
 #endif
 
-#include <ctime>
-static clock_t g_clock_start = 0L;
-
-float fgTime::s_start = -1.0;
-float fgTime::s_current = -1.0;
-float fgTime::s_lastTick = -1.0;
+namespace fg {
+    namespace timesys {
+#if defined(FG_USING_PLATFORM_WINDOWS)
+        static DWORD g_start;
+#else
+        static struct timeval g_start;
+#endif
+        ///
+        static clock_t g_clock_start = 0L;
+        ///
+        static float s_start = -1.0;
+        ///
+        static float s_current = -1.0;
+        ///
+        static float s_lastTick = -1.0;
+    };
+};
 
 #if defined(FG_USING_SDL2)
 #include <SDL2/SDL_timer.h>
 #include <unistd.h>
 #endif
 
+using namespace fg;
+
 /*
  * First initial time stamp
  */
-void fgTime::init(void) {
+void timesys::init(void) {
 #ifdef FG_USING_PLATFORM_WINDOWS
     //SYSTEMTIME time;
     //GetSystemTime(&time);
@@ -46,18 +58,18 @@ void fgTime::init(void) {
     s_start = (float)timeGetTime() / 1000.0f;
     g_start = timeGetTime();
 #else
-    g_clock_start = clock();
-    gettimeofday(&g_start, NULL);
-    s_start = float(g_start.tv_sec) + float(g_start.tv_usec / 1000000.0f);
+    timesys::g_clock_start = clock();
+    gettimeofday(&timesys::g_start, NULL);
+    timesys::s_start = float(timesys::g_start.tv_sec) + float(timesys::g_start.tv_usec / 1000000.0f);
 #endif
-    s_current = 0.0;
-    s_lastTick = FG_TIME_MIN_TICK;
+    timesys::s_current = 0.0;
+    timesys::s_lastTick = MINIMUM_TICK;
 }
 
 /*
  *
  */
-void fgTime::markTick(void) {
+void timesys::markTick(void) {
 #ifdef FG_USING_PLATFORM_WINDOWS
     //SYSTEMTIME time;
     //GetSystemTime(&time);
@@ -66,28 +78,28 @@ void fgTime::markTick(void) {
 #else
     struct timeval dtime;
     gettimeofday(&dtime, NULL);
-    float newTime = float(dtime.tv_sec - g_start.tv_sec +
-                          dtime.tv_usec / 1000000.0f - g_start.tv_usec / 1000000.0f);
+    float newTime = float(dtime.tv_sec - timesys::g_start.tv_sec +
+                          dtime.tv_usec / 1000000.0f - timesys::g_start.tv_usec / 1000000.0f);
 #endif
 
-    s_lastTick = newTime - s_current;
-    s_current = newTime;
+    timesys::s_lastTick = newTime - timesys::s_current;
+    timesys::s_current = newTime;
 
-    if(s_lastTick <= 0.0f)
-        s_lastTick = FG_TIME_MIN_TICK;
+    if(timesys::s_lastTick <= 0.0f)
+        timesys::s_lastTick = MINIMUM_TICK;
 }
 
 /*
  *
  */
-float fgTime::elapsed(void) {
-    return s_lastTick;
+float timesys::elapsed(void) {
+    return timesys::s_lastTick;
 }
 
 /*
  * Get time since init in seconds
  */
-float fgTime::exact(void) {
+float timesys::exact(void) {
 #ifdef FG_USING_PLATFORM_WINDOWS
     //SYSTEMTIME time;
     //GetSystemTime(&time);
@@ -96,33 +108,33 @@ float fgTime::exact(void) {
 #else
     struct timeval dtime;
     gettimeofday(&dtime, NULL);
-    return float(dtime.tv_sec - g_start.tv_sec +
-                 dtime.tv_usec / 1000000.0f - g_start.tv_usec / 1000000.0f);
+    return float(dtime.tv_sec - timesys::g_start.tv_sec +
+                 dtime.tv_usec / 1000000.0f - timesys::g_start.tv_usec / 1000000.0f);
 #endif
 }
 
 /*
  * Get clock ticks
  */
-float fgTime::ticks(void) {
-    clock_t curTime = clock() - g_clock_start;
+float timesys::ticks(void) {
+    clock_t curTime = clock() - timesys::g_clock_start;
     return float(curTime);
 }
 
 /*
  * Get time since init in miliseconds
  */
-float fgTime::ms(void) {
+float timesys::ms(void) {
     struct timeval newTime;
     gettimeofday(&newTime, NULL);
-    return float(newTime.tv_sec - g_start.tv_sec)*1000.0f +
-            float(newTime.tv_usec - g_start.tv_usec) / 1000.0f;
+    return float(newTime.tv_sec - timesys::g_start.tv_sec)*1000.0f +
+            float(newTime.tv_usec - timesys::g_start.tv_usec) / 1000.0f;
 }
 
 /*
  *
  */
-long fgTime::seconds(void) {
+long timesys::seconds(void) {
     return time(NULL);
 }
 
@@ -137,6 +149,6 @@ unsigned long int FG_GetTicks(void) {
 #elif defined FG_USING_SDL || defined FG_USING_SDL2
     return (unsigned long int)SDL_GetTicks();
 #else
-    return (unsigned long int)(fgTime::ticks() / ((float)CLOCKS_PER_SEC / 1000.0f)); // FIXME - here needs to be proper function getting the miliseconds
+    return (unsigned long int)(timesys::ticks() / ((float)CLOCKS_PER_SEC / 1000.0f)); // FIXME - here needs to be proper function getting the miliseconds
 #endif
 }

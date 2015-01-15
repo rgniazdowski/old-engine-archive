@@ -35,10 +35,10 @@ static char const * const FG_FACE_UP_TXT = "Face up";
 static char const * const FG_FACE_DOWN_TXT = "Face down";
 
 template <>
-bool fgSingleton<fgSensors>::instanceFlag = false;
+bool CSingleton<fgSensors>::instanceFlag = false;
 
 template <>
-fgSensors *fgSingleton<fgSensors>::instance = NULL;
+fgSensors *CSingleton<fgSensors>::instance = NULL;
 
 /// Names of the available sensors
 const char* fgSensors::s_sensorsNames[fgSensors::FG_SENSORS_TYPES] = {
@@ -74,7 +74,7 @@ int32_t HarvestCallback(void* systemData, void* userData) {
 
     int result = s3eTimerSetTimer(80, &HarvestCallback, (void *)self);
     if(result == S3E_RESULT_ERROR) {
-        FG_LOG::PrintError("Setting continued sensors-callback failed!");
+        log::PrintError("Setting continued sensors-callback failed!");
         return 0;
     }
 #endif // FG_USING_MARMALADE_SENSORS
@@ -105,7 +105,7 @@ fgBool fgSensors::startSensors() {
 #ifdef FG_USING_MARMALADE_SENSORS
     m_sensorsErrors[ FG_SENSORS_ACCELEROMETER ] = s3eAccelerometerStart();
     if(m_sensorsErrors[ FG_SENSORS_ACCELEROMETER ] == S3E_RESULT_ERROR) {
-        FG_LOG::PrintError("ERROR! Accelerometer did not activate!");
+        log::PrintError("ERROR! Accelerometer did not activate!");
         return FG_FALSE;
     }
 
@@ -124,7 +124,7 @@ fgBool fgSensors::startSensors() {
     // The timer receives pointer to this object! :)
     int result = s3eTimerSetTimer(80, &HarvestCallback, (void *)this);
     if(result == S3E_RESULT_ERROR) {
-        FG_LOG::PrintError("Setting sensors-callback failed!");
+        log::PrintError("Setting sensors-callback failed!");
         m_isRunning = FG_FALSE;
         return FG_FALSE;
     }
@@ -147,7 +147,7 @@ void fgSensors::stopSensors() {
  */
 const char* fgSensors::errorCodeText(int errorCode) {
     // TODO if needed
-    FG_LOG::PrintError("Sensors::errorCodeText called (its TODO)");
+    FG_LOG_ERROR("Sensors::errorCodeText called (its TODO)");
     return "UNKNOWN";
 }
 

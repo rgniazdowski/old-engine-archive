@@ -52,7 +52,7 @@ void fg::event::CJoypadController::open(const int device) {
     if(isGameController) {
         m_gamepad = SDL_GameControllerOpen(device);
         if(!m_gamepad) {
-            FG_LOG::PrintError("SDL: Error occurred for game controller: '%s'", SDL_GetError());
+            log::PrintError("SDL: Error occurred for game controller: '%s'", SDL_GetError());
             SDL_ClearError();
         }
         j = SDL_GameControllerGetJoystick(m_gamepad);
@@ -63,7 +63,7 @@ void fg::event::CJoypadController::open(const int device) {
         }
     }
     if(!j) {
-        FG_LOG::PrintError("SDL: Error occured for game controller: '%s'", SDL_GetError());
+        log::PrintError("SDL: Error occured for game controller: '%s'", SDL_GetError());
         SDL_ClearError();
     }
     m_instanceID = SDL_JoystickInstanceID(j);
@@ -137,7 +137,7 @@ fgBool fg::event::CJoypadController::initialize(void) {
 #if defined(FG_USING_SDL2)
     if(SDL_WasInit(SDL_INIT_GAMECONTROLLER) == 0) {
         if(SDL_Init(SDL_INIT_GAMECONTROLLER | SDL_INIT_JOYSTICK | SDL_INIT_HAPTIC) != 0) {
-            FG_LOG::PrintError("SDL: Couldn't initialize GameController subsystem: '%s'", SDL_GetError());
+            log::PrintError("SDL: Couldn't initialize GameController subsystem: '%s'", SDL_GetError());
             m_init = FG_FALSE;
             return FG_FALSE;
         }

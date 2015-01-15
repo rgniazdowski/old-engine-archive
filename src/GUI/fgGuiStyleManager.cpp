@@ -75,7 +75,7 @@ fgBool gui::CStyleManager::initialize(void) {
             CStyle *style = new CStyle();
             FG_LOG_DEBUG("GUI: Loading gui style file: '%s'", filename);
             if(!style->load(filename)) {
-                FG_LOG::PrintError("GUI: Failed to load gui style: '%s'", filename);
+                log::PrintError("GUI: Failed to load gui style: '%s'", filename);
                 delete style;
                 continue;
             } else {

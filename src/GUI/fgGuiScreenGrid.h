@@ -22,8 +22,8 @@
 namespace fg {
     namespace gui {
 
-        class CScreenGrid : public fgSingleton<CScreenGrid> {
-            friend class fgSingleton<CScreenGrid>;
+        class CScreenGrid : public CSingleton<CScreenGrid> {
+            friend class CSingleton<CScreenGrid>;
         private:
             /* By default maximum screen grid height is 40
                this makes positioning of the screen elements quite easier */

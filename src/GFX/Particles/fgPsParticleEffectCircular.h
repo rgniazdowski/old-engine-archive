@@ -86,7 +86,7 @@ public:
      */
     bool setDummy(int idx) {
         if(int(m_particles.size()) != maxCount() || idx >= maxCount()) {
-            FG_LOG::PrintError("########## Inconsistent ParticleEffectCircular: size[%d], maxCount[%d], which[%d] ##########", m_particles.size(), maxCount(), idx);
+            log::PrintError("########## Inconsistent ParticleEffectCircular: size[%d], maxCount[%d], which[%d] ##########", m_particles.size(), maxCount(), idx);
             return false;
         }
 

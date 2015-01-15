@@ -18,10 +18,10 @@
 #include "Resource/fgResource.h"
 
 template <>
-bool fgSingleton<fg::script::CMetatables>::instanceFlag = false;
+bool CSingleton<fg::script::CMetatables>::instanceFlag = false;
 
 template <>
-fg::script::CMetatables *fgSingleton<fg::script::CMetatables>::instance = NULL;
+fg::script::CMetatables *CSingleton<fg::script::CMetatables>::instance = NULL;
 
 using namespace fg;
 

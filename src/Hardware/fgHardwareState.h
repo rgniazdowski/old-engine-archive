@@ -32,8 +32,8 @@ enum fgScreenOrientation {
  * The class holds only SIMPLE states, i.e. it does not
  * hold GameLogic object. Reason: to avoid including EVERYTHING here.
  */
-class fgHardwareState : public fgSingleton<fgHardwareState> {
-    friend class fgSingleton<fgHardwareState>;
+class fgHardwareState : public CSingleton<fgHardwareState> {
+    friend class CSingleton<fgHardwareState>;
 private:
     // Timestamp (in milliseconds)
     unsigned long int m_TS;
