@@ -18,12 +18,14 @@
 #include "fgGFXSceneManager.h"
 #include "fgLog.h"
 
+using namespace fg;
+
 /**
  * 
  * @param pModel
  * @param pParent
  */
-fg::gfx::CSceneNodeObject::CSceneNodeObject(fg::gfx::CModel *pModel, fg::gfx::CSceneNode *pParent) :
+gfx::CSceneNodeObject::CSceneNodeObject(gfx::CModel *pModel, gfx::CSceneNode *pParent) :
 CSceneNode(FG_GFX_SCENE_NODE_OBJECT, pParent) {
     CSceneNode::setNodeType(FG_GFX_SCENE_NODE_OBJECT);
     // Now need to reset the draw call - this is object based on model
@@ -43,12 +45,12 @@ CSceneNode(FG_GFX_SCENE_NODE_OBJECT, pParent) {
  * 
  * @param orig
  */
-fg::gfx::CSceneNodeObject::CSceneNodeObject(const CSceneNodeObject& orig) { }
+gfx::CSceneNodeObject::CSceneNodeObject(const CSceneNodeObject& orig) { }
 
 /**
  * 
  */
-fg::gfx::CSceneNodeObject::~CSceneNodeObject() {
+gfx::CSceneNodeObject::~CSceneNodeObject() {
     FG_LOG_DEBUG("fgGfxSceneNodeObject destructor %s", this->m_nameTag.c_str());
     // Well there's no need to remove children from this destructor
     // The base class destructor (SceneNode) will take care of that
@@ -58,7 +60,7 @@ fg::gfx::CSceneNodeObject::~CSceneNodeObject() {
  * 
  * @param pModel
  */
-void fg::gfx::CSceneNodeObject::setModel(fg::gfx::CModel *pModel) {
+void gfx::CSceneNodeObject::setModel(gfx::CModel *pModel) {
     if(pModel) {
         if(m_pModel == pModel) {
             // No need to reinitialize #FIXME
@@ -83,21 +85,29 @@ void fg::gfx::CSceneNodeObject::setModel(fg::gfx::CModel *pModel) {
             // Would need to clear the children list?
         } // SRSLY? #FIXME
 
-        fg::gfx::CModel::modelShapes &shapes = pModel->getRefShapes();
-        fg::gfx::CModel::modelShapesItor sit = shapes.begin(), send = shapes.end();
+        gfx::CModel::modelShapes &shapes = pModel->getRefShapes();
+        setBoundingVolume(pModel->getRefAABB());
+        gfx::CModel::modelShapesItor sit = shapes.begin(), send = shapes.end();
         for(; sit != send; sit++) {
             if(!(*sit))
                 continue;
             SMeshBase *pMesh = (*sit)->mesh;
             if(!pMesh)
                 continue;
-            CSceneNode *pChildNode = new fg::gfx::CSceneNodeMesh(pMesh, this);
-            // Should register it in a manager?
-            if(m_pManager) {
-                if(m_pManager->getManagerType() == FG_MANAGER_SCENE) {
+            CSceneNode *pChildNode = new CSceneNodeMesh(pMesh, this);
+            // Should register it in a manager? #NOPE
+            // There is no need to register this NodeMesh - it's immediate child
+            // required to do the drawing - however this is about to change
+            // What if Object is made from many meshes, +explosion effect,
+            // The meshes spread through the scene - need to be managed
+            // If so the drawing procedures for object should be empty - not include
+            // the children. The children would be drawn via the scene manager/octree
+            // #FIXME #P2 #IMPORTANT
+            //if(m_pManager) {
+                //if(m_pManager->getManagerType() == FG_MANAGER_SCENE) {
                     //static_cast<fgGfxSceneManager *>(m_pManager)->addNode(pChildNode->getRefHandle(), pChildNode, this);
-                }
-            }
+                //}
+            //}
             // No need to check if it's inserted successfully
             getChildren().insert(pChildNode);
         }

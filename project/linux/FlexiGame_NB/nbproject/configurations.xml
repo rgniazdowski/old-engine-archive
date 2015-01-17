@@ -91,6 +91,8 @@
           <itemPath>../../../src/GFX/fgGFXAABoundingBox.h</itemPath>
           <itemPath>../../../src/GFX/fgGFXAttribBits.h</itemPath>
           <itemPath>../../../src/GFX/fgGFXAttributeData.h</itemPath>
+          <itemPath>../../../src/GFX/fgGFXBasetree.cpp</itemPath>
+          <itemPath>../../../src/GFX/fgGFXBasetree.h</itemPath>
           <itemPath>../../../src/GFX/fgGFXBoundingBox.h</itemPath>
           <itemPath>../../../src/GFX/fgGFXBoundingVolume.h</itemPath>
           <itemPath>../../../src/GFX/fgGFXBufferID.h</itemPath>
@@ -153,6 +155,7 @@
           <itemPath>../../../src/GFX/fgGFXTextureID.h</itemPath>
           <itemPath>../../../src/GFX/fgGFXTexturing.cpp</itemPath>
           <itemPath>../../../src/GFX/fgGFXTexturing.h</itemPath>
+          <itemPath>../../../src/GFX/fgGFXTreeNode.h</itemPath>
           <itemPath>../../../src/GFX/fgGFXTypes.h</itemPath>
           <itemPath>../../../src/GFX/fgGFXVertex.h</itemPath>
           <itemPath>../../../src/GFX/fgGFXVertexData.cpp</itemPath>
@@ -867,6 +870,10 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/GFX/fgGFXBasetree.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGFXBasetree.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../../../src/GFX/fgGFXBoundingBox.h"
             ex="false"
             tool="3"
@@ -1062,6 +1069,8 @@
             flavor2="8">
       </item>
       <item path="../../../src/GFX/fgGFXTexturing.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGFXTreeNode.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGFXTypes.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -2206,6 +2215,10 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/GFX/fgGFXBasetree.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGFXBasetree.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../../../src/GFX/fgGFXBoundingBox.h"
             ex="false"
             tool="3"
@@ -2401,6 +2414,8 @@
             flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGFXTexturing.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGFXTreeNode.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGFXTypes.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -3511,6 +3526,10 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/GFX/fgGFXBasetree.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGFXBasetree.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../../../src/GFX/fgGFXBoundingBox.h"
             ex="false"
             tool="3"
@@ -3706,6 +3725,8 @@
             flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGFXTexturing.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGFXTreeNode.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGFXTypes.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -4794,6 +4815,10 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/GFX/fgGFXBasetree.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGFXBasetree.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../../../src/GFX/fgGFXBoundingBox.h"
             ex="false"
             tool="3"
@@ -4989,6 +5014,8 @@
             flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGFXTexturing.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGFXTreeNode.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGFXTypes.h" ex="false" tool="3" flavor2="0">
       </item>

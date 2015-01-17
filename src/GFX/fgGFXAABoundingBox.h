@@ -965,10 +965,30 @@ namespace fg {
             }
             /**
              * 
+             * @param center
+             * @param extent
+             * @return 
+             */
+            fgBool test(const vector_type& center, const vector_type& extent) const {
+                // needs to return true if 'sphere' is completely inside of 'this' box
+                if(center.x - extent.x < this->min.x ||
+                        center.x + extent.x > this->max.x)
+                    return FG_FALSE;
+                if(center.y - extent.y < this->min.y ||
+                        center.y + extent.y > this->max.y)
+                    return FG_FALSE;
+                if(center.z - extent.z < this->min.z ||
+                        center.z + extent.z > this->max.z)
+                    return FG_FALSE;
+
+                return FG_TRUE;
+            }
+            /**
+             * 
              * @param box
              * @return 
              */
-            fgBool test(const self_type& box) const {
+            fgBool test(const self_type & box) const {
                 // needs to return true if 'box' is completely inside of 'this' box
                 if(box.min.x < this->min.x || box.max.x > this->max.x) {
                     return FG_FALSE;

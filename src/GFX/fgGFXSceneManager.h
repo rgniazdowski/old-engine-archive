@@ -49,7 +49,7 @@ namespace fg {
             ///
             typedef fgGfxSceneNodeHandle handle_type;
             ///
-            typedef std::priority_queue<CSceneNode*, std::deque<CSceneNode*>, fgPtrLessEq<CSceneNode*> > nodePriorityQueue;
+            typedef std::priority_queue<CSceneNode*, std::deque<CSceneNode*>, fgPtrLessEq<CSceneNode*> > NodePriorityQueue;
             ///
             typedef CVector<CSceneNode *> ObjectVec;
             ///
@@ -281,35 +281,35 @@ namespace fg {
              * @return 
              */
             inline CSceneNode *get(const int index) {
-                if(index < 0 || index >= (int)CHandleManager::getRefDataVector().size())
+                if(index < 0 || index >= (int)handle_mgr_type::getRefDataVector().size())
                     return NULL;
-                return CHandleManager::getRefDataVector()[index];
+                return handle_mgr_type::getRefDataVector()[index];
             }
 
             // This is special array like operator
             // Note that there is no boundaries checking
             CSceneNode *operator [](size_t n) {
-                return CHandleManager::getRefDataVector()[n];
+                return handle_mgr_type::getRefDataVector()[n];
             }
 
             // This is special array like operator
             // Note that there is no boundaries checking
             const CSceneNode *operator [](size_t n) const {
-                return CHandleManager::getRefDataVector()[n];
+                return handle_mgr_type::getRefDataVector()[n];
             }
 
             // Returns the number of valid handles used within the handle 
             // manager. This value should not be used for any kind of iteration
             // through the internal data vector
             unsigned int count(void) const {
-                return CHandleManager::getUsedHandleCount();
+                return handle_mgr_type::getUsedHandleCount();
             }
 
             // This will return the size of the internal data vector
             // Returned value takes into account also empty slots, so
             // this is the real size of the internal data array
             unsigned int size(void) const {
-                return CHandleManager::getRefDataVector().size();
+                return handle_mgr_type::getRefDataVector().size();
             }
             /**
              * 
@@ -333,15 +333,27 @@ namespace fg {
             inline CMVPMatrix *getMVP(void) {
                 return &m_MVP;
             }
-
+            /**
+             */
+            inline NodePriorityQueue& getNodeQueue(void) {
+                return m_nodeQueue;
+            }
+            /**
+             * 
+             * @return 
+             */
+            inline NodePriorityQueue const& getNodeQueue(void) const {
+                return m_nodeQueue;
+            }
+            
         private:
             /// Internal MVP matrix to use, this will set the perspective view
             CMVPMatrix m_MVP;
             /// Internal camera
             CCameraAnimation m_camera;
-            ///
-            nodePriorityQueue m_nodeQueue;
-            /// Pointer to the external resource manager - dont know if this is necessary
+            /// Queue containing scene node (sorted) ready to render
+            NodePriorityQueue m_nodeQueue;
+            /// Pointer to the external resource manager - don't know if this is necessary
             fg::base::CManager *m_pResourceMgr;
         };
     };

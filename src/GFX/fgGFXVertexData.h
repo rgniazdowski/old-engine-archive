@@ -178,8 +178,7 @@ namespace fg {
              * @param pos
              * @param uv
              */
-            virtual void append(
-                                const Vector3f &pos,
+            virtual void append(const Vector3f &pos,
                                 const Vector2f &uv) = 0;
             /**
              * 
@@ -187,8 +186,7 @@ namespace fg {
              * @param normal
              * @param uv
              */
-            virtual void append(
-                                const Vector3f &pos,
+            virtual void append(const Vector3f &pos,
                                 const Vector3f &normal,
                                 const Vector2f &uv) = 0;
             /**
@@ -561,8 +559,7 @@ namespace fg {
              * @param pos
              * @param uv
              */
-            virtual void append(
-                                const Vector3f &pos,
+            virtual void append(const Vector3f &pos,
                                 const Vector2f &uv) {
                 Vertex3v vertex;
                 vertex.position = pos;
@@ -576,8 +573,7 @@ namespace fg {
              * @param normal
              * @param uv
              */
-            virtual void append(
-                                const Vector3f &pos,
+            virtual void append(const Vector3f &pos,
                                 const Vector3f &normal,
                                 const Vector2f &uv) {
                 Vertex3v vertex;

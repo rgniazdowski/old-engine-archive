@@ -527,9 +527,10 @@ namespace fg {
                 center = 0.5f * (this->min + this->max);
                 extent = 0.5f * (this->max - this->min);
                 radius = 0.0f;
-                radius = math::max(radius, extent.x);
-                radius = math::max(radius, extent.y);
-                radius = math::max(radius, extent.z);
+                radius = math::max(radius, math::pow(extent.z * extent.z + extent.x * extent.x + extent.y * extent.y, 1.0f/2.0f));
+//                radius = math::max(radius, math::sqrt(extent.z * extent.z + extent.x * extent.x));
+                //radius = math::max(radius, math::sqrt(extent.z * extent.z + extent.y * extent.y));
+                //radius = math::max(radius, math::sqrt(extent.y * extent.y + extent.x * extent.x));
             }
             /**
              * 

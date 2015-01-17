@@ -54,4 +54,5 @@ void gfx::CSceneNodeMesh::setMesh(SMeshBase* pMesh) {
     if(m_drawCall) {
         m_drawCall->setupFromMesh(pMesh);
     }
+    setBoundingVolume(pMesh->aabb);
 }

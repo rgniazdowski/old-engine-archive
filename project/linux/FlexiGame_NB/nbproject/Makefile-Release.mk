@@ -63,6 +63,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/_ext/34731496/fgTextureResource.o \
 	${OBJECTDIR}/_ext/534590209/fgGFX2DScene.o \
 	${OBJECTDIR}/_ext/534590209/fgGFX3DScene.o \
+	${OBJECTDIR}/_ext/534590209/fgGFXBasetree.o \
 	${OBJECTDIR}/_ext/534590209/fgGFXCamera.o \
 	${OBJECTDIR}/_ext/534590209/fgGFXCameraAnimation.o \
 	${OBJECTDIR}/_ext/534590209/fgGFXContext.o \
@@ -337,6 +338,11 @@ ${OBJECTDIR}/_ext/534590209/fgGFX3DScene.o: ../../../src/GFX/fgGFX3DScene.cpp
 	${MKDIR} -p ${OBJECTDIR}/_ext/534590209
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_GL_BINDING -DFG_USING_OPENGL -DFG_USING_SDL2 -DFG_USING_TINYXML -DTIXML_USE_STL -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src `pkg-config --cflags libpng` `pkg-config --cflags gl` `pkg-config --cflags zlib` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534590209/fgGFX3DScene.o ../../../src/GFX/fgGFX3DScene.cpp
+
+${OBJECTDIR}/_ext/534590209/fgGFXBasetree.o: ../../../src/GFX/fgGFXBasetree.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/534590209
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_GL_BINDING -DFG_USING_OPENGL -DFG_USING_SDL2 -DFG_USING_TINYXML -DTIXML_USE_STL -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src `pkg-config --cflags libpng` `pkg-config --cflags gl` `pkg-config --cflags zlib` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534590209/fgGFXBasetree.o ../../../src/GFX/fgGFXBasetree.cpp
 
 ${OBJECTDIR}/_ext/534590209/fgGFXCamera.o: ../../../src/GFX/fgGFXCamera.cpp 
 	${MKDIR} -p ${OBJECTDIR}/_ext/534590209

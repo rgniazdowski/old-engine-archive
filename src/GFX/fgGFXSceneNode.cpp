@@ -23,6 +23,7 @@ gfx::CSceneNode::CSceneNode(fgGfxSceneNodeType nodeType,
 base_type(), // fgManagedObjectBase init
 drawable_type(FG_GFX_DRAWABLE_SCENENODE), // fgGfxDrawable init
 m_nodeType(nodeType), // Current node type
+m_pTreeNode(NULL),
 m_pParent(pParent), // Pointer to the parent node
 m_children(), // Children set
 m_isVisible(FG_TRUE), // Is this node visible?
@@ -46,6 +47,7 @@ gfx::CSceneNode::~CSceneNode() {
         delete m_drawCall;
     m_drawCall = NULL;
     m_pParent = NULL;
+    m_pTreeNode = NULL;
     // Need to signal the managing object that this node is going to be removed
     // Manager needs to destroy/release the managed children objects
     // .. .. .. 
@@ -65,6 +67,26 @@ gfx::CSceneNode::~CSceneNode() {
     m_pManager = NULL;
     m_children.clear();
     m_aabb.invalidate();
+}
+
+/**
+ * 
+ * @param pNode
+ * @return 
+ */
+fgBool gfx::CSceneNode::checkCollisionSphere(const CSceneNode* pNode) {
+    if(!pNode)
+        return FG_FALSE;
+    const Vector3f &self_center = m_aabb.center;
+    const Vector3f &obj_center = pNode->getRefBoundingVolume().center;
+    const Vector3f delta = obj_center - self_center;
+    const float radius = m_aabb.radius + pNode->getRefBoundingVolume().radius;
+    const float r2 = delta.x * delta.x + delta.y * delta.y + delta.z * delta.z;
+    const float radius2 = radius * radius;
+    if(r2 > radius2) {
+        return FG_FALSE;
+    } 
+    return FG_TRUE;
 }
 
 /**

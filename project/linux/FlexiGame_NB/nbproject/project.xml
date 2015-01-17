@@ -55,6 +55,7 @@
             <word>bool</word>
             <word>Btw</word>
             <word>bvec</word>
+            <word>bvh</word>
             <word>callbacks</word>
             <word>codec</word>
             <word>config</word>
@@ -137,6 +138,7 @@
             <word>ny</word>
             <word>nz</word>
             <word>obj</word>
+            <word>octree</word>
             <word>overallocation</word>
             <word>packfree</word>
             <word>packh</word>
@@ -160,6 +162,7 @@
             <word>pz</word>
             <word>quadangle</word>
             <word>quadragon</word>
+            <word>quadtree</word>
             <word>Radoslaw</word>
             <word>readdir</word>
             <word>rgb</word>

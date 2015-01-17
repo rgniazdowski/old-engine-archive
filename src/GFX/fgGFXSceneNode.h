@@ -21,6 +21,7 @@
     #endif
     #ifndef FG_INC_GFX_DRAW_CALL
         #include "fgGFXDrawCall.h"
+#include "fgGFXTreeNode.h"
     #endif
 
 namespace fg {
@@ -68,6 +69,11 @@ namespace fg {
 
     namespace gfx {
 
+        ///
+        class CSceneManager;
+        ///
+        struct STreeNode;
+        
         /**
          * Scene object/node can be anything, it requires model matrix for any kind of 
          * transformation to world space. AABB for boundaries, collision detection,
@@ -81,7 +87,7 @@ namespace fg {
          * Also need template structs for managing safe down/up-casting (static)
          */
         class CSceneNode :
-        public fg::resource::CManagedObject<fgGfxSceneNodeHandle>,
+        public resource::CManagedObject<fgGfxSceneNodeHandle>,
         public CDrawable {
         public:
             /// Scene node tag type
@@ -104,6 +110,8 @@ namespace fg {
         private:
             ///
             fgGfxSceneNodeType m_nodeType;
+            ///
+            STreeNode *m_pTreeNode;
             /// Scene node father/parent node pointer
             self_type *m_pParent;
             ///
@@ -132,6 +140,8 @@ namespace fg {
              */
             virtual ~CSceneNode();
 
+        public:
+            
             /**
              * 
              */
@@ -152,6 +162,16 @@ namespace fg {
              */
             virtual void draw(const Matrix4f& modelMat);
 
+        public:
+            /**
+             * 
+             * @param pNode
+             * @return 
+             */
+            fgBool checkCollisionSphere(const CSceneNode* pNode);
+            
+        public:
+            
             /**
              * 
              * @param pChild
@@ -274,6 +294,20 @@ namespace fg {
              */
             inline unsigned int getChildrenCount(void) const {
                 return m_children.size();
+            }
+            /**
+             * 
+             * @param pTreeNode
+             */
+            inline void setTreeNode(STreeNode *pTreeNode) {
+                m_pTreeNode = pTreeNode;
+            }
+            /**
+             * 
+             * @return 
+             */
+            inline STreeNode* getTreeNode(void) const {
+                return m_pTreeNode;
             }
             /**
              * 

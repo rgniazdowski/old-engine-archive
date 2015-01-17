@@ -13,8 +13,12 @@
 
     #include "fgGFXStdInc.h"
     #include "fgGFXSceneNode.h"
+    #include "fgGFXTreeNode.h"
     #include "fgVector.h"
     #include "fgBool.h"
+    #include "fgGFXBasetree.h"
+
+    #include <stack>
 
 namespace fg {
     namespace gfx {
@@ -22,24 +26,16 @@ namespace fg {
         /**
          *
          */
-        struct SOctreeNode {
+        struct SOctreeNode : public STreeNode {
             ///
             typedef SOctreeNode type;
             ///
             typedef SOctreeNode self_type;
             ///
-            typedef CVector<CSceneNode *> ObjectsVec;
-            ///
-            typedef ObjectsVec::iterator ObjectsVecItor;
+            typedef STreeNode base_type;
 
             ///
-            ObjectsVec objects;
-            ///
-            Vector3f center;
-            ///
             self_type *parent;
-            ///
-            int depth;
             ///
             self_type *child[2][2][2];
             /**
@@ -49,7 +45,7 @@ namespace fg {
              * @param _depth
              */
             SOctreeNode(self_type *_parent, Vector3f _center, int _depth = 0) :
-            center(_center), parent(_parent), depth(_depth) {
+            base_type(_center, _depth), parent(_parent) {
                 for(int i = 0; i < 2; i++) {
                     for(int j = 0; j < 2; j++) {
                         for(int k = 0; k < 2; k++) {
@@ -65,11 +61,7 @@ namespace fg {
              * @param _depth
              */
             SOctreeNode(self_type *_parent, Vector2f _center, int _depth = 0) :
-            parent(_parent), depth(_depth) {
-                center.x = _center.x;
-                center.y = _center.y;
-                center.z = 0.0f;
-
+            base_type(_center, _depth), parent(_parent) {
                 for(int i = 0; i < 2; i++) {
                     for(int j = 0; j < 2; j++) {
                         for(int k = 0; k < 2; k++) {
@@ -98,12 +90,82 @@ namespace fg {
             }
 
         };
-        
-        
+
         /**
          *
          */
-        class COctree {
+        class COctree : public CBasetree {
+        public:
+            ///
+            const unsigned int DEFAULT_WORLD_SIZE = 2048;
+
+        protected:
+
+            /**
+             *
+             */
+            struct STraverse : public STraverseBase<SOctreeNode> {
+                ///
+                typedef STraverseBase<SOctreeNode> base_type;
+                ///
+                typedef STraverse type;
+                ///
+                typedef SOctreeNode node_type;
+                /**
+                 * 
+                 */
+                STraverse() : base_type() { }
+                /**
+                 * 
+                 */
+                virtual ~STraverse() { }
+                /**
+                 * 
+                 * @return 
+                 */
+                SOctreeNode *next(SOctreeNode *root) {
+                    if(!current) {
+                        if(!root)
+                            return 0;
+                        rewind();
+                        current = root;
+                        count++;
+                        return current;
+                    }
+
+                    for(int i = idx; i < 8; i++) {
+                        uintptr_t offset = (uintptr_t)(&current->child[0][0][0]);
+                        offset += sizeof (SOctreeNode*)*(i);
+                        SOctreeNode *node = *((SOctreeNode**)offset);
+                        if(node) {
+                            idx = i + 1;
+                            node_stack.push(current);
+                            id_stack.push(idx);
+                            idx = 0;
+                            current = node;
+                            count++;
+                            return node;
+                        }
+                    }
+
+                    if(id_stack.empty()) {
+                        current = NULL;
+                        return current;
+                    }
+
+                    idx = id_stack.top();
+                    id_stack.pop();
+                    current = node_stack.top();
+                    node_stack.pop();
+
+                    if(!current) {
+                        return current;
+                    }
+                    return next(root);
+                }
+
+            };
+
         public:
             /**
              * 
@@ -118,11 +180,54 @@ namespace fg {
              * 
              */
             virtual ~COctree();
-            
-        private:
+
+        public:
+            /**
+             * 
+             * @return 
+             */
+            SOctreeNode *getRoot(void) const {
+                return m_root;
+            }
+
+        public:
+            /**
+             * 
+             * @param sceneNode
+             * @param treeNode
+             * @return 
+             */
+            virtual int insert(CSceneNode* sceneNode, STreeNode* treeNode = NULL);
+
+        public:
+            /**
+             *
+             */
+            STreeNode* next(void);
+            /**
+             * 
+             * @return 
+             */
+            STreeNode* current(void) const {
+                return m_traverse.current;
+            }
+            /**
+             * 
+             */
+            void rewind(void);
+            /**
+             * 
+             */
+            void skip(void);
+
+        protected:
+            ///
+            SOctreeNode *m_root;
+            ///
+            STraverse m_traverse;
 
         };
-        
+
     };
 };
 

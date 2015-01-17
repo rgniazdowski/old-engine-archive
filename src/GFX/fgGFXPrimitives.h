@@ -42,7 +42,7 @@ namespace fg {
 
             static void drawSkyBoxOptimized(void);
 
-            static void drawAABBLines(const AABoundingBox3Df& aabb);
+            static void drawAABBLines(const AABoundingBox3Df& aabb, const fgColor4f& color = fgColor4f(1.0f, 1.0f, 1.0f, 1.0f));
 
             /*
              *

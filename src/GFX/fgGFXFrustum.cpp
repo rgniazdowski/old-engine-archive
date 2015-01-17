@@ -316,7 +316,7 @@ int gfx::CFrustum::testSphere(const BoundingVolume3Df& box) {
  * @param box
  * @return 
  */
-int gfx::CFrustum::testVolume(const AABoundingBox3Df &box) {
+int gfx::CFrustum::testVolume(const AABoundingBox3Df& box) {
     if(!box.isValid())
         return OUTSIDE;
     // #FIXME - OPTIMIZE!
@@ -356,29 +356,55 @@ int gfx::CFrustum::testVolume(const AABoundingBox3Df &box) {
  * @param box
  * @return 
  */
-int gfx::CFrustum::testVolume(const BoundingVolume3Df &box) {
+int gfx::CFrustum::testVolume(const BoundingVolume3Df& box) {
     if(!box.isValid())
         return OUTSIDE;
-    // #FIXME - OPTIMIZE!
     int result = INSIDE;
-
     for(int i = 0; i < NUM_PLANES; i++) {
         Vec3f absPlane = math::abs(m_planes[i].n);
         float d = math::dot(box.center, m_planes[i].n);
         float r = math::dot(box.extent, absPlane);
-
         if(d + r < -m_planes[i].d) {
             return OUTSIDE;
         }
+    }
+    return result;
+}
 
-        // P/N vertex method is FUBAR, something is not working here
-        // It yields wrong results
-        // P max
-        //if(m_planes[i].distance(b.getVertexP(m_planes[i].n)) < 0)
-        //    return OUTSIDE;
-        // N min
-        //else if(m_planes[i].distance(b.getVertexN(m_planes[i].n)) < 0)
-        //    result = INTERSECT;
+/**
+ * 
+ * @param center
+ * @param extent
+ * @return 
+ */
+int gfx::CFrustum::testVolume(const Vector3f& center, const float extent) {
+    int result = INSIDE;
+    for(int i = 0; i < NUM_PLANES; i++) {
+        Vec3f absPlane = math::abs(m_planes[i].n);
+        float d = math::dot(center, m_planes[i].n);
+        float r = math::dot(Vector3f(extent, extent, extent), absPlane);
+        if(d + r < -m_planes[i].d) {
+            return OUTSIDE;
+        }
+    }
+    return result;
+}
+
+/**
+ * 
+ * @param center
+ * @param extent
+ * @return 
+ */
+int gfx::CFrustum::testVolume(const Vector3f& center, const Vector3f& extent) {
+    int result = INSIDE;
+    for(int i = 0; i < NUM_PLANES; i++) {
+        Vec3f absPlane = math::abs(m_planes[i].n);
+        float d = math::dot(center, m_planes[i].n);
+        float r = math::dot(extent, absPlane);
+        if(d + r < -m_planes[i].d) {
+            return OUTSIDE;
+        }
     }
     return result;
 }

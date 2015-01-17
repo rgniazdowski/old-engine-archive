@@ -12,65 +12,83 @@
     #define FG_INC_GFX_3D_SCENE_BLOCK
 
     #include "fgGFXSceneManager.h"
+    #include "fgGFXOctree.h"
+
+    #include <stack>
 
 namespace fg {
 
     namespace gfx {
 
-/**
- *
- */
-class CScene3D : public fg::gfx::CSceneManager {
-public:
-    ///
-    typedef fg::gfx::CSceneManager base_type;
-    
-private:
+        /**
+         *
+         */
+        class CScene3D : public CSceneManager {
+        public:
+            ///
+            typedef fg::gfx::CSceneManager base_type;
 
-public:
-    /**
-     * 
-     */
-    CScene3D();
-    /**
-     * 
-     */
-    virtual ~CScene3D();
+        private:
 
-public:
+        public:
+            /**
+             * 
+             */
+            CScene3D();
+            /**
+             * 
+             */
+            virtual ~CScene3D();
 
-    /**
-     * 
-     */
-    virtual void sortCalls(void);
+        public:
 
-    /**
-     * 
-     */
-    virtual void render(void);
+            /**
+             * 
+             */
+            virtual void sortCalls(void);
 
-    /**
-     * 
-     * @param pModelRes
-     * @param nameTag
-     * @return 
-     */
-    CSceneNode *addFromModel(CModelResource *pModelRes, const std::string& nameTag);
-    /**
-     * 
-     * @param modelNameTag
-     * @param nameTag
-     * @return 
-     */
-    CSceneNode *addFromModel(const std::string& modelNameTag, const std::string& nameTag);
-    /**
-     * 
-     * @param modelNameTag
-     * @param nameTag
-     * @return 
-     */
-    CSceneNode *addFromModel(const char *modelNameTag, const char *nameTag);
-};
+            /**
+             * 
+             */
+            virtual void render(void);
+
+            /**
+             * 
+             * @param pModelRes
+             * @param nameTag
+             * @return 
+             */
+            CSceneNode *addFromModel(CModelResource *pModelRes, const std::string& nameTag);
+            /**
+             * 
+             * @param modelNameTag
+             * @param nameTag
+             * @return 
+             */
+            CSceneNode *addFromModel(const std::string& modelNameTag, const std::string& nameTag);
+            /**
+             * 
+             * @param modelNameTag
+             * @param nameTag
+             * @return 
+             */
+            CSceneNode *addFromModel(const char *modelNameTag, const char *nameTag);
+            
+        protected:
+            /**
+             * 
+             * @param pNode
+             */
+            void checkCollisions(const CSceneNode* sceneNode);
+            
+        private:
+            /**
+             *
+             */
+            COctree *m_octree;
+            
+            std::stack<SOctreeNode *> m_octNodes;
+        };
     };
 };
 

@@ -27,6 +27,10 @@ namespace fg {
          */
         class CLooseQuadtree : public CQuadtree {
         public:
+            ///
+            const float DEFAULT_LOOSE_K = 2.0f;
+             
+        public:
             /**
              * 
              */
@@ -67,7 +71,7 @@ namespace fg {
              * @param treeNode
              * @return 
              */
-            virtual int insert(CSceneNode* sceneNode, SQuadTNode* treeNode = NULL);
+            virtual int insert(CSceneNode* sceneNode, SQuadtreeNode* treeNode = NULL);
             
         private:
             ///

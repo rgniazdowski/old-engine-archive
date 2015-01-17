@@ -11,7 +11,7 @@
     #define FG_INC_MESSAGE_SUBSYSTEM
     #define FG_INC_MESSAGE_SUBSYSTEM_BLOCK
 
-    #include "fgCommon.h"
+    #include "fgCommon.h" 
     #include "fgSingleton.h"
     #include "fgStatus.h"
     #include "fgManagerBase.h"
@@ -20,7 +20,7 @@
     #include "fgVector.h"
     #include "Util/fgRegularFile.h"
 
-    #include "fgLog.h"
+    #include "fgLog.h" 
 
 namespace fg {
     namespace msg {

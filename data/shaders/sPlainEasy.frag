@@ -25,12 +25,13 @@ uniform float u_useTexture;
 void main()
 {
 	vec4 texel;
+	float asd;
 	
 	if(u_useTexture > 0.5) {
 		texel = texture2D(s_texture, v_texCoord);
 	} else {
-		texel = vec4(1.0, 1.0, 1.0, 1.0);
+		texel = v_color;
+		
 	}
-    
-	gl_FragColor = texel; 
+	gl_FragColor = texel;
 }

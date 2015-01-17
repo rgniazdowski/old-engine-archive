@@ -8,13 +8,15 @@
  *******************************************************/
 
 #include "fgGFXOctree.h"
+#include "fgGameMain.h"
 
 using namespace fg;
 
 /**
  * 
  */
-gfx::COctree::COctree() { }
+gfx::COctree::COctree() :
+m_root(NULL) { }
 
 /**
  * 
@@ -25,4 +27,40 @@ gfx::COctree::COctree(const COctree& orig) { }
 /**
  * 
  */
-gfx::COctree::~COctree() { }
+gfx::COctree::~COctree() {
+    if(m_root) {
+        delete m_root;
+        m_root = NULL;
+    }
+}
+
+/**
+ * 
+ * @param sceneNode
+ * @param treeNode
+ * @return 
+ */
+int gfx::COctree::insert(CSceneNode* sceneNode, STreeNode* treeNode) {
+    return -1;
+}
+
+/**
+ *
+ */
+gfx::STreeNode* gfx::COctree::next(void) {
+    return m_traverse.next(m_root);
+}
+
+/**
+ * 
+ */
+void gfx::COctree::rewind(void) {
+    m_traverse.rewind();
+}
+
+/**
+ * 
+ */
+void gfx::COctree::skip(void) {
+    m_traverse.skip(m_root);
+}

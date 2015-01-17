@@ -20,7 +20,9 @@ using namespace fg;
 /**
  * 
  */
-gfx::CLooseQuadtree::CLooseQuadtree() { }
+gfx::CLooseQuadtree::CLooseQuadtree() :
+CQuadtree(),
+m_looseK(DEFAULT_LOOSE_K) { }
 
 /**
  * 
@@ -39,7 +41,7 @@ gfx::CLooseQuadtree::~CLooseQuadtree() { }
  * @param treeNode
  * @return 
  */
-int gfx::CLooseQuadtree::insert(CSceneNode* sceneNode, SQuadTNode* treeNode) {
+int gfx::CLooseQuadtree::insert(CSceneNode* sceneNode, SQuadtreeNode* treeNode) {
     if(!sceneNode) {
         return -1;
     }
@@ -47,17 +49,17 @@ int gfx::CLooseQuadtree::insert(CSceneNode* sceneNode, SQuadTNode* treeNode) {
     // Returns the depth of the node the object was placed in.
     if(!treeNode) {
         if(!m_root) {
-            m_root = new SQuadTNode(NULL, Vector3f(0.0f, 0.0f, 0.0f), 0);
+            m_root = new SQuadtreeNode(NULL, Vector3f(0.0f, 0.0f, 0.0f), 0);
         }
         treeNode = m_root;
     }
 
     // Check child nodes to see if object fits in one of them.
     //	if (o->radius < WORLD_SIZE / (4 << q->depth)) {
-    if(treeNode->depth + 1 < (int)m_maxDepth) {
-        float halfSize = m_looseK * m_worldSize.x / (2 << treeNode->depth);
+    if(treeNode->depth + 1 < (int)getMaxDepth()) {
+        float halfSize = m_looseK * getWorldSize().x / (2 << treeNode->depth);
         float quarterSize = halfSize / 2;
-        float offset = (m_worldSize.x / (2 << treeNode->depth)) / 2;
+        float offset = (getWorldSize().x / (2 << treeNode->depth)) / 2;
         const Vector3f& objpos = sceneNode->getRefBoundingVolume().center;
 
         // Pick child based on classification of object's center point.
@@ -70,7 +72,7 @@ int gfx::CLooseQuadtree::insert(CSceneNode* sceneNode, SQuadTNode* treeNode) {
         if(fitsInBox(sceneNode, Vector2f(cx, cy), quarterSize)) {
             // Recurse into this node.
             if(treeNode->child[j][i] == 0) {
-                treeNode->child[j][i] = new SQuadTNode(treeNode, Vector2f(cx, cy), treeNode->depth + 1);
+                treeNode->child[j][i] = new SQuadtreeNode(treeNode, Vector2f(cx, cy), treeNode->depth + 1);
             }
             return insert(sceneNode, treeNode->child[j][i]);
         }
@@ -78,6 +80,7 @@ int gfx::CLooseQuadtree::insert(CSceneNode* sceneNode, SQuadTNode* treeNode) {
 
     // Keep object in this node.
     if(!treeNode->objects.contains(sceneNode)) {
+        sceneNode->setTreeNode(treeNode);
         treeNode->objects.push_back(sceneNode);
     }
     return treeNode->depth;

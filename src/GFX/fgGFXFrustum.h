@@ -130,13 +130,27 @@ namespace fg {
              * @param box
              * @return 
              */
-            int testVolume(const AABoundingBox3Df &box);
+            int testVolume(const AABoundingBox3Df& box);
             /**
              * 
              * @param box
              * @return 
              */
-            int testVolume(const BoundingVolume3Df &box);
+            int testVolume(const BoundingVolume3Df& box);
+            /**
+             * 
+             * @param center
+             * @param extent
+             * @return 
+             */
+            int testVolume(const Vector3f& center, const float extent);
+            /**
+             * 
+             * @param center
+             * @param extent
+             * @return 
+             */
+            int testVolume(const Vector3f& center, const Vector3f& extent);
 
         public:
             /**

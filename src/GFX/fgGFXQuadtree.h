@@ -13,6 +13,8 @@
 
     #include "fgGFXStdInc.h"
     #include "fgGFXSceneNode.h"
+    #include "fgGFXTreeNode.h"
+    #include "fgGFXBasetree.h"
     #include "fgVector.h"
 
 namespace fg {
@@ -21,24 +23,16 @@ namespace fg {
         /**
          *
          */
-        struct SQuadTNode {
+        struct SQuadtreeNode : public STreeNode {
             ///
-            typedef SQuadTNode type;
+            typedef SQuadtreeNode type;
             ///
-            typedef SQuadTNode self_type;
+            typedef SQuadtreeNode self_type;
             ///
-            typedef CVector<CSceneNode *> ObjectsVec;
-            ///
-            typedef ObjectsVec::iterator ObjectsVecItor;
+            typedef STreeNode base_type;
 
             ///
-            ObjectsVec objects;
-            ///
-            Vector3f center;
-            ///
             self_type *parent;
-            ///
-            int depth;
             ///
             self_type *child[2][2];
             /**
@@ -47,8 +41,8 @@ namespace fg {
              * @param _center
              * @param _depth
              */
-            SQuadTNode(self_type *_parent, Vector3f _center, int _depth = 0) :
-            center(_center), parent(_parent), depth(_depth) {
+            SQuadtreeNode(self_type *_parent, Vector3f _center, int _depth = 0) :
+            base_type(_center, _depth), parent(_parent) {
                 for(int i = 0; i < 2; i++) {
                     for(int j = 0; j < 2; j++) {
                         child[i][j] = NULL;
@@ -61,12 +55,8 @@ namespace fg {
              * @param _center
              * @param _depth
              */
-            SQuadTNode(self_type *_parent, Vector2f _center, int _depth = 0) :
-            parent(_parent), depth(_depth) {
-                center.x = _center.x;
-                center.y = _center.y;
-                center.z = 0.0f;
-
+            SQuadtreeNode(self_type *_parent, Vector2f _center, int _depth = 0) :
+            base_type(_center, _depth), parent(_parent) {
                 for(int i = 0; i < 2; i++) {
                     for(int j = 0; j < 2; j++) {
                         child[i][j] = NULL;
@@ -76,7 +66,7 @@ namespace fg {
             /**
              * 
              */
-            virtual ~SQuadTNode() {
+            virtual ~SQuadtreeNode() {
                 objects.clear_optimised();
                 depth = 0;
                 parent = NULL;
@@ -95,16 +85,86 @@ namespace fg {
         /**
          * 
          */
-        class CQuadtree {
+        class CQuadtree : public CBasetree {
         public:
             ///
             const unsigned int DEFAULT_WORLD_SIZE = 1000;
-            
+
+        protected:
+
+            /**
+             *
+             */
+            struct STraverse : public STraverseBase<SQuadtreeNode> {
+                ///
+                typedef STraverseBase<SQuadtreeNode> base_type;
+                ///
+                typedef STraverse type;
+                ///
+                typedef SQuadtreeNode node_type;
+                /**
+                 * 
+                 */
+                STraverse() : base_type() { }
+                /**
+                 * 
+                 */
+                virtual ~STraverse() { }
+                /**
+                 * 
+                 * @return 
+                 */
+                SQuadtreeNode *next(SQuadtreeNode *root) {
+                    if(!current) {
+                        if(!root)
+                            return 0;
+                        rewind();
+                        current = root;
+                        count++;
+                        return current;
+                    }
+
+                    for(int i = idx; i < 4; i++) {
+                        uintptr_t offset = (uintptr_t)(&current->child[0][0]);
+                        offset += sizeof (SQuadtreeNode*)*(i);
+                        SQuadtreeNode *node = *((SQuadtreeNode**)offset);
+                        if(node) {
+                            idx = i + 1;
+                            node_stack.push(current);
+                            id_stack.push(idx);
+                            idx = 0;
+                            current = node;
+                            count++;
+                            return node;
+                        }
+                    }
+
+                    if(id_stack.empty()) {
+                        current = NULL;
+                        return current;
+                    }
+
+                    idx = id_stack.top();
+                    id_stack.pop();
+                    current = node_stack.top();
+                    node_stack.pop();
+
+                    if(!current) {
+                        return current;
+                    }
+                    return next(root);
+                }
+            };
+
         public:
             /**
              * 
              */
             CQuadtree();
+            /**
+             * 
+             */
+            CQuadtree(const CQuadtree& orig);
             /**
              * 
              */
@@ -115,75 +175,9 @@ namespace fg {
              * 
              * @return 
              */
-            SQuadTNode *getRoot(void) const {
+            SQuadtreeNode *getRoot(void) const {
                 return m_root;
             }
-            /**
-             * 
-             * @param worldSize
-             */
-            void setWorldSize(const Vector3f& worldSize) {
-                m_worldSize = worldSize;
-            }
-            /**
-             * 
-             * @param x
-             * @param y
-             * @param z
-             */
-            void setWorldSize(const float x, const float y, const float z) {
-                m_worldSize.x = x;
-                m_worldSize.y = y;
-                m_worldSize.z = z;
-            }
-            
-            /**
-             * 
-             * @return 
-             */
-            Vector3f& getWorldSize(void) {
-                return m_worldSize;
-            }            
-            /**
-             * 
-             * @return 
-             */
-            Vector3f const& getWorldSize(void) const {
-                return m_worldSize;
-            }
-
-        public:
-            /**
-             * 
-             * @param sceneNode
-             * @param treeNode
-             * @param halfExtent
-             * @return 
-             */
-            static fgBool fitsInBox(const CSceneNode* sceneNode,
-                                    SQuadTNode* treeNode,
-                                    const float halfExtent);
-            /**
-             * 
-             * @param sceneNode
-             * @param center
-             * @param halfExtent
-             * @return 
-             */
-            static fgBool fitsInBox(const CSceneNode* sceneNode,
-                                    const Vector3f& center,
-                                    const float halfExtent);
-            /**
-             * 
-             * @param sceneNode
-             * @param center
-             * @param halfExtent
-             * @return 
-             */
-            static fgBool fitsInBox(const CSceneNode* sceneNode,
-                                    const Vector2f& center,
-                                    const float halfExtent);
-
 
         public:
             /**
@@ -192,18 +186,34 @@ namespace fg {
              * @param treeNode
              * @return 
              */
-            virtual int insert(CSceneNode* sceneNode, SQuadTNode* treeNode = NULL);
-            
+            virtual int insert(CSceneNode* sceneNode, STreeNode* treeNode = NULL);
+
+        public:
+            /**
+             *
+             */
+            STreeNode* next(void);
+            /**
+             * 
+             * @return 
+             */
+            STreeNode* current(void) const {
+                return m_traverse.current;
+            }
+            /**
+             * 
+             */
+            void rewind(void);
+            /**
+             * 
+             */
+            void skip(void);
+
         protected:
             ///
-            SQuadTNode *m_root;
+            SQuadtreeNode *m_root;
             ///
-            Vector3f m_worldSize;
-            ///
-            unsigned int m_maxDepth;
-
-        private:
-
+            STraverse m_traverse;
         };
     };
 };

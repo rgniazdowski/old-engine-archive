@@ -164,7 +164,7 @@ void gfx::CDrawCall::setupFromMesh(const SMeshBase* pMesh) {
     pMesh->setupAttributes(m_attrData);
     m_drawCallType = FG_GFX_DRAW_CALL_MESH;
     m_attribMask = pMesh->attribMask();
-    m_fastCmp.setPart(0, (fg::util::FastCmp::data_type_32)m_attribMask);
+    m_fastCmp.setPart(0, (util::FastCmp::data_type_32)m_attribMask);
     if(pMesh->hasIndices()) {
         m_drawingInfo.buffer = pMesh->getIndicesVBO();
         m_drawingInfo.indices.pointer = pMesh->getIndicesPointer();

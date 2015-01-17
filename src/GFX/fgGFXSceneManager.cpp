@@ -125,15 +125,12 @@ void gfx::CSceneManager::flush(void) {
 void gfx::CSceneManager::sortCalls(void) {
     if(!getShaderManager())
         return;
-    //printf("fgGfxSceneManager::sortCalls(void)\n");
     m_MVP.setCamera((CCamera *)(&m_camera));
     if(getRefPriorityQueue().empty())
         CDrawingBatch::sortCalls(); // NOPE
     while(!m_nodeQueue.empty())
         m_nodeQueue.pop();
     DataVecItor itor = getRefDataVector().begin(), end = getRefDataVector().end();
-    //m_MVP.calculate(&m_camera, fgMatrix4f());
-    //m_MVP.getRefFrustum().set(m_MVP.getRefProjMatrix() * m_MVP.getRefViewMatrix());
 #if 1
     int idx = 0;
     for(; itor != end; itor++, idx++) {
@@ -163,7 +160,7 @@ void gfx::CSceneManager::sortCalls(void) {
         }
 #endif
         //FG_LOG_DEBUG("[%d] -> AABBox[%s] -- -- Sphere.30.0f[%s] %s\n", idx, msg[boxtest], msg[spherestatus], pNode->getNameStr());
-        //g_fgDebugConfig.gfxBBoxShow = true;
+        g_fgDebugConfig.gfxBBoxShow = true;
         // ? also need to push to queue more than one draw call
         // And i mean... wait wut? All children are registered
         // This is a tree - that needs to be traversed
@@ -189,8 +186,6 @@ void gfx::CSceneManager::sortCalls(void) {
  */
 void gfx::CSceneManager::render(void) {
     //printf("fgGfxSceneManager::render(void)\n");
-    //if(m_nodeQueue.empty())
-    //    fgGfxSceneManager::sortCalls();
     CDrawingBatch::render(); // #NOPE ? i don't know what i'm doing
     while(!m_nodeQueue.empty()) {
 #if defined(FG_DEBUG)
@@ -207,26 +202,24 @@ void gfx::CSceneManager::render(void) {
 #endif
 
 #if defined(FG_DEBUG)
-        static_cast<gfx::CShaderManager *>(m_pShaderMgr)->getCurrentProgram()->setUniform(FG_GFX_USE_TEXTURE, 0.0f);
+        CShaderProgram *pProgram = static_cast<gfx::CShaderManager *>(m_pShaderMgr)->getCurrentProgram();
+        pProgram->setUniform(FG_GFX_USE_TEXTURE, 0.0f);
         if(FG_DEBUG_CFG_OPTION(gfxBBoxShow) && pSceneNode->getNodeType() == FG_GFX_SCENE_NODE_OBJECT) {
-
             CSceneNodeObject *pSceneObj = static_cast<CSceneNodeObject *>(pSceneNode);
-            //g_fgDebugConfig.gfxBBoxShow
             // Current aabb - it's in model space (local)
             AABB3Df &modelBox = pSceneObj->getModel()->getRefAABB();
             // Initial Bounding box
-            CPrimitives::drawAABBLines(modelBox);
+            CPrimitives::drawAABBLines(modelBox, fgColor4f(1.0f, 0.0f, 0.0f, 1.0f));
             // Draw transformed bounding box #FIXME - colors FUBAR            
         }
         if(FG_DEBUG_CFG_OPTION(gfxBBoxShow)) {
             m_MVP.resetModelMatrix();
-            static_cast<gfx::CShaderManager *>(m_pShaderMgr)->getCurrentProgram()->setUniform(&m_MVP);
-            CPrimitives::drawAABBLines(pSceneNode->getRefBoundingVolume());
+            pProgram->setUniform(&m_MVP);
+            CPrimitives::drawAABBLines(pSceneNode->getRefBoundingVolume(), fgColor4f(0.5f, 0.5f, 1.0f, 1.0f));
         }
 #endif
         m_nodeQueue.pop();
     }
-    //printf(".\n");
 }
 
 #if 0

@@ -226,7 +226,8 @@ void gfx::CPrimitives::drawSkyBoxOptimized(void) {
                    c_stripCube1x1Idx);
 }
 
-void gfx::CPrimitives::drawAABBLines(const AABoundingBox3Df& aabb) {
+
+void gfx::CPrimitives::drawAABBLines(const AABoundingBox3Df& aabb, const fgColor4f& color) {
     gfx::CPlatform::context()->diffVertexAttribArrayMask(FG_GFX_POSITION_BIT | FG_GFX_COLOR_BIT);
 
     Vec3f center = aabb.getCenter();
@@ -271,27 +272,27 @@ void gfx::CPrimitives::drawAABBLines(const AABoundingBox3Df& aabb) {
                                          _id_vec(4), // 16
     };
     const fgColor4f aabbColor[] = {
-                                   fgColor4f(1.0f, 1.0f, 1.0f, 1.0f),
-                                   fgColor4f(1.0f, 1.0f, 1.0f, 1.0f),
-                                   fgColor4f(1.0f, 1.0f, 1.0f, 1.0f),
-                                   fgColor4f(1.0f, 1.0f, 1.0f, 1.0f),
+                                   color,
+                                   color,
+                                   color,
+                                   color,
 
-                                   fgColor4f(1.0f, 1.0f, 1.0f, 1.0f),
-                                   fgColor4f(1.0f, 1.0f, 1.0f, 1.0f),
-                                   fgColor4f(1.0f, 1.0f, 1.0f, 1.0f),
-                                   fgColor4f(1.0f, 1.0f, 1.0f, 1.0f),
+                                   color,
+                                   color,
+                                   color,
+                                   color,
 
-                                   fgColor4f(1.0f, 1.0f, 1.0f, 1.0f),
-                                   fgColor4f(1.0f, 1.0f, 1.0f, 1.0f),
-                                   fgColor4f(1.0f, 1.0f, 1.0f, 1.0f),
-                                   fgColor4f(1.0f, 1.0f, 1.0f, 1.0f),
+                                   color,
+                                   color,
+                                   color,
+                                   color,
 
-                                   fgColor4f(1.0f, 1.0f, 1.0f, 1.0f),
-                                   fgColor4f(1.0f, 1.0f, 1.0f, 1.0f),
-                                   fgColor4f(1.0f, 1.0f, 1.0f, 1.0f),
-                                   fgColor4f(1.0f, 1.0f, 1.0f, 1.0f),
+                                   color,
+                                   color,
+                                   color,
+                                   color,
 
-                                   fgColor4f(1.0f, 1.0f, 1.0f, 1.0f)
+                                   color
 
     };
 #undef _id_vec

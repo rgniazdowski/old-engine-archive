@@ -27,6 +27,10 @@ namespace fg {
          */
         class CLooseOctree : public COctree {
         public:
+            ///
+            const float DEFAULT_LOOSE_K = 2.0f;
+            
+        public:
             /**
              * 
              */
@@ -40,9 +44,38 @@ namespace fg {
              * 
              */
             virtual ~CLooseOctree();
-            
-        private:
 
+        public:
+            /**
+             * 
+             * @param k
+             */
+            void setLooseK(const float k) {
+                m_looseK = k;
+                if(m_looseK < 1.0f)
+                    m_looseK = 1.0f;
+            }
+            /**
+             * 
+             * @return 
+             */
+            float getLooseK(void) const {
+                return m_looseK;
+            }
+
+
+        public:
+            /**
+             * 
+             * @param sceneNode
+             * @param treeNode
+             * @return 
+             */
+            virtual int insert(CSceneNode* sceneNode, STreeNode* treeNode = NULL);
+
+        private:
+            ///
+            float m_looseK;
         };
     };
 };
