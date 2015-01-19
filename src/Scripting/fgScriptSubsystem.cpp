@@ -615,81 +615,81 @@ fgBool script::CScriptSubsystem::registerConstants(void) {
     // EVENT TYPE CONSTANTS #FIXME #STRING #OBFUSCATION
     //
 
-    m_fgObj.SetInteger("EVENT_INVALID", (int)FG_EVENT_INVALID);
+    m_fgObj.SetInteger("EVENT_INVALID", (int)event::INVALID);
 
-    m_fgObj.SetInteger("EVENT_TOUCH_PRESSED", (int)FG_EVENT_TOUCH_PRESSED);
-    m_fgObj.SetInteger("EVENT_TOUCH_RELEASED", (int)FG_EVENT_TOUCH_RELEASED);
-    m_fgObj.SetInteger("EVENT_TOUCH_MOTION", (int)FG_EVENT_TOUCH_MOTION);
-    m_fgObj.SetInteger("EVENT_TOUCH_TAP_FINISHED", (int)FG_EVENT_TOUCH_TAP_FINISHED);
-    m_fgObj.SetInteger("EVENT_MOUSE_PRESSED", (int)FG_EVENT_MOUSE_PRESSED);
-    m_fgObj.SetInteger("EVENT_MOUSE_RELEASED", (int)FG_EVENT_MOUSE_RELEASED);
-    m_fgObj.SetInteger("EVENT_MOUSE_MOTION", (int)FG_EVENT_MOUSE_MOTION);
-    m_fgObj.SetInteger("EVENT_SWIPE_X", (int)FG_EVENT_SWIPE_X);
-    m_fgObj.SetInteger("EVENT_SWIPE_Y", (int)FG_EVENT_SWIPE_Y);
-    m_fgObj.SetInteger("EVENT_SWIPE_XY", (int)FG_EVENT_SWIPE_XY);
-    m_fgObj.SetInteger("EVENT_SWIPE_ANGLE", (int)FG_EVENT_SWIPE_ANGLE);
-    m_fgObj.SetInteger("EVENT_SWIPE_PINCH", (int)FG_EVENT_SWIPE_PINCH);
-    m_fgObj.SetInteger("EVENT_MULTI_SWIPE_ROTATE", (int)FG_EVENT_MULTI_SWIPE_ROTATE);
-    m_fgObj.SetInteger("EVENT_KEY_DOWN", (int)FG_EVENT_KEY_DOWN);
-    m_fgObj.SetInteger("EVENT_KEY_UP", (int)FG_EVENT_KEY_UP);
+    m_fgObj.SetInteger("EVENT_TOUCH_PRESSED", (int)event::TOUCH_PRESSED);
+    m_fgObj.SetInteger("EVENT_TOUCH_RELEASED", (int)event::TOUCH_RELEASED);
+    m_fgObj.SetInteger("EVENT_TOUCH_MOTION", (int)event::TOUCH_MOTION);
+    m_fgObj.SetInteger("EVENT_TOUCH_TAP_FINISHED", (int)event::TOUCH_TAP_FINISHED);
+    m_fgObj.SetInteger("EVENT_MOUSE_PRESSED", (int)event::MOUSE_PRESSED);
+    m_fgObj.SetInteger("EVENT_MOUSE_RELEASED", (int)event::MOUSE_RELEASED);
+    m_fgObj.SetInteger("EVENT_MOUSE_MOTION", (int)event::MOUSE_MOTION);
+    m_fgObj.SetInteger("EVENT_SWIPE_X", (int)event::SWIPE_X);
+    m_fgObj.SetInteger("EVENT_SWIPE_Y", (int)event::SWIPE_Y);
+    m_fgObj.SetInteger("EVENT_SWIPE_XY", (int)event::SWIPE_XY);
+    m_fgObj.SetInteger("EVENT_SWIPE_ANGLE", (int)event::SWIPE_ANGLE);
+    m_fgObj.SetInteger("EVENT_SWIPE_PINCH", (int)event::SWIPE_PINCH);
+    m_fgObj.SetInteger("EVENT_MULTI_SWIPE_ROTATE", (int)event::MULTI_SWIPE_ROTATE);
+    m_fgObj.SetInteger("EVENT_KEY_DOWN", (int)event::KEY_DOWN);
+    m_fgObj.SetInteger("EVENT_KEY_UP", (int)event::KEY_UP);
 
-    m_fgObj.SetInteger("EVENT_RESOURCE_CREATED", (int)FG_EVENT_RESOURCE_CREATED);
-    m_fgObj.SetInteger("EVENT_RESOURCE_REMOVED", (int)FG_EVENT_RESOURCE_REMOVED);
-    m_fgObj.SetInteger("EVENT_RESOURCE_DISPOSED", (int)FG_EVENT_RESOURCE_DISPOSED);
-    m_fgObj.SetInteger("EVENT_RESOURCE_DESTROYED", (int)FG_EVENT_RESOURCE_DESTROYED);
-    m_fgObj.SetInteger("EVENT_RESOURCE_REQUESTED", (int)FG_EVENT_RESOURCE_REQUESTED);
+    m_fgObj.SetInteger("EVENT_RESOURCE_CREATED", (int)event::RESOURCE_CREATED);
+    m_fgObj.SetInteger("EVENT_RESOURCE_REMOVED", (int)event::RESOURCE_REMOVED);
+    m_fgObj.SetInteger("EVENT_RESOURCE_DISPOSED", (int)event::RESOURCE_DISPOSED);
+    m_fgObj.SetInteger("EVENT_RESOURCE_DESTROYED", (int)event::RESOURCE_DESTROYED);
+    m_fgObj.SetInteger("EVENT_RESOURCE_REQUESTED", (int)event::RESOURCE_REQUESTED);
 
-    m_fgObj.SetInteger("EVENT_PROGRAM_INIT", (int)FG_EVENT_PROGRAM_INIT);
-    m_fgObj.SetInteger("EVENT_VERTEX_STREAM_READY", (int)FG_EVENT_VERTEX_STREAM_READY);
-    m_fgObj.SetInteger("EVENT_CAMERA_CHANGED", (int)FG_EVENT_CAMERA_CHANGED);
-    m_fgObj.SetInteger("EVENT_SOUND_PLAYED", (int)FG_EVENT_SOUND_PLAYED);
-    m_fgObj.SetInteger("EVENT_MENU_CHANGED", (int)FG_EVENT_MENU_CHANGED);
-    m_fgObj.SetInteger("EVENT_WIDGET_STATE_CHANGED", (int)FG_EVENT_WIDGET_STATE_CHANGED);
-    m_fgObj.SetInteger("EVENT_SENSORS_CHANGED", (int)FG_EVENT_SENSORS_CHANGED);
+    m_fgObj.SetInteger("EVENT_PROGRAM_INIT", (int)event::PROGRAM_INIT);
+    m_fgObj.SetInteger("EVENT_VERTEX_STREAM_READY", (int)event::VERTEX_STREAM_READY);
+    m_fgObj.SetInteger("EVENT_CAMERA_CHANGED", (int)event::CAMERA_CHANGED);
+    m_fgObj.SetInteger("EVENT_SOUND_PLAYED", (int)event::SOUND_PLAYED);
+    m_fgObj.SetInteger("EVENT_MENU_CHANGED", (int)event::MENU_CHANGED);
+    m_fgObj.SetInteger("EVENT_WIDGET_STATE_CHANGED", (int)event::WIDGET_STATE_CHANGED);
+    m_fgObj.SetInteger("EVENT_SENSORS_CHANGED", (int)event::SENSORS_CHANGED);
 
-    m_fgObj.SetInteger("EVENT_GAME_CONTROLLER_ADDED", (int)FG_EVENT_GAME_CONTROLLER_ADDED);
-    m_fgObj.SetInteger("EVENT_GAME_CONTROLLER_REMOVED", (int)FG_EVENT_GAME_CONTROLLER_REMOVED);
-    m_fgObj.SetInteger("EVENT_GAME_CONTROLLER_BUTTON", (int)FG_EVENT_GAME_CONTROLLER_BUTTON);
-    m_fgObj.SetInteger("EVENT_GAME_CONTROLLER_AXIS", (int)FG_EVENT_GAME_CONTROLLER_AXIS);
+    m_fgObj.SetInteger("EVENT_GAME_CONTROLLER_ADDED", (int)event::GAME_CONTROLLER_ADDED);
+    m_fgObj.SetInteger("EVENT_GAME_CONTROLLER_REMOVED", (int)event::GAME_CONTROLLER_REMOVED);
+    m_fgObj.SetInteger("EVENT_GAME_CONTROLLER_BUTTON", (int)event::GAME_CONTROLLER_BUTTON);
+    m_fgObj.SetInteger("EVENT_GAME_CONTROLLER_AXIS", (int)event::GAME_CONTROLLER_AXIS);
 
     //
     // GAME LOGIC EVENT TYPE CONSTANTS
     //
-    m_fgObj.SetInteger("EVENT_GAME_STARTED", (int)FG_EVENT_GAME_STARTED);
-    m_fgObj.SetInteger("EVENT_GAME_PAUSED", (int)FG_EVENT_GAME_PAUSED);
-    m_fgObj.SetInteger("EVENT_GAME_STOPPED", (int)FG_EVENT_GAME_STOPPED);
-    m_fgObj.SetInteger("EVENT_GAME_LOADING", (int)FG_EVENT_GAME_LOADING);
-    m_fgObj.SetInteger("EVENT_GAME_RESTARTING", (int)FG_EVENT_GAME_RESTARTING);
-    m_fgObj.SetInteger("EVENT_GAME_FINISHED", (int)FG_EVENT_GAME_FINISHED);
-    m_fgObj.SetInteger("EVENT_GAME_WAITING", (int)FG_EVENT_GAME_WAITING);
-    m_fgObj.SetInteger("EVENT_GAME_CONNECTED", (int)FG_EVENT_GAME_CONNECTED);
-    m_fgObj.SetInteger("EVENT_GAME_DISCONNECTED", (int)FG_EVENT_GAME_DISCONNECTED);
+    m_fgObj.SetInteger("EVENT_GAME_STARTED", (int)game::GAME_STARTED);
+    m_fgObj.SetInteger("EVENT_GAME_PAUSED", (int)game::GAME_PAUSED);
+    m_fgObj.SetInteger("EVENT_GAME_STOPPED", (int)game::GAME_STOPPED);
+    m_fgObj.SetInteger("EVENT_GAME_LOADING", (int)game::GAME_LOADING);
+    m_fgObj.SetInteger("EVENT_GAME_RESTARTING", (int)game::GAME_RESTARTING);
+    m_fgObj.SetInteger("EVENT_GAME_FINISHED", (int)game::GAME_FINISHED);
+    m_fgObj.SetInteger("EVENT_GAME_WAITING", (int)game::GAME_WAITING);
+    m_fgObj.SetInteger("EVENT_GAME_CONNECTED", (int)game::GAME_CONNECTED);
+    m_fgObj.SetInteger("EVENT_GAME_DISCONNECTED", (int)game::GAME_DISCONNECTED);
 
     //
     // SWIPE DIRECTION
     //
-    m_fgObj.SetInteger("SWIPE_INVALID", (int)FG_SWIPE_INVALID);
-    m_fgObj.SetInteger("SWIPE_LEFT", (int)FG_SWIPE_LEFT);
-    m_fgObj.SetInteger("SWIPE_RIGHT", (int)FG_SWIPE_RIGHT);
-    m_fgObj.SetInteger("SWIPE_UP", (int)FG_SWIPE_UP);
-    m_fgObj.SetInteger("SWIPE_DOWN", (int)FG_SWIPE_DOWN);
-    m_fgObj.SetInteger("SWIPE_ANGLE", (int)FG_SWIPE_ANGLE);
+    m_fgObj.SetInteger("SWIPE_INVALID", (int)event::SSwipe::INVALID);
+    m_fgObj.SetInteger("SWIPE_LEFT", (int)event::SSwipe::LEFT);
+    m_fgObj.SetInteger("SWIPE_RIGHT", (int)event::SSwipe::RIGHT);
+    m_fgObj.SetInteger("SWIPE_UP", (int)event::SSwipe::UP);
+    m_fgObj.SetInteger("SWIPE_DOWN", (int)event::SSwipe::DOWN);
+    m_fgObj.SetInteger("SWIPE_ANGLE", (int)event::SSwipe::ANGLE);
 
     //
     // PINCH DIRECTION
     //
-    m_fgObj.SetInteger("PINCH_INVALID", (int)FG_PINCH_INVALID);
-    m_fgObj.SetInteger("PINCH_IN", (int)FG_PINCH_IN);
-    m_fgObj.SetInteger("PINCH_OUT", (int)FG_PINCH_OUT);
+    m_fgObj.SetInteger("PINCH_INVALID", (int)event::SSwipePinch::INVALID);
+    m_fgObj.SetInteger("PINCH_IN", (int)event::SSwipePinch::IN);
+    m_fgObj.SetInteger("PINCH_OUT", (int)event::SSwipePinch::OUT);
 
     //
     // RESOURCE STATUS
     //
-    m_fgObj.SetInteger("RESOURCE_CREATED", (int)FG_RESOURCE_CREATED);
-    m_fgObj.SetInteger("RESOURCE_REMOVED", (int)FG_RESOURCE_REMOVED);
-    m_fgObj.SetInteger("RESOURCE_DISPOSED", (int)FG_RESOURCE_DISPOSED);
-    m_fgObj.SetInteger("RESOURCE_DESTROYED", (int)FG_RESOURCE_DESTROYED);
-    m_fgObj.SetInteger("RESOURCE_REQUESTED", (int)FG_RESOURCE_REQUESTED);
+    m_fgObj.SetInteger("RESOURCE_CREATED", (int)event::SResource::CREATED);
+    m_fgObj.SetInteger("RESOURCE_REMOVED", (int)event::SResource::REMOVED);
+    m_fgObj.SetInteger("RESOURCE_DISPOSED", (int)event::SResource::DISPOSED);
+    m_fgObj.SetInteger("RESOURCE_DESTROYED", (int)event::SResource::DESTROYED);
+    m_fgObj.SetInteger("RESOURCE_REQUESTED", (int)event::SResource::REQUESTED);
 
 #endif /* FG_USING_LUA_PLUS */
     return FG_TRUE;
@@ -806,7 +806,7 @@ int script::CScriptSubsystem::addEventCallbackWrapper(lua_State *L) {
     LuaPlus::LuaState* state = lua_State_to_LuaState(L);
     LuaPlus::LuaStack args(state);
     const char *script = NULL;
-    fgEventType eventType = FG_EVENT_INVALID;
+    event::EventType eventType = event::INVALID;
     LuaPlus::LuaObject objFunction;
     fgBool hasFunction = FG_FALSE;
     int argc = 1;
@@ -835,7 +835,7 @@ int script::CScriptSubsystem::addEventCallbackWrapper(lua_State *L) {
         if(args[id].IsInteger()) {
             int iVal = args[id].GetInteger();
             //if(iVal < (int)FG_NUM_EVENT_TYPES)
-            eventType = (fgEventType)iVal;
+            eventType = (event::EventType)iVal;
             FG_LOG_DEBUG("Script: EventWrapper: eventType[%d]", iVal);
         }
         id++;
@@ -854,7 +854,7 @@ int script::CScriptSubsystem::addEventCallbackWrapper(lua_State *L) {
             }
         }
     }
-    if(eventType == FG_EVENT_INVALID) {
+    if(eventType == event::INVALID) {
         FG_LOG_DEBUG("Script: EventWrapper: event type is invalid");
         return 0;
     }
@@ -1070,7 +1070,7 @@ fgBool script::CScriptSubsystem::registerEventManager(void) {
     // Event Base structure
     const char *metatableNameEventBase = fgScriptMT->getMetatableName(CMetatables::EVENT_BASE_MT_ID);
     LPCD::Class(m_luaState->GetCState(), metatableNameEventBase)
-            .Property("eventType", &fgEventBase::eventType)
+            .Property("eventType", &event::SEventBase::eventType)
             // .Property("eventType", &fgEventBase::eventType)
             // .Property("timeStamp", &fgEventBase::timeStamp) // Time stamp should be float ?
             ;
@@ -1081,59 +1081,59 @@ fgBool script::CScriptSubsystem::registerEventManager(void) {
     // Controller Device Event : EventBase
     const char *metatableName = fgScriptMT->getMetatableName(CMetatables::EVENT_CONTROLLER_DEVICE_MT_ID);
     LPCD::Class(m_luaState->GetCState(), metatableName, metatableNameEventBase)
-            .Property("which", &fgControllerDeviceEvent::which);
+            .Property("which", &event::SControllerDevice::which);
     // __gc ? nope
 
     // Controller Button Event : EventBase
     metatableName = fgScriptMT->getMetatableName(CMetatables::EVENT_CONTROLLER_BUTTON_MT_ID);
     LPCD::Class(m_luaState->GetCState(), metatableName, metatableNameEventBase)
-            .Property("which", &fgControllerButtonEvent::which)
-            .Property("button", &fgControllerButtonEvent::button)
-            .Property("state", &fgControllerButtonEvent::state)
+            .Property("which", &event::SControllerButton::which)
+            .Property("button", &event::SControllerButton::button)
+            .Property("state", &event::SControllerButton::state)
             ;
     // __gc ? nope
 
     // Controller Axis Event : EventBase
     metatableName = fgScriptMT->getMetatableName(CMetatables::EVENT_CONTROLLER_AXIS_MT_ID);
     LPCD::Class(m_luaState->GetCState(), metatableName, metatableNameEventBase)
-            .Property("which", &fgControllerAxisEvent::which)
-            .Property("value", &fgControllerAxisEvent::axis)
-            .Property("axis", &fgControllerAxisEvent::value)
+            .Property("which", &event::SControllerAxis::which)
+            .Property("value", &event::SControllerAxis::axis)
+            .Property("axis", &event::SControllerAxis::value)
             ;
     // __gc ? nope
 
     // Touch Event : EventBase
     metatableName = fgScriptMT->getMetatableName(CMetatables::EVENT_TOUCH_MT_ID);
     LPCD::Class(m_luaState->GetCState(), metatableName, metatableNameEventBase)
-            .Property("x", &fgTouchEvent::x)
-            .Property("y", &fgTouchEvent::y)
-            .Property("touchID", &fgTouchEvent::touchID)
-            .Property("pressed", &fgTouchEvent::pressed)
+            .Property("x", &event::STouch::x)
+            .Property("y", &event::STouch::y)
+            .Property("touchID", &event::STouch::touchID)
+            .Property("pressed", &event::STouch::pressed)
             ;
     // __gc ? nope
 
     // Mouse Event : EventBase
     metatableName = fgScriptMT->getMetatableName(CMetatables::EVENT_MOUSE_MT_ID);
     LPCD::Class(m_luaState->GetCState(), metatableName, metatableNameEventBase)
-            .Property("x", &fgMouseEvent::x)
-            .Property("y", &fgMouseEvent::y)
-            .Property("buttonID", &fgMouseEvent::buttonID)
-            .Property("pressed", &fgMouseEvent::pressed)
+            .Property("x", &event::SMouse::x)
+            .Property("y", &event::SMouse::y)
+            .Property("buttonID", &event::SMouse::buttonID)
+            .Property("pressed", &event::SMouse::pressed)
             ;
     // __gc ? nope
 
     // Swipe Event : EventBase #FIXME #REFACTOR
     metatableName = fgScriptMT->getMetatableName(CMetatables::EVENT_SWIPE_MT_ID);
     LPCD::Class(m_luaState->GetCState(), metatableName, metatableNameEventBase)
-            .Property("swipeDirection", &fgSwipeEvent::swipeDirection)
-            .Property("xStart", &fgSwipeEvent::xStart)
-            .Property("yStart", &fgSwipeEvent::yStart)
-            .Property("xEnd", &fgSwipeEvent::xEnd)
-            .Property("yEnd", &fgSwipeEvent::yEnd)
-            .Property("swipeXOffset", &fgSwipeEvent::swipeXOffset)
-            .Property("swipeYOffset", &fgSwipeEvent::swipeYOffset)
-            .Property("swipeXSteps", &fgSwipeEvent::swipeXSteps)
-            .Property("swipeYSteps", &fgSwipeEvent::swipeYSteps)
+            .Property("swipeDirection", &event::SSwipe::swipeDirection)
+            .Property("xStart", &event::SSwipe::xStart)
+            .Property("yStart", &event::SSwipe::yStart)
+            .Property("xEnd", &event::SSwipe::xEnd)
+            .Property("yEnd", &event::SSwipe::yEnd)
+            .Property("swipeXOffset", &event::SSwipe::swipeXOffset)
+            .Property("swipeYOffset", &event::SSwipe::swipeYOffset)
+            .Property("swipeXSteps", &event::SSwipe::swipeXSteps)
+            .Property("swipeYSteps", &event::SSwipe::swipeYSteps)
             ;
     // __gc ? nope
 
@@ -1142,14 +1142,14 @@ fgBool script::CScriptSubsystem::registerEventManager(void) {
     //
     metatableName = fgScriptMT->getMetatableName(CMetatables::EVENT_SWIPE_PINCH_MT_ID);
     LPCD::Class(m_luaState->GetCState(), metatableName, metatableNameEventBase)
-            .Property("pinchDirection", &fgSwipePinchEvent::pinchDirection)
-            .Property("x", &fgSwipePinchEvent::x)
-            .Property("y", &fgSwipePinchEvent::y)
-            .Property("x2", &fgSwipePinchEvent::x2)
-            .Property("y2", &fgSwipePinchEvent::y2)
-            .Property("pinchXOffset", &fgSwipePinchEvent::pinchXOffset)
-            .Property("pinchYOffset", &fgSwipePinchEvent::pinchYOffset)
-            .Property("pinchSize", &fgSwipePinchEvent::pinchSize)
+            .Property("pinchDirection", &event::SSwipePinch::pinchDirection)
+            .Property("x", &event::SSwipePinch::x)
+            .Property("y", &event::SSwipePinch::y)
+            .Property("x2", &event::SSwipePinch::x2)
+            .Property("y2", &event::SSwipePinch::y2)
+            .Property("pinchXOffset", &event::SSwipePinch::pinchXOffset)
+            .Property("pinchYOffset", &event::SSwipePinch::pinchYOffset)
+            .Property("pinchSize", &event::SSwipePinch::pinchSize)
             ;
     // __gc ? nope
 
@@ -1158,28 +1158,28 @@ fgBool script::CScriptSubsystem::registerEventManager(void) {
     //
     metatableName = fgScriptMT->getMetatableName(CMetatables::EVENT_SWIPE_ROTATE_MT_ID);
     LPCD::Class(m_luaState->GetCState(), metatableName, metatableNameEventBase)
-            .Property("x", &fgSwipeRotateEvent::x)
-            .Property("y", &fgSwipeRotateEvent::y)
-            .Property("x2", &fgSwipeRotateEvent::x2)
-            .Property("y2", &fgSwipeRotateEvent::y2)
-            .Property("angle", &fgSwipeRotateEvent::angle)
+            .Property("x", &event::SSwipeRotate::x)
+            .Property("y", &event::SSwipeRotate::y)
+            .Property("x2", &event::SSwipeRotate::x2)
+            .Property("y2", &event::SSwipeRotate::y2)
+            .Property("angle", &event::SSwipeRotate::angle)
             ;
     // __gc ? nope
 
     // Key Event : EventBase
     metatableName = fgScriptMT->getMetatableName(CMetatables::EVENT_KEY_MT_ID);
     LPCD::Class(m_luaState->GetCState(), metatableName, metatableNameEventBase)
-            .Property("keyCode", &fgKeyEvent::keyCode)
-            .Property("which", &fgKeyEvent::which)
-            .Property("pressed", &fgKeyEvent::pressed)
+            .Property("keyCode", &event::SKey::keyCode)
+            .Property("which", &event::SKey::which)
+            .Property("pressed", &event::SKey::pressed)
             ;
     // __gc ? nope
 
     // Resource Event : EventBase
     metatableName = fgScriptMT->getMetatableName(CMetatables::EVENT_RESOURCE_MT_ID);
     LPCD::Class(m_luaState->GetCState(), metatableName, metatableNameEventBase)
-            .Property("status", &fgResourceEvent::status)
-            .Property("resource", &fgResourceEvent::resource) // need LPCD for fgResource * + type check
+            .Property("status", &event::SResource::status)
+            .Property("resource", &event::SResource::resource) // need LPCD for fgResource * + type check
             ;
     // __gc ? nope
 
@@ -1225,32 +1225,32 @@ fgBool script::CScriptSubsystem::registerEventManager(void) {
     //
     metatableName = fgScriptMT->getMetatableName(CMetatables::EVENT_SENSORS_MT_ID);
     LPCD::Class(m_luaState->GetCState(), metatableName, metatableNameEventBase)
-            .Property("x", &fgSensorsEvent::x)
-            .Property("y", &fgSensorsEvent::y)
-            .Property("z", &fgSensorsEvent::z)
+            .Property("x", &event::SSensors::x)
+            .Property("y", &event::SSensors::y)
+            .Property("z", &event::SSensors::z)
             ;
     // __gc ? nope
 
     // Event Main Union structure
     metatableName = fgScriptMT->getMetatableName(CMetatables::EVENT_MAIN_MT_ID);
     LPCD::Class(m_luaState->GetCState(), metatableName)
-            .Property("eventType", &fgEvent::eventType)
-            .Property("touch", &fgEvent::touch)
-            .Property("mouse", &fgEvent::mouse)
-            .Property("swipe", &fgEvent::swipe)
-            .Property("swipePinch", &fgEvent::swipePinch)
-            .Property("swipeRotate", &fgEvent::swipeRotate)
-            .Property("key", &fgEvent::key)
-            .Property("resource", &fgEvent::resource)
-            .Property("vertexStream", &fgEvent::vertexStream)
-            .Property("camera", &fgEvent::camera)
-            .Property("sound", &fgEvent::sound)
-            .Property("menuChanged", &fgEvent::menuChanged)
-            .Property("widget", &fgEvent::widget)
-            .Property("sensors", &fgEvent::sensors)
-            .Property("controller", &fgEvent::controller)
-            .Property("controllerAxis", &fgEvent::controllerAxis)
-            .Property("controllerButton", &fgEvent::controllerButton)
+            .Property("eventType", &event::SEvent::code)
+            .Property("touch", &event::SEvent::touch)
+            .Property("mouse", &event::SEvent::mouse)
+            .Property("swipe", &event::SEvent::swipe)
+            .Property("swipePinch", &event::SEvent::swipePinch)
+            .Property("swipeRotate", &event::SEvent::swipeRotate)
+            .Property("key", &event::SEvent::key)
+            .Property("resource", &event::SEvent::resource)
+            .Property("vertexStream", &event::SEvent::vertexStream)
+            .Property("camera", &event::SEvent::camera)
+            .Property("sound", &event::SEvent::sound)
+            .Property("menuChanged", &event::SEvent::menuChanged)
+            .Property("widget", &event::SEvent::widget)
+            .Property("sensors", &event::SEvent::sensors)
+            .Property("controller", &event::SEvent::controller)
+            .Property("controllerAxis", &event::SEvent::controllerAxis)
+            .Property("controllerButton", &event::SEvent::controllerButton)
             ;
     // __gc ? nope
 

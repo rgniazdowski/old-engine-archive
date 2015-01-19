@@ -13,38 +13,40 @@
 
     #include "Event/fgEventDefinitions.h" // #FIXME
 
-    /// Event thrown when game just started (once)
-    #define FG_EVENT_GAME_STARTED       (FG_EVENT_LAST_STANDARD_EVENT_CODE+1)
-    /// Event is thrown once when the game changes state to PAUSED
-    #define FG_EVENT_GAME_PAUSED        (FG_EVENT_LAST_STANDARD_EVENT_CODE+2)
-    /// Event is thrown once when the game changes state to STOPPED
-    #define FG_EVENT_GAME_STOPPED       (FG_EVENT_LAST_STANDARD_EVENT_CODE+3)
-    
-    /// Event is thrown once when the game is starting loading stage/level/data
-    #define FG_EVENT_GAME_LOADING       (FG_EVENT_LAST_STANDARD_EVENT_CODE+4)
-    /// Event is thrown once when the game is beginning to restart
-    #define FG_EVENT_GAME_RESTARTING    (FG_EVENT_LAST_STANDARD_EVENT_CODE+5)
-    
-    /// Event thrown on game finish (stage/level/whole)
-    #define FG_EVENT_GAME_FINISHED      (FG_EVENT_LAST_STANDARD_EVENT_CODE+6)
-    /// Event is thrown once when the game is waiting for external input
-    #define FG_EVENT_GAME_WAITING       (FG_EVENT_LAST_STANDARD_EVENT_CODE+7)
-    /// Event is thrown when the game connects successfully to the server
-    #define FG_EVENT_GAME_CONNECTED     (FG_EVENT_LAST_STANDARD_EVENT_CODE+8)
-    /// Event is thrown when the game disconnects from the server
-    #define FG_EVENT_GAME_DISCONNECTED  (FG_EVENT_LAST_STANDARD_EVENT_CODE+9)
-    
 
-    #define FG_EVENT_LAST_GAME_EVENT_CODE (FG_EVENT_LAST_STANDARD_EVENT_CODE+9)
 
     #include "fgManagerBase.h"
     #include <queue>
 
     #define FG_MANAGER_LOGIC        0x0001000
-    
+
 namespace fg {
     namespace game {
-        
+
+        /// Event thrown when game just started (once)
+        const event::EventType GAME_STARTED = (event::LAST_STANDARD_EVENT_CODE + 1);
+        /// Event is thrown once when the game changes state to PAUSED
+        const event::EventType GAME_PAUSED = (event::LAST_STANDARD_EVENT_CODE + 2);
+        /// Event is thrown once when the game changes state to STOPPED
+        const event::EventType GAME_STOPPED = (event::LAST_STANDARD_EVENT_CODE + 3);
+
+        /// Event is thrown once when the game is starting loading stage/level/data
+        const event::EventType GAME_LOADING = (event::LAST_STANDARD_EVENT_CODE + 4);
+        /// Event is thrown once when the game is beginning to restart
+        const event::EventType GAME_RESTARTING = (event::LAST_STANDARD_EVENT_CODE + 5);
+
+        /// Event thrown on game finish (stage/level/whole)
+        const event::EventType GAME_FINISHED = (event::LAST_STANDARD_EVENT_CODE + 6);
+        /// Event is thrown once when the game is waiting for external input
+        const event::EventType GAME_WAITING = (event::LAST_STANDARD_EVENT_CODE + 7);
+        /// Event is thrown when the game connects successfully to the server
+        const event::EventType GAME_CONNECTED = (event::LAST_STANDARD_EVENT_CODE + 8);
+        /// Event is thrown when the game disconnects from the server
+        const event::EventType GAME_DISCONNECTED = (event::LAST_STANDARD_EVENT_CODE + 9);
+
+
+        const event::EventType LAST_GAME_EVENT_CODE = (event::LAST_STANDARD_EVENT_CODE + 9);
+
         /**
          *
          */
@@ -53,9 +55,10 @@ namespace fg {
             typedef fg::base::CManager base_type;
             ///
             typedef float score_type;
-            
+
         public:
-            enum Status {
+
+            enum class Status : unsigned char {
                 /// Invalid game status - this cannot appear in normal gameplay.
                 /// If so, it means unknown error 
                 GAME_INVALID,
@@ -68,28 +71,28 @@ namespace fg {
                 GAME_PAUSED,
                 /// Game is not active/stopped - not even loading, normal nongame menu
                 GAME_STOPPED,
-                
+
                 /// Game is loading - loading, populating assets
                 GAME_LOADING,
                 /// Game is restarting - releasing any required data, then loading again
                 GAME_RESTARTING,
                 /// Game is stopping - releasing any required data, later back to nongame menu
                 GAME_STOPPING,
-                
+
                 /// Game is finishing - some midlevel presentation on level ending, showing
                 /// game status, highscores etc, 
                 GAME_FINISHING,
                 /// Game is finished, very similar to the FINISHING status, however this state
                 /// is when level is unloaded (required data released)
                 GAME_FINISHED,
-                
+
                 /// Game is connecting to the server
                 GAME_CONNECTING,
                 /// Game is waiting for some external input (any kind)
                 GAME_WAITING,
                 /// Game disconnect from the server - any kind of reason
                 /// This game state is for a very short period (in most cases max 1 frame)
-                GAME_DISCONNECTED                
+                GAME_DISCONNECTED
             };
         public:
             /**
@@ -105,14 +108,14 @@ namespace fg {
              * 
              */
             virtual ~Logic();
-            
+
         protected:
             /**
              * 
              * @param eventType
              * @return 
              */
-            fgBool throwGameEvent(const fgEventType eventType);
+            fgBool throwGameEvent(const event::EventType eventType);
             /**
              * 
              */
@@ -129,7 +132,7 @@ namespace fg {
              * @return 
              */
             virtual fgBool initialize(void);
-            
+
         public:
             /**
              * 
@@ -145,7 +148,6 @@ namespace fg {
             inline fg::base::CManager *getEventManager(void) const {
                 return m_pEventMgr;
             }
-            
             /**
              * 
              * @return 
@@ -153,7 +155,6 @@ namespace fg {
             inline Status getStatus(void) const {
                 return m_status;
             }
-            
             /**
              * 
              * @return 
@@ -202,7 +203,6 @@ namespace fg {
             inline void resetStageScore(void) {
                 m_stageScore = 0;
             }
-            
             /**
              * 
              * @return 
@@ -232,9 +232,9 @@ namespace fg {
             inline void setPlayerName(const std::string &playerName) {
                 m_playerName = playerName;
             }
-            
+
         public:
-            
+
             /**
              * 
              */
@@ -254,7 +254,7 @@ namespace fg {
              * @param stageName
              */
             void startGame(const char *stageName);
-            
+
             /**
              * 
              */
@@ -267,96 +267,96 @@ namespace fg {
              * 
              */
             void restartGame(void);
-            
+
         public:
             /**
              * 
              * @return 
              */
             fgBool isActive(void) const {
-                return (fgBool)(m_status == GAME_ACTIVE);
+                return (fgBool)(m_status == Status::GAME_ACTIVE);
             }
             /**
              * 
              * @return 
              */
             fgBool isPaused(void) const {
-                return (fgBool)(m_status == GAME_PAUSED);
+                return (fgBool)(m_status == Status::GAME_PAUSED);
             }
             /**
              * 
              * @return 
              */
             fgBool isStopped(void) const {
-                return (fgBool)(m_status == GAME_STOPPED);
+                return (fgBool)(m_status == Status::GAME_STOPPED);
             }
             /**
              * 
              * @return 
              */
             fgBool isLoading(void) const {
-                return (fgBool)(m_status == GAME_LOADING);
+                return (fgBool)(m_status == Status::GAME_LOADING);
             }
             /**
              * 
              * @return 
              */
             fgBool isRestarting(void) const {
-                return (fgBool)(m_status == GAME_RESTARTING);
+                return (fgBool)(m_status == Status::GAME_RESTARTING);
             }
             /**
              * 
              * @return 
              */
             fgBool isStopping(void) const {
-                return (fgBool)(m_status == GAME_STOPPING);
+                return (fgBool)(m_status == Status::GAME_STOPPING);
             }
             /**
              * 
              * @return 
              */
             fgBool isFinishing(void) const {
-                return (fgBool)(m_status == GAME_FINISHING);
+                return (fgBool)(m_status == Status::GAME_FINISHING);
             }
             /**
              * 
              * @return 
              */
             fgBool isFinished(void) const {
-                return (fgBool)(m_status == GAME_FINISHED);
+                return (fgBool)(m_status == Status::GAME_FINISHED);
             }
             /**
              * 
              * @return 
              */
             fgBool isConnecting(void) const {
-                return (fgBool)(m_status == GAME_CONNECTING);
+                return (fgBool)(m_status == Status::GAME_CONNECTING);
             }
             /**
              * 
              * @return 
              */
             fgBool isWaiting(void) const {
-                return (fgBool)(m_status == GAME_WAITING);
+                return (fgBool)(m_status == Status::GAME_WAITING);
             }
             /**
              * 
              * @return 
              */
             fgBool isDisconnected(void) const {
-                return (fgBool)(m_status == GAME_DISCONNECTED);
+                return (fgBool)(m_status == Status::GAME_DISCONNECTED);
             }
-            
+
         public:
             /**
              * 
              */
             void update(void);
-            
+
         protected:
             ///
             typedef std::queue<Status> StatusQueue;
-            
+
         private:
             /// External pointer to the event manager
             fg::base::CManager *m_pEventMgr;
@@ -380,4 +380,3 @@ namespace fg {
 
     #undef FG_INC_GAME_LOGIC_BLOCK
 #endif /* FG_INC_GAME_LOGIC */
-    

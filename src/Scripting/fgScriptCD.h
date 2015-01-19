@@ -915,52 +915,66 @@ namespace LPCD {
 
     ////////////////////////////////////////////////////////////////////////////
 
-    template<> struct Type<fgSwipeDirection> : public Type<int> {
-        static inline fgSwipeDirection Get(lua_State* L, int idx) {
-            return (fgSwipeDirection)Type<int>::Get(L, idx);
+    #define FG_CONV_CD_TYPE fg::event::SSwipe::Direction
+    
+    template<> struct Type<FG_CONV_CD_TYPE> : public Type<int> {
+        static inline FG_CONV_CD_TYPE Get(lua_State* L, int idx) {
+            return (FG_CONV_CD_TYPE)Type<int>::Get(L, idx);
         }
     };
 
-    template<> struct Type<fgSwipeDirection&> : public Type<fgSwipeDirection> {
+    template<> struct Type<FG_CONV_CD_TYPE &> : public Type<FG_CONV_CD_TYPE> {
     };
 
-    template<> struct Type<const fgSwipeDirection&> : public Type<fgSwipeDirection> {
+    template<> struct Type<const FG_CONV_CD_TYPE &> : public Type<FG_CONV_CD_TYPE> {
     };
+    
+    #undef FG_CONV_CD_TYPE
 
     ////////////////////////////////////////////////////////////////////////////
 
-    template<> struct Type<fgPinchDirection> : public Type<int> {
-        static inline fgPinchDirection Get(lua_State* L, int idx) {
-            return (fgPinchDirection)Type<int>::Get(L, idx);
+    #define FG_CONV_CD_TYPE fg::event::SSwipePinch::Direction
+    
+    template<> struct Type<FG_CONV_CD_TYPE> : public Type<int> {
+        static inline FG_CONV_CD_TYPE Get(lua_State* L, int idx) {
+            return (FG_CONV_CD_TYPE)Type<int>::Get(L, idx);
         }
     };
 
-    template<> struct Type<fgPinchDirection&> : public Type<fgPinchDirection> {
+    template<> struct Type<FG_CONV_CD_TYPE &> : public Type<FG_CONV_CD_TYPE> {
     };
 
-    template<> struct Type<const fgPinchDirection&> : public Type<fgPinchDirection> {
+    template<> struct Type<const FG_CONV_CD_TYPE &> : public Type<FG_CONV_CD_TYPE> {
     };
 
+    #undef FG_CONV_CD_TYPE
+    
     ////////////////////////////////////////////////////////////////////////////
 
-    template<> struct Type<fgResourceStatus> : public Type<int> {
-        static inline fgResourceStatus Get(lua_State* L, int idx) {
-            return (fgResourceStatus)Type<int>::Get(L, idx);
+    #define FG_CONV_CD_TYPE fg::event::SResource::Status
+    
+    template<> struct Type<FG_CONV_CD_TYPE> : public Type<int> {
+        static inline FG_CONV_CD_TYPE Get(lua_State* L, int idx) {
+            return (FG_CONV_CD_TYPE)Type<int>::Get(L, idx);
         }
     };
 
-    template<> struct Type<fgResourceStatus&> : public Type<fgResourceStatus> {
+    template<> struct Type<FG_CONV_CD_TYPE &> : public Type<FG_CONV_CD_TYPE> {
     };
 
-    template<> struct Type<const fgResourceStatus&> : public Type<fgResourceStatus> {
+    template<> struct Type<const FG_CONV_CD_TYPE &> : public Type<FG_CONV_CD_TYPE> {
     };
 
+    #undef FG_CONV_CD_TYPE
+    
     /***************************************************************************
      * fgEvent pointer parameter * (this is union parameter) - only passed as *
      **************************************************************************/
 
-    template<> struct Type<fgEvent *> {
-        static inline void Push(lua_State* L, const fgEvent * value) {
+    #define FG_CONV_CD_TYPE fg::event::SEvent
+    
+    template<> struct Type<FG_CONV_CD_TYPE *> {
+        static inline void Push(lua_State* L, const FG_CONV_CD_TYPE * value) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
             LuaPlus::LuaObject obj = state->BoxPointer((void*)value);
             // Can check the pointer (offset) and instead of creating new object
@@ -981,27 +995,31 @@ namespace LPCD {
             //result = (bool) obj.IsUserdata();
             return result;
         }
-        static inline fgEvent* Get(lua_State* L, int idx) {
+        static inline FG_CONV_CD_TYPE* Get(lua_State* L, int idx) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
-            fgEvent *pEventUnion = (fgEvent *)state->UnBoxPointer(idx);
+            FG_CONV_CD_TYPE *pEventUnion = (FG_CONV_CD_TYPE *)state->UnBoxPointer(idx);
             return pEventUnion;
         }
     };
 
-    template<> struct Type<fgEvent *&> : public Type<fgEvent *> {
+    template<> struct Type<FG_CONV_CD_TYPE *&> : public Type<FG_CONV_CD_TYPE *> {
     };
 
-    template<> struct Type<const fgEvent *&> : public Type<fgEvent *> {
+    template<> struct Type<const FG_CONV_CD_TYPE *&> : public Type<FG_CONV_CD_TYPE *> {
     };
 
+    #undef FG_CONV_CD_TYPE
+    
     ////////////////////////////////////////////////////////////////////////////
 
     /***************************************************************************
      * EVENT: fgTouchEvent - structure
      **************************************************************************/
 
-    template<> struct Type<fgTouchEvent> {
-        static inline void Push(lua_State* L, const fgTouchEvent& value) {
+    #define FG_CONV_CD_TYPE fg::event::STouch
+    
+    template<> struct Type<FG_CONV_CD_TYPE> {
+        static inline void Push(lua_State* L, const FG_CONV_CD_TYPE & value) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
             void *ptr = (void*)&value;
             LuaPlus::LuaObject obj = state->BoxPointer(ptr);
@@ -1017,24 +1035,28 @@ namespace LPCD {
             LuaPlus::LuaObject obj = state->Stack(idx);
             return obj.GetMetatable() == state->GetRegistry()[fgScriptMT->getMetatableName(fg::script::CMetatables::EVENT_TOUCH_MT_ID)];
         }
-        static inline fgTouchEvent Get(lua_State* L, int idx) {
+        static inline FG_CONV_CD_TYPE Get(lua_State* L, int idx) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
-            return *(fgTouchEvent*)state->UnBoxPointer(idx);
+            return *(FG_CONV_CD_TYPE*)state->UnBoxPointer(idx);
         }
     };
 
-    template<> struct Type<fgTouchEvent&> : public Type<fgTouchEvent> {
+    template<> struct Type<FG_CONV_CD_TYPE &> : public Type<FG_CONV_CD_TYPE> {
     };
 
-    template<> struct Type<const fgTouchEvent&> : public Type<fgTouchEvent> {
+    template<> struct Type<const FG_CONV_CD_TYPE &> : public Type<FG_CONV_CD_TYPE> {
     };
 
+    #undef FG_CONV_CD_TYPE
+    
     /***************************************************************************
      * EVENT: fgMouseEvent - structure
      **************************************************************************/
 
-    template<> struct Type<fgMouseEvent> {
-        static inline void Push(lua_State* L, const fgMouseEvent& value) {
+    #define FG_CONV_CD_TYPE fg::event::SMouse
+    
+    template<> struct Type<FG_CONV_CD_TYPE> {
+        static inline void Push(lua_State* L, const FG_CONV_CD_TYPE & value) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
             void *ptr = (void*)&value;
             LuaPlus::LuaObject obj = state->BoxPointer(ptr);
@@ -1050,24 +1072,28 @@ namespace LPCD {
             LuaPlus::LuaObject obj = state->Stack(idx);
             return obj.GetMetatable() == state->GetRegistry()[fgScriptMT->getMetatableName(fg::script::CMetatables::EVENT_MOUSE_MT_ID)];
         }
-        static inline fgMouseEvent Get(lua_State* L, int idx) {
+        static inline FG_CONV_CD_TYPE Get(lua_State* L, int idx) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
-            return *(fgMouseEvent*)state->UnBoxPointer(idx);
+            return *(FG_CONV_CD_TYPE*)state->UnBoxPointer(idx);
         }
     };
 
-    template<> struct Type<fgMouseEvent&> : public Type<fgMouseEvent> {
+    template<> struct Type<FG_CONV_CD_TYPE &> : public Type<FG_CONV_CD_TYPE> {
     };
 
-    template<> struct Type<const fgMouseEvent&> : public Type<fgMouseEvent> {
+    template<> struct Type<const FG_CONV_CD_TYPE &> : public Type<FG_CONV_CD_TYPE> {
     };
+    
+    #undef FG_CONV_CD_TYPE
 
     /***************************************************************************
      * EVENT: fgSwipeEvent - structure
      **************************************************************************/
 
-    template<> struct Type<fgSwipeEvent> {
-        static inline void Push(lua_State* L, const fgSwipeEvent& value) {
+    #define FG_CONV_CD_TYPE fg::event::SSwipe
+    
+    template<> struct Type<FG_CONV_CD_TYPE> {
+        static inline void Push(lua_State* L, const FG_CONV_CD_TYPE & value) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
             void *ptr = (void*)&value;
             LuaPlus::LuaObject obj = state->BoxPointer(ptr);
@@ -1083,24 +1109,28 @@ namespace LPCD {
             LuaPlus::LuaObject obj = state->Stack(idx);
             return obj.GetMetatable() == state->GetRegistry()[fgScriptMT->getMetatableName(fg::script::CMetatables::EVENT_SWIPE_MT_ID)];
         }
-        static inline fgSwipeEvent Get(lua_State* L, int idx) {
+        static inline FG_CONV_CD_TYPE Get(lua_State* L, int idx) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
-            return *(fgSwipeEvent*)state->UnBoxPointer(idx);
+            return *(FG_CONV_CD_TYPE*)state->UnBoxPointer(idx);
         }
     };
 
-    template<> struct Type<fgSwipeEvent&> : public Type<fgSwipeEvent> {
+    template<> struct Type<FG_CONV_CD_TYPE &> : public Type<FG_CONV_CD_TYPE> {
     };
 
-    template<> struct Type<const fgSwipeEvent&> : public Type<fgSwipeEvent> {
+    template<> struct Type<const FG_CONV_CD_TYPE &> : public Type<FG_CONV_CD_TYPE> {
     };
+    
+    #undef FG_CONV_CD_TYPE
 
     /***************************************************************************
      * EVENT: fgSwipePinchEvent - structure
      **************************************************************************/
 
-    template<> struct Type<fgSwipePinchEvent> {
-        static inline void Push(lua_State* L, const fgSwipePinchEvent& value) {
+    #define FG_CONV_CD_TYPE fg::event::SSwipePinch
+    
+    template<> struct Type<FG_CONV_CD_TYPE> {
+        static inline void Push(lua_State* L, const FG_CONV_CD_TYPE & value) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
             void *ptr = (void*)&value;
             LuaPlus::LuaObject obj = state->BoxPointer(ptr);
@@ -1116,24 +1146,28 @@ namespace LPCD {
             LuaPlus::LuaObject obj = state->Stack(idx);
             return obj.GetMetatable() == state->GetRegistry()[fgScriptMT->getMetatableName(fg::script::CMetatables::EVENT_SWIPE_PINCH_MT_ID)];
         }
-        static inline fgSwipePinchEvent Get(lua_State* L, int idx) {
+        static inline FG_CONV_CD_TYPE Get(lua_State* L, int idx) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
-            return *(fgSwipePinchEvent*)state->UnBoxPointer(idx);
+            return *(FG_CONV_CD_TYPE*)state->UnBoxPointer(idx);
         }
     };
 
-    template<> struct Type<fgSwipePinchEvent&> : public Type<fgSwipePinchEvent> {
+    template<> struct Type<FG_CONV_CD_TYPE &> : public Type<FG_CONV_CD_TYPE> {
     };
 
-    template<> struct Type<const fgSwipePinchEvent&> : public Type<fgSwipePinchEvent> {
+    template<> struct Type<const FG_CONV_CD_TYPE &> : public Type<FG_CONV_CD_TYPE> {
     };
+    
+    #undef FG_CONV_CD_TYPE
 
     /***************************************************************************
      * EVENT: fgSwipeRotateEvent - structure
      **************************************************************************/
 
-    template<> struct Type<fgSwipeRotateEvent> {
-        static inline void Push(lua_State* L, const fgSwipeRotateEvent& value) {
+    #define FG_CONV_CD_TYPE fg::event::SSwipeRotate
+    
+    template<> struct Type<FG_CONV_CD_TYPE> {
+        static inline void Push(lua_State* L, const FG_CONV_CD_TYPE & value) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
             void *ptr = (void*)&value;
             LuaPlus::LuaObject obj = state->BoxPointer(ptr);
@@ -1149,24 +1183,28 @@ namespace LPCD {
             LuaPlus::LuaObject obj = state->Stack(idx);
             return obj.GetMetatable() == state->GetRegistry()[fgScriptMT->getMetatableName(fg::script::CMetatables::EVENT_SWIPE_ROTATE_MT_ID)];
         }
-        static inline fgSwipeRotateEvent Get(lua_State* L, int idx) {
+        static inline FG_CONV_CD_TYPE Get(lua_State* L, int idx) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
-            return *(fgSwipeRotateEvent*)state->UnBoxPointer(idx);
+            return *(FG_CONV_CD_TYPE*)state->UnBoxPointer(idx);
         }
     };
 
-    template<> struct Type<fgSwipeRotateEvent&> : public Type<fgSwipeRotateEvent> {
+    template<> struct Type<FG_CONV_CD_TYPE &> : public Type<FG_CONV_CD_TYPE> {
     };
 
-    template<> struct Type<const fgSwipeRotateEvent&> : public Type<fgSwipeRotateEvent> {
+    template<> struct Type<const FG_CONV_CD_TYPE &> : public Type<FG_CONV_CD_TYPE> {
     };
+    
+    #undef FG_CONV_CD_TYPE
 
     /***************************************************************************
      * EVENT: fgKeyEvent - structure
      **************************************************************************/
 
-    template<> struct Type<fgKeyEvent> {
-        static inline void Push(lua_State* L, const fgKeyEvent& value) {
+    #define FG_CONV_CD_TYPE fg::event::SKey
+    
+    template<> struct Type<FG_CONV_CD_TYPE> {
+        static inline void Push(lua_State* L, const FG_CONV_CD_TYPE & value) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
             void *ptr = (void*)&value;
             LuaPlus::LuaObject obj = state->BoxPointer(ptr);
@@ -1182,24 +1220,28 @@ namespace LPCD {
             LuaPlus::LuaObject obj = state->Stack(idx);
             return obj.GetMetatable() == state->GetRegistry()[fgScriptMT->getMetatableName(fg::script::CMetatables::EVENT_KEY_MT_ID)];
         }
-        static inline fgKeyEvent Get(lua_State* L, int idx) {
+        static inline FG_CONV_CD_TYPE Get(lua_State* L, int idx) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
-            return *(fgKeyEvent*)state->UnBoxPointer(idx);
+            return *(FG_CONV_CD_TYPE*)state->UnBoxPointer(idx);
         }
     };
 
-    template<> struct Type<fgKeyEvent&> : public Type<fgKeyEvent> {
+    template<> struct Type<FG_CONV_CD_TYPE &> : public Type<FG_CONV_CD_TYPE> {
     };
 
-    template<> struct Type<const fgKeyEvent&> : public Type<fgKeyEvent> {
+    template<> struct Type<const FG_CONV_CD_TYPE &> : public Type<FG_CONV_CD_TYPE> {
     };
+    
+    #undef FG_CONV_CD_TYPE
 
     /***************************************************************************
      * EVENT: fgResourceEvent - structure
      **************************************************************************/
 
-    template<> struct Type<fgResourceEvent> {
-        static inline void Push(lua_State* L, const fgResourceEvent& value) {
+    #define FG_CONV_CD_TYPE fg::event::SResource
+    
+    template<> struct Type<FG_CONV_CD_TYPE> {
+        static inline void Push(lua_State* L, const FG_CONV_CD_TYPE & value) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
             void *ptr = (void*)&value;
             LuaPlus::LuaObject obj = state->BoxPointer(ptr);
@@ -1215,24 +1257,28 @@ namespace LPCD {
             LuaPlus::LuaObject obj = state->Stack(idx);
             return obj.GetMetatable() == state->GetRegistry()[fgScriptMT->getMetatableName(fg::script::CMetatables::EVENT_RESOURCE_MT_ID)];
         }
-        static inline fgResourceEvent Get(lua_State* L, int idx) {
+        static inline FG_CONV_CD_TYPE Get(lua_State* L, int idx) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
-            return *(fgResourceEvent*)state->UnBoxPointer(idx);
+            return *(FG_CONV_CD_TYPE*)state->UnBoxPointer(idx);
         }
     };
 
-    template<> struct Type<fgResourceEvent&> : public Type<fgResourceEvent> {
+    template<> struct Type<FG_CONV_CD_TYPE &> : public Type<FG_CONV_CD_TYPE> {
     };
 
-    template<> struct Type<const fgResourceEvent&> : public Type<fgResourceEvent> {
+    template<> struct Type<const FG_CONV_CD_TYPE &> : public Type<FG_CONV_CD_TYPE> {
     };
 
+    #undef FG_CONV_CD_TYPE
+    
     /***************************************************************************
      * EVENT: fgVertexStreamEvent - structure
      **************************************************************************/
 
-    template<> struct Type<fgVertexStreamEvent> {
-        static inline void Push(lua_State* L, const fgVertexStreamEvent& value) {
+    #define FG_CONV_CD_TYPE fg::event::SVertexStream
+    
+    template<> struct Type<FG_CONV_CD_TYPE> {
+        static inline void Push(lua_State* L, const FG_CONV_CD_TYPE & value) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
             void *ptr = (void*)&value;
             LuaPlus::LuaObject obj = state->BoxPointer(ptr);
@@ -1248,24 +1294,28 @@ namespace LPCD {
             LuaPlus::LuaObject obj = state->Stack(idx);
             return obj.GetMetatable() == state->GetRegistry()[fgScriptMT->getMetatableName(fg::script::CMetatables::EVENT_VERTEX_STREAM_MT_ID)];
         }
-        static inline fgVertexStreamEvent Get(lua_State* L, int idx) {
+        static inline FG_CONV_CD_TYPE Get(lua_State* L, int idx) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
-            return *(fgVertexStreamEvent*)state->UnBoxPointer(idx);
+            return *(FG_CONV_CD_TYPE*)state->UnBoxPointer(idx);
         }
     };
 
-    template<> struct Type<fgVertexStreamEvent&> : public Type<fgVertexStreamEvent> {
+    template<> struct Type<FG_CONV_CD_TYPE &> : public Type<FG_CONV_CD_TYPE> {
     };
 
-    template<> struct Type<const fgVertexStreamEvent&> : public Type<fgVertexStreamEvent> {
+    template<> struct Type<const FG_CONV_CD_TYPE &> : public Type<FG_CONV_CD_TYPE> {
     };
 
+    #undef FG_CONV_CD_TYPE
+    
     /***************************************************************************
      * EVENT: fgCameraEvent - structure
      **************************************************************************/
 
-    template<> struct Type<fgCameraEvent> {
-        static inline void Push(lua_State* L, const fgCameraEvent& value) {
+    #define FG_CONV_CD_TYPE fg::event::SCamera
+    
+    template<> struct Type<FG_CONV_CD_TYPE> {
+        static inline void Push(lua_State* L, const FG_CONV_CD_TYPE & value) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
             void *ptr = (void*)&value;
             LuaPlus::LuaObject obj = state->BoxPointer(ptr);
@@ -1281,24 +1331,28 @@ namespace LPCD {
             LuaPlus::LuaObject obj = state->Stack(idx);
             return obj.GetMetatable() == state->GetRegistry()[fgScriptMT->getMetatableName(fg::script::CMetatables::EVENT_CAMERA_MT_ID)];
         }
-        static inline fgCameraEvent Get(lua_State* L, int idx) {
+        static inline FG_CONV_CD_TYPE Get(lua_State* L, int idx) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
-            return *(fgCameraEvent*)state->UnBoxPointer(idx);
+            return *(FG_CONV_CD_TYPE*)state->UnBoxPointer(idx);
         }
     };
 
-    template<> struct Type<fgCameraEvent&> : public Type<fgCameraEvent> {
+    template<> struct Type<FG_CONV_CD_TYPE &> : public Type<FG_CONV_CD_TYPE> {
     };
 
-    template<> struct Type<const fgCameraEvent&> : public Type<fgCameraEvent> {
+    template<> struct Type<const FG_CONV_CD_TYPE &> : public Type<FG_CONV_CD_TYPE> {
     };
+    
+    #undef FG_CONV_CD_TYPE
 
     /***************************************************************************
      * EVENT: fgSoundEvent - structure
      **************************************************************************/
 
-    template<> struct Type<fgSoundEvent> {
-        static inline void Push(lua_State* L, const fgSoundEvent& value) {
+    #define FG_CONV_CD_TYPE fg::event::SSound
+    
+    template<> struct Type<FG_CONV_CD_TYPE> {
+        static inline void Push(lua_State* L, const FG_CONV_CD_TYPE & value) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
             void *ptr = (void*)&value;
             LuaPlus::LuaObject obj = state->BoxPointer(ptr);
@@ -1314,24 +1368,28 @@ namespace LPCD {
             LuaPlus::LuaObject obj = state->Stack(idx);
             return obj.GetMetatable() == state->GetRegistry()[fgScriptMT->getMetatableName(fg::script::CMetatables::EVENT_SOUND_MT_ID)];
         }
-        static inline fgSoundEvent Get(lua_State* L, int idx) {
+        static inline FG_CONV_CD_TYPE Get(lua_State* L, int idx) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
-            return *(fgSoundEvent*)state->UnBoxPointer(idx);
+            return *(FG_CONV_CD_TYPE*)state->UnBoxPointer(idx);
         }
     };
 
-    template<> struct Type<fgSoundEvent&> : public Type<fgSoundEvent> {
+    template<> struct Type<FG_CONV_CD_TYPE &> : public Type<FG_CONV_CD_TYPE> {
     };
 
-    template<> struct Type<const fgSoundEvent&> : public Type<fgSoundEvent> {
+    template<> struct Type<const FG_CONV_CD_TYPE &> : public Type<FG_CONV_CD_TYPE> {
     };
+    
+    #undef FG_CONV_CD_TYPE
 
     /***************************************************************************
      * EVENT: fgMenuChangedEvent - structure
      **************************************************************************/
 
-    template<> struct Type<fgMenuChangedEvent> {
-        static inline void Push(lua_State* L, const fgMenuChangedEvent& value) {
+    #define FG_CONV_CD_TYPE fg::event::SMenuChanged
+    
+    template<> struct Type<FG_CONV_CD_TYPE> {
+        static inline void Push(lua_State* L, const FG_CONV_CD_TYPE & value) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
             void *ptr = (void*)&value;
             LuaPlus::LuaObject obj = state->BoxPointer(ptr);
@@ -1347,24 +1405,28 @@ namespace LPCD {
             LuaPlus::LuaObject obj = state->Stack(idx);
             return obj.GetMetatable() == state->GetRegistry()[fgScriptMT->getMetatableName(fg::script::CMetatables::EVENT_MENU_CHANGED_MT_ID)];
         }
-        static inline fgMenuChangedEvent Get(lua_State* L, int idx) {
+        static inline FG_CONV_CD_TYPE Get(lua_State* L, int idx) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
-            return *(fgMenuChangedEvent*)state->UnBoxPointer(idx);
+            return *(FG_CONV_CD_TYPE*)state->UnBoxPointer(idx);
         }
     };
 
-    template<> struct Type<fgMenuChangedEvent&> : public Type<fgMenuChangedEvent> {
+    template<> struct Type<FG_CONV_CD_TYPE &> : public Type<FG_CONV_CD_TYPE> {
     };
 
-    template<> struct Type<const fgMenuChangedEvent&> : public Type<fgMenuChangedEvent> {
+    template<> struct Type<const FG_CONV_CD_TYPE &> : public Type<FG_CONV_CD_TYPE> {
     };
+    
+    #undef FG_CONV_CD_TYPE
 
     /***************************************************************************
      * EVENT: fgWidgetEvent - structure
      **************************************************************************/
 
-    template<> struct Type<fgWidgetEvent> {
-        static inline void Push(lua_State* L, const fgWidgetEvent& value) {
+    #define FG_CONV_CD_TYPE fg::event::SWidget
+    
+    template<> struct Type<FG_CONV_CD_TYPE> {
+        static inline void Push(lua_State* L, const FG_CONV_CD_TYPE & value) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
             void *ptr = (void*)&value;
             LuaPlus::LuaObject obj = state->BoxPointer(ptr);
@@ -1380,24 +1442,28 @@ namespace LPCD {
             LuaPlus::LuaObject obj = state->Stack(idx);
             return obj.GetMetatable() == state->GetRegistry()[fgScriptMT->getMetatableName(fg::script::CMetatables::EVENT_WIDGET_MT_ID)];
         }
-        static inline fgWidgetEvent Get(lua_State* L, int idx) {
+        static inline FG_CONV_CD_TYPE Get(lua_State* L, int idx) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
-            return *(fgWidgetEvent*)state->UnBoxPointer(idx);
+            return *(FG_CONV_CD_TYPE*)state->UnBoxPointer(idx);
         }
     };
 
-    template<> struct Type<fgWidgetEvent&> : public Type<fgWidgetEvent> {
+    template<> struct Type<FG_CONV_CD_TYPE &> : public Type<FG_CONV_CD_TYPE> {
     };
 
-    template<> struct Type<const fgWidgetEvent&> : public Type<fgWidgetEvent> {
+    template<> struct Type<const FG_CONV_CD_TYPE &> : public Type<FG_CONV_CD_TYPE> {
     };
+    
+    #undef FG_CONV_CD_TYPE
 
     /***************************************************************************
      * EVENT: fgSensorsEvent - structure
      **************************************************************************/
 
-    template<> struct Type<fgSensorsEvent> {
-        static inline void Push(lua_State* L, const fgSensorsEvent& value) {
+    #define FG_CONV_CD_TYPE fg::event::SSensors
+    
+    template<> struct Type<FG_CONV_CD_TYPE> {
+        static inline void Push(lua_State* L, const FG_CONV_CD_TYPE & value) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
             void *ptr = (void*)&value;
             LuaPlus::LuaObject obj = state->BoxPointer(ptr);
@@ -1413,24 +1479,28 @@ namespace LPCD {
             LuaPlus::LuaObject obj = state->Stack(idx);
             return obj.GetMetatable() == state->GetRegistry()[fgScriptMT->getMetatableName(fg::script::CMetatables::EVENT_SENSORS_MT_ID)];
         }
-        static inline fgSensorsEvent Get(lua_State* L, int idx) {
+        static inline FG_CONV_CD_TYPE Get(lua_State* L, int idx) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
-            return *(fgSensorsEvent*)state->UnBoxPointer(idx);
+            return *(FG_CONV_CD_TYPE*)state->UnBoxPointer(idx);
         }
     };
 
-    template<> struct Type<fgSensorsEvent&> : public Type<fgSensorsEvent> {
+    template<> struct Type<FG_CONV_CD_TYPE &> : public Type<FG_CONV_CD_TYPE> {
     };
 
-    template<> struct Type<const fgSensorsEvent&> : public Type<fgSensorsEvent> {
+    template<> struct Type<const FG_CONV_CD_TYPE &> : public Type<FG_CONV_CD_TYPE> {
     };
+    
+    #undef FG_CONV_CD_TYPE
 
     /***************************************************************************
      * EVENT: fgControllerDeviceEvent - structure
      **************************************************************************/
 
-    template<> struct Type<fgControllerDeviceEvent> {
-        static inline void Push(lua_State* L, const fgControllerDeviceEvent& value) {
+    #define FG_CONV_CD_TYPE fg::event::SControllerDevice
+    
+    template<> struct Type<FG_CONV_CD_TYPE> {
+        static inline void Push(lua_State* L, const FG_CONV_CD_TYPE & value) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
             void *ptr = (void*)&value;
             LuaPlus::LuaObject obj = state->BoxPointer(ptr);
@@ -1446,24 +1516,28 @@ namespace LPCD {
             LuaPlus::LuaObject obj = state->Stack(idx);
             return obj.GetMetatable() == state->GetRegistry()[fgScriptMT->getMetatableName(fg::script::CMetatables::EVENT_CONTROLLER_DEVICE_MT_ID)];
         }
-        static inline fgControllerDeviceEvent Get(lua_State* L, int idx) {
+        static inline FG_CONV_CD_TYPE Get(lua_State* L, int idx) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
-            return *(fgControllerDeviceEvent*)state->UnBoxPointer(idx);
+            return *(FG_CONV_CD_TYPE*)state->UnBoxPointer(idx);
         }
     };
 
-    template<> struct Type<fgControllerDeviceEvent&> : public Type<fgControllerDeviceEvent> {
+    template<> struct Type<FG_CONV_CD_TYPE &> : public Type<FG_CONV_CD_TYPE> {
     };
 
-    template<> struct Type<const fgControllerDeviceEvent&> : public Type<fgControllerDeviceEvent> {
+    template<> struct Type<const FG_CONV_CD_TYPE &> : public Type<FG_CONV_CD_TYPE> {
     };
 
+    #undef FG_CONV_CD_TYPE
+    
     /***************************************************************************
      * EVENT: fgControllerButtonEvent - structure
      **************************************************************************/
 
-    template<> struct Type<fgControllerButtonEvent> {
-        static inline void Push(lua_State* L, const fgControllerButtonEvent& value) {
+    #define FG_CONV_CD_TYPE fg::event::SControllerButton
+    
+    template<> struct Type<FG_CONV_CD_TYPE> {
+        static inline void Push(lua_State* L, const FG_CONV_CD_TYPE & value) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
             void *ptr = (void*)&value;
             LuaPlus::LuaObject obj = state->BoxPointer(ptr);
@@ -1479,24 +1553,28 @@ namespace LPCD {
             LuaPlus::LuaObject obj = state->Stack(idx);
             return obj.GetMetatable() == state->GetRegistry()[fgScriptMT->getMetatableName(fg::script::CMetatables::EVENT_CONTROLLER_BUTTON_MT_ID)];
         }
-        static inline fgControllerButtonEvent Get(lua_State* L, int idx) {
+        static inline FG_CONV_CD_TYPE Get(lua_State* L, int idx) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
-            return *(fgControllerButtonEvent*)state->UnBoxPointer(idx);
+            return *(FG_CONV_CD_TYPE*)state->UnBoxPointer(idx);
         }
     };
 
-    template<> struct Type<fgControllerButtonEvent&> : public Type<fgControllerButtonEvent> {
+    template<> struct Type<FG_CONV_CD_TYPE &> : public Type<FG_CONV_CD_TYPE> {
     };
 
-    template<> struct Type<const fgControllerButtonEvent&> : public Type<fgControllerButtonEvent> {
+    template<> struct Type<const FG_CONV_CD_TYPE &> : public Type<FG_CONV_CD_TYPE> {
     };
 
+    #undef FG_CONV_CD_TYPE
+    
     /***************************************************************************
      * EVENT: fgControllerAxisEvent - structure
      **************************************************************************/
 
-    template<> struct Type<fgControllerAxisEvent> {
-        static inline void Push(lua_State* L, const fgControllerAxisEvent& value) {
+    #define FG_CONV_CD_TYPE fg::event::SControllerAxis
+    
+    template<> struct Type<FG_CONV_CD_TYPE> {
+        static inline void Push(lua_State* L, const FG_CONV_CD_TYPE & value) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
             void *ptr = (void*)&value;
             LuaPlus::LuaObject obj = state->BoxPointer(ptr);
@@ -1512,18 +1590,20 @@ namespace LPCD {
             LuaPlus::LuaObject obj = state->Stack(idx);
             return obj.GetMetatable() == state->GetRegistry()[fgScriptMT->getMetatableName(fg::script::CMetatables::EVENT_CONTROLLER_AXIS_MT_ID)];
         }
-        static inline fgControllerAxisEvent Get(lua_State* L, int idx) {
+        static inline FG_CONV_CD_TYPE Get(lua_State* L, int idx) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
-            return *(fgControllerAxisEvent*)state->UnBoxPointer(idx);
+            return *(FG_CONV_CD_TYPE*)state->UnBoxPointer(idx);
         }
     };
 
-    template<> struct Type<fgControllerAxisEvent&> : public Type<fgControllerAxisEvent> {
+    template<> struct Type<FG_CONV_CD_TYPE &> : public Type<FG_CONV_CD_TYPE> {
     };
 
-    template<> struct Type<const fgControllerAxisEvent&> : public Type<fgControllerAxisEvent> {
+    template<> struct Type<const FG_CONV_CD_TYPE &> : public Type<FG_CONV_CD_TYPE> {
     };
 
+    #undef FG_CONV_CD_TYPE
+    
     ////////////////////////////////////////////////////////////////////////////
     // FG GFX SPECIAL TYPES
     ////////////////////////////////////////////////////////////////////////////

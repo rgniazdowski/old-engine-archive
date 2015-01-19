@@ -73,7 +73,7 @@ m_guiCallbacks(),
 m_screenBox() {
     m_widgetFactory = new CWidgetFactory();
     m_styleMgr = new CStyleManager();
-    m_widgetMgr = new fg::gui::CWidgetManager(m_widgetFactory, m_styleMgr);
+    m_widgetMgr = new gui::CWidgetManager(m_widgetFactory, m_styleMgr);
     m_guiDrawer = new CDrawer();
     m_guiDrawer->setResourceManager(resourceMgr);
 
@@ -256,19 +256,19 @@ void gui::CGuiMain::registerGuiCallbacks(void) {
         return;
 
     if(!m_guiTouchCallback)
-        m_guiTouchCallback = new fg::event::CMethodCallback<CGuiMain>(this, &CGuiMain::guiTouchHandler);
+        m_guiTouchCallback = new event::CMethodCallback<CGuiMain>(this, &CGuiMain::guiTouchHandler);
 
-    m_pEventMgr->addCallback(FG_EVENT_TOUCH_PRESSED, m_guiTouchCallback);
-    m_pEventMgr->addCallback(FG_EVENT_TOUCH_RELEASED, m_guiTouchCallback);
-    m_pEventMgr->addCallback(FG_EVENT_TOUCH_MOTION, m_guiTouchCallback);
-    m_pEventMgr->addCallback(FG_EVENT_TOUCH_TAP_FINISHED, m_guiTouchCallback);
+    m_pEventMgr->addCallback(event::TOUCH_PRESSED, m_guiTouchCallback);
+    m_pEventMgr->addCallback(event::TOUCH_RELEASED, m_guiTouchCallback);
+    m_pEventMgr->addCallback(event::TOUCH_MOTION, m_guiTouchCallback);
+    m_pEventMgr->addCallback(event::TOUCH_TAP_FINISHED, m_guiTouchCallback);
 
     if(!m_guiMouseCallback)
-        m_guiMouseCallback = new fg::event::CMethodCallback<CGuiMain>(this, &CGuiMain::guiMouseHandler);
+        m_guiMouseCallback = new event::CMethodCallback<CGuiMain>(this, &CGuiMain::guiMouseHandler);
 
-    m_pEventMgr->addCallback(FG_EVENT_MOUSE_PRESSED, m_guiMouseCallback);
-    m_pEventMgr->addCallback(FG_EVENT_MOUSE_RELEASED, m_guiMouseCallback);
-    m_pEventMgr->addCallback(FG_EVENT_MOUSE_MOTION, m_guiMouseCallback);
+    m_pEventMgr->addCallback(event::MOUSE_PRESSED, m_guiMouseCallback);
+    m_pEventMgr->addCallback(event::MOUSE_RELEASED, m_guiMouseCallback);
+    m_pEventMgr->addCallback(event::MOUSE_MOTION, m_guiMouseCallback);
 }
 
 /**
@@ -278,13 +278,13 @@ void gui::CGuiMain::unregisterGuiCallbacks(void) {
     if(!m_pEventMgr)
         return;
 
-    m_pEventMgr->removeCallback(FG_EVENT_TOUCH_PRESSED, m_guiTouchCallback);
-    m_pEventMgr->removeCallback(FG_EVENT_TOUCH_RELEASED, m_guiTouchCallback);
-    m_pEventMgr->removeCallback(FG_EVENT_TOUCH_MOTION, m_guiTouchCallback);
-    m_pEventMgr->removeCallback(FG_EVENT_TOUCH_TAP_FINISHED, m_guiTouchCallback);
-    m_pEventMgr->removeCallback(FG_EVENT_MOUSE_PRESSED, m_guiMouseCallback);
-    m_pEventMgr->removeCallback(FG_EVENT_MOUSE_RELEASED, m_guiMouseCallback);
-    m_pEventMgr->removeCallback(FG_EVENT_MOUSE_MOTION, m_guiMouseCallback);
+    m_pEventMgr->removeCallback(event::TOUCH_PRESSED, m_guiTouchCallback);
+    m_pEventMgr->removeCallback(event::TOUCH_RELEASED, m_guiTouchCallback);
+    m_pEventMgr->removeCallback(event::TOUCH_MOTION, m_guiTouchCallback);
+    m_pEventMgr->removeCallback(event::TOUCH_TAP_FINISHED, m_guiTouchCallback);
+    m_pEventMgr->removeCallback(event::MOUSE_PRESSED, m_guiMouseCallback);
+    m_pEventMgr->removeCallback(event::MOUSE_RELEASED, m_guiMouseCallback);
+    m_pEventMgr->removeCallback(event::MOUSE_MOTION, m_guiMouseCallback);
 }
 
 /**
@@ -399,10 +399,10 @@ void gui::CGuiMain::updateState(void) {
     }
     if(!m_currentMenu) {
         // #FIXME - this needs to look a little bit differently
-        fg::gui::CWidgetManager::WidgetVec & roots = m_widgetMgr->getRefRootWidgets();
+        gui::CWidgetManager::WidgetVec & roots = m_widgetMgr->getRefRootWidgets();
         if(roots.empty())
             return;
-        fg::gui::CWidget *mainMenu = m_widgetMgr->get("MainMenu");
+        gui::CWidget *mainMenu = m_widgetMgr->get("MainMenu");
         if(!mainMenu)
             return;
         if(!(mainMenu->getTypeTraits() & MENU))
@@ -520,7 +520,7 @@ event::CEventManager *gui::CGuiMain::getEventManager(void) const {
  * 
  * @return 
  */
-fg::resource::CResourceManager *gui::CGuiMain::getResourceManager(void) const {
+resource::CResourceManager *gui::CGuiMain::getResourceManager(void) const {
     return m_pResourceMgr;
 }
 
@@ -528,7 +528,7 @@ fg::resource::CResourceManager *gui::CGuiMain::getResourceManager(void) const {
  * 
  * @return 
  */
-fg::base::CManager *gui::CGuiMain::getShaderManager(void) const {
+base::CManager *gui::CGuiMain::getShaderManager(void) const {
     return m_pShaderMgr;
 }
 
@@ -569,7 +569,7 @@ void gui::CGuiMain::setResourceManager(resource::CResourceManager * pResourceMgr
  * 
  * @param pShaderMgr
  */
-void gui::CGuiMain::setShaderManager(fg::base::CManager * pShaderMgr) {
+void gui::CGuiMain::setShaderManager(base::CManager * pShaderMgr) {
     if(pShaderMgr) {
         if(pShaderMgr->getManagerType() != FG_MANAGER_GFX_SHADER)
             return;
@@ -595,7 +595,7 @@ void gui::CGuiMain::setPointerInputReceiver(event::CInputHandler * pointerInputR
 fgBool gui::CGuiMain::guiTouchHandler(event::CArgumentList * argv) {
     if(!argv)
         return FG_FALSE;
-    fgEventBase *pEvent = (fgEventBase *)argv->getValueByID(0);
+    event::SEvent *pEvent = (event::SEvent *)argv->getValueByID(0);
     if(!pEvent)
         return FG_FALSE;
     //fgEventType type = pEvent->eventType;
@@ -611,7 +611,7 @@ fgBool gui::CGuiMain::guiTouchHandler(event::CArgumentList * argv) {
 fgBool gui::CGuiMain::guiMouseHandler(event::CArgumentList * argv) {
     if(!argv)
         return FG_FALSE;
-    fgEventBase *pEvent = (fgEventBase *)argv->getValueByID(0);
+    event::SEvent *pEvent = (event::SEvent *)argv->getValueByID(0);
     if(!pEvent)
         return FG_FALSE;
     //fgEventType type = pEvent->eventType;

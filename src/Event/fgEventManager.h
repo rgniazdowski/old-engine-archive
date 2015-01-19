@@ -92,7 +92,7 @@ namespace fg {
              * 
              * @param eventCode
              */
-            void throwEvent(fgEventType eventCode);
+            void throwEvent(EventType eventCode);
 
             /**
              * This adds event to the waiting queue, the *list object needs to be allocated before,
@@ -100,7 +100,7 @@ namespace fg {
              * @param eventCode
              * @param list
              */
-            void throwEvent(fgEventType eventCode,
+            void throwEvent(EventType eventCode,
                             CArgumentList *list);
 
             /**
@@ -108,7 +108,7 @@ namespace fg {
              * @param eventCode
              * @param pSystemData
              */
-            void throwEvent(fgEventType eventCode,
+            void throwEvent(EventType eventCode,
                             void *pSystemData);
 
             /**
@@ -117,7 +117,7 @@ namespace fg {
              * @param pCallback
              * @return 
              */
-            CFunctionCallback* addCallback(fgEventType eventCode,
+            CFunctionCallback* addCallback(EventType eventCode,
                                            CFunctionCallback *pCallback);
             /**
              * 
@@ -125,7 +125,7 @@ namespace fg {
              * @param pFunction
              * @return 
              */
-            CFunctionCallback* addCallback(fgEventType eventCode,
+            CFunctionCallback* addCallback(EventType eventCode,
                                            CFunctionCallback::fgFunction pFunction);
 
             /**
@@ -135,7 +135,7 @@ namespace fg {
              * @param pUserData
              * @return 
              */
-            CFunctionCallback* addCallback(fgEventType eventCode,
+            CFunctionCallback* addCallback(EventType eventCode,
                                            CPlainFunctionCallback::fgPlainFunction pPlainFunction,
                                            void *pUserData = NULL);
             /**
@@ -146,7 +146,7 @@ namespace fg {
              * @return 
              */
             template < class Class >
-            CFunctionCallback* addCallback(fgEventType eventCode,
+            CFunctionCallback* addCallback(EventType eventCode,
                                            typename CMethodCallback<Class>::ClassMethod pMethod,
                                            Class* pClassInstance);
 
@@ -156,7 +156,7 @@ namespace fg {
              * @param callback
              * @return 
              */
-            fgBool removeCallback(fgEventType eventCode, CFunctionCallback *pCallback);
+            fgBool removeCallback(EventType eventCode, CFunctionCallback *pCallback);
 
             /**
              * 
@@ -214,7 +214,7 @@ namespace fg {
  */
 template <class Class>
 fg::event::CFunctionCallback* fg::event::CEventManager::addCallback(
-                                                                    fgEventType eventCode,
+                                                                    EventType eventCode,
                                                                     typename CMethodCallback<Class>::ClassMethod pMethod,
                                                                     Class* pClassInstance) {
     if(!pMethod || (int)eventCode < 0 || !pClassInstance)

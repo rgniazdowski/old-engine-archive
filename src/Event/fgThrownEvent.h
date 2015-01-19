@@ -22,7 +22,7 @@ namespace fg {
          */
         struct SThrownEvent {
             ///
-            fgEventType eventCode;
+            EventType eventCode;
             ///
             CArgumentList *argList;
             ///
@@ -30,7 +30,7 @@ namespace fg {
             /**
              * 
              */
-            SThrownEvent(fgEventType _eventCode = FG_EVENT_INVALID) :
+            SThrownEvent(EventType _eventCode = event::INVALID) :
             eventCode(_eventCode),
             argList(NULL),
             systemData(NULL) { }
@@ -39,7 +39,7 @@ namespace fg {
              * @param _eventCode
              * @param _argList
              */
-            SThrownEvent(fgEventType _eventCode, CArgumentList *_argList) :
+            SThrownEvent(EventType _eventCode, CArgumentList *_argList) :
             eventCode(_eventCode),
             argList(_argList),
             systemData(NULL) { }
@@ -48,7 +48,7 @@ namespace fg {
              * @param _eventCode
              * @param _systemData
              */
-            SThrownEvent(fgEventType _eventCode, void *_systemData) :
+            SThrownEvent(EventType _eventCode, void *_systemData) :
             eventCode(_eventCode),
             argList(NULL),
             systemData(_systemData) { }

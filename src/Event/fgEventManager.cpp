@@ -92,7 +92,7 @@ fgBool fg::event::CEventManager::initialize(void) {
  * 
  * @param eventCode
  */
-void fg::event::CEventManager::throwEvent(fgEventType eventCode) {
+void fg::event::CEventManager::throwEvent(EventType eventCode) {
     SThrownEvent event(eventCode);
     m_eventsQueue.push(event);
 }
@@ -102,7 +102,7 @@ void fg::event::CEventManager::throwEvent(fgEventType eventCode) {
  * @param eventCode
  * @param list
  */
-void fg::event::CEventManager::throwEvent(fgEventType eventCode, CArgumentList *list) {
+void fg::event::CEventManager::throwEvent(EventType eventCode, CArgumentList *list) {
     SThrownEvent event(eventCode, list);
     m_eventsQueue.push(event);
 }
@@ -112,7 +112,7 @@ void fg::event::CEventManager::throwEvent(fgEventType eventCode, CArgumentList *
  * @param eventCode
  * @param pSystemData
  */
-void fg::event::CEventManager::throwEvent(fgEventType eventCode,
+void fg::event::CEventManager::throwEvent(EventType eventCode,
                                           void *pSystemData) {
     SThrownEvent event(eventCode, (void *)pSystemData);
     m_eventsQueue.push(event);
@@ -124,7 +124,7 @@ void fg::event::CEventManager::throwEvent(fgEventType eventCode,
  * @param pCallback
  * @return 
  */
-fg::event::CFunctionCallback* fg::event::CEventManager::addCallback(fgEventType eventCode,
+fg::event::CFunctionCallback* fg::event::CEventManager::addCallback(EventType eventCode,
                                                                     CFunctionCallback *pCallback) {
     if(!pCallback || (int)eventCode < 0)
         return NULL;
@@ -142,7 +142,7 @@ fg::event::CFunctionCallback* fg::event::CEventManager::addCallback(fgEventType 
  * @param pFunction
  * @return 
  */
-fg::event::CFunctionCallback* fg::event::CEventManager::addCallback(fgEventType eventCode,
+fg::event::CFunctionCallback* fg::event::CEventManager::addCallback(EventType eventCode,
                                                                     CFunctionCallback::fgFunction pFunction) {
     if(!pFunction || (int)eventCode < 0)
         return NULL;
@@ -160,7 +160,7 @@ fg::event::CFunctionCallback* fg::event::CEventManager::addCallback(fgEventType 
  * @param pUserData
  * @return 
  */
-fg::event::CFunctionCallback* fg::event::CEventManager::addCallback(fgEventType eventCode,
+fg::event::CFunctionCallback* fg::event::CEventManager::addCallback(EventType eventCode,
                                                                     CPlainFunctionCallback::fgPlainFunction pPlainFunction,
                                                                     void *pUserData) {
     if((int)eventCode < 0 || !pPlainFunction)
@@ -177,7 +177,7 @@ fg::event::CFunctionCallback* fg::event::CEventManager::addCallback(fgEventType 
  * @param pCallback
  * @return 
  */
-fgBool fg::event::CEventManager::removeCallback(fgEventType eventCode, CFunctionCallback *pCallback) {
+fgBool fg::event::CEventManager::removeCallback(EventType eventCode, CFunctionCallback *pCallback) {
     if(!pCallback || (int)eventCode < 0)
         return FG_FALSE;
 

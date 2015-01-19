@@ -437,15 +437,15 @@ void resource::CResourceManager::refreshResource(CResource* pResource) {
 
         pResource->recreate();
         if(!pResource->isDisposed() && m_pEventMgr) {
-            fgResourceEvent *resEvent = fgMalloc<fgResourceEvent>();
-            resEvent->eventType = FG_EVENT_RESOURCE_CREATED;
+            event::SResource *resEvent = fgMalloc<event::SResource>();
+            resEvent->eventType = event::RESOURCE_CREATED;
             resEvent->timeStamp = FG_GetTicks();
-            resEvent->status = FG_RESOURCE_CREATED;
+            resEvent->status = event::SResource::CREATED;
             resEvent->resource = pResource;
 
             fg::event::CArgumentList *argList = new fg::event::CArgumentList();
             argList->push(fg::event::SArgument::Type::ARG_TMP_POINTER, (void *)resEvent);
-            static_cast<fg::event::CEventManager *>(m_pEventMgr)->throwEvent(FG_EVENT_RESOURCE_CREATED, argList);
+            static_cast<fg::event::CEventManager *>(m_pEventMgr)->throwEvent(event::RESOURCE_CREATED, argList);
         }
         addMemory(pResource->getSize());
 
@@ -690,15 +690,15 @@ resource::CResource* resource::CResourceManager::request(const std::string& info
         CResourceManager::refreshResource(resourcePtr);
         if(m_pEventMgr) {
             // #FIXME ! ! ! !
-            fgResourceEvent *resEvent = fgMalloc<fgResourceEvent>();
-            resEvent->eventType = FG_EVENT_RESOURCE_REQUESTED;
+            event::SResource *resEvent = fgMalloc<event::SResource>();
+            resEvent->eventType = event::RESOURCE_REQUESTED;
             resEvent->timeStamp = FG_GetTicks();
-            resEvent->status = FG_RESOURCE_REQUESTED;
+            resEvent->status = event::SResource::REQUESTED;
             resEvent->resource = resourcePtr;
 
             fg::event::CArgumentList *argList = new fg::event::CArgumentList();
             argList->push(fg::event::SArgument::Type::ARG_TMP_POINTER, (void *)resEvent);
-            static_cast<fg::event::CEventManager *>(m_pEventMgr)->throwEvent(FG_EVENT_RESOURCE_REQUESTED, argList);
+            static_cast<fg::event::CEventManager *>(m_pEventMgr)->throwEvent(event::RESOURCE_REQUESTED, argList);
         }
     }
     return resourcePtr;

@@ -85,9 +85,9 @@ fgBool script::CScriptCallback::Call(void) {
         gui::CButton button;
         (*m_function)((gui::CWidget *) & button); // No return value expected
     } else if(m_type == EVENT_CALLBACK) {
-        fgEvent event;
-        memset(&event, 0, sizeof (fgEvent));
-        (*m_function)((fgEvent *) & event);
+        event::SEvent event;
+        memset(&event, 0, sizeof (event::SEvent));
+        (*m_function)((event::SEvent *) & event);
     } else if(m_type == SCRIPT) {
         if(m_script.empty())
             return FG_FALSE;
@@ -136,91 +136,91 @@ fgBool script::CScriptCallback::Call(event::CArgumentList *argv) {
         }
         return FG_TRUE;
     } else if(m_type == EVENT_CALLBACK) {
-        fgEventBase *pEvent = (fgEventBase *)pArg;
+        event::SEvent *pEvent = (event::SEvent *)pArg;
         //
         // #FIXME -- need to automate this somehow ... cant quite see if it's possible
         //
 #if 0
-        fgEventType eType = pEvent->eventType;
+        event::EventType eType = pEvent->eventType;
         switch(eType) {
-            case FG_EVENT_TOUCH_PRESSED:
-            case FG_EVENT_TOUCH_RELEASED:
-            case FG_EVENT_TOUCH_MOTION:
-            case FG_EVENT_TOUCH_TAP_FINISHED:
+            case event::TOUCH_PRESSED:
+            case event::TOUCH_RELEASED:
+            case event::TOUCH_MOTION:
+            case event::TOUCH_TAP_FINISHED:
                 //fgTouchEvent
-                //FG_EVENT_TOUCH = 5,
+                //event::TOUCH = 5,
                 break;
 
-            case FG_EVENT_MOUSE_PRESSED:
-            case FG_EVENT_MOUSE_RELEASED:
-            case FG_EVENT_MOUSE_MOTION:
+            case event::MOUSE_PRESSED:
+            case event::MOUSE_RELEASED:
+            case event::MOUSE_MOTION:
                 //fgMouseEvent
-                //FG_EVENT_MOUSE = 9,
+                //event::MOUSE = 9,
                 break;
 
-            case FG_EVENT_SWIPE_X:
-            case FG_EVENT_SWIPE_Y:
-            case FG_EVENT_SWIPE_XY:
-                //case FG_EVENT_SWIPE_ANGLE:
+            case event::SWIPE_X:
+            case event::SWIPE_Y:
+            case event::SWIPE_XY:
+                //case event::SWIPE_ANGLE:
                 //fgSwipeEvent
                 break;
 
-            case FG_EVENT_SWIPE_PINCH:
+            case event::SWIPE_PINCH:
                 //fgSwipePinchEvent
                 break;
 
-            case FG_EVENT_MULTI_SWIPE_ROTATE:
+            case event::MULTI_SWIPE_ROTATE:
                 //fgSwipeRotateEvent
                 break;
 
-            case FG_EVENT_KEY_DOWN:
-            case FG_EVENT_KEY_UP:
+            case event::KEY_DOWN:
+            case event::KEY_UP:
                 //fgKeyEvent
                 break;
 
-            case FG_EVENT_RESOURCE_CREATED:
-            case FG_EVENT_RESOURCE_REMOVED:
-            case FG_EVENT_RESOURCE_DISPOSED:
-            case FG_EVENT_RESOURCE_DESTROYED:
-            case FG_EVENT_RESOURCE_REQUESTED:
+            case event::RESOURCE_CREATED:
+            case event::RESOURCE_REMOVED:
+            case event::RESOURCE_DISPOSED:
+            case event::RESOURCE_DESTROYED:
+            case event::RESOURCE_REQUESTED:
                 //fgResourceEvent
                 break;
 
-            case FG_EVENT_PROGRAM_INIT:
+            case event::PROGRAM_INIT:
                 // ??
                 break;
 
-            case FG_EVENT_VERTEX_STREAM_READY:
+            case event::VERTEX_STREAM_READY:
                 // fgVertexStreamEvent ??
                 break;
-            case FG_EVENT_CAMERA_CHANGED:
+            case event::CAMERA_CHANGED:
                 // ???
                 // fgCameraEvent
                 break;
 
-            case FG_EVENT_SOUND_PLAYED:
+            case event::SOUND_PLAYED:
                 // fgSoundEvent ??
                 break;
 
-            case FG_EVENT_MENU_CHANGED:
+            case event::MENU_CHANGED:
                 // fgMenuChangedEvent ??
                 break;
-            case FG_EVENT_WIDGET_STATE_CHANGED:
+            case event::WIDGET_STATE_CHANGED:
                 // fgWidgetEvent
                 break;
 
-            case FG_EVENT_SENSORS_CHANGED:
+            case event::SENSORS_CHANGED:
                 // fgSensorsEvent
                 break;
 
-            case FG_EVENT_GAME_CONTROLLER_ADDED:
-            case FG_EVENT_GAME_CONTROLLER_REMOVED:
+            case event::GAME_CONTROLLER_ADDED:
+            case event::GAME_CONTROLLER_REMOVED:
                 //fgControllerDeviceEvent
                 break;
-            case FG_EVENT_GAME_CONTROLLER_BUTTON:
+            case event::GAME_CONTROLLER_BUTTON:
                 //fgControllerButtonEvent
                 break;
-            case FG_EVENT_GAME_CONTROLLER_AXIS:
+            case event::GAME_CONTROLLER_AXIS:
                 //fgControllerAxisEvent
                 break;
             default:
@@ -233,7 +233,7 @@ fgBool script::CScriptCallback::Call(event::CArgumentList *argv) {
         //m_function((fgMouseEvent *));
         // fgEvent is just one big union, first bytes point
         // to the same thing in every event structure - eventType + timeStamp
-        (*m_function)((fgEvent *)pEvent);
+        (*m_function)((event::SEvent *)pEvent);
         return FG_TRUE;
     } else if(m_type == SCRIPT) {
         if(m_script.empty())
@@ -275,13 +275,13 @@ fgBool script::CScriptCallback::Call(void *pSystemData) {
         }
         return FG_TRUE;
     } else if(m_type == EVENT_CALLBACK) {
-        fgEventBase *pEvent = (fgEventBase *)pSystemData;
+        event::SEvent *pEvent = (event::SEvent *)pSystemData;
         // Need to cast to proper pointer already
         // Some helper ?
         //m_function((fgMouseEvent *));
         // fgEvent is just one big union, first bytes point
         // to the same thing in every event structure - eventType + timeStamp
-        (*m_function)((fgEvent *)pEvent);
+        (*m_function)((event::SEvent *)pEvent);
         return FG_TRUE;
     } else if(m_type == SCRIPT) {
         if(m_script.empty())

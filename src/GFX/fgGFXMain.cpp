@@ -33,7 +33,7 @@ float yolo_posx = 0;
 float yolo_posy = 0;
 
 using namespace fg;
-
+ 
 /*
  *
  */
@@ -105,7 +105,7 @@ void gfx::CGfxMain::registerResourceCallbacks(void) {
     if(!m_resourceCreatedCallback)
         m_resourceCreatedCallback = new fg::event::CMethodCallback<CGfxMain>(this, &gfx::CGfxMain::resourceCreatedHandler);
 
-    static_cast<fg::event::CEventManager *>(m_pEventMgr)->addCallback(FG_EVENT_RESOURCE_CREATED, m_resourceCreatedCallback);
+    static_cast<fg::event::CEventManager *>(m_pEventMgr)->addCallback(event::RESOURCE_CREATED, m_resourceCreatedCallback);
 }
 
 /**
@@ -115,7 +115,7 @@ void gfx::CGfxMain::unregisterResourceCallbacks(void) {
     if(!m_pEventMgr)
         return;
 
-    static_cast<fg::event::CEventManager *>(m_pEventMgr)->removeCallback(FG_EVENT_RESOURCE_CREATED, m_resourceCreatedCallback);
+    static_cast<fg::event::CEventManager *>(m_pEventMgr)->removeCallback(event::RESOURCE_CREATED, m_resourceCreatedCallback);
 }
 
 /**
@@ -759,13 +759,13 @@ fgBool gfx::CGfxMain::releaseTextures(void) {
 fgBool gfx::CGfxMain::resourceCreatedHandler(fg::event::CArgumentList * argv) {
     if(!argv)
         return FG_FALSE;
-    fgEventBase *event = (fgEventBase *)argv->getValueByID(0);
-    if(!event)
+    event::SEvent *event_struct = (event::SEvent *)argv->getValueByID(0);
+    if(!event_struct)
         return FG_FALSE;
-    fgEventType type = event->eventType;
-    if(type != FG_EVENT_RESOURCE_CREATED)
+    event::EventType type = event_struct->code;
+    if(type != event::RESOURCE_CREATED)
         return FG_FALSE;
-    fgResourceEvent *resourceEvent = (fgResourceEvent *)event;
+    event::SResource *resourceEvent = (event::SResource *)event_struct;
     resource::CResource *pResource = resourceEvent->resource;
     if(!pResource)
         return FG_FALSE;

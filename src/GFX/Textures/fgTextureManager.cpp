@@ -54,19 +54,19 @@ void gfx::CTextureManager::registerResourceCallbacks(void) {
         return;
 
     if(!m_resourceCreatedCallback)
-        m_resourceCreatedCallback = new fg::event::CMethodCallback<CTextureManager>(this, &gfx::CTextureManager::resourceCreatedHandler);
+        m_resourceCreatedCallback = new event::CMethodCallback<CTextureManager>(this, &gfx::CTextureManager::resourceCreatedHandler);
 
-    static_cast<fg::event::CEventManager *>(m_pEventMgr)->addCallback(FG_EVENT_RESOURCE_CREATED, m_resourceCreatedCallback);
-    //m_pEventMgr->addEventCallback(FG_EVENT_TOUCH_RELEASED, m_gameTouchCallback);
-    //m_pEventMgr->addEventCallback(FG_EVENT_TOUCH_MOTION, m_gameTouchCallback);
-    //m_pEventMgr->addEventCallback(FG_EVENT_TOUCH_TAP_FINISHED, m_gameTouchCallback);
+    static_cast<event::CEventManager *>(m_pEventMgr)->addCallback(event::RESOURCE_CREATED, m_resourceCreatedCallback);
+    //m_pEventMgr->addEventCallback(event::TOUCH_RELEASED, m_gameTouchCallback);
+    //m_pEventMgr->addEventCallback(event::TOUCH_MOTION, m_gameTouchCallback);
+    //m_pEventMgr->addEventCallback(event::TOUCH_TAP_FINISHED, m_gameTouchCallback);
 
     /*if(!m_gameMouseCallback)
         m_gameMouseCallback = new fgClassCallback<fgGameMain>(this, &fgGameMain::gameMouseHandler);
 
-    m_pEventMgr->addEventCallback(FG_EVENT_MOUSE_PRESSED, m_gameMouseCallback);
-    m_pEventMgr->addEventCallback(FG_EVENT_MOUSE_RELEASED, m_gameMouseCallback);
-    m_pEventMgr->addEventCallback(FG_EVENT_MOUSE_MOTION, m_gameMouseCallback);*/
+    m_pEventMgr->addEventCallback(event::MOUSE_PRESSED, m_gameMouseCallback);
+    m_pEventMgr->addEventCallback(event::MOUSE_RELEASED, m_gameMouseCallback);
+    m_pEventMgr->addEventCallback(event::MOUSE_MOTION, m_gameMouseCallback);*/
 }
 
 /*
@@ -76,11 +76,11 @@ void gfx::CTextureManager::unregisterResourceCallbacks(void) {
     if(!m_pEventMgr)
         return;
 
-    static_cast<fg::event::CEventManager *>(m_pEventMgr)->removeCallback(FG_EVENT_RESOURCE_CREATED, m_resourceCreatedCallback);
+    static_cast<event::CEventManager *>(m_pEventMgr)->removeCallback(event::RESOURCE_CREATED, m_resourceCreatedCallback);
 
-    //m_pEventMgr->removeEventCallback(FG_EVENT_MOUSE_PRESSED, m_gameMouseCallback);
-    //m_pEventMgr->removeEventCallback(FG_EVENT_MOUSE_RELEASED, m_gameMouseCallback);
-    //m_pEventMgr->removeEventCallback(FG_EVENT_MOUSE_MOTION, m_gameMouseCallback);
+    //m_pEventMgr->removeEventCallback(event::MOUSE_PRESSED, m_gameMouseCallback);
+    //m_pEventMgr->removeEventCallback(event::MOUSE_RELEASED, m_gameMouseCallback);
+    //m_pEventMgr->removeEventCallback(event::MOUSE_MOTION, m_gameMouseCallback);
 
 }
 
@@ -201,16 +201,16 @@ fgGfxTextureID& gfx::CTextureManager::getRefGfxID(const char *nameTag) {
  * @param argv
  * @return 
  */
-fgBool gfx::CTextureManager::resourceCreatedHandler(fg::event::CArgumentList * argv) {
+fgBool gfx::CTextureManager::resourceCreatedHandler(event::CArgumentList * argv) {
     if(!argv)
         return FG_FALSE;
-    fgEventBase *event = (fgEventBase *)argv->getValueByID(0);
-    if(!event)
+    event::SEvent *event_struct = (event::SEvent *)argv->getValueByID(0);
+    if(!event_struct)
         return FG_FALSE;
-    fgEventType type = event->eventType;
-    if(type != FG_EVENT_RESOURCE_CREATED)
+    event::EventType type = event_struct->code;
+    if(type != event::RESOURCE_CREATED)
         return FG_FALSE;
-    fgResourceEvent *resourceEvent = (fgResourceEvent *)event;
+    event::SResource *resourceEvent = (event::SResource *)event_struct;
     resource::CResource *pResource = resourceEvent->resource;
     if(!pResource)
         return FG_FALSE;
