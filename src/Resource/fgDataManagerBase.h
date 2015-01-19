@@ -233,6 +233,10 @@ fgBool fg::resource::CDataManagerBase<DataType, HandleType, TagType>::insert(Dat
         FG_MessageSubsystem->reportError(tag_type::name(), FG_ERRNO_RESOURCE_SETUP_HANDLE_NAME, FG_MSG_IN_FUNCTION);
         return FG_FALSE;
     }
+    #if defined(FG_DEBUG)
+    FG_MessageSubsystem->reportSuccess(tag_type::name(), FG_ERRNO_RESOURCE_OK, "Inserted data with name[%s], index[%u], magic[%u], handle[%u], hash[%u]",
+                                       nameTag.c_str(), pData->getName().getIndex(), dhUniqueID.getMagic(), dhUniqueID.getHandle(), pData->getName().getHash());
+    #endif
     return FG_TRUE;
 }
 /**

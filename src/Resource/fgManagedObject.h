@@ -17,6 +17,7 @@
     #define FG_INC_MANAGED_OBJECT
     #define FG_INC_MANAGED_OBJECT_BLOCK
 
+    #include "Util/fgNamedHandle.h"
     #include "fgManagerBase.h"
     #include "fgBool.h"
     #include <string>
@@ -101,14 +102,14 @@ namespace fg {
              * Get reference to resource name string
              * @return 
              */
-            inline std::string& getName(void) {
+            inline util::CNamedHandle& getName(void) {
                 return m_nameTag;
             }
             /**
              * 
              * @return 
              */
-            inline std::string const & getName(void) const {
+            inline util::CNamedHandle const & getName(void) const {
                 return m_nameTag;
             }
             /**
@@ -131,6 +132,7 @@ namespace fg {
              */
             inline void setHandle(const THandleType handle) {
                 m_handle = handle;
+                m_nameTag.setIndex(m_handle.getIndex());
             }
             /**
              * Gets the reference to the data handle
@@ -179,7 +181,7 @@ namespace fg {
             /// Pointer to the managing class - can be NULL
             fg::base::CManager *m_pManager;
             /// Name of the data, string ID
-            std::string m_nameTag;
+            util::CNamedHandle m_nameTag;
             /// Unique handle number
             THandleType m_handle;
             /// Is this data currently managed inside of any kind manager?

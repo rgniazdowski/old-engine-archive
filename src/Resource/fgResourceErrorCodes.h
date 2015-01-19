@@ -41,7 +41,7 @@
 
     #define FG_ERRNO_RESOURCE_LAST_CODE				FG_ERRNO_RESOURCE_BASE_CODE(18)
 
-    #define FG_ERRNO_RESOURCE_OK_TEXT					"No error"
+    #define FG_ERRNO_RESOURCE_OK_TEXT					"Success"
     #define FG_ERRNO_RESOURCE_NO_GROUPS_TEXT			"No resource groups found"
     #define FG_ERRNO_RESOURCE_PARAMETER_NULL_TEXT		"Resource parameter is NULL"
     #define FG_ERRNO_RESOURCE_ALREADY_MANAGED_TEXT		"Resource is already managed (it exists in handle manager)"

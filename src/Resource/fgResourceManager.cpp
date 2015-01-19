@@ -105,10 +105,10 @@ fgBool resource::CResourceManager::destroy(void) {
         DataVecItor begin = getRefDataVector().begin();
         DataVecItor end = getRefDataVector().end();
         for(DataVecItor itor = begin; itor != end; ++itor) {
-            if((*itor) == NULL)
+            if((*itor).data == NULL)
                 continue;
-            delete (*itor);
-            *itor = NULL;
+            delete (*itor).data;
+            (*itor).clear();
         }
     }
     CResourceManager::clear();
@@ -225,7 +225,7 @@ fgBool resource::CResourceManager::goToNext(ResourceType resType) {
         if(!isValid()) {
             break;
         }
-        if((*m_currentResource)->getResourceType() == resType) {
+        if((*m_currentResource).data->getResourceType() == resType) {
             break;
         }
     }
@@ -253,7 +253,7 @@ fgBool resource::CResourceManager::goToNext(const ResourceType* resTypes, int n)
         while(!status) {
             if(i == n || resTypes[i] == resource::INVALID)
                 break;
-            if((*m_currentResource)->getResourceType() == resTypes[i]) {
+            if((*m_currentResource).data->getResourceType() == resTypes[i]) {
                 status = FG_TRUE;
             }
             i++;
@@ -277,8 +277,8 @@ fgBool resource::CResourceManager::goToNext(ResourceType resType, fgQuality qual
         if(!isValid()) {
             break;
         }
-        if((*m_currentResource)->getResourceType() == resType) {
-            if((*m_currentResource)->getQuality() == quality) {
+        if((*m_currentResource).data->getResourceType() == resType) {
+            if((*m_currentResource).data->getQuality() == quality) {
                 break;
             }
         }
@@ -785,9 +785,9 @@ void resource::CResourceManager::refreshMemory(void) {
     resetMemory();
     DataVecItor begin = getRefDataVector().begin(), end = getRefDataVector().end();
     for(DataVecItor itor = begin; itor != end; ++itor) {
-        if(!(*itor))
+        if(!(*itor).data)
             continue;
-        addMemory((*itor)->getSize());
+        addMemory((*itor).data->getSize());
     }
 }
 
@@ -808,11 +808,11 @@ fgBool resource::CResourceManager::checkForOverallocation(void) {
         // insert copies of all the resource pointers into the priority queue, but
         // exclude those that are current disposed or are locked
         for(DataVecItor itor = begin; itor != end; ++itor) {
-            if(!(*itor))
+            if(!(*itor).data)
                 continue;
-            addMemory((*itor)->getSize());
-            if(!(*itor)->isDisposed() && !(*itor)->isLocked())
-                PriQueue.push(*itor);
+            addMemory((*itor).data->getSize());
+            if(!(*itor).data->isDisposed() && !(*itor).data->isLocked())
+                PriQueue.push((*itor).data);
         }
         // Attempt to remove iMemToPurge bytes from the managed resource
         int iMemToPurge = m_nCurrentUsedMemory - m_nMaximumMemory;

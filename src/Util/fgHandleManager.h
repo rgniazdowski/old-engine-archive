@@ -19,6 +19,7 @@
     #include "fgPath.h"
     #include "fgLog.h"
     #include "fgHandle.h"
+    #include "fgNamedHandle.h"
 
     #ifdef FG_USING_MARMALADE
         #include <hash_map>
@@ -62,44 +63,85 @@ namespace fg {
     #endif
         public:
             ///
+            typedef CHandleManager<TDataType, THandleType> self_type;
+            ///
             typedef TDataType data_type;
             ///
-            typedef std::string HashKey;
-            // Type for vector storing Data pointers
-            typedef fg::CVector <TDataType> DataVec;
-            typedef typename fg::CVector <TDataType>::iterator DataVecItor;
+            typedef std::string HashKeyString;
+
     #ifdef FG_USING_MARMALADE
+            ///
             typedef std::hash<std::string> hashFunc;
-            // Type for map, assigning handle index value to string ID (case sensitive)
-            typedef std::hash_map <HashKey, fgRawIndex, hashFunc, hmEqualTo> NameMap;
+            /// Type for map, assigning handle index value to string ID (case sensitive)
+            typedef std::hash_map<HashKeyString, fgRawIndex, hashFunc, hmEqualTo> NameMap;
     #else
-            typedef std::unordered_map <HashKey, fgRawIndex> NameMap;
+            /// Special Name map - maps std::string to the index
+            typedef std::unordered_map<HashKeyString, unsigned int> NameMap;
+            /// Iterator through the Name map
+            typedef NameMap::iterator NameMapItor;
+            /// Hash map - maps the name tags hash sum to the data vector index
+            typedef std::map<unsigned int, unsigned int> HashMap;
+            /// Iterator through the hash map
+            typedef HashMap::iterator HashMapItor;
     #endif
 
-        private:
-            ///
-            typedef fg::CVector <fgRawMagic> MagicVec;
-            ///
-            typedef fg::CVector <HashKey> NameVec;
-            ///
-            typedef fg::CVector <unsigned int> FreeSlotsVec;
+        protected:
 
-            /// Data storage
-            DataVec m_managedData;
-            /// Corresponding magic numbers
-            MagicVec m_magicData;
+            /**
+             * Special data holder - DataVec[index] -> data / magic / nameTag
+             */
+            struct SDataHolder {
+                ///
+                data_type data;
+                ///
+                fgRawMagic magic;
+                ///
+                CNamedHandle nameTag;
+                /**
+                 * 
+                 */
+                SDataHolder() : data(NULL), magic(0), nameTag() { }
+                /**
+                 * 
+                 */
+                ~SDataHolder() {
+                    clear();
+                }
+                /**
+                 * 
+                 */
+                void clear(void) {
+                    data = NULL;
+                    magic = 0;
+                    nameTag.setIndex(0);
+                    nameTag.clear();
+                }
+            };
+
+            // Type for vector storing Data pointers
+            typedef CVector<SDataHolder> DataVec;
+            /// Iterator through the managed data vector
+            typedef typename CVector<SDataHolder>::iterator DataVecItor;
+
+        private:
+            /// Free slots vector
+            typedef CVector<unsigned int> FreeSlotsVec;
+
             /// Free slots in the database
             FreeSlotsVec m_freeSlots;
-            /// Map for name (string) IDs
+            /// Special data storage
+            DataVec m_managedData;
+            /// Map for name (string) IDs - bind str name to index
             NameMap m_nameMap;
-            /// Vector for storing string IDs
-            NameVec m_nameVec;
+            /// Map for binding hash sum to index
+            HashMap m_hashMap;
 
         protected:
             /**
              * Reset internal data
              */
             void clear(void);
+
         public:
             /**
              * Default constructor for Handle Manager object
@@ -157,6 +199,12 @@ namespace fg {
              * @param name
              * @return 
              */
+            TDataType dereference(CNamedHandle& name);
+            /**
+             * 
+             * @param name
+             * @return 
+             */
             TDataType dereference(const std::string& name);
             /**
              * 
@@ -169,7 +217,7 @@ namespace fg {
              * @return 
              */
             unsigned int getUsedHandleCount(void) const {
-                return ( m_magicData.size() - m_freeSlots.size());
+                return (m_managedData.size() - m_freeSlots.size());
             }
             /**
              * 
@@ -214,10 +262,9 @@ namespace fg {
 template <typename TDataType, typename THandleType>
 void fg::util::CHandleManager<TDataType, THandleType>::clear(void) {
     m_managedData.clear_optimised();
-    m_magicData.clear_optimised();
     m_freeSlots.clear_optimised();
-    m_nameVec.clear_optimised();
     m_nameMap.clear();
+    m_hashMap.clear();
 }
 /**
  * 
@@ -230,20 +277,23 @@ fgBool fg::util::CHandleManager<TDataType, THandleType>::acquireHandle(THandleTy
     // If free list is empty, add a new one otherwise use first one found
     unsigned int index;
     if(m_freeSlots.empty()) {
-        index = m_magicData.size();
+        index = m_managedData.size();
         if(!rHandle.init(index))
             return FG_FALSE;
-        m_managedData.push_back(pResource);
-        m_magicData.push_back(rHandle.getMagic());
-        m_nameVec.push_back(std::string());
+        SDataHolder holder;
+        holder.data = pResource;
+        holder.magic = rHandle.getMagic();
+        holder.nameTag.setIndex(index);
+        m_managedData.push_back(holder);
+
     } else {
         index = m_freeSlots.back();
         if(!rHandle.init(index))
             return FG_FALSE;
         m_freeSlots.pop_back();
-        m_managedData[index] = pResource;
-        m_magicData[index] = rHandle.getMagic();
-        m_nameVec[index] = std::string();
+        m_managedData[index].data = pResource;
+        m_managedData[index].magic = rHandle.getMagic();
+        m_managedData[index].nameTag.setIndex(index);
     }
     return FG_TRUE;
 }
@@ -258,18 +308,22 @@ fgBool fg::util::CHandleManager<TDataType, THandleType>::setupName(const std::st
     if(!isHandleValid(rHandle)) {
         return FG_FALSE;
     }
-    if(m_nameMap.find(name) != m_nameMap.end()) {
-        FG_LOG_ERROR("%s(%d): Such key already exists in name map - name_tag[%s], function[%s]", fg::path::fileName(__FILE__), __LINE__ - 1, name.c_str(), __FUNCTION__);
-        return FG_FALSE; // Such key already exists
-    }
     fgRawIndex index = rHandle.getIndex();
-    if(!m_nameVec[index].empty()) {
-        FG_LOG_ERROR("%s(%d): There is name tag already in the vector - index[%s], name_tag[%s], function[%s]", fg::path::fileName(__FILE__), __LINE__ - 1, index, name.c_str(), __FUNCTION__);
+    if(m_nameMap.find(name) != m_nameMap.end()) {
+        FG_LOG_ERROR("HandleManager[%s] Such key already exists in name map - index[%u], name_tag[%s]", THandleType::getTagName(), index, name.c_str());
+        return FG_FALSE; // Such key already exists
+    }    
+    if(!m_managedData[index].nameTag.empty()) {
+        FG_LOG_ERROR("HandleManager[%s]: There is name tag already in the vector - index[%u], name_tag[%s]", THandleType::getTagName(), index, name.c_str());
         // There is already some set on the current index
         return FG_FALSE;
     }
+    m_managedData[index].nameTag.set(name);
+    m_managedData[index].nameTag.setIndex(index);
+    unsigned int hash = m_managedData[index].nameTag.getStringHash();
     m_nameMap[name] = index;
-    m_nameVec[index] = name;
+    m_hashMap[hash] = index;
+    FG_LOG_DEBUG("HandleManager[%s]: Setup name[%s], hash[%10u], index[%u]", THandleType::getTagName(), name.c_str(), hash, index);
     return FG_TRUE;
 }
 /**
@@ -283,19 +337,23 @@ fgBool fg::util::CHandleManager<TDataType, THandleType>::setupName(const char* n
     if(!isHandleValid(rHandle)) {
         return FG_FALSE;
     }
+    fgRawIndex index = rHandle.getIndex();
     if(m_nameMap.find(std::string(name)) != m_nameMap.end()) {
-        FG_LOG_ERROR("%s(%d): Such key already exists in name map - name_tag[%s], function[%s]", fg::path::fileName(__FILE__), __LINE__ - 1, name, __FUNCTION__);
+        FG_LOG_ERROR("HandleManager[%s] Such key already exists in name map - index[%u], name_tag[%s]", THandleType::getTagName(), index, name);
         return FG_FALSE; // Such key already exists
     }
-    fgRawIndex index = rHandle.getIndex();
-    if(m_nameVec[index].size() > 0) {
-        FG_LOG_ERROR("%s(%d): There is name tag already in the vector - index[%s], name_tag[%s], function[%s]", fg::path::fileName(__FILE__), __LINE__ - 1, index, name, __FUNCTION__);
+    if(!m_managedData[index].nameTag.empty()) {
+        FG_LOG_ERROR("HandleManager[%s]: There is name tag already in the vector - index[%u], name_tag[%s]", THandleType::getTagName(), index, name);
         // There is already some set on the current index
         // No reassignment is allowed
         return FG_FALSE;
     }
+    m_managedData[index].nameTag.set(std::string(name));
+    m_managedData[index].nameTag.setIndex(index);
+    unsigned int hash = m_managedData[index].nameTag.getStringHash();
     m_nameMap[std::string(name)] = index;
-    m_nameVec[index] = std::string(name);
+    m_hashMap[hash] = index;    
+    FG_LOG_DEBUG("HandleManager[%s]: Setup name[%s], hash[%10u], index[%u]", THandleType::getTagName(), name, hash, index);
     return FG_TRUE;
 }
 /**
@@ -312,17 +370,21 @@ fgBool fg::util::CHandleManager<TDataType, THandleType>::releaseHandle(const THa
     // which one?
     fgRawIndex index = handle.getIndex();
     // ok remove it - tag as unused and add to free list
-    m_magicData[index] = 0;
-    m_managedData[index] = NULL;
+    m_managedData[index].data = NULL;
+    m_managedData[index].magic = 0;
     FG_LOG_DEBUG("HandleManager[%s]: Releasing handle: index[%d], magic[%d], handle[%d]", THandleType::getTagName(), index, handle.getMagic(), handle.getHandle());
-    if(!m_nameVec[index].empty()) {
-        m_nameMap.erase(m_nameVec[index]);
-        FG_LOG_DEBUG("HandleManager[%s]: erasing '%s' from handle map...", THandleType::getTagName(), m_nameVec[index].c_str());
+    if(!m_managedData[index].nameTag.empty()) {
+        m_nameMap.erase(std::string(m_managedData[index].nameTag.c_str()));
+        FG_LOG_DEBUG("HandleManager[%s]: erasing '%s' from handle map...", THandleType::getTagName(), m_managedData[index].nameTag.c_str());
     }
-    m_nameVec[index].clear();
+    unsigned int hash = m_managedData[index].nameTag.getStringHash();
+    if(hash) {
+        m_hashMap.erase(hash);
+    }
+    m_managedData[index].nameTag.clear();
     m_freeSlots.push_back(index);
-    if(!getUsedHandleCount()) {
-        clear();
+    if(!this->getUsedHandleCount()) {
+        this->clear();
     }
     return FG_TRUE;
 }
@@ -331,7 +393,7 @@ fgBool fg::util::CHandleManager<TDataType, THandleType>::releaseHandle(const THa
  */
 template <typename TDataType, typename THandleType>
 void fg::util::CHandleManager<TDataType, THandleType>::releaseAllHandles(void) {
-    clear();
+    this->clear();
 }
 /**
  * 
@@ -340,11 +402,17 @@ void fg::util::CHandleManager<TDataType, THandleType>::releaseAllHandles(void) {
  */
 template <typename TDataType, typename THandleType>
 inline TDataType fg::util::CHandleManager<TDataType, THandleType>::dereference(const THandleType& handle) {
-    if(!isHandleValid(handle)) {
+    #if defined(FG_DEBUG)
+    if(!this->isHandleValid(handle)) {
         return NULL;
     }
+    #else
+    if(handle.isNull()) {
+        return NULL;
+    }
+    #endif
     fgRawIndex index = handle.getIndex();
-    return *(m_managedData.begin() + index);
+    return (*(m_managedData.begin() + index)).data;
 }
 /**
  * 
@@ -356,19 +424,38 @@ inline TDataType fg::util::CHandleManager<TDataType, THandleType>::dereference(c
     if(name.empty()) {
         return NULL;
     }
-    typename NameMap::iterator it = m_nameMap.find(name);
-    if(it == m_nameMap.end()) {
+    CNamedHandle nameTag;
+    nameTag.set(name);
+    unsigned int hash = nameTag.getStringHash();
+    HashMapItor hashIt = m_hashMap.find(hash);
+    if(hashIt == m_hashMap.end()) {
         return NULL;
     }
-    fgRawIndex index = (*it).second;
+    fgRawIndex index = hashIt->second;
+    #if defined(FG_DEBUG)
     if(index >= m_managedData.size()) {
         return NULL;
     }
-    if(m_nameVec[index].compare(name) == 0) {
-        return *(m_managedData.begin() + index);
-    } else {
-        return NULL;
+    #endif
+    return (*(m_managedData.begin() + index)).data;
+
+    #if 0
+    if(0) {
+        NameMapItor it = m_nameMap.find(name);
+        if(it == m_nameMap.end()) {
+            return NULL;
+        }
+        fgRawIndex index = (*it).second;
+        if(index >= m_managedData.size()) {
+            return NULL;
+        }
+        if(m_managedData[index].nameTag.compare(name) == 0) {
+
+        } else {
+            return NULL;
+        }
     }
+    #endif
 }
 /**
  * 
@@ -381,7 +468,42 @@ inline TDataType fg::util::CHandleManager<TDataType, THandleType>::dereference(c
         return NULL;
     }
     std::string key = name;
-    return CHandleManager<TDataType, THandleType>::dereference(key);
+    return self_type::dereference(key);
+}
+/**
+ * 
+ * @param name
+ * @return 
+ */
+template <typename TDataType, typename THandleType>
+inline TDataType fg::util::CHandleManager<TDataType, THandleType>::dereference(CNamedHandle& name) {
+    if(name.empty()) {
+        return NULL;
+    }
+    if(name.isIndexSet()) {
+        unsigned int index = name.getIndex();
+    #if defined(FG_DEBUG)
+        if(index >= m_managedData.size()) {
+            return NULL;
+        }
+    #endif
+        return *(m_managedData.begin() + index);
+    } else {
+        unsigned int hash = name.getStringHash();
+        HashMapItor hashIt = m_hashMap.find(hash);
+        if(hashIt == m_hashMap.end()) {
+            return NULL;
+        }
+        fgRawIndex index = hashIt->second;
+    #if defined(FG_DEBUG)
+        if(index >= m_managedData.size()) {
+            return NULL;
+        }
+    #endif
+        name.setIndex(index);
+        return *(m_managedData.begin() + index);
+    }
+    return NULL;
 }
 /**
  * 
@@ -390,8 +512,11 @@ inline TDataType fg::util::CHandleManager<TDataType, THandleType>::dereference(c
  */
 template <typename TDataType, typename THandleType>
 inline fgBool fg::util::CHandleManager<TDataType, THandleType>::isDataManaged(TDataType pData) {
-    if(m_managedData.find(pData) != -1) {
-        return FG_TRUE;
+    int n = m_managedData.size();
+    for(int i = 0; i < n; i++) {
+        if(m_managedData[i].data == pData) {
+            return FG_TRUE;
+        }
     }
     return FG_FALSE;
 }
@@ -408,9 +533,15 @@ inline fgBool fg::util::CHandleManager<TDataType, THandleType>::isHandleValid(co
     // check handle validity - $ this check can be removed for speed
     // if you can assume all handle references are always valid.
     fgRawIndex index = handle.getIndex();
-    if((index >= m_managedData.size()) || (m_magicData[index] != handle.getMagic())) {
+
+    if((index >= m_managedData.size()) || (m_managedData[index].magic != handle.getMagic())) {
         // no good! invalid handle == client programming error
-        FG_LOG_DEBUG("HandleManager[%s]: invalid handle, magic numbers don't match with index: index[%d], magic[%d], handle[%d], true_magic[%d]", THandleType::getTagName(), index, handle.getMagic(), handle.getHandle(), m_magicData[index]);
+        FG_LOG_DEBUG("HandleManager[%s]: invalid handle, magic numbers don't match with index: index[%d], magic[%d], handle[%d], true_magic[%d]",
+                     THandleType::getTagName(),
+                     index,
+                     handle.getMagic(),
+                     handle.getHandle(),
+                     m_managedData[index].magic);
         return FG_FALSE;
     }
     return FG_TRUE;

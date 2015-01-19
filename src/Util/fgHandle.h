@@ -44,23 +44,23 @@ private:
 
     enum {
         // Size to use for index bit field
-        FG_HANDLE_MAX_BITS_INDEX = 16,
+        MAX_BITS_INDEX = 16,
         // Size to use for magic bit field
-        FG_HANDLE_MAX_BITS_MAGIC = 16,
+        MAX_BITS_MAGIC = 16,
 
         // Size to compare against for asserting dereferences
-        FG_HANDLE_MAX_INDEX = (1 << FG_HANDLE_MAX_BITS_INDEX) - 1,
+        MAX_INDEX = (1 << MAX_BITS_INDEX) - 1,
         // Size to compare against for asserting dereferences
-        FG_HANDLE_MAX_MAGIC = (1 << FG_HANDLE_MAX_BITS_MAGIC) - 1,
+        MAX_MAGIC = (1 << MAX_BITS_MAGIC) - 1,
     };
 
     union {
 
         struct {
             // index into resource array
-            fgRawIndex m_index : FG_HANDLE_MAX_BITS_INDEX;
+            fgRawIndex m_index : MAX_BITS_INDEX;
             // magic number to check
-            fgRawMagic m_magic : FG_HANDLE_MAX_BITS_MAGIC;
+            fgRawMagic m_magic : MAX_BITS_MAGIC;
         };
         fgRawHandle m_handle;
     };
@@ -120,13 +120,13 @@ fgBool fgHandle<TagType>::init(fgRawIndex index) {
         // Don't allow reassignment
         return FG_FALSE;
     }
-    if(index > FG_HANDLE_MAX_INDEX) {
+    if(index > MAX_INDEX) {
         // Verify range
         return FG_FALSE;
     }
 
     static fgRawMagic s_autoMagic = 0;
-    if(++s_autoMagic >= FG_HANDLE_MAX_MAGIC) {
+    if(++s_autoMagic >= MAX_MAGIC) {
         s_autoMagic = 1;
     }
 

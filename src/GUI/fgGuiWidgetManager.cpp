@@ -62,11 +62,11 @@ fgBool gui::CWidgetManager::destroy(void) {
     end = getRefDataVector().end();
     itor = begin;
     for(; itor != end; itor++) {
-        if((*itor) == NULL)
+        if((*itor).data == NULL)
             continue;
 
-        delete (*itor);
-        *itor = NULL;
+        delete (*itor).data;
+        (*itor).clear();
     }
     handle_mgr_type::clear();
     m_pStyleMgr = NULL;

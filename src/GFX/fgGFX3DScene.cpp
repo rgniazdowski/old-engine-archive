@@ -61,9 +61,9 @@ void gfx::CScene3D::sortCalls(void) {
     ////////////////////////////////////////////////////////////////////////////
     DataVecItor itor = getRefDataVector().begin(), end = getRefDataVector().end();
     for(; itor != end; itor++) {
-        if(!(*itor))
+        if(!(*itor).data)
             continue;
-        CSceneNode *sceneNode = (*itor);
+        CSceneNode *sceneNode = (*itor).data;
         SOctreeNode *treeNode = static_cast<SOctreeNode *>(sceneNode->getTreeNode());
         sceneNode->setVisible(FG_FALSE);
         // There is a problem because the bounding box needs to be modified by

@@ -174,7 +174,7 @@ namespace fg {
                 if(!isValid())
                     return NULL;
                 else
-                    return (*m_currentResource);
+                    return (*m_currentResource).data;
             }
             /**
              * Is current pointer to resource valid?

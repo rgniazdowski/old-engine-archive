@@ -57,10 +57,10 @@ fgBool gfx::CShaderManager::destroy(void) {
     ProgramVec & data = getRefDataVector();
     DataVecItor begin = data.begin(), end = data.end(), itor = begin;
     for(; itor != end; ++itor) {
-        if((*itor) == NULL)
+        if((*itor).data == NULL)
             continue;
-        delete (*itor);
-        *itor = NULL;
+        delete (*itor).data;
+        (*itor).clear();
     }
     if(m_shadersDir)
         delete m_shadersDir;
@@ -329,7 +329,7 @@ gfx::CShaderProgram *gfx::CShaderManager::request(const std::string& info) {
         // This is special search for filename within already loaded shaders
         ProgramVecItor it = getRefDataVector().begin(), end = getRefDataVector().end();
         for(; it != end; it++) {
-            gfx::CShaderProgram *program = (*it);
+            CShaderProgram *program = (*it).data;
             if(!program)
                 continue;
             CShaderProgram::fileMapping &files = program->getFileMapping();
@@ -458,7 +458,7 @@ fgBool gfx::CShaderManager::compileShaders(void) {
     end = getRefDataVector().end();
     itor = getRefDataVector().begin();
     for(; itor != end; itor++) {
-        CShaderProgram *pProgram = *itor;
+        CShaderProgram *pProgram = (*itor).data;
         if(!pProgram)
             continue;
         if(!pProgram->compile()) {
@@ -485,7 +485,7 @@ fgBool gfx::CShaderManager::linkShaders(void) {
     end = getRefDataVector().end();
     itor = getRefDataVector().begin();
     for(; itor != end; itor++) {
-        CShaderProgram *pProgram = *itor;
+        CShaderProgram *pProgram = (*itor).data;
         if(!pProgram)
             continue;
         if(!pProgram->link()) {
@@ -512,7 +512,7 @@ fgBool gfx::CShaderManager::allReleaseGFX(void) {
     end = getRefDataVector().end();
     itor = getRefDataVector().begin();
     for(; itor != end; itor++) {
-        CShaderProgram *pProgram = *itor;
+        CShaderProgram *pProgram = (*itor).data;
         if(!pProgram)
             continue;
         if(!pProgram->releaseGFX()) {

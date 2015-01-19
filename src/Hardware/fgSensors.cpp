@@ -74,7 +74,7 @@ int32_t HarvestCallback(void* systemData, void* userData) {
 
     int result = s3eTimerSetTimer(80, &HarvestCallback, (void *)self);
     if(result == S3E_RESULT_ERROR) {
-        log::PrintError("Setting continued sensors-callback failed!");
+        FG_LOG_ERROR("Setting continued sensors-callback failed!");
         return 0;
     }
 #endif // FG_USING_MARMALADE_SENSORS
@@ -105,7 +105,7 @@ fgBool fgSensors::startSensors() {
 #ifdef FG_USING_MARMALADE_SENSORS
     m_sensorsErrors[ FG_SENSORS_ACCELEROMETER ] = s3eAccelerometerStart();
     if(m_sensorsErrors[ FG_SENSORS_ACCELEROMETER ] == S3E_RESULT_ERROR) {
-        log::PrintError("ERROR! Accelerometer did not activate!");
+        FG_LOG_ERROR("ERROR! Accelerometer did not activate!");
         return FG_FALSE;
     }
 
@@ -124,7 +124,7 @@ fgBool fgSensors::startSensors() {
     // The timer receives pointer to this object! :)
     int result = s3eTimerSetTimer(80, &HarvestCallback, (void *)this);
     if(result == S3E_RESULT_ERROR) {
-        log::PrintError("Setting sensors-callback failed!");
+        FG_LOG_ERROR("Setting sensors-callback failed!");
         m_isRunning = FG_FALSE;
         return FG_FALSE;
     }

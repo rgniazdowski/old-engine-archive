@@ -283,19 +283,19 @@ namespace fg {
             inline CSceneNode *get(const int index) {
                 if(index < 0 || index >= (int)handle_mgr_type::getRefDataVector().size())
                     return NULL;
-                return handle_mgr_type::getRefDataVector()[index];
+                return handle_mgr_type::getRefDataVector()[index].data;
             }
 
             // This is special array like operator
             // Note that there is no boundaries checking
             CSceneNode *operator [](size_t n) {
-                return handle_mgr_type::getRefDataVector()[n];
+                return handle_mgr_type::getRefDataVector()[n].data;
             }
 
             // This is special array like operator
             // Note that there is no boundaries checking
             const CSceneNode *operator [](size_t n) const {
-                return handle_mgr_type::getRefDataVector()[n];
+                return handle_mgr_type::getRefDataVector()[n].data;
             }
 
             // Returns the number of valid handles used within the handle 

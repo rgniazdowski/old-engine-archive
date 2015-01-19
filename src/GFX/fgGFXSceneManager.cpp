@@ -72,12 +72,12 @@ fgBool gfx::CSceneManager::destroy(void) {
     end = getRefDataVector().end();
     itor = begin;
     for(; itor != end; itor++) {
-        CSceneNode *pObj = *itor;
+        CSceneNode *pObj = (*itor).data;
         if(pObj == NULL)
             continue;
         if(pObj->isManaged())
-            delete pObj;
-        *itor = NULL;
+            delete pObj;        
+        (*itor).clear();
     }
     gfx::CSceneManager::clear();
     return FG_TRUE;
@@ -134,9 +134,9 @@ void gfx::CSceneManager::sortCalls(void) {
 #if 1
     int idx = 0;
     for(; itor != end; itor++, idx++) {
-        if(!(*itor))
+        if(!(*itor).data)
             continue;
-        CSceneNode *pNode = (*itor);
+        CSceneNode *pNode = (*itor).data;
         CDrawCall *pDrawCall = pNode->getDrawCall();
 #if defined(FG_DEBUG)
         if(g_fgDebugConfig.isDebugProfiling) {
@@ -325,7 +325,7 @@ fgBool gfx::CSceneManager::addNode(fgGfxSceneNodeHandle& nodeUniqueID,
     pNode->setManager(this); // Setup internal pointer to the manager
     pNode->setParent(pFatherNode); // Pointer to the parent (if any)
 
-    if(!handle_mgr_type::setupName(pNode->getName(), nodeUniqueID)) {
+    if(!handle_mgr_type::setupName(pNode->getName().c_str(), nodeUniqueID)) {
         // Could not setup handle string tag/name for the scene node
         // The handle name tag can be empty - sometimes it is not needed
         FG_LOG_ERROR("GFX.SceneManager: Could not setup handle string tag/name for the object: '%s'", pNode->getNameStr());

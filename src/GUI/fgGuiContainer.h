@@ -51,19 +51,19 @@ namespace fg {
             ///
             typedef fg::gui::CWidget base_type;
             ///
-            typedef std::map<std::string, fg::gui::CWidget*> childrenMap;
+            typedef std::map<std::string, CWidget*> ChildrenMap;
             ///
-            typedef childrenMap::iterator childrenMapItor;
+            typedef ChildrenMap::iterator ChildrenMapItor;
             ///
-            typedef fg::CVector<fg::gui::CWidget *> childrenVec;
+            typedef CVector<CWidget*> ChildrenVec;
             ///
-            typedef childrenVec::iterator childrenVecItor;
+            typedef ChildrenVec::iterator ChildrenVecItor;
 
         protected:
             /// 
-            childrenMap m_childrenMap;
+            ChildrenMap m_childrenMap;
             ///
-            childrenVec m_children;
+            ChildrenVec m_children;
             ///
             fgGuiContainerPackMethod m_packMethod;
             ///
@@ -142,12 +142,12 @@ namespace fg {
              * 
              * @return 
              */
-            childrenVec& getChildren(void);
+            ChildrenVec& getChildren(void);
             /**
              * 
              * @return 
              */
-            childrenMap& getChildrenMap(void);
+            ChildrenMap& getChildrenMap(void);
 
             /**
              * 

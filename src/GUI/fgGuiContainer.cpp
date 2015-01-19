@@ -391,10 +391,10 @@ gui::CWidget::State gui::CContainer::updateState(const fgPointerData *pointerDat
 gui::CWidget *gui::CContainer::getChild(const std::string& nameTag) {
     if(nameTag.empty())
         return NULL;
-    childrenMapItor itor = m_childrenMap.find(nameTag);
+    ChildrenMapItor itor = m_childrenMap.find(nameTag);
     if(itor == m_childrenMap.end())
         return NULL;
-    CWidget * pWidget = itor->second;
+    CWidget* pWidget = itor->second;
     return pWidget;
 }
 
@@ -403,7 +403,7 @@ gui::CWidget *gui::CContainer::getChild(const std::string& nameTag) {
  * @param nameTag
  * @return 
  */
-gui::CWidget *gui::CContainer::getChild(const char *nameTag) {
+gui::CWidget *gui::CContainer::getChild(const char* nameTag) {
     return getChild(std::string(nameTag));
 }
 
@@ -411,7 +411,7 @@ gui::CWidget *gui::CContainer::getChild(const char *nameTag) {
  * 
  * @return 
  */
-gui::CContainer::childrenVec& gui::CContainer::getChildren(void) {
+gui::CContainer::ChildrenVec& gui::CContainer::getChildren(void) {
     return m_children;
 }
 
@@ -419,7 +419,7 @@ gui::CContainer::childrenVec& gui::CContainer::getChildren(void) {
  * 
  * @return 
  */
-gui::CContainer::childrenMap& gui::CContainer::getChildrenMap(void) {
+gui::CContainer::ChildrenMap& gui::CContainer::getChildrenMap(void) {
     return m_childrenMap;
 }
 
@@ -457,12 +457,12 @@ fgBool gui::CContainer::removeChild(CWidget *pWidget) {
 fgBool gui::CContainer::removeChild(const std::string& nameTag) {
     if(nameTag.empty())
         return FG_FALSE;
-    childrenMapItor itor = m_childrenMap.find(nameTag);
+    ChildrenMapItor itor = m_childrenMap.find(nameTag);
     if(itor == m_childrenMap.end())
         return FG_FALSE;
     CWidget * pWidget = itor->second;
     m_childrenMap.erase(itor);
-    childrenVecItor vit = m_children.begin(), end = m_children.end();
+    ChildrenVecItor vit = m_children.begin(), end = m_children.end();
     for(; vit != end; vit++) {
         if(*vit == pWidget) {
 

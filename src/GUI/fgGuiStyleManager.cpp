@@ -41,10 +41,10 @@ fgBool gui::CStyleManager::destroy(void) {
     StyleVecItor begin = getRefDataVector().begin();
     StyleVecItor end = getRefDataVector().end();
     for(StyleVecItor itor = begin; itor != end; ++itor) {
-        if((*itor) == NULL)
+        if((*itor).data == NULL)
             continue;
-        delete (*itor);
-        *itor = NULL;
+        delete (*itor).data;
+        (*itor).clear();
     }
     gui::CStyleManager::clear();
     return FG_TRUE;
