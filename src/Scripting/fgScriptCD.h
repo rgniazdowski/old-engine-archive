@@ -39,6 +39,10 @@
         #include "GFX/Scene/fgGFXSceneNode.h"
     #endif
 
+    #ifndef FG_INC_GFX_MODEL_RESOURCE
+        #include "GFX/fgGFXModelResource.h"
+    #endif
+
     #ifndef FG_INC_SCRIPT_MT
         #include "fgScriptMT.h"
     #endif
@@ -915,8 +919,8 @@ namespace LPCD {
 
     ////////////////////////////////////////////////////////////////////////////
 
-    #define FG_CONV_CD_TYPE fg::event::SSwipe::Direction
-    
+        #define FG_CONV_CD_TYPE fg::event::SSwipe::Direction
+
     template<> struct Type<FG_CONV_CD_TYPE> : public Type<int> {
         static inline FG_CONV_CD_TYPE Get(lua_State* L, int idx) {
             return (FG_CONV_CD_TYPE)Type<int>::Get(L, idx);
@@ -928,13 +932,13 @@ namespace LPCD {
 
     template<> struct Type<const FG_CONV_CD_TYPE &> : public Type<FG_CONV_CD_TYPE> {
     };
-    
-    #undef FG_CONV_CD_TYPE
+
+        #undef FG_CONV_CD_TYPE
 
     ////////////////////////////////////////////////////////////////////////////
 
-    #define FG_CONV_CD_TYPE fg::event::SSwipePinch::Direction
-    
+        #define FG_CONV_CD_TYPE fg::event::SSwipePinch::Direction
+
     template<> struct Type<FG_CONV_CD_TYPE> : public Type<int> {
         static inline FG_CONV_CD_TYPE Get(lua_State* L, int idx) {
             return (FG_CONV_CD_TYPE)Type<int>::Get(L, idx);
@@ -947,12 +951,12 @@ namespace LPCD {
     template<> struct Type<const FG_CONV_CD_TYPE &> : public Type<FG_CONV_CD_TYPE> {
     };
 
-    #undef FG_CONV_CD_TYPE
-    
+        #undef FG_CONV_CD_TYPE
+
     ////////////////////////////////////////////////////////////////////////////
 
-    #define FG_CONV_CD_TYPE fg::event::SResource::Status
-    
+        #define FG_CONV_CD_TYPE fg::event::SResource::Status
+
     template<> struct Type<FG_CONV_CD_TYPE> : public Type<int> {
         static inline FG_CONV_CD_TYPE Get(lua_State* L, int idx) {
             return (FG_CONV_CD_TYPE)Type<int>::Get(L, idx);
@@ -965,14 +969,14 @@ namespace LPCD {
     template<> struct Type<const FG_CONV_CD_TYPE &> : public Type<FG_CONV_CD_TYPE> {
     };
 
-    #undef FG_CONV_CD_TYPE
-    
+        #undef FG_CONV_CD_TYPE
+
     /***************************************************************************
      * fgEvent pointer parameter * (this is union parameter) - only passed as *
      **************************************************************************/
 
-    #define FG_CONV_CD_TYPE fg::event::SEvent
-    
+        #define FG_CONV_CD_TYPE fg::event::SEvent
+
     template<> struct Type<FG_CONV_CD_TYPE *> {
         static inline void Push(lua_State* L, const FG_CONV_CD_TYPE * value) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
@@ -1008,16 +1012,16 @@ namespace LPCD {
     template<> struct Type<const FG_CONV_CD_TYPE *&> : public Type<FG_CONV_CD_TYPE *> {
     };
 
-    #undef FG_CONV_CD_TYPE
-    
+        #undef FG_CONV_CD_TYPE
+
     ////////////////////////////////////////////////////////////////////////////
 
     /***************************************************************************
      * EVENT: fgTouchEvent - structure
      **************************************************************************/
 
-    #define FG_CONV_CD_TYPE fg::event::STouch
-    
+        #define FG_CONV_CD_TYPE fg::event::STouch
+
     template<> struct Type<FG_CONV_CD_TYPE> {
         static inline void Push(lua_State* L, const FG_CONV_CD_TYPE & value) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
@@ -1047,14 +1051,14 @@ namespace LPCD {
     template<> struct Type<const FG_CONV_CD_TYPE &> : public Type<FG_CONV_CD_TYPE> {
     };
 
-    #undef FG_CONV_CD_TYPE
-    
+        #undef FG_CONV_CD_TYPE
+
     /***************************************************************************
      * EVENT: fgMouseEvent - structure
      **************************************************************************/
 
-    #define FG_CONV_CD_TYPE fg::event::SMouse
-    
+        #define FG_CONV_CD_TYPE fg::event::SMouse
+
     template<> struct Type<FG_CONV_CD_TYPE> {
         static inline void Push(lua_State* L, const FG_CONV_CD_TYPE & value) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
@@ -1083,15 +1087,15 @@ namespace LPCD {
 
     template<> struct Type<const FG_CONV_CD_TYPE &> : public Type<FG_CONV_CD_TYPE> {
     };
-    
-    #undef FG_CONV_CD_TYPE
+
+        #undef FG_CONV_CD_TYPE
 
     /***************************************************************************
      * EVENT: fgSwipeEvent - structure
      **************************************************************************/
 
-    #define FG_CONV_CD_TYPE fg::event::SSwipe
-    
+        #define FG_CONV_CD_TYPE fg::event::SSwipe
+
     template<> struct Type<FG_CONV_CD_TYPE> {
         static inline void Push(lua_State* L, const FG_CONV_CD_TYPE & value) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
@@ -1120,15 +1124,15 @@ namespace LPCD {
 
     template<> struct Type<const FG_CONV_CD_TYPE &> : public Type<FG_CONV_CD_TYPE> {
     };
-    
-    #undef FG_CONV_CD_TYPE
+
+        #undef FG_CONV_CD_TYPE
 
     /***************************************************************************
      * EVENT: fgSwipePinchEvent - structure
      **************************************************************************/
 
-    #define FG_CONV_CD_TYPE fg::event::SSwipePinch
-    
+        #define FG_CONV_CD_TYPE fg::event::SSwipePinch
+
     template<> struct Type<FG_CONV_CD_TYPE> {
         static inline void Push(lua_State* L, const FG_CONV_CD_TYPE & value) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
@@ -1157,15 +1161,15 @@ namespace LPCD {
 
     template<> struct Type<const FG_CONV_CD_TYPE &> : public Type<FG_CONV_CD_TYPE> {
     };
-    
-    #undef FG_CONV_CD_TYPE
+
+        #undef FG_CONV_CD_TYPE
 
     /***************************************************************************
      * EVENT: fgSwipeRotateEvent - structure
      **************************************************************************/
 
-    #define FG_CONV_CD_TYPE fg::event::SSwipeRotate
-    
+        #define FG_CONV_CD_TYPE fg::event::SSwipeRotate
+
     template<> struct Type<FG_CONV_CD_TYPE> {
         static inline void Push(lua_State* L, const FG_CONV_CD_TYPE & value) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
@@ -1194,15 +1198,15 @@ namespace LPCD {
 
     template<> struct Type<const FG_CONV_CD_TYPE &> : public Type<FG_CONV_CD_TYPE> {
     };
-    
-    #undef FG_CONV_CD_TYPE
+
+        #undef FG_CONV_CD_TYPE
 
     /***************************************************************************
      * EVENT: fgKeyEvent - structure
      **************************************************************************/
 
-    #define FG_CONV_CD_TYPE fg::event::SKey
-    
+        #define FG_CONV_CD_TYPE fg::event::SKey
+
     template<> struct Type<FG_CONV_CD_TYPE> {
         static inline void Push(lua_State* L, const FG_CONV_CD_TYPE & value) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
@@ -1231,15 +1235,15 @@ namespace LPCD {
 
     template<> struct Type<const FG_CONV_CD_TYPE &> : public Type<FG_CONV_CD_TYPE> {
     };
-    
-    #undef FG_CONV_CD_TYPE
+
+        #undef FG_CONV_CD_TYPE
 
     /***************************************************************************
      * EVENT: fgResourceEvent - structure
      **************************************************************************/
 
-    #define FG_CONV_CD_TYPE fg::event::SResource
-    
+        #define FG_CONV_CD_TYPE fg::event::SResource
+
     template<> struct Type<FG_CONV_CD_TYPE> {
         static inline void Push(lua_State* L, const FG_CONV_CD_TYPE & value) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
@@ -1269,14 +1273,14 @@ namespace LPCD {
     template<> struct Type<const FG_CONV_CD_TYPE &> : public Type<FG_CONV_CD_TYPE> {
     };
 
-    #undef FG_CONV_CD_TYPE
-    
+        #undef FG_CONV_CD_TYPE
+
     /***************************************************************************
      * EVENT: fgVertexStreamEvent - structure
      **************************************************************************/
 
-    #define FG_CONV_CD_TYPE fg::event::SVertexStream
-    
+        #define FG_CONV_CD_TYPE fg::event::SVertexStream
+
     template<> struct Type<FG_CONV_CD_TYPE> {
         static inline void Push(lua_State* L, const FG_CONV_CD_TYPE & value) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
@@ -1306,14 +1310,14 @@ namespace LPCD {
     template<> struct Type<const FG_CONV_CD_TYPE &> : public Type<FG_CONV_CD_TYPE> {
     };
 
-    #undef FG_CONV_CD_TYPE
-    
+        #undef FG_CONV_CD_TYPE
+
     /***************************************************************************
      * EVENT: fgCameraEvent - structure
      **************************************************************************/
 
-    #define FG_CONV_CD_TYPE fg::event::SCamera
-    
+        #define FG_CONV_CD_TYPE fg::event::SCamera
+
     template<> struct Type<FG_CONV_CD_TYPE> {
         static inline void Push(lua_State* L, const FG_CONV_CD_TYPE & value) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
@@ -1342,15 +1346,15 @@ namespace LPCD {
 
     template<> struct Type<const FG_CONV_CD_TYPE &> : public Type<FG_CONV_CD_TYPE> {
     };
-    
-    #undef FG_CONV_CD_TYPE
+
+        #undef FG_CONV_CD_TYPE
 
     /***************************************************************************
      * EVENT: fgSoundEvent - structure
      **************************************************************************/
 
-    #define FG_CONV_CD_TYPE fg::event::SSound
-    
+        #define FG_CONV_CD_TYPE fg::event::SSound
+
     template<> struct Type<FG_CONV_CD_TYPE> {
         static inline void Push(lua_State* L, const FG_CONV_CD_TYPE & value) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
@@ -1379,15 +1383,15 @@ namespace LPCD {
 
     template<> struct Type<const FG_CONV_CD_TYPE &> : public Type<FG_CONV_CD_TYPE> {
     };
-    
-    #undef FG_CONV_CD_TYPE
+
+        #undef FG_CONV_CD_TYPE
 
     /***************************************************************************
      * EVENT: fgMenuChangedEvent - structure
      **************************************************************************/
 
-    #define FG_CONV_CD_TYPE fg::event::SMenuChanged
-    
+        #define FG_CONV_CD_TYPE fg::event::SMenuChanged
+
     template<> struct Type<FG_CONV_CD_TYPE> {
         static inline void Push(lua_State* L, const FG_CONV_CD_TYPE & value) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
@@ -1416,15 +1420,15 @@ namespace LPCD {
 
     template<> struct Type<const FG_CONV_CD_TYPE &> : public Type<FG_CONV_CD_TYPE> {
     };
-    
-    #undef FG_CONV_CD_TYPE
+
+        #undef FG_CONV_CD_TYPE
 
     /***************************************************************************
      * EVENT: fgWidgetEvent - structure
      **************************************************************************/
 
-    #define FG_CONV_CD_TYPE fg::event::SWidget
-    
+        #define FG_CONV_CD_TYPE fg::event::SWidget
+
     template<> struct Type<FG_CONV_CD_TYPE> {
         static inline void Push(lua_State* L, const FG_CONV_CD_TYPE & value) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
@@ -1453,15 +1457,15 @@ namespace LPCD {
 
     template<> struct Type<const FG_CONV_CD_TYPE &> : public Type<FG_CONV_CD_TYPE> {
     };
-    
-    #undef FG_CONV_CD_TYPE
+
+        #undef FG_CONV_CD_TYPE
 
     /***************************************************************************
      * EVENT: fgSensorsEvent - structure
      **************************************************************************/
 
-    #define FG_CONV_CD_TYPE fg::event::SSensors
-    
+        #define FG_CONV_CD_TYPE fg::event::SSensors
+
     template<> struct Type<FG_CONV_CD_TYPE> {
         static inline void Push(lua_State* L, const FG_CONV_CD_TYPE & value) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
@@ -1490,15 +1494,15 @@ namespace LPCD {
 
     template<> struct Type<const FG_CONV_CD_TYPE &> : public Type<FG_CONV_CD_TYPE> {
     };
-    
-    #undef FG_CONV_CD_TYPE
+
+        #undef FG_CONV_CD_TYPE
 
     /***************************************************************************
      * EVENT: fgControllerDeviceEvent - structure
      **************************************************************************/
 
-    #define FG_CONV_CD_TYPE fg::event::SControllerDevice
-    
+        #define FG_CONV_CD_TYPE fg::event::SControllerDevice
+
     template<> struct Type<FG_CONV_CD_TYPE> {
         static inline void Push(lua_State* L, const FG_CONV_CD_TYPE & value) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
@@ -1528,14 +1532,14 @@ namespace LPCD {
     template<> struct Type<const FG_CONV_CD_TYPE &> : public Type<FG_CONV_CD_TYPE> {
     };
 
-    #undef FG_CONV_CD_TYPE
-    
+        #undef FG_CONV_CD_TYPE
+
     /***************************************************************************
      * EVENT: fgControllerButtonEvent - structure
      **************************************************************************/
 
-    #define FG_CONV_CD_TYPE fg::event::SControllerButton
-    
+        #define FG_CONV_CD_TYPE fg::event::SControllerButton
+
     template<> struct Type<FG_CONV_CD_TYPE> {
         static inline void Push(lua_State* L, const FG_CONV_CD_TYPE & value) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
@@ -1565,14 +1569,14 @@ namespace LPCD {
     template<> struct Type<const FG_CONV_CD_TYPE &> : public Type<FG_CONV_CD_TYPE> {
     };
 
-    #undef FG_CONV_CD_TYPE
-    
+        #undef FG_CONV_CD_TYPE
+
     /***************************************************************************
      * EVENT: fgControllerAxisEvent - structure
      **************************************************************************/
 
-    #define FG_CONV_CD_TYPE fg::event::SControllerAxis
-    
+        #define FG_CONV_CD_TYPE fg::event::SControllerAxis
+
     template<> struct Type<FG_CONV_CD_TYPE> {
         static inline void Push(lua_State* L, const FG_CONV_CD_TYPE & value) {
             LuaPlus::LuaState* state = lua_State_to_LuaState(L);
@@ -1602,8 +1606,8 @@ namespace LPCD {
     template<> struct Type<const FG_CONV_CD_TYPE &> : public Type<FG_CONV_CD_TYPE> {
     };
 
-    #undef FG_CONV_CD_TYPE
-    
+        #undef FG_CONV_CD_TYPE
+
     ////////////////////////////////////////////////////////////////////////////
     // FG GFX SPECIAL TYPES
     ////////////////////////////////////////////////////////////////////////////
@@ -1643,6 +1647,27 @@ namespace LPCD {
 
     template<> struct Type<const fg::gfx::CSceneNode *&> : public Type<fg::gfx::CSceneNode *> {
     };
+
+    ////////////////////////////////////////////////////////////////////////////
+
+        #define FG_CONV_CD_TYPE fg::gfx::ModelType
+
+    template<> struct Type<FG_CONV_CD_TYPE> : public Type<unsigned int> {
+        static inline void Push(lua_State* L, FG_CONV_CD_TYPE value) {
+            Type<unsigned int>::Push(L, static_cast<unsigned int>(value));
+        }
+        static inline FG_CONV_CD_TYPE Get(lua_State* L, int idx) {
+            return (FG_CONV_CD_TYPE)Type<unsigned int>::Get(L, idx);
+        }
+    };
+
+    template<> struct Type<FG_CONV_CD_TYPE &> : public Type<FG_CONV_CD_TYPE> {
+    };
+
+    template<> struct Type<const FG_CONV_CD_TYPE &> : public Type<FG_CONV_CD_TYPE> {
+    };
+
+        #undef FG_CONV_CD_TYPE
 
     ////////////////////////////////////////////////////////////////////////////
     // FG SFX SPECIAL TYPES

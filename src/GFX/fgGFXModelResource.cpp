@@ -21,7 +21,7 @@ using namespace fg;
 gfx::CModelResource::CModelResource() :
 CResource(),
 m_materialOverride(NULL),
-m_modelType(FG_GFX_MODEL_RES_INVALID),
+m_modelType(MODEL_INVALID),
 m_isMultitextured(FG_FALSE),
 m_isTextured(FG_FALSE),
 m_hasMaterial(FG_FALSE),
@@ -37,7 +37,7 @@ m_isInterleaved(FG_TRUE) {
 gfx::CModelResource::CModelResource(const char *path) :
 CResource(path),
 m_materialOverride(NULL),
-m_modelType(FG_GFX_MODEL_RES_INVALID),
+m_modelType(MODEL_INVALID),
 m_isMultitextured(FG_FALSE),
 m_isTextured(FG_FALSE),
 m_hasMaterial(FG_FALSE),
@@ -52,7 +52,7 @@ m_isInterleaved(FG_TRUE) {
 gfx::CModelResource::CModelResource(std::string& path) :
 CResource(path),
 m_materialOverride(NULL),
-m_modelType(FG_GFX_MODEL_RES_INVALID),
+m_modelType(MODEL_INVALID),
 m_isMultitextured(FG_FALSE),
 m_isTextured(FG_FALSE),
 m_hasMaterial(FG_FALSE),
@@ -60,14 +60,14 @@ m_isInterleaved(FG_TRUE) {
     m_resType = resource::MODEL3D;
 }
 
-/*
+/**
  * Clears the class data, this actually does not free allocated memory,
  * just resets base class attributes
  */
 void gfx::CModelResource::clear(void) {
     CResource::clear();
     m_materialOverride = NULL;
-    m_modelType = FG_GFX_MODEL_RES_INVALID;
+    m_modelType = MODEL_INVALID;
     m_isTextured = FG_FALSE;
     m_isMultitextured = FG_FALSE;
     m_hasMaterial = FG_FALSE;
@@ -81,14 +81,14 @@ void gfx::CModelResource::clear(void) {
  * @return 
  */
 fgBool gfx::CModelResource::setModelTypeFromFilePath(std::string &path) {
-    const char *ext = fg::path::fileExt(path.c_str());
+    const char *ext = path::fileExt(path.c_str());
     if(!ext)
         return FG_FALSE;
-    m_modelType = FG_GFX_MODEL_RES_INVALID;
+    m_modelType = MODEL_INVALID;
     if(strcasecmp(ext, FG_GFX_MODEL_RES_3DS_EXTENSION) == 0) {
-        m_modelType = FG_GFX_MODEL_RES_3DS;
+        m_modelType = MODEL_3DS;
     } else if(strcasecmp(ext, FG_GFX_MODEL_RES_OBJ_EXTENSION) == 0) {
-        m_modelType = FG_GFX_MODEL_RES_OBJ;
+        m_modelType = MODEL_OBJ;
     }
     return FG_TRUE;
 }
@@ -96,7 +96,7 @@ fgBool gfx::CModelResource::setModelTypeFromFilePath(std::string &path) {
 /*
  *
  */
-fgBool gfx::CModelResource::_loadOBJ(void) {
+fgBool gfx::CModelResource::loadWavefrontObj(void) {
     if(getFilePath(m_quality).empty()) {
         return FG_FALSE;
     }
@@ -128,22 +128,22 @@ fgBool gfx::CModelResource::_loadOBJ(void) {
             if(m_pManager) {
                 CResource *tex = NULL;
                 // Ambient texture handle lookup
-                tex = ((fg::resource::CResourceManager *)m_pManager)->request(shape->material->ambientTexName);
+                tex = ((resource::CResourceManager *)m_pManager)->request(shape->material->ambientTexName);
                 if(tex) {
                     shape->material->ambientTexHandle = tex->getHandle();
                 }
                 // Diffuse texture handle lookup
-                tex = ((fg::resource::CResourceManager *)m_pManager)->request(shape->material->diffuseTexName);
+                tex = ((resource::CResourceManager *)m_pManager)->request(shape->material->diffuseTexName);
                 if(tex) {
                     shape->material->diffuseTexHandle = tex->getHandle();
                 }
                 // Specular texture handle lookup
-                tex = ((fg::resource::CResourceManager *)m_pManager)->request(shape->material->specularTexName);
+                tex = ((resource::CResourceManager *)m_pManager)->request(shape->material->specularTexName);
                 if(tex) {
                     shape->material->specularTexHandle = tex->getHandle();
                 }
                 // Normal texture handle lookup
-                tex = ((fg::resource::CResourceManager *)m_pManager)->request(shape->material->normalTexName);
+                tex = ((resource::CResourceManager *)m_pManager)->request(shape->material->normalTexName);
                 if(tex) {
                     shape->material->normalTexHandle = tex->getHandle();
                 }
@@ -181,26 +181,26 @@ fgBool gfx::CModelResource::create(void) {
     }
     m_size = 0;
     if(getFilePath(m_quality).empty()) {
-        log::PrintError("%s(%d): file path is empty on create", fg::path::fileName(__FILE__), __LINE__ - 1);
+        FG_LOG_ERROR("%s(%d): file path is empty on create", fg::path::fileName(__FILE__), __LINE__ - 1);
         // #TODO error handling / reporting
         return FG_FALSE;
     }
     setModelTypeFromFilePath();
-    if(m_modelType == FG_GFX_MODEL_RES_INVALID) {
-        log::PrintError("%s(%d): model file type is invalid", fg::path::fileName(__FILE__), __LINE__ - 1);
+    if(m_modelType == MODEL_INVALID) {
+        FG_LOG_ERROR("%s(%d): model file type is invalid", fg::path::fileName(__FILE__), __LINE__ - 1);
         // #TODO error handling / reporting
         return FG_FALSE;
     }
     switch(m_modelType) {
-        case FG_GFX_MODEL_RES_CUSTOM:
+        case MODEL_CUSTOM:
             break;
 
-        case FG_GFX_MODEL_RES_3DS:
+        case MODEL_3DS:
             break;
 
-        case FG_GFX_MODEL_RES_OBJ:
+        case MODEL_OBJ:
             FG_LOG_DEBUG("Preparing to load an OBJ file for model: '%s'", getNameStr());
-            if(!_loadOBJ()) {
+            if(!loadWavefrontObj()) {
                 return FG_FALSE;
             }
             m_isReady = FG_TRUE;
@@ -208,25 +208,25 @@ fgBool gfx::CModelResource::create(void) {
             FG_MessageSubsystem->reportSuccess(tag_type::name(), FG_ERRNO_RESOURCE_OK, "Successfully loaded an OBJ model file: '%s'", getFilePathStr());
             break;
 
-        case FG_GFX_MODEL_RES_BLEND:
+        case MODEL_BLEND:
             break;
 
-        case FG_GFX_MODEL_RES_DAE:
+        case MODEL_DAE:
             break;
 
-        case FG_GFX_MODEL_RES_DXF:
+        case MODEL_DXF:
             break;
 
-        case FG_GFX_MODEL_RES_FBX:
+        case MODEL_FBX:
             break;
 
-        case FG_GFX_MODEL_RES_LWO:
+        case MODEL_LWO:
             break;
 
-        case FG_GFX_MODEL_RES_OFF:
+        case MODEL_OFF:
             break;
 
-        case FG_GFX_MODEL_RES_X:
+        case MODEL_X:
             break;
 
         default:

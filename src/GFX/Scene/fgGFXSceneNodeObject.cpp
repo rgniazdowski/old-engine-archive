@@ -85,7 +85,7 @@ void gfx::CSceneNodeObject::setModel(gfx::CModel *pModel) {
             // Would need to clear the children list?
         } // SRSLY? #FIXME
 
-        gfx::CModel::modelShapes &shapes = pModel->getRefShapes();
+        gfx::CModel::ModelShapes &shapes = pModel->getRefShapes();
         setBoundingVolume(pModel->getRefAABB());
         gfx::CModel::modelShapesItor sit = shapes.begin(), send = shapes.end();
         for(; sit != send; sit++) {

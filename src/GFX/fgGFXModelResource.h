@@ -21,29 +21,6 @@
         #include "Resource/fgResource.h"
     #endif
 
-// Invalid / not selected file format
-    #define FG_GFX_MODEL_RES_INVALID	0x000
-// Custom 3d model file format
-    #define	FG_GFX_MODEL_RES_CUSTOM		0x0F0
-// 3DS - Autodesk 3ds Max 3D
-    #define	FG_GFX_MODEL_RES_3DS		0x0F1
-// OBJ - Wavefront Technologies
-    #define	FG_GFX_MODEL_RES_OBJ		0x0F2
-// BLEND - Blender file database
-    #define	FG_GFX_MODEL_RES_BLEND		0x0F3
-// DAE - COLLADA
-    #define	FG_GFX_MODEL_RES_DAE		0x0F4
-// DXF - AutoCAD, Drawing Exchange Format - CAD data file format developed by Autodesk
-    #define	FG_GFX_MODEL_RES_DXF		0x0F5
-// FBX - Autodesk exchange - exchange format, in particular for interoperability between Autodesk products and other Digital content creation (DCC) software packages
-    #define	FG_GFX_MODEL_RES_FBX		0x0F6
-// LWO - Lightwave - LightWave high-end software file format
-    #define	FG_GFX_MODEL_RES_LWO		0x0F7
-// OFF - Object File Format 
-    #define	FG_GFX_MODEL_RES_OFF		0x0F8
-// X - DirectX 3D Model
-    #define	FG_GFX_MODEL_RES_X		0x0F9
-
 namespace fg {
     namespace resource {
         class CResource;
@@ -51,17 +28,47 @@ namespace fg {
 
     namespace gfx {
 
+        /**
+         *
+         */
+        enum ModelType {
+            /// Invalid / not selected file format
+            MODEL_INVALID = 0x000,
+            /// Custom 3d model file format (flexi obj - binary)
+            MODEL_CUSTOM = 0x0F0,
+            /// Custom 3d model file format (flexi obj - binary)
+            MODEL_FLEXI_OBJ = 0x0F0,
+            /// 3DS - Autodesk 3ds Max 3D
+            MODEL_3DS = 0x0F1,
+            /// OBJ - Wavefront Technologies
+            MODEL_OBJ = 0x0F2,
+            /// BLEND - Blender file database
+            MODEL_BLEND = 0x0F3,
+            /// DAE - COLLADA
+            MODEL_DAE = 0x0F4,
+            /// DXF - AutoCAD, Drawing Exchange Format - CAD data file format developed by Autodesk
+            MODEL_DXF = 0x0F5,
+            /// FBX - Autodesk exchange - exchange format, in particular for interoperability between Autodesk products and other Digital content creation (DCC) software packages
+            MODEL_FBX = 0x0F6,
+            /// LWO - Lightwave - LightWave high-end software file format
+            MODEL_LWO = 0x0F7,
+            /// OFF - Object File Format 
+            MODEL_OFF = 0x0F8,
+            /// X - DirectX 3D Model
+            MODEL_X = 0x0F9
+        };
+
         /*
          * Class definition for Model Resource
          * This resource loads various types of models
          * Provides functions also for generation of VBOs
          */
-        class CModelResource : public fg::resource::CResource {
+        class CModelResource : public resource::CResource {
         public:
             // Type definition for vector holding model shapes
-            typedef CVector<SShape *> modelShapes;
+            typedef CVector<SShape *> ModelShapes;
             // Type definition for special vector iterator
-            typedef modelShapes::iterator modelShapesItor;
+            typedef ModelShapes::iterator modelShapesItor;
 
         public:
             /**
@@ -143,21 +150,21 @@ namespace fg {
              * Helper function for loading the proper .OBJ model file
              * @return  FG_TRUE if the load was successful, FG_FALSE otherwise
              */
-            fgBool _loadOBJ(void);
+            fgBool loadWavefrontObj(void);
 
         public:
             /**
              * Returns the reference to the shapes array
              * @return  Reference to the shapes array
              */
-            modelShapes & getRefShapes(void) {
+            ModelShapes& getRefShapes(void) {
                 return m_shapes;
             }
             /**
              * Returns the reference to the shapes array
              * @return  Reference to the shapes array
              */
-            modelShapes const & getRefShapes(void) const {
+            ModelShapes const& getRefShapes(void) const {
                 //return (const_cast<fgDataObjectBase<HandleType, MapKeyType>*>(this)->getFilePath(id));
                 //return (const_cast<fgGfxModelResource *>(this)->getRefShapes());
                 return m_shapes;
@@ -166,14 +173,14 @@ namespace fg {
              * 
              * @return 
              */
-            AABoundingBox3Df & getRefAABB(void) {
+            AABoundingBox3Df& getRefAABB(void) {
                 return m_aabb;
             }
             /**
              * 
              * @return 
              */
-            AABoundingBox3Df const & getRefAABB(void) const {
+            AABoundingBox3Df const& getRefAABB(void) const {
                 return m_aabb;
             }
 
@@ -202,21 +209,21 @@ namespace fg {
              * Gets the main override material of the model resource
              * @return      Pointer to the override material for all shapes
              */
-            SMaterial* getMainMaterial(void) const {
+            inline SMaterial* getMainMaterial(void) const {
                 return m_materialOverride;
             }
             /**
              * Gets the specific model type identifier
              * @return  Unsigned int value indicating model type (based of file extension)
              */
-            fgGFXuint getModelType(void) const {
+            inline ModelType getModelType(void) const {
                 return m_modelType;
             }
             /**
              * Returns whether the model is multi-textured
              * @return  FG_TRUE if the model is multi-textured, FG_FALSE otherwise
              */
-            fgBool isMultitextured(void) const {
+            inline fgBool isMultitextured(void) const {
                 return m_isMultitextured;
             }
             /**
@@ -224,7 +231,7 @@ namespace fg {
              * @return  FG_TRUE if the model has any kind of texture in it (and likely
              *          texture coordinates data), FG_FALSE otherwise
              */
-            fgBool isTextured(void) const {
+            inline fgBool isTextured(void) const {
                 return m_isTextured;
             }
             /**
@@ -233,14 +240,14 @@ namespace fg {
              *          FG_FALSE otherwise. Note that when this function returns FG_FALSE,
              *          the main material (override) is still available and set to defaults
              */
-            fgBool hasMaterial(void) const {
+            inline fgBool hasMaterial(void) const {
                 return m_hasMaterial;
             }
             /**
              * Returns whether the data in the model is interleaved
              * @return  FG_TRUE if the data is interleaved, FG_FALSE otherwise
              */
-            fgBool isInterleaved(void) const {
+            inline fgBool isInterleaved(void) const {
                 return m_isInterleaved;
             }
             /**
@@ -249,44 +256,70 @@ namespace fg {
              * @remarks         If the value was changed, the change in the data to take
              *                  effect requires explicit reload of the model file
              */
-            void setInterleaved(fgBool toggle = FG_TRUE) {
+            inline void setInterleaved(fgBool toggle = FG_TRUE) {
                 m_isInterleaved = toggle;
             }
-
-            // Number of vertices
-            fgGFXuint getNumVertices(void) const {
+            /**
+             * Number of vertices
+             * @return 
+             */
+            inline fgGFXuint getNumVertices(void) const {
                 return m_numVertices;
             }
-            // Number of normals
-            fgGFXuint getNumNormals(void) const {
+            /**
+             * Number of normals
+             * @return 
+             */
+            inline fgGFXuint getNumNormals(void) const {
                 return m_numNormals;
             }
-            // Number of UVs - texture coords
-            fgGFXuint getNumUVs(void) const {
+            /**
+             * Number of UVs - texture coords
+             * @return 
+             */
+            inline fgGFXuint getNumUVs(void) const {
                 return m_numUVs;
             }
-            // Number of indices
-            fgGFXuint getNumIndices(void) const {
+            /**
+             * Number of indices
+             * @return 
+             */
+            inline fgGFXuint getNumIndices(void) const {
                 return m_numIndices;
             }
-            // Number of triangles
-            fgGFXuint getNumTriangles(void) const {
+            /**
+             * Number of triangles
+             * @return 
+             */
+            inline fgGFXuint getNumTriangles(void) const {
                 return m_numTriangles;
             }
-            // Number of all polygons in the model
-            fgGFXuint getNumPolygons(void) const {
+            /**
+             * Number of all polygons in the model
+             * @return 
+             */
+            inline fgGFXuint getNumPolygons(void) const {
                 return m_numPolygons;
             }
-            // Number of shapes used in the model
-            fgGFXuint getNumShapes(void) const {
+            /**
+             * Number of shapes used in the model
+             * @return 
+             */
+            inline fgGFXuint getNumShapes(void) const {
                 return m_numShapes;
             }
-            // Get number of materials used by this model
-            fgGFXuint getNumMaterials(void) const {
+            /**
+             * Get number of materials used by this model
+             * @return 
+             */
+            inline fgGFXuint getNumMaterials(void) const {
                 return m_numMaterials;
             }
-            // Return pointer to the array holding specific info
-            const fgGFXuint* getNumData(void) const {
+            /**
+             * Return pointer to the array holding specific info
+             * @return 
+             */
+            inline const fgGFXuint* getNumData(void) const {
                 return m_numData;
             }
 
@@ -294,11 +327,11 @@ namespace fg {
             /// Global material override definition
             SMaterial *m_materialOverride;
             /// Array holding all basic shapes of the model
-            modelShapes m_shapes;
+            ModelShapes m_shapes;
             /// Main bounding box - it's for whole model (all shapes)
             AABoundingBox3Df m_aabb;
             /// Identifier of the model type - based on the input data file extension
-            fgGFXuint m_modelType;
+            ModelType m_modelType;
             /// Is model multitextured?
             fgBool m_isMultitextured;
             /// Is model textured?

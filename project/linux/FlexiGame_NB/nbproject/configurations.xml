@@ -393,8 +393,6 @@
         <logicalFolder name="upstream" displayName="upstream" projectFiles="true">
           <itemPath>../../../modules/tinyobj/upstream/fgTinyObj.cpp</itemPath>
           <itemPath>../../../modules/tinyobj/upstream/fgTinyObj.h</itemPath>
-          <itemPath>../../../modules/tinyobj/upstream/tiny_obj_loader.cpp</itemPath>
-          <itemPath>../../../modules/tinyobj/upstream/tiny_obj_loader.h</itemPath>
         </logicalFolder>
       </logicalFolder>
       <logicalFolder name="tinyxml" displayName="tinyxml" projectFiles="true">
@@ -546,16 +544,6 @@
             flavor2="8">
       </item>
       <item path="../../../modules/tinyobj/upstream/fgTinyObj.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../../../modules/tinyobj/upstream/tiny_obj_loader.cpp"
-            ex="false"
-            tool="1"
-            flavor2="8">
-      </item>
-      <item path="../../../modules/tinyobj/upstream/tiny_obj_loader.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -1943,16 +1931,6 @@
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../modules/tinyobj/upstream/tiny_obj_loader.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="../../../modules/tinyobj/upstream/tiny_obj_loader.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
       <item path="../../../modules/tinyxml/upstream/tinystr.cpp"
             ex="false"
             tool="1"
@@ -3302,16 +3280,6 @@
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../modules/tinyobj/upstream/tiny_obj_loader.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="../../../modules/tinyobj/upstream/tiny_obj_loader.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
       <item path="../../../modules/tinyxml/upstream/tinystr.cpp"
             ex="false"
             tool="1"
@@ -4635,16 +4603,6 @@
             flavor2="0">
       </item>
       <item path="../../../modules/tinyobj/upstream/fgTinyObj.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../../../modules/tinyobj/upstream/tiny_obj_loader.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="../../../modules/tinyobj/upstream/tiny_obj_loader.h"
             ex="false"
             tool="3"
             flavor2="0">

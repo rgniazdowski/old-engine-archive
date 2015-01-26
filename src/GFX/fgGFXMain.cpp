@@ -776,7 +776,7 @@ fgBool gfx::CGfxMain::resourceCreatedHandler(fg::event::CArgumentList * argv) {
     if(pResource->getResourceType() != resource::MODEL3D)
         return FG_FALSE;
     gfx::CModelResource *pModel = (gfx::CModelResource *)pResource;
-    gfx::CModelResource::modelShapes &shapes = pModel->getRefShapes();
+    gfx::CModelResource::ModelShapes &shapes = pModel->getRefShapes();
     int n = shapes.size();
     if(n) {
         FG_LOG_DEBUG("GFX: Uploading static vertex data to VBO for model: '%s'", pModel->getNameStr());
