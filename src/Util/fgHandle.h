@@ -12,6 +12,7 @@
 
 #ifndef FG_INC_HANDLE
     #define FG_INC_HANDLE
+    #define FG_INC_HANDLE_BLOCK
 
     #include "fgCommon.h"
 
@@ -33,89 +34,94 @@ typedef FG_RAW_HANDLE_TYPE fgRawMagic;
         #define FG_IS_VALID_HANDLE(_rh)         ( !_rh.isNull() )
     #endif
 
-/*
- * The TagType parameter has to be one of fgTag template
- */
-template <typename TagType>
-class fgHandle {
-public:
-    typedef TagType tag_type;
-private:
+namespace fg {
+    namespace util {
 
-    enum {
-        // Size to use for index bit field
-        MAX_BITS_INDEX = 16,
-        // Size to use for magic bit field
-        MAX_BITS_MAGIC = 16,
+        /*
+         * The TagType parameter has to be one of fgTag template
+         */
+        template <typename TagType>
+        class CHandle {
+        public:
+            typedef TagType tag_type;
+        private:
 
-        // Size to compare against for asserting dereferences
-        MAX_INDEX = (1 << MAX_BITS_INDEX) - 1,
-        // Size to compare against for asserting dereferences
-        MAX_MAGIC = (1 << MAX_BITS_MAGIC) - 1,
-    };
+            enum {
+                // Size to use for index bit field
+                MAX_BITS_INDEX = 16,
+                // Size to use for magic bit field
+                MAX_BITS_MAGIC = 16,
 
-    union {
+                // Size to compare against for asserting dereferences
+                MAX_INDEX = (1 << MAX_BITS_INDEX) - 1,
+                // Size to compare against for asserting dereferences
+                MAX_MAGIC = (1 << MAX_BITS_MAGIC) - 1,
+            };
 
-        struct {
-            // index into resource array
-            fgRawIndex m_index : MAX_BITS_INDEX;
-            // magic number to check
-            fgRawMagic m_magic : MAX_BITS_MAGIC;
+            union {
+
+                struct {
+                    // index into resource array
+                    fgRawIndex m_index : MAX_BITS_INDEX;
+                    // magic number to check
+                    fgRawMagic m_magic : MAX_BITS_MAGIC;
+                };
+                fgRawHandle m_handle;
+            };
+
+        public:
+            // Default constructor for Handle object
+            CHandle() : m_handle(FG_INVALID_HANDLE) { }
+
+            // Reset the handle (becomes invalid)
+            void reset(void) {
+                m_handle = FG_INVALID_HANDLE;
+            }
+            /**
+             * 
+             * @param source
+             */
+            void copyFrom(const CHandle<TagType>& source) {
+                this->m_handle = source.getHandle();
+                this->m_magic = source.getMagic();
+                this->m_index = source.getIndex();
+            }
+
+            // Init handle with given index
+            fgBool init(fgRawIndex index);
+
+            // Get the index part of the handle
+            fgRawIndex getIndex(void) const {
+                return m_index;
+            }
+            // Get the magic part of the handle
+            fgRawMagic getMagic(void) const {
+                return m_magic;
+            }
+            // Return the handle ID number
+            fgRawHandle getHandle(void) const {
+                return m_handle;
+            }
+            // Check if handle is null
+            fgBool isNull(void) const {
+                return (fgBool)(m_handle == FG_INVALID_HANDLE);
+            }
+            // Return the handle ID number
+            operator fgRawHandle(void) const {
+                return m_handle;
+            }
+            //
+            static const char *getTagName(void) {
+                return TagType::name();
+            }
         };
-        fgRawHandle m_handle;
     };
-
-public:
-    // Default constructor for Handle object
-    fgHandle() : m_handle(FG_INVALID_HANDLE) { }
-
-    // Reset the handle (becomes invalid)
-    void reset(void) {
-        m_handle = FG_INVALID_HANDLE;
-    }
-    /**
-     * 
-     * @param source
-     */
-    void copyFrom(const fgHandle<TagType>& source) {
-        this->m_handle = source.getHandle();
-        this->m_magic = source.getMagic();
-        this->m_index = source.getIndex();
-    }
-
-    // Init handle with given index
-    fgBool init(fgRawIndex index);
-
-    // Get the index part of the handle
-    fgRawIndex getIndex(void) const {
-        return m_index;
-    }
-    // Get the magic part of the handle
-    fgRawMagic getMagic(void) const {
-        return m_magic;
-    }
-    // Return the handle ID number
-    fgRawHandle getHandle(void) const {
-        return m_handle;
-    }
-    // Check if handle is null
-    fgBool isNull(void) const {
-        return (fgBool)(m_handle == FG_INVALID_HANDLE);
-    }
-    // Return the handle ID number
-    operator fgRawHandle(void) const {
-        return m_handle;
-    }
-    //
-    static const char *getTagName(void) {
-        return TagType::name();
-    }
 };
 /*
  *
  */
 template <typename TagType>
-fgBool fgHandle<TagType>::init(fgRawIndex index) {
+fgBool fg::util::CHandle<TagType>::init(fgRawIndex index) {
     if(!isNull()) {
         // Don't allow reassignment
         return FG_FALSE;
@@ -141,7 +147,7 @@ fgBool fgHandle<TagType>::init(fgRawIndex index) {
  * @return 
  */
 template <typename TagType>
-inline bool operator !=(fgHandle <TagType> l, fgHandle <TagType> r) {
+inline bool operator !=(fg::util::CHandle<TagType> l, fg::util::CHandle<TagType> r) {
     return ( l.getHandle() != r.getHandle());
 }
 /**
@@ -151,7 +157,7 @@ inline bool operator !=(fgHandle <TagType> l, fgHandle <TagType> r) {
  * @return 
  */
 template <typename TagType>
-inline bool operator ==(fgHandle <TagType> l, fgHandle <TagType> r) {
+inline bool operator ==(fg::util::CHandle<TagType> l, fg::util::CHandle<TagType> r) {
     return ( l.getHandle() == r.getHandle());
 }
 /**
@@ -161,7 +167,7 @@ inline bool operator ==(fgHandle <TagType> l, fgHandle <TagType> r) {
  * @return 
  */
 template <typename TagType>
-inline bool operator >(fgHandle <TagType> l, fgHandle <TagType> r) {
+inline bool operator >(fg::util::CHandle<TagType> l, fg::util::CHandle<TagType> r) {
     return ( l.getHandle() > r.getHandle());
 }
 /**
@@ -171,7 +177,7 @@ inline bool operator >(fgHandle <TagType> l, fgHandle <TagType> r) {
  * @return 
  */
 template <typename TagType>
-inline bool operator <(fgHandle <TagType> l, fgHandle <TagType> r) {
+inline bool operator <(fg::util::CHandle <TagType> l, fg::util::CHandle<TagType> r) {
     return ( l.getHandle() < r.getHandle());
 }
 /**
@@ -181,7 +187,7 @@ inline bool operator <(fgHandle <TagType> l, fgHandle <TagType> r) {
  * @return 
  */
 template <typename TagType>
-inline bool operator >=(fgHandle <TagType> l, fgHandle <TagType> r) {
+inline bool operator >=(fg::util::CHandle<TagType> l, fg::util::CHandle<TagType> r) {
     return ( l.getHandle() >= r.getHandle());
 }
 /**
@@ -191,8 +197,9 @@ inline bool operator >=(fgHandle <TagType> l, fgHandle <TagType> r) {
  * @return 
  */
 template <typename TagType>
-inline bool operator <=(fgHandle <TagType> l, fgHandle <TagType> r) {
+inline bool operator <=(fg::util::CHandle<TagType> l, fg::util::CHandle<TagType> r) {
     return ( l.getHandle() <= r.getHandle());
 }
 
+    #undef FG_INC_HANDLE_BLOCK
 #endif /* FG_INC_HANDLE */

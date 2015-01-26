@@ -44,23 +44,25 @@
 
 // Draw call type
 typedef unsigned int fgGfxDrawCallType;
-// Draw call append mode
-typedef unsigned int fgGfxDrawAppendMode;
-
-    #define FG_GFX_DRAW_APPEND_ABSOLUTE 0
-    #define FG_GFX_DRAW_APPEND_RELATIVE 1
-
-// Drawable type
-    #define FG_GFX_DRAWABLE_DRAWCALL 1
 
     #include "Util/fgFastCmp.h"
 
 namespace fg {
     namespace gfx {
 
+        /**
+         * Draw call append mode
+         */
+        enum DrawAppendMode {
+            ///
+            DRAW_APPEND_ABSOLUTE,
+            ///
+            DRAW_APPEND_RELATIVE
+        };
+        
         class CDrawingBatch;
 
-        /*
+        /**
          * Special class representing a single draw call
          */
         class CDrawCall : public CDrawable {
@@ -70,7 +72,7 @@ namespace fg {
 
         private:
             /// Attribute binding data // Need to think what do with indices ?
-            fgGfxAttributeData m_attrData[FG_GFX_ATTRIBUTE_COUNT];
+            SAttributeData m_attrData[FG_GFX_ATTRIBUTE_COUNT];
             /// Information on indices used in this draw call
             /// Pointers within must be always valid
             fgGfxDrawingInfo m_drawingInfo;
@@ -86,7 +88,7 @@ namespace fg {
             /// It can be set to NULL, then the draw call will use
             /// last active shader program. The pointer to the shader
             /// program is required for updating uniform variables
-            fg::gfx::CShaderProgram *m_program;
+            CShaderProgram *m_program;
             /// Pointer to the used texture - this will require also pointer
             /// to the shader program (so the proper uniform sampler variable
             /// can be updated). However this is not always required.
@@ -106,12 +108,12 @@ namespace fg {
             /// What kind of draw call is this?
             fgGfxDrawCallType m_drawCallType;
             /// Append mode
-            fgGfxDrawAppendMode m_drawAppendMode;
+            DrawAppendMode m_drawAppendMode;
             /// Primitive mode used for drawing the vertex buffer
             /// It defaults to FG_GFX_TRIANGLES, however the most
             /// optimal is the Triangle Strip - this requires however
             /// modification of the vertex data after loading
-            fgGfxPrimitiveMode m_primMode;
+            PrimitiveMode m_primMode;
             /// Current color used
             fgColor4f m_color;
             /// Holds the value for the relative move
@@ -119,7 +121,7 @@ namespace fg {
             /// Scissor box for current draw call
             Vector4i m_scissorBox;
             ///
-            fg::util::FastCmp m_fastCmp;
+            util::FastCmp m_fastCmp;
             /// Holds value for special Z index used for more direct sorting
             int m_zIndex;
             /// Is this draw call managed by the drawing batch? 
@@ -187,7 +189,7 @@ namespace fg {
              * Returns the pointer to the attribute data array
              * @return 
              */
-            fgGfxAttributeData* getAttributeData(void);
+            SAttributeData* getAttributeData(void);
             /**
              * Returns currently active attribute mask
              * @return 
@@ -202,12 +204,12 @@ namespace fg {
              * Returns the append mode for the current draw call
              * @return 
              */
-            fgGfxDrawAppendMode getDrawAppendMode(void) const;
+            DrawAppendMode getDrawAppendMode(void) const;
             /**
              * Returns the primitive mode used for drawing
              * @return 
              */
-            fgGfxPrimitiveMode getPrimitiveMode(void) const;
+            PrimitiveMode getPrimitiveMode(void) const;
             /**
              * 
              * @return 
@@ -265,12 +267,12 @@ namespace fg {
              * Sets the append mode
              * @param mode
              */
-            void setDrawAppendMode(const fgGfxDrawAppendMode mode);
+            void setDrawAppendMode(const DrawAppendMode mode);
             /**
              *  Sets the primitive mode for the draw call
              * @param mode
              */
-            void setPrimitiveMode(const fgGfxPrimitiveMode mode);
+            void setPrimitiveMode(const PrimitiveMode mode);
 
             /**
              * Whether to set UVs, normals or colors active
@@ -558,7 +560,7 @@ template <>
 class fgPtrLess<CDrawable *> {
 public:
     inline bool operator ()(CDrawable * left, CDrawable * right) {
-        if(left->getDrawableType() == FG_GFX_DRAWABLE_DRAWCALL) {
+        if(left->getDrawableType() == DRAWABLE_DRAWCALL) {
             return *(static_cast<CDrawCall *>(left)) < *(static_cast<CDrawCall *>(right));
         }
         //return ((*left) < (*right));
@@ -570,7 +572,7 @@ template <>
 class fgPtrGreater<CDrawable *> {
 public:
     inline bool operator ()(CDrawable * left, CDrawable * right) {
-        if(left->getDrawableType() == FG_GFX_DRAWABLE_DRAWCALL) {
+        if(left->getDrawableType() == DRAWABLE_DRAWCALL) {
             return !(*(static_cast<CDrawCall *>(left)) < *(static_cast<CDrawCall *>(right)));
         }
         //return !((*left) < (*right));
@@ -582,7 +584,7 @@ template <>
 class fgPtrLessEq<CDrawable *> {
 public:
     inline bool operator ()(CDrawable * left, CDrawable * right) {
-        if(left->getDrawableType() == FG_GFX_DRAWABLE_DRAWCALL) {
+        if(left->getDrawableType() == DRAWABLE_DRAWCALL) {
             return *(static_cast<CDrawCall *>(left)) <= *(static_cast<CDrawCall *>(right));
         }
         //return ((*left) <= (*right));
@@ -594,7 +596,7 @@ template <>
 class fgPtrGreaterEq<CDrawable *> {
 public:
     inline bool operator ()(CDrawable * left, CDrawable * right) {
-        if(left->getDrawableType() == FG_GFX_DRAWABLE_DRAWCALL) {
+        if(left->getDrawableType() == DRAWABLE_DRAWCALL) {
             return !(*(static_cast<CDrawCall *>(left)) <= *(static_cast<CDrawCall *>(right)));
         }
         return false;

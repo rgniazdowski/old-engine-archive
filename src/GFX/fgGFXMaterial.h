@@ -66,13 +66,13 @@ namespace fg {
             std::string normalTexName;
 
             /// Handle for the ambient texture
-            FG_RHANDLE ambientTexHandle;
+            resource::ResourceHandle ambientTexHandle;
             /// Handle for the diffuse texture
-            FG_RHANDLE diffuseTexHandle;
+            resource::ResourceHandle diffuseTexHandle;
             /// Handle for the specular texture
-            FG_RHANDLE specularTexHandle;
+            resource::ResourceHandle specularTexHandle;
             /// Handle for the normal texture
-            FG_RHANDLE normalTexHandle;
+            resource::ResourceHandle normalTexHandle;
 
             ///
             std::map<std::string, std::string> unknownParam;

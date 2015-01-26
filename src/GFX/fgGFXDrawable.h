@@ -21,13 +21,18 @@
         #include "Math/fgMathLib.h"
     #endif
 
-typedef unsigned int fgGfxDrawableType;
-
-    #define FG_GFX_DRAWABLE_INVALID     0
-
 namespace fg {
 
     namespace gfx {
+        ///
+        typedef unsigned int DrawableType;
+
+        /// Invalid drawable
+        const DrawableType DRAWABLE_INVALID = 0x000;
+        /// Drawable draw call       
+        const DrawableType DRAWABLE_DRAWCALL = 0x0A0;
+        /// Drawable scene node
+        const DrawableType DRAWABLE_SCENENODE = 0x0A1;
 
         /**
          * 
@@ -37,7 +42,7 @@ namespace fg {
             /**
              * 
              */
-            CDrawable(const fgGfxDrawableType drawableType = FG_GFX_DRAWABLE_INVALID) :
+            CDrawable(const DrawableType drawableType = DRAWABLE_INVALID) :
             m_drawableType(drawableType) { }
             /**
              * 
@@ -70,7 +75,7 @@ namespace fg {
              * 
              * @return 
              */
-            fgGfxDrawableType getDrawableType(void) const {
+            DrawableType getDrawableType(void) const {
                 return m_drawableType;
             }
 
@@ -79,13 +84,13 @@ namespace fg {
              * 
              * @param drawableType
              */
-            void setDrawableType(const fgGfxDrawableType drawableType) {
+            void setDrawableType(const DrawableType drawableType) {
                 m_drawableType = drawableType;
             }
 
         private:
             ///
-            fgGfxDrawableType m_drawableType;
+            DrawableType m_drawableType;
         };
     };
 };

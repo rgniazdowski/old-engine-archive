@@ -53,7 +53,7 @@ namespace fg {
              * @param texture
              * @return 
              */
-            fg::gfx::CDrawCall *setupDrawCall(fg::gfx::CTexture *texture);
+            gfx::CDrawCall *setupDrawCall(gfx::CTexture *texture);
 
         public:
             /**

@@ -150,15 +150,15 @@ namespace fg {
             ///
             typedef fg::CVector<CResource *> rgResVec;
             ///
-            typedef fg::CVector<FG_RHANDLE> rgHandleVec;
+            typedef fg::CVector<ResourceHandle> rgHandleVec;
             ///
             typedef fg::CVector<CResource *>::iterator rgResVecItor;
             ///
-            typedef fg::CVector<FG_RHANDLE>::iterator rgHandleVecItor;
+            typedef fg::CVector<ResourceHandle>::iterator rgHandleVecItor;
             ///
             typedef fg::CVector<CResource *>::const_iterator rgResVecConstItor;
             ///
-            typedef fg::CVector<FG_RHANDLE>::const_iterator rgHandleVecConstItor;
+            typedef fg::CVector<ResourceHandle>::const_iterator rgHandleVecConstItor;
 
         public:
             /**

@@ -33,33 +33,39 @@ namespace fg {
     #define FG_TAG_SHADER_MANAGER_NAME  "GfxShaderManager"
 //#define FG_TAG_MANAGER_BASE_ID        20 //#FIXME - something automatic maybe?
     #define FG_TAG_SHADER_MANAGER       FG_TAG_TYPE(fg::gfx::CShaderManager)
-
 //FG_TAG_TEMPLATE(fgResourceManager, FG_TAG_MANAGER_BASE_NAME, FG_TAG_MANAGER_BASE_ID);
 FG_TAG_TEMPLATE_ID_AUTO(fg::gfx::CShaderManager, FG_TAG_SHADER_MANAGER_NAME);
-
-// Special handle type for manager base
-typedef FG_TAG_SHADER_MANAGER fgGfxShaderManagerTag;
 
     #define FG_MANAGER_GFX_SHADER   0x00000002
 
 namespace fg {
     namespace gfx {
+        /// Special handle type for manager base
+        typedef FG_TAG_SHADER_MANAGER ShaderManagerTag;
 
         /**
          *
          */
-        class CShaderManager : 
-        public fg::resource::CDataManagerBase<fg::gfx::CShaderProgram*, fgGfxShaderHandle, fgGfxShaderManagerTag> {
+        class CShaderManager :
+        public fg::resource::CDataManagerBase<fg::gfx::CShaderProgram*, ShaderHandle, ShaderManagerTag> {
         public:
-            typedef CDataManagerBase<CShaderProgram*, fgGfxShaderHandle, fgGfxShaderManagerTag> base_type;
+            ///
+            typedef CDataManagerBase<CShaderProgram*, ShaderHandle, ShaderManagerTag> base_type;
+            ///
             typedef CShaderManager self_type;
+            ///
             typedef CShaderProgram data_type;
+            ///
             typedef CShaderProgram* data_type_ptr;
-            typedef fgGfxShaderHandle handle_type;
-            typedef fgGfxShaderManagerTag tag_type;
+            ///
+            typedef ShaderHandle handle_type;
+            ///
+            typedef ShaderManagerTag tag_type;
 
         protected:
+            ///
             typedef DataVec ProgramVec;
+            ///
             typedef DataVec::iterator ProgramVecItor;
 
         public:
@@ -68,7 +74,7 @@ namespace fg {
              */
             CShaderManager();
             /**
-             * Default destructor for the shader manager object
+             * Destructor for the shader manager object
              */
             virtual ~CShaderManager();
 
@@ -126,7 +132,7 @@ namespace fg {
              * @param spUniqueID
              * @return 
              */
-            fgBool isProgramUsed(fgGfxShaderHandle spUniqueID);
+            fgBool isProgramUsed(ShaderHandle spUniqueID);
             /**
              * 
              * @param nameTag
@@ -151,7 +157,7 @@ namespace fg {
              * @param spUniqueID
              * @return 
              */
-            fgBool useProgram(fgGfxShaderHandle spUniqueID);
+            fgBool useProgram(ShaderHandle spUniqueID);
             /**
              * 
              * @param nameTag

@@ -7,18 +7,16 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-#ifndef FG_INC_GFX_OCTREE
-    #define FG_INC_GFX_OCTREE
-    #define FG_INC_GFX_OCTREE_BLOCK
+#ifndef FG_INC_GFX_QUADTREE
+    #define FG_INC_GFX_QUADTREE
+    #define FG_INC_GFX_QUADTREE_BLOCK
 
-    #include "fgGFXStdInc.h"
+    #include "GFX/fgGFXStdInc.h"
     #include "fgGFXSceneNode.h"
     #include "fgGFXTreeNode.h"
-    #include "fgVector.h"
-    #include "fgBool.h"
     #include "fgGFXBasetree.h"
-
-    #include <stack>
+    
+    #include "fgVector.h"
 
 namespace fg {
     namespace gfx {
@@ -26,31 +24,29 @@ namespace fg {
         /**
          *
          */
-        struct SOctreeNode : public STreeNode {
+        struct SQuadtreeNode : public STreeNode {
             ///
-            typedef SOctreeNode type;
+            typedef SQuadtreeNode type;
             ///
-            typedef SOctreeNode self_type;
+            typedef SQuadtreeNode self_type;
             ///
             typedef STreeNode base_type;
 
             ///
             self_type *parent;
             ///
-            self_type *child[2][2][2];
+            self_type *child[2][2];
             /**
              * 
              * @param _parent
              * @param _center
              * @param _depth
              */
-            SOctreeNode(self_type *_parent, Vector3f _center, int _depth = 0) :
+            SQuadtreeNode(self_type *_parent, Vector3f _center, int _depth = 0) :
             base_type(_center, _depth), parent(_parent) {
                 for(int i = 0; i < 2; i++) {
                     for(int j = 0; j < 2; j++) {
-                        for(int k = 0; k < 2; k++) {
-                            child[i][j][k] = NULL;
-                        } // for(k)
+                        child[i][j] = NULL;
                     } // for(j)
                 } // for(i)
             }
@@ -60,31 +56,27 @@ namespace fg {
              * @param _center
              * @param _depth
              */
-            SOctreeNode(self_type *_parent, Vector2f _center, int _depth = 0) :
+            SQuadtreeNode(self_type *_parent, Vector2f _center, int _depth = 0) :
             base_type(_center, _depth), parent(_parent) {
                 for(int i = 0; i < 2; i++) {
                     for(int j = 0; j < 2; j++) {
-                        for(int k = 0; k < 2; k++) {
-                            child[i][j][k] = NULL;
-                        } // for(k)
+                        child[i][j] = NULL;
                     } // for(j)
                 } // for(i)
             }
             /**
              * 
              */
-            virtual ~SOctreeNode() {
+            virtual ~SQuadtreeNode() {
                 objects.clear_optimised();
                 depth = 0;
                 parent = NULL;
                 for(int i = 0; i < 2; i++) {
                     for(int j = 0; j < 2; j++) {
-                        for(int k = 0; k < 2; k++) {
-                            if(child[i][j][k]) {
-                                delete child[i][j][k];
-                                child[i][j][k] = NULL;
-                            }
-                        } // for(k)
+                        if(child[i][j]) {
+                            delete child[i][j];
+                            child[i][j] = NULL;
+                        }
                     } // for(j)
                 } // for(i)
             }
@@ -92,25 +84,25 @@ namespace fg {
         };
 
         /**
-         *
+         * 
          */
-        class COctree : public CBasetree {
+        class CQuadtree : public CBasetree {
         public:
             ///
-            const unsigned int DEFAULT_WORLD_SIZE = 2048;
+            const unsigned int DEFAULT_WORLD_SIZE = 1000;
 
         protected:
 
             /**
              *
              */
-            struct STraverse : public STraverseBase<SOctreeNode> {
+            struct STraverse : public STraverseBase<SQuadtreeNode> {
                 ///
-                typedef STraverseBase<SOctreeNode> base_type;
+                typedef STraverseBase<SQuadtreeNode> base_type;
                 ///
                 typedef STraverse type;
                 ///
-                typedef SOctreeNode node_type;
+                typedef SQuadtreeNode node_type;
                 /**
                  * 
                  */
@@ -123,7 +115,7 @@ namespace fg {
                  * 
                  * @return 
                  */
-                SOctreeNode *next(SOctreeNode *root) {
+                SQuadtreeNode *next(SQuadtreeNode *root) {
                     if(!current) {
                         if(!root)
                             return 0;
@@ -133,10 +125,10 @@ namespace fg {
                         return current;
                     }
 
-                    for(int i = idx; i < 8; i++) {
-                        uintptr_t offset = (uintptr_t)(&current->child[0][0][0]);
-                        offset += sizeof (SOctreeNode*)*(i);
-                        SOctreeNode *node = *((SOctreeNode**)offset);
+                    for(int i = idx; i < 4; i++) {
+                        uintptr_t offset = (uintptr_t)(&current->child[0][0]);
+                        offset += sizeof (SQuadtreeNode*)*(i);
+                        SQuadtreeNode *node = *((SQuadtreeNode**)offset);
                         if(node) {
                             idx = i + 1;
                             node_stack.push(current);
@@ -163,30 +155,28 @@ namespace fg {
                     }
                     return next(root);
                 }
-
             };
 
         public:
             /**
              * 
              */
-            COctree();
-            /**
-             * 
-             * @param orig
-             */
-            COctree(const COctree& orig);
+            CQuadtree();
             /**
              * 
              */
-            virtual ~COctree();
+            CQuadtree(const CQuadtree& orig);
+            /**
+             * 
+             */
+            virtual ~CQuadtree();
 
         public:
             /**
              * 
              * @return 
              */
-            SOctreeNode *getRoot(void) const {
+            SQuadtreeNode *getRoot(void) const {
                 return m_root;
             }
 
@@ -222,14 +212,12 @@ namespace fg {
 
         protected:
             ///
-            SOctreeNode *m_root;
+            SQuadtreeNode *m_root;
             ///
             STraverse m_traverse;
-
         };
-
     };
 };
 
-    #undef FG_INC_GFX_OCTREE_BLOCK
-#endif /* FG_INC_GFX_OCTREE */
+    #undef FG_INC_GFX_QUADTREE_BLOCK
+#endif /* FG_INC_GFX_QUADTREE */

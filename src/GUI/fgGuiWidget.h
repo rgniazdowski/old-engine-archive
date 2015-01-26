@@ -57,12 +57,7 @@ namespace fg {
 
     #define FG_TAG_GUI_WIDGET_NAME	"GuiWidget"
     #define FG_TAG_GUI_WIDGET		FG_TAG_TYPE(fg::gui::CWidget)
-
 FG_TAG_TEMPLATE_ID_AUTO(fg::gui::CWidget, FG_TAG_GUI_WIDGET_NAME);
-typedef FG_TAG_GUI_WIDGET fgGuiWidgetTag;
-
-// Special handle type for gui widget (used mainly for widget manager)
-typedef fgHandle<fgGuiWidgetTag> fgGuiWidgetHandle;
 
     #define FG_GUI_WIDGET_DEFAULT_STYLE "DefaultStyle"
 
@@ -103,18 +98,23 @@ namespace fg {
 namespace fg {
     namespace gui {
 
+        /// Tag type for Gui Widget
+        typedef FG_TAG_GUI_WIDGET WidgetTag;
+        /// Special handle type for gui widget (used mainly for widget manager)
+        typedef fg::util::CHandle<WidgetTag> WidgetHandle;
+
         /**
          *
          * @see fgManagedObjectBase
          */
-        class CWidget : public fg::resource::CManagedObject<fgGuiWidgetHandle> {
+        class CWidget : public fg::resource::CManagedObject<WidgetHandle> {
             friend class CGuiMain;
             friend class CWidgetManager;
             friend class CStructureSheetParser;
 
         public:
             ///
-            typedef CManagedObject<fgGuiWidgetHandle> base_type;
+            typedef CManagedObject<WidgetHandle> base_type;
 
             /**
              *

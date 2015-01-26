@@ -28,16 +28,17 @@
 
 namespace fg {
     namespace gfx {
+        /// Forward declaration of class CShaderProgram
         class CShaderProgram;
+        /// Forward declaration of class CShaderManager
+        class CShaderManager;
     };
 };
     #define FG_TAG_GFX_SHADER_PROGRAM_NAME      "GfxShaderProgram"
     #define FG_TAG_GFX_SHADER_PROGRAM           FG_TAG_TYPE(fg::gfx::CShaderProgram)
-
 FG_TAG_TEMPLATE_ID_AUTO(fg::gfx::CShaderProgram, FG_TAG_GFX_SHADER_PROGRAM_NAME);
-typedef FG_TAG_GFX_SHADER_PROGRAM fgGfxShaderProgramTag;
 
-//
+///
 typedef fgGFXuint fgGfxProgramObjParamType;
 
 // #FIXME
@@ -62,9 +63,9 @@ typedef fgGFXuint fgGfxProgramObjParamType;
 
 namespace fg {
     namespace gfx {
-
-        /// Forward declaration of class CShaderManager
-        class CShaderManager;
+        
+        ///
+        typedef FG_TAG_GFX_SHADER_PROGRAM ShaderProgramTag;
         
         /**
          *
@@ -75,7 +76,7 @@ namespace fg {
             ///
             typedef fg::gfx::base::CShader base_type;
             ///
-            typedef fgGfxShaderProgramTag tag_type;
+            typedef ShaderProgramTag tag_type;
 
         public:
 
@@ -97,26 +98,26 @@ namespace fg {
              * @param _type
              * @return 
              */
-            static fgGFXint shaderTypeToSpID(fgGfxShaderType _type) {
+            static fgGFXint shaderTypeToSpID(ShaderType _type) {
                 fgGFXint spID = 0;
                 switch(_type) {
-                    case fgGfxShaderType::FG_GFX_SHADER_FRAGMENT:
+                    case ShaderType::FG_GFX_SHADER_FRAGMENT:
                         spID = SP_FRAGMENT_SHADER_ID;
                         break;
-                    case fgGfxShaderType::FG_GFX_SHADER_VERTEX:
+                    case ShaderType::FG_GFX_SHADER_VERTEX:
                         spID = SP_VERTEX_SHADER_ID;
                         break;
     #if defined FG_USING_OPENGL
-                    case fgGfxShaderType::FG_GFX_SHADER_TESS_CONTROL:
+                    case ShaderType::FG_GFX_SHADER_TESS_CONTROL:
                         spID = SP_TESS_CONTROL_SHADER_ID;
                         break;
-                    case fgGfxShaderType::FG_GFX_SHADER_TESS_EVALUATION:
+                    case ShaderType::FG_GFX_SHADER_TESS_EVALUATION:
                         spID = SP_TESS_EVALUATION_SHADER_ID;
                         break;
-                    case fgGfxShaderType::FG_GFX_SHADER_GEOMETRY:
+                    case ShaderType::FG_GFX_SHADER_GEOMETRY:
                         spID = SP_GEOMETRY_SHADER_ID;
                         break;
-                    case fgGfxShaderType::FG_GFX_SHADER_COMPUTE:
+                    case ShaderType::FG_GFX_SHADER_COMPUTE:
                         spID = SP_COMPUTE_SHADER_ID;
                         break;
     #endif
@@ -133,11 +134,11 @@ namespace fg {
             ///
             typedef shaderVec::iterator shaderVecItor;
             ///
-            typedef CShaderConfig::shaderUniformBindVec uniformBindVec;
+            typedef CShaderConfig::UniformBindVec uniformBindVec;
             ///
             typedef uniformBindVec::iterator uniformBindVecItor;
             ///
-            typedef CShaderConfig::shaderAttributeBindVec attributeBindVec;
+            typedef CShaderConfig::AttributeBindVec attributeBindVec;
             ///
             typedef attributeBindVec::iterator attributeBindVecItor;
 
@@ -341,7 +342,7 @@ namespace fg {
              * @param type
              * @return 
              */
-            inline CShader *getShader(fgGfxShaderType type) const {
+            inline CShader *getShader(ShaderType type) const {
                 fgGFXint id = shaderTypeToSpID(type);
                 if(id != -1)
                     return m_shaders[id];
@@ -356,7 +357,7 @@ namespace fg {
              * @param type
              * @return 
              */
-            fgGFXint getUniformLocation(fgGfxUniformType type);
+            fgGFXint getUniformLocation(UniformType type);
             /**
              * 
              * @param variableName
@@ -369,13 +370,13 @@ namespace fg {
              * @param type
              * @return 
              */
-            fgGFXint getUniformBindIndex(fgGfxUniformType type);
+            fgGFXint getUniformBindIndex(UniformType type);
             /**
              * 
              * @param type
              * @return 
              */
-            fgGfxUniformBind *getUniformBind(fgGfxUniformType type);
+            SUniformBind *getUniformBind(UniformType type);
 
             /**
              * 
@@ -396,7 +397,7 @@ namespace fg {
              * @param v0
              * @return 
              */
-            fgBool setUniform(fgGfxUniformType type, fgGFXfloat v0);
+            fgBool setUniform(UniformType type, fgGFXfloat v0);
             /**
              * 
              * @param type
@@ -404,7 +405,7 @@ namespace fg {
              * @param v1
              * @return 
              */
-            fgBool setUniform(fgGfxUniformType type, fgGFXfloat v0, fgGFXfloat v1);
+            fgBool setUniform(UniformType type, fgGFXfloat v0, fgGFXfloat v1);
             /**
              * 
              * @param type
@@ -413,7 +414,7 @@ namespace fg {
              * @param v2
              * @return 
              */
-            fgBool setUniform(fgGfxUniformType type,
+            fgBool setUniform(UniformType type,
                               fgGFXfloat v0,
                               fgGFXfloat v1,
                               fgGFXfloat v2);
@@ -426,7 +427,7 @@ namespace fg {
              * @param v3
              * @return 
              */
-            fgBool setUniform(fgGfxUniformType type,
+            fgBool setUniform(UniformType type,
                               fgGFXfloat v0,
                               fgGFXfloat v1,
                               fgGFXfloat v2,
@@ -438,7 +439,7 @@ namespace fg {
              * @param v0
              * @return 
              */
-            fgBool setUniform(fgGfxUniformType type, fgGFXint v0);
+            fgBool setUniform(UniformType type, fgGFXint v0);
             /**
              * 
              * @param type
@@ -446,7 +447,7 @@ namespace fg {
              * @param v1
              * @return 
              */
-            fgBool setUniform(fgGfxUniformType type, fgGFXint v0, fgGFXint v1);
+            fgBool setUniform(UniformType type, fgGFXint v0, fgGFXint v1);
             /**
              * 
              * @param type
@@ -455,7 +456,7 @@ namespace fg {
              * @param v2
              * @return 
              */
-            fgBool setUniform(fgGfxUniformType type,
+            fgBool setUniform(UniformType type,
                               fgGFXint v0,
                               fgGFXint v1,
                               fgGFXint v2);
@@ -468,7 +469,7 @@ namespace fg {
              * @param v3
              * @return 
              */
-            fgBool setUniform(fgGfxUniformType type,
+            fgBool setUniform(UniformType type,
                               fgGFXint v0,
                               fgGFXint v1,
                               fgGFXint v2,
@@ -481,7 +482,7 @@ namespace fg {
              * @param value
              * @return 
              */
-            fgBool setUniform(fgGfxUniformType type,
+            fgBool setUniform(UniformType type,
                               fgGFXsizei count,
                               const fgGFXfloat *value);
             /**
@@ -491,7 +492,7 @@ namespace fg {
              * @param value
              * @return 
              */
-            fgBool setUniform(fgGfxUniformType type,
+            fgBool setUniform(UniformType type,
                               fgGFXsizei count,
                               const fgGFXint *value);
 

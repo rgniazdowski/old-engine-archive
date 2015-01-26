@@ -29,14 +29,14 @@ namespace fg {
          */
         class CWidgetManager :
         public fg::base::CManager,
-        protected fg::util::CHandleManager<CWidget *, fgGuiWidgetHandle> {
+        protected fg::util::CHandleManager<CWidget *, WidgetHandle> {
         public:
             ///
             typedef fg::base::CManager base_type;
             ///
-            typedef fg::util::CHandleManager<CWidget *, fgGuiWidgetHandle> handle_mgr_type;
+            typedef fg::util::CHandleManager<CWidget *, WidgetHandle> handle_mgr_type;
             ///
-            typedef fgGuiWidgetHandle handle_type;
+            typedef WidgetHandle handle_type;
             ///
             typedef fg::CVector<CWidget *> WidgetVec;
             ///
@@ -144,7 +144,7 @@ namespace fg {
              * @param wFatherUniqueID
              * @return 
              */
-            virtual fgBool addWidget(CWidget *pWidget, const fgGuiWidgetHandle& wFatherUniqueID);
+            virtual fgBool addWidget(CWidget *pWidget, const WidgetHandle& wFatherUniqueID);
             /**
              * 
              * @param pWidget
@@ -171,7 +171,7 @@ namespace fg {
              * @param wUniqueID
              * @return 
              */
-            virtual fgBool remove(const fgGuiWidgetHandle& wUniqueID);
+            virtual fgBool remove(const WidgetHandle& wUniqueID);
             /**
              * 
              * @param nameTag
@@ -196,7 +196,7 @@ namespace fg {
              * @param wUniqueID
              * @return 
              */
-            virtual fgBool destroyWidget(const fgGuiWidgetHandle& wUniqueID);
+            virtual fgBool destroyWidget(const WidgetHandle& wUniqueID);
             /**
              * 
              * @param nameTag
@@ -215,7 +215,7 @@ namespace fg {
              * @param wUniqueID
              * @return 
              */
-            virtual CWidget* get(const fgGuiWidgetHandle& wUniqueID);
+            virtual CWidget* get(const WidgetHandle& wUniqueID);
             /**
              * 
              * @param nameTag
@@ -240,7 +240,7 @@ namespace fg {
              * @param wUniqueID
              * @return 
              */
-            virtual fgBool isManaged(const fgGuiWidgetHandle& wUniqueID);
+            virtual fgBool isManaged(const WidgetHandle& wUniqueID);
             /**
              * 
              * @param nameTag

@@ -50,7 +50,7 @@ fgGFXvoid *gfx::SMeshSoA::getIndicesPointer(void) const {
  * @param pDataArray
  * @return 
  */
-fgGFXboolean gfx::SMeshSoA::refreshAttributes(fgGfxAttributeData *pDataArray) const {
+fgGFXboolean gfx::SMeshSoA::refreshAttributes(SAttributeData *pDataArray) const {
     if(!pDataArray)
         return FG_GFX_FALSE;
     // 3V - pos + norm + uv
@@ -103,11 +103,11 @@ fgGFXboolean gfx::SMeshSoA::refreshAttributes(fgGfxAttributeData *pDataArray) co
     }
 
     // Colors = there are no colors, this attribute will be disabled
-    pDataArray[FG_GFX_ATTRIB_COLOR_LOCATION] = fgGfxAttributeData(FG_GFX_COLOR);
+    pDataArray[FG_GFX_ATTRIB_COLOR_LOCATION] = SAttributeData(FG_GFX_COLOR);
     pDataArray[FG_GFX_ATTRIB_COLOR_LOCATION].isInterleaved = FG_FALSE;
 
     // Tangents - this attribute will be disabled
-    pDataArray[FG_GFX_ATTRIB_TANGENT_LOCATION] = fgGfxAttributeData(FG_GFX_TANGENT);
+    pDataArray[FG_GFX_ATTRIB_TANGENT_LOCATION] = SAttributeData(FG_GFX_TANGENT);
     pDataArray[FG_GFX_ATTRIB_TANGENT_LOCATION].isInterleaved = FG_FALSE;
 
     return FG_GFX_TRUE;
@@ -118,7 +118,7 @@ fgGFXboolean gfx::SMeshSoA::refreshAttributes(fgGfxAttributeData *pDataArray) co
  * @param pDataArray
  * @return 
  */
-fgGFXboolean gfx::SMeshSoA::setupAttributes(fgGfxAttributeData *pDataArray) const {
+fgGFXboolean gfx::SMeshSoA::setupAttributes(SAttributeData *pDataArray) const {
     if(!pDataArray)
         return FG_GFX_FALSE;
     // 3V - pos + norm + uv
@@ -195,11 +195,11 @@ fgGFXboolean gfx::SMeshSoA::setupAttributes(fgGfxAttributeData *pDataArray) cons
     }
 
     // Colors = there are no colors, this attribute will be disabled
-    pDataArray[FG_GFX_ATTRIB_COLOR_LOCATION] = fgGfxAttributeData(FG_GFX_COLOR);
+    pDataArray[FG_GFX_ATTRIB_COLOR_LOCATION] = SAttributeData(FG_GFX_COLOR);
     pDataArray[FG_GFX_ATTRIB_COLOR_LOCATION].isInterleaved = FG_FALSE;
 
     // Tangents - this attribute will be disabled
-    pDataArray[FG_GFX_ATTRIB_TANGENT_LOCATION] = fgGfxAttributeData(FG_GFX_TANGENT);
+    pDataArray[FG_GFX_ATTRIB_TANGENT_LOCATION] = SAttributeData(FG_GFX_TANGENT);
     pDataArray[FG_GFX_ATTRIB_TANGENT_LOCATION].isInterleaved = FG_FALSE;
 
     return FG_GFX_TRUE;

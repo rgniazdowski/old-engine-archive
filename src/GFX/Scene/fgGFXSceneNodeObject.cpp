@@ -26,8 +26,8 @@ using namespace fg;
  * @param pParent
  */
 gfx::CSceneNodeObject::CSceneNodeObject(gfx::CModel *pModel, gfx::CSceneNode *pParent) :
-CSceneNode(FG_GFX_SCENE_NODE_OBJECT, pParent) {
-    CSceneNode::setNodeType(FG_GFX_SCENE_NODE_OBJECT);
+CSceneNode(SCENE_NODE_OBJECT, pParent) {
+    CSceneNode::setNodeType(SCENE_NODE_OBJECT);
     // Now need to reset the draw call - this is object based on model
     // it has multiple children - they have their own draw calls
     // One drawcall for model/object is not needed - remove it just in case
@@ -67,7 +67,7 @@ void gfx::CSceneNodeObject::setModel(gfx::CModel *pModel) {
             return;
         }
         m_pModel = pModel;
-        setNodeType(FG_GFX_SCENE_NODE_OBJECT);
+        setNodeType(SCENE_NODE_OBJECT);
         // Now this object is made of some shapes/meshes
         // they have separate drawcalls so this one (NodeObject) does not
         // need any separate drawcall - just one for every mesh/shape

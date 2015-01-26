@@ -8,16 +8,18 @@
  *******************************************************/
 
 #include "fgGFX3DScene.h"
-#include "Shaders/fgGFXShaderManager.h"
-#include "Textures/fgTextureResource.h"
-#include "Resource/fgResourceManager.h"
 #include "fgGFXSceneNode.h"
 #include "fgGFXLooseOctree.h"
+#include "fgGFXQuadtree.h"
+
+#include "GFX/Shaders/fgGFXShaderManager.h"
+#include "GFX/Textures/fgTextureResource.h"
+#include "Resource/fgResourceManager.h"
+
 #include "fgDebugConfig.h"
 
 #if defined(FG_DEBUG)
 #include "Util/fgProfiling.h"
-#include "fgGFXQuadtree.h"
 #endif
 
 using namespace fg;

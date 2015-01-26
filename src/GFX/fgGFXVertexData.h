@@ -135,13 +135,13 @@ namespace fg {
              * @param pDataArray
              * @return 
              */
-            virtual fgGFXboolean refreshAttributes(fgGfxAttributeData *pDataArray) const = 0;
+            virtual fgGFXboolean refreshAttributes(SAttributeData *pDataArray) const = 0;
             /**
              * 
              * @param pDataArray
              * @return 
              */
-            virtual fgGFXboolean setupAttributes(fgGfxAttributeData *pDataArray) const = 0;
+            virtual fgGFXboolean setupAttributes(SAttributeData *pDataArray) const = 0;
             /**
              * 
              * @return 
@@ -317,13 +317,13 @@ namespace fg {
              * @param pDataArray
              * @return 
              */
-            virtual fgGFXboolean refreshAttributes(fgGfxAttributeData *pDataArray) const;
+            virtual fgGFXboolean refreshAttributes(SAttributeData *pDataArray) const;
             /**
              * 
              * @param pDataArray
              * @return 
              */
-            virtual fgGFXboolean setupAttributes(fgGfxAttributeData *pDataArray) const;
+            virtual fgGFXboolean setupAttributes(SAttributeData *pDataArray) const;
 
             /**
              * 
@@ -520,13 +520,13 @@ namespace fg {
              * @param pDataArray
              * @return 
              */
-            virtual fgGFXboolean refreshAttributes(fgGfxAttributeData *pDataArray) const;
+            virtual fgGFXboolean refreshAttributes(SAttributeData *pDataArray) const;
             /**
              * 
              * @param pDataArray
              * @return 
              */
-            virtual fgGFXboolean setupAttributes(fgGfxAttributeData *pDataArray) const;
+            virtual fgGFXboolean setupAttributes(SAttributeData *pDataArray) const;
 
             /**
              * 
@@ -729,13 +729,13 @@ namespace fg {
              * @param pDataArray
              * @return 
              */
-            virtual fgGFXboolean refreshAttributes(fgGfxAttributeData *pDataArray) const;
+            virtual fgGFXboolean refreshAttributes(SAttributeData *pDataArray) const;
             /**
              * 
              * @param pDataArray
              * @return 
              */
-            virtual fgGFXboolean setupAttributes(fgGfxAttributeData *pDataArray) const;
+            virtual fgGFXboolean setupAttributes(SAttributeData *pDataArray) const;
 
             /**
              * 

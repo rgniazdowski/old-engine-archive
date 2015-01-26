@@ -153,7 +153,7 @@ fg::base::CManager* gfx::CTextureManager::getResourceManager(void) const {
  * @param texHandle
  * @return 
  */
-fgGfxTextureID& gfx::CTextureManager::getRefGfxID(const fgResourceHandle& texHandle) {
+fgGfxTextureID& gfx::CTextureManager::getRefGfxID(const resource::ResourceHandle& texHandle) {
     if(!m_pResourceMgr)
         return m_emptyGfxID;
     gfx::CTextureResource *pTexture = (CTextureResource *)static_cast<resource::CResourceManager *>(m_pResourceMgr)->get(texHandle);

@@ -18,7 +18,7 @@ using namespace fg;
  * 
  * @param type
  */
-gfx::CShader::CShader(fgGfxShaderType type) :
+gfx::CShader::CShader(ShaderType type) :
 m_type(type),
 m_version(FG_GFX_SHADING_LANGUAGE_INVALID),
 m_numSources(0),
@@ -27,7 +27,7 @@ m_sources(NULL),
 m_fileSource(NULL),
 m_precision(FG_GFX_SHADER_PRECISION_DEFAULT),
 m_isSourceLoaded(FG_FALSE) {
-    if(m_type == fgGfxShaderType::FG_GFX_SHADER_INVALID)
+    if(m_type == ShaderType::FG_GFX_SHADER_INVALID)
         FG_MessageSubsystem->reportError(tag_type::name(), FG_ERRNO_GFX_SHADER_WRONG_TYPE);
     m_params[FG_GFX_SHADER_TYPE] = (int)m_type;
     m_params[FG_GFX_SHADER_DELETE_STATUS] = 0;
@@ -73,7 +73,7 @@ fgBool gfx::CShader::setVersion(fgGfxSLVersion slVer) {
  * 
  * @param constantDef
  */
-void gfx::CShader::appendDefine(fgGfxShaderConstantDef constantDef) {
+void gfx::CShader::appendDefine(SShaderConstantDef constantDef) {
     std::string defStr;
     constantDef.toString(defStr);
     defStr.append("\n");
@@ -193,7 +193,7 @@ void gfx::CShader::freeSource(void) {
  * @return 
  */
 fgGFXuint gfx::CShader::create(void) {
-    if(m_type == fgGfxShaderType::FG_GFX_SHADER_INVALID)
+    if(m_type == ShaderType::FG_GFX_SHADER_INVALID)
         return 0;
     if(!m_gfxID || (glIsShader(m_gfxID) == FG_GFX_FALSE)) {
         m_gfxID = glCreateShader((fgGFXenum)m_type);

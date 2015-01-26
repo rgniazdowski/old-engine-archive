@@ -301,7 +301,7 @@ fgBool gui::CWidgetManager::addWidget(CWidget *pWidget, CWidget *pFatherWidget) 
         log::PrintError("WidgetManager: // Empty pointer - exit... no addition made");
         return FG_FALSE;
     }
-    fgGuiWidgetHandle wUniqueID;
+    WidgetHandle wUniqueID;
     if(handle_mgr_type::isDataManaged(pWidget)) {
         // Widget is already managed in the handle manager
         log::PrintError("WidgetManager: // Widget is already managed in the handle manager: '%s' of type '%s'", pWidget->getNameStr(), pWidget->getTypeNameStr());
@@ -385,7 +385,7 @@ fgBool gui::CWidgetManager::addWidget(CWidget *pWidget, CWidget *pFatherWidget) 
  * @param wFatherUniqueID
  * @return 
  */
-fgBool gui::CWidgetManager::addWidget(CWidget *pWidget, const fgGuiWidgetHandle& wFatherUniqueID) {
+fgBool gui::CWidgetManager::addWidget(CWidget *pWidget, const WidgetHandle& wFatherUniqueID) {
     return addWidget(pWidget, handle_mgr_type::dereference(wFatherUniqueID));
 }
 
@@ -433,7 +433,7 @@ fgBool gui::CWidgetManager::remove(CWidget *pWidget) {
  * @param wUniqueID
  * @return 
  */
-fgBool gui::CWidgetManager::remove(const fgGuiWidgetHandle& wUniqueID) {
+fgBool gui::CWidgetManager::remove(const WidgetHandle& wUniqueID) {
     CWidget *pWidget = dereference(wUniqueID);
     if(!pWidget)
         return FG_FALSE;
@@ -498,7 +498,7 @@ fgBool gui::CWidgetManager::destroyWidget(CWidget* & pWidget) {
  * @param wUniqueID
  * @return 
  */
-fgBool gui::CWidgetManager::destroyWidget(const fgGuiWidgetHandle& wUniqueID) {
+fgBool gui::CWidgetManager::destroyWidget(const WidgetHandle& wUniqueID) {
     CWidget *pWidget = dereference(wUniqueID);
     return destroyWidget(pWidget);
 }
@@ -528,7 +528,7 @@ fgBool gui::CWidgetManager::destroyWidget(const char *nameTag) {
  * @param wUniqueID
  * @return 
  */
-gui::CWidget* gui::CWidgetManager::get(const fgGuiWidgetHandle& wUniqueID) {
+gui::CWidget* gui::CWidgetManager::get(const WidgetHandle& wUniqueID) {
     return handle_mgr_type::dereference(wUniqueID);
 }
 
@@ -574,7 +574,7 @@ fgBool gui::CWidgetManager::isManaged(CWidget *pWidget) {
  * @param wUniqueID
  * @return 
  */
-fgBool gui::CWidgetManager::isManaged(const fgGuiWidgetHandle& wUniqueID) {
+fgBool gui::CWidgetManager::isManaged(const WidgetHandle& wUniqueID) {
     CWidget *pWidget = get(wUniqueID);
     return (fgBool)(pWidget != NULL);
 }

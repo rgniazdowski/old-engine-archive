@@ -156,7 +156,7 @@ fgBool resource::CResourceManager::initialize(void) {
     }
     for(unsigned int i = 0; i < resGroupFiles.size(); i++) {
         // #FIXME - should resource manager hold separate array for res groups IDS ? oh my ...
-        FG_RHANDLE grpUniqueID;
+        ResourceHandle grpUniqueID;
         CResourceGroup *resGroup = new CResourceGroup(m_pResourceFactory);
         // #TODO this will not always look like this - requires full path (cross platform)
         FG_LOG_DEBUG("Resource: Loading resource group file: '%s'", resGroupFiles[i].c_str());
@@ -315,7 +315,7 @@ fgBool resource::CResourceManager::insertResource(CResource* pResource) {
 /*
  * Insert resource group into manager
  */
-fgBool resource::CResourceManager::insertResourceGroup(const FG_RHANDLE& rhUniqueID,
+fgBool resource::CResourceManager::insertResourceGroup(const ResourceHandle& rhUniqueID,
                                                        CResource* pResource) {
     if(!CDataManagerBase::isManaged(pResource)) {
         return FG_FALSE;
@@ -331,7 +331,7 @@ fgBool resource::CResourceManager::insertResourceGroup(const FG_RHANDLE& rhUniqu
 /*
  * Removes an object completely from the manager.
  */
-fgBool resource::CResourceManager::remove(const FG_RHANDLE& rhUniqueID) {
+fgBool resource::CResourceManager::remove(const ResourceHandle& rhUniqueID) {
     return CResourceManager::remove(CDataManagerBase::get(rhUniqueID));
 }
 
@@ -371,7 +371,7 @@ fgBool resource::CResourceManager::remove(CResource* pResource) {
 /*
  * Disposes of the resource (frees memory) - does not remove resource from the manager
  */
-fgBool resource::CResourceManager::dispose(const FG_RHANDLE& rhUniqueID) {
+fgBool resource::CResourceManager::dispose(const ResourceHandle& rhUniqueID) {
     return dispose(CDataManagerBase::get(rhUniqueID));
 }
 
@@ -465,7 +465,7 @@ void resource::CResourceManager::refreshResource(CResource* pResource) {
  * @param rhUniqueID
  * @return 
  */
-resource::CResource* resource::CResourceManager::get(const FG_RHANDLE& rhUniqueID) {
+resource::CResource* resource::CResourceManager::get(const ResourceHandle& rhUniqueID) {
     resource::CResource *pResource = CDataManagerBase::get(rhUniqueID);
     if(!pResource) {
         return NULL;
@@ -721,7 +721,7 @@ resource::CResource* resource::CResourceManager::request(const char *info, const
  * to ensure that numerous locks can be safely made.
  * #FIXME #TODO #P3 - locking/unlocking is based on counter - DEPRECATED.
  */
-resource::CResource* resource::CResourceManager::lockResource(const FG_RHANDLE& rhUniqueID) {
+resource::CResource* resource::CResourceManager::lockResource(const ResourceHandle& rhUniqueID) {
     CResource *pResource = CDataManagerBase::get(rhUniqueID);
     lockResource(pResource);
     // return the object pointer
@@ -757,7 +757,7 @@ fgBool resource::CResourceManager::lockResource(resource::CResource *pResource) 
  * either by handle or by the object's pointer.
  * #FIXME #TODO #P3 - locking/unlocking is based on counter - DEPRECATED.
  */
-resource::CResource* resource::CResourceManager::unlockResource(const FG_RHANDLE& rhUniqueID) {
+resource::CResource* resource::CResourceManager::unlockResource(const ResourceHandle& rhUniqueID) {
     CResource *pResource = CDataManagerBase::get(rhUniqueID);
     pResource->Unlock();
     return pResource;

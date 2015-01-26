@@ -49,7 +49,7 @@ namespace fg {
 
         protected:
             ///
-            fgGfxShaderType m_type;
+            ShaderType m_type;
             ///
             defineStrVec m_defineStrVec;
             ///
@@ -65,7 +65,7 @@ namespace fg {
             ///
             char * m_fileSource;
             ///
-            fgGfxShaderPrecision m_precision;
+            ShaderPrecision m_precision;
             ///
             fgBool m_isSourceLoaded;
             ///
@@ -76,7 +76,7 @@ namespace fg {
              * 
              * @param type
              */
-            CShader(fgGfxShaderType type);
+            CShader(ShaderType type);
             /**
              * 
              */
@@ -92,7 +92,7 @@ namespace fg {
              * 
              * @param constantDef
              */
-            void appendDefine(fgGfxShaderConstantDef constantDef);
+            void appendDefine(SShaderConstantDef constantDef);
             /**
              * 
              * @param includeName
@@ -173,14 +173,14 @@ namespace fg {
              * 
              * @param precision
              */
-            void setPrecision(fgGfxShaderPrecision precision) {
+            void setPrecision(ShaderPrecision precision) {
                 m_precision = precision;
             }
             /**
              * 
              * @return 
              */
-            fgGfxShaderPrecision getPrecision(void) const {
+            ShaderPrecision getPrecision(void) const {
                 return m_precision;
             }
             /**

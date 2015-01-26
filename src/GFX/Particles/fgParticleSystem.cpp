@@ -15,7 +15,7 @@
 
 #include "fgParticleSystem.h"
 #include "Resource/fgResourceManager.h"
-#include "GFX/fgGFXSceneManager.h"
+#include "GFX/Scene/fgGFXSceneManager.h"
 #include "GFX/Textures/fgTextureResource.h"
 
 using namespace fg;
@@ -388,7 +388,7 @@ void gfx::CParticleSystem::calculate(void) {
             }
             pDrawCall->setTexture(pEffect->getTextureGfxID());
             // Just in case?
-            pDrawCall->setPrimitiveMode(fgGfxPrimitiveMode::FG_GFX_TRIANGLES);
+            pDrawCall->setPrimitiveMode(PrimitiveMode::TRIANGLES);
             pVertexData = pDrawCall->getVertexData();
             if(pVertexData) {
                 // #FIXME

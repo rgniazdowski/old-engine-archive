@@ -20,11 +20,10 @@
     #include "Shaders/fgGFXShaderManager.h"
     #include "Textures/fgTextureManager.h"
 
-    #include "fgGFX3DScene.h"
-    #include "fgGFX2DScene.h"
+    #include "Scene/fgGFX3DScene.h"
+    #include "Scene/fgGFX2DScene.h"
 
     #include "Util/fgTag.h"
-
     #include "Particles/fgParticleSystem.h"
     #include "Event/fgArgumentList.h"
     #include "Event/fgCallback.h"
@@ -37,14 +36,13 @@ namespace fg {
 
     #define FG_TAG_GFX_MAIN_NAME	"GfxMain"
     #define FG_TAG_GFX_MAIN		FG_TAG_TYPE(fg::gfx::CGfxMain)
-
 FG_TAG_TEMPLATE_ID_AUTO(fg::gfx::CGfxMain, FG_TAG_GFX_MAIN_NAME);
-
-typedef FG_TAG_GFX_MAIN fgGfxMainTag;
 
 namespace fg {
     namespace gfx {
-
+        ///
+        typedef FG_TAG_GFX_MAIN GfxMainTag;
+        
         /**
          *
          */
@@ -53,7 +51,7 @@ namespace fg {
             ///
             typedef CGfxMain type;
             ///
-            typedef fgGfxMainTag tag_type;
+            typedef GfxMainTag tag_type;
 
         public:
             /**
@@ -61,7 +59,7 @@ namespace fg {
              */
             CGfxMain();
             /**
-             * Default destructor for the GFX main object
+             * Destructor for the GFX main object
              */
             virtual ~CGfxMain();
 

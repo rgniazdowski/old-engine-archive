@@ -195,7 +195,7 @@ gfx::CDrawCall *gui::CFontDrawer::setupDrawCall(gfx::CTexture *texture) {
                                                                    FG_GFX_POSITION_BIT | FG_GFX_UVS_BIT | FG_GFX_COLOR_BIT);
     drawCall->setColor(m_color);
     drawCall->setTexture(texture->getRefGfxID());
-    drawCall->setDrawAppendMode(FG_GFX_DRAW_APPEND_ABSOLUTE);
+    drawCall->setDrawAppendMode(gfx::DRAW_APPEND_ABSOLUTE);
     return drawCall;
 }
 

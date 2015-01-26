@@ -8,11 +8,12 @@
  *******************************************************/
 
 #include "fgGFXSceneManager.h"
-#include "Shaders/fgGFXShaderManager.h"
-#include "Textures/fgTextureResource.h"
+#include "GFX/Shaders/fgGFXShaderManager.h"
+#include "GFX/Textures/fgTextureResource.h"
+#include "GFX/fgGFXFrustum.h"
+
 #include "Resource/fgResourceManager.h"
 #include "fgDebugConfig.h"
-#include "fgGFXFrustum.h"
 
 #if defined(FG_DEBUG)
 #include "Util/fgProfiling.h"
@@ -204,7 +205,7 @@ void gfx::CSceneManager::render(void) {
 #if defined(FG_DEBUG)
         CShaderProgram *pProgram = static_cast<gfx::CShaderManager *>(m_pShaderMgr)->getCurrentProgram();
         pProgram->setUniform(FG_GFX_USE_TEXTURE, 0.0f);
-        if(FG_DEBUG_CFG_OPTION(gfxBBoxShow) && pSceneNode->getNodeType() == FG_GFX_SCENE_NODE_OBJECT) {
+        if(FG_DEBUG_CFG_OPTION(gfxBBoxShow) && pSceneNode->getNodeType() == SCENE_NODE_OBJECT) {
             CSceneNodeObject *pSceneObj = static_cast<CSceneNodeObject *>(pSceneNode);
             // Current aabb - it's in model space (local)
             AABB3Df &modelBox = pSceneObj->getModel()->getRefAABB();
@@ -216,6 +217,29 @@ void gfx::CSceneManager::render(void) {
             m_MVP.resetModelMatrix();
             pProgram->setUniform(&m_MVP);
             CPrimitives::drawAABBLines(pSceneNode->getRefBoundingVolume(), fgColor4f(0.5f, 0.5f, 1.0f, 1.0f));
+        }
+
+        if(FG_DEBUG_CFG_OPTION(gfxBBoxShow)) {
+            Vector4f matpos = pSceneNode->getRefModelMatrix()[3];
+            Vector3f pos(matpos.x, matpos.y, matpos.z);
+            Matrix4f mat = math::translate(Matrix4f(), pos);
+            float radius = 1.0f; 
+            if(pSceneNode->getNodeType() == SCENE_NODE_OBJECT) {
+                AABB3Df &aabb = static_cast<CSceneNodeObject *>(pSceneNode)->getModel()->getRefAABB();
+                Vector3f extent = aabb.getExtent();
+                radius = math::sqrt(extent.z * extent.z + extent.x * extent.x + extent.y * extent.y);
+            }
+            mat = math::scale(mat, Vec3f(radius, radius, radius));
+            m_MVP.calculate(mat);
+            pProgram->setUniform(&m_MVP);
+            CPrimitives::drawSphereLines();
+            
+            mat = math::scale(mat, Vec3f(1.0f/radius, 1.0f/radius, 1.0f/radius));
+            radius = pSceneNode->getRefBoundingVolume().radius;
+            mat = math::scale(mat, Vec3f(radius, radius, radius));
+            m_MVP.calculate(mat);
+            pProgram->setUniform(&m_MVP);
+            CPrimitives::drawSphereLines();
         }
 #endif
         m_nodeQueue.pop();
@@ -291,7 +315,7 @@ CSceneNode *gfx::CSceneManager::appendModel(int& index,
  * @param oFatherObj
  * @return 
  */
-fgBool gfx::CSceneManager::addNode(fgGfxSceneNodeHandle& nodeUniqueID,
+fgBool gfx::CSceneManager::addNode(SceneNodeHandle& nodeUniqueID,
                                    CSceneNode *pNode,
                                    CSceneNode *pFatherNode) {
     if(!pNode) {
@@ -333,7 +357,7 @@ fgBool gfx::CSceneManager::addNode(fgGfxSceneNodeHandle& nodeUniqueID,
     //unsigned int index = pObj->getHandle().getIndex();
 
 #if 1
-    if(pNode->getNodeType() == FG_GFX_SCENE_NODE_OBJECT) {
+    if(pNode->getNodeType() == SCENE_NODE_OBJECT) {
         // #FIXME - this is total fubar
         CSceneNodeObject *pNodeObject = static_cast<CSceneNodeObject *>(pNode);
         CDrawCall *pDrawCall = (*pNodeObject->getChildren().begin())->getDrawCall();
@@ -373,9 +397,9 @@ fgBool gfx::CSceneManager::addNode(fgGfxSceneNodeHandle& nodeUniqueID,
  * @param oFatherUniqueID
  * @return 
  */
-fgBool gfx::CSceneManager::addNode(fgGfxSceneNodeHandle& oUniqueID,
+fgBool gfx::CSceneManager::addNode(SceneNodeHandle& oUniqueID,
                                    CSceneNode *pObj,
-                                   const fgGfxSceneNodeHandle& oFatherUniqueID) {
+                                   const SceneNodeHandle& oFatherUniqueID) {
     return addNode(oUniqueID, pObj, handle_mgr_type::dereference(oFatherUniqueID));
 }
 
@@ -386,7 +410,7 @@ fgBool gfx::CSceneManager::addNode(fgGfxSceneNodeHandle& oUniqueID,
  * @param oFatherNameTag
  * @return 
  */
-fgBool gfx::CSceneManager::addNode(fgGfxSceneNodeHandle& oUniqueID,
+fgBool gfx::CSceneManager::addNode(SceneNodeHandle& oUniqueID,
                                    CSceneNode *pObj,
                                    const std::string& oFatherNameTag) {
     return addNode(oUniqueID, pObj, handle_mgr_type::dereference(oFatherNameTag));
@@ -399,7 +423,7 @@ fgBool gfx::CSceneManager::addNode(fgGfxSceneNodeHandle& oUniqueID,
  * @param oFatherNameTag
  * @return 
  */
-fgBool gfx::CSceneManager::addNode(fgGfxSceneNodeHandle& oUniqueID,
+fgBool gfx::CSceneManager::addNode(SceneNodeHandle& oUniqueID,
                                    CSceneNode *pObj,
                                    const char* oFatherNameTag) {
     return addNode(oUniqueID, pObj, handle_mgr_type::dereference(oFatherNameTag));
@@ -425,7 +449,7 @@ fgBool gfx::CSceneManager::remove(CSceneNode *pObj) {
  * @param oUniqueID
  * @return 
  */
-fgBool gfx::CSceneManager::remove(const fgGfxSceneNodeHandle& oUniqueID) {
+fgBool gfx::CSceneManager::remove(const SceneNodeHandle& oUniqueID) {
     return remove(handle_mgr_type::dereference(oUniqueID));
 }
 
@@ -466,7 +490,7 @@ fgBool gfx::CSceneManager::destroyNode(CSceneNode*& pObj) {
  * @param oUniqueID
  * @return 
  */
-fgBool gfx::CSceneManager::destroyNode(const fgGfxSceneNodeHandle& oUniqueID) {
+fgBool gfx::CSceneManager::destroyNode(const SceneNodeHandle& oUniqueID) {
     CSceneNode *pObj = handle_mgr_type::dereference(oUniqueID);
     return destroyNode(pObj);
 }
@@ -496,7 +520,7 @@ fgBool gfx::CSceneManager::destroyNode(const char *nameTag) {
  * @param oUniqueID
  * @return 
  */
-gfx::CSceneNode* gfx::CSceneManager::get(const fgGfxSceneNodeHandle& oUniqueID) {
+gfx::CSceneNode* gfx::CSceneManager::get(const SceneNodeHandle& oUniqueID) {
     return handle_mgr_type::dereference(oUniqueID);
 }
 
@@ -543,7 +567,7 @@ fgBool gfx::CSceneManager::isManaged(const CSceneNode *pObj) {
  * @param oUniqueID
  * @return 
  */
-fgBool gfx::CSceneManager::isManaged(const fgGfxSceneNodeHandle& oUniqueID) {
+fgBool gfx::CSceneManager::isManaged(const SceneNodeHandle& oUniqueID) {
     CSceneNode *pObj = get(oUniqueID);
     return (fgBool)(pObj != NULL);
 }

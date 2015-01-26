@@ -138,8 +138,8 @@ fgBool gfx::CShaderManager::initialize(void) {
            "	v_color = a_color;\n"
            "}\n\0");
 
-    shaderVec[CShaderProgram::SP_FRAGMENT_SHADER_ID] = new CShader(fgGfxShaderType::FG_GFX_SHADER_FRAGMENT);
-    shaderVec[CShaderProgram::SP_VERTEX_SHADER_ID] = new CShader(fgGfxShaderType::FG_GFX_SHADER_VERTEX);
+    shaderVec[CShaderProgram::SP_FRAGMENT_SHADER_ID] = new CShader(ShaderType::FG_GFX_SHADER_FRAGMENT);
+    shaderVec[CShaderProgram::SP_VERTEX_SHADER_ID] = new CShader(ShaderType::FG_GFX_SHADER_VERTEX);
 
     ////////////////////////////////////////////////////////////////////////////
     // FRAGMENT SHADER
@@ -147,7 +147,7 @@ fgBool gfx::CShaderManager::initialize(void) {
     shaderVec[CShaderProgram::SP_FRAGMENT_SHADER_ID]->setName("DefaultShader");
     shaderVec[CShaderProgram::SP_FRAGMENT_SHADER_ID]->setFilePath("no_path");
     if(slVersion == FG_GFX_ESSL_100 || slVersion == FG_GFX_ESSL_300) {
-        shaderVec[CShaderProgram::SP_FRAGMENT_SHADER_ID]->appendDefine(fgGfxShaderConstantDef("FG_GFX_ESSL_PRECISION_DEF", FG_TRUE));
+        shaderVec[CShaderProgram::SP_FRAGMENT_SHADER_ID]->appendDefine(SShaderConstantDef("FG_GFX_ESSL_PRECISION_DEF", FG_TRUE));
     }
     shaderVec[CShaderProgram::SP_FRAGMENT_SHADER_ID]->setSourceBuffer(sourceFragment);
 
@@ -157,18 +157,18 @@ fgBool gfx::CShaderManager::initialize(void) {
     shaderVec[CShaderProgram::SP_VERTEX_SHADER_ID]->setName("DefaultShader");
     shaderVec[CShaderProgram::SP_VERTEX_SHADER_ID]->setFilePath("no_path");
     if(slVersion == FG_GFX_ESSL_100 || slVersion == FG_GFX_ESSL_300) {
-        shaderVec[CShaderProgram::SP_VERTEX_SHADER_ID]->appendDefine(fgGfxShaderConstantDef("FG_GFX_ESSL_PRECISION_DEF", FG_TRUE));
+        shaderVec[CShaderProgram::SP_VERTEX_SHADER_ID]->appendDefine(SShaderConstantDef("FG_GFX_ESSL_PRECISION_DEF", FG_TRUE));
     }
     shaderVec[CShaderProgram::SP_VERTEX_SHADER_ID]->setSourceBuffer(sourceVertex);
 
-    attrBinds.push_back(fgGfxAttributeBind("a_position", fgGfxAttributeType::FG_GFX_POSITION));
-    attrBinds.push_back(fgGfxAttributeBind("a_texCoord", fgGfxAttributeType::FG_GFX_TEXTURE_COORD));
-    attrBinds.push_back(fgGfxAttributeBind("a_color", fgGfxAttributeType::FG_GFX_COLOR));
+    attrBinds.push_back(SAttributeBind("a_position", AttributeType::FG_GFX_POSITION));
+    attrBinds.push_back(SAttributeBind("a_texCoord", AttributeType::FG_GFX_TEXTURE_COORD));
+    attrBinds.push_back(SAttributeBind("a_color", AttributeType::FG_GFX_COLOR));
 
-    uniformBinds.push_back(fgGfxUniformBind("u_mvpMatrix", fgGfxUniformType::FG_GFX_MVP_MATRIX));
-    uniformBinds.push_back(fgGfxUniformBind("u_CustomColor", fgGfxUniformType::FG_GFX_CUSTOM_COLOR));
-    uniformBinds.push_back(fgGfxUniformBind("u_useTexture", fgGfxUniformType::FG_GFX_USE_TEXTURE));
-    uniformBinds.push_back(fgGfxUniformBind("s_texture", fgGfxUniformType::FG_GFX_PLAIN_TEXTURE));
+    uniformBinds.push_back(SUniformBind("u_mvpMatrix", UniformType::FG_GFX_MVP_MATRIX));
+    uniformBinds.push_back(SUniformBind("u_CustomColor", UniformType::FG_GFX_CUSTOM_COLOR));
+    uniformBinds.push_back(SUniformBind("u_useTexture", UniformType::FG_GFX_USE_TEXTURE));
+    uniformBinds.push_back(SUniformBind("s_texture", UniformType::FG_GFX_PLAIN_TEXTURE));
 
     defaultProgram->m_isPreLoaded = FG_TRUE;
 
@@ -187,8 +187,8 @@ fgBool gfx::CShaderManager::initialize(void) {
         FG_LOG_ERROR("GFX: Unable to insert default built-in shader program into the Manager");
     } else {
         useProgram(defaultProgram);
-        defaultProgram->setUniform(fgGfxUniformType::FG_GFX_USE_TEXTURE, 1.0f);
-        defaultProgram->setUniform(fgGfxUniformType::FG_GFX_PLAIN_TEXTURE, 0);
+        defaultProgram->setUniform(UniformType::FG_GFX_USE_TEXTURE, 1.0f);
+        defaultProgram->setUniform(UniformType::FG_GFX_PLAIN_TEXTURE, 0);
     }
 
     m_init = FG_TRUE;
@@ -546,7 +546,7 @@ fgBool gfx::CShaderManager::useProgram(CShaderProgram *pProgram) {
  * @param spUniqueID
  * @return 
  */
-fgBool gfx::CShaderManager::useProgram(fgGfxShaderHandle spUniqueID) {
+fgBool gfx::CShaderManager::useProgram(ShaderHandle spUniqueID) {
     gfx::CShaderProgram *pProgram = dereference(spUniqueID);
     if(!pProgram) {
         return FG_FALSE;
@@ -607,7 +607,7 @@ fgBool gfx::CShaderManager::isProgramUsed(gfx::CShaderProgram *pProgram) {
  * @param spUniqueID
  * @return 
  */
-fgBool gfx::CShaderManager::isProgramUsed(fgGfxShaderHandle spUniqueID) {
+fgBool gfx::CShaderManager::isProgramUsed(ShaderHandle spUniqueID) {
     gfx::CShaderProgram *pProgram = dereference(spUniqueID);
     return CShaderManager::isProgramUsed(pProgram);
 }

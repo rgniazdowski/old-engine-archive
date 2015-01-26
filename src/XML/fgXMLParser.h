@@ -32,11 +32,7 @@ namespace fg {
 
     #define FG_TAG_XML_PARSER_NAME	"XMLParser"
     #define FG_TAG_XML_PARSER		FG_TAG_TYPE(fg::xml::CParser)
-
 FG_TAG_TEMPLATE_ID_AUTO(fg::xml::CParser, FG_TAG_XML_PARSER_NAME);
-typedef FG_TAG_XML_PARSER fgXMLParserTag;
-
-
 
 /** TiXmlBase is a base class for every class in TinyXml.
         It does little except to establish that TinyXml classes
@@ -56,11 +52,14 @@ typedef FG_TAG_XML_PARSER fgXMLParserTag;
                                                         Comment (leaf)
                                                         Unknown (leaf)
 
-        A Decleration contains: Attributes (not on tree)
+        A Declaration contains: Attributes (not on tree)
  */
 
 namespace fg {
     namespace xml {
+        
+        ///
+        typedef FG_TAG_XML_PARSER XMLParserTag;
 
         /**
          * This class extends the fgFile, so it can load the proper XML file
@@ -72,7 +71,8 @@ namespace fg {
             ///
             typedef fg::util::DataFile base_type;
             ///
-            typedef fgXMLParserTag tag_type;
+            typedef XMLParserTag tag_type;
+            
         protected:
             /// Loaded file size
             unsigned int m_fileSize;

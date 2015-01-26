@@ -30,17 +30,16 @@ namespace fg {
 
     #define FG_TAG_PARTICLE_SYSTEM_NAME     "ParticleSystem"
     #define FG_TAG_PARTICLE_SYSTEM          FG_TAG_TYPE(fg::gfx::CParticleSystem)
-
 FG_TAG_TEMPLATE_ID_AUTO(fg::gfx::CParticleSystem, FG_TAG_PARTICLE_SYSTEM_NAME);
-
-// Special handle type for Particle Effect
-typedef FG_TAG_PARTICLE_SYSTEM fgParticleSystemTag;
 
     #define FG_MANAGER_PARTICLE     0x00000800
 
 namespace fg {
 
     namespace gfx {
+
+        /// Tag type for ParticleSystem
+        typedef FG_TAG_PARTICLE_SYSTEM ParticleSystemTag;
 
         /**
          *

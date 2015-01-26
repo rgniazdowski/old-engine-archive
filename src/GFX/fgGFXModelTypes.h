@@ -201,14 +201,14 @@ namespace fg {
              * @param pDataArray
              * @return 
              */
-            virtual fgGFXboolean refreshAttributes(fgGfxAttributeData *pDataArray) const;
+            virtual fgGFXboolean refreshAttributes(SAttributeData *pDataArray) const;
 
             /**
              * 
              * @param pDataArray
              * @return 
              */
-            virtual fgGFXboolean setupAttributes(fgGfxAttributeData *pDataArray) const;
+            virtual fgGFXboolean setupAttributes(SAttributeData *pDataArray) const;
 
             /**
              * Generates the GFX buffers (VBO)
@@ -574,7 +574,7 @@ namespace fg {
              * @param pDataArray
              * @return 
              */
-            virtual fgGFXboolean refreshAttributes(fgGfxAttributeData *pDataArray) const {
+            virtual fgGFXboolean refreshAttributes(SAttributeData *pDataArray) const {
                 return vertices.refreshAttributes(pDataArray);
             }
             /**
@@ -585,7 +585,7 @@ namespace fg {
              * @param pDataArray
              * @return 
              */
-            virtual fgGFXboolean setupAttributes(fgGfxAttributeData *pDataArray) const {
+            virtual fgGFXboolean setupAttributes(SAttributeData *pDataArray) const {
                 return vertices.setupAttributes(pDataArray);
             }
             /**

@@ -58,19 +58,19 @@ namespace fg {
 //#define FG_TAG_MANAGER_BASE_ID        20 //#FIXME - something automatic maybe?
     #define FG_TAG_SCRIPT_MANAGER       FG_TAG_TYPE(fg::script::CScriptSubsystem)
     #define FG_TAG_SCRIPT_SUBSYSTEM     FG_TAG_SCRIPT_MANAGER
-
 //FG_TAG_TEMPLATE(fgScriptSubsystem, FG_TAG_SCRIPT_MANAGER_NAME, FG_TAG_SCRIPT_MANAGER_ID);
 FG_TAG_TEMPLATE_ID_AUTO(fg::script::CScriptSubsystem, FG_TAG_SCRIPT_SUBSYSTEM_NAME);
 
-// Special handle type for script subsystem
-typedef FG_TAG_SCRIPT_SUBSYSTEM fgScriptSubsystemTag;
-//typedef FG_TAG_SCRIPT_SUBSYSTEM fgScriptSubsystemTag;
-
-// Every 60s call global GC request
-    #define FG_SCRIPT_DEFAULT_GC_INTERVAL 5000
-
 namespace fg {
+
     namespace script {
+
+        /// Special handle type for script subsystem
+        typedef FG_TAG_SCRIPT_SUBSYSTEM ScriptSubsystemTag;
+        //typedef FG_TAG_SCRIPT_SUBSYSTEM fgScriptSubsystemTag;
+
+        /// Every 60s call global GC request
+        const unsigned int DEFAULT_GC_INTERVAL = 5000;
 
         /**
          * 
@@ -80,7 +80,7 @@ namespace fg {
             ///
             typedef fg::base::CManager base_type;
             ///
-            typedef fgScriptSubsystemTag tag_type;
+            typedef ScriptSubsystemTag tag_type;
 
         private:
 

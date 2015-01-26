@@ -19,20 +19,6 @@
     #include "Util/fgConfig.h"
     #include "Util/fgTag.h"
 
-enum fgGfxShaderConfigType {
-    FG_GFX_SHADER_CONFIG_INVALID = 0,
-    FG_GFX_SHADER_CONFIG_PROGRAM = 1,
-    FG_GFX_SHADER_CONFIG_FRAGMENT = 2,
-    FG_GFX_SHADER_CONFIG_VERTEX = 3
-    #if defined FG_USING_OPENGL
-    ,
-    FG_GFX_SHADER_CONFIG_TESS_CONTROL = 4,
-    FG_GFX_SHADER_CONFIG_TESS_EVALUATION = 5,
-    FG_GFX_SHADER_CONFIG_GEOMETRY = 6,
-    FG_GFX_SHADER_CONFIG_COMPUTE = 7
-    #endif
-};
-
     #define FG_GFX_SHADER_CONFIG_PROGRAM_SECTION_NAME   "ShaderProgramConfig"
     #define FG_GFX_SHADER_CONFIG_BASIC_SECTION_NAME     "ShaderConfig"
 
@@ -43,12 +29,27 @@ namespace fg {
 };
     #define FG_TAG_GFX_SHADER_CONFIG_NAME       "GfxShaderConfig"
     #define FG_TAG_GFX_SHADER_CONFIG            FG_TAG_TYPE(fg::gfx::CShaderConfig)
-
 FG_TAG_TEMPLATE_ID_AUTO(fg::gfx::CShaderConfig, FG_TAG_GFX_SHADER_CONFIG_NAME);
-typedef FG_TAG_GFX_SHADER_CONFIG fgGfxShaderConfigTag;
 
 namespace fg {
     namespace gfx {
+
+        /// Tag type for Shader Config
+        typedef FG_TAG_GFX_SHADER_CONFIG ShaderConfigTag;
+
+        enum ShaderConfigType {
+            FG_GFX_SHADER_CONFIG_INVALID = 0,
+            FG_GFX_SHADER_CONFIG_PROGRAM = 1,
+            FG_GFX_SHADER_CONFIG_FRAGMENT = 2,
+            FG_GFX_SHADER_CONFIG_VERTEX = 3
+    #if defined FG_USING_OPENGL
+            ,
+            FG_GFX_SHADER_CONFIG_TESS_CONTROL = 4,
+            FG_GFX_SHADER_CONFIG_TESS_EVALUATION = 5,
+            FG_GFX_SHADER_CONFIG_GEOMETRY = 6,
+            FG_GFX_SHADER_CONFIG_COMPUTE = 7
+    #endif
+        };
 
         /*
          * Shader config mission is to read special configs (INI) holding information
@@ -73,40 +74,40 @@ namespace fg {
             ///
             typedef fg::util::CConfig base_type;
             ///
-            typedef fgGfxShaderConfigTag tag_type;
+            typedef ShaderConfigTag tag_type;
             ///
-            typedef CVector<fgGfxShaderType> shaderTypeVec;
+            typedef CVector<ShaderType> ShaderTypeVec;
             ///
-            typedef CVector<fgGfxUniformBind> shaderUniformBindVec;
+            typedef CVector<SUniformBind> UniformBindVec;
             ///
-            typedef CVector<fgGfxAttributeBind> shaderAttributeBindVec;
+            typedef CVector<SAttributeBind> AttributeBindVec;
             ///
-            typedef CVector<std::string> shaderIncludeNameVec;
+            typedef CVector<std::string> IncludeNameVec;
             ///
-            typedef CVector<std::string> shaderFileVec;
+            typedef CVector<std::string> FileNameVec;
             ///
-            typedef CVector<fgQuality> shaderQualityVec;
+            typedef CVector<fgQuality> QualityVec;
             ///
-            typedef CVector<fgGfxShaderConstantDef> shaderConstantVec;
+            typedef CVector<SShaderConstantDef> ConstantVec;
 
         protected:
             ///
-            fgGfxShaderConfigType m_configType;
+            ShaderConfigType m_configType;
             ///
-            shaderTypeVec m_shaderTypes;
+            ShaderTypeVec m_shaderTypes;
 
             /// 
-            shaderUniformBindVec m_uniformBinds;
+            UniformBindVec m_uniformBinds;
             ///
-            shaderAttributeBindVec m_attributeBinds;
+            AttributeBindVec m_attributeBinds;
             ///
-            shaderIncludeNameVec m_includes;
+            IncludeNameVec m_includes;
             ///
-            shaderFileVec m_files;
+            FileNameVec m_files;
             ///
-            shaderQualityVec m_qualities;
+            QualityVec m_qualities;
             ///
-            shaderConstantVec m_constants;
+            ConstantVec m_constants;
 
             ///
             std::string m_selectedConfigName;
@@ -116,7 +117,7 @@ namespace fg {
             fgGfxSLVersion m_preferredSLVersion; // FIXME - this sould be probably somewhere else
 
             ///
-            fgGfxShaderPrecision m_defaultPrecision;
+            ShaderPrecision m_defaultPrecision;
 
         public:
             /**
@@ -148,77 +149,140 @@ namespace fg {
              * 
              * @return 
              */
-            fgGfxShaderConfigType getType(void) const {
+            inline ShaderConfigType getType(void) const {
                 return m_configType;
             }
             /**
              * 
              * @return 
              */
-            shaderTypeVec & getRefShaderTypes(void) {
+            inline ShaderTypeVec& getRefShaderTypes(void) {
                 return m_shaderTypes;
             }
             /**
              * 
              * @return 
              */
-            shaderUniformBindVec & getRefUniformBinds(void) {
+            inline ShaderTypeVec const& getRefShaderTypes(void) const {
+                return m_shaderTypes;
+            }
+            /**
+             * 
+             * @return 
+             */
+            inline UniformBindVec& getRefUniformBinds(void) {
                 return m_uniformBinds;
             }
             /**
              * 
              * @return 
              */
-            shaderAttributeBindVec & getRefAttributeBinds(void) {
+            inline UniformBindVec const& getRefUniformBinds(void) const {
+                return m_uniformBinds;
+            }
+            /**
+             * 
+             * @return 
+             */
+            inline AttributeBindVec& getRefAttributeBinds(void) {
                 return m_attributeBinds;
             }
             /**
              * 
              * @return 
              */
-            shaderIncludeNameVec & getRefIncludes(void) {
+            inline AttributeBindVec const& getRefAttributeBinds(void) const {
+                return m_attributeBinds;
+            }
+            /**
+             * 
+             * @return 
+             */
+            inline IncludeNameVec& getRefIncludes(void) {
                 return m_includes;
             }
             /**
              * 
              * @return 
              */
-            shaderFileVec & getRefFiles(void) {
+            inline IncludeNameVec const& getRefIncludes(void) const {
+                return m_includes;
+            }
+            /**
+             * 
+             * @return 
+             */
+            inline FileNameVec& getRefFiles(void) {
                 return m_files;
             }
             /**
              * 
              * @return 
              */
-            shaderQualityVec & getRefQualities(void) {
+            inline FileNameVec const& getRefFiles(void) const {
+                return m_files;
+            }
+            /**
+             * 
+             * @return 
+             */
+            inline QualityVec& getRefQualities(void) {
                 return m_qualities;
             }
             /**
              * 
              * @return 
              */
-            shaderConstantVec & getRefConstants(void) {
+            inline QualityVec const& getRefQualities(void) const {
+                return m_qualities;
+            }
+            /**
+             * 
+             * @return 
+             */
+            inline ConstantVec& getRefConstants(void) {
                 return m_constants;
             }
             /**
              * 
              * @return 
              */
-            std::string & getProgramName(void) {
+            inline ConstantVec const& getRefConstants(void) const {
+                return m_constants;
+            }
+            /**
+             * 
+             * @return 
+             */
+            inline std::string& getProgramName(void) {
                 return m_programName;
             }
             /**
              * 
              * @return 
              */
-            std::string & getSelectedConfigName(void) {
+            inline std::string const& getProgramName(void) const {
+                return m_programName;
+            }
+            /**
+             * 
+             * @return 
+             */
+            inline std::string& getSelectedConfigName(void) {
+                return m_selectedConfigName;
+            }
+            /**
+             * 
+             * @return 
+             */
+            inline std::string const& getSelectedConfigName(void) const {
                 return m_selectedConfigName;
             }
             /**
              * 
              * @param _ver
              */
-            void setPreferredSLVersion(fgGfxSLVersion version) {
+            inline void setPreferredSLVersion(fgGfxSLVersion version) {
                 m_preferredSLVersion = version;
             }
 

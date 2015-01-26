@@ -28,17 +28,18 @@
     #include "Hardware/fgQualityManager.h"
     #include "Scripting/fgScriptSubsystem.h"
     #include "GameLogic/fgGameLogic.h"
+
 namespace fg {
     class CGameMain;
 };
     #define FG_TAG_GAME_MAIN_NAME       "GameMain"
     #define FG_TAG_GAME_MAIN            FG_TAG_TYPE(fg::CGameMain)
-
 FG_TAG_TEMPLATE_ID_AUTO(fg::CGameMain, FG_TAG_GAME_MAIN_NAME);
 
-typedef FG_TAG_GAME_MAIN fgGameMainTag;
-
 namespace fg {
+
+    /// Tag type for the GameMain class
+    typedef FG_TAG_GAME_MAIN GameMainTag;
 
     /**
      *
@@ -46,7 +47,7 @@ namespace fg {
     class CGameMain : public event::CEventManager {
     public:
         ///
-        typedef fgGameMainTag tag_type;
+        typedef GameMainTag tag_type;
 
     public:
         /**

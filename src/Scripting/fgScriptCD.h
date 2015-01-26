@@ -36,7 +36,7 @@
     #endif
 
     #ifndef FG_INC_GFX_SCENE_NODE
-        #include "GFX/fgGFXSceneNode.h"
+        #include "GFX/Scene/fgGFXSceneNode.h"
     #endif
 
     #ifndef FG_INC_SCRIPT_MT

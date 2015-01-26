@@ -23,16 +23,13 @@
 namespace fg {
     namespace gui {
         class CStyle;
+        class CStyleManager;
     };
 };
+
     #define FG_TAG_GUI_STYLE_NAME	"GuiStyle"
     #define FG_TAG_GUI_STYLE		FG_TAG_TYPE(fg::gui::CStyle)
-
 FG_TAG_TEMPLATE_ID_AUTO(fg::gui::CStyle, FG_TAG_GUI_STYLE_NAME);
-typedef FG_TAG_GUI_STYLE fgGuiStyleTag;
-
-// Special handle type for shader program
-typedef fgHandle<fgGuiStyleTag> fgGuiStyleHandle;
 
     #ifdef FG_USING_MARMALADE
         #include <hash_map>
@@ -61,12 +58,15 @@ namespace fg {
 
     namespace gui {
 
-        class CStyleManager;
-        
+        /// Tag type for Gui Style
+        typedef FG_TAG_GUI_STYLE StyleTag;
+        /// Special handle type for Gui Style
+        typedef fg::util::CHandle<StyleTag> StyleHandle;
+
         /*
          *
          */
-        class CStyle : public fg::resource::CManagedDataFile<fgGuiStyleHandle, fgQuality> {
+        class CStyle : public fg::resource::CManagedDataFile<StyleHandle, fgQuality> {
             friend class fg::gui::CStyleManager;
     #ifdef FG_USING_MARMALADE
         protected:
@@ -81,7 +81,7 @@ namespace fg {
             };
     #endif
         public:
-            typedef fg::resource::CManagedDataFile<fgGuiStyleHandle, fgQuality> base_type;
+            typedef fg::resource::CManagedDataFile<StyleHandle, fgQuality> base_type;
             typedef std::string HashKey;
     #ifdef FG_USING_MARMALADE	
             typedef std::hash<std::string> hashFunc;

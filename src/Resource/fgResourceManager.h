@@ -24,27 +24,20 @@
 
     #include <iostream>
 
-    #ifndef FG_RHANDLE
-        #define FG_RHANDLE fgResourceHandle
-    #endif
 namespace fg {
     namespace resource {
         class CResourceManager;
     };
 };
+
     #define FG_TAG_RESOURCE_MANAGER_NAME	"ResourceMgr"
 //#define FG_TAG_MANAGER_BASE_ID		20 //#FIXME - something automatic maybe?
     #define FG_TAG_RESOURCE_MANAGER		FG_TAG_TYPE(fg::resource::CResourceManager)
-
 //FG_TAG_TEMPLATE(fgResourceManager, FG_TAG_MANAGER_BASE_NAME, FG_TAG_MANAGER_BASE_ID);
 FG_TAG_TEMPLATE_ID_AUTO(fg::resource::CResourceManager, FG_TAG_RESOURCE_MANAGER_NAME);
 
-// Special handle type for manager base
-typedef FG_TAG_RESOURCE_MANAGER fgResourceManagerTag;
 
     #define FG_MANAGER_RESOURCE     0x00000020
-
-
 
 namespace fg {
     namespace gfx {
@@ -53,7 +46,11 @@ namespace fg {
 }
 
 namespace fg {
+
     namespace resource {
+
+        /// Special handle type for manager base
+        typedef FG_TAG_RESOURCE_MANAGER ResourceManagerTag;
 
         /**
          * The resource manager handles all the external resources. It takes care of the memory
@@ -61,20 +58,20 @@ namespace fg {
          * the manager there's no additional
          *
          */
-        class CResourceManager : public CDataManagerBase<fg::resource::CResource*, fgResourceHandle, fgResourceManagerTag> {
+        class CResourceManager : public CDataManagerBase<fg::resource::CResource*, ResourceHandle, ResourceManagerTag> {
             friend class fg::gfx::CTextureManager;
 
         public:
             ///
-            typedef CDataManagerBase<CResource*, fgResourceHandle, fgResourceManagerTag> base_type;
+            typedef CDataManagerBase<CResource*, ResourceHandle, ResourceManagerTag> base_type;
             ///
-            typedef fgResourceHandle handle_type;
+            typedef ResourceHandle handle_type;
             ///
-            typedef fgResourceManagerTag tag_type;
+            typedef ResourceManagerTag tag_type;
 
         protected:
             ///
-            typedef fg::CVector<fgResourceHandle> rmHandleVec;
+            typedef fg::CVector<ResourceHandle> rmHandleVec;
             ///
             typedef rmHandleVec::iterator rmHandleVecItor;
 
@@ -235,7 +232,7 @@ namespace fg {
              * @param pResource
              * @return 
              */
-            fgBool insertResourceGroup(const FG_RHANDLE& rhUniqueID, CResource* pResource);
+            fgBool insertResourceGroup(const ResourceHandle& rhUniqueID, CResource* pResource);
             /**
              * 
              * @param pResource
@@ -260,7 +257,7 @@ namespace fg {
              * @param rhUniqueID
              * @return 
              */
-            virtual fgBool remove(const FG_RHANDLE& rhUniqueID);
+            virtual fgBool remove(const ResourceHandle& rhUniqueID);
             /**
              * Removes an object completely from the manager (does not free memory)
              * @param nameTag
@@ -285,7 +282,7 @@ namespace fg {
              * @param rhUniqueID
              * @return 
              */
-            fgBool dispose(const FG_RHANDLE& rhUniqueID);
+            fgBool dispose(const ResourceHandle& rhUniqueID);
             /**
              * Disposes of the resource (frees memory) - does not remove resource from the manager
              * @param nameTag
@@ -344,7 +341,7 @@ namespace fg {
             // Using GetResource tells the manager that you are about to access the
             // object.  If the resource has been disposed, it will be recreated
             // before it has been returned.
-            virtual CResource* get(const FG_RHANDLE& rhUniqueID);
+            virtual CResource* get(const ResourceHandle& rhUniqueID);
 
             // Using GetResource tells the manager that you are about to access the
             // object.  If the resource has been disposed, it will be recreated
@@ -361,7 +358,7 @@ namespace fg {
             // get swapped out, for instance.  The resource contains a reference count
             // to ensure that numerous locks can be safely made.
             // #FIXME #TODO #P3 - locking/unlocking is based on counter - DEPRECATED.
-            CResource* lockResource(const FG_RHANDLE& rhUniqueID);
+            CResource* lockResource(const ResourceHandle& rhUniqueID);
             // Lock the resource
             fgBool lockResource(CResource *pResource);
             // Unlocking the object let's the resource manager know that you no longer
@@ -370,7 +367,7 @@ namespace fg {
             // be swapped out at the manager's discretion.  The object can be referenced
             // either by handle or by the object's pointer.
             // #FIXME #TODO #P3 - locking/unlocking is based on counter - DEPRECATED.
-            CResource* unlockResource(const FG_RHANDLE& rhUniqueID);
+            CResource* unlockResource(const ResourceHandle& rhUniqueID);
             // Unlock the resource
             fgBool unlockResource(CResource *pResource);
 

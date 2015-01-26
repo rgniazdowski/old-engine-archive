@@ -21,8 +21,8 @@ using namespace fg;
  * 
  */
 gfx::CSceneNodeMesh::CSceneNodeMesh(SMeshBase *pMesh, CSceneNode *pParent) :
-CSceneNode(FG_GFX_SCENE_NODE_MESH, pParent) {
-    CSceneNode::setNodeType(FG_GFX_SCENE_NODE_MESH);
+CSceneNode(SCENE_NODE_MESH, pParent) {
+    CSceneNode::setNodeType(SCENE_NODE_MESH);
     if(m_drawCall) {
         delete m_drawCall;
         m_drawCall = NULL;
@@ -50,7 +50,7 @@ gfx::CSceneNodeMesh::~CSceneNodeMesh() { }
 void gfx::CSceneNodeMesh::setMesh(SMeshBase* pMesh) {
     if(!pMesh)
         return;
-    CSceneNode::setNodeType(FG_GFX_SCENE_NODE_MESH);
+    CSceneNode::setNodeType(SCENE_NODE_MESH);
     if(m_drawCall) {
         m_drawCall->setupFromMesh(pMesh);
     }

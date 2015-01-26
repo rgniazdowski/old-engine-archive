@@ -17,9 +17,9 @@
     #include <cstring>
     #include <string>
 
-    #define FG_FILE_NAME_MAX	256
-    #define FG_PATH_MAX			256
-    #define FG_INVALID			-1
+    #define FG_FILE_NAME_MAX    256
+    #define FG_PATH_MAX         256
+    #define FG_INVALID          -1
 
     #ifndef MAX
         #define MAX(a,b) (((a) > (b)) ? (a) : (b))

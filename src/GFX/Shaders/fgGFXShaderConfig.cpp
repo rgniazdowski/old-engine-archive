@@ -91,7 +91,7 @@ fgBool gfx::CShaderConfig::private_parseDefines(util::SCfgSection *definesSectio
         if(!param) continue;
         // for now only BOOL is supported
         if(param->type == util::SCfgParameter::BOOL && !param->name.empty()) {
-            fgGfxShaderConstantDef constant;
+            SShaderConstantDef constant;
             constant.name = param->name;
             constant.value = param->bool_val;
             m_constants.push_back(constant);
@@ -186,7 +186,7 @@ fgBool gfx::CShaderConfig::private_parseData(fgGfxSLVersion SLver) {
     {
         util::SCfgParameter *param = mainSection->getParameter("precision", util::SCfgParameter::STRING);
         if(param) {
-            m_defaultPrecision = (fgGfxShaderPrecision)FG_GFX_PRECISION_FROM_TEXT(param->string);
+            m_defaultPrecision = (ShaderPrecision)FG_GFX_PRECISION_FROM_TEXT(param->string);
         }
     }
 
@@ -240,8 +240,8 @@ fgBool gfx::CShaderConfig::private_parseData(fgGfxSLVersion SLver) {
             FG_MessageSubsystem->reportError(tag_type::name(), FG_ERRNO_GFX_SHADER_NO_TYPE);
             return FG_FALSE;
         }
-        fgGfxShaderType _shadertype = FG_GFX_SHADER_TYPE_FROM_TEXT(param->string);
-        if(_shadertype == fgGfxShaderType::FG_GFX_SHADER_INVALID) {
+        ShaderType _shadertype = FG_GFX_SHADER_TYPE_FROM_TEXT(param->string);
+        if(_shadertype == ShaderType::FG_GFX_SHADER_INVALID) {
             FG_MessageSubsystem->reportError(tag_type::name(), FG_ERRNO_GFX_SHADER_WRONG_TYPE);
             return FG_FALSE;
         }
@@ -309,7 +309,7 @@ fgBool gfx::CShaderConfig::private_parseData(fgGfxSLVersion SLver) {
         //
         // Loading attributes
         //
-        if(_shadertype == fgGfxShaderType::FG_GFX_SHADER_VERTEX) {
+        if(_shadertype == ShaderType::FG_GFX_SHADER_VERTEX) {
             // checking for attributes only for vertex shader 
             // (attributes in fragment shader are not allowed / needed)
             util::config::SectionVec _attributes;
@@ -324,7 +324,7 @@ fgBool gfx::CShaderConfig::private_parseData(fgGfxSLVersion SLver) {
             // float, vec2, vec3, vec4, mat2, mat3, and mat4.
             unsigned short _nmax = (unsigned short)_attributes.size(), i;
             for(i = 0; i < _nmax; i++) {
-                fgGfxAttributeBind _bind;
+                SAttributeBind _bind;
                 _bind.type = FG_GFX_ATTRIBUTE_TYPE_FROM_TEXT(_attributes[i]->subName.c_str());
                 if(_bind.type == FG_GFX_ATTRIBUTE_INVALID) {
                     FG_MessageSubsystem->reportWarning(tag_type::name(), FG_ERRNO_GFX_SHADER_WRONG_ATTRIBUTE);
@@ -362,7 +362,7 @@ fgBool gfx::CShaderConfig::private_parseData(fgGfxSLVersion SLver) {
         }
         unsigned short _nmax = (unsigned short)_uniforms.size(), i;
         for(i = 0; i < _nmax; i++) {
-            fgGfxUniformBind _bind;
+            SUniformBind _bind;
             _bind.type = FG_GFX_UNIFORM_TYPE_FROM_TEXT(_uniforms[i]->subName.c_str());
             if(_bind.type == FG_GFX_UNIFORM_INVALID) {
                 // Not a valid / supported uniform type - can ignore it ? Pass empty data to it?

@@ -18,7 +18,7 @@ using namespace fg;
  * @param pDataArray
  * @return 
  */
-fgGFXboolean gfx::CVertexData2v::refreshAttributes(fgGfxAttributeData *pDataArray) const {
+fgGFXboolean gfx::CVertexData2v::refreshAttributes(SAttributeData *pDataArray) const {
     if(!pDataArray)
         return FG_GFX_FALSE;
     // 2V - pos + uv
@@ -40,7 +40,7 @@ fgGFXboolean gfx::CVertexData2v::refreshAttributes(fgGfxAttributeData *pDataArra
     }
 
     // Normals - there are no normals, this attribute will be disabled
-    pDataArray[FG_GFX_ATTRIB_NORM_LOCATION] = fgGfxAttributeData(FG_GFX_NORMAL);
+    pDataArray[FG_GFX_ATTRIB_NORM_LOCATION] = SAttributeData(FG_GFX_NORMAL);
 
     // Move offset to UVs (first is position of type fgVector3f)
     offset += sizeof (Vector3f);
@@ -59,10 +59,10 @@ fgGFXboolean gfx::CVertexData2v::refreshAttributes(fgGfxAttributeData *pDataArra
     }
 
     // Colors = there are no colors, this attribute will be disabled
-    pDataArray[FG_GFX_ATTRIB_COLOR_LOCATION] = fgGfxAttributeData(FG_GFX_COLOR);
+    pDataArray[FG_GFX_ATTRIB_COLOR_LOCATION] = SAttributeData(FG_GFX_COLOR);
 
     // Tangents - this attribute will be disabled
-    pDataArray[FG_GFX_ATTRIB_TANGENT_LOCATION] = fgGfxAttributeData(FG_GFX_TANGENT);
+    pDataArray[FG_GFX_ATTRIB_TANGENT_LOCATION] = SAttributeData(FG_GFX_TANGENT);
 
     return FG_GFX_TRUE;
 }
@@ -72,7 +72,7 @@ fgGFXboolean gfx::CVertexData2v::refreshAttributes(fgGfxAttributeData *pDataArra
  * @param pDataArray
  * @return 
  */
-fgGFXboolean gfx::CVertexData2v::setupAttributes(fgGfxAttributeData *pDataArray) const {
+fgGFXboolean gfx::CVertexData2v::setupAttributes(SAttributeData *pDataArray) const {
     if(!pDataArray)
         return FG_GFX_FALSE;
     // 2V - pos + uv
@@ -101,7 +101,7 @@ fgGFXboolean gfx::CVertexData2v::setupAttributes(fgGfxAttributeData *pDataArray)
     }
 
     // Normals - there are no normals, this attribute will be disabled
-    pDataArray[FG_GFX_ATTRIB_NORM_LOCATION] = fgGfxAttributeData(FG_GFX_NORMAL);
+    pDataArray[FG_GFX_ATTRIB_NORM_LOCATION] = SAttributeData(FG_GFX_NORMAL);
 
     // Move offset to UVs (first is position of type fgVector3f)
     offset += sizeof (Vector3f);
@@ -127,10 +127,10 @@ fgGFXboolean gfx::CVertexData2v::setupAttributes(fgGfxAttributeData *pDataArray)
     }
 
     // Colors = there are no colors, this attribute will be disabled
-    pDataArray[FG_GFX_ATTRIB_COLOR_LOCATION] = fgGfxAttributeData(FG_GFX_COLOR);
+    pDataArray[FG_GFX_ATTRIB_COLOR_LOCATION] = SAttributeData(FG_GFX_COLOR);
 
     // Tangents - this attribute will be disabled
-    pDataArray[FG_GFX_ATTRIB_TANGENT_LOCATION] = fgGfxAttributeData(FG_GFX_TANGENT);
+    pDataArray[FG_GFX_ATTRIB_TANGENT_LOCATION] = SAttributeData(FG_GFX_TANGENT);
 
     return FG_GFX_TRUE;
 }
@@ -181,7 +181,7 @@ fgGFXboolean gfx::CVertexData2v::destroyBuffers(void) {
  * @param pDataArray
  * @return 
  */
-fgGFXboolean gfx::CVertexData3v::refreshAttributes(fgGfxAttributeData *pDataArray) const {
+fgGFXboolean gfx::CVertexData3v::refreshAttributes(SAttributeData *pDataArray) const {
     if(!pDataArray)
         return FG_GFX_FALSE;
     // 3V - pos + norm + uv
@@ -233,10 +233,10 @@ fgGFXboolean gfx::CVertexData3v::refreshAttributes(fgGfxAttributeData *pDataArra
     }
 
     // Colors = there are no colors, this attribute will be disabled
-    pDataArray[FG_GFX_ATTRIB_COLOR_LOCATION] = fgGfxAttributeData(FG_GFX_COLOR);
+    pDataArray[FG_GFX_ATTRIB_COLOR_LOCATION] = SAttributeData(FG_GFX_COLOR);
 
     // Tangents - this attribute will be disabled
-    pDataArray[FG_GFX_ATTRIB_TANGENT_LOCATION] = fgGfxAttributeData(FG_GFX_TANGENT);
+    pDataArray[FG_GFX_ATTRIB_TANGENT_LOCATION] = SAttributeData(FG_GFX_TANGENT);
 
     return FG_GFX_TRUE;
 }
@@ -246,7 +246,7 @@ fgGFXboolean gfx::CVertexData3v::refreshAttributes(fgGfxAttributeData *pDataArra
  * @param pDataArray
  * @return 
  */
-fgGFXboolean gfx::CVertexData3v::setupAttributes(fgGfxAttributeData *pDataArray) const {
+fgGFXboolean gfx::CVertexData3v::setupAttributes(SAttributeData *pDataArray) const {
     if(!pDataArray)
         return FG_GFX_FALSE;
     // 3V - pos + norm + uv
@@ -322,10 +322,10 @@ fgGFXboolean gfx::CVertexData3v::setupAttributes(fgGfxAttributeData *pDataArray)
     }
 
     // Colors = there are no colors, this attribute will be disabled
-    pDataArray[FG_GFX_ATTRIB_COLOR_LOCATION] = fgGfxAttributeData(FG_GFX_COLOR);
+    pDataArray[FG_GFX_ATTRIB_COLOR_LOCATION] = SAttributeData(FG_GFX_COLOR);
 
     // Tangents - this attribute will be disabled
-    pDataArray[FG_GFX_ATTRIB_TANGENT_LOCATION] = fgGfxAttributeData(FG_GFX_TANGENT);
+    pDataArray[FG_GFX_ATTRIB_TANGENT_LOCATION] = SAttributeData(FG_GFX_TANGENT);
 
     return FG_GFX_TRUE;
 }
@@ -375,7 +375,7 @@ fgGFXboolean gfx::CVertexData3v::destroyBuffers(void) {
  * @param pDataArray
  * @return 
  */
-fgGFXboolean gfx::CVertexData4v::refreshAttributes(fgGfxAttributeData *pDataArray) const {
+fgGFXboolean gfx::CVertexData4v::refreshAttributes(SAttributeData *pDataArray) const {
     if(!pDataArray)
         return FG_GFX_FALSE;
 
@@ -443,7 +443,7 @@ fgGFXboolean gfx::CVertexData4v::refreshAttributes(fgGfxAttributeData *pDataArra
     }
 
     // Tangents - this attribute will be disabled - not yet supported
-    pDataArray[FG_GFX_ATTRIB_TANGENT_LOCATION] = fgGfxAttributeData(FG_GFX_TANGENT);
+    pDataArray[FG_GFX_ATTRIB_TANGENT_LOCATION] = SAttributeData(FG_GFX_TANGENT);
 
     return FG_GFX_TRUE;
 }
@@ -453,7 +453,7 @@ fgGFXboolean gfx::CVertexData4v::refreshAttributes(fgGfxAttributeData *pDataArra
  * @param pDataArray
  * @return 
  */
-fgGFXboolean gfx::CVertexData4v::setupAttributes(fgGfxAttributeData *pDataArray) const {
+fgGFXboolean gfx::CVertexData4v::setupAttributes(SAttributeData *pDataArray) const {
     if(!pDataArray)
         return FG_GFX_FALSE;
     // 3V - pos + norm + uv + color
@@ -552,7 +552,7 @@ fgGFXboolean gfx::CVertexData4v::setupAttributes(fgGfxAttributeData *pDataArray)
     }
 
     // Tangents - this attribute will be disabled - not yet supported
-    pDataArray[FG_GFX_ATTRIB_TANGENT_LOCATION] = fgGfxAttributeData(FG_GFX_TANGENT);
+    pDataArray[FG_GFX_ATTRIB_TANGENT_LOCATION] = SAttributeData(FG_GFX_TANGENT);
 
     return FG_GFX_TRUE;
 }

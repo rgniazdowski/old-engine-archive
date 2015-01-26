@@ -17,7 +17,7 @@ using namespace fg;
  * @param attribMask
  */
 gfx::CDrawCall::CDrawCall(const fgGfxDrawCallType type, const fgGFXuint attribMask) :
-CDrawable(FG_GFX_DRAWABLE_DRAWCALL),
+CDrawable(DRAWABLE_DRAWCALL),
 m_vecDataBase(NULL),
 m_vecData2v(NULL),
 m_vecData3v(NULL),
@@ -27,8 +27,8 @@ m_textureID(),
 m_MVP(NULL),
 m_attribMask(attribMask),
 m_drawCallType(type),
-m_drawAppendMode(FG_GFX_DRAW_APPEND_ABSOLUTE),
-m_primMode(fgGfxPrimitiveMode::FG_GFX_TRIANGLES),
+m_drawAppendMode(DRAW_APPEND_ABSOLUTE),
+m_primMode(PrimitiveMode::TRIANGLES),
 m_color(1.0f, 1.0f, 1.0f, 1.0f),
 m_relMove(0.0f, 0.0f, 0.0f),
 m_scissorBox(0, 0, 0, 0),
@@ -205,7 +205,7 @@ int gfx::CDrawCall::getZIndex(void) const {
  * 
  * @return 
  */
-fgGfxAttributeData* gfx::CDrawCall::getAttributeData(void) {
+gfx::SAttributeData* gfx::CDrawCall::getAttributeData(void) {
     return m_attrData;
 }
 
@@ -229,7 +229,7 @@ fgGfxDrawCallType gfx::CDrawCall::getDrawCallType(void) const {
  * 
  * @return 
  */
-fgGfxDrawAppendMode gfx::CDrawCall::getDrawAppendMode(void) const {
+gfx::DrawAppendMode gfx::CDrawCall::getDrawAppendMode(void) const {
     return m_drawAppendMode;
 }
 
@@ -237,7 +237,7 @@ fgGfxDrawAppendMode gfx::CDrawCall::getDrawAppendMode(void) const {
  * 
  * @return 
  */
-fgGfxPrimitiveMode gfx::CDrawCall::getPrimitiveMode(void) const {
+gfx::PrimitiveMode gfx::CDrawCall::getPrimitiveMode(void) const {
     return m_primMode;
 }
 
@@ -336,14 +336,14 @@ void gfx::CDrawCall::setDrawCallType(const fgGfxDrawCallType type) {
 /*
  *
  */
-void gfx::CDrawCall::setDrawAppendMode(const fgGfxDrawAppendMode mode) {
+void gfx::CDrawCall::setDrawAppendMode(const DrawAppendMode mode) {
     m_drawAppendMode = mode;
 }
 
 /*
  *
  */
-void gfx::CDrawCall::setPrimitiveMode(const fgGfxPrimitiveMode mode) {
+void gfx::CDrawCall::setPrimitiveMode(const PrimitiveMode mode) {
     m_primMode = mode;
 }
 
@@ -476,7 +476,7 @@ void gfx::CDrawCall::appendRect2D(const Vec2f &relPos, const Vec2f &size,
     Vec2f pos(relPos.x, relPos.y);
     pos.x += m_relMove.x;
     pos.y += m_relMove.y;
-    if(m_drawAppendMode == FG_GFX_DRAW_APPEND_RELATIVE) {
+    if(m_drawAppendMode == DRAW_APPEND_RELATIVE) {
         m_relMove.x += size.x;
         m_relMove.y += size.y;
     }

@@ -84,7 +84,7 @@ sfx::base::CAudio *sfx::CSfxManager::get(const std::string& nameTag) {
  * @param soundHandle
  * @return 
  */
-sfx::base::CAudio *sfx::CSfxManager::get(const fgResourceHandle& soundHandle) {
+sfx::base::CAudio *sfx::CSfxManager::get(const resource::ResourceHandle& soundHandle) {
     if(!m_pResourceMgr)
         return NULL;
     resource::CResource *pResource = static_cast<resource::CResourceManager *>(m_pResourceMgr)->get(soundHandle);
@@ -321,7 +321,7 @@ fgBool sfx::CSfxManager::play(const std::string& name) {
  * @param soundHandle
  * @return 
  */
-fgBool sfx::CSfxManager::play(const fgResourceHandle& soundHandle) {
+fgBool sfx::CSfxManager::play(const resource::ResourceHandle& soundHandle) {
     base::CAudio *pAudio = get(soundHandle);
     if(!pAudio)
         return FG_FALSE;
@@ -360,7 +360,7 @@ fgBool sfx::CSfxManager::pause(const std::string& name) {
  * @param soundHandle
  * @return 
  */
-fgBool sfx::CSfxManager::pause(const fgResourceHandle& soundHandle) {
+fgBool sfx::CSfxManager::pause(const resource::ResourceHandle& soundHandle) {
     base::CAudio *pAudio = get(soundHandle);
     if(!pAudio)
         return FG_FALSE;
@@ -399,7 +399,7 @@ fgBool sfx::CSfxManager::resume(const std::string& name) {
  * @param soundHandle
  * @return 
  */
-fgBool sfx::CSfxManager::resume(const fgResourceHandle& soundHandle) {
+fgBool sfx::CSfxManager::resume(const resource::ResourceHandle& soundHandle) {
     base::CAudio *pAudio = get(soundHandle);
     if(!pAudio)
         return FG_FALSE;
@@ -438,7 +438,7 @@ fgBool sfx::CSfxManager::rewind(const std::string& name) {
  * @param soundHandle
  * @return 
  */
-fgBool sfx::CSfxManager::rewind(const fgResourceHandle& soundHandle) {
+fgBool sfx::CSfxManager::rewind(const resource::ResourceHandle& soundHandle) {
     base::CAudio *pAudio = get(soundHandle);
     if(!pAudio)
         return FG_FALSE;
@@ -477,7 +477,7 @@ fgBool sfx::CSfxManager::stop(const std::string& name) {
  * @param soundHandle
  * @return 
  */
-fgBool sfx::CSfxManager::stop(const fgResourceHandle& soundHandle) {
+fgBool sfx::CSfxManager::stop(const resource::ResourceHandle& soundHandle) {
     base::CAudio *pAudio = get(soundHandle);
     if(!pAudio)
         return FG_FALSE;
@@ -514,7 +514,7 @@ fgBool sfx::CSfxManager::isPlaying(const std::string& name) {
  * @param soundHandle
  * @return 
  */
-fgBool sfx::CSfxManager::isPlaying(const fgResourceHandle& soundHandle) {
+fgBool sfx::CSfxManager::isPlaying(const resource::ResourceHandle& soundHandle) {
     base::CAudio *pAudio = get(soundHandle);
     if(!pAudio)
         return FG_FALSE;
@@ -551,7 +551,7 @@ fgBool sfx::CSfxManager::isPaused(const std::string& name) {
  * @param soundHandle
  * @return 
  */
-fgBool sfx::CSfxManager::isPaused(const fgResourceHandle& soundHandle) {
+fgBool sfx::CSfxManager::isPaused(const resource::ResourceHandle& soundHandle) {
     base::CAudio *pAudio = get(soundHandle);
     if(!pAudio)
         return FG_FALSE;

@@ -14,17 +14,17 @@
  */
 
 #ifndef FG_INC_GFX_SCENE_NODE_OBJECT
-    #define	FG_INC_GFX_SCENE_NODE_OBJECT
+    #define FG_INC_GFX_SCENE_NODE_OBJECT
     #define FG_INC_GFX_SCENE_NODE_OBJECT_BLOCK
 
     #ifndef FG_INC_GFX_SCENE_NODE
         #include "fgGFXSceneNode.h"
     #endif
     #ifndef FG_INC_GFX_DRAW_CALL
-        #include "fgGFXDrawCall.h"
+        #include "GFX/fgGFXDrawCall.h"
     #endif
     #ifndef FG_INC_GFX_MODEL_RESOURCE
-        #include "fgGFXModelResource.h"
+        #include "GFX/fgGFXModelResource.h"
     #endif
 
 namespace fg {

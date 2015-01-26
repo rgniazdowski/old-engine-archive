@@ -21,47 +21,46 @@
 
 namespace fg {
     namespace gfx {
+        /// Forward declaration for CShader
         class CShader;
+        /// Forward declaration for CShaderProgram
+        class CShaderProgram;
+        /// Forward declaration for CShaderManager
+        class CShaderManager;
     };
 };
 
     #define FG_TAG_GFX_SHADER_NAME	"GfxShader"
     #define FG_TAG_GFX_SHADER		FG_TAG_TYPE(fg::gfx::CShader)
-
 FG_TAG_TEMPLATE_ID_AUTO(fg::gfx::CShader, FG_TAG_GFX_SHADER_NAME);
-typedef FG_TAG_GFX_SHADER fgGfxShaderTag;
-
-// Special handle type for shader program
-typedef fgHandle<fgGfxShaderTag> fgGfxShaderHandle;
 
 namespace fg {
+    
     namespace resource {
         template<typename THandleType, typename TMapKeyType> class CManagedDataFile;
     };
 
     namespace gfx {
 
-        /// Forward declaration
-        //class CShader;
-        /// Forward declaration for CShaderProgram
-        class CShaderProgram;
-        /// Forward declaration for CShaderManager
-        class CShaderManager;
+        /// Tag type for Shader
+        typedef FG_TAG_GFX_SHADER ShaderTag;
+        /// Special handle type for shader program
+        typedef fg::util::CHandle<ShaderTag> ShaderHandle;
 
         namespace base {
 
             /**
              *
              */
-            class CShader : public fg::resource::CManagedDataFile<fgGfxShaderHandle, fgQuality> {
+            class CShader : public fg::resource::CManagedDataFile<ShaderHandle, fgQuality> {
                 //friend class fg::gfx::CShader;
                 friend class fg::gfx::CShaderProgram;
                 friend class fg::gfx::CShaderManager;
             public:
                 ///
-                typedef CManagedDataFile<fgGfxShaderHandle, fgQuality> base_type;
+                typedef CManagedDataFile<ShaderHandle, fgQuality> base_type;
                 ///
-                typedef fgGfxShaderTag tag_type;
+                typedef ShaderTag tag_type;
 
             protected:
                 ///

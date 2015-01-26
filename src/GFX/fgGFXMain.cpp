@@ -135,7 +135,7 @@ fgBool gfx::CGfxMain::initGFX(void) {
     }
     if(m_mainWindow && status) {
         // #FIXME - resolution FIXME!
-        if(!m_mainWindow->setup(FG_PACKAGE_FULL_TEXT, 1024, 768)) {
+        if(!m_mainWindow->setup(FG_PACKAGE_FULL_TEXT, 1280, 720)) {
             delete m_mainWindow;
             m_mainWindow = NULL;
             status = FG_FALSE;
@@ -509,6 +509,9 @@ void gfx::CGfxMain::render(void) {
     modelMat = math::translate(Matrix4f(), Vector3f(yolo_posx, yolo_posy * 0.0f, yolo_posy));
     modelMat = math::rotate(modelMat, rotxyz, Vector3f(1.0f, 1.0f, 1.0f)); //math::translate(fgMatrix4f(1.0f), Vector3f(0.0f, 0.0f, -5.0f));
 
+    Vector4f translation = modelMat[3];
+    //printf("Position: %.2f %.2f %.2f %.2f\n", translation[0], translation[1], translation[2], translation[3]);
+    
     program = m_shaderMgr->get(sPlainEasyShaderName);
 
     if(!program) {
@@ -520,30 +523,30 @@ void gfx::CGfxMain::render(void) {
     program->setUniform(FG_GFX_PLAIN_TEXTURE, (fgGFXint)0);
 
     // #FIXME - this of course needs to be somewhere else 
-    if(cobraBomber && m_3DScene && 0) {
+    if(cobraBomber && m_3DScene) {
         if(!m_3DScene->count()) {
             //m_3DScene->addFromModel(cobraBomber, std::string("PlayerFighter"));
-            //m_3DScene->addFromModel(cobraBomber, std::string("PlayerEnemy"));
+            m_3DScene->addFromModel(cobraBomber, std::string("PlayerEnemy"));
         }
     }
     static float rot1 = 0.0f;
     static float radius1 = 200.0f;
     // #FIXME
-    if(m_3DScene && 0) {
+    if(m_3DScene) {
         gfx::CSceneNode *obj1 = m_3DScene->get("PlayerFighter");
         if(obj1) {
             obj1->setModelMatrix(modelMat);
         }
         gfx::CSceneNode *obj2 = m_3DScene->get("PlayerEnemy");
         if(obj2) {
-            rot1 += 0.00127f * (float)FG_HardwareState->getDelta();
+            rot1 += 0.000127f * (float)FG_HardwareState->getDelta();
             if(rot1 > M_PI * 2.0f)
                 rot1 = 0.0f;
             float rx = cos(rot1) * radius1;
             float rz = sin(rot1) * radius1;
 
             modelMat = math::translate(Matrix4f(), Vector3f(rx, 20.0f, rz));
-            modelMat = math::rotate(modelMat, (float)M_PI / 2.0f, Vector3f(0.0f, 1.0f, 0.0f));
+            modelMat = math::rotate(modelMat, (float)M_PI / 2.0f + rot1, Vector3f(1.0f, 1.0f, 1.0f));
             obj2->setModelMatrix(modelMat);
         }
     }
@@ -604,7 +607,7 @@ void gfx::CGfxMain::render(void) {
     }
 
 #endif
-    Model = math::translate(Model, Vec3f(yolo_posx * 0.0f, yolo_posy * 0.0f, 0.0f));
+    Model = math::translate(Model, Vec3f(yolo_posx * 1.0f, yolo_posy * 1.0f, 0.0f));
     Model = math::scale(Model, Vec3f(guiScale, guiScale, 0.0f));
 
     m_2DScene->getMVP()->setOrtho(0, (float)m_mainWindow->getWidth(), (float)m_mainWindow->getHeight(), 0.0f);

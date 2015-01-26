@@ -22,10 +22,10 @@ namespace fg {
         /**
          *
          */
-        class CStyleManager : public fg::resource::CDataManagerBase<CStyle*, fgGuiStyleHandle, fgGuiStyleTag> {
+        class CStyleManager : public fg::resource::CDataManagerBase<CStyle*, StyleHandle, StyleTag> {
         public:
             ///
-            typedef CDataManagerBase<CStyle*, fgGuiStyleHandle, fgGuiStyleTag> base_type;
+            typedef CDataManagerBase<CStyle*, StyleHandle, StyleTag> base_type;
 
         protected:
             ///

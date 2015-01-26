@@ -21,7 +21,7 @@ using namespace fg;
  * 
  */
 gfx::CParticleEmitter::CParticleEmitter(CParticleEffect *pEffect) :
-CSceneNode(FG_GFX_SCENE_NODE_CUSTOM, NULL),
+CSceneNode(SCENE_NODE_CUSTOM, NULL),
 m_effects(),
 m_origin(),
 m_particles(),

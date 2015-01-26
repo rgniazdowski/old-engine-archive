@@ -90,7 +90,7 @@ namespace fg {
              * @param soundHandle
              * @return 
              */
-            fg::sfx::base::CAudio *get(const fgResourceHandle& soundHandle);
+            fg::sfx::base::CAudio *get(const resource::ResourceHandle& soundHandle);
             
         public:
             /**
@@ -188,7 +188,7 @@ namespace fg {
              * @param soundHandle
              * @return 
              */
-            fgBool play(const fgResourceHandle& soundHandle);
+            fgBool play(const resource::ResourceHandle& soundHandle);
 
             /**
              * 
@@ -207,7 +207,7 @@ namespace fg {
              * @param soundHandle
              * @return 
              */
-            fgBool pause(const fgResourceHandle& soundHandle);
+            fgBool pause(const resource::ResourceHandle& soundHandle);
 
             /**
              * 
@@ -226,7 +226,7 @@ namespace fg {
              * @param soundHandle
              * @return 
              */
-            fgBool resume(const fgResourceHandle& soundHandle);
+            fgBool resume(const resource::ResourceHandle& soundHandle);
 
             /**
              * 
@@ -245,7 +245,7 @@ namespace fg {
              * @param soundHandle
              * @return 
              */
-            fgBool rewind(const fgResourceHandle& soundHandle);
+            fgBool rewind(const resource::ResourceHandle& soundHandle);
 
             /**
              * 
@@ -264,7 +264,7 @@ namespace fg {
              * @param soundHandle
              * @return 
              */
-            fgBool stop(const fgResourceHandle& soundHandle);
+            fgBool stop(const resource::ResourceHandle& soundHandle);
 
             /**
              * 
@@ -283,7 +283,7 @@ namespace fg {
              * @param soundHandle
              * @return 
              */
-            fgBool isPlaying(const fgResourceHandle& soundHandle);
+            fgBool isPlaying(const resource::ResourceHandle& soundHandle);
 
             /**
              * 
@@ -302,7 +302,7 @@ namespace fg {
              * @param soundHandle
              * @return 
              */
-            fgBool isPaused(const fgResourceHandle& soundHandle);
+            fgBool isPaused(const resource::ResourceHandle& soundHandle);
 
         };
 

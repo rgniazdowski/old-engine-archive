@@ -8,8 +8,8 @@
  *******************************************************/
 
 #include "fgGFXSceneNode.h"
-#include "fgGFXDrawCall.h"
 #include "fgGFXSceneManager.h"
+#include "GFX/fgGFXDrawCall.h"
 
 using namespace fg;
 
@@ -18,10 +18,10 @@ using namespace fg;
  * @param nodeType
  * @param pParent
  */
-gfx::CSceneNode::CSceneNode(fgGfxSceneNodeType nodeType,
+gfx::CSceneNode::CSceneNode(SceneNodeType nodeType,
                             self_type *pParent) :
 base_type(), // fgManagedObjectBase init
-drawable_type(FG_GFX_DRAWABLE_SCENENODE), // fgGfxDrawable init
+drawable_type(DRAWABLE_SCENENODE), // fgGfxDrawable init
 m_nodeType(nodeType), // Current node type
 m_pTreeNode(NULL),
 m_pParent(pParent), // Pointer to the parent node
@@ -32,7 +32,7 @@ m_aabb(), // axis-aligned bounding box - this one will be transformed
 m_drawCall(NULL) // DrawCall for this node - it cannot be managed
 {
     // Draw call is only initialized when Node Custom type is specialized
-    if(m_nodeType == FG_GFX_SCENE_NODE_CUSTOM) {
+    if(m_nodeType == SCENE_NODE_CUSTOM) {
         m_drawCall = new CDrawCall();
     } else {
         m_drawCall = NULL;

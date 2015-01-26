@@ -2071,7 +2071,7 @@ void gfx::CContext::vertexAttribPointer(fgGFXuint index,
     // # mirror
     // # usage of main attrib array in other places
     //
-    fgGfxAttributeData &attr = m_attrInfo[index];
+    SAttributeData &attr = m_attrInfo[index];
     attr.index = index;
     attr.size = size;
     attr.dataType = type;
@@ -2087,7 +2087,7 @@ void gfx::CContext::vertexAttribPointer(fgGFXuint index,
  * 
  * @param attrData
  */
-void gfx::CContext::vertexAttribPointer(fgGfxAttributeData& attrData) {
+void gfx::CContext::vertexAttribPointer(SAttributeData& attrData) {
     fgGFXint index = attrData.index;
     if(index < 0)
         return;

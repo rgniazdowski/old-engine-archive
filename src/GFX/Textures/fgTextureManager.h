@@ -26,20 +26,19 @@ namespace fg {
     };
 };
 
-    #define FG_TAG_TEXTURE_MANAGER_NAME		"GfxTextureManager"
-//#define FG_TAG_MANAGER_BASE_ID		20 //#FIXME - something automatic maybe?
-    #define FG_TAG_TEXTURE_MANAGER			FG_TAG_TYPE(fg::gfx::CTextureManager)
-
+    #define FG_TAG_TEXTURE_MANAGER_NAME     "GfxTextureManager"
+//#define FG_TAG_MANAGER_BASE_ID            20 //#FIXME - something automatic maybe?
+    #define FG_TAG_TEXTURE_MANAGER          FG_TAG_TYPE(fg::gfx::CTextureManager)
 //FG_TAG_TEMPLATE(fgResourceManager, FG_TAG_MANAGER_BASE_NAME, FG_TAG_MANAGER_BASE_ID);
 FG_TAG_TEMPLATE_ID_AUTO(fg::gfx::CTextureManager, FG_TAG_TEXTURE_MANAGER_NAME);
-
-// Special handle type for manager base
-typedef FG_TAG_TEXTURE_MANAGER fgTextureManagerTag;
 
     #define FG_MANAGER_TEXTURE      0x00000004
 
 namespace fg {
     namespace gfx {
+
+        /// Special tag type for Texture Manager
+        typedef FG_TAG_TEXTURE_MANAGER TextureManagerTag;
 
         /**
          * Class that allows to perform GROUP OPERATIONS on all textures. 
@@ -49,8 +48,8 @@ namespace fg {
             ///
             typedef fg::base::CManager base_type;
             ///
-            typedef fgTextureManagerTag tag_type;
-            
+            typedef TextureManagerTag tag_type;
+
         public:
             /**
              * Default constructor for Texture Manager object
@@ -158,7 +157,7 @@ namespace fg {
              * @param texHandle
              * @return 
              */
-            fgGfxTextureID &getRefGfxID(const fgResourceHandle& texHandle);
+            fgGfxTextureID &getRefGfxID(const resource::ResourceHandle& texHandle);
             /**
              * 
              * @param nameTag

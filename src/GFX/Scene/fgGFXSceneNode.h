@@ -13,16 +13,20 @@
 
     #include "Math/fgMathLib.h"
     #include "Util/fgTag.h"
-    #include "fgGFXAABoundingBox.h"
-    #include "fgGFXBoundingVolume.h"
+    #include "GFX/fgGFXAABoundingBox.h"
+    #include "GFX/fgGFXBoundingVolume.h"
 
     #ifndef FG_INC_GFX_DRAWABLE
-        #include "fgGFXDrawable.h"
+        #include "GFX/fgGFXDrawable.h"
     #endif
     #ifndef FG_INC_GFX_DRAW_CALL
-        #include "fgGFXDrawCall.h"
-#include "fgGFXTreeNode.h"
+        #include "GFX/fgGFXDrawCall.h"
     #endif
+    #ifndef FG_INC_GFX_TREE_NODE
+        #include "fgGFXTreeNode.h"
+    #endif
+
+    #include <set>
 
 namespace fg {
     namespace gfx {
@@ -30,50 +34,48 @@ namespace fg {
     }
 }
 
-    #define FG_TAG_GFX_OBJECT_NAME	"GfxSceneNode"
-    #define FG_TAG_GFX_OBJECT		FG_TAG_TYPE(fg::gfx::CSceneNode)
-
-FG_TAG_TEMPLATE_ID_AUTO(fg::gfx::CSceneNode, FG_TAG_GFX_OBJECT_NAME);
-typedef FG_TAG_GFX_OBJECT fgGfxSceneNodeTag;
-
-// Special handle type for gfx object (scene object)
-typedef fgHandle<fgGfxSceneNodeTag> fgGfxSceneNodeHandle;
-
-typedef unsigned int fgGfxSceneNodeType;
-
-    #define FG_GFX_SCENE_NODE_INVALID   0
-/// Custom scene node - it is still drawable but relies on custom
-/// draw call type to draw something - meaning that this utilizes
-/// custom vertex data
-    #define FG_GFX_SCENE_NODE_CUSTOM    1
-/// Node mesh is based on GfxMesh/Shape - Model is made of Shapes
-/// Every shape is made of one mesh. This will be mostly child node.
-    #define FG_GFX_SCENE_NODE_MESH      2
-/// This is special type of mesh node - based on GfxModel
-/// this will contain multiple children (mesh/shapes) with
-/// configured draw calls and updated bounding boxes
-    #define FG_GFX_SCENE_NODE_OBJECT    3
-/// Trigger is a special node type - when collision occurs with it
-/// the special event is thrown - registered callbacks will be called
-    #define FG_GFX_SCENE_NODE_TRIGGER   4
-
-/// Drawable type for scene node
-    #define FG_GFX_DRAWABLE_SCENENODE   5
-
-    #include <set>
+    #define FG_TAG_GFX_SCENE_NODE_NAME  "GfxSceneNode"
+    #define FG_TAG_GFX_SCENE_NODE       FG_TAG_TYPE(fg::gfx::CSceneNode)
+FG_TAG_TEMPLATE_ID_AUTO(fg::gfx::CSceneNode, FG_TAG_GFX_SCENE_NODE_NAME);
 
 namespace fg {
+
     namespace resource {
         template<typename THandleType> class CManagedObject;
     };
 
     namespace gfx {
 
+        /// Tag type for the Scene Node
+        typedef FG_TAG_GFX_SCENE_NODE SceneNodeTag;
+        /// Special handle type for gfx object (scene object)
+        typedef fg::util::CHandle<SceneNodeTag> SceneNodeHandle;
+
+        ///
+        typedef unsigned int SceneNodeType;
+
+        /// Invalid scene node - initial value
+        const SceneNodeType SCENE_NODE_INVALID = 0;
+        /// Custom scene node - it is still drawable but relies on custom
+        /// draw call type to draw something - meaning that this utilizes
+        /// custom vertex data
+        const SceneNodeType SCENE_NODE_CUSTOM = 1;
+        /// Node mesh is based on GfxMesh/Shape - Model is made of Shapes
+        /// Every shape is made of one mesh. This will be mostly child node.
+        const SceneNodeType SCENE_NODE_MESH = 2;
+        /// This is special type of mesh node - based on GfxModel
+        /// this will contain multiple children (mesh/shapes) with
+        /// configured draw calls and updated bounding boxes
+        const SceneNodeType SCENE_NODE_OBJECT = 3;
+        /// Trigger is a special node type - when collision occurs with it
+        /// the special event is thrown - registered callbacks will be called
+        const SceneNodeType SCENE_NODE_TRIGGER = 4;
+
         ///
         class CSceneManager;
         ///
         struct STreeNode;
-        
+
         /**
          * Scene object/node can be anything, it requires model matrix for any kind of 
          * transformation to world space. AABB for boundaries, collision detection,
@@ -87,17 +89,17 @@ namespace fg {
          * Also need template structs for managing safe down/up-casting (static)
          */
         class CSceneNode :
-        public resource::CManagedObject<fgGfxSceneNodeHandle>,
+        public resource::CManagedObject<SceneNodeHandle>,
         public CDrawable {
         public:
             /// Scene node tag type
-            typedef fgGfxSceneNodeTag tag_type;
+            typedef SceneNodeTag tag_type;
             /// Drawable object type
             typedef CDrawable drawable_type;
             /// Base type for scene node
-            typedef CManagedObject<fgGfxSceneNodeHandle> base_type;
+            typedef CManagedObject<SceneNodeHandle> base_type;
             /// Handle type for scene node
-            typedef fgGfxSceneNodeHandle handle_type;
+            typedef SceneNodeHandle handle_type;
             /// SceneNode type - self
             typedef CSceneNode self_type;
             /// Special set containing children
@@ -109,7 +111,7 @@ namespace fg {
 
         private:
             ///
-            fgGfxSceneNodeType m_nodeType;
+            SceneNodeType m_nodeType;
             ///
             STreeNode *m_pTreeNode;
             /// Scene node father/parent node pointer
@@ -134,14 +136,14 @@ namespace fg {
              * @param nodeType
              * @param pParent
              */
-            CSceneNode(fgGfxSceneNodeType nodeType = FG_GFX_SCENE_NODE_INVALID, self_type *pParent = NULL);
+            CSceneNode(SceneNodeType nodeType = SCENE_NODE_INVALID, self_type *pParent = NULL);
             /**
              * 
              */
             virtual ~CSceneNode();
 
         public:
-            
+
             /**
              * 
              */
@@ -169,9 +171,9 @@ namespace fg {
              * @return 
              */
             fgBool checkCollisionSphere(const CSceneNode* pNode);
-            
+
         public:
-            
+
             /**
              * 
              * @param pChild
@@ -334,7 +336,7 @@ namespace fg {
              * 
              * @return 
              */
-            inline fgGfxSceneNodeType getNodeType(void) const {
+            inline SceneNodeType getNodeType(void) const {
                 return m_nodeType;
             }
             /**
@@ -500,7 +502,7 @@ namespace fg {
              * 
              * @param objectType
              */
-            inline void setNodeType(const fgGfxSceneNodeType nodeType) {
+            inline void setNodeType(const SceneNodeType nodeType) {
                 m_nodeType = nodeType;
             }
         };

@@ -444,7 +444,7 @@ namespace fg {
             /// Currently used attribute mask
             fgGFXuint m_attribMask;
             ///
-            fgGfxAttributeData m_attrInfo[FG_GFX_ATTRIBUTE_DATA_MAX]; // #FIXME - attribute count ... why here?  hello?
+            SAttributeData m_attrInfo[FG_GFX_ATTRIBUTE_DATA_MAX]; // #FIXME - attribute count ... why here?  hello?
             /// Currently bound texture ID
             fgGFXuint m_boundTexture;
             /// Supported shading language version
@@ -719,7 +719,7 @@ namespace fg {
                                      fgGFXvoid* ptr);
 
             // Sets the various data details based on a special attribute data struct
-            void vertexAttribPointer(fgGfxAttributeData& attrData);
+            void vertexAttribPointer(SAttributeData& attrData);
 
         };
     };

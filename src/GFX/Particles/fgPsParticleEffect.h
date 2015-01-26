@@ -30,41 +30,38 @@
  *                            its tail, and never fully removes elements.
  *                            New element is always accepted.
  */
+namespace fg {
+    namespace gfx {
+        class CParticleEffect;
 
-class CParticleEffect;
+        /**
+         *
+         */
+        enum ParticleEffectFlags {
+            /// No specific flags are specified
+            FG_PARTICLE_FLAG_NONE = 0x00000000,
+            /// Is velocity random or static? If random then it's from <-spreadSpeed, spreadSpeed>
+            FG_PARTICLE_RANDOM_VELOCITY = 0x00000001,
+            /// Does life of the particle sets the size?
+            FG_PARTICLE_LIFE_AS_SIZE = 0x00000002,
+            /// Do particles pitch in the direction they're flying
+            FG_PARTICLE_FACING_VELOCITY = 0x00000004,
+            /// The particle sprite is rotated at a random angle when it is emitted
+            FG_PARTICLE_RANDOM_ANGLE = 0x00000008,
+            /// Is the current particle grouped? #FIXME
+            FG_PARTICLE_GROUP_EFFECT = 0x00000010,
+            /// Are parameters (start/end size, start/end color) taken into account 
+            /// when calculating the particles. LifeAsSize will be overridden.
+            FG_PARTICLE_PARAMS_ACTIVE = 0x00000020
+        };
+    };
+};
+
+FG_ENUM_FLAGS(fg::gfx::ParticleEffectFlags);
 
     #define FG_TAG_PARTICLE_EFFECT_NAME     "ParticleEffect"
-    #define FG_TAG_PARTICLE_EFFECT          FG_TAG_TYPE(CParticleEffect)
-
-FG_TAG_TEMPLATE_ID_AUTO(CParticleEffect, FG_TAG_PARTICLE_EFFECT_NAME);
-
-// Special tag type for particle effect
-typedef FG_TAG_PARTICLE_EFFECT fgParticleEffectTag;
-// Special handle type for particle effect
-//typedef fgHandle<fgParticleEffectTag> fgParticleEffectHandle;
-typedef fgResourceHandle fgParticleEffectHandle;
-
-/**
- *
- */
-enum fgParticleEffectFlags {
-    /// No specific flags are specified
-    FG_PARTICLE_FLAG_NONE = 0x00000000,
-    /// Is velocity random or static? If random then it's from <-spreadSpeed, spreadSpeed>
-    FG_PARTICLE_RANDOM_VELOCITY = 0x00000001,
-    /// Does life of the particle sets the size?
-    FG_PARTICLE_LIFE_AS_SIZE = 0x00000002,
-    /// Do particles pitch in the direction they're flying
-    FG_PARTICLE_FACING_VELOCITY = 0x00000004,
-    /// The particle sprite is rotated at a random angle when it is emitted
-    FG_PARTICLE_RANDOM_ANGLE = 0x00000008,
-    /// Is the current particle grouped? #FIXME
-    FG_PARTICLE_GROUP_EFFECT = 0x00000010,
-    /// Are parameters (start/end size, start/end color) taken into account 
-    /// when calculating the particles. LifeAsSize will be overridden.
-    FG_PARTICLE_PARAMS_ACTIVE = 0x00000020
-};
-FG_ENUM_FLAGS(fgParticleEffectFlags);
+    #define FG_TAG_PARTICLE_EFFECT          FG_TAG_TYPE(fg::gfx::CParticleEffect)
+FG_TAG_TEMPLATE_ID_AUTO(fg::gfx::CParticleEffect, FG_TAG_PARTICLE_EFFECT_NAME);
 
     #include <cfloat>
     #include <climits>
@@ -118,12 +115,18 @@ FG_ENUM_FLAGS(fgParticleEffectFlags);
 namespace fg {
     namespace gfx {
 
+        /// Special tag type for particle effect
+        typedef FG_TAG_PARTICLE_EFFECT ParticleEffectTag;
+        /// Special handle type for particle effect
+        ///typedef fgHandle<fgParticleEffectTag> fgParticleEffectHandle;
+        typedef fg::resource::ResourceHandle ParticleEffectHandle;
+
         class CParticleEffect : public fg::resource::CResource {
         private:
             /// Maximum number of a particles displayed at one time
             int m_maxCount;
             /// Particle effect specific flags
-            fgParticleEffectFlags m_flags;
+            ParticleEffectFlags m_flags;
             /// Particle area bounding box
             BoundingBox3Df m_particleArea;
             /// Is area set?
@@ -284,7 +287,7 @@ namespace fg {
              * @param flags
              * @param toggle
              */
-            inline void setFlag(const fgParticleEffectFlags flags, const fgBool toggle = FG_TRUE) {
+            inline void setFlag(const ParticleEffectFlags flags, const fgBool toggle = FG_TRUE) {
                 if(toggle) {
                     m_flags |= flags;
                 } else {
@@ -533,7 +536,7 @@ namespace fg {
              * 
              * @return 
              */
-            inline fgParticleEffectFlags getFlags(void) const {
+            inline ParticleEffectFlags getFlags(void) const {
                 return m_flags;
             }
             /**

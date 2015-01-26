@@ -36,18 +36,18 @@ namespace fg {
         class CSceneManager :
         public fg::base::CManager,
         protected CDrawingBatch,
-        protected fg::util::CHandleManager<CSceneNode *, fgGfxSceneNodeHandle> {
+        protected fg::util::CHandleManager<CSceneNode *, SceneNodeHandle> {
         public:
             ///
             typedef CSceneManager self_type;
             ///
             typedef fg::base::CManager base_type;
             ///
-            typedef fg::util::CHandleManager<CSceneNode *, fgGfxSceneNodeHandle> handle_mgr_type;
+            typedef fg::util::CHandleManager<CSceneNode *, SceneNodeHandle> handle_mgr_type;
             ///
             typedef CSceneNode node_type;
             ///
-            typedef fgGfxSceneNodeHandle handle_type;
+            typedef SceneNodeHandle handle_type;
             ///
             typedef std::priority_queue<CSceneNode*, std::deque<CSceneNode*>, fgPtrLessEq<CSceneNode*> > NodePriorityQueue;
             ///
@@ -148,7 +148,7 @@ namespace fg {
              * @param pFatherNode
              * @return 
              */
-            virtual fgBool addNode(fgGfxSceneNodeHandle& nodeUniqueID,
+            virtual fgBool addNode(SceneNodeHandle& nodeUniqueID,
                                    CSceneNode *pNode,
                                    CSceneNode *pFatherNode = NULL);
             /**
@@ -158,9 +158,9 @@ namespace fg {
              * @param nodeParentUniqueID
              * @return 
              */
-            virtual fgBool addNode(fgGfxSceneNodeHandle& nodeUniqueID,
+            virtual fgBool addNode(SceneNodeHandle& nodeUniqueID,
                                    CSceneNode *pNode,
-                                   const fgGfxSceneNodeHandle& nodeParentUniqueID);
+                                   const SceneNodeHandle& nodeParentUniqueID);
             /**
              * 
              * @param nodeUniqueID
@@ -168,7 +168,7 @@ namespace fg {
              * @param nodeParentNameTag
              * @return 
              */
-            virtual fgBool addNode(fgGfxSceneNodeHandle& nodeUniqueID,
+            virtual fgBool addNode(SceneNodeHandle& nodeUniqueID,
                                    CSceneNode *pNode,
                                    const std::string& nodeParentNameTag);
             /**
@@ -178,7 +178,7 @@ namespace fg {
              * @param nodeParentNameTag
              * @return 
              */
-            virtual fgBool addNode(fgGfxSceneNodeHandle& nodeUniqueID,
+            virtual fgBool addNode(SceneNodeHandle& nodeUniqueID,
                                    CSceneNode *pNode,
                                    const char* nodeParentNameTag);
 
@@ -193,7 +193,7 @@ namespace fg {
              * @param nodeUniqueID
              * @return 
              */
-            virtual fgBool remove(const fgGfxSceneNodeHandle& nodeUniqueID);
+            virtual fgBool remove(const SceneNodeHandle& nodeUniqueID);
             /**
              * 
              * @param nameTag
@@ -218,7 +218,7 @@ namespace fg {
              * @param nodeUniqueID
              * @return 
              */
-            virtual fgBool destroyNode(const fgGfxSceneNodeHandle& nodeUniqueID);
+            virtual fgBool destroyNode(const SceneNodeHandle& nodeUniqueID);
             /**
              * 
              * @param nameTag
@@ -237,7 +237,7 @@ namespace fg {
              * @param nodeUniqueID
              * @return 
              */
-            virtual CSceneNode* get(const fgGfxSceneNodeHandle& nodeUniqueID);
+            virtual CSceneNode* get(const SceneNodeHandle& nodeUniqueID);
             /**
              * 
              * @param nameTag
@@ -262,7 +262,7 @@ namespace fg {
              * @param nodeUniqueID
              * @return 
              */
-            virtual fgBool isManaged(const fgGfxSceneNodeHandle& nodeUniqueID);
+            virtual fgBool isManaged(const SceneNodeHandle& nodeUniqueID);
             /**
              * 
              * @param nameTag

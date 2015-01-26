@@ -11,6 +11,9 @@
 #include "GFX/Shaders/fgGFXShaderDefs.h"
 #include "GFX/Shaders/fgGFXShaderProgram.h"
 #include "fgGFXAABoundingBox.h"
+#include "GFX/fgGFXVertexData.h"
+#include "fgGFXModelTypes.h"
+#include "fgGFXDrawCall.h"
 
 using namespace fg;
 
@@ -220,7 +223,7 @@ void gfx::CPrimitives::drawSkyBoxOptimized(void) {
                                                    reinterpret_cast<fgGFXvoid*>(offset));
 
     //(GLenum mode, GLsizei count, GLenum type, const void *indices)
-    glDrawElements((GLenum)fgGfxPrimitiveMode::FG_GFX_TRIANGLE_STRIP,
+    glDrawElements((GLenum)PrimitiveMode::TRIANGLE_STRIP,
                    sizeof (c_stripCube1x1Idx) / sizeof (c_stripCube1x1Idx[0]),
                    GL_UNSIGNED_SHORT,
                    c_stripCube1x1Idx);
@@ -311,7 +314,7 @@ void gfx::CPrimitives::drawAABBLines(const AABoundingBox3Df& aabb, const fgColor
                                                    FG_GFX_FALSE,
                                                    sizeof (Vector4f),
                                                    reinterpret_cast<fgGFXvoid*>(offset));
-    glDrawArrays((GLenum)fgGfxPrimitiveMode::FG_GFX_LINE_STRIP, 0, sizeof (aabbLineStripBuf) / sizeof (aabbLineStripBuf[0]));
+    glDrawArrays((GLenum)PrimitiveMode::LINE_STRIP, 0, sizeof (aabbLineStripBuf) / sizeof (aabbLineStripBuf[0]));
 
 }
 
@@ -320,7 +323,7 @@ void gfx::CPrimitives::drawAABBLines(const AABoundingBox3Df& aabb, const fgColor
  */
 void gfx::CPrimitives::drawArray2D(const fg::CVector<Vertex2v> &inputData,
                                    const unsigned int attribMask,
-                                   const fgGfxPrimitiveMode mode) {
+                                   const PrimitiveMode mode) {
     if(inputData.empty() || !attribMask)
         return;
     gfx::CPlatform::context()->diffVertexAttribArrayMask(attribMask);
@@ -352,7 +355,7 @@ void gfx::CPrimitives::drawArray2D(const fg::CVector<Vertex2v> &inputData,
  */
 void gfx::CPrimitives::drawArray2D(const fg::CVector<Vertex3v> &inputData,
                                    const unsigned int attribMask,
-                                   const fgGfxPrimitiveMode mode) {
+                                   const PrimitiveMode mode) {
     if(inputData.empty() || !attribMask)
         return;
     // Need to optimize this
@@ -396,7 +399,7 @@ void gfx::CPrimitives::drawArray2D(const fg::CVector<Vertex3v> &inputData,
  */
 void gfx::CPrimitives::drawArray2D(const fg::CVector<Vertex4v> &inputData,
                                    const unsigned int attribMask,
-                                   const fgGfxPrimitiveMode mode) {
+                                   const PrimitiveMode mode) {
     if(inputData.empty() || !attribMask)
         return;
 
@@ -446,7 +449,7 @@ void gfx::CPrimitives::drawArray2D(const fg::CVector<Vertex4v> &inputData,
  */
 void gfx::CPrimitives::drawArray2D(const CVertexData *inputData,
                                    const unsigned int attribMask,
-                                   const fgGfxPrimitiveMode mode) {
+                                   const PrimitiveMode mode) {
     if(!inputData)
         return;
     if(inputData->empty() || !attribMask)
@@ -547,7 +550,7 @@ void gfx::CPrimitives::appendRect2D(CVertexData *outputData,
                                     const Vec2f &uv1,
                                     const Vec2f &uv2,
                                     const fgColor4f &color,
-                                    const fgGfxPrimitiveMode mode,
+                                    const PrimitiveMode mode,
                                     const fgBool rewind) {
     appendRect2D(outputData, Vec2f(0.0f, 0.0f), size, uv1, uv2, color, mode, rewind);
 }
@@ -561,7 +564,7 @@ void gfx::CPrimitives::appendRect2D(CVertexData *outputData,
                                     const Vec2f &uv1,
                                     const Vec2f &uv2,
                                     const fgColor4f &color,
-                                    const fgGfxPrimitiveMode mode,
+                                    const PrimitiveMode mode,
                                     const fgBool rewind) {
     appendRect2D(outputData, Vec2f(0.0f, 0.0f), Vec2f(sizex, sizey), uv1, uv2, color, mode, rewind);
 }
@@ -577,7 +580,7 @@ void gfx::CPrimitives::appendRect2D(CVertexData *outputData,
                                     const Vec2f &uv1,
                                     const Vec2f &uv2,
                                     const fgColor4f &color,
-                                    const fgGfxPrimitiveMode mode,
+                                    const PrimitiveMode mode,
                                     const fgBool rewind) {
     if(!outputData)
         return;
@@ -604,14 +607,14 @@ void gfx::CPrimitives::appendRect2D(CVertexData *outputData,
     x1 += relPos.x;
     y1 += relPos.y;
     Vector3f norm = Vector3f(1.0f, 1.0f, 1.0f);
-    if(mode == fgGfxPrimitiveMode::FG_GFX_TRIANGLE_STRIP || mode == fgGfxPrimitiveMode::FG_GFX_TRIANGLES) {
+    if(mode == PrimitiveMode::TRIANGLE_STRIP || mode == PrimitiveMode::TRIANGLES) {
 
         Vertex2v v1, v2;
         v1.position = Vec3f(x1, y1, 0.0f);
         v1.uv = Vec2f(uv1.x, 1 - uv1.y);
         v2.position = Vec3f(x1, y1 + size.y, 0.0f);
         v2.uv = Vec2f(uv1.x, 1 - uv2.y);
-        if(mode == fgGfxPrimitiveMode::FG_GFX_TRIANGLE_STRIP && outputData->empty()) {
+        if(mode == PrimitiveMode::TRIANGLE_STRIP && outputData->empty()) {
             Vertex3v v3, v4;
             v3.position = Vec3f(x1 + size.x, y1, 0.0f);
             v3.uv = Vec2f(uv2.x, 1 - uv1.y);
@@ -623,7 +626,7 @@ void gfx::CPrimitives::appendRect2D(CVertexData *outputData,
             outputData->append(v3.position, norm, v3.uv, color);
             outputData->append(v4.position, norm, v4.uv, color);
         } else {
-            if(mode == fgGfxPrimitiveMode::FG_GFX_TRIANGLE_STRIP) {
+            if(mode == PrimitiveMode::TRIANGLE_STRIP) {
                 v1.position[0] += size.x;
                 v2.position[0] += size.x;
             }
@@ -632,7 +635,7 @@ void gfx::CPrimitives::appendRect2D(CVertexData *outputData,
         }
 
 
-        if(mode == fgGfxPrimitiveMode::FG_GFX_TRIANGLES) {
+        if(mode == PrimitiveMode::TRIANGLES) {
             Vertex2v v3, v4;
             Vertex2v v5, v6;
             v3.position = Vec3f(x1 + size.x, y1, 0.0f);
