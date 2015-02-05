@@ -574,8 +574,8 @@ resource::CResource* resource::CResourceManager::request(const std::string& info
                 goToNext();
                 continue;
             }
-            CResource::fileMapping &files = res->getFileMapping();
-            CResource::fileMappingItor fit = files.begin(), fend = files.end();
+            CResource::FileMapping &files = res->getFileMapping();
+            CResource::FileMappingItor fit = files.begin(), fend = files.end();
             for(; fit != fend; fit++) {
                 // Comparing using endsWith - resource contains relative file paths
                 // not just file name - this request function takes in just file names

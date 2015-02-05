@@ -43,6 +43,8 @@
         </data>
         <spellchecker-wordlist xmlns="http://www.netbeans.org/ns/spellchecker-wordlist/1">
             <word>aabb</word>
+            <word>antialiased</word>
+            <word>antialiasing</word>
             <word>aos</word>
             <word>app</word>
             <word>arg</word>
@@ -88,6 +90,7 @@
             <word>flexi</word>
             <word>fmt</word>
             <word>foreach</word>
+            <word>fragment's</word>
             <word>framebuffer</word>
             <word>freeglut</word>
             <word>fubar</word>
@@ -115,6 +118,7 @@
             <word>init</word>
             <word>inline</word>
             <word>int</word>
+            <word>interpolators</word>
             <word>ismapped</word>
             <word>itor</word>
             <word>ivec</word>
@@ -132,6 +136,8 @@
             <word>metatables</word>
             <word>mp</word>
             <word>ms</word>
+            <word>multisample</word>
+            <word>multitexture</word>
             <word>multitextured</word>
             <word>multitexturing</word>
             <word>namespace</word>
@@ -166,13 +172,17 @@
             <word>quadragon</word>
             <word>quadtree</word>
             <word>Radoslaw</word>
+            <word>rasterized</word>
             <word>readdir</word>
+            <word>renderbuffer</word>
+            <word>renderbuffers</word>
             <word>rgb</word>
             <word>rgba</word>
             <word>s'</word>
             <word>sfactor</word>
             <word>sfx</word>
             <word>shaders</word>
+            <word>sizeof</word>
             <word>sliderboth</word>
             <word>sliderhorizontal</word>
             <word>slidervertical</word>
@@ -188,8 +198,10 @@
             <word>Subchunk</word>
             <word>subchunks</word>
             <word>subpath</word>
+            <word>subpixel</word>
             <word>texcoords</word>
             <word>texel</word>
+            <word>texels</word>
             <word>tga</word>
             <word>ttl</word>
             <word>unboxed</word>

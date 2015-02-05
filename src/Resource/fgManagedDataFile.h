@@ -9,7 +9,7 @@
 
 #ifndef FG_INC_MANAGED_DATA_FILE
     #define FG_INC_MANAGED_DATA_FILE
-    #define FG_INC_MANAGED_DATA_BLOCK
+    #define FG_INC_MANAGED_DATA_FILE_BLOCK
 
     #include "fgManagedObject.h"
     #include <map>
@@ -33,9 +33,9 @@ namespace fg {
         class CManagedDataFile : public CManagedObject<THandleType> {
         public:
             ///
-            typedef std::map<TMapKeyType, std::string> fileMapping;
+            typedef std::map<TMapKeyType, std::string> FileMapping;
             ///
-            typedef typename fileMapping::iterator fileMappingItor;
+            typedef typename FileMapping::iterator FileMappingItor;
             ///
             typedef THandleType handle_type;
             ///
@@ -88,7 +88,7 @@ namespace fg {
              * Get reference to data file path string
              * @return 
              */
-            inline const std::string& getFilePath(void) const {
+            inline std::string const& getFilePath(void) const {
                 return m_filePath;
             }
             /**
@@ -102,7 +102,7 @@ namespace fg {
              * 
              * @return 
              */
-            inline fileMapping& getFileMapping(void) {
+            inline FileMapping& getFileMapping(void) {
                 return m_fileMapping;
             }
             /**
@@ -179,7 +179,7 @@ namespace fg {
 
         protected:
             /// File mapping
-            fileMapping m_fileMapping;
+            FileMapping m_fileMapping;
             /// File path as separate string (by default this is for universal quality)
             std::string m_filePath;
             /// Default ID to write to
@@ -187,5 +187,5 @@ namespace fg {
         };
     };
 };
-    #undef FG_INC_MANAGED_DATA_BLOCK
-#endif /* FG_INC_MANAGED_DATA */
+    #undef FG_INC_MANAGED_DATA_FILE_BLOCK
+#endif /* FG_INC_MANAGED_DATA_FILE */

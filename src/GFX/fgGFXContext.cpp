@@ -201,37 +201,37 @@ void gfx::SContextParam::determineParamType(void) {
             paramType = FG_GFX_PARAM_DEPTH_FUNC;
             break;
 
-            //    params returns two values: the near and far mapping limits for the depth buffer.
-            //    Integer values, if requested, are linearly mapped from the internal 
-            //	  floating-point representation such that 1.0 returns the most positive representable
-            //	  integer value, and -1.0 returns the most negative representable integer
-            //    value. The initial value is (0, 1). See glDepthRangef.
+            // params returns two values: the near and far mapping limits for the depth buffer.
+            // Integer values, if requested, are linearly mapped from the internal 
+            // floating-point representation such that 1.0 returns the most positive representable
+            // integer value, and -1.0 returns the most negative representable integer
+            // value. The initial value is (0, 1). See glDepthRangef.
         case GL_DEPTH_RANGE:
             count = 2;
             type = FG_GFX_FLOAT;
             paramType = FG_GFX_PARAM_DEPTH_RANGE;
             break;
 
-            //    params returns a single boolean value indicating whether depth testing
-            //    of fragments is enabled. The initial value is GL_FALSE.
-            //    See glDepthFunc and glDepthRangef.
+            // params returns a single boolean value indicating whether depth testing
+            // of fragments is enabled. The initial value is GL_FALSE.
+            // See glDepthFunc and glDepthRangef.
         case GL_DEPTH_TEST:
             count = 1;
             type = FG_GFX_BOOL;
             paramType = FG_GFX_PARAM_BOOL;
             break;
 
-            //    params returns a single boolean value indicating if the depth buffer
-            //    is enabled for writing. The initial value is GL_TRUE.
-            //    See glDepthMask.
+            // params returns a single boolean value indicating if the depth buffer
+            // is enabled for writing. The initial value is GL_TRUE.
+            // See glDepthMask.
         case GL_DEPTH_WRITEMASK:
             count = 1;
             type = FG_GFX_BOOL;
             paramType = FG_GFX_PARAM_DEPTH_MASK;
             break;
 
-            //    params returns a single boolean value indicating whether dithering of
-            //    fragment colors and indices is enabled. The initial value is GL_TRUE.
+            // params returns a single boolean value indicating whether dithering of
+            // fragment colors and indices is enabled. The initial value is GL_TRUE.
         case GL_DITHER:
             count = 1;
             type = FG_GFX_BOOL;
@@ -248,101 +248,99 @@ void gfx::SContextParam::determineParamType(void) {
             paramType = FG_GFX_PARAM_VERT_BUFFER_BIND;
             break;
 
-            //    params returns a single value, the name of the buffer object
-            //    currently bound to the target GL_ELEMENT_ARRAY_BUFFER. If no buffer object
-            //    is bound to this target, 0 is returned.  The initial value is 0.
-            //    See glBindBuffer.
+            // params returns a single value, the name of the buffer object
+            // currently bound to the target GL_ELEMENT_ARRAY_BUFFER. If no buffer object
+            // is bound to this target, 0 is returned.  The initial value is 0.
+            // See glBindBuffer.
         case GL_ELEMENT_ARRAY_BUFFER_BINDING:
             count = 1;
             type = FG_GFX_INT;
             paramType = FG_GFX_PARAM_ELEM_BUFFER_BIND;
             break;
 
-            //    params returns a single value, the name of the currently bound
-            //    framebuffer. The initial value is 0, indicating the default framebuffer.
-            //    See glBindFramebuffer.
+            // params returns a single value, the name of the currently bound
+            // framebuffer. The initial value is 0, indicating the default framebuffer.
+            // See glBindFramebuffer.
         case GL_FRAMEBUFFER_BINDING:
             count = 1;
             type = FG_GFX_INT;
             paramType = FG_GFX_PARAM_FRAME_BUFFER_BIND;
             break;
 
-            //    params returns one value,
-            //    a symbolic constant indicating whether clockwise or counterclockwise
-            //    polygon winding is treated as front-facing. The initial value is
-            //    GL_CCW.
-            //    See glFrontFace.
+            // params returns one value,
+            // a symbolic constant indicating whether clockwise or counterclockwise
+            // polygon winding is treated as front-facing. The initial value is
+            // GL_CCW.
+            // See glFrontFace.
         case GL_FRONT_FACE:
             count = 1;
             type = FG_GFX_INT;
             paramType = FG_GFX_PARAM_FRONT_FACE;
             break;
 
-            //    params returns one value,
-            //    a symbolic constant indicating the mode of the mipmap generation filtering
-            //    hint. The initial value is GL_DONT_CARE.
-            //    See glHint.
+            // params returns one value,
+            // a symbolic constant indicating the mode of the mipmap generation filtering
+            // hint. The initial value is GL_DONT_CARE.
+            // See glHint.
         case GL_GENERATE_MIPMAP_HINT:
             count = 1;
             type = FG_GFX_INT;
             paramType = FG_GFX_PARAM_HINT;
             break;
 
-            //    params returns one value, the format
-            //    chosen by the implementation in which pixels may be read from the
-            //    color buffer of the currently bound framebuffer in conjunction with
-            //    GL_IMPLEMENTATION_COLOR_READ_TYPE.
-            //    In addition
-            //    to this implementation-dependent format/type pair, format 
-            //    GL_RGBA in conjunction with type 
-            //    GL_UNSIGNED_BYTE is always allowed by every
-            //    implementation, regardless of the currently bound render surface.
-            //    See glReadPixels.
+            // params returns one value, the format
+            // chosen by the implementation in which pixels may be read from the
+            // color buffer of the currently bound framebuffer in conjunction with
+            // GL_IMPLEMENTATION_COLOR_READ_TYPE.
+            // In addition to this implementation-dependent format/type pair,
+            // format GL_RGBA in conjunction with type GL_UNSIGNED_BYTE is always
+            // allowed by every implementation, regardless of the currently bound
+            // render surface.  See glReadPixels.
         case GL_IMPLEMENTATION_COLOR_READ_FORMAT:
             break;
 
-            //    params returns one value, the type
-            //    chosen by the implementation with which pixels may be read from the
-            //    color buffer of the currently bound framebuffer in conjunction with
-            //    GL_IMPLEMENTATION_COLOR_READ_FORMAT.
-            //    In addition
-            //    to this implementation-dependent format/type pair, format 
-            //    GL_RGBA in conjunction with type 
-            //    GL_UNSIGNED_BYTE is always allowed by every
-            //    implementation, regardless of the currently bound render surface.
-            //    See glReadPixels.
+            // params returns one value, the type
+            // chosen by the implementation with which pixels may be read from the
+            // color buffer of the currently bound framebuffer in conjunction with
+            // GL_IMPLEMENTATION_COLOR_READ_FORMAT.
+            // In addition
+            // to this implementation-dependent format/type pair, format 
+            // GL_RGBA in conjunction with type 
+            // GL_UNSIGNED_BYTE is always allowed by every
+            // implementation, regardless of the currently bound render surface.
+            // See glReadPixels.
         case GL_IMPLEMENTATION_COLOR_READ_TYPE:
             break;
 
-            //    params returns one value,
-            //    the line width as specified with glLineWidth. The initial value is 1.
+            // params returns one value,
+            // the line width as specified with glLineWidth. The initial value is 1.
         case GL_LINE_WIDTH:
             count = 1;
             type = FG_GFX_INT;
             paramType = FG_GFX_PARAM_INT;
             break;
 
-            //    params returns one value, the maximum supported texture image units that 
-            //    can be used to access texture maps from the vertex shader and the fragment processor combined. 
-            //    If both the vertex shader and the fragment processing stage access the same texture image
-            //    unit, then that counts as using two texture image units against this limit.
-            //    The value must be at least 8.
-            //    See glActiveTexture.
+            // params returns one value, the maximum supported texture image units that 
+            // can be used to access texture maps from the vertex shader and the fragment processor combined. 
+            // If both the vertex shader and the fragment processing stage access the same texture image
+            // unit, then that counts as using two texture image units against this limit.
+            // The value must be at least 8.
+            // See glActiveTexture.
         case GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS:
-            //    params returns one value.
-            //    The value gives a rough estimate of the largest cube-map texture that
-            //    the GL can handle. The value must be at least 16.
-            //    See glTexImage2D.
+            // params returns one value.
+            // The value gives a rough estimate of the largest cube-map texture that
+            // the GL can handle. The value must be at least 16.
+            // See glTexImage2D.
         case GL_MAX_CUBE_MAP_TEXTURE_SIZE:
-            //    params returns one value,
-            //    the maximum number of four-element floating-point, integer, or boolean vectors that can be held 
-            //    in uniform variable storage for a fragment shader. The value must be at least 16.
-            //    See glUniform.
+            // params returns one value,
+            // the maximum number of four-element floating-point, integer, or boolean vectors that can be held 
+            // in uniform variable storage for a fragment shader. The value must be at least 16.
+            // See glUniform.
         case GL_MAX_FRAGMENT_UNIFORM_VECTORS:
-            //    params returns one value.
-            //    The value indicates the largest renderbuffer width and height
-            //    that the GL can handle. The value must be at least 1.
-            //    See glRenderbufferStorage.
+            // params returns one value.
+            // The value indicates the largest renderbuffer width and height
+            // that the GL can handle. The value must be at least 1.
+            // See glRenderbufferStorage.
         case GL_MAX_RENDERBUFFER_SIZE:
             // params returns one value,
             // the maximum supported texture image units that 
@@ -350,115 +348,115 @@ void gfx::SContextParam::determineParamType(void) {
             // The value must be at least 8.
             // See glActiveTexture.
         case GL_MAX_TEXTURE_IMAGE_UNITS:
-            //    params returns one value.
-            //    The value gives a rough estimate of the largest texture that
-            //    the GL can handle. The value must be at least 64.
-            //    See glTexImage2D.
+            // params returns one value.
+            // The value gives a rough estimate of the largest texture that
+            // the GL can handle. The value must be at least 64.
+            // See glTexImage2D.
         case GL_MAX_TEXTURE_SIZE:
-            //    params returns one value,
-            //    the maximum number four-element floating-point vectors available for interpolating varying variables used by
-            //    vertex and fragment shaders. Varying variables declared as matrices or arrays 
-            //    will consume multiple interpolators. The value must be at least 8.
+            // params returns one value,
+            // the maximum number four-element floating-point vectors available for interpolating varying variables used by
+            // vertex and fragment shaders. Varying variables declared as matrices or arrays 
+            // will consume multiple interpolators. The value must be at least 8.
         case GL_MAX_VARYING_VECTORS:
-            //    params returns one value,
-            //    the maximum number of 4-component generic vertex attributes accessible to a vertex shader. 
-            //    The value must be at least 8.
-            //    See glVertexAttrib.
+            // params returns one value,
+            // the maximum number of 4-component generic vertex attributes accessible to a vertex shader. 
+            // The value must be at least 8.
+            // See glVertexAttrib.
         case GL_MAX_VERTEX_ATTRIBS:
-            //    params returns one value, the maximum supported texture image units that 
-            //    can be used to access texture maps from the vertex shader. The value may be 0.
-            //    See glActiveTexture.
+            // params returns one value, the maximum supported texture image units that 
+            // can be used to access texture maps from the vertex shader. The value may be 0.
+            // See glActiveTexture.
         case GL_MAX_VERTEX_TEXTURE_IMAGE_UNITS:
-            //    params returns one value,
-            //    the maximum number of four-element floating-point, integer, or boolean vectors that can be held 
-            //    in uniform variable storage for a vertex shader. The value must be at least 128.
-            //    See glUniform.
+            // params returns one value,
+            // the maximum number of four-element floating-point, integer, or boolean vectors that can be held 
+            // in uniform variable storage for a vertex shader. The value must be at least 128.
+            // See glUniform.
         case GL_MAX_VERTEX_UNIFORM_VECTORS:
-            //    params returns a single integer value indicating the number of available
-            //    compressed texture formats.  The minimum value is 0.
-            //    See glCompressedTexImage2D.
+            // params returns a single integer value indicating the number of available
+            // compressed texture formats.  The minimum value is 0.
+            // See glCompressedTexImage2D.
         case GL_NUM_COMPRESSED_TEXTURE_FORMATS:
-            //    params returns a single integer value indicating the number of available
-            //    shader binary formats.  The minimum value is 0.
-            //    See glShaderBinary.
+            // params returns a single integer value indicating the number of available
+            // shader binary formats.  The minimum value is 0.
+            // See glShaderBinary.
         case GL_NUM_SHADER_BINARY_FORMATS:
-            //    params returns one value,
-            //    the byte alignment used for writing pixel data to memory. The initial
-            //    value is 4.
-            //    See glPixelStorei.
+            // params returns one value,
+            // the byte alignment used for writing pixel data to memory. The initial
+            // value is 4.
+            // See glPixelStorei.
         case GL_PACK_ALIGNMENT:
             count = 1;
             type = FG_GFX_INT;
             paramType = FG_GFX_PARAM_INT;
             break;
 
-            //    params returns one value,
-            //    the scaling factor used to determine the variable offset that is added
-            //    to the depth value of each fragment generated when a polygon is
-            //    rasterized. The initial value is 0.
-            //    See glPolygonOffset.
+            // params returns one value,
+            // the scaling factor used to determine the variable offset that is added
+            // to the depth value of each fragment generated when a polygon is
+            // rasterized. The initial value is 0.
+            // See glPolygonOffset.
         case GL_POLYGON_OFFSET_FACTOR:
             count = 1;
             type = FG_GFX_INT;
             paramType = FG_GFX_PARAM_INT;
             break;
 
-            //    params returns a single boolean value indicating whether polygon offset
-            //    is enabled for polygons in fill mode. The initial value is GL_FALSE.
-            //    See glPolygonOffset.
+            // params returns a single boolean value indicating whether polygon offset
+            // is enabled for polygons in fill mode. The initial value is GL_FALSE.
+            // See glPolygonOffset.
         case GL_POLYGON_OFFSET_FILL:
             count = 1;
             type = FG_GFX_BOOL;
             paramType = FG_GFX_PARAM_BOOL;
             break;
 
-            //    params returns one value.
-            //    This value is multiplied by an implementation-specific value and then
-            //    added to the depth value of each fragment
-            //    generated when a polygon is rasterized. The initial value is 0.
-            //    See glPolygonOffset.
+            // params returns one value.
+            // This value is multiplied by an implementation-specific value and then
+            // added to the depth value of each fragment
+            // generated when a polygon is rasterized. The initial value is 0.
+            // See glPolygonOffset.
         case GL_POLYGON_OFFSET_UNITS:
             count = 1;
             type = FG_GFX_INT;
             paramType = FG_GFX_PARAM_INT;
             break;
 
-            //    params returns a single value, the name of the currently bound
-            //    renderbuffer. The initial value is 0, indicating no renderbuffer is bound.
-            //    See glBindRenderbuffer.
+            // params returns a single value, the name of the currently bound
+            // renderbuffer. The initial value is 0, indicating no renderbuffer is bound.
+            // See glBindRenderbuffer.
         case GL_RENDERBUFFER_BINDING:
             count = 1;
             type = FG_GFX_INT;
             paramType = FG_GFX_PARAM_RENDER_BUFFER_BIND;
             break;
 
-            //    params returns a single boolean value indicating if the 
-            //    fragment coverage value should be ANDed with a temporary coverage value based
-            //    on the fragment's alpha value. The initial value is GL_FALSE.
-            //    See glSampleCoverage.
+            // params returns a single boolean value indicating if the 
+            // fragment coverage value should be ANDed with a temporary coverage value based
+            // on the fragment's alpha value. The initial value is GL_FALSE.
+            // See glSampleCoverage.
         case GL_SAMPLE_ALPHA_TO_COVERAGE:
-            //    params returns a single boolean value indicating if the 
-            //    fragment coverage value should be ANDed with a temporary coverage value based
-            //    on the current sample coverage value. The initial value is GL_FALSE.
-            //    See glSampleCoverage.
+            // params returns a single boolean value indicating if the 
+            // fragment coverage value should be ANDed with a temporary coverage value based
+            // on the current sample coverage value. The initial value is GL_FALSE.
+            // See glSampleCoverage.
         case GL_SAMPLE_COVERAGE:
             count = 1;
             type = FG_GFX_BOOL;
             paramType = FG_GFX_PARAM_BOOL;
             break;
 
-            //    params returns a single integer value indicating the number of sample buffers
-            //    associated with the currently bound framebuffer.
-            //    See glSampleCoverage.
+            // params returns a single integer value indicating the number of sample buffers
+            // associated with the currently bound framebuffer.
+            // See glSampleCoverage.
         case GL_SAMPLE_BUFFERS:
             count = 1;
             type = FG_GFX_INT;
             paramType = FG_GFX_PARAM_INT;
             break;
 
-            //    params returns a single boolean value indicating if the temporary
-            //    coverage value should be inverted.
-            //    See glSampleCoverage.
+            // params returns a single boolean value indicating if the temporary
+            // coverage value should be inverted.
+            // See glSampleCoverage.
         case GL_SAMPLE_COVERAGE_INVERT:
             //glSampleCoverage(value, invert);
             count = 1;
@@ -466,9 +464,9 @@ void gfx::SContextParam::determineParamType(void) {
             paramType = FG_GFX_PARAM_SAMPLE_COVERAGE;
             break;
 
-            //    params returns a single positive floating-point value indicating the
-            //    current sample coverage value.
-            //    See glSampleCoverage.
+            // params returns a single positive floating-point value indicating the
+            // current sample coverage value.
+            // See glSampleCoverage.
         case GL_SAMPLE_COVERAGE_VALUE:
             count = 1;
             type = FG_GFX_FLOAT;
@@ -738,8 +736,9 @@ void gfx::SContextParam::determineParamType(void) {
     };
 }
 
-/*
- *
+/**
+ * 
+ * @return 
  */
 fgBool gfx::SContextParam::update(void) {
     if(this->paramType == FG_GFX_PARAM_INVALID)
@@ -946,6 +945,7 @@ m_init(FG_FALSE) {
     //SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE, 8);
     SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
     //SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+    //SDL_GL_SetAttribute(SDL_GL_SHARE_WITH_CURRENT_CONTEXT, 1);
 
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
@@ -1014,92 +1014,99 @@ m_init(FG_FALSE) {
 
 #endif
     FG_LOG_DEBUG("GFX: Initializing GL parameter list...");
-    m_params[(fgGFXuint)GL_ACTIVE_TEXTURE] = SContextParam(GL_ACTIVE_TEXTURE);
-    m_params[(fgGFXuint)GL_ALIASED_LINE_WIDTH_RANGE] = SContextParam(GL_ALIASED_LINE_WIDTH_RANGE);
-    m_params[(fgGFXuint)GL_ALIASED_POINT_SIZE_RANGE] = SContextParam(GL_ALIASED_POINT_SIZE_RANGE);
-    m_params[(fgGFXuint)GL_ALPHA_BITS] = SContextParam(GL_ALPHA_BITS);
-    m_params[(fgGFXuint)GL_BLEND] = SContextParam(GL_BLEND);
-    m_params[(fgGFXuint)GL_BLEND_COLOR] = SContextParam(GL_BLEND_COLOR);
-    m_params[(fgGFXuint)GL_BLEND_DST_ALPHA] = SContextParam(GL_BLEND_DST_ALPHA);
-    m_params[(fgGFXuint)GL_BLEND_DST_RGB] = SContextParam(GL_BLEND_DST_RGB);
-    m_params[(fgGFXuint)GL_BLEND_SRC_ALPHA] = SContextParam(GL_BLEND_SRC_ALPHA);
-    m_params[(fgGFXuint)GL_BLEND_SRC_RGB] = SContextParam(GL_BLEND_SRC_RGB);
-    m_params[(fgGFXuint)GL_BLEND_EQUATION_ALPHA] = SContextParam(GL_BLEND_EQUATION_ALPHA);
-    m_params[(fgGFXuint)GL_BLEND_EQUATION_RGB] = SContextParam(GL_BLEND_EQUATION_RGB);
-    m_params[(fgGFXuint)GL_RED_BITS] = SContextParam(GL_RED_BITS);
-    m_params[(fgGFXuint)GL_GREEN_BITS] = SContextParam(GL_GREEN_BITS);
-    m_params[(fgGFXuint)GL_BLUE_BITS] = SContextParam(GL_BLUE_BITS);
-    m_params[(fgGFXuint)GL_DEPTH_BITS] = SContextParam(GL_DEPTH_BITS);
-    m_params[(fgGFXuint)GL_COLOR_CLEAR_VALUE] = SContextParam(GL_COLOR_CLEAR_VALUE);
-    m_params[(fgGFXuint)GL_COLOR_WRITEMASK] = SContextParam(GL_COLOR_WRITEMASK);
-    //m_params[(fgGFXuint)GL_COMPRESSED_TEXTURE_FORMATS] = fgGfxContextParam(GL_COMPRESSED_TEXTURE_FORMATS);
-    m_params[(fgGFXuint)GL_CULL_FACE] = SContextParam(GL_CULL_FACE);
-    m_params[(fgGFXuint)GL_CULL_FACE_MODE] = SContextParam(GL_CULL_FACE_MODE);
-    m_params[(fgGFXuint)GL_CURRENT_PROGRAM] = SContextParam(GL_CURRENT_PROGRAM);
-    m_params[(fgGFXuint)GL_DEPTH_CLEAR_VALUE] = SContextParam(GL_DEPTH_CLEAR_VALUE);
-    m_params[(fgGFXuint)GL_DEPTH_FUNC] = SContextParam(GL_DEPTH_FUNC);
-    m_params[(fgGFXuint)GL_DEPTH_RANGE] = SContextParam(GL_DEPTH_RANGE);
-    m_params[(fgGFXuint)GL_DEPTH_TEST] = SContextParam(GL_DEPTH_TEST);
-    m_params[(fgGFXuint)GL_DEPTH_WRITEMASK] = SContextParam(GL_DEPTH_WRITEMASK);
-    m_params[(fgGFXuint)GL_DITHER] = SContextParam(GL_DITHER);
-    m_params[(fgGFXuint)GL_ARRAY_BUFFER_BINDING] = SContextParam(GL_ARRAY_BUFFER_BINDING);
-    m_params[(fgGFXuint)GL_ELEMENT_ARRAY_BUFFER_BINDING] = SContextParam(GL_ELEMENT_ARRAY_BUFFER_BINDING);
-    m_params[(fgGFXuint)GL_FRAMEBUFFER_BINDING] = SContextParam(GL_FRAMEBUFFER_BINDING);
-    m_params[(fgGFXuint)GL_FRONT_FACE] = SContextParam(GL_FRONT_FACE);
-    m_params[(fgGFXuint)GL_GENERATE_MIPMAP_HINT] = SContextParam(GL_GENERATE_MIPMAP_HINT);
-    m_params[(fgGFXuint)GL_IMPLEMENTATION_COLOR_READ_FORMAT] = SContextParam(GL_IMPLEMENTATION_COLOR_READ_FORMAT);
-    m_params[(fgGFXuint)GL_IMPLEMENTATION_COLOR_READ_TYPE] = SContextParam(GL_IMPLEMENTATION_COLOR_READ_TYPE);
-    m_params[(fgGFXuint)GL_LINE_WIDTH] = SContextParam(GL_LINE_WIDTH);
-    m_params[(fgGFXuint)GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS] = SContextParam(GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS);
-    m_params[(fgGFXuint)GL_MAX_CUBE_MAP_TEXTURE_SIZE] = SContextParam(GL_MAX_CUBE_MAP_TEXTURE_SIZE);
-    m_params[(fgGFXuint)GL_MAX_FRAGMENT_UNIFORM_VECTORS] = SContextParam(GL_MAX_FRAGMENT_UNIFORM_VECTORS);
-    m_params[(fgGFXuint)GL_MAX_RENDERBUFFER_SIZE] = SContextParam(GL_MAX_RENDERBUFFER_SIZE);
-    m_params[(fgGFXuint)GL_MAX_TEXTURE_IMAGE_UNITS] = SContextParam(GL_MAX_TEXTURE_IMAGE_UNITS);
-    m_params[(fgGFXuint)GL_MAX_TEXTURE_SIZE] = SContextParam(GL_MAX_TEXTURE_SIZE);
-    m_params[(fgGFXuint)GL_MAX_VARYING_VECTORS] = SContextParam(GL_MAX_VARYING_VECTORS);
-    m_params[(fgGFXuint)GL_MAX_VERTEX_ATTRIBS] = SContextParam(GL_MAX_VERTEX_ATTRIBS);
-    m_params[(fgGFXuint)GL_MAX_VERTEX_TEXTURE_IMAGE_UNITS] = SContextParam(GL_MAX_VERTEX_TEXTURE_IMAGE_UNITS);
-    m_params[(fgGFXuint)GL_MAX_VERTEX_UNIFORM_VECTORS] = SContextParam(GL_MAX_VERTEX_UNIFORM_VECTORS);
-    m_params[(fgGFXuint)GL_NUM_COMPRESSED_TEXTURE_FORMATS] = SContextParam(GL_NUM_COMPRESSED_TEXTURE_FORMATS);
-    m_params[(fgGFXuint)GL_NUM_SHADER_BINARY_FORMATS] = SContextParam(GL_NUM_SHADER_BINARY_FORMATS);
-    m_params[(fgGFXuint)GL_PACK_ALIGNMENT] = SContextParam(GL_PACK_ALIGNMENT);
-    m_params[(fgGFXuint)GL_POLYGON_OFFSET_FACTOR] = SContextParam(GL_POLYGON_OFFSET_FACTOR);
-    m_params[(fgGFXuint)GL_POLYGON_OFFSET_FILL] = SContextParam(GL_POLYGON_OFFSET_FILL);
-    m_params[(fgGFXuint)GL_POLYGON_OFFSET_UNITS] = SContextParam(GL_POLYGON_OFFSET_UNITS);
-    m_params[(fgGFXuint)GL_RENDERBUFFER_BINDING] = SContextParam(GL_RENDERBUFFER_BINDING);
-    m_params[(fgGFXuint)GL_SAMPLE_ALPHA_TO_COVERAGE] = SContextParam(GL_SAMPLE_ALPHA_TO_COVERAGE);
-    m_params[(fgGFXuint)GL_SAMPLE_COVERAGE] = SContextParam(GL_SAMPLE_COVERAGE);
-    m_params[(fgGFXuint)GL_SAMPLE_BUFFERS] = SContextParam(GL_SAMPLE_BUFFERS);
-    m_params[(fgGFXuint)GL_SAMPLE_COVERAGE_INVERT] = SContextParam(GL_SAMPLE_COVERAGE_INVERT);
-    m_params[(fgGFXuint)GL_SAMPLE_COVERAGE_VALUE] = SContextParam(GL_SAMPLE_COVERAGE_VALUE);
-    m_params[(fgGFXuint)GL_SAMPLES] = SContextParam(GL_SAMPLES);
-    m_params[(fgGFXuint)GL_MAX_VIEWPORT_DIMS] = SContextParam(GL_MAX_VIEWPORT_DIMS);
-    m_params[(fgGFXuint)GL_SCISSOR_BOX] = SContextParam(GL_SCISSOR_BOX);
-    m_params[(fgGFXuint)GL_SCISSOR_TEST] = SContextParam(GL_SCISSOR_TEST);
-    //m_params[(fgGFXuint)GL_SHADER_BINARY_FORMATS] = fgGfxContextParam(GL_SHADER_BINARY_FORMATS);
-    m_params[(fgGFXuint)GL_SHADER_COMPILER] = SContextParam(GL_SHADER_COMPILER);
-    m_params[(fgGFXuint)GL_STENCIL_BACK_FUNC] = SContextParam(GL_STENCIL_BACK_FUNC);
-    m_params[(fgGFXuint)GL_STENCIL_BACK_REF] = SContextParam(GL_STENCIL_BACK_REF);
-    m_params[(fgGFXuint)GL_STENCIL_BACK_VALUE_MASK] = SContextParam(GL_STENCIL_BACK_VALUE_MASK);
-    m_params[(fgGFXuint)GL_STENCIL_BACK_FAIL] = SContextParam(GL_STENCIL_BACK_FAIL);
-    m_params[(fgGFXuint)GL_STENCIL_BACK_PASS_DEPTH_FAIL] = SContextParam(GL_STENCIL_BACK_PASS_DEPTH_FAIL);
-    m_params[(fgGFXuint)GL_STENCIL_BACK_PASS_DEPTH_PASS] = SContextParam(GL_STENCIL_BACK_PASS_DEPTH_PASS);
-    m_params[(fgGFXuint)GL_STENCIL_BACK_WRITEMASK] = SContextParam(GL_STENCIL_BACK_WRITEMASK);
-    m_params[(fgGFXuint)GL_STENCIL_FUNC] = SContextParam(GL_STENCIL_FUNC);
-    m_params[(fgGFXuint)GL_STENCIL_REF] = SContextParam(GL_STENCIL_REF);
-    m_params[(fgGFXuint)GL_STENCIL_VALUE_MASK] = SContextParam(GL_STENCIL_VALUE_MASK);
-    m_params[(fgGFXuint)GL_STENCIL_FAIL] = SContextParam(GL_STENCIL_FAIL);
-    m_params[(fgGFXuint)GL_STENCIL_PASS_DEPTH_FAIL] = SContextParam(GL_STENCIL_PASS_DEPTH_FAIL);
-    m_params[(fgGFXuint)GL_STENCIL_PASS_DEPTH_PASS] = SContextParam(GL_STENCIL_PASS_DEPTH_PASS);
-    m_params[(fgGFXuint)GL_STENCIL_WRITEMASK] = SContextParam(GL_STENCIL_WRITEMASK);
-    m_params[(fgGFXuint)GL_STENCIL_TEST] = SContextParam(GL_STENCIL_TEST);
-    m_params[(fgGFXuint)GL_STENCIL_BITS] = SContextParam(GL_STENCIL_BITS);
-    m_params[(fgGFXuint)GL_STENCIL_CLEAR_VALUE] = SContextParam(GL_STENCIL_CLEAR_VALUE);
-    m_params[(fgGFXuint)GL_SUBPIXEL_BITS] = SContextParam(GL_SUBPIXEL_BITS);
-    m_params[(fgGFXuint)GL_TEXTURE_BINDING_2D] = SContextParam(GL_TEXTURE_BINDING_2D);
-    m_params[(fgGFXuint)GL_TEXTURE_BINDING_CUBE_MAP] = SContextParam(GL_TEXTURE_BINDING_CUBE_MAP);
-    m_params[(fgGFXuint)GL_UNPACK_ALIGNMENT] = SContextParam(GL_UNPACK_ALIGNMENT);
-    m_params[(fgGFXuint)GL_VIEWPORT] = SContextParam(GL_VIEWPORT);
+    //m_params[(fgGFXuint)GL_ACTIVE_TEXTURE] = SContextParam(GL_ACTIVE_TEXTURE);
+
+    m_params.reserve(gfx::NUM_GL_PARAMETERS);
+    m_params.resize(gfx::NUM_GL_PARAMETERS);
+
+    m_params[gfx::ACTIVE_TEXTURE] = SContextParam(GL_ACTIVE_TEXTURE);
+    m_params[gfx::ALIASED_LINE_WIDTH_RANGE] = SContextParam(GL_ALIASED_LINE_WIDTH_RANGE);
+    m_params[gfx::ALIASED_POINT_SIZE_RANGE] = SContextParam(GL_ALIASED_POINT_SIZE_RANGE);
+    m_params[gfx::ALPHA_BITS] = SContextParam(GL_ALPHA_BITS);
+    m_params[gfx::BLEND] = SContextParam(GL_BLEND);
+    m_params[gfx::BLEND_COLOR] = SContextParam(GL_BLEND_COLOR);
+    m_params[gfx::BLEND_DST_ALPHA] = SContextParam(GL_BLEND_DST_ALPHA);
+    m_params[gfx::BLEND_DST_RGB] = SContextParam(GL_BLEND_DST_RGB);
+    m_params[gfx::BLEND_SRC_ALPHA] = SContextParam(GL_BLEND_SRC_ALPHA);
+    m_params[gfx::BLEND_SRC_RGB] = SContextParam(GL_BLEND_SRC_RGB);
+    m_params[gfx::BLEND_EQUATION_ALPHA] = SContextParam(GL_BLEND_EQUATION_ALPHA);
+    m_params[gfx::BLEND_EQUATION_RGB] = SContextParam(GL_BLEND_EQUATION_RGB);
+    m_params[gfx::RED_BITS] = SContextParam(GL_RED_BITS);
+    m_params[gfx::GREEN_BITS] = SContextParam(GL_GREEN_BITS);
+    m_params[gfx::BLUE_BITS] = SContextParam(GL_BLUE_BITS);
+    m_params[gfx::DEPTH_BITS] = SContextParam(GL_DEPTH_BITS);
+    m_params[gfx::COLOR_CLEAR_VALUE] = SContextParam(GL_COLOR_CLEAR_VALUE);
+    m_params[gfx::COLOR_WRITEMASK] = SContextParam(GL_COLOR_WRITEMASK);
+    m_params[gfx::COMPRESSED_TEXTURE_FORMATS] = SContextParam(GL_COMPRESSED_TEXTURE_FORMATS);
+    m_params[gfx::CULL_FACE] = SContextParam(GL_CULL_FACE);
+    m_params[gfx::CULL_FACE_MODE] = SContextParam(GL_CULL_FACE_MODE);
+    m_params[gfx::CURRENT_PROGRAM] = SContextParam(GL_CURRENT_PROGRAM);
+    m_params[gfx::DEPTH_CLEAR_VALUE] = SContextParam(GL_DEPTH_CLEAR_VALUE);
+    m_params[gfx::DEPTH_FUNC] = SContextParam(GL_DEPTH_FUNC);
+    m_params[gfx::DEPTH_RANGE] = SContextParam(GL_DEPTH_RANGE);
+    m_params[gfx::DEPTH_TEST] = SContextParam(GL_DEPTH_TEST);
+    m_params[gfx::DEPTH_WRITEMASK] = SContextParam(GL_DEPTH_WRITEMASK);
+    m_params[gfx::DITHER] = SContextParam(GL_DITHER);
+    m_params[gfx::ARRAY_BUFFER_BINDING] = SContextParam(GL_ARRAY_BUFFER_BINDING);
+    m_params[gfx::ELEMENT_ARRAY_BUFFER_BINDING] = SContextParam(GL_ELEMENT_ARRAY_BUFFER_BINDING);
+    m_params[gfx::FRAMEBUFFER_BINDING] = SContextParam(GL_FRAMEBUFFER_BINDING);
+    m_params[gfx::FRONT_FACE] = SContextParam(GL_FRONT_FACE);
+    m_params[gfx::GENERATE_MIPMAP_HINT] = SContextParam(GL_GENERATE_MIPMAP_HINT);
+    m_params[gfx::IMPLEMENTATION_COLOR_READ_FORMAT] = SContextParam(GL_IMPLEMENTATION_COLOR_READ_FORMAT);
+    m_params[gfx::IMPLEMENTATION_COLOR_READ_TYPE] = SContextParam(GL_IMPLEMENTATION_COLOR_READ_TYPE);
+    m_params[gfx::LINE_WIDTH] = SContextParam(GL_LINE_WIDTH);
+    m_params[gfx::MAX_COMBINED_TEXTURE_IMAGE_UNITS] = SContextParam(GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS);
+    m_params[gfx::MAX_CUBE_MAP_TEXTURE_SIZE] = SContextParam(GL_MAX_CUBE_MAP_TEXTURE_SIZE);
+    m_params[gfx::MAX_FRAGMENT_UNIFORM_VECTORS] = SContextParam(GL_MAX_FRAGMENT_UNIFORM_VECTORS);
+    m_params[gfx::MAX_RENDERBUFFER_SIZE] = SContextParam(GL_MAX_RENDERBUFFER_SIZE);
+    m_params[gfx::MAX_TEXTURE_IMAGE_UNITS] = SContextParam(GL_MAX_TEXTURE_IMAGE_UNITS);
+    m_params[gfx::MAX_TEXTURE_SIZE] = SContextParam(GL_MAX_TEXTURE_SIZE);
+    m_params[gfx::MAX_VARYING_VECTORS] = SContextParam(GL_MAX_VARYING_VECTORS);
+    m_params[gfx::MAX_VERTEX_ATTRIBS] = SContextParam(GL_MAX_VERTEX_ATTRIBS);
+    m_params[gfx::MAX_VERTEX_TEXTURE_IMAGE_UNITS] = SContextParam(GL_MAX_VERTEX_TEXTURE_IMAGE_UNITS);
+    m_params[gfx::MAX_VERTEX_UNIFORM_VECTORS] = SContextParam(GL_MAX_VERTEX_UNIFORM_VECTORS);
+    m_params[gfx::NUM_COMPRESSED_TEXTURE_FORMATS] = SContextParam(GL_NUM_COMPRESSED_TEXTURE_FORMATS);
+    m_params[gfx::NUM_SHADER_BINARY_FORMATS] = SContextParam(GL_NUM_SHADER_BINARY_FORMATS);
+    m_params[gfx::PACK_ALIGNMENT] = SContextParam(GL_PACK_ALIGNMENT);
+    m_params[gfx::POLYGON_OFFSET_FACTOR] = SContextParam(GL_POLYGON_OFFSET_FACTOR);
+    m_params[gfx::POLYGON_OFFSET_FILL] = SContextParam(GL_POLYGON_OFFSET_FILL);
+    m_params[gfx::POLYGON_OFFSET_UNITS] = SContextParam(GL_POLYGON_OFFSET_UNITS);
+    m_params[gfx::RENDERBUFFER_BINDING] = SContextParam(GL_RENDERBUFFER_BINDING);
+    m_params[gfx::SAMPLE_ALPHA_TO_COVERAGE] = SContextParam(GL_SAMPLE_ALPHA_TO_COVERAGE);
+    m_params[gfx::SAMPLE_COVERAGE] = SContextParam(GL_SAMPLE_COVERAGE);
+    m_params[gfx::SAMPLE_BUFFERS] = SContextParam(GL_SAMPLE_BUFFERS);
+    m_params[gfx::SAMPLE_COVERAGE_INVERT] = SContextParam(GL_SAMPLE_COVERAGE_INVERT);
+    m_params[gfx::SAMPLE_COVERAGE_VALUE] = SContextParam(GL_SAMPLE_COVERAGE_VALUE);
+    m_params[gfx::SAMPLES] = SContextParam(GL_SAMPLES);
+    m_params[gfx::MAX_VIEWPORT_DIMS] = SContextParam(GL_MAX_VIEWPORT_DIMS);
+    m_params[gfx::SCISSOR_BOX] = SContextParam(GL_SCISSOR_BOX);
+    m_params[gfx::SCISSOR_TEST] = SContextParam(GL_SCISSOR_TEST);
+#if defined(FG_USING_OPENGL_ES) || defined(FG_USING_MARMALADE_OPENGL_ES)
+    m_params[gfx::SHADER_BINARY_FORMATS] = SContextParam(GL_SHADER_BINARY_FORMATS);
+#endif
+    m_params[gfx::SHADER_COMPILER] = SContextParam(GL_SHADER_COMPILER);
+    m_params[gfx::STENCIL_BACK_FUNC] = SContextParam(GL_STENCIL_BACK_FUNC);
+    m_params[gfx::STENCIL_BACK_REF] = SContextParam(GL_STENCIL_BACK_REF);
+    m_params[gfx::STENCIL_BACK_VALUE_MASK] = SContextParam(GL_STENCIL_BACK_VALUE_MASK);
+    m_params[gfx::STENCIL_BACK_FAIL] = SContextParam(GL_STENCIL_BACK_FAIL);
+    m_params[gfx::STENCIL_BACK_PASS_DEPTH_FAIL] = SContextParam(GL_STENCIL_BACK_PASS_DEPTH_FAIL);
+    m_params[gfx::STENCIL_BACK_PASS_DEPTH_PASS] = SContextParam(GL_STENCIL_BACK_PASS_DEPTH_PASS);
+    m_params[gfx::STENCIL_BACK_WRITEMASK] = SContextParam(GL_STENCIL_BACK_WRITEMASK);
+    m_params[gfx::STENCIL_FUNC] = SContextParam(GL_STENCIL_FUNC);
+    m_params[gfx::STENCIL_REF] = SContextParam(GL_STENCIL_REF);
+    m_params[gfx::STENCIL_VALUE_MASK] = SContextParam(GL_STENCIL_VALUE_MASK);
+    m_params[gfx::STENCIL_FAIL] = SContextParam(GL_STENCIL_FAIL);
+    m_params[gfx::STENCIL_PASS_DEPTH_FAIL] = SContextParam(GL_STENCIL_PASS_DEPTH_FAIL);
+    m_params[gfx::STENCIL_PASS_DEPTH_PASS] = SContextParam(GL_STENCIL_PASS_DEPTH_PASS);
+    m_params[gfx::STENCIL_WRITEMASK] = SContextParam(GL_STENCIL_WRITEMASK);
+    m_params[gfx::STENCIL_TEST] = SContextParam(GL_STENCIL_TEST);
+    m_params[gfx::STENCIL_BITS] = SContextParam(GL_STENCIL_BITS);
+    m_params[gfx::STENCIL_CLEAR_VALUE] = SContextParam(GL_STENCIL_CLEAR_VALUE);
+    m_params[gfx::SUBPIXEL_BITS] = SContextParam(GL_SUBPIXEL_BITS);
+    m_params[gfx::TEXTURE_BINDING_2D] = SContextParam(GL_TEXTURE_BINDING_2D);
+    m_params[gfx::TEXTURE_BINDING_CUBE_MAP] = SContextParam(GL_TEXTURE_BINDING_CUBE_MAP);
+    m_params[gfx::UNPACK_ALIGNMENT] = SContextParam(GL_UNPACK_ALIGNMENT);
+    m_params[gfx::VIEWPORT] = SContextParam(GL_VIEWPORT);
 
     memset(m_attrInfo, 0, sizeof (m_attrInfo));
 
@@ -1112,7 +1119,9 @@ m_init(FG_FALSE) {
 #if defined(FG_USING_MARMALADE)
     glExtensions = (const char*)glGetString(GL_EXTENSIONS);
 #elif defined(FG_USING_OPENGL_GLEW)
-    if(glewIsSupported("GL_VERSION_3_0") || glewIsSupported("GL_VERSION_3_2") || glewIsSupported("GL_VERSION_3_2")) {
+    if(glewIsSupported("GL_VERSION_3_0") ||
+       glewIsSupported("GL_VERSION_3_2") ||
+       glewIsSupported("GL_VERSION_3_3")) {
         int max = 0;
         glGetIntegerv(GL_NUM_EXTENSIONS, &max);
         for(int i = 0; i < max; i++) {
@@ -1243,9 +1252,9 @@ gfx::CContext::~CContext() {
  *
  */
 void gfx::CContext::initialize(void) {
-    ParameterMapItor end = m_params.end(), itor = m_params.begin();
+    ParameterVecItor end = m_params.end(), itor = m_params.begin();
     for(; itor != end; itor++) {
-        SContextParam &param = itor->second;
+        SContextParam &param = *itor;
         param.load();
         //printf("Parameter GFX: %d = %d\n", (int)itor->first, (int)param.boolVal);
     }
@@ -1254,36 +1263,36 @@ void gfx::CContext::initialize(void) {
 /*
  *
  */
-gfx::SContextParam& gfx::CContext::getParam(const fgGFXenum pname) {
-    return m_params[(fgGFXuint)pname];
+gfx::SContextParam& gfx::CContext::getParam(const ParamType pname) {
+    return m_params[(unsigned int)pname];
 }
 
 /*
  *
  */
-void gfx::CContext::enable(const fgGFXenum cap) {
-    m_params[(fgGFXuint)cap].set((fgGFXboolean)FG_GFX_TRUE);
+void gfx::CContext::enable(const ParamType cap) {
+    m_params[(unsigned int)cap].set((fgGFXboolean)FG_GFX_TRUE);
 }
 
 /*
  *
  */
-void gfx::CContext::disable(const fgGFXenum cap) {
-    m_params[(fgGFXuint)cap].set((fgGFXboolean)FG_GFX_FALSE);
+void gfx::CContext::disable(const ParamType cap) {
+    m_params[(unsigned int)cap].set((fgGFXboolean)FG_GFX_FALSE);
 }
 
 /*
  *
  */
-fgGFXboolean gfx::CContext::isEnabled(const fgGFXenum pname) {
-    return m_params[(fgGFXuint)pname].boolVal;
+fgGFXboolean gfx::CContext::isEnabled(const ParamType pname) {
+    return m_params[(unsigned int)pname].boolVal;
 }
 
 /*
  *
  */
-fgGFXboolean gfx::CContext::isDisabled(const fgGFXenum pname) {
-    return (fgGFXboolean)(FG_GFX_FALSE == m_params[(fgGFXuint)pname].boolVal);
+fgGFXboolean gfx::CContext::isDisabled(const ParamType pname) {
+    return (fgGFXboolean)(FG_GFX_FALSE == m_params[(unsigned int)pname].boolVal);
 }
 
 /**
@@ -1391,12 +1400,13 @@ void gfx::CContext::bufferData(fgGfxBufferID& bufferID,
     if((fgGFXenum)0 == target || (fgGFXenum)0 == bufferID.target) {
         bufferID.target = GL_ARRAY_BUFFER;
     }
-    if(m_params[(fgGFXuint)GL_ARRAY_BUFFER_BINDING] != bufferID.id && bufferID.target == GL_ARRAY_BUFFER) {
-        log::PrintError("GFX: Invalid buffer bound, can't set buffer data");
+    if(m_params[gfx::ARRAY_BUFFER_BINDING] != bufferID.id && bufferID.target == GL_ARRAY_BUFFER) {
+        FG_LOG_ERROR("GFX: Invalid buffer bound, can't set buffer data");
         return;
     }
-    if(m_params[(fgGFXuint)GL_ELEMENT_ARRAY_BUFFER_BINDING] != bufferID.id && bufferID.target == GL_ELEMENT_ARRAY_BUFFER) {
-        log::PrintError("GFX: Invalid buffer bound, can't set buffer data");
+    if(m_params[gfx::ELEMENT_ARRAY_BUFFER_BINDING] != bufferID.id && bufferID.target == GL_ELEMENT_ARRAY_BUFFER) {
+        FG_LOG_ERROR("GFX: Invalid buffer bound, can't set buffer data");
+
         return;
     }
     if(usage != (fgGFXenum)0)
@@ -1429,9 +1439,9 @@ void gfx::CContext::bindBuffer(fgGfxBufferID& bufferID, const fgGFXenum target) 
  */
 void gfx::CContext::bindBuffer(const fgGFXenum target, const fgGFXuint buffer) {
     if(target == GL_ARRAY_BUFFER || target == GL_ARRAY_BUFFER_BINDING) {
-        m_params[(fgGFXuint)GL_ARRAY_BUFFER_BINDING].set((fgGFXint)buffer);
+        m_params[gfx::ARRAY_BUFFER_BINDING].set((fgGFXint)buffer);
     } else if(target == GL_ELEMENT_ARRAY_BUFFER || target == GL_ELEMENT_ARRAY_BUFFER_BINDING) {
-        m_params[(fgGFXuint)GL_ELEMENT_ARRAY_BUFFER_BINDING].set((fgGFXint)buffer);
+        m_params[gfx::ELEMENT_ARRAY_BUFFER_BINDING].set((fgGFXint)buffer);
     }
 }
 
@@ -1442,9 +1452,9 @@ void gfx::CContext::bindBuffer(const fgGFXenum target, const fgGFXuint buffer) {
  */
 fgGFXuint gfx::CContext::boundBuffer(const fgGFXenum target) {
     if(target == GL_ARRAY_BUFFER || target == GL_ARRAY_BUFFER_BINDING) {
-        return m_params[(fgGFXuint)GL_ARRAY_BUFFER_BINDING];
+        return m_params[gfx::ARRAY_BUFFER_BINDING];
     } else if(target == GL_ELEMENT_ARRAY_BUFFER || target == GL_ELEMENT_ARRAY_BUFFER_BINDING) {
-        return m_params[(fgGFXuint)GL_ELEMENT_ARRAY_BUFFER_BINDING];
+        return m_params[gfx::ELEMENT_ARRAY_BUFFER_BINDING];
     }
     return 0;
 }
@@ -1491,7 +1501,7 @@ fgGFXuint gfx::CContext::boundTexture(void) const {
  * @return 
  */
 fgGFXuint gfx::CContext::activeTexture(void) {
-    return m_params[(fgGFXuint)GL_ACTIVE_TEXTURE];
+    return m_params[gfx::ACTIVE_TEXTURE];
 }
 
 /**
@@ -1499,7 +1509,7 @@ fgGFXuint gfx::CContext::activeTexture(void) {
  * @param texture
  */
 void gfx::CContext::activeTexture(const fgGFXenum texture) {
-    m_params[(fgGFXuint)GL_ACTIVE_TEXTURE].set((fgGFXint)texture);
+    m_params[gfx::ACTIVE_TEXTURE].set((fgGFXint)texture);
 }
 
 /**
@@ -1636,7 +1646,7 @@ void gfx::CContext::bindTexture(fgGfxTextureID& textureID, const fgGFXenum targe
  * @param texID
  */
 void gfx::CContext::bindTexture2D(const fgGFXuint texID) {
-    m_params[(fgGFXuint)GL_TEXTURE_BINDING_2D].set((fgGFXint)texID);
+    m_params[gfx::TEXTURE_BINDING_2D].set((fgGFXint)texID);
     m_boundTexture = texID;
 }
 
@@ -1645,7 +1655,7 @@ void gfx::CContext::bindTexture2D(const fgGFXuint texID) {
  * @param texID
  */
 void gfx::CContext::bindTextureCube(const fgGFXuint texID) {
-    m_params[(fgGFXuint)GL_TEXTURE_BINDING_CUBE_MAP].set((fgGFXint)texID);
+    m_params[gfx::TEXTURE_BINDING_CUBE_MAP].set((fgGFXint)texID);
     m_boundTexture = texID;
 }
 
@@ -1654,8 +1664,8 @@ void gfx::CContext::bindTextureCube(const fgGFXuint texID) {
  * @param mode
  */
 void gfx::CContext::blendEquation(const fgGFXenum mode) {
-    SContextParam& modeRGB = m_params[(fgGFXuint)GL_BLEND_EQUATION_RGB];
-    SContextParam& modeAlpha = m_params[(fgGFXuint)GL_BLEND_EQUATION_ALPHA];
+    SContextParam& modeRGB = m_params[gfx::BLEND_EQUATION_RGB];
+    SContextParam& modeAlpha = m_params[gfx::BLEND_EQUATION_ALPHA];
     if(modeRGB.intVal != (fgGFXint)mode || modeAlpha.intVal != (fgGFXint)mode) {
         modeAlpha = modeRGB = mode;
         glBlendEquationSeparate(mode, mode);
@@ -1668,10 +1678,10 @@ void gfx::CContext::blendEquation(const fgGFXenum mode) {
  * @param dfactor
  */
 void gfx::CContext::blendFunc(const fgGFXenum sfactor, const fgGFXenum dfactor) {
-    SContextParam& srcRGB = m_params[(fgGFXuint)GL_BLEND_SRC_RGB];
-    SContextParam& dstRGB = m_params[(fgGFXuint)GL_BLEND_DST_RGB];
-    SContextParam& srcAlpha = m_params[(fgGFXuint)GL_BLEND_SRC_ALPHA];
-    SContextParam& dstAlpha = m_params[(fgGFXuint)GL_BLEND_DST_ALPHA];
+    SContextParam& srcRGB = m_params[gfx::BLEND_SRC_RGB];
+    SContextParam& dstRGB = m_params[gfx::BLEND_DST_RGB];
+    SContextParam& srcAlpha = m_params[gfx::BLEND_SRC_ALPHA];
+    SContextParam& dstAlpha = m_params[gfx::BLEND_DST_ALPHA];
 
     if(srcRGB.intVal != (fgGFXint)sfactor ||
        srcAlpha.intVal != (fgGFXint)sfactor ||
@@ -1700,10 +1710,10 @@ void gfx::CContext::blendFunc(const fgGFXenum srcRGB,
                               const fgGFXenum dstRGB,
                               const fgGFXenum srcAlpha,
                               const fgGFXenum dstAlpha) {
-    SContextParam& srcRGBparam = m_params[(fgGFXuint)GL_BLEND_SRC_RGB];
-    SContextParam& dstRGBparam = m_params[(fgGFXuint)GL_BLEND_DST_RGB];
-    SContextParam& srcAlphaparam = m_params[(fgGFXuint)GL_BLEND_SRC_ALPHA];
-    SContextParam& dstAlphaparam = m_params[(fgGFXuint)GL_BLEND_DST_ALPHA];
+    SContextParam& srcRGBparam = m_params[gfx::BLEND_SRC_RGB];
+    SContextParam& dstRGBparam = m_params[gfx::BLEND_DST_RGB];
+    SContextParam& srcAlphaparam = m_params[gfx::BLEND_SRC_ALPHA];
+    SContextParam& dstAlphaparam = m_params[gfx::BLEND_DST_ALPHA];
 
     if(srcRGBparam.intVal != (fgGFXint)srcRGB ||
        srcAlphaparam.intVal != (fgGFXint)srcAlpha ||
@@ -1726,8 +1736,8 @@ void gfx::CContext::blendFunc(const fgGFXenum srcRGB,
  * @param program
  */
 void gfx::CContext::useProgram(const fgGFXuint program) {
-    if(m_params[(fgGFXuint)GL_CURRENT_PROGRAM].intVal != (fgGFXint)program) {
-        m_params[(fgGFXuint)GL_CURRENT_PROGRAM].set((fgGFXint)program);
+    if(m_params[gfx::CURRENT_PROGRAM].intVal != (fgGFXint)program) {
+        m_params[gfx::CURRENT_PROGRAM].set((fgGFXint)program);
     }
 }
 
@@ -1736,7 +1746,7 @@ void gfx::CContext::useProgram(const fgGFXuint program) {
  * @return 
  */
 fgGFXuint gfx::CContext::activeProgram(void) {
-    return m_params[(fgGFXuint)GL_CURRENT_PROGRAM];
+    return m_params[gfx::CURRENT_PROGRAM];
 }
 
 /**
@@ -1750,7 +1760,7 @@ void gfx::CContext::viewport(const fgGFXint x, const fgGFXint y, const fgGFXint 
     fgGFXuint areaQ = x * y + width*height;
     if(areaQ != m_viewportAreaQ) {
         m_viewportAreaQ = areaQ;
-        m_params[(fgGFXuint)GL_VIEWPORT].set(x, y, width, height);
+        m_params[gfx::VIEWPORT].set(x, y, width, height);
     }
 }
 
@@ -1782,7 +1792,7 @@ void gfx::CContext::scissor(const fgGFXint x, const fgGFXint y, const fgGFXint w
     fgGFXuint areaQ = x * y + width*height;
     if(areaQ != m_scissorAreaQ) {
         m_scissorAreaQ = areaQ;
-        m_params[(fgGFXuint)GL_SCISSOR_BOX].set(x, y, width, height);
+        m_params[gfx::SCISSOR_BOX].set(x, y, width, height);
     }
 }
 
@@ -1808,7 +1818,7 @@ void gfx::CContext::scissor(const Vector4i& dimensions) {
  * @param toggle
  */
 void gfx::CContext::setScissorTest(const fgBool toggle) {
-    m_params[(fgGFXuint)GL_SCISSOR_TEST].set((fgGFXboolean)toggle);
+    m_params[gfx::SCISSOR_TEST].set((fgGFXboolean)toggle);
 }
 
 /**
@@ -1816,7 +1826,7 @@ void gfx::CContext::setScissorTest(const fgBool toggle) {
  * @param toggle
  */
 void gfx::CContext::setDepthTest(const fgBool toggle) {
-    m_params[(fgGFXuint)GL_DEPTH_TEST].set((fgGFXboolean)toggle);
+    m_params[gfx::DEPTH_TEST].set((fgGFXboolean)toggle);
 }
 
 /**
@@ -1824,8 +1834,8 @@ void gfx::CContext::setDepthTest(const fgBool toggle) {
  * @param toggle
  */
 void gfx::CContext::setCullFace(const fgBool toggle) {
-    //gfxParamMapItor itor = m_params.find((fgGFXuint)GL_CULL_FACE);
-    m_params[(fgGFXuint)GL_CULL_FACE].set((fgGFXboolean)toggle);
+    //gfxParamMapItor itor = m_params.find(gfx::CULL_FACE);
+    m_params[gfx::CULL_FACE].set((fgGFXboolean)toggle);
 }
 
 /**
@@ -1833,49 +1843,49 @@ void gfx::CContext::setCullFace(const fgBool toggle) {
  * @param toggle
  */
 void gfx::CContext::setBlend(const fgBool toggle) {
-    m_params[(fgGFXuint)GL_BLEND].set((fgGFXboolean)toggle);
+    m_params[gfx::BLEND].set((fgGFXboolean)toggle);
 }
 
 /*
  *
  */
 void gfx::CContext::frontFace(const fgGFXenum mode) {
-    m_params[(fgGFXuint)GL_FRONT_FACE].set((fgGFXint)mode);
+    m_params[gfx::FRONT_FACE].set((fgGFXint)mode);
 }
 
 /*
  *
  */
 void gfx::CContext::cullFace(const fgGFXenum mode) {
-    m_params[(fgGFXuint)GL_CULL_FACE_MODE].set((fgGFXint)mode);
+    m_params[gfx::CULL_FACE_MODE].set((fgGFXint)mode);
 }
 
 /*
  *
  */
 void gfx::CContext::depthFunc(const fgGFXenum func) {
-    m_params[(fgGFXuint)GL_DEPTH_FUNC].set((fgGFXint)func);
+    m_params[gfx::DEPTH_FUNC].set((fgGFXint)func);
 }
 
 /*
  *
  */
 void gfx::CContext::clearDepth(const fgGFXfloat depth) {
-    m_params[(fgGFXuint)GL_DEPTH_CLEAR_VALUE].set(depth);
+    m_params[gfx::DEPTH_CLEAR_VALUE].set(depth);
 }
 
 /*
  *
  */
 void gfx::CContext::clearColor(const fgGFXfloat red, const fgGFXfloat green, const fgGFXfloat blue, const fgGFXfloat alpha) {
-    m_params[(fgGFXuint)GL_COLOR_CLEAR_VALUE].set(red, green, blue, alpha);
+    m_params[gfx::COLOR_CLEAR_VALUE].set(red, green, blue, alpha);
 }
 
 /*
  *
  */
 void gfx::CContext::clearStencil(const fgGFXint s) {
-    m_params[(fgGFXuint)GL_STENCIL_CLEAR_VALUE].set(s);
+    m_params[gfx::STENCIL_CLEAR_VALUE].set(s);
 }
 
 /*
@@ -2078,7 +2088,7 @@ void gfx::CContext::vertexAttribPointer(fgGFXuint index,
     attr.isNormalized = normalized;
     attr.stride = stride;
     attr.pointer = ptr;
-    attr.buffer = m_params[(fgGFXuint)GL_ARRAY_BUFFER_BINDING];
+    attr.buffer = m_params[gfx::ARRAY_BUFFER_BINDING];
     glVertexAttribPointer(index, size, type, normalized, stride, ptr);
     fgGLError("glVertexAttribPointer"); // #FIXME
 }
@@ -2094,7 +2104,7 @@ void gfx::CContext::vertexAttribPointer(SAttributeData& attrData) {
     fgGFXboolean isEnabled = m_attrInfo[index].isEnabled;
     m_attrInfo[index] = attrData;
     m_attrInfo[index].isEnabled = isEnabled;
-    m_attrInfo[index].buffer = m_params[(fgGFXuint)GL_ARRAY_BUFFER_BINDING];
+    m_attrInfo[index].buffer = m_params[gfx::ARRAY_BUFFER_BINDING];
 
     glVertexAttribPointer(attrData.index,
                           attrData.size,

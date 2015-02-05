@@ -332,8 +332,8 @@ gfx::CShaderProgram *gfx::CShaderManager::request(const std::string& info) {
             CShaderProgram *program = (*it).data;
             if(!program)
                 continue;
-            CShaderProgram::fileMapping &files = program->getFileMapping();
-            CShaderProgram::fileMappingItor fit = files.begin(), fend = files.end();
+            CShaderProgram::FileMapping &files = program->getFileMapping();
+            CShaderProgram::FileMappingItor fit = files.begin(), fend = files.end();
             for(; fit != fend; fit++) {
                 // Comparing using endsWith - resource contains relative file paths
                 // not just file name - this request function takes in just file names

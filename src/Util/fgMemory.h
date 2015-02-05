@@ -7,8 +7,9 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-#ifndef FG_INC_MEMORY_H
-    #define FG_INC_MEMORY_H
+#ifndef FG_INC_MEMORY
+    #define FG_INC_MEMORY
+    #define FG_INC_MEMORY_BLOCK
 
     #include "fgBuildConfig.h"
     #include "fgBool.h"
@@ -129,4 +130,6 @@ inline void fgFree(Type *& item, const fgBool clear = FG_FALSE) {
 
     //#define fgRealloc fgRealloc_sys_
 
-#endif
+    #undef FG_INC_MEMORY_BLOCK
+#endif /* FG_INC_MEMORY */
+    
