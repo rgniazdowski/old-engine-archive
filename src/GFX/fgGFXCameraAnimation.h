@@ -51,14 +51,14 @@ namespace fg {
              * 
              * @return 
              */
-            virtual float * update(void);
+            virtual float *update(void);
             /**
              * 
              * @param mouseXrel
              * @param mouseYrel
              * @return 
              */
-            virtual float * update(fgGFXfloat mouseXrel, fgGFXfloat mouseYrel);
+            virtual float *update(fgGFXfloat mouseXrel, fgGFXfloat mouseYrel);
             /**
              * 
              */

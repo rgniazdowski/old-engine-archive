@@ -15,10 +15,12 @@
 #include "s3eTypes.h"
 #endif
 
+using namespace fg;
+
 /**
  * 
  */
-fg::gfx::CWindow::CWindow() :
+gfx::CWindow::CWindow() :
 m_title(),
 #if defined(FG_USING_EGL)
 m_EGLSurface(0),
@@ -39,7 +41,7 @@ m_isOpen(FG_FALSE) { }
  * @param width
  * @param height
  */
-fg::gfx::CWindow::CWindow(const char *title, unsigned int width, unsigned int height) :
+gfx::CWindow::CWindow(const char *title, unsigned int width, unsigned int height) :
 m_title(),
 #if defined(FG_USING_EGL)
 m_EGLSurface(0),
@@ -59,7 +61,7 @@ m_isOpen(FG_FALSE) {
 /**
  * 
  */
-fg::gfx::CWindow::~CWindow() {
+gfx::CWindow::~CWindow() {
     close();
 }
 
@@ -70,7 +72,7 @@ fg::gfx::CWindow::~CWindow() {
  * @param height
  * @return 
  */
-fgBool fg::gfx::CWindow::setup(const char *title, unsigned int width, unsigned int height) {
+fgBool gfx::CWindow::setup(const char *title, unsigned int width, unsigned int height) {
     if(!CPlatform::isInit()) {
         log::PrintError("GFX: Cannot setup window without platform initialized.");
         return FG_FALSE;
@@ -155,7 +157,7 @@ fgBool fg::gfx::CWindow::setup(const char *title, unsigned int width, unsigned i
  * 
  * @return 
  */
-fgBool fg::gfx::CWindow::close(void) {
+fgBool gfx::CWindow::close(void) {
     if(!CPlatform::isInit()) {
         FG_LOG_ERROR("GFX: Platform not initialized.");
         return FG_FALSE;
@@ -198,7 +200,7 @@ fgBool fg::gfx::CWindow::close(void) {
  * 
  * @param toggle
  */
-void fg::gfx::CWindow::setFullscreen(fgBool toggle) {
+void gfx::CWindow::setFullscreen(fgBool toggle) {
     if(m_isFullscreen != toggle) {
         m_isFullscreen = toggle;
         refreshFS();
@@ -209,7 +211,7 @@ void fg::gfx::CWindow::setFullscreen(fgBool toggle) {
  * 
  * @return 
  */
-fgBool fg::gfx::CWindow::refreshFS(void) {
+fgBool gfx::CWindow::refreshFS(void) {
     // #FIXME
     return FG_TRUE;
 }
@@ -218,7 +220,7 @@ fgBool fg::gfx::CWindow::refreshFS(void) {
  * 
  * @return 
  */
-fgBool fg::gfx::CWindow::swapBuffers(void) {
+fgBool gfx::CWindow::swapBuffers(void) {
 #if defined FG_USING_MARMALADE_EGL
     EGLDisplay eglDisplay = (EGLDisplay)CPlatform::getDefaultDisplay();
     if(eglDisplay && m_EGLSurface)
@@ -235,10 +237,10 @@ fgBool fg::gfx::CWindow::swapBuffers(void) {
 /**
  *
  */
-void fg::gfx::CWindow::clearColor(void) {
+void gfx::CWindow::clearColor(void) {
 #if defined FG_USING_OPENGL || defined FG_USING_OPENGL_ES
     // #FIXME ?
     CPlatform::context()->clearColor(0.0f, 0.0f, 0.0f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // ?
 #endif
 }
