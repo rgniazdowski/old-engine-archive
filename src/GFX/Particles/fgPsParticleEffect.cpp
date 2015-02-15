@@ -113,7 +113,12 @@ fgBool gfx::CParticleEffect::initializeFromConfig(util::config::ParameterVec& pa
         } else if(param->name.compare("facing-velocity") == 0) {
             if(param->type == util::SCfgParameter::BOOL)
                 setFlag(FG_PARTICLE_FACING_VELOCITY, param->bool_val);
-
+        
+            // facing - camera – bool –
+        } else if(param->name.compare("facing-camera") == 0) {
+            if(param->type == util::SCfgParameter::BOOL)
+                setFlag(FG_PARTICLE_FACING_CAMERA, param->bool_val);
+            
             // params - active – bool –
         } else if(param->name.compare("params-active") == 0) {
             if(param->type == util::SCfgParameter::BOOL)

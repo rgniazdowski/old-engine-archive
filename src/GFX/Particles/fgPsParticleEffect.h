@@ -46,13 +46,15 @@ namespace fg {
             FG_PARTICLE_LIFE_AS_SIZE = 0x00000002,
             /// Do particles pitch in the direction they're flying
             FG_PARTICLE_FACING_VELOCITY = 0x00000004,
+            /// Does the particle is rotated so it's facing the camera
+            FG_PARTICLE_FACING_CAMERA = 0x00000008,
             /// The particle sprite is rotated at a random angle when it is emitted
-            FG_PARTICLE_RANDOM_ANGLE = 0x00000008,
+            FG_PARTICLE_RANDOM_ANGLE = 0x00000010,
             /// Is the current particle grouped? #FIXME
-            FG_PARTICLE_GROUP_EFFECT = 0x00000010,
+            FG_PARTICLE_GROUP_EFFECT = 0x00000020,
             /// Are parameters (start/end size, start/end color) taken into account 
             /// when calculating the particles. LifeAsSize will be overridden.
-            FG_PARTICLE_PARAMS_ACTIVE = 0x00000020
+            FG_PARTICLE_PARAMS_ACTIVE = 0x00000040
         };
     };
 };
@@ -252,11 +254,14 @@ namespace fg {
             /**
              * Unset the particle area
              */
-            inline void unsetParticleArea() {
+            inline void unsetParticleArea(void) {
                 m_particleArea.zero();
                 m_isAreaSet = FG_FALSE;
                 m_isAreaCheck = FG_FALSE;
             }
+            
+            ////////////////////////////////////////////////////////////////////
+            
             /**
              * Set the particle area for checking collisions with
              * @param area
@@ -358,6 +363,13 @@ namespace fg {
              */
             inline void setFacingVelocity(const fgBool toggle = FG_TRUE) {
                 setFlag(FG_PARTICLE_FACING_VELOCITY, toggle);
+            }
+            /**
+             * 
+             * @param toggle
+             */
+            inline void setFacingCamera(const fgBool toggle = FG_TRUE) {
+                setFlag(FG_PARTICLE_FACING_CAMERA, toggle);
             }
             /**
              * Is the newly added particle randomly rotated?
@@ -532,6 +544,9 @@ namespace fg {
             inline void setTextureGfxID(const fgGfxTextureID& texGfxID) {
                 m_textureGfxID = texGfxID;
             }
+            
+            ////////////////////////////////////////////////////////////////////
+            
             /**
              * 
              * @return 
@@ -669,10 +684,19 @@ namespace fg {
              * 
              * @return 
              */
+            inline fgBool isFacingCamera(void) {
+                return (fgBool)(m_flags & FG_PARTICLE_FACING_CAMERA);
+            }
+            /**
+             * 
+             * @return 
+             */
             inline fgBool isRandomAngle(void) {
                 return (fgBool)(m_flags & FG_PARTICLE_RANDOM_ANGLE);
             }
 
+            ////////////////////////////////////////////////////////////////////
+            
             /**
              * 
              * @param params
