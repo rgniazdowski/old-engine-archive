@@ -526,8 +526,8 @@ namespace fg {
             virtual inline void refresh(void) {
                 center = 0.5f * (this->min + this->max);
                 extent = 0.5f * (this->max - this->min);
-                radius = 0.0f;
-                radius = math::max(radius, math::pow(extent.z * extent.z + extent.x * extent.x + extent.y * extent.y, 1.0f/2.0f));
+                //radius = 0.0f;
+                //radius = math::max(radius, math::pow(extent.z * extent.z + extent.x * extent.x + extent.y * extent.y, 1.0f/2.0f));
 //                radius = math::max(radius, math::sqrt(extent.z * extent.z + extent.x * extent.x));
                 //radius = math::max(radius, math::sqrt(extent.z * extent.z + extent.y * extent.y));
                 //radius = math::max(radius, math::sqrt(extent.y * extent.y + extent.x * extent.x));
@@ -574,6 +574,8 @@ namespace fg {
              * @param m
              */
             virtual void transform(typename Matrix4T<TValueType>::type const& m) {
+                Vector3f ext = 0.5f * (this->max - this->min);
+                radius = math::max(radius, math::sqrt(ext.z * ext.z + ext.x * ext.x + ext.y * ext.y));
                 base_type::transform(m);
                 this->refresh();
             }
