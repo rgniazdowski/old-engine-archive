@@ -295,7 +295,7 @@ fgBool resource::CResourceManager::insertResource(CResource* pResource) {
     if(!pResource) {
         return FG_FALSE;
     }
-    if(!insert(pResource, pResource->getName())) {
+    if(!base_type::insert(pResource, pResource->getName())) {
         return FG_FALSE;
     }
     pResource->setManaged(FG_TRUE);
@@ -443,9 +443,9 @@ void resource::CResourceManager::refreshResource(CResource* pResource) {
             resEvent->status = event::SResource::CREATED;
             resEvent->resource = pResource;
 
-            fg::event::CArgumentList *argList = new fg::event::CArgumentList();
-            argList->push(fg::event::SArgument::Type::ARG_TMP_POINTER, (void *)resEvent);
-            static_cast<fg::event::CEventManager *>(m_pEventMgr)->throwEvent(event::RESOURCE_CREATED, argList);
+            event::CArgumentList *argList = new event::CArgumentList();
+            argList->push(event::SArgument::Type::ARG_TMP_POINTER, (void *)resEvent);
+            static_cast<event::CEventManager *>(m_pEventMgr)->throwEvent(event::RESOURCE_CREATED, argList);
         }
         addMemory(pResource->getSize());
 
@@ -696,9 +696,9 @@ resource::CResource* resource::CResourceManager::request(const std::string& info
             resEvent->status = event::SResource::REQUESTED;
             resEvent->resource = resourcePtr;
 
-            fg::event::CArgumentList *argList = new fg::event::CArgumentList();
-            argList->push(fg::event::SArgument::Type::ARG_TMP_POINTER, (void *)resEvent);
-            static_cast<fg::event::CEventManager *>(m_pEventMgr)->throwEvent(event::RESOURCE_REQUESTED, argList);
+            event::CArgumentList *argList = new event::CArgumentList();
+            argList->push(event::SArgument::Type::ARG_TMP_POINTER, (void *)resEvent);
+            static_cast<event::CEventManager *>(m_pEventMgr)->throwEvent(event::RESOURCE_REQUESTED, argList);
         }
     }
     return resourcePtr;

@@ -26,7 +26,8 @@ using namespace fg;
  * @param pParent
  */
 gfx::CSceneNodeObject::CSceneNodeObject(gfx::CModel *pModel, gfx::CSceneNode *pParent) :
-CSceneNode(SCENE_NODE_OBJECT, pParent) {
+CSceneNode(SCENE_NODE_OBJECT, pParent),
+m_pModel(NULL) {
     CSceneNode::setNodeType(SCENE_NODE_OBJECT);
     // Now need to reset the draw call - this is object based on model
     // it has multiple children - they have their own draw calls
@@ -54,6 +55,40 @@ gfx::CSceneNodeObject::~CSceneNodeObject() {
     FG_LOG_DEBUG("fgGfxSceneNodeObject destructor %s", this->m_nameTag.c_str());
     // Well there's no need to remove children from this destructor
     // The base class destructor (SceneNode) will take care of that
+    m_drawCall = NULL;
+}
+
+void gfx::CSceneNodeObject::updateAABB(void) {
+
+    if(getCollisionBody()) {
+        // Well the collision body is present, so the base function can be called
+        // it will do the required transformations (based on the physics)
+        base_type::updateAABB();
+    }
+
+    if(m_pModel) {
+        m_aabb.min = m_pModel->getRefAABB().min * getScale();
+        m_aabb.max = m_pModel->getRefAABB().max * getScale();
+        m_aabb.transform(m_modelMat);
+    }
+
+}
+
+/**
+ * 
+ * @param modelMat
+ */
+void gfx::CSceneNodeObject::updateAABB(const Matrix4f& modelMat) {
+    if(m_pModel) {
+        m_aabb.min = m_pModel->getRefAABB().min;
+        m_aabb.max = m_pModel->getRefAABB().max;
+        m_aabb.transform(modelMat);
+    }
+    if(getCollisionBody()) {
+        // Well the collision body is present, so the base function can be called
+        // it will do the required transformations (based on the physics)
+        base_type::updateAABB(modelMat);
+    }
 }
 
 /**
@@ -72,13 +107,13 @@ void gfx::CSceneNodeObject::setModel(gfx::CModel *pModel) {
         // they have separate drawcalls so this one (NodeObject) does not
         // need any separate drawcall - just one for every mesh/shape
         if(m_drawCall) {
-            delete m_drawCall;
+            //delete m_drawCall; // ?? ?? ?
             m_drawCall = NULL;
             // this is not needed
         }
         // Now setup draw call and children from every shape/mesh from given model
         // -- need some method for quick children removal - all of them
-        ChildrenSetItor it = getChildren().begin(), end = getChildren().end();
+        ChildrenVecItor it = getChildren().begin(), end = getChildren().end();
         for(; it != end; it++) {
             if(!(*it))
                 continue;
@@ -87,7 +122,7 @@ void gfx::CSceneNodeObject::setModel(gfx::CModel *pModel) {
 
         gfx::CModel::ModelShapes &shapes = pModel->getRefShapes();
         setBoundingVolume(pModel->getRefAABB());
-        gfx::CModel::modelShapesItor sit = shapes.begin(), send = shapes.end();
+        gfx::CModel::ModelShapesItor sit = shapes.begin(), send = shapes.end();
         for(; sit != send; sit++) {
             if(!(*sit))
                 continue;
@@ -104,12 +139,15 @@ void gfx::CSceneNodeObject::setModel(gfx::CModel *pModel) {
             // the children. The children would be drawn via the scene manager/octree
             // #FIXME #P2 #IMPORTANT
             //if(m_pManager) {
-                //if(m_pManager->getManagerType() == FG_MANAGER_SCENE) {
-                    //static_cast<fgGfxSceneManager *>(m_pManager)->addNode(pChildNode->getRefHandle(), pChildNode, this);
-                //}
+            //if(m_pManager->getManagerType() == FG_MANAGER_SCENE) {
+            //static_cast<fgGfxSceneManager *>(m_pManager)->addNode(pChildNode->getRefHandle(), pChildNode, this);
+            //}
             //}
             // No need to check if it's inserted successfully
-            getChildren().insert(pChildNode);
+            getChildren().push_back(pChildNode);
+        }
+        if(shapes.size()) {
+            m_drawCall = getChildren()[0]->getDrawCall();
         }
         /// Maybe some children should not be accessible globally?
         /// Need to think about it - there can be many objects containing the 

@@ -219,7 +219,8 @@ fgBool gfx::CParticleSystem::insert(CParticleEffect* pEffect, const std::string&
         return FG_FALSE;
     if(!m_pResourceMgr)
         return FG_FALSE;
-    if(static_cast<fg::resource::CResourceManager *>(m_pResourceMgr)->insert(pEffect, nameTag)) {
+    pEffect->setName(nameTag);
+    if(static_cast<resource::CResourceManager *>(m_pResourceMgr)->insert(pEffect)) {
         pEffect->setManaged(FG_TRUE);
         return FG_TRUE;
     }
@@ -246,7 +247,7 @@ fgBool gfx::CParticleSystem::insertParticleEffect(CParticleEffect *pEffect) {
 gfx::CParticleEffect* gfx::CParticleSystem::request(const std::string& info) {
     if(!m_pResourceMgr || info.empty())
         return NULL;
-    return (CParticleEffect *)(static_cast<fg::resource::CResourceManager *>(m_pResourceMgr)->request(info));
+    return (CParticleEffect *)(static_cast<resource::CResourceManager *>(m_pResourceMgr)->request(info));
 }
 
 /**
@@ -259,7 +260,7 @@ gfx::CParticleEffect* gfx::CParticleSystem::request(const char *info) {
         return NULL;
     if(strlen(info) < 1)
         return NULL;
-    return (CParticleEffect *)(static_cast<fg::resource::CResourceManager *>(m_pResourceMgr)->request(info));
+    return (CParticleEffect *)(static_cast<resource::CResourceManager *>(m_pResourceMgr)->request(info));
 }
 
 /**
@@ -288,7 +289,7 @@ gfx::CParticleEmitter* gfx::CParticleSystem::insertParticleEmitter(const std::st
         FG_LOG_ERROR("GFX: Particle emitter '%s' is already in the Scene Manager", particleEmitterNameTag.c_str());
         return NULL;
     }
-    CParticleEffect *pEffect = (CParticleEffect *)(static_cast<fg::resource::CResourceManager *>(m_pResourceMgr)->request(particleEffectNameTag));
+    CParticleEffect *pEffect = (CParticleEffect *)(static_cast<resource::CResourceManager *>(m_pResourceMgr)->request(particleEffectNameTag));
     if(!pEffect) {
         FG_LOG_ERROR("GFX: Unable to find particle effect: '%s'", particleEffectNameTag.c_str());
         return NULL;
@@ -296,7 +297,7 @@ gfx::CParticleEmitter* gfx::CParticleSystem::insertParticleEmitter(const std::st
     if(pEffect->isDisposed()) {
         pEffect->create();
     }
-    CTextureResource *pTexture = (CTextureResource *)(static_cast<fg::resource::CResourceManager *>(m_pResourceMgr)->request(pEffect->getTextureName()));
+    CTextureResource *pTexture = (CTextureResource *)(static_cast<resource::CResourceManager *>(m_pResourceMgr)->request(pEffect->getTextureName()));
     if(pTexture) {
         pEffect->setTextureGfxID(pTexture->getRefGfxID());
     }
@@ -308,9 +309,12 @@ gfx::CParticleEmitter* gfx::CParticleSystem::insertParticleEmitter(const std::st
                                                             pEmitter,
                                                             (gfx::CSceneNode *)NULL);
 
+    
+    CCamera *pCamera = (CCamera *)static_cast<gfx::CSceneManager *>(m_pSceneMgr)->getCamera();
+    pEmitter->setCamera(pCamera); // Set pointer for the camera
     // Set particle emitter as not managed
     // This means that particle emitter object must be freed
-    // by the particle manager
+    // by the particle manager // #FIXME - this needs be more obvious
     pEmitter->setManaged(FG_FALSE);
     m_emitters.push_back(pEmitter);
     // Should now set managed to false
@@ -382,7 +386,7 @@ void gfx::CParticleSystem::calculate(void) {
         CVertexData *pVertexData = NULL;
         if(pDrawCall) {
             // #FIXME
-            CTextureResource *pTexture = (CTextureResource *)(static_cast<fg::resource::CResourceManager *>(m_pResourceMgr)->request(pEffect->getTextureName()));
+            CTextureResource *pTexture = (CTextureResource *)(static_cast<resource::CResourceManager *>(m_pResourceMgr)->request(pEffect->getTextureName()));
             if(pTexture) {
                 pEffect->setTextureGfxID(pTexture->getRefGfxID());
             }

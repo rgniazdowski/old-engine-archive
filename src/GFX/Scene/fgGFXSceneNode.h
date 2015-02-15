@@ -25,6 +25,8 @@
     #ifndef FG_INC_GFX_TREE_NODE
         #include "fgGFXTreeNode.h"
     #endif
+    
+    #include "Physics/fgCollisionBody.h"
 
     #include <set>
 
@@ -103,23 +105,37 @@ namespace fg {
             /// SceneNode type - self
             typedef CSceneNode self_type;
             /// Special set containing children
-            typedef std::set<self_type *> ChildrenSet;
+            typedef CVector<self_type *> ChildrenVec;
             /// Bidirectional iterator through children set
-            typedef ChildrenSet::iterator ChildrenSetItor;
+            typedef ChildrenVec::iterator ChildrenVecItor;
             /// Bounding box type - axis-aligned
             typedef AABoundingBox3Df box_type;
 
         private:
-            ///
+            /// Current scene node type - set in the constructors
             SceneNodeType m_nodeType;
-            ///
-            STreeNode *m_pTreeNode;
+            /// Pointer to the tree node in which this scene node resides
+            /// This is for spatial partitioning
+            STreeNode* m_pTreeNode;
             /// Scene node father/parent node pointer
-            self_type *m_pParent;
-            ///
-            ChildrenSet m_children;
-            ///
+            self_type* m_pParent;
+            /// Collision body used for physics, it can be BOX, SPHERE or more
+            /// complex convex volume
+            physics::CCollisionBody* m_collisionBody;
+            /// Children of the current scene node
+            /// Note that this is for more logical hierarchy (not spatial)
+            ChildrenVec m_children;
+            /// Is the scene node visible? Will be set to FALSE when the scene node
+            /// is not in the visible tree node (quadtree/octree/...)
             fgBool m_isVisible;
+            /// This is for automatic scaling of the model matrix
+            /// based on the collision body size (half extent)
+            /// Used when the size of the rendered mesh/model is 1.0f
+            /// This will only have effect when using with the collision body
+            fgBool m_isAutoScale;
+            /// Current scale of the scene node - scale is automatically
+            /// applied to the displayed data (mesh/shape/model/...)
+            Vector3f m_scale;
 
         protected:
             /// Internal object specific model matrix
@@ -163,6 +179,64 @@ namespace fg {
              * @param modelMat
              */
             virtual void draw(const Matrix4f& modelMat);
+            
+        public:
+            /**
+             * 
+             * @param delta
+             */
+            virtual void update(float delta);
+            
+        public:
+            /**
+             *
+             */
+            void activateCollisionBody(const physics::CCollisionBody::BodyType bodyType);
+            /**
+             * 
+             */
+            void removeCollisionBody(void);
+            /**
+             * 
+             * @param bodyType
+             */
+            void setCollisionBodyType(const physics::CCollisionBody::BodyType bodyType);
+            /**
+             * 
+             * @return 
+             */
+            physics::CCollisionBody* getCollisionBody(void) const {
+                return m_collisionBody;
+            }
+            
+        public:
+            /**
+             * 
+             * @return 
+             */
+            inline fgBool isAutoScale(void) const {
+                return m_isAutoScale;
+            }
+            /**
+             * 
+             * @param toggle
+             */
+            inline void setAutoScale(fgBool toggle = FG_TRUE) {
+                m_isAutoScale = toggle;
+            }
+            
+            /**
+             */
+            inline Vector3f getScale(void) const {
+                return m_scale;
+            }
+            /**
+             * 
+             * @param scale
+             */
+            inline void setScale(const Vector3f& scale) {
+                m_scale = scale;
+            }
 
         public:
             /**
@@ -280,14 +354,14 @@ namespace fg {
              * 
              * @return 
              */
-            inline ChildrenSet & getChildren(void) {
+            inline ChildrenVec & getChildren(void) {
                 return m_children;
             }
             /**
              * 
              * @return 
              */
-            inline ChildrenSet const & getChildren(void) const {
+            inline ChildrenVec const & getChildren(void) const {
                 return m_children;
             }
             /**
@@ -392,18 +466,13 @@ namespace fg {
             /**
              * 
              */
-            virtual inline void updateAABB(void) {
-                // #FUBAR - no reset
-                m_aabb.transform(m_modelMat);
-            }
+            virtual void updateAABB(void);
             /**
              * 
              * @param modelMat
              */
-            virtual inline void updateAABB(const Matrix4f& modelMat) {
-                // #FUBAR - no reset performed
-                m_aabb.transform(modelMat);
-            }
+            virtual void updateAABB(const Matrix4f& modelMat);
+            
             /**
              * 
              * @return 

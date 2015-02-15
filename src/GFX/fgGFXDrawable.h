@@ -33,6 +33,8 @@ namespace fg {
         const DrawableType DRAWABLE_DRAWCALL = 0x0A0;
         /// Drawable scene node
         const DrawableType DRAWABLE_SCENENODE = 0x0A1;
+        /// Drawable scene box
+        const DrawableType DRAWABLE_SKYBOX = 0x0A2;
 
         /**
          * 

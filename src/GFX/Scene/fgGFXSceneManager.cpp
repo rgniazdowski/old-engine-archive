@@ -19,6 +19,8 @@
 #include "Util/fgProfiling.h"
 #endif
 
+#include "GFX/fgGFXPrimitives.h"
+
 using namespace fg;
 
 /**
@@ -27,15 +29,22 @@ using namespace fg;
 gfx::CSceneManager::CSceneManager() :
 CDrawingBatch(),
 m_MVP(),
-m_camera(FG_GFX_CAMERA_FREE) {
+m_camera(FG_GFX_CAMERA_FREE),
+m_skybox(),
+m_skyboxProgram(NULL),
+m_nodeQueue(),
+m_pResourceMgr(NULL),
+m_basetree(NULL) {
     m_managerType = FG_MANAGER_SCENE;
+    m_skybox.setScale(FG_GFX_PERSPECTIVE_ZFAR_DEFAULT * 1.1f); // #FIXME #SKYBOX scale
+    m_skybox.setMVP(&m_MVP);
 }
 
 /**
  * 
  */
 gfx::CSceneManager::~CSceneManager() {
-    gfx::CSceneManager::destroy();
+    CSceneManager::destroy();
 }
 
 /**
@@ -45,6 +54,7 @@ void gfx::CSceneManager::clear(void) {
     releaseAllHandles();
     m_managerType = FG_MANAGER_SCENE;
     m_pResourceMgr = NULL;
+    m_basetree = NULL;
 }
 
 /**
@@ -77,10 +87,10 @@ fgBool gfx::CSceneManager::destroy(void) {
         if(pObj == NULL)
             continue;
         if(pObj->isManaged())
-            delete pObj;        
+            delete pObj;
         (*itor).clear();
     }
-    gfx::CSceneManager::clear();
+    CSceneManager::clear();
     return FG_TRUE;
 }
 
@@ -109,6 +119,26 @@ void gfx::CSceneManager::setResourceManager(fg::base::CManager *pResourceMgr) {
         return;
     if(pResourceMgr->getManagerType() == FG_MANAGER_RESOURCE)
         m_pResourceMgr = pResourceMgr;
+}
+
+/**
+ * 
+ * @param shaderName
+ */
+void gfx::CSceneManager::setSkyBoxShader(const char* shaderName) {
+    if(shaderName && m_pShaderMgr) {
+        m_skyboxProgram = static_cast<gfx::CShaderManager *>(m_pShaderMgr)->get(shaderName);
+    }
+}
+
+/**
+ * 
+ * @param shaderName
+ */
+void gfx::CSceneManager::setSkyBoxShader(const std::string& shaderName) {
+    if(shaderName.size() && m_pShaderMgr) {
+        m_skyboxProgram = static_cast<gfx::CShaderManager *>(m_pShaderMgr)->get(shaderName);
+    }
 }
 
 /**
@@ -146,7 +176,7 @@ void gfx::CSceneManager::sortCalls(void) {
 #endif
         // There is a problem because the bounding box needs to be modified by
         // the model matrix; maybe some operator ?
-        pNode->updateAABB();
+        pNode->update(timesys::elapsed()); // updateAABB
 
         //const char *msg[] = {"OUTSIDE", "INTERSECT", "INSIDE", "[null]", "\0"};
         int boxtest = m_MVP.getRefFrustum().testVolume(pNode->getRefBoundingVolume());
@@ -186,8 +216,21 @@ void gfx::CSceneManager::sortCalls(void) {
  * 
  */
 void gfx::CSceneManager::render(void) {
+    CShaderManager *pShaderMgr = static_cast<gfx::CShaderManager *>(m_pShaderMgr);
+    CShaderProgram *pProgram = pShaderMgr->getCurrentProgram();
+    //pProgram->setUniform(FG_GFX_USE_TEXTURE, 1.0f);
     //printf("fgGfxSceneManager::render(void)\n");
-    CDrawingBatch::render(); // #NOPE ? i don't know what i'm doing
+    // Will now render main skybox
+    if(m_skyboxProgram) {
+        pShaderMgr->useProgram(m_skyboxProgram);
+        m_skybox.setPosition(m_camera.getRefEye());
+        m_skybox.setShaderProgram(m_skyboxProgram);
+        m_skybox.draw();
+    }
+    pShaderMgr->useProgram(pProgram);
+    // Calling underlying DrawingBatch render procedure
+    // This will contain drawcalls not associated with scene/octree/quadtree structure
+    CDrawingBatch::render();
     while(!m_nodeQueue.empty()) {
 #if defined(FG_DEBUG)
         if(g_fgDebugConfig.isDebugProfiling) {
@@ -195,6 +238,7 @@ void gfx::CSceneManager::render(void) {
         }
 #endif
         CSceneNode *pSceneNode = m_nodeQueue.top();
+        //printf("SCENENODE: %s\n", pSceneNode->getNameStr());
         pSceneNode->draw();
 #if defined(FG_DEBUG)
         if(g_fgDebugConfig.isDebugProfiling) {
@@ -203,15 +247,18 @@ void gfx::CSceneManager::render(void) {
 #endif
 
 #if defined(FG_DEBUG)
-        CShaderProgram *pProgram = static_cast<gfx::CShaderManager *>(m_pShaderMgr)->getCurrentProgram();
+        CModel *sphereModel = (CModel *)static_cast<resource::CResourceManager *>(m_pResourceMgr)->get("builtinSphere");
+        SMeshBase *sphereMesh = sphereModel->getRefShapes()[0]->mesh;
         pProgram->setUniform(FG_GFX_USE_TEXTURE, 0.0f);
         if(FG_DEBUG_CFG_OPTION(gfxBBoxShow) && pSceneNode->getNodeType() == SCENE_NODE_OBJECT) {
             CSceneNodeObject *pSceneObj = static_cast<CSceneNodeObject *>(pSceneNode);
-            // Current aabb - it's in model space (local)
-            AABB3Df &modelBox = pSceneObj->getModel()->getRefAABB();
-            // Initial Bounding box
-            CPrimitives::drawAABBLines(modelBox, fgColor4f(1.0f, 0.0f, 0.0f, 1.0f));
-            // Draw transformed bounding box #FIXME - colors FUBAR            
+            if(pSceneObj->getModel()) {
+                // Current aabb - it's in model space (local)
+                AABB3Df &modelBox = pSceneObj->getModel()->getRefAABB();
+                // Initial Bounding box
+                CPrimitives::drawAABBLines(modelBox, fgColor4f(1.0f, 0.0f, 0.0f, 1.0f));
+                // Draw transformed bounding box #FIXME - colors FUBAR
+            }
         }
         if(FG_DEBUG_CFG_OPTION(gfxBBoxShow)) {
             m_MVP.resetModelMatrix();
@@ -223,25 +270,23 @@ void gfx::CSceneManager::render(void) {
             Vector4f matpos = pSceneNode->getRefModelMatrix()[3];
             Vector3f pos(matpos.x, matpos.y, matpos.z);
             Matrix4f mat = math::translate(Matrix4f(), pos);
-            float radius = 1.0f; 
-            if(pSceneNode->getNodeType() == SCENE_NODE_OBJECT) {
-                AABB3Df &aabb = static_cast<CSceneNodeObject *>(pSceneNode)->getModel()->getRefAABB();
-                Vector3f extent = aabb.getExtent();
-                radius = math::sqrt(extent.z * extent.z + extent.x * extent.x + extent.y * extent.y);
-            }
+            const float radius = pSceneNode->getRefBoundingVolume().radius;
             mat = math::scale(mat, Vec3f(radius, radius, radius));
             m_MVP.calculate(mat);
             pProgram->setUniform(&m_MVP);
-            CPrimitives::drawSphereLines();
-            
-            mat = math::scale(mat, Vec3f(1.0f/radius, 1.0f/radius, 1.0f/radius));
-            radius = pSceneNode->getRefBoundingVolume().radius;
-            mat = math::scale(mat, Vec3f(radius, radius, radius));
-            m_MVP.calculate(mat);
-            pProgram->setUniform(&m_MVP);
-            CPrimitives::drawSphereLines();
+            CPrimitives::drawVertexData(sphereMesh, FG_GFX_POSITION_BIT | FG_GFX_UVS_BIT, PrimitiveMode::LINES);
         }
 #endif
+        //g_fgDebugConfig.physicsBBoxShow = true; // #FIXME
+        if(FG_DEBUG_CFG_OPTION(physicsBBoxShow)) {
+            physics::CCollisionBody *body = pSceneNode->getCollisionBody();
+            if(body) {
+                if(body->getBodyType() == physics::CCollisionBody::BOX) {
+                } else if(body->getBodyType() == physics::CCollisionBody::SPHERE) {
+                }
+            }
+        }
+        //#endif // defined(FG_DEBUG)
         m_nodeQueue.pop();
     }
 }
@@ -360,17 +405,21 @@ fgBool gfx::CSceneManager::addNode(SceneNodeHandle& nodeUniqueID,
     if(pNode->getNodeType() == SCENE_NODE_OBJECT) {
         // #FIXME - this is total fubar
         CSceneNodeObject *pNodeObject = static_cast<CSceneNodeObject *>(pNode);
-        CDrawCall *pDrawCall = (*pNodeObject->getChildren().begin())->getDrawCall();
-        pDrawCall->setMVP(&m_MVP);
-        if(pNodeObject->getModel()) {
-            if(getShaderManager())
-                pDrawCall->setShaderProgram(((gfx::CShaderManager *)getShaderManager())->getCurrentProgram());
-            if(m_pResourceMgr) {
-                SMaterial *pMainMaterial = pNodeObject->getModel()->getMainMaterial();
-                if(pMainMaterial) {
-                    CTextureResource *pTexRes = (CTextureResource *)((fg::resource::CResourceManager *)m_pResourceMgr)->get(pMainMaterial->ambientTexHandle);
-                    if(pTexRes)
-                        pDrawCall->setTexture(pTexRes->getRefGfxID());
+        if(pNodeObject->hasChildren()) {
+            CDrawCall *pDrawCall = (*pNodeObject->getChildren().begin())->getDrawCall();
+            if(pDrawCall) {
+                pDrawCall->setMVP(&m_MVP);
+                if(pNodeObject->getModel()) {
+                    if(getShaderManager())
+                        pDrawCall->setShaderProgram(((gfx::CShaderManager *)getShaderManager())->getCurrentProgram());
+                    if(m_pResourceMgr) {
+                        SMaterial *pMainMaterial = pNodeObject->getModel()->getMainMaterial();
+                        if(pMainMaterial) {
+                            CTextureResource *pTexRes = (CTextureResource *)((fg::resource::CResourceManager *)m_pResourceMgr)->get(pMainMaterial->ambientTexHandle);
+                            if(pTexRes)
+                                pDrawCall->setTexture(pTexRes->getRefGfxID());
+                        }
+                    }
                 }
             }
         }
@@ -383,7 +432,11 @@ fgBool gfx::CSceneManager::addNode(SceneNodeHandle& nodeUniqueID,
         }
     }
 #endif
-
+    if(m_basetree) {
+        // add to the spatial tree structure
+        // it can be octree/quadtree or any other (bounding volume hierarchy)
+        m_basetree->insert(pNode); // #FIXME -- need some kind of removal functionality        
+    }
     // 2nd argument tells that this draw call should not be managed
     // meaning: destructor wont be called on flush()
     //fgGfxDrawingBatch::appendDrawCall(drawCall, FG_FALSE); // Don't know if needed...

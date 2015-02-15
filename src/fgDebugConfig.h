@@ -30,6 +30,7 @@ struct fgDebugConfig {
         bool isDebug;           // Is debug build active?
         bool isVerbose;         // Is there some verbosity active?
         int verboseLevel;       // The exact verbosity level
+        bool physicsBBoxShow;   // Whether to show bounding boxes debug info for physics simulation
         bool guiBBoxShow;       // Whether to show bounding boxes debug info (GUI)
         bool gfxBBoxShow;       // Whether to show bounding boxes in GFX?
         bool gfxFrustumShow;    // Whether to show frustum boxes?

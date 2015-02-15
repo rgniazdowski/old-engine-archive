@@ -224,6 +224,15 @@ namespace fg {
             // If you pass in the pointer to resource handle, the Resource Manager
             // will provide a unique handle for you.
             fgBool insertResource(CResource* pResource);
+            
+            /**
+             * 
+             * @param pResource
+             * @return 
+             */
+            inline fgBool insert(CResource* pResource) {
+               return insertResource(pResource); 
+            }
 
         protected:
             /**

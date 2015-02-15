@@ -14,6 +14,7 @@
  */
 
 #include "fgPsParticleEmitter.h"
+#include "GFX/fgGFXCameraAnimation.h"
 
 using namespace fg;
 
@@ -26,7 +27,8 @@ m_effects(),
 m_origin(),
 m_particles(),
 m_numParticles(0),
-m_maxCount(0) {
+m_maxCount(0),
+m_pCamera(NULL) {
     setupFromParticleEffect(pEffect);
 }
 
@@ -59,6 +61,7 @@ void gfx::CParticleEmitter::addParticles(const unsigned int count, const Vector3
         return;
     if(m_effects.empty())
         return;
+    // #FIXME 
     CParticleEffect *pParticleEffect = m_effects.back();
     if(!pParticleEffect) {
         return;
@@ -95,6 +98,37 @@ fgBool gfx::CParticleEmitter::setupFromParticleEffect(CParticleEffect *pParticle
     return FG_TRUE;
 }
 
+// #FIXME 
+
+Quaternionf RotationBetweenVectors(const Vector3f& instart, const Vector3f& indest) {
+    Vector3f start = math::normalize(instart);
+    Vector3f dest = math::normalize(indest);
+    float cosTheta = math::dot(start, dest);
+    Vector3f rotationAxis;
+
+    if(cosTheta < -1 + 0.001f) {
+        // special case when vectors in opposite directions:
+        // there is no "ideal" rotation axis
+        // So guess one; any will do as long as it's perpendicular to start
+        rotationAxis = math::cross(Vector3f(0.0f, 0.0f, 1.0f), start);
+        if(math::length2(rotationAxis) < 0.01) // bad luck, they were parallel, try again!
+            rotationAxis = math::cross(Vector3f(1.0f, 0.0f, 0.0f), start);
+
+        rotationAxis = math::normalize(rotationAxis);
+        return math::angleAxis(180.0f, rotationAxis);
+    }
+
+    rotationAxis = math::cross(start, dest);
+    float s = math::sqrt((1.0f + cosTheta)*2.0f);
+    float invs = 1.0f / s;
+
+    return Quaternionf(s * 0.5f,
+                       rotationAxis.x * invs,
+                       rotationAxis.y * invs,
+                       rotationAxis.z * invs);
+
+}
+
 /**
  *
  */
@@ -119,6 +153,10 @@ void gfx::CParticleEmitter::calculate(void) {
     m_aabb.invalidate();
     m_aabb.min.z = 0.0f;
 
+    // This runs through the particles and updates the vertex data
+    // Given particle effect is allowed to use just the one texture
+    // To use different representations for particles, texture sheet is used
+    // The whole vertex, uv, color, ... data is passed as a single AoS stream
     for(int i = 0; i < (int)m_numParticles; i++) {
         pEffect->basicCalculate(&m_particles[i]);
         if(m_particles[i].life <= 0.0f) {
@@ -128,6 +166,9 @@ void gfx::CParticleEmitter::calculate(void) {
         SParticle &particle = m_particles[i];
         //
         // Calculate the texture coords based on texture sheet parameters
+        // Maybe there is a way to do this more quickly?
+        // Would need to pre-calculate this data, store it in some kind of object
+        // CTextureSheet or what-not
         //
         Vector2i &texSheetSize = pEffect->getTextureSheetSize();
         if(particle.texIndex < 0)
@@ -154,96 +195,76 @@ void gfx::CParticleEmitter::calculate(void) {
         Vertex4v &v5 = pData4v->at(j + 4);
         Vertex4v &v6 = pData4v->at(j + 5);
 
-        float x1 = particle.bbox.pos.x;
-        float y1 = particle.bbox.pos.y;
+        Vector3f position = particle.bbox.pos;
         Vector3f &size = particle.bbox.size;
         Vector2f uv1 = Vector2f(s, t + dt);
         Vector2f uv2 = Vector2f(s + ds, t);
 
-        float w2 = size.x / 2.0f;
-        float h2 = size.y / 2.0f;
-        m_aabb.merge(BoundingBox3Df(Vector3f(x1 - w2, y1 - h2, 0.0f), size));
+        const float w2 = size.x / 2.0f;
+        const float h2 = size.y / 2.0f;
+        const float d2 = size.z / 2.0f;
+
+        // Resize the axis aligned bound box of the scene node (particle emitter)
+        m_aabb.merge(BoundingBox3Df(Vector3f(position.x - w2, position.y - h2, position.z - d2), size));
         float z = -1.0f;
 
-        Vector4f V1(0 * x1 - w2, 0 * y1 - h2, z, 0.0f); // V1
-        Vector4f V2(0 * x1 - w2, 0 * y1 + h2, z, 0.0f); // V2 = V4
-        Vector4f V3(0 * x1 + w2, 0 * y1 - h2, z, 0.0f); // V3 = V6
-        Vector4f V5(0 * x1 + w2, 0 * y1 + h2, z, 0.0f); // V5
+        //
+        // This still would need optimization
+        // More optimal would be different primitive (different than quad, 2 tris)
+        // Would need some kind of optimizer (different shape yields faster results)
+        // Next: need to pass some data to the shader, some calculations should
+        // be done on the gpu (matrix mult, usage of quaternions)
+        //
+        // This would need to be done as shader attribute, for every vertex
+        // maybe along with the burn parameter
+        //
 
-        //Vector3f V1(0 * x1 - w2, 0 * y1 - h2, z); // V1
-        //Vector3f V2(0 * x1 - w2, 0 * y1 + h2, z); // V2 = V4
-        //Vector3f V3(0 * x1 + w2, 0 * y1 - h2, z); // V3 = V6
-        //Vector3f V5(0 * x1 + w2, 0 * y1 + h2, z); // V5
+        Vector3f V1(-w2, -h2, z); // V1
+        Vector3f V2(-w2, h2, z); // V2 = V4
+        Vector3f V3(w2, -h2, z); // V3 = V6
+        Vector3f V5(w2, +h2, z); // V5
 
+        // This will rotate the particle so it will point in the direction
+        // of flying, useful for sparks, long smoke, debris
         if(pEffect->isFacingVelocity()) {
-            Matrix4f mat;
+            Matrix3f mat;
             Vector3f direction = math::normalize(particle.velocity);
-            // This will only rotate in Z axis
-            // It's suitable only for 2D
-            mat[0].x = direction.y;
-            mat[0].y = -direction.x;
-            mat[1].x = direction.x;
-            mat[1].y = direction.y;
+
+            // Find the rotation between the front of the object (that we assume towards +Z, 
+            // but this depends on your model) and the desired direction 
+            Quatf rot1 = RotationBetweenVectors(Vec3f(0.0f, 1.0f, 0.0f), direction);
 #if 0
-            //mat = fgMath::rotate(mat, particle.rotation.z, Vectortor3f(0.0f, 0.0f, 1.0f));
-            //mat = fgMath::lookAt(Vector3f(), particle.velocity, Vectortor3f(1.0f, 0.0f, 0.0f));
-            /*
-             detail::tvec3<T, P> f(normalize(center - eye));
-                detail::tvec3<T, P> s(normalize(cross(f, up)));
-                detail::tvec3<T, P> u(cross(s, f));
+            // Recompute desiredUp so that it's perpendicular to the direction
+            // You can skip that part if you really want to force desiredUp
+            Vec3f desiredUp = math::cross(direction, Vec3f(0.0f, 0.0f, 1.0f));
+            Vec3f right = math::cross(direction, desiredUp);
+            desiredUp = math::cross(right, direction);
 
-                detail::tmat4x4<T, P> Result(1);
-                Result[0][0] = s.x;
-                Result[1][0] = s.y;
-                Result[2][0] = s.z;
-                Result[0][1] = u.x;
-                Result[1][1] = u.y;
-                Result[2][1] = u.z;
-                Result[0][2] =-f.x;
-                Result[1][2] =-f.y;
-                Result[2][2] =-f.z;
-                Result[3][0] =-dot(s, eye);
-                Result[3][1] =-dot(u, eye);
-                Result[3][2] = dot(f, eye);
-             */
-            /*
-            Vector3f center = particle.bbox.pos+particle.velocity, eye = particle.bbox.pos;
-            Vector3f up(0, 1, 0);
-            Vector3f side = fgMath::normalize(fgMath::cross(direction, up));
-            up = fgMath::cross(side, direction);
+            // Because of the 1rst rotation, the up is probably completely screwed up. 
+            // Find the rotation between the "up" of the rotated object, and the desired up
+            Vec3f newUp = rot1 * Vec3f(0.0f, 1.0f, 0.0f);
+            Quaternionf rot2 = RotationBetweenVectors(newUp, desiredUp);
+#endif           
+            mat = math::toMat3(rot1);
+            //mat = math::rotate(mat, M_PIF, direction);
 
-            mat[0].x = side.x;
-            mat[0].y = side.y;
-            mat[0].z = size.z;
+            V1 = mat * V1;
+            V2 = mat * V2;
+            V3 = mat * V3;
+            V5 = mat * V5;
+        } else if(pEffect->isFacingCamera() && m_pCamera) {
+            // For now the particles can face camera or velocity/direction
+            // not both
+            Matrix3f mat;
+            Vector3f &center = m_pCamera->getRefCenter();
+            Vector3f &eye = m_pCamera->getRefEye();
+            const Vector3f direction = math::normalize(center - eye);
+            
+            // Find the rotation between the front of the object (that we assume towards +Z, 
+            // but this depends on your model) and the desired direction 
+            Quatf rot1 = RotationBetweenVectors(Vec3f(0.0f, 0.0f, 1.0f), direction);
+            mat = math::toMat3(rot1);
 
-            mat[1].x = up.x;
-            mat[1].y = up.y;
-            mat[1].z = up.z;
-
-            mat[2].x = -direction.x;
-            mat[2].y = -direction.y;
-            mat[2].z = -direction.z;
-
-
-            Vector3f f(fgMath::normalize(center - eye));
-            Vector3f s(fgMath::normalize(fgMath::cross(f, up)));
-            Vector3f u(fgMath::cross(s, f));
-
-            mat = fgMat4f(1);
-            mat[0][0] = s.x;
-            mat[1][0] = s.y;
-            mat[2][0] = s.z;
-            mat[0][1] = u.x;
-            mat[1][1] = u.y;
-            mat[2][1] = u.z;
-            mat[0][2] = -f.x;
-            mat[1][2] = -f.y;
-            mat[2][2] = -f.z;
-            mat[3][0] = -fgMath::dot(s, eye);
-            mat[3][1] = -fgMath::dot(u, eye);
-            mat[3][2] = fgMath::dot(f, eye);
-             */
-#endif
             V1 = mat * V1;
             V2 = mat * V2;
             V3 = mat * V3;
@@ -263,16 +284,19 @@ void gfx::CParticleEmitter::calculate(void) {
         //v6.position = Vector3f(x1 + w2, y1 - h2, z); // V3 = V6
         v6.uv = Vector2f(uv2.x, uv1.y); // V3 = V6
 
-        v1.position = Vector3f(x1 + V1.x, y1 + V1.y, V1.z); // V1
-        v2.position = Vector3f(x1 + V2.x, y1 + V2.y, V2.z); // V2 = V4
-        v3.position = Vector3f(x1 + V3.x, y1 + V3.y, V3.z); // V3 = V6
+        v1.position = Vector3f(position.x + V1.x, position.y + V1.y, position.z + V1.z); // V1
+        v2.position = Vector3f(position.x + V2.x, position.y + V2.y, position.z + V2.z); // V2 = V4
+        v3.position = Vector3f(position.x + V3.x, position.y + V3.y, position.z + V3.z); // V3 = V6
         v4.position = v2.position; // V2 = V4
-        v5.position = Vector3f(x1 + V5.x, y1 + V5.y, V5.z); // V5
+        v5.position = Vector3f(position.x + V5.x, position.y + V5.y, position.z + V5.z); // V5
         v6.position = v3.position; // V3 = V6
 
-        //The variable ranges from zero (trans-parency blending) to one (additive blending).
+        // This is special blending between transparency & additive 
+        // Requires additional parameter - burn
+        // This needs to be moved to the shader
+        // Will cause data repeat (burn parameter will be passed for every vertex)
+        // The variable ranges from zero (transparency blending) to one (additive blending).
         float burn = particle.burn; // #FIXME
-
         Vector4f rgb = particle.color;
         float alpha = rgb.a;
         Vector4f fgc = rgb * alpha;
@@ -287,4 +311,29 @@ void gfx::CParticleEmitter::calculate(void) {
 
     }
     pData4v->resize(m_numParticles * 6);
+}
+
+/**
+ * 
+ */
+void gfx::CParticleEmitter::draw(void) {
+    //glEnable(GL_POLYGON_OFFSET_FILL);
+    //glDisable(GL_CULL_FACE);
+    //glDisable(GL_DEPTH_TEST);
+    //glPolygonOffset(1.0f, 2.0f);
+    m_drawCall->setZIndex(45); // #FIXME
+    // #FIXME - such things should be set inside of a material
+    CPlatform::context()->blendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+    CPlatform::context()->setBlend(FG_TRUE);
+    CPlatform::context()->setCullFace(FG_FALSE);
+    CPlatform::context()->disable(gfx::DEPTH_WRITEMASK);
+
+    base_type::draw();
+
+    CPlatform::context()->enable(gfx::DEPTH_WRITEMASK);
+    CPlatform::context()->setCullFace(FG_TRUE);
+    CPlatform::context()->setBlend(FG_FALSE);
+
+    //glEnable(GL_DEPTH_TEST);
+    //glDisable(GL_POLYGON_OFFSET_FILL);
 }

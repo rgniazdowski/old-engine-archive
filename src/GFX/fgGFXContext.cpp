@@ -574,7 +574,7 @@ void gfx::SContextParam::determineParamType(void) {
             //void glStencilOpSeparate(GLenum face,  GLenum sfail,  GLenum dpfail,  GLenum dppass);
             count = 1;
             type = FG_GFX_INT;
-            paramType = FG_GFX_PARAM_STENCIL_OP;
+            paramType = FG_GFX_PARAM_STENCIL_OP;            
             break;
 
             //    params returns one value,

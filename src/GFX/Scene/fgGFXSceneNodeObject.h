@@ -60,36 +60,23 @@ namespace fg {
              * 
              * @param pModel
              */
-            virtual void setModel(fg::gfx::CModel *pModel);
+            virtual void setModel(gfx::CModel *pModel);
             /**
              * 
              * @return 
              */
-            fg::gfx::CModel *getModel(void) const {
+            gfx::CModel *getModel(void) const {
                 return m_pModel;
             }
             /**
              * 
              */
-            virtual inline void updateAABB(void) {
-                // #FUBAR
-                if(m_pModel) {
-                    m_aabb.min = m_pModel->getRefAABB().min;
-                    m_aabb.max = m_pModel->getRefAABB().max;
-                    m_aabb.transform(m_modelMat);
-                }
-            }
+            virtual void updateAABB(void);
             /**
              * 
              * @param modelMat
              */
-            virtual inline void updateAABB(const Matrix4f& modelMat) {
-                if(m_pModel) {
-                    m_aabb.min = m_pModel->getRefAABB().min;
-                    m_aabb.max = m_pModel->getRefAABB().max;
-                    m_aabb.transform(modelMat);
-                }
-            }
+            virtual void updateAABB(const Matrix4f& modelMat);
         };
     };
 };

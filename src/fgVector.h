@@ -73,6 +73,28 @@ namespace fg {
             }
             return -1;
         }
+        
+        typename std::vector<T, Alloc>::const_iterator findItor(T const & value) const {
+            for(typename std::vector<T, Alloc>::const_iterator it = std::vector<T, Alloc>::begin();
+                    it != std::vector<T, Alloc>::end();
+                    it++) {
+                if((*it) == value) {
+                    return it;
+                }
+            }
+            return std::vector<T, Alloc>::end();
+        }
+        
+        typename std::vector<T, Alloc>::iterator findItor(T const & value)  {
+            for(typename std::vector<T, Alloc>::iterator it = std::vector<T, Alloc>::begin();
+                    it != std::vector<T, Alloc>::end();
+                    it++) {
+                if((*it) == value) {
+                    return it;
+                }
+            }
+            return std::vector<T, Alloc>::end();
+        }
         /**
          * 
          * @param value

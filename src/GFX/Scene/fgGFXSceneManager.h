@@ -24,10 +24,13 @@
     #include "fgGFXSceneNodeObject.h"
 
     #include "fgManagerBase.h"
+    #include "fgGFXSceneSkyBox.h"    
+    #include "fgGFXBasetree.h"
 
     #define FG_MANAGER_SCENE        0x00001000
 
 namespace fg {
+    
     namespace gfx {
 
         /**
@@ -53,8 +56,7 @@ namespace fg {
             ///
             typedef CVector<CSceneNode *> ObjectVec;
             ///
-            typedef ObjectVec::iterator ObjectVecItor;
-
+            typedef ObjectVec::iterator ObjectVecItor;        
 
         protected:
             /**
@@ -334,6 +336,32 @@ namespace fg {
                 return &m_MVP;
             }
             /**
+             * 
+             * @return 
+             */
+            inline CSceneSkyBox *getSkyBox(void) {
+                return &m_skybox;
+            }
+            /**
+             * 
+             * @param shaderName
+             */
+            void setSkyBoxShader(const char* shaderName);
+            /**
+             * 
+             * @param shaderName
+             */
+            void setSkyBoxShader(const std::string& shaderName);
+            /**
+             * 
+             * @param pProgram
+             */
+            inline void setSkyBoxShader(CShaderProgram* pProgram) {
+                m_skyboxProgram = pProgram;
+            }
+            /**
+             * 
+             * @return 
              */
             inline NodePriorityQueue& getNodeQueue(void) {
                 return m_nodeQueue;
@@ -345,16 +373,31 @@ namespace fg {
             inline NodePriorityQueue const& getNodeQueue(void) const {
                 return m_nodeQueue;
             }
-            
-        private:
+            /**
+             * 
+             * @return 
+             */
+            inline CBasetree *getBasetree(void) const {
+                return m_basetree;
+            }
+
+        private:            
             /// Internal MVP matrix to use, this will set the perspective view
             CMVPMatrix m_MVP;
             /// Internal camera
             CCameraAnimation m_camera;
+            /// Internal skybox
+            CSceneSkyBox m_skybox;
+            ///
+            CShaderProgram* m_skyboxProgram;
             /// Queue containing scene node (sorted) ready to render
             NodePriorityQueue m_nodeQueue;
             /// Pointer to the external resource manager - don't know if this is necessary
             fg::base::CManager *m_pResourceMgr;
+            
+        protected:
+            ///
+            CBasetree *m_basetree;
         };
     };
 };

@@ -30,6 +30,7 @@ struct fgDebugConfig g_fgDebugConfig = {
 #else
     0,
 #endif
+    false, //physicsBBoxShow    // Whether to show bounding boxes debug info for physics simulation
     false, //guiBBoxShow;       // Whether to show bounding boxes debug info (GUI)
     false, //gfxBBoxShow;       // Whether to show bounding boxes in GFX?
     false, //gfxFrustumShow;    // Whether to show frustum boxes?

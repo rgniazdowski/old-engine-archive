@@ -18,6 +18,10 @@
 
 namespace fg {
 
+    namespace physics {
+        class CWorld;
+    };
+
     namespace gfx {
 
         /**
@@ -73,20 +77,44 @@ namespace fg {
              * @return 
              */
             CSceneNode *addFromModel(const char *modelNameTag, const char *nameTag);
-            
+
+        public:
+            /**
+             * 
+             * @return 
+             */
+            COctree* getOctree(void) const {
+                return m_octree;
+            }
+            /**
+             * 
+             * @return 
+             */
+            inline physics::CWorld *getPhysicsWorld(void) const {
+                return m_physicsWorld;
+            }
+            /**
+             * 
+             * @return 
+             */
+            inline fgBool hasPhysicsWorld(void) const {
+                return (fgBool)(m_physicsWorld != NULL);
+            }
+
+
         protected:
             /**
              * 
              * @param pNode
              */
             void checkCollisions(const CSceneNode* sceneNode);
-            
+
         private:
-            /**
-             *
-             */
+            ///
+            physics::CWorld *m_physicsWorld;
+            ///
             COctree *m_octree;
-            
+            ///
             std::stack<SOctreeNode *> m_octNodes;
         };
     };

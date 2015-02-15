@@ -14,6 +14,7 @@
  */
 
 #include "fgGFXBasetree.h"
+#include "fgGFXSceneNode.h"
 
 using namespace fg;
 

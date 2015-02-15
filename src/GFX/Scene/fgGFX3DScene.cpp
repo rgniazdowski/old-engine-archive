@@ -17,10 +17,11 @@
 #include "Resource/fgResourceManager.h"
 
 #include "fgDebugConfig.h"
-
 #if defined(FG_DEBUG)
 #include "Util/fgProfiling.h"
 #endif
+
+#include "Physics/fgWorld.h"
 
 using namespace fg;
 
@@ -29,20 +30,29 @@ using namespace fg;
  */
 gfx::CScene3D::CScene3D() :
 CSceneManager(),
+m_physicsWorld(NULL),
 m_octree(NULL) {
     getMVP()->setPerspective(45.0f, 4.0f / 3.0f);
     m_octree = new CLooseOctree();
+    m_basetree = (CBasetree *)m_octree;
+    m_physicsWorld = new physics::CWorld(256);
 }
 
 /**
  * 
  */
 gfx::CScene3D::~CScene3D() {
-    if(m_octree)
+    if(m_octree) {
         delete m_octree;
+    }
     m_octree = NULL;
     while(m_octNodes.size())
         m_octNodes.pop();
+    m_basetree = NULL;
+    if(m_physicsWorld) {
+        delete m_physicsWorld;
+    }
+    m_physicsWorld = NULL;
 }
 
 /**
@@ -51,6 +61,11 @@ gfx::CScene3D::~CScene3D() {
 void gfx::CScene3D::sortCalls(void) {
     if(!getShaderManager())
         return;
+
+    if(m_physicsWorld) {
+        m_physicsWorld->startFrame();
+    }
+
     getMVP()->setCamera((CCamera *)(getCamera()));
     CFrustum &frustum = getMVP()->getRefFrustum();
 
@@ -70,14 +85,17 @@ void gfx::CScene3D::sortCalls(void) {
         sceneNode->setVisible(FG_FALSE);
         // There is a problem because the bounding box needs to be modified by
         // the model matrix; maybe some operator ?
-        sceneNode->updateAABB();
-        checkCollisions(sceneNode);
+        sceneNode->update(timesys::elapsed()); // #FIXME - maybe this should also call updateAABB??
+
+        // checkCollisions rewinds the octree/quadtree
+        // should not be called within the tree traversal
+        checkCollisions(sceneNode); // broadphase - this uses loose octree - more fast would be dynamic AABBtree ?
         if(treeNode) {
             unsigned int objCount = treeNode->objects.size();
             float halfSize = static_cast<CLooseOctree *>(m_octree)->getLooseK() * m_octree->getWorldSize().x / (2 << treeNode->depth);
             // Check bounds of this scene node - if does not fit - reinsert to different tree node - slow...
             if(m_octree->fitsInBox(sceneNode, treeNode->center, halfSize)) {
-                printf("%s fits in box depth %d\n", sceneNode->getNameStr(), treeNode->depth);
+                //printf("%s fits in box depth %d\n", sceneNode->getNameStr(), treeNode->depth);
             } else {
                 int objIdx = treeNode->objects.find(sceneNode);
                 if(objIdx != -1) {
@@ -95,7 +113,7 @@ void gfx::CScene3D::sortCalls(void) {
     // PHASE II: Traverse the tree, check visibility, update nodes
     ////////////////////////////////////////////////////////////////////////////
     m_octree->rewind();
-    printf(".......................\n");
+    //printf(".......................\n");
     while(m_octree->next()) {
         SOctreeNode *treeNode = static_cast<SOctreeNode *>(m_octree->current());
         unsigned int objCount = treeNode->objects.size();
@@ -143,7 +161,7 @@ void gfx::CScene3D::sortCalls(void) {
             // the tree. Also one would need some standard for special kind of tree - loose octrees? bitch?
             if(sceneNode->isVisible()) {
                 getNodeQueue().push(sceneNode);
-                printf("going to draw %s\n", sceneNode->getNameStr());
+                //printf("going to draw %s\n", sceneNode->getNameStr());
             }
             if(pDrawCall) {
                 if(!pDrawCall->getShaderProgram())
@@ -153,13 +171,20 @@ void gfx::CScene3D::sortCalls(void) {
             }
         }
     }
+
+    if(m_physicsWorld) {
+        m_physicsWorld->finishFrame();
+    }
 }
 
 /**
  * 
  */
 void gfx::CScene3D::render(void) {
-
+    // Calling underlying render function of the scene manager
+    // This uses the special node queue, which contains only visible scene nodes
+    // at the current render frame
+    // This node queue was updated in Scene3D::sortCalls
     CSceneManager::render();
     CShaderProgram *pProgram = static_cast<gfx::CShaderManager *>(m_pShaderMgr)->getCurrentProgram();
     pProgram->setUniform(FG_GFX_USE_TEXTURE, 0.0f);
@@ -202,7 +227,6 @@ gfx::CSceneNode *gfx::CScene3D::addFromModel(CModelResource* pModelRes,
         delete pNode;
         pNode = NULL;
     }
-    m_octree->insert(pNode);
     FG_LOG_DEBUG("GFX: Scene3D: Inserted object: '%s'", nameTag.c_str());
     return pNode;
 }
@@ -255,36 +279,56 @@ gfx::CSceneNode *gfx::CScene3D::addFromModel(const char *modelNameTag,
 void gfx::CScene3D::checkCollisions(const CSceneNode* sceneNode) {
     if(!sceneNode)
         return;
-    
+
+    if(m_physicsWorld) {
+        if(m_physicsWorld->hasMoreContacts() && m_physicsWorld->isGroundPlane()) {
+            // Create the ground plane data
+            const physics::CCollisionPlane& plane = m_physicsWorld->getGroundPlane();
+            // check collision with ground plane ?
+            physics::CCollisionBody *collisionBody = sceneNode->getCollisionBody();
+            if(collisionBody) {
+                collisionBody->checkCollision(plane, &m_physicsWorld->getCollisionData());
+            }
+        }
+    }
+
     m_octree->rewind();
     while(m_octree->next()) {
         SOctreeNode *treeNode = static_cast<SOctreeNode *>(m_octree->current());
         unsigned int objCount = treeNode->objects.size();
         float halfSize = static_cast<CLooseOctree *>(m_octree)->getLooseK() * m_octree->getWorldSize().x / (2 << treeNode->depth);
-        
+
         // First check to see if the object is completely outside the boundary
-	// of this node.
+        // of this node.
         const Vector3f delta = treeNode->center - sceneNode->getRefBoundingVolume().center;
         const float radius = sceneNode->getRefBoundingVolume().radius;
         const Vector3f diff = delta - radius;
         if(diff.x > halfSize || diff.y > halfSize || diff.z > halfSize) {
-            	// Object is completely outside the boundary of this
-		// node; don't bother checking contents.
+            // Object is completely outside the boundary of this
+            // node; don't bother checking contents.
             m_octree->skip();
             continue;
         }
-        
+
         for(unsigned int objIdx = 0; objIdx < objCount; objIdx++) {
             CSceneNode *childNode = treeNode->objects[objIdx];
             if(!childNode || childNode == sceneNode) {
                 continue;
             }
+            // Fast check for collision - checking nodes large sphere
             const fgBool isCollision = childNode->checkCollisionSphere(sceneNode);
-            if(isCollision) {
-                printf("*YES*  Collision occurred between: '%s'--'%s'\n", sceneNode->getNameStr(), childNode->getNameStr());
-            } else {
-                //printf("*NOPE* Collision occurred between: '%s'--'%s'\n", sceneNode->getNameStr(), childNode->getNameStr());
+            if(isCollision && m_physicsWorld->hasMoreContacts()) {
+                //printf("*YES*  Collision occurred between: '%s'--'%s'\n", sceneNode->getNameStr(), childNode->getNameStr());
+                {
+                    // #FIXME - physics fine collision detect / update
+                    physics::CCollisionBody *b1 = sceneNode->getCollisionBody();
+                    physics::CCollisionBody *b2 = childNode->getCollisionBody();
+                    if(b1 && b2) {
+                        // now can check fine collisions
+                        b1->checkCollision(b2, &m_physicsWorld->getCollisionData());
+                    }
+                }
             }
-        }                
-    }        
+        }
+    }
 }

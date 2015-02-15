@@ -24,6 +24,8 @@
 namespace fg {
     namespace gfx {
 
+        class CCamera;
+        
         /**
          * 
          */
@@ -52,6 +54,8 @@ namespace fg {
             unsigned int m_numParticles;
             /// Maximum number of the particles for this emitter 
             unsigned int m_maxCount;
+            /// Pointer to the camera, so the particles can be rotated properly
+            CCamera *m_pCamera;
 
         public:
             /**
@@ -63,6 +67,7 @@ namespace fg {
              * 
              */
             virtual ~CParticleEmitter();
+            
             /**
              * 
              * @param maxCount
@@ -74,6 +79,7 @@ namespace fg {
                     m_maxCount = maxCount;
                 }
             }
+            
             /**
              * 
              * @return 
@@ -107,6 +113,23 @@ namespace fg {
 
             /**
              * 
+             * @param pCamera
+             */
+            inline void setCamera(CCamera *pCamera) {
+                m_pCamera = pCamera;
+            }
+            /**
+             * 
+             * @return 
+             */
+            inline CCamera *getCamera(void) const {
+                return m_pCamera;
+            }
+            
+            ////////////////////////////////////////////////////////////////////
+            
+            /**
+             * 
              * @param which
              */
             void removeParticle(const unsigned int which);
@@ -128,6 +151,11 @@ namespace fg {
              * 
              */
             virtual void calculate(void);
+            
+            /**
+             * 
+             */
+            virtual void draw(void);
 
         };
     };

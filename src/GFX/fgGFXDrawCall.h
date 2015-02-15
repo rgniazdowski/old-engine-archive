@@ -50,6 +50,10 @@ typedef unsigned int fgGfxDrawCallType;
 namespace fg {
     namespace gfx {
 
+        const unsigned int DEFAULT_Z_INDEX = 127; // center / zero
+        const unsigned int MIN_Z_INDEX = 0; // it's like -256
+        const unsigned int MAX_Z_INDEX = 255; // +127
+
         /**
          * Draw call append mode
          */
@@ -59,7 +63,7 @@ namespace fg {
             ///
             DRAW_APPEND_RELATIVE
         };
-        
+
         class CDrawingBatch;
 
         /**
@@ -249,7 +253,7 @@ namespace fg {
              * Sets the Z index to specified value
              * @param zIndex
              */
-            void setZIndex(const int zIndex);
+            void setZIndex(const int zIndex = DEFAULT_Z_INDEX);
             /**
              * Increments by 1 the Z index
              */
@@ -300,38 +304,38 @@ namespace fg {
              * Sets the pointer to given MVP matrix
              * @param MVP
              */
-            void setMVP(CMVPMatrix *MVP = NULL);
+            void setMVP(CMVPMatrix* MVP = NULL);
             /**
              * Returns the pointer to currently used MVP matrix
              * @return 
              */
-            CMVPMatrix * getMVP(void) const;
+            CMVPMatrix* getMVP(void) const;
 
             // Can be null, which would mean that this draw call does not care about such thing
             // However it should be avoided. Shader program knows if it's being currently used.
             // Also only through shader manager given shader program can be set as active.
-            void setShaderProgram(fg::gfx::CShaderProgram *pProgram = NULL);
+            void setShaderProgram(gfx::CShaderProgram* pProgram = NULL);
             /**
              * Returns the currently used shader program for this draw call
              * @return 
              */
-            fg::gfx::CShaderProgram * getShaderProgram(void) const;
+            gfx::CShaderProgram* getShaderProgram(void) const;
 
             /**
              * Sets the texture pointer
              * @param textureID
              */
-            void setTexture(const fgGfxTextureID & textureID);
+            void setTexture(const fgGfxTextureID& textureID);
             /**
              * Returns the texture ID reference
              * @return 
              */
-            fgGfxTextureID const & getTexture(void) const;
+            fgGfxTextureID const& getTexture(void) const;
             /**
              * Returns the texture ID reference
              * @return 
              */
-            fgGfxTextureID & getTexture(void);
+            fgGfxTextureID& getTexture(void);
 
             /**
              * Clear the buffers

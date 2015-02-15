@@ -16,14 +16,16 @@
 #ifndef FG_INC_GFX_BASE_TREE
     #define FG_INC_GFX_BASE_TREE
     #define FG_INC_GFX_BASE_TREE_BLOCK
-
-    #include "fgGFXSceneNode.h"
+    
     #include "fgGFXTreeNode.h"
+    #include "fgBool.h"
 
     #include <stack>
 
 namespace fg {
     namespace gfx {
+        
+        class CSceneNode;
 
         /**
          *

@@ -33,7 +33,7 @@ m_color(1.0f, 1.0f, 1.0f, 1.0f),
 m_relMove(0.0f, 0.0f, 0.0f),
 m_scissorBox(0, 0, 0, 0),
 m_fastCmp(4, fg::util::FastCmp::CMP_DATA_32),
-m_zIndex(0),
+m_zIndex(50),
 m_isManaged(0) {
     m_attrData[FG_GFX_ATTRIB_POS_LOCATION].index = FG_GFX_ATTRIB_POS_LOCATION;
     m_attrData[FG_GFX_ATTRIB_POS_LOCATION].size = 3;
@@ -79,6 +79,7 @@ m_isManaged(0) {
     m_vecData3v->reserve(2);
     m_vecData4v->reserve(2);
 
+    setZIndex(m_zIndex);
     setupVertexData(m_attribMask);
 }
 
@@ -163,6 +164,7 @@ void gfx::CDrawCall::setupFromMesh(const SMeshBase* pMesh) {
         return;
     pMesh->setupAttributes(m_attrData);
     m_drawCallType = FG_GFX_DRAW_CALL_MESH;
+    m_primMode = pMesh->primMode;
     m_attribMask = pMesh->attribMask();
     m_fastCmp.setPart(0, (util::FastCmp::data_type_32)m_attribMask);
     if(pMesh->hasIndices()) {
@@ -306,8 +308,12 @@ void gfx::CDrawCall::setRelMove(const Vector2f& relMove) {
  * @param zIndex
  */
 void gfx::CDrawCall::setZIndex(const int zIndex) {
-    m_zIndex = zIndex;
-    m_fastCmp.setPart(2, (fg::util::FastCmp::data_type_32)m_zIndex);
+    if(zIndex < 0) {
+        m_zIndex = DEFAULT_Z_INDEX + zIndex;
+    } else {
+        m_zIndex = zIndex;
+    }
+    m_fastCmp.setPart(3, (fg::util::FastCmp::data_type_32)m_zIndex);
 }
 
 /*
@@ -315,7 +321,7 @@ void gfx::CDrawCall::setZIndex(const int zIndex) {
  */
 void gfx::CDrawCall::upZIndex(void) {
     m_zIndex++;
-    m_fastCmp.setPart(2, (fg::util::FastCmp::data_type_32)m_zIndex);
+    m_fastCmp.setPart(3, (fg::util::FastCmp::data_type_32)m_zIndex);
 }
 
 /*
@@ -323,7 +329,7 @@ void gfx::CDrawCall::upZIndex(void) {
  */
 void gfx::CDrawCall::downZIndex(void) {
     m_zIndex--;
-    m_fastCmp.setPart(2, (fg::util::FastCmp::data_type_32)m_zIndex);
+    m_fastCmp.setPart(3, (fg::util::FastCmp::data_type_32)m_zIndex);
 }
 
 /*
@@ -409,9 +415,9 @@ gfx::CMVPMatrix *gfx::CDrawCall::getMVP(void) const {
 void gfx::CDrawCall::setShaderProgram(gfx::CShaderProgram *pProgram) {
     m_program = pProgram;
     if(m_program)
-        m_fastCmp.setPart(3, (fg::util::FastCmp::data_type_32)m_program->getHandle().getIndex());
+        m_fastCmp.setPart(2, (fg::util::FastCmp::data_type_32)m_program->getHandle().getIndex());
     else
-        m_fastCmp.setPart(3, (fg::util::FastCmp::data_type_32)0);
+        m_fastCmp.setPart(2, (fg::util::FastCmp::data_type_32)0);
 
 }
 
@@ -555,8 +561,8 @@ void gfx::CDrawCall::draw(void) {
     if(applyAttributeData()) {
         // attribute data array is set
         // unsigned short is mainly because of ES
-        if(m_drawingInfo.buffer) {
-            glDrawElements((fgGFXenum)m_primMode, m_drawingInfo.count, GL_UNSIGNED_SHORT, m_drawingInfo.indices.pointer);
+        if(m_drawingInfo.buffer || m_drawingInfo.indices.pointer) {
+            glDrawElements((fgGFXenum)m_primMode, m_drawingInfo.count, GL_UNSIGNED_SHORT, m_drawingInfo.indices.offset);
         } else {
             // #FIXME
             glDrawArrays((fgGFXenum)m_primMode, 0, m_drawingInfo.count);

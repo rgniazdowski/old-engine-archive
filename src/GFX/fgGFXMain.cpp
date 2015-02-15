@@ -23,6 +23,7 @@
 #include "Resource/fgResourceManager.h"
 #include "Event/fgEventManager.h"
 #include "Util/fgProfiling.h"
+#include "Physics/fgCycloneCoreMath.h"
 
 #if defined(FG_USING_MARMALADE)
 #include "s3e.h"
@@ -255,6 +256,7 @@ void gfx::CGfxMain::setupLoader(void) {
     if(!m_textureMgr->isInit())
         return;
     resource::CResourceManager *pResourceMgr = static_cast<resource::CResourceManager *>(m_pResourceMgr);
+    /// #FIXME - builtin texture names... unacceptable
     //
     // Splash texture load and upload - #FIXME - splash texture names from config!
     //
@@ -402,14 +404,9 @@ void gfx::CGfxMain::display(void) {
  *
  */
 void gfx::CGfxMain::render(void) {
-    //m_gfxContext->scissor(100,100,200,300);
-    static float offset = 0.0f;
     static gfx::CModelResource *cobraBomber = NULL;
-
-    static float rotxyz = 0.0f;
-    static bool loadModel = true;
     glm::mat4 Model;
-
+    
     if(!m_mainWindow || !m_gfxContext) {
         FG_LOG_ERROR("Main window / context is NULL");
         return;
@@ -417,7 +414,6 @@ void gfx::CGfxMain::render(void) {
     fgGLError();
     m_mainWindow->clearColor();
     resource::CResourceManager *rm = NULL;
-    static int a[10] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 #if defined(FG_USING_SDL2)
     const Uint8 *state = SDL_GetKeyboardState(NULL);
 #endif
@@ -426,7 +422,6 @@ void gfx::CGfxMain::render(void) {
     std::string sSkyBoxEasyShaderName("sSkyBoxEasy");
     std::string modelname("CobraBomber");
 
-    offset = fmodf(offset + 0.2f, 2 * 3.141f);
     if(!m_textureMgr || !m_shaderMgr) {
         FG_LOG_ERROR("No texture / shader manager");
         return;
@@ -438,26 +433,12 @@ void gfx::CGfxMain::render(void) {
         return;
     }
 
-#if defined(FG_USING_SDL2)
-    if(state[SDL_SCANCODE_SPACE] == SDL_PRESSED && !a[6]) {
-        a[6]++;
-        loadModel = !loadModel;
-    } else if(state[SDL_SCANCODE_SPACE] == SDL_RELEASED) {
-        a[6] = 0;
+    if(!cobraBomber) {
+        cobraBomber = (gfx::CModelResource *)rm->get(modelname);
     }
-#endif
-#if defined(FG_USING_MARMALADE)
-    if(s3eKeyboardGetState(s3eKeySpace) & S3E_KEY_STATE_PRESSED) {
-        loadModel = !loadModel;
-    }
-#endif
-    if(loadModel) {
-        if(!cobraBomber)
-            cobraBomber = (gfx::CModelResource *)rm->get(modelname);
-        if(!cobraBomber) {
-            printf("NO MODEL\n");
-            return;
-        }
+    if(!cobraBomber) {
+        //printf("NO MODEL\n");
+        return;
     }
 
     m_3DScene->getCamera()->setDT((float)FG_HardwareState->getDelta());
@@ -490,116 +471,38 @@ void gfx::CGfxMain::render(void) {
         m_3DScene->getCamera()->moveRight();
 
 #endif
-
     m_3DScene->getCamera()->update();
     m_3DScene->getMVP()->setCamera(m_3DScene->getCamera());
     m_3DScene->getMVP()->setPerspective(45.0f, m_mainWindow->getAspect());
-    Matrix4f modelMat;
-    gfx::CShaderProgram *program = m_shaderMgr->get(sSkyBoxEasyShaderName);
-    program->setUniform(FG_GFX_USE_TEXTURE, 1.0f);
-    program->setUniform(FG_GFX_CUBE_TEXTURE, (fgGFXint)0);
+    m_3DScene->setSkyBoxShader(sSkyBoxEasyShaderName); // #FIXME #FUBAR
 
-    if(!program) {
-        FG_LOG_ERROR("Cant access sSkyBoxEasy shader program.");
-        return;
-    }
-    m_shaderMgr->useProgram(program);
+    //
+    // OH MY GOD HOW THIS SUX #FIXME
+    //
     if(true) {
-#if defined(FG_DEBUG)
-        if(g_fgDebugConfig.isDebugProfiling) {
-            profile::g_debugProfiling->begin("GFX::drawSkyBox");
-        }
-#endif
-        //
-        // #FIXME #TODO - that kind of SkyBox display sucks ass beyond recognition
-        //
         // Load proper texture
-#if defined(FG_DEBUG)
-        if(g_fgDebugConfig.isDebugProfiling) {
-            profile::g_debugProfiling->begin("GFX::drawSkyBoxTexResGet");
-        }
-#endif  
         static resource::CResource *pResourceX = NULL;
         if(!pResourceX)
             pResourceX = static_cast<resource::CResourceManager *>(m_pResourceMgr)->get("PurpleNebulaCube");
-#if defined(FG_DEBUG)
-        if(g_fgDebugConfig.isDebugProfiling) {
-            profile::g_debugProfiling->end("GFX::drawSkyBoxTexResGet");
-        }
-#endif
         if(pResourceX->getResourceType() == resource::TEXTURE) {
             gfx::CTexture *pTexture = static_cast<gfx::CTexture *>(pResourceX);
             if(pTexture) {
                 fgGfxTextureID &texID = pTexture->getRefGfxID();
-
-                //m_gfxContext->activeTexture(GL_TEXTURE1); // ? ? ? 
-                m_gfxContext->bindTexture(texID);
-
-                modelMat = math::translate(Matrix4f(), m_3DScene->getCamera()->getRefEye());
-                float skyboxScale = FG_GFX_PERSPECTIVE_ZFAR_DEFAULT * 1.1f;
-                modelMat = math::scale(modelMat, Vector3f(skyboxScale, skyboxScale, skyboxScale));
-                m_3DScene->getMVP()->calculate(modelMat);
-                program->setUniform(m_3DScene->getMVP());
-                m_gfxContext->frontFace(GL_CW); // #FUBAR
-                //m_gfxContext->setCullFace(FG_FALSE);
-                CPrimitives::drawSkyBoxOptimized();
-                m_gfxContext->frontFace(GL_CCW);
-                //m_gfxContext->setCullFace(FG_TRUE);
+                m_3DScene->getSkyBox()->setTexture(texID);
             }
         }
-#if defined(FG_DEBUG)
-        if(g_fgDebugConfig.isDebugProfiling) {
-            profile::g_debugProfiling->end("GFX::drawSkyBox");
-        }
-#endif
     }
 
-    rotxyz += 0.0094525f;
-    if(rotxyz > M_PI * 2.0f)
-        rotxyz = 0.0f;
-
-    modelMat = math::translate(Matrix4f(), Vector3f(yolo_posx, yolo_posy * 0.0f, yolo_posy));
-    modelMat = math::rotate(modelMat, rotxyz, Vector3f(1.0f, 1.0f, 1.0f)); //math::translate(fgMatrix4f(1.0f), Vector3f(0.0f, 0.0f, -5.0f));
-
-    Vector4f translation = modelMat[3];
-    //printf("Position: %.2f %.2f %.2f %.2f\n", translation[0], translation[1], translation[2], translation[3]);
-    
-    program = m_shaderMgr->get(sPlainEasyShaderName);
-
-    if(!program) {
+    CShaderProgram *sPlainEasyProgram = m_shaderMgr->get(sPlainEasyShaderName);
+    if(!sPlainEasyProgram) {
         FG_LOG_ERROR("Cant access sPlainEasy shader program.");
         return;
     }
-    m_shaderMgr->useProgram(program);
-    program->setUniform(FG_GFX_USE_TEXTURE, 1.0f);
-    program->setUniform(FG_GFX_PLAIN_TEXTURE, (fgGFXint)0);
+    m_shaderMgr->useProgram(sPlainEasyProgram);
+    sPlainEasyProgram->setUniform(FG_GFX_USE_TEXTURE, 1.0f);
+    sPlainEasyProgram->setUniform(FG_GFX_PLAIN_TEXTURE, (fgGFXint)0);
 
-    // #FIXME - this of course needs to be somewhere else 
-    if(cobraBomber && m_3DScene) {
-        if(!m_3DScene->count()) {
-            //m_3DScene->addFromModel(cobraBomber, std::string("PlayerFighter"));
-            m_3DScene->addFromModel(cobraBomber, std::string("PlayerEnemy"));
         }
-    }
-    static float rot1 = 0.0f;
-    static float radius1 = 200.0f;
-    // #FIXME
-    if(m_3DScene) {
-        gfx::CSceneNode *obj1 = m_3DScene->get("PlayerFighter");
-        if(obj1) {
-            obj1->setModelMatrix(modelMat);
-        }
-        gfx::CSceneNode *obj2 = m_3DScene->get("PlayerEnemy");
-        if(obj2) {
-            rot1 += 0.000127f * (float)FG_HardwareState->getDelta();
-            if(rot1 > M_PI * 2.0f)
-                rot1 = 0.0f;
-            float rx = cos(rot1) * radius1;
-            float rz = sin(rot1) * radius1;
-
-            modelMat = math::translate(Matrix4f(), Vector3f(rx, 20.0f, rz));
-            modelMat = math::rotate(modelMat, (float)M_PI / 2.0f + rot1, Vector3f(1.0f, 1.0f, 1.0f));
-            obj2->setModelMatrix(modelMat);
         }
     }
 
@@ -608,76 +511,42 @@ void gfx::CGfxMain::render(void) {
         profile::g_debugProfiling->begin("GFX::3DScene::render");
     }
 #endif
+    // 
     // RENDER THE 3D SCENE
+    //    
     m_3DScene->render();
+
 #if defined(FG_DEBUG)
     if(g_fgDebugConfig.isDebugProfiling) {
         profile::g_debugProfiling->end("GFX::3DScene::render");
     }
 #endif
-
     //////////////////////////////////////////////////////////////
     // 2D LAYER DRAWING TEST - NEEDS TO WORK DIFFERENTLY
     // THIS IS FOR GUI DRAWING - SPECIAL ORTHO SHADER
     //////////////////////////////////////////////////////////////
-    gfx::CShaderProgram *program2 = m_shaderMgr->get(sOrthoEasyShaderName);
-    if(!program2) {
+    gfx::CShaderProgram *sOrthoEasyProgram = m_shaderMgr->get(sOrthoEasyShaderName);
+    if(!sOrthoEasyProgram) {
         FG_LOG_ERROR("Cant access sOrthoEasy shader program.");
         return;
     }
-    m_shaderMgr->useProgram(program2);
-
-    gfx::CPlatform::context()->setBlend(FG_TRUE);
-#if defined(FG_USING_MARMALADE)
-    if(s3eKeyboardGetState(s3eKeyLeft) & S3E_KEY_STATE_DOWN) {
-        yolo_posx -= 10.0f;
-    }
-    if(s3eKeyboardGetState(s3eKeyRight) & S3E_KEY_STATE_DOWN) {
-        yolo_posx += 10.0f;
-    }
-    if(s3eKeyboardGetState(s3eKeyUp) & S3E_KEY_STATE_DOWN) {
-        yolo_posy -= 10.0f;
-    }
-    if(s3eKeyboardGetState(s3eKeyDown) & S3E_KEY_STATE_DOWN) {
-        yolo_posy += 10.0f;
-    }
-    if(s3eKeyboardGetState(s3eKeyRightShift) & S3E_KEY_STATE_DOWN) {
-        //        scale += 0.01f;
-    }
-#else
-    if(state[SDL_SCANCODE_LEFT] == SDL_PRESSED) {
-        yolo_posx -= 10.0f;
-    }
-    if(state[SDL_SCANCODE_RIGHT] == SDL_PRESSED) {
-        yolo_posx += 10.0f;
-    }
-    if(state[SDL_SCANCODE_UP] == SDL_PRESSED) {
-        yolo_posy -= 10.0f;
-    }
-    if(state[SDL_SCANCODE_DOWN] == SDL_PRESSED) {
-        yolo_posy += 10.0f;
-    }
-
-#endif
-    Model = math::translate(Model, Vec3f(yolo_posx * 1.0f, yolo_posy * 1.0f, 0.0f));
-    Model = math::scale(Model, Vec3f(guiScale, guiScale, 0.0f));
-
+    m_shaderMgr->useProgram(sOrthoEasyProgram);
+    m_gfxContext->setBlend(FG_TRUE);
     m_2DScene->getMVP()->setOrtho(0, (float)m_mainWindow->getWidth(), (float)m_mainWindow->getHeight(), 0.0f);
-    //m_2DScene->getMVP()->calculate(Model);
-    //m_2DScene->getMVP()->update();
-    //program2->setUniform(MVP);
-
-    gfx::CPlatform::context()->blendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-    //printf("fgGfx2DScene::render(void)\n");
     m_2DScene->render();
+    m_gfxContext->blendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+    m_gfxContext->setBlend(FG_FALSE);
 
     // #FIXME ! TOTAL FUBAR SITUATION ! OMG ! OH MY !
-    gfx::CMVPMatrix mvp_lol;
-    gfx::CMVPMatrix *MVP = &mvp_lol;
+    Model = math::translate(Model, Vec3f(0.0f, 0.0f, 0.0f));
+    Model = math::scale(Model, Vec3f(guiScale, guiScale, 0.0f));
+    CMVPMatrix mvp_lol;
+    CMVPMatrix *MVP = &mvp_lol;
     MVP->identity();
     MVP->setOrtho(0, (float)m_mainWindow->getWidth(), (float)m_mainWindow->getHeight(), 0.0f);
     MVP->calculate(Model);
-    program2->setUniform(MVP);
+    sOrthoEasyProgram->setUniform(MVP);
+    m_gfxContext->setBlend(FG_TRUE);
     m_gfxContext->blendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     m_gfxContext->scissor(0, 0, m_mainWindow->getWidth(), m_mainWindow->getHeight()); // #THA FUCK?
 }
@@ -694,7 +563,7 @@ fgBool gfx::CGfxMain::setupResourceManager(fg::base::CManager *pResourceManager)
         return FG_FALSE;
     }
     if(!m_textureMgr)
-        m_textureMgr = new gfx::CTextureManager(pResourceManager);
+        m_textureMgr = new CTextureManager(pResourceManager);
     else
         m_textureMgr->setResourceManager(pResourceManager);
     m_pResourceMgr = pResourceManager;
@@ -704,7 +573,8 @@ fgBool gfx::CGfxMain::setupResourceManager(fg::base::CManager *pResourceManager)
         m_2DScene->setResourceManager(m_pResourceMgr);
     if(m_particleSystem) {
         m_particleSystem->setResourceManager(m_pResourceMgr);
-        m_particleSystem->setSceneManager(m_2DScene);
+        //m_particleSystem->setSceneManager(m_2DScene);
+        m_particleSystem->setSceneManager(m_3DScene); // Particle system working in 3D space
         m_particleSystem->initialize();
     }
     fg::base::CManager *pEventMgr = static_cast<resource::CResourceManager *>(m_pResourceMgr)->getEventManager();
@@ -827,8 +697,8 @@ fgBool gfx::CGfxMain::resourceCreatedHandler(fg::event::CArgumentList * argv) {
 
     if(pResource->getResourceType() != resource::MODEL3D)
         return FG_FALSE;
-    gfx::CModelResource *pModel = (gfx::CModelResource *)pResource;
-    gfx::CModelResource::ModelShapes &shapes = pModel->getRefShapes();
+    CModelResource *pModel = (CModelResource *)pResource;
+    CModelResource::ModelShapes &shapes = pModel->getRefShapes();
     int n = shapes.size();
     if(n) {
         FG_LOG_DEBUG("GFX: Uploading static vertex data to VBO for model: '%s'", pModel->getNameStr());
@@ -839,7 +709,7 @@ fgBool gfx::CGfxMain::resourceCreatedHandler(fg::event::CArgumentList * argv) {
             continue;
         if(!shape->mesh)
             continue;
-        if(!gfx::CPlatform::context()->isBuffer(shape->mesh->getPtrVBO())) {
+        if(!CPlatform::context()->isBuffer(shape->mesh->getPtrVBO())) {
             FG_LOG_DEBUG("GFX: Uploading static vertex data to VBO for shape: '%s'", shape->name.c_str());
             shape->mesh->genBuffers();
         }
