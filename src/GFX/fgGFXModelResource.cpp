@@ -81,6 +81,9 @@ void gfx::CModelResource::clear(void) {
  * @return 
  */
 fgBool gfx::CModelResource::setModelTypeFromFilePath(std::string &path) {
+    if(m_modelType == MODEL_BUILTIN) {
+        return FG_TRUE;
+    }
     const char *ext = path::fileExt(path.c_str());
     if(!ext)
         return FG_FALSE;
@@ -93,30 +96,16 @@ fgBool gfx::CModelResource::setModelTypeFromFilePath(std::string &path) {
     return FG_TRUE;
 }
 
-/*
- *
- */
-fgBool gfx::CModelResource::loadWavefrontObj(void) {
-    if(getFilePath(m_quality).empty()) {
-        return FG_FALSE;
-    }
-    std::string err;
-    std::string mtl_basepath = fg::path::dirName(getFilePath());
-    err = fgTinyObj::LoadObj(this->m_shapes, getFilePathStr(m_quality), mtl_basepath.c_str(), m_isInterleaved);
-    if(!err.empty()) {
-        log::PrintError("Error while loading model: %s", err.c_str());
-        this->m_shapes.clear();
-        return FG_FALSE;
-    }
+fgBool gfx::CModelResource::refreshInternalData(void) {
     memset(m_numData, 0, sizeof (m_numData));
-    m_isReady = FG_FALSE;
     m_size = 0;
-    modelShapesItor begin, end, itor;
+    ModelShapesItor begin, end, itor;
     begin = this->m_shapes.begin();
     end = this->m_shapes.end();
     itor = begin;
     if(this->m_shapes.empty()) {
-        log::PrintError("There is no shapes in model file: '%s'", getFilePathStr());
+        FG_LOG_ERROR("There is no shapes in model file: '%s'", getFilePathStr());
+        return FG_FALSE;
     }
     for(; itor != end; itor++) {
         m_numShapes++;
@@ -172,6 +161,67 @@ fgBool gfx::CModelResource::loadWavefrontObj(void) {
     return FG_TRUE;
 }
 
+/**
+ * 
+ * @param shape
+ */
+void gfx::CModelResource::addShape(SShape *shape) {
+    if(!shape)
+        return;
+    if(shape->name.empty()) {
+        shape->name = "XShape1";
+    }
+    m_shapes.push_back(shape);
+}
+
+/**
+ * 
+ * @param mesh
+ * @param name
+ */
+void gfx::CModelResource::addShape(SMeshBase *mesh, const char *name) {
+    if(!mesh || !name) {
+        return;
+    }
+    if(!name[0]) {
+        return;
+    }
+
+    SShape *shape = new SShape();
+    shape->name = name;
+    shape->mesh = mesh;
+    m_shapes.push_back(shape);
+}
+
+/**
+ * 
+ * @param mesh
+ * @param name
+ */
+void gfx::CModelResource::addShape(SMeshBase *mesh, const std::string& name) {
+ }
+
+/**
+ * 
+ * @return 
+ */
+fgBool gfx::CModelResource::loadWavefrontObj(void) {
+    if(getFilePath(m_quality).empty()) {
+        return FG_FALSE;
+    }
+    std::string err;
+    std::string mtl_basepath = fg::path::dirName(getFilePath());
+    err = fgTinyObj::LoadObj(this->m_shapes, getFilePathStr(m_quality), mtl_basepath.c_str(), m_isInterleaved);
+    if(!err.empty()) {
+        FG_LOG_ERROR("Error while loading model: '%s'", err.c_str());
+        this->m_shapes.clear();
+        return FG_FALSE;
+    }
+    m_isReady = FG_FALSE;
+    refreshInternalData();
+    return FG_TRUE;
+}
+
 /*
  * Create function loads/interprets data from file in ROM and place it in RAM memory.
  */
@@ -180,16 +230,18 @@ fgBool gfx::CModelResource::create(void) {
         return FG_TRUE;
     }
     m_size = 0;
-    if(getFilePath(m_quality).empty()) {
-        FG_LOG_ERROR("%s(%d): file path is empty on create", fg::path::fileName(__FILE__), __LINE__ - 1);
-        // #TODO error handling / reporting
-        return FG_FALSE;
-    }
-    setModelTypeFromFilePath();
-    if(m_modelType == MODEL_INVALID) {
-        FG_LOG_ERROR("%s(%d): model file type is invalid", fg::path::fileName(__FILE__), __LINE__ - 1);
-        // #TODO error handling / reporting
-        return FG_FALSE;
+    if(m_modelType != MODEL_BUILTIN) {
+        if(getFilePath(m_quality).empty()) {
+            FG_LOG_ERROR("%s(%d): file path is empty on create", fg::path::fileName(__FILE__), __LINE__ - 1);
+            // #TODO error handling / reporting
+            return FG_FALSE;
+        }
+        setModelTypeFromFilePath();
+        if(m_modelType == MODEL_INVALID) {
+            FG_LOG_ERROR("%s(%d): model file type is invalid", fg::path::fileName(__FILE__), __LINE__ - 1);
+            // #TODO error handling / reporting
+            return FG_FALSE;
+        }
     }
     switch(m_modelType) {
         case MODEL_CUSTOM:
@@ -229,6 +281,15 @@ fgBool gfx::CModelResource::create(void) {
         case MODEL_X:
             break;
 
+        case MODEL_BUILTIN:
+            if(m_shapes.size()) {
+                // It means that there is some shape in the array.
+                // With this model type it is probably custom allocated
+                refreshInternalData();
+                m_isReady = FG_TRUE;
+            }
+            break;
+
         default:
             return FG_FALSE;
             break;
@@ -240,7 +301,7 @@ fgBool gfx::CModelResource::create(void) {
 }
 
 /*
- * Destroy all loaded data including additional metadata (called with deconstructor)
+ * Destroy all loaded data including additional metadata (called with destructor)
  */
 void gfx::CModelResource::destroy(void) {
     dispose();
@@ -251,7 +312,10 @@ void gfx::CModelResource::destroy(void) {
  * Reloads any data, recreates the resource (refresh)
  */
 fgBool gfx::CModelResource::recreate(void) {
-    dispose();
+    if(m_modelType != ModelType::MODEL_BUILTIN) {
+        // only dispose on reacreate when modelType is not BuiltIn
+        dispose();
+    }
     return create();
 }
 
@@ -279,7 +343,7 @@ void gfx::CModelResource::dispose(void) {
  * Check if resource is disposed (not loaded yet or disposed after)
  */
 fgBool gfx::CModelResource::isDisposed(void) const {
-    return (fgBool)(m_shapes.empty());
+    return (fgBool)(/*m_shapes.empty() &&*/!m_isReady && !m_size);
 }
 
 /**

@@ -8,17 +8,21 @@
  *******************************************************/
 
 #include "fgBuildConfig.h"
+#include "fgDebugConfig.h"
 #include "fgCommon.h"
+
 #include "fgGFXMain.h"
 #include "fgGFXMVPMatrix.h"
 #include "fgGFXModelResource.h"
+#include "fgGFXErrorCodes.h"
+#include "fgGFXPrimitives.h"
+#include "fgGFXDrawingBatch.h"
+
 #include "Textures/fgTextureResource.h"
 #include "Hardware/fgHardwareState.h"
 #include "Resource/fgResourceManager.h"
 #include "Event/fgEventManager.h"
-#include "fgGFXErrorCodes.h"
 #include "Util/fgProfiling.h"
-#include "fgDebugConfig.h"
 
 #if defined(FG_USING_MARMALADE)
 #include "s3e.h"
@@ -26,15 +30,14 @@
 #endif
 
 #include "fgLog.h"
-#include "fgGFXPrimitives.h"
-#include "fgGFXDrawingBatch.h"
+
 float guiScale = 1.0f;
 float yolo_posx = 0;
 float yolo_posy = 0;
 
 using namespace fg;
- 
-/*
+
+/**
  *
  */
 gfx::CGfxMain::CGfxMain() :
@@ -189,9 +192,58 @@ fgBool gfx::CGfxMain::initGFX(void) {
         m_loader.setMainWindow(m_mainWindow);
         FG_LOG_DEBUG("GFX: Subsystem initialized successfully");
     }
+
     float t2 = timesys::ms();
     FG_LOG_DEBUG("GFX: Initialized in %.2f seconds", (t2 - t1) / 1000.0f);
     return status;
+}
+
+/** 
+ * 
+ */
+void gfx::CGfxMain::generateBuiltInData(void) {
+    if(!m_pResourceMgr) {
+        // ERROR
+        return;
+    }
+    /// Will now create built in model shapes
+    SMeshAoS *builtin_cube_mesh = new SMeshAoS();
+    SShape *builtin_cube_shape = new SShape();
+    CPrimitives::createCubeMesh(builtin_cube_mesh);
+    CModel *cubeModel = new CModelResource();
+    cubeModel->setModelType(ModelType::MODEL_BUILTIN);
+    cubeModel->setName("builtinCube1x1");
+    builtin_cube_shape->name = "builtinCube1x1";
+    builtin_cube_shape->mesh = builtin_cube_mesh;
+    builtin_cube_shape->material = new SMaterial();
+    builtin_cube_shape->material->diffuseTexName = "hexangle.jpg";
+    builtin_cube_shape->material->ambientTexName = "hexangle.jpg";
+    cubeModel->addShape(builtin_cube_shape);
+    static_cast<resource::CResourceManager *>(m_pResourceMgr)->request("hexangle.jpg");
+    if(!static_cast<resource::CResourceManager *>(m_pResourceMgr)->insert(cubeModel)) {
+        static_cast<resource::CResourceManager *>(m_pResourceMgr)->remove(cubeModel);
+        delete cubeModel;
+    }
+    // Should not call create manually on the 3D Model
+    // This wont call the function for VBO upload
+    //cubeModel->create();
+
+    SMeshAoS *builtin_sphere_mesh = new SMeshAoS();
+    SShape *builtin_sphere_shape = new SShape();
+    CPrimitives::createSphereMesh(builtin_sphere_mesh, 16, 16);
+    CModel *sphereModel = new CModelResource();
+    sphereModel->setModelType(ModelType::MODEL_BUILTIN);
+    sphereModel->setName("builtinSphere");
+    builtin_sphere_shape->name = "builtinSphere";
+    builtin_sphere_shape->mesh = builtin_sphere_mesh;
+    builtin_sphere_shape->material = new SMaterial();
+    builtin_sphere_shape->material->ambientTexName = "mars_1k_color.jpg";
+    sphereModel->addShape(builtin_sphere_shape);
+    static_cast<resource::CResourceManager *>(m_pResourceMgr)->request("mars_1k_color.jpg");
+    if(!static_cast<resource::CResourceManager *>(m_pResourceMgr)->insert(sphereModel)) {
+        static_cast<resource::CResourceManager *>(m_pResourceMgr)->remove(sphereModel);
+        delete sphereModel;
+    }
 }
 
 /**

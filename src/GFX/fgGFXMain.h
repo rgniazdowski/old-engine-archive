@@ -98,6 +98,11 @@ namespace fg {
              * Close the subsystem - destroy the graphics context
              */
             void closeGFX(void);
+            
+            /**
+             * 
+             */
+            void generateBuiltInData(void);
 
             /**
              * 

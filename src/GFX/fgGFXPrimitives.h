@@ -18,12 +18,14 @@
     #endif
 
     #include "fgGFXAABoundingBox.h"
-
-
-
+    
 namespace fg {
     namespace gfx {
 
+        struct SMeshBase;
+        struct SMeshAoS;
+        struct SMeshSoA;
+        
         /**
          *
          */
@@ -41,45 +43,140 @@ namespace fg {
          */
         class CPrimitives {
         public:
+
+            ////////////////////////////////////////////////////////////////////
+
+            /**
+             * 
+             * @param attrData
+             * @param drawingInfo
+             * @param attribMask
+             */
+            static void applyAttributeData(SAttributeData *attrData,
+                                           fgGfxDrawingInfo& drawingInfo,
+                                           const unsigned int attribMask);
+
+            /**
+             * 
+             * @param mesh
+             * @param rings
+             * @param sectors
+             * @param radius
+             */
+            static void createSphereMesh(SMeshBase *mesh,
+                                         unsigned int rings,
+                                         unsigned int sectors,
+                                         float radius = 1.0f);
+
+            /**
+             * 
+             * @param mesh
+             * @param scale
+             */
+            static void createCubeMesh(SMeshBase *mesh,
+                                       float scale = 1.0f);
+
+            /*static void drawVertexDataIndexed(const CVertexData *inputData,
+                                       const CVector<fgGFXushort>& indices,
+                                       const unsigned int attribMask = FG_GFX_POSITION_BIT | FG_GFX_UVS_BIT,
+                                       const PrimitiveMode mode = PrimitiveMode::TRIANGLES);*/
+
+            ////////////////////////////////////////////////////////////////////
+
+            static void drawSkyBoxOptimized(void);
+
+            /**
+             * 
+             * @param aabb
+             * @param color
+             */
+            static void drawAABBLines(const AABoundingBox3Df& aabb, const fgColor4f& color = fgColor4f(1.0f, 1.0f, 1.0f, 1.0f));
+
             static void drawSquare2D(void);
 
             static void drawRect2D(void);
 
-            static void drawSkyBoxOptimized(void);
+            ////////////////////////////////////////////////////////////////////
 
-            static void drawSphereLines(void);
-
-            static void drawAABBLines(const AABoundingBox3Df& aabb, const fgColor4f& color = fgColor4f(1.0f, 1.0f, 1.0f, 1.0f));
-
-            /*
-             *
+            /**
+             * 
+             * @param inputData
+             * @param attribMask
+             * @param mode
              */
-            static void drawArray2D(const CVertexData *inputData,
-                                    const unsigned int attribMask = FG_GFX_POSITION_BIT | FG_GFX_UVS_BIT,
-                                    const PrimitiveMode mode = PrimitiveMode::TRIANGLES);
+            static void drawVertexData(const CVertexData *inputData,
+                                       const unsigned int attribMask = FG_GFX_POSITION_BIT | FG_GFX_UVS_BIT,
+                                       const PrimitiveMode mode = PrimitiveMode::TRIANGLES);
 
-            /*
-             *
+            /**
+             * 
+             * @param inputData
+             * @param attribMask
+             * @param mode
              */
-            static void drawArray2D(const fg::CVector<Vertex2v> &inputData,
-                                    const unsigned int attribMask = FG_GFX_POSITION_BIT | FG_GFX_UVS_BIT,
-                                    const PrimitiveMode mode = PrimitiveMode::TRIANGLES);
+            static void drawArray(const fg::CVector<Vertex2v> &inputData,
+                                  const unsigned int attribMask = FG_GFX_POSITION_BIT | FG_GFX_UVS_BIT,
+                                  const PrimitiveMode mode = PrimitiveMode::TRIANGLES);
 
-            /*
-             *
+            /**
+             * 
+             * @param inputData
+             * @param attribMask
+             * @param mode
              */
-            static void drawArray2D(const fg::CVector<Vertex3v> &inputData,
-                                    const unsigned int attribMask = FG_GFX_POSITION_BIT | FG_GFX_NORMAL_BIT | FG_GFX_UVS_BIT,
-                                    const PrimitiveMode mode = PrimitiveMode::TRIANGLES);
+            static void drawArray(const fg::CVector<Vertex3v> &inputData,
+                                  const unsigned int attribMask = FG_GFX_POSITION_BIT | FG_GFX_NORMAL_BIT | FG_GFX_UVS_BIT,
+                                  const PrimitiveMode mode = PrimitiveMode::TRIANGLES);
 
-            /*
-             *
+            /**
+             * 
+             * @param inputData
+             * @param attribMask
+             * @param mode
              */
-            static void drawArray2D(const fg::CVector<Vertex4v> &inputData,
-                                    const unsigned int attribMask = FG_GFX_POSITION_BIT | FG_GFX_NORMAL_BIT | FG_GFX_UVS_BIT | FG_GFX_COLOR_BIT,
-                                    const PrimitiveMode mode = PrimitiveMode::TRIANGLES);
+            static void drawArray(const fg::CVector<Vertex4v> &inputData,
+                                  const unsigned int attribMask = FG_GFX_POSITION_BIT | FG_GFX_NORMAL_BIT | FG_GFX_UVS_BIT | FG_GFX_COLOR_BIT,
+                                  const PrimitiveMode mode = PrimitiveMode::TRIANGLES);
 
-            /* ***************** 2 component vertex struct - pos, uv ************ */
+            ////////////////////////////////////////////////////////////////////
+
+            /**
+             * 
+             * @param inputData
+             * @param indices
+             * @param attribMask
+             * @param mode
+             */
+            static void drawArrayIndexed(const fg::CVector<Vertex2v> &inputData,
+                                         const CVector<fgGFXushort>& indices,
+                                         const unsigned int attribMask = FG_GFX_POSITION_BIT | FG_GFX_UVS_BIT,
+                                         const PrimitiveMode mode = PrimitiveMode::TRIANGLES);
+
+            /**
+             * 
+             * @param inputData
+             * @param indices
+             * @param attribMask
+             * @param mode
+             */
+            static void drawArrayIndexed(const fg::CVector<Vertex3v> &inputData,
+                                         const CVector<fgGFXushort>& indices,
+                                         const unsigned int attribMask = FG_GFX_POSITION_BIT | FG_GFX_NORMAL_BIT | FG_GFX_UVS_BIT,
+                                         const PrimitiveMode mode = PrimitiveMode::TRIANGLES);
+
+            /**
+             * 
+             * @param inputData
+             * @param indices
+             * @param attribMask
+             * @param mode
+             */
+            static void drawArrayIndexed(const fg::CVector<Vertex4v> &inputData,
+                                         const CVector<fgGFXushort>& indices,
+                                         const unsigned int attribMask = FG_GFX_POSITION_BIT | FG_GFX_NORMAL_BIT | FG_GFX_UVS_BIT | FG_GFX_COLOR_BIT,
+                                         const PrimitiveMode mode = PrimitiveMode::TRIANGLES);
+
+            /* ***************** 2 component vertex struct - pos, uv **********/
     #if 0
             /*
              *

@@ -14,7 +14,7 @@
  */
 
 #ifndef FG_INC_GFX_TEXTUREID
-    #define	FG_INC_GFX_TEXTUREID
+    #define FG_INC_GFX_TEXTUREID
 
     #ifndef FG_INC_GFX_GL
         #include "fgGFXGL.h"

@@ -20,6 +20,11 @@
     #ifndef FG_INC_GFX_AA_BOUNDING_BOX
         #include "fgGFXAABoundingBox.h"
     #endif
+
+    #ifndef FG_INC_GFX_PRIMITIVES
+        #include "fgGFXPrimitives.h"
+    #endif
+
 /*
 Assuming the container has at least one element in it, you 
 need to get the address of the initial element of the 
@@ -50,6 +55,12 @@ namespace fg {
         struct SMeshBase : public CVertexData {
             ////
             AABoundingBox3Df aabb;
+            ////
+            PrimitiveMode primMode;
+            /**
+             * 
+             */
+            SMeshBase() : aabb(), primMode(PrimitiveMode::TRIANGLES) { }
             /**
              * 
              */
@@ -63,31 +74,6 @@ namespace fg {
              * @return 
              */
             virtual size_t getDataSize(void) = 0;
-            /**
-             * 
-             * @return 
-             */
-            virtual fgGFXuint getNumVertices(void) const = 0;
-            /**
-             * 
-             * @return 
-             */
-            virtual fgGFXuint getNumNormals(void) const = 0;
-            /**
-             * 
-             * @return 
-             */
-            virtual fgGFXuint getNumUVs(void) const = 0;
-            /**
-             * 
-             * @return 
-             */
-            virtual fgGFXuint getNumColors(void) const = 0;
-            /**
-             * 
-             * @return 
-             */
-            virtual fgGFXuint getNumIndices(void) const = 0;
             /**
              * 
              */
@@ -297,6 +283,12 @@ namespace fg {
              */
             virtual fgGFXuint getNumIndices(void) const {
                 return (fgGFXuint)indices.size();
+            }
+            /**
+             *
+             */
+            virtual void appendIndice(fgGFXushort indice) {
+                indices.push_back(indice);
             }
             /**
              * Append the vertex data (position)
@@ -707,6 +699,12 @@ namespace fg {
              */
             virtual fgGFXuint attribMask(void) const {
                 return vertices.attribMask();
+            }
+            /**
+             *
+             */
+            virtual void appendIndice(fgGFXushort indice) {
+                indices.push_back(indice);
             }
             /**
              * 

@@ -97,7 +97,7 @@ namespace fg {
              */
             virtual fgGFXvoid *getIndicesPointer(void) const {
                 return (fgGFXvoid *)0;
-            }
+            }            
             /**
              * 
              * @return 
@@ -196,8 +196,7 @@ namespace fg {
              * @param uv
              * @param color
              */
-            virtual void append(
-                                const Vector3f &pos,
+            virtual void append(const Vector3f &pos,
                                 const Vector3f &normal,
                                 const Vector2f &uv,
                                 const fgColor3f &color) = 0;
@@ -208,8 +207,7 @@ namespace fg {
              * @param uv
              * @param color
              */
-            virtual void append(
-                                const Vector3f &pos,
+            virtual void append(const Vector3f &pos,
                                 const Vector3f &normal,
                                 const Vector2f &uv,
                                 const fgColor4f &color) = 0;
@@ -241,7 +239,35 @@ namespace fg {
              * @return 
              */
             virtual fgGFXuint size(void) const = 0;
-
+            /**
+             * 
+             * @return 
+             */
+            virtual fgGFXuint getNumVertices(void) const = 0;
+            /**
+             * 
+             * @return 
+             */
+            virtual fgGFXuint getNumNormals(void) const = 0;
+            /**
+             * 
+             * @return 
+             */
+            virtual fgGFXuint getNumUVs(void) const = 0;
+            /**
+             * 
+             * @return 
+             */
+            virtual fgGFXuint getNumColors(void) const = 0;
+            /**
+             * 
+             * @return 
+             */
+            virtual fgGFXuint getNumIndices(void) const = 0;
+            /**
+             *
+             */
+            virtual void appendIndice(fgGFXushort indice) = 0;
             /**
              * 
              * @param newSize
@@ -355,8 +381,7 @@ namespace fg {
              * @param pos
              * @param uv
              */
-            virtual void append(
-                                const Vector3f &pos,
+            virtual void append(const Vector3f &pos,
                                 const Vector2f &uv) {
                 Vertex2v vertex;
                 vertex.position = pos;
@@ -369,8 +394,7 @@ namespace fg {
              * @param normal
              * @param uv
              */
-            virtual void append(
-                                const Vector3f &pos,
+            virtual void append(const Vector3f &pos,
                                 const Vector3f &normal,
                                 const Vector2f &uv) {
                 append(pos, uv);
@@ -382,8 +406,7 @@ namespace fg {
              * @param uv
              * @param color
              */
-            virtual void append(
-                                const Vector3f &pos,
+            virtual void append(const Vector3f &pos,
                                 const Vector3f &normal,
                                 const Vector2f &uv,
                                 const fgColor3f &color) {
@@ -396,8 +419,7 @@ namespace fg {
              * @param uv
              * @param color
              */
-            virtual void append(
-                                const Vector3f &pos,
+            virtual void append(const Vector3f &pos,
                                 const Vector3f &normal,
                                 const Vector2f &uv,
                                 const fgColor4f &color) {
@@ -407,7 +429,7 @@ namespace fg {
              * 
              */
             virtual void pop_back(void) {
-                fg::CVector<Vertex2v>::pop_back();
+                CVector<Vertex2v>::pop_back();
             }
             /**
              * 
@@ -420,7 +442,7 @@ namespace fg {
              * 
              */
             virtual void clear(void) {
-                fg::CVector<Vertex2v>::clear();
+                CVector<Vertex2v>::clear();
             }
             /**
              * 
@@ -438,14 +460,53 @@ namespace fg {
              * @return 
              */
             virtual fgGFXuint size(void) const {
-                return fg::CVector<Vertex2v>::size();
+                return CVector<Vertex2v>::size();
             }
+            /**
+             * 
+             * @return 
+             */
+            virtual fgGFXuint getNumVertices(void) const {
+                return CVector<Vertex2v>::size();
+            }
+            /**
+             * 
+             * @return 
+             */
+            virtual fgGFXuint getNumNormals(void) const {
+                return 0;
+            }
+            /**
+             * 
+             * @return 
+             */
+            virtual fgGFXuint getNumUVs(void) const {
+                return CVector<Vertex2v>::size();
+            }
+            /**
+             * 
+             * @return 
+             */
+            virtual fgGFXuint getNumColors(void) const {
+                return 0;
+            }
+            /**
+             * 
+             * @return 
+             */
+            virtual fgGFXuint getNumIndices(void) const {
+                return 0;
+            }
+            /**
+             *
+             */
+            virtual void appendIndice(fgGFXushort indice) { }
             /**
              * 
              * @param newSize
              */
             virtual void reserve(const unsigned int newSize) {
-                fg::CVector<Vertex2v>::reserve(newSize);
+                CVector<Vertex2v>::reserve(newSize);
             }
             /**
              * 
@@ -627,7 +688,7 @@ namespace fg {
              * 
              */
             virtual void clear(void) {
-                fg::CVector<Vertex3v>::clear();
+                CVector<Vertex3v>::clear();
             }
             /**
              * 
@@ -635,9 +696,9 @@ namespace fg {
              */
             virtual fgGFXvoid *front(void) const {
     #if defined(FG_USING_MARMALADE)
-                return (fgGFXvoid *)(fg::CVector<Vertex3v>::begin());
+                return (fgGFXvoid *)(CVector<Vertex3v>::begin());
     #else
-                return (fgGFXvoid *)(&fg::CVector<Vertex3v>::front());
+                return (fgGFXvoid *)(&CVector<Vertex3v>::front());
     #endif /* FG_USING_MARMALADE */
             }
             /**
@@ -645,8 +706,47 @@ namespace fg {
              * @return 
              */
             virtual fgGFXuint size(void) const {
-                return fg::CVector<Vertex3v>::size();
+                return CVector<Vertex3v>::size();
             }
+            /**
+             * 
+             * @return 
+             */
+            virtual fgGFXuint getNumVertices(void) const {
+                return CVector<Vertex3v>::size();
+            }
+            /**
+             * 
+             * @return 
+             */
+            virtual fgGFXuint getNumNormals(void) const {
+                return CVector<Vertex3v>::size();
+            }
+            /**
+             * 
+             * @return 
+             */
+            virtual fgGFXuint getNumUVs(void) const {
+                return CVector<Vertex3v>::size();
+            }
+            /**
+             * 
+             * @return 
+             */
+            virtual fgGFXuint getNumColors(void) const {
+                return 0;
+            }
+            /**
+             * 
+             * @return 
+             */
+            virtual fgGFXuint getNumIndices(void) const {
+                return 0;
+            }
+            /**
+             *
+             */
+            virtual void appendIndice(fgGFXushort indice) { }
             /**
              * 
              * @param newSize
@@ -801,8 +901,7 @@ namespace fg {
              * @param uv
              * @param color
              */
-            virtual void append(
-                                const Vector3f &pos,
+            virtual void append(const Vector3f &pos,
                                 const Vector3f &normal,
                                 const Vector2f &uv,
                                 const fgColor3f &color) {
@@ -820,8 +919,7 @@ namespace fg {
              * @param uv
              * @param color
              */
-            virtual void append(
-                                const Vector3f &pos,
+            virtual void append(const Vector3f &pos,
                                 const Vector3f &normal,
                                 const Vector2f &uv,
                                 const fgColor4f &color) {
@@ -869,6 +967,45 @@ namespace fg {
             virtual fgGFXuint size(void) const {
                 return CVector<Vertex4v>::size();
             }
+            /**
+             * 
+             * @return 
+             */
+            virtual fgGFXuint getNumVertices(void) const {
+                return CVector<Vertex4v>::size();
+            }
+            /**
+             * 
+             * @return 
+             */
+            virtual fgGFXuint getNumNormals(void) const {
+                return CVector<Vertex4v>::size();
+            }
+            /**
+             * 
+             * @return 
+             */
+            virtual fgGFXuint getNumUVs(void) const {
+                return CVector<Vertex4v>::size();
+            }
+            /**
+             * 
+             * @return 
+             */
+            virtual fgGFXuint getNumColors(void) const {
+                return CVector<Vertex4v>::size();
+            }
+            /**
+             * 
+             * @return 
+             */
+            virtual fgGFXuint getNumIndices(void) const {
+                return 0;
+            }
+            /**
+             *
+             */
+            virtual void appendIndice(fgGFXushort indice) { }
             /**
              * 
              * @param newSize

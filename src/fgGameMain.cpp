@@ -325,8 +325,8 @@ fgBool CGameMain::initSubsystems(void) {
     //m_resourceFactory->registerResource(resource::CUSTOM, &);
     //m_resourceFactory->registerResource(resource::ZIP_PACK, &);
     m_resourceFactory->registerResource(resource::PARTICLE_EFFECT, &gfx::CParticleEffect::createResource);
-    
-    
+
+
     FG_HardwareState->deviceYield(0); // #FIXME - device yield...
     if(!m_resourceMgr)
         m_resourceMgr = new resource::CResourceManager(m_resourceFactory, m_qualityMgr, this);
@@ -339,6 +339,7 @@ fgBool CGameMain::initSubsystems(void) {
 #endif // FG_USING_MARMALADE
     // Setup GFX Main external pointers
     m_gfxMain->setupResourceManager(m_resourceMgr);
+    m_gfxMain->generateBuiltInData();
     FG_HardwareState->deviceYield(0); // #FIXME - device yield...
     ////////////////////////////////////////////////////////////////////////////
     // Resource Manager and GFX is now fully initialized (with default shader)
@@ -425,7 +426,7 @@ fgBool CGameMain::loadConfiguration(void) {
             return FG_FALSE;
         }
     }
-    
+
     // #FIXME
     CSimpleOpt::SOption gameOptions[] = {
         {0, "--mod", SO_REQ_SEP},

@@ -55,7 +55,9 @@ namespace fg {
             /// OFF - Object File Format 
             MODEL_OFF = 0x0F8,
             /// X - DirectX 3D Model
-            MODEL_X = 0x0F9
+            MODEL_X = 0x0F9,
+            /// BUILT IN DATA
+            MODEL_BUILTIN = 0x0FA
         };
 
         /*
@@ -68,7 +70,7 @@ namespace fg {
             // Type definition for vector holding model shapes
             typedef CVector<SShape *> ModelShapes;
             // Type definition for special vector iterator
-            typedef ModelShapes::iterator modelShapesItor;
+            typedef ModelShapes::iterator ModelShapesItor;
 
         public:
             /**
@@ -100,6 +102,12 @@ namespace fg {
              * just resets base class attributes
              */
             virtual void clear(void);
+            
+            /**
+             * 
+             * @return 
+             */
+            fgBool refreshInternalData(void);
 
         public:
             /**
@@ -126,7 +134,7 @@ namespace fg {
              */
             virtual fgBool isDisposed(void) const;
 
-        protected:
+        protected:            
             /**
              * Determines the model type identifier from the file extension
              * @param path  Path to check for file extension
@@ -152,6 +160,18 @@ namespace fg {
              */
             fgBool loadWavefrontObj(void);
 
+        public:
+            
+            void setModelType(ModelType modelType) {
+                m_modelType = modelType;
+            }
+            
+            void addShape(SShape *shape);
+
+            void addShape(SMeshBase *mesh, const char *name);
+            
+            void addShape(SMeshBase *mesh, const std::string& name);
+            
         public:
             /**
              * Returns the reference to the shapes array
