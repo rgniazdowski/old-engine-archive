@@ -30,6 +30,10 @@ files
 	"Thread/*.cpp"
 	"Thread/*.h"
 
+	["FlexiGame/Physics"]
+	"Physics/*.cpp"
+	"Physics/*.h"
+
 	["FlexiGame/GameLogic"]
 	"GameLogic/*.cpp"
 	"GameLogic/*.h"
