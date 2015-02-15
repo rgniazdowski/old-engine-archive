@@ -43,6 +43,7 @@
         </data>
         <spellchecker-wordlist xmlns="http://www.netbeans.org/ns/spellchecker-wordlist/1">
             <word>aabb</word>
+            <word>Accessor</word>
             <word>antialiased</word>
             <word>antialiasing</word>
             <word>aos</word>
@@ -55,11 +56,14 @@
             <word>bbox</word>
             <word>Bilas</word>
             <word>bitplanes</word>
+            <word>bitstring</word>
+            <word>body's</word>
             <word>bool</word>
             <word>Btw</word>
             <word>bvec</word>
             <word>bvh</word>
             <word>callbacks</word>
+            <word>centre</word>
             <word>codec</word>
             <word>config</word>
             <word>configs</word>
@@ -106,18 +110,21 @@
             <word>glm</word>
             <word>glu</word>
             <word>Gniazdowski</word>
+            <word>gpu</word>
             <word>gui</word>
             <word>hacky</word>
             <word>hcenter</word>
             <word>hexangle</word>
             <word>highp</word>
             <word>hslider</word>
+            <word>Icosagon</word>
             <word>ids</word>
             <word>idx</word>
             <word>ini</word>
             <word>init</word>
             <word>inline</word>
             <word>int</word>
+            <word>interpenetrating</word>
             <word>interpolators</word>
             <word>ismapped</word>
             <word>itor</word>
@@ -130,23 +137,28 @@
             <word>lu</word>
             <word>Lua</word>
             <word>malloc</word>
+            <word>masse</word>
             <word>mediump</word>
             <word>metadata</word>
             <word>metatable</word>
             <word>metatables</word>
             <word>mp</word>
             <word>ms</word>
+            <word>mult</word>
             <word>multisample</word>
             <word>multitexture</word>
             <word>multitextured</word>
             <word>multitexturing</word>
             <word>namespace</word>
             <word>nongame</word>
+            <word>normalised</word>
+            <word>noticable</word>
             <word>nx</word>
             <word>ny</word>
             <word>nz</word>
             <word>obj</word>
             <word>octree</word>
+            <word>ommit</word>
             <word>overallocation</word>
             <word>packfree</word>
             <word>packh</word>
@@ -171,6 +183,7 @@
             <word>quadangle</word>
             <word>quadragon</word>
             <word>quadtree</word>
+            <word>quaternions</word>
             <word>Radoslaw</word>
             <word>rasterized</word>
             <word>readdir</word>
@@ -183,6 +196,7 @@
             <word>sfx</word>
             <word>shaders</word>
             <word>sizeof</word>
+            <word>skybox</word>
             <word>sliderboth</word>
             <word>sliderhorizontal</word>
             <word>slidervertical</word>
@@ -206,6 +220,7 @@
             <word>ttl</word>
             <word>unboxed</word>
             <word>unix</word>
+            <word>unmovable</word>
             <word>unzipping</word>
             <word>userdata</word>
             <word>ushort</word>
@@ -217,9 +232,11 @@
             <word>vec</word>
             <word>vslider</word>
             <word>wav</word>
+            <word>windspeed</word>
             <word>wut</word>
             <word>xml</word>
             <word>xyz</word>
+            <word>xz</word>
             <word>zfail</word>
             <word>Zlib</word>
             <word>zpass</word>

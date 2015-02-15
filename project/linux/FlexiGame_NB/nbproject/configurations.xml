@@ -274,6 +274,44 @@
           <itemPath>../../../src/Math/fgKalmanFilter.h</itemPath>
           <itemPath>../../../src/Math/fgMathLib.h</itemPath>
         </logicalFolder>
+        <logicalFolder name="Physics" displayName="Physics" projectFiles="true">
+          <itemPath>../../../src/Physics/fgCollisionBody.cpp</itemPath>
+          <itemPath>../../../src/Physics/fgCollisionBody.h</itemPath>
+          <itemPath>../../../src/Physics/fgCollisionCoarse.cpp</itemPath>
+          <itemPath>../../../src/Physics/fgCollisionCoarse.h</itemPath>
+          <itemPath>../../../src/Physics/fgCollisionFine.cpp</itemPath>
+          <itemPath>../../../src/Physics/fgCollisionFine.h</itemPath>
+          <itemPath>../../../src/Physics/fgContact.cpp</itemPath>
+          <itemPath>../../../src/Physics/fgContact.h</itemPath>
+          <itemPath>../../../src/Physics/fgContactGenerator.h</itemPath>
+          <itemPath>../../../src/Physics/fgContactResolver.cpp</itemPath>
+          <itemPath>../../../src/Physics/fgContactResolver.h</itemPath>
+          <itemPath>../../../src/Physics/fgCycloneCoreMath.cpp</itemPath>
+          <itemPath>../../../src/Physics/fgCycloneCoreMath.h</itemPath>
+          <itemPath>../../../src/Physics/fgForceGenerator.cpp</itemPath>
+          <itemPath>../../../src/Physics/fgForceGenerator.h</itemPath>
+          <itemPath>../../../src/Physics/fgJoint.cpp</itemPath>
+          <itemPath>../../../src/Physics/fgJoint.h</itemPath>
+          <itemPath>../../../src/Physics/fgParticle.cpp</itemPath>
+          <itemPath>../../../src/Physics/fgParticle.h</itemPath>
+          <itemPath>../../../src/Physics/fgParticleContact.cpp</itemPath>
+          <itemPath>../../../src/Physics/fgParticleContact.h</itemPath>
+          <itemPath>../../../src/Physics/fgParticleContactResolver.cpp</itemPath>
+          <itemPath>../../../src/Physics/fgParticleContactResolver.h</itemPath>
+          <itemPath>../../../src/Physics/fgParticleForceGenerator.cpp</itemPath>
+          <itemPath>../../../src/Physics/fgParticleForceGenerator.h</itemPath>
+          <itemPath>../../../src/Physics/fgParticleLink.cpp</itemPath>
+          <itemPath>../../../src/Physics/fgParticleLink.h</itemPath>
+          <itemPath>../../../src/Physics/fgParticleWorld.cpp</itemPath>
+          <itemPath>../../../src/Physics/fgParticleWorld.h</itemPath>
+          <itemPath>../../../src/Physics/fgPrecision.h</itemPath>
+          <itemPath>../../../src/Physics/fgRandom.cpp</itemPath>
+          <itemPath>../../../src/Physics/fgRandom.h</itemPath>
+          <itemPath>../../../src/Physics/fgRigidBody.cpp</itemPath>
+          <itemPath>../../../src/Physics/fgRigidBody.h</itemPath>
+          <itemPath>../../../src/Physics/fgWorld.cpp</itemPath>
+          <itemPath>../../../src/Physics/fgWorld.h</itemPath>
+        </logicalFolder>
         <logicalFolder name="Resource" displayName="Resource" projectFiles="true">
           <itemPath>../../../src/Resource/fgDataManagerBase.h</itemPath>
           <itemPath>../../../src/Resource/fgManagedDataFile.h</itemPath>
@@ -1504,6 +1542,153 @@
       <item path="../../../src/Math/fgKalmanFilter.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/Math/fgMathLib.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgCollisionBody.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgCollisionBody.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgCollisionCoarse.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgCollisionCoarse.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgCollisionFine.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgCollisionFine.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgContact.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgContact.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgContactGenerator.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgContactResolver.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgContactResolver.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgCycloneCoreMath.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgCycloneCoreMath.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgForceGenerator.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgForceGenerator.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgJoint.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgJoint.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgParticle.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgParticle.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgParticleContact.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgParticleContact.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgParticleContactResolver.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgParticleContactResolver.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgParticleForceGenerator.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgParticleForceGenerator.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgParticleLink.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgParticleLink.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgParticleWorld.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgParticleWorld.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgPrecision.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgRandom.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgRandom.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgRigidBody.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgRigidBody.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgWorld.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgWorld.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/Resource/fgDataManagerBase.h"
             ex="false"
@@ -2888,6 +3073,153 @@
       </item>
       <item path="../../../src/Math/fgMathLib.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../../../src/Physics/fgCollisionBody.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgCollisionBody.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgCollisionCoarse.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgCollisionCoarse.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgCollisionFine.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgCollisionFine.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgContact.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgContact.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgContactGenerator.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgContactResolver.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgContactResolver.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgCycloneCoreMath.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgCycloneCoreMath.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgForceGenerator.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgForceGenerator.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgJoint.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgJoint.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgParticle.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgParticle.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgParticleContact.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgParticleContact.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgParticleContactResolver.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgParticleContactResolver.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgParticleForceGenerator.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgParticleForceGenerator.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgParticleLink.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgParticleLink.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgParticleWorld.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgParticleWorld.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgPrecision.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgRandom.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgRandom.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgRigidBody.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgRigidBody.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgWorld.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgWorld.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../../../src/Resource/fgDataManagerBase.h"
             ex="false"
             tool="3"
@@ -4237,6 +4569,153 @@
       </item>
       <item path="../../../src/Math/fgMathLib.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../../../src/Physics/fgCollisionBody.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgCollisionBody.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgCollisionCoarse.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgCollisionCoarse.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgCollisionFine.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgCollisionFine.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgContact.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgContact.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgContactGenerator.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgContactResolver.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgContactResolver.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgCycloneCoreMath.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgCycloneCoreMath.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgForceGenerator.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgForceGenerator.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgJoint.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgJoint.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgParticle.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgParticle.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgParticleContact.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgParticleContact.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgParticleContactResolver.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgParticleContactResolver.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgParticleForceGenerator.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgParticleForceGenerator.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgParticleLink.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgParticleLink.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgParticleWorld.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgParticleWorld.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgPrecision.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgRandom.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgRandom.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgRigidBody.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgRigidBody.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgWorld.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgWorld.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../../../src/Resource/fgDataManagerBase.h"
             ex="false"
             tool="3"
@@ -5563,6 +6042,153 @@
       <item path="../../../src/Math/fgKalmanFilter.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/Math/fgMathLib.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgCollisionBody.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgCollisionBody.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgCollisionCoarse.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgCollisionCoarse.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgCollisionFine.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgCollisionFine.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgContact.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgContact.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgContactGenerator.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgContactResolver.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgContactResolver.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgCycloneCoreMath.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgCycloneCoreMath.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgForceGenerator.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgForceGenerator.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgJoint.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgJoint.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgParticle.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgParticle.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgParticleContact.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgParticleContact.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgParticleContactResolver.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgParticleContactResolver.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgParticleForceGenerator.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgParticleForceGenerator.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgParticleLink.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgParticleLink.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgParticleWorld.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgParticleWorld.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgPrecision.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgRandom.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgRandom.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgRigidBody.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgRigidBody.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgWorld.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../../src/Physics/fgWorld.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/Resource/fgDataManagerBase.h"
             ex="false"

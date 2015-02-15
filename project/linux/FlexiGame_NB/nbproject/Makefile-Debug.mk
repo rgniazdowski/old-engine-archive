@@ -137,6 +137,23 @@ OBJECTFILES= \
 	${OBJECTDIR}/_ext/484399070/fgQualityManager.o \
 	${OBJECTDIR}/_ext/484399070/fgSensors.o \
 	${OBJECTDIR}/_ext/607778370/fgKalmanFilter.o \
+	${OBJECTDIR}/_ext/1611265229/fgCollisionBody.o \
+	${OBJECTDIR}/_ext/1611265229/fgCollisionCoarse.o \
+	${OBJECTDIR}/_ext/1611265229/fgCollisionFine.o \
+	${OBJECTDIR}/_ext/1611265229/fgContact.o \
+	${OBJECTDIR}/_ext/1611265229/fgContactResolver.o \
+	${OBJECTDIR}/_ext/1611265229/fgCycloneCoreMath.o \
+	${OBJECTDIR}/_ext/1611265229/fgForceGenerator.o \
+	${OBJECTDIR}/_ext/1611265229/fgJoint.o \
+	${OBJECTDIR}/_ext/1611265229/fgParticle.o \
+	${OBJECTDIR}/_ext/1611265229/fgParticleContact.o \
+	${OBJECTDIR}/_ext/1611265229/fgParticleContactResolver.o \
+	${OBJECTDIR}/_ext/1611265229/fgParticleForceGenerator.o \
+	${OBJECTDIR}/_ext/1611265229/fgParticleLink.o \
+	${OBJECTDIR}/_ext/1611265229/fgParticleWorld.o \
+	${OBJECTDIR}/_ext/1611265229/fgRandom.o \
+	${OBJECTDIR}/_ext/1611265229/fgRigidBody.o \
+	${OBJECTDIR}/_ext/1611265229/fgWorld.o \
 	${OBJECTDIR}/_ext/942373304/fgResource.o \
 	${OBJECTDIR}/_ext/942373304/fgResourceConfigParser.o \
 	${OBJECTDIR}/_ext/942373304/fgResourceFactory.o \
@@ -708,6 +725,91 @@ ${OBJECTDIR}/_ext/607778370/fgKalmanFilter.o: ../../../src/Math/fgKalmanFilter.c
 	${MKDIR} -p ${OBJECTDIR}/_ext/607778370
 	${RM} "$@.d"
 	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_GL_BINDING -DFG_USING_OPENGL -DFG_USING_SDL2 -DFG_USING_TINYXML -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src `pkg-config --cflags gl` `pkg-config --cflags sdl2` `pkg-config --cflags SDL2_mixer` `pkg-config --cflags libpng` `pkg-config --cflags zlib` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/607778370/fgKalmanFilter.o ../../../src/Math/fgKalmanFilter.cpp
+
+${OBJECTDIR}/_ext/1611265229/fgCollisionBody.o: ../../../src/Physics/fgCollisionBody.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/1611265229
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_GL_BINDING -DFG_USING_OPENGL -DFG_USING_SDL2 -DFG_USING_TINYXML -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src `pkg-config --cflags gl` `pkg-config --cflags sdl2` `pkg-config --cflags SDL2_mixer` `pkg-config --cflags libpng` `pkg-config --cflags zlib` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1611265229/fgCollisionBody.o ../../../src/Physics/fgCollisionBody.cpp
+
+${OBJECTDIR}/_ext/1611265229/fgCollisionCoarse.o: ../../../src/Physics/fgCollisionCoarse.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/1611265229
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_GL_BINDING -DFG_USING_OPENGL -DFG_USING_SDL2 -DFG_USING_TINYXML -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src `pkg-config --cflags gl` `pkg-config --cflags sdl2` `pkg-config --cflags SDL2_mixer` `pkg-config --cflags libpng` `pkg-config --cflags zlib` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1611265229/fgCollisionCoarse.o ../../../src/Physics/fgCollisionCoarse.cpp
+
+${OBJECTDIR}/_ext/1611265229/fgCollisionFine.o: ../../../src/Physics/fgCollisionFine.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/1611265229
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_GL_BINDING -DFG_USING_OPENGL -DFG_USING_SDL2 -DFG_USING_TINYXML -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src `pkg-config --cflags gl` `pkg-config --cflags sdl2` `pkg-config --cflags SDL2_mixer` `pkg-config --cflags libpng` `pkg-config --cflags zlib` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1611265229/fgCollisionFine.o ../../../src/Physics/fgCollisionFine.cpp
+
+${OBJECTDIR}/_ext/1611265229/fgContact.o: ../../../src/Physics/fgContact.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/1611265229
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_GL_BINDING -DFG_USING_OPENGL -DFG_USING_SDL2 -DFG_USING_TINYXML -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src `pkg-config --cflags gl` `pkg-config --cflags sdl2` `pkg-config --cflags SDL2_mixer` `pkg-config --cflags libpng` `pkg-config --cflags zlib` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1611265229/fgContact.o ../../../src/Physics/fgContact.cpp
+
+${OBJECTDIR}/_ext/1611265229/fgContactResolver.o: ../../../src/Physics/fgContactResolver.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/1611265229
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_GL_BINDING -DFG_USING_OPENGL -DFG_USING_SDL2 -DFG_USING_TINYXML -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src `pkg-config --cflags gl` `pkg-config --cflags sdl2` `pkg-config --cflags SDL2_mixer` `pkg-config --cflags libpng` `pkg-config --cflags zlib` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1611265229/fgContactResolver.o ../../../src/Physics/fgContactResolver.cpp
+
+${OBJECTDIR}/_ext/1611265229/fgCycloneCoreMath.o: ../../../src/Physics/fgCycloneCoreMath.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/1611265229
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_GL_BINDING -DFG_USING_OPENGL -DFG_USING_SDL2 -DFG_USING_TINYXML -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src `pkg-config --cflags gl` `pkg-config --cflags sdl2` `pkg-config --cflags SDL2_mixer` `pkg-config --cflags libpng` `pkg-config --cflags zlib` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1611265229/fgCycloneCoreMath.o ../../../src/Physics/fgCycloneCoreMath.cpp
+
+${OBJECTDIR}/_ext/1611265229/fgForceGenerator.o: ../../../src/Physics/fgForceGenerator.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/1611265229
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_GL_BINDING -DFG_USING_OPENGL -DFG_USING_SDL2 -DFG_USING_TINYXML -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src `pkg-config --cflags gl` `pkg-config --cflags sdl2` `pkg-config --cflags SDL2_mixer` `pkg-config --cflags libpng` `pkg-config --cflags zlib` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1611265229/fgForceGenerator.o ../../../src/Physics/fgForceGenerator.cpp
+
+${OBJECTDIR}/_ext/1611265229/fgJoint.o: ../../../src/Physics/fgJoint.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/1611265229
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_GL_BINDING -DFG_USING_OPENGL -DFG_USING_SDL2 -DFG_USING_TINYXML -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src `pkg-config --cflags gl` `pkg-config --cflags sdl2` `pkg-config --cflags SDL2_mixer` `pkg-config --cflags libpng` `pkg-config --cflags zlib` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1611265229/fgJoint.o ../../../src/Physics/fgJoint.cpp
+
+${OBJECTDIR}/_ext/1611265229/fgParticle.o: ../../../src/Physics/fgParticle.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/1611265229
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_GL_BINDING -DFG_USING_OPENGL -DFG_USING_SDL2 -DFG_USING_TINYXML -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src `pkg-config --cflags gl` `pkg-config --cflags sdl2` `pkg-config --cflags SDL2_mixer` `pkg-config --cflags libpng` `pkg-config --cflags zlib` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1611265229/fgParticle.o ../../../src/Physics/fgParticle.cpp
+
+${OBJECTDIR}/_ext/1611265229/fgParticleContact.o: ../../../src/Physics/fgParticleContact.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/1611265229
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_GL_BINDING -DFG_USING_OPENGL -DFG_USING_SDL2 -DFG_USING_TINYXML -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src `pkg-config --cflags gl` `pkg-config --cflags sdl2` `pkg-config --cflags SDL2_mixer` `pkg-config --cflags libpng` `pkg-config --cflags zlib` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1611265229/fgParticleContact.o ../../../src/Physics/fgParticleContact.cpp
+
+${OBJECTDIR}/_ext/1611265229/fgParticleContactResolver.o: ../../../src/Physics/fgParticleContactResolver.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/1611265229
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_GL_BINDING -DFG_USING_OPENGL -DFG_USING_SDL2 -DFG_USING_TINYXML -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src `pkg-config --cflags gl` `pkg-config --cflags sdl2` `pkg-config --cflags SDL2_mixer` `pkg-config --cflags libpng` `pkg-config --cflags zlib` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1611265229/fgParticleContactResolver.o ../../../src/Physics/fgParticleContactResolver.cpp
+
+${OBJECTDIR}/_ext/1611265229/fgParticleForceGenerator.o: ../../../src/Physics/fgParticleForceGenerator.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/1611265229
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_GL_BINDING -DFG_USING_OPENGL -DFG_USING_SDL2 -DFG_USING_TINYXML -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src `pkg-config --cflags gl` `pkg-config --cflags sdl2` `pkg-config --cflags SDL2_mixer` `pkg-config --cflags libpng` `pkg-config --cflags zlib` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1611265229/fgParticleForceGenerator.o ../../../src/Physics/fgParticleForceGenerator.cpp
+
+${OBJECTDIR}/_ext/1611265229/fgParticleLink.o: ../../../src/Physics/fgParticleLink.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/1611265229
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_GL_BINDING -DFG_USING_OPENGL -DFG_USING_SDL2 -DFG_USING_TINYXML -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src `pkg-config --cflags gl` `pkg-config --cflags sdl2` `pkg-config --cflags SDL2_mixer` `pkg-config --cflags libpng` `pkg-config --cflags zlib` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1611265229/fgParticleLink.o ../../../src/Physics/fgParticleLink.cpp
+
+${OBJECTDIR}/_ext/1611265229/fgParticleWorld.o: ../../../src/Physics/fgParticleWorld.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/1611265229
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_GL_BINDING -DFG_USING_OPENGL -DFG_USING_SDL2 -DFG_USING_TINYXML -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src `pkg-config --cflags gl` `pkg-config --cflags sdl2` `pkg-config --cflags SDL2_mixer` `pkg-config --cflags libpng` `pkg-config --cflags zlib` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1611265229/fgParticleWorld.o ../../../src/Physics/fgParticleWorld.cpp
+
+${OBJECTDIR}/_ext/1611265229/fgRandom.o: ../../../src/Physics/fgRandom.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/1611265229
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_GL_BINDING -DFG_USING_OPENGL -DFG_USING_SDL2 -DFG_USING_TINYXML -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src `pkg-config --cflags gl` `pkg-config --cflags sdl2` `pkg-config --cflags SDL2_mixer` `pkg-config --cflags libpng` `pkg-config --cflags zlib` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1611265229/fgRandom.o ../../../src/Physics/fgRandom.cpp
+
+${OBJECTDIR}/_ext/1611265229/fgRigidBody.o: ../../../src/Physics/fgRigidBody.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/1611265229
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_GL_BINDING -DFG_USING_OPENGL -DFG_USING_SDL2 -DFG_USING_TINYXML -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src `pkg-config --cflags gl` `pkg-config --cflags sdl2` `pkg-config --cflags SDL2_mixer` `pkg-config --cflags libpng` `pkg-config --cflags zlib` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1611265229/fgRigidBody.o ../../../src/Physics/fgRigidBody.cpp
+
+${OBJECTDIR}/_ext/1611265229/fgWorld.o: ../../../src/Physics/fgWorld.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/1611265229
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_GL_BINDING -DFG_USING_OPENGL -DFG_USING_SDL2 -DFG_USING_TINYXML -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src `pkg-config --cflags gl` `pkg-config --cflags sdl2` `pkg-config --cflags SDL2_mixer` `pkg-config --cflags libpng` `pkg-config --cflags zlib` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1611265229/fgWorld.o ../../../src/Physics/fgWorld.cpp
 
 ${OBJECTDIR}/_ext/942373304/fgResource.o: ../../../src/Resource/fgResource.cpp 
 	${MKDIR} -p ${OBJECTDIR}/_ext/942373304

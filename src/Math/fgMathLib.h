@@ -26,6 +26,9 @@
         #include "glm/mat3x3.hpp"
         #include "glm/mat4x4.hpp"
         #include "glm/geometric.hpp"
+        #include "glm/gtx/component_wise.hpp"
+        #include "glm/gtx/quaternion.hpp"
+        #include "glm/gtx/norm.hpp"
         #include "glm/gtc/matrix_transform.hpp"
         #include "glm/gtc/matrix_inverse.hpp"
         #include "glm/gtc/epsilon.hpp"
@@ -56,6 +59,44 @@ namespace fg {
     #if defined(FG_USING_GLM)
     namespace math {
         using namespace ::glm;
+        
+        namespace detail {
+            using namespace ::glm::detail;
+        }
+        template <typename T, precision P>
+        GLM_FUNC_QUALIFIER T squareLength(detail::tvec2<T, P> const & v) {
+            GLM_STATIC_ASSERT(std::numeric_limits<T>::is_iec559, "'squareLength' only accept floating-point inputs");
+            return (v.x * v.x + v.y * v.y);
+        }
+        template <typename T, precision P>
+        GLM_FUNC_QUALIFIER T squareLength(detail::tvec3<T, P> const & v) {
+            GLM_STATIC_ASSERT(std::numeric_limits<T>::is_iec559, "'squareLength' only accept floating-point inputs");
+            return (v.x * v.x + v.y * v.y + v.z * v.z);
+        }
+        template <typename T, precision P>
+        GLM_FUNC_QUALIFIER T squareLength(detail::tvec4<T, P> const & v) {
+            GLM_STATIC_ASSERT(std::numeric_limits<T>::is_iec559, "'squareLength' only accept floating-point inputs");
+            return (v.x * v.x + v.y * v.y + v.z * v.z + v.w * v.w);
+        }
+        template <typename T, precision P>
+        GLM_FUNC_QUALIFIER detail::tvec2<T, P> componentProduct(detail::tvec2<T, P> const & v1, detail::tvec2<T, P> const & v2) {
+            return detail::tvec2<T, P>(v1.x * v2.x,
+                    v1.y * v2.y);
+        }
+        template <typename T, precision P>
+        GLM_FUNC_QUALIFIER detail::tvec3<T, P> componentProduct(detail::tvec3<T, P> const & v1, detail::tvec3<T, P> const & v2) {
+            return detail::tvec3<T, P>(v1.x * v2.x,
+                    v1.y * v2.y,
+                    v1.z * v2.z);
+        }
+        template <typename T, precision P>
+        GLM_FUNC_QUALIFIER detail::tvec4<T, P> componentProduct(detail::tvec4<T, P> const & v1, detail::tvec4<T, P> const & v2) {
+            return detail::tvec4<T, P>(v1.x * v2.x,
+                    v1.y * v2.y,
+                    v1.z * v2.z,
+                    v1.w * v2.w);
+        }  
+
     }; /* namespace math; */
 
         #if !defined(FG_MATH_GLM_VECTOR_MASK)
