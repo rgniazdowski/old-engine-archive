@@ -176,10 +176,14 @@ fgBool resource::CResourceManager::initialize(void) {
         grpUniqueID = resGroup->getHandle();
         // There is a separate holder for resource group
         insertResourceGroup(grpUniqueID, resGroup);
+        const fgBool forceCreate = resGroup->isForceCreate();
         CResourceGroup::rgResVec& resInGrp = resGroup->getRefResourceFiles();
         for(CResourceGroup::rgResVecItor it = resInGrp.begin(); it != resInGrp.end(); it++) {
             (*it)->setQuality(static_cast<fgQualityManager *>(m_pQualityMgr)->getQuality());
             insertResource((*it));
+            if(forceCreate) {
+                refreshResource((*it));
+            }
         }
         // This is really important - refresh array with resource handles
         resGroup->refreshArrays();
@@ -299,6 +303,7 @@ fgBool resource::CResourceManager::insertResource(CResource* pResource) {
         return FG_FALSE;
     }
     pResource->setManaged(FG_TRUE);
+    pResource->setManager(this);
     // Get the memory and add it to the catalog total.  Note that we only have
     // to check for memory overallocation if we haven't preallocated memory
     if(!m_bResourceReserved) {
@@ -308,7 +313,7 @@ fgBool resource::CResourceManager::insertResource(CResource* pResource) {
             return FG_FALSE;
     } else
         m_bResourceReserved = FG_FALSE;
-    pResource->setManager(this);
+    
     return FG_TRUE;
 }
 

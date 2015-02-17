@@ -254,6 +254,22 @@ namespace fg {
             rgHandleVec& getRefResourceHandles(void) {
                 return m_rHandles;
             }
+            
+        public:
+            /**
+             * 
+             * @return 
+             */
+            fgBool isForceCreate(void) const {
+                return m_isForceCreate;
+            }
+            /**
+             * 
+             * @param toggle
+             */
+            void setForceCreate(fgBool toggle = FG_TRUE) {
+                m_isForceCreate = toggle;
+            }
 
         protected:
             /**
@@ -279,6 +295,8 @@ namespace fg {
             fgBool private_parseIniConfig(void);
 
         protected:
+            ///
+            fgBool m_isForceCreate;
             /// List of all handles within this resource group
             rgHandleVec m_rHandles;
             /// List of all resource files 

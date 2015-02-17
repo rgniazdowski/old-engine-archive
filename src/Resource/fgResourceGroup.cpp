@@ -148,6 +148,8 @@ void resource::CResourceGroupContentHandler::startElement(const char *localName,
                 m_resourceGroup->setName(attrvalue);
             } else if(strncasecmp(attrname, "priority", 8) == 0) {
                 m_resourceGroup->setPriority(getResourcePriorityFromText(attrvalue));
+            } else if(strncasecmp(attrname, "forceCreate", 11) == 0) {
+                m_resourceGroup->setForceCreate(FG_BOOL_FROM_TEXT(attrvalue));
             }
             attribute = attribute->Next();
         }
@@ -232,7 +234,12 @@ void resource::CResourceGroupContentHandler::startElement(const char *localName,
 /**
  * Base constructor of the resource group object
  */
-resource::CResourceGroup::CResourceGroup() {
+resource::CResourceGroup::CResourceGroup() :
+m_isForceCreate(FG_FALSE),
+m_rHandles(),
+m_resourceFiles(),
+m_xmlParser(NULL),
+m_resFactory(NULL) {
     clear();
 }
 
@@ -240,7 +247,12 @@ resource::CResourceGroup::CResourceGroup() {
  * 
  * @param resourceFactory
  */
-resource::CResourceGroup::CResourceGroup(CResourceFactory *resourceFactory) {
+resource::CResourceGroup::CResourceGroup(CResourceFactory *resourceFactory) :
+m_isForceCreate(FG_FALSE),
+m_rHandles(),
+m_resourceFiles(),
+m_xmlParser(NULL),
+m_resFactory(NULL) {
     clear();
     setResourceFactory(resourceFactory);
 }
@@ -363,6 +375,7 @@ fgBool resource::CResourceGroup::private_parseIniConfig(void) {
         delete config;
         return FG_FALSE;
     }
+    // #FIXME - need to support forceCreate option
     CResourceConfig::ResourceHeaderMap &headerMap = config->getRefHeaders();
     CResourceConfig::ResourceHeaderMapItor rhit = headerMap.begin(),
             end = headerMap.end();
