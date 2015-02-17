@@ -95,6 +95,8 @@ fgBool gfx::CParticleEmitter::setupFromParticleEffect(CParticleEffect *pParticle
         m_drawCall->setComponentActive(Vertex4v::attribMask());
         // Two triangles
         m_drawCall->getVertexData()->reserve(this->getMaxCount()*6);
+        if(pParticleEffect->getShaderProgram())
+            m_drawCall->setShaderProgram(pParticleEffect->getShaderProgram());
     }
     return FG_TRUE;
 }

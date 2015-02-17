@@ -16,7 +16,28 @@ using namespace fg;
 /**
  * 
  */
-gfx::CParticleEffect::CParticleEffect() : CResource() {
+gfx::CParticleEffect::CParticleEffect() : CResource(),
+m_maxCount(10),
+m_flags(FG_PARTICLE_FLAG_NONE),
+m_particleArea(),
+m_isAreaSet(FG_FALSE),
+m_isAreaCheck(FG_FALSE),
+m_textureName(),
+m_shaderName(),
+m_shaderProgram(NULL),
+m_textureGfxID(),
+m_textureSheetSize(),
+m_textureIDRange(),
+m_startSize(),
+m_endSize(),
+m_spreadSpeed(),
+m_lifeRange(),
+m_ttlRange(),
+m_fadeSpeedRange(),
+m_startColor(),
+m_endColor(),
+m_burnoutDelay(),
+m_burnRange() {
     m_resType = resource::PARTICLE_EFFECT;
     m_textureIDRange.x = 0;
     m_textureIDRange.y = 0;
@@ -36,7 +57,7 @@ gfx::CParticleEffect::~CParticleEffect() {
  * 
  */
 void gfx::CParticleEffect::clear(void) {
-    CResource::clear();
+    base_type::clear();
     m_resType = resource::PARTICLE_EFFECT;
 }
 
@@ -74,7 +95,10 @@ fgBool gfx::CParticleEffect::initializeFromConfig(util::config::ParameterVec& pa
 
                 }
             }
-
+        } else if(param->name.compare("shader") == 0 || param->name.compare("shader-name") == 0) {
+            if(param->type == util::SCfgParameter::STRING) {
+                this->setShaderName(param->string);
+            }
         } else if(param->name.compare("max-count") == 0) {
             // max - count – integer –
             if(param->type == util::SCfgParameter::INT)
@@ -113,12 +137,12 @@ fgBool gfx::CParticleEffect::initializeFromConfig(util::config::ParameterVec& pa
         } else if(param->name.compare("facing-velocity") == 0) {
             if(param->type == util::SCfgParameter::BOOL)
                 setFlag(FG_PARTICLE_FACING_VELOCITY, param->bool_val);
-        
+
             // facing - camera – bool –
         } else if(param->name.compare("facing-camera") == 0) {
             if(param->type == util::SCfgParameter::BOOL)
                 setFlag(FG_PARTICLE_FACING_CAMERA, param->bool_val);
-            
+
             // params - active – bool –
         } else if(param->name.compare("params-active") == 0) {
             if(param->type == util::SCfgParameter::BOOL)

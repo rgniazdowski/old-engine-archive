@@ -17,6 +17,7 @@
 #include "Resource/fgResourceManager.h"
 #include "GFX/Scene/fgGFXSceneManager.h"
 #include "GFX/Textures/fgTextureResource.h"
+#include "GFX/Shaders/fgGFXShaderManager.h"
 
 using namespace fg;
 
@@ -277,6 +278,10 @@ gfx::CParticleEmitter* gfx::CParticleSystem::insertParticleEmitter(const std::st
         FG_LOG_ERROR("GFX: Unable to add ParticleEmitter - Particle System is not set up");
         return NULL;
     }
+    resource::CResourceManager *pResourceMgr = static_cast<resource::CResourceManager *>(m_pResourceMgr);
+    CSceneManager *pSceneMgr = static_cast<CSceneManager*>(m_pSceneMgr);
+    CShaderManager *pShaderMgr = static_cast<CShaderManager*>(pSceneMgr->getShaderManager());
+
     if(particleEffectNameTag.empty() || particleEmitterNameTag.empty()) {
         FG_LOG_ERROR("GFX: Unable to add ParticleEmitter - name tags are empty");
         return NULL;
@@ -289,7 +294,7 @@ gfx::CParticleEmitter* gfx::CParticleSystem::insertParticleEmitter(const std::st
         FG_LOG_ERROR("GFX: Particle emitter '%s' is already in the Scene Manager", particleEmitterNameTag.c_str());
         return NULL;
     }
-    CParticleEffect *pEffect = (CParticleEffect *)(static_cast<resource::CResourceManager *>(m_pResourceMgr)->request(particleEffectNameTag));
+    CParticleEffect *pEffect = (CParticleEffect *)(pResourceMgr->request(particleEffectNameTag));
     if(!pEffect) {
         FG_LOG_ERROR("GFX: Unable to find particle effect: '%s'", particleEffectNameTag.c_str());
         return NULL;
@@ -297,20 +302,23 @@ gfx::CParticleEmitter* gfx::CParticleSystem::insertParticleEmitter(const std::st
     if(pEffect->isDisposed()) {
         pEffect->create();
     }
-    CTextureResource *pTexture = (CTextureResource *)(static_cast<resource::CResourceManager *>(m_pResourceMgr)->request(pEffect->getTextureName()));
+    CTextureResource *pTexture = (CTextureResource *)(pResourceMgr->request(pEffect->getTextureName()));
     if(pTexture) {
         pEffect->setTextureGfxID(pTexture->getRefGfxID());
+    }
+    if(pShaderMgr && !pEffect->getShaderProgram()) {
+        pEffect->setShaderProgram(pShaderMgr->get(pEffect->getShaderName()));
     }
     CParticleEmitter *pEmitter = new CParticleEmitter(pEffect);
     pEmitter->setName(particleEmitterNameTag);
     //pEmitter->setOrigin()
 
-    static_cast<gfx::CSceneManager *>(m_pSceneMgr)->addNode(pEmitter->getRefHandle(),
-                                                            pEmitter,
-                                                            (gfx::CSceneNode *)NULL);
+    pSceneMgr->addNode(pEmitter->getRefHandle(),
+                       pEmitter,
+                       (gfx::CSceneNode *)NULL);
 
-    
-    CCamera *pCamera = (CCamera *)static_cast<gfx::CSceneManager *>(m_pSceneMgr)->getCamera();
+
+    CCamera *pCamera = (CCamera *)pSceneMgr->getCamera();
     pEmitter->setCamera(pCamera); // Set pointer for the camera
     // Set particle emitter as not managed
     // This means that particle emitter object must be freed

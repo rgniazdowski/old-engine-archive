@@ -276,6 +276,10 @@ gfx::CSceneNode *gfx::CScene3D::addFromModel(const char *modelNameTag,
     return addFromModel(pModelRes, std::string(nameTag));
 }
 
+/**
+ * 
+ * @param sceneNode
+ */
 void gfx::CScene3D::checkCollisions(const CSceneNode* sceneNode) {
     if(!sceneNode)
         return;

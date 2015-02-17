@@ -120,6 +120,8 @@ FG_TAG_TEMPLATE_ID_AUTO(fg::gfx::CParticleEffect, FG_TAG_PARTICLE_EFFECT_NAME);
 namespace fg {
     namespace gfx {
 
+        class CShaderProgram;
+        
         /// Special tag type for particle effect
         typedef FG_TAG_PARTICLE_EFFECT ParticleEffectTag;
         /// Special handle type for particle effect
@@ -148,6 +150,10 @@ namespace fg {
             fgBool m_isAreaCheck;
             /// Texture name to use
             std::string m_textureName;
+            /// 
+            std::string m_shaderName;
+            ///
+            CShaderProgram *m_shaderProgram;
             /// Texture ID
             STextureID m_textureGfxID;
             /// Texture sprite sheet size
@@ -233,6 +239,57 @@ namespace fg {
              * @return 
              */
             virtual fgBool isDisposed(void) const;
+            
+            ////////////////////////////////////////////////////////////////////
+            
+            /**
+             * 
+             * @param pShaderProgram
+             */
+            void setShaderProgram(CShaderProgram* pShaderProgram) {
+                m_shaderProgram = pShaderProgram;
+            }
+            /**
+             * 
+             * @return 
+             */
+            CShaderProgram* getShaderProgram(void) const {
+                return m_shaderProgram;
+            }
+            
+            /**
+             * 
+             * @param shaderName
+             */
+            void setShaderName(const char* shaderName) {
+                if(shaderName)
+                    m_shaderName = shaderName;
+            }            
+            /**
+             * 
+             * @param shaderName
+             */
+            void setShaderName(const std::string& shaderName) {
+                m_shaderName = shaderName;
+            }
+            
+            /**
+             * 
+             * @return 
+             */
+            std::string& getShaderName(void) {
+                return m_shaderName;
+            }
+            /**
+             * 
+             * @return 
+             */
+            std::string const& getShaderName(void) const {
+                return m_shaderName;
+            }
+            
+            ////////////////////////////////////////////////////////////////////
+            
             /**
              * Limits number of particles the emitter will hold
              * Also limits number of the vertices, colors and UV binds
