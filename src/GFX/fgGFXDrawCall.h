@@ -50,9 +50,12 @@ typedef unsigned int fgGfxDrawCallType;
 namespace fg {
     namespace gfx {
 
-        const unsigned int DEFAULT_Z_INDEX = 127; // center / zero
-        const unsigned int MIN_Z_INDEX = 0; // it's like -256
-        const unsigned int MAX_Z_INDEX = 255; // +127
+        const unsigned int Z_INDEX_DEFAULT = 127; // center / zero
+        const unsigned int Z_INDEX_MIN = 0; // it's like -127
+        const unsigned int Z_INDEX_MAX = 255; // +127
+        
+        const unsigned int Z_INDEX_PARTICLES = 100;
+        const unsigned int Z_INDEX_OBJECTS_3D = 120;
 
         /**
          * Draw call append mode
@@ -173,12 +176,12 @@ namespace fg {
              * 
              * @return 
              */
-            Vector4i const & getScissorBox(void) const;
+            Vector4i const& getScissorBox(void) const;
             /**
              * 
              * @return 
              */
-            Vector3f const & getRelMove(void) const;
+            Vector3f const& getRelMove(void) const;
             /**
              * Returns the current Z index
              * @return 
@@ -233,27 +236,27 @@ namespace fg {
              * @param pos
              * @param size
              */
-            void setScissorBox(const Vector2i& pos, const Vector2i & size);
+            void setScissorBox(const Vector2i& pos, const Vector2i& size);
             /**
              * 
              * @param dimensions
              */
-            void setScissorBox(const Vector4i & dimensions);
+            void setScissorBox(const Vector4i& dimensions);
             /**
              * 
              * @param relMove
              */
-            void setRelMove(const Vector3f & relMove);
+            void setRelMove(const Vector3f& relMove);
             /**
              * 
              * @param relMove
              */
-            void setRelMove(const Vector2f & relMove);
+            void setRelMove(const Vector2f& relMove);
             /**
              * Sets the Z index to specified value
              * @param zIndex
              */
-            void setZIndex(const int zIndex = DEFAULT_Z_INDEX);
+            void setZIndex(const int zIndex = Z_INDEX_DEFAULT);
             /**
              * Increments by 1 the Z index
              */

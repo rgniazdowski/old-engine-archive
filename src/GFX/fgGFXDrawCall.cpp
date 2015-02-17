@@ -33,7 +33,7 @@ m_color(1.0f, 1.0f, 1.0f, 1.0f),
 m_relMove(0.0f, 0.0f, 0.0f),
 m_scissorBox(0, 0, 0, 0),
 m_fastCmp(4, fg::util::FastCmp::CMP_DATA_32),
-m_zIndex(50),
+m_zIndex(Z_INDEX_DEFAULT),
 m_isManaged(0) {
     m_attrData[FG_GFX_ATTRIB_POS_LOCATION].index = FG_GFX_ATTRIB_POS_LOCATION;
     m_attrData[FG_GFX_ATTRIB_POS_LOCATION].size = 3;
@@ -92,14 +92,17 @@ gfx::CDrawCall::~CDrawCall() {
     if(m_vecData2v) {
         m_vecData2v->clear();
         delete m_vecData2v;
+        m_vecData2v = NULL;
     }
     if(m_vecData3v) {
         m_vecData3v->clear();
         delete m_vecData3v;
+        m_vecData3v = NULL;
     }
     if(m_vecData4v) {
         m_vecData4v->clear();
         delete m_vecData4v;
+        m_vecData4v = NULL;
     }
     m_vecDataBase = NULL;
 }
@@ -116,12 +119,13 @@ void gfx::CDrawCall::setManaged(const fgBool toggle) {
  * 
  * @return 
  */
-fgBool gfx::CDrawCall::isManaged() const {
+fgBool gfx::CDrawCall::isManaged(void) const {
     return m_isManaged;
 }
 
-/*
- *
+/**
+ * 
+ * @param attribMask
  */
 void gfx::CDrawCall::setupVertexData(fgGFXuint attribMask) {
     if(!attribMask)
@@ -309,7 +313,7 @@ void gfx::CDrawCall::setRelMove(const Vector2f& relMove) {
  */
 void gfx::CDrawCall::setZIndex(const int zIndex) {
     if(zIndex < 0) {
-        m_zIndex = DEFAULT_Z_INDEX + zIndex;
+        m_zIndex = Z_INDEX_DEFAULT + zIndex;
     } else {
         m_zIndex = zIndex;
     }
@@ -424,7 +428,7 @@ void gfx::CDrawCall::setShaderProgram(gfx::CShaderProgram *pProgram) {
 /*
  *
  */
-gfx::CShaderProgram *gfx::CDrawCall::getShaderProgram(void) const {
+gfx::CShaderProgram* gfx::CDrawCall::getShaderProgram(void) const {
     return m_program;
 }
 

@@ -91,6 +91,7 @@ fgBool gfx::CParticleEmitter::setupFromParticleEffect(CParticleEffect *pParticle
     m_effects.push_back(pParticleEffect);
     setMaxCount(pParticleEffect->getMaxCount());
     if(m_drawCall) {
+        m_drawCall->setZIndex(Z_INDEX_PARTICLES);
         m_drawCall->setComponentActive(Vertex4v::attribMask());
         // Two triangles
         m_drawCall->getVertexData()->reserve(this->getMaxCount()*6);
@@ -321,7 +322,7 @@ void gfx::CParticleEmitter::draw(void) {
     //glDisable(GL_CULL_FACE);
     //glDisable(GL_DEPTH_TEST);
     //glPolygonOffset(1.0f, 2.0f);
-    m_drawCall->setZIndex(45); // #FIXME
+    //m_drawCall->setZIndex(45); // #FIXME
     // #FIXME - such things should be set inside of a material
     CPlatform::context()->blendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
     CPlatform::context()->setBlend(FG_TRUE);

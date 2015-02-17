@@ -32,6 +32,14 @@ namespace fg {
          */
         class CSceneNodeMesh : public CSceneNode {
         public:
+            ///
+            typedef CSceneNode base_type;
+            ///
+            typedef CSceneNodeMesh self_type;
+            ///
+            typedef CSceneNodeMesh type;
+            
+        public:
             /**
              * 
              */
