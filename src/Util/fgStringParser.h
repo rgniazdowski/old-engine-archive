@@ -59,9 +59,15 @@ public:
         if(value.empty())
             return fgColor4f(1.0f, 1.0f, 1.0f, 1.0f);
         int r = 255, g = 255, b = 255, a = 255;
+        
         fgColor4f retColor;
         std::string colorStr = fg::strings::trim(value);
-        if(fg::strings::startsWith(colorStr.c_str(), "rgba", FG_TRUE)) {
+        if(fg::strings::startsWith(colorStr.c_str(), "rgbaf", FG_TRUE)) {
+            sscanf(colorStr.c_str(), "rgbaf(%f,%f,%f,%f)", &retColor.r, &retColor.g, &retColor.b, &retColor.a);
+        } else if(fg::strings::startsWith(colorStr.c_str(), "rgbf", FG_TRUE)) {
+            sscanf(colorStr.c_str(), "rgbf(%f,%f,%f)", &retColor.r, &retColor.g, &retColor.b);
+            retColor.a = 1.0f;
+        } else if(fg::strings::startsWith(colorStr.c_str(), "rgba", FG_TRUE)) {
             sscanf(colorStr.c_str(), "rgba(%d,%d,%d,%d)", &r, &g, &b, &a);
             retColor.r = (float)r / 255.0f;
             retColor.g = (float)g / 255.0f;
@@ -76,6 +82,9 @@ public:
         } else if(fg::strings::startsWith(colorStr.c_str(), "#", FG_TRUE) || fg::strings::startsWith(colorStr.c_str(), "0x", FG_FALSE)) {
             // HEX!
             retColor = fg::colors::parseHEX(colorStr);
+        } else if(fg::strings::startsWith(colorStr.c_str(), "(", FG_TRUE) || fg::strings::startsWith(colorStr.c_str(), "[", FG_TRUE)){
+            // ?
+            parseVector(retColor, value);
         } else {
             // readable human name !
             retColor = fg::colors::getColor(colorStr);
