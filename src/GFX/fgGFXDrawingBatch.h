@@ -26,32 +26,32 @@ namespace fg {
         /*
          *
          */
-        class CDrawingBatch : public fg::gfx::CLayer {
+        class CDrawingBatch : public CLayer {
         public:
             ///
-            typedef fg::gfx::CLayer base_type;
+            typedef CLayer base_type;
 
         protected:
             ///
-            typedef std::priority_queue<CDrawCall *, std::deque<CDrawCall *>, fgPtrLessEq<CDrawCall *> > batchPriorityQueue;
+            typedef std::priority_queue<CDrawCall *, std::deque<CDrawCall *>, fgPtrLessEq<CDrawCall *> > BatchPriorityQueue;
             ///
-            typedef CVector<CDrawCall *> drawCallVec;
+            typedef CVector<CDrawCall *> DrawCallVec;
             ///
-            typedef drawCallVec::iterator drawCallVecItor;
+            typedef DrawCallVec::iterator DrawCallVecItor;
             ///
-            typedef CVector<unsigned int> dbFreeSlotsVec;
+            typedef CVector<unsigned int> FreeSlotsVec;
             ///
-            typedef dbFreeSlotsVec::iterator dbFreeSlotsVecItor;
+            typedef FreeSlotsVec::iterator FreeSlotsVecItor;
 
         private:
             ///
-            batchPriorityQueue m_priorityBatch;
+            BatchPriorityQueue m_priorityBatch;
             ///
-            drawCallVec m_drawCalls;
+            DrawCallVec m_drawCalls;
             ///
-            drawCallVec m_duplicates;
+            DrawCallVec m_duplicates;
             ///
-            dbFreeSlotsVec m_freeSlots;
+            FreeSlotsVec m_freeSlots;
             ///
             unsigned int m_numDrawCalls;
             ///
@@ -76,14 +76,14 @@ namespace fg {
              * 
              * @return 
              */
-            inline batchPriorityQueue& getRefPriorityQueue(void) {
+            inline BatchPriorityQueue& getRefPriorityQueue(void) {
                 return m_priorityBatch;
             }
             /**
              * 
              * @return 
              */
-            inline drawCallVec& getRefDrawCalls(void) {
+            inline DrawCallVec& getRefDrawCalls(void) {
                 return m_drawCalls;
             }
             /**

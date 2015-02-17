@@ -223,7 +223,7 @@ fgBool gfx::CDrawingBatch::removeDrawCall(CDrawCall *drawCall) {
         m_duplicates[dupIdx] = NULL;
     }
     int index = 0;
-    drawCallVecItor itor = m_drawCalls.begin(), end = m_drawCalls.end();
+    DrawCallVecItor itor = m_drawCalls.begin(), end = m_drawCalls.end();
     for(; itor != end; itor++) {
         if(*itor == drawCall) {
             if(!drawCall->isManaged() && m_numNotManaged)
@@ -246,8 +246,10 @@ fgBool gfx::CDrawingBatch::removeDrawCall(CDrawCall *drawCall) {
     return FG_FALSE;
 }
 
-/*
- *
+/**
+ * 
+ * @param index
+ * @return 
  */
 fgBool gfx::CDrawingBatch::deleteDrawCall(int index) {
     fgBool isManaged = FG_FALSE;
@@ -305,7 +307,7 @@ int gfx::CDrawingBatch::getFreeSlot(int maximum) {
         m_freeSlots.pop_back();
         return index;
     }
-    dbFreeSlotsVecItor it = m_freeSlots.begin(), end = m_freeSlots.end();
+    FreeSlotsVecItor it = m_freeSlots.begin(), end = m_freeSlots.end();
     for(; it != end; it++) {
         if(*it <= (unsigned int)maximum) {
             int index = *it;
