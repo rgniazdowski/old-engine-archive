@@ -31,7 +31,7 @@ namespace fg {
          * @return 
          */
         std::string trim(const std::string& str,
-                         const std::string& whitespace = " \t");
+                         const std::string& whitespace = " \t\r");
         /**
          * 
          * @param str
@@ -57,7 +57,7 @@ namespace fg {
          */
         std::string reduce(const std::string& str,
                            const std::string& fill = " ",
-                           const std::string& whitespace = " \t");
+                           const std::string& whitespace = " \t\r");
         /**
          * 
          * @param s

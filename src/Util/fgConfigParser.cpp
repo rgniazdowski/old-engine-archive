@@ -124,7 +124,7 @@ fgBool util::CConfigParser::parseData(const char *data, config::SectionMap &sect
            (line[0] == '/' && line[1] == '/')) // Ignore comments
             continue;
         if(line[0] == '[') {
-            fullSectionName = strings::trim(line, std::string("[]"));
+            fullSectionName = strings::trim(line, std::string("[]\r\n"));
             isSection = util::CConfigParser::splitSectionName(fullSectionName, sectionName, subSectionName);
             if(newSection) {
                 newSection = NULL;
