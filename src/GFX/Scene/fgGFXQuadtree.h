@@ -179,6 +179,11 @@ namespace fg {
             SQuadtreeNode *getRoot(void) const {
                 return m_root;
             }
+            
+            /**
+             * 
+             */
+            void deleteRoot(void) = 0;
 
         public:
             /**

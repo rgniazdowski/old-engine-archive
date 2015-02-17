@@ -63,19 +63,10 @@ void gfx::CSceneManager::clear(void) {
  */
 fgBool gfx::CSceneManager::destroy(void) {
     CDrawingBatch::flush();
-    //objectVecItor oit = m_objects.begin(), oend = m_objects.end();
-
-    // Delete all gfx objects in the scene
-    /*for(;oit!=oend;oit++) {
-        if(*oit) {
-            if((*oit)->isManaged() == FG_TRUE)
-                delete (*oit);
-     *oit = NULL;
-        }
+    if(m_basetree) {
+        m_basetree->deleteRoot();
     }
-    m_objects.clear_optimised(); */
-
-    // The piece of code seems to repeat itself
+    // The piece of code seems to repeat itself #FIXME #CODEREPEAT
     // Maybe even the handle manager can have this piece of code?
     // Delete all gfx objects in the scene
     DataVecItor begin, end, itor;
@@ -86,12 +77,42 @@ fgBool gfx::CSceneManager::destroy(void) {
         CSceneNode *pObj = (*itor).data;
         if(pObj == NULL)
             continue;
+        if(m_basetree) {
+            // need to have functions for scene node removal
+        }
         if(pObj->isManaged())
             delete pObj;
         (*itor).clear();
     }
     CSceneManager::clear();
     return FG_TRUE;
+}
+
+/**
+ * #FIXME
+ */
+void gfx::CSceneManager::clearScene(void) {
+    CDrawingBatch::flush();
+    if(m_basetree) {
+        m_basetree->deleteRoot();
+    }
+    // Delete all gfx objects in the scene
+    DataVecItor begin, end, itor;
+    begin = getRefDataVector().begin();
+    end = getRefDataVector().end();
+    itor = begin;
+    for(; itor != end; itor++) {
+        CSceneNode *pObj = (*itor).data;
+        if(pObj == NULL)
+            continue;
+        if(m_basetree) {
+            // need to have functions for scene node removal
+        }
+        if(pObj->isManaged())
+            delete pObj;
+        (*itor).clear();
+    }
+    releaseAllHandles();
 }
 
 /**

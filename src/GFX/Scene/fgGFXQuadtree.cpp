@@ -33,6 +33,14 @@ gfx::CQuadtree::~CQuadtree() {
     }
 }
 
+void gfx::CQuadtree::deleteRoot(void) {
+    if(m_root) {
+        delete m_root;
+        m_root = NULL;
+    }
+    m_traverse.rewind();
+}
+
 /**
  * Insert the given object (sceneNode - logical) into the tree given by treeNode
  * Returns the depth of the node the object was placed in.

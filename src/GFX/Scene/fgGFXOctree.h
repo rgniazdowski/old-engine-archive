@@ -25,7 +25,7 @@ namespace fg {
     namespace gfx {
 
         /**
-         *
+         * Those quadtree/octree structures need to be made linear #FIXME
          */
         struct SOctreeNode : public STreeNode {
             ///
@@ -190,6 +190,11 @@ namespace fg {
             SOctreeNode *getRoot(void) const {
                 return m_root;
             }
+            
+            /**
+             * 
+             */
+            void deleteRoot(void);
 
         public:
             /**
@@ -216,6 +221,7 @@ namespace fg {
              * 
              */
             void rewind(void);
+            
             /**
              * 
              */

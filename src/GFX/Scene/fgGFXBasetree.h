@@ -64,6 +64,7 @@ namespace fg {
                 current(NULL),
                 idx(0),
                 count(0) { }
+                
                 /**
                  * 
                  */
@@ -78,6 +79,7 @@ namespace fg {
                     idx = 0;
                     count = 0;
                 }
+                
                 /**
                  * 
                  */
@@ -92,6 +94,7 @@ namespace fg {
                     }
                     count = 0;
                 }
+                
                 /**
                  * 
                  */
@@ -103,6 +106,7 @@ namespace fg {
                         node_stack.pop();
                     }
                 }
+                
                 /**
                  * 
                  * @return 
@@ -126,6 +130,14 @@ namespace fg {
              * @return 
              */
             virtual STreeNode *getRoot(void) const = 0;
+            
+            /**
+             * 
+             */
+            virtual void deleteRoot(void) = 0;
+            
+            ////////////////////////////////////////////////////////////////////
+            
             /**
              * 
              * @param worldSize

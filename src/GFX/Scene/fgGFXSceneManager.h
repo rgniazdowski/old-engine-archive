@@ -60,9 +60,10 @@ namespace fg {
 
         protected:
             /**
-             * 
+             * This should be called something like resetInternals?
              */
             virtual void clear(void);
+            
 
         public:
             /**
@@ -73,6 +74,8 @@ namespace fg {
              * 
              */
             virtual ~CSceneManager();
+            
+            ////////////////////////////////////////////////////////////////////
 
             /**
              * 
@@ -84,25 +87,30 @@ namespace fg {
              * @return 
              */
             virtual fgBool initialize(void);
+            
+            ////////////////////////////////////////////////////////////////////
 
             /**
              * 
              * @param pShaderMgr
              */
-            virtual void setShaderManager(fg::base::CManager *pShaderMgr);
+            virtual void setShaderManager(fg::base::CManager* pShaderMgr);
 
             /**
              * Set internal pointer to the main resource manager
              * @param pResourceMgr
              */
-            void setResourceManager(fg::base::CManager *pResourceMgr);
+            void setResourceManager(fg::base::CManager* pResourceMgr);
             /**
              * Get internal pointer to the main resource manager
              * @return 
              */
-            inline fg::base::CManager *getResourceManager(void) const {
+            inline fg::base::CManager* getResourceManager(void) const {
                 return m_pResourceMgr;
             }
+            
+            ////////////////////////////////////////////////////////////////////
+            
             /**
              * 
              * @return 
@@ -130,6 +138,8 @@ namespace fg {
                 m_zIndex--;
             }
 
+            ////////////////////////////////////////////////////////////////////
+            
             /**
              * 
              */
@@ -143,6 +153,8 @@ namespace fg {
              */
             virtual void render(void);
 
+            ////////////////////////////////////////////////////////////////////
+            
             /**
              * 
              * @param nodeUniqueID
@@ -184,6 +196,8 @@ namespace fg {
                                    CSceneNode *pNode,
                                    const char* nodeParentNameTag);
 
+            ////////////////////////////////////////////////////////////////////
+            
             /**
              * 
              * @param pNode
@@ -209,6 +223,8 @@ namespace fg {
              */
             virtual fgBool remove(const char *nameTag);
 
+            ////////////////////////////////////////////////////////////////////
+            
             /**
              * 
              * @param pNode
@@ -234,6 +250,8 @@ namespace fg {
              */
             virtual fgBool destroyNode(const char *nameTag);
 
+            ////////////////////////////////////////////////////////////////////
+            
             /**
              * 
              * @param nodeUniqueID
@@ -253,6 +271,8 @@ namespace fg {
              */
             virtual CSceneNode* get(const char *nameTag);
 
+            ////////////////////////////////////////////////////////////////////
+            
             /**
              * 
              * @param pNode
@@ -277,6 +297,17 @@ namespace fg {
              * @return 
              */
             virtual fgBool isManaged(const char *nameTag);
+            
+            ////////////////////////////////////////////////////////////////////
+            
+            /**
+             * This function clears the scene, removes all nodes, tree nodes,
+             * releases all handles, resets the scene basically
+             */
+            virtual void clearScene(void);
+            
+            ////////////////////////////////////////////////////////////////////
+            
             /**
              * 
              * @param index
@@ -300,6 +331,8 @@ namespace fg {
                 return handle_mgr_type::getRefDataVector()[n].data;
             }
 
+            ////////////////////////////////////////////////////////////////////
+            
             // Returns the number of valid handles used within the handle 
             // manager. This value should not be used for any kind of iteration
             // through the internal data vector
@@ -313,6 +346,9 @@ namespace fg {
             unsigned int size(void) const {
                 return handle_mgr_type::getRefDataVector().size();
             }
+            
+            ////////////////////////////////////////////////////////////////////
+            
             /**
              * 
              */
@@ -359,6 +395,9 @@ namespace fg {
             inline void setSkyBoxShader(CShaderProgram* pProgram) {
                 m_skyboxProgram = pProgram;
             }
+            
+            ////////////////////////////////////////////////////////////////////
+            
             /**
              * 
              * @return 
@@ -380,6 +419,8 @@ namespace fg {
             inline CBasetree *getBasetree(void) const {
                 return m_basetree;
             }
+            
+            ////////////////////////////////////////////////////////////////////
 
         private:            
             /// Internal MVP matrix to use, this will set the perspective view

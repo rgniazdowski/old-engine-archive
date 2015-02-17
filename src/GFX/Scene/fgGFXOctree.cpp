@@ -36,6 +36,17 @@ gfx::COctree::~COctree() {
 
 /**
  * 
+ */
+void gfx::COctree::deleteRoot(void) {
+    if(m_root) {
+        delete m_root;
+        m_root = NULL;        
+    }
+    m_traverse.rewind();
+}
+
+/**
+ * 
  * @param sceneNode
  * @param treeNode
  * @return 
