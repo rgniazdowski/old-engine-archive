@@ -99,7 +99,7 @@ gfx::CDrawCall *gfx::CDrawingBatch::requestDrawCall(int &index,
     drawCall->setComponentActive(attribMask, FG_TRUE);
     drawCall->setZIndex(m_zIndex);
     drawCall->setManaged(FG_TRUE);
-    drawCall->setTexture(fgGfxTextureID());
+    drawCall->setTexture(STextureID());
     drawCall->setColor(fgColor3f(1.0f, 1.0f, 1.0f));
     drawCall->setRelMove(m_relMove);
     drawCall->setScissorBox(m_scissorBox);
@@ -118,8 +118,9 @@ gfx::CDrawCall *gfx::CDrawingBatch::getDrawCall(int index) {
     return m_drawCalls[index];
 }
 
-/*
- *
+/**
+ * 
+ * @return 
  */
 gfx::CDrawCall *gfx::CDrawingBatch::getLastDrawCall(void) {
     if(m_numDrawCalls == 0)
@@ -128,8 +129,12 @@ gfx::CDrawCall *gfx::CDrawingBatch::getLastDrawCall(void) {
     return m_drawCalls[m_numDrawCalls - 1];
 }
 
-/*
- *
+/**
+ * 
+ * @param drawCall
+ * @param manage
+ * @param check
+ * @return 
  */
 int gfx::CDrawingBatch::appendDrawCall(CDrawCall* drawCall, fgBool manage, fgBool check) {
     if(!drawCall)
@@ -435,7 +440,7 @@ void gfx::CDrawingBatch::flush(void) {
     m_zIndex = 0; */
 }
 
-/*
+/**
  *
  */
 void gfx::CDrawingBatch::sortCalls(void) {
@@ -451,7 +456,7 @@ void gfx::CDrawingBatch::sortCalls(void) {
     }
 }
 
-/*
+/**
  *
  */
 void gfx::CDrawingBatch::render(void) {

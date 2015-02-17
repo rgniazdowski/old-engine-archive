@@ -12,6 +12,7 @@
     #define FG_INC_PS_PARTICLE_EFFECT_BLOCK
 
     #include "fgBool.h"
+    #include "fgTypes.h"
     #include "GFX/fgGFXTypes.h"
 
     #include "fgParticle.h"
@@ -56,10 +57,12 @@ namespace fg {
             /// when calculating the particles. LifeAsSize will be overridden.
             FG_PARTICLE_PARAMS_ACTIVE = 0x00000040
         };
+        
+        FG_ENUM_FLAGS(ParticleEffectFlags);
     };
 };
 
-FG_ENUM_FLAGS(fg::gfx::ParticleEffectFlags);
+
 
     #define FG_TAG_PARTICLE_EFFECT_NAME     "ParticleEffect"
     #define FG_TAG_PARTICLE_EFFECT          FG_TAG_TYPE(fg::gfx::CParticleEffect)
@@ -123,7 +126,15 @@ namespace fg {
         ///typedef fgHandle<fgParticleEffectTag> fgParticleEffectHandle;
         typedef fg::resource::ResourceHandle ParticleEffectHandle;
 
-        class CParticleEffect : public fg::resource::CResource {
+        class CParticleEffect : public resource::CResource {
+        public:
+            ///
+            typedef fg::resource::CResource base_type;
+            ///
+            typedef CParticleEffect self_type;
+            ///
+            typedef CParticleEffect type;
+            
         private:
             /// Maximum number of a particles displayed at one time
             int m_maxCount;
@@ -138,7 +149,7 @@ namespace fg {
             /// Texture name to use
             std::string m_textureName;
             /// Texture ID
-            fgGfxTextureID m_textureGfxID;
+            STextureID m_textureGfxID;
             /// Texture sprite sheet size
             Vector2i m_textureSheetSize;
             /// Texture ID range
@@ -541,7 +552,7 @@ namespace fg {
              * 
              * @param texGfxID
              */
-            inline void setTextureGfxID(const fgGfxTextureID& texGfxID) {
+            inline void setTextureGfxID(const STextureID& texGfxID) {
                 m_textureGfxID = texGfxID;
             }
             
@@ -579,7 +590,7 @@ namespace fg {
              * 
              * @return 
              */
-            inline fgGfxTextureID& getTextureGfxID(void) {
+            inline STextureID& getTextureGfxID(void) {
                 return m_textureGfxID;
             }
             /**

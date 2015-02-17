@@ -1907,7 +1907,7 @@ namespace fg {
             typedef ParameterVec::iterator ParameterVecItor;
 
             ///
-            typedef std::map<fgGFXuint, fgGfxTextureID*> TextureMap;
+            typedef std::map<fgGFXuint, STextureID*> TextureMap;
             ///
             typedef TextureMap::iterator TextureMapItor;
 
@@ -2168,7 +2168,7 @@ namespace fg {
              * @param textureID
              * @return 
              */
-            fgGFXboolean isTexture(const fgGfxTextureID& textureID);
+            fgGFXboolean isTexture(const STextureID& textureID);
 
             /**
              * Set active texture unit ID
@@ -2188,14 +2188,14 @@ namespace fg {
              * @param target
              */
             void genTextures(const int count,
-                             fgGfxTextureID* textures,
+                             STextureID* textures,
                              const fgGFXenum target = GL_TEXTURE_2D);
             /**
              * Generate texture and store information in special structure
              * @param texture
              * @param target
              */
-            void genTexture(fgGfxTextureID* texture,
+            void genTexture(STextureID* texture,
                             const fgGFXenum target = GL_TEXTURE_2D);
 
             /**
@@ -2203,12 +2203,12 @@ namespace fg {
              * @param count
              * @param textures
              */
-            void deleteTextures(const int count, fgGfxTextureID* textures);
+            void deleteTextures(const int count, STextureID* textures);
             /**
              * Delete the given texture based on the special information struct
              * @param textureID
              */
-            void deleteTexture(fgGfxTextureID& textureID);
+            void deleteTexture(STextureID& textureID);
 
             /**
              * Bind texture to 2D
@@ -2225,7 +2225,7 @@ namespace fg {
              * @param textureID
              * @param target
              */
-            void bindTexture(fgGfxTextureID& textureID,
+            void bindTexture(STextureID& textureID,
                              const fgGFXenum target = (fgGFXenum)0);
 
             /**

@@ -124,21 +124,21 @@ namespace fg {
              * Sets the texture pointer
              * @param textureID
              */
-            void setTexture(const fgGfxTextureID& textureID) {
+            void setTexture(const STextureID& textureID) {
                 m_textureID = textureID;
             }
             /**
              * Returns the texture ID reference
              * @return 
              */
-            fgGfxTextureID& getTexture(void) {
+            STextureID& getTexture(void) {
                 return m_textureID;
             }
             /**
              * Returns the texture ID reference
              * @return 
              */
-            fgGfxTextureID const& getTexture(void) const {
+            STextureID const& getTexture(void) const {
                 return m_textureID;
             }
             /**
@@ -176,7 +176,7 @@ namespace fg {
             ///
             Vector3f m_pos;
             ///
-            fgGfxTextureID m_textureID;
+            STextureID m_textureID;
             ///
             CShaderProgram *m_program;
             ///

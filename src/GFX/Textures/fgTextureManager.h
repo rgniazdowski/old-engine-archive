@@ -157,19 +157,19 @@ namespace fg {
              * @param texHandle
              * @return 
              */
-            fgGfxTextureID &getRefGfxID(const resource::ResourceHandle& texHandle);
+            STextureID &getRefGfxID(const resource::ResourceHandle& texHandle);
             /**
              * 
              * @param nameTag
              * @return 
              */
-            fgGfxTextureID &getRefGfxID(const std::string& nameTag);
+            STextureID &getRefGfxID(const std::string& nameTag);
             /**
              * 
              * @param nameTag
              * @return 
              */
-            fgGfxTextureID &getRefGfxID(const char *nameTag);
+            STextureID &getRefGfxID(const char *nameTag);
 
         private:
             /**
@@ -203,7 +203,7 @@ namespace fg {
             ///
             fgBool m_allInVRAM;
             ///
-            fgGfxTextureID m_emptyGfxID;
+            STextureID m_emptyGfxID;
         };
     };
 };

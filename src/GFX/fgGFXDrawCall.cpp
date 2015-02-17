@@ -432,7 +432,7 @@ gfx::CShaderProgram *gfx::CDrawCall::getShaderProgram(void) const {
  * 
  * @param textureID
  */
-void gfx::CDrawCall::setTexture(const fgGfxTextureID& textureID) {
+void gfx::CDrawCall::setTexture(const STextureID& textureID) {
     m_textureID = textureID;
     m_fastCmp.setPart(1, (fg::util::FastCmp::data_type_32)m_textureID.id);
 }
@@ -441,14 +441,14 @@ void gfx::CDrawCall::setTexture(const fgGfxTextureID& textureID) {
  * 
  * @return 
  */
-fgGfxTextureID const & gfx::CDrawCall::getTexture(void) const {
+gfx::STextureID const& gfx::CDrawCall::getTexture(void) const {
     return m_textureID;
 }
 
 /*
  *
  */
-fgGfxTextureID& gfx::CDrawCall::getTexture(void) {
+gfx::STextureID& gfx::CDrawCall::getTexture(void) {
     return m_textureID;
 }
 

@@ -574,7 +574,7 @@ void gfx::SContextParam::determineParamType(void) {
             //void glStencilOpSeparate(GLenum face,  GLenum sfail,  GLenum dpfail,  GLenum dppass);
             count = 1;
             type = FG_GFX_INT;
-            paramType = FG_GFX_PARAM_STENCIL_OP;            
+            paramType = FG_GFX_PARAM_STENCIL_OP;
             break;
 
             //    params returns one value,
@@ -1532,7 +1532,7 @@ fgGFXboolean gfx::CContext::isTexture(const fgGFXuint texture) {
  * @param textureID
  * @return 
  */
-fgGFXboolean gfx::CContext::isTexture(const fgGfxTextureID& textureID) {
+fgGFXboolean gfx::CContext::isTexture(const STextureID& textureID) {
     return isTexture(textureID.id);
 }
 
@@ -1544,7 +1544,7 @@ void gfx::CContext::deleteAllTextures(void) {
         return;
     TextureMapItor itor = m_textures.begin(), end = m_textures.end();
     for(; itor != end; itor++) {
-        fgGfxTextureID *tex = itor->second;
+        STextureID *tex = itor->second;
         if(!tex)
             continue;
         glDeleteTextures(1, tex->ptrID());
@@ -1561,7 +1561,7 @@ void gfx::CContext::deleteAllTextures(void) {
  * @param target
  */
 void gfx::CContext::genTextures(const int count,
-                                fgGfxTextureID* textures,
+                                STextureID* textures,
                                 const fgGFXenum target/* = GL_TEXTURE_2D*/) {
     if(count <= 0 || !textures)
         return;
@@ -1577,7 +1577,7 @@ void gfx::CContext::genTextures(const int count,
  * @param texture
  * @param target
  */
-void gfx::CContext::genTexture(fgGfxTextureID* texture,
+void gfx::CContext::genTexture(STextureID* texture,
                                const fgGFXenum target/* = GL_TEXTURE_2D*/) {
     if(!texture)
         return;
@@ -1594,7 +1594,7 @@ void gfx::CContext::genTexture(fgGfxTextureID* texture,
  * @param count
  * @param textures
  */
-void gfx::CContext::deleteTextures(const int count, fgGfxTextureID* textures) {
+void gfx::CContext::deleteTextures(const int count, STextureID* textures) {
     if(count <= 0 || !textures)
         return;
     for(int i = 0; i < count; i++)
@@ -1605,7 +1605,7 @@ void gfx::CContext::deleteTextures(const int count, fgGfxTextureID* textures) {
  * 
  * @param textureID
  */
-void gfx::CContext::deleteTexture(fgGfxTextureID& textureID) {
+void gfx::CContext::deleteTexture(STextureID& textureID) {
     if(textureID.id == 0)
         return;
     if(m_textures.empty())
@@ -1625,7 +1625,7 @@ void gfx::CContext::deleteTexture(fgGfxTextureID& textureID) {
  * @param textureID
  * @param target
  */
-void gfx::CContext::bindTexture(fgGfxTextureID& textureID, const fgGFXenum target/*=0*/) {
+void gfx::CContext::bindTexture(STextureID& textureID, const fgGFXenum target/*=0*/) {
     if(textureID.id == 0)
         return;
     if(target != (fgGFXenum)0)

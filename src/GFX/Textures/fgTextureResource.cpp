@@ -210,7 +210,7 @@ fgBool gfx::CTextureResource::create(void) {
  */
 void gfx::CTextureResource::destroy(void) {
     releaseNonGFX();
-    gfx::CTextureResource::clear();
+    CTextureResource::clear();
 }
 
 /**

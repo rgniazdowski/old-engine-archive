@@ -75,7 +75,7 @@ namespace fg {
             typedef fg::gfx::CDrawable base_type;
 
         private:
-            /// Attribute binding data // Need to think what do with indices ?
+            /// Attribute binding data
             SAttributeData m_attrData[FG_GFX_ATTRIBUTE_COUNT];
             /// Information on indices used in this draw call
             /// Pointers within must be always valid
@@ -98,7 +98,7 @@ namespace fg {
             /// can be updated). However this is not always required.
             /// If there is no multitexturing then there's always one
             /// texture active (TEXTURE0).
-            fgGfxTextureID m_textureID;
+            STextureID m_textureID;
             /// Pointer to external MVP matrix to use
             /// this will need to be updated for every drawcall made
             /// because the model matrix would change
@@ -285,6 +285,8 @@ namespace fg {
              */
             void setComponentActive(unsigned int component, const fgBool reset = FG_FALSE);
 
+            ////////////////////////////////////////////////////////////////////
+            
             /**
              * Set active color for the next data
              * @param color
@@ -299,6 +301,8 @@ namespace fg {
              * This will reset used color
              */
             virtual void resetColor(void);
+            
+            ////////////////////////////////////////////////////////////////////
 
             /**
              * Sets the pointer to given MVP matrix
@@ -321,22 +325,26 @@ namespace fg {
              */
             gfx::CShaderProgram* getShaderProgram(void) const;
 
+            ////////////////////////////////////////////////////////////////////
+            
             /**
              * Sets the texture pointer
              * @param textureID
              */
-            void setTexture(const fgGfxTextureID& textureID);
+            void setTexture(const STextureID& textureID);
             /**
              * Returns the texture ID reference
              * @return 
              */
-            fgGfxTextureID const& getTexture(void) const;
+            STextureID const& getTexture(void) const;
             /**
              * Returns the texture ID reference
              * @return 
              */
-            fgGfxTextureID& getTexture(void);
+            STextureID& getTexture(void);
 
+            ////////////////////////////////////////////////////////////////////
+            
             /**
              * Clear the buffers
              */
@@ -365,6 +373,8 @@ namespace fg {
                               const Vector2f &uv1, const Vector2f &uv2,
                               const fgBool rewind = FG_FALSE);
 
+            ////////////////////////////////////////////////////////////////////
+            
             /**
              * 
              */
@@ -394,7 +404,7 @@ namespace fg {
                 CDrawCall::draw();
             }
 
-            ///////////////////////////////////////////////////////
+            ////////////////////////////////////////////////////////////////////
             // COMPARISON OPERATORS
 
             //

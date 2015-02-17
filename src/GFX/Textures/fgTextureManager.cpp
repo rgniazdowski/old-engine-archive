@@ -153,7 +153,7 @@ fg::base::CManager* gfx::CTextureManager::getResourceManager(void) const {
  * @param texHandle
  * @return 
  */
-fgGfxTextureID& gfx::CTextureManager::getRefGfxID(const resource::ResourceHandle& texHandle) {
+gfx::STextureID& gfx::CTextureManager::getRefGfxID(const resource::ResourceHandle& texHandle) {
     if(!m_pResourceMgr)
         return m_emptyGfxID;
     gfx::CTextureResource *pTexture = (CTextureResource *)static_cast<resource::CResourceManager *>(m_pResourceMgr)->get(texHandle);
@@ -169,7 +169,7 @@ fgGfxTextureID& gfx::CTextureManager::getRefGfxID(const resource::ResourceHandle
  * @param nameTag
  * @return 
  */
-fgGfxTextureID& gfx::CTextureManager::getRefGfxID(const std::string& nameTag) {
+gfx::STextureID& gfx::CTextureManager::getRefGfxID(const std::string& nameTag) {
     if(!m_pResourceMgr || nameTag.empty())
         return m_emptyGfxID;
     gfx::CTextureResource *pTexture = (CTextureResource *)static_cast<resource::CResourceManager *>(m_pResourceMgr)->get(nameTag);
@@ -185,7 +185,7 @@ fgGfxTextureID& gfx::CTextureManager::getRefGfxID(const std::string& nameTag) {
  * @param nameTag
  * @return 
  */
-fgGfxTextureID& gfx::CTextureManager::getRefGfxID(const char *nameTag) {
+gfx::STextureID& gfx::CTextureManager::getRefGfxID(const char *nameTag) {
     if(!m_pResourceMgr || !nameTag)
         return m_emptyGfxID;
     gfx::CTextureResource *pTexture = (CTextureResource *)static_cast<resource::CResourceManager *>(m_pResourceMgr)->get(nameTag);
@@ -290,7 +290,7 @@ fgBool gfx::CTextureManager::uploadToVRAM(CTexture *texture, fgBool force) {
         return FG_FALSE;
     }
     fgBool result = FG_TRUE;
-    fgGfxTextureID& texGfxID = texture->getRefGfxID();
+    STextureID& texGfxID = texture->getRefGfxID();
     if(gfx::CPlatform::context()->isTexture(texGfxID) == FG_GFX_TRUE && !force) {
         return result;
     }
@@ -402,7 +402,7 @@ void gfx::CTextureManager::allReleaseGFX(void) {
         resource::ResourceType resType = resource->getResourceType();
         if(resType == resource::TEXTURE || resType == resource::FONT) {
             CTextureResource *textureResource = (CTextureResource *)resource;
-            fgGfxTextureID& texGfxID = textureResource->getRefGfxID();
+            STextureID& texGfxID = textureResource->getRefGfxID();
             gfx::CPlatform::context()->deleteTexture(texGfxID);
             //textureResource->releaseNonGFX();
         }
@@ -420,7 +420,7 @@ void gfx::CTextureManager::releaseGFX(CTextureResource * texture) {
         return;
     resource::ResourceType resType = texture->getResourceType();
     if(resType == resource::TEXTURE || resType == resource::FONT) {
-        fgGfxTextureID& texGfxID = texture->getRefGfxID();
+        STextureID& texGfxID = texture->getRefGfxID();
         gfx::CPlatform::context()->deleteTexture(texGfxID);
     }
 }
@@ -451,7 +451,7 @@ fgBool gfx::CTextureManager::makeTexture(CTextureResource * pTexture) {
         return FG_FALSE;
     }
     FG_LOG_DEBUG("GFX: Preparing for texture upload [%s]...", pTexture->getNameStr());
-    fgGfxTextureID& texGfxID = pTexture->getRefGfxID();
+    STextureID& texGfxID = pTexture->getRefGfxID();
     // Generate texture object ONLY IF NEEDED
     if(FG_GFX_FALSE == gfx::CPlatform::context()->isTexture(texGfxID)) {
         gfx::CPlatform::context()->genTexture(pTexture->getPtrGfxID());

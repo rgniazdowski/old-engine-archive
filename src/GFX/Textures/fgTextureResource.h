@@ -136,14 +136,14 @@ namespace fg {
              * Get reference tothe texture id used by the low level graphics system - handle in OpenGL
              * @return 
              */
-            fgGfxTextureID& getRefGfxID() {
+            STextureID& getRefGfxID() {
                 return m_textureGfxID;
             }
             /**
              * 
              * @return 
              */
-            fgGfxTextureID* getPtrGfxID() {
+            STextureID* getPtrGfxID() {
                 return &m_textureGfxID;
             }
             /**
@@ -284,7 +284,7 @@ namespace fg {
             /// Number of color components (gray scale, RGB, RGBA)
             int m_components;
             /// OpenGL texture id handle
-            fgGfxTextureID m_textureGfxID;
+            STextureID m_textureGfxID;
 
         private:
             /// This is special trigger, it tells if texture was uploaded to VRAM
