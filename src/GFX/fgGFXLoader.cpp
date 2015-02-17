@@ -17,10 +17,12 @@
 #include "fgGFXPrimitives.h"
 #include "Hardware/fgHardwareState.h"
 
+using namespace fg;
+
 /**
  * 
  */
-fg::gfx::CLoader::CLoader() :
+gfx::CLoader::CLoader() :
 m_pSplashTex(NULL),
 m_pProgressTex(NULL),
 m_pProgram(NULL),
@@ -34,7 +36,7 @@ m_progress(0.0f) { }
  * 
  * @param orig
  */
-fg::gfx::CLoader::CLoader(const CLoader& orig) {
+gfx::CLoader::CLoader(const CLoader& orig) {
     if(this != &orig) {
         this->m_pSplashTex = orig.m_pSplashTex;
         this->m_pProgressTex = orig.m_pProgressTex;
@@ -50,7 +52,7 @@ fg::gfx::CLoader::CLoader(const CLoader& orig) {
 /**
  * 
  */
-fg::gfx::CLoader::~CLoader() {
+gfx::CLoader::~CLoader() {
     m_pSplashTex = NULL;
     m_pProgressTex = NULL;
     m_pProgram = NULL;
@@ -64,7 +66,7 @@ fg::gfx::CLoader::~CLoader() {
  * 
  * @param diff
  */
-void fg::gfx::CLoader::update(const float diff) {
+void gfx::CLoader::update(const float diff) {
     if(!m_pWindow || !m_pSplashTex || !m_pContext || !m_pProgram)
         return;
     m_pWindow->clearColor();

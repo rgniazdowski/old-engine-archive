@@ -487,7 +487,7 @@ void gfx::CGfxMain::render(void) {
         if(pResourceX->getResourceType() == resource::TEXTURE) {
             gfx::CTexture *pTexture = static_cast<gfx::CTexture *>(pResourceX);
             if(pTexture) {
-                fgGfxTextureID &texID = pTexture->getRefGfxID();
+                STextureID &texID = pTexture->getRefGfxID();
                 m_3DScene->getSkyBox()->setTexture(texID);
             }
         }

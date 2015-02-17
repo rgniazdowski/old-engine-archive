@@ -82,7 +82,7 @@ namespace fg {
             SAttributeData m_attrData[FG_GFX_ATTRIBUTE_COUNT];
             /// Information on indices used in this draw call
             /// Pointers within must be always valid
-            fgGfxDrawingInfo m_drawingInfo;
+            SDrawingInfo m_drawingInfo;
             /// Special vector data
             CVertexData *m_vecDataBase;
             ///

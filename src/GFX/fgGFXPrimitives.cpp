@@ -700,7 +700,7 @@ void gfx::CPrimitives::drawArrayIndexed(const CVector<Vertex4v> &inputData,
 }
 
 void gfx::CPrimitives::applyAttributeData(SAttributeData *attrData,
-                                          fgGfxDrawingInfo& drawingInfo,
+                                          SDrawingInfo& drawingInfo,
                                           const unsigned int attribMask) {
     if(!attrData)
         return;
@@ -742,7 +742,7 @@ void gfx::CPrimitives::drawVertexData(const CVertexData *inputData,
         return;
     unsigned int andMask = (attribMask & inputData->attribMask());
     SAttributeData attrData[FG_GFX_ATTRIBUTE_COUNT];
-    fgGfxDrawingInfo drawingInfo;
+    SDrawingInfo drawingInfo;
     inputData->setupAttributes(attrData);
     if(inputData->hasIndices()) {
         drawingInfo.buffer = inputData->getIndicesVBO();

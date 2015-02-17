@@ -42,7 +42,7 @@ namespace fg {
             /**
              * 
              */
-            ~CWindow();
+            virtual ~CWindow();
 
             /**
              * 

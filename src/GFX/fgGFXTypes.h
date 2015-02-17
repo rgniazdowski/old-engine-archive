@@ -15,6 +15,8 @@
         #error "FG_TYPES_BLOCK constant is defined. Do not include fgGfxTypes header inside of fgTypes header."
     #endif
 
+    #include "fgTypes.h"
+
     #ifndef FG_GFX_NONE
         #define FG_GFX_NONE 0
     #endif
@@ -63,7 +65,7 @@ namespace fg {
 
     #ifndef FG_INC_GFX_VERTEX_DATA
         #include "fgGFXVertexData.h"
-    #endif
+    #endif    
 
     #if !defined(FG_RAND)
         #define FG_RAND(_A, _B) (_A + (int)(((float)(_B - _A + 1)) * rand() / (((float)RAND_MAX) + 1.0f)))
@@ -176,36 +178,40 @@ inline const char * _FG_GFX_DATA_TYPE_TO_TEXT(fgGFXenum value) {
         #define FG_RAD2DEG_FUNC(_RADIANS) (_RADIANS * FG_RAD2DEG)
     #endif
 
-/**
- * This is quick drawing info, it's a helper, needs refactoring
- * It provides info for direct drawing functions (like DrawElements
- * or DrawArrays from gl). Because of the parameters it's easy to
- * check what drawing function to use.
- * #FIXME plox...
- */
-struct fgGfxDrawingInfo {
+namespace fg {
+    namespace gfx {
 
-    union {
-        ///
-        fgGFXvoid *pointer;
-        ///
-        fgGFXvoid *offset;
-    } indices;
-    ///
-    fgGFXuint buffer;
-    ///
-    fgGFXuint count;
-    /**
-     * 
-     */
-    fgGfxDrawingInfo() {
-        indices.pointer = 0;
-        indices.offset = 0;
-        buffer = 0;
-        count = 0;
+        /**
+         * This is quick drawing info, it's a helper, needs refactoring
+         * It provides info for direct drawing functions (like DrawElements
+         * or DrawArrays from gl). Because of the parameters it's easy to
+         * check what drawing function to use.
+         * #FIXME plox...
+         */
+        struct SDrawingInfo {
+
+            union {
+                ///
+                fgGFXvoid *pointer;
+                ///
+                fgGFXvoid *offset;
+            } indices;
+            ///
+            fgGFXuint buffer;
+            ///
+            fgGFXuint count;
+            /**
+             * 
+             */
+            SDrawingInfo() {
+                indices.pointer = 0;
+                indices.offset = 0;
+                buffer = 0;
+                count = 0;
+            }
+        };
     }
-};
-
+}
 // #FIXME #DUMP 
 inline void dumpMatrix(const float *mat, const char *title) {
     if(title)

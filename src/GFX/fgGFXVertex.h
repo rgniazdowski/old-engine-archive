@@ -32,7 +32,7 @@
     #ifndef FG_INC_GFX_ATTRIB_BITS
         #include "fgGFXAttribBits.h"
     #endif
-    
+
 namespace fg {
     namespace gfx {
 
@@ -53,7 +53,6 @@ namespace fg {
             fg::Vector2f uv; // location 2
             ///
             fgColor4f color; // location 3
-
             /**
              * 
              * @return 
@@ -68,6 +67,10 @@ namespace fg {
             static unsigned int attribMask(void) {
                 return FG_GFX_POSITION_BIT | FG_GFX_NORMAL_BIT | FG_GFX_UVS_BIT | FG_GFX_COLOR_BIT;
             }
+            /**
+             * 
+             * @return 
+             */
             static unsigned int stride(void) {
                 return sizeof (type);
             }
@@ -110,7 +113,7 @@ namespace fg {
                 return sizeof (type);
             }
         };
-        
+
         /**
          * Vertex2 - pos, uv
          */

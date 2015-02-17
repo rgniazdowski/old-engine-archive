@@ -53,7 +53,7 @@ namespace fg {
              * @param attribMask
              */
             static void applyAttributeData(SAttributeData *attrData,
-                                           fgGfxDrawingInfo& drawingInfo,
+                                           SDrawingInfo& drawingInfo,
                                            const unsigned int attribMask);
 
             /**
