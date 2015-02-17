@@ -97,6 +97,13 @@ namespace fg {
             virtual void setShaderManager(fg::base::CManager* pShaderMgr);
 
             /**
+             * 
+             * @return 
+             */
+            inline fg::base::CManager* getShaderManager(void) const {
+                return m_pShaderMgr;
+            }
+            /**
              * Set internal pointer to the main resource manager
              * @param pResourceMgr
              */
