@@ -2051,6 +2051,13 @@ namespace fg {
              * @param cap
              */
             void disable(const ParamType cap);
+            
+            /**
+             * 
+             * @param cap
+             * @param toggle
+             */
+            void setCapability(const ParamType cap, const fgBool toggle = FG_TRUE);
 
             /**
              * Is given capability/parameter enabled?

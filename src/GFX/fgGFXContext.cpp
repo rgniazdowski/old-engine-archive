@@ -1281,6 +1281,15 @@ void gfx::CContext::disable(const ParamType cap) {
     m_params[(unsigned int)cap].set((fgGFXboolean)FG_GFX_FALSE);
 }
 
+/**
+ * 
+ * @param cap
+ * @param toggle
+ */
+void gfx::CContext::setCapability(const ParamType cap, const fgBool toggle) {
+    m_params[(unsigned int)cap].set((fgGFXboolean)toggle);
+}
+
 /*
  *
  */
