@@ -39,9 +39,9 @@ namespace fg {
             ///
             typedef fg::util::CRegularFile::tag_type tag_type;
             ///
-            typedef fg::util::CFile::Mode Mode;
+            typedef fg::util::base::CFile::Mode Mode;
             ///
-            typedef fg::util::CFile::Mode FileMode;
+            typedef fg::util::base::CFile::Mode FileMode;
             ///
             typedef fg::util::CZipFile::Mode ZipMode;
 
