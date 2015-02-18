@@ -214,30 +214,46 @@ fgGFXboolean gfx::SMeshSoA::genBuffers(void) {
         return FG_GFX_FALSE;
     int &count = getRefVBOCount();
     count = 4;
-    gfx::CPlatform::context()->genBuffers(count, getRefPtrVBO(), GL_STATIC_DRAW);
-    gfx::CPlatform::context()->bindBuffer(getRefPtrVBO()[POSITIONS_VBO_ARRAY_IDX],
-                                          GL_ARRAY_BUFFER);
-    gfx::CPlatform::context()->bufferData(getRefPtrVBO()[POSITIONS_VBO_ARRAY_IDX],
-                                          sizeof (fgGFXfloat) * vertices.size(),
-                                          (fgGFXvoid *)(&vertices.front()));
 
-    gfx::CPlatform::context()->bindBuffer(getRefPtrVBO()[NORMALS_VBO_ARRAY_IDX],
-                                          GL_ARRAY_BUFFER);
-    gfx::CPlatform::context()->bufferData(getRefPtrVBO()[NORMALS_VBO_ARRAY_IDX],
-                                          sizeof (fgGFXfloat) * normals.size(),
-                                          (fgGFXvoid *)(&normals.front()));
+    FG_LOG_DEBUG("GFX: MESH SoA: generating %d buffers - static draw", count);
+    CPlatform::context()->genBuffers(count, getRefPtrVBO(), GL_STATIC_DRAW);
 
-    gfx::CPlatform::context()->bindBuffer(getRefPtrVBO()[TEX_COORDS_VBO_ARRAY_IDX],
-                                          GL_ARRAY_BUFFER);
-    gfx::CPlatform::context()->bufferData(getRefPtrVBO()[TEX_COORDS_VBO_ARRAY_IDX],
-                                          sizeof (fgGFXfloat) * uvs.size(),
-                                          (fgGFXvoid *)(&uvs.front()));
+    CPlatform::context()->bindBuffer(getRefPtrVBO()[POSITIONS_VBO_ARRAY_IDX],
+                                     GL_ARRAY_BUFFER);
+    CPlatform::context()->bufferData(getRefPtrVBO()[POSITIONS_VBO_ARRAY_IDX],
+                                     sizeof (fgGFXfloat) * vertices.size(),
+                                     (fgGFXvoid *)(&vertices.front()));
+    FG_LOG_DEBUG("GFX: MESH SoA: buffer id[positions][%d], data[%p], size[%d]",
+                 (int)getRefPtrVBO()[POSITIONS_VBO_ARRAY_IDX].id,
+                 (fgGFXvoid *)(&vertices.front()), vertices.size());
 
-    gfx::CPlatform::context()->bindBuffer(getRefPtrVBO()[INDICES_VBO_ARRAY_IDX],
-                                          GL_ELEMENT_ARRAY_BUFFER);
-    gfx::CPlatform::context()->bufferData(getRefPtrVBO()[INDICES_VBO_ARRAY_IDX],
-                                          sizeof (fgGFXushort) * indices.size(),
-                                          (fgGFXvoid *)(&indices.front()));
+    CPlatform::context()->bindBuffer(getRefPtrVBO()[NORMALS_VBO_ARRAY_IDX],
+                                     GL_ARRAY_BUFFER);
+    CPlatform::context()->bufferData(getRefPtrVBO()[NORMALS_VBO_ARRAY_IDX],
+                                     sizeof (fgGFXfloat) * normals.size(),
+                                     (fgGFXvoid *)(&normals.front()));
+    FG_LOG_DEBUG("GFX: MESH SoA: buffer id[normals][%d], data[%p], size[%d]",
+                 (int)getRefPtrVBO()[NORMALS_VBO_ARRAY_IDX].id,
+                 (fgGFXvoid *)(&normals.front()), normals.size());
+
+    CPlatform::context()->bindBuffer(getRefPtrVBO()[TEX_COORDS_VBO_ARRAY_IDX],
+                                     GL_ARRAY_BUFFER);
+    CPlatform::context()->bufferData(getRefPtrVBO()[TEX_COORDS_VBO_ARRAY_IDX],
+                                     sizeof (fgGFXfloat) * uvs.size(),
+                                     (fgGFXvoid *)(&uvs.front()));
+    FG_LOG_DEBUG("GFX: MESH SoA: buffer id[uvs][%d], data[%p], size[%d]",
+                 (int)getRefPtrVBO()[TEX_COORDS_VBO_ARRAY_IDX].id,
+                 (fgGFXvoid *)(&uvs.front()), uvs.size());
+
+    CPlatform::context()->bindBuffer(getRefPtrVBO()[INDICES_VBO_ARRAY_IDX],
+                                     GL_ELEMENT_ARRAY_BUFFER);
+    CPlatform::context()->bufferData(getRefPtrVBO()[INDICES_VBO_ARRAY_IDX],
+                                     sizeof (fgGFXushort) * indices.size(),
+                                     (fgGFXvoid *)(&indices.front()));
+    FG_LOG_DEBUG("GFX: MESH SoA: buffer id[indices][%d], data[%p], size[%d], size(B)[%d]",
+                 (int)getRefPtrVBO()[INDICES_VBO_ARRAY_IDX].id, (fgGFXvoid *)(&indices.front()),
+                 indices.size(), sizeof (fgGFXushort) * indices.size());
+
     return FG_GFX_TRUE;
 
 }
@@ -249,7 +265,8 @@ fgGFXboolean gfx::SMeshSoA::genBuffers(void) {
 fgGFXboolean gfx::SMeshSoA::deleteBuffers(void) {
     if(!getPtrVBO())
         return FG_GFX_FALSE;
-    gfx::CPlatform::context()->deleteBuffers(getVBOCount(), getPtrVBO());
+    FG_LOG_DEBUG("GFX: MESH SoA: removing %d buffers [%p]", getVBOCount(), getPtrVBO());
+    CPlatform::context()->deleteBuffers(getVBOCount(), getPtrVBO());
     return FG_GFX_TRUE;
 
 }
@@ -309,26 +326,27 @@ fgGFXboolean gfx::SMeshAoS::genBuffers(void) {
         return FG_GFX_FALSE;
     int &count = getRefVBOCount();
     count = 2;
-    gfx::CPlatform::context()->genBuffers(count, getRefPtrVBO(), GL_STATIC_DRAW);
-    gfx::CPlatform::context()->bindBuffer(getRefPtrVBO()[VERTICES_VBO_ARRAY_IDX],
-                                          GL_ARRAY_BUFFER);
+    FG_LOG_DEBUG("GFX: MESH AoS: generating %d buffers - static draw", count);
+    CPlatform::context()->genBuffers(count, getRefPtrVBO(), GL_STATIC_DRAW);
+    CPlatform::context()->bindBuffer(getRefPtrVBO()[VERTICES_VBO_ARRAY_IDX],
+                                     GL_ARRAY_BUFFER);
 
-    gfx::CPlatform::context()->bufferData(getRefPtrVBO()[VERTICES_VBO_ARRAY_IDX],
-                                          this->stride() * this->size(),
-                                          gfx::SMeshAoS::front());
+    CPlatform::context()->bufferData(getRefPtrVBO()[VERTICES_VBO_ARRAY_IDX],
+                                     this->stride() * this->size(),
+                                     SMeshAoS::front());
 
-    gfx::CPlatform::context()->bindBuffer(getRefPtrVBO()[INDICES_VBO_ARRAY_IDX],
-                                          GL_ELEMENT_ARRAY_BUFFER);
+    CPlatform::context()->bindBuffer(getRefPtrVBO()[INDICES_VBO_ARRAY_IDX],
+                                     GL_ELEMENT_ARRAY_BUFFER);
 
-    gfx::CPlatform::context()->bufferData(getRefPtrVBO()[INDICES_VBO_ARRAY_IDX],
-                                          sizeof (fgGFXushort) * indices.size(),
-                                          (fgGFXvoid *)(&indices.front()));
+    CPlatform::context()->bufferData(getRefPtrVBO()[INDICES_VBO_ARRAY_IDX],
+                                     sizeof (fgGFXushort) * indices.size(),
+                                     (fgGFXvoid *)(&indices.front()));
 
-    FG_LOG_DEBUG("GFX: MESH: binding buffer id: %d", (int)getRefPtrVBO()[VERTICES_VBO_ARRAY_IDX].id);
-    FG_LOG_DEBUG("GFX: MESH: buffer id: %d, data: %p, stride: %d, size: %d",
+    //FG_LOG_DEBUG("GFX: MESH: binding buffer id: %d", (int)getRefPtrVBO()[VERTICES_VBO_ARRAY_IDX].id);
+    FG_LOG_DEBUG("GFX: MESH AoS: buffer id[vertices][%d], data[%p], stride[%d], size[%d]",
                  (int)getRefPtrVBO()[VERTICES_VBO_ARRAY_IDX].id, front(), stride(), size());
-    FG_LOG_DEBUG("GFX: MESH: binding buffer id: %d", (int)getRefPtrVBO()[INDICES_VBO_ARRAY_IDX].id);
-    FG_LOG_DEBUG("GFX: MESH: buffer id: %d, data: %p, size(B): %d, size: %d",
+    //FG_LOG_DEBUG("GFX: MESH: binding buffer id: %d", (int)getRefPtrVBO()[INDICES_VBO_ARRAY_IDX].id);
+    FG_LOG_DEBUG("GFX: MESH AoS: buffer id[indices][%d], data[%p], size(B)[%d], size[%d]",
                  (int)getRefPtrVBO()[INDICES_VBO_ARRAY_IDX].id,
                  (fgGFXvoid *)(&indices.front()),
                  sizeof (fgGFXushort) * indices.size(),
@@ -345,7 +363,8 @@ fgGFXboolean gfx::SMeshAoS::genBuffers(void) {
 fgGFXboolean gfx::SMeshAoS::deleteBuffers(void) {
     if(!getPtrVBO())
         return FG_GFX_FALSE;
-    gfx::CPlatform::context()->deleteBuffers(getVBOCount(), getPtrVBO());
+    FG_LOG_DEBUG("GFX: MESH AoS: removing %d buffers [%p]", getVBOCount(), getPtrVBO());
+    CPlatform::context()->deleteBuffers(getVBOCount(), getPtrVBO());
     return FG_GFX_TRUE;
 
 }
