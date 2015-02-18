@@ -17,9 +17,7 @@
     #ifndef FG_INC_GFX_MODEL_TYPES
         #include "fgGFXModelTypes.h"
     #endif
-    #ifndef FG_INC_RESOURCE
-        #include "Resource/fgResource.h"
-    #endif
+    #include "Resource/fgResource.h"
 
 namespace fg {
     namespace resource {
@@ -73,10 +71,11 @@ namespace fg {
             typedef CModelResource self_type;
             ///
             typedef CModelResource type;
-            // Type definition for vector holding model shapes
-            typedef CVector<SShape *> ModelShapes;
-            // Type definition for special vector iterator
-            typedef ModelShapes::iterator ModelShapesItor;
+
+            /// Type definition for vector holding model shapes
+            typedef CVector<SShape *> ShapesVec;
+            /// Type definition for special vector iterator
+            typedef ShapesVec::iterator ShapesVecItor;
 
         public:
             /**
@@ -108,7 +107,7 @@ namespace fg {
              * just resets base class attributes
              */
             virtual void clear(void);
-            
+
             /**
              * 
              * @return 
@@ -167,30 +166,29 @@ namespace fg {
             fgBool loadWavefrontObj(void);
 
         public:
-            
             void setModelType(ModelType modelType) {
                 m_modelType = modelType;
             }
-            
+
             void addShape(SShape *shape);
 
             void addShape(SMeshBase *mesh, const char *name);
-            
+
             void addShape(SMeshBase *mesh, const std::string& name);
-            
+
         public:
             /**
              * Returns the reference to the shapes array
              * @return  Reference to the shapes array
              */
-            ModelShapes& getRefShapes(void) {
+            ShapesVec& getRefShapes(void) {
                 return m_shapes;
             }
             /**
              * Returns the reference to the shapes array
              * @return  Reference to the shapes array
              */
-            ModelShapes const& getRefShapes(void) const {
+            ShapesVec const& getRefShapes(void) const {
                 //return (const_cast<fgDataObjectBase<HandleType, MapKeyType>*>(this)->getFilePath(id));
                 //return (const_cast<fgGfxModelResource *>(this)->getRefShapes());
                 return m_shapes;
@@ -353,7 +351,7 @@ namespace fg {
             /// Global material override definition
             SMaterial *m_materialOverride;
             /// Array holding all basic shapes of the model
-            ModelShapes m_shapes;
+            ShapesVec m_shapes;
             /// Main bounding box - it's for whole model (all shapes)
             AABoundingBox3Df m_aabb;
             /// Identifier of the model type - based on the input data file extension

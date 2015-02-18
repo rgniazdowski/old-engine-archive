@@ -96,45 +96,57 @@ fgBool gfx::CModelResource::setModelTypeFromFilePath(std::string &path) {
     return FG_TRUE;
 }
 
+/**
+ * 
+ * @return 
+ */
 fgBool gfx::CModelResource::refreshInternalData(void) {
     memset(m_numData, 0, sizeof (m_numData));
-    m_size = 0;
-    ModelShapesItor begin, end, itor;
+    this->m_size = 0;
+    ShapesVecItor begin, end, itor;
     begin = this->m_shapes.begin();
     end = this->m_shapes.end();
     itor = begin;
     if(this->m_shapes.empty()) {
-        FG_LOG_ERROR("There is no shapes in model file: '%s'", getFilePathStr());
+        FG_LOG_ERROR("GFX.Model: There is no shapes in model file: '%s'", getFilePathStr());
         return FG_FALSE;
     }
     for(; itor != end; itor++) {
         m_numShapes++;
         SShape *shape = (*itor);
-        FG_LOG_DEBUG("Model '%s': found shape '%s'", getNameStr(), shape->name.c_str());
-        FG_LOG_DEBUG("Shape '%s': nvec: %d, nnorm: %d, nuvs: %d", shape->name.c_str(), shape->mesh->getNumVertices(), shape->mesh->getNumNormals(), shape->mesh->getNumUVs());
+        FG_LOG_DEBUG("GFX.Model: '%s': found shape '%s'", getNameStr(), shape->name.c_str());
+        FG_LOG_DEBUG("GFX.Model: shape '%s': vec[%d], norm[%d], uvs[%d]", shape->name.c_str(), shape->mesh->getNumVertices(), shape->mesh->getNumNormals(), shape->mesh->getNumUVs());
         if(shape->material) {
             m_numMaterials++;
-            if(m_pManager) {
+            if(base_type::m_pManager) {
                 CResource *tex = NULL;
                 // Ambient texture handle lookup
-                tex = ((resource::CResourceManager *)m_pManager)->request(shape->material->ambientTexName);
+                tex = ((resource::CResourceManager *)base_type::m_pManager)->request(shape->material->ambientTexName);
                 if(tex) {
-                    shape->material->ambientTexHandle = tex->getHandle();
+                    if(tex->getResourceType() == resource::TEXTURE) {
+                        shape->material->ambientTex = static_cast<CTextureResource *>(tex);
+                    }
                 }
                 // Diffuse texture handle lookup
-                tex = ((resource::CResourceManager *)m_pManager)->request(shape->material->diffuseTexName);
+                tex = ((resource::CResourceManager *)base_type::m_pManager)->request(shape->material->diffuseTexName);
                 if(tex) {
-                    shape->material->diffuseTexHandle = tex->getHandle();
+                    if(tex->getResourceType() == resource::TEXTURE) {
+                        shape->material->diffuseTex = static_cast<CTextureResource *>(tex);
+                    }
                 }
                 // Specular texture handle lookup
-                tex = ((resource::CResourceManager *)m_pManager)->request(shape->material->specularTexName);
+                tex = ((resource::CResourceManager *)base_type::m_pManager)->request(shape->material->specularTexName);
                 if(tex) {
-                    shape->material->specularTexHandle = tex->getHandle();
+                    if(tex->getResourceType() == resource::TEXTURE) {
+                        shape->material->specularTex = static_cast<CTextureResource *>(tex);
+                    }
                 }
                 // Normal texture handle lookup
-                tex = ((resource::CResourceManager *)m_pManager)->request(shape->material->normalTexName);
+                tex = ((resource::CResourceManager *)base_type::m_pManager)->request(shape->material->normalTexName);
                 if(tex) {
-                    shape->material->normalTexHandle = tex->getHandle();
+                    if(tex->getResourceType() == resource::TEXTURE) {
+                        shape->material->normalTex = static_cast<CTextureResource *>(tex);
+                    }
                 }
             }
         }
@@ -147,7 +159,7 @@ fgBool gfx::CModelResource::refreshInternalData(void) {
             // #FIXME
             m_numTriangles += shape->mesh->getNumIndices() / 3;
         }
-        m_size += shape->getDataSize();
+        this->m_size += shape->getDataSize();
     }
     if(!m_materialOverride) {
         if(!m_numShapes)
@@ -155,9 +167,9 @@ fgBool gfx::CModelResource::refreshInternalData(void) {
         else
             m_materialOverride = new SMaterial(*this->m_shapes[0]->material);
     }
-    m_size += m_materialOverride->getDataSize();
-    FG_LOG_DEBUG("Model '%s': vertices: %d, normals: %d, indices: %d, uvs: %d", getNameStr(),
-                 m_numVertices, m_numNormals, m_numIndices, m_numUVs);
+    this->m_size += m_materialOverride->getDataSize();
+    FG_LOG_DEBUG("GFX.Model: '%s': vertices[%d], normals[%d], indices[%d], uvs[%d], size(B)[%d]", getNameStr(),
+                 m_numVertices, m_numNormals, m_numIndices, m_numUVs, m_size);
     return FG_TRUE;
 }
 
@@ -199,25 +211,33 @@ void gfx::CModelResource::addShape(SMeshBase *mesh, const char *name) {
  * @param name
  */
 void gfx::CModelResource::addShape(SMeshBase *mesh, const std::string& name) {
- }
+    if(!mesh || name.empty()) {
+        return;
+    }
+
+    SShape *shape = new SShape();
+    shape->name = name;
+    shape->mesh = mesh;
+    m_shapes.push_back(shape);
+}
 
 /**
  * 
  * @return 
  */
 fgBool gfx::CModelResource::loadWavefrontObj(void) {
-    if(getFilePath(m_quality).empty()) {
+    if(getFilePath(this->m_quality).empty()) {
         return FG_FALSE;
     }
     std::string err;
     std::string mtl_basepath = fg::path::dirName(getFilePath());
-    err = fgTinyObj::LoadObj(this->m_shapes, getFilePathStr(m_quality), mtl_basepath.c_str(), m_isInterleaved);
+    err = fgTinyObj::LoadObj(this->m_shapes, getFilePathStr(this->m_quality), mtl_basepath.c_str(), m_isInterleaved);
     if(!err.empty()) {
         FG_LOG_ERROR("Error while loading model: '%s'", err.c_str());
         this->m_shapes.clear();
         return FG_FALSE;
     }
-    m_isReady = FG_FALSE;
+    this->m_isReady = FG_FALSE;
     refreshInternalData();
     return FG_TRUE;
 }
@@ -226,12 +246,12 @@ fgBool gfx::CModelResource::loadWavefrontObj(void) {
  * Create function loads/interprets data from file in ROM and place it in RAM memory.
  */
 fgBool gfx::CModelResource::create(void) {
-    if(m_isReady || !isDisposed()) {
+    if(this->m_isReady || !isDisposed()) {
         return FG_TRUE;
     }
-    m_size = 0;
+    this->m_size = 0;
     if(m_modelType != MODEL_BUILTIN) {
-        if(getFilePath(m_quality).empty()) {
+        if(getFilePath(this->m_quality).empty()) {
             FG_LOG_ERROR("%s(%d): file path is empty on create", fg::path::fileName(__FILE__), __LINE__ - 1);
             // #TODO error handling / reporting
             return FG_FALSE;
@@ -255,7 +275,7 @@ fgBool gfx::CModelResource::create(void) {
             if(!loadWavefrontObj()) {
                 return FG_FALSE;
             }
-            m_isReady = FG_TRUE;
+            this->m_isReady = FG_TRUE;
             // #FIXME - special tag type for Gfx Model Resource !
             FG_MessageSubsystem->reportSuccess(tag_type::name(), FG_ERRNO_RESOURCE_OK, "Successfully loaded an OBJ model file: '%s'", getFilePathStr());
             break;
@@ -286,7 +306,7 @@ fgBool gfx::CModelResource::create(void) {
                 // It means that there is some shape in the array.
                 // With this model type it is probably custom allocated
                 refreshInternalData();
-                m_isReady = FG_TRUE;
+                this->m_isReady = FG_TRUE;
             }
             break;
 
@@ -295,7 +315,7 @@ fgBool gfx::CModelResource::create(void) {
             break;
     };
 
-    if(!m_size) return FG_FALSE;
+    if(!this->m_size) return FG_FALSE;
     updateAABB();
     return FG_TRUE;
 }
