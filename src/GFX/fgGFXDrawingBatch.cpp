@@ -466,9 +466,9 @@ void gfx::CDrawingBatch::render(void) {
         gfx::CDrawingBatch::sortCalls(); // #FIX - need to call via fgGfxDrawingBatch to avoid duplicate call (virtual)
     int i = 0;
     while(!m_priorityBatch.empty()) {
-        CDrawable *drawCall = m_priorityBatch.top();
-        //if(drawCall)
-        drawCall->draw();
+        CDrawCall *pDrawCall = m_priorityBatch.top();        
+        //static_cast<CShaderManager *>(m_pShaderMgr)->useProgram(pDrawCall->getShaderProgram());
+        pDrawCall->draw();
         m_priorityBatch.pop();
         i++;
     }

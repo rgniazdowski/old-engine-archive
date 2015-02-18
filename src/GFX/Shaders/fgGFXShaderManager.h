@@ -47,10 +47,10 @@ namespace fg {
          *
          */
         class CShaderManager :
-        public fg::resource::CDataManagerBase<fg::gfx::CShaderProgram*, ShaderHandle, ShaderManagerTag> {
+        public resource::CDataManagerBase<CShaderProgram*, ShaderHandle, ShaderManagerTag> {
         public:
             ///
-            typedef CDataManagerBase<CShaderProgram*, ShaderHandle, ShaderManagerTag> base_type;
+            typedef fg::resource::CDataManagerBase<CShaderProgram*, ShaderHandle, ShaderManagerTag> base_type;
             ///
             typedef CShaderManager self_type;
             ///
@@ -210,6 +210,13 @@ namespace fg {
              */
             virtual CShaderProgram *request(const char *info);
 
+            /**
+             * This will just set the internal pointer, no additional operations
+             * This is intended for internal use inside of the shader program
+             * @param pProgram
+             */
+            void setInternalCurrentProgram(CShaderProgram *pProgram);
+            
             /**
              * 
              * @return 

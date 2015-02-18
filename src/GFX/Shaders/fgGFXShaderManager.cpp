@@ -271,7 +271,7 @@ fgBool gfx::CShaderManager::preLoadShaders(void) {
 fgBool gfx::CShaderManager::insert(CShaderProgram *pProgram, const std::string& nameTag) {
     if(!pProgram)
         return FG_FALSE;
-    if(CDataManagerBase::insert(pProgram, nameTag)) {
+    if(base_type::insert(pProgram, nameTag)) {
         pProgram->setName(nameTag); // ?
         pProgram->setManaged(FG_TRUE);
         pProgram->setManager(this);
@@ -399,6 +399,17 @@ gfx::CShaderProgram *gfx::CShaderManager::request(const std::string& info) {
 gfx::CShaderProgram *gfx::CShaderManager::request(const char *info) {
     return request(std::string(info));
 }
+
+/**
+ * 
+ * @param pProgram
+ */
+void gfx::CShaderManager::setInternalCurrentProgram(CShaderProgram* pProgram) {
+    if(!pProgram)
+        return;
+    m_currentProgram = pProgram;
+}
+
 
 /**
  * 
@@ -596,8 +607,8 @@ fgBool gfx::CShaderManager::useProgram(const char *nameTag) {
  */
 fgBool gfx::CShaderManager::isProgramUsed(gfx::CShaderProgram *pProgram) {
     if(m_currentProgram && m_currentProgram == pProgram) {
-        if(m_currentProgram->getGfxID() == pProgram->getGfxID())
-            return FG_TRUE;
+        //if(m_currentProgram->getGfxID() == pProgram->getGfxID())
+        return FG_TRUE;
     }
     return FG_FALSE;
 }

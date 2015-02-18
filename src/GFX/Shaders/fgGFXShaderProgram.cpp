@@ -315,12 +315,14 @@ fgBool gfx::CShaderProgram::isUsed(void) {
  * @return 
  */
 fgBool gfx::CShaderProgram::use(void) {
+    // call to glIsProgram may be a slowdown, this shouldn't be necessary at some point
     if(FG_GFX_FALSE == glIsProgram(m_gfxID) || !m_isPreLoaded)
         return FG_FALSE;
     if(m_manager) {
-        CShaderManager *shaderMgr = (CShaderManager *)m_manager;
+        CShaderManager *shaderMgr = static_cast<CShaderManager *>(m_manager);
         if(shaderMgr->isProgramUsed(this))
             return FG_FALSE;
+        shaderMgr->setInternalCurrentProgram(this); // ?
     }
     fgGFXuint last = CPlatform::context()->activeProgram();
     CPlatform::context()->useProgram(m_gfxID);

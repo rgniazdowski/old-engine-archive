@@ -600,6 +600,8 @@ void gfx::CDrawCall::draw(void) {
         scissorSet = FG_TRUE;
     }
     if(m_MVP && m_program) {
+        // force use program?
+        m_program->use();
         //m_MVP->calculate(m_modelMat);
         m_program->setUniform(m_MVP);
     }
