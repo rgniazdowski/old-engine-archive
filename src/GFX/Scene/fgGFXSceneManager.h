@@ -433,7 +433,120 @@ namespace fg {
             }
             
             ////////////////////////////////////////////////////////////////////
+            
+        protected:
+            
+            /**
+             * This special structure is for internal usage in SceneManager
+             * It's protected
+             * This should be used only in SceneManagers (2D/3D/Custom)
+             * It provides information about colliding objects, the info is simple
+             * Which scene nodes are colliding based on nodes radius.
+             * No further information is required. If nodeA is colliding with nodeB,
+             * then nodeB is colliding with nodeA.
+             * 
+             * This structure will be useful also for checking collisions between
+             * frames and reporting collision event just a single time.
+             */
+            struct SCollisionsInfo {
+                ///
+                typedef CVector<ObjectVec> ContactsVec;
+                ///
+                typedef ContactsVec::iterator ContactsVecItor;
+                
+                ///
+                ContactsVec contacts;
+                
+                /**
+                 * 
+                 * @return 
+                 */
+                SCollisionsInfo();
+                /**
+                 * 
+                 * @param maxObjects
+                 */
+                ~SCollisionsInfo();
+                
+                /**
+                 * 
+                 * @param maxObjects
+                 */
+                void reserve(const unsigned int maxObjects);
+                /**
+                 * 
+                 * @param numObjects
+                 */
+                void resize(const unsigned int numObjects);
+                /**
+                 * 
+                 * @param nodeA
+                 * @param nodeB
+                 */
+                void insert(const CSceneNode* nodeA, const CSceneNode* nodeB);
+                /**
+                 * 
+                 * @param pNode
+                 */
+                void removeAll(const CSceneNode* pNode = NULL);
+                /**
+                 * 
+                 * @param nodeA
+                 * @param nodeB
+                 */
+                void remove(const CSceneNode* nodeA, const CSceneNode* nodeB);
+                /**
+                 * 
+                 */
+                void clear(void);
+                
+                /**
+                 * 
+                 * @param nodeA
+                 * @param nodeB
+                 * @return 
+                 */
+                fgBool check(const CSceneNode* nodeA, const CSceneNode* nodeB) const;
+                
+                /**
+                 * 
+                 * @return 
+                 */
+                fgBool empty(void) const;
+                
+                /**
+                 * 
+                 * @param pNode
+                 * @return 
+                 */
+                fgBool empty(CSceneNode* pNode) const;
+                
+                /**
+                 * 
+                 * @return 
+                 */
+                unsigned int count(CSceneNode* pNode) const;
+                
+                /**
+                 * 
+                 * @return 
+                 */
+                unsigned int count(void) const;
+                /**
+                 * 
+                 * @return 
+                 */
+                unsigned int size(void) const;
+                /**
+                 * 
+                 * @return 
+                 */
+                unsigned int capacity(void) const;
+                
+            } m_collisionsInfo;
 
+            ////////////////////////////////////////////////////////////////////
+            
         private:            
             /// Internal MVP matrix to use, this will set the perspective view
             CMVPMatrix m_MVP;

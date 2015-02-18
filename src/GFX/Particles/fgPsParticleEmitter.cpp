@@ -29,6 +29,7 @@ m_particles(),
 m_numParticles(0),
 m_maxCount(0),
 m_pCamera(NULL) {
+    setCollidable(FG_FALSE);
     setupFromParticleEffect(pEffect);
 }
 

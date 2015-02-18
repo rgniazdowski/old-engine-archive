@@ -27,13 +27,13 @@ m_pTreeNode(NULL),
 m_pParent(pParent), // Pointer to the parent node
 m_collisionBody(NULL),
 m_children(), // Children set
-m_isVisible(FG_TRUE), // Is this node visible?
-m_isAutoScale(FG_FALSE),
+m_stateFlags(StateFlags::NONE),
 m_scale(1.0f, 1.0f, 1.0f),
 m_modelMat(), // model matrix init
 m_aabb(), // axis-aligned bounding box - this one will be transformed
 m_drawCall(NULL) // DrawCall for this node - it cannot be managed
 {
+    setCollidable(FG_TRUE);
     // Draw call is only initialized when Node Custom type is specialized
     if(m_nodeType == SCENE_NODE_CUSTOM) {
         m_drawCall = new CDrawCall();
@@ -98,8 +98,10 @@ void gfx::CSceneNode::refreshGfxInternals(void) {
  * @param pNode
  * @return 
  */
-fgBool gfx::CSceneNode::checkCollisionSphere(const CSceneNode* pNode) {
+fgBool gfx::CSceneNode::checkCollisionSphere(const CSceneNode* pNode) const {
     if(!pNode)
+        return FG_FALSE;
+    if(!pNode->isCollidable() || !this->isCollidable())
         return FG_FALSE;
     const Vector3f &self_center = m_aabb.center;
     const Vector3f &obj_center = pNode->getRefBoundingVolume().center;
@@ -117,7 +119,7 @@ fgBool gfx::CSceneNode::checkCollisionSphere(const CSceneNode* pNode) {
  * 
  */
 void gfx::CSceneNode::draw(void) {
-    if(!m_isVisible)
+    if(!isVisible())
         return;
     if(m_drawCall) {
         m_drawCall->draw(m_modelMat);
@@ -138,7 +140,7 @@ void gfx::CSceneNode::draw(void) {
  * @param relPos
  */
 void gfx::CSceneNode::draw(const Vec2f& relPos) {
-    if(!m_isVisible)
+    if(!isVisible())
         return;
     if(m_drawCall) {
         m_drawCall->draw(relPos);
@@ -156,7 +158,7 @@ void gfx::CSceneNode::draw(const Vec2f& relPos) {
  * @param relPos
  */
 void gfx::CSceneNode::draw(const Vec3f& relPos) {
-    if(!m_isVisible)
+    if(!isVisible())
         return;
     if(m_drawCall) {
         m_drawCall->draw(relPos);
@@ -174,7 +176,7 @@ void gfx::CSceneNode::draw(const Vec3f& relPos) {
  * @param modelMat
  */
 void gfx::CSceneNode::draw(const Matrix4f& modelMat) {
-    if(!m_isVisible)
+    if(!isVisible())
         return;
     if(m_drawCall) {
         m_drawCall->draw(modelMat);
@@ -213,7 +215,7 @@ void gfx::CSceneNode::updateAABB(const Matrix4f& modelMat) {
             m_aabb.min = -extent;
             m_aabb.max = extent;
             m_aabb.transform(modelMat);
-            if(m_isAutoScale) {
+            if(isAutoScale()) {
                 m_scale = extent * 2.0f;
             }
             //m_aabb.radius = math::sqrt(extent.x * extent.x + extent.y * extent.y + extent.z * extent.z);
@@ -225,7 +227,7 @@ void gfx::CSceneNode::updateAABB(const Matrix4f& modelMat) {
             m_aabb.min = -extent;
             m_aabb.max = extent;
             
-            if(m_isAutoScale) {
+            if(isAutoScale()) {
                 m_scale = Vector3f(radius, radius, radius);
             }
             // The collision body is a sphere - so it is guaranteed that even

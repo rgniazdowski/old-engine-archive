@@ -28,6 +28,7 @@ using namespace fg;
  */
 gfx::CSceneManager::CSceneManager() :
 CDrawingBatch(),
+m_collisionsInfo(),
 m_MVP(),
 m_camera(FG_GFX_CAMERA_FREE),
 m_skybox(),
@@ -65,6 +66,7 @@ fgBool gfx::CSceneManager::destroy(void) {
     if(m_basetree) {
         m_basetree->deleteRoot();
     }
+    m_collisionsInfo.clear();
     // The piece of code seems to repeat itself #FIXME #CODEREPEAT
     // Maybe even the handle manager can have this piece of code?
     // Delete all gfx objects in the scene
@@ -95,6 +97,7 @@ void gfx::CSceneManager::clearScene(void) {
     if(m_basetree) {
         m_basetree->deleteRoot();
     }
+    m_collisionsInfo.clear();
     // Delete all gfx objects in the scene
     DataVecItor begin, end, itor;
     begin = getRefDataVector().begin();
@@ -111,7 +114,7 @@ void gfx::CSceneManager::clearScene(void) {
             delete pObj;
         (*itor).clear();
     }
-    releaseAllHandles();
+    releaseAllHandles();    
 }
 
 /**
@@ -121,6 +124,237 @@ void gfx::CSceneManager::clearScene(void) {
 fgBool gfx::CSceneManager::initialize(void) {
     return FG_TRUE;
 }
+
+////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * 
+ */
+gfx::CSceneManager::SCollisionsInfo::SCollisionsInfo() : contacts() { }
+
+/**
+ * 
+ */
+gfx::CSceneManager::SCollisionsInfo::~SCollisionsInfo() {
+    clear();
+}
+
+/**
+ * 
+ * @param maxObjects
+ */
+void gfx::CSceneManager::SCollisionsInfo::reserve(const unsigned int maxObjects) {
+    contacts.reserve(maxObjects);
+    contacts.resize(maxObjects);
+}
+
+/**
+ * 
+ * @param numObjects
+ */
+void gfx::CSceneManager::SCollisionsInfo::resize(const unsigned int numObjects) {
+    contacts.resize(numObjects);
+    contacts.reserve(numObjects);
+}
+
+/**
+ * 
+ * @param nodeA
+ * @param nodeB
+ */
+void gfx::CSceneManager::SCollisionsInfo::insert(const CSceneNode* nodeA, const CSceneNode* nodeB) {
+    if(!nodeA || !nodeB) {
+        return;
+    }
+
+    if(nodeA->getRefHandle().getIndex() > contacts.capacity() ||
+       nodeB->getRefHandle().getIndex() > contacts.capacity()) {
+        return;
+    }
+    // A -> B
+    {
+        const unsigned int index = nodeA->getRefHandle().getIndex();
+        const int findIndex = contacts[index].find(const_cast<CSceneNode*>(nodeB));
+        if(findIndex == -1) {
+            contacts[index].push_back(const_cast<CSceneNode*>(nodeB));
+        }
+    }
+    // B -> A
+    {
+        const unsigned int index = nodeB->getRefHandle().getIndex();
+        const int findIndex = contacts[index].find(const_cast<CSceneNode*>(nodeA));
+        if(findIndex == -1) {
+            contacts[index].push_back(const_cast<CSceneNode*>(nodeA));
+        }
+    }
+}
+
+/**
+ * 
+ * @param pNode
+ */
+void gfx::CSceneManager::SCollisionsInfo::removeAll(const CSceneNode* pNode) {
+    if(!pNode) {
+        clear();
+    }
+    const unsigned int index = pNode->getRefHandle().getIndex();
+    if(index > contacts.capacity()) {
+        return;
+    }
+    contacts[index].clear_optimised();
+    //contacts[index].clear();
+    // #FIXME
+}
+
+/**
+ * 
+ * @param nodeA
+ * @param nodeB
+ */
+void gfx::CSceneManager::SCollisionsInfo::remove(const CSceneNode* nodeA, const CSceneNode* nodeB) {
+    if(!nodeA || !nodeB) {
+        return;
+    }
+    if(nodeA->getRefHandle().getIndex() > contacts.capacity() ||
+       nodeB->getRefHandle().getIndex() > contacts.capacity()) {
+        return;
+    }
+    // A -> B
+    {
+        const unsigned int index = nodeA->getRefHandle().getIndex();
+        const int findIndex = contacts[index].find(const_cast<CSceneNode*>(nodeB));
+        const unsigned int n = contacts[index].size();
+        if(findIndex != -1) {
+            contacts[index][findIndex] = contacts[index][n - 1];
+            contacts[index][n - 1] = NULL;
+            contacts[index].resize(n - 1);
+        }
+    }
+    // B -> A
+    {
+        const unsigned int index = nodeB->getRefHandle().getIndex();
+        const int findIndex = contacts[index].find(const_cast<CSceneNode*>(nodeA));
+        const unsigned int n = contacts[index].size();
+        if(findIndex != -1) {
+            contacts[index][findIndex] = contacts[index][n - 1];
+            contacts[index][n - 1] = NULL;
+            contacts[index].resize(n - 1);
+        }
+    }
+}
+
+/**
+ * 
+ */
+void gfx::CSceneManager::SCollisionsInfo::clear(void) {
+    const unsigned int n = contacts.capacity();
+    for(unsigned int i = 0; i < n; i++) {
+        contacts[i].clear();
+    }
+    contacts.clear();
+}
+
+/**
+ * 
+ * @param nodeA
+ * @param nodeB
+ * @return 
+ */
+fgBool gfx::CSceneManager::SCollisionsInfo::check(const CSceneNode *nodeA, const CSceneNode *nodeB) const {
+    if(!nodeA || !nodeB)
+        return FG_FALSE;
+    if(nodeA->getRefHandle().getIndex() > contacts.capacity() ||
+       nodeB->getRefHandle().getIndex() > contacts.capacity()) {
+        return FG_FALSE;
+    }
+    // A -> B
+    {
+        const unsigned int index = nodeA->getRefHandle().getIndex();
+        const int findIndex = contacts[index].find(const_cast<CSceneNode*>(nodeB));
+        
+        if(findIndex != -1) {
+            return FG_TRUE;
+        }
+    }
+    // B -> A
+    {
+        const unsigned int index = nodeB->getRefHandle().getIndex();
+        const int findIndex = contacts[index].find(const_cast<CSceneNode*>(nodeA));
+        if(findIndex != -1) {
+            return FG_TRUE;
+        }
+    }
+    return FG_FALSE;
+}
+
+/**
+ * 
+ * @return 
+ */
+fgBool gfx::CSceneManager::SCollisionsInfo::empty(void) const {
+    return contacts.empty();
+}
+
+/**
+ * 
+ * @param pNode
+ * @return 
+ */
+fgBool gfx::CSceneManager::SCollisionsInfo::empty(CSceneNode *pNode) const {
+    if(!pNode) {
+        return FG_FALSE;
+    }
+
+    const unsigned int index = pNode->getRefHandle().getIndex();
+    if(index > contacts.capacity()) {
+        return FG_FALSE;
+    }
+    return (fgBool)contacts[index].empty();
+    //m_MVP.getPtrCenter();
+}
+
+/**
+ * 
+ * @param pNode
+ * @return 
+ */
+unsigned int gfx::CSceneManager::SCollisionsInfo::count(CSceneNode *pNode) const {
+    if(!pNode) {
+        return FG_FALSE;
+    }
+
+    const unsigned int index = pNode->getRefHandle().getIndex();
+    if(index > contacts.capacity()) {
+        return FG_FALSE;
+    }
+    return (fgBool)contacts[index].size();
+}
+
+/**
+ * 
+ * @return 
+ */
+unsigned int gfx::CSceneManager::SCollisionsInfo::count(void) const {
+    return contacts.size();
+}
+
+/**
+ * 
+ * @return 
+ */
+unsigned int gfx::CSceneManager::SCollisionsInfo::size(void) const {
+    return contacts.size();
+}
+
+/**
+ * 
+ * @return 
+ */
+unsigned int gfx::CSceneManager::SCollisionsInfo::capacity(void) const {
+    return contacts.capacity();
+}
+
+////////////////////////////////////////////////////////////////////////////////
 
 /**
  * 
@@ -482,6 +716,11 @@ fgBool gfx::CSceneManager::addNode(SceneNodeHandle& nodeUniqueID,
     // 2nd argument tells that this draw call should not be managed
     // meaning: destructor wont be called on flush()
     //fgGfxDrawingBatch::appendDrawCall(drawCall, FG_FALSE); // Don't know if needed...
+
+    if(handle_mgr_type::getRefDataVector().size() > m_collisionsInfo.capacity()) {
+        m_collisionsInfo.reserve((unsigned int)((float)handle_mgr_type::getRefDataVector().size()*1.5f)+32);
+    }
+
     return FG_TRUE;
 }
 

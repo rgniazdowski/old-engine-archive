@@ -315,12 +315,27 @@ void gfx::CScene3D::checkCollisions(const CSceneNode* sceneNode) {
         }
 
         for(unsigned int objIdx = 0; objIdx < objCount; objIdx++) {
-            CSceneNode *childNode = treeNode->objects[objIdx];
+            const CSceneNode *childNode = treeNode->objects[objIdx];
             if(!childNode || childNode == sceneNode) {
                 continue;
             }
             // Fast check for collision - checking nodes large sphere
             const fgBool isCollision = childNode->checkCollisionSphere(sceneNode);
+            const fgBool isLastFrameCollision = m_collisionsInfo.check(childNode, sceneNode);
+            // Update the internal collision info arrays
+            if(isCollision) {
+                if(!isLastFrameCollision) {
+                    m_collisionsInfo.insert(childNode, sceneNode);
+                    FG_LOG_DEBUG("*INSERTING*  Collision BEGUN between: '%s'--'%s'\n", sceneNode->getNameStr(), childNode->getNameStr());
+                } else {
+                    // this collision is already occurring - based on last frame info
+                }
+            } else if(isLastFrameCollision) {
+                // the collision is not occurring in this frame
+                m_collisionsInfo.remove(childNode, sceneNode);
+                FG_LOG_DEBUG("*REMOVING*  Collision ENDED between: '%s'--'%s'\n", sceneNode->getNameStr(), childNode->getNameStr());
+            }
+
             if(isCollision && m_physicsWorld->hasMoreContacts()) {
                 //printf("*YES*  Collision occurred between: '%s'--'%s'\n", sceneNode->getNameStr(), childNode->getNameStr());
                 {

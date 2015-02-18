@@ -37,7 +37,10 @@ namespace fg {
          */
         struct SMaterial {
         public:
-
+            
+            /**
+             *
+             */
             enum StateFlags {
                 NONE = 0x0000,
                 FRONT_FACE_CCW = 0x0001,

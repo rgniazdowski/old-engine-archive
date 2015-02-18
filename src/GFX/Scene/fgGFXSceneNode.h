@@ -25,7 +25,7 @@
     #ifndef FG_INC_GFX_TREE_NODE
         #include "fgGFXTreeNode.h"
     #endif
-    
+
     #include "Physics/fgCollisionBody.h"
 
     #include <set>
@@ -101,6 +101,26 @@ namespace fg {
             friend class CSceneNodeMesh;
             friend class CSceneNodeObject;
         public:
+
+            /**
+             *
+             */
+            enum StateFlags {
+                NONE = 0x0000,
+                /// Is the scene node visible? Will be set to FALSE when the scene node
+            /// is not in the visible tree node (quadtree/octree/...)
+                VISIBLE = 0x0001,
+                /// This is for automatic scaling of the model matrix
+                /// based on the collision body size (half extent)
+                /// Used when the size of the rendered mesh/model is 1.0f
+                /// This will only have effect when using with the collision body
+                AUTO_SCALE = 0x0002,
+                /// Should check for collisions? If no, internal check will
+                /// always return FG_FALSE
+                COLLIDABLE = 0x0004
+            };
+
+        public:
             /// Scene node tag type
             typedef SceneNodeTag tag_type;
             /// Drawable object type
@@ -132,14 +152,8 @@ namespace fg {
             /// Children of the current scene node
             /// Note that this is for more logical hierarchy (not spatial)
             ChildrenVec m_children;
-            /// Is the scene node visible? Will be set to FALSE when the scene node
-            /// is not in the visible tree node (quadtree/octree/...)
-            fgBool m_isVisible;
-            /// This is for automatic scaling of the model matrix
-            /// based on the collision body size (half extent)
-            /// Used when the size of the rendered mesh/model is 1.0f
-            /// This will only have effect when using with the collision body
-            fgBool m_isAutoScale;
+            ///
+            StateFlags m_stateFlags;
             /// Current scale of the scene node - scale is automatically
             /// applied to the displayed data (mesh/shape/model/...)
             Vector3f m_scale;
@@ -164,7 +178,7 @@ namespace fg {
              * 
              */
             virtual ~CSceneNode();
-            
+
         protected:
             /**
              * 
@@ -192,14 +206,14 @@ namespace fg {
              * @param modelMat
              */
             virtual void draw(const Matrix4f& modelMat);
-            
+
         public:
             /**
              * 
              * @param delta
              */
             virtual void update(float delta);
-            
+
         public:
             /**
              *
@@ -221,23 +235,24 @@ namespace fg {
             physics::CCollisionBody* getCollisionBody(void) const {
                 return m_collisionBody;
             }
-            
+
         public:
+            void setFlag(const StateFlags flags, const fgBool toggle = FG_TRUE);
+            
             /**
              * 
              * @return 
              */
             inline fgBool isAutoScale(void) const {
-                return m_isAutoScale;
+                return (fgBool)!!(m_stateFlags & AUTO_SCALE);
             }
             /**
              * 
              * @param toggle
              */
             inline void setAutoScale(fgBool toggle = FG_TRUE) {
-                m_isAutoScale = toggle;
+                setFlag(AUTO_SCALE, toggle);
             }
-            
             /**
              */
             inline Vector3f getScale(void) const {
@@ -257,7 +272,7 @@ namespace fg {
              * @param pNode
              * @return 
              */
-            fgBool checkCollisionSphere(const CSceneNode* pNode);
+            fgBool checkCollisionSphere(const CSceneNode* pNode) const;
 
         public:
 
@@ -367,14 +382,14 @@ namespace fg {
              * 
              * @return 
              */
-            inline ChildrenVec & getChildren(void) {
+            inline ChildrenVec& getChildren(void) {
                 return m_children;
             }
             /**
              * 
              * @return 
              */
-            inline ChildrenVec const & getChildren(void) const {
+            inline ChildrenVec const& getChildren(void) const {
                 return m_children;
             }
             /**
@@ -388,7 +403,7 @@ namespace fg {
              * 
              * @param pTreeNode
              */
-            inline void setTreeNode(STreeNode *pTreeNode) {
+            inline void setTreeNode(STreeNode* pTreeNode) {
                 m_pTreeNode = pTreeNode;
             }
             /**
@@ -402,21 +417,21 @@ namespace fg {
              * 
              * @param pParent
              */
-            inline void setParent(self_type *pParent) {
+            inline void setParent(self_type* pParent) {
                 m_pParent = pParent;
             }
             /**
              * 
              * @return 
              */
-            inline self_type *getParent(void) const {
+            inline self_type* getParent(void) const {
                 return m_pParent;
             }
             /**
              * 
              * @return 
              */
-            inline CDrawCall *getDrawCall(void) const {
+            inline CDrawCall* getDrawCall(void) const {
                 return m_drawCall;
             }
             /**
@@ -437,7 +452,7 @@ namespace fg {
              * 
              * @return 
              */
-            inline Matrix4f const & getRefModelMatrix(void) const {
+            inline Matrix4f const& getRefModelMatrix(void) const {
                 return m_modelMat;
             }
             /**
@@ -485,20 +500,27 @@ namespace fg {
              * @param modelMat
              */
             virtual void updateAABB(const Matrix4f& modelMat);
-            
             /**
              * 
              * @return 
              */
-            fgBool isVisible(void) const {
-                return m_isVisible;
+            inline fgBool isVisible(void) const {
+                return (fgBool)!!(m_stateFlags & VISIBLE);
             }
             /**
              * 
              * @param toggle
              */
-            void setVisible(const fgBool toggle = FG_TRUE) {
-                m_isVisible = toggle;
+            inline void setVisible(const fgBool toggle = FG_TRUE) {
+                setFlag(VISIBLE, toggle);
+            }
+            
+            inline fgBool isCollidable(void) const {
+                return (fgBool)!!(m_stateFlags & COLLIDABLE);
+            }
+            
+            inline void setCollidable(const fgBool toggle = FG_TRUE) {
+                setFlag(COLLIDABLE, toggle);
             }
 
             ////////////////////////////////////////////////////////////////////////////
@@ -588,6 +610,22 @@ namespace fg {
                 m_nodeType = nodeType;
             }
         };
+        
+        FG_ENUM_FLAGS(CSceneNode::StateFlags);
+        
+        /**
+         * 
+         * @param flags
+         * @param toggle
+         */
+        inline void CSceneNode::setFlag(const StateFlags flags, const fgBool toggle) {
+            if(toggle) {
+                m_stateFlags |= flags;
+            } else {
+                m_stateFlags |= flags;
+                m_stateFlags ^= flags;
+            }
+        }
     };
 };
 
