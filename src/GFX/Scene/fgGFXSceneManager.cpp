@@ -31,7 +31,6 @@ CDrawingBatch(),
 m_MVP(),
 m_camera(FG_GFX_CAMERA_FREE),
 m_skybox(),
-m_skyboxProgram(NULL),
 m_nodeQueue(),
 m_pResourceMgr(NULL),
 m_basetree(NULL) {
@@ -148,7 +147,7 @@ void gfx::CSceneManager::setResourceManager(fg::base::CManager* pResourceMgr) {
  */
 void gfx::CSceneManager::setSkyBoxShader(const char* shaderName) {
     if(shaderName && m_pShaderMgr) {
-        m_skyboxProgram = static_cast<gfx::CShaderManager *>(m_pShaderMgr)->get(shaderName);
+        m_skybox.setShaderProgram(static_cast<gfx::CShaderManager*>(m_pShaderMgr)->get(shaderName));
     }
 }
 
@@ -158,7 +157,7 @@ void gfx::CSceneManager::setSkyBoxShader(const char* shaderName) {
  */
 void gfx::CSceneManager::setSkyBoxShader(const std::string& shaderName) {
     if(shaderName.size() && m_pShaderMgr) {
-        m_skyboxProgram = static_cast<gfx::CShaderManager *>(m_pShaderMgr)->get(shaderName);
+        m_skybox.setShaderProgram(static_cast<gfx::CShaderManager*>(m_pShaderMgr)->get(shaderName));
     }
 }
 
@@ -225,7 +224,7 @@ void gfx::CSceneManager::sortCalls(void) {
         }
         if(pDrawCall) {
             if(!pDrawCall->getShaderProgram())
-                pDrawCall->setShaderProgram(((gfx::CShaderManager *)getShaderManager())->getCurrentProgram());
+                pDrawCall->setShaderProgram(((gfx::CShaderManager*)getShaderManager())->getCurrentProgram());
             //pDrawCall->setModelMatrix(pObj->getRefModelMatrix());
             // getRefPriorityQueue().push(pDrawCall);
         }
@@ -242,13 +241,13 @@ void gfx::CSceneManager::render(void) {
     //pProgram->setUniform(FG_GFX_USE_TEXTURE, 1.0f);
     //printf("fgGfxSceneManager::render(void)\n");
     // Will now render main skybox
-    if(m_skyboxProgram) {
-        pShaderMgr->useProgram(m_skyboxProgram);
+    CShaderProgram* pSkyboxProgram = m_skybox.getShaderProgram();
+    if(pSkyboxProgram) {
+        pShaderMgr->useProgram(pSkyboxProgram);
         m_skybox.setPosition(m_camera.getRefEye());
-        m_skybox.setShaderProgram(m_skyboxProgram);
         m_skybox.draw();
+        pShaderMgr->useProgram(pProgram);
     }
-    pShaderMgr->useProgram(pProgram);
     // Calling underlying DrawingBatch render procedure
     // This will contain drawcalls not associated with scene/octree/quadtree structure
     CDrawingBatch::render();

@@ -400,7 +400,7 @@ namespace fg {
              * @param pProgram
              */
             inline void setSkyBoxShader(CShaderProgram* pProgram) {
-                m_skyboxProgram = pProgram;
+                m_skybox.setShaderProgram(pProgram);
             }
             
             ////////////////////////////////////////////////////////////////////
@@ -436,8 +436,6 @@ namespace fg {
             CCameraAnimation m_camera;
             /// Internal skybox
             CSceneSkyBox m_skybox;
-            ///
-            CShaderProgram* m_skyboxProgram;
             /// Queue containing scene node (sorted) ready to render
             NodePriorityQueue m_nodeQueue;
             /// Pointer to the external resource manager - don't know if this is necessary
