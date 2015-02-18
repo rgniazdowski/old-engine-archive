@@ -172,7 +172,7 @@ gfx::STextureID& gfx::CTextureManager::getRefGfxID(const resource::ResourceHandl
 gfx::STextureID& gfx::CTextureManager::getRefGfxID(const std::string& nameTag) {
     if(!m_pResourceMgr || nameTag.empty())
         return m_emptyGfxID;
-    gfx::CTextureResource *pTexture = (CTextureResource *)static_cast<resource::CResourceManager *>(m_pResourceMgr)->get(nameTag);
+    CTextureResource *pTexture = (CTextureResource *)static_cast<resource::CResourceManager *>(m_pResourceMgr)->get(nameTag);
     if(!pTexture) {
         m_emptyGfxID.reset();
         return m_emptyGfxID;
@@ -188,7 +188,7 @@ gfx::STextureID& gfx::CTextureManager::getRefGfxID(const std::string& nameTag) {
 gfx::STextureID& gfx::CTextureManager::getRefGfxID(const char *nameTag) {
     if(!m_pResourceMgr || !nameTag)
         return m_emptyGfxID;
-    gfx::CTextureResource *pTexture = (CTextureResource *)static_cast<resource::CResourceManager *>(m_pResourceMgr)->get(nameTag);
+    CTextureResource *pTexture = (CTextureResource *)static_cast<resource::CResourceManager *>(m_pResourceMgr)->get(nameTag);
     if(!pTexture) {
         m_emptyGfxID.reset();
         return m_emptyGfxID;
@@ -229,7 +229,7 @@ fgBool gfx::CTextureManager::resourceCreatedHandler(event::CArgumentList * argv)
     // Normally this should work without the force flag...
     // It's needed because for now resource lock/unlock 
     // is not working completely...
-    return gfx::CTextureManager::uploadToVRAM(pTexture, FG_TRUE);
+    return CTextureManager::uploadToVRAM(pTexture); // force flag
 }
 
 /**
@@ -295,7 +295,7 @@ fgBool gfx::CTextureManager::uploadToVRAM(CTexture *texture, fgBool force) {
         return result;
     }
     FG_LOG_DEBUG("GFX: Is texture '%s' locked? [%d]", texture->getNameStr(), texture->isLocked());
-    if(texture->isLocked() || force) {
+    if(texture->isLocked() || force || 1) {
         FG_LOG_DEBUG("GFX: Going to upload texture to VRAM - '%s'", texture->getNameStr());
         FG_LOG_DEBUG("GFX: Is Texture? [%d] ; Was in VRAM? [%d]", (int)glIsTexture(texGfxID), texture->isInVRAM());
         if(glIsTexture(texGfxID) == GL_TRUE) {
