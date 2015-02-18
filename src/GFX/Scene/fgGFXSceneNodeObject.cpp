@@ -58,6 +58,62 @@ gfx::CSceneNodeObject::~CSceneNodeObject() {
     m_drawCall = NULL;
 }
 
+/**
+ * 
+ */
+void gfx::CSceneNodeObject::refreshGfxInternals(void) {
+    if(!m_pManager)
+        return;
+    if(m_pManager->getManagerType() != FG_MANAGER_SCENE) {
+        return;
+    }
+    CSceneManager *pSceneMgr = static_cast<CSceneManager *>(m_pManager);
+    //pSceneMgr->getResourceManager();
+    //pSceneMgr->getShaderManager();
+    // ?? #FIXME
+
+    if(!m_pModel) {
+        return;
+    }
+    SMaterial* pMainMaterial = m_pModel->getMainMaterial();
+    CModel::ShapesVecItor sit = m_pModel->getRefShapes().begin(),
+            send = m_pModel->getRefShapes().end();
+    
+    for(; sit != send; sit++) {
+        if(!(*sit))
+            continue;
+        SShape* pShape = (*sit);
+        if(!pShape->material->shaderProgram) {
+            pShape->material->shaderProgram = pMainMaterial->shaderProgram;
+        }
+    }
+    
+    ChildrenVecItor it = getChildren().begin(), end = getChildren().end();
+    for(; it != end; it++) {
+        if(!(*it))
+            continue;
+        CSceneNode *pChildNode = (*it);
+        pChildNode->refreshGfxInternals();
+        if(pChildNode->getNodeType() == SCENE_NODE_MESH) {
+            CSceneNodeMesh *pMeshNode = static_cast<CSceneNodeMesh *>(pChildNode);
+            CDrawCall *pDrawCall = pMeshNode->getDrawCall();
+            if(pDrawCall) {
+                if(pMainMaterial && !pDrawCall->getMaterial())
+                    pDrawCall->setupMaterial(pMainMaterial);
+                // #FIXME
+                if(pMainMaterial->shaderProgram) {
+                    if(!pDrawCall->getShaderProgram())
+                        pDrawCall->setShaderProgram(pMainMaterial->shaderProgram);
+                }
+                //pDrawCall->setTexture()
+            }
+        }
+    }
+}
+
+/**
+ * 
+ */
 void gfx::CSceneNodeObject::updateAABB(void) {
 
     if(getCollisionBody()) {
@@ -101,6 +157,7 @@ void gfx::CSceneNodeObject::setModel(gfx::CModel *pModel) {
             // No need to reinitialize #FIXME
             return;
         }
+
         m_pModel = pModel;
         setNodeType(SCENE_NODE_OBJECT);
         // Now this object is made of some shapes/meshes
@@ -120,16 +177,18 @@ void gfx::CSceneNodeObject::setModel(gfx::CModel *pModel) {
             // Would need to clear the children list?
         } // SRSLY? #FIXME
 
-        gfx::CModel::ModelShapes &shapes = pModel->getRefShapes();
+        gfx::CModel::ShapesVec &shapes = pModel->getRefShapes();
         setBoundingVolume(pModel->getRefAABB());
-        gfx::CModel::ModelShapesItor sit = shapes.begin(), send = shapes.end();
+        gfx::CModel::ShapesVecItor sit = shapes.begin(), send = shapes.end();
         for(; sit != send; sit++) {
             if(!(*sit))
                 continue;
+            SShape *pShape = (*sit);
             SMeshBase *pMesh = (*sit)->mesh;
             if(!pMesh)
                 continue;
             CSceneNode *pChildNode = new CSceneNodeMesh(pMesh, this);
+            pChildNode->getDrawCall()->setupMaterial(pShape->material);
             // Should register it in a manager? #NOPE
             // There is no need to register this NodeMesh - it's immediate child
             // required to do the drawing - however this is about to change
@@ -147,7 +206,7 @@ void gfx::CSceneNodeObject::setModel(gfx::CModel *pModel) {
             getChildren().push_back(pChildNode);
         }
         if(shapes.size()) {
-            m_drawCall = getChildren()[0]->getDrawCall();
+            m_drawCall = getChildren()[0]->getDrawCall(); // ?
         }
         /// Maybe some children should not be accessible globally?
         /// Need to think about it - there can be many objects containing the 

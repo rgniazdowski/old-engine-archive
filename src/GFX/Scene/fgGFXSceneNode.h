@@ -76,6 +76,10 @@ namespace fg {
         ///
         class CSceneManager;
         ///
+        class CSceneNodeMesh;
+        ///
+        class CSceneNodeObject;
+        ///
         struct STreeNode;
 
         /**
@@ -93,13 +97,16 @@ namespace fg {
         class CSceneNode :
         public resource::CManagedObject<SceneNodeHandle>,
         public CDrawable {
+            friend class CSceneManager;
+            friend class CSceneNodeMesh;
+            friend class CSceneNodeObject;
         public:
             /// Scene node tag type
             typedef SceneNodeTag tag_type;
             /// Drawable object type
             typedef CDrawable drawable_type;
             /// Base type for scene node
-            typedef CManagedObject<SceneNodeHandle> base_type;
+            typedef fg::resource::CManagedObject<SceneNodeHandle> base_type;
             /// Handle type for scene node
             typedef SceneNodeHandle handle_type;
             /// SceneNode type - self
@@ -157,6 +164,12 @@ namespace fg {
              * 
              */
             virtual ~CSceneNode();
+            
+        protected:
+            /**
+             * 
+             */
+            virtual void refreshGfxInternals(void);
 
         public:
 

@@ -40,6 +40,11 @@ m_drawCall(NULL) // DrawCall for this node - it cannot be managed
     } else {
         m_drawCall = NULL;
     }
+    if(pParent) {
+        if(!m_pManager) {
+            m_pManager = pParent->getManager();
+        }
+    }
 }
 
 /**
@@ -74,6 +79,18 @@ gfx::CSceneNode::~CSceneNode() {
         delete m_collisionBody;
         m_collisionBody = NULL;
     }
+}
+
+/**
+ * 
+ */
+void gfx::CSceneNode::refreshGfxInternals(void) {
+   if(!m_pManager)
+       return;
+   if(m_pManager->getManagerType() != FG_MANAGER_SCENE) {
+       return;
+   }
+   // ?? #FIXME
 }
 
 /**

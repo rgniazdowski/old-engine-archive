@@ -64,6 +64,11 @@ namespace fg {
              */
             virtual void clear(void);
             
+            /**
+             * 
+             * @param pNode
+             */
+            virtual void initializeNode(CSceneNode* pNode);
 
         public:
             /**

@@ -118,6 +118,7 @@ fgBool gfx::CModelResource::refreshInternalData(void) {
         FG_LOG_DEBUG("GFX.Model: shape '%s': vec[%d], norm[%d], uvs[%d]", shape->name.c_str(), shape->mesh->getNumVertices(), shape->mesh->getNumNormals(), shape->mesh->getNumUVs());
         if(shape->material) {
             m_numMaterials++;
+#if 0
             if(base_type::m_pManager) {
                 CResource *tex = NULL;
                 // Ambient texture handle lookup
@@ -149,6 +150,7 @@ fgBool gfx::CModelResource::refreshInternalData(void) {
                     }
                 }
             }
+#endif
         }
 
         if(shape->mesh) {

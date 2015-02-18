@@ -14,6 +14,7 @@
  */
 
 #include "fgGFXSceneNodeMesh.h"
+#include "fgGFXSceneManager.h"
 
 using namespace fg;
 
@@ -43,6 +44,18 @@ gfx::CSceneNodeMesh::CSceneNodeMesh(const CSceneNodeMesh& orig) { }
  * 
  */
 gfx::CSceneNodeMesh::~CSceneNodeMesh() { }
+
+/**
+ * 
+ */
+void gfx::CSceneNodeMesh::refreshGfxInternals(void) {
+   if(!m_pManager)
+       return;
+   if(m_pManager->getManagerType() != FG_MANAGER_SCENE) {
+       return;
+   }
+   // ?? #FIXME
+}
 
 /**
  * 

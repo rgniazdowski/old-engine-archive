@@ -33,18 +33,20 @@ namespace fg {
         /**
          * 
          */
-        class CSceneNodeObject : public fg::gfx::CSceneNode {
+        class CSceneNodeObject : public CSceneNode {
         public:
-            typedef fg::gfx::CSceneNode base_type;
-
-        private:
-            fg::gfx::CModel *m_pModel;
+            ///
+            typedef CSceneNode base_type;
+            ///
+            typedef CSceneNodeObject self_type;
+            ///
+            typedef CSceneNodeObject type;
 
         public:
             /**
              * 
              */
-            CSceneNodeObject(fg::gfx::CModel *pModel = NULL, fg::gfx::CSceneNode *pParent = NULL);
+            CSceneNodeObject(gfx::CModel *pModel = NULL, CSceneNode *pParent = NULL);
             /**
              * 
              * @param orig
@@ -77,6 +79,15 @@ namespace fg {
              * @param modelMat
              */
             virtual void updateAABB(const Matrix4f& modelMat);
+
+        protected:
+            ///
+            virtual void refreshGfxInternals(void);
+
+        private:
+            /// Pointer to the external model
+            CModel *m_pModel;
+            
         };
     };
 };

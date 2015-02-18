@@ -258,7 +258,7 @@ void gfx::CSceneManager::render(void) {
         }
 #endif
         CSceneNode *pSceneNode = m_nodeQueue.top();
-        //printf("SCENENODE: %s\n", pSceneNode->getNameStr());
+        //printf("SCENENODE: %s\n", pSceneNode->getNameStr());        
         pSceneNode->draw();
 #if defined(FG_DEBUG)
         if(g_fgDebugConfig.isDebugProfiling) {
@@ -375,6 +375,57 @@ CSceneNode *gfx::CSceneManager::appendModel(int& index,
 
 /**
  * 
+ * @param pNode
+ */
+void gfx::CSceneManager::initializeNode(CSceneNode *pNode) {
+    if(!pNode) {
+        return;
+    }
+
+    CShaderManager* pShaderMgr = static_cast<gfx::CShaderManager *>(getShaderManager());
+
+    if(pNode->getNodeType() == SCENE_NODE_OBJECT) {
+        CSceneNodeObject* pNodeObject = static_cast<CSceneNodeObject*>(pNode);
+        /// This should be somewhere else - initialize shader program pointer from name
+        /// for material structure
+        CModel* pModel = pNodeObject->getModel();
+        if(pModel) {
+            if(!pModel->getMainMaterial()->shaderProgram) {
+                pModel->getMainMaterial()->shaderProgram =
+                        pShaderMgr->get(pModel->getMainMaterial()->shaderName);
+            }
+        }
+    }
+
+    {
+        CDrawCall* pDrawCall = pNode->getDrawCall();
+        if(pDrawCall) {
+            pDrawCall->setMVP(&m_MVP);
+            if(getShaderManager() && !pDrawCall->getShaderProgram()) {
+                pDrawCall->setShaderProgram(pShaderMgr->getCurrentProgram());
+            }
+        }
+        pNode->refreshGfxInternals();
+    }
+
+    CSceneNode::ChildrenVecItor it = pNode->getChildren().begin(),
+            end = pNode->getChildren().end();
+    for(; it != end; it++) {
+        if(!(*it))
+            continue;
+        CSceneNode* pChildNode = (*it);
+        CDrawCall* pDrawCall = pChildNode->getDrawCall();
+        if(pDrawCall) {
+            pDrawCall->setMVP(&m_MVP);
+            if(getShaderManager() && !pDrawCall->getShaderProgram()) {
+                pDrawCall->setShaderProgram(pShaderMgr->getCurrentProgram());
+            }
+        }
+    }
+}
+
+/**
+ * 
  * @param oUniqueID
  * @param pObj
  * @param oFatherObj
@@ -421,37 +472,8 @@ fgBool gfx::CSceneManager::addNode(SceneNodeHandle& nodeUniqueID,
     }
     //unsigned int index = pObj->getHandle().getIndex();
 
-#if 1
-    if(pNode->getNodeType() == SCENE_NODE_OBJECT) {
-        // #FIXME - this is total fubar
-        CSceneNodeObject *pNodeObject = static_cast<CSceneNodeObject *>(pNode);
-        if(pNodeObject->hasChildren()) {
-            CDrawCall *pDrawCall = (*pNodeObject->getChildren().begin())->getDrawCall();
-            if(pDrawCall) {
-                pDrawCall->setMVP(&m_MVP);
-                if(pNodeObject->getModel()) {
-                    if(getShaderManager())
-                        pDrawCall->setShaderProgram(((gfx::CShaderManager *)getShaderManager())->getCurrentProgram());
-                    if(m_pResourceMgr) {
-                        SMaterial *pMainMaterial = pNodeObject->getModel()->getMainMaterial();
-                        if(pMainMaterial) {
-                            CTextureResource *pTexRes = (CTextureResource *)((fg::resource::CResourceManager *)m_pResourceMgr)->get(pMainMaterial->ambientTexHandle);
-                            if(pTexRes)
-                                pDrawCall->setTexture(pTexRes->getRefGfxID());
-                        }
-                    }
-                }
-            }
-        }
-    } else {
-        CDrawCall *pDrawCall = pNode->getDrawCall();
-        if(pDrawCall) {
-            pDrawCall->setMVP(&m_MVP);
-            if(getShaderManager())
-                pDrawCall->setShaderProgram(((gfx::CShaderManager *)getShaderManager())->getCurrentProgram());
-        }
-    }
-#endif
+    initializeNode(pNode);
+
     if(m_basetree) {
         // add to the spatial tree structure
         // it can be octree/quadtree or any other (bounding volume hierarchy)

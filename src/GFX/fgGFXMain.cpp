@@ -702,23 +702,111 @@ fgBool gfx::CGfxMain::resourceCreatedHandler(fg::event::CArgumentList * argv) {
     if(!pResource)
         return FG_FALSE;
 
-    if(pResource->getResourceType() != resource::MODEL3D)
+    if(pResource->getResourceType() != resource::MODEL3D && pResource->getResourceType() != resource::PARTICLE_EFFECT)
         return FG_FALSE;
-    CModelResource *pModel = (CModelResource *)pResource;
-    CModelResource::ModelShapes &shapes = pModel->getRefShapes();
-    int n = shapes.size();
-    if(n) {
-        FG_LOG_DEBUG("GFX: Uploading static vertex data to VBO for model: '%s'", pModel->getNameStr());
-    }
-    for(int i = 0; i < n; i++) {
-        SShape *shape = shapes[i];
-        if(!shape)
-            continue;
-        if(!shape->mesh)
-            continue;
-        if(!CPlatform::context()->isBuffer(shape->mesh->getPtrVBO())) {
-            FG_LOG_DEBUG("GFX: Uploading static vertex data to VBO for shape: '%s'", shape->name.c_str());
-            shape->mesh->genBuffers();
+
+    if(pResource->getResourceType() == resource::MODEL3D) {
+
+        CModelResource *pModel = static_cast<CModelResource *>(pResource);
+        CModelResource::ShapesVec &shapes = pModel->getRefShapes();
+        resource::CResourceManager* pResourceMgr = static_cast<resource::CResourceManager *>(m_pResourceMgr);
+
+        if(pModel) {
+            SMaterial *pMainMaterial = pModel->getMainMaterial();
+            if(!pModel->getMainMaterial()->shaderProgram) {
+                pModel->getMainMaterial()->shaderProgram =
+                        m_shaderMgr->get(pModel->getMainMaterial()->shaderName);
+            }
+            //#FIXME
+            if(pResourceMgr) {
+                resource::CResource *tex = NULL;
+                // Ambient texture handle lookup
+                tex = pResourceMgr->request(pMainMaterial->ambientTexName);
+                if(tex) {
+                    if(tex->getResourceType() == resource::TEXTURE) {
+                        pMainMaterial->ambientTex = static_cast<CTextureResource *>(tex);
+                    }
+                }
+                // Diffuse texture handle lookup
+                tex = pResourceMgr->request(pMainMaterial->diffuseTexName);
+                if(tex) {
+                    if(tex->getResourceType() == resource::TEXTURE) {
+                        pMainMaterial->diffuseTex = static_cast<CTextureResource *>(tex);
+                    }
+                }
+                // Specular texture handle lookup
+                tex = pResourceMgr->request(pMainMaterial->specularTexName);
+                if(tex) {
+                    if(tex->getResourceType() == resource::TEXTURE) {
+                        pMainMaterial->specularTex = static_cast<CTextureResource *>(tex);
+                    }
+                }
+                // Normal texture handle lookup
+                tex = pResourceMgr->request(pMainMaterial->normalTexName);
+                if(tex) {
+                    if(tex->getResourceType() == resource::TEXTURE) {
+                        pMainMaterial->normalTex = static_cast<CTextureResource *>(tex);
+                    }
+                }
+            }
+        }
+
+        int n = shapes.size();
+        if(n) {
+            FG_LOG_DEBUG("GFX: Uploading static vertex data to VBO for model: '%s'", pModel->getNameStr());
+        }
+        for(int i = 0; i < n; i++) {
+            SShape *pShape = shapes[i];
+            if(!pShape)
+                continue;
+            if(pShape->material) {
+                if(!pShape->material->shaderProgram && pShape->material->shaderName.length()) {
+                    pShape->material->shaderProgram =
+                            m_shaderMgr->get(pShape->material->shaderName);
+                }
+            }
+            if(pResourceMgr) {
+                resource::CResource *tex = NULL;
+                // Ambient texture handle lookup
+                tex = pResourceMgr->request(pShape->material->ambientTexName);
+                if(tex) {
+                    if(tex->getResourceType() == resource::TEXTURE) {
+                        pShape->material->ambientTex = static_cast<CTextureResource *>(tex);
+                    }
+                }
+                // Diffuse texture handle lookup
+                tex = pResourceMgr->request(pShape->material->diffuseTexName);
+                if(tex) {
+                    if(tex->getResourceType() == resource::TEXTURE) {
+                        pShape->material->diffuseTex = static_cast<CTextureResource *>(tex);
+                    }
+                }
+                // Specular texture handle lookup
+                tex = pResourceMgr->request(pShape->material->specularTexName);
+                if(tex) {
+                    if(tex->getResourceType() == resource::TEXTURE) {
+                        pShape->material->specularTex = static_cast<CTextureResource *>(tex);
+                    }
+                }
+                // Normal texture handle lookup
+                tex = pResourceMgr->request(pShape->material->normalTexName);
+                if(tex) {
+                    if(tex->getResourceType() == resource::TEXTURE) {
+                        pShape->material->normalTex = static_cast<CTextureResource *>(tex);
+                    }
+                }
+            }
+            if(!pShape->mesh)
+                continue;
+            if(!CPlatform::context()->isBuffer(pShape->mesh->getPtrVBO())) {
+                FG_LOG_DEBUG("GFX: Uploading static vertex data to VBO for shape: '%s'", pShape->name.c_str());
+                pShape->mesh->genBuffers();
+            }
+        }
+    } else if(pResource->getResourceType() == resource::PARTICLE_EFFECT) {
+        CParticleEffect *pEffect = static_cast<CParticleEffect *>(pResource);
+        if(!pEffect->getShaderProgram() && pEffect->getShaderName().length()) {
+            pEffect->setShaderProgram(m_shaderMgr->get(pEffect->getShaderName()));
         }
     }
     return FG_TRUE;

@@ -67,6 +67,13 @@ namespace fg {
              * @param pMesh
              */
             virtual void setMesh(SMeshBase *pMesh);
+            
+        protected:
+            /**
+             * 
+             */
+            virtual void refreshGfxInternals(void);
+
 
         private:
             /// Pointer to external mesh that this object represents
