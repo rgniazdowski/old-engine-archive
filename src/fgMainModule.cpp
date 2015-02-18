@@ -348,6 +348,7 @@ fgBool CMainModule::initProgram() {
     if(!m_gameMain->loadResources()) {
         return FG_FALSE;
     }
+    m_gameMain->update();
     m_appInit = FG_TRUE;
     float t2 = timesys::ms();
     FG_LOG_DEBUG("Main: Program initialized in %.2f seconds", (t2 - t1) / 1000.0f);

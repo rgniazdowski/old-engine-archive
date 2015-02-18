@@ -93,7 +93,7 @@ m_gameFreeLookCallback(NULL) {
     FG_MessageSubsystem->setLogPaths("all.log", "error.log", "debug.log");
     m_inputHandler = new event::CInputHandler();
     m_joypadController = new event::CJoypadController(); // #FIXME - Joypad part of input receiver?
-    m_scriptSubsystem = new fg::script::CScriptSubsystem();
+    m_scriptSubsystem = new script::CScriptSubsystem();
     m_soundMgr = new sfx::CSfxManager();
     this->setEventManager();
     m_joypadController->initialize(); // #FIXME
@@ -339,7 +339,7 @@ fgBool CGameMain::initSubsystems(void) {
 #endif // FG_USING_MARMALADE
     // Setup GFX Main external pointers
     m_gfxMain->setupResourceManager(m_resourceMgr);
-    m_gfxMain->generateBuiltInData();
+    //m_gfxMain->generateBuiltInData();
     FG_HardwareState->deviceYield(0); // #FIXME - device yield...
     ////////////////////////////////////////////////////////////////////////////
     // Resource Manager and GFX is now fully initialized (with default shader)
@@ -348,6 +348,7 @@ fgBool CGameMain::initSubsystems(void) {
     m_gfxMain->setupLoader();
     FG_HardwareState->deviceYield(0); // #FIXME - device yield...
     m_gfxMain->getLoader()->update(0.0f);
+
     ////////////////////////////////////////////////////////////////////////////
     // Setup SFX manager external pointer - resource manager
     if(m_soundMgr)
@@ -358,7 +359,7 @@ fgBool CGameMain::initSubsystems(void) {
     m_gfxMain->getLoader()->update(10.0f);
     // Create object for Game Logic Manager
     if(!m_logicMgr)
-        m_logicMgr = new fg::game::Logic(NULL);
+        m_logicMgr = new game::Logic(NULL);
     // Setup Game Logic external pointers
     if(m_logicMgr) {
         m_logicMgr->setEventManager(this);
@@ -532,12 +533,15 @@ fgBool CGameMain::loadResources(void) {
     m_gfxMain->getParticleSystem()->insertParticleEmitter("ExplosionSmoke", "ExplosionSmoke", Vector3f(0.0f, 0.0f, 0.0f));
     m_gfxMain->getParticleSystem()->insertParticleEmitter("ExplosionSmokeTrails", "ExplosionSmokeTrails", Vector3f(0.0f, 0.0f, 0.0f));
     m_gfxMain->getParticleSystem()->insertParticleEmitter("ExplosionSparks", "ExplosionSparks", Vector3f(0.0f, 0.0f, 0.0f));
+    ////////////////////////////////////////////////////////////////////////////
+    m_gfxMain->getLoader()->update(10.0f);
+    this->update();
+    m_gfxMain->generateBuiltInData();
     float t2 = timesys::ms();
     FG_LOG_DEBUG("Main: Resources loaded in %.2f seconds", (t2 - t1) / 1000.0f);
-    m_gfxMain->getLoader()->update(10.0f);
 #if !defined(FG_USING_MARMALADE)
-    usleep(500 * 1000);
-#endif
+    usleep(50 * 1000);
+#endif    
     return FG_TRUE;
 }
 

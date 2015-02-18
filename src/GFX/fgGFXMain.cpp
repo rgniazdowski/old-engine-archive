@@ -217,17 +217,20 @@ void gfx::CGfxMain::generateBuiltInData(void) {
     builtin_cube_shape->name = "builtinCube1x1";
     builtin_cube_shape->mesh = builtin_cube_mesh;
     builtin_cube_shape->material = new SMaterial();
-    builtin_cube_shape->material->diffuseTexName = "hexangle.jpg";
-    builtin_cube_shape->material->ambientTexName = "hexangle.jpg";
+    builtin_cube_shape->material->diffuseTexName = "crate.jpg";
+    builtin_cube_shape->material->ambientTexName = "crate.jpg";
     cubeModel->addShape(builtin_cube_shape);
-    static_cast<resource::CResourceManager *>(m_pResourceMgr)->request("hexangle.jpg");
+    static_cast<resource::CResourceManager *>(m_pResourceMgr)->request("crate.jpg");
     if(!static_cast<resource::CResourceManager *>(m_pResourceMgr)->insert(cubeModel)) {
         static_cast<resource::CResourceManager *>(m_pResourceMgr)->remove(cubeModel);
         delete cubeModel;
+    } else {
+        // Should not call create manually on the 3D Model
+        // This wont call the function for VBO upload
+        //cubeModel->create();
+        //builtin_cube_mesh->genBuffers();
+        static_cast<resource::CResourceManager *>(m_pResourceMgr)->request("builtinCube1x1");
     }
-    // Should not call create manually on the 3D Model
-    // This wont call the function for VBO upload
-    //cubeModel->create();
 
     SMeshAoS *builtin_sphere_mesh = new SMeshAoS();
     SShape *builtin_sphere_shape = new SShape();
@@ -244,7 +247,11 @@ void gfx::CGfxMain::generateBuiltInData(void) {
     if(!static_cast<resource::CResourceManager *>(m_pResourceMgr)->insert(sphereModel)) {
         static_cast<resource::CResourceManager *>(m_pResourceMgr)->remove(sphereModel);
         delete sphereModel;
+    } else {
+        //builtin_sphere_mesh->genBuffers();
+        static_cast<resource::CResourceManager *>(m_pResourceMgr)->request("builtinSphere");
     }
+
 }
 
 /**
