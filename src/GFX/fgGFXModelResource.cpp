@@ -27,7 +27,7 @@ m_isTextured(FG_FALSE),
 m_hasMaterial(FG_FALSE),
 m_isInterleaved(FG_TRUE) {
     memset(m_numData, 0, sizeof (m_numData));
-    m_resType = resource::MODEL3D;
+    base_type::m_resType = resource::MODEL3D;
 }
 
 /**
@@ -42,7 +42,7 @@ m_isMultitextured(FG_FALSE),
 m_isTextured(FG_FALSE),
 m_hasMaterial(FG_FALSE),
 m_isInterleaved(FG_TRUE) {
-    m_resType = resource::MODEL3D;
+    base_type::m_resType = resource::MODEL3D;
 }
 
 /**
@@ -57,7 +57,7 @@ m_isMultitextured(FG_FALSE),
 m_isTextured(FG_FALSE),
 m_hasMaterial(FG_FALSE),
 m_isInterleaved(FG_TRUE) {
-    m_resType = resource::MODEL3D;
+    base_type::m_resType = resource::MODEL3D;
 }
 
 /**
@@ -65,7 +65,7 @@ m_isInterleaved(FG_TRUE) {
  * just resets base class attributes
  */
 void gfx::CModelResource::clear(void) {
-    CResource::clear();
+    base_type::clear();
     m_materialOverride = NULL;
     m_modelType = MODEL_INVALID;
     m_isTextured = FG_FALSE;

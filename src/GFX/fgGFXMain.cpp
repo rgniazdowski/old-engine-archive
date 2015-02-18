@@ -406,13 +406,20 @@ void gfx::CGfxMain::display(void) {
 void gfx::CGfxMain::render(void) {
     static gfx::CModelResource *cobraBomber = NULL;
     glm::mat4 Model;
-    
+
     if(!m_mainWindow || !m_gfxContext) {
         FG_LOG_ERROR("Main window / context is NULL");
         return;
     }
     fgGLError();
     m_mainWindow->clearColor();
+
+    m_gfxContext->setCullFace(FG_TRUE);
+    m_gfxContext->setDepthTest(FG_TRUE);
+    m_gfxContext->setBlend(FG_FALSE);
+    m_gfxContext->frontFace(FrontFace::FACE_CCW);
+    m_gfxContext->setCapability(gfx::DEPTH_WRITEMASK, FG_TRUE);
+
     resource::CResourceManager *rm = NULL;
 #if defined(FG_USING_SDL2)
     const Uint8 *state = SDL_GetKeyboardState(NULL);

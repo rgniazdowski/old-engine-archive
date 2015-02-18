@@ -1,8 +1,19 @@
 //
 // Copyright 2012-2013, Syoyo Fujita.
 // 
-// Licensed under 2-clause BSD liecense.
+// Licensed under 2-clause BSD license (Simplified BSD)
 //
+
+//
+// Required:   License and copyright notice
+// 
+// Permitted:  Commercial Use
+//             Distribution
+//             Modification
+//             Private Use
+//             Sublicensing
+// 
+// Forbidden:  Hold Liable
 
 //
 // version 0.9.6: Support Ni(index of refraction) mtl parameter.
@@ -16,18 +27,24 @@
 // version 0.9.0: Initial
 //
 
+//
+// Changes made in code to make it more compatible with FG engine.
+// Usage of FG types for material, vertex, etc
+//
 
 #include <cstdlib>
 #include <cstring>
 #include <cassert>
 
 #include <string>
-#include <vector>
 #include <map>
 #include <fstream>
 #include <sstream>
 
 #include "fgTinyObj.h"
+#include "Util/fgPath.h"
+#include "Util/fgStrings.h"
+#include "Util/fgStringParser.h"
 
 namespace fgTinyObj {
 
@@ -385,6 +402,171 @@ namespace fgTinyObj {
         return FG_TRUE;
     }
 
+    std::string LoadMtlIni(std::map<std::string, fg::gfx::SMaterial>& material_map, const std::string& path) {
+        material_map.clear();
+        std::stringstream err;
+        fg::gfx::SMaterial material;
+
+        fg::util::CConfig m_config;
+        if(!m_config.load(path.c_str())) {
+            return err.str();
+        }
+
+        fg::util::SCfgSection *section = m_config.getSection("Material");
+        if(!section) {
+            FG_LOG_ERROR("fgTinyObj: Couldn't find 'Material' section in: '%s'", path.c_str());
+            return err.str();
+        }
+
+        fg::util::config::ParameterVecItor end, itor;
+        end = section->parameters.end();
+        itor = section->parameters.begin();
+        for(; itor != end; itor++) {
+            fg::util::SCfgParameter *param = *itor;
+            if(!param)
+                continue;
+            if(param->name.compare("name") == 0) {
+                if(param->type == fg::util::SCfgParameter::STRING) {
+                    material.name = param->string;
+                }
+
+            } else if(param->name.compare("ambient") == 0) {
+                if(param->type == fg::util::SCfgParameter::STRING) {
+                    material.ambient = fgStringParser::parseColor(param->string);
+                }
+
+            } else if(param->name.compare("diffuse") == 0) {
+                if(param->type == fg::util::SCfgParameter::STRING) {
+                    material.diffuse = fgStringParser::parseColor(param->string);
+                }
+
+            } else if(param->name.compare("specular") == 0) {
+                if(param->type == fg::util::SCfgParameter::STRING) {
+                    material.specular = fgStringParser::parseColor(param->string);
+                }
+
+            } else if(param->name.compare("transmittance") == 0) {
+                if(param->type == fg::util::SCfgParameter::STRING) {
+                    material.transmittance = fgStringParser::parseColor(param->string);
+                }
+
+            } else if(param->name.compare("emission") == 0) {
+                if(param->type == fg::util::SCfgParameter::STRING) {
+                    material.emission = fgStringParser::parseColor(param->string);
+                }
+
+            } else if(param->name.compare("shininess") == 0) {
+                if(param->type == fg::util::SCfgParameter::FLOAT) {
+                    material.shininess = param->float_val;
+                } else if(param->type == fg::util::SCfgParameter::INT) {
+                    material.shininess = (float)param->int_val;
+                }
+
+            } else if(param->name.compare("ior") == 0) {
+                if(param->type == fg::util::SCfgParameter::FLOAT) {
+                    material.ior = param->float_val;
+                } else if(param->type == fg::util::SCfgParameter::INT) {
+                    material.ior = (float)param->int_val;
+                }
+
+            } else if(param->name.compare("dissolve") == 0) {
+                if(param->type == fg::util::SCfgParameter::FLOAT) {
+                    material.dissolve = param->float_val;
+                } else if(param->type == fg::util::SCfgParameter::INT) {
+                    material.dissolve = (float)param->int_val;
+                }
+
+            } else if(param->name.compare("illumination-model") == 0 || param->name.compare("illum-model") == 0) {
+                if(param->type == fg::util::SCfgParameter::INT) {
+                    material.illuminationModel = param->int_val;
+                }
+
+            } else if(param->name.compare("burn") == 0) {
+                if(param->type == fg::util::SCfgParameter::FLOAT) {
+                    material.burn = param->float_val;
+                } else if(param->type == fg::util::SCfgParameter::INT) {
+                    material.burn = (float)param->int_val;
+                }
+
+            } else if(param->name.compare("ambient-map") == 0) {
+                if(param->type == fg::util::SCfgParameter::STRING) {
+                    material.ambientTexName = param->string;
+                }
+
+            } else if(param->name.compare("diffuse-map") == 0) {
+                if(param->type == fg::util::SCfgParameter::STRING) {
+                    material.diffuseTexName = param->string;
+                }
+
+            } else if(param->name.compare("specular-map") == 0) {
+                if(param->type == fg::util::SCfgParameter::STRING) {
+                    material.specularTexName = param->string;
+                }
+
+            } else if(param->name.compare("normal-map") == 0) {
+                if(param->type == fg::util::SCfgParameter::STRING) {
+                    material.normalTexName = param->string;
+                }
+
+            } else if(param->name.compare("shader-name") == 0) {
+                if(param->type == fg::util::SCfgParameter::STRING) {
+                    material.shaderName = param->string;
+                }
+
+            } else if(param->name.compare("blend-mode") == 0) {
+                if(param->type == fg::util::SCfgParameter::STRING) {
+                    // case insensitive
+                    if(fg::strings::isEqual(param->string, "additive", FG_FALSE)) {
+                        material.blendMode = fg::gfx::BlendMode::BLEND_ADDITIVE;
+                    } else if(fg::strings::isEqual(param->string, "transparency", FG_FALSE)) {
+                        material.blendMode = fg::gfx::BlendMode::BLEND_TRANSPARENCY;
+                    }
+                }
+
+            } else if(param->name.compare("front-face") == 0) {
+                if(param->type == fg::util::SCfgParameter::STRING) {
+                    if(fg::strings::isEqual(param->string, "ccw", FG_FALSE)) {
+                        material.setFrontFace(fg::gfx::FACE_CCW);
+                    } else if(fg::strings::isEqual(param->string, "cw", FG_FALSE)) {
+                        material.setFrontFace(fg::gfx::FACE_CW);
+                    }
+                }
+
+            } else if(param->name.compare("cull-face") == 0) {
+                if(param->type == fg::util::SCfgParameter::BOOL) {
+                    material.setCullFace(param->bool_val);
+                } else if(param->type == fg::util::SCfgParameter::INT) {
+                    material.setCullFace((fgBool)param->int_val);
+                }
+
+            } else if(param->name.compare("depth-test") == 0) {
+                if(param->type == fg::util::SCfgParameter::BOOL) {
+                    material.setDepthTest(param->bool_val);
+                } else if(param->type == fg::util::SCfgParameter::INT) {
+                    material.setDepthTest((fgBool)param->int_val);
+                }
+                
+            } else if(param->name.compare("depth-write-mask") == 0) {
+                if(param->type == fg::util::SCfgParameter::BOOL) {
+                    material.setDepthWriteMask(param->bool_val);
+                } else if(param->type == fg::util::SCfgParameter::INT) {
+                    material.setDepthWriteMask((fgBool)param->int_val);
+                }
+                
+            } else if(param->name.compare("mtl-reference") == 0) {
+                if(param->type == fg::util::SCfgParameter::STRING) {
+                    // ????
+                }
+            }
+        }
+
+        m_config.clearAll();
+        
+        // flush last material.
+        material_map.insert(std::pair<std::string, fg::gfx::SMaterial>(material.name, material));
+        return err.str();
+    }
+
     /**
      * 
      * @param material_map
@@ -397,7 +579,8 @@ namespace fgTinyObj {
         fg::gfx::SMaterial material;
 
         int maxchars = 8192; // Alloc enough size.
-        std::vector<char> buf(maxchars); // Alloc enough size.
+        fg::CVector<char> buf; // Alloc enough size.
+        buf.reserve(maxchars);
         while(inStream.peek() != -1) {
             inStream.getline(&buf[0], maxchars);
 
@@ -474,8 +657,8 @@ namespace fgTinyObj {
                 continue;
             }
 
-            // transmittance
-            if(token[0] == 'K' && token[1] == 't' && isSpace((token[2]))) {
+            // transmittance - transmission filter 
+            if(token[0] == 'T' && token[1] == 'f' && isSpace((token[2]))) {
                 token += 2;
                 float r, g, b;
                 parseFloat3(r, g, b, token);
@@ -503,7 +686,7 @@ namespace fgTinyObj {
                 continue;
             }
 
-            // shininess
+            // shininess - specular exponent - defines the focus of the specular highlight - 0 - 1000
             if(token[0] == 'N' && token[1] == 's' && isSpace(token[2])) {
                 token += 2;
                 material.shininess = parseFloat(token);
@@ -591,8 +774,15 @@ namespace fgTinyObj {
             filepath = matId;
         }
 
-        std::ifstream matIStream(filepath.c_str());
-        return LoadMtl(matMap, matIStream);
+        const char *ext = fg::path::fileExt(filepath.c_str(), FG_TRUE);
+        if(fg::strings::endsWith(ext, "mtl")) {
+            std::ifstream matIStream(filepath.c_str());
+            return LoadMtl(matMap, matIStream);
+        } else if(fg::strings::endsWith(ext, "mat.ini")) {
+            return LoadMtlIni(matMap, filepath);
+        }
+
+        return std::string();
     }
 
     /**

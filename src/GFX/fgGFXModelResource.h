@@ -67,6 +67,12 @@ namespace fg {
          */
         class CModelResource : public resource::CResource {
         public:
+            ///
+            typedef fg::resource::CResource base_type;
+            ///
+            typedef CModelResource self_type;
+            ///
+            typedef CModelResource type;
             // Type definition for vector holding model shapes
             typedef CVector<SShape *> ModelShapes;
             // Type definition for special vector iterator
@@ -134,7 +140,7 @@ namespace fg {
              */
             virtual fgBool isDisposed(void) const;
 
-        protected:            
+        protected:
             /**
              * Determines the model type identifier from the file extension
              * @param path  Path to check for file extension

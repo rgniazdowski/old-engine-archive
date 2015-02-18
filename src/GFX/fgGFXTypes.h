@@ -181,6 +181,24 @@ inline const char * _FG_GFX_DATA_TYPE_TO_TEXT(fgGFXenum value) {
 namespace fg {
     namespace gfx {
 
+        enum BlendMode {
+            BLEND_OFF,
+            BLEND_TRANSPARENCY,
+            BLEND_ADDITIVE
+        };
+
+    #if defined(FG_USING_OPENGL) || defined(FG_USING_OPENGL_ES)
+        enum FrontFace {
+            FACE_CCW = (unsigned int)GL_CCW,
+            FACE_CW = (unsigned int)GL_CW
+        };
+    #else 
+        enum FrontFace {
+            FACE_CCW,
+            FACE_CW
+        };
+    #endif
+
         /**
          * This is quick drawing info, it's a helper, needs refactoring
          * It provides info for direct drawing functions (like DrawElements

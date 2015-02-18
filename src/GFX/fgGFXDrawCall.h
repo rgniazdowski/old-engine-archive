@@ -68,12 +68,14 @@ namespace fg {
         };
 
         class CDrawingBatch;
+        struct SMaterial;
 
         /**
          * Special class representing a single draw call
          */
         class CDrawCall : public CDrawable {
             friend class fg::gfx::CDrawingBatch;
+            
         public:
             typedef fg::gfx::CDrawable base_type;
 
@@ -108,6 +110,8 @@ namespace fg {
             /// view and projection matrix parameters stay the same (mostly)
             /// through all drawing batch
             CMVPMatrix *m_MVP;
+            /// Pointer to external material struct - can be NULL
+            SMaterial *m_material;
             /// Used vertex data will depend on the attribute mask used
             /// Appending specific data however may alter this and make 
             /// other buffers invalid
@@ -171,7 +175,27 @@ namespace fg {
              * @param pMesh
              */
             void setupFromMesh(const SMeshBase* pMesh);
+            
+            /**
+             * 
+             * @param pShape
+             */
+            void setupFromShape(const SShape* pShape);
+            
+            /**
+             * 
+             * @param pMaterial
+             */
+            void setupMaterial(const SMaterial* pMaterial);
 
+            ////////////////////////////////////////////////////////////////////
+            
+            /**
+             * 
+             * @return 
+             */
+            SMaterial *getMaterial(void) const;
+            
             /**
              * 
              * @return 

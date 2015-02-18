@@ -25,6 +25,7 @@ m_vecData4v(NULL),
 m_program(NULL),
 m_textureID(),
 m_MVP(NULL),
+m_material(NULL),
 m_attribMask(attribMask),
 m_drawCallType(type),
 m_drawAppendMode(DRAW_APPEND_ABSOLUTE),
@@ -105,6 +106,7 @@ gfx::CDrawCall::~CDrawCall() {
         m_vecData4v = NULL;
     }
     m_vecDataBase = NULL;
+    m_material = NULL;
 }
 
 /**
@@ -181,6 +183,60 @@ void gfx::CDrawCall::setupFromMesh(const SMeshBase* pMesh) {
         // If both pointer/offset and buffer are zero
         // then it means that there is no indices array
     }
+}
+
+/**
+ * 
+ * @param pShape
+ */
+void gfx::CDrawCall::setupFromShape(const SShape* pShape) {
+    if(!pShape)
+        return;
+    if(!pShape->mesh)
+        return;
+    setupFromMesh(pShape->mesh);
+    if(pShape->material) {
+        setupMaterial(pShape->material);
+    }
+}
+
+/**
+ * 
+ * @param pMaterial
+ */
+void gfx::CDrawCall::setupMaterial(const SMaterial* pMaterial) {
+    if(!pMaterial)
+        return;
+    
+    unsigned int sortingValue = pMaterial->getSortingValue();
+    // how to get texture?
+    m_material = (SMaterial *)pMaterial;
+    if(pMaterial->shaderProgram) {
+        //m_program = pMaterial->shaderProgram;
+        setShaderProgram(pMaterial->shaderProgram);
+    }
+    if(pMaterial->ambientTex) {
+        setTexture(pMaterial->ambientTex->getRefGfxID());
+    } else if(pMaterial->diffuseTex) {
+        setTexture(pMaterial->diffuseTex->getRefGfxID());
+    } else if(pMaterial->specularTex) {
+        
+    } else if(pMaterial->normalTex) {
+        
+    }
+    // textures?
+    // #FIXME
+    //m_fastCmp.setPart(1, (fg::util::FastCmp::data_type_32)m_textureID.id);
+    // This replaces value in sorting slot
+    m_fastCmp.setPart(1, (fg::util::FastCmp::data_type_32)sortingValue);
+}
+
+/**
+ * 
+ * @return 
+ */
+gfx::SMaterial* gfx::CDrawCall::getMaterial(void) const {
+    return m_material;
 }
 
 /**
@@ -563,6 +619,13 @@ void gfx::CDrawCall::draw(void) {
     }
     // Will now draw data from Other types ...
     if(applyAttributeData()) {
+        if(m_material) {
+            CPlatform::context()->setCullFace(m_material->isCullFace());
+            CPlatform::context()->setDepthTest(m_material->isDepthTest());
+            CPlatform::context()->setBlend(m_material->isBlend());
+            CPlatform::context()->frontFace((fgGFXenum)m_material->getGfxFrontFace());
+            CPlatform::context()->setCapability(gfx::DEPTH_WRITEMASK, m_material->isDepthWriteMask());
+        }
         // attribute data array is set
         // unsigned short is mainly because of ES
         if(m_drawingInfo.buffer || m_drawingInfo.indices.pointer) {

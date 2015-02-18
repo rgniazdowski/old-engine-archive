@@ -8,6 +8,7 @@
  *******************************************************/
 
 #include "fgGFXMaterial.h"
+#include "GFX/Shaders/fgGFXShaderProgram.h"
 
 /* #TODO P4 - stworzenie klasy Material w glownym podsystemie GFX - wazne: tablice wierzcholkow, 
  * kolorow/uv itp sa grupowane wedlug uzytego materialu
@@ -29,7 +30,30 @@ using namespace fg;
 /**
  * 
  */
-gfx::SMaterial::SMaterial() { }
+gfx::SMaterial::SMaterial() : name(),
+ambient(1.0f, 1.0f, 1.0f, 1.0f),
+diffuse(1.0f, 1.0f, 1.0f, 1.0f),
+specular(1.0f, 1.0f, 1.0f, 1.0f),
+transmittance(1.0f, 1.0f, 1.0f, 1.0f),
+emission(1.0f, 1.0f, 1.0f, 1.0f),
+shininess(1.0f),
+ior(1.0f),
+dissolve(1.0f),
+illuminationModel(0),
+burn(1.0f),
+ambientTexName(),
+diffuseTexName(),
+specularTexName(),
+normalTexName(),
+ambientTex(NULL),
+diffuseTex(NULL),
+specularTex(NULL),
+normalTex(NULL),
+shaderProgram(NULL),
+shaderName(),
+blendMode(BlendMode::BLEND_OFF),
+stateFlags(FRONT_FACE_CCW | DEPTH_TEST | DEPTH_WRITE_MASK | CULL_FACE),
+unknownParam() { }
 
 /**
  * 
@@ -41,7 +65,8 @@ size_t gfx::SMaterial::getDataSize(void) {
             ambientTexName.length() +
             diffuseTexName.length() +
             specularTexName.length() +
-            normalTexName.length();
+            normalTexName.length() +
+            shaderName.length();
     size += unknownParam.size() * (sizeof (std::string) * 2);
     return size;
 }
@@ -51,10 +76,10 @@ size_t gfx::SMaterial::getDataSize(void) {
  * @param material
  */
 gfx::SMaterial::SMaterial(const SMaterial & material) {
-    this->ambientTexHandle.copyFrom(material.ambientTexHandle);
-    this->diffuseTexHandle.copyFrom(material.diffuseTexHandle);
-    this->specularTexHandle.copyFrom(material.specularTexHandle);
-    this->normalTexHandle.copyFrom(material.normalTexHandle);
+    this->ambientTex = material.ambientTex;
+    this->diffuseTex = material.diffuseTex;
+    this->specularTex = material.specularTex;
+    this->normalTex = material.normalTex;
 
     this->name = material.name;
     this->ambient = material.ambient;
@@ -66,6 +91,12 @@ gfx::SMaterial::SMaterial(const SMaterial & material) {
     this->ior = material.ior;
     this->dissolve = material.dissolve;
     this->illuminationModel = material.illuminationModel;
+    this->burn = material.burn;
+    this->blendMode = material.blendMode;
+    this->shaderName = material.shaderName;
+    this->shaderProgram = material.shaderProgram;
+
+    this->stateFlags = material.stateFlags;
 
     this->ambientTexName = material.ambientTexName;
     this->diffuseTexName = material.diffuseTexName;
@@ -73,4 +104,84 @@ gfx::SMaterial::SMaterial(const SMaterial & material) {
     this->normalTexName = material.normalTexName;
 
     this->unknownParam = material.unknownParam;
+}
+
+/**
+ * 
+ */
+void gfx::SMaterial::clear(void) {
+    // #TODO - here is the place to call resource manager and decrease reference count for the used textures
+    //FG_ResourceManager->unlockResource(ambientTexHandle);
+    //FG_ResourceManager->unlockResource(diffuseTexHandle);
+    //FG_ResourceManager->unlockResource(specularTexHandle);
+    //FG_ResourceManager->unlockResource(normalTexHandle);
+    // #FIXME #PLOX
+    ambientTexName.clear();
+    diffuseTexName.clear();
+    specularTexName.clear();
+    normalTexName.clear();
+
+    name.clear();
+    shaderName.clear();
+    shaderProgram = NULL;
+
+    ambient = fgColor4f(0.0f, 0.0f, 0.0f, 1.0f);
+    diffuse = fgColor4f(0.0f, 0.0f, 0.0f, 1.0f);
+    specular = fgColor4f(0.0f, 0.0f, 0.0f, 1.0f);
+    transmittance = fgColor4f(0.0f, 0.0f, 0.0f, 1.0f);
+    emission = fgColor4f(0.0f, 0.0f, 0.0f, 1.0f);
+
+    shininess = 0.0f;
+    ior = 0.0f;
+    dissolve = 0.0f;
+    illuminationModel = 0;
+    burn = 0.0f;
+    
+    blendMode = BlendMode::BLEND_OFF;
+
+    //stateFlags = FRONT_FACE_CCW | DEPTH_TEST | DEPTH_WRITE_MASK | CULL_FACE;
+    stateFlags = NONE;
+
+    ambientTex = NULL;
+    diffuseTex = NULL;
+    specularTex = NULL;
+    normalTex = NULL;
+
+    unknownParam.clear();
+}
+
+/**
+ * 
+ * @param maxValue
+ * @return 
+ */
+unsigned int gfx::SMaterial::getSortingValue(const unsigned int maxValue) const {
+    unsigned int sortingValue = 0;
+    
+    sortingValue += (unsigned int)stateFlags;
+    sortingValue += (unsigned int)blendMode;
+    if(ambientTex) {
+        sortingValue += ambientTex->getRefHandle().getIndex() % 32;
+    }
+    if(diffuseTex) {
+        sortingValue += diffuseTex->getRefHandle().getIndex() % 32;
+    }
+    if(specularTex) {
+        sortingValue += specularTex->getRefHandle().getIndex() % 32;
+    }
+    if(normalTex) {
+        sortingValue += normalTex->getRefHandle().getIndex() % 32;
+    }
+    sortingValue += (unsigned int)illuminationModel;
+    sortingValue += name.length();
+    
+    //if(burn > 1.0f)
+//        burn = 1.0f; // ? ? ?
+    sortingValue += (unsigned int)(burn * 10.0f);
+    
+    if(sortingValue > maxValue) {
+        sortingValue = sortingValue % maxValue;
+    }
+    
+    return sortingValue;
 }
