@@ -191,6 +191,8 @@
             <word>renderbuffers</word>
             <word>rgb</word>
             <word>rgba</word>
+            <word>rgbaf</word>
+            <word>rgbf</word>
             <word>s'</word>
             <word>sfactor</word>
             <word>sfx</word>
@@ -226,6 +228,7 @@
             <word>ushort</word>
             <word>util</word>
             <word>uv</word>
+            <word>uvs</word>
             <word>valign</word>
             <word>vbo's</word>
             <word>vcenter</word>
