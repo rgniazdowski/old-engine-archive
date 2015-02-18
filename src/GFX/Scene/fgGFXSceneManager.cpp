@@ -529,9 +529,13 @@ fgBool gfx::CSceneManager::addNode(SceneNodeHandle& oUniqueID,
  * @param pObj
  * @return 
  */
-fgBool gfx::CSceneManager::remove(CSceneNode*  pObj) {
+fgBool gfx::CSceneManager::remove(CSceneNode* pObj) {
     if(!pObj || !isManaged(pObj)) {
         return FG_FALSE;
+    }
+    if(pObj->getTreeNode()) {
+        pObj->getTreeNode()->removeObject(pObj);
+        pObj->setTreeNode(NULL);
     }
     pObj->setManaged(FG_FALSE);
     // Reset the manager pointer - object is not managed - it is no longer needed

@@ -91,20 +91,20 @@ void gfx::CScene3D::sortCalls(void) {
         // should not be called within the tree traversal
         checkCollisions(sceneNode); // broadphase - this uses loose octree - more fast would be dynamic AABBtree ?
         if(treeNode) {
-            unsigned int objCount = treeNode->objects.size();
+            //unsigned int objCount = treeNode->objects.size();
             float halfSize = static_cast<CLooseOctree *>(m_octree)->getLooseK() * m_octree->getWorldSize().x / (2 << treeNode->depth);
             // Check bounds of this scene node - if does not fit - reinsert to different tree node - slow...
             if(m_octree->fitsInBox(sceneNode, treeNode->center, halfSize)) {
                 //printf("%s fits in box depth %d\n", sceneNode->getNameStr(), treeNode->depth);
-            } else {
-                int objIdx = treeNode->objects.find(sceneNode);
+            } else if(treeNode->removeObject(sceneNode)) {
+                /*int objIdx = treeNode->objects.find(sceneNode);
                 if(objIdx != -1) {
                     sceneNode->setTreeNode(NULL);
                     treeNode->objects[objIdx] = treeNode->objects[objCount - 1];
                     treeNode->objects[objCount - 1] = NULL;
-                    treeNode->objects.resize(objCount - 1);
-                    m_octree->insert(sceneNode);
-                }
+                    treeNode->objects.resize(objCount - 1);*/
+                m_octree->insert(sceneNode);
+                //}
             }
         }
     }

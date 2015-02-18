@@ -17,6 +17,7 @@
     #define FG_INC_GFX_TREE_NODE
     #define FG_INC_GFX_TREE_NODE_BLOCK
 
+    #include "fgBool.h"
     #include "fgVector.h"
     #include "Math/fgMathLib.h"
 
@@ -73,6 +74,13 @@ namespace fg {
                 objects.clear_optimised();
                 objects.resize(0);
             }
+            
+            /**
+             * 
+             * @param pNode
+             * @return 
+             */
+            virtual fgBool removeObject(CSceneNode *pNode);
         };
     };
 };

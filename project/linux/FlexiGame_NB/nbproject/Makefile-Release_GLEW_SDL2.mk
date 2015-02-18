@@ -64,6 +64,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/_ext/1008910172/fgGFXSceneNodeMesh.o \
 	${OBJECTDIR}/_ext/1008910172/fgGFXSceneNodeObject.o \
 	${OBJECTDIR}/_ext/1008910172/fgGFXSceneSkyBox.o \
+	${OBJECTDIR}/_ext/1008910172/fgGFXTreeNode.o \
 	${OBJECTDIR}/_ext/960776194/fgGFXShader.o \
 	${OBJECTDIR}/_ext/960776194/fgGFXShaderBase.o \
 	${OBJECTDIR}/_ext/960776194/fgGFXShaderConfig.o \
@@ -364,6 +365,11 @@ ${OBJECTDIR}/_ext/1008910172/fgGFXSceneSkyBox.o: ../../../src/GFX/Scene/fgGFXSce
 	${MKDIR} -p ${OBJECTDIR}/_ext/1008910172
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -s -DFG_NO_UNDEF -DFG_USING_GLEW -DFG_USING_GLM -DFG_USING_LUA_PLUS -DFG_USING_OPENGL -DFG_USING_OPENGL_GLEW -DFG_USING_SDL2 -DFG_USING_TINYXML -DTIXML_USE_STL -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/zlib_128/contrib/minizip -I../../../modules/luaplus51-all/Src -I../../../modules/simpleopt `pkg-config --cflags gl` `pkg-config --cflags glew` `pkg-config --cflags sdl2` `pkg-config --cflags SDL2_mixer` `pkg-config --cflags libpng` `pkg-config --cflags zlib` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1008910172/fgGFXSceneSkyBox.o ../../../src/GFX/Scene/fgGFXSceneSkyBox.cpp
+
+${OBJECTDIR}/_ext/1008910172/fgGFXTreeNode.o: ../../../src/GFX/Scene/fgGFXTreeNode.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/1008910172
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -s -DFG_NO_UNDEF -DFG_USING_GLEW -DFG_USING_GLM -DFG_USING_LUA_PLUS -DFG_USING_OPENGL -DFG_USING_OPENGL_GLEW -DFG_USING_SDL2 -DFG_USING_TINYXML -DTIXML_USE_STL -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/zlib_128/contrib/minizip -I../../../modules/luaplus51-all/Src -I../../../modules/simpleopt `pkg-config --cflags gl` `pkg-config --cflags glew` `pkg-config --cflags sdl2` `pkg-config --cflags SDL2_mixer` `pkg-config --cflags libpng` `pkg-config --cflags zlib` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1008910172/fgGFXTreeNode.o ../../../src/GFX/Scene/fgGFXTreeNode.cpp
 
 ${OBJECTDIR}/_ext/960776194/fgGFXShader.o: ../../../src/GFX/Shaders/fgGFXShader.cpp 
 	${MKDIR} -p ${OBJECTDIR}/_ext/960776194

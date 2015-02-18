@@ -1632,11 +1632,16 @@ fgBool script::CScriptSubsystem::register3DSceneManager(void) {
     }
 
     // Register additional direct functions for 3D Scene Manager - they're specific for this class/object
-    typedef gfx::CSceneNode * (gfx::CScene3D::*SCENE3D_SceneNode_C_STR_IN_C_STR_IN)(const char *, const char *);
+    typedef gfx::CSceneNode* (gfx::CScene3D::*SCENE3D_SceneNode_C_STR_IN_C_STR_IN)(const char *, const char *);
+    typedef fgBool(gfx::CScene3D::*SCENE3D_Bool_C_STR_IN)(const char *);
 
     m_mgrMetatables[SCENE3D_MGR].RegisterObjectDirect("addFromModel",
                                                       static_cast<gfx::CScene3D *>(0),
                                                       static_cast<SCENE3D_SceneNode_C_STR_IN_C_STR_IN>(&gfx::CScene3D::addFromModel));
+    
+    m_mgrMetatables[SCENE3D_MGR].RegisterObjectDirect("destroyNode",
+                                                      static_cast<gfx::CScene3D *>(0),
+                                                      static_cast<SCENE3D_Bool_C_STR_IN>(&gfx::CScene3D::destroyNode));
 
     ////////////////////////////////////////////////////////////////////////////
     //
