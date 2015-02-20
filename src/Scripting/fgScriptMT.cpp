@@ -220,12 +220,22 @@ void script::CMetatables::generateMetatableNames(void) {
 
     // GFX Scene Node type
     m_metatableInfoVec[SCENE_NODE_MT_ID] = metatableInfo("FGX", "T");
+    m_metatableInfoVec[SCENE_NODE_OBJECT_MT_ID] = metatableInfo("FGX", "T");
+    m_metatableInfoVec[SCENE_NODE_TRIGGER_MT_ID] = metatableInfo("FGX", "T");
+    
+    // GFX Scene Event types
+    m_metatableInfoVec[EVENT_SCENE_NODE_MT_ID] = metatableInfo("FGX", "T");
+    m_metatableInfoVec[EVENT_SCENE_NODE_COLLISION_MT_ID] = metatableInfo("FGX", "T");
+    m_metatableInfoVec[EVENT_SCENE_NODE_TRIGGER_MT_ID] = metatableInfo("FGX", "T");
+    m_metatableInfoVec[EVENT_SCENE_MAIN_MT_ID] = metatableInfo("FGX", "T");
 
 #endif
 
     for(int i = 0; i < (int)METATABLE_SIZE; i++) {
         m_metatableInfoVec[i].id = (unsigned short int)i;
+        printf("ScriptMT: Generated metatable name id[%d], name[%s]\n", i, m_metatableInfoVec[i].name);
     }
+    printf("");
 }
 
 /**

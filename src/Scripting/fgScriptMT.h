@@ -159,7 +159,14 @@ namespace fg {
                 //
                 // 3D/2D GFX Scene Node & other types
                 //
-                SCENE_NODE_MT_ID,
+                SCENE_NODE_MT_ID, // gfx::CSceneNode
+                SCENE_NODE_OBJECT_MT_ID, // gfx::CSceneNodeObject
+                SCENE_NODE_TRIGGER_MT_ID, // gfx::CSceneNodeTrigger
+                
+                EVENT_SCENE_NODE_MT_ID, // event::SSceneNode
+                EVENT_SCENE_NODE_COLLISION_MT_ID, // event::SSceneNodeCollision
+                EVENT_SCENE_NODE_TRIGGER_MT_ID, // event::SSceneNodeTrigger
+                EVENT_SCENE_MAIN_MT_ID, // event::SSceneEvent - union
 
                 METATABLE_SIZE
             };
