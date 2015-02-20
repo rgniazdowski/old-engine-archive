@@ -439,6 +439,19 @@ namespace fg {
              * @return 
              */
             static int addWidgetCallbackWrapper(lua_State *L);
+            
+            /**
+             * 
+             * @param L
+             * @return 
+             */
+            static int addSceneEventCallbackWrapper(lua_State *L);
+            
+            /**
+             * 
+             * @return 
+             */
+            static int addSceneTriggerCallbackWrapper(lua_State *L);
 
             /**
              * 
