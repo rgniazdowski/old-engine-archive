@@ -86,6 +86,8 @@
             <itemPath>../../../src/GFX/Scene/fgGFXSceneNodeMesh.h</itemPath>
             <itemPath>../../../src/GFX/Scene/fgGFXSceneNodeObject.cpp</itemPath>
             <itemPath>../../../src/GFX/Scene/fgGFXSceneNodeObject.h</itemPath>
+            <itemPath>../../../src/GFX/Scene/fgGFXSceneNodeTrigger.cpp</itemPath>
+            <itemPath>../../../src/GFX/Scene/fgGFXSceneNodeTrigger.h</itemPath>
             <itemPath>../../../src/GFX/Scene/fgGFXSceneSkyBox.cpp</itemPath>
             <itemPath>../../../src/GFX/Scene/fgGFXSceneSkyBox.h</itemPath>
             <itemPath>../../../src/GFX/Scene/fgGFXTreeNode.cpp</itemPath>
@@ -905,6 +907,16 @@
             flavor2="0">
       </item>
       <item path="../../../src/GFX/Scene/fgGFXSceneNodeObject.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Scene/fgGFXSceneNodeTrigger.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Scene/fgGFXSceneNodeTrigger.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -2454,6 +2466,16 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/GFX/Scene/fgGFXSceneNodeTrigger.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Scene/fgGFXSceneNodeTrigger.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../src/GFX/Scene/fgGFXSceneSkyBox.cpp"
             ex="false"
             tool="1"
@@ -3965,6 +3987,16 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/GFX/Scene/fgGFXSceneNodeTrigger.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Scene/fgGFXSceneNodeTrigger.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../src/GFX/Scene/fgGFXSceneSkyBox.cpp"
             ex="false"
             tool="1"
@@ -5450,6 +5482,16 @@
             flavor2="0">
       </item>
       <item path="../../../src/GFX/Scene/fgGFXSceneNodeObject.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Scene/fgGFXSceneNodeTrigger.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Scene/fgGFXSceneNodeTrigger.h"
             ex="false"
             tool="3"
             flavor2="0">

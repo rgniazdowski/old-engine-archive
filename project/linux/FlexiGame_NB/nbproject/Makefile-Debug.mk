@@ -63,6 +63,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/_ext/1008910172/fgGFXSceneNode.o \
 	${OBJECTDIR}/_ext/1008910172/fgGFXSceneNodeMesh.o \
 	${OBJECTDIR}/_ext/1008910172/fgGFXSceneNodeObject.o \
+	${OBJECTDIR}/_ext/1008910172/fgGFXSceneNodeTrigger.o \
 	${OBJECTDIR}/_ext/1008910172/fgGFXSceneSkyBox.o \
 	${OBJECTDIR}/_ext/1008910172/fgGFXTreeNode.o \
 	${OBJECTDIR}/_ext/960776194/fgGFXShader.o \
@@ -356,6 +357,11 @@ ${OBJECTDIR}/_ext/1008910172/fgGFXSceneNodeObject.o: ../../../src/GFX/Scene/fgGF
 	${MKDIR} -p ${OBJECTDIR}/_ext/1008910172
 	${RM} "$@.d"
 	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_GL_BINDING -DFG_USING_OPENGL -DFG_USING_SDL2 -DFG_USING_TINYXML -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src `pkg-config --cflags gl` `pkg-config --cflags sdl2` `pkg-config --cflags SDL2_mixer` `pkg-config --cflags libpng` `pkg-config --cflags zlib` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1008910172/fgGFXSceneNodeObject.o ../../../src/GFX/Scene/fgGFXSceneNodeObject.cpp
+
+${OBJECTDIR}/_ext/1008910172/fgGFXSceneNodeTrigger.o: ../../../src/GFX/Scene/fgGFXSceneNodeTrigger.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/1008910172
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_GL_BINDING -DFG_USING_OPENGL -DFG_USING_SDL2 -DFG_USING_TINYXML -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src `pkg-config --cflags gl` `pkg-config --cflags sdl2` `pkg-config --cflags SDL2_mixer` `pkg-config --cflags libpng` `pkg-config --cflags zlib` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1008910172/fgGFXSceneNodeTrigger.o ../../../src/GFX/Scene/fgGFXSceneNodeTrigger.cpp
 
 ${OBJECTDIR}/_ext/1008910172/fgGFXSceneSkyBox.o: ../../../src/GFX/Scene/fgGFXSceneSkyBox.cpp 
 	${MKDIR} -p ${OBJECTDIR}/_ext/1008910172
