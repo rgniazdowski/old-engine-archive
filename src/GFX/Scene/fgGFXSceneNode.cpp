@@ -85,12 +85,47 @@ gfx::CSceneNode::~CSceneNode() {
  * 
  */
 void gfx::CSceneNode::refreshGfxInternals(void) {
-   if(!m_pManager)
-       return;
-   if(m_pManager->getManagerType() != FG_MANAGER_SCENE) {
-       return;
-   }
-   // ?? #FIXME
+    if(!m_pManager)
+        return;
+    if(m_pManager->getManagerType() != FG_MANAGER_SCENE) {
+        return;
+    }
+    // ?? #FIXME
+}
+
+/**
+ * 
+ * @param halfSize
+ */
+void gfx::CSceneNode::setHalfSize(const Vector3f& halfSize) {
+    
+    if(m_collisionBody) {
+        m_collisionBody->setHalfSize(halfSize);        
+    }
+    
+    m_aabb.min = -halfSize;
+    m_aabb.max = halfSize;
+    m_aabb.refresh();
+    m_aabb.radius = math::length(halfSize);    
+    m_aabb.transform(m_modelMat);
+}
+
+/**
+ * 
+ * @param radius
+ */
+void gfx::CSceneNode::setRadius(float radius) {
+    if(radius < 0.0f)
+        radius *= -1.0f;
+    if(m_collisionBody) {
+        m_collisionBody->setRadius(radius);
+    }
+    float a = (2.0f * radius) / M_SQRT2;
+    m_aabb.min = -Vector3f(a, a, a);
+    m_aabb.max = Vector3f(a, a, a);
+    m_aabb.radius = radius;
+    m_aabb.refresh();
+    m_aabb.transform(m_modelMat);
 }
 
 /**
@@ -112,7 +147,22 @@ fgBool gfx::CSceneNode::checkCollisionSphere(const CSceneNode* pNode) const {
     if(r2 > radius2) {
         return FG_FALSE;
     }
+    
+    //m_aabb.test(pNode->getRefBoundingVolume());
     return FG_TRUE;
+}
+
+/**
+ * 
+ * @param pNode
+ * @return 
+ */
+fgBool gfx::CSceneNode::checkCollisionAABB(const CSceneNode* pNode) const {
+    if(!pNode)
+        return FG_FALSE;
+    if(!pNode->isCollidable() || !this->isCollidable())
+        return FG_FALSE;
+    return m_aabb.test(pNode->getRefBoundingVolume());
 }
 
 /**
@@ -474,7 +524,7 @@ fgBool gfx::CSceneNode::destroyChild(const std::string& childName) {
                 if(pChild->getParent() == this) {
                     secondCheck = FG_FALSE;
                 }
-                
+
                 // 2. method - with removal it's required to update iterator
                 it = m_children.findItor(pChild);
                 if(it != m_children.end()) {

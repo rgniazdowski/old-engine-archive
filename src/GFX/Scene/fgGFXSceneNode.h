@@ -100,6 +100,7 @@ namespace fg {
             friend class CSceneManager;
             friend class CSceneNodeMesh;
             friend class CSceneNodeObject;
+            
         public:
 
             /**
@@ -216,6 +217,88 @@ namespace fg {
 
         public:
             /**
+             * 
+             * @param position
+             */
+            inline virtual void setPosition(const Vec3f& position) {                
+                m_modelMat[3].x = position.x;
+                m_modelMat[3].y = position.y;
+                m_modelMat[3].z = position.z;
+            }
+            /**
+             * 
+             * @param x
+             * @param y
+             * @param z
+             */
+            inline virtual void setPosition(float x, float y, float z) {
+                m_modelMat[3].x = x;
+                m_modelMat[3].y = y;
+                m_modelMat[3].z = z;
+            }
+            /**
+             * 
+             * @param translation
+             */
+            inline virtual void translate(const Vec3f& translation) {
+                //m_modelMat = math::translate(m_modelMat, translation);
+                m_modelMat[3].x += translation.x;
+                m_modelMat[3].y += translation.y;
+                m_modelMat[3].z += translation.z;
+            }
+            /**
+             * 
+             * @param x
+             * @param y
+             * @param z
+             */
+            inline virtual void translate(float x, float y, float z) {
+                m_modelMat[3].x += x;
+                m_modelMat[3].y += y;
+                m_modelMat[3].z += z;
+            }
+            /**
+             * 
+             * @param angle
+             * @param axis
+             */
+            inline virtual void rotate(float angle, const Vec3f& axis) {
+                m_modelMat = math::rotate(m_modelMat, angle, axis);
+            }
+            /**
+             * 
+             * @param angle
+             * @param x
+             * @param y
+             * @param z
+             */
+            inline virtual void rotate(float angle, float x, float y, float z) {
+                m_modelMat = math::rotate(m_modelMat, angle, Vec3f(x, y, z));
+            }
+
+            /**
+             * 
+             * @param halfSize
+             */
+            void setHalfSize(const Vector3f& halfSize);
+            /**
+             * 
+             * @param x
+             * @param y
+             * @param z
+             */
+            inline void setHalfSize(float x, float y, float z) {
+                setHalfSize(Vector3f(x, y, z));
+            }
+
+            /**
+             * 
+             * @param radius
+             */
+            void setRadius(float radius);
+
+        public:
+            /**
              *
              */
             void activateCollisionBody(const physics::CCollisionBody::BodyType bodyType);
@@ -300,6 +383,8 @@ namespace fg {
              * @return 
              */
             fgBool checkCollisionSphere(const CSceneNode* pNode) const;
+            
+            fgBool checkCollisionAABB(const CSceneNode* pNode) const;
 
         public:
 
