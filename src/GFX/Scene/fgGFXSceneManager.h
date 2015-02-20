@@ -11,7 +11,13 @@
     #define FG_INC_GFX_SCENE_MANAGER
     #define FG_INC_GFX_SCENE_MANAGER_BLOCK
 
-    #include "Util/fgHandleManager.h"
+    #ifndef FG_INC_HANDLE_MANAGER
+        #include "Util/fgHandleManager.h"
+    #endif
+
+    #ifndef FG_INC_EVENT_MANAGER
+        #include "Event/fgEventManager.h"
+    #endif
 
     #ifndef FG_INC_GFX_DRAWING_BATCH
         #include "GFX/fgGFXDrawingBatch.h"
@@ -21,17 +27,23 @@
         #include "GFX/fgGFXCameraAnimation.h"
     #endif
 
-    #include "fgGFXSceneNodeObject.h"
 
-    #include "fgManagerBase.h"
-    #include "fgGFXSceneSkyBox.h"    
     #include "fgGFXBasetree.h"
+
+    #include "fgGFXSceneCallback.h"
+    #include "fgGFXSceneNode.h"
+    #include "fgGFXSceneNodeTrigger.h"
+    #include "fgGFXSceneNodeObject.h"
+    #include "fgGFXSceneSkyBox.h"    
 
     #define FG_MANAGER_SCENE        0x00001000
 
 namespace fg {
-    
+
     namespace gfx {
+
+        class CSceneCallback;
+        class CSceneNodeTrigger;
 
         /**
          *
@@ -56,14 +68,14 @@ namespace fg {
             ///
             typedef CVector<CSceneNode *> ObjectVec;
             ///
-            typedef ObjectVec::iterator ObjectVecItor;        
+            typedef ObjectVec::iterator ObjectVecItor;
 
         protected:
             /**
              * This should be called something like resetInternals?
              */
             virtual void clear(void);
-            
+
             /**
              * 
              * @param pNode
@@ -79,7 +91,7 @@ namespace fg {
              * 
              */
             virtual ~CSceneManager();
-            
+
             ////////////////////////////////////////////////////////////////////
 
             /**
@@ -92,7 +104,7 @@ namespace fg {
              * @return 
              */
             virtual fgBool initialize(void);
-            
+
             ////////////////////////////////////////////////////////////////////
 
             /**
@@ -100,7 +112,13 @@ namespace fg {
              * @param pShaderMgr
              */
             virtual void setShaderManager(fg::base::CManager* pShaderMgr);
-
+            /**
+             * 
+             * @return 
+             */
+            inline event::CEventManager* getEventManager(void) const {
+                return m_eventMgr;
+            }
             /**
              * 
              * @return 
@@ -120,9 +138,8 @@ namespace fg {
             inline fg::base::CManager* getResourceManager(void) const {
                 return m_pResourceMgr;
             }
-            
+
             ////////////////////////////////////////////////////////////////////
-            
             /**
              * 
              * @return 
@@ -151,7 +168,7 @@ namespace fg {
             }
 
             ////////////////////////////////////////////////////////////////////
-            
+
             /**
              * 
              */
@@ -164,9 +181,132 @@ namespace fg {
              * 
              */
             virtual void render(void);
+            /**
+             *
+             */
+            virtual void update(void);
 
             ////////////////////////////////////////////////////////////////////
-            
+
+            /**
+             * 
+             * @param eventCode
+             * @param pCallback
+             * @return 
+             */
+            CSceneCallback* addCallback(event::EventType eventCode,
+                                        CSceneCallback* pCallback);
+
+            /**
+             * 
+             * @param pTrigger
+             * @param pCallback
+             * @return 
+             */
+            fgBool addTriggerCallback(CSceneNodeTrigger::TriggerActivation activation,
+                                      CSceneNodeTrigger* pTrigger,
+                                      CSceneCallback* pCallback);
+
+            /**
+             * 
+             * @param nodeUniqueID
+             * @param pCallback
+             * @return 
+             */
+            fgBool addTriggerCallback(CSceneNodeTrigger::TriggerActivation activation,
+                                      const SceneNodeHandle& nodeUniqueID,
+                                      CSceneCallback* pCallback);
+
+            /**
+             * 
+             * @param nameTag
+             * @param pCallback
+             * @return 
+             */
+            fgBool addTriggerCallback(CSceneNodeTrigger::TriggerActivation activation,
+                                      const std::string& nameTag,
+                                      CSceneCallback* pCallback);
+
+            /**
+             * 
+             * @param nameTag
+             * @param pCallback
+             * @return 
+             */
+            fgBool addTriggerCallback(CSceneNodeTrigger::TriggerActivation activation,
+                                      const char* nameTag,
+                                      CSceneCallback* pCallback);
+
+            ////////////////////////////////////////////////////////////////////
+
+            /**
+             * 
+             * @param name
+             * @param position
+             * @return 
+             */
+            CSceneNode* addTrigger(const std::string& name,
+                                   const Vector3f& position);
+
+            /**
+             * 
+             * @param name
+             * @param position
+             * @param halfExtent
+             * @return 
+             */
+            CSceneNode* addTrigger(const std::string& name,
+                                   const Vector3f& position,
+                                   const Vector3f& halfExtent);
+
+            /**
+             * 
+             * @param name
+             * @param position
+             * @return 
+             */
+            CSceneNode* addTrigger(const char* name,
+                                   const Vector3f& position);
+
+            /**
+             * 
+             * @param name
+             * @param position
+             * @param halfExtent
+             * @return 
+             */
+            CSceneNode* addTrigger(const char* name,
+                                   const Vector3f& position,
+                                   const Vector3f& halfExtent);
+
+            /**
+             * 
+             * @param name
+             * @param x
+             * @param y
+             * @param z
+             * @return 
+             */
+            CSceneNode* addTrigger(const char* name,
+                                   float x, float y, float z);
+
+            /**
+             * 
+             * @param name
+             * @param x
+             * @param y
+             * @param z
+             * @param extX
+             * @param extY
+             * @param extZ
+             * @return 
+             */
+            CSceneNode* addTrigger(const char* name,
+                                   float x, float y, float z,
+                                   float extX, float extY, float extZ);
+
+            ////////////////////////////////////////////////////////////////////
+
             /**
              * 
              * @param nodeUniqueID
@@ -209,7 +349,7 @@ namespace fg {
                                    const char* nodeParentNameTag);
 
             ////////////////////////////////////////////////////////////////////
-            
+
             /**
              * 
              * @param pNode
@@ -236,7 +376,7 @@ namespace fg {
             virtual fgBool remove(const char *nameTag);
 
             ////////////////////////////////////////////////////////////////////
-            
+
             /**
              * 
              * @param pNode
@@ -263,7 +403,7 @@ namespace fg {
             virtual fgBool destroyNode(const char *nameTag);
 
             ////////////////////////////////////////////////////////////////////
-            
+
             /**
              * 
              * @param nodeUniqueID
@@ -284,7 +424,7 @@ namespace fg {
             virtual CSceneNode* get(const char *nameTag);
 
             ////////////////////////////////////////////////////////////////////
-            
+
             /**
              * 
              * @param pNode
@@ -309,17 +449,16 @@ namespace fg {
              * @return 
              */
             virtual fgBool isManaged(const char *nameTag);
-            
+
             ////////////////////////////////////////////////////////////////////
-            
+
             /**
              * This function clears the scene, removes all nodes, tree nodes,
              * releases all handles, resets the scene basically
              */
             virtual void clearScene(void);
-            
+
             ////////////////////////////////////////////////////////////////////
-            
             /**
              * 
              * @param index
@@ -344,7 +483,7 @@ namespace fg {
             }
 
             ////////////////////////////////////////////////////////////////////
-            
+
             // Returns the number of valid handles used within the handle 
             // manager. This value should not be used for any kind of iteration
             // through the internal data vector
@@ -358,9 +497,8 @@ namespace fg {
             unsigned int size(void) const {
                 return handle_mgr_type::getRefDataVector().size();
             }
-            
+
             ////////////////////////////////////////////////////////////////////
-            
             /**
              * 
              */
@@ -407,9 +545,8 @@ namespace fg {
             inline void setSkyBoxShader(CShaderProgram* pProgram) {
                 m_skybox.setShaderProgram(pProgram);
             }
-            
+
             ////////////////////////////////////////////////////////////////////
-            
             /**
              * 
              * @return 
@@ -431,11 +568,11 @@ namespace fg {
             inline CBasetree *getBasetree(void) const {
                 return m_basetree;
             }
-            
+
             ////////////////////////////////////////////////////////////////////
-            
+
         protected:
-            
+
             /**
              * This special structure is for internal usage in SceneManager
              * It's protected
@@ -453,10 +590,10 @@ namespace fg {
                 typedef CVector<ObjectVec> ContactsVec;
                 ///
                 typedef ContactsVec::iterator ContactsVecItor;
-                
+
                 ///
                 ContactsVec contacts;
-                
+
                 /**
                  * 
                  * @return 
@@ -467,7 +604,7 @@ namespace fg {
                  * @param maxObjects
                  */
                 ~SCollisionsInfo();
-                
+
                 /**
                  * 
                  * @param maxObjects
@@ -499,7 +636,7 @@ namespace fg {
                  * 
                  */
                 void clear(void);
-                
+
                 /**
                  * 
                  * @param nodeA
@@ -507,26 +644,26 @@ namespace fg {
                  * @return 
                  */
                 fgBool check(const CSceneNode* nodeA, const CSceneNode* nodeB) const;
-                
+
                 /**
                  * 
                  * @return 
                  */
                 fgBool empty(void) const;
-                
+
                 /**
                  * 
                  * @param pNode
                  * @return 
                  */
                 fgBool empty(CSceneNode* pNode) const;
-                
+
                 /**
                  * 
                  * @return 
                  */
                 unsigned int count(CSceneNode* pNode) const;
-                
+
                 /**
                  * 
                  * @return 
@@ -542,12 +679,50 @@ namespace fg {
                  * @return 
                  */
                 unsigned int capacity(void) const;
-                
+
             } m_collisionsInfo;
 
             ////////////////////////////////////////////////////////////////////
             
-        private:            
+            /**
+             *
+             */
+            struct TriggerInfo {
+                ///
+                CSceneNodeTrigger* pTrigger;
+                ///
+                CSceneNode* pNodeB;
+                ///
+                fgBool isBegin;
+                
+                /**
+                 * 
+                 */
+                TriggerInfo() : pTrigger(NULL), pNodeB(NULL), isBegin(FG_TRUE) { }
+                /**
+                 * 
+                 * @param trigger
+                 * @param node
+                 * @param begin
+                 */
+                TriggerInfo(CSceneNodeTrigger *trigger, CSceneNode *node, fgBool begin) :
+                pTrigger(trigger), pNodeB(node), isBegin(begin) { }
+                /**
+                 * 
+                 */
+                ~TriggerInfo() { pTrigger = NULL; pNodeB = NULL; isBegin = FG_FALSE; };
+            };
+
+            ///
+            typedef CVector<TriggerInfo> TriggerInfoVec;
+            ///
+            typedef TriggerInfoVec::iterator TriggerInfoVecItor;
+            
+            TriggerInfoVec m_triggers;
+            
+            ////////////////////////////////////////////////////////////////////
+
+        private:
             /// Internal MVP matrix to use, this will set the perspective view
             CMVPMatrix m_MVP;
             /// Internal camera
@@ -557,8 +732,10 @@ namespace fg {
             /// Queue containing scene node (sorted) ready to render
             NodePriorityQueue m_nodeQueue;
             /// Pointer to the external resource manager - don't know if this is necessary
-            fg::base::CManager *m_pResourceMgr;
-            
+            fg::base::CManager* m_pResourceMgr;
+            /// This is special manager for scene based events
+            event::CEventManager* m_eventMgr;
+
         protected:
             ///
             CBasetree *m_basetree;

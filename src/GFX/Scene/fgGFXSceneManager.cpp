@@ -8,18 +8,20 @@
  *******************************************************/
 
 #include "fgGFXSceneManager.h"
+#include "fgGFXSceneEvent.h"
+
 #include "GFX/Shaders/fgGFXShaderManager.h"
 #include "GFX/Textures/fgTextureResource.h"
 #include "GFX/fgGFXFrustum.h"
+#include "GFX/fgGFXPrimitives.h"
 
 #include "Resource/fgResourceManager.h"
+
 #include "fgDebugConfig.h"
 
 #if defined(FG_DEBUG)
 #include "Util/fgProfiling.h"
 #endif
-
-#include "GFX/fgGFXPrimitives.h"
 
 using namespace fg;
 
@@ -29,15 +31,19 @@ using namespace fg;
 gfx::CSceneManager::CSceneManager() :
 CDrawingBatch(),
 m_collisionsInfo(),
+m_triggers(),
 m_MVP(),
 m_camera(FG_GFX_CAMERA_FREE),
 m_skybox(),
 m_nodeQueue(),
 m_pResourceMgr(NULL),
+m_eventMgr(NULL),
 m_basetree(NULL) {
     m_managerType = FG_MANAGER_SCENE;
     m_skybox.setScale(FG_GFX_PERSPECTIVE_ZFAR_DEFAULT * 1.1f); // #FIXME #SKYBOX scale
     m_skybox.setMVP(&m_MVP);
+    m_eventMgr = new event::CEventManager(sizeof (event::SSceneEvent));
+    m_triggers.reserve(4);
 }
 
 /**
@@ -45,6 +51,10 @@ m_basetree(NULL) {
  */
 gfx::CSceneManager::~CSceneManager() {
     CSceneManager::destroy();
+    if(m_eventMgr) {
+        delete m_eventMgr;
+        m_eventMgr = NULL;
+    }
 }
 
 /**
@@ -85,6 +95,7 @@ fgBool gfx::CSceneManager::destroy(void) {
             delete pObj;
         (*itor).clear();
     }
+    m_triggers.clear_optimised();
     CSceneManager::clear();
     return FG_TRUE;
 }
@@ -114,7 +125,16 @@ void gfx::CSceneManager::clearScene(void) {
             delete pObj;
         (*itor).clear();
     }
-    releaseAllHandles();    
+    m_triggers.clear_optimised();
+    releaseAllHandles();
+    if(m_eventMgr) {
+        event::SSceneEvent* clearEvent = (event::SSceneEvent*) m_eventMgr->requestEventStruct();
+        clearEvent->code = event::SCENE_CLEARED;
+
+        event::CArgumentList *argList = m_eventMgr->requestArgumentList();
+        argList->push(event::SArgument::Type::ARG_TMP_POINTER, (void *)clearEvent);
+        m_eventMgr->throwEvent(event::SCENE_CLEARED, argList);
+    }
 }
 
 /**
@@ -122,6 +142,7 @@ void gfx::CSceneManager::clearScene(void) {
  * @return 
  */
 fgBool gfx::CSceneManager::initialize(void) {
+    m_eventMgr->initialize();
     return FG_TRUE;
 }
 
@@ -271,7 +292,7 @@ fgBool gfx::CSceneManager::SCollisionsInfo::check(const CSceneNode *nodeA, const
     {
         const unsigned int index = nodeA->getRefHandle().getIndex();
         const int findIndex = contacts[index].find(const_cast<CSceneNode*>(nodeB));
-        
+
         if(findIndex != -1) {
             return FG_TRUE;
         }
@@ -407,6 +428,38 @@ void gfx::CSceneManager::flush(void) {
 /**
  * 
  */
+void gfx::CSceneManager::update(void) {
+    while(m_triggers.size()) {
+        TriggerInfo &info = m_triggers.back();
+        CSceneNodeTrigger::TriggerActivation activation;
+        if(info.isBegin)
+            activation = CSceneNodeTrigger::ON_COLLISION_BEGIN;
+        else
+            activation = CSceneNodeTrigger::ON_COLLISION_END;
+        if(info.pTrigger) {
+            info.pTrigger->trigger(activation, info.pNodeB);
+        }
+
+        if(info.isBegin && m_eventMgr) {
+            event::SSceneNodeTrigger* triggerEvent = (event::SSceneNodeTrigger*) m_eventMgr->requestEventStruct();
+            triggerEvent->eventType = event::SCENE_NODE_TRIGGER_FIRED;
+            triggerEvent->pNodeTrigger = info.pTrigger;
+            triggerEvent->pNodeB = info.pNodeB;
+
+            event::CArgumentList *argList = m_eventMgr->requestArgumentList();
+            argList->push(event::SArgument::Type::ARG_TMP_POINTER, (void *)triggerEvent);
+            m_eventMgr->throwEvent(event::SCENE_NODE_TRIGGER_FIRED, argList);
+        }
+        m_triggers.pop_back();
+    }
+    if(m_eventMgr) {
+        m_eventMgr->executeEvents();
+    }
+}
+
+/**
+ * 
+ */
 void gfx::CSceneManager::sortCalls(void) {
     if(!getShaderManager())
         return;
@@ -521,9 +574,7 @@ void gfx::CSceneManager::render(void) {
         }
 
         if(FG_DEBUG_CFG_OPTION(gfxBBoxShow)) {
-            Vector4f matpos = pSceneNode->getRefModelMatrix()[3];
-            Vector3f pos(matpos.x, matpos.y, matpos.z);
-            Matrix4f mat = math::translate(Matrix4f(), pos);
+            Matrix4f mat = math::translate(Matrix4f(), pSceneNode->getRefBoundingVolume().center);
             const float radius = pSceneNode->getRefBoundingVolume().radius;
             mat = math::scale(mat, Vec3f(radius, radius, radius));
             m_MVP.calculate(mat);
@@ -606,6 +657,240 @@ CSceneNode *gfx::CSceneManager::appendModel(int& index,
     return pObj;
 }
 #endif
+
+/**
+ * 
+ * @param eventCode
+ * @param pCallback
+ * @return 
+ */
+gfx::CSceneCallback* gfx::CSceneManager::addCallback(event::EventType eventCode,
+                                                     CSceneCallback *pCallback) {
+    if(!pCallback || !m_eventMgr)
+        return NULL;
+    if(m_eventMgr->addCallback(eventCode, pCallback)) {
+        return pCallback;
+    } else {
+        return NULL;
+    }
+}
+
+/**
+ * 
+ * @param pTrigger
+ * @param pCallback
+ * @return 
+ */
+fgBool gfx::CSceneManager::addTriggerCallback(CSceneNodeTrigger::TriggerActivation activation,
+                                              CSceneNodeTrigger* pTrigger,
+                                              CSceneCallback* pCallback) {
+    fgBool status = FG_TRUE;
+    if(!pTrigger || !pCallback) {
+        status = FG_FALSE;
+    }
+    if(status) {
+        status = isManaged(pTrigger);
+    }
+    if(status) {
+        pTrigger->addCallback(pCallback, activation);
+    }
+    return status;
+}
+
+/**
+ * 
+ * @param nodeUniqueID
+ * @param pCallback
+ * @return 
+ */
+fgBool gfx::CSceneManager::addTriggerCallback(CSceneNodeTrigger::TriggerActivation activation,
+                                              const SceneNodeHandle& nodeUniqueID,
+                                              CSceneCallback* pCallback) {
+    fgBool status = FG_TRUE;
+    CSceneNode* pNode = NULL;
+    if(!pCallback) {
+        status = FG_FALSE;
+    }
+    if(status) {
+        pNode = get(nodeUniqueID);
+        if(!pNode)
+            status = FG_FALSE;
+    }
+    if(status) {
+        status = (pNode->getNodeType() == gfx::SCENE_NODE_TRIGGER);
+    }
+    if(status) {
+        CSceneNodeTrigger *pNodeTrigger = static_cast<CSceneNodeTrigger*>(pNode);
+        pNodeTrigger->addCallback(pCallback, activation);
+    }
+    return status;
+}
+
+/**
+ * 
+ * @param nameTag
+ * @param pCallback
+ * @return 
+ */
+fgBool gfx::CSceneManager::addTriggerCallback(CSceneNodeTrigger::TriggerActivation activation,
+                                              const std::string& nameTag,
+                                              CSceneCallback* pCallback) {
+    fgBool status = FG_TRUE;
+    CSceneNode* pNode = NULL;
+    if(!pCallback) {
+        status = FG_FALSE;
+    }
+    if(status) {
+        pNode = get(nameTag);
+        if(!pNode)
+            status = FG_FALSE;
+    }
+    if(status) {
+        status = (pNode->getNodeType() == gfx::SCENE_NODE_TRIGGER);
+    }
+    if(status) {
+        CSceneNodeTrigger *pNodeTrigger = static_cast<CSceneNodeTrigger*>(pNode);
+        pNodeTrigger->addCallback(pCallback, activation);
+    }
+    return status;
+}
+
+/**
+ * 
+ * @param nameTag
+ * @param pCallback
+ * @return 
+ */
+fgBool gfx::CSceneManager::addTriggerCallback(CSceneNodeTrigger::TriggerActivation activation,
+                                              const char* nameTag,
+                                              CSceneCallback* pCallback) {
+    fgBool status = FG_TRUE;
+    CSceneNode* pNode = NULL;
+    if(!pCallback || !nameTag) {
+        status = FG_FALSE;
+    }
+    if(status) {
+        pNode = get(nameTag);
+        if(!pNode)
+            status = FG_FALSE;
+    }
+    if(status) {
+        status = (pNode->getNodeType() == gfx::SCENE_NODE_TRIGGER);
+    }
+    if(status) {
+        CSceneNodeTrigger *pNodeTrigger = static_cast<CSceneNodeTrigger*>(pNode);
+        pNodeTrigger->addCallback(pCallback, activation);
+    }
+    return status;
+}
+
+/*
+ * @param name
+ * @param position
+ * @return
+ */
+gfx::CSceneNode* gfx::CSceneManager::addTrigger(const std::string& name,
+                                                const Vector3f& position) {
+    if(name.empty()) {
+        return NULL;
+    }
+    CSceneNodeTrigger *pNodeTrigger = new CSceneNodeTrigger();
+    pNodeTrigger->setName(name);
+    pNodeTrigger->setPosition(position);
+    if(!addNode(pNodeTrigger->getRefHandle(), pNodeTrigger)) {
+        remove(pNodeTrigger);
+        delete pNodeTrigger;
+        pNodeTrigger = NULL;
+    }
+    return pNodeTrigger;
+}
+
+/**
+ * 
+ * @param name
+ * @param position
+ * @param halfExtent
+ * @return 
+ */
+gfx::CSceneNode* gfx::CSceneManager::addTrigger(const std::string& name,
+                                                const Vector3f& position,
+                                                const Vector3f& halfExtent) {
+    CSceneNode *pNode = addTrigger(name, position);
+    if(pNode) {
+        pNode->setHalfSize(halfExtent);
+    }
+    return pNode;
+}
+
+/**
+ * 
+ * @param name
+ * @param position
+ * @return 
+ */
+gfx::CSceneNode* gfx::CSceneManager::addTrigger(const char* name,
+                                                const Vector3f& position) {
+    if(!name) {
+        return NULL;
+    }
+    if(!name[0]) {
+        return NULL;
+    }
+    return addTrigger(std::string(name), position);
+}
+
+/**
+ * 
+ * @param name
+ * @param position
+ * @param halfExtent
+ * @return 
+ */
+gfx::CSceneNode* gfx::CSceneManager::addTrigger(const char* name,
+                                                const Vector3f& position,
+                                                const Vector3f& halfExtent) {
+    if(!name) {
+        return NULL;
+    }
+    if(!name[0]) {
+        return NULL;
+    }
+    return addTrigger(std::string(name), position, halfExtent);
+}
+
+/**
+ * 
+ * @param name
+ * @param x
+ * @param y
+ * @param z
+ * @return 
+ */
+gfx::CSceneNode* gfx::CSceneManager::addTrigger(const char* name,
+                                                float x, float y, float z) {
+    if(!name)
+        return NULL;
+    return addTrigger(std::string(name), Vector3f(x, y, z));
+}
+
+/**
+ * 
+ * @param name
+ * @param x
+ * @param y
+ * @param z
+ * @param extX
+ * @param extY
+ * @param extZ
+ * @return 
+ */
+gfx::CSceneNode* gfx::CSceneManager::addTrigger(const char* name,
+                                                float x, float y, float z,
+                                                float extX, float extY, float extZ) {
+    if(!name)
+        return NULL;
+    return addTrigger(std::string(name), Vector3f(x, y, z), Vector3f(extX, extY, extZ));
+}
 
 /**
  * 
@@ -718,7 +1003,7 @@ fgBool gfx::CSceneManager::addNode(SceneNodeHandle& nodeUniqueID,
     //fgGfxDrawingBatch::appendDrawCall(drawCall, FG_FALSE); // Don't know if needed...
 
     if(handle_mgr_type::getRefDataVector().size() > m_collisionsInfo.capacity()) {
-        m_collisionsInfo.reserve((unsigned int)((float)handle_mgr_type::getRefDataVector().size()*1.5f)+32);
+        m_collisionsInfo.reserve((unsigned int)((float)handle_mgr_type::getRefDataVector().size()*1.5f) + 32);
     }
 
     return FG_TRUE;
