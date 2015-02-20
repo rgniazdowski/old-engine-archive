@@ -93,27 +93,12 @@ namespace fg {
              * 
              * @param halfSize
              */
-            void setHalfSize(const Vector3f& halfSize) {
-                if(m_collisionPrim && m_bodyType == BOX) {
-                    getCollisionBox()->halfSize = halfSize;
-                } else if(m_collisionPrim && m_bodyType == SPHERE) {
-                    getCollisionSphere()->radius = math::length(halfSize);
-                }
-            }
+            void setHalfSize(const Vector3f& halfSize);
             /**
              * 
              * @param radius
              */
-            void setRadius(real radius) {
-                if(radius < 0.0f)
-                    radius *= -1.0f;                
-                if(m_collisionPrim && m_bodyType == BOX) {
-                    real a = (2.0f * radius) / M_SQRT2;
-                    getCollisionBox()->halfSize = Vector3f(a, a, a);
-                } else if(m_collisionPrim && m_bodyType == SPHERE) {
-                    getCollisionSphere()->radius = radius;
-                }
-            }
+            void setRadius(real radius);
             /**
              * 
              * @param gravity

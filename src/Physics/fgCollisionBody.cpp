@@ -65,6 +65,33 @@ physics::CCollisionBody::~CCollisionBody() {
 
 /**
  * 
+ * @param halfSize
+ */
+void physics::CCollisionBody::setHalfSize(const Vector3f& halfSize) {
+    if(m_collisionPrim && m_bodyType == BOX) {
+        getCollisionBox()->halfSize = halfSize;
+    } else if(m_collisionPrim && m_bodyType == SPHERE) {
+        getCollisionSphere()->radius = math::length(halfSize);
+    }
+}
+
+/**
+ * 
+ * @param radius
+ */
+void physics::CCollisionBody::setRadius(real radius) {
+    if(radius < 0.0f)
+        radius *= -1.0f;
+    if(m_collisionPrim && m_bodyType == BOX) {
+        real a = (2.0f * radius) / M_SQRT2;
+        getCollisionBox()->halfSize = Vector3f(a, a, a);
+    } else if(m_collisionPrim && m_bodyType == SPHERE) {
+        getCollisionSphere()->radius = radius;
+    }
+}
+
+/**
+ * 
  * @param bodyType
  */
 void physics::CCollisionBody::setBodyType(const BodyType bodyType) {
@@ -89,7 +116,7 @@ void physics::CCollisionBody::setBodyType(const BodyType bodyType) {
 fgBool physics::CCollisionBody::checkCollision(CCollisionBody* body,
                                                SCollisionData *cData) {
     if(!body || !cData) {
-        return false;
+        return FG_FALSE;
     }
     bool collide = false;
     // #LOL
@@ -112,7 +139,7 @@ fgBool physics::CCollisionBody::checkCollision(CCollisionBody* body,
     } else {
 
     }
-    return collide;
+    return (fgBool)collide;
 }
 
 /**
