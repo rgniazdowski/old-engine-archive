@@ -123,11 +123,11 @@ void gfx::CSceneNodeObject::updateAABB(void) {
     }
 
     if(m_pModel) {
-        m_aabb.min = m_pModel->getRefAABB().min * getScale();
-        m_aabb.max = m_pModel->getRefAABB().max * getScale();
+        m_aabb.min = m_pModel->getRefAABB().min;
+        m_aabb.max = m_pModel->getRefAABB().max;
         m_aabb.transform(m_modelMat);
-    }
-
+        m_aabb.radius = math::length(m_scale * m_pModel->getRefAABB().getExtent());
+    } 
 }
 
 /**
@@ -139,6 +139,7 @@ void gfx::CSceneNodeObject::updateAABB(const Matrix4f& modelMat) {
         m_aabb.min = m_pModel->getRefAABB().min;
         m_aabb.max = m_pModel->getRefAABB().max;
         m_aabb.transform(modelMat);
+        m_aabb.radius = math::length(m_scale * m_pModel->getRefAABB().getExtent());
     }
     if(getCollisionBody()) {
         // Well the collision body is present, so the base function can be called

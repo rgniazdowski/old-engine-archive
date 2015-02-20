@@ -108,7 +108,7 @@ namespace fg {
             enum StateFlags {
                 NONE = 0x0000,
                 /// Is the scene node visible? Will be set to FALSE when the scene node
-            /// is not in the visible tree node (quadtree/octree/...)
+                /// is not in the visible tree node (quadtree/octree/...)
                 VISIBLE = 0x0001,
                 /// This is for automatic scaling of the model matrix
                 /// based on the collision body size (half extent)
@@ -154,11 +154,11 @@ namespace fg {
             ChildrenVec m_children;
             ///
             StateFlags m_stateFlags;
+
+        protected:
             /// Current scale of the scene node - scale is automatically
             /// applied to the displayed data (mesh/shape/model/...)
             Vector3f m_scale;
-
-        protected:
             /// Internal object specific model matrix
             Matrix4f m_modelMat;
             /// This is updated bounding box - it's transformed by the model matrix
@@ -237,8 +237,12 @@ namespace fg {
             }
 
         public:
+            /**
+             * 
+             * @param flags
+             * @param toggle
+             */
             void setFlag(const StateFlags flags, const fgBool toggle = FG_TRUE);
-            
             /**
              * 
              * @return 
@@ -254,16 +258,39 @@ namespace fg {
                 setFlag(AUTO_SCALE, toggle);
             }
             /**
+             * 
+             * @return 
              */
-            inline Vector3f getScale(void) const {
+            inline Vector3f& getScale(void) {
+                return m_scale;
+            }
+            /**
+             * 
+             * @return 
+             */
+            inline Vector3f const& getScale(void) const {
                 return m_scale;
             }
             /**
              * 
              * @param scale
              */
-            inline void setScale(const Vector3f& scale) {
+            inline virtual void setScale(const Vector3f& scale) {
+                const Vector4f translation = m_modelMat[3];
+                m_modelMat = math::scale(m_modelMat, scale / m_scale);
                 m_scale = scale;
+                m_modelMat[3].x = translation.x;
+                m_modelMat[3].y = translation.y;
+                m_modelMat[3].z = translation.z;
+            }
+            /**
+             * 
+             * @param x
+             * @param y
+             * @param z
+             */
+            inline virtual void setScale(float x, float y, float z) {
+                setScale(Vector3f(x, y, z));
             }
 
         public:
@@ -364,6 +391,8 @@ namespace fg {
              * @return 
              */
             fgBool hasChild(const char* childName);
+
+            ////////////////////////////////////////////////////////////////////
             /**
              * 
              * @return 
@@ -378,6 +407,8 @@ namespace fg {
             inline fgBool hasChildren(void) const {
                 return !isEmpty();
             }
+
+            ////////////////////////////////////////////////////////////////////
             /**
              * 
              * @return 
@@ -399,6 +430,8 @@ namespace fg {
             inline unsigned int getChildrenCount(void) const {
                 return m_children.size();
             }
+
+            ////////////////////////////////////////////////////////////////////
             /**
              * 
              * @param pTreeNode
@@ -427,6 +460,8 @@ namespace fg {
             inline self_type* getParent(void) const {
                 return m_pParent;
             }
+
+            ////////////////////////////////////////////////////////////////////
             /**
              * 
              * @return 
@@ -441,6 +476,8 @@ namespace fg {
             inline SceneNodeType getNodeType(void) const {
                 return m_nodeType;
             }
+
+            ////////////////////////////////////////////////////////////////////
             /**
              * 
              * @return 
@@ -491,6 +528,9 @@ namespace fg {
             inline BoundingVolume3Df const& getRefBoundingVolume(void) const {
                 return m_aabb;
             }
+
+            ////////////////////////////////////////////////////////////////////
+
             /**
              * 
              */
@@ -500,6 +540,8 @@ namespace fg {
              * @param modelMat
              */
             virtual void updateAABB(const Matrix4f& modelMat);
+
+            ////////////////////////////////////////////////////////////////////
             /**
              * 
              * @return 
@@ -514,16 +556,22 @@ namespace fg {
             inline void setVisible(const fgBool toggle = FG_TRUE) {
                 setFlag(VISIBLE, toggle);
             }
-            
+            /**
+             * 
+             * @return 
+             */
             inline fgBool isCollidable(void) const {
                 return (fgBool)!!(m_stateFlags & COLLIDABLE);
             }
-            
+            /**
+             * 
+             * @param toggle
+             */
             inline void setCollidable(const fgBool toggle = FG_TRUE) {
                 setFlag(COLLIDABLE, toggle);
             }
 
-            ////////////////////////////////////////////////////////////////////////////
+            ////////////////////////////////////////////////////////////////////
             /**
              * 
              * @param b
@@ -610,9 +658,8 @@ namespace fg {
                 m_nodeType = nodeType;
             }
         };
-        
+
         FG_ENUM_FLAGS(CSceneNode::StateFlags);
-        
         /**
          * 
          * @param flags
