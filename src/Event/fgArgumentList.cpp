@@ -7,57 +7,63 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
-#include "fgBuildConfig.h"
 #include "fgArgumentList.h"
 #include "Util/fgMemory.h"
 
-#include <iostream>
+using namespace fg;
 
-#ifdef FG_USING_MARMALADE
-#include "s3eMemory.h"
-#endif
-
-/*
- *
+/**
+ * 
  */
-fg::event::CArgumentList::CArgumentList() {
-    reset();
-    m_maxArgs = FG_ARGUMENT_DEFAULT_COUNT;
+event::CArgumentList::CArgumentList() :
+m_argv(),
+m_maxArgs(FG_ARGUMENT_DEFAULT_COUNT),
+m_currentArg(-1),
+m_emptyArgument() {
+    m_emptyArgument.reset();    
 }
 
-/*
- *
+/**
+ * 
+ * @param max
  */
-fg::event::CArgumentList::CArgumentList(int max) {
-    reset();
-    m_maxArgs = max;
+event::CArgumentList::CArgumentList(unsigned int max) :
+m_argv(),
+m_maxArgs(max),
+m_currentArg(-1),
+m_emptyArgument() {    
+    m_emptyArgument.reset();    
 }
 
-/*
- *
+/**
+ * 
  */
-fg::event::CArgumentList::~CArgumentList() {
+event::CArgumentList::~CArgumentList() {
     clear();
 }
 
-/*
- *
+/**
+ * 
+ * @param max
  */
-void fg::event::CArgumentList::setMaxCount(int max) {
+void event::CArgumentList::setMaxCount(unsigned int max) {
     m_maxArgs = max;
 }
 
-/*
- *
+/**
+ * 
+ * @return 
  */
-int fg::event::CArgumentList::getMaxCount(void) {
+unsigned int event::CArgumentList::getMaxCount(void) const {
     return m_maxArgs;
 }
 
-/*
- *
+/**
+ * 
+ * @param type
+ * @param value
  */
-void fg::event::CArgumentList::push(fg::event::SArgument::Type type, void *value) {
+void event::CArgumentList::push(event::SArgument::Type type, void *value) {
     SArgument new_argument;
     new_argument.reset();
     new_argument.type = type;
@@ -89,94 +95,92 @@ void fg::event::CArgumentList::push(fg::event::SArgument::Type type, void *value
     m_argv.push_back(new_argument);
 }
 
-/*
- *
+/**
+ * 
+ * @param int_val
  */
-void fg::event::CArgumentList::push(int int_val) {
-    fg::event::SArgument new_argument;
-    if((m_argc + 1) > m_maxArgs)
+void event::CArgumentList::push(int int_val) {
+    event::SArgument new_argument;
+    if(m_argv.size() >= m_maxArgs)
         return;
-    m_argc = m_argc + 1;
     new_argument.type = SArgument::Type::ARG_INTEGER;
     new_argument.int_val = int_val;
     m_argv.push_back(new_argument);
 }
 
-/*
- *
+/**
+ * 
+ * @param double_val
  */
-void fg::event::CArgumentList::push(double double_val) {
+void event::CArgumentList::push(double double_val) {
     SArgument new_argument;
-    if((m_argc + 1) > m_maxArgs)
+    if(m_argv.size() >= m_maxArgs)
         return;
-    m_argc = m_argc + 1;
     new_argument.type = SArgument::Type::ARG_DOUBLE;
     new_argument.double_val = double_val;
     m_argv.push_back(new_argument);
 }
 
-/*
- *
+/**
+ * 
+ * @param float_val
  */
-void fg::event::CArgumentList::push(float float_val) {
+void event::CArgumentList::push(float float_val) {
     SArgument new_argument;
-    if((m_argc + 1) > m_maxArgs)
+    if(m_argv.size() >= m_maxArgs)
         return;
-    m_argc = m_argc + 1;
-
     new_argument.type = SArgument::Type::ARG_FLOAT;
     new_argument.float_val = float_val;
     m_argv.push_back(new_argument);
 }
 
-/*
- *
+/**
+ * 
+ * @param string
  */
-void fg::event::CArgumentList::push(const char *string) {
+void event::CArgumentList::push(const char *string) {
     SArgument new_argument;
-    if((m_argc + 1) > m_maxArgs)
+    if(m_argv.size() >= m_maxArgs)
         return;
-    m_argc = m_argc + 1;
-
     new_argument.type = SArgument::Type::ARG_STRING;
     snprintf(new_argument.string, FG_ARGUMENT_MAX_STRING, (char *)string);
     m_argv.push_back(new_argument);
 }
 
-/*
- *
+/**
+ * 
+ * @param custom_pointer
  */
-void fg::event::CArgumentList::push(void *custom_pointer) {
+void event::CArgumentList::push(void *custom_pointer) {
     SArgument new_argument;
-
-    if((m_argc + 1) > m_maxArgs)
+    if(m_argv.size() >= m_maxArgs)
         return;
-    m_argc = m_argc + 1;
-
     new_argument.type = SArgument::Type::ARG_POINTER;
     new_argument.custom_pointer = custom_pointer;
     m_argv.push_back(new_argument);
 }
 
-/*
- *
+/**
+ * 
+ * @return 
  */
-int fg::event::CArgumentList::getCount() {
-    m_argc = m_argv.size();
-    return m_argc;
+int event::CArgumentList::getCount(void) const {
+    return m_argv.size();
 }
 
-/*
- *
+/**
+ * 
  */
-void fg::event::CArgumentList::reset() {
+void event::CArgumentList::reset(void) {
     m_currentArg = -1; // FIXME
 }
 
-/*
- *
+/**
+ * 
+ * @param type
+ * @return 
  */
-void* fg::event::CArgumentList::getNextValue(SArgument::Type* type) {
+void* event::CArgumentList::getNextValue(SArgument::Type* type) {
     m_currentArg = m_currentArg + 1;
     if(m_currentArg >= getCount()) {
         //	ArgumentList::Reset();
@@ -186,13 +190,16 @@ void* fg::event::CArgumentList::getNextValue(SArgument::Type* type) {
         return NULL;
     }
 
-    return fg::event::CArgumentList::getValueByID(m_currentArg, type);
+    return event::CArgumentList::getValueByID(m_currentArg, type);
 }
 
-/*
- *
+/**
+ * 
+ * @param ID
+ * @param type
+ * @return 
  */
-void* fg::event::CArgumentList::getValueByID(int ID, SArgument::Type *type) {
+void* event::CArgumentList::getValueByID(int ID, SArgument::Type *type) {
     if(ID >= 0 && ID < getCount()) {
         if(type != NULL)
             *type = m_argv[ID].type;
@@ -225,58 +232,73 @@ void* fg::event::CArgumentList::getValueByID(int ID, SArgument::Type *type) {
     return NULL;
 }
 
-/*
- *
+/**
+ * 
+ * @return 
  */
-fg::event::SArgument fg::event::CArgumentList::getNextStruct(void) {
+event::SArgument& event::CArgumentList::getNextStruct(void) {
     m_currentArg = m_currentArg + 1;
     if(m_currentArg >= getCount()) {
-        //ArgumentList::Reset();
         m_currentArg = getCount();
-        SArgument new_argument;
-        new_argument.type = SArgument::Type::ARG_NONE;
-        return new_argument;
+        m_emptyArgument.reset();
+        return m_emptyArgument;
     }
     return m_argv[m_currentArg];
 }
 
-/*
- *
+/**
+ * 
+ * @param ID
+ * @return 
  */
-fg::event::SArgument fg::event::CArgumentList::getStructByID(int ID) {
+event::SArgument& event::CArgumentList::getStructByID(int ID) {
     if(ID >= 0 && ID < getCount()) {
         return m_argv[ID];
     } else {
-        SArgument new_argument;
-        new_argument.type = SArgument::Type::ARG_NONE;
-        return new_argument;
+        m_emptyArgument.reset();
+        return m_emptyArgument;
     }
 }
 
-/*
- *
+/**
+ * 
+ * @param ID
+ * @return 
  */
-fgBool fg::event::CArgumentList::isNext(void) {
+event::SArgument const& event::CArgumentList::getStructByID(int ID) const {
+    if(ID >= 0 && ID < getCount()) {
+        return m_argv[ID];
+    } else {
+        return m_emptyArgument;
+    }
+}
+
+/**
+ * 
+ * @return 
+ */
+fgBool event::CArgumentList::isNext(void) const {
     if((m_currentArg + 1) >= getCount())
         return FG_FALSE;
     else
         return FG_TRUE;
 }
 
-/*
- *
+/**
+ * 
+ * @return 
  */
-int fg::event::CArgumentList::getCurrentID(void) {
+int event::CArgumentList::getCurrentID(void) const {
     return m_currentArg;
 }
 
-/*
+/**
  * This function  frees the memory  held by the  arguments (argv)
  * The rule is that when some value/structure/pointer is put into
  * the argument list it is being managed by the class, so it also
  * needs to be freed in this function.
  */
-void fg::event::CArgumentList::clear(void) {
+void event::CArgumentList::clear(void) {
     reset();
     while(isNext()) {
         SArgument arg = getNextStruct();
@@ -291,7 +313,6 @@ void fg::event::CArgumentList::clear(void) {
             }
         }
     }
-    m_argv.clear();
-    m_argc = 0;
+    m_argv.clear_optimised();
     reset();
 }

@@ -19,7 +19,7 @@
 namespace fg {
     namespace event {
 
-        /*
+        /**
          *
          */
         struct SArgument {
@@ -74,9 +74,7 @@ namespace fg {
             ///
             fg::CVector<SArgument> m_argv;
             ///
-            int m_argc;
-            ///
-            int m_maxArgs;
+            unsigned int m_maxArgs;
             ///
             int m_currentArg;
             ///
@@ -91,7 +89,7 @@ namespace fg {
              * 
              * @param _max
              */
-            CArgumentList(int _max);
+            explicit CArgumentList(unsigned int max);
 
             /**
              * 
@@ -102,12 +100,12 @@ namespace fg {
              * 
              * @param _max
              */
-            void setMaxCount(int _max);
+            void setMaxCount(unsigned int max);
             /**
              * 
              * @return 
              */
-            int getMaxCount();
+            unsigned int getMaxCount(void) const;
 
             /**
              * 
@@ -145,7 +143,7 @@ namespace fg {
              * 
              * @return 
              */
-            int getCount(void);
+            int getCount(void) const;
 
             /**
              * 
@@ -155,7 +153,7 @@ namespace fg {
              * 
              * @return 
              */
-            fgBool isNext(void);
+            fgBool isNext(void) const;
 
             /**
              * 
@@ -175,19 +173,26 @@ namespace fg {
              * 
              * @return 
              */
-            SArgument getNextStruct(void);
+            SArgument& getNextStruct(void);
             /**
              * 
              * @param ID
              * @return 
              */
-            SArgument getStructByID(int ID);
+            SArgument& getStructByID(int id);
+            
+            /**
+             * 
+             * @param ID
+             * @return 
+             */
+            SArgument const& getStructByID(int id) const;
 
             /**
              * 
              * @return 
              */
-            int getCurrentID(void);
+            int getCurrentID(void) const;
 
             /**
              * 
@@ -210,7 +215,7 @@ namespace fg {
              * @param i
              * @return 
              */
-            inline const SArgument& operator [](int i)const {
+            inline SArgument const& operator [](int i)const {
                 if((int)m_argv.size() > i)
                     return m_argv[i];
                 else
