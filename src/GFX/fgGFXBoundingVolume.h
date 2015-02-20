@@ -575,7 +575,8 @@ namespace fg {
              */
             virtual void transform(typename Matrix4T<TValueType>::type const& m) {
                 Vector3f ext = 0.5f * (this->max - this->min);
-                radius = math::max(radius, math::sqrt(ext.z * ext.z + ext.x * ext.x + ext.y * ext.y));
+                //radius = math::max(radius, math::sqrt(ext.z * ext.z + ext.x * ext.x + ext.y * ext.y));
+                radius = math::length(ext);
                 base_type::transform(m);
                 this->refresh();
             }
