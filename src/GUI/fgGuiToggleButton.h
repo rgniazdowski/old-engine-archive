@@ -24,6 +24,10 @@ namespace fg {
         public:
             ///
             typedef CButton base_type;
+            ///
+            typedef CToggleButton self_type;
+            ///
+            typedef CToggleButton type;
 
         public:
             /**

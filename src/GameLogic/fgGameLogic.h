@@ -12,11 +12,9 @@
     #define FG_INC_GAME_LOGIC_BLOCK
 
     #include "Event/fgEventDefinitions.h" // #FIXME
-
-
-
     #include "fgManagerBase.h"
     #include <queue>
+    #include <string>
 
     #define FG_MANAGER_LOGIC        0x0001000
 

@@ -154,7 +154,7 @@ namespace fg {
              * @param argv
              * @return 
              */
-            virtual fgBool Call(fg::event::CArgumentList *argv) {
+            virtual fgBool Call(fg::event::CArgumentList* argv) {
                 if(m_guiMethod != NULL && m_pClassInstance != NULL) {
                     // If argument list is given then maybe should check for existence
                     // of STRUCT parameters ?
@@ -200,14 +200,14 @@ namespace fg {
              * 
              * @return 
              */
-            inline fgGuiMethod & getGuiMethod(void) {
+            inline fgGuiMethod& getGuiMethod(void) {
                 return m_guiMethod;
             }
             /**
              * 
              * @return 
              */
-            inline fgGuiMethod const & getGuiMethod(void) const {
+            inline fgGuiMethod const& getGuiMethod(void) const {
                 return m_guiMethod;
             }
 
@@ -318,14 +318,14 @@ namespace fg {
              * 
              * @return 
              */
-            inline fgGuiFunction & getGuiFunction(void) {
+            inline fgGuiFunction& getGuiFunction(void) {
                 return m_guiFunction;
             }
             /**
              * 
              * @return 
              */
-            inline fgGuiFunction const & getGuiFunction(void) const {
+            inline fgGuiFunction const& getGuiFunction(void) const {
                 return m_guiFunction;
             }
 

@@ -69,7 +69,7 @@ namespace fg {
              * @param pUserData
              * @return 
              */
-            fgBool registerOnDestruct(callbackPtr pCallback, void *pUserData = NULL) {
+            fgBool registerOnDestruct(callbackPtr pCallback, void* pUserData = NULL) {
                 if(!pCallback)
                     return FG_FALSE;
                 int n = m_onDestructorCallbacks.size();
@@ -87,7 +87,7 @@ namespace fg {
              * Set resource name (string TAG/ID)
              * @param name
              */
-            inline void setName(const char *name) {
+            inline void setName(const char* name) {
                 if(name)
                     m_nameTag = name;
             }
@@ -109,7 +109,7 @@ namespace fg {
              * 
              * @return 
              */
-            inline util::CNamedHandle const & getName(void) const {
+            inline util::CNamedHandle const& getName(void) const {
                 return m_nameTag;
             }
             /**
@@ -145,7 +145,7 @@ namespace fg {
              * 
              * @return 
              */
-            inline THandleType const & getRefHandle(void) const {
+            inline THandleType const& getRefHandle(void) const {
                 return m_handle;
             }
             /**

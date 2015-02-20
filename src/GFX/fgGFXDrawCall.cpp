@@ -606,7 +606,7 @@ void gfx::CDrawCall::draw(void) {
         m_program->setUniform(m_MVP);
     }
     if(m_program) {
-        if(m_textureID.id) {
+        if(CPlatform::context()->isTexture(m_textureID.id)) {
             CPlatform::context()->bindTexture(m_textureID);
             m_program->setUniform(FG_GFX_USE_TEXTURE, 1.0f);
         } else {
