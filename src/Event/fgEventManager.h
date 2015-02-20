@@ -47,22 +47,32 @@ namespace fg {
          * Event manager main class definition.
          */
         class CEventManager : public fg::base::CManager {
-        private:
-            /// int - eventCode
-            /// Binding for all global events
-            CallbackBindingMap m_eventBinds;
-            /// Events queue (message queue so to speak)
-            EventsQueue m_eventsQueue;
-            /// Special pool with timeout callbacks (timers)
-            TimeoutCallbacksVec m_timeoutCallbacks;
-            /// Pool with cyclic timeout callbacks (repeat timers, self reset)
-            CyclicCallbacksVec m_cyclicCallbacks;
+        public:
+            typedef fg::base::CManager base_type;
+            typedef CEventManager self_type;
+            typedef CEventManager type;
+
+            typedef CVector<void *> EventsVoidPtrVec;
+            typedef EventsVoidPtrVec::iterator EventsVoidPtrVecItor;
+
+            typedef CVector<void *> ArgListVoidPtrVec;
+            typedef ArgListVoidPtrVec::iterator ArgListVoidPtrVecItor;
+
+        public:
+            /// Maximum number of allocated internal event structures
+            /// When number of event structures reaches MAX and 
+            /// free slots are empty - this would mean that event queue is full
+            static const unsigned int MAX_EVENT_STRUCTS = 256;
+            /// Maximum number of thrown events
+            static const unsigned int MAX_THROWN_EVENTS = 256;
+            /// This is initial allocation for pointer vectors (initial capacity)
+            static const unsigned int INITIAL_PTR_VEC_SIZE = 32;
 
         public:
             /**
              * Default constructor for Event Manager object
              */
-            CEventManager();
+            explicit CEventManager(unsigned int eventStructSize = sizeof (SEvent));
             /**
              * Default destructor for Event Manager object
              */
@@ -87,6 +97,32 @@ namespace fg {
              * @return 
              */
             virtual fgBool destroy(void);
+
+            /**
+             * 
+             * @return 
+             */
+            SEventBase* requestEventStruct(void);
+
+            /**
+             * 
+             * @param eventStructSize
+             * @return 
+             */
+            SEventBase* requestEventStruct(const unsigned int eventStructSize);
+
+            /**
+             * 
+             * @return 
+             */
+            CArgumentList* requestArgumentList(void);
+            /**
+             * 
+             * @param structSize
+             */
+            void setEventStructSize(const unsigned int structSize) {
+                m_eventStructSize = structSize;
+            }
 
             /**
              * 
@@ -202,6 +238,40 @@ namespace fg {
              * (or just the main thread)
              */
             void executeEvents(void);
+
+        private:
+
+            /**
+             * 
+             * @param ptr
+             */
+            void pushToFreeSlot(SEventBase* ptr);
+            /**
+             * 
+             * @param ptr
+             */
+            void pushToFreeSlot(CArgumentList* ptr);
+            
+        private:
+            /// Size in bytes for event structure preallocation
+            unsigned int m_eventStructSize;
+            /// int - eventCode
+            /// Binding for all global events
+            CallbackBindingMap m_eventBinds;
+            /// Events queue (message queue so to speak)
+            EventsQueue m_eventsQueue;
+            /// Special pool with timeout callbacks (timers)
+            TimeoutCallbacksVec m_timeoutCallbacks;
+            /// Pool with cyclic timeout callbacks (repeat timers, self reset)
+            CyclicCallbacksVec m_cyclicCallbacks;
+            ///
+            EventsVoidPtrVec m_eventStructs;
+            ///
+            EventsVoidPtrVec m_eventStructsFreeSlots;
+            ///
+            ArgListVoidPtrVec m_argLists;
+            ///
+            ArgListVoidPtrVec m_argListsFreeSlots;
         };
     };
 };
@@ -213,8 +283,7 @@ namespace fg {
  * @return 
  */
 template <class Class>
-fg::event::CFunctionCallback* fg::event::CEventManager::addCallback(
-                                                                    EventType eventCode,
+fg::event::CFunctionCallback* fg::event::CEventManager::addCallback(EventType eventCode,
                                                                     typename CMethodCallback<Class>::ClassMethod pMethod,
                                                                     Class* pClassInstance) {
     if(!pMethod || (int)eventCode < 0 || !pClassInstance)

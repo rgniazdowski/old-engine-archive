@@ -65,7 +65,7 @@ void event::CJoypadController::open(const int device) {
         }
     }
     if(!j) {
-        log::PrintError("SDL: Error occured for game controller: '%s'", SDL_GetError());
+        log::PrintError("SDL: Error occurred for game controller: '%s'", SDL_GetError());
         SDL_ClearError();
     }
     m_instanceID = SDL_JoystickInstanceID(j);
@@ -153,8 +153,10 @@ fgBool event::CJoypadController::initialize(void) {
             CJoypadController& jc = m_controllers[i];
             jc.open(i);
             if(m_pEventMgr) {
-                SControllerDevice *fgevent = fgMalloc<SControllerDevice>();
-                CArgumentList *list = new CArgumentList(1);
+                //SControllerDevice *fgevent = fgMalloc<SControllerDevice>();
+                //CArgumentList *list = new CArgumentList(1);
+                SControllerDevice *fgevent = (SControllerDevice*)m_pEventMgr->requestEventStruct();
+                CArgumentList *list = m_pEventMgr->requestArgumentList();
                 fgevent->which = i;
                 fgevent->timeStamp = 0; // #FIXME
                 fgevent->eventType = event::GAME_CONTROLLER_ADDED;
@@ -213,8 +215,10 @@ int event::CJoypadController::processEvent(const SDL_Event& event) {
             //fgJoypadController& jc = m_controllers[cIndex];
             // Throw proper fgEventManager event + info
             if(m_pEventMgr) {
-                SControllerAxis *fgevent = fgMalloc<SControllerAxis>();
-                CArgumentList *list = new CArgumentList(1);
+                //SControllerAxis *fgevent = fgMalloc<SControllerAxis>();
+                //CArgumentList *list = new CArgumentList(1);
+                SControllerAxis *fgevent = (SControllerAxis*)m_pEventMgr->requestEventStruct();
+                CArgumentList *list = m_pEventMgr->requestArgumentList();
                 fgevent->axis = caxis.axis;
                 fgevent->value = caxis.value;
                 fgevent->which = caxis.which;
@@ -236,8 +240,10 @@ int event::CJoypadController::processEvent(const SDL_Event& event) {
             //fgJoypadController& jc = m_controllers[cIndex];
             // Throw proper fgEventManager event + info
             if(m_pEventMgr) {
-                SControllerButton *fgevent = fgMalloc<SControllerButton>();
-                CArgumentList *list = new CArgumentList(1);
+                //SControllerButton *fgevent = fgMalloc<SControllerButton>();
+                //CArgumentList *list = new CArgumentList(1);
+                SControllerButton *fgevent = (SControllerButton*)m_pEventMgr->requestEventStruct();
+                CArgumentList *list = m_pEventMgr->requestArgumentList();
                 fgevent->state = cbutton.state;
                 fgevent->button = cbutton.button;
                 fgevent->which = cbutton.which;
@@ -255,8 +261,10 @@ int event::CJoypadController::processEvent(const SDL_Event& event) {
                 CJoypadController& jc = m_controllers[event.cdevice.which];
                 jc.open(event.cdevice.which);
                 if(m_pEventMgr) {
-                    SControllerDevice *fgevent = fgMalloc<SControllerDevice>();
-                    CArgumentList *list = new CArgumentList(1);
+                    //SControllerDevice *fgevent = fgMalloc<SControllerDevice>();
+                    //CArgumentList *list = new CArgumentList(1);
+                    SControllerDevice *fgevent = (SControllerDevice*)m_pEventMgr->requestEventStruct();
+                    CArgumentList *list = m_pEventMgr->requestArgumentList();
                     fgevent->which = event.cdevice.which;
                     fgevent->timeStamp = event.cdevice.timestamp;
                     fgevent->eventType = event::GAME_CONTROLLER_ADDED;
@@ -274,8 +282,10 @@ int event::CJoypadController::processEvent(const SDL_Event& event) {
             CJoypadController& jc = m_controllers[cIndex];
             jc.close();
             if(m_pEventMgr) {
-                SControllerDevice *fgevent = fgMalloc<SControllerDevice>();
-                CArgumentList *list = new CArgumentList(1);
+                //SControllerDevice *fgevent = fgMalloc<SControllerDevice>();
+                //CArgumentList *list = new CArgumentList(1);
+                SControllerDevice *fgevent = (SControllerDevice*)m_pEventMgr->requestEventStruct();
+                CArgumentList *list = m_pEventMgr->requestArgumentList();
                 fgevent->which = event.cdevice.which;
                 fgevent->timeStamp = event.cdevice.timestamp;
                 fgevent->eventType = event::GAME_CONTROLLER_REMOVED;

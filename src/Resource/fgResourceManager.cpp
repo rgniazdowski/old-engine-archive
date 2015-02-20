@@ -442,13 +442,15 @@ void resource::CResourceManager::refreshResource(CResource* pResource) {
 
         pResource->recreate();
         if(!pResource->isDisposed() && m_pEventMgr) {
-            event::SResource *resEvent = fgMalloc<event::SResource>();
+            //event::SResource *resEvent = fgMalloc<event::SResource>();
+            event::SResource *resEvent = (event::SResource*)static_cast<event::CEventManager *>(m_pEventMgr)->requestEventStruct();
+            event::CArgumentList *argList = static_cast<event::CEventManager *>(m_pEventMgr)->requestArgumentList();
             resEvent->eventType = event::RESOURCE_CREATED;
             resEvent->timeStamp = FG_GetTicks();
             resEvent->status = event::SResource::CREATED;
             resEvent->resource = pResource;
 
-            event::CArgumentList *argList = new event::CArgumentList();
+            //event::CArgumentList *argList = new event::CArgumentList();
             argList->push(event::SArgument::Type::ARG_TMP_POINTER, (void *)resEvent);
             static_cast<event::CEventManager *>(m_pEventMgr)->throwEvent(event::RESOURCE_CREATED, argList);
         }
@@ -695,13 +697,15 @@ resource::CResource* resource::CResourceManager::request(const std::string& info
         CResourceManager::refreshResource(resourcePtr);
         if(m_pEventMgr) {
             // #FIXME ! ! ! !
-            event::SResource *resEvent = fgMalloc<event::SResource>();
+            //event::SResource *resEvent = fgMalloc<event::SResource>();
+            event::SResource *resEvent = (event::SResource*)static_cast<event::CEventManager *>(m_pEventMgr)->requestEventStruct();
+            event::CArgumentList *argList = static_cast<event::CEventManager *>(m_pEventMgr)->requestArgumentList();
             resEvent->eventType = event::RESOURCE_REQUESTED;
             resEvent->timeStamp = FG_GetTicks();
             resEvent->status = event::SResource::REQUESTED;
             resEvent->resource = resourcePtr;
 
-            event::CArgumentList *argList = new event::CArgumentList();
+            //event::CArgumentList *argList = new event::CArgumentList();
             argList->push(event::SArgument::Type::ARG_TMP_POINTER, (void *)resEvent);
             static_cast<event::CEventManager *>(m_pEventMgr)->throwEvent(event::RESOURCE_REQUESTED, argList);
         }
