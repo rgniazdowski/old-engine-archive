@@ -9,8 +9,11 @@
 
 #include "fgGFX3DScene.h"
 #include "fgGFXSceneNode.h"
+#include "fgGFXSceneEvent.h"
 #include "fgGFXLooseOctree.h"
 #include "fgGFXQuadtree.h"
+
+#include "Util/fgMemory.h"
 
 #include "GFX/Shaders/fgGFXShaderManager.h"
 #include "GFX/Textures/fgTextureResource.h"
@@ -22,6 +25,7 @@
 #endif
 
 #include "Physics/fgWorld.h"
+
 
 using namespace fg;
 
@@ -319,18 +323,60 @@ void gfx::CScene3D::checkCollisions(const CSceneNode* sceneNode) {
             if(!childNode || childNode == sceneNode) {
                 continue;
             }
+            const SceneNodeType childType = childNode->getNodeType();
+            const SceneNodeType nodeType = sceneNode->getNodeType();
             // Fast check for collision - checking nodes large sphere
             const fgBool isCollision = childNode->checkCollisionSphere(sceneNode);
             const fgBool isLastFrameCollision = m_collisionsInfo.check(childNode, sceneNode);
             // Update the internal collision info arrays
             if(isCollision) {
                 if(!isLastFrameCollision) {
+
+                    // Check for special trigger nodes - two trigger nodes cannot collide
+                    // It should not be reported
+                    if(childType == gfx::SCENE_NODE_TRIGGER &&
+                       nodeType != gfx::SCENE_NODE_TRIGGER) {
+                        TriggerInfo info(NULL, NULL, FG_TRUE);
+                        info.pTrigger = static_cast<CSceneNodeTrigger*>(const_cast<CSceneNode*>(childNode));
+                        info.pNodeB = const_cast<CSceneNode*>(sceneNode);
+                        m_triggers.push_back(info);
+                    } else if(childType != gfx::SCENE_NODE_TRIGGER &&
+                              nodeType == gfx::SCENE_NODE_TRIGGER) {
+                        TriggerInfo info(NULL, NULL, FG_TRUE);
+                        info.pTrigger = static_cast<CSceneNodeTrigger*>(const_cast<CSceneNode*>(sceneNode));
+                        info.pNodeB = const_cast<CSceneNode*>(childNode);
+                        m_triggers.push_back(info);
+                    }
                     m_collisionsInfo.insert(childNode, sceneNode);
-                    FG_LOG_DEBUG("*INSERTING*  Collision BEGUN between: '%s'--'%s'\n", sceneNode->getNameStr(), childNode->getNameStr());
+                    if(nodeType != gfx::SCENE_NODE_TRIGGER && childType != gfx::SCENE_NODE_TRIGGER) {                        
+                        FG_LOG_DEBUG("*INSERTING*  Collision BEGUN between: '%s'--'%s'\n", sceneNode->getNameStr(), childNode->getNameStr());
+                        event::SSceneNodeCollision* collisionEvent = (event::SSceneNodeCollision*) getEventManager()->requestEventStruct();
+                        collisionEvent->eventType = event::SCENE_NODE_COLLISION;
+                        collisionEvent->pNodeA = const_cast<CSceneNode*>(sceneNode);
+                        collisionEvent->pNodeB = const_cast<CSceneNode*>(childNode);
+                        
+                        event::CArgumentList *argList = getEventManager()->requestArgumentList();
+                        argList->push(event::SArgument::Type::ARG_TMP_POINTER, (void *)collisionEvent);
+                        getEventManager()->throwEvent(event::SCENE_NODE_COLLISION, argList);
+                    }
                 } else {
                     // this collision is already occurring - based on last frame info
                 }
             } else if(isLastFrameCollision) {
+                // Check for special trigger nodes - two trigger nodes cannot collide                
+                if(childType == gfx::SCENE_NODE_TRIGGER &&
+                       nodeType != gfx::SCENE_NODE_TRIGGER) {
+                        TriggerInfo info(NULL, NULL, FG_FALSE);
+                        info.pTrigger = static_cast<CSceneNodeTrigger*>(const_cast<CSceneNode*>(childNode));
+                        info.pNodeB = const_cast<CSceneNode*>(sceneNode);
+                        m_triggers.push_back(info);
+                    } else if(childType != gfx::SCENE_NODE_TRIGGER &&
+                              nodeType == gfx::SCENE_NODE_TRIGGER) {
+                        TriggerInfo info(NULL, NULL, FG_FALSE);
+                        info.pTrigger = static_cast<CSceneNodeTrigger*>(const_cast<CSceneNode*>(sceneNode));
+                        info.pNodeB = const_cast<CSceneNode*>(childNode);
+                        m_triggers.push_back(info);
+                    }
                 // the collision is not occurring in this frame
                 m_collisionsInfo.remove(childNode, sceneNode);
                 FG_LOG_DEBUG("*REMOVING*  Collision ENDED between: '%s'--'%s'\n", sceneNode->getNameStr(), childNode->getNameStr());
@@ -344,7 +390,8 @@ void gfx::CScene3D::checkCollisions(const CSceneNode* sceneNode) {
                     physics::CCollisionBody *b2 = childNode->getCollisionBody();
                     if(b1 && b2) {
                         // now can check fine collisions
-                        b1->checkCollision(b2, &m_physicsWorld->getCollisionData());
+                        const fgBool isFineCollision = b1->checkCollision(b2, &m_physicsWorld->getCollisionData());
+                        // ? Now hwat?
                     }
                 }
             }
