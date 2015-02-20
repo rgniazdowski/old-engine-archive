@@ -11,10 +11,7 @@
     #define FG_INC_EVENT_DEFINITIONS
     #define FG_INC_EVENT_DEFINITIONS_BLOCK
 
-    #ifndef FG_INC_RESOURCE
-        #include "Resource/fgResource.h"
-    #endif
-
+    #include "fgBool.h"
 //
 // This file will contain all basic events occurring in the game engine
 // also defines standard event structures holding info about the event
@@ -22,68 +19,112 @@
 
 namespace fg {
 
+    namespace resource {
+        class CResource;
+    }
+
     namespace event {
 
     #ifndef FG_EVENT_TYPE_DEFINED
         #define FG_EVENT_TYPE_DEFINED
+        /// 
         typedef unsigned int EventType;
     #endif
 
+        /// 
         const EventType INVALID = 0;
 
+        /// 
         const EventType TOUCH_PRESSED = 1;
+        /// 
         const EventType TOUCH_RELEASED = 2;
+        /// 
         const EventType TOUCH_MOTION = 3;
+        /// 
         const EventType TOUCH_TAP_FINISHED = 4;
         //const EventType TOUCH=5;
 
+        /// 
         const EventType MOUSE_PRESSED = 6;
+        /// 
         const EventType MOUSE_RELEASED = 7;
+        /// 
         const EventType MOUSE_MOTION = 8;
         //const EventType MOUSE=9;
 
+        /// 
         const EventType SWIPE_X = 10;
+        /// 
         const EventType SWIPE_Y = 11;
+        /// 
         const EventType SWIPE_XY = 12;
+        /// 
         const EventType SWIPE_ANGLE = 12;
 
+        /// 
         const EventType SWIPE_PINCH = 14;
 
+        /// 
         const EventType MULTI_SWIPE_ROTATE = 15;
 
+        /// 
         const EventType KEY_DOWN = 16;
+        /// 
         const EventType KEY_UP = 17;
 
+        /// 
         const EventType RESOURCE_CREATED = 18;
+        /// 
         const EventType RESOURCE_REMOVED = 19;
+        /// 
         const EventType RESOURCE_DISPOSED = 20;
+        /// 
         const EventType RESOURCE_DESTROYED = 21;
+        /// 
         const EventType RESOURCE_REQUESTED = 22;
 
+        /// 
         const EventType PROGRAM_INIT = 23;
+        /// 
         const EventType LOADING_BEGIN = 24;
+        /// 
         const EventType LOADING_FINISHED = 25;
+        /// 
         const EventType SPLASHSCREEN = 26;
 
+        /// 
         const EventType VERTEX_STREAM_READY = 27;
+        /// 
         const EventType CAMERA_CHANGED = 28;
 
+        /// 
         const EventType SOUND_PLAYED = 29;
 
+        /// 
         const EventType MENU_CHANGED = 30;
+        /// 
         const EventType WIDGET_STATE_CHANGED = 31;
 
+        /// 
         const EventType SENSORS_CHANGED = 32;
 
+        /// 
         const EventType GAME_CONTROLLER_ADDED = 33;
+        /// 
         const EventType GAME_CONTROLLER_REMOVED = 34;
+        /// 
         const EventType GAME_CONTROLLER_BUTTON = 35;
+        /// 
         const EventType GAME_CONTROLLER_AXIS = 36;
 
+        /// 
         const EventType RESERVED1 = 37;
+        /// 
         const EventType RESERVED2 = 38;
+        /// 
         const EventType RESERVED3 = 39;
 
+        /// 
         const EventType LAST_STANDARD_EVENT_CODE = 39;
 
         /**
@@ -127,7 +168,6 @@ namespace fg {
             int y;
             unsigned int touchID;
             fgBool pressed;
-
         };
 
         /**
@@ -234,7 +274,7 @@ namespace fg {
                 BEGIN = 0,
                 CONTINUE = 1,
                 FINISH = 2
-            };
+            } status;
         };
 
         /**

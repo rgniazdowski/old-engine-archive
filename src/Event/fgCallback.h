@@ -22,9 +22,12 @@ namespace fg {
          */
         class CFunctionCallback {
         public:
-            // This is function pointer (to global or static member function)
+            /// This is function pointer (to global or static member function)
             typedef fgBool(*fgFunction)(CArgumentList *argv);
+            ///
             typedef fgFunction callback_type;
+
+        public:
             /**
              * 
              */
@@ -80,14 +83,14 @@ namespace fg {
              * 
              * @return 
              */
-            inline fgFunction & getFunction(void) {
+            inline fgFunction& getFunction(void) {
                 return m_function;
             }
             /**
              * 
              * @return 
              */
-            inline fgFunction const & getFunction(void) const {
+            inline fgFunction const& getFunction(void) const {
                 return m_function;
             }
 
@@ -102,11 +105,19 @@ namespace fg {
          */
         class CPlainFunctionCallback : public virtual CFunctionCallback {
         public:
+            ///
             typedef CFunctionCallback base_type;
-            ;
-            // This is function pointer (to global or static member function)
+            ///
+            typedef CPlainFunctionCallback self_type;
+            ///
+            typedef CPlainFunctionCallback type;
+
+            /// This is function pointer (to global or static member function)
             typedef fgBool(*fgPlainFunction)(void *systemData, void *userData);
+            ///
             typedef fgPlainFunction callback_type;
+
+        public:
             /**
              * 
              */
@@ -187,14 +198,14 @@ namespace fg {
              * 
              * @return 
              */
-            inline fgPlainFunction & getPlainFunction(void) {
+            inline fgPlainFunction& getPlainFunction(void) {
                 return m_plainFunction;
             }
             /**
              * 
              * @return 
              */
-            inline fgPlainFunction const & getPlainFunction(void) const {
+            inline fgPlainFunction const& getPlainFunction(void) const {
                 return m_plainFunction;
             }
         private:
@@ -213,9 +224,15 @@ namespace fg {
             ///
             typedef CFunctionCallback base_type;
             ///
+            typedef CMethodCallback self_type;
+            ///
+            typedef CMethodCallback type;
+            ///
             typedef fgBool(TClass::*ClassMethod)(CArgumentList *argv);
             ///
             typedef CMethodCallback callback_type;
+            
+        public:
             /**
              * 
              * @param class_instance
