@@ -76,6 +76,8 @@
             <itemPath>../../../src/GFX/Scene/fgGFXOctree.h</itemPath>
             <itemPath>../../../src/GFX/Scene/fgGFXQuadtree.cpp</itemPath>
             <itemPath>../../../src/GFX/Scene/fgGFXQuadtree.h</itemPath>
+            <itemPath>../../../src/GFX/Scene/fgGFXSceneCallback.h</itemPath>
+            <itemPath>../../../src/GFX/Scene/fgGFXSceneEvent.h</itemPath>
             <itemPath>../../../src/GFX/Scene/fgGFXSceneManager.cpp</itemPath>
             <itemPath>../../../src/GFX/Scene/fgGFXSceneManager.h</itemPath>
             <itemPath>../../../src/GFX/Scene/fgGFXSceneNode.cpp</itemPath>
@@ -853,6 +855,16 @@
             flavor2="0">
       </item>
       <item path="../../../src/GFX/Scene/fgGFXQuadtree.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Scene/fgGFXSceneCallback.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Scene/fgGFXSceneEvent.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -2392,6 +2404,16 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/GFX/Scene/fgGFXSceneCallback.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Scene/fgGFXSceneEvent.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../src/GFX/Scene/fgGFXSceneManager.cpp"
             ex="false"
             tool="1"
@@ -3893,6 +3915,16 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../../src/GFX/Scene/fgGFXSceneCallback.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Scene/fgGFXSceneEvent.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../../src/GFX/Scene/fgGFXSceneManager.cpp"
             ex="false"
             tool="1"
@@ -5368,6 +5400,16 @@
             flavor2="0">
       </item>
       <item path="../../../src/GFX/Scene/fgGFXQuadtree.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Scene/fgGFXSceneCallback.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Scene/fgGFXSceneEvent.h"
             ex="false"
             tool="3"
             flavor2="0">
