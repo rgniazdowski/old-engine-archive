@@ -38,6 +38,7 @@ struct lua_State {
 
     #include "Util/fgMemory.h"
     #include "GUI/fgGuiCallback.h"
+    #include "GFX/Scene/fgGFXSceneCallback.h"
 
 namespace fg {
     namespace script {
@@ -56,12 +57,15 @@ namespace fg {
             typedef void function_type; // #ERROR
     #endif /* FG_USING_LUA_PLUS */
 
-            enum ScriptCallbackType {
+            enum CallbackType {
                 SCRIPT,
                 EVENT_CALLBACK,
                 GUI_CALLBACK,
+                SCENE_CALLBACK,
+                SCENE_TRIGGER_CALLBACK,
                 INVALID
             };
+
         public:
             /**
              * 
@@ -82,7 +86,7 @@ namespace fg {
             CScriptCallback(lua_State *L,
                             const LuaPlus::LuaObject& function,
                             unsigned short int _argc = 1,
-                            const ScriptCallbackType _type = EVENT_CALLBACK) :
+                            const CallbackType _type = EVENT_CALLBACK) :
             m_luaState(L),
             m_script(),
             m_function(NULL),
@@ -103,7 +107,7 @@ namespace fg {
             CScriptCallback(lua_State *L,
                             const char *info,
                             const unsigned short int _argc = 1,
-                            ScriptCallbackType _type = EVENT_CALLBACK);
+                            CallbackType _type = EVENT_CALLBACK);
             /**
              * 
              */
@@ -156,7 +160,7 @@ namespace fg {
              * 
              * @param type
              */
-            void setType(const ScriptCallbackType type) {
+            void setType(const CallbackType type) {
                 if(type != INVALID)
                     m_type = type;
             }
@@ -164,7 +168,7 @@ namespace fg {
              * 
              * @return 
              */
-            ScriptCallbackType getType(void) const {
+            CallbackType getType(void) const {
                 return m_type;
             }
             /**
@@ -198,6 +202,13 @@ namespace fg {
              * @return 
              */
             virtual fgBool Call(void *pSystemData);
+            
+            /**
+             *
+             */
+            function_type* getScriptFunction(void) const {
+                return m_function;
+            }
 
         private:
     #if defined(FG_USING_LUA_PLUS) || defined(FG_USING_LUA)
@@ -211,7 +222,7 @@ namespace fg {
             ///
             function_type *m_function;
             ///
-            ScriptCallbackType m_type;
+            CallbackType m_type;
             ///
             unsigned short int m_argc;
         };
@@ -220,6 +231,12 @@ namespace fg {
          *
          */
         class CScriptGuiCallback : public CScriptCallback, public fg::gui::CGuiCallback {
+        public:
+            ///
+            typedef CScriptGuiCallback self_type;
+            ///
+            typedef CScriptGuiCallback type;
+
         public:
             /**
              * 
@@ -243,6 +260,8 @@ namespace fg {
                 fg::event::CFunctionCallback::setFunction((fg::event::CFunctionCallback::fgFunction)NULL);
             }
     #endif /* FG_USING_LUA_PLUS */
+    
+            
             /**
              * 
              * @param L
@@ -287,6 +306,85 @@ namespace fg {
              * @return 
              */
             virtual fgBool Call(fg::gui::CGuiMain *pGuiMain, fg::gui::CWidget *pWidget);
+        };
+
+        /**
+         *
+         */
+        class CScriptSceneCallback : public CScriptCallback, public fg::gfx::CSceneCallback {
+        public:
+            ///
+            typedef CScriptSceneCallback self_type;
+            ///
+            typedef CScriptSceneCallback type;
+
+        public:
+            /**
+             * 
+             */
+            CScriptSceneCallback() :
+            CScriptCallback(),
+            fg::gfx::CSceneCallback() {
+                fg::event::CFunctionCallback::setFunction((fg::event::CFunctionCallback::fgFunction)NULL);
+            }
+            /**
+             * 
+             * @param function
+             */
+    #if defined(FG_USING_LUA_PLUS)
+            CScriptSceneCallback(lua_State *L,
+                               const LuaPlus::LuaObject& function,
+                               unsigned short int _argc = 1) :
+            CScriptCallback(L, function, _argc, SCENE_CALLBACK),
+            fg::gfx::CSceneCallback() {
+                // Just to be sure - no harm done
+                fg::event::CFunctionCallback::setFunction((fg::event::CFunctionCallback::fgFunction)NULL);
+            }
+    #endif /* FG_USING_LUA_PLUS */
+            /**
+             * 
+             * @param L
+             * @param info
+             * @param _type
+             */
+            CScriptSceneCallback(lua_State *L,
+                               const char *info,
+                               const unsigned short int _argc = 1);
+
+            /**
+             * 
+             * @return 
+             */
+            virtual fgBool Call(void);
+
+            /**
+             * 
+             * @param argv
+             * @return 
+             */
+            virtual fgBool Call(fg::event::CArgumentList *argv);
+
+            /**
+             * 
+             * @param pSystemData
+             * @return 
+             */
+            virtual fgBool Call(void *pSystemData);
+
+            /**
+             * 
+             * @param pWidget
+             * @return 
+             */
+            virtual fgBool Call(fg::gfx::CSceneNode* pNodeA);
+
+            /**
+             * 
+             * @param pGuiMain
+             * @param pWidget
+             * @return 
+             */
+            virtual fgBool Call(fg::gfx::CSceneNode* pNodeA, fg::gfx::CSceneNode* pNodeB);
         };
     };
 };

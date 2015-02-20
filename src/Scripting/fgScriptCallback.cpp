@@ -19,6 +19,8 @@
 #include "GUI/fgGuiWidget.h"
 #include "GUI/fgGuiButton.h"
 #include "Event/fgEventDefinitions.h"
+#include "GFX/Scene/fgGFXSceneEvent.h"
+#include "GFX/Scene/fgGFXSceneNode.h"
 
 using namespace fg;
 
@@ -31,7 +33,7 @@ using namespace fg;
 script::CScriptCallback::CScriptCallback(lua_State *L,
                                          const char *info,
                                          unsigned short int _argc,
-                                         ScriptCallbackType _type) :
+                                         CallbackType _type) :
 m_luaState(L),
 m_script(),
 m_function(NULL),
@@ -43,7 +45,7 @@ m_argc(_argc) {
     }
     if(_type == INVALID)
         return;
-    if(_type == EVENT_CALLBACK || _type == GUI_CALLBACK) {
+    if(_type != SCRIPT) {
 #if defined(FG_USING_LUA_PLUS)
         LuaPlus::LuaState *state = lua_State_to_LuaState(m_luaState);
         if(!state)
@@ -73,7 +75,7 @@ fgBool script::CScriptCallback::Call(void) {
         // The call will fail
         return FG_FALSE;
     }
-        
+
 #if defined(FG_USING_LUA_PLUS)
     if(!m_argc) {
         (*m_function)(); // No return value expected
@@ -240,6 +242,7 @@ fgBool script::CScriptCallback::Call(event::CArgumentList *argv) {
             return FG_FALSE;
         LuaPlus::LuaState *state = lua_State_to_LuaState(m_luaState);
         state->DoString(m_script.c_str());
+        return FG_TRUE;
     }
 #endif /* FG_USING_LUA_PLUS */
     return FG_FALSE;
@@ -367,4 +370,253 @@ fgBool script::CScriptGuiCallback::Call(gui::CGuiMain *pGuiMain, gui::CWidget *p
     if(!pWidget)
         return FG_FALSE;
     return script::CScriptCallback::Call((void *)pWidget);
+}
+
+/*******************************************************************************
+ * SCRIPT SCENE CALLBACK - SPECIAL CALLBACK TO BE USED IN THE SCENE MANAGER
+ */
+
+/**
+ * 
+ * @param L
+ * @param info
+ * @param _type
+ */
+script::CScriptSceneCallback::CScriptSceneCallback(lua_State *L,
+                                                   const char *info,
+                                                   const unsigned short int _argc) :
+CScriptCallback(L, info, _argc, SCRIPT),
+gfx::CSceneCallback() {
+    event::CFunctionCallback::setFunction((event::CFunctionCallback::fgFunction)NULL);
+}
+
+/**
+ * 
+ * @return 
+ */
+fgBool script::CScriptSceneCallback::Call(void) {
+    if(getType() == INVALID) {
+        return FG_FALSE;
+    } else if(getType() == GUI_CALLBACK || getType() == SCRIPT) {
+        return script::CScriptCallback::Call();
+    }
+    return FG_FALSE;
+}
+
+/**
+ * 
+ * @param argv
+ * @return 
+ */
+fgBool script::CScriptSceneCallback::Call(event::CArgumentList *argv) {
+    if(!argv)
+        return FG_FALSE;
+    /// THis will probably contain argument list with Event structure pointer
+    if(argv->getCount()) {
+        event::SArgument::Type arg_type;
+        void *ptr = argv->getValueByID(0, &arg_type);
+        if(arg_type != event::SArgument::Type::ARG_TMP_POINTER)
+            return FG_FALSE;
+        event::SSceneEvent* pSceneNodeEvent = (event::SSceneEvent*)ptr;
+        if(pSceneNodeEvent->code != event::INVALID) {
+            //return this->Call(pSceneNodeEvent->pNodeA, pSceneNodeEvent->pNodeB);
+            return this->Call(ptr); // THis will handle the structure passed as void*
+        }
+    }
+    return FG_FALSE;
+}
+
+/**
+ * 
+ * @param pSystemData
+ * @return 
+ */
+fgBool script::CScriptSceneCallback::Call(void *pSystemData) {
+    if(!pSystemData || !getScriptFunction())
+        return FG_FALSE;
+
+    if(getType() != SCENE_CALLBACK && getType() != SCENE_TRIGGER_CALLBACK) {
+        return script::CScriptCallback::Call(pSystemData);
+    }
+    if(getType() == SCENE_CALLBACK) {
+        // If void pointer is passed it's quite possible that it is structure
+        // from event namespace - here it will be event::SSceneEvent or
+        // SSceneNode/SSceneCollision/SSceneTrigger
+
+        // Callbacks for scripts expect more precise callbacks
+        // So will need to pass more accurate argument #NOPE
+
+        // #FIXME - this switch is foobar
+        event::SSceneEvent *pSceneEvent = static_cast<event::SSceneEvent*>(pSystemData);
+        const unsigned int argc = getArgC();
+        switch(pSceneEvent->code) {
+            case event::SCENE_NODE_COLLISION:
+                if(argc == 1) {
+                    (*(getScriptFunction()))((event::SSceneEvent *)pSceneEvent);
+                } else if(argc == 2) {
+                    // callback is registered for two arguments
+                    // with scene events 1 argument means structure,
+                    // 2 arguments - 2 pointers to nodes
+                    (*(getScriptFunction())) ((gfx::CSceneNode*)pSceneEvent->collision.pNodeA,
+                                              (gfx::CSceneNode*)pSceneEvent->collision.pNodeB);
+                }
+                break;
+
+            case event::SCENE_NODE_TRIGGER_FIRED:
+                // This will be more global event, thrown when trigger is fired
+                // This can be turned off
+                if(argc == 1) {
+                    (*(getScriptFunction()))((event::SSceneEvent *)pSceneEvent);
+                } else if(argc == 2) {
+                    (*(getScriptFunction())) ((gfx::CSceneNodeTrigger*)pSceneEvent->trigger.pNodeTrigger,
+                                              (gfx::CSceneNode*)pSceneEvent->trigger.pNodeB);
+                }
+                break;
+
+            case event::SCENE_NODE_INSERTED:
+            case event::SCENE_NODE_REMOVED:
+            case event::SCENE_NODE_DESTROYED:
+                if(argc == 0) {
+                    (*(getScriptFunction()))();
+                } else if(argc == 1) {
+                    (*(getScriptFunction()))((event::SSceneEvent *)pSceneEvent);
+                } else if(argc == 2) {
+                    (*(getScriptFunction())) ((gfx::CSceneNode*)pSceneEvent->node.pNodeA,
+                                              (gfx::CSceneNode*)pSceneEvent->node.pNodeB);
+                }
+                break;
+
+            case event::SCENE_CLEARED:
+                if(argc == 0) {
+                    (*(getScriptFunction()))();
+                } else if(argc == 1) {
+                    (*(getScriptFunction()))((event::SSceneEvent *)pSceneEvent);
+                } else if(argc == 2) {
+                    // In this case it cannot be called
+                    // the scene cleared event cannot take two arguments
+                    //(*(getScriptFunction()))();
+                }
+                break;
+            default:
+                break;
+        }
+        return FG_TRUE;
+    } else /*SCENE_TRIGGER_CALLBACK*/ {
+        // This is different callback - it's not for the event - it's directly 
+        // used inside of a trigger scene object
+        // In this case when such callback is called with void* systemData parameter
+        // the passed pointer points to structure
+
+        // However for now it will stay unused
+        return FG_FALSE;
+    }
+    return FG_FALSE;
+}
+
+/**
+ * 
+ * @param pWidget
+ * @return 
+ */
+fgBool script::CScriptSceneCallback::Call(gfx::CSceneNode* pNodeA) {
+    if(!pNodeA || !getScriptFunction())
+        return FG_FALSE;
+    if(getType() != SCENE_CALLBACK && getType() != SCENE_TRIGGER_CALLBACK) {
+        return script::CScriptCallback::Call();
+    }
+    gfx::CSceneNode dummyNodeB;
+    memset(&dummyNodeB, 0, sizeof (gfx::CSceneNode));
+
+    if(getArgC() == 2) {
+
+        if(getType() == SCENE_CALLBACK) {
+            //(*(getScriptFunction()))((event::SEvent *)pEvent);
+            (*(getScriptFunction())) ((gfx::CSceneNode*)pNodeA, (gfx::CSceneNode*) & dummyNodeB);
+            return FG_TRUE;
+        } else /*SCENE_TRIGGER_CALLBACK*/if(pNodeA->getNodeType() == gfx::SCENE_NODE_TRIGGER) {
+            // First argument needs to have type of trigger
+            // Second will be empty;        
+            (*(getScriptFunction())) ((gfx::CSceneNodeTrigger*)pNodeA, (gfx::CSceneNode*) & dummyNodeB);
+            return FG_TRUE;
+        }
+    } else if(getArgC() == 1) {
+        // The registered script function receives only one argument,
+        // most probably this will be event structure
+        // Need to allocate some dummy one
+        event::SSceneEvent sceneEvent;
+        memset(&sceneEvent, 0, sizeof (event::SSceneEvent));
+        sceneEvent.code = event::SCENE_DUMMY;
+        sceneEvent.node.pNodeA = pNodeA;
+        (*(getScriptFunction())) ((event::SSceneEvent*) & sceneEvent);
+    }
+    return FG_FALSE;
+}
+
+/**
+ * 
+ * @param pGuiMain
+ * @param pWidget
+ * @return 
+ */
+fgBool script::CScriptSceneCallback::Call(gfx::CSceneNode* pNodeA, gfx::CSceneNode* pNodeB) {
+    fgBool status = FG_FALSE;
+    if(!getScriptFunction()) {
+        return status;
+    }
+    if(getType() != SCENE_CALLBACK && getType() != SCENE_TRIGGER_CALLBACK) {
+        return script::CScriptCallback::Call();
+    }
+    
+    if(!pNodeA && !pNodeB) {
+        if(this->getArgC() == 0) {
+            // The registered function does not take any arguments
+            (*(getScriptFunction())) ();
+            status = FG_TRUE;
+        }
+        return status;
+    }
+    if(this->getArgC() < 2) {
+        // This script callback is registered to receive less than 2 arguments
+        // which means that it wants to receive single structure - probably event::SScene*
+        //return FG_FALSE;
+    }
+    
+    if(!pNodeB) {
+        return this->Call(pNodeA);
+    }
+
+    if(this->getArgC() == 2) {
+        if(getType() == SCENE_CALLBACK) {
+            (*(getScriptFunction())) ((gfx::CSceneNode*)pNodeA, (gfx::CSceneNode*)pNodeB);
+            status = FG_TRUE;
+        } else /*SCENE_TRIGGER_CALLBACK*/if(pNodeA->getNodeType() == gfx::SCENE_NODE_TRIGGER) {
+            (*(getScriptFunction())) ((gfx::CSceneNodeTrigger*)pNodeA, (gfx::CSceneNode*)pNodeB);
+            status = FG_TRUE;
+        }
+    } else if(this->getArgC() == 1) {
+        // Takes just one arguments -> the function expects SceneEvent structure
+        // Need to allocate some dummy one
+        event::SSceneEvent sceneEvent;
+        memset(&sceneEvent, 0, sizeof (event::SSceneEvent));
+        
+        if(getType() == SCENE_CALLBACK) {
+            sceneEvent.code = event::SCENE_DUMMY;
+            sceneEvent.node.pNodeA = pNodeA;
+            sceneEvent.node.pNodeB = pNodeB;
+            (*(getScriptFunction())) ((event::SSceneEvent*) & sceneEvent);
+            status = FG_TRUE;
+        } else if(pNodeA->getNodeType() == gfx::SCENE_NODE_TRIGGER) {
+            sceneEvent.code = event::SCENE_NODE_TRIGGER_FIRED;
+            sceneEvent.trigger.pNodeTrigger = (gfx::CSceneNodeTrigger*)pNodeA;
+            sceneEvent.trigger.pNodeB = pNodeB;
+            (*(getScriptFunction())) ((event::SSceneEvent*) & sceneEvent);
+            status = FG_TRUE;
+        }
+        
+    } else if(this->getArgC() == 0) {
+        (*(getScriptFunction())) ();
+        status = FG_TRUE;
+    }
+    //return script::CScriptCallback::Call((void *)pWidget);
+    return status;
 }
