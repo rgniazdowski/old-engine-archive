@@ -34,16 +34,30 @@ namespace fg {
         public:
             ///
             typedef THandleType handle_type;
-            // System data is always set to (void *)this
-            typedef fgBool(*callbackPtr)(void *systemData, void *userData);
             ///
-            typedef callbackPtr callback_type;
+            typedef CManagedObject<THandleType> self_type;
+            // System data is always set to (void *)this
+            typedef fgBool(*CallbackFuncPtr)(void *systemData, void *userData);
+            ///
+            typedef CallbackFuncPtr callback_type;
 
         public:
             /**
              * Default empty constructor for managed base object
              */
             CManagedObject() : m_pManager(NULL), m_nameTag(), m_isManaged(FG_FALSE) { }
+            
+            /**
+             * 
+             * @param orig
+             */
+            CManagedObject(const self_type& orig) {
+                if(this != &orig) {
+                    m_pManager = orig.m_pManager;
+                    m_nameTag = orig.m_nameTag;
+                    m_isManaged = orig.m_isManaged;
+                }
+            }
             /**
              * Destructor for managed base object
              */
@@ -69,7 +83,19 @@ namespace fg {
              * @param pUserData
              * @return 
              */
-            fgBool registerOnDestruct(callbackPtr pCallback, void* pUserData = NULL) {
+            fgBool registerOnDestruct(CallbackFuncPtr pCallback, void* pUserData = NULL) {
+                if(!pCallback || isRegistered(pCallback))
+                    return FG_FALSE;
+                callbackData callbackInfo(pCallback, pUserData);
+                m_onDestructorCallbacks.push_back(callbackInfo);
+                return FG_TRUE;
+            }
+            /**
+             * 
+             * @param pCallback
+             * @return 
+             */
+            fgBool isRegistered(CallbackFuncPtr pCallback) {
                 if(!pCallback)
                     return FG_FALSE;
                 int n = m_onDestructorCallbacks.size();
@@ -77,11 +103,9 @@ namespace fg {
                 for(int i = 0; i < n; i++) {
                     callbackData &info = m_onDestructorCallbacks[i];
                     if(info.callback == pCallback)
-                        return FG_FALSE;
+                        return FG_TRUE;
                 }
-                callbackData callbackInfo(pCallback, pUserData);
-                m_onDestructorCallbacks.push_back(callbackInfo);
-                return FG_TRUE;
+                return FG_FALSE;
             }
             /**
              * Set resource name (string TAG/ID)
@@ -194,7 +218,7 @@ namespace fg {
              */
             struct callbackData {
                 ///
-                callbackPtr callback;
+                CallbackFuncPtr callback;
                 ///
                 void *userData;
                 /**
@@ -206,17 +230,17 @@ namespace fg {
                  * @param pUserData
                  * @param pCallback
                  */
-                callbackData(callbackPtr pCallback, void *pUserData) :
+                callbackData(CallbackFuncPtr pCallback, void *pUserData) :
                 callback(pCallback),
                 userData(pUserData) { }
             };
 
             ///
-            typedef fg::CVector<callbackData> callbackVec;
+            typedef fg::CVector<callbackData> CallbacksVec;
             ///
-            typedef typename callbackVec::iterator callbackVecItor;
+            typedef typename CallbacksVec::iterator CallbacksVecItor;
             /// Callbacks to call when the destructor is called
-            callbackVec m_onDestructorCallbacks;
+            CallbacksVec m_onDestructorCallbacks;
         };        
     };
 };
