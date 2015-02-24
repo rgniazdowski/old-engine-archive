@@ -28,9 +28,12 @@
 
 using namespace fg;
 
-void physics::CCollisionPrimitive::calculateInternals() {
-    if(body) {
+void physics::CCollisionPrimitive::calculateInternals(void) {
+    if(body) {        
         transform = body->getTransform() * offset;
+        //transform = offset * body->getTransform();
+        
+        //transform = physics::transform(body->getTransform(), offset);
     }
 }
 
@@ -407,7 +410,9 @@ unsigned physics::CCollisionDetector::boxAndBox(const CCollisionBox &one,
     CHECK_OVERLAP(math::cross(one.getAxis(2), two.getAxis(2)), 14);
 
     // Make sure we've got a result.
-    assert(best != 0xffffff);
+    //assert(best != 0xffffff);
+    if(best == 0xffffff)
+        return 0;
 
     // We now know there's a collision, and we know which
     // of the axes gave the smallest penetration. We now

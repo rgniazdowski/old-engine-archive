@@ -321,13 +321,13 @@ namespace fg {
              * from the rigid body.
              */
             void setMass(const real mass);
-
+            
             /**
              * Gets the mass of the rigid body.
              *
              * @return The current mass of the rigid body.
              */
-            real getMass() const;
+            real getMass(void) const;
 
             /**
              * Sets the inverse mass of the rigid body.
@@ -348,12 +348,12 @@ namespace fg {
              *
              * @return The current inverse mass of the rigid body.
              */
-            real getInverseMass() const;
+            real getInverseMass(void) const;
 
             /**
              * Returns true if the mass of the body is not-infinite.
              */
-            bool hasFiniteMass() const;
+            bool hasFiniteMass(void) const;
 
             /**
              * Sets the inertia tensor for the rigid body.
@@ -386,7 +386,7 @@ namespace fg {
              * tensor. The inertia tensor is expressed in the rigid body's
              * local space.
              */
-            Matrix3f getInertiaTensor() const;
+            Matrix3f getInertiaTensor(void) const;
 
             /**
              * Copies the current inertia tensor of the rigid body into
@@ -404,7 +404,7 @@ namespace fg {
              * @return A new matrix containing the current inertia
              * tensor. The inertia tensor is expressed in world space.
              */
-            Matrix3f getInertiaTensorWorld() const;
+            Matrix3f getInertiaTensorWorld(void) const;
 
             /**
              * Sets the inverse inertia tensor for the rigid body.
@@ -439,7 +439,7 @@ namespace fg {
              * inertia tensor. The inertia tensor is expressed in the
              * rigid body's local space.
              */
-            Matrix3f getInverseInertiaTensor() const;
+            Matrix3f getInverseInertiaTensor(void) const;
 
             /**
              * Copies the current inverse inertia tensor of the rigid body
@@ -459,7 +459,7 @@ namespace fg {
              * inertia tensor. The inertia tensor is expressed in world
              * space.
              */
-            Matrix3f getInverseInertiaTensorWorld() const;
+            Matrix3f getInverseInertiaTensorWorld(void) const;
 
             /**
              * Sets both linear and angular damping in one function call.
@@ -490,7 +490,7 @@ namespace fg {
              *
              * @return The current linear damping value.
              */
-            real getLinearDamping() const;
+            real getLinearDamping(void) const;
 
             /**
              * Sets the angular damping for the rigid body.
@@ -507,7 +507,7 @@ namespace fg {
              *
              * @return The current angular damping value.
              */
-            real getAngularDamping() const;
+            real getAngularDamping(void) const;
 
             /**
              * Sets the position of the rigid body.
@@ -543,7 +543,7 @@ namespace fg {
              *
              * @return The position of the rigid body.
              */
-            Vector3f getPosition() const;
+            Vector3f getPosition(void) const;
 
             /**
              * Sets the orientation of the rigid body.
@@ -594,7 +594,7 @@ namespace fg {
              *
              * @return The orientation of the rigid body.
              */
-            Quaternionf getOrientation() const;
+            Quaternionf getOrientation(void) const;
 
             /**
              * Fills the given matrix with a transformation representing
@@ -664,7 +664,7 @@ namespace fg {
              *
              * @return The transform matrix for the rigid body.
              */
-            Matrix4f getTransform() const;
+            Matrix4f getTransform(void) const;
 
             /**
              * Converts the given point from world space into the body's
@@ -751,7 +751,7 @@ namespace fg {
              * @return The velocity of the rigid body. The velocity is
              * given in world local space.
              */
-            Vector3f getVelocity() const;
+            Vector3f getVelocity(void) const;
 
             /**
              * Applies the given change in velocity.
@@ -795,7 +795,7 @@ namespace fg {
              * @return The rotation of the rigid body. The rotation is
              * given in world local space.
              */
-            Vector3f getRotation() const;
+            Vector3f getRotation(void) const;
 
             /**
              * Applies the given change in rotation.
@@ -807,7 +807,7 @@ namespace fg {
              *
              * @return The awake state of the body.
              */
-            bool getAwake() const {
+            bool getAwake(void) const {
                 return isAwake;
             }
 
@@ -824,7 +824,7 @@ namespace fg {
              * Returns true if the body is allowed to go to sleep at
              * any time.
              */
-            bool getCanSleep() const {
+            bool getCanSleep(void) const {
                 return canSleep;
             }
 
@@ -875,7 +875,7 @@ namespace fg {
              *
              * @return The rigid body's linear acceleration.
              */
-            Vector3f getLastFrameAcceleration() const;
+            Vector3f getLastFrameAcceleration(void) const;
 
             /*@}*/
 
@@ -973,7 +973,7 @@ namespace fg {
              * @return The acceleration of the rigid body. The acceleration is
              * given in world local space.
              */
-            Vector3f getAcceleration() const;
+            Vector3f getAcceleration(void) const;
 
             /*@}*/
 

@@ -33,11 +33,21 @@
 namespace fg {
 
     namespace physics {
-
+        
+        const real DEFAULT_LINEAR_DAMPING = 0.95f;
+        const real DEFAULT_ANGULAR_DAMPING = 0.8f;
+        
         /**
          *
          */
-        class CCollisionBody : public CRigidBody {            
+        class CCollisionBody : public CRigidBody {
+            ///
+            typedef CRigidBody base_type;
+            ///
+            typedef CCollisionBody self_type;
+            ///
+            typedef CCollisionBody type;
+            
         public:
             /**
              *
@@ -89,16 +99,62 @@ namespace fg {
             }
 
         public:
+            using base_type::setInertiaTensor;
+            
+            /**
+             * 
+             */
+            void setInertiaTensor(void);
+            
+            /**
+             * 
+             * @param halfSize
+             * @param mass
+             */
+            void setInertiaTensor(const Vector3f& halfSize, float mass);
+            
+            /**
+             * 
+             * @param halfSize
+             * @param mass
+             */
+            void setInertiaTensor(float radius, float mass);
+            
+            /**
+             * 
+             * @param halfSize
+             * @param mass
+             */
+            inline void setHalfSizeAndMass(const Vector3f& halfSize, float mass) {
+                setInertiaTensor(halfSize, mass);
+            }
+            
+            /**
+             * 
+             * @param mass
+             */
+            void setMassPerUnit(float mass);
             /**
              * 
              * @param halfSize
              */
-            void setHalfSize(const Vector3f& halfSize);
+            void setHalfSize(const Vector3f& halfSize);            
+            /**
+             * 
+             * @return 
+             */
+            Vector3f getHalfSize(void) const;
             /**
              * 
              * @param radius
              */
             void setRadius(real radius);
+            
+            /**
+             * 
+             * @param bodyType
+             */
+            float getRadius(void) const;
             /**
              * 
              * @param gravity

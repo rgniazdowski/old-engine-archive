@@ -45,11 +45,34 @@ physics::CCollisionBody::CCollisionBody(const CCollisionBody& orig) {
         this->m_bodyType = orig.m_bodyType;
         if(this->m_bodyType == BOX) {
             this->m_collisionPrim = new CCollisionBox();
-            if(orig.m_collisionPrim)
+            if(orig.m_collisionPrim) {
                 *(this->m_collisionPrim) = *(orig.m_collisionPrim);
+            }
             this->m_collisionPrim->body = this;
+            this->setHalfSize(orig.getHalfSize());
             // #TODO
+        } else if(this->m_bodyType == SPHERE) {
+            this->m_collisionPrim = new CCollisionSphere();
+            if(orig.m_collisionPrim) {
+                *(this->m_collisionPrim) = *(orig.m_collisionPrim);
+            }
+            this->m_collisionPrim->body = this;
+            this->setRadius(orig.getRadius());
         }
+        this->setMass(orig.getMass());
+        this->setInverseInertiaTensor(orig.getInverseInertiaTensor());
+        
+        this->setDamping(orig.getLinearDamping(), orig.getAngularDamping());
+        this->setAcceleration(orig.getAcceleration());
+        this->setPosition(orig.getPosition());
+        this->setOrientation(orig.getOrientation());
+        this->setRotation(orig.getRotation());
+        
+        this->setAwake(orig.getAwake());
+        this->setCanSleep(orig.getCanSleep());
+        
+        this->calculateDerivedData();
+        this->integrate(0.0f);
     }
 }
 
@@ -60,6 +83,59 @@ physics::CCollisionBody::~CCollisionBody() {
     if(m_collisionPrim) {
         m_collisionPrim->body = NULL;
         delete m_collisionPrim;
+    }
+}
+
+/**
+ * 
+ */
+void physics::CCollisionBody::setInertiaTensor(void) { 
+    if(m_bodyType == BOX) {
+        setInertiaTensor(getHalfSize(), getMass());
+    } else if(m_bodyType == SPHERE) {
+        setInertiaTensor(getRadius(), getMass());
+    }
+}
+
+/**
+ * 
+ * @param halfSize
+ * @param mass
+ */
+void physics::CCollisionBody::setInertiaTensor(const Vector3f& halfSize, float mass) {
+    setMass(mass);
+    setHalfSize(halfSize);
+    setInertiaTensor(physics::setBlockInertiaTensor(halfSize, mass));
+}
+
+/**
+ * 
+ * @param radius
+ * @param mass
+ */
+void physics::CCollisionBody::setInertiaTensor(float radius, float mass) {
+    setMass(mass);
+    setRadius(radius);
+    //float volume = (4.0f)/3.0f * M_PIF * math::pow(radius, 3.0f); 
+    // 2/5 * Mass * radius * radius
+    float sphereI = 2.0f / 5.0f * mass * radius * radius;
+    setInertiaTensor(physics::setInertiaTensorCoeffs(sphereI, sphereI, sphereI));
+    //setInertiaTensor(physics::setBlockInertiaTensor(halfSize, mass));
+}
+
+/**
+ * 
+ * @param mass
+ */
+void physics::CCollisionBody::setMassPerUnit(float mass) {
+    if(mass < FG_EPSILON)
+        return;
+    if(m_collisionPrim && m_bodyType == BOX) {
+        const Vector3f& halfSize = getCollisionBox()->halfSize;
+        setMass(mass * halfSize.x * halfSize.y * halfSize.z);
+    } else if(m_collisionPrim && m_bodyType == SPHERE) {
+        real a = (2.0f * getCollisionSphere()->radius) / M_SQRT2;
+        setMass(mass * a * a * a);
     }
 }
 
@@ -77,17 +153,46 @@ void physics::CCollisionBody::setHalfSize(const Vector3f& halfSize) {
 
 /**
  * 
+ * @return 
+ */
+Vector3f physics::CCollisionBody::getHalfSize(void) const {
+    if(m_collisionPrim && m_bodyType == BOX) {
+        return getCollisionBox()->halfSize;
+    } else if(m_collisionPrim && m_bodyType == SPHERE) {
+        //float a = (2.0f * getCollisionSphere()->radius) / M_SQRT2;
+        float a = math::sqrt((getCollisionSphere()->radius * getCollisionSphere()->radius) / 3.0f);
+        return Vector3f(a, a, a);
+    }
+    return Vector3f();
+}
+
+/**
+ * 
  * @param radius
  */
 void physics::CCollisionBody::setRadius(real radius) {
     if(radius < 0.0f)
         radius *= -1.0f;
     if(m_collisionPrim && m_bodyType == BOX) {
-        real a = (2.0f * radius) / M_SQRT2;
+        //real a = (2.0f * radius) / M_SQRT2;
+        real a = math::sqrt((radius * radius) / 3.0f);
         getCollisionBox()->halfSize = Vector3f(a, a, a);
     } else if(m_collisionPrim && m_bodyType == SPHERE) {
         getCollisionSphere()->radius = radius;
     }
+}
+
+/**
+ * 
+ * @return 
+ */
+float physics::CCollisionBody::getRadius(void) const {
+    if(m_collisionPrim && m_bodyType == BOX) {
+        return math::length(getCollisionBox()->halfSize);
+    } else if(m_collisionPrim && m_bodyType == SPHERE) {
+        return getCollisionSphere()->radius;
+    }
+    return 0.0f;
 }
 
 /**

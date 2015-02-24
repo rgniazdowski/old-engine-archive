@@ -53,7 +53,7 @@ static inline void _transformInertiaTensor(Matrix3f &iitWorld,
                                            const Matrix3f &iitBody,
                                            const Matrix4f &rotmat) {
 #if !PHYS_USE_2D_MAPPING_ENABLED
-    
+
     const float *iitBodydata = math::value_ptr(iitBody);
     const float *rotmatdata = math::value_ptr(rotmat);
     float *iitWorlddata = math::value_ptr(iitWorld);
@@ -189,7 +189,7 @@ static inline void _transformInertiaTensor(Matrix3f &iitWorld,
             t57 * rotmat[2][1] + // 9
             t62 * rotmat[2][2]; // 10
 #endif
-   //iitWorld = math::transpose(iitWorld);
+    //iitWorld = math::transpose(iitWorld);
 }
 
 /**
@@ -256,7 +256,7 @@ static inline void _calculateTransformMatrix(Matrix4f &transformMatrix,
  * FUNCTIONS DECLARED IN HEADER:
  * --------------------------------------------------------------------------
  */
-void physics::CRigidBody::calculateDerivedData() {
+void physics::CRigidBody::calculateDerivedData(void) {
     //orientation.normalise();
     orientation = math::normalize(orientation);
 
@@ -306,7 +306,7 @@ void physics::CRigidBody::integrate(real duration) {
     //orientation.addScaledVector(rotation, duration);
     //orientation += rotation * duration;
     //orientation += (Quaternionf(0, rotation * duration) * orientation) * 0.5f;
-    
+
     orientation = physics::addScaledVector(orientation, rotation, duration);
 
     // Normalise the orientation, and update the matrices with the new
@@ -337,7 +337,7 @@ void physics::CRigidBody::setMass(const real mass) {
     CRigidBody::inverseMass = ((real)1.0) / mass;
 }
 
-physics::real physics::CRigidBody::getMass() const {
+physics::real physics::CRigidBody::getMass(void) const {
     if(inverseMass == 0) {
         return REAL_MAX;
     } else {
@@ -349,12 +349,13 @@ void physics::CRigidBody::setInverseMass(const real inverseMass) {
     CRigidBody::inverseMass = inverseMass;
 }
 
-physics::real physics::CRigidBody::getInverseMass() const {
+physics::real physics::CRigidBody::getInverseMass(void) const {
     return inverseMass;
 }
 
-bool physics::CRigidBody::hasFiniteMass() const {
-    return inverseMass >= 0.0f;
+bool physics::CRigidBody::hasFiniteMass(void) const {
+    //return (fgBool)(inverseMass >= 0.0f);
+    return (inverseMass >= 0.0f);
 }
 
 void physics::CRigidBody::setInertiaTensor(const Matrix3f &inertiaTensor) {
@@ -370,7 +371,7 @@ void physics::CRigidBody::getInertiaTensor(Matrix3f *inertiaTensor) const {
     }
 }
 
-Matrix3f physics::CRigidBody::getInertiaTensor() const {
+Matrix3f physics::CRigidBody::getInertiaTensor(void) const {
     Matrix3f it;
     getInertiaTensor(&it);
     return it;
@@ -383,7 +384,7 @@ void physics::CRigidBody::getInertiaTensorWorld(Matrix3f *inertiaTensor) const {
     }
 }
 
-Matrix3f physics::CRigidBody::getInertiaTensorWorld() const {
+Matrix3f physics::CRigidBody::getInertiaTensorWorld(void) const {
     Matrix3f it;
     getInertiaTensorWorld(&it);
     return it;
@@ -398,7 +399,7 @@ void physics::CRigidBody::getInverseInertiaTensor(Matrix3f *inverseInertiaTensor
     *inverseInertiaTensor = CRigidBody::inverseInertiaTensor;
 }
 
-Matrix3f physics::CRigidBody::getInverseInertiaTensor() const {
+Matrix3f physics::CRigidBody::getInverseInertiaTensor(void) const {
     return inverseInertiaTensor;
 }
 
@@ -406,7 +407,7 @@ void physics::CRigidBody::getInverseInertiaTensorWorld(Matrix3f *inverseInertiaT
     *inverseInertiaTensor = inverseInertiaTensorWorld;
 }
 
-Matrix3f physics::CRigidBody::getInverseInertiaTensorWorld() const {
+Matrix3f physics::CRigidBody::getInverseInertiaTensorWorld(void) const {
     return inverseInertiaTensorWorld;
 }
 
@@ -420,7 +421,7 @@ void physics::CRigidBody::setLinearDamping(const real linearDamping) {
     CRigidBody::linearDamping = linearDamping;
 }
 
-physics::real physics::CRigidBody::getLinearDamping() const {
+physics::real physics::CRigidBody::getLinearDamping(void) const {
     return linearDamping;
 }
 
@@ -428,7 +429,7 @@ void physics::CRigidBody::setAngularDamping(const real angularDamping) {
     CRigidBody::angularDamping = angularDamping;
 }
 
-physics::real physics::CRigidBody::getAngularDamping() const {
+physics::real physics::CRigidBody::getAngularDamping(void) const {
     return angularDamping;
 }
 
@@ -446,7 +447,7 @@ void physics::CRigidBody::getPosition(Vector3f *position) const {
     *position = CRigidBody::position;
 }
 
-Vector3f physics::CRigidBody::getPosition() const {
+Vector3f physics::CRigidBody::getPosition(void) const {
     return position;
 }
 
@@ -470,7 +471,7 @@ void physics::CRigidBody::getOrientation(Quaternionf *orientation) const {
     *orientation = CRigidBody::orientation;
 }
 
-Quaternionf physics::CRigidBody::getOrientation() const {
+Quaternionf physics::CRigidBody::getOrientation(void) const {
     return orientation;
 }
 
@@ -555,7 +556,7 @@ void physics::CRigidBody::getGLTransform(float *matrix) const {
     matrix[15] = 1;
 }
 
-Matrix4f physics::CRigidBody::getTransform() const {
+Matrix4f physics::CRigidBody::getTransform(void) const {
     return transformMatrix;
 }
 
@@ -593,7 +594,7 @@ void physics::CRigidBody::getVelocity(Vector3f *velocity) const {
     *velocity = CRigidBody::velocity;
 }
 
-Vector3f physics::CRigidBody::getVelocity() const {
+Vector3f physics::CRigidBody::getVelocity(void) const {
     return velocity;
 }
 
@@ -615,7 +616,7 @@ void physics::CRigidBody::getRotation(Vector3f *rotation) const {
     *rotation = CRigidBody::rotation;
 }
 
-Vector3f physics::CRigidBody::getRotation() const {
+Vector3f physics::CRigidBody::getRotation(void) const {
     return rotation;
 }
 
@@ -646,11 +647,11 @@ void physics::CRigidBody::getLastFrameAcceleration(Vector3f *acceleration) const
     *acceleration = lastFrameAcceleration;
 }
 
-Vector3f physics::CRigidBody::getLastFrameAcceleration() const {
+Vector3f physics::CRigidBody::getLastFrameAcceleration(void) const {
     return lastFrameAcceleration;
 }
 
-void physics::CRigidBody::clearAccumulators() {
+void physics::CRigidBody::clearAccumulators(void) {
     forceAccum = Vector3f();
     torqueAccum = Vector3f();
 }
@@ -701,6 +702,6 @@ void physics::CRigidBody::getAcceleration(Vector3f *acceleration) const {
     *acceleration = CRigidBody::acceleration;
 }
 
-Vector3f physics::CRigidBody::getAcceleration() const {
+Vector3f physics::CRigidBody::getAcceleration(void) const {
     return acceleration;
 }
