@@ -1956,6 +1956,31 @@ namespace LPCD {
     };
 
     ////////////////////////////////////////////////////////////////////////////
+    
+    /***************************************************************************
+     * FG PHYSICS / COLLISION BODY ENUMERATION TYPES -> INT / UNSIGNED
+     **************************************************************************/
+
+        #define FG_CONV_CD_TYPE fg::physics::CCollisionBody::BodyType
+
+    template<> struct Type<FG_CONV_CD_TYPE> : public Type<unsigned int> {
+        static inline void Push(lua_State* L, FG_CONV_CD_TYPE value) {
+            Type<unsigned int>::Push(L, static_cast<unsigned int>(value));
+        }
+        static inline FG_CONV_CD_TYPE Get(lua_State* L, int idx) {
+            return (FG_CONV_CD_TYPE)Type<unsigned int>::Get(L, idx);
+        }
+    };
+
+    template<> struct Type<FG_CONV_CD_TYPE &> : public Type<FG_CONV_CD_TYPE> {
+    };
+
+    template<> struct Type<const FG_CONV_CD_TYPE &> : public Type<FG_CONV_CD_TYPE> {
+    };
+
+        #undef FG_CONV_CD_TYPE
+    
+    ////////////////////////////////////////////////////////////////////////////
 }
 
     #endif /* FG_USING_LUA_PLUS */
