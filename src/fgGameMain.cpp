@@ -460,6 +460,8 @@ fgBool CGameMain::loadConfiguration(void) {
 fgBool CGameMain::loadResources(void) {
     float t1 = timesys::ms();
     FG_LOG_DEBUG("Loading resources...");
+    m_gfxMain->getShaderManager()->setShadersPath("shaders/");
+    m_gfxMain->preLoadShaders();
 #if defined(FG_USING_LUA_PLUS)
     //LuaPlus::LuaState *state = m_scriptSubsystem->getLuaState();
     std::string mainScriptPath, modScriptPath;
@@ -473,8 +475,7 @@ fgBool CGameMain::loadResources(void) {
 #endif
     m_gfxMain->getLoader()->update(10.0f);
     ////////////////////////////////////////////////////////////////////////////
-    m_gfxMain->getShaderManager()->setShadersPath("shaders/");
-    m_gfxMain->preLoadShaders();
+
     std::string sPlainEasyShaderName("sPlainEasy");
     gfx::CShaderProgram *program = m_gfxMain->getShaderManager()->get(sPlainEasyShaderName);
     FG_HardwareState->deviceYield(0); // #FIXME - device yield...
