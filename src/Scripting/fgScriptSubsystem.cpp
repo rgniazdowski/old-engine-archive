@@ -178,7 +178,7 @@ fgBool script::CScriptSubsystem::cyclicGCFunction(void* systemData, void* userDa
  * @param filePath
  * @return 
  */
-int script::CScriptSubsystem::executeFile(const char *filePath) {
+int script::CScriptSubsystem::executeFile(const char* filePath) {
     if(!m_luaState || !filePath) {
         return 2;
     }
@@ -205,7 +205,7 @@ int script::CScriptSubsystem::executeFile(const char *filePath) {
         return 2;
     }
     scriptFile.close();
-    const char *fileName = fg::path::fileName(filePath);
+    const char* fileName = fg::path::fileName(filePath);
     int size = strlen(buffer), status = 0;
 #if defined(FG_USING_LUA_PLUS)
     status = m_luaState->DoBuffer(buffer, size, fileName);
@@ -482,7 +482,7 @@ int script::CScriptSubsystem::managedResourceGCEvent(lua_State* L) {
  */
 fgBool script::CScriptSubsystem::managedObjectDestructorCallback(void *systemData, void *userData) {
     if(!systemData)
-        return FG_FALSE;
+        return FG_FALSE; 
 
 #if defined(FG_USING_LUA_PLUS)
     uintptr_t offset = (uintptr_t)systemData;
@@ -523,6 +523,9 @@ fgBool script::CScriptSubsystem::registerConstants(void) {
     //
 
     m_fgObj.SetInteger("BUILD_VERSION", (int)FG_BUILD_VERSION);
+
+    m_fgObj.SetInteger("TRUE", 1);
+    m_fgObj.SetInteger("FALSE", 0);
 
     //
     // GUI STYLE CONSTANTS
@@ -706,10 +709,19 @@ fgBool script::CScriptSubsystem::registerConstants(void) {
     m_fgObj.SetInteger("SCENE_NODE_DESTROYED", (int)event::SCENE_NODE_DESTROYED);
     m_fgObj.SetInteger("SCENE_CLEARED", (int)event::SCENE_CLEARED);
     m_fgObj.SetInteger("SCENE_DUMMY", (int)event::SCENE_DUMMY);
-    
+
     m_fgObj.SetInteger("ON_COLLISION_BEGIN", (int)gfx::CSceneNodeTrigger::ON_COLLISION_BEGIN);
     m_fgObj.SetInteger("ON_COLLISION_END", (int)gfx::CSceneNodeTrigger::ON_COLLISION_END);
-    
+
+    //
+    // PHYSICS CONSTANTS (COLLISION BODY/OTHER)
+    //
+
+    m_fgObj.SetInteger("BODY_INVALID", (int)physics::CCollisionBody::INVALID);
+    m_fgObj.SetInteger("BODY_BOX", (int)physics::CCollisionBody::BOX);
+    m_fgObj.SetInteger("BODY_CUBE", (int)physics::CCollisionBody::BOX);
+    m_fgObj.SetInteger("BODY_SPHERE", (int)physics::CCollisionBody::SPHERE);
+    m_fgObj.SetInteger("BODY_COMPLEX", (int)physics::CCollisionBody::COMPLEX);
 
     //
 
@@ -827,7 +839,7 @@ int script::CScriptSubsystem::addEventCallbackWrapper(lua_State *L) {
 #if defined(FG_USING_LUA_PLUS)
     LuaPlus::LuaState* state = lua_State_to_LuaState(L);
     LuaPlus::LuaStack args(state);
-    const char *script = NULL;
+    const char* script = NULL;
     event::EventType eventType = event::INVALID;
     LuaPlus::LuaObject objFunction;
     fgBool hasFunction = FG_FALSE;
@@ -931,7 +943,7 @@ int script::CScriptSubsystem::addTimeoutCallbackWrapper(lua_State *L) {
 #if defined(FG_USING_LUA_PLUS)
     LuaPlus::LuaState* state = lua_State_to_LuaState(L);
     LuaPlus::LuaStack args(state);
-    const char *script = NULL;
+    const char* script = NULL;
     int timeout = -1;
     LuaPlus::LuaObject objFunction;
     fgBool hasFunction = FG_FALSE;
@@ -996,7 +1008,7 @@ int script::CScriptSubsystem::addCyclicCallbackWrapper(lua_State *L) {
 #if defined(FG_USING_LUA_PLUS)
     LuaPlus::LuaState* state = lua_State_to_LuaState(L);
     LuaPlus::LuaStack args(state);
-    const char *script = NULL;
+    const char* script = NULL;
     int interval = -1;
     int repeats = 0;
     LuaPlus::LuaObject objFunction;
@@ -1115,7 +1127,7 @@ fgBool script::CScriptSubsystem::registerEventManager(void) {
         m_userDataObjectMap[offset].isBound = FG_TRUE;
     }
     // Event Base structure
-    const char *metatableNameEventBase = fgScriptMT->getMetatableName(CMetatables::EVENT_BASE_MT_ID);
+    const char* metatableNameEventBase = fgScriptMT->getMetatableName(CMetatables::EVENT_BASE_MT_ID);
     LPCD::Class(m_luaState->GetCState(), metatableNameEventBase)
             .Property("eventType", &event::SEventBase::eventType)
             // .Property("eventType", &fgEventBase::eventType)
@@ -1126,7 +1138,7 @@ fgBool script::CScriptSubsystem::registerEventManager(void) {
     //FG_LOG_DEBUG("Script: Register metatable '%s' for Vector2i", fgScriptMT->getMetatableName(fgScriptMetatables::VECTOR2I_MT_ID));
 
     // Controller Device Event : EventBase
-    const char *metatableName = fgScriptMT->getMetatableName(CMetatables::EVENT_CONTROLLER_DEVICE_MT_ID);
+    const char* metatableName = fgScriptMT->getMetatableName(CMetatables::EVENT_CONTROLLER_DEVICE_MT_ID);
     LPCD::Class(m_luaState->GetCState(), metatableName, metatableNameEventBase)
             .Property("which", &event::SControllerDevice::which);
     // __gc ? nope
@@ -1317,7 +1329,7 @@ int script::CScriptSubsystem::newResourceWrapper(lua_State* L) {
 #if defined(FG_USING_LUA_PLUS)
     LuaPlus::LuaState* state = lua_State_to_LuaState(L);
     LuaPlus::LuaStack args(state);
-    const char *info = NULL;
+    const char* info = NULL;
     FG_LOG_DEBUG("Script: New Resource: argc[%d]", args.Count());
     if(args.Count()) {
         if(args[1].IsString()) {
@@ -1346,7 +1358,7 @@ int script::CScriptSubsystem::newResourceWrapper(lua_State* L) {
         status = FG_FALSE;
         FG_LOG_DEBUG("Script: New Resource: Unknown resource type requested / not supported: resType[%d]", resType);
     }
-    const char *metatableName = fgScriptMT->getMetatableName(metaID);
+    const char* metatableName = fgScriptMT->getMetatableName(metaID);
     if(status) {
         resourceObj.SetMetatable(state->GetRegistry()[metatableName]);
         FG_LOG_DEBUG("Script: New Resource: metatable: id[%d], name[%s]", metaID, metatableName);
@@ -1449,7 +1461,7 @@ fgBool script::CScriptSubsystem::registerResourceManager(void) {
     typedef void (gfx::CParticleEffect::*PE_void_Vec3f_IN)(const Vector3f&);
     typedef void (gfx::CParticleEffect::*PE_void_Vec2f_IN)(const Vector2f&);
     typedef void (gfx::CParticleEffect::*PE_void_Vec2i_IN)(const Vector2i&);
-    typedef void (gfx::CParticleEffect::*PE_void_C_STR_IN)(const char *);
+    typedef void (gfx::CParticleEffect::*PE_void_C_STR_IN)(const char*);
 
     //
     // Register Particle Effect Resource metatable
@@ -1601,7 +1613,7 @@ int script::CScriptSubsystem::addSceneEventCallbackWrapper(lua_State *L) {
 #if defined(FG_USING_LUA_PLUS)
     LuaPlus::LuaState* state = lua_State_to_LuaState(L);
     LuaPlus::LuaStack args(state);
-    const char *script = NULL;
+    const char* script = NULL;
     event::EventType eventType = event::INVALID;
     LuaPlus::LuaObject objFunction;
     fgBool hasFunction = FG_FALSE;
@@ -1688,10 +1700,10 @@ int script::CScriptSubsystem::addSceneEventCallbackWrapper(lua_State *L) {
 }
 
 int script::CScriptSubsystem::addSceneTriggerCallbackWrapper(lua_State *L) {
-    #if defined(FG_USING_LUA_PLUS)
+#if defined(FG_USING_LUA_PLUS)
     LuaPlus::LuaState* state = lua_State_to_LuaState(L);
     LuaPlus::LuaStack args(state);
-    const char *script = NULL, *triggerName = NULL;
+    const char* script = NULL, *triggerName = NULL;
     gfx::CSceneNodeTrigger::TriggerActivation activation = gfx::CSceneNodeTrigger::ON_COLLISION_BEGIN;
     LuaPlus::LuaObject objFunction;
     fgBool hasFunction = FG_FALSE;
@@ -1785,7 +1797,7 @@ int script::CScriptSubsystem::addSceneTriggerCallbackWrapper(lua_State *L) {
 fgBool script::CScriptSubsystem::registerSceneManager(LuaPlus::LuaObject &metatable,
                                                       const unsigned short int metatableID,
                                                       fg::base::CManager *sceneManager,
-                                                      const char *objectName) {
+                                                      const char* objectName) {
     if(m_isBindingComplete) {
         return FG_TRUE;
     }
@@ -1796,11 +1808,12 @@ fgBool script::CScriptSubsystem::registerSceneManager(LuaPlus::LuaObject &metata
     metatable = m_fgObj.CreateTable(fgScriptMT->getMetatableName(metatableID));
     metatable.SetObject("__index", metatable);
 
-    typedef gfx::CSceneNode * (gfx::CSceneManager::*SCENE_BASE_SceneNode_C_STR_IN)(const char *);
-    typedef fgBool(gfx::CSceneManager::*SCENE_BASE_Bool_C_STR_IN)(const char *);
+    typedef gfx::CSceneNode* (gfx::CSceneManager::*SCENE_BASE_SceneNode_C_STR_IN)(const char*);
+    typedef gfx::CSceneNode* (gfx::CSceneManager::*SCENE_BASE_SceneNode_C_STR_C_STR_IN)(const char*, const char*);
+    typedef fgBool(gfx::CSceneManager::*SCENE_BASE_Bool_C_STR_IN)(const char*);
 
-    typedef gfx::CSceneNode * (gfx::CSceneManager::*SCENE_BASE_SceneNode_C_STR_3X_FLOAT_IN)(const char *, float, float, float);
-    typedef gfx::CSceneNode * (gfx::CSceneManager::*SCENE_BASE_SceneNode_C_STR_6X_FLOAT_IN)(const char *, float, float, float, float, float, float);
+    typedef gfx::CSceneNode* (gfx::CSceneManager::*SCENE_BASE_SceneNode_C_STR_3X_FLOAT_IN)(const char*, float, float, float);
+    typedef gfx::CSceneNode* (gfx::CSceneManager::*SCENE_BASE_SceneNode_C_STR_6X_FLOAT_IN)(const char*, float, float, float, float, float, float);
 
     metatable.RegisterObjectDirect("get",
                                    static_cast<gfx::CSceneManager *>(0),
@@ -1822,6 +1835,10 @@ fgBool script::CScriptSubsystem::registerSceneManager(LuaPlus::LuaObject &metata
                                    static_cast<gfx::CSceneManager *>(0),
                                    static_cast<SCENE_BASE_SceneNode_C_STR_6X_FLOAT_IN>(&gfx::CSceneManager::addTrigger));
 
+    metatable.RegisterObjectDirect("addDuplicate",
+                                   static_cast<gfx::CSceneManager *>(0),
+                                   static_cast<SCENE_BASE_SceneNode_C_STR_C_STR_IN>(&gfx::CSceneManager::addDuplicate));
+    
     metatable.RegisterObjectDirect("count",
                                    static_cast<gfx::CSceneManager *>(0),
                                    &gfx::CSceneManager::count);
@@ -1831,7 +1848,7 @@ fgBool script::CScriptSubsystem::registerSceneManager(LuaPlus::LuaObject &metata
                                    &gfx::CSceneManager::size);
 
     metatable.Register("addEventCallback", &addSceneEventCallbackWrapper);
-    
+
     metatable.Register("addTriggerCallback", &addSceneTriggerCallbackWrapper);
 
     //m_mgrMetatables[RESOURCE_MGR].Register("request", &fgScriptSubsystem::newResourceWrapper);
@@ -1905,13 +1922,14 @@ fgBool script::CScriptSubsystem::register3DSceneManager(void) {
     }
 
     // Register additional direct functions for 3D Scene Manager - they're specific for this class/object
-    typedef gfx::CSceneNode * (gfx::CScene3D::*SCENE3D_SceneNode_C_STR_IN_C_STR_IN)(const char *, const char *);
-    typedef gfx::CSceneNode * (gfx::CScene3D::*SCENE3D_SceneNode_C_STR_IN)(const char *);
-    typedef fgBool(gfx::CScene3D::*SCENE3D_Bool_C_STR_IN)(const char *);
+    typedef gfx::CSceneNode * (gfx::CScene3D::*SCENE3D_SceneNode_C_STR_IN_C_STR_IN)(const char*, const char*);
+    typedef gfx::CSceneNode * (gfx::CScene3D::*SCENE3D_SceneNode_C_STR_IN)(const char*);
+    typedef fgBool(gfx::CScene3D::*SCENE3D_Bool_C_STR_IN)(const char*);
 
     m_mgrMetatables[SCENE3D_MGR].RegisterObjectDirect("addFromModel",
                                                       static_cast<gfx::CScene3D *>(0),
                                                       static_cast<SCENE3D_SceneNode_C_STR_IN_C_STR_IN>(&gfx::CScene3D::addFromModel));
+    
     //m_mgrMetatables[SCENE3D_MGR].
     //m_mgrMetatables[SCENE3D_MGR].Push(m_luaState);
     ////////////////////////////////////////////////////////////////////////////
@@ -1922,21 +1940,38 @@ fgBool script::CScriptSubsystem::register3DSceneManager(void) {
     //
 
     typedef Vector3f & (gfx::CSceneNode::*SCENENODE_Vec3fref_void)(void);
+    typedef Vector4f & (gfx::CSceneNode::*SCENENODE_Vec4fref_void)(void);
+    typedef Vector3f(gfx::CSceneNode::*SCENENODE_Vec3f_void_const)(void)const;
     typedef void (gfx::CSceneNode::*SCENENODE_void_float_3X)(float, float, float);
     typedef void (gfx::CSceneNode::*SCENENODE_void_float_4X)(float, float, float, float);
 
-    const char *metatableSceneNodeName = fgScriptMT->getMetatableName(CMetatables::SCENE_NODE_MT_ID);
-    const char *metatableSceneNodeTriggerName = fgScriptMT->getMetatableName(CMetatables::SCENE_NODE_TRIGGER_MT_ID);
+    const char* metatableSceneNodeName = fgScriptMT->getMetatableName(CMetatables::SCENE_NODE_MT_ID);
+    const char* metatableSceneNodeTriggerName = fgScriptMT->getMetatableName(CMetatables::SCENE_NODE_TRIGGER_MT_ID);
     // Register Base GfxSceneNode metatable
 
     LPCD::Class(m_luaState->GetCState(), metatableSceneNodeName)
             .ObjectDirect("getName", (gfx::CSceneNode::base_type *)0, &gfx::CSceneNode::base_type::getNameStr)
             .ObjectDirect("isManaged", (gfx::CSceneNode::base_type *)0, &gfx::CSceneNode::base_type::isManaged)
 
+            .ObjectDirect("update", (gfx::CSceneNode *)0, &gfx::CSceneNode::update)
+
+            .ObjectDirect("getPosition", (gfx::CSceneNode *)0, static_cast<SCENENODE_Vec4fref_void>(&gfx::CSceneNode::getPosition))
+            .ObjectDirect("setPosition", (gfx::CSceneNode *)0, static_cast<SCENENODE_void_float_3X>(&gfx::CSceneNode::setPosition))
+
+            .ObjectDirect("getRotation", (gfx::CSceneNode *)0, static_cast<SCENENODE_Vec3f_void_const>(&gfx::CSceneNode::getRotation))
+            .ObjectDirect("setRotation", (gfx::CSceneNode *)0, static_cast<SCENENODE_void_float_3X>(&gfx::CSceneNode::setRotation))
+
+            .ObjectDirect("getVelocity", (gfx::CSceneNode *)0, static_cast<SCENENODE_Vec3f_void_const>(&gfx::CSceneNode::getVelocity))
+            .ObjectDirect("setVelocity", (gfx::CSceneNode *)0, static_cast<SCENENODE_void_float_3X>(&gfx::CSceneNode::setVelocity))
+
+            .ObjectDirect("getAcceleration", (gfx::CSceneNode *)0, static_cast<SCENENODE_Vec3f_void_const>(&gfx::CSceneNode::getAcceleration))
+            .ObjectDirect("setAcceleration", (gfx::CSceneNode *)0, static_cast<SCENENODE_void_float_3X>(&gfx::CSceneNode::setAcceleration))
+
             .ObjectDirect("translate", (gfx::CSceneNode *)0, static_cast<SCENENODE_void_float_3X>(&gfx::CSceneNode::translate))
             .ObjectDirect("rotate", (gfx::CSceneNode *)0, static_cast<SCENENODE_void_float_4X>(&gfx::CSceneNode::rotate))
 
             .ObjectDirect("setHalfSize", (gfx::CSceneNode *)0, static_cast<SCENENODE_void_float_3X>(&gfx::CSceneNode::setHalfSize))
+            .ObjectDirect("setHalfSizeAndMass", (gfx::CSceneNode *)0, static_cast<SCENENODE_void_float_4X>(&gfx::CSceneNode::setHalfSizeAndMass))
             .ObjectDirect("setRadius", (gfx::CSceneNode *)0, &gfx::CSceneNode::setRadius)
 
             .ObjectDirect("isAutoScale", (gfx::CSceneNode *)0, &gfx::CSceneNode::isAutoScale)
@@ -1945,13 +1980,22 @@ fgBool script::CScriptSubsystem::register3DSceneManager(void) {
             .ObjectDirect("getScale", (gfx::CSceneNode *)0, static_cast<SCENENODE_Vec3fref_void>(&gfx::CSceneNode::getScale))
             .ObjectDirect("setScale", (gfx::CSceneNode *)0, static_cast<SCENENODE_void_float_3X>(&gfx::CSceneNode::setScale))
 
+            .ObjectDirect("setMass", (gfx::CSceneNode *)0, &gfx::CSceneNode::setMass)
+            .ObjectDirect("getMass", (gfx::CSceneNode *)0, &gfx::CSceneNode::getMass)
+
             .ObjectDirect("isEmpty", (gfx::CSceneNode *)0, &gfx::CSceneNode::isEmpty)
             .ObjectDirect("hasChildren", (gfx::CSceneNode *)0, &gfx::CSceneNode::hasChildren)
             .ObjectDirect("getChildrenCount", (gfx::CSceneNode *)0, &gfx::CSceneNode::getChildrenCount)
+
             .ObjectDirect("isVisible", (gfx::CSceneNode *)0, &gfx::CSceneNode::isVisible)
             .ObjectDirect("setVisible", (gfx::CSceneNode *)0, &gfx::CSceneNode::setVisible)
+
             .ObjectDirect("isCollidable", (gfx::CSceneNode *)0, &gfx::CSceneNode::isCollidable)
             .ObjectDirect("setCollidable", (gfx::CSceneNode *)0, &gfx::CSceneNode::setCollidable)
+
+            .ObjectDirect("activateCollisionBody", (gfx::CSceneNode *)0, &gfx::CSceneNode::setCollisionBodyType)
+            .ObjectDirect("removeCollisionBody", (gfx::CSceneNode *)0, &gfx::CSceneNode::removeCollisionBody)
+            .ObjectDirect("setCollisionBodyType", (gfx::CSceneNode *)0, &gfx::CSceneNode::setCollisionBodyType)
             ;
     //.MetatableFunction("__gc", &fgScriptSubsystem::managedResourceGCEvent); // #DELETE
 
@@ -1965,11 +2009,11 @@ fgBool script::CScriptSubsystem::register3DSceneManager(void) {
     // REGISTRATION OF SCENE MANAGER EVENT STRUCTURES
 
     // Event Base structure
-    const char *metatableNameEventBase = fgScriptMT->getMetatableName(CMetatables::EVENT_BASE_MT_ID);
+    const char* metatableNameEventBase = fgScriptMT->getMetatableName(CMetatables::EVENT_BASE_MT_ID);
 
     // Scene Node Event : EventBase
-    const char *metatableName = fgScriptMT->getMetatableName(CMetatables::EVENT_SCENE_NODE_MT_ID);
-    const char *metatableNameSceneNode = metatableName;
+    const char* metatableName = fgScriptMT->getMetatableName(CMetatables::EVENT_SCENE_NODE_MT_ID);
+    const char* metatableNameSceneNode = metatableName;
     LPCD::Class(m_luaState->GetCState(), metatableName, metatableNameEventBase)
             .Property("node", &event::SSceneNode::pNodeA)
             .Property("nodeA", &event::SSceneNode::pNodeA)
@@ -2028,9 +2072,18 @@ fgBool script::CScriptSubsystem::registerParticleSystem(void) {
     if(m_fgObj.GetRef() < 0)
         return FG_FALSE;
 
+    typedef void (gfx::CParticleSystem::*PS_void_C_STR__uint_float_3X_IN)(const char*, unsigned int, float, float, float);
+
     // Particle system/manager metatable
     m_mgrMetatables[PARTICLE_MGR] = m_fgObj.CreateTable(fgScriptMT->getMetatableName(CMetatables::PARTICLE_SYSTEM_MT_ID));
     m_mgrMetatables[PARTICLE_MGR].SetObject("__index", m_mgrMetatables[PARTICLE_MGR]);
+
+    m_mgrMetatables[PARTICLE_MGR].
+            RegisterObjectDirect("addParticles",
+                                 (gfx::CParticleSystem *)0,
+                                 static_cast<PS_void_C_STR__uint_float_3X_IN>(&gfx::CParticleSystem::addParticles));
+
+
     //m_metatableParticleMgr.Register("request", &fgScriptSubsystem::newResourceWrapper);
 
     uintptr_t offset = (uintptr_t)m_pParticleMgr;
@@ -2058,11 +2111,11 @@ int script::CScriptSubsystem::addWidgetCallbackWrapper(lua_State *L) {
 #if defined(FG_USING_LUA_PLUS)
     LuaPlus::LuaState* state = lua_State_to_LuaState(L);
     LuaPlus::LuaStack args(state);
-    const char *script = NULL;
+    const char* script = NULL;
     unsigned int callbackType = FG_GUI_WIDGET_CALLBACK_INVALID;
     LuaPlus::LuaObject objFunction;
     fgBool hasFunction = FG_FALSE;
-    const char *widgetName = NULL;
+    const char*widgetName = NULL;
     gui::CWidget *pWidget = NULL;
     int argc = 1;
     if(args.Count() == 0) {
@@ -2111,7 +2164,7 @@ int script::CScriptSubsystem::addWidgetCallbackWrapper(lua_State *L) {
             FG_LOG_DEBUG("Script: WidgetCallbackWrapper: 2nd argument: callbackType[%d]", callbackType);
         } else if(args[id].IsString()) {
             // [2] callback type - as name (string)
-            const char *ctype = args[id].GetString();
+            const char*ctype = args[id].GetString();
             if(strings::isEqual(ctype, "onFocus", FG_FALSE)) {
                 callbackType = FG_GUI_WIDGET_CALLBACK_ON_FOCUS;
 
@@ -2252,8 +2305,8 @@ fgBool script::CScriptSubsystem::registerWidgetManager(void) {
 
     typedef fgBool(gui::CWidgetManager::*GWM_Bool_Widget_IN)(gui::CWidget *);
     typedef fgBool(gui::CWidgetManager::*GWM_Bool_Widget_Widget_IN)(gui::CWidget *, gui::CWidget *);
-    typedef fgBool(gui::CWidgetManager::*GWM_Bool_C_STR_IN)(const char *);
-    typedef gui::CWidget * (gui::CWidgetManager::*GWM_Widget_C_STR_IN)(const char *);
+    typedef fgBool(gui::CWidgetManager::*GWM_Bool_C_STR_IN)(const char*);
+    typedef gui::CWidget * (gui::CWidgetManager::*GWM_Widget_C_STR_IN)(const char*);
 
     // Widget manager metatable
     m_mgrMetatables[WIDGET_MGR] = m_fgObj.CreateTable(fgScriptMT->getMetatableName(CMetatables::WIDGET_MANAGER_MT_ID));
@@ -2293,12 +2346,12 @@ fgBool script::CScriptSubsystem::registerWidgetManager(void) {
     m_userDataObjectMap[offset].isBound = FG_TRUE;
 
 
-    typedef void (gui::CWidget::*GW_void_C_STR_IN)(const char *);
-    typedef void (gui::CWidget::base_type::*GW_BASE_void_C_STR_IN)(const char *);
+    typedef void (gui::CWidget::*GW_void_C_STR_IN)(const char*);
+    typedef void (gui::CWidget::base_type::*GW_BASE_void_C_STR_IN)(const char*);
     typedef gui::CWidget * (gui::CWidget::*GW_Widget_void)(void)const;
 
-    const char *metatableNameWidget = fgScriptMT->getMetatableName(CMetatables::GUI_WIDGET_MT_ID);
-    const char *metatableName = NULL;
+    const char* metatableNameWidget = fgScriptMT->getMetatableName(CMetatables::GUI_WIDGET_MT_ID);
+    const char* metatableName = NULL;
     // Register Base Widget metatable
     LPCD::Class(m_luaState->GetCState(), metatableNameWidget)
             .ObjectDirect("getName", (gui::CWidget::base_type *)0, &gui::CWidget::base_type::getNameStr)
@@ -2368,7 +2421,7 @@ fgBool script::CScriptSubsystem::registerWidgetManager(void) {
             .MetatableFunction("__gc", &script::CScriptSubsystem::managedObjectTypedGCEvent<fg::gui::WidgetHandle>);
     m_fgObj.Register("ToggleButton", &script::CScriptSubsystem::managedObjectTypedNewEvent<gui::CToggleButton, CMetatables::GUI_TOGGLE_BUTTON_MT_ID>);
 
-    typedef fgBool(gui::CContainer::*GCNT_Bool_C_STR_IN)(const char *);
+    typedef fgBool(gui::CContainer::*GCNT_Bool_C_STR_IN)(const char*);
     typedef fgBool(gui::CContainer::*GCNT_Bool_Widget_IN)(gui::CWidget *);
 
     // Register Gui Container metatable
@@ -2499,9 +2552,9 @@ fgBool script::CScriptSubsystem::registerWidgetManager(void) {
     // The metatable for these will not have __gc function set
     // #SAFEDESIGN #FIXME #PTRSAFE
     //
-    typedef void (gui::CStyle::*GS_void_C_STR_IN)(const char *);
-    typedef void (gui::CStyle::base_type::base_type::*GS_BASE_void_C_STR_IN)(const char *);
-    typedef gui::CStyleContent * (gui::CStyle::*GS_StyleContent_C_STR_IN)(const char *);
+    typedef void (gui::CStyle::*GS_void_C_STR_IN)(const char*);
+    typedef void (gui::CStyle::base_type::base_type::*GS_BASE_void_C_STR_IN)(const char*);
+    typedef gui::CStyleContent * (gui::CStyle::*GS_StyleContent_C_STR_IN)(const char*);
 
     // Register Gui Style metatable
     //
@@ -2510,7 +2563,7 @@ fgBool script::CScriptSubsystem::registerWidgetManager(void) {
     // Thanks to this there will be less copy pasting of the same 
     // function pointers definitions ...
     // 
-    const char *metatableNameStyle = fgScriptMT->getMetatableName(CMetatables::GUI_STYLE_MT_ID);
+    const char* metatableNameStyle = fgScriptMT->getMetatableName(CMetatables::GUI_STYLE_MT_ID);
     LPCD::Class(m_luaState->GetCState(), metatableNameStyle)
             .ObjectDirect("getName",
                           (gui::CStyle::base_type::base_type *)0,
@@ -2609,7 +2662,7 @@ fgBool script::CScriptSubsystem::registerWidgetManager(void) {
 
     // Register Gui Style Content metatable - this metatable is without GC ! ! !
     //    
-    const char *metatableNameStyleContent = fgScriptMT->getMetatableName(CMetatables::GUI_STYLE_CONTENT_MT_ID);
+    const char* metatableNameStyleContent = fgScriptMT->getMetatableName(CMetatables::GUI_STYLE_CONTENT_MT_ID);
     LPCD::Class(m_luaState->GetCState(), metatableNameStyleContent)
             //.Property("shader", &fgGuiStyle) // NOPE ?
             .ObjectDirect("getBackground", (gui::CStyleContent *)0, &gui::CStyleContent::getBackground)
@@ -2675,8 +2728,8 @@ fgBool script::CScriptSubsystem::registerSoundManager(void) {
         return FG_TRUE;
     if(m_fgObj.GetRef() < 0)
         return FG_FALSE;
-    typedef fgBool(sfx::CSfxManager::*SFX_Bool_C_STR_IN)(const char *);
-    typedef sfx::base::CAudio * (sfx::CSfxManager::*SFX_CAudio_C_STR_IN)(const char *);
+    typedef fgBool(sfx::CSfxManager::*SFX_Bool_C_STR_IN)(const char*);
+    typedef sfx::base::CAudio * (sfx::CSfxManager::*SFX_CAudio_C_STR_IN)(const char*);
 
     // Sound manager metatable
     m_mgrMetatables[SOUND_MGR] = m_fgObj.CreateTable(fgScriptMT->getMetatableName(CMetatables::SOUND_MANAGER_MT_ID));
@@ -2754,8 +2807,8 @@ fgBool script::CScriptSubsystem::registerLogicManager(void) {
     if(m_fgObj.GetRef() < 0)
         return FG_FALSE;
 
-    typedef fgBool(fg::game::Logic::*LOGIC_Bool_C_STR_IN)(const char *);
-    typedef void(fg::game::Logic::*LOGIC_void_C_STR_IN)(const char *);
+    typedef fgBool(fg::game::Logic::*LOGIC_Bool_C_STR_IN)(const char*);
+    typedef void(fg::game::Logic::*LOGIC_void_C_STR_IN)(const char*);
     typedef void(fg::game::Logic::*LOGIC_void_UINT_IN)(const unsigned int);
 
     // Game Logic manager metatable
