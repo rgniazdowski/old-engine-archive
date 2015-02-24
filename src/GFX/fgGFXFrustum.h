@@ -157,7 +157,7 @@ namespace fg {
              * 
              * @return 
              */
-            fgPlanef *getPlanes(void) {
+            Planef *getPlanes(void) {
                 return m_planes;
             }
             /**
@@ -177,7 +177,7 @@ namespace fg {
 
         private:
             ///
-            fgPlanef m_planes[NUM_PLANES];
+            Planef m_planes[NUM_PLANES];
 
             struct {
                 /// Near Top Left
