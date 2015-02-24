@@ -33,23 +33,27 @@ namespace fg {
         public:
             /// Base type of the ParticleEmitter
             typedef fg::gfx::CSceneNode base_type;
+            ///
+            typedef CParticleEmitter self_type;
+            ///
+            typedef CParticleEmitter type;
             /// Vector type definition for holding Particle Effects
-            typedef fg::CVector<CParticleEffect *> particleEffects;
+            typedef CVector<CParticleEffect *> ParticleEffects;
             /// Iterator for the ParticleEffects vector
-            typedef particleEffects::iterator particleEffectsItor;
+            typedef ParticleEffects::iterator ParticleEffectsItor;
             /// Vector type holding Particles
-            typedef fg::CVector<SParticle> particleData;
+            typedef CVector<SParticle> ParticleData;
             /// Iterator for the Particles vector
-            typedef particleData::iterator particleDataItor;
+            typedef ParticleData::iterator ParticleDataItor;
 
         private:
             /// Pointers to the particle effects to which
             /// this particle emitter is bound
-            particleEffects m_effects;
+            ParticleEffects m_effects;
             /// Origin of the emitter (world space)
             Vector3f m_origin;
             /// Particle data used for manipulation, drawing
-            particleData m_particles;
+            ParticleData m_particles;
             /// Current number of particles in the emitter
             unsigned int m_numParticles;
             /// Maximum number of the particles for this emitter 
@@ -100,7 +104,7 @@ namespace fg {
              * 
              * @return 
              */
-            inline particleData& getParticleData(void) {
+            inline ParticleData& getParticleData(void) {
                 return m_particles;
             }
             /**

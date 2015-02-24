@@ -46,8 +46,16 @@ namespace fg {
          */
         class CParticleSystem : public fg::base::CManager {
         public:
-            typedef CVector<CParticleEmitter *> emittersVec;
-            typedef emittersVec::iterator emittersVecItor;
+            ///
+            typedef fg::base::CManager base_type;
+            ///
+            typedef CParticleSystem self_type;
+            ///
+            typedef CParticleSystem type;
+            ///
+            typedef CVector<CParticleEmitter *> EmittersVec;
+            ///
+            typedef EmittersVec::iterator EmittersVecItor;
 
         private:
             /// Pointer to the external resource manager
@@ -55,13 +63,14 @@ namespace fg {
             /// Pointer to the external scene manager
             fg::base::CManager *m_pSceneMgr;
             /// Emitters vector
-            emittersVec m_emitters;
+            EmittersVec m_emitters;
 
         public:
             /**
              * 
              */
-            CParticleSystem(fg::base::CManager *pResourceMgr = NULL, fg::base::CManager *pSceneMgr = NULL);
+            CParticleSystem(fg::base::CManager *pResourceMgr = NULL,
+                            fg::base::CManager *pSceneMgr = NULL);
             /**
              * 
              */
@@ -93,6 +102,21 @@ namespace fg {
              * @return 
              */
             fgBool isEmitterInTheArray(const char *emitterNameTag);
+            
+            /**
+             * 
+             * @param systemData
+             * @param userData
+             * @return 
+             */
+            static fgBool managedObjectDestructorCallback(void *systemData, void *userData);
+            
+            /**
+             * 
+             * @param args
+             * @return 
+             */
+            fgBool sceneClearedCallback(CSceneNode* pNodeA, CSceneNode* pNodeB);
 
         public:
             /**
@@ -113,9 +137,7 @@ namespace fg {
              * 
              * @param pSceneMgr
              */
-            inline void setSceneManager(fg::base::CManager *pSceneMgr) {
-                m_pSceneMgr = pSceneMgr;
-            }
+            void setSceneManager(fg::base::CManager *pSceneMgr);
             /**
              * 
              * @return 
@@ -124,6 +146,7 @@ namespace fg {
                 return m_pSceneMgr;
             }
 
+        public:
             /**
              * 
              * @param pEmitter
@@ -235,6 +258,53 @@ namespace fg {
              * 
              */
             virtual void calculate(void);
+
+            ////////////////////////////////////////////////////////////////////
+
+        public:
+            /**
+             * 
+             * @param particleEmitterNameTag
+             * @param numParticles
+             * @param origin
+             */
+            void addParticles(const std::string& emitterNameTag,
+                              unsigned int numParticles,
+                              const Vector3f& origin);
+
+            /**
+             * 
+             * @param particleEmitterNameTag
+             * @param numParticles
+             * @param origin
+             */
+            void addParticles(const char* emitterNameTag,
+                              unsigned int numParticles,
+                              const Vector3f& origin);
+
+            /**
+             * 
+             * @param particleEmitterNameTag
+             * @param numParticles
+             * @param x
+             * @param y
+             * @param z
+             */
+            void addParticles(const std::string& emitterNameTag,
+                              unsigned int numParticles,
+                              float x, float y, float z);
+
+            /**
+             * 
+             * @param particleEmitterNameTag
+             * @param numParticles
+             * @param x
+             * @param y
+             * @param z
+             */
+            void addParticles(const char* emitterNameTag,
+                              unsigned int numParticles,
+                              float x, float y, float z);
 
         };
     };

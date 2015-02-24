@@ -263,7 +263,7 @@ void gfx::CParticleEmitter::calculate(void) {
             Vector3f &center = m_pCamera->getRefCenter();
             Vector3f &eye = m_pCamera->getRefEye();
             const Vector3f direction = math::normalize(center - eye);
-            
+
             // Find the rotation between the front of the object (that we assume towards +Z, 
             // but this depends on your model) and the desired direction 
             Quatf rot1 = RotationBetweenVectors(Vec3f(0.0f, 0.0f, 1.0f), direction);
@@ -322,8 +322,6 @@ void gfx::CParticleEmitter::calculate(void) {
  */
 void gfx::CParticleEmitter::draw(void) {
     //glEnable(GL_POLYGON_OFFSET_FILL);
-    //glDisable(GL_CULL_FACE);
-    //glDisable(GL_DEPTH_TEST);
     //glPolygonOffset(1.0f, 2.0f);
     //m_drawCall->setZIndex(45); // #FIXME
     // #FIXME - such things should be set inside of a material
@@ -338,6 +336,5 @@ void gfx::CParticleEmitter::draw(void) {
     CPlatform::context()->setCullFace(FG_TRUE);
     CPlatform::context()->setBlend(FG_FALSE);
 
-    //glEnable(GL_DEPTH_TEST);
     //glDisable(GL_POLYGON_OFFSET_FILL);
 }

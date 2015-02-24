@@ -14,17 +14,22 @@
  */
 
 #include "fgParticleSystem.h"
+
 #include "Resource/fgResourceManager.h"
-#include "GFX/Scene/fgGFXSceneManager.h"
+
 #include "GFX/Textures/fgTextureResource.h"
 #include "GFX/Shaders/fgGFXShaderManager.h"
+#include "GFX/Scene/fgGFXSceneEvent.h"
+#include "GFX/Scene/fgGFXSceneCallback.h"
+#include "GFX/Scene/fgGFXSceneManager.h"
 
 using namespace fg;
 
 /**
  * 
  */
-gfx::CParticleSystem::CParticleSystem(fg::base::CManager *pResourceMgr, fg::base::CManager *pSceneMgr) {
+gfx::CParticleSystem::CParticleSystem(fg::base::CManager *pResourceMgr,
+                                      fg::base::CManager *pSceneMgr) {
     setResourceManager(pResourceMgr);
     setSceneManager(pSceneMgr);
 }
@@ -41,6 +46,68 @@ gfx::CParticleSystem::~CParticleSystem() {
  */
 void gfx::CParticleSystem::clear() {
     // ?
+}
+
+/**
+ * 
+ * @param systemData
+ * @param userData
+ * @return 
+ */
+fgBool gfx::CParticleSystem::managedObjectDestructorCallback(void *systemData, void *userData) {
+    if(!systemData || !userData)
+        return FG_FALSE;
+
+    // systemData is pointer to the object being destroyed
+    // userData - is the pointer to the particle system instance, 
+    // it was passed to the registering function
+
+    CParticleEmitter *pEmitter = (CParticleEmitter *)systemData;
+    CParticleSystem *pSystem = (CParticleSystem *)userData;
+
+    if(!pEmitter->isRegistered(&CParticleSystem::managedObjectDestructorCallback)) {
+        // If this function is not registered - this is not a valid call to the
+        // destructor callback
+        return FG_FALSE;
+    }
+
+    int index = pSystem->m_emitters.find(pEmitter);
+    unsigned int n = pSystem->m_emitters.size();
+    if(index != -1) {
+        pSystem->m_emitters[index] = NULL;
+    }
+
+    return FG_TRUE;
+}
+
+/**
+ * 
+ * @param args
+ * @return 
+ */
+fgBool gfx::CParticleSystem::sceneClearedCallback(CSceneNode* pNodeA, CSceneNode* pNodeB) {
+    // The scene was cleared - destroy all emitters
+    if(m_init) {
+        this->destroy(); // #FIXME
+        m_init = FG_TRUE;
+    }
+    return FG_TRUE;
+}
+
+/**
+ * 
+ * @param pSceneMgr
+ */
+void gfx::CParticleSystem::setSceneManager(fg::base::CManager* pSceneMgr) {
+    if(m_pSceneMgr != pSceneMgr && pSceneMgr) {
+        if(pSceneMgr->getManagerType() == FG_MANAGER_SCENE) {
+            //static_cast<CSceneManager *>(pSceneMgr)->getEventManager()->
+            CSceneCallback *pCallback = new CSceneMethodCallback<gfx::CParticleSystem>(this, &CParticleSystem::sceneClearedCallback);
+            //pCallback->setFunction(&CParticleSystem());
+            static_cast<CSceneManager *>(pSceneMgr)->addCallback(event::SCENE_CLEARED, pCallback);
+        }
+    }
+    m_pSceneMgr = pSceneMgr;
 }
 
 /**
@@ -106,8 +173,6 @@ fgBool gfx::CParticleSystem::isEmitterInTheArray(const char *emitterNameTag) {
 fgBool gfx::CParticleSystem::isEmitterInTheScene(const CParticleEmitter *pEmitter) {
     if(!pEmitter || !m_pSceneMgr)
         return FG_FALSE;
-
-    //if(m_emitters.find(pEmitter))
 
     return static_cast<CSceneManager *>(m_pSceneMgr)->isManaged(pEmitter);
 }
@@ -188,7 +253,6 @@ fgBool gfx::CParticleSystem::destroy(void) {
         }
     }
     m_emitters.clear_optimised();
-    //m_emitters.resize(0);
     return FG_TRUE;
 }
 
@@ -325,10 +389,10 @@ gfx::CParticleEmitter* gfx::CParticleSystem::insertParticleEmitter(const std::st
     // by the particle manager // #FIXME - this needs be more obvious
     pEmitter->setManaged(FG_FALSE);
     m_emitters.push_back(pEmitter);
+    pEmitter->registerOnDestruct(&CParticleSystem::managedObjectDestructorCallback, (void *)this);
     // Should now set managed to false
     // Store it in some array ?
     // Refresh?
-
     return pEmitter;
 }
 
@@ -410,5 +474,69 @@ void gfx::CParticleSystem::calculate(void) {
             }
         }
         pEmitter->calculate();
+    }
+}
+
+/**
+ * 
+ * @param particleEmitterNameTag
+ * @param numParticles
+ * @param origin
+ */
+void gfx::CParticleSystem::addParticles(const std::string& emitterNameTag,
+                                        unsigned int numParticles,
+                                        const Vector3f& origin) {
+    CParticleEmitter *pEmitter = (CParticleEmitter *)static_cast<CSceneManager *>(m_pSceneMgr)->get(emitterNameTag);
+    if(pEmitter) {
+        pEmitter->addParticles(numParticles, origin);
+    }
+}
+
+/**
+ * 
+ * @param particleEmitterNameTag
+ * @param numParticles
+ * @param origin
+ */
+void gfx::CParticleSystem::addParticles(const char* emitterNameTag,
+                                        unsigned int numParticles,
+                                        const Vector3f& origin) {
+    CParticleEmitter *pEmitter = (CParticleEmitter *)static_cast<CSceneManager *>(m_pSceneMgr)->get(emitterNameTag);
+    if(pEmitter) {
+        pEmitter->addParticles(numParticles, origin);
+    }
+}
+
+/**
+ * 
+ * @param particleEmitterNameTag
+ * @param numParticles
+ * @param x
+ * @param y
+ * @param z
+ */
+void gfx::CParticleSystem::addParticles(const std::string& emitterNameTag,
+                                        unsigned int numParticles,
+                                        float x, float y, float z) {
+    CParticleEmitter *pEmitter = (CParticleEmitter *)static_cast<CSceneManager *>(m_pSceneMgr)->get(emitterNameTag);
+    if(pEmitter) {
+        pEmitter->addParticles(numParticles, Vector3f(x, y, z));
+    }
+}
+
+/**
+ * 
+ * @param particleEmitterNameTag
+ * @param numParticles
+ * @param x
+ * @param y
+ * @param z
+ */
+void gfx::CParticleSystem::addParticles(const char* emitterNameTag,
+                                        unsigned int numParticles,
+                                        float x, float y, float z) {
+    CParticleEmitter *pEmitter = (CParticleEmitter *)static_cast<CSceneManager *>(m_pSceneMgr)->get(emitterNameTag);
+    if(pEmitter) {
+        pEmitter->addParticles(numParticles, Vector3f(x, y, z));
     }
 }
