@@ -24,6 +24,20 @@ const unsigned short gfx::SMeshSoA::INDICES_VBO_ARRAY_IDX = 3;
  * MESH SOA FUNCTIONS - STRUCTURE OF ARRAYS
  ******************************************************************************/
 
+void gfx::SMeshSoA::fixCenter(void) {
+    const unsigned int n = this->vertices.size() / 3;
+    if(!n)
+        return;
+    const Vector3f center = this->aabb.getCenter();
+    const void *data = (const void *)&this->vertices.front();
+    for(unsigned int i = 0; i < n; i++) {
+        for(unsigned int j = 0; j < 3; j++) {
+            this->vertices[i + j] -= center[j];
+        }
+    }
+    this->aabb.setBoundsFromData(data, sizeof(Vector3f), n);
+}
+
 /**
  * Get the indices VBO ID
  * @return  GFX id for indices VBO or 0 if not generated or invalid
@@ -295,6 +309,21 @@ const unsigned short gfx::SMeshAoS::NORMALS_VBO_ARRAY_IDX = 0;
 const unsigned short gfx::SMeshAoS::TEX_COORDS_VBO_ARRAY_IDX = 0;
 const unsigned short gfx::SMeshAoS::UVS_VBO_ARRAY_IDX = 0;
 const unsigned short gfx::SMeshAoS::INDICES_VBO_ARRAY_IDX = 1;
+
+/**
+ * 
+ */
+void gfx::SMeshAoS::fixCenter(void) {
+    const unsigned int n = this->vertices.size();
+    if(!n)
+        return;
+    const Vector3f center = this->aabb.getCenter();
+    const void *data = this->vertices.front();
+    for(unsigned int i = 0; i < n; i++) {
+        this->vertices[i].position -= center;
+    }
+    this->aabb.setBoundsFromData(data, vertices.stride(), n);
+}
 
 /**
  * Get the indices VBO ID

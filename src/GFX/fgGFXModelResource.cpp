@@ -318,7 +318,7 @@ fgBool gfx::CModelResource::create(void) {
     };
 
     if(!this->m_size) return FG_FALSE;
-    updateAABB();
+    this->updateAABB();
     return FG_TRUE;
 }
 
@@ -380,6 +380,7 @@ void gfx::CModelResource::updateAABB(void) {
     for(int i = 0; i < n; i++) {
         if(m_shapes[i]->mesh) {
             m_shapes[i]->updateAABB();
+            m_shapes[i]->mesh->fixCenter(); 
             m_aabb.merge(m_shapes[i]->mesh->aabb);
         }
     }

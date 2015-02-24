@@ -78,6 +78,10 @@ namespace fg {
              * 
              */
             virtual void updateAABB(void) = 0;
+            /**
+             * 
+             */
+            virtual void fixCenter(void) = 0;
         };
 
         /**
@@ -157,6 +161,10 @@ namespace fg {
                 // divide vertices size by 3 
                 this->aabb.setBoundsFromData(data, sizeof (Vector3f), vertices.size() / 3);
             }
+            /**
+             * 
+             */
+            virtual void fixCenter(void);
             /**
              * Returns whether the vertex data supports/generates VBOs
              * @return 
@@ -461,7 +469,6 @@ namespace fg {
             /// #FIXME Need to check for OGL version, ushort is mandatory on ES2
             fg::CVector<fgGFXushort> indices;
 
-
             static const unsigned short POSITIONS_VBO_ARRAY_IDX;
             static const unsigned short VERTICES_VBO_ARRAY_IDX;
             static const unsigned short NORMALS_VBO_ARRAY_IDX;
@@ -527,6 +534,10 @@ namespace fg {
                 // Here size does not need to be divided - AoS
                 this->aabb.setBoundsFromData(data, vertices.stride(), vertices.size());
             }
+            /**
+             *
+             */
+            virtual void fixCenter(void);
             /**
              * Clear the internal data arrays
              */
