@@ -305,7 +305,7 @@ void gfx::CPrimitives::createSphereMesh(fg::gfx::SMeshBase *mesh,
             }
         }
     }
-    mesh->primMode = PrimitiveMode::TRIANGLE_STRIP;
+    mesh->primMode = PrimitiveMode::TRIANGLES;
 }
 
 void gfx::CPrimitives::createCubeMesh(fg::gfx::SMeshBase *mesh,
