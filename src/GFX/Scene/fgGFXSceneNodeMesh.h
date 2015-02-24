@@ -59,14 +59,23 @@ namespace fg {
              * 
              * @return 
              */
-            SMeshBase *getMesh(void) const {
+            SMeshBase* getMesh(void) const {
                 return m_pMesh;
+            }
+            
+            SMaterial* getMaterial(void) const {
+                return m_pMaterial;
             }
             /**
              * 
              * @param pMesh
              */
             virtual void setMesh(SMeshBase *pMesh);
+            /**
+             * 
+             * @param pMaterial
+             */
+            void setMaterial(SMaterial *pMaterial);
             
             /**
              * 
@@ -77,7 +86,8 @@ namespace fg {
         private:
             /// Pointer to external mesh that this object represents
             SMeshBase *m_pMesh;
-
+            ///
+            SMaterial *m_pMaterial;
         };
     };
 };

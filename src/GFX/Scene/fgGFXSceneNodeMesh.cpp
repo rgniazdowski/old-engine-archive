@@ -58,12 +58,15 @@ gfx::CSceneNodeMesh::~CSceneNodeMesh() { }
  * 
  */
 void gfx::CSceneNodeMesh::refreshGfxInternals(void) {
-   if(!m_pManager)
-       return;
-   if(m_pManager->getManagerType() != FG_MANAGER_SCENE) {
-       return;
-   }
-   // ?? #FIXME
+    if(!m_pManager)
+        return;
+    if(m_pManager->getManagerType() != FG_MANAGER_SCENE) {
+        return;
+    }
+    if(m_drawCall) {
+        m_drawCall->setupFromMesh(m_pMesh);
+        m_drawCall->setupMaterial(m_pMaterial);
+    }
 }
 
 /**
@@ -71,6 +74,7 @@ void gfx::CSceneNodeMesh::refreshGfxInternals(void) {
  * @param pMesh
  */
 void gfx::CSceneNodeMesh::setMesh(SMeshBase* pMesh) {
+    m_pMesh = pMesh;
     if(!pMesh)
         return;
     base_type::setNodeType(SCENE_NODE_MESH);
@@ -78,4 +82,17 @@ void gfx::CSceneNodeMesh::setMesh(SMeshBase* pMesh) {
         m_drawCall->setupFromMesh(pMesh);
     }
     setBoundingVolume(pMesh->aabb);
+}
+
+/**
+ * 
+ * @param pMaterial
+ */
+void gfx::CSceneNodeMesh::setMaterial(SMaterial *pMaterial) {
+    m_pMaterial = pMaterial;
+    if(!pMaterial)
+        return;
+    if(m_drawCall) {
+        m_drawCall->setupMaterial(pMaterial);
+    }
 }
