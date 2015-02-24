@@ -1,5 +1,6 @@
-/*******************************************************
- * Copyright (C) 2014 Radoslaw Gniazdowski <contact@flexigame.com>. All rights reserved.
+/*******************************************************************************
+ * Copyright (C) Radoslaw Gniazdowski <contact@flexigame.com>.
+ * All rights reserved.
  *
  * This file is part of FlexiGame: Flexible Game Engine
  *
@@ -313,7 +314,7 @@ fgBool resource::CResourceManager::insertResource(CResource* pResource) {
             return FG_FALSE;
     } else
         m_bResourceReserved = FG_FALSE;
-    
+
     return FG_TRUE;
 }
 
@@ -536,7 +537,8 @@ resource::CResource* resource::CResourceManager::request(const char *info) {
  * @param forcedType
  * @return 
  */
-resource::CResource* resource::CResourceManager::request(const std::string& info, const ResourceType forcedType) {
+resource::CResource* resource::CResourceManager::request(const std::string& info,
+                                                         const ResourceType forcedType) {
     if(!m_dataDir || !m_init || !m_pResourceFactory || info.empty())
         return NULL;
     CResource *resourcePtr = NULL;

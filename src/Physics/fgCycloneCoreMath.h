@@ -1,5 +1,6 @@
-/*******************************************************
- * Copyright (C) 2014 Radoslaw Gniazdowski <contact@flexigame.com>. All rights reserved.
+/*******************************************************************************
+ * Copyright (C) Radoslaw Gniazdowski <contact@flexigame.com>.
+ * All rights reserved.
  * 
  * This file is part of FlexiGame: Flexible Game Engine
  * 
@@ -116,6 +117,11 @@
 
 namespace fg {
     namespace physics {
+
+        template <typename T, math::precision P>
+        GLM_FUNC_DECL math::detail::tmat4x4<T, P> transform(math::detail::tmat4x4<T, P> const & m1,
+                                                            math::detail::tmat4x4<T, P> const & m2);
+
         template <typename T, math::precision P>
         GLM_FUNC_DECL math::detail::tvec3<T, P> transform(math::detail::tmat4x4<T, P> const & m,
                                                           math::detail::tvec3<T, P> const & v);
@@ -131,6 +137,38 @@ namespace fg {
         template <typename T, math::precision P>
         GLM_FUNC_DECL math::detail::tvec3<T, P> transformInverseDirection(math::detail::tmat4x4<T, P> const & m,
                                                                           math::detail::tvec3<T, P> const & v);
+        /**
+         * 
+         * @param m1
+         * @param m2
+         * @return 
+         */
+        template <typename T, math::precision P>
+        GLM_FUNC_QUALIFIER math::detail::tmat4x4<T, P> transform(math::detail::tmat4x4<T, P> const & m1,
+                                                                 math::detail::tmat4x4<T, P> const & m2) {
+            math::detail::tmat4x4<T, P> result;
+            const float *data = math::value_ptr(m1);
+            const float *o_data = math::value_ptr(m1);
+            float *result_data = math::value_ptr(result);
+
+            result_data[0] = (o_data[0] * data[0]) + (o_data[4] * data[1]) + (o_data[8] * data[2]);
+            result_data[4] = (o_data[0] * data[4]) + (o_data[4] * data[5]) + (o_data[8] * data[6]);
+            result_data[8] = (o_data[0] * data[8]) + (o_data[4] * data[9]) + (o_data[8] * data[10]);
+
+            result_data[1] = (o_data[1] * data[0]) + (o_data[5] * data[1]) + (o_data[9] * data[2]);
+            result_data[5] = (o_data[1] * data[4]) + (o_data[5] * data[5]) + (o_data[9] * data[6]);
+            result_data[9] = (o_data[1] * data[8]) + (o_data[5] * data[9]) + (o_data[9] * data[10]);
+
+            result_data[2] = (o_data[2] * data[0]) + (o_data[6] * data[1]) + (o_data[10] * data[2]);
+            result_data[6] = (o_data[2] * data[4]) + (o_data[6] * data[5]) + (o_data[10] * data[6]);
+            result_data[10] = (o_data[2] * data[8]) + (o_data[6] * data[9]) + (o_data[10] * data[10]);
+
+            result_data[3] = (o_data[3] * data[0]) + (o_data[7] * data[1]) + (o_data[11] * data[2]) + data[3];
+            result_data[7] = (o_data[3] * data[4]) + (o_data[7] * data[5]) + (o_data[11] * data[6]) + data[7];
+            result_data[11] = (o_data[3] * data[8]) + (o_data[7] * data[9]) + (o_data[11] * data[10]) + data[11];
+            result_data[15] = 1.0f;
+            return result;
+        }
         /**
          * 
          * @param m
