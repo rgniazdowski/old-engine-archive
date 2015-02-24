@@ -1020,6 +1020,16 @@ fgBool gfx::CSceneManager::addNode(SceneNodeHandle& nodeUniqueID,
         m_collisionsInfo.reserve((unsigned int)((float)handle_mgr_type::getRefDataVector().size()*1.5f) + 32);
     }
 
+    if(m_eventMgr) {
+        event::SSceneNode* nodeEvent = (event::SSceneNode*) m_eventMgr->requestEventStruct();
+        nodeEvent->eventType = event::SCENE_NODE_INSERTED;
+        nodeEvent->pNodeA = pNode;
+        nodeEvent->pNodeB = NULL;
+
+        event::CArgumentList *argList = m_eventMgr->requestArgumentList();
+        argList->push(event::SArgument::Type::ARG_TMP_POINTER, (void *)nodeEvent);
+        m_eventMgr->throwEvent(event::SCENE_NODE_INSERTED, argList);
+    }
     return FG_TRUE;
 }
 
