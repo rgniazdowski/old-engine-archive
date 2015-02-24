@@ -1,4 +1,4 @@
 
-<ResourceGroup name="EndlessFlyingTextures" priority="medium">
+<ResourceGroup name="EndlessFlyingTextures" priority="medium" forceCreate="true">
 	<Texture config="textures/skybox/PurpleNebulaCube.res.ini" />
 </ResourceGroup>
