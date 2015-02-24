@@ -26,7 +26,6 @@
 
 #include "Physics/fgWorld.h"
 
-
 using namespace fg;
 
 /**
@@ -40,6 +39,7 @@ m_octree(NULL) {
     m_octree = new CLooseOctree();
     m_basetree = (CBasetree *)m_octree;
     m_physicsWorld = new physics::CWorld(256);
+//    setFrustumCheckSphere(FG_TRUE);
 }
 
 /**
@@ -66,6 +66,12 @@ void gfx::CScene3D::sortCalls(void) {
     if(!getShaderManager())
         return;
 
+    if(isLinearTraverse()) {
+        // #FIXME
+        CSceneManager::sortCalls();
+        return;
+    }
+
     if(m_physicsWorld) {
         m_physicsWorld->startFrame();
     }
@@ -85,6 +91,7 @@ void gfx::CScene3D::sortCalls(void) {
         if(!(*itor).data)
             continue;
         CSceneNode *sceneNode = (*itor).data;
+        sceneNode->refreshGfxInternals();
         SOctreeNode *treeNode = static_cast<SOctreeNode *>(sceneNode->getTreeNode());
         sceneNode->setVisible(FG_FALSE);
         // There is a problem because the bounding box needs to be modified by
@@ -93,7 +100,10 @@ void gfx::CScene3D::sortCalls(void) {
 
         // checkCollisions rewinds the octree/quadtree
         // should not be called within the tree traversal
-        checkCollisions(sceneNode); // broadphase - this uses loose octree - more fast would be dynamic AABBtree ?
+        if(!isIgnoreCollisions()) {
+            // broadphase - this uses loose octree - more fast would be dynamic AABBtree ?
+            checkCollisions(sceneNode);
+        }
         if(treeNode) {
             //unsigned int objCount = treeNode->objects.size();
             float halfSize = static_cast<CLooseOctree *>(m_octree)->getLooseK() * m_octree->getWorldSize().x / (2 << treeNode->depth);
@@ -144,12 +154,18 @@ void gfx::CScene3D::sortCalls(void) {
                 profile::g_debugProfiling->begin("GFX::Scene::FrustumCheck");
             }
 #endif
-            int boxtest = frustum.testVolume(sceneNode->getRefBoundingVolume());
-            //int spheretest = (int)m_MVP.getRefFrustum().testSphere(fgVector3f(pNode->getRefModelMatrix()[3]), 30.0f);
-            if(!boxtest)
+            int visibilityResult = 1;
+            if(isFrustumCheck()) {
+                visibilityResult = frustum.testVolume(sceneNode->getRefBoundingVolume());
+            } else if(isFrustumCheckSphere()) {
+                visibilityResult = frustum.testSphere(sceneNode->getRefBoundingVolume());
+            }
+            if(!visibilityResult) {
                 sceneNode->setVisible(FG_FALSE);
-            else
+            } else {
                 sceneNode->setVisible(FG_TRUE);
+            }
+
 #if defined(FG_DEBUG)
             if(g_fgDebugConfig.isDebugProfiling) {
                 profile::g_debugProfiling->end("GFX::Scene::FrustumCheck");
@@ -169,8 +185,7 @@ void gfx::CScene3D::sortCalls(void) {
             }
             if(pDrawCall) {
                 if(!pDrawCall->getShaderProgram())
-                    pDrawCall->setShaderProgram(((gfx::CShaderManager *)getShaderManager())->getCurrentProgram());
-                //pDrawCall->setModelMatrix(pObj->getRefModelMatrix());
+                    pDrawCall->setShaderProgram(((gfx::CShaderManager *)getShaderManager())->getCurrentProgram());                
                 // getRefPriorityQueue().push(pDrawCall);
             }
         }
@@ -185,6 +200,9 @@ void gfx::CScene3D::sortCalls(void) {
  * 
  */
 void gfx::CScene3D::render(void) {
+    if(isHideAll()) {
+        return;
+    }
     // Calling underlying render function of the scene manager
     // This uses the special node queue, which contains only visible scene nodes
     // at the current render frame
@@ -348,13 +366,13 @@ void gfx::CScene3D::checkCollisions(const CSceneNode* sceneNode) {
                         m_triggers.push_back(info);
                     }
                     m_collisionsInfo.insert(childNode, sceneNode);
-                    if(nodeType != gfx::SCENE_NODE_TRIGGER && childType != gfx::SCENE_NODE_TRIGGER) {                        
+                    if(nodeType != gfx::SCENE_NODE_TRIGGER && childType != gfx::SCENE_NODE_TRIGGER) {
                         FG_LOG_DEBUG("*INSERTING*  Collision BEGUN between: '%s'--'%s'\n", sceneNode->getNameStr(), childNode->getNameStr());
                         event::SSceneNodeCollision* collisionEvent = (event::SSceneNodeCollision*) getEventManager()->requestEventStruct();
                         collisionEvent->eventType = event::SCENE_NODE_COLLISION;
                         collisionEvent->pNodeA = const_cast<CSceneNode*>(sceneNode);
                         collisionEvent->pNodeB = const_cast<CSceneNode*>(childNode);
-                        
+
                         event::CArgumentList *argList = getEventManager()->requestArgumentList();
                         argList->push(event::SArgument::Type::ARG_TMP_POINTER, (void *)collisionEvent);
                         getEventManager()->throwEvent(event::SCENE_NODE_COLLISION, argList);
@@ -365,18 +383,18 @@ void gfx::CScene3D::checkCollisions(const CSceneNode* sceneNode) {
             } else if(isLastFrameCollision) {
                 // Check for special trigger nodes - two trigger nodes cannot collide                
                 if(childType == gfx::SCENE_NODE_TRIGGER &&
-                       nodeType != gfx::SCENE_NODE_TRIGGER) {
-                        TriggerInfo info(NULL, NULL, FG_FALSE);
-                        info.pTrigger = static_cast<CSceneNodeTrigger*>(const_cast<CSceneNode*>(childNode));
-                        info.pNodeB = const_cast<CSceneNode*>(sceneNode);
-                        m_triggers.push_back(info);
-                    } else if(childType != gfx::SCENE_NODE_TRIGGER &&
-                              nodeType == gfx::SCENE_NODE_TRIGGER) {
-                        TriggerInfo info(NULL, NULL, FG_FALSE);
-                        info.pTrigger = static_cast<CSceneNodeTrigger*>(const_cast<CSceneNode*>(sceneNode));
-                        info.pNodeB = const_cast<CSceneNode*>(childNode);
-                        m_triggers.push_back(info);
-                    }
+                   nodeType != gfx::SCENE_NODE_TRIGGER) {
+                    TriggerInfo info(NULL, NULL, FG_FALSE);
+                    info.pTrigger = static_cast<CSceneNodeTrigger*>(const_cast<CSceneNode*>(childNode));
+                    info.pNodeB = const_cast<CSceneNode*>(sceneNode);
+                    m_triggers.push_back(info);
+                } else if(childType != gfx::SCENE_NODE_TRIGGER &&
+                          nodeType == gfx::SCENE_NODE_TRIGGER) {
+                    TriggerInfo info(NULL, NULL, FG_FALSE);
+                    info.pTrigger = static_cast<CSceneNodeTrigger*>(const_cast<CSceneNode*>(sceneNode));
+                    info.pNodeB = const_cast<CSceneNode*>(childNode);
+                    m_triggers.push_back(info);
+                }
                 // the collision is not occurring in this frame
                 m_collisionsInfo.remove(childNode, sceneNode);
                 FG_LOG_DEBUG("*REMOVING*  Collision ENDED between: '%s'--'%s'\n", sceneNode->getNameStr(), childNode->getNameStr());
@@ -391,7 +409,7 @@ void gfx::CScene3D::checkCollisions(const CSceneNode* sceneNode) {
                     if(b1 && b2) {
                         // now can check fine collisions
                         const fgBool isFineCollision = b1->checkCollision(b2, &m_physicsWorld->getCollisionData());
-                        // ? Now hwat?
+                        // ? Now hwat? Another event? For fine collision detection?
                     }
                 }
             }

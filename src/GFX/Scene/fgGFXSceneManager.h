@@ -33,6 +33,7 @@
     #include "fgGFXSceneCallback.h"
     #include "fgGFXSceneNode.h"
     #include "fgGFXSceneNodeTrigger.h"
+    #include "fgGFXSceneNodeMesh.h"
     #include "fgGFXSceneNodeObject.h"
     #include "fgGFXSceneSkyBox.h"    
 
@@ -69,6 +70,35 @@ namespace fg {
             typedef CVector<CSceneNode *> ObjectVec;
             ///
             typedef ObjectVec::iterator ObjectVecItor;
+            
+        public:
+            /**
+             *
+             */
+            enum StateFlags {
+                /// No special scene state flags specified
+                NONE = 0x0000,
+                /// Linear traverse forced - no spatial trees are used (octree/quadtree)
+                LINEAR_TRAVERSE = 0x0001,
+                /// Ignore collisions between nodes (coarse and fine), no events thrown
+                IGNORE_COLLISIONS = 0x0002,
+                /// Hide all nodes
+                HIDE_NODES = 0x0004,
+                /// Hide just the skybox
+                HIDE_SKYBOX = 0x0008,
+                /// No additional shadows for scene objects
+                HIDE_SHADOWS = 0x0010, // 16 
+                /// Hide everything - nodes, skybox, additional drawcalls
+                HIDE_ALL = 0x001C, // 4 + 8 + 16 = 28
+                /// Frustum check will be performed (AABB)
+                FRUSTUM_CHECK = 0x0020, // 32
+                /// Frustum check will be performed (AABB)
+                FRUSTUM_CHECK_BOX = 0x0020, // 32
+                /// Frustum check will be performed based on bounding spheres
+                FRUSTUM_CHECK_SPHERE = 0x0040, // 64
+                /// Occlusion check will be performed
+                OCCLUSION_CHECK = 0x0080 // 128                              
+            };
 
         protected:
             /**
@@ -139,6 +169,153 @@ namespace fg {
                 return m_pResourceMgr;
             }
 
+            ////////////////////////////////////////////////////////////////////
+
+            /**
+             * 
+             * @param flags
+             * @param toggle
+             */
+            void setFlag(const StateFlags flags, const fgBool toggle = FG_TRUE);
+            
+            /**
+             * 
+             * @param toggle
+             */
+            inline void setLinearTraverse(const fgBool toggle = FG_TRUE) {
+                setFlag(LINEAR_TRAVERSE, toggle);
+            }
+            /**
+             * 
+             * @return 
+             */
+            inline fgBool isLinearTraverse(void) const {
+                return (fgBool)!!(m_stateFlags & LINEAR_TRAVERSE);
+            }
+            
+            /**
+             * 
+             * @param toggle
+             */
+            inline void setIgnoreCollisions(const fgBool toggle = FG_TRUE) {
+                setFlag(IGNORE_COLLISIONS, toggle);
+            }
+            /**
+             * 
+             * @return 
+             */
+            inline fgBool isIgnoreCollisions(void) const {
+                return (fgBool)!!(m_stateFlags & IGNORE_COLLISIONS);
+            }
+            
+            /**
+             * 
+             * @param toggle
+             */
+            inline void setHideNodes(const fgBool toggle = FG_TRUE) {
+                setFlag(HIDE_NODES, toggle);
+            }
+            /**
+             * 
+             * @return 
+             */
+            inline fgBool isHideNodes(void) const {
+                return (fgBool)!!(m_stateFlags & HIDE_NODES);
+            }
+            
+            /**
+             * 
+             * @param toggle
+             */
+            inline void setHideSkyBox(const fgBool toggle = FG_TRUE) {
+                setFlag(HIDE_SKYBOX, toggle);
+            }
+            /**
+             * 
+             * @return 
+             */
+            inline fgBool isHideSkyBox(void) const {
+                return (fgBool)!!(m_stateFlags & HIDE_SKYBOX);
+            }
+            
+            /**
+             * 
+             * @param toggle
+             */
+            inline void setHideShadows(const fgBool toggle = FG_TRUE) {
+                setFlag(HIDE_SHADOWS, toggle);
+            }
+            /**
+             * 
+             * @return 
+             */
+            inline fgBool isHideShadows(void) const {
+                return (fgBool)!!(m_stateFlags & HIDE_SHADOWS);
+            }
+            
+            /**
+             * 
+             * @param toggle
+             */
+            inline void setHideAll(const fgBool toggle = FG_TRUE) {
+                setFlag(HIDE_ALL, toggle);
+            }
+            /**
+             * 
+             * @return 
+             */
+            inline fgBool isHideAll(void) const {
+                return (fgBool)!!(m_stateFlags & HIDE_ALL);
+            }
+            
+            /**
+             * 
+             * @param toggle
+             */
+            inline void setFrustumCheck(const fgBool toggle = FG_TRUE) {
+                if(toggle)
+                    setFlag(FRUSTUM_CHECK_SPHERE, FG_FALSE);
+                setFlag(FRUSTUM_CHECK, toggle);
+            }
+            /**
+             * 
+             * @return 
+             */
+            inline fgBool isFrustumCheck(void) const {
+                return (fgBool)!!(m_stateFlags & FRUSTUM_CHECK);
+            }
+            
+            /**
+             * 
+             * @param toggle
+             */
+            inline void setFrustumCheckSphere(const fgBool toggle = FG_TRUE) {
+                setFlag(FRUSTUM_CHECK, !toggle);
+                setFlag(FRUSTUM_CHECK_SPHERE, toggle);
+            }
+            /**
+             * 
+             * @return 
+             */
+            inline fgBool isFrustumCheckSphere(void) const {
+                return (fgBool)!!(m_stateFlags & FRUSTUM_CHECK_SPHERE);
+            }
+            
+            /**
+             * 
+             * @param toggle
+             */
+            inline void setOcclusionCheck(const fgBool toggle = FG_TRUE) {
+                setFlag(OCCLUSION_CHECK, toggle);
+            }
+            /**
+             * 
+             * @return 
+             */
+            inline fgBool isOcclusionCheck(void) const {
+                return (fgBool)!!(m_stateFlags & OCCLUSION_CHECK);
+            }            
+            
             ////////////////////////////////////////////////////////////////////
             /**
              * 
@@ -779,6 +956,8 @@ namespace fg {
             ////////////////////////////////////////////////////////////////////
 
         private:
+            /// Internal flags, changing the default behavior of the Scene Manager
+            StateFlags m_stateFlags;
             /// Internal MVP matrix to use, this will set the perspective view
             CMVPMatrix m_MVP;
             /// Internal camera
@@ -796,6 +975,22 @@ namespace fg {
             ///
             CBasetree *m_basetree;
         };
+        
+        FG_ENUM_FLAGS(CSceneManager::StateFlags);
+        
+        /**
+         * 
+         * @param flags
+         * @param toggle
+         */
+        inline void CSceneManager::setFlag(const StateFlags flags, const fgBool toggle) {
+            if(toggle) {
+                m_stateFlags |= flags;
+            } else {
+                m_stateFlags |= flags;
+                m_stateFlags ^= flags;
+            }
+        }
     };
 };
 

@@ -32,6 +32,7 @@ gfx::CSceneManager::CSceneManager() :
 CDrawingBatch(),
 m_collisionsInfo(),
 m_triggers(),
+m_stateFlags(NONE | FRUSTUM_CHECK),
 m_MVP(),
 m_camera(FG_GFX_CAMERA_FREE),
 m_skybox(),
@@ -470,11 +471,11 @@ void gfx::CSceneManager::sortCalls(void) {
         m_nodeQueue.pop();
     DataVecItor itor = getRefDataVector().begin(), end = getRefDataVector().end();
 #if 1
-    int idx = 0;
-    for(; itor != end; itor++, idx++) {
+    for(; itor != end; itor++) {
         if(!(*itor).data)
             continue;
         CSceneNode* pNode = (*itor).data;
+        //pNode->refreshGfxInternals();
         CDrawCall* pDrawCall = pNode->getDrawCall();
 #if defined(FG_DEBUG)
         if(g_fgDebugConfig.isDebugProfiling) {
@@ -485,19 +486,22 @@ void gfx::CSceneManager::sortCalls(void) {
         // the model matrix; maybe some operator ?
         pNode->update(timesys::elapsed()); // updateAABB
 
-        //const char *msg[] = {"OUTSIDE", "INTERSECT", "INSIDE", "[null]", "\0"};
-        int boxtest = m_MVP.getRefFrustum().testVolume(pNode->getRefBoundingVolume());
-        //int spheretest = (int)m_MVP.getRefFrustum().testSphere(fgVector3f(pNode->getRefModelMatrix()[3]), 30.0f);
-        if(!boxtest)
+        int visibilityResult = 1;
+        if(isFrustumCheck()) {
+            visibilityResult = m_MVP.getRefFrustum().testVolume(pNode->getRefBoundingVolume());
+        } else if(isFrustumCheckSphere()) {
+            visibilityResult = m_MVP.getRefFrustum().testSphere(pNode->getRefBoundingVolume());
+        }
+        if(!visibilityResult) {
             pNode->setVisible(FG_FALSE);
-        else
+        } else {
             pNode->setVisible(FG_TRUE);
+        }
 #if defined(FG_DEBUG)
         if(g_fgDebugConfig.isDebugProfiling) {
             profile::g_debugProfiling->end("GFX::Scene::FrustumCheck");
         }
-#endif
-        //FG_LOG_DEBUG("[%d] -> AABBox[%s] -- -- Sphere.30.0f[%s] %s\n", idx, msg[boxtest], msg[spherestatus], pNode->getNameStr());
+#endif        
         g_fgDebugConfig.gfxBBoxShow = true;
         // ? also need to push to queue more than one draw call
         // And i mean... wait wut? All children are registered
@@ -509,10 +513,10 @@ void gfx::CSceneManager::sortCalls(void) {
         if(pNode->isVisible()) {
             m_nodeQueue.push(pNode);
         }
+        // #FIXME - srsly?
         if(pDrawCall) {
             if(!pDrawCall->getShaderProgram())
-                pDrawCall->setShaderProgram(((gfx::CShaderManager*)getShaderManager())->getCurrentProgram());
-            //pDrawCall->setModelMatrix(pObj->getRefModelMatrix());
+                pDrawCall->setShaderProgram(((gfx::CShaderManager*)getShaderManager())->getCurrentProgram());            
             // getRefPriorityQueue().push(pDrawCall);
         }
     }
@@ -523,22 +527,31 @@ void gfx::CSceneManager::sortCalls(void) {
  * 
  */
 void gfx::CSceneManager::render(void) {
+    if(isHideAll()) {
+        return;
+    }        
     CShaderManager* pShaderMgr = static_cast<gfx::CShaderManager*>(m_pShaderMgr);
     CShaderProgram* pProgram = pShaderMgr->getCurrentProgram();
     //pProgram->setUniform(FG_GFX_USE_TEXTURE, 1.0f);
     //printf("fgGfxSceneManager::render(void)\n");
     // Will now render main skybox
-    CShaderProgram* pSkyboxProgram = m_skybox.getShaderProgram();
-    if(pSkyboxProgram) {
-        pShaderMgr->useProgram(pSkyboxProgram);
-        m_skybox.setPosition(m_camera.getRefEye());
-        m_skybox.draw();
-        pShaderMgr->useProgram(pProgram);
+    if(!isHideSkyBox()) {
+        CShaderProgram* pSkyboxProgram = m_skybox.getShaderProgram();
+        if(pSkyboxProgram) {
+            pShaderMgr->useProgram(pSkyboxProgram);
+            m_skybox.setPosition(m_camera.getRefEye());
+            m_skybox.draw();
+            pShaderMgr->useProgram(pProgram);
+        }
     }
     // Calling underlying DrawingBatch render procedure
     // This will contain drawcalls not associated with scene/octree/quadtree structure
     CDrawingBatch::render();
     while(!m_nodeQueue.empty()) {
+        if(isHideNodes()) {
+            m_nodeQueue.pop();
+            continue;
+        }
 #if defined(FG_DEBUG)
         if(g_fgDebugConfig.isDebugProfiling) {
             profile::g_debugProfiling->begin("GFX::Scene::DrawNode");
@@ -933,6 +946,7 @@ void gfx::CSceneManager::initializeNode(CSceneNode *pNode) {
         if(!(*it))
             continue;
         CSceneNode* pChildNode = (*it);
+
         CDrawCall* pDrawCall = pChildNode->getDrawCall();
         if(pDrawCall) {
             pDrawCall->setMVP(&m_MVP);
