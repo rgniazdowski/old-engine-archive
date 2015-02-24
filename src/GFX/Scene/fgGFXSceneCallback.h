@@ -18,10 +18,11 @@
     #define FG_INC_GFX_SCENE_CALLBACK_BLOCK
 
     #include "Event/fgCallback.h"
+    #include "fgGFXSceneEvent.h"
 
 namespace fg {
     namespace gfx {
-        
+
         class CSceneNode;
         class CSceneNodeTrigger;
         class CSceneManager;
@@ -33,7 +34,7 @@ namespace fg {
             friend class CSceneNode;
             friend class CSceneNodeTrigger;
             friend class CSceneManager;
-            
+
         public:
             ///
             typedef fg::event::CFunctionCallback base_type;
@@ -56,14 +57,14 @@ namespace fg {
             virtual ~CSceneCallback() { }
 
             using base_type::Call;
-            
+
             /**
              * 
              * @param pNodeA
              * @return 
              */
             virtual fgBool Call(CSceneNode* pNodeA) = 0;
-            
+
             /**
              * 
              * @param pNodeA
@@ -71,16 +72,21 @@ namespace fg {
              * @return 
              */
             virtual fgBool Call(CSceneNode* pNodeA, CSceneNode* pNodeB) = 0;
-            
+
         private:
             ///
-            inline void upRef(void) { m_ref++; }
+            inline void upRef(void) {
+                m_ref++;
+            }
             ///
-            inline unsigned int downRef(void) { if(m_ref) m_ref--; return m_ref; }            
-            
+            inline unsigned int downRef(void) {
+                if(m_ref) m_ref--;
+                return m_ref;
+            }
+
         private:
             ///
-            unsigned int m_ref;            
+            unsigned int m_ref;
         };
 
         /**
@@ -99,7 +105,7 @@ namespace fg {
             typedef fgBool(TClass::*fgSceneMethod)(CSceneNode* pNodeA, CSceneNode* pNodeB);
             ///
             typedef fgSceneMethod callback_type;
-            
+
         public:
             /**
              * 
@@ -151,9 +157,24 @@ namespace fg {
             virtual fgBool Call(fg::event::CArgumentList* argv) {
                 if(m_sceneMethod != NULL && m_pClassInstance != NULL) {
                     // If argument list is given then maybe should check for existence
-                    // of STRUCT parameters ?
-                    //return (m_classInstance->*m_guiMethod)(argv);
+                    // of STRUCT parameters ?                    
+                    if(!argv)
+                        return FG_FALSE;
+                    /// THis will probably contain argument list with Event structure pointer
+                    if(argv->getCount()) {
+                        event::SArgument::Type arg_type;
+                        void *ptr = argv->getValueByID(0, &arg_type);
+                        if(arg_type != event::SArgument::Type::ARG_TMP_POINTER)
+                            return FG_FALSE;
+                        event::SSceneEvent* pSceneNodeEvent = (event::SSceneEvent*)ptr;
+                        if(pSceneNodeEvent->code != event::INVALID) {
+                            return this->Call(pSceneNodeEvent->node.pNodeA, pSceneNodeEvent->node.pNodeB);
+                            //return this->Call(ptr); // THis will handle the structure passed as void*
+                        }
+                    }
                     return FG_FALSE;
+                } else if(this->getFunction()) {
+                    base_type::base_type::Call(argv);
                 }
                 return FG_FALSE;
             }
@@ -176,7 +197,6 @@ namespace fg {
                         //if(pWidget->isManaged())
                         return (m_pClassInstance->*m_sceneMethod)(pNode, NULL);
                     }
-
                 }
                 return FG_FALSE;
             }
@@ -258,7 +278,6 @@ namespace fg {
             CSceneCallback() {
                 m_sceneFunction = pFunction;
             }
-            
             /**
              * 
              */
@@ -289,9 +308,24 @@ namespace fg {
             virtual fgBool Call(fg::event::CArgumentList* argv) {
                 if(m_sceneFunction != NULL) {
                     // If argument list is given then maybe should check for existence
-                    // of STRUCT parameters ?
-                    //return (m_classInstance->*m_sceneMethod)(argv);
+                    // of STRUCT parameters ?                    
+                    if(!argv)
+                        return FG_FALSE;
+                    /// THis will probably contain argument list with Event structure pointer
+                    if(argv->getCount()) {
+                        event::SArgument::Type arg_type;
+                        void *ptr = argv->getValueByID(0, &arg_type);
+                        if(arg_type != event::SArgument::Type::ARG_TMP_POINTER)
+                            return FG_FALSE;
+                        event::SSceneEvent* pSceneNodeEvent = (event::SSceneEvent*)ptr;
+                        if(pSceneNodeEvent->code != event::INVALID) {
+                            return this->Call(pSceneNodeEvent->node.pNodeA, pSceneNodeEvent->node.pNodeB);
+                            //return this->Call(ptr); // THis will handle the structure passed as void*
+                        }
+                    }
                     return FG_FALSE;
+                } else if(this->getFunction()) {
+                    return base_type::base_type::Call(argv);
                 }
                 return FG_FALSE;
             }
@@ -312,7 +346,8 @@ namespace fg {
                         //if(pWidget->isManaged())
                         return m_sceneFunction(pNode, NULL);
                     }
-
+                } else if(this->getFunction()) {
+                    return base_type::base_type::Call(pSystemData);
                 }
                 return FG_FALSE;
             }
