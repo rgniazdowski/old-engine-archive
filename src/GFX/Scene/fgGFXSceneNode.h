@@ -76,6 +76,10 @@ namespace fg {
         ///
         class CSceneManager;
         ///
+        class CScene3D;
+        ///
+        class CScene2D;
+        ///
         class CSceneNodeMesh;
         ///
         class CSceneNodeObject;
@@ -224,12 +228,11 @@ namespace fg {
         public:
             /**
              * 
-             * @param position
+             * @param velocity
              */
-            inline virtual void setPosition(const Vec3f& position) {                
-                m_modelMat[3].x = position.x;
-                m_modelMat[3].y = position.y;
-                m_modelMat[3].z = position.z;
+            inline void setVelocity(const Vector3f& velocity) {
+                if(m_collisionBody)
+                    m_collisionBody->setVelocity(velocity);
             }
             /**
              * 
@@ -237,10 +240,100 @@ namespace fg {
              * @param y
              * @param z
              */
-            inline virtual void setPosition(float x, float y, float z) {
-                m_modelMat[3].x = x;
-                m_modelMat[3].y = y;
-                m_modelMat[3].z = z;
+            inline void setVelocity(float x, float y, float z) {
+                if(m_collisionBody)
+                    m_collisionBody->setVelocity(x, y, z);
+            }
+            /**
+             * 
+             * @return 
+             */
+            inline Vector3f getVelocity(void) const {
+                if(m_collisionBody)
+                    return m_collisionBody->getVelocity();
+                return Vector3f();
+            }
+            /**
+             * 
+             * @param acceleration
+             */
+            inline void setAcceleration(const Vector3f& acceleration) {
+                if(m_collisionBody)
+                    m_collisionBody->setAcceleration(acceleration);
+            }
+            /**
+             * 
+             * @param x
+             * @param y
+             * @param z
+             */
+            inline void setAcceleration(float x, float y, float z) {
+                if(m_collisionBody)
+                    m_collisionBody->setAcceleration(x, y, z);
+            }
+            /**
+             * 
+             * @return 
+             */
+            inline Vector3f getAcceleration(void) const {
+                if(m_collisionBody)
+                    return m_collisionBody->getAcceleration();
+                return Vector3f();
+            }
+            /**
+             * 
+             * @param position
+             */
+            virtual void setPosition(const Vec3f& position);
+            /**
+             * 
+             * @param x
+             * @param y
+             * @param z
+             */
+            virtual void setPosition(float x, float y, float z);
+            /**
+             * 
+             * @return 
+             */
+            inline Vector4f& getPosition(void) {
+                return m_modelMat[3];
+            }
+            /**
+             * 
+             * @return 
+             */
+            inline Vector4f const& getPosition(void) const {
+                return m_modelMat[3];
+            }
+            /**
+             * 
+             * @return 
+             */
+            inline Vector3f getPosition3f(void) const {
+                return Vector3f(m_modelMat[3].x, m_modelMat[3].y, m_modelMat[3].z);
+            }
+            /**
+             * 
+             * @param rotation
+             */
+            virtual void setRotation(const Vector3f& rotation);
+            /**
+             * 
+             * @param x
+             * @param y
+             * @param z
+             */
+            virtual void setRotation(float x, float y, float z);
+            /**
+             * 
+             * @return 
+             */
+            inline Vector3f getRotation(void) const {
+                if(m_collisionBody) {
+                    return m_collisionBody->getRotation();
+                }
+                return Vector3f();
             }
             /**
              * 
@@ -296,12 +389,56 @@ namespace fg {
             inline void setHalfSize(float x, float y, float z) {
                 setHalfSize(Vector3f(x, y, z));
             }
+            /**
+             * 
+             * @param halfSize
+             * @param mass
+             */
+            inline void setHalfSizeAndMass(const Vector3f& halfSize, float mass) {
+                if(m_collisionBody) {
+                    m_collisionBody->setHalfSizeAndMass(halfSize, mass);
+                } else {
+                    setHalfSize(halfSize);
+                }
+            }
+            /**
+             * 
+             * @param x
+             * @param y
+             * @param z
+             * @param mass
+             */
+            inline void setHalfSizeAndMass(float x, float y, float z, float mass) {
+                if(m_collisionBody) {
+                    m_collisionBody->setHalfSizeAndMass(Vector3f(x, y, z), mass);
+                } else {
+                    setHalfSize(Vector3f(x, y, z));
+                }
+            }
 
             /**
              * 
              * @param radius
              */
             void setRadius(float radius);
+            /**
+             * 
+             * @return 
+             */
+            inline float getMass(void) const {
+                if(m_collisionBody)
+                    return m_collisionBody->getMass();                
+                return 0.0f;
+            }
+            /**
+             * 
+             */
+            inline void setMass(float mass) const {
+                if(m_collisionBody)
+                    m_collisionBody->setMass(mass);
+            }
+
+            ////////////////////////////////////////////////////////////////////
 
         public:
             /**
@@ -366,14 +503,8 @@ namespace fg {
              * 
              * @param scale
              */
-            inline virtual void setScale(const Vector3f& scale) {
-                const Vector4f translation = m_modelMat[3];
-                m_modelMat = math::scale(m_modelMat, scale / m_scale);
-                m_scale = scale;
-                m_modelMat[3].x = translation.x;
-                m_modelMat[3].y = translation.y;
-                m_modelMat[3].z = translation.z;
-            }
+            virtual void setScale(const Vector3f& scale);
+                
             /**
              * 
              * @param x
@@ -391,7 +522,12 @@ namespace fg {
              * @return 
              */
             fgBool checkCollisionSphere(const CSceneNode* pNode) const;
-            
+
+            /**
+             * 
+             * @param pNode
+             * @return 
+             */
             fgBool checkCollisionAABB(const CSceneNode* pNode) const;
 
         public:

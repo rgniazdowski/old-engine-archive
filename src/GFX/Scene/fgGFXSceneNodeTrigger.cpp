@@ -64,9 +64,7 @@ gfx::CSceneNodeTrigger::~CSceneNodeTrigger() {
  * @param position
  */
 void gfx::CSceneNodeTrigger::setPosition(const Vec3f& position) {
-    m_modelMat[3].x = position.x;
-    m_modelMat[3].y = position.y;
-    m_modelMat[3].z = position.z;
+    base_type::setPosition(position);
     //m_aabb.center = position;
     //m_aabb.extent;
     m_aabb.min = position - m_aabb.extent;
@@ -82,10 +80,8 @@ void gfx::CSceneNodeTrigger::setPosition(const Vec3f& position) {
  * @param z
  */
 void gfx::CSceneNodeTrigger::setPosition(float x, float y, float z) {
-    m_modelMat[3].x = x;
-    m_modelMat[3].y = y;
-    m_modelMat[3].z = z;
     const Vector3f pos(x, y, z);
+    base_type::setPosition(pos);
     m_aabb.min = pos - m_aabb.extent;
     m_aabb.max = pos + m_aabb.extent;
     m_aabb.refresh();

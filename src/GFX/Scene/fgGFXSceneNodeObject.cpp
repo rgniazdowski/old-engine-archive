@@ -73,18 +73,14 @@ void gfx::CSceneNodeObject::refreshGfxInternals(void) {
     if(m_pManager->getManagerType() != FG_MANAGER_SCENE) {
         return;
     }
-    CSceneManager *pSceneMgr = static_cast<CSceneManager *>(m_pManager);
-    //pSceneMgr->getResourceManager();
-    //pSceneMgr->getShaderManager();
-    // ?? #FIXME
-
+    //CSceneManager *pSceneMgr = static_cast<CSceneManager *>(m_pManager);
     if(!m_pModel) {
         return;
     }
     SMaterial* pMainMaterial = m_pModel->getMainMaterial();
     CModel::ShapesVecItor sit = m_pModel->getRefShapes().begin(),
             send = m_pModel->getRefShapes().end();
-    
+
     for(; sit != send; sit++) {
         if(!(*sit))
             continue;
@@ -93,13 +89,15 @@ void gfx::CSceneNodeObject::refreshGfxInternals(void) {
             pShape->material->shaderProgram = pMainMaterial->shaderProgram;
         }
     }
-    
+
     ChildrenVecItor it = getChildren().begin(), end = getChildren().end();
     for(; it != end; it++) {
         if(!(*it))
             continue;
         CSceneNode *pChildNode = (*it);
         pChildNode->refreshGfxInternals();
+        if(getManager())
+            pChildNode->setManager(getManager());
         if(pChildNode->getNodeType() == SCENE_NODE_MESH) {
             CSceneNodeMesh *pMeshNode = static_cast<CSceneNodeMesh *>(pChildNode);
             CDrawCall *pDrawCall = pMeshNode->getDrawCall();
@@ -190,7 +188,8 @@ void gfx::CSceneNodeObject::setModel(gfx::CModel *pModel) {
             if(!pMesh)
                 continue;
             CSceneNode *pChildNode = new CSceneNodeMesh(pMesh, this);
-            pChildNode->getDrawCall()->setupMaterial(pShape->material);
+            static_cast<CSceneNodeMesh *>(pChildNode)->setMaterial(pShape->material);
+            //pChildNode->getDrawCall()->setupMaterial(pShape->material);
             // Should register it in a manager? #NOPE
             // There is no need to register this NodeMesh - it's immediate child
             // required to do the drawing - however this is about to change

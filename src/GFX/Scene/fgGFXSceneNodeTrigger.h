@@ -151,7 +151,7 @@ namespace fg {
              * 
              * @param position
              */
-            virtual void setPosition(const Vec3f& position);           
+            virtual void setPosition(const Vec3f& position);
             /**
              * 
              * @param x
@@ -164,7 +164,7 @@ namespace fg {
              * @param translation
              */
             virtual void translate(const Vec3f& translation);
-            
+
             /**
              * 
              * @param x
@@ -172,15 +172,15 @@ namespace fg {
              * @param z
              */
             virtual void translate(float x, float y, float z);
-            
+
             using base_type::setScale;
-            
+
             /**
              * 
              * @param scale
              */
             virtual void setScale(const Vector3f& scale);
-            
+
             ////////////////////////////////////////////////////////////////////
         public:
 

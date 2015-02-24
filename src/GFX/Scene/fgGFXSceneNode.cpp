@@ -34,6 +34,7 @@ m_aabb(), // axis-aligned bounding box - this one will be transformed
 m_drawCall(NULL) // DrawCall for this node - it cannot be managed
 {
     setCollidable(FG_TRUE);
+    setAutoScale(FG_FALSE);
     // Draw call is only initialized when Node Custom type is specialized
     if(m_nodeType == SCENE_NODE_CUSTOM) {
         m_drawCall = new CDrawCall();
@@ -122,19 +123,74 @@ void gfx::CSceneNode::refreshGfxInternals(void) {
 
 /**
  * 
+ * @param position
+ */
+void gfx::CSceneNode::setPosition(const Vec3f& position) {
+    if(m_collisionBody) {
+        m_collisionBody->setPosition(position);
+        //m_collisionBody->calculateDerivedData(); // #FIXME
+    } else {
+        m_modelMat[3].x = position.x;
+        m_modelMat[3].y = position.y;
+        m_modelMat[3].z = position.z;
+    }
+}
+
+/**
+ * 
+ * @param x
+ * @param y
+ * @param z
+ */
+void gfx::CSceneNode::setPosition(float x, float y, float z) {
+    if(m_collisionBody) {
+        m_collisionBody->setPosition(x, y, z);
+        //m_collisionBody->calculateDerivedData(); // #FIXME
+    } else {
+        m_modelMat[3].x = x;
+        m_modelMat[3].y = y;
+        m_modelMat[3].z = z;
+    }
+}
+
+/**
+ * 
+ * @param rotation
+ */
+void gfx::CSceneNode::setRotation(const Vector3f& rotation) {
+    if(m_collisionBody) {
+        m_collisionBody->setRotation(rotation);
+    }
+}
+
+/**
+ * 
+ * @param x
+ * @param y
+ * @param z
+ */
+void gfx::CSceneNode::setRotation(float x, float y, float z) {
+    if(m_collisionBody) {
+        m_collisionBody->setRotation(x, y, z);
+    }
+}
+
+/**
+ * 
  * @param halfSize
  */
 void gfx::CSceneNode::setHalfSize(const Vector3f& halfSize) {
-    
+
     if(m_collisionBody) {
-        m_collisionBody->setHalfSize(halfSize);        
+        m_collisionBody->setHalfSize(halfSize);
+    } else {
+        // Update this when there is no physics collision body
+        m_aabb.min = -halfSize;
+        m_aabb.max = halfSize;
+        m_aabb.refresh();
+        m_aabb.radius = math::length(halfSize);
+        m_aabb.transform(m_modelMat);
     }
-    
-    m_aabb.min = -halfSize;
-    m_aabb.max = halfSize;
-    m_aabb.refresh();
-    m_aabb.radius = math::length(halfSize);    
-    m_aabb.transform(m_modelMat);
 }
 
 /**
@@ -146,13 +202,40 @@ void gfx::CSceneNode::setRadius(float radius) {
         radius *= -1.0f;
     if(m_collisionBody) {
         m_collisionBody->setRadius(radius);
+    } else {
+        // This will be set where there is no collision body
+        // It is not necessary with the collision body (physics)
+        // because the nodes internal AABB will be updated in update(*) function
+        //float a = (2.0f * radius) / M_SQRT2;
+        float a = math::sqrt(radius * radius / 3.0f);
+        m_aabb.min = -Vector3f(a, a, a);
+        m_aabb.max = Vector3f(a, a, a);
+        m_aabb.radius = radius;
+        m_aabb.refresh();
+        m_aabb.transform(m_modelMat);
     }
-    float a = (2.0f * radius) / M_SQRT2;
-    m_aabb.min = -Vector3f(a, a, a);
-    m_aabb.max = Vector3f(a, a, a);
-    m_aabb.radius = radius;
-    m_aabb.refresh();
-    m_aabb.transform(m_modelMat);
+}
+
+/**
+ * 
+ * @param scale
+ */
+void gfx::CSceneNode::setScale(const Vector3f& scale) {
+    if(!m_collisionBody) {
+        const Vector4f translation = m_modelMat[3];
+        m_modelMat = math::scale(m_modelMat, scale / m_scale);
+        m_scale = scale;
+        m_modelMat[3].x = translation.x;
+        m_modelMat[3].y = translation.y;
+        m_modelMat[3].z = translation.z;
+
+    } else if(!isAutoScale()) {
+        //Vector3f halfSize = m_collisionBody->getHalfSize();
+        //halfSize *= scale / m_scale;
+        //this->setHalfSize(halfSize);
+        //m_collisionBody->setHalfSize(halfSize);
+        m_scale = scale;
+    }
 }
 
 /**
@@ -174,7 +257,7 @@ fgBool gfx::CSceneNode::checkCollisionSphere(const CSceneNode* pNode) const {
     if(r2 > radius2) {
         return FG_FALSE;
     }
-    
+
     //m_aabb.test(pNode->getRefBoundingVolume());
     return FG_TRUE;
 }
@@ -345,6 +428,8 @@ void gfx::CSceneNode::removeCollisionBody(void) {
     if(m_collisionBody) {
         delete m_collisionBody;
         m_collisionBody = NULL;
+        // #FIXME
+        setAutoScale(FG_FALSE);
     }
 }
 
@@ -357,6 +442,17 @@ void gfx::CSceneNode::setCollisionBodyType(const physics::CCollisionBody::BodyTy
         m_collisionBody->setBodyType(bodyType);
     } else {
         m_collisionBody = new physics::CCollisionBody(bodyType);
+        m_collisionBody->setOrientation(1.0f, 0.0f, 0.0f, 0.0f); // #FIXME
+        m_collisionBody->setAngularDamping(physics::DEFAULT_ANGULAR_DAMPING);
+        m_collisionBody->setLinearDamping(physics::DEFAULT_LINEAR_DAMPING);
+        //m_collisionBody->setMass(1.0f);
+        //m_collisionBody->setHalfSize(m_aabb.extent);
+        // This will also calculate the inertia tensor
+        m_collisionBody->setHalfSizeAndMass(m_aabb.extent, 1.0f);
+        m_collisionBody->clearAccumulators();
+        m_collisionBody->setAwake(true);
+        m_collisionBody->setCanSleep(true);
+        m_collisionBody->calculateDerivedData();
     }
 }
 
