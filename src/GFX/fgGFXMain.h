@@ -72,6 +72,17 @@ namespace fg {
              * 
              */
             void unregisterResourceCallbacks(void);
+            
+            /**
+             * 
+             */
+            void registerSceneCallbacks(void);
+            
+            /**
+             * 
+             * @param argv
+             */
+            void unregisterSceneCallbacks(void);
 
             /**
              * 
@@ -79,6 +90,13 @@ namespace fg {
              * @return 
              */
             fgBool resourceCreatedHandler(fg::event::CArgumentList *argv);
+            
+            /**
+             * 
+             * @param argv
+             * @return 
+             */
+            fgBool sceneNodeInsertedHandler(fg::event::CArgumentList * argv);
 
         public:
 
@@ -213,6 +231,8 @@ namespace fg {
             CParticleSystem *m_particleSystem;
             /// 
             fg::event::CFunctionCallback *m_resourceCreatedCallback;
+            ///
+            fg::event::CFunctionCallback *m_sceneNodeInsertedCallback;;
             /// Is GFX init properly?
             fgBool m_init;
         };

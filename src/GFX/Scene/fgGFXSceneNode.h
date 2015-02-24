@@ -98,9 +98,11 @@ namespace fg {
         public resource::CManagedObject<SceneNodeHandle>,
         public CDrawable {
             friend class CSceneManager;
+            //friend class CScene3D;
+            //friend class CScene2D;
             friend class CSceneNodeMesh;
             friend class CSceneNodeObject;
-            
+
         public:
 
             /**
@@ -180,7 +182,6 @@ namespace fg {
              */
             virtual ~CSceneNode();
 
-        protected:
             /**
              * 
              */

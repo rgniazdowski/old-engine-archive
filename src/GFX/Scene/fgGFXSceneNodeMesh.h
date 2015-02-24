@@ -68,7 +68,6 @@ namespace fg {
              */
             virtual void setMesh(SMeshBase *pMesh);
             
-        protected:
             /**
              * 
              */

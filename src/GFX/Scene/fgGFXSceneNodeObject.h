@@ -80,7 +80,6 @@ namespace fg {
              */
             virtual void updateAABB(const Matrix4f& modelMat);
 
-        protected:
             ///
             virtual void refreshGfxInternals(void);
 

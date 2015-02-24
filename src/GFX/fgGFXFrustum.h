@@ -227,4 +227,3 @@ namespace fg {
 
     #undef FG_INC_GFX_FRUSTUM_BLOCK
 #endif	/* FG_INC_GFX_FRUSTUM */
-

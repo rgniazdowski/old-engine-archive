@@ -31,6 +31,7 @@
 #endif
 
 #include "fgLog.h"
+#include "Scene/fgGFXSceneEvent.h"
 
 float guiScale = 1.0f;
 float yolo_posx = 0;
@@ -52,6 +53,7 @@ m_3DScene(NULL),
 m_2DScene(NULL),
 m_particleSystem(NULL),
 m_resourceCreatedCallback(NULL),
+m_sceneNodeInsertedCallback(NULL),
 m_init(FG_FALSE) {
     m_3DScene = new gfx::CScene3D();
     m_2DScene = new gfx::CScene2D();
@@ -68,6 +70,8 @@ m_init(FG_FALSE) {
  */
 gfx::CGfxMain::~CGfxMain() {
     unregisterResourceCallbacks();
+    unregisterSceneCallbacks();
+    
     if(m_particleSystem)
         delete m_particleSystem;
     if(m_3DScene)
@@ -76,17 +80,23 @@ gfx::CGfxMain::~CGfxMain() {
         delete m_2DScene;
     if(m_gfxContext)
         m_gfxContext->deleteAllBuffers();
-    if(m_init)
-        closeGFX();
+    
     if(m_textureMgr)
         delete m_textureMgr;
     if(m_shaderMgr)
         delete m_shaderMgr;
     if(m_mainWindow)
         delete m_mainWindow;
+    
     if(m_resourceCreatedCallback)
         delete m_resourceCreatedCallback;
-    memset(this, 0, sizeof (CGfxMain)); // ?
+    if(m_sceneNodeInsertedCallback)
+        delete m_sceneNodeInsertedCallback;
+    
+    if(m_init)
+        closeGFX();
+    memset(this, 0, sizeof (CGfxMain));
+    
     m_resourceCreatedCallback = NULL;
     m_particleSystem = NULL;
     m_textureMgr = NULL;
@@ -120,6 +130,31 @@ void gfx::CGfxMain::unregisterResourceCallbacks(void) {
         return;
 
     static_cast<fg::event::CEventManager *>(m_pEventMgr)->removeCallback(event::RESOURCE_CREATED, m_resourceCreatedCallback);
+}
+
+/**
+ *
+ */
+void gfx::CGfxMain::registerSceneCallbacks(void) {
+    if(!m_3DScene || !m_2DScene)
+        return;
+
+    if(!m_sceneNodeInsertedCallback)
+        m_sceneNodeInsertedCallback = new fg::event::CMethodCallback<CGfxMain>(this, &gfx::CGfxMain::sceneNodeInsertedHandler);
+
+    m_3DScene->getEventManager()->addCallback(event::SCENE_NODE_INSERTED, m_sceneNodeInsertedCallback);
+    m_2DScene->getEventManager()->addCallback(event::SCENE_NODE_INSERTED, m_sceneNodeInsertedCallback);
+}
+
+/**
+ *
+ */
+void gfx::CGfxMain::unregisterSceneCallbacks(void) {
+    if(!m_3DScene || !m_2DScene)
+        return;
+
+    m_3DScene->getEventManager()->removeCallback(event::SCENE_NODE_INSERTED, m_sceneNodeInsertedCallback);
+    m_2DScene->getEventManager()->removeCallback(event::SCENE_NODE_INSERTED, m_sceneNodeInsertedCallback);
 }
 
 /**
@@ -193,7 +228,11 @@ fgBool gfx::CGfxMain::initGFX(void) {
         m_loader.setMainWindow(m_mainWindow);
         FG_LOG_DEBUG("GFX: Subsystem initialized successfully");
     }
-
+    if(status) {
+        m_3DScene->initialize();
+        m_2DScene->initialize();
+        registerSceneCallbacks();
+    }
     float t2 = timesys::ms();
     FG_LOG_DEBUG("GFX: Initialized in %.2f seconds", (t2 - t1) / 1000.0f);
     return status;
@@ -219,6 +258,7 @@ void gfx::CGfxMain::generateBuiltInData(void) {
     builtin_cube_shape->material = new SMaterial();
     builtin_cube_shape->material->diffuseTexName = "crate.jpg";
     builtin_cube_shape->material->ambientTexName = "crate.jpg";
+    builtin_cube_shape->material->shaderName = "sPlainEasy";
     cubeModel->addShape(builtin_cube_shape);
     static_cast<resource::CResourceManager *>(m_pResourceMgr)->request("crate.jpg");
     if(!static_cast<resource::CResourceManager *>(m_pResourceMgr)->insert(cubeModel)) {
@@ -305,6 +345,8 @@ void gfx::CGfxMain::closeGFX(void) {
             m_mainWindow->close();
         gfx::CPlatform::quit();
         unregisterResourceCallbacks();
+        unregisterSceneCallbacks();
+
         m_gfxContext = NULL;
     }
     m_init = FG_FALSE;
@@ -370,6 +412,8 @@ fgBool gfx::CGfxMain::resumeGFX(void) {
         }
     }
 
+    registerSceneCallbacks();
+
     if(!status)
         FG_LOG_WARNING("GFX: Resume of GFX subsystem finished with errors");
     else
@@ -398,13 +442,15 @@ void gfx::CGfxMain::display(void) {
         profile::g_debugProfiling->begin("GFX::2DScene::sortCalls");
     }
 #endif
-    //printf("fgGfx2DScene::sortCalls(void)\n");
     m_2DScene->sortCalls();
 #if defined(FG_DEBUG)
     if(g_fgDebugConfig.isDebugProfiling) {
         profile::g_debugProfiling->end("GFX::2DScene::sortCalls");
     }
 #endif
+
+    m_3DScene->update();
+    m_2DScene->update();
 }
 
 /**
@@ -816,5 +862,27 @@ fgBool gfx::CGfxMain::resourceCreatedHandler(fg::event::CArgumentList * argv) {
             pEffect->setShaderProgram(m_shaderMgr->get(pEffect->getShaderName()));
         }
     }
+    return FG_TRUE;
+}
+
+/**
+ * 
+ * @param argv
+ * @return 
+ */
+fgBool gfx::CGfxMain::sceneNodeInsertedHandler(fg::event::CArgumentList * argv) {
+    if(!argv)
+        return FG_FALSE;
+    event::SSceneEvent *event_struct = (event::SSceneEvent *)argv->getValueByID(0);
+    if(!event_struct)
+        return FG_FALSE;
+    event::EventType type = event_struct->code;
+    if(type != event::SCENE_NODE_INSERTED)
+        return FG_FALSE;
+
+    if(event_struct->node.pNodeA) {
+        event_struct->node.pNodeA->refreshGfxInternals();
+    }
+
     return FG_TRUE;
 }
