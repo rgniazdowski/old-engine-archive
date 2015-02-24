@@ -1050,6 +1050,131 @@ fgBool gfx::CSceneManager::addNode(SceneNodeHandle& oUniqueID,
 
 /**
  * 
+ * @param pSourceNode
+ * @param newNodeNameTag
+ * @return 
+ */
+gfx::CSceneNode* gfx::CSceneManager::addDuplicate(CSceneNode* pSourceNode,
+                                                  const std::string& newNodeNameTag) {
+    if(!pSourceNode || newNodeNameTag.empty())
+        return NULL;
+    if(pSourceNode->getManager() != this || !pSourceNode->isManaged())
+        return NULL;
+    CSceneNode *pNewNode = get(newNodeNameTag);
+    if(pNewNode) {
+        // The node with this name already exists - should not add it, just return pointer to it
+        // This is better than returning NULL
+        // However with this approach there is no guarantee that this node has
+        // the same type as the source node...
+        return pNewNode;
+    }
+    SceneNodeType nodeType = pSourceNode->getNodeType();
+    switch(nodeType) {
+        case SCENE_NODE_CUSTOM:
+            pNewNode = new CSceneNode(*pSourceNode);
+            break;
+        case SCENE_NODE_MESH:
+            pNewNode = new CSceneNodeMesh(*(static_cast<CSceneNodeMesh*>(pSourceNode)));
+            break;
+        case SCENE_NODE_OBJECT:
+            pNewNode = new CSceneNodeObject(*(static_cast<CSceneNodeObject*>(pSourceNode)));
+            break;
+        case SCENE_NODE_TRIGGER:
+            pNewNode = new CSceneNodeTrigger(*(static_cast<CSceneNodeTrigger*>(pSourceNode)));
+            break;
+        default:
+            break;
+    }
+    if(pNewNode) {
+        pNewNode->setName(newNodeNameTag);
+        fgBool status = addNode(pNewNode->getRefHandle(), pNewNode, pSourceNode->getParent());
+        if(!status) {
+            delete pNewNode;
+            pNewNode = NULL;
+        }
+    }
+    return pNewNode;
+}
+
+/**
+ * 
+ * @param pSourceNode
+ * @param newNodeNameTag
+ * @return 
+ */
+gfx::CSceneNode* gfx::CSceneManager::addDuplicate(CSceneNode* pSourceNode,
+                                                  const char* newNodeNameTag) {
+    if(!pSourceNode || !newNodeNameTag)
+        return NULL;
+    return addDuplicate(pSourceNode, std::string(newNodeNameTag));
+}
+
+/**
+ * 
+ * @param nodeUniqueID
+ * @param newNodeNameTag
+ * @return 
+ */
+gfx::CSceneNode* gfx::CSceneManager::addDuplicate(const SceneNodeHandle& nodeUniqueID,
+                                                  const std::string& newNodeNameTag) {
+    CSceneNode* pSourceNode = get(nodeUniqueID);
+    if(!pSourceNode)
+        return NULL;
+    return addDuplicate(pSourceNode, newNodeNameTag);
+}
+
+/**
+ * 
+ * @param nodeUniqueID
+ * @param newNodeNameTag
+ * @return 
+ */
+gfx::CSceneNode* gfx::CSceneManager::addDuplicate(const SceneNodeHandle& nodeUniqueID,
+                                                  const char* newNodeNameTag) {
+    if(!newNodeNameTag)
+        return NULL;
+    CSceneNode* pSourceNode = get(nodeUniqueID);
+    if(!pSourceNode)
+        return NULL;
+    return addDuplicate(pSourceNode, std::string(newNodeNameTag));
+}
+
+/**
+ * 
+ * @param sourceNodeNameTag
+ * @param newNodeNameTag
+ * @return 
+ */
+gfx::CSceneNode* gfx::CSceneManager::addDuplicate(const std::string& sourceNodeNameTag,
+                                                  const std::string& newNodeNameTag) {
+    if(newNodeNameTag.empty() || sourceNodeNameTag.empty())
+        return NULL;
+    CSceneNode* pSourceNode = get(sourceNodeNameTag);
+    if(!pSourceNode)
+        return NULL;
+    return addDuplicate(pSourceNode, newNodeNameTag);
+}
+
+/**
+ * 
+ * @param sourceNodeNameTag
+ * @param newNodeNameTag
+ * @return 
+ */
+gfx::CSceneNode* gfx::CSceneManager::addDuplicate(const char* sourceNodeNameTag,
+                                                  const char* newNodeNameTag) {
+    if(!sourceNodeNameTag || !newNodeNameTag)
+        return NULL;
+    if(!sourceNodeNameTag[0] || !newNodeNameTag[0])
+        return NULL;
+    CSceneNode* pSourceNode = get(sourceNodeNameTag);
+    if(!pSourceNode)
+        return NULL;
+    return addDuplicate(pSourceNode, std::string(newNodeNameTag));
+}
+
+/**
+ * 
  * @param pObj
  * @return 
  */

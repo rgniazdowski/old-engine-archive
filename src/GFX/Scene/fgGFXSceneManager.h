@@ -352,6 +352,62 @@ namespace fg {
 
             /**
              * 
+             * @param pSourceNode
+             * @param newNodeNameTag
+             * @return 
+             */
+            CSceneNode* addDuplicate(CSceneNode* pSourceNode,
+                                     const std::string& newNodeNameTag);
+            
+            /**
+             * 
+             * @param pSourceNode
+             * @param newNodeNameTag
+             * @return 
+             */
+            CSceneNode* addDuplicate(CSceneNode* pSourceNode,
+                                     const char* newNodeNameTag);
+            
+            /**
+             * 
+             * @param nodeUniqueID
+             * @param newNodeNameTag
+             * @return 
+             */
+            CSceneNode* addDuplicate(const SceneNodeHandle& nodeUniqueID,
+                                     const std::string& newNodeNameTag);
+            
+            /**
+             * 
+             * @param nodeUniqueID
+             * @param newNodeNameTag
+             * @return 
+             */
+            CSceneNode* addDuplicate(const SceneNodeHandle& nodeUniqueID,
+                                     const char* newNodeNameTag);            
+            
+            /**
+             * 
+             * @param sourceNodeNameTag
+             * @param newNodeNameTag
+             * @return 
+             */
+            CSceneNode* addDuplicate(const std::string& sourceNodeNameTag,
+                                     const std::string& newNodeNameTag);
+            
+            /**
+             * 
+             * @param sourceNodeNameTag
+             * @param newNodeNameTag
+             * @return 
+             */
+            CSceneNode* addDuplicate(const char* sourceNodeNameTag,
+                                     const char* newNodeNameTag);
+            
+            ////////////////////////////////////////////////////////////////////
+            
+            /**
+             * 
              * @param pNode
              * @return 
              */
