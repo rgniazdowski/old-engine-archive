@@ -501,7 +501,6 @@ void gfx::CGfxMain::render(void) {
         return;
     }
 
-    m_3DScene->getCamera()->setDT((float)FG_HardwareState->getDelta());
 #if defined(FG_USING_SDL2)
     if(state[SDL_SCANCODE_W] == SDL_PRESSED)
         m_3DScene->getCamera()->moveForward();

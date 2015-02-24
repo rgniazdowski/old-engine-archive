@@ -123,13 +123,13 @@ public:
     void unlockBase() {
         if(m_accelBaseLocked) {
             m_accelBaseLocked = FG_FALSE;
-            m_unlockTS = FG_HardwareState->getTS();
+            m_unlockTS = FG_GetTicks();
         }
     }
 
     // Accel-base is unlocked after unlockBase() call & after AFTER_UNLOCK_DELAY ms passed
     fgBool isBaseLocked() const {
-        return m_accelBaseLocked || (m_unlockTS > (FG_HardwareState->getTS() - FG_SENSORS_AFTER_UNLOCK_DELAY));
+        return m_accelBaseLocked || (m_unlockTS > (FG_GetTicks() - FG_SENSORS_AFTER_UNLOCK_DELAY));
     }
 
     // Harvests sensor data from given event.

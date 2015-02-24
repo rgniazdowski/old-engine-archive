@@ -665,7 +665,6 @@ void CGameMain::render(void) {
  */
 void CGameMain::update(void) {
     timesys::markTick();
-    FG_HardwareState->calculateDT(); // #FIXME
     FG_HardwareState->calculateFPS(); // #FIXME
 
     // Update logic manager

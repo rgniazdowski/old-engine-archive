@@ -195,13 +195,6 @@ namespace fg {
             inline fgGFXfloat getDistance(void) const {
                 return m_distance;
             }
-            /**
-             * 
-             * @param dt
-             */
-            inline void setDT(fgGFXfloat dt) {
-                m_dt = dt;
-            }
 
         private:
             ///
@@ -227,8 +220,6 @@ namespace fg {
                 ///
                 fgGFXfloat m_radius;
             };
-            ///
-            fgGFXfloat m_dt;
         };
     };
 };

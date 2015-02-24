@@ -34,8 +34,8 @@ fgHardwareState *CSingleton<fgHardwareState>::instance = NULL;
 /**
  * Private constructor
  */
-fgHardwareState::fgHardwareState() : m_TS(0), m_screenHeight(0), m_screenWidth(0),
-m_dispArea(0), m_DT(0), m_DT2(0), m_fps(0.0f), m_dpi(0) { }
+fgHardwareState::fgHardwareState() : m_screenHeight(0), m_screenWidth(0),
+m_dispArea(0), m_fps(0.0f), m_dpi(0) { }
 
 /**
  * Private destructor
@@ -80,26 +80,6 @@ void fgHardwareState::deviceYield(int ms) {
 #if defined FG_USING_MARMALADE
     s3eDeviceYield(ms);
 #endif // FG_USING_MARMALADE
-}
-
-/**
- * Computes "DeltaTime" (the time flow)
- */
-void fgHardwareState::calculateDT(void) {
-    static unsigned long int t1 = FG_GetTicks(), t2 = FG_GetTicks();
-    t2 = FG_GetTicks();
-
-    m_TS = t2; // Time stamp update
-    m_DT = t2 - t1; // Delta time (length of the single frame)
-    m_DT2 = t2 - t1; // Delta time used in animations - easy pause -> just set to 0 and animations/movement will stop
-
-    // #FIXME
-    // This is some fallback when fps is lower than 30
-    // Animation will be smoother but slower
-    if(m_DT2 >= 30)
-        m_DT2 = 15;
-
-    t1 = t2;
 }
 
 /**

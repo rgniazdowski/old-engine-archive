@@ -35,18 +35,12 @@ enum fgScreenOrientation {
 class fgHardwareState : public CSingleton<fgHardwareState> {
     friend class CSingleton<fgHardwareState>;
 private:
-    // Timestamp (in milliseconds)
-    unsigned long int m_TS;
     // Screen height
     int m_screenHeight;
     // Screen width
     int m_screenWidth;
     // Display area (WxH)
     int m_dispArea;
-    // Delta time (duration of last frame, in ms)
-    unsigned long int m_DT;
-    // Delta time 2
-    unsigned long int m_DT2;
     // Current FPS (frames per second)
     float m_fps;
     // DPI of the screen
@@ -66,31 +60,8 @@ public:
 
     void deviceYield(int ms = 0);
 
-    // FIXME
-    // now in the engine there will be two (or more) main threads - one for calculation of
-    // various thins (3d data, logic, scripts, events, callbacks, etc.) and another one for
-    // calling proper drawing functions, so basically DT should be calculated in the way
-    // that takes into account both threads - however calculation of FPS should be done only
-    // in graphics thread (?)
-    void calculateDT(void);
     // Calculate current FPS
     float calculateFPS(void);
-
-    // Timestamp without possibly slow s3eTimerGetMs() call.
-    // Used when ONE FRAME accuracy is sufficient.
-    unsigned long int getTS(void) const {
-        return m_TS;
-    }
-
-    // Returns delta-time
-    unsigned long int getDelta(void) const {
-        return m_DT;
-    }
-
-    // Returns delta-time 2
-    unsigned long int getDelta2(void) const {
-        return m_DT2;
-    }
 
     // Returns FPS
     float getFPS(void) const {
@@ -159,21 +130,6 @@ public:
     // Convert millimeters to pixels vertically
     int millimeterToPixelsY(float mm) {
         return (int)(getYDPI() * mm / 25.4f);
-    }
-
-    // Sets time stamp
-    void setTS(unsigned long int ts) {
-        m_TS = ts;
-    }
-
-    // Sets delta-time
-    void setDelta(unsigned long int dt) {
-        m_DT = dt;
-    }
-
-    // Sets delta-time 2
-    void setDelta2(unsigned long int dt2) {
-        m_DT2 = dt2;
     }
 
     // Set screen dimensions

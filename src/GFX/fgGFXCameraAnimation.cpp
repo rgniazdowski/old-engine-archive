@@ -8,6 +8,7 @@
  *******************************************************/
 
 #include "fgGFXCameraAnimation.h"
+#include "Util/fgTime.h"
 
 using namespace fg;
 
@@ -18,11 +19,10 @@ gfx::CCameraAnimation::CCameraAnimation(const fgGfxCameraType type) :
 m_type(type),
 m_hAngle((fgGFXfloat)M_PI),
 m_vAngle(0.0f),
-m_speed(0.15f),
+m_speed(150.0f),
 m_mouseSpeed(0.002f),
 m_zoom(1.0f),
-m_distance(1.0f),
-m_dt(0.0f) {
+m_distance(1.0f) {
     Vector3f position = Vector3f(0, 20.0f, 300.0f);
     m_eye = position;
 }
@@ -73,40 +73,40 @@ float *gfx::CCameraAnimation::update(fgGFXfloat mouseXrel, fgGFXfloat mouseYrel)
  *
  */
 void gfx::CCameraAnimation::moveLeft(void) {
-    m_eye -= m_right * m_dt * m_speed;
+    m_eye -= m_right * timesys::elapsed() * m_speed;
 }
 
 /*
  *
  */
 void gfx::CCameraAnimation::moveRight(void) {
-    m_eye += m_right * m_dt * m_speed;
+    m_eye += m_right * timesys::elapsed() * m_speed;
 }
 
 /*
  *
  */
 void gfx::CCameraAnimation::moveForward(void) {
-    m_eye += m_direction * m_dt * m_speed;
+    m_eye += m_direction * timesys::elapsed() * m_speed;
 }
 
 /*
  *
  */
 void gfx::CCameraAnimation::moveBackward(void) {
-    m_eye -= m_direction * m_dt * m_speed;
+    m_eye -= m_direction * timesys::elapsed() * m_speed;
 }
 
 /*
  *
  */
 void gfx::CCameraAnimation::moveUp(void) {
-    m_eye += m_up * m_dt * m_speed;
+    m_eye += m_up * timesys::elapsed() * m_speed;
 }
 
 /*
  *
  */
 void gfx::CCameraAnimation::moveDown(void) {
-    m_eye -= m_up * m_dt * m_speed;
+    m_eye -= m_up * timesys::elapsed() * m_speed;
 }
