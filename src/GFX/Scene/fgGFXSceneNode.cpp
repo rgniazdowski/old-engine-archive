@@ -49,6 +49,33 @@ m_drawCall(NULL) // DrawCall for this node - it cannot be managed
 
 /**
  * 
+ * @param orig
+ */
+gfx::CSceneNode::CSceneNode(const CSceneNode& orig) : base_type(orig) {
+    if(this != &orig) {
+        this->setDrawableType(orig.getDrawableType());
+        this->m_nodeType = orig.m_nodeType;
+        this->m_pTreeNode = NULL;
+        this->m_pParent = NULL;
+        if(orig.getCollisionBody()) {
+            this->m_collisionBody = new physics::CCollisionBody(*orig.m_collisionBody);
+        }
+        //this->m_children; // ?? ?? 
+        this->m_stateFlags = orig.m_stateFlags;
+        this->m_scale = orig.m_scale;
+        this->m_modelMat = orig.m_modelMat;
+        this->m_aabb = orig.m_aabb;
+        //this->m_pManager
+        if(this->m_nodeType == SCENE_NODE_CUSTOM) {
+            m_drawCall = new CDrawCall();
+        } else {
+            m_drawCall = NULL;
+        }
+    }
+}
+
+/**
+ * 
  */
 gfx::CSceneNode::~CSceneNode() {
     if(m_drawCall)

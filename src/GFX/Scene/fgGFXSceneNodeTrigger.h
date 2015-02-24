@@ -131,7 +131,7 @@ namespace fg {
              * 
              * @param orig
              */
-            //CSceneNodeTrigger(const CSceneNodeTrigger& orig);
+            CSceneNodeTrigger(const CSceneNodeTrigger& orig);
             /**
              * 
              */

@@ -179,6 +179,11 @@ namespace fg {
             CSceneNode(SceneNodeType nodeType = SCENE_NODE_INVALID, self_type *pParent = NULL);
             /**
              * 
+             * @param orig
+             */
+            CSceneNode(const CSceneNode& orig);
+            /**
+             * 
              */
             virtual ~CSceneNode();
 

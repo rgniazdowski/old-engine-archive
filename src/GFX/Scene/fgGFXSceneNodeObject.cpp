@@ -46,7 +46,13 @@ m_pModel(NULL) {
  * 
  * @param orig
  */
-gfx::CSceneNodeObject::CSceneNodeObject(const CSceneNodeObject& orig) { }
+gfx::CSceneNodeObject::CSceneNodeObject(const CSceneNodeObject& orig) : base_type(orig) { 
+    if(this != &orig) {
+        this->m_drawCall = NULL;
+        this->setModel(orig.getModel());
+        this->setNodeType(SCENE_NODE_OBJECT);
+    }
+}
 
 /**
  * 

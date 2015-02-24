@@ -28,7 +28,17 @@ gfx::CSceneNodeTrigger::CSceneNodeTrigger() : CSceneNode(SCENE_NODE_TRIGGER), m_
  * 
  * @param orig
  */
-//gfx::CSceneNodeTrigger::CSceneNodeTrigger(const CSceneNodeTrigger& orig) { }
+gfx::CSceneNodeTrigger::CSceneNodeTrigger(const CSceneNodeTrigger& orig) : base_type(orig) {
+    if(this != &orig) {
+        unsigned int n = orig.m_callbacks.size();
+        for(unsigned int i = 0; i < n; i++) {
+            this->m_callbacks.push_back(orig.m_callbacks[i]);
+            if(this->m_callbacks.back().pCallback) {
+                this->m_callbacks.back().pCallback->upRef();
+            }
+        }
+    }
+}
 
 /**
  * 
