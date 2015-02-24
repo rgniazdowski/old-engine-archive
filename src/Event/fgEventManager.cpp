@@ -452,47 +452,10 @@ fgBool event::CEventManager::removeCyclicCallback(CFunctionCallback *pCallback) 
  * also executes callbacks from cyclical and timeouts
  */
 void event::CEventManager::executeEvents(void) {
-    // Phase 1: execution of thrown events (now including the argument list).
-    // Btw after calling the proper callback,
-    // queue entry with argument list must be erased 
-    while(!m_eventsQueue.empty()) {
-        SThrownEvent &event = m_eventsQueue.front();
-        int eventCode = event.eventCode;
-        //FG_LOG_DEBUG("Event code thrown %d | list: %p", eventCode, event.argList);
-        CallbackBindingMap::iterator found = m_eventBinds.find(eventCode);
-        if(found == m_eventBinds.end()) {
-            if(event.argList) {
-                //delete event.argList;
-                pushToFreeSlot(event.argList);
-                event.argList = NULL;
-            }
-            m_eventsQueue.pop();
-            continue;
-        }
-        CallbacksVec &callbacks = (*found).second;
-        for(int j = 0; j < (int)callbacks.size(); j++) {
-            if(callbacks[j]) {
-                if(event.argList) {
-                    callbacks[j]->Call(event.argList);
-                } else if(event.systemData) {
-                    callbacks[j]->Call((void*)event.systemData);
-                } else {
-                    callbacks[j]->Call();
-                }
-            }
-        }
-
-        // Free the argument list as it is no longer need - one allocation for one call
-        if(event.argList) {
-            //delete event.argList;
-            pushToFreeSlot(event.argList);
-            event.argList = NULL;
-        }
-        m_eventsQueue.pop();
-    }
-
-    // Phase 2: Timeouts
-    unsigned long int TS = FG_HardwareState->getTS(); // #FIXME - hardware state TS
+    
+    ////////////////////////////////////////////////////////////////////////////
+    // Phase 1: Timeouts
+    unsigned long int TS = FG_GetTicks();
 
     // After timeout is executed it needs to be deleted from the timeouts pool - also the callback pointer must 
     // be freed with the argument list as they no longer needed
@@ -515,7 +478,8 @@ void event::CEventManager::executeEvents(void) {
         }
     }
 
-    // Phase 4: Cyclic callbacks
+    ////////////////////////////////////////////////////////////////////////////
+    // Phase 2: Cyclic callbacks
     unsigned int numCyclic = m_cyclicCallbacks.size();
 
     //for(CyclicCallbacksVecItor it = m_cyclicCallbacks.begin(); it != m_cyclicCallbacks.end(); it++) {
@@ -552,5 +516,45 @@ void event::CEventManager::executeEvents(void) {
                 i--;
             }
         }
+    }
+    
+    ////////////////////////////////////////////////////////////////////////////
+    // Phase 3: execution of thrown events (now including the argument list).
+    // Btw after calling the proper callback,
+    // queue entry with argument list must be erased 
+    while(!m_eventsQueue.empty()) {
+        SThrownEvent &event = m_eventsQueue.front();
+        int eventCode = event.eventCode;
+        //FG_LOG_DEBUG("Event code thrown %d | list: %p", eventCode, event.argList);
+        CallbackBindingMap::iterator found = m_eventBinds.find(eventCode);
+        if(found == m_eventBinds.end()) {
+            if(event.argList) {
+                //delete event.argList;
+                pushToFreeSlot(event.argList);
+                event.argList = NULL;
+            }
+            m_eventsQueue.pop();
+            continue;
+        }
+        CallbacksVec &callbacks = (*found).second;
+        for(int j = 0; j < (int)callbacks.size(); j++) {
+            if(callbacks[j]) {
+                if(event.argList) {
+                    callbacks[j]->Call(event.argList);
+                } else if(event.systemData) {
+                    callbacks[j]->Call((void*)event.systemData);
+                } else {
+                    callbacks[j]->Call();
+                }
+            }
+        }
+
+        // Free the argument list as it is no longer need - one allocation for one call
+        if(event.argList) {
+            //delete event.argList;
+            pushToFreeSlot(event.argList);
+            event.argList = NULL;
+        }
+        m_eventsQueue.pop();
     }
 }
