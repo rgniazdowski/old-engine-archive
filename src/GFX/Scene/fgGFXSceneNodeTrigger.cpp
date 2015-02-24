@@ -140,29 +140,14 @@ void gfx::CSceneNodeTrigger::setScale(const Vector3f& scale) {
     m_modelMat[3].x = translation.x;
     m_modelMat[3].y = translation.y;
     m_modelMat[3].z = translation.z;
-    
+
 }
 
-/**
- * 
- */
-void gfx::CSceneNodeTrigger::updateAABB(void) {
+void gfx::CSceneNodeTrigger::setCollisionBodyType(const physics::CCollisionBody::BodyType bodyType) {
+    // Scene Node Trigger does not need a collision body
+    // At least not the base version of node trigger
     if(getCollisionBody()) {
-        // Well the collision body is present, so the base function can be called
-        // it will do the required transformations (based on the physics)
-        base_type::updateAABB();
-    }
-}
-
-/**
- * 
- * @param modelMat
- */
-void gfx::CSceneNodeTrigger::updateAABB(const Matrix4f& modelMat) {
-    if(getCollisionBody()) {
-        // Well the collision body is present, so the base function can be called
-        // it will do the required transformations (based on the physics)
-        base_type::updateAABB(modelMat);
+        removeCollisionBody();
     }
 }
 

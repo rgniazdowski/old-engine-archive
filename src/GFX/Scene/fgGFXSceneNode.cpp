@@ -271,14 +271,6 @@ void gfx::CSceneNode::draw(const Matrix4f& modelMat) {
  * 
  */
 void gfx::CSceneNode::updateAABB(void) {
-    CSceneNode::updateAABB(m_modelMat); // Call the base version
-}
-
-/**
- * 
- * @param modelMat
- */
-void gfx::CSceneNode::updateAABB(const Matrix4f& modelMat) {
     // Note: the bounding volume of the scene node is bigger
     // it holds info for aabb after transformation (by model matrix)
     // and radius of the sphere that contains the transformed aabb
@@ -291,10 +283,8 @@ void gfx::CSceneNode::updateAABB(const Matrix4f& modelMat) {
             Vector3f &extent = m_collisionBody->getCollisionBox()->halfSize;
             m_aabb.min = -extent;
             m_aabb.max = extent;
-            m_aabb.transform(modelMat);
             if(isAutoScale()) {
                 m_scale = extent * 2.0f;
-                m_modelMat = math::scale(m_modelMat, m_scale);
             }
             //m_aabb.radius = math::sqrt(extent.x * extent.x + extent.y * extent.y + extent.z * extent.z);
         } else if(m_collisionBody->getBodyType() == physics::CCollisionBody::SPHERE) {
@@ -304,14 +294,13 @@ void gfx::CSceneNode::updateAABB(const Matrix4f& modelMat) {
             m_aabb.radius = radius;
             m_aabb.min = -extent;
             m_aabb.max = extent;
-
             if(isAutoScale()) {
                 m_scale = Vector3f(radius, radius, radius);
-                m_modelMat = math::scale(m_modelMat, m_scale);
             }
             // The collision body is a sphere - so it is guaranteed that even
             // with model transform the radius does not change
         }
+        m_modelMat = math::scale(m_modelMat, m_scale);
     } else {
         // #FUBAR - no reset performed
         // m_aabb.transform(m_modelMat);
@@ -327,16 +316,17 @@ void gfx::CSceneNode::update(float delta) {
     // Need to update the scene node model matrix based on the one
     // from the physics subsystem (CollisionBody/RigidBody)
     if(m_collisionBody) {
-        m_collisionBody->getGLTransform(math::value_ptr(m_modelMat));
         // This will also call calculateInternals() for the underlying
         // collision primitive (box/sphere/custom/...)
         m_collisionBody->integrate(delta);
+        m_collisionBody->getGLTransform(math::value_ptr(m_modelMat));
+        
     }
     // The base version of the updateAABB will update it depending on the collision body
     // if no collision body is present - the transformation wont be valid,
     // so it does nothing... - this way this function can be called at the end of 
     // any derived version (extend)
-    updateAABB();    
+    updateAABB();
     // Scaling?
 }
 

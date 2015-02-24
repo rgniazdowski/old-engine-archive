@@ -316,7 +316,7 @@ namespace fg {
              * 
              * @param bodyType
              */
-            void setCollisionBodyType(const physics::CCollisionBody::BodyType bodyType);
+            virtual void setCollisionBodyType(const physics::CCollisionBody::BodyType bodyType);
             /**
              * 
              * @return 
@@ -324,6 +324,8 @@ namespace fg {
             physics::CCollisionBody* getCollisionBody(void) const {
                 return m_collisionBody;
             }
+
+            ////////////////////////////////////////////////////////////////////
 
         public:
             /**
@@ -626,11 +628,6 @@ namespace fg {
              * 
              */
             virtual void updateAABB(void);
-            /**
-             * 
-             * @param modelMat
-             */
-            virtual void updateAABB(const Matrix4f& modelMat);
 
             ////////////////////////////////////////////////////////////////////
             /**

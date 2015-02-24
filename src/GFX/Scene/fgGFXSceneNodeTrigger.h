@@ -141,13 +141,9 @@ namespace fg {
 
             /**
              * 
+             * @param bodyType
              */
-            virtual void updateAABB(void);
-            /**
-             * 
-             * @param modelMat
-             */
-            virtual void updateAABB(const Matrix4f& modelMat);
+            virtual void setCollisionBodyType(const physics::CCollisionBody::BodyType bodyType);
 
             ////////////////////////////////////////////////////////////////////
 

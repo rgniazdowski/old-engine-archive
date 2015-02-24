@@ -122,35 +122,30 @@ void gfx::CSceneNodeObject::refreshGfxInternals(void) {
  */
 void gfx::CSceneNodeObject::updateAABB(void) {
 
-    if(getCollisionBody()) {
+    physics::CCollisionBody *body = getCollisionBody();
+    if(body) {
+        if(m_pModel && !isAutoScale()) {
+            if(body->getBodyType() == physics::CCollisionBody::SPHERE) {
+                body->setRadius(math::length(m_scale * m_pModel->getRefAABB().getExtent()));
+            } else {
+                body->setHalfSize(m_scale * (m_pModel->getRefAABB().getExtent()));
+            }
+            body->setInertiaTensor();
+            body->calculateDerivedData();
+        }
         // Well the collision body is present, so the base function can be called
         // it will do the required transformations (based on the physics)
         base_type::updateAABB();
     }
-
     if(m_pModel) {
         m_aabb.min = m_pModel->getRefAABB().min;
         m_aabb.max = m_pModel->getRefAABB().max;
         m_aabb.transform(m_modelMat);
-        m_aabb.radius = math::length(m_scale * m_pModel->getRefAABB().getExtent());
-    } 
-}
-
-/**
- * 
- * @param modelMat
- */
-void gfx::CSceneNodeObject::updateAABB(const Matrix4f& modelMat) {
-    if(m_pModel) {
-        m_aabb.min = m_pModel->getRefAABB().min;
-        m_aabb.max = m_pModel->getRefAABB().max;
-        m_aabb.transform(modelMat);
-        m_aabb.radius = math::length(m_scale * m_pModel->getRefAABB().getExtent());
-    }
-    if(getCollisionBody()) {
-        // Well the collision body is present, so the base function can be called
-        // it will do the required transformations (based on the physics)
-        base_type::updateAABB(modelMat);
+        if(body && !isAutoScale()) {
+            m_aabb.radius = body->getRadius();
+        } else {
+            m_aabb.radius = math::length(m_scale * m_pModel->getRefAABB().getExtent());
+        }
     }
 }
 
