@@ -8,7 +8,8 @@
 # num_faces: 150
 # num_groups: 1
 
-mtllib rock_d_02.mtl
+#mtllib rock_d_02.mtl
+mtllib rock_d_02.mat.ini
 
 v -0.673211 -0.673042 0.337919
 v -0.751067 -0.485957 0.211980
