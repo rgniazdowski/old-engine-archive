@@ -66,9 +66,9 @@ namespace fg {
         class CGuiMain : public fg::base::CManager, public CGuiBase {
         private:
             ///
-            typedef fg::CVector<CGuiCallback *> guiCallbackVec;
+            typedef CVector<CGuiCallback *> GuiCallbackVec;
             ///
-            typedef guiCallbackVec::iterator guiCallbackVecItor;
+            typedef GuiCallbackVec::iterator GuiCallbackVecItor;
 
         private:
             /// GUI style manager - loads and manages styles
@@ -95,7 +95,7 @@ namespace fg {
             /// Special callback for receiving mouse events
             fg::event::CFunctionCallback *m_guiMouseCallback;
             /// Special callback for handling link events (menu navigation)
-            fg::gui::CGuiCallback *m_guiLinkCallback;
+            CGuiCallback *m_guiLinkCallback;
 
             /// Next menu link (can be null if no menu change is required)
             CMenu *m_changeToMenu;
@@ -109,7 +109,7 @@ namespace fg {
 
             /// Special vector for holding gui callbacks
             /// It's used for easy free/deletion process
-            guiCallbackVec m_guiCallbacks;
+            GuiCallbackVec m_guiCallbacks;
 
             /// Special bounding box describing current screen/window
             /// 3D float/double type box is used for compatibility 
@@ -167,6 +167,8 @@ namespace fg {
              */
             virtual fgBool initialize(void);
 
+        ////////////////////////////////////////////////////////////////////////
+            
         public:
             /**
              * 
@@ -201,12 +203,14 @@ namespace fg {
                                      fg::gui::CGuiCallback *pCallback,
                                      const fgGuiWidgetCallbackType callbackType);
 
+        ////////////////////////////////////////////////////////////////////////
+        
         public:
             /**
              * 
              * @return 
              */
-            fg::gui::CWidgetManager *getWidgetManager(void) const;
+            CWidgetManager *getWidgetManager(void) const;
             /**
              * 
              * @return 
@@ -258,6 +262,42 @@ namespace fg {
              * @param pointerInputReceiver
              */
             void setPointerInputReceiver(fg::event::CInputHandler *pointerInputReceiver);
+            
+            ////////////////////////////////////////////////////////////////////
+            
+            /**
+             * 
+             * @param menuName
+             */
+            void changeMenu(const char *menuName);
+            /**
+             * 
+             * @param menuName
+             */
+            void changeMenu(const std::string& menuName);
+            /**
+             * 
+             * @param pMenu
+             */
+            void changeMenu(CWidget *pMenu);
+            
+            /**
+             * 
+             * @param menuName
+             */
+            void setCurrentMenu(const char *menuName);
+            /**
+             * 
+             * @param menuName
+             */
+            void setCurrentMenu(const std::string& menuName);
+            /**
+             * 
+             * @param pMenu
+             */
+            void setCurrentMenu(CWidget *pMenu);
+            
+            ////////////////////////////////////////////////////////////////////
 
             /**
              * Update state of all widgets (called only when needed)
@@ -274,6 +314,8 @@ namespace fg {
              */
             virtual void render(void); // #FIXME, just testing
 
+            ////////////////////////////////////////////////////////////////////
+            
             /**
              * 
              * @param argv

@@ -8,10 +8,11 @@
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
 
+#include "fgGuiMain.h"
+#include "fgDebugConfig.h"
+
 #include "GFX/fgGFXPrimitives.h"
 #include "GFX/Shaders/fgGFXShaderManager.h"
-#include "fgLog.h"
-#include "fgGuiMain.h"
 
 #include "fgGuiWidget.h"
 #include "fgGuiLabel.h"
@@ -41,8 +42,11 @@
 #include "GUI/Font/fgFontBuiltIn.h"
 
 #include "fgColors.h"
+#include "fgLog.h"
 
-#include "fgDebugConfig.h"
+#if defined(FG_USING_MARMALADE)
+#include "s3eKeyboard.h"
+#endif
 
 using namespace fg;
 
@@ -609,7 +613,7 @@ fgBool gui::CGuiMain::guiTouchHandler(event::CArgumentList * argv) {
  * @param argv
  * @return 
  */
-fgBool gui::CGuiMain::guiMouseHandler(event::CArgumentList * argv) {
+fgBool gui::CGuiMain::guiMouseHandler(event::CArgumentList* argv) {
     if(!argv)
         return FG_FALSE;
     event::SEvent *pEvent = (event::SEvent *)argv->getValueByID(0);
@@ -626,7 +630,7 @@ fgBool gui::CGuiMain::guiMouseHandler(event::CArgumentList * argv) {
  * @param pWidget
  * @return 
  */
-fgBool gui::CGuiMain::guiLinkHandler(CGuiMain* pGuiMain, CWidget * pWidget) {
+fgBool gui::CGuiMain::guiLinkHandler(CGuiMain* pGuiMain, CWidget* pWidget) {
     if(!pGuiMain || !pWidget || !m_widgetMgr)
         return FG_FALSE;
     if(pWidget->getLink().length()) {
@@ -634,16 +638,107 @@ fgBool gui::CGuiMain::guiLinkHandler(CGuiMain* pGuiMain, CWidget * pWidget) {
         if(!goToWidget)
             return FG_FALSE;
         if(goToWidget->getTypeTraits() & MENU) {
-            // NOT YET - need animation ?
-            m_changeToMenu = static_cast<CMenu *>(goToWidget);
-            //m_currentMenu = static_cast<fgGuiMenu *>(goToWidget);
-            FG_LOG_DEBUG("GUI: Changing menu to: '%s'", m_currentMenu->getNameStr());
-            this->updateState();
-            m_isMenuChanging = FG_TRUE; // #FIXME
+            changeMenu(goToWidget);
             return FG_TRUE;
         } else {
             return FG_FALSE;
         }
     }
     return FG_TRUE;
+}
+
+/**
+ * 
+ * @param menuName
+ */
+void gui::CGuiMain::changeMenu(const char *menuName) {
+    if(!menuName) {
+        return;
+    }
+    if(!m_widgetMgr) {
+        return;
+    }
+    CWidget *pWidget = m_widgetMgr->get(menuName);
+    changeMenu(pWidget);
+}
+
+/**
+ * 
+ * @param menuName
+ */
+void gui::CGuiMain::changeMenu(const std::string& menuName) {
+    if(menuName.empty()) {
+        return;
+    }
+    if(!m_widgetMgr) {
+        return;
+    }
+    CWidget *pWidget = m_widgetMgr->get(menuName);
+    changeMenu(pWidget);
+}
+
+/**
+ * 
+ * @param pMenu
+ */
+void gui::CGuiMain::changeMenu(CWidget *pMenu) {
+    if(!pMenu)
+        return;
+    if(m_widgetMgr && !m_widgetMgr->isManaged(pMenu)) {
+        return;
+    }
+    if(pMenu->getTypeTraits() & MENU) {
+        m_changeToMenu = static_cast<CMenu *>(pMenu);
+        FG_LOG_DEBUG("GUI: Changing menu to: '%s'", m_changeToMenu->getNameStr());
+        this->updateState();
+        m_isMenuChanging = FG_TRUE;
+    }
+}
+
+/**
+ * 
+ * @param menuName
+ */
+void gui::CGuiMain::setCurrentMenu(const char *menuName) {
+    if(!menuName) {
+        return;
+    }
+    if(!m_widgetMgr) {
+        return;
+    }
+    CWidget *pWidget = m_widgetMgr->get(menuName);
+    setCurrentMenu(pWidget);
+}
+
+/**
+ * 
+ * @param menuName
+ */
+void gui::CGuiMain::setCurrentMenu(const std::string& menuName) {
+    if(menuName.empty()) {
+        return;
+    }
+    if(!m_widgetMgr) {
+        return;
+    }
+    CWidget *pWidget = m_widgetMgr->get(menuName);
+    setCurrentMenu(pWidget);
+}
+
+/**
+ * 
+ * @param pMenu
+ */
+void gui::CGuiMain::setCurrentMenu(CWidget *pMenu) { 
+    if(!pMenu)
+        return;
+    if(m_widgetMgr && !m_widgetMgr->isManaged(pMenu)) {
+        return;
+    }
+    if(pMenu->getTypeTraits() & MENU) {
+        m_currentMenu = static_cast<CMenu *>(pMenu);
+        FG_LOG_DEBUG("GUI: Setting current menu to: '%s'", m_currentMenu->getNameStr());
+        this->updateState();
+        m_isMenuChanging = FG_FALSE;
+    }
 }

@@ -301,6 +301,10 @@ fgBool script::CScriptSubsystem::initialize(void) {
         m_fgObj = m_luaState->CreateTable();
         m_fgObj.SetMetatable(m_mgrMetatables[FG_NAMESPACE]); // ? # ?
         m_globals.SetObject("fg", m_fgObj);
+        m_globals.SetInteger("TRUE", 1);
+        m_globals.SetInteger("FALSE", 0);
+        m_globals.SetInteger("FG_TRUE", 1);
+        m_globals.SetInteger("FG_FALSE", 0);
     }
 
     if(!registerConstants()) {
@@ -483,7 +487,7 @@ int script::CScriptSubsystem::managedResourceGCEvent(lua_State* L) {
  */
 fgBool script::CScriptSubsystem::managedObjectDestructorCallback(void *systemData, void *userData) {
     if(!systemData)
-        return FG_FALSE; 
+        return FG_FALSE;
 
 #if defined(FG_USING_LUA_PLUS)
     uintptr_t offset = (uintptr_t)systemData;
@@ -1839,7 +1843,7 @@ fgBool script::CScriptSubsystem::registerSceneManager(LuaPlus::LuaObject &metata
     metatable.RegisterObjectDirect("addDuplicate",
                                    static_cast<gfx::CSceneManager *>(0),
                                    static_cast<SCENE_BASE_SceneNode_C_STR_C_STR_IN>(&gfx::CSceneManager::addDuplicate));
-    
+
     metatable.RegisterObjectDirect("count",
                                    static_cast<gfx::CSceneManager *>(0),
                                    &gfx::CSceneManager::count);
@@ -1930,7 +1934,7 @@ fgBool script::CScriptSubsystem::register3DSceneManager(void) {
     m_mgrMetatables[SCENE3D_MGR].RegisterObjectDirect("addFromModel",
                                                       static_cast<gfx::CScene3D *>(0),
                                                       static_cast<SCENE3D_SceneNode_C_STR_IN_C_STR_IN>(&gfx::CScene3D::addFromModel));
-    
+
     //m_mgrMetatables[SCENE3D_MGR].
     //m_mgrMetatables[SCENE3D_MGR].Push(m_luaState);
     ////////////////////////////////////////////////////////////////////////////
@@ -2267,9 +2271,17 @@ fgBool script::CScriptSubsystem::registerGuiMain(void) {
     if(m_fgObj.GetRef() < 0)
         return FG_FALSE;
 
+    typedef void(gui::CGuiMain::*GM_void_C_STR_IN)(const char*);
+
     // Gui main/manager metatable
     m_mgrMetatables[GUI_MAIN] = m_fgObj.CreateTable(fgScriptMT->getMetatableName(CMetatables::GUI_MAIN_MT_ID));
     m_mgrMetatables[GUI_MAIN].SetObject("__index", m_mgrMetatables[GUI_MAIN]);
+    m_mgrMetatables[GUI_MAIN].RegisterObjectDirect("changeMenu",
+                                                   (gui::CGuiMain *)0,
+                                                   static_cast<GM_void_C_STR_IN>(&gui::CGuiMain::changeMenu));
+    m_mgrMetatables[GUI_MAIN].RegisterObjectDirect("setCurrentMenu",
+                                                   (gui::CGuiMain *)0,
+                                                   static_cast<GM_void_C_STR_IN>(&gui::CGuiMain::setCurrentMenu));
     m_mgrMetatables[GUI_MAIN].Register("addWidgetCallback", &script::CScriptSubsystem::addWidgetCallbackWrapper);
 
     uintptr_t offset = (uintptr_t)m_pGuiMain;
