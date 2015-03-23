@@ -15,7 +15,7 @@
 
 using namespace fg;
 
-/*
+/**
  *
  */
 gui::CWidget::CWidget() :
@@ -39,7 +39,7 @@ m_onKey(NULL),
 m_onMouse(NULL),
 m_onChangeState(NULL),
 m_onLink(NULL),
-m_fatherPtr(NULL),
+m_pFather(NULL),
 m_type(WIDGET_UNKNOWN),
 m_typeTraits(WIDGET_UNKNOWN),
 m_state(State::NONE),
@@ -54,24 +54,44 @@ m_ignoreState(FG_FALSE) {
     m_bbox.size.z = -1.0f;
 }
 
-/*
+/**
  *
  */
 gui::CWidget::~CWidget() {
-    //printf("WIDGET DEL: %s [%s]\n", m_nameTag.c_str(), m_typeName.c_str());
+ }
+
+/**
+ * 
+ * @param size
+ * @param unit
+ */
+void gui::CWidget::setSize(const Vector3f& size, Unit unit) {
+    m_bbox.size = size;
+
+    m_styles[(int)State::NONE].getSize().style = (SSize::Style)unit;
+    m_styles[(int)State::NONE].getSize().set(size);
+    m_styles[(int)State::FOCUS].getSize().style = (SSize::Style)unit;
+    m_styles[(int)State::FOCUS].getSize().set(size);
+    m_styles[(int)State::PRESSED].getSize().style = (SSize::Style)unit;
+    m_styles[(int)State::PRESSED].getSize().set(size);
+    m_styles[(int)State::ACTIVATED].getSize().style = (SSize::Style)unit;
+    m_styles[(int)State::ACTIVATED].getSize().set(size);
+    m_styles[(int)State::DEACTIVATED].getSize().style = (SSize::Style)unit;
+    m_styles[(int)State::DEACTIVATED].getSize().set(size);
 }
 
 /**
  * 
  * @param guiLayer
  */
-void gui::CWidget::display(CDrawer *guiLayer) {
+void gui::CWidget::display(CDrawer* guiLayer) {
     if(!guiLayer)
         return;
     if(!m_isVisible)
         return;
-    CDrawer *guiDrawer = (CDrawer *)guiLayer;
+    CDrawer *guiDrawer = (CDrawer*)guiLayer;
     guiDrawer->downZIndex();
+    Vec2f tmpTextSize;
     Vec2f blockPos = Vec2f(m_bbox.pos.x, m_bbox.pos.y);
     Vec2f blockSize = Vec2f(m_bbox.size.x, m_bbox.size.y);
     fgColor4f &bgColor = m_styles[(int)m_state].getBackground().color;
@@ -81,19 +101,22 @@ void gui::CWidget::display(CDrawer *guiLayer) {
 #if defined(FG_DEBUG)
     // BLOCK SIZE / POS DEBUG PRINT
     if(g_fgDebugConfig.guiBBoxShow) {
+        guiDrawer->downZIndex();
         char buf[256];
-        snprintf(buf, 255, "%.1fx%.1f [%.1fx%.1f]", blockPos.x, blockPos.y, blockSize.x, blockSize.y);
+        snprintf(buf, 255, "%s >> %.1fx%.1f [%.1fx%.1f]", m_nameTag.c_str(), blockPos.x, blockPos.y, blockSize.x, blockSize.y);
         float tSize = m_styles[(int)m_state].getForeground().textSize;
         fgColor4f tColor = m_styles[(int)m_state].getForeground().color;
         std::string tFont = m_styles[(int)m_state].getForeground().font;
-        m_styles[(int)m_state].getForeground().textSize = 20.0f;
+        m_styles[(int)m_state].getForeground().textSize = 2.0f;
+        m_styles[(int)m_state].getForeground().unit = Unit::PERCENTS;
         m_styles[(int)m_state].getForeground().font = "StbConsolasBold";
-        m_styles[(int)m_state].getForeground().color = fgColor4f(.8f, .8f, .8f, 1.0f);
+        m_styles[(int)m_state].getForeground().color = fgColor4f(.8f, .2f, .1f, 1.0f);
         blockSize.y = 10.0f;
-        guiDrawer->appendText2D(m_textSize, blockPos, blockSize, m_styles[(int)m_state], buf);
+        guiDrawer->appendText2D(tmpTextSize, blockPos, blockSize, m_styles[(int)m_state], buf);
         m_styles[(int)m_state].getForeground().textSize = tSize;
         m_styles[(int)m_state].getForeground().font = tFont;
         m_styles[(int)m_state].getForeground().color = tColor;
+        guiDrawer->upZIndex();
     }
 #endif
     if(m_text.length()) {

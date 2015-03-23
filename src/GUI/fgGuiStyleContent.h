@@ -39,10 +39,10 @@
     #define FG_GUI_DEFAULT_VALIGN	Align::MIDDLE
     #define FG_GUI_DEFAULT_TEXT_ALIGN   (Align::CENTER | Align::MIDDLE)
 
-    #define FG_GUI_DEFAULT_SIZE_STYLE   SSize::Style::PIXELS
-    #define FG_GUI_DEFAULT_SIZE_X       10.0f
-    #define FG_GUI_DEFAULT_SIZE_Y       5.0f
-    #define FG_GUI_DEFAULT_SIZE_Z       1.0f
+    #define FG_GUI_DEFAULT_SIZE_STYLE   SSize::Style::INVALID_STYLE
+    #define FG_GUI_DEFAULT_SIZE_X       FG_GUI_FLOAT_UNIT_INVALID
+    #define FG_GUI_DEFAULT_SIZE_Y       FG_GUI_FLOAT_UNIT_INVALID
+    #define FG_GUI_DEFAULT_SIZE_Z       FG_GUI_FLOAT_UNIT_INVALID
 
     #define FG_GUI_DEFAULT_POSITION_STYLE	SPosition::Style::STATICPOS
     #define FG_GUI_DEFAULT_POSITION_LEFT	FG_GUI_FLOAT_UNIT_INVALID
@@ -59,6 +59,7 @@ namespace fg {
          *
          */
         enum class Unit : unsigned char {
+            INVALID_UNIT,
             PIXELS,
             INCHES,
             BLOCKS,
@@ -375,6 +376,42 @@ namespace fg {
                 front = left;
                 back = left;
             }
+            /**
+             * 
+             * @param pos
+             */
+            void set(const Vector3f& pos) {
+                if(this->style != SPosition::Style::STATICPOS) {
+                    if(pos.x <= 0.0f)
+                        this->left = math::abs(pos.x);
+                    else
+                        this->right = pos.x;
+                    if(pos.y <= 0.0f)
+                        this->top = math::abs(pos.y);
+                    else
+                        this->bottom = pos.y;
+                    if(pos.z <= 0.0f)
+                        this->front = math::abs(pos.z);
+                    else
+                        this->back = pos.z;
+                }
+            }
+            /**
+             * 
+             * @param pos
+             */
+            void set(const Vector2f& pos) {
+                if(this->style != SPosition::Style::STATICPOS) {
+                    if(pos.x <= 0.0f)
+                        this->left = math::abs(pos.x);
+                    else
+                        this->right = pos.x;
+                    if(pos.y <= 0.0f)
+                        this->top = math::abs(pos.y);
+                    else
+                        this->bottom = pos.y;
+                }
+            }
         };
 
         /**
@@ -386,6 +423,7 @@ namespace fg {
              *
              */
             enum class Style : unsigned char {
+                INVALID_STYLE = Unit::INVALID_UNIT,
                 PIXELS = Unit::PIXELS,
                 INCHES = Unit::INCHES,
                 BLOCKS = Unit::BLOCKS,
@@ -418,6 +456,35 @@ namespace fg {
             x(FG_GUI_DEFAULT_SIZE_X),
             y(FG_GUI_DEFAULT_SIZE_Y),
             z(FG_GUI_DEFAULT_SIZE_Z) { }
+            /**
+             * 
+             * @param size
+             */
+            void set(const Vector3f& size) {
+                this->x = size.x;
+                this->y = size.y;
+                this->z = size.z;
+            }
+            /**
+             * 
+             * @param _x
+             * @param _y
+             * @param _z
+             */
+            void set(float _x, float _y, float _z) {
+                this->x = _x;
+                this->y = _y;
+                this->z = _z;
+            }
+            /**
+             * 
+             * @param _x
+             * @param _y
+             */
+            void set(float _x, float _y) {
+                this->x = _x;
+                this->y = _y;
+            }
         };
     };
 };
@@ -455,6 +522,8 @@ namespace fg {
              * 
              */
             virtual ~CStyleContent();
+
+            void copyFrom(const CStyleContent& style);
 
             ////////////////////////////////////////////////////////////////////
 

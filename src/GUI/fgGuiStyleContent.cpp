@@ -26,6 +26,77 @@ gui::CStyleContent::~CStyleContent() { }
 
 /**
  * 
+ * @param style
+ */
+void gui::CStyleContent::copyFrom(const CStyleContent& style) {
+    if(this == &style)
+        return;
+    /// Used shader - name
+    m_shader = style.m_shader;
+    /// Used effect - name
+    m_effect = style.m_effect;
+    /// Size modifier
+    {
+        if(m_size.style == SSize::Style::INVALID_STYLE)
+            m_size.style = style.m_size.style;        
+        if(m_size.style == SSize::Style::INVALID_STYLE)
+            m_size.style = SSize::Style::PIXELS;
+        if(!FG_GUI_CHECK_FLOAT(m_size.x))
+            m_size.x = style.m_size.x;
+        if(!FG_GUI_CHECK_FLOAT(m_size.x))
+            m_size.x = 10.0f;
+        
+        if(!FG_GUI_CHECK_FLOAT(m_size.y))
+            m_size.y = style.m_size.y;
+        if(!FG_GUI_CHECK_FLOAT(m_size.y))
+            m_size.y = 10.0f;
+                 
+        if(!FG_GUI_CHECK_FLOAT(m_size.z))
+            m_size.z = style.m_size.z;
+        if(!FG_GUI_CHECK_FLOAT(m_size.z))
+            m_size.z = 1.0f;        
+    }
+    /// Style of the background (image, modifier)
+    m_bg = style.m_bg;
+    /// Foreground info & style
+    m_fg = style.m_fg;
+    /// Margins information
+    m_margin = style.m_margin;
+    /// Padding information
+    m_padding = style.m_padding;
+    /// Border information
+    m_border = style.m_border;
+    /// Position modifier
+    {
+        if(m_position.unit == Unit::INVALID_UNIT)
+            m_position.unit = style.m_position.unit;        
+        if(m_position.unit == Unit::INVALID_UNIT)
+            m_position.unit = Unit::PIXELS;
+        if(!FG_GUI_CHECK_FLOAT(m_position.left))
+            m_position.left = style.m_position.left;
+        if(!FG_GUI_CHECK_FLOAT(m_position.right))
+            m_position.right = style.m_position.right;
+
+        if(!FG_GUI_CHECK_FLOAT(m_position.back))
+            m_position.back = style.m_position.back;
+        if(!FG_GUI_CHECK_FLOAT(m_position.front))
+            m_position.front = style.m_position.front;
+
+        if(!FG_GUI_CHECK_FLOAT(m_position.top))
+            m_position.top = style.m_position.top;
+        if(!FG_GUI_CHECK_FLOAT(m_position.bottom))
+            m_position.bottom = style.m_position.bottom;
+    }
+    /// Horizontal align
+    m_align = style.m_align;
+    /// Vertical align
+    m_valign = style.m_valign;
+    /// Align of the text
+    m_textAlign = style.m_textAlign;
+}
+
+/**
+ * 
  * @param align
  * @param pos
  * @param size
@@ -300,6 +371,7 @@ float gui::CStyleContent::parseLength(const char *value, Unit &unit) {
         return 0.0f;
     float length = 0.0f;
     std::string lengthStr;
+    unit = Unit::PIXELS;
     if(strings::containsChars(value, "%")) {
         unit = Unit::PERCENTS;
         lengthStr = strings::trim(std::string(value), std::string(" %"));

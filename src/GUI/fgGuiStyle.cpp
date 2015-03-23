@@ -254,12 +254,12 @@ fgBool gui::CStyle::copyFullContent(CStyleContent *contents,
     strings::split(info, '.', parts);
     std::string search = parts[0];
     parts.clear();
-    contents[0] = getContent(search);
+    contents[0].copyFrom(getContent(search));
     for(int i = 1; i < num; i++) {
         std::string name = search;
         name.append(".");
         name.append(_buildInSubStyles[i]);
-        contents[i] = getContent(name);
+        contents[i].copyFrom(getContent(name));
     }
     return FG_TRUE;
 }

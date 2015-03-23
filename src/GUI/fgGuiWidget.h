@@ -106,11 +106,14 @@ namespace fg {
 
         /**
          *
-         * @see fgManagedObjectBase
+         * @see CManagedObject
          */
         class CWidget : public fg::resource::CManagedObject<WidgetHandle> {
+            ///
             friend class CGuiMain;
+            ///
             friend class CWidgetManager;
+            ///
             friend class CStructureSheetParser;
 
         public:
@@ -183,7 +186,7 @@ namespace fg {
             CGuiCallback *m_onLink;
 
             /// Pointer to the widget in which this one resides
-            CWidget *m_fatherPtr;
+            CWidget *m_pFather;
 
             /// Holds single value indicating the main type of the widget
             WidgetType m_type;
@@ -217,8 +220,9 @@ namespace fg {
              * @param widget
              */
             void setFather(fg::gui::CWidget *widget) {
-                m_fatherPtr = widget;
+                m_pFather = widget;
             }
+            
         public:
             /**
              * 
@@ -228,6 +232,9 @@ namespace fg {
              * 
              */
             virtual ~CWidget();
+            
+            ////////////////////////////////////////////////////////////////////
+            
             /**
              * 
              * @param guiLayer
@@ -268,12 +275,15 @@ namespace fg {
              * @return 
              */
             virtual State updateState(const fgPointerData *pointerData);
+            
+            ////////////////////////////////////////////////////////////////////
+            
             /**
              * 
              * @return 
              */
-            inline CWidget *getFather(void) const {
-                return m_fatherPtr;
+            inline CWidget* getFather(void) const {
+                return m_pFather;
             }
             /**
              * 
@@ -293,17 +303,19 @@ namespace fg {
              * 
              * @return 
              */
-            inline std::string &getTypeName(void) {
+            inline std::string& getTypeName(void) {
                 return m_typeName;
             }
             /**
              * 
              * @return 
              */
-            inline const char *getTypeNameStr(void) const {
+            inline const char* getTypeNameStr(void) const {
                 return m_typeName.c_str();
             }
 
+            ////////////////////////////////////////////////////////////////////
+            
         public:
             /**
              * Sets the visibility flag of the widget
@@ -397,9 +409,8 @@ namespace fg {
              * 
              * @param size
              */
-            inline void setSize(const Vector3f& size) {
-                m_bbox.size = size;
-            }
+            void setSize(const Vector3f& size, Unit unit = Unit::PIXELS);
+            
             /**
              * Returns the reference to the vector holding widget size
              * @return 
@@ -425,7 +436,7 @@ namespace fg {
              * 
              * @return 
              */
-            inline const char *getLinkStr(void) const {
+            inline const char* getLinkStr(void) const {
                 return m_link.c_str();
             }
             /**
@@ -439,7 +450,7 @@ namespace fg {
              * 
              * @return 
              */
-            inline const char *getScriptStr(void) const {
+            inline const char* getScriptStr(void) const {
                 return m_script.c_str();
             }
             /**
@@ -453,7 +464,7 @@ namespace fg {
              * 
              * @return 
              */
-            inline const char *getActionStr(void) const {
+            inline const char* getActionStr(void) const {
                 return m_action.c_str();
             }
             /**
@@ -467,7 +478,7 @@ namespace fg {
              * 
              * @return 
              */
-            inline const char *getConfigStr(void) const {
+            inline const char* getConfigStr(void) const {
                 return m_config.c_str();
             }
             /**
@@ -481,14 +492,14 @@ namespace fg {
              * 
              * @return 
              */
-            virtual const char *getTextStr(void) const {
+            virtual const char* getTextStr(void) const {
                 return m_text.c_str();
             }
             /**
              * 
              * @param link
              */
-            inline void setLink(const std::string &link) {
+            inline void setLink(const std::string& link) {
                 m_link = link;
             }
             /**
@@ -503,14 +514,14 @@ namespace fg {
              * 
              * @param script
              */
-            inline void setScript(const std::string &script) {
+            inline void setScript(const std::string& script) {
                 m_script = script;
             }
             /**
              * 
              * @param script
              */
-            inline void setScript(const char *script) {
+            inline void setScript(const char* script) {
                 if(script)
                     m_script = script;
             }
@@ -518,7 +529,7 @@ namespace fg {
              * 
              * @param action
              */
-            inline void setAction(const std::string &action) {
+            inline void setAction(const std::string& action) {
                 m_action = action;
             }
             /**
@@ -533,14 +544,14 @@ namespace fg {
              * 
              * @param config
              */
-            inline void setConfig(const std::string &config) {
+            inline void setConfig(const std::string& config) {
                 m_config = config;
             }
             /**
              * 
              * @param config
              */
-            inline void setConfig(const char *config) {
+            inline void setConfig(const char* config) {
                 if(config)
                     m_config = config;
             }
@@ -548,7 +559,7 @@ namespace fg {
              * 
              * @param text
              */
-            virtual void setText(const std::string &text) {
+            virtual void setText(const std::string& text) {
                 m_text = text;
             }
             /**
@@ -561,36 +572,39 @@ namespace fg {
              * 
              * @param text
              */
-            virtual void setText(const char *text) {
+            virtual void setText(const char* text) {
                 if(text)
                     m_text = text;
             }
+            
+            ////////////////////////////////////////////////////////////////////
+            
             /**
              * 
              * @return 
              */
-            inline std::string &getStyleName(void) {
+            inline std::string& getStyleName(void) {
                 return m_styleName;
             }
             /**
              * 
              * @return 
              */
-            inline const char *getStyleNameStr(void) const {
+            inline const char* getStyleNameStr(void) const {
                 return m_styleName.c_str();
             }
             /**
              * 
              * @param style
              */
-            inline void setStyleName(const std::string &style) {
+            inline void setStyleName(const std::string& style) {
                 m_styleName = style;
             }
             /**
              * 
              * @param style
              */
-            inline void setStyleName(const char *style) {
+            inline void setStyleName(const char* style) {
                 m_styleName = style; // #FIXME
             }
             /**
@@ -615,134 +629,137 @@ namespace fg {
              * @param state
              * @return 
              */
-            inline CStyleContent *getStyleContentPtr(State state = State::NONE) {
+            inline CStyleContent* getStyleContentPtr(State state = State::NONE) {
                 if(state >= State::COUNT)
                     return &m_styles[(int)State::NONE];
                 return &m_styles[(int)state];
             }
+            
+            ////////////////////////////////////////////////////////////////////
+            
             /**
              * 
              * @param callback
              */
-            inline void setOnFocusCallback(CGuiCallback *callback) {
+            inline void setOnFocusCallback(CGuiCallback* callback) {
                 m_onFocus = callback;
             }
             /**
              * 
              * @param callback
              */
-            inline void setOnFocusLostCallback(CGuiCallback *callback) {
+            inline void setOnFocusLostCallback(CGuiCallback* callback) {
                 m_onFocusLost = callback;
             }
             /**
              * 
              * @param callback
              */
-            inline void setOnClickCallback(CGuiCallback *callback) {
+            inline void setOnClickCallback(CGuiCallback* callback) {
                 m_onClick = callback;
             }
             /**
              * 
              * @param callback
              */
-            inline void setOnActivateCallback(CGuiCallback *callback) {
+            inline void setOnActivateCallback(CGuiCallback* callback) {
                 m_onActivate = callback;
             }
             /**
              * 
              * @param callback
              */
-            inline void setOnDeactivateCallback(CGuiCallback *callback) {
+            inline void setOnDeactivateCallback(CGuiCallback* callback) {
                 m_onDeactivate = callback;
             }
             /**
              * 
              * @param callback
              */
-            inline void setOnKeyCallback(CGuiCallback *callback) {
+            inline void setOnKeyCallback(CGuiCallback* callback) {
                 m_onKey = callback;
             }
             /**
              *
              */
-            inline void setOnMouseCallback(CGuiCallback *callback) {
+            inline void setOnMouseCallback(CGuiCallback* callback) {
                 m_onMouse = callback;
             }
             /**
              * 
              * @param callback
              */
-            inline void setOnChangeStateCallback(CGuiCallback *callback) {
+            inline void setOnChangeStateCallback(CGuiCallback* callback) {
                 m_onChangeState = callback;
             }
             /**
              * 
              * @return 
              */
-            inline void setOnLinkCallback(CGuiCallback *callback) {
+            inline void setOnLinkCallback(CGuiCallback* callback) {
                 m_onLink = callback;
             }
             /**
              * 
              * @return 
              */
-            inline CGuiCallback *getOnFocusCallback(void) const {
+            inline CGuiCallback* getOnFocusCallback(void) const {
                 return m_onFocus;
             }
             /**
              * 
              * @return 
              */
-            inline CGuiCallback *getOnFocusLostCallback(void) const {
+            inline CGuiCallback* getOnFocusLostCallback(void) const {
                 return m_onFocusLost;
             }
             /**
              * 
              * @return 
              */
-            inline CGuiCallback *getOnClickCallback(void) const {
+            inline CGuiCallback* getOnClickCallback(void) const {
                 return m_onClick;
             }
             /**
              * 
              * @return 
              */
-            inline CGuiCallback *getOnActivateCallback(void) const {
+            inline CGuiCallback* getOnActivateCallback(void) const {
                 return m_onActivate;
             }
             /**
              * 
              * @return 
              */
-            inline CGuiCallback *getOnDeactivateCallback(void) const {
+            inline CGuiCallback* getOnDeactivateCallback(void) const {
                 return m_onDeactivate;
             }
             /**
              * 
              * @return 
              */
-            inline CGuiCallback *getOnKeyCallback(void) const {
+            inline CGuiCallback* getOnKeyCallback(void) const {
                 return m_onKey;
             }
             /**
              * 
              * @return 
              */
-            inline CGuiCallback *getOnMouseCallback(void) const {
+            inline CGuiCallback* getOnMouseCallback(void) const {
                 return m_onMouse;
             }
             /**
              * 
              * @return 
              */
-            inline CGuiCallback *getOnChangeStateCallback(void) const {
+            inline CGuiCallback* getOnChangeStateCallback(void) const {
                 return m_onChangeState;
             }
             /**
              * 
              * @return 
              */
-            inline CGuiCallback *getOnLinkCallback(void) const {
+            inline CGuiCallback* getOnLinkCallback(void) const {
                 return m_onLink;
             }
         };
