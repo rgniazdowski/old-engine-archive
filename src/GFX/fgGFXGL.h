@@ -7,7 +7,6 @@
  * FlexiGame source code and any related files can not be copied, modified 
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
-
 #ifndef FG_INC_GFX_GL
     #define FG_INC_GFX_GL
     #define FG_INC_GFX_GL_BLOCK
@@ -19,7 +18,7 @@
     #ifndef FG_GFX_GL_INCLUDES_FINISHED
         #define FG_GFX_GL_INCLUDES_FINISHED
 
-        #if defined FG_USING_MARMALADE
+        #if defined(FG_USING_MARMALADE)
 //	MARMALADE SPECIFIC CODE
 
             #if !defined FG_USING_MARMALADE_OPENGL_ES && defined FG_USING_MARMALADE_IWGL
@@ -29,7 +28,7 @@
                 #include "s3eGL.h"
             #endif /* FG_USING_MARMALADE_OPENGL_ES */
 
-        #elif defined FG_USING_PLATFORM_LINUX /* && !defined FG_USING_MARMALADE */
+        #elif defined(FG_USING_PLATFORM_LINUX) && !defined(FG_USING_PLATFORM_ANDROID)/* && !defined FG_USING_MARMALADE */
 //	GFX includes for OpenGL/SDL - platform LINUX
 
             #if defined FG_USING_OPENGL
@@ -73,18 +72,19 @@ using namespace gl;
 
         #endif /* FG_USING_MARMALADE */
 
-        #if defined FG_USING_OPENGL_ES
+        #if defined(FG_USING_OPENGL_ES)
 
-            #if defined FG_USINGL_SDL2
+            #if defined(FG_USING_SDL2)
                 #include <SDL2/SDL.h>
                 #include <SDL2/SDL_opengles2.h>
+				#warning "SDL2 / OGLES2"
                 #define FG_INC_INCLUDED_GL_
             #else /* if SDL2 is not defined - native GLES2 support ? */
                 #include <GLES2/gl2.h>
                 #include <GLES2/gl2ext.h>
                 #include <GLES2/gl2platform.h>
                 #define FG_INC_INCLUDED_GL_
-            #endif /* defined FG_USINGL_SDL2 */
+            #endif /* defined FG_USING_SDL2 */
 
             #if defined FG_USING_EGL
                 #include <EGL/egl.h>

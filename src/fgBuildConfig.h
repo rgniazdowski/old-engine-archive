@@ -101,9 +101,21 @@
     #if defined(S3E_ANDROID_X86)
         #define FG_USING_PLATFORM_ANDROID
     #endif
-
+    
     #if defined(__gnu_linux__) || defined(__linux__) || defined(linux) || defined(__linux)
         #define FG_USING_PLATFORM_LINUX
+    #endif
+    
+    #if defined(ANDROID) || defined(__ANDROID__)
+        #undef ANDROID
+        #undef __ANDROID__
+        #define __ANDROID__ 1
+        #define ANROID 1
+        #define FG_USING_PLATFORM_ANDROID
+        #undef FG_USING_PLATFORM_LINUX
+        #undef linux
+        #undef __LINUX__
+        #undef LINUX        
     #endif
 
     #if defined(__CYGWIN__)
@@ -216,11 +228,40 @@
     #endif
 
 // Under linux - use plain GL
-    #ifdef FG_USING_PLATFORM_LINUX
-        #ifndef FG_USING_OPENGL
+    #if defined(FG_USING_PLATFORM_LINUX)
+        #if !defined(FG_USING_OPENGL)
             #define FG_USING_OPENGL
         #endif
     #endif
+
+///////////////// ANDROID DEFAULTS ////////////////////////////////////////////
+
+// Under android - use OGLES2 - 2.0 is default - 1.0 unused/unsupported
+    #if defined(FG_USING_PLATFORM_ANDROID)
+        #undef FG_USING_OPENGL_ES
+        #define FG_USING_OPENGL_ES
+        #undef FG_USING_EGL
+        #undef FG_USING_MARMALADE_EGL
+    #endif
+    
+// Under android - almost certain that build using Android SDK
+// Usage only with SDL2
+    #if defined(FG_USING_PLATFORM_ANDROID)
+        #undef FG_USING_SDL2
+        #define FG_USING_SDL2
+    #endif
+
+// Under android - always use lua plus - hard coded
+	#if defined(FG_USING_PLATFORM_ANDROID)
+		#undef FG_USING_LUA_PLUS
+		#define FG_USING_LUA_PLUS
+	#endif
+
+// Android
+	#if defined(FG_USING_PLATFORM_ANDROID)
+		#define FG_USING_TINYXML
+		#define TIXML_USE_STL
+	#endif
 
 /*************************** EXTENSIONS / PLUGINS SUPPORT ***************************/
 
@@ -248,7 +289,14 @@
 
 // Use TinyXML even on Linux
     #if defined(FG_USING_PLATFORM_LINUX)
-        #ifndef FG_USING_TINYXML
+        #if !defined(FG_USING_TINYXML)
+            #define FG_USING_TINYXML
+        #endif
+    #endif
+    
+// Use TinyXML also on Android
+    #if defined(FG_USING_PLATFORM_ANDROID)
+        #if !defined(FG_USING_TINYXML)
             #define FG_USING_TINYXML
         #endif
     #endif
