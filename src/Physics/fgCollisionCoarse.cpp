@@ -29,7 +29,7 @@ physics::SBoundingSphere::SBoundingSphere(const Vector3f &centre, real radius) {
 }
 
 physics::SBoundingSphere::SBoundingSphere(const SBoundingSphere &one,
-                                        const SBoundingSphere &two) {
+                                          const SBoundingSphere &two) {
     Vector3f centreOffset = two.centre - one.centre;
     real distance = math::squareLength(centreOffset);
     real radiusDiff = two.radius - one.radius;

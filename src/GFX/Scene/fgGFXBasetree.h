@@ -34,7 +34,7 @@ namespace fg {
         class CBasetree {
         public:
             ///
-            const unsigned int DEFAULT_DEPTH = 5;
+            static const unsigned int DEFAULT_DEPTH = 5;
 
         protected:
 

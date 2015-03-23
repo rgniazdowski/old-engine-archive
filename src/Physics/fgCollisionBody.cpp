@@ -120,7 +120,7 @@ void physics::CCollisionBody::setInertiaTensor(float radius, float mass) {
     //float volume = (4.0f)/3.0f * M_PIF * math::pow(radius, 3.0f); 
     // 2/5 * Mass * radius * radius
     float sphereI = 2.0f / 5.0f * mass * radius * radius;
-    setInertiaTensor(physics::setInertiaTensorCoeffs(sphereI, sphereI, sphereI));
+	setInertiaTensor(physics::setInertiaTensorCoeffs<float, math::precision::defaultp>(sphereI, sphereI, sphereI));
     //setInertiaTensor(physics::setBlockInertiaTensor(halfSize, mass));
 }
 

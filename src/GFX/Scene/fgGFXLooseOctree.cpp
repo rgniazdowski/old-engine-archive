@@ -18,6 +18,8 @@
 
 using namespace fg;
 
+const float gfx::CLooseOctree::DEFAULT_LOOSE_K = 2.0f;
+
 /**
  * 
  */

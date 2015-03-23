@@ -61,15 +61,15 @@ fgBool profile::CProfiling::begin(const std::string& name) {
         return FG_FALSE;
     ProfileMapPair query_pair;
     query_pair.first = name;
-    query_pair.second = new SSample();
+    query_pair.second = NULL;
     std::pair<ProfileMapItor, bool> result = m_sampleMap.insert(query_pair);
-    ProfileMapItor it = result.first;
+    ProfileMapItor &it = result.first;
     SSample *sample = it->second;
-    if(!sample)
-        return FG_FALSE;
-    if(result.second == false && sample->isValid) {
-        delete query_pair.second;
-        query_pair.second = NULL;
+    //if(!sample)
+    //    return FG_FALSE;
+    if(result.second == false && sample && sample->isValid) {
+        //delete query_pair.second;
+        //query_pair.second = NULL;
         // Existed
         if(sample->numOpen) {
             // max 1 open at once
@@ -83,13 +83,16 @@ fgBool profile::CProfiling::begin(const std::string& name) {
         // New insertion
         if(m_sampleMap.size() > FG_MAX_PROFILE_SAMPLES) {
             if(result.second) {
-                delete query_pair.second;
-                query_pair.second = NULL;
+                //delete query_pair.second;
+                //query_pair.second = NULL;
                 //it->second = NULL; // ?
             }
             m_sampleMap.erase(it);
             return FG_FALSE;
         }
+        if(!sample)
+            it->second = new SSample();
+        sample = it->second;
 
         sample->isValid = FG_TRUE;
         sample->numOpen = 1;
@@ -250,16 +253,17 @@ fgBool profile::CProfiling::storeProfileHistory(const std::string& name, float p
     oldRatio = 1.0f - newRatio;
     std::pair<std::string, SSampleHistory *> query_pair;
     query_pair.first = name;
-    query_pair.second = new SSampleHistory();
+    query_pair.second = NULL;
     std::pair<HistoryMapItor, bool> result = m_sampleHistory.insert(query_pair);
     HistoryMapItor it = result.first;
     SSampleHistory *sample = it->second;
-    if(!sample)
-        return FG_FALSE;
-    if(result.second == false) {
+    //if(!sample)
+    //    return FG_FALSE;
+    if(result.second == false && sample) {
         // Sample existed #FIXME -- too much allocs
-        delete query_pair.second;
-        query_pair.second = NULL;
+        //delete query_pair.second;
+        //query_pair.second = NULL;
+        //sample = it->second;
         // Existed
         sample->average = sample->average * oldRatio + (percent * newRatio);
         if(percent < sample->minimum) {
@@ -277,12 +281,14 @@ fgBool profile::CProfiling::storeProfileHistory(const std::string& name, float p
     } else {
         // New insertion
         if(m_sampleHistory.size() > FG_MAX_PROFILE_SAMPLES) {
-            delete it->second;
-            it->second = NULL;
+            //delete it->second;
+            //it->second = NULL;
             m_sampleHistory.erase(it);
             return FG_FALSE;
         }
-
+        if(!sample)
+            it->second = new SSampleHistory();
+        sample = it->second;
         sample->isValid = FG_TRUE;
         sample->name = name;
         sample->average = sample->minimum = sample->maximum = percent;

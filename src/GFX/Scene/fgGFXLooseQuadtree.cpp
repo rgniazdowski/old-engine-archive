@@ -18,6 +18,8 @@
 
 using namespace fg;
 
+const float gfx::CLooseQuadtree::DEFAULT_LOOSE_K = 2.0f;
+
 /**
  * 
  */

@@ -90,7 +90,7 @@ namespace fg {
         class CQuadtree : public CBasetree {
         public:
             ///
-            const unsigned int DEFAULT_WORLD_SIZE = 1000;
+            static const unsigned int DEFAULT_WORLD_SIZE = 1000;
 
         protected:
 

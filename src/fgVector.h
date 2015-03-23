@@ -17,7 +17,7 @@
     #endif
 
     #if defined(FG_USING_MARMALADE)
-        #include "IwUtil.h"
+        #include "IwArray.h"
 
 namespace fg {
 	/**
@@ -26,17 +26,50 @@ namespace fg {
 	template <class X, class A = ::CIwAllocator<X>, class REALLOCATE = ::ReallocateDefault<X, A > >
 	class CVector : public ::CIwArray<X, A, REALLOCATE> {
 	public:
+		typedef CVector<X, A, REALLOCATE> self_type;
+		typedef ::CIwArray<X, A, REALLOCATE> base_type;
+
+	public:
 		/**
 		 * @param i
 		 * @return
 		 */
 		X & at(int const i) const {
-			uint32 index = (uint32)i;
+			unsigned int index = (unsigned int)i;
 			if(index >= this->num_p) {
 				return this->p[0];
 			}
 			return this->p[index];
 		}
+
+		X & operator [] (int const i) const
+		{
+			const unsigned int index = (unsigned int)i;
+			IwAssertMsgN(1731, CORE, i>=0 && index<this->max_p, ("invalid index (%d) into array of capacity %u", i, (unsigned int)this->max_p));
+			return this->p[index];
+		}
+
+		typename base_type::const_iterator findItor(X const & value) const {
+            for(typename base_type::const_iterator it = base_type::begin();
+                    it != base_type::end();
+                    it++) {
+                if((*it) == value) {
+                    return it;
+                }
+            }
+            return base_type::end();
+        }
+        
+        typename base_type::iterator findItor(X const & value)  {
+            for(typename base_type::iterator it = base_type::begin();
+                    it != base_type::end();
+                    it++) {
+                if((*it) == value) {
+                    return it;
+                }
+            }
+            return base_type::end();
+        }
 	};
 };
     #else
@@ -50,6 +83,9 @@ namespace fg {
      */
     template <class T, class Alloc = std::allocator<T> >
     class CVector : public std::vector<T, Alloc> {
+	public:
+		typedef CVector<T, Alloc> self_type;
+		typedef std::vector<T, Alloc> base_type;
     public:
         /**
          * 
@@ -65,8 +101,8 @@ namespace fg {
          */
         int find(T const & value) const {
             int i = 0;
-            for(typename std::vector<T, Alloc>::const_iterator it = std::vector<T, Alloc>::begin();
-                    it != std::vector<T, Alloc>::end();
+            for(typename base_type::const_iterator it = std::vector<T, Alloc>::begin();
+                    it != base_type::end();
                     it++, i++) {
                 if((*it) == value) {
                     return i;
@@ -75,26 +111,26 @@ namespace fg {
             return -1;
         }
         
-        typename std::vector<T, Alloc>::const_iterator findItor(T const & value) const {
-            for(typename std::vector<T, Alloc>::const_iterator it = std::vector<T, Alloc>::begin();
-                    it != std::vector<T, Alloc>::end();
+        typename base_type::const_iterator findItor(T const & value) const {
+            for(typename base_type::const_iterator it = base_type::begin();
+                    it != base_type::end();
                     it++) {
                 if((*it) == value) {
                     return it;
                 }
             }
-            return std::vector<T, Alloc>::end();
+            return base_type::end();
         }
         
-        typename std::vector<T, Alloc>::iterator findItor(T const & value)  {
-            for(typename std::vector<T, Alloc>::iterator it = std::vector<T, Alloc>::begin();
-                    it != std::vector<T, Alloc>::end();
+        typename base_type::iterator findItor(T const & value)  {
+            for(typename base_type::iterator it = base_type::begin();
+                    it != base_type::end();
                     it++) {
                 if((*it) == value) {
                     return it;
                 }
             }
-            return std::vector<T, Alloc>::end();
+            return base_type::end();
         }
         /**
          * 
@@ -102,8 +138,8 @@ namespace fg {
          * @return 
          */
         bool contains(T const & value) const {
-            for(typename std::vector<T, Alloc>::const_iterator it = std::vector<T, Alloc>::begin();
-                    it != std::vector<T, Alloc>::end(); it++) {
+            for(typename base_type::const_iterator it = base_type::begin();
+                    it != base_type::end(); it++) {
                 if((*it) == value) {
                     return true;
                 }

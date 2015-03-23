@@ -99,7 +99,7 @@ namespace fg {
         class COctree : public CBasetree {
         public:
             ///
-            const unsigned int DEFAULT_WORLD_SIZE = 2048;
+            static const unsigned int DEFAULT_WORLD_SIZE = 2048;
 
         protected:
 

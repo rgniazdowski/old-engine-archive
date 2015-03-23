@@ -41,9 +41,9 @@ void gui::CMenu::setFlags(const std::string& flags) {
         return;
     unsigned int n = (unsigned int)flagsVec.size();
     for(unsigned int i = 0; i < n; i++) {
-        if(flagsVec[i].compare("mainmenu") == 0) {
+        if(flagsVec[i].compare("mainmenu") == 0 || flagsVec[i].compare("main") == 0) {
             m_isMainMenu = FG_TRUE;
-        } 
+        }
     }
     flagsVec.clear();
 }
@@ -55,6 +55,7 @@ void gui::CMenu::setDefaults(void) {
     m_type = MENU;
     m_typeName = FG_GUI_MENU_NAME;
     m_typeTraits = MENU | CONTAINER | WIDGET;
+    setIgnoreState(FG_TRUE);
 }
 
 /*

@@ -35,7 +35,7 @@
     #define FG_INC_PHYSICS_PRECISION
     #define FG_INC_PHYSICS_PRECISION_BLOCK
 
-    #include <float.h>
+    //#include <float.h>
 
 namespace fg {
     namespace physics {
@@ -55,7 +55,8 @@ namespace fg {
         typedef float real;
 
         /** Defines the highest value for the real number. */
-        #define REAL_MAX FLT_MAX
+        //#define REAL_MAX FLT_MAX
+		#define REAL_MAX 3.402823466e+38F
 
         /** Defines the precision of the square root operator. */
         #define real_sqrt sqrtf
@@ -76,7 +77,8 @@ namespace fg {
         #define real_fmod fmodf
 
         /** Defines the number e on which 1+e == 1 **/
-        #define real_epsilon FLT_EPSILON
+        //#define real_epsilon FLT_EPSILON
+		#define real_epsilon 1.19209290e-7F
 
         #define R_PI 3.14159f
     #else
@@ -95,10 +97,6 @@ namespace fg {
     #endif
     }
 }
-
-    #ifndef NULL
-        #define NULL ((void *)0)
-    #endif
 
     #undef FG_INC_PHYSICS_PRECISION_BLOCK
 #endif /* FG_INC_PHYSICS_PRECISION */

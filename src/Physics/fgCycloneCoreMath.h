@@ -394,12 +394,20 @@ namespace fg {
             }
             return result;
         }
+#if defined(FG_USING_MARMALADE)
+		template <typename T, math::precision P>
+#else
         template <typename T, math::precision P = math::precision::defaultp>
+#endif
         GLM_FUNC_QUALIFIER math::detail::tmat3x3<T, P> setInertiaTensorCoeffs(T ix, T iy, T iz,
                                                                               T ixy = (T)0.0,
                                                                               T ixz = (T)0.0,
                                                                               T iyz = (T)0.0) {
+#if defined(FG_USING_MARMALADE)
+			glm::detail::tmat3x3<T, math::precision::defaultp> result;
+#else
             glm::detail::tmat3x3<T, P> result;
+#endif
     #if PHYS_USE_2D_MAPPING_ENABLED
             result[0][0] = ix; // 0
             result[0][1] = result[1][0] = -ixy; // 1 3
@@ -432,11 +440,20 @@ namespace fg {
                     0.3f * mass * (squares.x + squares.z),
                     0.3f * mass * (squares.x + squares.y));
         }
+#if defined(FG_USING_MARMALADE)
+		template <typename T, math::precision P>
+#else
         template <typename T, math::precision P = math::precision::defaultp>
+#endif
         GLM_FUNC_QUALIFIER math::detail::tmat3x3<T, P> setDiagonal(T a,
                                                                    T b,
                                                                    T c) {
-            return setInertiaTensorCoeffs<T, P>(a, b, c);
+            
+#if defined(FG_USING_MARMALADE)
+			return setInertiaTensorCoeffs<T, math::precision::defaultp>(a, b, c);
+#else
+			return setInertiaTensorCoeffs<T, P>(a, b, c);
+#endif
         }
         template <typename T, math::precision P>
         GLM_FUNC_QUALIFIER math::detail::tmat3x3<T, P> setInverse(math::detail::tmat3x3<T, P> const & m) {

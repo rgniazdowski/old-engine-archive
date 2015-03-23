@@ -23,8 +23,6 @@
 
 using namespace fg;
 
-
-
 /*
  * Definition of the sleep epsilon extern.
  */

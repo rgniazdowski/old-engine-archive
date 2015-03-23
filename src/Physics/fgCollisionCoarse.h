@@ -30,7 +30,6 @@
     #define FG_INC_PHYSICS_COLLISION_COARSE
     #define FG_INC_PHYSICS_COLLISION_COARSE_BLOCK
 
-    #include <cstddef>
     #include "fgPrecision.h"
     #include "fgVector.h"
     #include "fgContact.h"

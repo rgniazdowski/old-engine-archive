@@ -29,7 +29,7 @@ namespace fg {
         class CLooseQuadtree : public CQuadtree {
         public:
             ///
-            const float DEFAULT_LOOSE_K = 2.0f;
+            static const float DEFAULT_LOOSE_K;
              
         public:
             /**
