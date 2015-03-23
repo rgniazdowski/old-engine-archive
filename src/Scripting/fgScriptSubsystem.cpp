@@ -1828,6 +1828,61 @@ fgBool script::CScriptSubsystem::registerSceneManager(LuaPlus::LuaObject &metata
                                    static_cast<gfx::CSceneManager *>(0),
                                    static_cast<SCENE_BASE_Bool_C_STR_IN>(&gfx::CSceneManager::isManaged));
 
+    metatable.RegisterObjectDirect("setLinearTraverse",
+                                   static_cast<gfx::CSceneManager *>(0),
+                                   &gfx::CSceneManager::setLinearTraverse);
+    metatable.RegisterObjectDirect("isLinearTraverse",
+                                   static_cast<gfx::CSceneManager *>(0),
+                                   &gfx::CSceneManager::isLinearTraverse);
+    metatable.RegisterObjectDirect("setIgnoreCollisions",
+                                   static_cast<gfx::CSceneManager *>(0),
+                                   &gfx::CSceneManager::setIgnoreCollisions);
+    metatable.RegisterObjectDirect("isIgnoreCollisions",
+                                   static_cast<gfx::CSceneManager *>(0),
+                                   &gfx::CSceneManager::isIgnoreCollisions);
+    metatable.RegisterObjectDirect("setHideNodes",
+                                   static_cast<gfx::CSceneManager *>(0),
+                                   &gfx::CSceneManager::setHideNodes);
+    metatable.RegisterObjectDirect("isHideNodes",
+                                   static_cast<gfx::CSceneManager *>(0),
+                                   &gfx::CSceneManager::isHideNodes);
+    metatable.RegisterObjectDirect("setHideSkyBox",
+                                   static_cast<gfx::CSceneManager *>(0),
+                                   &gfx::CSceneManager::setHideSkyBox);
+    metatable.RegisterObjectDirect("isHideSkyBox",
+                                   static_cast<gfx::CSceneManager *>(0),
+                                   &gfx::CSceneManager::isHideSkyBox);
+    metatable.RegisterObjectDirect("setHideShadows",
+                                   static_cast<gfx::CSceneManager *>(0),
+                                   &gfx::CSceneManager::setHideShadows);
+    metatable.RegisterObjectDirect("isHideShadows",
+                                   static_cast<gfx::CSceneManager *>(0),
+                                   &gfx::CSceneManager::isHideShadows);
+    metatable.RegisterObjectDirect("setHideAll",
+                                   static_cast<gfx::CSceneManager *>(0),
+                                   &gfx::CSceneManager::setHideAll);
+    metatable.RegisterObjectDirect("isHideAll",
+                                   static_cast<gfx::CSceneManager *>(0),
+                                   &gfx::CSceneManager::isHideAll);
+    metatable.RegisterObjectDirect("setFrustumCheck",
+                                   static_cast<gfx::CSceneManager *>(0),
+                                   &gfx::CSceneManager::setFrustumCheck);
+    metatable.RegisterObjectDirect("isFrustumCheck",
+                                   static_cast<gfx::CSceneManager *>(0),
+                                   &gfx::CSceneManager::isFrustumCheck);
+    metatable.RegisterObjectDirect("setFrustumCheckSphere",
+                                   static_cast<gfx::CSceneManager *>(0),
+                                   &gfx::CSceneManager::setFrustumCheckSphere);
+    metatable.RegisterObjectDirect("isFrustumCheckSphere",
+                                   static_cast<gfx::CSceneManager *>(0),
+                                   &gfx::CSceneManager::isFrustumCheckSphere);
+    metatable.RegisterObjectDirect("setOcclusionCheck",
+                                   static_cast<gfx::CSceneManager *>(0),
+                                   &gfx::CSceneManager::setOcclusionCheck);
+    metatable.RegisterObjectDirect("isOcclusionCheck",
+                                   static_cast<gfx::CSceneManager *>(0),
+                                   &gfx::CSceneManager::isOcclusionCheck);
+
     metatable.RegisterObjectDirect("destroyNode",
                                    static_cast<gfx::CSceneManager *>(0),
                                    static_cast<SCENE_BASE_Bool_C_STR_IN>(&gfx::CSceneManager::destroyNode));
