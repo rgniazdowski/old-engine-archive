@@ -1,6 +1,9 @@
 tmp.icf
 build_infinium_vc11
 build_infinium_vc12
+build_infinium_scons_arm
+build_infinium_scons_x86
+build_infinium_scons_aarch64
 deployments
 Infinium.mkb.bak
 data/defaultProfile.log
@@ -44,9 +47,15 @@ modules/glm/CMakeLists.txt
 modules/glm/CTestConfig.cmake
 modules/ng_luaplus/build_ng_luaplus_vc11
 modules/ng_luaplus/build_ng_luaplus_vc12
+modules/ng_luaplus/build_ng_luaplus_scons_aarch64
+modules/ng_luaplus/build_ng_luaplus_scons_arm
+modules/ng_luaplus/build_ng_luaplus_scons_x86
 modules/ng_luaplus/lib
 modules/zlib_128/build_zlib_128_vc11
 modules/zlib_128/build_zlib_128_vc12
+modules/zlib_128/build_zlib_128_scons_x86
+modules/zlib_128/build_zlib_128_scons_aarch64
+modules/zlib_128/build_zlib_128_scons_arm
 modules/zlib_128/lib
 modules/libjpeg/build_libjpeg_vc11
 modules/libjpeg/build_libjpeg_vc12
