@@ -35,7 +35,7 @@ m_collisionsInfo(),
 m_triggers(),
 m_stateFlags(NONE | FRUSTUM_CHECK),
 m_MVP(),
-m_camera(FG_GFX_CAMERA_FREE),
+m_camera(CCameraAnimation::FREE),
 m_skybox(),
 m_nodeQueue(),
 m_pResourceMgr(NULL),
@@ -489,9 +489,9 @@ void gfx::CSceneManager::sortCalls(void) {
 
         int visibilityResult = 1;
         if(isFrustumCheck()) {
-            visibilityResult = m_MVP.getRefFrustum().testVolume(pNode->getRefBoundingVolume());
+            visibilityResult = m_MVP.getFrustum().testVolume(pNode->getRefBoundingVolume());
         } else if(isFrustumCheckSphere()) {
-            visibilityResult = m_MVP.getRefFrustum().testSphere(pNode->getRefBoundingVolume());
+            visibilityResult = m_MVP.getFrustum().testSphere(pNode->getRefBoundingVolume());
         }
         if(!visibilityResult) {
             pNode->setVisible(FG_FALSE);

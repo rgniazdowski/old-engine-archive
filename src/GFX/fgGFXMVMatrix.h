@@ -52,9 +52,9 @@ namespace fg {
                                      const Matrix4f & modelMatrix,
                                      fgBool updateMatrix = FG_TRUE) {
                 if(camera) {
-                    m_eye = camera->getRefEye();
-                    m_center = camera->getRefCenter();
-                    m_up = camera->getRefUp();
+                    m_eye = camera->getEye();
+                    m_center = camera->getCenter();
+                    m_up = camera->getUp();
                     CMVMatrix::update();
                 }
                 if(updateMatrix)

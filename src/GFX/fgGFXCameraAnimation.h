@@ -15,18 +15,6 @@
     #include "fgGFXCamera.h"
     #include "fgGFXTypes.h"
 
-typedef unsigned int fgGfxCameraType;
-
-// Fly mode (like in noclip :)
-    #define FG_GFX_CAMERA_FREE		1
-// Locked/centered to some point, eye can change (rotate above the center point)
-    #define FG_GFX_CAMERA_CENTER_LOCKED	2
-// Locked to look at some object, follows it at the distance if it moves
-// position of the eye changes automatically
-    #define FG_GFX_CAMERA_FOLLOW	3
-// Camera walks the specified path (checkpoints)
-    #define FG_GFX_CAMERA_PATH		4
-
 namespace fg {
     namespace gfx {
 
@@ -35,14 +23,37 @@ namespace fg {
          */
         class CCameraAnimation : public CCamera {
         public:
+            ///
             typedef CCamera base_type;
+            ///
+            typedef CCameraAnimation self_type;
+            ///
+            typedef CCameraAnimation type;
+            
+        public:
+            /**
+             *
+             */
+            enum Type {
+                /// Fly mode (like in no-clip cheat)
+                FREE,
+                /// Locked/centered to some point, eye can change (rotate above the center point)
+                CENTER_LOCKED,
+                /// Locked to look at some object, follows it at the distance if it moves
+                /// position of the eye changes automatically
+                FOLLOW,
+                /// Camera walks the specified path (checkpoints)
+                PATH,
+                /// Standard FPS camera, eye/center locked on XZ plane, Y set separately
+                FPS_STANDARD
+            };
 
         public:
             /**
              * 
              * @param type
              */
-            CCameraAnimation(const fgGfxCameraType type = FG_GFX_CAMERA_FREE);
+            CCameraAnimation(const Type cameraType = FREE);
             /**
              * 
              */
@@ -88,28 +99,31 @@ namespace fg {
              * 
              * @param type
              */
-            inline void setType(fgGfxCameraType type) {
-                m_type = type;
+            inline void setType(const Type cameraType) {
+                m_type = cameraType;
+                if(m_type == CENTER_LOCKED || m_type == FPS_STANDARD) {
+                    m_up = Vector3f(0.0f, 1.0f, 0.0f);
+                }
             }
             /**
              * 
              * @return 
              */
-            inline fgGfxCameraType getType(void) const {
+            inline Type getType(void) const {
                 return m_type;
             }
             /**
              * 
              * @return 
              */
-            inline Vec3f& getRefDirection(void) {
+            inline Vec3f& getDirection(void) {
                 return m_direction;
             }
             /**
              * 
              * @return 
              */
-            inline Vec3f& getRefRight(void) {
+            inline Vec3f& getRight(void) {
                 return m_right;
             }
             /**
@@ -180,7 +194,21 @@ namespace fg {
              * @return 
              */
             inline fgGFXfloat getZoom(void) const {
-                return m_mouseSpeed;
+                return m_zoom;
+            }
+            /**
+             * 
+             * @param groundLevel
+             */
+            inline void setGroundLevel(fgGFXfloat groundLevel) {
+                m_groundLevel = groundLevel;
+            }
+            /**
+             * 
+             * @param distance
+             */
+            inline fgGFXfloat getGroundLevel(void) const {
+                return m_groundLevel;
             }
             /**
              * 
@@ -199,7 +227,7 @@ namespace fg {
 
         private:
             ///
-            fgGfxCameraType m_type;
+            Type m_type;
             ///
             Vec3f m_direction;
             ///
@@ -214,6 +242,8 @@ namespace fg {
             fgGFXfloat m_mouseSpeed;
             ///
             fgGFXfloat m_zoom;
+            ///
+            fgGFXfloat m_groundLevel;
 
             union {
                 ///

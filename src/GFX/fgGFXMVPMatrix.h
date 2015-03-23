@@ -117,10 +117,10 @@ namespace fg {
              * @param camera
              */
             virtual void setCamera(CCamera *camera) {
-                this->m_eye = camera->getRefEye();
-                this->m_center = camera->getRefCenter();
-                this->m_up = camera->getRefUp();
-                this->m_viewMatrix = camera->getRefViewMatrix();
+                this->m_eye = camera->getEye();
+                this->m_center = camera->getCenter();
+                this->m_up = camera->getUp();
+                this->m_viewMatrix = camera->getViewMatrix();
             }
             /*
              * Getters for MVP raw matrix

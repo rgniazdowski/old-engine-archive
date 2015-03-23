@@ -107,7 +107,8 @@ void gui::CContainer::setFlags(const std::string& flags) {
 void gui::CContainer::display(CDrawer *guiLayer) {
     if(!guiLayer)
         return;
-    guiLayer->downZIndex();
+    if(m_drawChildren)
+        guiLayer->downZIndex();
     base_type::display(guiLayer);
     if(!m_drawChildren)
         return;

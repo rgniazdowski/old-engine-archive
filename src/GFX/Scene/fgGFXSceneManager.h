@@ -266,7 +266,7 @@ namespace fg {
              * @return 
              */
             inline fgBool isHideAll(void) const {
-                return (fgBool)!!(m_stateFlags & HIDE_ALL);
+                return (fgBool)((m_stateFlags & HIDE_ALL) == HIDE_ALL);
             }
             
             /**
@@ -744,9 +744,9 @@ namespace fg {
              * @param pCamera
              */
             inline void applyCamera(const CCamera* pCamera) {
-                m_camera.setEye(pCamera->getRefEye());
-                m_camera.setCenter(pCamera->getRefCenter());
-                m_camera.setUp(pCamera->getRefUp());
+                m_camera.setEye(pCamera->getEye());
+                m_camera.setCenter(pCamera->getCenter());
+                m_camera.setUp(pCamera->getUp());
             }
             /**
              * 

@@ -45,14 +45,14 @@ namespace fg {
              * Returns reference to the internal view matrix
              * @return 
              */
-            inline Matrix4f & getRefViewMatrix(void) {
+            inline Matrix4f& getViewMatrix(void) {
                 return m_viewMatrix;
             }
             /**
              * Updates the view matrix based on the internal vector values
              * @return 
              */
-            virtual float * update(void) {
+            virtual float* update(void) {
                 m_viewMatrix = math::lookAt(m_eye, m_center, m_up);
                 //m_frustum.set(m_eye, m_center, m_up); // #SRSLY?
                 return getViewMatPtr();
@@ -61,14 +61,14 @@ namespace fg {
              * Returns the pointer to the view matrix
              * @return 
              */
-            inline const float * getViewMatPtr(void) const {
+            inline const float* getViewMatPtr(void) const {
                 return math::value_ptr(m_viewMatrix);
             }
             /**
              * Returns the pointer to the view matrix
              * @return 
              */
-            inline float * getViewMatPtr(void) {
+            inline float* getViewMatPtr(void) {
                 return math::value_ptr(m_viewMatrix);
             }
             /**
@@ -96,84 +96,84 @@ namespace fg {
              * Returns the reference to the eye vector
              * @return 
              */
-            inline Vector3f & getRefEye(void) {
+            inline Vector3f& getEye(void) {
                 return m_eye;
             }
             /**
              * Returns the reference to the center vector
              * @return 
              */
-            inline Vector3f & getRefCenter(void) {
+            inline Vector3f& getCenter(void) {
                 return m_center;
             }
             /**
              * Returns the reference to the up vector
              * @return 
              */
-            inline Vector3f & getRefUp(void) {
+            inline Vector3f& getUp(void) {
                 return m_up;
             }
             /**
              * Returns the reference to the eye vector
              * @return 
              */
-            inline Vector3f const & getRefEye(void) const {
+            inline Vector3f const& getEye(void) const {
                 return m_eye;
             }
             /**
              * Returns the reference to the center vector
              * @return 
              */
-            inline Vector3f const & getRefCenter(void) const {
+            inline Vector3f const& getCenter(void) const {
                 return m_center;
             }
             /**
              * Returns the reference to the up vector
              * @return 
              */
-            inline Vector3f const & getRefUp(void) const {
+            inline Vector3f const& getUp(void) const {
                 return m_up;
             }
             /**
              * Returns the pointer to the eye vector data
              * @return 
              */
-            inline const float * getPtrEye(void) const {
+            inline const float* getPtrEye(void) const {
                 return math::value_ptr(m_eye);
             }
             /**
              * Returns the pointer to the eye vector data
              * @return 
              */
-            inline float * getPtrEye(void) {
+            inline float* getPtrEye(void) {
                 return math::value_ptr(m_eye);
             }
             /**
              * Returns the pointer to the center vector data
              * @return 
              */
-            inline const float * getPtrCenter(void) const {
+            inline const float* getPtrCenter(void) const {
                 return math::value_ptr(m_center);
             }
             /**
              * Returns the pointer to the center vector data
              * @return 
              */
-            inline float * getPtrCenter(void) {
+            inline float* getPtrCenter(void) {
                 return math::value_ptr(m_center);
             }
             /**
              * Returns the pointer to the up vector data
              * @return 
              */
-            inline const float * getPtrUp(void) const {
+            inline const float* getPtrUp(void) const {
                 return math::value_ptr(m_up);
             }
             /**
              * Returns the pointer to the up vector data
              * @return 
              */
-            inline float * getPtrUp(void) {
+            inline float* getPtrUp(void) {
                 return math::value_ptr(m_up);
             }
             /**
@@ -188,14 +188,14 @@ namespace fg {
              * 
              * @return 
              */
-            inline CFrustum & getRefFrustum(void) {
+            inline CFrustum& getFrustum(void) {
                 return m_frustum;
             }
             /**
              * 
              * @return 
              */
-            inline CFrustum const & getRefFrustum(void) const {
+            inline CFrustum const& getFrustum(void) const {
                 return m_frustum;
             }
 
