@@ -224,7 +224,7 @@ namespace fg {
              * 
              * @param delta
              */
-            virtual void update(float delta);
+            virtual void update(float delta = 0.0f);
 
         public:
             /**

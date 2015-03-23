@@ -261,8 +261,8 @@ void gfx::CParticleEmitter::calculate(void) {
             // For now the particles can face camera or velocity/direction
             // not both
             Matrix3f mat;
-            Vector3f &center = m_pCamera->getRefCenter();
-            Vector3f &eye = m_pCamera->getRefEye();
+            Vector3f &center = m_pCamera->getCenter();
+            Vector3f &eye = m_pCamera->getEye();
             const Vector3f direction = math::normalize(center - eye);
 
             // Find the rotation between the front of the object (that we assume towards +Z, 

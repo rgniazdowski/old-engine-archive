@@ -540,7 +540,7 @@ void gfx::CSceneManager::render(void) {
         CShaderProgram* pSkyboxProgram = m_skybox.getShaderProgram();
         if(pSkyboxProgram) {
             pShaderMgr->useProgram(pSkyboxProgram);
-            m_skybox.setPosition(m_camera.getRefEye());
+            m_skybox.setPosition(m_camera.getEye());
             m_skybox.draw();
             pShaderMgr->useProgram(pProgram);
         }
