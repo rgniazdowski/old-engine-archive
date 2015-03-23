@@ -15,13 +15,13 @@ GOTO s3edirpresent
 
 :sets3edir
 echo ** Refreshing S3E_DIR variable value
-set S3E_DIR=C:\Marmalade\7.4\s3e
+set S3E_DIR=C:\Marmalade\7.5\s3e
 
 :s3edirpresent
 set FG_BUILDDIR=build_infinium_vc11
 set FG_PROJECTNAME=Infinium
 set FG_IPAFILENAME_SUBNAME=Infinium
-set PYTHON=C:\Marmalade\7.4\python\Python.exe
+set PYTHON=C:\Marmalade\7.5\python\Python.exe
 
 rem first argument is the name of the config and the subdir
 IF "%1"=="" (

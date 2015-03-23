@@ -11,6 +11,7 @@
 import os
 import sys
 import string
+import subprocess
 from optparse import OptionParser, make_option
 
 here = os.path.dirname(os.path.abspath(__file__))
@@ -42,6 +43,34 @@ elif _platform == "cygwin":
   fg.platform.cygwin = True
   fg.platform.current = "cygwin"
 
+  #
+#
+#
+def message(msg):
+  sys.stderr.write(msg.encode('utf8') + "\n")
+  sys.stderr.flush()
+
+#
+#
+#
+def error(msg):
+  sys.stderr.write("error: %s\n" % msg)
+  sys.stderr.flush()
+  sys.exit(1)
+
+#
+#
+#
+def execute(cmd):
+    message("running: %s" % str(cmd))
+    if os.name == 'nt':
+        shell = 1
+    else:
+        shell = 0
+    rtn = subprocess.call(cmd, shell=shell)
+    if rtn:
+        error("error running process: %s" % str(cmd))
+  
 #
 #
 #
@@ -49,8 +78,10 @@ def check_s3e_dir():
   global fg
   if fg.platform.windows == True:
     if 'S3E_DIR' not in os.environ:
-      print("**S3E_DIR not found in environment - setting default 7.4")
-      fg.s3edir = "C:\Marmalade\7.4\s3e"
+      print("**S3E_DIR not found in environment - setting default 7.5")
+      fg.s3edir = "C:\Marmalade\7.5\s3e"
+    else:
+	  fg.s3edir = os.environ['S3E_DIR']
   else:
     fg.s3edir = False
     print("**INFO** S3E_DIR is not available on this platform")
@@ -66,7 +97,7 @@ def run():
   print("** Project root dir: %s" % fg.rootdir)
   check_s3e_dir()
   if fg.s3edir == False:
-	fg.s3edir = "/mnt/c/Marmalade/7.4/s3e"
+	fg.s3edir = "/mnt/c/Marmalade/7.5/s3e"
 	print("**ERROR** S3E_DIR not set. Exit...\n")
 	#return False
 
@@ -142,6 +173,7 @@ def run():
   command = "%s --verbose=1 --buildenv=VC11 %s.mkb --default-buildenv=vc11 --msvc-project --deploy-only" % (fg.mkbbat, fg.projectname)
   print "** Executing command: %s" % command
   # EXEC
+  execute(command)
 
   ### Checking for deploy_config.py existence
   print "*****************************************************************"
@@ -156,8 +188,9 @@ def run():
   print "*****************************************************************"
   print "** Creating deployment for %s - ARM - %s - %s - Config %s" % (string.capitalize(deploy_os),string.upper(build),string.capitalize(fg.projectname),deploy_config_name)
   command = "%s -n -f %s --os=%s %s --arch arm --gcc %s" % (fg.s3edeploybat, deploy_config_param, deploy_os, build_opt, os.path.join(fg.full_builddir, "deploy_config.py"))
-  print "** Executing command: %s" % command
+  print "** Executing command: %s" % command  
   # EXEC
+  execute(command)
 
   print "*****************************************************************"
   print "** %s Deployment folder path: %s" % (string.capitalize(build), fg.full_deploymentdir)

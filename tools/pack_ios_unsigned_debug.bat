@@ -15,13 +15,14 @@ GOTO s3edirpresent
 
 :sets3edir
 echo ** Refreshing S3E_DIR variable value
-set S3E_DIR=C:\Marmalade\7.4\s3e
+set S3E_DIR=C:\Marmalade\7.5\s3e
 
 :s3edirpresent
+rem set FG_BUILDDIR=build_infinium_scons_aarch64
 set FG_BUILDDIR=build_infinium_vc11
 set FG_PROJECTNAME=Infinium
 set FG_IPAFILENAME_SUBNAME=Infinium
-set PYTHON=C:\Marmalade\7.4\python\Python.exe
+set PYTHON=C:\Marmalade\7.5\python\Python.exe
 
 rem first argument is the name of the config and the subdir
 IF "%1"=="" (
@@ -64,7 +65,7 @@ IF NOT EXIST "%FG_PROJECTNAME%.mkb" (
 rem ====================== refresh the deploy config
 echo ******************************************************
 echo ** Refreshing the %FG_BUILDDIR%\deploy_config.py configuration file
-call %S3E_DIR%\bin\mkb.bat --verbose=1 --buildenv=VC11 %FG_PROJECTNAME%.mkb --default-buildenv=vc11 --msvc-project --deploy-only
+call %S3E_DIR%\bin\mkb.bat --verbose=1 --buildenv=vc11 --arm %FG_PROJECTNAME%.mkb --default-buildenv=vc11 --msvc-project --deploy-only
 if errorlevel 1 goto end
 
 rem ====================== Checking for deploy_config.py existence

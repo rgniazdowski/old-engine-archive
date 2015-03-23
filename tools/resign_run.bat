@@ -15,7 +15,7 @@ IF "%S3E_DIR%" == "" (
 
 :sets3edir
 echo ** Refreshing S3E_DIR variable value
-set S3E_DIR=C:\Marmalade\7.4\s3e
+set S3E_DIR=C:\Marmalade\7.5\s3e
 
 :s3edirpresent
 
@@ -24,7 +24,7 @@ rem echo %1
 rem echo %2
 rem echo %3
 
-set FG_S3E_SIGN_CFG_FILE=C:\Marmalade\7.4\tools\IPhoneSigner\settings.ast
+set FG_S3E_SIGN_CFG_FILE=C:\Marmalade\7.5\tools\IPhoneSigner\settings.ast
 
 IF "%FG_IPAFILE%"=="" (
     echo **ERROR** Path to IPA package file not set
@@ -63,7 +63,7 @@ echo select %FG_SIGN_ID% >> %FG_S3E_SIGN_CFG_FILE%
 
 echo ** Executing preconfigured IPhoneSigner (Marmalade)
 
-C:\Marmalade\7.4\tools\IPhoneSigner\IPhoneSigner.exe
+C:\Marmalade\7.5\tools\IPhoneSigner\IPhoneSigner.exe
 
 :end
 
