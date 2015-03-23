@@ -14,10 +14,14 @@
  * Created on October 20, 2014, 4:25 PM
  */
 
+#include "fgBuildConfig.h"
 #include "fgColors.h"
 #include "fgBool.h"
 #include "Util/fgStrings.h"
 
+#if defined(FG_USING_PLATFORM_ANDROID)
+#include <cstdlib>
+#endif
 
 namespace fg {
     namespace colors {
@@ -347,6 +351,7 @@ void colors::initialize(void) {
     g_colorNames.push_back(ColorName(std::string("Plum"), std::string("DDA0DD")));
     g_colorNames.push_back(ColorName(std::string("PowderBlue"), std::string("B0E0E6")));
     g_colorNames.push_back(ColorName(std::string("Purple"), std::string("800080")));
+    g_colorNames.push_back(ColorName(std::string("RebeccaPurple"), std::string("663399")));
     g_colorNames.push_back(ColorName(std::string("Red"), std::string("FF0000")));
     g_colorNames.push_back(ColorName(std::string("RosyBrown"), std::string("BC8F8F")));
     g_colorNames.push_back(ColorName(std::string("RoyalBlue"), std::string("4169E1")));
