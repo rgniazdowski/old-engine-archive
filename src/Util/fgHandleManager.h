@@ -70,7 +70,7 @@ namespace fg {
             ///
             typedef std::string HashKeyString;
 
-    #ifdef FG_USING_MARMALADE
+    #if defined(FG_USING_MARMALADE)
             ///
             typedef std::hash<std::string> hashFunc;
             /// Type for map, assigning handle index value to string ID (case sensitive)
@@ -80,11 +80,12 @@ namespace fg {
             typedef std::unordered_map<HashKeyString, unsigned int> NameMap;
             /// Iterator through the Name map
             typedef NameMap::iterator NameMapItor;
+	#endif
             /// Hash map - maps the name tags hash sum to the data vector index
             typedef std::map<unsigned int, unsigned int> HashMap;
             /// Iterator through the hash map
             typedef HashMap::iterator HashMapItor;
-    #endif
+    
 
         protected:
 
