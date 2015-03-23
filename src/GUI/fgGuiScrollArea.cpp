@@ -25,7 +25,12 @@ m_relMove(),
 m_sliderSwitch(SLIDER_NONE) {
     gui::CScrollArea::setDefaults();
     m_hSlider = new CSlider();
+    m_hSlider->setName("hslider");
+    m_hSlider->setAlignment(CSlider::SLIDER_HORIZONTAL);
+    
     m_vSlider = new CSlider();
+    m_vSlider->setName("vslider");
+    m_vSlider->setAlignment(CSlider::SLIDER_VERTICAL);
 }
 
 /**
@@ -124,9 +129,11 @@ void gui::CScrollArea::display(CDrawer* guiLayer) {
     guiLayer->setScissorBox(0, 0, 0, 0); // No scissor box option... need to reset it however
     guiLayer->setRelMove(oldRelMove);
 
+    guiLayer->downZIndex();
     if(m_hSlider && (m_sliderSwitch & SLIDER_HORIZONTAL)) {
         m_hSlider->display(guiLayer);
     }
+    guiLayer->upZIndex();
     if(m_vSlider && (m_sliderSwitch & SLIDER_VERTICAL)) {
         m_vSlider->display(guiLayer);
     }
@@ -146,7 +153,7 @@ gfx::BoundingBox3Df gui::CScrollArea::updateBounds(void) {
     m_bbox.pos.y += margin.top;
     m_bbox.size.x -= margin.right + margin.left;
     m_bbox.size.y -= margin.bottom + margin.top;
-
+    
     if(m_hSlider) {
         CStyleContent &style = m_hSlider->getStyleContent(m_hSlider->getState());
         SBorderGroup &border = style.getBorder();
@@ -159,7 +166,10 @@ gfx::BoundingBox3Df gui::CScrollArea::updateBounds(void) {
 
         if(m_sliderSwitch & SLIDER_VERTICAL)
             w -= m_vSlider->getSize().x + border.left.width;
-        m_hSlider->setSize(Vector3f(w, h, 0.0f));
+        // It's ok to set size with this function as the slider widgets are not
+        // treated as normal children widgets (inside of a container)
+        //m_hSlider->setSize(Vector3f(w, h, 0.0f), Unit::PIXELS);
+        m_hSlider->getBBox().size = Vector3f(w, h, 0.0f);
         m_hSlider->setPosition(Vector3f(x, y, 0.0f));
         m_hSlider->updateBounds();
         m_hSlider->setRatio(scrollAreaSize.size.x / m_contentBBox.size.x);
@@ -177,7 +187,8 @@ gfx::BoundingBox3Df gui::CScrollArea::updateBounds(void) {
         if(m_sliderSwitch & SLIDER_HORIZONTAL)
             h -= m_hSlider->getSize().y + border.bottom.width;
 
-        m_vSlider->setSize(Vector3f(w, h, 0.0f));
+        m_vSlider->setSize(Vector3f(w, h, 0.0f), Unit::PIXELS);
+        m_vSlider->getBBox().size = Vector3f(w, h, 0.0f);
         // LEFT ? This will need fixing - #slider / scroll box positioning / update bounds
         m_vSlider->setPosition(Vector3f(x, y, 0.0f));
         m_vSlider->updateBounds();
@@ -202,7 +213,7 @@ gfx::BoundingBox3Df gui::CScrollArea::updateBounds(const gfx::BoundingBox3Df& bb
 void gui::CScrollArea::refresh(void) {
     base_type::refresh();
     if(m_hSlider && (m_sliderSwitch & SLIDER_HORIZONTAL)) {
-        m_hSlider->setStyleName(m_styleName);
+        m_hSlider->setStyleName(m_styleName);     
     }
     if(m_vSlider && (m_sliderSwitch & SLIDER_VERTICAL)) {
         m_vSlider->setStyleName(m_styleName);
