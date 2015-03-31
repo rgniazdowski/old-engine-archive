@@ -56,6 +56,8 @@
 #include "fgDebugConfig.h"
 /// Simple options management
 #include "SimpleOpt.h"
+/// Unistd
+#include "fgUnistd.h"
 
 using namespace fg;
 
@@ -93,11 +95,15 @@ m_gameFreeLookCallback(NULL) {
     FG_MessageSubsystem->initialize(); // ? #FIXME message subsystem
     FG_MessageSubsystem->setLogPaths("all.log", "error.log", "debug.log");
     m_inputHandler = new event::CInputHandler();
+#if !defined(FG_USING_PLATFORM_ANDROID)
     m_joypadController = new event::CJoypadController(); // #FIXME - Joypad part of input receiver?
+#endif
     m_scriptSubsystem = new script::CScriptSubsystem();
     m_soundMgr = new sfx::CSfxManager();
     this->setEventManager();
+#if !defined(FG_USING_PLATFORM_ANDROID)
     m_joypadController->initialize(); // #FIXME
+#endif
     registerGameCallbacks();
 }
 
@@ -451,6 +457,7 @@ fgBool CGameMain::loadConfiguration(void) {
                 break;
         };
     }
+    FG_LOG_DEBUG("Main: Selected current mod: '%s'", m_settings->getCurrentModPathStr());
     return FG_TRUE;
 }
 
@@ -537,13 +544,14 @@ fgBool CGameMain::loadResources(void) {
     m_gfxMain->getParticleSystem()->insertParticleEmitter("ExplosionSparks", "ExplosionSparks", Vector3f(0.0f, 0.0f, 0.0f));
     ////////////////////////////////////////////////////////////////////////////
     m_gfxMain->getLoader()->update(10.0f);
+    m_gfxMain->getShaderManager()->get(sPlainEasyShaderName)->use();
     this->update();
     m_gfxMain->generateBuiltInData();
     float t2 = timesys::ms();
     FG_LOG_DEBUG("Main: Resources loaded in %.2f seconds", (t2 - t1) / 1000.0f);
 #if !defined(FG_USING_MARMALADE)
     usleep(50 * 1000);
-#endif    
+#endif
     return FG_TRUE;
 }
 
@@ -622,15 +630,25 @@ void CGameMain::display(void) {
  * Begins the proper render of the created buffers
  */
 void CGameMain::render(void) {
+    if(!m_gfxMain->isInit()) {
+        return;
+    }
     // #FIXME
-    static int fpsc = 0;
-    if(fpsc == FG_FRAMES_COUNT_LIMIT + 2) {
-        printf("# FPS: %.2f\n", FG_HardwareState->getFPS());
+    static int fpsc = -1;
+#if !defined(FG_USING_MARMALADE)
+    if(fpsc < 0) {
+        usleep(50 * 1000);
+    }
+#endif
+    fpsc++;
+    //FG_LOG_DEBUG(".......... RENDER [%d] ....................\n", fpsc);
+    if(fpsc % 128 == 0) {
+        FG_LOG_INFO("# FPS: %.2f\n", FG_HardwareState->getFPS());
     }
     if(fpsc > 256) {
         fpsc = 0;
     }
-    fpsc++;
+    //fpsc++;
 #if defined(FG_DEBUG)
     if(g_fgDebugConfig.isDebugProfiling) {
         profile::g_debugProfiling->begin("GFX::render");
@@ -667,6 +685,9 @@ void CGameMain::render(void) {
 void CGameMain::update(void) {
     timesys::markTick();
     FG_HardwareState->calculateFPS(); // #FIXME
+
+    m_guiMain->setScreenSize(m_gfxMain->getMainWindow()->getWidth(),
+                             m_gfxMain->getMainWindow()->getHeight());
 
     // Update logic manager
     if(m_logicMgr)
