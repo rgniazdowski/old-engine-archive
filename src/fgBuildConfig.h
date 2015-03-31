@@ -12,7 +12,7 @@
  *
  * FlexiGame source code and any related files can not be copied, modified
  * and/or distributed without the express or written consent from the author.
- *******************************************************/
+ ******************************************************************************/
 
 // The build config is used to configure the whole engine at compile time.
 // The whole idea of using macros to add or remove big chunks of code is to
@@ -101,16 +101,16 @@
     #if defined(S3E_ANDROID_X86)
         #define FG_USING_PLATFORM_ANDROID
     #endif
-    
+
     #if defined(__gnu_linux__) || defined(__linux__) || defined(linux) || defined(__linux)
         #define FG_USING_PLATFORM_LINUX
     #endif
-    
+
     #if defined(ANDROID) || defined(__ANDROID__)
         #undef ANDROID
         #undef __ANDROID__
-        #define __ANDROID__ 1
         #define ANROID 1
+        #define __ANDROID__ 1
         #define FG_USING_PLATFORM_ANDROID
         #undef FG_USING_PLATFORM_LINUX
         #undef linux
@@ -126,21 +126,22 @@
         #define FG_USING_MINGW
     #endif
 
-    #if (defined __APPLE__ && defined __MACH__) || defined Macintosh || defined macintosh
+    #if (defined(__APPLE__) && defined(__MACH__)) || defined(Macintosh) || defined (macintosh)
         #define FG_USING_PLATFORM_MACOSX
     #endif
 
-    #if !defined FG_USING_MARMALADE && ( defined __WINDOWS__ || defined __WIN32__ || defined _WIN32 || defined _WIN64 || defined __TOS_WIN__ || defined WIN32 || defined win32)
+    #if !defined(FG_USING_MARMALADE) && ( defined __WINDOWS__ || defined __WIN32__ || defined _WIN32 || defined _WIN64 || defined __TOS_WIN__ || defined WIN32 || defined win32)
         #define FG_USING_PLATFORM_WINDOWS
     #endif
 
-    #if defined _MSC_VER
+    #if defined(_MSC_VER)
         #define FG_USING_VISUAL_STUDIO
     #endif
 
-    #if defined (_DEBUG) || defined(DEBUG) || defined(IW_DEBUG)
+    #if defined(_DEBUG) || defined(DEBUG) || defined(IW_DEBUG)
         #undef	DEBUG
         #define DEBUG		1
+        #undef FG_DEBUG
         #define FG_DEBUG	1
     #endif
 
@@ -157,27 +158,25 @@
     #endif
 
     #if defined(_RELEASE) || defined(__release) || !defined(FG_DEBUG)
-        #define FG_RELEASE
-    #endif
-
-    #if defined(FG_RELEASE)
         #undef FG_RELEASE
         #define FG_RELEASE 1
         #undef FG_DEBUG
+        #undef _DEBUG
+        #undef DEBUG
     #endif
 
 /*************************** SUBSYSTEM / INPUT / AUDIO SUPPORT ***************************/
 
 
 // This defines whether Marmalade's sensors will be used in the project
-    #ifdef FG_USING_MARMALADE
+    #if defined(FG_USING_MARMALADE)
         #define FG_USING_MARMALADE_SENSORS
 // This defines whether Marmalade's event subsystem should be used for getting the keyboard events
         #define FG_USING_MARMALADE_KEYBOARD
     #endif
 
 // Marmalade's sounds subsystem
-    #ifdef FG_USING_MARMALADE
+    #if defined(FG_USING_MARMALADE)
         #define FG_USING_MARMALADE_SOUND
 // Marmalade's audio subsystem, used along with s3eSound *FIXME*
         #define FG_USING_MARMALADE_AUDIO
@@ -186,26 +185,26 @@
     #endif
 
 // Marmalade's implementation of Threads need's to be used in the project
-    #ifdef FG_USING_MARMALADE
+    #if defined(FG_USING_MARMALADE)
         #define FG_USING_MARMALADE_THREADS
     #endif
 
 // This tells the game engine that OpenGL/ES is used via Marmalade API
-    #ifdef FG_USING_MARMALADE
+    #if defined(FG_USING_MARMALADE)
 //#define FG_USING_MARMALADE_IWGL // #FIXME
         #define FG_USING_MARMALADE_OPENGL_ES
 // FlexiGame will be using Marmalade's EGL instead of calling IwGL functions
-        #ifndef FG_USING_MARMALADE_IWGX
+        #if !defined(FG_USING_MARMALADE_IWGX)
             #define FG_USING_MARMALADE_EGL
         #endif
     #endif
 
 // Compatibility for sensors
-    #ifdef FG_USING_MARMALADE_SENSORS
+    #if defined(FG_USING_MARMALADE_SENSORS)
         #define FG_USING_SENSORS
     #endif
 
-    #ifdef FG_USING_MARMALADE_THREADS
+    #if defined(FG_USING_MARMALADE_THREADS)
         #ifndef FG_USING_THREADS
             #define FG_USING_THREADS
         #endif
@@ -213,15 +212,15 @@
 
 /*************************** GRAPHICS SPECIFIC ***************************/
 
-    #ifdef FG_USING_MARMALADE_OPENGL_ES
-        #ifndef FG_USING_OPENGL_ES
+    #if defined(FG_USING_MARMALADE_OPENGL_ES)
+        #if !defined(FG_USING_OPENGL_ES)
 // This for compability as some parts using OpenGL ES will be just the same as the parts 'depending' on Marmalade
             #define FG_USING_OPENGL_ES
         #endif
     #endif
 
-    #ifdef FG_USING_MARMALADE_EGL
-        #ifndef FG_USING_EGL
+    #if defined(FG_USING_MARMALADE_EGL)
+        #if !defined(FG_USING_EGL)
 // This for compability as some parts using EGL will be just the same as the parts (if not all) 'depending' on Marmalade
             #define FG_USING_EGL
         #endif
@@ -243,7 +242,7 @@
         #undef FG_USING_EGL
         #undef FG_USING_MARMALADE_EGL
     #endif
-    
+
 // Under android - almost certain that build using Android SDK
 // Usage only with SDL2
     #if defined(FG_USING_PLATFORM_ANDROID)
@@ -252,16 +251,16 @@
     #endif
 
 // Under android - always use lua plus - hard coded
-	#if defined(FG_USING_PLATFORM_ANDROID)
-		#undef FG_USING_LUA_PLUS
-		#define FG_USING_LUA_PLUS
-	#endif
+    #if defined(FG_USING_PLATFORM_ANDROID)
+        #undef FG_USING_LUA_PLUS
+        #define FG_USING_LUA_PLUS
+    #endif
 
 // Android
-	#if defined(FG_USING_PLATFORM_ANDROID)
-		#define FG_USING_TINYXML
-		#define TIXML_USE_STL
-	#endif
+    #if defined(FG_USING_PLATFORM_ANDROID)
+        #define FG_USING_TINYXML
+        #undef TIXML_USE_STL // When using Android - do not use STL in TinyXML
+    #endif
 
 /*************************** EXTENSIONS / PLUGINS SUPPORT ***************************/
 
@@ -271,12 +270,12 @@
 //#define FG_USING_THREADS
 
 // Engine will include the DPI info extension, but only if Marmalade is activated for this code build
-    #ifdef FG_USING_MARMALADE
-        #if defined IW_MKF_DPIEXT || IW_MKF_DPI
+    #if defined(FG_USING_MARMALADE)
+        #if defined(IW_MKF_DPIEXT) || defined(IW_MKF_DPI)
             #define FG_USING_DPI_INFO
         #endif
 // Engine will use the tiny xml lib - #FIXME tinyxml should also be used for other builds, but currently there is no config for that at all...
-        #if defined IW_MKF_TINYXML
+        #if defined(IW_MKF_TINYXML)
             #define FG_USING_TINYXML
         #endif
     #endif
@@ -293,11 +292,12 @@
             #define FG_USING_TINYXML
         #endif
     #endif
-    
+
 // Use TinyXML also on Android
     #if defined(FG_USING_PLATFORM_ANDROID)
         #if !defined(FG_USING_TINYXML)
             #define FG_USING_TINYXML
+            #undef TIXML_USE_STL // on android TinyXML should not use STL
         #endif
     #endif
 
@@ -329,7 +329,7 @@
 
 // Force TinyXml to use STL
     #if defined(FG_USING_TINYXML)
-        #if !defined(TIXML_USE_STL)
+        #if !defined(TIXML_USE_STL) && !defined(FG_USING_PLATFORM_ANDROID)
             #define TIXML_USE_STL
         #endif
     #endif
