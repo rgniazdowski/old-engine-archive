@@ -11,12 +11,17 @@
 #include "fgBuildConfig.h"
 #include "fgLog.h"
 #include "fgErrno.h"
+#include "Util/fgTime.h"
 
 #include <cstdio>
 #include <cstring>
 #include <cstdarg>
 
-#include "Util/fgTime.h"
+
+
+#if defined(FG_USING_PLATFORM_ANDROID)
+    #include <android/log.h>
+#endif
 
 namespace fg {
     namespace log {
@@ -154,7 +159,11 @@ void log::PrintInfo(const char *fmt, ...) {
     va_end(args);
 
     // s3eDebugTracePrintf(buf);
+#if defined(FG_USING_PLATFORM_ANDROID)
+    __android_log_print(ANDROID_LOG_VERBOSE, FG_PACKAGE_NAME, "%s", buf);
+#else
     puts(buf);
+#endif
 }
 
 /**
@@ -177,7 +186,11 @@ void log::PrintDebug(const char *fmt, ...) {
     va_end(args);
 
     // s3eDebugTracePrintf(buf);
-    puts(buf);
+    #if defined(FG_USING_PLATFORM_ANDROID)
+        __android_log_print(ANDROID_LOG_DEBUG, FG_PACKAGE_NAME, "%s", buf);
+    #else
+        puts(buf);
+    #endif
 #endif
 #endif
 }
@@ -196,7 +209,11 @@ void log::PrintError(const char *fmt, ...) {
     va_end(args);
 
     //s3eDebugErrorPrintf(buf);
+#if defined(FG_USING_PLATFORM_ANDROID)
+    __android_log_print(ANDROID_LOG_ERROR, FG_PACKAGE_NAME, "%s", buf);
+#else
     puts(buf);
+#endif
 }
 
 /**
@@ -213,7 +230,11 @@ void log::PrintWarning(const char *fmt, ...) {
     va_end(args);
 
     //s3eDebugErrorPrintf(buf);
+#if defined(FG_USING_PLATFORM_ANDROID)
+    __android_log_print(ANDROID_LOG_WARN, FG_PACKAGE_NAME, "%s", buf);
+#else
     puts(buf);
+#endif
 }
 
 /**
@@ -251,7 +272,28 @@ void log::PrintMessage(msg::SMessage *message, long timestamp) {
     char buf[log::BUFFER_MAX];
     if(!log::prepareMsgBuffer(message, buf, timestamp))
         return;
+#if defined(FG_USING_PLATFORM_ANDROID)
+    int priority = 0;
+    switch(message->type) {
+        case msg::MSG_DEBUG:            
+            priority = (int)ANDROID_LOG_DEBUG;
+            break;
+        case msg::MSG_ERROR:
+            priority = (int)ANDROID_LOG_ERROR;
+            if(message->error.critical)
+                priority = (int)ANDROID_LOG_FATAL;
+            break;
+        case msg::MSG_WARNING:
+            priority = (int)ANDROID_LOG_WARN;
+            break;
+        default:
+            priority = (int)ANDROID_LOG_INFO;
+        break;
+    };
+    __android_log_print(priority, FG_PACKAGE_NAME, "%s", buf);
+#else
     puts(buf);
+#endif    
 }
 
 /**
@@ -260,7 +302,9 @@ void log::PrintMessage(msg::SMessage *message, long timestamp) {
  * @param message
  * @param timestamp
  */
-void log::PrintMessageToLog(util::base::CFile *file, msg::SMessage *message, long timestamp) {
+void log::PrintMessageToLog(util::base::CFile *file, 
+                            msg::SMessage *message, 
+                            long timestamp) {
     if(!message || !file)
         return;
     if(!strlen(file->getPath()))
@@ -291,7 +335,7 @@ void log::PrintStatus(msg::SStatus *status) {
         char buf[log::BUFFER_MAX];
         if(!prepareStatusBuffer(status, buf))
             return;
-        puts(buf);
+        puts(buf); // #FIXME
     }
 }
 
