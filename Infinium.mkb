@@ -58,6 +58,10 @@ files
 	"GFX/*.cpp"
 	"GFX/*.h"
 
+	["FlexiGame/GFX/Scene"]
+	"GFX/Scene/*.cpp"
+	"GFX/Scene/*.h"
+
 	["FlexiGame/GFX/Shaders"]
 	"GFX/Shaders/*.cpp"
 	"GFX/Shaders/*.h"
@@ -112,20 +116,13 @@ assets
 	main/sound/mod/mod.dragonsfunk.mp3
 
     (data)
-    main/explosionDebris.particle.ini
-    main/ExplosionDebris.res.ini
-    main/explosionFlash.particle.ini
-    main/ExplosionFlash.res.ini
-    main/explosionRoundSparks.particle.ini
-    main/ExplosionRoundSparks.res.ini
-    main/explosionShockwave.particle.ini
-    main/ExplosionShockwave.res.ini
-    main/explosionSmoke.particle.ini
-    main/ExplosionSmoke.res.ini
-    main/explosionSmokeTrails.particle.ini
-    main/ExplosionSmokeTrails.res.ini
-    main/explosionSparks.particle.ini
-    main/ExplosionSparks.res.ini
+    main/ExplosionDebris.particle.ini
+    main/ExplosionFlash.particle.ini
+    main/ExplosionRoundSparks.particle.ini
+    main/ExplosionShockwave.particle.ini
+    main/ExplosionSmoke.particle.ini
+    main/ExplosionSmokeTrails.particle.ini
+    main/ExplosionSparks.particle.ini
     main/fonts.group.ini
 	main/textures.group.xml
 	main/particle_textures.group.xml
@@ -222,6 +219,9 @@ assets
 
     (data)
 	main/textures/gui/BackgroundCrate_1024x512.jpg
+
+	(data)
+	main/textures/crate.jpg
 
     (data)
     textures/Grill_1024x512.tga
@@ -323,6 +323,13 @@ assets
     endless_flying/CobraInterceptor.group.ini
 
 	(data)
+	endless_flying/textures/earthlights1k.jpg
+	endless_flying/textures/europamap1k.jpg
+	endless_flying/textures/jupitermap.jpg
+	endless_flying/textures/mars_1k_color.jpg
+	endless_flying/textures/plutomap1k.jpg
+
+	(data)
 	endless_flying/textures/skybox/plasma_galaxy_1024.jpg
 	endless_flying/textures/skybox/PurpleNebulaCube.res.ini
 	endless_flying/textures/skybox/PurpleNebula.res.ini
@@ -354,7 +361,10 @@ assets
 	endless_flying/obj/CobraBomber/CobraBomber_512.png
 	endless_flying/obj/CobraBomber/CobraBomber_1024.png
 	endless_flying/obj/CobraBomber/CobraBomber.mtl
+	endless_flying/obj/CobraBomber/CobraBomber.mat.ini
 	endless_flying/obj/CobraBomber/CobraBomber.obj
+	endless_flying/obj/CobraBomber/CobraBomber.res.ini
+	endless_flying/obj/CobraBomber/CobraBomberTexture.res.ini
 
 	(data)
 	endless_flying/obj/Crystal1/Crystal1.obj
@@ -364,6 +374,7 @@ assets
 
 	(data)
 	endless_flying/obj/Rocks/rock_d_01.mtl
+	endless_flying/obj/Rocks/rock_d_01.mat.ini
 	endless_flying/obj/Rocks/rock_d_01_normal_512.jpg
 	endless_flying/obj/Rocks/rock_d_01.obj
 	endless_flying/obj/Rocks/rock_d_01_tex_AM1_512.jpg
@@ -372,6 +383,7 @@ assets
 
 	(data)
 	endless_flying/obj/Rocks/rock_d_02.mtl
+	endless_flying/obj/Rocks/rock_d_02.mat.ini
 	endless_flying/obj/Rocks/rock_d_02_normal_512.jpg
 	endless_flying/obj/Rocks/rock_d_02.obj
 	endless_flying/obj/Rocks/rock_d_02_tex_AM1_512.jpg
@@ -380,6 +392,7 @@ assets
 
 	(data)
 	endless_flying/obj/Rocks/rock_d_03.mtl
+	endless_flying/obj/Rocks/rock_d_03.mat.ini
 	endless_flying/obj/Rocks/rock_d_03_normal_512.jpg
 	endless_flying/obj/Rocks/rock_d_03.obj
 	endless_flying/obj/Rocks/rock_d_03_tex_AM1_512.jpg
@@ -388,6 +401,7 @@ assets
 
 	(data)
 	endless_flying/obj/Rocks/rock_d_05.mtl
+	endless_flying/obj/Rocks/rock_d_05.mat.ini
 	endless_flying/obj/Rocks/rock_d_05_normal_512.jpg
 	endless_flying/obj/Rocks/rock_d_05.obj
 	endless_flying/obj/Rocks/rock_d_05_tex_AM1_512.jpg
@@ -397,6 +411,7 @@ assets
 
 	(data)
 	endless_flying/obj/Rocks/rock_d_06.mtl
+	endless_flying/obj/Rocks/rock_d_06.mat.ini
 	endless_flying/obj/Rocks/rock_d_06_normal_512.jpg
 	endless_flying/obj/Rocks/rock_d_06.obj
 	endless_flying/obj/Rocks/rock_d_06_tex_AM1_512.jpg
@@ -425,9 +440,11 @@ defines
 options
 {
 	module_path="modules"
-	arm-arch=armv6
-	arm-cpu=6
-	arm-fpu=vfp
+	aarch64-arch=armv8-a
+	aarch64-arch-mod=simd
+	#arm-arch=armv6
+	#arm-cpu=6
+	#arm-fpu=vfp
 	optimise-speed
 	#enable-exceptions
 	warn-level=2
