@@ -123,7 +123,7 @@ void gui::CSlider::display(CDrawer* guiLayer) {
 /**
  *
  */
-gui::CWidget::State gui::CSlider::updateState(const fgPointerData* pointerData) {
+gui::CWidget::State gui::CSlider::updateState(const event::SPointerData* pointerData) {
     if(!pointerData) {
         return m_state;
     }

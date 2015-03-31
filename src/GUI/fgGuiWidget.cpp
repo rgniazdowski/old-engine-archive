@@ -261,7 +261,7 @@ void gui::CWidget::refresh(void) {
  * @param pointerData
  * @return 
  */
-gui::CWidget::State gui::CWidget::updateState(const fgPointerData *pointerData) {
+gui::CWidget::State gui::CWidget::updateState(const event::SPointerData *pointerData) {
     if(!pointerData)
         return m_state;
     if(!m_isActive) {

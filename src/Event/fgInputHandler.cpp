@@ -214,7 +214,7 @@ void event::CInputHandler::handlePointerPressed(Vector2i point, unsigned int tou
         memset((void *)m_rawTouches, 0, sizeof (m_rawTouches));
     }
 
-    fgPointerRawData & touchData = m_rawTouches[ touchID ];
+    SPointerRawData & touchData = m_rawTouches[ touchID ];
     touchData.m_touchID = touchID;
 
     // Time stamp of contact with the screen
@@ -319,7 +319,7 @@ void event::CInputHandler::handlePointerReleased(Vector2i point, unsigned int to
     if(touchID >= MAX_TOUCH_POINTS)
         return;
 
-    fgPointerRawData & touchData = m_rawTouches[ touchID ];
+    SPointerRawData & touchData = m_rawTouches[ touchID ];
     touchData.m_state = FG_POINTER_STATE_RELEASED;
     touchData.m_pressed = FG_FALSE;
     touchData.m_touchID = touchID;
@@ -374,7 +374,7 @@ void event::CInputHandler::handlePointerReleased(Vector2i point, unsigned int to
  * @param pointerID
  * @return 
  */
-fgPointerRawData *event::CInputHandler::getPointerRawData(fgPointerID pointerID) {
+event::SPointerRawData *event::CInputHandler::getPointerRawData(fgPointerID pointerID) {
     if(pointerID >= MAX_TOUCH_POINTS)
         return NULL;
 
@@ -386,11 +386,11 @@ fgPointerRawData *event::CInputHandler::getPointerRawData(fgPointerID pointerID)
  * @param pointerID
  * @return 
  */
-fgPointerData *event::CInputHandler::getPointerData(fgPointerID pointerID) {
+event::SPointerData *event::CInputHandler::getPointerData(fgPointerID pointerID) {
     if(pointerID >= MAX_TOUCH_POINTS)
         return NULL;
 
-    return ((fgPointerData *)(&m_rawTouchesProcessed[pointerID]));
+    return ((SPointerData *)(&m_rawTouchesProcessed[pointerID]));
 }
 
 /**
@@ -521,7 +521,7 @@ void event::CInputHandler::processData(void) {
 #endif
     for(unsigned int i = 0; i < MAX_TOUCH_POINTS; i++) {
         int touchID = i;
-        fgPointerRawData & touchPtr = m_rawTouches[i];
+        SPointerRawData & touchPtr = m_rawTouches[i];
         //
         // DETECT TAP
         //

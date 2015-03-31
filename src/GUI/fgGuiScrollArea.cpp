@@ -223,7 +223,7 @@ void gui::CScrollArea::refresh(void) {
 /**
  * 
  */
-gui::CWidget::State gui::CScrollArea::updateState(const fgPointerData* pointerData) {
+gui::CWidget::State gui::CScrollArea::updateState(const event::SPointerData* pointerData) {
     if(!pointerData)
         return State::NONE;
 
@@ -234,7 +234,7 @@ gui::CWidget::State gui::CScrollArea::updateState(const fgPointerData* pointerDa
         m_vSlider->updateState(pointerData);
     }
     // #HAXXOR!
-    fgPointerData newPointerData = *pointerData;
+    event::SPointerData newPointerData = *pointerData;
     newPointerData.m_x -= m_relMove.x;
     newPointerData.m_y -= m_relMove.y;
     base_type::updateState(&newPointerData);

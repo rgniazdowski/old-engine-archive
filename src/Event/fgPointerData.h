@@ -75,60 +75,65 @@ typedef unsigned int fgButtonID;
 
 typedef unsigned int fgPointerState;
 
-/**
- *
- */
-struct fgPointerData {
+namespace fg {
+    namespace event {
 
-    /**
-     */
-    union {
-        ///
-        fgTouchID m_touchID;
-        ///
-        fgButtonID m_buttonID;
-        ///
-        fgPointerID m_pointerID;
-    };
-    ///
-    fgPointerState m_state;
+        /**
+         *
+         */
+        struct SPointerData {
 
-    /**
-     */
-    union {
-        ///
-        int m_moveX;
-        ///
-        int m_x;
-    };
+            /**
+             */
+            union {
+                ///
+                fgTouchID m_touchID;
+                ///
+                fgButtonID m_buttonID;
+                ///
+                fgPointerID m_pointerID;
+            };
+            ///
+            fgPointerState m_state;
 
-    /**
-     */
-    union {
-        ///
-        int m_moveY;
-        ///
-        int m_y;
-    };
+            /**
+             */
+            union {
+                ///
+                int m_moveX;
+                ///
+                int m_x;
+            };
 
-    /**
-     */
-    union {
-        fgBool m_pressed;
-        fgBool m_active;
-    };
-    ///
-    fgBool m_pointerTap;
-    /**
-     * 
-     */
-    fgPointerData() :
-    m_touchID(0),
-    m_state(FG_POINTER_STATE_UP),
-    m_x(0), m_y(0),
-    m_active(FG_FALSE),
-    m_pointerTap(FG_FALSE) { }
-};
+            /**
+             */
+            union {
+                ///
+                int m_moveY;
+                ///
+                int m_y;
+            };
+
+            /**
+             */
+            union {
+                fgBool m_pressed;
+                fgBool m_active;
+            };
+            ///
+            fgBool m_pointerTap;
+            /**
+             * 
+             */
+            SPointerData() :
+            m_touchID(0),
+            m_state(FG_POINTER_STATE_UP),
+            m_x(0), m_y(0),
+            m_active(FG_FALSE),
+            m_pointerTap(FG_FALSE) { }
+        };
+    } // event
+} // fg
 
     #undef FG_INC_POINTER_DATA_BLOCK
 #endif /* FG_INC_POINTER_DATA */

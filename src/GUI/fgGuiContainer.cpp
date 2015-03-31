@@ -372,7 +372,7 @@ void gui::CContainer::refresh(void) {
  * @param pointerData
  * @return 
  */
-gui::CWidget::State gui::CContainer::updateState(const fgPointerData *pointerData) {
+gui::CWidget::State gui::CContainer::updateState(const event::SPointerData *pointerData) {
     base_type::updateState(pointerData);
     //if(fgGuiWidget::updateState(pointerData) == FG_GUI_WIDGET_STATE_NONE);
     //return m_state;

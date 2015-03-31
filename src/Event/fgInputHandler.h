@@ -88,9 +88,9 @@ namespace fg {
             /// previously key was released
             CallbackBindingMap m_keyUpBinds;
             ///
-            fgPointerRawData m_rawTouchesProcessed[FG_INPUT_MAX_TOUCH_POINTS + 1];
+            SPointerRawData m_rawTouchesProcessed[FG_INPUT_MAX_TOUCH_POINTS + 1];
             ///
-            fgPointerRawData m_rawTouches[FG_INPUT_MAX_TOUCH_POINTS + 1];
+            SPointerRawData m_rawTouches[FG_INPUT_MAX_TOUCH_POINTS + 1];
             ///
             CEventManager *m_eventMgr;
             ///
@@ -203,13 +203,13 @@ namespace fg {
              * @param pointerID
              * @return 
              */
-            fgPointerRawData *getPointerRawData(fgPointerID pointerID = FG_DEFAULT_POINTER_ID);
+            SPointerRawData *getPointerRawData(fgPointerID pointerID = FG_DEFAULT_POINTER_ID);
             /**
              * 
              * @param pointerID
              * @return 
              */
-            fgPointerData *getPointerData(fgPointerID pointerID = FG_DEFAULT_POINTER_ID);
+            SPointerData *getPointerData(fgPointerID pointerID = FG_DEFAULT_POINTER_ID);
 
             /**
              * 

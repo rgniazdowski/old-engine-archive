@@ -414,11 +414,11 @@ void gui::CGuiMain::updateState(void) {
             return;
         m_currentMenu = static_cast<CMenu *>(mainMenu);
     }
-    fgPointerData *pt = m_pPointerInputReceiver->getPointerData();
-    if(pt) {
-        pt->m_x = (int)((float)pt->m_x * ((1.0f - guiScale) / guiScale + 1.0f));
-        pt->m_y = (int)((float)pt->m_y * ((1.0f - guiScale) / guiScale + 1.0f));
-    }
+    event::SPointerData *pt = m_pPointerInputReceiver->getPointerData();
+    //if(pt) {
+    //    pt->m_x = (int)((float)pt->m_x * ((1.0f - guiScale) / guiScale + 1.0f));
+    //    pt->m_y = (int)((float)pt->m_y * ((1.0f - guiScale) / guiScale + 1.0f));
+    //}
     m_currentMenu->updateState(pt);
 
     if(m_console) {
