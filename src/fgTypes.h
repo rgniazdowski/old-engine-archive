@@ -16,6 +16,7 @@
     #include "fgBool.h"
 
     #include <cstring>
+	#include <cstdlib>
 
     #ifndef NULL
         #ifndef __cplusplus
