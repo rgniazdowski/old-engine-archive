@@ -637,7 +637,7 @@ void CMainModule::keyStateChangedEvent(s3eKeyboardEvent* event) {
 /**
  * Main function that is called when the program starts.
  */
-#if defined FG_USING_MARMALADE
+#if defined(FG_USING_MARMALADE)
 
 extern "C" int main() {
     IwUtilInit();
@@ -656,20 +656,20 @@ extern "C" int SDL_main(int argc, char **argv) {
  */
 extern "C" int main(int argc, char *argv[]) {
 #endif /* FG_USING_MARMALADE */
-    //IwMemBucketDebugSetBreakpoint(1551);
     FG_LOG_DEBUG("%s: Starting up!", FG_PACKAGE_FULL_TEXT);
     FG_LOG_DEBUG("%s: build %s %s DEBUG", FG_PACKAGE_NAME, FG_BUILD_TIME, FG_BUILD_DATE);
 #if defined(FG_RELEASE)
     FG_LOG_INFO("%s: build %s %s RELEASE", FG_PACKAGE_NAME, FG_BUILD_TIME, FG_BUILD_DATE);
 #endif
 #if defined(FG_DEBUG) && !defined(FG_USING_MARMALADE)
-    char str_args[2048];
+    //char str_args[2048];
     FG_LOG_DEBUG("%s: Number of arguments: %d", FG_PACKAGE_NAME, argc);
     if(argc) {
         for(int i = 0; i < argc; i++) {
             FG_LOG_DEBUG("%s: ARGV[%d] = '%s'", FG_PACKAGE_NAME, i, argv[i]);
         }
     }
+    
 #endif
     CMainModule *mainModule = new CMainModule(argc, argv);
     if(!mainModule->initProgram()) {
