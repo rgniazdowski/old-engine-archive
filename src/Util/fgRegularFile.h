@@ -47,7 +47,7 @@ namespace fg {
 /* Seek from current position. */
     #define FG_FILE_SEEK_CUR    SEEK_CUR   
 /* Seek from end of file. */
-    #define FG_FILE_SEEK_END    SEEK_END   
+    #define FG_FILE_SEEK_END    SEEK_END 
 /* End of file */
     #define FG_EOF              EOF
 /* Max buffer for format string */
@@ -60,6 +60,10 @@ namespace fg {
 /* Standard error output */
     #define FG_ERR              stderr
 
+    #if defined(FG_USING_SDL2)
+        #include <SDL2/SDL_rwops.h>
+    #endif
+
 namespace fg {
     namespace util {
 
@@ -71,10 +75,16 @@ namespace fg {
             typedef fg::util::base::CFile base_type;
             typedef RegularFileTag tag_type;
             typedef fg::util::base::CFile::Mode Mode;
+            
+    #if defined(FG_USING_SDL2)
+            typedef SDL_RWops FileHandleType;
+    #else
+            typedef FILE FileHandleType;
+    #endif
 
         protected:
-            /// C standard file handle
-            FILE *m_file;
+            /// C standard or SDL_RWops file handle
+            FileHandleType *m_file;
 
         public:
             /**
@@ -264,7 +274,7 @@ namespace fg {
              * Return the stdio FILE standard pointer
              * @return 
              */
-            FILE *getFilePtr(void) const {
+            FileHandleType *getFilePtr(void) const {
                 return m_file;
             }
         };

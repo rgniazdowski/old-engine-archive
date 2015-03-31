@@ -45,6 +45,8 @@ namespace fg {
             typedef fg::util::base::CFile::Mode FileMode;
             ///
             typedef fg::util::CZipFile::Mode ZipMode;
+            
+            typedef fg::util::CRegularFile::FileHandleType FileHandleType;
 
         private:
 
@@ -319,7 +321,7 @@ namespace fg {
              * Return the stdio FILE standard pointer
              * @return 
              */
-            FILE *getFilePtr(void) const {
+            FileHandleType *getFilePtr(void) const {
                 return m_regular.getFilePtr();
             }
         };

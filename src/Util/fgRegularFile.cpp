@@ -22,13 +22,56 @@
 #include <fstream>
 #include <cerrno>
 
+#if defined(FG_USING_SDL2)
+#include <SDL2/SDL.h>
+
+/**
+ * The fgets function returns s if successful. If end-of-file is 
+ * encountered and no characters have been read into the array, 
+ * the contents of the array remain unchanged and a null pointer 
+ * is returned. If a read error occurs during the operation, the 
+ * array contents are indeterminate and a null pointer is returned. 
+ * 
+ * @param s
+ * @param n
+ * @param file
+ * @return 
+ */
+char *rw_fgets(char *s, int n, SDL_RWops *file) {
+    if(!s || !file || !n) {
+        return NULL;
+    }
+    register char *cs = s;
+    char c = 0;
+    *cs = 0;
+    while(file->read(file, &c, 1, 1)) {
+        if(!c) {
+            return NULL;
+        }
+        *(cs) = c;
+        cs++;
+
+        if(c == '\n') {
+            break;
+        }
+        c = 0;
+        if(!--n)
+            break;
+    }
+    if(!c && n)
+        return NULL;
+    *cs = 0;
+    return s;
+}
+#endif /* FG_USING_SDL2 */
+
 /**
  * Check if file exists
  * @param filePath
  * @return 
  */
 fgBool fg::util::CRegularFile::exists(const char *filePath) {
-#if defined FG_USING_MARMALADE
+#if defined(FG_USING_MARMALADE)
     return (fgBool)s3eFileCheckExists(filePath);
 #else
     std::ifstream fileCheck(filePath);
@@ -133,14 +176,25 @@ fgBool fg::util::CRegularFile::open(const char *filePath, Mode mode) {
     if(mode == Mode::READ ||
        mode == (Mode::READ | Mode::BINARY) ||
        mode & Mode::UPDATE) {
+#if !defined(FG_USING_PLATFORM_ANDROID)
         if(!exists(filePath)) {
             FG_MessageSubsystem->reportError(tag_type::name(), FG_ERRNO_FILE_DOESNT_EXIST, "%s", filePath);
             return FG_FALSE;
         }
+#endif
     }
-
+    
     FG_ERRNO_CLEAR();
+#if defined(FG_USING_SDL2)
+    //FG_LOG_DEBUG("SDL_RWFromFile: opening file '%s'", filePath);
+    m_file = SDL_RWFromFile(filePath, modeStr(mode));
+    if(!m_file) {
+        FG_MessageSubsystem->reportError(tag_type::name(), FG_ERRNO_FILE_OPEN_FAILED, "%s", SDL_GetError());
+    } else {
+    }
+#else
     m_file = fopen(filePath, modeStr(mode));
+#endif
 
     if(m_file == NULL) {
         if(FG_ERRNO)
@@ -184,10 +238,20 @@ fgBool fg::util::CRegularFile::open(void) {
 fgBool fg::util::CRegularFile::close(void) {
     if(m_file) {
         FG_ERRNO_CLEAR();
+        //m_file->hidden.stdio.fp
+#if !defined(FG_USING_SDL2)
         clearerr(m_file);
+#else
+        if(m_file->type == SDL_RWOPS_STDFILE)
+            clearerr(m_file->hidden.stdio.fp);
+#endif
     }
     if(m_file != NULL) {
+#if defined(FG_USING_SDL2)
+        if(m_file->close(m_file) == -1) {
+#else
         if(fclose(m_file) == FG_EOF) {
+#endif
             if(FG_ERRNO)
                 FG_MessageSubsystem->reportError(tag_type::name(), FG_ERRNO, "%s", m_filePath.c_str());
             else
@@ -223,9 +287,8 @@ char *fg::util::CRegularFile::load(const char *filePath) {
         FG_MessageSubsystem->reportWarning(tag_type::name(), FG_ERRNO_FILE_ALREADY_OPEN, "%s", filePath);
         return NULL;
     }
-
     int fileSize = getSize();
-    if(fileSize < 0) {
+    if(fileSize <= 0) {
         FG_MessageSubsystem->reportWarning(tag_type::name(), FG_ERRNO_FILE_ERROR_SIZE, "%s", filePath);
         close();
         return NULL;
@@ -237,8 +300,14 @@ char *fg::util::CRegularFile::load(const char *filePath) {
         close();
         return NULL;
     }
-
+#if defined(FG_USING_SDL2)
+    int bytesRead = m_file->read(m_file, fileBuffer, 1, fileSize);
+#if defined(FG_USING_PLATFORM_ANDROID)
+    FG_LOG_DEBUG("Loading file '%s' into buffer[%d], contents: '%s'", filePath, bytesRead, fileBuffer);
+#endif
+#else
     int bytesRead = read(fileBuffer, 1, fileSize);
+#endif
     fileBuffer[fileSize] = '\0';
     if(bytesRead != (int)fileSize) {
         FG_MessageSubsystem->reportWarning(tag_type::name(), FG_ERRNO_FILE_READ_COUNT, "%s", filePath);
@@ -280,13 +349,20 @@ int fg::util::CRegularFile::read(void *buffer, unsigned int elemsize, unsigned i
         FG_MessageSubsystem->reportWarning(tag_type::name(), FG_ERRNO_FILE_WRONG_PARAMETERS, "%s", m_filePath.c_str());
         return 0;
     }
+#if !defined(FG_USING_SDL2)
     FG_ERRNO_CLEAR();
     clearerr(m_file);
+#endif
+#if defined(FG_USING_SDL2)
+    unsigned int elemRead = (unsigned int)m_file->read(m_file, buffer, elemsize, elemcount);
+#else
     unsigned int elemRead = (unsigned int)fread(buffer, elemsize, elemcount, m_file);
-
+#endif
     if(elemRead != elemcount) {
+#if !defined(FG_USING_SDL2)
         if(ferror(m_file) && FG_ERRNO)
             FG_MessageSubsystem->reportError(tag_type::name(), FG_ERRNO, "%s", m_filePath.c_str());
+#endif
         FG_MessageSubsystem->reportWarning(tag_type::name(), FG_ERRNO_FILE_READ_COUNT, "%s", m_filePath.c_str());
     }
     return elemRead;
@@ -303,14 +379,22 @@ char *fg::util::CRegularFile::readString(char *buffer, unsigned int maxlen) {
         FG_MessageSubsystem->reportWarning(tag_type::name(), FG_ERRNO_FILE_WRONG_PARAMETERS);
         return NULL;
     }
+#if !defined(FG_USING_SDL2)
     FG_ERRNO_CLEAR();
     clearerr(m_file);
+#endif
+#if defined(FG_USING_SDL2)
+    char *retString = rw_fgets(buffer, maxlen, m_file);
+#else
     char *retString = fgets(buffer, maxlen, m_file);
+#endif
     if(retString == NULL) {
+#if !defined(FG_USING_SDL2)
         if(ferror(m_file) && FG_ERRNO)
             FG_MessageSubsystem->reportError(tag_type::name(), FG_ERRNO);
         else
             FG_MessageSubsystem->reportError(tag_type::name(), FG_ERRNO_FILE_ERROR_READ);
+#endif
         FG_MessageSubsystem->reportWarning(tag_type::name(), FG_ERRNO_FILE_ERROR_STRING);
     }
     return retString;
@@ -334,15 +418,23 @@ int fg::util::CRegularFile::print(const char *fmt, ...) {
     vsnprintf(buf, FG_MAX_BUFFER, fmt, args);
     va_end(args);
 
+#if !defined(FG_USING_SDL2)
     FG_ERRNO_CLEAR();
     clearerr(m_file);
-    int charsCount = fprintf(m_file, buf);
+#endif
+
+#if defined(FG_USING_SDL2)
+    int charsCount = m_file->write(m_file, buf, 1, strlen(buf));
+#else
+    int charsCount = fprintf(m_file, "%s", buf);
     if(ferror(m_file)) {
         if(FG_ERRNO)
             FG_MessageSubsystem->reportError(tag_type::name(), FG_ERRNO);
         else
             FG_MessageSubsystem->reportError(tag_type::name(), FG_ERRNO_FILE_ERROR_WRITE);
     }
+
+#endif
     return charsCount;
 }
 
@@ -358,14 +450,22 @@ int fg::util::CRegularFile::write(void *buffer, unsigned int elemsize, unsigned 
         FG_MessageSubsystem->reportWarning(tag_type::name(), FG_ERRNO_FILE_WRONG_PARAMETERS);
         return -1;
     }
+#if !defined(FG_USING_SDL2)
     FG_ERRNO_CLEAR();
     clearerr(m_file);
+#endif
+#if defined(FG_USING_SDL2)
+    unsigned int elemWritten = (unsigned int)m_file->write(m_file, buffer, elemsize, elemcount);
+#else
     unsigned int elemWritten = (unsigned int)fwrite(buffer, elemsize, elemcount, m_file);
+#endif
     if(elemWritten != elemcount) {
+#if !defined(FG_USING_SDL2)
         if(ferror(m_file) && FG_ERRNO)
             FG_MessageSubsystem->reportError(tag_type::name(), FG_ERRNO);
         else
             FG_MessageSubsystem->reportError(tag_type::name(), FG_ERRNO_FILE_ERROR_WRITE);
+#endif
         FG_MessageSubsystem->reportWarning(tag_type::name(), FG_ERRNO_FILE_WRITE_COUNT);
     }
 
@@ -386,7 +486,12 @@ int fg::util::CRegularFile::puts(const char *str) {
         FG_MessageSubsystem->reportWarning(tag_type::name(), FG_ERRNO_FILE_NOT_OPENED);
         return -1;
     }
-
+#if defined(FG_USING_SDL2)
+    int status = m_file->write(m_file, str, 1, strlen(str));
+    if(!status) {
+        FG_MessageSubsystem->reportError(tag_type::name(), FG_ERRNO_FILE_ERROR_WRITE);
+    }
+#else
     FG_ERRNO_CLEAR();
     clearerr(m_file);
     int status = fputs(str, m_file);
@@ -396,6 +501,7 @@ int fg::util::CRegularFile::puts(const char *str) {
         else
             FG_MessageSubsystem->reportError(tag_type::name(), FG_ERRNO_FILE_ERROR_WRITE);
     }
+#endif
     return status;
 }
 
@@ -408,8 +514,13 @@ fgBool fg::util::CRegularFile::isEOF(void) {
         FG_MessageSubsystem->reportWarning(tag_type::name(), FG_ERRNO_FILE_NOT_OPENED);
         return FG_FALSE;
     }
+#if defined(FG_USING_SDL2)
+    if(SDL_RWtell(m_file) < 0)
+        return FG_TRUE;
+#else
     if(feof(m_file))
         return FG_TRUE;
+#endif
     return FG_FALSE;
 }
 
@@ -422,6 +533,7 @@ fgBool fg::util::CRegularFile::flush(void) {
         FG_MessageSubsystem->reportWarning(tag_type::name(), FG_ERRNO_FILE_NOT_OPENED);
         return FG_FALSE;
     }
+#if !defined(FG_USING_SDL2)
     FG_ERRNO_CLEAR();
     clearerr(m_file);
     if(fflush(m_file) == 0) {
@@ -431,6 +543,7 @@ fgBool fg::util::CRegularFile::flush(void) {
             FG_MessageSubsystem->reportError(tag_type::name(), FG_ERRNO_FILE_ERROR_FLUSH);
         return FG_FALSE;
     }
+#endif
     return FG_TRUE;
 }
 
@@ -443,6 +556,14 @@ int fg::util::CRegularFile::getChar(void) {
         FG_MessageSubsystem->reportWarning(tag_type::name(), FG_ERRNO_FILE_NOT_OPENED);
         return -1;
     }
+#if defined(FG_USING_SDL2)
+    int charRead = 0;
+    int count = m_file->read(m_file, &charRead, 1, 1);
+    if(!count) {
+        FG_MessageSubsystem->reportWarning(tag_type::name(), FG_ERRNO_FILE_EOF);
+        return FG_EOF;
+    }
+#else
     FG_ERRNO_CLEAR();
     clearerr(m_file);
     int charRead = fgetc(m_file);
@@ -455,6 +576,7 @@ int fg::util::CRegularFile::getChar(void) {
         if(feof(m_file))
             FG_MessageSubsystem->reportWarning(tag_type::name(), FG_ERRNO_FILE_EOF);
     }
+#endif
     return charRead;
 }
 
@@ -468,6 +590,12 @@ int fg::util::CRegularFile::putChar(char c) {
         FG_MessageSubsystem->reportWarning(tag_type::name(), FG_ERRNO_FILE_NOT_OPENED);
         return FG_EOF;
     }
+#if defined(FG_USING_SDL2)
+    int charWrite = m_file->write(m_file, &c, 1, 1);
+    if(!charWrite) {
+        FG_MessageSubsystem->reportError(tag_type::name(), FG_ERRNO_FILE_ERROR_WRITE);
+    }
+#else
     FG_ERRNO_CLEAR();
     clearerr(m_file);
     int charWrite = fputc(c, m_file);
@@ -477,6 +605,7 @@ int fg::util::CRegularFile::putChar(char c) {
         else
             FG_MessageSubsystem->reportError(tag_type::name(), FG_ERRNO_FILE_ERROR_WRITE);
     }
+#endif
     return charWrite;
 }
 
@@ -490,6 +619,10 @@ int fg::util::CRegularFile::getSize(void) {
         return -1;
     }
     long size = 0;
+
+#if defined(FG_USING_SDL2)
+    size = (long)m_file->size(m_file);
+#else
     long prev = 0;
     fgBool _err = FG_FALSE;
     // #FIXME
@@ -514,6 +647,7 @@ int fg::util::CRegularFile::getSize(void) {
     }
     if(_err)
         size = -1L;
+#endif
     return (int)size;
 }
 
@@ -526,9 +660,13 @@ long fg::util::CRegularFile::getPosition(void) {
         FG_MessageSubsystem->reportWarning(tag_type::name(), FG_ERRNO_FILE_NOT_OPENED);
         return -1;
     }
+#if defined(FG_USING_SDL2)
+    long position = (long)SDL_RWtell(m_file);
+#else
     FG_ERRNO_CLEAR();
     clearerr(m_file);
     long position = ftell(m_file);
+#endif
     if(position == -1L) {
         if(FG_ERRNO)
             FG_MessageSubsystem->reportError(tag_type::name(), FG_ERRNO);
@@ -550,6 +688,11 @@ int fg::util::CRegularFile::setPosition(long offset, int whence) {
         FG_MessageSubsystem->reportWarning(tag_type::name(), FG_ERRNO_FILE_NOT_OPENED);
         return -1;
     }
+#if defined(FG_USING_SDL2)
+    if(m_file->seek(m_file, offset, whence) < 0) {
+        FG_MessageSubsystem->reportError(tag_type::name(), FG_ERRNO_FILE_ERROR_SEEK);
+    }
+#else
     FG_ERRNO_CLEAR();
     clearerr(m_file);
     if(fseek(m_file, offset, whence)) {
@@ -559,5 +702,6 @@ int fg::util::CRegularFile::setPosition(long offset, int whence) {
             FG_MessageSubsystem->reportError(tag_type::name(), FG_ERRNO_FILE_ERROR_SEEK);
         return -1;
     }
+#endif
     return 0;
 }
