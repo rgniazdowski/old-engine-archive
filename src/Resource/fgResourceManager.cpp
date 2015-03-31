@@ -27,13 +27,19 @@
 #include "Util/fgPath.h"
 #include "fgLog.h"
 
+#if defined(FG_USING_PLATFORM_ANDROID)    
+    #include "Android/fgAndroid.h"
+#endif
+
 using namespace fg;
 
 /**
  * 
  * @param resourceFactory
  */
-resource::CResourceManager::CResourceManager(CResourceFactory *pResourceFactory, fg::base::CManager *pQualityMgr, fg::base::CManager *pEventMgr) :
+resource::CResourceManager::CResourceManager(CResourceFactory *pResourceFactory,
+                                             fg::base::CManager *pQualityMgr,
+                                             fg::base::CManager *pEventMgr) :
 m_pResourceFactory(pResourceFactory),
 m_pQualityMgr(pQualityMgr),
 m_pEventMgr(pEventMgr),
@@ -138,7 +144,7 @@ fgBool resource::CResourceManager::initialize(void) {
     // #FIXME - compatibility for different platforms
     m_dataDir->readDir("./", FG_TRUE, FG_TRUE);
     m_dataDir->rewind();
-    FG_LOG_DEBUG("Resource: Initializing resource manager\nCurrent maximum memory: %.2f", (float)m_nMaximumMemory / 1024.0 / 1024.0); // #TODELETE
+    FG_LOG_DEBUG("Resource: Initializing resource manager. Current maximum memory: %.2f MiB", (float)m_nMaximumMemory / 1024.0 / 1024.0); // #TODELETE
     // First of all load any resource group configs,
     // file extension is *.rgrp and it's a xml file.
     std::string filepath;
@@ -177,6 +183,9 @@ fgBool resource::CResourceManager::initialize(void) {
         grpUniqueID = resGroup->getHandle();
         // There is a separate holder for resource group
         insertResourceGroup(grpUniqueID, resGroup);
+        // Force create - some resource groups have this special flag
+        // This means that when resource group is pre-cached the resources
+        // in this group will be created - additional memory will be allocated
         const fgBool forceCreate = resGroup->isForceCreate();
         CResourceGroup::rgResVec& resInGrp = resGroup->getRefResourceFiles();
         for(CResourceGroup::rgResVecItor it = resInGrp.begin(); it != resInGrp.end(); it++) {
@@ -189,6 +198,25 @@ fgBool resource::CResourceManager::initialize(void) {
         // This is really important - refresh array with resource handles
         resGroup->refreshArrays();
     }
+    FG_LOG_DEBUG("Resource: Pre cached %d resource group files.", resGroupFiles.size());
+    FG_LOG_DEBUG("Resource: Current number of cached resources: %d, total: %d bytes [%d KiB]",
+                 (int)getUsedHandleCount(),
+                 (int)m_nCurrentUsedMemory,
+                 (int)m_nCurrentUsedMemory/1024);
+#if defined(FG_DEBUG)
+    // With debug mode - printout the names of the resources and their size in bytes/kbytes
+    this->goToBegin();
+    do {
+        CResource *pResource = this->getCurrentResource();
+        if(pResource) {
+            FG_LOG_DEBUG("Resource[%.3d]: name[%s], size: %d bytes [%d KiB]", 
+                         pResource->getHandle().getIndex(),
+                         pResource->getNameStr(),
+                         (int)pResource->getSize(),
+                         (int)pResource->getSize()/1024);
+        }
+    } while(this->goToNext());
+#endif /* FG_DEBUG */
     resGroupFiles.clear();
     goToBegin();
     m_init = FG_TRUE;
@@ -230,6 +258,8 @@ fgBool resource::CResourceManager::goToNext(ResourceType resType) {
         if(!isValid()) {
             break;
         }
+        if(!(*m_currentResource).data)
+            continue;
         if((*m_currentResource).data->getResourceType() == resType) {
             break;
         }
@@ -388,8 +418,10 @@ fgBool resource::CResourceManager::dispose(const std::string& nameTag) {
     return dispose(CDataManagerBase::get(nameTag));
 }
 
-/*
+/**
  * Disposes of the resource (frees memory) - does not remove resource from the manager
+ * @param nameTag
+ * @return 
  */
 fgBool resource::CResourceManager::dispose(const char *nameTag) {
     return dispose(CDataManagerBase::get(nameTag));
