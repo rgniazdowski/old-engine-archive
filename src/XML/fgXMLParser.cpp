@@ -38,7 +38,7 @@ fgBool xml::CParser::loadXML(const char *filePath) {
 
     // Close the file
     close();
-
+    //FG_LOG_DEBUG("XMLParser: FileBuffer: '%s'", m_fileBuffer);
     // Process the XML raw data
     if(!m_xmlDocument.Parse(m_fileBuffer)) {
         if(m_xmlDocument.Error()) {
@@ -55,6 +55,9 @@ fgBool xml::CParser::loadXML(const char *filePath) {
 
     // Set the root element
     m_rootXMLElement = m_xmlDocument.FirstChildElement();
+    if(!m_rootXMLElement) {
+        FG_LOG_DEBUG("XMLParser: Root XML element is NULL");
+    }
     return FG_TRUE;
 }
 

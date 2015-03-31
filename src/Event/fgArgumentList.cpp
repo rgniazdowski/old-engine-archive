@@ -79,7 +79,7 @@ void event::CArgumentList::push(event::SArgument::Type type, void *value) {
             new_argument.float_val = *((float*)value);
             break;
         case SArgument::Type::ARG_STRING:
-            snprintf(new_argument.string, FG_ARGUMENT_MAX_STRING, (char *)value);
+            snprintf(new_argument.string, FG_ARGUMENT_MAX_STRING, "%s", (char *)value);
             break;
         case SArgument::Type::ARG_POINTER:
         case SArgument::Type::ARG_TMP_POINTER:
@@ -144,7 +144,7 @@ void event::CArgumentList::push(const char *string) {
     if(m_argv.size() >= m_maxArgs)
         return;
     new_argument.type = SArgument::Type::ARG_STRING;
-    snprintf(new_argument.string, FG_ARGUMENT_MAX_STRING, (char *)string);
+    snprintf(new_argument.string, FG_ARGUMENT_MAX_STRING, "%s", (char *)string);
     m_argv.push_back(new_argument);
 }
 

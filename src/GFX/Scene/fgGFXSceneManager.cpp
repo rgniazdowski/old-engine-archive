@@ -17,9 +17,9 @@
 #include "GFX/fgGFXPrimitives.h"
 
 #include "Resource/fgResourceManager.h"
+#include "Util/fgStrings.h"
 
 #include "fgDebugConfig.h"
-
 #if defined(FG_DEBUG)
 #include "Util/fgProfiling.h"
 #endif
@@ -476,7 +476,6 @@ void gfx::CSceneManager::sortCalls(void) {
         if(!(*itor).data)
             continue;
         CSceneNode* pNode = (*itor).data;
-        //pNode->refreshGfxInternals();
         CDrawCall* pDrawCall = pNode->getDrawCall();
 #if defined(FG_DEBUG)
         if(g_fgDebugConfig.isDebugProfiling) {
@@ -517,7 +516,7 @@ void gfx::CSceneManager::sortCalls(void) {
         // #FIXME - srsly?
         if(pDrawCall) {
             if(!pDrawCall->getShaderProgram())
-                pDrawCall->setShaderProgram(((gfx::CShaderManager*)getShaderManager())->getCurrentProgram());            
+                pDrawCall->setShaderProgram(((gfx::CShaderManager*)getShaderManager())->getCurrentProgram());
             // getRefPriorityQueue().push(pDrawCall);
         }
     }
@@ -530,7 +529,7 @@ void gfx::CSceneManager::sortCalls(void) {
 void gfx::CSceneManager::render(void) {
     if(isHideAll()) {
         return;
-    }        
+    }
     CShaderManager* pShaderMgr = static_cast<gfx::CShaderManager*>(m_pShaderMgr);
     CShaderProgram* pProgram = pShaderMgr->getCurrentProgram();
     //pProgram->setUniform(FG_GFX_USE_TEXTURE, 1.0f);
@@ -956,6 +955,8 @@ void gfx::CSceneManager::initializeNode(CSceneNode *pNode) {
             }
         }
     }
+
+    pNode->update();
 }
 
 /**

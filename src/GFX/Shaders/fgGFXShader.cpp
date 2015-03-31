@@ -146,7 +146,7 @@ fgBool gfx::CShader::loadSource(void) {
     m_sources[n] = m_fileSource;
 #if defined(FG_DEBUG)
     for(int i = 0; i < (int)m_numSources; i++) {
-        printf("[%d] '%s'\n", i, m_sources[i]);
+        FG_LOG_DEBUG("[%d] '%s'", i, m_sources[i]);
     }
 #endif
     m_isSourceLoaded = FG_TRUE;

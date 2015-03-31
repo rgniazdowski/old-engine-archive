@@ -9,6 +9,7 @@
  *******************************************************/
 
 #include "fgSettings.h"
+#include "fgLog.h"
 
 using namespace fg;
 
@@ -47,9 +48,11 @@ fgBool CSettings::load(const char *filePath) {
     m_parser->setContentHandler(content);
     if(!m_parser->loadXML(filePath)) {
         status = FG_FALSE;
+        FG_LOG_ERROR("Main: Failed to load XML settings file");
     } else {
         if(!m_parser->parseWithHandler()) {
             status = FG_FALSE;
+            FG_LOG_ERROR("Main: Failed to parse settings file with handler");
         }
     }
     delete content;
@@ -58,6 +61,9 @@ fgBool CSettings::load(const char *filePath) {
 
     if(status) {
         m_settings = data;
+        FG_LOG_DEBUG("Main: Copying loaded settings data; mod[%s]", data.currentModPath.c_str());
+    } else {
+        FG_LOG_ERROR("Main: Will not copy any settings data");
     }
     delete m_parser;
     m_parser = NULL;

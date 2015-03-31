@@ -254,7 +254,7 @@ fgBool gfx::CTextureManager::allToVRAM(fgBool reupload) {
     while(((resource::CResourceManager *)m_pResourceMgr)->isValid()) {
         resource::CResource *resource = ((resource::CResourceManager *)m_pResourceMgr)->getCurrentResource();
         if(!resource) {
-            log::PrintError("GFX: Loop in texture manager, resource is %p\n", resource);
+            FG_LOG_ERROR("GFX: Loop in texture manager, resource is %p\n", resource);
             return FG_FALSE;
         }
         resource::ResourceType resType = resource->getResourceType();

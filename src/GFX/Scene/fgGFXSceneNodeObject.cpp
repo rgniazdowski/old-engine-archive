@@ -59,7 +59,7 @@ gfx::CSceneNodeObject::CSceneNodeObject(const CSceneNodeObject& orig) : base_typ
  * 
  */
 gfx::CSceneNodeObject::~CSceneNodeObject() {
-    FG_LOG_DEBUG("fgGfxSceneNodeObject destructor %s", this->m_nameTag.c_str());
+    //FG_LOG_DEBUG("fgGfxSceneNodeObject destructor %s", this->m_nameTag.c_str());
     // Well there's no need to remove children from this destructor
     // The base class destructor (SceneNode) will take care of that
     m_drawCall = NULL;

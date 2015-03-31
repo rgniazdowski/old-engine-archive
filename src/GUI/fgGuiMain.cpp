@@ -402,7 +402,7 @@ void gui::CGuiMain::updateState(void) {
     }
     if(!m_currentMenu) {
         // #FIXME - this needs to look a little bit differently
-        gui::CWidgetManager::WidgetVec & roots = m_widgetMgr->getRefRootWidgets();
+        gui::CWidgetManager::WidgetVec& roots = m_widgetMgr->getRefRootWidgets();
         if(roots.empty())
             return;
         gui::CWidget *mainMenu = m_widgetMgr->get("MainMenu");
@@ -572,7 +572,7 @@ void gui::CGuiMain::setResourceManager(resource::CResourceManager * pResourceMgr
  * 
  * @param pShaderMgr
  */
-void gui::CGuiMain::setShaderManager(base::CManager * pShaderMgr) {
+void gui::CGuiMain::setShaderManager(base::CManager* pShaderMgr) {
     if(pShaderMgr) {
         if(pShaderMgr->getManagerType() != FG_MANAGER_GFX_SHADER)
             return;
@@ -586,7 +586,7 @@ void gui::CGuiMain::setShaderManager(base::CManager * pShaderMgr) {
  * 
  * @param pointerInputReceiver
  */
-void gui::CGuiMain::setPointerInputReceiver(event::CInputHandler * pointerInputReceiver) {
+void gui::CGuiMain::setPointerInputReceiver(event::CInputHandler* pointerInputReceiver) {
     m_pPointerInputReceiver = pointerInputReceiver;
 }
 
@@ -595,7 +595,7 @@ void gui::CGuiMain::setPointerInputReceiver(event::CInputHandler * pointerInputR
  * @param argv
  * @return 
  */
-fgBool gui::CGuiMain::guiTouchHandler(event::CArgumentList * argv) {
+fgBool gui::CGuiMain::guiTouchHandler(event::CArgumentList* argv) {
     if(!argv)
         return FG_FALSE;
     event::SEvent *pEvent = (event::SEvent *)argv->getValueByID(0);
@@ -727,7 +727,7 @@ void gui::CGuiMain::setCurrentMenu(const std::string& menuName) {
  * 
  * @param pMenu
  */
-void gui::CGuiMain::setCurrentMenu(CWidget *pMenu) { 
+void gui::CGuiMain::setCurrentMenu(CWidget *pMenu) {
     if(!pMenu)
         return;
     if(m_widgetMgr && !m_widgetMgr->isManaged(pMenu)) {

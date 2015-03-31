@@ -17,6 +17,7 @@
 #include "fgScriptMT.h"
 #include "GUI/fgGuiWidgetTypes.h"
 #include "Resource/fgResource.h"
+#include "fgLog.h"
 
 template <>
 bool CSingleton<fg::script::CMetatables>::instanceFlag = false;
@@ -234,9 +235,8 @@ void script::CMetatables::generateMetatableNames(void) {
 
     for(int i = 0; i < (int)METATABLE_SIZE; i++) {
         m_metatableInfoVec[i].id = (unsigned short int)i;
-        printf("ScriptMT: Generated metatable name id[%d], name[%s]\n", i, m_metatableInfoVec[i].name);
-    }
-    printf("");
+        FG_LOG_DEBUG("ScriptMT: Generated metatable name id[%d], name[%s]", i, m_metatableInfoVec[i].name);
+    }    
 }
 
 /**

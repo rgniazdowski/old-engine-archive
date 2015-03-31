@@ -234,7 +234,7 @@ fgBool gfx::CShaderManager::preLoadShaders(void) {
         if(strcasecmp(ext, FG_GFX_SHADER_CONFIG_PROGRAM_STD_SUFFIX) == 0) {
             shProgramCfgs.push_back(fgPath::join(m_shadersPath, std::string(filename)));
         }
-    }*/
+    }*/    
     unsigned short int count = 0;
     CStringVector::iterator begin, end, itor;
     begin = shProgramCfgs.begin();
@@ -258,8 +258,10 @@ fgBool gfx::CShaderManager::preLoadShaders(void) {
     shProgramCfgs.clear_optimised();
     m_isPreloadDone = FG_TRUE;
     FG_LOG_DEBUG("GFX: ShaderManager: cached %d shader programs", count);
-    if(!count)
+    if(!count) {
+        FG_LOG_DEBUG("GFX: ShaderManager: no shader programs found - is there a problem with assets?");
         return FG_FALSE;
+    }
     return FG_TRUE;
 }
 

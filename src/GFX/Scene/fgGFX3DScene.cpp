@@ -6,26 +6,24 @@
  * 
  * FlexiGame source code and any related files can not be copied, modified 
  * and/or distributed without the express or written consent from the author.
- *******************************************************/
+ ******************************************************************************/
 
 #include "fgGFX3DScene.h"
 #include "fgGFXSceneNode.h"
 #include "fgGFXSceneEvent.h"
 #include "fgGFXLooseOctree.h"
 #include "fgGFXQuadtree.h"
-
-#include "Util/fgMemory.h"
-
 #include "GFX/Shaders/fgGFXShaderManager.h"
 #include "GFX/Textures/fgTextureResource.h"
+
+#include "Util/fgMemory.h"
 #include "Resource/fgResourceManager.h"
+#include "Physics/fgWorld.h"
 
 #include "fgDebugConfig.h"
 #if defined(FG_DEBUG)
 #include "Util/fgProfiling.h"
 #endif
-
-#include "Physics/fgWorld.h"
 
 using namespace fg;
 
@@ -78,7 +76,7 @@ void gfx::CScene3D::sortCalls(void) {
     }
 
     getMVP()->setCamera((CCamera *)(getCamera()));
-    CFrustum &frustum = getMVP()->getRefFrustum();
+    CFrustum &frustum = getMVP()->getFrustum();
 
     // Remove from the queue any remaining nodes (SceneNode)
     while(!getNodeQueue().empty())
@@ -92,19 +90,13 @@ void gfx::CScene3D::sortCalls(void) {
         if(!(*itor).data)
             continue;
         CSceneNode *sceneNode = (*itor).data;
-        sceneNode->refreshGfxInternals();
+        //sceneNode->refreshGfxInternals(); // #FIXME - is this needed?!?
         SOctreeNode *treeNode = static_cast<SOctreeNode *>(sceneNode->getTreeNode());
         sceneNode->setVisible(FG_FALSE);
         // There is a problem because the bounding box needs to be modified by
         // the model matrix; maybe some operator ?
         sceneNode->update(timesys::elapsed()); // #FIXME - maybe this should also call updateAABB??
-
-        // checkCollisions rewinds the octree/quadtree
-        // should not be called within the tree traversal
-        if(!isIgnoreCollisions()) {
-            // broadphase - this uses loose octree - more fast would be dynamic AABBtree ?
-            checkCollisions(sceneNode);
-        }
+        
         if(treeNode) {
             //unsigned int objCount = treeNode->objects.size();
             float halfSize = static_cast<CLooseOctree *>(m_octree)->getLooseK() * m_octree->getWorldSize().x / (2 << treeNode->depth);
@@ -121,6 +113,12 @@ void gfx::CScene3D::sortCalls(void) {
                 m_octree->insert(sceneNode);
                 //}
             }
+        }
+        // checkCollisions rewinds the octree/quadtree
+        // should not be called within the tree traversal
+        if(!isIgnoreCollisions()) {
+            // broadphase - this uses loose octree - more fast would be dynamic AABBtree ?
+            checkCollisions(sceneNode);
         }
     }
 

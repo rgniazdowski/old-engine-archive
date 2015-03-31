@@ -13,6 +13,7 @@
 
     #include "fgXMLDefaultHandler.h"
     #include <cstdlib>
+    #include "fgLog.h"
 
 template<class _type> struct fgXMLAutoRoot {
 };
@@ -140,22 +141,27 @@ public:
 public:
     // Receive notification of the end of the document.
     virtual void endDocument(fgXMLDocument *document) {
+        //FG_LOG_DEBUG("XMLAutoHandler: endDocument(); failure[%d]", m_isFailure);
         if(m_isFailure)
             return;
     }
 
     // Receive notification of the end of an element.
     virtual void endElement(const char *localName, fgXMLElement *elementPtr, fgXMLNodeType nodeType, int depth = 0) {
+        //FG_LOG_DEBUG("XMLAutoHandler: endElement('%s'); failure[%d]", localName, m_isFailure);
         if(m_isFailure)
             return;
         m_elemStack.pop();
     }
 
     // Receive notification of the beginning of the document.
-    virtual void startDocument(fgXMLDocument *document) { }
+    virtual void startDocument(fgXMLDocument *document) { 
+        //FG_LOG_DEBUG("XMLAutoHandler: startDocument()");
+    }
 
     // Receive notification of the start of an element.
     virtual void startElement(const char *localName, fgXMLElement *elementPtr, fgXMLNodeType nodeType, fgXMLAttribute *firstAttribute, int depth = 0) {
+        //FG_LOG_DEBUG("XMLAutoHandler: startElement('%s'); failure[%d]", localName, m_isFailure);
         if(fgXMLAutoRoot<Target>::checkName(localName) != 0 && depth == 0) {
             m_isFailure = FG_TRUE;
             return;
@@ -174,6 +180,7 @@ public:
         fgXMLElement *elementPtr = NULL;
         if(!m_elemStack.empty())
             elementPtr = m_elemStack.top();
+        //FG_LOG_DEBUG("XMLAutoHandler: characters('%s', %d, %d); failure[%d]", ch, start, length, m_isFailure);
         fgXMLAutoCharacters<Target>::characters(ch, start, length, nodeType, m_target, elementPtr);
     }
     virtual void setTarget(Target *target) {

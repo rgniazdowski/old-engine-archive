@@ -13,8 +13,8 @@
 
     #include "fgCommon.h"
 
-    #ifdef FG_USING_TINYXML
-        #ifndef TINYXML_INCLUDED
+    #if defined(FG_USING_TINYXML)
+        #if !defined(TINYXML_INCLUDED)
             #include "tinyxml.h"
         #endif
 
@@ -45,6 +45,6 @@ typedef TiXmlUnknown fgXMLUnknown;
 typedef TiXmlVisitor fgXMLVisitor;
 typedef TiXmlNode::NodeType fgXMLNodeType;
 
-    #endif
+    #endif /* FG_USING_TINYXML */
 
 #endif /* FG_INC_XML_TYPES_WRAP */

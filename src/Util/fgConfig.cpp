@@ -11,6 +11,7 @@
 #include "fgConfig.h"
 #include "fgMemory.h"
 #include "fgException.h"
+#include "fgLog.h"
 
 using namespace fg;
 
@@ -449,7 +450,7 @@ void util::CConfig::dumpAllParameters(void) {
     for(; itor != end; itor++) {
         SCfgParameter *param = *itor;
         param->toString(_buf);
-        printf("PARAM: '%s' type: '%d', section: '%s', sub: '%s', dump: '%s'\n",
+        FG_LOG_DEBUG("PARAM: '%s' type: '%d', section: '%s', sub: '%s', dump: '%s'\n",
                param->name.c_str(),
                (int)param->type,
                param->sectionName.c_str(),
