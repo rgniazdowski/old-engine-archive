@@ -26,7 +26,7 @@
 namespace fg {
     namespace colors {
         ///
-        const unsigned int NUM_COLORS = 140;
+        const unsigned int NUM_COLORS = 141;
         ///
         static fgBool s_isInit = FG_FALSE;
 
