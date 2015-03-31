@@ -948,6 +948,34 @@ m_init(FG_FALSE) {
     //SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
     //SDL_GL_SetAttribute(SDL_GL_SHARE_WITH_CURRENT_CONTEXT, 1);
 
+    // Lists opengl es versions intended to try
+#if defined(FG_USING_OPENGL_ES)
+    const int numGLVersions = 3;
+    const std::pair<int, int> glVersions[3] {
+        {2, 0}, // Just for now the OGLES 2.0 has top priority
+        {3, 0},
+        {3, 1}
+    };
+    std::string glName = "OpenGL ES";
+#else
+    const int numGLVersions = 11;
+    const std::pair<int, int> glVersions[11] {
+        {4, 4},
+        {4, 3},
+        {4, 2},
+        {4, 1},
+        {4, 0},
+        {3, 3},
+        {3, 2},
+        {3, 1},
+        {3, 0},
+        {2, 1},
+        {2, 0}
+    };
+    std::string glName = "OpenGL";
+#endif
+
+#if !defined(FG_USING_PLATFORM_ANDROID)
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
 
@@ -978,6 +1006,28 @@ m_init(FG_FALSE) {
             return;
         }
     }
+#else
+    for(int i = 0; i < numGLVersions; i++) {
+        const std::pair<int, int>& glVersion = glVersions[i];
+        FG_LOG_DEBUG("GFX: Will try to create %s %d.%d context ...",
+                     glName.c_str(),
+                     glVersion.first,
+                     glVersion.second);
+        SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_ES);
+        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, glVersion.first);
+        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, glVersion.second);
+        m_GLContext = SDL_GL_CreateContext(m_sdlWindow);
+        if(!m_GLContext) {
+            FG_LOG_ERROR("GFX: RETRY: Couldn't create GL context: '%s'", SDL_GetError());
+        } else {
+            FG_LOG_DEBUG("GFX: Successfully created %s %d.%d context",
+                         glName.c_str(),
+                         glVersion.first,
+                         glVersion.second);
+            break;
+        }
+    }
+#endif /* !FG_USING_PLATFORM_ANDROID */
     int r, g, b, a, d, major, minor;
     SDL_GL_MakeCurrent(m_sdlWindow, m_GLContext);
 
@@ -988,7 +1038,13 @@ m_init(FG_FALSE) {
     SDL_GL_GetAttribute(SDL_GL_DEPTH_SIZE, &d);
     SDL_GL_GetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, &major);
     SDL_GL_GetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, &minor);
-
+#if defined(FG_USING_PLATFORM_ANDROID)
+    FG_LOG_DEBUG("GFX: Using Android platform");
+#elif defined(FG_USING_PLATFORM_LINUX)
+    FG_LOG_DEBUG("GFX: Using Linux platform");
+#elif defined(FG_USING_PLATFORM_WINDOW)
+    FG_LOG_DEBUG("GFX: Using Windows platform");
+#endif
     FG_LOG_DEBUG("GFX: GL version %d.%d", major, minor);
     FG_LOG_DEBUG("GFX: GL color buffer: red: %d, green: %d, blue: %d, alpha: %d, depth: %d,", r, g, b, a, d);
 
@@ -1011,6 +1067,8 @@ m_init(FG_FALSE) {
         return;
     }
     //glewIsSupported("GL_VERSION_3_0");
+#else
+    FG_LOG_DEBUG("GFX: Not using GLEW...");
 #endif
 
 #endif
@@ -1109,12 +1167,17 @@ m_init(FG_FALSE) {
     m_params[gfx::UNPACK_ALIGNMENT] = SContextParam(GL_UNPACK_ALIGNMENT);
     m_params[gfx::VIEWPORT] = SContextParam(GL_VIEWPORT);
 
+    FG_LOG_DEBUG("GFX: Currently monitoring %d context parameters", m_params.size());
+
     memset(m_attrInfo, 0, sizeof (m_attrInfo));
 
     std::string glVendor = (const char*)glGetString(GL_VENDOR);
     std::string glRenderer = (const char *)glGetString(GL_RENDERER);
     std::string glVersion = (const char *)glGetString(GL_VERSION);
     std::string glSLVersion = (const char *)glGetString(GL_SHADING_LANGUAGE_VERSION);
+#if defined(FG_DEBUG)
+    fgGLError("glGetString:GL_SHADING_LANGUAGE_VERSION");
+#endif
     std::string glExtensions;
 
 #if defined(FG_USING_MARMALADE)
@@ -1131,6 +1194,7 @@ m_init(FG_FALSE) {
     }
 #endif
 
+    FG_LOG_DEBUG("GFX: Using %s", glName.c_str());
     FG_LOG_DEBUG("GFX: GL vendor:     %s", glVendor.c_str());
     FG_LOG_DEBUG("GFX: GL renderer:   %s", glRenderer.c_str());
     FG_LOG_DEBUG("GFX: GL version:    %s", glVersion.c_str());
@@ -1167,14 +1231,18 @@ m_init(FG_FALSE) {
     for(int i = 0; i < (int)vparts.size(); i++) {
         strings::trim(vparts[i]);
         if(strings::startsWith(vparts[i].c_str(), "1.0", FG_FALSE)) {
-            if(g_fgBuildConfig.usingMarmaladeOpenGLES || g_fgBuildConfig.usingMarmalade) {
+            if(g_fgBuildConfig.usingMarmaladeOpenGLES ||
+               g_fgBuildConfig.usingMarmalade ||
+               g_fgBuildConfig.isPlatformAndroid) {
                 m_SLVersion = FG_GFX_ESSL_100;
                 selectedSLType = "ESSL";
                 selectedVersionNum = "1.0";
             }
         } else if(strings::startsWith(vparts[i].c_str(), "1.1", FG_FALSE)) {
             m_SLVersion = FG_GFX_GLSL_110;
-            if(g_fgBuildConfig.usingMarmaladeOpenGLES || g_fgBuildConfig.usingMarmalade) {
+            if(g_fgBuildConfig.usingMarmaladeOpenGLES ||
+               g_fgBuildConfig.usingMarmalade ||
+               g_fgBuildConfig.isPlatformAndroid) {
                 m_SLVersion = FG_GFX_ESSL_100;
                 selectedSLType = "ESSL";
                 selectedVersionNum = "1.0";
@@ -1192,10 +1260,18 @@ m_init(FG_FALSE) {
             m_SLVersion = FG_GFX_GLSL_150;
             selectedVersionNum = "1.5";
         } else if(strings::startsWith(vparts[i].c_str(), "3.0", FG_FALSE)) {
-            if(g_fgBuildConfig.usingMarmaladeOpenGLES || g_fgBuildConfig.usingMarmalade) {
+            if(g_fgBuildConfig.usingMarmaladeOpenGLES ||
+               g_fgBuildConfig.usingMarmalade ||
+               g_fgBuildConfig.isPlatformAndroid ||
+               g_fgBuildConfig.usingOpenGLES) {
                 m_SLVersion = FG_GFX_ESSL_300;
                 selectedSLType = "ESSL";
                 selectedVersionNum = "3.0";
+                // If engine is using version 2.0 of OGLES
+                if(major == 2) {
+                    selectedVersionNum = "1.0";
+                    m_SLVersion = FG_GFX_ESSL_100;
+                }
             }
         } else if(strings::startsWith(vparts[i].c_str(), "3.3", FG_FALSE)) {
             m_SLVersion = FG_GFX_GLSL_330;
@@ -1222,12 +1298,9 @@ m_init(FG_FALSE) {
         if(m_SLVersion != FG_GFX_SHADING_LANGUAGE_INVALID)
             break;
     }
-#if defined(FG_DEBUG)
     if(selectedVersionNum) {
         FG_LOG_DEBUG("GFX: Selected shading language version: %s %s", selectedSLType, selectedVersionNum);
     }
-#endif
-
     m_init = FG_TRUE;
 }
 
