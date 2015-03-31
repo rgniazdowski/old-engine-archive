@@ -347,8 +347,8 @@ std::string &util::CDirent::searchForFile(std::string &output,
         else
             searchPath.insert(0, "./");
     }
-    if(searchPath[searchPath.length() - 1] != '/' && searchPath[searchPath.length() - 1] != '\\')
-        searchPath.append("/");
+    if(searchPath.length() && searchPath[searchPath.length() - 1] != '/' && searchPath[searchPath.length() - 1] != '\\')
+        searchPath.append(path::DELIMITER);
     output.clear();
     fgBool stop = FG_FALSE;
     std::string foundPath;

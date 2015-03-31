@@ -17,7 +17,7 @@
     #include "fgVector.h"
     #include <string>
 
-    #if defined FG_USING_PLATFORM_WINDOWS
+    #if defined( FG_USING_PLATFORM_WINDOWS)
         #define FG_PATH_DELIM "\\"
         #define FG_PATH_DELIMC '\\'
         #define FG_PATH_DELIM2 "/"
@@ -31,7 +31,18 @@
 
 namespace fg {
     namespace path {
+        
+        const char * const DELIMITER = FG_PATH_DELIM;
+        const char DELIMITER_CHAR = FG_PATH_DELIMC;
 
+        /**
+         * This will return path to the root of assets directory (data)
+         * 
+         * @return  On android this function will return empty string
+         *          On linux and windows returns relative path to the current directory
+         */
+        const char* getAssetsPath(void);
+        
         /**
          * Return the file extension //fgPath::fileExt
          * @param path
