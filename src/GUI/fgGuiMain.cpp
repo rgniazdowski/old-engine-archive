@@ -387,8 +387,6 @@ fgBool gui::CGuiMain::addWidgetCallback(const std::string& widgetName,
     return addWidgetCallback(m_widgetMgr->get(widgetName), pCallback, callbackType);
 }
 
-extern float guiScale;
-
 /**
  * 
  */

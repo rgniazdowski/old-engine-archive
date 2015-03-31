@@ -34,10 +34,6 @@
 #include "s3eTypes.h"
 #endif
 
-float guiScale = 1.0f;
-float yolo_posx = 0;
-float yolo_posy = 0;
-
 using namespace fg;
 
 /**
@@ -616,7 +612,6 @@ void gfx::CGfxMain::render(void) {
 
     // #FIXME ! TOTAL FUBAR SITUATION ! OMG ! OH MY !
     Model = math::translate(Model, Vec3f(0.0f, 0.0f, 0.0f));
-    Model = math::scale(Model, Vec3f(guiScale, guiScale, 0.0f));
     CMVPMatrix mvp_lol;
     CMVPMatrix *MVP = &mvp_lol;
     MVP->identity();

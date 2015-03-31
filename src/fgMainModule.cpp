@@ -17,8 +17,6 @@
 #include "fgDebugConfig.h"
 #include "fgLog.h"
 
-extern float guiScale; // #FIXME GUI SCALE
-
 #if defined(FG_USING_MARMALADE)
 
 /**
@@ -242,7 +240,7 @@ SDL_EventType CMainModule::checkSDLEvents(void) {
                 this->m_gameMain->getInputHandler()->singleTouchButtonHandler((void *)&event.button, this->m_gameMain->getInputHandler());
                 break;
             case SDL_MOUSEWHEEL: /**< Mouse wheel motion */
-                guiScale += 0.05f * (float)event.wheel.y;
+                //guiScale += 0.05f * (float)event.wheel.y;
                 break;
 #endif /* PLATFORM SPECIFIC */
 
