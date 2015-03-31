@@ -15,24 +15,90 @@
 #include "fgStrings.h"
 #include "fgPath.h"
 #include "fgLog.h"
+#include "fgRegularFile.h"
+#include "fgMemory.h"
 
 using namespace fg;
+
+#if !defined(FG_USING_ANDROID)
+
+void CDirent_loadAssetsListInternal(CStringVector& outputList,
+                                    const std::string& relativePath,
+                                    fgBool isRecursive) {
+
+    util::CRegularFile assetsListFile;
+    outputList.clear();
+    ///assetsListFile.open("assets_list", "r");
+    char* fileData = assetsListFile.load("assets_list");
+    if(!fileData) {
+        return;
+    }
+
+    std::string dirPath;
+    CStringVector dirVec;
+    strings::split(relativePath, ';', dirVec);
+    int ndirs = dirVec.size();
+    std::string fileData2 = fileData;
+    CStringVector tmpList;
+    strings::split(fileData2, '\n', tmpList);
+    int n = tmpList.size();
+
+    for(int idir = 0; idir < ndirs; idir++) {
+        dirPath = dirVec[idir];
+
+        std::string relFixedPath;
+        unsigned int skip = 0;
+        if(dirPath[0] == '.') {
+            skip = 1;
+            if(dirPath[1] == FG_PATH_DELIMC || dirPath[1] == FG_PATH_DELIM2C)
+                skip = 2;
+            relFixedPath = dirPath.substr(skip);
+        } else {
+            relFixedPath = dirPath;
+        }
+        skip = relFixedPath.length();
+        if(skip && relFixedPath[skip - 1] != path::DELIMITER_CHAR) {
+            relFixedPath.push_back(path::DELIMITER_CHAR);
+            skip++;
+        }
+
+        for(int i = 0; i < n; i++) {
+            std::string newPath;
+            tmpList[i] = strings::trim(tmpList[i]);
+            const char *secondPart = NULL;
+            fgBool starts = FG_FALSE;
+            if(tmpList[i].length() > skip)
+                secondPart = tmpList[i].c_str() + skip + 1;
+            if((starts = strings::startsWith(tmpList[i], relFixedPath)) || !skip) {
+                newPath = tmpList[i];
+            }
+            if(strings::containsChars(secondPart, "/\\")) {
+                if(!isRecursive)
+                    newPath.clear();
+            }
+            if(newPath.length())
+                outputList.push_back(newPath);
+        }
+    }
+    fgFree(fileData);
+}
+#endif
 
 /**
  *
  */
 util::CDirent::CDirent() :
 m_dirPath(),
-m_fileNames(),
+m_filePaths(),
 m_fileIt(),
-#ifdef FG_USING_MARMALADE
+#if defined(FG_USING_MARMALADE)
 m_fileList(NULL),
 #else
 m_curDir(NULL),
 m_curEntry(NULL),
 #endif
 m_isRecursive(FG_FALSE) {
-    m_fileIt = m_fileNames.end();
+    m_fileIt = m_filePaths.end();
 }
 
 /**
@@ -65,7 +131,7 @@ util::CDirent::~CDirent() {
     // ?
 #endif
     m_dirPath.clear();
-    m_fileNames.clear_optimised();
+    m_filePaths.clear_optimised();
 }
 
 /**
@@ -104,7 +170,7 @@ fgBool util::CDirent::internal_readZipFile(const std::string& fileName,
         char fc = filePathInZip[fn - 1];
         // Check whether path has the ending delimeter - it's not so accurate
         if(!(dn == fn && (dc == '/' || dc == '\\') && (fc == '/' || fc == '\\')))
-            m_fileNames.push_back(filePathInZip);
+            m_filePaths.push_back(filePathInZip);
     }
     zip.close();
     return (fgBool)(!!nZipFiles);
@@ -125,7 +191,26 @@ fgBool util::CDirent::readDir(fgBool recursive, fgBool listZipFiles) {
     m_curEntry = NULL;
 #endif /* FG_USING_MARMALADE */
 
-    m_fileNames.clear_optimised();
+    m_filePaths.clear_optimised();
+#if defined(FG_USING_PLATFORM_ANDROID)
+    /* THIS IS ANDROID SPECIFIC CODE - it's a little complicated */
+    CStringVector outputList;
+    // ANDROID SPECIFIC
+    CDirent_loadAssetsListInternal(outputList, m_dirPath, recursive);
+    unsigned int n = outputList.size();
+    for(unsigned int i = 0; i < n; i++) {
+        const std::string& filePath = outputList[i];
+        const char *fileExt = strings::stristr(filePath, ".zip");
+        if(!fileExt)
+            fileExt = strings::stristr(filePath, ".pk3");
+        if(fileExt) {
+            // file path points to a zip file
+            internal_readZipFile(filePath, filePath, FG_FALSE);
+        } else {
+            m_filePaths.push_back(filePath);
+        }
+    }
+#else /* CODE BELOW IS FOR MARMALADE / LINUX / WINDOWS */
     CStringVector dirStack;
     std::string fileName;
     std::string dirPath;
@@ -146,6 +231,8 @@ fgBool util::CDirent::readDir(fgBool recursive, fgBool listZipFiles) {
             dirStack.push_back(dirPath);
         }
 
+        ////////////////////////////////////////////////////////////////////////
+        /// Go through directory stack
         while(!dirStack.empty()) {
             std::string filePath;
             std::string curDir = dirStack.back();
@@ -205,13 +292,11 @@ fgBool util::CDirent::readDir(fgBool recursive, fgBool listZipFiles) {
                         dirStack.push_back(filePath);
                     } else {
                         // push the path into vector
-                        m_fileNames.push_back(filePath);
+                        m_filePaths.push_back(filePath);
                     }
-                } else {
-                    if(!isDir) {
-                        // It's not a directory so push it into the list
-                        m_fileNames.push_back(fileName);
-                    }
+                } else if(!isDir) {
+                    // It's not a directory so push it into the list
+                    m_filePaths.push_back(filePath);
                 }
 
                 if(isZip && listZipFiles) {
@@ -228,9 +313,10 @@ fgBool util::CDirent::readDir(fgBool recursive, fgBool listZipFiles) {
 #endif /* FG_USING_MARMALADE */
         } // while(!dirStack.empty())
     } // for(...) -> split dir path by ';'
+#endif /* FG_USING_PLATFORM_ANDROID */
     rewind();
     m_isRecursive = recursive;
-    if(!m_fileNames.empty())
+    if(!m_filePaths.empty())
         return FG_TRUE;
     return FG_FALSE;
 }
@@ -249,11 +335,7 @@ fgBool util::CDirent::readDir(const char *dirPath,
     if(dirPath)
         m_dirPath = dirPath;
     if((dirPath && strlen(dirPath) == 0) || !dirPath) {
-#if defined FG_USING_PLATFORM_WINDOWS
-        m_dirPath = ".\\";
-#else
-        m_dirPath = "./";
-#endif
+        m_dirPath = path::getAssetsPath();
     }
     return readDir(recursive, listZipFiles);
 }
@@ -272,11 +354,7 @@ fgBool util::CDirent::readDir(const std::string &dirPath,
     if(!dirPath.empty()) {
         m_dirPath = dirPath;
     } else {
-#if defined FG_USING_PLATFORM_WINDOWS
-        m_dirPath = ".\\";
-#else
-        m_dirPath = "./";
-#endif
+        m_dirPath = path::getAssetsPath();
     }
     return readDir(recursive, listZipFiles);
 }
@@ -286,14 +364,14 @@ fgBool util::CDirent::readDir(const std::string &dirPath,
  * @return 
  */
 const char *util::CDirent::getNextFile(void) {
-    if(m_fileIt == m_fileNames.end()) {
-        m_fileIt = m_fileNames.begin();
-        if(m_fileIt != m_fileNames.end())
+    if(m_fileIt == m_filePaths.end()) {
+        m_fileIt = m_filePaths.begin();
+        if(m_fileIt != m_filePaths.end())
             return (*m_fileIt).c_str();
         return NULL;
     }
     m_fileIt++;
-    if(m_fileIt == m_fileNames.end())
+    if(m_fileIt == m_filePaths.end())
         return NULL;
 
     return (*m_fileIt).c_str();
@@ -307,6 +385,7 @@ const char *util::CDirent::getNextFile(void) {
 std::string &util::CDirent::getNextFilePath(std::string &path) {
     const char *filename = util::CDirent::getNextFile();
     path.clear();
+#if 0
     if(filename && !m_isRecursive) {
         // #FIXME - this will cause error if fgDirent was not recursive and
         // did not store file paths by default - if fgDirent was called with
@@ -316,6 +395,9 @@ std::string &util::CDirent::getNextFilePath(std::string &path) {
         // with the recursive mode, this array always stores paths (relative)
         path = filename;
     }
+#endif
+    if(filename)
+        path = filename;
     return path;
 }
 
@@ -335,18 +417,29 @@ std::string &util::CDirent::searchForFile(std::string &output,
     if(!basePath.empty()) {
         searchPath = basePath;
     } else {
-#if defined FG_USING_PLATFORM_WINDOWS
-        searchPath = ".\\";
-#else
-        searchPath = "./";
-#endif
+        // The default search path
+        searchPath = path::getAssetsPath();
     }
+#if 0
     if(searchPath[0] != '.') {
         if(searchPath[0] == '/' || searchPath[0] == '\\')
             searchPath.insert(searchPath.begin(), 1, '.');
         else
             searchPath.insert(0, "./");
     }
+#endif
+#if defined(FG_USING_PLATFORM_ANDROID)
+    /* Need to fix this path for android - cannot begin with ./ 
+     * also it would be good to move such things to some fg::path::* functions
+     * The below part and others are used quite a lot #FIXME #CODEREPEAT
+     */
+    if(searchPath[0] == '.') {
+        int skip = 1;
+        if(searchPath[1] == FG_PATH_DELIMC || searchPath[1] == FG_PATH_DELIM2C)
+            skip = 2;
+        searchPath = searchPath.substr(skip);
+    }
+#endif /* FG_USING_PLATFORM_ANDROID */
     if(searchPath.length() && searchPath[searchPath.length() - 1] != '/' && searchPath[searchPath.length() - 1] != '\\')
         searchPath.append(path::DELIMITER);
     output.clear();
@@ -358,7 +451,7 @@ std::string &util::CDirent::searchForFile(std::string &output,
     do {
         if(getNextFilePath(foundPath).empty())
             stop = FG_TRUE;
-        if(!stop && strings::startsWith(foundPath, searchPath)) {
+        if(!stop && (strings::startsWith(foundPath, searchPath) || searchPath.empty())) {
             subPath = foundPath.c_str() + searchPath.length();
             // If the found subpath contains delimeters - skip if deep trigger is not active
             if(!deep && strings::containsChars(subPath, "/\\"))
@@ -392,26 +485,27 @@ std::string &util::CDirent::searchForFile(std::string &output,
     return output;
 }
 
-/*
+/**
  * This function rewinds to the beginning the file pointer (in the list)
+ * @return 
  */
 fgBool util::CDirent::rewind(void) {
-    m_fileIt = m_fileNames.end();
-    if(!m_fileNames.size())
+    m_fileIt = m_filePaths.end();
+    if(!m_filePaths.size())
         return FG_FALSE;
     return FG_TRUE;
 }
 
-/*
- *
+/**
+ * 
  */
 void util::CDirent::clearList(void) {
     m_isRecursive = FG_FALSE;
 #ifdef FG_USING_MARMALADE
     m_fileList = NULL;
 #endif
-    m_fileNames.clear_optimised();
-    m_fileIt = m_fileNames.end();
+    m_filePaths.clear_optimised();
+    m_fileIt = m_filePaths.end();
 }
 
 /**
@@ -419,5 +513,5 @@ void util::CDirent::clearList(void) {
  * @return 
  */
 CStringVector &util::CDirent::getRefFiles(void) {
-    return m_fileNames;
+    return m_filePaths;
 }

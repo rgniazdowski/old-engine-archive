@@ -177,7 +177,7 @@ namespace fg {
             /// The whole path to the directory
             std::string m_dirPath;
             /// List/vector with the file names in the specified directory #FIXME
-            fg::CStringVector m_fileNames;
+            fg::CStringVector m_filePaths;
             /// iterator to the element in the string vector (file path/name)
             fg::CStringVector::iterator m_fileIt;
 
