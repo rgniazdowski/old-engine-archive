@@ -16,31 +16,9 @@
 #include "Util/fgStrings.h"
 #include "fgLog.h"
 
-/**
-
- * Check for glGetError() and conditionally returns false
- * (but only for DEBUG builds)
- */
-/*
-bool fgTexture::checkGlError(const char* fname) {
-    GLenum code;
-
-    code = glGetError();
-    if(GL_NO_ERROR != code) {
-        FG_LOG::PrintError("%s() failed! Code=%d, TexId=%d",fname, code, m_texId);
-
-#ifdef IW_DEBUG
-        return false;
-#endif
-
-    }
-    return true;
-}
- */
-
 using namespace fg;
 
-/*
+/**
  * Base constructor of the texture resource object
  */
 gfx::CTextureResource::CTextureResource() :
@@ -58,8 +36,9 @@ m_isInVRAM(FG_FALSE) {
     memset(m_cubeData, 0, sizeof (m_cubeData));
 }
 
-/*
- *
+/**
+ * 
+ * @param path
  */
 gfx::CTextureResource::CTextureResource(const char *path) :
 CResource(path),
@@ -94,7 +73,7 @@ m_isInVRAM(FG_FALSE) {
     memset(m_cubeData, 0, sizeof (m_cubeData));
 }
 
-/*
+/**
  * Clears the class data, this actually does not free allocated memory,
  * just resets base class attributes
  */
@@ -114,8 +93,9 @@ void gfx::CTextureResource::clear(void) {
     memset(m_cubeData, 0, sizeof (m_cubeData));
 }
 
-/*
+/**
  * Create function loads/interprets data from file in ROM and place it in RAM memory.
+ * @return 
  */
 fgBool gfx::CTextureResource::create(void) {
     if(m_rawData && m_isReady) {
@@ -143,7 +123,8 @@ fgBool gfx::CTextureResource::create(void) {
     unsigned char **targetRawData = NULL;
     int maxRawDataID = 0, i = 0;
 
-    if(m_textureType == FG_TEXTURE_PLAIN) { // 2D texture - single file, (x,y) coords
+    // 2D texture - single file, (x,y) coords
+    if(m_textureType == FG_TEXTURE_PLAIN || m_textureType == FG_TEXTURE_FONT) {
         maxRawDataID = 1;
         targetRawData = &m_rawData;
         filePathPtr = filePathStr;
@@ -152,7 +133,7 @@ fgBool gfx::CTextureResource::create(void) {
         targetRawData = m_cubeData; // ? the fuck is that?
         filePathPtr = filePathBuf;
     } else {
-        FG_LOG_DEBUG("GFX: Texture type is not supported");
+        FG_LOG_DEBUG("GFX: Texture type is not supported [%d]", m_textureType);
         maxRawDataID = 1;
         targetRawData = &m_rawData;
     }
