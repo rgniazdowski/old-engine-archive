@@ -13,6 +13,10 @@
                    displayName="Source Files"
                    projectFiles="true">
       <logicalFolder name="src" displayName="src" projectFiles="true">
+        <logicalFolder name="f1" displayName="Android" projectFiles="true">
+          <itemPath>../../../src/Android/fgAndroid.cpp</itemPath>
+          <itemPath>../../../src/Android/fgAndroid.h</itemPath>
+        </logicalFolder>
         <logicalFolder name="Audio" displayName="Audio" projectFiles="true">
           <itemPath>../../../src/Audio/fgSFXAudioBase.h</itemPath>
           <itemPath>../../../src/Audio/fgSFXErrorCodes.h</itemPath>
@@ -547,7 +551,7 @@
                             CT="3"
                             CN="Debug"
                             AC="true"
-                            BL="true"
+                            BL="false"
                             WD="../LuaPlusNextGen_NB"
                             BC="${MAKE}  -f Makefile CONF=Debug"
                             CC="${MAKE}  -f Makefile CONF=Debug clean"
@@ -560,7 +564,7 @@
                             CT="3"
                             CN="Debug"
                             AC="true"
-                            BL="true"
+                            BL="false"
                             WD="../MiniZipMaster_NB"
                             BC="${MAKE}  -f Makefile CONF=Debug"
                             CC="${MAKE}  -f Makefile CONF=Debug clean"
@@ -620,6 +624,10 @@
             ex="false"
             tool="1"
             flavor2="8">
+      </item>
+      <item path="../../../src/Android/fgAndroid.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../../src/Android/fgAndroid.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/Audio/fgSFXAudioBase.h"
             ex="false"
@@ -2176,6 +2184,10 @@
             tool="1"
             flavor2="0">
       </item>
+      <item path="../../../src/Android/fgAndroid.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../../src/Android/fgAndroid.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../../../src/Audio/fgSFXAudioBase.h"
             ex="false"
             tool="3"
@@ -3697,6 +3709,10 @@
             tool="1"
             flavor2="0">
       </item>
+      <item path="../../../src/Android/fgAndroid.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../../src/Android/fgAndroid.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../../../src/Audio/fgSFXAudioBase.h"
             ex="false"
             tool="3"
@@ -5195,6 +5211,10 @@
             ex="false"
             tool="1"
             flavor2="0">
+      </item>
+      <item path="../../../src/Android/fgAndroid.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../../src/Android/fgAndroid.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/Audio/fgSFXAudioBase.h"
             ex="false"

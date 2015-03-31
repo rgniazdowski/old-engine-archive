@@ -78,6 +78,7 @@
             <word>Dirent</word>
             <word>dirname</word>
             <word>dotfiles</word>
+            <word>dpi</word>
             <word>dragonsfunk</word>
             <word>drawcall</word>
             <word>drawcall's</word>
@@ -88,6 +89,7 @@
             <word>endian</word>
             <word>enum</word>
             <word>fg</word>
+            <word>fgets</word>
             <word>fgprivate</word>
             <word>flaredouble</word>
             <word>flarefour</word>
@@ -131,8 +133,10 @@
             <word>ivec</word>
             <word>Joypad</word>
             <word>jpg</word>
+            <word>kbytes</word>
             <word>lightuserdata</word>
             <word>Lightwave</word>
+            <word>linux</word>
             <word>ll</word>
             <word>lu</word>
             <word>Lua</word>
@@ -168,6 +172,7 @@
             <word>packvertical</word>
             <word>param</word>
             <word>params</word>
+            <word>pfactor</word>
             <word>plox</word>
             <word>Plugin</word>
             <word>png</word>
@@ -190,6 +195,7 @@
             <word>readdir</word>
             <word>renderbuffer</word>
             <word>renderbuffers</word>
+            <word>rfactor</word>
             <word>rgb</word>
             <word>rgba</word>
             <word>rgbaf</word>
@@ -238,9 +244,13 @@
             <word>wav</word>
             <word>windspeed</word>
             <word>wut</word>
+            <word>xdpi</word>
             <word>xml</word>
+            <word>xpfactor</word>
             <word>xyz</word>
             <word>xz</word>
+            <word>ydpi</word>
+            <word>ypfactor</word>
             <word>zfail</word>
             <word>Zlib</word>
             <word>zpass</word>

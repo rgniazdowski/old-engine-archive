@@ -40,6 +40,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/_ext/538025686/tinyxml.o \
 	${OBJECTDIR}/_ext/538025686/tinyxmlerror.o \
 	${OBJECTDIR}/_ext/538025686/tinyxmlparser.o \
+	${OBJECTDIR}/_ext/1335969013/fgAndroid.o \
 	${OBJECTDIR}/_ext/1650758620/fgSFXManager.o \
 	${OBJECTDIR}/_ext/1650758620/fgSFXMusicResource.o \
 	${OBJECTDIR}/_ext/1650758620/fgSFXSoundResource.o \
@@ -242,6 +243,11 @@ ${OBJECTDIR}/_ext/538025686/tinyxmlparser.o: ../../../modules/tinyxml/upstream/t
 	${MKDIR} -p ${OBJECTDIR}/_ext/538025686
 	${RM} "$@.d"
 	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_GL_BINDING -DFG_USING_OPENGL -DFG_USING_SDL2 -DFG_USING_TINYXML -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src `pkg-config --cflags gl` `pkg-config --cflags sdl2` `pkg-config --cflags SDL2_mixer` `pkg-config --cflags libpng` `pkg-config --cflags zlib` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/538025686/tinyxmlparser.o ../../../modules/tinyxml/upstream/tinyxmlparser.cpp
+
+${OBJECTDIR}/_ext/1335969013/fgAndroid.o: ../../../src/Android/fgAndroid.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/1335969013
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_GL_BINDING -DFG_USING_OPENGL -DFG_USING_SDL2 -DFG_USING_TINYXML -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src `pkg-config --cflags gl` `pkg-config --cflags sdl2` `pkg-config --cflags SDL2_mixer` `pkg-config --cflags libpng` `pkg-config --cflags zlib` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1335969013/fgAndroid.o ../../../src/Android/fgAndroid.cpp
 
 ${OBJECTDIR}/_ext/1650758620/fgSFXManager.o: ../../../src/Audio/fgSFXManager.cpp 
 	${MKDIR} -p ${OBJECTDIR}/_ext/1650758620
