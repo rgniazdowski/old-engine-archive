@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file:///mnt/armada/Develop/Game.Dev.Engine/infinium/project/android/android.iml" filepath="/mnt/armada/Develop/Game.Dev.Engine/infinium/project/android/android.iml" />
+      <module fileurl="file://$PROJECT_DIR$/flexigame_android/flexigame_android.iml" filepath="$PROJECT_DIR$/flexigame_android/flexigame_android.iml" />
+    </modules>
+  </component>
+</project>
+
