@@ -38,6 +38,7 @@
 			<Button name="XXHighscoresButton">HIGH SCORES</Button>
 			<Button name="XXStatsButton">STATISTICS</Button>
 			<Button name="XXOptionsButton">OPTIONS</Button>
+			<Button name="XXTestGoBack" link="MainMenu">GO BACK</Button>
 		</Container>
 		<Container flags="packvertical">
 			<Container name="StartGameContainer" visible="false" style="FrameS">
