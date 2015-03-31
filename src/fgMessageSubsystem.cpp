@@ -75,7 +75,7 @@ void msg::CMessageSubsystem::setLogPaths(const char *pathAll, const char *pathEr
 void msg::CMessageSubsystem::setLogAllPath(const char *pathAll) {
     if(pathAll)
         m_logAll.setPath(pathAll);
-    m_logAll.setMode(fg::util::CRegularFile::Mode::APPEND);
+    m_logAll.setMode(util::CRegularFile::Mode::APPEND);
 }
 
 /**
@@ -85,7 +85,7 @@ void msg::CMessageSubsystem::setLogAllPath(const char *pathAll) {
 void msg::CMessageSubsystem::setLogErrorPath(const char *pathError) {
     if(pathError)
         m_logError.setPath(pathError);
-    m_logError.setMode(fg::util::CRegularFile::Mode::APPEND);
+    m_logError.setMode(util::CRegularFile::Mode::APPEND);
 }
 
 /**
