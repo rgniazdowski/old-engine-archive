@@ -130,6 +130,8 @@ fgBool gfx::CPlatform::initialize(fgBool reinit) {
         FG_LOG_ERROR("GFX: Couldn't initialize SDL2: '%s'", SDL_GetError());
         SDL_ClearError();
         return FG_FALSE;
+    } else {
+        FG_LOG_DEBUG("GFX: Initialized SDL2 video & events");
     }
 
     SDL_DisplayMode *desktopMode = NULL;
@@ -213,7 +215,7 @@ fgBool gfx::CPlatform::initialize(fgBool reinit) {
  * 
  * @return 
  */
-fgBool gfx::CPlatform::quit(void) {
+fgBool gfx::CPlatform::quit(fgBool suspend) {
     fgBool status = FG_TRUE;
     if(m_init) {
 #if defined(FG_USING_EGL) || defined(FG_USING_MARMALADE_EGL)
@@ -226,12 +228,17 @@ fgBool gfx::CPlatform::quit(void) {
         m_init = FG_FALSE;
 #elif defined(FG_USING_MARMALADE_IWGL)
         IwGLTerminate();
-#elif defined FG_USING_SDL2
+#elif defined(FG_USING_SDL2)
         if(m_gfxContext)
             delete m_gfxContext;
         m_gfxContext = NULL;
-        FG_LOG_DEBUG("Quitting main SDL");
-        SDL_Quit();
+        if(!suspend) {
+            FG_LOG_DEBUG("GFX: Quitting main SDL");
+            SDL_Quit();
+        } else {
+            FG_LOG_DEBUG("GFX: Suspending SDL");
+            //SDL_QuitSubSystem(SDL_INIT_VIDEO);
+        }
         //#define SDL_MAIN_HANDLED
         //#include "SDL.h"
 

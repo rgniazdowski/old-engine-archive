@@ -115,7 +115,7 @@ namespace fg {
             /**
              * Close the subsystem - destroy the graphics context
              */
-            void closeGFX(void);
+            void closeGFX(fgBool suspend = FG_FALSE);
             
             /**
              * 
@@ -196,17 +196,25 @@ namespace fg {
              * 
              * @return 
              */
-            CLoader *getLoader(void) {
+            inline CLoader *getLoader(void) {
                 return &m_loader;
             }
             /**
              * 
              * @return 
              */
-            CContext *context(void) const {
+            inline CContext *context(void) const {
                 return m_gfxContext;
             }
 
+            /**
+             * 
+             * @return 
+             */
+            inline fgBool isInit(void) const {
+                return m_init;
+            }
+            
         private:
             /// Loader object - displays splash screen and progress bar at the early 
             /// stages of initialization - before GUI subsystem full initialization

@@ -6,7 +6,7 @@
  *
  * FlexiGame source code and any related files can not be copied, modified
  * and/or distributed without the express or written consent from the author.
- *******************************************************/
+ ******************************************************************************/
 
 #include "fgBuildConfig.h"
 #include "fgDebugConfig.h"
@@ -18,6 +18,7 @@
 #include "fgGFXErrorCodes.h"
 #include "fgGFXPrimitives.h"
 #include "fgGFXDrawingBatch.h"
+#include "Scene/fgGFXSceneEvent.h"
 
 #include "Textures/fgTextureResource.h"
 #include "Hardware/fgHardwareState.h"
@@ -26,13 +27,12 @@
 #include "Util/fgProfiling.h"
 #include "Physics/fgCycloneCoreMath.h"
 
+#include "fgLog.h"
+
 #if defined(FG_USING_MARMALADE)
 #include "s3e.h"
 #include "s3eTypes.h"
 #endif
-
-#include "fgLog.h"
-#include "Scene/fgGFXSceneEvent.h"
 
 float guiScale = 1.0f;
 float yolo_posx = 0;
@@ -72,7 +72,7 @@ m_init(FG_FALSE) {
 gfx::CGfxMain::~CGfxMain() {
     unregisterResourceCallbacks();
     unregisterSceneCallbacks();
-    
+
     if(m_particleSystem)
         delete m_particleSystem;
     if(m_3DScene)
@@ -81,23 +81,22 @@ gfx::CGfxMain::~CGfxMain() {
         delete m_2DScene;
     if(m_gfxContext)
         m_gfxContext->deleteAllBuffers();
-    
+
     if(m_textureMgr)
         delete m_textureMgr;
     if(m_shaderMgr)
         delete m_shaderMgr;
     if(m_mainWindow)
         delete m_mainWindow;
-    
+
     if(m_resourceCreatedCallback)
         delete m_resourceCreatedCallback;
     if(m_sceneNodeInsertedCallback)
         delete m_sceneNodeInsertedCallback;
-    
+
     if(m_init)
         closeGFX();
-    memset(this, 0, sizeof (CGfxMain));
-    
+
     m_resourceCreatedCallback = NULL;
     m_particleSystem = NULL;
     m_textureMgr = NULL;
@@ -173,9 +172,19 @@ fgBool gfx::CGfxMain::initGFX(void) {
     if(!m_mainWindow && status) {
         m_mainWindow = new gfx::CWindow();
     }
+    int sw = 1280;
+    int sh = 720;
+#if defined(FG_USING_SDL2) && defined(FG_USING_PLATFORM_ANDROID)
+    // This is needed only on android - there is just one video 
+    // mode available - full screen resolution
+    SDL_DisplayMode displayMode;
+    SDL_GetCurrentDisplayMode(0, &displayMode);
+    sw = displayMode.w;
+    sh = displayMode.h;
+#endif
     if(m_mainWindow && status) {
         // #FIXME - resolution FIXME!
-        if(!m_mainWindow->setup(FG_PACKAGE_FULL_TEXT, 1280, 720)) {
+        if(!m_mainWindow->setup(FG_PACKAGE_FULL_TEXT, sw, sh)) {
             delete m_mainWindow;
             m_mainWindow = NULL;
             status = FG_FALSE;
@@ -339,15 +348,19 @@ void gfx::CGfxMain::setupLoader(void) {
 /**
  *
  */
-void gfx::CGfxMain::closeGFX(void) {
+void gfx::CGfxMain::closeGFX(fgBool suspend) {
     FG_LOG_DEBUG("Closing GFX subsystem...");
     if(m_init) {
-        if(m_mainWindow)
+#if defined(FG_USING_SDL2)
+        // m_gfxContext->getGLContext()
+        SDL_GL_MakeCurrent(m_mainWindow->getSysPtr(), NULL);
+#endif
+        if(m_mainWindow && !suspend) {
             m_mainWindow->close();
-        gfx::CPlatform::quit();
+        }
+        gfx::CPlatform::quit(suspend);
         unregisterResourceCallbacks();
         unregisterSceneCallbacks();
-
         m_gfxContext = NULL;
     }
     m_init = FG_FALSE;
@@ -372,12 +385,15 @@ fgBool gfx::CGfxMain::suspendGFX(void) {
         if(m_gfxContext)
             m_gfxContext->deleteAllBuffers();
     }
-    if(status)
-        closeGFX();
+    if(status) {
+        // With parameter TRUE the SDL will not be closed
+        // Window will not be destroyed
+        closeGFX(FG_TRUE);
+    }
     if(!status)
         FG_LOG_WARNING("GFX: Suspension of GFX subsystem finished with errors");
     else
-        FG_LOG_WARNING("GFX: Suspension of GFX subsystem finished with no errors");
+        FG_LOG_DEBUG("GFX: Suspension of GFX subsystem finished with no errors");
     return status;
 }
 
@@ -389,6 +405,7 @@ fgBool gfx::CGfxMain::resumeGFX(void) {
     fgBool status = FG_TRUE;
     if(!gfx::CGfxMain::initGFX())
         status = FG_FALSE;
+    setupResourceManager(m_pResourceMgr);
     if(m_textureMgr && status)
         if(!m_textureMgr->allToVRAM(FG_TRUE))
             status = FG_FALSE;
@@ -418,7 +435,7 @@ fgBool gfx::CGfxMain::resumeGFX(void) {
     if(!status)
         FG_LOG_WARNING("GFX: Resume of GFX subsystem finished with errors");
     else
-        FG_LOG_WARNING("GFX: Resume of GFX subsystem finished with no errors");
+        FG_LOG_DEBUG("GFX: Resume of GFX subsystem finished with no errors");
     return status;
 }
 

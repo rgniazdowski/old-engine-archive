@@ -44,7 +44,7 @@ namespace fg {
              * 
              * @return 
              */
-            static fgBool quit(void);
+            static fgBool quit(fgBool suspend = FG_FALSE);
 
             /**
              * 
