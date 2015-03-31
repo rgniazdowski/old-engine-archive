@@ -117,7 +117,7 @@ float timesys::exact(void) {
 /*
  * Get clock ticks
  */
-float timesys::ticks(void) {
+float timesys::clockTicks(void) {
     clock_t curTime = clock() - timesys::g_clock_start;
     return float(curTime);
 }
@@ -132,24 +132,25 @@ float timesys::ms(void) {
             float(newTime.tv_usec - timesys::g_start.tv_usec) / 1000.0f;
 }
 
-/*
- *
+/**
+ * 
+ * @return 
  */
 long timesys::seconds(void) {
     return time(NULL);
 }
 
-/*
+/**
  * This function gets time in miliseconds. It doesnt matter from what 
  * point in time this is calculated - it is used for delta time mostly.
  * This function is very similar in usage as the SDL_GetTicks().
  */
-unsigned long int FG_GetTicks(void) {
-#if defined FG_USING_MARMALADE
+unsigned long int timesys::ticks(void) {
+#if defined(FG_USING_MARMALADE)
     return (unsigned long int)s3eTimerGetMs();
-#elif defined FG_USING_SDL || defined FG_USING_SDL2
+#elif defined(FG_USING_SDL) || defined(FG_USING_SDL2)
     return (unsigned long int)SDL_GetTicks();
 #else
-    return (unsigned long int)(timesys::ticks() / ((float)CLOCKS_PER_SEC / 1000.0f)); // FIXME - here needs to be proper function getting the miliseconds
+    return (unsigned long int)(timesys::clockTicks() / ((float)CLOCKS_PER_SEC / 1000.0f)); // FIXME - here needs to be proper function getting the miliseconds
 #endif
 }

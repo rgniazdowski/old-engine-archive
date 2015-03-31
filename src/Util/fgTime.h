@@ -10,6 +10,7 @@
 
 #ifndef FG_INC_TIME
     #define FG_INC_TIME
+    #define FG_INC_TIME_BLOCK
 
     #include <ctime>
 
@@ -45,7 +46,13 @@ namespace fg {
          * Get clock ticks
          * @return 
          */
-        float ticks(void);
+        float clockTicks(void);
+        /**
+         * Platform independent function for getting time in milliseconds
+         * as a unsigned long value (for more accurate float - use ms()
+         * @return 
+         */
+        unsigned long int ticks(void);
         /**
          * Get time since init in milliseconds
          * @return 
@@ -61,7 +68,6 @@ namespace fg {
 
 };
 
-// Platform independent function for getting time in milliseconds
-unsigned long int FG_GetTicks(void);
-
-#endif
+    #undef FG_INC_TIME_BLOCK
+#endif /* FG_INC_TIME */
+    

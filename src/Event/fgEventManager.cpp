@@ -196,11 +196,11 @@ event::SEventBase* event::CEventManager::requestEventStruct(void) {
     if(m_eventStructsFreeSlots.empty()) {
         ptr = (SEventBase *)fgMalloc<void>(m_eventStructSize, FG_TRUE);
         m_eventStructs.push_back((void *)ptr);
-        ptr->timeStamp = (unsigned long int)FG_GetTicks();
+        ptr->timeStamp = timesys::ticks();
     } else {
         ptr = (SEventBase *)m_eventStructsFreeSlots.back();
         memset(ptr, 0, m_eventStructSize);
-        ptr->timeStamp = (unsigned long int)FG_GetTicks();
+        ptr->timeStamp = timesys::ticks();
         m_eventStructsFreeSlots.pop_back();
     }
     return ptr;
@@ -219,11 +219,11 @@ event::SEventBase* event::CEventManager::requestEventStruct(const unsigned int e
     if(m_eventStructsFreeSlots.empty()) {
         ptr = (SEventBase *)fgMalloc<void>(eventStructSize, FG_TRUE);
         m_eventStructs.push_back((void *)ptr);
-        ptr->timeStamp = (unsigned long int)FG_GetTicks();
+        ptr->timeStamp = timesys::ticks();
     } else {
         ptr = (SEventBase *)m_eventStructsFreeSlots.back();
         ptr = (SEventBase *)fgRealloc<void>(ptr, eventStructSize, FG_TRUE);
-        ptr->timeStamp = (unsigned long int)FG_GetTicks();
+        ptr->timeStamp = timesys::ticks();
         m_eventStructsFreeSlots.pop_back();
     }
     return ptr;
@@ -371,7 +371,7 @@ event::CFunctionCallback* event::CEventManager::addTimeoutCallback(CFunctionCall
     if(!pCallback)
         return NULL;
     STimeoutCallback timeoutCallback(pCallback, timeout, pArgList);
-    timeoutCallback.timeStamp = FG_GetTicks();
+    timeoutCallback.timeStamp = timesys::ticks();
     m_timeoutCallbacks.push_back(timeoutCallback);
     return pCallback;
 }
@@ -417,7 +417,7 @@ event::CFunctionCallback* event::CEventManager::addCyclicCallback(CFunctionCallb
     if(!pCallback)
         return NULL;
     SCyclicCallback cyclicCallback(pCallback, repeats, interval, pArgList);
-    cyclicCallback.timeStamp = FG_GetTicks();
+    cyclicCallback.timeStamp = timesys::ticks();
     m_cyclicCallbacks.push_back(cyclicCallback);
     return pCallback;
 }
@@ -456,7 +456,7 @@ void event::CEventManager::executeEvents(void) {
     
     ////////////////////////////////////////////////////////////////////////////
     // Phase 1: Timeouts
-    unsigned long int TS = FG_GetTicks();
+    unsigned long int TS = timesys::ticks();
 
     // After timeout is executed it needs to be deleted from the timeouts pool - also the callback pointer must 
     // be freed with the argument list as they no longer needed

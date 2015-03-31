@@ -447,7 +447,7 @@ void resource::CResourceManager::refreshResource(CResource* pResource) {
             event::SResource *resEvent = (event::SResource*)static_cast<event::CEventManager *>(m_pEventMgr)->requestEventStruct();
             event::CArgumentList *argList = static_cast<event::CEventManager *>(m_pEventMgr)->requestArgumentList();
             resEvent->eventType = event::RESOURCE_CREATED;
-            resEvent->timeStamp = FG_GetTicks();
+            resEvent->timeStamp = timesys::ticks();
             resEvent->status = event::SResource::CREATED;
             resEvent->resource = pResource;
 
@@ -703,7 +703,7 @@ resource::CResource* resource::CResourceManager::request(const std::string& info
             event::SResource *resEvent = (event::SResource*)static_cast<event::CEventManager *>(m_pEventMgr)->requestEventStruct();
             event::CArgumentList *argList = static_cast<event::CEventManager *>(m_pEventMgr)->requestArgumentList();
             resEvent->eventType = event::RESOURCE_REQUESTED;
-            resEvent->timeStamp = FG_GetTicks();
+            resEvent->timeStamp = timesys::ticks();
             resEvent->status = event::SResource::REQUESTED;
             resEvent->resource = resourcePtr;
 

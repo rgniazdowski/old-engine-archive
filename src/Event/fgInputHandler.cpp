@@ -218,7 +218,7 @@ void event::CInputHandler::handlePointerPressed(Vector2i point, unsigned int tou
     touchData.m_touchID = touchID;
 
     // Time stamp of contact with the screen
-    touchData.m_pressedMilliseconds = (unsigned long int)FG_GetTicks();
+    touchData.m_pressedMilliseconds = timesys::ticks();
 
     // Quasi-initial position - reset after each detected SWIPE
     touchData.m_pointerXSwipeInitial = point.x;
@@ -249,7 +249,7 @@ void event::CInputHandler::handlePointerPressed(Vector2i point, unsigned int tou
         //STouch *touchEvent = fgMalloc<STouch>();
         STouch *touchEvent = (STouch *)m_eventMgr->requestEventStruct();
         touchEvent->eventType = event::TOUCH_PRESSED;
-        touchEvent->timeStamp = FG_GetTicks();
+        touchEvent->timeStamp = timesys::ticks();
         touchEvent->pressed = FG_TRUE;
         touchEvent->touchID = touchID;
         touchEvent->x = point.x;
@@ -293,7 +293,7 @@ void event::CInputHandler::handlePointerMoved(Vector2i point, unsigned int touch
         CArgumentList *argList = m_eventMgr->requestArgumentList();
         
         touchEvent->eventType = event::TOUCH_MOTION;
-        touchEvent->timeStamp = FG_GetTicks();
+        touchEvent->timeStamp = timesys::ticks();
         touchEvent->pressed = m_rawTouches[touchID].m_pressed;
         touchEvent->touchID = touchID;
         touchEvent->x = point.x;
@@ -324,7 +324,7 @@ void event::CInputHandler::handlePointerReleased(Vector2i point, unsigned int to
     touchData.m_pressed = FG_FALSE;
     touchData.m_touchID = touchID;
     // Time stamp of contact with the screen
-    touchData.m_releasedMilliseconds = (unsigned long int)FG_GetTicks();
+    touchData.m_releasedMilliseconds = timesys::ticks();
 
     // 
     // Releasing the pointer means no actions should be
@@ -351,7 +351,7 @@ void event::CInputHandler::handlePointerReleased(Vector2i point, unsigned int to
         CArgumentList *argList = m_eventMgr->requestArgumentList();
         
         touchEvent->eventType = event::TOUCH_RELEASED;
-        touchEvent->timeStamp = FG_GetTicks();
+        touchEvent->timeStamp = timesys::ticks();
         touchEvent->pressed = FG_FALSE; // Touch is released
         touchEvent->touchID = touchID;
         touchEvent->x = point.x;
@@ -547,7 +547,7 @@ void event::CInputHandler::processData(void) {
                         CArgumentList *argList = m_eventMgr->requestArgumentList();
                         
                         touchEvent->eventType = event::TOUCH_TAP_FINISHED;
-                        touchEvent->timeStamp = FG_GetTicks();
+                        touchEvent->timeStamp = timesys::ticks();
                         touchEvent->pressed = FG_FALSE;
                         touchEvent->touchID = touchPtr.m_touchID;
                         touchEvent->x = touchPtr.m_tapX;
@@ -622,7 +622,7 @@ void event::CInputHandler::processData(void) {
                     SSwipe *swipeEvent = (SSwipe*)m_eventMgr->requestEventStruct();
                     CArgumentList *argList = m_eventMgr->requestArgumentList();
                     
-                    swipeEvent->timeStamp = FG_GetTicks();
+                    swipeEvent->timeStamp = timesys::ticks();
                     fgBool X = FG_FALSE, Y = FG_FALSE;
                     if(touchPtr.m_swipeDown) {
                         swipeEvent->swipeDirection = SSwipe::DOWN;
