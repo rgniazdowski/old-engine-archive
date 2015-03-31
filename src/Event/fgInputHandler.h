@@ -32,7 +32,11 @@ namespace fg {
     class CMainModule;
 };
         #include "SDL2/SDL_events.h"
-        #define FG_DEFAULT_POINTER_ID 1
+        #if defined(FG_USING_PLATFORM_ANDROID)
+            #define FG_DEFAULT_POINTER_ID 0
+        #else
+            #define FG_DEFAULT_POINTER_ID 1
+        #endif
     #endif /* FG_USING_SDL2 */
 
 namespace fg {

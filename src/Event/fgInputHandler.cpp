@@ -124,12 +124,12 @@ void event::CInputHandler::initialize(void) {
         tap_size *= rfactor;
         x_threshold *= sqrt(rfactor);
         y_threshold *= sqrt(rfactor);
-        FG_LOG_DEBUG("TouchReceiver: <DPI, >RES bump used[rfactor:%f]", rfactor);
+        FG_LOG_DEBUG("InputHandler: <DPI> RES bump used[rfactor:%f]", rfactor);
     } else if(pfactor > 1.4 && rfactor < 1.7) {
         // Quite high DPI - and quite low resolution
         x_threshold *= 1.2f;
         y_threshold *= 1.2f;
-        FG_LOG_DEBUG("TouchReceiver: <DPI, >RES bump used [1.2f]");
+        FG_LOG_DEBUG("InputHandler: <DPI> RES bump used [1.2f]");
     }
 
     //
@@ -144,9 +144,9 @@ void event::CInputHandler::initialize(void) {
     PIXELS_PER_STEP_X = x_threshold;
     PIXELS_PER_STEP_Y = y_threshold;
 
-    FG_LOG_DEBUG("### pfactor: %f, xpfactor: %f, ypfactor: %f, dpi:%d, xdpi:%d, ydpi:%d",
+    FG_LOG_DEBUG("InputHandler: ### pfactor: %f, xpfactor: %f, ypfactor: %f, dpi:%d, xdpi:%d, ydpi:%d",
                  pfactor, xpfactor, ypfactor, FG_HardwareState->getDPI(), FG_HardwareState->getXDPI(), FG_HardwareState->getYDPI());
-    FG_LOG_DEBUG("MAX_OFFSET_FOR_TAP: [%d], MIN SWIPE_X: [%d], MIN SWIPE_Y: [%d], PIXELS_PER_X: [%d], PIXELS_PER_Y: [%d]",
+    FG_LOG_DEBUG("InputHandler: MAX_OFFSET_FOR_TAP: [%d], MIN SWIPE_X: [%d], MIN SWIPE_Y: [%d], PIXELS_PER_X: [%d], PIXELS_PER_Y: [%d]",
                  MAX_OFFSET_FOR_TAP, MIN_OFFSET_FOR_SWIPE_X, MIN_OFFSET_FOR_SWIPE_Y, PIXELS_PER_STEP_X, PIXELS_PER_STEP_Y);
 
 #if defined(FG_USING_MARMALADE)
@@ -536,7 +536,7 @@ void event::CInputHandler::processData(void) {
                     touchPtr.m_pointerTap = FG_TRUE;
                     touchPtr.m_tapX = (touchPtr.m_pointerXInitial + touchPtr.m_pointerXEnd) / 2;
                     touchPtr.m_tapY = (touchPtr.m_pointerYInitial + touchPtr.m_pointerYEnd) / 2;
-                    FG_LOG_DEBUG("TouchRcvr:: Tap (x,y)=(%d,%d)", touchPtr.m_tapX, touchPtr.m_tapY);
+                    FG_LOG_DEBUG("InputHandler: Tap (x,y)=(%d,%d) ID:%d", touchPtr.m_tapX, touchPtr.m_tapY, touchPtr.m_pointerID);
 
                     //
                     // Throwing the proper event
@@ -564,11 +564,11 @@ void event::CInputHandler::processData(void) {
                     }
 
                 } else {
-                    FG_LOG_DEBUG("TouchRcvr:: Space criterion NOT TRUE: x_delta = %d, y_delta = %d", abs(touchPtr.m_pointerXEnd - touchPtr.m_pointerXInitial),
+                    FG_LOG_DEBUG("InputHandler: Space criterion NOT TRUE: x_delta = %d, y_delta = %d", abs(touchPtr.m_pointerXEnd - touchPtr.m_pointerXInitial),
                                  abs(touchPtr.m_pointerYEnd - touchPtr.m_pointerYInitial));
                 }
             } else {
-                FG_LOG_DEBUG("TouchRcvr:: Time criterion NOT TRUE: delta_time = %d", delta_time);
+                FG_LOG_DEBUG("InputHandler: Time criterion NOT TRUE: delta_time = %d", delta_time);
             }
 
             // After processing press, erase collected data
@@ -835,10 +835,19 @@ int32_t event::CInputHandler::singleTouchButtonHandler(void* systemData, void* u
         inputReceiver->handlePointerReleased(Vector2i(event->m_x, event->m_y));
     }
 #elif defined(FG_USING_SDL2)
-    SDL_MouseButtonEvent *event = (SDL_MouseButtonEvent *)systemData;
-    if(event->type == SDL_MOUSEBUTTONDOWN) {
+    SDL_Event *sdlEvent = (SDL_Event *)systemData;    
+    
+    if(sdlEvent->type == SDL_MOUSEBUTTONDOWN) {
+        SDL_MouseButtonEvent *event = (SDL_MouseButtonEvent *)systemData;
         inputReceiver->handlePointerPressed(Vector2i(event->x, event->y), (unsigned int)event->button);
-    } else {
+    } else if(sdlEvent->type == SDL_MOUSEBUTTONUP) {
+        SDL_MouseButtonEvent *event = (SDL_MouseButtonEvent *)systemData;
+        inputReceiver->handlePointerReleased(Vector2i(event->x, event->y), (unsigned int)event->button);
+    } else if(sdlEvent->type == SDL_FINGERDOWN) {
+        SDL_MouseButtonEvent *event = (SDL_MouseButtonEvent *)systemData;
+        inputReceiver->handlePointerPressed(Vector2i(event->x, event->y), (unsigned int)event->button);
+    } else if(sdlEvent->type == SDL_FINGERUP) {
+        SDL_MouseButtonEvent *event = (SDL_MouseButtonEvent *)systemData;
         inputReceiver->handlePointerReleased(Vector2i(event->x, event->y), (unsigned int)event->button);
     }
 #endif
@@ -863,7 +872,6 @@ int32_t event::CInputHandler::singleTouchMotionHandler(void* systemData, void* u
     inputReceiver->handlePointerMoved(Vector2i(event->m_x, event->m_y));
 #elif defined(FG_USING_SDL2)
     SDL_MouseMotionEvent *event = (SDL_MouseMotionEvent *)systemData;
-
     inputReceiver->handlePointerMoved(Vector2i(event->x, event->y)/*, need ID? */, FG_DEFAULT_POINTER_ID, event->state);
 #endif
     return 0;
