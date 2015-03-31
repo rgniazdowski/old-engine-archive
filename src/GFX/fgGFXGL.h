@@ -77,7 +77,6 @@ using namespace gl;
             #if defined(FG_USING_SDL2)
                 #include <SDL2/SDL.h>
                 #include <SDL2/SDL_opengles2.h>
-				#warning "SDL2 / OGLES2"
                 #define FG_INC_INCLUDED_GL_
             #else /* if SDL2 is not defined - native GLES2 support ? */
                 #include <GLES2/gl2.h>

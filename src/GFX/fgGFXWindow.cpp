@@ -75,14 +75,15 @@ gfx::CWindow::~CWindow() {
  */
 fgBool gfx::CWindow::setup(const char *title, unsigned int width, unsigned int height) {
     if(!CPlatform::isInit()) {
-        log::PrintError("GFX: Cannot setup window without platform initialized.");
+        FG_LOG_ERROR("GFX: Cannot setup window without platform initialized.");
         return FG_FALSE;
     }
     if(m_isOpen) {
-        CWindow::close();
+        return FG_TRUE;
+        //CWindow::close();
     }
     fgBool status = FG_TRUE;
-#if defined FG_USING_EGL || defined FG_USING_MARMALADE_EGL
+#if defined(FG_USING_EGL) || defined(FG_USING_MARMALADE_EGL)
     EGLDisplay eglDisplay = (EGLDisplay)CPlatform::getDefaultDisplay();
     EGLContext eglContext = (EGLContext)CPlatform::context()->getGLContext();
     EGLConfig eglConfig = (EGLConfig)CPlatform::getDefaultConfig();
@@ -122,19 +123,24 @@ fgBool gfx::CWindow::setup(const char *title, unsigned int width, unsigned int h
 
     FG_LOG_DEBUG("EGL: Window surface created. Dimensions: %dx%d", w, h);
 
-#elif defined FG_USING_MARMALADE_IWGL
+#elif defined(FG_USING_MARMALADE_IWGL)
     m_width = IwGLGetInt(IW_GL_WIDTH);
     m_height = IwGLGetInt(IW_GL_HEIGHT);
 
-#elif defined FG_USING_SDL2
+#elif defined(FG_USING_SDL2)
 
     m_width = width;
     m_height = height;
     if(!title)
         title = FG_PACKAGE_FULL_TEXT;
+#if defined(FG_USING_PLATFORM_ANDROID)
+    m_isFullscreen = FG_TRUE;
+#endif
 
     //SDL_InitSubSystem() // SDL_INIT_AUDIO | SDL_INIT_GAMECONTROLLER | SDL_INIT_JOYSTICK 
     m_sdlFlags = SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL;
+    if(m_isFullscreen)
+        m_sdlFlags |= SDL_WINDOW_FULLSCREEN;
     m_sdlWindow = SDL_CreateWindow(title,
                                    SDL_WINDOWPOS_CENTERED,
                                    SDL_WINDOWPOS_CENTERED,
@@ -146,6 +152,8 @@ fgBool gfx::CWindow::setup(const char *title, unsigned int width, unsigned int h
         FG_LOG_ERROR("GFX: Couldn't create SDL window: '%s'", SDL_GetError());
         SDL_ClearError();
         return FG_FALSE;
+    } else {
+        FG_LOG_DEBUG("GFX: Successfully created SDL2 window %dx%d", m_width, m_height);
     }
 
 #endif
@@ -164,7 +172,7 @@ fgBool gfx::CWindow::close(void) {
         return FG_FALSE;
     }
     fgBool status = FG_TRUE;
-#if defined FG_USING_EGL
+#if defined(FG_USING_EGL)
     EGLDisplay eglDisplay = (EGLDisplay)CPlatform::getDefaultDisplay();
     // Getting context in the gfx window makes sense under EGL - it's safe
     // to asume (for now) that there's just one context and one window
@@ -177,14 +185,14 @@ fgBool gfx::CWindow::close(void) {
         m_EGLSurface = NULL;
     }
 
-#elif defined FG_USING_SDL2
+#elif defined(FG_USING_SDL2)
 
     if(m_sdlWindow) {
         SDL_DestroyWindow(m_sdlWindow);
         m_sdlWindow = NULL;
         m_sdlFlags = 0;
     }
-#elif defined FG_USING_IWGL
+#elif defined(FG_USING_IWGL)
     //
 #endif
     //m_width = 0;
@@ -202,10 +210,14 @@ fgBool gfx::CWindow::close(void) {
  * @param toggle
  */
 void gfx::CWindow::setFullscreen(fgBool toggle) {
+#if !defined(FG_USING_PLATFORM_ANDROID)
     if(m_isFullscreen != toggle) {
         m_isFullscreen = toggle;
         refreshFS();
     }
+#else
+    m_isFullscreen = FG_TRUE;
+#endif
 }
 
 /**
@@ -213,7 +225,25 @@ void gfx::CWindow::setFullscreen(fgBool toggle) {
  * @return 
  */
 fgBool gfx::CWindow::refreshFS(void) {
-    // #FIXME
+#if !defined(FG_USING_MARMALADE) && !defined(FG_USING_PLATFORM_ANDROID)
+    if(m_isFullscreen) {
+        // #FIXME
+        //m_sdlFlags |= SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL | SDL_WINDOW_FULLSCREEN_DESKTOP;
+        if(SDL_SetWindowFullscreen(m_sdlWindow, SDL_WINDOW_FULLSCREEN_DESKTOP) != 0) {
+            FG_LOG_ERROR("GFX: Couldn't change to fullscreen mode window: '%s'", SDL_GetError());
+            SDL_ClearError();
+            return FG_FALSE;
+        }
+        SDL_DisplayMode mode;
+        mode.w = 1920;
+        mode.h = 1080;
+        mode.refresh_rate = 60;
+        mode.format = SDL_PIXELFORMAT_RGB24;
+        m_width = 1920;
+        m_height = 1080;
+        SDL_SetWindowDisplayMode(m_sdlWindow, &mode);
+    }
+#endif
     return FG_TRUE;
 }
 
@@ -222,13 +252,15 @@ fgBool gfx::CWindow::refreshFS(void) {
  * @return 
  */
 fgBool gfx::CWindow::swapBuffers(void) {
-#if defined FG_USING_MARMALADE_EGL
+    if(!m_isOpen)
+        return FG_FALSE;
+#if defined(FG_USING_MARMALADE_EGL)
     EGLDisplay eglDisplay = (EGLDisplay)CPlatform::getDefaultDisplay();
     if(eglDisplay && m_EGLSurface)
         eglSwapBuffers(eglDisplay, m_EGLSurface);
-#elif defined FG_USING_MARMALADE_IWGL
+#elif defined(FG_USING_MARMALADE_IWGL)
     IwGLSwapBuffers();
-#elif defined FG_USING_SDL2
+#elif defined(FG_USING_SDL2)
     if(m_sdlWindow)
         SDL_GL_SwapWindow(m_sdlWindow);
 #endif
@@ -239,7 +271,7 @@ fgBool gfx::CWindow::swapBuffers(void) {
  *
  */
 void gfx::CWindow::clearColor(void) {
-#if defined FG_USING_OPENGL || defined FG_USING_OPENGL_ES
+#if defined(FG_USING_OPENGL) || defined(FG_USING_OPENGL_ES)
     // #FIXME ?
     CPlatform::context()->clearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // ?
