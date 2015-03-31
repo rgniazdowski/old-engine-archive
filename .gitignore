@@ -45,6 +45,7 @@ project/android/local.properties
 Thumbs.db
 .DS_Store
 assets/*
+data/main/assets.zip
 data/assets_dir_list
 data/assets_list
 data/assets_zip_list
