@@ -7,8 +7,8 @@
  * FlexiGame source code and any related files can not be copied, modified
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
-
 #include "fgMainModule.h"
+#include "Android/fgAndroid.h"
 
 #include "Event/fgEventManager.h"
 #include "Event/fgInputHandler.h"
@@ -89,6 +89,7 @@ m_argv(argv),
 m_appInit(FG_FALSE),
 m_slow(FG_FALSE),
 m_isExit(FG_FALSE),
+m_isSuspend(FG_FALSE),
 #if defined(FG_USING_MARMALADE) // #FIXME
 m_deviceQuery(),
 #endif /* FG_USING_MARMALADE */
@@ -97,6 +98,36 @@ m_gameMain(NULL) { }
 CMainModule::~CMainModule() { }
 
 #if defined(FG_USING_SDL2)
+
+int SDLCALL CMainModule::filterSDLEvents(void* userdata, SDL_Event* event) {
+    if(!userdata)
+        return 1;
+    CMainModule *mainModule = (CMainModule *)userdata;
+    switch(event->type) {
+        case SDL_APP_WILLENTERBACKGROUND:
+            FG_LOG_DEBUG("SDL2: FILTER: SDL_APP_WILL_ENTER_BACKGROUND");
+            // Focus lost?
+            mainModule->m_isSuspend = FG_TRUE;
+            break;
+        case SDL_APP_DIDENTERBACKGROUND:
+            FG_LOG_DEBUG("SDL2: FILTER: SDL_APP_DID_ENTER_BACKGROUND");
+            //suspendGfxEvent();
+            mainModule->m_isSuspend = FG_TRUE;
+            break;
+        case SDL_APP_WILLENTERFOREGROUND:
+            FG_LOG_DEBUG("SDL2: FILTER: SDL_APP_WILL_ENTER_FOREGROUND");
+            //resumeGfxEvent();
+            mainModule->m_isSuspend = FG_FALSE;
+            break;
+        case SDL_APP_DIDENTERFOREGROUND:
+            FG_LOG_DEBUG("SDL2: FILTER: SDL_APP_DID_ENTER_FOREGROUND");
+            mainModule->m_isSuspend = FG_FALSE;
+            break;
+        default:
+            break;
+    };
+    return 1;
+}
 
 /**
  * #FIXME - this needs to be maintained differently
@@ -110,6 +141,7 @@ SDL_EventType CMainModule::checkSDLEvents(void) {
         switch(event.type) {
                 /* Application events */
             case SDL_QUIT: /**< User-requested quit */
+                FG_LOG_DEBUG("SDL2: The application is terminating, caught QUIT...");
                 return SDL_QUIT;
                 break;
 
@@ -118,36 +150,51 @@ SDL_EventType CMainModule::checkSDLEvents(void) {
                                      Called on iOS in applicationWillTerminate()
                                      Called on Android in onDestroy()
                                 */
+                FG_LOG_DEBUG("SDL2: The application is terminating...");
+                return SDL_QUIT;
                 break;
 
             case SDL_APP_LOWMEMORY: /**< The application is low on memory, free memory if possible.
                                      Called on iOS in applicationDidReceiveMemoryWarning()
                                      Called on Android in onLowMemory()
                                 */
+                FG_LOG_DEBUG("SDL2: The application is low on memory...");
                 break;
 
             case SDL_APP_WILLENTERBACKGROUND: /**< The application is about to enter the background
                                      Called on iOS in applicationWillResignActive()
                                      Called on Android in onPause()
                                 */
+                FG_LOG_DEBUG("SDL2: The application is about to enter the background...");
+                // Focus lost?
+                m_isSuspend = FG_TRUE;
                 break;
 
             case SDL_APP_DIDENTERBACKGROUND: /**< The application did enter the background and may not get CPU for some time
                                      Called on iOS in applicationDidEnterBackground()
                                      Called on Android in onPause()
                                 */
+                FG_LOG_DEBUG("SDL2: The application did enter the background and may not get CPU for some time...");
+                suspendGfxEvent();
+                m_isSuspend = FG_TRUE;
                 break;
 
             case SDL_APP_WILLENTERFOREGROUND: /**< The application is about to enter the foreground
                                      Called on iOS in applicationWillEnterForeground()
                                      Called on Android in onResume()
                                 */
+                FG_LOG_DEBUG("SDL2: The application is about to enter the foreground...");
+                resumeGfxEvent();
+                m_isSuspend = FG_FALSE;
+                // Focus gained?
                 break;
 
             case SDL_APP_DIDENTERFOREGROUND: /**< The application is now interactive
                                      Called on iOS in applicationDidBecomeActive()
                                      Called on Android in onResume()
                                 */
+                FG_LOG_DEBUG("SDL2: The application is now interactive...");
+                m_isSuspend = FG_FALSE;
                 break;
 
 
@@ -254,10 +301,51 @@ SDL_EventType CMainModule::checkSDLEvents(void) {
 #endif
                 /* Touch events */
             case SDL_FINGERDOWN:
+            {
+                if(!m_gameMain)
+                    continue;
+                SDL_MouseButtonEvent button;
+                int w = this->m_gameMain->getGfxMain()->getMainWindow()->getWidth();
+                int h = this->m_gameMain->getGfxMain()->getMainWindow()->getHeight();
+                button.timestamp = event.tfinger.timestamp;
+                button.button = event.tfinger.fingerId;
+                button.clicks = 1;
+                button.type = SDL_FINGERDOWN;
+                button.state = SDL_PRESSED;
+                button.x = (int)((float)w * event.tfinger.x);
+                button.y = (int)((float)h * event.tfinger.y);
+                this->m_gameMain->getInputHandler()->singleTouchButtonHandler((void *)&button, this->m_gameMain->getInputHandler());
+            }
                 break;
             case SDL_FINGERUP:
+            {
+                SDL_MouseButtonEvent button;
+                int w = this->m_gameMain->getGfxMain()->getMainWindow()->getWidth();
+                int h = this->m_gameMain->getGfxMain()->getMainWindow()->getHeight();
+                button.timestamp = event.tfinger.timestamp;
+                button.button = event.tfinger.fingerId;
+                button.clicks = 1;
+                button.type = SDL_FINGERUP;
+                button.state = SDL_RELEASED;
+                button.x = (int)((float)w * event.tfinger.x);
+                button.y = (int)((float)h * event.tfinger.y);
+                this->m_gameMain->getInputHandler()->singleTouchButtonHandler((void *)&button, this->m_gameMain->getInputHandler());
+            }
                 break;
             case SDL_FINGERMOTION:
+            {
+                SDL_MouseMotionEvent motion;
+                int w = this->m_gameMain->getGfxMain()->getMainWindow()->getWidth();
+                int h = this->m_gameMain->getGfxMain()->getMainWindow()->getHeight();
+                motion.timestamp = event.tfinger.timestamp;
+                //motion.button = event.tfinger.fingerId;
+                //motion.clicks = 1;
+                motion.type = SDL_FINGERMOTION;
+                motion.state = SDL_PRESSED;
+                motion.x = (int)((float)w * event.tfinger.x);
+                motion.y = (int)((float)h * event.tfinger.y);
+                this->m_gameMain->getInputHandler()->singleTouchMotionHandler((void *)&motion, this->m_gameMain->getInputHandler());
+            }
                 break;
 
                 /* Gesture events */
@@ -281,6 +369,7 @@ SDL_EventType CMainModule::checkSDLEvents(void) {
                 break;
 
             default:
+#if !defined(FG_USING_PLATFORM_ANDROID)
                 if(event.type >= SDL_CONTROLLERAXISMOTION && event.type <= SDL_CONTROLLERDEVICEREMAPPED) {
                     if(!m_gameMain)
                         continue;
@@ -289,9 +378,12 @@ SDL_EventType CMainModule::checkSDLEvents(void) {
                         joypadController->processEvent(event);
                     }
                 }
+#endif
                 break;
         }
     }
+    if(m_isExit)
+        m_isSuspend = FG_TRUE;
     return status;
 }
 #endif
@@ -353,6 +445,10 @@ fgBool CMainModule::initProgram() {
     m_appInit = FG_TRUE;
     float t2 = timesys::ms();
     FG_LOG_DEBUG("Main: Program initialized in %.2f seconds", (t2 - t1) / 1000.0f);
+    
+#if defined(FG_USING_SDL2) && defined(FG_USING_PLATFORM_ANDROID)
+    SDL_AddEventWatch(filterSDLEvents, this);
+#endif    
     return FG_TRUE;
 }
 
@@ -363,6 +459,7 @@ fgBool CMainModule::initProgram() {
 fgBool CMainModule::mainLoopStep(void) {
     FG_HardwareState->deviceYield(0);
     if(!m_appInit) {
+        FG_LOG_DEBUG("MainModule: Loop step - application not initialized...");
         return FG_FALSE;
     }
 #if defined(FG_DEBUG)
@@ -370,21 +467,27 @@ fgBool CMainModule::mainLoopStep(void) {
         profile::g_debugProfiling->begin("Program::loopStep");
     }
 #endif
-    // #FIXME
+    // #FIXME - This event checking should not be in here
 #if defined(FG_USING_SDL2)
     if(checkSDLEvents() == SDL_QUIT) {
-        return FG_FALSE;
+        m_isExit = FG_TRUE;
     }
 #endif
+    if(m_isSuspend) {
+        //FG_LOG_DEBUG("MainModule: Loop step - suspend...");
+        return FG_TRUE;
+    }
 
 #if defined(FG_USING_MARMALADE)
     s3eKeyboardUpdate();
     if(s3eDeviceCheckQuitRequest()) {
         m_appInit = FG_FALSE;
+        m_isExit = FG_TRUE;
         return FG_FALSE;
     }
     if(s3eKeyboardGetState(s3eKeyEnter) & S3E_KEY_STATE_PRESSED) {
         m_appInit = FG_FALSE;
+        m_isExit = FG_TRUE;
         FG_LOG_DEBUG("ENTER PRESSED...");
         return FG_FALSE;
     }
@@ -464,7 +567,7 @@ void CMainModule::closeProgram(void) {
  * DEVICE PAUSE event
  */
 void CMainModule::suspendGfxEvent(void) {
-    FG_LOG_DEBUG(">>> SUSPEND GFX SUBSYSTEM <<<");
+    FG_LOG_DEBUG("MainModule: Suspending GFX Subsystem");
     if(m_gameMain)
         m_gameMain->getGfxMain()->suspendGFX();
 }
@@ -473,7 +576,7 @@ void CMainModule::suspendGfxEvent(void) {
  * DEVICE unpause event
  */
 void CMainModule::resumeGfxEvent(void) {
-    FG_LOG_DEBUG(">>> RESUME GFX SUBSYSTEM <<<");
+    FG_LOG_DEBUG("MainModule: Resuming GFX Subsystem...");
     if(m_gameMain)
         m_gameMain->getGfxMain()->resumeGFX();
 }
@@ -483,7 +586,7 @@ void CMainModule::resumeGfxEvent(void) {
  * (not the GL pause event)
  */
 void CMainModule::focusLostEvent(void) {
-    FG_LOG_DEBUG(">>> FOCUS LOST EVENT <<<");
+    FG_LOG_DEBUG("MainModule: Focus lost event");
 
     // Brak focus czyli:
     // - wyswietlenie menu
@@ -504,7 +607,7 @@ void CMainModule::focusLostEvent(void) {
  * (not the GL unpause event)
  */
 void CMainModule::focusGainedEvent(void) {
-    FG_LOG_DEBUG(">>> FOCUS GAINED EVENT <<<");
+    FG_LOG_DEBUG("MainModule: Focus gained event");
 }
 #if defined(FG_USING_MARMALADE)
 
@@ -542,6 +645,9 @@ extern "C" int main() {
     IwUtilInit();
     int argc = 0;
     char *argv[] = {NULL, NULL};
+#elif defined(FG_USING_PLATFORM_ANDROID) && defined(FG_USING_SDL2)
+
+extern "C" int SDL_main(int argc, char **argv) {
 #else
 
 /**
@@ -553,10 +659,19 @@ extern "C" int main() {
 extern "C" int main(int argc, char *argv[]) {
 #endif /* FG_USING_MARMALADE */
     //IwMemBucketDebugSetBreakpoint(1551);
-    FG_LOG_DEBUG("%s: Start up", FG_PACKAGE_FULL_TEXT);
+    FG_LOG_DEBUG("%s: Starting up!", FG_PACKAGE_FULL_TEXT);
+    FG_LOG_DEBUG("%s: build %s %s DEBUG", FG_PACKAGE_NAME, FG_BUILD_TIME, FG_BUILD_DATE);
+#if defined(FG_RELEASE)
+    FG_LOG_INFO("%s: build %s %s RELEASE", FG_PACKAGE_NAME, FG_BUILD_TIME, FG_BUILD_DATE);
+#endif
 #if defined(FG_DEBUG) && !defined(FG_USING_MARMALADE)
     char str_args[2048];
     FG_LOG_DEBUG("%s: Number of arguments: %d", FG_PACKAGE_NAME, argc);
+    if(argc) {
+        for(int i = 0; i < argc; i++) {
+            FG_LOG_DEBUG("%s: ARGV[%d] = '%s'", FG_PACKAGE_NAME, i, argv[i]);
+        }
+    }
 #endif
     CMainModule *mainModule = new CMainModule(argc, argv);
     if(!mainModule->initProgram()) {

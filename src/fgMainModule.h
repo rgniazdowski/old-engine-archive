@@ -57,6 +57,8 @@ public:
     static int32_t resumeGfxHandler(void *systemData, void *userData);
     static int32_t keyStateChangedHandler(void *systemData, void *userData);
 };
+#elif defined(FG_USING_PLATFORM_ANDROID) && defined(FG_USING_SDL2)
+extern "C" int SDL_main(int argc, char **argv);
     #else
 extern "C" int main(int argc, char *argv[]);
     #endif /* FG_USING_MARMALADE */
@@ -70,6 +72,8 @@ namespace fg {
     #if defined FG_USING_MARMALADE
         friend class ::fgMarmaladeHandlers;
         friend int ::main();
+    #elif defined(FG_USING_PLATFORM_ANDROID) && defined(FG_USING_SDL2)
+        friend int ::SDL_main(int argc, char **argv);
     #else
         friend int ::main(int argc, char *argv[]);
     #endif /* FG_USING_MARMALADE */
@@ -87,6 +91,9 @@ namespace fg {
 
     protected:
     #if defined(FG_USING_SDL2)
+    
+        static int SDLCALL filterSDLEvents(void* userdata, SDL_Event* event);
+        
         /**
          * #FIXME - this needs to be maintained differently
          * - maybe add some SDL2 event watches?
@@ -179,6 +186,8 @@ namespace fg {
         fgBool m_slow;
         /// Is exit activated?
         fgBool m_isExit;
+        ///
+        fgBool m_isSuspend;
     #if defined(FG_USING_MARMALADE) // #FIXME
         ///
         fgDeviceQuery m_deviceQuery;
