@@ -111,6 +111,11 @@ struct fgBuildConfig g_fgBuildConfig = {
 #else
     false,
 #endif
+#ifdef FG_USING_SDL_MIXER
+    true,
+#else
+    false,
+#endif
 #ifdef FG_USING_OPENAL
     true,
 #else

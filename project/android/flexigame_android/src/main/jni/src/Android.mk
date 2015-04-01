@@ -51,7 +51,7 @@ LOCAL_SRC_FILES := $(SDL_PATH)/src/main/android/SDL_android_main.c \
 
 LOCAL_SHARED_LIBRARIES := SDL2 SDL2_mixer SDL2_image zlib_128 ng_luaplus
 
-LOCAL_CFLAGS += -DFG_NO_UNDEF
+LOCAL_CFLAGS += -DFG_NO_UNDEF -DFG_USING_SDL2 -DFG_USING_THREADS
 LOCAL_CXXFLAGS += -std=c++11 -DFG_NO_UNDEF
 LOCAL_LDLIBS := -lGLESv1_CM -lGLESv2 -llog -landroid
 

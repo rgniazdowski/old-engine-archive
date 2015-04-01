@@ -59,6 +59,7 @@
         #undef FG_USING_GLM                             //  Is the OpenGL Mathemathics library (GLM) used? 
         #undef FG_USING_SDL                             //  Is the SDL1.x used?
         #undef FG_USING_SDL2                            //  Is the latest SDL2 used in this build?
+        #undef FG_USING_SDL_MIXER                       //  Is the latest SDL/SDL2 mixer library used in this build?
         #undef FG_USING_OPENAL                          //  Is the OpenAL library used (for sound system) in this build?
         #undef FG_USING_MARMALADE_EGL                   //  Is the EGL used via Marmalade in this build?
         #undef FG_USING_EGL                             //  Is the EGL library used in this build?
@@ -377,47 +378,48 @@ struct fgBuildConfig {
     bool isDebug;
     bool isVerbose;
     int verboseLevel;
-    bool usingMarmalade; //	Is Marmalade framework used in this build?
-    bool usingMarmaladeSensors; //	Is Marmalades' sensor subsystem used?
-    bool usingMarmaladeKeyboard; //	Is Marmalades' keyboard event handled in this build?
+    bool usingMarmalade; //     Is Marmalade framework used in this build?
+    bool usingMarmaladeSensors; //  Is Marmalade sensor subsystem used?
+    bool usingMarmaladeKeyboard; // Is Marmalade keyboard event handled in this build?
     bool usingMarmaladeSound; //	Is the s3eSound used?
-    bool usingMarmaladeAudio; //	Is the s3eAudio used?
-    bool usingMarmaladeThreads; //	Are Marmalades' threads used in this build?
-    bool usingMarmaladeIwGX; //	Is the IwGX subproject used?
-    bool usingMarmaladeIwGL; //	Is the IwGL subproject used in this build?
-    bool usingMarmaladeOpenGLES; //	Is the OpenGL ES used via Marmalade?
-    bool usingOpenGLES; //	Is the OpenGL ES used (will be also set when using OpenGL ES via Marmalade)?
-    bool usingOpenGL; //	Is the plain OpenGL used in this build?
+    bool usingMarmaladeAudio; //Is the s3eAudio used?
+    bool usingMarmaladeThreads; //  Are Marmalade threads used in this build?
+    bool usingMarmaladeIwGX; // Is the IwGX subproject used?
+    bool usingMarmaladeIwGL; // Is the IwGL subproject used in this build?
+    bool usingMarmaladeOpenGLES; // Is the OpenGL ES used via Marmalade?
+    bool usingOpenGLES; //      Is the OpenGL ES used (will be also set when using OpenGL ES via Marmalade)?
+    bool usingOpenGL; //        Is the plain OpenGL used in this build?
     bool usingOpenGLGLU; //	Is the GLU library used in this build?
-    bool usingOpenGLGLUT; //	Is the GLUT library used?
-    bool usingOpenGLGLEW; //	Is the GLEW library used?
-    bool usingGLM; //	Is the OpenGL Mathemathics library (GLM) used? 
+    bool usingOpenGLGLUT; //    Is the GLUT library used?
+    bool usingOpenGLGLEW; //    Is the GLEW library used?
+    bool usingGLM; //           Is the OpenGL Mathemathics library (GLM) used?
     bool usingSDL;
     bool usingSDL2;
-    bool usingOpenAL; //	Is the OpenAL library used (for sound system) in this build?
-    bool usingMarmaladeEGL; //	Is the EGL used via Marmalade in this build?
-    bool usingEGL; //	Is the EGL library used in this build?
+    bool usingSDLMixer; //      Is the latest SDL/SDL2 mixer library used in this build?
+    bool usingOpenAL; //        Is the OpenAL library used (for sound system) in this build?
+    bool usingMarmaladeEGL; //  Is the EGL used via Marmalade in this build?
+    bool usingEGL; //           Is the EGL library used in this build?
     bool usingSensors; //	Are sensors used in this build?
-    bool usingAudio; //	Is audio used at all?
-    bool usingThreads; //	Are threads (non-Marmalade) used at all?
-    bool usingDirectX; //	Is the DirectX (any version) used in this build?
-    bool usingDirectSound; //	Is the DirectSound used?
-    bool usingDPIInfo; //	Is the DPI Info extension used (Marmalade needed)?
-    bool usingTinyXML; //	Is the tinyxml library used in this build?
-    bool usingLUAPlus; //	Is the enhanced Lua C API used?
-    bool usingLUA; //	Is the original Lua C API used?
-    bool usingBullet; //	Is the Bullet (physics engine) library used in this build?
-    bool isPlatformWindows; //	Is the target platform Windows in this build?
-    bool isPlatformLinux; //	Is the target platform Linux?
-    bool isPlatformAndroid; //	Is the target platform Android?
-    bool isPlatformIOS; //	Is the target platform iOS?
-    bool isPlatformMACOSX; //	Is the target platform MACOS/X
-    bool usingCygwin; //	Is Cygwin used for current build?
-    bool usingMinGW; //	Is MinGW used for current build?
+    bool usingAudio; //         Is audio used at all?
+    bool usingThreads; //       Are threads (non-Marmalade) used at all?
+    bool usingDirectX; //       Is the DirectX (any version) used in this build?
+    bool usingDirectSound; //   Is the DirectSound used?
+    bool usingDPIInfo; //       Is the DPI Info extension used (Marmalade needed)?
+    bool usingTinyXML; //       Is the tinyxml library used in this build?
+    bool usingLUAPlus; //       Is the enhanced Lua C API used?
+    bool usingLUA; //           Is the original Lua C API used?
+    bool usingBullet; //        Is the Bullet (physics engine) library used in this build?
+    bool isPlatformWindows; //  Is the target platform Windows in this build?
+    bool isPlatformLinux; //    Is the target platform Linux?
+    bool isPlatformAndroid; //  Is the target platform Android?
+    bool isPlatformIOS; //      Is the target platform iOS?
+    bool isPlatformMACOSX; //   Is the target platform MACOS/X
+    bool usingCygwin; //        Is Cygwin used for current build?
+    bool usingMinGW; //         Is MinGW used for current build?
     bool usingVisualStudio; //  Does the build system run under Visual Studio (any version)?
-    bool usingQT; //	Does the build system run under QtCreator (any version)?
-    bool usingPlugins; //	Is Plugin Subsystem used in this build?
-    bool using_wxWidgets; //  Is wxWidgets GUI library used in this build?
+    bool usingQT; //            Does the build system run under QtCreator (any version)?
+    bool usingPlugins; //       Is Plugin Subsystem used in this build?
+    bool using_wxWidgets; //    Is wxWidgets GUI library used in this build?
     bool support_wxWidgets; //  Is wxWidgets enabled/supported in this build?
     int version;
     int versionMajor;

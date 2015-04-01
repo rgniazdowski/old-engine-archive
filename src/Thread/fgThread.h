@@ -10,81 +10,122 @@
 
 #ifndef FG_INC_THREAD
     #define FG_INC_THREAD
+    #define FG_INC_THREAD_BLOCK
 
     #include "fgBuildConfig.h"
     #include "fgBool.h"
-    #ifdef FG_USING_THREADS
+
+    #if defined(FG_USING_THREADS)
 
         #include "fgThreadLock.h"
 
 //#ifdef FG_USING_MARMALADE_THREADS
 //#include "s3eThread.h"
 //#endif
-        #if defined(FG_USING_PLATFORM_WINDOWS)
+        #if defined(FG_USING_SDL2)
+            #include <SDL2/SDL_thread.h>
+            #include <SDL2/SDL_mutex.h>
+        #elif defined(FG_USING_SDL)
+            #include <SDL/SDL_thread.h>
+            #include <SDL/SDL_mutex.h>
+        #elif defined(FG_USING_PLATFORM_WINDOWS)
         #else
             #include <pthread.h>
             #include <sched.h>
         #endif
 
-/*
+namespace fg {
+/**
  *
  */
-class fgThread {
+class CThread {
 public:
-        #if defined(FG_USING_PLATFORM_WINDOWS)
-    typedef HANDLE nativeHandle;
+        #if defined(FG_USING_SDL2) || defined(FG_USING_SDL)
+    typedef SDL_Thread* NativeHandle;
+        #elif defined(FG_USING_PLATFORM_WINDOWS)
+    typedef HANDLE NativeHandle;
         #else
-    typedef pthread_t nativeHandle;
+    typedef pthread_t NativeHandle;
         #endif
         #if __cplusplus > 199711L
-    using threadStartFuncPtr = void* (*)(void *);
+    using ThreadStartFuncPtr = void* (*)(void *);
         #else
-    typedef void* (*threadStartFuncPtr)(void *);
+    typedef void* (*ThreadStartFuncPtr)(void *);
         #endif
 protected:
 
-    struct threadStartInfo {
-        threadStartFuncPtr startFunction;
-        fgThread *thread;
+    /**
+     *
+     */
+    struct SThreadStartInfo {
+        ///
+        ThreadStartFuncPtr startFunction;
+        ///
+        CThread *thread;
+        ///
         void *arg;
-        threadStartInfo() :
+        /**
+         * 
+         */
+        SThreadStartInfo() :
         startFunction(NULL),
         thread(NULL),
         arg(NULL) { }
     };
 public:
-    //
-    fgThread();
-    //
-    virtual ~fgThread();
+    /**
+     * 
+     */
+    CThread();
+    /**
+     *
+     */
+    virtual ~CThread();
 
-    //
-    fgThread(threadStartFuncPtr startFunction, void *arg);
+    /**
+     *
+     * @param startFunction
+     * @param arg
+     */
+    CThread(ThreadStartFuncPtr startFunction, void *arg);
 
-
-    //
+    /**
+     *
+     */
     void join(void);
-    //
+    /**
+     *
+     * @return
+     */
     fgBool isJoinable(void) const;
-    //
+    /**
+     *
+     */
     void detach(void);
-
-    //
-    inline nativeHandle getHandle(void) {
+    /**
+     *
+     * @return
+     */
+    inline NativeHandle getHandle(void) {
         return m_handle;
     }
 
-    //
-    static unsigned int hwConcurrency();
+    /**
+     *
+     * @return
+     */
+    static unsigned int hwConcurrency(void);
 
 private:
     ///
-    nativeHandle m_handle;
+    NativeHandle m_handle;
     ///
     fgBool m_isValid;
     ///
-    mutable fgThreadLock m_dataLock;
-        #if defined(FG_USING_PLATFORM_WINDOWS)
+    mutable CThreadLock m_dataLock;
+        #if defined(FG_USING_SDL2) || defined(FG_USING_SDL)
+    static int wrapperFunc(void *_arg);
+        #elif defined(FG_USING_PLATFORM_WINDOWS)
     ///
     unsigned int m_win32ID;
     //
@@ -93,7 +134,11 @@ private:
     //
     static void *wrapperFunc(void *_arg);
         #endif
-};
+    };
 
-    #endif
+} // namespace fg
+
+    #endif /* FG_USING_THREADS */
+
+    #undef FG_INC_THREAD_BLOCK
 #endif /* FG_INC_THREAD */

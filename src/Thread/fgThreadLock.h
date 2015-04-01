@@ -10,101 +10,168 @@
 
 #ifndef FG_INC_THREAD_LOCK
     #define FG_INC_THREAD_LOCK
+    #define FG_INC_THREAD_LOCK_BLOCK
 
     #include "fgBuildConfig.h"
     #include "fgBool.h"
-    #ifdef FG_USING_THREADS
 
-        #include <pthread.h>
-        #include <sched.h>
+    #if defined(FG_USING_THREADS)
 
-class fgThreadLock {
-public:
-        #if defined(FG_USING_PLATFORM_WINDOWS)
-    typedef CRITICAL_SECTION nativeHandle;
+        #if defined(FG_USING_SDL2)
+            #include <SDL2/SDL_thread.h>
+            #include <SDL2/SDL_mutex.h>
+        #elif defined(FG_USING_SDL)
+            #include <SDL/SDL_thread.h>
+            #include <SDL/SDL_mutex.h>
+        #elif defined(FG_USING_PLATFORM_WINDOWS)
         #else
-    typedef pthread_mutex_t nativeHandle;
+            #include <pthread.h>
+            #include <sched.h>
         #endif
 
-public:
-    fgThreadLock()
-        #if defined(FG_USING_PLATFORM_WINDOWS)
-    : m_alreadyLocked(false)
-        #endif
-    {
-        #if defined(FG_USING_PLATFORM_WINDOWS)
-        InitializeCriticalSection(&m_handle);
+namespace fg {
+
+    /**
+     *
+     */
+    class CThreadLock {
+    public:
+        #if defined(FG_USING_SDL2) || defined(FG_USING_SDL)
+        typedef SDL_mutex* NativeHandle;
+        #elif defined(FG_USING_PLATFORM_WINDOWS)
+        typedef CRITICAL_SECTION NativeHandle;
         #else
-        pthread_mutex_init(&m_handle, NULL);
+        typedef pthread_mutex_t NativeHandle;
         #endif
-    }
-    ~fgThreadLock() {
+
+    public:
+        /**
+         *
+         */
+        CThreadLock()
         #if defined(FG_USING_PLATFORM_WINDOWS)
-        DeleteCriticalSection(&m_handle);
+        : m_alreadyLocked(false)
+        #endif
+        {
+        #if defined(FG_USING_SDL2) || defined(FG_USING_SDL)
+            m_handle = SDL_CreateMutex();
+            if(!m_handle) {
+                // ?
+            }
+        #elif defined(FG_USING_PLATFORM_WINDOWS)
+            InitializeCriticalSection(&m_handle);
         #else
-        pthread_mutex_destroy(&m_handle);
+            pthread_mutex_init(&m_handle, NULL);
         #endif
-    }
-    inline void lock() {
-        #if defined(FG_USING_PLATFORM_WINDOWS)
-        EnterCriticalSection(&m_handle);
-        while(m_isLocked) Sleep(1000); // Simulate deadlock...
-        m_isLocked = true;
-        #else
-        pthread_mutex_lock(&m_handle);
-        #endif
-    }
-    inline fgBool tryLock() {
-        #if defined(FG_USING_PLATFORM_WINDOWS)
-        fgBool status = (TryEnterCriticalSection(&mHandle) ? FG_TRUE : FG_FALSE);
-        if(ret && m_isLocked) {
-            LeaveCriticalSection(&m_handle);
-            status = FG_FALSE;
         }
-        return status;
+        /**
+         *
+         */
+        virtual ~CThreadLock() {
+        #if defined(FG_USING_SDL2) || defined(FG_USING_SDL)
+            SDL_DestroyMutex(m_handle);
+            m_handle = NULL;
+        #elif defined(FG_USING_PLATFORM_WINDOWS)
+            DeleteCriticalSection(&m_handle);
         #else
-        return (pthread_mutex_trylock(&m_handle) == 0) ? FG_TRUE : FG_FALSE;
+            pthread_mutex_destroy(&m_handle);
         #endif
-    }
-    inline void unlock() {
-        #if defined(FG_USING_PLATFORM_WINDOWS)
-        m_isLocked = FG_FALSE;
-        LeaveCriticalSection(&m_handle);
+        }
+        /**
+         *
+         */
+        inline void lock(void) {
+        #if defined(FG_USING_SDL2) || defined(FG_USING_SDL)
+            // return: 0, or -1 on error.
+            SDL_LockMutex(m_handle);
+        #elif defined(FG_USING_PLATFORM_WINDOWS)
+            EnterCriticalSection(&m_handle);
+            while(m_isLocked) Sleep(1000); // Simulate deadlock...
+            m_isLocked = true;
         #else
-        pthread_mutex_unlock(&m_handle);
+            pthread_mutex_lock(&m_handle);
         #endif
-    }
+        }
+        /**
+         *
+         * @return
+         */
+        inline fgBool tryLock(void) {
+        #if defined(FG_USING_SDL2) || defined(FG_USING_SDL)
+            // return: 0, SDL_MUTEX_TIMEDOUT, or -1 on error
+            return (SDL_TryLockMutex(m_handle) == 0) ? FG_TRUE : FG_FALSE;
+        #elif defined(FG_USING_PLATFORM_WINDOWS)
+            fgBool status = (TryEnterCriticalSection(&mHandle) ? FG_TRUE : FG_FALSE);
+            if(ret && m_isLocked) {
+                LeaveCriticalSection(&m_handle);
+                status = FG_FALSE;
+            }
+            return status;
+        #else
+            return (pthread_mutex_trylock(&m_handle) == 0) ? FG_TRUE : FG_FALSE;
+        #endif
+        }
+        /**
+         *
+         */
+        inline void unlock(void) {
+        #if defined(FG_USING_SDL2) || defined(FG_USING_SDL)
+            // return: 0, or -1 on error.
+            SDL_UnlockMutex(m_handle);
+        #elif defined(FG_USING_PLATFORM_WINDOWS)
+            m_isLocked = FG_FALSE;
+            LeaveCriticalSection(&m_handle);
+        #else
+            pthread_mutex_unlock(&m_handle);
+        #endif
+        }
 
-    //_TTHREAD_DISABLE_ASSIGNMENT(mutex)
+        //_TTHREAD_DISABLE_ASSIGNMENT(mutex)
 
-private:
+    private:
         #if defined(FG_USING_PLATFORM_WINDOWS)
-    fgBool m_isLocked;
+        ///
+        fgBool m_isLocked;
         #endif
-    nativeHandle m_handle;
-};
+        ///
+        NativeHandle m_handle;
+    };
 
-template <class T>
-class fgLockGuard {
-public:
-    typedef T lockType;
-    fgLockGuard() : m_lock(0) { }
+    /**
+     *
+     */
+    template <class T>
+    class CLockGuard {
+    public:
+        ///
+        typedef T LockType;
 
-    // The constructor locks the mutex.
-    explicit fgLockGuard(lockType &_lock) {
-        m_lock = &_lock;
-        m_lock->lock();
-    }
+    public:
+        CLockGuard() : m_lock(0) { }
+        /**
+         * The constructor locks the mutex
+         * @param _lock
+         */
+        explicit CLockGuard(LockType &_lock) {
+            m_lock = &_lock;
+            m_lock->lock();
+        }
+        /**
+         * The destructor unlocks the mutex
+         */
+        ~CLockGuard() {
+            if(m_lock)
+                m_lock->unlock();
+        }
 
-    // The destructor unlocks the mutex
-    ~fgLockGuard() {
-        if(m_lock)
-            m_lock->unlock();
-    }
+    private:
+        ///
+        LockType *m_lock;
+    };
 
-private:
-    lockType *m_lock;
-};
+} // namespace fg
 
-    #endif
+    #endif /* FG_USING_THREADS */
+
+    #undef FG_INC_THREAD_LOCK_BLOCK
 #endif /* FG_INC_THREAD_LOCK */

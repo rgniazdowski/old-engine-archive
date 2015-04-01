@@ -72,6 +72,7 @@
             <word>coords</word>
             <word>Cornsilk</word>
             <word>cpp</word>
+            <word>cygwin</word>
             <word>data's</word>
             <word>destructors</word>
             <word>dfactor</word>
@@ -154,6 +155,7 @@
             <word>multitexture</word>
             <word>multitextured</word>
             <word>multitexturing</word>
+            <word>mutex</word>
             <word>namespace</word>
             <word>nongame</word>
             <word>normalised</word>
@@ -226,6 +228,7 @@
             <word>texel</word>
             <word>texels</word>
             <word>tga</word>
+            <word>tinyxml</word>
             <word>ttl</word>
             <word>unboxed</word>
             <word>unix</word>

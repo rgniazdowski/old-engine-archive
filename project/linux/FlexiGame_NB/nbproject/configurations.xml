@@ -503,6 +503,7 @@
             <Elem>FG_USING_OPENGL</Elem>
             <Elem>FG_USING_OPENGL_GLEW</Elem>
             <Elem>FG_USING_SDL2</Elem>
+            <Elem>FG_USING_THREADS</Elem>
             <Elem>FG_USING_TINYXML</Elem>
             <Elem>TIXML_USE_STL</Elem>
             <Elem>_DEBUG</Elem>
@@ -531,6 +532,7 @@
             <Elem>FG_USING_OPENGL</Elem>
             <Elem>FG_USING_OPENGL_GLEW</Elem>
             <Elem>FG_USING_SDL2</Elem>
+            <Elem>FG_USING_THREADS</Elem>
             <Elem>FG_USING_TINYXML</Elem>
             <Elem>TIXML_USE_STL</Elem>
             <Elem>_DEBUG</Elem>
@@ -2068,6 +2070,7 @@
             <Elem>FG_USING_OPENGL</Elem>
             <Elem>FG_USING_OPENGL_GLEW</Elem>
             <Elem>FG_USING_SDL2</Elem>
+            <Elem>FG_USING_THREADS</Elem>
             <Elem>FG_USING_TINYXML</Elem>
             <Elem>TIXML_USE_STL</Elem>
           </preprocessorList>
@@ -2095,6 +2098,7 @@
             <Elem>FG_USING_OPENGL</Elem>
             <Elem>FG_USING_OPENGL_GLEW</Elem>
             <Elem>FG_USING_SDL2</Elem>
+            <Elem>FG_USING_THREADS</Elem>
             <Elem>FG_USING_TINYXML</Elem>
             <Elem>TIXML_USE_STL</Elem>
           </preprocessorList>

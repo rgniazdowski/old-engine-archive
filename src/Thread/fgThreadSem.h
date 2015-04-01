@@ -10,5 +10,9 @@
 
 #ifndef FG_INC_THREAD_SEM
     #define FG_INC_THREAD_SEM
+    #define FG_INC_THREAD_SEM_BLOCK
 
+
+
+    #undef FG_INC_THREAD_SEM_BLOCK
 #endif /* FG_INC_THREAD_SEM */
