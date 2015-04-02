@@ -199,13 +199,6 @@ namespace fg {
             inline CLoader *getLoader(void) {
                 return &m_loader;
             }
-            /**
-             * 
-             * @return 
-             */
-            inline CContext *context(void) const {
-                return m_gfxContext;
-            }
 
             /**
              * 
@@ -229,8 +222,6 @@ namespace fg {
             CShaderManager *m_shaderMgr;
             /// Main GFX OS specific window
             CWindow *m_mainWindow;
-            /// Main GFX context - it's directly connected to the GFX window
-            CContext *m_gfxContext;
             /// Main 3D scene management
             CScene3D *m_3DScene;
             /// Main 2D scene management

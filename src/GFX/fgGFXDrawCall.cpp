@@ -558,18 +558,18 @@ void gfx::CDrawCall::appendRect2D(const Vec2f &relPos, const Vec2f &size,
 fgBool gfx::CDrawCall::applyAttributeData(void) {
     if(m_drawCallType == FG_GFX_DRAW_CALL_MESH ||
        m_drawCallType == FG_GFX_DRAW_CALL_CUSTOM_ARRAY) {
-        CPlatform::context()->diffVertexAttribArrayMask(m_attribMask);
+        context::diffVertexAttribArrayMask(m_attribMask);
         if(m_attrData[0].isInterleaved == FG_TRUE && m_attrData[0].isBO) {
-            CPlatform::context()->bindBuffer(GL_ARRAY_BUFFER, m_attrData[0].buffer);
+            context::bindBuffer(GL_ARRAY_BUFFER, m_attrData[0].buffer);
         } else {
-            CPlatform::context()->bindBuffer(GL_ARRAY_BUFFER, 0);
+            context::bindBuffer(GL_ARRAY_BUFFER, 0);
         }
         for(int i = 0; i < FG_GFX_ATTRIBUTE_COUNT; i++) {
             if(m_attrData[i].isEnabled) {
                 if(m_attrData[i].isInterleaved == FG_FALSE && m_attrData[i].isBO) {
-                    CPlatform::context()->bindBuffer(GL_ARRAY_BUFFER, m_attrData[i].buffer);
+                    context::bindBuffer(GL_ARRAY_BUFFER, m_attrData[i].buffer);
                 }
-                CPlatform::context()->vertexAttribPointer(m_attrData[i].index,
+                context::vertexAttribPointer(m_attrData[i].index,
                                                           m_attrData[i].size,
                                                           m_attrData[i].dataType,
                                                           m_attrData[i].isNormalized,
@@ -578,9 +578,9 @@ fgBool gfx::CDrawCall::applyAttributeData(void) {
             }
         }
         if(m_drawingInfo.buffer) {
-            CPlatform::context()->bindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_drawingInfo.buffer);
+            context::bindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_drawingInfo.buffer);
         } else {
-            CPlatform::context()->bindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+            context::bindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
         }
     } else {
         return FG_FALSE;
@@ -597,7 +597,7 @@ void gfx::CDrawCall::draw(void) {
     fgBool scissorSet = FG_FALSE;
     if(m_scissorBox.z != 0 && m_scissorBox.w != 0) {
         // If scissor box has some kind of size then...
-        CPlatform::context()->scissor(m_scissorBox);
+        context::scissor(m_scissorBox);
         scissorSet = FG_TRUE;
     }
     if(m_MVP && m_program) {
@@ -607,8 +607,8 @@ void gfx::CDrawCall::draw(void) {
         m_program->setUniform(m_MVP);
     }
     if(m_program) {
-        if(CPlatform::context()->isTexture(m_textureID.id)) {
-            CPlatform::context()->bindTexture(m_textureID);
+        if(context::isTexture(m_textureID.id)) {
+            context::bindTexture(m_textureID);
             m_program->setUniform(FG_GFX_USE_TEXTURE, 1.0f);
         } else {
             m_program->setUniform(FG_GFX_USE_TEXTURE, 0.0f);
@@ -623,11 +623,11 @@ void gfx::CDrawCall::draw(void) {
     // Will now draw data from Other types ...
     if(applyAttributeData()) {
         if(m_material) {
-            CPlatform::context()->setCullFace(m_material->isCullFace());
-            CPlatform::context()->setDepthTest(m_material->isDepthTest());
-            CPlatform::context()->setBlend(m_material->isBlend());
-            CPlatform::context()->frontFace((fgGFXenum)m_material->getGfxFrontFace());
-            CPlatform::context()->setCapability(gfx::DEPTH_WRITEMASK, m_material->isDepthWriteMask());
+            context::setCullFace(m_material->isCullFace());
+            context::setDepthTest(m_material->isDepthTest());
+            context::setBlend(m_material->isBlend());
+            context::frontFace((fgGFXenum)m_material->getGfxFrontFace());
+            context::setCapability(gfx::DEPTH_WRITEMASK, m_material->isDepthWriteMask());
         }
         // attribute data array is set
         // unsigned short is mainly because of ES
@@ -638,13 +638,13 @@ void gfx::CDrawCall::draw(void) {
             glDrawArrays((fgGFXenum)m_primMode, 0, m_drawingInfo.count);
         }
         // #FIXME
-        CPlatform::context()->bindBuffer(GL_ARRAY_BUFFER, 0);
-        CPlatform::context()->bindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+        context::bindBuffer(GL_ARRAY_BUFFER, 0);
+        context::bindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
     }
 
     if(scissorSet) //FIXME
     {
         // Reset the scissor box
-        CPlatform::context()->scissor();
+        context::scissor();
     }
 }

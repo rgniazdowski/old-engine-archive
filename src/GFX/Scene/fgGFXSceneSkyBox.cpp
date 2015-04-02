@@ -91,7 +91,7 @@ void gfx::CSceneSkyBox::draw(const Vec3f& relPos) {
  * @param modelMat
  */
 void gfx::CSceneSkyBox::draw(const Matrix4f& modelMat) {
-    const fgBool isTexture = (fgBool)CPlatform::context()->isTexture(m_textureID);
+    const fgBool isTexture = (fgBool)context::isTexture(m_textureID);
     //if(!isTexture) {
     //fgBool test = (fgBool)glIsTexture(m_textureID.id);
     //printf("SKYBOX - NOT A TEXTURE ! %d || glIsTexture()=%d\n", m_textureID.id, (int)test);
@@ -99,11 +99,11 @@ void gfx::CSceneSkyBox::draw(const Matrix4f& modelMat) {
     if(isTexture && m_MVP && m_program) {
         m_program->setUniform(FG_GFX_USE_TEXTURE, 1.0f);
         m_program->setUniform(FG_GFX_CUBE_TEXTURE, (fgGFXint)0);
-        CPlatform::context()->bindTexture(m_textureID);
+        context::bindTexture(m_textureID);
         m_MVP->calculate(modelMat);
         m_program->setUniform(m_MVP);
-        CPlatform::context()->frontFace(GL_CW); // #FUBAR    
+        context::frontFace(GL_CW); // #FUBAR
         CPrimitives::drawSkyBoxOptimized();
-        CPlatform::context()->frontFace(GL_CCW);
+        context::frontFace(GL_CCW);
     }
 }

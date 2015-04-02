@@ -55,9 +55,6 @@ namespace fg {
             CShaderProgram *m_pProgram;
             /// Pointer to the main gfx window object
             CWindow *m_pWindow;
-            /// Pointer to the external context currently used
-            /// Probably passed down from GFX::MAIN
-            CContext *m_pContext;
             /// Main Model-Projection-View matrix to use with shader
             CMVPMatrix m_mvp;
             /// 4x4 matrix to hold translation and scale transformations
@@ -114,13 +111,6 @@ namespace fg {
                                    (float)m_pWindow->getHeight(),
                                    0.0f);
                 }
-            }
-            /**
-             * 
-             * @param pContext
-             */
-            void setContext(CContext *pContext) {
-                m_pContext = pContext;
             }
 
         public:

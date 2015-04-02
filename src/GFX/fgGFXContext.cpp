@@ -13,6 +13,55 @@
 #include "Util/fgMemory.h"
 #include "fgGFXPlatform.h"
 
+
+namespace fg {
+    namespace gfx {
+        namespace context {
+#if defined(FG_USING_SDL2)
+            SDL_Window *g_sdlWindow;
+            SDL_GLContext g_GLContext; // #FIXME - context can be separate? ... P4
+#elif defined(FG_USING_EGL)    
+            void* g_GLContext; // it's for EGL only...
+#else
+            void *g_GLContext; // ?
+#endif
+            /// Special parameter map used for caching and fast value check
+            /// It's used for not calling redundant GL functions, like:
+            /// glGet/glEnable/glDisable/glIsEnabled and so on. Also for
+            /// functions like activating proper vertex attrib array idx,
+            /// bounding textures... any kind of function that changes internal
+            /// state values.
+            ParameterVec g_params;
+            /// Special map used for holding valid texture IDs
+            /// Every texture needs to be created/deleted through
+            /// this class. When texture is deleted its' ID is zeroed
+            /// in every place in the app. Therefore there's no need to
+            /// often call glIsTexture. If gfx ID is not zero the texture
+            /// is surely valid.
+            TextureMap g_textures;
+            /// Special map used for holding valid VBO IDs. Use case
+            /// is the same as for textures.
+            BufferMap g_buffers;
+            /// Viewport area (used for fast check if viewport changed)
+            fgGFXuint g_viewportAreaQ;
+            /// Scissor area
+            fgGFXuint g_scissorAreaQ;
+
+            /// Currently used attribute mask
+            fgGFXuint g_attribMask;
+            ///
+            SAttributeData g_attrInfo[FG_GFX_ATTRIBUTE_DATA_MAX]; // #FIXME - attribute count ... why here?  hello?
+            /// Currently bound texture ID
+            fgGFXuint g_boundTexture;
+            /// Supported shading language version
+            ShadingLangVersion g_SLVersion;
+            ///
+            Vector2i g_screenSize;
+            /// Is context ready? Is initialization successful?
+            fgBool g_contextInit;
+        }
+    }
+}
 using namespace fg;
 
 /*
@@ -882,26 +931,54 @@ fgBool gfx::SContextParam::update(void) {
     return status;
 }
 
-/*
- *
- */
+fgBool gfx::context::isInit(void) {
+    return g_contextInit;
+}
+
+gfx::ShadingLangVersion gfx::context::getSLVersion(void) {
+    return g_SLVersion;
+}
+
+void *gfx::context::getGLContext(void) {
+    return g_GLContext;
+}
+
+Vector2i const& gfx::context::getScreenSize(void) {
+    return g_screenSize;
+}
+
+void gfx::context::setScreenSize(const int w, const int h) {
+    g_screenSize.x = w;
+    g_screenSize.y = h;
+}
+
+void gfx::context::setScreenSize(const Vector2i& screenSize) {
+    g_screenSize = screenSize;
+}
+
+void gfx::context::setScreenSize(const Vector2f& screenSize) {
+    g_screenSize.x = (int)screenSize.x;
+    g_screenSize.y = (int)screenSize.y;
+}
+
 #if defined(FG_USING_SDL2)
-gfx::CContext::CContext(SDL_Window *sdlWindow) :
+fgBool gfx::context::initialize(SDL_Window *sdlWindow)
 #else
 
-gfx::CContext::CContext() :
+fgBool gfx::context::initialize(void)
 #endif
+{
 #if defined(FG_USING_SDL2)
 
-m_sdlWindow(sdlWindow),
-m_GLContext(0),
+    g_sdlWindow = sdlWindow;
+    g_GLContext = 0;
 #endif
-m_viewportAreaQ(0),
-m_scissorAreaQ(0),
-m_attribMask(0),
-m_boundTexture(0),
-m_SLVersion(FG_GFX_SHADING_LANGUAGE_INVALID),
-m_init(FG_FALSE) {
+    g_viewportAreaQ = 0;
+    g_scissorAreaQ = 0;
+    g_attribMask = 0;
+    g_boundTexture = 0;
+    g_SLVersion = FG_GFX_SHADING_LANGUAGE_INVALID;
+    g_contextInit = FG_FALSE;
 
 #if defined(FG_USING_MARMALADE_EGL) || defined(FG_USING_EGL)
     /**********************************
@@ -924,8 +1001,8 @@ m_init(FG_FALSE) {
     }
     FG_LOG_DEBUG("EGL: requesting GL version: %d", glVersionN);
     EGLint attribs[] = {EGL_CONTEXT_CLIENT_VERSION, glVersionN, EGL_NONE,};
-    m_GLContext = eglCreateContext(eglDisplay, eglConfig, NULL, attribs);
-    if(!m_GLContext) {
+    g_GLContext = eglCreateContext(eglDisplay, eglConfig, NULL, attribs);
+    if(!g_GLContext) {
         FG_LOG_ERROR("EGL: CreateContext failed");
         fgEGLError("eglCreateContext");
         return;
@@ -988,8 +1065,8 @@ m_init(FG_FALSE) {
     // a window created to bound GL context to it
     // As for the EGL on Marmalade there is no Window - there's a Surface instead, bound
     // to the native window - the native window, the handle to it is provided via Marmalade
-    m_GLContext = SDL_GL_CreateContext(m_sdlWindow);
-    if(!m_GLContext) {
+    g_GLContext = SDL_GL_CreateContext(g_sdlWindow);
+    if(!g_GLContext) {
         FG_LOG_ERROR("GFX: Couldn't create GL context: '%s'", SDL_GetError());
         SDL_ClearError();
         // Failed so try again with least possible GL version
@@ -999,11 +1076,11 @@ m_init(FG_FALSE) {
         SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, 0);
         SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, 0);
 
-        m_GLContext = SDL_GL_CreateContext(m_sdlWindow);
-        if(!m_GLContext) {
+        g_GLContext = SDL_GL_CreateContext(g_sdlWindow);
+        if(!g_GLContext) {
             FG_LOG_ERROR("GFX: RETRY: Couldn't create GL context: '%s'", SDL_GetError());
             SDL_ClearError();
-            return;
+            return FG_FALSE;
         }
     }
 #else
@@ -1016,8 +1093,8 @@ m_init(FG_FALSE) {
         SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_ES);
         SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, glVersion.first);
         SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, glVersion.second);
-        m_GLContext = SDL_GL_CreateContext(m_sdlWindow);
-        if(!m_GLContext) {
+        g_GLContext = SDL_GL_CreateContext(g_sdlWindow);
+        if(!g_GLContext) {
             FG_LOG_ERROR("GFX: RETRY: Couldn't create GL context: '%s'", SDL_GetError());
         } else {
             FG_LOG_DEBUG("GFX: Successfully created %s %d.%d context",
@@ -1029,7 +1106,7 @@ m_init(FG_FALSE) {
     }
 #endif /* !FG_USING_PLATFORM_ANDROID */
     int r, g, b, a, d, major, minor;
-    SDL_GL_MakeCurrent(m_sdlWindow, m_GLContext);
+    SDL_GL_MakeCurrent(g_sdlWindow, g_GLContext);
 
     SDL_GL_GetAttribute(SDL_GL_RED_SIZE, &r);
     SDL_GL_GetAttribute(SDL_GL_GREEN_SIZE, &g);
@@ -1055,16 +1132,16 @@ m_init(FG_FALSE) {
     fgGFXenum glewInitResult = glewInit();
     if(glewInitResult != GLEW_OK) {
         FG_LOG_ERROR("GFX: GLEW initialization error error '%s'", glewGetErrorString(glewInitResult));
-        m_init = FG_FALSE;
-        return;
+        g_contextInit = FG_FALSE;
+        return FG_FALSE;
     } else {
         FG_LOG_DEBUG("GFX: GLEW init completed successfully.");
     }
     fgGFXenum errorCheckValue = fgGLError("glewInit");
     if(errorCheckValue != GL_NO_ERROR) {
         FG_LOG_ERROR("GFX: Context error, failed to initialize."); //, gluErrorString(errorCheckValue));
-        m_init = FG_FALSE;
-        return;
+        g_contextInit = FG_FALSE;
+        return FG_FALSE;
     }
     //glewIsSupported("GL_VERSION_3_0");
 #else
@@ -1075,101 +1152,101 @@ m_init(FG_FALSE) {
     FG_LOG_DEBUG("GFX: Initializing GL parameter list...");
     //m_params[(fgGFXuint)GL_ACTIVE_TEXTURE] = SContextParam(GL_ACTIVE_TEXTURE);
 
-    m_params.reserve(gfx::NUM_GL_PARAMETERS);
-    m_params.resize(gfx::NUM_GL_PARAMETERS);
+    g_params.reserve(gfx::NUM_GL_PARAMETERS);
+    g_params.resize(gfx::NUM_GL_PARAMETERS);
 
-    m_params[gfx::ACTIVE_TEXTURE] = SContextParam(GL_ACTIVE_TEXTURE);
-    m_params[gfx::ALIASED_LINE_WIDTH_RANGE] = SContextParam(GL_ALIASED_LINE_WIDTH_RANGE);
-    m_params[gfx::ALIASED_POINT_SIZE_RANGE] = SContextParam(GL_ALIASED_POINT_SIZE_RANGE);
-    m_params[gfx::ALPHA_BITS] = SContextParam(GL_ALPHA_BITS);
-    m_params[gfx::BLEND] = SContextParam(GL_BLEND);
-    m_params[gfx::BLEND_COLOR] = SContextParam(GL_BLEND_COLOR);
-    m_params[gfx::BLEND_DST_ALPHA] = SContextParam(GL_BLEND_DST_ALPHA);
-    m_params[gfx::BLEND_DST_RGB] = SContextParam(GL_BLEND_DST_RGB);
-    m_params[gfx::BLEND_SRC_ALPHA] = SContextParam(GL_BLEND_SRC_ALPHA);
-    m_params[gfx::BLEND_SRC_RGB] = SContextParam(GL_BLEND_SRC_RGB);
-    m_params[gfx::BLEND_EQUATION_ALPHA] = SContextParam(GL_BLEND_EQUATION_ALPHA);
-    m_params[gfx::BLEND_EQUATION_RGB] = SContextParam(GL_BLEND_EQUATION_RGB);
-    m_params[gfx::RED_BITS] = SContextParam(GL_RED_BITS);
-    m_params[gfx::GREEN_BITS] = SContextParam(GL_GREEN_BITS);
-    m_params[gfx::BLUE_BITS] = SContextParam(GL_BLUE_BITS);
-    m_params[gfx::DEPTH_BITS] = SContextParam(GL_DEPTH_BITS);
-    m_params[gfx::COLOR_CLEAR_VALUE] = SContextParam(GL_COLOR_CLEAR_VALUE);
-    m_params[gfx::COLOR_WRITEMASK] = SContextParam(GL_COLOR_WRITEMASK);
-    m_params[gfx::COMPRESSED_TEXTURE_FORMATS] = SContextParam(GL_COMPRESSED_TEXTURE_FORMATS);
-    m_params[gfx::CULL_FACE] = SContextParam(GL_CULL_FACE);
-    m_params[gfx::CULL_FACE_MODE] = SContextParam(GL_CULL_FACE_MODE);
-    m_params[gfx::CURRENT_PROGRAM] = SContextParam(GL_CURRENT_PROGRAM);
-    m_params[gfx::DEPTH_CLEAR_VALUE] = SContextParam(GL_DEPTH_CLEAR_VALUE);
-    m_params[gfx::DEPTH_FUNC] = SContextParam(GL_DEPTH_FUNC);
-    m_params[gfx::DEPTH_RANGE] = SContextParam(GL_DEPTH_RANGE);
-    m_params[gfx::DEPTH_TEST] = SContextParam(GL_DEPTH_TEST);
-    m_params[gfx::DEPTH_WRITEMASK] = SContextParam(GL_DEPTH_WRITEMASK);
-    m_params[gfx::DITHER] = SContextParam(GL_DITHER);
-    m_params[gfx::ARRAY_BUFFER_BINDING] = SContextParam(GL_ARRAY_BUFFER_BINDING);
-    m_params[gfx::ELEMENT_ARRAY_BUFFER_BINDING] = SContextParam(GL_ELEMENT_ARRAY_BUFFER_BINDING);
-    m_params[gfx::FRAMEBUFFER_BINDING] = SContextParam(GL_FRAMEBUFFER_BINDING);
-    m_params[gfx::FRONT_FACE] = SContextParam(GL_FRONT_FACE);
-    m_params[gfx::GENERATE_MIPMAP_HINT] = SContextParam(GL_GENERATE_MIPMAP_HINT);
-    m_params[gfx::IMPLEMENTATION_COLOR_READ_FORMAT] = SContextParam(GL_IMPLEMENTATION_COLOR_READ_FORMAT);
-    m_params[gfx::IMPLEMENTATION_COLOR_READ_TYPE] = SContextParam(GL_IMPLEMENTATION_COLOR_READ_TYPE);
-    m_params[gfx::LINE_WIDTH] = SContextParam(GL_LINE_WIDTH);
-    m_params[gfx::MAX_COMBINED_TEXTURE_IMAGE_UNITS] = SContextParam(GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS);
-    m_params[gfx::MAX_CUBE_MAP_TEXTURE_SIZE] = SContextParam(GL_MAX_CUBE_MAP_TEXTURE_SIZE);
-    m_params[gfx::MAX_FRAGMENT_UNIFORM_VECTORS] = SContextParam(GL_MAX_FRAGMENT_UNIFORM_VECTORS);
-    m_params[gfx::MAX_RENDERBUFFER_SIZE] = SContextParam(GL_MAX_RENDERBUFFER_SIZE);
-    m_params[gfx::MAX_TEXTURE_IMAGE_UNITS] = SContextParam(GL_MAX_TEXTURE_IMAGE_UNITS);
-    m_params[gfx::MAX_TEXTURE_SIZE] = SContextParam(GL_MAX_TEXTURE_SIZE);
-    m_params[gfx::MAX_VARYING_VECTORS] = SContextParam(GL_MAX_VARYING_VECTORS);
-    m_params[gfx::MAX_VERTEX_ATTRIBS] = SContextParam(GL_MAX_VERTEX_ATTRIBS);
-    m_params[gfx::MAX_VERTEX_TEXTURE_IMAGE_UNITS] = SContextParam(GL_MAX_VERTEX_TEXTURE_IMAGE_UNITS);
-    m_params[gfx::MAX_VERTEX_UNIFORM_VECTORS] = SContextParam(GL_MAX_VERTEX_UNIFORM_VECTORS);
-    m_params[gfx::NUM_COMPRESSED_TEXTURE_FORMATS] = SContextParam(GL_NUM_COMPRESSED_TEXTURE_FORMATS);
-    m_params[gfx::NUM_SHADER_BINARY_FORMATS] = SContextParam(GL_NUM_SHADER_BINARY_FORMATS);
-    m_params[gfx::PACK_ALIGNMENT] = SContextParam(GL_PACK_ALIGNMENT);
-    m_params[gfx::POLYGON_OFFSET_FACTOR] = SContextParam(GL_POLYGON_OFFSET_FACTOR);
-    m_params[gfx::POLYGON_OFFSET_FILL] = SContextParam(GL_POLYGON_OFFSET_FILL);
-    m_params[gfx::POLYGON_OFFSET_UNITS] = SContextParam(GL_POLYGON_OFFSET_UNITS);
-    m_params[gfx::RENDERBUFFER_BINDING] = SContextParam(GL_RENDERBUFFER_BINDING);
-    m_params[gfx::SAMPLE_ALPHA_TO_COVERAGE] = SContextParam(GL_SAMPLE_ALPHA_TO_COVERAGE);
-    m_params[gfx::SAMPLE_COVERAGE] = SContextParam(GL_SAMPLE_COVERAGE);
-    m_params[gfx::SAMPLE_BUFFERS] = SContextParam(GL_SAMPLE_BUFFERS);
-    m_params[gfx::SAMPLE_COVERAGE_INVERT] = SContextParam(GL_SAMPLE_COVERAGE_INVERT);
-    m_params[gfx::SAMPLE_COVERAGE_VALUE] = SContextParam(GL_SAMPLE_COVERAGE_VALUE);
-    m_params[gfx::SAMPLES] = SContextParam(GL_SAMPLES);
-    m_params[gfx::MAX_VIEWPORT_DIMS] = SContextParam(GL_MAX_VIEWPORT_DIMS);
-    m_params[gfx::SCISSOR_BOX] = SContextParam(GL_SCISSOR_BOX);
-    m_params[gfx::SCISSOR_TEST] = SContextParam(GL_SCISSOR_TEST);
+    g_params[gfx::ACTIVE_TEXTURE] = SContextParam(GL_ACTIVE_TEXTURE);
+    g_params[gfx::ALIASED_LINE_WIDTH_RANGE] = SContextParam(GL_ALIASED_LINE_WIDTH_RANGE);
+    g_params[gfx::ALIASED_POINT_SIZE_RANGE] = SContextParam(GL_ALIASED_POINT_SIZE_RANGE);
+    g_params[gfx::ALPHA_BITS] = SContextParam(GL_ALPHA_BITS);
+    g_params[gfx::BLEND] = SContextParam(GL_BLEND);
+    g_params[gfx::BLEND_COLOR] = SContextParam(GL_BLEND_COLOR);
+    g_params[gfx::BLEND_DST_ALPHA] = SContextParam(GL_BLEND_DST_ALPHA);
+    g_params[gfx::BLEND_DST_RGB] = SContextParam(GL_BLEND_DST_RGB);
+    g_params[gfx::BLEND_SRC_ALPHA] = SContextParam(GL_BLEND_SRC_ALPHA);
+    g_params[gfx::BLEND_SRC_RGB] = SContextParam(GL_BLEND_SRC_RGB);
+    g_params[gfx::BLEND_EQUATION_ALPHA] = SContextParam(GL_BLEND_EQUATION_ALPHA);
+    g_params[gfx::BLEND_EQUATION_RGB] = SContextParam(GL_BLEND_EQUATION_RGB);
+    g_params[gfx::RED_BITS] = SContextParam(GL_RED_BITS);
+    g_params[gfx::GREEN_BITS] = SContextParam(GL_GREEN_BITS);
+    g_params[gfx::BLUE_BITS] = SContextParam(GL_BLUE_BITS);
+    g_params[gfx::DEPTH_BITS] = SContextParam(GL_DEPTH_BITS);
+    g_params[gfx::COLOR_CLEAR_VALUE] = SContextParam(GL_COLOR_CLEAR_VALUE);
+    g_params[gfx::COLOR_WRITEMASK] = SContextParam(GL_COLOR_WRITEMASK);
+    g_params[gfx::COMPRESSED_TEXTURE_FORMATS] = SContextParam(GL_COMPRESSED_TEXTURE_FORMATS);
+    g_params[gfx::CULL_FACE] = SContextParam(GL_CULL_FACE);
+    g_params[gfx::CULL_FACE_MODE] = SContextParam(GL_CULL_FACE_MODE);
+    g_params[gfx::CURRENT_PROGRAM] = SContextParam(GL_CURRENT_PROGRAM);
+    g_params[gfx::DEPTH_CLEAR_VALUE] = SContextParam(GL_DEPTH_CLEAR_VALUE);
+    g_params[gfx::DEPTH_FUNC] = SContextParam(GL_DEPTH_FUNC);
+    g_params[gfx::DEPTH_RANGE] = SContextParam(GL_DEPTH_RANGE);
+    g_params[gfx::DEPTH_TEST] = SContextParam(GL_DEPTH_TEST);
+    g_params[gfx::DEPTH_WRITEMASK] = SContextParam(GL_DEPTH_WRITEMASK);
+    g_params[gfx::DITHER] = SContextParam(GL_DITHER);
+    g_params[gfx::ARRAY_BUFFER_BINDING] = SContextParam(GL_ARRAY_BUFFER_BINDING);
+    g_params[gfx::ELEMENT_ARRAY_BUFFER_BINDING] = SContextParam(GL_ELEMENT_ARRAY_BUFFER_BINDING);
+    g_params[gfx::FRAMEBUFFER_BINDING] = SContextParam(GL_FRAMEBUFFER_BINDING);
+    g_params[gfx::FRONT_FACE] = SContextParam(GL_FRONT_FACE);
+    g_params[gfx::GENERATE_MIPMAP_HINT] = SContextParam(GL_GENERATE_MIPMAP_HINT);
+    g_params[gfx::IMPLEMENTATION_COLOR_READ_FORMAT] = SContextParam(GL_IMPLEMENTATION_COLOR_READ_FORMAT);
+    g_params[gfx::IMPLEMENTATION_COLOR_READ_TYPE] = SContextParam(GL_IMPLEMENTATION_COLOR_READ_TYPE);
+    g_params[gfx::LINE_WIDTH] = SContextParam(GL_LINE_WIDTH);
+    g_params[gfx::MAX_COMBINED_TEXTURE_IMAGE_UNITS] = SContextParam(GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS);
+    g_params[gfx::MAX_CUBE_MAP_TEXTURE_SIZE] = SContextParam(GL_MAX_CUBE_MAP_TEXTURE_SIZE);
+    g_params[gfx::MAX_FRAGMENT_UNIFORM_VECTORS] = SContextParam(GL_MAX_FRAGMENT_UNIFORM_VECTORS);
+    g_params[gfx::MAX_RENDERBUFFER_SIZE] = SContextParam(GL_MAX_RENDERBUFFER_SIZE);
+    g_params[gfx::MAX_TEXTURE_IMAGE_UNITS] = SContextParam(GL_MAX_TEXTURE_IMAGE_UNITS);
+    g_params[gfx::MAX_TEXTURE_SIZE] = SContextParam(GL_MAX_TEXTURE_SIZE);
+    g_params[gfx::MAX_VARYING_VECTORS] = SContextParam(GL_MAX_VARYING_VECTORS);
+    g_params[gfx::MAX_VERTEX_ATTRIBS] = SContextParam(GL_MAX_VERTEX_ATTRIBS);
+    g_params[gfx::MAX_VERTEX_TEXTURE_IMAGE_UNITS] = SContextParam(GL_MAX_VERTEX_TEXTURE_IMAGE_UNITS);
+    g_params[gfx::MAX_VERTEX_UNIFORM_VECTORS] = SContextParam(GL_MAX_VERTEX_UNIFORM_VECTORS);
+    g_params[gfx::NUM_COMPRESSED_TEXTURE_FORMATS] = SContextParam(GL_NUM_COMPRESSED_TEXTURE_FORMATS);
+    g_params[gfx::NUM_SHADER_BINARY_FORMATS] = SContextParam(GL_NUM_SHADER_BINARY_FORMATS);
+    g_params[gfx::PACK_ALIGNMENT] = SContextParam(GL_PACK_ALIGNMENT);
+    g_params[gfx::POLYGON_OFFSET_FACTOR] = SContextParam(GL_POLYGON_OFFSET_FACTOR);
+    g_params[gfx::POLYGON_OFFSET_FILL] = SContextParam(GL_POLYGON_OFFSET_FILL);
+    g_params[gfx::POLYGON_OFFSET_UNITS] = SContextParam(GL_POLYGON_OFFSET_UNITS);
+    g_params[gfx::RENDERBUFFER_BINDING] = SContextParam(GL_RENDERBUFFER_BINDING);
+    g_params[gfx::SAMPLE_ALPHA_TO_COVERAGE] = SContextParam(GL_SAMPLE_ALPHA_TO_COVERAGE);
+    g_params[gfx::SAMPLE_COVERAGE] = SContextParam(GL_SAMPLE_COVERAGE);
+    g_params[gfx::SAMPLE_BUFFERS] = SContextParam(GL_SAMPLE_BUFFERS);
+    g_params[gfx::SAMPLE_COVERAGE_INVERT] = SContextParam(GL_SAMPLE_COVERAGE_INVERT);
+    g_params[gfx::SAMPLE_COVERAGE_VALUE] = SContextParam(GL_SAMPLE_COVERAGE_VALUE);
+    g_params[gfx::SAMPLES] = SContextParam(GL_SAMPLES);
+    g_params[gfx::MAX_VIEWPORT_DIMS] = SContextParam(GL_MAX_VIEWPORT_DIMS);
+    g_params[gfx::SCISSOR_BOX] = SContextParam(GL_SCISSOR_BOX);
+    g_params[gfx::SCISSOR_TEST] = SContextParam(GL_SCISSOR_TEST);
 #if defined(FG_USING_OPENGL_ES) || defined(FG_USING_MARMALADE_OPENGL_ES)
-    m_params[gfx::SHADER_BINARY_FORMATS] = SContextParam(GL_SHADER_BINARY_FORMATS);
+    g_params[gfx::SHADER_BINARY_FORMATS] = SContextParam(GL_SHADER_BINARY_FORMATS);
 #endif
-    m_params[gfx::SHADER_COMPILER] = SContextParam(GL_SHADER_COMPILER);
-    m_params[gfx::STENCIL_BACK_FUNC] = SContextParam(GL_STENCIL_BACK_FUNC);
-    m_params[gfx::STENCIL_BACK_REF] = SContextParam(GL_STENCIL_BACK_REF);
-    m_params[gfx::STENCIL_BACK_VALUE_MASK] = SContextParam(GL_STENCIL_BACK_VALUE_MASK);
-    m_params[gfx::STENCIL_BACK_FAIL] = SContextParam(GL_STENCIL_BACK_FAIL);
-    m_params[gfx::STENCIL_BACK_PASS_DEPTH_FAIL] = SContextParam(GL_STENCIL_BACK_PASS_DEPTH_FAIL);
-    m_params[gfx::STENCIL_BACK_PASS_DEPTH_PASS] = SContextParam(GL_STENCIL_BACK_PASS_DEPTH_PASS);
-    m_params[gfx::STENCIL_BACK_WRITEMASK] = SContextParam(GL_STENCIL_BACK_WRITEMASK);
-    m_params[gfx::STENCIL_FUNC] = SContextParam(GL_STENCIL_FUNC);
-    m_params[gfx::STENCIL_REF] = SContextParam(GL_STENCIL_REF);
-    m_params[gfx::STENCIL_VALUE_MASK] = SContextParam(GL_STENCIL_VALUE_MASK);
-    m_params[gfx::STENCIL_FAIL] = SContextParam(GL_STENCIL_FAIL);
-    m_params[gfx::STENCIL_PASS_DEPTH_FAIL] = SContextParam(GL_STENCIL_PASS_DEPTH_FAIL);
-    m_params[gfx::STENCIL_PASS_DEPTH_PASS] = SContextParam(GL_STENCIL_PASS_DEPTH_PASS);
-    m_params[gfx::STENCIL_WRITEMASK] = SContextParam(GL_STENCIL_WRITEMASK);
-    m_params[gfx::STENCIL_TEST] = SContextParam(GL_STENCIL_TEST);
-    m_params[gfx::STENCIL_BITS] = SContextParam(GL_STENCIL_BITS);
-    m_params[gfx::STENCIL_CLEAR_VALUE] = SContextParam(GL_STENCIL_CLEAR_VALUE);
-    m_params[gfx::SUBPIXEL_BITS] = SContextParam(GL_SUBPIXEL_BITS);
-    m_params[gfx::TEXTURE_BINDING_2D] = SContextParam(GL_TEXTURE_BINDING_2D);
-    m_params[gfx::TEXTURE_BINDING_CUBE_MAP] = SContextParam(GL_TEXTURE_BINDING_CUBE_MAP);
-    m_params[gfx::UNPACK_ALIGNMENT] = SContextParam(GL_UNPACK_ALIGNMENT);
-    m_params[gfx::VIEWPORT] = SContextParam(GL_VIEWPORT);
+    g_params[gfx::SHADER_COMPILER] = SContextParam(GL_SHADER_COMPILER);
+    g_params[gfx::STENCIL_BACK_FUNC] = SContextParam(GL_STENCIL_BACK_FUNC);
+    g_params[gfx::STENCIL_BACK_REF] = SContextParam(GL_STENCIL_BACK_REF);
+    g_params[gfx::STENCIL_BACK_VALUE_MASK] = SContextParam(GL_STENCIL_BACK_VALUE_MASK);
+    g_params[gfx::STENCIL_BACK_FAIL] = SContextParam(GL_STENCIL_BACK_FAIL);
+    g_params[gfx::STENCIL_BACK_PASS_DEPTH_FAIL] = SContextParam(GL_STENCIL_BACK_PASS_DEPTH_FAIL);
+    g_params[gfx::STENCIL_BACK_PASS_DEPTH_PASS] = SContextParam(GL_STENCIL_BACK_PASS_DEPTH_PASS);
+    g_params[gfx::STENCIL_BACK_WRITEMASK] = SContextParam(GL_STENCIL_BACK_WRITEMASK);
+    g_params[gfx::STENCIL_FUNC] = SContextParam(GL_STENCIL_FUNC);
+    g_params[gfx::STENCIL_REF] = SContextParam(GL_STENCIL_REF);
+    g_params[gfx::STENCIL_VALUE_MASK] = SContextParam(GL_STENCIL_VALUE_MASK);
+    g_params[gfx::STENCIL_FAIL] = SContextParam(GL_STENCIL_FAIL);
+    g_params[gfx::STENCIL_PASS_DEPTH_FAIL] = SContextParam(GL_STENCIL_PASS_DEPTH_FAIL);
+    g_params[gfx::STENCIL_PASS_DEPTH_PASS] = SContextParam(GL_STENCIL_PASS_DEPTH_PASS);
+    g_params[gfx::STENCIL_WRITEMASK] = SContextParam(GL_STENCIL_WRITEMASK);
+    g_params[gfx::STENCIL_TEST] = SContextParam(GL_STENCIL_TEST);
+    g_params[gfx::STENCIL_BITS] = SContextParam(GL_STENCIL_BITS);
+    g_params[gfx::STENCIL_CLEAR_VALUE] = SContextParam(GL_STENCIL_CLEAR_VALUE);
+    g_params[gfx::SUBPIXEL_BITS] = SContextParam(GL_SUBPIXEL_BITS);
+    g_params[gfx::TEXTURE_BINDING_2D] = SContextParam(GL_TEXTURE_BINDING_2D);
+    g_params[gfx::TEXTURE_BINDING_CUBE_MAP] = SContextParam(GL_TEXTURE_BINDING_CUBE_MAP);
+    g_params[gfx::UNPACK_ALIGNMENT] = SContextParam(GL_UNPACK_ALIGNMENT);
+    g_params[gfx::VIEWPORT] = SContextParam(GL_VIEWPORT);
 
-    FG_LOG_DEBUG("GFX: Currently monitoring %d context parameters", m_params.size());
+    FG_LOG_DEBUG("GFX: Currently monitoring %d context parameters", g_params.size());
 
-    memset(m_attrInfo, 0, sizeof (m_attrInfo));
+    memset(g_attrInfo, 0, sizeof (g_attrInfo));
 
     std::string glVendor = (const char*)glGetString(GL_VENDOR);
     std::string glRenderer = (const char *)glGetString(GL_RENDERER);
@@ -1224,7 +1301,7 @@ m_init(FG_FALSE) {
     //4.50              4.5
 
     vparts.clear();
-    m_SLVersion = FG_GFX_SHADING_LANGUAGE_INVALID;
+    g_SLVersion = FG_GFX_SHADING_LANGUAGE_INVALID;
     strings::split(glSLVersion, ' ', vparts);
     const char *selectedVersionNum = NULL;
     const char *selectedSLType = "GLSL";
@@ -1234,180 +1311,139 @@ m_init(FG_FALSE) {
             if(g_fgBuildConfig.usingMarmaladeOpenGLES ||
                g_fgBuildConfig.usingMarmalade ||
                g_fgBuildConfig.isPlatformAndroid) {
-                m_SLVersion = FG_GFX_ESSL_100;
+                g_SLVersion = FG_GFX_ESSL_100;
                 selectedSLType = "ESSL";
                 selectedVersionNum = "1.0";
             }
         } else if(strings::startsWith(vparts[i].c_str(), "1.1", FG_FALSE)) {
-            m_SLVersion = FG_GFX_GLSL_110;
+            g_SLVersion = FG_GFX_GLSL_110;
             if(g_fgBuildConfig.usingMarmaladeOpenGLES ||
                g_fgBuildConfig.usingMarmalade ||
                g_fgBuildConfig.isPlatformAndroid) {
-                m_SLVersion = FG_GFX_ESSL_100;
+                g_SLVersion = FG_GFX_ESSL_100;
                 selectedSLType = "ESSL";
                 selectedVersionNum = "1.0";
             }
         } else if(strings::startsWith(vparts[i].c_str(), "1.2", FG_FALSE)) {
-            m_SLVersion = FG_GFX_GLSL_120;
+            g_SLVersion = FG_GFX_GLSL_120;
             selectedVersionNum = "1.2";
         } else if(strings::startsWith(vparts[i].c_str(), "1.3", FG_FALSE)) {
-            m_SLVersion = FG_GFX_GLSL_130;
+            g_SLVersion = FG_GFX_GLSL_130;
             selectedVersionNum = "1.3";
         } else if(strings::startsWith(vparts[i].c_str(), "1.4", FG_FALSE)) {
-            m_SLVersion = FG_GFX_GLSL_140;
+            g_SLVersion = FG_GFX_GLSL_140;
             selectedVersionNum = "1.4";
         } else if(strings::startsWith(vparts[i].c_str(), "1.5", FG_FALSE)) {
-            m_SLVersion = FG_GFX_GLSL_150;
+            g_SLVersion = FG_GFX_GLSL_150;
             selectedVersionNum = "1.5";
         } else if(strings::startsWith(vparts[i].c_str(), "3.0", FG_FALSE)) {
             if(g_fgBuildConfig.usingMarmaladeOpenGLES ||
                g_fgBuildConfig.usingMarmalade ||
                g_fgBuildConfig.isPlatformAndroid ||
                g_fgBuildConfig.usingOpenGLES) {
-                m_SLVersion = FG_GFX_ESSL_300;
+                g_SLVersion = FG_GFX_ESSL_300;
                 selectedSLType = "ESSL";
                 selectedVersionNum = "3.0";
                 // If engine is using version 2.0 of OGLES
                 if(major == 2) {
                     selectedVersionNum = "1.0";
-                    m_SLVersion = FG_GFX_ESSL_100;
+                    g_SLVersion = FG_GFX_ESSL_100;
                 }
             }
         } else if(strings::startsWith(vparts[i].c_str(), "3.3", FG_FALSE)) {
-            m_SLVersion = FG_GFX_GLSL_330;
+            g_SLVersion = FG_GFX_GLSL_330;
             selectedVersionNum = "3.3";
         } else if(strings::startsWith(vparts[i].c_str(), "4.0", FG_FALSE)) {
-            m_SLVersion = FG_GFX_GLSL_400;
+            g_SLVersion = FG_GFX_GLSL_400;
             selectedVersionNum = "4.0";
         } else if(strings::startsWith(vparts[i].c_str(), "4.1", FG_FALSE)) {
-            m_SLVersion = FG_GFX_GLSL_410;
+            g_SLVersion = FG_GFX_GLSL_410;
             selectedVersionNum = "4.1";
         } else if(strings::startsWith(vparts[i].c_str(), "4.2", FG_FALSE)) {
-            m_SLVersion = FG_GFX_GLSL_420;
+            g_SLVersion = FG_GFX_GLSL_420;
             selectedVersionNum = "4.2";
         } else if(strings::startsWith(vparts[i].c_str(), "4.3", FG_FALSE)) {
-            m_SLVersion = FG_GFX_GLSL_430;
+            g_SLVersion = FG_GFX_GLSL_430;
             selectedVersionNum = "4.3"; // #FIXME
         } else if(strings::startsWith(vparts[i].c_str(), "4.4", FG_FALSE)) {
-            m_SLVersion = FG_GFX_GLSL_440;
+            g_SLVersion = FG_GFX_GLSL_440;
             selectedVersionNum = "4.4";
         } else if(strings::startsWith(vparts[i].c_str(), "4.5", FG_FALSE)) {
-            m_SLVersion = FG_GFX_GLSL_450;
+            g_SLVersion = FG_GFX_GLSL_450;
             selectedVersionNum = "4.5";
         }
-        if(m_SLVersion != FG_GFX_SHADING_LANGUAGE_INVALID)
+        if(g_SLVersion != FG_GFX_SHADING_LANGUAGE_INVALID)
             break;
     }
     if(selectedVersionNum) {
         FG_LOG_DEBUG("GFX: Selected shading language version: %s %s", selectedSLType, selectedVersionNum);
     }
-    m_init = FG_TRUE;
-}
 
-/*
- *
- */
-gfx::CContext::~CContext() {
-#if defined(FG_USING_SDL2)
-    if(m_GLContext)
-        SDL_GL_DeleteContext(m_GLContext);
-    m_GLContext = NULL;
-#elif defined(FG_USING_EGL)
-    if(m_GLContext) {
-        eglDestroyContext(CPlatform::getDefaultDisplay(), m_GLContext);
-        m_GLContext = NULL;
-    }
-#endif
-    m_params.clear();
-    m_init = FG_FALSE;
-}
-
-/*
- *
- */
-void gfx::CContext::initialize(void) {
-    ParameterVecItor end = m_params.end(), itor = m_params.begin();
+    ParameterVecItor end = g_params.end(), itor = g_params.begin();
     for(; itor != end; itor++) {
         SContextParam &param = *itor;
         param.load();
         //printf("Parameter GFX: %d = %d\n", (int)itor->first, (int)param.boolVal);
     }
+
+    g_contextInit = FG_TRUE;
+    return FG_TRUE;
 }
 
-/*
- *
- */
-gfx::SContextParam& gfx::CContext::getParam(const ParamType pname) {
-    return m_params[(unsigned int)pname];
+void gfx::context::destroy(void) {
+#if defined(FG_USING_SDL2)
+    if(g_GLContext)
+        SDL_GL_DeleteContext(g_GLContext);
+    g_GLContext = NULL;
+#elif defined(FG_USING_EGL)
+    if(g_GLContext) {
+        eglDestroyContext(CPlatform::getDefaultDisplay(), g_GLContext);
+        g_GLContext = NULL;
+    }
+#endif
+    g_params.clear();
+    g_contextInit = FG_FALSE;
 }
 
-/*
- *
- */
-void gfx::CContext::enable(const ParamType cap) {
-    m_params[(unsigned int)cap].set((fgGFXboolean)FG_GFX_TRUE);
+gfx::SContextParam& gfx::context::getParam(const ParamType pname) {
+    return g_params[(unsigned int)pname];
 }
 
-/*
- *
- */
-void gfx::CContext::disable(const ParamType cap) {
-    m_params[(unsigned int)cap].set((fgGFXboolean)FG_GFX_FALSE);
+void gfx::context::enable(const ParamType cap) {
+    g_params[(unsigned int)cap].set((fgGFXboolean)FG_GFX_TRUE);
 }
 
-/**
- * 
- * @param cap
- * @param toggle
- */
-void gfx::CContext::setCapability(const ParamType cap, const fgBool toggle) {
-    m_params[(unsigned int)cap].set((fgGFXboolean)toggle);
+void gfx::context::disable(const ParamType cap) {
+    g_params[(unsigned int)cap].set((fgGFXboolean)FG_GFX_FALSE);
 }
 
-/*
- *
- */
-fgGFXboolean gfx::CContext::isEnabled(const ParamType pname) {
-    return m_params[(unsigned int)pname].boolVal;
+void gfx::context::setCapability(const ParamType cap, const fgBool toggle) {
+    g_params[(unsigned int)cap].set((fgGFXboolean)toggle);
 }
 
-/*
- *
- */
-fgGFXboolean gfx::CContext::isDisabled(const ParamType pname) {
-    return (fgGFXboolean)(FG_GFX_FALSE == m_params[(unsigned int)pname].boolVal);
+fgGFXboolean gfx::context::isEnabled(const ParamType pname) {
+    return g_params[(unsigned int)pname].boolVal;
 }
 
-/**
- * 
- * @param buffer
- * @return 
- */
-fgGFXboolean gfx::CContext::isBuffer(const fgGFXuint buffer) {
+fgGFXboolean gfx::context::isDisabled(const ParamType pname) {
+    return (fgGFXboolean)(FG_GFX_FALSE == g_params[(unsigned int)pname].boolVal);
+}
+
+fgGFXboolean gfx::context::isBuffer(const fgGFXuint buffer) {
     if(buffer == 0)
         return FG_GFX_FALSE;
-    if(m_buffers.empty())
+    if(g_buffers.empty())
         return FG_GFX_FALSE;
-    if(m_buffers.find(buffer) == m_buffers.end())
+    if(g_buffers.find(buffer) == g_buffers.end())
         return FG_GFX_FALSE;
     return FG_GFX_TRUE;
 }
 
-/**
- * 
- * @param bufferID
- * @return 
- */
-fgGFXboolean gfx::CContext::isBuffer(const fgGfxBufferID& bufferID) {
+fgGFXboolean gfx::context::isBuffer(const SBufferID& bufferID) {
     return isBuffer(bufferID.id);
 }
 
-/**
- * 
- * @param bufferID
- * @return 
- */
-fgGFXboolean gfx::CContext::isBuffer(const fgGfxBufferID* bufferID) {
+fgGFXboolean gfx::context::isBuffer(const SBufferID* bufferID) {
     if(!bufferID)
         return FG_GFX_FALSE;
     return isBuffer(bufferID->id);
@@ -1420,74 +1456,56 @@ fgGFXboolean gfx::CContext::isBuffer(const fgGfxBufferID* bufferID) {
 //	for(;itor!=end;itor++) 
 //
 
-/**
- * 
- */
-void gfx::CContext::deleteAllBuffers(void) {
-    if(m_buffers.empty())
+void gfx::context::deleteAllBuffers(void) {
+    if(g_buffers.empty())
         return;
-    BufferMapItor itor = m_buffers.begin(), end = m_buffers.end();
+    BufferMapItor itor = g_buffers.begin(), end = g_buffers.end();
     for(; itor != end; itor++) {
-        fgGfxBufferID *buffer = itor->second;
+        SBufferID *buffer = itor->second;
         if(!buffer)
             continue;
         glDeleteBuffers(1, buffer->ptrID());
         fgGLError("glDeleteBuffers");
         buffer->id = 0;
     }
-    m_buffers.clear();
+    g_buffers.clear();
 }
 
-/**
- * 
- * @param count
- * @param buffers
- * @param usage
- * @return 
- */
-fgGFXboolean gfx::CContext::genBuffers(const int count,
-                                       fgGfxBufferID*& buffers,
-                                       const fgGFXenum usage) {
+fgGFXboolean gfx::context::genBuffers(const int count,
+                                      SBufferID*& buffers,
+                                      const fgGFXenum usage) {
     if(count <= 0)
         return FG_GFX_FALSE;
     if(!buffers) {
-        buffers = fgMalloc<fgGfxBufferID>(count);
+        buffers = fgMalloc<SBufferID>(count);
     }
     for(int i = 0; i < count; i++) {
-        fgGfxBufferID &buffer = buffers[i];
+        SBufferID &buffer = buffers[i];
         buffer.usage = usage;
         buffer.target = (fgGFXenum)0;
         if(!isBuffer(buffer))
             glGenBuffers(1, buffer.ptrID());
         if(buffer.id)
-            m_buffers[buffer.id] = &buffers[i];
+            g_buffers[buffer.id] = &buffers[i];
     }
     return FG_GFX_TRUE;
 }
 
-/**
- * 
- * @param bufferID
- * @param size
- * @param data
- * @param target
- * @param usage
- */
-void gfx::CContext::bufferData(fgGfxBufferID& bufferID,
-                               const fgGFXsizei size,
-                               const fgGFXvoid* data,
-                               const fgGFXenum target,
-                               const fgGFXenum usage) {
+void gfx::context::bufferData(SBufferID& bufferID,
+                              const fgGFXsizei size,
+                              const fgGFXvoid* data,
+                              const fgGFXenum target,
+                              const fgGFXenum usage) {
     if(!data)
         return;
     if((fgGFXenum)0 == target || (fgGFXenum)0 == bufferID.target) {
         bufferID.target = GL_ARRAY_BUFFER;
     }
-    if(m_params[gfx::ARRAY_BUFFER_BINDING] != bufferID.id && bufferID.target == GL_ARRAY_BUFFER) {
+    if(g_params[gfx::ARRAY_BUFFER_BINDING] != bufferID.id && bufferID.target == GL_ARRAY_BUFFER) {
         FG_LOG_ERROR("GFX: Invalid buffer bound, can't set buffer data");
         return;
     }
-    if(m_params[gfx::ELEMENT_ARRAY_BUFFER_BINDING] != bufferID.id && bufferID.target == GL_ELEMENT_ARRAY_BUFFER) {
+    if(g_params[gfx::ELEMENT_ARRAY_BUFFER_BINDING] != bufferID.id && bufferID.target == GL_ELEMENT_ARRAY_BUFFER) {
         FG_LOG_ERROR("GFX: Invalid buffer bound, can't set buffer data");
 
         return;
@@ -1500,12 +1518,7 @@ void gfx::CContext::bufferData(fgGfxBufferID& bufferID,
     fgGLError("glBufferData");
 }
 
-/**
- * 
- * @param bufferID
- * @param target
- */
-void gfx::CContext::bindBuffer(fgGfxBufferID& bufferID, const fgGFXenum target) {
+void gfx::context::bindBuffer(SBufferID& bufferID, const fgGFXenum target) {
     if(bufferID.id == 0)
         return;
     if(target != (fgGFXenum)0)
@@ -1515,117 +1528,73 @@ void gfx::CContext::bindBuffer(fgGfxBufferID& bufferID, const fgGFXenum target) 
     bindBuffer(bufferID.target, bufferID.id);
 }
 
-/**
- * 
- * @param target
- * @param buffer
- */
-void gfx::CContext::bindBuffer(const fgGFXenum target, const fgGFXuint buffer) {
+void gfx::context::bindBuffer(const fgGFXenum target, const fgGFXuint buffer) {
     if(target == GL_ARRAY_BUFFER || target == GL_ARRAY_BUFFER_BINDING) {
-        m_params[gfx::ARRAY_BUFFER_BINDING].set((fgGFXint)buffer);
+        g_params[gfx::ARRAY_BUFFER_BINDING].set((fgGFXint)buffer);
     } else if(target == GL_ELEMENT_ARRAY_BUFFER || target == GL_ELEMENT_ARRAY_BUFFER_BINDING) {
-        m_params[gfx::ELEMENT_ARRAY_BUFFER_BINDING].set((fgGFXint)buffer);
+        g_params[gfx::ELEMENT_ARRAY_BUFFER_BINDING].set((fgGFXint)buffer);
     }
 }
 
-/**
- * 
- * @param target
- * @return 
- */
-fgGFXuint gfx::CContext::boundBuffer(const fgGFXenum target) {
+fgGFXuint gfx::context::boundBuffer(const fgGFXenum target) {
     if(target == GL_ARRAY_BUFFER || target == GL_ARRAY_BUFFER_BINDING) {
-        return m_params[gfx::ARRAY_BUFFER_BINDING];
+        return g_params[gfx::ARRAY_BUFFER_BINDING];
     } else if(target == GL_ELEMENT_ARRAY_BUFFER || target == GL_ELEMENT_ARRAY_BUFFER_BINDING) {
-        return m_params[gfx::ELEMENT_ARRAY_BUFFER_BINDING];
+        return g_params[gfx::ELEMENT_ARRAY_BUFFER_BINDING];
     }
     return 0;
 }
 
-/**
- * 
- * @param bufferID
- */
-void gfx::CContext::deleteBuffer(fgGfxBufferID& bufferID) {
+void gfx::context::deleteBuffer(SBufferID& bufferID) {
     if(bufferID.id == 0)
         return;
-    if(m_buffers.empty())
+    if(g_buffers.empty())
         return;
-    BufferMapItor itor = m_buffers.find(bufferID.id);
-    if(itor == m_buffers.end())
+    BufferMapItor itor = g_buffers.find(bufferID.id);
+    if(itor == g_buffers.end())
         return;
     glDeleteBuffers(1, bufferID.ptrID());
     itor->second->id = 0;
-    m_buffers.erase(itor);
+    g_buffers.erase(itor);
 }
 
-/**
- * 
- * @param count
- * @param buffers
- */
-void gfx::CContext::deleteBuffers(const int count, fgGfxBufferID* buffers) {
+void gfx::context::deleteBuffers(const int count, SBufferID* buffers) {
     if(count <= 0 || !buffers)
         return;
     for(int i = 0; i < count; i++)
         deleteBuffer(buffers[i]);
 }
 
-/**
- * 
- * @return 
- */
-fgGFXuint gfx::CContext::boundTexture(void) const {
-    return m_boundTexture;
+fgGFXuint gfx::context::boundTexture(void) {
+    return g_boundTexture;
 }
 
-/**
- * 
- * @return 
- */
-fgGFXuint gfx::CContext::activeTexture(void) {
-    return m_params[gfx::ACTIVE_TEXTURE];
+fgGFXuint gfx::context::activeTexture(void) {
+    return g_params[gfx::ACTIVE_TEXTURE];
 }
 
-/**
- * 
- * @param texture
- */
-void gfx::CContext::activeTexture(const fgGFXenum texture) {
-    m_params[gfx::ACTIVE_TEXTURE].set((fgGFXint)texture);
+void gfx::context::activeTexture(const fgGFXenum texture) {
+    g_params[gfx::ACTIVE_TEXTURE].set((fgGFXint)texture);
 }
 
-/**
- * 
- * @param texture
- * @return 
- */
-fgGFXboolean gfx::CContext::isTexture(const fgGFXuint texture) {
+fgGFXboolean gfx::context::isTexture(const fgGFXuint texture) {
     if(texture == 0)
         return FG_GFX_FALSE;
-    if(m_textures.empty())
+    if(g_textures.empty())
         return FG_GFX_FALSE;
-    if(m_textures.find(texture) == m_textures.end())
+    if(g_textures.find(texture) == g_textures.end())
         return FG_GFX_FALSE;
     return FG_GFX_TRUE;
 }
 
-/**
- * 
- * @param textureID
- * @return 
- */
-fgGFXboolean gfx::CContext::isTexture(const STextureID& textureID) {
+fgGFXboolean gfx::context::isTexture(const STextureID& textureID) {
     return isTexture(textureID.id);
 }
 
-/**
- * 
- */
-void gfx::CContext::deleteAllTextures(void) {
-    if(m_textures.empty())
+void gfx::context::deleteAllTextures(void) {
+    if(g_textures.empty())
         return;
-    TextureMapItor itor = m_textures.begin(), end = m_textures.end();
+    TextureMapItor itor = g_textures.begin(), end = g_textures.end();
     for(; itor != end; itor++) {
         STextureID *tex = itor->second;
         if(!tex)
@@ -1634,18 +1603,12 @@ void gfx::CContext::deleteAllTextures(void) {
         fgGLError("glDeleteTextures");
         tex->id = 0;
     }
-    m_textures.clear();
+    g_textures.clear();
 }
 
-/**
- * 
- * @param count
- * @param textures
- * @param target
- */
-void gfx::CContext::genTextures(const int count,
-                                STextureID* textures,
-                                const fgGFXenum target/* = GL_TEXTURE_2D*/) {
+void gfx::context::genTextures(const int count,
+                               STextureID* textures,
+                               const fgGFXenum target/* = GL_TEXTURE_2D*/) {
     if(count <= 0 || !textures)
         return;
     if(!textures)
@@ -1655,13 +1618,8 @@ void gfx::CContext::genTextures(const int count,
     }
 }
 
-/**
- * 
- * @param texture
- * @param target
- */
-void gfx::CContext::genTexture(STextureID* texture,
-                               const fgGFXenum target/* = GL_TEXTURE_2D*/) {
+void gfx::context::genTexture(STextureID* texture,
+                              const fgGFXenum target/* = GL_TEXTURE_2D*/) {
     if(!texture)
         return;
     texture->target = target;
@@ -1669,46 +1627,32 @@ void gfx::CContext::genTexture(STextureID* texture,
         texture->target = GL_TEXTURE_2D;
     glGenTextures(1, texture->ptrID());
     if(texture->id)
-        m_textures[texture->id] = texture;
+        g_textures[texture->id] = texture;
 }
 
-/**
- * 
- * @param count
- * @param textures
- */
-void gfx::CContext::deleteTextures(const int count, STextureID* textures) {
+void gfx::context::deleteTextures(const int count, STextureID* textures) {
     if(count <= 0 || !textures)
         return;
     for(int i = 0; i < count; i++)
         deleteTexture(textures[i]);
 }
 
-/**
- * 
- * @param textureID
- */
-void gfx::CContext::deleteTexture(STextureID& textureID) {
+void gfx::context::deleteTexture(STextureID& textureID) {
     if(textureID.id == 0)
         return;
-    if(m_textures.empty())
+    if(g_textures.empty())
         return;
-    TextureMapItor itor = m_textures.find(textureID.id);
-    if(itor == m_textures.end())
+    TextureMapItor itor = g_textures.find(textureID.id);
+    if(itor == g_textures.end())
         return;
     glDeleteTextures(1, textureID.ptrID());
     textureID.id = 0;
     fgGLError("glDeleteTextures");
     itor->second->id = 0;
-    m_textures.erase(itor);
+    g_textures.erase(itor);
 }
 
-/**
- * 
- * @param textureID
- * @param target
- */
-void gfx::CContext::bindTexture(STextureID& textureID, const fgGFXenum target/*=0*/) {
+void gfx::context::bindTexture(STextureID& textureID, const fgGFXenum target/*=0*/) {
     if(textureID.id == 0)
         return;
     if(target != (fgGFXenum)0)
@@ -1724,47 +1668,30 @@ void gfx::CContext::bindTexture(STextureID& textureID, const fgGFXenum target/*=
     }
 }
 
-/**
- * 
- * @param texID
- */
-void gfx::CContext::bindTexture2D(const fgGFXuint texID) {
-    m_params[gfx::TEXTURE_BINDING_2D].set((fgGFXint)texID);
-    m_boundTexture = texID;
+void gfx::context::bindTexture2D(const fgGFXuint texID) {
+    g_params[gfx::TEXTURE_BINDING_2D].set((fgGFXint)texID);
+    g_boundTexture = texID;
 }
 
-/**
- * 
- * @param texID
- */
-void gfx::CContext::bindTextureCube(const fgGFXuint texID) {
-    m_params[gfx::TEXTURE_BINDING_CUBE_MAP].set((fgGFXint)texID);
-    m_boundTexture = texID;
+void gfx::context::bindTextureCube(const fgGFXuint texID) {
+    g_params[gfx::TEXTURE_BINDING_CUBE_MAP].set((fgGFXint)texID);
+    g_boundTexture = texID;
 }
 
-/**
- * 
- * @param mode
- */
-void gfx::CContext::blendEquation(const fgGFXenum mode) {
-    SContextParam& modeRGB = m_params[gfx::BLEND_EQUATION_RGB];
-    SContextParam& modeAlpha = m_params[gfx::BLEND_EQUATION_ALPHA];
+void gfx::context::blendEquation(const fgGFXenum mode) {
+    SContextParam& modeRGB = g_params[gfx::BLEND_EQUATION_RGB];
+    SContextParam& modeAlpha = g_params[gfx::BLEND_EQUATION_ALPHA];
     if(modeRGB.intVal != (fgGFXint)mode || modeAlpha.intVal != (fgGFXint)mode) {
         modeAlpha = modeRGB = mode;
         glBlendEquationSeparate(mode, mode);
     }
 }
 
-/**
- * 
- * @param sfactor
- * @param dfactor
- */
-void gfx::CContext::blendFunc(const fgGFXenum sfactor, const fgGFXenum dfactor) {
-    SContextParam& srcRGB = m_params[gfx::BLEND_SRC_RGB];
-    SContextParam& dstRGB = m_params[gfx::BLEND_DST_RGB];
-    SContextParam& srcAlpha = m_params[gfx::BLEND_SRC_ALPHA];
-    SContextParam& dstAlpha = m_params[gfx::BLEND_DST_ALPHA];
+void gfx::context::blendFunc(const fgGFXenum sfactor, const fgGFXenum dfactor) {
+    SContextParam& srcRGB = g_params[gfx::BLEND_SRC_RGB];
+    SContextParam& dstRGB = g_params[gfx::BLEND_DST_RGB];
+    SContextParam& srcAlpha = g_params[gfx::BLEND_SRC_ALPHA];
+    SContextParam& dstAlpha = g_params[gfx::BLEND_DST_ALPHA];
 
     if(srcRGB.intVal != (fgGFXint)sfactor ||
        srcAlpha.intVal != (fgGFXint)sfactor ||
@@ -1782,21 +1709,14 @@ void gfx::CContext::blendFunc(const fgGFXenum sfactor, const fgGFXenum dfactor) 
     }
 }
 
-/**
- * 
- * @param srcRGB
- * @param dstRGB
- * @param srcAlpha
- * @param dstAlpha
- */
-void gfx::CContext::blendFunc(const fgGFXenum srcRGB,
-                              const fgGFXenum dstRGB,
-                              const fgGFXenum srcAlpha,
-                              const fgGFXenum dstAlpha) {
-    SContextParam& srcRGBparam = m_params[gfx::BLEND_SRC_RGB];
-    SContextParam& dstRGBparam = m_params[gfx::BLEND_DST_RGB];
-    SContextParam& srcAlphaparam = m_params[gfx::BLEND_SRC_ALPHA];
-    SContextParam& dstAlphaparam = m_params[gfx::BLEND_DST_ALPHA];
+void gfx::context::blendFunc(const fgGFXenum srcRGB,
+                             const fgGFXenum dstRGB,
+                             const fgGFXenum srcAlpha,
+                             const fgGFXenum dstAlpha) {
+    SContextParam& srcRGBparam = g_params[gfx::BLEND_SRC_RGB];
+    SContextParam& dstRGBparam = g_params[gfx::BLEND_DST_RGB];
+    SContextParam& srcAlphaparam = g_params[gfx::BLEND_SRC_ALPHA];
+    SContextParam& dstAlphaparam = g_params[gfx::BLEND_DST_ALPHA];
 
     if(srcRGBparam.intVal != (fgGFXint)srcRGB ||
        srcAlphaparam.intVal != (fgGFXint)srcAlpha ||
@@ -1814,191 +1734,137 @@ void gfx::CContext::blendFunc(const fgGFXenum srcRGB,
     }
 }
 
-/**
- * 
- * @param program
- */
-void gfx::CContext::useProgram(const fgGFXuint program) {
-    if(m_params[gfx::CURRENT_PROGRAM].intVal != (fgGFXint)program) {
-        m_params[gfx::CURRENT_PROGRAM].set((fgGFXint)program);
+void gfx::context::useProgram(const fgGFXuint program) {
+    if(g_params[gfx::CURRENT_PROGRAM].intVal != (fgGFXint)program) {
+        g_params[gfx::CURRENT_PROGRAM].set((fgGFXint)program);
     }
 }
 
-/**
- * 
- * @return 
- */
-fgGFXuint gfx::CContext::activeProgram(void) {
-    return m_params[gfx::CURRENT_PROGRAM];
+fgGFXuint gfx::context::activeProgram(void) {
+    return g_params[gfx::CURRENT_PROGRAM];
 }
 
-/**
- * 
- * @param x
- * @param y
- * @param width
- * @param height
- */
-void gfx::CContext::viewport(const fgGFXint x, const fgGFXint y, const fgGFXint width, const fgGFXint height) {
+void gfx::context::viewport(const fgGFXint x,
+                            const fgGFXint y,
+                            const fgGFXint width,
+                            const fgGFXint height) {
     fgGFXuint areaQ = x * y + width*height;
-    if(areaQ != m_viewportAreaQ) {
-        m_viewportAreaQ = areaQ;
-        m_params[gfx::VIEWPORT].set(x, y, width, height);
+    if(areaQ != g_viewportAreaQ) {
+        g_viewportAreaQ = areaQ;
+        g_params[gfx::VIEWPORT].set(x, y, width, height);
     }
 }
 
-/**
- * 
- * @param pos
- * @param size
- */
-void gfx::CContext::viewport(const Vector2i& pos, const Vector2i& size) {
+void gfx::context::viewport(const Vector2i& pos,
+                            const Vector2i& size) {
     viewport(pos.x, pos.y, size.x, size.y);
 }
 
-/**
- * 
- * @param dimensions
- */
-void gfx::CContext::viewport(const Vector4i& dimensions) {
+void gfx::context::viewport(const Vector4i& dimensions) {
     viewport(dimensions.x, dimensions.y, dimensions.z, dimensions.w);
 }
 
-/**
- * 
- * @param x
- * @param y
- * @param width
- * @param height
- */
-void gfx::CContext::scissor(const fgGFXint x, const fgGFXint y, const fgGFXint width, const fgGFXint height) {
+fgGFXfloat gfx::context::getViewportAspect(void) {
+    fgGFXfloat y = (fgGFXfloat)g_params[(fgGFXuint)GL_VIEWPORT].ints[1];
+    if(y <= FG_EPSILON)
+        return 1.0f;
+    return (fgGFXfloat)g_params[(fgGFXuint)GL_VIEWPORT].ints[0] / y;
+}
+
+void gfx::context::scissor(void) {
+    scissor(0, 0, g_screenSize.x, g_screenSize.y);
+}
+
+void gfx::context::scissor(const fgGFXint x,
+                           const fgGFXint y,
+                           const fgGFXint width,
+                           const fgGFXint height) {
     fgGFXuint areaQ = x * y + width*height;
-    if(areaQ != m_scissorAreaQ) {
-        m_scissorAreaQ = areaQ;
-        m_params[gfx::SCISSOR_BOX].set(x, y, width, height);
+    if(areaQ != g_scissorAreaQ) {
+        g_scissorAreaQ = areaQ;
+        g_params[gfx::SCISSOR_BOX].set(x, y, width, height);
     }
 }
 
-/**
- * 
- * @param pos
- * @param size
- */
-void gfx::CContext::scissor(const Vector2i& pos, const Vector2i& size) {
+void gfx::context::scissor(const Vector2i& pos,
+                           const Vector2i& size) {
     scissor(pos.x, pos.y, size.x, size.y);
 }
 
-/**
- * 
- * @param dimensions
- */
-void gfx::CContext::scissor(const Vector4i& dimensions) {
+void gfx::context::scissor(const Vector4i& dimensions) {
     scissor(dimensions.x, dimensions.y, dimensions.z, dimensions.w);
 }
 
-/**
- * 
- * @param toggle
- */
-void gfx::CContext::setScissorTest(const fgBool toggle) {
-    m_params[gfx::SCISSOR_TEST].set((fgGFXboolean)toggle);
+fgGFXfloat gfx::context::getScissorAspect(void) {
+    fgGFXfloat y = (fgGFXfloat)g_params[(fgGFXuint)GL_SCISSOR_BOX].ints[1];
+    if(y <= FG_EPSILON)
+        return 1.0f;
+    return (fgGFXfloat)g_params[(fgGFXuint)GL_SCISSOR_BOX].ints[0] / y;
 }
 
-/**
- * 
- * @param toggle
- */
-void gfx::CContext::setDepthTest(const fgBool toggle) {
-    m_params[gfx::DEPTH_TEST].set((fgGFXboolean)toggle);
+void gfx::context::setScissorTest(const fgBool toggle) {
+    g_params[gfx::SCISSOR_TEST].set((fgGFXboolean)toggle);
 }
 
-/**
- * 
- * @param toggle
- */
-void gfx::CContext::setCullFace(const fgBool toggle) {
+void gfx::context::setDepthTest(const fgBool toggle) {
+    g_params[gfx::DEPTH_TEST].set((fgGFXboolean)toggle);
+}
+
+void gfx::context::setCullFace(const fgBool toggle) {
     //gfxParamMapItor itor = m_params.find(gfx::CULL_FACE);
-    m_params[gfx::CULL_FACE].set((fgGFXboolean)toggle);
+    g_params[gfx::CULL_FACE].set((fgGFXboolean)toggle);
 }
 
-/**
- * 
- * @param toggle
- */
-void gfx::CContext::setBlend(const fgBool toggle) {
-    m_params[gfx::BLEND].set((fgGFXboolean)toggle);
+void gfx::context::setBlend(const fgBool toggle) {
+    g_params[gfx::BLEND].set((fgGFXboolean)toggle);
 }
 
-/*
- *
- */
-void gfx::CContext::frontFace(const fgGFXenum mode) {
-    m_params[gfx::FRONT_FACE].set((fgGFXint)mode);
+void gfx::context::frontFace(const fgGFXenum mode) {
+    g_params[gfx::FRONT_FACE].set((fgGFXint)mode);
 }
 
-/*
- *
- */
-void gfx::CContext::cullFace(const fgGFXenum mode) {
-    m_params[gfx::CULL_FACE_MODE].set((fgGFXint)mode);
+void gfx::context::cullFace(const fgGFXenum mode) {
+    g_params[gfx::CULL_FACE_MODE].set((fgGFXint)mode);
 }
 
-/*
- *
- */
-void gfx::CContext::depthFunc(const fgGFXenum func) {
-    m_params[gfx::DEPTH_FUNC].set((fgGFXint)func);
+void gfx::context::depthFunc(const fgGFXenum func) {
+    g_params[gfx::DEPTH_FUNC].set((fgGFXint)func);
 }
 
-/*
- *
- */
-void gfx::CContext::clearDepth(const fgGFXfloat depth) {
-    m_params[gfx::DEPTH_CLEAR_VALUE].set(depth);
+void gfx::context::clearDepth(const fgGFXfloat depth) {
+    g_params[gfx::DEPTH_CLEAR_VALUE].set(depth);
 }
 
-/*
- *
- */
-void gfx::CContext::clearColor(const fgGFXfloat red, const fgGFXfloat green, const fgGFXfloat blue, const fgGFXfloat alpha) {
-    m_params[gfx::COLOR_CLEAR_VALUE].set(red, green, blue, alpha);
+void gfx::context::clearColor(const fgGFXfloat red,
+                              const fgGFXfloat green,
+                              const fgGFXfloat blue,
+                              const fgGFXfloat alpha) {
+    g_params[gfx::COLOR_CLEAR_VALUE].set(red, green, blue, alpha);
 }
 
-/*
- *
- */
-void gfx::CContext::clearStencil(const fgGFXint s) {
-    m_params[gfx::STENCIL_CLEAR_VALUE].set(s);
+void gfx::context::clearStencil(const fgGFXint s) {
+    g_params[gfx::STENCIL_CLEAR_VALUE].set(s);
 }
 
-/*
- *
- */
-fgGFXuint gfx::CContext::activeVertexAttribArrayMask(void) const {
-    return m_attribMask;
+fgGFXuint gfx::context::activeVertexAttribArrayMask(void) {
+    return g_attribMask;
 }
 
-/*
- *
- */
-fgBool gfx::CContext::isVertexAttribArrayActive(const fgGFXuint index) const {
-    return m_attrInfo[index].isEnabled;
+fgBool gfx::context::isVertexAttribArrayActive(const fgGFXuint index) {
+    return g_attrInfo[index].isEnabled;
 }
 
-/*
- *
- */
-void gfx::CContext::updateAttribMask(const fgGFXuint index) {
+void gfx::context::updateAttribMask(const fgGFXuint index) {
     if(index == FG_GFX_ATTRIB_POS_LOCATION) {
-        m_attribMask ^= FG_GFX_POSITION_BIT;
+        g_attribMask ^= FG_GFX_POSITION_BIT;
     } else if(index == FG_GFX_ATTRIB_NORM_LOCATION) {
-        m_attribMask ^= FG_GFX_NORMAL_BIT;
+        g_attribMask ^= FG_GFX_NORMAL_BIT;
     } else if(index == FG_GFX_ATTRIB_UVS_LOCATION) {
-        m_attribMask ^= FG_GFX_UVS_BIT;
+        g_attribMask ^= FG_GFX_UVS_BIT;
     } else if(index == FG_GFX_ATTRIB_COLOR_LOCATION) {
-        m_attribMask ^= FG_GFX_COLOR_BIT;
+        g_attribMask ^= FG_GFX_COLOR_BIT;
     } else if(index == FG_GFX_ATTRIB_TANGENT_LOCATION) {
-        m_attribMask ^= FG_GFX_TANGENT_BIT;
+        g_attribMask ^= FG_GFX_TANGENT_BIT;
     }
 }
 
@@ -2006,39 +1872,26 @@ void gfx::CContext::updateAttribMask(const fgGFXuint index) {
  * https://www.khronos.org/opengles/sdk/docs/man/xhtml/glEnableVertexAttribArray.xml
  */
 
-/**
- * 
- * @param index
- * @param updateMask
- */
-void gfx::CContext::enableVertexAttribArray(const fgGFXuint index, const fgBool updateMask) {
-    if(!m_attrInfo[index].isEnabled) {
-        m_attrInfo[index].isEnabled = FG_GFX_TRUE;
+void gfx::context::enableVertexAttribArray(const fgGFXuint index, const fgBool updateMask) {
+    if(!g_attrInfo[index].isEnabled) {
+        g_attrInfo[index].isEnabled = FG_GFX_TRUE;
         glEnableVertexAttribArray(index);
         if(updateMask)
             updateAttribMask(index);
     }
 }
 
-/**
- * 
- * @param index
- * @param updateMask
- */
-void gfx::CContext::disableVertexAttribArray(const fgGFXuint index, const fgBool updateMask) {
-    if(m_attrInfo[index].isEnabled) {
-        m_attrInfo[index].isEnabled = FG_GFX_FALSE;
+void gfx::context::disableVertexAttribArray(const fgGFXuint index, const fgBool updateMask) {
+    if(g_attrInfo[index].isEnabled) {
+        g_attrInfo[index].isEnabled = FG_GFX_FALSE;
         glDisableVertexAttribArray(index);
         if(updateMask)
             updateAttribMask(index);
     }
 }
 
-/*
- *
- */
-void gfx::CContext::enableVertexAttribArrayMask(const fgGFXuint mask) {
-    if(mask == m_attribMask)
+void gfx::context::enableVertexAttribArrayMask(const fgGFXuint mask) {
+    if(mask == g_attribMask)
         return;
     if(mask & FG_GFX_POSITION_BIT)
         enableVertexAttribArray(FG_GFX_ATTRIB_POS_LOCATION, FG_FALSE);
@@ -2050,14 +1903,11 @@ void gfx::CContext::enableVertexAttribArrayMask(const fgGFXuint mask) {
         enableVertexAttribArray(FG_GFX_ATTRIB_COLOR_LOCATION, FG_FALSE);
     if(mask & FG_GFX_TANGENT_BIT)
         enableVertexAttribArray(FG_GFX_ATTRIB_TANGENT_LOCATION, FG_FALSE);
-    m_attribMask = mask;
+    g_attribMask = mask;
 }
 
-/*
- *
- */
-void gfx::CContext::disableVertexAttribArrayMask(const fgGFXuint mask) {
-    if(mask == m_attribMask)
+void gfx::context::disableVertexAttribArrayMask(const fgGFXuint mask) {
+    if(mask == g_attribMask)
         return;
     if(!(mask & FG_GFX_POSITION_BIT))
         disableVertexAttribArray(FG_GFX_ATTRIB_POS_LOCATION, FG_FALSE);
@@ -2069,14 +1919,11 @@ void gfx::CContext::disableVertexAttribArrayMask(const fgGFXuint mask) {
         disableVertexAttribArray(FG_GFX_ATTRIB_COLOR_LOCATION, FG_FALSE);
     if(!(mask & FG_GFX_TANGENT_BIT))
         disableVertexAttribArray(FG_GFX_ATTRIB_TANGENT_LOCATION, FG_FALSE);
-    m_attribMask = mask;
+    g_attribMask = mask;
 }
 
-/*
- *
- */
-void gfx::CContext::diffVertexAttribArrayMask(const fgGFXuint mask) {
-    if(mask == m_attribMask)
+void gfx::context::diffVertexAttribArrayMask(const fgGFXuint mask) {
+    if(mask == g_attribMask)
         return;
     if(mask & FG_GFX_POSITION_BIT)
         enableVertexAttribArray(FG_GFX_ATTRIB_POS_LOCATION, FG_FALSE);
@@ -2102,60 +1949,48 @@ void gfx::CContext::diffVertexAttribArrayMask(const fgGFXuint mask) {
         enableVertexAttribArray(FG_GFX_ATTRIB_TANGENT_LOCATION, FG_FALSE);
     else
         disableVertexAttribArray(FG_GFX_ATTRIB_TANGENT_LOCATION, FG_FALSE);
-    m_attribMask = mask;
+    g_attribMask = mask;
 }
 
 /*
  * https://www.khronos.org/opengles/sdk/docs/man/xhtml/glGetVertexAttrib.xml
  */
-fgGFXuint gfx::CContext::getVertexAttribBufferBinding(const fgGFXuint index) {
-    return m_attrInfo[index].buffer;
+fgGFXuint gfx::context::getVertexAttribBufferBinding(const fgGFXuint index) {
+    return g_attrInfo[index].buffer;
 }
 
-/*
- *
- */
-fgGFXuint gfx::CContext::getVertexAttribSize(const fgGFXuint index) {
-    return m_attrInfo[index].size;
+fgGFXuint gfx::context::getVertexAttribSize(const fgGFXuint index) {
+    return g_attrInfo[index].size;
 }
 
-/*
- *
- */
-fgGFXuint gfx::CContext::getVertexAttribStride(const fgGFXuint index) {
+fgGFXuint gfx::context::getVertexAttribStride(const fgGFXuint index) {
     if(index >= 12)
         return 0;
-    return m_attrInfo[index].stride;
+    return g_attrInfo[index].stride;
 }
 
-/*
- *
- */
-fgGFXenum gfx::CContext::getVertexAttribType(const fgGFXuint index) {
+fgGFXenum gfx::context::getVertexAttribType(const fgGFXuint index) {
     if(index >= 12)
         return (fgGFXenum)0;
-    return m_attrInfo[index].type;
+    return g_attrInfo[index].type;
 }
 
-/*
- *
- */
-fgGFXboolean gfx::CContext::getVertexAttribNormalized(const fgGFXuint index) {
+fgGFXboolean gfx::context::getVertexAttribNormalized(const fgGFXuint index) {
     // #FIXME checks
     if(index >= 12)
         return FG_GFX_FALSE;
-    return m_attrInfo[index].isNormalized;
+    return g_attrInfo[index].isNormalized;
 }
 
 /*
  * https://www.khronos.org/opengles/sdk/docs/man/xhtml/glVertexAttribPointer.xml
  */
-void gfx::CContext::vertexAttribPointer(fgGFXuint index,
-                                        fgGFXint size,
-                                        fgGFXenum type,
-                                        fgGFXboolean normalized,
-                                        fgGFXsizei stride,
-                                        fgGFXvoid* ptr) {
+void gfx::context::vertexAttribPointer(fgGFXuint index,
+                                       fgGFXint size,
+                                       fgGFXenum type,
+                                       fgGFXboolean normalized,
+                                       fgGFXsizei stride,
+                                       fgGFXvoid* ptr) {
     if(index >= 12)
         return;
     // #FIXME
@@ -2164,30 +1999,26 @@ void gfx::CContext::vertexAttribPointer(fgGFXuint index,
     // # mirror
     // # usage of main attrib array in other places
     //
-    SAttributeData &attr = m_attrInfo[index];
+    SAttributeData &attr = g_attrInfo[index];
     attr.index = index;
     attr.size = size;
     attr.dataType = type;
     attr.isNormalized = normalized;
     attr.stride = stride;
     attr.pointer = ptr;
-    attr.buffer = m_params[gfx::ARRAY_BUFFER_BINDING];
+    attr.buffer = g_params[gfx::ARRAY_BUFFER_BINDING];
     glVertexAttribPointer(index, size, type, normalized, stride, ptr);
     fgGLError("glVertexAttribPointer"); // #FIXME
 }
 
-/**
- * 
- * @param attrData
- */
-void gfx::CContext::vertexAttribPointer(SAttributeData& attrData) {
+void gfx::context::vertexAttribPointer(SAttributeData& attrData) {
     fgGFXint index = attrData.index;
     if(index < 0)
         return;
-    fgGFXboolean isEnabled = m_attrInfo[index].isEnabled;
-    m_attrInfo[index] = attrData;
-    m_attrInfo[index].isEnabled = isEnabled;
-    m_attrInfo[index].buffer = m_params[gfx::ARRAY_BUFFER_BINDING];
+    fgGFXboolean isEnabled = g_attrInfo[index].isEnabled;
+    g_attrInfo[index] = attrData;
+    g_attrInfo[index].isEnabled = isEnabled;
+    g_attrInfo[index].buffer = g_params[gfx::ARRAY_BUFFER_BINDING];
 
     glVertexAttribPointer(attrData.index,
                           attrData.size,

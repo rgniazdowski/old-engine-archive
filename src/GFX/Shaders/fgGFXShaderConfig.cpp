@@ -64,7 +64,7 @@ void gfx::CShaderConfig::clearAll(void) {
  * @param SLver
  * @return 
  */
-fgBool gfx::CShaderConfig::load(const char *filePath, fgGfxSLVersion SLver) {
+fgBool gfx::CShaderConfig::load(const char *filePath, ShadingLangVersion SLver) {
     gfx::CShaderConfig::clearAll();
     if(!CConfig::load(filePath)) {
         FG_MessageSubsystem->reportError(tag_type::name(), FG_ERRNO_GFX_SHADER_FAIL_CFG_LOAD);
@@ -130,7 +130,7 @@ fgBool gfx::CShaderConfig::private_parseInclude(util::SCfgSection *includeSectio
 /*
  * #OPTIMISE #DIVIDE #FIXME shader config parse data, move some operations to other function for clarity
  */
-fgBool gfx::CShaderConfig::private_parseData(fgGfxSLVersion SLver) {
+fgBool gfx::CShaderConfig::private_parseData(ShadingLangVersion SLver) {
     if(SLver != FG_GFX_SHADING_LANGUAGE_INVALID) {
         m_preferredSLVersion = SLver;
     } else if(m_preferredSLVersion == FG_GFX_SHADING_LANGUAGE_INVALID) {

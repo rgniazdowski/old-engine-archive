@@ -11,6 +11,7 @@
 #include "fgGuiContainer.h"
 #include "Util/fgStrings.h"
 #include "fgGuiDrawer.h"
+#include "fgDebugConfig.h"
 
 using namespace fg;
 

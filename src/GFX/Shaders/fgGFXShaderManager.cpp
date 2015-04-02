@@ -82,7 +82,7 @@ fgBool gfx::CShaderManager::initialize(void) {
 
     // Will now initialize the builtin default shader program - it is not loaded
     // from configs or source file on disk/ROM
-    fgGfxSLVersion slVersion = CPlatform::context()->getSLVersion();
+    ShadingLangVersion slVersion = context::getSLVersion();
     CShaderProgram *defaultProgram = new CShaderProgram();
     defaultProgram->setName("DefaultShader"); // #FIXME - const name
     defaultProgram->setFilePath("DefaultShader");

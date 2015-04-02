@@ -62,11 +62,6 @@ namespace fg {
              * @return 
              */
             static void *getDefaultConfig(void);
-            /**
-             * 
-             * @return 
-             */
-            static CContext* context(void);
 
     #if defined(FG_USING_SDL2)
             // initializing main context with sdl window
@@ -85,8 +80,6 @@ namespace fg {
     #endif
 
         private:
-            /// Main gfx context (server/client state cache)
-            static fg::gfx::CContext *m_gfxContext;
             /// Is platform initialized?
             static fgBool m_init;
             /// Default display pointer 

@@ -47,7 +47,7 @@ namespace fg {
         class CVertexData {
         private:
             /// Array holding information about generated VBOs
-            fgGfxBufferID *m_VBO;
+            SBufferID *m_VBO;
             /// Number of VBO objects within this vertex data
             int m_VBOCount;
 
@@ -120,14 +120,14 @@ namespace fg {
              * 
              * @return 
              */
-            virtual fgGfxBufferID* getPtrVBO(void) const {
+            virtual SBufferID* getPtrVBO(void) const {
                 return m_VBO;
             }
             /**
              * 
              * @return 
              */
-            virtual fgGfxBufferID*& getRefPtrVBO(void) {
+            virtual SBufferID*& getRefPtrVBO(void) {
                 return m_VBO;
             }
 

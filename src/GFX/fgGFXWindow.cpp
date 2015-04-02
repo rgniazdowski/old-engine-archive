@@ -273,7 +273,7 @@ fgBool gfx::CWindow::swapBuffers(void) {
 void gfx::CWindow::clearColor(void) {
 #if defined(FG_USING_OPENGL) || defined(FG_USING_OPENGL_ES)
     // #FIXME ?
-    CPlatform::context()->clearColor(0.0f, 0.0f, 0.0f, 1.0f);
+    context::clearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // ?
 #endif
 }

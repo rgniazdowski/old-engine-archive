@@ -56,7 +56,7 @@ namespace fg {
             ///
             includeStrVec m_includeStrVec;
             ///
-            fgGfxSLVersion m_version;
+            ShadingLangVersion m_version;
             ///
             int m_numSources;
             ///
@@ -88,7 +88,7 @@ namespace fg {
              * @param slVer
              * @return 
              */
-            fgBool setVersion(fgGfxSLVersion slVer);
+            fgBool setVersion(ShadingLangVersion slVer);
             /**
              * 
              * @param constantDef

@@ -65,7 +65,7 @@ fgBool gfx::CBasetree::fitsInBox(const CSceneNode* sceneNode,
 
     const Vector3f& objpos = sceneNode->getRefBoundingVolume().center;
     const Vector3f& objext = sceneNode->getRefBoundingVolume().extent;
-    float r = sceneNode->getRefBoundingVolume().radius;
+    //float r = sceneNode->getRefBoundingVolume().radius;
 
     if(objpos.x - objext.x < center.x - halfExtent ||
        objpos.x + objext.x > center.x + halfExtent ||
@@ -94,7 +94,7 @@ fgBool gfx::CBasetree::fitsInBox(const CSceneNode* sceneNode,
 
     const Vector3f& objpos = sceneNode->getRefBoundingVolume().center;
     const Vector3f& objext = sceneNode->getRefBoundingVolume().extent;
-    float r = sceneNode->getRefBoundingVolume().radius;
+    //float r = sceneNode->getRefBoundingVolume().radius;
 
     if(objpos.x - objext.x < center.x - halfExtent ||
        objpos.x + objext.x > center.x + halfExtent ||

@@ -115,7 +115,7 @@ namespace fg {
             ///
             std::string m_programName;
 
-            fgGfxSLVersion m_preferredSLVersion; // FIXME - this sould be probably somewhere else
+            ShadingLangVersion m_preferredSLVersion; // FIXME - this sould be probably somewhere else
 
             ///
             ShaderPrecision m_defaultPrecision;
@@ -145,7 +145,7 @@ namespace fg {
              * @param SLver
              * @return 
              */
-            fgBool load(const char *filePath = NULL, fgGfxSLVersion SLver = FG_GFX_SHADING_LANGUAGE_INVALID);
+            fgBool load(const char *filePath = NULL, ShadingLangVersion SLver = FG_GFX_SHADING_LANGUAGE_INVALID);
             /**
              * 
              * @return 
@@ -283,7 +283,7 @@ namespace fg {
              * 
              * @param _ver
              */
-            inline void setPreferredSLVersion(fgGfxSLVersion version) {
+            inline void setPreferredSLVersion(ShadingLangVersion version) {
                 m_preferredSLVersion = version;
             }
 
@@ -293,7 +293,7 @@ namespace fg {
              * @param SLver
              * @return 
              */
-            fgBool private_parseData(fgGfxSLVersion SLver);
+            fgBool private_parseData(ShadingLangVersion SLver);
             /**
              * 
              * @param _definesSection

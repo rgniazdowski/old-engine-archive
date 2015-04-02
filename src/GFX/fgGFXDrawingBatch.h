@@ -21,10 +21,9 @@
     #define FG_GFX_DRAWING_BATCH_DEFAULT_RESERVE 64
 
 namespace fg {
-
     namespace gfx {
 
-        /*
+        /**
          *
          */
         class CDrawingBatch : public CLayer {
@@ -34,9 +33,9 @@ namespace fg {
 
         protected:
             ///
-            typedef std::priority_queue<CDrawCall *, std::deque<CDrawCall *>, fgPtrLessEq<CDrawCall *> > BatchPriorityQueue;
+            typedef std::priority_queue<CDrawCall*, std::deque<CDrawCall* >, fgPtrLessEq<CDrawCall* > > BatchPriorityQueue;
             ///
-            typedef CVector<CDrawCall *> DrawCallVec;
+            typedef CVector<CDrawCall*> DrawCallVec;
             ///
             typedef DrawCallVec::iterator DrawCallVecItor;
             ///
@@ -127,21 +126,21 @@ namespace fg {
              * @param index
              * @return 
              */
-            CDrawCall *requestDrawCall(int &index,
+            CDrawCall* requestDrawCall(int &index,
                                        const fgGfxDrawCallType type = FG_GFX_DRAW_CALL_CUSTOM_ARRAY,
                                        const fgGFXuint attribMask = FG_GFX_POSITION_BIT | FG_GFX_UVS_BIT,
-                                       fg::gfx::CShaderProgram *pProgram = NULL);
+                                       fg::gfx::CShaderProgram* pProgram = NULL);
             /**
              * 
              * @param index
              * @return 
              */
-            CDrawCall *getDrawCall(int index);
+            CDrawCall* getDrawCall(int index);
             /**
              * 
              * @return 
              */
-            CDrawCall *getLastDrawCall(void);
+            CDrawCall* getLastDrawCall(void);
             // Appends the specified draw call to the drawing batch
             // The check flag is used for duplicates
             int appendDrawCall(CDrawCall* drawCall, fgBool manage = FG_TRUE, fgBool check = FG_TRUE);
@@ -151,13 +150,13 @@ namespace fg {
              * @return      Returns the pointer of the removed draw call or NULL 
              *              if index was out of bounds (or the batch is empty)
              */
-            CDrawCall *removeDrawCall(int index);
+            CDrawCall* removeDrawCall(int index);
             /**
              * 
              * @param drawCall
              * @return 
              */
-            fgBool removeDrawCall(CDrawCall *drawCall);
+            fgBool removeDrawCall(CDrawCall* drawCall);
             /**
              * 
              * @param index
@@ -217,27 +216,27 @@ namespace fg {
              * 
              */
             virtual void render(void);
-            /**
+/**
              * 
              * @param n
              * @return 
              */
-            CDrawCall *operator [](size_t n) {
+            CDrawCall* operator [](size_t n) {
                 return m_drawCalls[n];
             }
-            /**
+/**
              * 
              * @param n
              * @return 
              */
-            const CDrawCall *operator [](size_t n) const {
+            const CDrawCall* operator [](size_t n) const {
                 return m_drawCalls[n];
             }
             /**
              * 
              * @return 
              */
-            Vector3f const & getRelMove(void) const {
+            Vector3f const& getRelMove(void) const {
                 return m_relMove;
             }
             /**
@@ -260,15 +259,15 @@ namespace fg {
              * 
              * @return 
              */
-            Vector4i const & getScissorBox(void) const {
+            Vector4i const& getScissorBox(void) const {
                 return m_scissorBox;
             }
             /**
              * 
              * @return 
              */
-            Vector2i const & getScreenSize(void) const {
-                return CPlatform::context()->getScreenSize();
+            inline Vector2i const& getScreenSize(void) const {
+                return context::getScreenSize();
             }
             /**
              * 
@@ -277,7 +276,10 @@ namespace fg {
              * @param width
              * @param height
              */
-            void setScissorBox(const fgGFXint x, const fgGFXint y, const fgGFXint width, const fgGFXint height) {
+            void setScissorBox(const fgGFXint x,
+                               const fgGFXint y,
+                               const fgGFXint width,
+                               const fgGFXint height) {
                 m_scissorBox.x = x;
                 m_scissorBox.y = y;
                 m_scissorBox.z = width;
@@ -288,7 +290,8 @@ namespace fg {
              * @param pos
              * @param size
              */
-            void setScissorBox(const Vector2i& pos, const Vector2i & size) {
+            void setScissorBox(const Vector2i& pos,
+                               const Vector2i& size) {
                 m_scissorBox.x = pos.x;
                 m_scissorBox.y = pos.y;
                 m_scissorBox.z = size.x;
@@ -298,7 +301,7 @@ namespace fg {
              * 
              * @param dimensions
              */
-            void setScissorBox(const Vector4i & dimensions) {
+            void setScissorBox(const Vector4i& dimensions) {
                 m_scissorBox = dimensions;
             }
 

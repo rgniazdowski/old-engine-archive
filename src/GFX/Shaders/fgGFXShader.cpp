@@ -62,7 +62,7 @@ void gfx::CShader::clearAll(void) {
  * @param slVer
  * @return 
  */
-fgBool gfx::CShader::setVersion(fgGfxSLVersion slVer) {
+fgBool gfx::CShader::setVersion(ShadingLangVersion slVer) {
     if(slVer != FG_GFX_SHADING_LANGUAGE_INVALID)
         m_version = slVer;
     else

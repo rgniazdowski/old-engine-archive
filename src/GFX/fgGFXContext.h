@@ -793,7 +793,7 @@ namespace fg {
             /// then the loading of binary shaders by the implementation
             /// is not supported.
             NUM_SHADER_BINARY_FORMATS,
-            
+
             /// Supported *only* by OpenGL ES 2.0+
             SHADER_BINARY_FORMATS,
 
@@ -1046,7 +1046,7 @@ namespace fg {
             /// @see glScissor
             SCISSOR_TEST,
 
-            
+
 
             /// a single boolean value indicating whether an online shader compiler 
             /// is present in the implementation. 
@@ -1662,8 +1662,11 @@ namespace fg {
                 floats[0] = _fval;
                 determineParamType();
             }
-
-            // 
+            /**
+             *
+             * @param _pname
+             * @param _ival
+             */
             SContextParam(const fgGFXenum _pname, const fgGFXint _ival) :
             pname(_pname),
             type(FG_GFX_INT),
@@ -1672,8 +1675,11 @@ namespace fg {
                 ints[0] = _ival;
                 determineParamType();
             }
-
-            // 
+            /**
+             *
+             * @param _pname
+             * @param _bval
+             */
             SContextParam(const fgGFXenum _pname,
                           const fgGFXboolean _bval) :
             pname(_pname),
@@ -1684,8 +1690,12 @@ namespace fg {
                 determineParamType();
                 //update();
             }
-
-            // 
+            /**
+             *
+             * @param _pname
+             * @param _count
+             * @param _fvals
+             */
             SContextParam(const fgGFXenum _pname,
                           const int _count,
                           const fgGFXfloat *_fvals) :
@@ -1695,8 +1705,12 @@ namespace fg {
                 determineParamType();
                 set(_fvals, FG_FALSE);
             }
-
-            // 
+            /**
+             * 
+             * @param _pname
+             * @param _count
+             * @param _ivals
+             */
             SContextParam(const fgGFXenum _pname,
                           const int _count,
                           const fgGFXint *_ivals) :
@@ -1706,8 +1720,12 @@ namespace fg {
                 determineParamType();
                 set(_ivals, FG_FALSE);
             }
-
-            // 
+            /**
+             * 
+             * @param _pname
+             * @param _count
+             * @param _bvals
+             */
             SContextParam(const fgGFXenum _pname,
                           const int _count,
                           const fgGFXboolean *_bvals) :
@@ -1898,10 +1916,8 @@ namespace fg {
          * Special class for holding information about current GFX context.
          * Works as a special kind of cache for client and server side.
          */
-        class CContext {
-            friend class fg::gfx::CPlatform;
+        namespace context {
 
-        public:
             ///
             typedef CVector<SContextParam> ParameterVec;
             ///
@@ -1913,127 +1929,67 @@ namespace fg {
             typedef TextureMap::iterator TextureMapItor;
 
             ///
-            typedef std::map<fgGFXuint, fgGfxBufferID*> BufferMap;
+            typedef std::map<fgGFXuint, SBufferID*> BufferMap;
             ///
             typedef BufferMap::iterator BufferMapItor;
 
-        private:
-    #if defined(FG_USING_SDL2)
-            SDL_Window *m_sdlWindow;
-            SDL_GLContext m_GLContext; // #FIXME - context can be separate? ... P4
-    #elif defined(FG_USING_EGL)    
-            void* m_GLContext; // it's for EGL only...
-    #else
-            void *m_GLContext; // ?
-    #endif
-            /// Special parameter map used for caching and fast value check
-            /// It's used for not calling redundant GL functions, like:
-            /// glGet/glEnable/glDisable/glIsEnabled and so on. Also for
-            /// functions like activating proper vertex attrib array idx,
-            /// bounding textures... any kind of function that changes internal
-            /// state values.
-            ParameterVec m_params;
-            /// Special map used for holding valid texture IDs
-            /// Every texture needs to be created/deleted through
-            /// this class. When texture is deleted its' ID is zeroed
-            /// in every place in the app. Therefore there's no need to
-            /// often call glIsTexture. If gfx ID is not zero the texture
-            /// is surely valid.
-            TextureMap m_textures;
-            /// Special map used for holding valid VBO IDs. Use case
-            /// is the same as for textures.
-            BufferMap m_buffers;
-            /// Viewport area (used for fast check if viewport changed)
-            fgGFXuint m_viewportAreaQ;
-            /// Scissor area
-            fgGFXuint m_scissorAreaQ;
 
-            /// Currently used attribute mask
-            fgGFXuint m_attribMask;
-            ///
-            SAttributeData m_attrInfo[FG_GFX_ATTRIBUTE_DATA_MAX]; // #FIXME - attribute count ... why here?  hello?
-            /// Currently bound texture ID
-            fgGFXuint m_boundTexture;
-            /// Supported shading language version
-            fgGfxSLVersion m_SLVersion;
-            ///
-            Vector2i m_screenSize;
-            /// Is context ready? Is initialization successful?
-            fgBool m_init;
 
-        protected:
     #if defined(FG_USING_SDL2)
             // Default constructor for the SDL build
-            CContext(SDL_Window *sdlWindow);
+            fgBool initialize(SDL_Window *sdlWindow);
     #else
             // Default constructor
-            CContext();
+            fgBool initialize(void);
     #endif
             // Destructor for the GFX context object
-            virtual ~CContext();
+            void destroy(void);
 
             // This function will set or unset given attrib bits
             // depending on the current mask value
             void updateAttribMask(const fgGFXuint index);
 
-        public:
             /**
              * 
              * @return 
              */
-            fgBool isInit(void) const {
-                return m_init;
-            }
+            fgBool isInit(void);
             /**
              * Return version ID for shading language currently supported by the graphics context
              * @return 
              */
-            fgGfxSLVersion getSLVersion(void) const {
-                return m_SLVersion;
-            }
+            ShadingLangVersion getSLVersion(void);
             /**
              * 
              * @return 
              */
-            void *getGLContext(void) const {
-                return m_GLContext;
-            }
+            void *getGLContext(void);
             /**
              * 
              * @return 
              */
-            Vector2i const & getScreenSize(void) const {
-                return m_screenSize;
-            }
+            Vector2i const& getScreenSize(void);
             /**
              * 
              * @param w
              * @param h
              */
-            void setScreenSize(const int w, const int h) {
-                m_screenSize.x = w;
-                m_screenSize.y = h;
-            }
+            void setScreenSize(const int w, const int h);
             /**
              * 
              * @param screenSize
              */
-            void setScreenSize(const Vector2i & screenSize) {
-                m_screenSize = screenSize;
-            }
+            void setScreenSize(const Vector2i& screenSize);
             /**
              * 
              * @param screenSize
              */
-            void setScreenSize(const Vector2f & screenSize) {
-                m_screenSize.x = (int)screenSize.x;
-                m_screenSize.y = (int)screenSize.y;
-            }
+            void setScreenSize(const Vector2f& screenSize);
 
             /**
              *  Initialize the context and internal parameter state
              */
-            void initialize(void);
+            //void initialize(void);
 
             /**
              * Get parameter structure
@@ -2052,7 +2008,7 @@ namespace fg {
              * @param cap
              */
             void disable(const ParamType cap);
-            
+
             /**
              * 
              * @param cap
@@ -2084,13 +2040,13 @@ namespace fg {
              * @param bufferID
              * @return 
              */
-            fgGFXboolean isBuffer(const fgGfxBufferID& bufferID);
+            fgGFXboolean isBuffer(const SBufferID& bufferID);
             /**
              * Is given pointer to buffer ID struct valid?
              * @param bufferID
              * @return 
              */
-            fgGFXboolean isBuffer(const fgGfxBufferID* bufferID);
+            fgGFXboolean isBuffer(const SBufferID* bufferID);
 
             /**
              * Delete/release all buffers registered within this context
@@ -2105,7 +2061,7 @@ namespace fg {
              * @return 
              */
             fgGFXboolean genBuffers(const int count,
-                                    fgGfxBufferID*& buffers,
+                                    SBufferID*& buffers,
                                     const fgGFXenum usage = GL_STATIC_DRAW);
 
             /**
@@ -2116,7 +2072,7 @@ namespace fg {
              * @param target
              * @param usage
              */
-            void bufferData(fgGfxBufferID& bufferID,
+            void bufferData(gfx::SBufferID& bufferID,
                             const fgGFXsizei size,
                             const fgGFXvoid* data,
                             const fgGFXenum target = GL_ARRAY_BUFFER,
@@ -2133,7 +2089,7 @@ namespace fg {
              * @param bufferID
              * @param target
              */
-            void bindBuffer(fgGfxBufferID& bufferID, const fgGFXenum target = (fgGFXenum)0);
+            void bindBuffer(SBufferID& bufferID, const fgGFXenum target = (fgGFXenum)0);
             /**
              * Return currently bound buffer
              * @param target
@@ -2145,20 +2101,20 @@ namespace fg {
              * Delete/release given buffer
              * @param bufferID
              */
-            void deleteBuffer(fgGfxBufferID& bufferID);
+            void deleteBuffer(SBufferID& bufferID);
             /**
              * Delete/release given number of buffers. 
              * IDs are zeroed and are no longer valid
              * @param count
              * @param buffers
              */
-            void deleteBuffers(const int count, fgGfxBufferID* buffers);
+            void deleteBuffers(const int count, SBufferID* buffers);
 
             /**
              * Currently bound texture ID
              * @return 
              */
-            fgGFXuint boundTexture(void) const;
+            fgGFXuint boundTexture(void);
             /**
              * Currently active texture unit ID
              * @return 
@@ -2306,18 +2262,11 @@ namespace fg {
              * Returns the viewport aspect ratio
              * @return 
              */
-            inline fgGFXfloat getViewportAspect(void) {
-                fgGFXfloat y = (fgGFXfloat)m_params[(fgGFXuint)GL_VIEWPORT].ints[1];
-                if(y <= FG_EPSILON)
-                    return 1.0f;
-                return (fgGFXfloat)m_params[(fgGFXuint)GL_VIEWPORT].ints[0] / y;
-            }
+            fgGFXfloat getViewportAspect(void);
             /**
              * Set the scissor box to default dimensions
              */
-            inline void scissor(void) {
-                scissor(0, 0, m_screenSize.x, m_screenSize.y);
-            }
+            void scissor(void);
             /**
              * Set the scissor box dimensions
              * @param x
@@ -2345,12 +2294,7 @@ namespace fg {
              * Returns the scissor box aspect ratio
              * @return 
              */
-            inline fgGFXfloat getScissorAspect(void) {
-                fgGFXfloat y = (fgGFXfloat)m_params[(fgGFXuint)GL_SCISSOR_BOX].ints[1];
-                if(y <= FG_EPSILON)
-                    return 1.0f;
-                return (fgGFXfloat)m_params[(fgGFXuint)GL_SCISSOR_BOX].ints[0] / y;
-            }
+            fgGFXfloat getScissorAspect(void);
 
             /**
              * Toggle scissor test capability
@@ -2399,7 +2343,10 @@ namespace fg {
              * @param blue
              * @param alpha
              */
-            void clearColor(const fgGFXfloat red, const fgGFXfloat green, const fgGFXfloat blue, const fgGFXfloat alpha);
+            void clearColor(const fgGFXfloat red,
+                            const fgGFXfloat green,
+                            const fgGFXfloat blue,
+                            const fgGFXfloat alpha);
             /**
              * Set the clear stencil value
              * @param s
@@ -2420,13 +2367,13 @@ namespace fg {
              * Returns the currently active vertex attribute mask
              * @return 
              */
-            fgGFXuint activeVertexAttribArrayMask(void) const;
+            fgGFXuint activeVertexAttribArrayMask(void);
             /**
              * Returns whether given index vertex attrib array is activated
              * @param index
              * @return 
              */
-            fgBool isVertexAttribArrayActive(const fgGFXuint index) const;
+            fgBool isVertexAttribArrayActive(const fgGFXuint index);
 
             /**
              * Enable the given vertex attrib array index and also by default update the current attrib mask

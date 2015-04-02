@@ -230,38 +230,38 @@ const gfx::Vertex3v c_stripRect3x1[] = {
 };
 
 void gfx::CPrimitives::drawSkyBoxOptimized(void) {
-    gfx::CPlatform::context()->diffVertexAttribArrayMask(Vertex4v::attribMask());
+    context::diffVertexAttribArrayMask(Vertex4v::attribMask());
 
     uintptr_t offset = (uintptr_t)((unsigned int*)&c_stripSkyBoxOptimized[0]);
-    gfx::CPlatform::context()->vertexAttribPointer(FG_GFX_ATTRIB_POS_LOCATION,
-                                                   3,
-                                                   FG_GFX_FLOAT,
-                                                   FG_GFX_FALSE,
-                                                   sizeof (Vertex4v),
-                                                   reinterpret_cast<fgGFXvoid*>(offset));
+    context::vertexAttribPointer(FG_GFX_ATTRIB_POS_LOCATION,
+                                 3,
+                                 FG_GFX_FLOAT,
+                                 FG_GFX_FALSE,
+                                 sizeof (Vertex4v),
+                                 reinterpret_cast<fgGFXvoid*>(offset));
     offset += sizeof (Vector3f); // Move offset to Normals
-    gfx::CPlatform::context()->vertexAttribPointer(FG_GFX_ATTRIB_NORM_LOCATION,
-                                                   3,
-                                                   FG_GFX_FLOAT,
-                                                   FG_GFX_FALSE,
-                                                   sizeof (Vertex4v),
-                                                   reinterpret_cast<fgGFXvoid*>(offset));
+    context::vertexAttribPointer(FG_GFX_ATTRIB_NORM_LOCATION,
+                                 3,
+                                 FG_GFX_FLOAT,
+                                 FG_GFX_FALSE,
+                                 sizeof (Vertex4v),
+                                 reinterpret_cast<fgGFXvoid*>(offset));
 
     offset += sizeof (Vector3f); // Move offset to UVS
-    gfx::CPlatform::context()->vertexAttribPointer(FG_GFX_ATTRIB_UVS_LOCATION,
-                                                   2,
-                                                   FG_GFX_FLOAT,
-                                                   FG_GFX_FALSE,
-                                                   sizeof (Vertex4v),
-                                                   reinterpret_cast<fgGFXvoid*>(offset));
+    context::vertexAttribPointer(FG_GFX_ATTRIB_UVS_LOCATION,
+                                 2,
+                                 FG_GFX_FLOAT,
+                                 FG_GFX_FALSE,
+                                 sizeof (Vertex4v),
+                                 reinterpret_cast<fgGFXvoid*>(offset));
 
     offset += sizeof (Vector2f); // Move offset to Color
-    gfx::CPlatform::context()->vertexAttribPointer(FG_GFX_ATTRIB_COLOR_LOCATION,
-                                                   4,
-                                                   FG_GFX_FLOAT,
-                                                   FG_GFX_FALSE,
-                                                   sizeof (Vertex4v),
-                                                   reinterpret_cast<fgGFXvoid*>(offset));
+    context::vertexAttribPointer(FG_GFX_ATTRIB_COLOR_LOCATION,
+                                 4,
+                                 FG_GFX_FLOAT,
+                                 FG_GFX_FALSE,
+                                 sizeof (Vertex4v),
+                                 reinterpret_cast<fgGFXvoid*>(offset));
 
     //(GLenum mode, GLsizei count, GLenum type, const void *indices)
     glDrawElements((GLenum)PrimitiveMode::TRIANGLE_STRIP,
@@ -340,7 +340,7 @@ void gfx::CPrimitives::createCubeMesh(fg::gfx::SMeshBase *mesh,
  * Osmioscian foremny (inaczej oktaedr) - octahedron: rings 3 | sectors 5 ? 
  */
 void gfx::CPrimitives::drawAABBLines(const AABoundingBox3Df& aabb, const fgColor4f& color) {
-    gfx::CPlatform::context()->diffVertexAttribArrayMask(FG_GFX_POSITION_BIT | FG_GFX_COLOR_BIT);
+    context::diffVertexAttribArrayMask(FG_GFX_POSITION_BIT | FG_GFX_COLOR_BIT);
 
     const Vec3f center = aabb.getCenter();
     const Vec3f extent = aabb.getExtent();
@@ -409,20 +409,20 @@ void gfx::CPrimitives::drawAABBLines(const AABoundingBox3Df& aabb, const fgColor
     };
 #undef _id_vec
     uintptr_t offset = (uintptr_t)((unsigned int*)&aabbLineStripBuf[0]);
-    gfx::CPlatform::context()->vertexAttribPointer(FG_GFX_ATTRIB_POS_LOCATION,
-                                                   3,
-                                                   FG_GFX_FLOAT,
-                                                   FG_GFX_FALSE,
-                                                   sizeof (Vector3f),
-                                                   reinterpret_cast<fgGFXvoid*>(offset));
+    context::vertexAttribPointer(FG_GFX_ATTRIB_POS_LOCATION,
+                                 3,
+                                 FG_GFX_FLOAT,
+                                 FG_GFX_FALSE,
+                                 sizeof (Vector3f),
+                                 reinterpret_cast<fgGFXvoid*>(offset));
 
     offset = (uintptr_t)((unsigned int*)&aabbColor[0]);
-    gfx::CPlatform::context()->vertexAttribPointer(FG_GFX_ATTRIB_COLOR_LOCATION,
-                                                   4,
-                                                   FG_GFX_FLOAT,
-                                                   FG_GFX_FALSE,
-                                                   sizeof (Vector4f),
-                                                   reinterpret_cast<fgGFXvoid*>(offset));
+    context::vertexAttribPointer(FG_GFX_ATTRIB_COLOR_LOCATION,
+                                 4,
+                                 FG_GFX_FLOAT,
+                                 FG_GFX_FALSE,
+                                 sizeof (Vector4f),
+                                 reinterpret_cast<fgGFXvoid*>(offset));
     glDrawArrays((GLenum)PrimitiveMode::LINE_STRIP, 0, sizeof (aabbLineStripBuf) / sizeof (aabbLineStripBuf[0]));
 
 }
@@ -438,25 +438,25 @@ void gfx::CPrimitives::drawArray(const fg::CVector<Vertex2v> &inputData,
                                  const PrimitiveMode mode) {
     if(inputData.empty() || !attribMask)
         return;
-    gfx::CPlatform::context()->diffVertexAttribArrayMask(attribMask);
+    context::diffVertexAttribArrayMask(attribMask);
 
     uintptr_t offset = (uintptr_t)((unsigned int*)&inputData.front());
     if(attribMask & FG_GFX_POSITION_BIT) {
-        gfx::CPlatform::context()->vertexAttribPointer(FG_GFX_ATTRIB_POS_LOCATION,
-                                                       3,
-                                                       FG_GFX_FLOAT,
-                                                       FG_GFX_FALSE,
-                                                       sizeof (Vertex2v),
-                                                       reinterpret_cast<fgGFXvoid*>(offset));
+        context::vertexAttribPointer(FG_GFX_ATTRIB_POS_LOCATION,
+                                     3,
+                                     FG_GFX_FLOAT,
+                                     FG_GFX_FALSE,
+                                     sizeof (Vertex2v),
+                                     reinterpret_cast<fgGFXvoid*>(offset));
     }
     offset += sizeof (Vector3f);
     if(attribMask & FG_GFX_UVS_BIT) {
-        gfx::CPlatform::context()->vertexAttribPointer(FG_GFX_ATTRIB_UVS_LOCATION,
-                                                       2,
-                                                       FG_GFX_FLOAT,
-                                                       FG_GFX_FALSE,
-                                                       sizeof (Vertex2v),
-                                                       reinterpret_cast<fgGFXvoid*>(offset));
+        context::vertexAttribPointer(FG_GFX_ATTRIB_UVS_LOCATION,
+                                     2,
+                                     FG_GFX_FLOAT,
+                                     FG_GFX_FALSE,
+                                     sizeof (Vertex2v),
+                                     reinterpret_cast<fgGFXvoid*>(offset));
     }
     glDrawArrays((GLenum)mode, 0, inputData.size());
     fgGLError("glDrawArrays");
@@ -478,32 +478,32 @@ void gfx::CPrimitives::drawArray(const fg::CVector<Vertex3v> &inputData,
     // every time, this may cause some slow down - find a way to remember the 
     // state of the active attribute arrays...
     uintptr_t offset = (uintptr_t)((unsigned int*)&inputData.front());
-    gfx::CPlatform::context()->diffVertexAttribArrayMask(attribMask);
+    context::diffVertexAttribArrayMask(attribMask);
     if(attribMask & FG_GFX_POSITION_BIT) {
-        gfx::CPlatform::context()->vertexAttribPointer(FG_GFX_ATTRIB_POS_LOCATION,
-                                                       3,
-                                                       FG_GFX_FLOAT,
-                                                       FG_GFX_FALSE,
-                                                       sizeof (Vertex3v),
-                                                       reinterpret_cast<fgGFXvoid*>(offset));
+        context::vertexAttribPointer(FG_GFX_ATTRIB_POS_LOCATION,
+                                     3,
+                                     FG_GFX_FLOAT,
+                                     FG_GFX_FALSE,
+                                     sizeof (Vertex3v),
+                                     reinterpret_cast<fgGFXvoid*>(offset));
     }
     offset += sizeof (Vector3f);
     if(attribMask & FG_GFX_NORMAL_BIT) {
-        gfx::CPlatform::context()->vertexAttribPointer(FG_GFX_ATTRIB_NORM_LOCATION,
-                                                       3,
-                                                       FG_GFX_FLOAT,
-                                                       FG_GFX_FALSE,
-                                                       sizeof (Vertex3v),
-                                                       reinterpret_cast<fgGFXvoid*>(offset));
+        context::vertexAttribPointer(FG_GFX_ATTRIB_NORM_LOCATION,
+                                     3,
+                                     FG_GFX_FLOAT,
+                                     FG_GFX_FALSE,
+                                     sizeof (Vertex3v),
+                                     reinterpret_cast<fgGFXvoid*>(offset));
     }
     offset += sizeof (Vector3f);
     if(attribMask & FG_GFX_UVS_BIT) {
-        gfx::CPlatform::context()->vertexAttribPointer(FG_GFX_ATTRIB_UVS_LOCATION,
-                                                       2,
-                                                       FG_GFX_FLOAT,
-                                                       FG_GFX_FALSE,
-                                                       sizeof (Vertex3v),
-                                                       reinterpret_cast<fgGFXvoid*>(offset));
+        context::vertexAttribPointer(FG_GFX_ATTRIB_UVS_LOCATION,
+                                     2,
+                                     FG_GFX_FLOAT,
+                                     FG_GFX_FALSE,
+                                     sizeof (Vertex3v),
+                                     reinterpret_cast<fgGFXvoid*>(offset));
     }
     glDrawArrays((GLenum)mode, 0, inputData.size());
     fgGLError("glDrawArrays");
@@ -522,41 +522,41 @@ void gfx::CPrimitives::drawArray(const fg::CVector<Vertex4v> &inputData,
         return;
 
     uintptr_t offset = (uintptr_t)((unsigned int*)&inputData.front());
-    gfx::CPlatform::context()->diffVertexAttribArrayMask(attribMask);
+    context::diffVertexAttribArrayMask(attribMask);
     if(attribMask & FG_GFX_POSITION_BIT) {
-        gfx::CPlatform::context()->vertexAttribPointer(FG_GFX_ATTRIB_POS_LOCATION,
-                                                       3,
-                                                       FG_GFX_FLOAT,
-                                                       FG_GFX_FALSE,
-                                                       sizeof (Vertex4v),
-                                                       reinterpret_cast<fgGFXvoid*>(offset));
+        context::vertexAttribPointer(FG_GFX_ATTRIB_POS_LOCATION,
+                                     3,
+                                     FG_GFX_FLOAT,
+                                     FG_GFX_FALSE,
+                                     sizeof (Vertex4v),
+                                     reinterpret_cast<fgGFXvoid*>(offset));
     }
     offset += sizeof (Vector3f);
     if(attribMask & FG_GFX_NORMAL_BIT) {
-        gfx::CPlatform::context()->vertexAttribPointer(FG_GFX_ATTRIB_NORM_LOCATION,
-                                                       3,
-                                                       FG_GFX_FLOAT,
-                                                       FG_GFX_FALSE,
-                                                       sizeof (Vertex4v),
-                                                       reinterpret_cast<fgGFXvoid*>(offset));
+        context::vertexAttribPointer(FG_GFX_ATTRIB_NORM_LOCATION,
+                                     3,
+                                     FG_GFX_FLOAT,
+                                     FG_GFX_FALSE,
+                                     sizeof (Vertex4v),
+                                     reinterpret_cast<fgGFXvoid*>(offset));
     }
     offset += sizeof (Vector3f);
     if(attribMask & FG_GFX_UVS_BIT) {
-        gfx::CPlatform::context()->vertexAttribPointer(FG_GFX_ATTRIB_UVS_LOCATION,
-                                                       2,
-                                                       FG_GFX_FLOAT,
-                                                       FG_GFX_FALSE,
-                                                       sizeof (Vertex4v),
-                                                       reinterpret_cast<fgGFXvoid*>(offset));
+        context::vertexAttribPointer(FG_GFX_ATTRIB_UVS_LOCATION,
+                                     2,
+                                     FG_GFX_FLOAT,
+                                     FG_GFX_FALSE,
+                                     sizeof (Vertex4v),
+                                     reinterpret_cast<fgGFXvoid*>(offset));
     }
     offset += sizeof (Vector2f);
     if(attribMask & FG_GFX_COLOR_BIT) {
-        gfx::CPlatform::context()->vertexAttribPointer(FG_GFX_ATTRIB_COLOR_LOCATION,
-                                                       4,
-                                                       FG_GFX_FLOAT,
-                                                       FG_GFX_FALSE,
-                                                       sizeof (Vertex4v),
-                                                       reinterpret_cast<fgGFXvoid*>(offset));
+        context::vertexAttribPointer(FG_GFX_ATTRIB_COLOR_LOCATION,
+                                     4,
+                                     FG_GFX_FLOAT,
+                                     FG_GFX_FALSE,
+                                     sizeof (Vertex4v),
+                                     reinterpret_cast<fgGFXvoid*>(offset));
     }
     glDrawArrays((GLenum)mode, 0, inputData.size());
     fgGLError("glDrawArrays");
@@ -576,25 +576,25 @@ void gfx::CPrimitives::drawArrayIndexed(const CVector<Vertex2v> &inputData,
 
     if(inputData.empty() || !attribMask || indices.empty())
         return;
-    gfx::CPlatform::context()->diffVertexAttribArrayMask(attribMask);
+    context::diffVertexAttribArrayMask(attribMask);
 
     uintptr_t offset = (uintptr_t)((unsigned int*)&inputData.front());
     if(attribMask & FG_GFX_POSITION_BIT) {
-        gfx::CPlatform::context()->vertexAttribPointer(FG_GFX_ATTRIB_POS_LOCATION,
-                                                       3,
-                                                       FG_GFX_FLOAT,
-                                                       FG_GFX_FALSE,
-                                                       sizeof (Vertex2v),
-                                                       reinterpret_cast<fgGFXvoid*>(offset));
+        context::vertexAttribPointer(FG_GFX_ATTRIB_POS_LOCATION,
+                                     3,
+                                     FG_GFX_FLOAT,
+                                     FG_GFX_FALSE,
+                                     sizeof (Vertex2v),
+                                     reinterpret_cast<fgGFXvoid*>(offset));
     }
     offset += sizeof (Vector3f);
     if(attribMask & FG_GFX_UVS_BIT) {
-        gfx::CPlatform::context()->vertexAttribPointer(FG_GFX_ATTRIB_UVS_LOCATION,
-                                                       2,
-                                                       FG_GFX_FLOAT,
-                                                       FG_GFX_FALSE,
-                                                       sizeof (Vertex2v),
-                                                       reinterpret_cast<fgGFXvoid*>(offset));
+        context::vertexAttribPointer(FG_GFX_ATTRIB_UVS_LOCATION,
+                                     2,
+                                     FG_GFX_FLOAT,
+                                     FG_GFX_FALSE,
+                                     sizeof (Vertex2v),
+                                     reinterpret_cast<fgGFXvoid*>(offset));
     }
     glDrawElements((GLenum)mode, indices.size(), GL_UNSIGNED_SHORT, &indices.front());
     fgGLError("glDrawElements");
@@ -614,32 +614,32 @@ void gfx::CPrimitives::drawArrayIndexed(const CVector<Vertex3v> &inputData,
     if(inputData.empty() || !attribMask || indices.empty())
         return;
     uintptr_t offset = (uintptr_t)((unsigned int*)&inputData.front());
-    gfx::CPlatform::context()->diffVertexAttribArrayMask(attribMask);
+    context::diffVertexAttribArrayMask(attribMask);
     if(attribMask & FG_GFX_POSITION_BIT) {
-        gfx::CPlatform::context()->vertexAttribPointer(FG_GFX_ATTRIB_POS_LOCATION,
-                                                       3,
-                                                       FG_GFX_FLOAT,
-                                                       FG_GFX_FALSE,
-                                                       sizeof (Vertex3v),
-                                                       reinterpret_cast<fgGFXvoid*>(offset));
+        context::vertexAttribPointer(FG_GFX_ATTRIB_POS_LOCATION,
+                                     3,
+                                     FG_GFX_FLOAT,
+                                     FG_GFX_FALSE,
+                                     sizeof (Vertex3v),
+                                     reinterpret_cast<fgGFXvoid*>(offset));
     }
     offset += sizeof (Vector3f);
     if(attribMask & FG_GFX_NORMAL_BIT) {
-        gfx::CPlatform::context()->vertexAttribPointer(FG_GFX_ATTRIB_NORM_LOCATION,
-                                                       3,
-                                                       FG_GFX_FLOAT,
-                                                       FG_GFX_FALSE,
-                                                       sizeof (Vertex3v),
-                                                       reinterpret_cast<fgGFXvoid*>(offset));
+        context::vertexAttribPointer(FG_GFX_ATTRIB_NORM_LOCATION,
+                                     3,
+                                     FG_GFX_FLOAT,
+                                     FG_GFX_FALSE,
+                                     sizeof (Vertex3v),
+                                     reinterpret_cast<fgGFXvoid*>(offset));
     }
     offset += sizeof (Vector3f);
     if(attribMask & FG_GFX_UVS_BIT) {
-        gfx::CPlatform::context()->vertexAttribPointer(FG_GFX_ATTRIB_UVS_LOCATION,
-                                                       2,
-                                                       FG_GFX_FLOAT,
-                                                       FG_GFX_FALSE,
-                                                       sizeof (Vertex3v),
-                                                       reinterpret_cast<fgGFXvoid*>(offset));
+        context::vertexAttribPointer(FG_GFX_ATTRIB_UVS_LOCATION,
+                                     2,
+                                     FG_GFX_FLOAT,
+                                     FG_GFX_FALSE,
+                                     sizeof (Vertex3v),
+                                     reinterpret_cast<fgGFXvoid*>(offset));
     }
     glDrawElements((GLenum)mode, indices.size(), GL_UNSIGNED_SHORT, &indices.front());
     fgGLError("glDrawElements");
@@ -660,41 +660,41 @@ void gfx::CPrimitives::drawArrayIndexed(const CVector<Vertex4v> &inputData,
         return;
 
     uintptr_t offset = (uintptr_t)((unsigned int*)&inputData.front());
-    gfx::CPlatform::context()->diffVertexAttribArrayMask(attribMask);
+    context::diffVertexAttribArrayMask(attribMask);
     if(attribMask & FG_GFX_POSITION_BIT) {
-        gfx::CPlatform::context()->vertexAttribPointer(FG_GFX_ATTRIB_POS_LOCATION,
-                                                       3,
-                                                       FG_GFX_FLOAT,
-                                                       FG_GFX_FALSE,
-                                                       sizeof (Vertex4v),
-                                                       reinterpret_cast<fgGFXvoid*>(offset));
+        context::vertexAttribPointer(FG_GFX_ATTRIB_POS_LOCATION,
+                                     3,
+                                     FG_GFX_FLOAT,
+                                     FG_GFX_FALSE,
+                                     sizeof (Vertex4v),
+                                     reinterpret_cast<fgGFXvoid*>(offset));
     }
     offset += sizeof (Vector3f);
     if(attribMask & FG_GFX_NORMAL_BIT) {
-        gfx::CPlatform::context()->vertexAttribPointer(FG_GFX_ATTRIB_NORM_LOCATION,
-                                                       3,
-                                                       FG_GFX_FLOAT,
-                                                       FG_GFX_FALSE,
-                                                       sizeof (Vertex4v),
-                                                       reinterpret_cast<fgGFXvoid*>(offset));
+        context::vertexAttribPointer(FG_GFX_ATTRIB_NORM_LOCATION,
+                                     3,
+                                     FG_GFX_FLOAT,
+                                     FG_GFX_FALSE,
+                                     sizeof (Vertex4v),
+                                     reinterpret_cast<fgGFXvoid*>(offset));
     }
     offset += sizeof (Vector3f);
     if(attribMask & FG_GFX_UVS_BIT) {
-        gfx::CPlatform::context()->vertexAttribPointer(FG_GFX_ATTRIB_UVS_LOCATION,
-                                                       2,
-                                                       FG_GFX_FLOAT,
-                                                       FG_GFX_FALSE,
-                                                       sizeof (Vertex4v),
-                                                       reinterpret_cast<fgGFXvoid*>(offset));
+        context::vertexAttribPointer(FG_GFX_ATTRIB_UVS_LOCATION,
+                                     2,
+                                     FG_GFX_FLOAT,
+                                     FG_GFX_FALSE,
+                                     sizeof (Vertex4v),
+                                     reinterpret_cast<fgGFXvoid*>(offset));
     }
     offset += sizeof (Vector2f);
     if(attribMask & FG_GFX_COLOR_BIT) {
-        gfx::CPlatform::context()->vertexAttribPointer(FG_GFX_ATTRIB_COLOR_LOCATION,
-                                                       4,
-                                                       FG_GFX_FLOAT,
-                                                       FG_GFX_FALSE,
-                                                       sizeof (Vertex4v),
-                                                       reinterpret_cast<fgGFXvoid*>(offset));
+        context::vertexAttribPointer(FG_GFX_ATTRIB_COLOR_LOCATION,
+                                     4,
+                                     FG_GFX_FLOAT,
+                                     FG_GFX_FALSE,
+                                     sizeof (Vertex4v),
+                                     reinterpret_cast<fgGFXvoid*>(offset));
     }
     glDrawElements((GLenum)mode, indices.size(), GL_UNSIGNED_SHORT, &indices.front());
     fgGLError("glDrawElements");
@@ -705,29 +705,29 @@ void gfx::CPrimitives::applyAttributeData(SAttributeData *attrData,
                                           const unsigned int attribMask) {
     if(!attrData)
         return;
-    CPlatform::context()->diffVertexAttribArrayMask(attribMask);
+    context::diffVertexAttribArrayMask(attribMask);
     if(attrData[0].isInterleaved == FG_TRUE && attrData[0].isBO) {
-        CPlatform::context()->bindBuffer(GL_ARRAY_BUFFER, attrData[0].buffer);
+        context::bindBuffer(GL_ARRAY_BUFFER, attrData[0].buffer);
     } else {
-        CPlatform::context()->bindBuffer(GL_ARRAY_BUFFER, 0);
+        context::bindBuffer(GL_ARRAY_BUFFER, 0);
     }
     for(int i = 0; i < FG_GFX_ATTRIBUTE_COUNT; i++) {
         if(attrData[i].isEnabled) {
             if(attrData[i].isInterleaved == FG_FALSE && attrData[i].isBO) {
-                CPlatform::context()->bindBuffer(GL_ARRAY_BUFFER, attrData[i].buffer);
+                context::bindBuffer(GL_ARRAY_BUFFER, attrData[i].buffer);
             }
-            CPlatform::context()->vertexAttribPointer(attrData[i].index,
-                                                      attrData[i].size,
-                                                      attrData[i].dataType,
-                                                      attrData[i].isNormalized,
-                                                      attrData[i].stride,
-                                                      attrData[i].offset);
+            context::vertexAttribPointer(attrData[i].index,
+                                         attrData[i].size,
+                                         attrData[i].dataType,
+                                         attrData[i].isNormalized,
+                                         attrData[i].stride,
+                                         attrData[i].offset);
         }
     }
     if(drawingInfo.buffer) {
-        CPlatform::context()->bindBuffer(GL_ELEMENT_ARRAY_BUFFER, drawingInfo.buffer);
+        context::bindBuffer(GL_ELEMENT_ARRAY_BUFFER, drawingInfo.buffer);
     } else {
-        CPlatform::context()->bindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+        context::bindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
     }
 }
 
@@ -765,50 +765,50 @@ void gfx::CPrimitives::drawVertexData(const CVertexData *inputData,
         glDrawArrays((fgGFXenum)mode, 0, drawingInfo.count);
     }
     // #FIXME
-    CPlatform::context()->bindBuffer(GL_ARRAY_BUFFER, 0);
-    CPlatform::context()->bindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+    context::bindBuffer(GL_ARRAY_BUFFER, 0);
+    context::bindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
     if(0) {
 
-        gfx::CPlatform::context()->diffVertexAttribArrayMask(andMask);
+        context::diffVertexAttribArrayMask(andMask);
         uintptr_t offset = (uintptr_t)((unsigned int*)inputData->front());
         if(andMask & FG_GFX_POSITION_BIT) {
-            gfx::CPlatform::context()->vertexAttribPointer(FG_GFX_ATTRIB_POS_LOCATION,
-                                                           3,
-                                                           FG_GFX_FLOAT,
-                                                           FG_GFX_FALSE,
-                                                           inputData->stride(),
-                                                           reinterpret_cast<fgGFXvoid*>(offset));
+            context::vertexAttribPointer(FG_GFX_ATTRIB_POS_LOCATION,
+                                         3,
+                                         FG_GFX_FLOAT,
+                                         FG_GFX_FALSE,
+                                         inputData->stride(),
+                                         reinterpret_cast<fgGFXvoid*>(offset));
         }
         if(inputData->attribMask() & FG_GFX_POSITION_BIT)
             offset += sizeof (Vector3f);
         if(andMask & FG_GFX_NORMAL_BIT) {
-            gfx::CPlatform::context()->vertexAttribPointer(FG_GFX_ATTRIB_NORM_LOCATION,
-                                                           3,
-                                                           FG_GFX_FLOAT,
-                                                           FG_GFX_FALSE,
-                                                           inputData->stride(),
-                                                           reinterpret_cast<fgGFXvoid*>(offset));
+            context::vertexAttribPointer(FG_GFX_ATTRIB_NORM_LOCATION,
+                                         3,
+                                         FG_GFX_FLOAT,
+                                         FG_GFX_FALSE,
+                                         inputData->stride(),
+                                         reinterpret_cast<fgGFXvoid*>(offset));
         }
         if(inputData->attribMask() & FG_GFX_UVS_BIT)
             offset += sizeof (Vector3f);
         if(andMask & FG_GFX_UVS_BIT) {
-            gfx::CPlatform::context()->vertexAttribPointer(FG_GFX_ATTRIB_UVS_LOCATION,
-                                                           2,
-                                                           FG_GFX_FLOAT,
-                                                           FG_GFX_FALSE,
-                                                           inputData->stride(),
-                                                           reinterpret_cast<fgGFXvoid*>(offset));
+            context::vertexAttribPointer(FG_GFX_ATTRIB_UVS_LOCATION,
+                                         2,
+                                         FG_GFX_FLOAT,
+                                         FG_GFX_FALSE,
+                                         inputData->stride(),
+                                         reinterpret_cast<fgGFXvoid*>(offset));
         }
         if(inputData->attribMask() & FG_GFX_COLOR_BIT)
             offset += sizeof (Vector2f);
         if(andMask & FG_GFX_COLOR_BIT) {
-            gfx::CPlatform::context()->vertexAttribPointer(FG_GFX_ATTRIB_COLOR_LOCATION,
-                                                           4,
-                                                           FG_GFX_FLOAT,
-                                                           FG_GFX_FALSE,
-                                                           inputData->stride(),
-                                                           reinterpret_cast<fgGFXvoid*>(offset));
+            context::vertexAttribPointer(FG_GFX_ATTRIB_COLOR_LOCATION,
+                                         4,
+                                         FG_GFX_FLOAT,
+                                         FG_GFX_FALSE,
+                                         inputData->stride(),
+                                         reinterpret_cast<fgGFXvoid*>(offset));
         }
         glDrawArrays((fgGFXenum)mode, 0, inputData->size());
         fgGLError("glDrawArrays");
@@ -817,21 +817,21 @@ void gfx::CPrimitives::drawVertexData(const CVertexData *inputData,
 }
 
 void gfx::CPrimitives::drawSquare2D(void) {
-    gfx::CPlatform::context()->diffVertexAttribArrayMask(FG_GFX_POSITION_BIT | FG_GFX_UVS_BIT);
-    gfx::CPlatform::context()->vertexAttribPointer(FG_GFX_ATTRIB_POS_LOCATION,
-                                                   3,
-                                                   FG_GFX_FLOAT,
-                                                   FG_GFX_FALSE,
-                                                   sizeof (Vertex3v),
-                                                   (fgGFXvoid *)c_stripSquare1x1);
+    context::diffVertexAttribArrayMask(FG_GFX_POSITION_BIT | FG_GFX_UVS_BIT);
+    context::vertexAttribPointer(FG_GFX_ATTRIB_POS_LOCATION,
+                                 3,
+                                 FG_GFX_FLOAT,
+                                 FG_GFX_FALSE,
+                                 sizeof (Vertex3v),
+                                 (fgGFXvoid *)c_stripSquare1x1);
 
     uintptr_t offset = (uintptr_t)((unsigned int*)&c_stripSquare1x1[0]) + sizeof (Vector3f) * 2;
-    gfx::CPlatform::context()->vertexAttribPointer(FG_GFX_ATTRIB_UVS_LOCATION,
-                                                   2,
-                                                   FG_GFX_FLOAT,
-                                                   FG_GFX_FALSE,
-                                                   sizeof (Vertex3v),
-                                                   (fgGFXvoid*)offset);
+    context::vertexAttribPointer(FG_GFX_ATTRIB_UVS_LOCATION,
+                                 2,
+                                 FG_GFX_FLOAT,
+                                 FG_GFX_FALSE,
+                                 sizeof (Vertex3v),
+                                 (fgGFXvoid*)offset);
     glDrawArrays(GL_TRIANGLE_STRIP, 0, sizeof (c_stripSquare1x1) / sizeof (Vertex3v));
 }
 
@@ -839,21 +839,21 @@ void gfx::CPrimitives::drawSquare2D(void) {
  *
  */
 void gfx::CPrimitives::drawRect2D(void) {
-    gfx::CPlatform::context()->diffVertexAttribArrayMask(FG_GFX_POSITION_BIT | FG_GFX_UVS_BIT);
-    gfx::CPlatform::context()->vertexAttribPointer(FG_GFX_ATTRIB_POS_LOCATION,
-                                                   3,
-                                                   FG_GFX_FLOAT,
-                                                   FG_GFX_FALSE,
-                                                   sizeof (Vertex3v),
-                                                   (fgGFXvoid *)c_stripRect3x1);
+    context::diffVertexAttribArrayMask(FG_GFX_POSITION_BIT | FG_GFX_UVS_BIT);
+    context::vertexAttribPointer(FG_GFX_ATTRIB_POS_LOCATION,
+                                 3,
+                                 FG_GFX_FLOAT,
+                                 FG_GFX_FALSE,
+                                 sizeof (Vertex3v),
+                                 (fgGFXvoid *)c_stripRect3x1);
 
     uintptr_t offset = (uintptr_t)((unsigned int*)&c_stripRect3x1[0]) + sizeof (fgGFXfloat) * 6;
-    gfx::CPlatform::context()->vertexAttribPointer(FG_GFX_ATTRIB_UVS_LOCATION,
-                                                   2,
-                                                   FG_GFX_FLOAT,
-                                                   FG_GFX_FALSE,
-                                                   sizeof (Vertex3v),
-                                                   (fgGFXvoid*)offset);
+    context::vertexAttribPointer(FG_GFX_ATTRIB_UVS_LOCATION,
+                                 2,
+                                 FG_GFX_FLOAT,
+                                 FG_GFX_FALSE,
+                                 sizeof (Vertex3v),
+                                 (fgGFXvoid*)offset);
     glDrawArrays(GL_TRIANGLE_STRIP, 0, sizeof (c_stripRect3x1) / sizeof (Vertex3v));
     fgGLError("glDrawArrays");
 }

@@ -15,47 +15,56 @@
  */
 
 #ifndef FG_INC_GFX_BUFFERID
-    #define	FG_INC_GFX_BUFFERID
+    #define FG_INC_GFX_BUFFERID
+    #define FG_INC_GFX_BUFFERID_BLOCK
 
     #ifndef FG_INC_GFX_GL
         #include "fgGFXGL.h"
     #endif
 
-/*
- *
- */
-struct fgGfxBufferID {
-    ///
-    fgGFXuint id;
-    ///
-    fgGFXenum target;
-    ///
-    fgGFXenum usage;
+namespace fg {
+    namespace gfx {
 
-    //
-    operator fgGFXint() const {
-        return (fgGFXint)id;
+        /**
+         *
+         */
+        struct SBufferID {
+            ///
+            fgGFXuint id;
+            ///
+            fgGFXenum target;
+            ///
+            fgGFXenum usage;
+
+            //
+            operator fgGFXint() const {
+                return (fgGFXint)id;
+            }
+
+            //
+            operator fgGFXuint() const {
+                return id;
+            }
+
+            //
+            fgGFXuint& refID(void) {
+                return id;
+            }
+
+            //
+            fgGFXuint* ptrID(void) {
+                return &id;
+            }
+            /**
+             *
+             * @param _id
+             * @param _target
+             */
+            SBufferID(fgGFXuint _id = 0, fgGFXenum _target = (fgGFXenum)0) :
+            id(_id), target(_target) { }
+        };
     }
+}
 
-    //
-    operator fgGFXuint() const {
-        return id;
-    }
-
-    //
-    fgGFXuint& refID(void) {
-        return id;
-    }
-
-    //
-    fgGFXuint* ptrID(void) {
-        return &id;
-    }
-
-    //
-    fgGfxBufferID(fgGFXuint _id = 0, fgGFXenum _target = (fgGFXenum)0) :
-    id(_id), target(_target) { }
-};
-
+    #undef FG_INC_GFX_BUFFERID_BLOCK
 #endif	/* FG_INC_GFX_BUFFERID */
-

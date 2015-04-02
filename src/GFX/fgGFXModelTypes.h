@@ -617,14 +617,14 @@ namespace fg {
              * 
              * @return 
              */
-            virtual fgGfxBufferID* getPtrVBO(void) const {
+            virtual SBufferID* getPtrVBO(void) const {
                 return vertices.getPtrVBO();
             }
             /**
              * 
              * @return 
              */
-            virtual fgGfxBufferID*& getRefPtrVBO(void) {
+            virtual SBufferID*& getRefPtrVBO(void) {
                 return vertices.getRefPtrVBO();
             }
 

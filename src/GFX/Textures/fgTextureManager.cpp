@@ -292,7 +292,7 @@ fgBool gfx::CTextureManager::uploadToVRAM(CTexture *texture, fgBool force) {
     }
     fgBool result = FG_TRUE;
     STextureID& texGfxID = texture->getRefGfxID();
-    if(gfx::CPlatform::context()->isTexture(texGfxID) == FG_GFX_TRUE && !force) {
+    if(gfx::context::isTexture(texGfxID) == FG_GFX_TRUE && !force) {
         return result;
     }
     FG_LOG_DEBUG("GFX: Is texture '%s' locked? [%d]", texture->getNameStr(), texture->isLocked());
@@ -313,7 +313,7 @@ fgBool gfx::CTextureManager::uploadToVRAM(CTexture *texture, fgBool force) {
                 result = FG_FALSE;
                 FG_LOG_ERROR("GFX: Could not upload texture '%s' to VRAM", texture->getFilePathStr());
             } else {
-                if(gfx::CPlatform::context()->isTexture(texGfxID) == FG_GFX_TRUE)
+                if(gfx::context::isTexture(texGfxID) == FG_GFX_TRUE)
                     texture->setIsInVRAM(FG_TRUE);
             }
         }
@@ -375,7 +375,7 @@ void gfx::CTextureManager::allReleaseNonGFX(void) {
         if(resType == resource::TEXTURE || resType == resource::FONT) {
             CTextureResource *textureResource = (CTextureResource *)resource;
             textureResource->releaseNonGFX();
-            if(gfx::CPlatform::context()->isTexture(textureResource->getRefGfxID()) == GL_TRUE)
+            if(gfx::context::isTexture(textureResource->getRefGfxID()) == GL_TRUE)
                 textureResource->setIsInVRAM(FG_TRUE);
         }
         ((resource::CResourceManager *)m_pResourceMgr)->goToNext(searchTypes, 3);
@@ -404,7 +404,7 @@ void gfx::CTextureManager::allReleaseGFX(void) {
         if(resType == resource::TEXTURE || resType == resource::FONT) {
             CTextureResource *textureResource = (CTextureResource *)resource;
             STextureID& texGfxID = textureResource->getRefGfxID();
-            gfx::CPlatform::context()->deleteTexture(texGfxID);
+            gfx::context::deleteTexture(texGfxID);
             //textureResource->releaseNonGFX();
         }
         ((resource::CResourceManager *)m_pResourceMgr)->goToNext(searchTypes, 3);
@@ -422,7 +422,7 @@ void gfx::CTextureManager::releaseGFX(CTextureResource * texture) {
     resource::ResourceType resType = texture->getResourceType();
     if(resType == resource::TEXTURE || resType == resource::FONT) {
         STextureID& texGfxID = texture->getRefGfxID();
-        gfx::CPlatform::context()->deleteTexture(texGfxID);
+        gfx::context::deleteTexture(texGfxID);
     }
 }
 
@@ -454,12 +454,12 @@ fgBool gfx::CTextureManager::makeTexture(CTextureResource * pTexture) {
     FG_LOG_DEBUG("GFX: Preparing for texture upload [%s]...", pTexture->getNameStr());
     STextureID& texGfxID = pTexture->getRefGfxID();
     // Generate texture object ONLY IF NEEDED
-    if(FG_GFX_FALSE == gfx::CPlatform::context()->isTexture(texGfxID)) {
-        gfx::CPlatform::context()->genTexture(pTexture->getPtrGfxID());
+    if(FG_GFX_FALSE == context::isTexture(texGfxID)) {
+        context::genTexture(pTexture->getPtrGfxID());
     }
     fgBool status = FG_TRUE;
     std::string failedFuncs;
-    gfx::CPlatform::context()->bindTexture(texGfxID);
+    context::bindTexture(texGfxID);
     if(fgGLError("glBindTexture")) {
         status = FG_FALSE;
         failedFuncs.append("glBindTexture, ");

@@ -661,7 +661,7 @@ void CGameMain::render(void) {
         profile::g_debugProfiling->end("GFX::render");
     }
 #endif
-    gfx::CPlatform::context()->setBlend(FG_TRUE); // #FIXME
+    gfx::context::setBlend(FG_TRUE); // #FIXME
 #if defined(FG_DEBUG)
     if(g_fgDebugConfig.isDebugProfiling) {
         profile::g_debugProfiling->begin("GUI::render");
@@ -673,7 +673,7 @@ void CGameMain::render(void) {
         profile::g_debugProfiling->end("GUI::render");
     }
 #endif
-    gfx::CPlatform::context()->setBlend(FG_FALSE); // #FIXME
+    gfx::context::setBlend(FG_FALSE); // #FIXME
     FG_HardwareState->deviceYield();
     m_gfxMain->getMainWindow()->swapBuffers();
 }

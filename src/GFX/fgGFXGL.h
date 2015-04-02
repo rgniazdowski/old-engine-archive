@@ -109,23 +109,28 @@ using namespace gl;
 //4.40              4.4
 //4.50              4.5
 
-enum fgGfxSLVersion {
-    FG_GFX_SHADING_LANGUAGE_INVALID = 0,
-    FG_GFX_ESSL_100 = 100,
-    FG_GFX_ESSL_300 = 300,
-    FG_GFX_GLSL_110 = 110,
-    FG_GFX_GLSL_120 = 120,
-    FG_GFX_GLSL_130 = 130,
-    FG_GFX_GLSL_140 = 140,
-    FG_GFX_GLSL_150 = 150,
-    FG_GFX_GLSL_330 = 330,
-    FG_GFX_GLSL_400 = 400,
-    FG_GFX_GLSL_410 = 410,
-    FG_GFX_GLSL_420 = 420,
-    FG_GFX_GLSL_430 = 430,
-    FG_GFX_GLSL_440 = 440,
-    FG_GFX_GLSL_450 = 450
-};
+namespace fg {
+    namespace gfx {
+
+        enum ShadingLangVersion {
+            FG_GFX_SHADING_LANGUAGE_INVALID = 0,
+            FG_GFX_ESSL_100 = 100,
+            FG_GFX_ESSL_300 = 300,
+            FG_GFX_GLSL_110 = 110,
+            FG_GFX_GLSL_120 = 120,
+            FG_GFX_GLSL_130 = 130,
+            FG_GFX_GLSL_140 = 140,
+            FG_GFX_GLSL_150 = 150,
+            FG_GFX_GLSL_330 = 330,
+            FG_GFX_GLSL_400 = 400,
+            FG_GFX_GLSL_410 = 410,
+            FG_GFX_GLSL_420 = 420,
+            FG_GFX_GLSL_430 = 430,
+            FG_GFX_GLSL_440 = 440,
+            FG_GFX_GLSL_450 = 450
+        };
+    }
+}
 
     #if defined FG_USING_OPENGL_ES
         #define FG_GFX_SHADING_LANG_VERSION_DEFAULT FG_GFX_ESSL_100

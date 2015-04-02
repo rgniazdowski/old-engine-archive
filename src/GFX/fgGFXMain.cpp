@@ -45,7 +45,6 @@ m_pResourceMgr(NULL),
 m_pEventMgr(NULL),
 m_shaderMgr(NULL),
 m_mainWindow(NULL),
-m_gfxContext(NULL),
 m_3DScene(NULL),
 m_2DScene(NULL),
 m_particleSystem(NULL),
@@ -75,8 +74,8 @@ gfx::CGfxMain::~CGfxMain() {
         delete m_3DScene;
     if(m_2DScene)
         delete m_2DScene;
-    if(m_gfxContext)
-        m_gfxContext->deleteAllBuffers();
+    if(context::isInit())
+        context::deleteAllBuffers();
 
     if(m_textureMgr)
         delete m_textureMgr;
@@ -100,7 +99,6 @@ gfx::CGfxMain::~CGfxMain() {
     m_pEventMgr = NULL;
     m_shaderMgr = NULL;
     m_mainWindow = NULL;
-    m_gfxContext = NULL;
     m_3DScene = NULL;
     m_2DScene = NULL;
 }
@@ -190,10 +188,9 @@ fgBool gfx::CGfxMain::initGFX(void) {
 #endif
     }
     if(status) {
-        m_gfxContext = gfx::CPlatform::context();
-        if(!m_gfxContext) {
+        if(!context::isInit()) {
             status = FG_FALSE;
-        } else if(!m_gfxContext->isInit()) {
+        } else if(!context::isInit()) {
             status = FG_FALSE;
         }
         if(!status) {
@@ -203,24 +200,23 @@ fgBool gfx::CGfxMain::initGFX(void) {
     if(status) {
 
         FG_LOG_DEBUG("GFX: Setting viewport (0, 0, %d, %d)", m_mainWindow->getWidth(), m_mainWindow->getHeight());
-        m_gfxContext->viewport(0, 0, m_mainWindow->getWidth(), m_mainWindow->getHeight());
-        m_gfxContext->clearDepth(1.0f);
-        m_gfxContext->setDepthTest(FG_TRUE);
-        m_gfxContext->depthFunc(GL_LEQUAL);
-        m_gfxContext->setCullFace(FG_TRUE);
-        m_gfxContext->frontFace(GL_CCW);
-        m_gfxContext->cullFace(GL_BACK);
-        m_gfxContext->setScissorTest(FG_TRUE);
-        m_gfxContext->setBlend(FG_FALSE);
-        m_gfxContext->blendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        m_gfxContext->blendEquation(GL_FUNC_ADD);
-        m_gfxContext->activeTexture(GL_TEXTURE0);
-        m_gfxContext->bindTexture2D(0);
-        m_gfxContext->bindTextureCube(0);
-        m_gfxContext->scissor(0, 0, m_mainWindow->getWidth(), m_mainWindow->getHeight());
-        m_gfxContext->setScreenSize(m_mainWindow->getWidth(), m_mainWindow->getHeight());
+        context::viewport(0, 0, m_mainWindow->getWidth(), m_mainWindow->getHeight());
+        context::clearDepth(1.0f);
+        context::setDepthTest(FG_TRUE);
+        context::depthFunc(GL_LEQUAL);
+        context::setCullFace(FG_TRUE);
+        context::frontFace(GL_CCW);
+        context::cullFace(GL_BACK);
+        context::setScissorTest(FG_TRUE);
+        context::setBlend(FG_FALSE);
+        context::blendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        context::blendEquation(GL_FUNC_ADD);
+        context::activeTexture(GL_TEXTURE0);
+        context::bindTexture2D(0);
+        context::bindTextureCube(0);
+        context::scissor(0, 0, m_mainWindow->getWidth(), m_mainWindow->getHeight());
+        context::setScreenSize(m_mainWindow->getWidth(), m_mainWindow->getHeight());
         m_2DScene->getMVP()->setOrtho(0.0f, (float)m_mainWindow->getWidth(), (float)m_mainWindow->getHeight(), 0.0f);
-        m_loader.setContext(m_gfxContext);
         m_init = FG_TRUE;
     }
     if(status && m_shaderMgr) {
@@ -348,7 +344,7 @@ void gfx::CGfxMain::closeGFX(fgBool suspend) {
     FG_LOG_DEBUG("Closing GFX subsystem...");
     if(m_init) {
 #if defined(FG_USING_SDL2)
-        // m_gfxContext->getGLContext()
+        // context::getGLContext()
         SDL_GL_MakeCurrent(m_mainWindow->getSysPtr(), NULL);
 #endif
         if(m_mainWindow && !suspend) {
@@ -357,7 +353,6 @@ void gfx::CGfxMain::closeGFX(fgBool suspend) {
         gfx::CPlatform::quit(suspend);
         unregisterResourceCallbacks();
         unregisterSceneCallbacks();
-        m_gfxContext = NULL;
     }
     m_init = FG_FALSE;
 }
@@ -378,8 +373,8 @@ fgBool gfx::CGfxMain::suspendGFX(void) {
             status = FG_FALSE;
     }
     {
-        if(m_gfxContext)
-            m_gfxContext->deleteAllBuffers();
+        if(context::isInit())
+            context::deleteAllBuffers();
     }
     if(status) {
         // With parameter TRUE the SDL will not be closed
@@ -439,7 +434,7 @@ fgBool gfx::CGfxMain::resumeGFX(void) {
  *
  */
 void gfx::CGfxMain::display(void) {
-    if(!m_gfxContext)
+    if(!context::isInit())
         return;
     if(m_particleSystem) {
         m_particleSystem->calculate();
@@ -474,18 +469,18 @@ void gfx::CGfxMain::render(void) {
     static gfx::CModelResource *cobraBomber = NULL;
     glm::mat4 Model;
 
-    if(!m_mainWindow || !m_gfxContext) {
+    if(!m_mainWindow || !context::isInit()) {
         FG_LOG_ERROR("Main window / context is NULL");
         return;
     }
     fgGLError();
     m_mainWindow->clearColor();
 
-    m_gfxContext->setCullFace(FG_TRUE);
-    m_gfxContext->setDepthTest(FG_TRUE);
-    m_gfxContext->setBlend(FG_FALSE);
-    m_gfxContext->frontFace(FrontFace::FACE_CCW);
-    m_gfxContext->setCapability(gfx::DEPTH_WRITEMASK, FG_TRUE);
+    context::setCullFace(FG_TRUE);
+    context::setDepthTest(FG_TRUE);
+    context::setBlend(FG_FALSE);
+    context::frontFace(FrontFace::FACE_CCW);
+    context::setCapability(gfx::DEPTH_WRITEMASK, FG_TRUE);
 
     resource::CResourceManager *rm = NULL;
 #if defined(FG_USING_SDL2)
@@ -575,10 +570,6 @@ void gfx::CGfxMain::render(void) {
     sPlainEasyProgram->setUniform(FG_GFX_USE_TEXTURE, 1.0f);
     sPlainEasyProgram->setUniform(FG_GFX_PLAIN_TEXTURE, (fgGFXint)0);
 
-        }
-        }
-    }
-
 #if defined(FG_DEBUG)
     if(g_fgDebugConfig.isDebugProfiling) {
         profile::g_debugProfiling->begin("GFX::3DScene::render");
@@ -594,21 +585,21 @@ void gfx::CGfxMain::render(void) {
         profile::g_debugProfiling->end("GFX::3DScene::render");
     }
 #endif
-    //////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////
     // 2D LAYER DRAWING TEST - NEEDS TO WORK DIFFERENTLY
     // THIS IS FOR GUI DRAWING - SPECIAL ORTHO SHADER
-    //////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////
     gfx::CShaderProgram *sOrthoEasyProgram = m_shaderMgr->get(sOrthoEasyShaderName);
     if(!sOrthoEasyProgram) {
         FG_LOG_ERROR("Cant access sOrthoEasy shader program.");
         return;
     }
     m_shaderMgr->useProgram(sOrthoEasyProgram);
-    m_gfxContext->setBlend(FG_TRUE);
+    context::setBlend(FG_TRUE);
     m_2DScene->getMVP()->setOrtho(0, (float)m_mainWindow->getWidth(), (float)m_mainWindow->getHeight(), 0.0f);
     m_2DScene->render();
-    m_gfxContext->blendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-    m_gfxContext->setBlend(FG_FALSE);
+    context::blendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+    context::setBlend(FG_FALSE);
 
     // #FIXME ! TOTAL FUBAR SITUATION ! OMG ! OH MY !
     Model = math::translate(Model, Vec3f(0.0f, 0.0f, 0.0f));
@@ -618,9 +609,9 @@ void gfx::CGfxMain::render(void) {
     MVP->setOrtho(0, (float)m_mainWindow->getWidth(), (float)m_mainWindow->getHeight(), 0.0f);
     MVP->calculate(Model);
     sOrthoEasyProgram->setUniform(MVP);
-    m_gfxContext->setBlend(FG_TRUE);
-    m_gfxContext->blendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    m_gfxContext->scissor(0, 0, m_mainWindow->getWidth(), m_mainWindow->getHeight()); // #THA FUCK?
+    context::setBlend(FG_TRUE);
+    context::blendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    context::scissor(0, 0, m_mainWindow->getWidth(), m_mainWindow->getHeight()); // #THA FUCK?
 }
 
 /**
@@ -863,7 +854,7 @@ fgBool gfx::CGfxMain::resourceCreatedHandler(fg::event::CArgumentList * argv) {
             }
             if(!pShape->mesh)
                 continue;
-            if(!CPlatform::context()->isBuffer(pShape->mesh->getPtrVBO())) {
+            if(!context::isBuffer(pShape->mesh->getPtrVBO())) {
                 FG_LOG_DEBUG("GFX: Uploading static vertex data to VBO for shape: '%s'", pShape->name.c_str());
                 pShape->mesh->genBuffers();
             }

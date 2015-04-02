@@ -11,9 +11,6 @@
 #include "fgGFXPlatform.h"
 #include "Util/fgMemory.h"
 
-/// Main gfx context (server/client state cache)
-fg::gfx::CContext *fg::gfx::CPlatform::m_gfxContext = NULL;
-
 /// Is platform initialized?
 fgBool fg::gfx::CPlatform::m_init = FG_FALSE;
 
@@ -30,25 +27,12 @@ void *fg::gfx::CPlatform::m_defaultConfig = 0;
 
 using namespace fg;
 
-/**
- * 
- */
 gfx::CPlatform::CPlatform() { }
 
-/**
- * 
- */
 gfx::CPlatform::~CPlatform() {
-    if(m_gfxContext)
-        delete m_gfxContext;
-    m_gfxContext = NULL;
+    context::destroy();
 }
 
-/**
- * 
- * @param reinit
- * @return 
- */
 fgBool gfx::CPlatform::initialize(fgBool reinit) {
     if(gfx::CPlatform::m_init && !reinit)
         return FG_TRUE;
@@ -211,10 +195,6 @@ fgBool gfx::CPlatform::initialize(fgBool reinit) {
     return status;
 }
 
-/**
- * 
- * @return 
- */
 fgBool gfx::CPlatform::quit(fgBool suspend) {
     fgBool status = FG_TRUE;
     if(m_init) {
@@ -229,9 +209,7 @@ fgBool gfx::CPlatform::quit(fgBool suspend) {
 #elif defined(FG_USING_MARMALADE_IWGL)
         IwGLTerminate();
 #elif defined(FG_USING_SDL2)
-        if(m_gfxContext)
-            delete m_gfxContext;
-        m_gfxContext = NULL;
+        context::destroy();
         if(!suspend) {
             FG_LOG_DEBUG("GFX: Quitting main SDL");
             SDL_Quit();
@@ -259,49 +237,23 @@ fgBool gfx::CPlatform::quit(fgBool suspend) {
 
 #if defined(FG_USING_SDL2)
 
-/**
- * 
- * @param sdlWindow
- * @return 
- */
 fgBool gfx::CPlatform::initializeMainContext(SDL_Window* sdlWindow) {
-    if(!m_gfxContext)
-        m_gfxContext = new CContext(sdlWindow);
-    if(!m_gfxContext->isInit())
-        return FG_FALSE;
-    m_gfxContext->initialize();
+    if(!context::isInit())
+        context::initialize(sdlWindow);
+    if(!context::isInit())
+        return FG_FALSE;    
     return FG_TRUE;
 }
 #endif
 
-/**
- * 
- * @return 
- */
-gfx::CContext *gfx::CPlatform::context(void) {
-    return m_gfxContext;
-}
-
-/**
- * 
- * @return 
- */
 fgBool gfx::CPlatform::isInit(void) {
     return gfx::CPlatform::m_init;
 }
 
-/**
- * 
- * @return 
- */
 void *gfx::CPlatform::getDefaultDisplay(void) {
     return gfx::CPlatform::m_defaultDisplay;
 }
 
-/**
- * 
- * @return 
- */
 void *gfx::CPlatform::getDefaultConfig(void) {
     return gfx::CPlatform::m_defaultConfig;
 }

@@ -28,7 +28,6 @@ m_pSplashTex(NULL),
 m_pProgressTex(NULL),
 m_pProgram(NULL),
 m_pWindow(NULL),
-m_pContext(NULL),
 m_mvp(),
 m_mat(),
 m_progress(0.0f) { }
@@ -43,7 +42,6 @@ gfx::CLoader::CLoader(const CLoader& orig) {
         this->m_pProgressTex = orig.m_pProgressTex;
         this->m_pProgram = orig.m_pProgram;
         this->m_pWindow = orig.m_pWindow;
-        this->m_pContext = orig.m_pContext;
         this->m_mvp = orig.m_mvp;
         this->m_mat = orig.m_mat;
         this->m_progress = orig.m_progress;
@@ -58,7 +56,6 @@ gfx::CLoader::~CLoader() {
     m_pProgressTex = NULL;
     m_pProgram = NULL;
     m_pWindow = NULL;
-    m_pContext = NULL;
     m_progress = 0.0f;
     m_mvp.identity();
 }
@@ -68,7 +65,7 @@ gfx::CLoader::~CLoader() {
  * @param diff
  */
 void gfx::CLoader::update(const float diff) {
-    if(!m_pWindow || !m_pSplashTex || !m_pContext || !m_pProgram)
+    if(!m_pWindow || !m_pSplashTex || !context::isInit() || !m_pProgram)
         return;
     m_pWindow->clearColor();
     m_progress += diff;
@@ -86,7 +83,7 @@ void gfx::CLoader::update(const float diff) {
     /// Get the lower dimensions
     float mextent = (float)glm::min((int)ww, (int)wh)*0.9f;
     /// Bind the splash texture
-    m_pContext->bindTexture(m_pSplashTex->getRefGfxID());
+    context::bindTexture(m_pSplashTex->getRefGfxID());
     // Centered on screen, aspect ratio 1:1 regardless of texture dimensions (for now)
     m_mat = math::translate(Matrix4f(),
                             Vec3f(ww / 2.0f,
@@ -106,7 +103,7 @@ void gfx::CLoader::update(const float diff) {
     float pw = ratio * ww;
     float ph = 0.07f * wh;
     /// Bind the progress texture
-    m_pContext->bindTexture(m_pProgressTex->getRefGfxID());
+    context::bindTexture(m_pProgressTex->getRefGfxID());
     // Bottom-left of the screen
     m_mat = math::translate(Matrix4f(),
                             Vec3f(ww / 2.0f,

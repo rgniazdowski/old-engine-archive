@@ -107,7 +107,7 @@ fgBool gfx::CShaderProgram::preLoadConfig(const char *path) {
     std::string filePathNoExt = fullPath.substr(0, fullPath.length() - 1 - strlen(ext));
 
     // First load the main shader program config
-    if(!m_config->load(path, CPlatform::context()->getSLVersion())) {
+    if(!m_config->load(path, context::getSLVersion())) {
         return FG_FALSE;
     }
     CShaderConfig::ShaderTypeVec shaderTypes = m_config->getRefShaderTypes();
@@ -119,7 +119,7 @@ fgBool gfx::CShaderProgram::preLoadConfig(const char *path) {
         std::string newPath;
         newPath.append(filePathNoExt).append(".").append(FG_GFX_SHADER_CFG_STD_SUFFIX(shaderTypes[i]));
 
-        if(!m_config->load(newPath.c_str(), CPlatform::context()->getSLVersion())) {
+        if(!m_config->load(newPath.c_str(), context::getSLVersion())) {
             FG_LOG_ERROR("GFX: Failed to load shader program config: '%s'", newPath.c_str());
             return FG_FALSE;
         }
@@ -325,8 +325,8 @@ fgBool gfx::CShaderProgram::use(void) {
             return FG_FALSE;
         shaderMgr->setInternalCurrentProgram(this); // ?
     }
-    fgGFXuint last = CPlatform::context()->activeProgram();
-    CPlatform::context()->useProgram(m_gfxID);
+    fgGFXuint last = context::activeProgram();
+    context::useProgram(m_gfxID);
     fgGLError("glUseProgram"); // #FIXME - GL error reporting - rtard?
     return FG_TRUE;
 }

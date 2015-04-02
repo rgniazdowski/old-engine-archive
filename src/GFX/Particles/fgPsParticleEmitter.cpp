@@ -326,16 +326,16 @@ void gfx::CParticleEmitter::draw(void) {
     //glPolygonOffset(1.0f, 2.0f);
     //m_drawCall->setZIndex(45); // #FIXME
     // #FIXME - such things should be set inside of a material
-    CPlatform::context()->blendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-    CPlatform::context()->setBlend(FG_TRUE);
-    CPlatform::context()->setCullFace(FG_FALSE);
-    CPlatform::context()->disable(gfx::DEPTH_WRITEMASK);
+    context::blendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+    context::setBlend(FG_TRUE);
+    context::setCullFace(FG_FALSE);
+    context::disable(gfx::DEPTH_WRITEMASK);
 
     base_type::draw();
 
-    CPlatform::context()->enable(gfx::DEPTH_WRITEMASK);
-    CPlatform::context()->setCullFace(FG_TRUE);
-    CPlatform::context()->setBlend(FG_FALSE);
+    context::enable(gfx::DEPTH_WRITEMASK);
+    context::setCullFace(FG_TRUE);
+    context::setBlend(FG_FALSE);
 
     //glDisable(GL_POLYGON_OFFSET_FILL);
 }
