@@ -64,9 +64,6 @@ namespace fg {
 }
 using namespace fg;
 
-/*
- *
- */
 void gfx::SContextParam::determineParamType(void) {
     count = 1;
     switch(this->pname) {
