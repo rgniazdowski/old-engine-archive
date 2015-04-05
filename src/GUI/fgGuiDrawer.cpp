@@ -14,55 +14,17 @@
 
 using namespace fg;
 
-/*
- *
- */
 gui::CDrawer::CDrawer() :
 m_pResourceMgr(NULL) { }
 
-/*
- *
- */
 gui::CDrawer::~CDrawer() {
     m_pResourceMgr = NULL;
 }
 
-/*
- *
- */
 void gui::CDrawer::setResourceManager(fg::base::CManager *pResourceMgr) {
     m_pResourceMgr = pResourceMgr;
 }
 
-/*
- *
- */
-void gui::CDrawer::flush(void) {
-    gfx::CDrawingBatch::flush();
-}
-
-/*
- *
- */
-void gui::CDrawer::sortCalls(void) {
-    gfx::CDrawingBatch::sortCalls();
-}
-
-/*
- *
- */
-void gui::CDrawer::render(void) {
-    gfx::CDrawingBatch::render();
-}
-
-/**
- * 
- * @param outTextSize
- * @param blockPos
- * @param blockSize
- * @param style
- * @param fmt
- */
 void gui::CDrawer::appendText2D(Vec2f& outTextSize,
                                 const Vec2f &blockPos,
                                 const Vec2f &blockSize,
@@ -98,12 +60,6 @@ void gui::CDrawer::appendText2D(Vec2f& outTextSize,
     this->print(outPos.x, outPos.y, buf, /*fg.textSize*/realTextSize);
 }
 
-/**
- * 
- * @param pos
- * @param size
- * @param style
- */
 void gui::CDrawer::appendBackground2D(const Vec2f &pos,
                                       const Vec2f &size,
                                       CStyleContent& style) {
@@ -151,12 +107,6 @@ void gui::CDrawer::appendBackground2D(const Vec2f &pos,
     drawCall->appendRect2D(pos, size, uv1, uv2, FG_FALSE);
 }
 
-/**
- * 
- * @param pos
- * @param size
- * @param style
- */
 void gui::CDrawer::appendBorder2D(const Vec2f &pos,
                                   const Vec2f &size,
                                   CStyleContent& style) {

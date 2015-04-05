@@ -19,9 +19,6 @@
 
 using namespace fg;
 
-/**
- * 
- */
 gui::CSlider::CSlider() :
 base_type(),
 m_maxValue(100.0f),
@@ -32,28 +29,18 @@ m_sliderAlign(SLIDER_VERTICAL) {
     CSlider::setDefaults();
 }
 
-/**
- * 
- */
 gui::CSlider::~CSlider() { }
 
-/**
- * 
- */
 void gui::CSlider::setDefaults(void) {
     m_type = SLIDER;
     m_typeTraits = SLIDER | WIDGET;
     m_typeName = FG_GUI_SLIDER_NAME;
 }
 
-/**
- * 
- * @param guiLayer
- */
 void gui::CSlider::display(CDrawer* guiLayer) {
     if(!guiLayer)
         return;
-    if(!m_isVisible)
+    if(!isVisible())
         return;
     CDrawer *guiDrawer = (CDrawer *)guiLayer; // wut?
     SPadding &padding = m_styles[(int)m_state].getPadding();
@@ -120,17 +107,14 @@ void gui::CSlider::display(CDrawer* guiLayer) {
     guiDrawer->appendBorder2D(blockPos, blockSize, m_styles[(int)m_state]);
 }
 
-/**
- *
- */
-gui::CWidget::State gui::CSlider::updateState(const event::SPointerData* pointerData) {
+gui::CWidget::EventState gui::CSlider::updateState(const event::SPointerData* pointerData) {
     if(!pointerData) {
         return m_state;
     }
-    State lastState = m_state;
-    fgBool ignoreStateTmp = m_ignoreState;
+    EventState lastState = m_state;
+    fgBool ignoreStateTmp = doesIgnoreState();
     // So base_type::updateState does not reset m_state
-    m_ignoreState = FG_FALSE;
+    setIgnoreState(FG_FALSE);
     Vec2f ptrRelPos;
 
     // This will update the state to the new value
@@ -144,7 +128,7 @@ gui::CWidget::State gui::CSlider::updateState(const event::SPointerData* pointer
         m_sliderAlign = SLIDER_UNIVERSAL;
     }
 
-    if(m_state == State::PRESSED || m_state == State::ACTIVATED) {
+    if(m_state == STATE_PRESSED || m_state == STATE_ACTIVATED) {
         // Need to update the slider value 
         // Can use focus?
 
@@ -160,9 +144,9 @@ gui::CWidget::State gui::CSlider::updateState(const event::SPointerData* pointer
         m_pointerRatio.y = ptrRelPos.y / m_bbox.size.y;
     }
 
-    m_ignoreState = ignoreStateTmp;
-    if(m_ignoreState)
-        m_state = State::NONE;
+    setIgnoreState(ignoreStateTmp);
+    if(isIgnoreState())
+        m_state = STATE_NONE;
 
     return m_state;
 }

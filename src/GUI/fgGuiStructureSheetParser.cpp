@@ -18,9 +18,6 @@
 
 using namespace fg;
 
-/**
- * 
- */
 gui::CStructureSheetParser::CStructureSheetParser() :
 m_elemStack(),
 m_widgetStack(),
@@ -29,9 +26,6 @@ m_widgetMgr(NULL),
 m_isFailure(FG_FALSE),
 m_count(0) { }
 
-/**
- * 
- */
 gui::CStructureSheetParser::~CStructureSheetParser() {
     while(!m_elemStack.empty())
         m_elemStack.pop();
@@ -41,49 +35,24 @@ gui::CStructureSheetParser::~CStructureSheetParser() {
     m_widgetMgr = NULL;
 }
 
-/**
- * 
- * @param widgetFactory
- */
 void gui::CStructureSheetParser::setWidgetFactory(CWidgetFactory *widgetFactory) {
     m_widgetFactory = widgetFactory;
 }
 
-/**
- * 
- * @return 
- */
 gui::CWidgetFactory *gui::CStructureSheetParser::getWidgetFactory(void) const {
     return m_widgetFactory;
 }
 
-/**
- * 
- * @param widgetMgr
- */
 void gui::CStructureSheetParser::setWidgetManager(CWidgetManager *widgetMgr) {
     m_widgetMgr = widgetMgr;
 }
 
-/**
- * 
- * @return 
- */
 gui::CWidgetManager *gui::CStructureSheetParser::getWidgetManager(void) const {
     return m_widgetMgr;
 }
 
-/**
- * 
- * @param document
- */
 void gui::CStructureSheetParser::startDocument(fgXMLDocument *document) { }
 
-/**
- * 
- * @param data
- * @return 
- */
 Vector3f gui::CStructureSheetParser::parseSpatialData(const char *data,
                                                       gui::Unit& unit) {
     Vector3f out;
@@ -117,12 +86,6 @@ Vector3f gui::CStructureSheetParser::parseSpatialData(const char *data,
     return out;
 }
 
-/**
- * 
- * @param pWidget
- * @param attribute
- * @return 
- */
 fgBool gui::CStructureSheetParser::parseWidgetAttributes(CWidget *pWidget,
                                                          fgXMLAttribute *attribute) {
     if(!pWidget)
@@ -162,16 +125,16 @@ fgBool gui::CStructureSheetParser::parseWidgetAttributes(CWidget *pWidget,
              * DEACTIVATED,
              * COUNT
              */
-            pWidget->getStyleContent(CWidget::State::NONE).getPosition().unit = unit;
-            pWidget->getStyleContent(CWidget::State::NONE).getPosition().set(pos);
-            pWidget->getStyleContent(CWidget::State::FOCUS).getPosition().unit = unit;
-            pWidget->getStyleContent(CWidget::State::FOCUS).getPosition().set(pos);
-            pWidget->getStyleContent(CWidget::State::PRESSED).getPosition().unit = unit;
-            pWidget->getStyleContent(CWidget::State::PRESSED).getPosition().set(pos);
-            pWidget->getStyleContent(CWidget::State::ACTIVATED).getPosition().unit = unit;
-            pWidget->getStyleContent(CWidget::State::ACTIVATED).getPosition().set(pos);
-            pWidget->getStyleContent(CWidget::State::DEACTIVATED).getPosition().unit = unit;
-            pWidget->getStyleContent(CWidget::State::DEACTIVATED).getPosition().set(pos);
+            pWidget->getStyleContent(CWidget::STATE_NONE).getPosition().unit = unit;
+            pWidget->getStyleContent(CWidget::STATE_NONE).getPosition().set(pos);
+            pWidget->getStyleContent(CWidget::STATE_FOCUS).getPosition().unit = unit;
+            pWidget->getStyleContent(CWidget::STATE_FOCUS).getPosition().set(pos);
+            pWidget->getStyleContent(CWidget::STATE_PRESSED).getPosition().unit = unit;
+            pWidget->getStyleContent(CWidget::STATE_PRESSED).getPosition().set(pos);
+            pWidget->getStyleContent(CWidget::STATE_ACTIVATED).getPosition().unit = unit;
+            pWidget->getStyleContent(CWidget::STATE_ACTIVATED).getPosition().set(pos);
+            pWidget->getStyleContent(CWidget::STATE_DEACTIVATED).getPosition().unit = unit;
+            pWidget->getStyleContent(CWidget::STATE_DEACTIVATED).getPosition().set(pos);
         } else if(strcasecmp(attrname, "size") == 0) {
             Unit unit = Unit::PIXELS;
             Vector3f size = parseSpatialData(attrvalue, unit);
@@ -205,14 +168,6 @@ fgBool gui::CStructureSheetParser::parseWidgetAttributes(CWidget *pWidget,
     return FG_TRUE;
 }
 
-/**
- * 
- * @param localName
- * @param elementPtr
- * @param nodeType
- * @param firstAttribute
- * @param depth
- */
 void gui::CStructureSheetParser::startElement(const char *localName,
                                               fgXMLElement *elementPtr,
                                               fgXMLNodeType nodeType,
@@ -286,13 +241,6 @@ void gui::CStructureSheetParser::startElement(const char *localName,
     m_widgetStack.push(pWidget);
 }
 
-/**
- * 
- * @param localName
- * @param elementPtr
- * @param nodeType
- * @param depth
- */
 void gui::CStructureSheetParser::endElement(const char *localName,
                                             fgXMLElement *elementPtr,
                                             fgXMLNodeType nodeType,
@@ -311,14 +259,6 @@ void gui::CStructureSheetParser::endElement(const char *localName,
     }
 }
 
-/**
- * 
- * @param ch
- * @param start
- * @param length
- * @param nodeType
- * @param depth
- */
 void gui::CStructureSheetParser::characters(const char *ch,
                                             int start,
                                             int length,
@@ -335,8 +275,4 @@ void gui::CStructureSheetParser::characters(const char *ch,
     }
 }
 
-/**
- * 
- * @param document
- */
 void gui::CStructureSheetParser::endDocument(fgXMLDocument *document) { }

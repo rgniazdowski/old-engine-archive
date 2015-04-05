@@ -12,39 +12,23 @@
 
 using namespace fg;
 
-/**
- *
- */
 gui::CMessageBox::CMessageBox() :
 base_type() {
     CMessageBox::setDefaults();
 }
 
-/**
- *
- */
 gui::CMessageBox::~CMessageBox() { }
 
-/**
- *
- */
 void gui::CMessageBox::setDefaults(void) {
     m_type = MESSAGE_BOX;
     m_typeName = FG_GUI_MESSAGE_BOX_NAME;
     m_typeTraits = MESSAGE_BOX | WINDOW | CONTAINER | WIDGET;
 }
 
-/**
- * 
- * @return 
- */
 gfx::BoundingBox3Df gui::CMessageBox::updateBounds(void) {
     return CWindow::updateBounds();
 }
 
-/*
- *
- */
 void gui::CMessageBox::refresh(void) {
     base_type::refresh();
 }

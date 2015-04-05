@@ -12,38 +12,22 @@
 
 using namespace fg;
 
-/**
- *
- */
 gui::CWindow::CWindow() {
     fg::gui::CWindow::setDefaults();
 }
 
-/**
- *
- */
 gui::CWindow::~CWindow() { }
 
-/**
- *
- */
 void gui::CWindow::setDefaults(void) {
     m_type = WINDOW;
     m_typeName = FG_GUI_WINDOW_NAME;
     m_typeTraits = WINDOW | CONTAINER | WIDGET;
 }
 
-/**
- * 
- * @return 
- */
 gfx::BoundingBox3Df gui::CWindow::updateBounds(void) {
     return fg::gui::CContainer::updateBounds();
 }
 
-/**
- *
- */
 void gui::CWindow::refresh(void) {
     base_type::refresh();
 }

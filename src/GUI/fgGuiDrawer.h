@@ -74,15 +74,15 @@ namespace fg {
             /**
              * 
              */
-            virtual void flush(void);
+            //virtual void flush(void);
             /**
              * 
              */
-            virtual void sortCalls(void);
+            //virtual void sortCalls(void);
             /**
              * 
              */
-            virtual void render(void);
+            //virtual void render(void);
 
             /**
              * 

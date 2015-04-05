@@ -13,31 +13,16 @@
 
 using namespace fg;
 
-/**
- * Default empty constructor for Resource Factory object
- */
 gui::CWidgetFactory::CWidgetFactory() { }
 
-/**
- * Default destructor for Resource Factory object
- */
 gui::CWidgetFactory::~CWidgetFactory() {
     clear();
 }
 
-/**
- * Clear all registered resource creators
- */
 void gui::CWidgetFactory::clear(void) {
     m_factoryMap.clear();
 }
 
-/**
- * Register resource create function based on resource type
- * @param type
- * @param function
- * @return 
- */
 fgBool gui::CWidgetFactory::registerWidget(const WidgetType type,
                                            fgCreateGuiWidgetFn function) {
     if(!function)
@@ -55,11 +40,6 @@ fgBool gui::CWidgetFactory::registerWidget(const WidgetType type,
     return FG_TRUE;
 }
 
-/**
- * Call specific create function for given widget
- * @param type
- * @return 
- */
 gui::CWidget* gui::CWidgetFactory::createWidget(const WidgetType type) {
     factoryMapItor it = m_factoryMap.find(type);
     if(it != m_factoryMap.end()) {
@@ -69,11 +49,6 @@ gui::CWidget* gui::CWidgetFactory::createWidget(const WidgetType type) {
     return NULL;
 }
 
-/**
- * Check if given widget type constructor/create function is registered in factory
- * @param type
- * @return 
- */
 fgBool gui::CWidgetFactory::isRegistered(const WidgetType type) {
     factoryMapItor it = m_factoryMap.find(type);
     if(it != m_factoryMap.end()) {

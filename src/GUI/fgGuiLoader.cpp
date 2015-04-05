@@ -12,39 +12,23 @@
 
 using namespace fg;
 
-/**
- *
- */
 gui::CLoaderSub::CLoaderSub() :
 CWidget() {
     CLoaderSub::setDefaults();
 }
 
-/**
- *
- */
 gui::CLoaderSub::~CLoaderSub() { }
 
-/**
- *
- */
 void gui::CLoaderSub::setDefaults(void) {
     m_type = LOADER;
     m_typeName = FG_GUI_LOADER_NAME;
     m_typeTraits = LOADER | WIDGET;
 }
 
-/**
- * 
- * @return 
- */
 gfx::BoundingBox3Df gui::CLoaderSub::updateBounds(void) {
     return base_type::updateBounds();
 }
 
-/**
- *
- */
 void gui::CLoaderSub::refresh(void) {
     base_type::refresh();
 }

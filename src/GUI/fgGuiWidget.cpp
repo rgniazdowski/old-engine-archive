@@ -15,9 +15,6 @@
 
 using namespace fg;
 
-/**
- *
- */
 gui::CWidget::CWidget() :
 CManagedObject(),
 m_typeName(),
@@ -42,10 +39,8 @@ m_onLink(NULL),
 m_pFather(NULL),
 m_type(WIDGET_UNKNOWN),
 m_typeTraits(WIDGET_UNKNOWN),
-m_state(State::NONE),
-m_isVisible(FG_TRUE),
-m_isActive(FG_TRUE),
-m_ignoreState(FG_FALSE) {
+m_state(STATE_NONE),
+m_stateFlags(VISIBLE | ACTIVE) {
     m_bbox.pos.x = -1.0f;
     m_bbox.pos.y = -1.0f;
     m_bbox.pos.z = -1.0f;
@@ -54,68 +49,55 @@ m_ignoreState(FG_FALSE) {
     m_bbox.size.z = -1.0f;
 }
 
-/**
- *
- */
-gui::CWidget::~CWidget() {
- }
+gui::CWidget::~CWidget() { }
 
-/**
- * 
- * @param size
- * @param unit
- */
 void gui::CWidget::setSize(const Vector3f& size, Unit unit) {
     m_bbox.size = size;
 
-    m_styles[(int)State::NONE].getSize().style = (SSize::Style)unit;
-    m_styles[(int)State::NONE].getSize().set(size);
-    m_styles[(int)State::FOCUS].getSize().style = (SSize::Style)unit;
-    m_styles[(int)State::FOCUS].getSize().set(size);
-    m_styles[(int)State::PRESSED].getSize().style = (SSize::Style)unit;
-    m_styles[(int)State::PRESSED].getSize().set(size);
-    m_styles[(int)State::ACTIVATED].getSize().style = (SSize::Style)unit;
-    m_styles[(int)State::ACTIVATED].getSize().set(size);
-    m_styles[(int)State::DEACTIVATED].getSize().style = (SSize::Style)unit;
-    m_styles[(int)State::DEACTIVATED].getSize().set(size);
+    m_styles[STATE_NONE].getSize().style = (SSize::Style)unit;
+    m_styles[STATE_NONE].getSize().set(size);
+    m_styles[STATE_FOCUS].getSize().style = (SSize::Style)unit;
+    m_styles[STATE_FOCUS].getSize().set(size);
+    m_styles[STATE_PRESSED].getSize().style = (SSize::Style)unit;
+    m_styles[STATE_PRESSED].getSize().set(size);
+    m_styles[STATE_ACTIVATED].getSize().style = (SSize::Style)unit;
+    m_styles[STATE_ACTIVATED].getSize().set(size);
+    m_styles[STATE_DEACTIVATED].getSize().style = (SSize::Style)unit;
+    m_styles[STATE_DEACTIVATED].getSize().set(size);
 }
 
-/**
- * 
- * @param guiLayer
- */
 void gui::CWidget::display(CDrawer* guiLayer) {
     if(!guiLayer)
         return;
-    if(!m_isVisible)
+    if(!isVisible())
         return;
     CDrawer *guiDrawer = (CDrawer*)guiLayer;
     guiDrawer->downZIndex();
     Vec2f tmpTextSize;
     Vec2f blockPos = Vec2f(m_bbox.pos.x, m_bbox.pos.y);
     Vec2f blockSize = Vec2f(m_bbox.size.x, m_bbox.size.y);
-    fgColor4f &bgColor = m_styles[(int)m_state].getBackground().color;
+    fgColor4f &bgColor = m_styles[m_state].getBackground().color;
     if(bgColor.a > FG_EPSILON)
-        guiDrawer->appendBackground2D(blockPos, blockSize, m_styles[(int)m_state]);
-    guiDrawer->appendBorder2D(blockPos, blockSize, m_styles[(int)m_state]);
+        guiDrawer->appendBackground2D(blockPos, blockSize, m_styles[m_state]);
+    guiDrawer->appendBorder2D(blockPos, blockSize, m_styles[m_state]);
 #if defined(FG_DEBUG)
     // BLOCK SIZE / POS DEBUG PRINT
     if(g_fgDebugConfig.guiBBoxShow) {
         guiDrawer->downZIndex();
         char buf[256];
         snprintf(buf, 255, "%s >> %.1fx%.1f [%.1fx%.1f]", m_nameTag.c_str(), blockPos.x, blockPos.y, blockSize.x, blockSize.y);
-        float tSize = m_styles[(int)m_state].getForeground().textSize;
-        fgColor4f tColor = m_styles[(int)m_state].getForeground().color;
-        std::string tFont = m_styles[(int)m_state].getForeground().font;
-        m_styles[(int)m_state].getForeground().textSize = 2.0f;
-        m_styles[(int)m_state].getForeground().unit = Unit::PERCENTS;
-        m_styles[(int)m_state].getForeground().font = "StbConsolasBold";
-        m_styles[(int)m_state].getForeground().color = fgColor4f(.8f, .2f, .1f, 1.0f);
+        float tSize = m_styles[m_state].getForeground().textSize;
+        fgColor4f tColor = m_styles[m_state].getForeground().color;
+        std::string tFont = m_styles[m_state].getForeground().font;
+        m_styles[m_state].getForeground().textSize = 2.0f;
+        m_styles[m_state].getForeground().unit = Unit::PERCENTS;
+        m_styles[m_state].getForeground().font = "StbConsolasBold";
+        m_styles[m_state].getForeground().color = fgColor4f(.8f, .2f, .1f, 1.0f);
         blockSize.y = 10.0f;
-        guiDrawer->appendText2D(tmpTextSize, blockPos, blockSize, m_styles[(int)m_state], buf);
-        m_styles[(int)m_state].getForeground().textSize = tSize;
-        m_styles[(int)m_state].getForeground().font = tFont;
-        m_styles[(int)m_state].getForeground().color = tColor;
+        guiDrawer->appendText2D(tmpTextSize, blockPos, blockSize, m_styles[m_state], buf);
+        m_styles[m_state].getForeground().textSize = tSize;
+        m_styles[m_state].getForeground().font = tFont;
+        m_styles[m_state].getForeground().color = tColor;
         guiDrawer->upZIndex();
     }
 #endif
@@ -124,7 +106,7 @@ void gui::CWidget::display(CDrawer* guiLayer) {
         guiDrawer->downZIndex();
         blockPos = Vec2f(m_bbox.pos.x, m_bbox.pos.y);
         blockSize = Vec2f(m_bbox.size.x, m_bbox.size.y);
-        guiDrawer->appendText2D(m_textSize, blockPos, blockSize, m_styles[(int)m_state], getTextStr());
+        guiDrawer->appendText2D(m_textSize, blockPos, blockSize, m_styles[m_state], getTextStr());
         guiDrawer->upZIndex();
     }
 #if defined(FG_DEBUG)
@@ -132,31 +114,27 @@ void gui::CWidget::display(CDrawer* guiLayer) {
     if(g_fgDebugConfig.guiBBoxShow) {
         blockPos = Vec2f(m_bbox.pos.x, m_bbox.pos.y);
         blockSize = Vec2f(m_bbox.size.x, m_bbox.size.y);
-        blockPos.x += m_styles[(int)m_state].getPadding().left;
-        blockPos.y += m_styles[(int)m_state].getPadding().top;
-        blockSize.x -= m_styles[(int)m_state].getPadding().right + m_styles[(int)m_state].getPadding().left;
-        blockSize.y -= m_styles[(int)m_state].getPadding().bottom + m_styles[(int)m_state].getPadding().top;
+        blockPos.x += m_styles[m_state].getPadding().left;
+        blockPos.y += m_styles[m_state].getPadding().top;
+        blockSize.x -= m_styles[m_state].getPadding().right + m_styles[m_state].getPadding().left;
+        blockSize.y -= m_styles[m_state].getPadding().bottom + m_styles[m_state].getPadding().top;
         guiDrawer->appendBorder2D(blockPos, blockSize, m_styles[0]);
     }
     // MARGIN DEBUG - OUTER BORDER
     if(g_fgDebugConfig.guiBBoxShow) {
         blockPos = Vec2f(m_bbox.pos.x, m_bbox.pos.y);
         blockSize = Vec2f(m_bbox.size.x, m_bbox.size.y);
-        blockPos.x -= m_styles[(int)m_state].getMargin().left;
-        blockPos.y -= m_styles[(int)m_state].getMargin().top;
-        blockSize.x += m_styles[(int)m_state].getMargin().right + m_styles[(int)m_state].getMargin().left;
-        blockSize.y += m_styles[(int)m_state].getMargin().bottom + m_styles[(int)m_state].getMargin().top;
+        blockPos.x -= m_styles[m_state].getMargin().left;
+        blockPos.y -= m_styles[m_state].getMargin().top;
+        blockSize.x += m_styles[m_state].getMargin().right + m_styles[m_state].getMargin().left;
+        blockSize.y += m_styles[m_state].getMargin().bottom + m_styles[m_state].getMargin().top;
         guiDrawer->appendBorder2D(blockPos, blockSize, m_styles[0]);
     }
 #endif
 }
 
-/**
- * 
- * @return 
- */
 gfx::BoundingBox3Df gui::CWidget::updateBounds(void) {
-    CStyleContent &style = m_styles[(int)m_state];
+    CStyleContent &style = m_styles[m_state];
     SPadding &padding = style.getPadding();
     // Padding is inside of the border - it applies to the contents inside
     // of the widget, in this case the lowest (most deep) content is initial
@@ -178,13 +156,8 @@ gfx::BoundingBox3Df gui::CWidget::updateBounds(void) {
     return positionAndSize;
 }
 
-/**
- * 
- * @param bounds
- * @return 
- */
 gfx::BoundingBox3Df gui::CWidget::updateBounds(const gfx::BoundingBox3Df &bounds) {
-    CStyleContent &style = m_styles[(int)m_state];
+    CStyleContent &style = m_styles[m_state];
     SPosition::Style posStyle = style.getPosition().style;
     SSize &size = style.getSize();
     if(size.style == SSize::Style::MAX) {
@@ -244,41 +217,33 @@ gfx::BoundingBox3Df gui::CWidget::updateBounds(const gfx::BoundingBox3Df &bounds
     return positionAndSize;
 }
 
-/**
- *
- */
 void gui::CWidget::refresh(void) {
-    if(m_styles[(int)m_state].getPosition().style != SPosition::Style::STATICPOS) {
-        if(FG_GUI_CHECK_FLOAT(m_styles[(int)m_state].getPosition().left))
-            m_relPos.x = m_styles[(int)m_state].getPosition().left;
-        if(FG_GUI_CHECK_FLOAT(m_styles[(int)m_state].getPosition().top))
-            m_relPos.y = m_styles[(int)m_state].getPosition().top;
+    if(m_styles[m_state].getPosition().style != SPosition::Style::STATICPOS) {
+        if(FG_GUI_CHECK_FLOAT(m_styles[m_state].getPosition().left))
+            m_relPos.x = m_styles[m_state].getPosition().left;
+        if(FG_GUI_CHECK_FLOAT(m_styles[m_state].getPosition().top))
+            m_relPos.y = m_styles[m_state].getPosition().top;
     }
 }
 
-/**
- * 
- * @param pointerData
- * @return 
- */
-gui::CWidget::State gui::CWidget::updateState(const event::SPointerData *pointerData) {
+gui::CWidget::EventState gui::CWidget::updateState(const event::SPointerData *pointerData) {
     if(!pointerData)
         return m_state;
-    if(!m_isActive) {
-        m_state = CWidget::State::DEACTIVATED;
+    if(!isActive()) {
+        m_state = STATE_DEACTIVATED;
         // what about deactivate callback
         // maybe on deactivate should be called when isActive is set to false?
         return m_state;
     }
-    State lastState = m_state;
-    m_state = State::NONE;
+    EventState lastState = m_state;
+    m_state = STATE_NONE;
     if(m_bbox.test((float)pointerData->m_x, (float)pointerData->m_y)) {
-        m_state = State::FOCUS;
+        m_state = STATE_FOCUS;
         //if(!m_ignoreState) FG_LOG_DEBUG("GUI: Widget name[%s] state[FOCUS]", getNameStr());
     }
 
-    if(m_state == State::FOCUS) {
-        if(lastState == State::NONE) {
+    if(m_state == STATE_FOCUS) {
+        if(lastState == STATE_NONE) {
             // Focus gained
             if(m_onFocus) {
                 m_onFocus->Call(this);
@@ -286,10 +251,10 @@ gui::CWidget::State gui::CWidget::updateState(const event::SPointerData *pointer
         }
         if(pointerData->m_state & FG_POINTER_STATE_PRESSED)//|| pointerData->m_state & FG_POINTER_STATE_DOWN) 
         {
-            m_state = State::PRESSED;
+            m_state = STATE_PRESSED;
             //if(!m_ignoreState) FG_LOG_DEBUG("GUI: Widget name[%s] state[PRESSED]", getNameStr());
         } else if(pointerData->m_state == FG_POINTER_STATE_RELEASED) {
-            if(lastState == State::PRESSED) {
+            if(lastState == STATE_PRESSED) {
                 // On click event - does not care about tap
                 // when widget is tapped - on activate event is called
                 if(m_onClick) {
@@ -298,10 +263,10 @@ gui::CWidget::State gui::CWidget::updateState(const event::SPointerData *pointer
                 //if(!m_ignoreState) FG_LOG_DEBUG("GUI: Widget name[%s] state[CLICK]", getNameStr());
 
                 if(pointerData->m_pointerTap) {
-                    m_state = State::ACTIVATED;
-                    if(lastState != State::ACTIVATED) {
+                    m_state = STATE_ACTIVATED;
+                    if(lastState != STATE_ACTIVATED) {
                         //if(!m_ignoreState) FG_LOG_DEBUG("GUI: Widget name[%s] state[ACTIVATED]", getNameStr());
-                        if(m_onActivate && lastState != State::ACTIVATED) {
+                        if(m_onActivate && lastState != STATE_ACTIVATED) {
                             m_onActivate->Call(this);
                             FG_LOG_DEBUG("GUI: Widget name[%s] call:onActivate()", getNameStr());
                         }
@@ -314,12 +279,12 @@ gui::CWidget::State gui::CWidget::updateState(const event::SPointerData *pointer
                 }
             }
             if(pointerData->m_pointerTap) {
-                m_state = State::ACTIVATED;
+                m_state = STATE_ACTIVATED;
             }
         } else {
             // que paso?
         }
-    } else if(lastState == State::FOCUS) {
+    } else if(lastState == STATE_FOCUS) {
         // Focus lost
         // It may be required that this calls should be executed in a different
         // thread or place - for now this will occur "in place" - where the widget
@@ -337,15 +302,15 @@ gui::CWidget::State gui::CWidget::updateState(const event::SPointerData *pointer
         if(m_onChangeState)
             m_onChangeState->Call(this);
     }
-    if(m_ignoreState)
-        m_state = State::NONE;
+    if(isIgnoreState())
+        m_state = STATE_NONE;
     // #FIXME - relative positioning refresh ? why?
-    if(m_state != lastState && m_styles[(int)m_state].getPosition().style == SPosition::Style::RELATIVE) {
-        if(FG_GUI_CHECK_FLOAT(m_styles[(int)m_state].getPosition().left)) {
-            m_relPos.x = m_styles[(int)m_state].getPosition().left;
+    if(m_state != lastState && m_styles[m_state].getPosition().style == SPosition::Style::RELATIVE) {
+        if(FG_GUI_CHECK_FLOAT(m_styles[m_state].getPosition().left)) {
+            m_relPos.x = m_styles[m_state].getPosition().left;
         }
-        if(FG_GUI_CHECK_FLOAT(m_styles[(int)m_state].getPosition().top)) {
-            m_relPos.y = m_styles[(int)m_state].getPosition().top;
+        if(FG_GUI_CHECK_FLOAT(m_styles[m_state].getPosition().top)) {
+            m_relPos.y = m_styles[m_state].getPosition().top;
         }
     }
     return m_state;

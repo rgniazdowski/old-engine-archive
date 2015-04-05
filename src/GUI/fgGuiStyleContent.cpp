@@ -14,20 +14,10 @@
 
 using namespace fg;
 
-/**
- *
- */
 gui::CStyleContent::CStyleContent() { }
 
-/**
- *
- */
 gui::CStyleContent::~CStyleContent() { }
 
-/**
- * 
- * @param style
- */
 void gui::CStyleContent::copyFrom(const CStyleContent& style) {
     if(this == &style)
         return;
@@ -95,13 +85,6 @@ void gui::CStyleContent::copyFrom(const CStyleContent& style) {
     m_textAlign = style.m_textAlign;
 }
 
-/**
- * 
- * @param align
- * @param pos
- * @param size
- * @param boundSize
- */
 void gui::CStyleContent::applyPosAlign(const Align align,
                                        Vector3f& pos,
                                        const Vector3f& size,
@@ -143,13 +126,6 @@ void gui::CStyleContent::applyPosAlign(const Align align,
     }
 }
 
-/**
- * 
- * @param align
- * @param pos
- * @param size
- * @param boundSize
- */
 void gui::CStyleContent::applyPosAlign(const Align align,
                                        Vector2f& pos,
                                        const Vector2f& size,
@@ -190,11 +166,6 @@ void gui::CStyleContent::applyPosAlign(const Align align,
     }
 }
 
-/**
- * 
- * @param value
- * @return 
- */
 fgColor4f gui::CStyleContent::parseColor(const char *value) {
     if(!value)
         return FG_GUI_DEFAULT_FG_COLOR;
@@ -225,11 +196,6 @@ fgColor4f gui::CStyleContent::parseColor(const char *value) {
     return retColor;
 }
 
-/**
- * 
- * @param value
- * @return 
- */
 gui::SBorder::Style gui::CStyleContent::parseBorderStyle(const char *value) {
     if(!value)
         return SBorder::Style::NONE;
@@ -246,11 +212,6 @@ gui::SBorder::Style gui::CStyleContent::parseBorderStyle(const char *value) {
     return style;
 }
 
-/**
- * 
- * @param value
- * @return 
- */
 gui::SBorder gui::CStyleContent::parseBorder(const char *value) {
     SBorder border;
     if(!value)
@@ -284,11 +245,6 @@ gui::SBorder gui::CStyleContent::parseBorder(const char *value) {
     return border;
 }
 
-/**
- * 
- * @param value
- * @return 
- */
 gui::SPosition::Style gui::CStyleContent::parsePositionStyle(const char *value) {
     if(!value)
         return SPosition::Style::STATICPOS;
@@ -307,11 +263,6 @@ gui::SPosition::Style gui::CStyleContent::parsePositionStyle(const char *value) 
     return style;
 }
 
-/**
- * 
- * @param value
- * @return 
- */
 gui::Align gui::CStyleContent::parseAlign(const char *value) {
     Align align = Align::CENTER;
     if(!value)
@@ -337,11 +288,6 @@ gui::Align gui::CStyleContent::parseAlign(const char *value) {
     return align;
 }
 
-/**
- * 
- * @param value
- * @return 
- */
 gui::SBackground::Style gui::CStyleContent::parseBackgroundStyle(const char *value) {
     SBackground::Style style = SBackground::Style::MAX;
     if(!value)
@@ -360,12 +306,6 @@ gui::SBackground::Style gui::CStyleContent::parseBackgroundStyle(const char *val
     return style;
 }
 
-/**
- * Parses the length stored as string
- * @param value     Input length to parsed stored as C-like string
- * @param type      Type of the unit, can be percents, inches, blocks or pixels
- * @return          Floating point value of the parsed length
- */
 float gui::CStyleContent::parseLength(const char *value, Unit &unit) {
     if(!value)
         return 0.0f;
@@ -389,12 +329,6 @@ float gui::CStyleContent::parseLength(const char *value, Unit &unit) {
     return length;
 }
 
-/**
- * Initializes the style content from ini style parameters
- * @param params    Style parameters from given section, taken directly from ini
- * @param merge     If true the styles will be merged, if false - overwritten
- * @return 
- */
 fgBool gui::CStyleContent::initializeFromConfig(util::config::ParameterVec &params, fgBool merge) {
     if(params.empty())
         return FG_FALSE;
@@ -743,213 +677,106 @@ fgBool gui::CStyleContent::initializeFromConfig(util::config::ParameterVec &para
     return FG_TRUE;
 }
 
-/**
- * 
- * @return 
- */
 gui::SBackground& gui::CStyleContent::getBackground(void) {
     return m_bg;
 }
 
-/**
- * 
- * @return 
- */
 gui::SForeground& gui::CStyleContent::getForeground(void) {
     return m_fg;
 }
 
-/**
- * 
- * @return 
- */
 gui::SMargin& gui::CStyleContent::getMargin(void) {
     return m_margin;
 }
 
-/**
- * 
- * @return 
- */
 gui::SPadding& gui::CStyleContent::getPadding(void) {
     return m_padding;
 }
 
-/**
- * 
- * @return 
- */
 gui::SBorderGroup& gui::CStyleContent::getBorder(void) {
     return m_border;
 }
 
-/**
- * 
- * @return 
- */
 gui::SPosition& gui::CStyleContent::getPosition(void) {
     return m_position;
 }
 
-/**
- * 
- * @return 
- */
 gui::Align gui::CStyleContent::getAlign(void) const {
     return m_align;
 }
 
-/**
- * 
- * @return 
- */
 gui::Align gui::CStyleContent::getVAlign(void) const {
     return m_valign;
 }
 
-/**
- * 
- * @return 
- */
 gui::Align gui::CStyleContent::getTextAlign(void) const {
     return m_textAlign;
 }
 
-/**
- * 
- * @return 
- */
 gui::SSize& gui::CStyleContent::getSize(void) {
     return m_size;
 }
 
-/**
- * 
- * @return 
- */
 std::string& gui::CStyleContent::getShader(void) {
     return m_shader;
 }
 
-/**
- * 
- * @return 
- */
 const char *gui::CStyleContent::getShaderStr(void) const {
     return m_shader.c_str();
 }
 
-/**
- * 
- * @return 
- */
 std::string& gui::CStyleContent::getEffect(void) {
     return m_effect;
 }
 
-/**
- * 
- * @return 
- */
 const char *gui::CStyleContent::getEffectStr(void) const {
     return m_effect.c_str();
 }
 
-/**
- * 
- * @param style
- * @return 
- */
 gui::CStyleContent& gui::CStyleContent::setBackground(const SBackground::Style style) {
     m_bg.style = style;
     return (*this);
 }
 
-/**
- * 
- * @param color
- * @return 
- */
 gui::CStyleContent& gui::CStyleContent::setBackground(const fgColor4f& color) {
     m_bg.color = color;
     return (*this);
 }
 
-/**
- * 
- * @param texture
- * @return 
- */
 gui::CStyleContent& gui::CStyleContent::setBackground(const std::string& texture) {
     m_bg.texture = texture;
     return (*this);
 }
 
-/**
- * 
- * @param texture
- * @return 
- */
 gui::CStyleContent& gui::CStyleContent::setBackground(const char *texture) {
     m_bg.texture = texture;
     return (*this);
 }
 
-/**
- * 
- * @param textSize
- * @return 
- */
 gui::CStyleContent& gui::CStyleContent::setForeground(const float textSize) {
     m_fg.textSize = textSize;
     return (*this);
 }
 
-/**
- * 
- * @param color
- * @return 
- */
 gui::CStyleContent& gui::CStyleContent::setForeground(const fgColor4f& color) {
     m_fg.color = color;
     return (*this);
 }
 
-/**
- * 
- * @param font
- * @return 
- */
 gui::CStyleContent& gui::CStyleContent::setForeground(const std::string& font) {
     m_fg.font = font;
     return (*this);
 }
 
-/**
- * 
- * @param font
- * @return 
- */
 gui::CStyleContent& gui::CStyleContent::setForeground(const char *font) {
     m_fg.font = font;
     return (*this);
 }
 
-/**
- * 
- * @param size
- * @return 
- */
 gui::CStyleContent& gui::CStyleContent::setMargin(const float size) {
     return setMargin(SMargin::Which::ALL, size);
 }
 
-/**
- * 
- * @param which
- * @param size
- * @return 
- */
 gui::CStyleContent& gui::CStyleContent::setMargin(const SMargin::Which which, const float size) {
     if(!!(which & SMargin::Which::LEFT))
         m_margin.left = size;
@@ -964,21 +791,10 @@ gui::CStyleContent& gui::CStyleContent::setMargin(const SMargin::Which which, co
     return (*this);
 }
 
-/**
- * 
- * @param size
- * @return 
- */
 gui::CStyleContent& gui::CStyleContent::setPadding(const float size) {
     return setPadding(SPadding::Which::ALL, size);
 }
 
-/**
- * 
- * @param which
- * @param size
- * @return 
- */
 gui::CStyleContent& gui::CStyleContent::setPadding(const SPadding::Which which, const float size) {
     if(!!(which & SPadding::Which::LEFT))
         m_padding.left = size;
@@ -993,39 +809,18 @@ gui::CStyleContent& gui::CStyleContent::setPadding(const SPadding::Which which, 
     return (*this);
 }
 
-/**
- * 
- * @param style
- * @return 
- */
 gui::CStyleContent& gui::CStyleContent::setBorder(const SBorder::Style style) {
     return setBorder(SBorder::Which::ALL, style);
 }
 
-/**
- * 
- * @param color
- * @return 
- */
 gui::CStyleContent& gui::CStyleContent::setBorder(const fgColor4f& color) {
     return setBorder(SBorder::Which::ALL, color);
 }
 
-/**
- * 
- * @param width
- * @return 
- */
 gui::CStyleContent& gui::CStyleContent::setBorder(const float width) {
     return setBorder(SBorder::Which::ALL, width);
 }
 
-/**
- * 
- * @param which
- * @param style
- * @return 
- */
 gui::CStyleContent& gui::CStyleContent::setBorder(const SBorder::Which which, const SBorder::Style style) {
     if(!!(which & SBorder::Which::LEFT))
         m_border.left.style = style;
@@ -1040,12 +835,6 @@ gui::CStyleContent& gui::CStyleContent::setBorder(const SBorder::Which which, co
     return (*this);
 }
 
-/**
- * 
- * @param which
- * @param color
- * @return 
- */
 gui::CStyleContent& gui::CStyleContent::setBorder(const SBorder::Which which, const fgColor4f& color) {
     if(!!(which & SBorder::Which::LEFT))
         m_border.left.color = color;
@@ -1060,12 +849,6 @@ gui::CStyleContent& gui::CStyleContent::setBorder(const SBorder::Which which, co
     return (*this);
 }
 
-/**
- * 
- * @param which
- * @param width
- * @return 
- */
 gui::CStyleContent& gui::CStyleContent::setBorder(const SBorder::Which which, const float width) {
     if(!!(which & SBorder::Which::LEFT))
         m_border.left.width = width;
@@ -1080,32 +863,16 @@ gui::CStyleContent& gui::CStyleContent::setBorder(const SBorder::Which which, co
     return (*this);
 }
 
-/**
- * 
- * @param style
- * @return 
- */
 gui::CStyleContent& gui::CStyleContent::setPosition(const SPosition::Style style) {
     m_position.style = style;
     return (*this);
 }
 
-/**
- * 
- * @param style
- * @param modPos
- * @return 
- */
 gui::CStyleContent& gui::CStyleContent::setPosition(const SPosition::Style style,
                                                     const Vector2f& modPos) {
     return setPosition(style).setPosition(modPos);
 }
 
-/**
- * 
- * @param modPos
- * @return 
- */
 gui::CStyleContent& gui::CStyleContent::setPosition(const Vector2f& modPos) {
     if(m_position.style != SPosition::Style::STATICPOS) {
         if(modPos.x <= 0.0f)
@@ -1120,22 +887,11 @@ gui::CStyleContent& gui::CStyleContent::setPosition(const Vector2f& modPos) {
     return (*this);
 }
 
-/**
- * 
- * @param style
- * @param modPos
- * @return 
- */
 gui::CStyleContent& gui::CStyleContent::setPosition(const SPosition::Style style,
                                                     const Vector3f& modPos) {
     return setPosition(style).setPosition(modPos);
 }
 
-/**
- * 
- * @param modPos
- * @return 
- */
 gui::CStyleContent& gui::CStyleContent::setPosition(const Vector3f& modPos) {
     if(m_position.style != SPosition::Style::STATICPOS) {
         if(modPos.x <= 0.0f)
@@ -1154,79 +910,38 @@ gui::CStyleContent& gui::CStyleContent::setPosition(const Vector3f& modPos) {
     return (*this);
 }
 
-/**
- * 
- * @param align
- * @return 
- */
 gui::CStyleContent& gui::CStyleContent::setAlign(const Align align) {
     m_align = align;
     return (*this);
 }
 
-/**
- * 
- * @param vAlign
- * @return 
- */
 gui::CStyleContent& gui::CStyleContent::setVAlign(const Align vAlign) {
     m_valign = vAlign;
     return (*this);
 }
 
-/**
- * 
- * @param textAlign
- * @return 
- */
 gui::CStyleContent& gui::CStyleContent::setTextAlign(const Align textAlign) {
     m_textAlign = textAlign;
     return (*this);
 }
 
-/**
- * 
- * @param style
- * @return 
- */
 gui::CStyleContent& gui::CStyleContent::setSize(const SSize::Style style) {
     m_size.style = style;
     return (*this);
 }
 
-/**
- * 
- * @param style
- * @param x
- * @param y
- * @return 
- */
 gui::CStyleContent& gui::CStyleContent::setSize(const SSize::Style style,
                                                 const float x,
                                                 const float y) {
     return setSize(style).setSize(x, y);
 }
 
-/**
- * 
- * @param style
- * @param size
- * @return 
- */
 gui::CStyleContent& gui::CStyleContent::setSize(const SSize::Style style,
                                                 const Vector2f& size) {
 
     return setSize(style).setSize(size);
 }
 
-/**
- * 
- * @param style
- * @param x
- * @param y
- * @param z
- * @return 
- */
 gui::CStyleContent& gui::CStyleContent::setSize(const SSize::Style style,
                                                 const float x,
                                                 const float y,
@@ -1235,47 +950,23 @@ gui::CStyleContent& gui::CStyleContent::setSize(const SSize::Style style,
     return setSize(style).setSize(x, y, z);
 }
 
-/**
- * 
- * @param style
- * @param size
- * @return 
- */
 gui::CStyleContent& gui::CStyleContent::setSize(const SSize::Style style,
                                                 const Vector3f& size) {
     return setSize(style).setSize(size);
 }
 
-/**
- * 
- * @param x
- * @param y
- * @return 
- */
 gui::CStyleContent& gui::CStyleContent::setSize(const float x, const float y) {
     m_size.x = x;
     m_size.y = y;
     return (*this);
 }
 
-/**
- * 
- * @param size
- * @return 
- */
 gui::CStyleContent& gui::CStyleContent::setSize(const Vector2f& size) {
     m_size.x = size.x;
     m_size.y = size.y;
     return (*this);
 }
 
-/**
- * 
- * @param x
- * @param y
- * @param z
- * @return 
- */
 gui::CStyleContent& gui::CStyleContent::setSize(const float x,
                                                 const float y,
                                                 const float z) {
@@ -1285,11 +976,6 @@ gui::CStyleContent& gui::CStyleContent::setSize(const float x,
     return (*this);
 }
 
-/**
- * 
- * @param size
- * @return 
- */
 gui::CStyleContent& gui::CStyleContent::setSize(const Vector3f& size) {
     m_size.x = size.x;
     m_size.y = size.y;
@@ -1297,41 +983,21 @@ gui::CStyleContent& gui::CStyleContent::setSize(const Vector3f& size) {
     return (*this);
 }
 
-/**
- * 
- * @param shader
- * @return 
- */
 gui::CStyleContent& gui::CStyleContent::setShader(const std::string& shader) {
     m_shader = shader;
     return (*this);
 }
 
-/**
- * 
- * @param shader
- * @return 
- */
 gui::CStyleContent& gui::CStyleContent::setShader(const char *shader) {
     m_shader = shader;
     return (*this);
 }
 
-/**
- * 
- * @param effect
- * @return 
- */
 gui::CStyleContent& gui::CStyleContent::setEffect(const std::string& effect) {
     m_effect = effect;
     return (*this);
 }
 
-/**
- * 
- * @param effect
- * @return 
- */
 gui::CStyleContent& gui::CStyleContent::setEffect(const char *effect) {
     m_effect = effect;
     return (*this);

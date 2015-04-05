@@ -12,21 +12,12 @@
 
 using namespace fg;
 
-/**
- *
- */
 gui::CToggleButton::CToggleButton() {
     CToggleButton::setDefaults();
 }
 
-/**
- *
- */
 gui::CToggleButton::~CToggleButton() { }
 
-/**
- *
- */
 void gui::CToggleButton::setDefaults(void) {
     m_type = TOGGLE_BUTTON;
     m_typeName = FG_GUI_TOGGLE_BUTTON_NAME;

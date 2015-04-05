@@ -12,32 +12,19 @@
 
 using namespace fg;
 
-/**
- *
- */
 gui::CLabel::CLabel() :
 CWidget() {
     CLabel::setDefaults();
 }
 
-/**
- *
- */
 gui::CLabel::~CLabel() { }
 
-/**
- *
- */
 void gui::CLabel::setDefaults(void) {
     m_type = LABEL;
     m_typeName = FG_GUI_LABEL_NAME;
     m_typeTraits = LABEL | WIDGET;
 }
 
-/**
- * 
- * @return 
- */
 gfx::BoundingBox3Df gui::CLabel::updateBounds(void) {
     return base_type::updateBounds();
 }

@@ -34,11 +34,6 @@
 
 using namespace fg;
 
-/**
- * 
- * @param widgetFactory
- * @param styleMgr
- */
 gui::CWidgetManager::CWidgetManager(CWidgetFactory *widgetFactory, CStyleManager *styleMgr) :
 m_pWidgetFactory(widgetFactory),
 m_pStyleMgr(styleMgr),
@@ -46,17 +41,10 @@ m_pGuiLinkCallback(NULL) {
     m_managerType = FG_MANAGER_GUI_WIDGET;
 }
 
-/**
- * 
- */
 gui::CWidgetManager::~CWidgetManager() {
     gui::CWidgetManager::destroy();
 }
 
-/**
- * 
- * @return 
- */
 fgBool gui::CWidgetManager::destroy(void) {
     DataVecItor begin, end, itor;
     begin = getRefDataVector().begin();
@@ -76,10 +64,6 @@ fgBool gui::CWidgetManager::destroy(void) {
     return FG_TRUE;
 }
 
-/**
- * 
- * @return 
- */
 fgBool gui::CWidgetManager::initialize(void) {
     FG_LOG_DEBUG("GUI: Initializing Widget manager...");
     if(!m_pWidgetFactory || !m_pStyleMgr) {
@@ -116,29 +100,16 @@ fgBool gui::CWidgetManager::initialize(void) {
     return FG_TRUE;
 }
 
-/**
- * 
- */
 void gui::CWidgetManager::clear(void) {
     handle_mgr_type::clear();
 }
 
-/**
- * 
- * @param typeName
- * @return 
- */
 gui::WidgetType gui::CWidgetManager::widgetTypeFromName(const char *typeName) {
     if(!typeName)
         return WIDGET_UNKNOWN;
     return widgetTypeFromName(std::string(typeName));
 }
 
-/**
- * 
- * @param typeName
- * @return 
- */
 gui::WidgetType gui::CWidgetManager::widgetTypeFromName(const std::string& typeName) {
     if(typeName.empty())
         return WIDGET_UNKNOWN;
@@ -182,67 +153,34 @@ gui::WidgetType gui::CWidgetManager::widgetTypeFromName(const std::string& typeN
     return WIDGET_UNKNOWN;
 }
 
-/**
- * 
- * @param path
- */
 void gui::CWidgetManager::setWidgetsPath(const std::string& path) {
     m_widgetsPath = path;
 }
 
-/**
- * 
- * @param path
- */
 void gui::CWidgetManager::setWidgetsPath(const char* path) {
     m_widgetsPath = path;
 }
 
-/**
- * 
- * @return 
- */
 gui::CWidgetManager::WidgetVec& gui::CWidgetManager::getRefRootWidgets(void) {
     return m_rootWidgets;
 }
 
-/**
- * 
- * @param widgetFactory
- */
 void gui::CWidgetManager::setWidgetFactory(CWidgetFactory *widgetFactory) {
     m_pWidgetFactory = widgetFactory;
 }
 
-/**
- * 
- * @return 
- */
 gui::CWidgetFactory *gui::CWidgetManager::getWidgetFactory(void) const {
     return m_pWidgetFactory;
 }
 
-/**
- * 
- * @param styleMgr
- */
 void gui::CWidgetManager::setStyleManager(CStyleManager *styleMgr) {
     m_pStyleMgr = styleMgr;
 }
 
-/**
- * 
- * @return 
- */
 gui::CStyleManager *gui::CWidgetManager::getStyleManager(void) const {
     return m_pStyleMgr;
 }
 
-/**
- * 
- * @param filePath
- * @return 
- */
 fgBool gui::CWidgetManager::loadStructureSheet(const std::string& filePath) {
     if(filePath.empty()) {
         return FG_FALSE;
@@ -250,11 +188,6 @@ fgBool gui::CWidgetManager::loadStructureSheet(const std::string& filePath) {
     return gui::CWidgetManager::loadStructureSheet(filePath.c_str());
 }
 
-/**
- * 
- * @param filePath
- * @return 
- */
 fgBool gui::CWidgetManager::loadStructureSheet(const char *filePath) {
     if(!filePath) {
         return FG_FALSE;
@@ -280,22 +213,10 @@ fgBool gui::CWidgetManager::loadStructureSheet(const char *filePath) {
     return FG_TRUE;
 }
 
-/**
- * 
- * @param pWidget
- * @return 
- */
 fgBool gui::CWidgetManager::addWidget(CWidget *pWidget) {
     return addWidget(pWidget, (CWidget *)NULL);
 }
 
-/**
- * 
- * @param wUniqueID
- * @param pWidget
- * @param pFatherWidget
- * @return 
- */
 fgBool gui::CWidgetManager::addWidget(CWidget *pWidget, CWidget *pFatherWidget) {
     if(!pWidget) {
         // Empty pointer - return
@@ -361,7 +282,7 @@ fgBool gui::CWidgetManager::addWidget(CWidget *pWidget, CWidget *pFatherWidget) 
                          pWidget->getTypeNameStr());
 
             style->copyFullContent(pWidget->getStyleContents(),
-                                   (int)CWidget::State::COUNT,
+                                   CWidget::STATE_COUNT,
                                    pWidget->getTypeName());
             pWidget->refresh();
             pWidget->updateBounds();
@@ -379,44 +300,18 @@ fgBool gui::CWidgetManager::addWidget(CWidget *pWidget, CWidget *pFatherWidget) 
     return FG_TRUE;
 }
 
-/**
- * 
- * @param wUniqueID
- * @param pWidget
- * @param wFatherUniqueID
- * @return 
- */
 fgBool gui::CWidgetManager::addWidget(CWidget *pWidget, const WidgetHandle& wFatherUniqueID) {
     return addWidget(pWidget, handle_mgr_type::dereference(wFatherUniqueID));
 }
 
-/**
- * 
- * @param wUniqueID
- * @param pWidget
- * @param wFatherNameTag
- * @return 
- */
 fgBool gui::CWidgetManager::addWidget(CWidget *pWidget, const std::string& wFatherNameTag) {
     return addWidget(pWidget, handle_mgr_type::dereference(wFatherNameTag));
 }
 
-/**
- * 
- * @param wUniqueID
- * @param pWidget
- * @param wFatherNameTag
- * @return 
- */
 fgBool gui::CWidgetManager::addWidget(CWidget *pWidget, const char* wFatherNameTag) {
     return addWidget(pWidget, handle_mgr_type::dereference(wFatherNameTag));
 }
 
-/**
- * 
- * @param pWidget
- * @return 
- */
 fgBool gui::CWidgetManager::remove(CWidget *pWidget) {
     if(!gui::CWidgetManager::isManaged(pWidget)) {
         return FG_FALSE;
@@ -429,11 +324,6 @@ fgBool gui::CWidgetManager::remove(CWidget *pWidget) {
     }
 }
 
-/**
- * 
- * @param wUniqueID
- * @return 
- */
 fgBool gui::CWidgetManager::remove(const WidgetHandle& wUniqueID) {
     CWidget *pWidget = dereference(wUniqueID);
     if(!pWidget)
@@ -446,11 +336,6 @@ fgBool gui::CWidgetManager::remove(const WidgetHandle& wUniqueID) {
     }
 }
 
-/**
- * 
- * @param nameTag
- * @return 
- */
 fgBool gui::CWidgetManager::remove(const std::string& nameTag) {
     CWidget *pWidget = dereference(nameTag);
     if(!pWidget)
@@ -463,11 +348,6 @@ fgBool gui::CWidgetManager::remove(const std::string& nameTag) {
     }
 }
 
-/**
- * 
- * @param nameTag
- * @return 
- */
 fgBool gui::CWidgetManager::remove(const char *nameTag) {
     CWidget *pWidget = dereference(nameTag);
     if(!pWidget)
@@ -480,11 +360,6 @@ fgBool gui::CWidgetManager::remove(const char *nameTag) {
     }
 }
 
-/**
- * 
- * @param pWidget
- * @return 
- */
 fgBool gui::CWidgetManager::destroyWidget(CWidget* & pWidget) {
     if(!gui::CWidgetManager::remove(pWidget)) {
         return FG_FALSE;
@@ -494,68 +369,33 @@ fgBool gui::CWidgetManager::destroyWidget(CWidget* & pWidget) {
     return FG_TRUE;
 }
 
-/**
- * 
- * @param wUniqueID
- * @return 
- */
 fgBool gui::CWidgetManager::destroyWidget(const WidgetHandle& wUniqueID) {
     CWidget *pWidget = dereference(wUniqueID);
     return destroyWidget(pWidget);
 }
 
-/**
- * 
- * @param nameTag
- * @return 
- */
 fgBool gui::CWidgetManager::destroyWidget(const std::string& nameTag) {
     CWidget *pWidget = dereference(nameTag);
     return destroyWidget(pWidget);
 }
 
-/**
- * 
- * @param nameTag
- * @return 
- */
 fgBool gui::CWidgetManager::destroyWidget(const char *nameTag) {
     CWidget *pWidget = dereference(nameTag);
     return destroyWidget(pWidget);
 }
 
-/**
- * 
- * @param wUniqueID
- * @return 
- */
 gui::CWidget* gui::CWidgetManager::get(const WidgetHandle& wUniqueID) {
     return handle_mgr_type::dereference(wUniqueID);
 }
 
-/**
- * 
- * @param nameTag
- * @return 
- */
 gui::CWidget* gui::CWidgetManager::get(const std::string& nameTag) {
     return handle_mgr_type::dereference(nameTag);
 }
 
-/**
- * 
- * @param nameTag
- * @return 
- */
 gui::CWidget* gui::CWidgetManager::get(const char *nameTag) {
     return handle_mgr_type::dereference(nameTag);
 }
 
-/**
- * 
- * @param pWidget
- * @return 
- */
 fgBool gui::CWidgetManager::isManaged(CWidget *pWidget) {
     if(!pWidget) {
         return FG_FALSE;
@@ -570,31 +410,16 @@ fgBool gui::CWidgetManager::isManaged(CWidget *pWidget) {
     return FG_TRUE;
 }
 
-/**
- * 
- * @param wUniqueID
- * @return 
- */
 fgBool gui::CWidgetManager::isManaged(const WidgetHandle& wUniqueID) {
     CWidget *pWidget = get(wUniqueID);
     return (fgBool)(pWidget != NULL);
 }
 
-/**
- * 
- * @param nameTag
- * @return 
- */
 fgBool gui::CWidgetManager::isManaged(const std::string& nameTag) {
     CWidget *pWidget = get(nameTag);
     return (fgBool)(pWidget != NULL);
 }
 
-/**
- * 
- * @param nameTag
- * @return 
- */
 fgBool gui::CWidgetManager::isManaged(const char *nameTag) {
     CWidget *pWidget = get(nameTag);
     return (fgBool)(pWidget != NULL);

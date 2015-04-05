@@ -240,7 +240,7 @@ fgBool gui::CGuiMain::initialize(void) {
                          m_console->getTypeNameStr());
 
             style->copyFullContent(m_console->getStyleContents(),
-                                   (int)CWidget::State::COUNT,
+                                   CWidget::STATE_COUNT,
                                    m_console->getTypeName());
             m_console->refresh();
             m_console->updateBounds();

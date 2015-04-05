@@ -15,22 +15,12 @@
 
 using namespace fg;
 
-/**
- *
- */
 gui::CStyle::CStyle() { }
 
-/**
- *
- */
 gui::CStyle::~CStyle() {
     m_styleContent.clear();
 }
 
-/**
- * 
- * @return 
- */
 fgBool gui::CStyle::load(void) {
     if(getFilePath().empty())
         return FG_FALSE;
@@ -155,11 +145,6 @@ fgBool gui::CStyle::load(void) {
     return FG_TRUE;
 }
 
-/**
- * 
- * @param path
- * @return 
- */
 fgBool gui::CStyle::load(const std::string& path) {
     if(path.empty())
         return FG_FALSE;
@@ -167,11 +152,6 @@ fgBool gui::CStyle::load(const std::string& path) {
     return gui::CStyle::load();
 }
 
-/**
- * 
- * @param path
- * @return 
- */
 fgBool gui::CStyle::load(const char *path) {
     if(!path)
         return FG_FALSE;
@@ -179,11 +159,6 @@ fgBool gui::CStyle::load(const char *path) {
     return gui::CStyle::load();
 }
 
-/**
- * 
- * @param info
- * @return 
- */
 gui::CStyleContent &gui::CStyle::getContent(const std::string& info) {
     if(info.empty())
         return m_styleContent["main"];
@@ -212,22 +187,10 @@ gui::CStyleContent &gui::CStyle::getContent(const std::string& info) {
     return m_styleContent["main"];
 }
 
-/**
- * 
- * @param info
- * @return 
- */
 gui::CStyleContent &gui::CStyle::getContent(const char *info) {
     return getContent(std::string(info));
 }
 
-/**
- * 
- * @param contents
- * @param num
- * @param info
- * @return 
- */
 fgBool gui::CStyle::copyFullContent(CStyleContent *contents,
                                     int num,
                                     const std::string& info) {
@@ -246,7 +209,7 @@ fgBool gui::CStyle::copyFullContent(CStyleContent *contents,
     /*
     STATE_NONE		0	// main
     STATE_FOCUS		1	// focus
-    STATE_PRESSED		2	// pressed
+    STATE_PRESSED	2	// pressed
     STATE_ACTIVATED	3	// activated
     STATE_DEACTIVATED	4	// deactivated
      */
@@ -264,13 +227,6 @@ fgBool gui::CStyle::copyFullContent(CStyleContent *contents,
     return FG_TRUE;
 }
 
-/**
- * 
- * @param contents
- * @param num
- * @param info
- * @return 
- */
 fgBool gui::CStyle::copyFullContent(CStyleContent *contents,
                                     int num,
                                     const char *info) {

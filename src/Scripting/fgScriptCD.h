@@ -713,7 +713,7 @@ namespace LPCD {
      * FG GUI ENUMERATION TYPES -> INT
      **************************************************************************/
 
-        #define FG_CONV_CD_TYPE fg::gui::CWidget::State
+        #define FG_CONV_CD_TYPE fg::gui::CWidget::EventState
 
     template<> struct Type<FG_CONV_CD_TYPE> : public Type<unsigned int> {
         static inline void Push(lua_State* L, FG_CONV_CD_TYPE value) {

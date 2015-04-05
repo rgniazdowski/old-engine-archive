@@ -13,9 +13,6 @@
 
 using namespace fg;
 
-/**
- *
- */
 gui::CTextArea::CTextArea() :
 CScrollArea(),
 m_textData(),
@@ -23,24 +20,14 @@ m_textAreaSize() {
     gui::CTextArea::setDefaults();
 }
 
-/**
- *
- */
 gui::CTextArea::~CTextArea() { }
 
-/**
- * 
- */
 void gui::CTextArea::setDefaults(void) {
     m_type = TEXT_AREA;
     m_typeName = FG_GUI_TEXT_AREA_NAME;
     m_typeTraits = TEXT_AREA | SCROLL_AREA | CONTAINER | WIDGET;
 }
 
-/**
- * 
- * @return 
- */
 gfx::BoundingBox3Df gui::CTextArea::updateBounds(void) {
     float textSize = m_styles[(int)m_state].getForeground().textSize;
     SPadding &padding = m_styles[(int)m_state].getPadding();
@@ -55,21 +42,14 @@ gfx::BoundingBox3Df gui::CTextArea::updateBounds(void) {
     return scrollAreaSize;
 }
 
-/**
- * 
- */
 void gui::CTextArea::refresh(void) {
     base_type::refresh(); // #FIXME
 }
 
-/**
- * 
- * @param guiLayer
- */
 void gui::CTextArea::display(CDrawer* guiLayer) {
     if(!guiLayer)
         return;
-    if(!m_isVisible)
+    if(!isVisible())
         return;
 
     base_type::display(guiLayer);

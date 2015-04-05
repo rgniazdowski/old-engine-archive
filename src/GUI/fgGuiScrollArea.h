@@ -109,13 +109,14 @@ namespace fg {
              * @param pointerData
              * @return 
              */
-            virtual State updateState(const event::SPointerData *pointerData);
+            virtual EventState updateState(const event::SPointerData *pointerData);
 
         };
-    };
-};
+        FG_ENUM_FLAGS(CScrollArea::SliderSwitch);
+    } // namespace gui
+} // namespace fg
 
-FG_ENUM_FLAGS(fg::gui::CScrollArea::SliderSwitch);
+
 
     #undef FG_INC_GUI_SCROLL_AREA_BLOCK
 #endif /* FG_INC_GUI_SCROLL_AREA */

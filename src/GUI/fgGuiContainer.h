@@ -125,7 +125,7 @@ namespace fg {
              * @param pointerData
              * @return 
              */
-            virtual State updateState(const event::SPointerData *pointerData);
+            virtual EventState updateState(const event::SPointerData *pointerData);
 
             /**
              * 

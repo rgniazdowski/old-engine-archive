@@ -19,7 +19,7 @@
 namespace fg {
     namespace gfx {
 
-        /*
+        /**
          *
          */
         class CPlatform {

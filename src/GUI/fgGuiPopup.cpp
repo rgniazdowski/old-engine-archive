@@ -12,39 +12,23 @@
 
 using namespace fg;
 
-/**
- *
- */
 gui::CPopup::CPopup() :
 base_type() {
     CPopup::setDefaults();
 }
 
-/**
- *
- */
 gui::CPopup::~CPopup() { }
 
-/**
- *
- */
 void gui::CPopup::setDefaults(void) {
     m_type = POPUP;
     m_typeName = FG_GUI_POPUP_NAME;
     m_typeTraits = POPUP | WINDOW | CONTAINER | WIDGET;
 }
 
-/**
- * 
- * @return 
- */
 gfx::BoundingBox3Df gui::CPopup::updateBounds(void) {
     return CWindow::updateBounds();
 }
 
-/**
- *
- */
 void gui::CPopup::refresh(void) {
     base_type::refresh();
 }

@@ -123,13 +123,33 @@ namespace fg {
             /**
              *
              */
-            enum class State : unsigned char {
-                NONE,
-                FOCUS,
-                PRESSED,
-                ACTIVATED,
-                DEACTIVATED,
-                COUNT
+            enum EventState {
+                STATE_NONE,
+                STATE_FOCUS,
+                STATE_PRESSED,
+                STATE_ACTIVATED,
+                STATE_DEACTIVATED,
+                STATE_COUNT
+            };
+
+            /**
+             *
+             */
+            enum StateFlags {
+                /// Empty state flags - nothing activated
+                NONE = 0x0000,
+                /// Whether or not the widget is visible (will be displayed)
+                VISIBLE = 0x0001,
+                /// If widget is not active it cannot be clicked, activated,
+                /// does not call callbacks nor check for changed event states.
+                /// When deactivated (isActive==false) state will be set to
+                /// WIDGET_STATE_DEACTIVATED and proper style for that state will be applied
+                ACTIVE = 0x0002,
+                /// If selected the widget will ignore state changes  based on external events
+                /// so the style of the widget will not change (will be static). However any
+                /// event callbacks set for this widget will fire (event handlers will execute
+                /// anyway). Default: false.
+                IGNORE_STATE = 0x004
             };
 
         protected:
@@ -155,7 +175,7 @@ namespace fg {
             /// be put into this variable. Some of widgets may completely ignore this.
             std::string m_text;
             /// Array storing current style modifications for the widget
-            CStyleContent m_styles[(int)State::COUNT];
+            CStyleContent m_styles[(int)STATE_COUNT];
 
             /// Relative position in pixels
             Vector3f m_relPos;
@@ -195,20 +215,8 @@ namespace fg {
             WidgetType m_typeTraits;
 
             /// Current event state of the widget
-            State m_state;
-
-            // size and position of other widgets nearby). Default: true.
-            fgBool m_isVisible;
-            /// If widget is not active it cannot be clicked, activated,
-            /// does not call callbacks nor check for changed event states.
-            /// When deactivated (isActive==false) state will be set to 
-            /// WIDGET_STATE_DEACTIVATED and proper style for that state will be applied
-            fgBool m_isActive;
-            /// If 'true' the widget will ignore state changes � based on external events 
-            /// � so the style of the widget will not change (will be static). However any 
-            /// event callbacks set for this widget will fire (event handlers will execute 
-            /// anyway). Default: false.
-            fgBool m_ignoreState;
+            EventState m_state;
+            StateFlags m_stateFlags;            
 
         protected:
             /**
@@ -222,7 +230,7 @@ namespace fg {
             void setFather(fg::gui::CWidget *widget) {
                 m_pFather = widget;
             }
-            
+
         public:
             /**
              * 
@@ -232,9 +240,9 @@ namespace fg {
              * 
              */
             virtual ~CWidget();
-            
+
             ////////////////////////////////////////////////////////////////////
-            
+
             /**
              * 
              * @param guiLayer
@@ -274,10 +282,9 @@ namespace fg {
              * @param pointerData
              * @return 
              */
-            virtual State updateState(const event::SPointerData *pointerData);
-            
+            virtual EventState updateState(const event::SPointerData *pointerData);
+
             ////////////////////////////////////////////////////////////////////
-            
             /**
              * 
              * @return 
@@ -315,32 +322,38 @@ namespace fg {
             }
 
             ////////////////////////////////////////////////////////////////////
-            
+
         public:
+            /**
+             *
+             * @param flags
+             * @param toggle
+             */
+            void setFlag(const StateFlags flags, const fgBool toggle = FG_TRUE);
             /**
              * Sets the visibility flag of the widget
              * @param toggle
              */
             inline void setVisible(fgBool toggle = FG_TRUE) {
-                m_isVisible = toggle;
+                setFlag(VISIBLE, toggle);
             }
             /**
              * Returns whether widget is visible (should be displayed?)
              * @return 
              */
             inline fgBool isVisible(void) const {
-                return m_isVisible;
+                return (fgBool)!!(m_stateFlags & VISIBLE);
             }
             /**
              * Sets the active flag of the widget
              * @param toggle
              */
             inline void setActive(fgBool toggle = FG_TRUE) {
-                m_isActive = toggle;
-                if(m_isActive) {
-                    m_state = State::NONE;
+                setFlag(ACTIVE, toggle);
+                if(toggle) {
+                    m_state = STATE_NONE;
                 } else {
-                    m_state = State::DEACTIVATED;
+                    m_state = STATE_DEACTIVATED;
                 }
             }
             /**
@@ -348,33 +361,33 @@ namespace fg {
              * @return 
              */
             inline fgBool isActive(void) const {
-                return m_isActive;
+                return (fgBool)!!(m_stateFlags & ACTIVE);
             }
             /**
              * Sets the ignoreState flag for the widget
              * @param toggle
              */
             inline void setIgnoreState(fgBool toggle = FG_TRUE) {
-                m_ignoreState = toggle;
+                setFlag(IGNORE_STATE, toggle);
             }
             /**
              *
              */
             inline fgBool doesIgnoreState(void) const {
-                return m_ignoreState;
+                return (fgBool)!!(m_stateFlags & IGNORE_STATE);
             }
             /**
              * 
              * @return 
              */
             inline fgBool isIgnoreState(void) const {
-                return m_ignoreState;
+                return (fgBool)!!(m_stateFlags & IGNORE_STATE);
             }
             /**
              * 
              * @return 
              */
-            inline State getState(void) const {
+            inline EventState getState(void) const {
                 return m_state;
             }
             /**
@@ -410,7 +423,6 @@ namespace fg {
              * @param size
              */
             void setSize(const Vector3f& size, Unit unit = Unit::PIXELS);
-            
             /**
              * Returns the reference to the vector holding widget size
              * @return 
@@ -576,9 +588,8 @@ namespace fg {
                 if(text)
                     m_text = text;
             }
-            
+
             ////////////////////////////////////////////////////////////////////
-            
             /**
              * 
              * @return 
@@ -619,24 +630,23 @@ namespace fg {
              * @param state
              * @return 
              */
-            inline CStyleContent& getStyleContent(State state = State::NONE) {
-                if(state >= State::COUNT)
-                    return m_styles[(int)State::NONE];
-                return m_styles[(int)state];
+            inline CStyleContent& getStyleContent(EventState state = STATE_NONE) {
+                if(state >= STATE_COUNT)
+                    return m_styles[STATE_NONE];
+                return m_styles[state];
             }
             /**
              * 
              * @param state
              * @return 
              */
-            inline CStyleContent* getStyleContentPtr(State state = State::NONE) {
-                if(state >= State::COUNT)
-                    return &m_styles[(int)State::NONE];
-                return &m_styles[(int)state];
+            inline CStyleContent* getStyleContentPtr(EventState state = STATE_NONE) {
+                if(state >= STATE_COUNT)
+                    return &m_styles[STATE_NONE];
+                return &m_styles[state];
             }
-            
+
             ////////////////////////////////////////////////////////////////////
-            
             /**
              * 
              * @param callback
@@ -763,8 +773,24 @@ namespace fg {
                 return m_onLink;
             }
         };
-    };
-};
+
+        FG_ENUM_FLAGS(CWidget::StateFlags);
+        /**
+         *
+         * @param flags
+         * @param toggle
+         */
+        inline void CWidget::setFlag(const StateFlags flags, const fgBool toggle) {
+            if(toggle) {
+                m_stateFlags |= flags;
+            } else {
+                m_stateFlags |= flags;
+                m_stateFlags ^= flags;
+            }
+        }
+
+    } // namespace gui
+} // namespace fg
 
     #undef FG_INC_GUI_WIDGET_BLOCK
 #endif /* FG_INC_GUI_WIDGET */

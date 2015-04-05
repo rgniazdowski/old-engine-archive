@@ -13,31 +13,18 @@
 
 using namespace fg;
 
-/**
- * 
- */
 gui::CStyleManager::CStyleManager() {
     m_managerType = FG_MANAGER_GUI_STYLE;
 }
 
-/**
- * 
- */
 gui::CStyleManager::~CStyleManager() {
     gui::CStyleManager::destroy();
 }
 
-/**
- * 
- */
 void gui::CStyleManager::clear(void) {
     releaseAllHandles();
 }
 
-/**
- * 
- * @return 
- */
 fgBool gui::CStyleManager::destroy(void) {
     StyleVecItor begin = getRefDataVector().begin();
     StyleVecItor end = getRefDataVector().end();
@@ -51,10 +38,6 @@ fgBool gui::CStyleManager::destroy(void) {
     return FG_TRUE;
 }
 
-/**
- * 
- * @return 
- */
 fgBool gui::CStyleManager::initialize(void) {
     FG_LOG_DEBUG("GUI: Initializing Style manager...");
     if(m_stylesPath.empty()) {
@@ -96,12 +79,6 @@ fgBool gui::CStyleManager::initialize(void) {
     return FG_TRUE;
 }
 
-/**
- * 
- * @param pStyle
- * @param nameTag
- * @return 
- */
 fgBool gui::CStyleManager::insert(CStyle *pStyle, const std::string& nameTag) {
     if(!pStyle)
         return FG_FALSE;
@@ -113,11 +90,6 @@ fgBool gui::CStyleManager::insert(CStyle *pStyle, const std::string& nameTag) {
     return FG_FALSE;
 }
 
-/**
- * 
- * @param pStyle
- * @return 
- */
 fgBool gui::CStyleManager::insertStyle(CStyle *pStyle) {
     if(!pStyle) {
         return FG_FALSE;
@@ -129,38 +101,20 @@ fgBool gui::CStyleManager::insertStyle(CStyle *pStyle) {
     return FG_TRUE;
 }
 
-/**
- * 
- * @param info
- * @return 
- */
 gui::CStyle* gui::CStyleManager::request(const std::string& info) {
     // #FIXME
     return NULL;
 }
 
-/**
- * 
- * @param info
- * @return 
- */
 gui::CStyle* gui::CStyleManager::request(const char *info) {
     // #FIXME
     return NULL;
 }
 
-/**
- * 
- * @param path
- */
 void gui::CStyleManager::setStylesPath(const std::string &path) {
     m_stylesPath = path;
 }
 
-/**
- * 
- * @param path
- */
 void gui::CStyleManager::setStylesPath(const char *path) {
     m_stylesPath = path;
 }

@@ -15,9 +15,6 @@
 
 using namespace fg;
 
-/**
- *
- */
 gui::CContainer::CContainer() :
 base_type(),
 m_packMethod(FG_GUI_CONTAINER_PACK_FREE),
@@ -26,9 +23,6 @@ m_drawChildren(FG_TRUE) {
     gui::CContainer::setDefaults();
 }
 
-/**
- *
- */
 gui::CContainer::~CContainer() {
     // What about freeing children widgets?
     // There should be some way to mark widgets for deletion (removal)
@@ -40,21 +34,14 @@ gui::CContainer::~CContainer() {
     m_childrenMap.clear();
 }
 
-/**
- *
- */
 void gui::CContainer::setDefaults(void) {
     m_type = CONTAINER;
     m_typeName = FG_GUI_CONTAINER_NAME;
     m_typeTraits = CONTAINER | WIDGET;
-    m_ignoreState = FG_TRUE; // CONTAINER BY DEFAULT IGNORES THE STATE CHANGE (STYLE)
+    setIgnoreState(FG_TRUE); // CONTAINER BY DEFAULT IGNORES THE STATE CHANGE (STYLE)
     m_packMethod = FG_GUI_CONTAINER_PACK_VERTICAL;
 }
 
-/**
- * 
- * @param flags
- */
 void gui::CContainer::setFlags(const std::string& flags) {
     if(flags.empty() || flags.length() < 3)
         return;
@@ -101,10 +88,6 @@ void gui::CContainer::setFlags(const std::string& flags) {
 
 //fgGuiDrawer *yolo = NULL;
 
-/**
- * 
- * @param guiLayer
- */
 void gui::CContainer::display(CDrawer *guiLayer) {
     if(!guiLayer)
         return;
@@ -126,10 +109,6 @@ void gui::CContainer::display(CDrawer *guiLayer) {
     //yolo = (fgGuiDrawer *)guiLayer;
 }
 
-/**
- * 
- * @return 
- */
 gfx::BoundingBox3Df gui::CContainer::updateBounds(void) {
     if(m_children.empty()) {
         return base_type::updateBounds();
@@ -354,9 +333,6 @@ gfx::BoundingBox3Df gui::CContainer::updateBounds(void) {
     return outerBox;
 }
 
-/**
- *
- */
 void gui::CContainer::refresh(void) {
     base_type::refresh();
     for(int i = 0; i < (int)m_children.size(); i++) {
@@ -368,12 +344,7 @@ void gui::CContainer::refresh(void) {
     }
 }
 
-/**
- * 
- * @param pointerData
- * @return 
- */
-gui::CWidget::State gui::CContainer::updateState(const event::SPointerData *pointerData) {
+gui::CWidget::EventState gui::CContainer::updateState(const event::SPointerData *pointerData) {
     base_type::updateState(pointerData);
     //if(fgGuiWidget::updateState(pointerData) == FG_GUI_WIDGET_STATE_NONE);
     //return m_state;
@@ -386,11 +357,6 @@ gui::CWidget::State gui::CContainer::updateState(const event::SPointerData *poin
     return m_state;
 }
 
-/**
- * 
- * @param nameTag
- * @return 
- */
 gui::CWidget *gui::CContainer::getChild(const std::string& nameTag) {
     if(nameTag.empty())
         return NULL;
@@ -401,36 +367,18 @@ gui::CWidget *gui::CContainer::getChild(const std::string& nameTag) {
     return pWidget;
 }
 
-/**
- * 
- * @param nameTag
- * @return 
- */
 gui::CWidget *gui::CContainer::getChild(const char* nameTag) {
     return getChild(std::string(nameTag));
 }
 
-/**
- * 
- * @return 
- */
 gui::CContainer::ChildrenVec& gui::CContainer::getChildren(void) {
     return m_children;
 }
 
-/**
- * 
- * @return 
- */
 gui::CContainer::ChildrenMap& gui::CContainer::getChildrenMap(void) {
     return m_childrenMap;
 }
 
-/**
- * 
- * @param pWidget
- * @return 
- */
 fgBool gui::CContainer::addChild(CWidget *pWidget) {
     if(m_children.find(pWidget) == -1) {
         m_childrenMap[pWidget->getName()] = pWidget;
@@ -441,22 +389,12 @@ fgBool gui::CContainer::addChild(CWidget *pWidget) {
     return FG_TRUE;
 }
 
-/**
- * 
- * @param pWidget
- * @return 
- */
 fgBool gui::CContainer::removeChild(CWidget *pWidget) {
     if(!pWidget)
         return FG_FALSE;
     return removeChild(pWidget->getName());
 }
 
-/**
- * 
- * @param nameTag
- * @return 
- */
 fgBool gui::CContainer::removeChild(const std::string& nameTag) {
     if(nameTag.empty())
         return FG_FALSE;
@@ -468,7 +406,6 @@ fgBool gui::CContainer::removeChild(const std::string& nameTag) {
     ChildrenVecItor vit = m_children.begin(), end = m_children.end();
     for(; vit != end; vit++) {
         if(*vit == pWidget) {
-
             m_children.erase(vit);
             return FG_TRUE;
             break;
@@ -477,11 +414,6 @@ fgBool gui::CContainer::removeChild(const std::string& nameTag) {
     return FG_FALSE;
 }
 
-/**
- * 
- * @param nameTag
- * @return 
- */
 fgBool gui::CContainer::removeChild(const char *nameTag) {
     if(!nameTag)
         return FG_FALSE;

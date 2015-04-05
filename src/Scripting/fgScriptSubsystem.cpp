@@ -601,12 +601,12 @@ fgBool script::CScriptSubsystem::registerConstants(void) {
     //
     // GUI WIDGET CONSTANTS
     //
-    m_fgObj.SetInteger("GUI_WIDGET_STATE_NONE", (int)gui::CWidget::State::NONE);
-    m_fgObj.SetInteger("GUI_WIDGET_STATE_FOCUS", (int)gui::CWidget::State::FOCUS);
-    m_fgObj.SetInteger("GUI_WIDGET_STATE_PRESSED", (int)gui::CWidget::State::PRESSED);
-    m_fgObj.SetInteger("GUI_WIDGET_STATE_ACTIVATED", (int)gui::CWidget::State::ACTIVATED);
-    m_fgObj.SetInteger("GUI_WIDGET_STATE_DEACTIVATED", (int)gui::CWidget::State::DEACTIVATED);
-    m_fgObj.SetInteger("GUI_WIDGET_STATE_COUNT", (int)gui::CWidget::State::COUNT);
+    m_fgObj.SetInteger("GUI_WIDGET_STATE_NONE", (int)gui::CWidget::STATE_NONE);
+    m_fgObj.SetInteger("GUI_WIDGET_STATE_FOCUS", (int)gui::CWidget::STATE_FOCUS);
+    m_fgObj.SetInteger("GUI_WIDGET_STATE_PRESSED", (int)gui::CWidget::STATE_PRESSED);
+    m_fgObj.SetInteger("GUI_WIDGET_STATE_ACTIVATED", (int)gui::CWidget::STATE_ACTIVATED);
+    m_fgObj.SetInteger("GUI_WIDGET_STATE_DEACTIVATED", (int)gui::CWidget::STATE_DEACTIVATED);
+    m_fgObj.SetInteger("GUI_WIDGET_STATE_COUNT", (int)gui::CWidget::STATE_COUNT);
 
     //
     // GUI WIDGET CALLBACK TYPE CONSTANTS        
@@ -1813,12 +1813,12 @@ fgBool script::CScriptSubsystem::registerSceneManager(LuaPlus::LuaObject &metata
     metatable = m_fgObj.CreateTable(fgScriptMT->getMetatableName(metatableID));
     metatable.SetObject("__index", metatable);
 
-    typedef gfx::CSceneNode* (gfx::CSceneManager::*SCENE_BASE_SceneNode_C_STR_IN)(const char*);
-    typedef gfx::CSceneNode* (gfx::CSceneManager::*SCENE_BASE_SceneNode_C_STR_C_STR_IN)(const char*, const char*);
+    typedef gfx::CSceneNode * (gfx::CSceneManager::*SCENE_BASE_SceneNode_C_STR_IN)(const char*);
+    typedef gfx::CSceneNode * (gfx::CSceneManager::*SCENE_BASE_SceneNode_C_STR_C_STR_IN)(const char*, const char*);
     typedef fgBool(gfx::CSceneManager::*SCENE_BASE_Bool_C_STR_IN)(const char*);
 
-    typedef gfx::CSceneNode* (gfx::CSceneManager::*SCENE_BASE_SceneNode_C_STR_3X_FLOAT_IN)(const char*, float, float, float);
-    typedef gfx::CSceneNode* (gfx::CSceneManager::*SCENE_BASE_SceneNode_C_STR_6X_FLOAT_IN)(const char*, float, float, float, float, float, float);
+    typedef gfx::CSceneNode * (gfx::CSceneManager::*SCENE_BASE_SceneNode_C_STR_3X_FLOAT_IN)(const char*, float, float, float);
+    typedef gfx::CSceneNode * (gfx::CSceneManager::*SCENE_BASE_SceneNode_C_STR_6X_FLOAT_IN)(const char*, float, float, float, float, float, float);
 
     metatable.RegisterObjectDirect("get",
                                    static_cast<gfx::CSceneManager *>(0),

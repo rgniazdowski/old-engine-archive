@@ -528,10 +528,10 @@ namespace fg {
             ////////////////////////////////////////////////////////////////////
 
             /**
-             * 
-             * @param params
-             * @param merge
-             * @return 
+             * Initializes the style content from ini style parameters
+             * @param params    Style parameters from given section, taken directly from ini
+             * @param merge     If true the styles will be merged, if false - overwritten
+             * @return
              */
             fgBool initializeFromConfig(util::config::ParameterVec &params, fgBool merge = FG_FALSE);
 
@@ -597,10 +597,10 @@ namespace fg {
              */
             static SBackground::Style parseBackgroundStyle(const char *value);
             /**
-             * 
-             * @param value
-             * @param unit
-             * @return 
+             * Parses the length stored as string
+             * @param value     Input length to parsed stored as C-like string
+             * @param type      Type of the unit, can be percents, inches, blocks or pixels
+             * @return          Floating point value of the parsed length
              */
             static float parseLength(const char *value, Unit &unit);
 

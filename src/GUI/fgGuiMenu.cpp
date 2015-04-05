@@ -13,22 +13,12 @@
 
 using namespace fg;
 
-/*
- *
- */
 gui::CMenu::CMenu() : m_isMainMenu(FG_FALSE) {
     gui::CMenu::setDefaults();
 }
 
-/*
- *
- */
 gui::CMenu::~CMenu() { }
 
-/**
- * 
- * @param flags
- */
 void gui::CMenu::setFlags(const std::string& flags) {
     if(flags.empty() || flags.length() < 5)
         return;
@@ -48,9 +38,6 @@ void gui::CMenu::setFlags(const std::string& flags) {
     flagsVec.clear();
 }
 
-/*
- *
- */
 void gui::CMenu::setDefaults(void) {
     m_type = MENU;
     m_typeName = FG_GUI_MENU_NAME;
@@ -58,16 +45,10 @@ void gui::CMenu::setDefaults(void) {
     setIgnoreState(FG_TRUE);
 }
 
-/*
- *
- */
 gfx::BoundingBox3Df gui::CMenu::updateBounds(void) {
     return CContainer::updateBounds();
 }
 
-/*
- *
- */
 void gui::CMenu::refresh(void) {
     CContainer::refresh();
 }
