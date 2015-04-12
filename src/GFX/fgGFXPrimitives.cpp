@@ -459,7 +459,7 @@ void gfx::CPrimitives::drawArray(const fg::CVector<Vertex2v> &inputData,
                                      reinterpret_cast<fgGFXvoid*>(offset));
     }
     glDrawArrays((GLenum)mode, 0, inputData.size());
-    fgGLError("glDrawArrays");
+    GLCheckError("glDrawArrays");
 }
 
 /**
@@ -506,7 +506,7 @@ void gfx::CPrimitives::drawArray(const fg::CVector<Vertex3v> &inputData,
                                      reinterpret_cast<fgGFXvoid*>(offset));
     }
     glDrawArrays((GLenum)mode, 0, inputData.size());
-    fgGLError("glDrawArrays");
+    GLCheckError("glDrawArrays");
 }
 
 /**
@@ -559,7 +559,7 @@ void gfx::CPrimitives::drawArray(const fg::CVector<Vertex4v> &inputData,
                                      reinterpret_cast<fgGFXvoid*>(offset));
     }
     glDrawArrays((GLenum)mode, 0, inputData.size());
-    fgGLError("glDrawArrays");
+    GLCheckError("glDrawArrays");
 }
 
 /**
@@ -597,7 +597,7 @@ void gfx::CPrimitives::drawArrayIndexed(const CVector<Vertex2v> &inputData,
                                      reinterpret_cast<fgGFXvoid*>(offset));
     }
     glDrawElements((GLenum)mode, indices.size(), GL_UNSIGNED_SHORT, &indices.front());
-    fgGLError("glDrawElements");
+    GLCheckError("glDrawElements");
 }
 
 /**
@@ -642,7 +642,7 @@ void gfx::CPrimitives::drawArrayIndexed(const CVector<Vertex3v> &inputData,
                                      reinterpret_cast<fgGFXvoid*>(offset));
     }
     glDrawElements((GLenum)mode, indices.size(), GL_UNSIGNED_SHORT, &indices.front());
-    fgGLError("glDrawElements");
+    GLCheckError("glDrawElements");
 }
 
 /**
@@ -697,7 +697,7 @@ void gfx::CPrimitives::drawArrayIndexed(const CVector<Vertex4v> &inputData,
                                      reinterpret_cast<fgGFXvoid*>(offset));
     }
     glDrawElements((GLenum)mode, indices.size(), GL_UNSIGNED_SHORT, &indices.front());
-    fgGLError("glDrawElements");
+    GLCheckError("glDrawElements");
 }
 
 void gfx::CPrimitives::applyAttributeData(SAttributeData *attrData,
@@ -811,7 +811,7 @@ void gfx::CPrimitives::drawVertexData(const CVertexData *inputData,
                                          reinterpret_cast<fgGFXvoid*>(offset));
         }
         glDrawArrays((fgGFXenum)mode, 0, inputData->size());
-        fgGLError("glDrawArrays");
+        GLCheckError("glDrawArrays");
     }
 
 }
@@ -855,7 +855,7 @@ void gfx::CPrimitives::drawRect2D(void) {
                                  sizeof (Vertex3v),
                                  (fgGFXvoid*)offset);
     glDrawArrays(GL_TRIANGLE_STRIP, 0, sizeof (c_stripRect3x1) / sizeof (Vertex3v));
-    fgGLError("glDrawArrays");
+    GLCheckError("glDrawArrays");
 }
 
 /*

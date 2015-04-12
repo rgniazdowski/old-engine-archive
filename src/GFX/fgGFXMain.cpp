@@ -473,7 +473,7 @@ void gfx::CGfxMain::render(void) {
         FG_LOG_ERROR("Main window / context is NULL");
         return;
     }
-    fgGLError();
+    GLCheckError();
     m_mainWindow->clearColor();
 
     context::setCullFace(FG_TRUE);

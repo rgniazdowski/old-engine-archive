@@ -137,70 +137,70 @@ namespace fg {
     #else
         #define FG_GFX_SHADING_LANG_VERSION_DEFAULT FG_GFX_GLSL_330 // ?
     #endif
+namespace fg {
+    namespace gfx {
+/**
+         *
+         * @param afterFunc
+         * @param params
+         * @return
+         */
+        inline unsigned int GLCheckError(const char *afterFunc = NULL, const char *params = NULL) {
+            static unsigned int repeatCnt = 0;
+            static GLenum lastCode = GL_NO_ERROR;
+            GLenum retCode = GL_NO_ERROR;
+            GLenum code = GL_NO_ERROR;
+            
+            const char * const invalidEnum = "An unacceptable value is specified for an enumerated argument.";
+            const char * const invalidValue = "A numeric argument is out of range.";
+            const char * const invalidOperation = "The specified operation is not allowed in the current state.";
+            const char * const outOfMemory = "There is not enough memory left to execute the command. The state of the GL is undefined";
+            const char * const invalidFBOp = "The command is trying to render to or read from the framebuffer while the currently bound framebuffer is not framebuffer complete (i.e. the return value from glCheckFramebufferStatus is not GL_FRAMEBUFFER_COMPLETE).";
+            
+            if(afterFunc == NULL)
+                afterFunc = "gl*";
+            if(params == NULL)
+                params = "\0";
 
-// #FIXME | this can be also used for EGL / SDL ? make it universal?
-inline unsigned int fgGLError(const char *afterFunc = NULL) {
-    static unsigned int repeatCnt = 0;
-    //	static const char *lastError = NULL;
-    static GLenum lastCode = GL_NO_ERROR;
+            while(FG_TRUE) {
+                code = glGetError();
+                retCode = code;
 
-    const char * invalidEnum = "An unacceptable value is specified for an enumerated argument.";
-    const char * invalidValue = "A numeric argument is out of range.";
-    const char * invalidOperation = "The specified operation is not allowed in the current state.";
-    const char * outOfMemory = "There is not enough memory left to execute the command. The state of the GL is undefined";
-    const char * invalidFBOp = "The command is trying to render to or read from the framebuffer while the currently bound framebuffer is not framebuffer complete (i.e. the return value from glCheckFramebufferStatus is not GL_FRAMEBUFFER_COMPLETE).";
-    GLenum retCode = GL_NO_ERROR;
-    if(afterFunc == NULL)
-        afterFunc = "gl*";
-    GLenum code = GL_NO_ERROR;
-
-    while(FG_TRUE) {
-        code = glGetError();
-
-        if(code == GL_NO_ERROR)
-            break;
-        if(repeatCnt >= 2 && lastCode == code) {
-            break;
-        } else if(lastCode != code) {
-            repeatCnt = 0;
+                if(code == GL_NO_ERROR)
+                    break;
+                if(repeatCnt >= 2 && lastCode == code) {
+                    break;
+                } else if(lastCode != code) {
+                    repeatCnt = 0;
+                }
+                switch(code) {
+                    case GL_INVALID_ENUM:
+                        FG_LOG_ERROR("GFX: GL_INVALID_ENUM after %s(%s): '%s'", afterFunc, params, invalidEnum);
+                        break;
+                    case GL_INVALID_VALUE:
+                        FG_LOG_ERROR("GFX: GL_INVALID_VALUE after %s(%s): '%s'", afterFunc, params, invalidValue);
+                        break;
+                    case GL_INVALID_OPERATION:
+                        FG_LOG_ERROR("GFX: GL_INVALID_OPERATION after %s(%s): '%s'", afterFunc, params, invalidOperation);
+                        break;
+                    case GL_OUT_OF_MEMORY:
+                        FG_LOG_ERROR("GFX: GL_OUT_OF_MEMORY after %s(%s): '%s'", afterFunc, params, outOfMemory);
+                        break;
+                    case GL_INVALID_FRAMEBUFFER_OPERATION:
+                        FG_LOG_ERROR("GFX: GL_INVALID_FRAMEBUFFER_OPERATION after %s(%s): '%s'", afterFunc, params, invalidFBOp);
+                        break;
+                    default:
+                        retCode = 0;
+                        break;
+                }
+                if(lastCode == code)
+                    repeatCnt++;
+                lastCode = code;
+            }
+            return (unsigned int)retCode;
         }
-        switch(code) {
-            case GL_INVALID_ENUM:
-                FG_LOG_ERROR("GFX: GL error GL_INVALID_ENUM after %s(): '%s'", afterFunc, invalidEnum);
-                retCode = code;
-                break;
-            case GL_INVALID_VALUE:
-                FG_LOG_ERROR("GFX: GL error GL_INVALID_VALUE after %s(): '%s'", afterFunc, invalidValue);
-                retCode = code;
-                break;
-            case GL_INVALID_OPERATION:
-                FG_LOG_ERROR("GFX: GL error GL_INVALID_OPERATION after %s(): '%s'", afterFunc, invalidOperation);
-                retCode = code;
-                break;
-            case GL_OUT_OF_MEMORY:
-                FG_LOG_ERROR("GFX: GL error GL_OUT_OF_MEMORY after %s(): '%s'", afterFunc, outOfMemory);
-                retCode = code;
-                break;
-            case GL_INVALID_FRAMEBUFFER_OPERATION:
-                FG_LOG_ERROR("GFX: GL error GL_INVALID_FRAMEBUFFER_OPERATION after %s(): '%s'", afterFunc, invalidFBOp);
-                retCode = code;
-                break;
-            default:
-                break;
-        }
-        if(lastCode == code)
-            repeatCnt++;
-
-        lastCode = code;
-        // ?
-        if(afterFunc) {
-            //	lastError = afterFunc;
-        } else {
-            //	lastError = NULL;
-        }
-    }
-    return (unsigned int)retCode;
-}
+    } // namespace gfx
+} // namespace fg
 
     #if defined(FG_USING_EGL) || defined(FG_USING_MARMALADE_EGL)
 // #FIXME | this can be also used for EGL / SDL ? make it universal?
@@ -221,7 +221,7 @@ inline unsigned int fgEGLError(const char *afterFunc = NULL) {
     errMap[EGL_BAD_PARAMETER] = "One or more argument values are invalid.";
     errMap[EGL_BAD_NATIVE_PIXMAP] = "A NativePixmapType argument does not refer to a valid native pixmap.";
     errMap[EGL_BAD_NATIVE_WINDOW] = "A NativeWindowType argument does not refer to a valid native window.";
-    errMap[EGL_CONTEXT_LOST] = "A power management event has occurred. The application must destroy all contexts and reinitialise OpenGL ES state and objects to continue rendering. ";
+    errMap[EGL_CONTEXT_LOST] = "A power management event has occurred. The application must destroy all contexts and reinitialize OpenGL ES state and objects to continue rendering. ";
 
     unsigned int retCode = 0;
     if(afterFunc == NULL)
@@ -230,67 +230,55 @@ inline unsigned int fgEGLError(const char *afterFunc = NULL) {
 
     while(FG_TRUE) {
         code = eglGetError();
+        retCode = code;
         if(code == EGL_SUCCESS)
             break;
         switch(code) {
             case EGL_NOT_INITIALIZED:
-                FG_LOG_ERROR("EGL error NOT_INITIALIZED after %s(): %s", afterFunc, errMap[code]);
-                retCode = code;
+                FG_LOG_ERROR("GFX: EGL_NOT_INITIALIZED after %s(): %s", afterFunc, errMap[code]);
                 break;
             case EGL_BAD_ACCESS:
-                FG_LOG_ERROR("EGL error BAD_ACCESS after %s(): %s", afterFunc, errMap[code]);
-                retCode = code;
+                FG_LOG_ERROR("GFX: EGL_BAD_ACCESS after %s(): %s", afterFunc, errMap[code]);
                 break;
             case EGL_BAD_ALLOC:
-                FG_LOG_ERROR("EGL error BAD_ALLOC after %s(): %s", afterFunc, errMap[code]);
-                retCode = code;
+                FG_LOG_ERROR("GFX: EGL_BAD_ALLOC after %s(): %s", afterFunc, errMap[code]);
                 break;
             case EGL_BAD_ATTRIBUTE:
-                FG_LOG_ERROR("EGL error BAD_ATTRIBUTE after %s(): %s", afterFunc, errMap[code]);
-                retCode = code;
+                FG_LOG_ERROR("GFX: EGL_BAD_ATTRIBUTE after %s(): %s", afterFunc, errMap[code]);
                 break;
             case EGL_BAD_CONTEXT:
-                FG_LOG_ERROR("EGL error BAD_CONTEXT after %s(): %s", afterFunc, errMap[code]);
-                retCode = code;
+                FG_LOG_ERROR("GFX: EGL_BAD_CONTEXT after %s(): %s", afterFunc, errMap[code]);
                 break;
             case EGL_BAD_CONFIG:
-                FG_LOG_ERROR("EGL error BAD_CONFIG after %s(): %s", afterFunc, errMap[code]);
-                retCode = code;
+                FG_LOG_ERROR("GFX: EGL_BAD_CONFIG after %s(): %s", afterFunc, errMap[code]);
                 break;
             case EGL_BAD_CURRENT_SURFACE:
-                FG_LOG_ERROR("EGL error BAD_CURRENT_SURFACE after %s(): %s", afterFunc, errMap[code]);
-                retCode = code;
+                FG_LOG_ERROR("GFX: EGL_BAD_CURRENT_SURFACE after %s(): %s", afterFunc, errMap[code]);
                 break;
             case EGL_BAD_DISPLAY:
-                FG_LOG_ERROR("EGL error BAD_DISPLAY after %s(): %s", afterFunc, errMap[code]);
-                retCode = code;
+                FG_LOG_ERROR("GFX: EGL_BAD_DISPLAY after %s(): %s", afterFunc, errMap[code]);
                 break;
             case EGL_BAD_SURFACE:
-                FG_LOG_ERROR("EGL error BAD_SURFACE after %s(): %s", afterFunc, errMap[code]);
-                retCode = code;
+                FG_LOG_ERROR("GFX: EGL_BAD_SURFACE after %s(): %s", afterFunc, errMap[code]);
                 break;
             case EGL_BAD_MATCH:
-                FG_LOG_ERROR("EGL error BAD_MATCH after %s(): %s", afterFunc, errMap[code]);
-                retCode = code;
+                FG_LOG_ERROR("GFX: EGL_BAD_MATCH after %s(): %s", afterFunc, errMap[code]);
                 break;
             case EGL_BAD_PARAMETER:
-                FG_LOG_ERROR("EGL error BAD_PARAMETER after %s(): %s", afterFunc, errMap[code]);
-                retCode = code;
+                FG_LOG_ERROR("GFX: EGL_BAD_PARAMETER after %s(): %s", afterFunc, errMap[code]);
                 break;
             case EGL_BAD_NATIVE_PIXMAP:
-                FG_LOG_ERROR("EGL error BAD_NATIVE_PIXMAP after %s(): %s", afterFunc, errMap[code]);
-                retCode = code;
+                FG_LOG_ERROR("GFX: EGL_BAD_NATIVE_PIXMAP after %s(): %s", afterFunc, errMap[code]);
                 break;
             case EGL_BAD_NATIVE_WINDOW:
-                FG_LOG_ERROR("EGL error BAD_NATIVE_WINDOW after %s(): %s", afterFunc, errMap[code]);
-                retCode = code;
+                FG_LOG_ERROR("GFX: EGL_BAD_NATIVE_WINDOW after %s(): %s", afterFunc, errMap[code]);
                 break;
             case EGL_CONTEXT_LOST:
-                FG_LOG_ERROR("EGL error CONTEXT_LOST after %s(): %s", afterFunc, errMap[code]);
-                retCode = code;
+                FG_LOG_ERROR("GFX: EGL_CONTEXT_LOST after %s(): %s", afterFunc, errMap[code]);
                 break;
             default:
-                FG_LOG_ERROR("EGL error after %s(): %s", afterFunc, errMap[code]);
+                FG_LOG_ERROR("GFX: EGL error after %s(): %s", afterFunc, errMap[code]);
+                retCode = 0;
                 break;
         }
     }

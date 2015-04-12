@@ -66,7 +66,7 @@ using namespace fg;
 
 void gfx::SContextParam::determineParamType(void) {
     count = 1;
-    switch(this->pname) {
+    switch(this->internal_pname) {
             // params returns a single value indicating the active multitexture unit. The initial value is GL_TEXTURE0.
             // See glActiveTexture.
         case GL_ACTIVE_TEXTURE:
@@ -794,9 +794,9 @@ fgBool gfx::SContextParam::update(void) {
     switch(this->paramType) {
         case FG_GFX_PARAM_BOOL:
             if(boolVal == FG_GFX_TRUE)
-                glEnable(pname);
+                glEnable(internal_pname);
             else
-                glDisable(pname);
+                glDisable(internal_pname);
             break;
         case FG_GFX_PARAM_FLOAT:
             // NOPE
@@ -832,23 +832,23 @@ fgBool gfx::SContextParam::update(void) {
             break;
         case FG_GFX_PARAM_TEXTURE_2D:
             glBindTexture(GL_TEXTURE_2D, (fgGFXuint)intVal);
-            fgGLError("glBindTexture");
+            GLCheckError("glBindTexture");
             break;
         case FG_GFX_PARAM_TEXTURE_3D:
             glBindTexture(GL_TEXTURE_CUBE_MAP, (fgGFXuint)intVal);
-            fgGLError("glBindTexture");
+            GLCheckError("glBindTexture");
             break;
         case FG_GFX_PARAM_TEXTURE:
             glActiveTexture((fgGFXenum)intVal);
-            fgGLError("glActiveTexture");
+            GLCheckError("glActiveTexture");
             break;
         case FG_GFX_PARAM_VERT_BUFFER_BIND:
             glBindBuffer(GL_ARRAY_BUFFER, intVal);
-            fgGLError("glBindBuffer");
+            GLCheckError("glBindBuffer");
             break;
         case FG_GFX_PARAM_ELEM_BUFFER_BIND:
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, intVal);
-            fgGLError("glBindBuffer");
+            GLCheckError("glBindBuffer");
             break;
         case FG_GFX_PARAM_CLEAR_DEPTH:
             // #FIXME / ALIAS glClearDepth/f
@@ -872,7 +872,7 @@ fgBool gfx::SContextParam::update(void) {
             break;
         case FG_GFX_PARAM_PROGRAM:
             glUseProgram((fgGFXuint)intVal);
-            fgGLError("glUseProgram");
+            GLCheckError("glUseProgram");
             break;
         case FG_GFX_PARAM_DEPTH_FUNC:
             glDepthFunc((fgGFXenum)intVal);
@@ -885,15 +885,15 @@ fgBool gfx::SContextParam::update(void) {
             break;
         case FG_GFX_PARAM_FRAME_BUFFER_BIND:
             glBindFramebuffer(GL_FRAMEBUFFER, intVal);
-            fgGLError("glBindFramebuffer");
+            GLCheckError("glBindFramebuffer");
             break;
         case FG_GFX_PARAM_RENDER_BUFFER_BIND:
             glBindRenderbuffer(GL_RENDERBUFFER, intVal);
-            fgGLError("glBindRenderbuffer");
+            GLCheckError("glBindRenderbuffer");
             break;
         case FG_GFX_PARAM_HINT:
-            glHint(pname, (fgGFXenum)intVal);
-            fgGLError("glHint");
+            glHint(internal_pname, (fgGFXenum)intVal);
+            GLCheckError("glHint");
             break;
         case FG_GFX_PARAM_SAMPLE_COVERAGE:
             // MULTI VALUE
@@ -1134,7 +1134,7 @@ fgBool gfx::context::initialize(void)
     } else {
         FG_LOG_DEBUG("GFX: GLEW init completed successfully.");
     }
-    fgGFXenum errorCheckValue = fgGLError("glewInit");
+    fgGFXenum errorCheckValue = GLCheckError("glewInit");
     if(errorCheckValue != GL_NO_ERROR) {
         FG_LOG_ERROR("GFX: Context error, failed to initialize."); //, gluErrorString(errorCheckValue));
         g_contextInit = FG_FALSE;
@@ -1250,7 +1250,7 @@ fgBool gfx::context::initialize(void)
     std::string glVersion = (const char *)glGetString(GL_VERSION);
     std::string glSLVersion = (const char *)glGetString(GL_SHADING_LANGUAGE_VERSION);
 #if defined(FG_DEBUG)
-    fgGLError("glGetString:GL_SHADING_LANGUAGE_VERSION");
+    GLCheckError("glGetString", "GL_SHADING_LANGUAGE_VERSION");
 #endif
     std::string glExtensions;
 
@@ -1462,7 +1462,7 @@ void gfx::context::deleteAllBuffers(void) {
         if(!buffer)
             continue;
         glDeleteBuffers(1, buffer->ptrID());
-        fgGLError("glDeleteBuffers");
+        GLCheckError("glDeleteBuffers");
         buffer->id = 0;
     }
     g_buffers.clear();
@@ -1512,7 +1512,7 @@ void gfx::context::bufferData(SBufferID& bufferID,
     if((fgGFXenum)0 == bufferID.usage)
         bufferID.usage = GL_STATIC_DRAW;
     glBufferData(bufferID.target, size, data, bufferID.usage);
-    fgGLError("glBufferData");
+    GLCheckError("glBufferData");
 }
 
 void gfx::context::bindBuffer(SBufferID& bufferID, const fgGFXenum target) {
@@ -1597,7 +1597,7 @@ void gfx::context::deleteAllTextures(void) {
         if(!tex)
             continue;
         glDeleteTextures(1, tex->ptrID());
-        fgGLError("glDeleteTextures");
+        GLCheckError("glDeleteTextures");
         tex->id = 0;
     }
     g_textures.clear();
@@ -1644,7 +1644,7 @@ void gfx::context::deleteTexture(STextureID& textureID) {
         return;
     glDeleteTextures(1, textureID.ptrID());
     textureID.id = 0;
-    fgGLError("glDeleteTextures");
+    GLCheckError("glDeleteTextures");
     itor->second->id = 0;
     g_textures.erase(itor);
 }
@@ -2005,7 +2005,7 @@ void gfx::context::vertexAttribPointer(fgGFXuint index,
     attr.pointer = ptr;
     attr.buffer = g_params[gfx::ARRAY_BUFFER_BINDING];
     glVertexAttribPointer(index, size, type, normalized, stride, ptr);
-    fgGLError("glVertexAttribPointer"); // #FIXME
+    GLCheckError("glVertexAttribPointer"); // #FIXME
 }
 
 void gfx::context::vertexAttribPointer(SAttributeData& attrData) {
@@ -2023,5 +2023,5 @@ void gfx::context::vertexAttribPointer(SAttributeData& attrData) {
                           attrData.isNormalized,
                           attrData.stride,
                           attrData.pointer);
-    fgGLError("glVertexAttribPointer"); // #FIXME
+    GLCheckError("glVertexAttribPointer"); // #FIXME
 }

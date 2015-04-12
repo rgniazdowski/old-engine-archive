@@ -198,7 +198,7 @@ fgGFXuint gfx::CShader::create(void) {
         return 0;
     if(!m_gfxID || (glIsShader(m_gfxID) == FG_GFX_FALSE)) {
         m_gfxID = glCreateShader((fgGFXenum)m_type);
-        fgGLError("glCreateShader");
+        GLCheckError("glCreateShader");
         FG_LOG_DEBUG("GFX: Created shader: %s, gfxID: %d [is shader? = %d]", FG_GFX_SHADER_TYPE_TO_TEXT(m_type), m_gfxID, (int)glIsShader(m_gfxID));
     }
     return m_gfxID;
@@ -222,9 +222,9 @@ fgBool gfx::CShader::compile(void) {
         return FG_FALSE;
     }
     glShaderSource(m_gfxID, m_numSources, m_sources, NULL);
-    fgGLError("glShaderSource");
+    GLCheckError("glShaderSource");
     glCompileShader(m_gfxID);
-    fgGLError("glCompileShader");
+    GLCheckError("glCompileShader");
     updateLog();
     updateParams();
     if(!m_params[FG_GFX_SHADER_COMPILE_STATUS]) {
@@ -270,7 +270,7 @@ fgBool gfx::CShader::compile(std::string & path) {
 fgBool gfx::CShader::deleteShader(void) {
     if(glIsShader(m_gfxID) == FG_GFX_TRUE) {
         glDeleteShader(m_gfxID);
-        fgGLError("glDeleteShader");
+        GLCheckError("glDeleteShader");
         updateParams();
         m_gfxID = 0;
         return FG_TRUE;
@@ -286,7 +286,7 @@ fgBool gfx::CShader::deleteShader(void) {
 fgBool gfx::CShader::attach(fgGFXuint program) {
     if((FG_GFX_TRUE == glIsProgram(program)) && (FG_GFX_TRUE == glIsShader(m_gfxID))) {
         glAttachShader(program, m_gfxID);
-        fgGLError("glAttachShader");
+        GLCheckError("glAttachShader");
         return FG_TRUE;
     }
     return FG_FALSE;
@@ -300,7 +300,7 @@ fgBool gfx::CShader::attach(fgGFXuint program) {
 fgBool gfx::CShader::detach(fgGFXuint program) {
     if((glIsProgram(program) == FG_GFX_TRUE) && (glIsShader(m_gfxID) == FG_GFX_TRUE)) {
         glDetachShader(program, m_gfxID);
-        fgGLError("glDetachShader");
+        GLCheckError("glDetachShader");
         return FG_TRUE;
     }
 

@@ -460,7 +460,7 @@ fgBool gfx::CTextureManager::makeTexture(CTextureResource * pTexture) {
     fgBool status = FG_TRUE;
     std::string failedFuncs;
     context::bindTexture(texGfxID);
-    if(fgGLError("glBindTexture")) {
+    if(GLCheckError("glBindTexture")) {
         status = FG_FALSE;
         failedFuncs.append("glBindTexture, ");
     }
@@ -485,7 +485,7 @@ fgBool gfx::CTextureManager::makeTexture(CTextureResource * pTexture) {
         //glTexParameteri(target, GL_TEXTURE_WRAP_R, (fgGFXint)GL_MIRRORED_REPEAT); // _R is not in ES 2.0 :( #FIXME
     }
 
-    if(fgGLError("glTexParameteri")) {
+    if(GLCheckError("glTexParameteri")) {
         status = FG_FALSE;
         failedFuncs.append("glTexParameteri, ");
     }
@@ -519,7 +519,7 @@ fgBool gfx::CTextureManager::makeTexture(CTextureResource * pTexture) {
                          pTexture->getCubeData((fgTextureCubeMapID)i));
         }
     }
-    if(fgGLError("glTexImage2D")) {
+    if(GLCheckError("glTexImage2D")) {
         status = FG_FALSE;
         failedFuncs.append("glTexImage2D, ");
     }

@@ -181,7 +181,7 @@ fgGFXuint gfx::CShaderProgram::create(void) {
         return 0;
     if(!m_gfxID || FG_GFX_FALSE == glIsProgram(m_gfxID)) {
         m_gfxID = glCreateProgram();
-        fgGLError("glCreateShader");
+        GLCheckError("glCreateShader");
         FG_LOG_DEBUG("GFX: Created shader program '%s', gfxID: %d [is shader program? = %d]", getNameStr(), m_gfxID, glIsProgram(m_gfxID));
     }
     return m_gfxID;
@@ -248,7 +248,7 @@ fgBool gfx::CShaderProgram::link(void) {
     }
     fgBool status = FG_TRUE;
     glLinkProgram(m_gfxID);
-    fgGLError("glLinkProgram");
+    GLCheckError("glLinkProgram");
     updateLinkStatus();
     if(!m_params[FG_GFX_PROGRAM_LINK_STATUS]) {
         updateLog();
@@ -256,7 +256,7 @@ fgBool gfx::CShaderProgram::link(void) {
         return FG_FALSE;
     }
     glValidateProgram(m_gfxID);
-    fgGLError("glValidateProgram");
+    GLCheckError("glValidateProgram");
     //s3eDeviceYield(0);
     updateValidateStatus();
     if(!m_params[FG_GFX_PROGRAM_VALIDATE_STATUS]) {
@@ -287,7 +287,7 @@ fgBool gfx::CShaderProgram::link(void) {
             int boundLoc = glGetAttribLocation(m_gfxID, bind.variableName.c_str());
             FG_LOG_DEBUG("GFX: Bound attribute '%s' to location %d (should be %d)",
                          bind.variableName.c_str(), boundLoc, (int)bind.type);
-            fgGLError("glGetAttribLocation");
+            GLCheckError("glGetAttribLocation");
         }
     }
     {
@@ -327,7 +327,7 @@ fgBool gfx::CShaderProgram::use(void) {
     }
     fgGFXuint last = context::activeProgram();
     context::useProgram(m_gfxID);
-    fgGLError("glUseProgram"); // #FIXME - GL error reporting - rtard?
+    GLCheckError("glUseProgram"); // #FIXME - GL error reporting - rtard?
     return FG_TRUE;
 }
 
@@ -589,7 +589,7 @@ fgBool gfx::CShaderProgram::bindAttributes(void) {
                      (int)bind.location);
 
         glBindAttribLocation(m_gfxID, (fgGFXuint)bind.location, bind.variableName.c_str());
-        fgGLError("glBindAttribLocation");
+        GLCheckError("glBindAttribLocation");
         bind.isBound = FG_GFX_TRUE;
     }
     return FG_TRUE;
@@ -617,7 +617,7 @@ fgBool gfx::CShaderProgram::bindUniforms(void) {
         FG_LOG_DEBUG("GFX: Preparing for binding uniform '%s' of type: '%s' (%d)", bind.variableName.c_str(), FG_GFX_UNIFORM_TYPE_TO_TEXT(bind.type), (int)bind.type);
         bind.location = glGetUniformLocation(m_gfxID, bind.variableName.c_str());
         FG_LOG_DEBUG("GFX: Bound uniform '%s' to location: %d", bind.variableName.c_str(), bind.location);
-        fgGLError("glGetUniformLocation");
+        GLCheckError("glGetUniformLocation");
     }
     return FG_TRUE;
 }
@@ -695,7 +695,7 @@ fgBool gfx::CShaderProgram::setUniform(CMVPMatrix *matrix) {
     if(bind->location == -1)
         return FG_FALSE;
     glUniformMatrix4fv(bind->location, 1, GL_FALSE, matrix->getModelViewProjMatPtr());
-    fgGLError("glUniformMatrix4fv");
+    GLCheckError("glUniformMatrix4fv");
     return FG_TRUE;
 }
 
@@ -711,7 +711,7 @@ fgBool gfx::CShaderProgram::setUniform(CMVMatrix *matrix) {
     if(bind->location == -1)
         return FG_FALSE;
     glUniformMatrix4fv(bind->location, 1, GL_FALSE, matrix->getModelViewMatPtr());
-    fgGLError("glUniformMatrix4fv");
+    GLCheckError("glUniformMatrix4fv");
     return FG_TRUE;
 }
 
@@ -731,7 +731,7 @@ fgBool gfx::CShaderProgram::setUniform(UniformType type,
     if(bind->location == -1)
         return FG_FALSE;
     glUniform1f(bind->location, v0);
-    fgGLError("glUniform1f");
+    GLCheckError("glUniform1f");
     return FG_TRUE;
 }
 
@@ -751,7 +751,7 @@ fgBool gfx::CShaderProgram::setUniform(UniformType type,
     if(bind->location == -1)
         return FG_FALSE;
     glUniform2f(bind->location, v0, v1);
-    fgGLError("glUniform2f");
+    GLCheckError("glUniform2f");
     return FG_TRUE;
 }
 
@@ -773,7 +773,7 @@ fgBool gfx::CShaderProgram::setUniform(UniformType type,
     if(bind->location == -1)
         return FG_FALSE;
     glUniform3f(bind->location, v0, v1, v2);
-    fgGLError("glUniform3f");
+    GLCheckError("glUniform3f");
     return FG_TRUE;
 }
 
@@ -797,7 +797,7 @@ fgBool gfx::CShaderProgram::setUniform(UniformType type,
     if(bind->location == -1)
         return FG_FALSE;
     glUniform4f(bind->location, v0, v1, v2, v3);
-    fgGLError("glUniform4f");
+    GLCheckError("glUniform4f");
     return FG_TRUE;
 }
 
@@ -815,7 +815,7 @@ fgBool gfx::CShaderProgram::setUniform(UniformType type,
     if(bind->location == -1)
         return FG_FALSE;
     glUniform1i(bind->location, v0);
-    fgGLError("glUniform1i");
+    GLCheckError("glUniform1i");
     return FG_TRUE;
 }
 
@@ -835,7 +835,7 @@ fgBool gfx::CShaderProgram::setUniform(UniformType type,
     if(bind->location == -1)
         return FG_FALSE;
     glUniform2i(bind->location, v0, v1);
-    fgGLError("glUniform2i");
+    GLCheckError("glUniform2i");
     return FG_TRUE;
 }
 
@@ -857,7 +857,7 @@ fgBool gfx::CShaderProgram::setUniform(UniformType type,
     if(bind->location == -1)
         return FG_FALSE;
     glUniform3i(bind->location, v0, v1, v2);
-    fgGLError("glUniform3i");
+    GLCheckError("glUniform3i");
     return FG_TRUE;
 }
 
@@ -881,7 +881,7 @@ fgBool gfx::CShaderProgram::setUniform(UniformType type,
     if(bind->location == -1)
         return FG_FALSE;
     glUniform4i(bind->location, v0, v1, v2, v3);
-    fgGLError("glUniform4i");
+    GLCheckError("glUniform4i");
     return FG_TRUE;
 }
 

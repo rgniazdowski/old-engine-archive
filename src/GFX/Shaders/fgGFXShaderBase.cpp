@@ -47,7 +47,7 @@ void fg::gfx::base::CShader::updateLog(void) {
         if(FG_GFX_FALSE == glIsProgram(m_gfxID))
             return;
         glGetProgramiv(m_gfxID, GL_INFO_LOG_LENGTH, &length);
-        fgGLError("glGetProgramiv");
+        GLCheckError("glGetProgramiv");
     }
     if(length) {
         if(m_log)
@@ -55,10 +55,10 @@ void fg::gfx::base::CShader::updateLog(void) {
         char *buffer = fgMalloc<char>(length);
         if(m_baseType == FG_GFX_BASE_TYPE_SHADER) {
             glGetShaderInfoLog(m_gfxID, length, NULL, buffer);
-            fgGLError("glGetShaderInfoLog"); // ?
+            GLCheckError("glGetShaderInfoLog"); // ?
         } else if(m_baseType == FG_GFX_BASE_TYPE_PROGRAM) {
             glGetProgramInfoLog(m_gfxID, length, NULL, buffer);
-            fgGLError("glGetProgramInfoLog"); // ?
+            GLCheckError("glGetProgramInfoLog"); // ?
         }
         m_log = buffer;
     }
@@ -82,10 +82,10 @@ void fg::gfx::base::CShader::updateParams(void) {
         const fgGFXenum pname = (fgGFXenum)itor->first;
         if(m_baseType == FG_GFX_BASE_TYPE_SHADER) {
             glGetShaderiv(m_gfxID, pname, &value);
-            fgGLError("glGetShaderiv");
+            GLCheckError("glGetShaderiv");
         } else if(m_baseType == FG_GFX_BASE_TYPE_PROGRAM) {
             glGetProgramiv(m_gfxID, pname, &value);
-            fgGLError("glGetProgramiv");
+            GLCheckError("glGetProgramiv");
         } else {
             continue;
         }
@@ -104,10 +104,10 @@ fgGFXint fg::gfx::base::CShader::updateParam(fgGFXenum pname) {
     fgGFXint value = 0;
     if(m_baseType == FG_GFX_BASE_TYPE_SHADER && (FG_GFX_TRUE == glIsShader(m_gfxID))) {
         glGetShaderiv(m_gfxID, (fgGFXenum)pname, &value);
-        fgGLError("glGetShaderiv");
+        GLCheckError("glGetShaderiv");
     } else if(m_baseType == FG_GFX_BASE_TYPE_PROGRAM && (FG_GFX_TRUE == glIsProgram(m_gfxID))) {
         glGetProgramiv(m_gfxID, (fgGFXenum)pname, &value);
-        fgGLError("glGetProgramiv");
+        GLCheckError("glGetProgramiv");
     }
     m_params[pname] = value;
     return value;

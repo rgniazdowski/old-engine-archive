@@ -1498,7 +1498,7 @@ namespace fg {
          */
         struct SContextParam {
             /// Parameter name (special enum value)
-            fgGFXenum pname;
+            fgGFXenum internal_pname;
             /// Generic type of the data storing information/values
             fgGFXenum type;
             /// Special parameter type, for determining special 
@@ -1509,9 +1509,9 @@ namespace fg {
 
             union {
                 ///
-                fgGFXboolean boolVal;
-                ///
                 fgGFXboolean booleans[12];
+                ///
+                fgGFXboolean boolVal;
                 ///
                 fgGFXfloat floats[12];
                 ///
@@ -1611,16 +1611,16 @@ namespace fg {
                     return;
                 switch(type) {
                     case FG_GFX_BOOL:
-                        glGetBooleanv(pname, booleans);
-                        fgGLError("glGetBooleanv");
+                        glGetBooleanv(internal_pname, booleans);
+                        GLCheckError("glGetBooleanv");
                         break;
                     case FG_GFX_FLOAT:
-                        glGetFloatv(pname, floats);
-                        fgGLError("glGetFloatv");
+                        glGetFloatv(internal_pname, floats);
+                        GLCheckError("glGetFloatv");
                         break;
                     case FG_GFX_INT:
-                        glGetIntegerv(pname, ints);
-                        fgGLError("glGetIntegerv");
+                        glGetIntegerv(internal_pname, ints);
+                        GLCheckError("glGetIntegerv");
                         break;
                     default:
                         break;
@@ -1642,7 +1642,7 @@ namespace fg {
              * @param _pname
              */
             SContextParam(const fgGFXenum _pname = (fgGFXenum)0) :
-            pname(_pname),
+            internal_pname(_pname),
             type(FG_GFX_BOOL),
             paramType(FG_GFX_PARAM_INVALID),
             count(1) {
@@ -1655,12 +1655,13 @@ namespace fg {
              * @param _fval
              */
             SContextParam(const fgGFXenum _pname, const fgGFXfloat _fval) :
-            pname(_pname),
+            internal_pname(_pname),
             type(FG_GFX_FLOAT),
             count(1) {
                 memset(ints, 0, 12);
                 floats[0] = _fval;
                 determineParamType();
+                set(_fval);
             }
             /**
              *
@@ -1668,12 +1669,13 @@ namespace fg {
              * @param _ival
              */
             SContextParam(const fgGFXenum _pname, const fgGFXint _ival) :
-            pname(_pname),
+            internal_pname(_pname),
             type(FG_GFX_INT),
             count(1) {
                 memset(ints, 0, 12);
                 ints[0] = _ival;
                 determineParamType();
+                set(_ival);
             }
             /**
              *
@@ -1682,13 +1684,13 @@ namespace fg {
              */
             SContextParam(const fgGFXenum _pname,
                           const fgGFXboolean _bval) :
-            pname(_pname),
+            internal_pname(_pname),
             type(FG_GFX_BOOL),
             count(1) {
                 memset(ints, 0, 12);
                 booleans[0] = _bval;
                 determineParamType();
-                //update();
+                set(_bval);
             }
             /**
              *
@@ -1699,11 +1701,11 @@ namespace fg {
             SContextParam(const fgGFXenum _pname,
                           const int _count,
                           const fgGFXfloat *_fvals) :
-            pname(_pname),
+            internal_pname(_pname),
             count(_count) {
                 memset(ints, 0, 12);
                 determineParamType();
-                set(_fvals, FG_FALSE);
+                set(_fvals, FG_TRUE);
             }
             /**
              * 
@@ -1714,11 +1716,11 @@ namespace fg {
             SContextParam(const fgGFXenum _pname,
                           const int _count,
                           const fgGFXint *_ivals) :
-            pname(_pname),
+            internal_pname(_pname),
             count(_count) {
                 memset(ints, 0, 12);
                 determineParamType();
-                set(_ivals, FG_FALSE);
+                set(_ivals, FG_TRUE);
             }
             /**
              * 
@@ -1729,11 +1731,11 @@ namespace fg {
             SContextParam(const fgGFXenum _pname,
                           const int _count,
                           const fgGFXboolean *_bvals) :
-            pname(_pname),
+            internal_pname(_pname),
             count(_count) {
                 memset(ints, 0, 12);
                 determineParamType();
-                set(_bvals, FG_FALSE);
+                set(_bvals, FG_TRUE);
             }
             /**
              * 
