@@ -358,6 +358,8 @@
           <itemPath>../../../src/Thread/fgThreadSem.h</itemPath>
         </logicalFolder>
         <logicalFolder name="Util" displayName="Util" projectFiles="true">
+          <itemPath>../../../src/Util/fgBTreeMap.h</itemPath>
+          <itemPath>../../../src/Util/fgBTreeSet.h</itemPath>
           <itemPath>../../../src/Util/fgConfig.cpp</itemPath>
           <itemPath>../../../src/Util/fgConfig.h</itemPath>
           <itemPath>../../../src/Util/fgConfigParser.cpp</itemPath>
@@ -386,6 +388,8 @@
           <itemPath>../../../src/Util/fgProfiling.h</itemPath>
           <itemPath>../../../src/Util/fgRegularFile.cpp</itemPath>
           <itemPath>../../../src/Util/fgRegularFile.h</itemPath>
+          <itemPath>../../../src/Util/fgSafeBTreeMap.h</itemPath>
+          <itemPath>../../../src/Util/fgSafeBTreeSet.h</itemPath>
           <itemPath>../../../src/Util/fgSettings.cpp</itemPath>
           <itemPath>../../../src/Util/fgSettings.h</itemPath>
           <itemPath>../../../src/Util/fgStringParser.h</itemPath>
@@ -492,6 +496,7 @@
             <pElem>../../../modules/luaplus51-all/Src</pElem>
             <pElem>../../../modules/zlib_128/contrib/minizip</pElem>
             <pElem>../../../modules/simpleopt</pElem>
+            <pElem>../../../modules/cpp_btree</pElem>
           </incDir>
           <preprocessorList>
             <Elem>DEBUG</Elem>
@@ -521,6 +526,7 @@
             <pElem>../../../modules/luaplus51-all/Src</pElem>
             <pElem>../../../modules/zlib_128/contrib/minizip</pElem>
             <pElem>../../../modules/simpleopt</pElem>
+            <pElem>../../../modules/cpp_btree</pElem>
           </incDir>
           <preprocessorList>
             <Elem>DEBUG</Elem>
@@ -1865,6 +1871,10 @@
       </item>
       <item path="../../../src/Thread/fgThreadSem.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../../../src/Util/fgBTreeMap.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Util/fgBTreeSet.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../../../src/Util/fgConfig.cpp" ex="false" tool="1" flavor2="8">
       </item>
       <item path="../../../src/Util/fgConfig.h" ex="false" tool="3" flavor2="0">
@@ -1938,6 +1948,10 @@
             flavor2="8">
       </item>
       <item path="../../../src/Util/fgRegularFile.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Util/fgSafeBTreeMap.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Util/fgSafeBTreeSet.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/Util/fgSettings.cpp" ex="false" tool="1" flavor2="8">
       </item>
@@ -2061,6 +2075,7 @@
             <pElem>../../../modules/luaplus51-all/Src</pElem>
             <pElem>../../../modules/zlib_128/contrib/minizip</pElem>
             <pElem>../../../modules/simpleopt</pElem>
+            <pElem>../../../modules/cpp_btree</pElem>
           </incDir>
           <preprocessorList>
             <Elem>FG_NO_UNDEF</Elem>
@@ -2089,6 +2104,7 @@
             <pElem>../../../modules/zlib_128/contrib/minizip</pElem>
             <pElem>../../../modules/luaplus51-all/Src</pElem>
             <pElem>../../../modules/simpleopt</pElem>
+            <pElem>../../../modules/cpp_btree</pElem>
           </incDir>
           <preprocessorList>
             <Elem>FG_NO_UNDEF</Elem>
@@ -3426,6 +3442,10 @@
       </item>
       <item path="../../../src/Thread/fgThreadSem.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../../../src/Util/fgBTreeMap.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Util/fgBTreeSet.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../../../src/Util/fgConfig.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="../../../src/Util/fgConfig.h" ex="false" tool="3" flavor2="0">
@@ -3499,6 +3519,10 @@
             flavor2="0">
       </item>
       <item path="../../../src/Util/fgRegularFile.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Util/fgSafeBTreeMap.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Util/fgSafeBTreeSet.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/Util/fgSettings.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -3635,6 +3659,7 @@
             <pElem>../../../modules/stbfont/usascii</pElem>
             <pElem>../../../modules/stbfont</pElem>
             <pElem>../../../modules/luaplus51-all/Src</pElem>
+            <pElem>../../../modules/cpp_btree</pElem>
           </incDir>
           <preprocessorList>
             <Elem>DEBUG</Elem>
@@ -4951,6 +4976,10 @@
       </item>
       <item path="../../../src/Thread/fgThreadSem.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../../../src/Util/fgBTreeMap.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Util/fgBTreeSet.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../../../src/Util/fgConfig.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="../../../src/Util/fgConfig.h" ex="false" tool="3" flavor2="0">
@@ -5024,6 +5053,10 @@
             flavor2="0">
       </item>
       <item path="../../../src/Util/fgRegularFile.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Util/fgSafeBTreeMap.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Util/fgSafeBTreeSet.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/Util/fgSettings.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -5148,6 +5181,7 @@
             <pElem>../../../modules/stbfont/usascii</pElem>
             <pElem>../../../modules/stbfont</pElem>
             <pElem>../../../modules/luaplus51-all/Src</pElem>
+            <pElem>../../../modules/cpp_btree</pElem>
           </incDir>
           <preprocessorList>
             <Elem>FG_NO_UNDEF</Elem>
@@ -6454,6 +6488,10 @@
       </item>
       <item path="../../../src/Thread/fgThreadSem.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../../../src/Util/fgBTreeMap.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Util/fgBTreeSet.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../../../src/Util/fgConfig.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="../../../src/Util/fgConfig.h" ex="false" tool="3" flavor2="0">
@@ -6527,6 +6565,10 @@
             flavor2="0">
       </item>
       <item path="../../../src/Util/fgRegularFile.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Util/fgSafeBTreeMap.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/Util/fgSafeBTreeSet.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/Util/fgSettings.cpp" ex="false" tool="1" flavor2="0">
       </item>

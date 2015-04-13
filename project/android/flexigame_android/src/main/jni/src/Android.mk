@@ -19,6 +19,7 @@ LOCAL_C_INCLUDES := $(LOCAL_PATH)/$(SDL_PATH)/include \
 	$(LOCAL_PATH)/../../../../../../../modules/luaplus51-all/Src/LuaPlus/lua52-luaplus/src \
 	$(LOCAL_PATH)/../../../../../../../modules/zlib_128/contrib/minizip \
 	$(LOCAL_PATH)/../../../../../../../modules/zlib_128 \
+	$(LOCAL_PATH)/../../../../../../../modules/cpp_btree \
 	$(LOCAL_PATH)/../SDL2_image/external/libpng-1.6.2 \
 	$(LOCAL_PATH)/../SDL2_image/external/jpeg-9
 
