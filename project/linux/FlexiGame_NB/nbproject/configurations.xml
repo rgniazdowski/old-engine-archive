@@ -167,8 +167,6 @@
         <itemPath>../../../src/GFX/fgGfxSimpleDrawer.h</itemPath>
         <itemPath>../../../src/GFX/fgGfxStdInc.h</itemPath>
         <itemPath>../../../src/GFX/fgGfxTextureID.h</itemPath>
-        <itemPath>../../../src/GFX/fgGfxTexturing.cpp</itemPath>
-        <itemPath>../../../src/GFX/fgGfxTexturing.h</itemPath>
         <itemPath>../../../src/GFX/fgGfxTypes.h</itemPath>
         <itemPath>../../../src/GFX/fgGfxVertex.h</itemPath>
         <itemPath>../../../src/GFX/fgGfxVertexData.cpp</itemPath>
@@ -1191,13 +1189,6 @@
       <item path="../../../src/GFX/fgGfxStdInc.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGfxTextureID.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../../../src/GFX/fgGfxTexturing.cpp"
-            ex="false"
-            tool="1"
-            flavor2="8">
-      </item>
-      <item path="../../../src/GFX/fgGfxTexturing.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGfxTypes.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -2768,13 +2759,6 @@
       </item>
       <item path="../../../src/GFX/fgGfxTextureID.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGfxTexturing.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="../../../src/GFX/fgGfxTexturing.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="../../../src/GFX/fgGfxTypes.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGfxVertex.h" ex="false" tool="3" flavor2="0">
@@ -4307,13 +4291,6 @@
       </item>
       <item path="../../../src/GFX/fgGfxTextureID.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGfxTexturing.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="../../../src/GFX/fgGfxTexturing.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="../../../src/GFX/fgGfxTypes.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGfxVertex.h" ex="false" tool="3" flavor2="0">
@@ -5823,13 +5800,6 @@
       <item path="../../../src/GFX/fgGfxStdInc.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGfxTextureID.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../../../src/GFX/fgGfxTexturing.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="../../../src/GFX/fgGfxTexturing.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGfxTypes.h" ex="false" tool="3" flavor2="0">
       </item>
