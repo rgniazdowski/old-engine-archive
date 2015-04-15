@@ -17,7 +17,7 @@
 #ifndef FG_INC_GFX_BASE_TREE
     #define FG_INC_GFX_BASE_TREE
     #define FG_INC_GFX_BASE_TREE_BLOCK
-    
+
     #include "fgGFXTreeNode.h"
     #include "fgBool.h"
 
@@ -25,11 +25,36 @@
 
 namespace fg {
     namespace gfx {
-        
+
         class CSceneNode;
 
+        ///
+        typedef unsigned int SpatialTreeType;
+
+        ///
+        const SpatialTreeType TREE_INVALID = 0;
+        ///
+        const SpatialTreeType TREE_QUADTREE = 1;
+        ///
+        const SpatialTreeType TREE_OCTREE = 2;
+        ///
+        const SpatialTreeType TREE_LOOSE_QUADTREE = 3;
+        ///
+        const SpatialTreeType TREE_LOOSE_OCTREE = 4;
+        ///
+        const SpatialTreeType TREE_BSP = 5;
+        ///
+        const SpatialTreeType TREE_ABT = 6;
+        ///
+        const SpatialTreeType TREE_DYNAMIC_AABB = 7;
+        //const SpatialTreeType TREE_BVH = 8;
+
         /**
-         *
+         * Base class implementation for holding tree structure
+         * Used mainly in spatial partitioning (object based)
+         * meaning structures like quad/octree, loose variants, BVH trees
+         * and other. It is not suitable for BSP tree structures that are
+         * used mainly for convex space partitioning (vertices, planes) #FIXME
          */
         class CBasetree {
         public:
@@ -65,7 +90,6 @@ namespace fg {
                 current(NULL),
                 idx(0),
                 count(0) { }
-                
                 /**
                  * 
                  */
@@ -80,7 +104,6 @@ namespace fg {
                     idx = 0;
                     count = 0;
                 }
-                
                 /**
                  * 
                  */
@@ -95,7 +118,6 @@ namespace fg {
                     }
                     count = 0;
                 }
-                
                 /**
                  * 
                  */
@@ -107,7 +129,7 @@ namespace fg {
                         node_stack.pop();
                     }
                 }
-                
+
                 /**
                  * 
                  * @return 
@@ -131,14 +153,13 @@ namespace fg {
              * @return 
              */
             virtual STreeNode *getRoot(void) const = 0;
-            
+
             /**
              * 
              */
             virtual void deleteRoot(void) = 0;
-            
+
             ////////////////////////////////////////////////////////////////////
-            
             /**
              * 
              * @param worldSize
@@ -226,7 +247,7 @@ namespace fg {
              * @param treeNode
              * @return 
              */
-            virtual int insert(CSceneNode* sceneNode, STreeNode* treeNode = NULL) = 0;
+            virtual int insert(CTreeNodeObject* pObject, STreeNode* pTreeNode = NULL) = 0;
 
         public:
             /**

@@ -1081,6 +1081,10 @@ fgBool gfx::context::initialize(void)
         }
     }
 #else
+    SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 8);
+    SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 8);
+    SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 8);
+    SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 16);
     for(int i = 0; i < numGLVersions; i++) {
         const std::pair<int, int>& glVersion = glVersions[i];
         FG_LOG_DEBUG("GFX: Will try to create %s %d.%d context ...",

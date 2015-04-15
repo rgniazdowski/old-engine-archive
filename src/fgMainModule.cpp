@@ -147,7 +147,7 @@ SDL_EventType CMainModule::checkSDLEvents(void) {
             case SDL_APP_TERMINATING: /**< The application is being terminated by the OS
                                      Called on iOS in applicationWillTerminate()
                                      Called on Android in onDestroy()
-                                */
+                                    */
                 FG_LOG_DEBUG("SDL2: The application is terminating...");
                 return SDL_QUIT;
                 break;
@@ -155,14 +155,14 @@ SDL_EventType CMainModule::checkSDLEvents(void) {
             case SDL_APP_LOWMEMORY: /**< The application is low on memory, free memory if possible.
                                      Called on iOS in applicationDidReceiveMemoryWarning()
                                      Called on Android in onLowMemory()
-                                */
+                                    */
                 FG_LOG_DEBUG("SDL2: The application is low on memory...");
                 break;
 
             case SDL_APP_WILLENTERBACKGROUND: /**< The application is about to enter the background
                                      Called on iOS in applicationWillResignActive()
                                      Called on Android in onPause()
-                                */
+                                    */
                 FG_LOG_DEBUG("SDL2: The application is about to enter the background...");
                 // Focus lost?
                 m_isSuspend = FG_TRUE;
@@ -171,7 +171,7 @@ SDL_EventType CMainModule::checkSDLEvents(void) {
             case SDL_APP_DIDENTERBACKGROUND: /**< The application did enter the background and may not get CPU for some time
                                      Called on iOS in applicationDidEnterBackground()
                                      Called on Android in onPause()
-                                */
+                                    */
                 FG_LOG_DEBUG("SDL2: The application did enter the background and may not get CPU for some time...");
                 suspendGfxEvent();
                 m_isSuspend = FG_TRUE;
@@ -180,7 +180,7 @@ SDL_EventType CMainModule::checkSDLEvents(void) {
             case SDL_APP_WILLENTERFOREGROUND: /**< The application is about to enter the foreground
                                      Called on iOS in applicationWillEnterForeground()
                                      Called on Android in onResume()
-                                */
+                                    */
                 FG_LOG_DEBUG("SDL2: The application is about to enter the foreground...");
                 resumeGfxEvent();
                 m_isSuspend = FG_FALSE;
@@ -190,7 +190,7 @@ SDL_EventType CMainModule::checkSDLEvents(void) {
             case SDL_APP_DIDENTERFOREGROUND: /**< The application is now interactive
                                      Called on iOS in applicationDidBecomeActive()
                                      Called on Android in onResume()
-                                */
+                                    */
                 FG_LOG_DEBUG("SDL2: The application is now interactive...");
                 m_isSuspend = FG_FALSE;
                 break;
@@ -443,7 +443,7 @@ fgBool CMainModule::initProgram() {
     m_appInit = FG_TRUE;
     float t2 = timesys::ms();
     FG_LOG_DEBUG("Main: Program initialized in %.2f seconds", (t2 - t1) / 1000.0f);
-    
+
 #if defined(FG_USING_SDL2) && defined(FG_USING_PLATFORM_ANDROID)
     SDL_AddEventWatch(filterSDLEvents, this);
 #endif    
@@ -525,6 +525,7 @@ fgBool CMainModule::mainLoopStep(void) {
     FG_HardwareState->deviceYield(0);
 #if defined(FG_DEBUG)
     static int loopCount = 0;
+    g_fgDebugConfig.isDebugProfiling = true;
     if(g_fgDebugConfig.isDebugProfiling) {
         profile::g_debugProfiling->end("Game::render");
         profile::g_debugProfiling->end("Program::loopStep");
@@ -545,8 +546,6 @@ fgBool CMainModule::mainLoopStep(void) {
  */
 void CMainModule::closeProgram(void) {
     FG_LOG_DEBUG("Closing program...");
-    // This frees all the data used by singletons and other nonresource data
-    // after that only things left to free are FG_GameMain and MainModule
     if(m_gameMain) {
         m_gameMain->closeSybsystems();
         delete m_gameMain;
@@ -557,7 +556,6 @@ void CMainModule::closeProgram(void) {
     if(profile::g_debugProfiling)
         delete profile::g_debugProfiling;
     profile::g_debugProfiling = NULL;
-    //profile::g_debugProfiling->clear();
 #endif
 }
 
@@ -571,7 +569,7 @@ void CMainModule::suspendGfxEvent(void) {
 }
 
 /**
- * DEVICE unpause event
+ * DEVICE resume event
  */
 void CMainModule::resumeGfxEvent(void) {
     FG_LOG_DEBUG("MainModule: Resuming GFX Subsystem...");
@@ -586,23 +584,25 @@ void CMainModule::resumeGfxEvent(void) {
 void CMainModule::focusLostEvent(void) {
     FG_LOG_DEBUG("MainModule: Focus lost event");
 
-    // Brak focus czyli:
-    // - wyswietlenie menu
-    // - dolne menu ipada wysuniete
-    // - minimalizacja
-    // - przelaczenie sie do innej aplikacji
-    // - nalezy wlaczyc pauze
-    // - zapisanie stanu gry
+    // No focus means:
+    // - displaying OS menu
+    // - lower ipad menu visible
+    // - minimized
+    // - switching to another app
+    // - need to turn on internal game pause switch
+    // - quickly save the game/app state
 
-    // it needs to be handled properly - for current moment if application losts focus while loading game data etc (initialization)
-    // - it will crash
-    // TODO pausing/unpausing events need to handle initialization moments properly - also be aware of the operations in other threads (?)
-    // TODO data loading procedures need to be sequential and easy to abort/revert/quit/resume
+    // it needs to be handled properly - for current moment if application losts
+    // focus while loading game data etc (initialization) - it will crash
+    // TODO pausing/un-pausing events need to handle initialization moments
+    // properly - also be aware of the operations in other threads (?)
+    // #TODO data loading procedures need to be sequential
+    // and easy to abort/revert/quit/resume
 }
 
 /**
- * DEVICE unpause event
- * (not the GL unpause event)
+ * DEVICE un-pause event
+ * (not the GL un-pause event)
  */
 void CMainModule::focusGainedEvent(void) {
     FG_LOG_DEBUG("MainModule: Focus gained event");
@@ -615,22 +615,11 @@ void CMainModule::focusGainedEvent(void) {
 void CMainModule::keyStateChangedEvent(s3eKeyboardEvent* event) {
     if(!m_appInit || !m_gameMain)
         return;
-#if 0
-    char dst[100];
-    s3eWChar wchar1 = s3eKeyboardGetChar();
-    int printable = (int)wchar1;
-    if(printable < 255) {
-        printf("printable: '%c'\n", (char)printable);
-    }
-    s3eKeyboardGetDisplayName(dst, event->m_Key);
-    printf("'%s'\n", dst);
-#endif
     if(event->m_Pressed) {
         m_gameMain->getInputHandler()->addKeyDown((int)event->m_Key);
     } else {
         m_gameMain->getInputHandler()->addKeyUp((int)event->m_Key);
     }
-    //FG_LOG_DEBUG("FG_EventManager - keyboard - %d is pressed? - code: %d", (int)event->m_Pressed, (int)event->m_Key);
 }
 #endif /* FG_USING_MARMALADE */
 
@@ -662,7 +651,6 @@ extern "C" int main(int argc, char *argv[]) {
     FG_LOG_INFO("%s: build %s %s RELEASE", FG_PACKAGE_NAME, FG_BUILD_TIME, FG_BUILD_DATE);
 #endif
 #if defined(FG_DEBUG) && !defined(FG_USING_MARMALADE)
-    //char str_args[2048];
     FG_LOG_DEBUG("%s: Number of arguments: %d", FG_PACKAGE_NAME, argc);
     if(argc) {
         for(int i = 0; i < argc; i++) {
@@ -691,18 +679,16 @@ extern "C" int main(int argc, char *argv[]) {
 #if defined(FG_USING_MARMALADE)
         s3eDeviceBacklightOn(); // #FIXME // need to wrap it in something else
 #endif /* FG_USING_MARMALADE */
-        if(status == FG_FALSE) {
+        if(status == FG_FALSE || mainModule->isExit()) {
             FG_LOG_DEBUG("Main loop break...");
             break;
         }
     }
-
     mainModule->closeProgram();
     FG_LOG_DEBUG("Deleting main module...");
     delete mainModule;
 
     FG_LOG_DEBUG("Successfully closed program");
-
 #if defined FG_USING_MARMALADE
     IwUtilTerminate();
     s3eDeviceExit(0);

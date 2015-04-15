@@ -24,7 +24,6 @@ gfx::CSceneNode::CSceneNode(SceneNodeType nodeType,
 base_type(), // fgManagedObjectBase init
 drawable_type(DRAWABLE_SCENENODE), // fgGfxDrawable init
 m_nodeType(nodeType), // Current node type
-m_pTreeNode(NULL),
 m_pParent(pParent), // Pointer to the parent node
 m_collisionBody(NULL),
 m_children(), // Children set
@@ -250,9 +249,9 @@ fgBool gfx::CSceneNode::checkCollisionSphere(const CSceneNode* pNode) const {
     if(!pNode->isCollidable() || !this->isCollidable())
         return FG_FALSE;
     const Vector3f &self_center = m_aabb.center;
-    const Vector3f &obj_center = pNode->getRefBoundingVolume().center;
+    const Vector3f &obj_center = pNode->getBoundingVolume().center;
     const Vector3f delta = obj_center - self_center;
-    const float radius = m_aabb.radius + pNode->getRefBoundingVolume().radius;
+    const float radius = m_aabb.radius + pNode->getBoundingVolume().radius;
     const float r2 = delta.x * delta.x + delta.y * delta.y + delta.z * delta.z;
     const float radius2 = radius * radius;
     if(r2 > radius2) {
@@ -273,7 +272,7 @@ fgBool gfx::CSceneNode::checkCollisionAABB(const CSceneNode* pNode) const {
         return FG_FALSE;
     if(!pNode->isCollidable() || !this->isCollidable())
         return FG_FALSE;
-    return m_aabb.test(pNode->getRefBoundingVolume());
+    return m_aabb.test(pNode->getBoundingVolume());
 }
 
 /**
@@ -404,7 +403,7 @@ void gfx::CSceneNode::update(float delta) {
         // collision primitive (box/sphere/custom/...)
         m_collisionBody->integrate(delta);
         m_collisionBody->getGLTransform(math::value_ptr(m_modelMat));
-        
+
     }
     // The base version of the updateAABB will update it depending on the collision body
     // if no collision body is present - the transformation wont be valid,

@@ -78,7 +78,7 @@ namespace fg {
         friend int ::main(int argc, char *argv[]);
     #endif /* FG_USING_MARMALADE */
 
-    protected:
+    public:
         /**
          * Initialize main module
          */
@@ -133,6 +133,7 @@ namespace fg {
         void setExit(fgBool exit) {
             m_isExit = exit;
         }
+    public:
         /**
          * Called when a fullscreen window with an OpenGL context
          * has been created and is ready to be used.

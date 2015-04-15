@@ -45,14 +45,13 @@ void gfx::COctree::deleteRoot(void) {
     }
     m_traverse.rewind();
 }
-
 /**
  * 
  * @param sceneNode
  * @param treeNode
  * @return 
  */
-int gfx::COctree::insert(CSceneNode* sceneNode, STreeNode* treeNode) {
+int gfx::COctree::insert(CTreeNodeObject* pObject, STreeNode* pTreeNode) {
     return -1;
 }
 

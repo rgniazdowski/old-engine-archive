@@ -38,7 +38,7 @@ namespace fg {
     namespace gfx {
 
         /**
-         * Vertex4 - pos, norm, uv, color
+         * Vertex4v - pos, norm, uv, color
          */
         struct Vertex4v {
             ///
@@ -73,12 +73,12 @@ namespace fg {
              * @return 
              */
             static unsigned int stride(void) {
-                return sizeof (type);
+                return sizeof (self_type);
             }
         };
 
         /**
-         * Vertex3 - pos, norm, uv
+         * Vertex3v - pos, norm, uv
          */
         struct Vertex3v {
             ///
@@ -87,11 +87,11 @@ namespace fg {
             typedef Vertex3v self_type;
 
             ///
-            fg::Vector3f position;
+            fg::Vector3f position; // 0
             ///
-            fg::Vector3f normal;
+            fg::Vector3f normal; // 1
             ///
-            fg::Vector2f uv;
+            fg::Vector2f uv; // 2
             /**
              * 
              * @return 
@@ -111,12 +111,12 @@ namespace fg {
              * @return 
              */
             static unsigned int stride(void) {
-                return sizeof (type);
+                return sizeof (self_type);
             }
         };
 
         /**
-         * Vertex2 - pos, uv
+         * Vertex2v - pos, uv
          */
         struct Vertex2v {
             ///
@@ -125,9 +125,9 @@ namespace fg {
             typedef Vertex2v self_type;
 
             ///
-            fg::Vector3f position;
+            fg::Vector3f position; // 0
             ///
-            fg::Vector2f uv;
+            fg::Vector2f uv; // 2
             /**
              * 
              * @return 
@@ -147,16 +147,134 @@ namespace fg {
              * @return 
              */
             static unsigned int stride(void) {
-                return sizeof (type);
+                return sizeof (self_type);
+            }
+        };
+
+        ////////////////////////////////////////////////////////////////////////
+        // Vertex lists
+
+        /**
+         * Vertex4vl - pos, norm, uv, color
+         */
+        struct Vertex4vl {
+            ///
+            typedef Vertex4vl type;
+            ///
+            typedef Vertex4vl self_type;
+
+            ///
+            fg::Vector3f position; // location 0
+            ///
+            fg::Vector3f normal; // location 1
+            ///
+            fg::Vector2f uv; // location 2
+            ///
+            fgColor4f color; // location 3
+            ///
+            self_type *vnext;
+            /**
+             *
+             * @return
+             */
+            static unsigned int size(void) {
+                return 4;
+            }
+            /**
+             *
+             * @return
+             */
+            static unsigned int attribMask(void) {
+                return FG_GFX_POSITION_BIT | FG_GFX_NORMAL_BIT | FG_GFX_UVS_BIT | FG_GFX_COLOR_BIT;
+            }
+            /**
+             *
+             * @return
+             */
+            static unsigned int stride(void) {
+                return sizeof (self_type);
+            }
+        };
+
+        /**
+         * Vertex3vl - pos, norm, uv
+         */
+        struct Vertex3vl {
+            ///
+            typedef Vertex3vl type;
+            ///
+            typedef Vertex3vl self_type;
+
+            ///
+            fg::Vector3f position; // 0
+            ///
+            fg::Vector3f normal; // 1
+            ///
+            fg::Vector2f uv; // 2
+            ///
+            self_type *vnext;
+            /**
+             *
+             * @return
+             */
+            static unsigned int size(void) {
+                return 3;
+            }
+            /**
+             *
+             * @return
+             */
+            static unsigned int attribMask(void) {
+                return FG_GFX_POSITION_BIT | FG_GFX_NORMAL_BIT | FG_GFX_UVS_BIT;
+            }
+            /**
+             *
+             * @return
+             */
+            static unsigned int stride(void) {
+                return sizeof (self_type);
+            }
+        };
+
+        /**
+         * Vertex2vl - pos, uv
+         */
+        struct Vertex2vl {
+            ///
+            typedef Vertex2vl type;
+            ///
+            typedef Vertex2vl self_type;
+
+            ///
+            fg::Vector3f position; // 0
+            ///
+            fg::Vector2f uv; // 2
+            ///
+            self_type *vnext;
+            /**
+             *
+             * @return
+             */
+            static unsigned int size(void) {
+                return 2;
+            }
+            /**
+             *
+             * @return
+             */
+            static unsigned int attribMask(void) {
+                return FG_GFX_POSITION_BIT | FG_GFX_UVS_BIT;
+            }
+            /**
+             *
+             * @return
+             */
+            static unsigned int stride(void) {
+                return sizeof (self_type);
             }
         };
     };
 };
-    #include <cstdio>
-inline void dumpVector(const fg::Vector3f & vec, const char *title) {
-    printf("%s = { %.2f %.2f %.2f }\n", (title ? title : "X"), vec.x, vec.y, vec.z);
-}
-
 
     #undef FG_INC_GFX_VERTEX_BLOCK
 #endif	/* FG_INC_GFX_VERTEX */

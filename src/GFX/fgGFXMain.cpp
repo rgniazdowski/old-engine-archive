@@ -284,6 +284,8 @@ void gfx::CGfxMain::generateBuiltInData(void) {
     builtin_sphere_shape->mesh = builtin_sphere_mesh;
     builtin_sphere_shape->material = new SMaterial();
     builtin_sphere_shape->material->ambientTexName = "mars_1k_color.jpg";
+    builtin_sphere_shape->material->diffuseTexName = "mars_1k_color.jpg";
+    builtin_sphere_shape->material->shaderName = "sPlainEasy";
     sphereModel->addShape(builtin_sphere_shape);
     static_cast<resource::CResourceManager *>(m_pResourceMgr)->request("mars_1k_color.jpg");
     if(!static_cast<resource::CResourceManager *>(m_pResourceMgr)->insert(sphereModel)) {
@@ -511,11 +513,16 @@ void gfx::CGfxMain::render(void) {
     }
 
 #if defined(FG_USING_SDL2)
-    if(state[SDL_SCANCODE_W] == SDL_PRESSED)
+    if(state[SDL_SCANCODE_W] == SDL_PRESSED) {
         m_3DScene->getCamera()->moveForward();
+        //printf("x:%.2f y:%.2f z:%.2f \n", m_3DScene->getCamera()->getEye().x,
+        //       m_3DScene->getCamera()->getEye().y,
+        //       m_3DScene->getCamera()->getEye().z);
+    }
 
-    if(state[SDL_SCANCODE_S] == SDL_PRESSED)
+    if(state[SDL_SCANCODE_S] == SDL_PRESSED) {
         m_3DScene->getCamera()->moveBackward();
+    }
 
     if(state[SDL_SCANCODE_A] == SDL_PRESSED)
         m_3DScene->getCamera()->moveLeft();
@@ -539,6 +546,11 @@ void gfx::CGfxMain::render(void) {
         m_3DScene->getCamera()->moveRight();
 
 #endif
+    CSceneNode* pPlayerBullshit = m_3DScene->get("PlayerBullshit");
+    if(pPlayerBullshit) {
+        m_3DScene->getCamera()->setType(CCameraAnimation::FPS_STANDARD);
+        //m_3DScene->getCamera()->setCenter(pPlayerBullshit->getPosition3f());
+    }
     m_3DScene->getCamera()->update();
     m_3DScene->getMVP()->setCamera(m_3DScene->getCamera());
     m_3DScene->getMVP()->setPerspective(45.0f, m_mainWindow->getAspect());

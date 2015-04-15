@@ -49,48 +49,50 @@ void gfx::CQuadtree::deleteRoot(void) {
  * @param treeNode
  * @return 
  */
-int gfx::CQuadtree::insert(CSceneNode* sceneNode, STreeNode* treeNode) {
-    if(!sceneNode)
+int gfx::CQuadtree::insert(CTreeNodeObject* pObject, STreeNode* pTreeNode) {
+    if(!pObject)
         return -1;
 
-    if(!treeNode) {
+    if(!pTreeNode) {
         if(!m_root) {
             m_root = new SQuadtreeNode(NULL, Vector3f(0.0f, 0.0f, 0.0f), 0);
         }
-        treeNode = m_root;
+        pTreeNode = m_root;
     }
 
-    int i, j;
+    int i = 0, j = 0;
+    Vector2f c;
 
     // Check child nodes to see if object fits in one of them.
-    if(treeNode->depth + 1 < (int)getMaxDepth()) {
-        float halfSize = getWorldSize().x / (float)(2 << treeNode->depth);
+    if(pTreeNode->depth + 1 < (int)getMaxDepth()) {
+        float halfSize = getWorldSize().x / (float)(2 << pTreeNode->depth);
         float quarterSize = halfSize / 2.0f;
         float offset = quarterSize;
 
         for(j = 0; j < 2; j++) {
             for(i = 0; i < 2; i++) {
-                float cx = treeNode->center.x + ((i == 0) ? -offset : offset);
-                float cy = treeNode->center.y + ((j == 0) ? -offset : offset);
 
-                SQuadtreeNode *qNode = static_cast<SQuadtreeNode *>(treeNode);
+                c.x = pTreeNode->center.x + ((i == 0) ? -offset : offset);
+                c.y = pTreeNode->center.y + ((j == 0) ? -offset : offset);
 
-                if(fitsInBox(sceneNode, Vector2f(cx, cy), quarterSize)) {
+                SQuadtreeNode *quadNode = static_cast<SQuadtreeNode *>(pTreeNode);
+
+                if(fitsInBox((CSceneNode *)pObject, c, quarterSize)) {
                     // Recurse into this node.
-                    if(qNode->child[j][i] == NULL) {
-                        qNode->child[j][i] = new SQuadtreeNode(qNode, Vector2f(cx, cy), treeNode->depth + 1);
+                    if(quadNode->child[j][i] == NULL) {
+                        quadNode->child[j][i] = new SQuadtreeNode(quadNode, c, pTreeNode->depth + 1);
                     }
-                    return insert(sceneNode, qNode->child[j][i]);
+                    return insert(pObject, quadNode->child[j][i]);
                 }
             }
         }
     }
     // Keep object in this node.
-    if(!treeNode->objects.contains(sceneNode)) {
-        sceneNode->setTreeNode(treeNode);
-        treeNode->objects.push_back(sceneNode);
+    if(!pTreeNode->objects.contains(pObject)) {
+        pObject->setTreeNode(pTreeNode);
+        pTreeNode->objects.push_back(pObject);
     }
-    return treeNode->depth;
+    return pTreeNode->depth;
 }
 
 /**

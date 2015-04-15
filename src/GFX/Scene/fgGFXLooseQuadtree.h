@@ -72,7 +72,7 @@ namespace fg {
              * @param treeNode
              * @return 
              */
-            virtual int insert(CSceneNode* sceneNode, SQuadtreeNode* treeNode = NULL);
+            virtual int insert(CTreeNodeObject* pObject, STreeNode* pTreeNode = NULL);
             
         private:
             ///

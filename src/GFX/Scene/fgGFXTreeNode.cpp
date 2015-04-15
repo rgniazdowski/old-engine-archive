@@ -24,13 +24,13 @@ using namespace fg;
  * @param pNode
  * @return 
  */
-fgBool gfx::STreeNode::removeObject(CSceneNode* pNode) {
-    if(!pNode || objects.empty())
+fgBool gfx::STreeNodeBase::removeObject(CTreeNodeObject* pObject) {
+    if(!pObject || objects.empty())
         return FG_FALSE;
-    const int index = objects.find(pNode);
+    const int index = objects.find(pObject);
     const unsigned int objCount = objects.size();
     if(index != -1) {
-        pNode->setTreeNode(NULL);
+        pObject->setTreeNode(NULL);
         objects[index] = objects[objCount - 1];
         objects[objCount - 1] = NULL;
         objects.resize(objCount - 1);

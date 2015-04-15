@@ -488,9 +488,9 @@ void gfx::CSceneManager::sortCalls(void) {
 
         int visibilityResult = 1;
         if(isFrustumCheck()) {
-            visibilityResult = m_MVP.getFrustum().testVolume(pNode->getRefBoundingVolume());
+            visibilityResult = m_MVP.getFrustum().testVolume(pNode->getBoundingVolume());
         } else if(isFrustumCheckSphere()) {
-            visibilityResult = m_MVP.getFrustum().testSphere(pNode->getRefBoundingVolume());
+            visibilityResult = m_MVP.getFrustum().testSphere(pNode->getBoundingVolume());
         }
         if(!visibilityResult) {
             pNode->setVisible(FG_FALSE);
@@ -583,12 +583,12 @@ void gfx::CSceneManager::render(void) {
         if(FG_DEBUG_CFG_OPTION(gfxBBoxShow)) {
             m_MVP.resetModelMatrix();
             pProgram->setUniform(&m_MVP);
-            CPrimitives::drawAABBLines(pSceneNode->getRefBoundingVolume(), fgColor4f(0.5f, 0.5f, 1.0f, 1.0f));
+            CPrimitives::drawAABBLines(pSceneNode->getBoundingVolume(), fgColor4f(0.5f, 0.5f, 1.0f, 1.0f));
         }
 
         if(FG_DEBUG_CFG_OPTION(gfxBBoxShow)) {
-            Matrix4f mat = math::translate(Matrix4f(), pSceneNode->getRefBoundingVolume().center);
-            const float radius = pSceneNode->getRefBoundingVolume().radius;
+            Matrix4f mat = math::translate(Matrix4f(), pSceneNode->getBoundingVolume().center);
+            const float radius = pSceneNode->getBoundingVolume().radius;
             mat = math::scale(mat, Vec3f(radius, radius, radius));
             m_MVP.calculate(mat);
             pProgram->setUniform(&m_MVP);

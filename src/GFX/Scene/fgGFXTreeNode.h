@@ -21,25 +21,88 @@
     #include "fgBool.h"
     #include "fgVector.h"
     #include "Math/fgMathLib.h"
+    #include "fgGFXTreeNodeObject.h"
 
 namespace fg {
     namespace gfx {
 
-        class CSceneNode;
+        ///
+        typedef unsigned char TreeNodeType;
+
+        const TreeNodeType TREE_NODE_INVALID = 0;
+        const TreeNodeType TREE_NODE_QUADTREE = 1;
+        const TreeNodeType TREE_NODE_OCTREE = 2;
+        const TreeNodeType TREE_NODE_BSP = 3;
+        const TreeNodeType TREE_NODE_ABT = 4;
+        const TreeNodeType TREE_NODE_DYNAMIC_AABB = 5;
+        //const TreeNodeType TREE_NODE_BVH = 6;
+
+        struct STreeNodeBase {
+        public:
+            ///
+            typedef STreeNodeBase type;
+            ///
+            typedef STreeNodeBase self_type;
+            ///
+            typedef CVector<CTreeNodeObject *> ObjectsVec;
+            ///
+            typedef ObjectsVec::iterator ObjectsVecItor;
+
+        protected:
+            ///
+            TreeNodeType nodeType;
+        public:
+            ///
+            ObjectsVec objects;
+            /**
+             *
+             */
+            STreeNodeBase(TreeNodeType _nodeType = TREE_NODE_INVALID) : nodeType(_nodeType), objects() { }
+            /**
+             *
+             */
+            virtual ~STreeNodeBase() {
+                objects.clear_optimised();
+                objects.resize(0);
+            }
+
+            /**
+             *
+             * @param pNode
+             * @return
+             */
+            virtual fgBool removeObject(CTreeNodeObject *pObject);
+            /**
+             * 
+             * @return
+             */
+            inline TreeNodeType getType(void) const {
+                return nodeType;
+            }
+
+        protected:
+            /**
+             *
+             * @param _nodeType
+             */
+            inline void setType(TreeNodeType _nodeType) {
+                nodeType = _nodeType;
+            }
+        };
 
         /**
          * Standard Node for any kind of 3D/2D spatial tree - GFX subsystem
          * This will be usable for octree/quadtree/bvh
          * For BSP it's more likely not usable
          */
-        struct STreeNode {
-            //
-            typedef CVector<CSceneNode *> ObjectsVec;
+        struct STreeNode : public STreeNodeBase {
             ///
-            typedef ObjectsVec::iterator ObjectsVecItor;
+            typedef STreeNode type;
+            ///
+            typedef STreeNode self_type;
+            ///
+            typedef STreeNodeBase base_type;
 
-            ///
-            ObjectsVec objects;
             ///
             Vector3f center;
             ///
@@ -47,7 +110,7 @@ namespace fg {
             /**
              * 
              */
-            STreeNode() : objects(), center(), depth(0) { }
+            STreeNode() : base_type(), center(), depth(0) { }
             /**
              * 
              * @param _parent
@@ -55,7 +118,7 @@ namespace fg {
              * @param _depth
              */
             STreeNode(Vector3f _center, int _depth = 0) :
-            objects(), center(_center), depth(_depth) { }
+            base_type(), center(_center), depth(_depth) { }
             /**
              * 
              * @param _parent
@@ -63,7 +126,7 @@ namespace fg {
              * @param _depth
              */
             STreeNode(Vector2f _center, int _depth = 0) :
-            objects(), center(), depth(_depth) { 
+            base_type(), center(), depth(_depth) {
                 center.x = _center.x;
                 center.y = _center.y;
                 center.z = 0.0f;
@@ -71,17 +134,7 @@ namespace fg {
             /**
              * 
              */
-            virtual ~STreeNode() {
-                objects.clear_optimised();
-                objects.resize(0);
-            }
-            
-            /**
-             * 
-             * @param pNode
-             * @return 
-             */
-            virtual fgBool removeObject(CSceneNode *pNode);
+            virtual ~STreeNode() { }
         };
     };
 };

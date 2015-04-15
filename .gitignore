@@ -41,6 +41,9 @@ project/android/flexigame_android/src/main/jni/libmikmod
 project/android/flexigame_android/src/main/jni/smpeg2
 project/android/flexigame_android/src/main/jni/LuaPlus
 project/android/flexigame_android/src/main/jni/zlib_128
+project/android/flexigame_android/src/main/bin
+project/android/flexigame_android/src/main/gen
+project/android/flexigame_android/src/main/.gradle
 project/android/.idea/workspace.xml
 project/android/.idea/tasks.xml
 project/android/.idea/datasources.xml
@@ -65,6 +68,7 @@ icons/tabbar_*
 icons/webclip_*
 icons/toolbar_*
 log
+modules/cpp_btree.zip
 modules/SDL2-2.0.3
 modules/SDL2_mixer-2.0.0
 modules/SDL2_image-2.0.0

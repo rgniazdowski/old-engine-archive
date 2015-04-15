@@ -23,8 +23,8 @@
     #ifndef FG_INC_GFX_DRAW_CALL
         #include "GFX/fgGFXDrawCall.h"
     #endif
-    #ifndef FG_INC_GFX_TREE_NODE
-        #include "fgGFXTreeNode.h"
+    #ifndef FG_INC_GFX_TREE_NODE_OBJECT
+        #include "fgGFXTreeNodeObject.h"
     #endif
 
     #include "Physics/fgCollisionBody.h"
@@ -86,6 +86,8 @@ namespace fg {
         class CSceneNodeObject;
         ///
         struct STreeNode;
+        ///
+        class CTreeNodeObject;
 
         /**
          * Scene object/node can be anything, it requires model matrix for any kind of 
@@ -101,7 +103,8 @@ namespace fg {
          */
         class CSceneNode :
         public resource::CManagedObject<SceneNodeHandle>,
-        public CDrawable {
+        public CDrawable,
+        public CTreeNodeObject {
             friend class CSceneManager;
             //friend class CScene3D;
             //friend class CScene2D;
@@ -149,9 +152,6 @@ namespace fg {
         private:
             /// Current scene node type - set in the constructors
             SceneNodeType m_nodeType;
-            /// Pointer to the tree node in which this scene node resides
-            /// This is for spatial partitioning
-            STreeNode* m_pTreeNode;
             /// Scene node father/parent node pointer
             self_type* m_pParent;
             /// Collision body used for physics, it can be BOX, SPHERE or more
@@ -428,7 +428,7 @@ namespace fg {
              */
             inline float getMass(void) const {
                 if(m_collisionBody)
-                    return m_collisionBody->getMass();                
+                    return m_collisionBody->getMass();
                 return 0.0f;
             }
             /**
@@ -505,7 +505,6 @@ namespace fg {
              * @param scale
              */
             virtual void setScale(const Vector3f& scale);
-                
             /**
              * 
              * @param x
@@ -664,20 +663,6 @@ namespace fg {
             ////////////////////////////////////////////////////////////////////
             /**
              * 
-             * @param pTreeNode
-             */
-            inline void setTreeNode(STreeNode* pTreeNode) {
-                m_pTreeNode = pTreeNode;
-            }
-            /**
-             * 
-             * @return 
-             */
-            inline STreeNode* getTreeNode(void) const {
-                return m_pTreeNode;
-            }
-            /**
-             * 
              * @param pParent
              */
             inline void setParent(self_type* pParent) {
@@ -712,14 +697,14 @@ namespace fg {
              * 
              * @return 
              */
-            inline Matrix4f& getRefModelMatrix(void) {
+            inline Matrix4f& getModelMatrix(void) {
                 return m_modelMat;
             }
             /**
              * 
              * @return 
              */
-            inline Matrix4f const& getRefModelMatrix(void) const {
+            inline Matrix4f const& getModelMatrix(void) const {
                 return m_modelMat;
             }
             /**
@@ -748,14 +733,14 @@ namespace fg {
              * 
              * @return 
              */
-            inline BoundingVolume3Df& getRefBoundingVolume(void) {
+            inline BoundingVolume3Df& getBoundingVolume(void) {
                 return m_aabb;
             }
             /**
              * 
              * @return 
              */
-            inline BoundingVolume3Df const& getRefBoundingVolume(void) const {
+            inline BoundingVolume3Df const& getBoundingVolume(void) const {
                 return m_aabb;
             }
 

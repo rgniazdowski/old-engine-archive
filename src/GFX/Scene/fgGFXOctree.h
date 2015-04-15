@@ -14,7 +14,6 @@
 
     #include "GFX/fgGFXStdInc.h"
     #include "fgGFXBasetree.h"
-    #include "fgGFXSceneNode.h"
     #include "fgGFXTreeNode.h"
 
     #include "fgBool.h"
@@ -48,6 +47,7 @@ namespace fg {
              */
             SOctreeNode(self_type *_parent, Vector3f _center, int _depth = 0) :
             base_type(_center, _depth), parent(_parent) {
+                nodeType = TREE_NODE_OCTREE;
                 for(int i = 0; i < 2; i++) {
                     for(int j = 0; j < 2; j++) {
                         for(int k = 0; k < 2; k++) {
@@ -64,6 +64,7 @@ namespace fg {
              */
             SOctreeNode(self_type *_parent, Vector2f _center, int _depth = 0) :
             base_type(_center, _depth), parent(_parent) {
+                nodeType = TREE_NODE_OCTREE;
                 for(int i = 0; i < 2; i++) {
                     for(int j = 0; j < 2; j++) {
                         for(int k = 0; k < 2; k++) {
@@ -79,6 +80,7 @@ namespace fg {
                 objects.clear_optimised();
                 depth = 0;
                 parent = NULL;
+                nodeType = 0;
                 for(int i = 0; i < 2; i++) {
                     for(int j = 0; j < 2; j++) {
                         for(int k = 0; k < 2; k++) {
@@ -204,7 +206,7 @@ namespace fg {
              * @param treeNode
              * @return 
              */
-            virtual int insert(CSceneNode* sceneNode, STreeNode* treeNode = NULL);
+            virtual int insert(CTreeNodeObject* pObject, STreeNode* pTreeNode = NULL);
 
         public:
             /**

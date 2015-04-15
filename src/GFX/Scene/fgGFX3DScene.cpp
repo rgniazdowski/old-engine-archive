@@ -38,7 +38,7 @@ m_octree(NULL) {
     m_octree = new CLooseOctree();
     m_basetree = (CBasetree *)m_octree;
     m_physicsWorld = new physics::CWorld(256);
-//    setFrustumCheckSphere(FG_TRUE);
+    //    setFrustumCheckSphere(FG_TRUE);
 }
 
 /**
@@ -96,7 +96,7 @@ void gfx::CScene3D::sortCalls(void) {
         // There is a problem because the bounding box needs to be modified by
         // the model matrix; maybe some operator ?
         sceneNode->update(timesys::elapsed()); // #FIXME - maybe this should also call updateAABB??
-        
+
         if(treeNode) {
             //unsigned int objCount = treeNode->objects.size();
             float halfSize = static_cast<CLooseOctree *>(m_octree)->getLooseK() * m_octree->getWorldSize().x / (2 << treeNode->depth);
@@ -139,7 +139,7 @@ void gfx::CScene3D::sortCalls(void) {
             continue;
         }
         for(unsigned int objIdx = 0; objIdx < objCount; objIdx++) {
-            CSceneNode *sceneNode = treeNode->objects[objIdx];
+            CSceneNode *sceneNode = (CSceneNode *)treeNode->objects[objIdx];
             if(!sceneNode) {
                 continue;
             }
@@ -155,9 +155,9 @@ void gfx::CScene3D::sortCalls(void) {
 #endif
             int visibilityResult = 1;
             if(isFrustumCheck()) {
-                visibilityResult = frustum.testVolume(sceneNode->getRefBoundingVolume());
+                visibilityResult = frustum.testVolume(sceneNode->getBoundingVolume());
             } else if(isFrustumCheckSphere()) {
-                visibilityResult = frustum.testSphere(sceneNode->getRefBoundingVolume());
+                visibilityResult = frustum.testSphere(sceneNode->getBoundingVolume());
             }
             if(!visibilityResult) {
                 sceneNode->setVisible(FG_FALSE);
@@ -184,7 +184,7 @@ void gfx::CScene3D::sortCalls(void) {
             }
             if(pDrawCall) {
                 if(!pDrawCall->getShaderProgram())
-                    pDrawCall->setShaderProgram(((gfx::CShaderManager *)getShaderManager())->getCurrentProgram());                
+                    pDrawCall->setShaderProgram(((gfx::CShaderManager *)getShaderManager())->getCurrentProgram());
                 // getRefPriorityQueue().push(pDrawCall);
             }
         }
@@ -325,8 +325,8 @@ void gfx::CScene3D::checkCollisions(const CSceneNode* sceneNode) {
 
         // First check to see if the object is completely outside the boundary
         // of this node.
-        const Vector3f delta = treeNode->center - sceneNode->getRefBoundingVolume().center;
-        const float radius = sceneNode->getRefBoundingVolume().radius;
+        const Vector3f delta = treeNode->center - sceneNode->getBoundingVolume().center;
+        const float radius = sceneNode->getBoundingVolume().radius;
         const Vector3f diff = delta - radius;
         if(diff.x > halfSize || diff.y > halfSize || diff.z > halfSize) {
             // Object is completely outside the boundary of this
@@ -336,7 +336,7 @@ void gfx::CScene3D::checkCollisions(const CSceneNode* sceneNode) {
         }
 
         for(unsigned int objIdx = 0; objIdx < objCount; objIdx++) {
-            const CSceneNode *childNode = treeNode->objects[objIdx];
+            const CSceneNode *childNode = (const CSceneNode *)treeNode->objects[objIdx];
             if(!childNode || childNode == sceneNode) {
                 continue;
             }
