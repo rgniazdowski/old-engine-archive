@@ -31,7 +31,7 @@ android {
     }
 
     task ndkBuild(type: Exec) {
-        commandLine 'ndk-build', '-C', file('src/main/jni').absolutePath, '-j8'
+        commandLine 'ndk-build', '-C', file('src/main/jni').absolutePath, '-j6'
     }
 
 	task ndkClean(type: Exec) {
