@@ -9,9 +9,9 @@
  *******************************************************/
 
 #include "fgFontDrawer.h"
-#include "GFX/fgGFXPrimitives.h"
-#include "GFX/Shaders/fgGFXShaderManager.h"
-#include "GFX/fgGFXAABoundingBox.h"
+#include "GFX/fgGfxPrimitives.h"
+#include "GFX/Shaders/fgGfxShaderManager.h"
+#include "GFX/fgGfxAABoundingBox.h"
 
 using namespace fg;
 

@@ -19,7 +19,7 @@
     #define FG_INC_COLORS_BLOCK
 
     #ifndef FG_INC_GFX_COLOR
-        #include "GFX/fgGFXColor.h"
+        #include "GFX/fgGfxColor.h"
     #endif
 
     #include "fgBool.h"

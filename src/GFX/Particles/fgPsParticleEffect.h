@@ -14,7 +14,7 @@
 
     #include "fgBool.h"
     #include "fgTypes.h"
-    #include "GFX/fgGFXTypes.h"
+    #include "GFX/fgGfxTypes.h"
 
     #include "fgParticle.h"
     #include "Util/fgTag.h"

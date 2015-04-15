@@ -19,7 +19,7 @@
     #undef FG_INC_PS_PARTICLE_EMITTER_BLOCK
 
     #include "fgVector.h"
-    #include "GFX/Scene/fgGFXSceneNode.h"
+    #include "GFX/Scene/fgGfxSceneNode.h"
     #include "fgPsParticleEffect.h"
 
 namespace fg {

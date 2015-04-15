@@ -21,8 +21,8 @@
 /// #FIXME #PLOX
 ///
 
-    #include "GFX/fgGFXColor.h"
-    #include "GFX/fgGFXTypes.h"
+    #include "GFX/fgGfxColor.h"
+    #include "GFX/fgGfxTypes.h"
     #include "Util/fgStrings.h"
     #include "fgColors.h"
 

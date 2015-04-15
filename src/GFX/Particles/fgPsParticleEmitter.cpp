@@ -15,7 +15,7 @@
  */
 
 #include "fgPsParticleEmitter.h"
-#include "GFX/fgGFXCameraAnimation.h"
+#include "GFX/fgGfxCameraAnimation.h"
 
 using namespace fg;
 

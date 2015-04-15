@@ -20,8 +20,8 @@
 #include "GUI/fgGuiWidget.h"
 #include "GUI/fgGuiButton.h"
 #include "Event/fgEventDefinitions.h"
-#include "GFX/Scene/fgGFXSceneEvent.h"
-#include "GFX/Scene/fgGFXSceneNode.h"
+#include "GFX/Scene/fgGfxSceneEvent.h"
+#include "GFX/Scene/fgGfxSceneNode.h"
 
 using namespace fg;
 
@@ -567,7 +567,7 @@ fgBool script::CScriptSceneCallback::Call(gfx::CSceneNode* pNodeA, gfx::CSceneNo
     if(getType() != SCENE_CALLBACK && getType() != SCENE_TRIGGER_CALLBACK) {
         return script::CScriptCallback::Call();
     }
-    
+
     if(!pNodeA && !pNodeB) {
         if(this->getArgC() == 0) {
             // The registered function does not take any arguments
@@ -581,7 +581,7 @@ fgBool script::CScriptSceneCallback::Call(gfx::CSceneNode* pNodeA, gfx::CSceneNo
         // which means that it wants to receive single structure - probably event::SScene*
         //return FG_FALSE;
     }
-    
+
     if(!pNodeB) {
         return this->Call(pNodeA);
     }
@@ -599,7 +599,7 @@ fgBool script::CScriptSceneCallback::Call(gfx::CSceneNode* pNodeA, gfx::CSceneNo
         // Need to allocate some dummy one
         event::SSceneEvent sceneEvent;
         memset(&sceneEvent, 0, sizeof (event::SSceneEvent));
-        
+
         if(getType() == SCENE_CALLBACK) {
             sceneEvent.code = event::SCENE_DUMMY;
             sceneEvent.node.pNodeA = pNodeA;
@@ -613,7 +613,7 @@ fgBool script::CScriptSceneCallback::Call(gfx::CSceneNode* pNodeA, gfx::CSceneNo
             (*(getScriptFunction())) ((event::SSceneEvent*) & sceneEvent);
             status = FG_TRUE;
         }
-        
+
     } else if(this->getArgC() == 0) {
         (*(getScriptFunction())) ();
         status = FG_TRUE;

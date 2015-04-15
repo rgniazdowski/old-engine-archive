@@ -13,8 +13,8 @@
     #define FG_INC_PARTICLE_BLOCK
 
     #include "Math/fgMathLib.h"
-    #include "GFX/fgGFXTypes.h"
-    #include "GFX/fgGFXBoundingBox.h"
+    #include "GFX/fgGfxTypes.h"
+    #include "GFX/fgGfxBoundingBox.h"
 
 namespace fg {
     namespace gfx {

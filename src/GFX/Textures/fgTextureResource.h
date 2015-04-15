@@ -17,7 +17,7 @@
     #include "Resource/fgResourceFactoryTypes.h"
 
     #include "fgTextureTypes.h"
-    #include "GFX/fgGFXStdInc.h"
+    #include "GFX/fgGfxStdInc.h"
 
 namespace fg {
     namespace gfx {

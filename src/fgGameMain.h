@@ -23,7 +23,7 @@
     #include "Event/fgJoypadController.h"
     #include "Audio/fgSFXManager.h"
 
-    #include "GFX/fgGFXMain.h"
+    #include "GFX/fgGfxMain.h"
     #include "GUI/fgGuiMain.h"
 
     #include "Hardware/fgQualityManager.h"

@@ -19,10 +19,10 @@
 #include "Resource/fgResourceManager.h"
 
 #include "GFX/Textures/fgTextureResource.h"
-#include "GFX/Shaders/fgGFXShaderManager.h"
-#include "GFX/Scene/fgGFXSceneEvent.h"
-#include "GFX/Scene/fgGFXSceneCallback.h"
-#include "GFX/Scene/fgGFXSceneManager.h"
+#include "GFX/Shaders/fgGfxShaderManager.h"
+#include "GFX/Scene/fgGfxSceneEvent.h"
+#include "GFX/Scene/fgGfxSceneCallback.h"
+#include "GFX/Scene/fgGfxSceneManager.h"
 
 using namespace fg;
 

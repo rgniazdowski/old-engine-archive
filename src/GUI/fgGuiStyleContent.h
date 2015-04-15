@@ -19,8 +19,8 @@
         #include "Math/fgMathLib.h"
     #endif
 
-    #include "GFX/fgGFXColor.h"
-    #include "GFX/fgGFXBoundingBox.h"
+    #include "GFX/fgGfxColor.h"
+    #include "GFX/fgGfxBoundingBox.h"
 
     #define FG_GUI_FLOAT_UNIT_INVALID       1280000.0f
     #define FG_GUI_CHECK_FLOAT(value)   (value < FG_GUI_FLOAT_UNIT_INVALID)

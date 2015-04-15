@@ -86,7 +86,7 @@ namespace fg {
         /**
          * 
          */
-        ~CMainModule();
+        virtual ~CMainModule();
 
 
     protected:

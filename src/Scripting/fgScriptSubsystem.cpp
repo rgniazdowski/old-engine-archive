@@ -44,9 +44,9 @@
 #include "Resource/fgResourceManager.h"
 #include "Resource/fgResourceFactory.h"
 // GFX / Scene management
-#include "GFX/Scene/fgGFXSceneManager.h"
-#include "GFX/Scene/fgGFX3DScene.h"
-#include "GFX/Shaders/fgGFXShaderManager.h"
+#include "GFX/Scene/fgGfxSceneManager.h"
+#include "GFX/Scene/fgGfx3DScene.h"
+#include "GFX/Shaders/fgGfxShaderManager.h"
 #include "GFX/Particles/fgParticleSystem.h"
 // GUI - Widget/Style management
 #include "GUI/fgGuiMain.h"

@@ -12,433 +12,350 @@
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
                    projectFiles="true">
-      <logicalFolder name="src" displayName="src" projectFiles="true">
-        <logicalFolder name="f1" displayName="Android" projectFiles="true">
-          <itemPath>../../../src/Android/fgAndroid.cpp</itemPath>
-          <itemPath>../../../src/Android/fgAndroid.h</itemPath>
+      <logicalFolder name="Android" displayName="Android" projectFiles="true">
+        <itemPath>../../../src/Android/fgAndroid.cpp</itemPath>
+        <itemPath>../../../src/Android/fgAndroid.h</itemPath>
+      </logicalFolder>
+      <logicalFolder name="Audio" displayName="Audio" projectFiles="true">
+        <itemPath>../../../src/Audio/fgSFXAudioBase.h</itemPath>
+        <itemPath>../../../src/Audio/fgSFXErrorCodes.h</itemPath>
+        <itemPath>../../../src/Audio/fgSFXManager.cpp</itemPath>
+        <itemPath>../../../src/Audio/fgSFXManager.h</itemPath>
+        <itemPath>../../../src/Audio/fgSFXMusicResource.cpp</itemPath>
+        <itemPath>../../../src/Audio/fgSFXMusicResource.h</itemPath>
+        <itemPath>../../../src/Audio/fgSFXSoundResource.cpp</itemPath>
+        <itemPath>../../../src/Audio/fgSFXSoundResource.h</itemPath>
+      </logicalFolder>
+      <logicalFolder name="Event" displayName="Event" projectFiles="true">
+        <itemPath>../../../src/Event/fgArgumentList.cpp</itemPath>
+        <itemPath>../../../src/Event/fgArgumentList.h</itemPath>
+        <itemPath>../../../src/Event/fgCallback.h</itemPath>
+        <itemPath>../../../src/Event/fgCyclicCallback.h</itemPath>
+        <itemPath>../../../src/Event/fgEventDefinitions.h</itemPath>
+        <itemPath>../../../src/Event/fgEventErrorCodes.h</itemPath>
+        <itemPath>../../../src/Event/fgEventHelper.h</itemPath>
+        <itemPath>../../../src/Event/fgEventManager.cpp</itemPath>
+        <itemPath>../../../src/Event/fgEventManager.h</itemPath>
+        <itemPath>../../../src/Event/fgInputHandler.cpp</itemPath>
+        <itemPath>../../../src/Event/fgInputHandler.h</itemPath>
+        <itemPath>../../../src/Event/fgJoypadController.cpp</itemPath>
+        <itemPath>../../../src/Event/fgJoypadController.h</itemPath>
+        <itemPath>../../../src/Event/fgPointerData.h</itemPath>
+        <itemPath>../../../src/Event/fgPointerRawData.h</itemPath>
+        <itemPath>../../../src/Event/fgThrownEvent.h</itemPath>
+        <itemPath>../../../src/Event/fgTimeoutCallback.h</itemPath>
+      </logicalFolder>
+      <logicalFolder name="GameLogic" displayName="GameLogic" projectFiles="true">
+        <itemPath>../../../src/GameLogic/fgGameLogic.cpp</itemPath>
+        <itemPath>../../../src/GameLogic/fgGameLogic.h</itemPath>
+      </logicalFolder>
+      <logicalFolder name="GFX" displayName="GFX" projectFiles="true">
+        <logicalFolder name="Particles" displayName="Particles" projectFiles="true">
+          <itemPath>../../../src/GFX/Particles/fgParticle.h</itemPath>
+          <itemPath>../../../src/GFX/Particles/fgParticleSystem.cpp</itemPath>
+          <itemPath>../../../src/GFX/Particles/fgParticleSystem.h</itemPath>
+          <itemPath>../../../src/GFX/Particles/fgPsParticleEffect.cpp</itemPath>
+          <itemPath>../../../src/GFX/Particles/fgPsParticleEffect.h</itemPath>
+          <itemPath>../../../src/GFX/Particles/fgPsParticleEffectCircular.cpp</itemPath>
+          <itemPath>../../../src/GFX/Particles/fgPsParticleEffectCircular.h</itemPath>
+          <itemPath>../../../src/GFX/Particles/fgPsParticleEmitter.cpp</itemPath>
+          <itemPath>../../../src/GFX/Particles/fgPsParticleEmitter.h</itemPath>
+          <itemPath>../../../src/GFX/Particles/fgPsSequentialEffect.cpp</itemPath>
+          <itemPath>../../../src/GFX/Particles/fgPsSequentialEffect.h</itemPath>
+          <itemPath>../../../src/GFX/Particles/fgPsSpecialEffect.h</itemPath>
         </logicalFolder>
-        <logicalFolder name="Audio" displayName="Audio" projectFiles="true">
-          <itemPath>../../../src/Audio/fgSFXAudioBase.h</itemPath>
-          <itemPath>../../../src/Audio/fgSFXErrorCodes.h</itemPath>
-          <itemPath>../../../src/Audio/fgSFXManager.cpp</itemPath>
-          <itemPath>../../../src/Audio/fgSFXManager.h</itemPath>
-          <itemPath>../../../src/Audio/fgSFXMusicResource.cpp</itemPath>
-          <itemPath>../../../src/Audio/fgSFXMusicResource.h</itemPath>
-          <itemPath>../../../src/Audio/fgSFXSoundResource.cpp</itemPath>
-          <itemPath>../../../src/Audio/fgSFXSoundResource.h</itemPath>
+        <logicalFolder name="Scene" displayName="Scene" projectFiles="true">
+          <itemPath>../../../src/GFX/Scene/fgGfx2DScene.cpp</itemPath>
+          <itemPath>../../../src/GFX/Scene/fgGfx2DScene.h</itemPath>
+          <itemPath>../../../src/GFX/Scene/fgGfx3DScene.cpp</itemPath>
+          <itemPath>../../../src/GFX/Scene/fgGfx3DScene.h</itemPath>
+          <itemPath>../../../src/GFX/Scene/fgGfxBasetree.cpp</itemPath>
+          <itemPath>../../../src/GFX/Scene/fgGfxBasetree.h</itemPath>
+          <itemPath>../../../src/GFX/Scene/fgGfxLooseOctree.cpp</itemPath>
+          <itemPath>../../../src/GFX/Scene/fgGfxLooseOctree.h</itemPath>
+          <itemPath>../../../src/GFX/Scene/fgGfxLooseQuadtree.cpp</itemPath>
+          <itemPath>../../../src/GFX/Scene/fgGfxLooseQuadtree.h</itemPath>
+          <itemPath>../../../src/GFX/Scene/fgGfxOctree.cpp</itemPath>
+          <itemPath>../../../src/GFX/Scene/fgGfxOctree.h</itemPath>
+          <itemPath>../../../src/GFX/Scene/fgGfxQuadtree.cpp</itemPath>
+          <itemPath>../../../src/GFX/Scene/fgGfxQuadtree.h</itemPath>
+          <itemPath>../../../src/GFX/Scene/fgGfxSceneCallback.h</itemPath>
+          <itemPath>../../../src/GFX/Scene/fgGfxSceneEvent.h</itemPath>
+          <itemPath>../../../src/GFX/Scene/fgGfxSceneManager.cpp</itemPath>
+          <itemPath>../../../src/GFX/Scene/fgGfxSceneManager.h</itemPath>
+          <itemPath>../../../src/GFX/Scene/fgGfxSceneNode.cpp</itemPath>
+          <itemPath>../../../src/GFX/Scene/fgGfxSceneNode.h</itemPath>
+          <itemPath>../../../src/GFX/Scene/fgGfxSceneNodeMesh.cpp</itemPath>
+          <itemPath>../../../src/GFX/Scene/fgGfxSceneNodeMesh.h</itemPath>
+          <itemPath>../../../src/GFX/Scene/fgGfxSceneNodeObject.cpp</itemPath>
+          <itemPath>../../../src/GFX/Scene/fgGfxSceneNodeObject.h</itemPath>
+          <itemPath>../../../src/GFX/Scene/fgGfxSceneNodeTrigger.cpp</itemPath>
+          <itemPath>../../../src/GFX/Scene/fgGfxSceneNodeTrigger.h</itemPath>
+          <itemPath>../../../src/GFX/Scene/fgGfxSceneSkyBox.cpp</itemPath>
+          <itemPath>../../../src/GFX/Scene/fgGfxSceneSkyBox.h</itemPath>
+          <itemPath>../../../src/GFX/Scene/fgGfxTreeNode.cpp</itemPath>
+          <itemPath>../../../src/GFX/Scene/fgGfxTreeNode.h</itemPath>
+          <itemPath>../../../src/GFX/Scene/fgGfxTreeNodeObject.h</itemPath>
         </logicalFolder>
-        <logicalFolder name="Event" displayName="Event" projectFiles="true">
-          <itemPath>../../../src/Event/fgArgumentList.cpp</itemPath>
-          <itemPath>../../../src/Event/fgArgumentList.h</itemPath>
-          <itemPath>../../../src/Event/fgCallback.h</itemPath>
-          <itemPath>../../../src/Event/fgCyclicCallback.h</itemPath>
-          <itemPath>../../../src/Event/fgEventDefinitions.h</itemPath>
-          <itemPath>../../../src/Event/fgEventErrorCodes.h</itemPath>
-          <itemPath>../../../src/Event/fgEventHelper.h</itemPath>
-          <itemPath>../../../src/Event/fgEventManager.cpp</itemPath>
-          <itemPath>../../../src/Event/fgEventManager.h</itemPath>
-          <itemPath>../../../src/Event/fgInputHandler.cpp</itemPath>
-          <itemPath>../../../src/Event/fgInputHandler.h</itemPath>
-          <itemPath>../../../src/Event/fgJoypadController.cpp</itemPath>
-          <itemPath>../../../src/Event/fgJoypadController.h</itemPath>
-          <itemPath>../../../src/Event/fgPointerData.h</itemPath>
-          <itemPath>../../../src/Event/fgPointerRawData.h</itemPath>
-          <itemPath>../../../src/Event/fgThrownEvent.h</itemPath>
-          <itemPath>../../../src/Event/fgTimeoutCallback.h</itemPath>
+        <logicalFolder name="Shaders" displayName="Shaders" projectFiles="true">
+          <itemPath>../../../src/GFX/Shaders/fgGfxShader.cpp</itemPath>
+          <itemPath>../../../src/GFX/Shaders/fgGfxShader.h</itemPath>
+          <itemPath>../../../src/GFX/Shaders/fgGfxShaderBase.cpp</itemPath>
+          <itemPath>../../../src/GFX/Shaders/fgGfxShaderBase.h</itemPath>
+          <itemPath>../../../src/GFX/Shaders/fgGfxShaderConfig.cpp</itemPath>
+          <itemPath>../../../src/GFX/Shaders/fgGfxShaderConfig.h</itemPath>
+          <itemPath>../../../src/GFX/Shaders/fgGfxShaderDefs.h</itemPath>
+          <itemPath>../../../src/GFX/Shaders/fgGfxShaderManager.cpp</itemPath>
+          <itemPath>../../../src/GFX/Shaders/fgGfxShaderManager.h</itemPath>
+          <itemPath>../../../src/GFX/Shaders/fgGfxShaderProgram.cpp</itemPath>
+          <itemPath>../../../src/GFX/Shaders/fgGfxShaderProgram.h</itemPath>
         </logicalFolder>
-        <logicalFolder name="GameLogic" displayName="GameLogic" projectFiles="true">
-          <itemPath>../../../src/GameLogic/fgGameLogic.cpp</itemPath>
-          <itemPath>../../../src/GameLogic/fgGameLogic.h</itemPath>
+        <logicalFolder name="Textures" displayName="Textures" projectFiles="true">
+          <itemPath>../../../src/GFX/Textures/fgTextureErrorCodes.h</itemPath>
+          <itemPath>../../../src/GFX/Textures/fgTextureLoader.cpp</itemPath>
+          <itemPath>../../../src/GFX/Textures/fgTextureLoader.h</itemPath>
+          <itemPath>../../../src/GFX/Textures/fgTextureManager.cpp</itemPath>
+          <itemPath>../../../src/GFX/Textures/fgTextureManager.h</itemPath>
+          <itemPath>../../../src/GFX/Textures/fgTextureResource.cpp</itemPath>
+          <itemPath>../../../src/GFX/Textures/fgTextureResource.h</itemPath>
+          <itemPath>../../../src/GFX/Textures/fgTextureTypes.h</itemPath>
         </logicalFolder>
-        <logicalFolder name="GFX" displayName="GFX" projectFiles="true">
-          <logicalFolder name="Particles" displayName="Particles" projectFiles="true">
-            <itemPath>../../../src/GFX/Particles/fgParticle.h</itemPath>
-            <itemPath>../../../src/GFX/Particles/fgParticleSystem.cpp</itemPath>
-            <itemPath>../../../src/GFX/Particles/fgParticleSystem.h</itemPath>
-            <itemPath>../../../src/GFX/Particles/fgPsParticleEffect.cpp</itemPath>
-            <itemPath>../../../src/GFX/Particles/fgPsParticleEffect.h</itemPath>
-            <itemPath>../../../src/GFX/Particles/fgPsParticleEffectCircular.cpp</itemPath>
-            <itemPath>../../../src/GFX/Particles/fgPsParticleEffectCircular.h</itemPath>
-            <itemPath>../../../src/GFX/Particles/fgPsParticleEmitter.cpp</itemPath>
-            <itemPath>../../../src/GFX/Particles/fgPsParticleEmitter.h</itemPath>
-            <itemPath>../../../src/GFX/Particles/fgPsSequentialEffect.cpp</itemPath>
-            <itemPath>../../../src/GFX/Particles/fgPsSequentialEffect.h</itemPath>
-            <itemPath>../../../src/GFX/Particles/fgPsSpecialEffect.h</itemPath>
-          </logicalFolder>
-          <logicalFolder name="Scene" displayName="Scene" projectFiles="true">
-            <itemPath>../../../src/GFX/Scene/fgGFX2DScene.cpp</itemPath>
-            <itemPath>../../../src/GFX/Scene/fgGFX2DScene.h</itemPath>
-            <itemPath>../../../src/GFX/Scene/fgGFX3DScene.cpp</itemPath>
-            <itemPath>../../../src/GFX/Scene/fgGFX3DScene.h</itemPath>
-            <itemPath>../../../src/GFX/Scene/fgGFXBasetree.cpp</itemPath>
-            <itemPath>../../../src/GFX/Scene/fgGFXBasetree.h</itemPath>
-            <itemPath>../../../src/GFX/Scene/fgGFXLooseOctree.cpp</itemPath>
-            <itemPath>../../../src/GFX/Scene/fgGFXLooseOctree.h</itemPath>
-            <itemPath>../../../src/GFX/Scene/fgGFXLooseQuadtree.cpp</itemPath>
-            <itemPath>../../../src/GFX/Scene/fgGFXLooseQuadtree.h</itemPath>
-            <itemPath>../../../src/GFX/Scene/fgGFXOctree.cpp</itemPath>
-            <itemPath>../../../src/GFX/Scene/fgGFXOctree.h</itemPath>
-            <itemPath>../../../src/GFX/Scene/fgGFXQuadtree.cpp</itemPath>
-            <itemPath>../../../src/GFX/Scene/fgGFXQuadtree.h</itemPath>
-            <itemPath>../../../src/GFX/Scene/fgGFXSceneCallback.h</itemPath>
-            <itemPath>../../../src/GFX/Scene/fgGFXSceneEvent.h</itemPath>
-            <itemPath>../../../src/GFX/Scene/fgGFXSceneManager.cpp</itemPath>
-            <itemPath>../../../src/GFX/Scene/fgGFXSceneManager.h</itemPath>
-            <itemPath>../../../src/GFX/Scene/fgGFXSceneNode.cpp</itemPath>
-            <itemPath>../../../src/GFX/Scene/fgGFXSceneNode.h</itemPath>
-            <itemPath>../../../src/GFX/Scene/fgGFXSceneNodeMesh.cpp</itemPath>
-            <itemPath>../../../src/GFX/Scene/fgGFXSceneNodeMesh.h</itemPath>
-            <itemPath>../../../src/GFX/Scene/fgGFXSceneNodeObject.cpp</itemPath>
-            <itemPath>../../../src/GFX/Scene/fgGFXSceneNodeObject.h</itemPath>
-            <itemPath>../../../src/GFX/Scene/fgGFXSceneNodeTrigger.cpp</itemPath>
-            <itemPath>../../../src/GFX/Scene/fgGFXSceneNodeTrigger.h</itemPath>
-            <itemPath>../../../src/GFX/Scene/fgGFXSceneSkyBox.cpp</itemPath>
-            <itemPath>../../../src/GFX/Scene/fgGFXSceneSkyBox.h</itemPath>
-            <itemPath>../../../src/GFX/Scene/fgGFXTreeNode.cpp</itemPath>
-            <itemPath>../../../src/GFX/Scene/fgGFXTreeNode.h</itemPath>
-          </logicalFolder>
-          <logicalFolder name="Shaders" displayName="Shaders" projectFiles="true">
-            <itemPath>../../../src/GFX/Shaders/fgGFXShader.cpp</itemPath>
-            <itemPath>../../../src/GFX/Shaders/fgGFXShader.h</itemPath>
-            <itemPath>../../../src/GFX/Shaders/fgGFXShaderBase.cpp</itemPath>
-            <itemPath>../../../src/GFX/Shaders/fgGFXShaderBase.h</itemPath>
-            <itemPath>../../../src/GFX/Shaders/fgGFXShaderConfig.cpp</itemPath>
-            <itemPath>../../../src/GFX/Shaders/fgGFXShaderConfig.h</itemPath>
-            <itemPath>../../../src/GFX/Shaders/fgGFXShaderDefs.h</itemPath>
-            <itemPath>../../../src/GFX/Shaders/fgGFXShaderManager.cpp</itemPath>
-            <itemPath>../../../src/GFX/Shaders/fgGFXShaderManager.h</itemPath>
-            <itemPath>../../../src/GFX/Shaders/fgGFXShaderProgram.cpp</itemPath>
-            <itemPath>../../../src/GFX/Shaders/fgGFXShaderProgram.h</itemPath>
-          </logicalFolder>
-          <logicalFolder name="Textures" displayName="Textures" projectFiles="true">
-            <itemPath>../../../src/GFX/Textures/fgTextureErrorCodes.h</itemPath>
-            <itemPath>../../../src/GFX/Textures/fgTextureLoader.cpp</itemPath>
-            <itemPath>../../../src/GFX/Textures/fgTextureLoader.h</itemPath>
-            <itemPath>../../../src/GFX/Textures/fgTextureManager.cpp</itemPath>
-            <itemPath>../../../src/GFX/Textures/fgTextureManager.h</itemPath>
-            <itemPath>../../../src/GFX/Textures/fgTextureResource.cpp</itemPath>
-            <itemPath>../../../src/GFX/Textures/fgTextureResource.h</itemPath>
-            <itemPath>../../../src/GFX/Textures/fgTextureTypes.h</itemPath>
-          </logicalFolder>
-          <itemPath>../../../src/GFX/fgGFXAABoundingBox.h</itemPath>
-          <itemPath>../../../src/GFX/fgGFXAttribBits.h</itemPath>
-          <itemPath>../../../src/GFX/fgGFXAttributeData.h</itemPath>
-          <itemPath>../../../src/GFX/fgGFXBoundingBox.h</itemPath>
-          <itemPath>../../../src/GFX/fgGFXBoundingVolume.h</itemPath>
-          <itemPath>../../../src/GFX/fgGFXBufferID.h</itemPath>
-          <itemPath>../../../src/GFX/fgGFXCamera.cpp</itemPath>
-          <itemPath>../../../src/GFX/fgGFXCamera.h</itemPath>
-          <itemPath>../../../src/GFX/fgGFXCameraAnimation.cpp</itemPath>
-          <itemPath>../../../src/GFX/fgGFXCameraAnimation.h</itemPath>
-          <itemPath>../../../src/GFX/fgGFXColor.h</itemPath>
-          <itemPath>../../../src/GFX/fgGFXContext.cpp</itemPath>
-          <itemPath>../../../src/GFX/fgGFXContext.h</itemPath>
-          <itemPath>../../../src/GFX/fgGFXDrawCall.cpp</itemPath>
-          <itemPath>../../../src/GFX/fgGFXDrawCall.h</itemPath>
-          <itemPath>../../../src/GFX/fgGFXDrawable.h</itemPath>
-          <itemPath>../../../src/GFX/fgGFXDrawingBatch.cpp</itemPath>
-          <itemPath>../../../src/GFX/fgGFXDrawingBatch.h</itemPath>
-          <itemPath>../../../src/GFX/fgGFXErrorCodes.h</itemPath>
-          <itemPath>../../../src/GFX/fgGFXFrustum.cpp</itemPath>
-          <itemPath>../../../src/GFX/fgGFXFrustum.h</itemPath>
-          <itemPath>../../../src/GFX/fgGFXGL.h</itemPath>
-          <itemPath>../../../src/GFX/fgGFXLayer.h</itemPath>
-          <itemPath>../../../src/GFX/fgGFXLight.cpp</itemPath>
-          <itemPath>../../../src/GFX/fgGFXLight.h</itemPath>
-          <itemPath>../../../src/GFX/fgGFXLoader.cpp</itemPath>
-          <itemPath>../../../src/GFX/fgGFXLoader.h</itemPath>
-          <itemPath>../../../src/GFX/fgGFXMVMatrix.h</itemPath>
-          <itemPath>../../../src/GFX/fgGFXMVPMatrix.h</itemPath>
-          <itemPath>../../../src/GFX/fgGFXMain.cpp</itemPath>
-          <itemPath>../../../src/GFX/fgGFXMain.h</itemPath>
-          <itemPath>../../../src/GFX/fgGFXMaterial.cpp</itemPath>
-          <itemPath>../../../src/GFX/fgGFXMaterial.h</itemPath>
-          <itemPath>../../../src/GFX/fgGFXModelResource.cpp</itemPath>
-          <itemPath>../../../src/GFX/fgGFXModelResource.h</itemPath>
-          <itemPath>../../../src/GFX/fgGFXModelTypes.cpp</itemPath>
-          <itemPath>../../../src/GFX/fgGFXModelTypes.h</itemPath>
-          <itemPath>../../../src/GFX/fgGFXPlane.h</itemPath>
-          <itemPath>../../../src/GFX/fgGFXPlatform.cpp</itemPath>
-          <itemPath>../../../src/GFX/fgGFXPlatform.h</itemPath>
-          <itemPath>../../../src/GFX/fgGFXPrimitives.cpp</itemPath>
-          <itemPath>../../../src/GFX/fgGFXPrimitives.h</itemPath>
-          <itemPath>../../../src/GFX/fgGFXProjection.h</itemPath>
-          <itemPath>../../../src/GFX/fgGFXSimpleDrawer.cpp</itemPath>
-          <itemPath>../../../src/GFX/fgGFXSimpleDrawer.h</itemPath>
-          <itemPath>../../../src/GFX/fgGFXStdInc.h</itemPath>
-          <itemPath>../../../src/GFX/fgGFXTextureID.h</itemPath>
-          <itemPath>../../../src/GFX/fgGFXTexturing.cpp</itemPath>
-          <itemPath>../../../src/GFX/fgGFXTexturing.h</itemPath>
-          <itemPath>../../../src/GFX/fgGFXTypes.h</itemPath>
-          <itemPath>../../../src/GFX/fgGFXVertex.h</itemPath>
-          <itemPath>../../../src/GFX/fgGFXVertexData.cpp</itemPath>
-          <itemPath>../../../src/GFX/fgGFXVertexData.h</itemPath>
-          <itemPath>../../../src/GFX/fgGFXWindow.cpp</itemPath>
-          <itemPath>../../../src/GFX/fgGFXWindow.h</itemPath>
+        <itemPath>../../../src/GFX/fgGfxAABoundingBox.h</itemPath>
+        <itemPath>../../../src/GFX/fgGfxAttribBits.h</itemPath>
+        <itemPath>../../../src/GFX/fgGfxAttributeData.h</itemPath>
+        <itemPath>../../../src/GFX/fgGfxBoundingBox.h</itemPath>
+        <itemPath>../../../src/GFX/fgGfxBoundingVolume.h</itemPath>
+        <itemPath>../../../src/GFX/fgGfxBufferID.h</itemPath>
+        <itemPath>../../../src/GFX/fgGfxCamera.cpp</itemPath>
+        <itemPath>../../../src/GFX/fgGfxCamera.h</itemPath>
+        <itemPath>../../../src/GFX/fgGfxCameraAnimation.cpp</itemPath>
+        <itemPath>../../../src/GFX/fgGfxCameraAnimation.h</itemPath>
+        <itemPath>../../../src/GFX/fgGfxColor.h</itemPath>
+        <itemPath>../../../src/GFX/fgGfxContext.cpp</itemPath>
+        <itemPath>../../../src/GFX/fgGfxContext.h</itemPath>
+        <itemPath>../../../src/GFX/fgGfxDrawCall.cpp</itemPath>
+        <itemPath>../../../src/GFX/fgGfxDrawCall.h</itemPath>
+        <itemPath>../../../src/GFX/fgGfxDrawable.h</itemPath>
+        <itemPath>../../../src/GFX/fgGfxDrawingBatch.cpp</itemPath>
+        <itemPath>../../../src/GFX/fgGfxDrawingBatch.h</itemPath>
+        <itemPath>../../../src/GFX/fgGfxErrorCodes.h</itemPath>
+        <itemPath>../../../src/GFX/fgGfxFrustum.cpp</itemPath>
+        <itemPath>../../../src/GFX/fgGfxFrustum.h</itemPath>
+        <itemPath>../../../src/GFX/fgGfxGL.h</itemPath>
+        <itemPath>../../../src/GFX/fgGfxLayer.h</itemPath>
+        <itemPath>../../../src/GFX/fgGfxLight.cpp</itemPath>
+        <itemPath>../../../src/GFX/fgGfxLight.h</itemPath>
+        <itemPath>../../../src/GFX/fgGfxLoader.cpp</itemPath>
+        <itemPath>../../../src/GFX/fgGfxLoader.h</itemPath>
+        <itemPath>../../../src/GFX/fgGfxMVMatrix.h</itemPath>
+        <itemPath>../../../src/GFX/fgGfxMVPMatrix.h</itemPath>
+        <itemPath>../../../src/GFX/fgGfxMain.cpp</itemPath>
+        <itemPath>../../../src/GFX/fgGfxMain.h</itemPath>
+        <itemPath>../../../src/GFX/fgGfxMaterial.cpp</itemPath>
+        <itemPath>../../../src/GFX/fgGfxMaterial.h</itemPath>
+        <itemPath>../../../src/GFX/fgGfxModelResource.cpp</itemPath>
+        <itemPath>../../../src/GFX/fgGfxModelResource.h</itemPath>
+        <itemPath>../../../src/GFX/fgGfxModelTypes.cpp</itemPath>
+        <itemPath>../../../src/GFX/fgGfxModelTypes.h</itemPath>
+        <itemPath>../../../src/GFX/fgGfxPlane.h</itemPath>
+        <itemPath>../../../src/GFX/fgGfxPlatform.cpp</itemPath>
+        <itemPath>../../../src/GFX/fgGfxPlatform.h</itemPath>
+        <itemPath>../../../src/GFX/fgGfxPrimitives.cpp</itemPath>
+        <itemPath>../../../src/GFX/fgGfxPrimitives.h</itemPath>
+        <itemPath>../../../src/GFX/fgGfxProjection.h</itemPath>
+        <itemPath>../../../src/GFX/fgGfxSimpleDrawer.cpp</itemPath>
+        <itemPath>../../../src/GFX/fgGfxSimpleDrawer.h</itemPath>
+        <itemPath>../../../src/GFX/fgGfxStdInc.h</itemPath>
+        <itemPath>../../../src/GFX/fgGfxTextureID.h</itemPath>
+        <itemPath>../../../src/GFX/fgGfxTexturing.cpp</itemPath>
+        <itemPath>../../../src/GFX/fgGfxTexturing.h</itemPath>
+        <itemPath>../../../src/GFX/fgGfxTypes.h</itemPath>
+        <itemPath>../../../src/GFX/fgGfxVertex.h</itemPath>
+        <itemPath>../../../src/GFX/fgGfxVertexData.cpp</itemPath>
+        <itemPath>../../../src/GFX/fgGfxVertexData.h</itemPath>
+        <itemPath>../../../src/GFX/fgGfxWindow.cpp</itemPath>
+        <itemPath>../../../src/GFX/fgGfxWindow.h</itemPath>
+      </logicalFolder>
+      <logicalFolder name="GUI" displayName="GUI" projectFiles="true">
+        <logicalFolder name="Font" displayName="Font" projectFiles="true">
+          <itemPath>../../../src/GUI/Font/fgFontBuiltIn.cpp</itemPath>
+          <itemPath>../../../src/GUI/Font/fgFontBuiltIn.h</itemPath>
+          <itemPath>../../../src/GUI/Font/fgFontBuiltInTypes.h</itemPath>
+          <itemPath>../../../src/GUI/Font/fgFontDrawer.cpp</itemPath>
+          <itemPath>../../../src/GUI/Font/fgFontDrawer.h</itemPath>
+          <itemPath>../../../src/GUI/Font/fgFontResource.cpp</itemPath>
+          <itemPath>../../../src/GUI/Font/fgFontResource.h</itemPath>
+          <itemPath>../../../src/GUI/Font/fgFontStbArial.cpp</itemPath>
+          <itemPath>../../../src/GUI/Font/fgFontStbArial.h</itemPath>
+          <itemPath>../../../src/GUI/Font/fgFontStbArialBold.cpp</itemPath>
+          <itemPath>../../../src/GUI/Font/fgFontStbArialBold.h</itemPath>
+          <itemPath>../../../src/GUI/Font/fgFontStbConsolas.cpp</itemPath>
+          <itemPath>../../../src/GUI/Font/fgFontStbConsolas.h</itemPath>
+          <itemPath>../../../src/GUI/Font/fgFontStbConsolasBold.cpp</itemPath>
+          <itemPath>../../../src/GUI/Font/fgFontStbConsolasBold.h</itemPath>
+          <itemPath>../../../src/GUI/Font/fgFontStbCourier.cpp</itemPath>
+          <itemPath>../../../src/GUI/Font/fgFontStbCourier.h</itemPath>
+          <itemPath>../../../src/GUI/Font/fgFontStbCourierBold.cpp</itemPath>
+          <itemPath>../../../src/GUI/Font/fgFontStbCourierBold.h</itemPath>
+          <itemPath>../../../src/GUI/Font/fgFontStbTimes.cpp</itemPath>
+          <itemPath>../../../src/GUI/Font/fgFontStbTimes.h</itemPath>
+          <itemPath>../../../src/GUI/Font/fgFontStbTimesBold.cpp</itemPath>
+          <itemPath>../../../src/GUI/Font/fgFontStbTimesBold.h</itemPath>
         </logicalFolder>
-        <logicalFolder name="GUI" displayName="GUI" projectFiles="true">
-          <logicalFolder name="Font" displayName="Font" projectFiles="true">
-            <itemPath>../../../src/GUI/Font/fgFontBuiltIn.cpp</itemPath>
-            <itemPath>../../../src/GUI/Font/fgFontBuiltIn.h</itemPath>
-            <itemPath>../../../src/GUI/Font/fgFontBuiltInTypes.h</itemPath>
-            <itemPath>../../../src/GUI/Font/fgFontDrawer.cpp</itemPath>
-            <itemPath>../../../src/GUI/Font/fgFontDrawer.h</itemPath>
-            <itemPath>../../../src/GUI/Font/fgFontResource.cpp</itemPath>
-            <itemPath>../../../src/GUI/Font/fgFontResource.h</itemPath>
-            <itemPath>../../../src/GUI/Font/fgFontStbArial.cpp</itemPath>
-            <itemPath>../../../src/GUI/Font/fgFontStbArial.h</itemPath>
-            <itemPath>../../../src/GUI/Font/fgFontStbArialBold.cpp</itemPath>
-            <itemPath>../../../src/GUI/Font/fgFontStbArialBold.h</itemPath>
-            <itemPath>../../../src/GUI/Font/fgFontStbConsolas.cpp</itemPath>
-            <itemPath>../../../src/GUI/Font/fgFontStbConsolas.h</itemPath>
-            <itemPath>../../../src/GUI/Font/fgFontStbConsolasBold.cpp</itemPath>
-            <itemPath>../../../src/GUI/Font/fgFontStbConsolasBold.h</itemPath>
-            <itemPath>../../../src/GUI/Font/fgFontStbCourier.cpp</itemPath>
-            <itemPath>../../../src/GUI/Font/fgFontStbCourier.h</itemPath>
-            <itemPath>../../../src/GUI/Font/fgFontStbCourierBold.cpp</itemPath>
-            <itemPath>../../../src/GUI/Font/fgFontStbCourierBold.h</itemPath>
-            <itemPath>../../../src/GUI/Font/fgFontStbTimes.cpp</itemPath>
-            <itemPath>../../../src/GUI/Font/fgFontStbTimes.h</itemPath>
-            <itemPath>../../../src/GUI/Font/fgFontStbTimesBold.cpp</itemPath>
-            <itemPath>../../../src/GUI/Font/fgFontStbTimesBold.h</itemPath>
-          </logicalFolder>
-          <itemPath>../../../src/GUI/fgGuiBase.h</itemPath>
-          <itemPath>../../../src/GUI/fgGuiButton.cpp</itemPath>
-          <itemPath>../../../src/GUI/fgGuiButton.h</itemPath>
-          <itemPath>../../../src/GUI/fgGuiCallback.cpp</itemPath>
-          <itemPath>../../../src/GUI/fgGuiCallback.h</itemPath>
-          <itemPath>../../../src/GUI/fgGuiConsole.cpp</itemPath>
-          <itemPath>../../../src/GUI/fgGuiConsole.h</itemPath>
-          <itemPath>../../../src/GUI/fgGuiContainer.cpp</itemPath>
-          <itemPath>../../../src/GUI/fgGuiContainer.h</itemPath>
-          <itemPath>../../../src/GUI/fgGuiDrawer.cpp</itemPath>
-          <itemPath>../../../src/GUI/fgGuiDrawer.h</itemPath>
-          <itemPath>../../../src/GUI/fgGuiEditableText.cpp</itemPath>
-          <itemPath>../../../src/GUI/fgGuiEditableText.h</itemPath>
-          <itemPath>../../../src/GUI/fgGuiErrorCodes.h</itemPath>
-          <itemPath>../../../src/GUI/fgGuiFrame.cpp</itemPath>
-          <itemPath>../../../src/GUI/fgGuiFrame.h</itemPath>
-          <itemPath>../../../src/GUI/fgGuiLabel.cpp</itemPath>
-          <itemPath>../../../src/GUI/fgGuiLabel.h</itemPath>
-          <itemPath>../../../src/GUI/fgGuiLoader.cpp</itemPath>
-          <itemPath>../../../src/GUI/fgGuiLoader.h</itemPath>
-          <itemPath>../../../src/GUI/fgGuiMain.cpp</itemPath>
-          <itemPath>../../../src/GUI/fgGuiMain.h</itemPath>
-          <itemPath>../../../src/GUI/fgGuiMenu.cpp</itemPath>
-          <itemPath>../../../src/GUI/fgGuiMenu.h</itemPath>
-          <itemPath>../../../src/GUI/fgGuiMessageBox.cpp</itemPath>
-          <itemPath>../../../src/GUI/fgGuiMessageBox.h</itemPath>
-          <itemPath>../../../src/GUI/fgGuiPopup.cpp</itemPath>
-          <itemPath>../../../src/GUI/fgGuiPopup.h</itemPath>
-          <itemPath>../../../src/GUI/fgGuiPrimitives.cpp</itemPath>
-          <itemPath>../../../src/GUI/fgGuiPrimitives.h</itemPath>
-          <itemPath>../../../src/GUI/fgGuiProgressBar.cpp</itemPath>
-          <itemPath>../../../src/GUI/fgGuiProgressBar.h</itemPath>
-          <itemPath>../../../src/GUI/fgGuiScreenGrid.cpp</itemPath>
-          <itemPath>../../../src/GUI/fgGuiScreenGrid.h</itemPath>
-          <itemPath>../../../src/GUI/fgGuiScrollArea.cpp</itemPath>
-          <itemPath>../../../src/GUI/fgGuiScrollArea.h</itemPath>
-          <itemPath>../../../src/GUI/fgGuiSlider.cpp</itemPath>
-          <itemPath>../../../src/GUI/fgGuiSlider.h</itemPath>
-          <itemPath>../../../src/GUI/fgGuiStructureSheet.cpp</itemPath>
-          <itemPath>../../../src/GUI/fgGuiStructureSheet.h</itemPath>
-          <itemPath>../../../src/GUI/fgGuiStructureSheetParser.cpp</itemPath>
-          <itemPath>../../../src/GUI/fgGuiStructureSheetParser.h</itemPath>
-          <itemPath>../../../src/GUI/fgGuiStyle.cpp</itemPath>
-          <itemPath>../../../src/GUI/fgGuiStyle.h</itemPath>
-          <itemPath>../../../src/GUI/fgGuiStyleContent.cpp</itemPath>
-          <itemPath>../../../src/GUI/fgGuiStyleContent.h</itemPath>
-          <itemPath>../../../src/GUI/fgGuiStyleManager.cpp</itemPath>
-          <itemPath>../../../src/GUI/fgGuiStyleManager.h</itemPath>
-          <itemPath>../../../src/GUI/fgGuiTable.cpp</itemPath>
-          <itemPath>../../../src/GUI/fgGuiTable.h</itemPath>
-          <itemPath>../../../src/GUI/fgGuiTextArea.cpp</itemPath>
-          <itemPath>../../../src/GUI/fgGuiTextArea.h</itemPath>
-          <itemPath>../../../src/GUI/fgGuiToggleButton.cpp</itemPath>
-          <itemPath>../../../src/GUI/fgGuiToggleButton.h</itemPath>
-          <itemPath>../../../src/GUI/fgGuiWidget.cpp</itemPath>
-          <itemPath>../../../src/GUI/fgGuiWidget.h</itemPath>
-          <itemPath>../../../src/GUI/fgGuiWidgetFactory.cpp</itemPath>
-          <itemPath>../../../src/GUI/fgGuiWidgetFactory.h</itemPath>
-          <itemPath>../../../src/GUI/fgGuiWidgetFactoryTypes.h</itemPath>
-          <itemPath>../../../src/GUI/fgGuiWidgetManager.cpp</itemPath>
-          <itemPath>../../../src/GUI/fgGuiWidgetManager.h</itemPath>
-          <itemPath>../../../src/GUI/fgGuiWidgetTypes.h</itemPath>
-          <itemPath>../../../src/GUI/fgGuiWindow.cpp</itemPath>
-          <itemPath>../../../src/GUI/fgGuiWindow.h</itemPath>
-        </logicalFolder>
-        <logicalFolder name="Hardware" displayName="Hardware" projectFiles="true">
-          <itemPath>../../../src/Hardware/fgDeviceQuery.cpp</itemPath>
-          <itemPath>../../../src/Hardware/fgDeviceQuery.h</itemPath>
-          <itemPath>../../../src/Hardware/fgHardwareState.cpp</itemPath>
-          <itemPath>../../../src/Hardware/fgHardwareState.h</itemPath>
-          <itemPath>../../../src/Hardware/fgQualityManager.cpp</itemPath>
-          <itemPath>../../../src/Hardware/fgQualityManager.h</itemPath>
-          <itemPath>../../../src/Hardware/fgQualityTypes.h</itemPath>
-          <itemPath>../../../src/Hardware/fgSensors.cpp</itemPath>
-          <itemPath>../../../src/Hardware/fgSensors.h</itemPath>
-        </logicalFolder>
-        <logicalFolder name="Math" displayName="Math" projectFiles="true">
-          <itemPath>../../../src/Math/fgKalmanFilter.cpp</itemPath>
-          <itemPath>../../../src/Math/fgKalmanFilter.h</itemPath>
-          <itemPath>../../../src/Math/fgMathLib.h</itemPath>
-        </logicalFolder>
-        <logicalFolder name="Physics" displayName="Physics" projectFiles="true">
-          <itemPath>../../../src/Physics/fgCollisionBody.cpp</itemPath>
-          <itemPath>../../../src/Physics/fgCollisionBody.h</itemPath>
-          <itemPath>../../../src/Physics/fgCollisionCoarse.cpp</itemPath>
-          <itemPath>../../../src/Physics/fgCollisionCoarse.h</itemPath>
-          <itemPath>../../../src/Physics/fgCollisionFine.cpp</itemPath>
-          <itemPath>../../../src/Physics/fgCollisionFine.h</itemPath>
-          <itemPath>../../../src/Physics/fgContact.cpp</itemPath>
-          <itemPath>../../../src/Physics/fgContact.h</itemPath>
-          <itemPath>../../../src/Physics/fgContactGenerator.h</itemPath>
-          <itemPath>../../../src/Physics/fgContactResolver.cpp</itemPath>
-          <itemPath>../../../src/Physics/fgContactResolver.h</itemPath>
-          <itemPath>../../../src/Physics/fgCycloneCoreMath.cpp</itemPath>
-          <itemPath>../../../src/Physics/fgCycloneCoreMath.h</itemPath>
-          <itemPath>../../../src/Physics/fgForceGenerator.cpp</itemPath>
-          <itemPath>../../../src/Physics/fgForceGenerator.h</itemPath>
-          <itemPath>../../../src/Physics/fgJoint.cpp</itemPath>
-          <itemPath>../../../src/Physics/fgJoint.h</itemPath>
-          <itemPath>../../../src/Physics/fgParticle.cpp</itemPath>
-          <itemPath>../../../src/Physics/fgParticle.h</itemPath>
-          <itemPath>../../../src/Physics/fgParticleContact.cpp</itemPath>
-          <itemPath>../../../src/Physics/fgParticleContact.h</itemPath>
-          <itemPath>../../../src/Physics/fgParticleContactResolver.cpp</itemPath>
-          <itemPath>../../../src/Physics/fgParticleContactResolver.h</itemPath>
-          <itemPath>../../../src/Physics/fgParticleForceGenerator.cpp</itemPath>
-          <itemPath>../../../src/Physics/fgParticleForceGenerator.h</itemPath>
-          <itemPath>../../../src/Physics/fgParticleLink.cpp</itemPath>
-          <itemPath>../../../src/Physics/fgParticleLink.h</itemPath>
-          <itemPath>../../../src/Physics/fgParticleWorld.cpp</itemPath>
-          <itemPath>../../../src/Physics/fgParticleWorld.h</itemPath>
-          <itemPath>../../../src/Physics/fgPrecision.h</itemPath>
-          <itemPath>../../../src/Physics/fgRandom.cpp</itemPath>
-          <itemPath>../../../src/Physics/fgRandom.h</itemPath>
-          <itemPath>../../../src/Physics/fgRigidBody.cpp</itemPath>
-          <itemPath>../../../src/Physics/fgRigidBody.h</itemPath>
-          <itemPath>../../../src/Physics/fgWorld.cpp</itemPath>
-          <itemPath>../../../src/Physics/fgWorld.h</itemPath>
-        </logicalFolder>
-        <logicalFolder name="Resource" displayName="Resource" projectFiles="true">
-          <itemPath>../../../src/Resource/fgDataManagerBase.h</itemPath>
-          <itemPath>../../../src/Resource/fgManagedDataFile.h</itemPath>
-          <itemPath>../../../src/Resource/fgManagedObject.h</itemPath>
-          <itemPath>../../../src/Resource/fgResource.cpp</itemPath>
-          <itemPath>../../../src/Resource/fgResource.h</itemPath>
-          <itemPath>../../../src/Resource/fgResourceConfigParser.cpp</itemPath>
-          <itemPath>../../../src/Resource/fgResourceConfigParser.h</itemPath>
-          <itemPath>../../../src/Resource/fgResourceErrorCodes.h</itemPath>
-          <itemPath>../../../src/Resource/fgResourceFactory.cpp</itemPath>
-          <itemPath>../../../src/Resource/fgResourceFactory.h</itemPath>
-          <itemPath>../../../src/Resource/fgResourceFactoryTypes.h</itemPath>
-          <itemPath>../../../src/Resource/fgResourceGroup.cpp</itemPath>
-          <itemPath>../../../src/Resource/fgResourceGroup.h</itemPath>
-          <itemPath>../../../src/Resource/fgResourceManager.cpp</itemPath>
-          <itemPath>../../../src/Resource/fgResourceManager.h</itemPath>
-        </logicalFolder>
-        <logicalFolder name="Scripting" displayName="Scripting" projectFiles="true">
-          <itemPath>../../../src/Scripting/fgScriptCD.h</itemPath>
-          <itemPath>../../../src/Scripting/fgScriptCallback.cpp</itemPath>
-          <itemPath>../../../src/Scripting/fgScriptCallback.h</itemPath>
-          <itemPath>../../../src/Scripting/fgScriptErrorCodes.h</itemPath>
-          <itemPath>../../../src/Scripting/fgScriptMT.cpp</itemPath>
-          <itemPath>../../../src/Scripting/fgScriptMT.h</itemPath>
-          <itemPath>../../../src/Scripting/fgScriptResource.cpp</itemPath>
-          <itemPath>../../../src/Scripting/fgScriptResource.h</itemPath>
-          <itemPath>../../../src/Scripting/fgScriptSubsystem.cpp</itemPath>
-          <itemPath>../../../src/Scripting/fgScriptSubsystem.h</itemPath>
-        </logicalFolder>
-        <logicalFolder name="Thread" displayName="Thread" projectFiles="true">
-          <itemPath>../../../src/Thread/fgThread.cpp</itemPath>
-          <itemPath>../../../src/Thread/fgThread.h</itemPath>
-          <itemPath>../../../src/Thread/fgThreadLock.h</itemPath>
-          <itemPath>../../../src/Thread/fgThreadSem.cpp</itemPath>
-          <itemPath>../../../src/Thread/fgThreadSem.h</itemPath>
-        </logicalFolder>
-        <logicalFolder name="Util" displayName="Util" projectFiles="true">
-          <itemPath>../../../src/Util/fgBTreeMap.h</itemPath>
-          <itemPath>../../../src/Util/fgBTreeSet.h</itemPath>
-          <itemPath>../../../src/Util/fgConfig.cpp</itemPath>
-          <itemPath>../../../src/Util/fgConfig.h</itemPath>
-          <itemPath>../../../src/Util/fgConfigParser.cpp</itemPath>
-          <itemPath>../../../src/Util/fgConfigParser.h</itemPath>
-          <itemPath>../../../src/Util/fgConfigStruct.h</itemPath>
-          <itemPath>../../../src/Util/fgConfigWriter.cpp</itemPath>
-          <itemPath>../../../src/Util/fgConfigWriter.h</itemPath>
-          <itemPath>../../../src/Util/fgDirent.cpp</itemPath>
-          <itemPath>../../../src/Util/fgDirent.h</itemPath>
-          <itemPath>../../../src/Util/fgFastCmp.cpp</itemPath>
-          <itemPath>../../../src/Util/fgFastCmp.h</itemPath>
-          <itemPath>../../../src/Util/fgFile.cpp</itemPath>
-          <itemPath>../../../src/Util/fgFile.h</itemPath>
-          <itemPath>../../../src/Util/fgFileBase.h</itemPath>
-          <itemPath>../../../src/Util/fgFileErrorCodes.h</itemPath>
-          <itemPath>../../../src/Util/fgHandle.h</itemPath>
-          <itemPath>../../../src/Util/fgHandleManager.h</itemPath>
-          <itemPath>../../../src/Util/fgHashFunc.cpp</itemPath>
-          <itemPath>../../../src/Util/fgHashFunc.h</itemPath>
-          <itemPath>../../../src/Util/fgMemory.h</itemPath>
-          <itemPath>../../../src/Util/fgMemoryErrorCodes.h</itemPath>
-          <itemPath>../../../src/Util/fgNamedHandle.h</itemPath>
-          <itemPath>../../../src/Util/fgPath.cpp</itemPath>
-          <itemPath>../../../src/Util/fgPath.h</itemPath>
-          <itemPath>../../../src/Util/fgProfiling.cpp</itemPath>
-          <itemPath>../../../src/Util/fgProfiling.h</itemPath>
-          <itemPath>../../../src/Util/fgRegularFile.cpp</itemPath>
-          <itemPath>../../../src/Util/fgRegularFile.h</itemPath>
-          <itemPath>../../../src/Util/fgSafeBTreeMap.h</itemPath>
-          <itemPath>../../../src/Util/fgSafeBTreeSet.h</itemPath>
-          <itemPath>../../../src/Util/fgSettings.cpp</itemPath>
-          <itemPath>../../../src/Util/fgSettings.h</itemPath>
-          <itemPath>../../../src/Util/fgStringParser.h</itemPath>
-          <itemPath>../../../src/Util/fgStrings.cpp</itemPath>
-          <itemPath>../../../src/Util/fgStrings.h</itemPath>
-          <itemPath>../../../src/Util/fgTag.h</itemPath>
-          <itemPath>../../../src/Util/fgTime.cpp</itemPath>
-          <itemPath>../../../src/Util/fgTime.h</itemPath>
-          <itemPath>../../../src/Util/fgZipFile.cpp</itemPath>
-          <itemPath>../../../src/Util/fgZipFile.h</itemPath>
-        </logicalFolder>
-        <logicalFolder name="XML" displayName="XML" projectFiles="true">
-          <itemPath>../../../src/XML/fgXMLAutoHandler.h</itemPath>
-          <itemPath>../../../src/XML/fgXMLDefaultHandler.h</itemPath>
-          <itemPath>../../../src/XML/fgXMLErrorCodes.h</itemPath>
-          <itemPath>../../../src/XML/fgXMLParser.cpp</itemPath>
-          <itemPath>../../../src/XML/fgXMLParser.h</itemPath>
-          <itemPath>../../../src/XML/fgXMLTypesWrap.h</itemPath>
-        </logicalFolder>
-        <itemPath>../../../src/fgBool.h</itemPath>
-        <itemPath>../../../src/fgBuildConfig.cpp</itemPath>
-        <itemPath>../../../src/fgBuildConfig.h</itemPath>
-        <itemPath>../../../src/fgColors.cpp</itemPath>
-        <itemPath>../../../src/fgColors.h</itemPath>
-        <itemPath>../../../src/fgCommon.cpp</itemPath>
-        <itemPath>../../../src/fgCommon.h</itemPath>
-        <itemPath>../../../src/fgDebugConfig.cpp</itemPath>
-        <itemPath>../../../src/fgDebugConfig.h</itemPath>
-        <itemPath>../../../src/fgErrno.cpp</itemPath>
-        <itemPath>../../../src/fgErrno.h</itemPath>
-        <itemPath>../../../src/fgErrorCodes.cpp</itemPath>
-        <itemPath>../../../src/fgErrorCodes.h</itemPath>
-        <itemPath>../../../src/fgException.h</itemPath>
-        <itemPath>../../../src/fgGameErrorCodes.h</itemPath>
-        <itemPath>../../../src/fgGameMain.cpp</itemPath>
-        <itemPath>../../../src/fgGameMain.h</itemPath>
-        <itemPath>../../../src/fgLog.cpp</itemPath>
-        <itemPath>../../../src/fgLog.h</itemPath>
-        <itemPath>../../../src/fgMainModule.cpp</itemPath>
-        <itemPath>../../../src/fgMainModule.h</itemPath>
-        <itemPath>../../../src/fgManagerBase.h</itemPath>
-        <itemPath>../../../src/fgMessageCommon.h</itemPath>
-        <itemPath>../../../src/fgMessageSubsystem.cpp</itemPath>
-        <itemPath>../../../src/fgMessageSubsystem.h</itemPath>
-        <itemPath>../../../src/fgSingleton.h</itemPath>
-        <itemPath>../../../src/fgStatus.h</itemPath>
-        <itemPath>../../../src/fgTypes.h</itemPath>
-        <itemPath>../../../src/fgUnistd.h</itemPath>
-        <itemPath>../../../src/fgVector.h</itemPath>
+        <itemPath>../../../src/GUI/fgGuiBase.h</itemPath>
+        <itemPath>../../../src/GUI/fgGuiButton.cpp</itemPath>
+        <itemPath>../../../src/GUI/fgGuiButton.h</itemPath>
+        <itemPath>../../../src/GUI/fgGuiCallback.cpp</itemPath>
+        <itemPath>../../../src/GUI/fgGuiCallback.h</itemPath>
+        <itemPath>../../../src/GUI/fgGuiConsole.cpp</itemPath>
+        <itemPath>../../../src/GUI/fgGuiConsole.h</itemPath>
+        <itemPath>../../../src/GUI/fgGuiContainer.cpp</itemPath>
+        <itemPath>../../../src/GUI/fgGuiContainer.h</itemPath>
+        <itemPath>../../../src/GUI/fgGuiDrawer.cpp</itemPath>
+        <itemPath>../../../src/GUI/fgGuiDrawer.h</itemPath>
+        <itemPath>../../../src/GUI/fgGuiEditableText.cpp</itemPath>
+        <itemPath>../../../src/GUI/fgGuiEditableText.h</itemPath>
+        <itemPath>../../../src/GUI/fgGuiErrorCodes.h</itemPath>
+        <itemPath>../../../src/GUI/fgGuiFrame.cpp</itemPath>
+        <itemPath>../../../src/GUI/fgGuiFrame.h</itemPath>
+        <itemPath>../../../src/GUI/fgGuiLabel.cpp</itemPath>
+        <itemPath>../../../src/GUI/fgGuiLabel.h</itemPath>
+        <itemPath>../../../src/GUI/fgGuiLoader.cpp</itemPath>
+        <itemPath>../../../src/GUI/fgGuiLoader.h</itemPath>
+        <itemPath>../../../src/GUI/fgGuiMain.cpp</itemPath>
+        <itemPath>../../../src/GUI/fgGuiMain.h</itemPath>
+        <itemPath>../../../src/GUI/fgGuiMenu.cpp</itemPath>
+        <itemPath>../../../src/GUI/fgGuiMenu.h</itemPath>
+        <itemPath>../../../src/GUI/fgGuiMessageBox.cpp</itemPath>
+        <itemPath>../../../src/GUI/fgGuiMessageBox.h</itemPath>
+        <itemPath>../../../src/GUI/fgGuiPopup.cpp</itemPath>
+        <itemPath>../../../src/GUI/fgGuiPopup.h</itemPath>
+        <itemPath>../../../src/GUI/fgGuiPrimitives.cpp</itemPath>
+        <itemPath>../../../src/GUI/fgGuiPrimitives.h</itemPath>
+        <itemPath>../../../src/GUI/fgGuiProgressBar.cpp</itemPath>
+        <itemPath>../../../src/GUI/fgGuiProgressBar.h</itemPath>
+        <itemPath>../../../src/GUI/fgGuiScreenGrid.cpp</itemPath>
+        <itemPath>../../../src/GUI/fgGuiScreenGrid.h</itemPath>
+        <itemPath>../../../src/GUI/fgGuiScrollArea.cpp</itemPath>
+        <itemPath>../../../src/GUI/fgGuiScrollArea.h</itemPath>
+        <itemPath>../../../src/GUI/fgGuiSlider.cpp</itemPath>
+        <itemPath>../../../src/GUI/fgGuiSlider.h</itemPath>
+        <itemPath>../../../src/GUI/fgGuiStructureSheet.cpp</itemPath>
+        <itemPath>../../../src/GUI/fgGuiStructureSheet.h</itemPath>
+        <itemPath>../../../src/GUI/fgGuiStructureSheetParser.cpp</itemPath>
+        <itemPath>../../../src/GUI/fgGuiStructureSheetParser.h</itemPath>
+        <itemPath>../../../src/GUI/fgGuiStyle.cpp</itemPath>
+        <itemPath>../../../src/GUI/fgGuiStyle.h</itemPath>
+        <itemPath>../../../src/GUI/fgGuiStyleContent.cpp</itemPath>
+        <itemPath>../../../src/GUI/fgGuiStyleContent.h</itemPath>
+        <itemPath>../../../src/GUI/fgGuiStyleManager.cpp</itemPath>
+        <itemPath>../../../src/GUI/fgGuiStyleManager.h</itemPath>
+        <itemPath>../../../src/GUI/fgGuiTable.cpp</itemPath>
+        <itemPath>../../../src/GUI/fgGuiTable.h</itemPath>
+        <itemPath>../../../src/GUI/fgGuiTextArea.cpp</itemPath>
+        <itemPath>../../../src/GUI/fgGuiTextArea.h</itemPath>
+        <itemPath>../../../src/GUI/fgGuiToggleButton.cpp</itemPath>
+        <itemPath>../../../src/GUI/fgGuiToggleButton.h</itemPath>
+        <itemPath>../../../src/GUI/fgGuiWidget.cpp</itemPath>
+        <itemPath>../../../src/GUI/fgGuiWidget.h</itemPath>
+        <itemPath>../../../src/GUI/fgGuiWidgetFactory.cpp</itemPath>
+        <itemPath>../../../src/GUI/fgGuiWidgetFactory.h</itemPath>
+        <itemPath>../../../src/GUI/fgGuiWidgetFactoryTypes.h</itemPath>
+        <itemPath>../../../src/GUI/fgGuiWidgetManager.cpp</itemPath>
+        <itemPath>../../../src/GUI/fgGuiWidgetManager.h</itemPath>
+        <itemPath>../../../src/GUI/fgGuiWidgetTypes.h</itemPath>
+        <itemPath>../../../src/GUI/fgGuiWindow.cpp</itemPath>
+        <itemPath>../../../src/GUI/fgGuiWindow.h</itemPath>
+      </logicalFolder>
+      <logicalFolder name="Hardware" displayName="Hardware" projectFiles="true">
+        <itemPath>../../../src/Hardware/fgDeviceQuery.cpp</itemPath>
+        <itemPath>../../../src/Hardware/fgDeviceQuery.h</itemPath>
+        <itemPath>../../../src/Hardware/fgHardwareState.cpp</itemPath>
+        <itemPath>../../../src/Hardware/fgHardwareState.h</itemPath>
+        <itemPath>../../../src/Hardware/fgQualityManager.cpp</itemPath>
+        <itemPath>../../../src/Hardware/fgQualityManager.h</itemPath>
+        <itemPath>../../../src/Hardware/fgQualityTypes.h</itemPath>
+        <itemPath>../../../src/Hardware/fgSensors.cpp</itemPath>
+        <itemPath>../../../src/Hardware/fgSensors.h</itemPath>
+      </logicalFolder>
+      <logicalFolder name="Math" displayName="Math" projectFiles="true">
+        <itemPath>../../../src/Math/fgKalmanFilter.cpp</itemPath>
+        <itemPath>../../../src/Math/fgKalmanFilter.h</itemPath>
+        <itemPath>../../../src/Math/fgMathLib.h</itemPath>
+      </logicalFolder>
+      <logicalFolder name="Physics" displayName="Physics" projectFiles="true">
+        <itemPath>../../../src/Physics/fgCollisionBody.cpp</itemPath>
+        <itemPath>../../../src/Physics/fgCollisionBody.h</itemPath>
+        <itemPath>../../../src/Physics/fgCollisionCoarse.cpp</itemPath>
+        <itemPath>../../../src/Physics/fgCollisionCoarse.h</itemPath>
+        <itemPath>../../../src/Physics/fgCollisionFine.cpp</itemPath>
+        <itemPath>../../../src/Physics/fgCollisionFine.h</itemPath>
+        <itemPath>../../../src/Physics/fgContact.cpp</itemPath>
+        <itemPath>../../../src/Physics/fgContact.h</itemPath>
+        <itemPath>../../../src/Physics/fgContactGenerator.h</itemPath>
+        <itemPath>../../../src/Physics/fgContactResolver.cpp</itemPath>
+        <itemPath>../../../src/Physics/fgContactResolver.h</itemPath>
+        <itemPath>../../../src/Physics/fgCycloneCoreMath.cpp</itemPath>
+        <itemPath>../../../src/Physics/fgCycloneCoreMath.h</itemPath>
+        <itemPath>../../../src/Physics/fgForceGenerator.cpp</itemPath>
+        <itemPath>../../../src/Physics/fgForceGenerator.h</itemPath>
+        <itemPath>../../../src/Physics/fgJoint.cpp</itemPath>
+        <itemPath>../../../src/Physics/fgJoint.h</itemPath>
+        <itemPath>../../../src/Physics/fgParticle.cpp</itemPath>
+        <itemPath>../../../src/Physics/fgParticle.h</itemPath>
+        <itemPath>../../../src/Physics/fgParticleContact.cpp</itemPath>
+        <itemPath>../../../src/Physics/fgParticleContact.h</itemPath>
+        <itemPath>../../../src/Physics/fgParticleContactResolver.cpp</itemPath>
+        <itemPath>../../../src/Physics/fgParticleContactResolver.h</itemPath>
+        <itemPath>../../../src/Physics/fgParticleForceGenerator.cpp</itemPath>
+        <itemPath>../../../src/Physics/fgParticleForceGenerator.h</itemPath>
+        <itemPath>../../../src/Physics/fgParticleLink.cpp</itemPath>
+        <itemPath>../../../src/Physics/fgParticleLink.h</itemPath>
+        <itemPath>../../../src/Physics/fgParticleWorld.cpp</itemPath>
+        <itemPath>../../../src/Physics/fgParticleWorld.h</itemPath>
+        <itemPath>../../../src/Physics/fgPrecision.h</itemPath>
+        <itemPath>../../../src/Physics/fgRandom.cpp</itemPath>
+        <itemPath>../../../src/Physics/fgRandom.h</itemPath>
+        <itemPath>../../../src/Physics/fgRigidBody.cpp</itemPath>
+        <itemPath>../../../src/Physics/fgRigidBody.h</itemPath>
+        <itemPath>../../../src/Physics/fgWorld.cpp</itemPath>
+        <itemPath>../../../src/Physics/fgWorld.h</itemPath>
+      </logicalFolder>
+      <logicalFolder name="Resource" displayName="Resource" projectFiles="true">
+        <itemPath>../../../src/Resource/fgDataManagerBase.h</itemPath>
+        <itemPath>../../../src/Resource/fgManagedDataFile.h</itemPath>
+        <itemPath>../../../src/Resource/fgManagedObject.h</itemPath>
+        <itemPath>../../../src/Resource/fgResource.cpp</itemPath>
+        <itemPath>../../../src/Resource/fgResource.h</itemPath>
+        <itemPath>../../../src/Resource/fgResourceConfigParser.cpp</itemPath>
+        <itemPath>../../../src/Resource/fgResourceConfigParser.h</itemPath>
+        <itemPath>../../../src/Resource/fgResourceErrorCodes.h</itemPath>
+        <itemPath>../../../src/Resource/fgResourceFactory.cpp</itemPath>
+        <itemPath>../../../src/Resource/fgResourceFactory.h</itemPath>
+        <itemPath>../../../src/Resource/fgResourceFactoryTypes.h</itemPath>
+        <itemPath>../../../src/Resource/fgResourceGroup.cpp</itemPath>
+        <itemPath>../../../src/Resource/fgResourceGroup.h</itemPath>
+        <itemPath>../../../src/Resource/fgResourceManager.cpp</itemPath>
+        <itemPath>../../../src/Resource/fgResourceManager.h</itemPath>
+      </logicalFolder>
+      <logicalFolder name="Scripting" displayName="Scripting" projectFiles="true">
+        <itemPath>../../../src/Scripting/fgScriptCD.h</itemPath>
+        <itemPath>../../../src/Scripting/fgScriptCallback.cpp</itemPath>
+        <itemPath>../../../src/Scripting/fgScriptCallback.h</itemPath>
+        <itemPath>../../../src/Scripting/fgScriptErrorCodes.h</itemPath>
+        <itemPath>../../../src/Scripting/fgScriptMT.cpp</itemPath>
+        <itemPath>../../../src/Scripting/fgScriptMT.h</itemPath>
+        <itemPath>../../../src/Scripting/fgScriptResource.cpp</itemPath>
+        <itemPath>../../../src/Scripting/fgScriptResource.h</itemPath>
+        <itemPath>../../../src/Scripting/fgScriptSubsystem.cpp</itemPath>
+        <itemPath>../../../src/Scripting/fgScriptSubsystem.h</itemPath>
+      </logicalFolder>
+      <logicalFolder name="Thread" displayName="Thread" projectFiles="true">
+        <itemPath>../../../src/Thread/fgThread.cpp</itemPath>
+        <itemPath>../../../src/Thread/fgThread.h</itemPath>
+        <itemPath>../../../src/Thread/fgThreadLock.h</itemPath>
+        <itemPath>../../../src/Thread/fgThreadSem.cpp</itemPath>
+        <itemPath>../../../src/Thread/fgThreadSem.h</itemPath>
       </logicalFolder>
       <logicalFolder name="tinyobj" displayName="tinyobj" projectFiles="true">
         <logicalFolder name="upstream" displayName="upstream" projectFiles="true">
@@ -456,6 +373,88 @@
           <itemPath>../../../modules/tinyxml/upstream/tinyxmlparser.cpp</itemPath>
         </logicalFolder>
       </logicalFolder>
+      <logicalFolder name="Util" displayName="Util" projectFiles="true">
+        <itemPath>../../../src/Util/fgBTreeMap.h</itemPath>
+        <itemPath>../../../src/Util/fgBTreeSet.h</itemPath>
+        <itemPath>../../../src/Util/fgConfig.cpp</itemPath>
+        <itemPath>../../../src/Util/fgConfig.h</itemPath>
+        <itemPath>../../../src/Util/fgConfigParser.cpp</itemPath>
+        <itemPath>../../../src/Util/fgConfigParser.h</itemPath>
+        <itemPath>../../../src/Util/fgConfigStruct.h</itemPath>
+        <itemPath>../../../src/Util/fgConfigWriter.cpp</itemPath>
+        <itemPath>../../../src/Util/fgConfigWriter.h</itemPath>
+        <itemPath>../../../src/Util/fgDirent.cpp</itemPath>
+        <itemPath>../../../src/Util/fgDirent.h</itemPath>
+        <itemPath>../../../src/Util/fgFastCmp.cpp</itemPath>
+        <itemPath>../../../src/Util/fgFastCmp.h</itemPath>
+        <itemPath>../../../src/Util/fgFile.cpp</itemPath>
+        <itemPath>../../../src/Util/fgFile.h</itemPath>
+        <itemPath>../../../src/Util/fgFileBase.h</itemPath>
+        <itemPath>../../../src/Util/fgFileErrorCodes.h</itemPath>
+        <itemPath>../../../src/Util/fgHandle.h</itemPath>
+        <itemPath>../../../src/Util/fgHandleManager.h</itemPath>
+        <itemPath>../../../src/Util/fgHashFunc.cpp</itemPath>
+        <itemPath>../../../src/Util/fgHashFunc.h</itemPath>
+        <itemPath>../../../src/Util/fgMemory.h</itemPath>
+        <itemPath>../../../src/Util/fgMemoryErrorCodes.h</itemPath>
+        <itemPath>../../../src/Util/fgNamedHandle.h</itemPath>
+        <itemPath>../../../src/Util/fgPath.cpp</itemPath>
+        <itemPath>../../../src/Util/fgPath.h</itemPath>
+        <itemPath>../../../src/Util/fgProfiling.cpp</itemPath>
+        <itemPath>../../../src/Util/fgProfiling.h</itemPath>
+        <itemPath>../../../src/Util/fgRegularFile.cpp</itemPath>
+        <itemPath>../../../src/Util/fgRegularFile.h</itemPath>
+        <itemPath>../../../src/Util/fgSafeBTreeMap.h</itemPath>
+        <itemPath>../../../src/Util/fgSafeBTreeSet.h</itemPath>
+        <itemPath>../../../src/Util/fgSettings.cpp</itemPath>
+        <itemPath>../../../src/Util/fgSettings.h</itemPath>
+        <itemPath>../../../src/Util/fgStringParser.h</itemPath>
+        <itemPath>../../../src/Util/fgStrings.cpp</itemPath>
+        <itemPath>../../../src/Util/fgStrings.h</itemPath>
+        <itemPath>../../../src/Util/fgTag.h</itemPath>
+        <itemPath>../../../src/Util/fgTime.cpp</itemPath>
+        <itemPath>../../../src/Util/fgTime.h</itemPath>
+        <itemPath>../../../src/Util/fgZipFile.cpp</itemPath>
+        <itemPath>../../../src/Util/fgZipFile.h</itemPath>
+      </logicalFolder>
+      <logicalFolder name="XML" displayName="XML" projectFiles="true">
+        <itemPath>../../../src/XML/fgXMLAutoHandler.h</itemPath>
+        <itemPath>../../../src/XML/fgXMLDefaultHandler.h</itemPath>
+        <itemPath>../../../src/XML/fgXMLErrorCodes.h</itemPath>
+        <itemPath>../../../src/XML/fgXMLParser.cpp</itemPath>
+        <itemPath>../../../src/XML/fgXMLParser.h</itemPath>
+        <itemPath>../../../src/XML/fgXMLTypesWrap.h</itemPath>
+      </logicalFolder>
+      <itemPath>../../../src/fgBool.h</itemPath>
+      <itemPath>../../../src/fgBuildConfig.cpp</itemPath>
+      <itemPath>../../../src/fgBuildConfig.h</itemPath>
+      <itemPath>../../../src/fgColors.cpp</itemPath>
+      <itemPath>../../../src/fgColors.h</itemPath>
+      <itemPath>../../../src/fgCommon.cpp</itemPath>
+      <itemPath>../../../src/fgCommon.h</itemPath>
+      <itemPath>../../../src/fgDebugConfig.cpp</itemPath>
+      <itemPath>../../../src/fgDebugConfig.h</itemPath>
+      <itemPath>../../../src/fgErrno.cpp</itemPath>
+      <itemPath>../../../src/fgErrno.h</itemPath>
+      <itemPath>../../../src/fgErrorCodes.cpp</itemPath>
+      <itemPath>../../../src/fgErrorCodes.h</itemPath>
+      <itemPath>../../../src/fgException.h</itemPath>
+      <itemPath>../../../src/fgGameErrorCodes.h</itemPath>
+      <itemPath>../../../src/fgGameMain.cpp</itemPath>
+      <itemPath>../../../src/fgGameMain.h</itemPath>
+      <itemPath>../../../src/fgLog.cpp</itemPath>
+      <itemPath>../../../src/fgLog.h</itemPath>
+      <itemPath>../../../src/fgMainModule.cpp</itemPath>
+      <itemPath>../../../src/fgMainModule.h</itemPath>
+      <itemPath>../../../src/fgManagerBase.h</itemPath>
+      <itemPath>../../../src/fgMessageCommon.h</itemPath>
+      <itemPath>../../../src/fgMessageSubsystem.cpp</itemPath>
+      <itemPath>../../../src/fgMessageSubsystem.h</itemPath>
+      <itemPath>../../../src/fgSingleton.h</itemPath>
+      <itemPath>../../../src/fgStatus.h</itemPath>
+      <itemPath>../../../src/fgTypes.h</itemPath>
+      <itemPath>../../../src/fgUnistd.h</itemPath>
+      <itemPath>../../../src/fgVector.h</itemPath>
     </logicalFolder>
     <logicalFolder name="TestFiles"
                    displayName="Test Files"
@@ -807,207 +806,212 @@
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Scene/fgGFX2DScene.cpp"
+      <item path="../../../src/GFX/Scene/fgGfx2DScene.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Scene/fgGFX2DScene.h"
+      <item path="../../../src/GFX/Scene/fgGfx2DScene.h"
             ex="false"
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Scene/fgGFX3DScene.cpp"
+      <item path="../../../src/GFX/Scene/fgGfx3DScene.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Scene/fgGFX3DScene.h"
+      <item path="../../../src/GFX/Scene/fgGfx3DScene.h"
             ex="false"
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Scene/fgGFXBasetree.cpp"
+      <item path="../../../src/GFX/Scene/fgGfxBasetree.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Scene/fgGFXBasetree.h"
+      <item path="../../../src/GFX/Scene/fgGfxBasetree.h"
             ex="false"
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Scene/fgGFXLooseOctree.cpp"
+      <item path="../../../src/GFX/Scene/fgGfxLooseOctree.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Scene/fgGFXLooseOctree.h"
+      <item path="../../../src/GFX/Scene/fgGfxLooseOctree.h"
             ex="false"
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Scene/fgGFXLooseQuadtree.cpp"
+      <item path="../../../src/GFX/Scene/fgGfxLooseQuadtree.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Scene/fgGFXLooseQuadtree.h"
+      <item path="../../../src/GFX/Scene/fgGfxLooseQuadtree.h"
             ex="false"
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Scene/fgGFXOctree.cpp"
+      <item path="../../../src/GFX/Scene/fgGfxOctree.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Scene/fgGFXOctree.h"
+      <item path="../../../src/GFX/Scene/fgGfxOctree.h"
             ex="false"
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Scene/fgGFXQuadtree.cpp"
+      <item path="../../../src/GFX/Scene/fgGfxQuadtree.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Scene/fgGFXQuadtree.h"
+      <item path="../../../src/GFX/Scene/fgGfxQuadtree.h"
             ex="false"
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Scene/fgGFXSceneCallback.h"
+      <item path="../../../src/GFX/Scene/fgGfxSceneCallback.h"
             ex="false"
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Scene/fgGFXSceneEvent.h"
+      <item path="../../../src/GFX/Scene/fgGfxSceneEvent.h"
             ex="false"
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Scene/fgGFXSceneManager.cpp"
+      <item path="../../../src/GFX/Scene/fgGfxSceneManager.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Scene/fgGFXSceneManager.h"
+      <item path="../../../src/GFX/Scene/fgGfxSceneManager.h"
             ex="false"
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Scene/fgGFXSceneNode.cpp"
+      <item path="../../../src/GFX/Scene/fgGfxSceneNode.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Scene/fgGFXSceneNode.h"
+      <item path="../../../src/GFX/Scene/fgGfxSceneNode.h"
             ex="false"
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Scene/fgGFXSceneNodeMesh.cpp"
+      <item path="../../../src/GFX/Scene/fgGfxSceneNodeMesh.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Scene/fgGFXSceneNodeMesh.h"
+      <item path="../../../src/GFX/Scene/fgGfxSceneNodeMesh.h"
             ex="false"
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Scene/fgGFXSceneNodeObject.cpp"
+      <item path="../../../src/GFX/Scene/fgGfxSceneNodeObject.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Scene/fgGFXSceneNodeObject.h"
+      <item path="../../../src/GFX/Scene/fgGfxSceneNodeObject.h"
             ex="false"
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Scene/fgGFXSceneNodeTrigger.cpp"
+      <item path="../../../src/GFX/Scene/fgGfxSceneNodeTrigger.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Scene/fgGFXSceneNodeTrigger.h"
+      <item path="../../../src/GFX/Scene/fgGfxSceneNodeTrigger.h"
             ex="false"
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Scene/fgGFXSceneSkyBox.cpp"
+      <item path="../../../src/GFX/Scene/fgGfxSceneSkyBox.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Scene/fgGFXSceneSkyBox.h"
+      <item path="../../../src/GFX/Scene/fgGfxSceneSkyBox.h"
             ex="false"
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Scene/fgGFXTreeNode.cpp"
+      <item path="../../../src/GFX/Scene/fgGfxTreeNode.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Scene/fgGFXTreeNode.h"
+      <item path="../../../src/GFX/Scene/fgGfxTreeNode.h"
             ex="false"
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Shaders/fgGFXShader.cpp"
-            ex="false"
-            tool="1"
-            flavor2="8">
-      </item>
-      <item path="../../../src/GFX/Shaders/fgGFXShader.h"
+      <item path="../../../src/GFX/Scene/fgGfxTreeNodeObject.h"
             ex="false"
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Shaders/fgGFXShaderBase.cpp"
+      <item path="../../../src/GFX/Shaders/fgGfxShader.cpp"
             ex="false"
             tool="1"
             flavor2="8">
       </item>
-      <item path="../../../src/GFX/Shaders/fgGFXShaderBase.h"
+      <item path="../../../src/GFX/Shaders/fgGfxShader.h"
             ex="false"
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Shaders/fgGFXShaderConfig.cpp"
+      <item path="../../../src/GFX/Shaders/fgGfxShaderBase.cpp"
             ex="false"
             tool="1"
             flavor2="8">
       </item>
-      <item path="../../../src/GFX/Shaders/fgGFXShaderConfig.h"
+      <item path="../../../src/GFX/Shaders/fgGfxShaderBase.h"
             ex="false"
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Shaders/fgGFXShaderDefs.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../../../src/GFX/Shaders/fgGFXShaderManager.cpp"
+      <item path="../../../src/GFX/Shaders/fgGfxShaderConfig.cpp"
             ex="false"
             tool="1"
             flavor2="8">
       </item>
-      <item path="../../../src/GFX/Shaders/fgGFXShaderManager.h"
+      <item path="../../../src/GFX/Shaders/fgGfxShaderConfig.h"
             ex="false"
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Shaders/fgGFXShaderProgram.cpp"
+      <item path="../../../src/GFX/Shaders/fgGfxShaderDefs.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Shaders/fgGfxShaderManager.cpp"
             ex="false"
             tool="1"
             flavor2="8">
       </item>
-      <item path="../../../src/GFX/Shaders/fgGFXShaderProgram.h"
+      <item path="../../../src/GFX/Shaders/fgGfxShaderManager.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Shaders/fgGfxShaderProgram.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+      </item>
+      <item path="../../../src/GFX/Shaders/fgGfxShaderProgram.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -1052,163 +1056,163 @@
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXAABoundingBox.h"
+      <item path="../../../src/GFX/fgGfxAABoundingBox.h"
             ex="false"
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXAttribBits.h" ex="false" tool="3" flavor2="0">
+      <item path="../../../src/GFX/fgGfxAttribBits.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXAttributeData.h"
+      <item path="../../../src/GFX/fgGfxAttributeData.h"
             ex="false"
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXBoundingBox.h"
+      <item path="../../../src/GFX/fgGfxBoundingBox.h"
             ex="false"
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXBoundingVolume.h"
+      <item path="../../../src/GFX/fgGfxBoundingVolume.h"
             ex="false"
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXBufferID.h" ex="false" tool="3" flavor2="0">
+      <item path="../../../src/GFX/fgGfxBufferID.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXCamera.cpp" ex="false" tool="1" flavor2="8">
+      <item path="../../../src/GFX/fgGfxCamera.cpp" ex="false" tool="1" flavor2="8">
       </item>
-      <item path="../../../src/GFX/fgGFXCamera.h" ex="false" tool="3" flavor2="0">
+      <item path="../../../src/GFX/fgGfxCamera.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXCameraAnimation.cpp"
+      <item path="../../../src/GFX/fgGfxCameraAnimation.cpp"
             ex="false"
             tool="1"
             flavor2="8">
       </item>
-      <item path="../../../src/GFX/fgGFXCameraAnimation.h"
+      <item path="../../../src/GFX/fgGfxCameraAnimation.h"
             ex="false"
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXColor.h" ex="false" tool="3" flavor2="0">
+      <item path="../../../src/GFX/fgGfxColor.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXContext.cpp" ex="false" tool="1" flavor2="8">
+      <item path="../../../src/GFX/fgGfxContext.cpp" ex="false" tool="1" flavor2="8">
       </item>
-      <item path="../../../src/GFX/fgGFXContext.h" ex="false" tool="3" flavor2="0">
+      <item path="../../../src/GFX/fgGfxContext.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXDrawCall.cpp" ex="false" tool="1" flavor2="8">
+      <item path="../../../src/GFX/fgGfxDrawCall.cpp" ex="false" tool="1" flavor2="8">
       </item>
-      <item path="../../../src/GFX/fgGFXDrawCall.h" ex="false" tool="3" flavor2="0">
+      <item path="../../../src/GFX/fgGfxDrawCall.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXDrawable.h" ex="false" tool="3" flavor2="0">
+      <item path="../../../src/GFX/fgGfxDrawable.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXDrawingBatch.cpp"
+      <item path="../../../src/GFX/fgGfxDrawingBatch.cpp"
             ex="false"
             tool="1"
             flavor2="8">
       </item>
-      <item path="../../../src/GFX/fgGFXDrawingBatch.h"
+      <item path="../../../src/GFX/fgGfxDrawingBatch.h"
             ex="false"
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXErrorCodes.h" ex="false" tool="3" flavor2="0">
+      <item path="../../../src/GFX/fgGfxErrorCodes.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXFrustum.cpp" ex="false" tool="1" flavor2="0">
+      <item path="../../../src/GFX/fgGfxFrustum.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXFrustum.h" ex="false" tool="3" flavor2="0">
+      <item path="../../../src/GFX/fgGfxFrustum.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXGL.h" ex="false" tool="3" flavor2="0">
+      <item path="../../../src/GFX/fgGfxGL.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXLayer.h" ex="false" tool="3" flavor2="0">
+      <item path="../../../src/GFX/fgGfxLayer.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXLight.cpp" ex="false" tool="1" flavor2="8">
+      <item path="../../../src/GFX/fgGfxLight.cpp" ex="false" tool="1" flavor2="8">
       </item>
-      <item path="../../../src/GFX/fgGFXLight.h" ex="false" tool="3" flavor2="0">
+      <item path="../../../src/GFX/fgGfxLight.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXLoader.cpp" ex="false" tool="1" flavor2="0">
+      <item path="../../../src/GFX/fgGfxLoader.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXLoader.h" ex="false" tool="3" flavor2="0">
+      <item path="../../../src/GFX/fgGfxLoader.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXMVMatrix.h" ex="false" tool="3" flavor2="0">
+      <item path="../../../src/GFX/fgGfxMVMatrix.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXMVPMatrix.h" ex="false" tool="3" flavor2="0">
+      <item path="../../../src/GFX/fgGfxMVPMatrix.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXMain.cpp" ex="false" tool="1" flavor2="8">
+      <item path="../../../src/GFX/fgGfxMain.cpp" ex="false" tool="1" flavor2="8">
       </item>
-      <item path="../../../src/GFX/fgGFXMain.h" ex="false" tool="3" flavor2="0">
+      <item path="../../../src/GFX/fgGfxMain.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXMaterial.cpp" ex="false" tool="1" flavor2="8">
+      <item path="../../../src/GFX/fgGfxMaterial.cpp" ex="false" tool="1" flavor2="8">
       </item>
-      <item path="../../../src/GFX/fgGFXMaterial.h" ex="false" tool="3" flavor2="0">
+      <item path="../../../src/GFX/fgGfxMaterial.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXModelResource.cpp"
+      <item path="../../../src/GFX/fgGfxModelResource.cpp"
             ex="false"
             tool="1"
             flavor2="8">
       </item>
-      <item path="../../../src/GFX/fgGFXModelResource.h"
+      <item path="../../../src/GFX/fgGfxModelResource.h"
             ex="false"
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXModelTypes.cpp"
+      <item path="../../../src/GFX/fgGfxModelTypes.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXModelTypes.h" ex="false" tool="3" flavor2="0">
+      <item path="../../../src/GFX/fgGfxModelTypes.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXPlane.h" ex="false" tool="3" flavor2="0">
+      <item path="../../../src/GFX/fgGfxPlane.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXPlatform.cpp" ex="false" tool="1" flavor2="8">
+      <item path="../../../src/GFX/fgGfxPlatform.cpp" ex="false" tool="1" flavor2="8">
       </item>
-      <item path="../../../src/GFX/fgGFXPlatform.h" ex="false" tool="3" flavor2="0">
+      <item path="../../../src/GFX/fgGfxPlatform.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXPrimitives.cpp"
+      <item path="../../../src/GFX/fgGfxPrimitives.cpp"
             ex="false"
             tool="1"
             flavor2="8">
       </item>
-      <item path="../../../src/GFX/fgGFXPrimitives.h" ex="false" tool="3" flavor2="0">
+      <item path="../../../src/GFX/fgGfxPrimitives.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXProjection.h" ex="false" tool="3" flavor2="0">
+      <item path="../../../src/GFX/fgGfxProjection.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXSimpleDrawer.cpp"
+      <item path="../../../src/GFX/fgGfxSimpleDrawer.cpp"
             ex="false"
             tool="1"
             flavor2="8">
       </item>
-      <item path="../../../src/GFX/fgGFXSimpleDrawer.h"
+      <item path="../../../src/GFX/fgGfxSimpleDrawer.h"
             ex="false"
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXStdInc.h" ex="false" tool="3" flavor2="0">
+      <item path="../../../src/GFX/fgGfxStdInc.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXTextureID.h" ex="false" tool="3" flavor2="0">
+      <item path="../../../src/GFX/fgGfxTextureID.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXTexturing.cpp"
+      <item path="../../../src/GFX/fgGfxTexturing.cpp"
             ex="false"
             tool="1"
             flavor2="8">
       </item>
-      <item path="../../../src/GFX/fgGFXTexturing.h" ex="false" tool="3" flavor2="0">
+      <item path="../../../src/GFX/fgGfxTexturing.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXTypes.h" ex="false" tool="3" flavor2="0">
+      <item path="../../../src/GFX/fgGfxTypes.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXVertex.h" ex="false" tool="3" flavor2="0">
+      <item path="../../../src/GFX/fgGfxVertex.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXVertexData.cpp"
+      <item path="../../../src/GFX/fgGfxVertexData.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXVertexData.h" ex="false" tool="3" flavor2="0">
+      <item path="../../../src/GFX/fgGfxVertexData.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXWindow.cpp" ex="false" tool="1" flavor2="8">
+      <item path="../../../src/GFX/fgGfxWindow.cpp" ex="false" tool="1" flavor2="8">
       </item>
-      <item path="../../../src/GFX/fgGFXWindow.h" ex="false" tool="3" flavor2="0">
+      <item path="../../../src/GFX/fgGfxWindow.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/GUI/Font/fgFontBuiltIn.cpp"
             ex="false"
@@ -2378,207 +2382,212 @@
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Scene/fgGFX2DScene.cpp"
+      <item path="../../../src/GFX/Scene/fgGfx2DScene.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Scene/fgGFX2DScene.h"
+      <item path="../../../src/GFX/Scene/fgGfx2DScene.h"
             ex="false"
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Scene/fgGFX3DScene.cpp"
+      <item path="../../../src/GFX/Scene/fgGfx3DScene.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Scene/fgGFX3DScene.h"
+      <item path="../../../src/GFX/Scene/fgGfx3DScene.h"
             ex="false"
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Scene/fgGFXBasetree.cpp"
+      <item path="../../../src/GFX/Scene/fgGfxBasetree.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Scene/fgGFXBasetree.h"
+      <item path="../../../src/GFX/Scene/fgGfxBasetree.h"
             ex="false"
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Scene/fgGFXLooseOctree.cpp"
+      <item path="../../../src/GFX/Scene/fgGfxLooseOctree.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Scene/fgGFXLooseOctree.h"
+      <item path="../../../src/GFX/Scene/fgGfxLooseOctree.h"
             ex="false"
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Scene/fgGFXLooseQuadtree.cpp"
+      <item path="../../../src/GFX/Scene/fgGfxLooseQuadtree.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Scene/fgGFXLooseQuadtree.h"
+      <item path="../../../src/GFX/Scene/fgGfxLooseQuadtree.h"
             ex="false"
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Scene/fgGFXOctree.cpp"
+      <item path="../../../src/GFX/Scene/fgGfxOctree.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Scene/fgGFXOctree.h"
+      <item path="../../../src/GFX/Scene/fgGfxOctree.h"
             ex="false"
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Scene/fgGFXQuadtree.cpp"
+      <item path="../../../src/GFX/Scene/fgGfxQuadtree.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Scene/fgGFXQuadtree.h"
+      <item path="../../../src/GFX/Scene/fgGfxQuadtree.h"
             ex="false"
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Scene/fgGFXSceneCallback.h"
+      <item path="../../../src/GFX/Scene/fgGfxSceneCallback.h"
             ex="false"
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Scene/fgGFXSceneEvent.h"
+      <item path="../../../src/GFX/Scene/fgGfxSceneEvent.h"
             ex="false"
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Scene/fgGFXSceneManager.cpp"
+      <item path="../../../src/GFX/Scene/fgGfxSceneManager.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Scene/fgGFXSceneManager.h"
+      <item path="../../../src/GFX/Scene/fgGfxSceneManager.h"
             ex="false"
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Scene/fgGFXSceneNode.cpp"
+      <item path="../../../src/GFX/Scene/fgGfxSceneNode.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Scene/fgGFXSceneNode.h"
+      <item path="../../../src/GFX/Scene/fgGfxSceneNode.h"
             ex="false"
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Scene/fgGFXSceneNodeMesh.cpp"
+      <item path="../../../src/GFX/Scene/fgGfxSceneNodeMesh.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Scene/fgGFXSceneNodeMesh.h"
+      <item path="../../../src/GFX/Scene/fgGfxSceneNodeMesh.h"
             ex="false"
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Scene/fgGFXSceneNodeObject.cpp"
+      <item path="../../../src/GFX/Scene/fgGfxSceneNodeObject.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Scene/fgGFXSceneNodeObject.h"
+      <item path="../../../src/GFX/Scene/fgGfxSceneNodeObject.h"
             ex="false"
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Scene/fgGFXSceneNodeTrigger.cpp"
+      <item path="../../../src/GFX/Scene/fgGfxSceneNodeTrigger.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Scene/fgGFXSceneNodeTrigger.h"
+      <item path="../../../src/GFX/Scene/fgGfxSceneNodeTrigger.h"
             ex="false"
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Scene/fgGFXSceneSkyBox.cpp"
+      <item path="../../../src/GFX/Scene/fgGfxSceneSkyBox.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Scene/fgGFXSceneSkyBox.h"
+      <item path="../../../src/GFX/Scene/fgGfxSceneSkyBox.h"
             ex="false"
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Scene/fgGFXTreeNode.cpp"
+      <item path="../../../src/GFX/Scene/fgGfxTreeNode.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Scene/fgGFXTreeNode.h"
+      <item path="../../../src/GFX/Scene/fgGfxTreeNode.h"
             ex="false"
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Shaders/fgGFXShader.cpp"
+      <item path="../../../src/GFX/Scene/fgGfxTreeNodeObject.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Shaders/fgGfxShader.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Shaders/fgGFXShader.h"
+      <item path="../../../src/GFX/Shaders/fgGfxShader.h"
             ex="false"
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Shaders/fgGFXShaderBase.cpp"
+      <item path="../../../src/GFX/Shaders/fgGfxShaderBase.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Shaders/fgGFXShaderBase.h"
+      <item path="../../../src/GFX/Shaders/fgGfxShaderBase.h"
             ex="false"
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Shaders/fgGFXShaderConfig.cpp"
+      <item path="../../../src/GFX/Shaders/fgGfxShaderConfig.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Shaders/fgGFXShaderConfig.h"
+      <item path="../../../src/GFX/Shaders/fgGfxShaderConfig.h"
             ex="false"
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Shaders/fgGFXShaderDefs.h"
+      <item path="../../../src/GFX/Shaders/fgGfxShaderDefs.h"
             ex="false"
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Shaders/fgGFXShaderManager.cpp"
+      <item path="../../../src/GFX/Shaders/fgGfxShaderManager.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Shaders/fgGFXShaderManager.h"
+      <item path="../../../src/GFX/Shaders/fgGfxShaderManager.h"
             ex="false"
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Shaders/fgGFXShaderProgram.cpp"
+      <item path="../../../src/GFX/Shaders/fgGfxShaderProgram.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Shaders/fgGFXShaderProgram.h"
+      <item path="../../../src/GFX/Shaders/fgGfxShaderProgram.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -2623,163 +2632,163 @@
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXAABoundingBox.h"
+      <item path="../../../src/GFX/fgGfxAABoundingBox.h"
             ex="false"
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXAttribBits.h" ex="false" tool="3" flavor2="0">
+      <item path="../../../src/GFX/fgGfxAttribBits.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXAttributeData.h"
+      <item path="../../../src/GFX/fgGfxAttributeData.h"
             ex="false"
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXBoundingBox.h"
+      <item path="../../../src/GFX/fgGfxBoundingBox.h"
             ex="false"
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXBoundingVolume.h"
+      <item path="../../../src/GFX/fgGfxBoundingVolume.h"
             ex="false"
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXBufferID.h" ex="false" tool="3" flavor2="0">
+      <item path="../../../src/GFX/fgGfxBufferID.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXCamera.cpp" ex="false" tool="1" flavor2="0">
+      <item path="../../../src/GFX/fgGfxCamera.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXCamera.h" ex="false" tool="3" flavor2="0">
+      <item path="../../../src/GFX/fgGfxCamera.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXCameraAnimation.cpp"
+      <item path="../../../src/GFX/fgGfxCameraAnimation.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXCameraAnimation.h"
+      <item path="../../../src/GFX/fgGfxCameraAnimation.h"
             ex="false"
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXColor.h" ex="false" tool="3" flavor2="0">
+      <item path="../../../src/GFX/fgGfxColor.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXContext.cpp" ex="false" tool="1" flavor2="0">
+      <item path="../../../src/GFX/fgGfxContext.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXContext.h" ex="false" tool="3" flavor2="0">
+      <item path="../../../src/GFX/fgGfxContext.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXDrawCall.cpp" ex="false" tool="1" flavor2="0">
+      <item path="../../../src/GFX/fgGfxDrawCall.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXDrawCall.h" ex="false" tool="3" flavor2="0">
+      <item path="../../../src/GFX/fgGfxDrawCall.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXDrawable.h" ex="false" tool="3" flavor2="0">
+      <item path="../../../src/GFX/fgGfxDrawable.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXDrawingBatch.cpp"
+      <item path="../../../src/GFX/fgGfxDrawingBatch.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXDrawingBatch.h"
+      <item path="../../../src/GFX/fgGfxDrawingBatch.h"
             ex="false"
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXErrorCodes.h" ex="false" tool="3" flavor2="0">
+      <item path="../../../src/GFX/fgGfxErrorCodes.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXFrustum.cpp" ex="false" tool="1" flavor2="0">
+      <item path="../../../src/GFX/fgGfxFrustum.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXFrustum.h" ex="false" tool="3" flavor2="0">
+      <item path="../../../src/GFX/fgGfxFrustum.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXGL.h" ex="false" tool="3" flavor2="0">
+      <item path="../../../src/GFX/fgGfxGL.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXLayer.h" ex="false" tool="3" flavor2="0">
+      <item path="../../../src/GFX/fgGfxLayer.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXLight.cpp" ex="false" tool="1" flavor2="0">
+      <item path="../../../src/GFX/fgGfxLight.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXLight.h" ex="false" tool="3" flavor2="0">
+      <item path="../../../src/GFX/fgGfxLight.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXLoader.cpp" ex="false" tool="1" flavor2="0">
+      <item path="../../../src/GFX/fgGfxLoader.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXLoader.h" ex="false" tool="3" flavor2="0">
+      <item path="../../../src/GFX/fgGfxLoader.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXMVMatrix.h" ex="false" tool="3" flavor2="0">
+      <item path="../../../src/GFX/fgGfxMVMatrix.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXMVPMatrix.h" ex="false" tool="3" flavor2="0">
+      <item path="../../../src/GFX/fgGfxMVPMatrix.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXMain.cpp" ex="false" tool="1" flavor2="0">
+      <item path="../../../src/GFX/fgGfxMain.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXMain.h" ex="false" tool="3" flavor2="0">
+      <item path="../../../src/GFX/fgGfxMain.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXMaterial.cpp" ex="false" tool="1" flavor2="0">
+      <item path="../../../src/GFX/fgGfxMaterial.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXMaterial.h" ex="false" tool="3" flavor2="0">
+      <item path="../../../src/GFX/fgGfxMaterial.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXModelResource.cpp"
+      <item path="../../../src/GFX/fgGfxModelResource.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXModelResource.h"
+      <item path="../../../src/GFX/fgGfxModelResource.h"
             ex="false"
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXModelTypes.cpp"
+      <item path="../../../src/GFX/fgGfxModelTypes.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXModelTypes.h" ex="false" tool="3" flavor2="0">
+      <item path="../../../src/GFX/fgGfxModelTypes.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXPlane.h" ex="false" tool="3" flavor2="0">
+      <item path="../../../src/GFX/fgGfxPlane.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXPlatform.cpp" ex="false" tool="1" flavor2="0">
+      <item path="../../../src/GFX/fgGfxPlatform.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXPlatform.h" ex="false" tool="3" flavor2="0">
+      <item path="../../../src/GFX/fgGfxPlatform.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXPrimitives.cpp"
+      <item path="../../../src/GFX/fgGfxPrimitives.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXPrimitives.h" ex="false" tool="3" flavor2="0">
+      <item path="../../../src/GFX/fgGfxPrimitives.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXProjection.h" ex="false" tool="3" flavor2="0">
+      <item path="../../../src/GFX/fgGfxProjection.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXSimpleDrawer.cpp"
+      <item path="../../../src/GFX/fgGfxSimpleDrawer.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXSimpleDrawer.h"
+      <item path="../../../src/GFX/fgGfxSimpleDrawer.h"
             ex="false"
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXStdInc.h" ex="false" tool="3" flavor2="0">
+      <item path="../../../src/GFX/fgGfxStdInc.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXTextureID.h" ex="false" tool="3" flavor2="0">
+      <item path="../../../src/GFX/fgGfxTextureID.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXTexturing.cpp"
+      <item path="../../../src/GFX/fgGfxTexturing.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXTexturing.h" ex="false" tool="3" flavor2="0">
+      <item path="../../../src/GFX/fgGfxTexturing.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXTypes.h" ex="false" tool="3" flavor2="0">
+      <item path="../../../src/GFX/fgGfxTypes.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXVertex.h" ex="false" tool="3" flavor2="0">
+      <item path="../../../src/GFX/fgGfxVertex.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXVertexData.cpp"
+      <item path="../../../src/GFX/fgGfxVertexData.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXVertexData.h" ex="false" tool="3" flavor2="0">
+      <item path="../../../src/GFX/fgGfxVertexData.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXWindow.cpp" ex="false" tool="1" flavor2="0">
+      <item path="../../../src/GFX/fgGfxWindow.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXWindow.h" ex="false" tool="3" flavor2="0">
+      <item path="../../../src/GFX/fgGfxWindow.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/GUI/Font/fgFontBuiltIn.cpp"
             ex="false"
@@ -3912,207 +3921,212 @@
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Scene/fgGFX2DScene.cpp"
+      <item path="../../../src/GFX/Scene/fgGfx2DScene.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Scene/fgGFX2DScene.h"
+      <item path="../../../src/GFX/Scene/fgGfx2DScene.h"
             ex="false"
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Scene/fgGFX3DScene.cpp"
+      <item path="../../../src/GFX/Scene/fgGfx3DScene.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Scene/fgGFX3DScene.h"
+      <item path="../../../src/GFX/Scene/fgGfx3DScene.h"
             ex="false"
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Scene/fgGFXBasetree.cpp"
+      <item path="../../../src/GFX/Scene/fgGfxBasetree.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Scene/fgGFXBasetree.h"
+      <item path="../../../src/GFX/Scene/fgGfxBasetree.h"
             ex="false"
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Scene/fgGFXLooseOctree.cpp"
+      <item path="../../../src/GFX/Scene/fgGfxLooseOctree.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Scene/fgGFXLooseOctree.h"
+      <item path="../../../src/GFX/Scene/fgGfxLooseOctree.h"
             ex="false"
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Scene/fgGFXLooseQuadtree.cpp"
+      <item path="../../../src/GFX/Scene/fgGfxLooseQuadtree.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Scene/fgGFXLooseQuadtree.h"
+      <item path="../../../src/GFX/Scene/fgGfxLooseQuadtree.h"
             ex="false"
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Scene/fgGFXOctree.cpp"
+      <item path="../../../src/GFX/Scene/fgGfxOctree.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Scene/fgGFXOctree.h"
+      <item path="../../../src/GFX/Scene/fgGfxOctree.h"
             ex="false"
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Scene/fgGFXQuadtree.cpp"
+      <item path="../../../src/GFX/Scene/fgGfxQuadtree.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Scene/fgGFXQuadtree.h"
+      <item path="../../../src/GFX/Scene/fgGfxQuadtree.h"
             ex="false"
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Scene/fgGFXSceneCallback.h"
+      <item path="../../../src/GFX/Scene/fgGfxSceneCallback.h"
             ex="false"
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Scene/fgGFXSceneEvent.h"
+      <item path="../../../src/GFX/Scene/fgGfxSceneEvent.h"
             ex="false"
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Scene/fgGFXSceneManager.cpp"
+      <item path="../../../src/GFX/Scene/fgGfxSceneManager.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Scene/fgGFXSceneManager.h"
+      <item path="../../../src/GFX/Scene/fgGfxSceneManager.h"
             ex="false"
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Scene/fgGFXSceneNode.cpp"
+      <item path="../../../src/GFX/Scene/fgGfxSceneNode.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Scene/fgGFXSceneNode.h"
+      <item path="../../../src/GFX/Scene/fgGfxSceneNode.h"
             ex="false"
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Scene/fgGFXSceneNodeMesh.cpp"
+      <item path="../../../src/GFX/Scene/fgGfxSceneNodeMesh.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Scene/fgGFXSceneNodeMesh.h"
+      <item path="../../../src/GFX/Scene/fgGfxSceneNodeMesh.h"
             ex="false"
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Scene/fgGFXSceneNodeObject.cpp"
+      <item path="../../../src/GFX/Scene/fgGfxSceneNodeObject.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Scene/fgGFXSceneNodeObject.h"
+      <item path="../../../src/GFX/Scene/fgGfxSceneNodeObject.h"
             ex="false"
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Scene/fgGFXSceneNodeTrigger.cpp"
+      <item path="../../../src/GFX/Scene/fgGfxSceneNodeTrigger.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Scene/fgGFXSceneNodeTrigger.h"
+      <item path="../../../src/GFX/Scene/fgGfxSceneNodeTrigger.h"
             ex="false"
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Scene/fgGFXSceneSkyBox.cpp"
+      <item path="../../../src/GFX/Scene/fgGfxSceneSkyBox.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Scene/fgGFXSceneSkyBox.h"
+      <item path="../../../src/GFX/Scene/fgGfxSceneSkyBox.h"
             ex="false"
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Scene/fgGFXTreeNode.cpp"
+      <item path="../../../src/GFX/Scene/fgGfxTreeNode.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Scene/fgGFXTreeNode.h"
+      <item path="../../../src/GFX/Scene/fgGfxTreeNode.h"
             ex="false"
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Shaders/fgGFXShader.cpp"
+      <item path="../../../src/GFX/Scene/fgGfxTreeNodeObject.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Shaders/fgGfxShader.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Shaders/fgGFXShader.h"
+      <item path="../../../src/GFX/Shaders/fgGfxShader.h"
             ex="false"
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Shaders/fgGFXShaderBase.cpp"
+      <item path="../../../src/GFX/Shaders/fgGfxShaderBase.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Shaders/fgGFXShaderBase.h"
+      <item path="../../../src/GFX/Shaders/fgGfxShaderBase.h"
             ex="false"
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Shaders/fgGFXShaderConfig.cpp"
+      <item path="../../../src/GFX/Shaders/fgGfxShaderConfig.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Shaders/fgGFXShaderConfig.h"
+      <item path="../../../src/GFX/Shaders/fgGfxShaderConfig.h"
             ex="false"
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Shaders/fgGFXShaderDefs.h"
+      <item path="../../../src/GFX/Shaders/fgGfxShaderDefs.h"
             ex="false"
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Shaders/fgGFXShaderManager.cpp"
+      <item path="../../../src/GFX/Shaders/fgGfxShaderManager.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Shaders/fgGFXShaderManager.h"
+      <item path="../../../src/GFX/Shaders/fgGfxShaderManager.h"
             ex="false"
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Shaders/fgGFXShaderProgram.cpp"
+      <item path="../../../src/GFX/Shaders/fgGfxShaderProgram.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Shaders/fgGFXShaderProgram.h"
+      <item path="../../../src/GFX/Shaders/fgGfxShaderProgram.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -4157,163 +4171,163 @@
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXAABoundingBox.h"
+      <item path="../../../src/GFX/fgGfxAABoundingBox.h"
             ex="false"
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXAttribBits.h" ex="false" tool="3" flavor2="0">
+      <item path="../../../src/GFX/fgGfxAttribBits.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXAttributeData.h"
+      <item path="../../../src/GFX/fgGfxAttributeData.h"
             ex="false"
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXBoundingBox.h"
+      <item path="../../../src/GFX/fgGfxBoundingBox.h"
             ex="false"
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXBoundingVolume.h"
+      <item path="../../../src/GFX/fgGfxBoundingVolume.h"
             ex="false"
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXBufferID.h" ex="false" tool="3" flavor2="0">
+      <item path="../../../src/GFX/fgGfxBufferID.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXCamera.cpp" ex="false" tool="1" flavor2="0">
+      <item path="../../../src/GFX/fgGfxCamera.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXCamera.h" ex="false" tool="3" flavor2="0">
+      <item path="../../../src/GFX/fgGfxCamera.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXCameraAnimation.cpp"
+      <item path="../../../src/GFX/fgGfxCameraAnimation.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXCameraAnimation.h"
+      <item path="../../../src/GFX/fgGfxCameraAnimation.h"
             ex="false"
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXColor.h" ex="false" tool="3" flavor2="0">
+      <item path="../../../src/GFX/fgGfxColor.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXContext.cpp" ex="false" tool="1" flavor2="0">
+      <item path="../../../src/GFX/fgGfxContext.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXContext.h" ex="false" tool="3" flavor2="0">
+      <item path="../../../src/GFX/fgGfxContext.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXDrawCall.cpp" ex="false" tool="1" flavor2="0">
+      <item path="../../../src/GFX/fgGfxDrawCall.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXDrawCall.h" ex="false" tool="3" flavor2="0">
+      <item path="../../../src/GFX/fgGfxDrawCall.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXDrawable.h" ex="false" tool="3" flavor2="0">
+      <item path="../../../src/GFX/fgGfxDrawable.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXDrawingBatch.cpp"
+      <item path="../../../src/GFX/fgGfxDrawingBatch.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXDrawingBatch.h"
+      <item path="../../../src/GFX/fgGfxDrawingBatch.h"
             ex="false"
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXErrorCodes.h" ex="false" tool="3" flavor2="0">
+      <item path="../../../src/GFX/fgGfxErrorCodes.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXFrustum.cpp" ex="false" tool="1" flavor2="0">
+      <item path="../../../src/GFX/fgGfxFrustum.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXFrustum.h" ex="false" tool="3" flavor2="0">
+      <item path="../../../src/GFX/fgGfxFrustum.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXGL.h" ex="false" tool="3" flavor2="0">
+      <item path="../../../src/GFX/fgGfxGL.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXLayer.h" ex="false" tool="3" flavor2="0">
+      <item path="../../../src/GFX/fgGfxLayer.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXLight.cpp" ex="false" tool="1" flavor2="0">
+      <item path="../../../src/GFX/fgGfxLight.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXLight.h" ex="false" tool="3" flavor2="0">
+      <item path="../../../src/GFX/fgGfxLight.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXLoader.cpp" ex="false" tool="1" flavor2="0">
+      <item path="../../../src/GFX/fgGfxLoader.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXLoader.h" ex="false" tool="3" flavor2="0">
+      <item path="../../../src/GFX/fgGfxLoader.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXMVMatrix.h" ex="false" tool="3" flavor2="0">
+      <item path="../../../src/GFX/fgGfxMVMatrix.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXMVPMatrix.h" ex="false" tool="3" flavor2="0">
+      <item path="../../../src/GFX/fgGfxMVPMatrix.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXMain.cpp" ex="false" tool="1" flavor2="0">
+      <item path="../../../src/GFX/fgGfxMain.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXMain.h" ex="false" tool="3" flavor2="0">
+      <item path="../../../src/GFX/fgGfxMain.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXMaterial.cpp" ex="false" tool="1" flavor2="0">
+      <item path="../../../src/GFX/fgGfxMaterial.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXMaterial.h" ex="false" tool="3" flavor2="0">
+      <item path="../../../src/GFX/fgGfxMaterial.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXModelResource.cpp"
+      <item path="../../../src/GFX/fgGfxModelResource.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXModelResource.h"
+      <item path="../../../src/GFX/fgGfxModelResource.h"
             ex="false"
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXModelTypes.cpp"
+      <item path="../../../src/GFX/fgGfxModelTypes.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXModelTypes.h" ex="false" tool="3" flavor2="0">
+      <item path="../../../src/GFX/fgGfxModelTypes.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXPlane.h" ex="false" tool="3" flavor2="0">
+      <item path="../../../src/GFX/fgGfxPlane.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXPlatform.cpp" ex="false" tool="1" flavor2="0">
+      <item path="../../../src/GFX/fgGfxPlatform.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXPlatform.h" ex="false" tool="3" flavor2="0">
+      <item path="../../../src/GFX/fgGfxPlatform.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXPrimitives.cpp"
+      <item path="../../../src/GFX/fgGfxPrimitives.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXPrimitives.h" ex="false" tool="3" flavor2="0">
+      <item path="../../../src/GFX/fgGfxPrimitives.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXProjection.h" ex="false" tool="3" flavor2="0">
+      <item path="../../../src/GFX/fgGfxProjection.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXSimpleDrawer.cpp"
+      <item path="../../../src/GFX/fgGfxSimpleDrawer.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXSimpleDrawer.h"
+      <item path="../../../src/GFX/fgGfxSimpleDrawer.h"
             ex="false"
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXStdInc.h" ex="false" tool="3" flavor2="0">
+      <item path="../../../src/GFX/fgGfxStdInc.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXTextureID.h" ex="false" tool="3" flavor2="0">
+      <item path="../../../src/GFX/fgGfxTextureID.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXTexturing.cpp"
+      <item path="../../../src/GFX/fgGfxTexturing.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXTexturing.h" ex="false" tool="3" flavor2="0">
+      <item path="../../../src/GFX/fgGfxTexturing.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXTypes.h" ex="false" tool="3" flavor2="0">
+      <item path="../../../src/GFX/fgGfxTypes.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXVertex.h" ex="false" tool="3" flavor2="0">
+      <item path="../../../src/GFX/fgGfxVertex.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXVertexData.cpp"
+      <item path="../../../src/GFX/fgGfxVertexData.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXVertexData.h" ex="false" tool="3" flavor2="0">
+      <item path="../../../src/GFX/fgGfxVertexData.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXWindow.cpp" ex="false" tool="1" flavor2="0">
+      <item path="../../../src/GFX/fgGfxWindow.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXWindow.h" ex="false" tool="3" flavor2="0">
+      <item path="../../../src/GFX/fgGfxWindow.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/GUI/Font/fgFontBuiltIn.cpp"
             ex="false"
@@ -5424,207 +5438,212 @@
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Scene/fgGFX2DScene.cpp"
+      <item path="../../../src/GFX/Scene/fgGfx2DScene.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Scene/fgGFX2DScene.h"
+      <item path="../../../src/GFX/Scene/fgGfx2DScene.h"
             ex="false"
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Scene/fgGFX3DScene.cpp"
+      <item path="../../../src/GFX/Scene/fgGfx3DScene.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Scene/fgGFX3DScene.h"
+      <item path="../../../src/GFX/Scene/fgGfx3DScene.h"
             ex="false"
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Scene/fgGFXBasetree.cpp"
+      <item path="../../../src/GFX/Scene/fgGfxBasetree.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Scene/fgGFXBasetree.h"
+      <item path="../../../src/GFX/Scene/fgGfxBasetree.h"
             ex="false"
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Scene/fgGFXLooseOctree.cpp"
+      <item path="../../../src/GFX/Scene/fgGfxLooseOctree.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Scene/fgGFXLooseOctree.h"
+      <item path="../../../src/GFX/Scene/fgGfxLooseOctree.h"
             ex="false"
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Scene/fgGFXLooseQuadtree.cpp"
+      <item path="../../../src/GFX/Scene/fgGfxLooseQuadtree.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Scene/fgGFXLooseQuadtree.h"
+      <item path="../../../src/GFX/Scene/fgGfxLooseQuadtree.h"
             ex="false"
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Scene/fgGFXOctree.cpp"
+      <item path="../../../src/GFX/Scene/fgGfxOctree.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Scene/fgGFXOctree.h"
+      <item path="../../../src/GFX/Scene/fgGfxOctree.h"
             ex="false"
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Scene/fgGFXQuadtree.cpp"
+      <item path="../../../src/GFX/Scene/fgGfxQuadtree.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Scene/fgGFXQuadtree.h"
+      <item path="../../../src/GFX/Scene/fgGfxQuadtree.h"
             ex="false"
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Scene/fgGFXSceneCallback.h"
+      <item path="../../../src/GFX/Scene/fgGfxSceneCallback.h"
             ex="false"
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Scene/fgGFXSceneEvent.h"
+      <item path="../../../src/GFX/Scene/fgGfxSceneEvent.h"
             ex="false"
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Scene/fgGFXSceneManager.cpp"
+      <item path="../../../src/GFX/Scene/fgGfxSceneManager.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Scene/fgGFXSceneManager.h"
+      <item path="../../../src/GFX/Scene/fgGfxSceneManager.h"
             ex="false"
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Scene/fgGFXSceneNode.cpp"
+      <item path="../../../src/GFX/Scene/fgGfxSceneNode.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Scene/fgGFXSceneNode.h"
+      <item path="../../../src/GFX/Scene/fgGfxSceneNode.h"
             ex="false"
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Scene/fgGFXSceneNodeMesh.cpp"
+      <item path="../../../src/GFX/Scene/fgGfxSceneNodeMesh.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Scene/fgGFXSceneNodeMesh.h"
+      <item path="../../../src/GFX/Scene/fgGfxSceneNodeMesh.h"
             ex="false"
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Scene/fgGFXSceneNodeObject.cpp"
+      <item path="../../../src/GFX/Scene/fgGfxSceneNodeObject.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Scene/fgGFXSceneNodeObject.h"
+      <item path="../../../src/GFX/Scene/fgGfxSceneNodeObject.h"
             ex="false"
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Scene/fgGFXSceneNodeTrigger.cpp"
+      <item path="../../../src/GFX/Scene/fgGfxSceneNodeTrigger.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Scene/fgGFXSceneNodeTrigger.h"
+      <item path="../../../src/GFX/Scene/fgGfxSceneNodeTrigger.h"
             ex="false"
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Scene/fgGFXSceneSkyBox.cpp"
+      <item path="../../../src/GFX/Scene/fgGfxSceneSkyBox.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Scene/fgGFXSceneSkyBox.h"
+      <item path="../../../src/GFX/Scene/fgGfxSceneSkyBox.h"
             ex="false"
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Scene/fgGFXTreeNode.cpp"
+      <item path="../../../src/GFX/Scene/fgGfxTreeNode.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Scene/fgGFXTreeNode.h"
+      <item path="../../../src/GFX/Scene/fgGfxTreeNode.h"
             ex="false"
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Shaders/fgGFXShader.cpp"
+      <item path="../../../src/GFX/Scene/fgGfxTreeNodeObject.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/Shaders/fgGfxShader.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Shaders/fgGFXShader.h"
+      <item path="../../../src/GFX/Shaders/fgGfxShader.h"
             ex="false"
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Shaders/fgGFXShaderBase.cpp"
+      <item path="../../../src/GFX/Shaders/fgGfxShaderBase.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Shaders/fgGFXShaderBase.h"
+      <item path="../../../src/GFX/Shaders/fgGfxShaderBase.h"
             ex="false"
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Shaders/fgGFXShaderConfig.cpp"
+      <item path="../../../src/GFX/Shaders/fgGfxShaderConfig.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Shaders/fgGFXShaderConfig.h"
+      <item path="../../../src/GFX/Shaders/fgGfxShaderConfig.h"
             ex="false"
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Shaders/fgGFXShaderDefs.h"
+      <item path="../../../src/GFX/Shaders/fgGfxShaderDefs.h"
             ex="false"
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Shaders/fgGFXShaderManager.cpp"
+      <item path="../../../src/GFX/Shaders/fgGfxShaderManager.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Shaders/fgGFXShaderManager.h"
+      <item path="../../../src/GFX/Shaders/fgGfxShaderManager.h"
             ex="false"
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Shaders/fgGFXShaderProgram.cpp"
+      <item path="../../../src/GFX/Shaders/fgGfxShaderProgram.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Shaders/fgGFXShaderProgram.h"
+      <item path="../../../src/GFX/Shaders/fgGfxShaderProgram.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -5669,163 +5688,163 @@
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXAABoundingBox.h"
+      <item path="../../../src/GFX/fgGfxAABoundingBox.h"
             ex="false"
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXAttribBits.h" ex="false" tool="3" flavor2="0">
+      <item path="../../../src/GFX/fgGfxAttribBits.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXAttributeData.h"
+      <item path="../../../src/GFX/fgGfxAttributeData.h"
             ex="false"
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXBoundingBox.h"
+      <item path="../../../src/GFX/fgGfxBoundingBox.h"
             ex="false"
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXBoundingVolume.h"
+      <item path="../../../src/GFX/fgGfxBoundingVolume.h"
             ex="false"
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXBufferID.h" ex="false" tool="3" flavor2="0">
+      <item path="../../../src/GFX/fgGfxBufferID.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXCamera.cpp" ex="false" tool="1" flavor2="0">
+      <item path="../../../src/GFX/fgGfxCamera.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXCamera.h" ex="false" tool="3" flavor2="0">
+      <item path="../../../src/GFX/fgGfxCamera.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXCameraAnimation.cpp"
+      <item path="../../../src/GFX/fgGfxCameraAnimation.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXCameraAnimation.h"
+      <item path="../../../src/GFX/fgGfxCameraAnimation.h"
             ex="false"
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXColor.h" ex="false" tool="3" flavor2="0">
+      <item path="../../../src/GFX/fgGfxColor.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXContext.cpp" ex="false" tool="1" flavor2="0">
+      <item path="../../../src/GFX/fgGfxContext.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXContext.h" ex="false" tool="3" flavor2="0">
+      <item path="../../../src/GFX/fgGfxContext.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXDrawCall.cpp" ex="false" tool="1" flavor2="0">
+      <item path="../../../src/GFX/fgGfxDrawCall.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXDrawCall.h" ex="false" tool="3" flavor2="0">
+      <item path="../../../src/GFX/fgGfxDrawCall.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXDrawable.h" ex="false" tool="3" flavor2="0">
+      <item path="../../../src/GFX/fgGfxDrawable.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXDrawingBatch.cpp"
+      <item path="../../../src/GFX/fgGfxDrawingBatch.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXDrawingBatch.h"
+      <item path="../../../src/GFX/fgGfxDrawingBatch.h"
             ex="false"
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXErrorCodes.h" ex="false" tool="3" flavor2="0">
+      <item path="../../../src/GFX/fgGfxErrorCodes.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXFrustum.cpp" ex="false" tool="1" flavor2="0">
+      <item path="../../../src/GFX/fgGfxFrustum.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXFrustum.h" ex="false" tool="3" flavor2="0">
+      <item path="../../../src/GFX/fgGfxFrustum.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXGL.h" ex="false" tool="3" flavor2="0">
+      <item path="../../../src/GFX/fgGfxGL.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXLayer.h" ex="false" tool="3" flavor2="0">
+      <item path="../../../src/GFX/fgGfxLayer.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXLight.cpp" ex="false" tool="1" flavor2="0">
+      <item path="../../../src/GFX/fgGfxLight.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXLight.h" ex="false" tool="3" flavor2="0">
+      <item path="../../../src/GFX/fgGfxLight.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXLoader.cpp" ex="false" tool="1" flavor2="0">
+      <item path="../../../src/GFX/fgGfxLoader.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXLoader.h" ex="false" tool="3" flavor2="0">
+      <item path="../../../src/GFX/fgGfxLoader.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXMVMatrix.h" ex="false" tool="3" flavor2="0">
+      <item path="../../../src/GFX/fgGfxMVMatrix.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXMVPMatrix.h" ex="false" tool="3" flavor2="0">
+      <item path="../../../src/GFX/fgGfxMVPMatrix.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXMain.cpp" ex="false" tool="1" flavor2="0">
+      <item path="../../../src/GFX/fgGfxMain.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXMain.h" ex="false" tool="3" flavor2="0">
+      <item path="../../../src/GFX/fgGfxMain.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXMaterial.cpp" ex="false" tool="1" flavor2="0">
+      <item path="../../../src/GFX/fgGfxMaterial.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXMaterial.h" ex="false" tool="3" flavor2="0">
+      <item path="../../../src/GFX/fgGfxMaterial.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXModelResource.cpp"
+      <item path="../../../src/GFX/fgGfxModelResource.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXModelResource.h"
+      <item path="../../../src/GFX/fgGfxModelResource.h"
             ex="false"
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXModelTypes.cpp"
+      <item path="../../../src/GFX/fgGfxModelTypes.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXModelTypes.h" ex="false" tool="3" flavor2="0">
+      <item path="../../../src/GFX/fgGfxModelTypes.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXPlane.h" ex="false" tool="3" flavor2="0">
+      <item path="../../../src/GFX/fgGfxPlane.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXPlatform.cpp" ex="false" tool="1" flavor2="0">
+      <item path="../../../src/GFX/fgGfxPlatform.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXPlatform.h" ex="false" tool="3" flavor2="0">
+      <item path="../../../src/GFX/fgGfxPlatform.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXPrimitives.cpp"
+      <item path="../../../src/GFX/fgGfxPrimitives.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXPrimitives.h" ex="false" tool="3" flavor2="0">
+      <item path="../../../src/GFX/fgGfxPrimitives.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXProjection.h" ex="false" tool="3" flavor2="0">
+      <item path="../../../src/GFX/fgGfxProjection.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXSimpleDrawer.cpp"
+      <item path="../../../src/GFX/fgGfxSimpleDrawer.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXSimpleDrawer.h"
+      <item path="../../../src/GFX/fgGfxSimpleDrawer.h"
             ex="false"
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXStdInc.h" ex="false" tool="3" flavor2="0">
+      <item path="../../../src/GFX/fgGfxStdInc.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXTextureID.h" ex="false" tool="3" flavor2="0">
+      <item path="../../../src/GFX/fgGfxTextureID.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXTexturing.cpp"
+      <item path="../../../src/GFX/fgGfxTexturing.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXTexturing.h" ex="false" tool="3" flavor2="0">
+      <item path="../../../src/GFX/fgGfxTexturing.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXTypes.h" ex="false" tool="3" flavor2="0">
+      <item path="../../../src/GFX/fgGfxTypes.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXVertex.h" ex="false" tool="3" flavor2="0">
+      <item path="../../../src/GFX/fgGfxVertex.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXVertexData.cpp"
+      <item path="../../../src/GFX/fgGfxVertexData.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXVertexData.h" ex="false" tool="3" flavor2="0">
+      <item path="../../../src/GFX/fgGfxVertexData.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXWindow.cpp" ex="false" tool="1" flavor2="0">
+      <item path="../../../src/GFX/fgGfxWindow.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGFXWindow.h" ex="false" tool="3" flavor2="0">
+      <item path="../../../src/GFX/fgGfxWindow.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/GUI/Font/fgFontBuiltIn.cpp"
             ex="false"

@@ -39,7 +39,7 @@ struct lua_State {
 
     #include "Util/fgMemory.h"
     #include "GUI/fgGuiCallback.h"
-    #include "GFX/Scene/fgGFXSceneCallback.h"
+    #include "GFX/Scene/fgGfxSceneCallback.h"
 
 namespace fg {
     namespace script {

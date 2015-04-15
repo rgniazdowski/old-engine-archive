@@ -30,9 +30,9 @@
 #include "Hardware/fgQualityManager.h"
 #include "Hardware/fgHardwareState.h"
 /// Required GFX modules
-#include "GFX/fgGFXMain.h"
-#include "GFX/fgGFXModelResource.h"
-#include "GFX/Shaders/fgGFXShaderProgram.h"
+#include "GFX/fgGfxMain.h"
+#include "GFX/fgGfxModelResource.h"
+#include "GFX/Shaders/fgGfxShaderProgram.h"
 #include "GFX/Textures/fgTextureManager.h"
 #include "GFX/Textures/fgTextureLoader.h"
 #include "GFX/Particles/fgParticleSystem.h"
@@ -643,7 +643,7 @@ void CGameMain::render(void) {
     fpsc++;
     //FG_LOG_DEBUG(".......... RENDER [%d] ....................\n", fpsc);
     if(fpsc % 128 == 0) {
-        FG_LOG_INFO("# FPS: %.2f\n", FG_HardwareState->getFPS());
+        FG_LOG_INFO("# FPS: %.2f", FG_HardwareState->getFPS());
     }
     if(fpsc > 256) {
         fpsc = 0;

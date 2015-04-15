@@ -33,23 +33,23 @@
     #endif
 
     #ifndef FG_INC_GFX_TYPES
-        #include "GFX/fgGFXTypes.h"
+        #include "GFX/fgGfxTypes.h"
     #endif
 
     #ifndef FG_INC_GFX_SCENE_NODE
-        #include "GFX/Scene/fgGFXSceneNode.h"
+        #include "GFX/Scene/fgGfxSceneNode.h"
     #endif
 
     #ifndef FG_INC_GFX_SCENE_NODE_TRIGGER
-        #include "GFX/Scene/fgGFXSceneNodeTrigger.h"
+        #include "GFX/Scene/fgGfxSceneNodeTrigger.h"
     #endif
     
     #ifndef FG_INC_GFX_SCENE_EVENT
-        #include "GFX/Scene/fgGFXSceneEvent.h"
+        #include "GFX/Scene/fgGfxSceneEvent.h"
     #endif
 
     #ifndef FG_INC_GFX_MODEL_RESOURCE
-        #include "GFX/fgGFXModelResource.h"
+        #include "GFX/fgGfxModelResource.h"
     #endif
 
     #ifndef FG_INC_SCRIPT_MT

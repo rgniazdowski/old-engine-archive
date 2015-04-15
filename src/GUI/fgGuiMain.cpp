@@ -11,8 +11,8 @@
 #include "fgGuiMain.h"
 #include "fgDebugConfig.h"
 
-#include "GFX/fgGFXPrimitives.h"
-#include "GFX/Shaders/fgGFXShaderManager.h"
+#include "GFX/fgGfxPrimitives.h"
+#include "GFX/Shaders/fgGfxShaderManager.h"
 
 #include "fgGuiWidget.h"
 #include "fgGuiLabel.h"

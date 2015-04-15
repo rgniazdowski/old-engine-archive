@@ -36,10 +36,10 @@
     #include <string>
 
     #ifndef FG_INC_GFX_LAYER
-        #include "GFX/fgGFXLayer.h"
+        #include "GFX/fgGfxLayer.h"
     #endif
 
-    #include "GFX/fgGFXBoundingBox.h"
+    #include "GFX/fgGfxBoundingBox.h"
 
     #ifndef FG_INC_POINTER_DATA
         #include "Event/fgPointerData.h"

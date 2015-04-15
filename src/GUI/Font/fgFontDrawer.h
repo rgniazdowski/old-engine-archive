@@ -12,7 +12,7 @@
     #define FG_INC_FONT_DRAWER
 
     #include "fgFontResource.h"
-    #include "GFX/fgGFXTypes.h"
+    #include "GFX/fgGfxTypes.h"
 
     #define FG_FONT_DEFAULT_CHAR_SIZE_PX	-1.0f
     #define FG_FONT_DRAW_STRING_BUF_MAX		1024
@@ -28,7 +28,7 @@ typedef unsigned int fgFontPrintMode;
     #define FG_FONT_PRINT_MODE_RELATIVE		1
 
     #ifndef FG_INC_GFX_DRAWING_BATCH
-        #include "GFX/fgGFXDrawingBatch.h"
+        #include "GFX/fgGfxDrawingBatch.h"
     #endif 
 
 namespace fg {

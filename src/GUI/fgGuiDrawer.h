@@ -17,7 +17,7 @@
     #endif
 
     #ifndef FG_INC_GFX_DRAWING_BATCH
-        #include "GFX/fgGFXDrawingBatch.h"
+        #include "GFX/fgGfxDrawingBatch.h"
     #endif 
 
     #ifndef FG_INC_GUI_STYLE_CONTENT

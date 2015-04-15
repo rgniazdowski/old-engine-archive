@@ -23,7 +23,7 @@
 
     #include "Audio/fgSFXErrorCodes.h"
     #include "Event/fgEventErrorCodes.h"
-    #include "GFX/fgGFXErrorCodes.h"
+    #include "GFX/fgGfxErrorCodes.h"
     #include "GFX/Textures/fgTextureErrorCodes.h"
     #include "GUI/fgGuiErrorCodes.h"
     #include "Resource/fgResourceErrorCodes.h"

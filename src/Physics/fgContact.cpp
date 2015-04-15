@@ -23,7 +23,7 @@
 #include "fgContact.h"
 #include "fgCycloneCoreMath.h"
 #include "fgLog.h"
-#include "GFX/fgGFXTypes.h"
+#include "GFX/fgGfxTypes.h"
 
 #include <memory.h>
 #include <assert.h>

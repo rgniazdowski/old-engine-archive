@@ -9,7 +9,7 @@
  *******************************************************/
 
 #include "fgGuiDrawer.h"
-#include "GFX/Shaders/fgGFXShaderManager.h"
+#include "GFX/Shaders/fgGfxShaderManager.h"
 #include "Resource/fgResourceManager.h"
 
 using namespace fg;
