@@ -16,7 +16,7 @@
     #include "fgGfxSceneNode.h"
     #include "fgGfxTreeNode.h"
     #include "fgGfxBasetree.h"
-    
+
     #include "fgVector.h"
 
 namespace fg {
@@ -182,7 +182,7 @@ namespace fg {
             SQuadtreeNode *getRoot(void) const {
                 return m_root;
             }
-            
+
             /**
              * 
              */
@@ -190,10 +190,11 @@ namespace fg {
 
         public:
             /**
-             * 
-             * @param sceneNode
-             * @param treeNode
-             * @return 
+             * Insert the given object (sceneNode - logical) into the tree given by treeNode
+             * Returns the depth of the node the object was placed in.
+             * @param pObject
+             * @param pTreeNode
+             * @return
              */
             virtual int insert(CTreeNodeObject* pObject, STreeNode* pTreeNode = NULL);
 

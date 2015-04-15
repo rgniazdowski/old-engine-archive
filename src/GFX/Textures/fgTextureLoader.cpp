@@ -176,16 +176,10 @@ static unsigned char *universalPreLoad(const char *path,
     }
 }
 
-/**
- * Loads a JPEG file and returns unsigned char array with raw data
- */
 unsigned char *fgTextureLoader::loadJPEG(const char *path, int &width, int &height) {
     return universalPreLoad(path, width, height, "jpeg");
 }
 
-/**
- * Loads a JPEG file and returns unsigned char array with raw data
- */
 unsigned char *fgTextureLoader::loadJPEG(fg::util::base::CFile *fileStream, int &width, int &height) {
     if(!fileStream) {
         // #TODO error handling / reporting
@@ -267,16 +261,10 @@ unsigned char *fgTextureLoader::loadJPEG(fg::util::base::CFile *fileStream, int 
     return data;
 }
 
-/*
- * Loads a PNG file and returns unsigned char array with raw data
- */
 unsigned char *fgTextureLoader::loadPNG(const char *path, int &width, int &height) {
     return universalPreLoad(path, width, height, "png");
 }
 
-/*
- * Loads a PNG file and returns unsigned char array with raw data
- */
 unsigned char *fgTextureLoader::loadPNG(fg::util::base::CFile *fileStream, int &width, int &height) {
     if(!fileStream) {
         // #TODO error handling / reporting
@@ -389,16 +377,10 @@ unsigned char *fgTextureLoader::loadPNG(fg::util::base::CFile *fileStream, int &
     return data;
 }
 
-/*
- * Loads a TGA file and returns unsigned char array with raw data
- */
 unsigned char *fgTextureLoader::loadTGA(const char *path, int &width, int &height) {
     return universalPreLoad(path, width, height, "tga");
 }
 
-/*
- * Loads a TGA file and returns unsigned char array with raw data
- */
 unsigned char *fgTextureLoader::loadTGA(fg::util::base::CFile *fileStream, int &width, int &height) {
     if(!fileStream) {
         FG_LOG_ERROR("TGA LOAD: FileStream specified is NULL!");
@@ -505,9 +487,6 @@ unsigned char *fgTextureLoader::loadTGA(fg::util::base::CFile *fileStream, int &
     return data;
 }
 
-/*
- *
- */
 fgBool fgTextureLoader::saveTGA(const char *path, const unsigned char *data, const int width, const int height) {
     int i, j;
     unsigned char *buf;

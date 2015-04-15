@@ -18,9 +18,6 @@
 
 using namespace fg;
 
-/**
- * 
- */
 gfx::CWindow::CWindow() :
 m_title(),
 #if defined(FG_USING_EGL)
@@ -36,12 +33,6 @@ m_isHW(FG_FALSE),
 m_isDB(FG_FALSE),
 m_isOpen(FG_FALSE) { }
 
-/**
- * 
- * @param title
- * @param width
- * @param height
- */
 gfx::CWindow::CWindow(const char *title, unsigned int width, unsigned int height) :
 m_title(),
 #if defined(FG_USING_EGL)
@@ -59,20 +50,10 @@ m_isOpen(FG_FALSE) {
     CWindow::setup(title, width, height);
 }
 
-/**
- * 
- */
 gfx::CWindow::~CWindow() {
     close();
 }
 
-/**
- * 
- * @param title
- * @param width
- * @param height
- * @return 
- */
 fgBool gfx::CWindow::setup(const char *title, unsigned int width, unsigned int height) {
     if(!CPlatform::isInit()) {
         FG_LOG_ERROR("GFX: Cannot setup window without platform initialized.");
@@ -162,10 +143,6 @@ fgBool gfx::CWindow::setup(const char *title, unsigned int width, unsigned int h
     return status;
 }
 
-/**
- * 
- * @return 
- */
 fgBool gfx::CWindow::close(void) {
     if(!CPlatform::isInit()) {
         FG_LOG_ERROR("GFX: Platform not initialized.");
@@ -205,10 +182,6 @@ fgBool gfx::CWindow::close(void) {
     return status;
 }
 
-/**
- * 
- * @param toggle
- */
 void gfx::CWindow::setFullscreen(fgBool toggle) {
 #if !defined(FG_USING_PLATFORM_ANDROID)
     if(m_isFullscreen != toggle) {
@@ -220,10 +193,6 @@ void gfx::CWindow::setFullscreen(fgBool toggle) {
 #endif
 }
 
-/**
- * 
- * @return 
- */
 fgBool gfx::CWindow::refreshFS(void) {
 #if !defined(FG_USING_MARMALADE) && !defined(FG_USING_PLATFORM_ANDROID)
     if(m_isFullscreen) {
@@ -247,10 +216,6 @@ fgBool gfx::CWindow::refreshFS(void) {
     return FG_TRUE;
 }
 
-/**
- * 
- * @return 
- */
 fgBool gfx::CWindow::swapBuffers(void) {
     if(!m_isOpen)
         return FG_FALSE;
@@ -267,9 +232,6 @@ fgBool gfx::CWindow::swapBuffers(void) {
     return FG_TRUE;
 }
 
-/**
- *
- */
 void gfx::CWindow::clearColor(void) {
 #if defined(FG_USING_OPENGL) || defined(FG_USING_OPENGL_ES)
     // #FIXME ?

@@ -28,9 +28,6 @@
 
 using namespace fg;
 
-/**
- * 
- */
 gfx::SMaterial::SMaterial() : name(),
 ambient(1.0f, 1.0f, 1.0f, 1.0f),
 diffuse(1.0f, 1.0f, 1.0f, 1.0f),
@@ -56,10 +53,6 @@ blendMode(BlendMode::BLEND_OFF),
 stateFlags(FRONT_FACE_CCW | DEPTH_TEST | DEPTH_WRITE_MASK | CULL_FACE),
 unknownParam() { }
 
-/**
- * 
- * @return 
- */
 size_t gfx::SMaterial::getDataSize(void) {
     size_t size = sizeof (SMaterial);
     size += name.length() +
@@ -72,10 +65,6 @@ size_t gfx::SMaterial::getDataSize(void) {
     return size;
 }
 
-/**
- * 
- * @param material
- */
 gfx::SMaterial::SMaterial(const SMaterial & material) {
     this->ambientTex = material.ambientTex;
     this->diffuseTex = material.diffuseTex;
@@ -107,9 +96,6 @@ gfx::SMaterial::SMaterial(const SMaterial & material) {
     this->unknownParam = material.unknownParam;
 }
 
-/**
- * 
- */
 void gfx::SMaterial::clear(void) {
     // #TODO - here is the place to call resource manager and decrease reference count for the used textures
     //FG_ResourceManager->unlockResource(ambientTexHandle);
@@ -151,11 +137,6 @@ void gfx::SMaterial::clear(void) {
     unknownParam.clear();
 }
 
-/**
- * 
- * @param maxValue
- * @return 
- */
 unsigned int gfx::SMaterial::getSortingValue(const unsigned int maxValue) const {
     unsigned int sortingValue = 0;
 

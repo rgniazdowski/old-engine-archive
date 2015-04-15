@@ -13,21 +13,11 @@
 
 using namespace fg;
 
-/**
- * 
- */
 gfx::COctree::COctree() :
 m_root(NULL) { }
 
-/**
- * 
- * @param orig
- */
 gfx::COctree::COctree(const COctree& orig) { }
 
-/**
- * 
- */
 gfx::COctree::~COctree() {
     if(m_root) {
         delete m_root;
@@ -35,43 +25,26 @@ gfx::COctree::~COctree() {
     }
 }
 
-/**
- * 
- */
 void gfx::COctree::deleteRoot(void) {
     if(m_root) {
         delete m_root;
-        m_root = NULL;        
+        m_root = NULL;
     }
     m_traverse.rewind();
 }
-/**
- * 
- * @param sceneNode
- * @param treeNode
- * @return 
- */
+
 int gfx::COctree::insert(CTreeNodeObject* pObject, STreeNode* pTreeNode) {
     return -1;
 }
 
-/**
- *
- */
 gfx::STreeNode* gfx::COctree::next(void) {
     return m_traverse.next(m_root);
 }
 
-/**
- * 
- */
 void gfx::COctree::rewind(void) {
     m_traverse.rewind();
 }
 
-/**
- * 
- */
 void gfx::COctree::skip(void) {
     m_traverse.skip(m_root);
 }

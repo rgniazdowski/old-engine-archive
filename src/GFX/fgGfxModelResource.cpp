@@ -16,9 +16,6 @@
 
 using namespace fg;
 
-/**
- * 
- */
 gfx::CModelResource::CModelResource() :
 CResource(),
 m_materialOverride(NULL),
@@ -31,10 +28,6 @@ m_isInterleaved(FG_TRUE) {
     base_type::m_resType = resource::MODEL3D;
 }
 
-/**
- * 
- * @param path
- */
 gfx::CModelResource::CModelResource(const char *path) :
 CResource(path),
 m_materialOverride(NULL),
@@ -46,10 +39,6 @@ m_isInterleaved(FG_TRUE) {
     base_type::m_resType = resource::MODEL3D;
 }
 
-/**
- * 
- * @param path
- */
 gfx::CModelResource::CModelResource(std::string& path) :
 CResource(path),
 m_materialOverride(NULL),
@@ -61,10 +50,6 @@ m_isInterleaved(FG_TRUE) {
     base_type::m_resType = resource::MODEL3D;
 }
 
-/**
- * Clears the class data, this actually does not free allocated memory,
- * just resets base class attributes
- */
 void gfx::CModelResource::clear(void) {
     base_type::clear();
     m_materialOverride = NULL;
@@ -76,11 +61,6 @@ void gfx::CModelResource::clear(void) {
     memset(m_numData, 0, sizeof (m_numData));
 }
 
-/**
- * 
- * @param path
- * @return 
- */
 fgBool gfx::CModelResource::setModelTypeFromFilePath(std::string &path) {
     if(m_modelType == MODEL_BUILTIN) {
         return FG_TRUE;
@@ -97,10 +77,6 @@ fgBool gfx::CModelResource::setModelTypeFromFilePath(std::string &path) {
     return FG_TRUE;
 }
 
-/**
- * 
- * @return 
- */
 fgBool gfx::CModelResource::refreshInternalData(void) {
     memset(m_numData, 0, sizeof (m_numData));
     this->m_size = 0;
@@ -176,10 +152,6 @@ fgBool gfx::CModelResource::refreshInternalData(void) {
     return FG_TRUE;
 }
 
-/**
- * 
- * @param shape
- */
 void gfx::CModelResource::addShape(SShape *shape) {
     if(!shape)
         return;
@@ -189,11 +161,6 @@ void gfx::CModelResource::addShape(SShape *shape) {
     m_shapes.push_back(shape);
 }
 
-/**
- * 
- * @param mesh
- * @param name
- */
 void gfx::CModelResource::addShape(SMeshBase *mesh, const char *name) {
     if(!mesh || !name) {
         return;
@@ -208,11 +175,6 @@ void gfx::CModelResource::addShape(SMeshBase *mesh, const char *name) {
     m_shapes.push_back(shape);
 }
 
-/**
- * 
- * @param mesh
- * @param name
- */
 void gfx::CModelResource::addShape(SMeshBase *mesh, const std::string& name) {
     if(!mesh || name.empty()) {
         return;
@@ -224,10 +186,6 @@ void gfx::CModelResource::addShape(SMeshBase *mesh, const std::string& name) {
     m_shapes.push_back(shape);
 }
 
-/**
- * 
- * @return 
- */
 fgBool gfx::CModelResource::loadWavefrontObj(void) {
     if(getFilePath(this->m_quality).empty()) {
         return FG_FALSE;
@@ -245,9 +203,6 @@ fgBool gfx::CModelResource::loadWavefrontObj(void) {
     return FG_TRUE;
 }
 
-/*
- * Create function loads/interprets data from file in ROM and place it in RAM memory.
- */
 fgBool gfx::CModelResource::create(void) {
     if(this->m_isReady || !isDisposed()) {
         return FG_TRUE;
@@ -323,17 +278,11 @@ fgBool gfx::CModelResource::create(void) {
     return FG_TRUE;
 }
 
-/*
- * Destroy all loaded data including additional metadata (called with destructor)
- */
 void gfx::CModelResource::destroy(void) {
     dispose();
     clear();
 }
 
-/*
- * Reloads any data, recreates the resource (refresh)
- */
 fgBool gfx::CModelResource::recreate(void) {
     if(m_modelType != ModelType::MODEL_BUILTIN) {
         // only dispose on reacreate when modelType is not BuiltIn
@@ -342,9 +291,6 @@ fgBool gfx::CModelResource::recreate(void) {
     return create();
 }
 
-/*
- * Dispose completely of the all loaded data, free all memory
- */
 void gfx::CModelResource::dispose(void) {
     int n = (int)m_shapes.size();
     for(int i = 0; i < n; i++) {
@@ -362,16 +308,10 @@ void gfx::CModelResource::dispose(void) {
     m_isReady = FG_FALSE;
 }
 
-/*
- * Check if resource is disposed (not loaded yet or disposed after)
- */
 fgBool gfx::CModelResource::isDisposed(void) const {
     return (fgBool)(/*m_shapes.empty() &&*/!m_isReady && !m_size);
 }
 
-/**
- * 
- */
 void gfx::CModelResource::updateAABB(void) {
     if(m_shapes.empty()) {
         return;
@@ -381,15 +321,12 @@ void gfx::CModelResource::updateAABB(void) {
     for(int i = 0; i < n; i++) {
         if(m_shapes[i]->mesh) {
             m_shapes[i]->updateAABB();
-            m_shapes[i]->mesh->fixCenter(); 
+            m_shapes[i]->mesh->fixCenter();
             m_aabb.merge(m_shapes[i]->mesh->aabb);
         }
     }
 }
 
-/*
- *
- */
 fgBool gfx::CModelResource::genBuffers(void) {
     if(m_shapes.empty()) {
         return FG_FALSE;
@@ -403,9 +340,6 @@ fgBool gfx::CModelResource::genBuffers(void) {
     return FG_TRUE;
 }
 
-/*
- *
- */
 fgBool gfx::CModelResource::deleteBuffers(void) {
     if(m_shapes.empty()) {
         return FG_FALSE;

@@ -10,16 +10,9 @@
 
 #include "fgGfx2DScene.h"
 
-/**
- * 
- */
 fg::gfx::CScene2D::CScene2D() {
     getMVP()->setOrtho(0.0f, 1024.0f, 768.0f, 0.0f);
 }
 
-/**
- * 
- */
 fg::gfx::CScene2D::~CScene2D() {
-    
-}
+ }

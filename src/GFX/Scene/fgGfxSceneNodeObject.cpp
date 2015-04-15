@@ -21,11 +21,6 @@
 
 using namespace fg;
 
-/**
- * 
- * @param pModel
- * @param pParent
- */
 gfx::CSceneNodeObject::CSceneNodeObject(gfx::CModel *pModel, gfx::CSceneNode *pParent) :
 CSceneNode(SCENE_NODE_OBJECT, pParent),
 m_pModel(NULL) {
@@ -43,11 +38,7 @@ m_pModel(NULL) {
     setModel(pModel);
 }
 
-/**
- * 
- * @param orig
- */
-gfx::CSceneNodeObject::CSceneNodeObject(const CSceneNodeObject& orig) : base_type(orig) { 
+gfx::CSceneNodeObject::CSceneNodeObject(const CSceneNodeObject& orig) : base_type(orig) {
     if(this != &orig) {
         this->m_drawCall = NULL;
         this->setModel(orig.getModel());
@@ -55,9 +46,6 @@ gfx::CSceneNodeObject::CSceneNodeObject(const CSceneNodeObject& orig) : base_typ
     }
 }
 
-/**
- * 
- */
 gfx::CSceneNodeObject::~CSceneNodeObject() {
     //FG_LOG_DEBUG("fgGfxSceneNodeObject destructor %s", this->m_nameTag.c_str());
     // Well there's no need to remove children from this destructor
@@ -65,9 +53,6 @@ gfx::CSceneNodeObject::~CSceneNodeObject() {
     m_drawCall = NULL;
 }
 
-/**
- * 
- */
 void gfx::CSceneNodeObject::refreshGfxInternals(void) {
     if(!m_pManager)
         return;
@@ -116,9 +101,6 @@ void gfx::CSceneNodeObject::refreshGfxInternals(void) {
     }
 }
 
-/**
- * 
- */
 void gfx::CSceneNodeObject::updateAABB(void) {
 
     physics::CCollisionBody *body = getCollisionBody();
@@ -148,10 +130,6 @@ void gfx::CSceneNodeObject::updateAABB(void) {
     }
 }
 
-/**
- * 
- * @param pModel
- */
 void gfx::CSceneNodeObject::setModel(gfx::CModel *pModel) {
     if(pModel) {
         if(m_pModel == pModel) {

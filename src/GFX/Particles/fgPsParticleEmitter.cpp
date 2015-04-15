@@ -19,9 +19,6 @@
 
 using namespace fg;
 
-/**
- * 
- */
 gfx::CParticleEmitter::CParticleEmitter(CParticleEffect *pEffect) :
 CSceneNode(SCENE_NODE_CUSTOM, NULL),
 m_effects(),
@@ -34,18 +31,11 @@ m_pCamera(NULL) {
     setupFromParticleEffect(pEffect);
 }
 
-/**
- * 
- */
 gfx::CParticleEmitter::~CParticleEmitter() {
     m_particles.clear_optimised();
     m_effects.clear_optimised();
 }
 
-/**
- * 
- * @param which
- */
 void gfx::CParticleEmitter::removeParticle(const unsigned int which) {
     if(which >= m_numParticles)
         return;
@@ -54,10 +44,6 @@ void gfx::CParticleEmitter::removeParticle(const unsigned int which) {
     m_numParticles--;
 }
 
-/**
- * 
- * @param count
- */
 void gfx::CParticleEmitter::addParticles(const unsigned int count, const Vector3f& customOrigin) {
     if(!count)
         return;
@@ -78,11 +64,6 @@ void gfx::CParticleEmitter::addParticles(const unsigned int count, const Vector3
     }
 }
 
-/**
- * 
- * @param pParticleEffect
- * @return
- */
 fgBool gfx::CParticleEmitter::setupFromParticleEffect(CParticleEffect *pParticleEffect) {
     if(!pParticleEffect) {
         return FG_FALSE;
@@ -102,8 +83,6 @@ fgBool gfx::CParticleEmitter::setupFromParticleEffect(CParticleEffect *pParticle
     }
     return FG_TRUE;
 }
-
-// #FIXME 
 
 Quaternionf RotationBetweenVectors(const Vector3f& instart, const Vector3f& indest) {
     Vector3f start = math::normalize(instart);
@@ -134,9 +113,6 @@ Quaternionf RotationBetweenVectors(const Vector3f& instart, const Vector3f& inde
 
 }
 
-/**
- *
- */
 void gfx::CParticleEmitter::calculate(void) {
     CVertexData *pVertexData = NULL;
     if(m_drawCall) {
@@ -318,9 +294,6 @@ void gfx::CParticleEmitter::calculate(void) {
     pData4v->resize(m_numParticles * 6);
 }
 
-/**
- * 
- */
 void gfx::CParticleEmitter::draw(void) {
     //glEnable(GL_POLYGON_OFFSET_FILL);
     //glPolygonOffset(1.0f, 2.0f);

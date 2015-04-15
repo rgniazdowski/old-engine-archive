@@ -12,17 +12,11 @@
 #include "Util/fgMemory.h"
 #include "fgLog.h"
 
-/*
- *
- */
 fg::gfx::base::CShader::CShader() :
 m_log(NULL),
 m_gfxID(0),
 m_baseType(FG_GFX_BASE_TYPE_INVALID) { }
 
-/*
- *
- */
 fg::gfx::base::CShader::~CShader() {
     m_params.clear();
     if(m_log)
@@ -30,9 +24,6 @@ fg::gfx::base::CShader::~CShader() {
     m_log = NULL;
 }
 
-/*
- *
- */
 void fg::gfx::base::CShader::updateLog(void) {
     if(!m_gfxID)
         return;
@@ -64,9 +55,6 @@ void fg::gfx::base::CShader::updateLog(void) {
     }
 }
 
-/*
- *
- */
 void fg::gfx::base::CShader::updateParams(void) {
     if(!m_gfxID)
         return;
@@ -93,9 +81,6 @@ void fg::gfx::base::CShader::updateParams(void) {
     }
 }
 
-/*
- *
- */
 fgGFXint fg::gfx::base::CShader::updateParam(fgGFXenum pname) {
     if(!m_gfxID)
         return 0;

@@ -19,11 +19,6 @@
 
 using namespace fg;
 
-/**
- * 
- * @param pNode
- * @return 
- */
 fgBool gfx::STreeNodeBase::removeObject(CTreeNodeObject* pObject) {
     if(!pObject || objects.empty())
         return FG_FALSE;

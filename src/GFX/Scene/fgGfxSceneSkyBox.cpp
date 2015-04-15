@@ -21,9 +21,6 @@
 
 using namespace fg;
 
-/**
- * 
- */
 gfx::CSceneSkyBox::CSceneSkyBox() :
 CDrawable(DRAWABLE_SKYBOX),
 m_skyBoxScale(1.0f),
@@ -32,10 +29,6 @@ m_textureID(),
 m_program(NULL),
 m_MVP(NULL) { }
 
-/**
- * 
- * @param orig
- */
 gfx::CSceneSkyBox::CSceneSkyBox(const CSceneSkyBox& orig) {
     if(this != &orig) {
         this->m_pos = orig.m_pos;
@@ -47,27 +40,17 @@ gfx::CSceneSkyBox::CSceneSkyBox(const CSceneSkyBox& orig) {
     }
 }
 
-/**
- * 
- */
 gfx::CSceneSkyBox::~CSceneSkyBox() {
     m_program = NULL;
     m_MVP = NULL;
 }
 
-/**
- * 
- */
 void gfx::CSceneSkyBox::draw(void) {
     Matrix4f modelMat = math::translate(Matrix4f(), m_pos);
     modelMat = math::scale(modelMat, Vector3f(m_skyBoxScale, m_skyBoxScale, m_skyBoxScale));
     draw(modelMat);
 }
 
-/**
- * Draw with relative 2D position
- * @param relPos
- */
 void gfx::CSceneSkyBox::draw(const Vec2f& relPos) {
     Matrix4f modelMat = math::translate(Matrix4f(), m_pos);
     modelMat = math::translate(modelMat, Vector3f(relPos.x, relPos.y, 0.0f));
@@ -75,10 +58,6 @@ void gfx::CSceneSkyBox::draw(const Vec2f& relPos) {
     draw(modelMat);
 }
 
-/**
- * Draw with relative 3D position
- * @param relPos
- */
 void gfx::CSceneSkyBox::draw(const Vec3f& relPos) {
     Matrix4f modelMat = math::translate(Matrix4f(), m_pos);
     modelMat = math::translate(modelMat, relPos);
@@ -86,10 +65,6 @@ void gfx::CSceneSkyBox::draw(const Vec3f& relPos) {
     draw(modelMat);
 }
 
-/**
- * Draw with given model matrix
- * @param modelMat
- */
 void gfx::CSceneSkyBox::draw(const Matrix4f& modelMat) {
     const fgBool isTexture = (fgBool)context::isTexture(m_textureID);
     //if(!isTexture) {

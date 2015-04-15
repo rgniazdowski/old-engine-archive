@@ -13,12 +13,6 @@
 
 using namespace fg;
 
-/**
- * 
- * @param reservedSize
- * @param drawCallType
- * @param attribMask
- */
 gfx::CDrawingBatch::CDrawingBatch(const unsigned int reservedSize,
                                   const fgGfxDrawCallType drawCallType,
                                   const fgGFXuint attribMask) :
@@ -33,9 +27,6 @@ m_pShaderMgr(NULL) {
     reserve(reservedSize);
 }
 
-/**
- *
- */
 gfx::CDrawingBatch::~CDrawingBatch() {
     gfx::CDrawingBatch::flush();
     reserve(0, FG_TRUE); // force down-resize
@@ -50,10 +41,6 @@ gfx::CDrawingBatch::~CDrawingBatch() {
     m_drawCalls.clear_optimised();
 }
 
-/**
- * 
- * @param pShaderMgr
- */
 void gfx::CDrawingBatch::setShaderManager(fg::base::CManager *pShaderMgr) {
     if(pShaderMgr) {
         if(pShaderMgr->getManagerType() != FG_MANAGER_GFX_SHADER)
@@ -62,14 +49,6 @@ void gfx::CDrawingBatch::setShaderManager(fg::base::CManager *pShaderMgr) {
     m_pShaderMgr = pShaderMgr;
 }
 
-/**
- * 
- * @param index
- * @param type
- * @param attribMask
- * @param pProgram
- * @return 
- */
 gfx::CDrawCall *gfx::CDrawingBatch::requestDrawCall(int &index,
                                                     const fgGfxDrawCallType type,
                                                     const fgGFXuint attribMask,
@@ -108,21 +87,12 @@ gfx::CDrawCall *gfx::CDrawingBatch::requestDrawCall(int &index,
     return drawCall;
 }
 
-/**
- * 
- * @param index
- * @return 
- */
 gfx::CDrawCall *gfx::CDrawingBatch::getDrawCall(int index) {
     if(index < 0 || index >= (int)m_drawCalls.size())
         return NULL;
     return m_drawCalls[index];
 }
 
-/**
- * 
- * @return 
- */
 gfx::CDrawCall *gfx::CDrawingBatch::getLastDrawCall(void) {
     if(m_numDrawCalls == 0)
         return NULL;
@@ -130,14 +100,9 @@ gfx::CDrawCall *gfx::CDrawingBatch::getLastDrawCall(void) {
     return m_drawCalls[m_numDrawCalls - 1];
 }
 
-/**
- * 
- * @param drawCall
- * @param manage
- * @param check
- * @return 
- */
-int gfx::CDrawingBatch::appendDrawCall(CDrawCall* drawCall, fgBool manage, fgBool check) {
+int gfx::CDrawingBatch::appendDrawCall(CDrawCall* drawCall,
+                                       fgBool manage,
+                                       fgBool check) {
     if(!drawCall)
         return -1;
     if(check && !m_drawCalls.empty()) {
@@ -175,11 +140,6 @@ int gfx::CDrawingBatch::appendDrawCall(CDrawCall* drawCall, fgBool manage, fgBoo
     return index;
 }
 
-/**
- * 
- * @param index
- * @return 
- */
 gfx::CDrawCall *gfx::CDrawingBatch::removeDrawCall(int index) {
     if(index >= (int)m_numDrawCalls || index < 0)
         return NULL;
@@ -211,11 +171,6 @@ gfx::CDrawCall *gfx::CDrawingBatch::removeDrawCall(int index) {
     return drawCall;
 }
 
-/**
- * Removes the specified draw call from the drawing batch
- * @param drawCall
- * @return 
- */
 fgBool gfx::CDrawingBatch::removeDrawCall(CDrawCall *drawCall) {
     if(!drawCall)
         return FG_FALSE;
@@ -247,11 +202,6 @@ fgBool gfx::CDrawingBatch::removeDrawCall(CDrawCall *drawCall) {
     return FG_FALSE;
 }
 
-/**
- * 
- * @param index
- * @return 
- */
 fgBool gfx::CDrawingBatch::deleteDrawCall(int index) {
     fgBool isManaged = FG_FALSE;
     if(index < (int)m_numDrawCalls && index >= 0) {
@@ -271,11 +221,6 @@ fgBool gfx::CDrawingBatch::deleteDrawCall(int index) {
     return FG_TRUE;
 }
 
-/**
- * 
- * @param drawCall
- * @return 
- */
 fgBool gfx::CDrawingBatch::deleteDrawCall(CDrawCall*& drawCall) {
     if(!drawCall) {
         return FG_FALSE;
@@ -295,11 +240,6 @@ fgBool gfx::CDrawingBatch::deleteDrawCall(CDrawCall*& drawCall) {
     return FG_TRUE;
 }
 
-/**
- * 
- * @param maximum
- * @return 
- */
 int gfx::CDrawingBatch::getFreeSlot(int maximum) {
     if(m_freeSlots.empty())
         return -1; // ?
@@ -319,11 +259,6 @@ int gfx::CDrawingBatch::getFreeSlot(int maximum) {
     return -1;
 }
 
-/**
- * 
- * @param reservedSize
- * @param force
- */
 void gfx::CDrawingBatch::reserve(unsigned int reservedSize, fgBool force) {
     if(m_reservedSize > reservedSize && force) {
         int remaining = m_numNotManaged;
@@ -387,9 +322,6 @@ void gfx::CDrawingBatch::reserve(unsigned int reservedSize, fgBool force) {
     }
 }
 
-/**
- * 
- */
 void gfx::CDrawingBatch::flush(void) {
     while(!m_priorityBatch.empty())
         m_priorityBatch.pop();
@@ -443,9 +375,6 @@ void gfx::CDrawingBatch::flush(void) {
     m_zIndex = 0; */
 }
 
-/**
- *
- */
 void gfx::CDrawingBatch::sortCalls(void) {
     while(!m_priorityBatch.empty())
         m_priorityBatch.pop();
@@ -459,9 +388,6 @@ void gfx::CDrawingBatch::sortCalls(void) {
     }
 }
 
-/**
- *
- */
 void gfx::CDrawingBatch::render(void) {
     if(m_priorityBatch.empty())
         gfx::CDrawingBatch::sortCalls(); // #FIX - need to call via fgGfxDrawingBatch to avoid duplicate call (virtual)

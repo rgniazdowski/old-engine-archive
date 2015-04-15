@@ -39,32 +39,18 @@ void gfx::SMeshSoA::fixCenter(void) {
     this->aabb.setBoundsFromData(data, sizeof (Vector3f), n);
 }
 
-/**
- * Get the indices VBO ID
- * @return  GFX id for indices VBO or 0 if not generated or invalid
- */
 fgGFXuint gfx::SMeshSoA::getIndicesVBO(void) const {
     if(!hasVBO())
         return 0;
     return getPtrVBO()[INDICES_VBO_ARRAY_IDX].id;
 }
 
-/**
- * Get the special GFX pointer to indices array
- * @return  Pointer to indices array. May be 0 (NULL) if VBO is
- *          generated (offset) or there are no indices at all
- */
 fgGFXvoid *gfx::SMeshSoA::getIndicesPointer(void) const {
     if(!hasVBO())
         return (fgGFXvoid *)((unsigned int*)&indices.front());
     return (fgGFXvoid *)0;
 }
 
-/**
- * 
- * @param pDataArray
- * @return 
- */
 fgGFXboolean gfx::SMeshSoA::refreshAttributes(SAttributeData *pDataArray) const {
     if(!pDataArray)
         return FG_GFX_FALSE;
@@ -128,11 +114,6 @@ fgGFXboolean gfx::SMeshSoA::refreshAttributes(SAttributeData *pDataArray) const 
     return FG_GFX_TRUE;
 }
 
-/**
- * 
- * @param pDataArray
- * @return 
- */
 fgGFXboolean gfx::SMeshSoA::setupAttributes(SAttributeData *pDataArray) const {
     if(!pDataArray)
         return FG_GFX_FALSE;
@@ -220,10 +201,6 @@ fgGFXboolean gfx::SMeshSoA::setupAttributes(SAttributeData *pDataArray) const {
     return FG_GFX_TRUE;
 }
 
-/**
- * 
- * @return 
- */
 fgGFXboolean gfx::SMeshSoA::genBuffers(void) {
     if(!gfx::CPlatform::isInit())
         return FG_GFX_FALSE;
@@ -273,10 +250,6 @@ fgGFXboolean gfx::SMeshSoA::genBuffers(void) {
 
 }
 
-/**
- * 
- * @return 
- */
 fgGFXboolean gfx::SMeshSoA::deleteBuffers(void) {
     if(!getPtrVBO())
         return FG_GFX_FALSE;
@@ -286,10 +259,6 @@ fgGFXboolean gfx::SMeshSoA::deleteBuffers(void) {
 
 }
 
-/**
- * 
- * @return 
- */
 fgGFXboolean gfx::SMeshSoA::destroyBuffers(void) {
     if(!getPtrVBO())
         return FG_GFX_FALSE;
@@ -311,9 +280,6 @@ const unsigned short gfx::SMeshAoS::TEX_COORDS_VBO_ARRAY_IDX = 0;
 const unsigned short gfx::SMeshAoS::UVS_VBO_ARRAY_IDX = 0;
 const unsigned short gfx::SMeshAoS::INDICES_VBO_ARRAY_IDX = 1;
 
-/**
- * 
- */
 void gfx::SMeshAoS::fixCenter(void) {
     const unsigned int n = this->vertices.size();
     if(!n)
@@ -326,31 +292,18 @@ void gfx::SMeshAoS::fixCenter(void) {
     this->aabb.setBoundsFromData(data, vertices.stride(), n);
 }
 
-/**
- * Get the indices VBO ID
- * @return  GFX id for indices VBO or 0 if not generated or invalid
- */
 fgGFXuint gfx::SMeshAoS::getIndicesVBO(void) const {
     if(!hasVBO())
         return 0;
     return getPtrVBO()[INDICES_VBO_ARRAY_IDX].id;
 }
 
-/**
- * Get the special GFX pointer to indices array
- * @return  Pointer to indices array. May be 0 (NULL) if VBO is
- *          generated (offset) or there are no indices at all
- */
 fgGFXvoid *gfx::SMeshAoS::getIndicesPointer(void) const {
     if(!hasVBO())
         return (fgGFXvoid *)((unsigned int*)&indices.front());
     return (fgGFXvoid *)0;
 }
 
-/**
- * 
- * @return  GFX_TRUE if buffers (VBO) were generated successfully
- */
 fgGFXboolean gfx::SMeshAoS::genBuffers(void) {
     if(!gfx::CPlatform::isInit())
         return FG_GFX_FALSE;
@@ -386,10 +339,6 @@ fgGFXboolean gfx::SMeshAoS::genBuffers(void) {
 
 }
 
-/**
- * 
- * @return 
- */
 fgGFXboolean gfx::SMeshAoS::deleteBuffers(void) {
     if(!getPtrVBO())
         return FG_GFX_FALSE;
@@ -399,10 +348,6 @@ fgGFXboolean gfx::SMeshAoS::deleteBuffers(void) {
 
 }
 
-/**
- * 
- * @return 
- */
 fgGFXboolean gfx::SMeshAoS::destroyBuffers(void) {
     if(!getPtrVBO())
         return FG_GFX_FALSE;

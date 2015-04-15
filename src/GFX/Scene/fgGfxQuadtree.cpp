@@ -12,21 +12,11 @@
 
 using namespace fg;
 
-/**
- * 
- */
 gfx::CQuadtree::CQuadtree() :
 m_root(NULL) { }
 
-/**
- * 
- * @param orig
- */
 gfx::CQuadtree::CQuadtree(const CQuadtree& orig) { }
 
-/**
- * 
- */
 gfx::CQuadtree::~CQuadtree() {
     if(m_root) {
         delete m_root;
@@ -42,13 +32,6 @@ void gfx::CQuadtree::deleteRoot(void) {
     m_traverse.rewind();
 }
 
-/**
- * Insert the given object (sceneNode - logical) into the tree given by treeNode
- * Returns the depth of the node the object was placed in.
- * @param sceneNode
- * @param treeNode
- * @return 
- */
 int gfx::CQuadtree::insert(CTreeNodeObject* pObject, STreeNode* pTreeNode) {
     if(!pObject) {
         return -1;
@@ -95,23 +78,14 @@ int gfx::CQuadtree::insert(CTreeNodeObject* pObject, STreeNode* pTreeNode) {
     return pTreeNode->depth;
 }
 
-/**
- *
- */
 gfx::STreeNode* gfx::CQuadtree::next(void) {
     return m_traverse.next(m_root);
 }
 
-/**
- * 
- */
 void gfx::CQuadtree::rewind(void) {
     m_traverse.rewind();
 }
 
-/**
- * 
- */
 void gfx::CQuadtree::skip(void) {
     m_traverse.skip(m_root);
 }

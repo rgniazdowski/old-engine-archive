@@ -12,11 +12,6 @@
 
 using namespace fg;
 
-/**
- * 
- * @param type
- * @param attribMask
- */
 gfx::CDrawCall::CDrawCall(const fgGfxDrawCallType type, const fgGFXuint attribMask) :
 CDrawable(DRAWABLE_DRAWCALL),
 m_vecDataBase(NULL),
@@ -85,9 +80,6 @@ m_isManaged(0) {
     setupVertexData(m_attribMask);
 }
 
-/*
- *
- */
 gfx::CDrawCall::~CDrawCall() {
     m_program = NULL;
     m_MVP = NULL;
@@ -110,26 +102,14 @@ gfx::CDrawCall::~CDrawCall() {
     m_material = NULL;
 }
 
-/**
- * 
- * @param toggle
- */
 void gfx::CDrawCall::setManaged(const fgBool toggle) {
     m_isManaged = toggle;
 }
 
-/**
- * 
- * @return 
- */
 fgBool gfx::CDrawCall::isManaged(void) const {
     return m_isManaged;
 }
 
-/**
- * 
- * @param attribMask
- */
 void gfx::CDrawCall::setupVertexData(fgGFXuint attribMask) {
     if(!attribMask)
         return;
@@ -162,10 +142,6 @@ void gfx::CDrawCall::setupVertexData(fgGFXuint attribMask) {
     m_fastCmp.setPart(0, (fg::util::FastCmp::data_type_32)m_attribMask);
 }
 
-/**
- * 
- * @param pMesh
- */
 void gfx::CDrawCall::setupFromMesh(const SMeshBase* pMesh) {
     if(!pMesh)
         return;
@@ -186,10 +162,6 @@ void gfx::CDrawCall::setupFromMesh(const SMeshBase* pMesh) {
     }
 }
 
-/**
- * 
- * @param pShape
- */
 void gfx::CDrawCall::setupFromShape(const SShape* pShape) {
     if(!pShape)
         return;
@@ -201,14 +173,10 @@ void gfx::CDrawCall::setupFromShape(const SShape* pShape) {
     }
 }
 
-/**
- * 
- * @param pMaterial
- */
 void gfx::CDrawCall::setupMaterial(const SMaterial* pMaterial) {
     if(!pMaterial)
         return;
-    
+
     unsigned int sortingValue = pMaterial->getSortingValue();
     // how to get texture?
     m_material = (SMaterial *)pMaterial;
@@ -221,9 +189,9 @@ void gfx::CDrawCall::setupMaterial(const SMaterial* pMaterial) {
     } else if(pMaterial->diffuseTex) {
         setTexture(pMaterial->diffuseTex->getRefGfxID());
     } else if(pMaterial->specularTex) {
-        
+
     } else if(pMaterial->normalTex) {
-        
+
     }
     // textures?
     // #FIXME
@@ -232,142 +200,77 @@ void gfx::CDrawCall::setupMaterial(const SMaterial* pMaterial) {
     m_fastCmp.setPart(1, (fg::util::FastCmp::data_type_32)sortingValue);
 }
 
-/**
- * 
- * @return 
- */
 gfx::SMaterial* gfx::CDrawCall::getMaterial(void) const {
     return m_material;
 }
 
-/**
- * 
- * @return 
- */
-Vector4i const & gfx::CDrawCall::getScissorBox(void) const {
+Vector4i const& gfx::CDrawCall::getScissorBox(void) const {
     return m_scissorBox;
 }
 
-/**
- * 
- * @return 
- */
-Vector3f const & gfx::CDrawCall::getRelMove(void) const {
+Vector3f const& gfx::CDrawCall::getRelMove(void) const {
     return m_relMove;
 }
 
-/**
- * 
- * @return 
- */
 int gfx::CDrawCall::getZIndex(void) const {
     return m_zIndex;
 }
 
-/**
- * 
- * @return 
- */
 gfx::SAttributeData* gfx::CDrawCall::getAttributeData(void) {
     return m_attrData;
 }
 
-/**
- * 
- * @return 
- */
 fgGFXuint gfx::CDrawCall::getAttribMask(void) const {
     return m_attribMask;
 }
 
-/**
- * 
- * @return 
- */
 fgGfxDrawCallType gfx::CDrawCall::getDrawCallType(void) const {
     return m_drawCallType;
 }
 
-/**
- * 
- * @return 
- */
 gfx::DrawAppendMode gfx::CDrawCall::getDrawAppendMode(void) const {
     return m_drawAppendMode;
 }
 
-/**
- * 
- * @return 
- */
 gfx::PrimitiveMode gfx::CDrawCall::getPrimitiveMode(void) const {
     return m_primMode;
 }
 
-/**
- * 
- * @return 
- */
 gfx::CVertexData *gfx::CDrawCall::getVertexData(void) const {
     return m_vecDataBase;
 }
 
-/**
- * 
- * @param x
- * @param y
- * @param width
- * @param height
- */
-void gfx::CDrawCall::setScissorBox(const fgGFXint x, const fgGFXint y, const fgGFXint width, const fgGFXint height) {
+void gfx::CDrawCall::setScissorBox(const fgGFXint x,
+                                   const fgGFXint y,
+                                   const fgGFXint width,
+                                   const fgGFXint height) {
     m_scissorBox.x = x;
     m_scissorBox.y = y;
     m_scissorBox.z = width;
     m_scissorBox.w = height;
 }
 
-/**
- * 
- * @param pos
- * @param size
- */
-void gfx::CDrawCall::setScissorBox(const Vector2i& pos, const Vector2i & size) {
+void gfx::CDrawCall::setScissorBox(const Vector2i& pos, const Vector2i& size) {
     m_scissorBox.x = pos.x;
     m_scissorBox.y = pos.y;
     m_scissorBox.z = size.x;
     m_scissorBox.w = size.y;
 }
 
-/**
- * 
- * @param dimensions
- */
-void gfx::CDrawCall::setScissorBox(const Vector4i & dimensions) {
+void gfx::CDrawCall::setScissorBox(const Vector4i& dimensions) {
     m_scissorBox = dimensions;
 }
 
-/**
- * 
- * @param relMove
- */
 void gfx::CDrawCall::setRelMove(const Vector3f& relMove) {
     m_relMove = relMove;
 }
 
-/**
- * 
- * @param relMove
- */
 void gfx::CDrawCall::setRelMove(const Vector2f& relMove) {
     m_relMove.x = relMove.x;
     m_relMove.y = relMove.y;
     m_relMove.z = 0.0f;
 }
 
-/**
- * 
- * @param zIndex
- */
 void gfx::CDrawCall::setZIndex(const int zIndex) {
     if(zIndex < 0) {
         m_zIndex = Z_INDEX_DEFAULT + zIndex;
@@ -377,47 +280,30 @@ void gfx::CDrawCall::setZIndex(const int zIndex) {
     m_fastCmp.setPart(3, (fg::util::FastCmp::data_type_32)m_zIndex);
 }
 
-/*
- *
- */
 void gfx::CDrawCall::upZIndex(void) {
     m_zIndex++;
     m_fastCmp.setPart(3, (fg::util::FastCmp::data_type_32)m_zIndex);
 }
 
-/*
- *
- */
 void gfx::CDrawCall::downZIndex(void) {
     m_zIndex--;
     m_fastCmp.setPart(3, (fg::util::FastCmp::data_type_32)m_zIndex);
 }
 
-/*
- *
- */
 void gfx::CDrawCall::setDrawCallType(const fgGfxDrawCallType type) {
     m_drawCallType = type;
 }
 
-/*
- *
- */
 void gfx::CDrawCall::setDrawAppendMode(const DrawAppendMode mode) {
     m_drawAppendMode = mode;
 }
 
-/*
- *
- */
 void gfx::CDrawCall::setPrimitiveMode(const PrimitiveMode mode) {
     m_primMode = mode;
 }
 
-/*
- * Whether to set UVs, normals or colors active
- */
-void gfx::CDrawCall::setComponentActive(unsigned int component, const fgBool reset) {
+void gfx::CDrawCall::setComponentActive(unsigned int component,
+                                        const fgBool reset) {
     if(!component || reset)
         m_attribMask = 0;
     if(component & FG_GFX_POSITION_BIT)
@@ -433,46 +319,26 @@ void gfx::CDrawCall::setComponentActive(unsigned int component, const fgBool res
     setupVertexData(m_attribMask);
 }
 
-/*
- *
- */
 void gfx::CDrawCall::setColor(const fgColor3f& color) {
     m_color = fgColor4f(color.r, color.g, color.b, 1.0f);
 }
 
-/*
- *
- */
 void gfx::CDrawCall::setColor(const fgColor4f& color) {
     m_color = color;
 }
 
-/*
- *
- */
 void gfx::CDrawCall::resetColor(void) {
     m_color = fgColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 }
 
-/*
- *
- */
 void gfx::CDrawCall::setMVP(CMVPMatrix *MVP) {
     m_MVP = MVP;
 }
 
-/*
- *
- */
 gfx::CMVPMatrix *gfx::CDrawCall::getMVP(void) const {
     return m_MVP;
 }
 
-/*
- * Can be null, which would mean that this draw call does not care about such thing
- * However it should be avoided. Shader program knows if it's being currently used.
- * Also only through shader manager given shader program can be set as active.
- */
 void gfx::CDrawCall::setShaderProgram(gfx::CShaderProgram *pProgram) {
     m_program = pProgram;
     if(m_program)
@@ -482,40 +348,23 @@ void gfx::CDrawCall::setShaderProgram(gfx::CShaderProgram *pProgram) {
 
 }
 
-/*
- *
- */
 gfx::CShaderProgram* gfx::CDrawCall::getShaderProgram(void) const {
     return m_program;
 }
 
-/**
- * 
- * @param textureID
- */
 void gfx::CDrawCall::setTexture(const STextureID& textureID) {
     m_textureID = textureID;
     m_fastCmp.setPart(1, (fg::util::FastCmp::data_type_32)m_textureID.id);
 }
 
-/**
- * 
- * @return 
- */
 gfx::STextureID const& gfx::CDrawCall::getTexture(void) const {
     return m_textureID;
 }
 
-/*
- *
- */
 gfx::STextureID& gfx::CDrawCall::getTexture(void) {
     return m_textureID;
 }
 
-/*
- * Clear the buffers
- */
 void gfx::CDrawCall::flush(void) {
     m_relMove = Vector3f(0.0f, 0.0f, 0.0f);
     if(m_vecDataBase)
@@ -524,9 +373,6 @@ void gfx::CDrawCall::flush(void) {
     m_scissorBox = Vector4i();
 }
 
-/*
- * Append simple rectangle next to the last one
- */
 void gfx::CDrawCall::appendRect2D(const Vec2f &size,
                                   const Vec2f &uv1, const Vec2f &uv2,
                                   const fgBool rewind) {
@@ -534,9 +380,6 @@ void gfx::CDrawCall::appendRect2D(const Vec2f &size,
     CPrimitives::appendRect2D(m_vecDataBase, Vec2f(0.0f, 0.0f), size, uv1, uv2, m_color, m_primMode, rewind);
 }
 
-/*
- *
- */
 void gfx::CDrawCall::appendRect2D(const Vec2f &relPos, const Vec2f &size,
                                   const Vec2f &uv1, const Vec2f &uv2,
                                   const fgBool rewind) {
@@ -551,10 +394,6 @@ void gfx::CDrawCall::appendRect2D(const Vec2f &relPos, const Vec2f &size,
     CPrimitives::appendRect2D(m_vecDataBase, pos, size, uv1, uv2, m_color, m_primMode, rewind);
 }
 
-/**
- * 
- * @return 
- */
 fgBool gfx::CDrawCall::applyAttributeData(void) {
     if(m_drawCallType == FG_GFX_DRAW_CALL_MESH ||
        m_drawCallType == FG_GFX_DRAW_CALL_CUSTOM_ARRAY) {
@@ -570,11 +409,11 @@ fgBool gfx::CDrawCall::applyAttributeData(void) {
                     context::bindBuffer(GL_ARRAY_BUFFER, m_attrData[i].buffer);
                 }
                 context::vertexAttribPointer(m_attrData[i].index,
-                                                          m_attrData[i].size,
-                                                          m_attrData[i].dataType,
-                                                          m_attrData[i].isNormalized,
-                                                          m_attrData[i].stride,
-                                                          m_attrData[i].offset);
+                                             m_attrData[i].size,
+                                             m_attrData[i].dataType,
+                                             m_attrData[i].isNormalized,
+                                             m_attrData[i].stride,
+                                             m_attrData[i].offset);
             }
         }
         if(m_drawingInfo.buffer) {
@@ -588,9 +427,6 @@ fgBool gfx::CDrawCall::applyAttributeData(void) {
     return FG_TRUE;
 }
 
-/*
- *
- */
 void gfx::CDrawCall::draw(void) {
     if(!m_vecDataBase && m_drawCallType == FG_GFX_DRAW_CALL_CUSTOM_ARRAY) // ? ?
         return;

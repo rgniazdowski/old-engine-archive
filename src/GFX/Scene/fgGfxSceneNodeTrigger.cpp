@@ -18,17 +18,10 @@
 
 using namespace fg;
 
-/**
- * 
- */
 gfx::CSceneNodeTrigger::CSceneNodeTrigger() : CSceneNode(SCENE_NODE_TRIGGER), m_callbacks() {
     m_callbacks.reserve(2);
 }
 
-/**
- * 
- * @param orig
- */
 gfx::CSceneNodeTrigger::CSceneNodeTrigger(const CSceneNodeTrigger& orig) : base_type(orig) {
     if(this != &orig) {
         unsigned int n = orig.m_callbacks.size();
@@ -41,9 +34,6 @@ gfx::CSceneNodeTrigger::CSceneNodeTrigger(const CSceneNodeTrigger& orig) : base_
     }
 }
 
-/**
- * 
- */
 gfx::CSceneNodeTrigger::~CSceneNodeTrigger() {
     unsigned int n = m_callbacks.size();
     for(unsigned int i = 0; i < n; i++) {
@@ -60,10 +50,6 @@ gfx::CSceneNodeTrigger::~CSceneNodeTrigger() {
     m_callbacks.swap(swapvec);
 }
 
-/**
- * 
- * @param position
- */
 void gfx::CSceneNodeTrigger::setPosition(const Vec3f& position) {
     base_type::setPosition(position);
     //m_aabb.center = position;
@@ -74,12 +60,6 @@ void gfx::CSceneNodeTrigger::setPosition(const Vec3f& position) {
 
 }
 
-/**
- * 
- * @param x
- * @param y
- * @param z
- */
 void gfx::CSceneNodeTrigger::setPosition(float x, float y, float z) {
     const Vector3f pos(x, y, z);
     base_type::setPosition(pos);
@@ -88,10 +68,6 @@ void gfx::CSceneNodeTrigger::setPosition(float x, float y, float z) {
     m_aabb.refresh();
 }
 
-/**
- * 
- * @param translation
- */
 void gfx::CSceneNodeTrigger::translate(const Vec3f& translation) {
     //m_modelMat = math::translate(m_modelMat, translation);
     m_modelMat[3].x += translation.x;
@@ -102,12 +78,6 @@ void gfx::CSceneNodeTrigger::translate(const Vec3f& translation) {
     m_aabb.refresh();
 }
 
-/**
- * 
- * @param x
- * @param y
- * @param z
- */
 void gfx::CSceneNodeTrigger::translate(float x, float y, float z) {
     m_modelMat[3].x += x;
     m_modelMat[3].y += y;
@@ -121,10 +91,6 @@ void gfx::CSceneNodeTrigger::translate(float x, float y, float z) {
     m_aabb.refresh();
 }
 
-/**
- * 
- * @param scale
- */
 void gfx::CSceneNodeTrigger::setScale(const Vector3f& scale) {
     const Vector4f translation = m_modelMat[3];
     m_modelMat = math::scale(m_modelMat, scale / m_scale);
@@ -148,11 +114,6 @@ void gfx::CSceneNodeTrigger::setCollisionBodyType(const physics::CCollisionBody:
     }
 }
 
-/**
- * 
- * @param pCallback
- * @param activationType
- */
 void gfx::CSceneNodeTrigger::addCallback(CSceneCallback *pCallback,
                                          TriggerActivation activationType) {
     if(!pCallback)
@@ -164,10 +125,6 @@ void gfx::CSceneNodeTrigger::addCallback(CSceneCallback *pCallback,
     }
 }
 
-/**
- * 
- * @param pCallback
- */
 void gfx::CSceneNodeTrigger::removeCallback(CSceneCallback *pCallback) {
     fgBool status = FG_FALSE;
     if(!pCallback) {
@@ -186,10 +143,6 @@ void gfx::CSceneNodeTrigger::removeCallback(CSceneCallback *pCallback) {
     }
 }
 
-/**
- * 
- * @param pCallback
- */
 fgBool gfx::CSceneNodeTrigger::checkCallback(CSceneCallback *pCallback) {
     fgBool status = FG_FALSE;
     if(!pCallback) {
@@ -205,11 +158,6 @@ fgBool gfx::CSceneNodeTrigger::checkCallback(CSceneCallback *pCallback) {
     return status;
 }
 
-/**
- * 
- * @param activationType
- * @param pNodeB
- */
 void gfx::CSceneNodeTrigger::trigger(TriggerActivation activationType,
                                      CSceneNode* pNodeB) {
 

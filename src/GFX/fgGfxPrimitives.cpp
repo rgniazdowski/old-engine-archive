@@ -20,9 +20,6 @@ using namespace fg;
 
 const fgColor4f colorWhite = fgColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 
-/*
- *
- */
 const gfx::Vertex4v c_stripSkyBoxOptimized[] = {
                                                 // Vertex data for face 0 // Front?
     {Vector3f(-0.5f, -0.5f, 0.5f), Vector3f(0.0f, 0.0f, -1.0f), Vector2f(2.0f / 3.0f, 1.0f - 0.0f), colorWhite}, //  v0
@@ -61,9 +58,6 @@ const gfx::Vertex4v c_stripSkyBoxOptimized[] = {
     {Vector3f(0.5f, 0.5f, -0.5f), Vector3f(0.0f, -1.0f, 0.0f), Vector2f(2.0f / 3.0f, 1.0f - 2.0f / 3.0f), colorWhite} // v23 
 };
 
-/*
- *
- */
 #if 0
 const gfx::Vertex3v c_stripCube1x1[] = {
                                         // Vertex data for face 0
@@ -142,9 +136,6 @@ const gfx::Vertex3v c_stripCube1x1[] = {
     {Vector3f(0.5f, 0.5f, -0.5f), Vector3f(0.0f, -1.0f, 0.0f), Vector2f(1.0f, 1.0f)} // v23 
 };
 
-/*
- *
- */
 const fgGFXushort c_stripCube1x1Idx[] = {
                                          0, 1, 2, 3, 3, // Face 0 - triangle strip ( v0,  v1,  v2,  v3)
                                          4, 4, 5, 6, 7, 7, // Face 1 - triangle strip ( v4,  v5,  v6,  v7)
@@ -154,9 +145,6 @@ const fgGFXushort c_stripCube1x1Idx[] = {
                                          20, 20, 21, 22, 23 // Face 5 - triangle strip (v20, v21, v22, v23)
 };
 
-/*
- *
- */
 static const GLfloat c_trisCube1x1[] = {
                                         -0.5f, -0.5f, -0.5f,
                                         -0.5f, -0.5f, 0.5f,
@@ -427,12 +415,6 @@ void gfx::CPrimitives::drawAABBLines(const AABoundingBox3Df& aabb, const fgColor
 
 }
 
-/**
- * 
- * @param inputData
- * @param attribMask
- * @param mode
- */
 void gfx::CPrimitives::drawArray(const fg::CVector<Vertex2v> &inputData,
                                  const unsigned int attribMask,
                                  const PrimitiveMode mode) {
@@ -462,12 +444,6 @@ void gfx::CPrimitives::drawArray(const fg::CVector<Vertex2v> &inputData,
     GLCheckError("glDrawArrays");
 }
 
-/**
- * 
- * @param inputData
- * @param attribMask
- * @param mode
- */
 void gfx::CPrimitives::drawArray(const fg::CVector<Vertex3v> &inputData,
                                  const unsigned int attribMask,
                                  const PrimitiveMode mode) {
@@ -509,12 +485,6 @@ void gfx::CPrimitives::drawArray(const fg::CVector<Vertex3v> &inputData,
     GLCheckError("glDrawArrays");
 }
 
-/**
- * 
- * @param inputData
- * @param attribMask
- * @param mode
- */
 void gfx::CPrimitives::drawArray(const fg::CVector<Vertex4v> &inputData,
                                  const unsigned int attribMask,
                                  const PrimitiveMode mode) {
@@ -562,13 +532,6 @@ void gfx::CPrimitives::drawArray(const fg::CVector<Vertex4v> &inputData,
     GLCheckError("glDrawArrays");
 }
 
-/**
- * 
- * @param inputData
- * @param indices
- * @param attribMask
- * @param mode
- */
 void gfx::CPrimitives::drawArrayIndexed(const CVector<Vertex2v> &inputData,
                                         const CVector<fgGFXushort>& indices,
                                         const unsigned int attribMask,
@@ -600,13 +563,6 @@ void gfx::CPrimitives::drawArrayIndexed(const CVector<Vertex2v> &inputData,
     GLCheckError("glDrawElements");
 }
 
-/**
- * 
- * @param inputData
- * @param indices
- * @param attribMask
- * @param mode
- */
 void gfx::CPrimitives::drawArrayIndexed(const CVector<Vertex3v> &inputData,
                                         const CVector<fgGFXushort>& indices,
                                         const unsigned int attribMask,
@@ -645,13 +601,6 @@ void gfx::CPrimitives::drawArrayIndexed(const CVector<Vertex3v> &inputData,
     GLCheckError("glDrawElements");
 }
 
-/**
- * 
- * @param inputData
- * @param indices
- * @param attribMask
- * @param mode
- */
 void gfx::CPrimitives::drawArrayIndexed(const CVector<Vertex4v> &inputData,
                                         const CVector<fgGFXushort>& indices,
                                         const unsigned int attribMask,
@@ -731,9 +680,6 @@ void gfx::CPrimitives::applyAttributeData(SAttributeData *attrData,
     }
 }
 
-/*
- *
- */
 void gfx::CPrimitives::drawVertexData(const CVertexData *inputData,
                                       const unsigned int attribMask,
                                       const PrimitiveMode mode) {
@@ -835,9 +781,6 @@ void gfx::CPrimitives::drawSquare2D(void) {
     glDrawArrays(GL_TRIANGLE_STRIP, 0, sizeof (c_stripSquare1x1) / sizeof (Vertex3v));
 }
 
-/*
- *
- */
 void gfx::CPrimitives::drawRect2D(void) {
     context::diffVertexAttribArrayMask(FG_GFX_POSITION_BIT | FG_GFX_UVS_BIT);
     context::vertexAttribPointer(FG_GFX_ATTRIB_POS_LOCATION,
@@ -858,9 +801,6 @@ void gfx::CPrimitives::drawRect2D(void) {
     GLCheckError("glDrawArrays");
 }
 
-/*
- *
- */
 void gfx::CPrimitives::appendRect2D(CVertexData *outputData,
                                     const Vec2f &size,
                                     const Vec2f &uv1,
@@ -871,9 +811,6 @@ void gfx::CPrimitives::appendRect2D(CVertexData *outputData,
     appendRect2D(outputData, Vec2f(0.0f, 0.0f), size, uv1, uv2, color, mode, rewind);
 }
 
-/*
- *
- */
 void gfx::CPrimitives::appendRect2D(CVertexData *outputData,
                                     float sizex,
                                     float sizey,

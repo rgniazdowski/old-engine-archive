@@ -19,25 +19,12 @@
 
 using namespace fg;
 
-/**
- * 
- */
 gfx::CBasetree::CBasetree() :
 m_worldSize((float)2000.0f, (float)2000.0f, (float)2000.0f),
 m_maxDepth(DEFAULT_DEPTH) { }
 
-/**
- * 
- */
 gfx::CBasetree::~CBasetree() { }
 
-/**
- * 
- * @param sceneNode
- * @param treeNode
- * @param halfExtent
- * @return 
- */
 fgBool gfx::CBasetree::fitsInBox(const CSceneNode* sceneNode,
                                  STreeNode* treeNode,
                                  const float halfExtent) {
@@ -50,13 +37,6 @@ fgBool gfx::CBasetree::fitsInBox(const CSceneNode* sceneNode,
     return fitsInBox(sceneNode, treeNode->center, halfExtent);
 }
 
-/**
- * 
- * @param sceneNode
- * @param center
- * @param halfExtent
- * @return 
- */
 fgBool gfx::CBasetree::fitsInBox(const CSceneNode* sceneNode,
                                  const Vector3f& center,
                                  const float halfExtent) {
@@ -79,13 +59,6 @@ fgBool gfx::CBasetree::fitsInBox(const CSceneNode* sceneNode,
     }
 }
 
-/**
- * 
- * @param sceneNode
- * @param center
- * @param halfExtent
- * @return 
- */
 fgBool gfx::CBasetree::fitsInBox(const CSceneNode* sceneNode,
                                  const Vector2f& center,
                                  const float halfExtent) {

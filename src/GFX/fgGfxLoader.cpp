@@ -20,9 +20,6 @@
 
 using namespace fg;
 
-/**
- * 
- */
 gfx::CLoader::CLoader() :
 m_pSplashTex(NULL),
 m_pProgressTex(NULL),
@@ -32,10 +29,6 @@ m_mvp(),
 m_mat(),
 m_progress(0.0f) { }
 
-/**
- * 
- * @param orig
- */
 gfx::CLoader::CLoader(const CLoader& orig) {
     if(this != &orig) {
         this->m_pSplashTex = orig.m_pSplashTex;
@@ -48,9 +41,6 @@ gfx::CLoader::CLoader(const CLoader& orig) {
     }
 }
 
-/**
- * 
- */
 gfx::CLoader::~CLoader() {
     m_pSplashTex = NULL;
     m_pProgressTex = NULL;
@@ -60,10 +50,6 @@ gfx::CLoader::~CLoader() {
     m_mvp.identity();
 }
 
-/**
- * 
- * @param diff
- */
 void gfx::CLoader::update(const float diff) {
     if(!m_pWindow || !m_pSplashTex || !context::isInit() || !m_pProgram)
         return;

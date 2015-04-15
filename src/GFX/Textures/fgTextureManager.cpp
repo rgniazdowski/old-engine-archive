@@ -19,9 +19,6 @@
 
 using namespace fg;
 
-/**
- * Protected constructor
- */
 gfx::CTextureManager::CTextureManager(fg::base::CManager *pResourceMgr) :
 m_pResourceMgr(NULL),
 m_pEventMgr(NULL),
@@ -40,16 +37,10 @@ m_allInVRAM(FG_FALSE) {
     m_managerType = FG_MANAGER_TEXTURE;
 }
 
-/**
- * Protected destructor
- */
 gfx::CTextureManager::~CTextureManager() {
     destroy();
 }
 
-/*
- *
- */
 void gfx::CTextureManager::registerResourceCallbacks(void) {
     if(!m_pEventMgr)
         return;
@@ -70,9 +61,6 @@ void gfx::CTextureManager::registerResourceCallbacks(void) {
     m_pEventMgr->addEventCallback(event::MOUSE_MOTION, m_gameMouseCallback);*/
 }
 
-/*
- *
- */
 void gfx::CTextureManager::unregisterResourceCallbacks(void) {
     if(!m_pEventMgr)
         return;
@@ -85,17 +73,10 @@ void gfx::CTextureManager::unregisterResourceCallbacks(void) {
 
 }
 
-/**
- * 
- */
 void gfx::CTextureManager::clear(void) {
     m_managerType = FG_MANAGER_TEXTURE;
 }
 
-/**
- * 
- * @return 
- */
 fgBool gfx::CTextureManager::destroy(void) {
     unregisterResourceCallbacks();
     if(m_resourceCreatedCallback)
@@ -107,10 +88,6 @@ fgBool gfx::CTextureManager::destroy(void) {
     return FG_TRUE;
 }
 
-/**
- * 
- * @return 
- */
 fgBool gfx::CTextureManager::initialize(void) {
     if(!m_pResourceMgr)
         return FG_FALSE;
@@ -119,10 +96,6 @@ fgBool gfx::CTextureManager::initialize(void) {
     return FG_TRUE;
 }
 
-/**
- * 
- * @param pResourceMgr
- */
 void gfx::CTextureManager::setResourceManager(fg::base::CManager* pResourceMgr) {
     if(!pResourceMgr)
         return;
@@ -141,19 +114,10 @@ void gfx::CTextureManager::setResourceManager(fg::base::CManager* pResourceMgr) 
     }
 }
 
-/**
- * 
- * @return 
- */
 fg::base::CManager* gfx::CTextureManager::getResourceManager(void) const {
     return m_pResourceMgr;
 }
 
-/**
- * 
- * @param texHandle
- * @return 
- */
 gfx::STextureID& gfx::CTextureManager::getRefGfxID(const resource::ResourceHandle& texHandle) {
     if(!m_pResourceMgr)
         return m_emptyGfxID;
@@ -165,11 +129,6 @@ gfx::STextureID& gfx::CTextureManager::getRefGfxID(const resource::ResourceHandl
     return pTexture->getRefGfxID();
 }
 
-/**
- * 
- * @param nameTag
- * @return 
- */
 gfx::STextureID& gfx::CTextureManager::getRefGfxID(const std::string& nameTag) {
     if(!m_pResourceMgr || nameTag.empty())
         return m_emptyGfxID;
@@ -181,11 +140,6 @@ gfx::STextureID& gfx::CTextureManager::getRefGfxID(const std::string& nameTag) {
     return pTexture->getRefGfxID();
 }
 
-/**
- * 
- * @param nameTag
- * @return 
- */
 gfx::STextureID& gfx::CTextureManager::getRefGfxID(const char *nameTag) {
     if(!m_pResourceMgr || !nameTag)
         return m_emptyGfxID;
@@ -197,11 +151,6 @@ gfx::STextureID& gfx::CTextureManager::getRefGfxID(const char *nameTag) {
     return pTexture->getRefGfxID();
 }
 
-/**
- * 
- * @param argv
- * @return 
- */
 fgBool gfx::CTextureManager::resourceCreatedHandler(event::CArgumentList * argv) {
     if(!argv)
         return FG_FALSE;
@@ -233,9 +182,6 @@ fgBool gfx::CTextureManager::resourceCreatedHandler(event::CArgumentList * argv)
     return CTextureManager::uploadToVRAM(pTexture); // force flag
 }
 
-/**
- * UPLOAD to VRAM – skips reload from disk ONLY if needed
- */
 fgBool gfx::CTextureManager::allToVRAM(fgBool reupload) {
     if(!m_init) {
         if(!initialize())
@@ -274,12 +220,6 @@ fgBool gfx::CTextureManager::allToVRAM(fgBool reupload) {
     return result;
 }
 
-/**
- * 
- * @param texture
- * @param force
- * @return 
- */
 fgBool gfx::CTextureManager::uploadToVRAM(CTexture *texture, fgBool force) {
     if(!((resource::CResourceManager *)m_pResourceMgr) || !texture)
         return FG_FALSE;
@@ -321,12 +261,6 @@ fgBool gfx::CTextureManager::uploadToVRAM(CTexture *texture, fgBool force) {
     return result;
 }
 
-/**
- * 
- * @param nameTag
- * @param force
- * @return 
- */
 fgBool gfx::CTextureManager::uploadToVRAM(const std::string& nameTag, fgBool force) {
     if(!m_pResourceMgr)
         return FG_FALSE;
@@ -334,12 +268,6 @@ fgBool gfx::CTextureManager::uploadToVRAM(const std::string& nameTag, fgBool for
     return uploadToVRAM(nameTag.c_str(), force);
 }
 
-/**
- * 
- * @param nameTag
- * @param force
- * @return 
- */
 fgBool gfx::CTextureManager::uploadToVRAM(const char *nameTag, fgBool force) {
     if(!m_pResourceMgr)
         return FG_FALSE;
@@ -353,9 +281,6 @@ fgBool gfx::CTextureManager::uploadToVRAM(const char *nameTag, fgBool force) {
     return uploadToVRAM(texture, force);
 }
 
-/**
- * Releases all NonGl (i.e. non VRAM) data
- */
 void gfx::CTextureManager::allReleaseNonGFX(void) {
     if(!m_pResourceMgr)
         return;
@@ -383,9 +308,6 @@ void gfx::CTextureManager::allReleaseNonGFX(void) {
     ((resource::CResourceManager *)m_pResourceMgr)->refreshMemory();
 }
 
-/**
- * Releases all OpenGL (i.e. texture ids) data
- */
 void gfx::CTextureManager::allReleaseGFX(void) {
     if(!m_pResourceMgr)
         return;
@@ -412,10 +334,6 @@ void gfx::CTextureManager::allReleaseGFX(void) {
     ((resource::CResourceManager *)m_pResourceMgr)->refreshMemory();
 }
 
-/**
- * 
- * @param texture
- */
 void gfx::CTextureManager::releaseGFX(CTextureResource * texture) {
     if(!texture)
         return;
@@ -426,13 +344,6 @@ void gfx::CTextureManager::releaseGFX(CTextureResource * texture) {
     }
 }
 
-/**
- * Uploads image to VRAM as a texture
- *
- * TODO: mozliwa jest optymalizacja: gdy wymiary tekstury
- * uploadowanej drugi raz sa takie same, mozna uzyc
- * glTexSubImage2D zamiast glTexImage2D
- */
 fgBool gfx::CTextureManager::makeTexture(CTextureResource * pTexture) {
     if(!m_pResourceMgr)
         return FG_FALSE;

@@ -14,9 +14,6 @@
 
 using namespace fg;
 
-/**
- * 
- */
 gfx::CParticleEffect::CParticleEffect() : CResource(),
 m_maxCount(10),
 m_flags(FG_PARTICLE_FLAG_NONE),
@@ -47,26 +44,15 @@ m_burnRange() {
     m_burnRange.y = 1.0f;
 }
 
-/**
- * 
- */
 gfx::CParticleEffect::~CParticleEffect() {
     gfx::CParticleEffect::destroy();
 }
 
-/**
- * 
- */
 void gfx::CParticleEffect::clear(void) {
     base_type::clear();
     m_resType = resource::PARTICLE_EFFECT;
 }
 
-/**
- * 
- * @param params
- * @return 
- */
 fgBool gfx::CParticleEffect::initializeFromConfig(util::config::ParameterVec& params) {
     if(params.empty())
         return FG_FALSE;
@@ -230,10 +216,6 @@ fgBool gfx::CParticleEffect::initializeFromConfig(util::config::ParameterVec& pa
     return FG_TRUE;
 }
 
-/**
- * Create function loads/interprets data from file in ROM and place it in RAM memory.
- * @return 
- */
 fgBool gfx::CParticleEffect::create(void) {
     if(m_isReady) {
         return FG_TRUE;
@@ -277,46 +259,26 @@ fgBool gfx::CParticleEffect::create(void) {
     return FG_TRUE;
 }
 
-/**
- * Destroy all loaded data including additional metadata (called with destructor)
- */
 void gfx::CParticleEffect::destroy(void) {
     m_isReady = FG_FALSE;
     m_size = 0;
 }
 
-/**
- * Reloads any data, recreates the resource (refresh)
- * @return 
- */
 fgBool gfx::CParticleEffect::recreate(void) {
     dispose();
     m_isReady = FG_FALSE;
     return create();
 }
 
-/**
- * Dispose completely of the all loaded data, free all memory
- */
 void gfx::CParticleEffect::dispose(void) {
     m_isReady = FG_FALSE;
     m_size = 0;
 }
 
-/**
- * Check if resource is disposed (not loaded yet or disposed after)
- * @return 
- */
 fgBool gfx::CParticleEffect::isDisposed(void) const {
     return !m_isReady;
 }
 
-/**
- * 
- * @param outputParticle
- * @param randomizePosition
- * @param position
- */
 void gfx::CParticleEffect::initializeParticle(SParticle *outputParticle,
                                               const fgBool randomizePosition,
                                               const Vector3f & position) {
@@ -443,13 +405,6 @@ void gfx::CParticleEffect::calculate(void) {
 }
 #endif
 
-/**
- * Takes two particles, does randomization on [from->some_val, to->some_val]
- * and stores new random values to Particle* from
- * @param from
- * @param to
- * @param result
- */
 void gfx::CParticleEffect::randomizeOnPair(const SParticle* from,
                                            const SParticle* to,
                                            SParticle * result) {
@@ -595,10 +550,6 @@ void gfx::CParticleEffect::randomizeOnPair(const SParticle* from,
     target->setColor(color);
 }
 
-/**
- * 
- * @param outputParticle
- */
 void gfx::CParticleEffect::basicCalculate(SParticle* outputParticle) {
     // MOVEMENT
     outputParticle->bbox.pos.x += outputParticle->velocity.x * timesys::elapsed();

@@ -21,30 +21,14 @@ using namespace fg;
 
 const float gfx::CLooseOctree::DEFAULT_LOOSE_K = 2.0f;
 
-/**
- * 
- */
 gfx::CLooseOctree::CLooseOctree() :
 COctree(),
 m_looseK(DEFAULT_LOOSE_K) { }
 
-/**
- * 
- * @param orig
- */
 gfx::CLooseOctree::CLooseOctree(const CLooseOctree& orig) { }
 
-/**
- * 
- */
 gfx::CLooseOctree::~CLooseOctree() { }
 
-/**
- * 
- * @param pObject
- * @param pTreeNode
- * @return 
- */
 int gfx::CLooseOctree::insert(CTreeNodeObject* pObject, STreeNode* pTreeNode) {
     if(!pObject) {
         return -1;

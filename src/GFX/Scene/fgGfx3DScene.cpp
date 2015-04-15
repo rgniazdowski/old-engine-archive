@@ -27,9 +27,6 @@
 
 using namespace fg;
 
-/**
- *  
- */
 gfx::CScene3D::CScene3D() :
 CSceneManager(),
 m_physicsWorld(NULL),
@@ -41,9 +38,6 @@ m_octree(NULL) {
     //    setFrustumCheckSphere(FG_TRUE);
 }
 
-/**
- * 
- */
 gfx::CScene3D::~CScene3D() {
     if(m_octree) {
         delete m_octree;
@@ -58,9 +52,6 @@ gfx::CScene3D::~CScene3D() {
     m_physicsWorld = NULL;
 }
 
-/**
- * 
- */
 void gfx::CScene3D::sortCalls(void) {
     if(!getShaderManager())
         return;
@@ -195,9 +186,6 @@ void gfx::CScene3D::sortCalls(void) {
     }
 }
 
-/**
- * 
- */
 void gfx::CScene3D::render(void) {
     if(isHideAll()) {
         return;
@@ -230,12 +218,6 @@ void gfx::CScene3D::render(void) {
     }
 }
 
-/**
- * 
- * @param pModelRes
- * @param nameTag
- * @return 
- */
 gfx::CSceneNode *gfx::CScene3D::addFromModel(CModelResource* pModelRes,
                                              const std::string& nameTag) {
     if(!pModelRes) {
@@ -252,12 +234,6 @@ gfx::CSceneNode *gfx::CScene3D::addFromModel(CModelResource* pModelRes,
     return pNode;
 }
 
-/**
- * 
- * @param modelNameTag
- * @param nameTag
- * @return 
- */
 gfx::CSceneNode *gfx::CScene3D::addFromModel(const std::string& modelNameTag,
                                              const std::string& nameTag) {
     if(modelNameTag.empty() || nameTag.empty()) {
@@ -274,12 +250,6 @@ gfx::CSceneNode *gfx::CScene3D::addFromModel(const std::string& modelNameTag,
     return addFromModel(pModelRes, nameTag);
 }
 
-/**
- * 
- * @param modelNameTag
- * @param nameTag
- * @return 
- */
 gfx::CSceneNode *gfx::CScene3D::addFromModel(const char *modelNameTag,
                                              const char *nameTag) {
     if(!modelNameTag || !nameTag) {
@@ -297,10 +267,6 @@ gfx::CSceneNode *gfx::CScene3D::addFromModel(const char *modelNameTag,
     return addFromModel(pModelRes, std::string(nameTag));
 }
 
-/**
- * 
- * @param sceneNode
- */
 void gfx::CScene3D::checkCollisions(const CSceneNode* sceneNode) {
     if(!sceneNode)
         return;

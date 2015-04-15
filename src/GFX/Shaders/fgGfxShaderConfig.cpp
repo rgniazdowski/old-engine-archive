@@ -16,32 +16,19 @@
 
 using namespace fg;
 
-/**
- * 
- */
 gfx::CShaderConfig::CShaderConfig() :
 m_configType(FG_GFX_SHADER_CONFIG_INVALID),
 m_preferredSLVersion(FG_GFX_SHADING_LANGUAGE_INVALID),
 m_defaultPrecision(FG_GFX_SHADER_PRECISION_DEFAULT) { }
 
-/**
- * 
- * @param filePath
- */
 gfx::CShaderConfig::CShaderConfig(const char *filePath) {
     gfx::CShaderConfig::load(filePath);
 }
 
-/**
- * 
- */
 gfx::CShaderConfig::~CShaderConfig() {
     clearAll();
 }
 
-/**
- * 
- */
 void gfx::CShaderConfig::clearAll(void) {
     CConfig::clearAll();
     m_selectedConfigName.clear();
@@ -58,12 +45,6 @@ void gfx::CShaderConfig::clearAll(void) {
     m_constants.clear_optimised();
 }
 
-/**
- * 
- * @param filePath
- * @param SLver
- * @return 
- */
 fgBool gfx::CShaderConfig::load(const char *filePath, ShadingLangVersion SLver) {
     gfx::CShaderConfig::clearAll();
     if(!CConfig::load(filePath)) {
@@ -73,11 +54,6 @@ fgBool gfx::CShaderConfig::load(const char *filePath, ShadingLangVersion SLver) 
     return private_parseData(SLver);
 }
 
-/**
- * 
- * @param definesSection
- * @return 
- */
 fgBool gfx::CShaderConfig::private_parseDefines(util::SCfgSection *definesSection) {
     if(!definesSection)
         return FG_FALSE;
@@ -104,11 +80,6 @@ fgBool gfx::CShaderConfig::private_parseDefines(util::SCfgSection *definesSectio
     return FG_TRUE;
 }
 
-/**
- * 
- * @param includeSection
- * @return 
- */
 fgBool gfx::CShaderConfig::private_parseInclude(util::SCfgSection *includeSection) {
     if(!includeSection)
         return FG_FALSE;

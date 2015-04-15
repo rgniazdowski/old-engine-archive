@@ -19,9 +19,6 @@
 
 using namespace fg;
 
-/**
- * 
- */
 gfx::CSceneNodeMesh::CSceneNodeMesh(SMeshBase *pMesh, CSceneNode *pParent) :
 CSceneNode(SCENE_NODE_MESH, pParent) {
     CSceneNode::setNodeType(SCENE_NODE_MESH);
@@ -35,11 +32,7 @@ CSceneNode(SCENE_NODE_MESH, pParent) {
     setMesh(pMesh);
 }
 
-/**
- * 
- * @param orig
- */
-gfx::CSceneNodeMesh::CSceneNodeMesh(const CSceneNodeMesh& orig) : base_type(orig) { 
+gfx::CSceneNodeMesh::CSceneNodeMesh(const CSceneNodeMesh& orig) : base_type(orig) {
     if(this != &orig) {
         this->m_drawCall = NULL;
         CSceneNode::setNodeType(SCENE_NODE_MESH);
@@ -50,14 +43,8 @@ gfx::CSceneNodeMesh::CSceneNodeMesh(const CSceneNodeMesh& orig) : base_type(orig
     }
 }
 
-/**
- * 
- */
 gfx::CSceneNodeMesh::~CSceneNodeMesh() { }
 
-/**
- * 
- */
 void gfx::CSceneNodeMesh::refreshGfxInternals(void) {
     if(!m_pManager)
         return;
@@ -70,10 +57,6 @@ void gfx::CSceneNodeMesh::refreshGfxInternals(void) {
     }
 }
 
-/**
- * 
- * @param pMesh
- */
 void gfx::CSceneNodeMesh::setMesh(SMeshBase* pMesh) {
     m_pMesh = pMesh;
     if(!pMesh)
@@ -85,10 +68,6 @@ void gfx::CSceneNodeMesh::setMesh(SMeshBase* pMesh) {
     setBoundingVolume(pMesh->aabb);
 }
 
-/**
- * 
- * @param pMaterial
- */
 void gfx::CSceneNodeMesh::setMaterial(SMaterial *pMaterial) {
     m_pMaterial = pMaterial;
     if(!pMaterial)

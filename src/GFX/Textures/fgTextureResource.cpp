@@ -18,9 +18,6 @@
 
 using namespace fg;
 
-/**
- * Base constructor of the texture resource object
- */
 gfx::CTextureResource::CTextureResource() :
 CResource(),
 m_fileType(FG_TEXTURE_FILE_INVALID),
@@ -36,10 +33,6 @@ m_isInVRAM(FG_FALSE) {
     memset(m_cubeData, 0, sizeof (m_cubeData));
 }
 
-/**
- * 
- * @param path
- */
 gfx::CTextureResource::CTextureResource(const char *path) :
 CResource(path),
 m_fileType(FG_TEXTURE_FILE_INVALID),
@@ -55,9 +48,6 @@ m_isInVRAM(FG_FALSE) {
     memset(m_cubeData, 0, sizeof (m_cubeData));
 }
 
-/*
- *
- */
 gfx::CTextureResource::CTextureResource(std::string& path) :
 CResource(path),
 m_fileType(FG_TEXTURE_FILE_INVALID),
@@ -73,10 +63,6 @@ m_isInVRAM(FG_FALSE) {
     memset(m_cubeData, 0, sizeof (m_cubeData));
 }
 
-/**
- * Clears the class data, this actually does not free allocated memory,
- * just resets base class attributes
- */
 void gfx::CTextureResource::clear(void) {
     CResource::clear();
     m_fileType = FG_TEXTURE_FILE_INVALID;
@@ -93,10 +79,6 @@ void gfx::CTextureResource::clear(void) {
     memset(m_cubeData, 0, sizeof (m_cubeData));
 }
 
-/**
- * Create function loads/interprets data from file in ROM and place it in RAM memory.
- * @return 
- */
 fgBool gfx::CTextureResource::create(void) {
     if(m_rawData && m_isReady) {
         return FG_TRUE;
@@ -187,18 +169,11 @@ fgBool gfx::CTextureResource::create(void) {
     return FG_TRUE;
 }
 
-/*
- * Destroy all loaded data including additional metadata (called with destructor)
- */
 void gfx::CTextureResource::destroy(void) {
     releaseNonGFX();
     CTextureResource::clear();
 }
 
-/**
- * Reloads any data, recreates the resource (refresh)
- * @return
- */
 fgBool gfx::CTextureResource::recreate(void) {
     FG_LOG_DEBUG("fgTextureResource::recreate(void)");
     if(m_isReady || m_rawData)
@@ -207,18 +182,10 @@ fgBool gfx::CTextureResource::recreate(void) {
     return create();
 }
 
-/**
- * Dispose completely of the all loaded data, free all memory
- * Releases non-GPU side of resources
- */
 void gfx::CTextureResource::dispose(void) {
     releaseNonGFX();
 }
 
-/**
- * Check if resource is disposed (not loaded yet or disposed after)\
- * @return
- */
 fgBool gfx::CTextureResource::isDisposed(void) const {
     // #FIXME ?
     // This should also check if texture (GL/GFX) ID is valid.
@@ -232,11 +199,6 @@ fgBool gfx::CTextureResource::isDisposed(void) const {
         return !this->hasOwnedRAM();
 }
 
-/**
- * 
- * @param path
- * @return 
- */
 fgBool gfx::CTextureResource::setFileTypeFromFilePath(std::string &path) {
     if(path.empty())
         return FG_FALSE;
@@ -258,9 +220,6 @@ fgBool gfx::CTextureResource::setFileTypeFromFilePath(std::string &path) {
     return FG_TRUE;
 }
 
-/**
- * Releases non-GPU side of resources
- */
 void gfx::CTextureResource::releaseNonGFX(void) {
     FG_LOG_DEBUG("GFX:Texture: release nonGFX: rawData[%p];", m_rawData);
 
@@ -280,10 +239,6 @@ void gfx::CTextureResource::releaseNonGFX(void) {
     m_isReady = FG_FALSE;
 }
 
-/**
- * 
- * @param flags
- */
 void gfx::CTextureResource::setFlags(const std::string& flags) {
     if(flags.empty() || flags.length() < 2)
         return;

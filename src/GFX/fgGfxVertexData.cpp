@@ -14,11 +14,6 @@
 
 using namespace fg;
 
-/**
- * 
- * @param pDataArray
- * @return 
- */
 fgGFXboolean gfx::CVertexData2v::refreshAttributes(SAttributeData *pDataArray) const {
     if(!pDataArray)
         return FG_GFX_FALSE;
@@ -68,11 +63,6 @@ fgGFXboolean gfx::CVertexData2v::refreshAttributes(SAttributeData *pDataArray) c
     return FG_GFX_TRUE;
 }
 
-/**
- * 
- * @param pDataArray
- * @return 
- */
 fgGFXboolean gfx::CVertexData2v::setupAttributes(SAttributeData *pDataArray) const {
     if(!pDataArray)
         return FG_GFX_FALSE;
@@ -136,10 +126,6 @@ fgGFXboolean gfx::CVertexData2v::setupAttributes(SAttributeData *pDataArray) con
     return FG_GFX_TRUE;
 }
 
-/**
- * 
- * @return 
- */
 fgGFXboolean gfx::CVertexData2v::genBuffers(void) {
     if(!fg::gfx::CPlatform::isInit())
         return FG_GFX_FALSE;
@@ -151,10 +137,6 @@ fgGFXboolean gfx::CVertexData2v::genBuffers(void) {
     return FG_GFX_TRUE;
 }
 
-/**
- * 
- * @return 
- */
 fgGFXboolean gfx::CVertexData2v::deleteBuffers(void) {
     if(!getPtrVBO())
         return FG_GFX_FALSE;
@@ -163,10 +145,6 @@ fgGFXboolean gfx::CVertexData2v::deleteBuffers(void) {
 
 }
 
-/**
- * 
- * @return 
- */
 fgGFXboolean gfx::CVertexData2v::destroyBuffers(void) {
     if(!getPtrVBO())
         return FG_GFX_FALSE;
@@ -177,11 +155,6 @@ fgGFXboolean gfx::CVertexData2v::destroyBuffers(void) {
     return FG_GFX_TRUE;
 }
 
-/**
- * 
- * @param pDataArray
- * @return 
- */
 fgGFXboolean gfx::CVertexData3v::refreshAttributes(SAttributeData *pDataArray) const {
     if(!pDataArray)
         return FG_GFX_FALSE;
@@ -242,11 +215,6 @@ fgGFXboolean gfx::CVertexData3v::refreshAttributes(SAttributeData *pDataArray) c
     return FG_GFX_TRUE;
 }
 
-/**
- * 
- * @param pDataArray
- * @return 
- */
 fgGFXboolean gfx::CVertexData3v::setupAttributes(SAttributeData *pDataArray) const {
     if(!pDataArray)
         return FG_GFX_FALSE;
@@ -331,10 +299,6 @@ fgGFXboolean gfx::CVertexData3v::setupAttributes(SAttributeData *pDataArray) con
     return FG_GFX_TRUE;
 }
 
-/**
- * 
- * @return 
- */
 fgGFXboolean gfx::CVertexData3v::genBuffers(void) {
     if(!fg::gfx::CPlatform::isInit())
         return FG_GFX_FALSE;
@@ -346,10 +310,6 @@ fgGFXboolean gfx::CVertexData3v::genBuffers(void) {
     return FG_GFX_TRUE;
 }
 
-/**
- * 
- * @return 
- */
 fgGFXboolean gfx::CVertexData3v::deleteBuffers(void) {
     if(!getPtrVBO())
         return FG_GFX_FALSE;
@@ -357,10 +317,6 @@ fgGFXboolean gfx::CVertexData3v::deleteBuffers(void) {
     return FG_GFX_TRUE;
 }
 
-/**
- * 
- * @return 
- */
 fgGFXboolean gfx::CVertexData3v::destroyBuffers(void) {
     if(!getPtrVBO())
         return FG_GFX_FALSE;
@@ -371,11 +327,6 @@ fgGFXboolean gfx::CVertexData3v::destroyBuffers(void) {
     return FG_GFX_TRUE;
 }
 
-/**
- * 
- * @param pDataArray
- * @return 
- */
 fgGFXboolean gfx::CVertexData4v::refreshAttributes(SAttributeData *pDataArray) const {
     if(!pDataArray)
         return FG_GFX_FALSE;
@@ -449,11 +400,6 @@ fgGFXboolean gfx::CVertexData4v::refreshAttributes(SAttributeData *pDataArray) c
     return FG_GFX_TRUE;
 }
 
-/**
- * 
- * @param pDataArray
- * @return 
- */
 fgGFXboolean gfx::CVertexData4v::setupAttributes(SAttributeData *pDataArray) const {
     if(!pDataArray)
         return FG_GFX_FALSE;
@@ -558,10 +504,6 @@ fgGFXboolean gfx::CVertexData4v::setupAttributes(SAttributeData *pDataArray) con
     return FG_GFX_TRUE;
 }
 
-/**
- * 
- * @return 
- */
 fgGFXboolean gfx::CVertexData4v::genBuffers(void) {
     if(!fg::gfx::CPlatform::isInit())
         return FG_GFX_FALSE;
@@ -573,10 +515,6 @@ fgGFXboolean gfx::CVertexData4v::genBuffers(void) {
     return FG_GFX_TRUE;
 }
 
-/**
- * 
- * @return 
- */
 fgGFXboolean gfx::CVertexData4v::deleteBuffers(void) {
     if(!getPtrVBO())
         return FG_GFX_FALSE;
@@ -584,10 +522,6 @@ fgGFXboolean gfx::CVertexData4v::deleteBuffers(void) {
     return FG_GFX_TRUE;
 }
 
-/**
- * 
- * @return 
- */
 fgGFXboolean gfx::CVertexData4v::destroyBuffers(void) {
     if(!getPtrVBO())
         return FG_GFX_FALSE;

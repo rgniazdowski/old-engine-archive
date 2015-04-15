@@ -20,30 +20,14 @@ using namespace fg;
 
 const float gfx::CLooseQuadtree::DEFAULT_LOOSE_K = 2.0f;
 
-/**
- * 
- */
 gfx::CLooseQuadtree::CLooseQuadtree() :
 CQuadtree(),
 m_looseK(DEFAULT_LOOSE_K) { }
 
-/**
- * 
- * @param orig
- */
 gfx::CLooseQuadtree::CLooseQuadtree(const CLooseQuadtree& orig) { }
 
-/**
- * 
- */
 gfx::CLooseQuadtree::~CLooseQuadtree() { }
 
-/**
- * 
- * @param sceneNode
- * @param treeNode
- * @return 
- */
 int gfx::CLooseQuadtree::insert(CTreeNodeObject* pObject, STreeNode* pTreeNode) {
     if(!pObject) {
         return -1;
