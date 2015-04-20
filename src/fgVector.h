@@ -11,7 +11,7 @@
 #ifndef FG_INC_VECTOR
     #define FG_INC_VECTOR
     #define FG_INC_VECTOR_BLOCK
-    
+
     #ifndef FG_INC_BUILD_CONFIG
         #include "fgBuildConfig.h"
     #endif
@@ -20,36 +20,34 @@
         #include "IwArray.h"
 
 namespace fg {
-	/**
-	 *
-	 */
-	template <class X, class A = ::CIwAllocator<X>, class REALLOCATE = ::ReallocateDefault<X, A > >
-	class CVector : public ::CIwArray<X, A, REALLOCATE> {
-	public:
-		typedef CVector<X, A, REALLOCATE> self_type;
-		typedef ::CIwArray<X, A, REALLOCATE> base_type;
 
-	public:
-		/**
-		 * @param i
-		 * @return
-		 */
-		X & at(int const i) const {
-			unsigned int index = (unsigned int)i;
-			if(index >= this->num_p) {
-				return this->p[0];
-			}
-			return this->p[index];
-		}
+    /**
+     *
+     */
+    template <class X, class A = ::CIwAllocator<X>, class REALLOCATE = ::ReallocateDefault<X, A > >
+    class CVector : public ::CIwArray<X, A, REALLOCATE> {
+    public:
+        typedef CVector<X, A, REALLOCATE> self_type;
+        typedef ::CIwArray<X, A, REALLOCATE> base_type;
 
-		X & operator [] (int const i) const
-		{
-			const unsigned int index = (unsigned int)i;
-			IwAssertMsgN(1731, CORE, i>=0 && index<this->max_p, ("invalid index (%d) into array of capacity %u", i, (unsigned int)this->max_p));
-			return this->p[index];
-		}
-
-		typename base_type::const_iterator findItor(X const & value) const {
+    public:
+        /**
+         * @param i
+         * @return
+         */
+        X & at(int const i) const {
+            unsigned int index = (unsigned int)i;
+            if(index >= this->num_p) {
+                return this->p[0];
+            }
+            return this->p[index];
+        }
+        X & operator [](int const i)const {
+            const unsigned int index = (unsigned int)i;
+            IwAssertMsgN(1731, CORE, i >= 0 && index<this->max_p, ("invalid index (%d) into array of capacity %u", i, (unsigned int)this->max_p));
+            return this->p[index];
+        }
+        typename base_type::const_iterator findItor(X const & value) const {
             for(typename base_type::const_iterator it = base_type::begin();
                     it != base_type::end();
                     it++) {
@@ -59,8 +57,7 @@ namespace fg {
             }
             return base_type::end();
         }
-        
-        typename base_type::iterator findItor(X const & value)  {
+        typename base_type::iterator findItor(X const & value) {
             for(typename base_type::iterator it = base_type::begin();
                     it != base_type::end();
                     it++) {
@@ -70,12 +67,12 @@ namespace fg {
             }
             return base_type::end();
         }
-	};
+    };
 };
     #else
 
         #include <vector>
-        
+
 namespace fg {
 
     /**
@@ -83,9 +80,9 @@ namespace fg {
      */
     template <class T, class Alloc = std::allocator<T> >
     class CVector : public std::vector<T, Alloc> {
-	public:
-		typedef CVector<T, Alloc> self_type;
-		typedef std::vector<T, Alloc> base_type;
+    public:
+        typedef CVector<T, Alloc> self_type;
+        typedef std::vector<T, Alloc> base_type;
     public:
         /**
          * 
@@ -110,7 +107,21 @@ namespace fg {
             }
             return -1;
         }
-        
+        /**
+         * 
+         */
+        void reverse(void) {
+            self_type rev = *this;
+            this->clear();
+            typename self_type::reverse_iterator b = rev.rbegin();
+            typename self_type::reverse_iterator e = rev.rend();
+            for(; b != e; b++) {
+                //*this << (*b);
+                this->push_back(*b);
+            }
+            rev.clear();
+        }
+
         typename base_type::const_iterator findItor(T const & value) const {
             for(typename base_type::const_iterator it = base_type::begin();
                     it != base_type::end();
@@ -121,8 +132,7 @@ namespace fg {
             }
             return base_type::end();
         }
-        
-        typename base_type::iterator findItor(T const & value)  {
+        typename base_type::iterator findItor(T const & value) {
             for(typename base_type::iterator it = base_type::begin();
                     it != base_type::end();
                     it++) {
