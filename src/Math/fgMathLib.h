@@ -13,6 +13,7 @@
     #define FG_INC_MATHLIB_BLOCK
 
     #include "fgBuildConfig.h"
+    #include "fgBool.h"
     #include <cmath>
 
     #if !defined(FG_RAND)
@@ -60,9 +61,39 @@ namespace fg {
     #if defined(FG_USING_GLM)
     namespace math {
         using namespace ::glm;
-        
+
         namespace detail {
             using namespace ::glm::detail;
+        }
+        /**
+         *
+         * @param value
+         * @return
+         */
+        inline fgBool isPowOf2(int value) {
+            return (fgBool)((value & (value - 1)) == 0);
+        }
+        /**
+         *
+         * @param value
+         * @param sv
+         * @return
+         */
+        inline int toPow2(int value, int sv = 0x1) {
+            while(value >>= 1) {
+                sv <<= 1;
+            }
+            return sv;
+        }
+        /**
+         *
+         * @param a
+         * @param b
+         * @return
+         */
+        inline fgBool isZero(float a, float b = (float)0.00001) {
+            if(a == (float)0.0)return FG_TRUE;
+            return ( a > -b && a < b);
         }
         template <typename T, precision P>
         GLM_FUNC_QUALIFIER T squareLength(detail::tvec2<T, P> const & v) {
@@ -96,7 +127,7 @@ namespace fg {
                     v1.y * v2.y,
                     v1.z * v2.z,
                     v1.w * v2.w);
-        }  
+        }
 
     }; /* namespace math; */
 
