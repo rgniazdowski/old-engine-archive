@@ -77,8 +77,8 @@ namespace fg {
                         value_type& minVal = bbox[j];
                         value_type& maxVal = bbox[j + innerMax];
                         value_type checkVal = *(values + j); // offset + sizeof(value_type)*j
-                        maxVal = fg::math::max(maxVal, checkVal);
-                        minVal = fg::math::min(minVal, checkVal);
+                        maxVal = math::max(maxVal, checkVal);
+                        minVal = math::min(minVal, checkVal);
                     }
                 }
                 return bbox;
@@ -371,6 +371,13 @@ namespace fg {
 
             /**
              * 
+             * @param v
+             * @return
+             */
+            virtual box_type& merge(const vector_type& v) = 0;
+
+            /**
+             * 
              * @param data
              * @param count
              * @return 
@@ -439,6 +446,18 @@ namespace fg {
             }
             /**
              * 
+             * @param v
+             * @return 
+             */
+            virtual inline self_type& merge(const vec_type& v) {
+                this->min.x = math::min(this->min.x, v.x);
+                this->min.y = math::min(this->min.y, v.y);
+                this->max.x = math::max(this->max.x, v.x);
+                this->max.y = math::max(this->max.y, v.y);
+                return (*this);
+            }
+            /**
+             * 
              * @param a
              * @param b
              * @return 
@@ -457,10 +476,10 @@ namespace fg {
              */
             virtual inline self_type& merge(self_type const &a) {
                 // Should zero? nope!
-                this->min.x = fg::math::min(this->min.x, a.min.x);
-                this->min.y = fg::math::min(this->min.y, a.min.y);
-                this->max.x = fg::math::max(this->max.x, a.max.x);
-                this->max.y = fg::math::max(this->max.y, a.max.y);
+                this->min.x = math::min(this->min.x, a.min.x);
+                this->min.y = math::min(this->min.y, a.min.y);
+                this->max.x = math::max(this->max.x, a.max.x);
+                this->max.y = math::max(this->max.y, a.max.y);
                 return (*this);
             }
             /**
@@ -470,10 +489,10 @@ namespace fg {
              */
             virtual inline self_type& merge(SBoundingBox2DT<TValueType> const &a) {
                 // Should zero? nope!
-                this->min.x = fg::math::min(this->min.x, a.pos.x);
-                this->min.y = fg::math::min(this->min.y, a.pos.y);
-                this->max.x = fg::math::max(this->max.x, a.pos.x + a.size.x);
-                this->max.y = fg::math::max(this->max.y, a.pos.y + a.size.y);
+                this->min.x = math::min(this->min.x, a.pos.x);
+                this->min.y = math::min(this->min.y, a.pos.y);
+                this->max.x = math::max(this->max.x, a.pos.x + a.size.x);
+                this->max.y = math::max(this->max.y, a.pos.y + a.size.y);
                 return (*this);
             }
             /**
@@ -520,10 +539,10 @@ namespace fg {
                     return (*this);
                 this->invalidate();
                 for(size_type i = 0; i < count; i++) {
-                    this->min.x = fg::math::min(this->min.x, data[i].x);
-                    this->min.y = fg::math::min(this->min.y, data[i].y);
-                    this->max.x = fg::math::max(this->max.x, data[i].x);
-                    this->max.y = fg::math::max(this->max.y, data[i].y);
+                    this->min.x = math::min(this->min.x, data[i].x);
+                    this->min.y = math::min(this->min.y, data[i].y);
+                    this->max.x = math::max(this->max.x, data[i].x);
+                    this->max.y = math::max(this->max.y, data[i].y);
                 }
                 return (*this);
             }
@@ -696,7 +715,8 @@ namespace fg {
              * @param b
              * @return 
              */
-            virtual inline self_type& merge(self_type const &a, self_type const &b) {
+            virtual inline self_type& merge(self_type const &a,
+                                            self_type const &b) {
                 this->invalidate();
                 this->merge(a);
                 this->merge(b);
@@ -708,7 +728,8 @@ namespace fg {
              * @param b
              * @return 
              */
-            virtual inline self_type& merge(SBoundingBox3DT<TValueType> const &a, SBoundingBox3DT<TValueType> const &b) {
+            virtual inline self_type& merge(SBoundingBox3DT<TValueType> const &a,
+                                            SBoundingBox3DT<TValueType> const &b) {
                 this->invalidate();
                 this->merge(a);
                 this->merge(b);
@@ -721,13 +742,26 @@ namespace fg {
              */
             virtual inline self_type& merge(self_type const &a) {
                 // Should zero? nope!
-                this->min.x = fg::math::min(this->min.x, a.min.x);
-                this->min.y = fg::math::min(this->min.y, a.min.y);
-                this->min.z = fg::math::min(this->min.z, a.min.z);
-                this->max.x = fg::math::max(this->max.x, a.max.x);
-                this->max.y = fg::math::max(this->max.y, a.max.y);
-                this->max.z = fg::math::max(this->max.z, a.max.z);
-
+                this->min.x = math::min(this->min.x, a.min.x);
+                this->min.y = math::min(this->min.y, a.min.y);
+                this->min.z = math::min(this->min.z, a.min.z);
+                this->max.x = math::max(this->max.x, a.max.x);
+                this->max.y = math::max(this->max.y, a.max.y);
+                this->max.z = math::max(this->max.z, a.max.z);
+                return (*this);
+            }
+            /**
+             *
+             * @param v
+             * @return
+             */
+            virtual inline self_type& merge(const vec_type& v) {
+                this->min.x = math::min(this->min.x, v.x);
+                this->min.y = math::min(this->min.y, v.y);
+                this->min.z = math::min(this->min.z, v.z);
+                this->max.x = math::max(this->max.x, v.x);
+                this->max.y = math::max(this->max.y, v.y);
+                this->max.z = math::max(this->max.z, v.z);
                 return (*this);
             }
             /**
@@ -737,12 +771,12 @@ namespace fg {
              */
             virtual inline self_type& merge(SBoundingBox3DT<TValueType> const &a) {
                 // Should zero? nope!
-                this->min.x = fg::math::min(this->min.x, a.pos.x);
-                this->min.y = fg::math::min(this->min.y, a.pos.y);
-                this->min.z = fg::math::min(this->min.z, a.pos.z);
-                this->max.x = fg::math::max(this->max.x, a.pos.x + a.size.x);
-                this->max.y = fg::math::max(this->max.y, a.pos.y + a.size.y);
-                this->max.z = fg::math::max(this->max.z, a.pos.z + a.size.z);
+                this->min.x = math::min(this->min.x, a.pos.x);
+                this->min.y = math::min(this->min.y, a.pos.y);
+                this->min.z = math::min(this->min.z, a.pos.z);
+                this->max.x = math::max(this->max.x, a.pos.x + a.size.x);
+                this->max.y = math::max(this->max.y, a.pos.y + a.size.y);
+                this->max.z = math::max(this->max.z, a.pos.z + a.size.z);
                 return (*this);
             }
             /**
@@ -754,7 +788,6 @@ namespace fg {
             virtual self_type& merge(const self_type *aaboxes, const size_type count = 1) {
                 if(!count || !aaboxes)
                     return (*this);
-                //this->zero(); // nope
                 for(size_type i = 0; i < count; i++) {
                     this->merge(aaboxes[i]);
                 }
@@ -766,10 +799,10 @@ namespace fg {
              * @param count
              * @return 
              */
-            virtual self_type& merge(const SBoundingBox3DT<TValueType> *boxes, const size_type count = 1) {
+            virtual self_type& merge(const SBoundingBox3DT<TValueType> *boxes,
+                                     const size_type count = 1) {
                 if(!count || !boxes)
                     return (*this);
-                //this->zero(); // nope
                 for(size_type i = 0; i < count; i++) {
                     this->merge(boxes[i]);
                 }
@@ -781,17 +814,18 @@ namespace fg {
              * @param count
              * @return 
              */
-            virtual self_type& setBoundsFromData(vector_type *data, const size_type count = 1) {
+            virtual self_type& setBoundsFromData(vector_type *data,
+                                                 const size_type count = 1) {
                 if(!data || !count)
                     return (*this);
                 this->invalidate();
                 for(size_type i = 0; i < count; i++) {
-                    this->min.x = fg::math::min(this->min.x, data[i].x);
-                    this->min.y = fg::math::min(this->min.y, data[i].y);
-                    this->min.z = fg::math::min(this->min.z, data[i].z);
-                    this->max.x = fg::math::max(this->max.x, data[i].x);
-                    this->max.y = fg::math::max(this->max.y, data[i].y);
-                    this->max.z = fg::math::max(this->max.z, data[i].z);
+                    this->min.x = math::min(this->min.x, data[i].x);
+                    this->min.y = math::min(this->min.y, data[i].y);
+                    this->min.z = math::min(this->min.z, data[i].z);
+                    this->max.x = math::max(this->max.x, data[i].x);
+                    this->max.y = math::max(this->max.y, data[i].y);
+                    this->max.z = math::max(this->max.z, data[i].z);
                 }
                 return (*this);
             }
