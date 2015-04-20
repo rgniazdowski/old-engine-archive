@@ -98,7 +98,7 @@ namespace fg {
              */
             virtual fgGFXvoid *getIndicesPointer(void) const {
                 return (fgGFXvoid *)0;
-            }            
+            }
             /**
              * 
              * @return 
@@ -302,7 +302,14 @@ namespace fg {
         /**
          *
          */
-        class CVertexData2v : public CVertexData, public fg::CVector<Vertex2v> {
+        class CVertexData2v : public CVertexData, public CVector<Vertex2v> {
+        public:
+            typedef CVertexData2v type;
+            typedef CVertexData2v self_type;
+            typedef CVertexData base_type;
+            typedef Vertex2v vertex_type;
+            typedef CVector<Vertex2v> base_vec_type;
+
         public:
             /**
              * 
@@ -375,7 +382,7 @@ namespace fg {
                 Vertex2v vertex;
                 vertex.position = pos;
                 vertex.uv = Vector2f(1.0f, 1.0f);
-                fg::CVector<Vertex2v>::push_back(vertex);
+                base_vec_type::push_back(vertex);
             }
             /**
              * 
@@ -387,7 +394,7 @@ namespace fg {
                 Vertex2v vertex;
                 vertex.position = pos;
                 vertex.uv = uv;
-                fg::CVector<Vertex2v>::push_back(vertex);
+                base_vec_type::push_back(vertex);
             }
             /**
              * 
@@ -430,20 +437,20 @@ namespace fg {
              * 
              */
             virtual void pop_back(void) {
-                CVector<Vertex2v>::pop_back();
+                base_vec_type::pop_back();
             }
             /**
              * 
              * @return 
              */
             virtual fgGFXvoid *back(void) const {
-                return (fgGFXvoid *)(&CVector<Vertex2v>::back());
+                return (fgGFXvoid *)(&base_vec_type::back());
             }
             /**
              * 
              */
             virtual void clear(void) {
-                CVector<Vertex2v>::clear();
+                base_vec_type::clear();
             }
             /**
              * 
@@ -451,9 +458,9 @@ namespace fg {
              */
             virtual fgGFXvoid *front(void) const {
     #if defined(FG_USING_MARMALADE)
-                return (fgGFXvoid *)(fg::CVector<Vertex2v>::begin());
+                return (fgGFXvoid *)(base_vec_type::begin());
     #else
-                return (fgGFXvoid *)(&fg::CVector<Vertex2v>::front());
+                return (fgGFXvoid *)(&base_vec_type::front());
     #endif /* FG_USING_MARMALADE */
             }
             /**
@@ -461,14 +468,14 @@ namespace fg {
              * @return 
              */
             virtual fgGFXuint size(void) const {
-                return CVector<Vertex2v>::size();
+                return base_vec_type::size();
             }
             /**
              * 
              * @return 
              */
             virtual fgGFXuint getNumVertices(void) const {
-                return CVector<Vertex2v>::size();
+                return base_vec_type::size();
             }
             /**
              * 
@@ -482,7 +489,7 @@ namespace fg {
              * @return 
              */
             virtual fgGFXuint getNumUVs(void) const {
-                return CVector<Vertex2v>::size();
+                return base_vec_type::size();
             }
             /**
              * 
@@ -507,40 +514,49 @@ namespace fg {
              * @param newSize
              */
             virtual void reserve(const unsigned int newSize) {
-                CVector<Vertex2v>::reserve(newSize);
+                base_vec_type::reserve(newSize);
             }
             /**
              * 
              * @return 
              */
             virtual void resize(const unsigned int newSize) {
-                fg::CVector<Vertex2v>::resize(newSize);
+                base_vec_type::resize(newSize);
             }
             /**
+             * 
+             * @return
              */
             virtual fgGFXsizei stride(void) const {
-                return sizeof (Vertex2v);
+                return sizeof (vertex_type);
             }
             /**
              * 
              * @return 
              */
             virtual fgGFXuint attribMask(void) const {
-                return (fgGFXuint)Vertex2v::attribMask();
+                return (fgGFXuint)vertex_type::attribMask();
             }
             /**
              * 
              * @return 
              */
             virtual bool empty(void) const {
-                return (bool) CVector<Vertex2v>::empty();
+                return (bool) base_vec_type::empty();
             }
         };
 
         /**
          *
          */
-        class CVertexData3v : public CVertexData, public fg::CVector<Vertex3v> {
+        class CVertexData3v : public CVertexData, public CVector<Vertex3v> {
+        public:
+            typedef CVertexData3v type;
+            typedef CVertexData3v self_type;
+            typedef CVertexData base_type;
+            typedef Vertex3v vertex_type;
+            typedef CVector<Vertex3v> base_vec_type;
+
         public:
             /**
              * 
@@ -614,7 +630,7 @@ namespace fg {
                 vertex.position = pos;
                 vertex.normal = Vector3f(1.0f, 1.0f, 1.0f);
                 vertex.uv = Vector2f(1.0f, 1.0f);
-                fg::CVector<Vertex3v>::push_back(vertex);
+                base_vec_type::push_back(vertex);
             }
             /**
              * 
@@ -627,7 +643,7 @@ namespace fg {
                 vertex.position = pos;
                 vertex.normal = Vector3f(1.0f, 1.0f, 1.0f);
                 vertex.uv = uv;
-                fg::CVector<Vertex3v>::push_back(vertex);
+                base_vec_type::push_back(vertex);
             }
             /**
              * 
@@ -642,7 +658,7 @@ namespace fg {
                 vertex.position = pos;
                 vertex.normal = normal;
                 vertex.uv = uv;
-                CVector<Vertex3v>::push_back(vertex);
+                base_vec_type::push_back(vertex);
             }
             /**
              * 
@@ -651,8 +667,7 @@ namespace fg {
              * @param uv
              * @param color
              */
-            virtual void append(
-                                const Vector3f &pos,
+            virtual void append(const Vector3f &pos,
                                 const Vector3f &normal,
                                 const Vector2f &uv,
                                 const fgColor3f &color) {
@@ -665,8 +680,7 @@ namespace fg {
              * @param uv
              * @param color
              */
-            virtual void append(
-                                const Vector3f &pos,
+            virtual void append(const Vector3f &pos,
                                 const Vector3f &normal,
                                 const Vector2f &uv,
                                 const fgColor4f &color) {
@@ -676,20 +690,20 @@ namespace fg {
              * 
              */
             virtual void pop_back(void) {
-                fg::CVector<Vertex3v>::pop_back();
+                base_vec_type::pop_back();
             }
             /**
              * 
              * @return 
              */
             virtual fgGFXvoid *back(void) const {
-                return (fgGFXvoid *)(&fg::CVector<Vertex3v>::back());
+                return (fgGFXvoid *)(&base_vec_type::back());
             }
             /**
              * 
              */
             virtual void clear(void) {
-                CVector<Vertex3v>::clear();
+                base_vec_type::clear();
             }
             /**
              * 
@@ -697,9 +711,9 @@ namespace fg {
              */
             virtual fgGFXvoid *front(void) const {
     #if defined(FG_USING_MARMALADE)
-                return (fgGFXvoid *)(CVector<Vertex3v>::begin());
+                return (fgGFXvoid *)(base_vec_type::begin());
     #else
-                return (fgGFXvoid *)(&CVector<Vertex3v>::front());
+                return (fgGFXvoid *)(&base_vec_type::front());
     #endif /* FG_USING_MARMALADE */
             }
             /**
@@ -707,28 +721,28 @@ namespace fg {
              * @return 
              */
             virtual fgGFXuint size(void) const {
-                return CVector<Vertex3v>::size();
+                return base_vec_type::size();
             }
             /**
              * 
              * @return 
              */
             virtual fgGFXuint getNumVertices(void) const {
-                return CVector<Vertex3v>::size();
+                return base_vec_type::size();
             }
             /**
              * 
              * @return 
              */
             virtual fgGFXuint getNumNormals(void) const {
-                return CVector<Vertex3v>::size();
+                return base_vec_type::size();
             }
             /**
              * 
              * @return 
              */
             virtual fgGFXuint getNumUVs(void) const {
-                return CVector<Vertex3v>::size();
+                return base_vec_type::size();
             }
             /**
              * 
@@ -753,42 +767,49 @@ namespace fg {
              * @param newSize
              */
             virtual void reserve(const unsigned int newSize) {
-                fg::CVector<Vertex3v>::reserve(newSize);
+                base_vec_type::reserve(newSize);
             }
             /**
              * 
              * @param newSize
              */
             virtual void resize(const unsigned int newSize) {
-                fg::CVector<Vertex3v>::resize(newSize);
+                base_vec_type::resize(newSize);
             }
             /**
              * 
              * @return 
              */
             virtual fgGFXsizei stride(void) const {
-                return sizeof (Vertex3v);
+                return sizeof (vertex_type);
             }
             /**
              * 
              * @return 
              */
             virtual fgGFXuint attribMask(void) const {
-                return (fgGFXuint)Vertex3v::attribMask();
+                return (fgGFXuint)vertex_type::attribMask();
             }
             /**
              * 
              * @return 
              */
             virtual bool empty(void) const {
-                return (bool) fg::CVector<Vertex3v>::empty();
+                return (bool) base_vec_type::empty();
             }
         };
 
         /**
          *
          */
-        class CVertexData4v : public CVertexData, public fg::CVector<Vertex4v> {
+        class CVertexData4v : public CVertexData, public CVector<Vertex4v> {
+        public:
+            typedef CVertexData4v type;
+            typedef CVertexData4v self_type;
+            typedef CVertexData base_type;
+            typedef Vertex4v vertex_type;
+            typedef CVector<Vertex4v> base_vec_type;
+
         public:
             /**
              * 
@@ -801,7 +822,7 @@ namespace fg {
              */
             virtual ~CVertexData4v() {
                 destroyBuffers();
-                clear_optimised();
+                base_vec_type::clear_optimised();
             }
             /**
              * 
@@ -863,7 +884,7 @@ namespace fg {
                 vertex.uv = Vector2f(1.0f, 1.0f);
                 vertex.normal = Vector3f(1.0f, 1.0f, 1.0f);
                 vertex.color = fgColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-                CVector<Vertex4v>::push_back(vertex);
+                base_vec_type::push_back(vertex);
             }
             /**
              * 
@@ -877,7 +898,7 @@ namespace fg {
                 vertex.uv = uv;
                 vertex.normal = Vector3f(1.0f, 1.0f, 1.0f);
                 vertex.color = fgColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-                CVector<Vertex4v>::push_back(vertex);
+                base_vec_type::push_back(vertex);
             }
             /**
              * 
@@ -893,7 +914,7 @@ namespace fg {
                 vertex.normal = normal;
                 vertex.uv = uv;
                 vertex.color = fgColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-                CVector<Vertex4v>::push_back(vertex);
+                base_vec_type::push_back(vertex);
             }
             /**
              * 
@@ -911,7 +932,7 @@ namespace fg {
                 vertex.normal = normal;
                 vertex.uv = uv;
                 vertex.color = fgColor4f(color.r, color.g, color.b, 1.0f);
-                CVector<Vertex4v>::push_back(vertex);
+                base_vec_type::push_back(vertex);
             }
             /**
              * 
@@ -929,26 +950,26 @@ namespace fg {
                 vertex.normal = normal;
                 vertex.uv = uv;
                 vertex.color = color;
-                CVector<Vertex4v>::push_back(vertex);
+                base_vec_type::push_back(vertex);
             }
             /**
              * 
              */
             virtual void pop_back(void) {
-                CVector<Vertex4v>::pop_back();
+                base_vec_type::pop_back();
             }
             /**
              * 
              * @return 
              */
             virtual fgGFXvoid *back(void) const {
-                return (fgGFXvoid *)(&CVector<Vertex4v>::back());
+                return (fgGFXvoid *)(&base_vec_type::back());
             }
             /**
              * 
              */
             virtual void clear(void) {
-                CVector<Vertex4v>::clear();
+                base_vec_type::clear();
             }
             /**
              * 
@@ -956,9 +977,9 @@ namespace fg {
              */
             virtual fgGFXvoid *front(void) const {
     #if defined(FG_USING_MARMALADE)
-                return (fgGFXvoid *)(CVector<Vertex4v>::begin());
+                return (fgGFXvoid *)(base_vec_type::begin());
     #else
-                return (fgGFXvoid *)(&CVector<Vertex4v>::front());
+                return (fgGFXvoid *)(&base_vec_type::front());
     #endif /* FG_USING_MARMALADE */
             }
             /**
@@ -966,35 +987,35 @@ namespace fg {
              * @return 
              */
             virtual fgGFXuint size(void) const {
-                return CVector<Vertex4v>::size();
+                return base_vec_type::size();
             }
             /**
              * 
              * @return 
              */
             virtual fgGFXuint getNumVertices(void) const {
-                return CVector<Vertex4v>::size();
+                return base_vec_type::size();
             }
             /**
              * 
              * @return 
              */
             virtual fgGFXuint getNumNormals(void) const {
-                return CVector<Vertex4v>::size();
+                return base_vec_type::size();
             }
             /**
              * 
              * @return 
              */
             virtual fgGFXuint getNumUVs(void) const {
-                return CVector<Vertex4v>::size();
+                return base_vec_type::size();
             }
             /**
              * 
              * @return 
              */
             virtual fgGFXuint getNumColors(void) const {
-                return CVector<Vertex4v>::size();
+                return base_vec_type::size();
             }
             /**
              * 
@@ -1006,41 +1027,43 @@ namespace fg {
             /**
              *
              */
-            virtual void appendIndice(fgGFXushort indice) { }
+            virtual void appendIndice(fgGFXushort indice) {
+                // empty
+            }
             /**
              * 
              * @param newSize
              */
             virtual void reserve(const unsigned int newSize) {
-                CVector<Vertex4v>::reserve(newSize);
+                base_vec_type::reserve(newSize);
             }
             /**
              * 
              * @param newSize
              */
             virtual void resize(const unsigned int newSize) {
-                CVector<Vertex4v>::resize(newSize);
+                base_vec_type::resize(newSize);
             }
             /**
              * 
              * @return 
              */
             virtual fgGFXsizei stride(void) const {
-                return sizeof (Vertex4v);
+                return sizeof (vertex_type);
             }
             /**
              * 
              * @return 
              */
             virtual fgGFXuint attribMask(void) const {
-                return (fgGFXuint)Vertex4v::attribMask();
+                return (fgGFXuint)vertex_type::attribMask();
             }
             /**
              * 
              * @return 
              */
             virtual bool empty(void) const {
-                return (bool) CVector<Vertex4v>::empty();
+                return (bool) base_vec_type::empty();
             }
         };
     };
