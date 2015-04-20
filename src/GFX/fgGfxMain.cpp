@@ -443,10 +443,10 @@ void gfx::CGfxMain::render(void) {
 #if defined(FG_USING_SDL2)
     const Uint8 *state = SDL_GetKeyboardState(NULL);
 #endif
-    std::string sPlainEasyShaderName("sPlainEasy");
-    std::string sOrthoEasyShaderName("sOrthoEasy");
-    std::string sSkyBoxEasyShaderName("sSkyBoxEasy");
-    std::string modelname("CobraBomber");
+    ::std::string sPlainEasyShaderName("sPlainEasy");
+    ::std::string sOrthoEasyShaderName("sOrthoEasy");
+    ::std::string sSkyBoxEasyShaderName("sSkyBoxEasy");
+    ::std::string modelname("CobraBomber");
 
     if(!m_textureMgr || !m_shaderMgr) {
         FG_LOG_ERROR("No texture / shader manager");
