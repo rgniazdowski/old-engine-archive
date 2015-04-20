@@ -75,6 +75,40 @@ namespace fg {
             static unsigned int stride(void) {
                 return sizeof (self_type);
             }
+            /**
+             *
+             * @param v1
+             * @param v2
+             * @param factor
+             * @return
+             */
+            static self_type interpolate(const self_type& v1,
+                                         const self_type& v2,
+                                         float factor = 0.5f) {
+                self_type result;
+                result.position = math::mix(v1.position, v2.position, factor);
+                result.normal = math::mix(v1.normal, v2.normal, factor);
+                result.uv = math::mix(v1.uv, v2.uv, factor);
+                result.color = math::mix(v1.color, v2.color, factor);
+                return result;
+            }
+            /**
+             *
+             * @param result
+             * @param v1
+             * @param v2
+             * @param factor
+             * @return
+             */
+            static void interpolate(self_type& result,
+                                    const self_type& v1,
+                                    const self_type& v2,
+                                    float factor = 0.5f) {
+                result.position = math::mix(v1.position, v2.position, factor);
+                result.normal = math::mix(v1.normal, v2.normal, factor);
+                result.uv = math::mix(v1.uv, v2.uv, factor);
+                result.color = math::mix(v1.color, v2.color, factor);
+            }
         };
 
         /**
@@ -113,6 +147,38 @@ namespace fg {
             static unsigned int stride(void) {
                 return sizeof (self_type);
             }
+            /**
+             *
+             * @param v1
+             * @param v2
+             * @param factor
+             * @return
+             */
+            static self_type interpolate(const self_type& v1,
+                                         const self_type& v2,
+                                         float factor = 0.5f) {
+                self_type result;
+                result.position = math::mix(v1.position, v2.position, factor);
+                result.normal = math::mix(v1.normal, v2.normal, factor);
+                result.uv = math::mix(v1.uv, v2.uv, factor);
+                return result;
+            }
+            /**
+             *
+             * @param result
+             * @param v1
+             * @param v2
+             * @param factor
+             * @return
+             */
+            static void interpolate(self_type& result,
+                                    const self_type& v1,
+                                    const self_type& v2,
+                                    float factor = 0.5f) {
+                result.position = math::mix(v1.position, v2.position, factor);
+                result.normal = math::mix(v1.normal, v2.normal, factor);
+                result.uv = math::mix(v1.uv, v2.uv, factor);
+            }
         };
 
         /**
@@ -148,6 +214,36 @@ namespace fg {
              */
             static unsigned int stride(void) {
                 return sizeof (self_type);
+            }
+            /**
+             *
+             * @param v1
+             * @param v2
+             * @param factor
+             * @return
+             */
+            static self_type interpolate(const self_type& v1,
+                                         const self_type& v2,
+                                         float factor = 0.5f) {
+                self_type result;
+                result.position = math::mix(v1.position, v2.position, factor);
+                result.uv = math::mix(v1.uv, v2.uv, factor);
+                return result;
+            }
+            /**
+             *
+             * @param result
+             * @param v1
+             * @param v2
+             * @param factor
+             * @return
+             */
+            static void interpolate(self_type& result,
+                                    const self_type& v1,
+                                    const self_type& v2,
+                                    float factor = 0.5f) {
+                result.position = math::mix(v1.position, v2.position, factor);
+                result.uv = math::mix(v1.uv, v2.uv, factor);
             }
         };
 
