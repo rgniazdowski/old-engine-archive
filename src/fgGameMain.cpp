@@ -130,7 +130,9 @@ CGameMain::~CGameMain() {
     if(m_gfxMain)
         delete m_gfxMain;
     m_gfxMain = NULL;
-    m_guiMain->setShaderManager(NULL);
+    if(m_guiMain) {
+        m_guiMain->setShaderManager(NULL);
+    }
     // Destroy SFX/Sound manager object
     if(m_soundMgr)
         delete m_soundMgr;
@@ -140,13 +142,17 @@ CGameMain::~CGameMain() {
     if(m_resourceMgr)
         delete m_resourceMgr;
     m_resourceMgr = NULL;
-    m_guiMain->setResourceManager(NULL);
+    if(m_guiMain) {
+        m_guiMain->setResourceManager(NULL);
+    }
     // Reset external pointers
-    m_scriptSubsystem->setResourceManager(NULL);
-    m_scriptSubsystem->setShaderManager(NULL);
-    m_scriptSubsystem->set2DSceneManager(NULL);
-    m_scriptSubsystem->set3DSceneManager(NULL);
-    m_scriptSubsystem->setLogicManager(NULL);
+    if(m_scriptSubsystem) {
+        m_scriptSubsystem->setResourceManager(NULL);
+        m_scriptSubsystem->setShaderManager(NULL);
+        m_scriptSubsystem->set2DSceneManager(NULL);
+        m_scriptSubsystem->set3DSceneManager(NULL);
+        m_scriptSubsystem->setLogicManager(NULL);
+    }
     // Destroy the resource factory object
     if(m_resourceFactory)
         delete m_resourceFactory;
@@ -155,7 +161,9 @@ CGameMain::~CGameMain() {
     if(m_inputHandler)
         delete m_inputHandler;
     m_inputHandler = NULL;
-    m_guiMain->setPointerInputReceiver(NULL);
+    if(m_guiMain) {
+        m_guiMain->setPointerInputReceiver(NULL);
+    }
     // Joystick Controller
     if(m_joypadController) {
         m_joypadController->quit();
@@ -184,12 +192,14 @@ CGameMain::~CGameMain() {
         delete m_guiMain;
     }
     m_guiMain = NULL;
-    m_scriptSubsystem->setGuiMain(NULL);
-    m_scriptSubsystem->setWidgetManager(NULL);
-    m_scriptSubsystem->setStyleManager(NULL);
-    // Destroy the Script Subsystem object
-    delete m_scriptSubsystem;
-    m_scriptSubsystem = NULL;
+    if(m_scriptSubsystem) {
+        m_scriptSubsystem->setGuiMain(NULL);
+        m_scriptSubsystem->setWidgetManager(NULL);
+        m_scriptSubsystem->setStyleManager(NULL);
+        // Destroy the Script Subsystem object
+        delete m_scriptSubsystem;
+        m_scriptSubsystem = NULL;
+    }
     // Free registered human readable colors - these are from HTML table
     colors::freeColors();
     // Unregister all error codes #FIXME
@@ -257,7 +267,7 @@ void CGameMain::unregisterGameCallbacks(void) {
  * 
  * @param eventMgr
  */
-void CGameMain::setEventManager() {
+void CGameMain::setEventManager(void) {
     //registerGameCallbacks();
     if(m_inputHandler)
         m_inputHandler->setEventManager(this);

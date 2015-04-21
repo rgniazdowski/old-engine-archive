@@ -394,7 +394,7 @@ SDL_EventType CMainModule::checkSDLEvents(void) {
  * 
  * @return 
  */
-fgBool CMainModule::initProgram() {
+fgBool CMainModule::initProgram(void) {
     timesys::init(); // #FIXME global time init?
 #if defined(FG_DEBUG)
     profile::g_debugProfiling = new profile::CProfiling();
