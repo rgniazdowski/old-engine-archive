@@ -149,7 +149,7 @@ namespace fg {
                 /// so the style of the widget will not change (will be static). However any
                 /// event callbacks set for this widget will fire (event handlers will execute
                 /// anyway). Default: false.
-                IGNORE_STATE = 0x004
+                IGNORE_STATE = 0x0004
             };
 
         protected:
