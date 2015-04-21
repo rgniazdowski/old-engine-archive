@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="FlexiGameEditor" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output="bin/Debug/FlexiGameEditor" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="/home/vigilant/develop/flexigame/data" />
+				<Option object_output="obj/Debug/" />
+				<Option type="0" />
+				<Option compiler="gcc" />
+				<Option projectLinkerOptionsRelation="2" />
+				<Compiler>
+					<Add option="-std=c++11" />
+					<Add option="-g" />
+					<Add option="-DDEBUG" />
+					<Add option="-DFG_DEBUG" />
+				</Compiler>
+				<Linker>
+					<Add library="../FlexiGame_NB/dist/Debug_GLEW_StaticLib/GNU-Linux-x86/libflexigame_nb.a" />
+					<Add library="../MiniZipMaster_NB/dist/Debug/GNU-Linux-x86/libminizipmaster_nb.a" />
+					<Add library="../LuaPlusNextGen_NB/dist/Debug/GNU-Linux-x86/libluaplusnextgen_nb.a" />
+				</Linker>
+			</Target>
+			<Target title="Release">
+				<Option output="bin/Release/FlexiGameEditor" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Release/" />
+				<Option type="0" />
+				<Option compiler="gcc" />
+				<Option projectLinkerOptionsRelation="2" />
+				<Compiler>
+					<Add option="-O2" />
+					<Add option="-std=c++11" />
+					<Add option="-DRELEASE" />
+					<Add option="-DFG_RELEASE" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+					<Add library="../FlexiGame_NB/dist/Release_GLEW_StaticLib/GNU-Linux-x86/libflexigame_nb.a" />
+					<Add library="../MiniZipMaster_NB/dist/Release/GNU-Linux-x86/libminizipmaster_nb.a" />
+					<Add library="../LuaPlusNextGen_NB/dist/Release/GNU-Linux-x86/libluaplusnextgen_nb.a" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-std=c++11" />
+			<Add option="-Wall" />
+			<Add option="`wx-config --cflags`" />
+			<Add option="-DFG_NO_UNDEF" />
+			<Add option="-DFG_USING_GLEW" />
+			<Add option="-DFG_USING_GLM" />
+			<Add option="-DFG_USING_LUA_PLUS" />
+			<Add option="-DFG_USING_OPENGL" />
+			<Add option="-DFG_USING_OPENGL_GLEW" />
+			<Add option="-DFG_USING_THREADS" />
+			<Add option="-DFG_USING_TINYXML" />
+			<Add option="-DTIXML_USE_STL" />
+			<Add directory="../../../modules/cpp_btree" />
+			<Add directory="../../../modules/zlib_128/contrib/minizip" />
+			<Add directory="../../../modules/simpleopt" />
+			<Add directory="../../../modules/luaplus51-all/Src" />
+			<Add directory="../../../modules/stbfont" />
+			<Add directory="../../../modules/stbfont/usascii" />
+			<Add directory="../../../modules/tinyxml/upstream" />
+			<Add directory="../../../modules/tinyobj/upstream" />
+			<Add directory="../../../modules/glm" />
+			<Add directory="../../../src" />
+		</Compiler>
+		<Linker>
+			<Add option="`wx-config --libs`" />
+			<Add option="`wx-config --gl-libs`" />
+			<Add option="`pkg-config gl --libs`" />
+			<Add option="`pkg-config glu --libs`" />
+			<Add option="`pkg-config glew --libs`" />
+			<Add option="-ljpeg" />
+			<Add option="`pkg-config libpng --libs`" />
+			<Add option="`pkg-config zlib --libs`" />
+		</Linker>
+		<Unit filename="FlexiGameEditorApp.cpp" />
+		<Unit filename="FlexiGameEditorApp.h" />
+		<Unit filename="FlexiGameEditorMain.cpp" />
+		<Unit filename="FlexiGameEditorMain.h" />
+		<Unit filename="wxsmith/FlexiGameEditorframe.wxs" />
+		<Extensions>
+			<envvars />
+			<code_completion>
+				<search_path add="../../../modules/glm" />
+				<search_path add="../../../src" />
+				<search_path add="../../../modules/tinyobj/upstream" />
+				<search_path add="../../../modules/tinyxml/upstream" />
+				<search_path add="../../../modules/stbfont/usascii" />
+				<search_path add="../../../modules/stbfont" />
+				<search_path add="../../../modules/luaplus51-all/Src" />
+				<search_path add="../../../modules/zlib_128/contrib/minizip" />
+				<search_path add="../../../modules/simpleopt" />
+				<search_path add="../../../modules/cpp_btree" />
+			</code_completion>
+			<lib_finder disable_auto="1" />
+			<debugger />
+			<wxsmith version="1">
+				<gui name="wxWidgets" src="FlexiGameEditorApp.cpp" main="FlexiGameEditorFrame" init_handlers="necessary" language="CPP" />
+				<resources>
+					<wxFrame wxs="wxsmith/FlexiGameEditorframe.wxs" src="FlexiGameEditorMain.cpp" hdr="FlexiGameEditorMain.h" fwddecl="0" i18n="1" name="FlexiGameEditorFrame" language="CPP" />
+				</resources>
+			</wxsmith>
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>

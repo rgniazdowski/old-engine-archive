@@ -1,0 +1,3283 @@
+# depslib dependency file v1.0
+1429646843 source:/mnt/armada/Develop/Game.Dev.Engine/infinium/project/linux/FlexiGameEditor/FlexiGameEditorApp.cpp
+	"FlexiGameEditorApp.h"
+	"fgBuildConfig.h"
+	"fgCommon.h"
+	"fgGameMain.h"
+	<cstdlib>
+	<cstdio>
+	<cmath>
+	<map>
+	"Event/fgEventManager.h"
+	"Event/fgInputHandler.h"
+	"Hardware/fgHardwareState.h"
+	"Util/fgProfiling.h"
+	"Util/fgStrings.h"
+	"fgDebugConfig.h"
+	"fgLog.h"
+	"FlexiGameEditorMain.h"
+	<wx/image.h>
+	"GFX/Scene/fgGfxBspCompiler.h"
+
+1429644959 /mnt/armada/Develop/Game.Dev.Engine/infinium/project/linux/FlexiGameEditor/FlexiGameEditorApp.h
+	"GFX/fgGfxGL.h"
+	"fgGameMain.h"
+	<wx/app.h>
+	"wx/wx.h"
+	"wx/glcanvas.h"
+
+1412797288 /usr/include/wx-3.0/wx/app.h
+	"wx/event.h"
+	"wx/eventfilter.h"
+	"wx/build.h"
+	"wx/cmdargs.h"
+	"wx/init.h"
+	"wx/intl.h"
+	"wx/log.h"
+	"wx/unix/app.h"
+	"wx/msw/app.h"
+	"wx/motif/app.h"
+	"wx/dfb/app.h"
+	"wx/gtk/app.h"
+	"wx/gtk1/app.h"
+	"wx/x11/app.h"
+	"wx/osx/app.h"
+	"wx/cocoa/app.h"
+	"wx/os2/app.h"
+	"wx/univ/theme.h"
+
+1412797288 /usr/include/wx-3.0/wx/event.h
+	"wx/defs.h"
+	"wx/cpp.h"
+	"wx/object.h"
+	"wx/clntdata.h"
+	"wx/gdicmn.h"
+	"wx/cursor.h"
+	"wx/mousestate.h"
+	"wx/dynarray.h"
+	"wx/thread.h"
+	"wx/tracker.h"
+	"wx/typeinfo.h"
+	"wx/any.h"
+	"wx/meta/convertible.h"
+	"wx/meta/removeref.h"
+
+1412797288 /usr/include/wx-3.0/wx/defs.h
+	"wx/platform.h"
+	"wx/version.h"
+	"wx/dlimpexp.h"
+	<stddef.h>
+	"wx/debug.h"
+	<sys/types.h>
+	<sys/types.h>
+	"wx/windowid.h"
+	<unistd.h>
+	"wx/msw/winundef.h"
+	"wx/features.h"
+
+1412797288 /usr/include/wx-3.0/wx/platform.h
+	<unistd.h>
+	<TargetConditionals.h>
+	<AvailabilityMacros.h>
+	"wx/osx/config_xcode.h"
+	"wx/android/config_android.h"
+	"wx/compiler.h"
+	"wx/setup.h"
+	"wx/msw/wince/libraries.h"
+	"wx/msw/libraries.h"
+	"wx/msw/gccpriv.h"
+	<TargetConditionals.h>
+	<AvailabilityMacros.h>
+	"wx/chkconf.h"
+
+1412797288 /usr/include/wx-3.0/wx/compiler.h
+
+1412797288 /usr/lib/wx/include/gtk2-unicode-3.0/wx/setup.h
+
+1412797288 /usr/include/wx-3.0/wx/chkconf.h
+	"wx/msw/wince/chkconf.h"
+	"wx/msw/chkconf.h"
+	"wx/gtk/chkconf.h"
+	"wx/gtk/chkconf.h"
+	"wx/cocoa/chkconf.h"
+	"wx/osx/chkconf.h"
+	"wx/os2/chkconf.h"
+	"wx/dfb/chkconf.h"
+	"wx/motif/chkconf.h"
+	"wx/x11/chkconf.h"
+	"wx/android/chkconf.h"
+	"wx/unix/chkconf.h"
+	"wx/univ/chkconf.h"
+
+1412797289 /usr/include/wx-3.0/wx/gtk/chkconf.h
+
+1412797288 /usr/include/wx-3.0/wx/unix/chkconf.h
+
+1412797288 /usr/include/wx-3.0/wx/version.h
+	"wx/cpp.h"
+
+1412797288 /usr/include/wx-3.0/wx/cpp.h
+	"wx/compiler.h"
+
+1412797288 /usr/include/wx-3.0/wx/dlimpexp.h
+
+1412797288 /usr/include/wx-3.0/wx/debug.h
+	<assert.h>
+	<limits.h>
+	"wx/chartype.h"
+	"wx/cpp.h"
+	"wx/dlimpexp.h"
+
+1412797288 /usr/include/wx-3.0/wx/chartype.h
+	"wx/platform.h"
+	<sys/types.h>
+	<wchar.h>
+	<wcstr.h>
+	<stdlib.h>
+	<widec.h>
+	<ctype.h>
+	<stddef.h>
+	<string.h>
+	<ctype.h>
+	<tchar.h>
+	<ctype.h>
+
+1412797289 /usr/include/wx-3.0/wx/windowid.h
+
+1412797288 /usr/include/wx-3.0/wx/features.h
+
+1412797288 /usr/include/wx-3.0/wx/object.h
+	"wx/memory.h"
+	"wx/xti.h"
+	"wx/rtti.h"
+	"wx/xti2.h"
+	"wx/msw/msvcrt.h"
+
+1412797288 /usr/include/wx-3.0/wx/memory.h
+	"wx/defs.h"
+	"wx/string.h"
+	"wx/msgout.h"
+	<stddef.h>
+
+1412797288 /usr/include/wx-3.0/wx/string.h
+	"wx/defs.h"
+	<ctype.h>
+	<stdio.h>
+	<string.h>
+	<stdarg.h>
+	<limits.h>
+	<string.h>
+	<stdio.h>
+	<stdarg.h>
+	<limits.h>
+	<stdlib.h>
+	"wx/wxcrtbase.h"
+	"wx/strvararg.h"
+	"wx/buffer.h"
+	"wx/strconv.h"
+	"wx/stringimpl.h"
+	"wx/stringops.h"
+	"wx/unichar.h"
+	"wx/tls.h"
+	"wx/iosfwrap.h"
+	"wx/crt.h"
+
+1412797288 /usr/include/wx-3.0/wx/wxcrtbase.h
+	"wx/chartype.h"
+	<stdio.h>
+	<string.h>
+	<ctype.h>
+	<wctype.h>
+	<time.h>
+	<io.h>
+
+1412797288 /usr/include/wx-3.0/wx/strvararg.h
+	"wx/platform.h"
+	"wx/cpp.h"
+	"wx/chartype.h"
+	"wx/strconv.h"
+	"wx/buffer.h"
+	"wx/unichar.h"
+	<type_traits>
+	<type_traits>
+	<tr1/type_traits>
+	"wx/stringimpl.h"
+
+1412797288 /usr/include/wx-3.0/wx/strconv.h
+	"wx/defs.h"
+	"wx/chartype.h"
+	"wx/buffer.h"
+	"typeinfo.h"
+	<stdlib.h>
+	"wx/fontenc.h"
+
+1412797288 /usr/include/wx-3.0/wx/buffer.h
+	"wx/chartype.h"
+	"wx/wxcrtbase.h"
+	<stdlib.h>
+
+1412797288 /usr/include/wx-3.0/wx/typeinfo.h
+	"wx/defs.h"
+	<typeinfo>
+	<string.h>
+
+1412797288 /usr/include/wx-3.0/wx/fontenc.h
+
+1412797288 /usr/include/wx-3.0/wx/unichar.h
+	"wx/defs.h"
+	"wx/chartype.h"
+	"wx/stringimpl.h"
+
+1412797288 /usr/include/wx-3.0/wx/stringimpl.h
+	"wx/defs.h"
+	"wx/chartype.h"
+	"wx/wxcrtbase.h"
+	<stdlib.h>
+	"wx/beforestd.h"
+	<string>
+	"wx/afterstd.h"
+
+1412797288 /usr/include/wx-3.0/wx/beforestd.h
+
+1412797288 /usr/include/wx-3.0/wx/afterstd.h
+	"wx/msw/winundef.h"
+
+1412797288 /usr/include/wx-3.0/wx/stringops.h
+	"wx/chartype.h"
+	"wx/stringimpl.h"
+	"wx/unichar.h"
+	"wx/buffer.h"
+
+1412797288 /usr/include/wx-3.0/wx/tls.h
+	"wx/defs.h"
+	"wx/msw/tls.h"
+	"wx/os2/tls.h"
+	"wx/unix/tls.h"
+	<stdlib.h>
+
+1412797288 /usr/include/wx-3.0/wx/unix/tls.h
+	<pthread.h>
+
+1412797288 /usr/include/wx-3.0/wx/iosfwrap.h
+	<iostream.h>
+	<iosfwd>
+	"wx/msw/winundef.h"
+
+1412797288 /usr/include/wx-3.0/wx/crt.h
+	"wx/defs.h"
+	"wx/chartype.h"
+	"wx/wxcrt.h"
+	"wx/wxcrtvararg.h"
+
+1412797288 /usr/include/wx-3.0/wx/wxcrt.h
+	"wx/wxcrtbase.h"
+	"wx/string.h"
+	<string.h>
+
+1412797288 /usr/include/wx-3.0/wx/wxcrtvararg.h
+	"wx/wxcrt.h"
+	"wx/strvararg.h"
+	"wx/string.h"
+	<stdarg.h>
+
+1412797288 /usr/include/wx-3.0/wx/msgout.h
+	"wx/defs.h"
+	"wx/chartype.h"
+	"wx/strvararg.h"
+
+1412797288 /usr/include/wx-3.0/wx/xti.h
+	"wx/defs.h"
+	"wx/xtitypes.h"
+	"wx/xtihandler.h"
+
+1412797288 /usr/include/wx-3.0/wx/xtitypes.h
+	"wx/defs.h"
+	"wx/string.h"
+	"wx/hashmap.h"
+	"wx/arrstr.h"
+	"wx/flags.h"
+	"wx/intl.h"
+	"wx/log.h"
+	<typeinfo>
+
+1412797288 /usr/include/wx-3.0/wx/hashmap.h
+	"wx/string.h"
+	"wx/wxcrt.h"
+	<unordered_map>
+	<tr1/unordered_map>
+	<ext/hash_map>
+	<hash_map>
+	<stddef.h>
+
+1412797288 /usr/include/wx-3.0/wx/arrstr.h
+	"wx/defs.h"
+	"wx/string.h"
+	"wx/dynarray.h"
+	"wx/beforestd.h"
+	<iterator>
+	"wx/afterstd.h"
+
+1412797288 /usr/include/wx-3.0/wx/dynarray.h
+	"wx/defs.h"
+	"wx/beforestd.h"
+	<vector>
+	<algorithm>
+	"wx/afterstd.h"
+
+1412797288 /usr/include/wx-3.0/wx/flags.h
+
+1412797288 /usr/include/wx-3.0/wx/intl.h
+	"wx/defs.h"
+	"wx/string.h"
+	"wx/translation.h"
+	"wx/fontenc.h"
+	"wx/language.h"
+
+1412797288 /usr/include/wx-3.0/wx/translation.h
+	"wx/defs.h"
+	"wx/string.h"
+	"wx/buffer.h"
+	"wx/language.h"
+	"wx/hashmap.h"
+	"wx/strconv.h"
+	"wx/scopedptr.h"
+
+1412797288 /usr/include/wx-3.0/wx/language.h
+	"wx/defs.h"
+
+1412797288 /usr/include/wx-3.0/wx/scopedptr.h
+	"wx/defs.h"
+	"wx/checkeddelete.h"
+
+1412797288 /usr/include/wx-3.0/wx/checkeddelete.h
+	"wx/cpp.h"
+
+1412797288 /usr/include/wx-3.0/wx/log.h
+	"wx/defs.h"
+	"wx/cpp.h"
+	"wx/string.h"
+	"wx/strvararg.h"
+	"wx/arrstr.h"
+	<time.h>
+	"wx/dynarray.h"
+	"wx/hashmap.h"
+	"wx/thread.h"
+	"wx/iosfwrap.h"
+	"wx/generic/logg.h"
+	"wx/cocoa/log.h"
+
+1412797288 /usr/include/wx-3.0/wx/thread.h
+	"wx/defs.h"
+
+1412797288 /usr/include/wx-3.0/wx/generic/logg.h
+
+1412797288 /usr/include/wx-3.0/wx/xtihandler.h
+	"wx/defs.h"
+	"wx/xti.h"
+
+1412797288 /usr/include/wx-3.0/wx/rtti.h
+	"wx/memory.h"
+	"wx/flags.h"
+
+1412797288 /usr/include/wx-3.0/wx/xti2.h
+	"wx/xtiprop.h"
+	"wx/xtictor.h"
+
+1412797288 /usr/include/wx-3.0/wx/xtiprop.h
+	"wx/defs.h"
+	"wx/xti.h"
+	"wx/any.h"
+
+1412797288 /usr/include/wx-3.0/wx/any.h
+	"wx/defs.h"
+	<new>
+	"wx/string.h"
+	"wx/meta/if.h"
+	"wx/typeinfo.h"
+	"wx/list.h"
+	"wx/datetime.h"
+	"wx/variant.h"
+
+1412797288 /usr/include/wx-3.0/wx/meta/if.h
+	"wx/defs.h"
+
+1412797288 /usr/include/wx-3.0/wx/list.h
+	"wx/defs.h"
+	"wx/object.h"
+	"wx/string.h"
+	"wx/vector.h"
+	"wx/beforestd.h"
+	<algorithm>
+	<iterator>
+	<list>
+	"wx/afterstd.h"
+
+1412797288 /usr/include/wx-3.0/wx/vector.h
+	"wx/defs.h"
+	<vector>
+	<algorithm>
+	"wx/scopeguard.h"
+	"wx/meta/movable.h"
+	"wx/meta/if.h"
+	"wx/beforestd.h"
+	<new>
+	"wx/afterstd.h"
+
+1412797289 /usr/include/wx-3.0/wx/scopeguard.h
+	"wx/defs.h"
+	"wx/except.h"
+
+1412797288 /usr/include/wx-3.0/wx/except.h
+	"wx/defs.h"
+
+1412797288 /usr/include/wx-3.0/wx/meta/movable.h
+	"wx/meta/pod.h"
+	"wx/string.h"
+
+1412797288 /usr/include/wx-3.0/wx/meta/pod.h
+	"wx/defs.h"
+
+1412797288 /usr/include/wx-3.0/wx/datetime.h
+	"wx/defs.h"
+	"wx/msw/wince/time.h"
+	<time.h>
+	<limits.h>
+	"wx/longlong.h"
+	"wx/anystr.h"
+	"wx/dynarray.h"
+
+1412797288 /usr/include/wx-3.0/wx/longlong.h
+	"wx/defs.h"
+	"wx/string.h"
+	<limits.h>
+	"wx/iosfwrap.h"
+	<limits>
+	"wx/strvararg.h"
+
+1412797288 /usr/include/wx-3.0/wx/anystr.h
+	"wx/string.h"
+
+1412797288 /usr/include/wx-3.0/wx/variant.h
+	"wx/defs.h"
+	"wx/object.h"
+	"wx/string.h"
+	"wx/arrstr.h"
+	"wx/list.h"
+	"wx/cpp.h"
+	"wx/longlong.h"
+	"wx/datetime.h"
+	"wx/iosfwrap.h"
+	"wx/any.h"
+
+1412797288 /usr/include/wx-3.0/wx/xtictor.h
+	"wx/defs.h"
+	"wx/xti.h"
+
+1412797288 /usr/include/wx-3.0/wx/clntdata.h
+	"wx/defs.h"
+	"wx/string.h"
+	"wx/hashmap.h"
+
+1412797288 /usr/include/wx-3.0/wx/gdicmn.h
+	"wx/defs.h"
+	"wx/list.h"
+	"wx/string.h"
+	"wx/fontenc.h"
+	"wx/hashmap.h"
+	"wx/math.h"
+
+1412797288 /usr/include/wx-3.0/wx/math.h
+	"wx/defs.h"
+	<math.h>
+	<cmath>
+	<float.h>
+	<ieeefp.h>
+
+1412797288 /usr/include/wx-3.0/wx/cursor.h
+	"wx/defs.h"
+	"wx/msw/cursor.h"
+	"wx/motif/cursor.h"
+	"wx/gtk/cursor.h"
+	"wx/gtk1/cursor.h"
+	"wx/x11/cursor.h"
+	"wx/dfb/cursor.h"
+	"wx/osx/cursor.h"
+	"wx/cocoa/cursor.h"
+	"wx/os2/cursor.h"
+	"wx/utils.h"
+
+1412797289 /usr/include/wx-3.0/wx/gtk/cursor.h
+	"wx/gdiobj.h"
+	"wx/gdicmn.h"
+
+1412797289 /usr/include/wx-3.0/wx/gdiobj.h
+	"wx/object.h"
+
+1412797288 /usr/include/wx-3.0/wx/utils.h
+	"wx/object.h"
+	"wx/list.h"
+	"wx/filefn.h"
+	"wx/hashmap.h"
+	"wx/versioninfo.h"
+	"wx/meta/implicitconversion.h"
+	"wx/gdicmn.h"
+	"wx/mousestate.h"
+	"wx/longlong.h"
+	"wx/platinfo.h"
+	<direct.h>
+	<dirent.h>
+	<unistd.h>
+	<stdio.h>
+
+1412797288 /usr/include/wx-3.0/wx/filefn.h
+	"wx/list.h"
+	"wx/arrstr.h"
+	"wx/msw/wince/time.h"
+	"wx/msw/private.h"
+	<time.h>
+	<sys/types.h>
+	<sys/stat.h>
+	<process.h>
+	"wx/os2/private.h"
+	<direct.h>
+	<io.h>
+	<unistd.h>
+	<unistd.h>
+	<dirent.h>
+	<direct.h>
+	<dos.h>
+	<io.h>
+	<direct.h>
+	<dos.h>
+	<io.h>
+	<io.h>
+	<unistd.h>
+	<dir.h>
+	<fcntl.h>
+	<sys/types.h>
+
+1412797288 /usr/include/wx-3.0/wx/versioninfo.h
+	"wx/string.h"
+
+1412797288 /usr/include/wx-3.0/wx/meta/implicitconversion.h
+	"wx/defs.h"
+	"wx/meta/if.h"
+
+1412797288 /usr/include/wx-3.0/wx/mousestate.h
+	"wx/gdicmn.h"
+	"wx/kbdstate.h"
+
+1412797288 /usr/include/wx-3.0/wx/kbdstate.h
+	"wx/defs.h"
+
+1412797288 /usr/include/wx-3.0/wx/platinfo.h
+	"wx/string.h"
+
+1412797288 /usr/include/wx-3.0/wx/tracker.h
+	"wx/defs.h"
+
+1412797288 /usr/include/wx-3.0/wx/meta/convertible.h
+
+1412797288 /usr/include/wx-3.0/wx/meta/removeref.h
+
+1412797288 /usr/include/wx-3.0/wx/eventfilter.h
+	"wx/defs.h"
+
+1412797288 /usr/include/wx-3.0/wx/build.h
+	"wx/version.h"
+
+1412797288 /usr/include/wx-3.0/wx/cmdargs.h
+	"wx/arrstr.h"
+
+1412797288 /usr/include/wx-3.0/wx/init.h
+	"wx/defs.h"
+	"wx/chartype.h"
+	"wx/msw/init.h"
+
+1412797288 /usr/include/wx-3.0/wx/unix/app.h
+	<signal.h>
+
+1412797289 /usr/include/wx-3.0/wx/gtk/app.h
+
+1412797288 /usr/include/wx-3.0/wx/wx.h
+	"wx/defs.h"
+	"wx/object.h"
+	"wx/dynarray.h"
+	"wx/list.h"
+	"wx/hash.h"
+	"wx/string.h"
+	"wx/hashmap.h"
+	"wx/arrstr.h"
+	"wx/intl.h"
+	"wx/log.h"
+	"wx/event.h"
+	"wx/app.h"
+	"wx/utils.h"
+	"wx/stream.h"
+	"wx/memory.h"
+	"wx/math.h"
+	"wx/stopwatch.h"
+	"wx/timer.h"
+	"wx/module.h"
+	"wx/wxcrt.h"
+	"wx/wxcrtvararg.h"
+	"wx/window.h"
+	"wx/containr.h"
+	"wx/panel.h"
+	"wx/toplevel.h"
+	"wx/frame.h"
+	"wx/gdicmn.h"
+	"wx/gdiobj.h"
+	"wx/region.h"
+	"wx/bitmap.h"
+	"wx/image.h"
+	"wx/colour.h"
+	"wx/font.h"
+	"wx/dc.h"
+	"wx/dcclient.h"
+	"wx/dcmemory.h"
+	"wx/dcprint.h"
+	"wx/dcscreen.h"
+	"wx/button.h"
+	"wx/menuitem.h"
+	"wx/menu.h"
+	"wx/pen.h"
+	"wx/brush.h"
+	"wx/palette.h"
+	"wx/icon.h"
+	"wx/cursor.h"
+	"wx/dialog.h"
+	"wx/settings.h"
+	"wx/msgdlg.h"
+	"wx/dataobj.h"
+	"wx/control.h"
+	"wx/ctrlsub.h"
+	"wx/bmpbuttn.h"
+	"wx/checkbox.h"
+	"wx/checklst.h"
+	"wx/choice.h"
+	"wx/scrolbar.h"
+	"wx/stattext.h"
+	"wx/statbmp.h"
+	"wx/statbox.h"
+	"wx/listbox.h"
+	"wx/radiobox.h"
+	"wx/radiobut.h"
+	"wx/textctrl.h"
+	"wx/slider.h"
+	"wx/gauge.h"
+	"wx/scrolwin.h"
+	"wx/dirdlg.h"
+	"wx/toolbar.h"
+	"wx/combobox.h"
+	"wx/layout.h"
+	"wx/sizer.h"
+	"wx/statusbr.h"
+	"wx/choicdlg.h"
+	"wx/textdlg.h"
+	"wx/filedlg.h"
+	"wx/mdi.h"
+	"wx/validate.h"
+	"wx/valtext.h"
+
+1412797288 /usr/include/wx-3.0/wx/hash.h
+	"wx/defs.h"
+	"wx/string.h"
+	"wx/object.h"
+
+1412797288 /usr/include/wx-3.0/wx/stream.h
+	"wx/defs.h"
+	<stdio.h>
+	"wx/object.h"
+	"wx/string.h"
+	"wx/filefn.h"
+
+1412797288 /usr/include/wx-3.0/wx/stopwatch.h
+	"wx/defs.h"
+	"wx/longlong.h"
+	"wx/time.h"
+
+1412797288 /usr/include/wx-3.0/wx/time.h
+	"wx/longlong.h"
+
+1412797288 /usr/include/wx-3.0/wx/timer.h
+	"wx/defs.h"
+	"wx/object.h"
+	"wx/longlong.h"
+	"wx/event.h"
+	"wx/stopwatch.h"
+	"wx/utils.h"
+
+1412797288 /usr/include/wx-3.0/wx/module.h
+	"wx/object.h"
+	"wx/list.h"
+	"wx/arrstr.h"
+	"wx/dynarray.h"
+
+1412797289 /usr/include/wx-3.0/wx/window.h
+	"wx/event.h"
+	"wx/list.h"
+	"wx/cursor.h"
+	"wx/font.h"
+	"wx/colour.h"
+	"wx/region.h"
+	"wx/utils.h"
+	"wx/intl.h"
+	"wx/validate.h"
+	"wx/palette.h"
+	"wx/accel.h"
+	"wx/access.h"
+	"wx/msw/window.h"
+	"wx/motif/window.h"
+	"wx/gtk/window.h"
+	"wx/gtk1/window.h"
+	"wx/x11/window.h"
+	"wx/dfb/window.h"
+	"wx/osx/window.h"
+	"wx/cocoa/window.h"
+	"wx/os2/window.h"
+	"wx/univ/window.h"
+
+1412797289 /usr/include/wx-3.0/wx/font.h
+	"wx/defs.h"
+	"wx/fontenc.h"
+	"wx/gdiobj.h"
+	"wx/gdicmn.h"
+	"wx/msw/font.h"
+	"wx/motif/font.h"
+	"wx/gtk/font.h"
+	"wx/gtk1/font.h"
+	"wx/x11/font.h"
+	"wx/dfb/font.h"
+	"wx/osx/font.h"
+	"wx/cocoa/font.h"
+	"wx/os2/font.h"
+
+1412797289 /usr/include/wx-3.0/wx/gtk/font.h
+
+1412797289 /usr/include/wx-3.0/wx/colour.h
+	"wx/defs.h"
+	"wx/gdiobj.h"
+	"wx/variant.h"
+	"wx/msw/colour.h"
+	"wx/motif/colour.h"
+	"wx/gtk/colour.h"
+	"wx/gtk1/colour.h"
+	"wx/generic/colour.h"
+	"wx/x11/colour.h"
+	"wx/osx/colour.h"
+	"wx/cocoa/colour.h"
+	"wx/os2/colour.h"
+
+1412797289 /usr/include/wx-3.0/wx/gtk/colour.h
+
+1412797289 /usr/include/wx-3.0/wx/region.h
+	"wx/gdiobj.h"
+	"wx/gdicmn.h"
+	"wx/msw/region.h"
+	"wx/gtk/region.h"
+	"wx/gtk1/region.h"
+	"wx/x11/region.h"
+	"wx/dfb/region.h"
+	"wx/osx/region.h"
+	"wx/cocoa/region.h"
+	"wx/os2/region.h"
+
+1412797289 /usr/include/wx-3.0/wx/gtk/region.h
+
+1412797289 /usr/include/wx-3.0/wx/validate.h
+	"wx/defs.h"
+	"wx/event.h"
+
+1412797289 /usr/include/wx-3.0/wx/palette.h
+	"wx/defs.h"
+	"wx/object.h"
+	"wx/gdiobj.h"
+	"wx/msw/palette.h"
+	"wx/x11/palette.h"
+	"wx/generic/paletteg.h"
+	"wx/osx/palette.h"
+	"wx/os2/palette.h"
+
+1412797289 /usr/include/wx-3.0/wx/generic/paletteg.h
+	"wx/defs.h"
+	"wx/object.h"
+	"wx/gdiobj.h"
+	"wx/gdicmn.h"
+
+1412797289 /usr/include/wx-3.0/wx/accel.h
+	"wx/defs.h"
+	"wx/object.h"
+	"wx/generic/accel.h"
+	"wx/msw/accel.h"
+	"wx/motif/accel.h"
+	"wx/gtk/accel.h"
+	"wx/gtk1/accel.h"
+	"wx/osx/accel.h"
+	"wx/generic/accel.h"
+	"wx/os2/accel.h"
+
+1412797288 /usr/include/wx-3.0/wx/generic/accel.h
+
+1412797289 /usr/include/wx-3.0/wx/gtk/accel.h
+	"wx/generic/accel.h"
+
+1412797289 /usr/include/wx-3.0/wx/access.h
+	"wx/defs.h"
+	"wx/variant.h"
+	"wx/msw/ole/access.h"
+
+1412797289 /usr/include/wx-3.0/wx/gtk/window.h
+	"wx/dynarray.h"
+
+1412797288 /usr/include/wx-3.0/wx/containr.h
+	"wx/defs.h"
+	"wx/event.h"
+
+1412797289 /usr/include/wx-3.0/wx/panel.h
+	"wx/window.h"
+	"wx/containr.h"
+	"wx/univ/panel.h"
+	"wx/msw/panel.h"
+	"wx/generic/panelg.h"
+
+1412797289 /usr/include/wx-3.0/wx/generic/panelg.h
+	"wx/bitmap.h"
+
+1412797289 /usr/include/wx-3.0/wx/bitmap.h
+	"wx/string.h"
+	"wx/gdicmn.h"
+	"wx/colour.h"
+	"wx/image.h"
+	"wx/variant.h"
+	"wx/msw/bitmap.h"
+	"wx/x11/bitmap.h"
+	"wx/gtk/bitmap.h"
+	"wx/gtk1/bitmap.h"
+	"wx/x11/bitmap.h"
+	"wx/dfb/bitmap.h"
+	"wx/osx/bitmap.h"
+	"wx/cocoa/bitmap.h"
+	"wx/os2/bitmap.h"
+	"wx/generic/mask.h"
+
+1412797289 /usr/include/wx-3.0/wx/image.h
+	"wx/defs.h"
+	"wx/object.h"
+	"wx/string.h"
+	"wx/gdicmn.h"
+	"wx/hashmap.h"
+	"wx/arrstr.h"
+	"wx/stream.h"
+	"wx/variant.h"
+	"wx/imagbmp.h"
+	"wx/imagpng.h"
+	"wx/imaggif.h"
+	"wx/imagpcx.h"
+	"wx/imagjpeg.h"
+	"wx/imagtga.h"
+	"wx/imagtiff.h"
+	"wx/imagpnm.h"
+	"wx/imagxpm.h"
+	"wx/imagiff.h"
+
+1412797289 /usr/include/wx-3.0/wx/imagbmp.h
+	"wx/image.h"
+
+1412797289 /usr/include/wx-3.0/wx/imagpng.h
+	"wx/defs.h"
+	"wx/image.h"
+	"wx/versioninfo.h"
+
+1412797289 /usr/include/wx-3.0/wx/imaggif.h
+	"wx/image.h"
+
+1412797289 /usr/include/wx-3.0/wx/imagpcx.h
+	"wx/image.h"
+
+1412797289 /usr/include/wx-3.0/wx/imagjpeg.h
+	"wx/defs.h"
+	"wx/image.h"
+	"wx/versioninfo.h"
+
+1412797289 /usr/include/wx-3.0/wx/imagtga.h
+	"wx/image.h"
+
+1412797289 /usr/include/wx-3.0/wx/imagtiff.h
+	"wx/defs.h"
+	"wx/image.h"
+	"wx/versioninfo.h"
+
+1412797289 /usr/include/wx-3.0/wx/imagpnm.h
+	"wx/image.h"
+
+1412797289 /usr/include/wx-3.0/wx/imagxpm.h
+	"wx/image.h"
+
+1412797289 /usr/include/wx-3.0/wx/imagiff.h
+	"wx/image.h"
+
+1412797289 /usr/include/wx-3.0/wx/gtk/bitmap.h
+
+1412797289 /usr/include/wx-3.0/wx/toplevel.h
+	"wx/nonownedwnd.h"
+	"wx/iconbndl.h"
+	"wx/weakref.h"
+	"wx/msw/toplevel.h"
+	"wx/gtk/toplevel.h"
+	"wx/gtk1/toplevel.h"
+	"wx/x11/toplevel.h"
+	"wx/dfb/toplevel.h"
+	"wx/osx/toplevel.h"
+	"wx/cocoa/toplevel.h"
+	"wx/os2/toplevel.h"
+	"wx/motif/toplevel.h"
+	"wx/univ/toplevel.h"
+
+1412797289 /usr/include/wx-3.0/wx/nonownedwnd.h
+	"wx/window.h"
+	"wx/dfb/nonownedwnd.h"
+	"wx/gtk/nonownedwnd.h"
+	"wx/osx/nonownedwnd.h"
+	"wx/msw/nonownedwnd.h"
+
+1412797289 /usr/include/wx-3.0/wx/gtk/nonownedwnd.h
+
+1412797289 /usr/include/wx-3.0/wx/iconbndl.h
+	"wx/gdiobj.h"
+	"wx/gdicmn.h"
+	"wx/icon.h"
+	"wx/dynarray.h"
+
+1412797289 /usr/include/wx-3.0/wx/icon.h
+	"wx/iconloc.h"
+	"wx/msw/icon.h"
+	"wx/motif/icon.h"
+	"wx/generic/icon.h"
+	"wx/generic/icon.h"
+	"wx/generic/icon.h"
+	"wx/generic/icon.h"
+	"wx/osx/icon.h"
+	"wx/generic/icon.h"
+	"wx/cocoa/icon.h"
+	"wx/os2/icon.h"
+	"wx/variant.h"
+
+1412797288 /usr/include/wx-3.0/wx/iconloc.h
+	"wx/string.h"
+
+1412797289 /usr/include/wx-3.0/wx/generic/icon.h
+	"wx/bitmap.h"
+
+1412797288 /usr/include/wx-3.0/wx/weakref.h
+	"wx/tracker.h"
+	"wx/meta/convertible.h"
+	"wx/meta/int2type.h"
+
+1412797288 /usr/include/wx-3.0/wx/meta/int2type.h
+
+1412797289 /usr/include/wx-3.0/wx/gtk/toplevel.h
+
+1412797288 /usr/include/wx-3.0/wx/frame.h
+	"wx/toplevel.h"
+	"wx/statusbr.h"
+	"wx/univ/frame.h"
+	"wx/msw/frame.h"
+	"wx/gtk/frame.h"
+	"wx/gtk1/frame.h"
+	"wx/motif/frame.h"
+	"wx/osx/frame.h"
+	"wx/cocoa/frame.h"
+	"wx/os2/frame.h"
+
+1412797289 /usr/include/wx-3.0/wx/statusbr.h
+	"wx/defs.h"
+	"wx/control.h"
+	"wx/list.h"
+	"wx/dynarray.h"
+	"wx/univ/statusbr.h"
+	"wx/msw/statusbar.h"
+	"wx/generic/statusbr.h"
+	"wx/osx/statusbr.h"
+	"wx/generic/statusbr.h"
+
+1412797288 /usr/include/wx-3.0/wx/control.h
+	"wx/defs.h"
+	"wx/window.h"
+	"wx/univ/control.h"
+	"wx/msw/control.h"
+	"wx/motif/control.h"
+	"wx/gtk/control.h"
+	"wx/gtk1/control.h"
+	"wx/osx/control.h"
+	"wx/cocoa/control.h"
+	"wx/os2/control.h"
+
+1412797289 /usr/include/wx-3.0/wx/gtk/control.h
+
+1412797289 /usr/include/wx-3.0/wx/generic/statusbr.h
+	"wx/defs.h"
+	"wx/pen.h"
+	"wx/arrstr.h"
+
+1412797289 /usr/include/wx-3.0/wx/pen.h
+	"wx/gdiobj.h"
+	"wx/gdicmn.h"
+	"wx/msw/pen.h"
+	"wx/x11/pen.h"
+	"wx/gtk/pen.h"
+	"wx/gtk1/pen.h"
+	"wx/dfb/pen.h"
+	"wx/osx/pen.h"
+	"wx/cocoa/pen.h"
+	"wx/os2/pen.h"
+
+1412797289 /usr/include/wx-3.0/wx/gtk/pen.h
+
+1412797289 /usr/include/wx-3.0/wx/gtk/frame.h
+
+1412797288 /usr/include/wx-3.0/wx/dc.h
+	"wx/object.h"
+	"wx/intl.h"
+	"wx/cursor.h"
+	"wx/font.h"
+	"wx/colour.h"
+	"wx/bitmap.h"
+	"wx/brush.h"
+	"wx/pen.h"
+	"wx/palette.h"
+	"wx/dynarray.h"
+	"wx/math.h"
+	"wx/image.h"
+	"wx/region.h"
+	"wx/affinematrix2d.h"
+
+1412797288 /usr/include/wx-3.0/wx/brush.h
+	"wx/defs.h"
+	"wx/object.h"
+	"wx/gdiobj.h"
+	"wx/gdicmn.h"
+	"wx/msw/brush.h"
+	"wx/x11/brush.h"
+	"wx/gtk/brush.h"
+	"wx/gtk1/brush.h"
+	"wx/dfb/brush.h"
+	"wx/osx/brush.h"
+	"wx/cocoa/brush.h"
+	"wx/os2/brush.h"
+
+1412797289 /usr/include/wx-3.0/wx/gtk/brush.h
+
+1412797288 /usr/include/wx-3.0/wx/affinematrix2d.h
+	"wx/defs.h"
+	"wx/affinematrix2dbase.h"
+
+1412797288 /usr/include/wx-3.0/wx/affinematrix2dbase.h
+	"wx/defs.h"
+	"wx/geometry.h"
+
+1412797289 /usr/include/wx-3.0/wx/geometry.h
+	"wx/defs.h"
+	"wx/utils.h"
+	"wx/gdicmn.h"
+	"wx/math.h"
+
+1412797288 /usr/include/wx-3.0/wx/dcclient.h
+	"wx/dc.h"
+
+1412797288 /usr/include/wx-3.0/wx/dcmemory.h
+	"wx/dc.h"
+	"wx/bitmap.h"
+
+1412797288 /usr/include/wx-3.0/wx/dcprint.h
+	"wx/defs.h"
+	"wx/dc.h"
+
+1412797288 /usr/include/wx-3.0/wx/dcscreen.h
+	"wx/defs.h"
+	"wx/dc.h"
+
+1412797288 /usr/include/wx-3.0/wx/button.h
+	"wx/defs.h"
+	"wx/anybutton.h"
+	"wx/univ/button.h"
+	"wx/msw/button.h"
+	"wx/motif/button.h"
+	"wx/gtk/button.h"
+	"wx/gtk1/button.h"
+	"wx/osx/button.h"
+	"wx/cocoa/button.h"
+	"wx/os2/button.h"
+
+1412797288 /usr/include/wx-3.0/wx/anybutton.h
+	"wx/defs.h"
+	"wx/bitmap.h"
+	"wx/control.h"
+	"wx/univ/anybutton.h"
+	"wx/msw/anybutton.h"
+	"wx/gtk/anybutton.h"
+	"wx/osx/anybutton.h"
+
+1412797289 /usr/include/wx-3.0/wx/gtk/anybutton.h
+
+1412797289 /usr/include/wx-3.0/wx/gtk/button.h
+
+1412797289 /usr/include/wx-3.0/wx/menuitem.h
+	"wx/defs.h"
+	"wx/object.h"
+	"wx/univ/menuitem.h"
+	"wx/msw/menuitem.h"
+	"wx/motif/menuitem.h"
+	"wx/gtk/menuitem.h"
+	"wx/gtk1/menuitem.h"
+	"wx/osx/menuitem.h"
+	"wx/cocoa/menuitem.h"
+	"wx/os2/menuitem.h"
+
+1412797289 /usr/include/wx-3.0/wx/gtk/menuitem.h
+	"wx/bitmap.h"
+
+1412797289 /usr/include/wx-3.0/wx/menu.h
+	"wx/defs.h"
+	"wx/list.h"
+	"wx/window.h"
+	"wx/menuitem.h"
+	"wx/univ/menu.h"
+	"wx/msw/menu.h"
+	"wx/motif/menu.h"
+	"wx/gtk/menu.h"
+	"wx/gtk1/menu.h"
+	"wx/osx/menu.h"
+	"wx/cocoa/menu.h"
+	"wx/os2/menu.h"
+
+1412797289 /usr/include/wx-3.0/wx/gtk/menu.h
+
+1412797288 /usr/include/wx-3.0/wx/dialog.h
+	"wx/toplevel.h"
+	"wx/containr.h"
+	"wx/sharedptr.h"
+	"wx/univ/dialog.h"
+	"wx/msw/dialog.h"
+	"wx/motif/dialog.h"
+	"wx/gtk/dialog.h"
+	"wx/gtk1/dialog.h"
+	"wx/osx/dialog.h"
+	"wx/cocoa/dialog.h"
+	"wx/os2/dialog.h"
+
+1412797288 /usr/include/wx-3.0/wx/sharedptr.h
+	"wx/defs.h"
+	"wx/atomic.h"
+
+1412797288 /usr/include/wx-3.0/wx/atomic.h
+	"wx/defs.h"
+	"wx/msw/wrapwin.h"
+	"libkern/OSAtomic.h"
+	<atomic.h>
+	"wx/thread.h"
+
+1412797289 /usr/include/wx-3.0/wx/gtk/dialog.h
+
+1412797289 /usr/include/wx-3.0/wx/settings.h
+	"wx/colour.h"
+	"wx/font.h"
+
+1412797289 /usr/include/wx-3.0/wx/msgdlg.h
+	"wx/defs.h"
+	"wx/dialog.h"
+	"wx/stockitem.h"
+	"wx/generic/msgdlgg.h"
+	"wx/cocoa/msgdlg.h"
+	"wx/msw/msgdlg.h"
+	"wx/motif/msgdlg.h"
+	"wx/gtk/msgdlg.h"
+	"wx/osx/msgdlg.h"
+	"wx/os2/msgdlg.h"
+
+1412797288 /usr/include/wx-3.0/wx/stockitem.h
+	"wx/defs.h"
+	"wx/chartype.h"
+	"wx/string.h"
+	"wx/accel.h"
+
+1412797288 /usr/include/wx-3.0/wx/generic/msgdlgg.h
+
+1412797289 /usr/include/wx-3.0/wx/gtk/msgdlg.h
+
+1412797289 /usr/include/wx-3.0/wx/dataobj.h
+	"wx/defs.h"
+	"wx/string.h"
+	"wx/bitmap.h"
+	"wx/list.h"
+	"wx/arrstr.h"
+	"wx/msw/ole/dataform.h"
+	"wx/motif/dataform.h"
+	"wx/gtk/dataform.h"
+	"wx/gtk1/dataform.h"
+	"wx/x11/dataform.h"
+	"wx/osx/dataform.h"
+	"wx/cocoa/dataform.h"
+	"wx/os2/dataform.h"
+	"wx/msw/ole/dataobj.h"
+	"wx/motif/dataobj.h"
+	"wx/x11/dataobj.h"
+	"wx/gtk/dataobj.h"
+	"wx/gtk1/dataobj.h"
+	"wx/osx/dataobj.h"
+	"wx/cocoa/dataobj.h"
+	"wx/os2/dataobj.h"
+	"wx/msw/ole/dataobj2.h"
+	"wx/gtk/dataobj2.h"
+	"wx/gtk1/dataobj2.h"
+	"wx/x11/dataobj2.h"
+	"wx/motif/dataobj2.h"
+	"wx/osx/dataobj2.h"
+	"wx/cocoa/dataobj2.h"
+	"wx/os2/dataobj2.h"
+
+1412797289 /usr/include/wx-3.0/wx/gtk/dataform.h
+
+1412797289 /usr/include/wx-3.0/wx/gtk/dataobj.h
+
+1412797289 /usr/include/wx-3.0/wx/gtk/dataobj2.h
+
+1412797288 /usr/include/wx-3.0/wx/ctrlsub.h
+	"wx/defs.h"
+	"wx/arrstr.h"
+	"wx/control.h"
+	"wx/msw/ctrlsub.h"
+	"wx/motif/ctrlsub.h"
+
+1412797288 /usr/include/wx-3.0/wx/bmpbuttn.h
+	"wx/defs.h"
+	"wx/button.h"
+	"wx/univ/bmpbuttn.h"
+	"wx/msw/bmpbuttn.h"
+	"wx/motif/bmpbuttn.h"
+	"wx/gtk/bmpbuttn.h"
+	"wx/gtk1/bmpbuttn.h"
+	"wx/osx/bmpbuttn.h"
+	"wx/cocoa/bmpbuttn.h"
+	"wx/os2/bmpbuttn.h"
+
+1412797289 /usr/include/wx-3.0/wx/gtk/bmpbuttn.h
+
+1412797288 /usr/include/wx-3.0/wx/checkbox.h
+	"wx/defs.h"
+	"wx/control.h"
+	"wx/univ/checkbox.h"
+	"wx/msw/checkbox.h"
+	"wx/motif/checkbox.h"
+	"wx/gtk/checkbox.h"
+	"wx/gtk1/checkbox.h"
+	"wx/osx/checkbox.h"
+	"wx/cocoa/checkbox.h"
+	"wx/os2/checkbox.h"
+
+1412797289 /usr/include/wx-3.0/wx/gtk/checkbox.h
+
+1412797288 /usr/include/wx-3.0/wx/checklst.h
+	"wx/defs.h"
+	"wx/listbox.h"
+	"wx/univ/checklst.h"
+	"wx/msw/wince/checklst.h"
+	"wx/msw/checklst.h"
+	"wx/motif/checklst.h"
+	"wx/gtk/checklst.h"
+	"wx/gtk1/checklst.h"
+	"wx/osx/checklst.h"
+	"wx/cocoa/checklst.h"
+	"wx/os2/checklst.h"
+
+1412797289 /usr/include/wx-3.0/wx/listbox.h
+	"wx/defs.h"
+	"wx/ctrlsub.h"
+	"wx/univ/listbox.h"
+	"wx/msw/listbox.h"
+	"wx/motif/listbox.h"
+	"wx/gtk/listbox.h"
+	"wx/gtk1/listbox.h"
+	"wx/osx/listbox.h"
+	"wx/os2/listbox.h"
+	"wx/cocoa/listbox.h"
+
+1412797289 /usr/include/wx-3.0/wx/gtk/listbox.h
+
+1412797289 /usr/include/wx-3.0/wx/gtk/checklst.h
+
+1412797288 /usr/include/wx-3.0/wx/choice.h
+	"wx/defs.h"
+	"wx/ctrlsub.h"
+	"wx/univ/choice.h"
+	"wx/msw/wince/choicece.h"
+	"wx/msw/choice.h"
+	"wx/motif/choice.h"
+	"wx/gtk/choice.h"
+	"wx/gtk1/choice.h"
+	"wx/osx/choice.h"
+	"wx/cocoa/choice.h"
+	"wx/os2/choice.h"
+
+1412797289 /usr/include/wx-3.0/wx/gtk/choice.h
+
+1412797289 /usr/include/wx-3.0/wx/scrolbar.h
+	"wx/defs.h"
+	"wx/control.h"
+	"wx/univ/scrolbar.h"
+	"wx/msw/scrolbar.h"
+	"wx/motif/scrolbar.h"
+	"wx/gtk/scrolbar.h"
+	"wx/gtk1/scrolbar.h"
+	"wx/osx/scrolbar.h"
+	"wx/cocoa/scrolbar.h"
+	"wx/os2/scrolbar.h"
+
+1412797289 /usr/include/wx-3.0/wx/gtk/scrolbar.h
+
+1412797289 /usr/include/wx-3.0/wx/stattext.h
+	"wx/defs.h"
+	"wx/control.h"
+	"wx/univ/stattext.h"
+	"wx/msw/stattext.h"
+	"wx/motif/stattext.h"
+	"wx/gtk/stattext.h"
+	"wx/gtk1/stattext.h"
+	"wx/osx/stattext.h"
+	"wx/cocoa/stattext.h"
+	"wx/os2/stattext.h"
+
+1412797289 /usr/include/wx-3.0/wx/gtk/stattext.h
+
+1412797289 /usr/include/wx-3.0/wx/statbmp.h
+	"wx/defs.h"
+	"wx/control.h"
+	"wx/bitmap.h"
+	"wx/icon.h"
+	"wx/univ/statbmp.h"
+	"wx/msw/statbmp.h"
+	"wx/motif/statbmp.h"
+	"wx/gtk/statbmp.h"
+	"wx/gtk1/statbmp.h"
+	"wx/osx/statbmp.h"
+	"wx/cocoa/statbmp.h"
+	"wx/os2/statbmp.h"
+
+1412797289 /usr/include/wx-3.0/wx/gtk/statbmp.h
+	"wx/icon.h"
+
+1412797289 /usr/include/wx-3.0/wx/statbox.h
+	"wx/defs.h"
+	"wx/control.h"
+	"wx/containr.h"
+	"wx/univ/statbox.h"
+	"wx/msw/statbox.h"
+	"wx/motif/statbox.h"
+	"wx/gtk/statbox.h"
+	"wx/gtk1/statbox.h"
+	"wx/osx/statbox.h"
+	"wx/cocoa/statbox.h"
+	"wx/os2/statbox.h"
+
+1412797289 /usr/include/wx-3.0/wx/gtk/statbox.h
+
+1412797289 /usr/include/wx-3.0/wx/radiobox.h
+	"wx/defs.h"
+	"wx/ctrlsub.h"
+	"wx/dynarray.h"
+	"wx/univ/radiobox.h"
+	"wx/msw/radiobox.h"
+	"wx/motif/radiobox.h"
+	"wx/gtk/radiobox.h"
+	"wx/gtk1/radiobox.h"
+	"wx/osx/radiobox.h"
+	"wx/cocoa/radiobox.h"
+	"wx/os2/radiobox.h"
+
+1412797289 /usr/include/wx-3.0/wx/gtk/radiobox.h
+	"wx/bitmap.h"
+	"wx/list.h"
+
+1412797289 /usr/include/wx-3.0/wx/radiobut.h
+	"wx/defs.h"
+	"wx/control.h"
+	"wx/univ/radiobut.h"
+	"wx/msw/radiobut.h"
+	"wx/motif/radiobut.h"
+	"wx/gtk/radiobut.h"
+	"wx/gtk1/radiobut.h"
+	"wx/osx/radiobut.h"
+	"wx/cocoa/radiobut.h"
+	"wx/os2/radiobut.h"
+
+1412797289 /usr/include/wx-3.0/wx/gtk/radiobut.h
+
+1412797289 /usr/include/wx-3.0/wx/textctrl.h
+	"wx/defs.h"
+	"wx/control.h"
+	"wx/textentry.h"
+	"wx/dynarray.h"
+	"wx/gdicmn.h"
+	"wx/ioswrap.h"
+	"wx/x11/textctrl.h"
+	"wx/univ/textctrl.h"
+	"wx/msw/wince/textctrlce.h"
+	"wx/msw/textctrl.h"
+	"wx/motif/textctrl.h"
+	"wx/gtk/textctrl.h"
+	"wx/gtk1/textctrl.h"
+	"wx/osx/textctrl.h"
+	"wx/cocoa/textctrl.h"
+	"wx/os2/textctrl.h"
+
+1412797289 /usr/include/wx-3.0/wx/textentry.h
+	"wx/filefn.h"
+	"wx/gdicmn.h"
+	"wx/gtk/textentry.h"
+	"wx/osx/textentry.h"
+	"wx/msw/textentry.h"
+	"wx/motif/textentry.h"
+	"wx/os2/textentry.h"
+
+1412797289 /usr/include/wx-3.0/wx/gtk/textentry.h
+
+1412797288 /usr/include/wx-3.0/wx/ioswrap.h
+	"wx/beforestd.h"
+	<iostream.h>
+	<iostream>
+	"wx/afterstd.h"
+	"wx/msw/winundef.h"
+
+1412797289 /usr/include/wx-3.0/wx/gtk/textctrl.h
+
+1412797289 /usr/include/wx-3.0/wx/slider.h
+	"wx/defs.h"
+	"wx/control.h"
+	"wx/univ/slider.h"
+	"wx/msw/slider.h"
+	"wx/motif/slider.h"
+	"wx/gtk/slider.h"
+	"wx/gtk1/slider.h"
+	"wx/osx/slider.h"
+	"wx/cocoa/slider.h"
+	"wx/os2/slider.h"
+
+1412797289 /usr/include/wx-3.0/wx/gtk/slider.h
+
+1412797288 /usr/include/wx-3.0/wx/gauge.h
+	"wx/defs.h"
+	"wx/control.h"
+	"wx/univ/gauge.h"
+	"wx/msw/gauge.h"
+	"wx/motif/gauge.h"
+	"wx/gtk/gauge.h"
+	"wx/gtk1/gauge.h"
+	"wx/osx/gauge.h"
+	"wx/cocoa/gauge.h"
+	"wx/os2/gauge.h"
+
+1412797289 /usr/include/wx-3.0/wx/gtk/gauge.h
+
+1412797289 /usr/include/wx-3.0/wx/scrolwin.h
+	"wx/panel.h"
+	"wx/gtk/scrolwin.h"
+	"wx/gtk1/scrolwin.h"
+	"wx/generic/scrolwin.h"
+
+1412797289 /usr/include/wx-3.0/wx/gtk/scrolwin.h
+
+1412797289 /usr/include/wx-3.0/wx/generic/scrolwin.h
+
+1412797288 /usr/include/wx-3.0/wx/dirdlg.h
+	"wx/dialog.h"
+	"wx/generic/dirdlgg.h"
+	"wx/generic/dirdlgg.h"
+	"wx/generic/dirdlgg.h"
+	"wx/msw/dirdlg.h"
+	"wx/gtk/dirdlg.h"
+	"wx/generic/dirdlgg.h"
+	"wx/osx/dirdlg.h"
+	"wx/cocoa/dirdlg.h"
+	"wx/generic/dirdlgg.h"
+
+1412797289 /usr/include/wx-3.0/wx/gtk/dirdlg.h
+
+1412797289 /usr/include/wx-3.0/wx/toolbar.h
+	"wx/defs.h"
+	"wx/tbarbase.h"
+	"wx/univ/toolbar.h"
+	"wx/msw/toolbar.h"
+	"wx/msw/wince/tbarwce.h"
+	"wx/motif/toolbar.h"
+	"wx/gtk/toolbar.h"
+	"wx/gtk1/toolbar.h"
+	"wx/osx/toolbar.h"
+	"wx/cocoa/toolbar.h"
+	"wx/os2/toolbar.h"
+
+1412797289 /usr/include/wx-3.0/wx/tbarbase.h
+	"wx/defs.h"
+	"wx/bitmap.h"
+	"wx/list.h"
+	"wx/control.h"
+
+1412797289 /usr/include/wx-3.0/wx/gtk/toolbar.h
+
+1412797288 /usr/include/wx-3.0/wx/combobox.h
+	"wx/defs.h"
+	"wx/textctrl.h"
+	"wx/ctrlsub.h"
+	"wx/textentry.h"
+	"wx/univ/combobox.h"
+	"wx/msw/combobox.h"
+	"wx/motif/combobox.h"
+	"wx/gtk/combobox.h"
+	"wx/gtk1/combobox.h"
+	"wx/osx/combobox.h"
+	"wx/cocoa/combobox.h"
+	"wx/os2/combobox.h"
+
+1412797289 /usr/include/wx-3.0/wx/gtk/combobox.h
+	"wx/choice.h"
+
+1412797289 /usr/include/wx-3.0/wx/layout.h
+	"wx/object.h"
+
+1412797289 /usr/include/wx-3.0/wx/sizer.h
+	"wx/defs.h"
+	"wx/window.h"
+
+1412797288 /usr/include/wx-3.0/wx/choicdlg.h
+	"wx/defs.h"
+	"wx/generic/choicdgg.h"
+
+1412797288 /usr/include/wx-3.0/wx/generic/choicdgg.h
+	"wx/dynarray.h"
+	"wx/dialog.h"
+
+1412797289 /usr/include/wx-3.0/wx/textdlg.h
+	"wx/generic/textdlgg.h"
+
+1412797289 /usr/include/wx-3.0/wx/generic/textdlgg.h
+	"wx/defs.h"
+	"wx/dialog.h"
+	"wx/valtext.h"
+	"wx/textctrl.h"
+
+1412797289 /usr/include/wx-3.0/wx/valtext.h
+	"wx/defs.h"
+	"wx/validate.h"
+
+1412797288 /usr/include/wx-3.0/wx/filedlg.h
+	"wx/defs.h"
+	"wx/dialog.h"
+	"wx/arrstr.h"
+	"wx/generic/filedlgg.h"
+	"wx/msw/filedlg.h"
+	"wx/motif/filedlg.h"
+	"wx/gtk/filedlg.h"
+	"wx/gtk1/filedlg.h"
+	"wx/osx/filedlg.h"
+	"wx/cocoa/filedlg.h"
+	"wx/os2/filedlg.h"
+
+1412797289 /usr/include/wx-3.0/wx/gtk/filedlg.h
+	"wx/gtk/filectrl.h"
+
+1412797289 /usr/include/wx-3.0/wx/gtk/filectrl.h
+	"wx/control.h"
+	"wx/filectrl.h"
+
+1412797289 /usr/include/wx-3.0/wx/filectrl.h
+	"wx/defs.h"
+	"wx/string.h"
+	"wx/event.h"
+	"wx/gtk/filectrl.h"
+	"wx/generic/filectrlg.h"
+
+1412797288 /usr/include/wx-3.0/wx/generic/filectrlg.h
+	"wx/containr.h"
+	"wx/listctrl.h"
+	"wx/filectrl.h"
+	"wx/filename.h"
+
+1412797289 /usr/include/wx-3.0/wx/listctrl.h
+	"wx/defs.h"
+	"wx/listbase.h"
+	"wx/msw/listctrl.h"
+	"wx/osx/listctrl.h"
+	"wx/generic/listctrl.h"
+
+1412797289 /usr/include/wx-3.0/wx/listbase.h
+	"wx/colour.h"
+	"wx/font.h"
+	"wx/gdicmn.h"
+	"wx/event.h"
+	"wx/control.h"
+
+1412797289 /usr/include/wx-3.0/wx/generic/listctrl.h
+	"wx/containr.h"
+	"wx/scrolwin.h"
+	"wx/textctrl.h"
+
+1412797288 /usr/include/wx-3.0/wx/filename.h
+	"wx/arrstr.h"
+	"wx/filefn.h"
+	"wx/datetime.h"
+	"wx/intl.h"
+	"wx/longlong.h"
+	"wx/file.h"
+
+1412797288 /usr/include/wx-3.0/wx/file.h
+	"wx/defs.h"
+	"wx/string.h"
+	"wx/filefn.h"
+	"wx/convauto.h"
+
+1412797288 /usr/include/wx-3.0/wx/convauto.h
+	"wx/strconv.h"
+	"wx/fontenc.h"
+
+1412797289 /usr/include/wx-3.0/wx/mdi.h
+	"wx/defs.h"
+	"wx/frame.h"
+	"wx/menu.h"
+	"wx/generic/mdig.h"
+	"wx/msw/mdi.h"
+	"wx/gtk/mdi.h"
+	"wx/gtk1/mdi.h"
+	"wx/osx/mdi.h"
+	"wx/cocoa/mdi.h"
+
+1412797289 /usr/include/wx-3.0/wx/gtk/mdi.h
+	"wx/frame.h"
+
+1412797289 /usr/include/wx-3.0/wx/glcanvas.h
+	"wx/defs.h"
+	"wx/app.h"
+	"wx/palette.h"
+	"wx/window.h"
+	"wx/msw/glcanvas.h"
+	"wx/x11/glcanvas.h"
+	"wx/gtk/glcanvas.h"
+	"wx/gtk1/glcanvas.h"
+	"wx/osx/glcanvas.h"
+	"wx/cocoa/glcanvas.h"
+
+1412797289 /usr/include/wx-3.0/wx/gtk/glcanvas.h
+	"wx/unix/glx11.h"
+
+1412797289 /usr/include/wx-3.0/wx/unix/glx11.h
+	<GL/glx.h>
+
+1429628572 /mnt/armada/Develop/Game.Dev.Engine/infinium/project/linux/FlexiGameEditor/FlexiGameEditorMain.h
+	<wx/menu.h>
+	<wx/statusbr.h>
+	<wx/frame.h>
+
+1429644012 source:/mnt/armada/Develop/Game.Dev.Engine/infinium/project/linux/FlexiGameEditor/FlexiGameEditorMain.cpp
+	"FlexiGameEditorMain.h"
+	<wx/msgdlg.h>
+	<wx/string.h>
+	<wx/intl.h>
+
+1429547812 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/GFX/fgGfxAABoundingBox.h
+	"GFX/fgGfxBoundingBox.h"
+	"fgBool.h"
+	<cfloat>
+
+1429103236 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/GFX/fgGfxBoundingBox.h
+	"fgBuildConfig.h"
+	"fgBool.h"
+	"fgGfxVertex.h"
+	"fgLog.h"
+	<cmath>
+
+1429102577 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/fgBuildConfig.h
+
+1429102577 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/fgBool.h
+	<climits>
+
+1429476114 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/GFX/fgGfxVertex.h
+	"fgBuildConfig.h"
+	"fgGfxColor.h"
+	"Math/fgMathLib.h"
+	"fgGfxAttribBits.h"
+
+1429102578 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/GFX/fgGfxColor.h
+	"fgBuildConfig.h"
+	"glm/vec3.hpp"
+	"glm/vec4.hpp"
+	<cmath>
+
+1413754451 /mnt/armada/Develop/Game.Dev.Engine/infinium/modules/glm/glm/vec3.hpp
+	"detail/type_vec3.hpp"
+
+1413754451 /mnt/armada/Develop/Game.Dev.Engine/infinium/modules/glm/glm/detail/type_vec3.hpp
+	"type_vec.hpp"
+	"_swizzle.hpp"
+	"_swizzle_func.hpp"
+	<cstddef>
+	"type_vec3.inl"
+
+1413754451 /mnt/armada/Develop/Game.Dev.Engine/infinium/modules/glm/glm/detail/type_vec.hpp
+	"precision.hpp"
+	"type_int.hpp"
+
+1413754451 /mnt/armada/Develop/Game.Dev.Engine/infinium/modules/glm/glm/detail/precision.hpp
+
+1413754451 /mnt/armada/Develop/Game.Dev.Engine/infinium/modules/glm/glm/detail/type_int.hpp
+	"setup.hpp"
+	"stl/_prolog.h"
+	"stdint.h"
+	<cstdint>
+	"stl/_epilog.h"
+
+1413754451 /mnt/armada/Develop/Game.Dev.Engine/infinium/modules/glm/glm/detail/setup.hpp
+	<cassert>
+	<cuda.h>
+	<intrin.h>
+	<immintrin.h>
+	<immintrin.h>
+	<smmintrin.h>
+	<pmmintrin.h>
+	<emmintrin.h>
+
+1413754451 /mnt/armada/Develop/Game.Dev.Engine/infinium/modules/glm/glm/detail/_swizzle.hpp
+
+1413754451 /mnt/armada/Develop/Game.Dev.Engine/infinium/modules/glm/glm/detail/_swizzle_func.hpp
+
+1393357678 /mnt/armada/Develop/Game.Dev.Engine/infinium/modules/glm/glm/detail/type_vec3.inl
+
+1413754451 /mnt/armada/Develop/Game.Dev.Engine/infinium/modules/glm/glm/vec4.hpp
+	"detail/type_vec4.hpp"
+
+1413754451 /mnt/armada/Develop/Game.Dev.Engine/infinium/modules/glm/glm/detail/type_vec4.hpp
+	"setup.hpp"
+	"type_vec.hpp"
+	"_swizzle.hpp"
+	"_swizzle_func.hpp"
+	<cstddef>
+	"type_vec4.inl"
+
+1403361216 /mnt/armada/Develop/Game.Dev.Engine/infinium/modules/glm/glm/detail/type_vec4.inl
+
+1429481124 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/Math/fgMathLib.h
+	"fgBuildConfig.h"
+	"fgBool.h"
+	<cmath>
+	"glm/common.hpp"
+	"glm/vec2.hpp"
+	"glm/vec3.hpp"
+	"glm/vec4.hpp"
+	"glm/mat3x3.hpp"
+	"glm/mat4x4.hpp"
+	"glm/geometric.hpp"
+	"glm/gtx/component_wise.hpp"
+	"glm/gtx/quaternion.hpp"
+	"glm/gtx/norm.hpp"
+	"glm/gtc/matrix_transform.hpp"
+	"glm/gtc/matrix_inverse.hpp"
+	"glm/gtc/epsilon.hpp"
+	"glm/gtc/type_ptr.hpp"
+
+1413754419 /mnt/armada/Develop/Game.Dev.Engine/infinium/modules/glm/glm/common.hpp
+	"detail/func_common.hpp"
+
+1413754451 /mnt/armada/Develop/Game.Dev.Engine/infinium/modules/glm/glm/detail/func_common.hpp
+	"setup.hpp"
+	"precision.hpp"
+	"type_int.hpp"
+	"_fixes.hpp"
+	"func_common.inl"
+
+1413754451 /mnt/armada/Develop/Game.Dev.Engine/infinium/modules/glm/glm/detail/_fixes.hpp
+	<cmath>
+
+1411097537 /mnt/armada/Develop/Game.Dev.Engine/infinium/modules/glm/glm/detail/func_common.inl
+	"func_vector_relational.hpp"
+	"type_vec2.hpp"
+	"type_vec3.hpp"
+	"type_vec4.hpp"
+	"_vectorize.hpp"
+	<limits>
+
+1413754451 /mnt/armada/Develop/Game.Dev.Engine/infinium/modules/glm/glm/detail/func_vector_relational.hpp
+	"precision.hpp"
+	"setup.hpp"
+	"func_vector_relational.inl"
+
+1389483480 /mnt/armada/Develop/Game.Dev.Engine/infinium/modules/glm/glm/detail/func_vector_relational.inl
+	<limits>
+
+1413754451 /mnt/armada/Develop/Game.Dev.Engine/infinium/modules/glm/glm/detail/type_vec2.hpp
+	"type_vec.hpp"
+	"_swizzle.hpp"
+	"_swizzle_func.hpp"
+	<cstddef>
+	"type_vec2.inl"
+
+1393357678 /mnt/armada/Develop/Game.Dev.Engine/infinium/modules/glm/glm/detail/type_vec2.inl
+
+1413754451 /mnt/armada/Develop/Game.Dev.Engine/infinium/modules/glm/glm/detail/_vectorize.hpp
+	"type_vec1.hpp"
+	"type_vec2.hpp"
+	"type_vec3.hpp"
+	"type_vec4.hpp"
+
+1413754451 /mnt/armada/Develop/Game.Dev.Engine/infinium/modules/glm/glm/detail/type_vec1.hpp
+	"../fwd.hpp"
+	"type_vec.hpp"
+	"_swizzle.hpp"
+	"_swizzle_func.hpp"
+	<cstddef>
+	"type_vec1.inl"
+
+1413754451 /mnt/armada/Develop/Game.Dev.Engine/infinium/modules/glm/glm/fwd.hpp
+	"detail/type_int.hpp"
+	"detail/type_float.hpp"
+	"detail/type_vec.hpp"
+	"detail/type_mat.hpp"
+
+1413754451 /mnt/armada/Develop/Game.Dev.Engine/infinium/modules/glm/glm/detail/type_float.hpp
+	"setup.hpp"
+
+1413754451 /mnt/armada/Develop/Game.Dev.Engine/infinium/modules/glm/glm/detail/type_mat.hpp
+	"precision.hpp"
+
+1393357678 /mnt/armada/Develop/Game.Dev.Engine/infinium/modules/glm/glm/detail/type_vec1.inl
+
+1413754451 /mnt/armada/Develop/Game.Dev.Engine/infinium/modules/glm/glm/vec2.hpp
+	"detail/type_vec2.hpp"
+
+1413754451 /mnt/armada/Develop/Game.Dev.Engine/infinium/modules/glm/glm/mat3x3.hpp
+	"detail/type_mat3x3.hpp"
+
+1413754451 /mnt/armada/Develop/Game.Dev.Engine/infinium/modules/glm/glm/detail/type_mat3x3.hpp
+	"../fwd.hpp"
+	"type_vec3.hpp"
+	"type_mat.hpp"
+	<limits>
+	"type_mat3x3.inl"
+
+1403361216 /mnt/armada/Develop/Game.Dev.Engine/infinium/modules/glm/glm/detail/type_mat3x3.inl
+
+1413754451 /mnt/armada/Develop/Game.Dev.Engine/infinium/modules/glm/glm/mat4x4.hpp
+	"detail/type_mat4x4.hpp"
+
+1413754451 /mnt/armada/Develop/Game.Dev.Engine/infinium/modules/glm/glm/detail/type_mat4x4.hpp
+	"../fwd.hpp"
+	"type_vec4.hpp"
+	"type_mat.hpp"
+	<limits>
+	<cstddef>
+	"type_mat4x4.inl"
+
+1393355594 /mnt/armada/Develop/Game.Dev.Engine/infinium/modules/glm/glm/detail/type_mat4x4.inl
+
+1413754451 /mnt/armada/Develop/Game.Dev.Engine/infinium/modules/glm/glm/geometric.hpp
+	"detail/func_geometric.hpp"
+
+1413754451 /mnt/armada/Develop/Game.Dev.Engine/infinium/modules/glm/glm/detail/func_geometric.hpp
+	"type_vec3.hpp"
+	"func_geometric.inl"
+
+1403287824 /mnt/armada/Develop/Game.Dev.Engine/infinium/modules/glm/glm/detail/func_geometric.inl
+	"func_exponential.hpp"
+	"func_common.hpp"
+	"type_vec2.hpp"
+	"type_vec4.hpp"
+	"type_float.hpp"
+
+1413754451 /mnt/armada/Develop/Game.Dev.Engine/infinium/modules/glm/glm/detail/func_exponential.hpp
+	"type_vec1.hpp"
+	"type_vec2.hpp"
+	"type_vec3.hpp"
+	"type_vec4.hpp"
+	<cmath>
+	"func_exponential.inl"
+
+1396394864 /mnt/armada/Develop/Game.Dev.Engine/infinium/modules/glm/glm/detail/func_exponential.inl
+	"func_vector_relational.hpp"
+	"_vectorize.hpp"
+	<limits>
+	<cassert>
+
+1413754451 /mnt/armada/Develop/Game.Dev.Engine/infinium/modules/glm/glm/gtx/component_wise.hpp
+	"../detail/setup.hpp"
+	"component_wise.inl"
+
+1389483480 /mnt/armada/Develop/Game.Dev.Engine/infinium/modules/glm/glm/gtx/component_wise.inl
+
+1413754451 /mnt/armada/Develop/Game.Dev.Engine/infinium/modules/glm/glm/gtx/quaternion.hpp
+	"../glm.hpp"
+	"../gtc/constants.hpp"
+	"../gtc/quaternion.hpp"
+	"../gtx/norm.hpp"
+	"quaternion.inl"
+
+1413754451 /mnt/armada/Develop/Game.Dev.Engine/infinium/modules/glm/glm/glm.hpp
+	"detail/_fixes.hpp"
+	<cmath>
+	<climits>
+	<cfloat>
+	<limits>
+	<cassert>
+	"fwd.hpp"
+	"vec2.hpp"
+	"vec3.hpp"
+	"vec4.hpp"
+	"mat2x2.hpp"
+	"mat2x3.hpp"
+	"mat2x4.hpp"
+	"mat3x2.hpp"
+	"mat3x3.hpp"
+	"mat3x4.hpp"
+	"mat4x2.hpp"
+	"mat4x3.hpp"
+	"mat4x4.hpp"
+	"trigonometric.hpp"
+	"exponential.hpp"
+	"common.hpp"
+	"packing.hpp"
+	"geometric.hpp"
+	"matrix.hpp"
+	"vector_relational.hpp"
+	"integer.hpp"
+
+1413754451 /mnt/armada/Develop/Game.Dev.Engine/infinium/modules/glm/glm/mat2x2.hpp
+	"detail/type_mat2x2.hpp"
+
+1413754451 /mnt/armada/Develop/Game.Dev.Engine/infinium/modules/glm/glm/detail/type_mat2x2.hpp
+	"../fwd.hpp"
+	"type_vec2.hpp"
+	"type_mat.hpp"
+	<limits>
+	"type_mat2x2.inl"
+
+1403361216 /mnt/armada/Develop/Game.Dev.Engine/infinium/modules/glm/glm/detail/type_mat2x2.inl
+
+1413754451 /mnt/armada/Develop/Game.Dev.Engine/infinium/modules/glm/glm/mat2x3.hpp
+	"detail/type_mat2x3.hpp"
+
+1413754451 /mnt/armada/Develop/Game.Dev.Engine/infinium/modules/glm/glm/detail/type_mat2x3.hpp
+	"../fwd.hpp"
+	"type_vec2.hpp"
+	"type_vec3.hpp"
+	"type_mat.hpp"
+	<limits>
+	"type_mat2x3.inl"
+
+1393355594 /mnt/armada/Develop/Game.Dev.Engine/infinium/modules/glm/glm/detail/type_mat2x3.inl
+
+1413754451 /mnt/armada/Develop/Game.Dev.Engine/infinium/modules/glm/glm/mat2x4.hpp
+	"detail/type_mat2x4.hpp"
+
+1413754451 /mnt/armada/Develop/Game.Dev.Engine/infinium/modules/glm/glm/detail/type_mat2x4.hpp
+	"../fwd.hpp"
+	"type_vec2.hpp"
+	"type_vec4.hpp"
+	"type_mat.hpp"
+	<limits>
+	"type_mat2x4.inl"
+
+1393355594 /mnt/armada/Develop/Game.Dev.Engine/infinium/modules/glm/glm/detail/type_mat2x4.inl
+
+1413754451 /mnt/armada/Develop/Game.Dev.Engine/infinium/modules/glm/glm/mat3x2.hpp
+	"detail/type_mat3x2.hpp"
+
+1413754451 /mnt/armada/Develop/Game.Dev.Engine/infinium/modules/glm/glm/detail/type_mat3x2.hpp
+	"../fwd.hpp"
+	"type_vec2.hpp"
+	"type_vec3.hpp"
+	"type_mat.hpp"
+	<limits>
+	"type_mat3x2.inl"
+
+1393355594 /mnt/armada/Develop/Game.Dev.Engine/infinium/modules/glm/glm/detail/type_mat3x2.inl
+
+1413754451 /mnt/armada/Develop/Game.Dev.Engine/infinium/modules/glm/glm/mat3x4.hpp
+	"detail/type_mat3x4.hpp"
+
+1413754451 /mnt/armada/Develop/Game.Dev.Engine/infinium/modules/glm/glm/detail/type_mat3x4.hpp
+	"../fwd.hpp"
+	"type_vec3.hpp"
+	"type_vec4.hpp"
+	"type_mat.hpp"
+	<limits>
+	"type_mat3x4.inl"
+
+1393355594 /mnt/armada/Develop/Game.Dev.Engine/infinium/modules/glm/glm/detail/type_mat3x4.inl
+
+1413754451 /mnt/armada/Develop/Game.Dev.Engine/infinium/modules/glm/glm/mat4x2.hpp
+	"detail/type_mat4x2.hpp"
+
+1413754451 /mnt/armada/Develop/Game.Dev.Engine/infinium/modules/glm/glm/detail/type_mat4x2.hpp
+	"../fwd.hpp"
+	"type_vec2.hpp"
+	"type_vec4.hpp"
+	"type_mat.hpp"
+	<limits>
+	"type_mat4x2.inl"
+
+1393355594 /mnt/armada/Develop/Game.Dev.Engine/infinium/modules/glm/glm/detail/type_mat4x2.inl
+
+1413754451 /mnt/armada/Develop/Game.Dev.Engine/infinium/modules/glm/glm/mat4x3.hpp
+	"detail/type_mat4x3.hpp"
+
+1413754451 /mnt/armada/Develop/Game.Dev.Engine/infinium/modules/glm/glm/detail/type_mat4x3.hpp
+	"../fwd.hpp"
+	"type_vec3.hpp"
+	"type_vec4.hpp"
+	"type_mat.hpp"
+	<limits>
+	"type_mat4x3.inl"
+
+1393355594 /mnt/armada/Develop/Game.Dev.Engine/infinium/modules/glm/glm/detail/type_mat4x3.inl
+
+1413754451 /mnt/armada/Develop/Game.Dev.Engine/infinium/modules/glm/glm/trigonometric.hpp
+	"detail/func_trigonometric.hpp"
+
+1413754451 /mnt/armada/Develop/Game.Dev.Engine/infinium/modules/glm/glm/detail/func_trigonometric.hpp
+	"func_trigonometric.inl"
+
+1389483480 /mnt/armada/Develop/Game.Dev.Engine/infinium/modules/glm/glm/detail/func_trigonometric.inl
+	"_vectorize.hpp"
+	<cmath>
+	<limits>
+
+1413754451 /mnt/armada/Develop/Game.Dev.Engine/infinium/modules/glm/glm/exponential.hpp
+	"detail/func_exponential.hpp"
+
+1413754451 /mnt/armada/Develop/Game.Dev.Engine/infinium/modules/glm/glm/packing.hpp
+	"detail/func_packing.hpp"
+
+1413754451 /mnt/armada/Develop/Game.Dev.Engine/infinium/modules/glm/glm/detail/func_packing.hpp
+	"type_vec2.hpp"
+	"type_vec4.hpp"
+	"func_packing.inl"
+
+1403287824 /mnt/armada/Develop/Game.Dev.Engine/infinium/modules/glm/glm/detail/func_packing.inl
+	"func_common.hpp"
+	"type_half.hpp"
+	"../fwd.hpp"
+
+1413754451 /mnt/armada/Develop/Game.Dev.Engine/infinium/modules/glm/glm/detail/type_half.hpp
+	"setup.hpp"
+	"type_half.inl"
+
+1403287824 /mnt/armada/Develop/Game.Dev.Engine/infinium/modules/glm/glm/detail/type_half.inl
+
+1413754451 /mnt/armada/Develop/Game.Dev.Engine/infinium/modules/glm/glm/matrix.hpp
+	"detail/func_matrix.hpp"
+
+1413754451 /mnt/armada/Develop/Game.Dev.Engine/infinium/modules/glm/glm/detail/func_matrix.hpp
+	"../detail/precision.hpp"
+	"../detail/setup.hpp"
+	"../detail/type_mat.hpp"
+	"../vec2.hpp"
+	"../vec3.hpp"
+	"../vec4.hpp"
+	"../mat2x2.hpp"
+	"../mat2x3.hpp"
+	"../mat2x4.hpp"
+	"../mat3x2.hpp"
+	"../mat3x3.hpp"
+	"../mat3x4.hpp"
+	"../mat4x2.hpp"
+	"../mat4x3.hpp"
+	"../mat4x4.hpp"
+	"func_matrix.inl"
+
+1403361216 /mnt/armada/Develop/Game.Dev.Engine/infinium/modules/glm/glm/detail/func_matrix.inl
+	"../geometric.hpp"
+	<limits>
+
+1413754451 /mnt/armada/Develop/Game.Dev.Engine/infinium/modules/glm/glm/vector_relational.hpp
+	"detail/func_vector_relational.hpp"
+
+1413754451 /mnt/armada/Develop/Game.Dev.Engine/infinium/modules/glm/glm/integer.hpp
+	"detail/func_integer.hpp"
+
+1413754451 /mnt/armada/Develop/Game.Dev.Engine/infinium/modules/glm/glm/detail/func_integer.hpp
+	"setup.hpp"
+	"func_integer.inl"
+
+1396394864 /mnt/armada/Develop/Game.Dev.Engine/infinium/modules/glm/glm/detail/func_integer.inl
+	"type_vec2.hpp"
+	"type_vec3.hpp"
+	"type_vec4.hpp"
+	"type_int.hpp"
+	"_vectorize.hpp"
+	<intrin.h>
+	<limits>
+
+1413754451 /mnt/armada/Develop/Game.Dev.Engine/infinium/modules/glm/glm/gtc/constants.hpp
+	"../detail/setup.hpp"
+	"constants.inl"
+
+1389483480 /mnt/armada/Develop/Game.Dev.Engine/infinium/modules/glm/glm/gtc/constants.inl
+	<limits>
+
+1413754451 /mnt/armada/Develop/Game.Dev.Engine/infinium/modules/glm/glm/gtc/quaternion.hpp
+	"../mat3x3.hpp"
+	"../mat4x4.hpp"
+	"../vec3.hpp"
+	"../vec4.hpp"
+	"../gtc/constants.hpp"
+	"quaternion.inl"
+
+1403287824 /mnt/armada/Develop/Game.Dev.Engine/infinium/modules/glm/glm/gtc/quaternion.inl
+	"../trigonometric.hpp"
+	"../geometric.hpp"
+	"../exponential.hpp"
+	<limits>
+
+1413754451 /mnt/armada/Develop/Game.Dev.Engine/infinium/modules/glm/glm/gtx/norm.hpp
+	"../glm.hpp"
+	"../gtx/quaternion.hpp"
+	"norm.inl"
+
+1389483480 /mnt/armada/Develop/Game.Dev.Engine/infinium/modules/glm/glm/gtx/norm.inl
+
+1403361076 /mnt/armada/Develop/Game.Dev.Engine/infinium/modules/glm/glm/gtx/quaternion.inl
+	<limits>
+	"../gtc/constants.hpp"
+
+1413754451 /mnt/armada/Develop/Game.Dev.Engine/infinium/modules/glm/glm/gtc/matrix_transform.hpp
+	"../mat4x4.hpp"
+	"../vec2.hpp"
+	"../vec3.hpp"
+	"../vec4.hpp"
+	"../gtc/constants.hpp"
+	"matrix_transform.inl"
+
+1403356714 /mnt/armada/Develop/Game.Dev.Engine/infinium/modules/glm/glm/gtc/matrix_transform.inl
+	"../geometric.hpp"
+	"../trigonometric.hpp"
+	"../matrix.hpp"
+
+1413754451 /mnt/armada/Develop/Game.Dev.Engine/infinium/modules/glm/glm/gtc/matrix_inverse.hpp
+	"../detail/setup.hpp"
+	"matrix_inverse.inl"
+
+1389483480 /mnt/armada/Develop/Game.Dev.Engine/infinium/modules/glm/glm/gtc/matrix_inverse.inl
+	"../mat2x2.hpp"
+	"../mat3x3.hpp"
+	"../mat4x4.hpp"
+
+1413754451 /mnt/armada/Develop/Game.Dev.Engine/infinium/modules/glm/glm/gtc/epsilon.hpp
+	"../detail/setup.hpp"
+	"../detail/precision.hpp"
+	"epsilon.inl"
+
+1389483480 /mnt/armada/Develop/Game.Dev.Engine/infinium/modules/glm/glm/gtc/epsilon.inl
+	"quaternion.hpp"
+	"../vector_relational.hpp"
+	"../common.hpp"
+	"../vec2.hpp"
+	"../vec3.hpp"
+	"../vec4.hpp"
+
+1413754451 /mnt/armada/Develop/Game.Dev.Engine/infinium/modules/glm/glm/gtc/type_ptr.hpp
+	"../gtc/quaternion.hpp"
+	"../vec2.hpp"
+	"../vec3.hpp"
+	"../vec4.hpp"
+	"../mat2x2.hpp"
+	"../mat2x3.hpp"
+	"../mat2x4.hpp"
+	"../mat3x2.hpp"
+	"../mat3x3.hpp"
+	"../mat3x4.hpp"
+	"../mat4x2.hpp"
+	"../mat4x3.hpp"
+	"../mat4x4.hpp"
+	<cstring>
+	"type_ptr.inl"
+
+1389483480 /mnt/armada/Develop/Game.Dev.Engine/infinium/modules/glm/glm/gtc/type_ptr.inl
+	<cstring>
+
+1429102578 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/GFX/fgGfxAttribBits.h
+
+1429102577 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/fgLog.h
+	"fgBuildConfig.h"
+	"fgMessageCommon.h"
+	"fgStatus.h"
+	"Util/fgFileBase.h"
+
+1429102577 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/fgMessageCommon.h
+	"fgBool.h"
+	"fgErrno.h"
+
+1429102577 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/fgErrno.h
+	<cerrno>
+	<map>
+	<string>
+
+1429102577 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/fgStatus.h
+	"fgTypes.h"
+	"fgErrno.h"
+	"fgMessageCommon.h"
+	"Util/fgTime.h"
+	<cstdarg>
+
+1429102577 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/fgTypes.h
+	"fgBuildConfig.h"
+	"fgBool.h"
+	<cstring>
+	<cstdlib>
+	"fgVector.h"
+
+1429121101 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/fgVector.h
+	"fgBuildConfig.h"
+	"IwArray.h"
+	<vector>
+	<string>
+
+1429102578 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/Util/fgTime.h
+	<ctime>
+
+1429102578 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/Util/fgFileBase.h
+	"fgTypes.h"
+
+1429633333 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/GFX/fgGfxGL.h
+	"fgBuildConfig.h"
+	"fgBool.h"
+	"fgLog.h"
+	<IwGL.h>
+	"s3eGL.h"
+	<GL/gl.h>
+	<GL/glext.h>
+	<GL/glew.h>
+	<SDL2/SDL.h>
+	<SDL2/SDL_opengl.h>
+	<GL/glew.h>
+	<SDL2/SDL.h>
+	<SDL2/SDL.h>
+	<SDL2/SDL_opengles2.h>
+	<GLES2/gl2.h>
+	<GLES2/gl2ext.h>
+	<GLES2/gl2platform.h>
+	<EGL/egl.h>
+
+1429103377 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/fgGameMain.h
+	"fgBuildConfig.h"
+	"fgCommon.h"
+	"Util/fgSettings.h"
+	"Util/fgConfig.h"
+	"Util/fgTag.h"
+	"Resource/fgResourceManager.h"
+	"Resource/fgResourceFactory.h"
+	"Event/fgInputHandler.h"
+	"Event/fgJoypadController.h"
+	"Audio/fgSFXManager.h"
+	"GFX/fgGfxMain.h"
+	"GUI/fgGuiMain.h"
+	"Hardware/fgQualityManager.h"
+	"Scripting/fgScriptSubsystem.h"
+	"GameLogic/fgGameLogic.h"
+
+1429102577 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/fgCommon.h
+	"fgBuildConfig.h"
+	<cstdlib>
+	<cstring>
+	<string>
+	"fgTypes.h"
+
+1429102578 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/Util/fgSettings.h
+	"fgTypes.h"
+	"XML/fgXMLParser.h"
+	"XML/fgXMLDefaultHandler.h"
+	"XML/fgXMLAutoHandler.h"
+
+1429102578 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/XML/fgXMLParser.h
+	"fgXMLTypesWrap.h"
+	<string>
+	<cstring>
+	<stack>
+	"fgStatus.h"
+	"Util/fgFile.h"
+	"fgXMLDefaultHandler.h"
+
+1429102578 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/XML/fgXMLTypesWrap.h
+	"fgCommon.h"
+	"tinyxml.h"
+
+1427201618 /mnt/armada/Develop/Game.Dev.Engine/infinium/modules/tinyxml/upstream/tinyxml.h
+	<ctype.h>
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<assert.h>
+	<string>
+	<iostream>
+	<sstream>
+	"tinystr.h"
+
+1413754483 /mnt/armada/Develop/Game.Dev.Engine/infinium/modules/tinyxml/upstream/tinystr.h
+	<assert.h>
+	<string.h>
+
+1429102578 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/Util/fgFile.h
+	"fgBuildConfig.h"
+	"fgFileBase.h"
+	"fgRegularFile.h"
+	"fgZipFile.h"
+
+1429102578 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/Util/fgRegularFile.h
+	"fgBuildConfig.h"
+	"fgCommon.h"
+	"fgTag.h"
+	"fgFileBase.h"
+	<cstdio>
+	<string>
+	<SDL2/SDL_rwops.h>
+
+1429102578 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/Util/fgTag.h
+
+1429102578 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/Util/fgZipFile.h
+	"fgBuildConfig.h"
+	"fgFileBase.h"
+	"zlib_128/zlib.h"
+	"zlib_128/contrib/minizip/unzip.h"
+	"zlib_128/contrib/minizip/zip.h"
+	"unzip.h"
+	"zip.h"
+
+1429102578 /mnt/armada/Develop/Game.Dev.Engine/infinium/modules/zlib_128/contrib/minizip/unzip.h
+	"zlib.h"
+	"ioapi.h"
+	"bzlib.h"
+
+1429102578 /mnt/armada/Develop/Game.Dev.Engine/infinium/modules/zlib_128/contrib/minizip/ioapi.h
+	<stdio.h>
+	<stdlib.h>
+	"../../zlib.h"
+	"stdint.h"
+
+1429102576 /mnt/armada/Develop/Game.Dev.Engine/infinium/modules/zlib_128/zlib.h
+	"zconf.h"
+
+1429102576 /mnt/armada/Develop/Game.Dev.Engine/infinium/modules/zlib_128/zconf.h
+	<windows.h>
+	<limits.h>
+	<sys/types.h>
+	<stdarg.h>
+	<stddef.h>
+	<unistd.h>
+	<unixio.h>
+
+1429102578 /mnt/armada/Develop/Game.Dev.Engine/infinium/modules/zlib_128/contrib/minizip/zip.h
+	"../../zlib.h"
+	"ioapi.h"
+	"bzlib.h"
+
+1429102578 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/XML/fgXMLDefaultHandler.h
+	"fgXMLTypesWrap.h"
+
+1429102578 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/XML/fgXMLAutoHandler.h
+	"fgXMLDefaultHandler.h"
+	<cstdlib>
+	"fgLog.h"
+	<stack>
+
+1429102578 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/Util/fgConfig.h
+	"fgConfigStruct.h"
+	"fgConfigParser.h"
+	"fgConfigWriter.h"
+
+1429102578 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/Util/fgConfigStruct.h
+	"fgTypes.h"
+	<string>
+	<map>
+
+1429102578 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/Util/fgConfigParser.h
+	"fgStatus.h"
+	"fgFile.h"
+	"fgConfigStruct.h"
+
+1429102578 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/Util/fgConfigWriter.h
+	"fgFile.h"
+	"fgConfigStruct.h"
+
+1429102578 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/Resource/fgResourceManager.h
+	"fgDataManagerBase.h"
+	"fgResource.h"
+	"fgResourceGroup.h"
+	"fgResourceFactory.h"
+	"Util/fgTag.h"
+	"Util/fgHandleManager.h"
+	"Util/fgDirent.h"
+	<iostream>
+
+1429102578 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/Resource/fgDataManagerBase.h
+	"fgManagerBase.h"
+	"Util/fgHandleManager.h"
+	"fgResourceErrorCodes.h"
+	"fgMessageSubsystem.h"
+
+1429102577 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/fgManagerBase.h
+	"fgBool.h"
+
+1429102578 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/Util/fgHandleManager.h
+	"fgBuildConfig.h"
+	"fgCommon.h"
+	"fgPath.h"
+	"fgLog.h"
+	"fgHandle.h"
+	"fgNamedHandle.h"
+	<hash_map>
+	<unordered_map>
+
+1429102578 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/Util/fgPath.h
+	"fgBuildConfig.h"
+	"fgBool.h"
+	"fgVector.h"
+	<string>
+
+1429102578 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/Util/fgHandle.h
+	"fgCommon.h"
+
+1429102578 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/Util/fgNamedHandle.h
+	<string>
+	"fgHashFunc.h"
+	"fgHandle.h"
+
+1429102578 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/Util/fgHashFunc.h
+	<string>
+
+1429102578 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/Resource/fgResourceErrorCodes.h
+	"fgErrno.h"
+
+1429102577 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/fgMessageSubsystem.h
+	"fgCommon.h"
+	"fgSingleton.h"
+	"fgStatus.h"
+	"fgManagerBase.h"
+	<stack>
+	"fgVector.h"
+	"Util/fgRegularFile.h"
+	"fgLog.h"
+
+1429102577 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/fgSingleton.h
+
+1429102578 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/Resource/fgResource.h
+	"Hardware/fgQualityTypes.h"
+	<string>
+	<ctime>
+	<cstring>
+	"fgManagerBase.h"
+	"fgManagedDataFile.h"
+	"Util/fgHandle.h"
+	"Util/fgTag.h"
+	"fgResourceFactoryTypes.h"
+
+1429102578 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/Hardware/fgQualityTypes.h
+	"fgCommon.h"
+
+1429102578 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/Resource/fgManagedDataFile.h
+	"fgManagedObject.h"
+	<map>
+	<string>
+
+1429102578 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/Resource/fgManagedObject.h
+	"Util/fgNamedHandle.h"
+	"fgManagerBase.h"
+	"fgBool.h"
+	<string>
+	<cstdio>
+
+1429102578 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/Resource/fgResourceFactoryTypes.h
+
+1429102578 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/Resource/fgResourceGroup.h
+	"fgCommon.h"
+	"fgResource.h"
+	"fgResourceFactory.h"
+	<cstdlib>
+	"XML/fgXMLParser.h"
+	"XML/fgXMLDefaultHandler.h"
+
+1429102578 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/Resource/fgResourceFactory.h
+	"fgCommon.h"
+	"fgResource.h"
+	"fgResourceFactoryTypes.h"
+	<map>
+
+1429102578 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/Util/fgDirent.h
+	"fgBuildConfig.h"
+	"fgTypes.h"
+	"s3eFile.h"
+	<cstdio>
+	<dirent.h>
+	<sys/stat.h>
+
+1429647694 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/Event/fgInputHandler.h
+	"fgBuildConfig.h"
+	"fgPointerRawData.h"
+	"Math/fgMathLib.h"
+	"Event/fgEventManager.h"
+	<map>
+	"s3eTypes.h"
+	"SDL2/SDL_events.h"
+
+1429102578 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/Event/fgPointerRawData.h
+	"fgBuildConfig.h"
+	"fgBool.h"
+	"fgPointerData.h"
+
+1429648091 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/Event/fgPointerData.h
+	"fgBuildConfig.h"
+	"fgBool.h"
+	"s3ePointer.h"
+	"SDL2/SDL_mouse.h"
+	"SDL2/SDL_events.h"
+
+1429102578 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/Event/fgEventManager.h
+	"fgBuildConfig.h"
+	"fgTypes.h"
+	"fgManagerBase.h"
+	"fgEventDefinitions.h"
+	"fgEventHelper.h"
+	"fgThrownEvent.h"
+	"fgTimeoutCallback.h"
+	"fgCyclicCallback.h"
+	"fgCallback.h"
+
+1429102578 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/Event/fgEventDefinitions.h
+	"fgBool.h"
+
+1429102578 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/Event/fgEventHelper.h
+	"fgVector.h"
+	"fgCallback.h"
+	"fgThrownEvent.h"
+	"fgTimeoutCallback.h"
+	"fgCyclicCallback.h"
+	<map>
+	<queue>
+
+1429102578 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/Event/fgCallback.h
+	"fgTypes.h"
+	"fgArgumentList.h"
+
+1429102578 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/Event/fgArgumentList.h
+	"fgTypes.h"
+
+1429102578 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/Event/fgThrownEvent.h
+	"fgEventDefinitions.h"
+	"fgArgumentList.h"
+
+1429102578 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/Event/fgTimeoutCallback.h
+	"fgCallback.h"
+	"fgArgumentList.h"
+
+1429102578 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/Event/fgCyclicCallback.h
+	"fgCallback.h"
+	"fgArgumentList.h"
+
+1429102578 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/Event/fgJoypadController.h
+	"fgBuildConfig.h"
+	"fgBool.h"
+	<SDL2/SDL.h>
+	<SDL2/SDL_gamecontroller.h>
+	<SDL2/SDL_joystick.h>
+	<SDL2/SDL_haptic.h>
+	<SDL2/SDL_events.h>
+	"Event/fgEventManager.h"
+
+1429632830 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/Audio/fgSFXManager.h
+	"fgBuildConfig.h"
+	"fgTypes.h"
+	"fgManagerBase.h"
+	"fgSFXSoundResource.h"
+	"fgSFXMusicResource.h"
+
+1429632748 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/Audio/fgSFXSoundResource.h
+	"fgBuildConfig.h"
+	<SDL2/SDL.h>
+	<SDL2/SDL_mixer.h>
+	<SDL/SDL.h>
+	<SDL/SDL_mixer.h>
+	"s3eFile.h"
+	"s3eSound.h"
+	"Resource/fgResource.h"
+	"fgSFXAudioBase.h"
+	"Resource/fgResourceFactoryTypes.h"
+	<stdlib.h>
+
+1429632785 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/Audio/fgSFXAudioBase.h
+	"fgBuildConfig.h"
+	"fgBool.h"
+
+1429632811 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/Audio/fgSFXMusicResource.h
+	"fgBuildConfig.h"
+	<SDL2/SDL.h>
+	<SDL2/SDL_mixer.h>
+	<SDL/SDL.h>
+	<SDL/SDL_mixer.h>
+	"s3eAudio.h"
+	"Resource/fgResource.h"
+	"fgSFXAudioBase.h"
+	"Resource/fgResourceFactoryTypes.h"
+
+1429103525 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/GFX/fgGfxMain.h
+	"fgBuildConfig.h"
+	"fgGfxStdInc.h"
+	"fgGfxWindow.h"
+	"fgGfxLoader.h"
+	"fgGfxCameraAnimation.h"
+	"Shaders/fgGfxShaderManager.h"
+	"Textures/fgTextureManager.h"
+	"Scene/fgGfx3DScene.h"
+	"Scene/fgGfx2DScene.h"
+	"Util/fgTag.h"
+	"Particles/fgParticleSystem.h"
+	"Event/fgArgumentList.h"
+	"Event/fgCallback.h"
+
+1429103236 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/GFX/fgGfxStdInc.h
+	"fgGfxGL.h"
+	"fgGfxPlatform.h"
+	"fgTypes.h"
+	"fgGfxTypes.h"
+
+1429103236 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/GFX/fgGfxPlatform.h
+	"fgGfxContext.h"
+
+1429646296 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/GFX/fgGfxContext.h
+	"fgGfxGL.h"
+	"fgGfxTypes.h"
+
+1429103236 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/GFX/fgGfxTypes.h
+	"fgTypes.h"
+	"Math/fgMathLib.h"
+	"fgGfxGL.h"
+	"fgGfxColor.h"
+	"fgGfxAttribBits.h"
+	"fgGfxAttributeData.h"
+	"fgGfxBufferID.h"
+	"fgGfxTextureID.h"
+	"fgGfxVertex.h"
+	"fgGfxVertexData.h"
+
+1429103236 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/GFX/fgGfxAttributeData.h
+	"fgGfxGL.h"
+	"fgGfxAttribBits.h"
+
+1429103236 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/GFX/fgGfxBufferID.h
+	"fgGfxGL.h"
+
+1429103236 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/GFX/fgGfxTextureID.h
+	"fgGfxGL.h"
+
+1429193223 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/GFX/fgGfxVertexData.h
+	"fgGfxGL.h"
+	"fgGfxBufferID.h"
+	"fgVector.h"
+	"fgGfxVertex.h"
+	"fgGfxAttributeData.h"
+
+1429103236 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/GFX/fgGfxWindow.h
+	"fgGfxGL.h"
+
+1429103502 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/GFX/fgGfxLoader.h
+	"fgTypes.h"
+	"fgGfxStdInc.h"
+	"Textures/fgTextureResource.h"
+	"fgGfxWindow.h"
+	"fgGfxMVPMatrix.h"
+	"Shaders/fgGfxShaderProgram.h"
+
+1429103442 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/GFX/Textures/fgTextureResource.h
+	"fgBuildConfig.h"
+	"Resource/fgResource.h"
+	"Resource/fgResourceFactoryTypes.h"
+	"fgTextureTypes.h"
+	"GFX/fgGfxStdInc.h"
+
+1429102581 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/GFX/Textures/fgTextureTypes.h
+
+1429103236 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/GFX/fgGfxMVPMatrix.h
+	"fgGfxMVMatrix.h"
+	"fgGfxProjection.h"
+
+1429103236 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/GFX/fgGfxMVMatrix.h
+	"fgGfxCamera.h"
+	"fgBool.h"
+
+1429103236 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/GFX/fgGfxCamera.h
+	"Math/fgMathLib.h"
+	"fgGfxFrustum.h"
+
+1429103236 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/GFX/fgGfxFrustum.h
+	"fgGfxPlane.h"
+	"fgGfxBoundingVolume.h"
+
+1429531512 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/GFX/fgGfxPlane.h
+	"fgBool.h"
+	"fgGfxVertex.h"
+	"Math/fgMathLib.h"
+
+1429103236 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/GFX/fgGfxBoundingVolume.h
+	"fgGfxAABoundingBox.h"
+
+1429102578 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/GFX/fgGfxProjection.h
+	"fgBuildConfig.h"
+	"Math/fgMathLib.h"
+
+1429103377 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/GFX/Shaders/fgGfxShaderProgram.h
+	"fgGfxShaderDefs.h"
+	"fgGfxShader.h"
+	"fgGfxShaderBase.h"
+	"fgGfxShaderConfig.h"
+	"Util/fgHandle.h"
+	"Util/fgTag.h"
+	"fgVector.h"
+	"GFX/fgGfxMVPMatrix.h"
+	"fgManagerBase.h"
+
+1429103377 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/GFX/Shaders/fgGfxShaderDefs.h
+	"GFX/fgGfxStdInc.h"
+	<string>
+
+1429103236 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/GFX/Shaders/fgGfxShader.h
+	"fgGfxShaderDefs.h"
+	"fgGfxShaderBase.h"
+	"Util/fgFile.h"
+	<map>
+
+1429103236 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/GFX/Shaders/fgGfxShaderBase.h
+	"fgGfxShaderDefs.h"
+	"Hardware/fgQualityTypes.h"
+	"Resource/fgManagedDataFile.h"
+	"Util/fgHandle.h"
+	"Util/fgTag.h"
+	<map>
+
+1429103236 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/GFX/Shaders/fgGfxShaderConfig.h
+	"fgGfxShaderDefs.h"
+	"Hardware/fgQualityTypes.h"
+	"Util/fgConfig.h"
+	"Util/fgTag.h"
+
+1429103236 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/GFX/fgGfxCameraAnimation.h
+	"fgGfxCamera.h"
+	"fgGfxTypes.h"
+
+1429103377 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/GFX/Shaders/fgGfxShaderManager.h
+	"GFX/fgGfxStdInc.h"
+	"fgManagerBase.h"
+	"Resource/fgDataManagerBase.h"
+	"Util/fgHandleManager.h"
+	"Util/fgTag.h"
+	"Util/fgDirent.h"
+	"fgGfxShaderProgram.h"
+
+1429102581 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/GFX/Textures/fgTextureManager.h
+	"fgBuildConfig.h"
+	"fgBool.h"
+	"fgManagerBase.h"
+	"fgTextureResource.h"
+	"fgTextureTypes.h"
+	"Util/fgTag.h"
+	"Event/fgArgumentList.h"
+	"Event/fgCallback.h"
+
+1429103236 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/GFX/Scene/fgGfx3DScene.h
+	"fgGfxSceneManager.h"
+	"fgGfxOctree.h"
+	<stack>
+
+1429103377 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/GFX/Scene/fgGfxSceneManager.h
+	"Util/fgHandleManager.h"
+	"Event/fgEventManager.h"
+	"GFX/fgGfxDrawingBatch.h"
+	"GFX/fgGfxCameraAnimation.h"
+	"fgGfxBasetree.h"
+	"fgGfxSceneCallback.h"
+	"fgGfxSceneNode.h"
+	"fgGfxSceneNodeTrigger.h"
+	"fgGfxSceneNodeMesh.h"
+	"fgGfxSceneNodeObject.h"
+	"fgGfxSceneSkyBox.h"
+
+1429103236 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/GFX/fgGfxDrawingBatch.h
+	"fgGfxDrawCall.h"
+	"fgGfxLayer.h"
+	<queue>
+	<deque>
+
+1429103236 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/GFX/fgGfxDrawCall.h
+	"fgGfxPrimitives.h"
+	"GFX/Shaders/fgGFXShaderDefs.h"
+	"GFX/Shaders/fgGFXShaderProgram.h"
+	"fgGfxTypes.h"
+	"fgGfxMVPMatrix.h"
+	"fgGfxModelTypes.h"
+	"fgGfxDrawable.h"
+	"Util/fgFastCmp.h"
+
+1429103455 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/GFX/fgGfxPrimitives.h
+	"fgGfxStdInc.h"
+	"Math/fgMathLib.h"
+	"GFX/Shaders/fgGfxShaderProgram.h"
+	"fgGfxAABoundingBox.h"
+
+1429103236 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/GFX/fgGfxModelTypes.h
+	"fgGfxTypes.h"
+	"fgGfxMaterial.h"
+	"fgGfxAABoundingBox.h"
+	"fgGfxPrimitives.h"
+
+1429103236 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/GFX/fgGfxMaterial.h
+	"fgGfxTypes.h"
+	"Textures/fgTextureResource.h"
+	"Math/fgMathLib.h"
+	<string>
+
+1429102578 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/GFX/fgGfxDrawable.h
+	"Math/fgMathLib.h"
+
+1429102578 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/Util/fgFastCmp.h
+	"fgBuildConfig.h"
+	"s3eTypes.h"
+	<cstdint>
+	"fgBool.h"
+
+1429102578 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/GFX/fgGfxLayer.h
+
+1429103236 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/GFX/Scene/fgGfxBasetree.h
+	"fgGfxTreeNode.h"
+	"fgBool.h"
+	<stack>
+
+1429103236 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/GFX/Scene/fgGfxTreeNode.h
+	"fgBool.h"
+	"fgVector.h"
+	"Math/fgMathLib.h"
+	"fgGfxTreeNodeObject.h"
+
+1429102581 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/GFX/Scene/fgGfxTreeNodeObject.h
+
+1429103236 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/GFX/Scene/fgGfxSceneCallback.h
+	"Event/fgCallback.h"
+	"fgGfxSceneEvent.h"
+
+1429102581 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/GFX/Scene/fgGfxSceneEvent.h
+	"Event/fgEventDefinitions.h"
+
+1429103377 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/GFX/Scene/fgGfxSceneNode.h
+	"Math/fgMathLib.h"
+	"Util/fgTag.h"
+	"GFX/fgGfxAABoundingBox.h"
+	"GFX/fgGfxBoundingVolume.h"
+	"GFX/fgGfxDrawable.h"
+	"GFX/fgGfxDrawCall.h"
+	"fgGfxTreeNodeObject.h"
+	"Physics/fgCollisionBody.h"
+	<set>
+
+1429102578 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/Physics/fgCollisionBody.h
+	"fgRigidBody.h"
+	"fgCollisionFine.h"
+	"fgBool.h"
+
+1429102578 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/Physics/fgRigidBody.h
+	"fgPrecision.h"
+	"fgCycloneCoreMath.h"
+
+1429102578 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/Physics/fgPrecision.h
+
+1429102578 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/Physics/fgCycloneCoreMath.h
+	"fgBuildConfig.h"
+	"fgDebugConfig.h"
+	"Math/fgMathLib.h"
+	"fgPrecision.h"
+
+1429102577 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/fgDebugConfig.h
+	"fgBuildConfig.h"
+
+1429102578 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/Physics/fgCollisionFine.h
+	"fgContact.h"
+	"fgContactResolver.h"
+	"fgContactGenerator.h"
+	"fgBool.h"
+
+1429102578 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/Physics/fgContact.h
+	"fgRigidBody.h"
+
+1429102578 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/Physics/fgContactResolver.h
+	"fgContact.h"
+	"fgBool.h"
+
+1429102578 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/Physics/fgContactGenerator.h
+
+1429103236 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/GFX/Scene/fgGfxSceneNodeTrigger.h
+	"fgGfxSceneNode.h"
+	"fgGfxSceneCallback.h"
+
+1429103236 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/GFX/Scene/fgGfxSceneNodeMesh.h
+	"fgGfxSceneNode.h"
+	"fgGfxModelTypes.h"
+
+1429103377 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/GFX/Scene/fgGfxSceneNodeObject.h
+	"fgGfxSceneNode.h"
+	"GFX/fgGfxDrawCall.h"
+	"GFX/fgGfxModelResource.h"
+
+1429103236 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/GFX/fgGfxModelResource.h
+	"fgTypes.h"
+	"fgGfxModelTypes.h"
+	"Resource/fgResource.h"
+
+1429103377 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/GFX/Scene/fgGfxSceneSkyBox.h
+	"GFX/fgGfxDrawable.h"
+	"GFX/fgGfxTextureID.h"
+
+1429103377 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/GFX/Scene/fgGfxOctree.h
+	"GFX/fgGfxStdInc.h"
+	"fgGfxBasetree.h"
+	"fgGfxTreeNode.h"
+	"fgBool.h"
+	"fgVector.h"
+	<stack>
+
+1429103236 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/GFX/Scene/fgGfx2DScene.h
+	"fgGfxSceneManager.h"
+
+1429102581 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/GFX/Particles/fgParticleSystem.h
+	"fgBool.h"
+	"fgPsParticleEffect.h"
+	"fgPsParticleEmitter.h"
+	"Util/fgTag.h"
+
+1429103377 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/GFX/Particles/fgPsParticleEffect.h
+	"fgBool.h"
+	"fgTypes.h"
+	"GFX/fgGfxTypes.h"
+	"fgParticle.h"
+	"Util/fgTag.h"
+	"Resource/fgResource.h"
+	"Util/fgConfigStruct.h"
+	<cfloat>
+	<climits>
+	"Resource/fgResourceFactoryTypes.h"
+
+1429103377 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/GFX/Particles/fgParticle.h
+	"Math/fgMathLib.h"
+	"GFX/fgGfxTypes.h"
+	"GFX/fgGfxBoundingBox.h"
+
+1429103470 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/GFX/Particles/fgPsParticleEmitter.h
+	"fgVector.h"
+	"GFX/Scene/fgGfxSceneNode.h"
+	"fgPsParticleEffect.h"
+
+1429102578 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/GUI/fgGuiMain.h
+	"fgManagerBase.h"
+	"fgGuiBase.h"
+	"fgGuiWidget.h"
+	"fgGuiMenu.h"
+	"fgGuiConsole.h"
+	"fgGuiStyleManager.h"
+	"fgGuiWidgetManager.h"
+	"fgGuiWidgetFactory.h"
+	"Event/fgEventManager.h"
+	"Event/fgInputHandler.h"
+	"Resource/fgResourceManager.h"
+	"fgGuiDrawer.h"
+	"fgGuiCallback.h"
+
+1429102578 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/GUI/fgGuiBase.h
+
+1429132417 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/GUI/fgGuiWidget.h
+	"fgBuildConfig.h"
+	"fgTypes.h"
+	"Math/fgMathLib.h"
+	"fgGuiWidgetTypes.h"
+	"Util/fgTag.h"
+	"Util/fgHandle.h"
+	"Resource/fgManagedObject.h"
+	"fgGuiStyleContent.h"
+	"fgGuiCallback.h"
+	<string>
+	"GFX/fgGfxLayer.h"
+	"GFX/fgGfxBoundingBox.h"
+	"Event/fgPointerData.h"
+
+1429102578 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/GUI/fgGuiWidgetTypes.h
+
+1429103377 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/GUI/fgGuiStyleContent.h
+	"fgBuildConfig.h"
+	"fgTypes.h"
+	"Math/fgMathLib.h"
+	"GFX/fgGfxColor.h"
+	"GFX/fgGfxBoundingBox.h"
+	"Util/fgConfigStruct.h"
+
+1429102578 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/GUI/fgGuiCallback.h
+	"Event/fgCallback.h"
+
+1429102578 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/GUI/fgGuiMenu.h
+	<map>
+	"fgCommon.h"
+	"fgGuiContainer.h"
+	"fgGuiWidgetFactoryTypes.h"
+
+1429102578 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/GUI/fgGuiContainer.h
+	"fgGuiWidget.h"
+	"fgGuiWidgetFactoryTypes.h"
+	<map>
+
+1429102578 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/GUI/fgGuiWidgetFactoryTypes.h
+
+1429102578 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/GUI/fgGuiConsole.h
+	"fgGuiTextArea.h"
+	"fgGuiWidgetFactoryTypes.h"
+
+1429102578 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/GUI/fgGuiTextArea.h
+	"fgGuiScrollArea.h"
+	"fgGuiWidgetFactoryTypes.h"
+	"fgVector.h"
+
+1429102578 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/GUI/fgGuiScrollArea.h
+	"fgGuiSlider.h"
+	"fgGuiContainer.h"
+	"fgGuiWidgetFactoryTypes.h"
+
+1429102578 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/GUI/fgGuiSlider.h
+	"fgGuiWidget.h"
+	"fgGuiWidgetFactoryTypes.h"
+
+1429102578 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/GUI/fgGuiStyleManager.h
+	"Resource/fgDataManagerBase.h"
+	"fgGuiStyle.h"
+
+1429102578 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/GUI/fgGuiStyle.h
+	"fgBuildConfig.h"
+	"fgGuiStyleContent.h"
+	"Resource/fgManagedDataFile.h"
+	"Util/fgHandle.h"
+	"Util/fgTag.h"
+	"Hardware/fgQualityTypes.h"
+	<hash_map>
+	<unordered_map>
+
+1429102578 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/GUI/fgGuiWidgetManager.h
+	"fgGuiWidget.h"
+	"Util/fgHandleManager.h"
+	"fgManagerBase.h"
+	"fgGuiWidgetFactory.h"
+	"fgGuiStyleManager.h"
+
+1429102578 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/GUI/fgGuiWidgetFactory.h
+	"fgTypes.h"
+	"fgGuiWidget.h"
+	"fgGuiWidgetFactoryTypes.h"
+	<map>
+
+1429103377 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/GUI/fgGuiDrawer.h
+	"Font/fgFontDrawer.h"
+	"GFX/fgGfxDrawingBatch.h"
+	"fgGuiStyleContent.h"
+	"fgManagerBase.h"
+
+1429103377 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/GUI/Font/fgFontDrawer.h
+	"fgFontResource.h"
+	"GFX/fgGfxTypes.h"
+	"GFX/fgGfxDrawingBatch.h"
+
+1429102581 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/GUI/Font/fgFontResource.h
+	"Resource/fgResource.h"
+	"Resource/fgResourceFactoryTypes.h"
+	"GFX/Textures/fgTextureResource.h"
+	"fgFontBuiltInTypes.h"
+
+1429102581 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/GUI/Font/fgFontBuiltInTypes.h
+	"Util/fgMemory.h"
+	"Math/fgMathLib.h"
+	<string>
+
+1429102578 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/Util/fgMemory.h
+	"fgBuildConfig.h"
+	"fgBool.h"
+	<cstring>
+	"s3eMemory.h"
+	<malloc.h>
+
+1429102578 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/Hardware/fgQualityManager.h
+	"fgQualityTypes.h"
+	"fgManagerBase.h"
+	<map>
+	<string>
+
+1429102578 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/Scripting/fgScriptSubsystem.h
+	"fgBuildConfig.h"
+	"fgManagerBase.h"
+	"Util/fgMemory.h"
+	"Util/fgTag.h"
+	"LuaPlus/LuaPlus.h"
+	"fgScriptMT.h"
+	"fgLog.h"
+	<map>
+	"Resource/fgManagedObject.h"
+	"Event/fgCallback.h"
+
+1429102576 /mnt/armada/Develop/Game.Dev.Engine/infinium/modules/luaplus51-all/Src/LuaPlus/LuaPlus.h
+	"LuaPlusInternal.h"
+	"LuaStackObject.h"
+	"LuaObject.h"
+	"LuaState.h"
+	"LuaTableIterator.h"
+	"LuaObject.inl"
+	"LuaStateOutFile.h"
+	"LuaStateOutString.h"
+	"LuaHelper.h"
+	"LuaAutoBlock.h"
+	"LuaStackTableIterator.h"
+	"LuaCall.h"
+	"LuaFunction.h"
+	"LuaPlusCD.h"
+
+1429102576 /mnt/armada/Develop/Game.Dev.Engine/infinium/modules/luaplus51-all/Src/LuaPlus/LuaPlusInternal.h
+	"lua.h"
+	"lauxlib.h"
+	<assert.h>
+	<stdio.h>
+
+1429102576 /mnt/armada/Develop/Game.Dev.Engine/infinium/modules/luaplus51-all/Src/LuaPlus/LuaStackObject.h
+	"LuaPlusInternal.h"
+	"LuaPlusCD.h"
+	"LuaStackObject.inl"
+
+1429102576 /mnt/armada/Develop/Game.Dev.Engine/infinium/modules/luaplus51-all/Src/LuaPlus/LuaPlusCD.h
+	"lua.h"
+	"lauxlib.h"
+	<stdlib.h>
+	<string.h>
+
+1429102576 /mnt/armada/Develop/Game.Dev.Engine/infinium/modules/luaplus51-all/Src/LuaPlus/LuaStackObject.inl
+
+1429102576 /mnt/armada/Develop/Game.Dev.Engine/infinium/modules/luaplus51-all/Src/LuaPlus/LuaObject.h
+	"LuaPlusInternal.h"
+	"LuaPlusCD.h"
+	"LuaStateCD.h"
+
+1429102576 /mnt/armada/Develop/Game.Dev.Engine/infinium/modules/luaplus51-all/Src/LuaPlus/LuaStateCD.h
+	"LuaPlusInternal.h"
+	"LuaPlusCD.h"
+
+1429102576 /mnt/armada/Develop/Game.Dev.Engine/infinium/modules/luaplus51-all/Src/LuaPlus/LuaState.h
+	"LuaPlusInternal.h"
+	"LuaState.inl"
+
+1429102576 /mnt/armada/Develop/Game.Dev.Engine/infinium/modules/luaplus51-all/Src/LuaPlus/LuaState.inl
+	<stdarg.h>
+	<string.h>
+	<assert.h>
+	"LuaStateCD.h"
+	"lualib.h"
+
+1429102576 /mnt/armada/Develop/Game.Dev.Engine/infinium/modules/luaplus51-all/Src/LuaPlus/LuaTableIterator.h
+	"LuaPlusInternal.h"
+	"LuaObject.h"
+
+1429102576 /mnt/armada/Develop/Game.Dev.Engine/infinium/modules/luaplus51-all/Src/LuaPlus/LuaObject.inl
+	<ctype.h>
+	<malloc.h>
+
+1429102576 /mnt/armada/Develop/Game.Dev.Engine/infinium/modules/luaplus51-all/Src/LuaPlus/LuaStateOutFile.h
+	"LuaPlusInternal.h"
+	<stdio.h>
+
+1429102576 /mnt/armada/Develop/Game.Dev.Engine/infinium/modules/luaplus51-all/Src/LuaPlus/LuaStateOutString.h
+	"LuaPlus.h"
+	<string.h>
+	<new>
+	<new.h>
+	<stdlib.h>
+	<assert.h>
+
+1429102576 /mnt/armada/Develop/Game.Dev.Engine/infinium/modules/luaplus51-all/Src/LuaPlus/LuaHelper.h
+	"LuaHelper_Object.h"
+	"LuaHelper_StackObject.h"
+
+1429102576 /mnt/armada/Develop/Game.Dev.Engine/infinium/modules/luaplus51-all/Src/LuaPlus/LuaHelper_Object.h
+	"LuaPlusInternal.h"
+
+1429102576 /mnt/armada/Develop/Game.Dev.Engine/infinium/modules/luaplus51-all/Src/LuaPlus/LuaHelper_StackObject.h
+	"LuaStackObject.h"
+
+1429102576 /mnt/armada/Develop/Game.Dev.Engine/infinium/modules/luaplus51-all/Src/LuaPlus/LuaAutoBlock.h
+	"LuaPlusInternal.h"
+
+1429102576 /mnt/armada/Develop/Game.Dev.Engine/infinium/modules/luaplus51-all/Src/LuaPlus/LuaStackTableIterator.h
+	"LuaStackObject.h"
+	"LuaStackTableIterator.inl"
+
+1429102576 /mnt/armada/Develop/Game.Dev.Engine/infinium/modules/luaplus51-all/Src/LuaPlus/LuaStackTableIterator.inl
+
+1429102576 /mnt/armada/Develop/Game.Dev.Engine/infinium/modules/luaplus51-all/Src/LuaPlus/LuaCall.h
+	"LuaPlusInternal.h"
+	"LuaObject.h"
+	"LuaCall.inl"
+
+1429102576 /mnt/armada/Develop/Game.Dev.Engine/infinium/modules/luaplus51-all/Src/LuaPlus/LuaCall.inl
+	"LuaPlusConfig.h"
+
+1429102576 /mnt/armada/Develop/Game.Dev.Engine/infinium/modules/luaplus51-all/Src/LuaPlus/LuaPlusConfig.h
+
+1429102576 /mnt/armada/Develop/Game.Dev.Engine/infinium/modules/luaplus51-all/Src/LuaPlus/LuaFunction.h
+	"LuaPlusInternal.h"
+	"LuaAutoBlock.h"
+
+1429102578 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/Scripting/fgScriptMT.h
+	"fgTypes.h"
+	"fgSingleton.h"
+
+1429102578 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/GameLogic/fgGameLogic.h
+	"Event/fgEventDefinitions.h"
+	"fgManagerBase.h"
+	<queue>
+	<string>
+
+1429102578 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/Hardware/fgHardwareState.h
+	"fgSingleton.h"
+
+1429102578 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/Util/fgProfiling.h
+	"fgCommon.h"
+	<stack>
+	<hash_map>
+	<map>
+	<unordered_map>
+
+1429102578 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/Util/fgStrings.h
+	"fgVector.h"
+	"fgBool.h"
+	<string>
+	<cstring>
+	<sstream>
+
+1429619065 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/GFX/Scene/fgGfxBspCompiler.h
+	"fgBool.h"
+	"fgVector.h"
+	"GFX/fgGfxAABoundingBox.h"
+	"fgGfxBspGeometry.h"
+
+1429483682 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/GFX/Scene/fgGfxBspGeometry.h
+	"fgGfxBspTypes.h"
+	"fgVector.h"
+	"GFX/fgGfxAABoundingBox.h"
+	"GFX/fgGfxVertexData.h"
+	"GFX/fgGfxPlane.h"
+
+1429532848 /mnt/armada/Develop/Game.Dev.Engine/infinium/src/GFX/Scene/fgGfxBspTypes.h
+	"Math/fgMathLib.h"
+	"fgBool.h"
+	<cfloat>
+	<cstdlib>
+	<memory.h>
+	<vector>
+	<algorithm>
+

@@ -1,0 +1,8 @@
+#!/bin/zsh
+
+#cd /home/vigilant/develop/flexigame/data
+dirname $0
+cd `dirname $0`
+cd ../data
+#../project/linux/FlexiGame_NB/dist/Debug_GLEW_SDL2/GNU-Linux-x86/flexigame_nb "$@"
+../project/linux/FlexiGameEditor/bin/Debug/FlexiGameEditor "$@"
