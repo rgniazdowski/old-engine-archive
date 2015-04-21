@@ -23,7 +23,7 @@
     #elif defined(FG_USING_MARMALADE)
 //#warning "TODO: Music/Audio support for Marmalade based build!"
         #include "s3eFile.h"
-        #ifdef FG_USING_MARMALADE_SOUND
+        #if defined(FG_USING_MARMALADE_SOUND)
             #include "s3eSound.h"
         #endif /* FG_USING_MARMALADE_SOUND */
     #endif
@@ -33,6 +33,8 @@
     #if defined(FG_USING_SDL_MIXER)
         #define FG_SOUND_RESOURCE_DEFAULT_VOLUME MIX_MAX_VOLUME
     #elif defined(FG_USING_MARMALADE)
+        #define FG_SOUND_RESOURCE_DEFAULT_VOLUME 0 // #FIXME
+    #else
         #define FG_SOUND_RESOURCE_DEFAULT_VOLUME 0 // #FIXME
     #endif
 

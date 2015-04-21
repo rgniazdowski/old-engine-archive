@@ -41,7 +41,7 @@ fgBool gfx::CPlatform::initialize(fgBool reinit) {
         gfx::CPlatform::quit(); // ?
     }
     fgBool status = FG_TRUE;
-    
+
 #if defined(FG_USING_EGL) || defined(FG_USING_MARMALADE_EGL)
     /**********************************
      * DISPLAY PART - GFX PLATFORM
@@ -92,24 +92,24 @@ fgBool gfx::CPlatform::initialize(fgBool reinit) {
     }
     m_defaultConfig = configList[config];
     FG_LOG_DEBUG("EGL: choosing config: %d", config);
-    _eglDumpConfig(m_defaultDisplay, m_defaultConfig); 
-    
+    _eglDumpConfig(m_defaultDisplay, m_defaultConfig);
+
     FG_LOG_DEBUG("EGL vendor:      %s", eglQueryString(m_defaultDisplay, EGL_VENDOR));
     FG_LOG_DEBUG("EGL version:     %s", eglQueryString(m_defaultDisplay, EGL_VERSION));
     FG_LOG_DEBUG("EGL extensions:  %s", eglQueryString(m_defaultDisplay, EGL_EXTENSIONS));
     FG_LOG_DEBUG("EGL client APIs: %s", eglQueryString(m_defaultDisplay, EGL_CLIENT_APIS));
-#elif defined FG_USING_MARMALADE_IWGL
+#elif defined(FG_USING_MARMALADE_IWGL)
 
     status = IwGLInit();
 
-#elif defined FG_USING_SDL2
+#elif defined(FG_USING_SDL2)
     //#define SDL_MAIN_HANDLED
     //#include "SDL.h"
     // SDL_SetMainReady();
     /**********************************
      * DISPLAY PART - GFX PLATFORM
      */
-    
+
     if(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS) != 0) {
         FG_LOG_ERROR("GFX: Couldn't initialize SDL2: '%s'", SDL_GetError());
         SDL_ClearError();
@@ -180,16 +180,10 @@ fgBool gfx::CPlatform::initialize(fgBool reinit) {
     //int SDL_InitSubSystem(Uint32 flags)
 
     // 
-
+#elif !defined(FG_USING_SDL2) && !defined(FG_USING_MARMALADE)
+    context::initialize();
 #endif
 
-#if !defined(FG_USING_SDL2)
-    if(status) {
-        if(!m_gfxContext)
-            m_gfxContext = new CContext();
-        m_gfxContext->initialize();
-    }
-#endif
     if(status)
         CPlatform::m_init = FG_TRUE;
     return status;
@@ -241,7 +235,7 @@ fgBool gfx::CPlatform::initializeMainContext(SDL_Window* sdlWindow) {
     if(!context::isInit())
         context::initialize(sdlWindow);
     if(!context::isInit())
-        return FG_FALSE;    
+        return FG_FALSE;
     return FG_TRUE;
 }
 #endif
@@ -258,7 +252,8 @@ void *gfx::CPlatform::getDefaultConfig(void) {
     return gfx::CPlatform::m_defaultConfig;
 }
 
-#if defined FG_USING_EGL
+#if defined(FG_USING_EGL)
+
 /**
  * 
  * @param display

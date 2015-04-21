@@ -700,6 +700,8 @@ void gfx::CPrimitives::drawVertexData(const CVertexData *inputData,
             drawingInfo.count = inputData->getNumIndices();
         // If both pointer/offset and buffer are zero
         // then it means that there is no indices array
+    } else {
+        drawingInfo.count = inputData->size();
     }
     applyAttributeData(attrData, drawingInfo, andMask);
     // attribute data array is set
@@ -713,7 +715,7 @@ void gfx::CPrimitives::drawVertexData(const CVertexData *inputData,
     // #FIXME
     context::bindBuffer(GL_ARRAY_BUFFER, 0);
     context::bindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-
+#if 0
     if(0) {
 
         context::diffVertexAttribArrayMask(andMask);
@@ -759,6 +761,7 @@ void gfx::CPrimitives::drawVertexData(const CVertexData *inputData,
         glDrawArrays((fgGFXenum)mode, 0, inputData->size());
         GLCheckError("glDrawArrays");
     }
+#endif
 
 }
 

@@ -54,12 +54,12 @@
 
     #else
 
-        #define FG_POINTER_BUTTON_SELECT            0
-        #define FG_POINTER_BUTTON_LEFTMOUSE         0
-        #define FG_POINTER_BUTTON_RIGHTMOUSE        1
+        #define FG_POINTER_BUTTON_SELECT            1
+        #define FG_POINTER_BUTTON_LEFTMOUSE         1
+        #define FG_POINTER_BUTTON_RIGHTMOUSE        3
         #define FG_POINTER_BUTTON_MIDDLEMOUSE       2
-        #define FG_POINTER_BUTTON_MOUSEWHEELUP      3
-        #define FG_POINTER_BUTTON_MOUSEWHEELDOWN    4
+        #define FG_POINTER_BUTTON_MOUSEWHEELUP      4
+        #define FG_POINTER_BUTTON_MOUSEWHEELDOWN    5
 
         #define FG_POINTER_STATE_UP                 0
         #define FG_POINTER_STATE_DOWN               1

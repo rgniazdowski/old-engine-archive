@@ -25,6 +25,8 @@
             #define FG_SFX_VOLUME_TYPE unsigned short int
         #elif defined(FG_USING_MARMALADE)
             #define FG_SFX_VOLUME_TYPE float
+        #else
+            #define FG_SFX_VOLUME_TYPE int
         #endif
     #endif
 

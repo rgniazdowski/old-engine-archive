@@ -34,6 +34,8 @@
         #define FG_MUSIC_RESOURCE_DEFAULT_VOLUME MIX_MAX_VOLUME
     #elif defined(FG_USING_MARMALADE)
         #define FG_MUSIC_RESOURCE_DEFAULT_VOLUME 0 // #FIXME
+    #else
+        #define FG_MUSIC_RESOURCE_DEFAULT_VOLUME 0 // #FIXME
     #endif
 
     #include "fgSFXAudioBase.h"

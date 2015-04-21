@@ -59,7 +59,7 @@ m_rawData(NULL) {
  * 
  */
 void sfx::CMusicResource::clear(void) {
-    CResource::clear();
+    base_type::clear();
     m_resType = resource::MUSIC;
     m_musData = NULL;
     m_rawData = NULL;

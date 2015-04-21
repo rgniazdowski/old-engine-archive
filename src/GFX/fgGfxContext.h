@@ -2238,6 +2238,10 @@ namespace fg {
             fgGFXuint activeProgram(void);
 
             /**
+             * Set viewport box to default dimensions
+             */
+            void viewport(void);
+            /**
              * Set the viewport dimensions
              * @param x
              * @param y

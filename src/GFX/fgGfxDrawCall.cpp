@@ -150,6 +150,7 @@ void gfx::CDrawCall::setupFromMesh(const SMeshBase* pMesh) {
     m_primMode = pMesh->primMode;
     m_attribMask = pMesh->attribMask();
     m_fastCmp.setPart(0, (util::FastCmp::data_type_32)m_attribMask);
+    m_drawingInfo.count = pMesh->getNumVertices();
     if(pMesh->hasIndices()) {
         m_drawingInfo.buffer = pMesh->getIndicesVBO();
         m_drawingInfo.indices.pointer = pMesh->getIndicesPointer();

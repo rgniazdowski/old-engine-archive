@@ -10,6 +10,7 @@
 
 #include "fgGfxWindow.h"
 #include "fgGfxPlatform.h"
+#include "fgGameMain.h"
 
 #if defined FG_USING_MARMALADE
 #include "s3e.h"
@@ -60,6 +61,13 @@ fgBool gfx::CWindow::setup(const char *title, unsigned int width, unsigned int h
         return FG_FALSE;
     }
     if(m_isOpen) {
+#if !defined(FG_USING_EGL) && !defined(FG_USING_MARMALADE_EGL) && !defined(FG_USING_SDL) && !defined(FG_USING_SDL2)
+        m_width = width;
+        m_height = height;
+#elif defined(FG_STATIC_LIBRARY)
+        m_width = width;
+        m_height = height;
+#endif
         return FG_TRUE;
         //CWindow::close();
     }
@@ -136,7 +144,9 @@ fgBool gfx::CWindow::setup(const char *title, unsigned int width, unsigned int h
     } else {
         FG_LOG_DEBUG("GFX: Successfully created SDL2 window %dx%d", m_width, m_height);
     }
-
+#else
+    m_width = width;
+    m_height = height;
 #endif
     if(status)
         m_isOpen = FG_TRUE;
@@ -194,7 +204,7 @@ void gfx::CWindow::setFullscreen(fgBool toggle) {
 }
 
 fgBool gfx::CWindow::refreshFS(void) {
-#if !defined(FG_USING_MARMALADE) && !defined(FG_USING_PLATFORM_ANDROID)
+#if !defined(FG_USING_MARMALADE) && !defined(FG_USING_PLATFORM_ANDROID) && defined(FG_USING_SDL2)
     if(m_isFullscreen) {
         // #FIXME
         //m_sdlFlags |= SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL | SDL_WINDOW_FULLSCREEN_DESKTOP;

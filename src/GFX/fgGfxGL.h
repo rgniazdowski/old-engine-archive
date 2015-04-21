@@ -31,19 +31,15 @@
         #elif defined(FG_USING_PLATFORM_LINUX) && !defined(FG_USING_PLATFORM_ANDROID)/* && !defined FG_USING_MARMALADE */
 //	GFX includes for OpenGL/SDL - platform LINUX
 
-            #if defined FG_USING_OPENGL
+            #if defined(FG_USING_OPENGL)
 
                 #if !defined(FG_USING_SDL2)
-                    #if !defined(FG_USING_GL_BINDING)
+                    #if !defined(FG_USING_GL_BINDING) && !defined(FG_USING_OPENGL_GLEW)
                         #define GL_GLEXT_PROTOTYPES
                         #include <GL/gl.h>
                         #include <GL/glext.h>
                     #elif defined(FG_USING_OPENGL_GLEW)
-                        #include <GL/glew.h>
-                    #elif defined(FG_USING_GL_BINDING)
-                        #include "glbinding/gl/gl.h"
-                        #include "glbinding/Binding.h"
-using namespace gl;
+                        #include <GL/glew.h>                    
                     #endif
                     #define FG_INC_INCLUDED_GL_
                 #else /* FG_USING_SDL2 */
@@ -52,12 +48,7 @@ using namespace gl;
                     #if !defined(FG_USING_GL_BINDING) && !defined(FG_USING_OPENGL_GLEW)
                         #include <SDL2/SDL_opengl.h>
                     #elif defined(FG_USING_OPENGL_GLEW)
-                        #include <GL/glew.h>
-                    #elif defined(FG_USING_GL_BINDING)
-//#                     include "glbinding/gl/gl30.h"
-                        #include "glbinding/gl/gl.h"                            
-                        #include "glbinding/Binding.h"
-using namespace gl;
+                        #include <GL/glew.h>                    
                     #endif
                     #define FG_INC_INCLUDED_GL_
                 #endif

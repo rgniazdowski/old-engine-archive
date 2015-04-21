@@ -162,6 +162,8 @@ void event::CInputHandler::initialize(void) {
     }
 #elif defined(FG_USING_SDL2)
     m_pointerAvailable = FG_TRUE;
+#else
+    m_pointerAvailable = FG_TRUE;
 #endif
     m_init = FG_TRUE;
 }
@@ -254,7 +256,7 @@ void event::CInputHandler::handlePointerPressed(Vector2i point, unsigned int tou
         touchEvent->touchID = touchID;
         touchEvent->x = point.x;
         touchEvent->y = point.y;
-        
+
         CArgumentList *argList = m_eventMgr->requestArgumentList();
         argList->push(SArgument::Type::ARG_TMP_POINTER, (void *)touchEvent);
         m_eventMgr->throwEvent(event::TOUCH_PRESSED, argList);
@@ -291,7 +293,7 @@ void event::CInputHandler::handlePointerMoved(Vector2i point, unsigned int touch
         //STouch *touchEvent = fgMalloc<STouch>();
         STouch *touchEvent = (STouch*)m_eventMgr->requestEventStruct();
         CArgumentList *argList = m_eventMgr->requestArgumentList();
-        
+
         touchEvent->eventType = event::TOUCH_MOTION;
         touchEvent->timeStamp = timesys::ticks();
         touchEvent->pressed = m_rawTouches[touchID].m_pressed;
@@ -349,7 +351,7 @@ void event::CInputHandler::handlePointerReleased(Vector2i point, unsigned int to
         //STouch *touchEvent = fgMalloc<STouch>();
         STouch *touchEvent = (STouch*)m_eventMgr->requestEventStruct();
         CArgumentList *argList = m_eventMgr->requestArgumentList();
-        
+
         touchEvent->eventType = event::TOUCH_RELEASED;
         touchEvent->timeStamp = timesys::ticks();
         touchEvent->pressed = FG_FALSE; // Touch is released
@@ -434,7 +436,7 @@ int event::CInputHandler::getPointerY(fgPointerID pointerID) {
  * @return 
  */
 event::CFunctionCallback* event::CInputHandler::addKeyDownCallback(int keyCode,
-                                                                           CFunctionCallback *callback) {
+                                                                   CFunctionCallback *callback) {
     if(!callback || keyCode <= 0)
         return NULL;
     if(m_keyDownBinds[keyCode].find(callback) >= 0) {
@@ -451,7 +453,7 @@ event::CFunctionCallback* event::CInputHandler::addKeyDownCallback(int keyCode,
  * @return 
  */
 event::CFunctionCallback* event::CInputHandler::addKeyUpCallback(int keyCode,
-                                                                         CFunctionCallback *callback) {
+                                                                 CFunctionCallback *callback) {
     if(!callback || keyCode <= 0)
         return NULL;
     if(m_keyUpBinds[keyCode].find(callback) >= 0) {
@@ -545,7 +547,7 @@ void event::CInputHandler::processData(void) {
                         //STouch *touchEvent = fgMalloc<STouch>();
                         STouch *touchEvent = (STouch*)m_eventMgr->requestEventStruct();
                         CArgumentList *argList = m_eventMgr->requestArgumentList();
-                        
+
                         touchEvent->eventType = event::TOUCH_TAP_FINISHED;
                         touchEvent->timeStamp = timesys::ticks();
                         touchEvent->pressed = FG_FALSE;
@@ -621,7 +623,7 @@ void event::CInputHandler::processData(void) {
                     //SSwipe *swipeEvent = fgMalloc<SSwipe>();
                     SSwipe *swipeEvent = (SSwipe*)m_eventMgr->requestEventStruct();
                     CArgumentList *argList = m_eventMgr->requestArgumentList();
-                    
+
                     swipeEvent->timeStamp = timesys::ticks();
                     fgBool X = FG_FALSE, Y = FG_FALSE;
                     if(touchPtr.m_swipeDown) {
@@ -725,12 +727,12 @@ void event::CInputHandler::processData(void) {
  * @param swipeSize
  */
 void event::CInputHandler::interpretSwipes(int min_offset_for_swipe,
-                                               int startPointer,
-                                               int endPointer,
-                                               int initialSwipePointer, // IN
-                                               fgBool* minusSwipe,
-                                               fgBool* plusSwipe,
-                                               int* swipeSize) // OUT
+                                           int startPointer,
+                                           int endPointer,
+                                           int initialSwipePointer, // IN
+                                           fgBool* minusSwipe,
+                                           fgBool* plusSwipe,
+                                           int* swipeSize) // OUT
 {
     // This is physical swipe lenght - not necesarily
     // software swipe (it will become software swipe
@@ -835,8 +837,8 @@ int32_t event::CInputHandler::singleTouchButtonHandler(void* systemData, void* u
         inputReceiver->handlePointerReleased(Vector2i(event->m_x, event->m_y));
     }
 #elif defined(FG_USING_SDL2)
-    SDL_Event *sdlEvent = (SDL_Event *)systemData;    
-    
+    SDL_Event *sdlEvent = (SDL_Event *)systemData;
+
     if(sdlEvent->type == SDL_MOUSEBUTTONDOWN) {
         SDL_MouseButtonEvent *event = (SDL_MouseButtonEvent *)systemData;
         inputReceiver->handlePointerPressed(Vector2i(event->x, event->y), (unsigned int)event->button);

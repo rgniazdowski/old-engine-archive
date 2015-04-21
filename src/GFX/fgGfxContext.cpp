@@ -977,6 +977,9 @@ fgBool gfx::context::initialize(void)
     g_SLVersion = FG_GFX_SHADING_LANGUAGE_INVALID;
     g_contextInit = FG_FALSE;
 
+    std::string glName = "OpenGL";
+    int r = 0, g = 0, b = 0, a = 0, d = 0, major = 0, minor = 0;
+
 #if defined(FG_USING_MARMALADE_EGL) || defined(FG_USING_EGL)
     /**********************************
      * CONTEXT PART - GFX CONTEXT
@@ -1030,10 +1033,11 @@ fgBool gfx::context::initialize(void)
         {3, 0},
         {3, 1}
     };
-    std::string glName = "OpenGL ES";
+    glName = "OpenGL ES";
 #else
-    const int numGLVersions = 11;
-    const std::pair<int, int> glVersions[11] {
+    const int numGLVersions = 12;
+    const std::pair<int, int> glVersions[12] {
+        {4, 5},
         {4, 4},
         {4, 3},
         {4, 2},
@@ -1046,7 +1050,7 @@ fgBool gfx::context::initialize(void)
         {2, 1},
         {2, 0}
     };
-    std::string glName = "OpenGL";
+    glName = "OpenGL";
 #endif
 
 #if !defined(FG_USING_PLATFORM_ANDROID)
@@ -1105,8 +1109,7 @@ fgBool gfx::context::initialize(void)
             break;
         }
     }
-#endif /* !FG_USING_PLATFORM_ANDROID */
-    int r, g, b, a, d, major, minor;
+#endif /* !FG_USING_PLATFORM_ANDROID */    
     SDL_GL_MakeCurrent(g_sdlWindow, g_GLContext);
 
     SDL_GL_GetAttribute(SDL_GL_RED_SIZE, &r);
@@ -1125,6 +1128,8 @@ fgBool gfx::context::initialize(void)
 #endif
     FG_LOG_DEBUG("GFX: GL version %d.%d", major, minor);
     FG_LOG_DEBUG("GFX: GL color buffer: red: %d, green: %d, blue: %d, alpha: %d, depth: %d,", r, g, b, a, d);
+
+#endif /* defined FG_USING_SDL2 */
 
     // Support for GLEW is enabled?
 #if defined(FG_USING_OPENGL_GLEW)
@@ -1147,9 +1152,9 @@ fgBool gfx::context::initialize(void)
     //glewIsSupported("GL_VERSION_3_0");
 #else
     FG_LOG_DEBUG("GFX: Not using GLEW...");
-#endif
+#endif /* defined FG_USING_OPENGL_GLEW */
 
-#endif
+
     FG_LOG_DEBUG("GFX: Initializing GL parameter list...");
     //m_params[(fgGFXuint)GL_ACTIVE_TEXTURE] = SContextParam(GL_ACTIVE_TEXTURE);
 
@@ -1268,6 +1273,49 @@ fgBool gfx::context::initialize(void)
         glGetIntegerv(GL_NUM_EXTENSIONS, &max);
         for(int i = 0; i < max; i++) {
             glExtensions.append((const char*)glGetStringi(GL_EXTENSIONS, i)).append(" ");
+        }
+    }
+
+    struct S_GLVerStatus
+    {
+        unsigned char supported;
+        int v_major;
+        int v_minor;
+    };
+
+    const int glVerStatusNum = 12;
+    S_GLVerStatus glVerStatus[12] {
+        {0, 4, 5},
+        {0, 4, 4},
+        {0, 4, 3},
+        {0, 4, 2},
+        {0, 4, 1},
+        {0, 4, 0},
+        {0, 3, 3},
+        {0, 3, 2},
+        {0, 3, 1},
+        {0, 3, 0},
+        {0, 2, 1},
+        {0, 2, 0}
+    };
+    glVerStatus[0].supported = GLEW_VERSION_4_5;
+    glVerStatus[1].supported = GLEW_VERSION_4_4;
+    glVerStatus[2].supported = GLEW_VERSION_4_3;
+    glVerStatus[3].supported = GLEW_VERSION_4_2;
+    glVerStatus[4].supported = GLEW_VERSION_4_1;
+    glVerStatus[5].supported = GLEW_VERSION_4_0;
+    glVerStatus[6].supported = GLEW_VERSION_3_3;
+    glVerStatus[7].supported = GLEW_VERSION_3_2;
+    glVerStatus[8].supported = GLEW_VERSION_3_1;
+    glVerStatus[9].supported = GLEW_VERSION_3_0;
+    glVerStatus[10].supported = GLEW_VERSION_2_1;
+    glVerStatus[11].supported = GLEW_VERSION_2_0;
+
+    for(int i = 0; i < glVerStatusNum; i++) {
+        if(glVerStatus[i].supported) {
+            FG_LOG_DEBUG("GFX: %s version %d.%d supported", glName.c_str(), glVerStatus[i].v_major, glVerStatus[i].v_minor);
+        } else {
+            FG_LOG_DEBUG("GFX: %s version %d.%d not supported", glName.c_str(), glVerStatus[i].v_major, glVerStatus[i].v_minor);
         }
     }
 #endif
@@ -1743,6 +1791,10 @@ void gfx::context::useProgram(const fgGFXuint program) {
 
 fgGFXuint gfx::context::activeProgram(void) {
     return g_params[gfx::CURRENT_PROGRAM];
+}
+
+void gfx::context::viewport(void) {
+    scissor(0, 0, g_screenSize.x, g_screenSize.y);
 }
 
 void gfx::context::viewport(const fgGFXint x,

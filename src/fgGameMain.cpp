@@ -646,6 +646,8 @@ void CGameMain::render(void) {
         FG_LOG_INFO("# FPS: %.2f", FG_HardwareState->getFPS());
     }
     if(fpsc > 256) {
+        FG_LOG_DEBUG("# Screen size: %d x %d", m_gfxMain->getMainWindow()->getWidth(),
+                     m_gfxMain->getMainWindow()->getHeight());
         fpsc = 0;
     }
     //fpsc++;

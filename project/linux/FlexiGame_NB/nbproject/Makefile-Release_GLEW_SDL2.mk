@@ -1045,8 +1045,6 @@ ${OBJECTDIR}/_ext/1386528437/fgMessageSubsystem.o: ../../../src/fgMessageSubsyst
 
 # Subprojects
 .build-subprojects:
-	cd ../LuaPlusNextGen_NB && ${MAKE}  -f Makefile CONF=Release
-	cd ../MiniZipMaster_NB && ${MAKE}  -f Makefile CONF=Release
 
 # Clean Targets
 .clean-conf: ${CLEAN_SUBPROJECTS}
@@ -1055,8 +1053,6 @@ ${OBJECTDIR}/_ext/1386528437/fgMessageSubsystem.o: ../../../src/fgMessageSubsyst
 
 # Subprojects
 .clean-subprojects:
-	cd ../LuaPlusNextGen_NB && ${MAKE}  -f Makefile CONF=Release clean
-	cd ../MiniZipMaster_NB && ${MAKE}  -f Makefile CONF=Release clean
 
 # Enable dependency checking
 .dep.inc: .depcheck-impl

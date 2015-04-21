@@ -16,7 +16,9 @@
 #include "Util/fgProfiling.h"
 #include "fgDebugConfig.h"
 #include "fgLog.h"
+#include "Util/fgStrings.h"
 
+#if !defined(FG_STATIC_LIBRARY)
 #if defined(FG_USING_MARMALADE)
 
 /**
@@ -695,3 +697,4 @@ extern "C" int main(int argc, char *argv[]) {
 #endif /* FG_USING_MARMALADE */
     return 0;
 }
+#endif

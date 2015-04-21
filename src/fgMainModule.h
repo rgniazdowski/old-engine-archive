@@ -18,31 +18,33 @@
     #define FG_INC_MAIN_MODULE
     #define FG_INC_MAIN_MODULE_BLOCK
 
-    #include "fgBuildConfig.h"
-    #include "fgCommon.h"
-    #include "fgGameMain.h"
+    #if !defined(FG_STATIC_LIBRARY)
 
-    #include <cstdlib>
-    #include <cstdio>
-    #include <cmath>
-    #include <map>
+        #include "fgBuildConfig.h"
+        #include "fgCommon.h"
+        #include "fgGameMain.h"
 
-    #if defined(FG_USING_MARMALADE)
-        #include "s3e.h"
-        #include "s3eTypes.h"
-        #include "IwUtil.h"
-        #include "s3eDevice.h"
-    #endif /* FG_USING_MARMALADE */
+        #include <cstdlib>
+        #include <cstdio>
+        #include <cmath>
+        #include <map>
 
-    #if defined(FG_USING_MARMALADE)
-        #include "Hardware/fgDeviceQuery.h"
-    #endif /* FG_USING_MARMALADE */
+        #if defined(FG_USING_MARMALADE)
+            #include "s3e.h"
+            #include "s3eTypes.h"
+            #include "IwUtil.h"
+            #include "s3eDevice.h"
+        #endif /* FG_USING_MARMALADE */
+
+        #if defined(FG_USING_MARMALADE)
+            #include "Hardware/fgDeviceQuery.h"
+        #endif /* FG_USING_MARMALADE */
 
 namespace fg {
     class CMainModule;
 };
 
-    #if defined(FG_USING_MARMALADE)
+        #if defined(FG_USING_MARMALADE)
 extern "C" int main();
 
 class fgMarmaladeHandlers {
@@ -57,11 +59,11 @@ public:
     static int32_t resumeGfxHandler(void *systemData, void *userData);
     static int32_t keyStateChangedHandler(void *systemData, void *userData);
 };
-#elif defined(FG_USING_PLATFORM_ANDROID) && defined(FG_USING_SDL2)
+        #elif defined(FG_USING_PLATFORM_ANDROID) && defined(FG_USING_SDL2)
 extern "C" int SDL_main(int argc, char **argv);
-    #else
+        #else
 extern "C" int main(int argc, char *argv[]);
-    #endif /* FG_USING_MARMALADE */
+        #endif /* FG_USING_MARMALADE */
 
 namespace fg {
 
@@ -69,14 +71,14 @@ namespace fg {
      *
      */
     class CMainModule {
-    #if defined FG_USING_MARMALADE
+        #if defined FG_USING_MARMALADE
         friend class ::fgMarmaladeHandlers;
         friend int ::main();
-    #elif defined(FG_USING_PLATFORM_ANDROID) && defined(FG_USING_SDL2)
+        #elif defined(FG_USING_PLATFORM_ANDROID) && defined(FG_USING_SDL2)
         friend int ::SDL_main(int argc, char **argv);
-    #else
+        #else
         friend int ::main(int argc, char *argv[]);
-    #endif /* FG_USING_MARMALADE */
+        #endif /* FG_USING_MARMALADE */
 
     public:
         /**
@@ -90,17 +92,17 @@ namespace fg {
 
 
     protected:
-    #if defined(FG_USING_SDL2)
-    
+        #if defined(FG_USING_SDL2)
+
         static int SDLCALL filterSDLEvents(void* userdata, SDL_Event* event);
-        
+
         /**
          * #FIXME - this needs to be maintained differently
          * - maybe add some SDL2 event watches?
          * @return 
          */
         SDL_EventType checkSDLEvents(void);
-    #endif
+        #endif
 
     public:
         /**
@@ -169,12 +171,12 @@ namespace fg {
          * (not the GL un-pause event)
          */
         void focusGainedEvent(void);
-    #if defined(FG_USING_MARMALADE)
+        #if defined(FG_USING_MARMALADE)
         /**
          * Handle PRESSING and RELEASING keys
          */
         void keyStateChangedEvent(s3eKeyboardEvent* event);
-    #endif /* FG_USING_MARMALADE */
+        #endif /* FG_USING_MARMALADE */
 
     private:
         /// Number of arguments passed to program
@@ -189,10 +191,10 @@ namespace fg {
         fgBool m_isExit;
         ///
         fgBool m_isSuspend;
-    #if defined(FG_USING_MARMALADE) // #FIXME
+        #if defined(FG_USING_MARMALADE) // #FIXME
         ///
         fgDeviceQuery m_deviceQuery;
-    #endif /* FG_USING_MARMALADE */
+        #endif /* FG_USING_MARMALADE */
         /// Game main class - this is for initialization procedures
         /// contains also functions for handling events, drawing, etc #TODO
         /// Needs refactoring, some level of merging within main module or
@@ -201,6 +203,8 @@ namespace fg {
         fg::CGameMain *m_gameMain;
     };
 };
+
+    #endif /* !defined FG_STATIC_LIBRARY */
 
     #undef FG_INC_MAIN_MODULE_BLOCK
 #endif	/* FG_INC_MAIN_MODULE */

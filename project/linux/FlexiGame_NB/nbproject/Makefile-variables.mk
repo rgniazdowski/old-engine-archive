@@ -38,6 +38,22 @@ CND_ARTIFACT_PATH_Release=dist/Release/GNU-Linux-x86/flexigame_nb
 CND_PACKAGE_DIR_Release=dist/Release/GNU-Linux-x86/package
 CND_PACKAGE_NAME_Release=flexigamenb.tar
 CND_PACKAGE_PATH_Release=dist/Release/GNU-Linux-x86/package/flexigamenb.tar
+# Debug_GLEW_StaticLib configuration
+CND_PLATFORM_Debug_GLEW_StaticLib=GNU-Linux-x86
+CND_ARTIFACT_DIR_Debug_GLEW_StaticLib=dist/Debug_GLEW_StaticLib/GNU-Linux-x86
+CND_ARTIFACT_NAME_Debug_GLEW_StaticLib=libflexigame_nb.a
+CND_ARTIFACT_PATH_Debug_GLEW_StaticLib=dist/Debug_GLEW_StaticLib/GNU-Linux-x86/libflexigame_nb.a
+CND_PACKAGE_DIR_Debug_GLEW_StaticLib=dist/Debug_GLEW_StaticLib/GNU-Linux-x86/package
+CND_PACKAGE_NAME_Debug_GLEW_StaticLib=FlexiGameNB.zip
+CND_PACKAGE_PATH_Debug_GLEW_StaticLib=dist/Debug_GLEW_StaticLib/GNU-Linux-x86/package/FlexiGameNB.zip
+# Release_GLEW_StaticLib configuration
+CND_PLATFORM_Release_GLEW_StaticLib=GNU-Linux-x86
+CND_ARTIFACT_DIR_Release_GLEW_StaticLib=dist/Release_GLEW_StaticLib/GNU-Linux-x86
+CND_ARTIFACT_NAME_Release_GLEW_StaticLib=libflexigame_nb.a
+CND_ARTIFACT_PATH_Release_GLEW_StaticLib=dist/Release_GLEW_StaticLib/GNU-Linux-x86/libflexigame_nb.a
+CND_PACKAGE_DIR_Release_GLEW_StaticLib=dist/Release_GLEW_StaticLib/GNU-Linux-x86/package
+CND_PACKAGE_NAME_Release_GLEW_StaticLib=FlexiGameNB.tar
+CND_PACKAGE_PATH_Release_GLEW_StaticLib=dist/Release_GLEW_StaticLib/GNU-Linux-x86/package/FlexiGameNB.tar
 #
 # include compiler specific variables
 #

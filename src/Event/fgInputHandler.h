@@ -37,7 +37,13 @@ namespace fg {
         #else
             #define FG_DEFAULT_POINTER_ID 1
         #endif
+    #else
+        #define FG_DEFAULT_POINTER_ID 1
     #endif /* FG_USING_SDL2 */
+
+    #if !defined(FG_DEFAULT_POINTER_ID)
+        #define FG_DEFAULT_POINTER_ID 0
+    #endif
 
 namespace fg {
 
@@ -234,7 +240,7 @@ namespace fg {
              */
             int getPointerY(fgPointerID pointerID = FG_DEFAULT_POINTER_ID);
 
-        protected:
+        public:
             /**
              * 
              * @param point

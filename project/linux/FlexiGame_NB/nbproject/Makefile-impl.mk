@@ -31,7 +31,7 @@ DEFAULTCONF=Debug_GLEW_SDL2
 CONF=${DEFAULTCONF}
 
 # All Configurations
-ALLCONFS=Debug_GLEW_SDL2 Release_GLEW_SDL2 Debug Release 
+ALLCONFS=Debug_GLEW_SDL2 Release_GLEW_SDL2 Debug Release Debug_GLEW_StaticLib Release_GLEW_StaticLib 
 
 
 # build

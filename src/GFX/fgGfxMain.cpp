@@ -167,8 +167,11 @@ fgBool gfx::CGfxMain::initGFX(void) {
     }
     if(status) {
         if(!context::isInit()) {
-            status = FG_FALSE;
-        } else if(!context::isInit()) {
+#if !defined(FG_USING_SDL2)
+            status = context::initialize();
+#endif
+        }
+        if(!context::isInit()) {
             status = FG_FALSE;
         }
         if(!status) {
@@ -178,7 +181,6 @@ fgBool gfx::CGfxMain::initGFX(void) {
     if(status) {
 
         FG_LOG_DEBUG("GFX: Setting viewport (0, 0, %d, %d)", m_mainWindow->getWidth(), m_mainWindow->getHeight());
-        context::viewport(0, 0, m_mainWindow->getWidth(), m_mainWindow->getHeight());
         context::clearDepth(1.0f);
         context::setDepthTest(FG_TRUE);
         context::depthFunc(GL_LEQUAL);
@@ -192,6 +194,7 @@ fgBool gfx::CGfxMain::initGFX(void) {
         context::activeTexture(GL_TEXTURE0);
         context::bindTexture2D(0);
         context::bindTextureCube(0);
+        context::viewport(0, 0, m_mainWindow->getWidth(), m_mainWindow->getHeight());
         context::scissor(0, 0, m_mainWindow->getWidth(), m_mainWindow->getHeight());
         context::setScreenSize(m_mainWindow->getWidth(), m_mainWindow->getHeight());
         m_2DScene->getMVP()->setOrtho(0.0f, (float)m_mainWindow->getWidth(), (float)m_mainWindow->getHeight(), 0.0f);
@@ -433,6 +436,8 @@ void gfx::CGfxMain::render(void) {
     GLCheckError();
     m_mainWindow->clearColor();
 
+    context::viewport();
+    context::scissor();
     context::setCullFace(FG_TRUE);
     context::setDepthTest(FG_TRUE);
     context::setBlend(FG_FALSE);
@@ -490,7 +495,7 @@ void gfx::CGfxMain::render(void) {
 
     if(state[SDL_SCANCODE_LCTRL] == SDL_PRESSED)
         m_3DScene->getCamera()->moveDown();
-#else 
+#elif defined(FG_USING_MARMALADE)
     if(s3eKeyboardGetState(s3eKeyW) & S3E_KEY_STATE_DOWN)
         m_3DScene->getCamera()->moveForward();
     if(s3eKeyboardGetState(s3eKeyS) & S3E_KEY_STATE_DOWN)
