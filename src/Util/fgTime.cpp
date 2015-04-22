@@ -35,9 +35,9 @@ namespace fg {
         ///
         static float s_start = -1.0;
         ///
-        static float s_current = -1.0;
+        static float s_current[NUM_TICK_CATEGORIES] = {-1.0f, -1.0f, -1.0f};
         ///
-        static float s_lastTick = -1.0;
+        static float s_lastTick[NUM_TICK_CATEGORIES] = {-1.0f, -1.0f, -1.0f};
     };
 };
 
@@ -48,9 +48,6 @@ namespace fg {
 
 using namespace fg;
 
-/*
- * First initial time stamp
- */
 void timesys::init(void) {
 #ifdef FG_USING_PLATFORM_WINDOWS
     //SYSTEMTIME time;
@@ -63,14 +60,15 @@ void timesys::init(void) {
     gettimeofday(&timesys::g_start, NULL);
     timesys::s_start = float(timesys::g_start.tv_sec) + float(timesys::g_start.tv_usec / 1000000.0f);
 #endif
-    timesys::s_current = 0.0;
-    timesys::s_lastTick = MINIMUM_TICK;
+    timesys::s_current[0] = 0.0;
+    timesys::s_current[1] = 0.0;
+    timesys::s_current[2] = 0.0;
+    timesys::s_lastTick[0] = MINIMUM_TICK;
+    timesys::s_lastTick[1] = MINIMUM_TICK;
+    timesys::s_lastTick[2] = MINIMUM_TICK;
 }
 
-/*
- *
- */
-void timesys::markTick(void) {
+void timesys::markTick(TickCategory category) {
 #ifdef FG_USING_PLATFORM_WINDOWS
     //SYSTEMTIME time;
     //GetSystemTime(&time);
@@ -83,23 +81,17 @@ void timesys::markTick(void) {
                           dtime.tv_usec / 1000000.0f - timesys::g_start.tv_usec / 1000000.0f);
 #endif
 
-    timesys::s_lastTick = newTime - timesys::s_current;
-    timesys::s_current = newTime;
+    timesys::s_lastTick[(unsigned int)category] = newTime - timesys::s_current[(unsigned int)category];
+    timesys::s_current[(unsigned int)category] = newTime;
 
-    if(timesys::s_lastTick <= 0.0f)
-        timesys::s_lastTick = MINIMUM_TICK;
+    if(timesys::s_lastTick[(unsigned int)category] <= 0.0f)
+        timesys::s_lastTick[(unsigned int)category] = MINIMUM_TICK;
 }
 
-/*
- *
- */
-float timesys::elapsed(void) {
-    return timesys::s_lastTick;
+float timesys::elapsed(TickCategory category) {
+    return timesys::s_lastTick[(unsigned int)category];
 }
 
-/*
- * Get time since init in seconds
- */
 float timesys::exact(void) {
 #ifdef FG_USING_PLATFORM_WINDOWS
     //SYSTEMTIME time;
@@ -114,17 +106,11 @@ float timesys::exact(void) {
 #endif
 }
 
-/*
- * Get clock ticks
- */
 float timesys::clockTicks(void) {
     clock_t curTime = clock() - timesys::g_clock_start;
     return float(curTime);
 }
 
-/*
- * Get time since init in miliseconds
- */
 float timesys::ms(void) {
     struct timeval newTime;
     gettimeofday(&newTime, NULL);
@@ -132,25 +118,16 @@ float timesys::ms(void) {
             float(newTime.tv_usec - timesys::g_start.tv_usec) / 1000.0f;
 }
 
-/**
- * 
- * @return 
- */
 long timesys::seconds(void) {
     return time(NULL);
 }
 
-/**
- * This function gets time in miliseconds. It doesnt matter from what 
- * point in time this is calculated - it is used for delta time mostly.
- * This function is very similar in usage as the SDL_GetTicks().
- */
 unsigned long int timesys::ticks(void) {
 #if defined(FG_USING_MARMALADE)
     return (unsigned long int)s3eTimerGetMs();
 #elif defined(FG_USING_SDL) || defined(FG_USING_SDL2)
     return (unsigned long int)SDL_GetTicks();
 #else
-    return (unsigned long int)(timesys::clockTicks() / ((float)CLOCKS_PER_SEC / 1000.0f)); // FIXME - here needs to be proper function getting the miliseconds
+    return (unsigned long int)(timesys::ms());
 #endif
 }

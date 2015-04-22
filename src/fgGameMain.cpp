@@ -61,10 +61,12 @@
 
 using namespace fg;
 
-/**
- * Default constructor for the Game Main object
- */
+//------------------------------------------------------------------------------
+
 CGameMain::CGameMain(int argc, char **argv) :
+m_isFpsLocked(FG_TRUE),
+m_fixedFPS(DEFAULT_FIXED_FPS),
+m_updateFixedFPS(DEFAULT_UPDATE_FIXED_FPS),
 m_argc(argc),
 m_argv(argv),
 m_gfxMain(NULL),
@@ -106,10 +108,8 @@ m_gameFreeLookCallback(NULL) {
 #endif
     registerGameCallbacks();
 }
+//------------------------------------------------------------------------------
 
-/**
- * Default destructor for the Game Main object
- */
 CGameMain::~CGameMain() {
     // >> Main Game Object destruction - begin
     // Unregister any required callbacks
@@ -209,10 +209,8 @@ CGameMain::~CGameMain() {
     FG_MessageSubsystem->deleteInstance();
     // >> Main Game object destruction - end
 }
+//------------------------------------------------------------------------------
 
-/**
- *
- */
 void CGameMain::registerGameCallbacks(void) {
     if(!m_gameTouchCallback)
         m_gameTouchCallback = new event::CMethodCallback<CGameMain>(this, &CGameMain::gameTouchHandler);
@@ -240,10 +238,8 @@ void CGameMain::registerGameCallbacks(void) {
     event::CEventManager::addCallback(event::MOUSE_RELEASED, m_gameFreeLookCallback);
     event::CEventManager::addCallback(event::MOUSE_MOTION, m_gameFreeLookCallback);
 }
+//------------------------------------------------------------------------------
 
-/**
- *
- */
 void CGameMain::unregisterGameCallbacks(void) {
     event::CEventManager::removeCallback(event::TOUCH_PRESSED, m_gameTouchCallback);
     event::CEventManager::removeCallback(event::TOUCH_RELEASED, m_gameTouchCallback);
@@ -262,11 +258,8 @@ void CGameMain::unregisterGameCallbacks(void) {
     event::CEventManager::removeCallback(event::MOUSE_RELEASED, m_gameFreeLookCallback);
     event::CEventManager::removeCallback(event::MOUSE_MOTION, m_gameFreeLookCallback);
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param eventMgr
- */
 void CGameMain::setEventManager(void) {
     //registerGameCallbacks();
     if(m_inputHandler)
@@ -284,12 +277,8 @@ void CGameMain::setEventManager(void) {
         m_scriptSubsystem->setEventManager(this);
     }
 }
+//------------------------------------------------------------------------------
 
-/**
- * This needs to be called first before everything else.
- * Function creates and initializes subsystems
- * @return
- */
 fgBool CGameMain::initSubsystems(void) {
     float t1 = timesys::ms();
     FG_HardwareState->deviceYield(0); // #FIXME - device yield...
@@ -422,12 +411,8 @@ fgBool CGameMain::initSubsystems(void) {
     m_gfxMain->getLoader()->update(10.0f);
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
-/**
- * This loads main configuration files determining the next steps
- * of game initialization
- * @return 
- */
 fgBool CGameMain::loadConfiguration(void) {
     FG_LOG_DEBUG("Loading configuration...");
     if(!m_settings)
@@ -470,11 +455,8 @@ fgBool CGameMain::loadConfiguration(void) {
     FG_LOG_DEBUG("Main: Selected current mod: '%s'", m_settings->getCurrentModPathStr());
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
-/**
- * This loads resources specified in configuration files
- * @return
- */
 fgBool CGameMain::loadResources(void) {
     float t1 = timesys::ms();
     FG_LOG_DEBUG("Loading resources...");
@@ -555,20 +537,14 @@ fgBool CGameMain::loadResources(void) {
     ////////////////////////////////////////////////////////////////////////////
     m_gfxMain->getLoader()->update(10.0f);
     m_gfxMain->getShaderManager()->get(sPlainEasyShaderName)->use();
-    this->update();
+    this->update(FG_TRUE);
     m_gfxMain->generateBuiltInData();
     float t2 = timesys::ms();
     FG_LOG_DEBUG("Main: Resources loaded in %.2f seconds", (t2 - t1) / 1000.0f);
-#if !defined(FG_USING_MARMALADE)
-    usleep(50 * 1000);
-#endif
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
-/**
- * This unloads, frees and deletes all data from fgResourceManager subsystem
- * @return
- */
 fgBool CGameMain::releaseResources(void) {
     if(m_resourceMgr) {
         FG_LOG_DEBUG("Releasing resources...");
@@ -576,12 +552,8 @@ fgBool CGameMain::releaseResources(void) {
     }
     return FG_FALSE;
 }
+//------------------------------------------------------------------------------
 
-/**
- * This frees the subsystems - simply deletes all singleton instances (every main subsystem is a singleton)
- * must be called after releaseResources
- * @return
- */
 fgBool CGameMain::closeSybsystems(void) {
     FG_LOG_DEBUG("Closing subsystems...");
     if(m_gfxMain)
@@ -596,11 +568,8 @@ fgBool CGameMain::closeSybsystems(void) {
 
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
-/**
- * This function releases the resources and closes the subsystems
- * @return
- */
 fgBool CGameMain::quit(void) {
     FG_LOG_DEBUG("Game main quit requested");
     fgBool status = FG_TRUE;
@@ -610,13 +579,25 @@ fgBool CGameMain::quit(void) {
         status = FG_FALSE;
     return status;
 }
+//------------------------------------------------------------------------------
 
-/**
- * Main display function creates the buffer (vertex/color/texture coords buffers) to be
- * displayed in current frame; the real drawing of created buffers is inside the render
- * function (which in the future should be in separate thread)
- */
-void CGameMain::display(void) {
+fgBool CGameMain::display(void) {
+    static float t1 = -1.0f;
+    float t2 = fg::timesys::ms();
+    float dt = 0.0f;
+    const float msPerFrame = 1000.0f / (float)m_fixedFPS;
+    if(t1 < 0.0f) {
+        t1 = fg::timesys::ms();
+    }
+    dt = t2 - t1;
+    if(dt > msPerFrame) {
+        t1 = t2;
+    } else if(m_isFpsLocked) {
+        return FG_FALSE;
+    }
+    // This should be synchronized to 60FPS, meaning that should be called in display / render
+    // maybe should give some cathegories ?
+    timesys::markTick(timesys::TICK_DISPLAY);
 #if defined(FG_DEBUG)
     if(g_fgDebugConfig.isDebugProfiling)
         profile::g_debugProfiling->begin("GFX::display");
@@ -634,17 +615,30 @@ void CGameMain::display(void) {
         profile::g_debugProfiling->end("GUI::display");
     }
 #endif
+    return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
-/**
- * Begins the proper render of the created buffers
- */
-void CGameMain::render(void) {
+fgBool CGameMain::render(void) {
     if(!m_gfxMain->isInit()) {
-        return;
+        return FG_FALSE;
     }
-    // #FIXME
     static int fpsc = -1;
+    static float t1 = -1.0f;
+    float t2 = fg::timesys::ms();
+    float dt = 0.0f;
+    const float msPerFrame = 1000.0f / (float)m_fixedFPS;
+    if(t1 < 0.0f) {
+        t1 = fg::timesys::ms();
+    }
+    dt = t2 - t1;
+    if(dt > msPerFrame) {
+        t1 = t2;
+    } else if(m_isFpsLocked) {
+        return FG_FALSE;
+    }
+    timesys::markTick(timesys::TICK_RENDER);
+    FG_HardwareState->calculateFPS();
 #if !defined(FG_USING_MARMALADE)
     if(fpsc < 0) {
         usleep(50 * 1000);
@@ -658,6 +652,10 @@ void CGameMain::render(void) {
     if(fpsc > 256) {
         FG_LOG_DEBUG("# Screen size: %d x %d", m_gfxMain->getMainWindow()->getWidth(),
                      m_gfxMain->getMainWindow()->getHeight());
+        FG_LOG_DEBUG("# GFX screen size: %d x %d", gfx::context::getScreenSize().x,
+                     gfx::context::getScreenSize().y);
+        FG_LOG_DEBUG("# GUI size: %d x %d", (int)m_guiMain->getScreenSize().x,
+                     (int)m_guiMain->getScreenSize().y);
         fpsc = 0;
     }
     //fpsc++;
@@ -688,16 +686,25 @@ void CGameMain::render(void) {
     gfx::context::setBlend(FG_FALSE); // #FIXME
     FG_HardwareState->deviceYield();
     m_gfxMain->getMainWindow()->swapBuffers();
+    return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
-/**
- * Update - all event handling, calling scripts, AI, game logic and etc
- * This happens for every frame (for iOS fps is hardcoded for 60, never more)
- */
-void CGameMain::update(void) {
-    timesys::markTick();
-    FG_HardwareState->calculateFPS(); // #FIXME
-
+fgBool CGameMain::update(fgBool force) {
+    static float t1 = -1.0f;
+    float t2 = fg::timesys::ms();
+    float dt = 0.0f;
+    const float msPerFrame = 1000.0f / (float)m_updateFixedFPS;
+    if(t1 < 0.0f) {
+        t1 = fg::timesys::ms();
+    }
+    dt = t2 - t1;
+    if(dt > msPerFrame) {
+        t1 = t2;
+    } else if(!force) {
+        return FG_FALSE;
+    }
+    timesys::markTick(timesys::TICK_UPDATE);
     m_guiMain->setScreenSize(m_gfxMain->getMainWindow()->getWidth(),
                              m_gfxMain->getMainWindow()->getHeight());
 
@@ -729,13 +736,10 @@ void CGameMain::update(void) {
     // that is no longer needed regardless of the actual overallocation - resources
     // can be tagged for deletion when no longer needed (eg. new map/level is loaded)
     //FG_ResourceManager->checkForOverallocation();
+    return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param argv
- * @return 
- */
 fgBool CGameMain::gameTouchHandler(event::CArgumentList *argv) {
     if(!argv)
         return FG_FALSE;
@@ -755,12 +759,8 @@ fgBool CGameMain::gameTouchHandler(event::CArgumentList *argv) {
     }
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param argv
- * @return 
- */
 fgBool CGameMain::gameMouseHandler(event::CArgumentList *argv) {
     if(!argv)
         return FG_FALSE;
@@ -772,12 +772,8 @@ fgBool CGameMain::gameMouseHandler(event::CArgumentList *argv) {
     //this->updateState();
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param argv
- * @return 
- */
 fgBool CGameMain::gameFreeLookHandler(event::CArgumentList* argv) {
     if(!argv || !this->m_gfxMain)
         return FG_FALSE;

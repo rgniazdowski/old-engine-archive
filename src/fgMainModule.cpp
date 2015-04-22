@@ -441,11 +441,11 @@ fgBool CMainModule::initProgram(void) {
     if(!m_gameMain->loadResources()) {
         return FG_FALSE;
     }
-    m_gameMain->update();
+    m_gameMain->update(FG_TRUE);
     m_appInit = FG_TRUE;
     float t2 = timesys::ms();
     FG_LOG_DEBUG("Main: Program initialized in %.2f seconds", (t2 - t1) / 1000.0f);
-
+    m_gameMain->update(FG_TRUE);
 #if defined(FG_USING_SDL2) && defined(FG_USING_PLATFORM_ANDROID)
     SDL_AddEventWatch(filterSDLEvents, this);
 #endif    
@@ -505,7 +505,7 @@ fgBool CMainModule::mainLoopStep(void) {
 #endif
     FG_HardwareState->deviceYield(0);
     m_gameMain->update();
-    FG_HardwareState->deviceYield(0);
+
 #if defined(FG_DEBUG)
     if(g_fgDebugConfig.isDebugProfiling) {
         profile::g_debugProfiling->end("Game::update");
@@ -515,16 +515,14 @@ fgBool CMainModule::mainLoopStep(void) {
     // well for now drawing and all update functions will be called in one place (one thread)
     // however it needs changing
     m_gameMain->display();
-    FG_HardwareState->deviceYield(0);
+
 #if defined(FG_DEBUG)
     if(g_fgDebugConfig.isDebugProfiling) {
         profile::g_debugProfiling->end("Game::display");
         profile::g_debugProfiling->begin("Game::render");
     }
-#endif
-    FG_HardwareState->deviceYield();
+#endif    
     m_gameMain->render();
-    FG_HardwareState->deviceYield(0);
 #if defined(FG_DEBUG)
     static int loopCount = 0;
     g_fgDebugConfig.isDebugProfiling = true;

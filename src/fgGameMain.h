@@ -42,6 +42,13 @@ namespace fg {
     /// Tag type for the GameMain class
     typedef FG_TAG_GAME_MAIN GameMainTag;
 
+    const unsigned short MAX_FIXED_FPS = 120;
+    const unsigned short MIN_FIXED_FPS = 24;
+    const unsigned short DEFAULT_FIXED_FPS = 60;
+    const unsigned short MAX_UPDATE_FIXED_FPS = 120;
+    const unsigned short MIN_UPDATE_FIXED_FPS = 48;
+    const unsigned short DEFAULT_UPDATE_FIXED_FPS = 120;
+
     /**
      *
      */
@@ -98,23 +105,45 @@ namespace fg {
          */
         fgBool releaseResources(void);
 
-        // This frees the subsystems - simply deletes all singleton instances 
-        // (every main subsystem is a singleton) #FIXME #KILLALLSINGLETONS
+        /**
+         * This frees the subsystems - simply deletes all singleton instances
+         * (every main subsystem is a singleton) #FIXME #KILLALLSINGLETONS
+         * @return
+         */
         fgBool closeSybsystems(void);
 
-        // This function releases the resources and closes the subsystems
+        /**
+         * This function releases the resources and closes the subsystems
+         * @return
+         */
         fgBool quit(void);
 
-        // Now main display function creates the buffer (vertex/color/texture coords buffers) 
-        // to be displayed in current frame. The real drawing of created buffers is inside the
-        // render function (which in the future should be in separate thread)
-        void display(void);
+        /**
+         * Now main display function creates the buffer (vertex/color/texture
+         * coords buffers) to be displayed in current frame. The real drawing of
+         * created buffers is inside the render function (which in the future
+         * should be in separate thread)
+         * @return  Returns FG_TRUE if the function was executed fully, FG_FALSE
+         *          if otherwise -- meaning that not enough time has elapsed for
+         *          the next execution (fixed FPS)
+         */
+        fgBool display(void);
 
-        // Begins the proper render of the created buffers
-        void render(void);
+        /**
+         * Begins the proper render of the created buffers
+         * @return  Returns FG_TRUE if the function was executed fully, FG_FALSE
+         *          if otherwise -- meaning that not enough time has elapsed for
+         *          the next execution (fixed FPS)
+         */
+        fgBool render(void);
 
-        // Update - all event handling, calling scripts, AI, game logic and others
-        void update(void);
+        /**
+         * Update - all event handling, calling scripts, AI, game logic and others
+         * @return  Returns FG_TRUE if the function was executed fully, FG_FALSE
+         *          if otherwise -- meaning that not enough time has elapsed for
+         *          the next execution (fixed update - 120FPS)
+         */
+        fgBool update(fgBool force = FG_FALSE);
 
     public:
         /**
@@ -156,8 +185,8 @@ namespace fg {
          * 
          * @return 
          */
-        inline CEventManager *getEventManager(void) {
-            return static_cast<CEventManager *>(this);
+        inline event::CEventManager *getEventManager(void) {
+            return static_cast<event::CEventManager *>(this);
         }
         /**
          * 
@@ -191,8 +220,62 @@ namespace fg {
          * 
          * @return 
          */
-        inline fg::game::Logic *getLogicManager(void) const {
+        inline game::Logic *getLogicManager(void) const {
             return m_logicMgr;
+        }
+
+    public:
+        /**
+         *
+         * @return
+         */
+        inline fgBool isFpsLocked(void) const {
+            return m_isFpsLocked;
+        }
+        /**
+         * 
+         * @param toggle
+         */
+        inline void lockFps(fgBool toggle = FG_TRUE) {
+            m_isFpsLocked = toggle;
+        }
+        /**
+         * 
+         * @return
+         */
+        inline unsigned short getFixedFps(void) const {
+            return m_fixedFPS;
+        }
+        /**
+         *
+         * @param fixedFPS
+         */
+        inline void setFixedFps(unsigned short fixedFPS) {
+            if(fixedFPS > MAX_FIXED_FPS) {
+                fixedFPS = MAX_FIXED_FPS;
+            } else if(fixedFPS < MIN_FIXED_FPS) {
+                fixedFPS = MIN_FIXED_FPS;
+            }
+            m_fixedFPS = fixedFPS;
+        }
+        /**
+         *
+         * @return
+         */
+        inline unsigned short getUpdateFixedFps(void) const {
+            return m_updateFixedFPS;
+        }
+        /**
+         *
+         * @param fixedFPS
+         */
+        inline void setUpdateFixedFps(unsigned short fixedFPS) {
+            if(fixedFPS > MAX_UPDATE_FIXED_FPS) {
+                fixedFPS = MAX_UPDATE_FIXED_FPS;
+            } else if(fixedFPS < MIN_UPDATE_FIXED_FPS) {
+                fixedFPS = MIN_UPDATE_FIXED_FPS;
+            }
+            m_updateFixedFPS = fixedFPS;
         }
 
     protected:
@@ -223,6 +306,12 @@ namespace fg {
         void setEventManager(void);
 
     private:
+        ///
+        fgBool m_isFpsLocked;
+        /// Fixed FPS
+        unsigned short m_fixedFPS;
+        /// Fixed FPS for update procedure (events)
+        unsigned short m_updateFixedFPS;
         /// Number of the arguments passed to program
         int m_argc;
         /// Array of arguments passed to program
@@ -258,6 +347,7 @@ namespace fg {
         event::CFunctionCallback *m_gameMouseCallback;
         /// Special callback for game free look (controlling camera via touch/click)
         event::CFunctionCallback *m_gameFreeLookCallback;
+
     };
 };
 
