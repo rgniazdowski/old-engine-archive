@@ -151,9 +151,23 @@ namespace fg {
              * @param w
              * @param h
              */
-            void setScreenSize(const int w, const int h) {
+            inline void setScreenSize(const int w, const int h) {
                 m_screenBox.size.x = (float)w;
                 m_screenBox.size.y = (float)h;
+            }
+            /**
+             * 
+             * @return
+             */
+            inline Vector3f& getScreenSize(void) {
+                return m_screenBox.size;
+            }
+            /**
+             *
+             * @return
+             */
+            inline Vector3f const& getScreenSize(void) const {
+                return m_screenBox.size;
             }
 
             /**
@@ -167,8 +181,8 @@ namespace fg {
              */
             virtual fgBool initialize(void);
 
-        ////////////////////////////////////////////////////////////////////////
-            
+            ////////////////////////////////////////////////////////////////////////
+
         public:
             /**
              * 
@@ -203,8 +217,8 @@ namespace fg {
                                      fg::gui::CGuiCallback *pCallback,
                                      const fgGuiWidgetCallbackType callbackType);
 
-        ////////////////////////////////////////////////////////////////////////
-        
+            ////////////////////////////////////////////////////////////////////////
+
         public:
             /**
              * 
@@ -262,9 +276,9 @@ namespace fg {
              * @param pointerInputReceiver
              */
             void setPointerInputReceiver(fg::event::CInputHandler *pointerInputReceiver);
-            
+
             ////////////////////////////////////////////////////////////////////
-            
+
             /**
              * 
              * @param menuName
@@ -280,7 +294,7 @@ namespace fg {
              * @param pMenu
              */
             void changeMenu(CWidget *pMenu);
-            
+
             /**
              * 
              * @param menuName
@@ -296,7 +310,7 @@ namespace fg {
              * @param pMenu
              */
             void setCurrentMenu(CWidget *pMenu);
-            
+
             ////////////////////////////////////////////////////////////////////
 
             /**
@@ -315,7 +329,7 @@ namespace fg {
             virtual void render(void); // #FIXME, just testing
 
             ////////////////////////////////////////////////////////////////////
-            
+
             /**
              * 
              * @param argv
