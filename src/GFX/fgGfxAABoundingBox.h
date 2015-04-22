@@ -571,7 +571,8 @@ namespace fg {
              * 
              */
             virtual inline void invalidate(void) {
-                this->zero();
+                this->max.x = (FLT_MAX / 4.0f) * (-1.0f);
+                this->max.y = (FLT_MAX / 4.0f) * (-1.0f);
                 this->min.x = FLT_MAX;
                 this->min.y = FLT_MAX;
             }
@@ -856,7 +857,9 @@ namespace fg {
              * 
              */
             virtual inline void invalidate(void) {
-                this->zero();
+                this->max.x = -10000.0f; //(FLT_MAX / 4.0f) * (-1.0f);
+                this->max.y = -10000.0f; //(FLT_MAX / 4.0f) * (-1.0f);
+                this->max.z = -10000.0f; //(FLT_MAX / 4.0f) * (-1.0f);
                 this->min.x = FLT_MAX;
                 this->min.y = FLT_MAX;
                 this->min.z = FLT_MAX;
@@ -1023,7 +1026,7 @@ namespace fg {
              * @param box
              * @return 
              */
-            fgBool test(const self_type & box) const {
+            fgBool test(const self_type& box) const {
                 // needs to return true if 'box' is completely inside of 'this' box
                 if(box.min.x < this->min.x || box.max.x > this->max.x) {
                     return FG_FALSE;
