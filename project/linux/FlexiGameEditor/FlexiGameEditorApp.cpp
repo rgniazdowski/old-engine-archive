@@ -18,6 +18,8 @@
 #include <cmath>
 #include <map>
 
+#include <pthread.h>
+
 #include "Event/fgEventManager.h"
 #include "Event/fgInputHandler.h"
 #include "Hardware/fgHardwareState.h"
@@ -64,6 +66,7 @@ bool FlexiGameEditorApp::OnInit()
             glPane = new BasicGLPane( (wxFrame*) Frame, args);
             sizer->Add(glPane, 1, wxEXPAND);
             Frame->SetSizer(sizer);
+            //Frame->GetSizer()->Add(glPane, 1, wxEXPAND);
             Frame->SetAutoLayout(true);
 
             this->m_renderTimer = new RenderTimer(glPane);
@@ -73,6 +76,7 @@ bool FlexiGameEditorApp::OnInit()
         }
         returnVal = wxsOK;
     }
+    //printf("FlexiGameEditorApp::OnInit(): THREAD ID: %lu\n", pthread_self());
     return returnVal;
 
 }
@@ -86,12 +90,14 @@ RenderTimer::RenderTimer(BasicGLPane* pane) : wxTimer()
 
 void RenderTimer::Notify()
 {
-    m_glPane->render();
+    m_glPane->Refresh();
+    //printf("RenderTime::Notify(): THREAD ID: %lu\n", pthread_self());
 }
 
 void RenderTimer::start()
 {
-    wxTimer::Start(1000/60);
+    //printf("RenderTime::start(): THREAD ID: %lu\n", pthread_self());
+    wxTimer::Start(1000/60); // #FIXME / this should be exactly 120 ?
 }
 
 
@@ -99,7 +105,6 @@ BEGIN_EVENT_TABLE(BasicGLPane, wxGLCanvas)
     EVT_MOTION(BasicGLPane::mouseMoved)
     EVT_LEFT_DOWN(BasicGLPane::mouseDown)
     EVT_LEFT_UP(BasicGLPane::mouseReleased)
-    EVT_RIGHT_DOWN(BasicGLPane::rightClick)
     EVT_LEAVE_WINDOW(BasicGLPane::mouseLeftWindow)
     EVT_SIZE(BasicGLPane::resized)
     EVT_KEY_DOWN(BasicGLPane::keyPressed)
@@ -112,8 +117,10 @@ END_EVENT_TABLE()
 
 
 void BasicGLPane::closeEvent(wxCloseEvent& event) {
+    //printf("CLOSE EVENT: THREAD ID: %lu\n", pthread_self());
     FG_LOG_DEBUG("WX: Close event callback");
     this->m_isExit = FG_TRUE;
+    this->m_appInit = FG_FALSE;
     closeProgram();
 }
 
@@ -123,6 +130,7 @@ void BasicGLPane::mouseMoved(wxMouseEvent& event) {
     int x = event.GetPosition().x;
     int y = event.GetPosition().y;
     this->m_gameMain->getInputHandler()->handlePointerMoved(fg::Vector2i(x,y), FG_DEFAULT_POINTER_ID, event.Dragging());
+    //printf("MOUSE MOVED: THREAD ID: %lu\n", pthread_self());
 }
 
 void BasicGLPane::mouseDown(wxMouseEvent& event) {
@@ -144,10 +152,11 @@ void BasicGLPane::mouseReleased(wxMouseEvent& event) {
     FG_LOG_DEBUG("WX: Mouse released event: %dx%d id:%d", x, y, button);
 }
 
-void BasicGLPane::rightClick(wxMouseEvent& event) {
-}
-
 void BasicGLPane::mouseLeftWindow(wxMouseEvent& event) {
+    int button = event.GetButton();
+    int x = event.GetPosition().x;
+    int y = event.GetPosition().y;
+    FG_LOG_DEBUG("WX: Mouse left window event: %dx%d id:%d", x, y, button);
 }
 
 void BasicGLPane::keyPressed(wxKeyEvent& event) {
@@ -159,30 +168,48 @@ void BasicGLPane::keyPressed(wxKeyEvent& event) {
 void BasicGLPane::keyReleased(wxKeyEvent& event) {
     int keyCode = event.GetKeyCode();
     this->m_gameMain->getInputHandler()->addKeyUp(keyCode);
-
 }
 
+void BasicGLPane::resized(wxSizeEvent& evt)
+{
+    int x = evt.GetSize().x;
+    int y = evt.GetSize().y;
+    FG_LOG_DEBUG("WX: Resize event %dx%d", x, y);
+    if(this->m_appInit)
+    {
+        this->m_gameMain->getGfxMain()->getMainWindow()->setup("BasicGLPane", x, y);
+        this->m_gameMain->getGuiMain()->setScreenSize(x, y);
+        fg::gfx::context::setScreenSize(x, y);
+
+    }
+    Refresh();
+}
+
+int BasicGLPane::getWidth(void)
+{
+    return GetSize().x;
+}
+
+int BasicGLPane::getHeight(void)
+{
+    return GetSize().y;
+}
 
 void BasicGLPane::idle(wxIdleEvent& event)
 {
-    static int i = 0;
-    static unsigned long t1 = 0;
+    static long int t1 = 0;
     static int f = 0;
-    if(t1 == 0)
-    {
+    if(t1 == 0) {
         t1 = time(NULL);
     }
-    if(!m_paint)
-        printf("idle() shown: %d | i: %d\n", IsShownOnScreen(), i);
-    if(!IsShown())
-        return;
-    event.RequestMore();
-    i++;
+    if(!IsShown()) return;
+
     f++;
     if(time(NULL) != t1)
     {
         t1 = time(NULL);
-        printf("FPS: %d\n", f);
+        FG_LOG_DEBUG("WX: IDLE FPS: %d", f);
+        //printf("IDLE: THREAD ID: %lu\n", pthread_self());
         f = 0;
     }
     if(m_paint && !m_appInit && !m_isInitializing) {
@@ -192,33 +219,72 @@ void BasicGLPane::idle(wxIdleEvent& event)
             FG_LOG_ERROR("WX: Failed to initialize the program...");
             m_isExit = FG_TRUE;
             m_appInit = FG_FALSE;
+            m_isInitializing = FG_FALSE;
             m_parentFrame->Close();
         } else {
             m_isInitializing = FG_FALSE;
             m_appInit = FG_TRUE;
+            // Unlock display/render FPS
+            // Proper FPS still will be maintained thanks to
+            // paint/refresh timer which is locked at 60FPS
+            this->m_gameMain->lockFps(FG_FALSE);
             FG_LOG_DEBUG("WX: Successfully initialized program...");
         }
     }
+
+    if(m_appInit) {
+        if(!this->update()) {
+            // loop break
+            m_isExit = FG_TRUE; // ?
+        }
+    }
+    event.RequestMore();
 }
+
 void BasicGLPane::paint( wxPaintEvent& evt )
 {
+    fgBool isSwapBuffers = FG_TRUE;
+    static unsigned long int t1 = 0;
+    unsigned long int t2 = 0;
+    static int f = 0;
+    if(t1 == 0) {
+        t1 = (unsigned long int)fg::timesys::ms();
+    }
+    t2 = (unsigned long int)fg::timesys::ms();
+    //printf("T2: %lu | clockTicks=%.2f | ms=%.2f | exact=%.2f | elapsed=%.2f\n", t2, fg::timesys::clockTicks(), fg::timesys::ms(), fg::timesys::exact(), fg::timesys::elapsed());
+    f++;
+    if(t2 - t1 > 1000) {
+        float fps = ((float)f)/(1000.0f/(float)(t2-t1));
+        t1 = t2;
+        FG_LOG_DEBUG("WX: Paint Event: FPS: %.1f", fps);
+        f = 0;
+    }
+
+    if(!IsShown()) return;
     if(!IsShownOnScreen()) return;
+    if(m_isExit) return;
+    if(m_isInitializing) return;
+
     wxGLCanvas::SetCurrent(*m_context);
     wxPaintDC(this); // only to be used in paint events. use wxClientDC to paint outside the paint event
     m_paint = FG_TRUE;
-    render();
-    FG_LOG_DEBUG("WX: Paint event...");
+
+    if(m_appInit) {
+        // displayAndRender returns FG_FALSE if render func was not called (meaning no swap is required)
+        if(!this->displayAndRender()) {
+            // loop break
+            isSwapBuffers = FG_FALSE;
+        }
+    } else {
+        FG_LOG_DEBUG("WX: Render func: app is not yet initialized");
+    }
+    //FG_LOG_DEBUG("WX: Paint Event: SWAP: %d", isSwapBuffers);
+    if(isSwapBuffers) {
+        glFlush();
+        SwapBuffers();
+    }
+    //printf("PAINT: THREAD ID: %lu\n", pthread_self());
 }
-
-
-// Vertices and faces of a simple cube to demonstrate 3D render
-// source: http://www.opengl.org/resources/code/samples/glut_examples/examples/cube.c
-GLfloat v[8][3];
-GLint faces[6][4] =    /* Vertex indices for the 6 faces of a cube. */
-{
-    {0, 1, 2, 3}, {3, 2, 6, 7}, {7, 6, 5, 4},
-    {4, 5, 1, 0}, {5, 6, 2, 1}, {7, 4, 0, 3}
-};
 
 #include "GFX/Scene/fgGfxBspCompiler.h"
 fg::gfx::CBspCompiler *bspCompiler = NULL;
@@ -227,33 +293,27 @@ BasicGLPane::BasicGLPane(wxFrame* parent, int* args) :
     wxGLCanvas(parent, wxID_ANY, args, wxDefaultPosition, wxDefaultSize, wxFULL_REPAINT_ON_RESIZE)
 {
     m_context = new wxGLContext(this);
-    // prepare a simple cube to demonstrate 3D render
-    // source: http://www.opengl.org/resources/code/samples/glut_examples/examples/cube.c
-    v[0][0] = v[1][0] = v[2][0] = v[3][0] = -1;
-    v[4][0] = v[5][0] = v[6][0] = v[7][0] = 1;
-    v[0][1] = v[1][1] = v[4][1] = v[5][1] = -1;
-    v[2][1] = v[3][1] = v[6][1] = v[7][1] = 1;
-    v[0][2] = v[3][2] = v[4][2] = v[7][2] = 1;
-    v[1][2] = v[2][2] = v[5][2] = v[6][2] = -1;
 
     // To avoid flashing on MSW
     SetBackgroundStyle(wxBG_STYLE_CUSTOM);
+    m_argc = 0;
+    m_argv[0] = NULL;
+    m_argv[1] = NULL;
 
     m_paint = FG_FALSE;
     m_isExit = FG_FALSE;
     m_appInit = FG_FALSE;
     m_isSuspend = FG_FALSE;
-    m_gameMain = NULL;
-    m_argc = 0;
-    m_argv[0] = NULL;
-    m_argv[1] = NULL;
-    m_parentFrame = parent;
     m_isInitializing = FG_FALSE;
+
+    m_parentFrame = parent;
+    m_gameMain = NULL;
 }
 
 BasicGLPane::~BasicGLPane()
 {
     FG_LOG_DEBUG("WX: Main destructor called");
+    wxGLCanvas::SetCurrent(*m_context);
     closeProgram();
     delete m_context;
 }
@@ -307,72 +367,39 @@ fgBool BasicGLPane::initProgram(void)
     if(!this->m_gameMain->loadResources()) {
         return FG_FALSE;
     }
-    this->m_gameMain->update();
+    this->m_gameMain->update(FG_TRUE);
+    this->m_gameMain->update(FG_TRUE);
     m_appInit = FG_TRUE;
     float t2 = timesys::ms();
     FG_LOG_DEBUG("Main: Program initialized in %.2f seconds", (t2 - t1) / 1000.0f);
     return FG_TRUE;
 }
 
-fgBool BasicGLPane::mainLoopStep(void)
+fgBool BasicGLPane::displayAndRender(void)
 {
+    fgBool status = FG_TRUE;
+
     using namespace fg;
-    FG_HardwareState->deviceYield(0);
-    if(!this->m_appInit) {
-        FG_LOG_DEBUG("MainModule: Loop step - application not initialized...");
-        return FG_FALSE;
-    }
 #if defined(FG_DEBUG)
     if(g_fgDebugConfig.isDebugProfiling) {
-        profile::g_debugProfiling->begin("Program::loopStep");
-    }
-#endif
-    // #FIXME - This event checking should not be in here
-
-    if(this->m_isSuspend) {
-        //FG_LOG_DEBUG("MainModule: Loop step - suspend...");
-        return FG_TRUE;
-    }
-
-    if(this->m_isExit) {
-        this->m_appInit = FG_FALSE;
-        FG_LOG_DEBUG("EXIT IS ACTIVATED - break loop main ! bye!");
-        return FG_FALSE;
-    }
-
-#if defined(FG_DEBUG)
-    if(g_fgDebugConfig.isDebugProfiling) {
-        profile::g_debugProfiling->begin("Game::update");
-    }
-#endif
-    FG_HardwareState->deviceYield(0);
-    this->m_gameMain->update();
-    FG_HardwareState->deviceYield(0);
-#if defined(FG_DEBUG)
-    if(g_fgDebugConfig.isDebugProfiling) {
-        profile::g_debugProfiling->end("Game::update");
         profile::g_debugProfiling->begin("Game::display");
     }
 #endif
     // well for now drawing and all update functions will be called in one place (one thread)
     // however it needs changing
     this->m_gameMain->display();
-    FG_HardwareState->deviceYield(0);
 #if defined(FG_DEBUG)
     if(g_fgDebugConfig.isDebugProfiling) {
         profile::g_debugProfiling->end("Game::display");
         profile::g_debugProfiling->begin("Game::render");
     }
 #endif
-    FG_HardwareState->deviceYield();
-    this->m_gameMain->render();
-    FG_HardwareState->deviceYield(0);
+    status = this->m_gameMain->render();
 #if defined(FG_DEBUG)
     static int loopCount = 0;
     g_fgDebugConfig.isDebugProfiling = true;
     if(g_fgDebugConfig.isDebugProfiling) {
         profile::g_debugProfiling->end("Game::render");
-        profile::g_debugProfiling->end("Program::loopStep");
         profile::g_debugProfiling->updateHistory();
 
         loopCount++;
@@ -382,54 +409,36 @@ fgBool BasicGLPane::mainLoopStep(void)
         }
     }
 #endif
+    return status;
+}
+
+fgBool BasicGLPane::update(void) {
+    using namespace fg;
+#if defined(FG_DEBUG)
+    if(g_fgDebugConfig.isDebugProfiling) {
+        profile::g_debugProfiling->begin("Game::update");
+    }
+#endif
+    if(!this->m_appInit) {
+        FG_LOG_DEBUG("MainModule: Loop step - application not initialized...");
+        return FG_FALSE;
+    }
+    if(this->m_isSuspend) {
+        //FG_LOG_DEBUG("MainModule: Loop step - suspend...");
+        return FG_TRUE;
+    }
+    if(this->m_isExit) {
+        this->m_appInit = FG_FALSE;
+        FG_LOG_DEBUG("EXIT IS ACTIVATED - break loop main ! bye!");
+        return FG_FALSE;
+    }
+
+    this->m_gameMain->update();
+
+#if defined(FG_DEBUG)
+    if(g_fgDebugConfig.isDebugProfiling) {
+        profile::g_debugProfiling->end("Game::update");
+    }
+#endif
     return FG_TRUE;
-}
-
-void BasicGLPane::resized(wxSizeEvent& evt)
-{
-//	wxGLCanvas::OnSize(evt);
-
-    int x = evt.GetSize().x;
-    int y = evt.GetSize().y;
-    FG_LOG_DEBUG("WX: Resize event %dx%d", x, y);
-    if(this->m_appInit)
-    {
-        this->m_gameMain->getGfxMain()->getMainWindow()->setup("BasicGLPane", x, y);
-        this->m_gameMain->getGuiMain()->setScreenSize(x, y);
-        fg::gfx::context::setScreenSize(x, y);
-
-    }
-    Refresh();
-}
-
-int BasicGLPane::getWidth()
-{
-    return GetSize().x;
-}
-
-int BasicGLPane::getHeight()
-{
-    return GetSize().y;
-}
-
-
-void BasicGLPane::render(void)
-{
-    if(!IsShown()) return;
-    if(!IsShownOnScreen()) return;
-    if(!m_paint) return;
-    if(m_isExit) return;
-    if(m_isInitializing) return;
-    wxGLCanvas::SetCurrent(*m_context);
-    if(m_appInit) {
-        if(!this->mainLoopStep()) {
-            // loop break
-            m_isExit = FG_TRUE; // ?
-        }
-    } else {
-        FG_LOG_DEBUG("WX: Render func: app is not yet initialized");
-    }
-
-    glFlush();
-    SwapBuffers();
 }

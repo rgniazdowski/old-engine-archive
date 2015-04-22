@@ -47,15 +47,22 @@ public:
 };
 
 
-
+/**
+ *
+ */
 class BasicGLPane : public wxGLCanvas
 {
+    ///
     wxGLContext*	m_context;
+    ///
     fgBool m_paint;
+    ///
     fgBool m_appInit;
+    ///
     fgBool m_isInitializing;
     /// Is exit activated?
     fgBool m_isExit;
+    ///
     fgBool m_isSuspend;
     /// Game main class - this is for initialization procedures
     /// contains also functions for handling events, drawing, etc #TODO
@@ -63,38 +70,41 @@ class BasicGLPane : public wxGLCanvas
     /// changing name to fgApplication - or extending fgApplication class
     /// #TODO - support threads
     fg::CGameMain *m_gameMain;
+    ///
     wxFrame* m_parentFrame;
+    ///
     int m_argc;
+    ///
     char *m_argv[2];
 
 public:
+
     BasicGLPane(wxFrame* parent, int* args);
+
     virtual ~BasicGLPane();
 
-    void closeProgram(void);
-    fgBool mainLoopStep(void);
     fgBool initProgram(void);
+    void closeProgram(void);
 
+    fgBool displayAndRender(void);
+    fgBool update(void);
 
-    void resized(wxSizeEvent& evt);
-
-    int getWidth();
-    int getHeight();
-
-    void idle(wxIdleEvent& evt);
-    void render(void);
     void paint(wxPaintEvent& evt);
 
-    // events
+    int getWidth(void);
+    int getHeight(void);
+
     void mouseMoved(wxMouseEvent& event);
     void mouseDown(wxMouseEvent& event);
     void mouseWheelMoved(wxMouseEvent& event);
     void mouseReleased(wxMouseEvent& event);
-    void rightClick(wxMouseEvent& event);
     void mouseLeftWindow(wxMouseEvent& event);
     void keyPressed(wxKeyEvent& event);
     void keyReleased(wxKeyEvent& event);
     void closeEvent(wxCloseEvent& event);
+
+    void idle(wxIdleEvent& evt);
+    void resized(wxSizeEvent& evt);
 
     DECLARE_EVENT_TABLE()
 };

@@ -73,7 +73,6 @@
 			<Add option="`wx-config --libs`" />
 			<Add option="`wx-config --gl-libs`" />
 			<Add option="`pkg-config gl --libs`" />
-			<Add option="`pkg-config glu --libs`" />
 			<Add option="`pkg-config glew --libs`" />
 			<Add option="-ljpeg" />
 			<Add option="`pkg-config libpng --libs`" />
