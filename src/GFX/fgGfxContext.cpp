@@ -1794,7 +1794,7 @@ fgGFXuint gfx::context::activeProgram(void) {
 }
 
 void gfx::context::viewport(void) {
-    scissor(0, 0, g_screenSize.x, g_screenSize.y);
+    viewport(0, 0, g_screenSize.x, g_screenSize.y);
 }
 
 void gfx::context::viewport(const fgGFXint x,
