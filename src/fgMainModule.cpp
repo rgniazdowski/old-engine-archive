@@ -229,17 +229,24 @@ SDL_EventType CMainModule::checkSDLEvents(void) {
             case SDL_MOUSEMOTION: /**< Mouse moved */
                 if(!m_gameMain)
                     continue;
-                this->m_gameMain->getInputHandler()->singleTouchMotionHandler((void *)&event.motion, this->m_gameMain->getInputHandler());
+                //this->m_gameMain->getInputHandler()->singleTouchMotionHandler((void *)&event.motion, this->m_gameMain->getInputHandler());
+                this->m_gameMain->getInputHandler()->handlePointerMoved(Vector2i(event.button.x, event.button.y),
+                                                                        FG_DEFAULT_POINTER_ID,
+                                                                        event.button.state);
                 break;
             case SDL_MOUSEBUTTONDOWN: /**< Mouse button pressed */
                 if(!m_gameMain)
                     continue;
-                this->m_gameMain->getInputHandler()->singleTouchButtonHandler((void *)&event.button, this->m_gameMain->getInputHandler());
+                //this->m_gameMain->getInputHandler()->singleTouchButtonHandler((void *)&event.button, this->m_gameMain->getInputHandler());
+                this->m_gameMain->getInputHandler()->handlePointerPressed(Vector2i(event.button.x, event.button.y),
+                                                                          event.button.button);
                 break;
             case SDL_MOUSEBUTTONUP: /**< Mouse button released */
                 if(!m_gameMain)
                     continue;
-                this->m_gameMain->getInputHandler()->singleTouchButtonHandler((void *)&event.button, this->m_gameMain->getInputHandler());
+                //this->m_gameMain->getInputHandler()->singleTouchButtonHandler((void *)&event.button, this->m_gameMain->getInputHandler());
+                this->m_gameMain->getInputHandler()->handlePointerReleased(Vector2i(event.button.x, event.button.y),
+                                                                           event.button.button);
                 break;
             case SDL_MOUSEWHEEL: /**< Mouse wheel motion */
                 //guiScale += 0.05f * (float)event.wheel.y;
@@ -304,47 +311,56 @@ SDL_EventType CMainModule::checkSDLEvents(void) {
             {
                 if(!m_gameMain)
                     continue;
-                SDL_MouseButtonEvent button;
                 int w = this->m_gameMain->getGfxMain()->getMainWindow()->getWidth();
                 int h = this->m_gameMain->getGfxMain()->getMainWindow()->getHeight();
+                /*SDL_MouseButtonEvent button;
                 button.timestamp = event.tfinger.timestamp;
                 button.button = event.tfinger.fingerId;
                 button.clicks = 1;
                 button.type = SDL_FINGERDOWN;
                 button.state = SDL_PRESSED;
                 button.x = (int)((float)w * event.tfinger.x);
-                button.y = (int)((float)h * event.tfinger.y);
-                this->m_gameMain->getInputHandler()->singleTouchButtonHandler((void *)&button, this->m_gameMain->getInputHandler());
+                button.y = (int)((float)h * event.tfinger.y);*/
+                int x = (int)((float)w * event.tfinger.x);
+                int y = (int)((float)h * event.tfinger.y);
+                this->m_gameMain->getInputHandler()->handlePointerPressed(Vector2i(x, y), event.tfinger.fingerId);
+                //this->m_gameMain->getInputHandler()->singleTouchButtonHandler((void *)&button, this->m_gameMain->getInputHandler());
             }
                 break;
             case SDL_FINGERUP:
             {
-                SDL_MouseButtonEvent button;
                 int w = this->m_gameMain->getGfxMain()->getMainWindow()->getWidth();
                 int h = this->m_gameMain->getGfxMain()->getMainWindow()->getHeight();
+                /*SDL_MouseButtonEvent button;
                 button.timestamp = event.tfinger.timestamp;
                 button.button = event.tfinger.fingerId;
                 button.clicks = 1;
                 button.type = SDL_FINGERUP;
                 button.state = SDL_RELEASED;
                 button.x = (int)((float)w * event.tfinger.x);
-                button.y = (int)((float)h * event.tfinger.y);
-                this->m_gameMain->getInputHandler()->singleTouchButtonHandler((void *)&button, this->m_gameMain->getInputHandler());
+                button.y = (int)((float)h * event.tfinger.y);*/
+                int x = (int)((float)w * event.tfinger.x);
+                int y = (int)((float)h * event.tfinger.y);
+                this->m_gameMain->getInputHandler()->handlePointerReleased(Vector2i(x, y), event.tfinger.fingerId);
+                //this->m_gameMain->getInputHandler()->singleTouchButtonHandler((void *)&button, this->m_gameMain->getInputHandler());
             }
                 break;
             case SDL_FINGERMOTION:
             {
-                SDL_MouseMotionEvent motion;
                 int w = this->m_gameMain->getGfxMain()->getMainWindow()->getWidth();
                 int h = this->m_gameMain->getGfxMain()->getMainWindow()->getHeight();
+                /*SDL_MouseMotionEvent motion;
                 motion.timestamp = event.tfinger.timestamp;
                 //motion.button = event.tfinger.fingerId;
                 //motion.clicks = 1;
                 motion.type = SDL_FINGERMOTION;
                 motion.state = SDL_PRESSED;
                 motion.x = (int)((float)w * event.tfinger.x);
-                motion.y = (int)((float)h * event.tfinger.y);
-                this->m_gameMain->getInputHandler()->singleTouchMotionHandler((void *)&motion, this->m_gameMain->getInputHandler());
+                motion.y = (int)((float)h * event.tfinger.y);*/
+                int x = (int)((float)w * event.tfinger.x);
+                int y = (int)((float)h * event.tfinger.y);
+                this->m_gameMain->getInputHandler()->handlePointerMoved(Vector2i(x, y), event.tfinger.fingerId, SDL_PRESSED);
+                //this->m_gameMain->getInputHandler()->singleTouchMotionHandler((void *)&motion, this->m_gameMain->getInputHandler());
             }
                 break;
 
