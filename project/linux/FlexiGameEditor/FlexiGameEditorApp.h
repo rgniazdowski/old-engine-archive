@@ -7,110 +7,26 @@
  * License:
  **************************************************************/
 
-#ifndef FLEXIGAMEEDITORAPP_H
-#define FLEXIGAMEEDITORAPP_H
-#include "GFX/fgGfxGL.h"
-#include "fgGameMain.h"
+#ifndef FG_INC_FLEXI_GAME_EDITOR_APP
+#define FG_INC_FLEXI_GAME_EDITOR_APP
+
+#include "fgBool.h"
+
 #include <wx/app.h>
 
-class BasicGLPane;
-class RenderTimer;
+class CEngineGFXPanel;
+class CRenderTimer;
+
 class FlexiGameEditorApp : public wxApp
 {
 public:
     virtual bool OnInit();
 
 private:
-    BasicGLPane* glPane;
-    RenderTimer* m_renderTimer;
-};
-
-#ifndef _glpane_
-#define _glpane_
-
-#include "wx/wx.h"
-#include "wx/glcanvas.h"
-
-typedef unsigned char fgBool;
-#define FG_TRUE 1
-#define FG_FALSE 0
-#define FG_ZERO 0
-
-class RenderTimer : public wxTimer
-{
-    BasicGLPane* m_glPane;
-public:
-
-    RenderTimer(BasicGLPane* pane);
-    void Notify();
-    void start();
+    fgBool m_isInit;
 };
 
 
-/**
- *
- */
-class BasicGLPane : public wxGLCanvas
-{
-    ///
-    wxGLContext*	m_context;
-    ///
-    fgBool m_paint;
-    ///
-    fgBool m_appInit;
-    ///
-    fgBool m_isInitializing;
-    /// Is exit activated?
-    fgBool m_isExit;
-    ///
-    fgBool m_isSuspend;
-    /// Game main class - this is for initialization procedures
-    /// contains also functions for handling events, drawing, etc #TODO
-    /// Needs refactoring, some level of merging within main module or
-    /// changing name to fgApplication - or extending fgApplication class
-    /// #TODO - support threads
-    fg::CGameMain *m_gameMain;
-    ///
-    wxFrame* m_parentFrame;
-    ///
-    int m_argc;
-    ///
-    char *m_argv[2];
-
-public:
-
-    BasicGLPane(wxFrame* parent, int* args);
-
-    virtual ~BasicGLPane();
-
-    fgBool initProgram(void);
-    void closeProgram(void);
-
-    fgBool displayAndRender(void);
-    fgBool update(void);
-
-    void paint(wxPaintEvent& evt);
-
-    int getWidth(void);
-    int getHeight(void);
-
-    void mouseMoved(wxMouseEvent& event);
-    void mouseDown(wxMouseEvent& event);
-    void mouseWheelMoved(wxMouseEvent& event);
-    void mouseReleased(wxMouseEvent& event);
-    void mouseLeftWindow(wxMouseEvent& event);
-    void keyPressed(wxKeyEvent& event);
-    void keyReleased(wxKeyEvent& event);
-    void closeEvent(wxCloseEvent& event);
-
-    void idle(wxIdleEvent& evt);
-    void resized(wxSizeEvent& evt);
-
-    DECLARE_EVENT_TABLE()
-};
 
 
-#endif
-
-
-#endif // FLEXIGAMEEDITORAPP_H
+#endif /* FG_INC_FLEXI_GAME_EDITOR_APP */

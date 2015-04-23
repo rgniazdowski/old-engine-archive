@@ -216,7 +216,7 @@ namespace fg {
              * 
              */
             virtual void render(void);
-/**
+            /**
              * 
              * @param n
              * @return 
@@ -224,7 +224,7 @@ namespace fg {
             CDrawCall* operator [](size_t n) {
                 return m_drawCalls[n];
             }
-/**
+            /**
              * 
              * @param n
              * @return 
