@@ -14,9 +14,9 @@
 
 #include <wx/app.h>
 
-class CEngineGFXPanel;
-class CRenderTimer;
-
+/**
+ *
+ */
 class FlexiGameEditorApp : public wxApp
 {
 public:

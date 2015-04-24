@@ -20,7 +20,7 @@
 #include "wx/glcanvas.h"
 
 class CRenderTimer;
-class CEngineGFXPanel;
+class CEngineGfxPanel;
 
 /**
  *
@@ -29,13 +29,13 @@ class CRenderTimer : public wxTimer
 {
 private:
     ///
-    CEngineGFXPanel* m_gfxPanel;
+    CEngineGfxPanel* m_gfxPanel;
 
 public:
     /**
      *
      */
-    CRenderTimer(CEngineGFXPanel* gfxPanel);
+    CRenderTimer(CEngineGfxPanel* gfxPanel);
 
     /**
      *
@@ -44,17 +44,17 @@ public:
     /**
      *
      */
-    void start(void);
+    void Start(void);
 };
 
 
 /**
  *
  */
-class CEngineGFXPanel : public wxGLCanvas
+class CEngineGfxPanel : public wxGLCanvas
 {
     ///
-    wxGLContext*	m_context;
+    wxGLContext* m_context;
     ///
     fgBool m_paint;
     ///
@@ -76,7 +76,7 @@ class CEngineGFXPanel : public wxGLCanvas
     /// #TODO - support threads
     fg::CGameMain *m_gameMain;
     ///
-    wxFrame* m_parentFrame;
+    wxWindow* m_parentFrame;
     ///
     int m_argc;
     ///
@@ -84,8 +84,8 @@ class CEngineGFXPanel : public wxGLCanvas
 
 public:
 
-    CEngineGFXPanel(wxFrame* parent, int* args);
-    virtual ~CEngineGFXPanel();
+    CEngineGfxPanel(wxWindow* parent, int* args);
+    virtual ~CEngineGfxPanel();
 
     fgBool initProgram(void);
     void closeProgram(void);
@@ -107,6 +107,7 @@ public:
     void idle(wxIdleEvent& evt);
     void resized(wxSizeEvent& evt);
 
+public:
     inline int getWidth(void) {
         return GetSize().x;
     }
@@ -155,8 +156,11 @@ public:
         m_isFrameFreeze = toggle;
     }
 
+    inline void setSuspend(fgBool toggle = FG_TRUE) {
+        m_isSuspend = toggle;
+    }
+
     DECLARE_EVENT_TABLE()
 };
-
 
 #endif /* FG_INC_ENGINE_GFX_PANEL */

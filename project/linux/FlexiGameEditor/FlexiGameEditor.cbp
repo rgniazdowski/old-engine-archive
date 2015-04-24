@@ -78,8 +78,10 @@
 			<Add option="`pkg-config libpng --libs`" />
 			<Add option="`pkg-config zlib --libs`" />
 		</Linker>
-		<Unit filename="CEngineGFXPanel.cpp" />
-		<Unit filename="CEngineGFXPanel.h" />
+		<Unit filename="CEngineGfxPanel.cpp" />
+		<Unit filename="CEngineGfxPanel.h" />
+		<Unit filename="CGfxHolderPanel.cpp" />
+		<Unit filename="CGfxHolderPanel.h" />
 		<Unit filename="FlexiGameEditorApp.cpp" />
 		<Unit filename="FlexiGameEditorApp.h" />
 		<Unit filename="FlexiGameEditorMain.cpp" />
