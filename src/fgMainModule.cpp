@@ -230,9 +230,9 @@ SDL_EventType CMainModule::checkSDLEvents(void) {
                 if(!m_gameMain)
                     continue;
                 //this->m_gameMain->getInputHandler()->singleTouchMotionHandler((void *)&event.motion, this->m_gameMain->getInputHandler());
-                this->m_gameMain->getInputHandler()->handlePointerMoved(Vector2i(event.button.x, event.button.y),
+                this->m_gameMain->getInputHandler()->handlePointerMoved(Vector2i(event.motion.x, event.motion.y),
                                                                         FG_DEFAULT_POINTER_ID,
-                                                                        event.button.state);
+                                                                        event.motion.state);
                 break;
             case SDL_MOUSEBUTTONDOWN: /**< Mouse button pressed */
                 if(!m_gameMain)
