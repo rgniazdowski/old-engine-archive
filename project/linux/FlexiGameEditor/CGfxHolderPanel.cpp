@@ -12,13 +12,13 @@
 #include "CEngineGfxPanel.h"
 
 BEGIN_EVENT_TABLE(CGfxHolderPanel, wxPanel)
-    EVT_CONTEXT_MENU(CGfxHolderPanel::onContextMenu)
+EVT_CONTEXT_MENU(CGfxHolderPanel::onContextMenu)
 END_EVENT_TABLE()
 
 //-----------------------------------------------------------------------------
 
 CGfxHolderPanel::CGfxHolderPanel(wxWindow* parent, CEngineGfxPanel* gfxPanel) :
-    wxPanel(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL | wxNO_BORDER | wxSIZE_AUTO) {
+wxPanel(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL | wxNO_BORDER | wxSIZE_AUTO) {
     m_boxSizer = new wxBoxSizer(wxHORIZONTAL);
     m_gfxPanel = gfxPanel;
     m_contextMenu = NULL;
@@ -48,7 +48,7 @@ void CGfxHolderPanel::removeGfxPanel(void) {
 void CGfxHolderPanel::activateGfxPanel(void) {
     removeGfxPanel();
     if(m_gfxPanel) {
-        m_boxSizer->Add(m_gfxPanel, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 2);
+        m_boxSizer->Add(m_gfxPanel, 1, wxALL | wxEXPAND | wxALIGN_CENTER_HORIZONTAL | wxALIGN_CENTER_VERTICAL, 2);
         showGfxPanel(FG_TRUE);
         suspendGfxPanel(FG_FALSE);
     }

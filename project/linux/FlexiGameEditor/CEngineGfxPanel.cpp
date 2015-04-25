@@ -25,38 +25,35 @@
 
 //-----------------------------------------------------------------------------
 
-CRenderTimer::CRenderTimer(CEngineGfxPanel* gfxPanel) : wxTimer()
-{
+CRenderTimer::CRenderTimer(CEngineGfxPanel* gfxPanel) : wxTimer() {
     m_gfxPanel = gfxPanel;
 }
 //-----------------------------------------------------------------------------
 
-void CRenderTimer::Notify(void)
-{
+void CRenderTimer::Notify(void) {
     m_gfxPanel->Refresh();
     //printf("RenderTime::Notify(): THREAD ID: %lu\n", pthread_self());
 }
 //-----------------------------------------------------------------------------
 
-void CRenderTimer::Start(void)
-{
+void CRenderTimer::Start(void) {
     //printf("RenderTime::start(): THREAD ID: %lu\n", pthread_self());
-    wxTimer::Start(1000/60); // #FIXME / this should be exactly 120 ?
+    wxTimer::Start(1000 / 60); // #FIXME / this should be exactly 120 ?
 }
 //-----------------------------------------------------------------------------
 
 BEGIN_EVENT_TABLE(CEngineGfxPanel, wxGLCanvas)
-    EVT_MOTION(CEngineGfxPanel::mouseMoved)
-    EVT_LEFT_DOWN(CEngineGfxPanel::mouseDown)
-    EVT_LEFT_UP(CEngineGfxPanel::mouseReleased)
-    EVT_LEAVE_WINDOW(CEngineGfxPanel::mouseLeftWindow)
-    EVT_SIZE(CEngineGfxPanel::resized)
-    EVT_KEY_DOWN(CEngineGfxPanel::keyPressed)
-    EVT_KEY_UP(CEngineGfxPanel::keyReleased)
-    EVT_MOUSEWHEEL(CEngineGfxPanel::mouseWheelMoved)
-    EVT_PAINT(CEngineGfxPanel::paint)
-    EVT_IDLE(CEngineGfxPanel::idle)
-    EVT_CLOSE(CEngineGfxPanel::closeEvent)
+EVT_MOTION(CEngineGfxPanel::mouseMoved)
+EVT_LEFT_DOWN(CEngineGfxPanel::mouseDown)
+EVT_LEFT_UP(CEngineGfxPanel::mouseReleased)
+EVT_LEAVE_WINDOW(CEngineGfxPanel::mouseLeftWindow)
+EVT_SIZE(CEngineGfxPanel::resized)
+EVT_KEY_DOWN(CEngineGfxPanel::keyPressed)
+EVT_KEY_UP(CEngineGfxPanel::keyReleased)
+EVT_MOUSEWHEEL(CEngineGfxPanel::mouseWheelMoved)
+EVT_PAINT(CEngineGfxPanel::paint)
+EVT_IDLE(CEngineGfxPanel::idle)
+EVT_CLOSE(CEngineGfxPanel::closeEvent)
 END_EVENT_TABLE()
 
 #include "GFX/Scene/fgGfxBspCompiler.h"
@@ -65,8 +62,7 @@ fg::gfx::CBspCompiler *bspCompiler = NULL;
 //-----------------------------------------------------------------------------
 
 CEngineGfxPanel::CEngineGfxPanel(wxWindow* parent, int* args) :
-    wxGLCanvas(parent, wxID_ANY, args, wxDefaultPosition, wxDefaultSize, wxFULL_REPAINT_ON_RESIZE)
-{
+wxGLCanvas(parent, wxID_ANY, args, wxDefaultPosition, wxDefaultSize, wxFULL_REPAINT_ON_RESIZE) {
     m_context = new wxGLContext(this);
 
     // To avoid flashing on MSW
@@ -88,8 +84,7 @@ CEngineGfxPanel::CEngineGfxPanel(wxWindow* parent, int* args) :
 }
 //-----------------------------------------------------------------------------
 
-CEngineGfxPanel::~CEngineGfxPanel()
-{
+CEngineGfxPanel::~CEngineGfxPanel() {
     FG_LOG_DEBUG("WX: Main destructor called");
     //if(m_context && IsShown())
     //    wxGLCanvas::SetCurrent(*m_context);
@@ -113,7 +108,7 @@ void CEngineGfxPanel::mouseMoved(wxMouseEvent& event) {
         int button = event.GetButton();
         int x = event.GetPosition().x;
         int y = event.GetPosition().y;
-        this->m_gameMain->getInputHandler()->handlePointerMoved(fg::Vector2i(x,y), FG_DEFAULT_POINTER_ID, event.Dragging());
+        this->m_gameMain->getInputHandler()->handlePointerMoved(fg::Vector2i(x, y), FG_DEFAULT_POINTER_ID, event.Dragging());
         //printf("MOUSE MOVED: THREAD ID: %lu\n", pthread_self());
     }
 }
@@ -124,7 +119,7 @@ void CEngineGfxPanel::mouseDown(wxMouseEvent& event) {
         int button = event.GetButton();
         int x = event.GetPosition().x;
         int y = event.GetPosition().y;
-        this->m_gameMain->getInputHandler()->handlePointerPressed(fg::Vector2i(x,y), button);
+        this->m_gameMain->getInputHandler()->handlePointerPressed(fg::Vector2i(x, y), button);
         FG_LOG_DEBUG("WX: Mouse down event: %dx%d id:%d", x, y, button);
     }
 }
@@ -141,7 +136,7 @@ void CEngineGfxPanel::mouseReleased(wxMouseEvent& event) {
         int button = event.GetButton();
         int x = event.GetPosition().x;
         int y = event.GetPosition().y;
-        this->m_gameMain->getInputHandler()->handlePointerReleased(fg::Vector2i(x,y), button);
+        this->m_gameMain->getInputHandler()->handlePointerReleased(fg::Vector2i(x, y), button);
         FG_LOG_DEBUG("WX: Mouse released event: %dx%d id:%d", x, y, button);
     }
 }
@@ -174,13 +169,11 @@ void CEngineGfxPanel::keyReleased(wxKeyEvent& event) {
 }
 //-----------------------------------------------------------------------------
 
-void CEngineGfxPanel::resized(wxSizeEvent& evt)
-{
-    int x = evt.GetSize().x;
-    int y = evt.GetSize().y;
+void CEngineGfxPanel::resized(wxSizeEvent& event) {
+    int x = event.GetSize().x;
+    int y = event.GetSize().y;
     FG_LOG_DEBUG("WX: Resize event %dx%d", x, y);
-    if(this->m_appInit && this->m_gameMain)
-    {
+    if(this->m_appInit && this->m_gameMain) {
         this->m_gameMain->getGfxMain()->getMainWindow()->setup("FlexiGame::Editor", x, y);
         this->m_gameMain->getGuiMain()->setScreenSize(x, y);
         fg::gfx::context::setScreenSize(x, y);
@@ -190,8 +183,7 @@ void CEngineGfxPanel::resized(wxSizeEvent& evt)
 }
 //-----------------------------------------------------------------------------
 
-void CEngineGfxPanel::idle(wxIdleEvent& event)
-{
+void CEngineGfxPanel::idle(wxIdleEvent& event) {
     static long int t1 = 0;
     static int f = 0;
     if(t1 == 0) {
@@ -201,8 +193,7 @@ void CEngineGfxPanel::idle(wxIdleEvent& event)
     if(!IsShown()) return;
 
     f++;
-    if(time(NULL) != t1)
-    {
+    if(time(NULL) != t1) {
         t1 = time(NULL);
         FG_LOG_DEBUG("WX: IDLE FPS: %d", f);
         //printf("IDLE: THREAD ID: %lu\n", pthread_self());
@@ -251,7 +242,7 @@ void CEngineGfxPanel::idle(wxIdleEvent& event)
 }
 //-----------------------------------------------------------------------------
 
-void CEngineGfxPanel::paint(wxPaintEvent& evt) {
+void CEngineGfxPanel::paint(wxPaintEvent& event) {
     fgBool isSwapBuffers = FG_TRUE;
     static unsigned long int t1 = 0;
     unsigned long int t2 = 0;
@@ -263,7 +254,7 @@ void CEngineGfxPanel::paint(wxPaintEvent& evt) {
     //printf("T2: %lu | clockTicks=%.2f | ms=%.2f | exact=%.2f | elapsed=%.2f\n", t2, fg::timesys::clockTicks(), fg::timesys::ms(), fg::timesys::exact(), fg::timesys::elapsed());
     f++;
     if(t2 - t1 > 1000) {
-        float fps = ((float)f)/(1000.0f/(float)(t2-t1));
+        float fps = ((float)f) / (1000.0f / (float)(t2 - t1));
         t1 = t2;
         FG_LOG_DEBUG("WX: Paint Event: FPS: %.1f", fps);
         f = 0;

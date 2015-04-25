@@ -21,11 +21,9 @@
 IMPLEMENT_APP(FlexiGameEditorApp);
 //-----------------------------------------------------------------------------
 
-bool FlexiGameEditorApp::OnInit()
-{
+bool FlexiGameEditorApp::OnInit() {
     bool returnVal = true;
-    if(false)
-    {
+    if(false) {
         //(*AppInitialize
         bool wxsOK = true;
         wxInitAllImageHandlers();
@@ -36,13 +34,10 @@ bool FlexiGameEditorApp::OnInit()
         	SetTopWindow(Frame);
         }
         //*)
-    }
-    else
-    {
+    } else {
         bool wxsOK = true;
         wxInitAllImageHandlers();
-        if ( wxsOK )
-        {
+        if(wxsOK) {
             FlexiGameEditorFrame* Frame = new FlexiGameEditorFrame(0);
             Frame->SetAutoLayout(true);
             Frame->Show();

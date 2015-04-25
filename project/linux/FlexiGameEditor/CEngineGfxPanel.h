@@ -9,15 +9,16 @@
  ******************************************************************************/
 
 #ifndef FG_INC_ENGINE_GFX_PANEL
-#define FG_INC_ENGINE_GFX_PANEL
+    #define FG_INC_ENGINE_GFX_PANEL
+    #define FG_INC_ENGINE_GFX_PANEL_BLOCK
 
-#include "fgBuildConfig.h"
-#include "fgBool.h"
-#include "GFX/fgGfxGL.h"
-#include "fgGameMain.h"
+    #include "fgBuildConfig.h"
+    #include "fgBool.h"
+    #include "GFX/fgGfxGL.h"
+    #include "fgGameMain.h"
 
-#include "wx/wx.h"
-#include "wx/glcanvas.h"
+    #include "wx/wx.h"
+    #include "wx/glcanvas.h"
 
 class CRenderTimer;
 class CEngineGfxPanel;
@@ -25,8 +26,7 @@ class CEngineGfxPanel;
 /**
  *
  */
-class CRenderTimer : public wxTimer
-{
+class CRenderTimer : public wxTimer {
 private:
     ///
     CEngineGfxPanel* m_gfxPanel;
@@ -47,12 +47,10 @@ public:
     void Start(void);
 };
 
-
 /**
  *
  */
-class CEngineGfxPanel : public wxGLCanvas
-{
+class CEngineGfxPanel : public wxGLCanvas {
     ///
     wxGLContext* m_context;
     ///
@@ -81,19 +79,39 @@ class CEngineGfxPanel : public wxGLCanvas
     int m_argc;
     ///
     char *m_argv[2];
-
 public:
-
+    /**
+     *
+     */
     CEngineGfxPanel(wxWindow* parent, int* args);
     virtual ~CEngineGfxPanel();
 
+    /**
+     *
+     * @return
+     */
     fgBool initProgram(void);
+    /**
+     * 
+     */
     void closeProgram(void);
 
+    /**
+     *
+     * @return
+     */
     fgBool displayAndRender(void);
+    /**
+     *
+     * @return
+     */
     fgBool update(void);
 
-    void paint(wxPaintEvent& evt);
+    /**
+     *
+     * @param event
+     */
+    void paint(wxPaintEvent& event);
 
     void mouseMoved(wxMouseEvent& event);
     void mouseDown(wxMouseEvent& event);
@@ -104,58 +122,55 @@ public:
     void keyReleased(wxKeyEvent& event);
     void closeEvent(wxCloseEvent& event);
 
-    void idle(wxIdleEvent& evt);
-    void resized(wxSizeEvent& evt);
+    /**
+     *
+     * @param event
+     */
+    void idle(wxIdleEvent& event);
+    /**
+     *
+     * @param event
+     */
+    void resized(wxSizeEvent& event);
 
+    //--------------------------------------------------------------------------
 public:
     inline int getWidth(void) {
         return GetSize().x;
     }
-
     inline int getHeight(void) {
         return GetSize().y;
     }
-
     inline fg::CGameMain* getGameMain(void) const {
         return m_gameMain;
     }
-
     inline fgBool isSuspend(void) const {
         return m_isSuspend;
     }
-
     inline fgBool isExit(void) const {
         return m_isExit;
     }
-
     inline fgBool isPaintReady(void) const {
         return m_paint;
     }
-
     inline fgBool isInitialized(void) const {
         return m_appInit;
     }
-
     inline fgBool canInitialize(void) const {
         return m_canInitialize;
     }
-
     inline fgBool isFrameFreeze(void) const {
         return m_isFrameFreeze;
     }
-
     inline void setExit(fgBool toggle = FG_TRUE) {
         m_isExit = toggle;
     }
-
     inline void setInitializeFlag(fgBool toggle = FG_TRUE) {
         m_canInitialize = toggle;
     }
-
     inline void setFrameFreeze(fgBool toggle = FG_TRUE) {
         m_isFrameFreeze = toggle;
     }
-
     inline void setSuspend(fgBool toggle = FG_TRUE) {
         m_isSuspend = toggle;
     }
@@ -163,4 +178,5 @@ public:
     DECLARE_EVENT_TABLE()
 };
 
+    #undef FG_INC_ENGINE_GFX_PANEL_BLOCK
 #endif /* FG_INC_ENGINE_GFX_PANEL */
