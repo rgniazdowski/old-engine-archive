@@ -17,7 +17,7 @@
     #include "wx/sizer.h"
     #include "wx/menu.h"
 
-class CEngineGfxPanel;
+class CEngineGfxCanvas;
 
 /**
  *
@@ -34,7 +34,7 @@ public:
      * @param parent
      * @param gfxPanel
      */
-    CGfxHolderPanel(wxWindow* parent, CEngineGfxPanel* gfxPanel = NULL);
+    CGfxHolderPanel(wxWindow* parent, CEngineGfxCanvas* gfxPanel = NULL);
     /**
      *
      */
@@ -43,27 +43,27 @@ public:
     /**
      *
      */
-    void removeGfxPanel(void);
+    void removeGfxCanvas(void);
     /**
      *
      */
-    void activateGfxPanel(void);
+    void activateGfxCanvas(void);
 
     /**
      *
      * @param
      */
-    void setGfxPanel(CEngineGfxPanel* gfxPanel);
+    void setGfxCanvas(CEngineGfxCanvas* gfxCanvas);
     /**
      *
      * @param toggle
      */
-    void showGfxPanel(fgBool toggle = FG_TRUE);
+    void showGfxCanvas(fgBool toggle = FG_TRUE);
     /**
      *
      * @param toggle
      */
-    void suspendGfxPanel(fgBool toggle = FG_TRUE);
+    void suspendGfxCanvas(fgBool toggle = FG_TRUE);
 
     /**
      *
@@ -81,8 +81,8 @@ public:
      *
      * @return
      */
-    CEngineGfxPanel* getGfxPanel(void) const {
-        return m_gfxPanel;
+    CEngineGfxCanvas* getGfxCanvas(void) const {
+        return m_gfxCanvas;
     }
     /**
      *
@@ -110,7 +110,7 @@ public:
 
 private:
     ///
-    CEngineGfxPanel* m_gfxPanel;
+    CEngineGfxCanvas* m_gfxCanvas;
     ///
     wxBoxSizer* m_boxSizer;
     ///

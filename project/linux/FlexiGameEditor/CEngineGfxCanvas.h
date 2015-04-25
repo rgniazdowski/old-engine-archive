@@ -21,7 +21,7 @@
     #include "wx/glcanvas.h"
 
 class CRenderTimer;
-class CEngineGfxPanel;
+class CEngineGfxCanvas;
 
 /**
  *
@@ -29,13 +29,13 @@ class CEngineGfxPanel;
 class CRenderTimer : public wxTimer {
 private:
     ///
-    CEngineGfxPanel* m_gfxPanel;
+    CEngineGfxCanvas* m_gfxCanvas;
 
 public:
     /**
      *
      */
-    CRenderTimer(CEngineGfxPanel* gfxPanel);
+    CRenderTimer(CEngineGfxCanvas* gfxCanvas);
 
     /**
      *
@@ -50,7 +50,7 @@ public:
 /**
  *
  */
-class CEngineGfxPanel : public wxGLCanvas {
+class CEngineGfxCanvas : public wxGLCanvas {
     ///
     wxGLContext* m_context;
     ///
@@ -83,8 +83,11 @@ public:
     /**
      *
      */
-    CEngineGfxPanel(wxWindow* parent, int* args);
-    virtual ~CEngineGfxPanel();
+    CEngineGfxCanvas(wxWindow* parent, int* args);
+    /**
+     *
+     */
+    virtual ~CEngineGfxCanvas();
 
     /**
      *
@@ -92,7 +95,7 @@ public:
      */
     fgBool initProgram(void);
     /**
-     * 
+     *
      */
     void closeProgram(void);
 

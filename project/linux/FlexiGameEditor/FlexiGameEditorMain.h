@@ -19,7 +19,7 @@
 #include <wx/frame.h>
 //*)
 
-    #include "CEngineGfxPanel.h"
+    #include "CEngineGfxCanvas.h"
     #include "CGfxHolderPanel.h"
 
 enum EnginePreviewMode {
@@ -55,7 +55,7 @@ private:
     /// This will also match the currently selected main notebook tab
     EnginePreviewMode m_previewMode;
     /// This is a special gfx context panel - only one can be active
-    CEngineGfxPanel* m_gfxMainCanvas;
+    CEngineGfxCanvas* m_gfxMainCanvas;
     /// Special render timer for calling Refresh() with hard coded fps
     CRenderTimer* m_renderTimer;
     /// Special holding panels for gfx context - it's required because,
@@ -102,7 +102,7 @@ public:
      */
     EnginePreviewMode getPreviewMode(const std::string& name);
     /**
-     * 
+     *
      * @param name
      * @return
      */

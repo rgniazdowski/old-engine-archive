@@ -230,8 +230,8 @@ FlexiGameEditorFrame::FlexiGameEditorFrame(wxWindow* parent, wxWindowID id)
     //wxBoxSizer* box1 = new wxBoxSizer(wxHORIZONTAL);
     //panel1->SetSizer(box1);
 
-    m_gfxMainCanvas = new CEngineGfxPanel(m_gfxHolderPanel, args);
-    m_gfxHolderPanel->setGfxPanel(m_gfxMainCanvas);
+    m_gfxMainCanvas = new CEngineGfxCanvas(m_gfxHolderPanel, args);
+    m_gfxHolderPanel->setGfxCanvas(m_gfxMainCanvas);
     m_gfxHolderPanel->setContextMenu(&GfxCanvasContextMenu);
     //box1->Add(m_gfxPanel, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
 
@@ -286,8 +286,8 @@ fgBool FlexiGameEditorFrame::activatePreviewPanel(EnginePreviewMode previewMode,
         } else if(page == (wxWindow *)m_gfxHolderPanel) {
             // this page is in different mode but contains the gfxHolderPanel
             // need to remove it and replace with dummy
-            m_gfxHolderPanel->getGfxPanel()->setSuspend(FG_TRUE);
-            m_gfxHolderPanel->getGfxPanel()->Show(false);
+            m_gfxHolderPanel->getGfxCanvas()->setSuspend(FG_TRUE);
+            m_gfxHolderPanel->getGfxCanvas()->Show(false);
             m_gfxHolderPanel->Layout();
             MainNotebook->RemovePage(i);
             wxPanel* dummy = new wxPanel(MainNotebook);
@@ -301,8 +301,8 @@ fgBool FlexiGameEditorFrame::activatePreviewPanel(EnginePreviewMode previewMode,
         delete page;
         MainNotebook->InsertPage(existIdx, m_gfxHolderPanel, pageName, false);
         MainNotebook->ChangeSelection(existIdx);
-        m_gfxHolderPanel->getGfxPanel()->setSuspend(FG_FALSE);
-        m_gfxHolderPanel->getGfxPanel()->Show(true);
+        m_gfxHolderPanel->getGfxCanvas()->setSuspend(FG_FALSE);
+        m_gfxHolderPanel->getGfxCanvas()->Show(true);
         m_gfxHolderPanel->Layout();
         MainNotebook->Layout();
         activated = FG_TRUE;
@@ -310,8 +310,8 @@ fgBool FlexiGameEditorFrame::activatePreviewPanel(EnginePreviewMode previewMode,
         // this will be a new insertion
         MainNotebook->AddPage(m_gfxHolderPanel, m_previewTabNames[previewMode], false);
         MainNotebook->ChangeSelection(MainNotebook->GetPageCount()-1);
-        m_gfxHolderPanel->getGfxPanel()->setSuspend(FG_FALSE);
-        m_gfxHolderPanel->getGfxPanel()->Show(true);
+        m_gfxHolderPanel->getGfxCanvas()->setSuspend(FG_FALSE);
+        m_gfxHolderPanel->getGfxCanvas()->Show(true);
         m_gfxHolderPanel->Layout();
         MainNotebook->Layout();
         activated = FG_TRUE;
@@ -341,8 +341,8 @@ fgBool FlexiGameEditorFrame::closePreviewPanel(EnginePreviewMode previewMode) {
             if(page == (wxWindow *)m_gfxHolderPanel) {
                 // The page already exists and has proper GfxHolder inside
                 // remove the page
-                m_gfxHolderPanel->getGfxPanel()->setSuspend(FG_TRUE);
-                m_gfxHolderPanel->getGfxPanel()->Show(false);
+                m_gfxHolderPanel->getGfxCanvas()->setSuspend(FG_TRUE);
+                m_gfxHolderPanel->getGfxCanvas()->Show(false);
                 MainNotebook->SetSelection(i > 0 ? i -1 : i + 1);
                 MainNotebook->RemovePage(i);
                 printf("Removed page: %d -> new selection %d | NUM %d\n", i, i > 0 ? i -1 : i, nPages);

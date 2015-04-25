@@ -9,7 +9,7 @@
  ******************************************************************************/
 
 #include "CGfxHolderPanel.h"
-#include "CEngineGfxPanel.h"
+#include "CEngineGfxCanvas.h"
 
 BEGIN_EVENT_TABLE(CGfxHolderPanel, wxPanel)
 EVT_CONTEXT_MENU(CGfxHolderPanel::onContextMenu)
@@ -17,63 +17,63 @@ END_EVENT_TABLE()
 
 //-----------------------------------------------------------------------------
 
-CGfxHolderPanel::CGfxHolderPanel(wxWindow* parent, CEngineGfxPanel* gfxPanel) :
+CGfxHolderPanel::CGfxHolderPanel(wxWindow* parent, CEngineGfxCanvas* gfxCanvas) :
 wxPanel(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL | wxNO_BORDER | wxSIZE_AUTO) {
     m_boxSizer = new wxBoxSizer(wxHORIZONTAL);
-    m_gfxPanel = gfxPanel;
+    m_gfxCanvas = gfxCanvas;
     m_contextMenu = NULL;
     this->SetSizer(m_boxSizer);
-    activateGfxPanel();
+    activateGfxCanvas();
 }
 //-----------------------------------------------------------------------------
 
 CGfxHolderPanel::~CGfxHolderPanel() {
-    removeGfxPanel();
-    m_gfxPanel = NULL;
+    removeGfxCanvas();
+    m_gfxCanvas = NULL;
     m_contextMenu = NULL;
 }
 //-----------------------------------------------------------------------------
 
-void CGfxHolderPanel::removeGfxPanel(void) {
-    if(m_boxSizer->GetItemCount() > 0 && m_gfxPanel) {
-        m_boxSizer->Detach(m_gfxPanel);
-        suspendGfxPanel(FG_TRUE);
-    } else if(!m_gfxPanel) {
+void CGfxHolderPanel::removeGfxCanvas(void) {
+    if(m_boxSizer->GetItemCount() > 0 && m_gfxCanvas) {
+        m_boxSizer->Detach(m_gfxCanvas);
+        suspendGfxCanvas(FG_TRUE);
+    } else if(!m_gfxCanvas) {
         if(m_boxSizer->GetItemCount())
             m_boxSizer->Clear(false);
     }
 }
 //-----------------------------------------------------------------------------
 
-void CGfxHolderPanel::activateGfxPanel(void) {
-    removeGfxPanel();
-    if(m_gfxPanel) {
-        m_boxSizer->Add(m_gfxPanel, 1, wxALL | wxEXPAND | wxALIGN_CENTER_HORIZONTAL | wxALIGN_CENTER_VERTICAL, 2);
-        showGfxPanel(FG_TRUE);
-        suspendGfxPanel(FG_FALSE);
+void CGfxHolderPanel::activateGfxCanvas(void) {
+    removeGfxCanvas();
+    if(m_gfxCanvas) {
+        m_boxSizer->Add(m_gfxCanvas, 1, wxALL | wxEXPAND | wxALIGN_CENTER_HORIZONTAL | wxALIGN_CENTER_VERTICAL, 2);
+        showGfxCanvas(FG_TRUE);
+        suspendGfxCanvas(FG_FALSE);
     }
 }
 //-----------------------------------------------------------------------------
 
-void CGfxHolderPanel::setGfxPanel(CEngineGfxPanel* gfxPanel) {
-    removeGfxPanel();
-    if(gfxPanel) {
-        m_gfxPanel = gfxPanel;
-        activateGfxPanel();
+void CGfxHolderPanel::setGfxCanvas(CEngineGfxCanvas* gfxCanvas) {
+    removeGfxCanvas();
+    if(gfxCanvas) {
+        m_gfxCanvas = gfxCanvas;
+        activateGfxCanvas();
     }
 }
 //-----------------------------------------------------------------------------
 
-void CGfxHolderPanel::showGfxPanel(fgBool toggle) {
-    if(m_gfxPanel) {
-        m_gfxPanel->Show((bool)toggle);
+void CGfxHolderPanel::showGfxCanvas(fgBool toggle) {
+    if(m_gfxCanvas) {
+        m_gfxCanvas->Show((bool)toggle);
     }
 }
 //-----------------------------------------------------------------------------
 
-void CGfxHolderPanel::suspendGfxPanel(fgBool toggle) {
-    if(m_gfxPanel) {
-        m_gfxPanel->setSuspend(toggle);
+void CGfxHolderPanel::suspendGfxCanvas(fgBool toggle) {
+    if(m_gfxCanvas) {
+        m_gfxCanvas->setSuspend(toggle);
     }
 }
 //-----------------------------------------------------------------------------

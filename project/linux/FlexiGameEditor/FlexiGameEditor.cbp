@@ -78,15 +78,30 @@
 			<Add option="`pkg-config libpng --libs`" />
 			<Add option="`pkg-config zlib --libs`" />
 		</Linker>
-		<Unit filename="CEngineGfxPanel.cpp" />
-		<Unit filename="CEngineGfxPanel.h" />
+		<Unit filename="CEditorConfigPanel.cpp" />
+		<Unit filename="CEditorConfigPanel.h" />
+		<Unit filename="CEditorDrawingBatchFrame.cpp" />
+		<Unit filename="CEditorDrawingBatchFrame.h" />
+		<Unit filename="CEditorEventMgrPanel.cpp" />
+		<Unit filename="CEditorEventMgrPanel.h" />
+		<Unit filename="CEditorResMgrPanel.cpp" />
+		<Unit filename="CEditorResMgrPanel.h" />
+		<Unit filename="CEditorScriptMgrPanel.cpp" />
+		<Unit filename="CEditorScriptMgrPanel.h" />
+		<Unit filename="CEngineGfxCanvas.cpp" />
+		<Unit filename="CEngineGfxCanvas.h" />
 		<Unit filename="CGfxHolderPanel.cpp" />
 		<Unit filename="CGfxHolderPanel.h" />
 		<Unit filename="FlexiGameEditorApp.cpp" />
 		<Unit filename="FlexiGameEditorApp.h" />
 		<Unit filename="FlexiGameEditorMain.cpp" />
 		<Unit filename="FlexiGameEditorMain.h" />
-		<Unit filename="wxsmith/FlexiGameEditorframe.wxs" />
+		<Unit filename="wxsmith/CEditorConfigPanel.wxs" />
+		<Unit filename="wxsmith/CEditorDrawingBatchFrame.wxs" />
+		<Unit filename="wxsmith/CEditorEventMgrPanel.wxs" />
+		<Unit filename="wxsmith/CEditorResMgrPanel.wxs" />
+		<Unit filename="wxsmith/CEditorScriptMgrPanel.wxs" />
+		<Unit filename="wxsmith/FlexiGameEditorFrame.wxs" />
 		<Extensions>
 			<envvars />
 			<code_completion>
@@ -106,7 +121,12 @@
 			<wxsmith version="1">
 				<gui name="wxWidgets" src="FlexiGameEditorApp.cpp" main="FlexiGameEditorFrame" init_handlers="necessary" language="CPP" />
 				<resources>
-					<wxFrame wxs="wxsmith/FlexiGameEditorframe.wxs" src="FlexiGameEditorMain.cpp" hdr="FlexiGameEditorMain.h" fwddecl="0" i18n="1" name="FlexiGameEditorFrame" language="CPP" />
+					<wxFrame wxs="wxsmith/FlexiGameEditorFrame.wxs" src="FlexiGameEditorMain.cpp" hdr="FlexiGameEditorMain.h" fwddecl="0" i18n="1" name="FlexiGameEditorFrame" language="CPP" />
+					<wxPanel wxs="wxsmith/CEditorConfigPanel.wxs" src="CEditorConfigPanel.cpp" hdr="CEditorConfigPanel.h" fwddecl="0" i18n="1" name="CEditorConfigPanel" language="CPP" />
+					<wxPanel wxs="wxsmith/CEditorResMgrPanel.wxs" src="CEditorResMgrPanel.cpp" hdr="CEditorResMgrPanel.h" fwddecl="0" i18n="1" name="CEditorResMgrPanel" language="CPP" />
+					<wxPanel wxs="wxsmith/CEditorScriptMgrPanel.wxs" src="CEditorScriptMgrPanel.cpp" hdr="CEditorScriptMgrPanel.h" fwddecl="0" i18n="1" name="CEditorScriptMgrPanel" language="CPP" />
+					<wxPanel wxs="wxsmith/CEditorEventMgrPanel.wxs" src="CEditorEventMgrPanel.cpp" hdr="CEditorEventMgrPanel.h" fwddecl="0" i18n="1" name="CEditorEventMgrPanel" language="CPP" />
+					<wxFrame wxs="wxsmith/CEditorDrawingBatchFrame.wxs" src="CEditorDrawingBatchFrame.cpp" hdr="CEditorDrawingBatchFrame.h" fwddecl="0" i18n="1" name="CEditorDrawingBatchFrame" language="CPP" />
 				</resources>
 			</wxsmith>
 		</Extensions>

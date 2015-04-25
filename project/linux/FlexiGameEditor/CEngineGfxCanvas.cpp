@@ -8,7 +8,7 @@
  * and/or distributed without the express or written consent from the author.
  ******************************************************************************/
 
-#include "CEngineGfxPanel.h"
+#include "CEngineGfxCanvas.h"
 
 #include <cstdlib>
 #include <cstdio>
@@ -25,13 +25,13 @@
 
 //-----------------------------------------------------------------------------
 
-CRenderTimer::CRenderTimer(CEngineGfxPanel* gfxPanel) : wxTimer() {
-    m_gfxPanel = gfxPanel;
+CRenderTimer::CRenderTimer(CEngineGfxCanvas* gfxCanvas) : wxTimer() {
+    m_gfxCanvas = gfxCanvas;
 }
 //-----------------------------------------------------------------------------
 
 void CRenderTimer::Notify(void) {
-    m_gfxPanel->Refresh();
+    m_gfxCanvas->Refresh();
     //printf("RenderTime::Notify(): THREAD ID: %lu\n", pthread_self());
 }
 //-----------------------------------------------------------------------------
@@ -42,18 +42,18 @@ void CRenderTimer::Start(void) {
 }
 //-----------------------------------------------------------------------------
 
-BEGIN_EVENT_TABLE(CEngineGfxPanel, wxGLCanvas)
-EVT_MOTION(CEngineGfxPanel::mouseMoved)
-EVT_LEFT_DOWN(CEngineGfxPanel::mouseDown)
-EVT_LEFT_UP(CEngineGfxPanel::mouseReleased)
-EVT_LEAVE_WINDOW(CEngineGfxPanel::mouseLeftWindow)
-EVT_SIZE(CEngineGfxPanel::resized)
-EVT_KEY_DOWN(CEngineGfxPanel::keyPressed)
-EVT_KEY_UP(CEngineGfxPanel::keyReleased)
-EVT_MOUSEWHEEL(CEngineGfxPanel::mouseWheelMoved)
-EVT_PAINT(CEngineGfxPanel::paint)
-EVT_IDLE(CEngineGfxPanel::idle)
-EVT_CLOSE(CEngineGfxPanel::closeEvent)
+BEGIN_EVENT_TABLE(CEngineGfxCanvas, wxGLCanvas)
+EVT_MOTION(CEngineGfxCanvas::mouseMoved)
+EVT_LEFT_DOWN(CEngineGfxCanvas::mouseDown)
+EVT_LEFT_UP(CEngineGfxCanvas::mouseReleased)
+EVT_LEAVE_WINDOW(CEngineGfxCanvas::mouseLeftWindow)
+EVT_SIZE(CEngineGfxCanvas::resized)
+EVT_KEY_DOWN(CEngineGfxCanvas::keyPressed)
+EVT_KEY_UP(CEngineGfxCanvas::keyReleased)
+EVT_MOUSEWHEEL(CEngineGfxCanvas::mouseWheelMoved)
+EVT_PAINT(CEngineGfxCanvas::paint)
+EVT_IDLE(CEngineGfxCanvas::idle)
+EVT_CLOSE(CEngineGfxCanvas::closeEvent)
 END_EVENT_TABLE()
 
 #include "GFX/Scene/fgGfxBspCompiler.h"
@@ -61,7 +61,7 @@ fg::gfx::CBspCompiler *bspCompiler = NULL;
 
 //-----------------------------------------------------------------------------
 
-CEngineGfxPanel::CEngineGfxPanel(wxWindow* parent, int* args) :
+CEngineGfxCanvas::CEngineGfxCanvas(wxWindow* parent, int* args) :
 wxGLCanvas(parent, wxID_ANY, args, wxDefaultPosition, wxDefaultSize, wxFULL_REPAINT_ON_RESIZE) {
     m_context = new wxGLContext(this);
 
@@ -84,7 +84,7 @@ wxGLCanvas(parent, wxID_ANY, args, wxDefaultPosition, wxDefaultSize, wxFULL_REPA
 }
 //-----------------------------------------------------------------------------
 
-CEngineGfxPanel::~CEngineGfxPanel() {
+CEngineGfxCanvas::~CEngineGfxCanvas() {
     FG_LOG_DEBUG("WX: Main destructor called");
     //if(m_context && IsShown())
     //    wxGLCanvas::SetCurrent(*m_context);
@@ -94,7 +94,7 @@ CEngineGfxPanel::~CEngineGfxPanel() {
 }
 //-----------------------------------------------------------------------------
 
-void CEngineGfxPanel::closeEvent(wxCloseEvent& event) {
+void CEngineGfxCanvas::closeEvent(wxCloseEvent& event) {
     //printf("CLOSE EVENT: THREAD ID: %lu\n", pthread_self());
     FG_LOG_DEBUG("WX: Close event callback");
     this->m_isExit = FG_TRUE;
@@ -103,7 +103,7 @@ void CEngineGfxPanel::closeEvent(wxCloseEvent& event) {
 }
 //-----------------------------------------------------------------------------
 
-void CEngineGfxPanel::mouseMoved(wxMouseEvent& event) {
+void CEngineGfxCanvas::mouseMoved(wxMouseEvent& event) {
     if(this->m_appInit && this->m_gameMain) {
         int button = event.GetButton();
         int x = event.GetPosition().x;
@@ -114,7 +114,7 @@ void CEngineGfxPanel::mouseMoved(wxMouseEvent& event) {
 }
 //-----------------------------------------------------------------------------
 
-void CEngineGfxPanel::mouseDown(wxMouseEvent& event) {
+void CEngineGfxCanvas::mouseDown(wxMouseEvent& event) {
     if(this->m_appInit && this->m_gameMain) {
         int button = event.GetButton();
         int x = event.GetPosition().x;
@@ -125,13 +125,13 @@ void CEngineGfxPanel::mouseDown(wxMouseEvent& event) {
 }
 //-----------------------------------------------------------------------------
 
-void CEngineGfxPanel::mouseWheelMoved(wxMouseEvent& event) {
+void CEngineGfxCanvas::mouseWheelMoved(wxMouseEvent& event) {
     if(this->m_appInit && this->m_gameMain) {
     }
 }
 //-----------------------------------------------------------------------------
 
-void CEngineGfxPanel::mouseReleased(wxMouseEvent& event) {
+void CEngineGfxCanvas::mouseReleased(wxMouseEvent& event) {
     if(this->m_appInit && this->m_gameMain) {
         int button = event.GetButton();
         int x = event.GetPosition().x;
@@ -142,7 +142,7 @@ void CEngineGfxPanel::mouseReleased(wxMouseEvent& event) {
 }
 //-----------------------------------------------------------------------------
 
-void CEngineGfxPanel::mouseLeftWindow(wxMouseEvent& event) {
+void CEngineGfxCanvas::mouseLeftWindow(wxMouseEvent& event) {
     if(this->m_appInit && this->m_gameMain) {
         int button = event.GetButton();
         int x = event.GetPosition().x;
@@ -152,7 +152,7 @@ void CEngineGfxPanel::mouseLeftWindow(wxMouseEvent& event) {
 }
 //-----------------------------------------------------------------------------
 
-void CEngineGfxPanel::keyPressed(wxKeyEvent& event) {
+void CEngineGfxCanvas::keyPressed(wxKeyEvent& event) {
     if(this->m_appInit && this->m_gameMain) {
         int keyCode = event.GetKeyCode();
         this->m_gameMain->getInputHandler()->addKeyDown(keyCode);
@@ -161,7 +161,7 @@ void CEngineGfxPanel::keyPressed(wxKeyEvent& event) {
 }
 //-----------------------------------------------------------------------------
 
-void CEngineGfxPanel::keyReleased(wxKeyEvent& event) {
+void CEngineGfxCanvas::keyReleased(wxKeyEvent& event) {
     if(this->m_appInit && this->m_gameMain) {
         int keyCode = event.GetKeyCode();
         this->m_gameMain->getInputHandler()->addKeyUp(keyCode);
@@ -169,7 +169,7 @@ void CEngineGfxPanel::keyReleased(wxKeyEvent& event) {
 }
 //-----------------------------------------------------------------------------
 
-void CEngineGfxPanel::resized(wxSizeEvent& event) {
+void CEngineGfxCanvas::resized(wxSizeEvent& event) {
     int x = event.GetSize().x;
     int y = event.GetSize().y;
     FG_LOG_DEBUG("WX: Resize event %dx%d", x, y);
@@ -183,7 +183,7 @@ void CEngineGfxPanel::resized(wxSizeEvent& event) {
 }
 //-----------------------------------------------------------------------------
 
-void CEngineGfxPanel::idle(wxIdleEvent& event) {
+void CEngineGfxCanvas::idle(wxIdleEvent& event) {
     static long int t1 = 0;
     static int f = 0;
     if(t1 == 0) {
@@ -242,7 +242,7 @@ void CEngineGfxPanel::idle(wxIdleEvent& event) {
 }
 //-----------------------------------------------------------------------------
 
-void CEngineGfxPanel::paint(wxPaintEvent& event) {
+void CEngineGfxCanvas::paint(wxPaintEvent& event) {
     fgBool isSwapBuffers = FG_TRUE;
     static unsigned long int t1 = 0;
     unsigned long int t2 = 0;
@@ -288,7 +288,7 @@ void CEngineGfxPanel::paint(wxPaintEvent& event) {
 }
 //-----------------------------------------------------------------------------
 
-void CEngineGfxPanel::closeProgram(void) {
+void CEngineGfxCanvas::closeProgram(void) {
     // if(m_paint && m_context && IsShown()) {
     //    wxGLCanvas::SetCurrent(*m_context);
     //}
@@ -311,7 +311,7 @@ void CEngineGfxPanel::closeProgram(void) {
 }
 //-----------------------------------------------------------------------------
 
-fgBool CEngineGfxPanel::initProgram(void) {
+fgBool CEngineGfxCanvas::initProgram(void) {
     using namespace fg;
     if(m_paint && m_context) {
         wxGLCanvas::SetCurrent(*m_context);
@@ -355,7 +355,7 @@ fgBool CEngineGfxPanel::initProgram(void) {
 }
 //-----------------------------------------------------------------------------
 
-fgBool CEngineGfxPanel::displayAndRender(void) {
+fgBool CEngineGfxCanvas::displayAndRender(void) {
     fgBool status = FG_TRUE;
     if(m_isSuspend) return FG_FALSE;
     using namespace fg;
@@ -394,7 +394,7 @@ fgBool CEngineGfxPanel::displayAndRender(void) {
 }
 //-----------------------------------------------------------------------------
 
-fgBool CEngineGfxPanel::update(void) {
+fgBool CEngineGfxCanvas::update(void) {
     if(!m_appInit) {
         FG_LOG_DEBUG("MainModule: Loop step - application not initialized...");
         return FG_FALSE;
