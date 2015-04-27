@@ -1,3 +1,12 @@
+/*******************************************************************************
+ * Copyright (C) Radoslaw Gniazdowski <contact@flexigame.com>.
+ * All rights reserved.
+ *
+ * This file is part of FlexiGame: Flexible Game Engine
+ *
+ * FlexiGame source code and any related files can not be copied, modified
+ * and/or distributed without the express or written consent from the author.
+ ******************************************************************************/
 /***************************************************************
  * Name:      FlexiGameEditorMain.h
  * Purpose:   Defines Application Frame
@@ -12,25 +21,37 @@
     #define FG_INC_FLEXI_GAME_EDITOR_MAIN_BLOCK
 
 //(*Headers(FlexiGameEditorFrame)
-#include <wx/sizer.h>
-#include <wx/notebook.h>
-#include <wx/menu.h>
-#include <wx/statusbr.h>
-#include <wx/frame.h>
+    #include <wx/sizer.h>
+    #include <wx/notebook.h>
+    #include <wx/menu.h>
+    #include <wx/statusbr.h>
+    #include <wx/frame.h>
 //*)
 
     #include "CEngineGfxCanvas.h"
     #include "CGfxHolderPanel.h"
 
+/**
+ *
+ */
 enum EnginePreviewMode {
+    /// Hidden - invalid preview mode
     FG_PREVIEW_HIDDEN,
+    /// Gfx preview for Game
     FG_PREVIEW_GAME,
+    /// Special gfx preview mode - scene management
     FG_PREVIEW_SCENE_MANAGER,
+    /// Shader management - testing, writing shaders
     FG_PREVIEW_SHADER_MANAGER,
+    /// BSP Builder preview mode - editing for BSP trees
     FG_PREVIEW_BSP_BUILDER,
+    /// Particle editing gfx preview
     FG_PREVIEW_PARTICLE_EDITOR,
+    /// Special XML editor for GUI structures
     FG_PREVIEW_GUI_EDITOR,
+    /// Model viewer, saver/exporter
     FG_PREVIEW_MODEL_VIEWER,
+    /// Total number of 3D preview modes
     FG_PREVIEW_NUM_MODES
 };
 
@@ -61,7 +82,7 @@ private:
     /// Special holding panels for gfx context - it's required because,
     /// there can be only one active gfx context, however the selected
     /// tabs can change along with the preview mode (displayed data)
-    CGfxHolderPanel* m_gfxHolderPanels[FG_PREVIEW_NUM_MODES];
+    //CGfxHolderPanel* m_gfxHolderPanels[FG_PREVIEW_NUM_MODES];
     CGfxHolderPanel* m_gfxHolderPanel;
     /// List of proper names for main notebook tabs
     wxString m_previewTabNames[FG_PREVIEW_NUM_MODES];
@@ -164,7 +185,9 @@ private:
     //(*Declarations(FlexiGameEditorFrame)
     wxStatusBar* MainStatusBar;
     wxMenuBar* MenuBarTop;
+    wxBoxSizer* MainBoxSizerV;
     wxMenu GfxCanvasContextMenu;
+    wxBoxSizer* MainBoxSizerH;
     wxNotebook* MainNotebook;
     wxNotebook* LeftNotebook;
     wxNotebook* BottomNotebook;

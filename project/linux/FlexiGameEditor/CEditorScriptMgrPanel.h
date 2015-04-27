@@ -1,31 +1,62 @@
-#ifndef CEDITORSCRIPTMGRPANEL_H
-#define CEDITORSCRIPTMGRPANEL_H
+/*******************************************************************************
+ * Copyright (C) Radoslaw Gniazdowski <contact@flexigame.com>.
+ * All rights reserved.
+ *
+ * This file is part of FlexiGame: Flexible Game Engine
+ *
+ * FlexiGame source code and any related files can not be copied, modified
+ * and/or distributed without the express or written consent from the author.
+ ******************************************************************************/
+
+#ifndef FG_INC_EDITOR_SCRIPT_MGR_PANEL
+    #define FG_INC_EDITOR_SCRIPT_MGR_PANEL
+    #define FG_INC_EDITOR_SCRIPT_MGR_PANEL_BLOCK
 
 //(*Headers(CEditorScriptMgrPanel)
-#include <wx/panel.h>
+    #include <wx/panel.h>
 //*)
 
-class CEditorScriptMgrPanel: public wxPanel
-{
-	public:
+/**
+ *
+ */
+class CEditorScriptMgrPanel : public wxPanel {
+public:
+    typedef CEditorScriptMgrPanel self_type;
+    typedef CEditorScriptMgrPanel type;
+    typedef wxPanel base_type;
 
-		CEditorScriptMgrPanel(wxWindow* parent,wxWindowID id=wxID_ANY,const wxPoint& pos=wxDefaultPosition,const wxSize& size=wxDefaultSize);
-		virtual ~CEditorScriptMgrPanel();
+public:
+    /**
+     *
+     * @param parent
+     * @param id
+     * @param pos
+     * @param size
+     */
+    CEditorScriptMgrPanel(wxWindow* parent,
+                          wxWindowID id = wxID_ANY,
+                          const wxPoint& pos = wxDefaultPosition,
+                          const wxSize& size = wxDefaultSize);
+    /**
+     * 
+     */
+    virtual ~CEditorScriptMgrPanel();
 
-		//(*Declarations(CEditorScriptMgrPanel)
-		//*)
+    //(*Declarations(CEditorScriptMgrPanel)
+    //*)
 
-	protected:
+protected:
 
-		//(*Identifiers(CEditorScriptMgrPanel)
-		//*)
+    //(*Identifiers(CEditorScriptMgrPanel)
+    //*)
 
-	private:
+private:
 
-		//(*Handlers(CEditorScriptMgrPanel)
-		//*)
+    //(*Handlers(CEditorScriptMgrPanel)
+    //*)
 
-		DECLARE_EVENT_TABLE()
+    DECLARE_EVENT_TABLE()
 };
 
-#endif
+    #undef FG_INC_EDITOR_SCRIPT_MGR_PANEL_BLOCK
+#endif /* FG_INC_EDITOR_SCRIPT_MGR_PANEL */

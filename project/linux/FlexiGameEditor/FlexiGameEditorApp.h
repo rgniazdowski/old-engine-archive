@@ -23,10 +23,9 @@ public:
     virtual bool OnInit();
 
 private:
+    ///
     fgBool m_isInit;
 };
-
-
 
     #undef FG_INC_FLEXI_GAME_EDITOR_APP_BLOCK
 #endif /* FG_INC_FLEXI_GAME_EDITOR_APP */

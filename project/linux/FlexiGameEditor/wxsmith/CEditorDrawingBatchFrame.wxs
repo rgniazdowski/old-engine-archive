@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <wxsmith>
-	<object class="wxFrame" name="CEditorDrawingBatchFrame">
-		<title>FlexiGame::DrawingBatch</title>
-		<centered>1</centered>
-		<pos_arg>1</pos_arg>
-		<size_arg>1</size_arg>
-	</object>
+    <object class="wxFrame" name="CEditorDrawingBatchFrame">
+        <title>FlexiGame::DrawingBatch</title>
+        <centered>1</centered>
+        <pos_arg>1</pos_arg>
+        <size_arg>1</size_arg>
+    </object>
 </wxsmith>

@@ -76,7 +76,6 @@ public:
      * @param position
      */
     void popupGfxContextMenu(const wxPoint& position);
-
     /**
      *
      * @return
@@ -118,4 +117,4 @@ private:
 };
 
     #undef FG_INC_GFX_HOLDER_PANEL_BLOCK
-#endif // FG_INC_GFX_HOLDER_PANEL
+#endif /* FG_INC_GFX_HOLDER_PANEL */

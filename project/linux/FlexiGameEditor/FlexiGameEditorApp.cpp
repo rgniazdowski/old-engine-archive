@@ -1,3 +1,12 @@
+/*******************************************************************************
+ * Copyright (C) Radoslaw Gniazdowski <contact@flexigame.com>.
+ * All rights reserved.
+ *
+ * This file is part of FlexiGame: Flexible Game Engine
+ *
+ * FlexiGame source code and any related files can not be copied, modified
+ * and/or distributed without the express or written consent from the author.
+ ******************************************************************************/
 /***************************************************************
  * Name:      FlexiGameEditorApp.cpp
  * Purpose:   Code for Application Class
@@ -27,11 +36,10 @@ bool FlexiGameEditorApp::OnInit() {
         //(*AppInitialize
         bool wxsOK = true;
         wxInitAllImageHandlers();
-        if ( wxsOK )
-        {
-        	FlexiGameEditorFrame* Frame = new FlexiGameEditorFrame(0);
-        	Frame->Show();
-        	SetTopWindow(Frame);
+        if(wxsOK) {
+            FlexiGameEditorFrame* Frame = new FlexiGameEditorFrame(0);
+            Frame->Show();
+            SetTopWindow(Frame);
         }
         //*)
     } else {

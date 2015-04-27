@@ -15,10 +15,17 @@
     #include "fgBuildConfig.h"
     #include "fgBool.h"
     #include "GFX/fgGfxGL.h"
-    #include "fgGameMain.h"
+
+    #include "Event/fgEventDefinitions.h"
+    #include "Scripting/fgScriptSubsystem.h"
+    #include "GameLogic/fgGameLogic.h"
 
     #include "wx/wx.h"
     #include "wx/glcanvas.h"
+
+namespace fg {
+    class CGameMain;
+}
 
 class CRenderTimer;
 class CEngineGfxCanvas;
@@ -27,6 +34,11 @@ class CEngineGfxCanvas;
  *
  */
 class CRenderTimer : public wxTimer {
+public:
+    typedef CRenderTimer self_type;
+    typedef CRenderTimer type;
+    typedef wxTimer base_type;
+
 private:
     ///
     CEngineGfxCanvas* m_gfxCanvas;
@@ -51,6 +63,12 @@ public:
  *
  */
 class CEngineGfxCanvas : public wxGLCanvas {
+public:
+    typedef CEngineGfxCanvas self_type;
+    typedef CEngineGfxCanvas type;
+    typedef wxGLCanvas base_type;
+
+private:
     ///
     wxGLContext* m_context;
     ///
@@ -79,6 +97,7 @@ class CEngineGfxCanvas : public wxGLCanvas {
     int m_argc;
     ///
     char *m_argv[2];
+
 public:
     /**
      *

@@ -10,11 +10,7 @@
 
 #include "CEngineGfxCanvas.h"
 
-#include <cstdlib>
-#include <cstdio>
-#include <cmath>
-#include <map>
-
+#include "fgGameMain.h"
 #include "Event/fgEventManager.h"
 #include "Event/fgInputHandler.h"
 #include "Hardware/fgHardwareState.h"
@@ -23,6 +19,10 @@
 #include "fgDebugConfig.h"
 #include "fgLog.h"
 
+#include <cstdlib>
+#include <cstdio>
+#include <cmath>
+#include <map>
 //-----------------------------------------------------------------------------
 
 CRenderTimer::CRenderTimer(CEngineGfxCanvas* gfxCanvas) : wxTimer() {
