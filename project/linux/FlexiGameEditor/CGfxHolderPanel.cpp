@@ -14,7 +14,6 @@
 BEGIN_EVENT_TABLE(CGfxHolderPanel, wxPanel)
 EVT_CONTEXT_MENU(CGfxHolderPanel::onContextMenu)
 END_EVENT_TABLE()
-
 //-----------------------------------------------------------------------------
 
 CGfxHolderPanel::CGfxHolderPanel(wxWindow* parent, CEngineGfxCanvas* gfxCanvas) :

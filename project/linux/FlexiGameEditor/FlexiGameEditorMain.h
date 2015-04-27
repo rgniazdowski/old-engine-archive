@@ -21,11 +21,11 @@
     #define FG_INC_FLEXI_GAME_EDITOR_MAIN_BLOCK
 
 //(*Headers(FlexiGameEditorFrame)
-    #include <wx/sizer.h>
-    #include <wx/notebook.h>
-    #include <wx/menu.h>
-    #include <wx/statusbr.h>
-    #include <wx/frame.h>
+#include <wx/sizer.h>
+#include <wx/notebook.h>
+#include <wx/menu.h>
+#include <wx/statusbr.h>
+#include <wx/frame.h>
 //*)
 
     #include "CEngineGfxCanvas.h"

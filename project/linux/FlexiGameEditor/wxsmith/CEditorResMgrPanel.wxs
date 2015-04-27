@@ -1,52 +1,52 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <wxsmith>
-    <object class="wxPanel" name="CEditorResMgrPanel">
-        <id_arg>0</id_arg>
-        <object class="wxBoxSizer" variable="BoxSizerMainV" member="no">
-            <orient>wxVERTICAL</orient>
-            <object class="sizeritem">
-                <object class="wxNotebook" name="ID_NOTEBOOK1" variable="Notebook1" member="yes">
-                    <object class="notebookpage">
-                        <object class="wxPanel" name="ID_PAGE1" variable="Page1" member="yes">
-                            <object class="wxGridBagSizer" variable="GridBagSizer1" member="no">
-                                <growablecols>0</growablecols>
-                                <growablerows>0</growablerows>
-                                <object class="sizeritem">
-                                    <object class="wxListView" name="ID_RESOURCELISTVIEW" variable="ResourceListView" member="yes">
-                                        <style>wxLC_REPORT</style>
-                                    </object>
-                                    <colspan>5</colspan>
-                                    <col>0</col>
-                                    <row>0</row>
-                                    <flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
-                                    <border>2</border>
-                                    <option>1</option>
-                                </object>
-                                <object class="sizeritem">
-                                    <object class="wxButton" name="ID_REFRESHLIST_BUTTON" variable="RefreshButton" member="yes">
-                                        <label>Refresh</label>
-                                        <handler function="OnResListRefreshButtonClick" entry="EVT_BUTTON" />
-                                    </object>
-                                    <col>0</col>
-                                    <row>1</row>
-                                    <flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
-                                    <border>2</border>
-                                    <option>1</option>
-                                </object>
-                            </object>
-                        </object>
-                        <label>Resource list</label>
-                        <selected>1</selected>
-                    </object>
-                    <object class="notebookpage">
-                        <object class="wxPanel" name="ID_PAGE2" variable="Page2" member="yes" />
-                        <label>Resource preview</label>
-                    </object>
-                </object>
-                <flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
-                <border>2</border>
-                <option>1</option>
-            </object>
-        </object>
-    </object>
+	<object class="wxPanel" name="CEditorResMgrPanel">
+		<id_arg>0</id_arg>
+		<object class="wxBoxSizer" variable="BoxSizerMainV" member="no">
+			<orient>wxVERTICAL</orient>
+			<object class="sizeritem">
+				<object class="wxNotebook" name="ID_NOTEBOOK1" variable="Notebook1" member="yes">
+					<object class="notebookpage">
+						<object class="wxPanel" name="ID_PAGE1" variable="Page1" member="yes">
+							<object class="wxGridBagSizer" variable="GridBagSizer1" member="no">
+								<growablecols>0</growablecols>
+								<growablerows>0</growablerows>
+								<object class="sizeritem">
+									<object class="wxListView" name="ID_RESOURCELISTVIEW" variable="ResourceListView" member="yes">
+										<style>wxLC_REPORT</style>
+									</object>
+									<colspan>5</colspan>
+									<col>0</col>
+									<row>0</row>
+									<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+									<border>2</border>
+									<option>1</option>
+								</object>
+								<object class="sizeritem">
+									<object class="wxButton" name="ID_REFRESHLIST_BUTTON" variable="RefreshButton" member="yes">
+										<label>Refresh</label>
+										<handler function="OnResListRefreshButtonClick" entry="EVT_BUTTON" />
+									</object>
+									<col>0</col>
+									<row>1</row>
+									<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+									<border>2</border>
+									<option>1</option>
+								</object>
+							</object>
+						</object>
+						<label>Resource list</label>
+						<selected>1</selected>
+					</object>
+					<object class="notebookpage">
+						<object class="wxPanel" name="ID_PAGE2" variable="Page2" member="yes" />
+						<label>Resource preview</label>
+					</object>
+				</object>
+				<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+				<border>2</border>
+				<option>1</option>
+			</object>
+		</object>
+	</object>
 </wxsmith>

@@ -15,12 +15,12 @@
     #include "fgBool.h"
 
 //(*Headers(CEditorResMgrPanel)
-    #include <wx/sizer.h>
-    #include <wx/listctrl.h>
-    #include <wx/notebook.h>
-    #include <wx/button.h>
-    #include <wx/panel.h>
-    #include <wx/gbsizer.h>
+#include <wx/sizer.h>
+#include <wx/listctrl.h>
+#include <wx/notebook.h>
+#include <wx/button.h>
+#include <wx/panel.h>
+#include <wx/gbsizer.h>
 //*)
 
 namespace fg {

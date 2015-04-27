@@ -1,180 +1,180 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <wxsmith>
-    <object class="wxFrame" name="FlexiGameEditorFrame">
-        <title>FlexiGame::Editor 1.0</title>
-        <size>800,550</size>
-        <font>
-            <style>normal</style>
-            <weight>light</weight>
-            <underlined>0</underlined>
-            <face>Arial</face>
-            <sysfont>wxSYS_DEFAULT_GUI_FONT</sysfont>
-            <relativesize>0.950000</relativesize>
-        </font>
-        <minsize>600,480</minsize>
-        <id_arg>0</id_arg>
-        <object class="wxBoxSizer" variable="MainBoxSizerH" member="yes">
-            <object class="sizeritem">
-                <object class="wxNotebook" name="idLeftNotebook" variable="LeftNotebook" member="yes">
-                    <minsize>256,384</minsize>
-                    <maxsize>384,0</maxsize>
-                    <handler function="OnLeftNotebookPageChanged" entry="EVT_NOTEBOOK_PAGE_CHANGED" />
-                </object>
-                <flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
-                <border>2</border>
-                <option>1</option>
-            </object>
-            <object class="sizeritem">
-                <object class="wxBoxSizer" variable="MainBoxSizerV" member="yes">
-                    <orient>wxVERTICAL</orient>
-                    <object class="sizeritem">
-                        <object class="wxNotebook" name="idMainNotebook" variable="MainNotebook" member="yes">
-                            <handler function="OnMainNotebookPageChanged" entry="EVT_NOTEBOOK_PAGE_CHANGED" />
-                        </object>
-                        <flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
-                        <border>2</border>
-                        <option>3</option>
-                    </object>
-                    <object class="sizeritem">
-                        <object class="wxNotebook" name="idBottomNotebook" variable="BottomNotebook" member="yes">
-                            <size>-1,64</size>
-                            <minsize>128,196</minsize>
-                            <style>wxNB_LEFT</style>
-                            <handler function="OnBottomNotebookPageChanged" entry="EVT_NOTEBOOK_PAGE_CHANGED" />
-                        </object>
-                        <flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
-                        <border>2</border>
-                        <option>-1</option>
-                    </object>
-                </object>
-                <flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
-                <border>2</border>
-                <option>3</option>
-            </object>
-        </object>
-        <object class="wxMenuBar" variable="MenuBarTop" member="yes">
-            <object class="wxMenu" variable="Menu1" member="no">
-                <label>&amp;File</label>
-                <object class="wxMenuItem" name="idMenuQuit" variable="MenuItem1" member="no">
-                    <label>Quit</label>
-                    <accel>Alt-F4</accel>
-                    <help>Quit the application</help>
-                    <handler function="OnQuit" entry="EVT_MENU" />
-                </object>
-            </object>
-            <object class="wxMenu" variable="Menu3" member="no">
-                <label>En&amp;gine</label>
-                <object class="wxMenuItem" name="idMenuEngineInitialize" variable="MenuItem3" member="no">
-                    <label>Initialize</label>
-                    <accel>Alt-R</accel>
-                    <help>Initialize the internal FlexiGame::Engine</help>
-                    <handler function="OnMenuEngineInitialize" entry="EVT_MENU" />
-                </object>
-                <object class="wxMenuItem" name="idMenuEngineQuit" variable="MenuItem11" member="no">
-                    <label>Quit</label>
-                    <accel>Alt+Q</accel>
-                    <help>Close the game engine - exit the game</help>
-                    <handler function="OnMenuEngineQuit" entry="EVT_MENU" />
-                </object>
-                <object class="separator" />
-                <object class="wxMenuItem" name="idMenuEngineFreezeFrame" variable="MenuItem10" member="no">
-                    <label>Freeze frame</label>
-                    <accel>Alt-P</accel>
-                    <help>Pause/freeze current frame</help>
-                    <handler function="OnMenuEngineFreezeFrame" entry="EVT_MENU" />
-                </object>
-            </object>
-            <object class="wxMenu" variable="Menu4" member="no">
-                <label>&amp;Tools</label>
-                <object class="wxMenuItem" name="idMenuToolsResourceManager" variable="MenuItem12" member="no">
-                    <label>Resource Manager</label>
-                    <help>Open window with Resource Manager</help>
-                    <handler function="OnMenuToolsResourceManager" entry="EVT_MENU" />
-                </object>
-                <object class="wxMenuItem" name="idMenuToolsScriptManager" variable="MenuItem13" member="no">
-                    <label>Script Manager</label>
-                    <handler function="OnMenuToolsScriptManager" entry="EVT_MENU" />
-                </object>
-                <object class="wxMenuItem" name="idMenuToolsEventManager" variable="MenuItem14" member="no">
-                    <label>Event Manager</label>
-                    <handler function="OnMenuToolsEventManager" entry="EVT_MENU" />
-                </object>
-                <object class="wxMenuItem" name="idMenuToolsFlexiGUIEditor" variable="MenuItem15" member="no">
-                    <label>Flexi GUI Editor</label>
-                    <handler function="OnMenuToolsFlexiGUIEditor" entry="EVT_MENU" />
-                </object>
-                <object class="separator" />
-                <object class="wxMenuItem" name="idMenuToolsSceneManager" variable="MenuItem16" member="no">
-                    <label>Scene Manager</label>
-                    <handler function="OnMenuToolsSceneManager" entry="EVT_MENU" />
-                </object>
-                <object class="wxMenuItem" name="idMenuToolsShaderManager" variable="MenuItem17" member="no">
-                    <label>Shader Manager</label>
-                    <handler function="OnMenuToolsShaderManager" entry="EVT_MENU" />
-                </object>
-                <object class="wxMenuItem" name="idMenuToolsBSPBuilder" variable="MenuItem18" member="no">
-                    <label>BSP Builder</label>
-                    <handler function="OnMenuToolsBSPBuilder" entry="EVT_MENU" />
-                </object>
-                <object class="wxMenuItem" name="idMenuToolsParticleEditor" variable="MenuItem19" member="no">
-                    <label>Particle Editor</label>
-                    <handler function="OnMenuToolsParticleEditor" entry="EVT_MENU" />
-                </object>
-                <object class="wxMenuItem" name="idMenuToolsModelViewer" variable="MenuItem20" member="no">
-                    <label>Model Viewer</label>
-                    <handler function="OnMenuToolsModelViewer" entry="EVT_MENU" />
-                </object>
-                <object class="separator" />
-                <object class="wxMenuItem" name="idMenuToolsOptions" variable="MenuItem4" member="no">
-                    <label>Options</label>
-                    <help>Edit options for FlexiGame::Editor</help>
-                    <handler function="OnMenuToolsOptions" entry="EVT_MENU" />
-                </object>
-            </object>
-            <object class="wxMenu" variable="Menu5" member="no">
-                <label>G&amp;it</label>
-                <object class="wxMenuItem" name="idMenuGitRunGitGUI" variable="MenuItem5" member="no">
-                    <label>Run Git GUI</label>
-                    <help>Execute the git gui application in project root folder</help>
-                </object>
-                <object class="wxMenuItem" name="idMenuGitRunGitk" variable="MenuItem6" member="no">
-                    <label>Run Gitk</label>
-                    <help>Run the gitk tool for visualing branches and commits</help>
-                </object>
-                <object class="wxMenuItem" name="idMenuGitShowLog" variable="MenuItem7" member="no">
-                    <label>Show log</label>
-                    <help>Show the git commits log</help>
-                </object>
-                <object class="wxMenuItem" name="idMenuGitOpenGitconfig" variable="MenuItem8" member="no">
-                    <label>Open .gitconfig</label>
-                    <help>Open for editing the main git configuration file for this project</help>
-                </object>
-            </object>
-            <object class="wxMenu" variable="Menu2" member="no">
-                <label>Help</label>
-                <object class="wxMenuItem" name="idMenuHelpLocalDocs" variable="MenuItem9" member="no">
-                    <label>Local docs</label>
-                    <help>Open HTML viewer with documentation (local)</help>
-                </object>
-                <object class="wxMenuItem" name="idMenuHelpAbout" variable="MenuItem2" member="no">
-                    <label>About</label>
-                    <accel>F1</accel>
-                    <help>Show info about this application</help>
-                    <handler function="OnAbout" entry="EVT_MENU" />
-                </object>
-            </object>
-        </object>
-        <object class="wxStatusBar" name="idMainStatusBar" variable="MainStatusBar" member="yes">
-            <fields>2</fields>
-            <widths>-10,-10</widths>
-            <styles>wxSB_NORMAL,wxSB_NORMAL</styles>
-            <style>wxST_SIZEGRIP</style>
-        </object>
-        <object class="wxMenu" variable="GfxCanvasContextMenu" member="yes">
-            <object class="wxMenuItem" name="idGfxContextMenuCloseView" variable="GfxContextItemCloseView" member="no">
-                <label>Close view</label>
-                <handler function="OnGfxContextItemCloseViewSelected" entry="EVT_MENU" />
-            </object>
-        </object>
-    </object>
+	<object class="wxFrame" name="FlexiGameEditorFrame">
+		<title>FlexiGame::Editor 1.0</title>
+		<size>800,550</size>
+		<font>
+			<style>normal</style>
+			<weight>light</weight>
+			<underlined>0</underlined>
+			<face>Arial</face>
+			<sysfont>wxSYS_DEFAULT_GUI_FONT</sysfont>
+			<relativesize>0.950000</relativesize>
+		</font>
+		<minsize>600,480</minsize>
+		<id_arg>0</id_arg>
+		<object class="wxBoxSizer" variable="MainBoxSizerH" member="yes">
+			<object class="sizeritem">
+				<object class="wxNotebook" name="idLeftNotebook" variable="LeftNotebook" member="yes">
+					<minsize>256,384</minsize>
+					<maxsize>384,0</maxsize>
+					<handler function="OnLeftNotebookPageChanged" entry="EVT_NOTEBOOK_PAGE_CHANGED" />
+				</object>
+				<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+				<border>2</border>
+				<option>1</option>
+			</object>
+			<object class="sizeritem">
+				<object class="wxBoxSizer" variable="MainBoxSizerV" member="yes">
+					<orient>wxVERTICAL</orient>
+					<object class="sizeritem">
+						<object class="wxNotebook" name="idMainNotebook" variable="MainNotebook" member="yes">
+							<handler function="OnMainNotebookPageChanged" entry="EVT_NOTEBOOK_PAGE_CHANGED" />
+						</object>
+						<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+						<border>2</border>
+						<option>3</option>
+					</object>
+					<object class="sizeritem">
+						<object class="wxNotebook" name="idBottomNotebook" variable="BottomNotebook" member="yes">
+							<size>-1,64</size>
+							<minsize>128,196</minsize>
+							<style>wxNB_LEFT</style>
+							<handler function="OnBottomNotebookPageChanged" entry="EVT_NOTEBOOK_PAGE_CHANGED" />
+						</object>
+						<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+						<border>2</border>
+						<option>-1</option>
+					</object>
+				</object>
+				<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+				<border>2</border>
+				<option>3</option>
+			</object>
+		</object>
+		<object class="wxMenuBar" variable="MenuBarTop" member="yes">
+			<object class="wxMenu" variable="Menu1" member="no">
+				<label>&amp;File</label>
+				<object class="wxMenuItem" name="idMenuQuit" variable="MenuItem1" member="no">
+					<label>Quit</label>
+					<accel>Alt-F4</accel>
+					<help>Quit the application</help>
+					<handler function="OnQuit" entry="EVT_MENU" />
+				</object>
+			</object>
+			<object class="wxMenu" variable="Menu3" member="no">
+				<label>En&amp;gine</label>
+				<object class="wxMenuItem" name="idMenuEngineInitialize" variable="MenuItem3" member="no">
+					<label>Initialize</label>
+					<accel>Alt-R</accel>
+					<help>Initialize the internal FlexiGame::Engine</help>
+					<handler function="OnMenuEngineInitialize" entry="EVT_MENU" />
+				</object>
+				<object class="wxMenuItem" name="idMenuEngineQuit" variable="MenuItem11" member="no">
+					<label>Quit</label>
+					<accel>Alt+Q</accel>
+					<help>Close the game engine - exit the game</help>
+					<handler function="OnMenuEngineQuit" entry="EVT_MENU" />
+				</object>
+				<object class="separator" />
+				<object class="wxMenuItem" name="idMenuEngineFreezeFrame" variable="MenuItem10" member="no">
+					<label>Freeze frame</label>
+					<accel>Alt-P</accel>
+					<help>Pause/freeze current frame</help>
+					<handler function="OnMenuEngineFreezeFrame" entry="EVT_MENU" />
+				</object>
+			</object>
+			<object class="wxMenu" variable="Menu4" member="no">
+				<label>&amp;Tools</label>
+				<object class="wxMenuItem" name="idMenuToolsResourceManager" variable="MenuItem12" member="no">
+					<label>Resource Manager</label>
+					<help>Open window with Resource Manager</help>
+					<handler function="OnMenuToolsResourceManager" entry="EVT_MENU" />
+				</object>
+				<object class="wxMenuItem" name="idMenuToolsScriptManager" variable="MenuItem13" member="no">
+					<label>Script Manager</label>
+					<handler function="OnMenuToolsScriptManager" entry="EVT_MENU" />
+				</object>
+				<object class="wxMenuItem" name="idMenuToolsEventManager" variable="MenuItem14" member="no">
+					<label>Event Manager</label>
+					<handler function="OnMenuToolsEventManager" entry="EVT_MENU" />
+				</object>
+				<object class="wxMenuItem" name="idMenuToolsFlexiGUIEditor" variable="MenuItem15" member="no">
+					<label>Flexi GUI Editor</label>
+					<handler function="OnMenuToolsFlexiGUIEditor" entry="EVT_MENU" />
+				</object>
+				<object class="separator" />
+				<object class="wxMenuItem" name="idMenuToolsSceneManager" variable="MenuItem16" member="no">
+					<label>Scene Manager</label>
+					<handler function="OnMenuToolsSceneManager" entry="EVT_MENU" />
+				</object>
+				<object class="wxMenuItem" name="idMenuToolsShaderManager" variable="MenuItem17" member="no">
+					<label>Shader Manager</label>
+					<handler function="OnMenuToolsShaderManager" entry="EVT_MENU" />
+				</object>
+				<object class="wxMenuItem" name="idMenuToolsBSPBuilder" variable="MenuItem18" member="no">
+					<label>BSP Builder</label>
+					<handler function="OnMenuToolsBSPBuilder" entry="EVT_MENU" />
+				</object>
+				<object class="wxMenuItem" name="idMenuToolsParticleEditor" variable="MenuItem19" member="no">
+					<label>Particle Editor</label>
+					<handler function="OnMenuToolsParticleEditor" entry="EVT_MENU" />
+				</object>
+				<object class="wxMenuItem" name="idMenuToolsModelViewer" variable="MenuItem20" member="no">
+					<label>Model Viewer</label>
+					<handler function="OnMenuToolsModelViewer" entry="EVT_MENU" />
+				</object>
+				<object class="separator" />
+				<object class="wxMenuItem" name="idMenuToolsOptions" variable="MenuItem4" member="no">
+					<label>Options</label>
+					<help>Edit options for FlexiGame::Editor</help>
+					<handler function="OnMenuToolsOptions" entry="EVT_MENU" />
+				</object>
+			</object>
+			<object class="wxMenu" variable="Menu5" member="no">
+				<label>G&amp;it</label>
+				<object class="wxMenuItem" name="idMenuGitRunGitGUI" variable="MenuItem5" member="no">
+					<label>Run Git GUI</label>
+					<help>Execute the git gui application in project root folder</help>
+				</object>
+				<object class="wxMenuItem" name="idMenuGitRunGitk" variable="MenuItem6" member="no">
+					<label>Run Gitk</label>
+					<help>Run the gitk tool for visualing branches and commits</help>
+				</object>
+				<object class="wxMenuItem" name="idMenuGitShowLog" variable="MenuItem7" member="no">
+					<label>Show log</label>
+					<help>Show the git commits log</help>
+				</object>
+				<object class="wxMenuItem" name="idMenuGitOpenGitconfig" variable="MenuItem8" member="no">
+					<label>Open .gitconfig</label>
+					<help>Open for editing the main git configuration file for this project</help>
+				</object>
+			</object>
+			<object class="wxMenu" variable="Menu2" member="no">
+				<label>Help</label>
+				<object class="wxMenuItem" name="idMenuHelpLocalDocs" variable="MenuItem9" member="no">
+					<label>Local docs</label>
+					<help>Open HTML viewer with documentation (local)</help>
+				</object>
+				<object class="wxMenuItem" name="idMenuHelpAbout" variable="MenuItem2" member="no">
+					<label>About</label>
+					<accel>F1</accel>
+					<help>Show info about this application</help>
+					<handler function="OnAbout" entry="EVT_MENU" />
+				</object>
+			</object>
+		</object>
+		<object class="wxStatusBar" name="idMainStatusBar" variable="MainStatusBar" member="yes">
+			<fields>2</fields>
+			<widths>-10,-10</widths>
+			<styles>wxSB_NORMAL,wxSB_NORMAL</styles>
+			<style>wxST_SIZEGRIP</style>
+		</object>
+		<object class="wxMenu" variable="GfxCanvasContextMenu" member="yes">
+			<object class="wxMenuItem" name="idGfxContextMenuCloseView" variable="GfxContextItemCloseView" member="no">
+				<label>Close view</label>
+				<handler function="OnGfxContextItemCloseViewSelected" entry="EVT_MENU" />
+			</object>
+		</object>
+	</object>
 </wxsmith>

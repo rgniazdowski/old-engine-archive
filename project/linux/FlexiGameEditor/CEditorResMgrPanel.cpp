@@ -51,21 +51,21 @@ CEditorResMgrPanel::CEditorResMgrPanel(wxWindow* parent,
     GridBagSizer1->AddGrowableCol(0);
     GridBagSizer1->AddGrowableRow(0);
     ResourceListView = new wxListView(Page1, ID_RESOURCELISTVIEW, wxDefaultPosition, wxDefaultSize, wxLC_REPORT, wxDefaultValidator, _T("ID_RESOURCELISTVIEW"));
-    GridBagSizer1->Add(ResourceListView, wxGBPosition(0, 0), wxGBSpan(1, 5), wxALL | wxEXPAND | wxALIGN_CENTER_HORIZONTAL | wxALIGN_CENTER_VERTICAL, 2);
+    GridBagSizer1->Add(ResourceListView, wxGBPosition(0, 0), wxGBSpan(1, 5), wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 2);
     RefreshButton = new wxButton(Page1, ID_REFRESHLIST_BUTTON, _("Refresh"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_REFRESHLIST_BUTTON"));
-    GridBagSizer1->Add(RefreshButton, wxGBPosition(1, 0), wxDefaultSpan, wxALL | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL, 2);
+    GridBagSizer1->Add(RefreshButton, wxGBPosition(1, 0), wxDefaultSpan, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 2);
     Page1->SetSizer(GridBagSizer1);
     GridBagSizer1->Fit(Page1);
     GridBagSizer1->SetSizeHints(Page1);
     Page2 = new wxPanel(Notebook1, ID_PAGE2, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL, _T("ID_PAGE2"));
     Notebook1->AddPage(Page1, _("Resource list"), true);
     Notebook1->AddPage(Page2, _("Resource preview"), false);
-    BoxSizerMainV->Add(Notebook1, 1, wxALL | wxEXPAND | wxALIGN_CENTER_HORIZONTAL | wxALIGN_CENTER_VERTICAL, 2);
+    BoxSizerMainV->Add(Notebook1, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 2);
     SetSizer(BoxSizerMainV);
     BoxSizerMainV->Fit(this);
     BoxSizerMainV->SetSizeHints(this);
 
-    Connect(ID_REFRESHLIST_BUTTON, wxEVT_COMMAND_BUTTON_CLICKED, (wxObjectEventFunction) & CEditorResMgrPanel::OnResListRefreshButtonClick);
+    Connect(ID_REFRESHLIST_BUTTON,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&CEditorResMgrPanel::OnResListRefreshButtonClick);
     //*)
     ////////////////////////////////////////////////////////////////////////////
 
