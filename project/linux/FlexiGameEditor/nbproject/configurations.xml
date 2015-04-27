@@ -1,0 +1,358 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configurationDescriptor version="95">
+  <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
+    <logicalFolder name="HeaderFiles"
+                   displayName="Header Files"
+                   projectFiles="true">
+      <itemPath>CEditorConfigPanel.h</itemPath>
+      <itemPath>CEditorDrawingBatchFrame.h</itemPath>
+      <itemPath>CEditorEventMgrPanel.h</itemPath>
+      <itemPath>CEditorResMgrPanel.h</itemPath>
+      <itemPath>CEditorScriptMgrPanel.h</itemPath>
+      <itemPath>CEngineGfxCanvas.h</itemPath>
+      <itemPath>CGfxHolderPanel.h</itemPath>
+      <itemPath>FlexiGameEditorApp.h</itemPath>
+      <itemPath>FlexiGameEditorMain.h</itemPath>
+    </logicalFolder>
+    <logicalFolder name="ResourceFiles"
+                   displayName="Resource Files"
+                   projectFiles="true">
+    </logicalFolder>
+    <logicalFolder name="SourceFiles"
+                   displayName="Source Files"
+                   projectFiles="true">
+      <itemPath>CEditorConfigPanel.cpp</itemPath>
+      <itemPath>CEditorDrawingBatchFrame.cpp</itemPath>
+      <itemPath>CEditorEventMgrPanel.cpp</itemPath>
+      <itemPath>CEditorResMgrPanel.cpp</itemPath>
+      <itemPath>CEditorScriptMgrPanel.cpp</itemPath>
+      <itemPath>CEngineGfxCanvas.cpp</itemPath>
+      <itemPath>CGfxHolderPanel.cpp</itemPath>
+      <itemPath>FlexiGameEditorApp.cpp</itemPath>
+      <itemPath>FlexiGameEditorMain.cpp</itemPath>
+    </logicalFolder>
+    <logicalFolder name="TestFiles"
+                   displayName="Test Files"
+                   projectFiles="false"
+                   kind="TEST_LOGICAL_FOLDER">
+    </logicalFolder>
+    <logicalFolder name="ExternalFiles"
+                   displayName="Important Files"
+                   projectFiles="false"
+                   kind="IMPORTANT_FILES_FOLDER">
+      <itemPath>Makefile.nb</itemPath>
+    </logicalFolder>
+  </logicalFolder>
+  <projectmakefile>Makefile.nb</projectmakefile>
+  <confs>
+    <conf name="Debug" type="1">
+      <toolsSet>
+        <compilerSet>default</compilerSet>
+        <dependencyChecking>true</dependencyChecking>
+        <rebuildPropChanged>false</rebuildPropChanged>
+      </toolsSet>
+      <compileType>
+        <cTool>
+          <architecture>2</architecture>
+          <standard>10</standard>
+          <incDir>
+            <pElem>/usr/lib/wx/include/gtk2-unicode-3.0</pElem>
+          </incDir>
+          <commandLine>`wx-config --cflags`</commandLine>
+          <preprocessorList>
+            <Elem>FG_DEBUG</Elem>
+            <Elem>FG_NO_UNDEF</Elem>
+            <Elem>FG_USING_GLEW</Elem>
+            <Elem>FG_USING_GLM</Elem>
+            <Elem>FG_USING_LUA_PLUS</Elem>
+            <Elem>FG_USING_OPENGL</Elem>
+            <Elem>FG_USING_OPENGL_GLEW</Elem>
+            <Elem>FG_USING_THREADS</Elem>
+            <Elem>FG_USING_TINYXML</Elem>
+            <Elem>TIXML_USE_STL</Elem>
+            <Elem>WXUSINGDLL</Elem>
+            <Elem>_FILE_OFFSET_BITS=64</Elem>
+            <Elem>__WXGTK__</Elem>
+          </preprocessorList>
+        </cTool>
+        <ccTool>
+          <architecture>2</architecture>
+          <standard>8</standard>
+          <incDir>
+            <pElem>/usr/lib/wx/include/gtk2-unicode-3.0</pElem>
+            <pElem>../../../src</pElem>
+            <pElem>../../../modules/glm</pElem>
+            <pElem>../../../modules/tinyobj/upstream</pElem>
+            <pElem>../../../modules/tinyxml/upstream</pElem>
+            <pElem>../../../modules/stbfont/usascii</pElem>
+            <pElem>../../../modules/stbfont</pElem>
+            <pElem>../../../modules/luaplus51-all/Src</pElem>
+            <pElem>../../../modules/zlib_128/contrib/minizip</pElem>
+            <pElem>../../../modules/simpleopt</pElem>
+            <pElem>../../../modules/cpp_btree</pElem>
+          </incDir>
+          <commandLine>`wx-config --cxxflags`</commandLine>
+          <preprocessorList>
+            <Elem>FG_DEBUG</Elem>
+            <Elem>FG_NO_UNDEF</Elem>
+            <Elem>FG_USING_GLEW</Elem>
+            <Elem>FG_USING_GLM</Elem>
+            <Elem>FG_USING_LUA_PLUS</Elem>
+            <Elem>FG_USING_OPENGL</Elem>
+            <Elem>FG_USING_OPENGL_GLEW</Elem>
+            <Elem>FG_USING_THREADS</Elem>
+            <Elem>FG_USING_TINYXML</Elem>
+            <Elem>TIXML_USE_STL</Elem>
+            <Elem>WXUSINGDLL</Elem>
+            <Elem>_FILE_OFFSET_BITS=64</Elem>
+            <Elem>__WXGTK__</Elem>
+          </preprocessorList>
+        </ccTool>
+        <linkerTool>
+          <output>bin/${CND_CONF}/FlexiGameEditor</output>
+          <linkerLibItems>
+            <linkerLibStdlibItem>Mathematics</linkerLibStdlibItem>
+            <linkerLibLibItem>jpeg</linkerLibLibItem>
+            <linkerOptionItem>`pkg-config --libs glew`</linkerOptionItem>
+            <linkerOptionItem>`pkg-config --libs gl`</linkerOptionItem>
+            <linkerOptionItem>`pkg-config --libs zlib`</linkerOptionItem>
+            <linkerOptionItem>`pkg-config --libs libpng`</linkerOptionItem>
+            <linkerLibProjectItem>
+              <makeArtifact PL="../FlexiGame_NB"
+                            CT="3"
+                            CN="Debug_GLEW_StaticLib"
+                            AC="true"
+                            BL="false"
+                            WD="../FlexiGame_NB"
+                            BC="${MAKE} -j 4 -f Makefile.nb CONF=Debug_GLEW_StaticLib"
+                            CC="${MAKE} -j 4 -f Makefile.nb CONF=Debug_GLEW_StaticLib clean"
+                            OP="${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libflexigame_nb.a">
+              </makeArtifact>
+            </linkerLibProjectItem>
+            <linkerLibProjectItem>
+              <makeArtifact PL="../LuaPlusNextGen_NB"
+                            CT="3"
+                            CN="Debug"
+                            AC="true"
+                            BL="false"
+                            WD="../LuaPlusNextGen_NB"
+                            BC="${MAKE} -j 4 -f Makefile CONF=Debug"
+                            CC="${MAKE} -j 4 -f Makefile CONF=Debug clean"
+                            OP="${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libluaplusnextgen_nb.a">
+              </makeArtifact>
+            </linkerLibProjectItem>
+            <linkerLibProjectItem>
+              <makeArtifact PL="../MiniZipMaster_NB"
+                            CT="3"
+                            CN="Debug"
+                            AC="true"
+                            BL="false"
+                            WD="../MiniZipMaster_NB"
+                            BC="${MAKE} -j 4 -f Makefile CONF=Debug"
+                            CC="${MAKE} -j 4 -f Makefile CONF=Debug clean"
+                            OP="${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libminizipmaster_nb.a">
+              </makeArtifact>
+            </linkerLibProjectItem>
+          </linkerLibItems>
+          <commandLine>`wx-config --libs` `wx-config --gl-libs`</commandLine>
+        </linkerTool>
+      </compileType>
+      <item path="CEditorConfigPanel.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="CEditorConfigPanel.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="CEditorDrawingBatchFrame.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="CEditorDrawingBatchFrame.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="CEditorEventMgrPanel.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="CEditorEventMgrPanel.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="CEditorResMgrPanel.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="CEditorResMgrPanel.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="CEditorScriptMgrPanel.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="CEditorScriptMgrPanel.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="CEngineGfxCanvas.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="CEngineGfxCanvas.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="CGfxHolderPanel.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="CGfxHolderPanel.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="FlexiGameEditorApp.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="FlexiGameEditorApp.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="FlexiGameEditorMain.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="FlexiGameEditorMain.h" ex="false" tool="3" flavor2="0">
+      </item>
+    </conf>
+    <conf name="Release" type="1">
+      <toolsSet>
+        <compilerSet>default</compilerSet>
+        <dependencyChecking>true</dependencyChecking>
+        <rebuildPropChanged>false</rebuildPropChanged>
+      </toolsSet>
+      <compileType>
+        <cTool>
+          <developmentMode>5</developmentMode>
+          <stripSymbols>true</stripSymbols>
+          <architecture>2</architecture>
+          <standard>10</standard>
+          <incDir>
+            <pElem>/usr/lib/wx/include/gtk2-unicode-3.0</pElem>
+          </incDir>
+          <commandLine>`wx-config --cflags`</commandLine>
+          <preprocessorList>
+            <Elem>FG_NO_UNDEF</Elem>
+            <Elem>FG_RELEASE</Elem>
+            <Elem>FG_USING_GLEW</Elem>
+            <Elem>FG_USING_GLM</Elem>
+            <Elem>FG_USING_LUA_PLUS</Elem>
+            <Elem>FG_USING_OPENGL</Elem>
+            <Elem>FG_USING_OPENGL_GLEW</Elem>
+            <Elem>FG_USING_THREADS</Elem>
+            <Elem>FG_USING_TINYXML</Elem>
+            <Elem>TIXML_USE_STL</Elem>
+            <Elem>WXUSINGDLL</Elem>
+            <Elem>_FILE_OFFSET_BITS=64</Elem>
+            <Elem>__WXGTK__</Elem>
+          </preprocessorList>
+        </cTool>
+        <ccTool>
+          <developmentMode>5</developmentMode>
+          <stripSymbols>true</stripSymbols>
+          <architecture>2</architecture>
+          <standard>8</standard>
+          <incDir>
+            <pElem>/usr/lib/wx/include/gtk2-unicode-3.0</pElem>
+            <pElem>../../../src</pElem>
+            <pElem>../../../modules/glm</pElem>
+            <pElem>../../../modules/tinyobj/upstream</pElem>
+            <pElem>../../../modules/tinyxml/upstream</pElem>
+            <pElem>../../../modules/stbfont/usascii</pElem>
+            <pElem>../../../modules/stbfont</pElem>
+            <pElem>../../../modules/luaplus51-all/Src</pElem>
+            <pElem>../../../modules/zlib_128/contrib/minizip</pElem>
+            <pElem>../../../modules/simpleopt</pElem>
+            <pElem>../../../modules/cpp_btree</pElem>
+          </incDir>
+          <commandLine>`wx-config --cxxflags`</commandLine>
+          <preprocessorList>
+            <Elem>FG_NO_UNDEF</Elem>
+            <Elem>FG_RELEASE</Elem>
+            <Elem>FG_USING_GLEW</Elem>
+            <Elem>FG_USING_GLM</Elem>
+            <Elem>FG_USING_LUA_PLUS</Elem>
+            <Elem>FG_USING_OPENGL</Elem>
+            <Elem>FG_USING_OPENGL_GLEW</Elem>
+            <Elem>FG_USING_THREADS</Elem>
+            <Elem>FG_USING_TINYXML</Elem>
+            <Elem>TIXML_USE_STL</Elem>
+            <Elem>WXUSINGDLL</Elem>
+            <Elem>_FILE_OFFSET_BITS=64</Elem>
+            <Elem>__WXGTK__</Elem>
+          </preprocessorList>
+        </ccTool>
+        <fortranCompilerTool>
+          <developmentMode>5</developmentMode>
+        </fortranCompilerTool>
+        <asmTool>
+          <developmentMode>5</developmentMode>
+        </asmTool>
+        <linkerTool>
+          <output>bin/${CND_CONF}/FlexiGameEditor</output>
+          <stripSymbols>true</stripSymbols>
+          <linkerLibItems>
+            <linkerLibStdlibItem>Mathematics</linkerLibStdlibItem>
+            <linkerLibLibItem>jpeg</linkerLibLibItem>
+            <linkerOptionItem>`pkg-config --libs glew`</linkerOptionItem>
+            <linkerOptionItem>`pkg-config --libs gl`</linkerOptionItem>
+            <linkerOptionItem>`pkg-config --libs libpng`</linkerOptionItem>
+            <linkerOptionItem>`pkg-config --libs zlib`</linkerOptionItem>
+            <linkerLibProjectItem>
+              <makeArtifact PL="../FlexiGame_NB"
+                            CT="3"
+                            CN="Release_GLEW_StaticLib"
+                            AC="false"
+                            BL="false"
+                            WD="../FlexiGame_NB"
+                            BC="${MAKE} -j 4 -f Makefile.nb CONF=Release_GLEW_StaticLib"
+                            CC="${MAKE} -j 4 -f Makefile.nb CONF=Release_GLEW_StaticLib clean"
+                            OP="${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libflexigame_nb.a">
+              </makeArtifact>
+            </linkerLibProjectItem>
+            <linkerLibProjectItem>
+              <makeArtifact PL="../LuaPlusNextGen_NB"
+                            CT="3"
+                            CN="Release"
+                            AC="false"
+                            BL="false"
+                            WD="../LuaPlusNextGen_NB"
+                            BC="${MAKE} -j 4 -f Makefile CONF=Release"
+                            CC="${MAKE} -j 4 -f Makefile CONF=Release clean"
+                            OP="${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libluaplusnextgen_nb.a">
+              </makeArtifact>
+            </linkerLibProjectItem>
+            <linkerLibProjectItem>
+              <makeArtifact PL="../MiniZipMaster_NB"
+                            CT="3"
+                            CN="Release"
+                            AC="false"
+                            BL="false"
+                            WD="../MiniZipMaster_NB"
+                            BC="${MAKE} -j 4 -f Makefile CONF=Release"
+                            CC="${MAKE} -j 4 -f Makefile CONF=Release clean"
+                            OP="${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libminizipmaster_nb.a">
+              </makeArtifact>
+            </linkerLibProjectItem>
+          </linkerLibItems>
+          <commandLine>`wx-config --libs` `wx-config --gl-libs`</commandLine>
+        </linkerTool>
+      </compileType>
+      <item path="CEditorConfigPanel.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="CEditorConfigPanel.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="CEditorDrawingBatchFrame.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="CEditorDrawingBatchFrame.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="CEditorEventMgrPanel.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="CEditorEventMgrPanel.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="CEditorResMgrPanel.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="CEditorResMgrPanel.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="CEditorScriptMgrPanel.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="CEditorScriptMgrPanel.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="CEngineGfxCanvas.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="CEngineGfxCanvas.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="CGfxHolderPanel.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="CGfxHolderPanel.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="FlexiGameEditorApp.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="FlexiGameEditorApp.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="FlexiGameEditorMain.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="FlexiGameEditorMain.h" ex="false" tool="3" flavor2="0">
+      </item>
+    </conf>
+  </confs>
+</configurationDescriptor>
