@@ -14,6 +14,19 @@ data/error.log
 data/debug.log
 project/linux/FlexiGameEditor/obj
 project/linux/FlexiGameEditor/bin
+project/linux/FlexiGameEditor/dist
+project/linux/FlexiGameEditor/build
+project/linux/FlexiGameEditor/error.log
+project/linux/FlexiGameEditor/all.log
+project/linux/FlexiGameEditor/profile.log
+project/linux/FlexiGameEditor/profile
+project/linux/FlexiGameEditor/.dep.inc
+project/linux/FlexiGameEditor/FlexiGameEditor.cbp.bak
+project/linux/FlexiGameEditor/FlexiGameEditor.layout.bak
+project/linux/FlexiGameEditor/FlexiGameEditor.layout
+project/linux/FlexiGameEditor/FlexiGameEditor.depend
+project/linux/FlexiGameEditor/nbproject/private
+project/linux/FlexiGameEditor/nbproject/private/private.xml
 project/linux/FlexiGame/obj
 project/linux/FlexiGame/bin
 project/linux/foobar-cpp
@@ -113,3 +126,4 @@ modules/libjpeg/build_libjpeg_vc12
 modules/libjpeg/build_jpeg_vc11
 modules/libjpeg/build_jpeg_vc12
 modules/libjpeg/lib
+/project/linux/FlexiGameEditor/build/
