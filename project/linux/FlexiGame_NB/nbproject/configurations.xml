@@ -480,7 +480,6 @@
     <Elem>../../../modules/glm</Elem>
     <Elem>../../../modules/tinyobj</Elem>
     <Elem>../../../modules/tinyxml</Elem>
-    <Elem>../../../modules/glbinding/source/glbinding</Elem>
   </sourceRootList>
   <projectmakefile>Makefile.nb</projectmakefile>
   <confs>
