@@ -285,6 +285,10 @@ fgBool CGameMain::initSubsystems(void) {
     if(m_gfxMain)
         return FG_FALSE;
     m_gfxMain = new gfx::CGfxMain();
+    int w,h;
+    w = m_mainConfig->getParameterInt("MainConfig.hardware", "screenWidth");
+    h = m_mainConfig->getParameterInt("MainConfig.hardware", "screenHeight");
+    m_gfxMain->setScreenSize(w, h);    
     if(!m_gfxMain->initGFX()) {
         return FG_FALSE;
     }
@@ -299,10 +303,7 @@ fgBool CGameMain::initSubsystems(void) {
         guiPath.append(";");
         guiPath.append(modPath);
         m_guiMain = new gui::CGuiMain(guiPath, guiPath);
-    }
-    FG_HardwareState->deviceYield(0); // #FIXME - device yield...
-    int w = m_gfxMain->getMainWindow()->getWidth();
-    int h = m_gfxMain->getMainWindow()->getHeight();
+    }    
     m_guiMain->setScreenSize(w, h);
     FG_HardwareState->setScreenDimensions(w, h);
     FG_HardwareState->initDPI();
