@@ -53,10 +53,10 @@ namespace fg {
             typedef CEventManager self_type;
             typedef CEventManager type;
 
-            typedef CVector<void *> EventsVoidPtrVec;
+            typedef CVector<void*> EventsVoidPtrVec;
             typedef EventsVoidPtrVec::iterator EventsVoidPtrVecItor;
 
-            typedef CVector<void *> ArgListVoidPtrVec;
+            typedef CVector<void*> ArgListVoidPtrVec;
             typedef ArgListVoidPtrVec::iterator ArgListVoidPtrVecItor;
 
         public:
@@ -124,6 +124,7 @@ namespace fg {
             void setEventStructSize(const unsigned int structSize) {
                 m_eventStructSize = structSize;
             }
+            ////////////////////////////////////////////////////////////////////
 
             /**
              * 
@@ -146,7 +147,43 @@ namespace fg {
              * @param pSystemData
              */
             void throwEvent(EventType eventCode,
-                            void *pSystemData);
+                            void* pSystemData);
+
+            ////////////////////////////////////////////////////////////////////
+
+            /**
+             *
+             * @param eventCode
+             * @return
+             */
+            unsigned int executeEvent(EventType eventCode);
+
+            /**
+             *
+             * @param thrownEvent
+             * @return
+             */
+            unsigned int executeEvent(const SThrownEvent& thrownEvent);
+
+            /**
+             *
+             * @param eventCode
+             * @param list
+             * @return
+             */
+            unsigned int executeEvent(EventType eventCode,
+                                      CArgumentList *list);
+
+            /**
+             * 
+             * @param eventCode
+             * @param pSystemData
+             * @return
+             */
+            unsigned int executeEvent(EventType eventCode,
+                                      void* pSystemData);
+
+            ////////////////////////////////////////////////////////////////////
 
             /**
              * 
@@ -186,6 +223,7 @@ namespace fg {
             CFunctionCallback* addCallback(EventType eventCode,
                                            typename CMethodCallback<Class>::ClassMethod pMethod,
                                            Class* pClassInstance);
+            ////////////////////////////////////////////////////////////////////
 
             /**
              * 
@@ -193,7 +231,32 @@ namespace fg {
              * @param callback
              * @return 
              */
-            fgBool removeCallback(EventType eventCode, CFunctionCallback *pCallback);
+            fgBool removeCallback(EventType eventCode, CFunctionCallback* pCallback);
+
+            /**
+             * This will remove all callbacks bind to the given event. The destructors
+             * will not be called.
+             * @param eventCode
+             * @return
+             */
+            fgBool removeCallbacks(EventType eventCode);
+
+            /**
+             * 
+             * @param eventCode
+             * @param pCallback
+             * @return 
+             */
+            fgBool deleteCallback(EventType eventCode, CFunctionCallback*& pCallback);
+
+            /**
+             * 
+             * @param eventCode
+             * @return 
+             */
+            fgBool deleteCallbacks(EventType eventCode);
+
+            ////////////////////////////////////////////////////////////////////
 
             /**
              * 
@@ -202,16 +265,18 @@ namespace fg {
              * @param argList
              * @return 
              */
-            CFunctionCallback* addTimeoutCallback(CFunctionCallback *pCallback,
+            CFunctionCallback* addTimeoutCallback(CFunctionCallback* pCallback,
                                                   const int timeout,
-                                                  CArgumentList *pArgList);
+                                                  CArgumentList* pArgList);
 
             /**
              * 
              * @param pCallback
              * @return 
              */
-            fgBool removeTimeoutCallback(CFunctionCallback *pCallback);
+            fgBool removeTimeoutCallback(CFunctionCallback* pCallback);
+
+            ////////////////////////////////////////////////////////////////////
 
             /**
              * 
@@ -221,17 +286,19 @@ namespace fg {
              * @param argList
              * @return 
              */
-            CFunctionCallback* addCyclicCallback(CFunctionCallback *pCallback,
+            CFunctionCallback* addCyclicCallback(CFunctionCallback* pCallback,
                                                  const int repeats = FG_CYCLIC_CALLBACK_INFINITE_REPEAT,
                                                  const int interval = FG_CYCLIC_CALLBACK_DEFAULT_INTERVAL,
-                                                 CArgumentList *pArgList = NULL);
+                                                 CArgumentList* pArgList = NULL);
 
             /**
              * 
              * @param pCallback
              * @return 
              */
-            fgBool removeCyclicCallback(CFunctionCallback *pCallback);
+            fgBool removeCyclicCallback(CFunctionCallback* pCallback);
+
+            ////////////////////////////////////////////////////////////////////
 
             /**
              * Execute (finalized) all events waiting in a queue
@@ -252,7 +319,7 @@ namespace fg {
              * @param ptr
              */
             void pushToFreeSlot(CArgumentList* ptr);
-            
+
         private:
             /// Size in bytes for event structure preallocation
             unsigned int m_eventStructSize;

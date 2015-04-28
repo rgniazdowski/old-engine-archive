@@ -18,9 +18,8 @@
 
 using namespace fg;
 
-/**
- * Default constructor for Event Manager object
- */
+//------------------------------------------------------------------------------
+
 event::CEventManager::CEventManager(unsigned int eventStructSize) :
 m_eventStructSize(eventStructSize),
 m_eventBinds(),
@@ -33,28 +32,20 @@ m_argLists(),
 m_argListsFreeSlots() {
     m_managerType = FG_MANAGER_EVENT;
 }
+//------------------------------------------------------------------------------
 
-/**
- * Destructor for Event Manager object
- */
 event::CEventManager::~CEventManager() {
     event::CEventManager::destroy();
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param ptr
- */
 void event::CEventManager::pushToFreeSlot(SEventBase* ptr) {
     if(!ptr)
         return;
     m_eventStructsFreeSlots.push_back((void*)ptr);
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param ptr
- */
 void event::CEventManager::pushToFreeSlot(CArgumentList* ptr) {
     if(!ptr)
         return;
@@ -70,11 +61,8 @@ void event::CEventManager::pushToFreeSlot(CArgumentList* ptr) {
     ptr->clear();
     m_argListsFreeSlots.push_back((void *)ptr);
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @return 
- */
 fgBool event::CEventManager::destroy(void) {
     for(CallbackBindingMap::iterator it = m_eventBinds.begin(); it != m_eventBinds.end(); it++) {
         for(int i = 0; i < (int)it->second.size(); i++) {
@@ -120,7 +108,7 @@ fgBool event::CEventManager::destroy(void) {
 
     int n = m_eventStructs.size();
     while(m_eventStructsFreeSlots.size()) {
-        void *ptr = m_eventStructsFreeSlots.back();
+        void* ptr = m_eventStructsFreeSlots.back();
         int index = m_eventStructs.find(ptr);
         if(index != -1) {
             m_eventStructs[index] = m_eventStructs[n - 1];
@@ -132,7 +120,7 @@ fgBool event::CEventManager::destroy(void) {
         m_eventStructsFreeSlots.pop_back();
     }
     while(m_eventStructs.size()) {
-        void *ptr = m_eventStructs.back();
+        void* ptr = m_eventStructs.back();
         if(ptr) {
             fgFree(ptr);
         }
@@ -141,7 +129,7 @@ fgBool event::CEventManager::destroy(void) {
 
     n = m_argLists.size();
     while(m_argListsFreeSlots.size()) {
-        void *ptr = m_argListsFreeSlots.back();
+        void* ptr = m_argListsFreeSlots.back();
         int index = m_argLists.find(ptr);
         if(index != -1) {
             m_argLists[index] = m_argLists[n - 1];
@@ -166,33 +154,25 @@ fgBool event::CEventManager::destroy(void) {
     event::CEventManager::clear();
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
-/**
- *
- */
 void event::CEventManager::clear(void) {
     m_eventBinds.clear();
     m_timeoutCallbacks.clear();
     m_cyclicCallbacks.clear();
     m_managerType = FG_MANAGER_EVENT;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @return 
- */
 fgBool event::CEventManager::initialize(void) {
     m_eventStructs.reserve(INITIAL_PTR_VEC_SIZE);
     m_argLists.reserve(INITIAL_PTR_VEC_SIZE);
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @return 
- */
 event::SEventBase* event::CEventManager::requestEventStruct(void) {
-    SEventBase *ptr = NULL;
+    SEventBase* ptr = NULL;
     if(m_eventStructsFreeSlots.empty()) {
         ptr = (SEventBase *)fgMalloc<void>(m_eventStructSize, FG_TRUE);
         m_eventStructs.push_back((void *)ptr);
@@ -205,17 +185,13 @@ event::SEventBase* event::CEventManager::requestEventStruct(void) {
     }
     return ptr;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param eventStructSize
- * @return 
- */
 event::SEventBase* event::CEventManager::requestEventStruct(const unsigned int eventStructSize) {
     if(!eventStructSize) {
         return requestEventStruct();
     }
-    SEventBase *ptr = NULL;
+    SEventBase* ptr = NULL;
     if(m_eventStructsFreeSlots.empty()) {
         ptr = (SEventBase *)fgMalloc<void>(eventStructSize, FG_TRUE);
         m_eventStructs.push_back((void *)ptr);
@@ -228,13 +204,10 @@ event::SEventBase* event::CEventManager::requestEventStruct(const unsigned int e
     }
     return ptr;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @return 
- */
 event::CArgumentList* event::CEventManager::requestArgumentList(void) {
-    CArgumentList *ptr = NULL;
+    CArgumentList* ptr = NULL;
     if(m_argListsFreeSlots.empty()) {
         ptr = new CArgumentList();
         m_argLists.push_back((void *)ptr);
@@ -245,21 +218,14 @@ event::CArgumentList* event::CEventManager::requestArgumentList(void) {
     }
     return ptr;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param eventCode
- */
 void event::CEventManager::throwEvent(EventType eventCode) {
     SThrownEvent event(eventCode);
     m_eventsQueue.push(event);
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param eventCode
- * @param list
- */
 void event::CEventManager::throwEvent(EventType eventCode, CArgumentList *list) {
     SThrownEvent event(eventCode, list);
     // Should check in here whether or not the argument list in
@@ -269,17 +235,100 @@ void event::CEventManager::throwEvent(EventType eventCode, CArgumentList *list) 
     // arg type - tmp pointer - will be reused inside of event manager
     m_eventsQueue.push(event);
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param eventCode
- * @param pSystemData
- */
 void event::CEventManager::throwEvent(EventType eventCode,
-                                      void *pSystemData) {
+                                      void* pSystemData) {
     SThrownEvent event(eventCode, (void *)pSystemData);
     m_eventsQueue.push(event);
 }
+//------------------------------------------------------------------------------
+
+unsigned int event::CEventManager::executeEvent(EventType eventCode) {
+    unsigned int count = 0;
+    CallbackBindingMap::iterator found = m_eventBinds.find(eventCode);
+    if(found != m_eventBinds.end()) {
+        CallbacksVec &callbacks = (*found).second;
+        for(int j = 0; j < (int)callbacks.size(); j++) {
+            if(callbacks[j]) {
+                callbacks[j]->Call();
+                count++;
+            }
+        }
+    }
+    return count;
+}
+//------------------------------------------------------------------------------
+
+unsigned int event::CEventManager::executeEvent(const SThrownEvent& thrownEvent) {
+    unsigned int count = 0;
+    CallbackBindingMap::iterator found = m_eventBinds.find(thrownEvent.eventCode);
+    if(found != m_eventBinds.end()) {
+        CallbacksVec &callbacks = (*found).second;
+        for(int j = 0; j < (int)callbacks.size(); j++) {
+            if(callbacks[j]) {
+                if(thrownEvent.argList) {
+                    callbacks[j]->Call(thrownEvent.argList);
+                } else if(thrownEvent.systemData) {
+                    callbacks[j]->Call((void*)thrownEvent.systemData);
+                } else {
+                    callbacks[j]->Call();
+                }
+                count++;
+            }
+        }
+    }
+    if(thrownEvent.argList) {
+        pushToFreeSlot(thrownEvent.argList);
+    }
+    return count;
+}
+//------------------------------------------------------------------------------
+
+unsigned int event::CEventManager::executeEvent(EventType eventCode,
+                                                CArgumentList* list) {
+    unsigned int count = 0;
+    CallbackBindingMap::iterator found = m_eventBinds.find(eventCode);
+    if(found != m_eventBinds.end()) {
+        CallbacksVec &callbacks = (*found).second;
+        for(int j = 0; j < (int)callbacks.size(); j++) {
+            if(callbacks[j]) {
+                if(list) {
+                    callbacks[j]->Call(list);
+                } else {
+                    callbacks[j]->Call();
+                }
+                count++;
+            }
+        }
+    }
+    if(list) {
+        pushToFreeSlot(list);
+    }
+    return count;
+}
+//------------------------------------------------------------------------------
+
+unsigned int event::CEventManager::executeEvent(EventType eventCode,
+                                                void* pSystemData) {
+    unsigned int count = 0;
+    CallbackBindingMap::iterator found = m_eventBinds.find(eventCode);
+    if(found != m_eventBinds.end()) {
+        CallbacksVec &callbacks = (*found).second;
+        for(int j = 0; j < (int)callbacks.size(); j++) {
+            if(callbacks[j]) {
+                if(pSystemData) {
+                    callbacks[j]->Call((void*)pSystemData);
+                } else {
+                    callbacks[j]->Call();
+                }
+                count++;
+            }
+        }
+    }
+    return count;
+}
+//------------------------------------------------------------------------------
 
 event::CFunctionCallback* event::CEventManager::addCallback(EventType eventCode,
                                                             CFunctionCallback* pCallback) {
@@ -318,13 +367,7 @@ event::CFunctionCallback* event::CEventManager::addCallback(EventType eventCode,
 }
 //------------------------------------------------------------------------------
 
-/**
- * 
- * @param eventCode
- * @param pCallback
- * @return 
- */
-fgBool event::CEventManager::removeCallback(EventType eventCode, CFunctionCallback *pCallback) {
+fgBool event::CEventManager::removeCallback(EventType eventCode, CFunctionCallback* pCallback) {
     if(!pCallback || (int)eventCode < 0)
         return FG_FALSE;
 
@@ -341,17 +384,67 @@ fgBool event::CEventManager::removeCallback(EventType eventCode, CFunctionCallba
     }
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param pCallback
- * @param timeout
- * @param pArgList
- * @return 
- */
-event::CFunctionCallback* event::CEventManager::addTimeoutCallback(CFunctionCallback *pCallback,
+fgBool event::CEventManager::removeCallbacks(EventType eventCode) {
+    if((int)eventCode < 0)
+        return FG_FALSE;
+
+    CallbacksVec &callbacksVec = m_eventBinds[eventCode];
+    if(callbacksVec.empty())
+        return FG_FALSE;
+    CallbacksVecItor cit = callbacksVec.begin(), end = callbacksVec.end();
+    for(; cit != end; cit++) {
+        *cit = NULL;
+    }
+    callbacksVec.clear_optimised();
+    return FG_TRUE;
+}
+//------------------------------------------------------------------------------
+
+fgBool event::CEventManager::deleteCallback(EventType eventCode, CFunctionCallback*& pCallback) {
+    if(!pCallback || (int)eventCode < 0)
+        return FG_FALSE;
+
+    CallbacksVec &callbacksVec = m_eventBinds[eventCode];
+    if(callbacksVec.empty())
+        return FG_FALSE;
+    CallbacksVecItor cit = callbacksVec.begin(), end = callbacksVec.end();
+    for(; cit != end; cit++) {
+        if(*cit == pCallback) {
+            m_eventBinds[eventCode].erase(cit);
+            delete pCallback;
+            pCallback = NULL;
+            return FG_TRUE;
+            break;
+        }
+    }
+    return FG_TRUE;
+}
+//------------------------------------------------------------------------------
+
+fgBool event::CEventManager::deleteCallbacks(EventType eventCode) {
+    if((int)eventCode < 0)
+        return FG_FALSE;
+
+    CallbacksVec &callbacksVec = m_eventBinds[eventCode];
+    if(callbacksVec.empty())
+        return FG_FALSE;
+    CallbacksVecItor cit = callbacksVec.begin(), end = callbacksVec.end();
+    for(; cit != end; cit++) {
+        CFunctionCallback* pCallback = *cit;
+        delete pCallback;
+        *cit = NULL;
+        pCallback = NULL;
+    }
+    callbacksVec.clear_optimised();
+    return FG_TRUE;
+}
+//------------------------------------------------------------------------------
+
+event::CFunctionCallback* event::CEventManager::addTimeoutCallback(CFunctionCallback* pCallback,
                                                                    const int timeout,
-                                                                   CArgumentList *pArgList) {
+                                                                   CArgumentList* pArgList) {
     if(!pCallback)
         return NULL;
     STimeoutCallback timeoutCallback(pCallback, timeout, pArgList);
@@ -359,13 +452,9 @@ event::CFunctionCallback* event::CEventManager::addTimeoutCallback(CFunctionCall
     m_timeoutCallbacks.push_back(timeoutCallback);
     return pCallback;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param pCallback
- * @return 
- */
-fgBool event::CEventManager::removeTimeoutCallback(CFunctionCallback *pCallback) {
+fgBool event::CEventManager::removeTimeoutCallback(CFunctionCallback* pCallback) {
     if(!pCallback)
         return FG_FALSE;
     fgBool status = FG_FALSE;
@@ -385,19 +474,12 @@ fgBool event::CEventManager::removeTimeoutCallback(CFunctionCallback *pCallback)
     }
     return status;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param pCallback
- * @param repeats
- * @param interval
- * @param pArgList
- * @return 
- */
-event::CFunctionCallback* event::CEventManager::addCyclicCallback(CFunctionCallback *pCallback,
+event::CFunctionCallback* event::CEventManager::addCyclicCallback(CFunctionCallback* pCallback,
                                                                   const int repeats,
                                                                   const int interval,
-                                                                  CArgumentList *pArgList) {
+                                                                  CArgumentList* pArgList) {
     if(!pCallback)
         return NULL;
     SCyclicCallback cyclicCallback(pCallback, repeats, interval, pArgList);
@@ -405,13 +487,9 @@ event::CFunctionCallback* event::CEventManager::addCyclicCallback(CFunctionCallb
     m_cyclicCallbacks.push_back(cyclicCallback);
     return pCallback;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param pCallback
- * @return 
- */
-fgBool event::CEventManager::removeCyclicCallback(CFunctionCallback *pCallback) {
+fgBool event::CEventManager::removeCyclicCallback(CFunctionCallback* pCallback) {
     if(!pCallback)
         return FG_FALSE;
     fgBool status = FG_FALSE;
@@ -431,13 +509,10 @@ fgBool event::CEventManager::removeCyclicCallback(CFunctionCallback *pCallback) 
     }
     return status;
 }
+//------------------------------------------------------------------------------
 
-/* 
- * This function calls all callbacks from the triggered/thrown events
- * also executes callbacks from cyclical and timeouts
- */
 void event::CEventManager::executeEvents(void) {
-    
+
     ////////////////////////////////////////////////////////////////////////////
     // Phase 1: Timeouts
     unsigned long int TS = timesys::ticks();
@@ -502,44 +577,15 @@ void event::CEventManager::executeEvents(void) {
             }
         }
     }
-    
+
     ////////////////////////////////////////////////////////////////////////////
     // Phase 3: execution of thrown events (now including the argument list).
     // Btw after calling the proper callback,
     // queue entry with argument list must be erased 
     while(!m_eventsQueue.empty()) {
         SThrownEvent &event = m_eventsQueue.front();
-        int eventCode = event.eventCode;
-        //FG_LOG_DEBUG("Event code thrown %d | list: %p", eventCode, event.argList);
-        CallbackBindingMap::iterator found = m_eventBinds.find(eventCode);
-        if(found == m_eventBinds.end()) {
-            if(event.argList) {
-                //delete event.argList;
-                pushToFreeSlot(event.argList);
-                event.argList = NULL;
-            }
-            m_eventsQueue.pop();
-            continue;
-        }
-        CallbacksVec &callbacks = (*found).second;
-        for(int j = 0; j < (int)callbacks.size(); j++) {
-            if(callbacks[j]) {
-                if(event.argList) {
-                    callbacks[j]->Call(event.argList);
-                } else if(event.systemData) {
-                    callbacks[j]->Call((void*)event.systemData);
-                } else {
-                    callbacks[j]->Call();
-                }
-            }
-        }
-
-        // Free the argument list as it is no longer need - one allocation for one call
-        if(event.argList) {
-            //delete event.argList;
-            pushToFreeSlot(event.argList);
-            event.argList = NULL;
-        }
+        executeEvent(event);
         m_eventsQueue.pop();
     }
 }
+//------------------------------------------------------------------------------
