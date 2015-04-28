@@ -224,6 +224,8 @@ fgBool gfx::CPlatform::quit(fgBool suspend) {
         //	return 0;
         //}
         //void SDL_QuitSubSystem(Uint32 flags)
+#else
+		context::destroy();
 #endif
     }
     return status;
