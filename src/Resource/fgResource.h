@@ -36,31 +36,31 @@ namespace fg {
 
     #include "fgResourceFactoryTypes.h"
 
-    #define FG_TAG_RESOURCE_NAME	"Resource"
-    #define FG_TAG_RESOURCE		FG_TAG_TYPE(fg::resource::CResource)
+    #define FG_TAG_RESOURCE_NAME        "Resource"
+    #define FG_TAG_RESOURCE             FG_TAG_TYPE(fg::resource::CResource)
 FG_TAG_TEMPLATE_ID_AUTO(fg::resource::CResource, FG_TAG_RESOURCE_NAME);
 
 ////////////////////////////////////////////////////////////////////////////////
 
-    #define FG_RESOURCE_INVALID_TEXT		"Invalid"
-    #define FG_RESOURCE_SOUND_TEXT		"Sound"
-    #define FG_RESOURCE_MUSIC_TEXT		"Music"
+    #define FG_RESOURCE_INVALID_TEXT            "Invalid"
+    #define FG_RESOURCE_SOUND_TEXT              "Sound"
+    #define FG_RESOURCE_MUSIC_TEXT              "Music"
     #define FG_RESOURCE_3D_MODEL_TEXT           "3DModel"
-    #define FG_RESOURCE_TEXTURE_TEXT		"Texture"
-    #define FG_RESOURCE_FONT_TEXT		"Font"
-    #define FG_RESOURCE_SAVE_FILE_TEXT		"SaveFile"
+    #define FG_RESOURCE_TEXTURE_TEXT            "Texture"
+    #define FG_RESOURCE_FONT_TEXT               "Font"
+    #define FG_RESOURCE_SAVE_FILE_TEXT          "SaveFile"
     #define FG_RESOURCE_GUI_STRUCTURE_SHEET_TEXT    "GuiStructureSheet" // #FIXME
     #define FG_RESOURCE_GUI_STYLE_SHEET_TEXT        "GuiStyleSheet" // #FIXME
-    #define FG_RESOURCE_SHADER_TEXT		"Shader" // #FIXME
-    #define FG_RESOURCE_SCENE_TEXT		"Scene"
-    #define FG_RESOURCE_SCRIPT_TEXT		"Script"
-    #define FG_RESOURCE_GROUP_TEXT		"ResourceGroup"
-    #define FG_RESOURCE_VARIA_TEXT		"Varia"
-    #define FG_RESOURCE_BINARY_TEXT 		"Binary"
-    #define FG_RESOURCE_LIBRARY_TEXT 		"Library"
-    #define FG_RESOURCE_PLUGIN_TEXT 		"Plugin"
-    #define FG_RESOURCE_CUSTOM_TEXT 		"Custom"
-    #define FG_RESOURCE_ZIP_PACK_TEXT		"ZipPack"
+    #define FG_RESOURCE_SHADER_TEXT             "Shader" // #FIXME
+    #define FG_RESOURCE_SCENE_TEXT              "Scene"
+    #define FG_RESOURCE_SCRIPT_TEXT             "Script"
+    #define FG_RESOURCE_GROUP_TEXT              "ResourceGroup"
+    #define FG_RESOURCE_VARIA_TEXT              "Varia"
+    #define FG_RESOURCE_BINARY_TEXT             "Binary"
+    #define FG_RESOURCE_LIBRARY_TEXT            "Library"
+    #define FG_RESOURCE_PLUGIN_TEXT             "Plugin"
+    #define FG_RESOURCE_CUSTOM_TEXT             "Custom"
+    #define FG_RESOURCE_ZIP_PACK_TEXT           "ZipPack"
     #define FG_RESOURCE_PARTICLE_EFFECT_TEXT    "ParticleEffect"
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -76,13 +76,13 @@ FG_TAG_TEMPLATE_ID_AUTO(fg::resource::CResource, FG_TAG_RESOURCE_NAME);
 // ## ### #FIXME ## ## ## !! ! ! ! ! 
 
 // Text (string version) for the resource low priority enum
-    #define FG_RES_PRIORITY_LOW_TEXT		"low"
+    #define FG_RES_PRIORITY_LOW_TEXT            "low"
 // Text (string version) for the resource medium priority enum
-    #define FG_RES_PRIORITY_MEDIUM_TEXT		"medium"
+    #define FG_RES_PRIORITY_MEDIUM_TEXT         "medium"
 // Text (string version) for the resource high priority enum
-    #define FG_RES_PRIORITY_HIGH_TEXT		"high"
+    #define FG_RES_PRIORITY_HIGH_TEXT           "high"
 // Text (string version_ for the resource invalid priority enum
-    #define FG_RES_PRIORITY_INVALID_TEXT	"invalid"
+    #define FG_RES_PRIORITY_INVALID_TEXT        "invalid"
 
 namespace fg {
 
@@ -180,6 +180,80 @@ namespace fg {
 
         /// Number of all resource types - built in
         const ResourceType NUM_RESOURCE_TYPES = (RESERVED6 - SOUND);
+        /**
+         * 
+         * @param resourceType
+         * @return 
+         */
+        inline const char* getResourceTypeName(ResourceType resourceType) {
+            const char* returnText = FG_RESOURCE_INVALID_TEXT;
+            switch(resourceType) {
+                case SOUND:
+                    returnText = FG_RESOURCE_SOUND_TEXT;
+                    break;
+                case MUSIC:
+                    returnText = FG_RESOURCE_MUSIC_TEXT;
+                    break;
+                case MODEL3D:
+                    returnText = FG_RESOURCE_3D_MODEL_TEXT;
+                    break;
+                case TEXTURE:
+                    returnText = FG_RESOURCE_TEXTURE_TEXT;
+                    break;
+                case FONT:
+                    returnText = FG_RESOURCE_FONT_TEXT;
+                    break;
+                case SAVE_FILE:
+                    returnText = FG_RESOURCE_SAVE_FILE_TEXT;
+                    break;
+                case GUI_STRUCTURE_SHEET:
+                    // #FIXME
+                    returnText = FG_RESOURCE_GUI_STRUCTURE_SHEET_TEXT;
+                    break;
+                case GUI_STYLE_SHEET:
+                    // #FIXME
+                    returnText = FG_RESOURCE_GUI_STYLE_SHEET_TEXT;
+                    break;
+                case SHADER:
+                    // #FIXME
+                    returnText = FG_RESOURCE_SHADER_TEXT;
+                    break;
+                case SCENE:
+                    returnText = FG_RESOURCE_SCENE_TEXT;
+                    break;
+                case SCRIPT:
+                    returnText = FG_RESOURCE_SCRIPT_TEXT;
+                    break;
+                case GROUP:
+                    returnText = FG_RESOURCE_GROUP_TEXT;
+                    break;
+                case VARIA:
+                    returnText = FG_RESOURCE_VARIA_TEXT;
+                    break;
+                case BINARY:
+                    returnText = FG_RESOURCE_BINARY_TEXT;
+                    break;
+                case LIBRARY:
+                    returnText = FG_RESOURCE_LIBRARY_TEXT;
+                    break;
+                case PLUGIN:
+                    returnText = FG_RESOURCE_PLUGIN_TEXT;
+                    break;
+                case CUSTOM:
+                    returnText = FG_RESOURCE_CUSTOM_TEXT;
+                    break;
+                case ZIP_PACK:
+                    returnText = FG_RESOURCE_ZIP_PACK_TEXT;
+                    break;
+                case PARTICLE_EFFECT:
+                    returnText = FG_RESOURCE_PARTICLE_EFFECT_TEXT;
+                    break;
+                default:
+                    returnText = FG_RESOURCE_INVALID_TEXT;
+                    break;
+            }
+            return returnText;
+        }
         /**
          * 
          * @param text
