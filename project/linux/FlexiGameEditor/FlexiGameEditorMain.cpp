@@ -21,7 +21,6 @@
 
 #include <wx/msgdlg.h>
 
-
 //(*InternalHeaders(FlexiGameEditorFrame)
 #include <wx/settings.h>
 #include <wx/string.h>
@@ -92,11 +91,18 @@ const long FlexiGameEditorFrame::idGfxContextMenuCloseView = wxNewId();
 BEGIN_EVENT_TABLE(FlexiGameEditorFrame, wxFrame)
 //(*EventTable(FlexiGameEditorFrame)
 //*)
+EVT_IDLE(FlexiGameEditorFrame::OnIdle)
 END_EVENT_TABLE()
 //-----------------------------------------------------------------------------
 CEditorResMgrPanel *g_resMgrPanel = NULL;
 
-FlexiGameEditorFrame::FlexiGameEditorFrame(wxWindow* parent, wxWindowID id) {
+FlexiGameEditorFrame::FlexiGameEditorFrame(wxWindow* parent, wxWindowID id) : wxFrame(),
+m_previewMode(FG_PREVIEW_HIDDEN),
+m_gfxMainCanvas(NULL),
+m_renderTimer(NULL),
+m_gfxHolderPanel(NULL),
+m_previewTabNames(),
+m_gameMain(NULL) {
     ////////////////////////////////////////////////////////////////////////////
     //(*Initialize(FlexiGameEditorFrame)
     wxMenuItem* MenuItem2;
@@ -242,7 +248,8 @@ FlexiGameEditorFrame::FlexiGameEditorFrame(wxWindow* parent, wxWindowID id) {
     __wxStatusBarStyles_1[1] = wxSB_SUNKEN;
     MainStatusBar->SetStatusStyles(2, __wxStatusBarStyles_1);
 
-    //Connect(idMainStatusBar, wxEVT_CONTEXT_MENU, (wxObjectEventFunction)&FlexiGameEditorFrame::onContextMenu);
+    Connect(idMainNotebook, wxEVT_CONTEXT_MENU, (wxObjectEventFunction)&FlexiGameEditorFrame::onContextMenu);
+
     m_previewTabNames[FG_PREVIEW_HIDDEN] = wxT("Hidden");
     m_previewTabNames[FG_PREVIEW_GAME] = wxT("Game view");
     m_previewTabNames[FG_PREVIEW_SCENE_MANAGER] = wxT("Scene Manager");
@@ -254,27 +261,24 @@ FlexiGameEditorFrame::FlexiGameEditorFrame(wxWindow* parent, wxWindowID id) {
     //FG_PREVIEW_NUM_MODES
 
     int args[] = {WX_GL_RGBA, WX_GL_DOUBLEBUFFER, WX_GL_DEPTH_SIZE, 16, 0};
-    //m_gfxPanel = new CEngineGFXPanel( (wxFrame*) this, args);
-    //panel1 = new wxPanel(MainNotebook, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL | wxNO_BORDER | wxSIZE_AUTO);
-
-    //wxBoxSizer* box1 = new wxBoxSizer(wxHORIZONTAL);
-    //panel1->SetSizer(box1);
 
     m_gfxHolderPanel = new CGfxHolderPanel(MainNotebook);
-    m_gfxMainCanvas = new CEngineGfxCanvas(m_gfxHolderPanel, args);
+    m_gfxMainCanvas = new CEngineGfxCanvas(m_gfxHolderPanel, args, &m_gameMain);
     m_gfxHolderPanel->setGfxCanvas(m_gfxMainCanvas);
     m_gfxHolderPanel->setContextMenu(&GfxCanvasContextMenu);
-    //box1->Add(m_gfxPanel, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
-    //panel1->AddChild(m_gfxPanel);
-    //MainBoxSizerV->Insert(0, m_gfxPanel, 3, wxEXPAND);
+    
     MainNotebook->InsertPage(0, m_gfxHolderPanel, m_previewTabNames[FG_PREVIEW_GAME], true);
-
+    
     m_renderTimer = new CRenderTimer(m_gfxMainCanvas);
-    m_renderTimer->Start();
+    m_renderTimer->start();
+
+    g_resMgrPanel = new CEditorResMgrPanel(MainNotebook);
+    MainNotebook->AddPage(g_resMgrPanel, "Resource manager 1");
 
     Layout();
 
-
+    fg::timesys::init();
+    m_previewMode = FG_PREVIEW_GAME;
 }
 //-----------------------------------------------------------------------------
 
@@ -285,6 +289,15 @@ FlexiGameEditorFrame::~FlexiGameEditorFrame() {
     m_renderTimer->Stop();
     delete m_renderTimer;
     m_renderTimer = NULL;
+}
+//-----------------------------------------------------------------------------
+
+void FlexiGameEditorFrame::OnIdle(wxIdleEvent& event) {
+    if(m_gfxMainCanvas) {
+        g_resMgrPanel->setGameMain(m_gameMain);
+    }
+    usleep(1000 * 1); // 100 fps ?
+    //usleep(1000 * 20); // 50 fps ?
 }
 //-----------------------------------------------------------------------------
 
@@ -417,6 +430,7 @@ EnginePreviewMode FlexiGameEditorFrame::getPreviewMode(const std::string& name) 
             return (EnginePreviewMode)i;
         }
     }
+
     return FG_PREVIEW_HIDDEN;
 }
 //-----------------------------------------------------------------------------

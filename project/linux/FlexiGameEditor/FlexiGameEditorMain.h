@@ -86,6 +86,8 @@ private:
     CGfxHolderPanel* m_gfxHolderPanel;
     /// List of proper names for main notebook tabs
     wxString m_previewTabNames[FG_PREVIEW_NUM_MODES];
+    ///
+    fg::CGameMain* m_gameMain;
 
 public:
     /**
@@ -131,6 +133,8 @@ public:
 
 
 private:
+
+    void OnIdle(wxIdleEvent& event);
 
     //(*Handlers(FlexiGameEditorFrame)
     void OnQuit(wxCommandEvent& event);

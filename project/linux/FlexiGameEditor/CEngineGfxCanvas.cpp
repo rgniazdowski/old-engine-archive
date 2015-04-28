@@ -25,8 +25,11 @@
 #include <map>
 //-----------------------------------------------------------------------------
 
-CRenderTimer::CRenderTimer(CEngineGfxCanvas* gfxCanvas) : wxTimer() {
+CRenderTimer::CRenderTimer(CEngineGfxCanvas* gfxCanvas, float fps) :
+base_type(),
+m_fps(60.0f) {
     m_gfxCanvas = gfxCanvas;
+    setFps(fps);
 }
 //-----------------------------------------------------------------------------
 
@@ -36,24 +39,24 @@ void CRenderTimer::Notify(void) {
 }
 //-----------------------------------------------------------------------------
 
-void CRenderTimer::Start(void) {
+void CRenderTimer::start(void) {
     //printf("RenderTime::start(): THREAD ID: %lu\n", pthread_self());
-    wxTimer::Start(1000 / 60); // #FIXME / this should be exactly 120 ?
+    base_type::Start((int)(1000 / m_fps)); // #FIXME / this should be exactly 120 ?
 }
 //-----------------------------------------------------------------------------
 
 BEGIN_EVENT_TABLE(CEngineGfxCanvas, wxGLCanvas)
-EVT_MOTION(CEngineGfxCanvas::mouseMoved)
-EVT_LEFT_DOWN(CEngineGfxCanvas::mouseDown)
-EVT_LEFT_UP(CEngineGfxCanvas::mouseReleased)
-EVT_LEAVE_WINDOW(CEngineGfxCanvas::mouseLeftWindow)
-EVT_SIZE(CEngineGfxCanvas::resized)
-EVT_KEY_DOWN(CEngineGfxCanvas::keyPressed)
-EVT_KEY_UP(CEngineGfxCanvas::keyReleased)
-EVT_MOUSEWHEEL(CEngineGfxCanvas::mouseWheelMoved)
-EVT_PAINT(CEngineGfxCanvas::paint)
-EVT_IDLE(CEngineGfxCanvas::idle)
-EVT_CLOSE(CEngineGfxCanvas::closeEvent)
+EVT_MOTION(CEngineGfxCanvas::OnMouseMoved)
+EVT_LEFT_DOWN(CEngineGfxCanvas::OnMouseDown)
+EVT_LEFT_UP(CEngineGfxCanvas::OnMouseReleased)
+EVT_LEAVE_WINDOW(CEngineGfxCanvas::OnMouseLeftWindow)
+EVT_SIZE(CEngineGfxCanvas::OnResized)
+EVT_KEY_DOWN(CEngineGfxCanvas::OnKeyPressed)
+EVT_KEY_UP(CEngineGfxCanvas::OnKeyReleased)
+EVT_MOUSEWHEEL(CEngineGfxCanvas::OnMouseWheelMoved)
+EVT_PAINT(CEngineGfxCanvas::OnPaint)
+EVT_IDLE(CEngineGfxCanvas::OnIdle)
+EVT_CLOSE(CEngineGfxCanvas::OnCloseEvent)
 END_EVENT_TABLE()
 
 #include "GFX/Scene/fgGfxBspCompiler.h"
@@ -61,7 +64,7 @@ fg::gfx::CBspCompiler *bspCompiler = NULL;
 
 //-----------------------------------------------------------------------------
 
-CEngineGfxCanvas::CEngineGfxCanvas(wxWindow* parent, int* args) :
+CEngineGfxCanvas::CEngineGfxCanvas(wxWindow* parent, int* args, fg::CGameMain **gameMainOrig) :
 wxGLCanvas(parent, wxID_ANY, args, wxDefaultPosition, wxDefaultSize, wxFULL_REPAINT_ON_RESIZE) {
     m_context = new wxGLContext(this);
 
@@ -79,8 +82,14 @@ wxGLCanvas(parent, wxID_ANY, args, wxDefaultPosition, wxDefaultSize, wxFULL_REPA
     m_isSuspend = FG_FALSE;
     m_isInitializing = FG_FALSE;
 
+    m_onSwapCallback = new fg::event::CPlainFunctionCallback(&OnGfxWindowSwapBuffer, (void*)this);
+
     m_parentFrame = parent;
     m_gameMain = NULL;
+    m_gameMainOrig = gameMainOrig;
+    if(gameMainOrig) {
+        m_gameMain = *gameMainOrig;
+    }
 }
 //-----------------------------------------------------------------------------
 
@@ -91,10 +100,14 @@ CEngineGfxCanvas::~CEngineGfxCanvas() {
     closeProgram();
     delete m_context;
     m_context = NULL;
+    if(m_onSwapCallback) {
+        delete m_onSwapCallback;
+    }
+    m_onSwapCallback = NULL;
 }
 //-----------------------------------------------------------------------------
 
-void CEngineGfxCanvas::closeEvent(wxCloseEvent& event) {
+void CEngineGfxCanvas::OnCloseEvent(wxCloseEvent& event) {
     //printf("CLOSE EVENT: THREAD ID: %lu\n", pthread_self());
     FG_LOG_DEBUG("WX: Close event callback");
     this->m_isExit = FG_TRUE;
@@ -103,7 +116,7 @@ void CEngineGfxCanvas::closeEvent(wxCloseEvent& event) {
 }
 //-----------------------------------------------------------------------------
 
-void CEngineGfxCanvas::mouseMoved(wxMouseEvent& event) {
+void CEngineGfxCanvas::OnMouseMoved(wxMouseEvent& event) {
     if(this->m_appInit && this->m_gameMain) {
         int button = event.GetButton();
         int x = event.GetPosition().x;
@@ -114,7 +127,7 @@ void CEngineGfxCanvas::mouseMoved(wxMouseEvent& event) {
 }
 //-----------------------------------------------------------------------------
 
-void CEngineGfxCanvas::mouseDown(wxMouseEvent& event) {
+void CEngineGfxCanvas::OnMouseDown(wxMouseEvent& event) {
     if(this->m_appInit && this->m_gameMain) {
         int button = event.GetButton();
         int x = event.GetPosition().x;
@@ -125,13 +138,13 @@ void CEngineGfxCanvas::mouseDown(wxMouseEvent& event) {
 }
 //-----------------------------------------------------------------------------
 
-void CEngineGfxCanvas::mouseWheelMoved(wxMouseEvent& event) {
+void CEngineGfxCanvas::OnMouseWheelMoved(wxMouseEvent& event) {
     if(this->m_appInit && this->m_gameMain) {
     }
 }
 //-----------------------------------------------------------------------------
 
-void CEngineGfxCanvas::mouseReleased(wxMouseEvent& event) {
+void CEngineGfxCanvas::OnMouseReleased(wxMouseEvent& event) {
     if(this->m_appInit && this->m_gameMain) {
         int button = event.GetButton();
         int x = event.GetPosition().x;
@@ -142,7 +155,7 @@ void CEngineGfxCanvas::mouseReleased(wxMouseEvent& event) {
 }
 //-----------------------------------------------------------------------------
 
-void CEngineGfxCanvas::mouseLeftWindow(wxMouseEvent& event) {
+void CEngineGfxCanvas::OnMouseLeftWindow(wxMouseEvent& event) {
     if(this->m_appInit && this->m_gameMain) {
         int button = event.GetButton();
         int x = event.GetPosition().x;
@@ -152,7 +165,7 @@ void CEngineGfxCanvas::mouseLeftWindow(wxMouseEvent& event) {
 }
 //-----------------------------------------------------------------------------
 
-void CEngineGfxCanvas::keyPressed(wxKeyEvent& event) {
+void CEngineGfxCanvas::OnKeyPressed(wxKeyEvent& event) {
     if(this->m_appInit && this->m_gameMain) {
         int keyCode = event.GetKeyCode();
         this->m_gameMain->getInputHandler()->addKeyDown(keyCode);
@@ -161,7 +174,7 @@ void CEngineGfxCanvas::keyPressed(wxKeyEvent& event) {
 }
 //-----------------------------------------------------------------------------
 
-void CEngineGfxCanvas::keyReleased(wxKeyEvent& event) {
+void CEngineGfxCanvas::OnKeyReleased(wxKeyEvent& event) {
     if(this->m_appInit && this->m_gameMain) {
         int keyCode = event.GetKeyCode();
         this->m_gameMain->getInputHandler()->addKeyUp(keyCode);
@@ -169,21 +182,22 @@ void CEngineGfxCanvas::keyReleased(wxKeyEvent& event) {
 }
 //-----------------------------------------------------------------------------
 
-void CEngineGfxCanvas::resized(wxSizeEvent& event) {
+void CEngineGfxCanvas::OnResized(wxSizeEvent& event) {
     int x = event.GetSize().x;
     int y = event.GetSize().y;
     FG_LOG_DEBUG("WX: Resize event %dx%d", x, y);
-    if(this->m_appInit && this->m_gameMain) {
-        this->m_gameMain->getGfxMain()->getMainWindow()->setup("FlexiGame::Editor", x, y);
-        this->m_gameMain->getGuiMain()->setScreenSize(x, y);
-        fg::gfx::context::setScreenSize(x, y);
-
+    m_screenSize.x = x;
+    m_screenSize.y = y;
+    if(m_appInit && m_gameMain) {
+        m_gameMain->getGfxMain()->getMainWindow()->setup("FlexiGame::Editor", x, y);
+        m_gameMain->getGuiMain()->setScreenSize(x, y);
+        fg::gfx::context::setScreenSize(x, y);        
     }
     Refresh();
 }
 //-----------------------------------------------------------------------------
 
-void CEngineGfxCanvas::idle(wxIdleEvent& event) {
+void CEngineGfxCanvas::OnIdle(wxIdleEvent& event) {
     static long int t1 = 0;
     static int f = 0;
     if(t1 == 0) {
@@ -238,11 +252,35 @@ void CEngineGfxCanvas::idle(wxIdleEvent& event) {
         m_appInit = FG_FALSE;
         closeProgram();
     }
+    usleep(1000 * 5);
     event.RequestMore();
 }
 //-----------------------------------------------------------------------------
 
-void CEngineGfxCanvas::paint(wxPaintEvent& event) {
+fgBool CEngineGfxCanvas::OnGfxWindowSwapBuffer(void* pSystemData, void *pUserData) {
+    if(!pSystemData || !pUserData) {
+        return FG_FALSE;
+    }
+    // this function is static
+    // pSystemData will be the pointer to the Window object
+    // pUserData will be the pointer to the CEngineGfxCanvas object
+    CEngineGfxCanvas *gfxCanvas = static_cast<CEngineGfxCanvas*>(pUserData);
+
+    if(!gfxCanvas->isInitialized()) {
+        //wxClientDC(gfxCanvas);
+        gfxCanvas->SetCurrent(*(gfxCanvas->m_context));
+        wxClientDC dc(gfxCanvas);
+        glFlush();
+        gfxCanvas->SwapBuffers();        
+    } else {
+        //gfxCanvas->getGameMain()->removeCallbacks(fg::event::SWAP_BUFFERS);
+        gfxCanvas->getGameMain()->deleteCallback(fg::event::SWAP_BUFFERS, gfxCanvas->getRefOnSwapCallback());
+    }
+    return FG_TRUE;
+}
+
+//-----------------------------------------------------------------------------
+void CEngineGfxCanvas::OnPaint(wxPaintEvent& event) {
     fgBool isSwapBuffers = FG_TRUE;
     static unsigned long int t1 = 0;
     unsigned long int t2 = 0;
@@ -293,16 +331,17 @@ void CEngineGfxCanvas::closeProgram(void) {
     //    wxGLCanvas::SetCurrent(*m_context);
     //}
     FG_LOG_DEBUG("Closing program...");
-    if(this->m_gameMain) {
-        this->m_gameMain->closeSybsystems();
-        delete this->m_gameMain;
+    if(m_gameMain) {
+        m_gameMain->closeSybsystems();
+        delete m_gameMain;
     }
-    this->m_gameMain = NULL;
-    this->m_appInit = FG_FALSE;
-    this->m_isInitializing = FG_FALSE;
-    this->m_canInitialize = FG_FALSE;
-    this->m_isFrameFreeze = FG_FALSE;
-    this->m_isExit = FG_FALSE;
+    m_gameMain = NULL;
+    *m_gameMainOrig = m_gameMain;
+    m_appInit = FG_FALSE;
+    m_isInitializing = FG_FALSE;
+    m_canInitialize = FG_FALSE;
+    m_isFrameFreeze = FG_FALSE;
+    m_isExit = FG_FALSE;
 #if defined(FG_DEBUG)
     if(fg::profile::g_debugProfiling)
         delete fg::profile::g_debugProfiling;
@@ -330,14 +369,19 @@ fgBool CEngineGfxCanvas::initProgram(void) {
 
     if(!this->m_gameMain) {
         FG_LOG_DEBUG("Creating game main object...");
-        this->m_gameMain = new fg::CGameMain(this->m_argc, this->m_argv);
+        m_gameMain = new fg::CGameMain(this->m_argc, this->m_argv);
+        *m_gameMainOrig = m_gameMain;
     }
+    this->m_gameMain->addCallback(fg::event::SWAP_BUFFERS, m_onSwapCallback);
     // Well the whole configuration process should update the screen (swap buffers)
     // this is needed to display splash screen (after marmalade splash screen) and
     // show the game initialization process by displaying the progress bar
     if(!this->m_gameMain->loadConfiguration()) {
         return FG_FALSE;
     }
+    m_gameMain->getMainConfig()->setParameterInt("MainConfig.hardware", "screenWidth", m_screenSize.x);
+    m_gameMain->getMainConfig()->setParameterInt("MainConfig.hardware", "screenHeight", m_screenSize.y);
+
     // Initialize the main subsystems (gui, gfx and others)
     if(!this->m_gameMain->initSubsystems()) {
         return FG_FALSE;
@@ -351,6 +395,7 @@ fgBool CEngineGfxCanvas::initProgram(void) {
     m_appInit = FG_TRUE;
     float t2 = timesys::ms();
     FG_LOG_DEBUG("Main: Program initialized in %.2f seconds", (t2 - t1) / 1000.0f);
+    
     return FG_TRUE;
 }
 //-----------------------------------------------------------------------------
