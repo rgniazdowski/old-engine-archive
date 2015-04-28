@@ -26,6 +26,8 @@
 
 using namespace fg;
 
+//------------------------------------------------------------------------------
+
 gfx::CSceneManager::CSceneManager() :
 CDrawingBatch(),
 m_collisionsInfo(),
@@ -44,6 +46,7 @@ m_basetree(NULL) {
     m_eventMgr = new event::CEventManager(sizeof (event::SSceneEvent));
     m_triggers.reserve(4);
 }
+//------------------------------------------------------------------------------
 
 gfx::CSceneManager::~CSceneManager() {
     CSceneManager::destroy();
@@ -52,6 +55,7 @@ gfx::CSceneManager::~CSceneManager() {
         m_eventMgr = NULL;
     }
 }
+//------------------------------------------------------------------------------
 
 void gfx::CSceneManager::clear(void) {
     releaseAllHandles();
@@ -59,6 +63,7 @@ void gfx::CSceneManager::clear(void) {
     m_pResourceMgr = NULL;
     m_basetree = NULL;
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CSceneManager::destroy(void) {
     CDrawingBatch::flush();
@@ -88,6 +93,7 @@ fgBool gfx::CSceneManager::destroy(void) {
     CSceneManager::clear();
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
 void gfx::CSceneManager::clearScene(void) {
     CDrawingBatch::flush();
@@ -122,6 +128,7 @@ void gfx::CSceneManager::clearScene(void) {
         m_eventMgr->throwEvent(event::SCENE_CLEARED, argList);
     }
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CSceneManager::initialize(void) {
     m_eventMgr->initialize();
@@ -131,20 +138,24 @@ fgBool gfx::CSceneManager::initialize(void) {
 ////////////////////////////////////////////////////////////////////////////////
 
 gfx::CSceneManager::SCollisionsInfo::SCollisionsInfo() : contacts() { }
+//------------------------------------------------------------------------------
 
 gfx::CSceneManager::SCollisionsInfo::~SCollisionsInfo() {
     clear();
 }
+//------------------------------------------------------------------------------
 
 void gfx::CSceneManager::SCollisionsInfo::reserve(const unsigned int maxObjects) {
     contacts.reserve(maxObjects);
     contacts.resize(maxObjects);
 }
+//------------------------------------------------------------------------------
 
 void gfx::CSceneManager::SCollisionsInfo::resize(const unsigned int numObjects) {
     contacts.resize(numObjects);
     contacts.reserve(numObjects);
 }
+//------------------------------------------------------------------------------
 
 void gfx::CSceneManager::SCollisionsInfo::insert(const CSceneNode* nodeA, const CSceneNode* nodeB) {
     if(!nodeA || !nodeB) {
@@ -172,6 +183,7 @@ void gfx::CSceneManager::SCollisionsInfo::insert(const CSceneNode* nodeA, const 
         }
     }
 }
+//------------------------------------------------------------------------------
 
 void gfx::CSceneManager::SCollisionsInfo::removeAll(const CSceneNode* pNode) {
     if(!pNode) {
@@ -185,6 +197,7 @@ void gfx::CSceneManager::SCollisionsInfo::removeAll(const CSceneNode* pNode) {
     //contacts[index].clear();
     // #FIXME
 }
+//------------------------------------------------------------------------------
 
 void gfx::CSceneManager::SCollisionsInfo::remove(const CSceneNode* nodeA,
                                                  const CSceneNode* nodeB) {
@@ -218,6 +231,7 @@ void gfx::CSceneManager::SCollisionsInfo::remove(const CSceneNode* nodeA,
         }
     }
 }
+//------------------------------------------------------------------------------
 
 void gfx::CSceneManager::SCollisionsInfo::clear(void) {
     const unsigned int n = contacts.capacity();
@@ -226,6 +240,7 @@ void gfx::CSceneManager::SCollisionsInfo::clear(void) {
     }
     contacts.clear();
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CSceneManager::SCollisionsInfo::check(const CSceneNode *nodeA,
                                                   const CSceneNode *nodeB) const {
@@ -254,10 +269,12 @@ fgBool gfx::CSceneManager::SCollisionsInfo::check(const CSceneNode *nodeA,
     }
     return FG_FALSE;
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CSceneManager::SCollisionsInfo::empty(void) const {
     return contacts.empty();
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CSceneManager::SCollisionsInfo::empty(CSceneNode *pNode) const {
     if(!pNode) {
@@ -271,6 +288,7 @@ fgBool gfx::CSceneManager::SCollisionsInfo::empty(CSceneNode *pNode) const {
     return (fgBool)contacts[index].empty();
     //m_MVP.getPtrCenter();
 }
+//------------------------------------------------------------------------------
 
 unsigned int gfx::CSceneManager::SCollisionsInfo::count(CSceneNode *pNode) const {
     if(!pNode) {
@@ -283,14 +301,17 @@ unsigned int gfx::CSceneManager::SCollisionsInfo::count(CSceneNode *pNode) const
     }
     return (fgBool)contacts[index].size();
 }
+//------------------------------------------------------------------------------
 
 unsigned int gfx::CSceneManager::SCollisionsInfo::count(void) const {
     return contacts.size();
 }
+//------------------------------------------------------------------------------
 
 unsigned int gfx::CSceneManager::SCollisionsInfo::size(void) const {
     return contacts.size();
 }
+//------------------------------------------------------------------------------
 
 unsigned int gfx::CSceneManager::SCollisionsInfo::capacity(void) const {
     return contacts.capacity();
@@ -301,6 +322,7 @@ unsigned int gfx::CSceneManager::SCollisionsInfo::capacity(void) const {
 void gfx::CSceneManager::setShaderManager(fg::base::CManager* pShaderMgr) {
     CDrawingBatch::setShaderManager(pShaderMgr);
 }
+//------------------------------------------------------------------------------
 
 void gfx::CSceneManager::setResourceManager(fg::base::CManager* pResourceMgr) {
     if(!pResourceMgr)
@@ -308,24 +330,28 @@ void gfx::CSceneManager::setResourceManager(fg::base::CManager* pResourceMgr) {
     if(pResourceMgr->getManagerType() == FG_MANAGER_RESOURCE)
         m_pResourceMgr = pResourceMgr;
 }
+//------------------------------------------------------------------------------
 
 void gfx::CSceneManager::setSkyBoxShader(const char* shaderName) {
     if(shaderName && m_pShaderMgr) {
         m_skybox.setShaderProgram(static_cast<gfx::CShaderManager*>(m_pShaderMgr)->get(shaderName));
     }
 }
+//------------------------------------------------------------------------------
 
 void gfx::CSceneManager::setSkyBoxShader(const std::string& shaderName) {
     if(shaderName.size() && m_pShaderMgr) {
         m_skybox.setShaderProgram(static_cast<gfx::CShaderManager*>(m_pShaderMgr)->get(shaderName));
     }
 }
+//------------------------------------------------------------------------------
 
 void gfx::CSceneManager::flush(void) {
     CDrawingBatch::flush();
     while(!m_nodeQueue.empty())
         m_nodeQueue.pop();
 }
+//------------------------------------------------------------------------------
 
 void gfx::CSceneManager::update(void) {
     while(m_triggers.size()) {
@@ -355,6 +381,7 @@ void gfx::CSceneManager::update(void) {
         m_eventMgr->executeEvents();
     }
 }
+//------------------------------------------------------------------------------
 
 void gfx::CSceneManager::sortCalls(void) {
     if(!getShaderManager())
@@ -416,6 +443,7 @@ void gfx::CSceneManager::sortCalls(void) {
     }
 #endif
 }
+//------------------------------------------------------------------------------
 
 void gfx::CSceneManager::render(void) {
     if(isHideAll()) {
@@ -499,6 +527,7 @@ void gfx::CSceneManager::render(void) {
         m_nodeQueue.pop();
     }
 }
+//------------------------------------------------------------------------------
 
 #if 0
 
@@ -559,6 +588,7 @@ gfx::CSceneCallback* gfx::CSceneManager::addCallback(event::EventType eventCode,
         return NULL;
     }
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CSceneManager::addTriggerCallback(CSceneNodeTrigger::TriggerActivation activation,
                                               CSceneNodeTrigger* pTrigger,
@@ -575,6 +605,7 @@ fgBool gfx::CSceneManager::addTriggerCallback(CSceneNodeTrigger::TriggerActivati
     }
     return status;
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CSceneManager::addTriggerCallback(CSceneNodeTrigger::TriggerActivation activation,
                                               const SceneNodeHandle& nodeUniqueID,
@@ -598,6 +629,7 @@ fgBool gfx::CSceneManager::addTriggerCallback(CSceneNodeTrigger::TriggerActivati
     }
     return status;
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CSceneManager::addTriggerCallback(CSceneNodeTrigger::TriggerActivation activation,
                                               const std::string& nameTag,
@@ -621,6 +653,7 @@ fgBool gfx::CSceneManager::addTriggerCallback(CSceneNodeTrigger::TriggerActivati
     }
     return status;
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CSceneManager::addTriggerCallback(CSceneNodeTrigger::TriggerActivation activation,
                                               const char* nameTag,
@@ -644,6 +677,7 @@ fgBool gfx::CSceneManager::addTriggerCallback(CSceneNodeTrigger::TriggerActivati
     }
     return status;
 }
+//------------------------------------------------------------------------------
 
 gfx::CSceneNode* gfx::CSceneManager::addTrigger(const std::string& name,
                                                 const Vector3f& position) {
@@ -660,6 +694,7 @@ gfx::CSceneNode* gfx::CSceneManager::addTrigger(const std::string& name,
     }
     return pNodeTrigger;
 }
+//------------------------------------------------------------------------------
 
 gfx::CSceneNode* gfx::CSceneManager::addTrigger(const std::string& name,
                                                 const Vector3f& position,
@@ -670,6 +705,7 @@ gfx::CSceneNode* gfx::CSceneManager::addTrigger(const std::string& name,
     }
     return pNode;
 }
+//------------------------------------------------------------------------------
 
 gfx::CSceneNode* gfx::CSceneManager::addTrigger(const char* name,
                                                 const Vector3f& position) {
@@ -681,6 +717,7 @@ gfx::CSceneNode* gfx::CSceneManager::addTrigger(const char* name,
     }
     return addTrigger(std::string(name), position);
 }
+//------------------------------------------------------------------------------
 
 gfx::CSceneNode* gfx::CSceneManager::addTrigger(const char* name,
                                                 const Vector3f& position,
@@ -693,6 +730,7 @@ gfx::CSceneNode* gfx::CSceneManager::addTrigger(const char* name,
     }
     return addTrigger(std::string(name), position, halfExtent);
 }
+//------------------------------------------------------------------------------
 
 gfx::CSceneNode* gfx::CSceneManager::addTrigger(const char* name,
                                                 float x, float y, float z) {
@@ -700,6 +738,7 @@ gfx::CSceneNode* gfx::CSceneManager::addTrigger(const char* name,
         return NULL;
     return addTrigger(std::string(name), Vector3f(x, y, z));
 }
+//------------------------------------------------------------------------------
 
 gfx::CSceneNode* gfx::CSceneManager::addTrigger(const char* name,
                                                 float x, float y, float z,
@@ -708,6 +747,7 @@ gfx::CSceneNode* gfx::CSceneManager::addTrigger(const char* name,
         return NULL;
     return addTrigger(std::string(name), Vector3f(x, y, z), Vector3f(extX, extY, extZ));
 }
+//------------------------------------------------------------------------------
 
 void gfx::CSceneManager::initializeNode(CSceneNode *pNode) {
     if(!pNode) {
@@ -758,6 +798,7 @@ void gfx::CSceneManager::initializeNode(CSceneNode *pNode) {
 
     pNode->update();
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CSceneManager::addNode(SceneNodeHandle& nodeUniqueID,
                                    CSceneNode* pNode,
@@ -827,24 +868,28 @@ fgBool gfx::CSceneManager::addNode(SceneNodeHandle& nodeUniqueID,
     }
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CSceneManager::addNode(SceneNodeHandle& oUniqueID,
                                    CSceneNode* pObj,
                                    const SceneNodeHandle& oFatherUniqueID) {
     return addNode(oUniqueID, pObj, handle_mgr_type::dereference(oFatherUniqueID));
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CSceneManager::addNode(SceneNodeHandle& oUniqueID,
                                    CSceneNode* pObj,
                                    const std::string& oFatherNameTag) {
     return addNode(oUniqueID, pObj, handle_mgr_type::dereference(oFatherNameTag));
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CSceneManager::addNode(SceneNodeHandle& oUniqueID,
                                    CSceneNode* pObj,
                                    const char* oFatherNameTag) {
     return addNode(oUniqueID, pObj, handle_mgr_type::dereference(oFatherNameTag));
 }
+//------------------------------------------------------------------------------
 
 gfx::CSceneNode* gfx::CSceneManager::addDuplicate(CSceneNode* pSourceNode,
                                                   const std::string& newNodeNameTag) {
@@ -887,6 +932,7 @@ gfx::CSceneNode* gfx::CSceneManager::addDuplicate(CSceneNode* pSourceNode,
     }
     return pNewNode;
 }
+//------------------------------------------------------------------------------
 
 gfx::CSceneNode* gfx::CSceneManager::addDuplicate(CSceneNode* pSourceNode,
                                                   const char* newNodeNameTag) {
@@ -894,6 +940,7 @@ gfx::CSceneNode* gfx::CSceneManager::addDuplicate(CSceneNode* pSourceNode,
         return NULL;
     return addDuplicate(pSourceNode, std::string(newNodeNameTag));
 }
+//------------------------------------------------------------------------------
 
 gfx::CSceneNode* gfx::CSceneManager::addDuplicate(const SceneNodeHandle& nodeUniqueID,
                                                   const std::string& newNodeNameTag) {
@@ -902,6 +949,7 @@ gfx::CSceneNode* gfx::CSceneManager::addDuplicate(const SceneNodeHandle& nodeUni
         return NULL;
     return addDuplicate(pSourceNode, newNodeNameTag);
 }
+//------------------------------------------------------------------------------
 
 gfx::CSceneNode* gfx::CSceneManager::addDuplicate(const SceneNodeHandle& nodeUniqueID,
                                                   const char* newNodeNameTag) {
@@ -912,6 +960,7 @@ gfx::CSceneNode* gfx::CSceneManager::addDuplicate(const SceneNodeHandle& nodeUni
         return NULL;
     return addDuplicate(pSourceNode, std::string(newNodeNameTag));
 }
+//------------------------------------------------------------------------------
 
 gfx::CSceneNode* gfx::CSceneManager::addDuplicate(const std::string& sourceNodeNameTag,
                                                   const std::string& newNodeNameTag) {
@@ -922,6 +971,7 @@ gfx::CSceneNode* gfx::CSceneManager::addDuplicate(const std::string& sourceNodeN
         return NULL;
     return addDuplicate(pSourceNode, newNodeNameTag);
 }
+//------------------------------------------------------------------------------
 
 gfx::CSceneNode* gfx::CSceneManager::addDuplicate(const char* sourceNodeNameTag,
                                                   const char* newNodeNameTag) {
@@ -934,6 +984,7 @@ gfx::CSceneNode* gfx::CSceneManager::addDuplicate(const char* sourceNodeNameTag,
         return NULL;
     return addDuplicate(pSourceNode, std::string(newNodeNameTag));
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CSceneManager::remove(CSceneNode* pObj) {
     if(!pObj || !isManaged(pObj)) {
@@ -948,18 +999,22 @@ fgBool gfx::CSceneManager::remove(CSceneNode* pObj) {
     pObj->setManager(NULL);
     return handle_mgr_type::releaseHandle(pObj->getHandle());
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CSceneManager::remove(const SceneNodeHandle& oUniqueID) {
     return remove(handle_mgr_type::dereference(oUniqueID));
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CSceneManager::remove(const std::string& nameTag) {
     return remove(handle_mgr_type::dereference(nameTag));
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CSceneManager::remove(const char* nameTag) {
     return remove(handle_mgr_type::dereference(nameTag));
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CSceneManager::destroyNode(CSceneNode*& pObj) {
     if(!gfx::CSceneManager::remove(pObj)) {
@@ -969,33 +1024,40 @@ fgBool gfx::CSceneManager::destroyNode(CSceneNode*& pObj) {
     pObj = NULL;
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CSceneManager::destroyNode(const SceneNodeHandle& oUniqueID) {
     CSceneNode *pObj = handle_mgr_type::dereference(oUniqueID);
     return destroyNode(pObj);
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CSceneManager::destroyNode(const std::string& nameTag) {
     CSceneNode *pObj = handle_mgr_type::dereference(nameTag);
     return destroyNode(pObj);
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CSceneManager::destroyNode(const char* nameTag) {
     CSceneNode *pObj = handle_mgr_type::dereference(nameTag);
     return destroyNode(pObj);
 }
+//------------------------------------------------------------------------------
 
 gfx::CSceneNode * gfx::CSceneManager::get(const SceneNodeHandle& oUniqueID) {
     return handle_mgr_type::dereference(oUniqueID);
 }
+//------------------------------------------------------------------------------
 
 gfx::CSceneNode * gfx::CSceneManager::get(const std::string& nameTag) {
     return handle_mgr_type::dereference(nameTag);
 }
+//------------------------------------------------------------------------------
 
 gfx::CSceneNode* gfx::CSceneManager::get(const char* nameTag) {
     return handle_mgr_type::dereference(nameTag);
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CSceneManager::isManaged(const CSceneNode* pObj) {
     if(!pObj) {
@@ -1011,18 +1073,22 @@ fgBool gfx::CSceneManager::isManaged(const CSceneNode* pObj) {
     //}
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CSceneManager::isManaged(const SceneNodeHandle& oUniqueID) {
     CSceneNode* pObj = get(oUniqueID);
     return (fgBool)(pObj != NULL);
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CSceneManager::isManaged(const std::string& nameTag) {
     CSceneNode* pObj = get(nameTag);
     return (fgBool)(pObj != NULL);
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CSceneManager::isManaged(const char *nameTag) {
     CSceneNode* pObj = get(nameTag);
     return (fgBool)(pObj != NULL);
 }
+//------------------------------------------------------------------------------

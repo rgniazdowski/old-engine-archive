@@ -50,7 +50,7 @@ namespace fg {
              * @param pGuiMain
              */
             CSceneCallback() : m_ref(0) {
-                fg::event::CFunctionCallback::setFunction((fg::event::CFunctionCallback::fgFunction)NULL);
+                fg::event::CFunctionCallback::setFunction((fg::event::CFunctionCallback::Function)NULL);
             }
             /**
              * 
