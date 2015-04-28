@@ -77,7 +77,7 @@ namespace fg {
             m_function(NULL),
             m_type(INVALID),
             m_argc(0) {
-                fg::event::CFunctionCallback::setFunction((fg::event::CFunctionCallback::fgFunction)NULL);
+                fg::event::CFunctionCallback::setFunction((fg::event::CFunctionCallback::Function)NULL);
             }
             /**
              * 
@@ -245,7 +245,7 @@ namespace fg {
             CScriptGuiCallback(fg::gui::CGuiMain *pGuiMain = NULL) :
             CScriptCallback(),
             fg::gui::CGuiCallback(pGuiMain) {
-                fg::event::CFunctionCallback::setFunction((fg::event::CFunctionCallback::fgFunction)NULL);
+                fg::event::CFunctionCallback::setFunction((fg::event::CFunctionCallback::Function)NULL);
             }
             /**
              * 
@@ -258,7 +258,7 @@ namespace fg {
             CScriptCallback(L, function, _argc, GUI_CALLBACK),
             fg::gui::CGuiCallback(pGuiMain) {
                 // Just to be sure - no harm done
-                fg::event::CFunctionCallback::setFunction((fg::event::CFunctionCallback::fgFunction)NULL);
+                fg::event::CFunctionCallback::setFunction((fg::event::CFunctionCallback::Function)NULL);
             }
     #endif /* FG_USING_LUA_PLUS */
     
@@ -326,7 +326,7 @@ namespace fg {
             CScriptSceneCallback() :
             CScriptCallback(),
             fg::gfx::CSceneCallback() {
-                fg::event::CFunctionCallback::setFunction((fg::event::CFunctionCallback::fgFunction)NULL);
+                fg::event::CFunctionCallback::setFunction((fg::event::CFunctionCallback::Function)NULL);
             }
             /**
              * 
@@ -339,7 +339,7 @@ namespace fg {
             CScriptCallback(L, function, _argc, SCENE_CALLBACK),
             fg::gfx::CSceneCallback() {
                 // Just to be sure - no harm done
-                fg::event::CFunctionCallback::setFunction((fg::event::CFunctionCallback::fgFunction)NULL);
+                fg::event::CFunctionCallback::setFunction((fg::event::CFunctionCallback::Function)NULL);
             }
     #endif /* FG_USING_LUA_PLUS */
             /**

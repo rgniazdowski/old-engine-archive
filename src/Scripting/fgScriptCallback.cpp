@@ -312,7 +312,7 @@ script::CScriptGuiCallback::CScriptGuiCallback(gui::CGuiMain *pGuiMain, lua_Stat
                                                const unsigned short int _argc) :
 CScriptCallback(L, info, _argc, SCRIPT),
 gui::CGuiCallback(pGuiMain) {
-    event::CFunctionCallback::setFunction((event::CFunctionCallback::fgFunction)NULL);
+    event::CFunctionCallback::setFunction((event::CFunctionCallback::Function)NULL);
 }
 
 /**
@@ -388,7 +388,7 @@ script::CScriptSceneCallback::CScriptSceneCallback(lua_State *L,
                                                    const unsigned short int _argc) :
 CScriptCallback(L, info, _argc, SCRIPT),
 gfx::CSceneCallback() {
-    event::CFunctionCallback::setFunction((event::CFunctionCallback::fgFunction)NULL);
+    event::CFunctionCallback::setFunction((event::CFunctionCallback::Function)NULL);
 }
 
 /**

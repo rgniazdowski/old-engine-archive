@@ -281,14 +281,8 @@ void event::CEventManager::throwEvent(EventType eventCode,
     m_eventsQueue.push(event);
 }
 
-/**
- * 
- * @param eventCode
- * @param pCallback
- * @return 
- */
 event::CFunctionCallback* event::CEventManager::addCallback(EventType eventCode,
-                                                            CFunctionCallback *pCallback) {
+                                                            CFunctionCallback* pCallback) {
     if(!pCallback || (int)eventCode < 0)
         return NULL;
     // Duplicate callbacks are not allowed for the same event
@@ -298,41 +292,31 @@ event::CFunctionCallback* event::CEventManager::addCallback(EventType eventCode,
     m_eventBinds[eventCode].push_back(pCallback);
     return pCallback;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param eventCode
- * @param pFunction
- * @return 
- */
 event::CFunctionCallback* event::CEventManager::addCallback(EventType eventCode,
-                                                            CFunctionCallback::fgFunction pFunction) {
+                                                            CFunctionCallback::Function pFunction) {
     if(!pFunction || (int)eventCode < 0)
         return NULL;
     // !! !!
     // Need to check somehow for duplicates #FIXME
-    CFunctionCallback *pCallback = new CFunctionCallback(pFunction);
+    CFunctionCallback* pCallback = new CFunctionCallback(pFunction);
     m_eventBinds[eventCode].push_back(pCallback);
     return pCallback;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param eventCode
- * @param pPlainFunction
- * @param pUserData
- * @return 
- */
 event::CFunctionCallback* event::CEventManager::addCallback(EventType eventCode,
-                                                            CPlainFunctionCallback::fgPlainFunction pPlainFunction,
-                                                            void *pUserData) {
+                                                            CPlainFunctionCallback::PlainFunction pPlainFunction,
+                                                            void* pUserData) {
     if((int)eventCode < 0 || !pPlainFunction)
         return NULL;
 
-    CFunctionCallback *pCallback = new CPlainFunctionCallback(pPlainFunction, pUserData);
+    CFunctionCallback* pCallback = new CPlainFunctionCallback(pPlainFunction, pUserData);
     m_eventBinds[eventCode].push_back(pCallback);
     return pCallback;
 }
+//------------------------------------------------------------------------------
 
 /**
  * 

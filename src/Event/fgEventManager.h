@@ -155,7 +155,7 @@ namespace fg {
              * @return 
              */
             CFunctionCallback* addCallback(EventType eventCode,
-                                           CFunctionCallback *pCallback);
+                                           CFunctionCallback* pCallback);
             /**
              * 
              * @param eventCode
@@ -163,7 +163,7 @@ namespace fg {
              * @return 
              */
             CFunctionCallback* addCallback(EventType eventCode,
-                                           CFunctionCallback::fgFunction pFunction);
+                                           CFunctionCallback::Function pFunction);
 
             /**
              * 
@@ -173,8 +173,8 @@ namespace fg {
              * @return 
              */
             CFunctionCallback* addCallback(EventType eventCode,
-                                           CPlainFunctionCallback::fgPlainFunction pPlainFunction,
-                                           void *pUserData = NULL);
+                                           CPlainFunctionCallback::PlainFunction pPlainFunction,
+                                           void* pUserData = NULL);
             /**
              * 
              * @param eventCode

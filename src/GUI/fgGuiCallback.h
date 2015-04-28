@@ -41,7 +41,7 @@ namespace fg {
              * @param pGuiMain
              */
             CGuiCallback(CGuiMain *pGuiMain = NULL) {
-                fg::event::CFunctionCallback::setFunction((fg::event::CFunctionCallback::fgFunction)NULL);
+                fg::event::CFunctionCallback::setFunction((fg::event::CFunctionCallback::Function)NULL);
                 m_pGuiMain = pGuiMain;
             }
             /**
