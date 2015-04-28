@@ -66,7 +66,7 @@ namespace fg {
                 // Now call the special destructor callbacks
                 int n = m_onDestructorCallbacks.size();
                 for(int i = 0; i < n; i++) {
-                    callbackData &info = m_onDestructorCallbacks[i];
+                    CallbackData &info = m_onDestructorCallbacks[i];
                     if(info.callback) {
                         info.callback((void *)this, (void *)info.userData);
                         info.callback = NULL;
@@ -87,7 +87,7 @@ namespace fg {
             fgBool registerOnDestruct(CallbackFuncPtr pCallback, void* pUserData = NULL) {
                 if(!pCallback || isRegistered(pCallback))
                     return FG_FALSE;
-                callbackData callbackInfo(pCallback, pUserData);
+                CallbackData callbackInfo(pCallback, pUserData);
                 m_onDestructorCallbacks.push_back(callbackInfo);
                 return FG_TRUE;
             }
@@ -102,7 +102,7 @@ namespace fg {
                 int n = m_onDestructorCallbacks.size();
                 // Check for duplicates
                 for(int i = 0; i < n; i++) {
-                    callbackData &info = m_onDestructorCallbacks[i];
+                    CallbackData &info = m_onDestructorCallbacks[i];
                     if(info.callback == pCallback)
                         return FG_TRUE;
                 }
@@ -217,7 +217,7 @@ namespace fg {
             /**
              *
              */
-            struct callbackData {
+            struct CallbackData {
                 ///
                 CallbackFuncPtr callback;
                 ///
@@ -225,19 +225,19 @@ namespace fg {
                 /**
                  * 
                  */
-                callbackData() : userData(NULL), callback(NULL) { }
+                CallbackData() : userData(NULL), callback(NULL) { }
                 /**
                  * 
                  * @param pUserData
                  * @param pCallback
                  */
-                callbackData(CallbackFuncPtr pCallback, void *pUserData) :
+                CallbackData(CallbackFuncPtr pCallback, void *pUserData) :
                 callback(pCallback),
                 userData(pUserData) { }
             };
 
             ///
-            typedef fg::CVector<callbackData> CallbacksVec;
+            typedef fg::CVector<CallbackData> CallbacksVec;
             ///
             typedef typename CallbacksVec::iterator CallbacksVecItor;
             /// Callbacks to call when the destructor is called
