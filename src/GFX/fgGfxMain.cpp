@@ -35,6 +35,7 @@
 #endif
 
 using namespace fg;
+//------------------------------------------------------------------------------
 
 gfx::CGfxMain::CGfxMain() :
 m_textureMgr(NULL),
@@ -57,6 +58,7 @@ m_init(FG_FALSE) {
     m_3DScene->setShaderManager(m_shaderMgr);
     m_2DScene->setShaderManager(m_shaderMgr);
 }
+//------------------------------------------------------------------------------
 
 gfx::CGfxMain::~CGfxMain() {
     unregisterResourceCallbacks();
@@ -83,9 +85,13 @@ gfx::CGfxMain::~CGfxMain() {
     if(m_sceneNodeInsertedCallback)
         delete m_sceneNodeInsertedCallback;
 
+    if(m_loader)
+        delete m_loader;
+
     if(m_init)
         closeGFX();
 
+    m_loader = NULL;
     m_resourceCreatedCallback = NULL;
     m_particleSystem = NULL;
     m_textureMgr = NULL;
@@ -109,6 +115,7 @@ fgBool gfx::CGfxMain::handleMainWindowBufferSwap(void *pSystemData, void *pUserD
     gfx::CGfxMain* pGfxMain = static_cast<gfx::CGfxMain*>(pUserData);
     // SWAP_BUFFER event is not thrown and executed in the main EventMgr function
     // it's always called in place by executeEvent(event) function
+    static_cast<event::CEventManager*>(pGfxMain->getEventManager())->executeEvent(event::SWAP_BUFFERS, pSystemData);
     
     return FG_TRUE;
 }
@@ -167,8 +174,9 @@ fgBool gfx::CGfxMain::initGFX(void) {
         m_mainWindow = new gfx::CWindow();
     }
     m_mainWindow->registerOnSwap(&gfx::CGfxMain::handleMainWindowBufferSwap, (void*)this);
-    int sw = 1280;
-    int sh = 720;
+    m_loader = new CLoader(this);
+    int sw = (int)context::getScreenSize().x;
+    int sh = (int)context::getScreenSize().y;
 #if defined(FG_USING_SDL2) && defined(FG_USING_PLATFORM_ANDROID)
     // This is needed only on android - there is just one video 
     // mode available - full screen resolution
@@ -229,9 +237,7 @@ fgBool gfx::CGfxMain::initGFX(void) {
             //status = FG_FALSE; // ?
         }
     }
-    if(status) {
-        m_loader.setProgram(m_shaderMgr->getCurrentProgram());
-        m_loader.setMainWindow(m_mainWindow);
+    if(status) {        
         FG_LOG_DEBUG("GFX: Subsystem initialized successfully");
     }
     if(status) {
@@ -243,6 +249,7 @@ fgBool gfx::CGfxMain::initGFX(void) {
     FG_LOG_DEBUG("GFX: Initialized in %.2f seconds", (t2 - t1) / 1000.0f);
     return status;
 }
+//------------------------------------------------------------------------------
 
 void gfx::CGfxMain::generateBuiltInData(void) {
     if(!m_pResourceMgr) {
@@ -296,8 +303,95 @@ void gfx::CGfxMain::generateBuiltInData(void) {
         //builtin_sphere_mesh->genBuffers();
         static_cast<resource::CResourceManager *>(m_pResourceMgr)->request("builtinSphere");
     }
-
 }
+
+////////////////////////////////////////////////////////////////////////////////
+
+gfx::CGfxMain::CLoader::CLoader(CGfxMain* pGfxMain) :
+m_pSplashTex(NULL),
+m_pProgressTex(NULL),
+m_pGfxMain(pGfxMain),
+m_mvp(),
+m_mat(),
+m_progress(0.0f) { }
+//------------------------------------------------------------------------------
+
+gfx::CGfxMain::CLoader::CLoader(const CLoader& orig) {
+    if(this != &orig) {
+        this->m_pSplashTex = orig.m_pSplashTex;
+        this->m_pProgressTex = orig.m_pProgressTex;        
+        this->m_pGfxMain = orig.m_pGfxMain;
+        this->m_mvp = orig.m_mvp;
+        this->m_mat = orig.m_mat;
+        this->m_progress = orig.m_progress;
+    }
+}
+//------------------------------------------------------------------------------
+
+gfx::CGfxMain::CLoader::~CLoader() {
+    m_pSplashTex = NULL;
+    m_pProgressTex = NULL;
+    m_pGfxMain = NULL;
+    m_progress = 0.0f;
+    m_mvp.identity();
+}
+//------------------------------------------------------------------------------
+
+void gfx::CGfxMain::CLoader::update(const float diff) {
+    if(!m_pGfxMain || !m_pSplashTex || !context::isInit())
+        return;
+    if(!m_pGfxMain->getShaderManager()->getCurrentProgram())
+        return;
+    setupMVP();
+    m_pGfxMain->getMainWindow()->clearColor();
+    m_progress += diff;
+    if(m_progress > 100.0f)
+        m_progress = 100.0f;
+    if(m_progress < 0.0f)
+        m_progress = 0.0f;
+    float ratio = m_progress / 100.0f;
+    //float sw = m_pSplashTex->getWidth();
+    //float sh = m_pSplashTex->getHeight();
+    float ww = m_pGfxMain->getMainWindow()->getWidth();
+    float wh = m_pGfxMain->getMainWindow()->getHeight();
+    /// The splash screen will be shown centered, with proper proportion
+    /// based on the screen dimensions
+    /// Get the lower dimensions
+    float mextent = (float)glm::min((int)ww, (int)wh)*0.9f;
+    /// Bind the splash texture
+    context::bindTexture(m_pSplashTex->getRefGfxID());
+    // Centered on screen, aspect ratio 1:1 regardless of texture dimensions (for now)
+    m_mat = math::translate(Matrix4f(),
+                            Vec3f(ww / 2.0f,
+                                  wh / 2.0f,
+                                  0.0f));
+    m_mat = math::rotate(m_mat, (float)ratio * M_PIF * (70.0f / (float)FG_RAND(100, 110)), Vec3f(0.0f, 0.0f, 1.0f));
+    m_mat = math::scale(m_mat, Vec3f(mextent, mextent, 0.0f));
+    m_mvp.calculate(m_mat);
+    m_pGfxMain->getShaderManager()->getCurrentProgram()->setUniform(&m_mvp);
+    CPrimitives::drawSquare2D();
+
+    if(!m_pProgressTex || m_progress < FG_EPSILON) {
+        m_pGfxMain->getMainWindow()->swapBuffers();
+        return;
+    }
+    float pw = ratio * ww;
+    float ph = 0.07f * wh;
+    /// Bind the progress texture
+    context::bindTexture(m_pProgressTex->getRefGfxID());
+    // Bottom-left of the screen
+    m_mat = math::translate(Matrix4f(),
+                            Vec3f(ww / 2.0f,
+                                  wh - ph / 2.0f,
+                                  0.0f));
+    m_mat = math::scale(m_mat, Vec3f(pw, ph, 0.0f));
+    m_mvp.calculate(m_mat);
+    m_pGfxMain->getShaderManager()->getCurrentProgram()->setUniform(&m_mvp);
+    CPrimitives::drawSquare2D();
+    m_pGfxMain->getMainWindow()->swapBuffers();    
+}
+
+////////////////////////////////////////////////////////////////////////////////
 
 void gfx::CGfxMain::setupLoader(void) {
     if(!m_pResourceMgr)
@@ -319,7 +413,7 @@ void gfx::CGfxMain::setupLoader(void) {
     }
     m_textureMgr->uploadToVRAM(texture, FG_TRUE);
     FG_HardwareState->deviceYield(1);
-    m_loader.setSplashTexture(texture);
+    m_loader->setSplashTexture(texture);
     //
     // ProgressBar texture load and upload
     //
@@ -333,7 +427,7 @@ void gfx::CGfxMain::setupLoader(void) {
     }
     m_textureMgr->uploadToVRAM(texture, FG_TRUE);
     FG_HardwareState->deviceYield(1);
-    m_loader.setProgressTexture(texture);
+    m_loader->setProgressTexture(texture);
 
 }
 //------------------------------------------------------------------------------
@@ -452,6 +546,9 @@ void gfx::CGfxMain::display(void) {
     m_2DScene->update();
 }
 //------------------------------------------------------------------------------
+
+#include "GFX/Scene/fgGfxBspCompiler.h"
+extern fg::gfx::CBspCompiler *bspCompiler;
 
 void gfx::CGfxMain::render(void) {
     static gfx::CModelResource *cobraBomber = NULL;
@@ -579,6 +676,9 @@ void gfx::CGfxMain::render(void) {
     // RENDER THE 3D SCENE
     //    
     m_3DScene->render();
+    if(bspCompiler) {
+        bspCompiler->renderBSP(FG_TRUE, m_3DScene->getCamera()->getEye());
+    }
 
 #if defined(FG_DEBUG)
     if(g_fgDebugConfig.isDebugProfiling) {

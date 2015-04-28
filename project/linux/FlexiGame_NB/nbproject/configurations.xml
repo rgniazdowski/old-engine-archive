@@ -154,8 +154,6 @@
         <itemPath>../../../src/GFX/fgGfxLayer.h</itemPath>
         <itemPath>../../../src/GFX/fgGfxLight.cpp</itemPath>
         <itemPath>../../../src/GFX/fgGfxLight.h</itemPath>
-        <itemPath>../../../src/GFX/fgGfxLoader.cpp</itemPath>
-        <itemPath>../../../src/GFX/fgGfxLoader.h</itemPath>
         <itemPath>../../../src/GFX/fgGfxMVMatrix.h</itemPath>
         <itemPath>../../../src/GFX/fgGfxMVPMatrix.h</itemPath>
         <itemPath>../../../src/GFX/fgGfxMain.cpp</itemPath>
@@ -1180,10 +1178,6 @@
       <item path="../../../src/GFX/fgGfxLight.cpp" ex="false" tool="1" flavor2="8">
       </item>
       <item path="../../../src/GFX/fgGfxLight.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../../../src/GFX/fgGfxLoader.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="../../../src/GFX/fgGfxLoader.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGfxMVMatrix.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -2795,10 +2789,6 @@
       </item>
       <item path="../../../src/GFX/fgGfxLight.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGfxLoader.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="../../../src/GFX/fgGfxLoader.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="../../../src/GFX/fgGfxMVMatrix.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGfxMVPMatrix.h" ex="false" tool="3" flavor2="0">
@@ -4372,10 +4362,6 @@
       </item>
       <item path="../../../src/GFX/fgGfxLight.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGfxLoader.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="../../../src/GFX/fgGfxLoader.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="../../../src/GFX/fgGfxMVMatrix.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGfxMVPMatrix.h" ex="false" tool="3" flavor2="0">
@@ -5926,10 +5912,6 @@
       <item path="../../../src/GFX/fgGfxLight.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGfxLight.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../../../src/GFX/fgGfxLoader.cpp" ex="false" tool="1" flavor2="0">
-      </item>
-      <item path="../../../src/GFX/fgGfxLoader.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGfxMVMatrix.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -7513,10 +7495,6 @@
       </item>
       <item path="../../../src/GFX/fgGfxLight.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/GFX/fgGfxLoader.cpp" ex="false" tool="1" flavor2="8">
-      </item>
-      <item path="../../../src/GFX/fgGfxLoader.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="../../../src/GFX/fgGfxMVMatrix.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGfxMVPMatrix.h" ex="false" tool="3" flavor2="0">
@@ -9090,10 +9068,6 @@
       <item path="../../../src/GFX/fgGfxLight.cpp" ex="false" tool="1" flavor2="8">
       </item>
       <item path="../../../src/GFX/fgGfxLight.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../../../src/GFX/fgGfxLoader.cpp" ex="false" tool="1" flavor2="8">
-      </item>
-      <item path="../../../src/GFX/fgGfxLoader.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGfxMVMatrix.h" ex="false" tool="3" flavor2="0">
       </item>

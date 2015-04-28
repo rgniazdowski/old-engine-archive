@@ -48,6 +48,9 @@ namespace fg {
          */
         class CGfxMain {
         public:
+            class CLoader;
+
+        public:
             ///
             typedef CGfxMain type;
             ///
@@ -120,15 +123,18 @@ namespace fg {
              * @return 
              */
             fgBool initGFX(void);
+
             /**
              * Close the subsystem - destroy the graphics context
              */
             void closeGFX(fgBool suspend = FG_FALSE);
-            
+
             /**
              * 
              */
             void generateBuiltInData(void);
+
+            ////////////////////////////////////////////////////////////////////
 
             /**
              * 
@@ -243,10 +249,9 @@ namespace fg {
              * 
              * @return 
              */
-            inline CLoader *getLoader(void) {
-                return &m_loader;
+            inline ::fg::gfx::CGfxMain::CLoader* getLoader(void) {
+                return m_loader;
             }
-
             /**
              * 
              * @return 
@@ -264,10 +269,86 @@ namespace fg {
             inline void setScreenSize(int w, int h) {
                 context::setScreenSize(w, h);
             }
+
+        public:
+
+            /**
+             *
+             */
+            class CLoader {
+                friend class ::fg::gfx::CGfxMain;
+
+            public:
+                /**
+                 *
+                 */
+                CLoader(CGfxMain* pGfxMain);
+                /**
+                 *
+                 * @param orig
+                 */
+                CLoader(const CLoader& orig);
+                /**
+                 * 
+                 */
+                virtual ~CLoader();
+
+            public:
+                /**
+                 *
+                 * @param pSplashTex
+                 */
+                void setSplashTexture(CTextureResource *pSplashTex) {
+                    m_pSplashTex = pSplashTex;
+                }
+                /**
+                 *
+                 * @param pProgressTex
+                 */
+                void setProgressTexture(CTextureResource *pProgressTex) {
+                    m_pProgressTex = pProgressTex;
+                }
+                /**
+                 * 
+                 */
+                void setupMVP(void) {
+                    if(m_pGfxMain) {
+                        m_mvp.setOrtho(0.0f,
+                                       (float)context::getScreenSize().x,
+                                       (float)context::getScreenSize().y,
+                                       0.0f);
+                    }
+                }
+
+            public:
+                /**
+                 * Update the screen - draw the splash screen with the progress bar
+                 * updated by the specified difference - progress is from 0 to 100
+                 * @param diff
+                 */
+                void update(const float diff = 0.0f);
+
+            private:
+                /// Pointer to the splash texture to display as the background
+                /// Please note that this textures need to be uploaded to the GFX
+                CTextureResource *m_pSplashTex;
+                /// Pointer to the progress texture - used to draw the simple bar
+                /// This can be NULL - if so, no progress bar will be displayed
+                CTextureResource *m_pProgressTex;
+                /// Pointer to the gfx main class
+                CGfxMain* m_pGfxMain;
+                /// Main Model-Projection-View matrix to use with shader
+                CMVPMatrix m_mvp;
+                /// 4x4 matrix to hold translation and scale transformations
+                Matrix4f m_mat;
+                /// Progress of the loading - from 0 to 100
+                float m_progress;
+            };
+
         private:
             /// Loader object - displays splash screen and progress bar at the early 
             /// stages of initialization - before GUI subsystem full initialization
-            CLoader m_loader;
+            CLoader* m_loader;
             /// Texture manager for GFX upload/reload - works with Resource manager
             CTextureManager *m_textureMgr;
             /// Pointer to the resource manager - defined and managed outside

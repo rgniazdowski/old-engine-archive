@@ -88,7 +88,6 @@ OBJECTFILES= \
 	${OBJECTDIR}/_ext/534590209/fgGfxDrawingBatch.o \
 	${OBJECTDIR}/_ext/534590209/fgGfxFrustum.o \
 	${OBJECTDIR}/_ext/534590209/fgGfxLight.o \
-	${OBJECTDIR}/_ext/534590209/fgGfxLoader.o \
 	${OBJECTDIR}/_ext/534590209/fgGfxMain.o \
 	${OBJECTDIR}/_ext/534590209/fgGfxMaterial.o \
 	${OBJECTDIR}/_ext/534590209/fgGfxModelResource.o \
@@ -490,11 +489,6 @@ ${OBJECTDIR}/_ext/534590209/fgGfxLight.o: ../../../src/GFX/fgGfxLight.cpp
 	${MKDIR} -p ${OBJECTDIR}/_ext/534590209
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -s -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DFG_USING_GLEW -DFG_USING_GLM -DFG_USING_LUA_PLUS -DFG_USING_OPENGL -DFG_USING_OPENGL_GLEW -DFG_USING_THREADS -DFG_USING_TINYXML -DTIXML_USE_STL -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/zlib_128/contrib/minizip -I../../../modules/luaplus51-all/Src -I../../../modules/simpleopt -I../../../modules/cpp_btree -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534590209/fgGfxLight.o ../../../src/GFX/fgGfxLight.cpp
-
-${OBJECTDIR}/_ext/534590209/fgGfxLoader.o: ../../../src/GFX/fgGfxLoader.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/534590209
-	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -s -DFG_NO_UNDEF -DFG_STATIC_LIBRARY -DFG_USING_GLEW -DFG_USING_GLM -DFG_USING_LUA_PLUS -DFG_USING_OPENGL -DFG_USING_OPENGL_GLEW -DFG_USING_THREADS -DFG_USING_TINYXML -DTIXML_USE_STL -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/zlib_128/contrib/minizip -I../../../modules/luaplus51-all/Src -I../../../modules/simpleopt -I../../../modules/cpp_btree -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534590209/fgGfxLoader.o ../../../src/GFX/fgGfxLoader.cpp
 
 ${OBJECTDIR}/_ext/534590209/fgGfxMain.o: ../../../src/GFX/fgGfxMain.cpp 
 	${MKDIR} -p ${OBJECTDIR}/_ext/534590209
