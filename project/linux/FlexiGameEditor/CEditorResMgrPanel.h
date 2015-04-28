@@ -77,6 +77,7 @@ public:
 
 private:
     //(*Declarations(CEditorResMgrPanel)
+    wxPanel* Page3;
     wxPanel* Page1;
     wxPanel* Page2;
     wxButton* RefreshButton;
@@ -91,6 +92,7 @@ protected:
     static const long ID_REFRESHLIST_BUTTON;
     static const long ID_PAGE1;
     static const long ID_PAGE2;
+    static const long ID_PAGE3;
     static const long ID_NOTEBOOK1;
     //*)
 
@@ -100,6 +102,7 @@ private:
 
     //(*Handlers(CEditorResMgrPanel)
     void OnResListRefreshButtonClick(wxCommandEvent& event);
+    void OnResourceListViewItemAction(wxListEvent& event);
     //*)
 
     DECLARE_EVENT_TABLE()

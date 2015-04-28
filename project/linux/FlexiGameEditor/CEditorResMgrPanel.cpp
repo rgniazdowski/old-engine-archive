@@ -13,7 +13,8 @@
 #include "fgGameMain.h"
 #include "Resource/fgResourceManager.h"
 
-#include "wx/stattext.h"
+#include <wx/msgdlg.h>
+#include <wx/stattext.h>
 
 //(*InternalHeaders(CEditorResMgrPanel)
 #include <wx/string.h>
@@ -25,6 +26,7 @@ const long CEditorResMgrPanel::ID_RESOURCELISTVIEW = wxNewId();
 const long CEditorResMgrPanel::ID_REFRESHLIST_BUTTON = wxNewId();
 const long CEditorResMgrPanel::ID_PAGE1 = wxNewId();
 const long CEditorResMgrPanel::ID_PAGE2 = wxNewId();
+const long CEditorResMgrPanel::ID_PAGE3 = wxNewId();
 const long CEditorResMgrPanel::ID_NOTEBOOK1 = wxNewId();
 //*)
 
@@ -58,13 +60,16 @@ CEditorResMgrPanel::CEditorResMgrPanel(wxWindow* parent,
     GridBagSizer1->Fit(Page1);
     GridBagSizer1->SetSizeHints(Page1);
     Page2 = new wxPanel(Notebook1, ID_PAGE2, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL, _T("ID_PAGE2"));
+    Page3 = new wxPanel(Notebook1, ID_PAGE3, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL, _T("ID_PAGE3"));
     Notebook1->AddPage(Page1, _("Resource list"), true);
     Notebook1->AddPage(Page2, _("Resource preview"), false);
+    Notebook1->AddPage(Page3, _("Status"), false);
     BoxSizerMainV->Add(Notebook1, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 2);
     SetSizer(BoxSizerMainV);
     BoxSizerMainV->Fit(this);
     BoxSizerMainV->SetSizeHints(this);
 
+    Connect(ID_RESOURCELISTVIEW,wxEVT_COMMAND_LIST_ITEM_ACTIVATED,(wxObjectEventFunction)&CEditorResMgrPanel::OnResourceListViewItemAction);
     Connect(ID_REFRESHLIST_BUTTON,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&CEditorResMgrPanel::OnResListRefreshButtonClick);
     //*)
     ////////////////////////////////////////////////////////////////////////////
@@ -170,5 +175,25 @@ fgBool CEditorResMgrPanel::refreshResourceList(void) {
 
 void CEditorResMgrPanel::OnResListRefreshButtonClick(wxCommandEvent& event) {
     refreshResourceList();
+}
+//------------------------------------------------------------------------------
+
+void CEditorResMgrPanel::OnResourceListViewItemAction(wxListEvent& event)
+{
+    wxEventType type = event.GetEventType();
+    if(type == wxEVT_LIST_ITEM_ACTIVATED) {
+        // Display some detailed window description
+        // special small frame? CEditorResInfoFrame
+        long idx = ResourceListView->GetFocusedItem();
+        if(idx < 0)
+            return;
+        // 0 - type, 1 - name tag
+        //ResourceListView->GetItemText(idx, 0).c_str().AsChar();
+        //ResourceListView->GetItemText(idx, 1).c_str().AsChar();
+    } else if(type == wxEVT_LIST_ITEM_SELECTED) {
+
+    } else if(type == wxEVT_LIST_ITEM_RIGHT_CLICK) {
+        // context menu?
+    }
 }
 //------------------------------------------------------------------------------
