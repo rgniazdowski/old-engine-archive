@@ -11,7 +11,7 @@
 #ifndef FG_INC_THROWN_EVENT
     #define FG_INC_THROWN_EVENT
     #define FG_INC_THROWN_EVENT_BLOCK
-    
+
     #include "fgEventDefinitions.h"
     #include "fgArgumentList.h"
 

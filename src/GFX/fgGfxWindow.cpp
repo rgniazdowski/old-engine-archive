@@ -19,7 +19,10 @@
 
 using namespace fg;
 
+//------------------------------------------------------------------------------
+
 gfx::CWindow::CWindow() :
+m_onSwapCallbacks(),
 m_title(),
 #if defined(FG_USING_EGL)
 m_EGLSurface(0),
@@ -33,8 +36,10 @@ m_isFullscreen(FG_FALSE),
 m_isHW(FG_FALSE),
 m_isDB(FG_FALSE),
 m_isOpen(FG_FALSE) { }
+//------------------------------------------------------------------------------
 
 gfx::CWindow::CWindow(const char *title, unsigned int width, unsigned int height) :
+m_onSwapCallbacks(),
 m_title(),
 #if defined(FG_USING_EGL)
 m_EGLSurface(0),
@@ -50,10 +55,19 @@ m_isDB(FG_FALSE),
 m_isOpen(FG_FALSE) {
     CWindow::setup(title, width, height);
 }
+//------------------------------------------------------------------------------
 
 gfx::CWindow::~CWindow() {
     close();
+    int n = m_onSwapCallbacks.size();
+    for(int i = 0; i < n; i++) {
+        CallbackData &info = m_onSwapCallbacks[i];
+        info.callback = NULL;
+        info.userData = NULL;
+    }
+    m_onSwapCallbacks.clear_optimised();
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CWindow::setup(const char *title, unsigned int width, unsigned int height) {
     if(!CPlatform::isInit()) {
@@ -152,6 +166,7 @@ fgBool gfx::CWindow::setup(const char *title, unsigned int width, unsigned int h
         m_isOpen = FG_TRUE;
     return status;
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CWindow::close(void) {
     if(!CPlatform::isInit()) {
@@ -191,6 +206,7 @@ fgBool gfx::CWindow::close(void) {
     //m_title.clear(); // ?
     return status;
 }
+//------------------------------------------------------------------------------
 
 void gfx::CWindow::setFullscreen(fgBool toggle) {
 #if !defined(FG_USING_PLATFORM_ANDROID)
@@ -202,6 +218,7 @@ void gfx::CWindow::setFullscreen(fgBool toggle) {
     m_isFullscreen = FG_TRUE;
 #endif
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CWindow::refreshFS(void) {
 #if !defined(FG_USING_MARMALADE) && !defined(FG_USING_PLATFORM_ANDROID) && defined(FG_USING_SDL2)
@@ -225,6 +242,7 @@ fgBool gfx::CWindow::refreshFS(void) {
 #endif
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CWindow::swapBuffers(void) {
     if(!m_isOpen)
@@ -239,8 +257,19 @@ fgBool gfx::CWindow::swapBuffers(void) {
     if(m_sdlWindow)
         SDL_GL_SwapWindow(m_sdlWindow);
 #endif
+    // Now call the special on swap callbacks
+    int n = m_onSwapCallbacks.size();
+    for(int i = 0; i < n; i++) {
+        CallbackData &info = m_onSwapCallbacks[i];
+        if(info.callback) {
+            // systemData = this, userData 
+            info.callback((void *)this, (void *)info.userData);
+        }
+    }
+
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
 void gfx::CWindow::clearColor(void) {
 #if defined(FG_USING_OPENGL) || defined(FG_USING_OPENGL_ES)
@@ -249,3 +278,28 @@ void gfx::CWindow::clearColor(void) {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // ?
 #endif
 }
+//------------------------------------------------------------------------------
+
+fgBool gfx::CWindow::registerOnSwap(CallbackFuncPtr pCallback,
+                                        void* pUserData) {
+    if(!pCallback || isRegistered(pCallback))
+        return FG_FALSE;
+    CallbackData callbackInfo(pCallback, pUserData);
+    m_onSwapCallbacks.push_back(callbackInfo);
+    return FG_TRUE;
+}
+//------------------------------------------------------------------------------
+
+fgBool gfx::CWindow::isRegistered(CallbackFuncPtr pCallback) {
+    if(!pCallback)
+        return FG_FALSE;
+    int n = m_onSwapCallbacks.size();
+    // Check for duplicates
+    for(int i = 0; i < n; i++) {
+        CallbackData &info = m_onSwapCallbacks[i];
+        if(info.callback == pCallback)
+            return FG_TRUE;
+    }
+    return FG_FALSE;
+}
+//------------------------------------------------------------------------------

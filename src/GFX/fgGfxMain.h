@@ -42,7 +42,7 @@ namespace fg {
     namespace gfx {
         ///
         typedef FG_TAG_GFX_MAIN GfxMainTag;
-        
+
         /**
          *
          */
@@ -72,12 +72,11 @@ namespace fg {
              * 
              */
             void unregisterResourceCallbacks(void);
-            
+
             /**
              * 
              */
             void registerSceneCallbacks(void);
-            
             /**
              * 
              * @param argv
@@ -86,11 +85,21 @@ namespace fg {
 
             /**
              * 
+             * @param pSystemData
+             * @param pUserData
+             * @return
+             */
+            static fgBool handleMainWindowBufferSwap(void *pSystemData, void *pUserData);
+
+            ////////////////////////////////////////////////////////////////////
+
+            /**
+             * 
              * @param argv
              * @return 
              */
             fgBool resourceCreatedHandler(fg::event::CArgumentList *argv);
-            
+
             /**
              * 
              * @param argv
@@ -99,7 +108,6 @@ namespace fg {
             fgBool sceneNodeInsertedHandler(fg::event::CArgumentList * argv);
 
         public:
-
             /**
              * Sets the pointer to the external resource manager
              * @param pResourceManager
@@ -133,65 +141,104 @@ namespace fg {
              */
             fgBool resumeGFX(void);
 
-            // Now main display function creates the buffer (vertex/color/texture coords buffers) 
-            // to be displayed in current frame. The real drawing of created buffers is inside the
-            // render function (which in the future should be in separate thread)
-            // This will generate the list of visible objects, do frustum culling
+            ////////////////////////////////////////////////////////////////////
+
+            /**
+             * Now main display function creates the buffer (vertex/color/texture coords buffers)
+             * to be displayed in current frame. The real drawing of created buffers is inside the
+             * render function (which in the future should be in separate thread)
+             * This will generate the list of visible objects, do frustum culling
+             */
             void display(void);
 
-            // Begins the proper render of the created buffers
+            /**
+             * Begins the proper render of the created buffers
+             */
             void render(void);
+
+            ////////////////////////////////////////////////////////////////////
 
             /**
              * This will preload needed textures for the GFX::Loader - splash/progress
              */
             void setupLoader(void);
-
-            /**
-             * Returns the pointer to the Texture Manager
-             * @return 
-             */
-            CTextureManager *getTextureManager(void) const;
             /**
              * Releases all textures - the GFX side and nonGFX (meaning internal RAM)
              * @return 
              */
             fgBool releaseTextures(void);
             /**
-             * Returns the pointer to the shader manager
-             * @return 
-             */
-            CShaderManager *getShaderManager(void) const;
-            /**
              * Pre loads all shaders - caches the specific configs
              * @return 
              */
-            fgBool preLoadShaders(void) const;
+            fgBool preLoadShaders(void);
+
+            ////////////////////////////////////////////////////////////////////
+            /**
+             * Returns the pointer to the Texture Manager
+             * @return
+             */
+            inline CTextureManager* getTextureManager(void) const {
+                return m_textureMgr;
+            }
+            /**
+             *
+             * @return
+             */
+            inline fg::base::CManager* getResourceManager(void) const {
+                return m_pResourceMgr;
+            }
+            /**
+             *
+             * @return
+             */
+            inline fg::base::CManager* getEventManager(void) const {
+                return m_pEventMgr;
+            }
+            /**
+             * Returns the pointer to the shader manager
+             * @return
+             */
+            inline CShaderManager* getShaderManager(void) const {
+                return m_shaderMgr;
+            }
             /**
              * Returns the pointer to the main GFX windows - OS specific main window
              * @return 
              */
-            CWindow *getMainWindow(void) const;
+            inline CWindow* getMainWindow(void) const {
+                return m_mainWindow;
+            }
             /**
              * Getter for the Scene3D object
              * @return 
              */
-            CScene3D *get3DScene(void) const;
+            inline CScene3D* get3DScene(void) const {
+                return m_3DScene;
+            }
             /**
              * Returns the pointer to the main 2D scene - may be NULL
              * @return 
              */
-            CScene2D *get2DScene(void) const;
+            inline CScene2D* get2DScene(void) const {
+                return m_2DScene;
+            }
             /**
              * Returns the pointer to the main 3D scene camera - may be NULL
              * @return 
              */
-            CCameraAnimation *get3DSceneCamera(void) const;
+            inline CCameraAnimation* get3DSceneCamera(void) const {
+                if(!m_3DScene)
+                    return NULL;
+                return m_3DScene->getCamera();
+            }
             /**
              * 
              * @return 
              */
-            CParticleSystem *getParticleSystem(void) const;
+            inline CParticleSystem* getParticleSystem(void) const {
+                return m_particleSystem;
+            }
             /**
              * 
              * @return 
@@ -207,7 +254,16 @@ namespace fg {
             inline fgBool isInit(void) const {
                 return m_init;
             }
-            
+
+            ////////////////////////////////////////////////////////////////////
+            /**
+             * 
+             * @param w
+             * @param h
+             */
+            inline void setScreenSize(int w, int h) {
+                context::setScreenSize(w, h);
+            }
         private:
             /// Loader object - displays splash screen and progress bar at the early 
             /// stages of initialization - before GUI subsystem full initialization
@@ -231,7 +287,7 @@ namespace fg {
             /// 
             fg::event::CFunctionCallback *m_resourceCreatedCallback;
             ///
-            fg::event::CFunctionCallback *m_sceneNodeInsertedCallback;;
+            fg::event::CFunctionCallback *m_sceneNodeInsertedCallback;
             /// Is GFX init properly?
             fgBool m_init;
         };

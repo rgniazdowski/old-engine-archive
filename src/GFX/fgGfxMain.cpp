@@ -96,6 +96,24 @@ gfx::CGfxMain::~CGfxMain() {
     m_3DScene = NULL;
     m_2DScene = NULL;
 }
+//------------------------------------------------------------------------------
+
+fgBool gfx::CGfxMain::handleMainWindowBufferSwap(void *pSystemData, void *pUserData) {
+    if(!pSystemData || !pUserData)
+        return FG_FALSE;
+    
+    // pSystemData will be the pointer to the main window (or any window to which
+    // this callback is assigned)
+    // pUserData will be the pointer to the CGfxMain object
+    
+    gfx::CGfxMain* pGfxMain = static_cast<gfx::CGfxMain*>(pUserData);
+    // SWAP_BUFFER event is not thrown and executed in the main EventMgr function
+    // it's always called in place by executeEvent(event) function
+    
+    return FG_TRUE;
+}
+
+//------------------------------------------------------------------------------
 
 void gfx::CGfxMain::registerResourceCallbacks(void) {
     if(!m_pEventMgr)
@@ -106,6 +124,7 @@ void gfx::CGfxMain::registerResourceCallbacks(void) {
 
     static_cast<fg::event::CEventManager *>(m_pEventMgr)->addCallback(event::RESOURCE_CREATED, m_resourceCreatedCallback);
 }
+//------------------------------------------------------------------------------
 
 void gfx::CGfxMain::unregisterResourceCallbacks(void) {
     if(!m_pEventMgr)
@@ -113,6 +132,7 @@ void gfx::CGfxMain::unregisterResourceCallbacks(void) {
 
     static_cast<fg::event::CEventManager *>(m_pEventMgr)->removeCallback(event::RESOURCE_CREATED, m_resourceCreatedCallback);
 }
+//------------------------------------------------------------------------------
 
 void gfx::CGfxMain::registerSceneCallbacks(void) {
     if(!m_3DScene || !m_2DScene)
@@ -124,6 +144,7 @@ void gfx::CGfxMain::registerSceneCallbacks(void) {
     m_3DScene->getEventManager()->addCallback(event::SCENE_NODE_INSERTED, m_sceneNodeInsertedCallback);
     m_2DScene->getEventManager()->addCallback(event::SCENE_NODE_INSERTED, m_sceneNodeInsertedCallback);
 }
+//------------------------------------------------------------------------------
 
 void gfx::CGfxMain::unregisterSceneCallbacks(void) {
     if(!m_3DScene || !m_2DScene)
@@ -132,6 +153,7 @@ void gfx::CGfxMain::unregisterSceneCallbacks(void) {
     m_3DScene->getEventManager()->removeCallback(event::SCENE_NODE_INSERTED, m_sceneNodeInsertedCallback);
     m_2DScene->getEventManager()->removeCallback(event::SCENE_NODE_INSERTED, m_sceneNodeInsertedCallback);
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CGfxMain::initGFX(void) {
     float t1 = timesys::ms();
@@ -144,6 +166,7 @@ fgBool gfx::CGfxMain::initGFX(void) {
     if(!m_mainWindow && status) {
         m_mainWindow = new gfx::CWindow();
     }
+    m_mainWindow->registerOnSwap(&gfx::CGfxMain::handleMainWindowBufferSwap, (void*)this);
     int sw = 1280;
     int sh = 720;
 #if defined(FG_USING_SDL2) && defined(FG_USING_PLATFORM_ANDROID)
@@ -313,6 +336,7 @@ void gfx::CGfxMain::setupLoader(void) {
     m_loader.setProgressTexture(texture);
 
 }
+//------------------------------------------------------------------------------
 
 void gfx::CGfxMain::closeGFX(fgBool suspend) {
     FG_LOG_DEBUG("Closing GFX subsystem...");
@@ -330,6 +354,7 @@ void gfx::CGfxMain::closeGFX(fgBool suspend) {
     }
     m_init = FG_FALSE;
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CGfxMain::suspendGFX(void) {
     fgBool status = FG_TRUE;
@@ -357,6 +382,7 @@ fgBool gfx::CGfxMain::suspendGFX(void) {
         FG_LOG_DEBUG("GFX: Suspension of GFX subsystem finished with no errors");
     return status;
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CGfxMain::resumeGFX(void) {
     fgBool status = FG_TRUE;
@@ -395,6 +421,7 @@ fgBool gfx::CGfxMain::resumeGFX(void) {
         FG_LOG_DEBUG("GFX: Resume of GFX subsystem finished with no errors");
     return status;
 }
+//------------------------------------------------------------------------------
 
 void gfx::CGfxMain::display(void) {
     if(!context::isInit())
@@ -424,6 +451,7 @@ void gfx::CGfxMain::display(void) {
     m_3DScene->update();
     m_2DScene->update();
 }
+//------------------------------------------------------------------------------
 
 void gfx::CGfxMain::render(void) {
     static gfx::CModelResource *cobraBomber = NULL;
@@ -585,6 +613,7 @@ void gfx::CGfxMain::render(void) {
     context::blendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     context::scissor(0, 0, m_mainWindow->getWidth(), m_mainWindow->getHeight()); // #THA FUCK?
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CGfxMain::setupResourceManager(fg::base::CManager *pResourceManager) {
     if(!pResourceManager)
@@ -619,38 +648,9 @@ fgBool gfx::CGfxMain::setupResourceManager(fg::base::CManager *pResourceManager)
         registerResourceCallbacks();
     return m_textureMgr->initialize(); // #FIXME - texture mgr init ?
 }
+//------------------------------------------------------------------------------
 
-gfx::CTextureManager *gfx::CGfxMain::getTextureManager(void) const {
-    return m_textureMgr;
-}
-
-gfx::CShaderManager *gfx::CGfxMain::getShaderManager(void) const {
-    return m_shaderMgr;
-}
-
-gfx::CWindow *gfx::CGfxMain::getMainWindow(void) const {
-    return m_mainWindow;
-}
-
-gfx::CScene3D *gfx::CGfxMain::get3DScene(void) const {
-    return m_3DScene;
-}
-
-gfx::CScene2D *gfx::CGfxMain::get2DScene(void) const {
-    return m_2DScene;
-}
-
-gfx::CCameraAnimation *gfx::CGfxMain::get3DSceneCamera(void) const {
-    if(!m_3DScene)
-        return NULL;
-    return m_3DScene->getCamera();
-}
-
-gfx::CParticleSystem *gfx::CGfxMain::getParticleSystem(void) const {
-    return m_particleSystem;
-}
-
-fgBool gfx::CGfxMain::preLoadShaders(void) const {
+fgBool gfx::CGfxMain::preLoadShaders(void) {
     if(!m_shaderMgr) {
         return FG_FALSE;
     }
@@ -658,6 +658,7 @@ fgBool gfx::CGfxMain::preLoadShaders(void) const {
         m_shaderMgr->initialize();
     return m_shaderMgr->preLoadShaders();
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CGfxMain::releaseTextures(void) {
     if(m_textureMgr) {
@@ -669,6 +670,7 @@ fgBool gfx::CGfxMain::releaseTextures(void) {
     m_pResourceMgr = NULL;
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CGfxMain::resourceCreatedHandler(fg::event::CArgumentList * argv) {
     if(!argv)
@@ -793,6 +795,7 @@ fgBool gfx::CGfxMain::resourceCreatedHandler(fg::event::CArgumentList * argv) {
     }
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CGfxMain::sceneNodeInsertedHandler(fg::event::CArgumentList * argv) {
     if(!argv)
@@ -810,3 +813,4 @@ fgBool gfx::CGfxMain::sceneNodeInsertedHandler(fg::event::CArgumentList * argv) 
 
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------

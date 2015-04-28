@@ -92,41 +92,43 @@ namespace fg {
         const EventType LOADING_FINISHED = 25;
         /// 
         const EventType SPLASHSCREEN = 26;
+        ///
+        const EventType SWAP_BUFFERS = 27;
 
         /// 
-        const EventType VERTEX_STREAM_READY = 27;
+        const EventType VERTEX_STREAM_READY = 28;
         /// 
-        const EventType CAMERA_CHANGED = 28;
+        const EventType CAMERA_CHANGED = 29;
 
         /// 
-        const EventType SOUND_PLAYED = 29;
+        const EventType SOUND_PLAYED = 30;
 
         /// 
-        const EventType MENU_CHANGED = 30;
+        const EventType MENU_CHANGED = 31;
         /// 
-        const EventType WIDGET_STATE_CHANGED = 31;
+        const EventType WIDGET_STATE_CHANGED = 32;
 
         /// 
-        const EventType SENSORS_CHANGED = 32;
+        const EventType SENSORS_CHANGED = 33;
 
         /// 
-        const EventType GAME_CONTROLLER_ADDED = 33;
+        const EventType GAME_CONTROLLER_ADDED = 34;
         /// 
-        const EventType GAME_CONTROLLER_REMOVED = 34;
+        const EventType GAME_CONTROLLER_REMOVED = 35;
         /// 
-        const EventType GAME_CONTROLLER_BUTTON = 35;
+        const EventType GAME_CONTROLLER_BUTTON = 36;
         /// 
-        const EventType GAME_CONTROLLER_AXIS = 36;
+        const EventType GAME_CONTROLLER_AXIS = 37;
 
         /// 
-        const EventType RESERVED1 = 37;
+        const EventType RESERVED1 = 38;
         /// 
-        const EventType RESERVED2 = 38;
+        const EventType RESERVED2 = 39;
         /// 
-        const EventType RESERVED3 = 39;
+        const EventType RESERVED3 = 40;
 
         /// 
-        const EventType LAST_STANDARD_EVENT_CODE = 39;
+        const EventType LAST_STANDARD_EVENT_CODE = RESERVED3;
 
         /**
          *

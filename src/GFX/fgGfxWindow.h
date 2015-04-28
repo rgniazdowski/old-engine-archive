@@ -28,6 +28,16 @@ namespace fg {
          */
         class CWindow {
         public:
+            ///
+            typedef CWindow self_type;
+            ///
+            typedef CWindow type;
+            ///
+            typedef fgBool(*CallbackFuncPtr)(void *systemData, void *userData);
+            ///
+            typedef CallbackFuncPtr callback_type;
+
+        public:
             /**
              *
              */
@@ -59,6 +69,34 @@ namespace fg {
              * @return 
              */
             fgBool close(void);
+
+            /**
+             *
+             * @return
+             */
+            fgBool swapBuffers(void);
+
+            /**
+             *
+             */
+            void clearColor(void);
+            
+            /**
+             *
+             * @param pCallback
+             * @param pUserData
+             * @return
+             */
+            fgBool registerOnSwap(CallbackFuncPtr pCallback, void* pUserData = NULL);
+            /**
+             *
+             * @param pCallback
+             * @return
+             */
+            fgBool isRegistered(CallbackFuncPtr pCallback);
+
+            ////////////////////////////////////////////////////////////////////
+
             /**
              * 
              * @return 
@@ -91,16 +129,6 @@ namespace fg {
              * 
              * @return 
              */
-            fgBool swapBuffers(void);
-
-            /**
-             * 
-             */
-            void clearColor(void);
-            /**
-             * 
-             * @return 
-             */
             fgBool isOpen(void) const {
                 return m_isOpen;
             }
@@ -120,8 +148,37 @@ namespace fg {
     #endif
 
         private:
-            //
             fgBool refreshFS(void);
+
+        private:
+            // Well from the looks of it this structs and vectors should be in
+            // separate class; maybe with name ? 
+
+            struct CallbackData {
+                ///
+                CallbackFuncPtr callback;
+                ///
+                void *userData;
+                /**
+                 *
+                 */
+                CallbackData() : callback(NULL), userData(NULL) { }
+                /**
+                 * 
+                 * @param pCallback
+                 * @param pUserData
+                 */
+                CallbackData(CallbackFuncPtr pCallback, void *pUserData) :
+                callback(pCallback),
+                userData(pUserData) { }
+            };
+
+            ///
+            typedef fg::CVector<CallbackData> CallbacksVec;
+            ///
+            typedef CallbacksVec::iterator CallbacksVecItor;
+            ///
+            CallbacksVec m_onSwapCallbacks;
 
         private:
             /// 
