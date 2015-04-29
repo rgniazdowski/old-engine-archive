@@ -6,33 +6,30 @@
  * 
  * FlexiGame source code and any related files can not be copied, modified 
  * and/or distributed without the express or written consent from the author.
- *******************************************************/
+ ******************************************************************************/
 
 #include "fgSettings.h"
 #include "fgLog.h"
 
 using namespace fg;
+//------------------------------------------------------------------------------
 
-/*
- *
- */
 CSettings::CSettings() : m_parser(NULL) { }
+//------------------------------------------------------------------------------
 
-/*
- *
- */
 CSettings::CSettings(const char *filePath) : m_parser(NULL) {
     load(filePath);
 }
+//------------------------------------------------------------------------------
 
-/*
- *
- */
-CSettings::~CSettings() { }
+CSettings::~CSettings() {
+    if(m_parser) {
+        delete m_parser;
+        m_parser = NULL;
+    }
+}
+//------------------------------------------------------------------------------
 
-/*
- *
- */
 fgBool CSettings::load(const char *filePath) {
     if(!filePath)
         return FG_FALSE;
@@ -69,3 +66,4 @@ fgBool CSettings::load(const char *filePath) {
     m_parser = NULL;
     return status;
 }
+//------------------------------------------------------------------------------

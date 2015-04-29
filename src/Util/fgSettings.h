@@ -29,6 +29,8 @@ namespace fg {
          *
          */
         struct settingsData {
+            /// Installation root dir
+            std::string installationPath;
             /// Path to the data folder
             std::string defaultDataPath;
             /// Path to the log folder
@@ -93,7 +95,7 @@ namespace fg {
          * 
          * @param filePath
          */
-        CSettings(const char *filePath);
+        CSettings(const char* filePath);
         /**
          * 
          */
@@ -104,174 +106,260 @@ namespace fg {
          * @param filePath
          * @return 
          */
-        fgBool load(const char *filePath);
+        fgBool load(const char* filePath);
 
     public:
+        /**
+         *
+         * @return
+         */
+        std::string& getInstallationPath(void) {
+            return m_settings.installationPath;
+        }
         /**
          * 
          * @return 
          */
-        std::string &getDefaultDataPath(void) {
+        std::string const& getInstallationPath(void) const {
+            return m_settings.installationPath;
+        }
+        /**
+         *
+         * @return
+         */
+        const char* getInstallationPathStr(void) const {
+            return m_settings.installationPath.c_str();
+        }
+        /**
+         * 
+         * @param path
+         */
+        void setInstallationPath(const char* path) {
+            if(path)
+                m_settings.installationPath = path;
+        }
+        //----------------------------------------------------------------------
+        /**
+         * 
+         * @return 
+         */
+        std::string& getDefaultDataPath(void) {
+            return m_settings.defaultDataPath;
+        }
+        /**
+         *
+         * @return
+         */
+        std::string const& getDefaultDataPath(void) const {
             return m_settings.defaultDataPath;
         }
         /**
          * 
          * @return 
          */
-        const char *getDefaultDataPathStr(void) const {
+        const char* getDefaultDataPathStr(void) const {
             return m_settings.defaultDataPath.c_str();
         }
         /**
          * 
          * @param path
          */
-        void setDefaultDataPath(const char *path) {
+        void setDefaultDataPath(const char* path) {
             if(path)
                 m_settings.defaultDataPath = path;
         }
+        //----------------------------------------------------------------------
         /**
          * 
          * @return 
          */
-        std::string &getDefaultLogPath(void) {
+        std::string& getDefaultLogPath(void) {
+            return m_settings.defaultLogPath;
+        }
+        /**
+         *
+         * @return
+         */
+        std::string const& getDefaultLogPath(void) const {
             return m_settings.defaultLogPath;
         }
         /**
          * 
          * @return 
          */
-        const char *getDefaultLogPathStr(void) const {
+        const char* getDefaultLogPathStr(void) const {
             return m_settings.defaultLogPath.c_str();
         }
         /**
          * 
          * @param path
          */
-        void setDefaultLogPath(const char *path) {
+        void setDefaultLogPath(const char* path) {
             if(path)
                 m_settings.defaultLogPath = path;
         }
+        //----------------------------------------------------------------------
         /**
          * 
          * @return 
          */
-        std::string &getMainConfigPath(void) {
+        std::string& getMainConfigPath(void) {
+            return m_settings.mainConfigPath;
+        }
+        /**
+         *
+         * @return
+         */
+        std::string const& getMainConfigPath(void) const {
             return m_settings.mainConfigPath;
         }
         /**
          * 
          * @return 
          */
-        const char *getMainConfigPathStr(void) const {
+        const char* getMainConfigPathStr(void) const {
             return m_settings.mainConfigPath.c_str();
         }
         /**
          * 
          * @param path
          */
-        void setMainConfigPath(const char *path) {
+        void setMainConfigPath(const char* path) {
             if(path)
                 m_settings.mainConfigPath = path;
         }
+        //----------------------------------------------------------------------
         /**
          * 
          * @return 
          */
-        std::string &getProgramTitle(void) {
+        std::string& getProgramTitle(void) {
+            return m_settings.programTitle;
+        }
+        /**
+         *
+         * @return
+         */
+        std::string const& getProgramTitle(void) const {
             return m_settings.programTitle;
         }
         /**
          * 
          * @return 
          */
-        const char *getProgramTitleStr(void) const {
+        const char* getProgramTitleStr(void) const {
             return m_settings.programTitle.c_str();
         }
         /**
          * 
          * @param path
          */
-        void setProgramTitle(const char *path) {
+        void setProgramTitle(const char* path) {
             if(path)
                 m_settings.programTitle = path;
         }
+        //----------------------------------------------------------------------
         /**
          * 
          * @return 
          */
-        std::string &getDefaultProfileName(void) {
+        std::string& getDefaultProfileName(void) {
+            return m_settings.defaultProfileName;
+        }
+/**
+         *
+         * @return
+         */
+        std::string const& getDefaultProfileName(void) const {
             return m_settings.defaultProfileName;
         }
         /**
          * 
          * @return 
          */
-        const char *getDefaultProfileNameStr(void) const {
+        const char* getDefaultProfileNameStr(void) const {
             return m_settings.defaultProfileName.c_str();
         }
         /**
          * 
          * @param path
          */
-        void setDefaultProfileName(const char *path) {
+        void setDefaultProfileName(const char* path) {
             if(path)
                 m_settings.defaultProfileName = path;
         }
+        //----------------------------------------------------------------------
         /**
          * 
          * @return 
          */
-        std::string &getMainModPath(void) {
+        std::string& getMainModPath(void) {
+            return m_settings.mainModPath;
+        }
+        /**
+         *
+         * @return
+         */
+        std::string const& getMainModPath(void) const {
             return m_settings.mainModPath;
         }
         /**
          * 
          * @return 
          */
-        const char *getMainModPathStr(void) const {
+        const char* getMainModPathStr(void) const {
             return m_settings.mainModPath.c_str();
         }
         /**
          * 
          * @param path
          */
-        void setMainModPath(const char *path) {
+        void setMainModPath(const char* path) {
             if(path)
                 m_settings.mainModPath = path;
         }
+        //----------------------------------------------------------------------
         /**
          * 
          * @return 
          */
-        std::string &getCurrentModPath(void) {
+        std::string& getCurrentModPath(void) {
+            return m_settings.currentModPath;
+        }
+        /**
+         *
+         * @return
+         */
+        std::string const& getCurrentModPath(void) const {
             return m_settings.currentModPath;
         }
         /**
          * 
          * @return 
          */
-        const char *getCurrentModPathStr(void) const {
+        const char* getCurrentModPathStr(void) const {
             return m_settings.currentModPath.c_str();
         }
         /**
          * 
          * @param path
          */
-        void setCurrentModPath(const char *path) {
+        void setCurrentModPath(const char* path) {
             if(path)
                 m_settings.currentModPath = path;
         }
+        //----------------------------------------------------------------------
     #if 0
         // 
-        std::string &getLastExecution(void) {
+        std::string& getLastExecution(void) {
             return m_settings.lastExecution;
         }
         // 
-        const char *getLastExecutionStr(void) const {
+        const char* getLastExecutionStr(void) const {
             return m_settings.lastExecution.c_str();
         }
         // 
-        void setLastExecution(const char *path) {
+        void setLastExecution(const char* path) {
             if(path)
                 m_settings.lastExecution = path;
         }
@@ -323,6 +411,7 @@ namespace fg {
         void setUseSound(fgBool toggle) {
             m_settings.useSound = toggle;
         }
+        //----------------------------------------------------------------------
         /**
          * 
          * @return 
@@ -337,6 +426,7 @@ namespace fg {
         void setUseConsole(fgBool toggle) {
             m_settings.useConsole = toggle;
         }
+        //----------------------------------------------------------------------
         /**
          * 
          * @return 
@@ -351,6 +441,7 @@ namespace fg {
         void setUseNetwork(fgBool toggle) {
             m_settings.useNetwork = toggle;
         }
+        //----------------------------------------------------------------------
     #if 0
         // 
         fgBool isCleanExit(void) const {
@@ -361,6 +452,7 @@ namespace fg {
             m_settings.cleanExit = toggle;
         }
     #endif
+        //----------------------------------------------------------------------
         /**
          * 
          * @return 
@@ -375,7 +467,6 @@ namespace fg {
         void setDebugMode(fgBool toggle) {
             m_settings.debugMode = toggle;
         }
-
     };
 
 };
@@ -384,14 +475,15 @@ namespace fg {
 FG_XML_AUTO_TEMPLATE_ROOT(fg::CSettings::settingsData, FG_SETTINGS_XML_ROOT_NODE_NAME);
 
 FG_XML_AUTO_TEMPLATE_ELEMENT_BEGIN(fg::CSettings::settingsData);
-FG_XML_AUTO_TEMPLATE_ELEMENT_CHECK_NAME(const char *, defaultDataPath, "defaultDataPath");
-FG_XML_AUTO_TEMPLATE_ELEMENT_CHECK_NAME(const char *, defaultLogPath, "defaultLogPath");
-FG_XML_AUTO_TEMPLATE_ELEMENT_CHECK_NAME(const char *, mainConfigPath, "mainConfigPath");
-FG_XML_AUTO_TEMPLATE_ELEMENT_CHECK_NAME(const char *, programTitle, "programTitle");
-FG_XML_AUTO_TEMPLATE_ELEMENT_CHECK_NAME(const char *, defaultProfileName, "defaultProfileName");
-FG_XML_AUTO_TEMPLATE_ELEMENT_CHECK_NAME(const char *, mainModPath, "mainModPath");
-FG_XML_AUTO_TEMPLATE_ELEMENT_CHECK_NAME(const char *, currentModPath, "currentModPath");
-//FG_XML_AUTO_TEMPLATE_ELEMENT_CHECK_NAME(const char *, lastExecution,		"lastExecution");
+FG_XML_AUTO_TEMPLATE_ELEMENT_CHECK_NAME(const char*, installationPath, "installationPath");
+FG_XML_AUTO_TEMPLATE_ELEMENT_CHECK_NAME(const char*, defaultDataPath, "defaultDataPath");
+FG_XML_AUTO_TEMPLATE_ELEMENT_CHECK_NAME(const char*, defaultLogPath, "defaultLogPath");
+FG_XML_AUTO_TEMPLATE_ELEMENT_CHECK_NAME(const char*, mainConfigPath, "mainConfigPath");
+FG_XML_AUTO_TEMPLATE_ELEMENT_CHECK_NAME(const char*, programTitle, "programTitle");
+FG_XML_AUTO_TEMPLATE_ELEMENT_CHECK_NAME(const char*, defaultProfileName, "defaultProfileName");
+FG_XML_AUTO_TEMPLATE_ELEMENT_CHECK_NAME(const char*, mainModPath, "mainModPath");
+FG_XML_AUTO_TEMPLATE_ELEMENT_CHECK_NAME(const char*, currentModPath, "currentModPath");
+//FG_XML_AUTO_TEMPLATE_ELEMENT_CHECK_NAME(const char* , lastExecution,		"lastExecution");
 //FG_XML_AUTO_TEMPLATE_ELEMENT_CHECK_NAME(int,		videoModeID,		"videoModeID");
 FG_XML_AUTO_TEMPLATE_ELEMENT_CHECK_NAME(int, verboseLevel, "verboseLevel");
 //FG_XML_AUTO_TEMPLATE_ELEMENT_CHECK_NAME(long,		lastTimestamp,		"lastTimestamp");

@@ -133,7 +133,13 @@ template <> struct fgXMLAutoAttribute<_type> { \
 template<typename Target>
 class fgXMLAutoHandler : public fg::xml::CDefaultHandler {
 public:
-    fgXMLAutoHandler() : m_target(NULL), m_isFailure(FG_FALSE) { }
+    /**
+     *
+     */
+    fgXMLAutoHandler() : m_isFailure(FG_FALSE), m_target(NULL) { }
+    /**
+     * 
+     */
     virtual ~fgXMLAutoHandler() {
         while(!m_elemStack.empty())
             m_elemStack.pop();
@@ -183,6 +189,10 @@ public:
         //FG_LOG_DEBUG("XMLAutoHandler: characters('%s', %d, %d); failure[%d]", ch, start, length, m_isFailure);
         fgXMLAutoCharacters<Target>::characters(ch, start, length, nodeType, m_target, elementPtr);
     }
+    /**
+     * 
+     * @param target
+     */
     virtual void setTarget(Target *target) {
         m_target = target;
     }

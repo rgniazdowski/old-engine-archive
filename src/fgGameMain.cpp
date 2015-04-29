@@ -430,13 +430,13 @@ fgBool CGameMain::loadConfiguration(void) {
             return FG_FALSE;
         }
     }
-
+    path::changeCurrentWorkingDir(m_settings->getInstallationPath());
+    path::changeCurrentWorkingDir(m_settings->getDefaultDataPath());
     // #FIXME
     CSimpleOpt::SOption gameOptions[] = {
         {0, "--mod", SO_REQ_SEP},
         { -1, NULL, SO_NONE}
     };
-
     CSimpleOpt args;
     args.Init(m_argc, m_argv, gameOptions, SO_O_NOERR | SO_O_EXACT);
     while(args.Next()) {
@@ -827,3 +827,4 @@ fgBool CGameMain::gameFreeLookHandler(event::CArgumentList* argv) {
     }
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
