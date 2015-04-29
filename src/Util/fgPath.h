@@ -42,7 +42,40 @@ namespace fg {
          *          On linux and windows returns relative path to the current directory
          */
         const char* getAssetsPath(void);
-        
+
+        /**
+         *
+         * @param newPath
+         * @return
+         */
+        fgBool changeCurrentWorkingDir(const char *newPath);
+        /**
+         * 
+         * @param newPath
+         * @return 
+         */
+        fgBool changeCurrentWorkingDir(const std::string& newPath);
+
+        /**
+         *
+         * @param buffer
+         * @param maxlen
+         * @return
+         */
+        char* getCurrentWorkingPath(char* buffer, size_t maxlen);
+
+        /**
+         *
+         * @return
+         */
+        std::string getCurrentWorkingPath(void);
+
+        /**
+         * 
+         * @param output_path
+         */
+        void getCurrentWorkingPath(std::string& output_path);
+
         /**
          * Return the file extension //fgPath::fileExt
          * @param path

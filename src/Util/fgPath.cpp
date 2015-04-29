@@ -6,18 +6,17 @@
  * 
  * FlexiGame source code and any related files can not be copied, modified 
  * and/or distributed without the express or written consent from the author.
- *******************************************************/
+ ******************************************************************************/
 
 #include "fgPath.h"
 #include "fgCommon.h"
 #include "fgMemory.h"
+#include "fgUnistd.h"
 
 using namespace fg;
 
-/**
- * 
- * @return 
- */
+//------------------------------------------------------------------------------
+
 const char* path::getAssetsPath(void) {
 #if defined(FG_USING_PLATFORM_ANDROID)
     return "\0\0";
@@ -27,13 +26,48 @@ const char* path::getAssetsPath(void) {
     return "./";
 #endif
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param path
- * @param fullExt
- * @return 
- */
+fgBool path::changeCurrentWorkingDir(const char *newPath) {
+    if(!newPath)
+        return FG_FALSE;
+    return chdir(newPath) < 0 ? FG_FALSE : FG_TRUE;
+}
+//------------------------------------------------------------------------------
+
+fgBool path::changeCurrentWorkingDir(const std::string& newPath) {
+    if(newPath.empty())
+        return FG_FALSE;
+    return chdir(newPath.c_str()) < 0 ? FG_FALSE : FG_TRUE;
+}
+//------------------------------------------------------------------------------
+
+char* path::getCurrentWorkingPath(char* buffer, size_t maxlen) {
+    if(!buffer)
+        return NULL;
+    if(maxlen < 8)
+        return NULL;
+    getcwd(buffer, maxlen);
+    return buffer;
+}
+//------------------------------------------------------------------------------
+
+std::string path::getCurrentWorkingPath(void) {
+    std::string curdir;
+    getCurrentWorkingPath(curdir);
+    return curdir;
+}
+//------------------------------------------------------------------------------
+
+void path::getCurrentWorkingPath(std::string& output_path){
+    output_path.clear();
+    char buf[PATH_MAX];
+    if(getcwd(buf, PATH_MAX)) {
+        output_path.append(buf);
+    }
+}
+//------------------------------------------------------------------------------
+
 const char* path::fileExt(const char* path, fgBool fullExt) {
     if(!path) return NULL;
     path = path::fileName(path);
@@ -45,22 +79,15 @@ const char* path::fileExt(const char* path, fgBool fullExt) {
     if(!dot || dot == path) return NULL;
     return dot + 1;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param path
- * @return 
- */
 const char* path::fileName(const char* path) {
     if(!path)
         return NULL;
     return (strrchr(path, '/') ? strrchr(path, '/') + 1 : strrchr(path, '\\') ? strrchr(path, '\\') + 1 : path);
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param path
- */
 void path::dirName(char* path) {
     const char* filename = path::fileName(path);
     if(!filename)
@@ -71,12 +98,8 @@ void path::dirName(char* path) {
     for(int i = pos; i < npath; i++)
         path[i] = 0;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param path
- * @return 
- */
 char* path::dirName(const char* path) {
     const char* filename = path::fileName(path);
     if(!filename)
@@ -89,36 +112,22 @@ char* path::dirName(const char* path) {
     buf[newlen] = 0;
     return buf;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param path
- * @return 
- */
 std::string path::dirName(std::string &path) {
     const char* filename = path::fileName(path.c_str());
     if(!filename)
         return path;
     return path.substr(0, path.length() - strlen(filename));
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param path
- * @param dirpath
- * @return 
- */
 std::string& path::dirName(std::string &path, std::string &dirpath) {
     dirpath = dirName(path);
     return dirpath;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param path
- * @param dirpath
- * @param filename
- */
 void path::split(std::string &path, std::string &dirpath, std::string &filename) {
     dirpath = dirName(path);
     const char* filename_c = path::fileName(path.c_str());
@@ -127,17 +136,11 @@ void path::split(std::string &path, std::string &dirpath, std::string &filename)
     else
         filename = filename_c;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param path
- * @param dirpath
- * @param filename
- * @return 
- */
 std::string& path::join(std::string &path,
-                            const std::string &dirpath, 
-                            const std::string &filename) {
+                        const std::string &dirpath,
+                        const std::string &filename) {
     // path - here is the result stored
 
     int dirlen = (int)dirpath.length();
@@ -150,22 +153,14 @@ std::string& path::join(std::string &path,
     path.append(filename);
     return path;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param dirpath
- * @param filename
- * @return 
- */
 std::string path::join(const std::string &dirpath, const std::string &filename) {
     std::string path;
     path::join(path, dirpath, filename);
     return path;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param path
- * @param parts
- */
 void path::join(std::string &path, CStringVector &parts) { }
+//------------------------------------------------------------------------------
