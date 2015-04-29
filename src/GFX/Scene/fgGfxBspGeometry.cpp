@@ -118,12 +118,24 @@ fgBool gfx::CPolygon::doesContainPoint(Vector3f& pi) {
 }
 
 gfx::CPolygon::CPolygon(const CPolygon& p) {
+    m_planeIdx = 0;
+    m_flags = 0;
+    m_vertexData = NULL;
     this->operator =(p);
 }
 
 gfx::CPolygon& gfx::CPolygon::operator =(const CPolygon& p) {
     if(this != &p) {
-        m_vertexData->clear();
+        if(m_vertexData) {
+            m_vertexData->clear();
+        } else {
+            m_vertexData = new CVertexData4v();
+            if(p.m_vertexData) {
+                if(p.m_vertexData->size()) {
+                    m_vertexData->reserve(p.m_vertexData->size());
+                }
+            }
+        }
         copyProperties((CPolygon&)p);
         Vertex4v *pData = (Vertex4v *)p.m_vertexData->front();
         unsigned int n = p.m_vertexData->size();
@@ -172,7 +184,7 @@ void gfx::CPolygon::split(base_type& plane,
     Vertex4v iv;
     //Vtx itxB = *m_vertexData.begin();
     //Vtx itxA = m_vertexData.back();
-    Vertex4v& itxA = *((Vertex4v*)m_vertexData->back());
+    Vertex4v itxA = *((Vertex4v*)m_vertexData->back());
     float fB = 0.0f;
     float fA = plane.distance(itxA.position);
 
