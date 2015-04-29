@@ -18,8 +18,10 @@
 
 using namespace fg;
 
+//------------------------------------------------------------------------------
+
 gfx::CTextureResource::CTextureResource() :
-CResource(),
+base_type(),
 m_fileType(FG_TEXTURE_FILE_INVALID),
 m_textureType(FG_TEXTURE_PLAIN),
 m_pixelFormat(FG_TEXTURE_PIXEL_INVALID),
@@ -29,12 +31,13 @@ m_height(0),
 m_components(-1),
 m_textureGfxID(0),
 m_isInVRAM(FG_FALSE) {
-    m_resType = resource::TEXTURE;
+    this->m_resType = resource::TEXTURE;
     memset(m_cubeData, 0, sizeof (m_cubeData));
 }
+//------------------------------------------------------------------------------
 
 gfx::CTextureResource::CTextureResource(const char *path) :
-CResource(path),
+base_type(path),
 m_fileType(FG_TEXTURE_FILE_INVALID),
 m_textureType(FG_TEXTURE_PLAIN),
 m_pixelFormat(FG_TEXTURE_PIXEL_INVALID),
@@ -44,12 +47,13 @@ m_height(0),
 m_components(-1),
 m_textureGfxID(0),
 m_isInVRAM(FG_FALSE) {
-    m_resType = resource::TEXTURE;
+    this->m_resType = resource::TEXTURE;
     memset(m_cubeData, 0, sizeof (m_cubeData));
 }
+//------------------------------------------------------------------------------
 
 gfx::CTextureResource::CTextureResource(std::string& path) :
-CResource(path),
+base_type(path),
 m_fileType(FG_TEXTURE_FILE_INVALID),
 m_textureType(FG_TEXTURE_PLAIN),
 m_pixelFormat(FG_TEXTURE_PIXEL_INVALID),
@@ -59,12 +63,13 @@ m_height(0),
 m_components(-1),
 m_textureGfxID(0),
 m_isInVRAM(FG_FALSE) {
-    m_resType = resource::TEXTURE;
+    this->m_resType = resource::TEXTURE;
     memset(m_cubeData, 0, sizeof (m_cubeData));
 }
+//------------------------------------------------------------------------------
 
 void gfx::CTextureResource::clear(void) {
-    CResource::clear();
+    base_type::clear();
     m_fileType = FG_TEXTURE_FILE_INVALID;
     m_textureType = FG_TEXTURE_PLAIN;
     m_pixelFormat = FG_TEXTURE_PIXEL_INVALID;
@@ -74,10 +79,11 @@ void gfx::CTextureResource::clear(void) {
     m_height = 0;
     m_components = -1;
     m_textureGfxID = 0;
-    m_resType = resource::TEXTURE;
+    this->m_resType = resource::TEXTURE;
     m_isInVRAM = FG_FALSE;
     memset(m_cubeData, 0, sizeof (m_cubeData));
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CTextureResource::create(void) {
     if(m_rawData && m_isReady) {
@@ -121,7 +127,7 @@ fgBool gfx::CTextureResource::create(void) {
     }
     // #FIXME
     m_components = FG_TEXTURE_COMP_RGBA;
-    m_size = 0;
+    this->m_size = 0;
     const char *cubeSuffix[6] = {"px", "nx", "py", "ny", "pz", "nz"};
     for(i = 0; i < maxRawDataID; i++) {
         if(m_textureType == FG_TEXTURE_CUBE) {
@@ -161,30 +167,34 @@ fgBool gfx::CTextureResource::create(void) {
             FG_LOG_DEBUG("GFX: Successfully loaded texture nameTag[%s], path[%s]", m_nameTag.c_str(), filePathStr);
         }
         // #FIXME - texture raw data size calculation!
-        m_size += sizeof (unsigned char) * m_width * m_height * m_components;
+        this->m_size += sizeof (unsigned char) * m_width * m_height * m_components;
         FG_LOG_DEBUG("GFX: texture [%s] current size (KB): %.1f [MB=%.2f]", m_nameTag.c_str(), m_size / 1024.0f, m_size / 1024.0f / 1024.0f);
     }
 
-    m_isReady = FG_TRUE;
+    this->m_isReady = FG_TRUE;
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
 void gfx::CTextureResource::destroy(void) {
     releaseNonGFX();
-    CTextureResource::clear();
+    self_type::clear();
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CTextureResource::recreate(void) {
     FG_LOG_DEBUG("fgTextureResource::recreate(void)");
-    if(m_isReady || m_rawData)
-        releaseNonGFX();
-    m_isReady = FG_FALSE;
+    if(this->m_isReady || m_rawData)
+        dispose();
+    this->m_isReady = FG_FALSE;
     return create();
 }
+//------------------------------------------------------------------------------
 
 void gfx::CTextureResource::dispose(void) {
     releaseNonGFX();
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CTextureResource::isDisposed(void) const {
     // #FIXME ?
@@ -198,6 +208,7 @@ fgBool gfx::CTextureResource::isDisposed(void) const {
     else
         return !this->hasOwnedRAM();
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CTextureResource::setFileTypeFromFilePath(std::string &path) {
     if(path.empty())
@@ -219,31 +230,32 @@ fgBool gfx::CTextureResource::setFileTypeFromFilePath(std::string &path) {
     }
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
 void gfx::CTextureResource::releaseNonGFX(void) {
-    FG_LOG_DEBUG("GFX:Texture: release nonGFX: rawData[%p];", m_rawData);
-
+    if(m_rawData) {
+        FG_LOG_DEBUG("GFX:Texture: release nonGFX: rawData[%p];", m_rawData);
+    }
     for(int i = 0; i < FG_NUM_TEXTURE_CUBE_MAPS; i++) {
         if(m_cubeData[i]) {
             delete [] m_cubeData[i];
         }
         m_cubeData[i] = NULL;
     }
-    //if(m_rawData)
-    //    delete [] m_rawData;
-    //m_rawData = NULL;
+    m_rawData = NULL;
     m_width = 0;
     m_height = 0;
     m_components = 0;
-    m_size = 0;
-    m_isReady = FG_FALSE;
+    this->m_size = 0;
+    this->m_isReady = FG_FALSE;
 }
+//------------------------------------------------------------------------------
 
 void gfx::CTextureResource::setFlags(const std::string& flags) {
     if(flags.empty() || flags.length() < 2)
         return;
     // This is important - always call setFlags for the base class
-    CResource::setFlags(flags);
+    base_type::setFlags(flags);
     fg::CStringVector flagsVec;
     strings::split(flags, ' ', flagsVec);
     if(flagsVec.empty())
@@ -269,3 +281,4 @@ void gfx::CTextureResource::setFlags(const std::string& flags) {
         }
     }
 }
+//------------------------------------------------------------------------------

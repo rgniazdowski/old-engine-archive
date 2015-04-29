@@ -21,7 +21,7 @@ namespace fg {
     namespace gui {
         ///
         typedef unsigned int FontType;
-        
+
         ///
         const unsigned int STANDARD_GRID_SIZE = 16;
         ///
@@ -30,7 +30,7 @@ namespace fg {
         const unsigned int STANDARD_GRID_HEIGHT = 16;
         ///
         const unsigned int STANDARD_ASCII_SIZE = 256;
-        
+
         /// Invalid font type - initial value
         const FontType FONT_INVALID = 0x0000;
         /// Font made from texture resource
@@ -39,10 +39,10 @@ namespace fg {
         /*
          * Class definition for Font Resource - extends the Texture Resource
          */
-        class CFontResource : public fg::gfx::CTextureResource {
+        class CFontResource : public ::fg::gfx::CTextureResource {
         public:
             ///
-            typedef fg::gfx::CTextureResource base_type;
+            typedef ::fg::gfx::CTextureResource base_type;
             ///
             typedef CFontResource type;
             ///
@@ -91,11 +91,6 @@ namespace fg {
              * Destroy all loaded data including additional metadata (called with destructor)
              */
             virtual void destroy(void);
-            /**
-             * Reloads any data, recreates the resource (refresh)
-             * @return 
-             */
-            virtual fgBool recreate(void);
             /**
              * Dispose completely of the all loaded data, free all memory
              */

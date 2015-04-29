@@ -27,12 +27,12 @@ namespace fg {
         /*
          *
          */
-        class CTextureResource : public fg::resource::CResource {
-            friend class fg::gfx::CTextureManager;
+        class CTextureResource : public ::fg::resource::CResource {
+            friend class ::fg::gfx::CTextureManager;
 
         public:
             ///
-            typedef fg::resource::CResource base_type;
+            typedef ::fg::resource::CResource base_type;
             ///
             typedef CTextureResource type;
             ///

@@ -23,6 +23,11 @@ namespace fg {
          */
         class CFontBuiltInResource : public CFontResource {
         public:
+            typedef CFontResource base_type;
+            typedef CFontBuiltInResource self_type;
+            typedef CFontBuiltInResource type;
+
+        public:
             /**
              * 
              */
@@ -36,7 +41,7 @@ namespace fg {
              * 
              */
             virtual ~CFontBuiltInResource() {
-                CFontBuiltInResource::destroy();
+                self_type::destroy();
             }
 
         protected:
@@ -55,20 +60,6 @@ namespace fg {
              * 
              */
             virtual void destroy(void);
-            /**
-             * 
-             * @return 
-             */
-            virtual fgBool recreate(void);
-            /**
-             * 
-             */
-            virtual void dispose(void);
-            /**
-             * 
-             * @return 
-             */
-            virtual fgBool isDisposed(void) const;
             /**
              * 
              * @param rawFontData

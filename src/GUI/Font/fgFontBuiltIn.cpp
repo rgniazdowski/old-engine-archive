@@ -12,39 +12,31 @@
 
 using namespace fg;
 
-/**
- * 
- */
+//------------------------------------------------------------------------------
+
 gui::CFontBuiltInResource::CFontBuiltInResource() :
-CFontResource(),
+base_type(),
 m_rawFontData(NULL) {
     m_fontType = FG_FONT_TYPE_STB_BUILTIN;
-    m_resType = resource::FONT;
+    this->m_resType = resource::FONT;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param rawFontData
- */
 gui::CFontBuiltInResource::CFontBuiltInResource(SFontBuiltInRawData *rawFontData) :
-CFontResource(),
+base_type(),
 m_rawFontData(rawFontData) {
     m_fontType = FG_FONT_TYPE_STB_BUILTIN;
-    m_resType = resource::FONT;
+    this->m_resType = resource::FONT;
 }
+//------------------------------------------------------------------------------
 
-/*
- *
- */
 void gui::CFontBuiltInResource::clear(void) {
-    CFontResource::clear();
+    base_type::clear();
     m_rawData = NULL;
     m_fontType = FG_FONT_TYPE_STB_BUILTIN;
 }
+//------------------------------------------------------------------------------
 
-/*
- *
- */
 fgBool gui::CFontBuiltInResource::create(void) {
     FG_LOG_DEBUG("fgFontBuiltInResource::create();");
     if(!m_rawFontData)
@@ -155,45 +147,17 @@ fgBool gui::CFontBuiltInResource::create(void) {
     m_fontType = FG_FONT_TYPE_STB_BUILTIN;
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
-/*
- *
- */
 void gui::CFontBuiltInResource::destroy(void) {
-    CFontResource::destroy();
+    base_type::destroy();
     m_rawFontData = NULL;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @return 
- */
-fgBool gui::CFontBuiltInResource::recreate(void) {
-    gui::CFontBuiltInResource::dispose();
-    return gui::CFontBuiltInResource::create();
-}
-
-/*
- *
- */
-void gui::CFontBuiltInResource::dispose(void) {
-    CFontResource::dispose();
-}
-
-/**
- * 
- * @return 
- */
-fgBool gui::CFontBuiltInResource::isDisposed(void) const {
-    return CFontResource::isDisposed();
-}
-
-/**
- * 
- * @param rawFontData
- */
 void gui::CFontBuiltInResource::setBuiltInRawFontData(SFontBuiltInRawData *rawFontData) {
     if(!rawFontData)
         return;
     m_rawFontData = rawFontData;
 }
+//------------------------------------------------------------------------------
