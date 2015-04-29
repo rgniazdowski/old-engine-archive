@@ -15,7 +15,6 @@
     #include "fgGfxStdInc.h"
 
     #include "fgGfxWindow.h"
-    #include "fgGfxLoader.h"
     #include "fgGfxCameraAnimation.h"
     #include "Shaders/fgGfxShaderManager.h"
     #include "Textures/fgTextureManager.h"
