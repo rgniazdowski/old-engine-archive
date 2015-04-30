@@ -28,6 +28,7 @@ m_modelMat(), // model matrix init
 m_aabb(), // axis-aligned bounding box - this one will be transformed
 m_drawCall(NULL) // DrawCall for this node - it cannot be managed
 {
+    setActive(FG_TRUE);
     setCollidable(FG_TRUE);
     setAutoScale(FG_FALSE);
     // Draw call is only initialized when Node Custom type is specialized

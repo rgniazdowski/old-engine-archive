@@ -117,6 +117,7 @@ namespace fg {
              *
              */
             enum StateFlags {
+                /// No flags selected
                 NONE = 0x0000,
                 /// Is the scene node visible? Will be set to FALSE when the scene node
                 /// is not in the visible tree node (quadtree/octree/...)
@@ -128,7 +129,11 @@ namespace fg {
                 AUTO_SCALE = 0x0002,
                 /// Should check for collisions? If no, internal check will
                 /// always return FG_FALSE
-                COLLIDABLE = 0x0004
+                COLLIDABLE = 0x0004,
+                /// Whether or not this node is active. Node is active by default
+                ACTIVE = 0x0008,
+                /// Whether or not this node is selected. False by default
+                SELECTED = 0x0010
             };
 
         public:
@@ -779,6 +784,40 @@ namespace fg {
              */
             inline void setCollidable(const fgBool toggle = FG_TRUE) {
                 setFlag(COLLIDABLE, toggle);
+            }
+            /**
+             *
+             * @return
+             */
+            inline fgBool isActive(void) const {
+                return (fgBool)!!(m_stateFlags & ACTIVE);
+            }
+            /**
+             * 
+             * @param toggle
+             */
+            inline void setActive(const fgBool toggle = FG_TRUE) {
+                setFlag(ACTIVE, toggle);
+            }
+            /**
+             * 
+             * @return 
+             */
+            inline fgBool isSelected(void) const {
+                return (fgBool)!!(m_stateFlags & SELECTED);
+            }
+            /**
+             *
+             * @param toggle
+             */
+            inline void setSelected(const fgBool toggle = FG_TRUE) {
+                setFlag(SELECTED, toggle);
+            }
+            /**
+             *
+             */
+            inline void unselect(void) {
+                setFlag(SELECTED, FG_FALSE);
             }
 
             ////////////////////////////////////////////////////////////////////
