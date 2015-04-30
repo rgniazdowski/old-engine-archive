@@ -49,6 +49,13 @@ namespace fg {
                 return m_viewMatrix;
             }
             /**
+             * Returns constant reference to the internal view matrix
+             * @return
+             */
+            inline Matrix4f const& getViewMatrix(void) const {
+                return m_viewMatrix;
+            }
+            /**
              * Updates the view matrix based on the internal vector values
              * @return 
              */
