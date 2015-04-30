@@ -1,4 +1,5 @@
 <Settings>
+	<installationPath>/home/vigilant/develop/flexigame</installationPath>
 	<defaultDataPath>data</defaultDataPath>
 	<defaultLogPath>log</defaultLogPath>
 	<mainConfigPath>main.config.ini</mainConfigPath>
