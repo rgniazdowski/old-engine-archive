@@ -71,10 +71,11 @@ namespace fg {
             typedef CVector<CSceneNode *> ObjectVec;
             ///
             typedef ObjectVec::iterator ObjectVecItor;
-            
+
         public:
+
             /**
-             *
+             * Maximum is: 0x10 00 00 00
              */
             enum StateFlags {
                 /// No special scene state flags specified
@@ -98,7 +99,19 @@ namespace fg {
                 /// Frustum check will be performed based on bounding spheres
                 FRUSTUM_CHECK_SPHERE = 0x0040, // 64
                 /// Occlusion check will be performed
-                OCCLUSION_CHECK = 0x0080 // 128                              
+                OCCLUSION_CHECK = 0x0080, // 128
+                /// single pick selection active (on click actions)
+                PICK_SELECTION_ON_CLICK = 0x0100, // 256
+                /// Continuous pick selection active (mouse movement / hover)
+                PICK_SELECTION_ON_HOVER = 0x0200, // 512
+                /// Should pick selection be more accurate
+                PICK_SELECTION_AABB_TRIANGLES = 0x0400, // 1024
+                /// The state of pick selection (mouse/picker state)
+                /// When active the picker is currently selecting, used only
+                /// when pick selection is in click mode
+                /// Pick selection does not care what mouse button (or anything)
+                /// is used, picker state is reported from outside
+                PICK_SELECTION_PICKER_ACTIVE = 0x0800 // 2048
             };
 
         protected:
@@ -143,12 +156,12 @@ namespace fg {
              * @param pShaderMgr
              */
             virtual void setShaderManager(fg::base::CManager* pShaderMgr);
-            /**
+/**
              * 
              * @return 
              */
-            inline event::CEventManager* getEventManager(void) const {
-                return m_eventMgr;
+            inline event::CEventManager* getInternalEventManager(void) const {
+                return m_sceneEventMgr;
             }
             /**
              * 
@@ -178,7 +191,13 @@ namespace fg {
              * @param toggle
              */
             void setFlag(const StateFlags flags, const fgBool toggle = FG_TRUE);
-            
+            /**
+             * 
+             * @return 
+             */
+            StateFlags getStateFlags(void) const {
+                return m_stateFlags;
+            }
             /**
              * 
              * @param toggle
@@ -193,7 +212,6 @@ namespace fg {
             inline fgBool isLinearTraverse(void) const {
                 return (fgBool)!!(m_stateFlags & LINEAR_TRAVERSE);
             }
-            
             /**
              * 
              * @param toggle
@@ -208,7 +226,6 @@ namespace fg {
             inline fgBool isIgnoreCollisions(void) const {
                 return (fgBool)!!(m_stateFlags & IGNORE_COLLISIONS);
             }
-            
             /**
              * 
              * @param toggle
@@ -223,7 +240,6 @@ namespace fg {
             inline fgBool isHideNodes(void) const {
                 return (fgBool)!!(m_stateFlags & HIDE_NODES);
             }
-            
             /**
              * 
              * @param toggle
@@ -238,7 +254,6 @@ namespace fg {
             inline fgBool isHideSkyBox(void) const {
                 return (fgBool)!!(m_stateFlags & HIDE_SKYBOX);
             }
-            
             /**
              * 
              * @param toggle
@@ -253,7 +268,6 @@ namespace fg {
             inline fgBool isHideShadows(void) const {
                 return (fgBool)!!(m_stateFlags & HIDE_SHADOWS);
             }
-            
             /**
              * 
              * @param toggle
@@ -268,7 +282,6 @@ namespace fg {
             inline fgBool isHideAll(void) const {
                 return (fgBool)((m_stateFlags & HIDE_ALL) == HIDE_ALL);
             }
-            
             /**
              * 
              * @param toggle
@@ -285,7 +298,6 @@ namespace fg {
             inline fgBool isFrustumCheck(void) const {
                 return (fgBool)!!(m_stateFlags & FRUSTUM_CHECK);
             }
-            
             /**
              * 
              * @param toggle
@@ -301,7 +313,6 @@ namespace fg {
             inline fgBool isFrustumCheckSphere(void) const {
                 return (fgBool)!!(m_stateFlags & FRUSTUM_CHECK_SPHERE);
             }
-            
             /**
              * 
              * @param toggle
@@ -315,9 +326,116 @@ namespace fg {
              */
             inline fgBool isOcclusionCheck(void) const {
                 return (fgBool)!!(m_stateFlags & OCCLUSION_CHECK);
-            }            
-            
-            ////////////////////////////////////////////////////////////////////
+            }
+            /**
+             *
+             * @param toggle
+             */
+            inline void setPickSelectionOnClick(const fgBool toggle = FG_TRUE) {
+                setFlag(PICK_SELECTION_ON_HOVER, FG_FALSE);
+                setFlag(PICK_SELECTION_ON_CLICK, toggle);
+            }
+            /**
+             *
+             * @return
+             */
+            inline fgBool isPickSelectionOnClick(void) const {
+                return (fgBool)!!(m_stateFlags & PICK_SELECTION_ON_CLICK);
+            }
+            /**
+             *
+             * @param toggle
+             */
+            inline void setPickSelectionOnHover(const fgBool toggle = FG_TRUE) {
+                setFlag(PICK_SELECTION_ON_CLICK, FG_FALSE);
+                setFlag(PICK_SELECTION_ON_HOVER, toggle);
+            }
+            /**
+             * 
+             * @return
+             */
+            inline fgBool isPickSelectionOnHover(void) const {
+                return (fgBool)!!(m_stateFlags & PICK_SELECTION_ON_HOVER);
+            }
+            /**
+             *
+             * @param toggle
+             */
+            inline void setPickSelectionAABBTriangles(const fgBool toggle = FG_TRUE) {
+                setFlag(PICK_SELECTION_AABB_TRIANGLES, toggle);
+            }
+            /**
+             *
+             * @return
+             */
+            inline fgBool isPickSelectionAABBTriangles(void) const {
+                return (fgBool)!!(m_stateFlags & PICK_SELECTION_AABB_TRIANGLES);
+            }
+            //------------------------------------------------------------------
+            /**
+             *
+             * @param position
+             */
+            inline void reportSelectionMove(const Vector2i& position) {
+                m_pickSelection.pickPosition = position;
+            }
+            /**
+             *
+             * @param x
+             * @param y
+             */
+            inline void reportSelectionMove(int x, int y) {
+                m_pickSelection.pickPosition.x = x;
+                m_pickSelection.pickPosition.y = y;
+            }
+            /**
+             *
+             * @param state
+             */
+            inline void reportSelectionClick(const fgBool state = FG_TRUE) {
+                setFlag(PICK_SELECTION_PICKER_ACTIVE, state);
+            }
+            /**
+             *
+             */
+            inline void reportSelectionUnclick(void) {
+                setFlag(PICK_SELECTION_PICKER_ACTIVE, FG_FALSE);
+            }
+            /**
+             * 
+             * @return
+             */
+            SceneNodeHandle getLastPickedNodeHandle(void) const {
+                return m_pickSelection.h_lastSelectedNode;
+            }
+            /**
+             *
+             */
+            CSceneNode *getLastPickedNode(void) {
+                return get(m_pickSelection.h_lastSelectedNode);
+            }
+            /**
+             *
+             * @return
+             */
+            SceneNodeHandle getCurrentPickedNodeHandle(void) const {
+                return m_pickSelection.h_currentlySelectedNode;
+            }
+            /**
+             *
+             */
+            CSceneNode *getCurrentPickedNode(void) {
+                return get(m_pickSelection.h_currentlySelectedNode);
+            }
+            /**
+             * 
+             * @return 
+             */
+            inline fgBool isPickSelectionPickerActive(void) const {
+                return (fgBool)!!(m_stateFlags & PICK_SELECTION_PICKER_ACTIVE);
+            }
+        public:
+            //------------------------------------------------------------------
             /**
              * 
              * @return 
@@ -536,7 +654,7 @@ namespace fg {
              */
             CSceneNode* addDuplicate(CSceneNode* pSourceNode,
                                      const std::string& newNodeNameTag);
-            
+
             /**
              * 
              * @param pSourceNode
@@ -545,7 +663,7 @@ namespace fg {
              */
             CSceneNode* addDuplicate(CSceneNode* pSourceNode,
                                      const char* newNodeNameTag);
-            
+
             /**
              * 
              * @param nodeUniqueID
@@ -554,7 +672,7 @@ namespace fg {
              */
             CSceneNode* addDuplicate(const SceneNodeHandle& nodeUniqueID,
                                      const std::string& newNodeNameTag);
-            
+
             /**
              * 
              * @param nodeUniqueID
@@ -562,8 +680,8 @@ namespace fg {
              * @return 
              */
             CSceneNode* addDuplicate(const SceneNodeHandle& nodeUniqueID,
-                                     const char* newNodeNameTag);            
-            
+                                     const char* newNodeNameTag);
+
             /**
              * 
              * @param sourceNodeNameTag
@@ -572,7 +690,7 @@ namespace fg {
              */
             CSceneNode* addDuplicate(const std::string& sourceNodeNameTag,
                                      const std::string& newNodeNameTag);
-            
+
             /**
              * 
              * @param sourceNodeNameTag
@@ -581,9 +699,9 @@ namespace fg {
              */
             CSceneNode* addDuplicate(const char* sourceNodeNameTag,
                                      const char* newNodeNameTag);
-            
+
             ////////////////////////////////////////////////////////////////////
-            
+
             /**
              * 
              * @param pNode
@@ -917,45 +1035,128 @@ namespace fg {
             } m_collisionsInfo;
 
             ////////////////////////////////////////////////////////////////////
-            
+
             /**
              *
              */
-            struct TriggerInfo {
+            struct STriggerInfo {
                 ///
                 CSceneNodeTrigger* pTrigger;
                 ///
                 CSceneNode* pNodeB;
                 ///
                 fgBool isBegin;
-                
                 /**
                  * 
                  */
-                TriggerInfo() : pTrigger(NULL), pNodeB(NULL), isBegin(FG_TRUE) { }
+                STriggerInfo() : pTrigger(NULL), pNodeB(NULL), isBegin(FG_TRUE) { }
                 /**
                  * 
                  * @param trigger
                  * @param node
                  * @param begin
                  */
-                TriggerInfo(CSceneNodeTrigger *trigger, CSceneNode *node, fgBool begin) :
+                STriggerInfo(CSceneNodeTrigger *trigger, CSceneNode *node, fgBool begin) :
                 pTrigger(trigger), pNodeB(node), isBegin(begin) { }
                 /**
                  * 
                  */
-                ~TriggerInfo() { pTrigger = NULL; pNodeB = NULL; isBegin = FG_FALSE; };
+                ~STriggerInfo() {
+                    pTrigger = NULL;
+                    pNodeB = NULL;
+                    isBegin = FG_FALSE;
+                };
             };
 
             ///
-            typedef CVector<TriggerInfo> TriggerInfoVec;
+            typedef CVector<STriggerInfo> TriggerInfoVec;
             ///
             typedef TriggerInfoVec::iterator TriggerInfoVecItor;
-            
+
             TriggerInfoVec m_triggers;
-            
+
             ////////////////////////////////////////////////////////////////////
 
+            /**
+             *
+             */
+            struct SPickSelection {
+
+                enum Result {
+                    NOT_PICKED,
+                    PICKED_SPHERE,
+                    PICKED_AABB
+                };
+                ///
+                unsigned char aabbTrisIdx[12][3];
+                ///
+                Vector3f aabbPoints[8];
+                /// Current pick position, the pick state (up/down) is in state flags
+                Vector2i pickPosition;
+                /// Current position of the ray origin
+                Vector3f rayEye;
+                /// Current direction of the ray
+                Vector3f rayDir;
+                ///
+                Result goodPickResult;
+                ///
+                fgBool shouldUnselect;
+                ///
+                fgBool shouldCheck;
+                ///
+                SceneNodeHandle h_lastSelectedNode;
+                ///
+                SceneNodeHandle h_currentlySelectedNode;
+
+                /**
+                 * 
+                 */
+                SPickSelection();
+                /**
+                 * 
+                 */
+                ~SPickSelection() { }
+
+                /**
+                 *
+                 * @param mvp
+                 * @param camera
+                 */
+                void init(const CMVPMatrix& mvp,
+                          const CCamera& camera,
+                          StateFlags stateFlags);
+
+                /**
+                 *
+                 * @param mvp
+                 * @param camera
+                 * @param screenCoord
+                 */
+                void updateRay(const CMVPMatrix& mvp,
+                               const CCamera& camera);
+
+                /**
+                 *
+                 * @param pNode
+                 * @param checkAABBTriangles
+                 * @return
+                 */
+                Result isPicked(const CSceneNode* pNode,
+                                const fgBool checkAABBTriangles = FG_TRUE);
+
+                /**
+                 *
+                 * @param pEventMgr
+                 * @param pNode
+                 * @param checkAABBTriangles
+                 * @return
+                 */
+                Result fullCheck(CSceneManager* pSceneMgr,
+                                 CSceneNode* pNode,
+                                 const fgBool checkAABBTriangles = FG_TRUE);
+            } m_pickSelection;
+
+            ////////////////////////////////////////////////////////////////////
         private:
             /// Internal flags, changing the default behavior of the Scene Manager
             StateFlags m_stateFlags;
@@ -970,15 +1171,14 @@ namespace fg {
             /// Pointer to the external resource manager - don't know if this is necessary
             fg::base::CManager* m_pResourceMgr;
             /// This is special manager for scene based events
-            event::CEventManager* m_eventMgr;
+            event::CEventManager* m_sceneEventMgr;
 
         protected:
             ///
             CBasetree *m_basetree;
         };
-        
+
         FG_ENUM_FLAGS(CSceneManager::StateFlags);
-        
         /**
          * 
          * @param flags

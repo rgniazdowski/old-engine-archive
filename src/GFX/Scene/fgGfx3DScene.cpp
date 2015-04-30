@@ -73,6 +73,12 @@ void gfx::CScene3D::sortCalls(void) {
     while(!getNodeQueue().empty())
         getNodeQueue().pop();
 
+    //
+    // Pick selection init
+    //
+    m_pickSelection.init(*getMVP(), *getCamera(), getStateFlags());
+    const fgBool checkPickSelectionAABB = isPickSelectionAABBTriangles();
+
     ////////////////////////////////////////////////////////////////////////////
     // PHASE I: Iterate through all objects, animate, update AABB, collisions...
     ////////////////////////////////////////////////////////////////////////////
@@ -80,28 +86,32 @@ void gfx::CScene3D::sortCalls(void) {
     for(; itor != end; itor++) {
         if(!(*itor).data)
             continue;
-        CSceneNode *sceneNode = (*itor).data;
+        CSceneNode *pSceneNode = (*itor).data;
+        if(!pSceneNode->isActive()) {
+            //continue;
+        }
+
         //sceneNode->refreshGfxInternals(); // #FIXME - is this needed?!?
-        SOctreeNode *treeNode = static_cast<SOctreeNode *>(sceneNode->getTreeNode());
-        sceneNode->setVisible(FG_FALSE);
+        SOctreeNode *pTreeNode = static_cast<SOctreeNode *>(pSceneNode->getTreeNode());
+        pSceneNode->setVisible(FG_FALSE);
         // There is a problem because the bounding box needs to be modified by
         // the model matrix; maybe some operator ?
-        sceneNode->update(timesys::elapsed()); // #FIXME - maybe this should also call updateAABB??
+        pSceneNode->update(timesys::elapsed()); // #FIXME - maybe this should also call updateAABB??
 
-        if(treeNode) {
+        if(pTreeNode) {
             //unsigned int objCount = treeNode->objects.size();
-            float halfSize = static_cast<CLooseOctree *>(m_octree)->getLooseK() * m_octree->getWorldSize().x / (2 << treeNode->depth);
+            float halfSize = static_cast<CLooseOctree *>(m_octree)->getLooseK() * m_octree->getWorldSize().x / (2 << pTreeNode->depth);
             // Check bounds of this scene node - if does not fit - reinsert to different tree node - slow...
-            if(m_octree->fitsInBox(sceneNode, treeNode->center, halfSize)) {
+            if(m_octree->fitsInBox(pSceneNode, pTreeNode->center, halfSize)) {
                 //printf("%s fits in box depth %d\n", sceneNode->getNameStr(), treeNode->depth);
-            } else if(treeNode->removeObject(sceneNode)) {
+            } else if(pTreeNode->removeObject(pSceneNode)) {
                 /*int objIdx = treeNode->objects.find(sceneNode);
                 if(objIdx != -1) {
                     sceneNode->setTreeNode(NULL);
                     treeNode->objects[objIdx] = treeNode->objects[objCount - 1];
                     treeNode->objects[objCount - 1] = NULL;
                     treeNode->objects.resize(objCount - 1);*/
-                m_octree->insert(sceneNode);
+                m_octree->insert(pSceneNode);
                 //}
             }
         }
@@ -109,8 +119,12 @@ void gfx::CScene3D::sortCalls(void) {
         // should not be called within the tree traversal
         if(!isIgnoreCollisions()) {
             // broadphase - this uses loose octree - more fast would be dynamic AABBtree ?
-            checkCollisions(sceneNode);
+            checkCollisions(pSceneNode);
         }
+        if(m_pickSelection.shouldCheck) {
+            m_pickSelection.fullCheck(this, pSceneNode, checkPickSelectionAABB);
+        }
+        ////////
     }
 
     ////////////////////////////////////////////////////////////////////////////
@@ -119,26 +133,26 @@ void gfx::CScene3D::sortCalls(void) {
     m_octree->rewind();
     //printf(".......................\n");
     while(m_octree->next()) {
-        SOctreeNode *treeNode = static_cast<SOctreeNode *>(m_octree->current());
-        unsigned int objCount = treeNode->objects.size();
-        float halfSize = static_cast<CLooseOctree *>(m_octree)->getLooseK() * m_octree->getWorldSize().x / (2 << treeNode->depth);
-        m_octNodes.push(treeNode);
-        if(frustum.testVolume(treeNode->center, halfSize) == CFrustum::OUTSIDE) {
+        SOctreeNode *pTreeNode = static_cast<SOctreeNode *>(m_octree->current());
+        unsigned int objCount = pTreeNode->objects.size();
+        float halfSize = static_cast<CLooseOctree *>(m_octree)->getLooseK() * m_octree->getWorldSize().x / (2 << pTreeNode->depth);
+        m_octNodes.push(pTreeNode);
+        if(frustum.testVolume(pTreeNode->center, halfSize) == CFrustum::OUTSIDE) {
             // Skip this tree node - it's completely outside of the frustum
             // Octree traverse functions needs to have special func for skipping
             m_octree->skip();
             continue;
         }
         for(unsigned int objIdx = 0; objIdx < objCount; objIdx++) {
-            CSceneNode *sceneNode = (CSceneNode *)treeNode->objects[objIdx];
-            if(!sceneNode) {
+            CSceneNode *pSceneNode = (CSceneNode *)pTreeNode->objects[objIdx];
+            if(!pSceneNode) {
                 continue;
             }
-            if(sceneNode->isVisible()) {
+            if(pSceneNode->isVisible()) {
                 continue;
             }
 
-            CDrawCall *pDrawCall = sceneNode->getDrawCall();
+            CDrawCall *pDrawCall = pSceneNode->getDrawCall();
 #if defined(FG_DEBUG)
             if(g_fgDebugConfig.isDebugProfiling) {
                 profile::g_debugProfiling->begin("GFX::Scene::FrustumCheck");
@@ -146,14 +160,14 @@ void gfx::CScene3D::sortCalls(void) {
 #endif
             int visibilityResult = 1;
             if(isFrustumCheck()) {
-                visibilityResult = frustum.testVolume(sceneNode->getBoundingVolume());
+                visibilityResult = frustum.testVolume(pSceneNode->getBoundingVolume());
             } else if(isFrustumCheckSphere()) {
-                visibilityResult = frustum.testSphere(sceneNode->getBoundingVolume());
+                visibilityResult = frustum.testSphere(pSceneNode->getBoundingVolume());
             }
             if(!visibilityResult) {
-                sceneNode->setVisible(FG_FALSE);
+                pSceneNode->setVisible(FG_FALSE);
             } else {
-                sceneNode->setVisible(FG_TRUE);
+                pSceneNode->setVisible(FG_TRUE);
             }
 
 #if defined(FG_DEBUG)
@@ -169,8 +183,8 @@ void gfx::CScene3D::sortCalls(void) {
             // The aabb for each object is updated based on the children
             // Need some standard for manipulating this objects, and also for traversing
             // the tree. Also one would need some standard for special kind of tree - loose octrees? bitch?
-            if(sceneNode->isVisible()) {
-                getNodeQueue().push(sceneNode);
+            if(pSceneNode->isVisible()) {
+                getNodeQueue().push(pSceneNode);
                 //printf("going to draw %s\n", sceneNode->getNameStr());
             }
             if(pDrawCall) {
@@ -319,13 +333,13 @@ void gfx::CScene3D::checkCollisions(const CSceneNode* sceneNode) {
                     // It should not be reported
                     if(childType == gfx::SCENE_NODE_TRIGGER &&
                        nodeType != gfx::SCENE_NODE_TRIGGER) {
-                        TriggerInfo info(NULL, NULL, FG_TRUE);
+                        STriggerInfo info(NULL, NULL, FG_TRUE);
                         info.pTrigger = static_cast<CSceneNodeTrigger*>(const_cast<CSceneNode*>(childNode));
                         info.pNodeB = const_cast<CSceneNode*>(sceneNode);
                         m_triggers.push_back(info);
                     } else if(childType != gfx::SCENE_NODE_TRIGGER &&
                               nodeType == gfx::SCENE_NODE_TRIGGER) {
-                        TriggerInfo info(NULL, NULL, FG_TRUE);
+                        STriggerInfo info(NULL, NULL, FG_TRUE);
                         info.pTrigger = static_cast<CSceneNodeTrigger*>(const_cast<CSceneNode*>(sceneNode));
                         info.pNodeB = const_cast<CSceneNode*>(childNode);
                         m_triggers.push_back(info);
@@ -333,14 +347,14 @@ void gfx::CScene3D::checkCollisions(const CSceneNode* sceneNode) {
                     m_collisionsInfo.insert(childNode, sceneNode);
                     if(nodeType != gfx::SCENE_NODE_TRIGGER && childType != gfx::SCENE_NODE_TRIGGER) {
                         FG_LOG_DEBUG("*INSERTING*  Collision BEGUN between: '%s'--'%s'\n", sceneNode->getNameStr(), childNode->getNameStr());
-                        event::SSceneNodeCollision* collisionEvent = (event::SSceneNodeCollision*) getEventManager()->requestEventStruct();
+                        event::SSceneNodeCollision* collisionEvent = (event::SSceneNodeCollision*) getInternalEventManager()->requestEventStruct();
                         collisionEvent->eventType = event::SCENE_NODE_COLLISION;
                         collisionEvent->pNodeA = const_cast<CSceneNode*>(sceneNode);
                         collisionEvent->pNodeB = const_cast<CSceneNode*>(childNode);
 
-                        event::CArgumentList *argList = getEventManager()->requestArgumentList();
+                        event::CArgumentList *argList = getInternalEventManager()->requestArgumentList();
                         argList->push(event::SArgument::Type::ARG_TMP_POINTER, (void *)collisionEvent);
-                        getEventManager()->throwEvent(event::SCENE_NODE_COLLISION, argList);
+                        getInternalEventManager()->throwEvent(event::SCENE_NODE_COLLISION, argList);
                     }
                 } else {
                     // this collision is already occurring - based on last frame info
@@ -349,13 +363,13 @@ void gfx::CScene3D::checkCollisions(const CSceneNode* sceneNode) {
                 // Check for special trigger nodes - two trigger nodes cannot collide                
                 if(childType == gfx::SCENE_NODE_TRIGGER &&
                    nodeType != gfx::SCENE_NODE_TRIGGER) {
-                    TriggerInfo info(NULL, NULL, FG_FALSE);
+                    STriggerInfo info(NULL, NULL, FG_FALSE);
                     info.pTrigger = static_cast<CSceneNodeTrigger*>(const_cast<CSceneNode*>(childNode));
                     info.pNodeB = const_cast<CSceneNode*>(sceneNode);
                     m_triggers.push_back(info);
                 } else if(childType != gfx::SCENE_NODE_TRIGGER &&
                           nodeType == gfx::SCENE_NODE_TRIGGER) {
-                    TriggerInfo info(NULL, NULL, FG_FALSE);
+                    STriggerInfo info(NULL, NULL, FG_FALSE);
                     info.pTrigger = static_cast<CSceneNodeTrigger*>(const_cast<CSceneNode*>(sceneNode));
                     info.pNodeB = const_cast<CSceneNode*>(childNode);
                     m_triggers.push_back(info);

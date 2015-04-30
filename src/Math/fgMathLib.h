@@ -28,6 +28,7 @@
         #include "glm/mat3x3.hpp"
         #include "glm/mat4x4.hpp"
         #include "glm/geometric.hpp"
+        #include "glm/gtx/intersect.hpp"
         #include "glm/gtx/component_wise.hpp"
         #include "glm/gtx/quaternion.hpp"
         #include "glm/gtx/norm.hpp"

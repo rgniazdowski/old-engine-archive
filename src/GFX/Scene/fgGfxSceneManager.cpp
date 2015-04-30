@@ -38,21 +38,22 @@ m_camera(CCameraAnimation::FREE),
 m_skybox(),
 m_nodeQueue(),
 m_pResourceMgr(NULL),
-m_eventMgr(NULL),
+m_sceneEventMgr(NULL),
 m_basetree(NULL) {
     m_managerType = FG_MANAGER_SCENE;
     m_skybox.setScale(FG_GFX_PERSPECTIVE_ZFAR_DEFAULT * 1.1f); // #FIXME #SKYBOX scale
     m_skybox.setMVP(&m_MVP);
-    m_eventMgr = new event::CEventManager(sizeof (event::SSceneEvent));
+    m_sceneEventMgr = new event::CEventManager(sizeof (event::SSceneEvent));
     m_triggers.reserve(4);
+
 }
 //------------------------------------------------------------------------------
 
 gfx::CSceneManager::~CSceneManager() {
     CSceneManager::destroy();
-    if(m_eventMgr) {
-        delete m_eventMgr;
-        m_eventMgr = NULL;
+    if(m_sceneEventMgr) {
+        delete m_sceneEventMgr;
+        m_sceneEventMgr = NULL;
     }
 }
 //------------------------------------------------------------------------------
@@ -119,19 +120,19 @@ void gfx::CSceneManager::clearScene(void) {
     }
     m_triggers.clear_optimised();
     releaseAllHandles();
-    if(m_eventMgr) {
-        event::SSceneEvent* clearEvent = (event::SSceneEvent*) m_eventMgr->requestEventStruct();
+    if(m_sceneEventMgr) {
+        event::SSceneEvent* clearEvent = (event::SSceneEvent*) m_sceneEventMgr->requestEventStruct();
         clearEvent->code = event::SCENE_CLEARED;
 
-        event::CArgumentList *argList = m_eventMgr->requestArgumentList();
+        event::CArgumentList *argList = m_sceneEventMgr->requestArgumentList();
         argList->push(event::SArgument::Type::ARG_TMP_POINTER, (void *)clearEvent);
-        m_eventMgr->throwEvent(event::SCENE_CLEARED, argList);
+        m_sceneEventMgr->throwEvent(event::SCENE_CLEARED, argList);
     }
 }
 //------------------------------------------------------------------------------
 
 fgBool gfx::CSceneManager::initialize(void) {
-    m_eventMgr->initialize();
+    m_sceneEventMgr->initialize();
     return FG_TRUE;
 }
 
@@ -353,9 +354,193 @@ void gfx::CSceneManager::flush(void) {
 }
 //------------------------------------------------------------------------------
 
+gfx::CSceneManager::SPickSelection::SPickSelection() :
+aabbTrisIdx {
+    {
+        1, 2, 4
+    }, // 0: front:   124 | 234
+    {
+        2, 3, 4
+    }, // 1
+    {
+        8, 1, 5
+    }, // 2: left:    815 | 145
+    {
+        1, 4, 5
+    }, // 3
+    {
+        2, 7, 3
+    }, // 4: right:   273 | 763
+    {
+        7, 6, 3
+    }, // 5
+    {
+        4, 3, 5
+    }, // 6: top:     435 | 365
+    {
+        3, 6, 5
+    }, // 7
+    {
+        8, 7, 1
+    }, // 8: bottom:  871 | 721
+    {
+        7, 2, 1
+    }, // 9
+    {
+        7, 8, 6
+    }, // 10: back:    786 | 856
+    {
+        8, 5, 6
+    } //  11
+}
+
+,
+pickPosition(0, 0),
+rayEye(),
+rayDir() { }
+//------------------------------------------------------------------------------
+
+void gfx::CSceneManager::SPickSelection::init(const CMVPMatrix& mvp,
+                                              const CCamera& camera,
+                                              StateFlags stateFlags) {
+    //
+    // Pick selection init
+    //
+    shouldCheck = FG_FALSE;
+    shouldUnselect = FG_FALSE;
+    goodPickResult = NOT_PICKED;
+    if(((fgBool)!!(stateFlags & PICK_SELECTION_ON_CLICK)) &&
+       ((fgBool)!!(stateFlags & PICK_SELECTION_PICKER_ACTIVE))) {
+        shouldCheck = FG_TRUE;
+    } else if((fgBool)!!(stateFlags & PICK_SELECTION_ON_HOVER)) {
+        shouldCheck = FG_TRUE;
+        shouldUnselect = FG_TRUE;
+    }
+    if(shouldCheck) {
+        goodPickResult = PICKED_SPHERE;
+        updateRay(mvp, camera);
+    }
+    if((fgBool)!!(stateFlags & PICK_SELECTION_AABB_TRIANGLES))
+        goodPickResult = PICKED_AABB;
+    h_currentlySelectedNode.reset();
+}
+//------------------------------------------------------------------------------
+
+void gfx::CSceneManager::SPickSelection::updateRay(const CMVPMatrix& mvp,
+                                                   const CCamera& camera) {
+    const Vector2i& screenSize = context::getScreenSize();
+    //if(screenCoord.x >= 0 && screenCoord.y >= 0) {
+    //    pickPosition = screenCoord;
+    //}
+    // Step1: 3d normalised device coords
+    float x = (2.0f * pickPosition.x) / (float)screenSize.x - 1.0f;
+    float y = 1.0f - (2.0f * pickPosition.y) / (float)screenSize.y;
+    //float z = -1.0f; // -1.0f?
+
+    rayEye = camera.getEye();
+    // Step 2: 4d Homogeneous Clip Coordinates
+    Vector4f rayClip = Vector4f(x, y, -1.0f, 1.0f);
+    // Step 3: 4d Eye (Camera) Coordinates
+    Vector4f ray4dEye = math::inverse(mvp.getRefProjMatrix()) * rayClip;
+    ray4dEye.z = -1.0f;
+    ray4dEye.w = 0.0f;
+    // Step 4: 4d World Coordinates
+    Vector4f ray4d = (math::inverse(mvp.getViewMatrix()) * ray4dEye);
+    // don't forget to normalize the vector at some point
+    rayDir = math::normalize(Vector3f(ray4d.x, ray4d.y, ray4d.z));
+}
+//------------------------------------------------------------------------------
+
+gfx::CSceneManager::SPickSelection::Result gfx::CSceneManager::SPickSelection::isPicked(const CSceneNode* pNode,
+                                                                                        const fgBool checkAABBTriangles) {
+    if(!pNode)
+        return NOT_PICKED;
+    Result result = NOT_PICKED;
+    Vector3f intersectionPos, intersectionNorm, baryPosition;
+    const BoundingVolume3Df& volume = pNode->getBoundingVolume();
+    const Vec3f& center = volume.center;
+    const Vec3f& extent = volume.extent;
+    if(volume.radius < std::numeric_limits<float>::epsilon())
+        return NOT_PICKED;
+    bool triangleStatus = false;
+    bool status = math::intersectRaySphere(rayEye, rayDir,
+                                           center,
+                                           volume.radius,
+                                           intersectionPos,
+                                           intersectionNorm);
+    if(status)
+        result = PICKED_SPHERE;
+
+    if(status && checkAABBTriangles) {
+        aabbPoints[0] = Vec3f(center.x - extent.x, center.y - extent.y, center.z + extent.z); // 1 -x, -y, +z
+        aabbPoints[1] = Vec3f(center.x + extent.x, center.y - extent.y, center.z + extent.z); // 2 +x, -y, +z
+        aabbPoints[2] = Vec3f(center.x + extent.x, center.y + extent.y, center.z + extent.z); // 3 +x, +y, +z
+        aabbPoints[3] = Vec3f(center.x - extent.x, center.y + extent.y, center.z + extent.z); // 4 -x, +y, +z
+
+        aabbPoints[4] = Vec3f(center.x - extent.x, center.y + extent.y, center.z - extent.z); // 5 -x, +y, -z
+        aabbPoints[5] = Vec3f(center.x + extent.x, center.y + extent.y, center.z - extent.z); // 6 +x, +y, -z
+        aabbPoints[6] = Vec3f(center.x + extent.x, center.y - extent.y, center.z - extent.z); // 7 +x, -y, -z
+        aabbPoints[7] = Vec3f(center.x - extent.x, center.y - extent.y, center.z - extent.z); //  8 -x, -y, -z
+#define v_i(_X) aabbPoints[(_X-1)]
+        // now check all the walls of the AABB
+        // 12 triangles
+        for(unsigned int i = 0; i < 12; i++) {
+            triangleStatus = math::intersectRayTriangle(rayEye,
+                                                        rayDir,
+                                                        v_i(aabbTrisIdx[i][0]),
+                                                        v_i(aabbTrisIdx[i][1]),
+                                                        v_i(aabbTrisIdx[i][2]),
+                                                        baryPosition);
+            if(triangleStatus) {
+                result = PICKED_AABB;
+                break;
+            }
+        }
+#undef v_i
+    }
+    return result;
+}
+//------------------------------------------------------------------------------
+
+gfx::CSceneManager::SPickSelection::Result gfx::CSceneManager::SPickSelection::fullCheck(CSceneManager* pSceneMgr,
+                                                                                         CSceneNode* pNode,
+                                                                                         const fgBool checkAABBTriangles) {
+    if(!pSceneMgr || !pNode) {
+        return NOT_PICKED;
+    }
+    Result pickResult = isPicked(pNode, checkAABBTriangles);
+    if(pickResult == goodPickResult) {
+        pNode->setSelected(FG_TRUE);
+        h_currentlySelectedNode = pNode->getHandle();
+        CSceneNode *pLastNode = pSceneMgr->getLastPickedNode();
+        if(pLastNode && pLastNode != pNode) {
+            // need additional checks for adding selections
+            // and group selection - not needed now #TODO : group select
+            pLastNode->unselect();
+        }
+        h_lastSelectedNode = pNode->getHandle();
+        // no need to check for more // unless multi select?
+        shouldCheck = FG_FALSE;
+        // Throw proper event
+        event::CArgumentList *argList = pSceneMgr->getInternalEventManager()->requestArgumentList();
+        event::SSceneNode* nodeEvent = (event::SSceneNode*) pSceneMgr->getInternalEventManager()->requestEventStruct();
+        nodeEvent->eventType = event::SCENE_NODE_SELECTED;
+        nodeEvent->pNodeA = pNode;        
+        argList->push(event::SArgument::Type::ARG_TMP_POINTER, (void *)nodeEvent);
+        pSceneMgr->getInternalEventManager()->throwEvent(event::SCENE_NODE_SELECTED, argList);
+    } else {
+        if(shouldUnselect) {
+            pNode->unselect();
+        }
+    }
+
+    return pickResult;
+}
+//------------------------------------------------------------------------------
+
 void gfx::CSceneManager::update(void) {
     while(m_triggers.size()) {
-        TriggerInfo &info = m_triggers.back();
+        STriggerInfo &info = m_triggers.back();
         CSceneNodeTrigger::TriggerActivation activation;
         if(info.isBegin)
             activation = CSceneNodeTrigger::ON_COLLISION_BEGIN;
@@ -365,20 +550,20 @@ void gfx::CSceneManager::update(void) {
             info.pTrigger->trigger(activation, info.pNodeB);
         }
 
-        if(info.isBegin && m_eventMgr) {
-            event::SSceneNodeTrigger* triggerEvent = (event::SSceneNodeTrigger*) m_eventMgr->requestEventStruct();
+        if(info.isBegin && m_sceneEventMgr) {
+            event::SSceneNodeTrigger* triggerEvent = (event::SSceneNodeTrigger*) m_sceneEventMgr->requestEventStruct();
             triggerEvent->eventType = event::SCENE_NODE_TRIGGER_FIRED;
             triggerEvent->pNodeTrigger = info.pTrigger;
             triggerEvent->pNodeB = info.pNodeB;
 
-            event::CArgumentList *argList = m_eventMgr->requestArgumentList();
+            event::CArgumentList *argList = m_sceneEventMgr->requestArgumentList();
             argList->push(event::SArgument::Type::ARG_TMP_POINTER, (void *)triggerEvent);
-            m_eventMgr->throwEvent(event::SCENE_NODE_TRIGGER_FIRED, argList);
+            m_sceneEventMgr->throwEvent(event::SCENE_NODE_TRIGGER_FIRED, argList);
         }
         m_triggers.pop_back();
     }
-    if(m_eventMgr) {
-        m_eventMgr->executeEvents();
+    if(m_sceneEventMgr) {
+        m_sceneEventMgr->executeEvents();
     }
 }
 //------------------------------------------------------------------------------
@@ -391,18 +576,28 @@ void gfx::CSceneManager::sortCalls(void) {
         CDrawingBatch::sortCalls(); // NOPE
     while(!m_nodeQueue.empty())
         m_nodeQueue.pop();
+
+    //
+    // Pick selection init // function maybe?
+    //
+    m_pickSelection.init(m_MVP, m_camera, m_stateFlags);
+    const fgBool checkPickSelectionAABB = isPickSelectionAABBTriangles();
+
     DataVecItor itor = getRefDataVector().begin(), end = getRefDataVector().end();
 #if 1
     for(; itor != end; itor++) {
         if(!(*itor).data)
             continue;
         CSceneNode* pNode = (*itor).data;
+        if(!pNode->isActive()) {
+
+        }
         CDrawCall* pDrawCall = pNode->getDrawCall();
 #if defined(FG_DEBUG)
         if(g_fgDebugConfig.isDebugProfiling) {
             profile::g_debugProfiling->begin("GFX::Scene::FrustumCheck");
         }
-#endif
+#endif        
         // There is a problem because the bounding box needs to be modified by
         // the model matrix; maybe some operator ?
         pNode->update(timesys::elapsed()); // updateAABB
@@ -422,7 +617,13 @@ void gfx::CSceneManager::sortCalls(void) {
         if(g_fgDebugConfig.isDebugProfiling) {
             profile::g_debugProfiling->end("GFX::Scene::FrustumCheck");
         }
-#endif        
+#endif
+
+        // Pick selection // #FIXME
+        if(m_pickSelection.shouldCheck) {
+            m_pickSelection.fullCheck(this, pNode, checkPickSelectionAABB);
+        }
+
         g_fgDebugConfig.gfxBBoxShow = true;
         // ? also need to push to queue more than one draw call
         // And i mean... wait wut? All children are registered
@@ -430,7 +631,7 @@ void gfx::CSceneManager::sortCalls(void) {
         // There is no need to go through all (linear) objects through the scene
         // The aabb for each object is updated based on the children
         // Need some standard for manipulating this objects, and also for traversing
-        // the tree. Also one would need some standard for special kind of tree - loose octrees? bitch?
+        // the tree. Also one would need some standard for special kind of tree - loose octrees?
         if(pNode->isVisible()) {
             m_nodeQueue.push(pNode);
         }
@@ -580,9 +781,9 @@ CSceneNode *gfx::CSceneManager::appendModel(int& index,
 
 gfx::CSceneCallback* gfx::CSceneManager::addCallback(event::EventType eventCode,
                                                      CSceneCallback *pCallback) {
-    if(!pCallback || !m_eventMgr)
+    if(!pCallback || !m_sceneEventMgr)
         return NULL;
-    if(m_eventMgr->addCallback(eventCode, pCallback)) {
+    if(m_sceneEventMgr->addCallback(eventCode, pCallback)) {
         return pCallback;
     } else {
         return NULL;
@@ -856,15 +1057,15 @@ fgBool gfx::CSceneManager::addNode(SceneNodeHandle& nodeUniqueID,
         m_collisionsInfo.reserve((unsigned int)((float)handle_mgr_type::getRefDataVector().size()*1.5f) + 32);
     }
 
-    if(m_eventMgr) {
-        event::SSceneNode* nodeEvent = (event::SSceneNode*) m_eventMgr->requestEventStruct();
+    if(m_sceneEventMgr) {
+        event::SSceneNode* nodeEvent = (event::SSceneNode*) m_sceneEventMgr->requestEventStruct();
         nodeEvent->eventType = event::SCENE_NODE_INSERTED;
         nodeEvent->pNodeA = pNode;
         nodeEvent->pNodeB = NULL;
 
-        event::CArgumentList *argList = m_eventMgr->requestArgumentList();
+        event::CArgumentList *argList = m_sceneEventMgr->requestArgumentList();
         argList->push(event::SArgument::Type::ARG_TMP_POINTER, (void *)nodeEvent);
-        m_eventMgr->throwEvent(event::SCENE_NODE_INSERTED, argList);
+        m_sceneEventMgr->throwEvent(event::SCENE_NODE_INSERTED, argList);
     }
     return FG_TRUE;
 }

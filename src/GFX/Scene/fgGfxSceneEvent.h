@@ -29,17 +29,27 @@ namespace fg {
 
     namespace event {
 
+        /// Event thrown when collision occurred between two nodes
         const EventType SCENE_NODE_COLLISION = LAST_STANDARD_EVENT_CODE + 100;
+        /// Event thrown when scene node trigger is fired (collision occured)
         const EventType SCENE_NODE_TRIGGER_FIRED = LAST_STANDARD_EVENT_CODE + 101;
+        /// Event thrown when scene node is inserted
         const EventType SCENE_NODE_INSERTED = LAST_STANDARD_EVENT_CODE + 102;
+        /// Event thrown when scene node is removed
         const EventType SCENE_NODE_REMOVED = LAST_STANDARD_EVENT_CODE + 103;
+        ///
         const EventType SCENE_NODE_DESTROYED = LAST_STANDARD_EVENT_CODE + 104;
 
-        const EventType SCENE_CLEARED = LAST_STANDARD_EVENT_CODE + 105;
+        /// Event thrown when node is selected through pick selection
+        const EventType SCENE_NODE_SELECTED = LAST_STANDARD_EVENT_CODE + 105;
 
-        const EventType SCENE_DUMMY = LAST_STANDARD_EVENT_CODE + 106;
+        /// This event is thrown when scene was explicitly cleared, all nodes
+        // removed or deleted
+        const EventType SCENE_CLEARED = LAST_STANDARD_EVENT_CODE + 106;
 
-        const EventType LAST_SCENE_EVENT_CODE = LAST_STANDARD_EVENT_CODE + 106;
+        const EventType SCENE_DUMMY = LAST_STANDARD_EVENT_CODE + 107;
+
+        const EventType LAST_SCENE_EVENT_CODE = LAST_STANDARD_EVENT_CODE + 107;
 
         /*
          *

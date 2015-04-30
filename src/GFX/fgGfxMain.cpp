@@ -148,8 +148,8 @@ void gfx::CGfxMain::registerSceneCallbacks(void) {
     if(!m_sceneNodeInsertedCallback)
         m_sceneNodeInsertedCallback = new fg::event::CMethodCallback<CGfxMain>(this, &gfx::CGfxMain::sceneNodeInsertedHandler);
 
-    m_3DScene->getEventManager()->addCallback(event::SCENE_NODE_INSERTED, m_sceneNodeInsertedCallback);
-    m_2DScene->getEventManager()->addCallback(event::SCENE_NODE_INSERTED, m_sceneNodeInsertedCallback);
+    m_3DScene->getInternalEventManager()->addCallback(event::SCENE_NODE_INSERTED, m_sceneNodeInsertedCallback);
+    m_2DScene->getInternalEventManager()->addCallback(event::SCENE_NODE_INSERTED, m_sceneNodeInsertedCallback);
 }
 //------------------------------------------------------------------------------
 
@@ -157,8 +157,8 @@ void gfx::CGfxMain::unregisterSceneCallbacks(void) {
     if(!m_3DScene || !m_2DScene)
         return;
 
-    m_3DScene->getEventManager()->removeCallback(event::SCENE_NODE_INSERTED, m_sceneNodeInsertedCallback);
-    m_2DScene->getEventManager()->removeCallback(event::SCENE_NODE_INSERTED, m_sceneNodeInsertedCallback);
+    m_3DScene->getInternalEventManager()->removeCallback(event::SCENE_NODE_INSERTED, m_sceneNodeInsertedCallback);
+    m_2DScene->getInternalEventManager()->removeCallback(event::SCENE_NODE_INSERTED, m_sceneNodeInsertedCallback);
 }
 //------------------------------------------------------------------------------
 

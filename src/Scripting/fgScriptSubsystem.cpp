@@ -1816,6 +1816,7 @@ fgBool script::CScriptSubsystem::registerSceneManager(LuaPlus::LuaObject &metata
     typedef gfx::CSceneNode * (gfx::CSceneManager::*SCENE_BASE_SceneNode_C_STR_IN)(const char*);
     typedef gfx::CSceneNode * (gfx::CSceneManager::*SCENE_BASE_SceneNode_C_STR_C_STR_IN)(const char*, const char*);
     typedef fgBool(gfx::CSceneManager::*SCENE_BASE_Bool_C_STR_IN)(const char*);
+    typedef void(gfx::CSceneManager::*SCENE_BASE_void_2X_INT_IN)(int, int);
 
     typedef gfx::CSceneNode * (gfx::CSceneManager::*SCENE_BASE_SceneNode_C_STR_3X_FLOAT_IN)(const char*, float, float, float);
     typedef gfx::CSceneNode * (gfx::CSceneManager::*SCENE_BASE_SceneNode_C_STR_6X_FLOAT_IN)(const char*, float, float, float, float, float, float);
@@ -1882,6 +1883,44 @@ fgBool script::CScriptSubsystem::registerSceneManager(LuaPlus::LuaObject &metata
     metatable.RegisterObjectDirect("isOcclusionCheck",
                                    static_cast<gfx::CSceneManager *>(0),
                                    &gfx::CSceneManager::isOcclusionCheck);
+
+
+    metatable.RegisterObjectDirect("setPickSelectionOnClick",
+                                   static_cast<gfx::CSceneManager *>(0),
+                                   &gfx::CSceneManager::setPickSelectionOnClick);
+
+    metatable.RegisterObjectDirect("isPickSelectionOnClick",
+                                   static_cast<gfx::CSceneManager *>(0),
+                                   &gfx::CSceneManager::isPickSelectionOnClick);
+
+    metatable.RegisterObjectDirect("setPickSelectionOnHover",
+                                   static_cast<gfx::CSceneManager *>(0),
+                                   &gfx::CSceneManager::setPickSelectionOnHover);
+
+    metatable.RegisterObjectDirect("isPickSelectionOnHover",
+                                   static_cast<gfx::CSceneManager *>(0),
+                                   &gfx::CSceneManager::isPickSelectionOnHover);
+
+    metatable.RegisterObjectDirect("setPickSelectionAABBTriangles",
+                                   static_cast<gfx::CSceneManager *>(0),
+                                   &gfx::CSceneManager::setPickSelectionAABBTriangles);
+    
+    metatable.RegisterObjectDirect("isPickSelectionAABBTriangles",
+                                   static_cast<gfx::CSceneManager *>(0),
+                                   &gfx::CSceneManager::isPickSelectionAABBTriangles);
+
+    metatable.RegisterObjectDirect("reportSelectionMove",
+                                   static_cast<gfx::CSceneManager *>(0),
+                                   static_cast<SCENE_BASE_void_2X_INT_IN>(&gfx::CSceneManager::reportSelectionMove));
+
+    metatable.RegisterObjectDirect("reportSelectionClick",
+                                   static_cast<gfx::CSceneManager *>(0),
+                                   &gfx::CSceneManager::reportSelectionClick);
+
+    metatable.RegisterObjectDirect("reportSelectionUnclick",
+                                   static_cast<gfx::CSceneManager *>(0),
+                                   &gfx::CSceneManager::reportSelectionUnclick);
+    
 
     metatable.RegisterObjectDirect("destroyNode",
                                    static_cast<gfx::CSceneManager *>(0),

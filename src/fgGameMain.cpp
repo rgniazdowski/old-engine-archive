@@ -285,10 +285,10 @@ fgBool CGameMain::initSubsystems(void) {
     if(m_gfxMain)
         return FG_FALSE;
     m_gfxMain = new gfx::CGfxMain();
-    int w,h;
+    int w, h;
     w = m_mainConfig->getParameterInt("MainConfig.hardware", "screenWidth");
     h = m_mainConfig->getParameterInt("MainConfig.hardware", "screenHeight");
-    m_gfxMain->setScreenSize(w, h);    
+    m_gfxMain->setScreenSize(w, h);
     if(!m_gfxMain->initGFX()) {
         return FG_FALSE;
     }
@@ -303,7 +303,7 @@ fgBool CGameMain::initSubsystems(void) {
         guiPath.append(";");
         guiPath.append(modPath);
         m_guiMain = new gui::CGuiMain(guiPath, guiPath);
-    }    
+    }
     m_guiMain->setScreenSize(w, h);
     FG_HardwareState->setScreenDimensions(w, h);
     FG_HardwareState->initDPI();
@@ -758,6 +758,19 @@ fgBool CGameMain::gameTouchHandler(event::CArgumentList *argv) {
         this->m_gfxMain->getParticleSystem()->addParticles("ExplosionSmokeTrails", 32, Vector3f((float)touch->x, (float)touch->y, 0.0f));
         this->m_gfxMain->getParticleSystem()->addParticles("ExplosionSparks", 48, Vector3f((float)touch->x, (float)touch->y, 0.0f));
     }
+    if(this->m_gfxMain) {
+        if(type == event::TOUCH_MOTION) {
+            event::STouch *touch = (event::STouch *)pEvent;
+            this->m_gfxMain->get3DScene()->reportSelectionMove(touch->x, touch->y);
+            this->m_gfxMain->get2DScene()->reportSelectionMove(touch->x, touch->y);
+        } else if(type == event::TOUCH_PRESSED) {
+            this->m_gfxMain->get3DScene()->reportSelectionClick(FG_TRUE);
+            this->m_gfxMain->get2DScene()->reportSelectionClick(FG_TRUE);
+        } else if(type == event::TOUCH_RELEASED) {
+            this->m_gfxMain->get3DScene()->reportSelectionClick(FG_FALSE);
+            this->m_gfxMain->get2DScene()->reportSelectionClick(FG_FALSE);
+        }
+    }
     return FG_TRUE;
 }
 //------------------------------------------------------------------------------
@@ -768,9 +781,20 @@ fgBool CGameMain::gameMouseHandler(event::CArgumentList *argv) {
     event::SEvent *pEvent = (event::SEvent *)argv->getValueByID(0);
     if(!pEvent)
         return FG_FALSE;
-    //fgEventType type = event->eventType;
-    //fgMouseEvent *mouseEvent = (fgMouseEvent *)event;
-    //this->updateState();
+    event::EventType type = pEvent->code;
+    if(this->m_gfxMain) {
+        if(type == event::MOUSE_MOTION) {
+            event::SMouse *mouse = (event::SMouse *)pEvent;
+            this->m_gfxMain->get3DScene()->reportSelectionMove(mouse->x, mouse->y);
+            this->m_gfxMain->get2DScene()->reportSelectionMove(mouse->x, mouse->y);
+        } else if(type == event::MOUSE_PRESSED) {
+            this->m_gfxMain->get3DScene()->reportSelectionClick(FG_TRUE);
+            this->m_gfxMain->get2DScene()->reportSelectionClick(FG_TRUE);
+        } else if(type == event::MOUSE_RELEASED) {
+            this->m_gfxMain->get3DScene()->reportSelectionClick(FG_FALSE);
+            this->m_gfxMain->get2DScene()->reportSelectionClick(FG_FALSE);
+        }
+    }
     return FG_TRUE;
 }
 //------------------------------------------------------------------------------
