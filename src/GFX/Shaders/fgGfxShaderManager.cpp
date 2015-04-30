@@ -16,6 +16,7 @@
 #include "Util/fgMemory.h"
 
 using namespace fg;
+//------------------------------------------------------------------------------
 
 gfx::CShaderManager::CShaderManager() :
 m_currentProgram(NULL),
@@ -26,10 +27,12 @@ m_isPreloadDone(FG_FALSE) {
     m_managerType = FG_MANAGER_GFX_SHADER;
     m_init = FG_FALSE;
 }
+//------------------------------------------------------------------------------
 
 gfx::CShaderManager::~CShaderManager() {
     destroy();
 }
+//------------------------------------------------------------------------------
 
 void gfx::CShaderManager::clear(void) {
     m_currentProgram = NULL;
@@ -40,6 +43,7 @@ void gfx::CShaderManager::clear(void) {
     m_init = FG_FALSE;
     m_isPreloadDone = FG_FALSE;
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CShaderManager::destroy(void) {
     ProgramVec & data = getRefDataVector();
@@ -55,6 +59,7 @@ fgBool gfx::CShaderManager::destroy(void) {
     CShaderManager::clear();
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CShaderManager::initialize(void) {
     if(m_init) {
@@ -178,6 +183,7 @@ fgBool gfx::CShaderManager::initialize(void) {
     m_init = FG_TRUE;
     return m_init; //preLoadShaders(); // ?
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CShaderManager::preLoadShaders(void) {
     if(!m_init)
@@ -243,6 +249,7 @@ fgBool gfx::CShaderManager::preLoadShaders(void) {
     }
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CShaderManager::insert(CShaderProgram *pProgram, const std::string& nameTag) {
     if(!pProgram)
@@ -255,10 +262,12 @@ fgBool gfx::CShaderManager::insert(CShaderProgram *pProgram, const std::string& 
     }
     return FG_FALSE;
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CShaderManager::insertProgram(CShaderProgram *pProgram) {
     return insert(pProgram, pProgram->getName());
 }
+//------------------------------------------------------------------------------
 
 gfx::CShaderProgram *gfx::CShaderManager::request(const std::string& info) {
     if(!m_shadersDir || !m_init || info.empty())
@@ -353,23 +362,26 @@ gfx::CShaderProgram *gfx::CShaderManager::request(const std::string& info) {
             return NULL;
         }
     }
-
     return shaderPtr;
 }
+//------------------------------------------------------------------------------
 
 gfx::CShaderProgram *gfx::CShaderManager::request(const char *info) {
     return request(std::string(info));
 }
+//------------------------------------------------------------------------------
 
 void gfx::CShaderManager::setInternalCurrentProgram(CShaderProgram* pProgram) {
     if(!pProgram)
         return;
     m_currentProgram = pProgram;
 }
+//------------------------------------------------------------------------------
 
 gfx::CShaderProgram *gfx::CShaderManager::getCurrentProgram(void) const {
     return m_currentProgram;
 }
+//------------------------------------------------------------------------------
 
 void gfx::CShaderManager::setShadersPath(const std::string &path) {
     m_shadersPath = path;
@@ -383,7 +395,9 @@ void gfx::CShaderManager::setShadersPath(const std::string &path) {
         else
             m_shadersPath.insert(0, "./");
     }
+    FG_LOG_DEBUG("GFX:%s: Set shaders path to: '%s'", tag_type::name(), m_shadersPath.c_str());
 }
+//------------------------------------------------------------------------------
 
 void gfx::CShaderManager::setShadersPath(const char *path) {
     if(!path) {
@@ -399,6 +413,7 @@ void gfx::CShaderManager::setShadersPath(const char *path) {
     }
     FG_LOG_DEBUG("GFX:%s: Set shaders path to: '%s'", tag_type::name(), m_shadersPath.c_str());
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CShaderManager::compileShaders(void) {
     if(!m_init) {
@@ -422,6 +437,7 @@ fgBool gfx::CShaderManager::compileShaders(void) {
         FG_MessageSubsystem->reportWarning(tag_type::name(), FG_ERRNO_GFX_OK, "Problem occurred when compiling shader programs");
     return status;
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CShaderManager::linkShaders(void) {
     if(!m_init) {
@@ -445,6 +461,7 @@ fgBool gfx::CShaderManager::linkShaders(void) {
         FG_MessageSubsystem->reportWarning(tag_type::name(), FG_ERRNO_GFX_OK, "Problem occurred when linking shader programs");
     return status;
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CShaderManager::allReleaseGFX(void) {
     if(!m_init) {
@@ -468,6 +485,7 @@ fgBool gfx::CShaderManager::allReleaseGFX(void) {
         FG_MessageSubsystem->reportWarning(tag_type::name(), FG_ERRNO_GFX_OK, "Problem occurred when releasing shader programs");
     return status;
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CShaderManager::useProgram(CShaderProgram *pProgram) {
     if(!pProgram)
@@ -478,6 +496,7 @@ fgBool gfx::CShaderManager::useProgram(CShaderProgram *pProgram) {
     }
     return FG_FALSE;
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CShaderManager::useProgram(ShaderHandle spUniqueID) {
     gfx::CShaderProgram *pProgram = dereference(spUniqueID);
@@ -489,6 +508,7 @@ fgBool gfx::CShaderManager::useProgram(ShaderHandle spUniqueID) {
     m_currentProgram = pProgram;
     return pProgram->use();
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CShaderManager::useProgram(const std::string &nameTag) {
     gfx::CShaderProgram *pProgram = dereference(nameTag);
@@ -500,6 +520,7 @@ fgBool gfx::CShaderManager::useProgram(const std::string &nameTag) {
     m_currentProgram = pProgram;
     return pProgram->use();
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CShaderManager::useProgram(const char *nameTag) {
     gfx::CShaderProgram *pProgram = dereference(nameTag);
@@ -511,6 +532,7 @@ fgBool gfx::CShaderManager::useProgram(const char *nameTag) {
     m_currentProgram = pProgram;
     return pProgram->use();
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CShaderManager::isProgramUsed(gfx::CShaderProgram *pProgram) {
     if(m_currentProgram && m_currentProgram == pProgram) {
@@ -519,18 +541,22 @@ fgBool gfx::CShaderManager::isProgramUsed(gfx::CShaderProgram *pProgram) {
     }
     return FG_FALSE;
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CShaderManager::isProgramUsed(ShaderHandle spUniqueID) {
     gfx::CShaderProgram *pProgram = dereference(spUniqueID);
     return CShaderManager::isProgramUsed(pProgram);
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CShaderManager::isProgramUsed(const std::string &nameTag) {
     CShaderProgram *pProgram = dereference(nameTag);
     return CShaderManager::isProgramUsed(pProgram);
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CShaderManager::isProgramUsed(const char *nameTag) {
     CShaderProgram *pProgram = dereference(nameTag);
     return CShaderManager::isProgramUsed(pProgram);
 }
+//------------------------------------------------------------------------------

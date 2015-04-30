@@ -6,12 +6,14 @@
  * 
  * FlexiGame source code and any related files can not be copied, modified 
  * and/or distributed without the express or written consent from the author.
- *******************************************************/
+ ******************************************************************************/
 
 #include "fgGfxDrawingBatch.h"
 #include "GFX/Shaders/fgGfxShaderManager.h"
 
 using namespace fg;
+
+//------------------------------------------------------------------------------
 
 gfx::CDrawingBatch::CDrawingBatch(const unsigned int reservedSize,
                                   const fgGfxDrawCallType drawCallType,
@@ -26,6 +28,7 @@ m_relMove(),
 m_pShaderMgr(NULL) {
     reserve(reservedSize);
 }
+//------------------------------------------------------------------------------
 
 gfx::CDrawingBatch::~CDrawingBatch() {
     gfx::CDrawingBatch::flush();
@@ -40,6 +43,7 @@ gfx::CDrawingBatch::~CDrawingBatch() {
     m_freeSlots.clear_optimised();
     m_drawCalls.clear_optimised();
 }
+//------------------------------------------------------------------------------
 
 void gfx::CDrawingBatch::setShaderManager(fg::base::CManager *pShaderMgr) {
     if(pShaderMgr) {
@@ -48,6 +52,7 @@ void gfx::CDrawingBatch::setShaderManager(fg::base::CManager *pShaderMgr) {
     }
     m_pShaderMgr = pShaderMgr;
 }
+//------------------------------------------------------------------------------
 
 gfx::CDrawCall *gfx::CDrawingBatch::requestDrawCall(int &index,
                                                     const fgGfxDrawCallType type,
@@ -86,12 +91,14 @@ gfx::CDrawCall *gfx::CDrawingBatch::requestDrawCall(int &index,
     //m_drawCalls.push_back(drawCall);
     return drawCall;
 }
+//------------------------------------------------------------------------------
 
 gfx::CDrawCall *gfx::CDrawingBatch::getDrawCall(int index) {
     if(index < 0 || index >= (int)m_drawCalls.size())
         return NULL;
     return m_drawCalls[index];
 }
+//------------------------------------------------------------------------------
 
 gfx::CDrawCall *gfx::CDrawingBatch::getLastDrawCall(void) {
     if(m_numDrawCalls == 0)
@@ -99,6 +106,7 @@ gfx::CDrawCall *gfx::CDrawingBatch::getLastDrawCall(void) {
     //return m_drawCalls.back();
     return m_drawCalls[m_numDrawCalls - 1];
 }
+//------------------------------------------------------------------------------
 
 int gfx::CDrawingBatch::appendDrawCall(CDrawCall* drawCall,
                                        fgBool manage,
@@ -139,6 +147,7 @@ int gfx::CDrawingBatch::appendDrawCall(CDrawCall* drawCall,
     drawCall->setScissorBox(m_scissorBox);
     return index;
 }
+//------------------------------------------------------------------------------
 
 gfx::CDrawCall *gfx::CDrawingBatch::removeDrawCall(int index) {
     if(index >= (int)m_numDrawCalls || index < 0)
@@ -170,6 +179,7 @@ gfx::CDrawCall *gfx::CDrawingBatch::removeDrawCall(int index) {
     }
     return drawCall;
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CDrawingBatch::removeDrawCall(CDrawCall *drawCall) {
     if(!drawCall)
@@ -201,6 +211,7 @@ fgBool gfx::CDrawingBatch::removeDrawCall(CDrawCall *drawCall) {
     }
     return FG_FALSE;
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CDrawingBatch::deleteDrawCall(int index) {
     fgBool isManaged = FG_FALSE;
@@ -220,6 +231,7 @@ fgBool gfx::CDrawingBatch::deleteDrawCall(int index) {
     }
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CDrawingBatch::deleteDrawCall(CDrawCall*& drawCall) {
     if(!drawCall) {
@@ -239,6 +251,7 @@ fgBool gfx::CDrawingBatch::deleteDrawCall(CDrawCall*& drawCall) {
     }
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
 int gfx::CDrawingBatch::getFreeSlot(int maximum) {
     if(m_freeSlots.empty())
@@ -258,6 +271,7 @@ int gfx::CDrawingBatch::getFreeSlot(int maximum) {
     }
     return -1;
 }
+//------------------------------------------------------------------------------
 
 void gfx::CDrawingBatch::reserve(unsigned int reservedSize, fgBool force) {
     if(m_reservedSize > reservedSize && force) {
@@ -321,6 +335,7 @@ void gfx::CDrawingBatch::reserve(unsigned int reservedSize, fgBool force) {
         // do nothing
     }
 }
+//------------------------------------------------------------------------------
 
 void gfx::CDrawingBatch::flush(void) {
     while(!m_priorityBatch.empty())
@@ -374,6 +389,7 @@ void gfx::CDrawingBatch::flush(void) {
     }
     m_zIndex = 0; */
 }
+//------------------------------------------------------------------------------
 
 void gfx::CDrawingBatch::sortCalls(void) {
     while(!m_priorityBatch.empty())
@@ -387,6 +403,7 @@ void gfx::CDrawingBatch::sortCalls(void) {
             m_priorityBatch.push(drawCall);
     }
 }
+//------------------------------------------------------------------------------
 
 void gfx::CDrawingBatch::render(void) {
     if(m_priorityBatch.empty())
@@ -400,3 +417,4 @@ void gfx::CDrawingBatch::render(void) {
         i++;
     }
 }
+//------------------------------------------------------------------------------
