@@ -14,6 +14,8 @@
 
 using namespace fg;
 
+//------------------------------------------------------------------------------
+
 gfx::CParticleEffect::CParticleEffect() : CResource(),
 m_maxCount(10),
 m_flags(FG_PARTICLE_FLAG_NONE),
@@ -43,15 +45,18 @@ m_burnRange() {
     m_burnRange.x = 1.0f;
     m_burnRange.y = 1.0f;
 }
+//------------------------------------------------------------------------------
 
 gfx::CParticleEffect::~CParticleEffect() {
     gfx::CParticleEffect::destroy();
 }
+//------------------------------------------------------------------------------
 
 void gfx::CParticleEffect::clear(void) {
     base_type::clear();
     m_resType = resource::PARTICLE_EFFECT;
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CParticleEffect::initializeFromConfig(util::config::ParameterVec& params) {
     if(params.empty())
@@ -215,6 +220,7 @@ fgBool gfx::CParticleEffect::initializeFromConfig(util::config::ParameterVec& pa
         return FG_FALSE;
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CParticleEffect::create(void) {
     if(m_isReady) {
@@ -263,21 +269,25 @@ void gfx::CParticleEffect::destroy(void) {
     m_isReady = FG_FALSE;
     m_size = 0;
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CParticleEffect::recreate(void) {
     dispose();
     m_isReady = FG_FALSE;
     return create();
 }
+//------------------------------------------------------------------------------
 
 void gfx::CParticleEffect::dispose(void) {
     m_isReady = FG_FALSE;
     m_size = 0;
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CParticleEffect::isDisposed(void) const {
     return !m_isReady;
 }
+//------------------------------------------------------------------------------
 
 void gfx::CParticleEffect::initializeParticle(SParticle *outputParticle,
                                               const fgBool randomizePosition,
@@ -359,6 +369,7 @@ void gfx::CParticleEffect::initializeParticle(SParticle *outputParticle,
     }
     return;
 }
+//------------------------------------------------------------------------------
 
 #if 0
 
@@ -549,6 +560,7 @@ void gfx::CParticleEffect::randomizeOnPair(const SParticle* from,
 
     target->setColor(color);
 }
+//------------------------------------------------------------------------------
 
 void gfx::CParticleEffect::basicCalculate(SParticle* outputParticle) {
     // MOVEMENT
@@ -600,3 +612,4 @@ void gfx::CParticleEffect::basicCalculate(SParticle* outputParticle) {
             color.a = 1.0f;
     }
 }
+//------------------------------------------------------------------------------

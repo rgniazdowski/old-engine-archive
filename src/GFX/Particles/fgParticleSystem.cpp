@@ -6,7 +6,7 @@
  * 
  * FlexiGame source code and any related files can not be copied, modified 
  * and/or distributed without the express or written consent from the author.
- *******************************************************/
+ ******************************************************************************/
 /*
  * fgParticleSystem.cpp
  *
@@ -26,19 +26,24 @@
 
 using namespace fg;
 
+//------------------------------------------------------------------------------
+
 gfx::CParticleSystem::CParticleSystem(fg::base::CManager *pResourceMgr,
                                       fg::base::CManager *pSceneMgr) {
     setResourceManager(pResourceMgr);
     setSceneManager(pSceneMgr);
 }
+//------------------------------------------------------------------------------
 
 gfx::CParticleSystem::~CParticleSystem() {
     gfx::CParticleSystem::destroy();
 }
+//------------------------------------------------------------------------------
 
 void gfx::CParticleSystem::clear() {
     // ?
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CParticleSystem::managedObjectDestructorCallback(void *systemData, void *userData) {
     if(!systemData || !userData)
@@ -65,6 +70,7 @@ fgBool gfx::CParticleSystem::managedObjectDestructorCallback(void *systemData, v
 
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CParticleSystem::sceneClearedCallback(CSceneNode* pNodeA, CSceneNode* pNodeB) {
     // The scene was cleared - destroy all emitters
@@ -74,6 +80,7 @@ fgBool gfx::CParticleSystem::sceneClearedCallback(CSceneNode* pNodeA, CSceneNode
     }
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
 void gfx::CParticleSystem::setSceneManager(fg::base::CManager* pSceneMgr) {
     if(m_pSceneMgr != pSceneMgr && pSceneMgr) {
@@ -86,6 +93,7 @@ void gfx::CParticleSystem::setSceneManager(fg::base::CManager* pSceneMgr) {
     }
     m_pSceneMgr = pSceneMgr;
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CParticleSystem::isEmitterInTheArray(CParticleEmitter *pEmitter) {
     if(!pEmitter || m_emitters.empty()) {
@@ -96,6 +104,7 @@ fgBool gfx::CParticleSystem::isEmitterInTheArray(CParticleEmitter *pEmitter) {
     }
     return FG_FALSE;
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CParticleSystem::isEmitterInTheArray(const std::string& emitterNameTag) {
     if(emitterNameTag.empty() || m_emitters.empty()) {
@@ -111,6 +120,7 @@ fgBool gfx::CParticleSystem::isEmitterInTheArray(const std::string& emitterNameT
     }
     return FG_FALSE;
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CParticleSystem::isEmitterInTheArray(const char *emitterNameTag) {
     if(!emitterNameTag || m_emitters.empty()) {
@@ -126,6 +136,7 @@ fgBool gfx::CParticleSystem::isEmitterInTheArray(const char *emitterNameTag) {
     }
     return FG_FALSE;
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CParticleSystem::isEmitterInTheScene(const CParticleEmitter *pEmitter) {
     if(!pEmitter || !m_pSceneMgr)
@@ -133,6 +144,7 @@ fgBool gfx::CParticleSystem::isEmitterInTheScene(const CParticleEmitter *pEmitte
 
     return static_cast<CSceneManager *>(m_pSceneMgr)->isManaged(pEmitter);
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CParticleSystem::isEmitterInTheScene(const std::string& emitterNameTag) {
     if(emitterNameTag.empty() || !m_pSceneMgr)
@@ -140,6 +152,7 @@ fgBool gfx::CParticleSystem::isEmitterInTheScene(const std::string& emitterNameT
 
     return static_cast<CSceneManager *>(m_pSceneMgr)->isManaged(emitterNameTag);
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CParticleSystem::isEmitterInTheScene(const char *emitterNameTag) {
     if(!emitterNameTag || !m_pSceneMgr)
@@ -147,6 +160,7 @@ fgBool gfx::CParticleSystem::isEmitterInTheScene(const char *emitterNameTag) {
 
     return static_cast<CSceneManager *>(m_pSceneMgr)->isManaged(emitterNameTag);
 }
+//------------------------------------------------------------------------------
 
 gfx::CParticleEmitter *gfx::CParticleSystem::getParticleEmitter(const std::string& emitterNameTag) {
     if(emitterNameTag.empty() || !m_pSceneMgr)
@@ -159,6 +173,7 @@ gfx::CParticleEmitter *gfx::CParticleSystem::getParticleEmitter(const std::strin
     }
     return NULL;
 }
+//------------------------------------------------------------------------------
 
 gfx::CParticleEmitter *gfx::CParticleSystem::getParticleEmitter(const char *emitterNameTag) {
     if(!emitterNameTag || !m_pSceneMgr)
@@ -171,6 +186,7 @@ gfx::CParticleEmitter *gfx::CParticleSystem::getParticleEmitter(const char *emit
     }
     return NULL;
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CParticleSystem::destroy(void) {
     m_init = FG_FALSE;
@@ -188,6 +204,7 @@ fgBool gfx::CParticleSystem::destroy(void) {
     m_emitters.clear_optimised();
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CParticleSystem::initialize(void) {
     if(m_init)
@@ -200,6 +217,7 @@ fgBool gfx::CParticleSystem::initialize(void) {
     m_managerType = FG_MANAGER_PARTICLE;
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CParticleSystem::insert(CParticleEffect* pEffect, const std::string& nameTag) {
     if(nameTag.empty() || !pEffect)
@@ -213,18 +231,21 @@ fgBool gfx::CParticleSystem::insert(CParticleEffect* pEffect, const std::string&
     }
     return FG_FALSE;
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CParticleSystem::insertParticleEffect(CParticleEffect *pEffect) {
     if(!pEffect)
         return FG_FALSE;
     return insert(pEffect, pEffect->getName());
 }
+//------------------------------------------------------------------------------
 
 gfx::CParticleEffect* gfx::CParticleSystem::request(const std::string& info) {
     if(!m_pResourceMgr || info.empty())
         return NULL;
     return (CParticleEffect *)(static_cast<resource::CResourceManager *>(m_pResourceMgr)->request(info));
 }
+//------------------------------------------------------------------------------
 
 gfx::CParticleEffect* gfx::CParticleSystem::request(const char *info) {
     if(!m_pResourceMgr || !info)
@@ -233,6 +254,7 @@ gfx::CParticleEffect* gfx::CParticleSystem::request(const char *info) {
         return NULL;
     return (CParticleEffect *)(static_cast<resource::CResourceManager *>(m_pResourceMgr)->request(info));
 }
+//------------------------------------------------------------------------------
 
 gfx::CParticleEmitter* gfx::CParticleSystem::insertParticleEmitter(const std::string& particleEffectNameTag,
                                                                    const std::string& particleEmitterNameTag,
@@ -294,6 +316,7 @@ gfx::CParticleEmitter* gfx::CParticleSystem::insertParticleEmitter(const std::st
     // Refresh?
     return pEmitter;
 }
+//------------------------------------------------------------------------------
 
 gfx::CParticleEmitter* gfx::CParticleSystem::insertParticleEmitter(const char *particleEffectNameTag,
                                                                    const char *particleEmitterNameTag,
@@ -312,6 +335,7 @@ gfx::CParticleEmitter* gfx::CParticleSystem::insertParticleEmitter(const char *p
                                  std::string(particleEmitterNameTag),
                                  emitterOrigin);
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CParticleSystem::insertParticleEmitter(const CParticleEmitter* pParticleEmitter,
                                                    const std::string& particleEffectNameTag) {
@@ -321,6 +345,7 @@ fgBool gfx::CParticleSystem::insertParticleEmitter(const CParticleEmitter* pPart
 
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
 void gfx::CParticleSystem::calculate(void) {
     if(!m_pSceneMgr)
@@ -359,6 +384,7 @@ void gfx::CParticleSystem::calculate(void) {
         pEmitter->calculate();
     }
 }
+//------------------------------------------------------------------------------
 
 void gfx::CParticleSystem::addParticles(const std::string& emitterNameTag,
                                         unsigned int numParticles,
@@ -368,6 +394,7 @@ void gfx::CParticleSystem::addParticles(const std::string& emitterNameTag,
         pEmitter->addParticles(numParticles, origin);
     }
 }
+//------------------------------------------------------------------------------
 
 void gfx::CParticleSystem::addParticles(const char* emitterNameTag,
                                         unsigned int numParticles,
@@ -377,6 +404,7 @@ void gfx::CParticleSystem::addParticles(const char* emitterNameTag,
         pEmitter->addParticles(numParticles, origin);
     }
 }
+//------------------------------------------------------------------------------
 
 void gfx::CParticleSystem::addParticles(const std::string& emitterNameTag,
                                         unsigned int numParticles,
@@ -386,6 +414,7 @@ void gfx::CParticleSystem::addParticles(const std::string& emitterNameTag,
         pEmitter->addParticles(numParticles, Vector3f(x, y, z));
     }
 }
+//------------------------------------------------------------------------------
 
 void gfx::CParticleSystem::addParticles(const char* emitterNameTag,
                                         unsigned int numParticles,
@@ -395,3 +424,4 @@ void gfx::CParticleSystem::addParticles(const char* emitterNameTag,
         pEmitter->addParticles(numParticles, Vector3f(x, y, z));
     }
 }
+//------------------------------------------------------------------------------

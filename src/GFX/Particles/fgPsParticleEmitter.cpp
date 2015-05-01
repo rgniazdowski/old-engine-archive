@@ -19,6 +19,8 @@
 
 using namespace fg;
 
+//------------------------------------------------------------------------------
+
 gfx::CParticleEmitter::CParticleEmitter(CParticleEffect *pEffect) :
 CSceneNode(SCENE_NODE_CUSTOM, NULL),
 m_effects(),
@@ -30,11 +32,13 @@ m_pCamera(NULL) {
     setCollidable(FG_FALSE);
     setupFromParticleEffect(pEffect);
 }
+//------------------------------------------------------------------------------
 
 gfx::CParticleEmitter::~CParticleEmitter() {
     m_particles.clear_optimised();
     m_effects.clear_optimised();
 }
+//------------------------------------------------------------------------------
 
 void gfx::CParticleEmitter::removeParticle(const unsigned int which) {
     if(which >= m_numParticles)
@@ -43,8 +47,10 @@ void gfx::CParticleEmitter::removeParticle(const unsigned int which) {
     //m_particles.resize(m_particles.size() - 1);
     m_numParticles--;
 }
+//------------------------------------------------------------------------------
 
-void gfx::CParticleEmitter::addParticles(const unsigned int count, const Vector3f& customOrigin) {
+void gfx::CParticleEmitter::addParticles(const unsigned int count,
+                                         const Vector3f& customOrigin) {
     if(!count)
         return;
     if(m_effects.empty())
@@ -63,6 +69,7 @@ void gfx::CParticleEmitter::addParticles(const unsigned int count, const Vector3
         m_numParticles++;
     }
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CParticleEmitter::setupFromParticleEffect(CParticleEffect *pParticleEffect) {
     if(!pParticleEffect) {
@@ -83,6 +90,7 @@ fgBool gfx::CParticleEmitter::setupFromParticleEffect(CParticleEffect *pParticle
     }
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
 Quaternionf RotationBetweenVectors(const Vector3f& instart, const Vector3f& indest) {
     Vector3f start = math::normalize(instart);
@@ -112,6 +120,7 @@ Quaternionf RotationBetweenVectors(const Vector3f& instart, const Vector3f& inde
                        rotationAxis.z * invs);
 
 }
+//------------------------------------------------------------------------------
 
 void gfx::CParticleEmitter::calculate(void) {
     CVertexData *pVertexData = NULL;
@@ -291,8 +300,10 @@ void gfx::CParticleEmitter::calculate(void) {
         v6.color = color; // V3 = V6
 
     }
+    m_aabb.radius = math::length(m_aabb.extent); // why radius is not updated?
     pData4v->resize(m_numParticles * 6);
 }
+//------------------------------------------------------------------------------
 
 void gfx::CParticleEmitter::draw(void) {
     //glEnable(GL_POLYGON_OFFSET_FILL);
@@ -312,3 +323,4 @@ void gfx::CParticleEmitter::draw(void) {
 
     //glDisable(GL_POLYGON_OFFSET_FILL);
 }
+//------------------------------------------------------------------------------
