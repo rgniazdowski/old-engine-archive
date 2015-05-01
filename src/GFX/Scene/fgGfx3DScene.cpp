@@ -121,10 +121,6 @@ void gfx::CScene3D::sortCalls(void) {
             // broadphase - this uses loose octree - more fast would be dynamic AABBtree ?
             checkCollisions(pSceneNode);
         }
-        if(m_pickSelection.shouldCheck) {
-            m_pickSelection.fullCheck(this, pSceneNode, checkPickSelectionAABB);
-        }
-        ////////
     }
 
     ////////////////////////////////////////////////////////////////////////////
@@ -164,11 +160,7 @@ void gfx::CScene3D::sortCalls(void) {
             } else if(isFrustumCheckSphere()) {
                 visibilityResult = frustum.testSphere(pSceneNode->getBoundingVolume());
             }
-            if(!visibilityResult) {
-                pSceneNode->setVisible(FG_FALSE);
-            } else {
-                pSceneNode->setVisible(FG_TRUE);
-            }
+            pSceneNode->setVisible(!!visibilityResult);
 
 #if defined(FG_DEBUG)
             if(g_fgDebugConfig.isDebugProfiling) {
@@ -184,6 +176,11 @@ void gfx::CScene3D::sortCalls(void) {
             // Need some standard for manipulating this objects, and also for traversing
             // the tree. Also one would need some standard for special kind of tree - loose octrees? bitch?
             if(pSceneNode->isVisible()) {
+                // Checking for pick selection only when node is visible
+                if(m_pickSelection.shouldCheck) {
+                    m_pickSelection.fullCheck(this, pSceneNode, checkPickSelectionAABB);
+                }
+                ////////
                 getNodeQueue().push(pSceneNode);
                 //printf("going to draw %s\n", sceneNode->getNameStr());
             }

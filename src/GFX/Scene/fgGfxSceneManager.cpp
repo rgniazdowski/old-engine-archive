@@ -525,7 +525,7 @@ gfx::CSceneManager::SPickSelection::Result gfx::CSceneManager::SPickSelection::f
         event::CArgumentList *argList = pSceneMgr->getInternalEventManager()->requestArgumentList();
         event::SSceneNode* nodeEvent = (event::SSceneNode*) pSceneMgr->getInternalEventManager()->requestEventStruct();
         nodeEvent->eventType = event::SCENE_NODE_SELECTED;
-        nodeEvent->pNodeA = pNode;        
+        nodeEvent->pNodeA = pNode;
         argList->push(event::SArgument::Type::ARG_TMP_POINTER, (void *)nodeEvent);
         pSceneMgr->getInternalEventManager()->throwEvent(event::SCENE_NODE_SELECTED, argList);
     } else {
@@ -608,11 +608,7 @@ void gfx::CSceneManager::sortCalls(void) {
         } else if(isFrustumCheckSphere()) {
             visibilityResult = m_MVP.getFrustum().testSphere(pNode->getBoundingVolume());
         }
-        if(!visibilityResult) {
-            pNode->setVisible(FG_FALSE);
-        } else {
-            pNode->setVisible(FG_TRUE);
-        }
+        pNode->setVisible(!!visibilityResult);
 #if defined(FG_DEBUG)
         if(g_fgDebugConfig.isDebugProfiling) {
             profile::g_debugProfiling->end("GFX::Scene::FrustumCheck");
@@ -620,7 +616,7 @@ void gfx::CSceneManager::sortCalls(void) {
 #endif
 
         // Pick selection // #FIXME
-        if(m_pickSelection.shouldCheck) {
+        if(m_pickSelection.shouldCheck && visibilityResult) {
             m_pickSelection.fullCheck(this, pNode, checkPickSelectionAABB);
         }
 
