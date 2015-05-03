@@ -27,6 +27,8 @@
 
 using namespace fg;
 
+//------------------------------------------------------------------------------
+
 gfx::CScene3D::CScene3D() :
 CSceneManager(),
 m_physicsWorld(NULL),
@@ -37,6 +39,7 @@ m_octree(NULL) {
     m_physicsWorld = new physics::CWorld(256);
     //    setFrustumCheckSphere(FG_TRUE);
 }
+//------------------------------------------------------------------------------
 
 gfx::CScene3D::~CScene3D() {
     if(m_octree) {
@@ -51,6 +54,7 @@ gfx::CScene3D::~CScene3D() {
     }
     m_physicsWorld = NULL;
 }
+//------------------------------------------------------------------------------
 
 void gfx::CScene3D::sortCalls(void) {
     if(!getShaderManager())
@@ -77,8 +81,7 @@ void gfx::CScene3D::sortCalls(void) {
     // Pick selection init
     //
     m_pickSelection.init(*getMVP(), *getCamera(), getStateFlags());
-    const fgBool checkPickSelectionAABB = isPickSelectionAABBTriangles();
-
+    const fgBool checkPickSelectionAABB = isPickSelectionAABBTriangles();    
     ////////////////////////////////////////////////////////////////////////////
     // PHASE I: Iterate through all objects, animate, update AABB, collisions...
     ////////////////////////////////////////////////////////////////////////////
@@ -195,7 +198,9 @@ void gfx::CScene3D::sortCalls(void) {
     if(m_physicsWorld) {
         m_physicsWorld->finishFrame();
     }
+    m_pickSelection.end(getStateFlags());
 }
+//------------------------------------------------------------------------------
 
 void gfx::CScene3D::render(void) {
     if(isHideAll()) {
@@ -228,6 +233,7 @@ void gfx::CScene3D::render(void) {
         m_octNodes.pop();
     }
 }
+//------------------------------------------------------------------------------
 
 gfx::CSceneNode *gfx::CScene3D::addFromModel(CModelResource* pModelRes,
                                              const std::string& nameTag) {
@@ -244,6 +250,7 @@ gfx::CSceneNode *gfx::CScene3D::addFromModel(CModelResource* pModelRes,
     FG_LOG_DEBUG("GFX: Scene3D: Inserted object: '%s'", nameTag.c_str());
     return pNode;
 }
+//------------------------------------------------------------------------------
 
 gfx::CSceneNode *gfx::CScene3D::addFromModel(const std::string& modelNameTag,
                                              const std::string& nameTag) {
@@ -260,6 +267,7 @@ gfx::CSceneNode *gfx::CScene3D::addFromModel(const std::string& modelNameTag,
     }
     return addFromModel(pModelRes, nameTag);
 }
+//------------------------------------------------------------------------------
 
 gfx::CSceneNode *gfx::CScene3D::addFromModel(const char *modelNameTag,
                                              const char *nameTag) {
@@ -277,6 +285,7 @@ gfx::CSceneNode *gfx::CScene3D::addFromModel(const char *modelNameTag,
     // #FIXME char * / std::string !
     return addFromModel(pModelRes, std::string(nameTag));
 }
+//------------------------------------------------------------------------------
 
 void gfx::CScene3D::checkCollisions(const CSceneNode* sceneNode) {
     if(!sceneNode)
@@ -392,3 +401,4 @@ void gfx::CScene3D::checkCollisions(const CSceneNode* sceneNode) {
         }
     }
 }
+//------------------------------------------------------------------------------

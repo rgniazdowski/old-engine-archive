@@ -1909,6 +1909,30 @@ fgBool script::CScriptSubsystem::registerSceneManager(LuaPlus::LuaObject &metata
                                    static_cast<gfx::CSceneManager *>(0),
                                    &gfx::CSceneManager::isPickSelectionAABBTriangles);
 
+    metatable.RegisterObjectDirect("setPickSelectionGroup",
+                                   static_cast<gfx::CSceneManager *>(0),
+                                   &gfx::CSceneManager::setPickSelectionGroup);
+
+    metatable.RegisterObjectDirect("isPickSelectionGroup",
+                                   static_cast<gfx::CSceneManager *>(0),
+                                   &gfx::CSceneManager::isPickSelectionGroup);
+
+    metatable.RegisterObjectDirect("setPickSelectionToggle",
+                                   static_cast<gfx::CSceneManager *>(0),
+                                   &gfx::CSceneManager::setPickSelectionToggle);
+
+    metatable.RegisterObjectDirect("isPickSelectionToggle",
+                                   static_cast<gfx::CSceneManager *>(0),
+                                   &gfx::CSceneManager::isPickSelectionToggle);
+
+    metatable.RegisterObjectDirect("setPickSelectionBox",
+                                   static_cast<gfx::CSceneManager *>(0),
+                                   &gfx::CSceneManager::setPickSelectionBox);
+
+    metatable.RegisterObjectDirect("isPickSelectionBox",
+                                   static_cast<gfx::CSceneManager *>(0),
+                                   &gfx::CSceneManager::isPickSelectionBox);
+
     metatable.RegisterObjectDirect("reportSelectionMove",
                                    static_cast<gfx::CSceneManager *>(0),
                                    static_cast<SCENE_BASE_void_2X_INT_IN>(&gfx::CSceneManager::reportSelectionMove));

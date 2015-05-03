@@ -24,7 +24,7 @@ namespace fg {
             typedef CCamera base_type;
 
         public:
-            /**
+/**
              * 
              */
             CMVMatrix() : CCamera(), m_modelViewMatrix() { }

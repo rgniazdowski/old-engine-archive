@@ -243,8 +243,8 @@ void gfx::CSceneManager::SCollisionsInfo::clear(void) {
 }
 //------------------------------------------------------------------------------
 
-fgBool gfx::CSceneManager::SCollisionsInfo::check(const CSceneNode *nodeA,
-                                                  const CSceneNode *nodeB) const {
+fgBool gfx::CSceneManager::SCollisionsInfo::check(const CSceneNode*nodeA,
+                                                  const CSceneNode*nodeB) const {
     if(!nodeA || !nodeB)
         return FG_FALSE;
     if(nodeA->getRefHandle().getIndex() > contacts.capacity() ||
@@ -277,7 +277,7 @@ fgBool gfx::CSceneManager::SCollisionsInfo::empty(void) const {
 }
 //------------------------------------------------------------------------------
 
-fgBool gfx::CSceneManager::SCollisionsInfo::empty(CSceneNode *pNode) const {
+fgBool gfx::CSceneManager::SCollisionsInfo::empty(CSceneNode*pNode) const {
     if(!pNode) {
         return FG_FALSE;
     }
@@ -291,7 +291,7 @@ fgBool gfx::CSceneManager::SCollisionsInfo::empty(CSceneNode *pNode) const {
 }
 //------------------------------------------------------------------------------
 
-unsigned int gfx::CSceneManager::SCollisionsInfo::count(CSceneNode *pNode) const {
+unsigned int gfx::CSceneManager::SCollisionsInfo::count(CSceneNode*pNode) const {
     if(!pNode) {
         return FG_FALSE;
     }
@@ -354,6 +354,32 @@ void gfx::CSceneManager::flush(void) {
 }
 //------------------------------------------------------------------------------
 
+void gfx::CSceneManager::reportSelectionClick(const fgBool state) {
+    setFlag(PICK_SELECTION_PICKER_ACTIVE, state);
+    // if the mode is on click + toggle - do nothing?
+    // if the mode is on click + toggle off - clear selection
+    // if the mode is on click + group selection + toggle off- clear selection
+    // if the mode is on click + group selection + toggle - do nothing
+    if(isPickSelectionOnClick() && state) {
+        m_pickSelection.pickPosBegin = m_pickSelection.pickPos;
+        m_pickSelection.pickBegin = timesys::exact();
+        if(!isPickSelectionToggle()) {
+            clearSelection();
+        }
+    }
+}
+//------------------------------------------------------------------------------
+
+void gfx::CSceneManager::clearSelection(void) {
+    unsigned int n = m_pickSelection.h_selectedNodes.size();
+    for(unsigned int i = 0; i < n; i++) {
+        m_pickSelection.h_selectedNodes[i].reset();
+    }
+    m_pickSelection.h_selectedNodes.clear_optimised();
+    m_pickSelection.h_selectionTimeStamps.clear();
+}
+//------------------------------------------------------------------------------
+
 gfx::CSceneManager::SPickSelection::SPickSelection() :
 aabbTrisIdx {
     {
@@ -395,9 +421,27 @@ aabbTrisIdx {
 }
 
 ,
-pickPosition(0, 0),
+pickPos(0, 0),
+pickPosBegin(0, 0),
+pickBox(),
 rayEye(),
-rayDir() { }
+rayDir(),
+pickBegin(-1.0f),
+goodPickResult(NOT_PICKED),
+shouldUnselect(FG_FALSE),
+shouldCheck(FG_FALSE),
+isToggle(FG_FALSE),
+isGroup(FG_FALSE),
+checkBox(FG_FALSE),
+h_lastSelectedNode(),
+h_selectedNodes(),
+h_selectionTimeStamps() {
+    h_selectedNodes.reserve(16);
+    for(int i = 0; i < 16; i++) {
+        h_selectedNodes[i].reset();
+    }
+    pickBegin = timesys::exact();
+}
 //------------------------------------------------------------------------------
 
 void gfx::CSceneManager::SPickSelection::init(const CMVPMatrix& mvp,
@@ -408,13 +452,36 @@ void gfx::CSceneManager::SPickSelection::init(const CMVPMatrix& mvp,
     //
     shouldCheck = FG_FALSE;
     shouldUnselect = FG_FALSE;
+    isToggle = FG_FALSE;
+    isGroup = FG_FALSE;
     goodPickResult = NOT_PICKED;
-    if(((fgBool)!!(stateFlags & PICK_SELECTION_ON_CLICK)) &&
-       ((fgBool)!!(stateFlags & PICK_SELECTION_PICKER_ACTIVE))) {
-        shouldCheck = FG_TRUE;
+
+    Vector2i size;
+    Vector2i pos = pickPosBegin;
+    size.x = pickPos.x - pickPosBegin.x;
+    size.y = pickPos.y - pickPosBegin.y;
+
+    if(size.x < 0) {
+        pos.x = pos.x + size.x;
+        size.x = -1 * size.x;
+    }
+    if(size.y < 0) {
+        pos.y = pos.y + size.y;
+        size.y = -1 * size.y;
+    }
+    pickBox.min = pos;
+    pickBox.setWidth(size.x);
+    pickBox.setHeight(size.y);
+
+    if((fgBool)!!(stateFlags & PICK_SELECTION_ON_CLICK)) {
+        shouldCheck = (fgBool)!!(stateFlags & PICK_SELECTION_PICKER_ACTIVE) || !h_lastSelectedNode.isNull();
+        isToggle = (fgBool)!!(stateFlags & PICK_SELECTION_TOGGLE) && shouldCheck;
+        isGroup = (fgBool)!!(stateFlags & PICK_SELECTION_GROUP);
+        checkBox = (fgBool)!!(stateFlags & PICK_SELECTION_BOX);
     } else if((fgBool)!!(stateFlags & PICK_SELECTION_ON_HOVER)) {
         shouldCheck = FG_TRUE;
         shouldUnselect = FG_TRUE;
+        isGroup = (fgBool)!!(stateFlags & PICK_SELECTION_GROUP);
     }
     if(shouldCheck) {
         goodPickResult = PICKED_SPHERE;
@@ -422,7 +489,18 @@ void gfx::CSceneManager::SPickSelection::init(const CMVPMatrix& mvp,
     }
     if((fgBool)!!(stateFlags & PICK_SELECTION_AABB_TRIANGLES))
         goodPickResult = PICKED_AABB;
-    h_currentlySelectedNode.reset();
+}
+//------------------------------------------------------------------------------
+
+void gfx::CSceneManager::SPickSelection::end(StateFlags stateFlags) {
+    if((fgBool)!!(stateFlags & PICK_SELECTION_ON_CLICK)) {
+        if((fgBool)!!(stateFlags & PICK_SELECTION_PICKER_ACTIVE) == 0) {
+            h_lastSelectedNode.reset();
+            pickBegin = -1.0f;
+            pickBox.invalidate();
+            //printf("%.3f: Removing last selected node\n", timesys::exact());
+        }
+    }
 }
 //------------------------------------------------------------------------------
 
@@ -433,8 +511,8 @@ void gfx::CSceneManager::SPickSelection::updateRay(const CMVPMatrix& mvp,
     //    pickPosition = screenCoord;
     //}
     // Step1: 3d normalised device coords
-    float x = (2.0f * pickPosition.x) / (float)screenSize.x - 1.0f;
-    float y = 1.0f - (2.0f * pickPosition.y) / (float)screenSize.y;
+    float x = (2.0f * pickPos.x) / (float)screenSize.x - 1.0f;
+    float y = 1.0f - (2.0f * pickPos.y) / (float)screenSize.y;
     //float z = -1.0f; // -1.0f?
 
     rayEye = camera.getEye();
@@ -452,6 +530,7 @@ void gfx::CSceneManager::SPickSelection::updateRay(const CMVPMatrix& mvp,
 //------------------------------------------------------------------------------
 
 gfx::CSceneManager::SPickSelection::Result gfx::CSceneManager::SPickSelection::isPicked(const CSceneNode* pNode,
+                                                                                        const CMVPMatrix& mvp,
                                                                                         const fgBool checkAABBTriangles) {
     if(!pNode)
         return NOT_PICKED;
@@ -498,6 +577,46 @@ gfx::CSceneManager::SPickSelection::Result gfx::CSceneManager::SPickSelection::i
         }
 #undef v_i
     }
+    if(!result && checkBox) {
+        // if we need to check the picker selection box against the node
+        const Vector4i& viewport = context::getViewport();
+        const Vector2i& screensize = context::getScreenSize();
+        AABB3Df aabb;
+        aabb.invalidate();
+        aabbPoints[0] = math::project(Vec3f(center.x - extent.x, center.y - extent.y, center.z + extent.z), mvp.getRefViewProjMatrix(), viewport); // 1 -x, -y, +z
+        aabbPoints[1] = math::project(Vec3f(center.x + extent.x, center.y - extent.y, center.z + extent.z), mvp.getRefViewProjMatrix(), viewport); // 2 +x, -y, +z
+        aabbPoints[2] = math::project(Vec3f(center.x + extent.x, center.y + extent.y, center.z + extent.z), mvp.getRefViewProjMatrix(), viewport); // 3 +x, +y, +z
+        aabbPoints[3] = math::project(Vec3f(center.x - extent.x, center.y + extent.y, center.z + extent.z), mvp.getRefViewProjMatrix(), viewport); // 4 -x, +y, +z
+
+        aabbPoints[4] = math::project(Vec3f(center.x - extent.x, center.y + extent.y, center.z - extent.z), mvp.getRefViewProjMatrix(), viewport); // 5 -x, +y, -z
+        aabbPoints[5] = math::project(Vec3f(center.x + extent.x, center.y + extent.y, center.z - extent.z), mvp.getRefViewProjMatrix(), viewport); // 6 +x, +y, -z
+        aabbPoints[6] = math::project(Vec3f(center.x + extent.x, center.y - extent.y, center.z - extent.z), mvp.getRefViewProjMatrix(), viewport); // 7 +x, -y, -z
+        aabbPoints[7] = math::project(Vec3f(center.x - extent.x, center.y - extent.y, center.z - extent.z), mvp.getRefViewProjMatrix(), viewport);
+        for(int i = 0; i < 8; i++)
+            aabb.merge(aabbPoints[i]);
+        AABB2Di box2d;
+        Vector2i pos, size;
+        pos.x = aabb.min.x;
+        pos.y = screensize.y - aabb.max.y;
+        size.x = aabb.max.x - aabb.min.x;
+        size.y = aabb.max.y - aabb.min.y;
+        if(size.x < 0) {
+            pos.x = pos.x + size.x;
+            size.x = -1 * size.x;
+        }
+        if(size.y < 0) {
+            pos.y = pos.y + size.y;
+            size.y = -1 * size.y;
+        }
+        box2d.min = pos;
+        box2d.setWidth(size.x);
+        box2d.setHeight(size.y);
+        // is box2d completly inside of pickBox?
+        fgBool boxStatus = pickBox.test(box2d);
+        if(boxStatus) {
+            result = goodPickResult;
+        }
+    }
     return result;
 }
 //------------------------------------------------------------------------------
@@ -508,26 +627,67 @@ gfx::CSceneManager::SPickSelection::Result gfx::CSceneManager::SPickSelection::f
     if(!pSceneMgr || !pNode) {
         return NOT_PICKED;
     }
-    Result pickResult = isPicked(pNode, checkAABBTriangles);
+    Result pickResult = isPicked(pNode, (*pSceneMgr->getMVP()), checkAABBTriangles);
+    fgBool shouldThrow = FG_TRUE;
+    fgBool shouldRemove = FG_FALSE;
+    const float exact = timesys::exact();
+    int idx = -1;
     if(pickResult == goodPickResult) {
-        pNode->setSelected(FG_TRUE);
-        h_currentlySelectedNode = pNode->getHandle();
-        CSceneNode *pLastNode = pSceneMgr->getLastPickedNode();
-        if(pLastNode && pLastNode != pNode) {
-            // need additional checks for adding selections
-            // and group selection - not needed now #TODO : group select
-            pLastNode->unselect();
+        CSceneNode*pLastNode = pSceneMgr->getLastPickedNode();
+        SceneNodeHandle handle = pNode->getHandle();
+        idx = h_selectedNodes.find(handle);
+        const float ts = h_selectionTimeStamps[handle];
+        if(isToggle && ts < pickBegin) {
+            pNode->setSelected(!pNode->isSelected());
+            if(!pNode->isSelected()) {
+                shouldThrow = FG_FALSE;
+                shouldRemove = FG_TRUE; // remove from the list
+            }
+        } else if(pNode->isSelected()) {
+            // no toggle mode - already selected, no event?
+            shouldThrow = FG_FALSE;
+        } else if(!isToggle) {
+            pNode->setSelected(FG_TRUE);
         }
-        h_lastSelectedNode = pNode->getHandle();
-        // no need to check for more // unless multi select?
-        shouldCheck = FG_FALSE;
-        // Throw proper event
-        event::CArgumentList *argList = pSceneMgr->getInternalEventManager()->requestArgumentList();
-        event::SSceneNode* nodeEvent = (event::SSceneNode*) pSceneMgr->getInternalEventManager()->requestEventStruct();
-        nodeEvent->eventType = event::SCENE_NODE_SELECTED;
-        nodeEvent->pNodeA = pNode;
-        argList->push(event::SArgument::Type::ARG_TMP_POINTER, (void *)nodeEvent);
-        pSceneMgr->getInternalEventManager()->throwEvent(event::SCENE_NODE_SELECTED, argList);
+        if(pLastNode && pLastNode != pNode && !isGroup) {
+            // if the last node is not as the current one
+            // group selection is off so...
+            pLastNode->unselect();
+            // no need to check for more // unless multi select?
+            shouldCheck = FG_FALSE;
+        }
+        if(!isGroup && !shouldRemove) {
+            h_selectedNodes.clear_optimised();
+            h_selectedNodes.resize(1);
+            h_selectedNodes[0] = handle;
+            if(shouldThrow) {
+                h_selectionTimeStamps[handle] = exact;
+            }
+        }
+        if(isGroup && !shouldRemove && pNode->isSelected()) {
+            if(-1 == h_selectedNodes.find(handle)) {
+                h_selectedNodes.push_back(handle);
+                h_selectionTimeStamps[handle] = exact;
+            }
+        }
+        if(shouldRemove && h_selectedNodes.size()) {
+            unsigned int size = h_selectedNodes.size();
+            h_selectedNodes[idx] = h_selectedNodes[size - 1];
+            h_selectedNodes[size - 1].reset();
+            h_selectedNodes.resize(size - 1);
+            h_selectionTimeStamps[handle] = exact;
+        }
+        if(pNode->isSelected())
+            h_lastSelectedNode = handle;
+        if(shouldThrow) {
+            // Throw proper event
+            event::CArgumentList *argList = pSceneMgr->getInternalEventManager()->requestArgumentList();
+            event::SSceneNode* nodeEvent = (event::SSceneNode*) pSceneMgr->getInternalEventManager()->requestEventStruct();
+            nodeEvent->eventType = event::SCENE_NODE_SELECTED;
+            nodeEvent->pNodeA = pNode;
+            argList->push(event::SArgument::Type::ARG_TMP_POINTER, (void *)nodeEvent);
+            pSceneMgr->getInternalEventManager()->throwEvent(event::SCENE_NODE_SELECTED, argList);
+        }
     } else {
         if(shouldUnselect) {
             pNode->unselect();
@@ -556,7 +716,7 @@ void gfx::CSceneManager::update(void) {
             triggerEvent->pNodeTrigger = info.pTrigger;
             triggerEvent->pNodeB = info.pNodeB;
 
-            event::CArgumentList *argList = m_sceneEventMgr->requestArgumentList();
+            event::CArgumentList* argList = m_sceneEventMgr->requestArgumentList();
             argList->push(event::SArgument::Type::ARG_TMP_POINTER, (void *)triggerEvent);
             m_sceneEventMgr->throwEvent(event::SCENE_NODE_TRIGGER_FIRED, argList);
         }
@@ -639,6 +799,7 @@ void gfx::CSceneManager::sortCalls(void) {
         }
     }
 #endif
+    m_pickSelection.end(getStateFlags());
 }
 //------------------------------------------------------------------------------
 
@@ -673,8 +834,8 @@ void gfx::CSceneManager::render(void) {
             profile::g_debugProfiling->begin("GFX::Scene::DrawNode");
         }
 #endif
-        CSceneNode *pSceneNode = m_nodeQueue.top();
-        //printf("SCENENODE: %s\n", pSceneNode->getNameStr());        
+        CSceneNode*pSceneNode = m_nodeQueue.top();
+        //printf("SCENENODE: %s\n", pSceneNode->getNameStr());
         pSceneNode->draw();
 #if defined(FG_DEBUG)
         if(g_fgDebugConfig.isDebugProfiling) {
@@ -760,7 +921,7 @@ int gfx::CSceneManager::appendObject(CSceneNode *pObj, fgBool manage) {
     return ((int)m_objects.size() - 1);
 }
 
-CSceneNode *gfx::CSceneManager::appendModel(int& index,
+CSceneNode* gfx::CSceneManager::appendModel(int& index,
                                             CModelResource* pModelRes,
                                             fgBool manage) {
     if(!pModelRes) {
@@ -776,7 +937,7 @@ CSceneNode *gfx::CSceneManager::appendModel(int& index,
 #endif
 
 gfx::CSceneCallback* gfx::CSceneManager::addCallback(event::EventType eventCode,
-                                                     CSceneCallback *pCallback) {
+                                                     CSceneCallback* pCallback) {
     if(!pCallback || !m_sceneEventMgr)
         return NULL;
     if(m_sceneEventMgr->addCallback(eventCode, pCallback)) {
@@ -845,7 +1006,7 @@ fgBool gfx::CSceneManager::addTriggerCallback(CSceneNodeTrigger::TriggerActivati
         status = (pNode->getNodeType() == gfx::SCENE_NODE_TRIGGER);
     }
     if(status) {
-        CSceneNodeTrigger *pNodeTrigger = static_cast<CSceneNodeTrigger*>(pNode);
+        CSceneNodeTrigger* pNodeTrigger = static_cast<CSceneNodeTrigger*>(pNode);
         pNodeTrigger->addCallback(pCallback, activation);
     }
     return status;
@@ -881,7 +1042,7 @@ gfx::CSceneNode* gfx::CSceneManager::addTrigger(const std::string& name,
     if(name.empty()) {
         return NULL;
     }
-    CSceneNodeTrigger *pNodeTrigger = new CSceneNodeTrigger();
+    CSceneNodeTrigger* pNodeTrigger = new CSceneNodeTrigger();
     pNodeTrigger->setName(name);
     pNodeTrigger->setPosition(position);
     if(!addNode(pNodeTrigger->getRefHandle(), pNodeTrigger)) {
@@ -896,7 +1057,7 @@ gfx::CSceneNode* gfx::CSceneManager::addTrigger(const std::string& name,
 gfx::CSceneNode* gfx::CSceneManager::addTrigger(const std::string& name,
                                                 const Vector3f& position,
                                                 const Vector3f& halfExtent) {
-    CSceneNode *pNode = addTrigger(name, position);
+    CSceneNode* pNode = addTrigger(name, position);
     if(pNode) {
         pNode->setHalfSize(halfExtent);
     }
@@ -946,7 +1107,7 @@ gfx::CSceneNode* gfx::CSceneManager::addTrigger(const char* name,
 }
 //------------------------------------------------------------------------------
 
-void gfx::CSceneManager::initializeNode(CSceneNode *pNode) {
+void gfx::CSceneManager::initializeNode(CSceneNode* pNode) {
     if(!pNode) {
         return;
     }
@@ -1043,7 +1204,7 @@ fgBool gfx::CSceneManager::addNode(SceneNodeHandle& nodeUniqueID,
     if(m_basetree) {
         // add to the spatial tree structure
         // it can be octree/quadtree or any other (bounding volume hierarchy)
-        m_basetree->insert(pNode); // #FIXME -- need some kind of removal functionality        
+        m_basetree->insert(pNode); // #FIXME -- need some kind of removal functionality
     }
     // 2nd argument tells that this draw call should not be managed
     // meaning: destructor wont be called on flush()
@@ -1094,7 +1255,7 @@ gfx::CSceneNode* gfx::CSceneManager::addDuplicate(CSceneNode* pSourceNode,
         return NULL;
     if(pSourceNode->getManager() != this || !pSourceNode->isManaged())
         return NULL;
-    CSceneNode *pNewNode = get(newNodeNameTag);
+    CSceneNode* pNewNode = get(newNodeNameTag);
     if(pNewNode) {
         // The node with this name already exists - should not add it, just return pointer to it
         // This is better than returning NULL
@@ -1236,17 +1397,17 @@ fgBool gfx::CSceneManager::destroyNode(const std::string& nameTag) {
 //------------------------------------------------------------------------------
 
 fgBool gfx::CSceneManager::destroyNode(const char* nameTag) {
-    CSceneNode *pObj = handle_mgr_type::dereference(nameTag);
+    CSceneNode* pObj = handle_mgr_type::dereference(nameTag);
     return destroyNode(pObj);
 }
 //------------------------------------------------------------------------------
 
-gfx::CSceneNode * gfx::CSceneManager::get(const SceneNodeHandle& oUniqueID) {
+gfx::CSceneNode* gfx::CSceneManager::get(const SceneNodeHandle& oUniqueID) {
     return handle_mgr_type::dereference(oUniqueID);
 }
 //------------------------------------------------------------------------------
 
-gfx::CSceneNode * gfx::CSceneManager::get(const std::string& nameTag) {
+gfx::CSceneNode* gfx::CSceneManager::get(const std::string& nameTag) {
     return handle_mgr_type::dereference(nameTag);
 }
 //------------------------------------------------------------------------------

@@ -63,11 +63,11 @@ namespace fg {
                                                float zFar = FG_GFX_PERSPECTIVE_ZFAR_DEFAULT) {
                 float properFOV;
     #if defined GLM_FORCE_RADIANS
-                properFOV = glm::radians(fovY);
+                properFOV = math::radians(fovY);
     #else
                 properFOV = fovY;
     #endif
-                m_projMatrix = glm::perspective(properFOV, aspect, zNear, zFar);
+                m_projMatrix = math::perspective(properFOV, aspect, zNear, zFar);
             }
             /**
              * 

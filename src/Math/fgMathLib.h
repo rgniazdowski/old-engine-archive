@@ -66,6 +66,20 @@ namespace fg {
         namespace detail {
             using namespace ::glm::detail;
         }
+        template <typename T, typename U, precision P>
+        GLM_FUNC_QUALIFIER detail::tvec3<T, P> project(detail::tvec3<T, P> const & obj,
+                                                       detail::tmat4x4<T, P> const & mvp,
+                                                       detail::tvec4<U, P> const & viewport) {
+            detail::tvec4<T, P> tmp = detail::tvec4<T, P>(obj, T(1));
+            tmp = mvp * tmp;
+
+            tmp /= tmp.w;
+            tmp = tmp * T(0.5) + T(0.5);
+            tmp[0] = tmp[0] * T(viewport[2]) + T(viewport[0]);
+            tmp[1] = tmp[1] * T(viewport[3]) + T(viewport[1]);
+
+            return detail::tvec3<T, P>(tmp);
+        }
         /**
          *
          * @param value

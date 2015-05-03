@@ -111,7 +111,18 @@ namespace fg {
                 /// when pick selection is in click mode
                 /// Pick selection does not care what mouse button (or anything)
                 /// is used, picker state is reported from outside
-                PICK_SELECTION_PICKER_ACTIVE = 0x0800 // 2048
+                PICK_SELECTION_PICKER_ACTIVE = 0x0800, // 2048
+                /// Is group selection active? If yes, then multiple nodes can
+                /// be selected by clicking or holding mouse button down and
+                /// drawing a selection rectangle, ignored in hover mode
+                PICK_SELECTION_GROUP = 0x1000, // 4096
+                /// Pick selection toggle mode?
+                /// The second click deselects the node (if already selected)
+                /// Ignored in hover mode; Works also with rectangle selection
+                PICK_SELECTION_TOGGLE = 0x2000, // 8192
+                /// Whether or not the group selection uses selection box
+                /// valid only with on click selection
+                PICK_SELECTION_BOX = 0x4000 // 16384
             };
 
         protected:
@@ -156,7 +167,7 @@ namespace fg {
              * @param pShaderMgr
              */
             virtual void setShaderManager(fg::base::CManager* pShaderMgr);
-/**
+            /**
              * 
              * @return 
              */
@@ -371,13 +382,56 @@ namespace fg {
             inline fgBool isPickSelectionAABBTriangles(void) const {
                 return (fgBool)!!(m_stateFlags & PICK_SELECTION_AABB_TRIANGLES);
             }
+            /**
+             *
+             * @param toggle
+             */
+            inline void setPickSelectionGroup(const fgBool toggle = FG_TRUE) {
+                setFlag(PICK_SELECTION_GROUP, toggle);
+            }
+            /**
+             * 
+             * @return 
+             */
+            inline fgBool isPickSelectionGroup(void) const {
+                return (fgBool)!!(m_stateFlags & PICK_SELECTION_GROUP);
+            }
+            /**
+             * 
+             * @param toggle
+             */
+            inline void setPickSelectionToggle(const fgBool toggle = FG_TRUE) {
+                setFlag(PICK_SELECTION_TOGGLE, toggle);
+            }
+            /**
+             * 
+             * @return 
+             */
+            inline fgBool isPickSelectionToggle(void) const {
+                return (fgBool)!!(m_stateFlags & PICK_SELECTION_TOGGLE);
+            }
+            /**
+             * 
+             * @param toggle
+             */
+            inline void setPickSelectionBox(const fgBool toggle = FG_TRUE) {
+                setFlag(PICK_SELECTION_BOX, toggle);
+            }
+            /**
+             *
+             * @return
+             */
+            inline fgBool isPickSelectionBox(void) const {
+                return (fgBool)!!(m_stateFlags & PICK_SELECTION_BOX);
+            }
+
             //------------------------------------------------------------------
             /**
              *
              * @param position
              */
             inline void reportSelectionMove(const Vector2i& position) {
-                m_pickSelection.pickPosition = position;
+                m_pickSelection.pickPos = position;
             }
             /**
              *
@@ -385,22 +439,24 @@ namespace fg {
              * @param y
              */
             inline void reportSelectionMove(int x, int y) {
-                m_pickSelection.pickPosition.x = x;
-                m_pickSelection.pickPosition.y = y;
+                m_pickSelection.pickPos.x = x;
+                m_pickSelection.pickPos.y = y;
             }
             /**
              *
              * @param state
              */
-            inline void reportSelectionClick(const fgBool state = FG_TRUE) {
-                setFlag(PICK_SELECTION_PICKER_ACTIVE, state);
-            }
+            void reportSelectionClick(const fgBool state = FG_TRUE);
             /**
              *
              */
             inline void reportSelectionUnclick(void) {
-                setFlag(PICK_SELECTION_PICKER_ACTIVE, FG_FALSE);
+                reportSelectionClick(FG_FALSE);
             }
+            /**
+             * 
+             */
+            void clearSelection(void);
             /**
              * 
              * @return
@@ -419,13 +475,33 @@ namespace fg {
              * @return
              */
             SceneNodeHandle getCurrentPickedNodeHandle(void) const {
-                return m_pickSelection.h_currentlySelectedNode;
+                return m_pickSelection.h_selectedNodes[0];
             }
             /**
              *
              */
             CSceneNode *getCurrentPickedNode(void) {
-                return get(m_pickSelection.h_currentlySelectedNode);
+                return get(m_pickSelection.h_selectedNodes[0]);
+            }
+            /**
+             *
+             * @param count
+             * @return
+             */
+            CVector<SceneNodeHandle>& getCurrentPickedNodeHandles(unsigned int* count) {
+                if(count)
+                    *count = (unsigned int)m_pickSelection.h_selectedNodes.size();
+                return m_pickSelection.h_selectedNodes;
+            }
+            /**
+             * 
+             * @param count
+             * @return 
+             */
+            CVector<SceneNodeHandle> const& getCurrentPickedNodeHandles(unsigned int* count) const {
+                if(count)
+                    *count = (unsigned int)m_pickSelection.h_selectedNodes.size();
+                return m_pickSelection.h_selectedNodes;
             }
             /**
              * 
@@ -433,6 +509,48 @@ namespace fg {
              */
             inline fgBool isPickSelectionPickerActive(void) const {
                 return (fgBool)!!(m_stateFlags & PICK_SELECTION_PICKER_ACTIVE);
+            }
+            /**
+             * 
+             * @return 
+             */
+            Vector2i& getPickSelectionPos(void) {
+                return m_pickSelection.pickPos;
+            }
+            /**
+             *
+             * @return
+             */
+            Vector2i const& getPickSelectionPos(void) const {
+                return m_pickSelection.pickPos;
+            }
+            /**
+             *
+             * @return
+             */
+            Vector2i& getPickSelectionPosStart(void) {
+                return m_pickSelection.pickPosBegin;
+            }
+            /**
+             * 
+             * @return
+             */
+            Vector2i const& getPickSelectionPosStart(void) const {
+                return m_pickSelection.pickPosBegin;
+            }
+            /**
+             *
+             * @return
+             */
+            AABoundingBox2Di& getPickSelectionBox(void) {
+                return m_pickSelection.pickBox;
+            }
+            /**
+             * 
+             * @return
+             */
+            AABoundingBox2Di const& getPickSelectionBox(void) const {
+                return m_pickSelection.pickBox;
             }
         public:
             //------------------------------------------------------------------
@@ -1092,11 +1210,17 @@ namespace fg {
                 ///
                 Vector3f aabbPoints[8];
                 /// Current pick position, the pick state (up/down) is in state flags
-                Vector2i pickPosition;
+                Vector2i pickPos;
+                /// The start position of the pick selection (picker activated)
+                Vector2i pickPosBegin;
+                /// Also the size of the picker box
+                AABB2Di pickBox;
                 /// Current position of the ray origin
                 Vector3f rayEye;
                 /// Current direction of the ray
                 Vector3f rayDir;
+                ///
+                float pickBegin;
                 ///
                 Result goodPickResult;
                 ///
@@ -1104,9 +1228,17 @@ namespace fg {
                 ///
                 fgBool shouldCheck;
                 ///
+                fgBool isToggle;
+                ///
+                fgBool isGroup;
+                ///
+                fgBool checkBox;
+                ///
                 SceneNodeHandle h_lastSelectedNode;
                 ///
-                SceneNodeHandle h_currentlySelectedNode;
+                CVector<SceneNodeHandle> h_selectedNodes;
+                ///
+                std::map<SceneNodeHandle, float> h_selectionTimeStamps;
 
                 /**
                  * 
@@ -1127,6 +1259,12 @@ namespace fg {
                           StateFlags stateFlags);
 
                 /**
+                 * 
+                 * @param stateFlags
+                 */
+                void end(StateFlags stateFlags);
+
+                /**
                  *
                  * @param mvp
                  * @param camera
@@ -1142,6 +1280,7 @@ namespace fg {
                  * @return
                  */
                 Result isPicked(const CSceneNode* pNode,
+                                const CMVPMatrix& mvp,
                                 const fgBool checkAABBTriangles = FG_TRUE);
 
                 /**
