@@ -6,7 +6,7 @@
  * 
  * FlexiGame source code and any related files can not be copied, modified 
  * and/or distributed without the express or written consent from the author.
- *******************************************************/
+ ******************************************************************************/
 
 #include "fgGuiStyleContent.h"
 #include "Util/fgStrings.h"
@@ -14,9 +14,13 @@
 
 using namespace fg;
 
+//------------------------------------------------------------------------------
+
 gui::CStyleContent::CStyleContent() { }
+//------------------------------------------------------------------------------
 
 gui::CStyleContent::~CStyleContent() { }
+//------------------------------------------------------------------------------
 
 void gui::CStyleContent::copyFrom(const CStyleContent& style) {
     if(this == &style)
@@ -28,23 +32,23 @@ void gui::CStyleContent::copyFrom(const CStyleContent& style) {
     /// Size modifier
     {
         if(m_size.style == SSize::Style::INVALID_STYLE)
-            m_size.style = style.m_size.style;        
+            m_size.style = style.m_size.style;
         if(m_size.style == SSize::Style::INVALID_STYLE)
             m_size.style = SSize::Style::PIXELS;
         if(!FG_GUI_CHECK_FLOAT(m_size.x))
             m_size.x = style.m_size.x;
         if(!FG_GUI_CHECK_FLOAT(m_size.x))
             m_size.x = 10.0f;
-        
+
         if(!FG_GUI_CHECK_FLOAT(m_size.y))
             m_size.y = style.m_size.y;
         if(!FG_GUI_CHECK_FLOAT(m_size.y))
             m_size.y = 10.0f;
-                 
+
         if(!FG_GUI_CHECK_FLOAT(m_size.z))
             m_size.z = style.m_size.z;
         if(!FG_GUI_CHECK_FLOAT(m_size.z))
-            m_size.z = 1.0f;        
+            m_size.z = 1.0f;
     }
     /// Style of the background (image, modifier)
     m_bg = style.m_bg;
@@ -59,7 +63,7 @@ void gui::CStyleContent::copyFrom(const CStyleContent& style) {
     /// Position modifier
     {
         if(m_position.unit == Unit::INVALID_UNIT)
-            m_position.unit = style.m_position.unit;        
+            m_position.unit = style.m_position.unit;
         if(m_position.unit == Unit::INVALID_UNIT)
             m_position.unit = Unit::PIXELS;
         if(!FG_GUI_CHECK_FLOAT(m_position.left))
@@ -84,6 +88,7 @@ void gui::CStyleContent::copyFrom(const CStyleContent& style) {
     /// Align of the text
     m_textAlign = style.m_textAlign;
 }
+//------------------------------------------------------------------------------
 
 void gui::CStyleContent::applyPosAlign(const Align align,
                                        Vector3f& pos,
@@ -125,6 +130,7 @@ void gui::CStyleContent::applyPosAlign(const Align align,
             pos.y = (boundPos.y + boundSize.y) - size.y - offset->bottom;
     }
 }
+//------------------------------------------------------------------------------
 
 void gui::CStyleContent::applyPosAlign(const Align align,
                                        Vector2f& pos,
@@ -165,6 +171,7 @@ void gui::CStyleContent::applyPosAlign(const Align align,
             pos.y = (boundPos.y + boundSize.y) - size.y - offset->bottom;
     }
 }
+//------------------------------------------------------------------------------
 
 fgColor4f gui::CStyleContent::parseColor(const char *value) {
     if(!value)
@@ -195,6 +202,7 @@ fgColor4f gui::CStyleContent::parseColor(const char *value) {
 
     return retColor;
 }
+//------------------------------------------------------------------------------
 
 gui::SBorder::Style gui::CStyleContent::parseBorderStyle(const char *value) {
     if(!value)
@@ -211,6 +219,7 @@ gui::SBorder::Style gui::CStyleContent::parseBorderStyle(const char *value) {
     }
     return style;
 }
+//------------------------------------------------------------------------------
 
 gui::SBorder gui::CStyleContent::parseBorder(const char *value) {
     SBorder border;
@@ -244,6 +253,7 @@ gui::SBorder gui::CStyleContent::parseBorder(const char *value) {
     }
     return border;
 }
+//------------------------------------------------------------------------------
 
 gui::SPosition::Style gui::CStyleContent::parsePositionStyle(const char *value) {
     if(!value)
@@ -262,6 +272,7 @@ gui::SPosition::Style gui::CStyleContent::parsePositionStyle(const char *value) 
 
     return style;
 }
+//------------------------------------------------------------------------------
 
 gui::Align gui::CStyleContent::parseAlign(const char *value) {
     Align align = Align::CENTER;
@@ -287,6 +298,7 @@ gui::Align gui::CStyleContent::parseAlign(const char *value) {
     }
     return align;
 }
+//------------------------------------------------------------------------------
 
 gui::SBackground::Style gui::CStyleContent::parseBackgroundStyle(const char *value) {
     SBackground::Style style = SBackground::Style::MAX;
@@ -305,6 +317,7 @@ gui::SBackground::Style gui::CStyleContent::parseBackgroundStyle(const char *val
 
     return style;
 }
+//------------------------------------------------------------------------------
 
 float gui::CStyleContent::parseLength(const char *value, Unit &unit) {
     if(!value)
@@ -328,6 +341,7 @@ float gui::CStyleContent::parseLength(const char *value, Unit &unit) {
     length = (float)atof(lengthStr.c_str());
     return length;
 }
+//------------------------------------------------------------------------------
 
 fgBool gui::CStyleContent::initializeFromConfig(util::config::ParameterVec &params, fgBool merge) {
     if(params.empty())
@@ -676,106 +690,133 @@ fgBool gui::CStyleContent::initializeFromConfig(util::config::ParameterVec &para
     }
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
 gui::SBackground& gui::CStyleContent::getBackground(void) {
     return m_bg;
 }
+//------------------------------------------------------------------------------
 
 gui::SForeground& gui::CStyleContent::getForeground(void) {
     return m_fg;
 }
+//------------------------------------------------------------------------------
 
 gui::SMargin& gui::CStyleContent::getMargin(void) {
     return m_margin;
 }
+//------------------------------------------------------------------------------
 
 gui::SPadding& gui::CStyleContent::getPadding(void) {
     return m_padding;
 }
+//------------------------------------------------------------------------------
 
 gui::SBorderGroup& gui::CStyleContent::getBorder(void) {
     return m_border;
 }
+//------------------------------------------------------------------------------
 
 gui::SPosition& gui::CStyleContent::getPosition(void) {
     return m_position;
 }
+//------------------------------------------------------------------------------
 
 gui::Align gui::CStyleContent::getAlign(void) const {
     return m_align;
 }
+//------------------------------------------------------------------------------
 
 gui::Align gui::CStyleContent::getVAlign(void) const {
     return m_valign;
 }
+//------------------------------------------------------------------------------
 
 gui::Align gui::CStyleContent::getTextAlign(void) const {
     return m_textAlign;
 }
+//------------------------------------------------------------------------------
 
 gui::SSize& gui::CStyleContent::getSize(void) {
     return m_size;
 }
+//------------------------------------------------------------------------------
 
 std::string& gui::CStyleContent::getShader(void) {
     return m_shader;
 }
+//------------------------------------------------------------------------------
 
 const char *gui::CStyleContent::getShaderStr(void) const {
     return m_shader.c_str();
 }
+//------------------------------------------------------------------------------
 
 std::string& gui::CStyleContent::getEffect(void) {
     return m_effect;
 }
+//------------------------------------------------------------------------------
 
 const char *gui::CStyleContent::getEffectStr(void) const {
     return m_effect.c_str();
 }
+//------------------------------------------------------------------------------
 
 gui::CStyleContent& gui::CStyleContent::setBackground(const SBackground::Style style) {
     m_bg.style = style;
     return (*this);
 }
+//------------------------------------------------------------------------------
 
 gui::CStyleContent& gui::CStyleContent::setBackground(const fgColor4f& color) {
     m_bg.color = color;
     return (*this);
 }
+//------------------------------------------------------------------------------
 
 gui::CStyleContent& gui::CStyleContent::setBackground(const std::string& texture) {
     m_bg.texture = texture;
     return (*this);
 }
+//------------------------------------------------------------------------------
 
 gui::CStyleContent& gui::CStyleContent::setBackground(const char *texture) {
-    m_bg.texture = texture;
+    if(texture)
+        m_bg.texture = texture;
+    else
+        m_bg.texture.clear();
     return (*this);
 }
+//------------------------------------------------------------------------------
 
 gui::CStyleContent& gui::CStyleContent::setForeground(const float textSize) {
     m_fg.textSize = textSize;
     return (*this);
 }
+//------------------------------------------------------------------------------
 
 gui::CStyleContent& gui::CStyleContent::setForeground(const fgColor4f& color) {
     m_fg.color = color;
     return (*this);
 }
+//------------------------------------------------------------------------------
 
 gui::CStyleContent& gui::CStyleContent::setForeground(const std::string& font) {
     m_fg.font = font;
     return (*this);
 }
+//------------------------------------------------------------------------------
 
 gui::CStyleContent& gui::CStyleContent::setForeground(const char *font) {
     m_fg.font = font;
     return (*this);
 }
+//------------------------------------------------------------------------------
 
 gui::CStyleContent& gui::CStyleContent::setMargin(const float size) {
     return setMargin(SMargin::Which::ALL, size);
 }
+//------------------------------------------------------------------------------
 
 gui::CStyleContent& gui::CStyleContent::setMargin(const SMargin::Which which, const float size) {
     if(!!(which & SMargin::Which::LEFT))
@@ -790,10 +831,12 @@ gui::CStyleContent& gui::CStyleContent::setMargin(const SMargin::Which which, co
         m_margin.value = size;
     return (*this);
 }
+//------------------------------------------------------------------------------
 
 gui::CStyleContent& gui::CStyleContent::setPadding(const float size) {
     return setPadding(SPadding::Which::ALL, size);
 }
+//------------------------------------------------------------------------------
 
 gui::CStyleContent& gui::CStyleContent::setPadding(const SPadding::Which which, const float size) {
     if(!!(which & SPadding::Which::LEFT))
@@ -808,18 +851,22 @@ gui::CStyleContent& gui::CStyleContent::setPadding(const SPadding::Which which, 
         m_padding.value = size;
     return (*this);
 }
+//------------------------------------------------------------------------------
 
 gui::CStyleContent& gui::CStyleContent::setBorder(const SBorder::Style style) {
     return setBorder(SBorder::Which::ALL, style);
 }
+//------------------------------------------------------------------------------
 
 gui::CStyleContent& gui::CStyleContent::setBorder(const fgColor4f& color) {
     return setBorder(SBorder::Which::ALL, color);
 }
+//------------------------------------------------------------------------------
 
 gui::CStyleContent& gui::CStyleContent::setBorder(const float width) {
     return setBorder(SBorder::Which::ALL, width);
 }
+//------------------------------------------------------------------------------
 
 gui::CStyleContent& gui::CStyleContent::setBorder(const SBorder::Which which, const SBorder::Style style) {
     if(!!(which & SBorder::Which::LEFT))
@@ -834,6 +881,7 @@ gui::CStyleContent& gui::CStyleContent::setBorder(const SBorder::Which which, co
         m_border.all.style = style;
     return (*this);
 }
+//------------------------------------------------------------------------------
 
 gui::CStyleContent& gui::CStyleContent::setBorder(const SBorder::Which which, const fgColor4f& color) {
     if(!!(which & SBorder::Which::LEFT))
@@ -848,6 +896,7 @@ gui::CStyleContent& gui::CStyleContent::setBorder(const SBorder::Which which, co
         m_border.all.color = color;
     return (*this);
 }
+//------------------------------------------------------------------------------
 
 gui::CStyleContent& gui::CStyleContent::setBorder(const SBorder::Which which, const float width) {
     if(!!(which & SBorder::Which::LEFT))
@@ -862,16 +911,19 @@ gui::CStyleContent& gui::CStyleContent::setBorder(const SBorder::Which which, co
         m_border.all.width = width;
     return (*this);
 }
+//------------------------------------------------------------------------------
 
 gui::CStyleContent& gui::CStyleContent::setPosition(const SPosition::Style style) {
     m_position.style = style;
     return (*this);
 }
+//------------------------------------------------------------------------------
 
 gui::CStyleContent& gui::CStyleContent::setPosition(const SPosition::Style style,
                                                     const Vector2f& modPos) {
     return setPosition(style).setPosition(modPos);
 }
+//------------------------------------------------------------------------------
 
 gui::CStyleContent& gui::CStyleContent::setPosition(const Vector2f& modPos) {
     if(m_position.style != SPosition::Style::STATICPOS) {
@@ -886,11 +938,13 @@ gui::CStyleContent& gui::CStyleContent::setPosition(const Vector2f& modPos) {
     }
     return (*this);
 }
+//------------------------------------------------------------------------------
 
 gui::CStyleContent& gui::CStyleContent::setPosition(const SPosition::Style style,
                                                     const Vector3f& modPos) {
     return setPosition(style).setPosition(modPos);
 }
+//------------------------------------------------------------------------------
 
 gui::CStyleContent& gui::CStyleContent::setPosition(const Vector3f& modPos) {
     if(m_position.style != SPosition::Style::STATICPOS) {
@@ -909,38 +963,45 @@ gui::CStyleContent& gui::CStyleContent::setPosition(const Vector3f& modPos) {
     }
     return (*this);
 }
+//------------------------------------------------------------------------------
 
 gui::CStyleContent& gui::CStyleContent::setAlign(const Align align) {
     m_align = align;
     return (*this);
 }
+//------------------------------------------------------------------------------
 
 gui::CStyleContent& gui::CStyleContent::setVAlign(const Align vAlign) {
     m_valign = vAlign;
     return (*this);
 }
+//------------------------------------------------------------------------------
 
 gui::CStyleContent& gui::CStyleContent::setTextAlign(const Align textAlign) {
     m_textAlign = textAlign;
     return (*this);
 }
+//------------------------------------------------------------------------------
 
 gui::CStyleContent& gui::CStyleContent::setSize(const SSize::Style style) {
     m_size.style = style;
     return (*this);
 }
+//------------------------------------------------------------------------------
 
 gui::CStyleContent& gui::CStyleContent::setSize(const SSize::Style style,
                                                 const float x,
                                                 const float y) {
     return setSize(style).setSize(x, y);
 }
+//------------------------------------------------------------------------------
 
 gui::CStyleContent& gui::CStyleContent::setSize(const SSize::Style style,
                                                 const Vector2f& size) {
 
     return setSize(style).setSize(size);
 }
+//------------------------------------------------------------------------------
 
 gui::CStyleContent& gui::CStyleContent::setSize(const SSize::Style style,
                                                 const float x,
@@ -949,23 +1010,27 @@ gui::CStyleContent& gui::CStyleContent::setSize(const SSize::Style style,
 
     return setSize(style).setSize(x, y, z);
 }
+//------------------------------------------------------------------------------
 
 gui::CStyleContent& gui::CStyleContent::setSize(const SSize::Style style,
                                                 const Vector3f& size) {
     return setSize(style).setSize(size);
 }
+//------------------------------------------------------------------------------
 
 gui::CStyleContent& gui::CStyleContent::setSize(const float x, const float y) {
     m_size.x = x;
     m_size.y = y;
     return (*this);
 }
+//------------------------------------------------------------------------------
 
 gui::CStyleContent& gui::CStyleContent::setSize(const Vector2f& size) {
     m_size.x = size.x;
     m_size.y = size.y;
     return (*this);
 }
+//------------------------------------------------------------------------------
 
 gui::CStyleContent& gui::CStyleContent::setSize(const float x,
                                                 const float y,
@@ -975,6 +1040,7 @@ gui::CStyleContent& gui::CStyleContent::setSize(const float x,
     m_size.z = z;
     return (*this);
 }
+//------------------------------------------------------------------------------
 
 gui::CStyleContent& gui::CStyleContent::setSize(const Vector3f& size) {
     m_size.x = size.x;
@@ -982,23 +1048,28 @@ gui::CStyleContent& gui::CStyleContent::setSize(const Vector3f& size) {
     m_size.z = size.z;
     return (*this);
 }
+//------------------------------------------------------------------------------
 
 gui::CStyleContent& gui::CStyleContent::setShader(const std::string& shader) {
     m_shader = shader;
     return (*this);
 }
+//------------------------------------------------------------------------------
 
 gui::CStyleContent& gui::CStyleContent::setShader(const char *shader) {
     m_shader = shader;
     return (*this);
 }
+//------------------------------------------------------------------------------
 
 gui::CStyleContent& gui::CStyleContent::setEffect(const std::string& effect) {
     m_effect = effect;
     return (*this);
 }
+//------------------------------------------------------------------------------
 
 gui::CStyleContent& gui::CStyleContent::setEffect(const char *effect) {
     m_effect = effect;
     return (*this);
 }
+//------------------------------------------------------------------------------

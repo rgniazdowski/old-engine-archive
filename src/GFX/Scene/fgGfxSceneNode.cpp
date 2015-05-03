@@ -6,13 +6,15 @@
  * 
  * FlexiGame source code and any related files can not be copied, modified 
  * and/or distributed without the express or written consent from the author.
- *******************************************************/
+ ******************************************************************************/
 
 #include "fgGfxSceneNode.h"
 #include "fgGfxSceneManager.h"
 #include "GFX/fgGfxDrawCall.h"
 
 using namespace fg;
+
+//------------------------------------------------------------------------------
 
 gfx::CSceneNode::CSceneNode(SceneNodeType nodeType,
                             self_type *pParent) :
@@ -43,6 +45,7 @@ m_drawCall(NULL) // DrawCall for this node - it cannot be managed
         }
     }
 }
+//------------------------------------------------------------------------------
 
 gfx::CSceneNode::CSceneNode(const CSceneNode& orig) : base_type(orig) {
     if(this != &orig) {
@@ -66,6 +69,7 @@ gfx::CSceneNode::CSceneNode(const CSceneNode& orig) : base_type(orig) {
         }
     }
 }
+//------------------------------------------------------------------------------
 
 gfx::CSceneNode::~CSceneNode() {
     if(m_drawCall)
@@ -97,6 +101,7 @@ gfx::CSceneNode::~CSceneNode() {
         m_collisionBody = NULL;
     }
 }
+//------------------------------------------------------------------------------
 
 void gfx::CSceneNode::refreshGfxInternals(void) {
     if(!m_pManager)
@@ -106,6 +111,7 @@ void gfx::CSceneNode::refreshGfxInternals(void) {
     }
     // ?? #FIXME
 }
+//------------------------------------------------------------------------------
 
 void gfx::CSceneNode::setPosition(const Vec3f& position) {
     if(m_collisionBody) {
@@ -117,6 +123,7 @@ void gfx::CSceneNode::setPosition(const Vec3f& position) {
         m_modelMat[3].z = position.z;
     }
 }
+//------------------------------------------------------------------------------
 
 void gfx::CSceneNode::setPosition(float x, float y, float z) {
     if(m_collisionBody) {
@@ -128,18 +135,21 @@ void gfx::CSceneNode::setPosition(float x, float y, float z) {
         m_modelMat[3].z = z;
     }
 }
+//------------------------------------------------------------------------------
 
 void gfx::CSceneNode::setRotation(const Vector3f& rotation) {
     if(m_collisionBody) {
         m_collisionBody->setRotation(rotation);
     }
 }
+//------------------------------------------------------------------------------
 
 void gfx::CSceneNode::setRotation(float x, float y, float z) {
     if(m_collisionBody) {
         m_collisionBody->setRotation(x, y, z);
     }
 }
+//------------------------------------------------------------------------------
 
 void gfx::CSceneNode::setHalfSize(const Vector3f& halfSize) {
 
@@ -154,6 +164,7 @@ void gfx::CSceneNode::setHalfSize(const Vector3f& halfSize) {
         m_aabb.transform(m_modelMat);
     }
 }
+//------------------------------------------------------------------------------
 
 void gfx::CSceneNode::setRadius(float radius) {
     if(radius < 0.0f)
@@ -173,6 +184,7 @@ void gfx::CSceneNode::setRadius(float radius) {
         m_aabb.transform(m_modelMat);
     }
 }
+//------------------------------------------------------------------------------
 
 void gfx::CSceneNode::setScale(const Vector3f& scale) {
     if(!m_collisionBody) {
@@ -191,6 +203,7 @@ void gfx::CSceneNode::setScale(const Vector3f& scale) {
         m_scale = scale;
     }
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CSceneNode::checkCollisionSphere(const CSceneNode* pNode) const {
     if(!pNode)
@@ -210,6 +223,7 @@ fgBool gfx::CSceneNode::checkCollisionSphere(const CSceneNode* pNode) const {
     //m_aabb.test(pNode->getRefBoundingVolume());
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CSceneNode::checkCollisionAABB(const CSceneNode* pNode) const {
     if(!pNode)
@@ -218,6 +232,7 @@ fgBool gfx::CSceneNode::checkCollisionAABB(const CSceneNode* pNode) const {
         return FG_FALSE;
     return m_aabb.test(pNode->getBoundingVolume());
 }
+//------------------------------------------------------------------------------
 
 void gfx::CSceneNode::draw(void) {
     if(!isVisible())
@@ -235,6 +250,7 @@ void gfx::CSceneNode::draw(void) {
         }
     }
 }
+//------------------------------------------------------------------------------
 
 void gfx::CSceneNode::draw(const Vec2f& relPos) {
     if(!isVisible())
@@ -249,6 +265,7 @@ void gfx::CSceneNode::draw(const Vec2f& relPos) {
         (*it)->draw(relPos);
     }
 }
+//------------------------------------------------------------------------------
 
 void gfx::CSceneNode::draw(const Vec3f& relPos) {
     if(!isVisible())
@@ -263,6 +280,7 @@ void gfx::CSceneNode::draw(const Vec3f& relPos) {
         (*it)->draw(relPos);
     }
 }
+//------------------------------------------------------------------------------
 
 void gfx::CSceneNode::draw(const Matrix4f& modelMat) {
     if(!isVisible())
@@ -277,7 +295,7 @@ void gfx::CSceneNode::draw(const Matrix4f& modelMat) {
         (*it)->draw(modelMat);
     }
 }
-////////////////////////////////////////////////////////////////////////////////
+//------------------------------------------------------------------------------
 
 void gfx::CSceneNode::updateAABB(void) {
     // Note: the bounding volume of the scene node is bigger
@@ -315,6 +333,7 @@ void gfx::CSceneNode::updateAABB(void) {
         // m_aabb.transform(m_modelMat);
     }
 }
+//------------------------------------------------------------------------------
 
 void gfx::CSceneNode::update(float delta) {
     // The collision body is present 
@@ -334,10 +353,12 @@ void gfx::CSceneNode::update(float delta) {
     updateAABB();
     // Scaling?
 }
+//------------------------------------------------------------------------------
 
 void gfx::CSceneNode::activateCollisionBody(const physics::CCollisionBody::BodyType bodyType) {
     setCollisionBodyType(bodyType);
 }
+//------------------------------------------------------------------------------
 
 void gfx::CSceneNode::removeCollisionBody(void) {
     if(m_collisionBody) {
@@ -347,6 +368,7 @@ void gfx::CSceneNode::removeCollisionBody(void) {
         setAutoScale(FG_FALSE);
     }
 }
+//------------------------------------------------------------------------------
 
 void gfx::CSceneNode::setCollisionBodyType(const physics::CCollisionBody::BodyType bodyType) {
     if(m_collisionBody) {
@@ -366,8 +388,7 @@ void gfx::CSceneNode::setCollisionBodyType(const physics::CCollisionBody::BodyTy
         m_collisionBody->calculateDerivedData();
     }
 }
-
-////////////////////////////////////////////////////////////////////////////////
+//------------------------------------------------------------------------------
 
 fgBool gfx::CSceneNode::addChild(CSceneNode *pChild) {
     if(!pChild)
@@ -380,6 +401,7 @@ fgBool gfx::CSceneNode::addChild(CSceneNode *pChild) {
     }
     return status;
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CSceneNode::removeChild(CSceneNode *pChild) {
     if(!pChild || m_children.empty())
@@ -401,6 +423,7 @@ fgBool gfx::CSceneNode::removeChild(CSceneNode *pChild) {
     }
     return status;
 }
+//------------------------------------------------------------------------------
 
 gfx::CSceneNode *gfx::CSceneNode::removeChild(const std::string& childName) {
     if(childName.empty() || m_children.empty())
@@ -460,6 +483,7 @@ gfx::CSceneNode *gfx::CSceneNode::removeChild(const std::string& childName) {
     }
     return pChild;
 }
+//------------------------------------------------------------------------------
 
 gfx::CSceneNode *gfx::CSceneNode::removeChild(const char *childName) {
     if(!childName || m_children.empty())
@@ -468,6 +492,7 @@ gfx::CSceneNode *gfx::CSceneNode::removeChild(const char *childName) {
         return NULL;
     return removeChild(std::string(childName));
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CSceneNode::destroyChild(CSceneNode *&pChild) {
     if(!pChild)
@@ -497,6 +522,7 @@ fgBool gfx::CSceneNode::destroyChild(CSceneNode *&pChild) {
     }
     return status;
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CSceneNode::destroyChild(const std::string& childName) {
     if(childName.empty() || m_children.empty())
@@ -561,6 +587,7 @@ fgBool gfx::CSceneNode::destroyChild(const std::string& childName) {
     }
     return status;
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CSceneNode::destroyChild(const char *childName) {
     if(!childName)
@@ -569,6 +596,7 @@ fgBool gfx::CSceneNode::destroyChild(const char *childName) {
         return FG_FALSE;
     return destroyChild(std::string(childName));
 }
+//------------------------------------------------------------------------------
 
 gfx::CSceneNode* gfx::CSceneNode::getChild(const gfx::CSceneNode::handle_type& childHandle) {
     if(childHandle.isNull() || m_children.empty())
@@ -610,6 +638,7 @@ gfx::CSceneNode* gfx::CSceneNode::getChild(const gfx::CSceneNode::handle_type& c
     }
     return pChild;
 }
+//------------------------------------------------------------------------------
 
 gfx::CSceneNode* gfx::CSceneNode::getChild(const std::string& childName) {
     if(childName.empty() || m_children.empty())
@@ -653,10 +682,12 @@ gfx::CSceneNode* gfx::CSceneNode::getChild(const std::string& childName) {
     }
     return pChild;
 }
+//------------------------------------------------------------------------------
 
 gfx::CSceneNode* gfx::CSceneNode::getChild(const char *childName) {
     return getChild(std::string(childName));
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CSceneNode::hasChild(CSceneNode *pChild) {
     if(!pChild || m_children.empty())
@@ -667,6 +698,7 @@ fgBool gfx::CSceneNode::hasChild(CSceneNode *pChild) {
         status = FG_TRUE;
     return status;
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CSceneNode::hasChild(const gfx::CSceneNode::handle_type& childHandle) {
     if(childHandle.isNull() || m_children.empty())
@@ -683,6 +715,7 @@ fgBool gfx::CSceneNode::hasChild(const gfx::CSceneNode::handle_type& childHandle
     }
     return status;
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CSceneNode::hasChild(const std::string& childName) {
     if(m_children.empty())
@@ -692,6 +725,7 @@ fgBool gfx::CSceneNode::hasChild(const std::string& childName) {
         status = FG_TRUE;
     return status;
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CSceneNode::hasChild(const char* childName) {
     if(!childName || m_children.empty())
@@ -701,3 +735,4 @@ fgBool gfx::CSceneNode::hasChild(const char* childName) {
         status = FG_TRUE;
     return status;
 }
+//------------------------------------------------------------------------------

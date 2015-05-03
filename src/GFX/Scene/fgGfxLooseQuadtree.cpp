@@ -18,15 +18,20 @@
 
 using namespace fg;
 
+//------------------------------------------------------------------------------
+
 const float gfx::CLooseQuadtree::DEFAULT_LOOSE_K = 2.0f;
 
 gfx::CLooseQuadtree::CLooseQuadtree() :
 CQuadtree(),
 m_looseK(DEFAULT_LOOSE_K) { }
+//------------------------------------------------------------------------------
 
 gfx::CLooseQuadtree::CLooseQuadtree(const CLooseQuadtree& orig) { }
+//------------------------------------------------------------------------------
 
 gfx::CLooseQuadtree::~CLooseQuadtree() { }
+//------------------------------------------------------------------------------
 
 int gfx::CLooseQuadtree::insert(CTreeNodeObject* pObject, STreeNode* pTreeNode) {
     if(!pObject) {
@@ -77,3 +82,4 @@ int gfx::CLooseQuadtree::insert(CTreeNodeObject* pObject, STreeNode* pTreeNode) 
     }
     return pTreeNode->depth;
 }
+//------------------------------------------------------------------------------

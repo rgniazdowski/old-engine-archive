@@ -6,7 +6,7 @@
  * 
  * FlexiGame source code and any related files can not be copied, modified 
  * and/or distributed without the express or written consent from the author.
- *******************************************************/
+ ******************************************************************************/
 
 #include "fgGuiMain.h"
 #include "fgDebugConfig.h"
@@ -50,11 +50,8 @@
 
 using namespace fg;
 
-/**
- * 
- * @param eventMgr
- * @param resourceMgr
- */
+//------------------------------------------------------------------------------
+
 gui::CGuiMain::CGuiMain(const std::string& stylesPath,
                         const std::string& widgetsPath,
                         event::CEventManager *eventMgr,
@@ -104,26 +101,19 @@ m_screenBox() {
     m_console = new CConsole();
     m_console->setVisible(FG_FALSE); // #FIXME :o
 }
+//------------------------------------------------------------------------------
 
-/**
- *
- */
 gui::CGuiMain::~CGuiMain() {
     gui::CGuiMain::destroy();
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- */
 void gui::CGuiMain::clear(void) {
     m_managerType = FG_MANAGER_GUI_MAIN;
 
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @return 
- */
 fgBool gui::CGuiMain::destroy(void) {
     unregisterGuiCallbacks();
 
@@ -176,11 +166,8 @@ fgBool gui::CGuiMain::destroy(void) {
 
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @return 
- */
 fgBool gui::CGuiMain::initialize(void) {
     if(m_init)
         return FG_TRUE;
@@ -252,10 +239,8 @@ fgBool gui::CGuiMain::initialize(void) {
     updateState();
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
-/**
- *
- */
 void gui::CGuiMain::registerGuiCallbacks(void) {
     if(!m_pEventMgr)
         return;
@@ -275,10 +260,8 @@ void gui::CGuiMain::registerGuiCallbacks(void) {
     m_pEventMgr->addCallback(event::MOUSE_RELEASED, m_guiMouseCallback);
     m_pEventMgr->addCallback(event::MOUSE_MOTION, m_guiMouseCallback);
 }
+//------------------------------------------------------------------------------
 
-/**
- *
- */
 void gui::CGuiMain::unregisterGuiCallbacks(void) {
     if(!m_pEventMgr)
         return;
@@ -291,14 +274,8 @@ void gui::CGuiMain::unregisterGuiCallbacks(void) {
     m_pEventMgr->removeCallback(event::MOUSE_RELEASED, m_guiMouseCallback);
     m_pEventMgr->removeCallback(event::MOUSE_MOTION, m_guiMouseCallback);
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param pWidget
- * @param pCallback
- * @param callbackType
- * @return 
- */
 fgBool gui::CGuiMain::addWidgetCallback(CWidget *pWidget,
                                         CGuiCallback *pCallback,
                                         const fgGuiWidgetCallbackType callbackType) {
@@ -354,14 +331,8 @@ fgBool gui::CGuiMain::addWidgetCallback(CWidget *pWidget,
     }
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param widgetName
- * @param pCallback
- * @param callbackType
- * @return 
- */
 fgBool gui::CGuiMain::addWidgetCallback(const char *widgetName,
                                         CGuiCallback *pCallback,
                                         const fgGuiWidgetCallbackType callbackType) {
@@ -371,14 +342,8 @@ fgBool gui::CGuiMain::addWidgetCallback(const char *widgetName,
         return FG_FALSE;
     return addWidgetCallback(m_widgetMgr->get(widgetName), pCallback, callbackType);
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param widgetName
- * @param pCallback
- * @param callbackType
- * @return 
- */
 fgBool gui::CGuiMain::addWidgetCallback(const std::string& widgetName,
                                         CGuiCallback *pCallback,
                                         const fgGuiWidgetCallbackType callbackType) {
@@ -386,10 +351,8 @@ fgBool gui::CGuiMain::addWidgetCallback(const std::string& widgetName,
         return FG_FALSE;
     return addWidgetCallback(m_widgetMgr->get(widgetName), pCallback, callbackType);
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- */
 void gui::CGuiMain::updateState(void) {
     if(!m_widgetMgr || !m_pResourceMgr || !m_pPointerInputReceiver)
         return;
@@ -425,10 +388,8 @@ void gui::CGuiMain::updateState(void) {
         }
     }
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- */
 void gui::CGuiMain::display(void) {
     if(!m_widgetMgr || !m_pResourceMgr)
         return;
@@ -478,75 +439,54 @@ void gui::CGuiMain::display(void) {
         }
     }
 }
+//------------------------------------------------------------------------------
 
-/**
- *
- */
 void gui::CGuiMain::render(void) {
     m_guiDrawer->render();
     m_guiDrawer->flush();
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @return 
- */
+gui::CDrawer* gui::CGuiMain::getDrawer(void) const {
+    return m_guiDrawer;
+}
+//------------------------------------------------------------------------------
+
 gui::CWidgetManager *gui::CGuiMain::getWidgetManager(void) const {
     return m_widgetMgr;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @return 
- */
 gui::CWidgetFactory *gui::CGuiMain::getWidgetFactory(void) const {
     return m_widgetFactory;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @return 
- */
 gui::CStyleManager *gui::CGuiMain::getStyleManager(void) const {
     return m_styleMgr;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @return 
- */
 event::CEventManager *gui::CGuiMain::getEventManager(void) const {
     return m_pEventMgr;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @return 
- */
 resource::CResourceManager *gui::CGuiMain::getResourceManager(void) const {
     return m_pResourceMgr;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @return 
- */
 base::CManager *gui::CGuiMain::getShaderManager(void) const {
     return m_pShaderMgr;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @return 
- */
 event::CInputHandler *gui::CGuiMain::getPointerInputReceiver(void) const {
     return m_pPointerInputReceiver;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param pEventMgr
- */
 void gui::CGuiMain::setEventManager(event::CEventManager * pEventMgr) {
     if(!pEventMgr) {
         unregisterGuiCallbacks();
@@ -557,21 +497,15 @@ void gui::CGuiMain::setEventManager(event::CEventManager * pEventMgr) {
     if(m_pEventMgr)
         registerGuiCallbacks();
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param pResourceMgr
- */
 void gui::CGuiMain::setResourceManager(resource::CResourceManager * pResourceMgr) {
     m_pResourceMgr = pResourceMgr;
     if(m_guiDrawer)
         m_guiDrawer->setResourceManager(pResourceMgr);
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param pShaderMgr
- */
 void gui::CGuiMain::setShaderManager(base::CManager* pShaderMgr) {
     if(pShaderMgr) {
         if(pShaderMgr->getManagerType() != FG_MANAGER_GFX_SHADER)
@@ -581,20 +515,13 @@ void gui::CGuiMain::setShaderManager(base::CManager* pShaderMgr) {
     if(m_guiDrawer)
         m_guiDrawer->setShaderManager(m_pShaderMgr);
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param pointerInputReceiver
- */
 void gui::CGuiMain::setPointerInputReceiver(event::CInputHandler* pointerInputReceiver) {
     m_pPointerInputReceiver = pointerInputReceiver;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param argv
- * @return 
- */
 fgBool gui::CGuiMain::guiTouchHandler(event::CArgumentList* argv) {
     if(!argv)
         return FG_FALSE;
@@ -605,12 +532,8 @@ fgBool gui::CGuiMain::guiTouchHandler(event::CArgumentList* argv) {
     this->updateState();
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param argv
- * @return 
- */
 fgBool gui::CGuiMain::guiMouseHandler(event::CArgumentList* argv) {
     if(!argv)
         return FG_FALSE;
@@ -621,13 +544,8 @@ fgBool gui::CGuiMain::guiMouseHandler(event::CArgumentList* argv) {
     this->updateState();
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param pGuiMain
- * @param pWidget
- * @return 
- */
 fgBool gui::CGuiMain::guiLinkHandler(CGuiMain* pGuiMain, CWidget* pWidget) {
     if(!pGuiMain || !pWidget || !m_widgetMgr)
         return FG_FALSE;
@@ -644,11 +562,8 @@ fgBool gui::CGuiMain::guiLinkHandler(CGuiMain* pGuiMain, CWidget* pWidget) {
     }
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param menuName
- */
 void gui::CGuiMain::changeMenu(const char *menuName) {
     if(!menuName) {
         return;
@@ -659,11 +574,8 @@ void gui::CGuiMain::changeMenu(const char *menuName) {
     CWidget *pWidget = m_widgetMgr->get(menuName);
     changeMenu(pWidget);
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param menuName
- */
 void gui::CGuiMain::changeMenu(const std::string& menuName) {
     if(menuName.empty()) {
         return;
@@ -674,11 +586,8 @@ void gui::CGuiMain::changeMenu(const std::string& menuName) {
     CWidget *pWidget = m_widgetMgr->get(menuName);
     changeMenu(pWidget);
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param pMenu
- */
 void gui::CGuiMain::changeMenu(CWidget *pMenu) {
     if(!pMenu)
         return;
@@ -692,11 +601,8 @@ void gui::CGuiMain::changeMenu(CWidget *pMenu) {
         m_isMenuChanging = FG_TRUE;
     }
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param menuName
- */
 void gui::CGuiMain::setCurrentMenu(const char *menuName) {
     if(!menuName) {
         return;
@@ -707,11 +613,8 @@ void gui::CGuiMain::setCurrentMenu(const char *menuName) {
     CWidget *pWidget = m_widgetMgr->get(menuName);
     setCurrentMenu(pWidget);
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param menuName
- */
 void gui::CGuiMain::setCurrentMenu(const std::string& menuName) {
     if(menuName.empty()) {
         return;
@@ -722,11 +625,8 @@ void gui::CGuiMain::setCurrentMenu(const std::string& menuName) {
     CWidget *pWidget = m_widgetMgr->get(menuName);
     setCurrentMenu(pWidget);
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param pMenu
- */
 void gui::CGuiMain::setCurrentMenu(CWidget *pMenu) {
     if(!pMenu)
         return;
@@ -740,3 +640,4 @@ void gui::CGuiMain::setCurrentMenu(CWidget *pMenu) {
         m_isMenuChanging = FG_FALSE;
     }
 }
+//------------------------------------------------------------------------------

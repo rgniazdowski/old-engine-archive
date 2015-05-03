@@ -12,10 +12,14 @@
 
 using namespace fg;
 
+//------------------------------------------------------------------------------
+
 gfx::CQuadtree::CQuadtree() :
 m_root(NULL) { }
+//------------------------------------------------------------------------------
 
 gfx::CQuadtree::CQuadtree(const CQuadtree& orig) { }
+//------------------------------------------------------------------------------
 
 gfx::CQuadtree::~CQuadtree() {
     if(m_root) {
@@ -23,6 +27,7 @@ gfx::CQuadtree::~CQuadtree() {
         m_root = NULL;
     }
 }
+//------------------------------------------------------------------------------
 
 void gfx::CQuadtree::deleteRoot(void) {
     if(m_root) {
@@ -31,6 +36,7 @@ void gfx::CQuadtree::deleteRoot(void) {
     }
     m_traverse.rewind();
 }
+//------------------------------------------------------------------------------
 
 int gfx::CQuadtree::insert(CTreeNodeObject* pObject, STreeNode* pTreeNode) {
     if(!pObject) {
@@ -77,15 +83,19 @@ int gfx::CQuadtree::insert(CTreeNodeObject* pObject, STreeNode* pTreeNode) {
     }
     return pTreeNode->depth;
 }
+//------------------------------------------------------------------------------
 
 gfx::STreeNode* gfx::CQuadtree::next(void) {
     return m_traverse.next(m_root);
 }
+//------------------------------------------------------------------------------
 
 void gfx::CQuadtree::rewind(void) {
     m_traverse.rewind();
 }
+//------------------------------------------------------------------------------
 
 void gfx::CQuadtree::skip(void) {
     m_traverse.skip(m_root);
 }
+//------------------------------------------------------------------------------

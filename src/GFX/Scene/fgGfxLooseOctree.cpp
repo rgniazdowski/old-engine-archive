@@ -19,15 +19,20 @@
 
 using namespace fg;
 
+//------------------------------------------------------------------------------
+
 const float gfx::CLooseOctree::DEFAULT_LOOSE_K = 2.0f;
 
 gfx::CLooseOctree::CLooseOctree() :
 COctree(),
 m_looseK(DEFAULT_LOOSE_K) { }
+//------------------------------------------------------------------------------
 
 gfx::CLooseOctree::CLooseOctree(const CLooseOctree& orig) { }
+//------------------------------------------------------------------------------
 
 gfx::CLooseOctree::~CLooseOctree() { }
+//------------------------------------------------------------------------------
 
 int gfx::CLooseOctree::insert(CTreeNodeObject* pObject, STreeNode* pTreeNode) {
     if(!pObject) {
@@ -80,3 +85,4 @@ int gfx::CLooseOctree::insert(CTreeNodeObject* pObject, STreeNode* pTreeNode) {
     }
     return pTreeNode->depth;
 }
+//------------------------------------------------------------------------------

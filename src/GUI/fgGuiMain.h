@@ -140,8 +140,8 @@ namespace fg {
              */
             CGuiMain(const std::string& stylesPath,
                      const std::string& widgetsPath,
-                     fg::event::CEventManager *pEventMgr = NULL,
-                     fg::resource::CResourceManager *pResourceMgr = NULL);
+                     fg::event::CEventManager* pEventMgr = NULL,
+                     fg::resource::CResourceManager* pResourceMgr = NULL);
             /**
              * 
              */
@@ -191,8 +191,8 @@ namespace fg {
              * @param callbackType
              * @return 
              */
-            fgBool addWidgetCallback(fg::gui::CWidget *pWidget,
-                                     fg::gui::CGuiCallback *pCallback,
+            fgBool addWidgetCallback(fg::gui::CWidget* pWidget,
+                                     fg::gui::CGuiCallback* pCallback,
                                      const fgGuiWidgetCallbackType callbackType);
 
             /**
@@ -203,7 +203,7 @@ namespace fg {
              * @return 
              */
             fgBool addWidgetCallback(const char *widgetName,
-                                     fg::gui::CGuiCallback *pCallback,
+                                     fg::gui::CGuiCallback* pCallback,
                                      const fgGuiWidgetCallbackType callbackType);
 
             /**
@@ -214,7 +214,7 @@ namespace fg {
              * @return 
              */
             fgBool addWidgetCallback(const std::string& widgetName,
-                                     fg::gui::CGuiCallback *pCallback,
+                                     fg::gui::CGuiCallback* pCallback,
                                      const fgGuiWidgetCallbackType callbackType);
 
             ////////////////////////////////////////////////////////////////////////
@@ -224,58 +224,63 @@ namespace fg {
              * 
              * @return 
              */
-            CWidgetManager *getWidgetManager(void) const;
+            CDrawer* getDrawer(void) const;
             /**
              * 
              * @return 
              */
-            CWidgetFactory *getWidgetFactory(void) const;
+            CWidgetManager* getWidgetManager(void) const;
             /**
              * 
              * @return 
              */
-            CStyleManager *getStyleManager(void) const;
+            CWidgetFactory* getWidgetFactory(void) const;
             /**
              * 
              * @return 
              */
-            fg::event::CEventManager *getEventManager(void) const;
+            CStyleManager* getStyleManager(void) const;
             /**
              * 
              * @return 
              */
-            fg::resource::CResourceManager *getResourceManager(void) const;
+            fg::event::CEventManager* getEventManager(void) const;
             /**
              * 
              * @return 
              */
-            fg::base::CManager *getShaderManager(void) const;
+            fg::resource::CResourceManager* getResourceManager(void) const;
             /**
              * 
              * @return 
              */
-            fg::event::CInputHandler *getPointerInputReceiver(void) const;
+            fg::base::CManager* getShaderManager(void) const;
+            /**
+             * 
+             * @return 
+             */
+            fg::event::CInputHandler* getPointerInputReceiver(void) const;
 
             /**
              * 
              * @param pEventMgr
              */
-            void setEventManager(fg::event::CEventManager *pEventMgr);
+            void setEventManager(fg::event::CEventManager* pEventMgr);
             /**
              * 
              * @param pResourceMgr
              */
-            void setResourceManager(fg::resource::CResourceManager *pResourceMgr);
+            void setResourceManager(fg::resource::CResourceManager* pResourceMgr);
             /**
              * 
              * @param pShaderMgr
              */
-            void setShaderManager(fg::base::CManager *pShaderMgr);
+            void setShaderManager(fg::base::CManager* pShaderMgr);
             /**
              * 
              * @param pointerInputReceiver
              */
-            void setPointerInputReceiver(fg::event::CInputHandler *pointerInputReceiver);
+            void setPointerInputReceiver(fg::event::CInputHandler* pointerInputReceiver);
 
             ////////////////////////////////////////////////////////////////////
 
@@ -293,7 +298,7 @@ namespace fg {
              * 
              * @param pMenu
              */
-            void changeMenu(CWidget *pMenu);
+            void changeMenu(CWidget* pMenu);
 
             /**
              * 
@@ -309,7 +314,14 @@ namespace fg {
              * 
              * @param pMenu
              */
-            void setCurrentMenu(CWidget *pMenu);
+            void setCurrentMenu(CWidget* pMenu);
+            /**
+             *
+             * @return
+             */
+            CMenu* getCurrentMenu(void) const {
+                return m_currentMenu;
+            }
 
             ////////////////////////////////////////////////////////////////////
 
@@ -348,7 +360,7 @@ namespace fg {
              * @param pWidget
              * @return 
              */
-            fgBool guiLinkHandler(CGuiMain *pGuiMain, fg::gui::CWidget *pWidget);
+            fgBool guiLinkHandler(CGuiMain* pGuiMain, fg::gui::CWidget* pWidget);
         };
     };
 };

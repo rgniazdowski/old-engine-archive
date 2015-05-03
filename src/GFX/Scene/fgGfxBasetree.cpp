@@ -18,12 +18,15 @@
 #include "fgGfxSceneNode.h"
 
 using namespace fg;
+//------------------------------------------------------------------------------
 
 gfx::CBasetree::CBasetree() :
 m_worldSize((float)2000.0f, (float)2000.0f, (float)2000.0f),
 m_maxDepth(DEFAULT_DEPTH) { }
+//------------------------------------------------------------------------------
 
 gfx::CBasetree::~CBasetree() { }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CBasetree::fitsInBox(const CSceneNode* sceneNode,
                                  STreeNode* treeNode,
@@ -36,6 +39,7 @@ fgBool gfx::CBasetree::fitsInBox(const CSceneNode* sceneNode,
     //sceneNode->getRefBoundingVolume().test(treeNode->center, halfExtent);
     return fitsInBox(sceneNode, treeNode->center, halfExtent);
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CBasetree::fitsInBox(const CSceneNode* sceneNode,
                                  const Vector3f& center,
@@ -58,6 +62,7 @@ fgBool gfx::CBasetree::fitsInBox(const CSceneNode* sceneNode,
         return FG_TRUE;
     }
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CBasetree::fitsInBox(const CSceneNode* sceneNode,
                                  const Vector2f& center,
@@ -78,3 +83,4 @@ fgBool gfx::CBasetree::fitsInBox(const CSceneNode* sceneNode,
         return FG_TRUE;
     }
 }
+//------------------------------------------------------------------------------

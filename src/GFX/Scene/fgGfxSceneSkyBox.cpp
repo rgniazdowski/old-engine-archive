@@ -21,6 +21,8 @@
 
 using namespace fg;
 
+//------------------------------------------------------------------------------
+
 gfx::CSceneSkyBox::CSceneSkyBox() :
 CDrawable(DRAWABLE_SKYBOX),
 m_skyBoxScale(1.0f),
@@ -28,6 +30,7 @@ m_pos(),
 m_textureID(),
 m_program(NULL),
 m_MVP(NULL) { }
+//------------------------------------------------------------------------------
 
 gfx::CSceneSkyBox::CSceneSkyBox(const CSceneSkyBox& orig) {
     if(this != &orig) {
@@ -39,17 +42,20 @@ gfx::CSceneSkyBox::CSceneSkyBox(const CSceneSkyBox& orig) {
         this->setDrawableType(DRAWABLE_SKYBOX);
     }
 }
+//------------------------------------------------------------------------------
 
 gfx::CSceneSkyBox::~CSceneSkyBox() {
     m_program = NULL;
     m_MVP = NULL;
 }
+//------------------------------------------------------------------------------
 
 void gfx::CSceneSkyBox::draw(void) {
     Matrix4f modelMat = math::translate(Matrix4f(), m_pos);
     modelMat = math::scale(modelMat, Vector3f(m_skyBoxScale, m_skyBoxScale, m_skyBoxScale));
     draw(modelMat);
 }
+//------------------------------------------------------------------------------
 
 void gfx::CSceneSkyBox::draw(const Vec2f& relPos) {
     Matrix4f modelMat = math::translate(Matrix4f(), m_pos);
@@ -57,6 +63,7 @@ void gfx::CSceneSkyBox::draw(const Vec2f& relPos) {
     modelMat = math::scale(modelMat, Vector3f(m_skyBoxScale, m_skyBoxScale, m_skyBoxScale));
     draw(modelMat);
 }
+//------------------------------------------------------------------------------
 
 void gfx::CSceneSkyBox::draw(const Vec3f& relPos) {
     Matrix4f modelMat = math::translate(Matrix4f(), m_pos);
@@ -64,6 +71,7 @@ void gfx::CSceneSkyBox::draw(const Vec3f& relPos) {
     modelMat = math::scale(modelMat, Vector3f(m_skyBoxScale, m_skyBoxScale, m_skyBoxScale));
     draw(modelMat);
 }
+//------------------------------------------------------------------------------
 
 void gfx::CSceneSkyBox::draw(const Matrix4f& modelMat) {
     const fgBool isTexture = (fgBool)context::isTexture(m_textureID);
@@ -82,3 +90,4 @@ void gfx::CSceneSkyBox::draw(const Matrix4f& modelMat) {
         context::frontFace(GL_CCW);
     }
 }
+//------------------------------------------------------------------------------
