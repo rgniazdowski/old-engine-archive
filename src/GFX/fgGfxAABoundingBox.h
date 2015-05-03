@@ -239,54 +239,48 @@ namespace fg {
             /**
              * 
              * @param left
-             * @return 
              */
-            box_type& setLeft(value_type left) {
+            self_type& setLeft(value_type left) {
                 this->min.x = left;
                 return (*this);
             }
             /**
              * 
              * @param right
-             * @return 
              */
-            box_type& setRight(value_type right) {
+            self_type& setRight(value_type right) {
                 this->max.x = right;
                 return (*this);
             }
             /**
              * 
              * @param top
-             * @return 
              */
-            box_type& setTop(value_type top) {
+            self_type& setTop(value_type top) {
                 this->max.y = top;
                 return (*this);
             }
             /**
              * 
              * @param back
-             * @return 
              */
-            box_type& setBottom(value_type back) {
+            self_type& setBottom(value_type back) {
                 this->min.y = back;
                 return (*this);
             }
             /**
              * 
              * @param width
-             * @return 
              */
-            box_type& setWidth(value_type width) {
+            self_type& setWidth(value_type width) {
                 this->max.x = this->min.x + width;
                 return (*this);
             }
             /**
              * 
              * @param height
-             * @return 
              */
-            box_type& setHeight(value_type height) {
+            self_type& setHeight(value_type height) {
                 this->max.y = this->min.y + height;
                 return (*this);
             }
@@ -506,7 +500,7 @@ namespace fg {
                 if(!count || !aaboxes)
                     return (*this);
                 //this->zero(); // NOPE
-                for(int i = 0; i < count; i++) {
+                for(size_type i = 0; i < count; i++) {
                     this->merge(aaboxes[i]);
                 }
                 return (*this);
@@ -522,7 +516,7 @@ namespace fg {
                 if(!count || !boxes)
                     return (*this);
                 //this->zero(); // NOPE
-                for(int i = 0; i < count; i++) {
+                for(size_type i = 0; i < count; i++) {
                     this->merge(boxes[i]);
                 }
                 return (*this);
@@ -571,10 +565,11 @@ namespace fg {
              * 
              */
             virtual inline void invalidate(void) {
-                this->max.x = (FLT_MAX / 4.0f) * (-1.0f);
-                this->max.y = (FLT_MAX / 4.0f) * (-1.0f);
-                this->min.x = FLT_MAX;
-                this->min.y = FLT_MAX;
+                ;
+                this->max.x = (std::numeric_limits<value_type>::max() / (value_type)(4)) * (value_type)(-1);
+                this->max.y = (std::numeric_limits<value_type>::max() / (value_type)(4)) * (value_type)(-1);
+                this->min.x = std::numeric_limits<value_type>::max();
+                this->min.y = std::numeric_limits<value_type>::max();
             }
             /**
              * 
@@ -860,9 +855,9 @@ namespace fg {
                 this->max.x = -10000.0f; //(FLT_MAX / 4.0f) * (-1.0f);
                 this->max.y = -10000.0f; //(FLT_MAX / 4.0f) * (-1.0f);
                 this->max.z = -10000.0f; //(FLT_MAX / 4.0f) * (-1.0f);
-                this->min.x = FLT_MAX;
-                this->min.y = FLT_MAX;
-                this->min.z = FLT_MAX;
+                this->min.x = std::numeric_limits<value_type>::max();
+                this->min.y = std::numeric_limits<value_type>::max();
+                this->min.z = std::numeric_limits<value_type>::max();
             }
             /**
              *
@@ -870,7 +865,7 @@ namespace fg {
             virtual inline fgBool isValid(void) const {
                 size_type n = this->length();
                 for(size_type i = 0; i < n; i++) {
-                    if((*this)[i] == FLT_MAX) {
+                    if((*this)[i] == std::numeric_limits<value_type>::max()) {
                         return FG_FALSE;
                     }
                 }

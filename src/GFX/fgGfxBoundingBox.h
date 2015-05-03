@@ -184,7 +184,7 @@ namespace fg {
              * @param left
              * @return 
              */
-            box_type &setLeft(value_type left) {
+            self_type& setLeft(value_type left) {
                 this->pos.x = left;
                 return (*this);
             }
@@ -193,7 +193,7 @@ namespace fg {
              * @param right
              * @return 
              */
-            box_type &setRight(value_type right) {
+            self_type& setRight(value_type right) {
                 this->size.x = right - this->pos.x;
                 return (*this);
             }
@@ -202,7 +202,7 @@ namespace fg {
              * @param top
              * @return 
              */
-            box_type &setTop(value_type top) {
+            self_type& setTop(value_type top) {
                 this->pos.y = top;
                 return (*this);
             }
@@ -211,7 +211,7 @@ namespace fg {
              * @param back
              * @return 
              */
-            box_type &setBottom(value_type back) {
+            self_type& setBottom(value_type back) {
                 this->size.y = back - this->pos.y;
                 return (*this);
             }
@@ -220,7 +220,7 @@ namespace fg {
              * @param width
              * @return 
              */
-            box_type &setWidth(value_type width) {
+            self_type& setWidth(value_type width) {
                 this->size.x = width;
                 return (*this);
             }
@@ -229,7 +229,7 @@ namespace fg {
              * @param height
              * @return 
              */
-            box_type &setHeight(value_type height) {
+            self_type& setHeight(value_type height) {
                 this->size.y = height;
                 return (*this);
             }
@@ -497,7 +497,7 @@ namespace fg {
              * @param front
              * @return 
              */
-            self_type &setFront(value_type front) {
+            self_type& setFront(value_type front) {
                 this->pos.z = front;
                 return (*this);
             }
@@ -506,7 +506,7 @@ namespace fg {
              * @param back
              * @return 
              */
-            self_type &setBack(value_type back) {
+            self_type& setBack(value_type back) {
                 this->size.z = back + this->pos.z; // #FIXME
                 return (*this);
             }
@@ -515,7 +515,7 @@ namespace fg {
              * @param depth
              * @return 
              */
-            self_type &setDepth(value_type depth) {
+            self_type& setDepth(value_type depth) {
                 this->size.z = depth;
                 return (*this);
             }
