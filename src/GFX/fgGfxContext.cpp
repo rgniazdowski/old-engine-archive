@@ -1817,6 +1817,11 @@ void gfx::context::viewport(const Vector4i& dimensions) {
     viewport(dimensions.x, dimensions.y, dimensions.z, dimensions.w);
 }
 
+Vector4i gfx::context::getViewport(void) {
+    const SContextParam& viewport = g_params[gfx::VIEWPORT];
+    return Vector4i(viewport.ints[0], viewport.ints[1], viewport.ints[2], viewport.ints[3]);
+}
+
 fgGFXfloat gfx::context::getViewportAspect(void) {
     fgGFXfloat y = (fgGFXfloat)g_params[(fgGFXuint)GL_VIEWPORT].ints[1];
     if(y <= FG_EPSILON)

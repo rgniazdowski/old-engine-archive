@@ -2265,6 +2265,11 @@ namespace fg {
              */
             void viewport(const Vector4i& dimensions);
             /**
+             * 
+             * @return 
+             */
+            Vector4i getViewport(void);
+            /**
              * Returns the viewport aspect ratio
              * @return 
              */
