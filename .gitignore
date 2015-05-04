@@ -127,3 +127,6 @@ modules/libjpeg/build_jpeg_vc11
 modules/libjpeg/build_jpeg_vc12
 modules/libjpeg/lib
 /project/linux/FlexiGameEditor/build/
+/project/linux/ChainReaction/build/
+/project/linux/ChainReaction/dist/
+/project/linux/ChainReaction/nbproject/private/
