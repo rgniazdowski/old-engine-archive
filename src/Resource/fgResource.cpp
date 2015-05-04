@@ -51,7 +51,7 @@ m_isReady(FG_FALSE) {
 /*
  * Constructor with additional parameter (path)
  */
-resource::CResource::CResource(std::string& path) :
+resource::CResource::CResource(const std::string& path) :
 m_priority(ResourcePriority::LOW),
 m_quality(FG_QUALITY_UNIVERSAL),
 m_resType(resource::INVALID),

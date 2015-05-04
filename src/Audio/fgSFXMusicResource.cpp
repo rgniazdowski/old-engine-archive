@@ -6,7 +6,7 @@
  * 
  * FlexiGame source code and any related files can not be copied, modified 
  * and/or distributed without the express or written consent from the author.
- *******************************************************/
+ ******************************************************************************/
 
 #include "fgSFXMusicResource.h"
 #include "Util/fgFile.h"
@@ -14,9 +14,8 @@
 
 using namespace fg;
 
-/**
- * 
- */
+//------------------------------------------------------------------------------
+
 sfx::CMusicResource::CMusicResource() :
 CResource(),
 CAudio(base::T_MUSIC),
@@ -26,11 +25,8 @@ m_rawData(NULL) {
     m_resType = resource::MUSIC;
     m_baseType = base::T_MUSIC;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param path
- */
 sfx::CMusicResource::CMusicResource(const char *path) :
 CResource(path),
 CAudio(base::T_MUSIC),
@@ -40,12 +36,9 @@ m_rawData(NULL) {
     m_resType = resource::MUSIC;
     m_baseType = base::T_MUSIC;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param path
- */
-sfx::CMusicResource::CMusicResource(std::string& path) :
+sfx::CMusicResource::CMusicResource(const std::string& path) :
 CResource(path),
 CAudio(base::T_MUSIC),
 m_musData(NULL),
@@ -54,10 +47,8 @@ m_rawData(NULL) {
     m_resType = resource::MUSIC;
     m_baseType = base::T_MUSIC;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- */
 void sfx::CMusicResource::clear(void) {
     base_type::clear();
     m_resType = resource::MUSIC;
@@ -67,11 +58,8 @@ void sfx::CMusicResource::clear(void) {
     m_volume = FG_MUSIC_RESOURCE_DEFAULT_VOLUME;
     m_baseType = base::T_MUSIC;
 }
+//------------------------------------------------------------------------------
 
-/**
- * Create function loads/interprets data from file in ROM and place it in RAM memory.
- * @return 
- */
 fgBool sfx::CMusicResource::create(void) {
     if(m_isReady)
         return FG_TRUE;
@@ -101,31 +89,24 @@ fgBool sfx::CMusicResource::create(void) {
 #endif
     return m_isReady;
 }
+//------------------------------------------------------------------------------
 
-/**
- * Destroy all loaded data including additional metadata (called with destructor)
- */
 void sfx::CMusicResource::destroy(void) {
     dispose();
     m_musData = NULL;
     m_isReady = FG_FALSE;
     sfx::CMusicResource::clear();
 }
+//------------------------------------------------------------------------------
 
-/**
- * Reloads any data, recreates the resource (refresh)
- * @return 
- */
 fgBool sfx::CMusicResource::recreate(void) {
     if(m_isReady) {
         dispose();
     }
     return create();
 }
+//------------------------------------------------------------------------------
 
-/**
- * Dispose completely of the all loaded data, free all memory
- */
 void sfx::CMusicResource::dispose(void) {
 #if defined(FG_USING_SDL_MIXER)
     setVolume(0);
@@ -139,21 +120,16 @@ void sfx::CMusicResource::dispose(void) {
     m_musData = NULL;
     m_isReady = FG_FALSE;
 }
+//------------------------------------------------------------------------------
 
-/**
- * Check if resource is disposed (not loaded yet or disposed after)
- * @return 
- */
 fgBool sfx::CMusicResource::isDisposed(void) const {
     if(!m_isReady) {
         return FG_TRUE;
     }
     return FG_FALSE;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- */
 void sfx::CMusicResource::play(void) {
     if(!m_isReady)
         return;
@@ -183,10 +159,8 @@ void sfx::CMusicResource::play(void) {
     }
 #endif
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- */
 void sfx::CMusicResource::pause(void) {
     if(!m_isReady)
         return;
@@ -213,10 +187,8 @@ void sfx::CMusicResource::pause(void) {
     //m_isPaused = FG_TRUE;
 #endif
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- */
 void sfx::CMusicResource::resume(void) {
     if(!m_isReady)
         return;
@@ -238,10 +210,8 @@ void sfx::CMusicResource::resume(void) {
     }
 #endif
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- */
 void sfx::CMusicResource::rewind(void) {
     if(!m_isReady)
         return;
@@ -263,10 +233,8 @@ void sfx::CMusicResource::rewind(void) {
     }
 #endif
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- */
 void sfx::CMusicResource::stop(void) {
     if(!m_isReady)
         return;
@@ -279,11 +247,8 @@ void sfx::CMusicResource::stop(void) {
     m_isPlaying = FG_FALSE;
     m_isPaused = FG_FALSE;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @return 
- */
 fgBool sfx::CMusicResource::isPaused(void) {
     if(!m_isReady)
         return FG_FALSE;
@@ -295,11 +260,8 @@ fgBool sfx::CMusicResource::isPaused(void) {
 #endif    
     return m_isPaused;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @return 
- */
 fgBool sfx::CMusicResource::isPlaying(void) {
     if(!m_isReady)
         return FG_FALSE;
@@ -310,11 +272,8 @@ fgBool sfx::CMusicResource::isPlaying(void) {
 #endif
     return m_isPlaying;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param volume
- */
 void sfx::CMusicResource::setVolume(FG_SFX_VOLUME_TYPE volume) {
     if(!m_isReady)
         return;
@@ -326,3 +285,4 @@ void sfx::CMusicResource::setVolume(FG_SFX_VOLUME_TYPE volume) {
 #endif 
     m_volume = volume;
 }
+//------------------------------------------------------------------------------

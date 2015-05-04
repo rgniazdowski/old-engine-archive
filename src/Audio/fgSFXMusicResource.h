@@ -84,7 +84,7 @@ namespace fg {
              * 
              * @param path
              */
-            CMusicResource(std::string& path);
+            CMusicResource(const std::string& path);
             /**
              * 
              */

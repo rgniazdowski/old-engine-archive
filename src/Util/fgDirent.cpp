@@ -6,7 +6,7 @@
  * 
  * FlexiGame source code and any related files can not be copied, modified 
  * and/or distributed without the express or written consent from the author.
- *******************************************************/
+ ******************************************************************************/
 
 #include "fgDirent.h"
 #include "fgCommon.h" // #FIXME
@@ -19,6 +19,8 @@
 #include "fgMemory.h"
 
 using namespace fg;
+
+//------------------------------------------------------------------------------
 
 #if !defined(FG_USING_ANDROID)
 
@@ -84,9 +86,7 @@ void CDirent_loadAssetsListInternal(CStringVector& outputList,
 }
 #endif
 
-/**
- *
- */
+//------------------------------------------------------------------------------
 util::CDirent::CDirent() :
 m_dirPath(),
 m_filePaths(),
@@ -101,29 +101,19 @@ m_isRecursive(FG_FALSE) {
     m_fileIt = m_filePaths.end();
 }
 
-/**
- * Constructor with the specified directory path
- * Please note that this constructor will also call the
- * read directory function.
- */
+//------------------------------------------------------------------------------
 util::CDirent::CDirent(const char *dirPath) {
     m_isRecursive = FG_FALSE;
     readDir(dirPath, FG_FALSE);
 }
+//------------------------------------------------------------------------------
 
-/**
- * Constructor with the specified directory path
- * Please note that this constructor will also call the
- * read directory function.
- */
 util::CDirent::CDirent(const std::string &dirPath) {
     m_isRecursive = FG_FALSE;
     readDir(dirPath, FG_FALSE);
 }
+//------------------------------------------------------------------------------
 
-/**
- *
- */
 util::CDirent::~CDirent() {
 #ifdef FG_USING_MARMALADE
     // ?
@@ -133,14 +123,8 @@ util::CDirent::~CDirent() {
     m_dirPath.clear();
     m_filePaths.clear_optimised();
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param fileName
- * @param filePath
- * @param recursive
- * @return 
- */
 fgBool util::CDirent::internal_readZipFile(const std::string& fileName,
                                            const std::string& filePath,
                                            fgBool recursive) {
@@ -175,14 +159,8 @@ fgBool util::CDirent::internal_readZipFile(const std::string& fileName,
     zip.close();
     return (fgBool)(!!nZipFiles);
 }
+//------------------------------------------------------------------------------
 
-/**
- * Reads the directory content creating a list
- * with file names in it (or file paths) - paths to directories are ignored
- * @param recursive
- * @param listZipFiles
- * @return 
- */
 fgBool util::CDirent::readDir(fgBool recursive, fgBool listZipFiles) {
 #ifdef FG_USING_MARMALADE
     m_fileList = NULL;
@@ -320,15 +298,8 @@ fgBool util::CDirent::readDir(fgBool recursive, fgBool listZipFiles) {
         return FG_TRUE;
     return FG_FALSE;
 }
+//------------------------------------------------------------------------------
 
-/*
- * Reads the specified directory content creating
- * a list of file names
- * @param dirPath
- * @param recursive
- * @param listZipFiles
- * @return 
- */
 fgBool util::CDirent::readDir(const char *dirPath,
                               fgBool recursive,
                               fgBool listZipFiles) {
@@ -339,15 +310,8 @@ fgBool util::CDirent::readDir(const char *dirPath,
     }
     return readDir(recursive, listZipFiles);
 }
+//------------------------------------------------------------------------------
 
-/**
- * Reads the specified directory content creating
- * a list of file names
- * @param dirPath
- * @param recursive
- * @param listZipFiles
- * @return 
- */
 fgBool util::CDirent::readDir(const std::string &dirPath,
                               fgBool recursive,
                               fgBool listZipFiles) {
@@ -358,11 +322,8 @@ fgBool util::CDirent::readDir(const std::string &dirPath,
     }
     return readDir(recursive, listZipFiles);
 }
+//------------------------------------------------------------------------------
 
-/**
- * Return the next file name
- * @return 
- */
 const char *util::CDirent::getNextFile(void) {
     if(m_fileIt == m_filePaths.end()) {
         m_fileIt = m_filePaths.begin();
@@ -376,12 +337,8 @@ const char *util::CDirent::getNextFile(void) {
 
     return (*m_fileIt).c_str();
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param path
- * @return 
- */
 std::string &util::CDirent::getNextFilePath(std::string &path) {
     const char *filename = util::CDirent::getNextFile();
     path.clear();
@@ -401,14 +358,6 @@ std::string &util::CDirent::getNextFilePath(std::string &path) {
     return path;
 }
 
-/**
- * 
- * @param output
- * @param basePath
- * @param patterns
- * @param deep
- * @return 
- */
 std::string &util::CDirent::searchForFile(std::string &output,
                                           const std::string &basePath,
                                           const std::string &patterns,
@@ -484,21 +433,16 @@ std::string &util::CDirent::searchForFile(std::string &output,
     } while(!stop && output.empty());
     return output;
 }
+//------------------------------------------------------------------------------
 
-/**
- * This function rewinds to the beginning the file pointer (in the list)
- * @return 
- */
 fgBool util::CDirent::rewind(void) {
     m_fileIt = m_filePaths.end();
     if(!m_filePaths.size())
         return FG_FALSE;
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- */
 void util::CDirent::clearList(void) {
     m_isRecursive = FG_FALSE;
 #ifdef FG_USING_MARMALADE
@@ -507,11 +451,9 @@ void util::CDirent::clearList(void) {
     m_filePaths.clear_optimised();
     m_fileIt = m_filePaths.end();
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @return 
- */
 CStringVector &util::CDirent::getRefFiles(void) {
     return m_filePaths;
 }
+//------------------------------------------------------------------------------

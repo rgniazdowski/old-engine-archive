@@ -363,7 +363,7 @@ namespace fg {
              * Constructor with additional parameter (path)
              * @param path
              */
-            CResource(std::string& path);
+            CResource(const std::string& path);
             /**
              * Destructor of the resource object
              */

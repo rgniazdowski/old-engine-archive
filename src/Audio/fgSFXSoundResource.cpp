@@ -6,7 +6,7 @@
  * 
  * FlexiGame source code and any related files can not be copied, modified 
  * and/or distributed without the express or written consent from the author.
- *******************************************************/
+ ******************************************************************************/
 
 #include "fgSFXSoundResource.h"
 #include "fgLog.h"
@@ -16,9 +16,8 @@
 
 using namespace fg;
 
-/**
- * 
- */
+//------------------------------------------------------------------------------
+
 sfx::CSoundResource::CSoundResource() :
 CResource(),
 CAudio(base::T_SOUND),
@@ -30,11 +29,8 @@ m_header() {
     m_resType = resource::SOUND;
     m_baseType = base::T_SOUND;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param path
- */
 sfx::CSoundResource::CSoundResource(const char *path) :
 CResource(path),
 CAudio(base::T_SOUND),
@@ -46,12 +42,9 @@ m_header() {
     m_resType = resource::SOUND;
     m_baseType = base::T_SOUND;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param path
- */
-sfx::CSoundResource::CSoundResource(std::string& path) :
+sfx::CSoundResource::CSoundResource(const std::string& path) :
 CResource(path),
 CAudio(base::T_SOUND),
 m_chunkData(NULL),
@@ -62,12 +55,10 @@ m_header() {
     m_resType = resource::SOUND;
     m_baseType = base::T_SOUND;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- */
 void sfx::CSoundResource::clear(void) {
-    CResource::clear();
+    base_type::clear();
     m_resType = resource::SOUND;
     m_chunkData = NULL;
     m_soundData = NULL;
@@ -76,6 +67,7 @@ void sfx::CSoundResource::clear(void) {
     m_channel = 0;
     m_baseType = base::T_SOUND;
 }
+//------------------------------------------------------------------------------
 
 fgBool sfx::CSoundResource::loadRawData(void) {
     if(getFilePath(m_quality).empty())
@@ -113,11 +105,8 @@ fgBool sfx::CSoundResource::loadRawData(void) {
 #endif
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @return 
- */
 fgBool sfx::CSoundResource::loadWavData(void) {
     if(getFilePath(m_quality).empty())
         return FG_FALSE;
@@ -180,11 +169,8 @@ fgBool sfx::CSoundResource::loadWavData(void) {
     m_header.sampleRate = wavHeader.sampleRate;
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
-/**
- * Create function loads/interprets data from file in ROM and place it in RAM memory.
- * @return 
- */
 fgBool sfx::CSoundResource::create(void) {
     if(m_isReady)
         return FG_TRUE;
@@ -294,31 +280,24 @@ fgBool sfx::CSoundResource::create(void) {
 #endif
     return m_isReady;
 }
+//------------------------------------------------------------------------------
 
-/**
- * Destroy all loaded data including additional metadata (called with destructor)
- */
 void sfx::CSoundResource::destroy(void) {
     dispose();
     m_chunkData = NULL;
     m_isReady = FG_FALSE;
     sfx::CSoundResource::clear();
 }
+//------------------------------------------------------------------------------
 
-/**
- * Reloads any data, recreates the resource (refresh)
- * @return 
- */
 fgBool sfx::CSoundResource::recreate(void) {
     if(m_isReady) {
         dispose();
     }
     return create();
 }
+//------------------------------------------------------------------------------
 
-/**
- * Dispose completely of the all loaded data, free all memory
- */
 void sfx::CSoundResource::dispose(void) {
 #if defined(FG_USING_SDL_MIXER)
     setVolume(0);
@@ -336,11 +315,8 @@ void sfx::CSoundResource::dispose(void) {
     m_isReady = FG_FALSE;
     m_channel = 0;
 }
+//------------------------------------------------------------------------------
 
-/**
- * Check if resource is disposed (not loaded yet or disposed after)
- * @return 
- */
 fgBool sfx::CSoundResource::isDisposed(void) const {
 #if defined(FG_USING_MARMALADE_SOUND)
     if(!m_soundData || !m_isReady) {
@@ -353,10 +329,8 @@ fgBool sfx::CSoundResource::isDisposed(void) const {
 #endif
     return FG_FALSE;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- */
 void sfx::CSoundResource::play(void) {
     if(!m_isReady)
         return;
@@ -394,10 +368,8 @@ void sfx::CSoundResource::play(void) {
     }
 #endif
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- */
 void sfx::CSoundResource::pause(void) {
     if(!m_isReady)
         return;
@@ -414,10 +386,8 @@ void sfx::CSoundResource::pause(void) {
     m_isPaused = FG_TRUE;
 #endif
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- */
 void sfx::CSoundResource::resume(void) {
     if(!m_isReady)
         return;
@@ -437,10 +407,8 @@ void sfx::CSoundResource::resume(void) {
     }
 #endif
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- */
 void sfx::CSoundResource::rewind(void) {
     if(!m_isReady)
         return;
@@ -452,10 +420,8 @@ void sfx::CSoundResource::rewind(void) {
     play();
 #endif
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- */
 void sfx::CSoundResource::stop(void) {
     if(!m_isReady)
         return;
@@ -473,11 +439,8 @@ void sfx::CSoundResource::stop(void) {
     }
 #endif
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @return 
- */
 fgBool sfx::CSoundResource::isPaused(void) {
     if(!m_isReady)
         return FG_FALSE;
@@ -489,11 +452,8 @@ fgBool sfx::CSoundResource::isPaused(void) {
 #endif    
     return m_isPaused;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @return 
- */
 fgBool sfx::CSoundResource::isPlaying(void) {
     if(!m_isReady)
         return FG_FALSE;
@@ -504,11 +464,8 @@ fgBool sfx::CSoundResource::isPlaying(void) {
 #endif
     return m_isPlaying;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param volume
- */
 void sfx::CSoundResource::setVolume(FG_SFX_VOLUME_TYPE volume) {
     if(!m_isReady)
         return;
@@ -527,11 +484,8 @@ void sfx::CSoundResource::setVolume(FG_SFX_VOLUME_TYPE volume) {
 #endif 
     m_volume = volume;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @return 
- */
 int sfx::CSoundResource::getCurrentChannel(void) {
     if(!m_isReady) {
         m_channel = 0;
@@ -540,3 +494,4 @@ int sfx::CSoundResource::getCurrentChannel(void) {
     }
     return m_channel;
 }
+//------------------------------------------------------------------------------

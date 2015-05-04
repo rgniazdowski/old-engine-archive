@@ -252,7 +252,7 @@ namespace fg {
              * 
              * @param path
              */
-            CSoundResource(std::string& path);
+            CSoundResource(const std::string& path);
             /**
              * 
              */
@@ -260,6 +260,10 @@ namespace fg {
                 CSoundResource::destroy();
             }
 
+            /**
+             * 
+             * @return
+             */
             FG_RESOURCE_FACTORY_CREATE_FUNCTION(CSoundResource);
 
 

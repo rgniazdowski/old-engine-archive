@@ -6,7 +6,7 @@
  * 
  * FlexiGame source code and any related files can not be copied, modified 
  * and/or distributed without the express or written consent from the author.
- *******************************************************/
+ ******************************************************************************/
 
 #include "fgGfxModelResource.h"
 #include "fgTinyObj.h"
@@ -15,6 +15,8 @@
 #include "Util/fgPath.h"
 
 using namespace fg;
+
+//------------------------------------------------------------------------------
 
 gfx::CModelResource::CModelResource() :
 CResource(),
@@ -27,6 +29,7 @@ m_isInterleaved(FG_TRUE) {
     memset(m_numData, 0, sizeof (m_numData));
     base_type::m_resType = resource::MODEL3D;
 }
+//------------------------------------------------------------------------------
 
 gfx::CModelResource::CModelResource(const char *path) :
 CResource(path),
@@ -38,6 +41,7 @@ m_hasMaterial(FG_FALSE),
 m_isInterleaved(FG_TRUE) {
     base_type::m_resType = resource::MODEL3D;
 }
+//------------------------------------------------------------------------------
 
 gfx::CModelResource::CModelResource(std::string& path) :
 CResource(path),
@@ -49,6 +53,7 @@ m_hasMaterial(FG_FALSE),
 m_isInterleaved(FG_TRUE) {
     base_type::m_resType = resource::MODEL3D;
 }
+//------------------------------------------------------------------------------
 
 void gfx::CModelResource::clear(void) {
     base_type::clear();
@@ -60,6 +65,7 @@ void gfx::CModelResource::clear(void) {
     m_isInterleaved = FG_TRUE;
     memset(m_numData, 0, sizeof (m_numData));
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CModelResource::setModelTypeFromFilePath(std::string &path) {
     if(m_modelType == MODEL_BUILTIN) {
@@ -76,6 +82,7 @@ fgBool gfx::CModelResource::setModelTypeFromFilePath(std::string &path) {
     }
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CModelResource::refreshInternalData(void) {
     memset(m_numData, 0, sizeof (m_numData));
@@ -151,6 +158,7 @@ fgBool gfx::CModelResource::refreshInternalData(void) {
                  m_numVertices, m_numNormals, m_numIndices, m_numUVs, m_size);
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
 void gfx::CModelResource::addShape(SShape *shape) {
     if(!shape)
@@ -160,6 +168,7 @@ void gfx::CModelResource::addShape(SShape *shape) {
     }
     m_shapes.push_back(shape);
 }
+//------------------------------------------------------------------------------
 
 void gfx::CModelResource::addShape(SMeshBase *mesh, const char *name) {
     if(!mesh || !name) {
@@ -174,6 +183,7 @@ void gfx::CModelResource::addShape(SMeshBase *mesh, const char *name) {
     shape->mesh = mesh;
     m_shapes.push_back(shape);
 }
+//------------------------------------------------------------------------------
 
 void gfx::CModelResource::addShape(SMeshBase *mesh, const std::string& name) {
     if(!mesh || name.empty()) {
@@ -185,6 +195,7 @@ void gfx::CModelResource::addShape(SMeshBase *mesh, const std::string& name) {
     shape->mesh = mesh;
     m_shapes.push_back(shape);
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CModelResource::loadWavefrontObj(void) {
     if(getFilePath(this->m_quality).empty()) {
@@ -202,6 +213,7 @@ fgBool gfx::CModelResource::loadWavefrontObj(void) {
     refreshInternalData();
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CModelResource::create(void) {
     if(this->m_isReady || !isDisposed()) {
@@ -277,11 +289,13 @@ fgBool gfx::CModelResource::create(void) {
     this->updateAABB();
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
 void gfx::CModelResource::destroy(void) {
     dispose();
     clear();
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CModelResource::recreate(void) {
     if(m_modelType != ModelType::MODEL_BUILTIN) {
@@ -290,6 +304,7 @@ fgBool gfx::CModelResource::recreate(void) {
     }
     return create();
 }
+//------------------------------------------------------------------------------
 
 void gfx::CModelResource::dispose(void) {
     int n = (int)m_shapes.size();
@@ -307,10 +322,12 @@ void gfx::CModelResource::dispose(void) {
     m_hasMaterial = FG_FALSE;
     m_isReady = FG_FALSE;
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CModelResource::isDisposed(void) const {
     return (fgBool)(/*m_shapes.empty() &&*/!m_isReady && !m_size);
 }
+//------------------------------------------------------------------------------
 
 void gfx::CModelResource::updateAABB(void) {
     if(m_shapes.empty()) {
@@ -326,6 +343,7 @@ void gfx::CModelResource::updateAABB(void) {
         }
     }
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CModelResource::genBuffers(void) {
     if(m_shapes.empty()) {
@@ -339,6 +357,7 @@ fgBool gfx::CModelResource::genBuffers(void) {
     }
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CModelResource::deleteBuffers(void) {
     if(m_shapes.empty()) {
@@ -352,3 +371,4 @@ fgBool gfx::CModelResource::deleteBuffers(void) {
     }
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
