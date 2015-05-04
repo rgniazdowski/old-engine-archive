@@ -17,7 +17,6 @@
                 <sourceRootElem>../../../modules/glm</sourceRootElem>
                 <sourceRootElem>../../../modules/tinyobj</sourceRootElem>
                 <sourceRootElem>../../../modules/tinyxml</sourceRootElem>
-                <sourceRootElem>../../../modules/glbinding/source/glbinding</sourceRootElem>
             </sourceRootList>
             <confList>
                 <confElem>

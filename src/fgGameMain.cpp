@@ -58,6 +58,8 @@
 #include "SimpleOpt.h"
 /// Unistd
 #include "fgUnistd.h"
+/// Plugin resource
+#include "fgPluginResource.h"
 
 using namespace fg;
 
@@ -328,7 +330,7 @@ fgBool CGameMain::initSubsystems(void) {
     //m_resourceFactory->registerResource(resource::VARIA, &);
     //m_resourceFactory->registerResource(resource::BINARY, &);
     //m_resourceFactory->registerResource(resource::LIBRARY, &);
-    //m_resourceFactory->registerResource(resource::PLUGIN, &);
+    m_resourceFactory->registerResource(resource::PLUGIN, &CPluginResource::createResource);
     //m_resourceFactory->registerResource(resource::CUSTOM, &);
     //m_resourceFactory->registerResource(resource::ZIP_PACK, &);
     m_resourceFactory->registerResource(resource::PARTICLE_EFFECT, &gfx::CParticleEffect::createResource);
@@ -573,6 +575,8 @@ fgBool CGameMain::closeSybsystems(void) {
 
 fgBool CGameMain::quit(void) {
     FG_LOG_DEBUG("Game main quit requested");
+    executeEvent(event::PROGRAM_QUIT);
+    this->update(FG_TRUE);
     fgBool status = FG_TRUE;
     if(!releaseResources())
         status = FG_FALSE;
@@ -616,6 +620,7 @@ fgBool CGameMain::display(void) {
         profile::g_debugProfiling->end("GUI::display");
     }
 #endif
+    executeEvent(event::DISPLAY_SHOT);
     return FG_TRUE;
 }
 //------------------------------------------------------------------------------
@@ -640,6 +645,7 @@ fgBool CGameMain::render(void) {
     }
     timesys::markTick(timesys::TICK_RENDER);
     FG_HardwareState->calculateFPS();
+    executeEvent(event::RENDER_SHOT);
 #if !defined(FG_USING_MARMALADE)
     if(fpsc < 0) {
         usleep(50 * 1000);
@@ -708,7 +714,7 @@ fgBool CGameMain::update(fgBool force) {
     timesys::markTick(timesys::TICK_UPDATE);
     m_guiMain->setScreenSize(m_gfxMain->getMainWindow()->getWidth(),
                              m_gfxMain->getMainWindow()->getHeight());
-
+    executeEvent(event::UPDATE_SHOT);
     // Update logic manager
     if(m_logicMgr)
         m_logicMgr->update();
