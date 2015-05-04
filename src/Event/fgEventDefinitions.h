@@ -6,7 +6,7 @@
  * 
  * FlexiGame source code and any related files can not be copied, modified 
  * and/or distributed without the express or written consent from the author.
- *******************************************************/
+ ******************************************************************************/
 
 #ifndef FG_INC_EVENT_DEFINITIONS
     #define FG_INC_EVENT_DEFINITIONS
@@ -86,46 +86,64 @@ namespace fg {
 
         /// 
         const EventType PROGRAM_INIT = 23;
-        /// 
-        const EventType LOADING_BEGIN = 24;
-        /// 
-        const EventType LOADING_FINISHED = 25;
-        /// 
-        const EventType SPLASHSCREEN = 26;
         ///
-        const EventType SWAP_BUFFERS = 27;
+        const EventType PROGRAM_QUIT = 24;
+        ///
+        const EventType PROGRAM_SUSPEND = 25;
+        ///
+        const EventType PROGRAM_RESUME = 26;
+        
+        /// 
+        const EventType LOADING_BEGIN = 27;
+        /// 
+        const EventType LOADING_FINISHED = 28;
+        /// 
+        const EventType SPLASHSCREEN = 29;
+        ///
+        const EventType SWAP_BUFFERS = 30;
+        ///
+        const EventType UPDATE_SHOT = 31;
+        ///
+        const EventType IDLE = UPDATE_SHOT;
+        ///
+        const EventType DISPLAY_SHOT = 32;
+        ///
+        const EventType RENDER_SHOT = 33;
+
+        ///
+        const EventType FRAME_FREEZE = 34;
 
         /// 
-        const EventType VERTEX_STREAM_READY = 28;
+        const EventType VERTEX_STREAM_READY = 35;
         /// 
-        const EventType CAMERA_CHANGED = 29;
+        const EventType CAMERA_CHANGED = 36;
 
         /// 
-        const EventType SOUND_PLAYED = 30;
+        const EventType SOUND_PLAYED = 37;
 
         /// 
-        const EventType MENU_CHANGED = 31;
+        const EventType MENU_CHANGED = 38;
         /// 
-        const EventType WIDGET_STATE_CHANGED = 32;
+        const EventType WIDGET_STATE_CHANGED = 39;
 
         /// 
-        const EventType SENSORS_CHANGED = 33;
+        const EventType SENSORS_CHANGED = 40;
 
         /// 
-        const EventType GAME_CONTROLLER_ADDED = 34;
+        const EventType GAME_CONTROLLER_ADDED = 41;
         /// 
-        const EventType GAME_CONTROLLER_REMOVED = 35;
+        const EventType GAME_CONTROLLER_REMOVED = 42;
         /// 
-        const EventType GAME_CONTROLLER_BUTTON = 36;
+        const EventType GAME_CONTROLLER_BUTTON = 43;
         /// 
-        const EventType GAME_CONTROLLER_AXIS = 37;
+        const EventType GAME_CONTROLLER_AXIS = 44;
 
         /// 
-        const EventType RESERVED1 = 38;
+        const EventType RESERVED1 = 45;
         /// 
-        const EventType RESERVED2 = 39;
+        const EventType RESERVED2 = 46;
         /// 
-        const EventType RESERVED3 = 40;
+        const EventType RESERVED3 = 47;
 
         /// 
         const EventType LAST_STANDARD_EVENT_CODE = RESERVED3;
