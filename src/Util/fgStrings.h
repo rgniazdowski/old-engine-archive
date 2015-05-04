@@ -21,10 +21,55 @@
 
 namespace fg {
 
-    /**
-     *
-     */
     namespace strings {
+        /**
+         *
+         * @param output
+         * @param input
+         */
+        void toLower(std::string& output, const std::string& input);
+        /**
+         *
+         * @param input
+         * @return
+         */
+        std::string toLower(const std::string& input);
+        /**
+         *
+         * @param output
+         * @param input
+         */
+        void toLower(char* output, const char* input);
+        /**
+         *
+         * @param input
+         * @return
+         */
+        char* toLower(const char* input);
+
+        /**
+         *
+         * @param output
+         * @param input
+         */
+        void toUpper(std::string& output, const std::string& input);
+        /**
+         *
+         * @param input
+         */
+        std::string toUpper(const std::string& input);
+        /**
+         *
+         * @param output
+         * @param input
+         */
+        void toUpper(char* output, const char* input);
+        /**
+         * 
+         * @param input
+         * @return
+         */
+        char* toUpper(const char* input);
         /**
          * 
          * @param str
@@ -40,15 +85,15 @@ namespace fg {
          * @return 
          */
         std::string trim(const std::string& str,
-                         const char *whitespace);
+                         const char* whitespace);
         /**
          * 
          * @param str
          * @param whitespace
          * @return 
          */
-        std::string trim(const char *str,
-                         const char *whitespace);
+        std::string trim(const char* str,
+                         const char* whitespace);
         /**
          * 
          * @param str
@@ -106,8 +151,8 @@ namespace fg {
          * @param caseSensitive
          * @return 
          */
-        fgBool isEqual(const char *input,
-                       const char *pattern,
+        fgBool isEqual(const char* input,
+                       const char* pattern,
                        const fgBool caseSensitive = FG_TRUE);
         /**
          * 
@@ -126,8 +171,8 @@ namespace fg {
          * @param caseSensitive
          * @return 
          */
-        fgBool startsWith(const char *input,
-                          const char *pattern,
+        fgBool startsWith(const char* input,
+                          const char* pattern,
                           fgBool caseSensitive = FG_TRUE);
         /**
          * 
@@ -146,8 +191,8 @@ namespace fg {
          * @param caseSensitive
          * @return 
          */
-        fgBool endsWith(const char *input,
-                        const char *pattern,
+        fgBool endsWith(const char* input,
+                        const char* pattern,
                         fgBool caseSensitive = FG_TRUE);
         /**
          * 
@@ -163,8 +208,8 @@ namespace fg {
          * @param caseSensitive
          * @return 
          */
-        fgBool containsChars(const char *input,
-                             const char *chars,
+        fgBool containsChars(const char* input,
+                             const char* chars,
                              const fgBool caseSensitive = FG_TRUE);
         /**
          * 
@@ -172,28 +217,28 @@ namespace fg {
          * @param needle
          * @return 
          */
-        const char *strstr(const char *str, const char *needle);
+        const char* strstr(const char* str, const char* needle);
         /**
          * 
          * @param str
          * @param needle
          * @return 
          */
-        const char *strstr(const std::string& str, const std::string& needle);
+        const char* strstr(const std::string& str, const std::string& needle);
         /**
          * 
          * @param str
          * @param needle
          * @return 
          */
-        const char *stristr(const char *str, const char *needle);
+        const char* stristr(const char* str, const char* needle);
         /**
          * 
          * @param str
          * @param needle
          * @return 
          */
-        const char *stristr(const std::string& str, const std::string& needle);
+        const char* stristr(const std::string& str, const std::string& needle);
     };
 };
 

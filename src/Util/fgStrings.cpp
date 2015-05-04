@@ -18,12 +18,108 @@
 
 using namespace fg;
 
-/**
- * 
- * @param str
- * @param whitespace
- * @return 
- */
+//------------------------------------------------------------------------------
+
+void strings::toLower(std::string& output, const std::string& input) {
+    if(input.empty())
+        return;
+    output.resize(input.length(), '\0');
+    unsigned int n = input.length();
+    for(unsigned int i = 0; i < n; i++) {
+        output[i] = tolower(input[i]);
+    }
+}
+//------------------------------------------------------------------------------
+
+std::string strings::toLower(const std::string& input) {
+    std::string output;
+    if(input.empty())
+        return output;
+    output.resize(input.length(), '\0');
+    unsigned int n = input.length();
+    for(unsigned int i = 0; i < n; i++) {
+        output[i] = tolower(input[i]);
+    }
+    return output;
+}
+//------------------------------------------------------------------------------
+
+void strings::toLower(char* output, const char* input) {
+    if(!output || !input)
+        return;
+    unsigned int n = strlen(input);
+    if(!n)
+        return;
+    for(unsigned int i = 0; i < n; i++) {
+        output[i] = tolower(input[i]);
+    }
+}
+//------------------------------------------------------------------------------
+
+char* strings::toLower(const char* input) {
+    if(!input)
+        return NULL;
+    unsigned int n = strlen(input);
+    char *output = strdup(input);
+    if(!output)
+        return NULL;
+    for(unsigned int i = 0; i < n; i++) {
+        output[i] = tolower(input[i]);
+    }
+    return output;
+}
+//------------------------------------------------------------------------------
+
+void strings::toUpper(std::string& output, const std::string& input) {
+    if(input.empty())
+        return;
+    output.resize(input.length(), '\0');
+    unsigned int n = input.length();
+    for(unsigned int i = 0; i < n; i++) {
+        output[i] = toupper(input[i]);
+    }
+}
+//------------------------------------------------------------------------------
+
+std::string strings::toUpper(const std::string& input) {
+    std::string output;
+    if(input.empty())
+        return output;
+    output.resize(input.length(), '\0');
+    unsigned int n = input.length();
+    for(unsigned int i = 0; i < n; i++) {
+        output[i] = toupper(input[i]);
+    }
+    return output;
+}
+//------------------------------------------------------------------------------
+
+void strings::toUpper(char* output, const char* input) {
+    if(!output || !input)
+        return;
+    unsigned int n = strlen(input);
+    if(!n)
+        return;
+    for(unsigned int i = 0; i < n; i++) {
+        output[i] = toupper(input[i]);
+    }
+}
+//------------------------------------------------------------------------------
+
+char* strings::toUpper(const char* input) {
+    if(!input)
+        return NULL;
+    unsigned int n = strlen(input);
+    char *output = strdup(input);
+    if(!output)
+        return NULL;
+    for(unsigned int i = 0; i < n; i++) {
+        output[i] = toupper(input[i]);
+    }
+    return output;
+}
+//------------------------------------------------------------------------------
+
 std::string strings::trim(const std::string& str,
                           const std::string& whitespace) {
     const unsigned int strBegin = str.find_first_not_of(whitespace);
@@ -35,13 +131,8 @@ std::string strings::trim(const std::string& str,
 
     return str.substr(strBegin, strRange);
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param str
- * @param whitespace
- * @return 
- */
 std::string strings::trim(const std::string& str,
                           const char *whitespace) {
     std::string whitespaceStr;
@@ -49,13 +140,8 @@ std::string strings::trim(const std::string& str,
         whitespaceStr = " \t";
     return strings::trim(str, whitespaceStr);
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param str
- * @param whitespace
- * @return 
- */
 std::string strings::trim(const char *str,
                           const char *whitespace) {
     if(!str)
@@ -65,14 +151,8 @@ std::string strings::trim(const char *str,
         whitespaceStr = " \t";
     return strings::trim(std::string(str), whitespaceStr);
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param str
- * @param fill
- * @param whitespace
- * @return 
- */
 std::string strings::reduce(const std::string& str,
                             const std::string& fill,
                             const std::string& whitespace) {
@@ -93,14 +173,8 @@ std::string strings::reduce(const std::string& str,
 
     return result;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param s
- * @param delim
- * @param elems
- * @return 
- */
 CVector<std::string>& strings::split(const std::string& s,
                                      char delim,
                                      CVector<std::string>& elems) {
@@ -112,25 +186,16 @@ CVector<std::string>& strings::split(const std::string& s,
     }
     return elems;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param s
- * @param delim
- * @return 
- */
 CVector<std::string> strings::split(const std::string &s,
                                     char delim) {
     CVector<std::string> elems;
     strings::split(s, delim, elems);
     return elems;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param string
- * @return 
- */
 fgBool strings::isFloat(const std::string& string) {
     std::string::const_iterator it = string.begin();
     fgBool decimalPoint = FG_FALSE;
@@ -160,12 +225,8 @@ fgBool strings::isFloat(const std::string& string) {
     }
     return (fgBool)(((int)string.size() > minSize) && it == string.end() && decimalPoint);
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param string
- * @return 
- */
 fgBool strings::isNumber(const std::string& string) {
     std::string::const_iterator it = string.begin();
     fgBool decimalPoint = FG_FALSE;
@@ -185,14 +246,8 @@ fgBool strings::isNumber(const std::string& string) {
     }
     return (fgBool)(((int)string.size() > minSize) && it == string.end());
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param input
- * @param pattern
- * @param caseSensitive
- * @return 
- */
 fgBool strings::isEqual(const std::string& input,
                         const std::string& pattern,
                         const fgBool caseSensitive) {
@@ -200,14 +255,8 @@ fgBool strings::isEqual(const std::string& input,
         return FG_FALSE;
     return strings::startsWith(input, pattern, caseSensitive);
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param input
- * @param pattern
- * @param caseSensitive
- * @return 
- */
 fgBool strings::isEqual(const char *input,
                         const char *pattern,
                         const fgBool caseSensitive) {
@@ -215,14 +264,8 @@ fgBool strings::isEqual(const char *input,
         return FG_FALSE;
     return strings::startsWith(input, pattern, caseSensitive);
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param input
- * @param pattern
- * @param caseSensitive
- * @return 
- */
 fgBool strings::startsWith(const std::string& input,
                            const std::string& pattern,
                            const fgBool caseSensitive) {
@@ -237,14 +280,8 @@ fgBool strings::startsWith(const std::string& input,
     }
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param input
- * @param pattern
- * @param caseSensitive
- * @return 
- */
 fgBool strings::startsWith(const char *input,
                            const char *pattern,
                            fgBool caseSensitive) {
@@ -262,14 +299,8 @@ fgBool strings::startsWith(const char *input,
     }
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param input
- * @param pattern
- * @param caseSensitive
- * @return 
- */
 fgBool strings::endsWith(const std::string& input,
                          const std::string& pattern,
                          fgBool caseSensitive) {
@@ -285,14 +316,8 @@ fgBool strings::endsWith(const std::string& input,
     }
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param input
- * @param pattern
- * @param caseSensitive
- * @return 
- */
 fgBool strings::endsWith(const char *input,
                          const char *pattern,
                          fgBool caseSensitive) {
@@ -310,24 +335,13 @@ fgBool strings::endsWith(const char *input,
     }
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param input
- * @param chars
- * @return 
- */
 fgBool strings::containsChars(const std::string& input, const std::string& chars) {
     return (input.find_first_of(chars) != std::string::npos);
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param input
- * @param chars
- * @param caseSensitive
- * @return 
- */
 fgBool strings::containsChars(const char *input,
                               const char *chars,
                               const fgBool caseSensitive) {
@@ -347,13 +361,8 @@ fgBool strings::containsChars(const char *input,
     }
     return FG_FALSE;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param str
- * @param needle
- * @return 
- */
 const char *strings::strstr(const char *str, const char *needle) {
     if(!needle || !*needle || !str) return str;
     char *p1 = (char*)str, *p2 = (char*)needle;
@@ -374,25 +383,15 @@ const char *strings::strstr(const char *str, const char *needle) {
     }
     return NULL;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param str
- * @param needle
- * @return 
- */
 const char *strings::strstr(const std::string& str, const std::string& needle) {
     if(str.empty() || needle.empty())
         return NULL;
     return strings::strstr(str.c_str(), needle.c_str());
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param str
- * @param needle
- * @return 
- */
 const char *strings::stristr(const char *str, const char *needle) {
     if(!needle || !*needle || !str) return str;
     char *p1 = (char*)str, *p2 = (char*)needle;
@@ -413,15 +412,11 @@ const char *strings::stristr(const char *str, const char *needle) {
     }
     return NULL;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param str
- * @param needle
- * @return 
- */
 const char *strings::stristr(const std::string& str, const std::string& needle) {
     if(str.empty() || needle.empty())
         return NULL;
     return strings::stristr(str.c_str(), needle.c_str());
 }
+//------------------------------------------------------------------------------
