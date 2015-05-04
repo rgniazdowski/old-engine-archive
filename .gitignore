@@ -6,6 +6,9 @@ build_infinium_scons_x86
 build_infinium_scons_aarch64
 deployments
 Infinium.mkb.bak
+data/libChainReaction.so
+data/ChainReaction/libChainReaction.so
+data/EndlessFlying/libEndlessFlying.so
 data/defaultProfile.log
 data/test1.lua
 data-ram
