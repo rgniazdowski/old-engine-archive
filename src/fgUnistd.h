@@ -6,10 +6,11 @@
  * 
  * FlexiGame source code and any related files can not be copied, modified 
  * and/or distributed without the express or written consent from the author.
- *******************************************************/
+ ******************************************************************************/
 
 #ifndef FG_INC_UNISTD
     #define FG_INC_UNISTD
+    #define FG_INC_UNISTD_BLOCK
 
     #ifndef FG_INC_BUILD_CONFIG
         #include "fgBuildConfig.h"
@@ -75,5 +76,5 @@ typedef unsigned __int64 uint64_t;
 
     #endif /* defined MARMALADE || defined PLATFORM LINUX */
 
+    #undef FG_INC_UNISTD_BLOCK
 #endif /* FG_INC_UNISTD */
-
