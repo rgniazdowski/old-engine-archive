@@ -6,7 +6,7 @@
 	<programTitle>Flexible Game Engine: Infinium</programTitle>
 	<defaultProfileName>default</defaultProfileName>
 	<mainModPath>main</mainModPath>
-	<currentModPath>endless_flying</currentModPath>
+	<currentModPath>EndlessFlying</currentModPath>
 	<verboseLevel>3</verboseLevel>
 	<useSound>true</useSound>
 	<useConsole>true</useConsole>

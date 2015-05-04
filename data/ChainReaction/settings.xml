@@ -5,7 +5,7 @@
 	<programTitle>Flexible Game Engine: Infinium</programTitle>
 	<defaultProfileName>default</defaultProfileName>
 	<mainModPath>main</mainModPath>
-	<currentModPath>chain_reaction</currentModPath>
+	<currentModPath>ChainReaction</currentModPath>
 	<verboseLevel>3</verboseLevel>
 	<useSound>true</useSound>
 	<useConsole>true</useConsole>

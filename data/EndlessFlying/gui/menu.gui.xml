@@ -9,7 +9,12 @@
             <Button name="LoadGameButton" link="LoadGameMenu" size="75%,5%">LOAD GAME</Button>
             <Button name="StatsButton" link="StatsMenu" size="75%,5%">STATS</Button>
             <Button name="OptionsButton" link="OptionsMenu" size="75%,5%">OPTIONS</Button>
+            <Button link="XXX" size="75%,5%">XXX</Button>
         </Container>
+	</Menu>
+
+	<Menu name="XXX" visible="true">
+
 	</Menu>
 
 	<Menu name="LoadGameMenu" flags="packvertical">
@@ -35,7 +40,32 @@
 
 	<Menu name="PlayGameMenu" flags="packvertical">
         <Container flags="packhorizontal" size="100%,100%">
-           
+           <ScrollArea name="Scrolled" ignoreState="true" style="FrameStyle" flags="vslider hslider packvertical" size="90%,70%">
+			<Button name="XXX1" size="100,50">XX1</Button>
+			<Button name="XXX2" size="100,50">XX2</Button>
+			<Button name="XXX3" size="100,50">XX3</Button>
+			<Button name="XXX4" size="100,50">XX4</Button>
+			<Button name="XXX5" size="100,50">XX5</Button>
+			<Button name="XXX6" size="100,50">XX6</Button>
+			<Button size="100,50">XX6</Button>
+			<Button size="100,50">XX6</Button>
+			<Button size="100,50">XX6</Button>
+			<Button size="100,50">XX6</Button>
+			<Button size="100,50">XX6</Button>
+			<Button size="100,50">XX6</Button>
+			<Button size="100,50">XX6</Button>
+			<Button size="100,50">XX6</Button>
+			<Button size="100,50">XX6</Button>
+			<Button size="100,50">XX6</Button>
+			<Button size="100,50">XX6</Button>
+			<Button size="100,50">XX6</Button>
+			<Button size="100,50">XX6</Button>
+			<Button size="100,50">XX6</Button>
+			<Button size="100,50">XX6</Button>
+			<Button size="100,50">XX6</Button>
+			<Button size="100,50">XX6</Button>
+			<Button size="100,50">XX6XX</Button>
+		</ScrollArea>
         </Container>
         <Container flags="packhorizontal" style="BottomFrameStyle">
             <Button name="ContinueGameButton" size="75%,5%">CONTINUE</Button>
