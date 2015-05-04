@@ -17,7 +17,7 @@ using namespace fg;
  * 
  * @param pEventMgr
  */
-game::Logic::Logic(fg::base::CManager* pEventMgr) :
+game::CLogic::CLogic(fg::base::CManager* pEventMgr) :
 fg::base::CManager(),
 m_status(Status::GAME_INVALID),
 m_currentStageID(0),
@@ -35,21 +35,21 @@ m_playerName() {
  * 
  * @param orig
  */
-game::Logic::Logic(const Logic& orig) {
+game::CLogic::CLogic(const CLogic& orig) {
     // ?? ?? ??
 }
 
 /**
  * 
  */
-game::Logic::~Logic() {
+game::CLogic::~CLogic() {
     destroy();
 }
 
 /**
  * 
  */
-void game::Logic::clear(void) {
+void game::CLogic::clear(void) {
     // ?? ?? ?? 
 }
 
@@ -57,7 +57,7 @@ void game::Logic::clear(void) {
  * 
  * @return 
  */
-fgBool game::Logic::initialize(void) {
+fgBool game::CLogic::initialize(void) {
     m_init = FG_TRUE;
     m_managerType = FG_MANAGER_LOGIC;
     return FG_TRUE;
@@ -67,7 +67,7 @@ fgBool game::Logic::initialize(void) {
  * 
  * @return 
  */
-fgBool game::Logic::destroy(void) {
+fgBool game::CLogic::destroy(void) {
     m_init = FG_FALSE;
     return FG_TRUE;
 }
@@ -77,7 +77,7 @@ fgBool game::Logic::destroy(void) {
  * @param eventType
  * @return 
  */
-fgBool game::Logic::throwGameEvent(const event::EventType eventType) {
+fgBool game::CLogic::throwGameEvent(const event::EventType eventType) {
     if(!m_pEventMgr) {
         return FG_FALSE;
     }
@@ -92,7 +92,7 @@ fgBool game::Logic::throwGameEvent(const event::EventType eventType) {
 /**
  * 
  */
-void game::Logic::startGameDefault(void) {
+void game::CLogic::startGameDefault(void) {
     //Elements are pushed into the "back" of the specific container and popped from its "front".
     m_statusQueue.push(Status::GAME_ACTIVE); // #FIXME
 }
@@ -101,7 +101,7 @@ void game::Logic::startGameDefault(void) {
  * 
  * @param stageID
  */
-void game::Logic::startGame(const unsigned int stageID) {
+void game::CLogic::startGame(const unsigned int stageID) {
     m_statusQueue.push(Status::GAME_ACTIVE);
 }
 
@@ -109,7 +109,7 @@ void game::Logic::startGame(const unsigned int stageID) {
  * 
  * @param stageName
  */
-void game::Logic::startGame(const std::string& stageName) {
+void game::CLogic::startGame(const std::string& stageName) {
     m_statusQueue.push(Status::GAME_ACTIVE);
 }
 
@@ -117,14 +117,14 @@ void game::Logic::startGame(const std::string& stageName) {
  * 
  * @param stageName
  */
-void game::Logic::startGame(const char *stageName) {
+void game::CLogic::startGame(const char *stageName) {
     m_statusQueue.push(Status::GAME_ACTIVE);
 }
 
 /**
  * 
  */
-void game::Logic::stopGame(void) {
+void game::CLogic::stopGame(void) {
     // There will be needed some additional checking
     // Also need to determine how to pass data (event structure)
     m_statusQueue.push(Status::GAME_STOPPED);
@@ -133,21 +133,21 @@ void game::Logic::stopGame(void) {
 /**
  * 
  */
-void game::Logic::pauseGame(void) {
+void game::CLogic::pauseGame(void) {
     m_statusQueue.push(Status::GAME_PAUSED);
 }
 
 /**
  * 
  */
-void game::Logic::restartGame(void) {
+void game::CLogic::restartGame(void) {
     m_statusQueue.push(Status::GAME_RESTARTING);
 }
 
 /**
  * 
  */
-void game::Logic::update(void) {
+void game::CLogic::update(void) {
 
     //while(!m_statusQueue.empty())
     if(!m_statusQueue.empty()) {

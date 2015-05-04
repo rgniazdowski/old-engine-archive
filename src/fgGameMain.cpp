@@ -368,7 +368,7 @@ fgBool CGameMain::initSubsystems(void) {
     m_gfxMain->getLoader()->update(10.0f);
     // Create object for Game Logic Manager
     if(!m_logicMgr)
-        m_logicMgr = new game::Logic(NULL);
+        m_logicMgr = new game::CLogic(NULL);
     // Setup Game Logic external pointers
     if(m_logicMgr) {
         m_logicMgr->setEventManager(this);
@@ -432,8 +432,10 @@ fgBool CGameMain::loadConfiguration(void) {
             return FG_FALSE;
         }
     }
+#if !defined(FG_USING_PLATFORM_ANDROID) && !defined(FG_USING_PLATFORM_IOS)
     path::changeCurrentWorkingDir(m_settings->getInstallationPath());
     path::changeCurrentWorkingDir(m_settings->getDefaultDataPath());
+#endif
     // #FIXME
     CSimpleOpt::SOption gameOptions[] = {
         {0, "--mod", SO_REQ_SEP},

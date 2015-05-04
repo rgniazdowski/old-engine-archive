@@ -220,7 +220,7 @@ namespace fg {
          * 
          * @return 
          */
-        inline game::Logic *getLogicManager(void) const {
+        inline game::CLogic *getLogicManager(void) const {
             return m_logicMgr;
         }
 
@@ -339,7 +339,7 @@ namespace fg {
         /// Sound manager - loading, playing sounds
         sfx::CSfxManager *m_soundMgr;
         /// Inner game logic
-        game::Logic *m_logicMgr;
+        game::CLogic *m_logicMgr;
 
         /// Callback for Touch events
         event::CFunctionCallback *m_gameTouchCallback;

@@ -49,7 +49,7 @@ namespace fg {
         /**
          *
          */
-        class Logic : public fg::base::CManager {
+        class CLogic : public fg::base::CManager {
         public:
             typedef fg::base::CManager base_type;
             ///
@@ -97,16 +97,16 @@ namespace fg {
             /**
              * 
              */
-            Logic(fg::base::CManager *pEventMgr);
+            CLogic(fg::base::CManager *pEventMgr);
             /**
              * 
              * @param orig
              */
-            Logic(const Logic &orig);
+            CLogic(const CLogic &orig);
             /**
              * 
              */
-            virtual ~Logic();
+            virtual ~CLogic();
 
         protected:
             /**
