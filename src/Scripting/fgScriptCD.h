@@ -1618,6 +1618,43 @@ namespace LPCD {
         #undef FG_CONV_CD_TYPE
 
     ////////////////////////////////////////////////////////////////////////////
+    // FG GFX SHADER PROGRAM TYPE
+    ////////////////////////////////////////////////////////////////////////////
+
+    template<> struct Type<fg::gfx::CShaderProgram *> {
+        static inline void Push(lua_State* L, const fg::gfx::CShaderProgram * value) {
+            LuaPlus::LuaState* state = lua_State_to_LuaState(L);
+            LuaPlus::LuaObject obj = state->BoxPointer((void*)value);
+        #if defined(FG_DEBUG)
+            FG_LOG_DEBUG("Script: LPCD Push: ptr[%p], offset[%lu], name[%s], type[fg::gfx::CShaderProgram]", value, (uintptr_t)value, value->getNameStr());
+        #endif
+            fg::script::CMetatables::METAID metaID = fg::script::CMetatables::SCENE_NODE_MT_ID;
+            const char *metatableName = fgScriptMT->getMetatableName(metaID);
+            obj.SetMetatable(state->GetRegistry()[metatableName]);
+        }
+        static inline bool Match(lua_State* L, int idx) {
+            LuaPlus::LuaState* state = lua_State_to_LuaState(L);
+            LuaPlus::LuaObject obj = state->Stack(idx);
+            bool result = (obj.GetMetatable() == state->GetRegistry()[fgScriptMT->getMetatableName(fg::script::CMetatables::SHADER_PROGRAM_MT_ID)]);
+            FG_LOG_DEBUG("Script: LPCD Match: type[fg::gfx::CShaderProgram] -> result[%d]", (int)result);
+            // This is fubar
+            result = (bool) obj.IsUserdata();
+            return result;
+        }
+        static inline fg::gfx::CShaderProgram * Get(lua_State* L, int idx) {
+            LuaPlus::LuaState* state = lua_State_to_LuaState(L);
+            fg::gfx::CShaderProgram *pShaderProgram = (fg::gfx::CShaderProgram *)state->UnBoxPointer(idx);
+            return pShaderProgram;
+        }
+    };
+
+    template<> struct Type<fg::gfx::CShaderProgram *&> : public Type<fg::gfx::CShaderProgram *> {
+    };
+
+    template<> struct Type<const fg::gfx::CShaderProgram *&> : public Type<fg::gfx::CShaderProgram *> {
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
     // FG GFX SPECIAL TYPES
     ////////////////////////////////////////////////////////////////////////////
 

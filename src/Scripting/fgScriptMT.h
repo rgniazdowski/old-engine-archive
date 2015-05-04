@@ -158,6 +158,11 @@ namespace fg {
                 SCRIPT_CALLBACK_MT_ID,
 
                 //
+                // GFX other
+                //
+                SHADER_PROGRAM_MT_ID,
+
+                //
                 // 3D/2D GFX Scene Node & other types
                 //
                 SCENE_NODE_MT_ID, // gfx::CSceneNode

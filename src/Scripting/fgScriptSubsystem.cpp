@@ -6,7 +6,7 @@
  * 
  * FlexiGame source code and any related files can not be copied, modified 
  * and/or distributed without the express or written consent from the author.
- *******************************************************/
+ ******************************************************************************/
 
 #include "fgScriptSubsystem.h"
 
@@ -85,48 +85,33 @@
 
 using namespace fg;
 
+//------------------------------------------------------------------------------
+
 #if defined(FG_USING_LUA_PLUS)
-///
 LuaPlus::LuaState *script::CScriptSubsystem::m_luaState = NULL;
-///
 LuaPlus::LuaObject script::CScriptSubsystem::m_globals;
-///
 LuaPlus::LuaObject script::CScriptSubsystem::m_fgObj;
-///
 script::CScriptSubsystem::userDataObjectMap script::CScriptSubsystem::m_userDataObjectMap;
 #else 
 void *script::CScriptSubsystem::m_luaState = NULL;
 #endif /* FG_USING_LUA_PLUS */
 
-///
 fgBool script::CScriptSubsystem::m_isBindingComplete = FG_FALSE;
 
-/// Pointer to the external GUI Main object
 fg::base::CManager *script::CScriptSubsystem::m_pGuiMain = NULL;
-/// Pointer to the external Event manager
 fg::base::CManager *script::CScriptSubsystem::m_pEventMgr = NULL;
-/// Pointer to the external Resource manager
 fg::base::CManager *script::CScriptSubsystem::m_pResourceMgr = NULL;
-/// Pointer to the external GFX Shader manager
 fg::base::CManager *script::CScriptSubsystem::m_pShaderMgr = NULL;
-/// Pointer to the external 2D Scene manager
 fg::base::CManager *script::CScriptSubsystem::m_p2DSceneMgr = NULL;
-/// Pointer to the external 3D Scene manager
 fg::base::CManager *script::CScriptSubsystem::m_p3DSceneMgr = NULL;
-/// Pointer to the external Particle manager
 fg::base::CManager *script::CScriptSubsystem::m_pParticleMgr = NULL;
-/// Pointer to the external GUI Widget manager
 fg::base::CManager *script::CScriptSubsystem::m_pWidgetMgr = NULL;
-/// Pointer to the external GUI Style manager
 fg::base::CManager *script::CScriptSubsystem::m_pStyleMgr = NULL;
-/// Pointer to the external Sound manager
 fg::base::CManager *script::CScriptSubsystem::m_pSoundMgr = NULL;
-/// Pointer to the external Game Logic manager
 fg::base::CManager *script::CScriptSubsystem::m_pLogicMgr = NULL;
 
-/**
- * 
- */
+//------------------------------------------------------------------------------
+
 script::CScriptSubsystem::CScriptSubsystem()
 #if defined(FG_USING_LUA_PLUS)
 #endif /* FG_USING_LUA_PLUS */
@@ -134,28 +119,19 @@ script::CScriptSubsystem::CScriptSubsystem()
     m_managerType = FG_MANAGER_SCRIPT;
     m_cyclicGCCallback = new event::CPlainFunctionCallback(&script::CScriptSubsystem::cyclicGCFunction, NULL);
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- */
 script::CScriptSubsystem::~CScriptSubsystem() {
     script::CScriptSubsystem::destroy();
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- */
 void script::CScriptSubsystem::clear(void) {
     m_cyclicGCCallback = NULL;
     m_managerType = FG_MANAGER_SCRIPT;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param systemData
- * @param userData
- * @return 
- */
 fgBool script::CScriptSubsystem::cyclicGCFunction(void* systemData, void* userData) {
     if(!m_luaState)
         return FG_FALSE;
@@ -173,12 +149,8 @@ fgBool script::CScriptSubsystem::cyclicGCFunction(void* systemData, void* userDa
 #endif /* FG_USING_LUA_PLUS */
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param filePath
- * @return 
- */
 int script::CScriptSubsystem::executeFile(const char* filePath) {
     if(!m_luaState || !filePath) {
         return 2;
@@ -223,11 +195,8 @@ int script::CScriptSubsystem::executeFile(const char* filePath) {
     fgFree(buffer);
     return status;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @return 
- */
 fgBool script::CScriptSubsystem::destroy(void) {
     if(!m_init)
         return FG_FALSE;
@@ -266,11 +235,8 @@ fgBool script::CScriptSubsystem::destroy(void) {
     script::CScriptSubsystem::clear();
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @return 
- */
 fgBool script::CScriptSubsystem::initialize(void) {
     if(m_init)
         return m_init;
@@ -374,12 +340,8 @@ fgBool script::CScriptSubsystem::initialize(void) {
 
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param L
- * @return 
- */
 int script::CScriptSubsystem::simpleFreeGCEvent(lua_State* L) {
     if(!L)
         return 0;
@@ -420,12 +382,8 @@ int script::CScriptSubsystem::simpleFreeGCEvent(lua_State* L) {
 #endif /* FG_USING_LUA_PLUS */
     return 0;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param L
- * @return 
- */
 int script::CScriptSubsystem::managedResourceGCEvent(lua_State* L) {
     if(!L)
         return 0;
@@ -478,13 +436,8 @@ int script::CScriptSubsystem::managedResourceGCEvent(lua_State* L) {
 #endif /* FG_USING_LUA_PLUS */
     return 0;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param systemData
- * @param userData
- * @return 
- */
 fgBool script::CScriptSubsystem::managedObjectDestructorCallback(void *systemData, void *userData) {
     if(!systemData)
         return FG_FALSE;
@@ -507,11 +460,8 @@ fgBool script::CScriptSubsystem::managedObjectDestructorCallback(void *systemDat
 #endif /* FG_USING_LUA_PLUS */
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @return 
- */
 fgBool script::CScriptSubsystem::registerConstants(void) {
     if(!m_luaState)
         return FG_FALSE;
@@ -728,16 +678,11 @@ fgBool script::CScriptSubsystem::registerConstants(void) {
     m_fgObj.SetInteger("BODY_SPHERE", (int)physics::CCollisionBody::SPHERE);
     m_fgObj.SetInteger("BODY_COMPLEX", (int)physics::CCollisionBody::COMPLEX);
 
-    //
-
 #endif /* FG_USING_LUA_PLUS */
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @return 
- */
 fgBool script::CScriptSubsystem::registerAdditionalTypes(void) {
     if(!m_luaState)
         return FG_FALSE;
@@ -834,12 +779,8 @@ fgBool script::CScriptSubsystem::registerAdditionalTypes(void) {
 #endif /* FG_USING_LUA_PLUS */
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param L
- * @return 
- */
 int script::CScriptSubsystem::addEventCallbackWrapper(lua_State *L) {
 #if defined(FG_USING_LUA_PLUS)
     LuaPlus::LuaState* state = lua_State_to_LuaState(L);
@@ -938,12 +879,8 @@ int script::CScriptSubsystem::addEventCallbackWrapper(lua_State *L) {
 #endif
     return 0;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param L
- * @return 
- */
 int script::CScriptSubsystem::addTimeoutCallbackWrapper(lua_State *L) {
 #if defined(FG_USING_LUA_PLUS)
     LuaPlus::LuaState* state = lua_State_to_LuaState(L);
@@ -1003,12 +940,8 @@ int script::CScriptSubsystem::addTimeoutCallbackWrapper(lua_State *L) {
 #endif
     return 0;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param L
- * @return 
- */
 int script::CScriptSubsystem::addCyclicCallbackWrapper(lua_State *L) {
 #if defined(FG_USING_LUA_PLUS)
     LuaPlus::LuaState* state = lua_State_to_LuaState(L);
@@ -1088,11 +1021,8 @@ int script::CScriptSubsystem::addCyclicCallbackWrapper(lua_State *L) {
 #endif
     return 0;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @return 
- */
 fgBool script::CScriptSubsystem::registerEventManager(void) {
     if(!m_luaState)
         return FG_FALSE;
@@ -1322,12 +1252,8 @@ fgBool script::CScriptSubsystem::registerEventManager(void) {
 #endif /* FG_USING_LUA_PLUS */    
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param state
- * @return 
- */
 int script::CScriptSubsystem::newResourceWrapper(lua_State* L) {
     if(!L)
         return 0;
@@ -1377,11 +1303,8 @@ int script::CScriptSubsystem::newResourceWrapper(lua_State* L) {
 #endif /* FG_USING_LUA_PLUS */
     return 1;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @return 
- */
 fgBool script::CScriptSubsystem::registerResourceManager(void) {
     if(!m_luaState)
         return FG_FALSE;
@@ -1588,15 +1511,14 @@ fgBool script::CScriptSubsystem::registerResourceManager(void) {
 #endif /* FG_USING_LUA_PLUS */    
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @return
- */
 fgBool script::CScriptSubsystem::registerShaderManager(void) {
     if(m_isBindingComplete)
         return FG_TRUE;
     if(!m_pShaderMgr)
+        return FG_FALSE;
+    if(m_pShaderMgr->getManagerType() != FG_MANAGER_GFX_SHADER)
         return FG_FALSE;
 
 #if defined(FG_USING_LUA_PLUS)
@@ -1605,15 +1527,92 @@ fgBool script::CScriptSubsystem::registerShaderManager(void) {
     if(m_fgObj.GetRef() < 0)
         return FG_FALSE;
 
+    typedef fgBool(gfx::CShaderManager::*SHADER_MGR_Bool_C_STR_IN)(const char*);
+    typedef void(gfx::CShaderManager::*SHADER_MGR_void_C_STR_IN)(const char*);
+    typedef gfx::CShaderProgram * (gfx::CShaderManager::*SHADER_MGR_ShaderProgram_C_STR_IN)(const char*);
+
+    // GFX Shader Manager manager metatable
+    m_mgrMetatables[SHADER_MGR] = m_fgObj.CreateTable(fgScriptMT->getMetatableName(CMetatables::SHADER_MANAGER_MT_ID));
+    m_mgrMetatables[SHADER_MGR].SetObject("__index", m_mgrMetatables[SHADER_MGR]);
+
+    m_mgrMetatables[SHADER_MGR].RegisterObjectDirect("compileShaders",
+                                                     static_cast<gfx::CShaderManager *>(0),
+                                                     &gfx::CShaderManager::compileShaders);
+
+    m_mgrMetatables[SHADER_MGR].RegisterObjectDirect("linkShaders",
+                                                     static_cast<gfx::CShaderManager *>(0),
+                                                     &gfx::CShaderManager::linkShaders);
+
+    m_mgrMetatables[SHADER_MGR].RegisterObjectDirect("allReleaseGFX",
+                                                     static_cast<gfx::CShaderManager *>(0),
+                                                     &gfx::CShaderManager::allReleaseGFX);
+
+    m_mgrMetatables[SHADER_MGR].RegisterObjectDirect("isProgramUsed",
+                                                     static_cast<gfx::CShaderManager *>(0),
+                                                     static_cast<SHADER_MGR_Bool_C_STR_IN>(&gfx::CShaderManager::isProgramUsed));
+
+    m_mgrMetatables[SHADER_MGR].RegisterObjectDirect("useProgram",
+                                                     static_cast<gfx::CShaderManager *>(0),
+                                                     static_cast<SHADER_MGR_Bool_C_STR_IN>(&gfx::CShaderManager::useProgram));
+
+    m_mgrMetatables[SHADER_MGR].RegisterObjectDirect("setShadersPath",
+                                                     static_cast<gfx::CShaderManager *>(0),
+                                                     static_cast<SHADER_MGR_void_C_STR_IN>(&gfx::CShaderManager::setShadersPath));
+
+    m_mgrMetatables[SHADER_MGR].RegisterObjectDirect("request",
+                                                     static_cast<gfx::CShaderManager *>(0),
+                                                     static_cast<SHADER_MGR_ShaderProgram_C_STR_IN>(&gfx::CShaderManager::request));
+
+    m_mgrMetatables[SHADER_MGR].RegisterObjectDirect("isPreloadDone",
+                                                     static_cast<gfx::CShaderManager *>(0),
+                                                     &gfx::CShaderManager::isPreloadDone);
+
+    intptr_t offset = (uintptr_t)m_pShaderMgr;
+    userDataObjectMapItor it = m_userDataObjectMap.find(offset);
+    if(it != m_userDataObjectMap.end()) {
+        // This pointer is already registered ?
+        return FG_FALSE;
+    }
+    LuaPlus::LuaObject shaderMgrObj = m_luaState->BoxPointer((void *)m_pShaderMgr);    
+    shaderMgrObj.SetMetatable(m_mgrMetatables[SHADER_MGR]);
+    m_fgObj.SetObject("ShaderManager", shaderMgrObj);
+
+
+    // Register ShaderProgram metatable
+    LPCD::Class(m_luaState->GetCState(), fgScriptMT->getMetatableName(CMetatables::SHADER_PROGRAM_MT_ID))
+            .ObjectDirect("getName", (gfx::CShaderProgram::base_type::base_type::base_type *)0, &gfx::CShaderProgram::base_type::base_type::base_type::getNameStr)
+            .ObjectDirect("isManaged", (gfx::CShaderProgram::base_type::base_type::base_type *)0, &gfx::CShaderProgram::base_type::base_type::base_type::isManaged)
+            .ObjectDirect("compile",
+                          (gfx::CShaderProgram *)0,
+                          &gfx::CShaderProgram::compile)
+            .ObjectDirect("link",
+                          (gfx::CShaderProgram *)0,
+                          &gfx::CShaderProgram::compile)
+            .ObjectDirect("use",
+                          (gfx::CShaderProgram *)0,
+                          &gfx::CShaderProgram::compile)
+            .ObjectDirect("deleteProgram",
+                          (gfx::CShaderProgram *)0,
+                          &gfx::CShaderProgram::compile)
+            .ObjectDirect("clearAll",
+                          (gfx::CShaderProgram *)0,
+                          &gfx::CShaderProgram::compile)
+            .ObjectDirect("isUsed",
+                          (gfx::CShaderProgram *)0,
+                          &gfx::CShaderProgram::compile)
+            .ObjectDirect("isLinked",
+                          (gfx::CShaderProgram *)0,
+                          &gfx::CShaderProgram::compile)
+            .ObjectDirect("isCompiled",
+                          (gfx::CShaderProgram *)0,
+                          &gfx::CShaderProgram::compile);
+
+
 #endif /* FG_USING_LUA_PLUS */
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param L
- * @return 
- */
 int script::CScriptSubsystem::addSceneEventCallbackWrapper(lua_State *L) {
 #if defined(FG_USING_LUA_PLUS)
     LuaPlus::LuaState* state = lua_State_to_LuaState(L);
@@ -1703,6 +1702,7 @@ int script::CScriptSubsystem::addSceneEventCallbackWrapper(lua_State *L) {
 #endif
     return 0;
 }
+//------------------------------------------------------------------------------
 
 int script::CScriptSubsystem::addSceneTriggerCallbackWrapper(lua_State *L) {
 #if defined(FG_USING_LUA_PLUS)
@@ -1790,13 +1790,8 @@ int script::CScriptSubsystem::addSceneTriggerCallbackWrapper(lua_State *L) {
 #endif
     return 0;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param metatable
- * @param sceneManager
- * @return 
- */
 #if defined(FG_USING_LUA_PLUS)
 
 fgBool script::CScriptSubsystem::registerSceneManager(LuaPlus::LuaObject &metatable,
@@ -1904,7 +1899,7 @@ fgBool script::CScriptSubsystem::registerSceneManager(LuaPlus::LuaObject &metata
     metatable.RegisterObjectDirect("setPickSelectionAABBTriangles",
                                    static_cast<gfx::CSceneManager *>(0),
                                    &gfx::CSceneManager::setPickSelectionAABBTriangles);
-    
+
     metatable.RegisterObjectDirect("isPickSelectionAABBTriangles",
                                    static_cast<gfx::CSceneManager *>(0),
                                    &gfx::CSceneManager::isPickSelectionAABBTriangles);
@@ -1944,7 +1939,7 @@ fgBool script::CScriptSubsystem::registerSceneManager(LuaPlus::LuaObject &metata
     metatable.RegisterObjectDirect("reportSelectionUnclick",
                                    static_cast<gfx::CSceneManager *>(0),
                                    &gfx::CSceneManager::reportSelectionUnclick);
-    
+
 
     metatable.RegisterObjectDirect("destroyNode",
                                    static_cast<gfx::CSceneManager *>(0),
@@ -1992,11 +1987,8 @@ fgBool script::CScriptSubsystem::registerSceneManager(LuaPlus::LuaObject &metata
 }
 #else
 #endif /* FG_USING_LUA_PLUS */
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @return
- */
 fgBool script::CScriptSubsystem::register2DSceneManager(void) {
     if(m_isBindingComplete)
         return FG_TRUE;
@@ -2019,11 +2011,8 @@ fgBool script::CScriptSubsystem::register2DSceneManager(void) {
 #endif /* FG_USING_LUA_PLUS */
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @return
- */
 fgBool script::CScriptSubsystem::register3DSceneManager(void) {
     if(m_isBindingComplete)
         return FG_TRUE;
@@ -2178,11 +2167,8 @@ fgBool script::CScriptSubsystem::register3DSceneManager(void) {
 #endif /* FG_USING_LUA_PLUS */
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @return
- */
 fgBool script::CScriptSubsystem::registerParticleSystem(void) {
     if(m_isBindingComplete)
         return FG_TRUE;
@@ -2224,12 +2210,8 @@ fgBool script::CScriptSubsystem::registerParticleSystem(void) {
 #endif /* FG_USING_LUA_PLUS */
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param L
- * @return 
- */
 int script::CScriptSubsystem::addWidgetCallbackWrapper(lua_State *L) {
 #if defined(FG_USING_LUA_PLUS)
     LuaPlus::LuaState* state = lua_State_to_LuaState(L);
@@ -2372,11 +2354,8 @@ int script::CScriptSubsystem::addWidgetCallbackWrapper(lua_State *L) {
 #endif
     return 0;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @return 
- */
 fgBool script::CScriptSubsystem::registerGuiMain(void) {
     if(m_isBindingComplete)
         return FG_TRUE;
@@ -2417,11 +2396,8 @@ fgBool script::CScriptSubsystem::registerGuiMain(void) {
 #endif /* FG_USING_LUA_PLUS */
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @return
- */
 fgBool script::CScriptSubsystem::registerWidgetManager(void) {
     if(m_isBindingComplete)
         return FG_TRUE;
@@ -2821,11 +2797,8 @@ fgBool script::CScriptSubsystem::registerWidgetManager(void) {
 #endif /* FG_USING_LUA_PLUS */
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @return
- */
 fgBool script::CScriptSubsystem::registerStyleManager(void) {
     if(m_isBindingComplete)
         return FG_TRUE;
@@ -2841,11 +2814,8 @@ fgBool script::CScriptSubsystem::registerStyleManager(void) {
 #endif /* FG_USING_LUA_PLUS */
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @return
- */
 fgBool script::CScriptSubsystem::registerSoundManager(void) {
     if(m_isBindingComplete)
         return FG_TRUE;
@@ -2920,10 +2890,8 @@ fgBool script::CScriptSubsystem::registerSoundManager(void) {
 #endif /* FG_USING_LUA_PLUS */
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- */
 fgBool script::CScriptSubsystem::registerLogicManager(void) {
     if(m_isBindingComplete)
         return FG_TRUE;
@@ -2938,91 +2906,91 @@ fgBool script::CScriptSubsystem::registerLogicManager(void) {
     if(m_fgObj.GetRef() < 0)
         return FG_FALSE;
 
-    typedef fgBool(fg::game::Logic::*LOGIC_Bool_C_STR_IN)(const char*);
-    typedef void(fg::game::Logic::*LOGIC_void_C_STR_IN)(const char*);
-    typedef void(fg::game::Logic::*LOGIC_void_UINT_IN)(const unsigned int);
+    typedef fgBool(fg::game::CLogic::*LOGIC_Bool_C_STR_IN)(const char*);
+    typedef void(fg::game::CLogic::*LOGIC_void_C_STR_IN)(const char*);
+    typedef void(fg::game::CLogic::*LOGIC_void_UINT_IN)(const unsigned int);
 
     // Game Logic manager metatable
     m_mgrMetatables[LOGIC_MGR] = m_fgObj.CreateTable(fgScriptMT->getMetatableName(CMetatables::LOGIC_MANAGER_MT_ID));
     m_mgrMetatables[LOGIC_MGR].SetObject("__index", m_mgrMetatables[LOGIC_MGR]);
     m_mgrMetatables[LOGIC_MGR].RegisterObjectDirect("startGameDefault",
-                                                    static_cast<fg::game::Logic *>(0),
-                                                    &fg::game::Logic::startGameDefault);
+                                                    static_cast<fg::game::CLogic *>(0),
+                                                    &fg::game::CLogic::startGameDefault);
     m_mgrMetatables[LOGIC_MGR].RegisterObjectDirect("startGameStageID",
-                                                    static_cast<fg::game::Logic *>(0),
-                                                    static_cast<LOGIC_void_UINT_IN>(&fg::game::Logic::startGame));
+                                                    static_cast<fg::game::CLogic *>(0),
+                                                    static_cast<LOGIC_void_UINT_IN>(&fg::game::CLogic::startGame));
     m_mgrMetatables[LOGIC_MGR].RegisterObjectDirect("startGameStageName",
-                                                    static_cast<fg::game::Logic *>(0),
-                                                    static_cast<LOGIC_void_C_STR_IN>(&fg::game::Logic::startGame));
+                                                    static_cast<fg::game::CLogic *>(0),
+                                                    static_cast<LOGIC_void_C_STR_IN>(&fg::game::CLogic::startGame));
     m_mgrMetatables[LOGIC_MGR].RegisterObjectDirect("stopGame",
-                                                    static_cast<fg::game::Logic *>(0),
-                                                    &fg::game::Logic::stopGame);
+                                                    static_cast<fg::game::CLogic *>(0),
+                                                    &fg::game::CLogic::stopGame);
     m_mgrMetatables[LOGIC_MGR].RegisterObjectDirect("pauseGame",
-                                                    static_cast<fg::game::Logic *>(0),
-                                                    &fg::game::Logic::pauseGame);
+                                                    static_cast<fg::game::CLogic *>(0),
+                                                    &fg::game::CLogic::pauseGame);
     m_mgrMetatables[LOGIC_MGR].RegisterObjectDirect("restartGame",
-                                                    static_cast<fg::game::Logic *>(0),
-                                                    &fg::game::Logic::restartGame);
+                                                    static_cast<fg::game::CLogic *>(0),
+                                                    &fg::game::CLogic::restartGame);
 
     m_mgrMetatables[LOGIC_MGR].RegisterObjectDirect("getCurrentStageID",
-                                                    static_cast<fg::game::Logic *>(0),
-                                                    &fg::game::Logic::getCurrentStageID);
+                                                    static_cast<fg::game::CLogic *>(0),
+                                                    &fg::game::CLogic::getCurrentStageID);
     m_mgrMetatables[LOGIC_MGR].RegisterObjectDirect("getCurrentStageName",
-                                                    static_cast<fg::game::Logic *>(0),
-                                                    &fg::game::Logic::getCurrentStageNameStr);
+                                                    static_cast<fg::game::CLogic *>(0),
+                                                    &fg::game::CLogic::getCurrentStageNameStr);
     m_mgrMetatables[LOGIC_MGR].RegisterObjectDirect("getStageScore",
-                                                    static_cast<fg::game::Logic *>(0),
-                                                    &fg::game::Logic::getStageScore);
+                                                    static_cast<fg::game::CLogic *>(0),
+                                                    &fg::game::CLogic::getStageScore);
     m_mgrMetatables[LOGIC_MGR].RegisterObjectDirect("getGlobalScore",
-                                                    static_cast<fg::game::Logic *>(0),
-                                                    &fg::game::Logic::getGlobalScore);
+                                                    static_cast<fg::game::CLogic *>(0),
+                                                    &fg::game::CLogic::getGlobalScore);
     m_mgrMetatables[LOGIC_MGR].RegisterObjectDirect("increaseStageScore",
-                                                    static_cast<fg::game::Logic *>(0),
-                                                    &fg::game::Logic::increaseStageScore);
+                                                    static_cast<fg::game::CLogic *>(0),
+                                                    &fg::game::CLogic::increaseStageScore);
     m_mgrMetatables[LOGIC_MGR].RegisterObjectDirect("resetStageScore",
-                                                    static_cast<fg::game::Logic *>(0),
-                                                    &fg::game::Logic::resetStageScore);
+                                                    static_cast<fg::game::CLogic *>(0),
+                                                    &fg::game::CLogic::resetStageScore);
 
     m_mgrMetatables[LOGIC_MGR].RegisterObjectDirect("setPlayerName",
-                                                    static_cast<fg::game::Logic *>(0),
-                                                    static_cast<LOGIC_void_C_STR_IN>(&fg::game::Logic::setPlayerName));
+                                                    static_cast<fg::game::CLogic *>(0),
+                                                    static_cast<LOGIC_void_C_STR_IN>(&fg::game::CLogic::setPlayerName));
     m_mgrMetatables[LOGIC_MGR].RegisterObjectDirect("getPlayerName",
-                                                    static_cast<fg::game::Logic *>(0),
-                                                    &fg::game::Logic::getPlayerNameStr);
+                                                    static_cast<fg::game::CLogic *>(0),
+                                                    &fg::game::CLogic::getPlayerNameStr);
 
     m_mgrMetatables[LOGIC_MGR].RegisterObjectDirect("isActive",
-                                                    static_cast<fg::game::Logic *>(0),
-                                                    &fg::game::Logic::isActive);
+                                                    static_cast<fg::game::CLogic *>(0),
+                                                    &fg::game::CLogic::isActive);
     m_mgrMetatables[LOGIC_MGR].RegisterObjectDirect("isPaused",
-                                                    static_cast<fg::game::Logic *>(0),
-                                                    &fg::game::Logic::isPaused);
+                                                    static_cast<fg::game::CLogic *>(0),
+                                                    &fg::game::CLogic::isPaused);
     m_mgrMetatables[LOGIC_MGR].RegisterObjectDirect("isStopped",
-                                                    static_cast<fg::game::Logic *>(0),
-                                                    &fg::game::Logic::isStopped);
+                                                    static_cast<fg::game::CLogic *>(0),
+                                                    &fg::game::CLogic::isStopped);
     m_mgrMetatables[LOGIC_MGR].RegisterObjectDirect("isLoading",
-                                                    static_cast<fg::game::Logic *>(0),
-                                                    &fg::game::Logic::isLoading);
+                                                    static_cast<fg::game::CLogic *>(0),
+                                                    &fg::game::CLogic::isLoading);
     m_mgrMetatables[LOGIC_MGR].RegisterObjectDirect("isRestarting",
-                                                    static_cast<fg::game::Logic *>(0),
-                                                    &fg::game::Logic::isRestarting);
+                                                    static_cast<fg::game::CLogic *>(0),
+                                                    &fg::game::CLogic::isRestarting);
     m_mgrMetatables[LOGIC_MGR].RegisterObjectDirect("isStopping",
-                                                    static_cast<fg::game::Logic *>(0),
-                                                    &fg::game::Logic::isStopping);
+                                                    static_cast<fg::game::CLogic *>(0),
+                                                    &fg::game::CLogic::isStopping);
     m_mgrMetatables[LOGIC_MGR].RegisterObjectDirect("isFinishing",
-                                                    static_cast<fg::game::Logic *>(0),
-                                                    &fg::game::Logic::isFinishing);
+                                                    static_cast<fg::game::CLogic *>(0),
+                                                    &fg::game::CLogic::isFinishing);
     m_mgrMetatables[LOGIC_MGR].RegisterObjectDirect("isFinished",
-                                                    static_cast<fg::game::Logic *>(0),
-                                                    &fg::game::Logic::isFinished);
+                                                    static_cast<fg::game::CLogic *>(0),
+                                                    &fg::game::CLogic::isFinished);
     m_mgrMetatables[LOGIC_MGR].RegisterObjectDirect("isConnecting",
-                                                    static_cast<fg::game::Logic *>(0),
-                                                    &fg::game::Logic::isConnecting);
+                                                    static_cast<fg::game::CLogic *>(0),
+                                                    &fg::game::CLogic::isConnecting);
     m_mgrMetatables[LOGIC_MGR].RegisterObjectDirect("isWaiting",
-                                                    static_cast<fg::game::Logic *>(0),
-                                                    &fg::game::Logic::isWaiting);
+                                                    static_cast<fg::game::CLogic *>(0),
+                                                    &fg::game::CLogic::isWaiting);
     m_mgrMetatables[LOGIC_MGR].RegisterObjectDirect("isDisconnected",
-                                                    static_cast<fg::game::Logic *>(0),
-                                                    &fg::game::Logic::isDisconnected);
+                                                    static_cast<fg::game::CLogic *>(0),
+                                                    &fg::game::CLogic::isDisconnected);
     uintptr_t offset = (uintptr_t)m_pLogicMgr;
     userDataObjectMapItor it = m_userDataObjectMap.find(offset);
     if(it != m_userDataObjectMap.end()) {
@@ -3042,3 +3010,4 @@ fgBool script::CScriptSubsystem::registerLogicManager(void) {
 #endif /* FG_USING_LUA_PLUS */
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
