@@ -546,6 +546,16 @@ fgBool CGameMain::loadResources(void) {
     m_gfxMain->generateBuiltInData();
     float t2 = timesys::ms();
     FG_LOG_DEBUG("Main: Resources loaded in %.2f seconds", (t2 - t1) / 1000.0f);
+
+    FG_LOG_DEBUG("Main: Initializing mod plugin: '%s'", m_settings->getCurrentModPathStr());
+    // Name of the plugin resource should have the same name as mod
+    resource::CResource *pPluginRes = m_resourceMgr->request(m_settings->getCurrentModPathStr());
+    if(pPluginRes && pPluginRes->getResourceType() == resource::PLUGIN) {
+        CPluginResource *plugin = (CPluginResource *)pPluginRes;
+        plugin->setInternalInfo(this); // setting pointer to the CGameMain
+        plugin->create(); // Loading the shared object | should initialize the plugin
+    }
+    this->update(FG_TRUE);
     return FG_TRUE;
 }
 //------------------------------------------------------------------------------
