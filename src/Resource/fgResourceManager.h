@@ -212,7 +212,7 @@ namespace fg {
              * @param quality
              * @return 
              */
-            fgBool goToNext(ResourceType resType, fgQuality quality);
+            fgBool goToNext(ResourceType resType, Quality quality);
 
             // -----------------------------------------------------------------------
             // General resource access

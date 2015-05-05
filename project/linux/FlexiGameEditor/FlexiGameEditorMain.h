@@ -87,7 +87,7 @@ private:
     /// List of proper names for main notebook tabs
     wxString m_previewTabNames[FG_PREVIEW_NUM_MODES];
     ///
-    fg::CGameMain* m_gameMain;
+    fg::CEngineMain* m_engineMain;
 
 public:
     /**

@@ -102,7 +102,7 @@ m_gfxMainCanvas(NULL),
 m_renderTimer(NULL),
 m_gfxHolderPanel(NULL),
 m_previewTabNames(),
-m_gameMain(NULL) {
+m_engineMain(NULL) {
     ////////////////////////////////////////////////////////////////////////////
     //(*Initialize(FlexiGameEditorFrame)
     wxMenuItem* MenuItem2;
@@ -263,7 +263,7 @@ m_gameMain(NULL) {
     int args[] = {WX_GL_RGBA, WX_GL_DOUBLEBUFFER, WX_GL_DEPTH_SIZE, 16, 0};
 
     m_gfxHolderPanel = new CGfxHolderPanel(MainNotebook);
-    m_gfxMainCanvas = new CEngineGfxCanvas(m_gfxHolderPanel, args, &m_gameMain);
+    m_gfxMainCanvas = new CEngineGfxCanvas(m_gfxHolderPanel, args, &m_engineMain);
     m_gfxHolderPanel->setGfxCanvas(m_gfxMainCanvas);
     m_gfxHolderPanel->setContextMenu(&GfxCanvasContextMenu);
     
@@ -294,7 +294,7 @@ FlexiGameEditorFrame::~FlexiGameEditorFrame() {
 
 void FlexiGameEditorFrame::OnIdle(wxIdleEvent& event) {
     if(m_gfxMainCanvas) {
-        g_resMgrPanel->setGameMain(m_gameMain);
+        g_resMgrPanel->setEngineMain(m_engineMain);
     }
     usleep(1000 * 1); // 100 fps ?
     //usleep(1000 * 20); // 50 fps ?

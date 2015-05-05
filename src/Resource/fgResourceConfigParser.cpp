@@ -155,9 +155,9 @@ fgBool resource::CResourceConfig::parseData(void) {
             std::string path;
             std::string flags;
             resource::ResourceType type = resource::INVALID;
-            fgQuality quality = FG_QUALITY_UNIVERSAL;
+            Quality quality = Quality::UNIVERSAL;
             resource::ResourcePriority priority = ResourcePriority::LOW;
-            CVector<fgQuality> qualityVec;
+            CVector<Quality> qualityVec;
             CVector<std::string> pathVec;
             CVector<std::string> _helperVec;
 
@@ -196,7 +196,7 @@ fgBool resource::CResourceConfig::parseData(void) {
                     _helperVec.clear_optimised();
                     strings::split(param->string, ',', _helperVec);
                     for(int i = 0; i < (int)_helperVec.size(); i++) {
-                        qualityVec.push_back(FG_QUALITY_FROM_TEXT(_helperVec[i].c_str()));
+                        qualityVec.push_back(getQualityFromText(_helperVec[i].c_str()));
                     }
                     if(qualityVec.empty())
                         foundQuality = FG_FALSE;
@@ -219,10 +219,10 @@ fgBool resource::CResourceConfig::parseData(void) {
                 // In other case, the resource has single quality selected and stores single file
             } else {
                 if((param = section->getParameter("quality", util::SCfgParameter::STRING)) != NULL) {
-                    quality = FG_QUALITY_FROM_TEXT(param->string);
+                    quality = getQualityFromText(param->string);
                     qualityVec.push_back(quality);
                 } else {
-                    quality = FG_QUALITY_UNIVERSAL;
+                    quality = Quality::UNIVERSAL;
                 }
                 if((param = section->getParameter("path", util::SCfgParameter::STRING)) != NULL) {
                     path::join(path, dirPath, param->string);

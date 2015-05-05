@@ -31,16 +31,16 @@
     #include "GameLogic/fgGameLogic.h"
 
 namespace fg {
-    class CGameMain;
+    class CEngineMain;
 };
-    #define FG_TAG_GAME_MAIN_NAME       "GameMain"
-    #define FG_TAG_GAME_MAIN            FG_TAG_TYPE(fg::CGameMain)
-FG_TAG_TEMPLATE_ID_AUTO(fg::CGameMain, FG_TAG_GAME_MAIN_NAME);
+    #define FG_TAG_ENGINE_MAIN_NAME       "EngineMain"
+    #define FG_TAG_ENGINE_MAIN            FG_TAG_TYPE(fg::CEngineMain)
+FG_TAG_TEMPLATE_ID_AUTO(fg::CEngineMain, FG_TAG_ENGINE_MAIN_NAME);
 
 namespace fg {
 
     /// Tag type for the GameMain class
-    typedef FG_TAG_GAME_MAIN GameMainTag;
+    typedef FG_TAG_ENGINE_MAIN EngineMainTag;
 
     const unsigned short MAX_FIXED_FPS = 120;
     const unsigned short MIN_FIXED_FPS = 24;
@@ -52,21 +52,27 @@ namespace fg {
     /**
      *
      */
-    class CGameMain : public event::CEventManager {
+    class CEngineMain : public event::CEventManager {
     public:
         ///
-        typedef GameMainTag tag_type;
+        typedef CEngineMain self_type;
+        ///
+        typedef CEngineMain type;
+        ///
+        typedef event::CEventManager base_type;
+        ///
+        typedef EngineMainTag tag_type;
 
     public:
         /**
          * Default constructor for the Game Main object
          * @param pEventMgr
          */
-        CGameMain(int argc, char **argv);
+        CEngineMain(int argc, char **argv);
         /**
          * Default destructor for the Game Main object
          */
-        virtual ~CGameMain();
+        virtual ~CEngineMain();
 
     protected:
         /**
@@ -325,7 +331,7 @@ namespace fg {
         /// Main config 
         util::CConfig *m_mainConfig;
         /// Main Quality Manager
-        fgQualityManager *m_qualityMgr;
+        CQualityManager *m_qualityMgr;
         /// Main Resource Manager
         resource::CResourceManager *m_resourceMgr;
         /// Resource factory object - registers create() methods for Resource Objects

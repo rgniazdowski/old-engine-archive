@@ -24,7 +24,7 @@
 //*)
 
 namespace fg {
-    class CGameMain;
+    class CEngineMain;
 }
 
 /**
@@ -64,15 +64,15 @@ public:
      *
      * @return
      */
-    fg::CGameMain* getGameMain(void) const {
-        return m_gameMain;
+    fg::CEngineMain* getGameMain(void) const {
+        return m_engineMain;
     }
     /**
      * 
-     * @param gameMain
+     * @param engineMain
      */
-    void setGameMain(fg::CGameMain* gameMain) {
-        m_gameMain = gameMain;
+    void setEngineMain(fg::CEngineMain* engineMain) {
+        m_engineMain = engineMain;
     }
 
 private:
@@ -98,7 +98,7 @@ protected:
 
 private:
     ///
-    fg::CGameMain* m_gameMain;
+    fg::CEngineMain* m_engineMain;
 
     //(*Handlers(CEditorResMgrPanel)
     void OnResListRefreshButtonClick(wxCommandEvent& event);

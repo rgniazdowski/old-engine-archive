@@ -34,7 +34,7 @@ namespace fg {
          */
         struct SResourceHeader {
             ///
-            fg::CVector<fgQuality> qualities;
+            fg::CVector<Quality> qualities;
             ///
             fg::CStringVector paths;
             ///
@@ -46,7 +46,7 @@ namespace fg {
             /// Priority of this resource
             ResourcePriority priority;
             /// Quality of the resource
-            fgQuality quality;
+            Quality quality;
             /// Resource type
             ResourceType resType;
             ///
@@ -61,7 +61,7 @@ namespace fg {
             flags(),
             configPath(),
             priority(ResourcePriority::LOW),
-            quality(FG_QUALITY_UNIVERSAL),
+            quality(Quality::UNIVERSAL),
             resType(resource::INVALID),
             isConfig(FG_FALSE) { }
             /**
@@ -167,7 +167,7 @@ namespace fg {
              * 
              * @return 
              */
-            CVector<fgQuality> &getRefQualities(void) {
+            CVector<Quality> &getRefQualities(void) {
                 return m_header.qualities;
             }
             /**

@@ -60,7 +60,7 @@ FFLAGS=
 ASFLAGS=
 
 # Link Libraries and Options
-LDLIBSOPTIONS=-lm -ljpeg `pkg-config --libs glew` `pkg-config --libs gl` `pkg-config --libs libpng` `pkg-config --libs zlib` ../FlexiGame_NB/dist/Release_GLEW_StaticLib/GNU-Linux-x86/libflexigame_nb.a ../LuaPlusNextGen_NB/dist/Release/GNU-Linux-x86/libluaplusnextgen_nb.a ../MiniZipMaster_NB/dist/Release/GNU-Linux-x86/libminizipmaster_nb.a  
+LDLIBSOPTIONS=-lm -ljpeg `pkg-config --libs glew` `pkg-config --libs gl` `pkg-config --libs libpng` `pkg-config --libs zlib` ../FlexiGame_NB/dist/Release_GLEW_StaticLib/GNU-Linux-x86/libflexigame_nb.a ../LuaPlusNextGen_NB/dist/Release/GNU-Linux-x86/libluaplusnextgen_nb.a ../MiniZipMaster_NB/dist/Release/GNU-Linux-x86/libminizipmaster_nb.a -ldl  
 
 # Build Targets
 .build-conf: ${BUILD_SUBPROJECTS}

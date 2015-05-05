@@ -53,13 +53,13 @@ namespace fg {
             /**
              *
              */
-            class CShader : public fg::resource::CManagedDataFile<ShaderHandle, fgQuality> {
+            class CShader : public fg::resource::CManagedDataFile<ShaderHandle, Quality> {
                 //friend class fg::gfx::CShader;
                 friend class fg::gfx::CShaderProgram;
                 friend class fg::gfx::CShaderManager;
             public:
                 ///
-                typedef CManagedDataFile<ShaderHandle, fgQuality> base_type;
+                typedef CManagedDataFile<ShaderHandle, Quality> base_type;
                 ///
                 typedef ShaderTag tag_type;
 

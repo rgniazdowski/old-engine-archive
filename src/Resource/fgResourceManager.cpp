@@ -189,7 +189,7 @@ fgBool resource::CResourceManager::initialize(void) {
         const fgBool forceCreate = resGroup->isForceCreate();
         CResourceGroup::rgResVec& resInGrp = resGroup->getRefResourceFiles();
         for(CResourceGroup::rgResVecItor it = resInGrp.begin(); it != resInGrp.end(); it++) {
-            (*it)->setQuality(static_cast<fgQualityManager *>(m_pQualityMgr)->getQuality());
+            (*it)->setQuality(static_cast<CQualityManager *>(m_pQualityMgr)->getQuality());
             insertResource((*it));
             if(forceCreate) {
                 refreshResource((*it));
@@ -306,7 +306,7 @@ fgBool resource::CResourceManager::goToNext(const ResourceType* resTypes, int n)
  * @param quality
  * @return 
  */
-fgBool resource::CResourceManager::goToNext(ResourceType resType, fgQuality quality) {
+fgBool resource::CResourceManager::goToNext(ResourceType resType, Quality quality) {
     while(FG_TRUE) {
         goToNext();
         if(!isValid()) {
@@ -471,7 +471,7 @@ void resource::CResourceManager::refreshResource(CResource* pResource) {
     // Recreate the object before giving it to the application
     if(pResource->isDisposed()) {
         if(m_pQualityMgr)
-            pResource->setQuality(static_cast<fgQualityManager *>(m_pQualityMgr)->getQuality());
+            pResource->setQuality(static_cast<CQualityManager *>(m_pQualityMgr)->getQuality());
 
         pResource->recreate();
         if(!pResource->isDisposed() && m_pEventMgr) {
@@ -712,8 +712,8 @@ resource::CResource* resource::CResourceManager::request(const std::string& info
             resourcePtr = m_pResourceFactory->createResource(resExtType);
             resourcePtr->setName(info);
             resourcePtr->setPriority(ResourcePriority::LOW);
-            resourcePtr->setQuality(FG_QUALITY_UNIVERSAL);
-            resourcePtr->setDefaultID(FG_QUALITY_UNIVERSAL);
+            resourcePtr->setQuality(Quality::UNIVERSAL);
+            resourcePtr->setDefaultID(Quality::UNIVERSAL);
             resourcePtr->setFilePath(filePath);
             FG_LOG_DEBUG("Resource: Requested resource: '%s'", filePath.c_str());
         }

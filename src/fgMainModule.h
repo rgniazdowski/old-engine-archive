@@ -22,7 +22,7 @@
 
         #include "fgBuildConfig.h"
         #include "fgCommon.h"
-        #include "fgGameMain.h"
+        #include "fgEngineMain.h"
 
         #include <cstdlib>
         #include <cstdio>
@@ -200,7 +200,7 @@ namespace fg {
         /// Needs refactoring, some level of merging within main module or
         /// changing name to fgApplication - or extending fgApplication class
         /// #TODO - support threads
-        fg::CGameMain *m_gameMain;
+        fg::CEngineMain *m_engineMain;
     };
 };
 

@@ -9,7 +9,6 @@
  ******************************************************************************/
 
 #include "fgGfxOctree.h"
-#include "fgGameMain.h"
 
 using namespace fg;
 

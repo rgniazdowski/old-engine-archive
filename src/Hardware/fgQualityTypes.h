@@ -10,42 +10,92 @@
 
 #ifndef FG_INC_QUALITY_TYPES
     #define FG_INC_QUALITY_TYPES
+    #define FG_INC_QUALITY_TYPES_BLOCK
 
-    #include "fgCommon.h"
+    #include <cstring>
 
-// Enums for specifing quality
+namespace fg {
 
-enum fgQuality {
-    FG_QUALITY_UNIVERSAL = -1,
-    FG_QUALITY_LOW = 0,
-    FG_QUALITY_MEDIUM = 1,
-    FG_QUALITY_HIGH = 2,
-    FG_QUALITY_EXTRA = 3
-};
+    /**
+     *
+     */
+    enum class Quality : char {
+        ///
+        UNIVERSAL = -1,
+        ///
+        LOW = 0,
+        ///
+        MEDIUM = 1,
+        ///
+        HIGH = 2,
+        ///
+        EXTRA = 3,
+        ///
+        ULTRA = 4,
+        ///
+        REALITY = 5
+    };
+    /**
+     * Convert text (literal) to corresponding enum value
+     * @param text
+     * @return
+     */
+    inline Quality getQualityFromText(const char* text) {
+        Quality quality = Quality::UNIVERSAL;
+        if(!text) {
+            return quality;
+        }
+        const unsigned int n = strlen(text);
 
-// Text (string version) for the universal quality enum
-    #define FG_QUALITY_UNIVERSAL_TEXT	"universal"
-// Text (string version) for the universal quality enum
-    #define FG_QUALITY_LOW_TEXT			"low"
-// Text (string version) for the medium quality enum
-    #define FG_QUALITY_MEDIUM_TEXT		"medium"
-// Text (string version) for the high quality enum
-    #define FG_QUALITY_HIGH_TEXT		"high"
-// Text (string version) for the universal quality enum
-    #define FG_QUALITY_EXTRA_TEXT		"extra"
-
-// Convert text (literal) to corresponding enum value
-inline fgQuality FG_INC_QUALITY_FROM_TEXT(const char* text) {
-    if(!text)
-        return FG_QUALITY_UNIVERSAL;
-    FG_RETURN_ENUM_IF_TEXT_EQ(FG_QUALITY_UNIVERSAL);
-    FG_RETURN_ENUM_IF_TEXT_EQ(FG_QUALITY_LOW);
-    FG_RETURN_ENUM_IF_TEXT_EQ(FG_QUALITY_MEDIUM);
-    FG_RETURN_ENUM_IF_TEXT_EQ(FG_QUALITY_HIGH);
-    FG_RETURN_ENUM_IF_TEXT_EQ(FG_QUALITY_EXTRA);
-    return FG_QUALITY_UNIVERSAL;
+        if(n == 9 && strncasecmp(text, "universal", 9) == 0) {
+            quality = Quality::UNIVERSAL;
+        } else if(n == 3 && strncasecmp(text, "low", 3) == 0) {
+            quality = Quality::LOW;
+        } else if(n == 6 && strncasecmp(text, "medium", 6) == 0) {
+            quality = Quality::MEDIUM;
+        } else if(n == 4 && strncasecmp(text, "high", 4) == 0) {
+            quality = Quality::HIGH;
+        } else if(n == 5 && strncasecmp(text, "extra", 5) == 0) {
+            quality = Quality::EXTRA;
+        } else if(n == 5 && strncasecmp(text, "ultra", 5) == 0) {
+            quality = Quality::ULTRA;
+        } else if(n == 7 && strncasecmp(text, "reality", 7) == 0) {
+            quality = Quality::REALITY;
+        }
+        return quality;
+    }
+    /**
+     * 
+     * @param quality
+     * @return
+     */
+    inline const char* getQualityName(Quality quality) {
+        const char* returnText = "universal";
+        switch(quality) {
+            case Quality::LOW:
+                returnText = "low";
+                break;
+            case Quality::MEDIUM:
+                returnText = "medium";
+                break;
+            case Quality::HIGH:
+                returnText = "high";
+                break;
+            case Quality::EXTRA:
+                returnText = "extra";
+                break;
+            case Quality::ULTRA:
+                returnText = "ultra";
+                break;
+            case Quality::REALITY:
+                returnText = "reality";
+                break;
+            default:
+                break;
+        }
+        return returnText;
+    }
 }
-// #FIXME - #P3 - string obfuscation (also for error code -> text msg translations)
-    #define FG_QUALITY_FROM_TEXT(text) FG_INC_QUALITY_FROM_TEXT(text)
 
+    #undef FG_INC_QUALITY_TYPES_BLOCK
 #endif /* FG_INC_QUALITY_TYPES */

@@ -204,10 +204,10 @@ fgBool gfx::CTextureManager::allToVRAM(fgBool reupload) {
             return FG_FALSE;
         }
         resource::ResourceType resType = resource->getResourceType();
-        fgQuality quality = resource->getQuality();
+        Quality quality = resource->getQuality();
         if((resType == resource::TEXTURE || resType == resource::FONT) &&
            (FG_TRUE/* #FIXME quality == FG_QualityManager->getQuality()*/ ||
-            quality == FG_QUALITY_UNIVERSAL)) {
+            quality == Quality::UNIVERSAL)) {
             fgBool force = FG_FALSE;
             CTextureResource *textureResource = (CTextureResource *)resource;
             if(reupload && textureResource->isInVRAM())
@@ -225,7 +225,7 @@ fgBool gfx::CTextureManager::uploadToVRAM(CTexture *texture, fgBool force) {
         return FG_FALSE;
     FG_HardwareState->deviceYield();
     resource::ResourceType resType = texture->getResourceType();
-    fgQuality quality = texture->getQuality();
+    Quality quality = texture->getQuality();
     if(!((resType == resource::TEXTURE || resType == resource::FONT))) {
         FG_LOG_DEBUG("GFX: Resource '%s' is not texture?", texture->getNameStr());
         return FG_FALSE;

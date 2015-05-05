@@ -10,7 +10,7 @@
 
 #include "fgBuildConfig.h"
 #include "fgDebugConfig.h"
-#include "fgGameMain.h"
+#include "fgEngineMain.h"
 #include "fgPluginResource.h"
 #include "ChainReaction.h"
 #include "Event/fgCallback.h"
@@ -34,11 +34,11 @@ fgBool fgInitPluginFunction_CHAINREACTION(fg::CPluginResource::SInternalInfo* in
     if(!info) {
         return FG_FALSE;
     }
-    if(!info->pGameMain) {
+    if(!info->pEngineMain) {
         return FG_FALSE;
     }
     dispCallbackPtr = new fg::event::CPlainFunctionCallback(&displayCallback, (void*)info);
-    info->pGameMain->addCallback(fg::event::DISPLAY_SHOT, dispCallbackPtr);
+    info->pEngineMain->addCallback(fg::event::DISPLAY_SHOT, dispCallbackPtr);
     if(!dispCallbackPtr) {
     }
     return FG_TRUE;
@@ -48,11 +48,11 @@ fgBool fgExitPluginFunction_CHAINREACTION(fg::CPluginResource::SInternalInfo* in
     if(!info) {
         return FG_FALSE;
     }
-    if(!info->pGameMain) {
+    if(!info->pEngineMain) {
         return FG_FALSE;
     }
     if(dispCallbackPtr) {
-        info->pGameMain->removeCallback(fg::event::DISPLAY_SHOT, dispCallbackPtr);
+        info->pEngineMain->removeCallback(fg::event::DISPLAY_SHOT, dispCallbackPtr);
         delete dispCallbackPtr;
         dispCallbackPtr = NULL;
     }

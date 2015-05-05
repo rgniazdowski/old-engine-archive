@@ -6,7 +6,7 @@
  * 
  * FlexiGame source code and any related files can not be copied, modified 
  * and/or distributed without the express or written consent from the author.
- *******************************************************/
+ ******************************************************************************/
 /*
  * fgQualityManager.cpp
  *
@@ -15,17 +15,14 @@
  */
 
 #include "fgQualityManager.h"
-
-#include <cstdlib>
-#include <ctime>
-#include <cstring>
-#include "fgLog.h"
 #include "fgHardwareState.h"
+#include "fgLog.h"
 
-/*
- * Default constructor for Quality Manager object
- */
-fgQualityManager::fgQualityManager(const int dispArea) :
+using namespace fg;
+
+//------------------------------------------------------------------------------
+
+CQualityManager::CQualityManager(const int dispArea) :
 m_hardwareQuality(FG_QUALITY_DEFAULT),
 m_forcedQuality(FG_QUALITY_DEFAULT),
 m_selectedQuality(FG_QUALITY_DEFAULT),
@@ -36,46 +33,34 @@ m_currentDispArea(dispArea) {
     m_managerType = FG_MANAGER_QUALITY;
     initialize();
 }
+//------------------------------------------------------------------------------
 
-/*
- * Default destructor for Quality Manager object
- */
-fgQualityManager::~fgQualityManager() {
+CQualityManager::~CQualityManager() {
     destroy();
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- */
-void fgQualityManager::clear(void) {
+void CQualityManager::clear(void) {
     m_displayAreaQuality.clear();
     m_managerType = FG_MANAGER_QUALITY;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @return 
- */
-fgBool fgQualityManager::destroy(void) {
-    fgQualityManager::clear();
+fgBool CQualityManager::destroy(void) {
+    CQualityManager::clear();
     m_init = FG_FALSE;
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @return 
- */
-fgBool fgQualityManager::initialize(void) {
+fgBool CQualityManager::initialize(void) {
     determineQuality();
     m_init = FG_TRUE;
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
-/*
- * Determine quality via screen resolution (this is bound to change in the future)
- */
-void fgQualityManager::determineQuality(void) {
+void CQualityManager::determineQuality(void) {
     /*
     #low
     240�320     {[S3E]DispAreaQ==76800}
@@ -94,49 +79,49 @@ void fgQualityManager::determineQuality(void) {
     1536x2048   {[S3E]DispAreaQ==3145728}
      */
     // 320x240
-    m_displayAreaQuality[76800] = FG_QUALITY_LOW;
+    m_displayAreaQuality[76800] = Quality::LOW;
     // 480x320
-    m_displayAreaQuality[153600] = FG_QUALITY_LOW;
+    m_displayAreaQuality[153600] = Quality::LOW;
     // 400x800
-    m_displayAreaQuality[320000] = FG_QUALITY_LOW;
+    m_displayAreaQuality[320000] = Quality::LOW;
     // 800x480
-    m_displayAreaQuality[384000] = FG_QUALITY_LOW;
+    m_displayAreaQuality[384000] = Quality::LOW;
 
     // X
-    m_displayAreaQuality[400000] = FG_QUALITY_MEDIUM;
+    m_displayAreaQuality[400000] = Quality::MEDIUM;
     // 800x600
-    m_displayAreaQuality[480000] = FG_QUALITY_MEDIUM;
+    m_displayAreaQuality[480000] = Quality::MEDIUM;
     // 960x540
-    m_displayAreaQuality[518400] = FG_QUALITY_MEDIUM;
+    m_displayAreaQuality[518400] = Quality::MEDIUM;
     // 1024x600 / 960x640
-    m_displayAreaQuality[614400] = FG_QUALITY_MEDIUM;
+    m_displayAreaQuality[614400] = Quality::MEDIUM;
     // 1024x768
-    m_displayAreaQuality[786432] = FG_QUALITY_MEDIUM;
+    m_displayAreaQuality[786432] = Quality::MEDIUM;
     // 1280x768
-    m_displayAreaQuality[983040] = FG_QUALITY_MEDIUM;
+    m_displayAreaQuality[983040] = Quality::MEDIUM;
     // 1280x800
-    m_displayAreaQuality[1024000] = FG_QUALITY_MEDIUM;
+    m_displayAreaQuality[1024000] = Quality::MEDIUM;
 
     // 1920x1080
-    m_displayAreaQuality[2073600] = FG_QUALITY_HIGH;
+    m_displayAreaQuality[2073600] = Quality::HIGH;
     // 1920x1200
-    m_displayAreaQuality[2304000] = FG_QUALITY_HIGH;
+    m_displayAreaQuality[2304000] = Quality::HIGH;
     // 2048x1536
-    m_displayAreaQuality[3145728] = FG_QUALITY_HIGH;
+    m_displayAreaQuality[3145728] = Quality::HIGH;
 
     // PRETEND insertion of the SEARCHED key
-    std::pair<int, fgQuality> query_pair;
+    std::pair<int, Quality> query_pair;
     query_pair.first = m_currentDispArea;
-    query_pair.second = FG_QUALITY_MEDIUM;
-    std::pair < areaQMapItor, bool> result = m_displayAreaQuality.insert(query_pair);
+    query_pair.second = Quality::MEDIUM;
+    std::pair < AreaQMapItor, bool> result = m_displayAreaQuality.insert(query_pair);
 
-    areaQMapItor it = result.first;
+    AreaQMapItor it = result.first;
     if(false == result.second) {
         // EXISTED
         m_selectedQuality = it->second;
     } else {
         // NEW INSERTION
-        areaQMapItor it_offset = it;
+        AreaQMapItor it_offset = it;
         it_offset++;
         if(it_offset != m_displayAreaQuality.end()) {
             // NEXT IS FINE
@@ -154,14 +139,15 @@ void fgQualityManager::determineQuality(void) {
     m_hardwareQuality = m_selectedQuality;
     std::string qualityname;
     qualityname.clear();
-    if(m_hardwareQuality == FG_QUALITY_LOW)
-        qualityname = "FG_QUALITY_LOW";
-    else if(m_hardwareQuality == FG_QUALITY_MEDIUM)
-        qualityname = "FG_QUALITY_MEDIUM";
-    else if(m_hardwareQuality == FG_QUALITY_HIGH)
-        qualityname = "FG_QUALITY_HIGH";
+    if(m_hardwareQuality == Quality::LOW)
+        qualityname = "Quality::LOW";
+    else if(m_hardwareQuality == Quality::MEDIUM)
+        qualityname = "Quality::MEDIUM";
+    else if(m_hardwareQuality == Quality::HIGH)
+        qualityname = "Quality::HIGH";
     else
         qualityname = "FG_QUALITY_INVALID";
     FG_LOG_DEBUG("QUALITY MANAGER - Detected quality: %s, Area: %d", qualityname.c_str(), it->first);
     qualityname.clear();
 }
+//------------------------------------------------------------------------------

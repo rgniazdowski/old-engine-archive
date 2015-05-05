@@ -93,7 +93,7 @@ m_isSuspend(FG_FALSE),
 #if defined(FG_USING_MARMALADE) // #FIXME
 m_deviceQuery(),
 #endif /* FG_USING_MARMALADE */
-m_gameMain(NULL) { }
+m_engineMain(NULL) { }
 
 CMainModule::~CMainModule() { }
 
@@ -206,17 +206,17 @@ SDL_EventType CMainModule::checkSDLEvents(void) {
 
                 /* Keyboard events */
             case SDL_KEYDOWN: /**< Key pressed */
-                if(this->m_gameMain) {
+                if(this->m_engineMain) {
                     // #FIXME
                     if(!event.key.repeat)
-                        this->m_gameMain->getInputHandler()->addKeyDown((int)event.key.keysym.sym);
+                        this->m_engineMain->getInputHandler()->addKeyDown((int)event.key.keysym.sym);
                 }
                 break;
             case SDL_KEYUP: /**< Key released */
-                if(this->m_gameMain) {
+                if(this->m_engineMain) {
                     // #FIXME
                     if(!event.key.repeat)
-                        this->m_gameMain->getInputHandler()->addKeyUp((int)event.key.keysym.sym);
+                        this->m_engineMain->getInputHandler()->addKeyUp((int)event.key.keysym.sym);
                 }
                 break;
             case SDL_TEXTEDITING: /**< Keyboard text editing (composition) */
@@ -227,25 +227,25 @@ SDL_EventType CMainModule::checkSDLEvents(void) {
 #if defined(FG_USING_PLATFORM_LINUX) || defined(FG_USING_PLATFORM_WINDOWS)
                 /* Mouse events */
             case SDL_MOUSEMOTION: /**< Mouse moved */
-                if(!m_gameMain)
+                if(!m_engineMain)
                     continue;
                 //this->m_gameMain->getInputHandler()->singleTouchMotionHandler((void *)&event.motion, this->m_gameMain->getInputHandler());
-                this->m_gameMain->getInputHandler()->handlePointerMoved(Vector2i(event.motion.x, event.motion.y),
-                                                                        FG_DEFAULT_POINTER_ID,
+                this->m_engineMain->getInputHandler()->handlePointerMoved(Vector2i(event.motion.x, event.motion.y),
                                                                         event.motion.state);
+            }
                 break;
             case SDL_MOUSEBUTTONDOWN: /**< Mouse button pressed */
-                if(!m_gameMain)
+                if(!m_engineMain)
                     continue;
                 //this->m_gameMain->getInputHandler()->singleTouchButtonHandler((void *)&event.button, this->m_gameMain->getInputHandler());
-                this->m_gameMain->getInputHandler()->handlePointerPressed(Vector2i(event.button.x, event.button.y),
+                this->m_engineMain->getInputHandler()->handlePointerPressed(Vector2i(event.button.x, event.button.y),
                                                                           event.button.button);
                 break;
             case SDL_MOUSEBUTTONUP: /**< Mouse button released */
-                if(!m_gameMain)
+                if(!m_engineMain)
                     continue;
                 //this->m_gameMain->getInputHandler()->singleTouchButtonHandler((void *)&event.button, this->m_gameMain->getInputHandler());
-                this->m_gameMain->getInputHandler()->handlePointerReleased(Vector2i(event.button.x, event.button.y),
+                this->m_engineMain->getInputHandler()->handlePointerReleased(Vector2i(event.button.x, event.button.y),
                                                                            event.button.button);
                 break;
             case SDL_MOUSEWHEEL: /**< Mouse wheel motion */
@@ -293,9 +293,9 @@ SDL_EventType CMainModule::checkSDLEvents(void) {
             case SDL_CONTROLLERDEVICEREMOVED: /**< An opened Game controller has been removed */
                 FG_LOG_DEBUG("SDL_CONTROLLERDEVICEREMOVED");
             {
-                if(!m_gameMain)
+                if(!m_engineMain)
                     continue;
-                CJoypadController *joypadController = this->m_gameMain->getJoypadController();
+                CJoypadController *joypadController = this->m_engineMain->getJoypadController();
                 if(joypadController) {
                     joypadController->processEvent(event);
                 }
@@ -309,10 +309,10 @@ SDL_EventType CMainModule::checkSDLEvents(void) {
                 /* Touch events */
             case SDL_FINGERDOWN:
             {
-                if(!m_gameMain)
+                if(!m_engineMain)
                     continue;
-                int w = this->m_gameMain->getGfxMain()->getMainWindow()->getWidth();
-                int h = this->m_gameMain->getGfxMain()->getMainWindow()->getHeight();
+                int w = this->m_engineMain->getGfxMain()->getMainWindow()->getWidth();
+                int h = this->m_engineMain->getGfxMain()->getMainWindow()->getHeight();
                 /*SDL_MouseButtonEvent button;
                 button.timestamp = event.tfinger.timestamp;
                 button.button = event.tfinger.fingerId;
@@ -323,14 +323,14 @@ SDL_EventType CMainModule::checkSDLEvents(void) {
                 button.y = (int)((float)h * event.tfinger.y);*/
                 int x = (int)((float)w * event.tfinger.x);
                 int y = (int)((float)h * event.tfinger.y);
-                this->m_gameMain->getInputHandler()->handlePointerPressed(Vector2i(x, y), event.tfinger.fingerId);
+                this->m_engineMain->getInputHandler()->handlePointerPressed(Vector2i(x, y), event.tfinger.fingerId);
                 //this->m_gameMain->getInputHandler()->singleTouchButtonHandler((void *)&button, this->m_gameMain->getInputHandler());
             }
                 break;
             case SDL_FINGERUP:
             {
-                int w = this->m_gameMain->getGfxMain()->getMainWindow()->getWidth();
-                int h = this->m_gameMain->getGfxMain()->getMainWindow()->getHeight();
+                int w = this->m_engineMain->getGfxMain()->getMainWindow()->getWidth();
+                int h = this->m_engineMain->getGfxMain()->getMainWindow()->getHeight();
                 /*SDL_MouseButtonEvent button;
                 button.timestamp = event.tfinger.timestamp;
                 button.button = event.tfinger.fingerId;
@@ -341,14 +341,14 @@ SDL_EventType CMainModule::checkSDLEvents(void) {
                 button.y = (int)((float)h * event.tfinger.y);*/
                 int x = (int)((float)w * event.tfinger.x);
                 int y = (int)((float)h * event.tfinger.y);
-                this->m_gameMain->getInputHandler()->handlePointerReleased(Vector2i(x, y), event.tfinger.fingerId);
+                this->m_engineMain->getInputHandler()->handlePointerReleased(Vector2i(x, y), event.tfinger.fingerId);
                 //this->m_gameMain->getInputHandler()->singleTouchButtonHandler((void *)&button, this->m_gameMain->getInputHandler());
             }
                 break;
             case SDL_FINGERMOTION:
             {
-                int w = this->m_gameMain->getGfxMain()->getMainWindow()->getWidth();
-                int h = this->m_gameMain->getGfxMain()->getMainWindow()->getHeight();
+                int w = this->m_engineMain->getGfxMain()->getMainWindow()->getWidth();
+                int h = this->m_engineMain->getGfxMain()->getMainWindow()->getHeight();
                 /*SDL_MouseMotionEvent motion;
                 motion.timestamp = event.tfinger.timestamp;
                 //motion.button = event.tfinger.fingerId;
@@ -359,7 +359,7 @@ SDL_EventType CMainModule::checkSDLEvents(void) {
                 motion.y = (int)((float)h * event.tfinger.y);*/
                 int x = (int)((float)w * event.tfinger.x);
                 int y = (int)((float)h * event.tfinger.y);
-                this->m_gameMain->getInputHandler()->handlePointerMoved(Vector2i(x, y), event.tfinger.fingerId, SDL_PRESSED);
+                this->m_engineMain->getInputHandler()->handlePointerMoved(Vector2i(x, y), event.tfinger.fingerId, SDL_PRESSED);
                 //this->m_gameMain->getInputHandler()->singleTouchMotionHandler((void *)&motion, this->m_gameMain->getInputHandler());
             }
                 break;
@@ -387,9 +387,9 @@ SDL_EventType CMainModule::checkSDLEvents(void) {
             default:
 #if !defined(FG_USING_PLATFORM_ANDROID)
                 if(event.type >= SDL_CONTROLLERAXISMOTION && event.type <= SDL_CONTROLLERDEVICEREMAPPED) {
-                    if(!m_gameMain)
+                    if(!m_engineMain)
                         continue;
-                    fg::event::CJoypadController *joypadController = this->m_gameMain->getJoypadController();
+                    fg::event::CJoypadController *joypadController = this->m_engineMain->getJoypadController();
                     if(joypadController) {
                         joypadController->processEvent(event);
                     }
@@ -439,29 +439,29 @@ fgBool CMainModule::initProgram(void) {
     s3eGLRegister(S3E_GL_RESUME, &fgMarmaladeHandlers::resumeGfxHandler, (void *)this);
 
 #endif /* FG_USING_MARMALADE */
-    if(!m_gameMain) {
+    if(!m_engineMain) {
         FG_LOG_DEBUG("Creating game main object...");
-        m_gameMain = new fg::CGameMain(m_argc, m_argv);
+        m_engineMain = new fg::CEngineMain(m_argc, m_argv);
     }
     // Well the whole configuration process should update the screen (swap buffers)
     // this is needed to display splash screen (after marmalade splash screen) and
     // show the game initialization process by displaying the progress bar
-    if(!m_gameMain->loadConfiguration()) {
+    if(!m_engineMain->loadConfiguration()) {
         return FG_FALSE;
     }
     // Initialize the main subsystems (gui, gfx and others)
-    if(!m_gameMain->initSubsystems()) {
+    if(!m_engineMain->initSubsystems()) {
         return FG_FALSE;
     }
     // Preload any required resources
-    if(!m_gameMain->loadResources()) {
+    if(!m_engineMain->loadResources()) {
         return FG_FALSE;
     }
-    m_gameMain->update(FG_TRUE);
+    m_engineMain->update(FG_TRUE);
     m_appInit = FG_TRUE;
     float t2 = timesys::ms();
     FG_LOG_DEBUG("Main: Program initialized in %.2f seconds", (t2 - t1) / 1000.0f);
-    m_gameMain->update(FG_TRUE);
+    m_engineMain->update(FG_TRUE);
 #if defined(FG_USING_SDL2) && defined(FG_USING_PLATFORM_ANDROID)
     SDL_AddEventWatch(filterSDLEvents, this);
 #endif    
@@ -520,7 +520,7 @@ fgBool CMainModule::mainLoopStep(void) {
     }
 #endif
     FG_HardwareState->deviceYield(0);
-    m_gameMain->update();
+    m_engineMain->update();
 
 #if defined(FG_DEBUG)
     if(g_fgDebugConfig.isDebugProfiling) {
@@ -530,7 +530,7 @@ fgBool CMainModule::mainLoopStep(void) {
 #endif
     // well for now drawing and all update functions will be called in one place (one thread)
     // however it needs changing
-    m_gameMain->display();
+    m_engineMain->display();
 
 #if defined(FG_DEBUG)
     if(g_fgDebugConfig.isDebugProfiling) {
@@ -538,7 +538,7 @@ fgBool CMainModule::mainLoopStep(void) {
         profile::g_debugProfiling->begin("Game::render");
     }
 #endif    
-    m_gameMain->render();
+    m_engineMain->render();
 #if defined(FG_DEBUG)
     static int loopCount = 0;
     g_fgDebugConfig.isDebugProfiling = true;
@@ -562,11 +562,11 @@ fgBool CMainModule::mainLoopStep(void) {
  */
 void CMainModule::closeProgram(void) {
     FG_LOG_DEBUG("Closing program...");
-    if(m_gameMain) {
-        m_gameMain->closeSybsystems();
-        delete m_gameMain;
+    if(m_engineMain) {
+        m_engineMain->closeSybsystems();
+        delete m_engineMain;
     }
-    m_gameMain = NULL;
+    m_engineMain = NULL;
     m_appInit = FG_FALSE;
 #if defined(FG_DEBUG)
     if(profile::g_debugProfiling)
@@ -580,8 +580,8 @@ void CMainModule::closeProgram(void) {
  */
 void CMainModule::suspendGfxEvent(void) {
     FG_LOG_DEBUG("MainModule: Suspending GFX Subsystem");
-    if(m_gameMain)
-        m_gameMain->getGfxMain()->suspendGFX();
+    if(m_engineMain)
+        m_engineMain->getGfxMain()->suspendGFX();
 }
 
 /**
@@ -589,8 +589,8 @@ void CMainModule::suspendGfxEvent(void) {
  */
 void CMainModule::resumeGfxEvent(void) {
     FG_LOG_DEBUG("MainModule: Resuming GFX Subsystem...");
-    if(m_gameMain)
-        m_gameMain->getGfxMain()->resumeGFX();
+    if(m_engineMain)
+        m_engineMain->getGfxMain()->resumeGFX();
 }
 
 /**

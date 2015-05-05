@@ -16,7 +16,7 @@
 
 #include "fgBuildConfig.h"
 #include "fgPluginResource.h"
-#include "fgGameMain.h"
+#include "fgEngineMain.h"
 #include "Util/fgStrings.h"
 
 #if defined(FG_USING_SDL2)
@@ -123,7 +123,7 @@ CPluginResource::~CPluginResource() {
 
 void CPluginResource::clear(void) {
     base_type::clear();
-    m_internalInfo.pGameMain = NULL;
+    m_internalInfo.pEngineMain = NULL;
     m_initFuncName.clear();
     m_exitFuncName.clear();
     m_pluginInitStatus = FG_FALSE;
@@ -138,7 +138,7 @@ fgBool CPluginResource::create(void) {
     if(m_isReady || m_libHandle)
         return FG_TRUE;
 
-    if(!m_internalInfo.pGameMain) {
+    if(!m_internalInfo.pEngineMain) {
         // Need to initialize pointer before create
         return FG_FALSE;
     }

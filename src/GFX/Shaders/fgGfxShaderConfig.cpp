@@ -252,7 +252,7 @@ fgBool gfx::CShaderConfig::private_parseData(ShadingLangVersion SLver) {
             strings::split(_q_vec, ',', _helperVec);
             m_qualities.clear_optimised();
             for(int i = 0; i < (int)_helperVec.size(); i++) {
-                m_qualities.push_back(FG_QUALITY_FROM_TEXT(_helperVec[i].c_str()));
+                m_qualities.push_back(getQualityFromText(_helperVec[i].c_str()));
             }
             if(!m_qualities.empty()) {
                 foundQuality = FG_TRUE;

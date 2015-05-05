@@ -10,7 +10,6 @@
 
 #include "fgGfxWindow.h"
 #include "fgGfxPlatform.h"
-#include "fgGameMain.h"
 
 #if defined FG_USING_MARMALADE
 #include "s3e.h"

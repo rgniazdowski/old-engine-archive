@@ -67,7 +67,7 @@ namespace fg {
         /*
          *
          */
-        class CStyle : public fg::resource::CManagedDataFile<StyleHandle, fgQuality> {
+        class CStyle : public fg::resource::CManagedDataFile<StyleHandle, Quality> {
             friend class fg::gui::CStyleManager;
     #ifdef FG_USING_MARMALADE
         protected:
@@ -82,7 +82,7 @@ namespace fg {
             };
     #endif
         public:
-            typedef fg::resource::CManagedDataFile<StyleHandle, fgQuality> base_type;
+            typedef fg::resource::CManagedDataFile<StyleHandle, Quality> base_type;
             typedef std::string HashKey;
     #ifdef FG_USING_MARMALADE	
             typedef std::hash<std::string> hashFunc;

@@ -335,19 +335,19 @@ namespace fg {
         /**
          * Base class for resource
          */
-        class CResource : public CManagedDataFile<ResourceHandle, fgQuality> {
+        class CResource : public CManagedDataFile<ResourceHandle, Quality> {
             friend class CResourceManager;
             friend class CResourceGroup;
 
         public:
             ///
-            typedef CManagedDataFile<ResourceHandle, fgQuality> base_type;
+            typedef CManagedDataFile<ResourceHandle, Quality> base_type;
             ///
             typedef ResourceTag tag_type;
             ///
             typedef ResourceHandle handle_type;
             ///
-            typedef fgQuality quality_type;
+            typedef Quality quality_type;
 
         public:
             /**
@@ -449,14 +449,14 @@ namespace fg {
              * Set the resource quality
              * @param quality
              */
-            inline void setQuality(fgQuality quality) {
+            inline void setQuality(Quality quality) {
                 m_quality = quality;
             }
             /**
              * Get the resource quality
              * @return 
              */
-            inline fgQuality getQuality(void) const {
+            inline Quality getQuality(void) const {
                 return m_quality;
             }
             /**
@@ -564,7 +564,7 @@ namespace fg {
             /// Priority of this resource
             ResourcePriority m_priority;
             /// Quality of the resource
-            fgQuality m_quality;
+            Quality m_quality;
             /// Resource type
             ResourceType m_resType;
             /// Number of references to this resource

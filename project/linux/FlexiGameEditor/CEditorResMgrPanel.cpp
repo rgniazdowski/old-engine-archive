@@ -10,7 +10,7 @@
 
 #include "CEditorResMgrPanel.h"
 
-#include "fgGameMain.h"
+#include "fgEngineMain.h"
 #include "Resource/fgResourceManager.h"
 
 #include <wx/msgdlg.h>
@@ -115,10 +115,10 @@ CEditorResMgrPanel::~CEditorResMgrPanel() {
 //------------------------------------------------------------------------------
 
 fgBool CEditorResMgrPanel::refreshResourceList(void) {
-    if(!m_gameMain) {
+    if(!m_engineMain) {
         return FG_FALSE;
     }
-    fg::resource::CResourceManager *pResMgr = m_gameMain->getResourceManager();
+    fg::resource::CResourceManager *pResMgr = m_engineMain->getResourceManager();
     if(!pResMgr) {
         return FG_FALSE;
     }

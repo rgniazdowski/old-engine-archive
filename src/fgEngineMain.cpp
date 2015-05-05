@@ -9,7 +9,7 @@
  *******************************************************/
 
 /// Main include
-#include "fgGameMain.h"
+#include "fgEngineMain.h"
 /// Standard includes
 #include <cstdlib>
 #include <cstdio>
@@ -65,7 +65,7 @@ using namespace fg;
 
 //------------------------------------------------------------------------------
 
-CGameMain::CGameMain(int argc, char **argv) :
+CEngineMain::CEngineMain(int argc, char **argv) :
 m_isFpsLocked(FG_TRUE),
 m_fixedFPS(DEFAULT_FIXED_FPS),
 m_updateFixedFPS(DEFAULT_UPDATE_FIXED_FPS),
@@ -112,7 +112,7 @@ m_gameFreeLookCallback(NULL) {
 }
 //------------------------------------------------------------------------------
 
-CGameMain::~CGameMain() {
+CEngineMain::~CEngineMain() {
     // >> Main Game Object destruction - begin
     // Unregister any required callbacks
     unregisterGameCallbacks();
@@ -213,9 +213,9 @@ CGameMain::~CGameMain() {
 }
 //------------------------------------------------------------------------------
 
-void CGameMain::registerGameCallbacks(void) {
+void CEngineMain::registerGameCallbacks(void) {
     if(!m_gameTouchCallback)
-        m_gameTouchCallback = new event::CMethodCallback<CGameMain>(this, &CGameMain::gameTouchHandler);
+        m_gameTouchCallback = new event::CMethodCallback<CEngineMain>(this, &CEngineMain::gameTouchHandler);
 
     event::CEventManager::addCallback(event::TOUCH_PRESSED, m_gameTouchCallback);
     event::CEventManager::addCallback(event::TOUCH_RELEASED, m_gameTouchCallback);
@@ -223,14 +223,14 @@ void CGameMain::registerGameCallbacks(void) {
     event::CEventManager::addCallback(event::TOUCH_TAP_FINISHED, m_gameTouchCallback);
 
     if(!m_gameMouseCallback)
-        m_gameMouseCallback = new event::CMethodCallback<CGameMain>(this, &CGameMain::gameMouseHandler);
+        m_gameMouseCallback = new event::CMethodCallback<CEngineMain>(this, &CEngineMain::gameMouseHandler);
 
     event::CEventManager::addCallback(event::MOUSE_PRESSED, m_gameMouseCallback);
     event::CEventManager::addCallback(event::MOUSE_RELEASED, m_gameMouseCallback);
     event::CEventManager::addCallback(event::MOUSE_MOTION, m_gameMouseCallback);
 
     if(!m_gameFreeLookCallback)
-        m_gameFreeLookCallback = new event::CMethodCallback<CGameMain>(this, &CGameMain::gameFreeLookHandler);
+        m_gameFreeLookCallback = new event::CMethodCallback<CEngineMain>(this, &CEngineMain::gameFreeLookHandler);
 
     event::CEventManager::addCallback(event::TOUCH_PRESSED, m_gameFreeLookCallback);
     event::CEventManager::addCallback(event::TOUCH_RELEASED, m_gameFreeLookCallback);
@@ -242,7 +242,7 @@ void CGameMain::registerGameCallbacks(void) {
 }
 //------------------------------------------------------------------------------
 
-void CGameMain::unregisterGameCallbacks(void) {
+void CEngineMain::unregisterGameCallbacks(void) {
     event::CEventManager::removeCallback(event::TOUCH_PRESSED, m_gameTouchCallback);
     event::CEventManager::removeCallback(event::TOUCH_RELEASED, m_gameTouchCallback);
     event::CEventManager::removeCallback(event::TOUCH_MOTION, m_gameTouchCallback);
@@ -262,7 +262,7 @@ void CGameMain::unregisterGameCallbacks(void) {
 }
 //------------------------------------------------------------------------------
 
-void CGameMain::setEventManager(void) {
+void CEngineMain::setEventManager(void) {
     //registerGameCallbacks();
     if(m_inputHandler)
         m_inputHandler->setEventManager(this);
@@ -281,7 +281,7 @@ void CGameMain::setEventManager(void) {
 }
 //------------------------------------------------------------------------------
 
-fgBool CGameMain::initSubsystems(void) {
+fgBool CEngineMain::initSubsystems(void) {
     float t1 = timesys::ms();
     FG_HardwareState->deviceYield(0); // #FIXME - device yield...
     if(m_gfxMain)
@@ -310,7 +310,7 @@ fgBool CGameMain::initSubsystems(void) {
     FG_HardwareState->setScreenDimensions(w, h);
     FG_HardwareState->initDPI();
     if(!m_qualityMgr)
-        m_qualityMgr = new fgQualityManager(w * h);
+        m_qualityMgr = new CQualityManager(w * h);
     if(!m_resourceFactory)
         m_resourceFactory = new resource::CResourceFactory();
     else
@@ -416,7 +416,7 @@ fgBool CGameMain::initSubsystems(void) {
 }
 //------------------------------------------------------------------------------
 
-fgBool CGameMain::loadConfiguration(void) {
+fgBool CEngineMain::loadConfiguration(void) {
     FG_LOG_DEBUG("Loading configuration...");
     if(!m_settings)
         m_settings = new CSettings();
@@ -462,7 +462,7 @@ fgBool CGameMain::loadConfiguration(void) {
 }
 //------------------------------------------------------------------------------
 
-fgBool CGameMain::loadResources(void) {
+fgBool CEngineMain::loadResources(void) {
     float t1 = timesys::ms();
     FG_LOG_DEBUG("Loading resources...");
     m_gfxMain->getShaderManager()->setShadersPath("shaders/");
@@ -560,7 +560,7 @@ fgBool CGameMain::loadResources(void) {
 }
 //------------------------------------------------------------------------------
 
-fgBool CGameMain::releaseResources(void) {
+fgBool CEngineMain::releaseResources(void) {
     if(m_resourceMgr) {
         FG_LOG_DEBUG("Releasing resources...");
         return m_resourceMgr->destroy();
@@ -569,12 +569,12 @@ fgBool CGameMain::releaseResources(void) {
 }
 //------------------------------------------------------------------------------
 
-fgBool CGameMain::closeSybsystems(void) {
+fgBool CEngineMain::closeSybsystems(void) {
     FG_LOG_DEBUG("Closing subsystems...");
     if(m_gfxMain)
         m_gfxMain->releaseTextures();
 
-    CGameMain::releaseResources();
+    CEngineMain::releaseResources();
     if(m_inputHandler)
         m_inputHandler->setEventManager(NULL);
     FG_HardwareState->deleteInstance(); // #KILL_ALL_SINGLETONS
@@ -585,7 +585,7 @@ fgBool CGameMain::closeSybsystems(void) {
 }
 //------------------------------------------------------------------------------
 
-fgBool CGameMain::quit(void) {
+fgBool CEngineMain::quit(void) {
     FG_LOG_DEBUG("Game main quit requested");
     executeEvent(event::PROGRAM_QUIT);
     this->update(FG_TRUE);
@@ -598,7 +598,7 @@ fgBool CGameMain::quit(void) {
 }
 //------------------------------------------------------------------------------
 
-fgBool CGameMain::display(void) {
+fgBool CEngineMain::display(void) {
     static float t1 = -1.0f;
     float t2 = fg::timesys::ms();
     float dt = 0.0f;
@@ -637,7 +637,7 @@ fgBool CGameMain::display(void) {
 }
 //------------------------------------------------------------------------------
 
-fgBool CGameMain::render(void) {
+fgBool CEngineMain::render(void) {
     if(!m_gfxMain->isInit()) {
         return FG_FALSE;
     }
@@ -709,7 +709,7 @@ fgBool CGameMain::render(void) {
 }
 //------------------------------------------------------------------------------
 
-fgBool CGameMain::update(fgBool force) {
+fgBool CEngineMain::update(fgBool force) {
     static float t1 = -1.0f;
     float t2 = fg::timesys::ms();
     float dt = 0.0f;
@@ -759,7 +759,7 @@ fgBool CGameMain::update(fgBool force) {
 }
 //------------------------------------------------------------------------------
 
-fgBool CGameMain::gameTouchHandler(event::CArgumentList *argv) {
+fgBool CEngineMain::gameTouchHandler(event::CArgumentList *argv) {
     if(!argv)
         return FG_FALSE;
     event::SEvent *pEvent = (event::SEvent *)argv->getValueByID(0);
@@ -793,7 +793,7 @@ fgBool CGameMain::gameTouchHandler(event::CArgumentList *argv) {
 }
 //------------------------------------------------------------------------------
 
-fgBool CGameMain::gameMouseHandler(event::CArgumentList *argv) {
+fgBool CEngineMain::gameMouseHandler(event::CArgumentList *argv) {
     if(!argv)
         return FG_FALSE;
     event::SEvent *pEvent = (event::SEvent *)argv->getValueByID(0);
@@ -817,7 +817,7 @@ fgBool CGameMain::gameMouseHandler(event::CArgumentList *argv) {
 }
 //------------------------------------------------------------------------------
 
-fgBool CGameMain::gameFreeLookHandler(event::CArgumentList* argv) {
+fgBool CEngineMain::gameFreeLookHandler(event::CArgumentList* argv) {
     if(!argv || !this->m_gfxMain)
         return FG_FALSE;
     if(!this->m_gfxMain->get3DSceneCamera())

@@ -24,7 +24,7 @@
     #include "wx/glcanvas.h"
 
 namespace fg {
-    class CGameMain;
+    class CEngineMain;
 }
 
 class CRenderTimer;
@@ -134,10 +134,10 @@ private:
     /// Needs refactoring, some level of merging within main module or
     /// changing name to fgApplication - or extending fgApplication class
     /// #TODO - support threads
-    fg::CGameMain* m_gameMain;
+    fg::CEngineMain* m_engineMain;
     /// Pointer to pointer to game main object - by this we can update pointer
     /// in the main wx app/frame
-    fg::CGameMain** m_gameMainOrig;
+    fg::CEngineMain** m_engineMainOrig;
     ///
     fg::event::CFunctionCallback* m_onSwapCallback;
     ///
@@ -153,7 +153,7 @@ public:
     /**
      *
      */
-    CEngineGfxCanvas(wxWindow* parent, int* args, fg::CGameMain **gameMainOrig);
+    CEngineGfxCanvas(wxWindow* parent, int* args, fg::CEngineMain **engineMainOrig);
     /**
      *
      */
@@ -250,19 +250,19 @@ public:
     }
     /**
      *
-     * @param gameMainOrig
+     * @param engineMainOrig
      */
-    inline void setGameMainOriginal(fg::CGameMain **gameMainOrig) {
-        m_gameMainOrig = gameMainOrig;
+    inline void setEngineMainOriginal(fg::CEngineMain **engineMainOrig) {
+        m_engineMainOrig = engineMainOrig;
     }
     /**
      *
      * @return
      */
-    inline fg::CGameMain* getGameMain(void) const {
-        if(!m_gameMainOrig)
+    inline fg::CEngineMain* getEngineMain(void) const {
+        if(!m_engineMainOrig)
             return NULL;
-        return *m_gameMainOrig;
+        return *m_engineMainOrig;
     }
     /**
      *

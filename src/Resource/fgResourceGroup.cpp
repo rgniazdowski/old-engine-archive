@@ -160,7 +160,7 @@ void resource::CResourceGroupContentHandler::startElement(const char *localName,
         }
     }
     m_curResPriority = ResourcePriority::LOW;
-    fgQuality resQuality = FG_QUALITY_UNIVERSAL;
+    Quality resQuality = Quality::UNIVERSAL;
     // Here are common attributes for every resource tag in resource group
     // Path to the resource
     const char *resPath = NULL;
@@ -199,7 +199,7 @@ void resource::CResourceGroupContentHandler::startElement(const char *localName,
             } else if(strncasecmp(attrname, "priority", 8) == 0) {
                 m_curResPriority = getResourcePriorityFromText(attrvalue);
             } else if(strncasecmp(attrname, "quality", 7) == 0) {
-                resQuality = FG_QUALITY_FROM_TEXT(attrvalue);
+                resQuality = getQualityFromText(attrvalue);
             } else if(strncasecmp(attrname, "ismapped", 8) == 0) {
                 m_isMapped = FG_BOOL_FROM_TEXT(attrvalue);
             }

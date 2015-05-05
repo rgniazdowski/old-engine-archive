@@ -21,13 +21,13 @@ using namespace fg;
  */
 resource::CResource::CResource() :
 m_priority(ResourcePriority::LOW),
-m_quality(FG_QUALITY_UNIVERSAL),
+m_quality(Quality::UNIVERSAL),
 m_resType(resource::INVALID),
 m_nRefCount(0),
 m_lastAccess(0),
 m_size(0),
 m_isReady(FG_FALSE) {
-    setDefaultID(FG_QUALITY_UNIVERSAL);
+    setDefaultID(Quality::UNIVERSAL);
     //FG_LOG_DEBUG("fgResource::fgResource();");
 }
 
@@ -37,13 +37,13 @@ m_isReady(FG_FALSE) {
  */
 resource::CResource::CResource(const char *path) :
 m_priority(ResourcePriority::LOW),
-m_quality(FG_QUALITY_UNIVERSAL),
+m_quality(Quality::UNIVERSAL),
 m_resType(resource::INVALID),
 m_nRefCount(0),
 m_lastAccess(0),
 m_size(0),
 m_isReady(FG_FALSE) {
-    setDefaultID(FG_QUALITY_UNIVERSAL);
+    setDefaultID(Quality::UNIVERSAL);
     //FG_LOG_DEBUG("fgResource::fgResource(const char *path);");
     setFilePath(path);
 }
@@ -53,13 +53,13 @@ m_isReady(FG_FALSE) {
  */
 resource::CResource::CResource(const std::string& path) :
 m_priority(ResourcePriority::LOW),
-m_quality(FG_QUALITY_UNIVERSAL),
+m_quality(Quality::UNIVERSAL),
 m_resType(resource::INVALID),
 m_nRefCount(0),
 m_lastAccess(0),
 m_size(0),
 m_isReady(FG_FALSE) {
-    setDefaultID(FG_QUALITY_UNIVERSAL);
+    setDefaultID(Quality::UNIVERSAL);
     //FG_LOG_DEBUG("fgResource::fgResource(std::string& path);");
     setFilePath(path);
 }
@@ -71,7 +71,7 @@ m_isReady(FG_FALSE) {
 void resource::CResource::clear(void) {
     m_resType = resource::INVALID;
     m_priority = ResourcePriority::LOW;
-    m_quality = FG_QUALITY_UNIVERSAL;
+    m_quality = Quality::UNIVERSAL;
     m_nRefCount = 0;
     m_lastAccess = 0;
     m_isReady = FG_FALSE;

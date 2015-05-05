@@ -153,6 +153,7 @@
                             OP="${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libminizipmaster_nb.a">
               </makeArtifact>
             </linkerLibProjectItem>
+            <linkerLibLibItem>dl</linkerLibLibItem>
           </linkerLibItems>
           <commandLine>`wx-config --libs` `wx-config --gl-libs`</commandLine>
         </linkerTool>
@@ -313,6 +314,7 @@
                             OP="${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libminizipmaster_nb.a">
               </makeArtifact>
             </linkerLibProjectItem>
+            <linkerLibLibItem>dl</linkerLibLibItem>
           </linkerLibItems>
           <commandLine>`wx-config --libs` `wx-config --gl-libs`</commandLine>
         </linkerTool>

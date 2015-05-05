@@ -23,7 +23,7 @@
 
 namespace fg {
 
-    class CGameMain;
+    class CEngineMain;
 
     /**
      *
@@ -49,7 +49,7 @@ namespace fg {
     #endif
 
         struct SInternalInfo {
-            ::fg::CGameMain *pGameMain;
+            ::fg::CEngineMain *pEngineMain;
         };
 
     public:
@@ -116,17 +116,17 @@ namespace fg {
          * @param internalInfo
          */
         void setInternalInfo(const SInternalInfo& internalInfo) {
-            if(!internalInfo.pGameMain)
+            if(!internalInfo.pEngineMain)
                 return;
             m_internalInfo = internalInfo;
         }
         /**
          * 
-         * @param pGameMain
+         * @param pEngineMain
          */
-        void setInternalInfo(CGameMain* pGameMain) {
-            if(pGameMain) {
-                m_internalInfo.pGameMain = pGameMain;
+        void setInternalInfo(CEngineMain* pEngineMain) {
+            if(pEngineMain) {
+                m_internalInfo.pEngineMain = pEngineMain;
             }
         }
         /**

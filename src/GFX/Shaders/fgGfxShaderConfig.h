@@ -87,7 +87,7 @@ namespace fg {
             ///
             typedef CVector<std::string> FileNameVec;
             ///
-            typedef CVector<fgQuality> QualityVec;
+            typedef CVector<Quality> QualityVec;
             ///
             typedef CVector<SShaderConstantDef> ConstantVec;
 

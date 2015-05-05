@@ -191,9 +191,9 @@ OBJECTFILES= \
 	${OBJECTDIR}/_ext/1386528437/fgColors.o \
 	${OBJECTDIR}/_ext/1386528437/fgCommon.o \
 	${OBJECTDIR}/_ext/1386528437/fgDebugConfig.o \
+	${OBJECTDIR}/_ext/1386528437/fgEngineMain.o \
 	${OBJECTDIR}/_ext/1386528437/fgErrno.o \
 	${OBJECTDIR}/_ext/1386528437/fgErrorCodes.o \
-	${OBJECTDIR}/_ext/1386528437/fgGameMain.o \
 	${OBJECTDIR}/_ext/1386528437/fgLog.o \
 	${OBJECTDIR}/_ext/1386528437/fgMainModule.o \
 	${OBJECTDIR}/_ext/1386528437/fgMessageSubsystem.o \
@@ -1008,6 +1008,11 @@ ${OBJECTDIR}/_ext/1386528437/fgDebugConfig.o: ../../../src/fgDebugConfig.cpp
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -s -DFG_NO_UNDEF -DFG_USING_GLEW -DFG_USING_GLM -DFG_USING_LUA_PLUS -DFG_USING_OPENGL -DFG_USING_OPENGL_GLEW -DFG_USING_SDL2 -DFG_USING_THREADS -DFG_USING_TINYXML -DTIXML_USE_STL -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/zlib_128/contrib/minizip -I../../../modules/luaplus51-all/Src -I../../../modules/simpleopt -I../../../modules/cpp_btree `pkg-config --cflags gl` `pkg-config --cflags glew` `pkg-config --cflags sdl2` `pkg-config --cflags SDL2_mixer` `pkg-config --cflags libpng` `pkg-config --cflags zlib` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1386528437/fgDebugConfig.o ../../../src/fgDebugConfig.cpp
 
+${OBJECTDIR}/_ext/1386528437/fgEngineMain.o: ../../../src/fgEngineMain.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/1386528437
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -s -DFG_NO_UNDEF -DFG_USING_GLEW -DFG_USING_GLM -DFG_USING_LUA_PLUS -DFG_USING_OPENGL -DFG_USING_OPENGL_GLEW -DFG_USING_SDL2 -DFG_USING_THREADS -DFG_USING_TINYXML -DTIXML_USE_STL -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/zlib_128/contrib/minizip -I../../../modules/luaplus51-all/Src -I../../../modules/simpleopt -I../../../modules/cpp_btree `pkg-config --cflags gl` `pkg-config --cflags glew` `pkg-config --cflags sdl2` `pkg-config --cflags SDL2_mixer` `pkg-config --cflags libpng` `pkg-config --cflags zlib` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1386528437/fgEngineMain.o ../../../src/fgEngineMain.cpp
+
 ${OBJECTDIR}/_ext/1386528437/fgErrno.o: ../../../src/fgErrno.cpp 
 	${MKDIR} -p ${OBJECTDIR}/_ext/1386528437
 	${RM} "$@.d"
@@ -1017,11 +1022,6 @@ ${OBJECTDIR}/_ext/1386528437/fgErrorCodes.o: ../../../src/fgErrorCodes.cpp
 	${MKDIR} -p ${OBJECTDIR}/_ext/1386528437
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -s -DFG_NO_UNDEF -DFG_USING_GLEW -DFG_USING_GLM -DFG_USING_LUA_PLUS -DFG_USING_OPENGL -DFG_USING_OPENGL_GLEW -DFG_USING_SDL2 -DFG_USING_THREADS -DFG_USING_TINYXML -DTIXML_USE_STL -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/zlib_128/contrib/minizip -I../../../modules/luaplus51-all/Src -I../../../modules/simpleopt -I../../../modules/cpp_btree `pkg-config --cflags gl` `pkg-config --cflags glew` `pkg-config --cflags sdl2` `pkg-config --cflags SDL2_mixer` `pkg-config --cflags libpng` `pkg-config --cflags zlib` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1386528437/fgErrorCodes.o ../../../src/fgErrorCodes.cpp
-
-${OBJECTDIR}/_ext/1386528437/fgGameMain.o: ../../../src/fgGameMain.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/1386528437
-	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -s -DFG_NO_UNDEF -DFG_USING_GLEW -DFG_USING_GLM -DFG_USING_LUA_PLUS -DFG_USING_OPENGL -DFG_USING_OPENGL_GLEW -DFG_USING_SDL2 -DFG_USING_THREADS -DFG_USING_TINYXML -DTIXML_USE_STL -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/zlib_128/contrib/minizip -I../../../modules/luaplus51-all/Src -I../../../modules/simpleopt -I../../../modules/cpp_btree `pkg-config --cflags gl` `pkg-config --cflags glew` `pkg-config --cflags sdl2` `pkg-config --cflags SDL2_mixer` `pkg-config --cflags libpng` `pkg-config --cflags zlib` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1386528437/fgGameMain.o ../../../src/fgGameMain.cpp
 
 ${OBJECTDIR}/_ext/1386528437/fgLog.o: ../../../src/fgLog.cpp 
 	${MKDIR} -p ${OBJECTDIR}/_ext/1386528437
