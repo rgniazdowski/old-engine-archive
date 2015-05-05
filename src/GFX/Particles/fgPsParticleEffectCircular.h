@@ -14,7 +14,16 @@
     #include <climits>
     #include "fgPsParticleEffect.h"
     #include "fgLog.h"
-    
+
+/*
+ * PsParticleEffectLimited – implements container, that inserts objects in FREE SPACE, and
+ *                           gets blocked if the FREE SPACE ends
+ *
+ * PsParticleEffectCircular – implements CIRCULAR container – that constantly overwrites
+ *                            its tail, and never fully removes elements.
+ *                            New element is always accepted.
+ */
+
     #if 0
 /*
  *

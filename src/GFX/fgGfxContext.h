@@ -6,7 +6,7 @@
  * 
  * FlexiGame source code and any related files can not be copied, modified 
  * and/or distributed without the express or written consent from the author.
- *******************************************************/
+ ******************************************************************************/
 
 #ifndef FG_INC_GFX_CONTEXT
     #define FG_INC_GFX_CONTEXT
@@ -1914,10 +1914,6 @@ namespace fg {
 
         class CPlatform;
 
-        /**
-         * Special class for holding information about current GFX context.
-         * Works as a special kind of cache for client and server side.
-         */
         namespace context {
 
             ///

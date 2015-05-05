@@ -4,6 +4,7 @@
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
                    projectFiles="true">
+      <itemPath>../../../src/fgNamespaceInfo.h</itemPath>
       <itemPath>../../../src/fgPluginResource.h</itemPath>
       <itemPath>../../../src/fgWindowsStd.h</itemPath>
     </logicalFolder>
@@ -2078,6 +2079,8 @@
       </item>
       <item path="../../../src/fgMessageSubsystem.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../../../src/fgNamespaceInfo.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../../../src/fgPluginResource.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="../../../src/fgPluginResource.h" ex="false" tool="3" flavor2="0">
@@ -3684,6 +3687,8 @@
       </item>
       <item path="../../../src/fgMessageSubsystem.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../../../src/fgNamespaceInfo.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../../../src/fgPluginResource.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="../../../src/fgPluginResource.h" ex="false" tool="3" flavor2="0">
@@ -5253,6 +5258,8 @@
       </item>
       <item path="../../../src/fgMessageSubsystem.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../../../src/fgNamespaceInfo.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../../../src/fgPluginResource.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="../../../src/fgPluginResource.h" ex="false" tool="3" flavor2="0">
@@ -6799,6 +6806,8 @@
             flavor2="0">
       </item>
       <item path="../../../src/fgMessageSubsystem.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/fgNamespaceInfo.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/fgPluginResource.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -8378,6 +8387,8 @@
       </item>
       <item path="../../../src/fgMessageSubsystem.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../../../src/fgNamespaceInfo.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../../../src/fgPluginResource.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="../../../src/fgPluginResource.h" ex="false" tool="3" flavor2="0">
@@ -9947,6 +9958,8 @@
             flavor2="8">
       </item>
       <item path="../../../src/fgMessageSubsystem.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/fgNamespaceInfo.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/fgPluginResource.cpp" ex="false" tool="1" flavor2="0">
       </item>

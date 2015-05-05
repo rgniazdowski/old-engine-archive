@@ -584,12 +584,7 @@ namespace fg {
 }
 
 namespace fg {
-
-    /**
-     * The physics namespace includes all cyclone functions and
-     * classes. It is defined as a namespace to allow function and class
-     * names to be simple without causing conflicts.
-     */
+    
     namespace physics {
 
         const Vector3f GRAVITY = Vector3f(0, -9.81f, 0);

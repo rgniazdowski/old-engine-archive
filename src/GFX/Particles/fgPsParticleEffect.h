@@ -6,7 +6,7 @@
  *
  * FlexiGame source code and any related files can not be copied, modified
  * and/or distributed without the express or written consent from the author.
- *******************************************************/
+ ******************************************************************************/
 
 #ifndef FG_INC_PS_PARTICLE_EFFECT
     #define FG_INC_PS_PARTICLE_EFFECT
@@ -24,14 +24,7 @@
     #include "Resource/fgResource.h"
     #include "Util/fgConfigStruct.h"
 
-/**
- * PsParticleEffectLimited – implements container, that inserts objects in FREE SPACE, and
- *                           gets blocked if the FREE SPACE ends
- *
- * PsParticleEffectCircular – implements CIRCULAR container – that constantly overwrites
- *                            its tail, and never fully removes elements.
- *                            New element is always accepted.
- */
+
 namespace fg {
     namespace gfx {
         class CParticleEffect;
