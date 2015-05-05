@@ -16,33 +16,40 @@
 
 #include "fgDebugConfig.h"
 
-struct fgDebugConfig g_fgDebugConfig = {
-#ifndef FG_DEBUG
-    false
-#else
-    true,
-#ifdef FG_VERBOSE
-    true,
-#else
-    false,
-#endif
-#ifdef FG_VERBOSE_LEVEL
-    FG_VERBOSE_LEVEL,
-#else
-    0,
-#endif
-    false, //physicsBBoxShow    // Whether to show bounding boxes debug info for physics simulation
-    false, //guiBBoxShow;       // Whether to show bounding boxes debug info (GUI)
-    false, //gfxBBoxShow;       // Whether to show bounding boxes in GFX?
-    false, //gfxFrustumShow;    // Whether to show frustum boxes?
-    false, //gfxLightShow;      // Whether to show light sources?
-    false, //gfxDumpConfig;     // If true, this will dump available configs in EGL
-    false, //gfxDumpDisplay;    // If true, this will dump available display resolutions
-    false, //labelsShow;        // Whether to show labels (any kind)
-    false, //dumpConfig;        // Dump configs on load?
-    false, //forceFullscreen;   // Is fullscreen forced?
-    false, //isDebugProfiling;  // Is debug profiling enabled?
-    false, //consoleShow;       // Is special console being displayed?
-    0 //empty;
-#endif /* FG_DEBUG */
-};
+//------------------------------------------------------------------------------
+
+namespace fg {
+
+    struct SDebugConfig g_DebugConfig = {
+    #ifndef FG_DEBUG
+        false
+    #else
+        true,
+    #ifdef FG_VERBOSE
+        true,
+    #else
+        false,
+    #endif
+    #ifdef FG_VERBOSE_LEVEL
+        FG_VERBOSE_LEVEL,
+    #else
+        0,
+    #endif
+        false, //physicsBBoxShow    // Whether to show bounding boxes debug info for physics simulation
+        false, //guiBBoxShow;       // Whether to show bounding boxes debug info (GUI)
+        false, //gfxBBoxShow;       // Whether to show bounding boxes in GFX?
+        false, //gfxFrustumShow;    // Whether to show frustum boxes?
+        false, //gfxLightShow;      // Whether to show light sources?
+        false, //gfxDumpConfig;     // If true, this will dump available configs in EGL
+        false, //gfxDumpDisplay;    // If true, this will dump available display resolutions
+        false, //labelsShow;        // Whether to show labels (any kind)
+        false, //dumpConfig;        // Dump configs on load?
+        false, //forceFullscreen;   // Is fullscreen forced?
+        false, //isDebugProfiling;  // Is debug profiling enabled?
+        false, //consoleShow;       // Is special console being displayed?
+        0 //empty;
+    #endif /* FG_DEBUG */
+    };
+
+} // namespace fg
+//------------------------------------------------------------------------------

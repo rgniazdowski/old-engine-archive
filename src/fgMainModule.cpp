@@ -492,7 +492,7 @@ fgBool CMainModule::mainLoopStep(void) {
         return FG_FALSE;
     }
 #if defined(FG_DEBUG)
-    if(g_fgDebugConfig.isDebugProfiling) {
+    if(g_DebugConfig.isDebugProfiling) {
         profile::g_debugProfiling->begin("Program::loopStep");
     }
 #endif
@@ -528,7 +528,7 @@ fgBool CMainModule::mainLoopStep(void) {
     }
 
 #if defined(FG_DEBUG)
-    if(g_fgDebugConfig.isDebugProfiling) {
+    if(g_DebugConfig.isDebugProfiling) {
         profile::g_debugProfiling->begin("Game::update");
     }
 #endif
@@ -536,7 +536,7 @@ fgBool CMainModule::mainLoopStep(void) {
     m_engineMain->update();
 
 #if defined(FG_DEBUG)
-    if(g_fgDebugConfig.isDebugProfiling) {
+    if(g_DebugConfig.isDebugProfiling) {
         profile::g_debugProfiling->end("Game::update");
         profile::g_debugProfiling->begin("Game::display");
     }
@@ -546,7 +546,7 @@ fgBool CMainModule::mainLoopStep(void) {
     m_engineMain->display();
 
 #if defined(FG_DEBUG)
-    if(g_fgDebugConfig.isDebugProfiling) {
+    if(g_DebugConfig.isDebugProfiling) {
         profile::g_debugProfiling->end("Game::display");
         profile::g_debugProfiling->begin("Game::render");
     }
@@ -554,8 +554,8 @@ fgBool CMainModule::mainLoopStep(void) {
     m_engineMain->render();
 #if defined(FG_DEBUG)
     static int loopCount = 0;
-    g_fgDebugConfig.isDebugProfiling = true;
-    if(g_fgDebugConfig.isDebugProfiling) {
+    g_DebugConfig.isDebugProfiling = true;
+    if(g_DebugConfig.isDebugProfiling) {
         profile::g_debugProfiling->end("Game::render");
         profile::g_debugProfiling->end("Program::loopStep");
         profile::g_debugProfiling->updateHistory();

@@ -405,7 +405,7 @@ fgBool CEngineGfxCanvas::displayAndRender(void) {
     if(m_isSuspend) return FG_FALSE;
     using namespace fg;
 #if defined(FG_DEBUG)
-    if(g_fgDebugConfig.isDebugProfiling) {
+    if(g_DebugConfig.isDebugProfiling) {
         profile::g_debugProfiling->begin("Game::display");
     }
 #endif
@@ -415,7 +415,7 @@ fgBool CEngineGfxCanvas::displayAndRender(void) {
         this->m_engineMain->display();
     }
 #if defined(FG_DEBUG)
-    if(g_fgDebugConfig.isDebugProfiling) {
+    if(g_DebugConfig.isDebugProfiling) {
         profile::g_debugProfiling->end("Game::display");
         profile::g_debugProfiling->begin("Game::render");
     }
@@ -423,8 +423,8 @@ fgBool CEngineGfxCanvas::displayAndRender(void) {
     status = this->m_engineMain->render();
 #if defined(FG_DEBUG)
     static int loopCount = 0;
-    g_fgDebugConfig.isDebugProfiling = true;
-    if(g_fgDebugConfig.isDebugProfiling) {
+    g_DebugConfig.isDebugProfiling = true;
+    if(g_DebugConfig.isDebugProfiling) {
         profile::g_debugProfiling->end("Game::render");
         profile::g_debugProfiling->updateHistory();
 
@@ -455,15 +455,16 @@ fgBool CEngineGfxCanvas::update(void) {
     }
     using namespace fg;
 #if defined(FG_DEBUG)
-    if(g_fgDebugConfig.isDebugProfiling) {
+    if(g_DebugConfig.isDebugProfiling) {
         profile::g_debugProfiling->begin("Game::update");
     }
 #endif
     m_engineMain->update();
 #if defined(FG_DEBUG)
-    if(g_fgDebugConfig.isDebugProfiling) {
+    if(g_DebugConfig.isDebugProfiling) {
         profile::g_debugProfiling->end("Game::update");
     }
 #endif
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------

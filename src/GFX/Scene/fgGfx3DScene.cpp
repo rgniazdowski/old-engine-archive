@@ -153,7 +153,7 @@ void gfx::CScene3D::sortCalls(void) {
 
             CDrawCall *pDrawCall = pSceneNode->getDrawCall();
 #if defined(FG_DEBUG)
-            if(g_fgDebugConfig.isDebugProfiling) {
+            if(g_DebugConfig.isDebugProfiling) {
                 profile::g_debugProfiling->begin("GFX::Scene::FrustumCheck");
             }
 #endif
@@ -166,11 +166,11 @@ void gfx::CScene3D::sortCalls(void) {
             pSceneNode->setVisible(!!visibilityResult);
 
 #if defined(FG_DEBUG)
-            if(g_fgDebugConfig.isDebugProfiling) {
+            if(g_DebugConfig.isDebugProfiling) {
                 profile::g_debugProfiling->end("GFX::Scene::FrustumCheck");
             }
 #endif
-            g_fgDebugConfig.gfxBBoxShow = true;
+            g_DebugConfig.gfxBBoxShow = true;
             // ? also need to push to queue more than one draw call
             // And i mean... wait wut? All children are registered
             // This is a tree - that needs to be traversed

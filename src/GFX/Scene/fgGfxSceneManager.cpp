@@ -754,7 +754,7 @@ void gfx::CSceneManager::sortCalls(void) {
         }
         CDrawCall* pDrawCall = pNode->getDrawCall();
 #if defined(FG_DEBUG)
-        if(g_fgDebugConfig.isDebugProfiling) {
+        if(g_DebugConfig.isDebugProfiling) {
             profile::g_debugProfiling->begin("GFX::Scene::FrustumCheck");
         }
 #endif        
@@ -770,7 +770,7 @@ void gfx::CSceneManager::sortCalls(void) {
         }
         pNode->setVisible(!!visibilityResult);
 #if defined(FG_DEBUG)
-        if(g_fgDebugConfig.isDebugProfiling) {
+        if(g_DebugConfig.isDebugProfiling) {
             profile::g_debugProfiling->end("GFX::Scene::FrustumCheck");
         }
 #endif
@@ -780,7 +780,7 @@ void gfx::CSceneManager::sortCalls(void) {
             m_pickSelection.fullCheck(this, pNode, checkPickSelectionAABB);
         }
 
-        g_fgDebugConfig.gfxBBoxShow = true;
+        g_DebugConfig.gfxBBoxShow = true;
         // ? also need to push to queue more than one draw call
         // And i mean... wait wut? All children are registered
         // This is a tree - that needs to be traversed
@@ -830,7 +830,7 @@ void gfx::CSceneManager::render(void) {
             continue;
         }
 #if defined(FG_DEBUG)
-        if(g_fgDebugConfig.isDebugProfiling) {
+        if(g_DebugConfig.isDebugProfiling) {
             profile::g_debugProfiling->begin("GFX::Scene::DrawNode");
         }
 #endif
@@ -838,7 +838,7 @@ void gfx::CSceneManager::render(void) {
         //printf("SCENENODE: %s\n", pSceneNode->getNameStr());
         pSceneNode->draw();
 #if defined(FG_DEBUG)
-        if(g_fgDebugConfig.isDebugProfiling) {
+        if(g_DebugConfig.isDebugProfiling) {
             profile::g_debugProfiling->end("GFX::Scene::DrawNode");
         }
 #endif

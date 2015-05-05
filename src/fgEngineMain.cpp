@@ -616,19 +616,19 @@ fgBool CEngineMain::display(void) {
     // maybe should give some cathegories ?
     timesys::markTick(timesys::TICK_DISPLAY);
 #if defined(FG_DEBUG)
-    if(g_fgDebugConfig.isDebugProfiling)
+    if(g_DebugConfig.isDebugProfiling)
         profile::g_debugProfiling->begin("GFX::display");
 #endif
     m_gfxMain->display();
 #if defined(FG_DEBUG)
-    if(g_fgDebugConfig.isDebugProfiling) {
+    if(g_DebugConfig.isDebugProfiling) {
         profile::g_debugProfiling->end("GFX::display");
         profile::g_debugProfiling->begin("GUI::display");
     }
 #endif
     m_guiMain->display();
 #if defined(FG_DEBUG)
-    if(g_fgDebugConfig.isDebugProfiling) {
+    if(g_DebugConfig.isDebugProfiling) {
         profile::g_debugProfiling->end("GUI::display");
     }
 #endif
@@ -679,26 +679,26 @@ fgBool CEngineMain::render(void) {
     }
     //fpsc++;
 #if defined(FG_DEBUG)
-    if(g_fgDebugConfig.isDebugProfiling) {
+    if(g_DebugConfig.isDebugProfiling) {
         profile::g_debugProfiling->begin("GFX::render");
     }
 #endif
     m_gfxMain->render();
     FG_HardwareState->deviceYield();
 #if defined(FG_DEBUG)
-    if(g_fgDebugConfig.isDebugProfiling) {
+    if(g_DebugConfig.isDebugProfiling) {
         profile::g_debugProfiling->end("GFX::render");
     }
 #endif
     gfx::context::setBlend(FG_TRUE); // #FIXME
 #if defined(FG_DEBUG)
-    if(g_fgDebugConfig.isDebugProfiling) {
+    if(g_DebugConfig.isDebugProfiling) {
         profile::g_debugProfiling->begin("GUI::render");
     }
 #endif
     m_guiMain->render();
 #if defined(FG_DEBUG)
-    if(g_fgDebugConfig.isDebugProfiling) {
+    if(g_DebugConfig.isDebugProfiling) {
         profile::g_debugProfiling->end("GUI::render");
     }
 #endif

@@ -1357,18 +1357,18 @@ fgBool gfx::context::initialize(void)
     for(int i = 0; i < (int)vparts.size(); i++) {
         strings::trim(vparts[i]);
         if(strings::startsWith(vparts[i].c_str(), "1.0", FG_FALSE)) {
-            if(g_fgBuildConfig.usingMarmaladeOpenGLES ||
-               g_fgBuildConfig.usingMarmalade ||
-               g_fgBuildConfig.isPlatformAndroid) {
+            if(g_BuildConfig.usingMarmaladeOpenGLES ||
+               g_BuildConfig.usingMarmalade ||
+               g_BuildConfig.isPlatformAndroid) {
                 g_SLVersion = FG_GFX_ESSL_100;
                 selectedSLType = "ESSL";
                 selectedVersionNum = "1.0";
             }
         } else if(strings::startsWith(vparts[i].c_str(), "1.1", FG_FALSE)) {
             g_SLVersion = FG_GFX_GLSL_110;
-            if(g_fgBuildConfig.usingMarmaladeOpenGLES ||
-               g_fgBuildConfig.usingMarmalade ||
-               g_fgBuildConfig.isPlatformAndroid) {
+            if(g_BuildConfig.usingMarmaladeOpenGLES ||
+               g_BuildConfig.usingMarmalade ||
+               g_BuildConfig.isPlatformAndroid) {
                 g_SLVersion = FG_GFX_ESSL_100;
                 selectedSLType = "ESSL";
                 selectedVersionNum = "1.0";
@@ -1386,10 +1386,10 @@ fgBool gfx::context::initialize(void)
             g_SLVersion = FG_GFX_GLSL_150;
             selectedVersionNum = "1.5";
         } else if(strings::startsWith(vparts[i].c_str(), "3.0", FG_FALSE)) {
-            if(g_fgBuildConfig.usingMarmaladeOpenGLES ||
-               g_fgBuildConfig.usingMarmalade ||
-               g_fgBuildConfig.isPlatformAndroid ||
-               g_fgBuildConfig.usingOpenGLES) {
+            if(g_BuildConfig.usingMarmaladeOpenGLES ||
+               g_BuildConfig.usingMarmalade ||
+               g_BuildConfig.isPlatformAndroid ||
+               g_BuildConfig.usingOpenGLES) {
                 g_SLVersion = FG_GFX_ESSL_300;
                 selectedSLType = "ESSL";
                 selectedVersionNum = "3.0";

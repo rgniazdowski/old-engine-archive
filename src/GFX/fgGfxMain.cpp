@@ -524,20 +524,20 @@ void gfx::CGfxMain::display(void) {
         m_particleSystem->calculate();
     }
 #if defined(FG_DEBUG)
-    if(g_fgDebugConfig.isDebugProfiling) {
+    if(g_DebugConfig.isDebugProfiling) {
         profile::g_debugProfiling->begin("GFX::3DScene::sortCalls");
     }
 #endif
     m_3DScene->sortCalls();
 #if defined(FG_DEBUG)
-    if(g_fgDebugConfig.isDebugProfiling) {
+    if(g_DebugConfig.isDebugProfiling) {
         profile::g_debugProfiling->end("GFX::3DScene::sortCalls");
         profile::g_debugProfiling->begin("GFX::2DScene::sortCalls");
     }
 #endif
     m_2DScene->sortCalls();
 #if defined(FG_DEBUG)
-    if(g_fgDebugConfig.isDebugProfiling) {
+    if(g_DebugConfig.isDebugProfiling) {
         profile::g_debugProfiling->end("GFX::2DScene::sortCalls");
     }
 #endif
@@ -668,7 +668,7 @@ void gfx::CGfxMain::render(void) {
     sPlainEasyProgram->setUniform(FG_GFX_PLAIN_TEXTURE, (fgGFXint)0);
 
 #if defined(FG_DEBUG)
-    if(g_fgDebugConfig.isDebugProfiling) {
+    if(g_DebugConfig.isDebugProfiling) {
         profile::g_debugProfiling->begin("GFX::3DScene::render");
     }
 #endif
@@ -681,7 +681,7 @@ void gfx::CGfxMain::render(void) {
     }
 
 #if defined(FG_DEBUG)
-    if(g_fgDebugConfig.isDebugProfiling) {
+    if(g_DebugConfig.isDebugProfiling) {
         profile::g_debugProfiling->end("GFX::3DScene::render");
     }
 #endif

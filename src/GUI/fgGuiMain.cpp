@@ -416,14 +416,14 @@ void gui::CGuiMain::display(void) {
     if(state[SDL_SCANCODE_GRAVE] == SDL_PRESSED && !tylda) {
         tylda++;
         m_console->setVisible(!m_console->isVisible());
-        g_fgDebugConfig.consoleShow = (bool)m_console->isVisible();
+        g_DebugConfig.consoleShow = (bool)m_console->isVisible();
     } else if(state[SDL_SCANCODE_GRAVE] == SDL_RELEASED) {
         tylda = 0;
     }
 #elif defined(FG_USING_MARMALADE)
     if(s3eKeyboardGetState(s3eKeyBacktick) & S3E_KEY_STATE_PRESSED || s3eKeyboardGetState(s3eKeyTab) & S3E_KEY_STATE_PRESSED) {
         m_console->setVisible(!m_console->isVisible());
-        g_fgDebugConfig.consoleShow = (bool)m_console->isVisible();
+        g_DebugConfig.consoleShow = (bool)m_console->isVisible();
     }
 #endif
     // #FUBAR #MSG
