@@ -6,21 +6,58 @@
  * 
  * FlexiGame source code and any related files can not be copied, modified 
  * and/or distributed without the express or written consent from the author.
- *******************************************************/
+ ******************************************************************************/
 
-#ifndef FG_INC_GAME_LOGIC
-    #define FG_INC_GAME_LOGIC
-    #define FG_INC_GAME_LOGIC_BLOCK
+#ifndef FG_INC_GAME_MAIN
+    #define FG_INC_GAME_MAIN
+    #define FG_INC_GAME_MAIN_BLOCK
 
     #include "Event/fgEventDefinitions.h" // #FIXME
     #include "fgManagerBase.h"
     #include <queue>
     #include <string>
 
-    #define FG_MANAGER_LOGIC        0x0001000
+    #define FG_MANAGER_GAME_MAIN        0x0001000
 
 namespace fg {
     namespace game {
+
+        enum class Status : unsigned char {
+            /// Invalid game status - this cannot appear in normal gameplay.
+            /// If so, it means unknown error
+            INVALID,
+            /// Unknown game state - undefined - in most cases it will be
+            /// treated the same as STOPPED
+            UNKNOWN,
+            /// Game is active, normal gameplay
+            ACTIVE,
+            /// Game is paused, in most cases this displays pause menu
+            PAUSED,
+            /// Game is not active/stopped - not even loading, normal nongame menu
+            STOPPED,
+
+            /// Game is loading - loading, populating assets
+            LOADING,
+            /// Game is restarting - releasing any required data, then loading again
+            RESTARTING,
+            /// Game is stopping - releasing any required data, later back to nongame menu
+            STOPPING,
+
+            /// Game is finishing - some midlevel presentation on level ending, showing
+            /// game status, highscores etc,
+            FINISHING,
+            /// Game is finished, very similar to the FINISHING status, however this state
+            /// is when level is unloaded (required data released)
+            FINISHED,
+
+            /// Game is connecting to the server
+            CONNECTING,
+            /// Game is waiting for some external input (any kind)
+            WAITING,
+            /// Game disconnect from the server - any kind of reason
+            /// This game state is for a very short period (in most cases max 1 frame)
+            DISCONNECTED
+        };
 
         /// Event thrown when game just started (once)
         const event::EventType GAME_STARTED = (event::LAST_STANDARD_EVENT_CODE + 1);
@@ -49,7 +86,7 @@ namespace fg {
         /**
          *
          */
-        class CLogic : public fg::base::CManager {
+        class CGameMain : public fg::base::CManager {
         public:
             typedef fg::base::CManager base_type;
             ///
@@ -57,56 +94,21 @@ namespace fg {
 
         public:
 
-            enum class Status : unsigned char {
-                /// Invalid game status - this cannot appear in normal gameplay.
-                /// If so, it means unknown error 
-                GAME_INVALID,
-                /// Unknown game state - undefined - in most cases it will be
-                /// treated the same as STOPPED
-                GAME_UNKNOWN,
-                /// Game is active, normal gameplay
-                GAME_ACTIVE,
-                /// Game is paused, in most cases this displays pause menu
-                GAME_PAUSED,
-                /// Game is not active/stopped - not even loading, normal nongame menu
-                GAME_STOPPED,
 
-                /// Game is loading - loading, populating assets
-                GAME_LOADING,
-                /// Game is restarting - releasing any required data, then loading again
-                GAME_RESTARTING,
-                /// Game is stopping - releasing any required data, later back to nongame menu
-                GAME_STOPPING,
-
-                /// Game is finishing - some midlevel presentation on level ending, showing
-                /// game status, highscores etc, 
-                GAME_FINISHING,
-                /// Game is finished, very similar to the FINISHING status, however this state
-                /// is when level is unloaded (required data released)
-                GAME_FINISHED,
-
-                /// Game is connecting to the server
-                GAME_CONNECTING,
-                /// Game is waiting for some external input (any kind)
-                GAME_WAITING,
-                /// Game disconnect from the server - any kind of reason
-                /// This game state is for a very short period (in most cases max 1 frame)
-                GAME_DISCONNECTED
-            };
         public:
             /**
              * 
              */
-            CLogic(fg::base::CManager *pEventMgr);
+            CGameMain(fg::base::CManager *pEventMgr);
             /**
              * 
              * @param orig
              */
-            CLogic(const CLogic &orig);
+            CGameMain(const CGameMain &orig);
             /**
              * 
              */
-            virtual ~CLogic();
+            virtual ~CGameMain();
 
         protected:
             /**
@@ -273,77 +275,77 @@ namespace fg {
              * @return 
              */
             fgBool isActive(void) const {
-                return (fgBool)(m_status == Status::GAME_ACTIVE);
+                return (fgBool)(m_status == Status::ACTIVE);
             }
             /**
              * 
              * @return 
              */
             fgBool isPaused(void) const {
-                return (fgBool)(m_status == Status::GAME_PAUSED);
+                return (fgBool)(m_status == Status::PAUSED);
             }
             /**
              * 
              * @return 
              */
             fgBool isStopped(void) const {
-                return (fgBool)(m_status == Status::GAME_STOPPED);
+                return (fgBool)(m_status == Status::STOPPED);
             }
             /**
              * 
              * @return 
              */
             fgBool isLoading(void) const {
-                return (fgBool)(m_status == Status::GAME_LOADING);
+                return (fgBool)(m_status == Status::LOADING);
             }
             /**
              * 
              * @return 
              */
             fgBool isRestarting(void) const {
-                return (fgBool)(m_status == Status::GAME_RESTARTING);
+                return (fgBool)(m_status == Status::RESTARTING);
             }
             /**
              * 
              * @return 
              */
             fgBool isStopping(void) const {
-                return (fgBool)(m_status == Status::GAME_STOPPING);
+                return (fgBool)(m_status == Status::STOPPING);
             }
             /**
              * 
              * @return 
              */
             fgBool isFinishing(void) const {
-                return (fgBool)(m_status == Status::GAME_FINISHING);
+                return (fgBool)(m_status == Status::FINISHING);
             }
             /**
              * 
              * @return 
              */
             fgBool isFinished(void) const {
-                return (fgBool)(m_status == Status::GAME_FINISHED);
+                return (fgBool)(m_status == Status::FINISHED);
             }
             /**
              * 
              * @return 
              */
             fgBool isConnecting(void) const {
-                return (fgBool)(m_status == Status::GAME_CONNECTING);
+                return (fgBool)(m_status == Status::CONNECTING);
             }
             /**
              * 
              * @return 
              */
             fgBool isWaiting(void) const {
-                return (fgBool)(m_status == Status::GAME_WAITING);
+                return (fgBool)(m_status == Status::WAITING);
             }
             /**
              * 
              * @return 
              */
             fgBool isDisconnected(void) const {
-                return (fgBool)(m_status == Status::GAME_DISCONNECTED);
+                return (fgBool)(m_status == Status::DISCONNECTED);
             }
 
         public:
@@ -377,5 +379,5 @@ namespace fg {
     };
 };
 
-    #undef FG_INC_GAME_LOGIC_BLOCK
+    #undef FG_INC_GAME_MAIN_BLOCK
 #endif /* FG_INC_GAME_LOGIC */

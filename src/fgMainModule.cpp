@@ -229,22 +229,35 @@ SDL_EventType CMainModule::checkSDLEvents(void) {
             case SDL_MOUSEMOTION: /**< Mouse moved */
                 if(!m_engineMain)
                     continue;
-                //this->m_gameMain->getInputHandler()->singleTouchMotionHandler((void *)&event.motion, this->m_gameMain->getInputHandler());
+            {
+                unsigned int mid = FG_DEFAULT_POINTER_ID;
+                if(event.motion.state & SDL_BUTTON_LMASK)
+                    mid = 1;
+                if(event.motion.state & SDL_BUTTON_MMASK)
+                    mid = 2;
+                if(event.motion.state & SDL_BUTTON_RMASK)
+                    mid = 3;
+                if(event.motion.state & SDL_BUTTON_X1MASK)
+                    mid = 4;
+                if(event.motion.state & SDL_BUTTON_X2MASK)
+                    mid = 5;
+                //this->m_engineMain->getInputHandler()->singleTouchMotionHandler((void *)&event.motion, this->m_engineMain->getInputHandler());
                 this->m_engineMain->getInputHandler()->handlePointerMoved(Vector2i(event.motion.x, event.motion.y),
+                                                                        mid,
                                                                         event.motion.state);
             }
                 break;
             case SDL_MOUSEBUTTONDOWN: /**< Mouse button pressed */
                 if(!m_engineMain)
                     continue;
-                //this->m_gameMain->getInputHandler()->singleTouchButtonHandler((void *)&event.button, this->m_gameMain->getInputHandler());
+                //this->m_engineMain->getInputHandler()->singleTouchButtonHandler((void *)&event.button, this->m_engineMain->getInputHandler());
                 this->m_engineMain->getInputHandler()->handlePointerPressed(Vector2i(event.button.x, event.button.y),
                                                                           event.button.button);
                 break;
             case SDL_MOUSEBUTTONUP: /**< Mouse button released */
                 if(!m_engineMain)
                     continue;
-                //this->m_gameMain->getInputHandler()->singleTouchButtonHandler((void *)&event.button, this->m_gameMain->getInputHandler());
+                //this->m_engineMain->getInputHandler()->singleTouchButtonHandler((void *)&event.button, this->m_engineMain->getInputHandler());
                 this->m_engineMain->getInputHandler()->handlePointerReleased(Vector2i(event.button.x, event.button.y),
                                                                            event.button.button);
                 break;
@@ -324,7 +337,7 @@ SDL_EventType CMainModule::checkSDLEvents(void) {
                 int x = (int)((float)w * event.tfinger.x);
                 int y = (int)((float)h * event.tfinger.y);
                 this->m_engineMain->getInputHandler()->handlePointerPressed(Vector2i(x, y), event.tfinger.fingerId);
-                //this->m_gameMain->getInputHandler()->singleTouchButtonHandler((void *)&button, this->m_gameMain->getInputHandler());
+                //this->m_engineMain->getInputHandler()->singleTouchButtonHandler((void *)&button, this->m_engineMain->getInputHandler());
             }
                 break;
             case SDL_FINGERUP:
@@ -342,7 +355,7 @@ SDL_EventType CMainModule::checkSDLEvents(void) {
                 int x = (int)((float)w * event.tfinger.x);
                 int y = (int)((float)h * event.tfinger.y);
                 this->m_engineMain->getInputHandler()->handlePointerReleased(Vector2i(x, y), event.tfinger.fingerId);
-                //this->m_gameMain->getInputHandler()->singleTouchButtonHandler((void *)&button, this->m_gameMain->getInputHandler());
+                //this->m_engineMain->getInputHandler()->singleTouchButtonHandler((void *)&button, this->m_engineMain->getInputHandler());
             }
                 break;
             case SDL_FINGERMOTION:
@@ -360,7 +373,7 @@ SDL_EventType CMainModule::checkSDLEvents(void) {
                 int x = (int)((float)w * event.tfinger.x);
                 int y = (int)((float)h * event.tfinger.y);
                 this->m_engineMain->getInputHandler()->handlePointerMoved(Vector2i(x, y), event.tfinger.fingerId, SDL_PRESSED);
-                //this->m_gameMain->getInputHandler()->singleTouchMotionHandler((void *)&motion, this->m_gameMain->getInputHandler());
+                //this->m_engineMain->getInputHandler()->singleTouchMotionHandler((void *)&motion, this->m_engineMain->getInputHandler());
             }
                 break;
 
@@ -629,12 +642,12 @@ void CMainModule::focusGainedEvent(void) {
  * Handle PRESSING and RELEASING keys
  */
 void CMainModule::keyStateChangedEvent(s3eKeyboardEvent* event) {
-    if(!m_appInit || !m_gameMain)
+    if(!m_appInit || !m_engineMain)
         return;
     if(event->m_Pressed) {
-        m_gameMain->getInputHandler()->addKeyDown((int)event->m_Key);
+        m_engineMain->getInputHandler()->addKeyDown((int)event->m_Key);
     } else {
-        m_gameMain->getInputHandler()->addKeyUp((int)event->m_Key);
+        m_engineMain->getInputHandler()->addKeyUp((int)event->m_Key);
     }
 }
 #endif /* FG_USING_MARMALADE */

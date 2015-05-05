@@ -76,15 +76,15 @@ namespace fg {
             }
         };
 
-        /*
+        /**
          *
          */
-        class CResourceConfig : public util::CConfig {
+        class CResourceConfig : public ::fg::util::CConfig {
         public:
             ///
             typedef CResourceConfig type;
             ///
-            typedef util::CConfig base_type;
+            typedef ::fg::util::CConfig base_type;
             ///
             typedef std::map<std::string, SResourceHeader> ResourceHeaderMap;
             ///

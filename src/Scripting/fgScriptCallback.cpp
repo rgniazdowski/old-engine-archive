@@ -25,12 +25,8 @@
 
 using namespace fg;
 
-/**
- * 
- * @param L
- * @param info
- * @param _type
- */
+//------------------------------------------------------------------------------
+
 script::CScriptCallback::CScriptCallback(lua_State *L,
                                          const char *info,
                                          unsigned short int _argc,
@@ -63,11 +59,8 @@ m_argc(_argc) {
         FG_LOG_DEBUG("ScriptCallback: Initializing with script: '%s'", info);
     }
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @return 
- */
 fgBool script::CScriptCallback::Call(void) {
     if(m_type == INVALID || !m_luaState || !m_function)
         return FG_FALSE;
@@ -100,12 +93,8 @@ fgBool script::CScriptCallback::Call(void) {
 #endif /* FG_USING_LUA_PLUS */
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param argv
- * @return 
- */
 fgBool script::CScriptCallback::Call(event::CArgumentList *argv) {
     if(m_type == INVALID || !m_luaState)
         return FG_FALSE;
@@ -248,11 +237,8 @@ fgBool script::CScriptCallback::Call(event::CArgumentList *argv) {
 #endif /* FG_USING_LUA_PLUS */
     return FG_FALSE;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @return 
- */
 fgBool script::CScriptCallback::Call(void *pSystemData) {
     if(m_type == INVALID || !m_luaState)
         return FG_FALSE;
@@ -296,17 +282,12 @@ fgBool script::CScriptCallback::Call(void *pSystemData) {
 #endif /* FG_USING_LUA_PLUS */
     return FG_FALSE;
 }
+//------------------------------------------------------------------------------
 
 /*******************************************************************************
  * SCRIPT GUI CALLBACK - SPECIAL CALLBACK TO BE USED IN GUI 
  */
 
-/**
- * 
- * @param L
- * @param info
- * @param _type
- */
 script::CScriptGuiCallback::CScriptGuiCallback(gui::CGuiMain *pGuiMain, lua_State *L,
                                                const char *info,
                                                const unsigned short int _argc) :
@@ -314,11 +295,8 @@ CScriptCallback(L, info, _argc, SCRIPT),
 gui::CGuiCallback(pGuiMain) {
     event::CFunctionCallback::setFunction((event::CFunctionCallback::Function)NULL);
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @return 
- */
 fgBool script::CScriptGuiCallback::Call(void) {
     if(getType() == INVALID) {
         return FG_FALSE;
@@ -327,62 +305,40 @@ fgBool script::CScriptGuiCallback::Call(void) {
     }
     return FG_FALSE;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param argv
- * @return 
- */
 fgBool script::CScriptGuiCallback::Call(event::CArgumentList *argv) {
     if(!argv)
         return FG_FALSE;
     return script::CScriptCallback::Call(argv);
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param pSystemData
- * @return 
- */
 fgBool script::CScriptGuiCallback::Call(void *pSystemData) {
     if(!pSystemData)
         return FG_FALSE;
     return script::CScriptCallback::Call(pSystemData);
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param pWidget
- * @return 
- */
 fgBool script::CScriptGuiCallback::Call(gui::CWidget *pWidget) {
     if(!pWidget)
         return FG_FALSE;
     return script::CScriptCallback::Call((void *)pWidget);
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param pGuiMain
- * @param pWidget
- * @return 
- */
 fgBool script::CScriptGuiCallback::Call(gui::CGuiMain *pGuiMain, gui::CWidget *pWidget) {
     if(!pWidget)
         return FG_FALSE;
     return script::CScriptCallback::Call((void *)pWidget);
 }
+//------------------------------------------------------------------------------
 
 /*******************************************************************************
  * SCRIPT SCENE CALLBACK - SPECIAL CALLBACK TO BE USED IN THE SCENE MANAGER
  */
 
-/**
- * 
- * @param L
- * @param info
- * @param _type
- */
 script::CScriptSceneCallback::CScriptSceneCallback(lua_State *L,
                                                    const char *info,
                                                    const unsigned short int _argc) :
@@ -390,11 +346,8 @@ CScriptCallback(L, info, _argc, SCRIPT),
 gfx::CSceneCallback() {
     event::CFunctionCallback::setFunction((event::CFunctionCallback::Function)NULL);
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @return 
- */
 fgBool script::CScriptSceneCallback::Call(void) {
     if(getType() == INVALID) {
         return FG_FALSE;
@@ -403,12 +356,8 @@ fgBool script::CScriptSceneCallback::Call(void) {
     }
     return FG_FALSE;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param argv
- * @return 
- */
 fgBool script::CScriptSceneCallback::Call(event::CArgumentList *argv) {
     if(!argv)
         return FG_FALSE;
@@ -426,12 +375,8 @@ fgBool script::CScriptSceneCallback::Call(event::CArgumentList *argv) {
     }
     return FG_FALSE;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param pSystemData
- * @return 
- */
 fgBool script::CScriptSceneCallback::Call(void *pSystemData) {
     if(!pSystemData || !getScriptFunction())
         return FG_FALSE;
@@ -513,12 +458,8 @@ fgBool script::CScriptSceneCallback::Call(void *pSystemData) {
     }
     return FG_FALSE;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param pWidget
- * @return 
- */
 fgBool script::CScriptSceneCallback::Call(gfx::CSceneNode* pNodeA) {
     if(!pNodeA || !getScriptFunction())
         return FG_FALSE;
@@ -552,13 +493,8 @@ fgBool script::CScriptSceneCallback::Call(gfx::CSceneNode* pNodeA) {
     }
     return FG_FALSE;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param pGuiMain
- * @param pWidget
- * @return 
- */
 fgBool script::CScriptSceneCallback::Call(gfx::CSceneNode* pNodeA, gfx::CSceneNode* pNodeB) {
     fgBool status = FG_FALSE;
     if(!getScriptFunction()) {
@@ -621,3 +557,4 @@ fgBool script::CScriptSceneCallback::Call(gfx::CSceneNode* pNodeA, gfx::CSceneNo
     //return script::CScriptCallback::Call((void *)pWidget);
     return status;
 }
+//------------------------------------------------------------------------------

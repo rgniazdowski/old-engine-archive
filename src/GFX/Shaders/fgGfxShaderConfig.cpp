@@ -16,18 +16,23 @@
 
 using namespace fg;
 
+//------------------------------------------------------------------------------
+
 gfx::CShaderConfig::CShaderConfig() :
 m_configType(FG_GFX_SHADER_CONFIG_INVALID),
 m_preferredSLVersion(FG_GFX_SHADING_LANGUAGE_INVALID),
 m_defaultPrecision(FG_GFX_SHADER_PRECISION_DEFAULT) { }
+//------------------------------------------------------------------------------
 
 gfx::CShaderConfig::CShaderConfig(const char *filePath) {
     gfx::CShaderConfig::load(filePath);
 }
+//------------------------------------------------------------------------------
 
 gfx::CShaderConfig::~CShaderConfig() {
     clearAll();
 }
+//------------------------------------------------------------------------------
 
 void gfx::CShaderConfig::clearAll(void) {
     CConfig::clearAll();
@@ -44,6 +49,7 @@ void gfx::CShaderConfig::clearAll(void) {
     m_qualities.clear_optimised();
     m_constants.clear_optimised();
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CShaderConfig::load(const char *filePath, ShadingLangVersion SLver) {
     gfx::CShaderConfig::clearAll();
@@ -53,6 +59,7 @@ fgBool gfx::CShaderConfig::load(const char *filePath, ShadingLangVersion SLver) 
     }
     return private_parseData(SLver);
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CShaderConfig::private_parseDefines(util::SCfgSection *definesSection) {
     if(!definesSection)
@@ -79,6 +86,7 @@ fgBool gfx::CShaderConfig::private_parseDefines(util::SCfgSection *definesSectio
         return FG_FALSE;
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CShaderConfig::private_parseInclude(util::SCfgSection *includeSection) {
     if(!includeSection)
@@ -97,10 +105,8 @@ fgBool gfx::CShaderConfig::private_parseInclude(util::SCfgSection *includeSectio
         return FG_FALSE;
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
-/*
- * #OPTIMISE #DIVIDE #FIXME shader config parse data, move some operations to other function for clarity
- */
 fgBool gfx::CShaderConfig::private_parseData(ShadingLangVersion SLver) {
     if(SLver != FG_GFX_SHADING_LANGUAGE_INVALID) {
         m_preferredSLVersion = SLver;
@@ -415,3 +421,4 @@ fgBool gfx::CShaderConfig::private_parseData(ShadingLangVersion SLver) {
     }
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------

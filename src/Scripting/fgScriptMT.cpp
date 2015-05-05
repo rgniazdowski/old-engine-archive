@@ -27,23 +27,16 @@ fg::script::CMetatables *CSingleton<fg::script::CMetatables>::instance = NULL;
 
 using namespace fg;
 
-/**
- * 
- */
-script::CMetatables::CMetatables() { }
+//------------------------------------------------------------------------------
 
-/**
- * 
- */
+script::CMetatables::CMetatables() { }
+//------------------------------------------------------------------------------
+
 script::CMetatables::~CMetatables() {
     clearMetatableNames();
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param widgetType
- * @return 
- */
 script::CMetatables::METAID script::CMetatables::getMetatableIDFromWidgetType(const unsigned int widgetType) {
     METAID metaID;
     if(widgetType == gui::BUTTON) {
@@ -81,12 +74,8 @@ script::CMetatables::METAID script::CMetatables::getMetatableIDFromWidgetType(co
     }
     return metaID;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param resourceType
- * @return 
- */
 script::CMetatables::METAID script::CMetatables::getMetatableIDFromResourceType(const unsigned int resourceType) {
     METAID metaID;
     if(resourceType == resource::TEXTURE) {
@@ -106,10 +95,8 @@ script::CMetatables::METAID script::CMetatables::getMetatableIDFromResourceType(
     }
     return metaID;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- */
 void script::CMetatables::generateMetatableNames(void) {
     // Initializing metatable map
     m_metatableInfoVec.clear();
@@ -123,116 +110,119 @@ void script::CMetatables::generateMetatableNames(void) {
 
 #if !defined(FG_USING_MARMALADE)
 
-    m_metatableInfoVec[EMPTY_MT_ID] = metatableInfo("FG", "X");
+    m_metatableInfoVec[EMPTY_MT_ID] = SMetatableInfo("FG", "X");
 
-    m_metatableInfoVec[FG_NAMESPACE_MT_ID] = metatableInfo("FG", "NMSPC");
+    m_metatableInfoVec[FG_NAMESPACE_MT_ID] = SMetatableInfo("FG", "NMSPC");
+    m_metatableInfoVec[FG_GFX_NAMESPACE_MT_ID] = SMetatableInfo("FG", "NMSPC");
+    m_metatableInfoVec[FG_GUI_NAMESPACE_MT_ID] = SMetatableInfo("FG", "NMSPC");
+    m_metatableInfoVec[FG_SFX_NAMESPACE_MT_ID] = SMetatableInfo("FG", "NMSPC");
 
-    m_metatableInfoVec[VECTOR2I_MT_ID] = metatableInfo("FGX", "T");
-    m_metatableInfoVec[VECTOR2F_MT_ID] = metatableInfo("FGX", "T");
-    m_metatableInfoVec[VECTOR3I_MT_ID] = metatableInfo("FGX", "T");
-    m_metatableInfoVec[VECTOR3F_MT_ID] = metatableInfo("FGX", "T");
-    m_metatableInfoVec[VECTOR4I_MT_ID] = metatableInfo("FGX", "T");
-    m_metatableInfoVec[VECTOR4F_MT_ID] = metatableInfo("FGX", "T");
+    m_metatableInfoVec[VECTOR2I_MT_ID] = SMetatableInfo("FGX", "T");
+    m_metatableInfoVec[VECTOR2F_MT_ID] = SMetatableInfo("FGX", "T");
+    m_metatableInfoVec[VECTOR3I_MT_ID] = SMetatableInfo("FGX", "T");
+    m_metatableInfoVec[VECTOR3F_MT_ID] = SMetatableInfo("FGX", "T");
+    m_metatableInfoVec[VECTOR4I_MT_ID] = SMetatableInfo("FGX", "T");
+    m_metatableInfoVec[VECTOR4F_MT_ID] = SMetatableInfo("FGX", "T");
 
-    m_metatableInfoVec[ERROR_MT_ID] = metatableInfo("FGX", "T");
+    m_metatableInfoVec[ERROR_MT_ID] = SMetatableInfo("FGX", "T");
 
-    m_metatableInfoVec[EVENT_MANAGER_MT_ID] = metatableInfo("FGX", "T");
-    m_metatableInfoVec[RESOURCE_MANAGER_MT_ID] = metatableInfo("FGX", "T");
-    m_metatableInfoVec[SHADER_MANAGER_MT_ID] = metatableInfo("FGX", "T");
-    m_metatableInfoVec[SCENE2D_MANAGER_MT_ID] = metatableInfo("FGX", "T");
-    m_metatableInfoVec[SCENE3D_MANAGER_MT_ID] = metatableInfo("FGX", "T");
-    m_metatableInfoVec[PARTICLE_SYSTEM_MT_ID] = metatableInfo("FGX", "T");
-    m_metatableInfoVec[GUI_MAIN_MT_ID] = metatableInfo("FGX", "T");
-    m_metatableInfoVec[WIDGET_MANAGER_MT_ID] = metatableInfo("FGX", "T");
-    m_metatableInfoVec[STYLE_MANAGER_MT_ID] = metatableInfo("FGX", "T");
-    m_metatableInfoVec[SOUND_MANAGER_MT_ID] = metatableInfo("FGX", "T");
-    m_metatableInfoVec[LOGIC_MANAGER_MT_ID] = metatableInfo("FGX", "T");
+    m_metatableInfoVec[EVENT_MANAGER_MT_ID] = SMetatableInfo("FGX", "T");
+    m_metatableInfoVec[RESOURCE_MANAGER_MT_ID] = SMetatableInfo("FGX", "T");
+    m_metatableInfoVec[SHADER_MANAGER_MT_ID] = SMetatableInfo("FGX", "T");
+    m_metatableInfoVec[SCENE2D_MANAGER_MT_ID] = SMetatableInfo("FGX", "T");
+    m_metatableInfoVec[SCENE3D_MANAGER_MT_ID] = SMetatableInfo("FGX", "T");
+    m_metatableInfoVec[PARTICLE_SYSTEM_MT_ID] = SMetatableInfo("FGX", "T");
+    m_metatableInfoVec[GUI_MAIN_MT_ID] = SMetatableInfo("FGX", "T");
+    m_metatableInfoVec[WIDGET_MANAGER_MT_ID] = SMetatableInfo("FGX", "T");
+    m_metatableInfoVec[STYLE_MANAGER_MT_ID] = SMetatableInfo("FGX", "T");
+    m_metatableInfoVec[SOUND_MANAGER_MT_ID] = SMetatableInfo("FGX", "T");
+    m_metatableInfoVec[GAME_MAIN_MGR_MT_ID] = SMetatableInfo("FGX", "T");
 
-    m_metatableInfoVec[RESOURCE_MT_ID] = metatableInfo("FGX", "T");
-    m_metatableInfoVec[TEXTURE_RESOURCE_MT_ID] = metatableInfo("FGX", "T");
-    m_metatableInfoVec[FONT_RESOURCE_MT_ID] = metatableInfo("FGX", "T");
-    m_metatableInfoVec[GFX_MODEL_RESOURCE_MT_ID] = metatableInfo("FGX", "T");
-    m_metatableInfoVec[PARTICLE_EFFECT_RESOURCE_MT_ID] = metatableInfo("FGX", "T");
-    m_metatableInfoVec[AUDIO_BASE_RES_MT_ID] = metatableInfo("FGX", "T");
-    m_metatableInfoVec[SOUND_RESOURCE_MT_ID] = metatableInfo("FGX", "T");
-    m_metatableInfoVec[MUSIC_RESOURCE_MT_ID] = metatableInfo("FGX", "T");
-    m_metatableInfoVec[PLUGIN_RESOURCE_MT_ID] = metatableInfo("FGX", "T");
-    m_metatableInfoVec[SAVE_FILE_RESOURCE_MT_ID] = metatableInfo("FGX", "T");
+    m_metatableInfoVec[RESOURCE_MT_ID] = SMetatableInfo("FGX", "T");
+    m_metatableInfoVec[TEXTURE_RESOURCE_MT_ID] = SMetatableInfo("FGX", "T");
+    m_metatableInfoVec[FONT_RESOURCE_MT_ID] = SMetatableInfo("FGX", "T");
+    m_metatableInfoVec[GFX_MODEL_RESOURCE_MT_ID] = SMetatableInfo("FGX", "T");
+    m_metatableInfoVec[PARTICLE_EFFECT_RESOURCE_MT_ID] = SMetatableInfo("FGX", "T");
+    m_metatableInfoVec[AUDIO_BASE_RES_MT_ID] = SMetatableInfo("FGX", "T");
+    m_metatableInfoVec[SOUND_RESOURCE_MT_ID] = SMetatableInfo("FGX", "T");
+    m_metatableInfoVec[MUSIC_RESOURCE_MT_ID] = SMetatableInfo("FGX", "T");
+    m_metatableInfoVec[PLUGIN_RESOURCE_MT_ID] = SMetatableInfo("FGX", "T");
+    m_metatableInfoVec[SAVE_FILE_RESOURCE_MT_ID] = SMetatableInfo("FGX", "T");
 
     // INI Config / Settings XML
 
-    m_metatableInfoVec[CONFIG_MT_ID] = metatableInfo("FGX", "T");
-    m_metatableInfoVec[SETTINGS_MT_ID] = metatableInfo("FGX", "T");
+    m_metatableInfoVec[CONFIG_MT_ID] = SMetatableInfo("FGX", "T");
+    m_metatableInfoVec[SETTINGS_MT_ID] = SMetatableInfo("FGX", "T");
 
     // GUI Widget structure metatables
 
-    m_metatableInfoVec[GUI_WIDGET_MT_ID] = metatableInfo("FGX", "T");
-    m_metatableInfoVec[GUI_BUTTON_MT_ID] = metatableInfo("FGX", "T");
-    m_metatableInfoVec[GUI_CONSOLE_MT_ID] = metatableInfo("FGX", "T");
-    m_metatableInfoVec[GUI_CONTAINER_MT_ID] = metatableInfo("FGX", "T");
-    m_metatableInfoVec[GUI_FRAME_MT_ID] = metatableInfo("FGX", "T");
-    m_metatableInfoVec[GUI_LABEL_MT_ID] = metatableInfo("FGX", "T");
-    m_metatableInfoVec[GUI_LOADER_MT_ID] = metatableInfo("FGX", "T");
-    m_metatableInfoVec[GUI_MENU_MT_ID] = metatableInfo("FGX", "T");
-    m_metatableInfoVec[GUI_MESSAGE_BOX_MT_ID] = metatableInfo("FGX", "T");
-    m_metatableInfoVec[GUI_POPUP_MT_ID] = metatableInfo("FGX", "T");
-    m_metatableInfoVec[GUI_PROGRESS_BAR_MT_ID] = metatableInfo("FGX", "T");
-    m_metatableInfoVec[GUI_SCROLL_AREA_MT_ID] = metatableInfo("FGX", "T");
-    m_metatableInfoVec[GUI_TABLE_MT_ID] = metatableInfo("FGX", "T");
-    m_metatableInfoVec[GUI_TEXT_AREA_MT_ID] = metatableInfo("FGX", "T");
-    m_metatableInfoVec[GUI_TOGGLE_BUTTON_MT_ID] = metatableInfo("FGX", "T");
-    m_metatableInfoVec[GUI_WINDOW_MT_ID] = metatableInfo("FGX", "T");
+    m_metatableInfoVec[GUI_WIDGET_MT_ID] = SMetatableInfo("FGX", "T");
+    m_metatableInfoVec[GUI_BUTTON_MT_ID] = SMetatableInfo("FGX", "T");
+    m_metatableInfoVec[GUI_CONSOLE_MT_ID] = SMetatableInfo("FGX", "T");
+    m_metatableInfoVec[GUI_CONTAINER_MT_ID] = SMetatableInfo("FGX", "T");
+    m_metatableInfoVec[GUI_FRAME_MT_ID] = SMetatableInfo("FGX", "T");
+    m_metatableInfoVec[GUI_LABEL_MT_ID] = SMetatableInfo("FGX", "T");
+    m_metatableInfoVec[GUI_LOADER_MT_ID] = SMetatableInfo("FGX", "T");
+    m_metatableInfoVec[GUI_MENU_MT_ID] = SMetatableInfo("FGX", "T");
+    m_metatableInfoVec[GUI_MESSAGE_BOX_MT_ID] = SMetatableInfo("FGX", "T");
+    m_metatableInfoVec[GUI_POPUP_MT_ID] = SMetatableInfo("FGX", "T");
+    m_metatableInfoVec[GUI_PROGRESS_BAR_MT_ID] = SMetatableInfo("FGX", "T");
+    m_metatableInfoVec[GUI_SCROLL_AREA_MT_ID] = SMetatableInfo("FGX", "T");
+    m_metatableInfoVec[GUI_TABLE_MT_ID] = SMetatableInfo("FGX", "T");
+    m_metatableInfoVec[GUI_TEXT_AREA_MT_ID] = SMetatableInfo("FGX", "T");
+    m_metatableInfoVec[GUI_TOGGLE_BUTTON_MT_ID] = SMetatableInfo("FGX", "T");
+    m_metatableInfoVec[GUI_WINDOW_MT_ID] = SMetatableInfo("FGX", "T");
 
     // GUI Style special structures
 
-    m_metatableInfoVec[GUI_STYLE_MT_ID] = metatableInfo("FGX", "T");
-    m_metatableInfoVec[GUI_STYLE_CONTENT_MT_ID] = metatableInfo("FGX", "T");
-    m_metatableInfoVec[GUI_STYLE_SIZE_MT_ID] = metatableInfo("FGX", "T");
-    m_metatableInfoVec[GUI_STYLE_BACKGROUND_MT_ID] = metatableInfo("FGX", "T");
-    m_metatableInfoVec[GUI_STYLE_FOREGROUND_MT_ID] = metatableInfo("FGX", "T");
-    m_metatableInfoVec[GUI_STYLE_MARGIN_MT_ID] = metatableInfo("FGX", "T");
-    m_metatableInfoVec[GUI_STYLE_PADDING_MT_ID] = metatableInfo("FGX", "T");
-    m_metatableInfoVec[GUI_STYLE_BORDER_INFO_MT_ID] = metatableInfo("FGX", "T");
-    m_metatableInfoVec[GUI_STYLE_BORDER_MT_ID] = metatableInfo("FGX", "T");
-    m_metatableInfoVec[GUI_STYLE_POSITION_MT_ID] = metatableInfo("FGX", "T");
+    m_metatableInfoVec[GUI_STYLE_MT_ID] = SMetatableInfo("FGX", "T");
+    m_metatableInfoVec[GUI_STYLE_CONTENT_MT_ID] = SMetatableInfo("FGX", "T");
+    m_metatableInfoVec[GUI_STYLE_SIZE_MT_ID] = SMetatableInfo("FGX", "T");
+    m_metatableInfoVec[GUI_STYLE_BACKGROUND_MT_ID] = SMetatableInfo("FGX", "T");
+    m_metatableInfoVec[GUI_STYLE_FOREGROUND_MT_ID] = SMetatableInfo("FGX", "T");
+    m_metatableInfoVec[GUI_STYLE_MARGIN_MT_ID] = SMetatableInfo("FGX", "T");
+    m_metatableInfoVec[GUI_STYLE_PADDING_MT_ID] = SMetatableInfo("FGX", "T");
+    m_metatableInfoVec[GUI_STYLE_BORDER_INFO_MT_ID] = SMetatableInfo("FGX", "T");
+    m_metatableInfoVec[GUI_STYLE_BORDER_MT_ID] = SMetatableInfo("FGX", "T");
+    m_metatableInfoVec[GUI_STYLE_POSITION_MT_ID] = SMetatableInfo("FGX", "T");
 
     // Thrown Event info structures 
 
-    m_metatableInfoVec[EVENT_BASE_MT_ID] = metatableInfo("FGX", "T");
-    m_metatableInfoVec[EVENT_CONTROLLER_DEVICE_MT_ID] = metatableInfo("FGX", "T");
-    m_metatableInfoVec[EVENT_CONTROLLER_BUTTON_MT_ID] = metatableInfo("FGX", "T");
-    m_metatableInfoVec[EVENT_CONTROLLER_AXIS_MT_ID] = metatableInfo("FGX", "T");
-    m_metatableInfoVec[EVENT_TOUCH_MT_ID] = metatableInfo("FGX", "T");
-    m_metatableInfoVec[EVENT_MOUSE_MT_ID] = metatableInfo("FGX", "T");
-    m_metatableInfoVec[EVENT_SWIPE_MT_ID] = metatableInfo("FGX", "T");
-    m_metatableInfoVec[EVENT_SWIPE_PINCH_MT_ID] = metatableInfo("FGX", "T");
-    m_metatableInfoVec[EVENT_SWIPE_ROTATE_MT_ID] = metatableInfo("FGX", "T");
-    m_metatableInfoVec[EVENT_KEY_MT_ID] = metatableInfo("FGX", "T");
-    m_metatableInfoVec[EVENT_RESOURCE_MT_ID] = metatableInfo("FGX", "T");
-    m_metatableInfoVec[EVENT_VERTEX_STREAM_MT_ID] = metatableInfo("FGX", "T");
-    m_metatableInfoVec[EVENT_CAMERA_MT_ID] = metatableInfo("FGX", "T");
-    m_metatableInfoVec[EVENT_SOUND_MT_ID] = metatableInfo("FGX", "T");
-    m_metatableInfoVec[EVENT_MENU_CHANGED_MT_ID] = metatableInfo("FGX", "T");
-    m_metatableInfoVec[EVENT_WIDGET_MT_ID] = metatableInfo("FGX", "T");
-    m_metatableInfoVec[EVENT_SENSORS_MT_ID] = metatableInfo("FGX", "T");
-    m_metatableInfoVec[EVENT_MAIN_MT_ID] = metatableInfo("FGX", "T");
+    m_metatableInfoVec[EVENT_BASE_MT_ID] = SMetatableInfo("FGX", "T");
+    m_metatableInfoVec[EVENT_CONTROLLER_DEVICE_MT_ID] = SMetatableInfo("FGX", "T");
+    m_metatableInfoVec[EVENT_CONTROLLER_BUTTON_MT_ID] = SMetatableInfo("FGX", "T");
+    m_metatableInfoVec[EVENT_CONTROLLER_AXIS_MT_ID] = SMetatableInfo("FGX", "T");
+    m_metatableInfoVec[EVENT_TOUCH_MT_ID] = SMetatableInfo("FGX", "T");
+    m_metatableInfoVec[EVENT_MOUSE_MT_ID] = SMetatableInfo("FGX", "T");
+    m_metatableInfoVec[EVENT_SWIPE_MT_ID] = SMetatableInfo("FGX", "T");
+    m_metatableInfoVec[EVENT_SWIPE_PINCH_MT_ID] = SMetatableInfo("FGX", "T");
+    m_metatableInfoVec[EVENT_SWIPE_ROTATE_MT_ID] = SMetatableInfo("FGX", "T");
+    m_metatableInfoVec[EVENT_KEY_MT_ID] = SMetatableInfo("FGX", "T");
+    m_metatableInfoVec[EVENT_RESOURCE_MT_ID] = SMetatableInfo("FGX", "T");
+    m_metatableInfoVec[EVENT_VERTEX_STREAM_MT_ID] = SMetatableInfo("FGX", "T");
+    m_metatableInfoVec[EVENT_CAMERA_MT_ID] = SMetatableInfo("FGX", "T");
+    m_metatableInfoVec[EVENT_SOUND_MT_ID] = SMetatableInfo("FGX", "T");
+    m_metatableInfoVec[EVENT_MENU_CHANGED_MT_ID] = SMetatableInfo("FGX", "T");
+    m_metatableInfoVec[EVENT_WIDGET_MT_ID] = SMetatableInfo("FGX", "T");
+    m_metatableInfoVec[EVENT_SENSORS_MT_ID] = SMetatableInfo("FGX", "T");
+    m_metatableInfoVec[EVENT_MAIN_MT_ID] = SMetatableInfo("FGX", "T");
 
     // Script callback type
-    m_metatableInfoVec[SCRIPT_CALLBACK_MT_ID] = metatableInfo("FGX", "T");
+    m_metatableInfoVec[SCRIPT_CALLBACK_MT_ID] = SMetatableInfo("FGX", "T");
 
     // GFX Shader Program
-    m_metatableInfoVec[SHADER_PROGRAM_MT_ID] = metatableInfo("FGX", "T");
+    m_metatableInfoVec[SHADER_PROGRAM_MT_ID] = SMetatableInfo("FGX", "T");
 
     // GFX Scene Node type
-    m_metatableInfoVec[SCENE_NODE_MT_ID] = metatableInfo("FGX", "T");
-    m_metatableInfoVec[SCENE_NODE_OBJECT_MT_ID] = metatableInfo("FGX", "T");
-    m_metatableInfoVec[SCENE_NODE_TRIGGER_MT_ID] = metatableInfo("FGX", "T");
+    m_metatableInfoVec[SCENE_NODE_MT_ID] = SMetatableInfo("FGX", "T");
+    m_metatableInfoVec[SCENE_NODE_OBJECT_MT_ID] = SMetatableInfo("FGX", "T");
+    m_metatableInfoVec[SCENE_NODE_TRIGGER_MT_ID] = SMetatableInfo("FGX", "T");
 
     // GFX Scene Event types
-    m_metatableInfoVec[EVENT_SCENE_NODE_MT_ID] = metatableInfo("FGX", "T");
-    m_metatableInfoVec[EVENT_SCENE_NODE_COLLISION_MT_ID] = metatableInfo("FGX", "T");
-    m_metatableInfoVec[EVENT_SCENE_NODE_TRIGGER_MT_ID] = metatableInfo("FGX", "T");
-    m_metatableInfoVec[EVENT_SCENE_MAIN_MT_ID] = metatableInfo("FGX", "T");
+    m_metatableInfoVec[EVENT_SCENE_NODE_MT_ID] = SMetatableInfo("FGX", "T");
+    m_metatableInfoVec[EVENT_SCENE_NODE_COLLISION_MT_ID] = SMetatableInfo("FGX", "T");
+    m_metatableInfoVec[EVENT_SCENE_NODE_TRIGGER_MT_ID] = SMetatableInfo("FGX", "T");
+    m_metatableInfoVec[EVENT_SCENE_MAIN_MT_ID] = SMetatableInfo("FGX", "T");
 
 #endif
 
@@ -241,12 +231,11 @@ void script::CMetatables::generateMetatableNames(void) {
         FG_LOG_DEBUG("ScriptMT: Generated metatable name id[%d], name[%s]", i, m_metatableInfoVec[i].name);
     }
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- */
-void script::CMetatables::clearMetatableNames() {
+void script::CMetatables::clearMetatableNames(void) {
     m_metatableInfoVec.clear();
-    metatableInfoVec smvec;
+    MetatableInfoVec smvec;
     m_metatableInfoVec.swap(smvec);
 }
+//------------------------------------------------------------------------------

@@ -116,10 +116,18 @@ namespace fg {
              * This enum correspond to ones in fgScriptMT/Metatables - just managers
              */
             enum {
-                EMPTY_MT_MGR,
+                EMPTY_MT_MGR = 0,
 
+                //
+                // FG main namespaces
+                //
                 FG_NAMESPACE,
-
+                FG_GFX_NAMESPACE,
+                FG_GUI_NAMESPACE,
+                FG_SFX_NAMESPACE,
+                //
+                // Main managers
+                //
                 EVENT_MGR,
                 RESOURCE_MGR,
                 SHADER_MGR,
@@ -130,7 +138,7 @@ namespace fg {
                 WIDGET_MGR,
                 STYLE_MGR,
                 SOUND_MGR,
-                LOGIC_MGR,
+                GAME_MAIN_MGR,
 
                 NUM_MGR_METATABLES
             };
@@ -171,8 +179,8 @@ namespace fg {
             static fg::base::CManager *m_pStyleMgr;
             /// Pointer to the external sound manager
             static fg::base::CManager *m_pSoundMgr;
-            /// Pointer to the external logic manager
-            static fg::base::CManager *m_pLogicMgr;
+            /// Pointer to the external game main manager
+            static fg::base::CManager *m_pGameMainMgr;
 
             ///
             static fgBool m_isBindingComplete;
@@ -264,10 +272,10 @@ namespace fg {
             }
             /**
              * 
-             * @param pLogicManager
+             * @param pGameMainManager
              */
-            inline void setLogicManager(fg::base::CManager *pLogicManager) {
-                m_pLogicMgr = pLogicManager;
+            inline void setGameMainManager(fg::base::CManager *pGameMainManager) {
+                m_pGameMainMgr = pGameMainManager;
             }
 
         protected:
@@ -440,14 +448,14 @@ namespace fg {
              * @return 
              */
             static int addWidgetCallbackWrapper(lua_State *L);
-            
+
             /**
              * 
              * @param L
              * @return 
              */
             static int addSceneEventCallbackWrapper(lua_State *L);
-            
+
             /**
              * 
              * @return 
@@ -540,7 +548,7 @@ namespace fg {
              * 
              * @return 
              */
-            fgBool registerLogicManager(void);
+            fgBool registerGameMainManager(void);
         };
     };
 };

@@ -18,7 +18,7 @@
 
     #include "Event/fgEventDefinitions.h"
     #include "Scripting/fgScriptSubsystem.h"
-    #include "GameLogic/fgGameLogic.h"
+    #include "GameLogic/fgGameMain.h"
 
     #include "wx/wx.h"
     #include "wx/glcanvas.h"

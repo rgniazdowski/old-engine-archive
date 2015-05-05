@@ -6,7 +6,7 @@
  *
  * FlexiGame source code and any related files can not be copied, modified
  * and/or distributed without the express or written consent from the author.
- *******************************************************/
+ ******************************************************************************/
 
 #include "fgResourceConfigParser.h"
 #include "Util/fgStrings.h"
@@ -15,20 +15,18 @@
 
 using namespace fg;
 
-/**
- *
- */
+//------------------------------------------------------------------------------
+
 resource::CResourceConfig::CResourceConfig() :
+base_type(),
 m_header(),
 m_resNames(),
 m_cfgType(FG_RES_CFG_INVALID),
 m_resources() { }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param filePath
- */
 resource::CResourceConfig::CResourceConfig(const char *filePath) :
+base_type(),
 m_header(),
 m_resNames(),
 m_cfgType(FG_RES_CFG_INVALID),
@@ -36,68 +34,48 @@ m_resources() {
     if(filePath)
         resource::CResourceConfig::load(filePath);
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- */
 resource::CResourceConfig::~CResourceConfig() {
     m_resNames.clear_optimised();
     m_resources.clear();
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param filePath
- * @return 
- */
 fgBool resource::CResourceConfig::load(const char *filePath) {
     if(!filePath)
         return FG_FALSE;
-    if(!CConfig::load(filePath)) {
+    if(!base_type::load(filePath)) {
         return FG_FALSE;
     }
 
     return resource::CResourceConfig::parseData();
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @return 
- */
 util::SCfgSection *resource::CResourceConfig::getConfigSection(void) {
     if(m_cfgType == FG_RES_CFG_RESOURCE_GROUP)
-        return CConfig::getSection(FG_RESOURCE_GROUP_TEXT);
+        return base_type::getSection(FG_RESOURCE_GROUP_TEXT);
     else if(m_cfgType == FG_RES_CFG_RESOURCE)
-        return CConfig::getSection(FG_RESOURCE_TEXT);
+        return base_type::getSection(FG_RESOURCE_TEXT);
     else
         return NULL;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param resName
- * @return 
- */
 resource::SResourceHeader &resource::CResourceConfig::getRefHeader(const char *resName) {
     return resource::CResourceConfig::getRefHeader(std::string(resName));
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param resName
- * @return 
- */
 resource::SResourceHeader &resource::CResourceConfig::getRefHeader(const std::string & resName) {
     ResourceHeaderMapItor rhmit = m_resources.find(resName);
     if(rhmit == m_resources.end())
         return m_resources["__INVALID__"];
     return rhmit->second;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @return 
- */
 fgBool resource::CResourceConfig::parseData(void) {
     if(m_sectionMap.empty()) {
         FG_LOG_ERROR("Resource config section map is empty");
@@ -264,3 +242,4 @@ fgBool resource::CResourceConfig::parseData(void) {
 
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------

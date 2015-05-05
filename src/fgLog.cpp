@@ -6,7 +6,7 @@
  * 
  * FlexiGame source code and any related files can not be copied, modified 
  * and/or distributed without the express or written consent from the author.
- *******************************************************/
+ ******************************************************************************/
 
 #include "fgBuildConfig.h"
 #include "fgLog.h"
@@ -17,7 +17,7 @@
 #include <cstring>
 #include <cstdarg>
 
-
+//------------------------------------------------------------------------------
 
 #if defined(FG_USING_PLATFORM_ANDROID)
     #include <android/log.h>
@@ -145,10 +145,8 @@ namespace fg {
 
 using namespace fg;
 
-/**
- * Log info message
- * @param fmt
- */
+//------------------------------------------------------------------------------
+
 void log::PrintInfo(const char *fmt, ...) {
     char buf[BUFFER_MAX];
     va_list args;
@@ -165,11 +163,8 @@ void log::PrintInfo(const char *fmt, ...) {
     puts(buf);
 #endif
 }
+//------------------------------------------------------------------------------
 
-/**
- * Write log message
- * @param fmt
- */
 void log::PrintDebug(const char *fmt, ...) {
 #ifdef FG_DEBUG
 #if FG_DEBUG
@@ -194,11 +189,8 @@ void log::PrintDebug(const char *fmt, ...) {
 #endif
 #endif
 }
+//------------------------------------------------------------------------------
 
-/**
- * Log error message
- * @param fmt
- */
 void log::PrintError(const char *fmt, ...) {
     char buf[BUFFER_MAX];
     va_list args;
@@ -215,11 +207,8 @@ void log::PrintError(const char *fmt, ...) {
     puts(buf);
 #endif
 }
+//------------------------------------------------------------------------------
 
-/**
- * Log warning message
- * @param fmt
- */
 void log::PrintWarning(const char *fmt, ...) {
     char buf[BUFFER_MAX];
     va_list args;
@@ -236,13 +225,8 @@ void log::PrintWarning(const char *fmt, ...) {
     puts(buf);
 #endif
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param file
- * @param fmt
- * @param ...
- */
 void log::WriteToLog(util::base::CFile *file, const char *fmt, ...) {
     if(!file)
         return;
@@ -262,12 +246,8 @@ void log::WriteToLog(util::base::CFile *file, const char *fmt, ...) {
 
     file->puts(buf);
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param message
- * @param timestamp
- */
 void log::PrintMessage(msg::SMessage *message, long timestamp) {
     char buf[log::BUFFER_MAX];
     if(!log::prepareMsgBuffer(message, buf, timestamp))
@@ -295,13 +275,8 @@ void log::PrintMessage(msg::SMessage *message, long timestamp) {
     puts(buf);
 #endif    
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param file
- * @param message
- * @param timestamp
- */
 void log::PrintMessageToLog(util::base::CFile *file, 
                             msg::SMessage *message, 
                             long timestamp) {
@@ -322,10 +297,8 @@ void log::PrintMessageToLog(util::base::CFile *file,
     buf[n + 2] = '\0';
     file->puts(buf);
 }
+//------------------------------------------------------------------------------
 
-/*
- *
- */
 void log::PrintStatus(msg::SStatus *status) {
     if(!status)
         return;
@@ -338,10 +311,8 @@ void log::PrintStatus(msg::SStatus *status) {
         puts(buf); // #FIXME
     }
 }
+//------------------------------------------------------------------------------
 
-/*
- *
- */
 void log::PrintStatusToLog(util::base::CFile *file, msg::SStatus *status) {
     if(!status || !file)
         return;
@@ -364,3 +335,4 @@ void log::PrintStatusToLog(util::base::CFile *file, msg::SStatus *status) {
         file->puts(buf);
     }
 }
+//------------------------------------------------------------------------------

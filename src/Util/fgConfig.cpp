@@ -6,7 +6,7 @@
  * 
  * FlexiGame source code and any related files can not be copied, modified 
  * and/or distributed without the express or written consent from the author.
- *******************************************************/
+ ******************************************************************************/
 
 #include "fgConfig.h"
 #include "fgMemory.h"
@@ -15,23 +15,17 @@
 
 using namespace fg;
 
-/**
- *
- */
-util::CConfig::CConfig() : m_parser(NULL), m_writer(NULL) { }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param filePath
- */
+util::CConfig::CConfig() : m_parser(NULL), m_writer(NULL) { }
+//------------------------------------------------------------------------------
+
 util::CConfig::CConfig(const char *configPath) : m_parser(NULL), m_writer(NULL) {
     if(configPath)
         util::CConfig::load(configPath); // #FIXME
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- */
 util::CConfig::~CConfig() {
     if(m_parser)
         delete m_parser;
@@ -41,10 +35,8 @@ util::CConfig::~CConfig() {
     m_writer = NULL;
     clearAll();
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- */
 void util::CConfig::refreshParameterVec(void) {
     m_parameterVec.clear_optimised();
     config::SectionMapItor it = m_sectionMap.begin(),
@@ -57,12 +49,8 @@ void util::CConfig::refreshParameterVec(void) {
         }
     }
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param filePath
- * @return 
- */
 fgBool util::CConfig::load(const char *configPath) {
     if(!configPath) {
         if(m_configPath.empty())
@@ -83,12 +71,8 @@ fgBool util::CConfig::load(const char *configPath) {
     refreshParameterVec();
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param filePath
- * @return 
- */
 fgBool util::CConfig::save(const char *filePath) {
     if(!filePath) {
         if(m_configPath.empty())
@@ -108,10 +92,8 @@ fgBool util::CConfig::save(const char *filePath) {
 
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- */
 void util::CConfig::clearAll(void) {
     if(!m_sectionMap.empty()) {
         m_configPath.clear();
@@ -128,12 +110,8 @@ void util::CConfig::clearAll(void) {
     m_parameterVec.clear_optimised();
     m_isLoaded = FG_FALSE;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param sectionName
- * @return 
- */
 util::SCfgSection *util::CConfig::getSection(const char *sectionName) {
     if(!sectionName)
         return NULL;
@@ -146,22 +124,13 @@ util::SCfgSection *util::CConfig::getSection(const char *sectionName) {
 
     return smit->second;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param sectionName
- * @return 
- */
 util::SCfgSection *util::CConfig::getSection(const std::string & sectionName) {
     return getSection(sectionName.c_str());
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param sectionsVec
- * @param sectionNameBegin
- * @return 
- */
 int util::CConfig::getSectionsWith(config::SectionVec & sectionsVec,
                                    const char *sectionNameBegin) {
     if(!sectionNameBegin || m_sectionMap.empty()) {
@@ -178,13 +147,8 @@ int util::CConfig::getSectionsWith(config::SectionVec & sectionsVec,
     }
     return sectionsVec.size();
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param sectionName
- * @param parameterName
- * @return 
- */
 void *util::CConfig::getParameterValue(const char *sectionName,
                                        const char *parameterName) {
     if(!sectionName || !parameterName)
@@ -197,14 +161,8 @@ void *util::CConfig::getParameterValue(const char *sectionName,
         return NULL;
     return parameter->get();
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param sectionName
- * @param parameterName
- * @param status
- * @return 
- */
 int util::CConfig::getParameterInt(const char *sectionName,
                                    const char *parameterName,
                                    fgBool *status) {
@@ -219,14 +177,8 @@ int util::CConfig::getParameterInt(const char *sectionName,
         *status = FG_TRUE;
     return *int_ptr;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param sectionName
- * @param parameterName
- * @param status
- * @return 
- */
 long int util::CConfig::getParameterLong(const char *sectionName,
                                          const char *parameterName,
                                          fgBool *status) {
@@ -241,14 +193,8 @@ long int util::CConfig::getParameterLong(const char *sectionName,
         *status = FG_TRUE;
     return *long_ptr;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param sectionName
- * @param parameterName
- * @param status
- * @return 
- */
 float util::CConfig::getParameterFloat(const char *sectionName,
                                        const char *parameterName,
                                        fgBool *status) {
@@ -263,14 +209,8 @@ float util::CConfig::getParameterFloat(const char *sectionName,
         *status = FG_TRUE;
     return *float_ptr;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param sectionName
- * @param parameterName
- * @param status
- * @return 
- */
 fgBool util::CConfig::getParameterBool(const char *sectionName,
                                        const char *parameterName,
                                        fgBool *status) {
@@ -285,13 +225,8 @@ fgBool util::CConfig::getParameterBool(const char *sectionName,
         *status = FG_TRUE;
     return *bool_ptr;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param sectionName
- * @param parameterName
- * @return 
- */
 char *util::CConfig::getParameterString(const char *sectionName,
                                         const char *parameterName) {
     void *ptr = getParameterValue(sectionName, parameterName);
@@ -299,16 +234,8 @@ char *util::CConfig::getParameterString(const char *sectionName,
         return NULL;
     return (char *)ptr;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param sectionName
- * @param parameterName
- * @param type
- * @param value
- * @param freeInValue
- * @return 
- */
 fgBool util::CConfig::setParameterValue(const char *sectionName,
                                         const char *parameterName,
                                         util::SCfgParameter::Type type,
@@ -362,14 +289,8 @@ fgBool util::CConfig::setParameterValue(const char *sectionName,
     }
     return status;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param sectionName
- * @param parameterName
- * @param value
- * @return 
- */
 fgBool util::CConfig::setParameterInt(const char *sectionName,
                                       const char *parameterName,
                                       int value) {
@@ -377,14 +298,8 @@ fgBool util::CConfig::setParameterInt(const char *sectionName,
     void *void_ptr = (void *)(&newValue);
     return setParameterValue(sectionName, parameterName, SCfgParameter::INT, void_ptr);
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param sectionName
- * @param parameterName
- * @param value
- * @return 
- */
 fgBool util::CConfig::setParameterLong(const char *sectionName,
                                        const char *parameterName,
                                        long int value) {
@@ -392,14 +307,8 @@ fgBool util::CConfig::setParameterLong(const char *sectionName,
     void *void_ptr = (void *)(&newValue);
     return setParameterValue(sectionName, parameterName, SCfgParameter::LONG, void_ptr);
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param sectionName
- * @param parameterName
- * @param value
- * @return 
- */
 fgBool util::CConfig::setParameterFloat(const char *sectionName,
                                         const char *parameterName,
                                         float value) {
@@ -407,14 +316,8 @@ fgBool util::CConfig::setParameterFloat(const char *sectionName,
     void *void_ptr = (void *)(&newValue);
     return setParameterValue(sectionName, parameterName, SCfgParameter::FLOAT, void_ptr);
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param sectionName
- * @param parameterName
- * @param value
- * @return 
- */
 fgBool util::CConfig::setParameterBool(const char *sectionName,
                                        const char *parameterName,
                                        fgBool value) {
@@ -422,14 +325,8 @@ fgBool util::CConfig::setParameterBool(const char *sectionName,
     void *void_ptr = (void *)(&newValue);
     return setParameterValue(sectionName, parameterName, SCfgParameter::BOOL, void_ptr);
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param sectionName
- * @param parameterName
- * @param value
- * @return 
- */
 fgBool util::CConfig::setParameterString(const char *sectionName,
                                          const char *parameterName,
                                          const char *value) {
@@ -437,10 +334,8 @@ fgBool util::CConfig::setParameterString(const char *sectionName,
     void *void_ptr = (void *)(newValue);
     return setParameterValue(sectionName, parameterName, SCfgParameter::STRING, void_ptr, FG_TRUE);
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- */
 void util::CConfig::dumpAllParameters(void) {
     config::ParameterVecItor begin, end, itor;
     begin = m_parameterVec.begin();
@@ -460,3 +355,4 @@ void util::CConfig::dumpAllParameters(void) {
         memset(_buf, 0, 1024);
     }
 }
+//------------------------------------------------------------------------------

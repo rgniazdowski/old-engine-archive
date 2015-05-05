@@ -6,7 +6,7 @@
  *
  * FlexiGame source code and any related files can not be copied, modified
  * and/or distributed without the express or written consent from the author.
- *******************************************************/
+ ******************************************************************************/
 
 /// Main include
 #include "fgEngineMain.h"
@@ -21,7 +21,7 @@
 #include "Util/fgTime.h"
 #include "Util/fgProfiling.h"
 /// Game logic
-#include "GameLogic/fgGameLogic.h"
+#include "GameLogic/fgGameMain.h"
 /// Resource management
 #include "Resource/fgResourceManager.h"
 #include "Resource/fgResourceFactory.h"
@@ -82,7 +82,7 @@ m_inputHandler(NULL),
 m_joypadController(NULL),
 m_scriptSubsystem(NULL),
 m_soundMgr(NULL),
-m_logicMgr(NULL),
+m_gameMain(NULL),
 m_gameTouchCallback(NULL),
 m_gameMouseCallback(NULL),
 m_gameFreeLookCallback(NULL) {
@@ -117,9 +117,9 @@ CEngineMain::~CEngineMain() {
     // Unregister any required callbacks
     unregisterGameCallbacks();
     // Main Game Logic Manager
-    if(m_logicMgr)
-        delete m_logicMgr;
-    m_logicMgr = NULL;
+    if(m_gameMain)
+        delete m_gameMain;
+    m_gameMain = NULL;
     // Global Settings
     if(m_settings)
         delete m_settings;
@@ -153,7 +153,7 @@ CEngineMain::~CEngineMain() {
         m_scriptSubsystem->setShaderManager(NULL);
         m_scriptSubsystem->set2DSceneManager(NULL);
         m_scriptSubsystem->set3DSceneManager(NULL);
-        m_scriptSubsystem->setLogicManager(NULL);
+        m_scriptSubsystem->setGameMainManager(NULL);
     }
     // Destroy the resource factory object
     if(m_resourceFactory)
@@ -367,13 +367,13 @@ fgBool CEngineMain::initSubsystems(void) {
     }
     m_gfxMain->getLoader()->update(10.0f);
     // Create object for Game Logic Manager
-    if(!m_logicMgr)
-        m_logicMgr = new game::CLogic(NULL);
+    if(!m_gameMain)
+        m_gameMain = new game::CGameMain(NULL);
     // Setup Game Logic external pointers
-    if(m_logicMgr) {
-        m_logicMgr->setEventManager(this);
+    if(m_gameMain) {
+        m_gameMain->setEventManager(this);
         // Initialize the Game Logic object
-        if(!m_logicMgr->initialize()) {
+        if(!m_gameMain->initialize()) {
             FG_LOG_ERROR("Logic: Main Game Logic module initialized with errors");
         }
     }
@@ -403,7 +403,7 @@ fgBool CEngineMain::initSubsystems(void) {
     m_scriptSubsystem->setSoundManager(static_cast<fg::base::CManager *>(m_soundMgr));
     m_scriptSubsystem->setStyleManager(static_cast<fg::base::CManager *>(m_guiMain->getStyleManager()));
     m_scriptSubsystem->setWidgetManager(static_cast<fg::base::CManager *>(m_guiMain->getWidgetManager()));
-    m_scriptSubsystem->setLogicManager(static_cast<fg::base::CManager *>(m_logicMgr));
+    m_scriptSubsystem->setGameMainManager(static_cast<fg::base::CManager *>(m_gameMain));
     m_gfxMain->getLoader()->update(10.0f);
     if(!m_scriptSubsystem->initialize()) {
         FG_LOG_ERROR("Script: Initialization of Script module finished with errors");
@@ -728,8 +728,8 @@ fgBool CEngineMain::update(fgBool force) {
                              m_gfxMain->getMainWindow()->getHeight());
     executeEvent(event::UPDATE_SHOT);
     // Update logic manager
-    if(m_logicMgr)
-        m_logicMgr->update();
+    if(m_gameMain)
+        m_gameMain->update();
     // TouchReceiver processes the data received from marmalade/system event
     // callbacks and throws proper events
     // Pointer input receiver needs name change #FIXME - need some

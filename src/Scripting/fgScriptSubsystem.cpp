@@ -74,7 +74,7 @@
 #include "GUI/fgGuiToggleButton.h"
 #include "GUI/fgGuiWindow.h"
 // Game Logic / etc
-#include "GameLogic/fgGameLogic.h"
+#include "GameLogic/fgGameMain.h"
 // Special Script Callback
 #include "fgScriptCallback.h"
 // Audio
@@ -108,7 +108,7 @@ fg::base::CManager *script::CScriptSubsystem::m_pParticleMgr = NULL;
 fg::base::CManager *script::CScriptSubsystem::m_pWidgetMgr = NULL;
 fg::base::CManager *script::CScriptSubsystem::m_pStyleMgr = NULL;
 fg::base::CManager *script::CScriptSubsystem::m_pSoundMgr = NULL;
-fg::base::CManager *script::CScriptSubsystem::m_pLogicMgr = NULL;
+fg::base::CManager *script::CScriptSubsystem::m_pGameMainMgr = NULL;
 
 //------------------------------------------------------------------------------
 
@@ -321,7 +321,7 @@ fgBool script::CScriptSubsystem::initialize(void) {
         FG_LOG_ERROR("Script: Failed to register SoundManager object");
     }
 
-    if(!registerLogicManager()) {
+    if(!registerGameMainManager()) {
         FG_LOG_ERROR("Script: Failed to register GameLogicManager object");
     }
 
@@ -2892,113 +2892,113 @@ fgBool script::CScriptSubsystem::registerSoundManager(void) {
 }
 //------------------------------------------------------------------------------
 
-fgBool script::CScriptSubsystem::registerLogicManager(void) {
+fgBool script::CScriptSubsystem::registerGameMainManager(void) {
     if(m_isBindingComplete)
         return FG_TRUE;
-    if(!m_pLogicMgr)
+    if(!m_pGameMainMgr)
         return FG_FALSE;
-    if(m_pLogicMgr->getManagerType() != FG_MANAGER_LOGIC)
+    if(m_pGameMainMgr->getManagerType() != FG_MANAGER_GAME_MAIN)
         return FG_FALSE;
 
 #if defined(FG_USING_LUA_PLUS)
-    if(m_mgrMetatables[LOGIC_MGR].GetRef() >= 0)
+    if(m_mgrMetatables[GAME_MAIN_MGR].GetRef() >= 0)
         return FG_TRUE;
     if(m_fgObj.GetRef() < 0)
         return FG_FALSE;
 
-    typedef fgBool(fg::game::CLogic::*LOGIC_Bool_C_STR_IN)(const char*);
-    typedef void(fg::game::CLogic::*LOGIC_void_C_STR_IN)(const char*);
-    typedef void(fg::game::CLogic::*LOGIC_void_UINT_IN)(const unsigned int);
+    typedef fgBool(fg::game::CGameMain::*LOGIC_Bool_C_STR_IN)(const char*);
+    typedef void(fg::game::CGameMain::*LOGIC_void_C_STR_IN)(const char*);
+    typedef void(fg::game::CGameMain::*LOGIC_void_UINT_IN)(const unsigned int);
 
     // Game Logic manager metatable
-    m_mgrMetatables[LOGIC_MGR] = m_fgObj.CreateTable(fgScriptMT->getMetatableName(CMetatables::LOGIC_MANAGER_MT_ID));
-    m_mgrMetatables[LOGIC_MGR].SetObject("__index", m_mgrMetatables[LOGIC_MGR]);
-    m_mgrMetatables[LOGIC_MGR].RegisterObjectDirect("startGameDefault",
-                                                    static_cast<fg::game::CLogic *>(0),
-                                                    &fg::game::CLogic::startGameDefault);
-    m_mgrMetatables[LOGIC_MGR].RegisterObjectDirect("startGameStageID",
-                                                    static_cast<fg::game::CLogic *>(0),
-                                                    static_cast<LOGIC_void_UINT_IN>(&fg::game::CLogic::startGame));
-    m_mgrMetatables[LOGIC_MGR].RegisterObjectDirect("startGameStageName",
-                                                    static_cast<fg::game::CLogic *>(0),
-                                                    static_cast<LOGIC_void_C_STR_IN>(&fg::game::CLogic::startGame));
-    m_mgrMetatables[LOGIC_MGR].RegisterObjectDirect("stopGame",
-                                                    static_cast<fg::game::CLogic *>(0),
-                                                    &fg::game::CLogic::stopGame);
-    m_mgrMetatables[LOGIC_MGR].RegisterObjectDirect("pauseGame",
-                                                    static_cast<fg::game::CLogic *>(0),
-                                                    &fg::game::CLogic::pauseGame);
-    m_mgrMetatables[LOGIC_MGR].RegisterObjectDirect("restartGame",
-                                                    static_cast<fg::game::CLogic *>(0),
-                                                    &fg::game::CLogic::restartGame);
+    m_mgrMetatables[GAME_MAIN_MGR] = m_fgObj.CreateTable(fgScriptMT->getMetatableName(CMetatables::GAME_MAIN_MGR_MT_ID));
+    m_mgrMetatables[GAME_MAIN_MGR].SetObject("__index", m_mgrMetatables[GAME_MAIN_MGR]);
+    m_mgrMetatables[GAME_MAIN_MGR].RegisterObjectDirect("startGameDefault",
+                                                    static_cast<fg::game::CGameMain *>(0),
+                                                    &fg::game::CGameMain::startGameDefault);
+    m_mgrMetatables[GAME_MAIN_MGR].RegisterObjectDirect("startGameStageID",
+                                                    static_cast<fg::game::CGameMain *>(0),
+                                                    static_cast<LOGIC_void_UINT_IN>(&fg::game::CGameMain::startGame));
+    m_mgrMetatables[GAME_MAIN_MGR].RegisterObjectDirect("startGameStageName",
+                                                    static_cast<fg::game::CGameMain *>(0),
+                                                    static_cast<LOGIC_void_C_STR_IN>(&fg::game::CGameMain::startGame));
+    m_mgrMetatables[GAME_MAIN_MGR].RegisterObjectDirect("stopGame",
+                                                    static_cast<fg::game::CGameMain *>(0),
+                                                    &fg::game::CGameMain::stopGame);
+    m_mgrMetatables[GAME_MAIN_MGR].RegisterObjectDirect("pauseGame",
+                                                    static_cast<fg::game::CGameMain *>(0),
+                                                    &fg::game::CGameMain::pauseGame);
+    m_mgrMetatables[GAME_MAIN_MGR].RegisterObjectDirect("restartGame",
+                                                    static_cast<fg::game::CGameMain *>(0),
+                                                    &fg::game::CGameMain::restartGame);
 
-    m_mgrMetatables[LOGIC_MGR].RegisterObjectDirect("getCurrentStageID",
-                                                    static_cast<fg::game::CLogic *>(0),
-                                                    &fg::game::CLogic::getCurrentStageID);
-    m_mgrMetatables[LOGIC_MGR].RegisterObjectDirect("getCurrentStageName",
-                                                    static_cast<fg::game::CLogic *>(0),
-                                                    &fg::game::CLogic::getCurrentStageNameStr);
-    m_mgrMetatables[LOGIC_MGR].RegisterObjectDirect("getStageScore",
-                                                    static_cast<fg::game::CLogic *>(0),
-                                                    &fg::game::CLogic::getStageScore);
-    m_mgrMetatables[LOGIC_MGR].RegisterObjectDirect("getGlobalScore",
-                                                    static_cast<fg::game::CLogic *>(0),
-                                                    &fg::game::CLogic::getGlobalScore);
-    m_mgrMetatables[LOGIC_MGR].RegisterObjectDirect("increaseStageScore",
-                                                    static_cast<fg::game::CLogic *>(0),
-                                                    &fg::game::CLogic::increaseStageScore);
-    m_mgrMetatables[LOGIC_MGR].RegisterObjectDirect("resetStageScore",
-                                                    static_cast<fg::game::CLogic *>(0),
-                                                    &fg::game::CLogic::resetStageScore);
+    m_mgrMetatables[GAME_MAIN_MGR].RegisterObjectDirect("getCurrentStageID",
+                                                    static_cast<fg::game::CGameMain *>(0),
+                                                    &fg::game::CGameMain::getCurrentStageID);
+    m_mgrMetatables[GAME_MAIN_MGR].RegisterObjectDirect("getCurrentStageName",
+                                                    static_cast<fg::game::CGameMain *>(0),
+                                                    &fg::game::CGameMain::getCurrentStageNameStr);
+    m_mgrMetatables[GAME_MAIN_MGR].RegisterObjectDirect("getStageScore",
+                                                    static_cast<fg::game::CGameMain *>(0),
+                                                    &fg::game::CGameMain::getStageScore);
+    m_mgrMetatables[GAME_MAIN_MGR].RegisterObjectDirect("getGlobalScore",
+                                                    static_cast<fg::game::CGameMain *>(0),
+                                                    &fg::game::CGameMain::getGlobalScore);
+    m_mgrMetatables[GAME_MAIN_MGR].RegisterObjectDirect("increaseStageScore",
+                                                    static_cast<fg::game::CGameMain *>(0),
+                                                    &fg::game::CGameMain::increaseStageScore);
+    m_mgrMetatables[GAME_MAIN_MGR].RegisterObjectDirect("resetStageScore",
+                                                    static_cast<fg::game::CGameMain *>(0),
+                                                    &fg::game::CGameMain::resetStageScore);
 
-    m_mgrMetatables[LOGIC_MGR].RegisterObjectDirect("setPlayerName",
-                                                    static_cast<fg::game::CLogic *>(0),
-                                                    static_cast<LOGIC_void_C_STR_IN>(&fg::game::CLogic::setPlayerName));
-    m_mgrMetatables[LOGIC_MGR].RegisterObjectDirect("getPlayerName",
-                                                    static_cast<fg::game::CLogic *>(0),
-                                                    &fg::game::CLogic::getPlayerNameStr);
+    m_mgrMetatables[GAME_MAIN_MGR].RegisterObjectDirect("setPlayerName",
+                                                    static_cast<fg::game::CGameMain *>(0),
+                                                    static_cast<LOGIC_void_C_STR_IN>(&fg::game::CGameMain::setPlayerName));
+    m_mgrMetatables[GAME_MAIN_MGR].RegisterObjectDirect("getPlayerName",
+                                                    static_cast<fg::game::CGameMain *>(0),
+                                                    &fg::game::CGameMain::getPlayerNameStr);
 
-    m_mgrMetatables[LOGIC_MGR].RegisterObjectDirect("isActive",
-                                                    static_cast<fg::game::CLogic *>(0),
-                                                    &fg::game::CLogic::isActive);
-    m_mgrMetatables[LOGIC_MGR].RegisterObjectDirect("isPaused",
-                                                    static_cast<fg::game::CLogic *>(0),
-                                                    &fg::game::CLogic::isPaused);
-    m_mgrMetatables[LOGIC_MGR].RegisterObjectDirect("isStopped",
-                                                    static_cast<fg::game::CLogic *>(0),
-                                                    &fg::game::CLogic::isStopped);
-    m_mgrMetatables[LOGIC_MGR].RegisterObjectDirect("isLoading",
-                                                    static_cast<fg::game::CLogic *>(0),
-                                                    &fg::game::CLogic::isLoading);
-    m_mgrMetatables[LOGIC_MGR].RegisterObjectDirect("isRestarting",
-                                                    static_cast<fg::game::CLogic *>(0),
-                                                    &fg::game::CLogic::isRestarting);
-    m_mgrMetatables[LOGIC_MGR].RegisterObjectDirect("isStopping",
-                                                    static_cast<fg::game::CLogic *>(0),
-                                                    &fg::game::CLogic::isStopping);
-    m_mgrMetatables[LOGIC_MGR].RegisterObjectDirect("isFinishing",
-                                                    static_cast<fg::game::CLogic *>(0),
-                                                    &fg::game::CLogic::isFinishing);
-    m_mgrMetatables[LOGIC_MGR].RegisterObjectDirect("isFinished",
-                                                    static_cast<fg::game::CLogic *>(0),
-                                                    &fg::game::CLogic::isFinished);
-    m_mgrMetatables[LOGIC_MGR].RegisterObjectDirect("isConnecting",
-                                                    static_cast<fg::game::CLogic *>(0),
-                                                    &fg::game::CLogic::isConnecting);
-    m_mgrMetatables[LOGIC_MGR].RegisterObjectDirect("isWaiting",
-                                                    static_cast<fg::game::CLogic *>(0),
-                                                    &fg::game::CLogic::isWaiting);
-    m_mgrMetatables[LOGIC_MGR].RegisterObjectDirect("isDisconnected",
-                                                    static_cast<fg::game::CLogic *>(0),
-                                                    &fg::game::CLogic::isDisconnected);
-    uintptr_t offset = (uintptr_t)m_pLogicMgr;
+    m_mgrMetatables[GAME_MAIN_MGR].RegisterObjectDirect("isActive",
+                                                    static_cast<fg::game::CGameMain *>(0),
+                                                    &fg::game::CGameMain::isActive);
+    m_mgrMetatables[GAME_MAIN_MGR].RegisterObjectDirect("isPaused",
+                                                    static_cast<fg::game::CGameMain *>(0),
+                                                    &fg::game::CGameMain::isPaused);
+    m_mgrMetatables[GAME_MAIN_MGR].RegisterObjectDirect("isStopped",
+                                                    static_cast<fg::game::CGameMain *>(0),
+                                                    &fg::game::CGameMain::isStopped);
+    m_mgrMetatables[GAME_MAIN_MGR].RegisterObjectDirect("isLoading",
+                                                    static_cast<fg::game::CGameMain *>(0),
+                                                    &fg::game::CGameMain::isLoading);
+    m_mgrMetatables[GAME_MAIN_MGR].RegisterObjectDirect("isRestarting",
+                                                    static_cast<fg::game::CGameMain *>(0),
+                                                    &fg::game::CGameMain::isRestarting);
+    m_mgrMetatables[GAME_MAIN_MGR].RegisterObjectDirect("isStopping",
+                                                    static_cast<fg::game::CGameMain *>(0),
+                                                    &fg::game::CGameMain::isStopping);
+    m_mgrMetatables[GAME_MAIN_MGR].RegisterObjectDirect("isFinishing",
+                                                    static_cast<fg::game::CGameMain *>(0),
+                                                    &fg::game::CGameMain::isFinishing);
+    m_mgrMetatables[GAME_MAIN_MGR].RegisterObjectDirect("isFinished",
+                                                    static_cast<fg::game::CGameMain *>(0),
+                                                    &fg::game::CGameMain::isFinished);
+    m_mgrMetatables[GAME_MAIN_MGR].RegisterObjectDirect("isConnecting",
+                                                    static_cast<fg::game::CGameMain *>(0),
+                                                    &fg::game::CGameMain::isConnecting);
+    m_mgrMetatables[GAME_MAIN_MGR].RegisterObjectDirect("isWaiting",
+                                                    static_cast<fg::game::CGameMain *>(0),
+                                                    &fg::game::CGameMain::isWaiting);
+    m_mgrMetatables[GAME_MAIN_MGR].RegisterObjectDirect("isDisconnected",
+                                                    static_cast<fg::game::CGameMain *>(0),
+                                                    &fg::game::CGameMain::isDisconnected);
+    uintptr_t offset = (uintptr_t)m_pGameMainMgr;
     userDataObjectMapItor it = m_userDataObjectMap.find(offset);
     if(it != m_userDataObjectMap.end()) {
         return FG_FALSE;
     }
     // Create lua object for Game Logic manager global
-    LuaPlus::LuaObject logicMgrObj = m_luaState->BoxPointer((void *)m_pLogicMgr);
-    logicMgrObj.SetMetatable(m_mgrMetatables[LOGIC_MGR]);
+    LuaPlus::LuaObject logicMgrObj = m_luaState->BoxPointer((void *)m_pGameMainMgr);
+    logicMgrObj.SetMetatable(m_mgrMetatables[GAME_MAIN_MGR]);
 
 
     // #FIXME - create in script proper structure as in C++ -> fg.game.Logic, etc

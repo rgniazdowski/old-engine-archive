@@ -6,7 +6,7 @@
  * 
  * FlexiGame source code and any related files can not be copied, modified 
  * and/or distributed without the express or written consent from the author.
- *******************************************************/
+ ******************************************************************************/
 
 #ifndef FG_INC_CONFIG
     #define FG_INC_CONFIG
@@ -36,6 +36,7 @@ namespace fg {
             std::string m_configPath;
             /// Simple flag to check if the config file loaded successfully
             fgBool m_isLoaded;
+            
         public:
             /**
              * 
@@ -50,6 +51,10 @@ namespace fg {
              * 
              */
             virtual ~CConfig();
+            /**
+             * 
+             * @return
+             */
             inline fgBool isLoaded(void) const {
                 return m_isLoaded;
             }

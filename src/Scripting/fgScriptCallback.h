@@ -46,7 +46,6 @@ namespace fg {
 
         /**
          * 
-         * @return 
          */
         class CScriptCallback : public virtual fg::event::CFunctionCallback {
         public:

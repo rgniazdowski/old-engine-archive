@@ -6,13 +6,12 @@
  * 
  * FlexiGame source code and any related files can not be copied, modified 
  * and/or distributed without the express or written consent from the author.
- *******************************************************/
+ ******************************************************************************/
 
 #include "fgErrorCodes.h"
 
-/**
- *
- */
+//------------------------------------------------------------------------------
+
 void fgErrorCodes::registerAll(void) {
     FG_ERRNO_MAIN::__registerAll();
 
@@ -29,10 +28,9 @@ void fgErrorCodes::registerAll(void) {
 
     FG_ERRNO_GAME::__registerAll();
 }
+//------------------------------------------------------------------------------
 
-/**
- *
- */
 void fgErrorCodes::unregisterAll(void) {
     fgErrno::reset();
 }
+//------------------------------------------------------------------------------

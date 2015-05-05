@@ -6,7 +6,7 @@
  * 
  * FlexiGame source code and any related files can not be copied, modified 
  * and/or distributed without the express or written consent from the author.
- *******************************************************/
+ ******************************************************************************/
 
 #include "fgConfigParser.h"
 #include "fgMemory.h"
@@ -15,25 +15,16 @@
 
 using namespace fg;
 
-/**
- * Default constructor for config parser object
- */
-util::CConfigParser::CConfigParser() : m_fileSize(0), m_fileBuffer(NULL) { }
+//------------------------------------------------------------------------------
 
-/**
- * Destructor for config parser object
- */
+util::CConfigParser::CConfigParser() : m_fileSize(0), m_fileBuffer(NULL) { }
+//------------------------------------------------------------------------------
+
 util::CConfigParser::~CConfigParser() {
     freeData();
 }
+//------------------------------------------------------------------------------
 
-/**
- * Split section name
- * @param fullSectionName
- * @param sectionName
- * @param subSectionName
- * @return 
- */
 fgBool util::CConfigParser::splitSectionName(std::string &fullSectionName,
                                              std::string &sectionName,
                                              std::string &subSectionName) {
@@ -62,13 +53,8 @@ fgBool util::CConfigParser::splitSectionName(std::string &fullSectionName,
     }
     return isSection;
 }
+//------------------------------------------------------------------------------
 
-/**
- * Load config and store all parameters in given section map
- * @param filePath
- * @param sectionMap
- * @return 
- */
 fgBool util::CConfigParser::load(const char *filePath, config::SectionMap &sectionMap) {
     if(m_fileBuffer)
         fgFree(m_fileBuffer);
@@ -87,13 +73,8 @@ fgBool util::CConfigParser::load(const char *filePath, config::SectionMap &secti
     // parse data and store it in section map
     return parseData(m_fileBuffer, sectionMap);
 }
+//------------------------------------------------------------------------------
 
-/**
- * Parse data and store parameters in given section map (reference)
- * @param data
- * @param sectionMap
- * @return 
- */
 fgBool util::CConfigParser::parseData(const char *data, config::SectionMap &sectionMap) {
     if(!data) {
         if(!m_fileBuffer) {
@@ -198,13 +179,12 @@ fgBool util::CConfigParser::parseData(const char *data, config::SectionMap &sect
     }
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
-/**
- * Free all data assiocated with the config parameters
- */
 void util::CConfigParser::freeData(void) {
     if(m_fileBuffer)
         fgFree(m_fileBuffer);
     m_fileSize = 0;
     m_fileBuffer = NULL;
 }
+//------------------------------------------------------------------------------

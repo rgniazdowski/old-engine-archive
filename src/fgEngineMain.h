@@ -6,11 +6,11 @@
  * 
  * FlexiGame source code and any related files can not be copied, modified 
  * and/or distributed without the express or written consent from the author.
- *******************************************************/
+ ******************************************************************************/
 
-#ifndef FG_INC_GAME_MAIN
-    #define FG_INC_GAME_MAIN
-    #define FG_INC_GAME_MAIN_BLOCK
+#ifndef FG_INC_ENGINE_MAIN
+    #define FG_INC_ENGINE_MAIN
+    #define FG_INC_ENGINE_MAIN_BLOCK
 
     #include "fgBuildConfig.h"
     #include "fgCommon.h"
@@ -28,7 +28,7 @@
 
     #include "Hardware/fgQualityManager.h"
     #include "Scripting/fgScriptSubsystem.h"
-    #include "GameLogic/fgGameLogic.h"
+    #include "GameLogic/fgGameMain.h"
 
 namespace fg {
     class CEngineMain;
@@ -226,8 +226,8 @@ namespace fg {
          * 
          * @return 
          */
-        inline game::CLogic *getLogicManager(void) const {
-            return m_logicMgr;
+        inline game::CGameMain *getGameMain(void) const {
+            return m_gameMain;
         }
 
     public:
@@ -345,7 +345,7 @@ namespace fg {
         /// Sound manager - loading, playing sounds
         sfx::CSfxManager *m_soundMgr;
         /// Inner game logic
-        game::CLogic *m_logicMgr;
+        game::CGameMain *m_gameMain;
 
         /// Callback for Touch events
         event::CFunctionCallback *m_gameTouchCallback;
@@ -357,5 +357,5 @@ namespace fg {
     };
 };
 
-    #undef FG_INC_GAME_MAIN_BLOCK
+    #undef FG_INC_ENGINE_MAIN_BLOCK
 #endif /* FG_INC_GAME_MAIN */

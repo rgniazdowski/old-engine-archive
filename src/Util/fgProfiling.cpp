@@ -6,7 +6,7 @@
  *
  * FlexiGame source code and any related files can not be copied, modified
  * and/or distributed without the express or written consent from the author.
- *******************************************************/
+ ******************************************************************************/
 
 #include "fgProfiling.h"
 #include "fgTime.h"
@@ -14,33 +14,27 @@
 
 using namespace fg;
 
+//------------------------------------------------------------------------------
+
 #if defined(FG_DEBUG)
 ///
 profile::CProfiling *profile::g_debugProfiling = NULL;
 #endif
+//------------------------------------------------------------------------------
 
-/**
- * 
- */
 profile::CProfiling::CProfiling() : m_startProfile(-1.0f), m_endProfile(-1.0f) { }
+//------------------------------------------------------------------------------
 
-/**
- * 
- */
 profile::CProfiling::~CProfiling() {
     clear();
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- */
 void profile::CProfiling::initialize(void) {
     m_startProfile = timesys::exact();
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- */
 void profile::CProfiling::clear(void) {
     while(!m_profileStack.empty())
         m_profileStack.pop();
@@ -50,12 +44,8 @@ void profile::CProfiling::clear(void) {
     m_startProfile = 0.0f;
     m_endProfile = 0.0f;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param name
- * @return 
- */
 fgBool profile::CProfiling::begin(const std::string& name) {
     if(name.empty())
         return FG_FALSE;
@@ -110,24 +100,16 @@ fgBool profile::CProfiling::begin(const std::string& name) {
 
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param name
- * @return 
- */
 fgBool profile::CProfiling::begin(const char* name) {
     if(!name)
         return FG_FALSE;
     std::string strName = std::string(name);
     return begin(strName);
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param name
- * @return 
- */
 fgBool profile::CProfiling::end(const std::string& name) {
     if(name.empty())
         return FG_FALSE;
@@ -153,12 +135,8 @@ fgBool profile::CProfiling::end(const std::string& name) {
 
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param name
- * @return 
- */
 fgBool profile::CProfiling::end(const char* name) {
     if(!name)
         return FG_FALSE;
@@ -166,10 +144,8 @@ fgBool profile::CProfiling::end(const char* name) {
     strName.append(name);
     return end(strName);
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- */
 void profile::CProfiling::updateHistory(void) {
     m_endProfile = timesys::exact();
 
@@ -187,10 +163,8 @@ void profile::CProfiling::updateHistory(void) {
     }
     m_startProfile = timesys::exact();
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- */
 void profile::CProfiling::dumpToDefaultFile(void) {
     ProfileVecItor begin = m_orderVec.begin(), end = m_orderVec.end(), it;
     fg::util::CRegularFile file;
@@ -235,13 +209,8 @@ void profile::CProfiling::dumpToDefaultFile(void) {
     }
     file.close();
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param name
- * @param percent
- * @return 
- */
 fgBool profile::CProfiling::storeProfileHistory(const std::string& name, float percent) {
     if(name.empty())
         return FG_FALSE;
@@ -295,15 +264,8 @@ fgBool profile::CProfiling::storeProfileHistory(const std::string& name, float p
     }
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param name
- * @param average
- * @param minimum
- * @param maximum
- * @return 
- */
 fgBool profile::CProfiling::getProfileHistory(const std::string& name,
                                               float* average,
                                               float* minimum,
@@ -324,3 +286,4 @@ fgBool profile::CProfiling::getProfileHistory(const std::string& name,
         *maximum = entry->maximum;
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------

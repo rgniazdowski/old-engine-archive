@@ -41,10 +41,12 @@ namespace fg {
                 EMPTY_MT_ID = 0,
 
                 //
-                // FG main metatable
+                // FG main namespaces
                 //
                 FG_NAMESPACE_MT_ID, // #used
-
+                FG_GFX_NAMESPACE_MT_ID,
+                FG_GUI_NAMESPACE_MT_ID,
+                FG_SFX_NAMESPACE_MT_ID,
                 //
                 // Main managers
                 //
@@ -58,7 +60,7 @@ namespace fg {
                 WIDGET_MANAGER_MT_ID, // #used
                 STYLE_MANAGER_MT_ID,
                 SOUND_MANAGER_MT_ID,
-                LOGIC_MANAGER_MT_ID,
+                GAME_MAIN_MGR_MT_ID,
 
                 //
                 // Vectors / Color
@@ -181,7 +183,7 @@ namespace fg {
             /**
              * 
              */
-            struct metatableInfo {
+            struct SMetatableInfo {
                 ///
                 static const unsigned char NAME_MAX_LENGTH = 24;
                 ///
@@ -191,7 +193,7 @@ namespace fg {
                 /**
                  * 
                  */
-                metatableInfo() : id(0) {
+                SMetatableInfo() : id(0) {
                     randomizeName();
                     //FG_LOG_DEBUG("Script: metatableInfo: name: '%s'", name);
                 }
@@ -200,7 +202,7 @@ namespace fg {
                  * @param _id
                  * @param _name
                  */
-                metatableInfo(const int _id, const char *_name) : id(_id) {
+                SMetatableInfo(const int _id, const char *_name) : id(_id) {
                     if(_name)
                         strncpy(name, _name, (int)NAME_MAX_LENGTH);
                     else
@@ -210,7 +212,7 @@ namespace fg {
                  * 
                  * @param _name
                  */
-                metatableInfo(const char *_name) : id(0) {
+                SMetatableInfo(const char *_name) : id(0) {
                     if(_name)
                         strncpy(name, _name, (int)NAME_MAX_LENGTH);
                     else
@@ -221,7 +223,7 @@ namespace fg {
                  * @param prefix
                  * @param suffix
                  */
-                metatableInfo(const char *prefix, const char *suffix) : id(0) {
+                SMetatableInfo(const char *prefix, const char *suffix) : id(0) {
                     randomizeName(prefix, suffix);
                     //FG_LOG_DEBUG("Script: metatableInfo: name: '%s'", name);
 
@@ -232,7 +234,7 @@ namespace fg {
                  * @param prefix
                  * @param suffix
                  */
-                metatableInfo(const unsigned short int _id, const char *prefix, const char *suffix) : id(_id) {
+                SMetatableInfo(const unsigned short int _id, const char *prefix, const char *suffix) : id(_id) {
                     randomizeName(prefix, suffix);
                 }
                 /**
@@ -284,13 +286,13 @@ namespace fg {
             };
 
             ///
-            typedef fg::CVector<metatableInfo> metatableInfoVec;
+            typedef fg::CVector<SMetatableInfo> MetatableInfoVec;
             ///
-            typedef metatableInfoVec::iterator metatableInfoVecItor;
+            typedef MetatableInfoVec::iterator MetatableInfoVecItor;
 
         private:
             ///
-            metatableInfoVec m_metatableInfoVec;
+            MetatableInfoVec m_metatableInfoVec;
 
         protected:
             /**

@@ -138,7 +138,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/_ext/534589759/fgGuiWidgetFactory.o \
 	${OBJECTDIR}/_ext/534589759/fgGuiWidgetManager.o \
 	${OBJECTDIR}/_ext/534589759/fgGuiWindow.o \
-	${OBJECTDIR}/_ext/477241454/fgGameLogic.o \
+	${OBJECTDIR}/_ext/477241454/fgGameMain.o \
 	${OBJECTDIR}/_ext/484399070/fgDeviceQuery.o \
 	${OBJECTDIR}/_ext/484399070/fgHardwareState.o \
 	${OBJECTDIR}/_ext/484399070/fgQualityManager.o \
@@ -168,7 +168,6 @@ OBJECTFILES= \
 	${OBJECTDIR}/_ext/942373304/fgResourceManager.o \
 	${OBJECTDIR}/_ext/1210739651/fgScriptCallback.o \
 	${OBJECTDIR}/_ext/1210739651/fgScriptMT.o \
-	${OBJECTDIR}/_ext/1210739651/fgScriptResource.o \
 	${OBJECTDIR}/_ext/1210739651/fgScriptSubsystem.o \
 	${OBJECTDIR}/_ext/166270660/fgThread.o \
 	${OBJECTDIR}/_ext/166270660/fgThreadSem.o \
@@ -739,10 +738,10 @@ ${OBJECTDIR}/_ext/534589759/fgGuiWindow.o: ../../../src/GUI/fgGuiWindow.cpp
 	${RM} "$@.d"
 	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_GL_BINDING -DFG_USING_OPENGL -DFG_USING_SDL2 -DFG_USING_TINYXML -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/cpp_btree `pkg-config --cflags gl` `pkg-config --cflags sdl2` `pkg-config --cflags SDL2_mixer` `pkg-config --cflags libpng` `pkg-config --cflags zlib` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534589759/fgGuiWindow.o ../../../src/GUI/fgGuiWindow.cpp
 
-${OBJECTDIR}/_ext/477241454/fgGameLogic.o: ../../../src/GameLogic/fgGameLogic.cpp 
+${OBJECTDIR}/_ext/477241454/fgGameMain.o: ../../../src/GameLogic/fgGameMain.cpp 
 	${MKDIR} -p ${OBJECTDIR}/_ext/477241454
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_GL_BINDING -DFG_USING_OPENGL -DFG_USING_SDL2 -DFG_USING_TINYXML -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/cpp_btree `pkg-config --cflags gl` `pkg-config --cflags sdl2` `pkg-config --cflags SDL2_mixer` `pkg-config --cflags libpng` `pkg-config --cflags zlib` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/477241454/fgGameLogic.o ../../../src/GameLogic/fgGameLogic.cpp
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_GL_BINDING -DFG_USING_OPENGL -DFG_USING_SDL2 -DFG_USING_TINYXML -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/cpp_btree `pkg-config --cflags gl` `pkg-config --cflags sdl2` `pkg-config --cflags SDL2_mixer` `pkg-config --cflags libpng` `pkg-config --cflags zlib` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/477241454/fgGameMain.o ../../../src/GameLogic/fgGameMain.cpp
 
 ${OBJECTDIR}/_ext/484399070/fgDeviceQuery.o: ../../../src/Hardware/fgDeviceQuery.cpp 
 	${MKDIR} -p ${OBJECTDIR}/_ext/484399070
@@ -888,11 +887,6 @@ ${OBJECTDIR}/_ext/1210739651/fgScriptMT.o: ../../../src/Scripting/fgScriptMT.cpp
 	${MKDIR} -p ${OBJECTDIR}/_ext/1210739651
 	${RM} "$@.d"
 	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_GL_BINDING -DFG_USING_OPENGL -DFG_USING_SDL2 -DFG_USING_TINYXML -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/cpp_btree `pkg-config --cflags gl` `pkg-config --cflags sdl2` `pkg-config --cflags SDL2_mixer` `pkg-config --cflags libpng` `pkg-config --cflags zlib` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1210739651/fgScriptMT.o ../../../src/Scripting/fgScriptMT.cpp
-
-${OBJECTDIR}/_ext/1210739651/fgScriptResource.o: ../../../src/Scripting/fgScriptResource.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/1210739651
-	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_GL_BINDING -DFG_USING_OPENGL -DFG_USING_SDL2 -DFG_USING_TINYXML -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/cpp_btree `pkg-config --cflags gl` `pkg-config --cflags sdl2` `pkg-config --cflags SDL2_mixer` `pkg-config --cflags libpng` `pkg-config --cflags zlib` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1210739651/fgScriptResource.o ../../../src/Scripting/fgScriptResource.cpp
 
 ${OBJECTDIR}/_ext/1210739651/fgScriptSubsystem.o: ../../../src/Scripting/fgScriptSubsystem.cpp 
 	${MKDIR} -p ${OBJECTDIR}/_ext/1210739651

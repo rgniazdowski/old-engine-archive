@@ -6,7 +6,7 @@
  *
  * FlexiGame source code and any related files can not be copied, modified
  * and/or distributed without the express or written consent from the author.
- *******************************************************/
+ ******************************************************************************/
 
 #include "fgMessageSubsystem.h"
 
@@ -18,27 +18,21 @@ fg::msg::CMessageSubsystem *CSingleton<fg::msg::CMessageSubsystem>::instance = N
 
 using namespace fg;
 
-/**
- * 
- */
-msg::CMessageSubsystem::CMessageSubsystem() { }
+//------------------------------------------------------------------------------
 
-/**
- * 
- */
+msg::CMessageSubsystem::CMessageSubsystem() { }
+//------------------------------------------------------------------------------
+
 msg::CMessageSubsystem::~CMessageSubsystem() {
     destroy();
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- */
 void msg::CMessageSubsystem::clear(void) {
     flushAll();
 }
+//------------------------------------------------------------------------------
 
-/** \brief
- */
 fgBool msg::CMessageSubsystem::destroy(void) {
     flushAll();
 
@@ -47,60 +41,41 @@ fgBool msg::CMessageSubsystem::destroy(void) {
     m_logDebug.close();
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @return 
- */
 fgBool msg::CMessageSubsystem::initialize(void) {
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param pathAll
- * @param pathError
- * @param pathDebug
- */
 void msg::CMessageSubsystem::setLogPaths(const char *pathAll, const char *pathError, const char *pathDebug) {
     setLogAllPath(pathAll);
     setLogErrorPath(pathError);
     setLogDebugPath(pathDebug);
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param pathAll
- */
 void msg::CMessageSubsystem::setLogAllPath(const char *pathAll) {
     if(pathAll)
         m_logAll.setPath(pathAll);
     m_logAll.setMode(util::CRegularFile::Mode::APPEND);
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param pathError
- */
 void msg::CMessageSubsystem::setLogErrorPath(const char *pathError) {
     if(pathError)
         m_logError.setPath(pathError);
     m_logError.setMode(util::CRegularFile::Mode::APPEND);
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param pathDebug
- */
 void msg::CMessageSubsystem::setLogDebugPath(const char *pathDebug) {
     if(pathDebug)
         m_logDebug.setPath(pathDebug);
     m_logDebug.setMode(fg::util::CRegularFile::Mode::APPEND);
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- */
 void msg::CMessageSubsystem::flushAll(void) {
     while(!m_statusVec.empty()) {
         SStatus *back = m_statusVec.back();
@@ -113,12 +88,8 @@ void msg::CMessageSubsystem::flushAll(void) {
     }
     m_statusVec.clear_optimised();
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param msg
- * @return 
- */
 fgBool msg::CMessageSubsystem::pushMessage(SMessage *msg) {
     if(!msg)
         return FG_FALSE;
@@ -126,12 +97,8 @@ fgBool msg::CMessageSubsystem::pushMessage(SMessage *msg) {
     SStatus *newStatus = new SStatus(msg);
     return pushStatus(newStatus);
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param status
- * @return 
- */
 fgBool msg::CMessageSubsystem::pushStatus(SStatus *status) {
     if(!status)
         return FG_FALSE;
@@ -162,13 +129,8 @@ fgBool msg::CMessageSubsystem::pushStatus(SStatus *status) {
         log::PrintStatusToLog(filePtr, status);
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param tagName
- * @param code
- * @param fmt
- */
 void msg::CMessageSubsystem::reportSuccess(const char *tagName, int code, const char *fmt, ...) {
     const char *msgData = NULL;
     char buf[BUFFER_MAX];
@@ -183,13 +145,8 @@ void msg::CMessageSubsystem::reportSuccess(const char *tagName, int code, const 
     SStatus *newStatus = new SStatus();
     pushStatus(newStatus->success(code, msgData));
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param tagName
- * @param code
- * @param fmt
- */
 void msg::CMessageSubsystem::reportWarning(const char *tagName, int code, const char *fmt, ...) {
     const char *msgData = NULL;
     char buf[BUFFER_MAX];
@@ -204,13 +161,8 @@ void msg::CMessageSubsystem::reportWarning(const char *tagName, int code, const 
     SStatus *newStatus = new SStatus();
     pushStatus(newStatus->warning(code, msgData));
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param tagName
- * @param code
- * @param fmt
- */
 void msg::CMessageSubsystem::reportError(const char *tagName, int code, const char *fmt, ...) {
     const char *msgData = NULL;
     char buf[BUFFER_MAX];
@@ -225,13 +177,8 @@ void msg::CMessageSubsystem::reportError(const char *tagName, int code, const ch
     SStatus *newStatus = new SStatus();
     pushStatus(newStatus->error(code, msgData));
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param tagName
- * @param code
- * @param fmt
- */
 void msg::CMessageSubsystem::reportDebug(const char *tagName, int code, const char *fmt, ...) {
     const char *msgData = NULL;
     char buf[BUFFER_MAX];
@@ -246,22 +193,16 @@ void msg::CMessageSubsystem::reportDebug(const char *tagName, int code, const ch
     SStatus *newStatus = new SStatus();
     pushStatus(newStatus->debug(code, msgData));
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @return 
- */
 msg::SStatus *msg::CMessageSubsystem::getLastStatus(void) {
     if(!m_statusVec.empty()) {
         return m_statusVec.back();
     }
     return NULL;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @return 
- */
 msg::SMessage *msg::CMessageSubsystem::getLastMessage(void) {
     if(!m_statusVec.empty()) {
         SStatus *status = m_statusVec.back();
@@ -270,3 +211,4 @@ msg::SMessage *msg::CMessageSubsystem::getLastMessage(void) {
     }
     return NULL;
 }
+//------------------------------------------------------------------------------

@@ -6,78 +6,59 @@
  * 
  * FlexiGame source code and any related files can not be copied, modified 
  * and/or distributed without the express or written consent from the author.
- *******************************************************/
+ ******************************************************************************/
 
-#include "fgGameLogic.h"
+#include "fgGameMain.h"
 #include "Event/fgEventManager.h"
 
 using namespace fg;
 
-/**
- * 
- * @param pEventMgr
- */
-game::CLogic::CLogic(fg::base::CManager* pEventMgr) :
+//------------------------------------------------------------------------------
+
+game::CGameMain::CGameMain(fg::base::CManager* pEventMgr) :
 fg::base::CManager(),
-m_status(Status::GAME_INVALID),
+m_status(Status::INVALID),
 m_currentStageID(0),
 m_currentStageName(),
 m_score(0),
 m_stageScore(0),
 m_playerName() {
     setEventManager(pEventMgr);
-    m_managerType = FG_MANAGER_LOGIC;
+    m_managerType = FG_MANAGER_GAME_MAIN;
     if(pEventMgr)
-        initialize();
+        initialize(); 
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param orig
- */
-game::CLogic::CLogic(const CLogic& orig) {
+game::CGameMain::CGameMain(const CGameMain& orig) {
     // ?? ?? ??
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- */
-game::CLogic::~CLogic() {
+game::CGameMain::~CGameMain() {
     destroy();
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- */
-void game::CLogic::clear(void) {
+void game::CGameMain::clear(void) {
     // ?? ?? ?? 
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @return 
- */
-fgBool game::CLogic::initialize(void) {
+fgBool game::CGameMain::initialize(void) {
     m_init = FG_TRUE;
-    m_managerType = FG_MANAGER_LOGIC;
+    m_managerType = FG_MANAGER_GAME_MAIN;
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @return 
- */
-fgBool game::CLogic::destroy(void) {
+fgBool game::CGameMain::destroy(void) {
     m_init = FG_FALSE;
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param eventType
- * @return 
- */
-fgBool game::CLogic::throwGameEvent(const event::EventType eventType) {
+fgBool game::CGameMain::throwGameEvent(const event::EventType eventType) {
     if(!m_pEventMgr) {
         return FG_FALSE;
     }
@@ -88,66 +69,47 @@ fgBool game::CLogic::throwGameEvent(const event::EventType eventType) {
     static_cast<fg::event::CEventManager *>(m_pEventMgr)->throwEvent(eventType);
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- */
-void game::CLogic::startGameDefault(void) {
+void game::CGameMain::startGameDefault(void) {
     //Elements are pushed into the "back" of the specific container and popped from its "front".
-    m_statusQueue.push(Status::GAME_ACTIVE); // #FIXME
+    m_statusQueue.push(Status::ACTIVE); // #FIXME
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param stageID
- */
-void game::CLogic::startGame(const unsigned int stageID) {
-    m_statusQueue.push(Status::GAME_ACTIVE);
+void game::CGameMain::startGame(const unsigned int stageID) {
+    m_statusQueue.push(Status::ACTIVE);
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param stageName
- */
-void game::CLogic::startGame(const std::string& stageName) {
-    m_statusQueue.push(Status::GAME_ACTIVE);
+void game::CGameMain::startGame(const std::string& stageName) {
+    m_statusQueue.push(Status::ACTIVE);
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param stageName
- */
-void game::CLogic::startGame(const char *stageName) {
-    m_statusQueue.push(Status::GAME_ACTIVE);
+void game::CGameMain::startGame(const char *stageName) {
+    m_statusQueue.push(Status::ACTIVE);
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- */
-void game::CLogic::stopGame(void) {
+void game::CGameMain::stopGame(void) {
     // There will be needed some additional checking
     // Also need to determine how to pass data (event structure)
-    m_statusQueue.push(Status::GAME_STOPPED);
+    m_statusQueue.push(Status::STOPPED);
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- */
-void game::CLogic::pauseGame(void) {
-    m_statusQueue.push(Status::GAME_PAUSED);
+void game::CGameMain::pauseGame(void) {
+    m_statusQueue.push(Status::PAUSED);
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- */
-void game::CLogic::restartGame(void) {
-    m_statusQueue.push(Status::GAME_RESTARTING);
+void game::CGameMain::restartGame(void) {
+    m_statusQueue.push(Status::RESTARTING);
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- */
-void game::CLogic::update(void) {
+void game::CGameMain::update(void) {
 
     //while(!m_statusQueue.empty())
     if(!m_statusQueue.empty()) {
@@ -157,68 +119,68 @@ void game::CLogic::update(void) {
         switch(status) {
 
                 /// Game is active, normal gameplay
-            case Status::GAME_ACTIVE:
+            case Status::ACTIVE:
                 if(m_status != status)
                     throwGameEvent(game::GAME_STARTED);
-                if(m_status == Status::GAME_CONNECTING)
+                if(m_status == Status::CONNECTING)
                     throwGameEvent(game::GAME_CONNECTED); // Are you sure?
 
                 break;
 
                 /// Game is paused, in most cases this displays pause menu
-            case Status::GAME_PAUSED:
+            case Status::PAUSED:
                 if(m_status != status)
                     throwGameEvent(game::GAME_PAUSED);
                 break;
 
                 /// Game is not active/stopped - not even loading, normal nongame menu
-            case Status::GAME_STOPPED:
+            case Status::STOPPED:
                 if(m_status != status)
                     throwGameEvent(game::GAME_STOPPED);
                 break;
 
                 /// Game is loading - loading, populating assets
-            case Status::GAME_LOADING:
+            case Status::LOADING:
                 if(m_status != status)
                     throwGameEvent(game::GAME_LOADING);
                 break;
 
                 /// Game is restarting - releasing any required data, then loading again
-            case Status::GAME_RESTARTING:
+            case Status::RESTARTING:
                 if(m_status != status)
                     throwGameEvent(game::GAME_RESTARTING);
                 break;
 
                 /// Game is stopping - releasing any required data, later back to nongame menu
-            case Status::GAME_STOPPING:
+            case Status::STOPPING:
                 break;
 
                 /// Game is finishing - some midlevel presentation on level ending, showing
                 /// game status, highscores etc, 
-            case Status::GAME_FINISHING:
+            case Status::FINISHING:
                 break;
 
                 /// Game is finished, very similar to the FINISHING status, however this state
                 /// is when level is unloaded (required data released)
-            case Status::GAME_FINISHED:
+            case Status::FINISHED:
                 if(m_status != status)
                     throwGameEvent(game::GAME_FINISHED);
                 break;
 
                 /// Game is connecting to the server
-            case Status::GAME_CONNECTING:
+            case Status::CONNECTING:
                 // ?
                 break;
 
                 /// Game is waiting for some external input (any kind)
-            case Status::GAME_WAITING:
+            case Status::WAITING:
                 if(m_status != status)
                     throwGameEvent(game::GAME_WAITING);
                 break;
 
                 /// Game disconnect from the server - any kind of reason
                 /// This game state is for a very short period (in most cases max 1 frame)
-            case Status::GAME_DISCONNECTED:
+            case Status::DISCONNECTED:
                 if(m_status != status)
                     throwGameEvent(game::GAME_DISCONNECTED);
                 break;
@@ -232,3 +194,4 @@ void game::CLogic::update(void) {
         m_statusQueue.pop();
     }
 }
+//------------------------------------------------------------------------------

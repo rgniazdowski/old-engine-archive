@@ -6,7 +6,7 @@
  *
  * FlexiGame source code and any related files can not be copied, modified
  * and/or distributed without the express or written consent from the author.
- *******************************************************/
+ ******************************************************************************/
 /**
  * Portions Copyright (C) James Boer, 2000
  */
@@ -16,9 +16,8 @@
 
 using namespace fg;
 
-/**
- * Base constructor of the resource object
- */
+//------------------------------------------------------------------------------
+
 resource::CResource::CResource() :
 m_priority(ResourcePriority::LOW),
 m_quality(Quality::UNIVERSAL),
@@ -30,11 +29,8 @@ m_isReady(FG_FALSE) {
     setDefaultID(Quality::UNIVERSAL);
     //FG_LOG_DEBUG("fgResource::fgResource();");
 }
+//------------------------------------------------------------------------------
 
-/**
- * Constructor with additional parameter (path)
- * @param path
- */
 resource::CResource::CResource(const char *path) :
 m_priority(ResourcePriority::LOW),
 m_quality(Quality::UNIVERSAL),
@@ -47,10 +43,8 @@ m_isReady(FG_FALSE) {
     //FG_LOG_DEBUG("fgResource::fgResource(const char *path);");
     setFilePath(path);
 }
+//------------------------------------------------------------------------------
 
-/*
- * Constructor with additional parameter (path)
- */
 resource::CResource::CResource(const std::string& path) :
 m_priority(ResourcePriority::LOW),
 m_quality(Quality::UNIVERSAL),
@@ -63,11 +57,8 @@ m_isReady(FG_FALSE) {
     //FG_LOG_DEBUG("fgResource::fgResource(std::string& path);");
     setFilePath(path);
 }
+//------------------------------------------------------------------------------
 
-/*
- * Clears the class data, this actually does not free allocated memory,
- * just resets base class attributes
- */
 void resource::CResource::clear(void) {
     m_resType = resource::INVALID;
     m_priority = ResourcePriority::LOW;
@@ -81,12 +72,8 @@ void resource::CResource::clear(void) {
     m_pManager = NULL;
     //FG_LOG_DEBUG("fgResource::clear(void);");
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param container
- * @return 
- */
 bool resource::CResource::operator <(CResource& container) {
     if(getPriority() < container.getPriority())
         return true;
@@ -106,12 +93,8 @@ bool resource::CResource::operator <(CResource& container) {
     }
     return false;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param container
- * @return 
- */
 bool resource::CResource::operator >(CResource& container) {
     if(getPriority() < container.getPriority())
         return false;
@@ -131,3 +114,4 @@ bool resource::CResource::operator >(CResource& container) {
     }
     return false;
 }
+//------------------------------------------------------------------------------

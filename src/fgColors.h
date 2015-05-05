@@ -25,13 +25,8 @@
     #include "fgBool.h"
     #include <string>
 
-/**
- *
- */
 namespace fg {
-    /**
-     * 
-     */
+
     namespace colors {
 
         /**

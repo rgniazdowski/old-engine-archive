@@ -6,7 +6,7 @@
  *
  * FlexiGame source code and any related files can not be copied, modified
  * and/or distributed without the express or written consent from the author.
- *******************************************************/
+ ******************************************************************************/
 
 #include "fgTextureManager.h"
 #include "fgTextureResource.h"
@@ -18,6 +18,8 @@
 #include "Event/fgEventManager.h"
 
 using namespace fg;
+
+//------------------------------------------------------------------------------
 
 gfx::CTextureManager::CTextureManager(fg::base::CManager *pResourceMgr) :
 m_pResourceMgr(NULL),
@@ -36,10 +38,12 @@ m_allInVRAM(FG_FALSE) {
     }
     m_managerType = FG_MANAGER_TEXTURE;
 }
+//------------------------------------------------------------------------------
 
 gfx::CTextureManager::~CTextureManager() {
     destroy();
 }
+//------------------------------------------------------------------------------
 
 void gfx::CTextureManager::registerResourceCallbacks(void) {
     if(!m_pEventMgr)
@@ -60,6 +64,7 @@ void gfx::CTextureManager::registerResourceCallbacks(void) {
     m_pEventMgr->addEventCallback(event::MOUSE_RELEASED, m_gameMouseCallback);
     m_pEventMgr->addEventCallback(event::MOUSE_MOTION, m_gameMouseCallback);*/
 }
+//------------------------------------------------------------------------------
 
 void gfx::CTextureManager::unregisterResourceCallbacks(void) {
     if(!m_pEventMgr)
@@ -72,10 +77,12 @@ void gfx::CTextureManager::unregisterResourceCallbacks(void) {
     //m_pEventMgr->removeEventCallback(event::MOUSE_MOTION, m_gameMouseCallback);
 
 }
+//------------------------------------------------------------------------------
 
 void gfx::CTextureManager::clear(void) {
     m_managerType = FG_MANAGER_TEXTURE;
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CTextureManager::destroy(void) {
     unregisterResourceCallbacks();
@@ -87,6 +94,7 @@ fgBool gfx::CTextureManager::destroy(void) {
     m_init = FG_FALSE;
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CTextureManager::initialize(void) {
     if(!m_pResourceMgr)
@@ -95,6 +103,7 @@ fgBool gfx::CTextureManager::initialize(void) {
     m_managerType = FG_MANAGER_TEXTURE;
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
 void gfx::CTextureManager::setResourceManager(fg::base::CManager* pResourceMgr) {
     if(!pResourceMgr)
@@ -113,10 +122,12 @@ void gfx::CTextureManager::setResourceManager(fg::base::CManager* pResourceMgr) 
             registerResourceCallbacks();
     }
 }
+//------------------------------------------------------------------------------
 
 fg::base::CManager* gfx::CTextureManager::getResourceManager(void) const {
     return m_pResourceMgr;
 }
+//------------------------------------------------------------------------------
 
 gfx::STextureID& gfx::CTextureManager::getRefGfxID(const resource::ResourceHandle& texHandle) {
     if(!m_pResourceMgr)
@@ -128,6 +139,7 @@ gfx::STextureID& gfx::CTextureManager::getRefGfxID(const resource::ResourceHandl
     }
     return pTexture->getRefGfxID();
 }
+//------------------------------------------------------------------------------
 
 gfx::STextureID& gfx::CTextureManager::getRefGfxID(const std::string& nameTag) {
     if(!m_pResourceMgr || nameTag.empty())
@@ -139,6 +151,7 @@ gfx::STextureID& gfx::CTextureManager::getRefGfxID(const std::string& nameTag) {
     }
     return pTexture->getRefGfxID();
 }
+//------------------------------------------------------------------------------
 
 gfx::STextureID& gfx::CTextureManager::getRefGfxID(const char *nameTag) {
     if(!m_pResourceMgr || !nameTag)
@@ -150,6 +163,7 @@ gfx::STextureID& gfx::CTextureManager::getRefGfxID(const char *nameTag) {
     }
     return pTexture->getRefGfxID();
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CTextureManager::resourceCreatedHandler(event::CArgumentList * argv) {
     if(!argv)
@@ -181,6 +195,7 @@ fgBool gfx::CTextureManager::resourceCreatedHandler(event::CArgumentList * argv)
     // is not working completely...
     return CTextureManager::uploadToVRAM(pTexture); // force flag
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CTextureManager::allToVRAM(fgBool reupload) {
     if(!m_init) {
@@ -219,6 +234,7 @@ fgBool gfx::CTextureManager::allToVRAM(fgBool reupload) {
     m_allInVRAM = FG_TRUE;
     return result;
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CTextureManager::uploadToVRAM(CTexture *texture, fgBool force) {
     if(!((resource::CResourceManager *)m_pResourceMgr) || !texture)
@@ -260,6 +276,7 @@ fgBool gfx::CTextureManager::uploadToVRAM(CTexture *texture, fgBool force) {
     } // else: if resource is not locked then most likely it is not needed
     return result;
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CTextureManager::uploadToVRAM(const std::string& nameTag, fgBool force) {
     if(!m_pResourceMgr)
@@ -267,6 +284,7 @@ fgBool gfx::CTextureManager::uploadToVRAM(const std::string& nameTag, fgBool for
 
     return uploadToVRAM(nameTag.c_str(), force);
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CTextureManager::uploadToVRAM(const char *nameTag, fgBool force) {
     if(!m_pResourceMgr)
@@ -280,6 +298,7 @@ fgBool gfx::CTextureManager::uploadToVRAM(const char *nameTag, fgBool force) {
     gfx::CTexture *texture = (gfx::CTexture *)resource;
     return uploadToVRAM(texture, force);
 }
+//------------------------------------------------------------------------------
 
 void gfx::CTextureManager::allReleaseNonGFX(void) {
     if(!m_pResourceMgr)
@@ -307,6 +326,7 @@ void gfx::CTextureManager::allReleaseNonGFX(void) {
     }
     ((resource::CResourceManager *)m_pResourceMgr)->refreshMemory();
 }
+//------------------------------------------------------------------------------
 
 void gfx::CTextureManager::allReleaseGFX(void) {
     if(!m_pResourceMgr)
@@ -333,6 +353,7 @@ void gfx::CTextureManager::allReleaseGFX(void) {
     }
     ((resource::CResourceManager *)m_pResourceMgr)->refreshMemory();
 }
+//------------------------------------------------------------------------------
 
 void gfx::CTextureManager::releaseGFX(CTextureResource * texture) {
     if(!texture)
@@ -343,6 +364,7 @@ void gfx::CTextureManager::releaseGFX(CTextureResource * texture) {
         gfx::context::deleteTexture(texGfxID);
     }
 }
+//------------------------------------------------------------------------------
 
 fgBool gfx::CTextureManager::makeTexture(CTextureResource * pTexture) {
     if(!m_pResourceMgr)
@@ -446,3 +468,4 @@ fgBool gfx::CTextureManager::makeTexture(CTextureResource * pTexture) {
     FG_HardwareState->deviceYield();
     return status;
 }
+//------------------------------------------------------------------------------
