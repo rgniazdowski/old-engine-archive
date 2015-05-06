@@ -160,7 +160,7 @@ fgBool gui::CStructureSheetParser::parseWidgetAttributes(CWidget *pWidget,
         snprintf(_tmp, 23, "%d", m_count + rand() % 9000 + (m_count / rand() % 10));
         autoName.append("_").append(_tmp);
 
-        snprintf(_tmp, 23, "%d", fgHashFunc::SDBM(autoName.c_str()) % 200000 + fgHashFunc::DEK(autoName.c_str()) % 30000); // #FIXME
+        snprintf(_tmp, 23, "%d", util::hash::SDBM(autoName.c_str()) % 200000 + util::hash::DEK(autoName.c_str()) % 30000); // #FIXME
         autoName.append("_").append(_tmp);
         pWidget->setName(autoName);
     }

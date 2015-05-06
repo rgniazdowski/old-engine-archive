@@ -259,17 +259,25 @@ namespace fg {
             inline size_type capacity(void) const {
                 return base_type::capacity();
             }
-            /***/
+            /**
+             *
+             * @param res_size
+             */
             void reserve(size_type res_size) {
                 base_type::reserve(res_size);
                 calculateHash();
             }
-            /***/
+            /**
+             *
+             */
             void clear(void) {
                 base_type::clear();
                 calculateHash();
             }
-            /***/
+            /**
+             *
+             * @return
+             */
             bool empty(void) const {
                 return base_type::empty();
             }
@@ -567,8 +575,6 @@ namespace fg {
             }
 
         public:
-
-        public:
             /**
              * 
              * @param nameTag
@@ -659,7 +665,7 @@ namespace fg {
              * 
              */
             void calculateHash(void) {
-                m_stringHash = fgHashFunc::DJB(c_str());
+                m_stringHash = hash::DJB(c_str());
                 m_hash16 = (fgRawMagic)(m_stringHash & 0xFFFF);
             }
 

@@ -17,251 +17,195 @@
 #include "fgHashFunc.h"
 #include <cstring>
 
-/**
- * 
- */
-fgHashFunc::fgHashFunc() { }
+using namespace fg;
 
-/**
- * 
- * @param orig
- */
-fgHashFunc::fgHashFunc(const fgHashFunc& orig) { }
+//------------------------------------------------------------------------------
 
-/**
- * 
- */
-fgHashFunc::~fgHashFunc() { }
-
-/**
- * 
- * @param str
- * @return 
- */
-unsigned int fgHashFunc::RS(const char *str) {
+unsigned int util::hash::RS(const char *str) {
     unsigned int b = 378551;
     unsigned int a = 63689;
-    unsigned int hash = 0;
+    unsigned int hashValue = 0;
     unsigned int c = 0;
     if(!str) {
-        return hash;
+        return hashValue;
     }
 
     while((c = *str++)) {
-        hash = hash * a + c;
+        hashValue = hashValue * a + c;
         a = a * b;
     }
 
-    return hash;
+    return hashValue;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param str
- * @return 
- */
-unsigned int fgHashFunc::JS(const char *str) {
-    unsigned int hash = 1315423911;
+unsigned int util::hash::JS(const char *str) {
+    unsigned int hashValue = 1315423911;
     unsigned int c = 0;
     if(!str) {
-        return hash;
+        return hashValue;
     }
 
     while((c = *str++)) {
-        hash ^= ((hash << 5) + c + (hash >> 2));
+        hashValue ^= ((hashValue << 5) + c + (hashValue >> 2));
     }
 
-    return hash;
+    return hashValue;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param str
- * @return 
- */
-unsigned int fgHashFunc::PJW(const char *str) {
+unsigned int util::hash::PJW(const char *str) {
     unsigned int BitsInUnsignedInt = (unsigned int)(sizeof (unsigned int) * 8);
     unsigned int ThreeQuarters = (unsigned int)((BitsInUnsignedInt * 3) / 4);
     unsigned int OneEighth = (unsigned int)(BitsInUnsignedInt / 8);
     unsigned int HighBits = (unsigned int)(0xFFFFFFFF) << (BitsInUnsignedInt - OneEighth);
-    unsigned int hash = 0;
+    unsigned int hashValue = 0;
     unsigned int test = 0;
     unsigned int c = 0;
     if(!str) {
-        return hash;
+        return hashValue;
     }
 
     while((c = *str++)) {
-        hash = (hash << OneEighth) + c;
+        hashValue = (hashValue << OneEighth) + c;
 
-        if((test = hash & HighBits) != 0) {
-            hash = ((hash ^ (test >> ThreeQuarters)) & (~HighBits));
+        if((test = hashValue & HighBits) != 0) {
+            hashValue = ((hashValue ^ (test >> ThreeQuarters)) & (~HighBits));
         }
     }
 
-    return hash;
+    return hashValue;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param str
- * @return 
- */
-unsigned int fgHashFunc::ELF(const char *str) {
-    unsigned int hash = 0;
+unsigned int util::hash::ELF(const char *str) {
+    unsigned int hashValue = 0;
     unsigned int x = 0;
     unsigned int c = 0;
     if(!str) {
-        return hash;
+        return hashValue;
     }
 
     while((c = *str++)) {
-        hash = (hash << 4) + c;
-        if((x = hash & 0xF0000000L) != 0) {
-            hash ^= (x >> 24);
+        hashValue = (hashValue << 4) + c;
+        if((x = hashValue & 0xF0000000L) != 0) {
+            hashValue ^= (x >> 24);
         }
-        hash &= ~x;
+        hashValue &= ~x;
     }
 
-    return hash;
+    return hashValue;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param str
- * @return 
- */
-unsigned int fgHashFunc::BKDR(const char *str) {
+unsigned int util::hash::BKDR(const char *str) {
     unsigned int seed = 131; // 31 131 1313 13131 131313 etc..
-    unsigned int hash = 0;
+    unsigned int hashValue = 0;
     unsigned int c = 0;
     if(!str) {
-        return hash;
+        return hashValue;
     }
 
     while((c = *str++)) {
-        hash = (hash * seed) + c;
+        hashValue = (hashValue * seed) + c;
     }
 
-    return hash;
+    return hashValue;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param str
- * @return 
- */
-unsigned int fgHashFunc::SDBM(const char *str) {
-    unsigned int hash = 0;
+unsigned int util::hash::SDBM(const char *str) {
+    unsigned int hashValue = 0;
     unsigned int c = 0;
     if(!str) {
-        return hash;
+        return hashValue;
     }
 
     while((c = *str++)) {
-        hash = c + (hash << 6) + (hash << 16) - hash;
+        hashValue = c + (hashValue << 6) + (hashValue << 16) - hashValue;
     }
 
-    return hash;
+    return hashValue;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param str
- * @return 
- */
-unsigned int fgHashFunc::DJB(const char *str) {
-    unsigned int hash = 5381;
+unsigned int util::hash::DJB(const char *str) {
+    unsigned int hashValue = 5381;
     unsigned int c = 0;
     if(!str) {
-        return hash;
+        return hashValue;
     }
 
     while((c = *str++)) {
-        hash = ((hash << 5) + hash) + c;
+        hashValue = ((hashValue << 5) + hashValue) + c;
     }
 
-    return hash;
+    return hashValue;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param str
- * @return 
- */
-unsigned int fgHashFunc::DEK(const char *str) {
-    unsigned int hash = 0;
+unsigned int util::hash::DEK(const char *str) {
+    unsigned int hashValue = 0;
     unsigned int c = 0;
     if(!str) {
-        return hash;
+        return hashValue;
     }
-    hash = static_cast<unsigned int>(strlen(str));
+    hashValue = static_cast<unsigned int>(strlen(str));
 
     while((c = *str++)) {
-        hash = ((hash << 5) ^ (hash >> 27)) ^ c;
+        hashValue = ((hashValue << 5) ^ (hashValue >> 27)) ^ c;
     }
 
-    return hash;
+    return hashValue;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param str
- * @return 
- */
-unsigned int fgHashFunc::BP(const char *str) {
-    unsigned int hash = 0;
+unsigned int util::hash::BP(const char *str) {
+    unsigned int hashValue = 0;
     unsigned int c = 0;
     if(!str) {
-        return hash;
+        return hashValue;
     }
 
     while((c = *str++)) {
-        hash = hash << 7 ^ c;
+        hashValue = hashValue << 7 ^ c;
     }
 
-    return hash;
+    return hashValue;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param str
- * @return 
- */
-unsigned int fgHashFunc::FNV(const char *str) {
+unsigned int util::hash::FNV(const char *str) {
     const unsigned int fnv_prime = 0x811C9DC5;
-    unsigned int hash = 0;
+    unsigned int hashValue = 0;
     unsigned int c = 0;
     if(!str) {
-        return hash;
+        return hashValue;
     }
 
     while((c = *str++)) {
-        hash *= fnv_prime;
-        hash ^= c;
+        hashValue *= fnv_prime;
+        hashValue ^= c;
     }
 
-    return hash;
+    return hashValue;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param str
- * @return 
- */
-unsigned int fgHashFunc::AP(const char *str) {
-    unsigned int hash = 0xAAAAAAAA;
+unsigned int util::hash::AP(const char *str) {
+    unsigned int hashValue = 0xAAAAAAAA;
     unsigned int c = 0;
     size_t i = 0;
     if(!str) {
-        return hash;
+        return hashValue;
     }
 
     while((c = *str++)) {
         i++;
-        hash ^= ((i & 1) == 0) ? ((hash << 7) ^ c * (hash >> 3)) :
-                (~((hash << 11) + (c ^ (hash >> 5))));
+        hashValue ^= ((i & 1) == 0) ? ((hashValue << 7) ^ c * (hashValue >> 3)) :
+                (~((hashValue << 11) + (c ^ (hashValue >> 5))));
     }
 
-    return hash;
+    return hashValue;
 }
+//------------------------------------------------------------------------------
