@@ -119,21 +119,35 @@ namespace fg {
         fgBool isExit(void) const {
             return m_isExit;
         }
+        /**
+         *
+         * @return
+         */
+        fgBool isFrameFreeze(void) const {
+            return m_isFrameFreeze;
+        }
 
     private:
         /**
          * 
          * @param slow
          */
-        void setSlow(fgBool slow) {
+        void setSlow(fgBool slow = FG_TRUE) {
             m_slow = slow;
         }
         /**
          * 
          * @param exit
          */
-        void setExit(fgBool exit) {
+        void setExit(fgBool exit = FG_TRUE) {
             m_isExit = exit;
+        }
+        /**
+         *
+         * @param freeze
+         */
+        void setFrameFreeze(fgBool freeze = FG_TRUE) {
+            m_isFrameFreeze = freeze;
         }
     public:
         /**
@@ -191,6 +205,8 @@ namespace fg {
         fgBool m_isExit;
         ///
         fgBool m_isSuspend;
+        ///
+        fgBool m_isFrameFreeze;
         #if defined(FG_USING_MARMALADE) // #FIXME
         ///
         fgDeviceQuery m_deviceQuery;

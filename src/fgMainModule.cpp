@@ -90,6 +90,7 @@ m_appInit(FG_FALSE),
 m_slow(FG_FALSE),
 m_isExit(FG_FALSE),
 m_isSuspend(FG_FALSE),
+m_isFrameFreeze(FG_FALSE),
 #if defined(FG_USING_MARMALADE) // #FIXME
 m_deviceQuery(),
 #endif /* FG_USING_MARMALADE */
@@ -540,9 +541,11 @@ fgBool CMainModule::mainLoopStep(void) {
         profile::g_debugProfiling->begin("Game::display");
     }
 #endif
-    // well for now drawing and all update functions will be called in one place (one thread)
-    // however it needs changing
-    m_engineMain->display();
+    if(!m_isFrameFreeze) {
+        // well for now drawing and all update functions will be called in one place (one thread)
+        // however it needs changing
+        m_engineMain->display();
+    }
 
 #if defined(FG_DEBUG)
     if(g_DebugConfig.isDebugProfiling) {
