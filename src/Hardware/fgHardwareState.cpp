@@ -6,7 +6,7 @@
  *
  * FlexiGame source code and any related files can not be copied, modified
  * and/or distributed without the express or written consent from the author.
- *******************************************************/
+ ******************************************************************************/
 
 #include "fgBuildConfig.h"
 #include "fgCommon.h"
@@ -16,43 +16,34 @@
 #include <cstdlib>
 #include <cmath>
 
-#if defined FG_USING_MARMALADE
+#if defined(FG_USING_MARMALADE)
 #include "s3eDevice.h"
 #endif // FG_USING_MARMALADE
 
 #include "Util/fgTime.h"
 
-#if defined FG_USING_DPI_INFO
+#if defined(FG_USING_DPI_INFO)
 #include "dpiInfo.h"
 #endif // FG_USING_DPI_INFO
 
-template <>
-bool CSingleton<fgHardwareState>::instanceFlag = false;
+using namespace fg;
 
-template <>
-fgHardwareState *CSingleton<fgHardwareState>::instance = NULL;
+//------------------------------------------------------------------------------
 
-/**
- * Private constructor
- */
-fgHardwareState::fgHardwareState() : m_screenHeight(0), m_screenWidth(0),
+CHardwareState::CHardwareState() : m_screenHeight(0), m_screenWidth(0),
 m_dispArea(0), m_fps(0.0f), m_dpi(0) { }
+//------------------------------------------------------------------------------
 
-/**
- * Private destructor
- */
-fgHardwareState::~fgHardwareState() {
+CHardwareState::~CHardwareState() {
 #if defined FG_USING_DPI_INFO
     if(0 != m_dpi) {
         DPI::dpiTerminate();
     }
 #endif // FG_USING_DPI_INFO
 }
+//------------------------------------------------------------------------------
 
-/**
- * Inits DPI. Called from GL init code, when display is ready
- */
-void fgHardwareState::initDPI() {
+void CHardwareState::initDPI(void) {
 #if defined FG_USING_DPI_INFO
     DPI::dpiInit();
 
@@ -76,17 +67,16 @@ void fgHardwareState::initDPI() {
 
     m_dpiAndAreaCoef = sqrtf(float(display_area)) / m_dpi;
 }
+//------------------------------------------------------------------------------
 
-void fgHardwareState::deviceYield(int ms) {
+void CHardwareState::deviceYield(int ms) {
 #if defined FG_USING_MARMALADE
     s3eDeviceYield(ms);
 #endif // FG_USING_MARMALADE
 }
+//------------------------------------------------------------------------------
 
-/**
- * Compute FPS
- */
-float fgHardwareState::calculateFPS(void) {
+float CHardwareState::calculateFPS(void) {
     static int nframes = 0;
     static float fps_time = 0.0f;
     nframes++;
@@ -97,3 +87,4 @@ float fgHardwareState::calculateFPS(void) {
     }
     return m_fps;
 }
+//------------------------------------------------------------------------------

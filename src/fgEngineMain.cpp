@@ -108,6 +108,7 @@ m_gameFreeLookCallback(NULL) {
 #if !defined(FG_USING_PLATFORM_ANDROID)
     m_joypadController->initialize(); // #FIXME
 #endif
+    m_hardwareState = new CHardwareState();
     registerGameCallbacks();
 }
 //------------------------------------------------------------------------------
@@ -202,6 +203,9 @@ CEngineMain::~CEngineMain() {
         delete m_scriptSubsystem;
         m_scriptSubsystem = NULL;
     }
+    if(m_hardwareState)
+        delete m_hardwareState;
+    m_hardwareState = NULL;
     // Free registered human readable colors - these are from HTML table
     colors::freeColors();
     // Unregister all error codes #FIXME
@@ -283,7 +287,7 @@ void CEngineMain::setEventManager(void) {
 
 fgBool CEngineMain::initSubsystems(void) {
     float t1 = timesys::ms();
-    FG_HardwareState->deviceYield(0); // #FIXME - device yield...
+    // DEVICE YIELD
     if(m_gfxMain)
         return FG_FALSE;
     m_gfxMain = new gfx::CGfxMain();
@@ -307,8 +311,9 @@ fgBool CEngineMain::initSubsystems(void) {
         m_guiMain = new gui::CGuiMain(guiPath, guiPath);
     }
     m_guiMain->setScreenSize(w, h);
-    FG_HardwareState->setScreenDimensions(w, h);
-    FG_HardwareState->initDPI();
+    // #FIXME #HARDWARE_STATE #SCREENSIZE
+    m_hardwareState->setScreenDimensions(w, h);
+    m_hardwareState->initDPI();
     if(!m_qualityMgr)
         m_qualityMgr = new CQualityManager(w * h);
     if(!m_resourceFactory)
@@ -336,7 +341,7 @@ fgBool CEngineMain::initSubsystems(void) {
     m_resourceFactory->registerResource(resource::PARTICLE_EFFECT, &gfx::CParticleEffect::createResource);
 
 
-    FG_HardwareState->deviceYield(0); // #FIXME - device yield...
+    // DEVICE YIELD
     if(!m_resourceMgr)
         m_resourceMgr = new resource::CResourceManager(m_resourceFactory, m_qualityMgr, this);
 #if defined(FG_USING_MARMALADE)
@@ -349,13 +354,13 @@ fgBool CEngineMain::initSubsystems(void) {
     // Setup GFX Main external pointers
     m_gfxMain->setupResourceManager(m_resourceMgr);
     //m_gfxMain->generateBuiltInData();
-    FG_HardwareState->deviceYield(0); // #FIXME - device yield...
+    // DEVICE YIELD
     ////////////////////////////////////////////////////////////////////////////
     // Resource Manager and GFX is now fully initialized (with default shader)
     // Now is the moment to display something on screen - preload some texture
     // This will preload any required textures and upload them to the GFX
     m_gfxMain->setupLoader();
-    FG_HardwareState->deviceYield(0); // #FIXME - device yield...
+    // DEVICE YIELD
     m_gfxMain->getLoader()->update(0.0f);
 
     ////////////////////////////////////////////////////////////////////////////
@@ -378,9 +383,9 @@ fgBool CEngineMain::initSubsystems(void) {
         }
     }
     if(m_inputHandler)
-        m_inputHandler->initialize();
+        m_inputHandler->initialize(m_hardwareState);
     m_gfxMain->getLoader()->update(10.0f);
-    FG_HardwareState->deviceYield(0); // #FIXME - device yield...
+    // DEVICE YIELD
     // Setup GUI Main external pointers
     m_guiMain->setResourceManager(m_resourceMgr);
     m_guiMain->setShaderManager(m_gfxMain->getShaderManager());
@@ -408,7 +413,7 @@ fgBool CEngineMain::initSubsystems(void) {
     if(!m_scriptSubsystem->initialize()) {
         FG_LOG_ERROR("Script: Initialization of Script module finished with errors");
     }
-    FG_HardwareState->deviceYield(0); // #FIXME - device yield...
+    // DEVICE YIELD
     float t2 = timesys::ms();
     FG_LOG_DEBUG("Main: All subsystems initialized in %.2f seconds", (t2 - t1) / 1000.0f);
     m_gfxMain->getLoader()->update(10.0f);
@@ -483,7 +488,7 @@ fgBool CEngineMain::loadResources(void) {
 
     std::string sPlainEasyShaderName("sPlainEasy");
     gfx::CShaderProgram *program = m_gfxMain->getShaderManager()->get(sPlainEasyShaderName);
-    FG_HardwareState->deviceYield(0); // #FIXME - device yield...
+    // DEVICE YIELD
     FG_LOG_DEBUG("Will now try to compile and link 'sPlainEasy' shader program");
     if(program) {
         // Compile all required shaders
@@ -495,7 +500,7 @@ fgBool CEngineMain::loadResources(void) {
     {
         std::string sOrthoEasyShaderName("sOrthoEasy");
         gfx::CShaderProgram *program = m_gfxMain->getShaderManager()->get(sOrthoEasyShaderName);
-        FG_HardwareState->deviceYield(0); // #FIXME - device yield...
+        // DEVICE YIELD
         FG_LOG_DEBUG("Init: Will now try to compile and link 'sOrthoEasyShader' shader program");
         if(program) {
             program->compile();
@@ -506,7 +511,7 @@ fgBool CEngineMain::loadResources(void) {
     {
         std::string sSkyBoxEasyShaderName("sSkyBoxEasy");
         gfx::CShaderProgram *program = m_gfxMain->getShaderManager()->get(sSkyBoxEasyShaderName);
-        FG_HardwareState->deviceYield(0); // #FIXME - device yield...
+        // DEVICE YIELD
         FG_LOG_DEBUG("Init: Will now try to compile and link 'sSkyBoxEasyShader' shader program");
         if(program) {
             program->compile();
@@ -514,7 +519,7 @@ fgBool CEngineMain::loadResources(void) {
         }
     }
     m_gfxMain->getLoader()->update(10.0f);
-    FG_HardwareState->deviceYield(0); // #FIXME - device yield...
+    // DEVICE YIELD
 #if 1
     ////////////////////////////////////////////////////////////////////////////
     // Can also create special event for GFX - upload static vertex data
@@ -527,7 +532,7 @@ fgBool CEngineMain::loadResources(void) {
         float t2 = timesys::ms();
         FG_LOG_DEBUG("WHOLE OBJECT CREATION TOOK: %.2f seconds", (t2 - t1) / 1000.0f);
     }
-    FG_HardwareState->deviceYield(0);
+    // DEVICE YIELD
     m_gfxMain->getLoader()->update(10.0f);
     ////////////////////////////////////////////////////////////////////////////
 #endif
@@ -577,7 +582,7 @@ fgBool CEngineMain::closeSybsystems(void) {
     CEngineMain::releaseResources();
     if(m_inputHandler)
         m_inputHandler->setEventManager(NULL);
-    FG_HardwareState->deleteInstance(); // #KILL_ALL_SINGLETONS
+    // DEVICE YIELD
     if(m_gfxMain)
         m_gfxMain->closeGFX();
 
@@ -656,7 +661,7 @@ fgBool CEngineMain::render(void) {
         return FG_FALSE;
     }
     timesys::markTick(timesys::TICK_RENDER);
-    FG_HardwareState->calculateFPS();
+    m_hardwareState->calculateFPS();
     executeEvent(event::RENDER_SHOT);
 #if !defined(FG_USING_MARMALADE)
     if(fpsc < 0) {
@@ -666,7 +671,7 @@ fgBool CEngineMain::render(void) {
     fpsc++;
     //FG_LOG_DEBUG(".......... RENDER [%d] ....................\n", fpsc);
     if(fpsc % 128 == 0) {
-        FG_LOG_INFO("# FPS: %.2f", FG_HardwareState->getFPS());
+        //        FG_LOG_INFO("# FPS: %.2f", m_hardwareState->getFPS());
     }
     if(fpsc > 256) {
         FG_LOG_DEBUG("# Screen size: %d x %d", m_gfxMain->getMainWindow()->getWidth(),
@@ -677,14 +682,13 @@ fgBool CEngineMain::render(void) {
                      (int)m_guiMain->getScreenSize().y);
         fpsc = 0;
     }
-    //fpsc++;
 #if defined(FG_DEBUG)
     if(g_DebugConfig.isDebugProfiling) {
         profile::g_debugProfiling->begin("GFX::render");
     }
 #endif
     m_gfxMain->render();
-    FG_HardwareState->deviceYield();
+    // DEVICE YIELD
 #if defined(FG_DEBUG)
     if(g_DebugConfig.isDebugProfiling) {
         profile::g_debugProfiling->end("GFX::render");
@@ -703,7 +707,7 @@ fgBool CEngineMain::render(void) {
     }
 #endif
     gfx::context::setBlend(FG_FALSE); // #FIXME
-    FG_HardwareState->deviceYield();
+    // DEVICE YIELD
     m_gfxMain->getMainWindow()->swapBuffers();
     return FG_TRUE;
 }
@@ -738,11 +742,11 @@ fgBool CEngineMain::update(fgBool force) {
     // Also SDL events throwing needs some fixing
     if(m_inputHandler)
         m_inputHandler->processData();
-    FG_HardwareState->deviceYield(0);
+    // DEVICE YIELD
     // Well this is really useful system, in the end GUI and others will be hooked
     // to EventManager so everything what needs to be done is done in this function
     event::CEventManager::executeEvents();
-    FG_HardwareState->deviceYield(0);
+    // DEVICE YIELD
     // This must be called  when you wish the manager to check for discardable
     // resources.  Resources will only be swapped out if the maximum allowable
     // limit has been reached, and it will discard them from lowest to highest

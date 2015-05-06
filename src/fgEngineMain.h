@@ -39,6 +39,8 @@ FG_TAG_TEMPLATE_ID_AUTO(fg::CEngineMain, FG_TAG_ENGINE_MAIN_NAME);
 
 namespace fg {
 
+    class CHardwareState;
+
     /// Tag type for the GameMain class
     typedef FG_TAG_ENGINE_MAIN EngineMainTag;
 
@@ -332,6 +334,8 @@ namespace fg {
         util::CConfig *m_mainConfig;
         /// Main Quality Manager
         CQualityManager *m_qualityMgr;
+        ///
+        CHardwareState *m_hardwareState;
         /// Main Resource Manager
         resource::CResourceManager *m_resourceMgr;
         /// Resource factory object - registers create() methods for Resource Objects

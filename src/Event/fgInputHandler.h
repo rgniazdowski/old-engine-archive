@@ -47,6 +47,8 @@ namespace fg {
 
 namespace fg {
 
+    class CHardwareState;
+
     namespace event {
 
         /**
@@ -110,7 +112,20 @@ namespace fg {
             ///
             fgBool m_pointerAvailable;
 
-            ///
+            /**
+             * Detects if swipe occurred and computes its size.
+             *
+             * The initialPointer is used to detect occurrence,
+             * startPointer to compute size.
+             *
+             * @param min_offset_for_swipe
+             * @param startPointer
+             * @param endPointer
+             * @param initialSwipePointer
+             * @param minusSwipe
+             * @param plusSwipe
+             * @param swipeSize
+             */
             void interpretSwipes(int min_offset_for_swipe,
                                  int startPointer,
                                  int endPointer,
@@ -133,7 +148,7 @@ namespace fg {
             /**
              * 
              */
-            void initialize(void);
+            void initialize(const CHardwareState* pHardwareState);
             /**
              * 
              */
@@ -270,24 +285,25 @@ namespace fg {
              */
             static int32_t multiTouchButtonHandler(void* systemData, void* userData);
             /**
-             * 
-             * @param systemData
-             * @param userData
-             * @return 
+             * Touch motion HANDLER
+             *
+             * @param systemData Pointer to the event structure
+             * @param userData Pointer to the handling class - fgInputHandler
+             * @return
              */
             static int32_t multiTouchMotionHandler(void* systemData, void* userData);
             /**
-             * 
-             * @param systemData
-             * @param userData
-             * @return 
+             * Single press/release HANDLER
+             * @param systemData Pointer to the event structure
+             * @param userData Pointer to the handling class - fgInputHandler
+             * @return
              */
             static int32_t singleTouchButtonHandler(void* systemData, void* userData);
             /**
-             * 
-             * @param systemData
-             * @param userData
-             * @return 
+             * Single motion HANDLER
+             * @param systemData Pointer to the event structure
+             * @param userData Pointer to the handling class - fgInputHandler
+             * @return
              */
             static int32_t singleTouchMotionHandler(void* systemData, void* userData);
 

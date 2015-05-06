@@ -16,9 +16,9 @@
 
 #ifndef FG_INC_GUI_SCREEN_GRID
     #define FG_INC_GUI_SCREEN_GRID
-
-    #include "Math/fgMathLib.h"
-    #include "fgSingleton.h"
+    #if 0
+        #include "Math/fgMathLib.h"
+        #include "fgSingleton.h"
 
 namespace fg {
     namespace gui {
@@ -86,10 +86,10 @@ namespace fg {
     };
 };
 
-    #define SCREEN_TRANSFORM(POS)           fg::gui::CScreenGrid::getInstance()->transformToPixels(POS)
-    #define SCREEN_TRANSFORM_POS(STRUCT_)   fg::gui::CScreenGrid::getInstance()->transform(STRUCT_)
-    #define SCREEN_TRANSFORM_2D(POSX, POSY) fg::gui::CScreenGrid::getInstance()->transform(POSX, POSY)
+        #define SCREEN_TRANSFORM(POS)           fg::gui::CScreenGrid::getInstance()->transformToPixels(POS)
+        #define SCREEN_TRANSFORM_POS(STRUCT_)   fg::gui::CScreenGrid::getInstance()->transform(STRUCT_)
+        #define SCREEN_TRANSFORM_2D(POSX, POSY) fg::gui::CScreenGrid::getInstance()->transform(POSX, POSY)
 
-    #define FG_GuiScreenGrid                fg::gui::CScreenGrid::getInstance();
-
+        #define FG_GuiScreenGrid                fg::gui::CScreenGrid::getInstance();
+    #endif
 #endif /* FG_INC_GUI_SCREEN_GRID */

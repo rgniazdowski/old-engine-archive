@@ -486,7 +486,7 @@ fgBool CMainModule::initProgram(void) {
  * @return
  */
 fgBool CMainModule::mainLoopStep(void) {
-    FG_HardwareState->deviceYield(0);
+    // DEVICE YIELD FUNCTION IN HERE
     if(!m_appInit) {
         FG_LOG_DEBUG("MainModule: Loop step - application not initialized...");
         return FG_FALSE;
@@ -531,8 +531,7 @@ fgBool CMainModule::mainLoopStep(void) {
     if(g_DebugConfig.isDebugProfiling) {
         profile::g_debugProfiling->begin("Game::update");
     }
-#endif
-    FG_HardwareState->deviceYield(0);
+#endif    
     m_engineMain->update();
 
 #if defined(FG_DEBUG)
@@ -700,11 +699,11 @@ extern "C" int main(int argc, char *argv[]) {
 #endif /* FG_USING_MARMALADE */		
         return 1;
     }
-    FG_HardwareState->deviceYield(0);
+    // DEVICE YIELD FUNCTION IN HERE
 
     while(FG_TRUE) {
         fgBool status = mainModule->mainLoopStep();
-        FG_HardwareState->deviceYield(1);
+        // DEVICE YIELD FUNCTION IN HERE
 #if defined(FG_USING_MARMALADE)
         s3eDeviceBacklightOn(); // #FIXME // need to wrap it in something else
 #endif /* FG_USING_MARMALADE */

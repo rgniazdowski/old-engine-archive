@@ -21,7 +21,6 @@
 #include "Scene/fgGfxSceneEvent.h"
 
 #include "Textures/fgTextureResource.h"
-#include "Hardware/fgHardwareState.h"
 #include "Resource/fgResourceManager.h"
 #include "Event/fgEventManager.h"
 #include "Util/fgProfiling.h"
@@ -412,7 +411,7 @@ void gfx::CGfxMain::setupLoader(void) {
         return;
     }
     m_textureMgr->uploadToVRAM(texture, FG_TRUE);
-    FG_HardwareState->deviceYield(1);
+    // DEVICE YIELD
     m_loader->setSplashTexture(texture);
     //
     // ProgressBar texture load and upload
@@ -426,7 +425,7 @@ void gfx::CGfxMain::setupLoader(void) {
         return;
     }
     m_textureMgr->uploadToVRAM(texture, FG_TRUE);
-    FG_HardwareState->deviceYield(1);
+    // DEVICE YIELD
     m_loader->setProgressTexture(texture);
 
 }

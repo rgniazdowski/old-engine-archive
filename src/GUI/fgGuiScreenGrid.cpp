@@ -7,7 +7,7 @@
  * FlexiGame source code and any related files can not be copied, modified 
  * and/or distributed without the express or written consent from the author.
  *******************************************************/
-
+#if 0
 #include "Hardware/fgHardwareState.h"
 
 #include "fgGuiScreenGrid.h"
@@ -101,3 +101,5 @@ Vector2f gui::CScreenGrid::transform(float grid_position_x, float grid_position_
     transformed.y = (float)transformToPixels(grid_position_y);
     return transformed;
 }
+
+#endif

@@ -12,7 +12,6 @@
 #include "fgTextureResource.h"
 
 #include "Hardware/fgQualityManager.h"
-#include "Hardware/fgHardwareState.h"
 #include "Resource/fgResourceManager.h"
 #include "Event/fgEventDefinitions.h"
 #include "Event/fgEventManager.h"
@@ -239,7 +238,7 @@ fgBool gfx::CTextureManager::allToVRAM(fgBool reupload) {
 fgBool gfx::CTextureManager::uploadToVRAM(CTexture *texture, fgBool force) {
     if(!((resource::CResourceManager *)m_pResourceMgr) || !texture)
         return FG_FALSE;
-    FG_HardwareState->deviceYield();
+    // DEVICE YIELD
     resource::ResourceType resType = texture->getResourceType();
     Quality quality = texture->getQuality();
     if(!((resType == resource::TEXTURE || resType == resource::FONT))) {
@@ -289,7 +288,7 @@ fgBool gfx::CTextureManager::uploadToVRAM(const std::string& nameTag, fgBool for
 fgBool gfx::CTextureManager::uploadToVRAM(const char *nameTag, fgBool force) {
     if(!m_pResourceMgr)
         return FG_FALSE;
-    FG_HardwareState->deviceYield();
+    // DEVICE YIELD
     resource::CResource *resource = ((resource::CResourceManager *)m_pResourceMgr)->get(nameTag);
     if(!resource)
         return FG_FALSE;
@@ -369,7 +368,7 @@ void gfx::CTextureManager::releaseGFX(CTextureResource * texture) {
 fgBool gfx::CTextureManager::makeTexture(CTextureResource * pTexture) {
     if(!m_pResourceMgr)
         return FG_FALSE;
-    FG_HardwareState->deviceYield();
+    // DEVICE YIELD
     if(!pTexture) {
         FG_LOG_ERROR("GFX: Cannot upload texture - texture resource is NULL");
         return FG_FALSE;
@@ -465,7 +464,7 @@ fgBool gfx::CTextureManager::makeTexture(CTextureResource * pTexture) {
         FG_LOG_DEBUG("GFX: Texture [%s] dimensions: %dx%d", pTexture->getNameStr(), pTexture->getWidth(), pTexture->getHeight());
     }
     glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
-    FG_HardwareState->deviceYield();
+    // DEVICE YIELD
     return status;
 }
 //------------------------------------------------------------------------------

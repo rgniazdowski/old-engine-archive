@@ -6,7 +6,7 @@
  * 
  * FlexiGame source code and any related files can not be copied, modified 
  * and/or distributed without the express or written consent from the author.
- *******************************************************/
+ ******************************************************************************/
 
 #include "fgCommon.h"
 #include "fgInputHandler.h"
@@ -33,6 +33,8 @@
 const unsigned int fg::event::CInputHandler::MAX_TOUCH_POINTS = FG_INPUT_MAX_TOUCH_POINTS;
 
 using namespace fg;
+
+//------------------------------------------------------------------------------
 
 /**
  * 
@@ -65,12 +67,10 @@ m_pointerAvailable(FG_FALSE) {
     memset((void *)m_rawTouches, 0, sizeof (m_rawTouches));
     memset((void *)m_rawTouchesProcessed, 0, sizeof (m_rawTouchesProcessed));
 }
+//------------------------------------------------------------------------------
 
-/**
- *
- */
-void event::CInputHandler::initialize(void) {
-    int DispArea = FG_HardwareState->getDisplayArea();
+void event::CInputHandler::initialize(const CHardwareState* pHardwareState) {
+    int DispArea = pHardwareState->getDisplayArea();
 
     //
     // Reference DPI and RESOLUTION – of iPod 3Gen
@@ -93,9 +93,9 @@ void event::CInputHandler::initialize(void) {
     // DPI and RESOLUTION bias of CURRENT device
     //
 
-    float pfactor = FG_HardwareState->getDPI() / reference_dpi;
-    float xpfactor = FG_HardwareState->getXDPI() / reference_xdpi;
-    float ypfactor = FG_HardwareState->getYDPI() / reference_ydpi;
+    float pfactor = pHardwareState->getDPI() / reference_dpi;
+    float xpfactor = pHardwareState->getXDPI() / reference_xdpi;
+    float ypfactor = pHardwareState->getYDPI() / reference_ydpi;
     float rfactor = sqrt(DispArea / reference_res);
 
     //
@@ -145,7 +145,7 @@ void event::CInputHandler::initialize(void) {
     PIXELS_PER_STEP_Y = y_threshold;
 
     FG_LOG_DEBUG("InputHandler: ### pfactor: %f, xpfactor: %f, ypfactor: %f, dpi:%d, xdpi:%d, ydpi:%d",
-                 pfactor, xpfactor, ypfactor, FG_HardwareState->getDPI(), FG_HardwareState->getXDPI(), FG_HardwareState->getYDPI());
+                 pfactor, xpfactor, ypfactor, pHardwareState->getDPI(), pHardwareState->getXDPI(), pHardwareState->getYDPI());
     FG_LOG_DEBUG("InputHandler: MAX_OFFSET_FOR_TAP: [%d], MIN SWIPE_X: [%d], MIN SWIPE_Y: [%d], PIXELS_PER_X: [%d], PIXELS_PER_Y: [%d]",
                  MAX_OFFSET_FOR_TAP, MIN_OFFSET_FOR_SWIPE_X, MIN_OFFSET_FOR_SWIPE_Y, PIXELS_PER_STEP_X, PIXELS_PER_STEP_Y);
 
@@ -167,10 +167,8 @@ void event::CInputHandler::initialize(void) {
 #endif
     m_init = FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
-/**
- * Destructor for the InputHandler object
- */
 event::CInputHandler::~CInputHandler() {
     for(CallbackBindingMap::iterator it = m_keyDownBinds.begin(); it != m_keyDownBinds.end(); it++) {
         for(int i = 0; i < (int)it->second.size(); i++) {
@@ -204,11 +202,8 @@ event::CInputHandler::~CInputHandler() {
     m_keysUpPool.clear();
     m_keysDownPool.clear();
 }
+//------------------------------------------------------------------------------
 
-/**
- * Screen touch event.
- * @param point Pointer position
- */
 void event::CInputHandler::handlePointerPressed(Vector2i point, unsigned int touchID) {
     if(touchID >= MAX_TOUCH_POINTS) {
         return;
@@ -268,11 +263,8 @@ void event::CInputHandler::handlePointerPressed(Vector2i point, unsigned int tou
         //m_eventMgr->throwEvent(event::TOUCH, argList);
     }
 }
+//------------------------------------------------------------------------------
 
-/**
- * Pointer move event.
- * @param point Pointer position
- */
 void event::CInputHandler::handlePointerMoved(Vector2i point, unsigned int touchID, fgPointerState state) {
     if(touchID >= MAX_TOUCH_POINTS)
         return;
@@ -312,11 +304,8 @@ void event::CInputHandler::handlePointerMoved(Vector2i point, unsigned int touch
         //m_eventMgr->throwEvent(event::TOUCH, argList);
     }
 }
+//------------------------------------------------------------------------------
 
-/**
- * Pointer released.
- * @param point Pointer position
- */
 void event::CInputHandler::handlePointerReleased(Vector2i point, unsigned int touchID) {
     if(touchID >= MAX_TOUCH_POINTS)
         return;
@@ -370,71 +359,46 @@ void event::CInputHandler::handlePointerReleased(Vector2i point, unsigned int to
         //m_eventMgr->throwEvent(event::TOUCH, argList);
     }
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param pointerID
- * @return 
- */
 event::SPointerRawData *event::CInputHandler::getPointerRawData(fgPointerID pointerID) {
     if(pointerID >= MAX_TOUCH_POINTS)
         return NULL;
 
     return &m_rawTouchesProcessed[pointerID];
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param pointerID
- * @return 
- */
 event::SPointerData *event::CInputHandler::getPointerData(fgPointerID pointerID) {
     if(pointerID >= MAX_TOUCH_POINTS)
         return NULL;
 
     return ((SPointerData *)(&m_rawTouchesProcessed[pointerID]));
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param pointerID
- * @return 
- */
 fgPointerState event::CInputHandler::getPointerState(fgPointerID pointerID) {
     if(pointerID >= MAX_TOUCH_POINTS)
         return FG_FALSE;
 
     return m_rawTouchesProcessed[pointerID].m_state;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param pointerID
- * @return 
- */
 int event::CInputHandler::getPointerX(fgPointerID pointerID) {
     if(pointerID >= MAX_TOUCH_POINTS)
         return 0;
     return m_rawTouchesProcessed[pointerID].m_x;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param pointerID
- * @return 
- */
 int event::CInputHandler::getPointerY(fgPointerID pointerID) {
     if(pointerID >= MAX_TOUCH_POINTS)
         return 0;
     return m_rawTouchesProcessed[pointerID].m_y;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param keyCode
- * @param callback
- * @return 
- */
 event::CFunctionCallback* event::CInputHandler::addKeyDownCallback(int keyCode,
                                                                    CFunctionCallback *callback) {
     if(!callback || keyCode <= 0)
@@ -445,13 +409,8 @@ event::CFunctionCallback* event::CInputHandler::addKeyDownCallback(int keyCode,
     m_keyDownBinds[keyCode].push_back(callback);
     return callback;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param keyCode
- * @param callback
- * @return 
- */
 event::CFunctionCallback* event::CInputHandler::addKeyUpCallback(int keyCode,
                                                                  CFunctionCallback *callback) {
     if(!callback || keyCode <= 0)
@@ -462,26 +421,18 @@ event::CFunctionCallback* event::CInputHandler::addKeyUpCallback(int keyCode,
     m_keyUpBinds[keyCode].push_back(callback);
     return callback;
 }
+//------------------------------------------------------------------------------
 
-/**
- * This adds key code to the pool of pressed down keys
- * @param keyCode
- */
 void event::CInputHandler::addKeyDown(int keyCode) {
     m_keysDownPool.push_back(keyCode);
 }
+//------------------------------------------------------------------------------
 
-/**
- * This adds key code to the pool of released (up) keys
- * @param keyCode
- */
 void event::CInputHandler::addKeyUp(int keyCode) {
     m_keysUpPool.push_back(keyCode);
 }
+//------------------------------------------------------------------------------
 
-/**
- *
- */
 void event::CInputHandler::processData(void) {
     //
     // Phase 1: execute keyboard callbacks - from active keys in the pool
@@ -711,21 +662,8 @@ void event::CInputHandler::processData(void) {
         }
     }
 }
+//------------------------------------------------------------------------------
 
-/**
- * Detects if swipe occurred and computes its size.
- *
- * The initialPointer is used to detect occurrence,
- * startPointer to compute size.
- * 
- * @param min_offset_for_swipe
- * @param startPointer
- * @param endPointer
- * @param initialSwipePointer
- * @param minusSwipe
- * @param plusSwipe
- * @param swipeSize
- */
 void event::CInputHandler::interpretSwipes(int min_offset_for_swipe,
                                            int startPointer,
                                            int endPointer,
@@ -762,14 +700,8 @@ void event::CInputHandler::interpretSwipes(int min_offset_for_swipe,
         *plusSwipe = FG_TRUE;
     }
 }
+//------------------------------------------------------------------------------
 
-/**
- * Touch press/release HANDLER
- * 
- * @param systemData Pointer to the event structure
- * @param userData Pointer to the handling class - fgInputHandler
- * @return 
- */
 int32_t event::CInputHandler::multiTouchButtonHandler(void* systemData, void* userData) {
     if(!systemData || !userData)
         return 0;
@@ -795,14 +727,8 @@ int32_t event::CInputHandler::multiTouchButtonHandler(void* systemData, void* us
 #endif
     return 0;
 }
+//------------------------------------------------------------------------------
 
-/**
- * Touch motion HANDLER
- * 
- * @param systemData Pointer to the event structure
- * @param userData Pointer to the handling class - fgInputHandler
- * @return 
- */
 int32_t event::CInputHandler::multiTouchMotionHandler(void* systemData, void* userData) {
     if(!systemData || !userData)
         return 0;
@@ -816,13 +742,8 @@ int32_t event::CInputHandler::multiTouchMotionHandler(void* systemData, void* us
 #endif
     return 0;
 }
+//------------------------------------------------------------------------------
 
-/**
- * Single press/release HANDLER
- * @param systemData Pointer to the event structure
- * @param userData Pointer to the handling class - fgInputHandler
- * @return 
- */
 int32_t event::CInputHandler::singleTouchButtonHandler(void* systemData, void* userData) {
     if(!systemData || !userData)
         return 0;
@@ -855,13 +776,8 @@ int32_t event::CInputHandler::singleTouchButtonHandler(void* systemData, void* u
 #endif
     return 0;
 }
+//------------------------------------------------------------------------------
 
-/**
- * Single motion HANDLER
- * @param systemData Pointer to the event structure
- * @param userData Pointer to the handling class - fgInputHandler
- * @return 
- */
 int32_t event::CInputHandler::singleTouchMotionHandler(void* systemData, void* userData) {
     if(!systemData || !userData)
         return 0;
@@ -878,3 +794,4 @@ int32_t event::CInputHandler::singleTouchMotionHandler(void* systemData, void* u
 #endif
     return 0;
 }
+//------------------------------------------------------------------------------
