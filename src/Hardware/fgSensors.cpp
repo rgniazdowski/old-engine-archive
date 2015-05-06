@@ -6,10 +6,9 @@
  *
  * FlexiGame source code and any related files can not be copied, modified
  * and/or distributed without the express or written consent from the author.
- *******************************************************/
+ ******************************************************************************/
 
 #include "fgBuildConfig.h"
-#include "fgCommon.h"
 #include "fgLog.h"
 
 #include <cmath>
@@ -23,6 +22,10 @@
 
 #include "fgSensors.h"
 
+using namespace fg;
+
+//------------------------------------------------------------------------------
+
 static char const * const FG_NONE_TXT = "";
 static char const * const FG_SENSOR_ACCELEROMETER_TXT = "Accelerometer";
 static char const * const FG_SENSOR_COMPASS_TXT = "Compass";
@@ -35,27 +38,14 @@ static char const * const FG_LANDSCAPE_RIGHT_TXT = "Landscape right";
 static char const * const FG_FACE_UP_TXT = "Face up";
 static char const * const FG_FACE_DOWN_TXT = "Face down";
 
-template <>
-bool CSingleton<fgSensors>::instanceFlag = false;
-
-template <>
-fgSensors *CSingleton<fgSensors>::instance = NULL;
-
 /// Names of the available sensors
-const char* fgSensors::s_sensorsNames[fgSensors::FG_SENSORS_TYPES] = {
+const char* CSensors::s_sensorsNames[CSensors::FG_SENSORS_TYPES] = {
                                                                       FG_SENSOR_ACCELEROMETER_TXT,
                                                                       FG_SENSOR_COMPASS_TXT
 };
 
-/** \brief
- *
- * \param systemData void*
- * \param userData void*
- * \return int32_t
- *
- */
 int32_t HarvestCallback(void* systemData, void* userData) {
-    fgSensors *self = (fgSensors *)userData;
+    CSensors *self = (CSensors *)userData;
 #ifdef FG_USING_MARMALADE_SENSORS
     // Are sensors running?
     if(FG_FALSE == self->m_isRunning) {
@@ -71,7 +61,7 @@ int32_t HarvestCallback(void* systemData, void* userData) {
     // Adding epsilon to ensure no zero-division error
     float mag = 0.001f + sqrtf((x * x) + (y * y) + (z * z));
 
-    self->harvestData(fgSensors::FG_SENSORS_ACCELEROMETER, x / mag, y / mag, z / mag);
+    self->harvestData(CSensors::FG_SENSORS_ACCELEROMETER, x / mag, y / mag, z / mag);
 
     int result = s3eTimerSetTimer(80, &HarvestCallback, (void *)self);
     if(result == S3E_RESULT_ERROR) {
@@ -81,28 +71,22 @@ int32_t HarvestCallback(void* systemData, void* userData) {
 #endif // FG_USING_MARMALADE_SENSORS
     return 0;
 }
+//------------------------------------------------------------------------------
 
-/** \brief Private constructor
- */
-fgSensors::fgSensors() : m_isRunning(false), m_arbIdx(0), m_unlockTS(0), m_accelBaseLocked(false) {
+CSensors::CSensors() : m_isRunning(false), m_arbIdx(0), m_unlockTS(0), m_accelBaseLocked(false) {
     memset(m_sensorsErrors, 0, sizeof (m_sensorsErrors));
     memset(m_sensorsValues, 0, sizeof (m_sensorsValues));
     memset(m_accelRawBase, 0, sizeof (m_accelRawBase));
     memset(m_accelFinalBase, 0, sizeof (m_accelFinalBase));
-};
-
-/** \brief
- */
-fgSensors::~fgSensors() {
-    stopSensors();
 }
+//------------------------------------------------------------------------------
 
-/** \brief Starts sensors subsystems, registers timer and callback
- *
- * \return fgBool
- *
- */
-fgBool fgSensors::startSensors() {
+CSensors::~CSensors() {
+    stop();
+}
+//------------------------------------------------------------------------------
+
+fgBool CSensors::start(void) {
 #ifdef FG_USING_MARMALADE_SENSORS
     m_sensorsErrors[ FG_SENSORS_ACCELEROMETER ] = s3eAccelerometerStart();
     if(m_sensorsErrors[ FG_SENSORS_ACCELEROMETER ] == S3E_RESULT_ERROR) {
@@ -115,9 +99,9 @@ fgBool fgSensors::startSensors() {
     // r - sensor noise (covariance)
     // initial_error - (covariance)
     // initial_value - (value)
-    m_filters[FG_SENSORS_ACCELEROMETER].x().init(0.8f, 0.2f, 0.05f, 0.1f);
-    m_filters[FG_SENSORS_ACCELEROMETER].y().init(0.8f, 0.2f, 0.05f, 0.1f);
-    m_filters[FG_SENSORS_ACCELEROMETER].z().init(0.8f, 0.2f, 0.05f, 0.1f);
+    m_filters[FG_SENSORS_ACCELEROMETER].getX().init(0.8f, 0.2f, 0.05f, 0.1f);
+    m_filters[FG_SENSORS_ACCELEROMETER].getY().init(0.8f, 0.2f, 0.05f, 0.1f);
+    m_filters[FG_SENSORS_ACCELEROMETER].getZ().init(0.8f, 0.2f, 0.05f, 0.1f);
 
     m_isRunning = FG_TRUE;
 
@@ -132,64 +116,43 @@ fgBool fgSensors::startSensors() {
 #endif // FG_USING_MARMALADE_SENSORS
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
-/**
- * Unregister callback and stop subsystems
- */
-void fgSensors::stopSensors() {
+void CSensors::stop(void) {
     m_isRunning = FG_FALSE;
 #ifdef FG_USING_MARMALADE_SENSORS
     s3eAccelerometerStop();
 #endif // FG_USING_MARMALADE_SENSORS
 }
+//------------------------------------------------------------------------------
 
-/**
- * Get error string from code
- */
-const char* fgSensors::errorCodeText(int errorCode) {
+const char* CSensors::errorCodeText(int errorCode) {
     // TODO if needed
     FG_LOG_ERROR("Sensors::errorCodeText called (its TODO)");
     return "UNKNOWN";
 }
+//------------------------------------------------------------------------------
 
-/** \brief
- *
- * \param x float*
- * \param y float*
- * \param z float*
- * \return void
- *
- */
-void fgSensors::getAccelerometer(float *x, float *y, float *z) {
+void CSensors::getAccelerometer(float *x, float *y, float *z) {
 #if 1
-    *x = m_filters[FG_SENSORS_ACCELEROMETER].x().value();
-    *y = m_filters[FG_SENSORS_ACCELEROMETER].y().value();
-    *z = m_filters[FG_SENSORS_ACCELEROMETER].z().value();
+    *x = m_filters[FG_SENSORS_ACCELEROMETER].getX().value();
+    *y = m_filters[FG_SENSORS_ACCELEROMETER].getY().value();
+    *z = m_filters[FG_SENSORS_ACCELEROMETER].getZ().value();
 #else
     *x = m_sensorsValues[ACCELEROMETER][0];
     *y = m_sensorsValues[ACCELEROMETER][1];
     *z = m_sensorsValues[ACCELEROMETER][2];
 #endif
 }
+//------------------------------------------------------------------------------
 
-/**
- * Gets the reference, normal values
- */
-void fgSensors::getAccelerometerBase(float *x, float *y) {
+void CSensors::getAccelerometerBase(float *x, float *y) {
     *x = m_accelFinalBase[0];
     *y = m_accelFinalBase[1];
 }
+//------------------------------------------------------------------------------
 
-/** \brief Pass through sensor data to Kalman filters
- *
- * \param type int
- * \param x float
- * \param y float
- * \param z float
- * \return void
- *
- */
-void fgSensors::harvestData(int type, float x, float y, float z) {
+void CSensors::harvestData(int type, float x, float y, float z) {
     // Shortcut for ACCEL
     if(type != FG_SENSORS_ACCELEROMETER)
         return;
@@ -220,8 +183,8 @@ void fgSensors::harvestData(int type, float x, float y, float z) {
 
     float prev_sum = m_accelRawBase[m_arbIdx][0] + m_accelRawBase[m_arbIdx][1];
 
-    float fx = m_filters[type].x().value();
-    float fy = m_filters[type].y().value();
+    float fx = m_filters[type].getX().value();
+    float fy = m_filters[type].getY().value();
 
     float new_sum = fx + fy;
 
@@ -298,4 +261,4 @@ void fgSensors::harvestData(int type, float x, float y, float z) {
     m_accelFinalBase[0] /= FG_SENSORS_BASE_SIZE + 2;
     m_accelFinalBase[1] /= FG_SENSORS_BASE_SIZE;
 }
-
+//------------------------------------------------------------------------------
