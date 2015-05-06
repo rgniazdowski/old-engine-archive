@@ -66,7 +66,9 @@ namespace fg {
             ///
             typedef SceneNodeHandle handle_type;
             ///
-            typedef std::priority_queue<CSceneNode*, std::deque<CSceneNode*>, fgPtrLessEq<CSceneNode*> > NodePriorityQueue;
+            typedef CPriorityQueue<CSceneNode*, std::deque<CSceneNode*>, fgPtrLessEq<CSceneNode*> > NodePriorityQueue;
+            ///
+            typedef NodePriorityQueue::const_iterator NodePriorityQueueConstItor;
             ///
             typedef CVector<CSceneNode *> ObjectVec;
             ///

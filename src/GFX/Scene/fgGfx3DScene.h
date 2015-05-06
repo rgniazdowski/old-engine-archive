@@ -116,7 +116,7 @@ namespace fg {
             ///
             COctree *m_octree;
             ///
-            std::stack<SOctreeNode *> m_octNodes;
+            CVector<SOctreeNode *> m_octNodes;
         };
     };
 };

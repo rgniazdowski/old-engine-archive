@@ -6,6 +6,7 @@
                    projectFiles="true">
       <itemPath>../../../src/fgNamespaceInfo.h</itemPath>
       <itemPath>../../../src/fgPluginResource.h</itemPath>
+      <itemPath>../../../src/fgQueue.h</itemPath>
       <itemPath>../../../src/fgWindowsStd.h</itemPath>
     </logicalFolder>
     <logicalFolder name="ResourceFiles"
@@ -2082,6 +2083,8 @@
       </item>
       <item path="../../../src/fgPluginResource.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../../../src/fgQueue.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../../../src/fgSingleton.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/fgStatus.h" ex="false" tool="3" flavor2="0">
@@ -3688,6 +3691,8 @@
       </item>
       <item path="../../../src/fgPluginResource.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../../../src/fgQueue.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../../../src/fgSingleton.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/fgStatus.h" ex="false" tool="3" flavor2="0">
@@ -5257,6 +5262,8 @@
       </item>
       <item path="../../../src/fgPluginResource.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../../../src/fgQueue.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../../../src/fgSingleton.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/fgStatus.h" ex="false" tool="3" flavor2="0">
@@ -6803,6 +6810,8 @@
       <item path="../../../src/fgPluginResource.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="../../../src/fgPluginResource.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/fgQueue.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/fgSingleton.h" ex="false" tool="3" flavor2="0">
       </item>
@@ -8382,6 +8391,8 @@
       </item>
       <item path="../../../src/fgPluginResource.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../../../src/fgQueue.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../../../src/fgSingleton.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/fgStatus.h" ex="false" tool="3" flavor2="0">
@@ -9951,6 +9962,8 @@
       <item path="../../../src/fgPluginResource.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="../../../src/fgPluginResource.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/fgQueue.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/fgSingleton.h" ex="false" tool="3" flavor2="0">
       </item>

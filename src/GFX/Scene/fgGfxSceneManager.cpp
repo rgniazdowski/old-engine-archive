@@ -824,17 +824,26 @@ void gfx::CSceneManager::render(void) {
     // Calling underlying DrawingBatch render procedure
     // This will contain drawcalls not associated with scene/octree/quadtree structure
     CDrawingBatch::render();
-    while(!m_nodeQueue.empty()) {
+    //while(!m_nodeQueue.empty()) {
+    NodePriorityQueueConstItor nodesItor, nodesEnd;
+    nodesEnd = m_nodeQueue.end();
+    nodesItor = m_nodeQueue.begin();
+    for(;nodesItor != nodesEnd; nodesItor++)
+    {
         if(isHideNodes()) {
-            m_nodeQueue.pop();
-            continue;
+            // #FIXME
+            m_nodeQueue.clear(); //pop/clear
+            break; //continue/break
         }
+        //CSceneNode* pSceneNode = m_nodeQueue.top();
+        CSceneNode* pSceneNode = *nodesItor;
+        if(!pSceneNode)
+            continue;
 #if defined(FG_DEBUG)
         if(g_DebugConfig.isDebugProfiling) {
             profile::g_debugProfiling->begin("GFX::Scene::DrawNode");
         }
-#endif
-        CSceneNode*pSceneNode = m_nodeQueue.top();
+#endif       
         //printf("SCENENODE: %s\n", pSceneNode->getNameStr());
         pSceneNode->draw();
 #if defined(FG_DEBUG)
@@ -882,7 +891,7 @@ void gfx::CSceneManager::render(void) {
             }
         }
         //#endif // defined(FG_DEBUG)
-        m_nodeQueue.pop();
+        //m_nodeQueue.pop();
     }
 }
 //------------------------------------------------------------------------------

@@ -32,11 +32,13 @@ using namespace fg;
 gfx::CScene3D::CScene3D() :
 CSceneManager(),
 m_physicsWorld(NULL),
-m_octree(NULL) {
+m_octree(NULL),
+m_octNodes() {
     getMVP()->setPerspective(45.0f, 4.0f / 3.0f);
     m_octree = new CLooseOctree();
     m_basetree = (CBasetree *)m_octree;
     m_physicsWorld = new physics::CWorld(256);
+    m_octNodes.reserve(64);
     //    setFrustumCheckSphere(FG_TRUE);
 }
 //------------------------------------------------------------------------------
@@ -45,9 +47,8 @@ gfx::CScene3D::~CScene3D() {
     if(m_octree) {
         delete m_octree;
     }
-    m_octree = NULL;
-    while(m_octNodes.size())
-        m_octNodes.pop();
+    m_octree = NULL;    
+    m_octNodes.clear();
     m_basetree = NULL;
     if(m_physicsWorld) {
         delete m_physicsWorld;
@@ -73,9 +74,10 @@ void gfx::CScene3D::sortCalls(void) {
     getMVP()->setCamera((CCamera *)(getCamera()));
     CFrustum &frustum = getMVP()->getFrustum();
 
+    getNodeQueue().clear();
     // Remove from the queue any remaining nodes (SceneNode)
-    while(!getNodeQueue().empty())
-        getNodeQueue().pop();
+    //while(!getNodeQueue().empty())
+    //    getNodeQueue().pop();
 
     //
     // Pick selection init
@@ -130,18 +132,18 @@ void gfx::CScene3D::sortCalls(void) {
     // PHASE II: Traverse the tree, check visibility, update nodes
     ////////////////////////////////////////////////////////////////////////////
     m_octree->rewind();
-    //printf(".......................\n");
+    m_octNodes.resize(0);
     while(m_octree->next()) {
         SOctreeNode *pTreeNode = static_cast<SOctreeNode *>(m_octree->current());
         unsigned int objCount = pTreeNode->objects.size();
         float halfSize = static_cast<CLooseOctree *>(m_octree)->getLooseK() * m_octree->getWorldSize().x / (2 << pTreeNode->depth);
-        m_octNodes.push(pTreeNode);
         if(frustum.testVolume(pTreeNode->center, halfSize) == CFrustum::OUTSIDE) {
             // Skip this tree node - it's completely outside of the frustum
             // Octree traverse functions needs to have special func for skipping
             m_octree->skip();
             continue;
         }
+        m_octNodes.push_back(pTreeNode);
         for(unsigned int objIdx = 0; objIdx < objCount; objIdx++) {
             CSceneNode *pSceneNode = (CSceneNode *)pTreeNode->objects[objIdx];
             if(!pSceneNode) {
@@ -213,24 +215,31 @@ void gfx::CScene3D::render(void) {
     CSceneManager::render();
     CShaderProgram *pProgram = static_cast<gfx::CShaderManager *>(m_pShaderMgr)->getCurrentProgram();
     pProgram->setUniform(FG_GFX_USE_TEXTURE, 0.0f);
-    while(!m_octNodes.empty()) {
-        SOctreeNode *treeNode = m_octNodes.top();
+    const unsigned int n = m_octNodes.size();
+    unsigned int i = 0;
+    //while(!m_octNodes.empty()) {
+    while(i < n) {
+        SOctreeNode *pTreeNode = m_octNodes.at(i);
+        i++;
+        if(!pTreeNode)
+            continue;
 #if defined(FG_DEBUG)
 
-        float d = ((float)treeNode->depth / (float)m_octree->getMaxDepth()) + 0.2f;
+        float d = ((float)pTreeNode->depth / (float)m_octree->getMaxDepth()) + 0.2f;
         if(d > 1) d = 1.0f;
         if(FG_DEBUG_CFG_OPTION(gfxBBoxShow)) {
             getMVP()->resetModelMatrix();
             pProgram->setUniform(getMVP());
             AABoundingBox3Df aabb;
-            float halfSize = static_cast<CLooseOctree *>(m_octree)->getLooseK() * m_octree->getWorldSize().x / (2 << treeNode->depth);
+            float halfSize = static_cast<CLooseOctree *>(m_octree)->getLooseK() * m_octree->getWorldSize().x / (2 << pTreeNode->depth);
             Vec3f extent = Vec3f(halfSize, halfSize, halfSize);
-            aabb.min = treeNode->center - extent;
-            aabb.max = treeNode->center + extent;
+            aabb.min = pTreeNode->center - extent;
+            aabb.max = pTreeNode->center + extent;
             CPrimitives::drawAABBLines(aabb, Color4f(0.2f, d, 1.0f - d, 1.0f));
         }
 #endif
-        m_octNodes.pop();
+        //m_octNodes.pop();
+        //i++;
     }
 }
 //------------------------------------------------------------------------------
