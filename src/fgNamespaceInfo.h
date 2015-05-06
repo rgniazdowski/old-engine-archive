@@ -162,6 +162,11 @@ namespace fg {
          */
         namespace tag_helper {
         }
+        /**
+         * Contains ready to use various hash functions.
+         */
+        namespace hash {
+        }
     }
     /**
      * XML namespace holds every class needed in XML manipulations (requires tinyxml)
