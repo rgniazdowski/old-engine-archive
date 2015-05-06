@@ -18,7 +18,7 @@
 
 using namespace fg;
 
-const fgColor4f colorWhite = fgColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+const Color4f colorWhite = Color4f(1.0f, 1.0f, 1.0f, 1.0f);
 
 const gfx::Vertex4v c_stripSkyBoxOptimized[] = {
                                                 // Vertex data for face 0 // Front?
@@ -327,7 +327,7 @@ void gfx::CPrimitives::createCubeMesh(fg::gfx::SMeshBase *mesh,
 /* 
  * Osmioscian foremny (inaczej oktaedr) - octahedron: rings 3 | sectors 5 ? 
  */
-void gfx::CPrimitives::drawAABBLines(const AABoundingBox3Df& aabb, const fgColor4f& color) {
+void gfx::CPrimitives::drawAABBLines(const AABoundingBox3Df& aabb, const Color4f& color) {
     context::diffVertexAttribArrayMask(FG_GFX_POSITION_BIT | FG_GFX_COLOR_BIT);
 
     const Vec3f center = aabb.getCenter();
@@ -371,7 +371,7 @@ void gfx::CPrimitives::drawAABBLines(const AABoundingBox3Df& aabb, const fgColor
                                          _id_vec(5), // 15
                                          _id_vec(4), // 16
     };
-    const fgColor4f aabbColor[] = {
+    const Color4f aabbColor[] = {
                                    color,
                                    color,
                                    color,
@@ -808,7 +808,7 @@ void gfx::CPrimitives::appendRect2D(CVertexData *outputData,
                                     const Vec2f &size,
                                     const Vec2f &uv1,
                                     const Vec2f &uv2,
-                                    const fgColor4f &color,
+                                    const Color4f &color,
                                     const PrimitiveMode mode,
                                     const fgBool rewind) {
     appendRect2D(outputData, Vec2f(0.0f, 0.0f), size, uv1, uv2, color, mode, rewind);
@@ -819,7 +819,7 @@ void gfx::CPrimitives::appendRect2D(CVertexData *outputData,
                                     float sizey,
                                     const Vec2f &uv1,
                                     const Vec2f &uv2,
-                                    const fgColor4f &color,
+                                    const Color4f &color,
                                     const PrimitiveMode mode,
                                     const fgBool rewind) {
     appendRect2D(outputData, Vec2f(0.0f, 0.0f), Vec2f(sizex, sizey), uv1, uv2, color, mode, rewind);
@@ -835,7 +835,7 @@ void gfx::CPrimitives::appendRect2D(CVertexData *outputData,
                                     const Vec2f &size,
                                     const Vec2f &uv1,
                                     const Vec2f &uv2,
-                                    const fgColor4f &color,
+                                    const Color4f &color,
                                     const PrimitiveMode mode,
                                     const fgBool rewind) {
     if(!outputData)

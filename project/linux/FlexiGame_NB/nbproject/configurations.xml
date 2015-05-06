@@ -414,7 +414,6 @@
         <itemPath>../../../src/Util/fgSafeBTreeSet.h</itemPath>
         <itemPath>../../../src/Util/fgSettings.cpp</itemPath>
         <itemPath>../../../src/Util/fgSettings.h</itemPath>
-        <itemPath>../../../src/Util/fgStringParser.h</itemPath>
         <itemPath>../../../src/Util/fgStrings.cpp</itemPath>
         <itemPath>../../../src/Util/fgStrings.h</itemPath>
         <itemPath>../../../src/Util/fgTag.h</itemPath>
@@ -1991,8 +1990,6 @@
       <item path="../../../src/Util/fgSettings.cpp" ex="false" tool="1" flavor2="8">
       </item>
       <item path="../../../src/Util/fgSettings.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../../../src/Util/fgStringParser.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/Util/fgStrings.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -3600,8 +3597,6 @@
       </item>
       <item path="../../../src/Util/fgSettings.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/Util/fgStringParser.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="../../../src/Util/fgStrings.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="../../../src/Util/fgStrings.h" ex="false" tool="3" flavor2="0">
@@ -5171,8 +5166,6 @@
       </item>
       <item path="../../../src/Util/fgSettings.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/Util/fgStringParser.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="../../../src/Util/fgStrings.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="../../../src/Util/fgStrings.h" ex="false" tool="3" flavor2="0">
@@ -6719,8 +6712,6 @@
       <item path="../../../src/Util/fgSettings.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="../../../src/Util/fgSettings.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../../../src/Util/fgStringParser.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/Util/fgStrings.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -8300,8 +8291,6 @@
       </item>
       <item path="../../../src/Util/fgSettings.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../../../src/Util/fgStringParser.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="../../../src/Util/fgStrings.cpp" ex="false" tool="1" flavor2="8">
       </item>
       <item path="../../../src/Util/fgStrings.h" ex="false" tool="3" flavor2="0">
@@ -9871,8 +9860,6 @@
       <item path="../../../src/Util/fgSettings.cpp" ex="false" tool="1" flavor2="8">
       </item>
       <item path="../../../src/Util/fgSettings.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="../../../src/Util/fgStringParser.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/Util/fgStrings.cpp" ex="false" tool="1" flavor2="8">
       </item>

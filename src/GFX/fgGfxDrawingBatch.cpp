@@ -85,7 +85,7 @@ gfx::CDrawCall *gfx::CDrawingBatch::requestDrawCall(int &index,
     drawCall->setZIndex(m_zIndex);
     drawCall->setManaged(FG_TRUE);
     drawCall->setTexture(STextureID());
-    drawCall->setColor(fgColor3f(1.0f, 1.0f, 1.0f));
+    drawCall->setColor(Color3f(1.0f, 1.0f, 1.0f));
     drawCall->setRelMove(m_relMove);
     drawCall->setScissorBox(m_scissorBox);
     //m_drawCalls.push_back(drawCall);

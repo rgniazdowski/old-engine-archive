@@ -200,7 +200,7 @@ namespace fg {
             virtual void append(const Vector3f &pos,
                                 const Vector3f &normal,
                                 const Vector2f &uv,
-                                const fgColor3f &color) = 0;
+                                const Color3f &color) = 0;
             /**
              * 
              * @param pos
@@ -211,7 +211,7 @@ namespace fg {
             virtual void append(const Vector3f &pos,
                                 const Vector3f &normal,
                                 const Vector2f &uv,
-                                const fgColor4f &color) = 0;
+                                const Color4f &color) = 0;
 
             /**
              * 
@@ -417,7 +417,7 @@ namespace fg {
             virtual void append(const Vector3f &pos,
                                 const Vector3f &normal,
                                 const Vector2f &uv,
-                                const fgColor3f &color) {
+                                const Color3f &color) {
                 append(pos, uv);
             }
             /**
@@ -430,7 +430,7 @@ namespace fg {
             virtual void append(const Vector3f &pos,
                                 const Vector3f &normal,
                                 const Vector2f &uv,
-                                const fgColor4f &color) {
+                                const Color4f &color) {
                 append(pos, uv);
             }
             /**
@@ -670,7 +670,7 @@ namespace fg {
             virtual void append(const Vector3f &pos,
                                 const Vector3f &normal,
                                 const Vector2f &uv,
-                                const fgColor3f &color) {
+                                const Color3f &color) {
                 append(pos, normal, uv);
             }
             /**
@@ -683,7 +683,7 @@ namespace fg {
             virtual void append(const Vector3f &pos,
                                 const Vector3f &normal,
                                 const Vector2f &uv,
-                                const fgColor4f &color) {
+                                const Color4f &color) {
                 append(pos, normal, uv);
             }
             /**
@@ -883,7 +883,7 @@ namespace fg {
                 vertex.position = pos;
                 vertex.uv = Vector2f(1.0f, 1.0f);
                 vertex.normal = Vector3f(1.0f, 1.0f, 1.0f);
-                vertex.color = fgColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+                vertex.color = Color4f(1.0f, 1.0f, 1.0f, 1.0f);
                 base_vec_type::push_back(vertex);
             }
             /**
@@ -897,7 +897,7 @@ namespace fg {
                 vertex.position = pos;
                 vertex.uv = uv;
                 vertex.normal = Vector3f(1.0f, 1.0f, 1.0f);
-                vertex.color = fgColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+                vertex.color = Color4f(1.0f, 1.0f, 1.0f, 1.0f);
                 base_vec_type::push_back(vertex);
             }
             /**
@@ -913,7 +913,7 @@ namespace fg {
                 vertex.position = pos;
                 vertex.normal = normal;
                 vertex.uv = uv;
-                vertex.color = fgColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+                vertex.color = Color4f(1.0f, 1.0f, 1.0f, 1.0f);
                 base_vec_type::push_back(vertex);
             }
             /**
@@ -926,12 +926,12 @@ namespace fg {
             virtual void append(const Vector3f &pos,
                                 const Vector3f &normal,
                                 const Vector2f &uv,
-                                const fgColor3f &color) {
+                                const Color3f &color) {
                 Vertex4v vertex;
                 vertex.position = pos;
                 vertex.normal = normal;
                 vertex.uv = uv;
-                vertex.color = fgColor4f(color.r, color.g, color.b, 1.0f);
+                vertex.color = Color4f(color.r, color.g, color.b, 1.0f);
                 base_vec_type::push_back(vertex);
             }
             /**
@@ -944,7 +944,7 @@ namespace fg {
             virtual void append(const Vector3f &pos,
                                 const Vector3f &normal,
                                 const Vector2f &uv,
-                                const fgColor4f &color) {
+                                const Color4f &color) {
                 Vertex4v vertex;
                 vertex.position = pos;
                 vertex.normal = normal;

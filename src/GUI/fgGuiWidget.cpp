@@ -76,7 +76,7 @@ void gui::CWidget::display(CDrawer* guiLayer) {
     Vec2f tmpTextSize;
     Vec2f blockPos = Vec2f(m_bbox.pos.x, m_bbox.pos.y);
     Vec2f blockSize = Vec2f(m_bbox.size.x, m_bbox.size.y);
-    fgColor4f &bgColor = m_styles[m_state].getBackground().color;
+    Color4f &bgColor = m_styles[m_state].getBackground().color;
     if(bgColor.a > FG_EPSILON)
         guiDrawer->appendBackground2D(blockPos, blockSize, m_styles[m_state]);
     guiDrawer->appendBorder2D(blockPos, blockSize, m_styles[m_state]);
@@ -87,12 +87,12 @@ void gui::CWidget::display(CDrawer* guiLayer) {
         char buf[256];
         snprintf(buf, 255, "%s >> %.1fx%.1f [%.1fx%.1f]", m_nameTag.c_str(), blockPos.x, blockPos.y, blockSize.x, blockSize.y);
         float tSize = m_styles[m_state].getForeground().textSize;
-        fgColor4f tColor = m_styles[m_state].getForeground().color;
+        Color4f tColor = m_styles[m_state].getForeground().color;
         std::string tFont = m_styles[m_state].getForeground().font;
         m_styles[m_state].getForeground().textSize = 2.0f;
         m_styles[m_state].getForeground().unit = Unit::PERCENTS;
         m_styles[m_state].getForeground().font = "StbConsolasBold";
-        m_styles[m_state].getForeground().color = fgColor4f(.8f, .2f, .1f, 1.0f);
+        m_styles[m_state].getForeground().color = Color4f(.8f, .2f, .1f, 1.0f);
         blockSize.y = 10.0f;
         guiDrawer->appendText2D(tmpTextSize, blockPos, blockSize, m_styles[m_state], buf);
         m_styles[m_state].getForeground().textSize = tSize;

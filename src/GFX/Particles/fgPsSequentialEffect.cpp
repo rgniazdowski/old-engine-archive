@@ -81,7 +81,7 @@ int SequentialEffect::addSequence(float x, float y, float z, float size, int cou
     m_data[idx].time_begin = FG_HardwareState->getTS();
     m_data[idx].time_last_frame = FG_HardwareState->getTS();
 
-    fgColor color;
+    Color4f color;
     //color.Set(255,255,255,255);
     //	particle.setColor(color);
     particle.data = &m_data[idx];

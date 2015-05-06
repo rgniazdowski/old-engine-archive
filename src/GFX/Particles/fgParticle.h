@@ -42,7 +42,7 @@ namespace fg {
             /// Time of creation
             unsigned long int spawnTime;
             /// Color of the particle, stored as float for better precision
-            fgColor4f color;
+            Color4f color;
             /// Texture index - this is not texture ID from GFX subsystem
             /// used for binding - it is more of index of the texture in 
             /// the particle texture sheet (many images in one file, tiled)
@@ -59,7 +59,7 @@ namespace fg {
              * 
              * @param inColor
              */
-            void setColor(const fgColor4f& inColor) {
+            void setColor(const Color4f& inColor) {
                 color = inColor;
             }
             /**

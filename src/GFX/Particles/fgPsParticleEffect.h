@@ -182,9 +182,9 @@ namespace fg {
             Vector2f m_fadeSpeedRange;
 
             /// The start color of the particle
-            fgColor4f m_startColor;
+            Color4f m_startColor;
             /// The end color of the animated particle. The particle will reach the end color in TTL miliseconds
-            fgColor4f m_endColor;
+            Color4f m_endColor;
 
             /// 
             unsigned int m_burnoutDelay;
@@ -529,7 +529,7 @@ namespace fg {
             /**
              * The start color of the particle
              */
-            inline void setStartColor(const fgColor4f& color) {
+            inline void setStartColor(const Color4f& color) {
                 m_startColor = color;
                 setFlag(FG_PARTICLE_PARAMS_ACTIVE, FG_TRUE);
             }
@@ -551,7 +551,7 @@ namespace fg {
             /**
              * The end color of the animated particle. The particle will reach the end color in TTL miliseconds
              */
-            inline void setEndColor(const fgColor4f& color) {
+            inline void setEndColor(const Color4f& color) {
                 m_endColor = color;
                 setFlag(FG_PARTICLE_PARAMS_ACTIVE, FG_TRUE);
             }
@@ -704,14 +704,14 @@ namespace fg {
              * 
              * @return 
              */
-            inline fgColor4f& getStartColor(void) {
+            inline Color4f& getStartColor(void) {
                 return m_startColor;
             }
             /**
              * 
              * @return 
              */
-            inline fgColor4f& getEndColor(void) {
+            inline Color4f& getEndColor(void) {
                 return m_endColor;
             }
             /**

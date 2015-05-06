@@ -28,11 +28,11 @@
     #include "Util/fgConfigStruct.h"
 
     #define FG_GUI_DEFAULT_BORDER_STYLE SBorder::Style::SOLID
-    #define FG_GUI_DEFAULT_BORDER_COLOR	fgColor4f(1.0f, 1.0f, 1.0f, 1.0f)
+    #define FG_GUI_DEFAULT_BORDER_COLOR	Color4f(1.0f, 1.0f, 1.0f, 1.0f)
     #define FG_GUI_DEFAULT_BORDER_WIDTH	2.0f
     #define FG_GUI_DEFAULT_TEXT_SIZE	16.0f
     #define FG_GUI_DEFAULT_FONT		"StbCourier"
-    #define FG_GUI_DEFAULT_FG_COLOR	fgColor4f(0.9f, 0.9f, 0.9f, 1.0f)
+    #define FG_GUI_DEFAULT_FG_COLOR	Color4f(0.9f, 0.9f, 0.9f, 1.0f)
     #define FG_GUI_DEFAULT_MARGIN       8.0f
     #define FG_GUI_DEFAULT_PADDING      8.0f
     #define FG_GUI_DEFAULT_ALIGN	Align::CENTER
@@ -94,7 +94,7 @@ namespace fg {
             ///
             Style style;
             ///
-            fgColor4f color;
+            Color4f color;
             ///
             float width;
             /**
@@ -109,7 +109,7 @@ namespace fg {
              * 
              * @return 
              */
-            operator fgColor4f() const {
+            operator Color4f() const {
                 return color;
             }
             /**
@@ -147,7 +147,7 @@ namespace fg {
             ///
             std::string texture;
             ///
-            fgColor4f color;
+            Color4f color;
             /**
              * 
              */
@@ -167,7 +167,7 @@ namespace fg {
              * 
              * @return 
              */
-            operator fgColor4f() const {
+            operator Color4f() const {
                 return color;
             }
             /**
@@ -190,7 +190,7 @@ namespace fg {
             ///
             std::string font;
             ///
-            fgColor4f color;
+            Color4f color;
             /**
              * 
              */
@@ -565,7 +565,7 @@ namespace fg {
              * @param value
              * @return 
              */
-            static fgColor4f parseColor(const char *value);
+            static Color4f parseColor(const char *value);
             /**
              * 
              * @param value
@@ -690,7 +690,7 @@ namespace fg {
              * @param color
              * @return 
              */
-            self_ref setBackground(const fgColor4f& color);
+            self_ref setBackground(const Color4f& color);
             /**
              * 
              * @param texture
@@ -717,7 +717,7 @@ namespace fg {
              * @param color
              * @return 
              */
-            self_ref setForeground(const fgColor4f& color);
+            self_ref setForeground(const Color4f& color);
             /**
              * 
              * @param font
@@ -776,7 +776,7 @@ namespace fg {
              * @param color
              * @return 
              */
-            self_ref setBorder(const fgColor4f& color);
+            self_ref setBorder(const Color4f& color);
             /**
              * 
              * @param width
@@ -799,7 +799,7 @@ namespace fg {
              * @param color
              * @return 
              */
-            self_ref setBorder(const SBorder::Which which, const fgColor4f& color);
+            self_ref setBorder(const SBorder::Which which, const Color4f& color);
             /**
              * 
              * @param which

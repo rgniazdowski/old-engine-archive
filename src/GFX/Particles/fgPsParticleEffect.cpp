@@ -6,11 +6,11 @@
  *
  * FlexiGame source code and any related files can not be copied, modified
  * and/or distributed without the express or written consent from the author.
- *******************************************************/
+ ******************************************************************************/
 
 #include "fgPsParticleEffect.h"
 #include "Util/fgConfig.h"
-#include "Util/fgStringParser.h"
+#include "Util/fgStrings.h"
 
 using namespace fg;
 
@@ -101,7 +101,7 @@ fgBool gfx::CParticleEffect::initializeFromConfig(util::config::ParameterVec& pa
             // particle - area – boundingbox –
         } else if(param->name.compare("particle-area") == 0) {
             if(param->type == util::SCfgParameter::STRING) {
-                fgStringParser::parseVector<BoundingBox3Df>(m_particleArea, param->string);
+                strings::parseVector<BoundingBox3Df>(m_particleArea, param->string);
                 this->m_isAreaSet = FG_TRUE;
             }
 
@@ -143,42 +143,42 @@ fgBool gfx::CParticleEffect::initializeFromConfig(util::config::ParameterVec& pa
             // start - size – vector –
         } else if(param->name.compare("start-size") == 0) {
             if(param->type == util::SCfgParameter::STRING)
-                fgStringParser::parseVector<Vector3f>(m_startSize, param->string);
+                strings::parseVector<Vector3f>(m_startSize, param->string);
 
             // end - size – vector –
         } else if(param->name.compare("end-size") == 0) {
             if(param->type == util::SCfgParameter::STRING)
-                fgStringParser::parseVector<Vector3f>(m_endSize, param->string);
+                strings::parseVector<Vector3f>(m_endSize, param->string);
 
             // spread - speed – vector –
         } else if(param->name.compare("spread-speed") == 0) {
             if(param->type == util::SCfgParameter::STRING)
-                fgStringParser::parseVector<Vector3f>(m_spreadSpeed, param->string);
+                strings::parseVector<Vector3f>(m_spreadSpeed, param->string);
 
             // life - range – vector –
         } else if(param->name.compare("life-range") == 0) {
             if(param->type == util::SCfgParameter::STRING)
-                fgStringParser::parseVector<Vector2f>(m_lifeRange, param->string);
+                strings::parseVector<Vector2f>(m_lifeRange, param->string);
 
             // ttl - range – vector –
         } else if(param->name.compare("ttl-range") == 0) {
             if(param->type == util::SCfgParameter::STRING)
-                fgStringParser::parseVector<Vector2i>(m_ttlRange, param->string);
+                strings::parseVector<Vector2i>(m_ttlRange, param->string);
 
             // fade - speed - range – vector –
         } else if(param->name.compare("fade-speed-range") == 0) {
             if(param->type == util::SCfgParameter::STRING)
-                fgStringParser::parseVector<Vector2f>(m_fadeSpeedRange, param->string);
+                strings::parseVector<Vector2f>(m_fadeSpeedRange, param->string);
 
             // start - color – color –
         } else if(param->name.compare("start-color") == 0) {
             if(param->type == util::SCfgParameter::STRING)
-                m_startColor = fgStringParser::parseColor(param->string);
+                m_startColor = strings::parseColor(param->string);
 
             // end - color – color –
         } else if(param->name.compare("end-color") == 0) {
             if(param->type == util::SCfgParameter::STRING)
-                m_endColor = fgStringParser::parseColor(param->string);
+                m_endColor = strings::parseColor(param->string);
 
             // texture – string –
         } else if(param->name.compare("texture") == 0 ||
@@ -190,12 +190,12 @@ fgBool gfx::CParticleEffect::initializeFromConfig(util::config::ParameterVec& pa
         } else if(param->name.compare("texture-size") == 0 ||
                   param->name.compare("texture-sheet-size") == 0) {
             if(param->type == util::SCfgParameter::STRING)
-                fgStringParser::parseVector<Vector2i>(m_textureSheetSize, param->string);
+                strings::parseVector<Vector2i>(m_textureSheetSize, param->string);
 
             // textureIDRange – vector –
         } else if(param->name.compare("texture-id-range") == 0) {
             if(param->type == util::SCfgParameter::STRING)
-                fgStringParser::parseVector<Vector2i>(m_textureIDRange, param->string);
+                strings::parseVector<Vector2i>(m_textureIDRange, param->string);
 
             // Burnout delay (milliseconds)
         } else if(param->name.compare("burnout-delay") == 0) {
@@ -213,7 +213,7 @@ fgBool gfx::CParticleEffect::initializeFromConfig(util::config::ParameterVec& pa
         } else if(param->name.compare("burn-range") == 0 ||
                   param->name.compare("burnout-range") == 0) {
             if(param->type == util::SCfgParameter::STRING)
-                fgStringParser::parseVector<Vector2f>(m_burnRange, param->string);
+                strings::parseVector<Vector2f>(m_burnRange, param->string);
         }
     }
     if(this->getName().empty() || m_maxCount <= 0)
@@ -536,7 +536,7 @@ void gfx::CParticleEffect::randomizeOnPair(const SParticle* from,
     //    target->spawn_time = FG_HardwareState->getTS();
     // #FIXME - time usage
 
-    fgColor4f color;
+    Color4f color;
 
     // Color R
     from_val = (int)(from->color.r * 1000);
@@ -589,7 +589,7 @@ void gfx::CParticleEffect::basicCalculate(SParticle* outputParticle) {
         float elapsed = timesys::elapsed();
         float ttl = (float)outputParticle->ttl / 1000.0f;
         outputParticle->bbox.size += (m_endSize - m_startSize) / ttl * elapsed;
-        fgColor4f &color = outputParticle->color;
+        Color4f &color = outputParticle->color;
         color += (m_endColor - m_startColor) / ttl * elapsed;
         if(color.r < 0.0f)
             color.r = 0.0f;

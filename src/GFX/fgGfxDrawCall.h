@@ -127,7 +127,7 @@ namespace fg {
             /// modification of the vertex data after loading
             PrimitiveMode m_primMode;
             /// Current color used
-            fgColor4f m_color;
+            Color4f m_color;
             /// Holds the value for the relative move
             Vector3f m_relMove;
             /// Scissor box for current draw call
@@ -319,12 +319,12 @@ namespace fg {
              * Set active color for the next data
              * @param color
              */
-            virtual void setColor(const fgColor3f & color);
+            virtual void setColor(const Color3f & color);
             /**
              * Set active color for the next data
              * @param color
              */
-            virtual void setColor(const fgColor4f & color);
+            virtual void setColor(const Color4f & color);
             /**
              * This will reset used color
              */

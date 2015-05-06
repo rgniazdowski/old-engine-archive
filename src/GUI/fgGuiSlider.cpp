@@ -45,8 +45,8 @@ void gui::CSlider::display(CDrawer* guiLayer) {
     CDrawer *guiDrawer = (CDrawer *)guiLayer; // wut?
     SPadding &padding = m_styles[(int)m_state].getPadding();
     SBorderGroup &borderInfo = m_styles[(int)m_state].getBorder();
-    fgColor4f &bgColor = m_styles[(int)m_state].getBackground().color;
-    fgColor4f &fgColor = m_styles[(int)m_state].getForeground().color;
+    Color4f &bgColor = m_styles[(int)m_state].getBackground().color;
+    Color4f &fgColor = m_styles[(int)m_state].getForeground().color;
     /// need to normally draw Slider from base_type::display
     /// and also provide additional drawing (slider hook ?)
 

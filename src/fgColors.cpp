@@ -30,54 +30,54 @@ namespace fg {
         ///
         static fgBool s_isInit = FG_FALSE;
 
-    };
-};
+        struct SColorName
+        {
+            ///
+            Color4f color;
+            ///
+            std::string name;
 
-struct SColorName
-{
-    ///
-    fgColor4f color;
-    ///
-    std::string name;
+            SColorName() { }
 
-    SColorName() { }
+            /**
+             *
+             * @param _color
+             * @param _name
+             */
+            SColorName(const std::string& _name,
+                       const Color4f& _color) :
+            color(_color),
+            name(_name) { }
 
-    /**
-     * 
-     * @param _color
-     * @param _name
-     */
-    SColorName(const std::string& _name,
-              const fgColor4f& _color) :
-    color(_color),
-    name(_name) { }
+            /**
+             *
+             * @param _name
+             * @param _hexColor
+             * @param _comp
+             */
+            SColorName(const std::string& _name,
+                       const unsigned long _hexColor,
+                       const unsigned char _comp) :
+            name(_name) {
+                color = fg::colors::parseHEX(_hexColor, _comp);
+            }
 
-    /**
-     * 
-     * @param _name
-     * @param _hexColor
-     * @param _comp
-     */
-    SColorName(const std::string& _name,
-              const unsigned long _hexColor,
-              const unsigned char _comp) :
-    name(_name) {
-        color = fg::colors::parseHEX(_hexColor, _comp);
-    }
+            /**
+             *
+             * @param _name
+             * @param _hexStr
+             */
+            SColorName(const std::string& _name, const std::string& _hexStr) :
+            name(_name) {
+                color = fg::colors::parseHEX(_hexStr);
+            }
+        }; // struct SColorName
 
-    /**
-     * 
-     * @param _name
-     * @param _hexStr
-     */
-    SColorName(const std::string& _name, const std::string& _hexStr) :
-    name(_name) {
-        color = fg::colors::parseHEX(_hexStr);
-    }
-};
+        /// Special array containing 140 standard colors and human readable names
+        CVector<SColorName> g_colorNames;
 
-/// Special array containing 140 standard colors and human readable names
-fg::CVector<SColorName> g_colorNames;
+    } // namespace colors
+} // namespace fg
 
 #if 0
 static const SColorName s_colorNames[140]; // = {
@@ -394,16 +394,16 @@ void colors::freeColors() {
 }
 //------------------------------------------------------------------------------
 
-fgColor4f colors::getColor(const char *name) {
+Color4f colors::getColor(const char *name) {
     return getColor(std::string(name));
 }
 //------------------------------------------------------------------------------
 
-fgColor4f colors::getColor(const std::string& name) {
+Color4f colors::getColor(const std::string& name) {
     if(!colors::s_isInit)
-        return fgColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+        return Color4f(1.0f, 1.0f, 1.0f, 1.0f);
     if(name.empty())
-        return fgColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+        return Color4f(1.0f, 1.0f, 1.0f, 1.0f);
 
     int n = NUM_COLORS;
 
@@ -414,16 +414,16 @@ fgColor4f colors::getColor(const std::string& name) {
             return g_colorNames[i].color;
         }
     }
-    return fgColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+    return Color4f(1.0f, 1.0f, 1.0f, 1.0f);
 }
 //------------------------------------------------------------------------------
 
-fgColor4f colors::parseHEX(const char *value) {
+Color4f colors::parseHEX(const char *value) {
     return parseHEX(std::string(value));
 }
 //------------------------------------------------------------------------------
 
-fgColor4f colors::parseHEX(const std::string& value) {
+Color4f colors::parseHEX(const std::string& value) {
     std::string hexStr = strings::trim(value, std::string(" \t\n\r;#x"));
     if(strings::startsWith(hexStr, std::string("0x"), FG_FALSE)) {
         hexStr = hexStr.substr(2);
@@ -434,20 +434,20 @@ fgColor4f colors::parseHEX(const std::string& value) {
     } else if(hexStr.length() == 6) {
         comp = 3;
     } else {
-        return fgColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+        return Color4f(1.0f, 1.0f, 1.0f, 1.0f);
     }
     char *p;
     unsigned long hexNum = strtoul(hexStr.c_str(), &p, 16);
     if(*p != 0) {
-        return fgColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+        return Color4f(1.0f, 1.0f, 1.0f, 1.0f);
     } else {
         return colors::parseHEX(hexNum, comp);
     }
 }
 //------------------------------------------------------------------------------
 
-fgColor4f colors::parseHEX(unsigned long int value, const unsigned char comp) {
-    fgColor4f color;
+Color4f colors::parseHEX(unsigned long int value, const unsigned char comp) {
+    Color4f color;
     color.b = (float)(value & 0xFF) / 255.0f;
     value >>= 8;
     color.g = (float)(value & 0xFF) / 255.0f;

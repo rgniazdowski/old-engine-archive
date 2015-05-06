@@ -153,7 +153,7 @@ void gui::CFontDrawer::render(void) {
  * 
  * @param color
  */
-void gui::CFontDrawer::setColor(const fgColor4f &color) {
+void gui::CFontDrawer::setColor(const Color4f &color) {
     m_color = color;
     gfx::CDrawCall *drawCall = gfx::CDrawingBatch::getLastDrawCall();
     if(drawCall) {
@@ -165,8 +165,8 @@ void gui::CFontDrawer::setColor(const fgColor4f &color) {
  * 
  * @param color
  */
-void gui::CFontDrawer::setColor(const fgColor3f &color) {
-    m_color = fgColor4f(color.r, color.g, color.g, 1.0f);
+void gui::CFontDrawer::setColor(const Color3f &color) {
+    m_color = Color4f(color.r, color.g, color.g, 1.0f);
     gfx::CDrawCall *drawCall = gfx::CDrawingBatch::getLastDrawCall();
     if(drawCall) {
         drawCall->setColor(m_color);
@@ -177,7 +177,7 @@ void gui::CFontDrawer::setColor(const fgColor3f &color) {
  * 
  */
 void fg::gui::CFontDrawer::setColor(void) {
-    m_color = fgColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+    m_color = Color4f(1.0f, 1.0f, 1.0f, 1.0f);
     gfx::CDrawCall *drawCall = gfx::CDrawingBatch::getLastDrawCall();
     if(drawCall) {
         drawCall->setColor(m_color);

@@ -157,9 +157,9 @@ namespace fg {
             return false;
         }
 
-    };
+    }; // class CVector<>
 
-};
+} // namespace fg
     #endif /* FG_USING_MARMALADE */
 
     #include <string>

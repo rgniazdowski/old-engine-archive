@@ -91,7 +91,7 @@ namespace fg {
              * @param aabb
              * @param color
              */
-            static void drawAABBLines(const AABoundingBox3Df& aabb, const fgColor4f& color = fgColor4f(1.0f, 1.0f, 1.0f, 1.0f));
+            static void drawAABBLines(const AABoundingBox3Df& aabb, const Color4f& color = Color4f(1.0f, 1.0f, 1.0f, 1.0f));
 
             static void drawSquare2D(void);
 
@@ -214,7 +214,7 @@ namespace fg {
             static void appendRect2D(CVertexData *outputData,
                                      float sizex, float sizey,
                                      const fg::Vector2f &uv1, const fg::Vector2f &uv2,
-                                     const fgColor4f &color,
+                                     const Color4f &color,
                                      const PrimitiveMode mode = PrimitiveMode::TRIANGLES,
                                      const fgBool rewind = FG_FALSE);
 
@@ -224,7 +224,7 @@ namespace fg {
             static void appendRect2D(CVertexData *outputData,
                                      const fg::Vector2f &size,
                                      const fg::Vector2f &uv1, const fg::Vector2f &uv2,
-                                     const fgColor4f &color,
+                                     const Color4f &color,
                                      const PrimitiveMode mode = PrimitiveMode::TRIANGLES,
                                      const fgBool rewind = FG_FALSE);
 
@@ -234,7 +234,7 @@ namespace fg {
             static void appendRect2D(CVertexData *outputData,
                                      const fg::Vector2f &relPos, const fg::Vector2f &size,
                                      const fg::Vector2f &uv1, const fg::Vector2f &uv2,
-                                     const fgColor4f &color,
+                                     const Color4f &color,
                                      const PrimitiveMode mode = PrimitiveMode::TRIANGLES,
                                      const fgBool rewind = FG_FALSE);
 

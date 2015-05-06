@@ -291,7 +291,7 @@ void gfx::CParticleEmitter::calculate(void) {
         float alpha = rgb.a;
         Vector4f fgc = rgb * alpha;
         float alphac = alpha * (1.0f - burn);
-        fgColor4f color(fgc[0], fgc[1], fgc[2], alphac);
+        Color4f color(fgc[0], fgc[1], fgc[2], alphac);
         v1.color = color; // V1
         v2.color = color; // V2 = V4
         v4.color = color; // V2 = V4

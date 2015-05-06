@@ -56,15 +56,15 @@ namespace fg {
             std::string name;
 
             /// Ambient color component
-            fgColor4f ambient;
+            Color4f ambient;
             /// Diffuse color component
-            fgColor4f diffuse;
+            Color4f diffuse;
             /// Specular color component
-            fgColor4f specular;
+            Color4f specular;
             /// Transmittance color component
-            fgColor4f transmittance;
+            Color4f transmittance;
             /// Emission color component
-            fgColor4f emission;
+            Color4f emission;
 
             /// The shininess parameter of the material
             float shininess;

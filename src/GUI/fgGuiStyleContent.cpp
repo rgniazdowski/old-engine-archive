@@ -173,12 +173,12 @@ void gui::CStyleContent::applyPosAlign(const Align align,
 }
 //------------------------------------------------------------------------------
 
-fgColor4f gui::CStyleContent::parseColor(const char *value) {
+Color4f gui::CStyleContent::parseColor(const char *value) {
     if(!value)
         return FG_GUI_DEFAULT_FG_COLOR;
     std::string colorStr = value;
     int r = 255, g = 255, b = 255, a = 255;
-    fgColor4f retColor;
+    Color4f retColor;
     colorStr = strings::trim(colorStr);
     if(strings::startsWith(colorStr.c_str(), "rgba", FG_TRUE)) {
         sscanf(colorStr.c_str(), "rgba(%d,%d,%d,%d)", &r, &g, &b, &a);
@@ -768,7 +768,7 @@ gui::CStyleContent& gui::CStyleContent::setBackground(const SBackground::Style s
 }
 //------------------------------------------------------------------------------
 
-gui::CStyleContent& gui::CStyleContent::setBackground(const fgColor4f& color) {
+gui::CStyleContent& gui::CStyleContent::setBackground(const Color4f& color) {
     m_bg.color = color;
     return (*this);
 }
@@ -795,7 +795,7 @@ gui::CStyleContent& gui::CStyleContent::setForeground(const float textSize) {
 }
 //------------------------------------------------------------------------------
 
-gui::CStyleContent& gui::CStyleContent::setForeground(const fgColor4f& color) {
+gui::CStyleContent& gui::CStyleContent::setForeground(const Color4f& color) {
     m_fg.color = color;
     return (*this);
 }
@@ -858,7 +858,7 @@ gui::CStyleContent& gui::CStyleContent::setBorder(const SBorder::Style style) {
 }
 //------------------------------------------------------------------------------
 
-gui::CStyleContent& gui::CStyleContent::setBorder(const fgColor4f& color) {
+gui::CStyleContent& gui::CStyleContent::setBorder(const Color4f& color) {
     return setBorder(SBorder::Which::ALL, color);
 }
 //------------------------------------------------------------------------------
@@ -883,7 +883,7 @@ gui::CStyleContent& gui::CStyleContent::setBorder(const SBorder::Which which, co
 }
 //------------------------------------------------------------------------------
 
-gui::CStyleContent& gui::CStyleContent::setBorder(const SBorder::Which which, const fgColor4f& color) {
+gui::CStyleContent& gui::CStyleContent::setBorder(const SBorder::Which which, const Color4f& color) {
     if(!!(which & SBorder::Which::LEFT))
         m_border.left.color = color;
     if(!!(which & SBorder::Which::RIGHT))

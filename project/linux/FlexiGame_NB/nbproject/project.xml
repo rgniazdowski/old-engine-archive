@@ -50,6 +50,7 @@
         </data>
         <spellchecker-wordlist xmlns="http://www.netbeans.org/ns/spellchecker-wordlist/1">
             <word>aabb</word>
+            <word>Accel</word>
             <word>Accessor</word>
             <word>antialiased</word>
             <word>antialiasing</word>
@@ -144,6 +145,7 @@
             <word>ivec</word>
             <word>Joypad</word>
             <word>jpg</word>
+            <word>Kalman</word>
             <word>kbytes</word>
             <word>lightuserdata</word>
             <word>Lightwave</word>

@@ -15,6 +15,9 @@
  */
 
 #include "fgStrings.h"
+#include "fgColors.h"
+#include <cstring>
+#include <sstream>
 
 using namespace fg;
 
@@ -418,5 +421,51 @@ const char *strings::stristr(const std::string& str, const std::string& needle) 
     if(str.empty() || needle.empty())
         return NULL;
     return strings::stristr(str.c_str(), needle.c_str());
+}
+//------------------------------------------------------------------------------
+
+Color4f strings::parseColor(const char *value) {
+    if(!value)
+        return Color4f(1.0f, 1.0f, 1.0f, 1.0f);
+    return parseColor(std::string(value));
+}
+//------------------------------------------------------------------------------
+
+Color4f strings::parseColor(const std::string& value) {
+    if(value.empty())
+        return Color4f(1.0f, 1.0f, 1.0f, 1.0f);
+    int r = 255, g = 255, b = 255, a = 255;
+
+    Color4f retColor;
+    std::string colorStr = trim(value);
+    if(startsWith(colorStr.c_str(), "rgbaf", FG_TRUE)) {
+        sscanf(colorStr.c_str(), "rgbaf(%f,%f,%f,%f)", &retColor.r, &retColor.g, &retColor.b, &retColor.a);
+    } else if(startsWith(colorStr.c_str(), "rgbf", FG_TRUE)) {
+        sscanf(colorStr.c_str(), "rgbf(%f,%f,%f)", &retColor.r, &retColor.g, &retColor.b);
+        retColor.a = 1.0f;
+    } else if(startsWith(colorStr.c_str(), "rgba", FG_TRUE)) {
+        sscanf(colorStr.c_str(), "rgba(%d,%d,%d,%d)", &r, &g, &b, &a);
+        retColor.r = (float)r / 255.0f;
+        retColor.g = (float)g / 255.0f;
+        retColor.b = (float)b / 255.0f;
+        retColor.a = (float)a / 255.0f;
+    } else if(startsWith(colorStr.c_str(), "rgb", FG_TRUE)) {
+        sscanf(colorStr.c_str(), "rgb(%d,%d,%d)", &r, &g, &b);
+        retColor.r = (float)r / 255.0f;
+        retColor.g = (float)g / 255.0f;
+        retColor.b = (float)b / 255.0f;
+        retColor.a = (float)a / 255.0f;
+    } else if(startsWith(colorStr.c_str(), "#", FG_TRUE) || startsWith(colorStr.c_str(), "0x", FG_FALSE)) {
+        // HEX!
+        retColor = fg::colors::parseHEX(colorStr);
+    } else if(startsWith(colorStr.c_str(), "(", FG_TRUE) || startsWith(colorStr.c_str(), "[", FG_TRUE)) {
+        // ?
+        parseVector(retColor, value);
+    } else {
+        // readable human name !
+        retColor = fg::colors::getColor(colorStr);
+    }
+
+    return retColor;
 }
 //------------------------------------------------------------------------------

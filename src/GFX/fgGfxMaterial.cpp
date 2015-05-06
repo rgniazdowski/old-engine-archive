@@ -112,11 +112,11 @@ void gfx::SMaterial::clear(void) {
     shaderName.clear();
     shaderProgram = NULL;
 
-    ambient = fgColor4f(0.0f, 0.0f, 0.0f, 1.0f);
-    diffuse = fgColor4f(0.0f, 0.0f, 0.0f, 1.0f);
-    specular = fgColor4f(0.0f, 0.0f, 0.0f, 1.0f);
-    transmittance = fgColor4f(0.0f, 0.0f, 0.0f, 1.0f);
-    emission = fgColor4f(0.0f, 0.0f, 0.0f, 1.0f);
+    ambient = Color4f(0.0f, 0.0f, 0.0f, 1.0f);
+    diffuse = Color4f(0.0f, 0.0f, 0.0f, 1.0f);
+    specular = Color4f(0.0f, 0.0f, 0.0f, 1.0f);
+    transmittance = Color4f(0.0f, 0.0f, 0.0f, 1.0f);
+    emission = Color4f(0.0f, 0.0f, 0.0f, 1.0f);
 
     shininess = 0.0f;
     ior = 0.0f;

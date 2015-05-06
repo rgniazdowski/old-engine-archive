@@ -44,7 +44,6 @@
 #include "fgTinyObj.h"
 #include "Util/fgPath.h"
 #include "Util/fgStrings.h"
-#include "Util/fgStringParser.h"
 
 namespace fgTinyObj {
 
@@ -432,27 +431,27 @@ namespace fgTinyObj {
 
             } else if(param->name.compare("ambient") == 0) {
                 if(param->type == fg::util::SCfgParameter::STRING) {
-                    material.ambient = fgStringParser::parseColor(param->string);
+                    material.ambient = fg::strings::parseColor(param->string);
                 }
 
             } else if(param->name.compare("diffuse") == 0) {
                 if(param->type == fg::util::SCfgParameter::STRING) {
-                    material.diffuse = fgStringParser::parseColor(param->string);
+                    material.diffuse = fg::strings::parseColor(param->string);
                 }
 
             } else if(param->name.compare("specular") == 0) {
                 if(param->type == fg::util::SCfgParameter::STRING) {
-                    material.specular = fgStringParser::parseColor(param->string);
+                    material.specular = fg::strings::parseColor(param->string);
                 }
 
             } else if(param->name.compare("transmittance") == 0) {
                 if(param->type == fg::util::SCfgParameter::STRING) {
-                    material.transmittance = fgStringParser::parseColor(param->string);
+                    material.transmittance = fg::strings::parseColor(param->string);
                 }
 
             } else if(param->name.compare("emission") == 0) {
                 if(param->type == fg::util::SCfgParameter::STRING) {
-                    material.emission = fgStringParser::parseColor(param->string);
+                    material.emission = fg::strings::parseColor(param->string);
                 }
 
             } else if(param->name.compare("shininess") == 0) {

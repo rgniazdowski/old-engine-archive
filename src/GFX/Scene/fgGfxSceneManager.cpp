@@ -853,14 +853,14 @@ void gfx::CSceneManager::render(void) {
                 // Current aabb - it's in model space (local)
                 AABB3Df& modelBox = pSceneObj->getModel()->getRefAABB();
                 // Initial Bounding box
-                CPrimitives::drawAABBLines(modelBox, fgColor4f(1.0f, 0.0f, 0.0f, 1.0f));
+                CPrimitives::drawAABBLines(modelBox, Color4f(1.0f, 0.0f, 0.0f, 1.0f));
                 // Draw transformed bounding box #FIXME - colors FUBAR
             }
         }
         if(FG_DEBUG_CFG_OPTION(gfxBBoxShow)) {
             m_MVP.resetModelMatrix();
             pProgram->setUniform(&m_MVP);
-            CPrimitives::drawAABBLines(pSceneNode->getBoundingVolume(), fgColor4f(0.5f, 0.5f, 1.0f, 1.0f));
+            CPrimitives::drawAABBLines(pSceneNode->getBoundingVolume(), Color4f(0.5f, 0.5f, 1.0f, 1.0f));
         }
 
         if(FG_DEBUG_CFG_OPTION(gfxBBoxShow)) {

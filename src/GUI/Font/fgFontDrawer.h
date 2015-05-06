@@ -95,12 +95,12 @@ namespace fg {
              * 
              * @param color
              */
-            virtual void setColor(const fgColor4f &color);
+            virtual void setColor(const Color4f &color);
             /**
              * 
              * @param color
              */
-            virtual void setColor(const fgColor3f &color);
+            virtual void setColor(const Color3f &color);
             /**
              * 
              */
@@ -250,7 +250,7 @@ namespace fg {
             /// Currently used font resource for drawing
             CFontResource *m_currentFont;
             /// Currently used color for drawing
-            fgColor4f m_color;
+            Color4f m_color;
             /// Font printing mode
             fgFontPrintMode m_printMode;
         };

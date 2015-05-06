@@ -50,32 +50,32 @@ namespace fg {
          * @param name
          * @return 
          */
-        fgColor4f getColor(const char *name);
+        Color4f getColor(const char *name);
         /**
          * 
          * @param name
          * @return 
          */
-        fgColor4f getColor(const std::string& name);
+        Color4f getColor(const std::string& name);
         /**
          * 
          * @param value
          * @return 
          */
-        fgColor4f parseHEX(const char *value);
+        Color4f parseHEX(const char *value);
         /**
          * 
          * @param value
          * @return 
          */
-        fgColor4f parseHEX(const std::string& value);
+        Color4f parseHEX(const std::string& value);
         /**
          * 
          * @param value
          * @param comp
          * @return 
          */
-        fgColor4f parseHEX(unsigned long int value, const unsigned char comp = 4);
+        Color4f parseHEX(unsigned long int value, const unsigned char comp = 4);
 
     };
 };

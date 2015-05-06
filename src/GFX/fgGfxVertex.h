@@ -53,7 +53,7 @@ namespace fg {
             ///
             fg::Vector2f uv; // location 2
             ///
-            fgColor4f color; // location 3
+            Color4f color; // location 3
             /**
              * 
              * @return 
@@ -266,7 +266,7 @@ namespace fg {
             ///
             fg::Vector2f uv; // location 2
             ///
-            fgColor4f color; // location 3
+            Color4f color; // location 3
             ///
             self_type *vnext;
             /**

@@ -320,16 +320,16 @@ void gfx::CDrawCall::setComponentActive(unsigned int component,
     setupVertexData(m_attribMask);
 }
 
-void gfx::CDrawCall::setColor(const fgColor3f& color) {
-    m_color = fgColor4f(color.r, color.g, color.b, 1.0f);
+void gfx::CDrawCall::setColor(const Color3f& color) {
+    m_color = Color4f(color.r, color.g, color.b, 1.0f);
 }
 
-void gfx::CDrawCall::setColor(const fgColor4f& color) {
+void gfx::CDrawCall::setColor(const Color4f& color) {
     m_color = color;
 }
 
 void gfx::CDrawCall::resetColor(void) {
-    m_color = fgColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+    m_color = Color4f(1.0f, 1.0f, 1.0f, 1.0f);
 }
 
 void gfx::CDrawCall::setMVP(CMVPMatrix *MVP) {
