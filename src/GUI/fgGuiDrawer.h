@@ -73,19 +73,6 @@ namespace fg {
 
             /**
              * 
-             */
-            //virtual void flush(void);
-            /**
-             * 
-             */
-            //virtual void sortCalls(void);
-            /**
-             * 
-             */
-            //virtual void render(void);
-
-            /**
-             * 
              * @param outTextSize
              * @param blockPos
              * @param blockSize
@@ -109,6 +96,13 @@ namespace fg {
              * @param style
              */
             virtual void appendBorder2D(const Vec2f &pos, const Vec2f &size, CStyleContent& style);
+            /**
+             * 
+             * @param pos
+             * @param radius
+             * @param style
+             */
+            virtual void appendCircleBorder2D(const Vec2f& pos, float radius, CStyleContent& style);
 
         };
     };

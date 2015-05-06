@@ -106,6 +106,7 @@ void gui::CDrawer::appendBackground2D(const Vec2f &pos,
     drawCall->setColor(background.color);
     drawCall->appendRect2D(pos, size, uv1, uv2, FG_FALSE);
 }
+//------------------------------------------------------------------------------
 
 void gui::CDrawer::appendBorder2D(const Vec2f &pos,
                                   const Vec2f &size,
@@ -154,3 +155,30 @@ void gui::CDrawer::appendBorder2D(const Vec2f &pos,
     drawCall->setColor(style.getBorder().bottom.color);
     drawCall->appendRect2D(pos4, size4, Vec2f(0, 1), Vec2f(1, 0), FG_FALSE);
 }
+//------------------------------------------------------------------------------
+
+void gui::CDrawer::appendCircleBorder2D(const Vec2f &pos,
+                                        float radius,
+                                        CStyleContent& style) {
+    if(!m_pResourceMgr)
+        return;
+    SBorderGroup &border = style.getBorder();
+    int index;
+    gfx::CDrawCall *drawCall = requestDrawCall(index, FG_GFX_DRAW_CALL_CUSTOM_ARRAY);
+    drawCall->setComponentActive(0);
+    drawCall->setComponentActive(FG_GFX_POSITION_BIT | FG_GFX_COLOR_BIT);
+    drawCall->setPrimitiveMode(gfx::PrimitiveMode::LINE_STRIP);
+    gfx::CVertexData *pVertexData = drawCall->getVertexData();
+    drawCall->setColor(border.all.color);
+
+    unsigned int nSlices = 24;
+    float angle = 0.0f;
+    for(unsigned int i = 0; i<=nSlices; i++) {
+        angle = i * (float)2.0f*M_PIF/(float)nSlices;
+        float x = pos.x + math::cos(angle) * radius;
+        float y = pos.y + math::sin(angle) * radius;
+        Vec3f point = Vec3f(x,y,0);
+        pVertexData->append(point, Vec3f(), Vec2f(), border.all.color);
+    }
+}
+//------------------------------------------------------------------------------

@@ -15,8 +15,7 @@
     #include "fgGfxDrawCall.h"
     #include "fgGfxLayer.h"
 
-    #include <queue>
-    #include <deque>
+    #include "fgQueue.h"
 
     #define FG_GFX_DRAWING_BATCH_DEFAULT_RESERVE 64
 
@@ -33,7 +32,7 @@ namespace fg {
 
         protected:
             ///
-            typedef std::priority_queue<CDrawCall*, std::deque<CDrawCall* >, fgPtrLessEq<CDrawCall* > > BatchPriorityQueue;
+            typedef CPriorityQueue<CDrawCall*, std::deque<CDrawCall* >, fgPtrLessEq<CDrawCall* > > BatchPriorityQueue;
             ///
             typedef CVector<CDrawCall*> DrawCallVec;
             ///

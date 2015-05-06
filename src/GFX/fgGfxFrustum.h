@@ -175,6 +175,13 @@ namespace fg {
             float getZFar(void) const {
                 return m_zFar;
             }
+            /**
+             * 
+             * @return
+             */
+            float getAngle(void) const {
+                return m_angle;
+            }
 
         private:
             ///
