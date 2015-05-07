@@ -79,7 +79,7 @@ namespace fg {
              * @param style
              * @param fmt
              */
-            virtual void appendText2D(Vec2f& outTextSize, const Vec2f &blockPos, const Vec2f &blockSize, CStyleContent& style, const char *fmt, ...);
+            virtual void appendText2D(Vec2f& outTextSize, const Vec2f& blockPos, const Vec2f& blockSize, CStyleContent& style, const char *fmt, ...);
 
             /**
              * 
@@ -87,7 +87,7 @@ namespace fg {
              * @param size
              * @param style
              */
-            virtual void appendBackground2D(const Vec2f &pos, const Vec2f &size, CStyleContent& style);
+            virtual void appendBackground2D(const Vec2f& pos, const Vec2f& size, CStyleContent& style);
 
             /**
              * 
@@ -95,7 +95,20 @@ namespace fg {
              * @param size
              * @param style
              */
-            virtual void appendBorder2D(const Vec2f &pos, const Vec2f &size, CStyleContent& style);
+            virtual void appendBorder2D(const Vec2f& pos, const Vec2f& size, CStyleContent& style);
+            /**
+             * 
+             * @param pos
+             * @param size
+             * @param style
+             */
+            virtual void appendBorder2D(const gfx::AABB2Df& box, CStyleContent& style);
+            /**
+             * 
+             * @param box
+             * @param style
+             */
+            virtual void appendBorder2D(const gfx::BB2Df& box, CStyleContent& style);
             /**
              * 
              * @param pos

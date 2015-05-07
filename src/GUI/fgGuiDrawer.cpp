@@ -6,7 +6,7 @@
  * 
  * FlexiGame source code and any related files can not be copied, modified 
  * and/or distributed without the express or written consent from the author.
- *******************************************************/
+ ******************************************************************************/
 
 #include "fgGuiDrawer.h"
 #include "GFX/Shaders/fgGfxShaderManager.h"
@@ -126,33 +126,134 @@ void gui::CDrawer::appendBorder2D(const Vec2f &pos,
     drawCall->setComponentActive(0);
     drawCall->setComponentActive(FG_GFX_POSITION_BIT | FG_GFX_COLOR_BIT);
 
-    lwidth = style.getBorder().left.width;
-    rwidth = style.getBorder().right.width;
-    twidth = style.getBorder().top.width;
-    bwidth = style.getBorder().bottom.width;
+    lwidth = border.left.width;
+    rwidth = border.right.width;
+    twidth = border.top.width;
+    bwidth = border.bottom.width;
     // Left
     Vec2f pos1(pos.x - lwidth, pos.y - twidth);
     Vec2f size1(lwidth, size.y + twidth + bwidth);
-
     // Top
     Vec2f pos2(pos.x, pos.y - twidth);
     Vec2f size2(size.x, twidth);
-
     // Right
     Vec2f pos3(pos.x + size.x, pos.y - twidth);
     Vec2f size3(rwidth, size.y + twidth + bwidth);
-
     // Bottom
     Vec2f pos4(pos.x, pos.y + size.y);
     Vec2f size4(size.x, bwidth);
 
-    drawCall->setColor(style.getBorder().left.color);
+    drawCall->setColor(border.left.color);
     drawCall->appendRect2D(pos1, size1, Vec2f(0, 1), Vec2f(1, 0), FG_FALSE);
-    drawCall->setColor(style.getBorder().top.color);
+    drawCall->setColor(border.top.color);
     drawCall->appendRect2D(pos2, size2, Vec2f(0, 1), Vec2f(1, 0), FG_FALSE);
-    drawCall->setColor(style.getBorder().right.color);
+    drawCall->setColor(border.right.color);
     drawCall->appendRect2D(pos3, size3, Vec2f(0, 1), Vec2f(1, 0), FG_FALSE);
-    drawCall->setColor(style.getBorder().bottom.color);
+    drawCall->setColor(border.bottom.color);
+    drawCall->appendRect2D(pos4, size4, Vec2f(0, 1), Vec2f(1, 0), FG_FALSE);
+}
+//------------------------------------------------------------------------------
+
+void gui::CDrawer::appendBorder2D(const gfx::AABB2Df& box, CStyleContent& style) {
+    if(!m_pResourceMgr)
+        return;
+    SBorderGroup &border = style.getBorder();
+    if(border.left.style == SBorder::Style::NONE &&
+       border.right.style == SBorder::Style::NONE &&
+       border.top.style == SBorder::Style::NONE &&
+       border.bottom.style == SBorder::Style::NONE) {
+        return;
+    }
+    int index;
+    float lwidth = 0.0f, rwidth = 0.0f, twidth = 0.0f, bwidth = 0.0f;
+    gfx::CDrawCall *drawCall = requestDrawCall(index, FG_GFX_DRAW_CALL_CUSTOM_ARRAY);
+    drawCall->setComponentActive(0);
+    drawCall->setComponentActive(FG_GFX_POSITION_BIT | FG_GFX_COLOR_BIT);
+
+    lwidth = border.left.width;
+    rwidth = border.right.width;
+    twidth = border.top.width;
+    bwidth = border.bottom.width;
+
+    Vec2f pos;
+    pos.x = box.min.x;
+    pos.y = box.min.y;
+    Vec2f size;
+    size.x = box.max.x - box.min.x;
+    size.y = box.max.y - box.min.y;
+
+    // Left
+    Vec2f pos1(pos.x - lwidth, pos.y - twidth);
+    Vec2f size1(lwidth, size.y + twidth + bwidth);
+    // Top
+    Vec2f pos2(pos.x, pos.y - twidth);
+    Vec2f size2(size.x, twidth);
+    // Right
+    Vec2f pos3(pos.x + size.x, pos.y - twidth);
+    Vec2f size3(rwidth, size.y + twidth + bwidth);
+    // Bottom
+    Vec2f pos4(pos.x, pos.y + size.y);
+    Vec2f size4(size.x, bwidth);
+
+    drawCall->setColor(border.left.color);
+    drawCall->appendRect2D(pos1, size1, Vec2f(0, 1), Vec2f(1, 0), FG_FALSE);
+    drawCall->setColor(border.top.color);
+    drawCall->appendRect2D(pos2, size2, Vec2f(0, 1), Vec2f(1, 0), FG_FALSE);
+    drawCall->setColor(border.right.color);
+    drawCall->appendRect2D(pos3, size3, Vec2f(0, 1), Vec2f(1, 0), FG_FALSE);
+    drawCall->setColor(border.bottom.color);
+    drawCall->appendRect2D(pos4, size4, Vec2f(0, 1), Vec2f(1, 0), FG_FALSE);
+}
+//------------------------------------------------------------------------------
+
+void gui::CDrawer::appendBorder2D(const gfx::BB2Df& box, CStyleContent& style) {
+    if(!m_pResourceMgr)
+        return;
+    SBorderGroup &border = style.getBorder();
+    if(border.left.style == SBorder::Style::NONE &&
+       border.right.style == SBorder::Style::NONE &&
+       border.top.style == SBorder::Style::NONE &&
+       border.bottom.style == SBorder::Style::NONE) {
+        return;
+    }
+    float lwidth = 0.0f, rwidth = 0.0f, twidth = 0.0f, bwidth = 0.0f;
+    int index;
+    gfx::CDrawCall *drawCall = requestDrawCall(index, FG_GFX_DRAW_CALL_CUSTOM_ARRAY);
+    drawCall->setComponentActive(0);
+    drawCall->setComponentActive(FG_GFX_POSITION_BIT | FG_GFX_COLOR_BIT);
+
+    lwidth = border.left.width;
+    rwidth = border.right.width;
+    twidth = border.top.width;
+    bwidth = border.bottom.width;
+
+    Vec2f pos;
+    pos.x = box.pos.x;
+    pos.y = box.pos.y;
+    Vec2f size;
+    size.x = box.size.x;
+    size.y = box.size.y;
+
+    // Left
+    Vec2f pos1(pos.x - lwidth, pos.y - twidth);
+    Vec2f size1(lwidth, size.y + twidth + bwidth);
+    // Top
+    Vec2f pos2(pos.x, pos.y - twidth);
+    Vec2f size2(size.x, twidth);
+    // Right
+    Vec2f pos3(pos.x + size.x, pos.y - twidth);
+    Vec2f size3(rwidth, size.y + twidth + bwidth);
+    // Bottom
+    Vec2f pos4(pos.x, pos.y + size.y);
+    Vec2f size4(size.x, bwidth);
+
+    drawCall->setColor(border.left.color);
+    drawCall->appendRect2D(pos1, size1, Vec2f(0, 1), Vec2f(1, 0), FG_FALSE);
+    drawCall->setColor(border.top.color);
+    drawCall->appendRect2D(pos2, size2, Vec2f(0, 1), Vec2f(1, 0), FG_FALSE);
+    drawCall->setColor(border.right.color);
+    drawCall->appendRect2D(pos3, size3, Vec2f(0, 1), Vec2f(1, 0), FG_FALSE);
+    drawCall->setColor(border.bottom.color);
     drawCall->appendRect2D(pos4, size4, Vec2f(0, 1), Vec2f(1, 0), FG_FALSE);
 }
 //------------------------------------------------------------------------------
@@ -173,11 +274,11 @@ void gui::CDrawer::appendCircleBorder2D(const Vec2f &pos,
 
     unsigned int nSlices = 24;
     float angle = 0.0f;
-    for(unsigned int i = 0; i<=nSlices; i++) {
-        angle = i * (float)2.0f*M_PIF/(float)nSlices;
+    for(unsigned int i = 0; i <= nSlices; i++) {
+        angle = i * (float)2.0f * M_PIF / (float)nSlices;
         float x = pos.x + math::cos(angle) * radius;
         float y = pos.y + math::sin(angle) * radius;
-        Vec3f point = Vec3f(x,y,0);
+        Vec3f point = Vec3f(x, y, 0);
         pVertexData->append(point, Vec3f(), Vec2f(), border.all.color);
     }
 }
