@@ -32,7 +32,11 @@ gfx::CSceneManager::CSceneManager() :
 CDrawingBatch(),
 m_collisionsInfo(),
 m_triggers(),
+m_pickSelection(),
 m_stateFlags(NONE | FRUSTUM_CHECK),
+m_groundLevel(0.0f),
+m_groundGridCellSize(50.0f),
+m_worldSize(),
 m_MVP(),
 m_camera(CCameraAnimation::FREE),
 m_skybox(),
@@ -536,8 +540,8 @@ gfx::CSceneManager::SPickSelection::isPicked(const CSceneNode* pNode,
                                              const fgBool checkAABBTriangles) {
     pickInfo.result = (SPickedNodeInfo::Result)NOT_PICKED;
     if(!pNode)
-        return NOT_PICKED;    
-    const BoundingVolume3Df& volume = pNode->getBoundingVolume();    
+        return NOT_PICKED;
+    const BoundingVolume3Df& volume = pNode->getBoundingVolume();
     if(volume.radius < std::numeric_limits<float>::epsilon())
         return NOT_PICKED;
     const Vec3f& center = volume.center;
@@ -550,9 +554,9 @@ gfx::CSceneManager::SPickSelection::isPicked(const CSceneNode* pNode,
                                            volume.radius,
                                            pickInfo.intersectionPos,
                                            pickInfo.intersectionNorm);
-    if(status)
+    if(status) {
         pickInfo.result = (SPickedNodeInfo::Result)PICKED_SPHERE;
-
+    }
     {
         Vec3f screenCenter = math::project(center, mvp.getRefViewProjMatrix(), viewport);
         float d = math::distance(center, rayEye);
@@ -754,6 +758,17 @@ void gfx::CSceneManager::sortCalls(void) {
     // Pick selection init // function maybe?
     //
     m_pickSelection.init(m_MVP, m_camera, m_stateFlags);
+    if(m_pickSelection.shouldCheck) {
+        float distance = 0.0f;
+        bool groundStatus = math::intersectRayPlane(m_pickSelection.rayEye,
+                                                    m_pickSelection.rayDir,
+                                                    Vector3f(0.0f, m_groundLevel, 0.0f),
+                                                    Vector3f(0.0f, 1.0f, 0.0f),
+                                                    distance);
+        m_pickSelection.groundIntersectionPoint = m_pickSelection.rayEye + m_pickSelection.rayDir * distance;
+        if(!groundStatus)
+            m_pickSelection.groundIntersectionPoint = Vector3f();
+    }
     const fgBool checkPickSelectionAABB = isPickSelectionAABBTriangles();
 
     DataVecItor itor = getRefDataVector().begin(), end = getRefDataVector().end();
@@ -822,6 +837,7 @@ void gfx::CSceneManager::render(void) {
     }
     CShaderManager* pShaderMgr = static_cast<gfx::CShaderManager*>(m_pShaderMgr);
     CShaderProgram* pProgram = pShaderMgr->getCurrentProgram();
+    pProgram->setUniform(FG_GFX_USE_TEXTURE, 1.0f);
     //pProgram->setUniform(FG_GFX_USE_TEXTURE, 1.0f);
     //printf("fgGfxSceneManager::render(void)\n");
     // Will now render main skybox
@@ -863,11 +879,10 @@ void gfx::CSceneManager::render(void) {
             profile::g_debugProfiling->end("GFX::Scene::DrawNode");
         }
 #endif
-
+        pProgram->setUniform(FG_GFX_USE_TEXTURE, 0.0f);
 #if defined(FG_DEBUG)
         CModel* sphereModel = (CModel*)static_cast<resource::CResourceManager*>(m_pResourceMgr)->get("builtinSphere");
         SMeshBase* sphereMesh = sphereModel->getRefShapes()[0]->mesh;
-        pProgram->setUniform(FG_GFX_USE_TEXTURE, 0.0f);
         if(FG_DEBUG_CFG_OPTION(gfxBBoxShow) && pSceneNode->getNodeType() == SCENE_NODE_OBJECT) {
             CSceneNodeObject* pSceneObj = static_cast<CSceneNodeObject*>(pSceneNode);
             if(pSceneObj->getModel()) {
@@ -904,6 +919,57 @@ void gfx::CSceneManager::render(void) {
         }
         //#endif // defined(FG_DEBUG)
         //m_nodeQueue.pop();
+    } // for(node queue iteration)
+
+    if(isShowGroundGrid()) {
+        pProgram->setUniform(FG_GFX_USE_TEXTURE, 0.0f);
+        m_MVP.calculate(Matrix4f());
+        pProgram->setUniform(&m_MVP);
+        CVertexData4v gridLines;
+        Vector3f pos, corner;
+        Color3f color;
+        float step = m_groundGridCellSize;
+        int rows = m_worldSize.z / step; // Z
+        int cols = m_worldSize.x / step; // X
+        float depth = rows * step;
+        float width = cols * step;
+        pos.y = m_groundLevel;
+        corner = Vec3f(-cols / 2 * step, m_groundLevel, -rows / 2 * step);
+        for(int i = 0; i <= cols; i++) {
+            color = Color3f(1.0f, 1.0f, 1.0f); // white
+            pos.x = corner.x + i * step;
+            pos.z = corner.z;
+            gridLines.append(pos, Vec3f(), Vec2f(), color); // A
+            pos.z += depth;
+            gridLines.append(pos, Vec3f(), Vec2f(), color); // B
+            if(i < cols) {
+                color = Color3f(0.6f, 0.6f, 0.6f); // gray
+                pos.x += step / 2.0f;
+                pos.z = corner.z;
+                gridLines.append(pos, Vec3f(), Vec2f(), color); // A
+                pos.z += depth;
+                gridLines.append(pos, Vec3f(), Vec2f(), color); // B
+            }
+        }
+
+        for(int i = 0; i <= rows; i++) {
+            color = Color3f(1.0f, 1.0f, 1.0f); // white
+            pos.x = corner.x;
+            pos.z = corner.z + i * step;
+            gridLines.append(pos, Vec3f(), Vec2f(), color); // A
+            pos.x += width;
+            gridLines.append(pos, Vec3f(), Vec2f(), color); // B
+            if(i < rows) {
+                color = Color3f(0.6f, 0.6f, 0.6f); // gray
+                pos.x = corner.x;
+                pos.z += step / 2.0f;
+                gridLines.append(pos, Vec3f(), Vec2f(), color); // A
+                pos.x += width;
+                gridLines.append(pos, Vec3f(), Vec2f(), color); // B
+            }
+        }
+
+        CPrimitives::drawVertexData(&gridLines, FG_GFX_POSITION_BIT | FG_GFX_UVS_BIT | FG_GFX_COLOR_BIT, PrimitiveMode::LINES);
     }
 }
 //------------------------------------------------------------------------------

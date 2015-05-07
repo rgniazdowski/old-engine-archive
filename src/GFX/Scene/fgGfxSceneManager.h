@@ -125,7 +125,9 @@ namespace fg {
                 PICK_SELECTION_TOGGLE = 0x2000, // 8192
                 /// Whether or not the group selection uses selection box
                 /// valid only with on click selection
-                PICK_SELECTION_BOX = 0x4000 // 16384
+                PICK_SELECTION_BOX = 0x4000, // 16384
+                ///
+                SHOW_GROUND_GRID = 0x8000
             };
 
         protected:
@@ -426,6 +428,20 @@ namespace fg {
              */
             inline fgBool isPickSelectionBox(void) const {
                 return (fgBool)!!(m_stateFlags & PICK_SELECTION_BOX);
+            }
+            /**
+             * 
+             * @param toggle
+             */
+            inline void setShowGroundGrid(const fgBool toggle = FG_TRUE) {
+                setFlag(SHOW_GROUND_GRID, toggle);
+            }
+            /**
+             *
+             * @return
+             */
+            inline fgBool isShowGroundGrid(void) const {
+                return (fgBool)!!(m_stateFlags & SHOW_GROUND_GRID);
             }
 
             //------------------------------------------------------------------
@@ -1041,6 +1057,68 @@ namespace fg {
             inline CBasetree *getBasetree(void) const {
                 return m_basetree;
             }
+            /**
+             *
+             * @param worldSize
+             */
+            inline void setWorldSize(const Vector3f& worldSize) {
+                m_worldSize = worldSize;
+                if(m_basetree)
+                    m_basetree->setWorldSize(m_worldSize);
+            }
+            /**
+             *
+             * @param x
+             * @param y
+             * @param z
+             */
+            inline void setWorldSize(float x, float y, float z) {
+                m_worldSize = Vector3f(x, y, z);
+                if(m_basetree)
+                    m_basetree->setWorldSize(m_worldSize);
+            }
+            /**
+             *
+             * @return
+             */
+            inline Vector3f& getWorldSize(void) {
+                return m_worldSize;
+            }
+            /**
+             * 
+             * @return
+             */
+            inline Vector3f const& getWorldSize(void) const {
+                return m_worldSize;
+            }
+            /**
+             * 
+             * @param groundLevel
+             */
+            inline void setGroundLevel(float groundLevel) {
+                m_groundLevel = groundLevel;
+            }
+            /**
+             * 
+             * @return
+             */
+            inline float getGroundLevel(void) const {
+                return m_groundLevel;
+            }
+            /**
+             *
+             * @param groundGridCellSize
+             */
+            inline void setGroundGridCellSize(float groundGridCellSize) {
+                m_groundGridCellSize = groundGridCellSize;
+            }
+            /**
+             * 
+             * @return
+             */
+            inline float getGroundGridCellSize(void) const {
+                return m_groundGridCellSize;
+            }
 
             ////////////////////////////////////////////////////////////////////
 
@@ -1297,6 +1375,8 @@ namespace fg {
                 /// Current direction of the ray
                 Vector3f rayDir;
                 ///
+                Vector3f groundIntersectionPoint;
+                ///
                 float pickBegin;
                 ///
                 Result goodPickResult;
@@ -1393,6 +1473,12 @@ namespace fg {
         private:
             /// Internal flags, changing the default behavior of the Scene Manager
             StateFlags m_stateFlags;
+            ///
+            float m_groundLevel;
+            ///
+            float m_groundGridCellSize;
+            ///
+            Vector3f m_worldSize;
             /// Internal MVP matrix to use, this will set the perspective view
             CMVPMatrix m_MVP;
             /// Internal camera

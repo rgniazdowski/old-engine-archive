@@ -1928,6 +1928,16 @@ fgBool script::CScriptSubsystem::registerSceneManager(LuaPlus::LuaObject &metata
                                    static_cast<gfx::CSceneManager *>(0),
                                    &gfx::CSceneManager::isPickSelectionBox);
 
+
+    metatable.RegisterObjectDirect("setShowGroundGrid",
+                                   static_cast<gfx::CSceneManager *>(0),
+                                   &gfx::CSceneManager::setShowGroundGrid);
+
+    metatable.RegisterObjectDirect("isShowGroundGrid",
+                                   static_cast<gfx::CSceneManager *>(0),
+                                   &gfx::CSceneManager::isShowGroundGrid);
+
+
     metatable.RegisterObjectDirect("reportSelectionMove",
                                    static_cast<gfx::CSceneManager *>(0),
                                    static_cast<SCENE_BASE_void_2X_INT_IN>(&gfx::CSceneManager::reportSelectionMove));

@@ -39,7 +39,7 @@ m_octNodes() {
     m_basetree = (CBasetree *)m_octree;
     m_physicsWorld = new physics::CWorld(256);
     m_octNodes.reserve(64);
-    //    setFrustumCheckSphere(FG_TRUE);
+    setWorldSize(COctree::DEFAULT_WORLD_SIZE, COctree::DEFAULT_WORLD_SIZE, COctree::DEFAULT_WORLD_SIZE);
 }
 //------------------------------------------------------------------------------
 
@@ -47,7 +47,7 @@ gfx::CScene3D::~CScene3D() {
     if(m_octree) {
         delete m_octree;
     }
-    m_octree = NULL;    
+    m_octree = NULL;
     m_octNodes.clear();
     m_basetree = NULL;
     if(m_physicsWorld) {
@@ -83,7 +83,19 @@ void gfx::CScene3D::sortCalls(void) {
     // Pick selection init
     //
     m_pickSelection.init(*getMVP(), *getCamera(), getStateFlags());
-    const fgBool checkPickSelectionAABB = isPickSelectionAABBTriangles();    
+    if(m_pickSelection.shouldCheck) {
+        float distance = 0.0f;
+        bool groundStatus = math::intersectRayPlane(m_pickSelection.rayEye,
+                                                    m_pickSelection.rayDir,
+                                                    Vector3f(0.0f, getGroundLevel(), 0.0f),
+                                                    Vector3f(0.0f, 1.0f, 0.0f),
+                                                    distance);
+
+        m_pickSelection.groundIntersectionPoint = m_pickSelection.rayEye + m_pickSelection.rayDir * distance;
+        if(!groundStatus)
+            m_pickSelection.groundIntersectionPoint = Vector3f();
+    }
+    const fgBool checkPickSelectionAABB = isPickSelectionAABBTriangles();
     ////////////////////////////////////////////////////////////////////////////
     // PHASE I: Iterate through all objects, animate, update AABB, collisions...
     ////////////////////////////////////////////////////////////////////////////
