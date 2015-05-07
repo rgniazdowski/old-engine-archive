@@ -72,11 +72,15 @@ namespace fg {
                 typedef TNodeType node_type;
                 ///
                 typedef STraverseBase<TNodeType> base_type;
+                ///
+                typedef std::stack<int> IdStack;
+                ///
+                typedef std::stack<TNodeType*> NodeStack;
 
                 /// Stack containing child ids
-                std::stack<int> id_stack;
+                IdStack idStack;
                 /// Stack for containing nodes
-                std::stack<TNodeType*> node_stack;
+                NodeStack nodeStack;
                 /// Current node pointer
                 TNodeType *current;
                 /// Index of the child to read (0-7)
@@ -94,11 +98,11 @@ namespace fg {
                  * 
                  */
                 virtual ~STraverseBase() {
-                    while(id_stack.size()) {
-                        id_stack.pop();
+                    while(idStack.size()) {
+                        idStack.pop();
                     }
-                    while(node_stack.size()) {
-                        node_stack.pop();
+                    while(nodeStack.size()) {
+                        nodeStack.pop();
                     }
                     current = NULL;
                     idx = 0;
@@ -110,11 +114,11 @@ namespace fg {
                 void rewind(void) {
                     current = NULL;
                     idx = 0;
-                    while(id_stack.size()) {
-                        id_stack.pop();
+                    while(idStack.size()) {
+                        idStack.pop();
                     }
-                    while(node_stack.size()) {
-                        node_stack.pop();
+                    while(nodeStack.size()) {
+                        nodeStack.pop();
                     }
                     count = 0;
                 }
@@ -122,11 +126,11 @@ namespace fg {
                  * 
                  */
                 void skip(TNodeType *root) {
-                    if(root && !id_stack.empty()) {
-                        idx = id_stack.top();
-                        id_stack.pop();
-                        current = node_stack.top();
-                        node_stack.pop();
+                    if(root && !idStack.empty()) {
+                        idx = idStack.top();
+                        idStack.pop();
+                        current = nodeStack.top();
+                        nodeStack.pop();
                     }
                 }
 

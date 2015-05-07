@@ -127,47 +127,7 @@ namespace fg {
                  * 
                  * @return 
                  */
-                SOctreeNode *next(SOctreeNode *root) {
-                    if(!current) {
-                        if(!root)
-                            return 0;
-                        rewind();
-                        current = root;
-                        count++;
-                        return current;
-                    }
-
-                    for(int i = idx; i < 8; i++) {
-                        uintptr_t offset = (uintptr_t)(&current->child[0][0][0]);
-                        offset += sizeof (SOctreeNode*)*(i);
-                        SOctreeNode *node = *((SOctreeNode**)offset);
-                        if(node) {
-                            idx = i + 1;
-                            node_stack.push(current);
-                            id_stack.push(idx);
-                            idx = 0;
-                            current = node;
-                            count++;
-                            return node;
-                        }
-                    }
-
-                    if(id_stack.empty()) {
-                        current = NULL;
-                        return current;
-                    }
-
-                    idx = id_stack.top();
-                    id_stack.pop();
-                    current = node_stack.top();
-                    node_stack.pop();
-
-                    if(!current) {
-                        return current;
-                    }
-                    return next(root);
-                }
-
+                SOctreeNode *next(SOctreeNode *pRoot);
             };
 
         public:

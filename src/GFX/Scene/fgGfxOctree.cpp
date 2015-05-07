@@ -43,6 +43,48 @@ int gfx::COctree::insert(CTreeNodeObject* pObject, STreeNode* pTreeNode) {
 }
 //------------------------------------------------------------------------------
 
+gfx::SOctreeNode* gfx::COctree::STraverse::next(SOctreeNode *pRoot) {
+    if(!current) {
+        if(!pRoot)
+            return 0;
+        rewind();
+        current = pRoot;
+        count++;
+        return current;
+    }
+
+    for(int i = idx; i < 8; i++) {
+        uintptr_t offset = (uintptr_t)(&current->child[0][0][0]);
+        offset += sizeof (SOctreeNode*)*(i);
+        SOctreeNode *node = *((SOctreeNode**)offset);
+        if(node) {
+            idx = i + 1;
+            nodeStack.push(current);
+            idStack.push(idx);
+            idx = 0;
+            current = node;
+            count++;
+            return node;
+        }
+    }
+
+    if(idStack.empty()) {
+        current = NULL;
+        return current;
+    }
+
+    idx = idStack.top();
+    idStack.pop();
+    current = nodeStack.top();
+    nodeStack.pop();
+
+    if(!current) {
+        return current;
+    }
+    return next(pRoot);
+}
+//------------------------------------------------------------------------------
+
 gfx::STreeNode* gfx::COctree::next(void) {
     return m_traverse.next(m_root);
 }

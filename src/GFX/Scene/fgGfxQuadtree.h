@@ -134,8 +134,8 @@ namespace fg {
                         SQuadtreeNode *node = *((SQuadtreeNode**)offset);
                         if(node) {
                             idx = i + 1;
-                            node_stack.push(current);
-                            id_stack.push(idx);
+                            nodeStack.push(current);
+                            idStack.push(idx);
                             idx = 0;
                             current = node;
                             count++;
@@ -143,15 +143,15 @@ namespace fg {
                         }
                     }
 
-                    if(id_stack.empty()) {
+                    if(idStack.empty()) {
                         current = NULL;
                         return current;
                     }
 
-                    idx = id_stack.top();
-                    id_stack.pop();
-                    current = node_stack.top();
-                    node_stack.pop();
+                    idx = idStack.top();
+                    idStack.pop();
+                    current = nodeStack.top();
+                    nodeStack.pop();
 
                     if(!current) {
                         return current;
