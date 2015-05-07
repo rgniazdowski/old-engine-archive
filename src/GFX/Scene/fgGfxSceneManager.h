@@ -739,6 +739,57 @@ namespace fg {
                                    float extX, float extY, float extZ);
 
             ////////////////////////////////////////////////////////////////////
+            /**
+             *
+             * @param name
+             * @return
+             */
+            inline CSceneNode* createRootNode(const char* name) {
+                if(!name) {
+                    name = "fgMainNode";
+                }
+                return createRootNode(std::string(name));
+            }
+            /**
+             *
+             * @param name
+             * @return
+             */
+            virtual CSceneNode* createRootNode(const std::string& name);
+
+            /**
+             *
+             * @param pNode
+             * @return
+             */
+            virtual fgBool selectActiveRootNode(CSceneNode* pNode);
+            /**
+             *
+             * @param nodeUniqueID
+             * @return
+             */
+            fgBool selectActiveRootNode(SceneNodeHandle& nodeUniqueID);
+            /**
+             * 
+             * @param name
+             * @return
+             */
+            fgBool selectActiveRootNode(const std::string& name);
+            /**
+             *
+             * @param name
+             * @return
+             */
+            fgBool selectActiveRootNode(const char* name);
+            /**
+             *
+             * @return
+             */
+            CSceneNode* getActiveRootNode(void) const {
+                return m_activeRootNode;
+            }
+
+            ////////////////////////////////////////////////////////////////////
 
             /**
              * 
@@ -757,9 +808,9 @@ namespace fg {
              * @param nodeParentUniqueID
              * @return 
              */
-            virtual fgBool addNode(SceneNodeHandle& nodeUniqueID,
-                                   CSceneNode *pNode,
-                                   const SceneNodeHandle& nodeParentUniqueID);
+            fgBool addNode(SceneNodeHandle& nodeUniqueID,
+                           CSceneNode *pNode,
+                           const SceneNodeHandle& nodeParentUniqueID);
             /**
              * 
              * @param nodeUniqueID
@@ -767,9 +818,9 @@ namespace fg {
              * @param nodeParentNameTag
              * @return 
              */
-            virtual fgBool addNode(SceneNodeHandle& nodeUniqueID,
-                                   CSceneNode *pNode,
-                                   const std::string& nodeParentNameTag);
+            fgBool addNode(SceneNodeHandle& nodeUniqueID,
+                           CSceneNode *pNode,
+                           const std::string& nodeParentNameTag);
             /**
              * 
              * @param nodeUniqueID
@@ -777,9 +828,9 @@ namespace fg {
              * @param nodeParentNameTag
              * @return 
              */
-            virtual fgBool addNode(SceneNodeHandle& nodeUniqueID,
-                                   CSceneNode *pNode,
-                                   const char* nodeParentNameTag);
+            fgBool addNode(SceneNodeHandle& nodeUniqueID,
+                           CSceneNode *pNode,
+                           const char* nodeParentNameTag);
 
             ////////////////////////////////////////////////////////////////////
 
@@ -1343,11 +1394,26 @@ namespace fg {
                 onScreen() {
                     onScreen.box.invalidate();
                 }
+                /**
+                 *
+                 */
+                void clear(void) {
+                    timeStamp = -1.0f;
+                    handle.reset();
+                    onScreen.box.invalidate();
+                    onScreen.radius = 0;
+                    onScreen.center.x = 0;
+                    onScreen.center.y = 0;
+                    intersectionPos = Vec3f();
+                    intersectionNorm = Vec3f();
+                    baryPosition = Vec3f();
+                    result = NOT_PICKED;
+                }
             };
 
             typedef util::btree_map<SceneNodeHandle, SPickedNodeInfo> PickedNodesInfoMap;
             typedef PickedNodesInfoMap::iterator PickedNodesInfoMapItor;
-            
+
         protected:
 
             /**
@@ -1453,6 +1519,57 @@ namespace fg {
                                  const fgBool checkAABBTriangles = FG_TRUE);
             } m_pickSelection;
 
+            /**
+             *
+             */
+            struct STraverse {
+                ///
+                typedef CSceneNode node_type;
+                ///
+                typedef std::stack<int> IdStack;
+                ///
+                typedef std::stack<CSceneNode*> NodeStack;
+
+                /// Stack containing child ids
+                IdStack idStack;
+                /// Stack for containing nodes
+                NodeStack nodeStack;
+                /// Current node pointer
+                CSceneNode *current;
+                /// Index of the child to read
+                int idx;
+                /// Number of objects traversed
+                int count;
+                /**
+                 *
+                 */
+                STraverse() :
+                idStack(),
+                nodeStack(),
+                current(NULL),
+                idx(0),
+                count(0) { }
+                /**
+                 *
+                 */
+                ~STraverse();
+                /**
+                 *
+                 */
+                void rewind(void);
+                /**
+                 *
+                 * @param pRoot
+                 */
+                void skip(CSceneNode* pRoot);
+
+                /**
+                 *
+                 * @return
+                 */
+                CSceneNode* next(CSceneNode* pRoot);
+            } m_traverse;
+
         public:
             /**
              * 
@@ -1485,6 +1602,13 @@ namespace fg {
             CCameraAnimation m_camera;
             /// Internal skybox
             CSceneSkyBox m_skybox;
+            /// Root nodes of this scene manager. Single root node is a common
+            /// father for other nodes which are added later - root node creates
+            /// separate scene, level, map, etc. Root node will be created if
+            /// there isn't any
+            ObjectVec m_rootNodes;
+            /// Currently active root node - separate scene
+            CSceneNode* m_activeRootNode;
             /// Queue containing scene node (sorted) ready to render
             NodePriorityQueue m_nodeQueue;
             /// Pointer to the external resource manager - don't know if this is necessary

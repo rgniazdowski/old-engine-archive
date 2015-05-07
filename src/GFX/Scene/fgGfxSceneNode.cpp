@@ -219,8 +219,6 @@ fgBool gfx::CSceneNode::checkCollisionSphere(const CSceneNode* pNode) const {
     if(r2 > radius2) {
         return FG_FALSE;
     }
-
-    //m_aabb.test(pNode->getRefBoundingVolume());
     return FG_TRUE;
 }
 //------------------------------------------------------------------------------
@@ -262,7 +260,9 @@ void gfx::CSceneNode::draw(const Vec2f& relPos) {
     for(; it != end; it++) {
         if(!(*it))
             continue;
-        (*it)->draw(relPos);
+        if(m_drawCall != (*it)->getDrawCall()) {
+            (*it)->draw(relPos);
+        }
     }
 }
 //------------------------------------------------------------------------------
@@ -277,7 +277,9 @@ void gfx::CSceneNode::draw(const Vec3f& relPos) {
     for(; it != end; it++) {
         if(!(*it))
             continue;
-        (*it)->draw(relPos);
+        if(m_drawCall != (*it)->getDrawCall()) {
+            (*it)->draw(relPos);
+        }
     }
 }
 //------------------------------------------------------------------------------
@@ -292,7 +294,9 @@ void gfx::CSceneNode::draw(const Matrix4f& modelMat) {
     for(; it != end; it++) {
         if(!(*it))
             continue;
-        (*it)->draw(modelMat);
+        if(m_drawCall != (*it)->getDrawCall()) {
+            (*it)->draw(modelMat);
+        }
     }
 }
 //------------------------------------------------------------------------------
@@ -398,6 +402,7 @@ fgBool gfx::CSceneNode::addChild(CSceneNode *pChild) {
         status = FG_FALSE; // duplicate, do not add...
     if(status) {
         m_children.push_back(pChild);
+        pChild->setParent(this);
     }
     return status;
 }
@@ -686,6 +691,16 @@ gfx::CSceneNode* gfx::CSceneNode::getChild(const std::string& childName) {
 
 gfx::CSceneNode* gfx::CSceneNode::getChild(const char *childName) {
     return getChild(std::string(childName));
+}
+//------------------------------------------------------------------------------
+
+gfx::CSceneNode* gfx::CSceneNode::getChild(const unsigned int index) {
+    if(!getChildrenCount())
+        return NULL;
+    if(index >= getChildrenCount())
+        return NULL;
+    CSceneNode* pChild = m_children[index];
+    return pChild;
 }
 //------------------------------------------------------------------------------
 

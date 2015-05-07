@@ -6,7 +6,7 @@
  * 
  * FlexiGame source code and any related files can not be copied, modified 
  * and/or distributed without the express or written consent from the author.
- *******************************************************/
+ ******************************************************************************/
 
 #ifndef FG_INC_GFX_SCENE_NODE
     #define FG_INC_GFX_SCENE_NODE
@@ -59,20 +59,22 @@ namespace fg {
 
         /// Invalid scene node - initial value
         const SceneNodeType SCENE_NODE_INVALID = 0;
+        /// This is a special SceneNode type - it's for specifying root nodes
+        const SceneNodeType SCENE_NODE_ROOT = 1;
         /// Custom scene node - it is still drawable but relies on custom
         /// draw call type to draw something - meaning that this utilizes
         /// custom vertex data
-        const SceneNodeType SCENE_NODE_CUSTOM = 1;
+        const SceneNodeType SCENE_NODE_CUSTOM = 2;
         /// Node mesh is based on GfxMesh/Shape - Model is made of Shapes
         /// Every shape is made of one mesh. This will be mostly child node.
-        const SceneNodeType SCENE_NODE_MESH = 2;
+        const SceneNodeType SCENE_NODE_MESH = 3;
         /// This is special type of mesh node - based on GfxModel
         /// this will contain multiple children (mesh/shapes) with
         /// configured draw calls and updated bounding boxes
-        const SceneNodeType SCENE_NODE_OBJECT = 3;
+        const SceneNodeType SCENE_NODE_OBJECT = 4;
         /// Trigger is a special node type - when collision occurs with it
         /// the special event is thrown - registered callbacks will be called
-        const SceneNodeType SCENE_NODE_TRIGGER = 4;
+        const SceneNodeType SCENE_NODE_TRIGGER = 5;
 
         ///
         class CSceneManager;
@@ -600,6 +602,12 @@ namespace fg {
              * @return 
              */
             self_type* getChild(const char *childName);
+            /**
+             * 
+             * @param index
+             * @return
+             */
+            self_type* getChild(const unsigned int index = 0);
 
             /**
              * 

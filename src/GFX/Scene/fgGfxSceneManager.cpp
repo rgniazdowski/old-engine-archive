@@ -33,6 +33,7 @@ CDrawingBatch(),
 m_collisionsInfo(),
 m_triggers(),
 m_pickSelection(),
+m_traverse(),
 m_stateFlags(NONE | FRUSTUM_CHECK),
 m_groundLevel(0.0f),
 m_groundGridCellSize(50.0f),
@@ -40,6 +41,8 @@ m_worldSize(),
 m_MVP(),
 m_camera(CCameraAnimation::FREE),
 m_skybox(),
+m_rootNodes(),
+m_activeRootNode(NULL),
 m_nodeQueue(),
 m_pResourceMgr(NULL),
 m_sceneEventMgr(NULL),
@@ -49,7 +52,7 @@ m_basetree(NULL) {
     m_skybox.setMVP(&m_MVP);
     m_sceneEventMgr = new event::CEventManager(sizeof (event::SSceneEvent));
     m_triggers.reserve(4);
-
+    m_traverse.rewind();
 }
 //------------------------------------------------------------------------------
 
@@ -715,6 +718,86 @@ gfx::CSceneManager::SPickSelection::fullCheck(CSceneManager* pSceneMgr,
 }
 //------------------------------------------------------------------------------
 
+gfx::CSceneManager::STraverse::~STraverse() {
+    while(idStack.size()) {
+        idStack.pop();
+    }
+    while(nodeStack.size()) {
+        nodeStack.pop();
+    }
+    current = NULL;
+    idx = 0;
+    count = 0;
+}
+//------------------------------------------------------------------------------
+
+void gfx::CSceneManager::STraverse::rewind(void) {
+    current = NULL;
+    idx = 0;
+    while(idStack.size()) {
+        idStack.pop();
+    }
+    while(nodeStack.size()) {
+        nodeStack.pop();
+    }
+    count = 0;
+}
+//------------------------------------------------------------------------------
+
+void gfx::CSceneManager::STraverse::skip(CSceneNode* pRoot) {
+    if(pRoot && !idStack.empty()) {
+        idx = idStack.top();
+        idStack.pop();
+        current = nodeStack.top();
+        nodeStack.pop();
+        if(current) {
+        }
+    }
+}
+//------------------------------------------------------------------------------
+
+gfx::CSceneNode* gfx::CSceneManager::STraverse::next(CSceneNode* pRoot) {
+    if(!current) {
+        if(!pRoot)
+            return NULL;
+        rewind();
+        current = pRoot;
+        count++;
+        return current;
+    }
+    const int nChildren = current->getChildrenCount();
+    const CSceneNode::ChildrenVec &children = current->getChildren();
+    for(int i = idx; i < nChildren; i++) {
+        CSceneNode *pNode = children[i];
+        if(pNode && pNode->getParent()) {
+            idx = i + 1;
+            nodeStack.push(current);
+            idStack.push(idx);
+            idx = 0;
+            current = pNode;
+            count++;
+            return current;
+        }
+    }
+
+    if(idStack.empty()) {
+        current = NULL;
+        return current;
+    }
+
+    idx = idStack.top();
+    idStack.pop();
+    current = nodeStack.top();
+    nodeStack.pop();
+
+    if(!current) {
+        return current;
+    }
+    return next(pRoot);
+}
+
+//------------------------------------------------------------------------------
+
 void gfx::CSceneManager::update(void) {
     while(m_triggers.size()) {
         STriggerInfo &info = m_triggers.back();
@@ -770,44 +853,46 @@ void gfx::CSceneManager::sortCalls(void) {
             m_pickSelection.groundIntersectionPoint = Vector3f();
     }
     const fgBool checkPickSelectionAABB = isPickSelectionAABBTriangles();
-
-    DataVecItor itor = getRefDataVector().begin(), end = getRefDataVector().end();
-#if 1
-    for(; itor != end; itor++) {
-        if(!(*itor).data)
+    
+    m_traverse.rewind();
+    while(m_traverse.next(getActiveRootNode())) {
+        CSceneNode *pSceneNode = m_traverse.current;
+        if(!pSceneNode)
             continue;
-        CSceneNode* pNode = (*itor).data;
-        if(!pNode->isActive()) {
-
+        if(pSceneNode->getNodeType() == SCENE_NODE_ROOT) {
+            continue; // for now skip the root nodes in linear traversal
         }
-        CDrawCall* pDrawCall = pNode->getDrawCall();
+        CDrawCall* pDrawCall = pSceneNode->getDrawCall();
 #if defined(FG_DEBUG)
         if(g_DebugConfig.isDebugProfiling) {
             profile::g_debugProfiling->begin("GFX::Scene::FrustumCheck");
         }
-#endif        
-        // There is a problem because the bounding box needs to be modified by
-        // the model matrix; maybe some operator ?
-        pNode->update(timesys::elapsed()); // updateAABB
-
+#endif
+        if(pSceneNode->isActive()) {
+            // There is a problem because the bounding box needs to be modified by
+            // the model matrix; maybe some operator ?
+            pSceneNode->update(timesys::elapsed()); // update nodes internals when active
+        }
         int visibilityResult = 1;
         if(isFrustumCheck()) {
-            visibilityResult = m_MVP.getFrustum().testVolume(pNode->getBoundingVolume());
+            visibilityResult = m_MVP.getFrustum().testVolume(pSceneNode->getBoundingVolume());
         } else if(isFrustumCheckSphere()) {
-            visibilityResult = m_MVP.getFrustum().testSphere(pNode->getBoundingVolume());
+            visibilityResult = m_MVP.getFrustum().testSphere(pSceneNode->getBoundingVolume());
         }
-        pNode->setVisible(!!visibilityResult);
+        pSceneNode->setVisible(!!visibilityResult);
 #if defined(FG_DEBUG)
         if(g_DebugConfig.isDebugProfiling) {
             profile::g_debugProfiling->end("GFX::Scene::FrustumCheck");
         }
 #endif
-
         // Pick selection // #FIXME
-        if(m_pickSelection.shouldCheck && visibilityResult) {
-            m_pickSelection.fullCheck(this, pNode, checkPickSelectionAABB);
+        if(m_pickSelection.shouldCheck) {
+            if(visibilityResult) {
+                m_pickSelection.fullCheck(this, pSceneNode, checkPickSelectionAABB);
+            } else {
+                m_pickSelection.pickedNodesInfo[pSceneNode->getHandle()].clear();
+            }
         }
-
         g_DebugConfig.gfxBBoxShow = true;
         // ? also need to push to queue more than one draw call
         // And i mean... wait wut? All children are registered
@@ -816,8 +901,8 @@ void gfx::CSceneManager::sortCalls(void) {
         // The aabb for each object is updated based on the children
         // Need some standard for manipulating this objects, and also for traversing
         // the tree. Also one would need some standard for special kind of tree - loose octrees?
-        if(pNode->isVisible()) {
-            m_nodeQueue.push(pNode);
+        if(pSceneNode->isVisible()) {
+            m_nodeQueue.push(pSceneNode);
         }
         // #FIXME - srsly?
         if(pDrawCall) {
@@ -826,7 +911,6 @@ void gfx::CSceneManager::sortCalls(void) {
             // getRefPriorityQueue().push(pDrawCall);
         }
     }
-#endif
     m_pickSelection.end(getStateFlags());
 }
 //------------------------------------------------------------------------------
@@ -1245,6 +1329,50 @@ void gfx::CSceneManager::initializeNode(CSceneNode* pNode) {
 }
 //------------------------------------------------------------------------------
 
+gfx::CSceneNode* gfx::CSceneManager::createRootNode(const std::string& name) {
+    if(name.empty())
+        return NULL;
+    CSceneNode *pRootNode = get(name);
+    if(!pRootNode) {
+        pRootNode = new CSceneNode(SCENE_NODE_ROOT, NULL);
+        pRootNode->setName(name);
+        addNode(pRootNode->getRefHandle(), pRootNode);
+    }
+    if(!m_activeRootNode)
+        m_activeRootNode = pRootNode;
+    return pRootNode;
+}
+//------------------------------------------------------------------------------
+
+fgBool gfx::CSceneManager::selectActiveRootNode(CSceneNode* pNode) {
+    if(!pNode)
+        return FG_FALSE;
+    if(!isManaged(pNode))
+        return FG_FALSE;
+    int idx = m_rootNodes.find(pNode);
+    if(idx < 0) {
+        return FG_FALSE;
+    }
+    m_activeRootNode = pNode;
+    return FG_TRUE;
+}
+//------------------------------------------------------------------------------
+
+fgBool gfx::CSceneManager::selectActiveRootNode(SceneNodeHandle& nodeUniqueID) {
+    return selectActiveRootNode(handle_mgr_type::dereference(nodeUniqueID));
+}
+//------------------------------------------------------------------------------
+
+fgBool gfx::CSceneManager::selectActiveRootNode(const std::string& name) {
+    return selectActiveRootNode(handle_mgr_type::dereference(name));
+}
+//------------------------------------------------------------------------------
+
+fgBool gfx::CSceneManager::selectActiveRootNode(const char* name) {
+    return selectActiveRootNode(handle_mgr_type::dereference(name));
+}
+//------------------------------------------------------------------------------
+
 fgBool gfx::CSceneManager::addNode(SceneNodeHandle& nodeUniqueID,
                                    CSceneNode* pNode,
                                    CSceneNode* pFatherNode) {
@@ -1277,7 +1405,21 @@ fgBool gfx::CSceneManager::addNode(SceneNodeHandle& nodeUniqueID,
     // be set to FG_FALSE after addition
     pNode->setManaged(FG_TRUE);
     pNode->setManager(this); // Setup internal pointer to the manager
-    pNode->setParent(pFatherNode); // Pointer to the parent (if any)
+    if(pFatherNode != pNode && pNode->getNodeType() != SCENE_NODE_ROOT)
+        pNode->setParent(pFatherNode); // Pointer to the parent (if any)
+
+    if(pNode->getNodeType() != SCENE_NODE_ROOT && !pFatherNode) {
+        // If this node is not root and does not have a father node
+        // set as parent currently active root node
+        if(!m_activeRootNode) {
+            createRootNode(NULL); // create root node with standard name            
+        }
+        pNode->setParent(m_activeRootNode);
+    }
+
+    if(pNode->getParent()) {
+        pNode->getParent()->addChild(pNode);
+    }
 
     if(!handle_mgr_type::setupName(pNode->getName().c_str(), nodeUniqueID)) {
         // Could not setup handle string tag/name for the scene node
@@ -1288,15 +1430,19 @@ fgBool gfx::CSceneManager::addNode(SceneNodeHandle& nodeUniqueID,
 
     initializeNode(pNode);
 
-    if(m_basetree) {
+    if(m_basetree && pNode->getNodeType() != SCENE_NODE_ROOT) {
         // add to the spatial tree structure
         // it can be octree/quadtree or any other (bounding volume hierarchy)
-        m_basetree->insert(pNode); // #FIXME -- need some kind of removal functionality
+
+        m_basetree->insert(pNode);
     }
     // 2nd argument tells that this draw call should not be managed
     // meaning: destructor wont be called on flush()
     //fgGfxDrawingBatch::appendDrawCall(drawCall, FG_FALSE); // Don't know if needed...
 
+    // Reserve more space for the internal collisions info structure
+    // This vector stores information about nodes that are colliding in the
+    // current frame
     if(handle_mgr_type::getRefDataVector().size() > m_collisionsInfo.capacity()) {
         m_collisionsInfo.reserve((unsigned int)((float)handle_mgr_type::getRefDataVector().size()*1.5f) + 32);
     }

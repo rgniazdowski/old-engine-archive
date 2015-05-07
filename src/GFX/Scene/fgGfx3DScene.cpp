@@ -60,25 +60,18 @@ gfx::CScene3D::~CScene3D() {
 void gfx::CScene3D::sortCalls(void) {
     if(!getShaderManager())
         return;
-
     if(isLinearTraverse()) {
-        // #FIXME
         CSceneManager::sortCalls();
         return;
     }
-
     if(m_physicsWorld) {
         m_physicsWorld->startFrame();
     }
-
+    // Update the MVP based on the main camera properties
     getMVP()->setCamera((CCamera *)(getCamera()));
     CFrustum &frustum = getMVP()->getFrustum();
-
-    getNodeQueue().clear();
     // Remove from the queue any remaining nodes (SceneNode)
-    //while(!getNodeQueue().empty())
-    //    getNodeQueue().pop();
-
+    getNodeQueue().clear();
     //
     // Pick selection init
     //
@@ -99,37 +92,29 @@ void gfx::CScene3D::sortCalls(void) {
     ////////////////////////////////////////////////////////////////////////////
     // PHASE I: Iterate through all objects, animate, update AABB, collisions...
     ////////////////////////////////////////////////////////////////////////////
-    DataVecItor itor = getRefDataVector().begin(), end = getRefDataVector().end();
-    for(; itor != end; itor++) {
-        if(!(*itor).data)
+    m_traverse.rewind();
+    while(m_traverse.next(getActiveRootNode())) {
+        CSceneNode *pSceneNode = m_traverse.current;
+        if(!pSceneNode)
             continue;
-        CSceneNode *pSceneNode = (*itor).data;
-        if(!pSceneNode->isActive()) {
-            //continue;
+        if(pSceneNode->getNodeType() == SCENE_NODE_ROOT) {
+            continue; // skip root nodes
         }
-
-        //sceneNode->refreshGfxInternals(); // #FIXME - is this needed?!?
+        if(!pSceneNode->isActive()) {
+            continue; // skip not active node
+        }
         SOctreeNode *pTreeNode = static_cast<SOctreeNode *>(pSceneNode->getTreeNode());
         pSceneNode->setVisible(FG_FALSE);
         // There is a problem because the bounding box needs to be modified by
         // the model matrix; maybe some operator ?
-        pSceneNode->update(timesys::elapsed()); // #FIXME - maybe this should also call updateAABB??
+        pSceneNode->update(timesys::elapsed());
 
         if(pTreeNode) {
-            //unsigned int objCount = treeNode->objects.size();
             float halfSize = static_cast<CLooseOctree *>(m_octree)->getLooseK() * m_octree->getWorldSize().x / (2 << pTreeNode->depth);
             // Check bounds of this scene node - if does not fit - reinsert to different tree node - slow...
             if(m_octree->fitsInBox(pSceneNode, pTreeNode->center, halfSize)) {
-                //printf("%s fits in box depth %d\n", sceneNode->getNameStr(), treeNode->depth);
             } else if(pTreeNode->removeObject(pSceneNode)) {
-                /*int objIdx = treeNode->objects.find(sceneNode);
-                if(objIdx != -1) {
-                    sceneNode->setTreeNode(NULL);
-                    treeNode->objects[objIdx] = treeNode->objects[objCount - 1];
-                    treeNode->objects[objCount - 1] = NULL;
-                    treeNode->objects.resize(objCount - 1);*/
                 m_octree->insert(pSceneNode);
-                //}
             }
         }
         // checkCollisions rewinds the octree/quadtree
@@ -139,7 +124,6 @@ void gfx::CScene3D::sortCalls(void) {
             checkCollisions(pSceneNode);
         }
     }
-
     ////////////////////////////////////////////////////////////////////////////
     // PHASE II: Traverse the tree, check visibility, update nodes
     ////////////////////////////////////////////////////////////////////////////
@@ -185,21 +169,16 @@ void gfx::CScene3D::sortCalls(void) {
             }
 #endif
             g_DebugConfig.gfxBBoxShow = true;
-            // ? also need to push to queue more than one draw call
-            // And i mean... wait wut? All children are registered
-            // This is a tree - that needs to be traversed
-            // There is no need to go through all (linear) objects through the scene
-            // The aabb for each object is updated based on the children
-            // Need some standard for manipulating this objects, and also for traversing
-            // the tree. Also one would need some standard for special kind of tree - loose octrees? bitch?
             if(pSceneNode->isVisible()) {
                 // Checking for pick selection only when node is visible
                 if(m_pickSelection.shouldCheck) {
-                    m_pickSelection.fullCheck(this, pSceneNode, checkPickSelectionAABB);
+                    if(!visibilityResult) {
+                        m_pickSelection.pickedNodesInfo[pSceneNode->getHandle()].clear();
+                    } else {
+                        m_pickSelection.fullCheck(this, pSceneNode, checkPickSelectionAABB);
+                    }
                 }
-                ////////
                 getNodeQueue().push(pSceneNode);
-                //printf("going to draw %s\n", sceneNode->getNameStr());
             }
             if(pDrawCall) {
                 if(!pDrawCall->getShaderProgram())
@@ -208,7 +187,6 @@ void gfx::CScene3D::sortCalls(void) {
             }
         }
     }
-
     if(m_physicsWorld) {
         m_physicsWorld->finishFrame();
     }
