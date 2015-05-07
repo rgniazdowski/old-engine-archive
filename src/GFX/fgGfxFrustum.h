@@ -182,6 +182,20 @@ namespace fg {
             float getAngle(void) const {
                 return m_angle;
             }
+            /**
+             *
+             * @return
+             */
+            float getTangent(void) const {
+                return m_tang;
+            }
+            /**
+             *
+             * @return
+             */
+            float getAspect(void) const {
+                return m_aspect;
+            }
 
         private:
             ///

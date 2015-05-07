@@ -376,7 +376,7 @@ void gfx::CSceneManager::clearSelection(void) {
         m_pickSelection.h_selectedNodes[i].reset();
     }
     m_pickSelection.h_selectedNodes.clear_optimised();
-    m_pickSelection.h_selectionTimeStamps.clear();
+    m_pickSelection.pickedNodesInfo.clear();
 }
 //------------------------------------------------------------------------------
 
@@ -435,7 +435,7 @@ isGroup(FG_FALSE),
 checkBox(FG_FALSE),
 h_lastSelectedNode(),
 h_selectedNodes(),
-h_selectionTimeStamps() {
+pickedNodesInfo() {
     h_selectedNodes.reserve(16);
     for(int i = 0; i < 16; i++) {
         h_selectedNodes[i].reset();
@@ -529,26 +529,40 @@ void gfx::CSceneManager::SPickSelection::updateRay(const CMVPMatrix& mvp,
 }
 //------------------------------------------------------------------------------
 
-gfx::CSceneManager::SPickSelection::Result gfx::CSceneManager::SPickSelection::isPicked(const CSceneNode* pNode,
-                                                                                        const CMVPMatrix& mvp,
-                                                                                        const fgBool checkAABBTriangles) {
+gfx::CSceneManager::SPickSelection::Result
+gfx::CSceneManager::SPickSelection::isPicked(const CSceneNode* pNode,
+                                             SPickedNodeInfo& pickInfo,
+                                             const CMVPMatrix& mvp,
+                                             const fgBool checkAABBTriangles) {
+    pickInfo.result = (SPickedNodeInfo::Result)NOT_PICKED;
     if(!pNode)
-        return NOT_PICKED;
-    Result result = NOT_PICKED;
-    Vector3f intersectionPos, intersectionNorm, baryPosition;
-    const BoundingVolume3Df& volume = pNode->getBoundingVolume();
-    const Vec3f& center = volume.center;
-    const Vec3f& extent = volume.extent;
+        return NOT_PICKED;    
+    const BoundingVolume3Df& volume = pNode->getBoundingVolume();    
     if(volume.radius < std::numeric_limits<float>::epsilon())
         return NOT_PICKED;
+    const Vec3f& center = volume.center;
+    const Vec3f& extent = volume.extent;
+    const Vector4i& viewport = context::getViewport();
+    const Vector2i& screensize = context::getScreenSize();
     bool triangleStatus = false;
     bool status = math::intersectRaySphere(rayEye, rayDir,
                                            center,
                                            volume.radius,
-                                           intersectionPos,
-                                           intersectionNorm);
+                                           pickInfo.intersectionPos,
+                                           pickInfo.intersectionNorm);
     if(status)
-        result = PICKED_SPHERE;
+        pickInfo.result = (SPickedNodeInfo::Result)PICKED_SPHERE;
+
+    {
+        Vec3f screenCenter = math::project(center, mvp.getRefViewProjMatrix(), viewport);
+        float d = math::distance(center, rayEye);
+        float r = volume.radius;
+        float fov = mvp.getFrustum().getTangent();
+        float pr = 1.0f / math::tan(fov) * r / math::sqrt(d * d - r * r); // Right
+        pickInfo.onScreen.radius = pr * gfx::context::getScreenSize().y / 2.0f;
+        pickInfo.onScreen.center.x = screenCenter.x;
+        pickInfo.onScreen.center.y = screenCenter.y;
+    }
 
     if(status && checkAABBTriangles) {
         aabbPoints[0] = Vec3f(center.x - extent.x, center.y - extent.y, center.z + extent.z); // 1 -x, -y, +z
@@ -569,18 +583,16 @@ gfx::CSceneManager::SPickSelection::Result gfx::CSceneManager::SPickSelection::i
                                                         v_i(aabbTrisIdx[i][0]),
                                                         v_i(aabbTrisIdx[i][1]),
                                                         v_i(aabbTrisIdx[i][2]),
-                                                        baryPosition);
+                                                        pickInfo.baryPosition);
             if(triangleStatus) {
-                result = PICKED_AABB;
+                pickInfo.result = (SPickedNodeInfo::Result)PICKED_AABB;
                 break;
             }
         }
 #undef v_i
     }
-    if(!result && checkBox) {
-        // if we need to check the picker selection box against the node
-        const Vector4i& viewport = context::getViewport();
-        const Vector2i& screensize = context::getScreenSize();
+    if(!pickInfo.result && checkBox || checkBox) {
+        // if we need to check the picker selection box against the node        
         AABB3Df aabb;
         aabb.invalidate();
         aabbPoints[0] = math::project(Vec3f(center.x - extent.x, center.y - extent.y, center.z + extent.z), mvp.getRefViewProjMatrix(), viewport); // 1 -x, -y, +z
@@ -594,7 +606,6 @@ gfx::CSceneManager::SPickSelection::Result gfx::CSceneManager::SPickSelection::i
         aabbPoints[7] = math::project(Vec3f(center.x - extent.x, center.y - extent.y, center.z - extent.z), mvp.getRefViewProjMatrix(), viewport);
         for(int i = 0; i < 8; i++)
             aabb.merge(aabbPoints[i]);
-        AABB2Di box2d;
         Vector2i pos, size;
         pos.x = aabb.min.x;
         pos.y = screensize.y - aabb.max.y;
@@ -608,35 +619,37 @@ gfx::CSceneManager::SPickSelection::Result gfx::CSceneManager::SPickSelection::i
             pos.y = pos.y + size.y;
             size.y = -1 * size.y;
         }
-        box2d.min = pos;
-        box2d.setWidth(size.x);
-        box2d.setHeight(size.y);
-        // is box2d completly inside of pickBox?
-        fgBool boxStatus = pickBox.test(box2d);
+        pickInfo.onScreen.box.min = pos;
+        pickInfo.onScreen.box.setWidth(size.x);
+        pickInfo.onScreen.box.setHeight(size.y);
+        // is box2d completely inside of pickBox?
+        fgBool boxStatus = pickBox.test(pickInfo.onScreen.box);
         if(boxStatus) {
-            result = goodPickResult;
+            pickInfo.result = (SPickedNodeInfo::Result)goodPickResult;
         }
     }
-    return result;
+    return (Result)pickInfo.result;
 }
 //------------------------------------------------------------------------------
 
-gfx::CSceneManager::SPickSelection::Result gfx::CSceneManager::SPickSelection::fullCheck(CSceneManager* pSceneMgr,
-                                                                                         CSceneNode* pNode,
-                                                                                         const fgBool checkAABBTriangles) {
+gfx::CSceneManager::SPickSelection::Result
+gfx::CSceneManager::SPickSelection::fullCheck(CSceneManager* pSceneMgr,
+                                              CSceneNode* pNode,
+                                              const fgBool checkAABBTriangles) {
     if(!pSceneMgr || !pNode) {
         return NOT_PICKED;
     }
-    Result pickResult = isPicked(pNode, (*pSceneMgr->getMVP()), checkAABBTriangles);
+    SceneNodeHandle nodeHandle = pNode->getHandle();
+    pickedNodesInfo[nodeHandle].handle = nodeHandle;
+    Result pickResult = isPicked(pNode, pickedNodesInfo[nodeHandle], (*pSceneMgr->getMVP()), checkAABBTriangles);
     fgBool shouldThrow = FG_TRUE;
     fgBool shouldRemove = FG_FALSE;
     const float exact = timesys::exact();
     int idx = -1;
     if(pickResult == goodPickResult) {
         CSceneNode*pLastNode = pSceneMgr->getLastPickedNode();
-        SceneNodeHandle handle = pNode->getHandle();
-        idx = h_selectedNodes.find(handle);
-        const float ts = h_selectionTimeStamps[handle];
+        idx = h_selectedNodes.find(nodeHandle);
+        const float ts = pickedNodesInfo[nodeHandle].timeStamp;
         if(isToggle && ts < pickBegin) {
             pNode->setSelected(!pNode->isSelected());
             if(!pNode->isSelected()) {
@@ -659,15 +672,15 @@ gfx::CSceneManager::SPickSelection::Result gfx::CSceneManager::SPickSelection::f
         if(!isGroup && !shouldRemove) {
             h_selectedNodes.clear_optimised();
             h_selectedNodes.resize(1);
-            h_selectedNodes[0] = handle;
+            h_selectedNodes[0] = nodeHandle;
             if(shouldThrow) {
-                h_selectionTimeStamps[handle] = exact;
+                pickedNodesInfo[nodeHandle].timeStamp = exact;
             }
         }
         if(isGroup && !shouldRemove && pNode->isSelected()) {
-            if(-1 == h_selectedNodes.find(handle)) {
-                h_selectedNodes.push_back(handle);
-                h_selectionTimeStamps[handle] = exact;
+            if(-1 == h_selectedNodes.find(nodeHandle)) {
+                h_selectedNodes.push_back(nodeHandle);
+                pickedNodesInfo[nodeHandle].timeStamp = exact;
             }
         }
         if(shouldRemove && h_selectedNodes.size()) {
@@ -675,10 +688,10 @@ gfx::CSceneManager::SPickSelection::Result gfx::CSceneManager::SPickSelection::f
             h_selectedNodes[idx] = h_selectedNodes[size - 1];
             h_selectedNodes[size - 1].reset();
             h_selectedNodes.resize(size - 1);
-            h_selectionTimeStamps[handle] = exact;
+            pickedNodesInfo[nodeHandle].timeStamp = exact;
         }
         if(pNode->isSelected())
-            h_lastSelectedNode = handle;
+            h_lastSelectedNode = nodeHandle;
         if(shouldThrow) {
             // Throw proper event
             event::CArgumentList *argList = pSceneMgr->getInternalEventManager()->requestArgumentList();
@@ -828,8 +841,7 @@ void gfx::CSceneManager::render(void) {
     NodePriorityQueueConstItor nodesItor, nodesEnd;
     nodesEnd = m_nodeQueue.end();
     nodesItor = m_nodeQueue.begin();
-    for(;nodesItor != nodesEnd; nodesItor++)
-    {
+    for(; nodesItor != nodesEnd; nodesItor++) {
         if(isHideNodes()) {
             // #FIXME
             m_nodeQueue.clear(); //pop/clear

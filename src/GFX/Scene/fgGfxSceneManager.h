@@ -6,7 +6,7 @@
  * 
  * FlexiGame source code and any related files can not be copied, modified 
  * and/or distributed without the express or written consent from the author.
- *******************************************************/
+ ******************************************************************************/
 
 #ifndef FG_INC_GFX_SCENE_MANAGER
     #define FG_INC_GFX_SCENE_MANAGER
@@ -28,6 +28,7 @@
         #include "GFX/fgGfxCameraAnimation.h"
     #endif
 
+    #include "Util/fgBTreeMap.h"
 
     #include "fgGfxBasetree.h"
 
@@ -1156,6 +1157,8 @@ namespace fg {
 
             ////////////////////////////////////////////////////////////////////
 
+        protected:
+
             /**
              *
              */
@@ -1196,6 +1199,78 @@ namespace fg {
             TriggerInfoVec m_triggers;
 
             ////////////////////////////////////////////////////////////////////
+
+        public:
+
+            /**
+             * Helper structure which contains more information about the selected
+             * node (via pick selection). The result of the selection (whether
+             * is picked or not). Additional information on the screenBox for the
+             * selected scene node.
+             */
+            struct SPickedNodeInfo {
+
+                /**
+                 *
+                 */
+                enum Result {
+                    /// This node was not picked
+                    NOT_PICKED,
+                    /// This node was picked via bounding sphere or circle if
+                    /// the box selection is active
+                    PICKED_SPHERE,
+                    /// This node was picked via AABB or 2D on screen box if the
+                    /// box/rectangle selection is active
+                    PICKED_AABB
+                };
+                ///
+                Result result;
+                ///
+                float timeStamp;
+                ///
+                SceneNodeHandle handle;
+                ///
+                Vector3f intersectionPos;
+                ///
+                Vector3f intersectionNorm;
+                ///
+                Vector3f baryPosition;
+
+                /**
+                 *
+                 */
+                struct SOnScreen {
+                    /// bounding box/rectangle of the selected node
+                    AABB2Di box;
+                    /// center of the bounding 2d circle
+                    Vector2i center;
+                    /// radius of the 2d circle
+                    int radius;
+                    /**
+                     *
+                     */
+                    SOnScreen() : box(), center(), radius() {
+                        box.invalidate();
+                    }
+                } onScreen;
+                /**
+                 *
+                 */
+                SPickedNodeInfo() : result(NOT_PICKED),
+                timeStamp(-1.0f),
+                handle(),
+                intersectionPos(),
+                intersectionNorm(),
+                baryPosition(),
+                onScreen() {
+                    onScreen.box.invalidate();
+                }
+            };
+
+            typedef util::btree_map<SceneNodeHandle, SPickedNodeInfo> PickedNodesInfoMap;
+            typedef PickedNodesInfoMap::iterator PickedNodesInfoMapItor;
+            
+        protected:
 
             /**
              *
@@ -1240,7 +1315,7 @@ namespace fg {
                 ///
                 CVector<SceneNodeHandle> h_selectedNodes;
                 ///
-                std::map<SceneNodeHandle, float> h_selectionTimeStamps;
+                PickedNodesInfoMap pickedNodesInfo;
 
                 /**
                  * 
@@ -1282,6 +1357,7 @@ namespace fg {
                  * @return
                  */
                 Result isPicked(const CSceneNode* pNode,
+                                SPickedNodeInfo& pickInfo,
                                 const CMVPMatrix& mvp,
                                 const fgBool checkAABBTriangles = FG_TRUE);
 
@@ -1296,6 +1372,22 @@ namespace fg {
                                  CSceneNode* pNode,
                                  const fgBool checkAABBTriangles = FG_TRUE);
             } m_pickSelection;
+
+        public:
+            /**
+             * 
+             * @return
+             */
+            PickedNodesInfoMap& getPickedNodesInfo(void) {
+                return m_pickSelection.pickedNodesInfo;
+            }
+            /**
+             *
+             * @return
+             */
+            PickedNodesInfoMap const& getPickedNodesInfo(void) const {
+                return m_pickSelection.pickedNodesInfo;
+            }
 
             ////////////////////////////////////////////////////////////////////
         private:
