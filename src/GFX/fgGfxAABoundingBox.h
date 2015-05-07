@@ -123,9 +123,7 @@ namespace fg {
             /**
              * 
              */
-            SAABoundingBoxT() :
-            min(),
-            max() { }
+            SAABoundingBoxT() : min(), max() { }
             /**
              * Overloaded copy constructor - needs to be implemented
              * explicitly because of the union containing complex types
@@ -382,13 +380,25 @@ namespace fg {
              * 
              */
             virtual void invalidate(void) {
-                this->zero();
+                const value_type fmax = std::numeric_limits<value_type>::max();
+                this->max.x = fmax / (value_type)2 * (value_type)(-1);
+                this->max.y = fmax / (value_type)2 * (value_type)(-1);
+                this->min.x = fmax;
+                this->min.y = fmax;
+
             }
             /**
-             * 
-             * @return 
+             *
              */
-            virtual inline fgBool isValid(void) const {
+            virtual fgBool isValid(void) const {
+                size_type n = this->length();
+                const value_type fmax = std::numeric_limits<value_type>::max();
+                for(size_type i = 0; i < n; i++) {
+                    if((*this)[i] == fmax ||
+                            (*this)[i] <= fmax / (value_type)2 * (value_type)(-1)) {
+                        return FG_FALSE;
+                    }
+                }
                 return FG_TRUE;
             }
         };
@@ -425,6 +435,29 @@ namespace fg {
             SAABoundingBox2DT(const vec_type& _min,
                               const vec_type& _max) :
             base_type(_min, _max) { }
+            /**
+             * 
+             * @param other
+             */
+            template<class TNewValueType>
+            SAABoundingBox2DT(const SAABoundingBox2DT<TNewValueType>& other) {
+                *this = other;
+            }
+            /**
+             *
+             * @param other
+             * @return
+             */
+            template<class TNewValueType>
+            self_type& operator =(const SAABoundingBox2DT<TNewValueType>& other) {
+                if(this != (self_type*) & other) {
+                    this->min.x = (value_type)other.min.x;
+                    this->min.y = (value_type)other.min.y;
+                    this->max.x = (value_type)other.max.x;
+                    this->max.y = (value_type)other.max.y;
+                }
+                return (*this);
+            }
             /**
              * 
              * @param a
@@ -563,16 +596,6 @@ namespace fg {
             }
             /**
              * 
-             */
-            virtual inline void invalidate(void) {
-                ;
-                this->max.x = (std::numeric_limits<value_type>::max() / (value_type)(4)) * (value_type)(-1);
-                this->max.y = (std::numeric_limits<value_type>::max() / (value_type)(4)) * (value_type)(-1);
-                this->min.x = std::numeric_limits<value_type>::max();
-                this->min.y = std::numeric_limits<value_type>::max();
-            }
-            /**
-             * 
              * @return 
              */
             inline vector_type getCenter(void) const {
@@ -705,6 +728,31 @@ namespace fg {
              */
             SAABoundingBox3DT(const vec_type& _min, const vec_type& _size) :
             base_type(_min, _size) { }
+            /**
+             *
+             * @param other
+             */
+            template<class TNewValueType>
+            SAABoundingBox3DT(const SAABoundingBox3DT<TNewValueType>& other) {
+                *this = other;
+            }
+            /**
+             *
+             * @param other
+             * @return
+             */
+            template<class TNewValueType>
+            self_type& operator =(const SAABoundingBox3DT<TNewValueType>& other) {
+                if(this != (self_type*) & other) {
+                    this->min.x = (value_type)other.min.x;
+                    this->min.y = (value_type)other.min.y;
+                    this->min.z = (value_type)other.min.z;
+                    this->max.x = (value_type)other.max.x;
+                    this->max.y = (value_type)other.max.y;
+                    this->max.z = (value_type)other.max.z;
+                }
+                return (*this);
+            }
             /**
              * 
              * @param a
@@ -852,25 +900,14 @@ namespace fg {
              * 
              */
             virtual inline void invalidate(void) {
-                this->max.x = -10000.0f; //(FLT_MAX / 4.0f) * (-1.0f);
-                this->max.y = -10000.0f; //(FLT_MAX / 4.0f) * (-1.0f);
-                this->max.z = -10000.0f; //(FLT_MAX / 4.0f) * (-1.0f);
-                this->min.x = std::numeric_limits<value_type>::max();
-                this->min.y = std::numeric_limits<value_type>::max();
-                this->min.z = std::numeric_limits<value_type>::max();
-            }
-            /**
-             *
-             */
-            virtual inline fgBool isValid(void) const {
-                size_type n = this->length();
-                for(size_type i = 0; i < n; i++) {
-                    if((*this)[i] == std::numeric_limits<value_type>::max()) {
-                        return FG_FALSE;
-                    }
-                }
-                return FG_TRUE;
-            }
+                const value_type fmax = std::numeric_limits<value_type>::max();
+                this->max.x = fmax / (value_type)2 * (value_type)(-1);
+                this->max.y = fmax / (value_type)2 * (value_type)(-1);
+                this->max.z = fmax / (value_type)2 * (value_type)(-1);
+                this->min.x = fmax;
+                this->min.y = fmax;
+                this->min.z = fmax;
+            }            
             /**
              * 
              * @return 

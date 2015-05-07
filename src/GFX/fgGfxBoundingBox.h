@@ -329,6 +329,29 @@ namespace fg {
              */
             SBoundingBox2DT(const vec_type &_pos, const vec_type &_size) :
             base_type(_pos, _size) { }
+            /**
+             * 
+             * @param other
+             */
+            template<class TNewValueType>
+            SBoundingBox2DT(const SBoundingBox2DT<TNewValueType>& other) {
+                *this = other;
+            }
+            /**
+             *
+             * @param other
+             * @return
+             */
+            template<class TNewValueType>
+            self_type& operator =(const SBoundingBox2DT<TNewValueType>& other) {
+                if(this != (self_type*) & other) {
+                    this->pos.x = (value_type)other.pos.x;
+                    this->pos.y = (value_type)other.pos.y;
+                    this->size.x = (value_type)other.size.x;
+                    this->size.y = (value_type)other.size.y;
+                }
+                return (*this);
+            }
     #if 0
             /**
              * 
@@ -460,6 +483,31 @@ namespace fg {
              */
             SBoundingBox3DT(const vec_type &_pos, const vec_type &_size) :
             base_type(_pos, _size) { }
+            /**
+             *
+             * @param other
+             */
+            template<class TNewValueType>
+            SBoundingBox3DT(const SBoundingBox3DT<TNewValueType>& other) {
+                *this = other;
+            }
+            /**
+             *
+             * @param other
+             * @return
+             */
+            template<class TNewValueType>
+            self_type& operator =(const SBoundingBox3DT<TNewValueType>& other) {
+                if(this != (self_type*) & other) {
+                    this->pos.x = (value_type)other.pos.x;
+                    this->pos.y = (value_type)other.pos.y;
+                    this->pos.z = (value_type)other.pos.z;
+                    this->size.x = (value_type)other.size.x;
+                    this->size.y = (value_type)other.size.y;
+                    this->size.z = (value_type)other.size.z;
+                }
+                return (*this);
+            }
             /**
              * 
              */
