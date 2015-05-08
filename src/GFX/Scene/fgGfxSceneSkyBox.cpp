@@ -86,7 +86,7 @@ void gfx::CSceneSkyBox::draw(const Matrix4f& modelMat) {
         m_MVP->calculate(modelMat);
         m_program->setUniform(m_MVP);
         context::frontFace(GL_CW); // #FUBAR
-        CPrimitives::drawSkyBoxOptimized();
+        primitives::drawSkyBoxOptimized();
         context::frontFace(GL_CCW);
     }
 }

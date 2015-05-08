@@ -6,7 +6,7 @@
  * 
  * FlexiGame source code and any related files can not be copied, modified 
  * and/or distributed without the express or written consent from the author.
- *******************************************************/
+ ******************************************************************************/
 
 #include "fgGfxPrimitives.h"
 #include "GFX/Shaders/fgGfxShaderDefs.h"
@@ -17,6 +17,8 @@
 #include "fgGfxDrawCall.h"
 
 using namespace fg;
+
+//------------------------------------------------------------------------------
 
 const Color4f colorWhite = Color4f(1.0f, 1.0f, 1.0f, 1.0f);
 
@@ -144,6 +146,7 @@ const fgGFXushort c_stripCube1x1Idx[] = {
                                          16, 16, 17, 18, 19, 19, // Face 4 - triangle strip (v16, v17, v18, v19)
                                          20, 20, 21, 22, 23 // Face 5 - triangle strip (v20, v21, v22, v23)
 };
+//------------------------------------------------------------------------------
 
 static const GLfloat c_trisCube1x1[] = {
                                         -0.5f, -0.5f, -0.5f,
@@ -188,6 +191,7 @@ static const GLfloat c_trisCube1x1[] = {
                                         -0.5f, 0.5f, 0.5f,
                                         0.5f, -0.5f, 0.5f
 };
+//------------------------------------------------------------------------------
 
 /*
  * Square is size of 1.0fx1.0f, point 0.0 is centered (0.0 is center mass),
@@ -216,8 +220,9 @@ const gfx::Vertex3v c_stripRect3x1[] = {
     {Vector3f(0.5f, 0.5f, 0.f), Vector3f(0.f, 0.f, 0.f), Vector2f(1.f, 1.f)},
     {Vector3f(0.5f, -0.5f, 0.f), Vector3f(0.f, 0.f, 0.f), Vector2f(1.f, 0.f)}
 };
+//------------------------------------------------------------------------------
 
-void gfx::CPrimitives::drawSkyBoxOptimized(void) {
+void gfx::primitives::drawSkyBoxOptimized(void) {
     context::diffVertexAttribArrayMask(Vertex4v::attribMask());
 
     uintptr_t offset = (uintptr_t)((unsigned int*)&c_stripSkyBoxOptimized[0]);
@@ -257,8 +262,9 @@ void gfx::CPrimitives::drawSkyBoxOptimized(void) {
                    GL_UNSIGNED_SHORT,
                    c_stripCube1x1Idx);
 }
+//------------------------------------------------------------------------------
 
-void gfx::CPrimitives::createSphereMesh(fg::gfx::SMeshBase *mesh,
+void gfx::primitives::createSphereMesh(fg::gfx::SMeshBase *mesh,
                                         unsigned int rings,
                                         unsigned int sectors,
                                         float radius) {
@@ -296,8 +302,9 @@ void gfx::CPrimitives::createSphereMesh(fg::gfx::SMeshBase *mesh,
     }
     mesh->primMode = PrimitiveMode::TRIANGLES;
 }
+//------------------------------------------------------------------------------
 
-void gfx::CPrimitives::createCubeMesh(fg::gfx::SMeshBase *mesh,
+void gfx::primitives::createCubeMesh(fg::gfx::SMeshBase *mesh,
                                       float scale) {
     if(!mesh) {
         return;
@@ -323,11 +330,12 @@ void gfx::CPrimitives::createCubeMesh(fg::gfx::SMeshBase *mesh,
     }
     mesh->primMode = PrimitiveMode::TRIANGLE_STRIP;
 }
+//------------------------------------------------------------------------------
 
 /* 
  * Osmioscian foremny (inaczej oktaedr) - octahedron: rings 3 | sectors 5 ? 
  */
-void gfx::CPrimitives::drawAABBLines(const AABoundingBox3Df& aabb, const Color4f& color) {
+void gfx::primitives::drawAABBLines(const AABoundingBox3Df& aabb, const Color4f& color) {
     context::diffVertexAttribArrayMask(FG_GFX_POSITION_BIT | FG_GFX_COLOR_BIT);
 
     const Vec3f center = aabb.getCenter();
@@ -414,8 +422,9 @@ void gfx::CPrimitives::drawAABBLines(const AABoundingBox3Df& aabb, const Color4f
     glDrawArrays((GLenum)PrimitiveMode::LINE_STRIP, 0, sizeof (aabbLineStripBuf) / sizeof (aabbLineStripBuf[0]));
 
 }
+//------------------------------------------------------------------------------
 
-void gfx::CPrimitives::drawArray(const fg::CVector<Vertex2v> &inputData,
+void gfx::primitives::drawArray(const fg::CVector<Vertex2v> &inputData,
                                  const unsigned int attribMask,
                                  const PrimitiveMode mode) {
     if(inputData.empty() || !attribMask)
@@ -443,8 +452,9 @@ void gfx::CPrimitives::drawArray(const fg::CVector<Vertex2v> &inputData,
     glDrawArrays((GLenum)mode, 0, inputData.size());
     GLCheckError("glDrawArrays");
 }
+//------------------------------------------------------------------------------
 
-void gfx::CPrimitives::drawArray(const fg::CVector<Vertex3v> &inputData,
+void gfx::primitives::drawArray(const fg::CVector<Vertex3v> &inputData,
                                  const unsigned int attribMask,
                                  const PrimitiveMode mode) {
     if(inputData.empty() || !attribMask)
@@ -484,8 +494,9 @@ void gfx::CPrimitives::drawArray(const fg::CVector<Vertex3v> &inputData,
     glDrawArrays((GLenum)mode, 0, inputData.size());
     GLCheckError("glDrawArrays");
 }
+//------------------------------------------------------------------------------
 
-void gfx::CPrimitives::drawArray(const fg::CVector<Vertex4v> &inputData,
+void gfx::primitives::drawArray(const fg::CVector<Vertex4v> &inputData,
                                  const unsigned int attribMask,
                                  const PrimitiveMode mode) {
     if(inputData.empty() || !attribMask)
@@ -531,8 +542,9 @@ void gfx::CPrimitives::drawArray(const fg::CVector<Vertex4v> &inputData,
     glDrawArrays((GLenum)mode, 0, inputData.size());
     GLCheckError("glDrawArrays");
 }
+//------------------------------------------------------------------------------
 
-void gfx::CPrimitives::drawArrayIndexed(const CVector<Vertex2v> &inputData,
+void gfx::primitives::drawArrayIndexed(const CVector<Vertex2v> &inputData,
                                         const CVector<fgGFXushort>& indices,
                                         const unsigned int attribMask,
                                         const PrimitiveMode mode) {
@@ -562,8 +574,9 @@ void gfx::CPrimitives::drawArrayIndexed(const CVector<Vertex2v> &inputData,
     glDrawElements((GLenum)mode, indices.size(), GL_UNSIGNED_SHORT, &indices.front());
     GLCheckError("glDrawElements");
 }
+//------------------------------------------------------------------------------
 
-void gfx::CPrimitives::drawArrayIndexed(const CVector<Vertex3v> &inputData,
+void gfx::primitives::drawArrayIndexed(const CVector<Vertex3v> &inputData,
                                         const CVector<fgGFXushort>& indices,
                                         const unsigned int attribMask,
                                         const PrimitiveMode mode) {
@@ -600,8 +613,9 @@ void gfx::CPrimitives::drawArrayIndexed(const CVector<Vertex3v> &inputData,
     glDrawElements((GLenum)mode, indices.size(), GL_UNSIGNED_SHORT, &indices.front());
     GLCheckError("glDrawElements");
 }
+//------------------------------------------------------------------------------
 
-void gfx::CPrimitives::drawArrayIndexed(const CVector<Vertex4v> &inputData,
+void gfx::primitives::drawArrayIndexed(const CVector<Vertex4v> &inputData,
                                         const CVector<fgGFXushort>& indices,
                                         const unsigned int attribMask,
                                         const PrimitiveMode mode) {
@@ -648,8 +662,9 @@ void gfx::CPrimitives::drawArrayIndexed(const CVector<Vertex4v> &inputData,
     glDrawElements((GLenum)mode, indices.size(), GL_UNSIGNED_SHORT, &indices.front());
     GLCheckError("glDrawElements");
 }
+//------------------------------------------------------------------------------
 
-void gfx::CPrimitives::applyAttributeData(SAttributeData *attrData,
+void gfx::primitives::applyAttributeData(SAttributeData *attrData,
                                           SDrawingInfo& drawingInfo,
                                           const unsigned int attribMask) {
     if(!attrData)
@@ -679,8 +694,9 @@ void gfx::CPrimitives::applyAttributeData(SAttributeData *attrData,
         context::bindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
     }
 }
+//------------------------------------------------------------------------------
 
-void gfx::CPrimitives::drawVertexData(const CVertexData *inputData,
+void gfx::primitives::drawVertexData(const CVertexData *inputData,
                                       const unsigned int attribMask,
                                       const PrimitiveMode mode) {
     if(!inputData)
@@ -764,8 +780,9 @@ void gfx::CPrimitives::drawVertexData(const CVertexData *inputData,
 #endif
 
 }
+//------------------------------------------------------------------------------
 
-void gfx::CPrimitives::drawSquare2D(void) {
+void gfx::primitives::drawSquare2D(void) {
     context::diffVertexAttribArrayMask(FG_GFX_POSITION_BIT | FG_GFX_UVS_BIT);
     context::vertexAttribPointer(FG_GFX_ATTRIB_POS_LOCATION,
                                  3,
@@ -783,8 +800,9 @@ void gfx::CPrimitives::drawSquare2D(void) {
                                  (fgGFXvoid*)offset);
     glDrawArrays(GL_TRIANGLE_STRIP, 0, sizeof (c_stripSquare1x1) / sizeof (Vertex3v));
 }
+//------------------------------------------------------------------------------
 
-void gfx::CPrimitives::drawRect2D(void) {
+void gfx::primitives::drawRect2D(void) {
     context::diffVertexAttribArrayMask(FG_GFX_POSITION_BIT | FG_GFX_UVS_BIT);
     context::vertexAttribPointer(FG_GFX_ATTRIB_POS_LOCATION,
                                  3,
@@ -803,8 +821,9 @@ void gfx::CPrimitives::drawRect2D(void) {
     glDrawArrays(GL_TRIANGLE_STRIP, 0, sizeof (c_stripRect3x1) / sizeof (Vertex3v));
     GLCheckError("glDrawArrays");
 }
+//------------------------------------------------------------------------------
 
-void gfx::CPrimitives::appendRect2D(CVertexData *outputData,
+void gfx::primitives::appendRect2D(CVertexData *outputData,
                                     const Vec2f &size,
                                     const Vec2f &uv1,
                                     const Vec2f &uv2,
@@ -813,8 +832,9 @@ void gfx::CPrimitives::appendRect2D(CVertexData *outputData,
                                     const fgBool rewind) {
     appendRect2D(outputData, Vec2f(0.0f, 0.0f), size, uv1, uv2, color, mode, rewind);
 }
+//------------------------------------------------------------------------------
 
-void gfx::CPrimitives::appendRect2D(CVertexData *outputData,
+void gfx::primitives::appendRect2D(CVertexData *outputData,
                                     float sizex,
                                     float sizey,
                                     const Vec2f &uv1,
@@ -824,13 +844,14 @@ void gfx::CPrimitives::appendRect2D(CVertexData *outputData,
                                     const fgBool rewind) {
     appendRect2D(outputData, Vec2f(0.0f, 0.0f), Vec2f(sizex, sizey), uv1, uv2, color, mode, rewind);
 }
+//------------------------------------------------------------------------------
 
 /*
  * This goes from left to right, this is not optimal in any way 
  * (does not use indexing, quad is specified via 6 vertices - two separate triangles)
  * Currently specifing UVs for Triangle strip is not obvious (it's tricky, needs changing)
  */
-void gfx::CPrimitives::appendRect2D(CVertexData *outputData,
+void gfx::primitives::appendRect2D(CVertexData *outputData,
                                     const Vec2f &relPos,
                                     const Vec2f &size,
                                     const Vec2f &uv1,
@@ -913,3 +934,4 @@ void gfx::CPrimitives::appendRect2D(CVertexData *outputData,
         }
     }
 }
+//------------------------------------------------------------------------------

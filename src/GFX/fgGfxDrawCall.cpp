@@ -378,7 +378,7 @@ void gfx::CDrawCall::appendRect2D(const Vec2f &size,
                                   const Vec2f &uv1, const Vec2f &uv2,
                                   const fgBool rewind) {
     // #FIXME - TOO DEEP CALL 
-    CPrimitives::appendRect2D(m_vecDataBase, Vec2f(0.0f, 0.0f), size, uv1, uv2, m_color, m_primMode, rewind);
+    primitives::appendRect2D(m_vecDataBase, Vec2f(0.0f, 0.0f), size, uv1, uv2, m_color, m_primMode, rewind);
 }
 
 void gfx::CDrawCall::appendRect2D(const Vec2f &relPos, const Vec2f &size,
@@ -392,7 +392,7 @@ void gfx::CDrawCall::appendRect2D(const Vec2f &relPos, const Vec2f &size,
         m_relMove.y += size.y;
     }
     // #FIXME - TOO DEEP CALL
-    CPrimitives::appendRect2D(m_vecDataBase, pos, size, uv1, uv2, m_color, m_primMode, rewind);
+    primitives::appendRect2D(m_vecDataBase, pos, size, uv1, uv2, m_color, m_primMode, rewind);
 }
 
 fgBool gfx::CDrawCall::applyAttributeData(void) {

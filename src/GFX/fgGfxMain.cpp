@@ -277,7 +277,7 @@ void gfx::CGfxMain::generateBuiltInData(void) {
     /// Will now create built in model shapes
     SMeshAoS *builtin_cube_mesh = new SMeshAoS();
     SShape *builtin_cube_shape = new SShape();
-    CPrimitives::createCubeMesh(builtin_cube_mesh);
+    primitives::createCubeMesh(builtin_cube_mesh);
     CModel *cubeModel = new CModelResource();
     cubeModel->setModelType(ModelType::MODEL_BUILTIN);
     cubeModel->setName("builtinCube1x1");
@@ -302,7 +302,7 @@ void gfx::CGfxMain::generateBuiltInData(void) {
 
     SMeshAoS *builtin_sphere_mesh = new SMeshAoS();
     SShape *builtin_sphere_shape = new SShape();
-    CPrimitives::createSphereMesh(builtin_sphere_mesh, 16, 16);
+    primitives::createSphereMesh(builtin_sphere_mesh, 16, 16);
     CModel *sphereModel = new CModelResource();
     sphereModel->setModelType(ModelType::MODEL_BUILTIN);
     sphereModel->setName("builtinSphere");
@@ -337,7 +337,7 @@ m_progress(0.0f) { }
 gfx::CGfxMain::CLoader::CLoader(const CLoader& orig) {
     if(this != &orig) {
         this->m_pSplashTex = orig.m_pSplashTex;
-        this->m_pProgressTex = orig.m_pProgressTex;        
+        this->m_pProgressTex = orig.m_pProgressTex;
         this->m_pGfxMain = orig.m_pGfxMain;
         this->m_mvp = orig.m_mvp;
         this->m_mat = orig.m_mat;
@@ -387,7 +387,7 @@ void gfx::CGfxMain::CLoader::update(const float diff) {
     m_mat = math::scale(m_mat, Vec3f(mextent, mextent, 0.0f));
     m_mvp.calculate(m_mat);
     m_pGfxMain->getShaderManager()->getCurrentProgram()->setUniform(&m_mvp);
-    CPrimitives::drawSquare2D();
+    primitives::drawSquare2D();
 
     if(!m_pProgressTex || m_progress < FG_EPSILON) {
         m_pGfxMain->getMainWindow()->swapBuffers();
@@ -405,8 +405,8 @@ void gfx::CGfxMain::CLoader::update(const float diff) {
     m_mat = math::scale(m_mat, Vec3f(pw, ph, 0.0f));
     m_mvp.calculate(m_mat);
     m_pGfxMain->getShaderManager()->getCurrentProgram()->setUniform(&m_mvp);
-    CPrimitives::drawSquare2D();
-    m_pGfxMain->getMainWindow()->swapBuffers();    
+    primitives::drawSquare2D();
+    m_pGfxMain->getMainWindow()->swapBuffers();
 }
 
 ////////////////////////////////////////////////////////////////////////////////

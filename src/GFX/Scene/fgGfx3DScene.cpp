@@ -225,7 +225,7 @@ void gfx::CScene3D::render(void) {
             Vec3f extent = Vec3f(halfSize, halfSize, halfSize);
             aabb.min = pTreeNode->center - extent;
             aabb.max = pTreeNode->center + extent;
-            CPrimitives::drawAABBLines(aabb, Color4f(0.2f, d, 1.0f - d, 1.0f));
+            primitives::drawAABBLines(aabb, Color4f(0.2f, d, 1.0f - d, 1.0f));
         }
 #endif
         //m_octNodes.pop();

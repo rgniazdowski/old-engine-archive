@@ -973,14 +973,14 @@ void gfx::CSceneManager::render(void) {
                 // Current aabb - it's in model space (local)
                 AABB3Df& modelBox = pSceneObj->getModel()->getRefAABB();
                 // Initial Bounding box
-                CPrimitives::drawAABBLines(modelBox, Color4f(1.0f, 0.0f, 0.0f, 1.0f));
+                primitives::drawAABBLines(modelBox, Color4f(1.0f, 0.0f, 0.0f, 1.0f));
                 // Draw transformed bounding box #FIXME - colors FUBAR
             }
         }
         if(FG_DEBUG_CFG_OPTION(gfxBBoxShow)) {
             m_MVP.resetModelMatrix();
             pProgram->setUniform(&m_MVP);
-            CPrimitives::drawAABBLines(pSceneNode->getBoundingVolume(), Color4f(0.5f, 0.5f, 1.0f, 1.0f));
+            primitives::drawAABBLines(pSceneNode->getBoundingVolume(), Color4f(0.5f, 0.5f, 1.0f, 1.0f));
         }
 
         if(FG_DEBUG_CFG_OPTION(gfxBBoxShow)) {
@@ -989,7 +989,7 @@ void gfx::CSceneManager::render(void) {
             mat = math::scale(mat, Vec3f(radius, radius, radius));
             m_MVP.calculate(mat);
             pProgram->setUniform(&m_MVP);
-            CPrimitives::drawVertexData(sphereMesh, FG_GFX_POSITION_BIT | FG_GFX_UVS_BIT, PrimitiveMode::LINES);
+            primitives::drawVertexData(sphereMesh, FG_GFX_POSITION_BIT | FG_GFX_UVS_BIT, PrimitiveMode::LINES);
         }
 #endif
         //g_fgDebugConfig.physicsBBoxShow = true; // #FIXME
@@ -1053,7 +1053,7 @@ void gfx::CSceneManager::render(void) {
             }
         }
 
-        CPrimitives::drawVertexData(&gridLines, FG_GFX_POSITION_BIT | FG_GFX_UVS_BIT | FG_GFX_COLOR_BIT, PrimitiveMode::LINES);
+        primitives::drawVertexData(&gridLines, FG_GFX_POSITION_BIT | FG_GFX_COLOR_BIT, PrimitiveMode::LINES);
     }
 }
 //------------------------------------------------------------------------------
