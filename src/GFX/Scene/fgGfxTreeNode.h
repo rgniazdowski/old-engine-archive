@@ -61,10 +61,7 @@ namespace fg {
             /**
              *
              */
-            virtual ~STreeNodeBase() {
-                objects.clear_optimised();
-                objects.resize(0);
-            }
+            virtual ~STreeNodeBase();
 
             /**
              *
@@ -72,6 +69,11 @@ namespace fg {
              * @return
              */
             virtual fgBool removeObject(CTreeNodeObject *pObject);
+            /**
+             *
+             * @return
+             */
+            virtual fgBool removeAllObjects(void);
             /**
              * 
              * @return

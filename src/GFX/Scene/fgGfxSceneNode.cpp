@@ -514,10 +514,9 @@ fgBool gfx::CSceneNode::destroyChild(CSceneNode *&pChild) {
         // This is required so the scene manager wont call again this function
         // to remove the child from it's parent
         pChild->setParent(NULL);
-        if(m_pManager && false) { // #FIXME
+        if(m_pManager) { // #FIXME
             if(m_pManager->getManagerType() == FG_MANAGER_SCENE) {
-                static_cast<CSceneManager *>(m_pManager)->destroyNode(pChild);
-                managerValid = FG_TRUE;
+                managerValid = static_cast<CSceneManager *>(m_pManager)->destroyNode(pChild);
             }
         }
         if(!managerValid) {
@@ -576,14 +575,17 @@ fgBool gfx::CSceneNode::destroyChild(const std::string& childName) {
         if(it != m_children.end()) {
             pChild->setParent(NULL);
             m_children.erase(it);
+            fgBool destroyStatus = FG_FALSE;
             // Scene node has access to manager - this will change when
             // scene manager will register special callbacks inside of a node
             // However deletion not. Deletion will be automatic (on object destructor
             // scene mgr callback is fired)
             if(managerValid) {
                 // #FIXME
-                static_cast<CSceneManager *>(m_pManager)->destroyNode(pChild);
-            } else {
+                destroyStatus = static_cast<CSceneManager *>(m_pManager)->destroyNode(pChild);
+            } 
+            if(!destroyStatus) {
+                // the destroyNode function failed, need to delete manually
                 delete pChild;
                 pChild = NULL;
             }

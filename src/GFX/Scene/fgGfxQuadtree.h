@@ -71,7 +71,6 @@ namespace fg {
              * 
              */
             virtual ~SQuadtreeNode() {
-                objects.clear_optimised();
                 depth = 0;
                 parent = NULL;
                 nodeType = 0;

@@ -21,6 +21,11 @@ using namespace fg;
 
 //------------------------------------------------------------------------------
 
+gfx::STreeNodeBase::~STreeNodeBase() {
+    removeAllObjects();
+}
+//------------------------------------------------------------------------------
+
 fgBool gfx::STreeNodeBase::removeObject(CTreeNodeObject* pObject) {
     if(!pObject || objects.empty())
         return FG_FALSE;
@@ -35,5 +40,17 @@ fgBool gfx::STreeNodeBase::removeObject(CTreeNodeObject* pObject) {
     } else {
         return FG_FALSE;
     }
+}
+//------------------------------------------------------------------------------
+
+fgBool gfx::STreeNodeBase::removeAllObjects(void) {
+    fgBool status = FG_TRUE;
+    while(!objects.empty()) {
+        CTreeNodeObject* pObject = objects.front();
+        if(!removeObject(pObject))
+            status = FG_FALSE;
+    }
+    objects.clear_optimised();    
+    return status;
 }
 //------------------------------------------------------------------------------

@@ -80,12 +80,12 @@ namespace fg {
             typedef std::unordered_map<HashKeyString, unsigned int> NameMap;
             /// Iterator through the Name map
             typedef NameMap::iterator NameMapItor;
-	#endif
+    #endif
             /// Hash map - maps the name tags hash sum to the data vector index
             typedef std::map<unsigned int, unsigned int> HashMap;
             /// Iterator through the hash map
             typedef HashMap::iterator HashMapItor;
-    
+
 
         protected:
 
@@ -312,11 +312,17 @@ fgBool fg::util::CHandleManager<TDataType, THandleType>::setupName(const std::st
     }
     fgRawIndex index = rHandle.getIndex();
     if(m_nameMap.find(name) != m_nameMap.end()) {
-        FG_LOG_ERROR("HandleManager[%s] Such key already exists in name map - index[%u], name_tag[%s]", THandleType::getTagName(), index, name.c_str());
+        FG_LOG_ERROR("HandleManager[%s] Such key already exists in name map - index[%u], name_tag[%s]",
+                     THandleType::getTagName(),
+                     index,
+                     name.c_str());
         return FG_FALSE; // Such key already exists
-    }    
+    }
     if(!m_managedData[index].nameTag.empty()) {
-        FG_LOG_ERROR("HandleManager[%s]: There is name tag already in the vector - index[%u], name_tag[%s]", THandleType::getTagName(), index, name.c_str());
+        FG_LOG_ERROR("HandleManager[%s]: There is name tag already in the vector - index[%u], name_tag[%s]",
+                     THandleType::getTagName(),
+                     index,
+                     name.c_str());
         // There is already some set on the current index
         return FG_FALSE;
     }
@@ -325,7 +331,11 @@ fgBool fg::util::CHandleManager<TDataType, THandleType>::setupName(const std::st
     unsigned int hash = m_managedData[index].nameTag.getStringHash();
     m_nameMap[name] = index;
     m_hashMap[hash] = index;
-    FG_LOG_DEBUG("HandleManager[%s]: Setup name[%s], hash[%10u], index[%u]", THandleType::getTagName(), name.c_str(), hash, index);
+    FG_LOG_DEBUG("HandleManager[%s]: Setup name[%s], hash[%10u], index[%u]",
+                 THandleType::getTagName(),
+                 name.c_str(),
+                 hash,
+                 index);
     return FG_TRUE;
 }
 /**
@@ -339,23 +349,34 @@ fgBool fg::util::CHandleManager<TDataType, THandleType>::setupName(const char* n
     if(!isHandleValid(rHandle)) {
         return FG_FALSE;
     }
+    std::string strname = std::string(name);
     fgRawIndex index = rHandle.getIndex();
-    if(m_nameMap.find(std::string(name)) != m_nameMap.end()) {
-        FG_LOG_ERROR("HandleManager[%s] Such key already exists in name map - index[%u], name_tag[%s]", THandleType::getTagName(), index, name);
+    if(m_nameMap.find(strname) != m_nameMap.end()) {
+        FG_LOG_ERROR("HandleManager[%s] Such key already exists in name map - index[%u], name_tag[%s]",
+                     THandleType::getTagName(),
+                     index,
+                     name);
         return FG_FALSE; // Such key already exists
     }
     if(!m_managedData[index].nameTag.empty()) {
-        FG_LOG_ERROR("HandleManager[%s]: There is name tag already in the vector - index[%u], name_tag[%s]", THandleType::getTagName(), index, name);
+        FG_LOG_ERROR("HandleManager[%s]: There is name tag already in the vector - index[%u], name_tag[%s]",
+                     THandleType::getTagName(),
+                     index,
+                     name);
         // There is already some set on the current index
         // No reassignment is allowed
         return FG_FALSE;
     }
-    m_managedData[index].nameTag.set(std::string(name));
+    m_managedData[index].nameTag.set(strname);
     m_managedData[index].nameTag.setIndex(index);
     unsigned int hash = m_managedData[index].nameTag.getStringHash();
-    m_nameMap[std::string(name)] = index;
-    m_hashMap[hash] = index;    
-    FG_LOG_DEBUG("HandleManager[%s]: Setup name[%s], hash[%10u], index[%u]", THandleType::getTagName(), name, hash, index);
+    m_nameMap[strname] = index;
+    m_hashMap[hash] = index;
+    FG_LOG_DEBUG("HandleManager[%s]: Setup name[%s], hash[%10u], index[%u]",
+                 THandleType::getTagName(),
+                 name,
+                 hash,
+                 index);
     return FG_TRUE;
 }
 /**
@@ -374,10 +395,14 @@ fgBool fg::util::CHandleManager<TDataType, THandleType>::releaseHandle(const THa
     // ok remove it - tag as unused and add to free list
     m_managedData[index].data = NULL;
     m_managedData[index].magic = 0;
-    FG_LOG_DEBUG("HandleManager[%s]: Releasing handle: index[%d], magic[%d], handle[%d]", THandleType::getTagName(), index, handle.getMagic(), handle.getHandle());
+    FG_LOG_DEBUG("HandleManager[%s]: Releasing handle: index[%d], magic[%d], handle[%d], name[%s]",
+                 THandleType::getTagName(),
+                 index,
+                 handle.getMagic(),
+                 handle.getHandle(),
+                 m_managedData[index].nameTag.c_str());
     if(!m_managedData[index].nameTag.empty()) {
         m_nameMap.erase(std::string(m_managedData[index].nameTag.c_str()));
-        FG_LOG_DEBUG("HandleManager[%s]: erasing '%s' from handle map...", THandleType::getTagName(), m_managedData[index].nameTag.c_str());
     }
     unsigned int hash = m_managedData[index].nameTag.getStringHash();
     if(hash) {

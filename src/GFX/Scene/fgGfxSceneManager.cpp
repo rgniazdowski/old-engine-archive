@@ -79,9 +79,13 @@ fgBool gfx::CSceneManager::destroy(void) {
         m_basetree->deleteRoot();
     }
     m_collisionsInfo.clear();
-    // The piece of code seems to repeat itself #FIXME #CODEREPEAT
-    // Maybe even the handle manager can have this piece of code?
-    // Delete all gfx objects in the scene
+    unsigned int nRoots = m_rootNodes.size();
+    for(unsigned int i = 0; i < nRoots; i++) {
+        destroyNode(m_rootNodes[i]);
+        m_rootNodes[i] = NULL;
+    }
+    m_rootNodes.clear();
+    // Delete all gfx objects remaining in the scene
     DataVecItor begin, end, itor;
     begin = getRefDataVector().begin();
     end = getRefDataVector().end();
@@ -90,11 +94,7 @@ fgBool gfx::CSceneManager::destroy(void) {
         CSceneNode* pObj = (*itor).data;
         if(pObj == NULL)
             continue;
-        if(m_basetree) {
-            // need to have functions for scene node removal
-        }
-        if(pObj->isManaged())
-            delete pObj;
+        destroyNode(pObj);
         (*itor).clear();
     }
     m_triggers.clear_optimised();
@@ -109,6 +109,12 @@ void gfx::CSceneManager::clearScene(void) {
         m_basetree->deleteRoot();
     }
     m_collisionsInfo.clear();
+    unsigned int nRoots = m_rootNodes.size();
+    for(unsigned int i = 0; i < nRoots; i++) {
+        destroyNode(m_rootNodes[i]);
+        m_rootNodes[i] = NULL;
+    }
+    m_rootNodes.clear();
     // Delete all gfx objects in the scene
     DataVecItor begin, end, itor;
     begin = getRefDataVector().begin();
@@ -118,11 +124,7 @@ void gfx::CSceneManager::clearScene(void) {
         CSceneNode* pObj = (*itor).data;
         if(pObj == NULL)
             continue;
-        if(m_basetree) {
-            // need to have functions for scene node removal
-        }
-        if(pObj->isManaged())
-            delete pObj;
+        destroyNode(pObj);
         (*itor).clear();
     }
     m_triggers.clear_optimised();
@@ -853,7 +855,7 @@ void gfx::CSceneManager::sortCalls(void) {
             m_pickSelection.groundIntersectionPoint = Vector3f();
     }
     const fgBool checkPickSelectionAABB = isPickSelectionAABBTriangles();
-    
+
     m_traverse.rewind();
     while(m_traverse.next(getActiveRootNode())) {
         CSceneNode *pSceneNode = m_traverse.current;
@@ -1336,7 +1338,12 @@ gfx::CSceneNode* gfx::CSceneManager::createRootNode(const std::string& name) {
     if(!pRootNode) {
         pRootNode = new CSceneNode(SCENE_NODE_ROOT, NULL);
         pRootNode->setName(name);
-        addNode(pRootNode->getRefHandle(), pRootNode);
+        fgBool addStatus = addNode(pRootNode->getRefHandle(), pRootNode);
+        if(!addStatus) {
+            remove(pRootNode);
+            delete pRootNode;
+            return NULL;
+        }
     }
     if(!m_activeRootNode)
         m_activeRootNode = pRootNode;
@@ -1399,21 +1406,22 @@ fgBool gfx::CSceneManager::addNode(SceneNodeHandle& nodeUniqueID,
         FG_LOG_ERROR("GFX.SceneManager: Could not aquire handle for the object: '%s'", pNode->getNameStr());
         return FG_FALSE;
     }
+    SceneNodeType nodeType = pNode->getNodeType();
     pNode->setHandle(nodeUniqueID);
     // By default object is set to be managed
     // However in some cases the 'managed' flag will
     // be set to FG_FALSE after addition
     pNode->setManaged(FG_TRUE);
     pNode->setManager(this); // Setup internal pointer to the manager
-    if(pFatherNode != pNode && pNode->getNodeType() != SCENE_NODE_ROOT)
+    if(pFatherNode != pNode && nodeType != SCENE_NODE_ROOT)
         pNode->setParent(pFatherNode); // Pointer to the parent (if any)
 
-    if(pNode->getNodeType() != SCENE_NODE_ROOT && !pFatherNode) {
+    if(nodeType != SCENE_NODE_ROOT && !pFatherNode) {
         // If this node is not root and does not have a father node
         // set as parent currently active root node
         if(!m_activeRootNode) {
             createRootNode(NULL); // create root node with standard name            
-        }
+        } // what if creating root node failed?
         pNode->setParent(m_activeRootNode);
     }
 
@@ -1430,11 +1438,19 @@ fgBool gfx::CSceneManager::addNode(SceneNodeHandle& nodeUniqueID,
 
     initializeNode(pNode);
 
-    if(m_basetree && pNode->getNodeType() != SCENE_NODE_ROOT) {
+    if(m_basetree && nodeType != SCENE_NODE_ROOT) {
         // add to the spatial tree structure
         // it can be octree/quadtree or any other (bounding volume hierarchy)
 
         m_basetree->insert(pNode);
+    }
+    if(nodeType == SCENE_NODE_ROOT) {
+        pNode->setCollidable(FG_FALSE);
+        int idx = m_rootNodes.find(pNode);
+        if(idx < 0) {
+            // there is no such root node in the array
+            m_rootNodes.push_back(pNode);
+        }
     }
     // 2nd argument tells that this draw call should not be managed
     // meaning: destructor wont be called on flush()
@@ -1585,9 +1601,16 @@ fgBool gfx::CSceneManager::remove(CSceneNode* pObj) {
         pObj->getTreeNode()->removeObject(pObj);
         pObj->setTreeNode(NULL);
     }
+    // Reset the manager pointer - object is not managed - it is no longer needed    
+    pObj->setManager(NULL); // #FIXME - what about children? they also need to be removed from the manager
+    CSceneNode* parentObj = pObj->getParent();
+    if(parentObj) {
+        // This is also so that removeChild() wont call this function again
+        parentObj->setManager(NULL);
+        parentObj->removeChild(pObj);
+        parentObj->setManager(this);
+    }
     pObj->setManaged(FG_FALSE);
-    // Reset the manager pointer - object is not managed - it is no longer needed
-    pObj->setManager(NULL);
     return handle_mgr_type::releaseHandle(pObj->getHandle());
 }
 //------------------------------------------------------------------------------
@@ -1611,6 +1634,7 @@ fgBool gfx::CSceneManager::destroyNode(CSceneNode*& pObj) {
     if(!gfx::CSceneManager::remove(pObj)) {
         return FG_FALSE;
     }
+    pObj->setManager(this); // This is so the children can also be destroyed
     delete pObj;
     pObj = NULL;
     return FG_TRUE;

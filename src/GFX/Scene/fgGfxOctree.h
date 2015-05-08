@@ -77,7 +77,6 @@ namespace fg {
              * 
              */
             virtual ~SOctreeNode() {
-                objects.clear_optimised();
                 depth = 0;
                 parent = NULL;
                 nodeType = 0;

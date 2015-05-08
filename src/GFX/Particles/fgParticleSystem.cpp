@@ -29,7 +29,10 @@ using namespace fg;
 //------------------------------------------------------------------------------
 
 gfx::CParticleSystem::CParticleSystem(fg::base::CManager *pResourceMgr,
-                                      fg::base::CManager *pSceneMgr) {
+                                      fg::base::CManager *pSceneMgr) :
+m_pResourceMgr(NULL),
+m_pSceneMgr(NULL),
+m_emitters() {
     setResourceManager(pResourceMgr);
     setSceneManager(pSceneMgr);
 }
