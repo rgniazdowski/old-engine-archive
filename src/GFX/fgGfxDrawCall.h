@@ -133,7 +133,7 @@ namespace fg {
             /// Scissor box for current draw call
             Vector4i m_scissorBox;
             ///
-            util::FastCmp m_fastCmp;
+            util::CFastCmp m_fastCmp;
             /// Holds value for special Z index used for more direct sorting
             int m_zIndex;
             /// Is this draw call managed by the drawing batch? 
@@ -463,22 +463,22 @@ namespace fg {
 
             //
             inline bool operator <(const CDrawCall & a) const {
-                return fg::util::FastCmp::less32(this->m_fastCmp, a.m_fastCmp);
+                return fg::util::CFastCmp::less32(this->m_fastCmp, a.m_fastCmp);
             }
 
             //
             inline bool operator >(const CDrawCall & a) const {
-                return fg::util::FastCmp::greater32(this->m_fastCmp, a.m_fastCmp);
+                return fg::util::CFastCmp::greater32(this->m_fastCmp, a.m_fastCmp);
             }
 
             //
             inline bool operator <=(const CDrawCall & a) const {
-                return fg::util::FastCmp::less_eq32(this->m_fastCmp, a.m_fastCmp);
+                return fg::util::CFastCmp::less_eq32(this->m_fastCmp, a.m_fastCmp);
             }
 
             //
             inline bool operator >=(const CDrawCall & a) const {
-                return fg::util::FastCmp::greater_eq32(this->m_fastCmp, a.m_fastCmp);
+                return fg::util::CFastCmp::greater_eq32(this->m_fastCmp, a.m_fastCmp);
             }
 
             //

@@ -33,7 +33,7 @@ namespace fg {
         /**
          *
          */
-        class FastCmp {
+        class CFastCmp {
         public:
             ///
             typedef uint64_t data_type;
@@ -61,16 +61,16 @@ namespace fg {
             /**
              * 
              */
-            FastCmp(const size_type numParts = 2, const DataSize dataSize = CMP_DATA_32);
+            CFastCmp(const size_type numParts = 2, const DataSize dataSize = CMP_DATA_32);
             /**
              * 
              * @param orig
              */
-            FastCmp(const FastCmp& orig);
+            CFastCmp(const CFastCmp& orig);
             /**
              * 
              */
-            virtual ~FastCmp();
+            virtual ~CFastCmp();
 
             /**
              * 
@@ -150,63 +150,63 @@ namespace fg {
                 return m_dataVec[rawPartID];
             }
         public:
-            static inline bool less(const FastCmp &a, const FastCmp &b) {
+            static inline bool less(const CFastCmp &a, const CFastCmp &b) {
                 return a.m_data < b.m_data;
             }
             
-            static inline bool less_eq(const FastCmp &a, const FastCmp &b) {
+            static inline bool less_eq(const CFastCmp &a, const CFastCmp &b) {
                 return a.m_data <= b.m_data;
             }
             
-            static inline bool greater(const FastCmp &a, const FastCmp &b) {
+            static inline bool greater(const CFastCmp &a, const CFastCmp &b) {
                 return a.m_data > b.m_data;
             }
             
-            static inline bool greater_eq(const FastCmp &a, const FastCmp &b) {
+            static inline bool greater_eq(const CFastCmp &a, const CFastCmp &b) {
                 return a.m_data >= b.m_data;
             }
             
-            static inline bool less32(const FastCmp &a, const FastCmp &b) {
+            static inline bool less32(const CFastCmp &a, const CFastCmp &b) {
                 return a.m_data32 < b.m_data32;
             }
             
-            static inline bool less_eq32(const FastCmp &a, const FastCmp &b) {
+            static inline bool less_eq32(const CFastCmp &a, const CFastCmp &b) {
                 return a.m_data32 <= b.m_data32;
             }
             
-            static inline bool greater32(const FastCmp &a, const FastCmp &b) {
+            static inline bool greater32(const CFastCmp &a, const CFastCmp &b) {
                 return a.m_data32 > b.m_data32;
             }
             
-            static inline bool greater_eq32(const FastCmp &a, const FastCmp &b) {
+            static inline bool greater_eq32(const CFastCmp &a, const CFastCmp &b) {
                 return a.m_data32 >= b.m_data32;
             }
             
-            static inline bool less16(const FastCmp &a, const FastCmp &b) {
+            static inline bool less16(const CFastCmp &a, const CFastCmp &b) {
                 return a.m_data16 < b.m_data16;
             }
             
-            static inline bool less_eq16(const FastCmp &a, const FastCmp &b) {
+            static inline bool less_eq16(const CFastCmp &a, const CFastCmp &b) {
                 return a.m_data16 <= b.m_data16;
             }
             
-            static inline bool greater16(const FastCmp &a, const FastCmp &b) {
+            static inline bool greater16(const CFastCmp &a, const CFastCmp &b) {
                 return a.m_data16 > b.m_data16;
             }
             
-            static inline bool greater_eq16(const FastCmp &a, const FastCmp &b) {
+            static inline bool greater_eq16(const CFastCmp &a, const CFastCmp &b) {
                 return a.m_data16 >= b.m_data16;
             }
             
-            static inline bool equal(const FastCmp &a, const FastCmp &b) {
+            static inline bool equal(const CFastCmp &a, const CFastCmp &b) {
                 return a.m_data == b.m_data;
             }
             
-            static inline bool equal32(const FastCmp &a, const FastCmp &b) {
+            static inline bool equal32(const CFastCmp &a, const CFastCmp &b) {
                 return a.m_data32 == b.m_data32;
             }
             
-            static inline bool equal16(const FastCmp &a, const FastCmp &b) {
+            static inline bool equal16(const CFastCmp &a, const CFastCmp &b) {
                 return a.m_data16 == b.m_data16;
             }
             
@@ -255,8 +255,8 @@ namespace fg {
                 data_type_8 m_dataVec[DATA_MAX_RAW_PARTS];
             };
         };
-    };
-};
+    } // namespace util
+} // namespace fg
 
     #undef FG_INC_FAST_CMP_BLOCK
 #endif	/* FG_INC_FAST_CMP */

@@ -18,45 +18,35 @@
 #include <cstring>
 
 ///
-//const fg::util::FastCmp::size_type fg::util::FastCmp::DATA_MAX_RAW_PARTS = 8;
+//const util::FastCmp::size_type util::FastCmp::DATA_MAX_RAW_PARTS = 8;
 ///
-//const fg::util::FastCmp::size_type fg::util::FastCmp::DATA_MAX_BITS = 64;
+//const util::FastCmp::size_type util::FastCmp::DATA_MAX_BITS = 64;
 
-/**
- * 
- * @param numParts
- * @param dataSize
- */
-fg::util::FastCmp::FastCmp(const size_type numParts, const DataSize dataSize) :
+using namespace fg;
+
+//------------------------------------------------------------------------------
+
+util::CFastCmp::CFastCmp(const size_type numParts, const DataSize dataSize) :
 m_numParts(numParts),
 m_data(0) {
     reset(numParts, dataSize);
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param orig
- */
-fg::util::FastCmp::FastCmp(const FastCmp& orig) {
+util::CFastCmp::CFastCmp(const CFastCmp& orig) {
    this->m_data = orig.m_data;
    this->m_numParts = orig.m_numParts;
    this->m_maxBits = orig.m_maxBits;
    this->m_numPartBits = orig.m_numPartBits;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- */
-fg::util::FastCmp::~FastCmp() {
-    memset(this, 0, sizeof(FastCmp));
+util::CFastCmp::~CFastCmp() {
+    memset(this, 0, sizeof(CFastCmp));
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param numParts
- * @param dataSize
- */
-void fg::util::FastCmp::reset(const size_type numParts, const DataSize dataSize) {
+void util::CFastCmp::reset(const size_type numParts, const DataSize dataSize) {
     if(dataSize == CMP_DATA_64) {
         m_maxBits = (size_type)sizeof(data_type_64)*8;
     } else if(dataSize == CMP_DATA_32) {
@@ -85,13 +75,9 @@ void fg::util::FastCmp::reset(const size_type numParts, const DataSize dataSize)
     m_numPartBits = m_maxBits / m_numParts;
     clear();
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param partID
- * @param partValue
- */
-void fg::util::FastCmp::setPart(size_type partID, data_type_32 partValue) {
+void util::CFastCmp::setPart(size_type partID, data_type_32 partValue) {
     if(partID >= m_numParts || !isValid())
         return;
     size_type shift = partID*m_numPartBits;
@@ -113,3 +99,4 @@ void fg::util::FastCmp::setPart(size_type partID, data_type_32 partValue) {
         m_data16 |= ((data_type_16)partValue) << shift;
     }
 }
+//------------------------------------------------------------------------------

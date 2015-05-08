@@ -29,7 +29,7 @@ m_primMode(PrimitiveMode::TRIANGLES),
 m_color(1.0f, 1.0f, 1.0f, 1.0f),
 m_relMove(0.0f, 0.0f, 0.0f),
 m_scissorBox(0, 0, 0, 0),
-m_fastCmp(4, fg::util::FastCmp::CMP_DATA_32),
+m_fastCmp(4, fg::util::CFastCmp::CMP_DATA_32),
 m_zIndex(Z_INDEX_DEFAULT),
 m_isManaged(0) {
     m_attrData[FG_GFX_ATTRIB_POS_LOCATION].index = FG_GFX_ATTRIB_POS_LOCATION;
@@ -139,7 +139,7 @@ void gfx::CDrawCall::setupVertexData(fgGFXuint attribMask) {
         memset(&m_drawingInfo, 0, sizeof (m_drawingInfo));
     }
     m_attribMask = attribMask;
-    m_fastCmp.setPart(0, (fg::util::FastCmp::data_type_32)m_attribMask);
+    m_fastCmp.setPart(0, (fg::util::CFastCmp::data_type_32)m_attribMask);
 }
 
 void gfx::CDrawCall::setupFromMesh(const SMeshBase* pMesh) {
@@ -149,7 +149,7 @@ void gfx::CDrawCall::setupFromMesh(const SMeshBase* pMesh) {
     m_drawCallType = FG_GFX_DRAW_CALL_MESH;
     m_primMode = pMesh->primMode;
     m_attribMask = pMesh->attribMask();
-    m_fastCmp.setPart(0, (util::FastCmp::data_type_32)m_attribMask);
+    m_fastCmp.setPart(0, (util::CFastCmp::data_type_32)m_attribMask);
     m_drawingInfo.count = pMesh->getNumVertices();
     if(pMesh->hasIndices()) {
         m_drawingInfo.buffer = pMesh->getIndicesVBO();
@@ -198,7 +198,7 @@ void gfx::CDrawCall::setupMaterial(const SMaterial* pMaterial) {
     // #FIXME
     //m_fastCmp.setPart(1, (fg::util::FastCmp::data_type_32)m_textureID.id);
     // This replaces value in sorting slot
-    m_fastCmp.setPart(1, (fg::util::FastCmp::data_type_32)sortingValue);
+    m_fastCmp.setPart(1, (fg::util::CFastCmp::data_type_32)sortingValue);
 }
 
 gfx::SMaterial* gfx::CDrawCall::getMaterial(void) const {
@@ -278,17 +278,17 @@ void gfx::CDrawCall::setZIndex(const int zIndex) {
     } else {
         m_zIndex = zIndex;
     }
-    m_fastCmp.setPart(3, (fg::util::FastCmp::data_type_32)m_zIndex);
+    m_fastCmp.setPart(3, (fg::util::CFastCmp::data_type_32)m_zIndex);
 }
 
 void gfx::CDrawCall::upZIndex(void) {
     m_zIndex++;
-    m_fastCmp.setPart(3, (fg::util::FastCmp::data_type_32)m_zIndex);
+    m_fastCmp.setPart(3, (fg::util::CFastCmp::data_type_32)m_zIndex);
 }
 
 void gfx::CDrawCall::downZIndex(void) {
     m_zIndex--;
-    m_fastCmp.setPart(3, (fg::util::FastCmp::data_type_32)m_zIndex);
+    m_fastCmp.setPart(3, (fg::util::CFastCmp::data_type_32)m_zIndex);
 }
 
 void gfx::CDrawCall::setDrawCallType(const fgGfxDrawCallType type) {
@@ -343,9 +343,9 @@ gfx::CMVPMatrix *gfx::CDrawCall::getMVP(void) const {
 void gfx::CDrawCall::setShaderProgram(gfx::CShaderProgram *pProgram) {
     m_program = pProgram;
     if(m_program)
-        m_fastCmp.setPart(2, (fg::util::FastCmp::data_type_32)m_program->getHandle().getIndex());
+        m_fastCmp.setPart(2, (fg::util::CFastCmp::data_type_32)m_program->getHandle().getIndex());
     else
-        m_fastCmp.setPart(2, (fg::util::FastCmp::data_type_32)0);
+        m_fastCmp.setPart(2, (fg::util::CFastCmp::data_type_32)0);
 
 }
 
@@ -355,7 +355,7 @@ gfx::CShaderProgram* gfx::CDrawCall::getShaderProgram(void) const {
 
 void gfx::CDrawCall::setTexture(const STextureID& textureID) {
     m_textureID = textureID;
-    m_fastCmp.setPart(1, (fg::util::FastCmp::data_type_32)m_textureID.id);
+    m_fastCmp.setPart(1, (fg::util::CFastCmp::data_type_32)m_textureID.id);
 }
 
 gfx::STextureID const& gfx::CDrawCall::getTexture(void) const {
