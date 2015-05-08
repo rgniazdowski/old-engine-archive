@@ -18,10 +18,11 @@
 #include "fgFileErrorCodes.h"
 #include "fgMessageSubsystem.h"
 
-/**
- * 
- */
-fg::util::CFile::CFile() :
+using namespace fg;
+
+//------------------------------------------------------------------------------
+
+util::CFile::CFile() :
 m_zip(),
 m_regular(),
 m_file(NULL),
@@ -29,12 +30,9 @@ m_mode(REGULAR) {
     m_file = &m_regular;
     m_modeFlags = Mode::READ;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param filePath
- */
-fg::util::CFile::CFile(const char *filePath) :
+util::CFile::CFile(const char *filePath) :
 m_zip(),
 m_regular(),
 m_file(NULL),
@@ -43,12 +41,9 @@ m_mode(REGULAR) {
     m_modeFlags = Mode::READ;
     this->setPath(filePath);
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param orig
- */
-fg::util::CFile::CFile(const CFile& orig) {
+util::CFile::CFile(const CFile& orig) {
     if(&orig != this) {
         this->m_mode = orig.m_mode;
         this->m_modeFlags = orig.m_modeFlags;
@@ -61,21 +56,16 @@ fg::util::CFile::CFile(const CFile& orig) {
         // #FIXME
     }
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- */
-fg::util::CFile::~CFile() {
+util::CFile::~CFile() {
     m_zip.close();
     m_regular.close();
     m_file = NULL;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param filePath
- */
-void fg::util::CFile::setPath(const char *filePath) {
+void util::CFile::setPath(const char *filePath) {
     if(!filePath)
         return;
     base_type::setPath(filePath);
@@ -98,22 +88,15 @@ void fg::util::CFile::setPath(const char *filePath) {
         m_file = &m_zip;
     }
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param filePath
- */
-void fg::util::CFile::setPath(const std::string & filePath) {
+void util::CFile::setPath(const std::string & filePath) {
     if(filePath.size())
         setPath(filePath.c_str());
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param fmt
- * @return 
- */
-int fg::util::CFile::print(const char *fmt, ...) {
+int util::CFile::print(const char *fmt, ...) {
     if(fmt == NULL || m_file == NULL) {
         FG_MessageSubsystem->reportWarning(tag_type::name(), FG_ERRNO_FILE_WRONG_PARAMETERS);
         return -1;
@@ -128,3 +111,4 @@ int fg::util::CFile::print(const char *fmt, ...) {
 
     return m_file->puts(buf);
 }
+//------------------------------------------------------------------------------

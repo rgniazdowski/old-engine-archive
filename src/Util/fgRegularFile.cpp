@@ -6,7 +6,7 @@
  *
  * FlexiGame source code and any related files can not be copied, modified
  * and/or distributed without the express or written consent from the author.
- *******************************************************/
+ ******************************************************************************/
 
 #include "fgRegularFile.h"
 #include "fgFileErrorCodes.h"
@@ -65,12 +65,11 @@ char *rw_fgets(char *s, int n, SDL_RWops *file) {
 }
 #endif /* FG_USING_SDL2 */
 
-/**
- * Check if file exists
- * @param filePath
- * @return 
- */
-fgBool fg::util::CRegularFile::exists(const char *filePath) {
+using namespace fg;
+
+//------------------------------------------------------------------------------
+
+fgBool util::CRegularFile::exists(const char *filePath) {
 #if defined(FG_USING_MARMALADE)
     return (fgBool)s3eFileCheckExists(filePath);
 #else
@@ -78,48 +77,33 @@ fgBool fg::util::CRegularFile::exists(const char *filePath) {
     return (fgBool)fileCheck.good();
 #endif
 }
+//------------------------------------------------------------------------------
 
-/**
- * Check if file exists
- * @param filePath
- * @return 
- */
-fgBool fg::util::CRegularFile::exists(const std::string &filePath) {
-    return fg::util::CRegularFile::exists(filePath.c_str());
+fgBool util::CRegularFile::exists(const std::string &filePath) {
+    return util::CRegularFile::exists(filePath.c_str());
 }
+//------------------------------------------------------------------------------
 
-/**
- * Default constructor for File object
- */
-fg::util::CRegularFile::CRegularFile() :
+util::CRegularFile::CRegularFile() :
 m_file(NULL) {
     m_modeFlags = Mode::READ | Mode::BINARY;
 }
+//------------------------------------------------------------------------------
 
-/**
- * Constructor for File object with parameter (file path)
- * @param filePath
- */
-fg::util::CRegularFile::CRegularFile(const char *filePath) :
+util::CRegularFile::CRegularFile(const char *filePath) :
 m_file(NULL) {
     m_modeFlags = Mode::READ | Mode::BINARY;
     m_filePath = filePath;
 }
+//------------------------------------------------------------------------------
 
-/**
- * Destructor, closes the file, frees up all buffers
- */
-fg::util::CRegularFile::~CRegularFile() {
+util::CRegularFile::~CRegularFile() {
     close();
     m_filePath.clear();
 }
+//------------------------------------------------------------------------------
 
-/**
- * Get the C standard mode for fopen
- * @param mode
- * @return 
- */
-const char *fg::util::CRegularFile::modeStr(Mode mode) {
+const char *util::CRegularFile::modeStr(Mode mode) {
     if(mode == Mode::NONE)
         return "";
     if(!!(mode & Mode::READ)) {
@@ -151,14 +135,9 @@ const char *fg::util::CRegularFile::modeStr(Mode mode) {
     }
     return "";
 }
+//------------------------------------------------------------------------------
 
-/**
- * Open the file (pointed to by path) with specified mode
- * @param filePath
- * @param mode
- * @return 
- */
-fgBool fg::util::CRegularFile::open(const char *filePath, Mode mode) {
+fgBool util::CRegularFile::open(const char *filePath, Mode mode) {
     if(filePath == NULL) {
         FG_MessageSubsystem->reportWarning(tag_type::name(), FG_ERRNO_FILE_NO_PATH);
         //FG_LOG_WARNING("%s: No file path specified", tag_type::name())
@@ -207,35 +186,25 @@ fgBool fg::util::CRegularFile::open(const char *filePath, Mode mode) {
     m_modeFlags = mode;
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
-/**
- * Open the file with specified mode
- * @param mode
- * @return 
- */
-fgBool fg::util::CRegularFile::open(Mode mode) {
+fgBool util::CRegularFile::open(Mode mode) {
     if(mode == Mode::NONE) {
         FG_MessageSubsystem->reportWarning(tag_type::name(), FG_ERRNO_FILE_WRONG_MODE, "%s", m_filePath.c_str());
         return FG_FALSE;
     }
     return open(m_filePath.c_str(), mode);
 }
+//------------------------------------------------------------------------------
 
-/**
- * Open the file with already set options
- * @return 
- */
-fgBool fg::util::CRegularFile::open(void) {
+fgBool util::CRegularFile::open(void) {
     if(m_modeFlags == Mode::NONE)
         m_modeFlags = Mode::READ;
     return open(m_filePath.c_str(), m_modeFlags);
 }
+//------------------------------------------------------------------------------
 
-/**
- * Close the file
- * @return 
- */
-fgBool fg::util::CRegularFile::close(void) {
+fgBool util::CRegularFile::close(void) {
     if(m_file) {
         FG_ERRNO_CLEAR();
         //m_file->hidden.stdio.fp
@@ -263,26 +232,17 @@ fgBool fg::util::CRegularFile::close(void) {
     }
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
-/**
- * Check if file is currently opened
- * @return 
- */
-fgBool fg::util::CRegularFile::isOpen(void) const {
+fgBool util::CRegularFile::isOpen(void) const {
     if(m_file)
         return FG_TRUE;
     else
         return FG_FALSE;
 }
+//------------------------------------------------------------------------------
 
-/**
- * This will load the whole file into char *buffer
- * @return Newly allocated string representing the contents of the file
- *         There is a limit for how big this buffer can be. If it's
- *         exceeded a NULL pointer will be returned. The returned
- *         string buffer will be null-terminated ('\0' will be appended)
- */
-char *fg::util::CRegularFile::load(const char *filePath) {
+char *util::CRegularFile::load(const char *filePath) {
     if(!isOpen() && !open(filePath, Mode::READ | Mode::BINARY)) {
         FG_MessageSubsystem->reportWarning(tag_type::name(), FG_ERRNO_FILE_ALREADY_OPEN, "%s", filePath);
         return NULL;
@@ -320,31 +280,18 @@ char *fg::util::CRegularFile::load(const char *filePath) {
 
     return fileBuffer;
 }
+//------------------------------------------------------------------------------
 
-/**
- * This will load the whole file into char *buffer
- * @param filePath
- * @return Newly allocated string representing the contents of the file
- *         There is a limit for how big this buffer can be. If it's
- *         exceeded a NULL pointer will be returned. The returned
- *         string buffer will be null-terminated ('\0' will be appended)
- */
-char *fg::util::CRegularFile::load(void) {
+char *util::CRegularFile::load(void) {
     if(m_filePath.empty()) {
         FG_MessageSubsystem->reportWarning(tag_type::name(), FG_ERRNO_FILE_NO_PATH, "%s", m_filePath.c_str());
         return NULL;
     }
     return load(m_filePath.c_str());
 }
+//------------------------------------------------------------------------------
 
-/**
- * Read from file
- * @param buffer
- * @param elemsize
- * @param elemcount
- * @return 
- */
-int fg::util::CRegularFile::read(void *buffer, unsigned int elemsize, unsigned int elemcount) {
+int util::CRegularFile::read(void *buffer, unsigned int elemsize, unsigned int elemcount) {
     if(buffer == NULL || elemsize == 0 || elemcount == 0 || m_file == NULL) {
         FG_MessageSubsystem->reportWarning(tag_type::name(), FG_ERRNO_FILE_WRONG_PARAMETERS, "%s", m_filePath.c_str());
         return 0;
@@ -367,14 +314,9 @@ int fg::util::CRegularFile::read(void *buffer, unsigned int elemsize, unsigned i
     }
     return elemRead;
 }
+//------------------------------------------------------------------------------
 
-/**
- * Read string from the file
- * @param buffer
- * @param maxlen
- * @return 
- */
-char *fg::util::CRegularFile::readString(char *buffer, unsigned int maxlen) {
+char *util::CRegularFile::readString(char *buffer, unsigned int maxlen) {
     if(buffer == NULL || maxlen == 0 || m_file == NULL) {
         FG_MessageSubsystem->reportWarning(tag_type::name(), FG_ERRNO_FILE_WRONG_PARAMETERS);
         return NULL;
@@ -399,13 +341,9 @@ char *fg::util::CRegularFile::readString(char *buffer, unsigned int maxlen) {
     }
     return retString;
 }
+//------------------------------------------------------------------------------
 
-/**
- * Print to the file
- * @param fmt
- * @return 
- */
-int fg::util::CRegularFile::print(const char *fmt, ...) {
+int util::CRegularFile::print(const char *fmt, ...) {
     if(fmt == NULL || m_file == NULL) {
         FG_MessageSubsystem->reportWarning(tag_type::name(), FG_ERRNO_FILE_WRONG_PARAMETERS);
         return -1;
@@ -437,15 +375,9 @@ int fg::util::CRegularFile::print(const char *fmt, ...) {
 #endif
     return charsCount;
 }
+//------------------------------------------------------------------------------
 
-/**
- * Write to the file
- * @param buffer
- * @param elemsize
- * @param elemcount
- * @return 
- */
-int fg::util::CRegularFile::write(void *buffer, unsigned int elemsize, unsigned int elemcount) {
+int util::CRegularFile::write(void *buffer, unsigned int elemsize, unsigned int elemcount) {
     if(m_file == NULL || buffer == NULL || elemsize == 0 || elemcount == 0) {
         FG_MessageSubsystem->reportWarning(tag_type::name(), FG_ERRNO_FILE_WRONG_PARAMETERS);
         return -1;
@@ -471,13 +403,9 @@ int fg::util::CRegularFile::write(void *buffer, unsigned int elemsize, unsigned 
 
     return elemWritten;
 }
+//------------------------------------------------------------------------------
 
-/**
- * Put given string into the file
- * @param str
- * @return 
- */
-int fg::util::CRegularFile::puts(const char *str) {
+int util::CRegularFile::puts(const char *str) {
     if(str == NULL) {
         FG_MessageSubsystem->reportWarning(tag_type::name(), FG_ERRNO_FILE_WRONG_PARAMETERS);
         return -1;
@@ -504,12 +432,9 @@ int fg::util::CRegularFile::puts(const char *str) {
 #endif
     return status;
 }
+//------------------------------------------------------------------------------
 
-/**
- * Check is it end of file
- * @return 
- */
-fgBool fg::util::CRegularFile::isEOF(void) {
+fgBool util::CRegularFile::isEOF(void) {
     if(m_file == NULL) {
         FG_MessageSubsystem->reportWarning(tag_type::name(), FG_ERRNO_FILE_NOT_OPENED);
         return FG_FALSE;
@@ -523,12 +448,9 @@ fgBool fg::util::CRegularFile::isEOF(void) {
 #endif
     return FG_FALSE;
 }
+//------------------------------------------------------------------------------
 
-/**
- * Flush file buffers
- * @return 
- */
-fgBool fg::util::CRegularFile::flush(void) {
+fgBool util::CRegularFile::flush(void) {
     if(m_file == NULL) {
         FG_MessageSubsystem->reportWarning(tag_type::name(), FG_ERRNO_FILE_NOT_OPENED);
         return FG_FALSE;
@@ -546,12 +468,9 @@ fgBool fg::util::CRegularFile::flush(void) {
 #endif
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
-/**
- *  Get (read) single character from file
- * @return 
- */
-int fg::util::CRegularFile::getChar(void) {
+int util::CRegularFile::getChar(void) {
     if(m_file == NULL) {
         FG_MessageSubsystem->reportWarning(tag_type::name(), FG_ERRNO_FILE_NOT_OPENED);
         return -1;
@@ -579,13 +498,9 @@ int fg::util::CRegularFile::getChar(void) {
 #endif
     return charRead;
 }
+//------------------------------------------------------------------------------
 
-/**
- * Put (write) single character to file
- * @param c
- * @return 
- */
-int fg::util::CRegularFile::putChar(char c) {
+int util::CRegularFile::putChar(char c) {
     if(m_file == NULL) {
         FG_MessageSubsystem->reportWarning(tag_type::name(), FG_ERRNO_FILE_NOT_OPENED);
         return FG_EOF;
@@ -608,12 +523,9 @@ int fg::util::CRegularFile::putChar(char c) {
 #endif
     return charWrite;
 }
+//------------------------------------------------------------------------------
 
-/**
- * Get the file size (in bytes)
- * @return 
- */
-int fg::util::CRegularFile::getSize(void) {
+int util::CRegularFile::getSize(void) {
     if(m_file == NULL) {
         FG_MessageSubsystem->reportWarning(tag_type::name(), FG_ERRNO_FILE_NOT_OPENED);
         return -1;
@@ -650,12 +562,9 @@ int fg::util::CRegularFile::getSize(void) {
 #endif
     return (int)size;
 }
+//------------------------------------------------------------------------------
 
-/**
- * Get the current position in the file
- * @return 
- */
-long fg::util::CRegularFile::getPosition(void) {
+long util::CRegularFile::getPosition(void) {
     if(m_file == NULL) {
         FG_MessageSubsystem->reportWarning(tag_type::name(), FG_ERRNO_FILE_NOT_OPENED);
         return -1;
@@ -676,14 +585,9 @@ long fg::util::CRegularFile::getPosition(void) {
     }
     return position;
 }
+//------------------------------------------------------------------------------
 
-/**
- * Sets the position in the currently open/selected file
- * @param offset
- * @param whence
- * @return 
- */
-int fg::util::CRegularFile::setPosition(long offset, int whence) {
+int util::CRegularFile::setPosition(long offset, int whence) {
     if(m_file == NULL) {
         FG_MessageSubsystem->reportWarning(tag_type::name(), FG_ERRNO_FILE_NOT_OPENED);
         return -1;
@@ -705,3 +609,4 @@ int fg::util::CRegularFile::setPosition(long offset, int whence) {
 #endif
     return 0;
 }
+//------------------------------------------------------------------------------

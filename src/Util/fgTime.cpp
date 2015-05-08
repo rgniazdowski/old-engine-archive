@@ -6,7 +6,7 @@
  * 
  * FlexiGame source code and any related files can not be copied, modified 
  * and/or distributed without the express or written consent from the author.
- *******************************************************/
+ ******************************************************************************/
 
 #include "fgBuildConfig.h"
 #include "fgTime.h"
@@ -48,6 +48,8 @@ namespace fg {
 
 using namespace fg;
 
+//------------------------------------------------------------------------------
+
 void timesys::init(void) {
 #ifdef FG_USING_PLATFORM_WINDOWS
     //SYSTEMTIME time;
@@ -67,6 +69,7 @@ void timesys::init(void) {
     timesys::s_lastTick[1] = MINIMUM_TICK;
     timesys::s_lastTick[2] = MINIMUM_TICK;
 }
+//------------------------------------------------------------------------------
 
 void timesys::markTick(TickCategory category) {
 #ifdef FG_USING_PLATFORM_WINDOWS
@@ -87,10 +90,12 @@ void timesys::markTick(TickCategory category) {
     if(timesys::s_lastTick[(unsigned int)category] <= 0.0f)
         timesys::s_lastTick[(unsigned int)category] = MINIMUM_TICK;
 }
+//------------------------------------------------------------------------------
 
 float timesys::elapsed(TickCategory category) {
     return timesys::s_lastTick[(unsigned int)category];
 }
+//------------------------------------------------------------------------------
 
 float timesys::exact(void) {
 #ifdef FG_USING_PLATFORM_WINDOWS
@@ -105,11 +110,13 @@ float timesys::exact(void) {
                  dtime.tv_usec / 1000000.0f - timesys::g_start.tv_usec / 1000000.0f);
 #endif
 }
+//------------------------------------------------------------------------------
 
 float timesys::clockTicks(void) {
     clock_t curTime = clock() - timesys::g_clock_start;
     return float(curTime);
 }
+//------------------------------------------------------------------------------
 
 float timesys::ms(void) {
     struct timeval newTime;
@@ -117,10 +124,12 @@ float timesys::ms(void) {
     return float(newTime.tv_sec - timesys::g_start.tv_sec)*1000.0f +
             float(newTime.tv_usec - timesys::g_start.tv_usec) / 1000.0f;
 }
+//------------------------------------------------------------------------------
 
 long timesys::seconds(void) {
     return time(NULL);
 }
+//------------------------------------------------------------------------------
 
 unsigned long int timesys::ticks(void) {
 #if defined(FG_USING_MARMALADE)
@@ -131,3 +140,4 @@ unsigned long int timesys::ticks(void) {
     return (unsigned long int)(timesys::ms());
 #endif
 }
+//------------------------------------------------------------------------------

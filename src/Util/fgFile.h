@@ -328,8 +328,8 @@ namespace fg {
 
         /// The higher file class alias - data file
         typedef CFile DataFile;
-    };
-};
+    } // namespace util
+} // namespace fg
 
     #undef FG_INC_FILE_BLOCK
 #endif	/* FG_INC_FILE */

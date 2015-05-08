@@ -20,10 +20,11 @@
 #include "fgPath.h"
 #include <fstream>
 
-/**
- * 
- */
-fg::util::CZipFile::CZipFile() :
+using namespace fg;
+
+//------------------------------------------------------------------------------
+
+util::CZipFile::CZipFile() :
 m_password(),
 m_selectedFilePath(),
 m_extractionPath(),
@@ -38,12 +39,9 @@ m_mode(Mode::READ) {
     memset(&m_zGlobalInfo, 0, sizeof (ZipGlobalInfo));
     memset(&m_zFilePos, 0, sizeof (ZipFilePos));
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param filePath
- */
-fg::util::CZipFile::CZipFile(const char* filePath) :
+util::CZipFile::CZipFile(const char* filePath) :
 m_password(),
 m_selectedFilePath(),
 m_extractionPath(),
@@ -60,12 +58,9 @@ m_mode(Mode::READ) {
     if(filePath)
         setPath(filePath);
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param filePath
- */
-fg::util::CZipFile::CZipFile(const std::string& filePath) :
+util::CZipFile::CZipFile(const std::string& filePath) :
 m_password(),
 m_selectedFilePath(),
 m_extractionPath(),
@@ -81,17 +76,12 @@ m_mode(Mode::READ) {
     memset(&m_zFilePos, 0, sizeof (ZipFilePos));
     setPath(filePath);
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param orig
- */
-fg::util::CZipFile::CZipFile(const CZipFile& orig) { }
+util::CZipFile::CZipFile(const CZipFile& orig) { }
+//------------------------------------------------------------------------------
 
-/**
- * Default virtual destructor for the ZipFile object
- */
-fg::util::CZipFile::~CZipFile() {
+util::CZipFile::~CZipFile() {
     m_filePath.clear();
     m_selectedFilePath.clear();
 #if !defined(FG_USING_MARMALADE)
@@ -100,12 +90,9 @@ fg::util::CZipFile::~CZipFile() {
 #endif
     m_filePaths.clear_optimised();
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param mode
- */
-void fg::util::CZipFile::setMode(FileMode mode) {
+void util::CZipFile::setMode(FileMode mode) {
     m_modeFlags = mode; // File mode
     m_mode = Mode::READ; // ZipFile mode
     if(!!(m_modeFlags & FileMode::READ) && !(m_modeFlags & FileMode::UPDATE)) {
@@ -139,12 +126,9 @@ void fg::util::CZipFile::setMode(FileMode mode) {
     }
 #endif
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param filePath
- */
-void fg::util::CZipFile::setPath(const char *filePath) {
+void util::CZipFile::setPath(const char *filePath) {
     // This will determine whether or not the specified file points to a valid 
     // ZipFile (based on the extension) and also set the relative path to inner
     // compressed file (if any is specified). This means that this supports paths
@@ -183,22 +167,16 @@ void fg::util::CZipFile::setPath(const char *filePath) {
         }
     }
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param filePath
- */
-void fg::util::CZipFile::setPath(const std::string & filePath) {
+void util::CZipFile::setPath(const std::string & filePath) {
     if(filePath.empty())
         return;
     setPath(filePath.c_str());
 }
+//------------------------------------------------------------------------------
 
-/**
- * Check whether currently selected file is a directory
- * @return 
- */
-fgBool fg::util::CZipFile::isCurrentFileDir(void) {
+fgBool util::CZipFile::isCurrentFileDir(void) {
     int sn = m_selectedFilePath.size();
     if(sn) {
         std::string dirname;
@@ -211,12 +189,9 @@ fgBool fg::util::CZipFile::isCurrentFileDir(void) {
     }
     return FG_FALSE;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @return 
- */
-fgBool fg::util::CZipFile::goToNextFile(void) {
+fgBool util::CZipFile::goToNextFile(void) {
     if(!isOpen())
         return FG_FALSE;
     m_currentFileID++;
@@ -225,12 +200,9 @@ fgBool fg::util::CZipFile::goToNextFile(void) {
     }
     return private_selectFile(m_currentFileID);
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @return 
- */
-fgBool fg::util::CZipFile::goToPreviousFile(void) {
+fgBool util::CZipFile::goToPreviousFile(void) {
     if(!isOpen())
         return FG_FALSE;
     m_currentFileID--;
@@ -239,22 +211,16 @@ fgBool fg::util::CZipFile::goToPreviousFile(void) {
     }
     return private_selectFile(m_currentFileID);
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @return 
- */
-fgBool fg::util::CZipFile::goToFirstFile(void) {
+fgBool util::CZipFile::goToFirstFile(void) {
     if(m_filePath.empty())
         return FG_FALSE;
     return selectFile(m_filePath.c_str());
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @return 
- */
-fgBool fg::util::CZipFile::private_updateCurrentFileInfo(void) {
+fgBool util::CZipFile::private_updateCurrentFileInfo(void) {
     fgBool status = FG_TRUE;
     if(!isOpen())
         status = FG_FALSE;
@@ -286,13 +252,9 @@ fgBool fg::util::CZipFile::private_updateCurrentFileInfo(void) {
     }
     return status;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param id
- * @return 
- */
-fgBool fg::util::CZipFile::private_selectFile(const int id) {
+fgBool util::CZipFile::private_selectFile(const int id) {
     if(id < 0 || id >= (int)m_filePaths.size())
         return FG_FALSE;
     if(m_filePath.empty()) {
@@ -317,19 +279,9 @@ fgBool fg::util::CZipFile::private_selectFile(const int id) {
     return private_updateCurrentFileInfo();
     //return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
-/**
- * Selects the file inside of the ZipFile. By default the first file
- * is selected.
- * @param filePath  Relative path to the file inside the Zip. If the
- * path to the ZipFile is not set this function will fail. If the 
- * path points to the ZipFile (is not relative) the first file will
- * be selected.
- * @return          FG_TRUE on  success (valid  file  is  selected),
- *                  FG_FALSE otherwise (no  valid  Zip  specified or
- *                  the selected file does not exist in the Zip)
- */
-fgBool fg::util::CZipFile::selectFile(const char *filePath) {
+fgBool util::CZipFile::selectFile(const char *filePath) {
     if(!filePath) {
         return FG_FALSE;
     }
@@ -371,27 +323,14 @@ fgBool fg::util::CZipFile::selectFile(const char *filePath) {
     private_updateCurrentFileInfo();
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
-/**
- * Selects the file inside of the ZipFile. By default the first file
- * is selected.
- * @param filePath  Relative path to the file inside the Zip. If the
- * path to the ZipFile is not set this function will fail. If the 
- * path points to the ZipFile (is not relative) the first file will
- * be selected.
- * @return          FG_TRUE on  success (valid  file  is  selected),
- *                  FG_FALSE otherwise (no  valid  Zip  specified or
- *                  the selected file does not exist in the Zip)
- */
-fgBool fg::util::CZipFile::selectFile(const std::string& filePath) {
+fgBool util::CZipFile::selectFile(const std::string& filePath) {
     return selectFile(filePath.c_str());
 }
+//------------------------------------------------------------------------------
 
-/**
- * Open the ZipFile with already set options
- * @return 
- */
-fgBool fg::util::CZipFile::open(void) {
+fgBool util::CZipFile::open(void) {
     if(m_mode == Mode::NONE || m_zipPath.empty())
         return FG_FALSE;
     // MAIN OPEN FUNCTION FOR ZIP
@@ -455,27 +394,17 @@ fgBool fg::util::CZipFile::open(void) {
     }
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
-/**
- * Open the file with specified mode. This will have different effect,
- * based on the currently set path or selected file inside of the zip.
- * @param mode
- * @return 
- */
-fgBool fg::util::CZipFile::open(Mode mode) {
+fgBool util::CZipFile::open(Mode mode) {
     if(mode == Mode::NONE)
         return FG_FALSE;
     this->setMode(mode);
     return open();
 }
+//------------------------------------------------------------------------------
 
-/**
- * Open the ZipFile (pointed to by path) with specified mode. 
- * @param filePath
- * @param mode
- * @return 
- */
-fgBool fg::util::CZipFile::open(const char *filePath, Mode mode) {
+fgBool util::CZipFile::open(const char *filePath, Mode mode) {
     // This is open working with special mode
     if(!filePath || mode == Mode::NONE)
         return FG_FALSE;
@@ -483,34 +412,18 @@ fgBool fg::util::CZipFile::open(const char *filePath, Mode mode) {
     this->setMode(mode);
     return open();
 }
+//------------------------------------------------------------------------------
 
-/**
- * Open the file with specified mode. It will use currently selected
- * ZipFile/file path. Action really  performed  depends  on the file 
- * path - actually used mode to  open the file may  differ  from the 
- * one passed in the  function.  This  function  is  used mainly for 
- * compatibility and transparency with util::File class. 
- * @param mode
- * @return 
- */
-fgBool fg::util::CZipFile::open(FileMode mode) {
+fgBool util::CZipFile::open(FileMode mode) {
     // Inception?
     if(m_filePath.empty() || mode == FileMode::NONE)
         return FG_FALSE;
     this->setMode(mode);
     return open();
 }
+//------------------------------------------------------------------------------
 
-/**
- * Open the file (pointed to by path)  with  specified  mode. Action
- * performed depends on the file path. Whenever  the  new ZipFile is 
- * opened - the inside structure (file list  with relative paths) is
- * buffered into StringVector.
- * @param filePath
- * @param mode
- * @return 
- */
-fgBool fg::util::CZipFile::open(const char *filePath, FileMode mode) {
+fgBool util::CZipFile::open(const char *filePath, FileMode mode) {
     if(!filePath || mode == FileMode::NONE)
         return FG_FALSE;
     this->setPath(filePath);
@@ -519,12 +432,9 @@ fgBool fg::util::CZipFile::open(const char *filePath, FileMode mode) {
     // apply the paths...
     return open();
 }
+//------------------------------------------------------------------------------
 
-/**
- * Close the file
- * @return 
- */
-fgBool fg::util::CZipFile::close(void) {
+fgBool util::CZipFile::close(void) {
     if(!isOpen())
         return FG_TRUE;
     if(m_uf) {
@@ -543,20 +453,14 @@ fgBool fg::util::CZipFile::close(void) {
     m_filePaths.clear_optimised();
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
-/**
- * Check if file is currently opened
- * @return 
- */
-fgBool fg::util::CZipFile::isOpen(void) const {
+fgBool util::CZipFile::isOpen(void) const {
     return (fgBool)(m_zf != NULL || m_uf != NULL);
 }
+//------------------------------------------------------------------------------
 
-/**
- * Check if file exists
- * @return 
- */
-fgBool fg::util::CZipFile::exists(void) {
+fgBool util::CZipFile::exists(void) {
 #if defined FG_USING_MARMALADE
     return (fgBool)s3eFileCheckExists(m_filePath.c_str());
 #else
@@ -564,15 +468,9 @@ fgBool fg::util::CZipFile::exists(void) {
     return (fgBool)fileCheck.good();
 #endif
 }
+//------------------------------------------------------------------------------
 
-/**
- * This will load the whole file into char *buffer
- * @return Newly allocated string representing the contents of the file
- *         There is a limit for how big this buffer can be. If it's
- *         exceeded a NULL pointer will be returned. The returned
- *         string buffer will be null-terminated ('\0' will be appended)
- */
-char *fg::util::CZipFile::load(void) {
+char *util::CZipFile::load(void) {
     char *data = NULL;
     fgBool status = FG_TRUE;
     unsigned int fileSize = 0;
@@ -612,16 +510,9 @@ char *fg::util::CZipFile::load(void) {
     }
     return data;
 }
+//------------------------------------------------------------------------------
 
-/**
- * This will load the whole file into char *buffer
- * @param filePath
- * @return Newly allocated string representing the contents of the file
- *         There is a limit for how big this buffer can be. If it's
- *         exceeded a NULL pointer will be returned. The returned
- *         string buffer will be null-terminated ('\0' will be appended)
- */
-char *fg::util::CZipFile::load(const char *filePath) {
+char *util::CZipFile::load(const char *filePath) {
     if(!filePath)
         return NULL;
     if(isOpen()) {
@@ -635,15 +526,9 @@ char *fg::util::CZipFile::load(const char *filePath) {
     }
     return load();
 }
+//------------------------------------------------------------------------------
 
-/**
- * Read from file
- * @param buffer
- * @param elemsize
- * @param elemcount
- * @return 
- */
-int fg::util::CZipFile::read(void *buffer, unsigned int elemsize, unsigned int elemcount) {
+int util::CZipFile::read(void *buffer, unsigned int elemsize, unsigned int elemcount) {
     if(!buffer || !elemsize || !elemcount || m_filePath.empty())
         return 0;
     if(m_mode == Mode::READ && !m_uf)
@@ -662,14 +547,9 @@ int fg::util::CZipFile::read(void *buffer, unsigned int elemsize, unsigned int e
     }
     return elemRead;
 }
+//------------------------------------------------------------------------------
 
-/**
- * Read string from the file
- * @param buffer
- * @param maxlen
- * @return 
- */
-char *fg::util::CZipFile::readString(char *buffer, unsigned int maxlen) {
+char *util::CZipFile::readString(char *buffer, unsigned int maxlen) {
     if(!buffer || !maxlen)
         return NULL;
     if(!isOpen())
@@ -700,26 +580,16 @@ char *fg::util::CZipFile::readString(char *buffer, unsigned int maxlen) {
     }
     return buffer;
 }
+//------------------------------------------------------------------------------
 
-/**
- * Write to the file
- * @param buffer
- * @param elemsize
- * @param elemcount
- * @return 
- */
-int fg::util::CZipFile::write(void *buffer, unsigned int elemsize, unsigned int elemcount) {
+int util::CZipFile::write(void *buffer, unsigned int elemsize, unsigned int elemcount) {
     if(!buffer || !elemsize || !elemcount || m_filePath.empty())
         return 0;
     return 0;
 }
+//------------------------------------------------------------------------------
 
-/**
- * Print to the file
- * @param fmt
- * @return 
- */
-int fg::util::CZipFile::print(const char *fmt, ...) {
+int util::CZipFile::print(const char *fmt, ...) {
     if(!fmt || !isOpen())
         return 0;
     if(m_mode != Mode::WRITE && m_mode != Mode::UPDATE)
@@ -729,13 +599,9 @@ int fg::util::CZipFile::print(const char *fmt, ...) {
 
     return 0;
 }
+//------------------------------------------------------------------------------
 
-/**
- * Put given string into the file
- * @param str
- * @return 
- */
-int fg::util::CZipFile::puts(const char *str) {
+int util::CZipFile::puts(const char *str) {
     if(!str || !isOpen())
         return 0;
     if(m_mode != Mode::WRITE && m_mode != Mode::UPDATE)
@@ -745,12 +611,9 @@ int fg::util::CZipFile::puts(const char *str) {
 
     return 0;
 }
+//------------------------------------------------------------------------------
 
-/**
- * Check is it end of file
- * @return 
- */
-fgBool fg::util::CZipFile::isEOF(void) {
+fgBool util::CZipFile::isEOF(void) {
     fgBool status = FG_FALSE;
     if(m_uf && !m_selectedFilePath.empty()) {
         if(unzeof(m_uf) == 1)
@@ -758,20 +621,14 @@ fgBool fg::util::CZipFile::isEOF(void) {
     }
     return status;
 }
+//------------------------------------------------------------------------------
 
-/**
- * Flush file buffers
- * @return 
- */
-fgBool fg::util::CZipFile::flush(void) {
+fgBool util::CZipFile::flush(void) {
     return FG_FALSE;
 }
+//------------------------------------------------------------------------------
 
-/**
- *  Get (read) single character from file
- * @return 
- */
-int fg::util::CZipFile::getChar(void) {
+int util::CZipFile::getChar(void) {
     int c = 0;
     if(m_mode == Mode::READ && m_uf && !m_selectedFilePath.empty()) {
         if(this->read((void *)&c, 1, 1) <= 0)
@@ -779,21 +636,14 @@ int fg::util::CZipFile::getChar(void) {
     }
     return c;
 }
+//------------------------------------------------------------------------------
 
-/**
- * Put (write) single character to file
- * @param c
- * @return 
- */
-int fg::util::CZipFile::putChar(char c) {
+int util::CZipFile::putChar(char c) {
     return 0;
 }
+//------------------------------------------------------------------------------
 
-/**
- * Get the file size (in bytes)
- * @return 
- */
-int fg::util::CZipFile::getSize(void) {
+int util::CZipFile::getSize(void) {
     int size = 0;
     //if(m_selectedFilePath.empty()) {
     // There is no current file selected
@@ -804,12 +654,9 @@ int fg::util::CZipFile::getSize(void) {
         size = (int)m_zInfo.unz64.uncompressed_size;
     return size;
 }
+//------------------------------------------------------------------------------
 
-/**
- * Get the current position in the file
- * @return 
- */
-long fg::util::CZipFile::getPosition(void) {
+long util::CZipFile::getPosition(void) {
     long pos = 0L;
     if(m_uf)
         pos = (long)unztell(m_uf);
@@ -820,13 +667,9 @@ long fg::util::CZipFile::getPosition(void) {
     //}       
     return pos;
 }
+//------------------------------------------------------------------------------
 
-/**
- * Sets the position in the currently open/selected file
- * @param offset
- * @param whence
- * @return 
- */
-int fg::util::CZipFile::setPosition(long offset, int whence) {
+int util::CZipFile::setPosition(long offset, int whence) {
     return 0;
 }
+//------------------------------------------------------------------------------
