@@ -6,7 +6,7 @@
  * 
  * FlexiGame source code and any related files can not be copied, modified 
  * and/or distributed without the express or written consent from the author.
- *******************************************************/
+ ******************************************************************************/
 /*
  * Implementation file for the rigid body force generators.
  *
@@ -23,12 +23,15 @@
 
 using namespace fg;
 
+//------------------------------------------------------------------------------
+
 void physics::CForceRegistry::updateForces(real duration) {
     Registry::iterator i = registrations.begin();
     for(; i != registrations.end(); i++) {
         i->forcegen->updateForce(i->body, duration);
     }
 }
+//------------------------------------------------------------------------------
 
 void physics::CForceRegistry::add(CRigidBody *body, CForceGenerator *forcegen) {
     CForceRegistry::SForceRegistration registration;
@@ -36,6 +39,7 @@ void physics::CForceRegistry::add(CRigidBody *body, CForceGenerator *forcegen) {
     registration.forcegen = forcegen;
     registrations.push_back(registration);
 }
+//------------------------------------------------------------------------------
 
 void physics::CForceRegistry::remove(CRigidBody* body, CForceGenerator* forcegen) {
     Registry::iterator i = registrations.begin();
@@ -46,6 +50,7 @@ void physics::CForceRegistry::remove(CRigidBody* body, CForceGenerator* forcegen
         }
     }
 }
+//------------------------------------------------------------------------------
 
 physics::CBuoyancy::CBuoyancy(const Vector3f &cOfB, real maxDepth, real volume,
                               real waterHeight, real liquidDensity /* = 1000.0f */) {
@@ -55,6 +60,7 @@ physics::CBuoyancy::CBuoyancy(const Vector3f &cOfB, real maxDepth, real volume,
     CBuoyancy::volume = volume;
     CBuoyancy::waterHeight = waterHeight;
 }
+//------------------------------------------------------------------------------
 
 void physics::CBuoyancy::updateForce(CRigidBody *body, real duration) {
     // Calculate the submersion depth
@@ -77,8 +83,10 @@ void physics::CBuoyancy::updateForce(CRigidBody *body, real duration) {
             (depth - maxDepth - waterHeight) / 2 * maxDepth;
     body->addForceAtBodyPoint(force, centreOfBuoyancy);
 }
+//------------------------------------------------------------------------------
 
 physics::CGravity::CGravity(const Vector3f& gravity) : gravity(gravity) { }
+//------------------------------------------------------------------------------
 
 void physics::CGravity::updateForce(CRigidBody* body, real duration) {
     // Check that we do not have infinite mass
@@ -87,6 +95,7 @@ void physics::CGravity::updateForce(CRigidBody* body, real duration) {
     // Apply the mass-scaled force to the body
     body->addForce(gravity * body->getMass());
 }
+//------------------------------------------------------------------------------
 
 physics::CSpring::CSpring(const Vector3f &localConnectionPt,
                           CRigidBody *other,
@@ -98,6 +107,7 @@ otherConnectionPoint(otherConnectionPt),
 other(other),
 springConstant(springConstant),
 restLength(restLength) { }
+//------------------------------------------------------------------------------
 
 void physics::CSpring::updateForce(CRigidBody* body, real duration) {
     // Calculate the two ends in world space
@@ -118,16 +128,19 @@ void physics::CSpring::updateForce(CRigidBody* body, real duration) {
     force *= -magnitude;
     body->addForceAtPoint(force, lws);
 }
+//------------------------------------------------------------------------------
 
 physics::CAero::CAero(const Matrix3f &tensor, const Vector3f &position, const Vector3f *windspeed) {
     CAero::tensor = tensor;
     CAero::position = position;
     CAero::windspeed = windspeed;
 }
+//------------------------------------------------------------------------------
 
 void physics::CAero::updateForce(CRigidBody *body, real duration) {
     CAero::updateForceFromTensor(body, duration, tensor);
 }
+//------------------------------------------------------------------------------
 
 void physics::CAero::updateForceFromTensor(CRigidBody *body, real duration,
                                            const Matrix3f &tensor) {
@@ -145,17 +158,21 @@ void physics::CAero::updateForceFromTensor(CRigidBody *body, real duration,
     // Apply the force
     body->addForceAtBodyPoint(force, position);
 }
+//------------------------------------------------------------------------------
 
-physics::CAeroControl::CAeroControl(const Matrix3f &base, const Matrix3f &min, const Matrix3f &max,
-                                    const Vector3f &position, const Vector3f *windspeed)
-:
+physics::CAeroControl::CAeroControl(const Matrix3f &base,
+                                    const Matrix3f &min,
+                                    const Matrix3f &max,
+                                    const Vector3f &position,
+                                    const Vector3f *windspeed) :
 CAero(base, position, windspeed) {
     CAeroControl::minTensor = min;
     CAeroControl::maxTensor = max;
     controlSetting = 0.0f;
 }
+//------------------------------------------------------------------------------
 
-Matrix3f physics::CAeroControl::getTensor() {
+Matrix3f physics::CAeroControl::getTensor(void) {
 
     if(controlSetting <= -1.0f) return minTensor;
     else if(controlSetting >= 1.0f) return maxTensor;
@@ -165,14 +182,18 @@ Matrix3f physics::CAeroControl::getTensor() {
         return physics::linearInterpolate(tensor, maxTensor, controlSetting);
     } else return tensor;
 }
+//------------------------------------------------------------------------------
 
 void physics::CAeroControl::setControl(real value) {
     controlSetting = value;
 }
+//------------------------------------------------------------------------------
 
 void physics::CAeroControl::updateForce(CRigidBody *body, real duration) {
     Matrix3f tensor = getTensor();
     CAero::updateForceFromTensor(body, duration, tensor);
 }
+//------------------------------------------------------------------------------
 
 void physics::CExplosion::updateForce(CRigidBody* body, real duration) { }
+//------------------------------------------------------------------------------

@@ -6,7 +6,7 @@
  * 
  * FlexiGame source code and any related files can not be copied, modified 
  * and/or distributed without the express or written consent from the author.
- *******************************************************/
+ ******************************************************************************/
 /*
  * Implementation file for the fine grained collision detector.
  *
@@ -29,6 +29,8 @@
 
 using namespace fg;
 
+//------------------------------------------------------------------------------
+
 void physics::CCollisionPrimitive::calculateInternals(void) {
     if(body) {        
         transform = body->getTransform() * offset;
@@ -37,6 +39,7 @@ void physics::CCollisionPrimitive::calculateInternals(void) {
         //transform = physics::transform(body->getTransform(), offset);
     }
 }
+//------------------------------------------------------------------------------
 
 bool physics::CIntersectionTest::sphereAndHalfSpace(const CCollisionSphere &sphere,
                                                     const CCollisionPlane &plane) {
@@ -47,6 +50,7 @@ bool physics::CIntersectionTest::sphereAndHalfSpace(const CCollisionSphere &sphe
     // Check for the intersection
     return ballDistance <= plane.offset;
 }
+//------------------------------------------------------------------------------
 
 bool physics::CIntersectionTest::sphereAndSphere(const CCollisionSphere &one,
                                                  const CCollisionSphere &two) {
@@ -57,6 +61,7 @@ bool physics::CIntersectionTest::sphereAndSphere(const CCollisionSphere &one,
     return math::squareLength(midline) <
             (one.radius + two.radius)*(one.radius + two.radius);
 }
+//------------------------------------------------------------------------------
 
 static inline physics::real transformToAxis(const physics::CCollisionBox &box,
                                             const Vector3f &axis) {
@@ -64,6 +69,7 @@ static inline physics::real transformToAxis(const physics::CCollisionBox &box,
             box.halfSize.y * real_abs(math::dot(axis, box.getAxis(1))) +
             box.halfSize.z * real_abs(math::dot(axis, box.getAxis(2)));
 }
+//------------------------------------------------------------------------------
 
 /**
  * This function checks if the two boxes overlap
@@ -85,6 +91,7 @@ static inline bool overlapOnAxis(const physics::CCollisionBox &one,
     // Check for overlap
     return (distance < oneProject + twoProject);
 }
+//------------------------------------------------------------------------------
 
 // This preprocessor definition is only used as a convenience
 // in the boxAndBox intersection  method.
@@ -119,6 +126,7 @@ bool physics::CIntersectionTest::boxAndBox(const CCollisionBox &one,
             );
 }
 #undef TEST_OVERLAP
+//------------------------------------------------------------------------------
 
 bool physics::CIntersectionTest::boxAndHalfSpace(const CCollisionBox &box,
                                                  const CCollisionPlane &plane
@@ -133,6 +141,7 @@ bool physics::CIntersectionTest::boxAndHalfSpace(const CCollisionBox &box,
     // Check for the intersection
     return boxDistance <= plane.offset;
 }
+//------------------------------------------------------------------------------
 
 unsigned physics::CCollisionDetector::sphereAndTruePlane(const CCollisionSphere &sphere,
                                                          const CCollisionPlane &plane,
@@ -172,6 +181,7 @@ unsigned physics::CCollisionDetector::sphereAndTruePlane(const CCollisionSphere 
     data->addContacts(1);
     return 1;
 }
+//------------------------------------------------------------------------------
 
 unsigned physics::CCollisionDetector::sphereAndHalfSpace(const CCollisionSphere &sphere,
                                                          const CCollisionPlane &plane,
@@ -200,6 +210,7 @@ unsigned physics::CCollisionDetector::sphereAndHalfSpace(const CCollisionSphere 
     data->addContacts(1);
     return 1;
 }
+//------------------------------------------------------------------------------
 
 unsigned physics::CCollisionDetector::sphereAndSphere(const CCollisionSphere &one,
                                                       const CCollisionSphere &two,
@@ -235,6 +246,7 @@ unsigned physics::CCollisionDetector::sphereAndSphere(const CCollisionSphere &on
     data->addContacts(1);
     return 1;
 }
+//------------------------------------------------------------------------------
 
 /*
  * This function checks if the two boxes overlap
@@ -258,6 +270,7 @@ static inline physics::real penetrationOnAxis(const physics::CCollisionBox &one,
     // overlap, negative indicates separation).
     return oneProject + twoProject - distance;
 }
+//------------------------------------------------------------------------------
 
 static inline bool tryAxis(const physics::CCollisionBox &one,
                            const physics::CCollisionBox &two,
@@ -281,6 +294,7 @@ static inline bool tryAxis(const physics::CCollisionBox &one,
     }
     return true;
 }
+//------------------------------------------------------------------------------
 
 void fillPointFaceBoxBox(const physics::CCollisionBox &one,
                          const physics::CCollisionBox &two,
@@ -314,6 +328,7 @@ void fillPointFaceBoxBox(const physics::CCollisionBox &one,
     contact->contactPoint = physics::transform(two.getTransform(), vertex);
     contact->setBodyData(one.body, two.body, data->friction, data->restitution);
 }
+//------------------------------------------------------------------------------
 
 static inline Vector3f contactPoint(const Vector3f &pOne,
                                     const Vector3f &dOne,
@@ -364,6 +379,7 @@ static inline Vector3f contactPoint(const Vector3f &pOne,
         return cOne * ((physics::real)0.5) + cTwo * ((physics::real)0.5);
     }
 }
+//------------------------------------------------------------------------------
 
 // This preprocessor definition is only used as a convenience
 // in the boxAndBox contact generation method.
@@ -488,6 +504,7 @@ unsigned physics::CCollisionDetector::boxAndBox(const CCollisionBox &one,
     return 0;
 }
 #undef CHECK_OVERLAP
+//------------------------------------------------------------------------------
 
 unsigned physics::CCollisionDetector::boxAndPoint(const CCollisionBox &box,
                                                   const Vector3f &point,
@@ -532,6 +549,7 @@ unsigned physics::CCollisionDetector::boxAndPoint(const CCollisionBox &box,
     data->addContacts(1);
     return 1;
 }
+//------------------------------------------------------------------------------
 
 unsigned physics::CCollisionDetector::boxAndSphere(const CCollisionBox &box,
                                                    const CCollisionSphere &sphere,
@@ -585,6 +603,7 @@ unsigned physics::CCollisionDetector::boxAndSphere(const CCollisionBox &box,
     data->addContacts(1);
     return 1;
 }
+//------------------------------------------------------------------------------
 
 unsigned physics::CCollisionDetector::boxAndHalfSpace(const CCollisionBox &box,
                                                       const CCollisionPlane &plane,
@@ -656,3 +675,4 @@ unsigned physics::CCollisionDetector::boxAndHalfSpace(const CCollisionBox &box,
     data->addContacts(contactsUsed);
     return contactsUsed;
 }
+//------------------------------------------------------------------------------

@@ -6,7 +6,7 @@
  * 
  * FlexiGame source code and any related files can not be copied, modified 
  * and/or distributed without the express or written consent from the author.
- *******************************************************/
+ ******************************************************************************/
 /*
  * Implementation file for random number generation.
  *
@@ -24,6 +24,8 @@
 
 using namespace fg;
 
+//------------------------------------------------------------------------------
+
 physics::CParticleWorld::CParticleWorld(unsigned maxContacts, unsigned iterations) :
 m_resolver(iterations),
 m_maxContacts(maxContacts) {
@@ -31,10 +33,12 @@ m_maxContacts(maxContacts) {
     m_isCalculateIterations = (iterations == 0);
 
 }
+//------------------------------------------------------------------------------
 
 physics::CParticleWorld::~CParticleWorld() {
     delete[] m_contacts;
 }
+//------------------------------------------------------------------------------
 
 void physics::CParticleWorld::startFrame() {
     for(Particles::iterator p = m_particles.begin();
@@ -44,6 +48,7 @@ void physics::CParticleWorld::startFrame() {
         (*p)->clearAccumulator();
     }
 }
+//------------------------------------------------------------------------------
 
 unsigned physics::CParticleWorld::generateContacts() {
     unsigned limit = m_maxContacts;
@@ -64,6 +69,7 @@ unsigned physics::CParticleWorld::generateContacts() {
     // Return the number of contacts used.
     return m_maxContacts - limit;
 }
+//------------------------------------------------------------------------------
 
 void physics::CParticleWorld::integrate(real duration) {
     for(Particles::iterator p = m_particles.begin();
@@ -73,6 +79,7 @@ void physics::CParticleWorld::integrate(real duration) {
         (*p)->integrate(duration);
     }
 }
+//------------------------------------------------------------------------------
 
 void physics::CParticleWorld::runPhysics(real duration) {
     // First apply the force generators
@@ -90,25 +97,30 @@ void physics::CParticleWorld::runPhysics(real duration) {
         m_resolver.resolveContacts(m_contacts, usedContacts, duration);
     }
 }
+//------------------------------------------------------------------------------
 
 physics::CParticleWorld::Particles& physics::CParticleWorld::getParticles() {
     return m_particles;
 }
+//------------------------------------------------------------------------------
 
 physics::CParticleWorld::ContactGenerators& physics::CParticleWorld::getContactGenerators() {
     return m_contactGenerators;
 }
+//------------------------------------------------------------------------------
 
 physics::CParticleForceRegistry& physics::CParticleWorld::getForceRegistry() {
     return m_registry;
 }
+//------------------------------------------------------------------------------
 
 void physics::CGroundContacts::init(physics::CParticleWorld::Particles *particles) {
     physics::CGroundContacts::particles = particles;
 }
+//------------------------------------------------------------------------------
 
 unsigned physics::CGroundContacts::addContact(physics::CParticleContact *contact,
-                                             unsigned limit) const {
+                                              unsigned limit) const {
     unsigned count = 0;
     for(physics::CParticleWorld::Particles::iterator p = particles->begin();
         p != particles->end();
@@ -128,3 +140,4 @@ unsigned physics::CGroundContacts::addContact(physics::CParticleContact *contact
     }
     return count;
 }
+//------------------------------------------------------------------------------

@@ -6,7 +6,7 @@
  * 
  * FlexiGame source code and any related files can not be copied, modified 
  * and/or distributed without the express or written consent from the author.
- *******************************************************/
+ ******************************************************************************/
 /*
  * Implementation file for the coarse collision detector.
  *
@@ -23,10 +23,13 @@
 
 using namespace fg;
 
+//------------------------------------------------------------------------------
+
 physics::SBoundingSphere::SBoundingSphere(const Vector3f &centre, real radius) {
     SBoundingSphere::centre = centre;
     SBoundingSphere::radius = radius;
 }
+//------------------------------------------------------------------------------
 
 physics::SBoundingSphere::SBoundingSphere(const SBoundingSphere &one,
                                           const SBoundingSphere &two) {
@@ -59,12 +62,14 @@ physics::SBoundingSphere::SBoundingSphere(const SBoundingSphere &one,
     }
 
 }
+//------------------------------------------------------------------------------
 
 bool physics::SBoundingSphere::overlaps(const SBoundingSphere *other) const {
     //real distanceSquared = (centre - other->centre).squareMagnitude();
     real distanceSquared = math::squareLength(centre - other->centre);
     return distanceSquared < (radius + other->radius)*(radius + other->radius);
 }
+//------------------------------------------------------------------------------
 
 physics::real physics::SBoundingSphere::getGrowth(const SBoundingSphere &other) const {
     SBoundingSphere newSphere(*this, other);
@@ -73,3 +78,4 @@ physics::real physics::SBoundingSphere::getGrowth(const SBoundingSphere &other) 
     // area of the sphere.
     return newSphere.radius * newSphere.radius - radius*radius;
 }
+//------------------------------------------------------------------------------

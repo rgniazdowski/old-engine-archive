@@ -6,7 +6,7 @@
  *
  * FlexiGame source code and any related files can not be copied, modified
  * and/or distributed without the express or written consent from the author.
- *******************************************************/
+ ******************************************************************************/
 
 #include "fgResourceGroup.h"
 #include "fgResourceFactory.h"
@@ -18,13 +18,12 @@
 
 using namespace fg;
 
+//------------------------------------------------------------------------------
+
 /*******************************************************************************
  * RESOURCE GROUP CONTENT HANDLER - READING XML FILE
  */
 
-/**
- * Base constructor of the resource group content handler object
- */
 resource::CResourceGroupContentHandler::CResourceGroupContentHandler() :
 m_resourceGroup(NULL),
 m_resType(resource::INVALID),
@@ -32,22 +31,14 @@ m_resourcePtr(NULL),
 m_curResPriority(ResourcePriority::INVALID),
 m_isMapped(FG_FALSE),
 m_isFileQualityMapTag(FG_FALSE) { }
+//------------------------------------------------------------------------------
 
-/**
- * Destructor of the resource group content handler object
- */
 resource::CResourceGroupContentHandler::~CResourceGroupContentHandler() {
     while(!m_elemStack.empty())
         m_elemStack.pop();
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param localName
- * @param elementPtr
- * @param nodeType
- * @param depth
- */
 void resource::CResourceGroupContentHandler::endElement(const char *localName,
                                                         fgXMLElement *elementPtr,
                                                         fgXMLNodeType nodeType,
@@ -66,12 +57,8 @@ void resource::CResourceGroupContentHandler::endElement(const char *localName,
         m_curResPriority = ResourcePriority::INVALID;
     }
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param path
- * @return 
- */
 fgBool resource::CResourceGroupContentHandler::loadResConfig(const char *path) {
     if(!path)
         return FG_FALSE;
@@ -108,11 +95,8 @@ fgBool resource::CResourceGroupContentHandler::loadResConfig(const char *path) {
     return FG_TRUE;
     ;
 }
+//------------------------------------------------------------------------------
 
-/*
- * Receive notification of the start of an element.
- * This function will add to the specified resource group any identified resources.
- */
 void resource::CResourceGroupContentHandler::startElement(const char *localName,
                                                           fgXMLElement *elementPtr,
                                                           fgXMLNodeType nodeType,
@@ -229,12 +213,8 @@ void resource::CResourceGroupContentHandler::startElement(const char *localName,
         m_resourcePtr->setName(resName);
     }
 }
+//------------------------------------------------------------------------------
 
-/*********************************************************/
-
-/**
- * Base constructor of the resource group object
- */
 resource::CResourceGroup::CResourceGroup() :
 m_isForceCreate(FG_FALSE),
 m_rHandles(),
@@ -243,11 +223,8 @@ m_xmlParser(NULL),
 m_resFactory(NULL) {
     clear();
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param resourceFactory
- */
 resource::CResourceGroup::CResourceGroup(CResourceFactory *resourceFactory) :
 m_isForceCreate(FG_FALSE),
 m_rHandles(),
@@ -257,34 +234,24 @@ m_resFactory(NULL) {
     clear();
     setResourceFactory(resourceFactory);
 }
+//------------------------------------------------------------------------------
 
-/**
- * Destructor of the resource group object
- */
 resource::CResourceGroup::~CResourceGroup() {
     resource::CResourceGroup::destroy();
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param resourceFactory
- */
 void resource::CResourceGroup::setResourceFactory(CResourceFactory *resourceFactory) {
     if(resourceFactory)
         m_resFactory = resourceFactory;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @return 
- */
 resource::CResourceFactory *resource::CResourceGroup::getFactory(void) const {
     return m_resFactory;
 }
+//------------------------------------------------------------------------------
 
-/**
- * Clears the class data, this actually does not free allocated memory, just resets base class attributes
- */
 void resource::CResourceGroup::clear(void) {
     CResource::clear();
     m_rHandles.clear_optimised();
@@ -292,11 +259,8 @@ void resource::CResourceGroup::clear(void) {
     m_resType = resource::GROUP;
     m_resFactory = NULL;
 }
+//------------------------------------------------------------------------------
 
-/**
- * Create function loads/interprets data from file in ROM and place it in RAM memory.
- * @return
- */
 fgBool resource::CResourceGroup::create(void) {
     if(m_resourceFiles.empty())
         return FG_FALSE;
@@ -308,20 +272,15 @@ fgBool resource::CResourceGroup::create(void) {
     }
     return status;
 }
+//------------------------------------------------------------------------------
 
-/**
- * Destroy all loaded data including additional metadata (called with destructor)
- */
 void resource::CResourceGroup::destroy(void) {
     ZeroLock();
     dispose();
     clear();
 }
+//------------------------------------------------------------------------------
 
-/**
- * Reloads any data, recreates the resource (refresh)
- * @return
- */
 fgBool resource::CResourceGroup::recreate(void) {
     //FG_LOG_DEBUG("fgResourceGroup::recreate();");
     if(m_resourceFiles.empty())
@@ -334,10 +293,8 @@ fgBool resource::CResourceGroup::recreate(void) {
     }
     return status;
 }
+//------------------------------------------------------------------------------
 
-/**
- * Dispose completely of the all loaded data, free all memory
- */
 void resource::CResourceGroup::dispose(void) {
     if(m_resourceFiles.empty())
         return;
@@ -345,11 +302,8 @@ void resource::CResourceGroup::dispose(void) {
         (*it)->dispose();
     }
 }
+//------------------------------------------------------------------------------
 
-/**
- * Check if resource is disposed (not loaded yet or disposed after)
- * @return
- */
 fgBool resource::CResourceGroup::isDisposed(void) const {
     if(m_resourceFiles.empty())
         return FG_TRUE;
@@ -360,11 +314,8 @@ fgBool resource::CResourceGroup::isDisposed(void) const {
     }
     return status;
 }
+//------------------------------------------------------------------------------
 
-/**
- *
- * @return
- */
 fgBool resource::CResourceGroup::private_parseIniConfig(void) {
     if(!m_resFactory) {
         return FG_FALSE;
@@ -438,13 +389,8 @@ fgBool resource::CResourceGroup::private_parseIniConfig(void) {
 
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
-/**
- * This will parse/load xml group config file. It wont
- * load or allocate any data - this is for 'create' to do.
- * This function will return false if file path is not set.
- * @return
- */
 fgBool resource::CResourceGroup::preLoadConfig(void) {
     if(!m_resFactory) {
         return FG_FALSE;
@@ -474,10 +420,8 @@ fgBool resource::CResourceGroup::preLoadConfig(void) {
     }
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
-/**
- * Refresh arrays holding handles and resource pointers within this group
- */
 void resource::CResourceGroup::refreshArrays(void) {
     m_rHandles.clear();
     if(m_resourceFiles.empty())
@@ -486,11 +430,8 @@ void resource::CResourceGroup::refreshArrays(void) {
         m_rHandles.push_back((*it)->getHandle());
     }
 }
+//------------------------------------------------------------------------------
 
-/**
- * Lock the resource (reference counter +1)
- * @return
- */
 unsigned int resource::CResourceGroup::Lock(void) {
     if(m_resourceFiles.empty())
         return -1;
@@ -499,11 +440,8 @@ unsigned int resource::CResourceGroup::Lock(void) {
     }
     return upRef();
 }
+//------------------------------------------------------------------------------
 
-/**
- * Unlock the resource (reference counter -1)
- * @return
- */
 unsigned int resource::CResourceGroup::Unlock(void) {
     if(m_resourceFiles.empty())
         return -1;
@@ -512,10 +450,8 @@ unsigned int resource::CResourceGroup::Unlock(void) {
     }
     return downRef();
 }
+//------------------------------------------------------------------------------
 
-/**
- * Unlock completely the resource (reference counter = 0)
- */
 void resource::CResourceGroup::ZeroLock(void) {
     if(m_resourceFiles.empty())
         return;
@@ -524,3 +460,4 @@ void resource::CResourceGroup::ZeroLock(void) {
     }
     CResource::ZeroLock();
 }
+//------------------------------------------------------------------------------

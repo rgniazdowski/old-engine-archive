@@ -6,7 +6,7 @@
  * 
  * FlexiGame source code and any related files can not be copied, modified 
  * and/or distributed without the express or written consent from the author.
- *******************************************************/
+ ******************************************************************************/
 /*
  * Interface file for the force generators.
  *
@@ -318,7 +318,7 @@ namespace fg {
              * Calculates the final aerodynamic tensor for the current
              * control setting.
              */
-            Matrix3f getTensor();
+            Matrix3f getTensor(void);
 
         public:
             /**

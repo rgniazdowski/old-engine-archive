@@ -6,7 +6,7 @@
  * 
  * FlexiGame source code and any related files can not be copied, modified 
  * and/or distributed without the express or written consent from the author.
- *******************************************************/
+ ******************************************************************************/
 /*
  * Implementation file for the particle force generators.
  *
@@ -23,12 +23,15 @@
 
 using namespace fg;
 
+//------------------------------------------------------------------------------
+
 void physics::CParticleForceRegistry::updateForces(real duration) {
     Registry::iterator i = registrations.begin();
     for(; i != registrations.end(); i++) {
         i->forcegen->updateForce(i->particle, duration);
     }
 }
+//------------------------------------------------------------------------------
 
 void physics::CParticleForceRegistry::add(CParticle* particle, CParticleForceGenerator* forcegen) {
     CParticleForceRegistry::ParticleForceRegistration registration;
@@ -36,6 +39,7 @@ void physics::CParticleForceRegistry::add(CParticle* particle, CParticleForceGen
     registration.forcegen = forcegen;
     registrations.push_back(registration);
 }
+//------------------------------------------------------------------------------
 
 void physics::CParticleForceRegistry::remove(CParticle* particle, CParticleForceGenerator* forcegen) {
     Registry::iterator i = registrations.begin();
@@ -46,8 +50,10 @@ void physics::CParticleForceRegistry::remove(CParticle* particle, CParticleForce
         }
     }
 }
+//------------------------------------------------------------------------------
 
 physics::CParticleGravity::CParticleGravity(const Vector3f& gravity) : gravity(gravity) { }
+//------------------------------------------------------------------------------
 
 void physics::CParticleGravity::updateForce(CParticle* particle, real duration) {
     // Check that we do not have infinite mass
@@ -56,16 +62,18 @@ void physics::CParticleGravity::updateForce(CParticle* particle, real duration) 
     // Apply the mass-scaled force to the particle
     particle->addForce(gravity * particle->getMass());
 }
+//------------------------------------------------------------------------------
 
 physics::CParticleDrag::CParticleDrag(real k1, real k2) : k1(k1), k2(k2) { }
+//------------------------------------------------------------------------------
 
 void physics::CParticleDrag::updateForce(CParticle* particle, real duration) {
     Vector3f force;
     particle->getVelocity(&force);
-    
+
     // Calculate the total drag coefficient
     real dragCoeff = math::length(force);
-    
+
     dragCoeff = k1 * dragCoeff + k2 * dragCoeff * dragCoeff;
 
     // Calculate the final force and apply it
@@ -74,9 +82,11 @@ void physics::CParticleDrag::updateForce(CParticle* particle, real duration) {
     force *= -dragCoeff;
     particle->addForce(force);
 }
+//------------------------------------------------------------------------------
 
 physics::CParticleSpring::CParticleSpring(CParticle *other, real sc, real rl) :
 other(other), springConstant(sc), restLength(rl) { }
+//------------------------------------------------------------------------------
 
 void physics::CParticleSpring::updateForce(CParticle* particle, real duration) {
     // Calculate the vector of the spring
@@ -95,13 +105,15 @@ void physics::CParticleSpring::updateForce(CParticle* particle, real duration) {
     force *= -magnitude;
     particle->addForce(force);
 }
+//------------------------------------------------------------------------------
 
 physics::CParticleBuoyancy::CParticleBuoyancy(real maxDepth,
-                                   real volume,
-                                   real waterHeight,
-                                   real liquidDensity) :
+                                              real volume,
+                                              real waterHeight,
+                                              real liquidDensity) :
 maxDepth(maxDepth), volume(volume),
 waterHeight(waterHeight), liquidDensity(liquidDensity) { }
+//------------------------------------------------------------------------------
 
 void physics::CParticleBuoyancy::updateForce(CParticle* particle, real duration) {
     // Calculate the submersion depth
@@ -123,9 +135,11 @@ void physics::CParticleBuoyancy::updateForce(CParticle* particle, real duration)
             (depth - maxDepth - waterHeight) / 2 * maxDepth;
     particle->addForce(force);
 }
+//------------------------------------------------------------------------------
 
 physics::CParticleBungee::CParticleBungee(CParticle *other, real sc, real rl)
 : other(other), springConstant(sc), restLength(rl) { }
+//------------------------------------------------------------------------------
 
 void physics::CParticleBungee::updateForce(CParticle* particle, real duration) {
     // Calculate the vector of the spring
@@ -146,9 +160,11 @@ void physics::CParticleBungee::updateForce(CParticle* particle, real duration) {
     force *= -magnitude;
     particle->addForce(force);
 }
+//------------------------------------------------------------------------------
 
 physics::CParticleFakeSpring::CParticleFakeSpring(Vector3f *anchor, real sc, real d)
 : anchor(anchor), springConstant(sc), damping(d) { }
+//------------------------------------------------------------------------------
 
 void physics::CParticleFakeSpring::updateForce(CParticle* particle, real duration) {
     // Check that we do not have infinite mass
@@ -175,19 +191,23 @@ void physics::CParticleFakeSpring::updateForce(CParticle* particle, real duratio
             particle->getVelocity() * ((real)1.0 / duration);
     particle->addForce(accel * particle->getMass());
 }
+//------------------------------------------------------------------------------
 
 physics::CParticleAnchoredSpring::CParticleAnchoredSpring() { }
+//------------------------------------------------------------------------------
 
 physics::CParticleAnchoredSpring::CParticleAnchoredSpring(Vector3f *anchor,
-                                               real sc, real rl)
-: anchor(anchor), springConstant(sc), restLength(rl) { }
+                                                          real sc, real rl) :
+anchor(anchor), springConstant(sc), restLength(rl) { }
+//------------------------------------------------------------------------------
 
 void physics::CParticleAnchoredSpring::init(Vector3f *anchor, real springConstant,
-                                  real restLength) {
+                                            real restLength) {
     CParticleAnchoredSpring::anchor = anchor;
     CParticleAnchoredSpring::springConstant = springConstant;
     CParticleAnchoredSpring::restLength = restLength;
 }
+//------------------------------------------------------------------------------
 
 void physics::CParticleAnchoredBungee::updateForce(CParticle* particle, real duration) {
     // Calculate the vector of the spring
@@ -196,7 +216,7 @@ void physics::CParticleAnchoredBungee::updateForce(CParticle* particle, real dur
     force -= *anchor;
 
     // Calculate the magnitude of the force
-    real magnitude = math::length(force);//force.magnitude();
+    real magnitude = math::length(force); //force.magnitude();
     if(magnitude < restLength) return;
 
     magnitude = magnitude - restLength;
@@ -207,6 +227,7 @@ void physics::CParticleAnchoredBungee::updateForce(CParticle* particle, real dur
     force *= -magnitude;
     particle->addForce(force);
 }
+//------------------------------------------------------------------------------
 
 void physics::CParticleAnchoredSpring::updateForce(CParticle* particle, real duration) {
     // Calculate the vector of the spring
@@ -215,7 +236,7 @@ void physics::CParticleAnchoredSpring::updateForce(CParticle* particle, real dur
     force -= *anchor;
 
     // Calculate the magnitude of the force
-    real magnitude = math::length(force);//force.magnitude();
+    real magnitude = math::length(force); //force.magnitude();
     magnitude = (restLength - magnitude) * springConstant;
 
     // Calculate the final force and apply it
@@ -224,3 +245,4 @@ void physics::CParticleAnchoredSpring::updateForce(CParticle* particle, real dur
     force *= magnitude;
     particle->addForce(force);
 }
+//------------------------------------------------------------------------------

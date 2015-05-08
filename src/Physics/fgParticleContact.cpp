@@ -6,7 +6,7 @@
  * 
  * FlexiGame source code and any related files can not be copied, modified 
  * and/or distributed without the express or written consent from the author.
- *******************************************************/
+ ******************************************************************************/
 /*
  * Implementation file for the particle contact resolution system.
  *
@@ -23,16 +23,20 @@
 
 using namespace fg;
 
+//------------------------------------------------------------------------------
+
 void physics::CParticleContact::resolve(real duration) {
     resolveVelocity(duration);
     resolveInterpenetration(duration);
 }
+//------------------------------------------------------------------------------
 
 physics::real physics::CParticleContact::calculateSeparatingVelocity() const {
     Vector3f relativeVelocity = particle[0]->getVelocity();
     if(particle[1]) relativeVelocity -= particle[1]->getVelocity();
     return math::dot(relativeVelocity, contactNormal);
 }
+//------------------------------------------------------------------------------
 
 void physics::CParticleContact::resolveVelocity(real duration) {
     // Find the velocity in the direction of the contact
@@ -92,6 +96,7 @@ void physics::CParticleContact::resolveVelocity(real duration) {
                                  );
     }
 }
+//------------------------------------------------------------------------------
 
 void physics::CParticleContact::resolveInterpenetration(real duration) {
     // If we don't have any penetration, skip this step.
@@ -122,16 +127,19 @@ void physics::CParticleContact::resolveInterpenetration(real duration) {
         particle[1]->setPosition(particle[1]->getPosition() + particleMovement[1]);
     }
 }
+//------------------------------------------------------------------------------
 
 physics::CParticleContactResolver::CParticleContactResolver(unsigned iterations) : iterations(iterations) { }
+//------------------------------------------------------------------------------
 
 void physics::CParticleContactResolver::setIterations(unsigned iterations) {
     CParticleContactResolver::iterations = iterations;
 }
+//------------------------------------------------------------------------------
 
 void physics::CParticleContactResolver::resolveContacts(CParticleContact *contactArray,
-                                                       unsigned numContacts,
-                                                       real duration) {
+                                                        unsigned numContacts,
+                                                        real duration) {
     unsigned i;
 
     iterationsUsed = 0;
@@ -174,3 +182,4 @@ void physics::CParticleContactResolver::resolveContacts(CParticleContact *contac
         iterationsUsed++;
     }
 }
+//------------------------------------------------------------------------------

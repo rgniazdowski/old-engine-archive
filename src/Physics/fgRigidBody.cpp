@@ -31,6 +31,8 @@
 
 using namespace fg;
 
+//------------------------------------------------------------------------------
+
 /*
  * --------------------------------------------------------------------------
  * INTERNAL OR HELPER FUNCTIONS:
@@ -43,6 +45,7 @@ using namespace fg;
 static inline void _checkInverseInertiaTensor(const Matrix3f &iitWorld) {
     // TODO: Perform a validity check in an assert.
 }
+//------------------------------------------------------------------------------
 
 /**
  * Internal function to do an inertia tensor transform by a quaternion.
@@ -192,6 +195,7 @@ static inline void _transformInertiaTensor(Matrix3f &iitWorld,
 #endif
     //iitWorld = math::transpose(iitWorld);
 }
+//------------------------------------------------------------------------------
 
 /**
  * Inline function that creates a transform matrix from a
@@ -251,12 +255,8 @@ static inline void _calculateTransformMatrix(Matrix4f &transformMatrix,
     transformMatrixdata[11] = position.z;
 #endif
 }
+//------------------------------------------------------------------------------
 
-/*
- * --------------------------------------------------------------------------
- * FUNCTIONS DECLARED IN HEADER:
- * --------------------------------------------------------------------------
- */
 void physics::CRigidBody::calculateDerivedData(void) {
     //orientation.normalise();
     orientation = math::normalize(orientation);
@@ -271,6 +271,7 @@ void physics::CRigidBody::calculateDerivedData(void) {
                             transformMatrix);
 
 }
+//------------------------------------------------------------------------------
 
 void physics::CRigidBody::integrate(real duration) {
     if(!isAwake) return;
@@ -330,6 +331,7 @@ void physics::CRigidBody::integrate(real duration) {
         else if(motion > 10 * sleepEpsilon) motion = 10 * sleepEpsilon;
     }
 }
+//------------------------------------------------------------------------------
 
 void physics::CRigidBody::setMass(const real mass) {
 #if defined(FG_DEBUG)
@@ -337,6 +339,7 @@ void physics::CRigidBody::setMass(const real mass) {
 #endif
     CRigidBody::inverseMass = ((real)1.0) / mass;
 }
+//------------------------------------------------------------------------------
 
 physics::real physics::CRigidBody::getMass(void) const {
     if(inverseMass == 0) {
@@ -345,25 +348,30 @@ physics::real physics::CRigidBody::getMass(void) const {
         return ((real)1.0) / inverseMass;
     }
 }
+//------------------------------------------------------------------------------
 
 void physics::CRigidBody::setInverseMass(const real inverseMass) {
     CRigidBody::inverseMass = inverseMass;
 }
+//------------------------------------------------------------------------------
 
 physics::real physics::CRigidBody::getInverseMass(void) const {
     return inverseMass;
 }
+//------------------------------------------------------------------------------
 
 bool physics::CRigidBody::hasFiniteMass(void) const {
     //return (fgBool)(inverseMass >= 0.0f);
     return (inverseMass >= 0.0f);
 }
+//------------------------------------------------------------------------------
 
 void physics::CRigidBody::setInertiaTensor(const Matrix3f &inertiaTensor) {
     //inverseInertiaTensor.setInverse(inertiaTensor);
     inverseInertiaTensor = physics::setInverse(inertiaTensor);
     _checkInverseInertiaTensor(inverseInertiaTensor);
 }
+//------------------------------------------------------------------------------
 
 void physics::CRigidBody::getInertiaTensor(Matrix3f *inertiaTensor) const {
     //inertiaTensor->setInverse(inverseInertiaTensor);
@@ -371,12 +379,14 @@ void physics::CRigidBody::getInertiaTensor(Matrix3f *inertiaTensor) const {
         *inertiaTensor = physics::setInverse(inverseInertiaTensor);
     }
 }
+//------------------------------------------------------------------------------
 
 Matrix3f physics::CRigidBody::getInertiaTensor(void) const {
     Matrix3f it;
     getInertiaTensor(&it);
     return it;
 }
+//------------------------------------------------------------------------------
 
 void physics::CRigidBody::getInertiaTensorWorld(Matrix3f *inertiaTensor) const {
     //inertiaTensor->setInverse(inverseInertiaTensorWorld);
@@ -384,78 +394,95 @@ void physics::CRigidBody::getInertiaTensorWorld(Matrix3f *inertiaTensor) const {
         *inertiaTensor = physics::setInverse(inverseInertiaTensorWorld);
     }
 }
+//------------------------------------------------------------------------------
 
 Matrix3f physics::CRigidBody::getInertiaTensorWorld(void) const {
     Matrix3f it;
     getInertiaTensorWorld(&it);
     return it;
 }
+//------------------------------------------------------------------------------
 
 void physics::CRigidBody::setInverseInertiaTensor(const Matrix3f &inverseInertiaTensor) {
     _checkInverseInertiaTensor(inverseInertiaTensor);
     CRigidBody::inverseInertiaTensor = inverseInertiaTensor;
 }
+//------------------------------------------------------------------------------
 
 void physics::CRigidBody::getInverseInertiaTensor(Matrix3f *inverseInertiaTensor) const {
     *inverseInertiaTensor = CRigidBody::inverseInertiaTensor;
 }
+//------------------------------------------------------------------------------
 
 Matrix3f physics::CRigidBody::getInverseInertiaTensor(void) const {
     return inverseInertiaTensor;
 }
+//------------------------------------------------------------------------------
 
 void physics::CRigidBody::getInverseInertiaTensorWorld(Matrix3f *inverseInertiaTensor) const {
     *inverseInertiaTensor = inverseInertiaTensorWorld;
 }
+//------------------------------------------------------------------------------
 
 Matrix3f physics::CRigidBody::getInverseInertiaTensorWorld(void) const {
     return inverseInertiaTensorWorld;
 }
+//------------------------------------------------------------------------------
 
 void physics::CRigidBody::setDamping(const real linearDamping,
                                      const real angularDamping) {
     CRigidBody::linearDamping = linearDamping;
     CRigidBody::angularDamping = angularDamping;
 }
+//------------------------------------------------------------------------------
 
 void physics::CRigidBody::setLinearDamping(const real linearDamping) {
     CRigidBody::linearDamping = linearDamping;
 }
+//------------------------------------------------------------------------------
 
 physics::real physics::CRigidBody::getLinearDamping(void) const {
     return linearDamping;
 }
+//------------------------------------------------------------------------------
 
 void physics::CRigidBody::setAngularDamping(const real angularDamping) {
     CRigidBody::angularDamping = angularDamping;
 }
+//------------------------------------------------------------------------------
 
 physics::real physics::CRigidBody::getAngularDamping(void) const {
     return angularDamping;
 }
+//------------------------------------------------------------------------------
 
 void physics::CRigidBody::setPosition(const Vector3f &position) {
     CRigidBody::position = position;
 }
+//------------------------------------------------------------------------------
 
 void physics::CRigidBody::setPosition(const real x, const real y, const real z) {
     position.x = x;
     position.y = y;
     position.z = z;
 }
+//------------------------------------------------------------------------------
 
 void physics::CRigidBody::getPosition(Vector3f *position) const {
     *position = CRigidBody::position;
 }
+//------------------------------------------------------------------------------
 
 Vector3f physics::CRigidBody::getPosition(void) const {
     return position;
 }
+//------------------------------------------------------------------------------
 
 void physics::CRigidBody::setOrientation(const Quaternionf &orientation) {
     CRigidBody::orientation = math::normalize(orientation);
     //RigidBody::orientation.normalise();
 }
+//------------------------------------------------------------------------------
 
 void physics::CRigidBody::setOrientation(const real r, const real i,
                                          const real j, const real k) {
@@ -467,14 +494,17 @@ void physics::CRigidBody::setOrientation(const real r, const real i,
     //orientation.normalise();
     orientation = math::normalize(orientation);
 }
+//------------------------------------------------------------------------------
 
 void physics::CRigidBody::getOrientation(Quaternionf *orientation) const {
     *orientation = CRigidBody::orientation;
 }
+//------------------------------------------------------------------------------
 
 Quaternionf physics::CRigidBody::getOrientation(void) const {
     return orientation;
 }
+//------------------------------------------------------------------------------
 
 void physics::CRigidBody::getOrientation(Matrix3f *matrix) const {
     Matrix3f &mat = *matrix;
@@ -490,6 +520,7 @@ void physics::CRigidBody::getOrientation(Matrix3f *matrix) const {
     mat[2][1] = transformMatrix[2][1];
     mat[2][2] = transformMatrix[2][2];
 }
+//------------------------------------------------------------------------------
 
 void physics::CRigidBody::getOrientation(real matrix[9]) const {
     matrix[0] = transformMatrix[0][0]; // 0
@@ -504,11 +535,13 @@ void physics::CRigidBody::getOrientation(real matrix[9]) const {
     matrix[7] = transformMatrix[2][1]; // 9
     matrix[8] = transformMatrix[2][2]; // 10
 }
+//------------------------------------------------------------------------------
 
 void physics::CRigidBody::getTransform(Matrix4f *transform) const {
     //memcpy(transform, &transformMatrix.data, sizeof (Matrix4f));
     *transform = transformMatrix;
 }
+//------------------------------------------------------------------------------
 
 void physics::CRigidBody::getTransform(real *matrix) const {
     //memcpy(matrix, transformMatrix.data, sizeof (real)*12);
@@ -530,6 +563,7 @@ void physics::CRigidBody::getTransform(real *matrix) const {
     matrix[12] = matrix[13] = matrix[14] = 0;
     matrix[15] = 1;
 }
+//------------------------------------------------------------------------------
 
 void physics::CRigidBody::getGLTransform(float *matrix) const {
     if(!matrix)
@@ -556,74 +590,90 @@ void physics::CRigidBody::getGLTransform(float *matrix) const {
     matrix[14] = (float)transformMatrix[2][3]; // 11
     matrix[15] = 1;
 }
+//------------------------------------------------------------------------------
 
 Matrix4f physics::CRigidBody::getTransform(void) const {
     return transformMatrix;
 }
+//------------------------------------------------------------------------------
 
 Vector3f physics::CRigidBody::getPointInLocalSpace(const Vector3f &point) const {
     //return transformMatrix.transformInverse(point);
     return physics::transformInverse(transformMatrix, point);
 }
+//------------------------------------------------------------------------------
 
 Vector3f physics::CRigidBody::getPointInWorldSpace(const Vector3f &point) const {
     //return transformMatrix.transform(point);    
     return physics::transform(transformMatrix, point);
 }
+//------------------------------------------------------------------------------
 
 Vector3f physics::CRigidBody::getDirectionInLocalSpace(const Vector3f &direction) const {
     //return transformMatrix.transformInverseDirection(direction);
     return physics::transformInverseDirection(transformMatrix, direction);
 }
+//------------------------------------------------------------------------------
 
 Vector3f physics::CRigidBody::getDirectionInWorldSpace(const Vector3f &direction) const {
     //return transformMatrix.transformDirection(direction);
     return physics::transformDirection(transformMatrix, direction);
 }
+//------------------------------------------------------------------------------
 
 void physics::CRigidBody::setVelocity(const Vector3f &velocity) {
     CRigidBody::velocity = velocity;
 }
+//------------------------------------------------------------------------------
 
 void physics::CRigidBody::setVelocity(const real x, const real y, const real z) {
     velocity.x = x;
     velocity.y = y;
     velocity.z = z;
 }
+//------------------------------------------------------------------------------
 
 void physics::CRigidBody::getVelocity(Vector3f *velocity) const {
     *velocity = CRigidBody::velocity;
 }
+//------------------------------------------------------------------------------
 
 Vector3f physics::CRigidBody::getVelocity(void) const {
     return velocity;
 }
+//------------------------------------------------------------------------------
 
 void physics::CRigidBody::addVelocity(const Vector3f &deltaVelocity) {
     velocity += deltaVelocity;
 }
+//------------------------------------------------------------------------------
 
 void physics::CRigidBody::setRotation(const Vector3f &rotation) {
     CRigidBody::rotation = rotation;
 }
+//------------------------------------------------------------------------------
 
 void physics::CRigidBody::setRotation(const real x, const real y, const real z) {
     rotation.x = x;
     rotation.y = y;
     rotation.z = z;
 }
+//------------------------------------------------------------------------------
 
 void physics::CRigidBody::getRotation(Vector3f *rotation) const {
     *rotation = CRigidBody::rotation;
 }
+//------------------------------------------------------------------------------
 
 Vector3f physics::CRigidBody::getRotation(void) const {
     return rotation;
 }
+//------------------------------------------------------------------------------
 
 void physics::CRigidBody::addRotation(const Vector3f &deltaRotation) {
     rotation += deltaRotation;
 }
+//------------------------------------------------------------------------------
 
 void physics::CRigidBody::setAwake(const bool awake) {
     if(awake) {
@@ -637,30 +687,36 @@ void physics::CRigidBody::setAwake(const bool awake) {
         rotation = Vector3f();
     }
 }
+//------------------------------------------------------------------------------
 
 void physics::CRigidBody::setCanSleep(const bool canSleep) {
     CRigidBody::canSleep = canSleep;
 
     if(!canSleep && !isAwake) setAwake();
 }
+//------------------------------------------------------------------------------
 
 void physics::CRigidBody::getLastFrameAcceleration(Vector3f *acceleration) const {
     *acceleration = lastFrameAcceleration;
 }
+//------------------------------------------------------------------------------
 
 Vector3f physics::CRigidBody::getLastFrameAcceleration(void) const {
     return lastFrameAcceleration;
 }
+//------------------------------------------------------------------------------
 
 void physics::CRigidBody::clearAccumulators(void) {
     forceAccum = Vector3f();
     torqueAccum = Vector3f();
 }
+//------------------------------------------------------------------------------
 
 void physics::CRigidBody::addForce(const Vector3f &force) {
     forceAccum += force;
     isAwake = true;
 }
+//------------------------------------------------------------------------------
 
 void physics::CRigidBody::addForceAtBodyPoint(const Vector3f &force,
                                               const Vector3f &point) {
@@ -669,6 +725,7 @@ void physics::CRigidBody::addForceAtBodyPoint(const Vector3f &force,
     addForceAtPoint(force, pt);
 
 }
+//------------------------------------------------------------------------------
 
 void physics::CRigidBody::addForceAtPoint(const Vector3f &force,
                                           const Vector3f &point) {
@@ -683,26 +740,32 @@ void physics::CRigidBody::addForceAtPoint(const Vector3f &force,
 
     isAwake = true;
 }
+//------------------------------------------------------------------------------
 
 void physics::CRigidBody::addTorque(const Vector3f &torque) {
     torqueAccum += torque;
     isAwake = true;
 }
+//------------------------------------------------------------------------------
 
 void physics::CRigidBody::setAcceleration(const Vector3f &acceleration) {
     CRigidBody::acceleration = acceleration;
 }
+//------------------------------------------------------------------------------
 
 void physics::CRigidBody::setAcceleration(const real x, const real y, const real z) {
     acceleration.x = x;
     acceleration.y = y;
     acceleration.z = z;
 }
+//------------------------------------------------------------------------------
 
 void physics::CRigidBody::getAcceleration(Vector3f *acceleration) const {
     *acceleration = CRigidBody::acceleration;
 }
+//------------------------------------------------------------------------------
 
 Vector3f physics::CRigidBody::getAcceleration(void) const {
     return acceleration;
 }
+//------------------------------------------------------------------------------

@@ -6,13 +6,12 @@
  *
  * FlexiGame source code and any related files can not be copied, modified
  * and/or distributed without the express or written consent from the author.
- *******************************************************/
+ ******************************************************************************/
 
 #ifndef FG_INC_RESOURCE_FACTORY
     #define FG_INC_RESOURCE_FACTORY
     #define FG_INC_RESOURCE_FACTORY_BLOCK
 
-    #include "fgCommon.h"
     #include "fgResource.h"
     #include "fgResourceFactoryTypes.h"
 

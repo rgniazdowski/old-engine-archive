@@ -6,7 +6,7 @@
  * 
  * FlexiGame source code and any related files can not be copied, modified 
  * and/or distributed without the express or written consent from the author.
- *******************************************************/
+ ******************************************************************************/
 /*
  * Implementation file for joints.
  *
@@ -24,6 +24,8 @@
 #include "Math/fgMathLib.h"
 
 using namespace fg;
+
+//------------------------------------------------------------------------------
 
 unsigned physics::CJoint::addContact(CContact *contact, unsigned limit) const {
     // Calculate the position of each connection point in world coordinates
@@ -51,6 +53,7 @@ unsigned physics::CJoint::addContact(CContact *contact, unsigned limit) const {
 
     return 0;
 }
+//------------------------------------------------------------------------------
 
 void physics::CJoint::set(CRigidBody *a, const Vector3f& a_pos,
                           CRigidBody *b, const Vector3f& b_pos,
@@ -63,3 +66,4 @@ void physics::CJoint::set(CRigidBody *a, const Vector3f& a_pos,
 
     physics::CJoint::error = error;
 }
+//------------------------------------------------------------------------------

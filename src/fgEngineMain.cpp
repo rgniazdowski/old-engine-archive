@@ -118,33 +118,43 @@ CEngineMain::~CEngineMain() {
     // Unregister any required callbacks
     unregisterGameCallbacks();
     // Main Game Logic Manager
-    if(m_gameMain)
+    if(m_gameMain) {
+        FG_LOG_DEBUG("Destroying the Main Game Logic Manager...");
         delete m_gameMain;
-    m_gameMain = NULL;
+        m_gameMain = NULL;
+    }
     // Global Settings
-    if(m_settings)
+    if(m_settings) {
         delete m_settings;
-    m_settings = NULL;
+        m_settings = NULL;
+    }
     // Main configuration file
-    if(m_mainConfig)
+    if(m_mainConfig) {
         delete m_mainConfig;
-    m_mainConfig = NULL;
+        m_mainConfig = NULL;
+    }
     // GFX Main object
-    if(m_gfxMain)
+    if(m_gfxMain) {
+        FG_LOG_DEBUG("Destroying the GFX Subsystem...");
         delete m_gfxMain;
-    m_gfxMain = NULL;
+        m_gfxMain = NULL;
+    }
     if(m_guiMain) {
         m_guiMain->setShaderManager(NULL);
     }
     // Destroy SFX/Sound manager object
-    if(m_soundMgr)
+    if(m_soundMgr) {
+        FG_LOG_DEBUG("Destroying the SFX Subsystem...");
         delete m_soundMgr;
-    m_soundMgr = NULL;
+        m_soundMgr = NULL;
+    }
     // Destroy Resource Manager object
     // This will also destroy any left resources
-    if(m_resourceMgr)
+    if(m_resourceMgr) {
+        FG_LOG_DEBUG("Destroying the Resource Manager...");
         delete m_resourceMgr;
-    m_resourceMgr = NULL;
+        m_resourceMgr = NULL;
+    }
     if(m_guiMain) {
         m_guiMain->setResourceManager(NULL);
     }
@@ -157,13 +167,16 @@ CEngineMain::~CEngineMain() {
         m_scriptSubsystem->setGameMainManager(NULL);
     }
     // Destroy the resource factory object
-    if(m_resourceFactory)
+    if(m_resourceFactory) {
         delete m_resourceFactory;
-    m_resourceFactory = NULL;
+        m_resourceFactory = NULL;
+    }
     // Input Receiver object
-    if(m_inputHandler)
+    if(m_inputHandler) {
+        FG_LOG_DEBUG("Destroying the Input Handler...");
         delete m_inputHandler;
-    m_inputHandler = NULL;
+        m_inputHandler = NULL;
+    }
     if(m_guiMain) {
         m_guiMain->setPointerInputReceiver(NULL);
     }
@@ -171,41 +184,48 @@ CEngineMain::~CEngineMain() {
     if(m_joypadController) {
         m_joypadController->quit();
         delete m_joypadController;
+        m_joypadController = NULL;
     }
-    m_joypadController = NULL;
     // Remove any callbacks
     // They're already unregistered
-    if(m_gameTouchCallback)
+    if(m_gameTouchCallback) {
         delete m_gameTouchCallback;
-    if(m_gameMouseCallback)
+        m_gameTouchCallback = NULL;
+    }
+    if(m_gameMouseCallback) {
         delete m_gameMouseCallback;
-    if(m_gameFreeLookCallback)
+        m_gameMouseCallback = NULL;
+    }
+    if(m_gameFreeLookCallback) {
         delete m_gameFreeLookCallback;
-    m_gameMouseCallback = NULL;
-    m_gameTouchCallback = NULL;
-    m_gameFreeLookCallback = NULL;
+        m_gameFreeLookCallback = NULL;
+    }
     // Destroy the quality manager
-    if(m_qualityMgr)
+    if(m_qualityMgr) {
         delete m_qualityMgr;
-    m_qualityMgr = NULL;
+        m_qualityMgr = NULL;
+    }
     // Main GUI class 
     // Do not reset the pointer... needs it to unregister callbacks
     //m_guiMain->setEventManager(NULL);    
     if(m_guiMain) {
+        FG_LOG_DEBUG("Destroying the main GUI...");
         delete m_guiMain;
+        m_guiMain = NULL;
     }
-    m_guiMain = NULL;
     if(m_scriptSubsystem) {
         m_scriptSubsystem->setGuiMain(NULL);
         m_scriptSubsystem->setWidgetManager(NULL);
         m_scriptSubsystem->setStyleManager(NULL);
+        FG_LOG_DEBUG("Destroying the Script Subsystem...");
         // Destroy the Script Subsystem object
         delete m_scriptSubsystem;
         m_scriptSubsystem = NULL;
     }
-    if(m_hardwareState)
+    if(m_hardwareState) {
         delete m_hardwareState;
-    m_hardwareState = NULL;
+        m_hardwareState = NULL;
+    }
     // Free registered human readable colors - these are from HTML table
     colors::freeColors();
     // Unregister all error codes #FIXME

@@ -6,7 +6,7 @@
  * 
  * FlexiGame source code and any related files can not be copied, modified 
  * and/or distributed without the express or written consent from the author.
- *******************************************************/
+ ******************************************************************************/
 /*
  * Implementation file for particle links.
  *
@@ -23,11 +23,14 @@
 
 using namespace fg;
 
+//------------------------------------------------------------------------------
+
 physics::real physics::CParticleLink::currentLength() const {
     Vector3f relativePos = particle[0]->getPosition() -
             particle[1]->getPosition();
     return math::length(relativePos);
 }
+//------------------------------------------------------------------------------
 
 unsigned physics::CParticleCable::addContact(CParticleContact *contact,
                                    unsigned limit) const {
@@ -54,6 +57,7 @@ unsigned physics::CParticleCable::addContact(CParticleContact *contact,
 
     return 1;
 }
+//------------------------------------------------------------------------------
 
 unsigned physics::CParticleRod::addContact(CParticleContact *contact,
                                  unsigned limit) const {
@@ -88,11 +92,13 @@ unsigned physics::CParticleRod::addContact(CParticleContact *contact,
 
     return 1;
 }
+//------------------------------------------------------------------------------
 
 physics::real physics::CParticleConstraint::currentLength() const {
     Vector3f relativePos = particle->getPosition() - anchor;
     return math::length(relativePos); // magnitude()
 }
+//------------------------------------------------------------------------------
 
 unsigned physics::CParticleCableConstraint::addContact(CParticleContact *contact,
                                              unsigned limit) const {
@@ -119,6 +125,7 @@ unsigned physics::CParticleCableConstraint::addContact(CParticleContact *contact
 
     return 1;
 }
+//------------------------------------------------------------------------------
 
 unsigned physics::CParticleRodConstraint::addContact(CParticleContact *contact,
                                            unsigned limit) const {
@@ -153,3 +160,4 @@ unsigned physics::CParticleRodConstraint::addContact(CParticleContact *contact,
 
     return 1;
 }
+//------------------------------------------------------------------------------

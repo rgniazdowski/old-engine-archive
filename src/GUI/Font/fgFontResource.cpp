@@ -54,7 +54,6 @@ void gui::CFontResource::clear(void) {
 //------------------------------------------------------------------------------
 
 fgBool gui::CFontResource::create(void) {
-    FG_LOG_DEBUG("fgFontResource::create();");
     m_textureType = FG_TEXTURE_FONT;
     if(!base_type::create()) {
         // #TODO error handling / reporting
@@ -129,7 +128,6 @@ void gui::CFontResource::destroy(void) {
 //------------------------------------------------------------------------------
 
 void gui::CFontResource::dispose(void) {
-    FG_LOG_DEBUG("fgFontResource::~dispose();");
     base_type::dispose();
     m_step = 0;
     m_info.destroy();

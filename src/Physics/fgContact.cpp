@@ -6,7 +6,7 @@
  * 
  * FlexiGame source code and any related files can not be copied, modified 
  * and/or distributed without the express or written consent from the author.
- *******************************************************/
+ ******************************************************************************/
 /*
  * Implementation file for the contact resolution system.
  *
@@ -30,6 +30,8 @@
 
 using namespace fg;
 
+//------------------------------------------------------------------------------
+
 void physics::CContact::setBodyData(CRigidBody* one, CRigidBody *two,
                                     real friction, real restitution) {
     physics::CContact::body[0] = one;
@@ -37,6 +39,7 @@ void physics::CContact::setBodyData(CRigidBody* one, CRigidBody *two,
     physics::CContact::friction = friction;
     physics::CContact::restitution = restitution;
 }
+//------------------------------------------------------------------------------
 
 void physics::CContact::matchAwakeState() {
     // Collisions with the world never cause a body to wake up.
@@ -51,6 +54,7 @@ void physics::CContact::matchAwakeState() {
         else body[0]->setAwake();
     }
 }
+//------------------------------------------------------------------------------
 
 /*
  * Swaps the bodies in the current contact, so body 0 is at body 1 and
@@ -66,6 +70,7 @@ void physics::CContact::swapBodies() {
     body[0] = body[1];
     body[1] = temp;
 }
+//------------------------------------------------------------------------------
 
 /*
  * Constructs an arbitrary orthonormal basis for the contact.  This is
@@ -118,6 +123,7 @@ void physics::CContact::calculateContactBasis() {
                      contactTangent[0],
                      contactTangent[1]);
 }
+//------------------------------------------------------------------------------
 
 Vector3f physics::CContact::calculateLocalVelocity(unsigned bodyIndex, real duration) {
     CRigidBody *thisBody = body[bodyIndex];
@@ -147,6 +153,7 @@ Vector3f physics::CContact::calculateLocalVelocity(unsigned bodyIndex, real dura
     // And return it
     return contactVelocity;
 }
+//------------------------------------------------------------------------------
 
 void physics::CContact::calculateDesiredDeltaVelocity(real duration) {
     const static real velocityLimit = (real)0.25f;
@@ -174,6 +181,7 @@ void physics::CContact::calculateDesiredDeltaVelocity(real duration) {
             -m_contactVelocity.x
             - thisRestitution * (m_contactVelocity.x - velocityFromAcc);
 }
+//------------------------------------------------------------------------------
 
 void physics::CContact::calculateInternals(real duration) {
     // Check if the first object is NULL, and swap if it is.
@@ -198,6 +206,7 @@ void physics::CContact::calculateInternals(real duration) {
     // Calculate the desired change in velocity for resolution
     calculateDesiredDeltaVelocity(duration);
 }
+//------------------------------------------------------------------------------
 
 void physics::CContact::applyVelocityChange(Vector3f velocityChange[2],
                                             Vector3f rotationChange[2]) {
@@ -246,6 +255,7 @@ void physics::CContact::applyVelocityChange(Vector3f velocityChange[2],
         body[1]->addRotation(rotationChange[1]);
     }
 }
+//------------------------------------------------------------------------------
 
 inline
 Vector3f physics::CContact::calculateFrictionlessImpulse(Matrix3f * inverseInertiaTensor) {
@@ -382,6 +392,7 @@ Vector3f physics::CContact::calculateFrictionImpulse(Matrix3f * inverseInertiaTe
     //printf("CFI: %.2f %.2f %.2f | friction:%.2f | planarImpulse:%.2f\n", impulseContact.x, impulseContact.y, impulseContact.z, friction, planarImpulse);
     return impulseContact;
 }
+//------------------------------------------------------------------------------
 
 void physics::CContact::applyPositionChange(Vector3f linearChange[2],
                                             Vector3f angularChange[2],
@@ -501,3 +512,4 @@ void physics::CContact::applyPositionChange(Vector3f linearChange[2],
             if(!body[i]->getAwake()) body[i]->calculateDerivedData();
         }
 }
+//------------------------------------------------------------------------------

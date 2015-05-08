@@ -6,7 +6,7 @@
  *
  * FlexiGame source code and any related files can not be copied, modified
  * and/or distributed without the express or written consent from the author.
- *******************************************************/
+ ******************************************************************************/
 /**
  * Portions Copyright (C) James Boer, 2000
  */
@@ -28,15 +28,13 @@
 #include "fgLog.h"
 
 #if defined(FG_USING_PLATFORM_ANDROID)    
-    #include "Android/fgAndroid.h"
+#include "Android/fgAndroid.h"
 #endif
 
 using namespace fg;
 
-/**
- * 
- * @param resourceFactory
- */
+//------------------------------------------------------------------------------
+
 resource::CResourceManager::CResourceManager(CResourceFactory *pResourceFactory,
                                              fg::base::CManager *pQualityMgr,
                                              fg::base::CManager *pEventMgr) :
@@ -51,17 +49,13 @@ m_bResourceReserved(FG_FALSE) {
     m_resourceGroupHandles.clear_optimised();
     m_managerType = FG_MANAGER_RESOURCE;
 }
+//------------------------------------------------------------------------------
 
-/**
- *
- */
 resource::CResourceManager::~CResourceManager() {
     CResourceManager::destroy();
 }
+//------------------------------------------------------------------------------
 
-/**
- * Reset local parameters
- */
 void resource::CResourceManager::clear(void) {
     releaseAllHandles();
     m_nCurrentUsedMemory = 0;
@@ -75,11 +69,8 @@ void resource::CResourceManager::clear(void) {
     m_pEventMgr = NULL;
     m_managerType = FG_MANAGER_RESOURCE;
 }
+//------------------------------------------------------------------------------
 
-/**
- * This function will release all data and memory held by resource
- * manager itself (including resources)
- */
 fgBool resource::CResourceManager::destroy(void) {
     FG_LOG_DEBUG(">>>>> fgResourceManager::destroy(void); GROUPS"); // #TODELETE
     {
@@ -124,11 +115,8 @@ fgBool resource::CResourceManager::destroy(void) {
     m_dataDir = NULL;
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
-/**
- * Function pre loads any required data (configs, metadata, etc)
- * @return 
- */
 fgBool resource::CResourceManager::initialize(void) {
     if(m_init) {
         // double initialization ?
@@ -202,18 +190,18 @@ fgBool resource::CResourceManager::initialize(void) {
     FG_LOG_DEBUG("Resource: Current number of cached resources: %d, total: %d bytes [%d KiB]",
                  (int)getUsedHandleCount(),
                  (int)m_nCurrentUsedMemory,
-                 (int)m_nCurrentUsedMemory/1024);
+                 (int)m_nCurrentUsedMemory / 1024);
 #if defined(FG_DEBUG)
     // With debug mode - printout the names of the resources and their size in bytes/kbytes
     this->goToBegin();
     do {
         CResource *pResource = this->getCurrentResource();
         if(pResource) {
-            FG_LOG_DEBUG("Resource[%.3d]: name[%s], size: %d bytes [%d KiB]", 
+            FG_LOG_DEBUG("Resource[%.3d]: name[%s], size: %d bytes [%d KiB]",
                          pResource->getHandle().getIndex(),
                          pResource->getNameStr(),
                          (int)pResource->getSize(),
-                         (int)pResource->getSize()/1024);
+                         (int)pResource->getSize() / 1024);
         }
     } while(this->goToNext());
 #endif /* FG_DEBUG */
@@ -222,23 +210,14 @@ fgBool resource::CResourceManager::initialize(void) {
     m_init = FG_TRUE;
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
-/**
- * Set maximum memory value for the used memory counter
- * @param nMaxSize
- * @return 
- */
 fgBool resource::CResourceManager::setMaximumMemory(size_t nMaxSize) {
     m_nMaximumMemory = nMaxSize;
     return checkForOverallocation();
 }
+//------------------------------------------------------------------------------
 
-/**
- * Allows the resource manager to pre-reserve an amount of memory so
- * an inserted resource does not exceed the maximum allowed memory
- * @param nMem
- * @return 
- */
 fgBool resource::CResourceManager::reserveMemory(size_t nMem) {
     addMemory(nMem);
     if(!checkForOverallocation())
@@ -246,12 +225,8 @@ fgBool resource::CResourceManager::reserveMemory(size_t nMem) {
     m_bResourceReserved = FG_TRUE;
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
-/**
- * Find next resource with given criteria (currently resource type)
- * @param resType
- * @return 
- */
 fgBool resource::CResourceManager::goToNext(ResourceType resType) {
     while(FG_TRUE) {
         m_currentResource++;
@@ -267,13 +242,8 @@ fgBool resource::CResourceManager::goToNext(ResourceType resType) {
 
     return isValid();
 }
+//------------------------------------------------------------------------------
 
-/**
- * Find next resource with given criteria (currently resource type)
- * @param resTypes
- * @param n
- * @return 
- */
 fgBool resource::CResourceManager::goToNext(const ResourceType* resTypes, int n) {
     if(!resTypes)
         return FG_FALSE;
@@ -299,13 +269,8 @@ fgBool resource::CResourceManager::goToNext(const ResourceType* resTypes, int n)
 
     return isValid();
 }
+//------------------------------------------------------------------------------
 
-/**
- * Find next resource with given criteria (currently resource type and quality)
- * @param resType
- * @param quality
- * @return 
- */
 fgBool resource::CResourceManager::goToNext(ResourceType resType, Quality quality) {
     while(FG_TRUE) {
         goToNext();
@@ -321,11 +286,8 @@ fgBool resource::CResourceManager::goToNext(ResourceType resType, Quality qualit
 
     return isValid();
 }
+//------------------------------------------------------------------------------
 
-/**
- * Insert resource group into manager, if you pass in the pointer to
- * resource handle, the Resource Manager will provide a unique handle for you.
- */
 fgBool resource::CResourceManager::insertResource(CResource* pResource) {
     if(!pResource) {
         return FG_FALSE;
@@ -347,10 +309,8 @@ fgBool resource::CResourceManager::insertResource(CResource* pResource) {
 
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
-/*
- * Insert resource group into manager
- */
 fgBool resource::CResourceManager::insertResourceGroup(const ResourceHandle& rhUniqueID,
                                                        CResource* pResource) {
     if(!CDataManagerBase::isManaged(pResource)) {
@@ -363,32 +323,23 @@ fgBool resource::CResourceManager::insertResourceGroup(const ResourceHandle& rhU
     m_resourceGroupHandles.push_back(rhUniqueID);
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
-/*
- * Removes an object completely from the manager.
- */
 fgBool resource::CResourceManager::remove(const ResourceHandle& rhUniqueID) {
     return CResourceManager::remove(CDataManagerBase::get(rhUniqueID));
 }
+//------------------------------------------------------------------------------
 
-/*
- * Removes an object completely from the manager.
- */
 fgBool resource::CResourceManager::remove(const std::string& nameTag) {
     return CResourceManager::remove(CDataManagerBase::get(nameTag));
 }
+//------------------------------------------------------------------------------
 
-/*
- * Removes an object completely from the manager.
- */
 fgBool resource::CResourceManager::remove(const char *nameTag) {
     return CResourceManager::remove(CDataManagerBase::get(nameTag));
 }
+//------------------------------------------------------------------------------
 
-/*
- * Removes an object completely from the manager.
- * Does not free memory (held by the allocated object).
- */
 fgBool resource::CResourceManager::remove(CResource* pResource) {
     if(!CDataManagerBase::isManaged(pResource))
         return FG_FALSE;
@@ -403,35 +354,23 @@ fgBool resource::CResourceManager::remove(CResource* pResource) {
     releaseHandle(pResource->getHandle());
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
-/*
- * Disposes of the resource (frees memory) - does not remove resource from the manager
- */
 fgBool resource::CResourceManager::dispose(const ResourceHandle& rhUniqueID) {
     return dispose(CDataManagerBase::get(rhUniqueID));
 }
+//------------------------------------------------------------------------------
 
-/*
- * Disposes of the resource (frees memory) - does not remove resource from the manager
- */
 fgBool resource::CResourceManager::dispose(const std::string& nameTag) {
     return dispose(CDataManagerBase::get(nameTag));
 }
+//------------------------------------------------------------------------------
 
-/**
- * Disposes of the resource (frees memory) - does not remove resource from the manager
- * @param nameTag
- * @return 
- */
 fgBool resource::CResourceManager::dispose(const char *nameTag) {
     return dispose(CDataManagerBase::get(nameTag));
 }
+//------------------------------------------------------------------------------
 
-/**
- * Disposes of the resource (frees memory) - does not remove resource from the manager
- * @param pResource
- * @return 
- */
 fgBool resource::CResourceManager::dispose(CResource* pResource) {
     if(!CDataManagerBase::isManaged(pResource))
         return FG_FALSE;
@@ -453,11 +392,8 @@ fgBool resource::CResourceManager::dispose(CResource* pResource) {
     }
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param pResource
- */
 void resource::CResourceManager::refreshResource(CResource* pResource) {
     if(!pResource)
         return;
@@ -496,15 +432,8 @@ void resource::CResourceManager::refreshResource(CResource* pResource) {
         pResource->Unlock();
     }
 }
+//------------------------------------------------------------------------------
 
-/**
- * Get the resource pointer (object) via resource handle ID
- * Using GetResource tells the manager that you are about to access the
- * object.  If the resource has been disposed, it will be recreated
- * before it has been returned.
- * @param rhUniqueID
- * @return 
- */
 resource::CResource* resource::CResourceManager::get(const ResourceHandle& rhUniqueID) {
     resource::CResource *pResource = CDataManagerBase::get(rhUniqueID);
     if(!pResource) {
@@ -514,15 +443,8 @@ resource::CResource* resource::CResourceManager::get(const ResourceHandle& rhUni
     // return the object pointer
     return pResource;
 }
+//------------------------------------------------------------------------------
 
-/**
- * Get the resource pointer (object) via resource handle ID
- * Using GetResource tells the manager that you are about to access the
- * object.  If the resource has been disposed, it will be recreated
- * before it has been returned.
- * @param nameTag
- * @return 
- */
 resource::CResource* resource::CResourceManager::get(const std::string& nameTag) {
     CResource *pResource = CDataManagerBase::get(nameTag);
     if(!pResource) {
@@ -532,43 +454,23 @@ resource::CResource* resource::CResourceManager::get(const std::string& nameTag)
     // return the object pointer
     return pResource;
 }
+//------------------------------------------------------------------------------
 
-/**
- * Get the resource pointer (object) via resource handle ID
- * Using GetResource tells the manager that you are about to access the
- * object.  If the resource has been disposed, it will be recreated
- * before it has been returned.
- * @param nameTag
- * @return 
- */
 resource::CResource* resource::CResourceManager::get(const char *nameTag) {
     return CResourceManager::get(std::string(nameTag));
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param info
- * @return 
- */
 resource::CResource* resource::CResourceManager::request(const std::string& info) {
     return request(info, AUTO);
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param info
- * @return 
- */
 resource::CResource* resource::CResourceManager::request(const char *info) {
     return request(std::string(info), AUTO);
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param info
- * @param forcedType
- * @return 
- */
 resource::CResource* resource::CResourceManager::request(const std::string& info,
                                                          const ResourceType forcedType) {
     if(!m_dataDir || !m_init || !m_pResourceFactory || info.empty())
@@ -746,36 +648,21 @@ resource::CResource* resource::CResourceManager::request(const std::string& info
     }
     return resourcePtr;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param info
- * @param forcedType
- * @return 
- */
 resource::CResource* resource::CResourceManager::request(const char *info, const ResourceType forcedType) {
     return request(std::string(info), forcedType);
 }
+//------------------------------------------------------------------------------
 
-/*
- * Locking the resource ensures that the resource does not get managed by
- * the Resource Manager.  You can use this to ensure that a surface does not
- * get swapped out, for instance.  The resource contains a reference count
- * to ensure that numerous locks can be safely made.
- * #FIXME #TODO #P3 - locking/unlocking is based on counter - DEPRECATED.
- */
 resource::CResource* resource::CResourceManager::lockResource(const ResourceHandle& rhUniqueID) {
     CResource *pResource = CDataManagerBase::get(rhUniqueID);
     lockResource(pResource);
     // return the object pointer
     return pResource;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param pResource
- * @return 
- */
 fgBool resource::CResourceManager::lockResource(resource::CResource *pResource) {
     if(!CDataManagerBase::isManaged(pResource)) {
         return FG_FALSE;
@@ -791,24 +678,15 @@ fgBool resource::CResourceManager::lockResource(resource::CResource *pResource) 
     }
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
-/*
- * Unlocking the object let's the resource manager know that you no longer
- * need exclusive access.  When all locks have been released (the reference
- * count is 0), the object is considered safe for management again and can
- * be swapped out at the manager's discretion.  The object can be referenced
- * either by handle or by the object's pointer.
- * #FIXME #TODO #P3 - locking/unlocking is based on counter - DEPRECATED.
- */
 resource::CResource* resource::CResourceManager::unlockResource(const ResourceHandle& rhUniqueID) {
     CResource *pResource = CDataManagerBase::get(rhUniqueID);
     pResource->Unlock();
     return pResource;
 }
+//------------------------------------------------------------------------------
 
-/*
- * Unlock the resource
- */
 fgBool resource::CResourceManager::unlockResource(resource::CResource *pResource) {
     if(!CDataManagerBase::isManaged(pResource)) {
         return FG_FALSE;
@@ -820,10 +698,8 @@ fgBool resource::CResourceManager::unlockResource(resource::CResource *pResource
     pResource->Unlock();
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
-/*
- * Refresh allocated memory based on managed resources
- */
 void resource::CResourceManager::refreshMemory(void) {
     resetMemory();
     DataVecItor begin = getRefDataVector().begin(), end = getRefDataVector().end();
@@ -833,14 +709,8 @@ void resource::CResourceManager::refreshMemory(void) {
         addMemory((*itor).data->getSize());
     }
 }
+//------------------------------------------------------------------------------
 
-/*
- * This must be called when you wish the manager to check for discardable
- * resources.  Resources will only be swapped out if the maximum allowable
- * limit has been reached, and it will discard them from lowest to highest
- * priority, determined by the resource class's < operator.  Function will
- * fail if requested memory cannot be freed.
- */
 fgBool resource::CResourceManager::checkForOverallocation(void) {
     if(m_nCurrentUsedMemory > m_nMaximumMemory) {
         resetMemory();
@@ -878,3 +748,4 @@ fgBool resource::CResourceManager::checkForOverallocation(void) {
     }
     return FG_TRUE;
 }
+//------------------------------------------------------------------------------

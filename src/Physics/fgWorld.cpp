@@ -6,7 +6,7 @@
  * 
  * FlexiGame source code and any related files can not be copied, modified 
  * and/or distributed without the express or written consent from the author.
- *******************************************************/
+ ******************************************************************************/
 /*
  * Implementation file for random number generation.
  *
@@ -25,11 +25,8 @@
 
 using namespace fg;
 
-/**
- * 
- * @param maxContacts
- * @param iterations
- */
+//------------------------------------------------------------------------------
+
 physics::CWorld::CWorld(unsigned maxContacts, unsigned iterations) :
 m_isCalculateIterations(FG_FALSE),
 m_resolver(iterations),
@@ -46,27 +43,19 @@ m_maxIterations(iterations) {
     m_collisionData.contactArray = m_contacts;
     m_collisionData.reset(m_maxContacts);
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- */
 physics::CWorld::~CWorld() {
     delete[] m_contacts;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param offset
- */
 void physics::CWorld::setGroundPlane(float offset) {
     m_groundPlane.offset = offset;
     m_useGroundPlane = FG_TRUE;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param maxContacts
- */
 void physics::CWorld::setMaxContacts(unsigned int maxContacts) {
     if(maxContacts > 0) {
         if(m_contacts)
@@ -78,10 +67,8 @@ void physics::CWorld::setMaxContacts(unsigned int maxContacts) {
         m_collisionData.reset(m_maxContacts);
     }
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- */
 void physics::CWorld::startFrame(void) {
     m_collisionData.reset(m_maxContacts);
     // This should be set individually for every different colliding object
@@ -90,10 +77,8 @@ void physics::CWorld::startFrame(void) {
     m_collisionData.restitution = 0.1f;
     m_collisionData.tolerance = 0.1f;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- */
 void physics::CWorld::finishFrame(void) {
     if (m_isCalculateIterations) { 
         m_resolver.setIterations(m_collisionData.contactCount * 3); // 4? 2?
@@ -102,6 +87,7 @@ void physics::CWorld::finishFrame(void) {
                                m_collisionData.contactCount,
                                timesys::elapsed());
 }
+//------------------------------------------------------------------------------
 
 
 /*

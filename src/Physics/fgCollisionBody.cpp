@@ -27,20 +27,15 @@
 
 using namespace fg;
 
-/**
- * 
- * @param bodyType
- */
+//------------------------------------------------------------------------------
+
 physics::CCollisionBody::CCollisionBody(const BodyType bodyType) :
 m_collisionPrim(NULL),
 m_bodyType(INVALID) {
     setBodyType(bodyType);
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param orig
- */
 physics::CCollisionBody::CCollisionBody(const CCollisionBody& orig) {
     if(&orig != this) {
         this->m_bodyType = orig.m_bodyType;
@@ -76,20 +71,16 @@ physics::CCollisionBody::CCollisionBody(const CCollisionBody& orig) {
         this->integrate(0.0f);
     }
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- */
 physics::CCollisionBody::~CCollisionBody() {
     if(m_collisionPrim) {
         m_collisionPrim->body = NULL;
         delete m_collisionPrim;
     }
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- */
 void physics::CCollisionBody::setInertiaTensor(void) { 
     if(m_bodyType == BOX) {
         setInertiaTensor(getHalfSize(), getMass());
@@ -97,23 +88,15 @@ void physics::CCollisionBody::setInertiaTensor(void) {
         setInertiaTensor(getRadius(), getMass());
     }
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param halfSize
- * @param mass
- */
 void physics::CCollisionBody::setInertiaTensor(const Vector3f& halfSize, float mass) {
     setMass(mass);
     setHalfSize(halfSize);
     setInertiaTensor(physics::setBlockInertiaTensor(halfSize, mass));
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param radius
- * @param mass
- */
 void physics::CCollisionBody::setInertiaTensor(float radius, float mass) {
     setMass(mass);
     setRadius(radius);
@@ -123,11 +106,8 @@ void physics::CCollisionBody::setInertiaTensor(float radius, float mass) {
 	setInertiaTensor(physics::setInertiaTensorCoeffs<float, math::precision::defaultp>(sphereI, sphereI, sphereI));
     //setInertiaTensor(physics::setBlockInertiaTensor(halfSize, mass));
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param mass
- */
 void physics::CCollisionBody::setMassPerUnit(float mass) {
     if(mass < FG_EPSILON)
         return;
@@ -139,11 +119,8 @@ void physics::CCollisionBody::setMassPerUnit(float mass) {
         setMass(mass * a * a * a);
     }
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param halfSize
- */
 void physics::CCollisionBody::setHalfSize(const Vector3f& halfSize) {
     if(m_collisionPrim && m_bodyType == BOX) {
         getCollisionBox()->halfSize = halfSize;
@@ -151,11 +128,8 @@ void physics::CCollisionBody::setHalfSize(const Vector3f& halfSize) {
         getCollisionSphere()->radius = math::length(halfSize);
     }
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @return 
- */
 Vector3f physics::CCollisionBody::getHalfSize(void) const {
     if(m_collisionPrim && m_bodyType == BOX) {
         return getCollisionBox()->halfSize;
@@ -166,11 +140,8 @@ Vector3f physics::CCollisionBody::getHalfSize(void) const {
     }
     return Vector3f();
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param radius
- */
 void physics::CCollisionBody::setRadius(real radius) {
     if(radius < 0.0f)
         radius *= -1.0f;
@@ -182,11 +153,8 @@ void physics::CCollisionBody::setRadius(real radius) {
         getCollisionSphere()->radius = radius;
     }
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @return 
- */
 float physics::CCollisionBody::getRadius(void) const {
     if(m_collisionPrim && m_bodyType == BOX) {
         return math::length(getCollisionBox()->halfSize);
@@ -195,11 +163,8 @@ float physics::CCollisionBody::getRadius(void) const {
     }
     return 0.0f;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param bodyType
- */
 void physics::CCollisionBody::setBodyType(const BodyType bodyType) {
     if(m_collisionPrim && m_bodyType == bodyType)
         return;
@@ -212,13 +177,8 @@ void physics::CCollisionBody::setBodyType(const BodyType bodyType) {
         m_collisionPrim->body = this;
     }
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param body
- * @param cData
- * @return 
- */
 fgBool physics::CCollisionBody::checkCollision(CCollisionBody* body,
                                                SCollisionData *cData) {
     if(!body || !cData) {
@@ -247,13 +207,8 @@ fgBool physics::CCollisionBody::checkCollision(CCollisionBody* body,
     }
     return (fgBool)collide;
 }
+//------------------------------------------------------------------------------
 
-/**
- * 
- * @param plane
- * @param cData
- * @return 
- */
 fgBool physics::CCollisionBody::checkCollision(const CCollisionPlane& plane,
                                                SCollisionData* cData) {
     if(!cData) {
@@ -267,3 +222,4 @@ fgBool physics::CCollisionBody::checkCollision(const CCollisionPlane& plane,
     }
     return collide;
 }
+//------------------------------------------------------------------------------

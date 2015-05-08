@@ -63,43 +63,62 @@ gfx::CGfxMain::~CGfxMain() {
     unregisterResourceCallbacks();
     unregisterSceneCallbacks();
 
-    if(m_particleSystem)
+    if(m_particleSystem) {
+        FG_LOG_DEBUG("GFX: Destroying the Particle Subsystem...");
         delete m_particleSystem;
-    if(m_3DScene)
+        m_particleSystem = NULL;
+    }
+    if(m_3DScene) {
+        FG_LOG_DEBUG("GFX: Destroying the 3D Scene...");
         delete m_3DScene;
-    if(m_2DScene)
+        m_3DScene = NULL;
+    }
+    if(m_2DScene) {
+        FG_LOG_DEBUG("GFX: Destroying the 2D Scene...");
         delete m_2DScene;
-    if(context::isInit())
+        m_2DScene = NULL;
+    }
+    if(context::isInit()) {
         context::deleteAllBuffers();
+    }
 
-    if(m_textureMgr)
+    if(m_textureMgr) {
+        FG_LOG_DEBUG("GFX: Destroying the Texture Manager...");
         delete m_textureMgr;
-    if(m_shaderMgr)
+        m_textureMgr = NULL;
+
+    }
+    if(m_shaderMgr) {
+        FG_LOG_DEBUG("GFX: Destroying the Shader Manager...");
         delete m_shaderMgr;
-    if(m_mainWindow)
+        m_shaderMgr = NULL;
+
+    }
+    if(m_mainWindow) {
         delete m_mainWindow;
+        m_mainWindow = NULL;
 
-    if(m_resourceCreatedCallback)
+    }
+    if(m_resourceCreatedCallback) {
         delete m_resourceCreatedCallback;
-    if(m_sceneNodeInsertedCallback)
+        m_resourceCreatedCallback = NULL;
+    }
+    if(m_sceneNodeInsertedCallback) {
         delete m_sceneNodeInsertedCallback;
+        m_sceneNodeInsertedCallback = NULL;
+    }
 
-    if(m_loader)
+    if(m_loader) {
         delete m_loader;
+        m_loader = NULL;
+    }
 
-    if(m_init)
+    if(m_init) {
         closeGFX();
-
-    m_loader = NULL;
-    m_resourceCreatedCallback = NULL;
-    m_particleSystem = NULL;
-    m_textureMgr = NULL;
+    }
+    // External pointers
     m_pResourceMgr = NULL;
     m_pEventMgr = NULL;
-    m_shaderMgr = NULL;
-    m_mainWindow = NULL;
-    m_3DScene = NULL;
-    m_2DScene = NULL;
 }
 //------------------------------------------------------------------------------
 
@@ -236,7 +255,7 @@ fgBool gfx::CGfxMain::initGFX(void) {
             //status = FG_FALSE; // ?
         }
     }
-    if(status) {        
+    if(status) {
         FG_LOG_DEBUG("GFX: Subsystem initialized successfully");
     }
     if(status) {

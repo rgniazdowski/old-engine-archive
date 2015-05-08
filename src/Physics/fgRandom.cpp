@@ -26,69 +26,65 @@
 
 using namespace fg;
 
-physics::CRandom::CRandom()
-{
+physics::CRandom::CRandom() {
     seed(0);
 }
 
-physics::CRandom::CRandom(unsigned seed)
-{
+physics::CRandom::CRandom(unsigned seed) {
     physics::CRandom::seed(seed);
 }
 
-void physics::CRandom::seed(unsigned s)
-{
-    if (s == 0) {
+void physics::CRandom::seed(unsigned s) {
+    if(s == 0) {
         s = (unsigned)clock();
     }
 
     // Fill the buffer with some basic random numbers
-    for (unsigned i = 0; i < 17; i++)
-    {
+    for(unsigned i = 0; i < 17; i++) {
         // Simple linear congruential generator
         s = s * 2891336453 + 1;
         m_buffer[i] = s;
     }
 
     // Initialize pointers into the buffer
-    m_p1 = 0;  m_p2 = 10;
+    m_p1 = 0;
+    m_p2 = 10;
 }
 
-unsigned physics::CRandom::rotl(unsigned n, unsigned r)
-{
-	  return	(n << r) |
-			  (n >> (32 - r));
+unsigned physics::CRandom::rotl(unsigned n, unsigned r) {
+    return (n << r) |
+            (n >> (32 - r));
 }
 
-unsigned physics::CRandom::rotr(unsigned n, unsigned r)
-{
-	  return	(n >> r) |
-				(n << (32 - r));
+unsigned physics::CRandom::rotr(unsigned n, unsigned r) {
+    return (n >> r) |
+            (n << (32 - r));
 }
 
-unsigned physics::CRandom::randomBits()
-{
+unsigned physics::CRandom::randomBits() {
     unsigned result;
 
     // Rotate the buffer and store it back to itself
     result = m_buffer[m_p1] = rotl(m_buffer[m_p2], 13) + rotl(m_buffer[m_p1], 9);
 
     // Rotate pointers
-    if (--m_p1 < 0) m_p1 = 16;
-    if (--m_p2 < 0) m_p2 = 16;
+    if(--m_p1 < 0) m_p1 = 16;
+    if(--m_p2 < 0) m_p2 = 16;
 
     // Return result
     return result;
 }
 
 #ifdef SINGLE_PRECISION
-physics::real physics::CRandom::randomReal()
-{
+
+physics::real physics::CRandom::randomReal() {
     // Get the random number
     unsigned bits = randomBits();
 
     // Set up a reinterpret structure for manipulation
-    union {
+
+    union
+    {
         real value;
         unsigned word;
     } convert;
@@ -102,13 +98,15 @@ physics::real physics::CRandom::randomReal()
     return convert.value - 1.0f;
 }
 #else
-physics::real physics::CRandom::randomReal()
-{
+
+physics::real physics::CRandom::randomReal() {
     // Get the random number
     unsigned bits = randomBits();
 
     // Set up a reinterpret structure for manipulation
-    union {
+
+    union
+    {
         real value;
         unsigned words[2];
     } convert;
@@ -117,7 +115,7 @@ physics::real physics::CRandom::randomReal()
     // sign and exponent bits (so that the size of the result is 1-2)
     // and using the bits to create the fraction part of the float. Note
     // that bits are used more than once in this process.
-    convert.words[0] =  bits << 20; // Fill in the top 16 bits
+    convert.words[0] = bits << 20; // Fill in the top 16 bits
     convert.words[1] = (bits >> 12) | 0x3FF00000; // And the bottom 20
 
     // And return the value
@@ -125,71 +123,62 @@ physics::real physics::CRandom::randomReal()
 }
 #endif
 
-physics::real physics::CRandom::randomReal(real min, real max)
-{
-    return randomReal() * (max-min) + min;
+physics::real physics::CRandom::randomReal(real min, real max) {
+    return randomReal() * (max - min) + min;
 }
 
-physics::real physics::CRandom::randomReal(real scale)
-{
+physics::real physics::CRandom::randomReal(real scale) {
     return randomReal() * scale;
 }
 
-unsigned physics::CRandom::randomInt(unsigned max)
-{
+unsigned physics::CRandom::randomInt(unsigned max) {
     return randomBits() % max;
 }
 
-physics::real physics::CRandom::randomBinomial(real scale)
-{
-    return (randomReal()-randomReal())*scale;
+physics::real physics::CRandom::randomBinomial(real scale) {
+    return (randomReal() - randomReal())*scale;
 }
 
-Quaternionf physics::CRandom::randomQuaternion()
-{
+Quaternionf physics::CRandom::randomQuaternion() {
     Quaternionf q(
-        randomReal(),
-        randomReal(),
-        randomReal(),
-        randomReal()
-        );
+                  randomReal(),
+                  randomReal(),
+                  randomReal(),
+                  randomReal()
+                  );
     q = math::normalize(q);
     //q.normalise();
     return q;
 }
 
-Vector3f physics::CRandom::randomVector(real scale)
-{
+Vector3f physics::CRandom::randomVector(real scale) {
     return Vector3f(
-        randomBinomial(scale),
-        randomBinomial(scale),
-        randomBinomial(scale)
-        );
+                    randomBinomial(scale),
+                    randomBinomial(scale),
+                    randomBinomial(scale)
+                    );
 }
 
-Vector3f physics::CRandom::randomXZVector(real scale)
-{
+Vector3f physics::CRandom::randomXZVector(real scale) {
     return Vector3f(
-        randomBinomial(scale),
-        0,
-        randomBinomial(scale)
-        );
+                    randomBinomial(scale),
+                    0,
+                    randomBinomial(scale)
+                    );
 }
 
-Vector3f physics::CRandom::randomVector(const Vector3f &scale)
-{
+Vector3f physics::CRandom::randomVector(const Vector3f &scale) {
     return Vector3f(
-        randomBinomial(scale.x),
-        randomBinomial(scale.y),
-        randomBinomial(scale.z)
-        );
+                    randomBinomial(scale.x),
+                    randomBinomial(scale.y),
+                    randomBinomial(scale.z)
+                    );
 }
 
-Vector3f physics::CRandom::randomVector(const Vector3f &min, const Vector3f &max)
-{
+Vector3f physics::CRandom::randomVector(const Vector3f &min, const Vector3f &max) {
     return Vector3f(
-        randomReal(min.x, max.x),
-        randomReal(min.y, max.y),
-        randomReal(min.z, max.z)
-        );
+                    randomReal(min.x, max.x),
+                    randomReal(min.y, max.y),
+                    randomReal(min.z, max.z)
+                    );
 }

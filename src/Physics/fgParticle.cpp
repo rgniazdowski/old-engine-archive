@@ -6,7 +6,7 @@
  * 
  * FlexiGame source code and any related files can not be copied, modified 
  * and/or distributed without the express or written consent from the author.
- *******************************************************/
+ ******************************************************************************/
 /*
  * Implementation file for the particle class.
  *
@@ -24,16 +24,11 @@
 
 using namespace fg;
 
-/*
- * --------------------------------------------------------------------------
- * FUNCTIONS DECLARED IN HEADER:
- * --------------------------------------------------------------------------
- */
+//------------------------------------------------------------------------------
 
-void physics::CParticle::integrate(real duration)
-{
+void physics::CParticle::integrate(real duration) {
     // We don't integrate things with zero mass.
-    if (inverseMass <= 0.0f) return;
+    if(inverseMass <= 0.0f) return;
 
     assert(duration > 0.0);
 
@@ -56,121 +51,120 @@ void physics::CParticle::integrate(real duration)
     // Clear the forces.
     clearAccumulator();
 }
+//------------------------------------------------------------------------------
 
-
-
-void physics::CParticle::setMass(const real mass)
-{
+void physics::CParticle::setMass(const real mass) {
     assert(mass != 0);
-    physics::CParticle::inverseMass = ((real)1.0)/mass;
+    physics::CParticle::inverseMass = ((real)1.0) / mass;
 }
+//------------------------------------------------------------------------------
 
-physics::real physics::CParticle::getMass() const
-{
-    if (inverseMass == 0) {
+physics::real physics::CParticle::getMass() const {
+    if(inverseMass == 0) {
         return REAL_MAX;
     } else {
-        return ((real)1.0)/inverseMass;
+        return ((real)1.0) / inverseMass;
     }
 }
+//------------------------------------------------------------------------------
 
-void physics::CParticle::setInverseMass(const real inverseMass)
-{
+void physics::CParticle::setInverseMass(const real inverseMass) {
     physics::CParticle::inverseMass = inverseMass;
 }
+//------------------------------------------------------------------------------
 
-physics::real physics::CParticle::getInverseMass() const
-{
+physics::real physics::CParticle::getInverseMass() const {
     return inverseMass;
 }
+//------------------------------------------------------------------------------
 
-bool physics::CParticle::hasFiniteMass() const
-{
+bool physics::CParticle::hasFiniteMass() const {
     return inverseMass >= 0.0f;
 }
+//------------------------------------------------------------------------------
 
-void physics::CParticle::setDamping(const real damping)
-{
+void physics::CParticle::setDamping(const real damping) {
     physics::CParticle::damping = damping;
 }
+//------------------------------------------------------------------------------
 
-physics::real physics::CParticle::getDamping() const
-{
+physics::real physics::CParticle::getDamping() const {
     return damping;
 }
+//------------------------------------------------------------------------------
 
-void physics::CParticle::setPosition(const Vector3f &position)
-{
+void physics::CParticle::setPosition(const Vector3f &position) {
     physics::CParticle::position = position;
 }
+//------------------------------------------------------------------------------
 
-void physics::CParticle::setPosition(const real x, const real y, const real z)
-{
+void physics::CParticle::setPosition(const real x, const real y, const real z) {
     position.x = x;
     position.y = y;
     position.z = z;
 }
+//------------------------------------------------------------------------------
 
-void physics::CParticle::getPosition(Vector3f *position) const
-{
+void physics::CParticle::getPosition(Vector3f *position) const {
     *position = physics::CParticle::position;
 }
+//------------------------------------------------------------------------------
 
-Vector3f physics::CParticle::getPosition() const
-{
+Vector3f physics::CParticle::getPosition() const {
     return position;
 }
+//------------------------------------------------------------------------------
 
-void physics::CParticle::setVelocity(const Vector3f &velocity)
-{
+void physics::CParticle::setVelocity(const Vector3f &velocity) {
     physics::CParticle::velocity = velocity;
 }
+//------------------------------------------------------------------------------
 
-void physics::CParticle::setVelocity(const real x, const real y, const real z)
-{
+void physics::CParticle::setVelocity(const real x, const real y, const real z) {
     velocity.x = x;
     velocity.y = y;
     velocity.z = z;
 }
+//------------------------------------------------------------------------------
 
-void physics::CParticle::getVelocity(Vector3f *velocity) const
-{
+void physics::CParticle::getVelocity(Vector3f *velocity) const {
     *velocity = physics::CParticle::velocity;
 }
+//------------------------------------------------------------------------------
 
-Vector3f physics::CParticle::getVelocity() const
-{
+Vector3f physics::CParticle::getVelocity() const {
     return velocity;
 }
+//------------------------------------------------------------------------------
 
-void physics::CParticle::setAcceleration(const Vector3f &acceleration)
-{
+void physics::CParticle::setAcceleration(const Vector3f &acceleration) {
     physics::CParticle::acceleration = acceleration;
 }
+//------------------------------------------------------------------------------
 
-void physics::CParticle::setAcceleration(const real x, const real y, const real z)
-{
+void physics::CParticle::setAcceleration(const real x, const real y, const real z) {
     acceleration.x = x;
     acceleration.y = y;
     acceleration.z = z;
 }
+//------------------------------------------------------------------------------
 
-void physics::CParticle::getAcceleration(Vector3f *acceleration) const
-{
+void physics::CParticle::getAcceleration(Vector3f *acceleration) const {
     *acceleration = physics::CParticle::acceleration;
 }
+//------------------------------------------------------------------------------
 
-Vector3f physics::CParticle::getAcceleration() const
-{
+Vector3f physics::CParticle::getAcceleration() const {
     return acceleration;
 }
+//------------------------------------------------------------------------------
 
-void physics::CParticle::clearAccumulator()
-{
+void physics::CParticle::clearAccumulator() {
     forceAccum = Vector3f();
 }
+//------------------------------------------------------------------------------
 
-void physics::CParticle::addForce(const Vector3f &force)
-{
+void physics::CParticle::addForce(const Vector3f &force) {
     forceAccum += force;
 }
+//------------------------------------------------------------------------------
