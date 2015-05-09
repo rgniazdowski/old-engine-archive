@@ -196,7 +196,6 @@ namespace fg {
                 this->n = vector_type(_a, _b, _c);
                 this->d = _d;
                 normalize();
-                //determineAxis();
             }
             /**
              * 
@@ -217,7 +216,6 @@ namespace fg {
             value_type distance(const vector_type& point) {
                 return (value_type)(this->d + math::dot(this->n, point));
                 //return (value_type)(math::dot(point, this->n) - this->d);
-
                 //return (d + normal.innerProduct(p));
             }
             /**
@@ -315,15 +313,43 @@ namespace fg {
              * @param ip
              * @return 
              */
-            fgBool rayIntersect(const vector_type& vpos,
-                                const vector_type& vdir,
-                                vector_type& ip) {
-                value_type dp = math::dot(this->n, vdir);
-                if(dp == 0.0) {
-                    return FG_FALSE;
+            fgBool rayIntersect(const vector_type& rayOrigin,
+                                const vector_type& rayDir,
+                                vector_type& intersectionPoint,
+                                const fgBool bothSides = FG_FALSE) {
+                float distance = 0.0f;
+                fgBool status = rayIntersect(rayOrigin, rayDir, distance, bothSides);
+                if(status) {
+                    intersectionPoint = rayOrigin + rayDir * distance;
                 }
-                ip = vpos - ((vdir * distance(vpos)) / dp);
-                return FG_TRUE;
+                return (fgBool)status;
+            }
+            /**
+             *
+             * @param rayOrigin
+             * @param rayDir
+             * @param distance
+             * @return
+             */
+            fgBool rayIntersect(const vector_type& rayOrigin,
+                                const vector_type& rayDir,
+                                value_type& distance,
+                                const fgBool bothSides = FG_FALSE) {
+                bool status = math::intersectRayPlane(rayOrigin,
+                                                      rayDir,
+                                                      n * d,
+                                                      n,
+                                                      distance);
+                if(!status && bothSides) {
+                    reverse();
+                    status = math::intersectRayPlane(rayOrigin,
+                                                     rayDir,
+                                                     n * d,
+                                                     n,
+                                                     distance);
+                    reverse();
+                }
+                return (fgBool)status;
             }
             /**
              *
