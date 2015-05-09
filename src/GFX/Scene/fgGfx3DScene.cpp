@@ -207,7 +207,6 @@ void gfx::CScene3D::render(void) {
     pProgram->setUniform(FG_GFX_USE_TEXTURE, 0.0f);
     const unsigned int n = m_octNodes.size();
     unsigned int i = 0;
-    //while(!m_octNodes.empty()) {
     while(i < n) {
         SOctreeNode *pTreeNode = m_octNodes.at(i);
         i++;
@@ -216,8 +215,8 @@ void gfx::CScene3D::render(void) {
 #if defined(FG_DEBUG)
 
         float d = ((float)pTreeNode->depth / (float)m_octree->getMaxDepth()) + 0.2f;
-        if(d > 1) d = 1.0f;
-        if(FG_DEBUG_CFG_OPTION(gfxBBoxShow)) {
+        if(d > 1.0f) d = 1.0f;
+        if(FG_DEBUG_CFG_OPTION(gfxTreeBBoxShow)) {
             getMVP()->resetModelMatrix();
             pProgram->setUniform(getMVP());
             AABoundingBox3Df aabb;
@@ -227,9 +226,7 @@ void gfx::CScene3D::render(void) {
             aabb.max = pTreeNode->center + extent;
             primitives::drawAABBLines(aabb, Color4f(0.2f, d, 1.0f - d, 1.0f));
         }
-#endif
-        //m_octNodes.pop();
-        //i++;
+#endif        
     }
 }
 //------------------------------------------------------------------------------

@@ -38,6 +38,7 @@ namespace fg {
         false, //physicsBBoxShow    // Whether to show bounding boxes debug info for physics simulation
         false, //guiBBoxShow;       // Whether to show bounding boxes debug info (GUI)
         false, //gfxBBoxShow;       // Whether to show bounding boxes in GFX?
+        false, //gfxTreeBBoxShow;   // Whether to show bounding boxes of spatial trees in GFX?
         false, //gfxFrustumShow;    // Whether to show frustum boxes?
         false, //gfxLightShow;      // Whether to show light sources?
         false, //gfxDumpConfig;     // If true, this will dump available configs in EGL
