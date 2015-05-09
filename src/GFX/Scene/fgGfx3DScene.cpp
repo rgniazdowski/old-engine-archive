@@ -77,16 +77,13 @@ void gfx::CScene3D::sortCalls(void) {
     //
     m_pickSelection.init(*getMVP(), *getCamera(), getStateFlags());
     if(m_pickSelection.shouldCheck) {
-        float distance = 0.0f;
-        bool groundStatus = math::intersectRayPlane(m_pickSelection.rayEye,
-                                                    m_pickSelection.rayDir,
-                                                    getGroundPlane().n * getGroundPlane().d,
-                                                    getGroundPlane().n,
-                                                    distance);
-
-        m_pickSelection.groundIntersectionPoint = m_pickSelection.rayEye + m_pickSelection.rayDir * distance;
-        if(!groundStatus)
+        fgBool groundStatus = getGroundGrid().rayIntersect(m_pickSelection.rayEye,
+                                                            m_pickSelection.rayDir,
+                                                            m_pickSelection.groundIntersectionPoint,
+                                                            FG_TRUE);
+        if(!groundStatus) {
             m_pickSelection.groundIntersectionPoint = Vector3f();
+        }
     }
     const fgBool checkPickSelectionAABB = isPickSelectionAABBTriangles();
     ////////////////////////////////////////////////////////////////////////////

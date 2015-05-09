@@ -91,6 +91,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/_ext/534590209/fgGfxMaterial.o \
 	${OBJECTDIR}/_ext/534590209/fgGfxModelResource.o \
 	${OBJECTDIR}/_ext/534590209/fgGfxModelTypes.o \
+	${OBJECTDIR}/_ext/534590209/fgGfxPlaneGrid.o \
 	${OBJECTDIR}/_ext/534590209/fgGfxPlatform.o \
 	${OBJECTDIR}/_ext/534590209/fgGfxPolygon.o \
 	${OBJECTDIR}/_ext/534590209/fgGfxPrimitives.o \
@@ -502,6 +503,11 @@ ${OBJECTDIR}/_ext/534590209/fgGfxModelTypes.o: ../../../src/GFX/fgGfxModelTypes.
 	${MKDIR} -p ${OBJECTDIR}/_ext/534590209
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_GL_BINDING -DFG_USING_OPENGL -DFG_USING_SDL2 -DFG_USING_TINYXML -DTIXML_USE_STL -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/cpp_btree `pkg-config --cflags libpng` `pkg-config --cflags gl` `pkg-config --cflags zlib` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534590209/fgGfxModelTypes.o ../../../src/GFX/fgGfxModelTypes.cpp
+
+${OBJECTDIR}/_ext/534590209/fgGfxPlaneGrid.o: ../../../src/GFX/fgGfxPlaneGrid.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/534590209
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -DFG_NO_UNDEF -DFG_USING_GLM -DFG_USING_GL_BINDING -DFG_USING_OPENGL -DFG_USING_SDL2 -DFG_USING_TINYXML -DTIXML_USE_STL -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/cpp_btree `pkg-config --cflags libpng` `pkg-config --cflags gl` `pkg-config --cflags zlib` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534590209/fgGfxPlaneGrid.o ../../../src/GFX/fgGfxPlaneGrid.cpp
 
 ${OBJECTDIR}/_ext/534590209/fgGfxPlatform.o: ../../../src/GFX/fgGfxPlatform.cpp 
 	${MKDIR} -p ${OBJECTDIR}/_ext/534590209

@@ -107,7 +107,7 @@ Quaternionf RotationBetweenVectors(const Vector3f& instart, const Vector3f& inde
             rotationAxis = math::cross(Vector3f(1.0f, 0.0f, 0.0f), start);
 
         rotationAxis = math::normalize(rotationAxis);
-        return math::angleAxis(180.0f, rotationAxis);
+        return math::angleAxis(M_PIF, rotationAxis);
     }
 
     rotationAxis = math::cross(start, dest);

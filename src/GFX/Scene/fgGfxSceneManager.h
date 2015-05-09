@@ -31,13 +31,14 @@
     #include "Util/fgBTreeMap.h"
 
     #include "fgGfxBasetree.h"
-
     #include "fgGfxSceneCallback.h"
     #include "fgGfxSceneNode.h"
     #include "fgGfxSceneNodeTrigger.h"
     #include "fgGfxSceneNodeMesh.h"
     #include "fgGfxSceneNodeObject.h"
     #include "fgGfxSceneSkyBox.h"    
+
+    #include "GFX/fgGfxPlaneGrid.h"
 
     #define FG_MANAGER_SCENE        0x00001000
 
@@ -1116,6 +1117,8 @@ namespace fg {
                 m_worldSize = worldSize;
                 if(m_basetree)
                     m_basetree->setWorldSize(m_worldSize);
+                m_groundGrid.dimensions.x = m_worldSize.x; // X
+                m_groundGrid.dimensions.y = m_worldSize.z; // Z
             }
             /**
              *
@@ -1123,10 +1126,12 @@ namespace fg {
              * @param y
              * @param z
              */
-            inline void setWorldSize(float x, float y, float z) {
+            void setWorldSize(float x, float y, float z) {
                 m_worldSize = Vector3f(x, y, z);
                 if(m_basetree)
                     m_basetree->setWorldSize(m_worldSize);
+                m_groundGrid.dimensions.x = m_worldSize.x; // X
+                m_groundGrid.dimensions.y = m_worldSize.z; // Z
             }
             /**
              *
@@ -1147,14 +1152,16 @@ namespace fg {
              * @param groundLevel
              */
             inline void setGroundLevel(float groundLevel) {
-                m_groundPlane.set(Planef::Y, groundLevel);
+                m_groundGrid.set(Planef::Y, groundLevel);
             }
             /**
              *
              * @param groundPlane
              */
             inline void setGroundPlane(const Planef& groundPlane) {
-                m_groundPlane = groundPlane;
+                m_groundGrid.n = groundPlane.n;
+                m_groundGrid.axis = groundPlane.axis;
+                m_groundGrid.d = groundPlane.d;
             }
             /**
              *
@@ -1162,42 +1169,42 @@ namespace fg {
              * @param level
              */
             inline void setGroundPlane(Planef::Axis axis, float level) {
-                m_groundPlane.set(axis, level);
+                m_groundGrid.set(axis, level);
             }
             /**
              * 
              * @return
              */
             inline float getGroundLevel(void) const {
-                return m_groundPlane.d;
+                return m_groundGrid.d;
             }
             /**
              *
              * @return
              */
-            inline Planef& getGroundPlane(void) {
-                return m_groundPlane;
+            inline SPlaneGridf& getGroundGrid(void) {
+                return m_groundGrid;
             }
             /**
              * 
              * @return
              */
-            inline Planef const& getGroundPlane(void) const {
-                return m_groundPlane;
+            inline SPlaneGridf const& getGroundGrid(void) const {
+                return m_groundGrid;
             }
             /**
              *
              * @param groundGridCellSize
              */
             inline void setGroundGridCellSize(float groundGridCellSize) {
-                m_groundGridCellSize = groundGridCellSize;
+                m_groundGrid.cellSize = groundGridCellSize;
             }
             /**
              * 
              * @return
              */
             inline float getGroundGridCellSize(void) const {
-                return m_groundGridCellSize;
+                return m_groundGrid.cellSize;
             }
 
             ////////////////////////////////////////////////////////////////////
@@ -1620,9 +1627,7 @@ namespace fg {
             /// Internal flags, changing the default behavior of the Scene Manager
             StateFlags m_stateFlags;
             ///
-            Planef m_groundPlane;
-            ///
-            float m_groundGridCellSize;
+            SPlaneGridf m_groundGrid;
             ///
             Vector3f m_worldSize;
             /// Internal MVP matrix to use, this will set the perspective view

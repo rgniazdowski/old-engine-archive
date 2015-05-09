@@ -35,8 +35,7 @@ m_triggers(),
 m_pickSelection(),
 m_traverse(),
 m_stateFlags(NONE | FRUSTUM_CHECK),
-m_groundPlane(),
-m_groundGridCellSize(50.0f),
+m_groundGrid(),
 m_worldSize(),
 m_MVP(),
 m_camera(CCameraAnimation::FREE),
@@ -47,7 +46,8 @@ m_nodeQueue(),
 m_pResourceMgr(NULL),
 m_sceneEventMgr(NULL),
 m_basetree(NULL) {
-    m_groundPlane.set(Planef::Y, 0.0f);
+    m_groundGrid.set(Planef::Y, 0.0f);
+    m_groundGrid.cellSize = 50.0f;
     m_managerType = FG_MANAGER_SCENE;
     m_skybox.setScale(FG_GFX_PERSPECTIVE_ZFAR_DEFAULT * 1.1f); // #FIXME #SKYBOX scale
     m_skybox.setMVP(&m_MVP);
@@ -837,21 +837,17 @@ void gfx::CSceneManager::sortCalls(void) {
     m_MVP.setCamera((CCamera*)(&m_camera));
     if(getRefPriorityQueue().empty())
         CDrawingBatch::sortCalls(); // NOPE
-    while(!m_nodeQueue.empty())
-        m_nodeQueue.pop();
 
+    m_nodeQueue.clear();
     //
-    // Pick selection init // function maybe?
+    // Pick selection init
     //
     m_pickSelection.init(m_MVP, m_camera, m_stateFlags);
     if(m_pickSelection.shouldCheck) {
-        float distance = 0.0f;
-        bool groundStatus = math::intersectRayPlane(m_pickSelection.rayEye,
-                                                    m_pickSelection.rayDir,
-                                                    m_groundPlane.n * m_groundPlane.d,
-                                                    m_groundPlane.n,
-                                                    distance);
-        m_pickSelection.groundIntersectionPoint = m_pickSelection.rayEye + m_pickSelection.rayDir * distance;
+        fgBool groundStatus = m_groundGrid.rayIntersect(m_pickSelection.rayEye,
+                                                         m_pickSelection.rayDir,
+                                                         m_pickSelection.groundIntersectionPoint,
+                                                         FG_TRUE);
         if(!groundStatus)
             m_pickSelection.groundIntersectionPoint = Vector3f();
     }
@@ -940,7 +936,6 @@ void gfx::CSceneManager::render(void) {
     // Calling underlying DrawingBatch render procedure
     // This will contain drawcalls not associated with scene/octree/quadtree structure
     CDrawingBatch::render();
-    //while(!m_nodeQueue.empty()) {
     NodePriorityQueueConstItor nodesItor, nodesEnd;
     nodesEnd = m_nodeQueue.end();
     nodesItor = m_nodeQueue.begin();
@@ -950,7 +945,6 @@ void gfx::CSceneManager::render(void) {
             m_nodeQueue.clear(); //pop/clear
             break; //continue/break
         }
-        //CSceneNode* pSceneNode = m_nodeQueue.top();
         CSceneNode* pSceneNode = *nodesItor;
         if(!pSceneNode)
             continue;
@@ -959,7 +953,6 @@ void gfx::CSceneManager::render(void) {
             profile::g_debugProfiling->begin("GFX::Scene::DrawNode");
         }
 #endif       
-        //printf("SCENENODE: %s\n", pSceneNode->getNameStr());
         pSceneNode->draw();
 #if defined(FG_DEBUG)
         if(g_DebugConfig.isDebugProfiling) {
@@ -1004,73 +997,16 @@ void gfx::CSceneManager::render(void) {
                 }
             }
         }
-        //#endif // defined(FG_DEBUG)
-        //m_nodeQueue.pop();
     } // for(node queue iteration)
-
+    
     if(isShowGroundGrid()) {
         pProgram->setUniform(FG_GFX_USE_TEXTURE, 0.0f);
-        Matrix4f modelMat;
-        Vector3f oldNormal = Vec3f(0.0f, 1.0f, 0.0f);
-        if(m_groundPlane.axis != Planef::Y) {
-            Vector3f rotAxis; float rotAngle=0.0f;
-            if(m_groundPlane.n.y <= (-1.0f + std::numeric_limits<float>::epsilon())) {
-                rotAxis = Vec3f(0.0f, 0.0f, 1.0f);
-                rotAngle = M_PIF; // 180 degrees
-            } else {
-                rotAxis = math::cross(oldNormal, m_groundPlane.n);
-                rotAngle = math::acos(math::dot(oldNormal, m_groundPlane.n));
-            }
-            modelMat = math::rotate(modelMat, rotAngle, rotAxis);
-        }
-        modelMat = math::translate(modelMat, m_groundPlane.n * m_groundPlane.d);
-        m_MVP.calculate(modelMat);
-        pProgram->setUniform(&m_MVP);
+        m_groundGrid.render(pProgram, &m_MVP);
         CVertexData4v gridLines;
-        Vector3f pos, corner;
+        Vector3f pos;
         Color3f color;
-        float step = m_groundGridCellSize;
-        int rows = m_worldSize.z / step; // Z
-        int cols = m_worldSize.x / step; // X
-        float depth = rows * step;
-        float width = cols * step;
-        //pos.y = m_groundPlane.d;
-        corner = Vec3f(-cols / 2 * step, m_groundPlane.d*.0f, -rows / 2 * step);
-        for(int i = 0; i <= cols; i++) {
-            color = Color3f(1.0f, 1.0f, 1.0f); // white
-            pos.x = corner.x + i * step;
-            pos.z = corner.z;
-            gridLines.append(pos, Vec3f(), Vec2f(), color); // A
-            pos.z += depth;
-            gridLines.append(pos, Vec3f(), Vec2f(), color); // B
-            if(i < cols) {
-                color = Color3f(0.6f, 0.6f, 0.6f); // gray
-                pos.x += step / 2.0f;
-                pos.z = corner.z;
-                gridLines.append(pos, Vec3f(), Vec2f(), color); // A
-                pos.z += depth;
-                gridLines.append(pos, Vec3f(), Vec2f(), color); // B
-            }
         }
 
-        for(int i = 0; i <= rows; i++) {
-            color = Color3f(1.0f, 1.0f, 1.0f); // white
-            pos.x = corner.x;
-            pos.z = corner.z + i * step;
-            gridLines.append(pos, Vec3f(), Vec2f(), color); // A
-            pos.x += width;
-            gridLines.append(pos, Vec3f(), Vec2f(), color); // B
-            if(i < rows) {
-                color = Color3f(0.6f, 0.6f, 0.6f); // gray
-                pos.x = corner.x;
-                pos.z += step / 2.0f;
-                gridLines.append(pos, Vec3f(), Vec2f(), color); // A
-                pos.x += width;
-                gridLines.append(pos, Vec3f(), Vec2f(), color); // B
-            }
-        }
-
-        primitives::drawVertexData(&gridLines, FG_GFX_POSITION_BIT | FG_GFX_COLOR_BIT, PrimitiveMode::LINES);
     }
 }
 //------------------------------------------------------------------------------

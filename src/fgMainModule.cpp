@@ -6,7 +6,7 @@
  *
  * FlexiGame source code and any related files can not be copied, modified
  * and/or distributed without the express or written consent from the author.
- *******************************************************/
+ ******************************************************************************/
 #include "fgMainModule.h"
 #include "Android/fgAndroid.h"
 
@@ -244,8 +244,8 @@ SDL_EventType CMainModule::checkSDLEvents(void) {
                     mid = 5;
                 //this->m_engineMain->getInputHandler()->singleTouchMotionHandler((void *)&event.motion, this->m_engineMain->getInputHandler());
                 this->m_engineMain->getInputHandler()->handlePointerMoved(Vector2i(event.motion.x, event.motion.y),
-                                                                        mid,
-                                                                        event.motion.state);
+                                                                          mid,
+                                                                          event.motion.state);
             }
                 break;
             case SDL_MOUSEBUTTONDOWN: /**< Mouse button pressed */
@@ -253,14 +253,14 @@ SDL_EventType CMainModule::checkSDLEvents(void) {
                     continue;
                 //this->m_engineMain->getInputHandler()->singleTouchButtonHandler((void *)&event.button, this->m_engineMain->getInputHandler());
                 this->m_engineMain->getInputHandler()->handlePointerPressed(Vector2i(event.button.x, event.button.y),
-                                                                          event.button.button);
+                                                                            event.button.button);
                 break;
             case SDL_MOUSEBUTTONUP: /**< Mouse button released */
                 if(!m_engineMain)
                     continue;
                 //this->m_engineMain->getInputHandler()->singleTouchButtonHandler((void *)&event.button, this->m_engineMain->getInputHandler());
                 this->m_engineMain->getInputHandler()->handlePointerReleased(Vector2i(event.button.x, event.button.y),
-                                                                           event.button.button);
+                                                                             event.button.button);
                 break;
             case SDL_MOUSEWHEEL: /**< Mouse wheel motion */
                 //guiScale += 0.05f * (float)event.wheel.y;
@@ -532,7 +532,8 @@ fgBool CMainModule::mainLoopStep(void) {
     if(g_DebugConfig.isDebugProfiling) {
         profile::g_debugProfiling->begin("Game::update");
     }
-#endif    
+#endif
+
     m_engineMain->update();
 
 #if defined(FG_DEBUG)

@@ -167,6 +167,8 @@
         <itemPath>../../../src/GFX/fgGfxModelTypes.cpp</itemPath>
         <itemPath>../../../src/GFX/fgGfxModelTypes.h</itemPath>
         <itemPath>../../../src/GFX/fgGfxPlane.h</itemPath>
+        <itemPath>../../../src/GFX/fgGfxPlaneGrid.cpp</itemPath>
+        <itemPath>../../../src/GFX/fgGfxPlaneGrid.h</itemPath>
         <itemPath>../../../src/GFX/fgGfxPlatform.cpp</itemPath>
         <itemPath>../../../src/GFX/fgGfxPlatform.h</itemPath>
         <itemPath>../../../src/GFX/fgGfxPolygon.cpp</itemPath>
@@ -1202,6 +1204,13 @@
       <item path="../../../src/GFX/fgGfxModelTypes.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGfxPlane.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGfxPlaneGrid.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGfxPlaneGrid.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGfxPlatform.cpp" ex="false" tool="1" flavor2="8">
       </item>
@@ -2805,6 +2814,13 @@
       </item>
       <item path="../../../src/GFX/fgGfxPlane.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../../../src/GFX/fgGfxPlaneGrid.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGfxPlaneGrid.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../../../src/GFX/fgGfxPlatform.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGfxPlatform.h" ex="false" tool="3" flavor2="0">
@@ -4370,6 +4386,13 @@
       </item>
       <item path="../../../src/GFX/fgGfxPlane.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../../../src/GFX/fgGfxPlaneGrid.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGfxPlaneGrid.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../../../src/GFX/fgGfxPlatform.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGfxPlatform.h" ex="false" tool="3" flavor2="0">
@@ -5912,6 +5935,13 @@
       <item path="../../../src/GFX/fgGfxModelTypes.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGfxPlane.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGfxPlaneGrid.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGfxPlaneGrid.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGfxPlatform.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -7487,6 +7517,13 @@
       </item>
       <item path="../../../src/GFX/fgGfxPlane.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../../../src/GFX/fgGfxPlaneGrid.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGfxPlaneGrid.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../../../src/GFX/fgGfxPlatform.cpp" ex="false" tool="1" flavor2="8">
       </item>
       <item path="../../../src/GFX/fgGfxPlatform.h" ex="false" tool="3" flavor2="0">
@@ -9052,6 +9089,13 @@
       <item path="../../../src/GFX/fgGfxModelTypes.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGfxPlane.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGfxPlaneGrid.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGfxPlaneGrid.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGfxPlatform.cpp" ex="false" tool="1" flavor2="8">
       </item>
