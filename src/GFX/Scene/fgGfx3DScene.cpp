@@ -80,8 +80,8 @@ void gfx::CScene3D::sortCalls(void) {
         float distance = 0.0f;
         bool groundStatus = math::intersectRayPlane(m_pickSelection.rayEye,
                                                     m_pickSelection.rayDir,
-                                                    Vector3f(0.0f, getGroundLevel(), 0.0f),
-                                                    Vector3f(0.0f, 1.0f, 0.0f),
+                                                    getGroundPlane().n * getGroundPlane().d,
+                                                    getGroundPlane().n,
                                                     distance);
 
         m_pickSelection.groundIntersectionPoint = m_pickSelection.rayEye + m_pickSelection.rayDir * distance;

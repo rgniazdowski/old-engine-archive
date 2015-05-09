@@ -35,7 +35,7 @@ m_triggers(),
 m_pickSelection(),
 m_traverse(),
 m_stateFlags(NONE | FRUSTUM_CHECK),
-m_groundLevel(0.0f),
+m_groundPlane(),
 m_groundGridCellSize(50.0f),
 m_worldSize(),
 m_MVP(),
@@ -47,6 +47,7 @@ m_nodeQueue(),
 m_pResourceMgr(NULL),
 m_sceneEventMgr(NULL),
 m_basetree(NULL) {
+    m_groundPlane.set(Planef::Y, 0.0f);
     m_managerType = FG_MANAGER_SCENE;
     m_skybox.setScale(FG_GFX_PERSPECTIVE_ZFAR_DEFAULT * 1.1f); // #FIXME #SKYBOX scale
     m_skybox.setMVP(&m_MVP);
@@ -847,8 +848,8 @@ void gfx::CSceneManager::sortCalls(void) {
         float distance = 0.0f;
         bool groundStatus = math::intersectRayPlane(m_pickSelection.rayEye,
                                                     m_pickSelection.rayDir,
-                                                    Vector3f(0.0f, m_groundLevel, 0.0f),
-                                                    Vector3f(0.0f, 1.0f, 0.0f),
+                                                    m_groundPlane.n * m_groundPlane.d,
+                                                    m_groundPlane.n,
                                                     distance);
         m_pickSelection.groundIntersectionPoint = m_pickSelection.rayEye + m_pickSelection.rayDir * distance;
         if(!groundStatus)
@@ -1009,7 +1010,21 @@ void gfx::CSceneManager::render(void) {
 
     if(isShowGroundGrid()) {
         pProgram->setUniform(FG_GFX_USE_TEXTURE, 0.0f);
-        m_MVP.calculate(Matrix4f());
+        Matrix4f modelMat;
+        Vector3f oldNormal = Vec3f(0.0f, 1.0f, 0.0f);
+        if(m_groundPlane.axis != Planef::Y) {
+            Vector3f rotAxis; float rotAngle=0.0f;
+            if(m_groundPlane.n.y <= (-1.0f + std::numeric_limits<float>::epsilon())) {
+                rotAxis = Vec3f(0.0f, 0.0f, 1.0f);
+                rotAngle = M_PIF; // 180 degrees
+            } else {
+                rotAxis = math::cross(oldNormal, m_groundPlane.n);
+                rotAngle = math::acos(math::dot(oldNormal, m_groundPlane.n));
+            }
+            modelMat = math::rotate(modelMat, rotAngle, rotAxis);
+        }
+        modelMat = math::translate(modelMat, m_groundPlane.n * m_groundPlane.d);
+        m_MVP.calculate(modelMat);
         pProgram->setUniform(&m_MVP);
         CVertexData4v gridLines;
         Vector3f pos, corner;
@@ -1019,8 +1034,8 @@ void gfx::CSceneManager::render(void) {
         int cols = m_worldSize.x / step; // X
         float depth = rows * step;
         float width = cols * step;
-        pos.y = m_groundLevel;
-        corner = Vec3f(-cols / 2 * step, m_groundLevel, -rows / 2 * step);
+        //pos.y = m_groundPlane.d;
+        corner = Vec3f(-cols / 2 * step, m_groundPlane.d*.0f, -rows / 2 * step);
         for(int i = 0; i <= cols; i++) {
             color = Color3f(1.0f, 1.0f, 1.0f); // white
             pos.x = corner.x + i * step;

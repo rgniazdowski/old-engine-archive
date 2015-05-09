@@ -102,6 +102,14 @@ namespace fg {
             }
             /**
              * 
+             * @param _axis
+             * @param _d
+             */
+            SPlaneT(Axis _axis, value_type _d) {
+                set(_axis, _d);
+            }
+            /**
+             * 
              * @param other
              */
             SPlaneT(const self_type& other) {
@@ -115,6 +123,29 @@ namespace fg {
             virtual ~SPlaneT() { }
 
         public:
+            /**
+             * 
+             * @param _axis
+             * @param _d
+             */
+            void set(Axis _axis, value_type _d) {
+                this->d = d;
+                switch(_axis) {
+                    case Axis::X:
+                        this->n = vector_type((value_type)1, 0, 0);
+                        break;
+                    case Axis::Y:
+                        this->n = vector_type(0, (value_type)1, 0);
+                        break;
+                    case Axis::Z:
+                        this->n = vector_type(0, 0, (value_type)1);
+                        break;
+                    default:
+                        this->n = vector_type(0, (value_type)1, 0);
+                        break;
+                }
+                this->axis = _axis;
+            }
             /**
              * 
              * @param v1

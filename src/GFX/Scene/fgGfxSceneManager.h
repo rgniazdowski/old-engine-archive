@@ -1147,14 +1147,43 @@ namespace fg {
              * @param groundLevel
              */
             inline void setGroundLevel(float groundLevel) {
-                m_groundLevel = groundLevel;
+                m_groundPlane.set(Planef::Y, groundLevel);
+            }
+            /**
+             *
+             * @param groundPlane
+             */
+            inline void setGroundPlane(const Planef& groundPlane) {
+                m_groundPlane = groundPlane;
+            }
+            /**
+             *
+             * @param axis
+             * @param level
+             */
+            inline void setGroundPlane(Planef::Axis axis, float level) {
+                m_groundPlane.set(axis, level);
             }
             /**
              * 
              * @return
              */
             inline float getGroundLevel(void) const {
-                return m_groundLevel;
+                return m_groundPlane.d;
+            }
+            /**
+             *
+             * @return
+             */
+            inline Planef& getGroundPlane(void) {
+                return m_groundPlane;
+            }
+            /**
+             * 
+             * @return
+             */
+            inline Planef const& getGroundPlane(void) const {
+                return m_groundPlane;
             }
             /**
              *
@@ -1591,7 +1620,7 @@ namespace fg {
             /// Internal flags, changing the default behavior of the Scene Manager
             StateFlags m_stateFlags;
             ///
-            float m_groundLevel;
+            Planef m_groundPlane;
             ///
             float m_groundGridCellSize;
             ///
