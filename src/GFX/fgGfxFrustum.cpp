@@ -21,11 +21,16 @@
 
 using namespace fg;
 
+//------------------------------------------------------------------------------
+
 gfx::CFrustum::CFrustum() { }
+//------------------------------------------------------------------------------
 
 gfx::CFrustum::CFrustum(const CFrustum& orig) { }
+//------------------------------------------------------------------------------
 
 gfx::CFrustum::~CFrustum() { }
+//------------------------------------------------------------------------------
 
 void gfx::CFrustum::setCamera(const float angle,
                               const float ratio,
@@ -42,7 +47,7 @@ void gfx::CFrustum::setCamera(const float angle,
     this->m_fh = zFar * this->m_tang;
     this->m_fw = this->m_fh * ratio;
 }
-#include <cstdio>
+//------------------------------------------------------------------------------
 
 void gfx::CFrustum::set(const Vector3f &eye,
                         const Vector3f &center,
@@ -103,6 +108,7 @@ void gfx::CFrustum::set(const Vector3f &eye,
     dumpPlane(m_planes[FARP], "FARP");
 #endif
 }
+//------------------------------------------------------------------------------
 
 void gfx::CFrustum::set(const Matrix4f &matrix) {
     float a = 0.0f, b = 0.0f, c = 0.0f, d = 0.0f;
@@ -225,6 +231,7 @@ void gfx::CFrustum::set(const Matrix4f &matrix) {
     dumpPlane(m_planes[FARP], "FARP");
 #endif
 }
+//------------------------------------------------------------------------------
 
 int gfx::CFrustum::testPoint(const Vector3f &point) {
     // #FIXME - OPTIMIZE!
@@ -236,6 +243,7 @@ int gfx::CFrustum::testPoint(const Vector3f &point) {
     }
     return result;
 }
+//------------------------------------------------------------------------------
 
 int gfx::CFrustum::testSphere(const Vector3f &point, const float radius) {
     // #FIXME - OPTIMIZE!
@@ -252,6 +260,7 @@ int gfx::CFrustum::testSphere(const Vector3f &point, const float radius) {
     }
     return result;
 }
+//------------------------------------------------------------------------------
 
 int gfx::CFrustum::testSphere(const BoundingVolume3Df& box) {
     // #FIXME - remember that for now this all works with world-space (MVP transform)
@@ -267,6 +276,7 @@ int gfx::CFrustum::testSphere(const BoundingVolume3Df& box) {
     }
     return result;
 }
+//------------------------------------------------------------------------------
 
 int gfx::CFrustum::testVolume(const AABoundingBox3Df& box) {
     if(!box.isValid())
@@ -302,6 +312,7 @@ int gfx::CFrustum::testVolume(const AABoundingBox3Df& box) {
     }
     return result;
 }
+//------------------------------------------------------------------------------
 
 int gfx::CFrustum::testVolume(const BoundingVolume3Df& box) {
     if(!box.isValid())
@@ -317,6 +328,7 @@ int gfx::CFrustum::testVolume(const BoundingVolume3Df& box) {
     }
     return result;
 }
+//------------------------------------------------------------------------------
 
 int gfx::CFrustum::testVolume(const Vector3f& center, const float extent) {
     int result = INSIDE;
@@ -330,6 +342,7 @@ int gfx::CFrustum::testVolume(const Vector3f& center, const float extent) {
     }
     return result;
 }
+//------------------------------------------------------------------------------
 
 int gfx::CFrustum::testVolume(const Vector3f& center, const Vector3f& extent) {
     int result = INSIDE;
@@ -343,3 +356,4 @@ int gfx::CFrustum::testVolume(const Vector3f& center, const Vector3f& extent) {
     }
     return result;
 }
+//------------------------------------------------------------------------------

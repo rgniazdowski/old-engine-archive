@@ -11,13 +11,14 @@
 
 using namespace fg;
 
+//------------------------------------------------------------------------------
+
 int AllocBitsRoundByLong(int nSetCount) {
     int rval = (nSetCount + 7) / 8; // bytes
     rval = (rval * 3 + 3) & 0xFFFFFFFC; // round by mod4
     return rval;
 }
-
-//---------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
 void gfx::CPvsProcessor::process(CBspTree& tree, CPortalProcessor& portalprc) {
     FG_LOG_DEBUG("GFX: Calculating PVS. Please Wait...");
@@ -36,8 +37,7 @@ void gfx::CPvsProcessor::process(CBspTree& tree, CPortalProcessor& portalprc) {
     dw_deltatime = timesys::ticks() - dw_deltatime;
     FG_LOG_DEBUG("GFX: PVS Time: %d ms", dw_deltatime);
 }
-
-//---------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
 fgBool CompletteOnBack(gfx::Planef& pA, gfx::CPortal& rP) {
     int count = rP.m_vertexes.size();
@@ -50,8 +50,7 @@ fgBool CompletteOnBack(gfx::Planef& pA, gfx::CPortal& rP) {
     }
     return (fgBool)(0 == count);
 }
-
-//---------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
 fgBool CompletteOnFront(gfx::Planef& pA, gfx::CPortal& rP) {
     int count = rP.m_vertexes.size();
@@ -65,9 +64,7 @@ fgBool CompletteOnFront(gfx::Planef& pA, gfx::CPortal& rP) {
     }
     return (fgBool)(0 == count);
 }
-
-
-//---------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
 fgBool gfx::CPvsProcessor::InitalPortalVis(CVector<CPortal>& rPortals) {
     fgBool bRetVal = FG_TRUE;
@@ -109,8 +106,7 @@ fgBool gfx::CPvsProcessor::InitalPortalVis(CVector<CPortal>& rPortals) {
     delete []pVis;
     return bRetVal;
 }
-
-//---------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
 void gfx::CPvsProcessor::R_PortalFlood(CPortal& srcP, unsigned char* pVis, int nLeaf) {
     if(m_portVs[srcP.m_idxThis]->portArrPvs[nLeaf] == 1) // leaf vis bit
@@ -127,8 +123,7 @@ void gfx::CPvsProcessor::R_PortalFlood(CPortal& srcP, unsigned char* pVis, int n
         R_PortalFlood(srcP, pVis, prtA.m_sideLIdx[1]);
     }
 }
-
-//---------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
 void gfx::CPvsProcessor::performPVS(CPortal& portA,
                                     CVector<CPortal>& rPortals,
@@ -143,9 +138,7 @@ void gfx::CPvsProcessor::performPVS(CPortal& portA,
             prevPvs[prtB.m_idxThis] = 0;
     }
 }
-
-
-//---------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
 void gfx::CPvsProcessor::gatherLeafsVis(void) {
     int dummy;
@@ -181,8 +174,7 @@ void gfx::CPvsProcessor::gatherLeafsVis(void) {
         pWalkPvsPtr += nPerLeaf;
     }
 }
-
-//---------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
 fgBool gfx::CPvsProcessor::doesPortalSeesPortal(CPortal& a, CPortal& b) {
     //Vector3f dummy;
@@ -227,3 +219,4 @@ fgBool gfx::CPvsProcessor::doesPortalSeesPortal(CPortal& a, CPortal& b) {
     }
     return FG_FALSE;
 }
+//------------------------------------------------------------------------------

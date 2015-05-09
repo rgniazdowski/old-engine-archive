@@ -77,8 +77,6 @@
           <itemPath>../../../src/GFX/Scene/fgGfxBasetree.h</itemPath>
           <itemPath>../../../src/GFX/Scene/fgGfxBspCompiler.cpp</itemPath>
           <itemPath>../../../src/GFX/Scene/fgGfxBspCompiler.h</itemPath>
-          <itemPath>../../../src/GFX/Scene/fgGfxBspGeometry.cpp</itemPath>
-          <itemPath>../../../src/GFX/Scene/fgGfxBspGeometry.h</itemPath>
           <itemPath>../../../src/GFX/Scene/fgGfxBspTree.cpp</itemPath>
           <itemPath>../../../src/GFX/Scene/fgGfxBspTypes.cpp</itemPath>
           <itemPath>../../../src/GFX/Scene/fgGfxBspTypes.h</itemPath>
@@ -171,6 +169,8 @@
         <itemPath>../../../src/GFX/fgGfxPlane.h</itemPath>
         <itemPath>../../../src/GFX/fgGfxPlatform.cpp</itemPath>
         <itemPath>../../../src/GFX/fgGfxPlatform.h</itemPath>
+        <itemPath>../../../src/GFX/fgGfxPolygon.cpp</itemPath>
+        <itemPath>../../../src/GFX/fgGfxPolygon.h</itemPath>
         <itemPath>../../../src/GFX/fgGfxPrimitives.cpp</itemPath>
         <itemPath>../../../src/GFX/fgGfxPrimitives.h</itemPath>
         <itemPath>../../../src/GFX/fgGfxProjection.h</itemPath>
@@ -853,16 +853,6 @@
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Scene/fgGfxBspGeometry.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="../../../src/GFX/Scene/fgGfxBspGeometry.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
       <item path="../../../src/GFX/Scene/fgGfxBspTree.cpp"
             ex="false"
             tool="1"
@@ -1216,6 +1206,10 @@
       <item path="../../../src/GFX/fgGfxPlatform.cpp" ex="false" tool="1" flavor2="8">
       </item>
       <item path="../../../src/GFX/fgGfxPlatform.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGfxPolygon.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGfxPolygon.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGfxPrimitives.cpp"
             ex="false"
@@ -2461,16 +2455,6 @@
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Scene/fgGfxBspGeometry.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="../../../src/GFX/Scene/fgGfxBspGeometry.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
       <item path="../../../src/GFX/Scene/fgGfxBspTree.cpp"
             ex="false"
             tool="1"
@@ -2824,6 +2808,10 @@
       <item path="../../../src/GFX/fgGfxPlatform.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGfxPlatform.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGfxPolygon.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGfxPolygon.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGfxPrimitives.cpp"
             ex="false"
@@ -4032,16 +4020,6 @@
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Scene/fgGfxBspGeometry.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="../../../src/GFX/Scene/fgGfxBspGeometry.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
       <item path="../../../src/GFX/Scene/fgGfxBspTree.cpp"
             ex="false"
             tool="1"
@@ -4395,6 +4373,10 @@
       <item path="../../../src/GFX/fgGfxPlatform.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGfxPlatform.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGfxPolygon.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGfxPolygon.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGfxPrimitives.cpp"
             ex="false"
@@ -5581,16 +5563,6 @@
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Scene/fgGfxBspGeometry.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="../../../src/GFX/Scene/fgGfxBspGeometry.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
       <item path="../../../src/GFX/Scene/fgGfxBspTree.cpp"
             ex="false"
             tool="1"
@@ -5944,6 +5916,10 @@
       <item path="../../../src/GFX/fgGfxPlatform.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGfxPlatform.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGfxPolygon.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGfxPolygon.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGfxPrimitives.cpp"
             ex="false"
@@ -7161,16 +7137,6 @@
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Scene/fgGfxBspGeometry.cpp"
-            ex="false"
-            tool="1"
-            flavor2="8">
-      </item>
-      <item path="../../../src/GFX/Scene/fgGfxBspGeometry.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
       <item path="../../../src/GFX/Scene/fgGfxBspTree.cpp"
             ex="false"
             tool="1"
@@ -7524,6 +7490,10 @@
       <item path="../../../src/GFX/fgGfxPlatform.cpp" ex="false" tool="1" flavor2="8">
       </item>
       <item path="../../../src/GFX/fgGfxPlatform.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGfxPolygon.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGfxPolygon.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGfxPrimitives.cpp"
             ex="false"
@@ -8733,16 +8703,6 @@
             tool="3"
             flavor2="0">
       </item>
-      <item path="../../../src/GFX/Scene/fgGfxBspGeometry.cpp"
-            ex="false"
-            tool="1"
-            flavor2="8">
-      </item>
-      <item path="../../../src/GFX/Scene/fgGfxBspGeometry.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
       <item path="../../../src/GFX/Scene/fgGfxBspTree.cpp"
             ex="false"
             tool="1"
@@ -9096,6 +9056,10 @@
       <item path="../../../src/GFX/fgGfxPlatform.cpp" ex="false" tool="1" flavor2="8">
       </item>
       <item path="../../../src/GFX/fgGfxPlatform.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGfxPolygon.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../../src/GFX/fgGfxPolygon.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="../../../src/GFX/fgGfxPrimitives.cpp"
             ex="false"

@@ -7,17 +7,17 @@
  * FlexiGame source code and any related files can not be copied, modified
  * and/or distributed without the express or written consent from the author.
  ******************************************************************************/
-// compiler.cpp: implementation of the Compiler class.
-//
-//////////////////////////////////////////////////////////////////////
 
 #include "fgGfxBspCompiler.h"
+#include "GFX/fgGfxPrimitives.h"
+#include "GFX/fgGfxFrustum.h"
 #include "GFX/fgGfxStdInc.h"
 #include "fgGfxBspTypes.h"
+#include "fgColors.h"
 
 using namespace fg;
 
-//---------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 
 fgBool gfx::CBspCompiler::compile(fgBool usethreads) {
     m_usethreads = usethreads;

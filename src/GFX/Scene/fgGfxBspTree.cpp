@@ -8,7 +8,6 @@
  * and/or distributed without the express or written consent from the author.
  ******************************************************************************/
 
-#include "fgGfxBspGeometry.h"
 #include "fgGfxBspCompiler.h"
 
 using namespace fg;

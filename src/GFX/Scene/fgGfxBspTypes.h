@@ -13,8 +13,9 @@
  * Author: Octavian Marius Chincisan
  */
 
-#ifndef __BASELIB_H__
-    #define __BASELIB_H__
+#ifndef FG_INC_GFX_BSP_TYPES
+    #define FG_INC_GFX_BSP_TYPES
+    #define FG_INC_GFX_BSP_TYPES_BLOCK
     #pragma pack(push, 8)
 
     #include "Math/fgMathLib.h"
@@ -25,34 +26,30 @@
     #include <vector>
     #include <algorithm>
 
-    #define _SCOPE
     #define ASSERT(...)
 
-    #define NO_FLAG(f_,v_)	(!(f_&v_))
-    #define HAS_FLAG(f_,v_)	(f_&v_)
-    #define REM_FLAG(f_,v_)	(f_&=~v_)
-    #define ADD_FLAG(f_,v_)	(f_|=v_)
-    #define SET_FLAG(f_,v_)	(f_=v_)
+    #define POLY_DELETED	0x8
+    #define POLY_BT_ISSPLITER	0x10
+    #define POLY_PORTAL0        0x20
+    #define POLY_PORTAL1        0x40
+    #define POLY_PROCESSED      0x80
+    #define POLY_HIDDEN         0x100
+    #define POLY_DIRTY          0x800
+    #define POLY_SELECTED       0x2000
+    #define BRSH_SOLID          0x1
+    #define BRSH_REV            0x2
+    #define BRSH_DIRTY          0x8
+    #define BRSH_TERRAIN        0x10
+
+    #define FG_NO_FLAG(f_,v_)	(!(f_&v_))
+    #define FG_HAS_FLAG(f_,v_)	(!!(f_&v_))
+    #define FG_REM_FLAG(f_,v_)	(f_&=~v_)
+    #define FG_ADD_FLAG(f_,v_)	(f_|=v_)
+    #define FG_SET_FLAG(f_,v_)	(f_=v_)
 
     #define EPSILONBIG      0.0625F
     #define EPSILON         0.0009765625F
-    #define INFINIT         999999999.0F
-    #define PI              3.14159265358900                // PI in radians
-    #define DOIPI           6.28318530717900	            // 2 pi
-    #define PIPE2           1.57079632679400                // halfpi
-    #define PIPE4           0.78539816339700                // quad of  pi
-    #define PIPE6           0.52359877559800                // sixth of pi
-    #define ONEDG           0.0174532925199F                // one grade
-    #define G2R(a)          (a*0.0174532925F)               // grades to radians
-    #define R2G(a)          (a*57.295779513F)               // radians to grades
     #define SWITCHI(_x,_y)  ((_x)^=(_y)^=(_x)^=(_y))        // swithes 2 integers
-    #define ROLLG(a)        {if(a<0) a=360; else if (a > 360) a = 0;}       // roll's the angle
-    #define ROLLR(a)        {if(a<0) a=DOIPI; else if (a > DOIPI) a = 0.00;}
-    #define ROLL180(a)      {if(a<-180.00) a=180.00; else if (a > 180.00) a = -180.00;}
-    #define BLOCKRANGE(a)   if(a < - PIPE2-EPSILON) a =- (PIPE2-EPSILON); else if (a > PIPE2-EPSILON) a = PIPE2-EPSILON;  // blocks the range of angle to straight up/down
-    #define CLAMPVAL(_v_,m_,M_) {if(_v_< m_) _v_= m_; else if (_v_> M_)  _v_=M_;}
-    #define ROLLPI(a)       {if(a < -(PI) ) a = (PI); else if (a > (PI)) a = -(PI);}
-    #define ROLL2PI(a)      {if(a < 0) a = DOIPI; else if (a > DOIPI) a = 0;}
 /*
     #define FRAND(a,b)      (float)((float)(rand()%a)/b)
     #define FRANDPREC(nLow, nHigh) ( ( (1.0f / ( (rand() % 100) + 1) ) * ((nHigh) - (nLow ) ) ) + (nLow) )		
@@ -86,7 +83,7 @@ inline float Frand() {
     unsigned int t = jflone | (jflmask & x);
     return (*(float*)& t) - 3.0f;
 }
-*/
+ */
 /*
 inline float Asinr(float val) {
     if(-1.0 < val) {
@@ -276,4 +273,5 @@ namespace fg {
     #define RB_PORTALSBSP                   1015
 
     #pragma pack(pop)
-#endif // __BASELIB_H__
+    #undef FG_INC_GFX_BSP_TYPES_BLOCK
+#endif /* FG_INC_GFX_BSP_TYPES */

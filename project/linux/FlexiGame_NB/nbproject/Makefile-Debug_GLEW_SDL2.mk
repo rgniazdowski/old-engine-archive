@@ -57,7 +57,6 @@ OBJECTFILES= \
 	${OBJECTDIR}/_ext/1008910172/fgGfx3DScene.o \
 	${OBJECTDIR}/_ext/1008910172/fgGfxBasetree.o \
 	${OBJECTDIR}/_ext/1008910172/fgGfxBspCompiler.o \
-	${OBJECTDIR}/_ext/1008910172/fgGfxBspGeometry.o \
 	${OBJECTDIR}/_ext/1008910172/fgGfxBspTree.o \
 	${OBJECTDIR}/_ext/1008910172/fgGfxBspTypes.o \
 	${OBJECTDIR}/_ext/1008910172/fgGfxLooseOctree.o \
@@ -93,6 +92,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/_ext/534590209/fgGfxModelResource.o \
 	${OBJECTDIR}/_ext/534590209/fgGfxModelTypes.o \
 	${OBJECTDIR}/_ext/534590209/fgGfxPlatform.o \
+	${OBJECTDIR}/_ext/534590209/fgGfxPolygon.o \
 	${OBJECTDIR}/_ext/534590209/fgGfxPrimitives.o \
 	${OBJECTDIR}/_ext/534590209/fgGfxSimpleDrawer.o \
 	${OBJECTDIR}/_ext/534590209/fgGfxVertexData.o \
@@ -337,11 +337,6 @@ ${OBJECTDIR}/_ext/1008910172/fgGfxBspCompiler.o: ../../../src/GFX/Scene/fgGfxBsp
 	${RM} "$@.d"
 	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_NO_UNDEF -DFG_USING_GLEW -DFG_USING_GLM -DFG_USING_LUA_PLUS -DFG_USING_OPENGL -DFG_USING_OPENGL_GLEW -DFG_USING_SDL2 -DFG_USING_THREADS -DFG_USING_TINYXML -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree `pkg-config --cflags gl` `pkg-config --cflags glew` `pkg-config --cflags sdl2` `pkg-config --cflags SDL2_mixer` `pkg-config --cflags libpng` `pkg-config --cflags zlib` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1008910172/fgGfxBspCompiler.o ../../../src/GFX/Scene/fgGfxBspCompiler.cpp
 
-${OBJECTDIR}/_ext/1008910172/fgGfxBspGeometry.o: ../../../src/GFX/Scene/fgGfxBspGeometry.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/1008910172
-	${RM} "$@.d"
-	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_NO_UNDEF -DFG_USING_GLEW -DFG_USING_GLM -DFG_USING_LUA_PLUS -DFG_USING_OPENGL -DFG_USING_OPENGL_GLEW -DFG_USING_SDL2 -DFG_USING_THREADS -DFG_USING_TINYXML -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree `pkg-config --cflags gl` `pkg-config --cflags glew` `pkg-config --cflags sdl2` `pkg-config --cflags SDL2_mixer` `pkg-config --cflags libpng` `pkg-config --cflags zlib` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/1008910172/fgGfxBspGeometry.o ../../../src/GFX/Scene/fgGfxBspGeometry.cpp
-
 ${OBJECTDIR}/_ext/1008910172/fgGfxBspTree.o: ../../../src/GFX/Scene/fgGfxBspTree.cpp 
 	${MKDIR} -p ${OBJECTDIR}/_ext/1008910172
 	${RM} "$@.d"
@@ -516,6 +511,11 @@ ${OBJECTDIR}/_ext/534590209/fgGfxPlatform.o: ../../../src/GFX/fgGfxPlatform.cpp
 	${MKDIR} -p ${OBJECTDIR}/_ext/534590209
 	${RM} "$@.d"
 	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_NO_UNDEF -DFG_USING_GLEW -DFG_USING_GLM -DFG_USING_LUA_PLUS -DFG_USING_OPENGL -DFG_USING_OPENGL_GLEW -DFG_USING_SDL2 -DFG_USING_THREADS -DFG_USING_TINYXML -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree `pkg-config --cflags gl` `pkg-config --cflags glew` `pkg-config --cflags sdl2` `pkg-config --cflags SDL2_mixer` `pkg-config --cflags libpng` `pkg-config --cflags zlib` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534590209/fgGfxPlatform.o ../../../src/GFX/fgGfxPlatform.cpp
+
+${OBJECTDIR}/_ext/534590209/fgGfxPolygon.o: ../../../src/GFX/fgGfxPolygon.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/534590209
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -Wall -DDEBUG -DFG_DEBUG -DFG_NO_UNDEF -DFG_USING_GLEW -DFG_USING_GLM -DFG_USING_LUA_PLUS -DFG_USING_OPENGL -DFG_USING_OPENGL_GLEW -DFG_USING_SDL2 -DFG_USING_THREADS -DFG_USING_TINYXML -DTIXML_USE_STL -D_DEBUG -I../../../src -I../../../modules/glm -I../../../modules/tinyobj/upstream -I../../../modules/tinyxml/upstream -I../../../modules/stbfont/usascii -I../../../modules/stbfont -I../../../modules/luaplus51-all/Src -I../../../modules/zlib_128/contrib/minizip -I../../../modules/simpleopt -I../../../modules/cpp_btree `pkg-config --cflags gl` `pkg-config --cflags glew` `pkg-config --cflags sdl2` `pkg-config --cflags SDL2_mixer` `pkg-config --cflags libpng` `pkg-config --cflags zlib` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/534590209/fgGfxPolygon.o ../../../src/GFX/fgGfxPolygon.cpp
 
 ${OBJECTDIR}/_ext/534590209/fgGfxPrimitives.o: ../../../src/GFX/fgGfxPrimitives.cpp 
 	${MKDIR} -p ${OBJECTDIR}/_ext/534590209

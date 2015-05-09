@@ -14,21 +14,22 @@
 
     #include "fgBool.h"
     #include "fgVector.h"
+    #include "fgGfxBspTypes.h"
     #include "GFX/fgGfxAABoundingBox.h"
-    #include "fgGfxBspGeometry.h"
+    #include "GFX/fgGfxPolygon.h"
 
 //--------------------------------------------------------------------------------
     #define NODE_EMPTY      0x0
     #define NODE_SOLID      0x1
-    #define NODE_LEAF       0x80000000
+    #define NODE_LEAF       0x8
     #define N_FRONT         1
     #define N_BACK          0
-    #define FLAG_PROCESSED  0x8000000
 
 namespace fg {
     namespace gfx {
         class CBspTree;
         class CPolygon;
+        class CFrustum;
     }
 }
 

@@ -184,8 +184,9 @@ namespace fg {
              * @return 
              */
             value_type distance(const vector_type& point) {
-                // (math::dot(point, n) - d);
                 return (value_type)(this->d + math::dot(this->n, point));
+                //return (value_type)(math::dot(point, this->n) - this->d);
+
                 //return (d + normal.innerProduct(p));
             }
             /**
@@ -196,8 +197,9 @@ namespace fg {
              * @return
              */
             value_type distance(value_type a, value_type b, value_type c) {
-                // (math::dot(Vector3f(a, b, c), n) - d);
                 return (value_type)(this->d + math::dot(this->n, vector_type(a, b, c)));
+                //return (value_type)(math::dot(vector_type(a, b, c), this->n) - this->d);
+
                 //return (d + normal.innerProduct(p));
             }
             /**
@@ -262,6 +264,8 @@ namespace fg {
                             return -(point.z - (-this->d));
                         }
                         return (point.z - this->d);
+                        break;
+                    default:
                         break;
                 }
                 return (value_type)(math::dot(point, this->n) - this->d);
