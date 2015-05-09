@@ -265,9 +265,9 @@ void gfx::primitives::drawSkyBoxOptimized(void) {
 //------------------------------------------------------------------------------
 
 void gfx::primitives::createSphereMesh(fg::gfx::SMeshBase *mesh,
-                                        unsigned int rings,
-                                        unsigned int sectors,
-                                        float radius) {
+                                       unsigned int rings,
+                                       unsigned int sectors,
+                                       float radius) {
     if(!mesh) {
         return;
     }
@@ -305,7 +305,7 @@ void gfx::primitives::createSphereMesh(fg::gfx::SMeshBase *mesh,
 //------------------------------------------------------------------------------
 
 void gfx::primitives::createCubeMesh(fg::gfx::SMeshBase *mesh,
-                                      float scale) {
+                                     float scale) {
     if(!mesh) {
         return;
     }
@@ -380,27 +380,27 @@ void gfx::primitives::drawAABBLines(const AABoundingBox3Df& aabb, const Color4f&
                                          _id_vec(4), // 16
     };
     const Color4f aabbColor[] = {
-                                   color,
-                                   color,
-                                   color,
-                                   color,
+                                 color,
+                                 color,
+                                 color,
+                                 color,
 
-                                   color,
-                                   color,
-                                   color,
-                                   color,
+                                 color,
+                                 color,
+                                 color,
+                                 color,
 
-                                   color,
-                                   color,
-                                   color,
-                                   color,
+                                 color,
+                                 color,
+                                 color,
+                                 color,
 
-                                   color,
-                                   color,
-                                   color,
-                                   color,
+                                 color,
+                                 color,
+                                 color,
+                                 color,
 
-                                   color
+                                 color
 
     };
 #undef _id_vec
@@ -424,9 +424,27 @@ void gfx::primitives::drawAABBLines(const AABoundingBox3Df& aabb, const Color4f&
 }
 //------------------------------------------------------------------------------
 
+void gfx::primitives::drawArray(const CVector<Vector3f>& inputData,
+                                const PrimitiveMode mode) {
+    if(inputData.empty())
+        return;
+    const unsigned int attribMask = FG_GFX_POSITION_BIT;
+
+    uintptr_t offset = (uintptr_t)((unsigned int*)&inputData.front());
+    context::vertexAttribPointer(FG_GFX_ATTRIB_POS_LOCATION,
+                                 3,
+                                 FG_GFX_FLOAT,
+                                 FG_GFX_FALSE,
+                                 sizeof (Vector3f),
+                                 reinterpret_cast<fgGFXvoid*>(offset));
+    glDrawArrays((GLenum)mode, 0, inputData.size());
+    GLCheckError("glDrawArrays");
+}
+//------------------------------------------------------------------------------
+
 void gfx::primitives::drawArray(const fg::CVector<Vertex2v> &inputData,
-                                 const unsigned int attribMask,
-                                 const PrimitiveMode mode) {
+                                const unsigned int attribMask,
+                                const PrimitiveMode mode) {
     if(inputData.empty() || !attribMask)
         return;
     context::diffVertexAttribArrayMask(attribMask);
@@ -455,8 +473,8 @@ void gfx::primitives::drawArray(const fg::CVector<Vertex2v> &inputData,
 //------------------------------------------------------------------------------
 
 void gfx::primitives::drawArray(const fg::CVector<Vertex3v> &inputData,
-                                 const unsigned int attribMask,
-                                 const PrimitiveMode mode) {
+                                const unsigned int attribMask,
+                                const PrimitiveMode mode) {
     if(inputData.empty() || !attribMask)
         return;
     // Need to optimize this
@@ -497,8 +515,8 @@ void gfx::primitives::drawArray(const fg::CVector<Vertex3v> &inputData,
 //------------------------------------------------------------------------------
 
 void gfx::primitives::drawArray(const fg::CVector<Vertex4v> &inputData,
-                                 const unsigned int attribMask,
-                                 const PrimitiveMode mode) {
+                                const unsigned int attribMask,
+                                const PrimitiveMode mode) {
     if(inputData.empty() || !attribMask)
         return;
 
@@ -545,9 +563,9 @@ void gfx::primitives::drawArray(const fg::CVector<Vertex4v> &inputData,
 //------------------------------------------------------------------------------
 
 void gfx::primitives::drawArrayIndexed(const CVector<Vertex2v> &inputData,
-                                        const CVector<fgGFXushort>& indices,
-                                        const unsigned int attribMask,
-                                        const PrimitiveMode mode) {
+                                       const CVector<fgGFXushort>& indices,
+                                       const unsigned int attribMask,
+                                       const PrimitiveMode mode) {
 
     if(inputData.empty() || !attribMask || indices.empty())
         return;
@@ -577,9 +595,9 @@ void gfx::primitives::drawArrayIndexed(const CVector<Vertex2v> &inputData,
 //------------------------------------------------------------------------------
 
 void gfx::primitives::drawArrayIndexed(const CVector<Vertex3v> &inputData,
-                                        const CVector<fgGFXushort>& indices,
-                                        const unsigned int attribMask,
-                                        const PrimitiveMode mode) {
+                                       const CVector<fgGFXushort>& indices,
+                                       const unsigned int attribMask,
+                                       const PrimitiveMode mode) {
     if(inputData.empty() || !attribMask || indices.empty())
         return;
     uintptr_t offset = (uintptr_t)((unsigned int*)&inputData.front());
@@ -616,9 +634,9 @@ void gfx::primitives::drawArrayIndexed(const CVector<Vertex3v> &inputData,
 //------------------------------------------------------------------------------
 
 void gfx::primitives::drawArrayIndexed(const CVector<Vertex4v> &inputData,
-                                        const CVector<fgGFXushort>& indices,
-                                        const unsigned int attribMask,
-                                        const PrimitiveMode mode) {
+                                       const CVector<fgGFXushort>& indices,
+                                       const unsigned int attribMask,
+                                       const PrimitiveMode mode) {
     if(inputData.empty() || !attribMask || indices.empty())
         return;
 
@@ -665,8 +683,8 @@ void gfx::primitives::drawArrayIndexed(const CVector<Vertex4v> &inputData,
 //------------------------------------------------------------------------------
 
 void gfx::primitives::applyAttributeData(SAttributeData *attrData,
-                                          SDrawingInfo& drawingInfo,
-                                          const unsigned int attribMask) {
+                                         SDrawingInfo& drawingInfo,
+                                         const unsigned int attribMask) {
     if(!attrData)
         return;
     context::diffVertexAttribArrayMask(attribMask);
@@ -697,8 +715,8 @@ void gfx::primitives::applyAttributeData(SAttributeData *attrData,
 //------------------------------------------------------------------------------
 
 void gfx::primitives::drawVertexData(const CVertexData *inputData,
-                                      const unsigned int attribMask,
-                                      const PrimitiveMode mode) {
+                                     const unsigned int attribMask,
+                                     const PrimitiveMode mode) {
     if(!inputData)
         return;
     if(inputData->empty() || !attribMask)
@@ -824,24 +842,24 @@ void gfx::primitives::drawRect2D(void) {
 //------------------------------------------------------------------------------
 
 void gfx::primitives::appendRect2D(CVertexData *outputData,
-                                    const Vec2f &size,
-                                    const Vec2f &uv1,
-                                    const Vec2f &uv2,
-                                    const Color4f &color,
-                                    const PrimitiveMode mode,
-                                    const fgBool rewind) {
+                                   const Vec2f &size,
+                                   const Vec2f &uv1,
+                                   const Vec2f &uv2,
+                                   const Color4f &color,
+                                   const PrimitiveMode mode,
+                                   const fgBool rewind) {
     appendRect2D(outputData, Vec2f(0.0f, 0.0f), size, uv1, uv2, color, mode, rewind);
 }
 //------------------------------------------------------------------------------
 
 void gfx::primitives::appendRect2D(CVertexData *outputData,
-                                    float sizex,
-                                    float sizey,
-                                    const Vec2f &uv1,
-                                    const Vec2f &uv2,
-                                    const Color4f &color,
-                                    const PrimitiveMode mode,
-                                    const fgBool rewind) {
+                                   float sizex,
+                                   float sizey,
+                                   const Vec2f &uv1,
+                                   const Vec2f &uv2,
+                                   const Color4f &color,
+                                   const PrimitiveMode mode,
+                                   const fgBool rewind) {
     appendRect2D(outputData, Vec2f(0.0f, 0.0f), Vec2f(sizex, sizey), uv1, uv2, color, mode, rewind);
 }
 //------------------------------------------------------------------------------
@@ -852,13 +870,13 @@ void gfx::primitives::appendRect2D(CVertexData *outputData,
  * Currently specifing UVs for Triangle strip is not obvious (it's tricky, needs changing)
  */
 void gfx::primitives::appendRect2D(CVertexData *outputData,
-                                    const Vec2f &relPos,
-                                    const Vec2f &size,
-                                    const Vec2f &uv1,
-                                    const Vec2f &uv2,
-                                    const Color4f &color,
-                                    const PrimitiveMode mode,
-                                    const fgBool rewind) {
+                                   const Vec2f &relPos,
+                                   const Vec2f &size,
+                                   const Vec2f &uv1,
+                                   const Vec2f &uv2,
+                                   const Color4f &color,
+                                   const PrimitiveMode mode,
+                                   const fgBool rewind) {
     if(!outputData)
         return;
     float x1 = 0.0f, y1 = 0.0f;

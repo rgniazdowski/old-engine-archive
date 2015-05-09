@@ -19,14 +19,14 @@
     #endif
 
     #include "fgGfxAABoundingBox.h"
-    
+
 namespace fg {
     namespace gfx {
 
         struct SMeshBase;
         struct SMeshAoS;
         struct SMeshSoA;
-        
+
         /**
          *
          */
@@ -53,8 +53,8 @@ namespace fg {
              * @param attribMask
              */
             void applyAttributeData(SAttributeData *attrData,
-                                           SDrawingInfo& drawingInfo,
-                                           const unsigned int attribMask);
+                                    SDrawingInfo& drawingInfo,
+                                    const unsigned int attribMask);
 
             /**
              * 
@@ -64,9 +64,9 @@ namespace fg {
              * @param radius
              */
             void createSphereMesh(SMeshBase *mesh,
-                                         unsigned int rings,
-                                         unsigned int sectors,
-                                         float radius = 1.0f);
+                                  unsigned int rings,
+                                  unsigned int sectors,
+                                  float radius = 1.0f);
 
             /**
              * 
@@ -74,7 +74,7 @@ namespace fg {
              * @param scale
              */
             void createCubeMesh(SMeshBase *mesh,
-                                       float scale = 1.0f);
+                                float scale = 1.0f);
 
             /*void drawVertexDataIndexed(const CVertexData *inputData,
                                        const CVector<fgGFXushort>& indices,
@@ -105,8 +105,16 @@ namespace fg {
              * @param mode
              */
             void drawVertexData(const CVertexData *inputData,
-                                       const unsigned int attribMask = FG_GFX_POSITION_BIT | FG_GFX_UVS_BIT,
-                                       const PrimitiveMode mode = PrimitiveMode::TRIANGLES);
+                                const unsigned int attribMask = FG_GFX_POSITION_BIT | FG_GFX_UVS_BIT,
+                                const PrimitiveMode mode = PrimitiveMode::TRIANGLES);
+
+            /**
+             * 
+             * @param inputData
+             * @param mode
+             */
+            void drawArray(const CVector<Vector3f>& inputData,
+                           const PrimitiveMode mode = PrimitiveMode::TRIANGLES);
 
             /**
              * 
@@ -115,8 +123,8 @@ namespace fg {
              * @param mode
              */
             void drawArray(const fg::CVector<Vertex2v> &inputData,
-                                  const unsigned int attribMask = FG_GFX_POSITION_BIT | FG_GFX_UVS_BIT,
-                                  const PrimitiveMode mode = PrimitiveMode::TRIANGLES);
+                           const unsigned int attribMask = FG_GFX_POSITION_BIT | FG_GFX_UVS_BIT,
+                           const PrimitiveMode mode = PrimitiveMode::TRIANGLES);
 
             /**
              * 
@@ -125,8 +133,8 @@ namespace fg {
              * @param mode
              */
             void drawArray(const fg::CVector<Vertex3v> &inputData,
-                                  const unsigned int attribMask = FG_GFX_POSITION_BIT | FG_GFX_NORMAL_BIT | FG_GFX_UVS_BIT,
-                                  const PrimitiveMode mode = PrimitiveMode::TRIANGLES);
+                           const unsigned int attribMask = FG_GFX_POSITION_BIT | FG_GFX_NORMAL_BIT | FG_GFX_UVS_BIT,
+                           const PrimitiveMode mode = PrimitiveMode::TRIANGLES);
 
             /**
              * 
@@ -135,8 +143,8 @@ namespace fg {
              * @param mode
              */
             void drawArray(const fg::CVector<Vertex4v> &inputData,
-                                  const unsigned int attribMask = FG_GFX_POSITION_BIT | FG_GFX_NORMAL_BIT | FG_GFX_UVS_BIT | FG_GFX_COLOR_BIT,
-                                  const PrimitiveMode mode = PrimitiveMode::TRIANGLES);
+                           const unsigned int attribMask = FG_GFX_POSITION_BIT | FG_GFX_NORMAL_BIT | FG_GFX_UVS_BIT | FG_GFX_COLOR_BIT,
+                           const PrimitiveMode mode = PrimitiveMode::TRIANGLES);
 
             ////////////////////////////////////////////////////////////////////
 
@@ -148,9 +156,9 @@ namespace fg {
              * @param mode
              */
             void drawArrayIndexed(const fg::CVector<Vertex2v> &inputData,
-                                         const CVector<fgGFXushort>& indices,
-                                         const unsigned int attribMask = FG_GFX_POSITION_BIT | FG_GFX_UVS_BIT,
-                                         const PrimitiveMode mode = PrimitiveMode::TRIANGLES);
+                                  const CVector<fgGFXushort>& indices,
+                                  const unsigned int attribMask = FG_GFX_POSITION_BIT | FG_GFX_UVS_BIT,
+                                  const PrimitiveMode mode = PrimitiveMode::TRIANGLES);
 
             /**
              * 
@@ -160,9 +168,9 @@ namespace fg {
              * @param mode
              */
             void drawArrayIndexed(const fg::CVector<Vertex3v> &inputData,
-                                         const CVector<fgGFXushort>& indices,
-                                         const unsigned int attribMask = FG_GFX_POSITION_BIT | FG_GFX_NORMAL_BIT | FG_GFX_UVS_BIT,
-                                         const PrimitiveMode mode = PrimitiveMode::TRIANGLES);
+                                  const CVector<fgGFXushort>& indices,
+                                  const unsigned int attribMask = FG_GFX_POSITION_BIT | FG_GFX_NORMAL_BIT | FG_GFX_UVS_BIT,
+                                  const PrimitiveMode mode = PrimitiveMode::TRIANGLES);
 
             /**
              * 
@@ -172,9 +180,9 @@ namespace fg {
              * @param mode
              */
             void drawArrayIndexed(const fg::CVector<Vertex4v> &inputData,
-                                         const CVector<fgGFXushort>& indices,
-                                         const unsigned int attribMask = FG_GFX_POSITION_BIT | FG_GFX_NORMAL_BIT | FG_GFX_UVS_BIT | FG_GFX_COLOR_BIT,
-                                         const PrimitiveMode mode = PrimitiveMode::TRIANGLES);
+                                  const CVector<fgGFXushort>& indices,
+                                  const unsigned int attribMask = FG_GFX_POSITION_BIT | FG_GFX_NORMAL_BIT | FG_GFX_UVS_BIT | FG_GFX_COLOR_BIT,
+                                  const PrimitiveMode mode = PrimitiveMode::TRIANGLES);
 
             /* ***************** 2 component vertex struct - pos, uv **********/
     #if 0
@@ -182,28 +190,28 @@ namespace fg {
              *
              */
             void appendRect2D(fg::CVector<Vertex2v> &outputData,
-                                     float sizex, float sizey,
-                                     const Vector2f &uv1, const Vector2f &uv2,
-                                     const PrimitiveMode mode = FG_GFX_TRIANGLES,
-                                     const fgBool rewind = FG_FALSE);
+                              float sizex, float sizey,
+                              const Vector2f &uv1, const Vector2f &uv2,
+                              const PrimitiveMode mode = FG_GFX_TRIANGLES,
+                              const fgBool rewind = FG_FALSE);
 
             /*
              *
              */
             void appendRect2D(fg::CVector<Vertex2v> &outputData,
-                                     const Vector2f &size,
-                                     const Vector2f &uv1, const Vector2f &uv2,
-                                     const PrimitiveMode mode = FG_GFX_TRIANGLES,
-                                     const fgBool rewind = FG_FALSE);
+                              const Vector2f &size,
+                              const Vector2f &uv1, const Vector2f &uv2,
+                              const PrimitiveMode mode = FG_GFX_TRIANGLES,
+                              const fgBool rewind = FG_FALSE);
 
             /*
              *
              */
             void appendRect2D(fg::CVector<Vertex2v> &outputData,
-                                     const Vector2f &relPos, const Vector2f &size,
-                                     const Vector2f &uv1, const Vector2f &uv2,
-                                     const PrimitiveMode mode = FG_GFX_TRIANGLES,
-                                     const fgBool rewind = FG_FALSE);
+                              const Vector2f &relPos, const Vector2f &size,
+                              const Vector2f &uv1, const Vector2f &uv2,
+                              const PrimitiveMode mode = FG_GFX_TRIANGLES,
+                              const fgBool rewind = FG_FALSE);
     #endif
             /* ***************** 3 component vertex struct - pos, norm, uv ************ */
 
@@ -211,31 +219,31 @@ namespace fg {
              *
              */
             void appendRect2D(CVertexData *outputData,
-                                     float sizex, float sizey,
-                                     const fg::Vector2f &uv1, const fg::Vector2f &uv2,
-                                     const Color4f &color,
-                                     const PrimitiveMode mode = PrimitiveMode::TRIANGLES,
-                                     const fgBool rewind = FG_FALSE);
+                              float sizex, float sizey,
+                              const fg::Vector2f &uv1, const fg::Vector2f &uv2,
+                              const Color4f &color,
+                              const PrimitiveMode mode = PrimitiveMode::TRIANGLES,
+                              const fgBool rewind = FG_FALSE);
 
             /*
              *
              */
             void appendRect2D(CVertexData *outputData,
-                                     const fg::Vector2f &size,
-                                     const fg::Vector2f &uv1, const fg::Vector2f &uv2,
-                                     const Color4f &color,
-                                     const PrimitiveMode mode = PrimitiveMode::TRIANGLES,
-                                     const fgBool rewind = FG_FALSE);
+                              const fg::Vector2f &size,
+                              const fg::Vector2f &uv1, const fg::Vector2f &uv2,
+                              const Color4f &color,
+                              const PrimitiveMode mode = PrimitiveMode::TRIANGLES,
+                              const fgBool rewind = FG_FALSE);
 
             /*
              *
              */
             void appendRect2D(CVertexData *outputData,
-                                     const fg::Vector2f &relPos, const fg::Vector2f &size,
-                                     const fg::Vector2f &uv1, const fg::Vector2f &uv2,
-                                     const Color4f &color,
-                                     const PrimitiveMode mode = PrimitiveMode::TRIANGLES,
-                                     const fgBool rewind = FG_FALSE);
+                              const fg::Vector2f &relPos, const fg::Vector2f &size,
+                              const fg::Vector2f &uv1, const fg::Vector2f &uv2,
+                              const Color4f &color,
+                              const PrimitiveMode mode = PrimitiveMode::TRIANGLES,
+                              const fgBool rewind = FG_FALSE);
 
             /* ***************** 4 component vertex struct - pos, norm, uv ************ */
     #if 0
@@ -243,28 +251,28 @@ namespace fg {
              *
              */
             void appendRect2D(fg::CVector<Vertex4v> &outputData,
-                                     float sizex, float sizey,
-                                     const fg::Vector2f &uv1, const fg::Vector2f &uv2,
-                                     const PrimitiveMode mode = FG_GFX_TRIANGLES,
-                                     const fgBool rewind = FG_FALSE);
+                              float sizex, float sizey,
+                              const fg::Vector2f &uv1, const fg::Vector2f &uv2,
+                              const PrimitiveMode mode = FG_GFX_TRIANGLES,
+                              const fgBool rewind = FG_FALSE);
 
             /*
              *
              */
             void appendRect2D(fg::CVector<Vertex4v> &outputData,
-                                     const fg::Vector2f &size,
-                                     const fg::Vector2f &uv1, const fg::Vector2f &uv2,
-                                     const PrimitiveMode mode = FG_GFX_TRIANGLES,
-                                     const fgBool rewind = FG_FALSE);
+                              const fg::Vector2f &size,
+                              const fg::Vector2f &uv1, const fg::Vector2f &uv2,
+                              const PrimitiveMode mode = FG_GFX_TRIANGLES,
+                              const fgBool rewind = FG_FALSE);
 
             /*
              *
              */
             void appendRect2D(fg::CVector<Vertex4v> &outputData,
-                                     const fg::Vector2f &relPos, const fg::Vector2f &size,
-                                     const fg::Vector2f &uv1, const fg::Vector2f &uv2,
-                                     const PrimitiveMode mode = FG_GFX_TRIANGLES,
-                                     const fgBool rewind = FG_FALSE);
+                              const fg::Vector2f &relPos, const fg::Vector2f &size,
+                              const fg::Vector2f &uv1, const fg::Vector2f &uv2,
+                              const PrimitiveMode mode = FG_GFX_TRIANGLES,
+                              const fgBool rewind = FG_FALSE);
     #endif
         }
     }
